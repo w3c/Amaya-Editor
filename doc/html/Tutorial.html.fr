@@ -5,6 +5,10 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <title>Amaya - Guide utilisateur</title>
+  <style type="text/css">
+
+.xml {color: #E50000}
+.exercice {color: #A9B200}</style>
   <meta name="generator" content="amaya 8.2, see http://www.w3.org/Amaya/" />
 </head>
 
@@ -113,6 +117,27 @@ des "frames" pour faire que les sites Web soient accessibles aux handicapés
   <li>Autoriser la <strong>composition</strong> avec d'autres langages XML
     (RDF, MathML, SVG, SMIL, autres).</li>
 </ul>
+
+<h3>Les différences entre HTML et XHTML</h3>
+<pre><span class="xml">&lt;?xml version="1.0" encoding="iso-8859-1"?&gt;</span>
+<span class="xml">&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+      "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"&gt;</span>
+<span style="color: #9969FF">&lt;!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+      "http://www.w3.org/TR/html4/loose.dtd"&gt;</span>
+&lt;html <span class="xml">xmlns="http://www.w3.org/1999/xhtml"</span>&gt;
+&lt;head&gt;
+&lt;meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"<span style="color: #E50000" class="xml">/</span>&gt;
+&lt;title&gt;Amaya - Guide utilisateur&lt;/title&gt;
+&lt;/head&gt;
+&lt;body <span class="xml">xml:lang="fr"</span>&gt;
+&lt;h1 id=<span class="xml">"</span>Amaya<span class="xml">"</span>&gt;Amaya - Guide utilisateur<span class="xml">&lt;/h1&gt;</span>
+&lt;h2&gt;Plan<span class="xml">&lt;/h2&gt;</span>
+&lt;ol&gt;
+&lt;li&gt;Introduction<span class="xml">&lt;/li&gt;</span>
+&lt;li&gt;HTML<span class="xml">&lt;/li&gt;</span>
+&lt;li&gt;Quelques règles<span class="xml">&lt;/li&gt;</span>&lt;/ol&gt;
+<span class="xml">&lt;/body&gt;</span>
+<span class="xml">&lt;/html&gt;</span></pre>
 
 <h3>Les familles HTML</h3>
 
@@ -523,10 +548,6 @@ disponibles au clavier comme&nbsp;:</p>
     espace</code>. Ce caractère sera sauvé comme une entité
     (<code>&amp;nbsp;</code>).</li>
   <li>Pour obtenir un &euro; (euro), vous devez taper <code>Alt e</code>.</li>
-  <li>Pour obtenir un &#x153; (oelig), vous devez taper <code>Ctrl o</code>
-    puis <code>Ctrl e</code>.</li>
-  <li>Pour obtenir un &#x152; (OElig), vous devez taper <code>Shift Ctrl
-    O</code> puis <code>Shift Ctrl E</code>.</li>
   <li>Pour obtenir un «, vous devez taper <code>Ctrl &lt;</code> (ou
     <code>Shift</code> <code>Ctrl &lt;</code> selon le clavier).</li>
   <li>Pour obtenir un », vous devez taper <code>Shift Ctrl &gt;</code>.</li>
@@ -564,8 +585,8 @@ modifications opérées dans le document.</p>
 
 <p><a href="Creating.html.fr">A voir pour plus de détail</a></p>
 
-<p><em>Exercice1&nbsp;:</em> Créer un document contenant des paragraphes, des
-en-têtes, des divisions.</p>
+<p class="exercice"><em>Exercice 1&nbsp;:</em> Créer un document contenant
+des paragraphes, des en-têtes, des divisions.</p>
 
 <h1 id="L831">6. Les listes</h1>
 
@@ -656,7 +677,8 @@ touches <code>Back Space</code> et <code>Delete</code> pour fusionner des
 listes ou des items de listes.</p>
 
 <div>
-<p><em>Exercice2&nbsp;:</em> Créer et transformer des listes.</p>
+<p class="exercice"><em>Exercice 2&nbsp;:</em> Créer et transformer des
+listes.</p>
 </div>
 
 <h1 id="L1002">7. Les liens</h1>
@@ -770,6 +792,10 @@ ancre</strong> qui permet de détruire l'ancre cible ou le lien sélectionné.
 Il suffit que la sélection soit à l'intérieur de l'ancre à détruire. L'ancre
 est détruite, mais son contenu reste.</p>
 
+<p class="exercice"><em>Exercice 3&nbsp;:</em> Créer des liens dans un
+document et entre documents, copier/coller de structures contenant des liens,
+remplacer, détruire.</p>
+
 <h1 id="L1163">8. Mises en évidence du texte</h1>
 
 <p>Il est possible de marquer des parties de texte mises en ligne soit en
@@ -802,11 +828,179 @@ aurait été:</p>
 
 <h1 id="L1206">9. Les tables</h1>
 
-<p>Création d'une table</p>
+<h3><a id="Creating">Créer une nouvelle table</a></h3>
 
-<p>*************</p>
+<p>Quand on active le bouton table <img src="../images/table.gif"
+alt="Table button" /> ou quand on sélectionne l'entrée <strong>Table</strong>
+depuis le menu <strong>Xhtml</strong>, Amaya visualise une boîte de dialogue
+qui permet de spécifier le nombre initial de lignes, de colonnes, ainsi que
+la bordure en pixels.</p>
 
-<p>Ajout de cellules</p>
+<p style="text-align: center"><img alt="(Create table)"
+src="../images/create_table-fr.png" /></p>
+
+<p>En confirmant on crée une table comme suit.</p>
+
+<table border="1" summary="table">
+  <caption>I</caption>
+  <tbody>
+    <tr>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>L'espace au dessus de la table est réservé à la légende. Le point
+d'insertion est automatiquement placé dans cette légende pour en saisir le
+contenu. La touche <code>Delete</code> supprime la légende.</p>
+
+<p>La nouvelle table contient des cellules vides. On peut cliquer sur l'une
+d'entre elles au hasard et y insérer du texte, des images et autre. On peut
+également déplacer le point d'insertion de cellule en cellule par
+l'intermédiaire des flèches du clavier.</p>
+
+<h3><a id="Adding">Ajouter une nouvelle colonne</a></h3>
+
+<p>Pour ajouter un nouvelle colonne à une table&nbsp;:</p>
+<ol>
+  <li>Pour créer une nouvelle colonne à droite d'une cellule existante, il
+    faut placer le curseur à la fin de la cellule et sélectionner l'entrée
+    <strong>Cellule</strong> ou <strong>Cellule titre</strong> dans le
+    sous-menu <strong>Table</strong>.</li>
+  <li>Pour créer une nouvelle colonne à gauche d'une cellule existante, il
+    faut placer le curseur au début de la cellule et sélectionner l'entrée
+    <strong>Cellule</strong> ou <strong>Cellule titre</strong> dans le
+    sous-menu <strong>Table</strong>.</li>
+</ol>
+
+<table border="1" summary="table">
+  <caption>Légende</caption>
+  <tbody>
+    <tr>
+      <td>Cell 1.1</td>
+      <td>I</td>
+      <td>Cell 1.2</td>
+      <td>Cell 1.3</td>
+    </tr>
+    <tr>
+      <td>Cell 2.1</td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Il n'existe pas de commande spécifique pour créer une nouvelle colonne.
+Quand vous créez une nouvelle cellule, Amaya engendre la nouvelle colonne
+correspondante. Mais il existe une commande spécifique (Détruire colonne de
+table) pour détruire une colonne, même si elle n'est pas vide. Cette commande
+se trouve à la fin du sous-menu <strong>Table</strong> du menu
+<strong>Xhtml</strong>.</p>
+
+<h3><a id="Adding1">Ajouter une nouvelle ligne</a></h3>
+<ol>
+  <li>Pour créer une nouvelle ligne en dessous d'une ligne existante, il faut
+    placer le curseur à la fin de la dernière cellule de la ligne et
+    sélectionner l'entrée <strong>Ligne</strong> dans le sous-menu
+    <strong>Table</strong>.</li>
+  <li>Pour créer une nouvelle ligne au-dessus d'une ligne existante, il faut
+    placer le curseur au début de la première cellule de la ligne et
+    sélectionner l'entrée <strong>Ligne</strong> dans le sous-menu
+    <strong>Table</strong>.</li>
+</ol>
+
+<p>De nouvelles lignes peuvent être créées efficacement avec la touche <a
+href="Creating.html.fr#L906">Enter</a>. Quand la ligne entière est
+sélectionnée (il faut utiliser la touche <code>F2</code> sous Windows et
+<code>Esc</code> sous Linux pour ça), en tapant la touche <code>Enter</code>
+vous créez une nouvelle ligne après la ligne sélectionnée.</p>
+
+<h3>Ajouter un nouveau corps de table (tbody)</h3>
+<ol>
+  <li>Pour créer un nouveau corps de table en dessous d'un corps de table
+    existant, il faut placer le curseur à la fin de la dernière cellule de la
+    dernière ligne du corps de table et sélectionner l'entrée <strong>Corps
+    (tbody)</strong> dans le sous-menu <strong>Table</strong>.</li>
+  <li>Pour créer un nouveau corps de table au-dessus d'une ligne existante,
+    il faut placer le curseur au début de la première cellule de la ligne et
+    sélectionner l'entrée <strong>Ligne</strong> dans le sous-menu
+    <strong>Table</strong>.</li>
+</ol>
+
+<p>De nouveaux corps de table peuvent être créés efficacement avec la touche
+<a href="Creating.html.fr#L906">Enter</a>. Quand le corps de table entier est
+sélectionné (il faut utiliser la touche <code>F2</code> sous Windows et
+<code>Esc</code> sous Linux pour ça), en tapant la touche <code>Enter</code>
+vous créez une nouveau corps de table après le corps de table sélectionné.</p>
+
+<h3>Supprimer/Copier/Coller une colonne</h3>
+
+<p>Pour supprimer une colonne de table&nbsp;:</p>
+<ol>
+  <li>Il faut placer le curseur dans une cellule de la colonne et
+    sélectionner l'entrée <strong>Détruire colonne de table</strong> dans le
+    sous-menu <strong>Table</strong>.</li>
+  <li>Vous pouvez aussi initialiser la sélection dans une cellule et étendre
+    la sélection jusqu'à une autre cellule de la même colonne (par exemple
+    débuter la sélection dans la cellule Cell 1.2 et la terminer dans la
+    cellule Cell 3.2). Amaya passe en mode sélection de colonne. La touche
+    <code>F2</code> sous Windows (<code>Esc</code> sous Linux) étend la
+    sélection entre les deux cellules dans la colonne, limites incluses (Cell
+    1.2, Cell 2.2, Cell 3.2). La touche <code>Delete</code> détruira le
+    contenu de toutes les cellules sélectionnées. En activant une autre fois
+    la touche <code>F2</code> ou <code>Esc</code>, la sélection est étendue à
+    toute la colonne. La touche <code>Delete</code> détruira le contenu de la
+    colonne sélectionnée.</li>
+</ol>
+
+<table border="1" summary="table">
+  <tbody>
+    <tr>
+      <td>Cell 1.1</td>
+      <td>Cell 1.2</td>
+      <td>Cell 1.3</td>
+    </tr>
+    <tr>
+      <td>Cell 2.1</td>
+      <td>Cell 2.2</td>
+      <td>Cell 2.3</td>
+    </tr>
+    <tr>
+      <td>Cell 3.1</td>
+      <td>Cell 3.2</td>
+      <td>Cell 3.3</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Quand une colonne entière est sélectionnée, il est possible de la copier
+(ou couper) et de la coller avant ou après une autre colonne.</p>
+<ol>
+  <li>Pour coller une nouvelle colonne avant une colonne existante, il faut
+    placer le curseur au début d'une cellule de la colonne existante et
+    coller la colonne copiée ou coupée.</li>
+  <li>Pour coller une nouvelle colonne après une colonne existante, il faut
+    placer le curseur à la fin d'une cellule de la colonne existante et
+    coller la colonne copiée ou coupée.</li>
+</ol>
+
+<h3><a id="Adding2">Ajouter quelque chose après une table</a></h3>
+
+<p>De nombreux types d'éléments peuvent être inclus à l'intérieur des
+cellules de la table. Pour cette raison, Amaya pourrait mal comprendre vos
+intentions quand vous sélectionnez un type d'élément (par exemple cliquant
+H1, H2, etc. ou sélectionnant une entrée dans le menu <strong>Xhtml</strong>)
+pendant qu'un composant de la table est sélectionné. Quand vous voulez créer
+un élément après la table, vous devez sélectionner la table entière
+(contrôler la sélection courante dans la ligne du bas de la fenêtre) et taper
+sur la touche Enter. Amaya engendrera un paragraphe après la table. Ce
+nouveau paragraphe peut être modifié si besoin est.</p>
 
 <h3>Création d'un paragraphe après une table</h3>
 
@@ -815,6 +1009,10 @@ crée un nouveau paragraphe dans la table. Pour créer un paragraphe après la
 table, il faut sélectionner la table entière en utilisant la touche
 <code>Esc</code> (Unix) ou <code>F2</code> (Windows) puis
 <code>Enter</code>.</p>
+
+<p class="exercice"><em>Exercice 4&nbsp;:</em> Créer une table, créer une
+ligne avant/après, déplacer une ligne, créer une colonne avant/après,
+déplacer une colonne.</p>
 
 <h1 id="L1228">10. Recherche/Remplacement - Correction orthographique</h1>
 
@@ -829,9 +1027,10 @@ actions vous avez des choix d'options.<code>Ctrl f</code> en Windows,
 <code>Shift Ctrl %</code> sur Unix) . Un boite de dialogue apparait pour
 saisir le texte à rechercher, et éventuellement le texte de remplacement.</p>
 
-<p><img alt="(Rechercher/Remplacer)"
-src="../images/search_and_replace-fr.png" style="float:left" />Pour chacune
-des actions vous avez des choix d'options.</p>
+<p style="text-align: center"><img alt="(Rechercher/Remplacer)"
+src="../images/search_and_replace-fr.png" /></p>
+
+<p>Pour chacune des actions vous avez des choix d'options.</p>
 <ul>
   <li>les options de recherche :
     <ul>
@@ -854,7 +1053,10 @@ des actions vous avez des choix d'options.</p>
 <h3>Correction orthographique</h3>
 
 <p>La correction orthographique se réalise à l'aide d'une boite de dialogue
-activé par l'action <strong>Edition/Vérifier orthographe</strong>.</p>
+activée par l'action <strong>Edition/Vérifier orthographe</strong>.</p>
+
+<p style="text-align: center"><img alt="(Correcteur)"
+src="../images/spellchecking-fr.png" /></p>
 
 <p>les options de la boite de dialogue :</p>
 <ul>
@@ -883,7 +1085,50 @@ activé par l'action <strong>Edition/Vérifier orthographe</strong>.</p>
   </li>
 </ul>
 
+<p class="exercice"><em>Exercice 5&nbsp;:</em> Rechercher/remplacer, changer
+la lange d'un passage et passer le correcteur orthographique.</p>
+
 <h1 id="L1230">11. Attributs</h1>
+
+<p>Il y a deux manières d'éditer des attributs :</p>
+<ul>
+  <li>Le menu <strong>Attributs</strong></li>
+  <li>La Vue structure</li>
+</ul>
+
+<h3><a id="L1073">Editer des attributs par le biais du menu Attributs</a></h3>
+
+<p>Le menu <strong>Attributs</strong> donne une liste de tous les attributs
+qui peuvent être associés à l'élément sélectionné. Il peut être utilisé pour
+créer un attribut, pour changer la valeur d'un attribut existant ou pour
+effacer un attribut.</p>
+
+<p>Pour éditer un attribut, sélectionnez d'abord l'élément approprié. Vous
+devez sélectionner l'élément entier et pas seulement un caractère à
+l'intérieur de l'élément. Pour cela, il faut utiliser la touche
+<code>F2</code> (Windows) ou <code>Esc</code> (Linux). Quand l'élément est
+sélectionné, le menu <strong>Attributs</strong> affiche la liste des
+attributs applicables. On peut voir rapidement si l'attribut a une valeur ou
+non</p>
+
+<p>Pour changer la valeur d'un attribut, comme <code>href</code> pour une
+ancre, on modifie la valeur dans la boîte de dialogue puis on valide avec le
+bouton <strong>Appliquer</strong><strong>.</strong> Pour supprimer
+l'attribut, on clique sur le bouton <strong>Retire l'attribut</strong>.</p>
+
+<h3><a id="Editing">Editer des attributs dans la Vue structure</a></h3>
+
+<p>Tous les attributs sont affichés dans la Vue structure. Les attributs dont
+la valeur peut être choisie librement sont affichés en noir et vous pouvez
+éditer leur valeur comme n'importe quelle autre chaîne de caractères. Quand
+la valeur de l'attribut est affichée en bleu, vous pouvez seulement la
+changer à l'aide du menu <strong>Attributs</strong>. Ceci assure que seules
+des valeurs correctes soient choisies.</p>
+
+<p>Quand la sélection se trouve dans une valeur d'attribut, la touche
+<code>F2</code> (Windows) ou <code>Esc</code> (Linux) sélectionne la valeur
+complète. La touche <code>Delete</code> détruit alors la valeur, et un
+deuxième <code>Delete</code> supprimera l'attribut.</p>
 
 <h1 id="L1232">12. Création de feuilles de style CSS</h1>
 
@@ -908,7 +1153,7 @@ erreurs est de suivre le lien vers la vue source du document</p>
 
 <p>Erreur d'encodage</p>
 <address>
-  <p>Irène Vatton $date: Monday 15 December 2003 - 16:55:28$</p>
+  <p>Irène Vatton $date: Monday 22 December 2003 - 16:22:14$</p>
 
 </address>
 

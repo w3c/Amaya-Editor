@@ -48,7 +48,7 @@ devez sélectionner l'élément entier et pas seulement un caractère à
 l'intérieur de l'élément. Pour cela, utilisez <a
 href="Selecting.html.fr#Selecting1">la touche ESC (sur les stations Unix) ou
 la touche F2 (sur les stations Windows)</a> . Quand l'élément a été
-sélectionné, choisissez dans le menu <strong>Attributs</strong>l'attribut à
+sélectionné, choisissez dans le menu <strong>Attributs</strong> l'attribut à
 éditer. <strong>Amaya</strong> agit alors en fonction de l'attribut choisi
 :</p>
 <ul>
@@ -63,16 +63,16 @@ sélectionné, choisissez dans le menu <strong>Attributs</strong>l'attribut à
     <ul>
       <li>Si vous voulez créer cet attribut ou changer sa valeur, choisissez
         dans le menu la valeur désirée et cliquer sur le bouton
-        <strong>Application</strong>.</li>
+        <strong>Appliquer</strong>.</li>
       <li>Si vous voulez supprimer l'attribut, cliquez sur le bouton
-        <strong>Delete</strong>.</li>
+        <strong>Retire attribut</strong>.</li>
     </ul>
   </li>
   <li>Si c'est un attribut avec une valeur libre (comme <code>href</code>
     pour une ancre), une boîte de dialogue apparaît. Dans cette boîte de
     dialogue, vous pouvez éditer la valeur de l'attribut. Achevez la commande
-    avec le bouton <strong>Application.</strong> Pour supprimer l'attribut,
-    cliquez sur le bouton <strong>Delete</strong>.</li>
+    avec le bouton <strong>Appliquer.</strong> Pour supprimer l'attribut,
+    cliquez sur le bouton <strong>Retire attribut</strong>.</li>
 </ul>
 
 <h3><a name="Copying">Copier des attribut</a></h3>
@@ -83,7 +83,7 @@ Attribut.Vous devez d'abord sélectionner l'élément qui contient l'attribut
 que vous voulez copier. Sélectionnez l'entrée de l'attribut approprié dans le
 menu Attributs. Puis sélectionnez le nouvel élément auquel vous voulez
 associer l'attribut en cours et cliquez sur le bouton
-<strong>Application.</strong></p>
+<strong>Appliquer.</strong></p>
 
 <h3><a name="Editing">Editer des attributs dans la Vue structure</a></h3>
 
