@@ -531,7 +531,7 @@ ThotBool            HiddenType (PtrElement pEl)
 	if (pEl->ElTerminal || pEl->ElFirstChild != NULL)
 	   ret = TRUE;
      }
-   else
+   else if (pEl->ElStructSchema)
      {
 	pSRule = pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1];
 	if (pSRule->SrConstruct == CsChoice)
