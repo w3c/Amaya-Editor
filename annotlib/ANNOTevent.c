@@ -300,7 +300,13 @@ void ANNOT_Init ()
 
   tmp = TtaGetEnvString ("ANNOT_USER");
   if (tmp)
-    annotUser = TtaStrdup (tmp);
+    {
+#ifdef _I18N_
+      annotUser = TtaConvertIsoToMbs (tmp, ISO_8859_1);
+#else
+      annotUser = TtaStrdup (tmp);
+#endif /* _I18N_ */
+    }
   else
     annotUser = NULL;
   tmp = TtaGetEnvString ("ANNOT_SERVERS");
