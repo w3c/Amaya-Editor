@@ -28,7 +28,7 @@ NULL=nul
 !IF  "$(CFG)" == "cpp - Win32 Release"
 
 OUTDIR=.\..\bin
-INTDIR=.\Release
+INTDIR=.\cpp___Wi
 # Begin Custom Macros
 OutDir=.\..\bin
 # End Custom Macros
@@ -116,7 +116,7 @@ LINK32_OBJS= \
 !ELSEIF  "$(CFG)" == "cpp - Win32 Debug"
 
 OUTDIR=.\..\bin
-INTDIR=.\Debug
+INTDIR=.\cpp___W0
 # Begin Custom Macros
 OutDir=.\..\bin
 # End Custom Macros

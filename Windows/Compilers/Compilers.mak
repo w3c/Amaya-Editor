@@ -39,12 +39,12 @@ ALL : "$(OUTDIR)\Compilers.exe"
 
 !ELSE 
 
-ALL : "tra - Win32 Release" "str - Win32 Release" "prs - Win32 Release" "app - Win32 Release" "$(OUTDIR)\Compilers.exe"
+ALL : "LibThotKernel - Win32 Release" "tra - Win32 Release" "str - Win32 Release" "prs - Win32 Release" "app - Win32 Release" "$(OUTDIR)\Compilers.exe"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"app - Win32 ReleaseCLEAN" "prs - Win32 ReleaseCLEAN" "str - Win32 ReleaseCLEAN" "tra - Win32 ReleaseCLEAN" 
+CLEAN :"app - Win32 ReleaseCLEAN" "prs - Win32 ReleaseCLEAN" "str - Win32 ReleaseCLEAN" "tra - Win32 ReleaseCLEAN" "LibThotKernel - Win32 ReleaseCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -102,7 +102,7 @@ LINK32=link.exe
 LINK32_FLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:no /pdb:"$(OUTDIR)\Compilers.pdb" /machine:I386 /out:"$(OUTDIR)\Compilers.exe" 
 LINK32_OBJS= \
 	"$(INTDIR)\winthotcompilers.obj" \
-	"$(OUTDIR)\LibThotKernel.lib" \
+	"..\LibThotKernel.lib" \
 	"$(OUTDIR)\app.lib" \
 	"$(OUTDIR)\prs.lib" \
 	"$(OUTDIR)\str.lib" \
@@ -127,12 +127,12 @@ ALL : "$(OUTDIR)\Compilers.exe" "$(OUTDIR)\Compilers.bsc"
 
 !ELSE 
 
-ALL : "tra - Win32 Debug" "str - Win32 Debug" "prs - Win32 Debug" "app - Win32 Debug" "$(OUTDIR)\Compilers.exe" "$(OUTDIR)\Compilers.bsc"
+ALL : "LibThotKernel - Win32 Debug" "tra - Win32 Debug" "str - Win32 Debug" "prs - Win32 Debug" "app - Win32 Debug" "$(OUTDIR)\Compilers.exe" "$(OUTDIR)\Compilers.bsc"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"app - Win32 DebugCLEAN" "prs - Win32 DebugCLEAN" "str - Win32 DebugCLEAN" "tra - Win32 DebugCLEAN" 
+CLEAN :"app - Win32 DebugCLEAN" "prs - Win32 DebugCLEAN" "str - Win32 DebugCLEAN" "tra - Win32 DebugCLEAN" "LibThotKernel - Win32 DebugCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -201,7 +201,7 @@ LINK32=link.exe
 LINK32_FLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:yes /pdb:"$(OUTDIR)\Compilers.pdb" /debug /machine:I386 /out:"$(OUTDIR)\Compilers.exe" /pdbtype:sept 
 LINK32_OBJS= \
 	"$(INTDIR)\winthotcompilers.obj" \
-	"$(OUTDIR)\LibThotKernel.lib" \
+	"..\LibThotKernel.lib" \
 	"$(OUTDIR)\app.lib" \
 	"$(OUTDIR)\prs.lib" \
 	"$(OUTDIR)\str.lib" \
@@ -326,6 +326,32 @@ LINK32_OBJS= \
 "tra - Win32 DebugCLEAN" : 
    cd "..\tra"
    $(MAKE) /$(MAKEFLAGS) /F .\tra.mak CFG="tra - Win32 Debug" RECURSE=1 CLEAN 
+   cd "..\Compilers"
+
+!ENDIF 
+
+!IF  "$(CFG)" == "Compilers - Win32 Release"
+
+"LibThotKernel - Win32 Release" : 
+   cd "..\LibThotKernel"
+   $(MAKE) /$(MAKEFLAGS) /F .\LibThotKernel.mak CFG="LibThotKernel - Win32 Release" 
+   cd "..\Compilers"
+
+"LibThotKernel - Win32 ReleaseCLEAN" : 
+   cd "..\LibThotKernel"
+   $(MAKE) /$(MAKEFLAGS) /F .\LibThotKernel.mak CFG="LibThotKernel - Win32 Release" RECURSE=1 CLEAN 
+   cd "..\Compilers"
+
+!ELSEIF  "$(CFG)" == "Compilers - Win32 Debug"
+
+"LibThotKernel - Win32 Debug" : 
+   cd "..\LibThotKernel"
+   $(MAKE) /$(MAKEFLAGS) /F .\LibThotKernel.mak CFG="LibThotKernel - Win32 Debug" 
+   cd "..\Compilers"
+
+"LibThotKernel - Win32 DebugCLEAN" : 
+   cd "..\LibThotKernel"
+   $(MAKE) /$(MAKEFLAGS) /F .\LibThotKernel.mak CFG="LibThotKernel - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\Compilers"
 
 !ENDIF 
