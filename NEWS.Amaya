@@ -17,7 +17,11 @@ Extensions 2.1:
 * Thot API: Due to a conflict with the libjpeg definition the Thot type boolean
   has been renamed ThotBool.
 
- 
+* MathML: the full presentation part of MathML is now supported, but only
+  some attributes are taken into account when formatting mathematical
+  expressions.
+
+
 Fixed bugs 2.1:
 ---------------
 
