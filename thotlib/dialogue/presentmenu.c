@@ -574,19 +574,19 @@ static void  ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply,
        switch (charStyle)
 	  {
 	  case 0:
-	    pPRule->PrChrValue = 'R';	/* roman */
+	    value = 'R';	/* roman */
 	    intvalue = StyleRoman;	    
 	    break;
 	  case 1:
-	    pPRule->PrChrValue = 'I';	/* italic */
+	    value = 'I';	/* italic */
 	    intvalue = StyleItalics;
 	    break;
 	  case 2:
-	    pPRule->PrChrValue = 'O';	/* oblique */
+	    value = 'O';	/* oblique */
 	    intvalue = StyleOblique;
 	    break;
 	  default:
-	    pPRule->PrChrValue = 'R';
+	    value = 'R';
 	    intvalue = StyleRoman;	    
 	    break;
 	  }
