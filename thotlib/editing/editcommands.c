@@ -2545,17 +2545,25 @@ static void ContentEditing (int editType)
 	    /* le pave a disparu entre temps */
 	    return;
 	  
-	  if (editType != TEXT_SUP)
-	    NewContent (pAb);
 	  /* signale la nouvelle selection courante */
 	  if ((editType == TEXT_CUT || editType == TEXT_PASTE ||
 	       editType == TEXT_X_PASTE || editType == TEXT_DEL ||
-	       editType == TEXT_SUP) &&
-	      pViewSel->VsBox != NULL)
+	       editType == TEXT_SUP) && pViewSel->VsBox)
 	    {
 	      pViewSelEnd = &pFrame->FrSelectionEnd;
 	      i = pViewSel->VsBox->BxFirstChar + pViewSel->VsIndBox;
 	      j = pViewSelEnd->VsBox->BxFirstChar + pViewSelEnd->VsIndBox;
+	      if (editType != TEXT_SUP)
+		{
+		  if (pAb->AbPresentationBox && pAb->AbCreatorAttr)
+		    {
+		      /* update the selection within the attribute */
+		      FirstSelectedCharInAttr = i;
+		      LastSelectedCharInAttr = j;
+		      SelPosition = (LastSelectedCharInAttr <= FirstSelectedCharInAttr);
+		    }
+		  NewContent (pAb);
+		}
 	      ChangeSelection (frame, pViewSel->VsBox->BxAbstractBox, i,
 			       FALSE, TRUE, FALSE, FALSE);
 	      if (pAb->AbLeafType != LtPolyLine && j != i)
