@@ -1141,8 +1141,8 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 		  ptfont->FiHeights[ind] = wsize.cy;
 		  c++;
 		}
-	      }
 #ifdef VERYSLOW
+	      }
 	      /* this gives very good spacing, but is very slow for each
 	         new font (about 2 min for a Japanese press release on a 450mhz box */
 	      else {
@@ -1257,9 +1257,7 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	  if (ptfont == NULL)
 	    ptfont = FontDialogue;
 	}
-#ifdef VERYSLOW
     }
-#endif /* VERYSLOW */
 
   if (ptfont && size == requestedsize)
     {
