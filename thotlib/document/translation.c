@@ -204,15 +204,7 @@ static void PutChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
 	  mbc[0] = '&';
 	  nb_bytes2write = 1;
 	}
-      else if (c == EOL)
-	{
-	  nb_bytes2write = 0;
-	  if (ExportCRLF)
-	    mbc[nb_bytes2write++] = __CR__;
-	  mbc[nb_bytes2write++] = EOL;
-	  mbc[nb_bytes2write] = EOS;
-	}
-      else if (entityName &&
+     else if (entityName &&
 	       (c == 0X22 || c == 0X26 || c == 0X3C || c == 0X3E || c == 0XA0))
 	{
 	  if (c == 0X22) /* &quot; */
@@ -368,9 +360,13 @@ static void PutChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
 	    {
 	      /* end of line, write the buffer into the file */
 	      for (i = 0; i < OutFile[fnum].OfBufferLen; i++)
-		putc ((int)OutFile[fnum].OfBuffer[i], fileDesc);
+		     putc ((int)OutFile[fnum].OfBuffer[i], fileDesc);
 
-	      fprintf (fileDesc, tsEOL);
+		  if (ExportCRLF)
+		  /* generate a CR */
+		     putc (__CR__, fileDesc);
+		  /* generate a LF */		  
+		  fprintf (fileDesc, tsEOL);
 	      /* le buffer de sortie est vide maintenant */
 	      OutFile[fnum].OfBufferLen = 0;
 	      OutFile[fnum].OfLineLen = 0;
