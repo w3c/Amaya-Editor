@@ -1,6 +1,5 @@
 /*
-   message.c : traitement des messages d'erreur venant de THOT, impression, traduction...
-   Irene Vatton
+   traitement des messages d'erreur venant de THOT, impression, traduction...
  */
 
 #include "thot_gui.h"
@@ -39,39 +38,36 @@ static char         result[MAX_TXT_LEN];
 #endif
 
 /* ---------------------------------------------------------------------- */
-/* |    AsciiTranslate convertit les code d'accents du fichier de message    | */
+/* |  AsciiTranslate convertit les code d'accents du fichier de message | */
 /* |            en accents.                                             | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-char               *AsciiTranslate (char *buffer)
-
+char               *AsciiTranslate (char *pBuffer)
 #else  /* __STDC__ */
-char               *AsciiTranslate (buffer)
-char               *buffer;
-
+char               *AsciiTranslate (pBuffer)
+char               *pBuffer;
 #endif /* __STDC__ */
-
 {
    char                nombre[4];
    int                 uniteid, dixid, centid;
    int                 i = 0, j = 0, k;
 
-   while (buffer[i] != '\0')
+   while (pBuffer[i] != '\0')
      {
 	/* On lit jusqu'au premier backslash rencontre */
-	while ((buffer[i] != '\\') && (buffer[i] != '\0'))
-	   result[j++] = buffer[i++];
+	while ((pBuffer[i] != '\\') && (pBuffer[i] != '\0'))
+	   result[j++] = pBuffer[i++];
 
 	/* Teste si on est en presence de deux backslashs ou */
 	/* si on se trouve devant un caractere special */
-	if (buffer[i] != '\0')
-	   if (buffer[i + 1] == '\\')
+	if (pBuffer[i] != '\0')
+	   if (pBuffer[i + 1] == '\\')
 	     {
 		/* On est dans le cas de deux backslashs consecutifs; on les prend */
-		result[j++] = buffer[i++];
-		result[j++] = buffer[i++];
+		result[j++] = pBuffer[i++];
+		result[j++] = pBuffer[i++];
 	     }
-	   else if (buffer[i + 1] == 'n')
+	   else if (pBuffer[i + 1] == 'n')
 	     {
 		/* On est dans le cas d'un \n */
 		i += 2;
@@ -83,17 +79,17 @@ char               *buffer;
 		i++;
 		/* on construit le nombre correspondant au caractere */
 		k = 0;
-		while ((buffer[i] >= '0')
-		       && (buffer[i] <= '9')
-		       && (buffer[i] != '\0')
+		while ((pBuffer[i] >= '0')
+		       && (pBuffer[i] <= '9')
+		       && (pBuffer[i] != '\0')
 		       && (k <= 2))
-		   nombre[k++] = buffer[i++];
+		   nombre[k++] = pBuffer[i++];
 		nombre[k] = '\0';
 
 		switch (strlen (nombre))
 		      {
 			 case 0:
-			    result[j++] = buffer[i++];
+			    result[j++] = pBuffer[i++];
 			    break;
 			 case 1:
 			    uniteid = nombre[0] - '0';
@@ -139,19 +135,19 @@ int                 msgNumber;
    int                 num;
    PtrTabMsg           currenttable;
    PtrTabMsg           previoustable;
-   char                texte[MAX_TXT_LEN];
-   char                nomfichier[200];
+   char                pBuffer[MAX_TXT_LEN];
+   char                fileName[200];
 
    /* contruction du nom $THOTDIR/bin/$LANG-msgName */
    s = TtaGetVarLANG ();
-   strcpy (nomfichier, s);
-   nomfichier[2] = '-';
-   strcpy (&nomfichier[3], msgName);
-   SearchFile (nomfichier, 2, texte);
-   file = fopen (texte, "r");
+   strcpy (fileName, s);
+   fileName[2] = '-';
+   strcpy (&fileName[3], msgName);
+   SearchFile (fileName, 2, pBuffer);
+   file = fopen (pBuffer, "r");
    if (file == NULL)
      {
-	printf ("WARNING: cannot open file %s\n", texte);
+	printf ("WARNING: cannot open file %s\n", pBuffer);
 	return (-1);
      }
    else
@@ -184,10 +180,10 @@ int                 msgNumber;
 	  }
 
 	/* Charge les messages */
-	while (((fscanf (file, "%d %[^#\n]", &num, texte)) != EOF) && (num < msgNumber))
+	while (((fscanf (file, "%d %[^#\n]", &num, pBuffer)) != EOF) && (num < msgNumber))
 	  {
-	    s = (char *) TtaGetMemory (strlen (texte) + 1);
-	    strcpy (s, AsciiTranslate (texte));
+	    s = (char *) TtaGetMemory (strlen (pBuffer) + 1);
+	    strcpy (s, AsciiTranslate (pBuffer));
 	    currenttable->TabMessages[num] = s;
 	  }
 	fclose (file);
@@ -249,7 +245,7 @@ int                 msgType;
   va_list             pa;
   int                 i, lg, vald;
   char                *vals, *p;
-  char                buffer[MAX_PATH];
+  char                pBuffer[MAX_PATH];
 
   if (fmt)
     {
@@ -260,7 +256,7 @@ int                 msgType;
 	{
 	  if (*p != '%')
 	    {
-	      buffer[i++] = *p;
+	      pBuffer[i++] = *p;
 	    }
 	  else
 	    {
@@ -271,8 +267,8 @@ int                 msgType;
 		  vald = va_arg (pa, int);
 		  if (i + 10 < MAX_PATH)
 		    {
-		      sprintf (&buffer[i], "%d", vald);
-		      i += strlen (&buffer[i]);
+		      sprintf (&pBuffer[i], "%d", vald);
+		      i += strlen (&pBuffer[i]);
 		    }
 		  else
 		    i = MAX_PATH;	      
@@ -283,7 +279,7 @@ int                 msgType;
 		  lg = strlen (vals);
 		  if (i + lg < MAX_PATH)
 		    {
-		      strcpy (&buffer[i], vals);
+		      strcpy (&pBuffer[i], vals);
 		      i += lg;
 		    }
 		  else
@@ -291,17 +287,17 @@ int                 msgType;
 		  break;
 		default:
 		  /* other value not allowed */
-		  buffer[i++] = *p;
+		  pBuffer[i++] = *p;
 		  break;
 		}
 	    }
 	}
       /* Display the final message */
-      buffer[i] = '\0';
+      pBuffer[i] = '\0';
       if (msgType == CONFIRM)
-	DisplayConfirmMessage (buffer);
+	DisplayConfirmMessage (pBuffer);
       else
-	DisplayMessage (buffer, msgType);
+	DisplayMessage (pBuffer, msgType);
     }
 }
 
@@ -323,21 +319,18 @@ int                 number;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    DisplayPivotMessage traite les erreurs survenues a` la lecture d'un| */
-/* |            fichier pivot.                                          | */
+/* |    DisplayPivotMessage traite les erreurs survenues a` la lecture  | */
+/* |            d'un fichier pivot.                                     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                DisplayPivotMessage (char *code)
-
 #else  /* __STDC__ */
 void                DisplayPivotMessage (code)
 char               *code;
-
 #endif /* __STDC__ */
-
 {
-   char                buffer[MAX_CHAR];
+   char                pBuffer[MAX_CHAR];
 
-   strncpy (buffer, code, MAX_CHAR);
-   TtaDisplayMessage (INFO, TtaGetMessage(LIB, ERR_PIV), buffer);
+   strncpy (pBuffer, code, MAX_CHAR);
+   TtaDisplayMessage (INFO, TtaGetMessage(LIB, ERR_PIV), pBuffer);
 }

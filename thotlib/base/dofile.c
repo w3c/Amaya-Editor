@@ -16,7 +16,7 @@
 #include "platform_f.h"
 
 /* ---------------------------------------------------------------------- */
-/* |    MakeCompleteName compose un nom de fichier absolu en concatenant   | */
+/* |   MakeCompleteName compose un nom de fichier absolu en concatenant | */
 /* |            un nom de directory, le nom de fichier (fname) et       | */
 /* |            l'extension (fext).                                     | */
 /* |            Retourne le nom compose' dans nomabs.                   | */
@@ -30,32 +30,28 @@
 /* |            directory_list n'est pas change'.                       | */
 /* |            Si le fichier n'existe pas, on retourne nomabs vide et  | */
 /* |            dans directory_list le 1er nom du path fourni a` l'appel| */
-/* |            (MakeCompleteName est utilise pour la lecture)             | */
+/* |            (MakeCompleteName est utilise pour la lecture)          | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
-void                MakeCompleteName (Name fname, char *fext, PathBuffer directory_list, PathBuffer nomabs, int *lg)
-
+void                MakeCompleteName (Name fname, char *fext, PathBuffer directory_list, PathBuffer completeName, int *length)
 #else  /* __STDC__ */
-void                MakeCompleteName (fname, fext, directory_list, nomabs, lg)
+void                MakeCompleteName (fname, fext, directory_list, completeName, length)
 Name                 fname;
 char               *fext;
 PathBuffer          directory_list;
-PathBuffer          nomabs;
-int                *lg;
-
+PathBuffer          completeName;
+int                *length;
 #endif /* __STDC__ */
-
 {
    int                 i, j;
    PathBuffer          single_directory;
    PathBuffer          first_directory;
-   boolean             trouve;
+   boolean             found;
 
-   trouve = FALSE;
+   found = FALSE;
    i = 1;
    first_directory[0] = '\0';
-   while (directory_list[i - 1] != '\0' && (!trouve))
+   while (directory_list[i - 1] != '\0' && (!found))
      {
 	j = 1;
 	while (directory_list[i - 1] != PATH_SEP
@@ -74,10 +70,10 @@ int                *lg;
 	if (first_directory[0] == '\0')
 	   strncpy (first_directory, single_directory, MAX_PATH);
 	/* on construit le nom */
-	FindCompleteName (fname, fext, single_directory, nomabs, lg);
-	if (ThotFile_exist (nomabs))
+	FindCompleteName (fname, fext, single_directory, completeName, length);
+	if (ThotFile_exist (completeName))
 	  {
-	     trouve = TRUE;
+	     found = TRUE;
 	     strncpy (directory_list, single_directory, MAX_PATH);
 	  }
 	else
@@ -85,126 +81,115 @@ int                *lg;
 	if (directory_list[i - 1] == PATH_SEP)
 	   i++;
      }
-   if (!trouve)
+   if (!found)
      {
-	nomabs[0] = '\0';
+	completeName[0] = '\0';
 	if (first_directory[0] != '\0')
 	   strncpy (directory_list, first_directory, MAX_PATH);
      }
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    GetPictureFileName construit dans fn le nom absolu d'un fichier   | */
-/* |            image a` partir du nom du fichier contenu dans name     | */
-/* |            partir du nom du fichier contenu dans name et des'      | */
-/* |            repertoires de documents ou de sche'mas.                | */
-/* |            Si le fichier n'existe pas on retourne name.            | */
+/* |    GetPictureFileName construit dans fileName le nom absolu d'un   | */
+/* |            fichier image a` partir du nom contenu dans name et     | */
+/* |            des repertoires de documents ou de sche'mas.            | */
+/* |            Si le fichier n'existe pas retourne name.               | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
-void                GetPictureFileName (char *name, char *fn)
-
+void                GetPictureFileName (char *name, char *fileName)
 #else  /* __STDC__ */
-void                GetPictureFileName (name, fn)
+void                GetPictureFileName (name, fileName)
 char               *name;
-char               *fn;
-
+char               *fileName;
 #endif /* __STDC__ */
-
 {
-   int                 lg;
-   PathBuffer          Directory;
+   int                 length;
+   PathBuffer          directory;
 
    /* Recherche le fichier dans les repertoires de documents */
    if (name[0] == DIR_SEP)
-      strcpy (fn, name);
+      strcpy (fileName, name);
    else
      {
-	strcpy (Directory, DocumentPath);
-	MakeCompleteName (name, "", Directory, fn, &lg);
-	if (!ThotFile_exist (fn))
+	strcpy (directory, DocumentPath);
+	MakeCompleteName (name, "", directory, fileName, &length);
+	if (!ThotFile_exist (fileName))
 	  {
 	     /* Recherche le fichier dans les repertoires de schemas */
-	     strcpy (Directory, SchemaPath);
-	     MakeCompleteName (name, "", Directory, fn, &lg);
+	     strcpy (directory, SchemaPath);
+	     MakeCompleteName (name, "", directory, fileName, &length);
 	  }
      }
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    IsExtended compare la fin de fname avec fext. Si la fin est     | */
-/* |            identique, retourne Vrai.                               | */
+/* |    IsExtended compare la fin de fileName avec extension. Si la fin | */
+/* |            est identique, retourne Vrai.                           | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static boolean      IsExtended (Name fname, char *fext)
-
+static boolean      IsExtended (Name fileName, char *extension)
 #else  /* __STDC__ */
-static boolean      IsExtended (fname, fext)
-Name                 fname;
-char               *fext;
-
+static boolean      IsExtended (fileName, extension)
+Name                fileName;
+char               *extension;
 #endif /* __STDC__ */
-
 {
-   int                 i, j, namelong, extlong;
-   boolean             res;
+   int                 i, j;
+   int                 nameLength, extLength;
+   boolean             ok;
 
-   namelong = 0;
-   extlong = 0;
+   nameLength = 0;
+   extLength = 0;
 
-   /* on mesure fext */
-   extlong = strlen (fext);
-   /* on mesure fname */
-   namelong = strlen (fname);
-   if (namelong >= MAX_CHAR)
-      res = FALSE;
-   else if (namelong > 0 && extlong > 0)
+   /* on mesure extension */
+   extLength = strlen (extension);
+   /* on mesure fileName */
+   nameLength = strlen (fileName);
+   if (nameLength >= MAX_CHAR)
+      ok = FALSE;
+   else if (nameLength > 0 && extLength > 0)
      {
-	res = TRUE;
-	j = namelong - 1;
-	for (i = extlong - 1; i >= 0; i--)
+	ok = TRUE;
+	j = nameLength - 1;
+	for (i = extLength - 1; i >= 0; i--)
 	  {
-	     res = fext[i] == fname[j] && res;
+	     ok = (extension[i] == fileName[j]) && ok;
 	     j--;
 	  }
-	res = res && fname[j] == '.';
+	ok = ok && (fileName[j] == '.');
      }
    else
-      res = FALSE;
-   return res;
+      ok = FALSE;
+   return ok;
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    FindCompleteName compose un nom de fichier absolu en concatenant le   | */
-/* |            nom de directory, le nom de fichier (fname) et          | */
-/* |            l'extension (fext).                                     | */
-/* |            Retourne le nom compose' dans nomabs et la longueur     | */
-/* |            de ce nom dans lg.                                      | */
-/* |            Si fname se termine deja par fext, alors copie          | */
-/* |            simplement fname dans nomabs.                           | */
+/* |   FindCompleteName compose un nom de fichier absolu en concatenant | */
+/* |            le nom de directory, le nom de fichier (fileName) et    | */
+/* |            l'extension (extension).                                | */
+/* |            Retourne le nom compose dans completeName et la         | */
+/* |            longueur de ce nom dans length.                         | */
+/* |            Si fileName se termine deja par extension, alors copie  | */
+/* |            simplement fileName dans completeName.                  | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
-void                FindCompleteName (Name fname, char *fext, PathBuffer directory, PathBuffer nomabs, int *lg)
-
+void                FindCompleteName (Name fileName, char *extension, PathBuffer directory, PathBuffer completeName, int *length)
 #else  /* __STDC__ */
-void                FindCompleteName (fname, fext, directory, nomabs, lg)
-Name                 fname;
-char               *fext;
+void                FindCompleteName (fileName, extension, directory, completeName, length)
+Name                 fileName;
+char               *extension;
 PathBuffer          directory;
-PathBuffer          nomabs;
-int                *lg;
-
+PathBuffer          completeName;
+int                *length;
 #endif /* __STDC__ */
-
 {
    int                 i, j, k, h = 0;
    char               *home_dir = NULL;
 
    /* on recopie le repertoire */
    i = strlen (directory);
-   j = strlen (fname);
+   j = strlen (fileName);
 
    /* check for tilde indicating the HOME directory */
    if (directory[0] == '~')
@@ -213,59 +198,61 @@ int                *lg;
      }
    if (home_dir != NULL)
      {
-	i--;			/* tilde will not be copied */
+       /* tilde will not be copied */
+	i--;
 	h = strlen (home_dir);
      }
    if (i > 1)
-      i++;			/* for the added DIR_STR */
+     /* for the added DIR_STR */
+      i++;
 
    /* si on cherche a ouvrir un fichier pivot et que le nom de fichier se
       termine par ".piv", on remplace ce suffixe par ".PIV" */
-   if (strcmp (fext, "PIV") == 0)
+   if (strcmp (extension, "PIV") == 0)
      {
 	if (j > 4)
-	   if (fname[j - 4] == '.')
-	      if (fname[j - 3] == 'p')
-		 if (fname[j - 2] == 'i')
-		    if (fname[j - 1] == 'v')
+	   if (fileName[j - 4] == '.')
+	      if (fileName[j - 3] == 'p')
+		 if (fileName[j - 2] == 'i')
+		    if (fileName[j - 1] == 'v')
 		      {
-			 fname[j - 3] = 'P';
-			 fname[j - 2] = 'I';
-			 fname[j - 1] = 'V';
+			 fileName[j - 3] = 'P';
+			 fileName[j - 2] = 'I';
+			 fileName[j - 1] = 'V';
 		      }
      }
-   if (!IsExtended (fname, fext) && fext[0] != '\0')
-      k = strlen (fext) + 1;	/* dont forget the '.' */
+   if (!IsExtended (fileName, extension) && extension[0] != '\0')
+      k = strlen (extension) + 1;	/* dont forget the '.' */
    else
       k = 0;
    if (i + j + k + h >= MAX_PATH)
       return;
 
-   nomabs[0] = '\0';
+   completeName[0] = '\0';
    if (home_dir)
      {
-	strcat (nomabs, home_dir);
-	strcat (nomabs, &directory[1]);
+	strcat (completeName, home_dir);
+	strcat (completeName, &directory[1]);
      }
    else
      {
-	strcat (nomabs, directory);
+	strcat (completeName, directory);
      }
 
    /* on ajoute un DIR_STR */
    if (i >= 1)
      {
-	strcat (nomabs, DIR_STR);
+	strcat (completeName, DIR_STR);
      }
 
    /* on recopie le nom */
-   strcat (nomabs, fname);
+   strcat (completeName, fileName);
    if (k != 0)
      {
 	/* on ajoute l'extension */
-	strcat (nomabs, ".");
-	strcat (nomabs, fext);
+	strcat (completeName, ".");
+	strcat (completeName, extension);
      }
    /* on termine la chaine */
-   *lg = i + j + k + h;
+   *length = i + j + k + h;
 }

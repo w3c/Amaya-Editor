@@ -20,20 +20,20 @@
 #include "platform_tv.h"
 #include "appli_f.h"
 #include "tree_f.h"
-#include "xbmhandler_f.h"
 #include "views_f.h"
 #include "dofile_f.h"
 #include "platform_f.h"
 #include "font_f.h"
 #include "frame_f.h"
+#include "picture_f.h"
+#include "presrules_f.h"
+#include "inites_f.h"
 #include "gifhandler_f.h"
 #include "jpeghandler_f.h"
-#include "picture_f.h"
+#include "xbmhandler_f.h"
 #include "xpmhandler_f.h"
 #include "pnghandler_f.h"
-#include "presrules_f.h"
 #include "epshandler_f.h"
-#include "inites_f.h"
 
 static PictureHandler  PictureHandlerTable[MAX_PICT_FORMATS];
 static int             PictureIdType      [MAX_PICT_FORMATS];
@@ -111,16 +111,16 @@ Pixmap       PicMask;
 
 
 /* ---------------------------------------------------------------------- */
-/* |  Picture_Center met a jour les parametres xtranslate, ytranslate,  | */
-/* |            pxorig, pyorig en fonction des valeur de PicWArea,      | */
-/* |            PicHArea, wif, hif et pres.                             | */
-/* |            - Si on presente ReScale, la translation se             | */
-/* |            fait dans une seule direction.                          | */
-/* |            - Si on presente FillFrame, on ne translate pas.        | */
-/* |            - Si on presente RealSize on translate pour             | */
-/* |            faire le centrage.                                      | */
-/* |            Si l'image est plus grande que la boite, on clippe et   | */
-/* |            donc pxorig ou pyorig sont non nuls.                    | */
+/* |  Picture_Center updates the parameters xtranslate, ytranslate,  | */
+/* |            pxorig, pyorig depending on the values of PicWArea,      | */
+/* |            PicHArea, wif, hif and pres.                                           | */
+/* |            - If we use ReScale, the tranlation is performed            | */
+/* |            in one direction.                                                      | */
+/* |            - If we use FillFrame, there's no translation        | */
+/* |            - if we use RealSize we translate to achieve             | */
+/* |            the centering               .                                      | */
+/* |            if the picture size is greater than the frame then  | */
+/* |          pxorig or pyorig are positive.                                 | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 static void         Picture_Center (int wimage, int himage, int wbox, int hbox, PictureScaling pres, int *xtranslate, int *ytranslate, int *pxorig, int *pyorig)
@@ -209,9 +209,9 @@ PictInfo    *imageDesc;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |  LayoutPicture effectue une copie du pixmap SrcPix sur l'ecran     | */
-/* |            Drawab.                                                 | */
-/* |            Si srcorx ou srcory sont negatif, on decale la copie.   | */
+/* |  LayoutPicture performs the layout of SrcPix on the screen described    | */
+/* |            by Drawab.                                                 | */
+/* |            if srcorx or srcory are postive, the copy operation is shifted   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 static void         LayoutPicture (Pixmap SrcPix, Drawable Drawab, int srcorx, int srcory, int w, int h, int desorx, int desory)
@@ -251,13 +251,13 @@ int                 desory;
 /* |   IsValid retourne FALSE si le pixmap contenu dans imageDesc  | */
 /* |            est vide. On retourne TRUE s'il est egal aux images     | */
 /* |            predefinies BadPixmap.                                  | */
-/* |            - Si on presente RealSize, on retourne TRUE.            | */
-/* |            - Si on presente ReScale, on retourne TRUE si           | */
-/* |            la boite box possede au moins une dimension egale a`    | */
-/* |            celle du pixmap.                                        | */
-/* |            - Si on presente FillFrame, on retourne TRUE si la      | */
-/* |            boite box possede la meme taille que le pixmap dans     | */
-/* |            les 2 directions.                                       | */
+/* |            - if we use RealSize, we  return TRUE.            | */
+/* |            - if we use  ReScale, we return TRUE            | */
+/* |            the box have one of the two  dimensions a least equals   | */
+/* |            to the one of the pixmap.                                        | */
+/* |            - if we use  ReScale FillFrame, we return TRUE if the      | */
+/* |            frame box  has the same size than the pixmap in      | */
+/* |            both directions.                                                     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 static boolean      IsValid (PtrBox box, PictInfo * imageDesc)
@@ -303,8 +303,8 @@ PictInfo    *imageDesc;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    GetPictureFormat retourne le format d'une image contenue dans   | */
-/* |          le fichier fileName ou UNKNOWN_FORMAT si on ne trouve pas.| */
+/* |    GetPictureFormat returns the format of a file picture          | */
+/* |    the file  fileName or UNKNOWN_FORMAT if not recognized  */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 static int          GetPictureFormat (char *fileName)

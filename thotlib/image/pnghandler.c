@@ -11,6 +11,8 @@
 
 #define EXPORT extern
 #include "picture_tv.h"
+
+#include "font_f.h"
 #include "frame_tv.h"
 #include "picture_f.h"
 
@@ -544,7 +546,7 @@ int *bg;
 
 
 /* ---------------------------------------------------------------------- */
-/* |	ReadPngToData  Ouverture+lecture du fichier                     | */
+/* |	ReadPngToData                    | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 unsigned char *ReadPngToData(char *datafile, int *w, int *h, int *ncolors, int *cpp, ThotColorStruct colrs[256], int *bg)
@@ -583,8 +585,6 @@ unsigned char *ReadPngToData(datafile, w, h, ncolors, cpp, colrs, bg)
 
 
 /* ---------------------------------------------------------------------- */
-/* |	PngCreate lit et retourne le Png lu dans le fichier 	| */
-/* |		fn. Met a` jour xif, yif, wif, hif.			| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 Drawable PngCreate(char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable *mask1)
@@ -610,9 +610,6 @@ Drawable PngCreate(fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1)
   unsigned char *buffer;
   int ncolors, cpp, bg = -1;
 
-  /* parametres de chargement de l'image Png - repli couleurs */
-  
-  /* chargement effectif de limage par la bibliotheque Png rel 0.88*/
 
   buffer = ReadPngToData(fn, &w, &h, &ncolors, &cpp, colrs, &bg );
 
@@ -630,12 +627,11 @@ Drawable PngCreate(fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1)
 
  if (pixmap == None)
     { 
-      /* cas d'echec de lecture prevoir les mess d'erreur (5) */  
    
       return (Drawable) None; 
     }
   else
-    { /* succes ou succes partiel => initialisation de la tailles de l'image */
+    { 
 
       *wif = w;
       *hif = h;
@@ -643,21 +639,17 @@ Drawable PngCreate(fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1)
       *xif = 0;
       *yif = 0;
 
-      /* liberation de la structure temporaire attribut et sortie en beaute ! */ 
-
-
       return (Drawable) pixmap;
 	  	  
     }
 #endif /* !NEW_WILLOWS */
-}/*PngCreate*/
+}
 
 
 
 
 
 /* ---------------------------------------------------------------------- */
-/* |	PngPrint convertit un Png en PostScript.		| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void PngPrint(char * fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int fd, unsigned long BackGroundPixel)
@@ -693,9 +685,6 @@ void PngPrint(fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHAr
   ThotColorStruct colrs[256];
   unsigned char *buffer;
 
-  /* lecture de la pixmap sous forme de donnees et une table de couleurs */
-  /* cela nous evite d'alouer les couleurs sur l'ecran mais de les transformer */
-  /* directement en RGB pour la generation ps */
   
   buffer = ReadPngToData(fn, &w, &h, &ncolors, &cpp, colrs, &bg );
 
@@ -716,48 +705,27 @@ void PngPrint(fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHAr
     {
     case RealSize:
       
-      /* on centre l'image en x */
-      /* quelle place a-t-on de chaque cote ? */
       delta = (wif - PicWArea)/2;
       if (delta > 0)
 	{
-	  /* on a de la place entre l'if et le cf */
-	  /* on a pas besoin de retailler dans le pixmap */
-	  /* on va afficher le pixmap dans une boite plus petite */
-	  /* decale'e de delta vers le centre */
 	  xif += delta;
-	  /* la largeur de la boite est celle du cf */
 	  wif = PicWArea;
 	}
       else
 	{
-	  /* on a pas de place entre l'if et le cf */
-	  /* on va retailler dans le pixmap pour que ca rentre */
-	  /* on sauve delta pour savoir ou couper */
 	  xtmp = -delta;
-	  /* on met a jour PicWArea pour etre coherent */
 	  PicWArea = wif;
 	}     
-      /* on centre l'image en y */
       delta = (hif - PicHArea)/2;
       if (delta > 0)
 	{
-	  /* on a de la place entre l'if et le cf */
-	  /* on a pas besoin de retailler dans le pixmap */
-	  /* on va afficher le pixmap dans une boite plus petite */
-	  /* decale'e de delta vers le centre */
 	  yif += delta ;
-	  /* la hauteur de la boite est celle du cf */
 	  hif = PicHArea;
 	}
       else
 	{
-	  /* on a pas de place entre l'if et le cf */
-	  /* on va retailler dans le pixmap pour que ca rentre */
-	  /* on sauve delta pour savoir ou couper */
 
 	  ytmp = - delta;
-	  /* on met a jour PicHArea pour etre coherent */
 	  PicHArea = hif;
 	}   
       break;
@@ -776,22 +744,14 @@ void PngPrint(fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHAr
 	    }
       break;
     case FillFrame:
-      /* DumpImage fait du plein cadre avec wif et hif */
       break;
     default:
       break;
     }
 
-  /* NL plus besoin de faire des transformations */
-  /* cette fonction est independante de X11                */
-  /* si xtmp ou ytmp sont non nuls, ca veut dire qu'on retaille */
-  /* dans le pixmap (cas RealSize) */
   wim = w;
   /*him = h;*/
-
-  /* generation du poscript , header Dumpimage2 + dimensions + deplacement dans la page */
-  /* chaque pt = RRGGBB en hexa */
-  
+ 
   fprintf((FILE *)fd, "gsave %d -%d translate\n", PixelToPoint (xif), PixelToPoint (yif + hif));
   fprintf((FILE *)fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea, PixelToPoint (wif), PixelToPoint (hif));
   fprintf((FILE *)fd, "\n"); 
@@ -803,9 +763,6 @@ void PngPrint(fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHAr
   
       for (x = 0 ; x < wif; x++)
 	{
-	      
-	  /* generation des composantes RGB de l'image dans le poscript */
-   
 	  fprintf((FILE *)fd, "%02x%02x%02x",
 		  (colrs[*pt].red)>>8,
 		  (colrs[*pt].green)>>8,
@@ -820,13 +777,10 @@ void PngPrint(fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHAr
   fprintf((FILE *)fd, "grestore\n");
   fprintf((FILE *)fd, "\n");   
   free(buffer);
-      
-    
 #endif /* !NEW_WILLOWS */
-}/*PngPrint*/
+}
 
 /* ---------------------------------------------------------------------- */
-/* |	IsPngFormat teste si un fichier contient un Png X11.	| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 boolean IsPngFormat(char * fn)

@@ -1,9 +1,4 @@
 
-/* +-------------------------------------------------------------------+ */
-/* |  Driver Jpeg: LAYAIDA Nabil                                       | */
-/* |               Jpeg format.                                        | */
-/* +-------------------------------------------------------------------+ */
-
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -26,7 +21,7 @@
 
 struct my_error_mgr
   {
-     struct jpeg_error_mgr pub;	/* "public" fields */
+     struct jpeg_error_mgr pub;            	/* "public" fields */
      jmp_buf             setjmp_buffer;		/* for return to caller */
   };
 
@@ -58,7 +53,6 @@ extern int          PixelEnPt ();
 #endif /* __STDC__ */
 
 /* ---------------------------------------------------------------------- */
-/* | lit un fichier Jpeg et le rend en forme normalizee                                                                    | */
 /* ---------------------------------------------------------------------- */
 unsigned char      *ReadJPEG (FILE * infile, int *width, int *height, ThotColorStruct colrs[256])
 {
@@ -200,8 +194,6 @@ ThotColorStruct     colrs[256];
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    Messages d'erreur : On recupere les erreurs de Xpm et on envoi  | */
-/* |            vers le frame Thot Dialogue                             | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                JpegPrintErrorMsg (int ErrorNumber)
@@ -214,8 +206,6 @@ int                 ErrorNumber;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    JpegCreate lit et retourne le Jpeg lu dans le fichier      | */
-/* |            fn. Met a` jour xif, yif, wif, hif.                     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 ThotBitmap          JpegCreate (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable * mask1)
@@ -236,7 +226,7 @@ ThotBitmap         *mask1;
    ThotColorStruct     colrs[256];
    unsigned char      *buffer;
 
-   /* ffective load of the Picture from Jpeg Library */
+   /* effective load of the Picture from Jpeg Library */
 
    buffer = ReadJpegToData (fn, &w, &h, colrs);
 
@@ -264,7 +254,7 @@ ThotBitmap         *mask1;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    JpegPrint convertit un Pixmap en PostScript.               | */
+/* |    JpegPrint              | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                JpegPrint (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int fd, unsigned long BackGroundPixel)
@@ -295,9 +285,6 @@ unsigned long       BackGroundPixel;
    ThotColorStruct     colrs[256];
    unsigned char      *buffer;
 
-   /* lecture de la pixmap sous forme de donnees et une table de couleurs */
-   /* cela nous evite d'alouer les couleurs sur l'ecran mais de les transformer */
-   /* directement en RGB pour la generation ps */
 
    buffer = ReadJpegToData (fn, &w, &h, colrs);
 
@@ -318,48 +305,27 @@ unsigned long       BackGroundPixel;
 	 {
 	    case RealSize:
 
-	       /* on centre l'image en x */
-	       /* quelle place a-t-on de chaque cote ? */
 	       delta = (wif - PicWArea) / 2;
 	       if (delta > 0)
 		 {
-		    /* on a de la place entre l'if et le cf */
-		    /* on a pas besoin de retailler dans le pixmap */
-		    /* on va afficher le pixmap dans une boite plus petite */
-		    /* decale'e de delta vers le centre */
 		    xif += delta;
-		    /* la largeur de la boite est celle du cf */
 		    wif = PicWArea;
 		 }
 	       else
 		 {
-		    /* on a pas de place entre l'if et le cf */
-		    /* on va retailler dans le pixmap pour que ca rentre */
-		    /* on sauve delta pour savoir ou couper */
 		    xtmp = -delta;
-		    /* on met a jour PicWArea pour etre coherent */
 		    PicWArea = wif;
 		 }
-	       /* on centre l'image en y */
 	       delta = (hif - PicHArea) / 2;
 	       if (delta > 0)
 		 {
-		    /* on a de la place entre l'if et le cf */
-		    /* on a pas besoin de retailler dans le pixmap */
-		    /* on va afficher le pixmap dans une boite plus petite */
-		    /* decale'e de delta vers le centre */
 		    yif += delta;
-		    /* la hauteur de la boite est celle du cf */
 		    hif = PicHArea;
 		 }
 	       else
 		 {
-		    /* on a pas de place entre l'if et le cf */
-		    /* on va retailler dans le pixmap pour que ca rentre */
-		    /* on sauve delta pour savoir ou couper */
 
 		    ytmp = -delta;
-		    /* on met a jour PicHArea pour etre coherent */
 		    PicHArea = hif;
 		 }
 	       break;
@@ -378,21 +344,14 @@ unsigned long       BackGroundPixel;
 		 }
 	       break;
 	    case FillFrame:
-	       /* DumpImage fait du plein cadre avec wif et hif */
 	       break;
 	    default:
 	       break;
 	 }
 
-   /* NL plus besoin de faire des transformations */
-   /* cette fonction est independante de X11                */
-   /* si xtmp ou ytmp sont non nuls, ca veut dire qu'on retaille */
-   /* dans le pixmap (cas RealSize) */
-   wim = w;
+  wim = w;
    /*him = h; */
 
-   /* generation du poscript , header Dumpimage2 + dimensions + deplacement dans la page */
-   /* chaque pt = RRGGBB en hexa */
 
    fprintf ((FILE *) fd, "gsave %d -%d translate\n", PixelToPoint (xif), PixelToPoint (yif + hif));
    fprintf ((FILE *) fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea, PixelToPoint (wif), PixelToPoint (hif));
@@ -406,7 +365,6 @@ unsigned long       BackGroundPixel;
 	for (x = 0; x < wif; x++)
 	  {
 
-	     /* generation des composantes RGB de l'image dans le poscript */
 
 #ifndef NEW_WILLOWS
 	     fprintf ((FILE *) fd, "%02x%02x%02x",
@@ -428,7 +386,7 @@ unsigned long       BackGroundPixel;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    IsJpegFormat teste si un fichier contient un Pixmap X11.        | */
+/* |    IsJpegFormat     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 boolean             IsJpegFormat (char *fn)

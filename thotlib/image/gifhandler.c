@@ -1,13 +1,4 @@
 
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
-/* +-------------------------------------------------------------------+ */
-/* |  Driver Gif : LAYAIDA Nabil 31-10-1994                            | */
-/* |               Copyright INRIA Rhone-Alpes                         | */
-/* |               Gif format of 1990.    (David Koblas Algorithm)     | */
-/* +-------------------------------------------------------------------+ */
-
-
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -347,7 +338,7 @@ ThotColorStruct     colrs[256];
 	     data = ReadGifImage (fd, LM_to_uint (buf[4], buf[5]),
 				  LM_to_uint (buf[6], buf[7]), localColorMap,
 		     BitSet (buf[8], INTERLACE), imageCount != imageNumber);
-	     return (data);	/* anticipating the exit to prevent gif video !!! crazy netscape !! */
+	     return (data);	/* anticipating the exit to prevent gif video */
 	  }
 	else
 	  {
@@ -735,7 +726,7 @@ unsigned long       ul;
 	    case 0xFFFF:
 	       return (8 + 8);
 	    default:
-	       fprintf (stderr, "nbbits : fuck off invalid PicMask\n");
+	       fprintf (stderr, "nbbits : invalid PicMask\n");
 	       return (8);
 	 }
 }
@@ -1224,7 +1215,7 @@ ThotColorStruct     colrs[256];
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ReadGifToData  Ouverture+lecture du fichier                     | */
+/* |    ReadGifToData                   | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 unsigned char      *ReadGifToData (char *datafile, int *w, int *h, int *ncolors, int *cpp, ThotColorStruct colrs[256])
@@ -1263,8 +1254,6 @@ ThotColorStruct     colrs[256];
 
 
 /* ---------------------------------------------------------------------- */
-/* |    GifCreate lit et retourne le Gif lu dans le fichier        | */
-/* |            fn. Met a` jour xif, yif, wif, hif.                     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 ThotBitmap          GifCreate (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, ThotBitmap * mask1)
@@ -1297,7 +1286,6 @@ ThotBitmap         *mask1;
    if (buffer == NULL)
       return ThotBitmapNone;
 
-   /* transparence dans le gif !!! chouette Non !!! */
    if (Gif89.transparent != -1)
      {
 	if (Gif89.transparent < 0)
@@ -1320,7 +1308,7 @@ ThotBitmap         *mask1;
 
    if (pixmap == None)
      {
-	return ThotBitmapNone;	/* cas d'echec de lecture prevoir les mess d'erreur (5) */
+	return ThotBitmapNone;
      }
    else
      {
@@ -1333,11 +1321,11 @@ ThotBitmap         *mask1;
 	return (ThotBitmap) pixmap;
 
      }
-}				/*GifCreate */
+}			
 
 
 /* ---------------------------------------------------------------------- */
-/* |    GifPrint convertit un Pixmap en PostScript.                | */
+/* |    GifPrint                | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                GifPrint (char *fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, int fd, unsigned long BackGroundPixel)
@@ -1369,9 +1357,6 @@ unsigned long       BackGroundPixel;
    unsigned char      *buffer;
    int                 ncolors, cpp, i;
 
-   /* lecture de la pixmap sous forme de donnees et une table de couleurs */
-   /* cela nous evite d'alouer les couleurs sur l'ecran mais de les transformer */
-   /* directement en RGB pour la generation ps */
    Gif89.transparent = -1;
    Gif89.delayTime = -1;
    Gif89.inputFlag = -1;
@@ -1379,7 +1364,6 @@ unsigned long       BackGroundPixel;
 
    buffer = ReadGifToData (fn, &w, &h, &ncolors, &cpp, colrs);
 
-   /* transparence dans le gif !!! chouette Non !!! */
    if (Gif89.transparent != -1)
      {
 	if (Gif89.transparent < 0)
@@ -1403,48 +1387,27 @@ unsigned long       BackGroundPixel;
      {
      case RealSize:
        
-       /* on centre l'image en x */
-       /* quelle place a-t-on de chaque cote ? */
        delta = (wif - PicWArea) / 2;
        if (delta > 0)
 	 {
-	   /* on a de la place entre l'if et le cf */
-	   /* on a pas besoin de retailler dans le pixmap */
-	   /* on va afficher le pixmap dans une boite plus petite */
-	   /* decale'e de delta vers le centre */
 	   xif += delta;
-	   /* la largeur de la boite est celle du cf */
 	   wif = PicWArea;
 	 }
        else
 	 {
-	   /* on a pas de place entre l'if et le cf */
-	   /* on va retailler dans le pixmap pour que ca rentre */
-	   /* on sauve delta pour savoir ou couper */
 	   xtmp = -delta;
-	   /* on met a jour PicWArea pour etre coherent */
 	   PicWArea = wif;
 	 }
-       /* on centre l'image en y */
        delta = (hif - PicHArea) / 2;
        if (delta > 0)
 	 {
-	   /* on a de la place entre l'if et le cf */
-	   /* on a pas besoin de retailler dans le pixmap */
-	   /* on va afficher le pixmap dans une boite plus petite */
-	   /* decale'e de delta vers le centre */
 	   yif += delta;
-	   /* la hauteur de la boite est celle du cf */
 	   hif = PicHArea;
 	 }
        else
 	 {
-	   /* on a pas de place entre l'if et le cf */
-	   /* on va retailler dans le pixmap pour que ca rentre */
-	   /* on sauve delta pour savoir ou couper */
 	   
 	   ytmp = -delta;
-	   /* on met a jour PicHArea pour etre coherent */
 	   PicHArea = hif;
 	 }
        break;
@@ -1463,21 +1426,14 @@ unsigned long       BackGroundPixel;
 	 }
        break;
      case FillFrame:
-       /* DumpImage fait du plein cadre avec wif et hif */
        break;
      default:
        break;
      }
 
-   /* NL plus besoin de faire des transformations */
-   /* on transforme le pixmap en Ximage */
-   /* si xtmp ou ytmp sont non nuls, ca veut dire qu'on retaille */
-   /* dans le pixmap (cas RealSize) */
-   wim = w;
+  wim = w;
    /*m = h; */
    
-   /* generation du poscript , header Dumpimage2 + dimensions + deplacement dans la page */
-   /* chaque pt = RRGGBB en hexa */
    fprintf ((FILE *) fd, "gsave %d -%d translate\n", PixelToPoint (xif), PixelToPoint (yif + hif));
    fprintf ((FILE *) fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea, PixelToPoint (wif), PixelToPoint (hif));
    fprintf ((FILE *) fd, "\n");
@@ -1489,8 +1445,6 @@ unsigned long       BackGroundPixel;
 
 	for (x = 0; x < wif; x++)
 	  {
-
-	     /* generation des composantes RGB de l'image dans le poscript */
 
 #ifndef NEW_WILLOWS
 	     fprintf ((FILE *) fd, "%02x%02x%02x",
@@ -1509,10 +1463,10 @@ unsigned long       BackGroundPixel;
    fprintf ((FILE *) fd, "\n");
    free (buffer);
 
-}				/*GifPrint */
+}			
 
 /* ---------------------------------------------------------------------- */
-/* |    IsGifFormat teste si un fichier est au format image Gif .       | */
+/* |    IsGifFormat      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 boolean             IsGifFormat (char *datafile)

@@ -1,9 +1,5 @@
 /*
-   xpmhandler.c : Auteur NabilLayaida Juin 1994.
-   xpmhandler.c -- Implementation of X11 Pixmap Driver
-   Major changes: 20-06 Error handling
-   05-08 Color closeness management
-   20-08 Pixmap V3.4.c integration
+   xpmhandler.c  Pixmap V3.4.c 
  */
 
 #include "thot_gui.h"
@@ -29,8 +25,8 @@
 
 
 /* ---------------------------------------------------------------------- */
-/* |    XpmCreate lit et retourne le Pixmap lu dans le fichier  | */
-/* |            fn. Met a` jour xif, yif, wif, hif.                     | */
+/* |    XpmCreate reads and produces the bitmap read from the file          | */
+/* |            fn. updates the wif, hif, xif , yif                                                | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 Drawable            XpmCreate (char *fn, PictureScaling pres, int *xif, int *yif, int *wif, int *hif, unsigned long BackGroundPixel, Drawable * mask1)
@@ -54,7 +50,7 @@ Drawable           *mask1;
    XpmAttributes       att;
    unsigned long       valuemask = 0;
 
-   /* parametres de chargement de l'image pixmap - repli couleurs */
+   /* pixmap loading parameters passed to the library */
    att.valuemask = valuemask;
    att.valuemask |= XpmRGBCloseness;
    att.valuemask |= XpmReturnPixels;
@@ -64,7 +60,6 @@ Drawable           *mask1;
    att.numsymbols = 1;
    att.mask_pixel = BackGroundPixel;
 
-   /* chargement effectif de l'image par la bibliotheque Xpm rel 3.4c */
    status = XpmReadFileToPixmap (TtDisplay, TtRootWindow, fn, &pixmap, mask1, &att);
    if (status != XpmSuccess)
      {
@@ -90,15 +85,14 @@ Drawable           *mask1;
      }
    else
      {
-       /* succes ou succes partiel => initialise la tailles de l'image */
 	*wif = att.width;
 	*hif = att.height;
 	*xif = 0;
 	*yif = 0;
 
-	/* libere la structure temporaire attribut et sortie en beaute ! */
+	/* frees the library's internal structures */
 	XpmFreeAttributes (&att);
-	att.valuemask = valuemask;/* reinitialise de valuemask avec 0 */
+	att.valuemask = valuemask;/* reinitialises the value mask */
 	return (Drawable) pixmap;
      }
 #endif /* !NEW_WILLOWS */
@@ -136,7 +130,7 @@ unsigned long       BackGroundPixel;
    unsigned int       *pt;
    unsigned char       pt1;
    int                 x, y;
-   int                 wim /*, him */ ;
+   int                 wim ;
    XpmAttributes       att;
    int                 status;
    unsigned long       valuemask = 0;
@@ -147,7 +141,7 @@ unsigned long       BackGroundPixel;
    unsigned int        NbCharPerLine;
    unsigned short      red, green, blue;
 
-   /* initialisation des parametres de chargement de l'image pour le print */
+   /* pixmap loading parameters passed to the library */
    valuemask |= XpmExactColors;
    valuemask |= XpmColorTable;
    valuemask |= XpmReturnColorTable;
@@ -155,9 +149,6 @@ unsigned long       BackGroundPixel;
    valuemask |= XpmHotspot;
    valuemask |= XpmCharsPerPixel;
 
-   /* lire la pixmap sous forme de donnees et une table de couleurs   */
-   /* nous evite d'allouer les couleurs a l'ecran mais de les transformer */
-   /* directement en ps, fonction de bas niveau de la bibliotheque pixmap */
 
    status = XpmReadFileToXpmImage (fn, &image, &info);
 
@@ -169,60 +160,38 @@ unsigned long       BackGroundPixel;
    xtmp = 0;
    ytmp = 0;
 
-   /* en fonction de la presentation definit les dimensions en sorties ps */
+
    switch (pres)
 	 {
 	    case RealSize:
 
-	       /* on centre l'image en x */
-	       /* quelle place a-t-on de chaque cote ? */
 
 	       delta = (wif - PicWArea) / 2;
 
 	       if (delta > 0)
 		 {
-		    /* on a de la place entre l'if et le cf */
-		    /* on a pas besoin de retailler dans le pixmap */
-		    /* on va afficher le pixmap dans une boite plus petite */
-		    /* decale'e de delta vers le centre */
 		    xif += delta;
-		    /* la largeur de la boite est celle du cf */
 		    wif = PicWArea;
 		 }
 	       else
 		 {
-		    /* on a pas de place entre l'if et le cf */
-		    /* on va retailler dans le pixmap pour que ca rentre */
-		    /* on sauve delta pour savoir ou couper */
 		    xtmp = -delta;
-		    /* on met a jour PicWArea pour etre coherent */
 		    PicWArea = wif;
 		 }
-	       /* on centre l'image en y */
 	       delta = (hif - PicHArea) / 2;
 	       if (delta > 0)
 		 {
-		    /* on a de la place entre l'if et le cf */
-		    /* on a pas besoin de retailler dans le pixmap */
-		    /* on va afficher le pixmap dans une boite plus petite */
-		    /* decale'e de delta vers le centre */
 		    yif += delta;
-		    /* la hauteur de la boite est celle du cf */
 		    hif = PicHArea;
 		 }
 	       else
 		 {
-		    /* on a pas de place entre l'if et le cf */
-		    /* on va retailler dans le pixmap pour que ca rentre */
-		    /* on sauve delta pour savoir ou couper */
 
 		    ytmp = -delta;
-		    /* on met a jour PicHArea pour etre coherent */
 		    PicHArea = hif;
 		 }
 	       break;
 	    case ReScale:
-	       /* clacul des proportions dans le cas d'un zoom ! */
 
 	       if ((float) PicHArea / (float) PicWArea <= (float) hif / (float) wif)
 		 {
@@ -238,20 +207,12 @@ unsigned long       BackGroundPixel;
 		 }
 	       break;
 	    case FillFrame:
-	       /* DumpImage fait du plein cadre avec wif et hif */
 	       break;
 	    default:
 	       break;
 	 }
 
-   /* NL plus besoin de faire des transformations */
-   /* on ne transforme plus le pixmap en Ximage */
-   /* si xtmp ou ytmp sont non nuls, ca veut dire qu'on retaille */
-   /* dans le pixmap (cas RealSize) */
-
-
-   /* chargement de la colortab et remplacement  de la couleur transparente par celle */
-   /* du BackgoundColor defini par l'editeur Thot */
+   /* reads the colorspace palette to produce the ps */
 
    for (i = 0; i < image.ncolors; i++)
      {
@@ -283,8 +244,8 @@ unsigned long       BackGroundPixel;
 
 
 
-   /* generation du poscript , header Dumpimage2 + dimensions  */
-   /* + deplacement dans la page chaque pt = RRGGBB en hexa    */
+   /* generation of the poscript , header Dumpimage2 + dimensions  */
+   /* + picture location. Each pixel = RRGGBB in  hexa    */
 
 
    fprintf ((FILE *) fd, "gsave %d -%d translate\n", PixelToPoint (xif), PixelToPoint (yif + hif));
@@ -299,7 +260,7 @@ unsigned long       BackGroundPixel;
 	for (x = 0; x < wif; x++)
 	  {
 
-	     /* generation des composantes RGB de l'image dans le poscript */
+	     /* RGB components generation */
 	     pt1 = (unsigned char) (*pt);
 
 	     fprintf ((FILE *) fd, "%02x%02x%02x",
@@ -322,10 +283,10 @@ unsigned long       BackGroundPixel;
 
 
 #endif /* !NEW_WILLOWS */
-}				/*XpmPrint */
+}			
 
 /* ---------------------------------------------------------------------- */
-/* |    IsXpmFormat teste si un fichier contient un Pixmap X11.      | */
+/* |    IsXpmFormat    check if the file header is of an xbm format  by reading the first bytes  | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
 boolean                IsXpmFormat (char *fn)
@@ -358,4 +319,4 @@ char               *fn;
    return res;
 
 
-}				/*IsXpmFormat */
+}			
