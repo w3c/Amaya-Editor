@@ -1433,13 +1433,9 @@ void TtaMainLoop ()
       TtaHandleOneEvent (&ev);
     }
 
-#ifndef _GTK
-#else /* _GTK */
-     while (gtk_events_pending ())
-       gtk_main_iteration ();
-  /* gdk_set_show_events(TRUE);*/
-  gtk_main ();
-#endif /* !_GTK */
+#ifdef _GTK
+  gtk_exit (0);
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------

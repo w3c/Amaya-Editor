@@ -3016,6 +3016,8 @@ void UpdateScrollbars (int frame)
        /*       gtk_widget_show_all (GTK_WIDGET(hscroll)->parent);*/
        gtk_widget_show_all (GTK_WIDGET(hscroll));
        gtk_widget_queue_draw (GTK_WIDGET(hscroll));
+       gtk_adjustment_value_changed (tmpw);
+       gtk_adjustment_changed (tmpw);
        /*       gtk_widget_show_all (GTK_WIDGET(tmpw));*/
 #endif /* !_GTK */
      }
@@ -3047,6 +3049,8 @@ void UpdateScrollbars (int frame)
        /*       gtk_widget_show_all (GTK_WIDGET(vscroll)->parent);*/
        gtk_widget_show_all (GTK_WIDGET(vscroll));
        gtk_widget_queue_draw (GTK_WIDGET(vscroll));
+       gtk_adjustment_value_changed (tmpw);
+       gtk_adjustment_changed (tmpw);
        /*       gtk_widget_show_all (GTK_WIDGET(tmpw));*/
 #endif /* !_GTK */
      }
