@@ -24,7 +24,7 @@
 22 Création impossible du document %s
 23 En attente d'un socket
 24 Lecture %s
-25 criture %s
+25 Ecriture %s
 26 En attente d'une connexion
 27 Connexion vers %s
 28 Recherche de %s
@@ -129,8 +129,8 @@
 127 Mode de répétition
 128 repeat
 129 repeat-x
-130 Votre précédente session Amaya a planté. Voulez-vous recharger les documents modifiés ?
-131 chec de l'authentification. Voulez-vous réessayer ?
+130 La précédente session Amaya s'est mal terminée. Voulez-vous recharger les documents modifiés ?
+131 Echec de l'authentification. Voulez-vous réessayer ?
 132 L'opération sera redirigée. Voulez-vous continuer ?
 133 Nombre de lignes
 134 Nombre de colonnes
@@ -209,6 +209,6 @@
 207 Support FTP (experimental)
 208 Dans le profil Amaya courant :
 209 Des balises/attributs sont ignorées - voir le fichier log
-210 **Not available
-211 **The encoding of this document is not supported by Amaya. If you edit it, you may loose some information
+210 Non disponible
+211 L'encodage de ce document n'est pas supporté par Amaya. Si vous l'éditez, vous pouvez perdre des informations.
 212 Butiner

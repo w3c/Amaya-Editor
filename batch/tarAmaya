@@ -4,7 +4,7 @@
 #
 #       amaya-$MACH-$AMAYAVERSION.tgz
 # 
-AMAYAVERSION=3.2.1
+AMAYAVERSION=3.9
 THOTDIR=$PWD/../..
 DEST=/tahiti/thottape
 PLATFORMS="solaris2 LINUX-ELF"
