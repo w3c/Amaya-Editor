@@ -4,7 +4,7 @@
 2 Não há arquivo de alfabeto
 3 A nova vista não pode substituir a vista precedente
 4 Esquemas incompatíveis. Recompile %s
-5 Erro fatal: Tipos (fonts) Thot não encontrados
+5 Erro fatal: Tipos (fonts) não encontrados
 6 Memória esgotada
 7 Erro fatal: Incapaz de conectar a X
 8 A vista está modificada antes de ser criada
@@ -18,7 +18,7 @@
 16 4 páginas/folha
 17 %s
 18 Não há memória suficiente
-19 *** Thot: Erro irrecuperável ***
+19 *** Amaya: Erro irrecuperável ***
 20 Quaisquer documentos modificados serão salvos
 21 Arquivo .TRA incorreto: %s
 22 %s não é um irmão válido para %s (%s)
@@ -136,3 +136,7 @@
 134 Remover atributo
 135 Botão esquerdo fixa a cor da seleção
 136 Botão do meio ou da direita fixa a cor do cursor
+137 Botão do meio ou da direita fixa a cor do cursor
+138 **More ...
+139 **Get
+140 **Color
