@@ -25,6 +25,7 @@
 
  */
 
+#include "ustring.h"
 #include "thot_sys.h"
 #include "reference.h"
 #include "attribute.h"

@@ -78,7 +78,7 @@ extern void         TtaSetMainLoop (ExternalInitMainLoop init,
    info: text to display when the cursor stays on the button.
    Returns index
   ----------------------------------------------------------------------*/
-extern int          TtaAddButton (Document document, View view, Pixmap icon, void (*procedure) (), char *info);
+extern int          TtaAddButton (Document document, View view, Pixmap icon, void (*procedure) (), STRING info);
 
 /*----------------------------------------------------------------------
    TtaGetButtonCallback
@@ -134,7 +134,7 @@ extern void         TtaChangeButton (Document document, View view, int index, Pi
    procedure: procedure to be executed when the new entry is changed by the
    user.
   ----------------------------------------------------------------------*/
-extern int          TtaAddTextZone (Document document, View view, char *label, boolean editable, void (*procedure) ());
+extern int          TtaAddTextZone (Document document, View view, STRING label, boolean editable, void (*procedure) ());
 
 /*----------------------------------------------------------------------
    TtaSetTextZone
@@ -148,7 +148,7 @@ extern int          TtaAddTextZone (Document document, View view, char *label, b
    index: 
 
   ----------------------------------------------------------------------*/
-extern void         TtaSetTextZone (Document document, View view, int index, char *text);
+extern void         TtaSetTextZone (Document document, View view, int index, STRING text);
 
 /*----------------------------------------------------------------------
    TtaSetMenuOff desactive le menu (1 a n) de la vue du document ou   
@@ -196,7 +196,7 @@ extern void         TtaSetItemOn (Document document, View view, int menuID, int 
    void callbakProcedure(reference, datatype, data)
    int reference;
    int datatype;
-   char *data; 
+   STRING data; 
 
    Parameter:
    callbakProcedure: the application callback procedure.
@@ -205,6 +205,11 @@ extern void         TtaSetItemOn (Document document, View view, int menuID, int 
    reference of the first form or menu.
   ----------------------------------------------------------------------*/
 extern int          TtaSetCallback (void (*callbakProcedure) (), int set);
+
+/*----------------------------------------------------------------------
+   TtaSetStatus affiche le status de la vue du document.                      
+  ----------------------------------------------------------------------*/
+extern void         TtaSetStatus (Document document, View view, CONST STRING text, CONST STRING name);
 
 /*----------------------------------------------------------------------
    TtaGetViewFrame retourne le widget du frame de la vue document.    
@@ -224,7 +229,7 @@ extern void         TtaFetchOneEvent (ThotEvent *ev);
    process an X-Windows Event.
   ----------------------------------------------------------------------*/
 extern void         TtaHandleOneEvent (ThotEvent * ev);
-extern int          TtaXLookupString (ThotKeyEvent * event, char *buffer, int nbytes,
+extern int          TtaXLookupString (ThotKeyEvent * event, STRING buffer, int nbytes,
 				  KeySym * keysym, ThotComposeStatus * status);
 
 #endif /* !_WINDOWS */
@@ -266,7 +271,7 @@ extern void         TtaHandlePendingEvents ();
 
   ----------------------------------------------------------------------*/
 extern void         TtaClickElement (/*OUT*/ Document *document, /*OUT*/ Element *element);
-extern Pixmap       TtaCreatePixmapLogo (char **data);
+extern Pixmap       TtaCreatePixmapLogo (STRING *data);
 
 /*----------------------------------------------------------------------
    TtaCreateBitmapLogo
@@ -282,7 +287,7 @@ extern Pixmap       TtaCreatePixmapLogo (char **data);
    The created pixmap for the logo.
 
   ----------------------------------------------------------------------*/
-extern Pixmap       TtaCreateBitmapLogo (int width, int height, char *bits);
+extern Pixmap       TtaCreateBitmapLogo (int width, int height, STRING bits);
 extern void         TtaSetCursorWatch (Document document, View view);
 extern void         TtaResetCursor (Document document, View view);
 
@@ -333,7 +338,7 @@ extern void         TtaGiveSelectPosition (Document document, Element element, V
    none
 
   ----------------------------------------------------------------------*/
-extern void         TtaRegisterPixmap ( char *name, Pixmap pix );
+extern void         TtaRegisterPixmap ( STRING name, Pixmap pix );
 
 /*----------------------------------------------------------------------
    TtaLoadImage
@@ -348,7 +353,7 @@ extern void         TtaRegisterPixmap ( char *name, Pixmap pix );
    The created pixmap
 
   ----------------------------------------------------------------------*/
-extern Pixmap       TtaLoadImage ( char *name, char *path );
+extern Pixmap       TtaLoadImage ( STRING name, STRING path );
 
 /*----------------------------------------------------------------------
    TtaGetImage
@@ -362,7 +367,7 @@ extern Pixmap       TtaLoadImage ( char *name, char *path );
    The pixmap or NULL if not found.
 
   ----------------------------------------------------------------------*/
-extern Pixmap       TtaGetImage ( char *name ); 
+extern Pixmap       TtaGetImage ( STRING name ); 
 
 #else  /* __STDC__ */
 
@@ -373,12 +378,12 @@ extern void         TtaSetMainLoop ( /* ExternalInitMainLoop init,
 				    ExternalLockMainLoop lock,
 				    ExternalUnlockMainLoop unlock */ );
 
-extern int          TtaAddButton ( /*Document document, View view, Pixmap icon, void (*procedure) (), char *info */ );
+extern int          TtaAddButton ( /*Document document, View view, Pixmap icon, void (*procedure) (), STRING info */ );
 extern void        *TtaGetButtonCallback ( /*Document document, View view, int index */);
 extern void         TtaSwitchButton ( /*Document document, View view, int index */ );
 extern void         TtaChangeButton ( /*Document document, View view, int index, Pixmap picture */ );
-extern int          TtaAddTextZone ( /*Document document, View view, char *label, boolean editable, void (*procedure) () */ );
-extern void         TtaSetTextZone ( /*Document document, View view, int index, char *text */ );
+extern int          TtaAddTextZone ( /*Document document, View view, STRING label, boolean editable, void (*procedure) () */ );
+extern void         TtaSetTextZone ( /*Document document, View view, int index, STRING text */ );
 extern void         TtaSetMenuOff ( /*Document document, View view, int menuID */ );
 extern void         TtaSetMenuOn ( /*Document document, View view, int menuID */ );
 extern void         TtaSetToggleItem ( /*Document document, View view, int menuID, int itemID, boolean on */ );
@@ -389,7 +394,7 @@ extern int          TtaSetCallback ( /*void (*callbakProcedure) (), int set */ )
 #ifndef _WINDOWS
 extern void         TtaFetchOneEvent ( /*ThotEvent *ev */ );
 extern void         TtaHandleOneEvent ( /*ThotEvent *ev */ );
-extern int          TtaXLookupString (	/* ThotKeyEvent *event, char *buffer, int nbytes,
+extern int          TtaXLookupString (	/* ThotKeyEvent *event, STRING buffer, int nbytes,
 					   KeySym *keysym, ThotComposeStatus *status */ );
 
 #endif /* !_WINDOWS */
@@ -398,8 +403,8 @@ extern void         TtaUnlockMainLoop ( /* void */ );
 extern void         TtaMainLoop ( /* void */ );
 extern void         TtaHandlePendingEvents ();
 extern void         TtaClickElement ( /*Document *document, Element *element */ );
-extern Pixmap       TtaCreatePixmapLogo ( /*char **data */ );
-extern Pixmap       TtaCreateBitmapLogo ( /*int width, int height, char *bits */ );
+extern Pixmap       TtaCreatePixmapLogo ( /*STRING *data */ );
+extern Pixmap       TtaCreateBitmapLogo ( /*int width, int height, STRING bits */ );
 extern void         TtaSetCursorWatch ( /*Document document, View view */ );
 extern void         TtaResetCursor ( /*Document document, View view */ );
 extern Pixel        TtaGetMenuColor ( /* void */ );
@@ -407,9 +412,9 @@ extern Pixel        TtaGetButtonColor ( /* void */ );
 extern int          TtaGetScreenDepth ( /* void */ );
 extern Display     *TtaGetCurrentDisplay ( /* void */ );
 extern void         TtaGiveSelectPosition ( /* Document document, Element element, View view, int *X, int *Y */ );
-extern void         TtaRegisterPixmap (/* char *name, Pixmap pix */);
-extern Pixmap       TtaLoadImage (/* char *name, char *path */);
-extern Pixmap       TtaGetImage (/* char *name */);
+extern void         TtaRegisterPixmap (/* STRING name, Pixmap pix */);
+extern Pixmap       TtaLoadImage (/* STRING name, STRING path */);
+extern Pixmap       TtaGetImage (/* STRING name */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -22,9 +22,8 @@
    
 */
 
-#define EOS     '\0'
-#define SPACE    ' '
-#define MAX_LENGTH     512
+#include "ustring.h"
+#include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
 #include "tree.h"
@@ -36,19 +35,12 @@
 #include "document.h"
 #include "application.h"
 #include "appstruct.h"
-
-#include "translatexml_f.h"
+#include "appdialogue.h"
 #include "constxml.h"
 #include "typexml.h"
-#include "xmlmodule_f.h"
-#include "thotmodule_f.h"
-#include "callback_f.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
-#include "constmedia.h"
-#include "typemedia.h"
-#include "appdialogue.h"
 #include "appdialogue_tv.h"
 #include "edit_tv.h"
 /* an entity name */
@@ -134,6 +126,12 @@ static char         entityName[MAX_ENTITY_LENGTH]; /* name of entity being
 					     read */
 static int          entityNameLength = 0; /* length of entity name read so
 					     far */
+
+#include "callback_f.h"
+#include "fileaccess_f.h"
+#include "thotmodule_f.h"
+#include "translatexml_f.h"
+#include "xmlmodule_f.h"
 
 
 /*----------------------------------------------------------------------

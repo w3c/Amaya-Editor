@@ -1,6 +1,10 @@
+#include "ustring.h"
+
+
+#include "ustring.h"
+#include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
-
 #include "tree.h"
 #include "content.h"
 #include "view.h"
@@ -10,17 +14,10 @@
 #include "application.h"
 #include "appstruct.h"
 #include "appdialogue.h"
-
-
 #include "constxml.h"
 #include "typexml.h"
-#include "parsexml_f.h"
-#include "xmlmodule_f.h"
-#ifndef NODISPLAY
-#include "changeabsbox_f.h"
-#else
-#include "nodisplay_f.h"
-#endif
+
+
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "appdialogue_tv.h"
@@ -46,11 +43,10 @@ static int PBnumber = 0;
 static int PBview = 0;
 static int PBtype = 0;
 
-/* Thot and Xml attributes actions tables */
-#define MAX_ATTR 100;
-#define EOS     '\0'
-#define SPACE    ' '
-#define MAX_LENGTH     512
+#include "parsexml_f.h"
+#include "xmlmodule_f.h"
+#include "changeabsbox_f.h"
+
 /*----------------------------------------------------------------------
   XmlSetPageNum: sets the next pagebreak number
   ----------------------------------------------------------------------*/

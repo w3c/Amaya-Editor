@@ -1163,11 +1163,11 @@ int                 frame;
 	  pBox->BxNextBackground = NULL;
 	}
     }
-  else
+  /***  else
     {
       BackgroundColor[frame] = DefaultBColor;
       SetMainWindowBackgroundColor (frame, DefaultBColor);
-    }
+    }****/
 }
 
 

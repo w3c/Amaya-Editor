@@ -1071,15 +1071,24 @@ int                 height;
 	   DisplayFrame (frame);
 	   ShowSelection (pDoc->DocViewRootAb[view - 1], TRUE);
 	 }
-       /* Update Paste and Undo entries */
+       /* Update Paste entry in menu */
        if ((FirstSavedElement == NULL && ClipboardThot.BuLength == 0) ||
 	   pDoc->DocReadOnly)
 	 SwitchPaste(pDoc, FALSE);
        else
 	 SwitchPaste(pDoc, TRUE);
-       /* TODO check the Undo state of the document */
-       SwitchUndo (pDoc, FALSE);
-       SwitchRedo (pDoc, FALSE);
+
+	    /* check the Undo state of the document */
+	    if (pDoc->DocNbEditsInHistory == 0)
+	      SwitchUndo (pDoc, FALSE);
+	    else
+	      SwitchUndo (pDoc, TRUE);
+
+	    /* check the Redo state of the document */
+	    if (pDoc->DocNbUndone == 0)
+	      SwitchRedo (pDoc, FALSE);
+	    else
+	      SwitchRedo (pDoc, TRUE);
 
        /* met a jour les menus de la fenetre */
        if (ThotLocalActions[T_chselect] != NULL)

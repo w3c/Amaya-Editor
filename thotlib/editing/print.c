@@ -2499,9 +2499,9 @@ BOOL      buttonCmd;
 #endif /* __STDC__ */
 #else  /* !_WINDOWS */
 #ifdef __STDC__
-void                main (int argc, char **argv)
+int                 main (int argc, char **argv)
 #else  /* __STDC__ */
-void                main (argc, argv)
+int                 main (argc, argv)
 int                 argc;
 char              **argv;
 
@@ -2509,14 +2509,13 @@ char              **argv;
 #endif /* _WINDOWS */
 {
   STRING              realName;
-  CHAR                name [MAX_PATH];             
-
   STRING              server = (STRING) NULL;
-  STRING               pChar;
-  CHAR                option [100];
+  STRING              pChar;
   STRING              destination = (STRING) NULL;
+  CHAR                option [100];
+  CHAR                name [MAX_PATH];             
   CHAR                cmd[800];
-  CHAR		          tempFile [MAX_PATH];
+  CHAR		      tempFile [MAX_PATH];
   int                 i, l;
   int                 argCounter;
   int                 viewsCounter = 0;

@@ -967,9 +967,9 @@ Document       doc;
 	  tempdocument = GetLocalPath (doc, DocumentURLs[doc]);
 	  TtaFileUnlink (tempdocument);
 	  TtaFreeMemory (tempdocument);
-      sprintf (htmlErrFile, "%s%c%d%cHTML.ERR", TempFileDirectory, DIR_SEP, doc, DIR_SEP);
-      if (TtaFileExist (htmlErrFile))
-         TtaFileUnlink (htmlErrFile);
+	  sprintf (htmlErrFile, "%s%c%d%cHTML.ERR", TempFileDirectory, DIR_SEP, doc, DIR_SEP);
+	  if (TtaFileExist (htmlErrFile))
+	    TtaFileUnlink (htmlErrFile);
 	}
       else 
 	if (DocumentTypes[doc] == docImage || DocumentTypes[doc] == docImageRO) 

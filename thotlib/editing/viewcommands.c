@@ -580,32 +580,51 @@ PtrDocument         pDoc;
 			      &pDoc->DocViewVolume[0], X, Y, width, height);
 	if (pDoc->DocViewFrame[0] != 0)
 	  {
-	     pDoc->DocView[0].DvSSchema = pDoc->DocSSchema;
-	     pDoc->DocView[0].DvPSchemaView = 1;
-	     pDoc->DocViewFreeVolume[0] = pDoc->DocViewVolume[0];
-	     pDoc->DocView[0].DvSync = TRUE;
-	     /* met a jour les menus variables de la fenetre */
-	     if (ThotLocalActions[T_chselect] != NULL)
-		(*ThotLocalActions[T_chselect]) (pDoc);
-	     if (ThotLocalActions[T_chattr] != NULL)
-		(*ThotLocalActions[T_chattr]) (pDoc);
-	     if (pDoc->DocRootElement != NULL)
-	       {
-		  pDoc->DocViewRootAb[0] = AbsBoxesCreate (pDoc->DocRootElement, pDoc, 1, TRUE, TRUE, &complete);
-		  /* on ne s'occupe pas de la hauteur de page */
-		  i = 0;
-		  ChangeConcreteImage (pDoc->DocViewFrame[0], &i,
-				       pDoc->DocViewRootAb[0]);
-		  DisplayFrame (pDoc->DocViewFrame[0]);
-		  ShowSelection (pDoc->DocViewRootAb[0], TRUE);
-		  notifyDoc.event = TteViewOpen;
-		  notifyDoc.document = (Document) IdentDocument (pDoc);
-		  notifyDoc.view = 1;
-		  CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
-		  /* ouvre les vues specifiees dans la section open du */
-		  /* fichier .conf */
-		  ConfigOpenFirstViews (pDoc);
-	       }
+	    /* Update Paste entry in menu */
+	    if ((FirstSavedElement == NULL && ClipboardThot.BuLength == 0) ||
+		pDoc->DocReadOnly)
+	      SwitchPaste(pDoc, FALSE);
+	    else
+	      SwitchPaste(pDoc, TRUE);
+
+	    /* check the Undo state of the document */
+	    if (pDoc->DocNbEditsInHistory == 0)
+	      SwitchUndo (pDoc, FALSE);
+	    else
+	      SwitchUndo (pDoc, TRUE);
+
+	    /* check the Redo state of the document */
+	    if (pDoc->DocNbUndone == 0)
+	      SwitchRedo (pDoc, FALSE);
+	    else
+	      SwitchRedo (pDoc, TRUE);
+
+	    pDoc->DocView[0].DvSSchema = pDoc->DocSSchema;
+	    pDoc->DocView[0].DvPSchemaView = 1;
+	    pDoc->DocViewFreeVolume[0] = pDoc->DocViewVolume[0];
+	    pDoc->DocView[0].DvSync = TRUE;
+	    /* met a jour les menus variables de la fenetre */
+	    if (ThotLocalActions[T_chselect] != NULL)
+	      (*ThotLocalActions[T_chselect]) (pDoc);
+	    if (ThotLocalActions[T_chattr] != NULL)
+	      (*ThotLocalActions[T_chattr]) (pDoc);
+	    if (pDoc->DocRootElement != NULL)
+	      {
+		pDoc->DocViewRootAb[0] = AbsBoxesCreate (pDoc->DocRootElement, pDoc, 1, TRUE, TRUE, &complete);
+		/* on ne s'occupe pas de la hauteur de page */
+		i = 0;
+		ChangeConcreteImage (pDoc->DocViewFrame[0], &i,
+				     pDoc->DocViewRootAb[0]);
+		DisplayFrame (pDoc->DocViewFrame[0]);
+		ShowSelection (pDoc->DocViewRootAb[0], TRUE);
+		notifyDoc.event = TteViewOpen;
+		notifyDoc.document = (Document) IdentDocument (pDoc);
+		notifyDoc.view = 1;
+		CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
+		/* ouvre les vues specifiees dans la section open du */
+		/* fichier .conf */
+		ConfigOpenFirstViews (pDoc);
+	      }
 	  }
      }
 }

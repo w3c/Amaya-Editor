@@ -29,13 +29,10 @@
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
-#define EOS     '\0'
-#define SPACE    ' '
-#define MAX_LENGTH     512
+#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
-
 #include "tree.h"
 #include "content.h"
 #include "view.h"
@@ -45,12 +42,8 @@
 #include "application.h"
 #include "appstruct.h"
 #include "reference.h"
-
 #include "constxml.h"
 #include "typexml.h"
-#include "parsexml_f.h"
-#include "xmlmodule_f.h"
-
 
 /* temporary pointer to parser prefixlist */
 static PrefixType *ParserPrefixs;
@@ -66,6 +59,10 @@ typedef struct _XmlReferenceType
 }XmlReferenceType;
 /* references list */
 static XmlReferenceType *ReferenceList = NULL;
+
+
+#include "parsexml_f.h"
+#include "xmlmodule_f.h"
 
 /*----------------------------------------------------------------------
     XmlAddNSPresentation: add a presentation for a given namespace

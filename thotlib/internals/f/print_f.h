@@ -45,8 +45,8 @@ extern void DisplayMessage ( STRING text,
                              int msgType );
 extern void TtaError ( int errorCode );
 extern void CloseInsertion ( void );
-extern void main ( int argc,
-                   char **argv );
+extern int main ( int argc,
+		  char **argv );
 
 #else /* __STDC__ */
 
@@ -89,8 +89,8 @@ extern void DisplayMessage (/* STRING text,
                                int msgType */);
 extern void TtaError (/* int errorCode */);
 extern void CloseInsertion (/* void */);
-extern void main (/* int argc,
-                     char **argv */);
+extern int main (/* int argc,
+		    char **argv */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -475,8 +475,8 @@ boolean		    on;
 {
   int		index;
 #ifdef _WINDOWS
-  BYTE state;
-  int  picture;
+  BYTE          state;
+  int           picture;
 #else /* !_WINDOWS */
   Pixmap	picture;
 #endif /* _WINDOWS */
@@ -484,44 +484,42 @@ boolean		    on;
   if (back)
     {
       index = 2;
+      if (on)
+	{
 #ifdef _WINDOWS 
-      if (on)
-	{
 	  state   = TRUE;
-	  picture = iconBack; 
+#endif /* _WINDOWS */
+	  picture = iconBack;
+	  TtaSetItemOn (document, 1, File, BBack);
 	}
       else
 	{
+#ifdef _WINDOWS 
           state = FALSE;
-	  picture = iconBackNo;
-	}
-#else  /* !_WINDOWS */
-      if (on)
-	picture = iconBack;
-      else
-	picture = iconBackNo;
 #endif /* _WINDOWS */
+	  picture = iconBackNo;
+	  TtaSetItemOff (document, 1, File, BBack);
+	}
     }
   else
     {
       index = 3;
-#ifdef _WINDOWS
       if (on)
 	{
+#ifdef _WINDOWS 
 	  state = TRUE;
+#endif /* _WINDOWS */
 	  picture = iconForward;
+	  TtaSetItemOn (document, 1, File, BForward);
         }
       else
 	{
+#ifdef _WINDOWS 
 	  state = FALSE;
-	  picture = iconForwardNo;
-	}
-#else /* !_WINDOWS */
-      if (on)
-	picture = iconForward;
-      else
-	picture = iconForwardNo;
 #endif /* _WINDOWS */
+	  picture = iconForwardNo;
+	  TtaSetItemOff (document, 1, File, BForward);
+	}
     }
 #ifdef _WINDOWS
   WIN_TtaChangeButton (document, 1, index, picture, state);
@@ -2808,45 +2806,50 @@ void               *ctx_cbf;
 	       if (newdoc == 0)
 		 /* cannot display the new document */
 		 ok = FALSE;
-	       else if (CE_event == CE_HELP || CE_event == CE_LOG)
+	       else
 		 {
-		   DocumentTypes[newdoc] = docReadOnly;
-		   /* help document has to be in read-only mode */
-		   TtcSwitchCommands (newdoc, 1); /* no command filed */
-
-		   TtaSetItemOff (newdoc, 1, File, BNew);
-		   TtaSetItemOff (newdoc, 1, File, BOpenDoc);
-		   TtaSetItemOff (newdoc, 1, File, BOpenInNewWindow);
-		   TtaSetItemOff (newdoc, 1, File, BSave);
-		   TtaSetItemOff (newdoc, 1, Edit_, BCut);
-		   TtaSetItemOff (newdoc, 1, Edit_, BPaste);
-		   TtaSetItemOff (newdoc, 1, Edit_, BClear);
-		   TtaSetItemOff (newdoc, 1, Edit_, BSpellCheck);
-		   TtaSetItemOff (newdoc, 1, Edit_, BTransform);
-		   if (CE_event == CE_HELP)
+		   TtaSetItemOff (newdoc, 1, File, BBack);
+		   TtaSetItemOff (newdoc, 1, File, BForward);
+		   if (CE_event == CE_HELP || CE_event == CE_LOG)
 		     {
-		       TtaSetToggleItem (newdoc, 1, Views, TShowTextZone, FALSE);
-		       TtaSetToggleItem (newdoc, 1, Edit_, TEditMode, FALSE);
-		       TtaChangeButton (newdoc, 1, 5, iconBrowser);
+		       DocumentTypes[newdoc] = docReadOnly;
+		       /* help document has to be in read-only mode */
+		       TtcSwitchCommands (newdoc, 1); /* no command filed */
+		       
+		       TtaSetItemOff (newdoc, 1, File, BNew);
+		       TtaSetItemOff (newdoc, 1, File, BOpenDoc);
+		       TtaSetItemOff (newdoc, 1, File, BOpenInNewWindow);
+		       TtaSetItemOff (newdoc, 1, File, BSave);
+		       TtaSetItemOff (newdoc, 1, Edit_, BCut);
+		       TtaSetItemOff (newdoc, 1, Edit_, BPaste);
+		       TtaSetItemOff (newdoc, 1, Edit_, BClear);
+		       TtaSetItemOff (newdoc, 1, Edit_, BSpellCheck);
+		       TtaSetItemOff (newdoc, 1, Edit_, BTransform);
+		       if (CE_event == CE_HELP)
+			 {
+			   TtaSetToggleItem (newdoc, 1, Views, TShowTextZone, FALSE);
+			   TtaSetToggleItem (newdoc, 1, Edit_, TEditMode, FALSE);
+			   TtaChangeButton (newdoc, 1, 5, iconBrowser);
+			 }
+		       else
+			 {
+			   TtaSetItemOff (newdoc, 1, File, BReload);
+			   /* invalid the menu Views */
+			   TtaSetMenuOff (newdoc, 1, Views);
+			 }
+		       TtaSetMenuOff (newdoc, 1, Types);
+		       TtaSetMenuOff (newdoc, 1, Links);
+		       TtaSetMenuOff (newdoc, 1, Style);
+		       TtaSetMenuOff (newdoc, 1, Special);
+		       TtaSetMenuOff (newdoc, 1, Attributes_);
+		       TtaSetMenuOff (newdoc, 1, Help_);
 		     }
 		   else
 		     {
-		       TtaSetItemOff (newdoc, 1, File, BReload);
-		       /* invalid the menu Views */
-		       TtaSetMenuOff (newdoc, 1, Views);
+		       /* it's a simple HTML document */
+		       DocumentTypes[newdoc] = docHTML;
+		       TtaSetToggleItem (newdoc, 1, Edit_, TEditMode, TRUE);
 		     }
-		   TtaSetMenuOff (newdoc, 1, Types);
-		   TtaSetMenuOff (newdoc, 1, Links);
-		   TtaSetMenuOff (newdoc, 1, Style);
-		   TtaSetMenuOff (newdoc, 1, Special);
-		   TtaSetMenuOff (newdoc, 1, Attributes_);
-		   TtaSetMenuOff (newdoc, 1, Help_);
-		 }
-	       else
-		 {
-		   /* it's a simple HTML document */
-		   DocumentTypes[newdoc] = docHTML;
-		   TtaSetToggleItem (newdoc, 1, Edit_, TEditMode, TRUE);
 		 }
 	     }
 	   else

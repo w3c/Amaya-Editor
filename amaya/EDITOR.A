@@ -210,6 +210,7 @@ MENUS
 
 	view:1 Help_ button:BInformation -> HelpAmaya;
 	view:1 Help_ button:BAtW3C -> HelpAtW3C;
+	view:1 Help_ Separator;
 	view:1 Help_ button:BHelpBrowsing -> HelpBrowsing;
 	view:1 Help_ button:BHelpSelecting -> HelpSelecting;
 	view:1 Help_ button:B -> HelpSearching;
