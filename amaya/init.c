@@ -2341,6 +2341,9 @@ ThotBool	    history;
 		   DocumentTypes[newdoc] == docTextRO ||
 		   DocumentTypes[newdoc] == docCSS ||
 		   DocumentTypes[newdoc] == docCSSRO);
+      /* Now we forget the method CE_INIT. It's a standard method */
+      if (DocumentMeta[newdoc]->method == CE_INIT)
+	DocumentMeta[newdoc]->method = CE_ABSOLUTE;
       StartParser (newdoc, tempdocument, documentname, tempdir, pathname, plainText);
       TtaFreeMemory (tempdir);
       if (!plainText)
