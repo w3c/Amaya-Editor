@@ -175,7 +175,7 @@ static ThotBool IsDifferredTable (PtrAbstractBox table, PtrAbstractBox cell,
 		   (pLockRel->LockRCell[i] == NULL || pLockRel->LockRCell[i] == cell))
 	    /* the table is already registered */
 	    return TRUE;
-	  else if (DoUnlock1 &&
+	  else if (DoUnlock1 && pLockRel->LockRTable[i] &&
 		   !IsParentBox (table->AbBox, pLockRel->LockRTable[i]->AbBox))
 	    /* another differed table is enclosed by the same table */
 	    {
@@ -2048,16 +2048,14 @@ static void    UnlockTableFormatting ()
 		  if (IsDead (table))
 		    /* nothing to do more on this table */
 		    pLockRel->LockRTable[i] = NULL;
+		  /* there is a change within a specific cell */
+		  CheckedTable = table;
 		  if (cell && cell->AbBox)
 		    /* there is a change within a specific cell */
 		    SetCellWidths (cell, table, pLockRel->LockRFrame[i]);
 		  else
-		    {
-		      /* there is a change within a specific cell */
-		      CheckedTable = table;
-		      SetTableWidths (table, pLockRel->LockRFrame[i]);
-		      CheckedTable = NULL;
-		    }
+		    SetTableWidths (table, pLockRel->LockRFrame[i]);
+		  CheckedTable = NULL;
 		}
 	      /* next entry */
 	      i--;
