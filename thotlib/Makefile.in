@@ -88,6 +88,8 @@ THOTK_OBJ = \
 	base/message.o \
 	base/platform.o \
 	base/registry.o \
+	base/registry_wx.o \
+	base/message_wx.o \
 	base/actions.o \
 	base/units.o \
 	document/externalref.o \
@@ -294,8 +296,6 @@ libThotEditor.a : $(THOTK_OBJ) $(DISPLAY_OBJ) $(EDITOR_OBJ)
 #
 
 PRINT_OBJ= \
-	base/message_wx.o \
-	base/registry_wx.o \
 	dialogue/AmayaPrintNotify.o \
 	dialogue/nodialog.o \
 	tree/paginatePP.o \

@@ -6879,18 +6879,18 @@ void InitAmaya (NotifyEvent * event)
 
    /* initialize icons */
 #ifdef _WX
-   stopR         = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "stop.gif") );
+   stopR         = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"stop.gif") );
    stopN         = (ThotIcon) 0;
-   iconSave      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "save.gif") );
+   iconSave      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"save.gif") );
    iconSaveNo    = (ThotIcon) 0;
-   iconFind      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "find.gif") );
-   iconReload    = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "reload.gif") );
-   iconHome      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "home.gif") );
-   iconBack      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "back.gif") );
+   iconFind      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"find.gif") );
+   iconReload    = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"reload.gif") );
+   iconHome      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"home.gif") );
+   iconBack      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"back.gif") );
    iconBackNo    = (ThotIcon) 0;
-   iconForward   = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "forward.gif") );
+   iconForward   = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"forward.gif") );
    iconForwardNo = (ThotIcon) 0;
-   iconPrint     = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "print.gif") );
+   iconPrint     = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"print.gif") );
    iconI = (ThotIcon) 0;
    iconINo = (ThotIcon) 0;
    iconB = (ThotIcon) 0;
