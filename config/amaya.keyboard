@@ -71,6 +71,8 @@ Ctrl <Key>Home:     TtcPageTop()
 Ctrl <Key>End:      TtcPageEnd() 
 Alt <Key>Return:    DoAction()
 Alt <Key>Home:      GoToHome()
+Shift Alt <Key><:   TtcInsertChar("\253")
+Shift Alt <Key>>:   TtcInsertChar("\273")
 
 #File menu 
 Shift Ctrl <Key>N:                 ChangeTitle()

@@ -889,25 +889,6 @@ static gboolean CallPopGTK (GtkWidget *widget, gpointer data)
 #endif /* _GTK */
 
 /*----------------------------------------------------------------------
-  Callback for a scrolled window (keypress)
-  ----------------------------------------------------------------------*/
-#ifdef _GTK
-static gboolean scr_popup_key_press (GtkWidget * widget, GdkEventKey * event, gpointer data)
-{
-  if (event->keyval == GDK_Escape) 
-    {
-      formKillGTK (widget, NULL, data);
-      return TRUE;
-    }
-  else if (event->keyval == GDK_Return
-	   || event->keyval == GDK_space)
-    return (CallPopGTK (widget, data));
-  else
-    return FALSE;
-}
-#endif /* _GTK */
-
-/*----------------------------------------------------------------------
    Callback pour un bouton du sous-menu de formulaire                 
   ----------------------------------------------------------------------*/
 static void CallRadio (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
@@ -1136,6 +1117,26 @@ static void formKillGTK (GtkWidget *widget, GdkEvent *event, gpointer data)
       catalogue->Cat_Type == CAT_POPUP ||
       catalogue->Cat_Type == CAT_SCRPOPUP)
     TtaDestroyDialogue (catalogue->Cat_Ref);
+}
+#endif /* _GTK */
+
+/*----------------------------------------------------------------------
+  Callback for a scrolled window (keypress)
+  ----------------------------------------------------------------------*/
+#ifdef _GTK
+static gboolean scr_popup_key_press (GtkWidget *widget, GdkEventKey *event,
+				     gpointer data)
+{
+  if (event->keyval == GDK_Escape) 
+    {
+      formKillGTK (widget, NULL, data);
+      return TRUE;
+    }
+  else if (event->keyval == GDK_Return
+	   || event->keyval == GDK_space)
+    return (CallPopGTK (widget, data));
+  else
+    return FALSE;
 }
 #endif /* _GTK */
 

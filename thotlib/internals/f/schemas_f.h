@@ -82,9 +82,9 @@ extern void TtaAppendXmlElement ( char *XMLName,
                                   ElementType *elType,
                                   char **mappedName,
                                   Document document );
-extern void TtaGetXmlElementType ( char* XMLName,
+extern void TtaGetXmlElementType ( char *XMLName,
                                    ElementType *elType,
-                                   char** mappedName,
+                                   char **mappedName,
                                    Document doc );
 extern void TtaGetXmlAttributeType ( char* XMLName,
                                      AttributeType *attrType,
@@ -180,9 +180,9 @@ extern void TtaAppendXmlElement (/* char *XMLName,
                                     ElementType *elType,
                                     char **mappedName,
                                     Document document */);
-extern void TtaGetXmlElementType (/* char* XMLName,
+extern void TtaGetXmlElementType (/* char *XMLName,
                                      ElementType *elType,
-                                     char** mappedName,
+                                     char **mappedName,
                                      Document doc */);
 extern void TtaGetXmlAttributeType (/* char* XMLName,
                                        AttributeType *attrType,

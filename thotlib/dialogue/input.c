@@ -548,67 +548,66 @@ void WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam,
   ----------------------------------------------------------------------*/
 gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
 {
-   int                 status;
-   int                 PicMask;
-   int                 frame;
-   unsigned int        state, save;
-   unsigned char       string[2];
-   KeySym              KS;
-   GtkWidget          *drawing_area;
-   GtkEntry           *textzone;
+  int                 status;
+  int                 PicMask;
+  int                 frame;
+  unsigned int        state, save;
+  unsigned char       string[2];
+  KeySym              KS;
+  GtkWidget          *drawing_area;
+  GtkEntry           *textzone;
 
-   frame = (int) data;
-   if (frame > MAX_FRAME)
-     frame = 0;
-   /* the drawing area is the main zone where keypress event must be active */
-   drawing_area = FrameTable[frame].WdFrame;
-   /* Focus is on all the drawing frame : 
-      Drawing area and his hiden text catcher (for multikey),
-      and the URLtext textzone, 
-      so we must now know where is the focus, 
-      to analyse the meaning of the keypress
-      and setting it on one of the  textfields*/
-   if (FrameTable[frame].Text_Zone[1])
-       {
-	   
-	 if (GTK_WIDGET_HAS_FOCUS (FrameTable[frame].Text_Zone[1]))
-	    { 
-		 /* We're in the url zone*/
-		 return FALSE;
-	    } 
-	 else
-	    { 
-		 /* We're in the drawing so get the hidden textfield adress*/		 
-		 textzone = gtk_object_get_data (GTK_OBJECT (drawing_area), "Text_catcher");
-		 gtk_widget_grab_focus (GTK_WIDGET(textzone));
-	     }
-     }
+  frame = (int) data;
+  if (frame > MAX_FRAME)
+    frame = 0;
+  /* the drawing area is the main zone where keypress event must be active */
+  drawing_area = FrameTable[frame].WdFrame;
+  /* Focus is on all the drawing frame : 
+     Drawing area and his hiden text catcher (for multikey),
+     and the URLtext textzone, 
+     so we must now know where is the focus, 
+     to analyse the meaning of the keypress
+     and setting it on one of the  textfields*/
+  if (FrameTable[frame].Text_Zone[1])
+    {
+      if (GTK_WIDGET_HAS_FOCUS (FrameTable[frame].Text_Zone[1]))
+	{ 
+	  /* We're in the url zone*/
+	  return FALSE;
+	} 
+      else
+	{ 
+	  /* We're in the drawing so get the hidden textfield adress*/		 
+	  textzone = gtk_object_get_data (GTK_OBJECT (drawing_area), "Text_catcher");
+	  gtk_widget_grab_focus (GTK_WIDGET(textzone));
+	}
+    }
 
-   status = 0;
-   /* control, alt and mouse status bits of the state are ignored */
-   state = event->state & (GDK_SHIFT_MASK | GDK_LOCK_MASK | GDK_MOD3_MASK);
+  status = 0;
+  /* control, alt and mouse status bits of the state are ignored */
+  state = event->state & (GDK_SHIFT_MASK | GDK_LOCK_MASK | GDK_MOD3_MASK);
 
-   strncpy(string, event->string, 2);
-   KS = event->keyval;
-   if (event->state != state)
-     {
-       save = event->state;
-       event->state = state;
-       state = save;
-     }
-   PicMask = 0;
-   if (state & GDK_SHIFT_MASK)
-      PicMask |= THOT_MOD_SHIFT;
-   /*if (state & GDK_LOCK_MASK)
-     PicMask |= THOT_MOD_SHIFT;*/
-   if (state & GDK_CONTROL_MASK)
-       PicMask |= THOT_MOD_CTRL;
-   if (state & GDK_MOD1_MASK || state & GDK_MOD4_MASK)
-      PicMask |= THOT_MOD_ALT;
-   if (event->keyval == GDK_space)
-     event->length = 1;
-   ThotInput (frame, &string[0], event->length, PicMask, KS);
-   return FALSE;
+  strncpy(string, event->string, 2);
+  KS = event->keyval;
+  if (event->state != state)
+    {
+      save = event->state;
+      event->state = state;
+      state = save;
+    }
+  PicMask = 0;
+  if (state & GDK_SHIFT_MASK)
+    PicMask |= THOT_MOD_SHIFT;
+  /*if (state & GDK_LOCK_MASK)
+    PicMask |= THOT_MOD_SHIFT;*/
+  if (state & GDK_CONTROL_MASK)
+    PicMask |= THOT_MOD_CTRL;
+  if (state & GDK_MOD1_MASK || state & GDK_MOD4_MASK)
+    PicMask |= THOT_MOD_ALT;
+  if (event->keyval == GDK_space)
+    event->length = 1;
+  ThotInput (frame, &string[0], event->length, PicMask, KS);
+  return FALSE;
 }
 
 /*----------------------------------------------------------------------
@@ -1331,15 +1330,15 @@ void      TtaRemoveAccessKey (Document doc, unsigned int key)
    InitTranslations
    intializes the keybord encoding.
   ----------------------------------------------------------------------*/
-ThotTranslations      InitTranslations (char *appliname)
+ThotTranslations InitTranslations (char *appliname)
 {
-  char*             appHome;	   /* fichier de translation */
-  char              fullName[200];  /* ligne en construction pour motif */
-  char              home[200]; 
-  char              name[80]; 
-  char*               text;	   
-  char*               adr;
-  char                transText [MAX_LENGTH];
+  char               *appHome;	   /* fichier de translation */
+  char                fullName[200];  /* ligne en construction pour motif */
+  char                home[200]; 
+  char                name[80]; 
+  char               *text;	   
+  char               *adr;
+  char                transText[MAX_LENGTH];
   char                ch[80]; 
   char                line[200];  /* ligne en construction pour motif */
   char                equiv[MAX_EQUIV]; /* equivalents caracteres pour motif */
