@@ -109,7 +109,6 @@ MENUS
 	Edit_ button:BInsertBefore -> InsertBefore;
 	Edit_ button:BInsertAfter -> InsertAfter;
 	Edit_ Separator;
-	Edit_ toggle:TEditMode -> SetBrowserEditor;
 	Edit_ button:BFind -> TtcSearchText;
 	Edit_ button:BSpellCheck -> SpellCheck;
 	Edit_ button:BTransform -> TransformType;

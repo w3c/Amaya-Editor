@@ -1271,12 +1271,6 @@ void RestartParser (Document doc, char *localFile,
   else
     DocumentMeta[doc]->xmlformat = FALSE;
 
-  /* When the mode was set to browser by a parsing error,
-     restore the original mode */
-  if (!ReadOnlyDocument[doc] && 
-      !TtaGetDocumentAccessMode (doc))
-    ChangeToEditorMode (doc);
-  
   /* Removes all CSS informations linked with the document */
   RemoveDocCSSs (doc);  
   /* Clear all editing operations registered in the editing history of the
@@ -1289,7 +1283,7 @@ void RestartParser (Document doc, char *localFile,
   if (profile != parsingLevel)
     {
       TtaSetDocumentProfile (doc, parsingLevel);
-      TtaUpdateMenus (doc, 1, ReadOnlyDocument[doc]);
+      TtaUpdateMenus (doc, 1, FALSE);
     }
   /* Calls the corresponding parser */
   if (DocumentMeta[doc]->xmlformat)       

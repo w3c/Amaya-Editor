@@ -58,8 +58,6 @@
 #include "saveNo.xpm"
 #include "find.xpm"
 #include "Reload.xpm"
-#include "Browser.xpm"
-#include "Editor.xpm"
 #include "Print.xpm"
 #include "Back.xpm"
 #include "BackNo.xpm"
@@ -206,8 +204,6 @@ static ThotIcon       iconLink;
 static ThotIcon       iconLinkNo;
 static ThotIcon       iconTable;
 static ThotIcon       iconTableNo;
-static ThotIcon       iconBrowser;
-static ThotIcon       iconEditor;
 static ThotIcon       iconHome;
 #endif /* #if defined(_GTK) || defined(_WX) */
 
@@ -229,6 +225,7 @@ static ThotIcon       iconHome;
 #define iconBNo        8
 #define iconT          9
 #define iconTNo        9
+#define iconHome      10
 #define iconImage     11
 #define iconImageNo   11
 #define iconH1        12
@@ -247,9 +244,6 @@ static ThotIcon       iconHome;
 #define iconLinkNo    18
 #define iconTable     19
 #define iconTableNo   19
-#define iconBrowser   23
-#define iconEditor    26
-#define iconHome      10
 
 extern int       menu_item;
 extern char      LostPicturePath [512];
@@ -839,33 +833,6 @@ static void SetFormReadWrite (Element el, Document doc)
 
 
 /*----------------------------------------------------------------------
-   SetDocumentReadOnly
-   Set the whole document in ReadOnly mode except input elements
-  ----------------------------------------------------------------------*/
-static void SetDocumentReadOnly (Document doc)
-{
-   ElementType  elType;
-   Element      el, elForm;
-
-  TtaSetDocumentAccessMode (doc, 0);
-  el = TtaGetMainRoot (doc);
-  elType = TtaGetElementType (el);
-  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-    {
-      elType.ElTypeNum = HTML_EL_Form;
-      elForm = TtaSearchTypedElement (elType, SearchForward, el);
-      while (elForm != NULL)
-	{
-	  /* there is a form */
-	  el = TtaGetFirstChild (elForm);
-	  if (el != NULL)
-	    SetFormReadWrite (el, doc);
-	  elForm = TtaSearchTypedElement (elType, SearchForward, elForm);
-	}
-    }
-}
-
-/*----------------------------------------------------------------------
    Update the save button and the corresponding menu entry according to the
    document status.
   ----------------------------------------------------------------------*/
@@ -1062,104 +1029,6 @@ void SetTableMenuOn (Document doc, View view)
     }
 }
 
-/*----------------------------------------------------------------------
-  UpdateBrowserMenus
-  Update windows menus for the Browser mode
-  ----------------------------------------------------------------------*/
-static void UpdateBrowserMenus (Document doc)
-{
-  View       view;
- 
-  TtaChangeButton (doc, 1, iEditor, iconBrowser, TRUE);
-  TtaSetToggleItem (doc, 1, Edit_, TEditMode, FALSE);
-
-  /* Update the doctype menu */
-  UpdateDoctypeMenu (doc);
-  
-  TtaSetItemOff (doc, 1, Edit_, BUndo);
-  TtaSetItemOff (doc, 1, Edit_, BRedo);
-  TtaSetItemOff (doc, 1, Edit_, BCut);
-  TtaSetItemOff (doc, 1, Edit_, BPaste);
-  TtaSetItemOff (doc, 1, Edit_, BClear);
-  
-  if (DocumentTypes[doc] == docHTML ||
-      DocumentTypes[doc] == docSVG ||
-      DocumentTypes[doc] == docMath ||
-      DocumentTypes[doc] == docXml ||
-      DocumentTypes[doc] == docImage)
-    {
-      TtaChangeButton (doc, 1, iI, iconINo, FALSE);
-      TtaChangeButton (doc, 1, iB, iconBNo, FALSE);
-      TtaChangeButton (doc, 1, iT, iconTNo, FALSE);
-      TtaChangeButton (doc, 1, iImage, iconImageNo, FALSE);
-      TtaChangeButton (doc, 1, iH1, iconH1No, FALSE);
-      TtaChangeButton (doc, 1, iH2, iconH2No, FALSE);
-      TtaChangeButton (doc, 1, iH3, iconH3No, FALSE);
-      TtaChangeButton (doc, 1,iBullet, iconBulletNo, FALSE);
-      TtaChangeButton (doc, 1,iNum, iconNumNo, FALSE);
-      TtaChangeButton (doc, 1,iDL, iconDLNo, FALSE);
-      TtaChangeButton (doc, 1, iLink, iconLinkNo, FALSE);
-      TtaChangeButton (doc, 1, iTable, iconTableNo, FALSE);
-      SwitchIconMath (doc, 1, FALSE);
-#ifdef _SVG
-      SwitchIconGraph (doc, 1, FALSE);
-      SwitchIconLibrary (doc, 1, FALSE);
-#ifdef _GL
-      SwitchIconAnim (doc, 1, FALSE);
-#endif /*_GL*/
-#endif /* _SVG */   
-      TtaSetItemOff (doc, 1, Edit_, BSpellCheck);
-      TtaSetItemOff (doc, 1, Edit_, BTransform);
-      TtaSetMenuOff (doc, 1, Types);
-      TtaSetMenuOff (doc, 1, XMLTypes);
-      TtaSetMenuOff (doc, 1, Links);
-      TtaSetMenuOff (doc, 1, Style);
-
-      view = TtaGetViewFromName (doc, "Structure_view");
-      if (view != 0 && TtaIsViewOpen (doc, view))
-	{
-	  TtaSetItemOff (doc, view, Edit_, BCut);
-	  TtaSetItemOff (doc, view, Edit_, BPaste);
-	  TtaSetItemOff (doc, view, Edit_, BClear);
-	  TtaSetItemOff (doc, view, Edit_, BSpellCheck);
-	  TtaSetItemOff (doc, view, Edit_, BTransform);
-	  TtaSetMenuOff (doc, view, Types);
-	  TtaSetMenuOff (doc, view, XMLTypes);
-	}
-      view = TtaGetViewFromName (doc, "Alternate_view");
-      if (view != 0 && TtaIsViewOpen (doc, view))
-	{
-	  TtaSetItemOff (doc, view, Edit_, BCut);
-	  TtaSetItemOff (doc, view, Edit_, BPaste);
-	  TtaSetItemOff (doc, view, Edit_, BClear);
-	  TtaSetItemOff (doc, view, Edit_, BSpellCheck);
-	  TtaSetMenuOff (doc, view, Types);
-	  TtaSetMenuOff (doc, view, XMLTypes);
-	}
-      view = TtaGetViewFromName (doc, "Links_view");
-      if (view != 0 && TtaIsViewOpen (doc, view))
-	{
-	  TtaSetItemOff (doc, view, Edit_, BCut);
-	  TtaSetItemOff (doc, view, Edit_, BPaste);
-	  TtaSetItemOff (doc, view, Edit_, BClear);
-	  TtaSetItemOff (doc, view, Edit_, BSpellCheck);
-	  TtaSetItemOff (doc, view, Edit_, BTransform);
-	  TtaSetMenuOff (doc, view, Types);
-	  TtaSetMenuOff (doc, view, XMLTypes);
-	}
-      view = TtaGetViewFromName (doc, "Table_of_contents");
-      if (view != 0 && TtaIsViewOpen (doc, view))
-	{
-	  TtaSetItemOff (doc, view, Edit_, BCut);
-	  TtaSetItemOff (doc, view, Edit_, BPaste);
-	  TtaSetItemOff (doc, view, Edit_, BClear);
-	  TtaSetItemOff (doc, view, Edit_, BSpellCheck);
-	  TtaSetItemOff (doc, view, Edit_, BTransform);
-	  TtaSetMenuOff (doc, view, Types);
-	  TtaSetMenuOff (doc, view, XMLTypes);
-	}
-    }
-}
 
 /*----------------------------------------------------------------------
    UpdateEditorMenus 
@@ -1176,7 +1045,7 @@ void UpdateEditorMenus (Document doc)
 	       profile != L_Strict && profile != L_Basic);
 
   /* update specific menu entries */
-  TtaUpdateMenus (doc, 1, ReadOnlyDocument[doc]);
+  TtaUpdateMenus (doc, 1, FALSE);
   /* Update the doctype menu */
   UpdateDoctypeMenu (doc);
   /* structure information is active only in the structure view */
@@ -1193,8 +1062,6 @@ void UpdateEditorMenus (Document doc)
     SetTableMenuOn (doc, 1);
   else
     SetTableMenuOff (doc, 1);
-  TtaChangeButton (doc, 1, iEditor, iconEditor, TRUE);
-  TtaSetToggleItem (doc, 1, Edit_, TEditMode, TRUE);
   TtaSetItemOn (doc, 1, Edit_, BUndo);
   TtaSetItemOn (doc, 1, Edit_, BRedo);
   TtaSetItemOn (doc, 1, Edit_, BCut);
@@ -1257,7 +1124,7 @@ void UpdateEditorMenus (Document doc)
       if (view != 0 && TtaIsViewOpen (doc, view))
 	{
 	  /* update specific menu entries */
-	  TtaUpdateMenus (doc, view, ReadOnlyDocument[doc]);
+	  TtaUpdateMenus (doc, view, FALSE);
 	  TtaSetItemOn (doc, view, Edit_, BCut);
 	  TtaSetItemOn (doc, view, Edit_, BPaste);
 	  TtaSetItemOn (doc, view, Edit_, BClear);
@@ -1275,7 +1142,7 @@ void UpdateEditorMenus (Document doc)
       if (view != 0 && TtaIsViewOpen (doc, view))
 	{
 	  /* update specific menu entries */
-	  TtaUpdateMenus (doc, view, ReadOnlyDocument[doc]);
+	  TtaUpdateMenus (doc, view, FALSE);
 	  /* structure information is active only in the structure view */
 	  TtaSetItemOff (doc, view, Types, BStyle);
 	  TtaSetItemOff (doc, view, Types, BComment);
@@ -1298,7 +1165,7 @@ void UpdateEditorMenus (Document doc)
       if (view != 0 && TtaIsViewOpen (doc, view))
 	{
 	  /* update specific menu entries */
-	  TtaUpdateMenus (doc, view, ReadOnlyDocument[doc]);
+	  TtaUpdateMenus (doc, view, FALSE);
 	  /* structure information is active only in the structure view */
 	  TtaSetItemOff (doc, view, Types, BStyle);
 	  TtaSetItemOff (doc, view, Types, BComment);
@@ -1325,7 +1192,7 @@ void UpdateEditorMenus (Document doc)
       if (view != 0 && TtaIsViewOpen (doc, view))
 	{
 	  /* update specific menu entries */
-	  TtaUpdateMenus (doc, view, ReadOnlyDocument[doc]);
+	  TtaUpdateMenus (doc, view, FALSE);
 	  /* structure information is active only in the structure view */
 	  TtaSetItemOff (doc, view, Types, BStyle);
 	  TtaSetItemOff (doc, view, Types, BComment);
@@ -1347,82 +1214,6 @@ void UpdateEditorMenus (Document doc)
     }
 }
 
-/*----------------------------------------------------------------------
-   ChangeToEdotirMode
-   Similar to Editor mode except for  the variable ReadOnlyDocument
-  ----------------------------------------------------------------------*/
-void ChangeToEditorMode (Document doc)
-{
-   Document  docSel;
-
-   if (DocumentTypes[doc] == docXml)
-     /* don't allow editing mode for XML document today */
-     return;
-   docSel = TtaGetSelectedDocument ();
-   if (docSel == doc)
-     TtaUnselect (doc);
-
-   /* =============> The document is in Read-Write mode now */
-   if (TtaIsDocumentModified (doc))
-     DocStatusUpdate (doc, TRUE);
-   /* change the document status */
-   TtaSetDocumentAccessMode (doc, 1);
-   /* update windows menus */
-   UpdateEditorMenus (doc);
-}
-
-/*----------------------------------------------------------------------
-   ChangeToBrowserMode
-   Similar to Browser mode except for the variable ReadOnlyDocument
-  ----------------------------------------------------------------------*/
-void ChangeToBrowserMode (Document doc)
-{
-   Document  docSel;
-
-   docSel = TtaGetSelectedDocument ();
-   if (docSel == doc)
-     TtaUnselect (doc);
-
-   /* =============> The document is in Read-Only mode now */
-   /* change the document status */
-   SetDocumentReadOnly (doc);
-   /* update windows menus */
-   UpdateBrowserMenus (doc);
-}
-
-/*----------------------------------------------------------------------
-   Change the Browser/Editor mode                    
-  ----------------------------------------------------------------------*/
-void SetBrowserEditor (Document doc, View view)
-{
-   Document  docSel;
-
-   docSel = TtaGetSelectedDocument ();
-   if (docSel == doc)
-     TtaUnselect (doc);
-
-   if (TtaGetDocumentAccessMode (doc))
-     {
-       /* =============> The document is in Read-Only mode now */
-       /* change the document status */
-       SetDocumentReadOnly (doc);
-       ReadOnlyDocument[doc] = TRUE;
-       /* update windows menus */
-       UpdateBrowserMenus (doc);
-     }
-   else
-     {
-       /* =============> The document is in Read-Write mode now */
-       /* change the document status */
-       ReadOnlyDocument[doc] = FALSE;
-       TtaSetDocumentAccessMode (doc, 1);
-       /* change the document status */
-       if (TtaIsDocumentModified (doc))
-	 DocStatusUpdate (doc, TRUE);
-       /* update windows menus */
-       UpdateEditorMenus (doc);
-     }
-}
 
 /*----------------------------------------------------------------------
   ShowLogFile
@@ -1549,7 +1340,6 @@ void CheckParsingErrors (Document doc)
 	    ParseAsHTML (doc, 1);
 	  else
 	    {
-	      ChangeToBrowserMode (doc);
 	      if (ExtraChoice || UserAnswer)
 		{
 		  ShowLogFile (doc, 1);
@@ -2595,9 +2385,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
        TtaGetDocumentPageId( doc, -1, &page_id, &page_position );
 #endif /* _WX */
       /* keep in memory if the closed document is in read-only mode */
-      if (ReadOnlyDocument[doc])
-	readOnly = TRUE;
-      else if (!TtaGetDocumentAccessMode (doc))
+      if (!TtaGetDocumentAccessMode (doc))
 	/* if there is a parsing error/warning for the old document */
 	reinitialized = TRUE;
 
@@ -2911,7 +2699,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 		 }
 	       else
 		 {
-		   ReadOnlyDocument[doc] = TRUE;
 		   TtaSetDocumentAccessMode (doc, 0);
 		 }
 	     }
@@ -2993,23 +2780,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	   iHome = TtaAddButton (doc, 1, iconHome, (Proc)GoToHome, "GoToHome",
 				 TtaGetMessage (AMAYA, AM_BUTTON_HOME),
 				 TBSTYLE_BUTTON, TRUE);
-
-#ifdef _WINGUI
-	   /* cannot change the browser icone -> use active instead of */
-	   iEditor = TtaAddButton (doc, 1, iconBrowser, (Proc)SetBrowserEditor,
-				   "SetBrowserEditor",
-				   TtaGetMessage (AMAYA, AM_BUTTON_BrowseEdit),
-				   TBSTYLE_BUTTON, TRUE);
-	   TtaChangeButton (doc, 1, iEditor, iconEditor, TRUE);
-#endif /* _WINGUI */
-
-#if defined(_GTK)
-	   iEditor = TtaAddButton (doc, 1, iconEditor, (Proc)SetBrowserEditor,
-				   "SetBrowserEditor",
-				   TtaGetMessage (AMAYA, AM_BUTTON_BrowseEdit),
-				   TBSTYLE_BUTTON, TRUE);
-#endif /* defined(_GTK) */
-     
 	   /* SEPARATOR */
 	   TtaAddButton (doc, 1, None, NULL, NULL, NULL, TBSTYLE_SEP, FALSE);
 	   iSave = TtaAddButton (doc, 1, iconSaveNo, (Proc)SaveDocument,
@@ -3258,10 +3028,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	     }
 	 }
      }
-
-   /* set the document in Read-Only mode */
-   if (readOnly)
-     ReadOnlyDocument[doc] = TRUE;
    return (doc);
 }
 
@@ -3941,7 +3707,6 @@ static Document LoadDocument (Document doc, char *pathname,
 	      /* store the profile of the new document */
 	      /* and update the menus according to it */
 	      TtaSetDocumentProfile (newdoc, docProfile);
-	      /*TtaUpdateMenus (newdoc, 1, ReadOnlyDocument[newdoc]);*/
 	    }
 	}
       else
@@ -3960,7 +3725,6 @@ static Document LoadDocument (Document doc, char *pathname,
 			DIR_SEP, newdoc, DIR_SEP, "contain.html");
 	      CreateHTMLContainer (pathname, documentname, tempfile, TRUE);
 	    }
-	  ChangeToBrowserMode (doc);
 	}
 
       /* what we have to do if doc and targetDocument are different */
@@ -4159,14 +3923,6 @@ static Document LoadDocument (Document doc, char *pathname,
    
       /* Update the Doctype menu */
       UpdateDoctypeMenu (newdoc);
-      if (ReadOnlyDocument[newdoc])
-	{
-	  UpdateBrowserMenus (newdoc);
-	  SetDocumentReadOnly (newdoc);
-	}
-      else
-	UpdateEditorMenus (newdoc);
-
       if (*inNewWindow || newdoc != doc)
 	/* the document is displayed in a different window */
 	/* reset the history of the new window */
@@ -4261,8 +4017,7 @@ void Reload_callback (int doc, int status, char *urlName,
 	  identifier, as given by the thotlib */
        res = LoadDocument (newdoc, urlName, form_data, NULL, method,
 			   tempfile, documentname, http_headers, FALSE, &InNewWindow);
-       if (!ReadOnlyDocument[doc])
-	 UpdateEditorMenus (doc);
+       UpdateEditorMenus (doc);
 
        if (res == 0)
 	 {
@@ -4631,12 +4386,6 @@ void ShowSource (Document document, View view)
 	 StartParser (sourceDoc, localFile, documentname, tempdir,
 		      localFile, TRUE, FALSE);
 	 SetWindowTitle (document, sourceDoc, 0);
-	 /* Set the document read-only when needed */
-	 if (ReadOnlyDocument[document])
-	   {
-	     ReadOnlyDocument[sourceDoc] = TRUE;
-	     SetDocumentReadOnly (sourceDoc);
-	   }
     	 /* Switch the synchronization entry */
     	 if (TtaIsDocumentModified (document))
     	    DocStatusUpdate (document, TRUE);
@@ -4670,10 +4419,7 @@ void ShowStructure (Document doc, View view)
 	{
 	  TtcSwitchButtonBar (doc, structView); /* no button bar */
 	  TtcSwitchCommands (doc, structView); /* no command open */
-	  if (ReadOnlyDocument[doc])
-	    UpdateBrowserMenus (doc);
-	  else
-	    UpdateEditorMenus (doc);
+	  UpdateEditorMenus (doc);
 	}
     }
   SetWindowTitle (doc, doc, 0);
@@ -4702,10 +4448,7 @@ void ShowAlternate (Document doc, View view)
 	  SetWindowTitle (doc, doc, altView);
 	  TtcSwitchButtonBar (doc, altView); /* no button bar */
 	  TtcSwitchCommands (doc, altView); /* no command open */
-	  if (ReadOnlyDocument[doc])
-	    UpdateBrowserMenus (doc);
-	  else
-	    UpdateEditorMenus (doc);
+	  UpdateEditorMenus (doc);
 	}
     }
 }
@@ -4734,10 +4477,7 @@ void ShowLinks (Document doc, View view)
 	  SetWindowTitle (doc, doc, linksView);
 	  TtcSwitchButtonBar (doc, linksView); /* no button bar */
 	  TtcSwitchCommands (doc, linksView); /* no command open */
-      	  if (ReadOnlyDocument[doc])
-	    UpdateBrowserMenus (doc);
-	  else
-	    UpdateEditorMenus (doc);
+	  UpdateEditorMenus (doc);
 	}
     }
 }
@@ -4766,10 +4506,7 @@ void ShowToC (Document doc, View view)
 	  SetWindowTitle (doc, doc, tocView);
 	  TtcSwitchButtonBar (doc, tocView); /* no button bar */
 	  TtcSwitchCommands (doc, tocView); /* no command open */
-	  if (ReadOnlyDocument[doc])
-	    UpdateBrowserMenus (doc);
-	  else
-	    UpdateEditorMenus (doc);
+	  UpdateEditorMenus (doc);
 	}
     }
 }
@@ -6901,10 +6638,6 @@ void FreeAmayaIcons ()
     delete iconForward;
   if (iconForwardNo) 
     delete iconForwardNo;
-  if (iconBrowser) 	
-    delete iconBrowser;
-  if (iconEditor) 	
-    delete iconEditor;
   if (iconH1) 	
     delete iconH1;
   if (iconH1No) 	
@@ -6961,8 +6694,6 @@ void FreeAmayaIcons ()
   iconBackNo = (ThotIcon) 0;
   iconForward = (ThotIcon) 0;
   iconForwardNo = (ThotIcon) 0;
-  iconBrowser = (ThotIcon) 0;
-  iconEditor = (ThotIcon) 0;
   iconH1 = (ThotIcon) 0;
   iconH1No = (ThotIcon) 0;
   iconH2 = (ThotIcon) 0;
@@ -7100,8 +6831,6 @@ void InitAmaya (NotifyEvent * event)
    iconBackNo = (ThotIcon) 0;
    iconForward = (ThotIcon) 0;
    iconForwardNo = (ThotIcon) 0;
-   iconBrowser = (ThotIcon) 0;
-   iconEditor = (ThotIcon) 0;
    iconH1 = (ThotIcon) 0;
    iconH1No = (ThotIcon) 0;
    iconH2 = (ThotIcon) 0;
@@ -7144,8 +6873,6 @@ void InitAmaya (NotifyEvent * event)
    iconBNo = (ThotIcon) 0;
    iconT = (ThotIcon) 0;
    iconTNo = (ThotIcon) 0;
-   iconBrowser = (ThotIcon) 0;
-   iconEditor = (ThotIcon) 0;
    iconH1 = (ThotIcon) 0;
    iconH1No = (ThotIcon) 0;
    iconH2 = (ThotIcon) 0;
@@ -7184,8 +6911,6 @@ void InitAmaya (NotifyEvent * event)
    iconBackNo = (ThotIcon) TtaCreatePixmapLogo (BackNo_xpm);
    iconForward = (ThotIcon) TtaCreatePixmapLogo (Forward_xpm);
    iconForwardNo = (ThotIcon) TtaCreatePixmapLogo (ForwardNo_xpm);
-   iconBrowser = (ThotIcon) TtaCreatePixmapLogo (Browser_xpm);
-   iconEditor = (ThotIcon) TtaCreatePixmapLogo (Editor_xpm);
    iconH1 = (ThotIcon) TtaCreatePixmapLogo (H1_xpm);
    iconH1No = (ThotIcon) TtaCreatePixmapLogo (H1No_xpm);
    iconH2 = (ThotIcon) TtaCreatePixmapLogo (H2_xpm);

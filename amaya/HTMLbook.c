@@ -1015,7 +1015,7 @@ static void CloseMakeBook (Document document)
   SetInternalLinks (document);
   /* if the document changed force the browser mode */
   if (SubDocs)
-    SetBrowserEditor (document,0);
+    /* send a warning to the user to avoid to save this document */;
   /* remove registered  sub-documents */
   FreeSubDocTable ();
   DocBook = 0;

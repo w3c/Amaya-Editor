@@ -265,7 +265,6 @@ HelpXml
 &CreateDoctypeHtmlTransitional
 &CreateDoctypeHtmlStrict
 &SaveDocument
-SetBrowserEditor
 &TransformType
 &TtcCutSelection
 TtcCopySelection

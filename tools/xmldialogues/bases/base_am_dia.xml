@@ -799,16 +799,6 @@
 	<message xml:lang="fi">&amp;Lisää</message>
 	<message xml:lang="tr">&amp;Ekle</message>
 </label>
-<label define="TEditMode">
-	<message xml:lang="en">&amp;Editor Mode</message>
-	<message xml:lang="fr">Mode &amp;éditeur</message>
-	<message xml:lang="de">Editormodus</message>
-	<message xml:lang="it">Modo Editor</message>
-	<message xml:lang="es">&amp;Modo Edición</message>
-	<message xml:lang="pt">Modo Editor</message>
-	<message xml:lang="fi">Muokkaustila</message>
-	<message xml:lang="tr">Editör modu</message>
-</label>
 <label define="BFind">
 	<message xml:lang="en">&amp;Find...</message>
 	<message xml:lang="fr">Rec&amp;hercher...</message>
