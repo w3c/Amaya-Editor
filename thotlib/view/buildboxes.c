@@ -2809,9 +2809,6 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 			   pCurrentBox->BxYOrg + pCurrentBox->BxHeight + k);
 #else /* _GL */  
 
-	      /* Compute Bounding Box*/
-	      ComputeABoundingBox (pCurrentBox->BxAbstractBox, frame);
-
 	      DefRegion (frame, pCurrentBox->BxClipX - k,
 			 pCurrentBox->BxClipY - k,
 			 pCurrentBox->BxClipX + pCurrentBox->BxClipW + k,
