@@ -2550,7 +2550,24 @@ View view;
 #endif /* __STDC__ */
 {
 #ifdef ANNOTATIONS
-  ANNOT_Create (doc, view);
+  ANNOT_Create (doc, view, TRUE);
+#endif /* ANNOTATIONS */
+}
+
+/*----------------------------------------------------------------------
+  AnnotateDocument
+  Frontend to the function that creates an annotation
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void AnnotateSelection (Document doc, View view)
+#else 
+void AnnotateSelection (doc, view)
+Document doc;
+View view;
+#endif /* __STDC__ */
+{
+#ifdef ANNOTATIONS
+  ANNOT_Create (doc, view, FALSE);
 #endif /* ANNOTATIONS */
 }
 

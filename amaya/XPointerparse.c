@@ -678,15 +678,22 @@ static void SelectToNode (Document doc, nodeInfo *node)
   ----------------------------------------------------------------------*/
 void XPointer_select (XPointerContextPtr ctx)
 {
+  Element root;
+
   if (!ctx || ctx->error)
     return;
 
   if (TtaGetSelectedDocument () == ctx->doc)
     TtaUnselect (ctx->doc);
 
-  SelectNode (ctx->doc, &(ctx->nodeStart));
-  if (ctx->type == RANGE_TO)
-    SelectToNode (ctx->doc, &(ctx->nodeEnd));
+  root = TtaGetMainRoot (ctx->doc);
+  /* only do the selection if it's not the root */
+  if (ctx->nodeStart.el != root)
+    {
+      SelectNode (ctx->doc, &(ctx->nodeStart));
+      if (ctx->type == RANGE_TO)
+	SelectToNode (ctx->doc, &(ctx->nodeEnd));
+    }
 }
 
 /*----------------------------------------------------------------------

@@ -237,7 +237,7 @@ MENUS
 
 	Attributes_;
 
-	view:1 Annotations_ button:BAnnotateSel -> AnnotateDocument;
+	view:1 Annotations_ button:BAnnotateSel -> AnnotateSelection;
 	view:1 Annotations_ button:BAnnotateDocument -> AnnotateDocument;
 	Annotations_ Separator;
 	view:1 Annotations_ button:BPostAnnot -> PostAnnotation;

@@ -583,15 +583,17 @@ ThotBool firstF;
   XPointer_build
   If there is a selection in the document, it returns a pointer
   to an  XPointer expression that represents what was selected.
+  If useDocRoot is true, then it computes an XPointer for the
+  document's root.
   It's up to the caller to free the returned string.
   Returns NULL in case of failure.
   N.B., the view parameter isn't used, but it's included to be coherent
   with the function API.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char * XPointer_build (Document doc, View view)
+char * XPointer_build (Document doc, View view, ThotBool useDocRoot)
 #else
-char * XPointer_build (doc, view)
+char * XPointer_build (doc, view, useDocRoot)
 Document doc;
 View view;
 #endif
@@ -624,42 +626,56 @@ View view;
     return NULL;
 
   /* is the document selected? */
-  if (!TtaIsDocumentSelected (doc))
-    return NULL;
-  
-  /* get the first selected element */
-  TtaGiveFirstSelectedElement (doc, &firstEl, &firstCh, &i);
-  printf ("first Ch is %d, i is %d\n", firstCh, i);
-
-  AdjustSelMode (firstEl, &firstCh, i, &mode);
-
-  if (firstEl == NULL)
-    return NULL; /* ERROR, there is no selection */
-
-  /* is it a caret or an extension selection? */
-  if (TtaIsSelectionEmpty ())
-    lastEl = NULL;
-  else
+  if (useDocRoot)
     {
-      TtaGiveLastSelectedElement (doc, &lastEl, &i, &lastCh);
-#ifdef DEBUG_XPOINTER
-      printf ("last Ch is %d, i is %d\n", lastCh, i);
-#endif 
-      AdjustSelMode (lastEl, &lastCh, i, &mode);
-    }
-
-  /* if the selection is in the same element, adjust the first element's
-   length */
-  if (firstEl == lastEl)
-    {
-      firstLen = lastCh - firstCh + 1;
+      firstEl = TtaGetMainRoot (doc);
+      if (!firstEl)
+	return NULL; /* something went wrong */
+      firstLen = 0;
+      firstCh = 0;
       lastEl = NULL;
       mode  = mode & ~(SEL_START_POINT | SEL_END_POINT);
     }
   else
     {
-      firstLen = 1;
-      mode |= SEL_RANGE_TO;
+      if (!TtaIsDocumentSelected (doc))
+	/* nothing was selected */
+	return NULL;
+  
+      /* get the first selected element */
+      TtaGiveFirstSelectedElement (doc, &firstEl, &firstCh, &i);
+#ifdef DEBUG_XPOINTER
+      printf ("first Ch is %d, i is %d\n", firstCh, i);
+#endif 
+      AdjustSelMode (firstEl, &firstCh, i, &mode);
+      
+      if (firstEl == NULL)
+	return NULL; /* ERROR, there is no selection */
+
+      /* is it a caret or an extension selection? */
+      if (TtaIsSelectionEmpty ())
+	lastEl = NULL;
+      else
+	{
+	  TtaGiveLastSelectedElement (doc, &lastEl, &i, &lastCh);
+#ifdef DEBUG_XPOINTER
+	  printf ("last Ch is %d, i is %d\n", lastCh, i);
+#endif 
+	  AdjustSelMode (lastEl, &lastCh, i, &mode);
+	}
+      /* if the selection is in the same element, adjust the first element's
+	 length */
+      if (firstEl == lastEl)
+	{
+	  firstLen = lastCh - firstCh + 1;
+	  lastEl = NULL;
+	  mode  = mode & ~(SEL_START_POINT | SEL_END_POINT);
+	}
+      else
+	{
+	  firstLen = 1;
+	  mode |= SEL_RANGE_TO;
+	}
     }
 
   firstXpath = XPointer_ThotEl2XPath (firstEl, firstCh, firstLen, mode, TRUE);

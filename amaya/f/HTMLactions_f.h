@@ -17,8 +17,10 @@ extern void FollowTheLink_callback ( int targetDocument,
                                      void * context );
 extern void DoAction ( Document doc,
                        View view );
+extern ThotBool IgnoreEvent ( NotifyElement *event );
 extern ThotBool DoubleClick ( NotifyElement *event );
 extern ThotBool SimpleClick ( NotifyElement *event );
+extern ThotBool AnnotSimpleClick ( NotifyElement *event );
 extern void UpdateTitle ( Element el,
                           Document doc );
 extern void FreeDocumentResource ( Document doc );
@@ -43,8 +45,10 @@ extern void FollowTheLink_callback (/* int targetDocument,
                                        void * context */);
 extern void DoAction (/* Document doc,
                          View view */);
+extern ThotBool IgnoreEvent (/* NotifyElement *event */);
 extern ThotBool DoubleClick (/* NotifyElement *event */);
 extern ThotBool SimpleClick (/* NotifyElement *event */);
+extern ThotBool AnnotSimpleClick (/* NotifyElement *event */);
 extern void UpdateTitle (/* Element el,
                             Document doc */);
 extern void FreeDocumentResource (/* Document doc */);

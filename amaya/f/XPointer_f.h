@@ -14,7 +14,8 @@ extern Element SearchSiblingIndex ( Element root,
 extern ThotBool SearchTextPosition ( Element *mark,
                                      int *firstCh );
 extern char * XPointer_build ( Document doc,
-                               View view );
+                               View view,
+                               ThotBool useDocRoot );
 
 #else /* __STDC__ */
 
@@ -26,7 +27,8 @@ extern Element SearchSiblingIndex (/* Element root,
 extern ThotBool SearchTextPosition (/* Element *mark,
                                        int *firstCh */);
 extern char * XPointer_build (/* Document doc,
-                                 View view */);
+                                 View view,
+                                 ThotBool useDocRoot */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

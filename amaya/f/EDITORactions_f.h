@@ -159,6 +159,8 @@ extern void ConfigAnnot ( Document doc,
                           View view );
 extern void AnnotateDocument ( Document doc,
                                View view );
+extern void AnnotateSelection ( Document doc,
+                                View view );
 extern void LoadAnnotations ( Document doc,
                               View view );
 extern void PostAnnotation ( Document doc,
@@ -325,6 +327,8 @@ extern void ConfigAnnot (/* Document doc,
                             View view */);
 extern void AnnotateDocument (/* Document doc,
                                  View view */);
+extern void AnnotateSelection (/* Document doc,
+                                  View view */);
 extern void LoadAnnotations (/* Document doc,
                                 View view */);
 extern void PostAnnotation (/* Document doc,
