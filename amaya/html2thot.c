@@ -4416,7 +4416,7 @@ char               *pathURL;
                        firstTerm, lastTerm, termList, child, parent, firstEntry,
                        lastEntry, glossary, list, elText, previous, elLinks,
                        lastLink, elMetas, lastMeta, elScripts, lastScript;
-   boolean             ok;
+   boolean             ok, moved;
 
    /* the root element only accepts elements HEAD, BODY and Comment as */
    /* children */
@@ -4640,18 +4640,20 @@ char               *pathURL;
 	lastChild = NULL;
 	el = TtaGetFirstChild (rootElement);
 	previous = elHead;
+	moved = FALSE;
 	while (el != NULL)
 	  {
 	     nextEl = el;
 	     TtaNextSibling (&nextEl);
 	     elType = TtaGetElementType (el);
-	     if (elType.ElTypeNum == HTML_EL_Invalid_element ||
-		 elType.ElTypeNum == HTML_EL_Comment_)
-		/* don't move Comments and Invalid_elements */
-		previous = el;
-	     else if (elType.ElTypeNum == HTML_EL_BODY)
+	     if (elType.ElTypeNum == HTML_EL_BODY)
 		/* stop */
 		nextEl = NULL;
+	     else if (!moved && (elType.ElTypeNum == HTML_EL_Invalid_element ||
+				 elType.ElTypeNum == HTML_EL_Comment_))
+		/* don't move Comments and Invalid_elements if the previous
+		   element has not been moved */
+		previous = el;
 	     else if (elType.ElTypeNum != HTML_EL_HEAD)
 		/* this element should be a child of BODY */
 	       {
@@ -4673,6 +4675,7 @@ char               *pathURL;
 		  else
 		     TtaInsertSibling (el, lastChild, FALSE, theDocument);
 		  lastChild = el;
+		  moved = TRUE;
 	       }
 	     /* get next child of the root */
 	     el = nextEl;
