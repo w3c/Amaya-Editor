@@ -238,7 +238,7 @@ void AmayaCharStylePanel::OnApplyFontFamily( wxCommandEvent& event )
 {
   int font_family    = XRCCTRL(*m_pPanelContentDetach,"wxID_CHOICE_FONTFAMILY",wxChoice)->GetSelection();
   ThotCallback (NumMenuCharFamily, INTEGER_DATA, (char*)font_family); /* default=4 */
-  ThotCallback (NumFormPresChar, INTEGER_DATA, (char*) 1);
+  ThotCallback (NumFormPresChar, INTEGER_DATA, (char*) 2);
 }
 
 /*
@@ -252,7 +252,7 @@ void AmayaCharStylePanel::OnApplyUnderline( wxCommandEvent& event )
 {
   int font_underline = XRCCTRL(*m_pPanelContentDetach,"wxID_CHOICE_UNDERLINE",wxChoice)->GetSelection();
   ThotCallback (NumMenuUnderlineType, INTEGER_DATA, (char*)font_underline); /* default=4 */
-  ThotCallback (NumFormPresChar, INTEGER_DATA, (char*) 1);
+  ThotCallback (NumFormPresChar, INTEGER_DATA, (char*) 3);
 }
 
 /*
@@ -266,7 +266,7 @@ void AmayaCharStylePanel::OnApplyBodySize( wxCommandEvent& event )
 {
   int font_size      = XRCCTRL(*m_pPanelContentDetach,"wxID_CHOICE_BODYSIZE",wxChoice)->GetSelection();
   ThotCallback (NumMenuCharFontSize, INTEGER_DATA, (char*)font_size); /* default=2 */
-  ThotCallback (NumFormPresChar, INTEGER_DATA, (char*) 1);
+  ThotCallback (NumFormPresChar, INTEGER_DATA, (char*) 4);
 }
 
 /*
@@ -280,7 +280,7 @@ void AmayaCharStylePanel::OnApplyCharStyle( wxCommandEvent& event )
 {
   int font_style     = XRCCTRL(*m_pPanelContentDetach,"wxID_CHOICE_CHARSTYLE",wxChoice)->GetSelection();
   ThotCallback (NumMenuCharFontStyle, INTEGER_DATA, (char*)font_style); /* default=3 */
-  ThotCallback (NumFormPresChar, INTEGER_DATA, (char*) 1);
+  ThotCallback (NumFormPresChar, INTEGER_DATA, (char*) 5);
 }
 
 
@@ -295,7 +295,7 @@ void AmayaCharStylePanel::OnApplyBoldness( wxCommandEvent& event )
 {
   int font_weight    = XRCCTRL(*m_pPanelContentDetach,"wxID_CHOICE_BOLDNESS",wxChoice)->GetSelection();
   ThotCallback (NumMenuCharFontWeight, INTEGER_DATA, (char*)font_weight); /* default=2 */
-  ThotCallback (NumFormPresChar, INTEGER_DATA, (char*) 1);
+  ThotCallback (NumFormPresChar, INTEGER_DATA, (char*) 6);
 }
 
 /*
