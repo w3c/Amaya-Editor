@@ -432,6 +432,16 @@ void WIN_AddFrameCatalogue (ThotWidget parent, struct Cat_Context* catalogue)
     }
 }
 
+/*----------------------------------------------------------------------
+CleanFrameCatList
+  ----------------------------------------------------------------------*/
+void CleanFrameCatList (int frame) 
+{
+  int catIndex;
+  for (catIndex = 0; catIndex < MAX_FRAMECAT; catIndex++)
+    FrameCatList [frame].Cat_Table[catIndex] = NULL;
+}
+
 
 /*----------------------------------------------------------------------
    WinLookupCatEntry Lookup the Catalogue table for an entry          
