@@ -36,10 +36,14 @@ SpellCheckDlgWX::SpellCheckDlgWX( int ref,
 
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("SpellCheckDlgWX"));
   wxLogDebug( _T("SpellCheckDlgWX::SpellCheckDlgWX"));
-  wxString wx_title = TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_LIB_PRINT) );
+  wxString wx_title = TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_Correct) );
   SetTitle( wx_title );
 
-  // options check list
+  // proposals
+
+  // search area radio box
+
+  // 'ignore' check list
   /*
   XRCCTRL(*this, "wxID_OPTIONS_TXT", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_OPTIONS) ));
   XRCCTRL(*this, "wxID_MANUAL_CHK", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_MANUAL_FEED) ));

@@ -163,7 +163,7 @@ static void DisplayWords (void)
    /* attention i = nbpropositions + 1 (le mot errone) */
    TtaNewSelector (SpellingBase + ChkrSelectProp,
 		   SpellingBase + ChkrFormCorrect,
-		   TtaGetMessage (CORR, Correct), i - 1,
+		   TtaGetMessage (LIB, TMSG_Correct), i - 1,
 		   ((i < 2) ? (char *)"" : BufMenu), 3, entry, TRUE, FALSE);
    /* selectionner la proposition 0 dans le selecteur - si elle existe */
    if (strcmp (ChkrCorrection[1], "$") != 0)
@@ -194,27 +194,27 @@ static LRESULT CALLBACK SpellCheckDlgProc (ThotWindow hwnDlg, UINT msg,
       SpellChecker = hwnDlg;
       hwndLanguage = GetDlgItem (hwnDlg, IDC_LANG);
       wordButton = GetDlgItem (hwnDlg, IDC_CURWORD);
-      SetWindowText (hwnDlg, TtaGetMessage (CORR, Correct));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_LABEL), TtaGetMessage (CORR, Correct));
+      SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_Correct));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_LABEL), TtaGetMessage (LIB, TMSG_Correct));
       SetWindowText (GetDlgItem (hwnDlg, IDC_BEFORE), TtaGetMessage (LIB, TMSG_BEFORE_SEL));
       SetWindowText (GetDlgItem (hwnDlg, IDC_WITHIN), TtaGetMessage (LIB, TMSG_WITHIN_SEL));
       SetWindowText (GetDlgItem (hwnDlg, IDC_AFTER), TtaGetMessage (LIB, TMSG_AFTER_SEL));
       SetWindowText (GetDlgItem (hwnDlg, IDC_WHOLEDOC), TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_NBPROPOSALS), TtaGetMessage (CORR, Number_Propositions));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_NBPROPOSALS), TtaGetMessage (LIB, TMSG_Number_Propositions));
       
-      SetWindowText (GetDlgItem (hwnDlg, ID_SKIPNEXT), TtaGetMessage (CORR, Pass_Without));
-      SetWindowText (GetDlgItem (hwnDlg, ID_SKIPDIC), TtaGetMessage (CORR, Pass_With));
-      SetWindowText (GetDlgItem (hwnDlg, ID_REPLACENEXT), TtaGetMessage (CORR, Replace_Without));
-      SetWindowText (GetDlgItem (hwnDlg, ID_REPLACEDIC), TtaGetMessage(CORR, Replace_With));
+      SetWindowText (GetDlgItem (hwnDlg, ID_SKIPNEXT), TtaGetMessage (LIB, TMSG_Pass_Without));
+      SetWindowText (GetDlgItem (hwnDlg, ID_SKIPDIC), TtaGetMessage (LIB, TMSG_Pass_With));
+      SetWindowText (GetDlgItem (hwnDlg, ID_REPLACENEXT), TtaGetMessage (LIB, TMSG_Replace_Without));
+      SetWindowText (GetDlgItem (hwnDlg, ID_REPLACEDIC), TtaGetMessage(LIB, TMSG_Replace_With));
       
-      SetWindowText (GetDlgItem (hwnDlg, IDC_IGNORE1), TtaGetMessage (CORR, Capitals));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_IGNORE2), TtaGetMessage (CORR, Arabics));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_IGNORE3), TtaGetMessage (CORR, Romans));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_IGNORE4), TtaGetMessage (CORR, Specials));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_IGNORE1), TtaGetMessage (LIB, TMSG_Capitals));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_IGNORE2), TtaGetMessage (LIB, TMSG_Arabics));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_IGNORE3), TtaGetMessage (LIB, TMSG_Romans));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_IGNORE4), TtaGetMessage (LIB, TMSG_Specials));
       
-      SetWindowText (GetDlgItem (hwnDlg, IDC_CHECKGROUP), TtaGetMessage (CORR, What));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_CHECKGROUP), TtaGetMessage (LIB, TMSG_What));
       
-      SetWindowText (GetDlgItem (hwnDlg, IDC_IGNOREGROUP), TtaGetMessage (CORR, Ignore));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_IGNOREGROUP), TtaGetMessage (LIB, TMSG_Ignore));
       
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
       WordList = GetDlgItem (hwnDlg, IDC_WORDLIST);
@@ -422,16 +422,16 @@ void TtcSpellCheck (Document doc, View view)
    /* creer la feuille de dialogue de CORRECTION */
    /* attache'e au bouton Confirmer du formulaire (1) CORRIGER */
    indx = 0;		   /* tous les boutons du dialogue de correction */
-   strcpy (&BufMenu[indx], TtaGetMessage (CORR, Pass_Without));
+   strcpy (&BufMenu[indx], TtaGetMessage (LIB, TMSG_Pass_Without));
    indx += strlen(&BufMenu[indx]) + 1;
-   strcpy(&BufMenu[indx], TtaGetMessage(CORR, Pass_With));
+   strcpy(&BufMenu[indx], TtaGetMessage(LIB, TMSG_Pass_With));
    indx += strlen (&BufMenu[indx]) + 1;
-   strcpy (&BufMenu[indx], TtaGetMessage (CORR, Replace_Without));
+   strcpy (&BufMenu[indx], TtaGetMessage (LIB, TMSG_Replace_Without));
    indx += strlen(&BufMenu[indx]) + 1;
-   strcpy(&BufMenu[indx], TtaGetMessage(CORR, Replace_With));
+   strcpy(&BufMenu[indx], TtaGetMessage(LIB, TMSG_Replace_With));
    /* ne pas afficher cette feuille maintenant */
    TtaNewSheet (SpellingBase + ChkrFormCorrect, TtaGetViewFrame (doc, view), 
-		TtaGetMessage (CORR, Correct), 4, BufMenu, FALSE, 4, 'L',
+		TtaGetMessage (LIB, TMSG_Correct), 4, BufMenu, FALSE, 4, 'L',
 		D_DONE);
    TtaSetDefaultButton (SpellingBase + ChkrFormCorrect, 3);
    /* initialise le champ langue de correction courante */
@@ -456,7 +456,7 @@ void TtcSpellCheck (Document doc, View view)
    indx += strlen (&BufMenu[indx]) + 1;
    sprintf (&BufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC));
    TtaNewSubmenu (SpellingBase + ChkrMenuOR, SpellingBase + ChkrFormCorrect, 0,
-		  TtaGetMessage (CORR, What), 4, BufMenu, NULL, 0, FALSE);
+		  TtaGetMessage (LIB, TMSG_What), 4, BufMenu, NULL, 0, FALSE);
    TtaSetMenuForm (SpellingBase + ChkrMenuOR, 2);     /* apres la selection */
    /* Initialiser le formulaire CORRIGER */
    /* Document selectionne */
@@ -482,21 +482,21 @@ void TtcSpellCheck (Document doc, View view)
 
    /* creer la forme de modification d'un nombre NC 1-10 */
    TtaNewNumberForm (SpellingBase + ChkrCaptureNC, SpellingBase + ChkrFormCorrect,
-     TtaGetMessage (CORR, Number_Propositions), 1, MAX_PROPOSAL_CHKR, TRUE);
+     TtaGetMessage (LIB, TMSG_Number_Propositions), 1, MAX_PROPOSAL_CHKR, TRUE);
    TtaSetNumberForm (SpellingBase + ChkrCaptureNC, 3);
 
    /* sous-menu Mots a ignorer */
    indx = 0;
-   sprintf (&BufMenu[indx], "B%s", TtaGetMessage (CORR, Capitals));
+   sprintf (&BufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_Capitals));
    indx += strlen (&BufMenu[indx]) + 1;
-   sprintf (&BufMenu[indx], "B%s", TtaGetMessage (CORR, Arabics));
+   sprintf (&BufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_Arabics));
    indx += strlen (&BufMenu[indx]) + 1;
-   sprintf (&BufMenu[indx], "B%s", TtaGetMessage (CORR, Romans));
+   sprintf (&BufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_Romans));
    indx += strlen (&BufMenu[indx]) + 1;
-   sprintf (&BufMenu[indx], "B%s", TtaGetMessage (CORR, Specials));
+   sprintf (&BufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_Specials));
    TtaNewToggleMenu (SpellingBase + ChkrMenuIgnore,
 		     SpellingBase + ChkrFormCorrect,
-		     TtaGetMessage (CORR, Ignore),
+		     TtaGetMessage (LIB, TMSG_Ignore),
 		     4, BufMenu, NULL, TRUE);
 
    /* liste des caracteres speciaux dans le formulaire OPTIONS */
@@ -631,10 +631,10 @@ static ThotBool StartSpellChecker ()
      {
        /* Correction TERMINEE */
 #ifdef _WINGUI
-       MessageBox (NULL, TtaGetMessage (CORR, END_CHECK), \
+       MessageBox (NULL, TtaGetMessage (LIB, TMSG_END_CHECK), \
 		   "Spell checking", MB_OK | MB_ICONINFORMATION);
 #else  /* _WINGUI */
-       TtaDisplayMessage (CONFIRM, TtaGetMessage (CORR, END_CHECK), NULL);
+       TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_END_CHECK), NULL);
 #endif /* _WINGUI */
        FirstStep = TRUE;
        ok = FALSE;

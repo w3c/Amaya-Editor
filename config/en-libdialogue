@@ -141,3 +141,25 @@
 139 Get
 140 Color
 141 No element can be inserted
+142 Number of proposals
+143 Checking
+144 Search/Skip
+145 Replace (+ dic)
+146 Replace and next
+147 Other language
+148 Skip (+ dic)
+149 words containing:
+150 Spell checking ...
+151 Roman numerals
+152 Ignore
+153 words that are all caps
+154 words with digits
+155 Parameter file error
+156 No keyboard file
+157 Cannot save the document dictionary
+158 Incorrect word "%s" refused in this dictionary
+159 Word "%s" added in the document dictionary
+160 End of spell checking
+161 Spell checking aborted
+162 Please select a document
+163 Document dictionary saved: %s

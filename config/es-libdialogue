@@ -141,3 +141,25 @@
 139 Obtener
 140 Color
 141 No se puede insertar ningún elemento
+142 Número de propuestas:
+143 Comprobar
+144 Buscar/Saltar
+145 Reemplazar (+ dic)
+146 Reemplazar y siguiente
+147 Otro idioma
+148 Saltar (+ dic)
+149 Palabras que contengan:
+150 Verificar ortografía
+151 Números romanos
+152 Ignorar
+153 Palabras en mayúsculas
+154 Palabras con dígitos
+155 Error en archivo de parámetro
+156 No hay archivo de teclado
+157 No puedo guardar el diccionario del documento
+158 Palabra incorrecta "%s" rechazada en este diccionario
+159 Palabra "%s" añadida al diccionario del documento
+160 Fin de la corrección ortográfica
+161 Corrección ortográfica abortada
+162 Por favor, seleccione un documento
+163 Diccionario del documento guardado: %s

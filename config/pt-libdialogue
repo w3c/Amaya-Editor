@@ -141,3 +141,25 @@
 139 Comece
 140 Cor
 141 **No element can be inserted
+142 Número de propostas
+143 Verificação
+144 Buscar/Pular
+145 Substituir (+ dic)
+146 Substituir e próximo
+147 Outro idioma
+148 Pular (+ dic)
+149 Palavras contendo:
+150 Verificar ortografia...
+151 Numerais romanos
+152 Ignorar
+153 palavras todas maíusculas
+154 palavras com dígitos
+155 Erro em arquivo de parâmetros
+156 Não há arquivo de teclado
+157 Não é possível salvar o dicionário do documento
+158 Palavra incorreta "%s" recusada neste dicionário
+159 Palavra "%s" adicionada ao dicionário do documento
+160 Fim da verificação ortográfica
+161 Abortada a verificação ortográfica
+162 Por favor selecione um documento
+163 Dicionário do documento salvo: %s

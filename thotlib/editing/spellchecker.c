@@ -602,14 +602,14 @@ static void SaveDictFile (PtrDict docDict)
 	       }
 	     fclose (f);
 	     /* OK sauvegarde dictionnaire document */
-	     TtaDisplayMessage (INFO, TtaGetMessage (CORR, OK_SAVE),
+	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_OK_SAVE),
 				docDict->DictName);
 	     /* toutes les mises a jour sont enregistrees */
 	     docDict->DictModified = FALSE;
 	  }
 	else
 	   /* erreur sauvegarde dictionnaire document */
-	   TtaDisplaySimpleMessage (INFO, CORR, NO_SAVE);
+	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_NO_SAVE);
      }
 }
 
@@ -651,7 +651,7 @@ void AddWord (unsigned char *word, PtrDict * pDict)
 		    else
 		      {
 			 /* impossible d'ajouter dans le dictionnaire du document ??? */
-			 TtaDisplayMessage (INFO, TtaGetMessage (CORR, REFUSE_WORD), word);
+			 TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_REFUSE_WORD), word);
 			 OKinsere = FALSE;
 		      }
 		    break;
@@ -682,14 +682,14 @@ void AddWord (unsigned char *word, PtrDict * pDict)
 	if (OKinsere == TRUE)
 	  {
 	     /* avertir l'utilisateur de la reussite de l'ajout dans le dict */
-	     TtaDisplayMessage (INFO, TtaGetMessage (CORR, ADD_WORD), word);
+	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_ADD_WORD), word);
 	     /*  enregistrer le dictionnaire du document apres chaque mise a jour */
 	     SaveDictFile (docDict);
 	  }
      }
    else	
      /* car. incorrect, ajout du mot refus\351 */
-      TtaDisplayMessage (INFO, TtaGetMessage (CORR, REFUSE_WORD), word);
+      TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_REFUSE_WORD), word);
 }
 
 
@@ -832,7 +832,7 @@ static void init_param (FILE * fd)
 		Delta[i] = rr;
 	  }
 	else
-	   TtaDisplaySimpleMessage (INFO, CORR, NO_PARAM);
+	   TtaDisplaySimpleMessage (INFO, LIB, TMSG_NO_PARAM);
 	/* erreur fichier parametre */
      }
 }
@@ -902,7 +902,7 @@ int ParametrizeChecker ()
 	       }
 	     else
 	       {
-		  TtaDisplaySimpleMessage (INFO, CORR, NO_KEYBOARD);
+		  TtaDisplaySimpleMessage (INFO, LIB, TMSG_NO_KEYBOARD);
 		  ret = 0;
 	       }
 	  }

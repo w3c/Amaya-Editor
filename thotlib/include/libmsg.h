@@ -144,6 +144,28 @@
 #define TMSG_CPGETBUTTON		139
 #define TMSG_CPCOLORBUTTON		140
 #define TMSG_NO_ELEMENT		141
-#define TMSG_LIB_MSG_MAX		142
+#define TMSG_Number_Propositions		142
+#define TMSG_What		143
+#define TMSG_Pass_Without		144
+#define TMSG_Replace_With		145
+#define TMSG_Replace_Without		146
+#define TMSG_Keep_Unknown		147
+#define TMSG_Pass_With		148
+#define TMSG_Specials		149
+#define TMSG_Correct		150
+#define TMSG_Romans		151
+#define TMSG_Ignore		152
+#define TMSG_Capitals		153
+#define TMSG_Arabics		154
+#define TMSG_NO_PARAM		155
+#define TMSG_NO_KEYBOARD		156
+#define TMSG_NO_SAVE		157
+#define TMSG_REFUSE_WORD		158
+#define TMSG_ADD_WORD		159
+#define TMSG_END_CHECK		160
+#define TMSG_STOP_CHECK		161
+#define TMSG_NO_SELECT		162
+#define TMSG_OK_SAVE		163
+#define TMSG_LIB_MSG_MAX		164
 
 #endif

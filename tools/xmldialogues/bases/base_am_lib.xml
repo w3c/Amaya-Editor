@@ -1565,6 +1565,249 @@
 	<message xml:lang="de">Es kann kein Element eingefügt werden</message>
 	<message xml:lang="it">Non si possono inserire elementi</message>
 </label>
+
+<label define="TMSG_Number_Propositions">
+	<message xml:lang="en">Number of proposals</message>
+	<message xml:lang="de">Anzahl Vorschläge</message>
+	<message xml:lang="fr">Nombre de propositions</message>
+	<message xml:lang="it">Numero di proposte alternative</message>
+	<message xml:lang="tr">Önerilerin sayısı</message>
+	<message xml:lang="es">Número de propuestas:</message>
+	<message xml:lang="pt">Número de propostas</message>
+	<message xml:lang="fi">Ehdotuksien lukumäärä</message>
+	<message xml:lang="ru">Количество вариантов</message>
+</label>
+<label define="TMSG_What">
+	<message xml:lang="en">Checking</message>
+	<message xml:lang="de">Überprüfe</message>
+	<message xml:lang="fr">Où corriger</message>
+	<message xml:lang="it">Controlla</message>
+	<message xml:lang="tr">Kontrol ediliyor</message>
+	<message xml:lang="es">Comprobar</message>
+	<message xml:lang="pt">Verificação</message>
+	<message xml:lang="fi">Tarkistetaan</message>
+	<message xml:lang="ru">Место проверки</message>
+</label>
+<label define="TMSG_Pass_Without">
+	<message xml:lang="en">Search/Skip</message>
+	<message xml:lang="de">Suchen</message>
+	<message xml:lang="fr">Chercher/Suivant</message>
+	<message xml:lang="it">Cerca</message>
+	<message xml:lang="tr">Atla ve sonraki</message>
+	<message xml:lang="es">Buscar/Saltar</message>
+	<message xml:lang="pt">Buscar/Pular</message>
+	<message xml:lang="fi">Etsi/Hylkää</message>
+	<message xml:lang="ru">Найти/Пропустить</message>
+</label>
+<label define="TMSG_Replace_With">
+	<message xml:lang="en">Replace (+ dic)</message>
+	<message xml:lang="de">Ersetzen (PW)</message>
+	<message xml:lang="fr">Remplacer (+ dic)</message>
+	<message xml:lang="it">Sostituisci (+ diz)</message>
+	<message xml:lang="tr">Değiştir (+ sözlük)</message>
+	<message xml:lang="es">Reemplazar (+ dic)</message>
+	<message xml:lang="pt">Substituir (+ dic)</message>
+	<message xml:lang="fi">Korvaa (+ dic)</message>
+	<message xml:lang="ru">Заместить (+словарь)</message>
+</label>
+<label define="TMSG_Replace_Without">
+	<message xml:lang="en">Replace and next</message>
+	<message xml:lang="de">Ersetzen</message>
+	<message xml:lang="fr">Remplacer</message>
+	<message xml:lang="it">Sostituisci e continua</message>
+	<message xml:lang="tr">Değiştir</message>
+	<message xml:lang="es">Reemplazar y siguiente</message>
+	<message xml:lang="pt">Substituir e próximo</message>
+	<message xml:lang="fi">Korvaa ja seuraava</message>
+	<message xml:lang="ru">Заместить и следующий</message>
+</label>
+<label define="TMSG_Keep_Unknown">
+	<message xml:lang="en">Other language</message>
+	<message xml:lang="de">Sprache</message>
+	<message xml:lang="fr">Autre langue</message>
+	<message xml:lang="it">Altra lingua</message>
+	<message xml:lang="tr">Başka dil</message>
+	<message xml:lang="es">Otro idioma</message>
+	<message xml:lang="pt">Outro idioma</message>
+	<message xml:lang="fi">Toinen kieli</message>
+	<message xml:lang="ru">Другой язык</message>
+</label>
+<label define="TMSG_Pass_With">
+	<message xml:lang="en">Skip (+ dic)</message>
+	<message xml:lang="de">Überspringen (PW)</message>
+	<message xml:lang="fr">Suivant (+ dic)</message>
+	<message xml:lang="it">Salta (+ diz)</message>
+	<message xml:lang="tr">Atla (+ sözlük)</message>
+	<message xml:lang="es">Saltar (+ dic)</message>
+	<message xml:lang="pt">Pular (+ dic)</message>
+	<message xml:lang="fi">Hylkää (+ dic)</message>
+	<message xml:lang="ru">Пропустить (+словарь)</message>
+</label>
+<label define="TMSG_Specials">
+	<message xml:lang="en">words containing:</message>
+	<message xml:lang="de">Worte mit</message>
+	<message xml:lang="fr">incluant les caractères :</message>
+	<message xml:lang="it">parole contenenti:</message>
+	<message xml:lang="tr">Karakterleri içeren:</message>
+	<message xml:lang="es">Palabras que contengan:</message>
+	<message xml:lang="pt">Palavras contendo:</message>
+	<message xml:lang="fi">sanat, joissa:</message>
+	<message xml:lang="ru">слова содержащие:</message>
+</label>
+<label define="TMSG_Correct">
+	<message xml:lang="en">Spell checking ...</message>
+	<message xml:lang="de">Rechtschreibprüfung</message>
+	<message xml:lang="fr">Corriger...</message>
+	<message xml:lang="it">Controllo ortografico...</message>
+	<message xml:lang="tr">Yazım hataları düzelt...</message>
+	<message xml:lang="es">Verificar ortografía</message>
+	<message xml:lang="pt">Verificar ortografia...</message>
+	<message xml:lang="fi">Oikeinkirjoituksen tarkistus ...</message>
+	<message xml:lang="ru">Проверка правописания...</message>
+</label>
+<label define="TMSG_Romans">
+	<message xml:lang="en">Roman numerals</message>
+	<message xml:lang="de">Römische Zahlen</message>
+	<message xml:lang="fr">en chiffres romains</message>
+	<message xml:lang="it">numerali romani</message>
+	<message xml:lang="tr">Roma rakamları</message>
+	<message xml:lang="es">Números romanos</message>
+	<message xml:lang="pt">Numerais romanos</message>
+	<message xml:lang="fi">Roomalaiset numerot</message>
+	<message xml:lang="ru">римские цифры</message>
+</label>
+<label define="TMSG_Ignore">
+	<message xml:lang="en">Ignore</message>
+	<message xml:lang="de">Ignorieren</message>
+	<message xml:lang="fr">Ignorer les mots</message>
+	<message xml:lang="it">Ignora</message>
+	<message xml:lang="tr">Aldırma</message>
+	<message xml:lang="es">Ignorar</message>
+	<message xml:lang="pt">Ignorar</message>
+	<message xml:lang="fi">Ohita</message>
+	<message xml:lang="ru">Игнорировать</message>
+</label>
+<label define="TMSG_Capitals">
+	<message xml:lang="en">words that are all caps</message>
+	<message xml:lang="de">Worte in Großbuchstaben</message>
+	<message xml:lang="fr">en lettres capitales</message>
+	<message xml:lang="it">parole tutte maiuscole</message>
+	<message xml:lang="tr">Hepsi büyük harf olan sözcükler</message>
+	<message xml:lang="es">Palabras en mayúsculas</message>
+	<message xml:lang="pt">palavras todas maíusculas</message>
+	<message xml:lang="fi">sanat, joissa kaikki isolla</message>
+	<message xml:lang="ru">слова из заглавных букв</message>
+</label>
+<label define="TMSG_Arabics">
+	<message xml:lang="en">words with digits</message>
+	<message xml:lang="de">Worte mit Ziffern</message>
+	<message xml:lang="fr">incluant des chiffres</message>
+	<message xml:lang="it">parole contenenti cifre</message>
+	<message xml:lang="tr">Rakam içeren sözcükler</message>
+	<message xml:lang="es">Palabras con dígitos</message>
+	<message xml:lang="pt">palavras com dígitos</message>
+	<message xml:lang="fi">sanat, joissa numeroita</message>
+	<message xml:lang="ru">слова с цифрами</message>
+</label>
+<label define="TMSG_NO_PARAM">
+	<message xml:lang="en">Parameter file error</message>
+	<message xml:lang="de">Fehler in der Parameterdatei</message>
+	<message xml:lang="fr">Erreur dans le fichier des paramètres</message>
+	<message xml:lang="it">Errore nel file dei parametri</message>
+	<message xml:lang="tr">Parametre dosya hatası</message>
+	<message xml:lang="es">Error en archivo de parámetro</message>
+	<message xml:lang="pt">Erro em arquivo de parâmetros</message>
+	<message xml:lang="fi">Parametritiedosto virhe</message>
+	<message xml:lang="ru">Ошибка файла параметра</message>
+</label>
+<label define="TMSG_NO_KEYBOARD">
+	<message xml:lang="en">No keyboard file</message>
+	<message xml:lang="de">Tastaturdatei fehlt</message>
+	<message xml:lang="fr">Absence de fichier clavier</message>
+	<message xml:lang="it">Il file della tastiera non esiste</message>
+	<message xml:lang="tr">Tuştakımı dosyası yok</message>
+	<message xml:lang="es">No hay archivo de teclado</message>
+	<message xml:lang="pt">Não há arquivo de teclado</message>
+	<message xml:lang="fi">Ei näppäimistötiedostoa</message>
+	<message xml:lang="ru">Файл не является файлом введённым с клавиатуры</message>
+</label>
+<label define="TMSG_NO_SAVE">
+	<message xml:lang="en">Cannot save the document dictionary</message>
+	<message xml:lang="de">Kann das Dokumentwörterbuch nicht speichern</message>
+	<message xml:lang="fr">Impossible d\'enregistrer le dictionnaire du document</message>
+	<message xml:lang="it">Impossibile salvare il dizionario del documento</message>
+	<message xml:lang="tr">Belge sözlüğü kaydedilemiyor</message>
+	<message xml:lang="es">No puedo guardar el diccionario del documento</message>
+	<message xml:lang="pt">Não é possível salvar o dicionário do documento</message>
+	<message xml:lang="fi">Dokumentin sanastoa ei voi tallentaa</message>
+	<message xml:lang="ru">Невозможно сохранить словарь</message>
+</label>
+<label define="TMSG_REFUSE_WORD">
+	<message xml:lang="en">Incorrect word "%s" refused in this dictionary</message>
+	<message xml:lang="de">Fehlerhaftes Wort "%s" im Wörterbuch zurückgewiesen</message>
+	<message xml:lang="fr">Mot "%s" incorrect refusé dans ce dictionnaire</message>
+	<message xml:lang="it">Parola scorretta "%s" rifiutata in questo dizionario</message>
+	<message xml:lang="tr">Yanlış sözcük "%s" bu sözlükte kabul edilmiyor</message>
+	<message xml:lang="es">Palabra incorrecta "%s" rechazada en este diccionario</message>
+	<message xml:lang="pt">Palavra incorreta "%s" recusada neste dicionário</message>
+	<message xml:lang="fi">Kelpaamaton sana "%s", ei ole hyväksytty tässä sanastossa</message>
+	<message xml:lang="ru">Неправильному слову "%s" отказано в добавлении его в этот словарь</message>
+</label>
+<label define="TMSG_ADD_WORD">
+	<message xml:lang="en">Word "%s" added in the document dictionary</message>
+	<message xml:lang="de">Wort "%s" zum Dokumentwörterbuch hinzugefügt</message>
+	<message xml:lang="fr">Mot "%s" ajouté dans le dictionnaire du document</message>
+	<message xml:lang="it">Parola "%s" aggiunta nel dizionario del documento</message>
+	<message xml:lang="tr">"%s" sözcüğü belge sözlüğüne eklendi</message>
+	<message xml:lang="es">Palabra "%s" añadida al diccionario del documento</message>
+	<message xml:lang="pt">Palavra "%s" adicionada ao dicionário do documento</message>
+	<message xml:lang="fi">Sana "%s" lisätty dokumentin sanastoon</message>
+	<message xml:lang="ru">Слово "%s" добавлено в словарь</message>
+</label>
+<label define="TMSG_END_CHECK">
+	<message xml:lang="en">End of spell checking</message>
+	<message xml:lang="de">Rechtschreibprüfung beendet</message>
+	<message xml:lang="fr">Correction terminée</message>
+	<message xml:lang="it">Fine controllo ortografico</message>
+	<message xml:lang="tr">Yazım hataları arama sonu</message>
+	<message xml:lang="es">Fin de la corrección ortográfica</message>
+	<message xml:lang="pt">Fim da verificação ortográfica</message>
+	<message xml:lang="fi">Oikeinkirjoitustarkistus valmis!</message>
+	<message xml:lang="ru">Конец проверки правописания</message>
+</label>
+<label define="TMSG_STOP_CHECK">
+	<message xml:lang="en">Spell checking aborted</message>
+	<message xml:lang="de">Rechtschreibprüfung abgebrochen</message>
+	<message xml:lang="fr">Correction interrompue</message>
+	<message xml:lang="it">Controllo ortografico interrotto</message>
+	<message xml:lang="tr">Yazım hatası araması iptal edildi</message>
+	<message xml:lang="es">Corrección ortográfica abortada</message>
+	<message xml:lang="pt">Abortada a verificação ortográfica</message>
+	<message xml:lang="fi">Oikeinkirjoitustarkistus keskeytetty!</message>
+	<message xml:lang="ru">Проверка правописания прервана</message>
+</label>
+<label define="TMSG_NO_SELECT">
+	<message xml:lang="en">Please select a document</message>
+	<message xml:lang="de">Bitte ein Dokument auswählen</message>
+	<message xml:lang="fr">Rien à corriger : sélectionnez un document</message>
+	<message xml:lang="it">Seleziona un documento</message>
+	<message xml:lang="tr">Lütfen bir belge seçin</message>
+	<message xml:lang="es">Por favor, seleccione un documento</message>
+	<message xml:lang="pt">Por favor selecione um documento</message>
+	<message xml:lang="fi">Valitse dokumentti</message>
+	<message xml:lang="ru">Выберите документ</message>
+</label>
+<label define="TMSG_OK_SAVE">
+	<message xml:lang="en">Document dictionary saved: %s</message>
+	<message xml:lang="de">Dokumentwörterbuch unter %s gespeichert</message>
+	<message xml:lang="fr">Sauvegarde du dictionnaire "%s"</message>
+	<message xml:lang="it">Dizionario del documento salvato: %s</message>
+	<message xml:lang="tr">Belge sözlüğü kaydedildi: %s</message>
+	<message xml:lang="es">Diccionario del documento guardado: %s</message>
+	<message xml:lang="pt">Dicionário do documento salvo: %s</message>
+	<message xml:lang="fi">Dokumentin sanasto tallennettu: %s</message>
+	<message xml:lang="ru">Словарь сохранён в: %s</message>
+</label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>
 </messages>
