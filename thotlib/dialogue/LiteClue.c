@@ -28,73 +28,6 @@ www.compgen.com/widgets
 Thanks to Contributers:
 J Satchell, Eric Marttila 
 */
-/* Revision History:
-$Log$
-Revision 1.3  1998-06-10 15:56:08  cvs
-Improving Zoom, tooltips and clipboard
-Irene
-
-Revision 1.2  1998/06/08 07:12:49  cvs
-New version of LiteClue.
-Improvement of table formatting.
-Irene
-
-Revision 1.14  1998/01/06 15:30:33  gary
-If font specified by resource can not be converted, use fixed
-font as fallback. If no font at all can be converted, prevent
-crash, just disable widget entirely.
-
-Revision 1.13  1997/07/07 14:55:04  gary
-Cancel timeouts when XcgLiteClueDeleteWidget is called to prevent
-errant timeout event on deleted widget.
-
-Revision 1.12  1997/06/20 20:09:09  gary
-Add XcgLiteClueDispatchEvent to enable clues for insensitive widgets.
-
-Revision 1.11  1997/06/15 14:10:24  gary
-Add XcgLiteClueDispatchEvent to enable clues for insensitive widgets.
-
-Revision 1.10  1997/04/14 13:02:33  gary
-Attempt to fix problem when we get multiple enter events bu no leave event.
-
-Revision 1.9  1997/03/10 14:42:41  gary
-Attempt to fix problem when we get multiple enter events bu no leave event.
-Add C++ wrapper to allow linking with C++ programs. (In HView.h)
-
-Revision 1.8  1997/01/17 13:44:14  gary
-Support of cancelWaitPeriod resource: this is a period from the point
-a help popdown occurs in which the normal waitPeriod is suspended
-for the next popup
-
-Revision 1.7  1996/12/16 22:35:38  gary
-Fix double entry problem
-
-Revision 1.6  1996/11/18 14:52:21  gary
-remove some compile warnings pointed out by a user
-
-Revision 1.5  1996/11/12 20:56:43  gary
-remove some compile warnings
-
-Revision 1.4  1996/10/20  13:38:16  gary
-Version 1.2 freeze
-
-Revision 1.3  1996/10/19 16:16:30  gary
-Compile warning removed with cast
-
-Revision 1.2  1996/10/19 16:07:38  gary
-a) R4 back compatibility
-b) Delay before pop up of help, waitPeriod resource (def 500 ms).
-	Thanks to J Satchell for this.
-c) Button press in watched widget pops down help
-
-Revision 1.1  1996/10/18 23:14:58  gary
-Initial
-
-
-$log
-Add NO_FONT_SET to usr FontStruct rather than FontSet
-$log
-*/
 
 #ifndef _WINDOWS
 
@@ -102,7 +35,7 @@ $log
 #include "thot_sys.h"
 #include "LiteClueP.h"
 
-extern Pixel Button_Color;
+#include "inites_f.h"
 
 #define CheckWidgetClass(routine) \
 	if (XtClass(w) != xcgLiteClueWidgetClass) \
@@ -360,7 +293,7 @@ static void create_GC(XcgLiteClueWidget cw )
 
 	valuemask = GCForeground | GCBackground | GCFillStyle;
 	myXGCV.foreground = cw->liteClue.foreground;
-	myXGCV.background = /*cw->core.background_pixel*/Button_Color;
+	myXGCV.background = ColorPixel(ColorNumber("Yellow")) /* cw->core.background_pixel */;
 	myXGCV.fill_style = FillSolid; 
 
 #if XtSpecificationRelease < 5	|| defined(NO_FONT_SET)
@@ -463,18 +396,6 @@ Cardinal *num_args)
 
 static Boolean setValues( Widget _current, Widget _request, Widget _new, ArgList args, Cardinal * num_args)
 {
-	XcgLiteClueWidget cw_new = (XcgLiteClueWidget) _new;
-	XcgLiteClueWidget cw_cur = (XcgLiteClueWidget) _current;
-
-	/* values of cw_new->liteClue.cancelWaitPeriod and
-	   cw_new->liteClue.waitPeriod are accepted without checking */
-
-	if (cw_new->liteClue.foreground != cw_cur->liteClue.foreground 
-	||  cw_new->core.background_pixel != cw_cur->core.background_pixel )
-	{
-		create_GC(cw_new);
-	}
-
 	return FALSE;
 }
 

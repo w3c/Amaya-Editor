@@ -313,6 +313,12 @@ int                 number;
 
    Dict_Init ();
    ThotInitDisplay (name, 0, 0);
+
+#  ifndef _WINDOWS
+   /* initialize the LiteClue Widget */
+   InitClue(RootShell);
+#  endif /* !_WINDOWS */
+
    alphabet = TtaGetAlphabet (TtaGetDefaultLanguage ());
    FontIdentifier (alphabet, 'H', 0, MenuSize, UnPoint, text, namef1);
    FontIdentifier (alphabet, 'H', 1, MenuSize, UnPoint, text, namef2);
@@ -1292,10 +1298,10 @@ caddr_t             call_d;
 static ThotWidget liteClue = NULL;
 
 #ifdef __STDC__
-void                InitClue (ThotWidget toplevel)
+void         InitClue (ThotWidget toplevel)
 #else  /* __STDC__ */
-void                InitClue (toplevel)
-ThotWidget          toplevel;
+void         InitClue (toplevel)
+ThotWidget   toplevel;
 
 #endif /* __STDC__ */
 {
@@ -1317,7 +1323,7 @@ ThotWidget          toplevel;
 	   wait_ms = 500;
        }
    }
-   bg = ColorPixel(ColorNumber("yellow"));
+   bg = ColorPixel(ColorNumber("Yellow"));
    n = 0;
    XtSetArg (args[n], XtNbackground, bg);
    n++;

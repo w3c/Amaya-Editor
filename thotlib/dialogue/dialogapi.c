@@ -1829,8 +1829,6 @@ Display           **Dp;
    DefaultFont = XmFontListCreate (XLoadQueryFont (GDp, "fixed"), XmSTRING_DEFAULT_CHARSET);
    formFONT = XmFontListCreate (XLoadQueryFont (GDp, "fixed"), XmSTRING_DEFAULT_CHARSET);
 
-   /* initialize the LiteClue Widget */
-   InitClue(RootShell);
 #  endif /* _WINDOWS */
 
    if (txtOK == NULL)
