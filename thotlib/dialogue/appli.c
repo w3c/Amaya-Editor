@@ -638,11 +638,7 @@ gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer d
     return TRUE;
   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
     return TRUE; 
-  GL_ActivateDrawing ();
-  DefRegion (frame, 
-	     x, y+FrameTable[frame].FrTopMargin, 
-	     width+x, y+height+FrameTable[frame].FrTopMargin);
-  GL_DrawAll (widget, frame);
+  gtk_gl_area_swapbuffers (GTK_GL_AREA (widget));
 return TRUE;
 }
 /*----------------------------------------------------------------------
@@ -670,6 +666,9 @@ gboolean FrameResizedGTK (GtkWidget *widget,
 	GLResize (width, height, x ,y);
 	Clear (frame, width, height, 0, 0);
 	GL_ActivateDrawing ();
+	DefRegion (frame, 
+		   x, y+FrameTable[frame].FrTopMargin, 
+		   width+x, y+height+FrameTable[frame].FrTopMargin);
 	FrameRedraw (frame, width, height);
 	GL_DrawAll (widget, frame);
       }
@@ -971,19 +970,14 @@ void FrameHScrolledGTK (GtkAdjustment *w, int frame)
   ----------------------------------------------------------------------*/
 #ifndef _GTK
 void FrameVScrolled (int *w, int frame, int *param)
-#else /* _GTK */
-void FrameVScrolledGTK (GtkAdjustment *w, int frame)
-#endif /* _GTK */
 {
   int                 delta;
   int                 h, y;
   int                 start, end, total;
   int                 n;
   int                 view;
-#ifndef _GTK
   Arg                 args[MAX_ARGS];
   XmScrollBarCallbackStruct *infos;
-#endif /* _GTK */
   float               carparpix;
   NotifyWindow        notifyDoc;
   Document            doc;
@@ -992,8 +986,6 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
     return;
   FrameToView (frame, &doc, &view);
-/***** printf ("FrameVScrolled\n"); ****/
-#ifndef _GTK
   infos = (XmScrollBarCallbackStruct *) param;
   if (infos->reason == XmCR_DECREMENT)
     /* Deplacement en arriere d'un caractere de la fenetre */
@@ -1009,9 +1001,6 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
     delta = FrameTable[frame].FrHeight;
   else
     delta = MAX_SIZE;		/* indeterminee */
-#else /* _GTK */
-  delta = w->value;
-#endif /* _GTK */
   notifyDoc.event = TteViewScroll;
   notifyDoc.document = doc;
   notifyDoc.view = view;
@@ -1019,7 +1008,6 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
   notifyDoc.horizontalValue = 0;
   if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
     {
-#ifndef _GTK
       if (infos->reason == XmCR_VALUE_CHANGED ||
 	  infos->reason == XmCR_DRAG)
 	{
@@ -1030,23 +1018,12 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
 	  XtSetArg (args[n], XmNsliderSize, &h);
 	  n++;
 	  XtGetValues (FrameTable[frame].WdScrollV, args, n);
-#else /* _GTK */  
-	  /* h is the height of the page */
-       	  h = w->page_size;
-	  /* Absolute move in the document */
-	  delta = w->value;
-#endif /* _GTK */      
 	  /* Regarde ou se situe l'image abstraite dans le document */
 	  n = PositionAbsBox (frame, &start, &end, &total);
 	  /* au retour n = 0 si l'image est complete */
 	  /* Calcule le nombre de caracteres represente par un pixel */
 	  carparpix = (float) total / (float) FrameTable[frame].FrHeight;
-#ifndef _GTK
 	  y = (int) ((float) infos->value * carparpix);
-#else /* _GTK */
-	  y = (int) ((float) w->value * carparpix);
-#endif /* _GTK */
-/******* printf ("  n=%d, y=%d, start=%d, end=%d, total=%d\n", n, y, start, end, total); ****/
 	  if (n == 0 || (y >= start && y <= total - end))
 	    {
 	      /* On se deplace a l'interieur de l'image Concrete */
@@ -1056,18 +1033,10 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
 	      delta = FrameTable[frame].FrHeight - start - end;
 	      /* Calcule la position demandee dans cette portion de scroll */
 	      /* On detecte quand le deplacement bute en bas du document */
-#ifndef _GTK
 	      if (infos->value + h >= FrameTable[frame].FrHeight)
 		y = delta;
 	      else
 		y = infos->value - start;
-#else /* _GTK */
-	      if (w->value + h >= FrameTable[frame].FrHeight)
-		y = delta;
-	      else
-	        y = w->value - start;
-#endif /* _GTK */
-/***** printf ("  ShowYPosition %d %d\n", y, delta); *****/
 	      ShowYPosition (frame, y, delta);
 	    }
 	  else if (!JumpInProgress)
@@ -1082,13 +1051,11 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
 	      else
 		delta = 0;
 	      delta = (delta * 100) / FrameTable[frame].FrHeight;
-/***** printf ("  JumpIntoView %d\n", delta); ****/
 	      JumpIntoView (frame, delta);
 	      /* recompute the scroll bars */
 	      UpdateScrollbars (frame);
 	      JumpInProgress = FALSE;
 	    }
-#ifndef _GTK
 	}
       else if (infos->reason == XmCR_TO_TOP)
 	{
@@ -1106,8 +1073,6 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
 	}
       else
 	VerticalScroll (frame, delta, 1);
-#else /* _GTK */
-#endif /* _GTK */
     notifyDoc.document = doc;
     notifyDoc.view = view;
     notifyDoc.verticalValue = delta;
@@ -1115,6 +1080,70 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
     CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
     }
 }
+#else /* _GTK */
+void FrameVScrolledGTK (GtkAdjustment *w, int frame)
+{
+  int                 delta;
+  int                 h, y;
+  int                 start, end, total;
+  int                 n;
+  int                 view;
+  float               carparpix;
+  NotifyWindow        notifyDoc;
+  Document            doc;
+
+  /* ne pas traiter si le document est en mode NoComputedDisplay */
+  if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
+    return;
+  FrameToView (frame, &doc, &view);
+  /***** printf ("FrameVScrolled\n"); ****/
+  /* h is the height of the page */
+  h = w->page_size;
+  /* Absolute move in the document */
+  delta = w->value;
+  /* Regarde ou se situe l'image abstraite dans le document */
+  n = PositionAbsBox (frame, &start, &end, &total);
+  /* au retour n = 0 si l'image est complete */
+  /* Calcule le nombre de caracteres represente par un pixel */
+  carparpix = (float) total / (float) FrameTable[frame].FrHeight;
+  y = (int) ((float) w->value * carparpix);
+  /******* printf ("  n=%d, y=%d, start=%d, end=%d, total=%d\n", n, y, start, end, total); ****/
+  if (n == 0 || (y >= start && y <= total - end))
+    {
+      /* On se deplace a l'interieur de l'image Concrete */
+      /* Calcule la portion de scroll qui represente l'image Concrete */
+      start = (int) ((float) start / carparpix);
+      end = (int) ((float) end / carparpix);
+      delta = FrameTable[frame].FrHeight - start - end;
+      /* Calcule la position demandee dans cette portion de scroll */
+      /* On detecte quand le deplacement bute en bas du document */
+      if (w->value + h >= FrameTable[frame].FrHeight)
+	y = delta;
+      else
+	y = w->value - start;
+      /***** printf ("  ShowYPosition %d %d\n", y, delta); *****/
+      ShowYPosition (frame, y, delta);
+    }
+  else if (!JumpInProgress)
+    {
+      JumpInProgress = TRUE;
+      /* On regarde si le deplacement bute en bas du document */
+      if (delta + h >= FrameTable[frame].FrHeight - 4)
+	delta = FrameTable[frame].FrHeight;
+      else if (delta >= 4)
+	/* Ou plutot vers le milieu */
+	delta += h / 2;
+      else
+	delta = 0;
+      delta = (delta * 100) / FrameTable[frame].FrHeight;
+      /***** printf ("  JumpIntoView %d\n", delta); ****/
+      JumpIntoView (frame, delta);
+      /* recompute the scroll bars */
+      UpdateScrollbars (frame);
+      JumpInProgress = FALSE;
+    }
+}
+#endif /*_GTK*/
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -3260,6 +3289,9 @@ void UpdateScrollbars (int frame)
    SCROLLINFO          scrollInfo;
 #endif /* _WINDOWS */
 
+   if (JumpInProgress)
+    return;
+
    /* Demande le volume affiche dans la fenetre */
    ComputeDisplayedChars (frame, &Xpos, &Ypos, &width, &height);
    hscroll = FrameTable[frame].WdScrollH;
@@ -3268,46 +3300,67 @@ void UpdateScrollbars (int frame)
 #ifndef _WINDOWS
    l = FrameTable[frame].FrWidth;
    h = FrameTable[frame].FrHeight;
-   if (width + Xpos <= l)
-     {
 #ifndef _GTK
+ if (width + Xpos <= l)
+     {
        n = 0;
        XtSetArg (args[n], XmNminimum, 0);n++;
        XtSetArg (args[n], XmNmaximum, l);n++;
        XtSetArg (args[n], XmNvalue, Xpos);n++;
        XtSetArg (args[n], XmNsliderSize, width);n++;
        XtSetValues (hscroll, args, n);
-#else /* _GTK */
-       tmpw = gtk_range_get_adjustment (GTK_RANGE (hscroll));
-       tmpw->lower = 0;
-       tmpw->upper = l;
-       tmpw->page_size = width;
-       tmpw->page_increment = width-13;
-       tmpw->step_increment = 8;
-       tmpw->value = Xpos;
-       gtk_adjustment_changed (tmpw);
-#endif /* _GTK */
      }
    if (height + Ypos <= h)
      {
-#ifndef _GTK
        n = 0;
        XtSetArg (args[n], XmNminimum, 0);n++;
        XtSetArg (args[n], XmNmaximum, h);n++;
        XtSetArg (args[n], XmNvalue, Ypos);n++;
        XtSetArg (args[n], XmNsliderSize, height);n++;
        XtSetValues (vscroll, args, n);
-#else /* _GTK */
-       tmpw = gtk_range_get_adjustment (GTK_RANGE (vscroll));
-       tmpw->lower = 0;
-       tmpw->upper = h;
-       tmpw->page_size = height;
-       tmpw->page_increment = height;
-       tmpw->step_increment = 6;
-       tmpw->value = Ypos;
-       gtk_adjustment_changed (tmpw);
-#endif /* _GTK */
      }
+#else /*_GTK*/
+
+   if (width == l && Xpos == 0)
+     gtk_widget_hide (GTK_WIDGET (hscroll));
+   else
+     if (width + Xpos <= l)
+       {
+	 gtk_widget_show (GTK_WIDGET (hscroll));
+	 
+	 tmpw = gtk_range_get_adjustment (GTK_RANGE (hscroll));
+	 tmpw->lower = 0;
+	 tmpw->upper = l;
+	 tmpw->page_size = width;
+	 tmpw->page_increment = width-13;
+	 tmpw->step_increment = 8;
+	 tmpw->value = Xpos;
+	 gtk_adjustment_changed (tmpw);
+       }
+   else
+     gtk_widget_show (GTK_WIDGET (hscroll));
+   
+   if (height == h && Ypos == 0)
+     gtk_widget_hide (GTK_WIDGET (vscroll));
+   else
+     if (height + Ypos <= h)
+       {
+	 gtk_widget_show (GTK_WIDGET (vscroll));
+	 
+	 tmpw = gtk_range_get_adjustment (GTK_RANGE (vscroll));
+	 tmpw->lower = 0;
+	 tmpw->upper = h;
+	 tmpw->page_size = height;
+	 tmpw->page_increment = height;
+	 tmpw->step_increment = 6;
+	 tmpw->value = Ypos;
+	 gtk_adjustment_changed (tmpw);
+       }
+     else
+       {
+	 gtk_widget_show (GTK_WIDGET (vscroll));
+       }
+#endif /*_GTK*/  
 #else  /* _WINDOWS */
    GetWindowRect (FrRef[frame], &rWindow);
    h = rWindow.bottom - rWindow.top;

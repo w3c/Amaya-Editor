@@ -390,15 +390,14 @@ int BoxCharacterWidth (CHAR_T c, SpecFont specfont)
 #endif /* _I18N_ */
 #else /*_GL*/
   PtrFont         font;
-  unsigned char   car;
 
-  if (SpecialCharBoxWidth (c))
-    return 1;
-  car = GetFontAndIndexFromSpec (c, specfont, &font);
+  /*if (SpecialCharBoxWidth (c))
+   return 1;*/
+  GetFontAndIndexFromSpec (c, specfont, &font);
   if (font == NULL)
     return 6;
   else 
-    return CharacterWidth (car, font);
+    return UnicodeCharacterWidth (c, font);
 #endif /*_GL*/
 }
 /*----------------------------------------------------------------------
@@ -985,12 +984,8 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
   PtrFont             ptfont;
 
   FontIdentifier (script, family, highlight, size, UnRelative, text, textX);
-#ifdef _PCLDEBUG
-  g_print ("\n XLFD selection : %s", textX);
-#endif /*_PCLDEBUG*/
   /* initialize the PostScript font name */
   strcpy (PsName, text);   
-
   /* Font cache lookup */
   j = 0;
   i = 0;
@@ -1022,6 +1017,9 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	  strcpy (&TtFontName[deb], text);
 	  strcpy (&TtPsFontName[i * 8], PsName);	   
 #ifdef _GL
+#ifdef _PCLDEBUG
+  g_print ("\n XLFD selection : %s", textX);
+#endif /*_PCLDEBUG*/
 	  ptfont = GL_LoadFont (script, family, highlight, size, textX);/*alphabet=>script*/
 #else /*_GL*/
 #ifdef _WINDOWS
@@ -1163,9 +1161,6 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
   mask = 1 << (frame - 1);
   /* store window frame number */
   TtFontFrames[i] = TtFontFrames[i] | mask;
-#ifdef _PCLDEBUG
-  g_print ("\nXLFD selected %s", textX);
-#endif /*_PCLDEBUG*/
   return (ptfont);
 }
 

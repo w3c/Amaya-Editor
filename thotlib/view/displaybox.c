@@ -932,19 +932,13 @@ ThotBool LocateNextChar (PtrTextBuffer *adbuff, int *ind, ThotBool rtl)
     }
   return TRUE;
 }
-
-int GL_UnicodeDrawString (int fg, 
-			  CHAR_T *str, float x, float y, 
-			  int hyphen, int frame,
-			  void *GL_font, int end);
-
 /*----------------------------------------------------------------------
   DisplayJustifiedText display the content of a Text box tweaking
   the space sizes to ajust line length to the size of the frame.
   Remaining pixel space (BxNPixels) is equally dispatched 
   on all spaces in the line.
   ----------------------------------------------------------------------*/
-#if !defined (_GL) || (defined(_GL) && !defined(_I18N_))
+#if !defined (_GL) 
 static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 				  ThotBool selected)
 {

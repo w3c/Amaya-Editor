@@ -442,7 +442,6 @@ void ComputeDisplayedChars (int frame, int *Xpos, int *Ypos, int *width, int *he
       /* there is nothing on the left */
       *width = l - *Xpos;
 
-
    /***     Vertical scrolling             ***/
    /*      +-------------+                   */
    /*      |  Document   |a                  */

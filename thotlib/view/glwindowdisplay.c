@@ -122,10 +122,8 @@
 
 #include "openglfont.h"
 #include "glwindowdisplay.h"
-/* Using Bitmap font !!
-(mainly cause texture font 
-needs caching)*/
-#define MESA
+
+static ThotBool Software_Mode;
 
 /* Vertex list when tesselation is called 
    This list is filled with all new vertex 
@@ -180,11 +178,6 @@ void SetMainWindowBackgroundColor (int frame, int color)
   ----------------------------------------------------------------------*/
 void Clear (int frame, int width, int height, int x, int y)
 {
-  if (width == 0 || height == 0)
-    {
-      g_print ("\n\nclearerror:");
-      return;
-    }
   y = y + FrameTable[frame].FrTopMargin;
   GL_SetForeground (GL_Background[frame]); 
   glBegin (GL_QUADS); 
@@ -780,7 +773,7 @@ static void ResetPixelTransferBias ()
     }
   glCallList (Precompiled); 
 }
-#define BIT8DIVIDE(A) ((float)A / 255)
+#define BIT8DIVIDE(A) ((float)A /256)
 /*----------------------
   SetPixelTransferBias
 ------------------------*/
@@ -816,7 +809,6 @@ int GL_UnicodeDrawString (int fg,
     str[end] = EOS;
   /*TranslateChars (str);*/
   SetPixelTransferBias (fg);
-  /*glRasterPos2f (x, y);*/
   width = UnicodeFontRender (GL_font, str, x, y, end, 
 			     FrameTable[ActiveFrame].FrHeight);
   ResetPixelTransferBias();
@@ -829,8 +821,8 @@ void GL_DrawUnicodeChar (CHAR_T const c, float x, float y, void *GL_font, int fg
 {
   CHAR_T str[2];
 
-  str[0] = c;
-  str[1] = '\0';
+  str[0] = (CHAR_T) c;
+  str[1] = EOS;
   GL_UnicodeDrawString (fg, str, x, y, 0, GL_font, 1);
 }
 
@@ -954,7 +946,7 @@ void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   int                 buffleft;
   int                 indbuff, bl;
   int                 indmax;
-  int                 nbcar, x, y, y1;  /******/
+  int                 nbcar, x, y, y1; 
   int                 lgspace, whitespace;
   int                 fg, bg;
   int                 shadow;
@@ -981,8 +973,7 @@ void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   if (pAb->AbBox->BxShadow)
     shadow = 1;
   else
-    shadow = 0;
-  
+    shadow = 0;  
   /* Is this box the first of a block of text? */
   if (mbox == pBox)
     blockbegin = TRUE;
@@ -1054,6 +1045,8 @@ void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	      restbl = newbl;
 	      x += lg;
 	      bchar = adbuff->BuContent[indbuff];
+	      GetFontAndIndexFromSpec (adbuff->BuContent[indbuff],
+					     font, &nextfont);
 	      if (bchar == SPACE)
 		{
 		  lg = lgspace;
@@ -1343,9 +1336,7 @@ void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		Draw the content of the buffer.
 		Call the function in any case to let Postscript justify the
 		text of the box.
-	      */
-	      if (nbcar == 0)
-		bl = 0;
+	      */	      
 	      y1 = y + BoxFontBase (pBox->BxFont);
 	      x += GL_UnicodeDrawString (fg, bbuffer,
 					  x, REALY(y1), 
@@ -1422,6 +1413,7 @@ void GL_ActivateDrawing()
 {
   GL_Modif = TRUE;
 }
+#undef _PCLDEBUG
 /*----------------------------------------------------------------------
  GL_DrawAll : Only function that Really Draw opengl !!
   ----------------------------------------------------------------------*/
@@ -1495,12 +1487,19 @@ void GL_DrawAll (ThotWidget widget, int frame)
 
 void SetGlPipelineState ()
 {
-      /* Display Opengl Vendor Name,  Opengl Version, Opengl Renderer*/
+  if (strncmp ("MESA", (char *)glGetString(GL_RENDERER), 4) == 0
+      || strncmp ("Microsoft", (char *)glGetString(GL_VENDOR), 8) == 0)
+    Software_Mode = TRUE;
+  else
+    Software_Mode = FALSE;
+  g_print ("\n%s", (Software_Mode)?"    Hard":"     Soft");
 #ifdef _PCLDEBUG
-      g_print ("%s, %s, %s", (char *)glGetString(GL_VENDOR), 
-	       (char *)glGetString(GL_VERSION), 
-	       (char *)glGetString(GL_RENDERER));
-      /* g_print( "%s\n", (char *)glGetString(GL_EXTENSIONS));  */   
+  /* Display Opengl Vendor Name,  Opengl Version, Opengl Renderer*/
+  g_print ("\n%s", (Software_Mode)?"    Soft":"     Hard");
+  g_print ("\n%s, \n%s, \n%s\n", (char *)glGetString(GL_VENDOR), 
+	   (char *)glGetString(GL_VERSION), 
+	   (char *)glGetString(GL_RENDERER));
+  /* g_print( "%s\n", (char *)glGetString(GL_EXTENSIONS));  */   
 #endif /*_PCLDEBUG*/
       glClearColor (1, 0, 0, 0.5);
       /* no fog*/
@@ -1603,33 +1602,40 @@ void GL_BackBufferRegionSwapping (int x, int y, int width, int height, int Total
 #endif /*_WINDOWS*/
 }
 /*---------------------------------------
-  GL_window_copy_area
-       We copy region content of the back buffer 
-	    on the exposed region 
-	    => opengl region buffer swapping 
+  GL_window_copy_area :
+  Hard : We redraw the zone instead of copying it. 
+  Soft : We copy region content of the back buffer 
+         on the exposed region (=> opengl region buffer swapping )
 --------------------------------------------*/
 void GL_window_copy_area (int frame, int xf, int yf, int xd, int yd,
 			  int width, int height)
 {
-  DefRegion (frame, 
-	     xd, yd+FrameTable[frame].FrTopMargin, 
-	     width+xd, yd+height+FrameTable[frame].FrTopMargin);
-#ifdef PCL
+  if (!Software_Mode)
+    DefRegion (frame, 
+	       xd, yd+FrameTable[frame].FrTopMargin, 
+	       width+xd, yd+height+FrameTable[frame].FrTopMargin);
+  else
+    {
 #ifdef _WINDOWS
-  if (! wglMakeCurrent (GL_Windows[frame], GL_Context[frame]))
-    return;
+      if (! wglMakeCurrent (GL_Windows[frame], GL_Context[frame]))
+	return;
 #else /*_WINDOWS*/
-  if (!gtk_gl_area_make_current (GTK_GL_AREA(FrameTable[frame].WdFrame)))
-    return;
+      if (!gtk_gl_area_make_current (GTK_GL_AREA(FrameTable[frame].WdFrame)))
+	return;
 #endif /*_WINDOWS*/
-  /* Copy from backbuffer to backbuffer */
-  glRasterPos2i (xf, yf + height);
-  glCopyPixels (xd,  FrameTable[frame].FrHeight + FrameTable[frame].FrTopMargin - (yd + height), width, height, GL_COLOR);
-  glDrawBuffer (GL_FRONT);
-  /*copy from back to front */
-  glCopyPixels (xd, FrameTable[frame].FrHeight + FrameTable[frame].FrTopMargin - (yd + height), width, height, GL_COLOR);
-  glDrawBuffer (GL_BACK);
-#endif /*P_CL*/
+      /* Copy from backbuffer to backbuffer */
+      glRasterPos2i (xf, yf + height);
+      glCopyPixels (xd,  
+		    FrameTable[frame].FrHeight + FrameTable[frame].FrTopMargin 
+		    - (yd + height), 
+		    width, height, GL_COLOR);
+      glDrawBuffer (GL_FRONT);
+      /*copy from back to front */
+      glCopyPixels (xd, FrameTable[frame].FrHeight + FrameTable[frame].FrTopMargin
+		    - (yd + height), 
+		    width, height, GL_COLOR);
+      glDrawBuffer (GL_BACK);
+    }
 }
 
 

@@ -29,8 +29,9 @@ typedef struct _GL_glyph
 
 typedef struct _GL_font
 {
-  FT_Face *face;  
-  GL_glyph **glyphList;
+  FT_Face   *face;
+  int       kerning;
+  GL_glyph  **glyphList;
 } GL_font;
 
 
@@ -41,7 +42,7 @@ static int           FontDescender (GL_font *font);
 static int           FontFaceSize (GL_font *font, const unsigned int size, const unsigned int res );
 static int           FontCharMap (GL_font *font, FT_Encoding encoding, char alphabet);
 static void          FontBBox (GL_font *font,
-			       char* string,
+			       wchar_t* string,
 			       float *llx, float *lly, 
 			       float *llz, float *urx, 
 			       float  *ury, float *urz);
@@ -56,8 +57,9 @@ static int           FTLibraryInit ();
 void                 FTLibraryFree ();
 
 
-static void          FaceKernAdvance (FT_Face face, unsigned int index1, 
-				      unsigned int index2, FT_Vector *kernAdvance);
+static float          FaceKernAdvance (FT_Face face, 
+				       unsigned int index1, 
+				       unsigned int index2);
 static GL_glyph      *MakeBitmapGlyph(GL_font *font, unsigned int g);
 
 

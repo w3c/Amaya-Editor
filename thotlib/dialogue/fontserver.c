@@ -78,13 +78,18 @@ int GetFontFilename (char script, int family,
     }
   else if (script == 'G' || family == 0)
     {
+      XftPatternAddString (pat, XFT_FOUNDRY, "adobe"); 
+      XftPatternAddString (pat, XFT_FOUNDRY, "microsoft"); 
+
       XftPatternAddString (pat, XFT_FAMILY, "symbol");
-      XftPatternAddString (pat, XFT_FAMILY, "Symbol");
-      XftPatternAddString (pat, XFT_FAMILY, "Standard Symbols L");
-      XftPatternAddString (pat, XFT_FOUNDRY, "adobe");
-      XftPatternAddString (pat, XFT_ENCODING, "fontspecific");
-      XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_MEDIUM);
-      XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_ROMAN);
+      XftPatternAddString (pat, XFT_FAMILY, "Symbol"); 
+      XftPatternAddString (pat, XFT_FAMILY, "Standard Symbols L"); 
+      
+      /*       XftPatternAddString (pat, XFT_ENCODING, "fontspecific");  */
+      
+      XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_MEDIUM); 
+      XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_ROMAN); 
+      XftPatternAddString (pat, XFT_ENCODING, "symbol");
     }
   else
     {
