@@ -122,6 +122,7 @@ DISPLAY_OBJ = \
 	view/gldisplay.o \
 	dialogue/openglfont.o \
 	dialogue/fontserver.o \
+	dialogue/fontconfig.o \
 	dialogue/font.o \
 	dialogue/stix.o \
 	document/documentapi.o \

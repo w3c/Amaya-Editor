@@ -15,6 +15,7 @@
  *
  */
 
+#include "application.h"
 #include "thot_sys.h"
 #include "libmsg.h"
 #include "message.h"
@@ -22,7 +23,6 @@
 #include "typemedia.h"
 #include "frame.h"
 #include "appdialogue.h"
-
 /*  tolower(c) was a macro defined in ctypes.h that returns
    something wrong if c is not an upper case letter. */
 #define TOLOWER(c)	(isupper(c)? tolower(c) : (c))
@@ -71,6 +71,11 @@ static SpecFont   FirstFontSel = NULL;
 #include "units_f.h"
 #include "windowdisplay_f.h"
 
+
+#ifdef _GTK
+#include <gdk/gdkx.h>
+#endif /*_GTK*/
+
 #ifdef _GL
 #ifdef _GTK
 #include <gtkgl/gtkglarea.h>
@@ -90,19 +95,20 @@ static SpecFont   FirstFontSel = NULL;
 void *GL_LoadFont (char alphabet, int family, 
 		   int highlight, int size,
 		   char *xlfd)
-{    
+{
   char filename[2048];
   
-   if (size > MaxNumberOfSizes)
-	size = LogicalPointsSizes[MaxNumberOfSizes];
-   else if (size >= 0)
-	size = LogicalPointsSizes[size];
-   else
-	size = 12;
-  if (GetFontFilename(alphabet, family, 
+  if (size > MaxNumberOfSizes)
+    size = LogicalPointsSizes[MaxNumberOfSizes];
+  else if (size >= 0)
+    size = LogicalPointsSizes[size];
+  else
+    size = 12;
+  if (GetFontFilename (alphabet, family, 
 		      highlight, size, 
 		      UseLucidaFamily, UseAdobeFamily,
 		      filename))
+    if (TtaFileExist (filename))
       return (gl_font_init (filename, alphabet, size)); 
   return NULL;
 }
@@ -1056,6 +1062,8 @@ PtrFont ReadFont (char script, int family, int highlight, int size,
   Parameters increase decrease are true when a new test is allowed.
   The parameter requestedsize gives the initial requested size.
   ----------------------------------------------------------------------*/
+#ifdef FILEFONT
+
 static PtrFont LoadNearestFont (char script, int family, int highlight,
 				int size, int requestedsize, int frame,
 				ThotBool increase, ThotBool decrease)
@@ -1302,6 +1310,257 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
     }
   return (ptfont);
 }
+
+#else FILEFONT
+
+static PtrFont LoadNearestFont (char script, int family, int highlight,
+				int size, int requestedsize, int frame,
+				ThotBool increase, ThotBool decrease)
+{
+  int                 i, j, deb;
+  int                 val;
+  unsigned int		  mask;
+  char                text[10], PsName[10], textX[100];
+#if defined (_WINDOWS) && !defined (_GL)
+  SIZE                wsize;
+  TEXTMETRIC          textMetric;
+  int                 c, ind, space = 32;
+  HFONT               hOldFont;
+  HDC                 display;
+#endif /* _WINDOWS */
+  PtrFont             ptfont;
+
+  FontIdentifier (script, family, highlight, size, UnRelative, text, textX);
+  /* initialize the PostScript font name */
+  strcpy (PsName, text);   
+  /* Font cache lookup */
+  i = 0;
+  deb = 0;
+  ptfont = NULL;
+  if (script != 'E')
+    while (ptfont == NULL && i < FirstFreeFont)
+      {
+	if (TtFonts[i] == NULL)
+	  /* check if we forgot to update FirstFreeFont */
+	  FirstFreeFont = i;
+	if (strcmp (&TtFontName[deb], text) == 0)
+	  /* Font cache lookup succeeded */
+	  ptfont = TtFonts[i];
+	else
+	  {
+	    i++;
+	    deb += MAX_FONTNAME;
+	  }
+      }   
+
+  if (ptfont == NULL)
+    {
+      /* Load a new font */
+      if (FirstFreeFont < MAX_FONT)
+	{
+	  /* No table overflow: load the new font */
+#ifdef _GL
+#ifdef _PCLDEBUGFONT
+	  g_print ("\n XLFD selection : %s %s", textX, text);
+#endif /*_PCLDEBUG*/
+	  ptfont = GL_LoadFont (script, family, highlight, size, textX);
+#else /*_GL*/
+#ifdef _WINDOWS
+	  /* Allocate the font structure */
+	  val = LogicalPointsSizes[size];
+	  ActiveFont = WIN_LoadFont (script, family, highlight, val);
+	  if (ActiveFont)
+	    {
+	      if (TtPrinterDC != NULL)
+		{
+		  display = TtPrinterDC;
+		  hOldFont = SelectObject (TtPrinterDC, ActiveFont);
+		}
+	      else
+		{
+		  display = GetDC(FrRef[frame]);
+		  hOldFont = SelectObject (display, ActiveFont);
+		}
+	      ptfont = TtaGetMemory (sizeof (FontInfo));
+	      ptfont->FiScript = script;
+	      ptfont->FiFamily = family;
+	      ptfont->FiHighlight = highlight;
+	      ptfont->FiSize = val;
+#ifdef VERYSLOW
+	      if (script != 'Z')
+	      {
+#endif /* VERYSLOW */
+	        if (GetTextMetrics (display, &textMetric))
+		{
+		  ptfont->FiAscent = textMetric.tmAscent;
+		  ptfont->FiHeight = textMetric.tmAscent + textMetric.tmDescent;
+		}
+	        else
+		{
+		  ptfont->FiAscent = 0;
+		  ptfont->FiHeight = 0;
+		}
+	        ptfont->FiFirstChar = textMetric.tmFirstChar;
+	        ptfont->FiLastChar = textMetric.tmLastChar;
+	        val = textMetric.tmLastChar - textMetric.tmFirstChar + 1;
+	        ptfont->FiWidths = (int *) TtaGetMemory (val * sizeof (int));
+	        ptfont->FiHeights = (int *) TtaGetMemory (val * sizeof (int));
+		  c = textMetric.tmFirstChar;
+	        for (ind = 0; ind < val; ind ++)
+		{
+		  GetTextExtentPoint (display, (LPCTSTR) (&c),
+				      1, (LPSIZE) (&wsize));
+		  if (wsize.cx == 0)
+		    GetTextExtentPoint (display, (LPCTSTR) (&space),
+					1, (LPSIZE) (&wsize));
+		  ptfont->FiWidths[ind] = wsize.cx;
+		  ptfont->FiHeights[ind] = wsize.cy;
+		  c++;
+		}
+#ifdef VERYSLOW
+	      }
+	      /* this gives very good spacing, but is very slow for each
+	         new font (about 2 min for a Japanese press release on a 450mhz box */
+	      else {
+		TEXTMETRICW textMetric;
+		int spacewidth, spaceheight;
+		GetTextExtentPointW (display, (LPWORD) (&space),
+					1, (LPSIZE) (&wsize));
+		spacewidth = wsize.cx;
+		spaceheight = wsize.cy;
+	        /* insert code for GetTextMetricsW */
+	        if (GetTextMetricsW (display, &textMetric))
+		{
+		  ptfont->FiAscent = textMetric.tmAscent;
+		  ptfont->FiHeight = textMetric.tmAscent + textMetric.tmDescent;
+		}
+	        else
+		{
+		  ptfont->FiAscent = 0;
+		  ptfont->FiHeight = 0;
+		}
+	        ptfont->FiFirstChar = textMetric.tmFirstChar;
+	        ptfont->FiLastChar = textMetric.tmLastChar;
+	        val = textMetric.tmLastChar - textMetric.tmFirstChar + 1;
+	        ptfont->FiWidths = (int *) TtaGetMemory (val * sizeof (int));
+	        ptfont->FiHeights = (int *) TtaGetMemory (val * sizeof (int));
+		c = textMetric.tmFirstChar;
+	        for (ind = 0; ind < val; ind ++)
+		{
+		  GetTextExtentPointW (display, (LPWORD) (&c),
+				      1, (LPSIZE) (&wsize));
+		  if (wsize.cx == 0) {
+		    ptfont->FiWidths[ind] = spacewidth;
+		    ptfont->FiHeights[ind] = spaceheight;
+		  }
+		  else {
+		    ptfont->FiWidths[ind] = wsize.cx;
+		    ptfont->FiHeights[ind] = wsize.cy;
+		  }
+		  c++;
+		}
+	      }
+#endif /* VERYSLOW */
+	      DeleteObject (ActiveFont);
+	      ActiveFont = 0;
+	      if (TtPrinterDC == NULL && display)
+		ReleaseDC (FrRef[frame], display);
+	    }
+	  else
+	    ptfont = NULL;
+#else  /* _WINDOWS */
+	  ptfont = LoadFont (textX);
+#endif /* !_WINDOWS */
+#endif/*  _GL */
+	  /* Loading failed try to find a neighbour */
+	  if (ptfont == NULL)
+	    {
+	      /* Change size */
+	      if (increase)
+		{
+		  if (size >= MaxNumberOfSizes)
+		    increase = FALSE;
+		  else
+		    {
+		      val = size + 1;
+		      ptfont = LoadNearestFont (script, family, highlight,
+						val, requestedsize,
+						frame, increase, FALSE);
+		    }
+		}
+	      if (ptfont == NULL && decrease && !increase)
+		{
+		  if (size <= 0)
+		    decrease = FALSE;
+		  else
+		    {
+		      val = size - 1;
+		      ptfont = LoadNearestFont (script, family, highlight,
+						val, requestedsize,
+						frame, FALSE, decrease);
+		    }
+		}
+	    }
+	}
+      if (ptfont == NULL && script != 'E')
+	{
+	  if (script != '1' && script != 'L' && script != 'G' && size != -1)
+	    /* try without highlight and no specific size */
+	    ptfont = LoadNearestFont (script, family, 0,
+				      -1, requestedsize, frame, FALSE, FALSE);
+	  else
+	    {
+	      /* Try to load another family from the same script */
+	      for (j = 0; j < FirstFreeFont; j++)
+		{
+		  if (TtFonts[j] && TtFontName[j * MAX_FONTNAME] == script)
+		    {
+		      ptfont = TtFonts[j];
+		      j = FirstFreeFont;
+		    }
+		}
+	    }
+	  if (ptfont == NULL && script == '7')
+	    {
+	      /* look for a font Symbol */
+	      ptfont = LoadNearestFont (script, family, 0,
+					-1, requestedsize, frame, FALSE, FALSE);
+	      if (ptfont)
+		/* now we'll work with the font Symbol */
+		GreekFontScript = 'G';
+	    }
+	  /* last case the default font */
+	  if (ptfont == NULL)
+	    ptfont = FontDialogue;
+	}
+    }
+
+  if (ptfont && size == requestedsize)
+    {
+      if (i == FirstFreeFont || TtFonts[i] == NULL)
+	{
+	  /* initialize a new entry */
+	  FirstFreeFont = i + 1;
+	  strcpy (&TtFontName[deb], text);
+	  strcpy (&TtPsFontName[i * 8], PsName);
+	  TtFonts[i] = ptfont;
+	  TtFontMask[i] = 0;
+#ifndef _WINDOWS
+          val = LogicalPointsSizes[size];
+	  if (script == 'G' &&
+	      (val == 8 || val == 10 || val == 12 ||
+	       val == 14 || val == 24))
+	    TtPatchedFont[i] = val;
+#endif /* _WINDOWS */
+	}
+      /* rely to the current frame */
+      mask = 1 << (frame - 1);
+      TtFontMask[i] = TtFontMask[i] | mask;
+    }
+  return (ptfont);
+}
+#endif FILEFONT
+
 
 /*---------------------------------------------------------------
   ReadFont Load a stix font
@@ -1742,6 +2001,13 @@ void TtaSetFontZoom (int zoom)
   FontZoom = zoom;
 }
 
+#ifdef _PCL
+char *FontLoadFromConfig (char script, 
+			 int family, 
+			 int highlight);
+#endif
+
+
 /*----------------------------------------------------------------------
   InitDialogueFonts initialize the standard fonts used by the Thot Toolkit.
   ----------------------------------------------------------------------*/
@@ -2055,5 +2321,10 @@ void ThotFreeAllFonts (void)
   FreeMathFonts();
   FTLibraryFree ();
 #endif /*_GL*/
+#ifdef _FONTCONFIG
+  /*Free the font config structure
+    build upon the config file*/
+  FreeFontConfig ();
+#endif /*_FONTCONFIG*/
 }
 

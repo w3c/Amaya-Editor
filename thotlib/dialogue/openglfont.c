@@ -1039,6 +1039,170 @@ int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int siz
 
 #else /*NEWKERN*/
 
+/*----------------------------------------------------------------------
+  p2 :  Lowest power of two bigger than the argument.
+  ----------------------------------------------------------------------*/
+/*All these work on UNSIGNED BITS !!! 
+ if little-big endianess is involved,
+ all those atre wrong !!!*/
+
+#define lowest_bit(x) (x & -x)
+#define is_pow2(x) (x != 0 && x == lowest_bit(x))
+
+static int ceil_pow2_minus_1(unsigned int x)
+{
+  unsigned int i;
+  
+  for (i=1; i; i <<= 1)
+    x |= x >> i;
+  return x;
+}
+#define p2(p) (is_pow2(p)?p:ceil_pow2_minus_1((unsigned int) p) + 1)
+  
+/* Don't know exactly wich is faster...
+ this on is pretty good too...*/
+
+/* 
+int p2(p){
+p -= 1; 
+p |= p >> 16; 
+p |= p >> 8; 
+p |= p >> 4; 
+p |= p >> 2; 
+p |= p >> 1; 
+return p + 1;
+
+otherwise, identical, formulical,
+but VERY VERY VERY slower 
+(int to float, log, ceil, and finally float to int...)
+return 1 << (int) ceilf(logf((float) p) / M_LN2);
+} 
+*/
+
+/*----------------------------------------------------------------------
+  GL_MakeTextureSize : Texture sizes must be power of two
+  ----------------------------------------------------------------------*/
+static void GL_MakeTextureSize(unsigned char *PicPixmap, 
+			       int PicWidth, int PicHeight,
+			       int GL_w, int GL_h)
+{
+  unsigned char      *data, *ptr1, *ptr2;
+  int                 xdiff, x, y, nbpixel;
+
+  if (PicPixmap != None &&
+      !(PicWidth == GL_w &&
+       PicHeight == GL_h))
+	{
+	data = TtaGetMemory (sizeof (unsigned char) * GL_w * GL_h);
+	/* Black transparent filling */
+	memset (data, 0, sizeof (unsigned char) * GL_w * GL_h);
+	ptr1 = PicPixmap;
+	ptr2 = data;
+	xdiff = (GL_w - PicWidth) * nbpixel;
+	x = nbpixel * PicWidth;
+	for (y = 0; y < PicHeight; y++)
+	    {
+		/* copy R,G,B,A */
+		memcpy (ptr2, ptr1, x); 
+		/* jump over the black transparent zone*/
+		ptr1 += x;
+		ptr2 += x + xdiff;
+		}	
+	TtaFreeMemory (PicPixmap);
+	PicPixmap = data;
+  }
+}
+
+
+/*----------------------------------------------------------------------
+ GL_TextureMap : map texture on a Quad (sort of a rectangle)
+ Drawpixel Method for software implementation, as it's much faster for those
+ Texture Method for hardware implementation as it's faster and better.
+  ----------------------------------------------------------------------*/
+static void GL_TextureMap (unsigned char *Image, 
+			   int xFrame, int yFrame, 
+			   int width, int height)
+{  
+  GLfloat   GL_w, GL_h;   
+  GLint		Mode;
+  
+  GL_w = p2(width);
+  GL_h = p2(height);
+
+  glEnable (GL_TEXTURE_2D); 
+  
+/* Put texture in 3d card memory */
+  /*
+    if (!glIsTexture (Image->TextureBind))
+    {
+*/      
+
+  /*
+    glGenTextures (1, &(Image->TextureBind));
+    glBindTexture (GL_TEXTURE_2D, Image->TextureBind);
+  */
+  
+      /*TEXTURE ZOOM : GL_NEAREST is fastest and GL_LINEAR is second fastest*/
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      /* How texture is mapped... initially GL_REPEAT
+	 GL_REPEAT, GL_CLAMP, GL_CLAMP_TO_EDGE are another option.. Bench !!*/	    
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+      glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP); 
+      /* does current Color modify texture no = GL_REPLACE, 
+	 else => GL_MODULATE, GL_DECAL, ou GL_BLEND */
+      glTexEnvi (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+      /* We give te texture to opengl Pipeline system */	    
+     
+      GL_MakeTextureSize (Image, 
+			  width, height,
+			  GL_w, GL_h);	
+
+      glTexImage2D (GL_TEXTURE_2D, 
+		    0, 
+		    GL_ALPHA,
+		    GL_w, 
+		    GL_h, 
+		    0,
+		    Mode, 
+		    GL_UNSIGNED_BYTE, 
+		    (GLvoid *) Image);
+      /*
+	}
+  else
+    {
+      glBindTexture(GL_TEXTURE_2D, Image->TextureBind);
+    }
+      */
+
+  /* We have resized the picture to match a power of 2
+     We don't want to see all the picture, just the w and h 
+     portion*/
+  GL_w = (GLfloat) width/GL_w;
+  GL_h = (GLfloat) height/GL_h;   	
+  /* Not sure of the vertex order 
+     (not the faster one, I think) */
+  glBegin (GL_QUADS);
+  /* Texture coordinates are unrelative 
+     to the size of the square */      
+  /* lower left */
+  glTexCoord2i (0,    0); 
+  glVertex2i (xFrame,     yFrame + height);
+  /* upper right*/
+  glTexCoord2f (GL_w, 0.0); 
+  glVertex2i (xFrame + width, yFrame + height);
+  /* lower right */
+  glTexCoord2f (GL_w, GL_h); 
+  glVertex2i (xFrame + width, yFrame); 
+  /* upper left */
+  glTexCoord2f (0.0,  GL_h); 
+  glVertex2i (xFrame, yFrame);      
+  glEnd ();	
+  /* State disabling */
+  glDisable (GL_TEXTURE_2D); 
+}
+
+
 int UnicodeFontRender (void *gl_font, wchar_t *text, 
 		       float x, float y, 
 		       int size,
@@ -1060,6 +1224,11 @@ int UnicodeFontRender (void *gl_font, wchar_t *text,
   int               pen_x, n;
 
 
+                          /*ft_kerning_unscaled*/
+                          /*ft_kerning_default,*/
+			  /*ft_kerning_unfitted*/
+#define KERNING_CHOICE  ft_kerning_default
+
   font = (GL_font *) gl_font;
   face = *(font->face);
   use_kerning = font->kerning;
@@ -1076,11 +1245,9 @@ int UnicodeFontRender (void *gl_font, wchar_t *text,
         /* retrieve kerning distance and move pen position*/
         if ( use_kerning && previous && glyph_index )
         {
-          FT_Get_Kerning( face, 
+          FT_Get_Kerning (face, 
 			  previous, glyph_index,
-                          /*ft_kerning_default,*/
-			  /*ft_kerning_unfitted,*/
-			  ft_kerning_unscaled,
+			  KERNING_CHOICE,
 			  &delta);
 
           pen_x += delta.x >> 6;
@@ -1115,27 +1282,39 @@ int UnicodeFontRender (void *gl_font, wchar_t *text,
 	/* record current glyph index*/
         previous = glyph_index;
       }
-  
+  /* retrieve kerning distance and move pen position*/
+  if ( use_kerning && previous && glyph_index )
+    {
+      FT_Get_Kerning (face, 
+		      previous, 0,
+		      KERNING_CHOICE,
+		      &delta);
+          pen_x += delta.x >> 6;
+    }
+  /*  
   for ( n = 0; n < size; n++ )
     {
-      glRasterPos2f (bitmap_pos[n].x, 
-		     bitmap_pos[n].y - miny);
+      glRasterPos2f (x + bitmap_pos[n].x, 
+		     y - bitmap_pos[n].y);
       glDrawPixels (bitmaps[n]->dimension.x,
 		    bitmaps[n]->dimension.y,
 		    GL_ALPHA,
 		    GL_UNSIGNED_BYTE,
-		    (const GLubyte *) data);
+		    (const GLubyte *) bitmaps[n]->data);
     }
- return bitmap_pos[n-1].x
+  return (pen_x);
+  */
 
-  Height = (int) (maxy - miny) * 2;
-  Width = (int) (bitmap_pos[n -1].x * 2);
+  //Height = (int)  (p2 (((maxy - miny)*10)));
+  Height = (int)  (maxy - miny)*10;
+  Width = (int)  (p2 ((pen_x*10)));
 
   if (Height <= 0 || Width <= 0 || miny == 10000)
     return 0;
 
   data = (unsigned char *) TtaGetMemory (sizeof (unsigned char)
 					  *Height*Width); 
+  left = 0;
 
   memset (data, 25, sizeof (unsigned char)*Height*Width);
 
@@ -1144,18 +1323,28 @@ int UnicodeFontRender (void *gl_font, wchar_t *text,
       {
 
         left = (int) ((bitmap_pos[n].y - miny)*Width 
-		    + bitmap_pos[n].x + left);
-
+		    + bitmap_pos[n].x);
 	if (bitmaps[n])
+	  {
+	  
+	g_print ("\n%i H:%i W : %i, Pixels : %i \n\t w: %i h: %i", 
+		 left, Height, Width, Height*Width,
+		 (int) bitmaps[n]->dimension.x,
+		 (int) bitmaps[n]->dimension.y);
+
 	  BitmapAppend (data + left,
 			bitmaps[n]->data,
-			bitmaps[n]->dimension.x,
-			bitmaps[n]->dimension.y,
+			(int) bitmaps[n]->dimension.x,
+			(int) bitmaps[n]->dimension.y,
 			Width);
+	  }
       }
 
    y -= (float) miny;
 
+   GL_TextureMap (data, x, y, Width, Height);
+
+#ifdef NOWAY
   /* If y > height or x < 0 
      OpenGL doesn't draw bitmap 
      due to his clipping mechanism
@@ -1176,6 +1365,8 @@ int UnicodeFontRender (void *gl_font, wchar_t *text,
   else 
     right = 0;
   
+
+
   /* Position inside the canvas*/
   glRasterPos2f (x, y);
   /*Translation for outside clipping strings*/
@@ -1195,11 +1386,13 @@ int UnicodeFontRender (void *gl_font, wchar_t *text,
 	    (float) right, 
 	    (float) left,
 	    NULL);
+
+#endif /*NOWAY*/
+
   if (data)
     TtaFreeMemory (data);
 
-  return (bitmaps[n-1]->pos.x);  
+  return (pen_x);  
 }
 #endif /*NEWKERN*/
-
 #endif /* _GL */

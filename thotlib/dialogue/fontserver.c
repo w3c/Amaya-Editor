@@ -11,6 +11,8 @@
  * Author: P. Cheyrou-Lagreze (INRIA)
  */
 
+
+
 #ifdef _GL
 
 #include <stdio.h>
@@ -25,6 +27,26 @@
 #include <windows.h>
 #endif  /* _GTK */
  
+
+#ifdef _FONTCONFIG
+int GetFontFilename (char script, int family, int highlight, 
+		     int size, int UseLucidaFamily, int UseAdobeFamily,
+		     char *filename)
+{
+  char *response;
+
+  response = (char *) FontLoadFromConfig (script, 
+					  family, 
+					  highlight);
+  
+  if (response == NULL)
+    response = (char *) FontLoadFromConfig ('1', 1, 1);
+  
+  strcpy (filename, response);
+  return (1);
+}
+
+#else
 
 /* XFT_FAMILY XFT_FOUNDRY XFT_STYLE XFT_ENCODING "iso8859-1" 
    XFT_SLANT  XFT_WEIGHT XFT_SIZE  XFT_DPI */
@@ -339,6 +361,9 @@ int GetFontFilename (char script, int family, int highlight, int size,
     XftPatternAddDouble (pat, XFT_SIZE, ((double) size) / 10.0);
 
   /* Returns a pattern more precise that let us load fonts*/
+
+
+
   match = XftFontMatch (GDK_DISPLAY(), 0, pat, &result); 
   if (match) 
     {
@@ -432,7 +457,6 @@ int GetFontFilename (char script, int family, int highlight, int size,
   return 1;
 #endif /* _GTK */
 }
-
-
-
+#endif /* _FONTCONFIG */
 #endif /* _GL */
+

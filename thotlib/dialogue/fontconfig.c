@@ -1,0 +1,386 @@
+/*
+ *
+ *  (c) COPYRIGHT INRIA, 1996-2002
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+ 
+/*
+ * Module dedicated to font selection upon a user file defining the fonts
+ *
+ * Author: P. Cheyrou-lagreze (INRIA)
+ *
+ */
+
+#ifdef _FONTCONFIG
+
+#include "application.h"
+
+/* Each Family can 
+   have different 
+   font style*/
+typedef struct FontFamilyConfig
+{
+  char *highlight[6];
+  /*
+  char *bold;
+  char *italic;
+  char *normal;
+  */
+} FontFamilyConfig;
+
+/* 
+   CSS 2 generic font families 
+   for each language 
+*/
+typedef struct FontScript
+{
+  FontFamilyConfig *family[6];
+  /*
+  FontFamily *serif;
+  FontFamily *sansserif;
+  FontFamily *monospace;
+  FontFamily *cursive;
+  FontFamily *fantasy;
+  */
+} FontScript;
+
+void FontConfigCreate ()
+{
+  
+}
+
+void FontConfigUserSelect ()
+{
+
+}
+
+static int isnum( char c )
+{
+  return( c >= '0' && c <= '9' ? 1 : 0 );
+}
+
+static int AdvanceNextWord (unsigned char *line, int indline)
+{
+  
+  while (!isnum (line[indline]) 
+	 && line[indline] != '\0')
+    {
+      if (line[indline] == '#')
+	while (line[indline] != EOL 
+	       && line[indline] != EOS)
+	  indline++;
+      /* skip spaces if there are */
+      /*
+	while (line[indline] <= SPACE 
+	     && line[indline] != EOS)
+	     indline++;
+      */
+      indline++;
+    }
+  return indline;
+}
+
+/*----------------------------------------------------------------------
+   getWord                                                    
+  ----------------------------------------------------------------------*/
+static int getWord (int indline, unsigned char *line, char *word)
+{
+   int             indword;
+
+   /*place ourself next to a word*/
+   indline = AdvanceNextWord (line, indline);
+   /* copy the word from the line*/
+   indword = 0;
+   word[0] = EOS;
+   while ( line[indline] != ';' &&
+	   line[indline] != EOS)
+     word[indword++] = line[indline++];
+   /* marque la fin du mot trouve' */
+   word[indword] = EOS;
+   if (indword == 0)
+     {
+       line[0] = EOS;
+       return 0;
+     }
+   return (indline);
+}
+
+/*----------------------------------------------------------------------
+   getFontFace                                                  
+  ----------------------------------------------------------------------*/
+static int getFontFace (int indline, unsigned char *line, char *word)
+{
+   int             indword;
+
+   indword = 0;
+   word[0] = EOS;   
+   /* skip all char if there are */
+   while (line[indline] != EOL 
+	  && line[indline] != EOS)
+     {
+       if (line[indline] == '=')
+	 {
+	   /* get the font-face highlight number*/
+	   word[indword++] = line[indline -1 ];
+	   word[indword++] = EOS;
+	   indline++;
+	   /*we return to the '1=' */
+	   while (line[indline] > SPACE && 
+		  line[indline] != ';' &&
+		  line[indline] != EOS)
+	     word[indword++] = line[indline++];
+	   indline++;	   
+	   /* marque la fin du mot trouve' */
+	   word[indword] = EOS;
+	   return indline;
+	 }
+       indline++;
+     }
+     return (indline);
+}
+
+/*----------------------------------------------------------------------
+   getFontFamily                                                  
+  ----------------------------------------------------------------------*/
+static int getFontFamily (int indline, unsigned char *line, char *word)
+{
+   int             indword;
+
+   /* copy the word from the line*/
+   indword = 0;
+   word[0] = EOS;
+#ifdef _WINDOWS
+   while ( !(line[indline-4] == EOL &&
+	      line[indline-2] == EOL &&
+	      line[indline] == EOL) &&
+	  line[indline] != EOS)
+#else     
+   while ( !(line[indline-2] == EOL &&
+	      line[indline-1] == EOL &&
+	      line[indline] == EOL) &&
+	  line[indline] != EOS)
+#endif
+     {
+       if (isnum (line[indline]))
+	 {
+	   while (line[indline] > SPACE && 
+		  line[indline] != ';' &&
+		  line[indline] != EOS)
+	     word[indword++] = line[indline++];
+	   /* marque la fin du mot trouve' */
+	   word[indword] = EOS;
+	   return indline;
+	 }
+       indline++;     
+     }
+   return (indline);
+}
+
+#undef MAX_TXT_LEN
+#define MAX_TXT_LEN 8144 
+
+FontScript **FontConfigLoad ()
+{  
+  FontScript         **Fonts;
+  FILE               *file;
+  char                line[MAX_TXT_LEN];
+  char                word[MAX_TXT_LEN];
+  char                fname[MAX_TXT_LEN];
+  char *Thot_Dir;
+  int indline, script, highlight, family;
+  char *fontface;
+
+  Thot_Dir = TtaGetEnvString ("THOTDIR");
+  strcpy (fname, Thot_Dir);
+
+#ifndef _GL
+#ifdef _WINDOWS
+  strcat (fname, "/config/fonts.win");
+#else /*_WINDOWS*/
+  strcat (fname, "/config/fonts.unix");  
+#endif /*_WINDOWS*/
+#else /*_GL*/
+  strcat (fname, "/config/fonts.gl");  
+#endif /*_GL*/
+
+  /* open the fonts definition file */
+   file = TtaReadOpen (fname);
+   if (file == NULL)
+     {
+	fprintf (stderr, "cannot open font definition file %s\n", fname);
+	return NULL;
+     }
+
+   /*Big Alloc*/
+   Fonts = TtaGetMemory (31 * sizeof (FontScript **));
+   for (script = 0; script < 30; script++)
+     Fonts[script] = NULL;
+   line[0] = EOS;
+   while (fread (line, 1, MAX_TXT_LEN - 1, file))
+       {
+	 indline = 0;
+	 while (line[indline] != EOS)
+	   {
+	     /*reads the script*/
+	     indline = getWord (indline, line, word);
+	     if (indline && word[0] != EOS)
+	       {
+		 script = atoi (word);
+		 if (script < 30)
+		   {
+		     Fonts[script] = TtaGetMemory (sizeof (FontScript));
+		     for (family = 0; family < 6; family++)
+		      Fonts[script]->family[family] = NULL;
+		     family = 0;
+		     /*reads all family for a script*/
+		     while (indline != 0)
+		       {
+			 indline = getFontFamily (indline, line, word);
+			 if (word[0] == EOS)
+			   break;
+			 family = atoi (word);	
+			 if (family <= 6)
+			   {
+			     Fonts[script]->family[family] = 
+			       TtaGetMemory (sizeof (FontScript));
+			     /*reads all highlights*/
+			     for (highlight = 0;highlight < 6; highlight++)
+			       Fonts[script]->family[family]->highlight[highlight] = NULL;
+			     highlight = 0;
+			     while (indline != 0)
+			       {			 
+				 indline = getFontFace (indline, line, word);  
+				 if (word[0] == EOS)
+				   break;
+				 highlight = atoi (word);
+				 if (highlight < 6)
+				   {
+				     /*Get the font-face in 
+				       1=font-face 
+				       string (so +1-1)*/
+				     fontface = TtaGetMemory (sizeof (char) 
+							      * (strlen (&word[2]) + 1));
+				     strcpy (fontface, &word[2]);
+				     Fonts[script]->family[family]->highlight[highlight]
+				       = fontface;
+				   }
+			       }
+			   }
+		       }
+		   }
+	       }
+	   }
+       }
+   TtaReadClose (file);
+   return Fonts;
+}
+
+static FontScript **Fonttab = NULL;
+
+char *FontLoadFromConfig (char script, 
+			  int family, 
+			  int highlight)
+{
+  int int_script = 1;
+
+  if (Fonttab == NULL)
+    Fonttab = FontConfigLoad ();
+  
+  switch (script) 
+    {
+    case 'F':
+      intscript = 13;
+      break;
+    case 'D':
+      intscript = 15;      
+      break;
+    case 'E':
+      /* ESSTIX FONTS ???*/
+      intscript = 20;
+      family = 1;
+      highlight = 1;
+      break;
+    case 'G':
+      /*Symbols*/
+      intscript = 20;
+      family = 1;
+      highlight = 1;
+      break;
+    case 'L':
+      /* Latin ? */
+      intscript = 1;
+      break;
+    case 'Z':
+      /*unicode ??*/
+      intscript = 0;
+      family = 1;
+      highlight = 1;
+      break;
+    default:
+      intscript = atoi (&script);
+      if (intscript < 0 || intscript > 9)
+	intscript = 1;
+      break;
+    }
+
+  switch (highlight)
+    {
+    case 0:
+      highlight = 1;
+      break;
+    case 4:
+      highlight = 3;
+      break;
+    case 5:
+      highlight = 3;
+      break;
+    default:
+      if (highlight > 5 || highlight < 0)
+	highlight = 1;
+      break;
+    }
+
+  if (family < 0 || family > 5)
+    family = 1;
+
+  if (Fonttab[intscript])
+    if (Fonttab[intscript]->family[family])
+      return (Fonttab[intscript]->family[family]->highlight[highlight]);
+  
+  return NULL;
+}
+
+
+void FreeFontConfig ()
+{
+  int script, family, highlight;
+  
+  script = 0;
+  while (script < 30)
+    {
+      if (Fonttab[script])
+	{
+	  family = 0;
+	  while (family < 5)
+	    {
+	      if (Fonttab[script]->family[family])
+		{
+		  highlight = 0;
+		  while (highlight < 5)
+		    {
+		      if (Fonttab[script]->family[family]->highlight[highlight])
+			TtaFreeMemory (Fonttab[script]->family[family]->highlight[highlight]);
+		      highlight++;
+		    }
+		  TtaFreeMemory (Fonttab[script]->family[family]);
+		}
+	      family++;
+	    }
+	  TtaFreeMemory (Fonttab[script]);
+	}
+      script++;
+    }
+}
+
+#endif /* _FONTCONFIG */

@@ -789,7 +789,7 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	     }
 #else /* _GTK */ 
 	   im = gdk_imlib_load_image (imageDesc->PicFileName);
-	   if (im)
+	   if (im )//&& w > 0 && h > 0)
 	     {
 	       gdk_imlib_render(im, w, h);
 	       if (imageDesc->PicMask)
