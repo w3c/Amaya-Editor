@@ -532,7 +532,7 @@ boolean             premierfils;
 		       Wrtext (Noeud->ElText, 72 - Indent, outfile);
 		       fprintf (outfile, "\'\n");
 		       break;
-		    case LtPlyLine:
+		    case LtPolyLine:
 		       fprintf (outfile, " Type=%c %d points\n", Noeud->ElPolyLineType,
 				Noeud->ElNPoints);
 		       for (i = 1; i <= Indent; i++)
@@ -1065,7 +1065,7 @@ FILE               *outfile;
 		    fprintf (outfile, "text ");
 
 		    break;
-		 case LtPlyLine:
+		 case LtPolyLine:
 		    fprintf (outfile, "polyline ");
 		    break;
 		 case LtPageColBreak:
@@ -1107,7 +1107,7 @@ FILE               *outfile;
 		    Wrtext (pPa1->AbText, 60, outfile);
 		    fprintf (outfile, "\'");
 		    break;
-		 case LtPlyLine:
+		 case LtPolyLine:
 		    fprintf (outfile, "type=%c\n", pPa1->AbPolyLineShape);
 		    for (i = 1; i <= Indent + 6; i++)
 		       fprintf (outfile, " ");
@@ -1513,7 +1513,7 @@ FILE               *outfile;
 			 putc (pAb->AbRealShape, outfile);
 			 fprintf (outfile, "\'");
 			 break;
-		      case LtPlyLine:
+		      case LtPolyLine:
 			 fprintf (outfile, "POLYLINE\n");
 			 for (j = 1; j <= Indent + 6; j++)
 			    fprintf (outfile, " ");

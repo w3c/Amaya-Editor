@@ -907,7 +907,7 @@ Document            document;
      }
    else if (((PtrElement) element)->ElLeafType != LtSymbol &&
 	    ((PtrElement) element)->ElLeafType != LtGraphics &&
-	    ((PtrElement) element)->ElLeafType != LtPlyLine)
+	    ((PtrElement) element)->ElLeafType != LtPolyLine)
      {
 	TtaError (ERR_invalid_element_type);
      }
@@ -944,14 +944,14 @@ Document            document;
 		  if (polyline && ((PtrElement) element)->ElLeafType == LtGraphics)
 		     /* changing simple graphic --> polyline */
 		    {
-		       ((PtrElement) element)->ElLeafType = LtPlyLine;
+		       ((PtrElement) element)->ElLeafType = LtPolyLine;
 		       GetTextBuffer (&((PtrElement) element)->ElPolyLineBuffer);
 		       ((PtrElement) element)->ElNPoints = 1;
 		       ((PtrElement) element)->ElText->BuLength = 1;
 		       ((PtrElement) element)->ElText->BuPoints[0].XCoord = 0;
 		       ((PtrElement) element)->ElText->BuPoints[0].YCoord = 0;
 		    }
-		  else if (!polyline && ((PtrElement) element)->ElLeafType == LtPlyLine)
+		  else if (!polyline && ((PtrElement) element)->ElLeafType == LtPolyLine)
 		     /* changing polyline --> simple graphic */
 		    {
 		       delta = -((PtrElement) element)->ElNPoints;
@@ -969,7 +969,7 @@ Document            document;
 			      shape == '\0')
 			delta = -1;
 	       }
-	     if (((PtrElement) element)->ElLeafType == LtPlyLine)
+	     if (((PtrElement) element)->ElLeafType == LtPolyLine)
 		((PtrElement) element)->ElPolyLineType = shape;
 	     else
 		((PtrElement) element)->ElGraph = shape;
@@ -1010,7 +1010,7 @@ Document            document;
       TtaError (ERR_invalid_parameter);
    else if (!((PtrElement) element)->ElTerminal)
       TtaError (ERR_invalid_element_type);
-   else if (((PtrElement) element)->ElLeafType != LtPlyLine)
+   else if (((PtrElement) element)->ElLeafType != LtPolyLine)
       TtaError (ERR_invalid_element_type);
    else
       /* verifies the parameter document */
@@ -1565,11 +1565,11 @@ Element             element;
      }
    else if (((PtrElement) element)->ElLeafType != LtSymbol &&
 	    ((PtrElement) element)->ElLeafType != LtGraphics &&
-	    ((PtrElement) element)->ElLeafType != LtPlyLine)
+	    ((PtrElement) element)->ElLeafType != LtPolyLine)
      {
 	TtaError (ERR_invalid_element_type);
      }
-   else if (((PtrElement) element)->ElLeafType == LtPlyLine)
+   else if (((PtrElement) element)->ElLeafType == LtPolyLine)
       content = ((PtrElement) element)->ElPolyLineType;
    else
       content = ((PtrElement) element)->ElGraph;
@@ -1602,7 +1602,7 @@ Element             element;
       TtaError (ERR_invalid_parameter);
    else if (!((PtrElement) element)->ElTerminal)
       TtaError (ERR_invalid_element_type);
-   else if (((PtrElement) element)->ElLeafType != LtPlyLine)
+   else if (((PtrElement) element)->ElLeafType != LtPolyLine)
       TtaError (ERR_invalid_element_type);
    else
       /* one ignore the boundary point limite, considered in ElNPoints */
@@ -1649,7 +1649,7 @@ int                *y;
       TtaError (ERR_invalid_parameter);
    else if (!((PtrElement) element)->ElTerminal)
       TtaError (ERR_invalid_element_type);
-   else if (((PtrElement) element)->ElLeafType != LtPlyLine)
+   else if (((PtrElement) element)->ElLeafType != LtPolyLine)
       TtaError (ERR_invalid_element_type);
    else if (unit != UnPoint && unit != UnPixel)
       TtaError (ERR_invalid_parameter);

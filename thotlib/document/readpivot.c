@@ -2760,7 +2760,7 @@ boolean             createDesc;
 						     else
 						       {
 							  /* transforme l'element graphique simple en Polyline */
-							  pEl->ElLeafType = LtPlyLine;
+							  pEl->ElLeafType = LtPolyLine;
 							  GetTextBuffer (&pEl->ElPolyLineBuffer);
 							  pEl->ElVolume = n;
 							  pEl->ElPolyLineType = ch;

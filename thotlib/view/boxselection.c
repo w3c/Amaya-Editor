@@ -513,7 +513,7 @@ boolean             alone;
 		       lastChar = pAb->AbVolume;
 		    }
 	       }
-	     else if (pAb->AbLeafType != LtPlyLine && pAb->AbLeafType != LtPicture)
+	     else if (pAb->AbLeafType != LtPolyLine && pAb->AbLeafType != LtPicture)
 		firstChar = 0;
 
 	     /* memorise si la selection relle porte sur un seul pave ou non */
@@ -523,7 +523,7 @@ boolean             alone;
 
 	     /* La selection porte sur le pave complet ou un point de controle */
 	     /* de pave polyline */
-	     if (firstChar == 0 || pAb->AbVolume == 0 || pAb->AbLeafType == LtPlyLine || pAb->AbLeafType == LtPicture)
+	     if (firstChar == 0 || pAb->AbVolume == 0 || pAb->AbLeafType == LtPolyLine || pAb->AbLeafType == LtPicture)
 	       {
 		  /* Est-ce une boite de texte ? */
 		  if (pAb->AbLeafType == LtText)
@@ -542,7 +542,7 @@ boolean             alone;
 		    {
 		       pViewSel = &pFrame->FrSelectionBegin;
 		       pViewSel->VsBox = pBox;
-		       if (endSelection && pAb->AbLeafType != LtPlyLine && pAb->AbLeafType != LtPicture)
+		       if (endSelection && pAb->AbLeafType != LtPolyLine && pAb->AbLeafType != LtPicture)
 			  /* tout selectionne */
 			  pViewSel->VsIndBox = 0;
 		       else

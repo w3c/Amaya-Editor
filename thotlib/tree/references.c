@@ -531,7 +531,7 @@ PtrElement          pEl;
 				   }
 			      }
 			    break;
-			 case LtPlyLine:
+			 case LtPolyLine:
 			    /* annule le contenu d'une poly line */
 			    if (pEl->ElPolyLineBuffer != NULL)
 			      {

@@ -4,15 +4,15 @@
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
- 
 
 #ifndef THOT_APPDIALOGUE_VAR
 #define THOT_APPDIALOGUE_VAR
 
-extern int UserErrorCode; /* defini dans thotmsg.c */
+extern int UserErrorCode;
 
-/* TABLE DES TRAITEMENTS INTERNES et optionnels de Thot		*/
-/* Appel action: (*ThotLocalActions[i])(ref, typedata, data);   */
+/* Table of internal optional Thot operations (actions)		    */
+/* Calling an action: (*ThotLocalActions[i])(ref, datatype, data);  */
+
 EXPORT Proc		ThotLocalActions[MAX_LOCAL_ACTIONS];
 
 #ifndef NODISPLAY
@@ -37,16 +37,18 @@ EXPORT ThotWidget	RootShell;
 
 EXPORT Proc		CurrentCallbackAPI;
 
-/* TABLE DES ACTIONS liees aux menus des fenetres Application et Documents */
-/* On conserve pour chaque action : nom, adresse , equivalent clavier	   */
-/* et indicateur pour chaque fenetre susceptible d'appeler cette action	   */
-/* Appel action: (*ptraction->Call_Action)(document, vue);   		   */
+/* Table of actions related to the menus attached to Application and	  */
+/* Documents windows.							  */
+/* For each action, the following items are stored: name, address,	  */
+/* keyboard equivalent, windows supposed to call the action.		  */
+/* Calling an action: (*actionptr->Call_Action)(document, view);	  */
+
 EXPORT Action_Ctl	*MenuActionList;
 EXPORT int		MaxMenuAction;
 
-/* Gestion des evenements de retour sur les fenetres Application et Documents */
+/* return events for Application and Document windows			  */
+
 EXPORT int      ClickIsDone;
 
 #endif /* !NODISPLAY */
-
 #endif /* THOT_APPDIALOGUE_VAR */

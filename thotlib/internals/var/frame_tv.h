@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -9,17 +9,17 @@
  * Global variables for frame management
  */
 
-
 #ifndef THOT_FRAME_VAR
 #define THOT_FRAME_VAR
 
 #ifndef NODISPLAY
-/* Frames table */
-EXPORT Frame_Ctl        FrameTable[MAX_FRAME+1];
-EXPORT ThotWindow  FrRef[MAX_FRAME + 1 + 1]; /* ref des fenetres de travail */
-EXPORT ThotColor BackgroundColor[MAX_FRAME + 1 + 1]; /* Background colors   */
 
-EXPORT int  DOT_PER_INCHE;         /* Precision en points par pouce */
+/* Frames table */
+EXPORT Frame_Ctl   FrameTable[MAX_FRAME+1];
+EXPORT ThotWindow  FrRef[MAX_FRAME + 2];		/* window references */
+EXPORT ThotColor   BackgroundColor[MAX_FRAME + 2];	/* Background color */
+
+EXPORT int	 DOT_PER_INCHE;	   /* screen resolution		  */
 EXPORT ThotColor Black_Color;      /* Couleur d'ecriture          */
 EXPORT ThotColor White_Color;      /* Couleur de fond             */
 EXPORT ThotColor Scroll_Color;     /* Couleur des bandeaux        */

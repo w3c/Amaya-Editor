@@ -84,7 +84,7 @@ int                 pointselect;
 	     if (pAb == NULL)
 		/* C'est une boite sans pave */
 		VideoInvert (frame, rightX - leftX, bottomY - topY, leftX, topY);
-	     else if (pAb->AbLeafType == LtPlyLine && pBox->BxNChars > 1)
+	     else if (pAb->AbLeafType == LtPolyLine && pBox->BxNChars > 1)
 	       {
 		  /* C'est une boite polyline */
 		  /* On marque le(s) point(s) caracteristique(s) de la polyline */

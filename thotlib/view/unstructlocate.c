@@ -86,7 +86,7 @@ int                *pointselect;
 	     pointIndex = 0;
 	     if (pAb->AbVisibility >= pFrame->FrVisibility)
 	       {
-		  if (pAb->AbPresentationBox || pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPlyLine)
+		  if (pAb->AbPresentationBox || pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPolyLine)
 		    {
 		       pCurrentBox = GetEnclosingClickedBox (pAb, x, x, y, &pointIndex);
 		       if (pCurrentBox == NULL)

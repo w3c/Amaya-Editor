@@ -632,7 +632,7 @@ PtrDocument         pDoc;
 		  pEl->ElText = NULL;
 		  pEl->ElTextLength = 0;
 		  break;
-	       case LtPlyLine:
+	       case LtPolyLine:
 		  pBuf = pEl->ElPolyLineBuffer;
 		  while (pBuf != NULL)
 		    {

@@ -1050,7 +1050,7 @@ boolean             subTree;
 				case LtPairedElem:
 				   PutInteger (pivFile, pEl1->ElPairIdent);
 				   break;
-				case LtPlyLine:
+				case LtPolyLine:
 				   /* ecrit le code representant la forme de la ligne */
 				   TtaWriteByte (pivFile, pEl1->ElPolyLineType);
 				   /* ecrit une marque indiquant que c'est une Polyline */

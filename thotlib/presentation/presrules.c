@@ -1340,7 +1340,7 @@ PtrDocument         pDoc;
 		    pAb->AbLanguage = pEl->ElLanguage;
 		    pAb->AbVolume = pEl->ElTextLength;
 		    break;
-		 case LtPlyLine:
+		 case LtPolyLine:
 		    /* prend le contenu de l'element correspondant */
 		    pAb->AbPolyLineBuffer = pEl->ElPolyLineBuffer;
 		    pAb->AbVolume = pEl->ElNPoints;

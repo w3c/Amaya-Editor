@@ -187,7 +187,7 @@ PtrAbstractBox      pAb;
 	/* celui d'une marque de paire, on libere les buffers */
 	libAb = FALSE;
 	if (pAbbox1->AbPresentationBox)
-	   if (pAbbox1->AbLeafType == LtText || pAbbox1->AbLeafType == LtPlyLine ||
+	   if (pAbbox1->AbLeafType == LtText || pAbbox1->AbLeafType == LtPolyLine ||
 	       pAbbox1->AbLeafType == LtPicture)
 	      libAb = TRUE;
 	if (!libAb)
@@ -201,8 +201,8 @@ PtrAbstractBox      pAb;
 	   switch (pAbbox1->AbLeafType)
 		 {
 		    case LtText:
-		    case LtPlyLine:
-		       if (pAbbox1->AbLeafType == LtPlyLine)
+		    case LtPolyLine:
+		       if (pAbbox1->AbLeafType == LtPolyLine)
 			  pBT = pAbbox1->AbPolyLineBuffer;
 		       else
 			  pBT = pAbbox1->AbText;

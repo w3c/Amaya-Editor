@@ -1076,7 +1076,7 @@ int                 frame;
       else
 	 DisplayGraph (pBox, frame);
    /* Polyline */
-   else if (pBox->BxAbstractBox->AbLeafType == LtPlyLine)
+   else if (pBox->BxAbstractBox->AbLeafType == LtPolyLine)
       if (pBox->BxNChars == 1)
 	 DisplayEmptyBox (pBox, frame, '2');
       else

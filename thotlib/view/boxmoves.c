@@ -317,13 +317,13 @@ boolean             inAbtractBox;
 	while (pChildAb != NULL)
 	  {
 	     if (pChildAb->AbLeafType == LtGraphics
-		 || pChildAb->AbLeafType == LtPlyLine
+		 || pChildAb->AbLeafType == LtPolyLine
 		 || pChildAb->AbLeafType == LtCompound)
 		MirrorShape (pChildAb, horizRef, vertRef, inAbtractBox);
 	     pChildAb = pChildAb->AbNext;
 	  }
      }
-   else if (pAb->AbLeafType == LtPlyLine)
+   else if (pAb->AbLeafType == LtPolyLine)
       MirrorPolyline (pAb, horizRef, vertRef, inAbtractBox);
    else if (pAb->AbLeafType == LtGraphics)
      {
@@ -1779,7 +1779,7 @@ int                 frame;
 		   pBox->BxMoved = NULL;
 
 		/* Force la reevaluation des points de controle de la polyline */
-		if (pCurrentAb->AbLeafType == LtPlyLine && pBox->BxPictInfo != NULL)
+		if (pCurrentAb->AbLeafType == LtPolyLine && pBox->BxPictInfo != NULL)
 		  {
 		     /* libere les points de controle */
 		     free ((char *) pBox->BxPictInfo);
@@ -2205,7 +2205,7 @@ int                 frame;
 		   pBox->BxMoved = NULL;
 
 		/* Force la reevaluation des points de controle de la polyline */
-		if (pCurrentAb->AbLeafType == LtPlyLine && pBox->BxPictInfo != NULL)
+		if (pCurrentAb->AbLeafType == LtPolyLine && pBox->BxPictInfo != NULL)
 		  {
 		     /* libere les points de controle */
 		     free ((char *) pBox->BxPictInfo);

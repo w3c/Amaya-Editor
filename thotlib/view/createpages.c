@@ -125,7 +125,7 @@ PtrAbstractBox      pAb;
 	       pNewAbbox->AbPictInfo = pAb->AbPictInfo;
 	       break;
 	    case LtPairedElem:
-	    case LtPlyLine:
+	    case LtPolyLine:
 	    case LtReference:
 	    case LtPageColBreak:
 	       break;

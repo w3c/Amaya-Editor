@@ -896,7 +896,7 @@ int                *pointselect;
 		else
 		   return (pBox);
 	     }
-	   else if (pAb->AbLeafType == LtPlyLine && pAb->AbVolume > 2)
+	   else if (pAb->AbLeafType == LtPolyLine && pAb->AbVolume > 2)
 	     {
 		/* La polyline contient au moins un segment */
 		pBox = GetPolylinePoint (pAb, lowerX, y, pointselect);
@@ -1144,7 +1144,7 @@ int                 yRef;
 	     if (pAb->AbVisibility >= pFrame->FrVisibility
 		 && (!pAb->AbPresentationBox || pAb->AbCanBeModified))
 	       {
-		  if (pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPlyLine)
+		  if (pAb->AbLeafType == LtGraphics || pAb->AbLeafType == LtPolyLine)
 		    {
 		       pCurrentBox = GetEnclosingClickedBox (pAb, xRef, xRef, yRef, &pointIndex);
 		       if (pCurrentBox == NULL)

@@ -1211,7 +1211,7 @@ void               *event;
 			      /* on ne peut inserer ou coller dans un document en lecture seule */
 			      TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
 			   /* Message 'Document en lecture seule' */
-			   else if (firstCar != 0 && firstSel->ElTerminal && firstSel->ElLeafType == LtPlyLine)
+			   else if (firstCar != 0 && firstSel->ElTerminal && firstSel->ElLeafType == LtPolyLine)
 			     {
 				/* selection a l'interieur d'une polyline */
 				if (ThotLocalActions[T_editfunc] != NULL)

@@ -2251,8 +2251,8 @@ int                 delta;
 		       pAbbox1->AbText = element->ElText;
 		       pAbbox1->AbLanguage = element->ElLanguage;
 		       break;
-		    case LtPlyLine:
-		       pAbbox1->AbLeafType = LtPlyLine;
+		    case LtPolyLine:
+		       pAbbox1->AbLeafType = LtPolyLine;
 		       pAbbox1->AbPolyLineBuffer = element->ElPolyLineBuffer;
 		       pAbbox1->AbPolyLineShape = element->ElPolyLineType;
 		       pAbbox1->AbVolume = element->ElNPoints;

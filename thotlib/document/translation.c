@@ -358,7 +358,7 @@ PtrDocument         pDoc;
    textTransBegin = 0;
    TextTransEnd = 0;
    if (!(pEl->ElLeafType == LtText || pEl->ElLeafType == LtSymbol ||
-	 pEl->ElLeafType == LtGraphics || pEl->ElLeafType == LtPlyLine)
+	 pEl->ElLeafType == LtGraphics || pEl->ElLeafType == LtPolyLine)
        || !transChar)
       pTSch = GetTranslationSchema (pEl->ElStructSchema);
    else
@@ -406,7 +406,7 @@ PtrDocument         pDoc;
 				 transExist = pTSch->TsSymbolFirst != 0;
 				 break;
 			      case LtGraphics:
-			      case LtPlyLine:
+			      case LtPolyLine:
 				 transExist = pTSch->TsGraphicsFirst != 0;
 				 break;
 			      default:
@@ -627,7 +627,7 @@ PtrDocument         pDoc;
 	       break;
 	    case LtSymbol:
 	    case LtGraphics:
-	    case LtPlyLine:
+	    case LtPolyLine:
 	       if (pTSch != NULL)
 		 {
 		    if (!transChar)
@@ -646,7 +646,7 @@ PtrDocument         pDoc;
 			 lt = pTSch->TsGraphicsLast;
 		      }
 		    /* prend dans c le caractere qui represente la forme graphique */
-		    if (pEl->ElLeafType == LtPlyLine)
+		    if (pEl->ElLeafType == LtPolyLine)
 		       c = pEl->ElPolyLineType;
 		    else
 		       c = pEl->ElGraph;
@@ -675,7 +675,7 @@ PtrDocument         pDoc;
 			    /* ce symbole ne se traduit pas */
 			    PutChar (c, fileNum, NULL, pDoc, lineBreak);
 		      }
-		    if (pEl->ElLeafType == LtPlyLine)
+		    if (pEl->ElLeafType == LtPolyLine)
 		       if (pEl->ElNPoints > 0)
 			  /* la ligne a au moins un point de controle */
 			  /* on ecrit les coordonnees des points de controle */
@@ -841,7 +841,7 @@ PtrElement          pEl;
 		  /* un element de paire n'est jamais considere' comme vide */
 		  empty = FALSE;
 		  break;
-	       case LtPlyLine:
+	       case LtPolyLine:
 		  empty = (pEl->ElNPoints == 0);
 		  break;
 	       default:

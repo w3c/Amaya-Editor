@@ -1143,7 +1143,7 @@ int                *carIndex;
 		    pCurrentBox->BxNChars = pAb->AbVolume;
 		    GiveGraphicSize (pAb, &width, &height);
 		    break;
-		 case LtPlyLine:
+		 case LtPolyLine:
 		    /* Prend une copie des points de controle */
 		    pCurrentBox->BxBuffer = CopyText (pAb->AbPolyLineBuffer, NULL);
 		    pCurrentBox->BxNChars = pAb->AbVolume;	/* Nombre de points */
@@ -1497,7 +1497,7 @@ int                 frame;
 	     if (pCurrentBox->BxType == BoBlock)
 		RemoveLines (pCurrentBox, frame, pCurrentBox->BxFirstLine, &changeSelectBegin, &changeSelectEnd);
 
-	     else if (pAb->AbLeafType == LtPlyLine)
+	     else if (pAb->AbLeafType == LtPolyLine)
 		FreePolyline (pCurrentBox);
 	     pChildAb = pAb->AbFirstEnclosed;
 	     pAb->AbNew = toRemake;
@@ -1786,7 +1786,7 @@ int                 frame;
    /* AbstractBox MORT */
    else if (pAb->AbDead)
      {
-	if (pAb->AbLeafType == LtPlyLine)
+	if (pAb->AbLeafType == LtPolyLine)
 	   FreePolyline (pBox);	/* libere la liste des buffers de la boite */
 
 	/* On situe la boite dans le chainage des boites terminales */
@@ -2000,7 +2000,7 @@ int                 frame;
 				}
 			      GiveGraphicSize (pAb, &width, &height);
 			      break;
-			   case LtPlyLine:
+			   case LtPolyLine:
 			      if (pAb->AbChange)
 				{
 				   /* Libere les anciens buffers */

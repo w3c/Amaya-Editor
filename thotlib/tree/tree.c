@@ -700,7 +700,7 @@ int                 Kind;
 			      if (pEl->ElTextLength == 0)
 				 ret = TRUE;
 			      break;
-			   case LtPlyLine:
+			   case LtPolyLine:
 			      if (pEl->ElNPoints == 0)
 				 ret = TRUE;
 			      break;
@@ -2636,7 +2636,7 @@ boolean             del;
 			 (*pNew)->ElText = NULL;
 			 (*pNew)->ElTextLength = 0;
 			 break;
-		      case LtPlyLine:
+		      case LtPolyLine:
 			 pEl->ElPolyLineBuffer = (*pNew)->ElPolyLineBuffer;
 			 pEl->ElNPoints = (*pNew)->ElNPoints;
 			 pEl->ElVolume = pEl->ElNPoints;
@@ -3402,7 +3402,7 @@ PtrElement         *pEl;
 		       pEl1->ElPictInfo = NULL;
 		    }
 	       }
-	     if (pEl1->ElLeafType == LtPlyLine)
+	     if (pEl1->ElLeafType == LtPolyLine)
 		/* frees all the coordinate buffers associated to the element */
 	       {
 		  pBuf = pEl1->ElPolyLineBuffer;
@@ -3774,7 +3774,7 @@ boolean             shareRef;
 				   pEl->ElTextLength = pSource->ElTextLength;
 				   pEl->ElVolume = pEl->ElTextLength;
 				   break;
-				case LtPlyLine:
+				case LtPolyLine:
 				   pEl->ElPolyLineBuffer = CopyText (pSource->ElPolyLineBuffer, pEl);
 				   pEl->ElNPoints = pSource->ElNPoints;
 				   pEl->ElPolyLineType = pSource->ElPolyLineType;
@@ -3962,7 +3962,7 @@ PtrDocument         pDoc;
 	       case LtText:
 		  done = pEl->ElTextLength > 0;
 		  break;
-	       case LtPlyLine:
+	       case LtPolyLine:
 		  done = pEl->ElNPoints > 0;
 	       case LtSymbol:
 	       case LtGraphics:
@@ -4007,19 +4007,19 @@ PtrDocument         pDoc;
 			   {
 			      case LtText:
 			      case LtPicture:
-			      case LtPlyLine:
+			      case LtPolyLine:
 				 if (pSource->ElLeafType == LtText)
 				    pEl->ElLanguage = pSource->ElLanguage;
 				 /* we copy the content of a text or of an image */
-				 if (pSource->ElLeafType == LtPlyLine)
+				 if (pSource->ElLeafType == LtPolyLine)
 				   {
-				      if (pEl->ElLeafType == LtPlyLine &&
+				      if (pEl->ElLeafType == LtPolyLine &&
 					  pEl->ElPolyLineBuffer != NULL)
 					{
 					   ClearText (pEl->ElPolyLineBuffer);
 					   FreeTextBuffer (pEl->ElPolyLineBuffer);
 					}
-				      pEl->ElLeafType = LtPlyLine;
+				      pEl->ElLeafType = LtPolyLine;
 				      pEl->ElPolyLineBuffer = CopyText (pSource->ElPolyLineBuffer, pEl);
 				      pEl->ElNPoints = pSource->ElNPoints;
 				      pEl->ElPolyLineType = pSource->ElPolyLineType;

@@ -1,62 +1,48 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
  
-/*
- * page.var
- */
-
-
-
 #ifdef __COLPAGE__
-/* Hauteur de la page sans le bas de page minimum */
-EXPORT int     	BreakPageHeight; /* hauteur de la coupure corps+haut*/
-EXPORT int  PageHeaderHeight; /* hauteur haut*/
-EXPORT int  WholePageHeight; /* hauteur totale calculee a partir */
-        /* de la hauteur du haut, du bas et du corps de page */
-        /* cette variable est reevaluee apres creation d'une */
-        /* page de type PgBegin */
-EXPORT boolean StopBeforeCreation;
-				 /* evaluation avec arret sur MP ou ref*/
-EXPORT boolean FoundPageHF; /* pour savoir la cause de l'arret de */
- /* creation des paves: soit volume soit MP ou d'un elt asscoc HB */
-EXPORT boolean StopGroupCol; 
-                 /* detection d'une colonne groupee pour l'equilibrage */
-EXPORT boolean ToBalance; 
-           /* demande de detection d'une colonne groupee pour l'equilibrage */
-/* Pointeur sur la reference a l' element associe'
- * dont l'image apparait dans une boite de haut ou de bas de page
- * et a provoque un debordement de page.
- */
-EXPORT PtrElement 	HFPageRefAssoc;
-/* Pointeur sur le pave a detruire dans le cas d'un debordement de page
- * c'est soit le pave de l'element associe soit son englobant si c'etait
- * le seul place dans la page. C'est le pointeur sur le pave principal, 
- *les paves de presentation avant et apres seront detruits dans le module page.
-*/
-EXPORT PtrAbstractBox		AbsBoxAssocToDestroy;
+/* page height without the minimum footer */
+EXPORT int	BreakPageHeight;	/* height of page body + header */
+EXPORT int	PageHeaderHeight;	/* height of page header */
+EXPORT int	WholePageHeight;	/* total height (header+body+footer)
+					   This variable is recomputed whenever
+					   a page of type PgBegin is created */
+EXPORT boolean	StopBeforeCreation;
+EXPORT boolean	FoundPageHF;	/* to know the reason for stopping abstract
+				   boxes creation: volume or associated element
+				   to be displayed in a page header or footer*/
+EXPORT boolean StopGroupCol;	/* a grouped column has been detected */
+EXPORT boolean ToBalance; 	/* ask for detection of grouped column, in
+				   order to balance columns in the same group*/
+EXPORT PtrElement 	HFPageRefAssoc;/* the reference element that designates
+			the associated element whose image appears in a page
+			header or footer and has caused a page overflow */
+
+EXPORT PtrAbstractBox	AbsBoxAssocToDestroy;	/* the abstract box to be
+			deleted in case of page overflow. It's either the
+			abst. box of the associated element or its parent, if
+			it is the only in the current page. It's always the
+			main abstract box (not a presentation box). */
 #else /* __COLPAGE__ */
-EXPORT int     	PageHeight; /* hauteur de la coupure corps+haut*/
+EXPORT int		PageHeight;	/* page height (header + body) */
 #endif /* __COLPAGE__ */
 
-EXPORT int      RealPageHeight; /* hauteur de la page pour le Mediateur */
-/* NOTE: le Mediateur ne coupe pas exactement a la hauteur indiquee par */
-/* l'editeur, pour eviter de couper une ligne de texte en deux, */
-/* par exemple. RealPageHeight est la hauteur de coupure de */
-/* page effectivement utilisee par le Mediateur. */
+EXPORT int      RealPageHeight;		/* Page height for the formatter */
+/* Note: The formatter does not break pages exactly at the position
+   indicated, as this position may cross a line of text horizontally, for
+   instance. RealPageHeight is the actual position of the page break, as
+   computed by the formatter */
 
-
-/* Boites de haut de page dont la creation a ete differee */
-EXPORT int  PageFooterHeight; /* hauteur bas */
-EXPORT int     	NbBoxesPageHeaderToCreate;
-EXPORT PtrElement      PageHeaderRefAssoc;
-
+/* Page header boxes whose creation has been delayed */
+EXPORT int		PageFooterHeight;
+EXPORT int		NbBoxesPageHeaderToCreate;
+EXPORT PtrElement	PageHeaderRefAssoc;
 EXPORT PtrElement 	WorkingPage;
 EXPORT PtrPRule 	PageCreateRule;
 EXPORT PtrPSchema 	PageSchPresRule;
-
-
 EXPORT boolean		RunningPaginate;
