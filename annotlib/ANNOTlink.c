@@ -132,7 +132,8 @@ CHAR_T *labl;
 int cN;
 #endif /* __STDC__*/
 {
-  LINK_AddLinkToSource (source_doc, DocumentURLs[annot_doc], labf, c1, labl, cN);
+  LINK_AddLinkToSource (source_doc, DocumentURLs[annot_doc], 
+			labf, c1, labl, cN);
   LINK_SaveLink (source_doc, annot_doc, labf, c1, labl, cN);
 
 #if 0
@@ -237,21 +238,22 @@ int cN;
   -----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void LINK_SaveLink (Document source_doc, Document annot_doc, CHAR_T *labf, int c1, CHAR_T *labl, int cN)
+void LINK_SaveLink (Document source_doc, Document annot_doc, CHAR_T *labf, int c1, CHAR_T *labl, int cl)
 #else /* __STDC__*/
-void LINK_SaveLink (source_doc, annot_doc, annotName, labf, c1, labl, cN)
+void LINK_SaveLink (source_doc, annot_doc, annotName, labf, c1, labl, cl)
      Document source_doc;
      Document annot_doc;
      CHAR_T *  annotName;
      CHAR_T *  labf;
      int      c1;
      CHAR_T *  labl;
-     int      cN;
+     int      cl;
 #endif /* __STDC__*/
 {
-  FILE   *indexFile;
   char   *annot_user;
   char   *indexName;
+  AnnotMeta *annot;
+  List   *annot_list;
 
   /* Open the annotation index */
   indexName = LINK_GetAnnotationIndexFile (DocumentURLs[source_doc]);
@@ -260,11 +262,41 @@ void LINK_SaveLink (source_doc, annot_doc, annotName, labf, c1, labl, cN)
       indexName = GetTempName (GetAnnotDir (), "index");
       AddAnnotationIndexFile (DocumentURLs[source_doc], indexName);
     }
+
+  /*
+  **  Make a new annotation entry, add it to annotlist,  and initialize g271it.
+  */
+  annot =  AnnotMeta_new ();
+  annot_list = AnnotMetaDataList[source_doc];
+  List_add (&annot_list, (void *) annot);
+
+  annot->about = TtaStrdup (DocumentURLs[source_doc]);
+  ustrcpy (annot->labf, labf);
+  annot->c1 = c1;
+  ustrcpy (annot->labl, labl);
+  annot->cl = cl;
+  /* @ */
+  annot->date = TtaStrdup ("date");
+  annot_user = GetAnnotUser ();
+  annot->author = TtaStrdup (annot_user);
+  annot->content_type = TtaStrdup ("text/html");
+  /* @ some parameters, I don't know what to do! */
+  annot->content_length = TtaStrdup ("120?");
+  annot->body_url = TtaStrdup (DocumentURLs[annot_doc]); 
+
+  /* write the update annotation list */
+  AnnotList_writeIndex (indexName, annot_list);
+  TtaFreeMemory (indexName);
+  return;
+
+#if 0
   indexFile = fopen (indexName, "a");
   TtaFreeMemory (indexName);
 
   /* Add the new link */
   annot_user = GetAnnotUser ();
+  /* @@@ change this to add a new entry to annot_list then
+     output index file to indexFile */
   ufprintf (indexFile, TEXT("%s|%s|%s|%d|%s|%d\n"), 
 	    annot_user, 
 	    DocumentURLs[annot_doc], 
@@ -273,6 +305,7 @@ void LINK_SaveLink (source_doc, annot_doc, annotName, labf, c1, labl, cN)
  
   /* clean up and quit */
   fclose (indexFile);
+#endif
 }
 
 /*-----------------------------------------------------------------------
@@ -282,21 +315,10 @@ void LINK_SaveLink (source_doc, annot_doc, annotName, labf, c1, labl, cN)
   -----------------------------------------------------------------------*/
 void LINK_DelMetaFromMemory (Document doc)
 {
-  AnnotMeta *me, *next;
-  
   if (!AnnotMetaDataList[doc])
     return;
 
-  for (me = AnnotMetaDataList[doc]; me ; me = next)
-  {
-      next = me->next;
-      TtaFreeMemory (me->author);
-      TtaFreeMemory (me->date);
-      TtaFreeMemory (me->type);
-      TtaFreeMemory (me->annotFile);
-      TtaFreeMemory (me);
-    }
-
+  AnnotList_free (AnnotMetaDataList[doc]);
   AnnotMetaDataList[doc] = NULL;
 }
 
@@ -348,14 +370,14 @@ void LINK_LoadAnnotations (doc, annotIndex)
 {
   View    view;
   Element el, body;
-  List *annot_list;
+  List *annot_list, *list_ptr;
   AnnotMeta *annot;
 
   if (!annotIndex || !(TtaFileExist (annotIndex)))
     /* there are no annotations */
     return;
   
-  annot_list = RDF_parseFile ("/tmp/rdf.tmp", ANNOT_SINGLE);
+  annot_list = RDF_parseFile (annotIndex, ANNOT_LIST);
 
   if (!annot_list)
     /* we didn't read any annotation */
@@ -366,23 +388,22 @@ void LINK_LoadAnnotations (doc, annotIndex)
   view = TtaGetViewFromName (doc, "Formatted_view");
   body = SearchElementInDoc (doc, HTML_EL_BODY);
   
-  annot = (AnnotMeta *) annot_list->object;
+  list_ptr = annot_list;
 
-  while (annot)
+  while (list_ptr)
     {
+      annot = (AnnotMeta *) list_ptr->object;
     if ((el = TtaSearchElementByLabel (annot->labf, body)) == NULL)
-      fprintf (stderr, "This annotations has lost its parent!\n");
+      /* @@ perhaps I should erase it from the list? */
+      fprintf (stderr, "This annotation has lost its parent!\n");
     else 
       {
 	LINK_AddLinkToSource (doc, annot->body_url, annot->labf, annot->c1,
 			      annot->labl, annot->cl);
-	LINK_AddMetaToMemory (doc, annot->author, TEXT("date"), TEXT("Something"),
-			      annot->body_url);
-#if 0
-	LINK_AddMetaToMemory (doc, annotUser, TEXT("date"), TEXT("Something"),
-			      annotFile);
-#endif
+	AnnotMetaDataList[doc] = annot_list;
       }
+    /* @@@ */
+    list_ptr = list_ptr->next;
   }
 }
 

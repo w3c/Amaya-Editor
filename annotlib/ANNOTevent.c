@@ -229,17 +229,19 @@ View view;
   /*
    * Parsing test!
   */
-  
+
+#if 0  
   annot_list = RDF_parseFile ("/tmp/rdf.tmp", ANNOT_SINGLE);
   AnnotList_print (annot_list);
   AnnotList_free (annot_list);
   return;
+#endif
 
   /*
    * load the local annotations 
    */
   annotIndex = LINK_GetAnnotationIndexFile (DocumentURLs[doc]);
-#if 0
+#if 1
   LINK_LoadAnnotations (doc, annotIndex);
 #else
   LINK_LoadAnnotations (doc, "/tmp/rdfquery.xml");

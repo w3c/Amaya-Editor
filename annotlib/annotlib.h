@@ -79,7 +79,7 @@ AnnotFileType;
 #include "rdf2annot_f.h"
 
 /* linked list of all annotations related to a document */
-AnnotMeta *AnnotMetaDataList[DocumentTableLength];
+List *AnnotMetaDataList[DocumentTableLength];
 
 /* Definition de constantes pour les annotations */
 

@@ -109,7 +109,8 @@ Document ANNOT_NewDocument (doc)
 AnnotMeta *GetMetaData (Document doc, Document annotDoc)
 #endif
 {
-  AnnotMeta *me;
+  List *ptr;
+  AnnotMeta *annot = NULL;
   STRING annotFile;
 
   /* @@@ why I can't use docAnnot??? what is interfering? */
@@ -117,17 +118,24 @@ AnnotMeta *GetMetaData (Document doc, Document annotDoc)
       && DocumentTypes[doc] == 11)
     return (NULL);
 
-  me = AnnotMetaDataList[doc];
-  if (me)
-    annotFile = me->annotFile;
+  /* get a pointer to the annot list */
+  ptr = AnnotMetaDataList[doc];
+  if (!ptr)
+    return (NULL);
 
-  while (me) 
+  while (ptr)
     {
-      if (ustrcasecmp (DocumentURLs[annotDoc], annotFile) ||
-	  ustrcasecmp (DocumentURLs[annotDoc], annotFile + 5))
+      annot = (AnnotMeta *) ptr->object;
+      if (ustrcasecmp (DocumentURLs[annotDoc], annot->body_url) ||
+	  ustrcasecmp (DocumentURLs[annotDoc], annot->body_url + 5))
 	break;
+      ptr->next;
     }
-  return me;
+
+  if (ptr)
+    return annot;
+  else
+    return NULL;
 }
 
 /*-----------------------------------------------------------------------

@@ -151,6 +151,69 @@ void AnnotList_print (List *annot_list)
   printf ("\n");
 }
 
+/* ------------------------------------------------------------
+   AnnotList_writeIndex
+   Writes an RDF annotation index file from the contents
+   of annot_list.
+   ------------------------------------------------------------*/
+void AnnotList_writeIndex (CHAR_T *indexFile, List *annot_list)
+{
+  AnnotMeta *annot;
+  List *annot_ptr;
+  FILE *fp;
+
+  if (!annot_list || !indexFile || indexFile[0] == WC_EOS)
+    return;
+
+  fp = fopen (indexFile, "w");
+  /* write the prologue */
+  fprintf (fp, 
+	  "<r:RDF xmlns:r=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n"
+	  "xmlns:a=\"http://www.w3.org/1999/xx/annotation-ns#\"\n"
+	  "xmlns:xlink=\"http://www.w3.org/1999/xx/xlink#\"\n"
+	  "xmlns:http=\"http://www.w3.org/1999/xx/http#\"\n"
+ 	  "xmlns:d=\"http://purl.org/dc/elements/1.0/\">\n");
+
+  /*write each annotation entry */
+  annot_ptr = annot_list;
+  while (annot_ptr)
+    {
+      annot = (AnnotMeta *) annot_ptr->object;
+
+      fprintf (fp, 
+	       "<a:Annotation about=\"%s\">\n",
+	       annot->about);
+
+      fprintf (fp,
+	      "<xlink:href r:resource=\"%s#id(%s|%d|%s|%d)\" />\n",
+	       annot->source_url,
+	       annot->labf
+,	       annot->c1,
+	       annot->labl,
+	       annot->cl);
+
+      fprintf (fp,
+	       "<d:creator>%s</d:creator>\n",
+	       annot->author);
+
+      fprintf (fp,
+	       "<d:date>%s</d:date>\n",
+	       annot->date);
+
+      fprintf (fp,
+	       "<a:body r:resource=\"%s\" />\"\n",
+	       annot->body_url);
+
+      fprintf (fp, 
+	       "</a:Annotation>\n");
+      annot_ptr = annot_ptr->next;
+    }
+  /* write the epiloge */
+  fprintf (fp, 
+	   "</r:RDF>\n");
+  fclose (fp);
+}
+
 /***************************************************
  **
  **************************************************/

@@ -148,8 +148,6 @@ static void start_hndl(void *data, const char *el, const char **attr)
     cdata_buff = &(annot->content_type);
   else if (!strcmp (el, "http:ContentLength"))
     cdata_buff = &(annot->content_length);
-  else if (!strcmp (el, "http:ContentLength"))
-    cdata_buff = &(annot->content_length);
   else if (!strcmp (el, "a:body"))
     {
       if (attr[0] && !strcmp (attr[0], "r:resource"))
