@@ -867,7 +867,8 @@ void AnnotList_writeIndex (CHAR_T *indexFile, List *annot_list)
 #endif
 
 	  fprintf (fp,
-	      "<a:context>#%s</a:context>\n",
+	      "<a:context>%s#%s</a:context>\n",
+		   annot->source_url,
 		   annot->xptr);
 
 	  if (annot->author)
@@ -962,7 +963,8 @@ CHAR_T * ANNOT_PreparePostBody (Document doc)
 		   annot->source_url);
 
 	  fprintf (fp,
-	      "<a:context>#%s</a:context>\n",
+	      "<a:context>%s#%s</a:context>\n",
+		   annot->source_url,
 		   annot->xptr);
 	  
 	  if (annot->author)
