@@ -3085,7 +3085,7 @@ ThotBool            inheritRule;
    PtrPRule            pR, pRuleView1, pRuleToApply;
    int                 view, i;
    PtrPSchema          pSchP;
-   PtrSSchema	       pSS;
+   PtrSSchema	       pSSattr;
    PtrHandlePSchema    pHd;
    ThotBool            apply;
 
@@ -3099,8 +3099,8 @@ ThotBool            inheritRule;
 	view = AppliedView (pEl, pAttr, pDoc, viewNb);
 	/* on cherchera d'abord dans le schema de presentation principal de */
 	/* l'attribut */
-	pSS = pAttr->AeAttrSSchema;
-	pSchP = pSS->SsPSchema;
+	pSSattr = pAttr->AeAttrSSchema;
+	pSchP = pSSattr->SsPSchema;
 	pHd = NULL;
 	/* on examine le schema de presentation principal, puis les schemas */
 	/* additionnels */
@@ -3116,7 +3116,7 @@ ThotBool            inheritRule;
 	       {
 		  /* verifie si c'est une regle de creation et si oui applique */
 		  /* la regle de creation */
-		  if (!ApplCrRule (pR, pSS, pSchP, pAttr, pAbbReturn,
+		  if (!ApplCrRule (pR, pSSattr, pSchP, pAttr, pAbbReturn,
 				viewNb, pDoc, pEl, forward, lqueue, queuePR,
 				   queuePP, queuePS, queuePA, pNewAbbox))
 		    {
@@ -3220,8 +3220,8 @@ ThotBool            inheritRule;
 	                                   pAttr->AeAttrSSchema) ||
 	                 AttrHasException (ExcCssId, pAttr->AeAttrNum,
 	                                   pAttr->AeAttrSSchema))
-			pSS = pDoc->DocSSchema;
-		     pHd = pSS->SsFirstPSchemaExtens;
+			pSSattr = pDoc->DocSSchema;
+		     pHd = pSSattr->SsFirstPSchemaExtens;
 		     }
 	       }
 	     else
