@@ -386,40 +386,49 @@ void               *extra;
 	  /* display the image within the document */
 	  if (update)
 	    {
-	      if (desc == NULL) {
-		/* it is a local image */
-		if (callback) {
-		    if (!strncmp(pathname, "file:/", 6))
-		        callback(doc, el, &pathname[6], extra);
-		    else
-		        callback(doc, el, &pathname[0], extra);
-		} else
-		    DisplayImage (doc, el, pathname);
-	      } else if (TtaFileExist (desc->localName)) {
-	        /* remote image, but already here */
-		if (callback)
-		    callback(doc, el, desc->localName, extra);
-		else
-		    DisplayImage (doc, el, desc->localName);
-	      } else
+	      if (desc == NULL)
 		{
-		  /* chain this new element as waiting for this image */
-		  ctxEl = desc->elImage;
-		  if (ctxEl != NULL)
-		    {
-		      while (ctxEl->nextElement != NULL)
+		  /* it is a local image */
+		if (callback)
+		  {
+		    if (!strncmp(pathname, "file:/", 6))
+		      callback(doc, el, &pathname[6], extra);
+		    else
+		      callback(doc, el, &pathname[0], extra);
+		  }
+		else
+		  DisplayImage (doc, el, pathname);
+	      }
+	      else
+		if (TtaFileExist (desc->localName))
+		  {
+		    /* remote image, but already here */
+		    if (callback)
+		      callback(doc, el, desc->localName, extra);
+		    else
+		      DisplayImage (doc, el, desc->localName);
+		  }
+		else
+		  {
+		    /* chain this new element as waiting for this image */
+		    ctxEl = desc->elImage;
+		    if (ctxEl != NULL && ctxEl->currentElement != el)
+		      {
+			/* concerned elements are different */
+			while (ctxEl->nextElement != NULL)
+			  ctxEl = ctxEl->nextElement;
+			ctxEl->nextElement = (ElemImage *) TtaGetMemory (sizeof (ElemImage));
 			ctxEl = ctxEl->nextElement;
-		      ctxEl->nextElement = (ElemImage *) TtaGetMemory (sizeof (ElemImage));
-		      ctxEl->callback = callback;
-		      ctxEl->extra = extra;
-		      ctxEl = ctxEl->nextElement;
-		      ctxEl->currentElement = el;
-		      ctxEl->nextElement = NULL;
-		    }
-		}
+			ctxEl->callback = callback;
+			ctxEl->extra = extra;
+			ctxEl = ctxEl->nextElement;
+			ctxEl->currentElement = el;
+			ctxEl->nextElement = NULL;
+		      }
+		  }
 	    }
 	}
-
+      
       if (attr != NULL && imageName)
 	TtaFreeMemory (imageName);
     }

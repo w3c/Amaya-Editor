@@ -217,10 +217,10 @@ int                 ymax;
 	   pAbChild = pAb->AbFirstEnclosed;
 	   while (pAbChild != NULL && !pAbChild->AbDead && pAbChild->AbBox->BxType == BoGhost)
 	     pAbChild = pAbChild->AbFirstEnclosed;
-	   if (pAbChild != NULL && !pAbChild->AbDead)
+	   if (pAbChild != NULL && !pAbChild->AbDead && pAbChild->AbBox != NULL)
 	     {
 	       pBoxChild = pAbChild->AbBox;
-	       /* if the box is splitted take child boxes */
+	       /* if the box is split take child boxes */
 	       if (pBoxChild->BxType == BoSplit)
 		 pBoxChild = pBoxChild->BxNexChild;
 	       do
@@ -238,7 +238,7 @@ int                 ymax;
 				      pAb->AbBackground, pAb->AbFillPattern);
 		   pBoxChild = pBoxChild->BxNext;
 		 }
-	       while (IsParentBox (pBox, pBoxChild));
+	       while (pBoxChild != NULL && IsParentBox (pBox, pBoxChild));
 	     }
 	 }
        else if (pBox->BxYOrg + pBox->BxHeight >= ymin
