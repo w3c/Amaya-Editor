@@ -5,7 +5,7 @@
 	<language encoding="latin1">fr</language>
 	<language encoding="latin1">de</language>
 	<language encoding="latin1">it</language>
-	<language encoding="latin1">tr</language>
+	<language encoding="utf-8">tr</language>
 	<language encoding="latin1">es</language>
 	<language encoding="latin1">pt</language>
 	<language encoding="latin1">fi</language>
@@ -2812,7 +2812,7 @@
 </label>
 <label define="AM_DAV_TIMEOUT">
 	<message xml:lang="en">Lock Timeout</message>
-	<message xml:lang="fr">Temps d'Expiration</message>
+	<message xml:lang="fr">Expiration du verrou</message>
 	<message xml:lang="pt">Duração da Trava</message>
 	<message xml:lang="de">Sperrzeitüberschreitung</message>
 	<message xml:lang="fi">Lukituksen aikakatkaisu</message>

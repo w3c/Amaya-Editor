@@ -1246,7 +1246,8 @@ LRESULT CALLBACK SaveAsDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 			 TtaGetMessage (LIB, TMSG_DOCUMENT_FORMAT));
 	    SetWindowText (GetDlgItem (hwnDlg, IDC_HTML), "HTML");
 	    SetWindowText (GetDlgItem (hwnDlg, IDC_XML), "XML");
-	    SetWindowText (GetDlgItem (hwnDlg, IDC_TEXT), "Text");
+	    SetWindowText (GetDlgItem (hwnDlg, IDC_TEXT),
+			   TtaGetMessage (AMAYA, AM_TEXT));
 	    if (SaveAsHTML)
 		{
           CheckRadioButton (hwnDlg, IDC_HTML, IDC_XML, IDC_HTML);
@@ -1402,9 +1403,9 @@ LRESULT CALLBACK OpenDocDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
     case WM_INITDIALOG:
       SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_OPEN_URL));
       SetWindowText (GetDlgItem (hwnDlg, IDC_URLMESSAGE),
-		  "Type the URI or push the button Browse");
+		     TtaGetMessage (AMAYA, AM_LOCATION));
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
-		  TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+		     TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
       SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TtaGetMessage (AMAYA, AM_BROWSE));
       SetWindowText (GetDlgItem (hwnDlg, IDC_CLEAR), TtaGetMessage (AMAYA, AM_CLEAR));
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
@@ -3431,8 +3432,8 @@ static void ResetDocInfo (ThotWindow hwnDlg)
 /*-----------------------------------------------------------------------
  DocumentInfoDlgProc
  ------------------------------------------------------------------------*/
-LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
-									  LPARAM lParam)
+LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg,
+				      WPARAM wParam, LPARAM lParam)
 {
   Document    doc;
   char     *content;

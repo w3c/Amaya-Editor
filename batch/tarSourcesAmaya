@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# This script builds the Source tar files for Amaya
+# This script builds the Source tarfile for Amaya
 #
 #       amaya-src-$AMAYAVERSION.tgz
 #

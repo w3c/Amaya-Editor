@@ -1,59 +1,59 @@
-# encoding= latin1
+# encoding= utf-8
 0 Dosyalar
 1 Git
 2 Temizle
 3 %s belgesi kaydedildi
-4 Özellik
+4 Ã–zellik
 5 URL
 6 Metin
-7 İsim
+7 Ãsim
 8 Parola
-9 Sınıf olarak kullan
-10 Sınıf uygula
-11 Sınıf seçimi
-12 %s alınıyor
-13 %s yüklenemiyor
+9 SÃ½nÃ½f olarak kullan
+10 SÃ½nÃ½f uygula
+11 SÃ½nÃ½f seÃ§imi
+12 %s alÃ½nÃ½yor
+13 %s yÃ¼klenemiyor
 14 Bitti!
-15 Hedefi seçin
-16 Geçersiz hedef
+15 Hedefi seÃ§in
+16 GeÃ§ersiz hedef
 17 Adres
-18 Başlık
-19 Tüm değişiklikleri kaybedeceksiniz, devam etmek istiyor musunuz?
+18 BaÃ¾lÃ½k
+19 TÃ¼m deÃ°iÃ¾iklikleri kaybedeceksiniz, devam etmek istiyor musunuz?
 20 Redirection fetching of %s
 21 Too many redirections detected
-22 Yerel dosya %s yaratılamıyor
-23 Yerel dosya %s yaratılamıyor
-24 Boş bir soket bekleniyor
+22 Yerel dosya %s yaratÃ½lamÃ½yor
+23 Yerel dosya %s yaratÃ½lamÃ½yor
+24 BoÃ¾ bir soket bekleniyor
 25 %s okunuyor
-26 %s yazılıyor
-27 Bağlantı bekleniyor
-28 %s: bağlanılıyor
-29 %s: aranıyor
+26 %s yazÃ½lÃ½yor
+27 BaÃ°lantÃ½ bekleniyor
+28 %s: baÃ°lanÃ½lÃ½yor
+29 %s: aranÃ½yor
 30 Belirsiz durum
-31 Güvenlik istemi
+31 GÃ¼venlik istemi
 32 **Please authenticate for
-33 %s için yetkilendirme başarısız
-34 %s yüklendi, ancak veri içermiyor
-35 Aktarım kesildi!
-36 %s: şu anda erişilemiyor, başka bir zaman deneyin
-37 %s yüklendi
+33 %s iÃ§in yetkilendirme baÃ¾arÃ½sÃ½z
+34 %s yÃ¼klendi, ancak veri iÃ§ermiyor
+35 AktarÃ½m kesildi!
+36 %s: Ã¾u anda eriÃ¾ilemiyor, baÃ¾ka bir zaman deneyin
+37 %s yÃ¼klendi
 38 %s kaydediliyor
 39 %s kaydedilemedi
-40 Türkçe sistem hata mesajları
-41 <A> tanımlaması bu unsurları içeremez
-42 <A> tanımlaması içinde bir başka <A> tanımı yer alamaz.
-43 %s tipi URL\'ler için GET desteği henüz yok, üzgünüm
-44 %s tipi URL\'ler için PUT desteği henüz yok, üzgünüm
-45 Amaya\'nın bu sürümü, bu özelliği desteklemiyor
-46 %s\'in yazımı tamamlandı
-47 %s normale dönüştürülemedi
-48 %s geçici dosya dizini yaratılamadı
-49 Seçili bölge için hiç bir dönüşüm kullanılamaz
-50 Dönüşüm başarısız
-51 HTML.trans dosyası, %s satırında yazım hatası
+40 TÃ¼rkÃ§e sistem hata mesajlarÃ½
+41 <A> tanÃ½mlamasÃ½ bu unsurlarÃ½ iÃ§eremez
+42 <A> tanÃ½mlamasÃ½ iÃ§inde bir baÃ¾ka <A> tanÃ½mÃ½ yer alamaz.
+43 %s tipi URL\'ler iÃ§in GET desteÃ°i henÃ¼z yok, Ã¼zgÃ¼nÃ¼m
+44 %s tipi URL\'ler iÃ§in PUT desteÃ°i henÃ¼z yok, Ã¼zgÃ¼nÃ¼m
+45 Amaya\'nÃ½n bu sÃ¼rÃ¼mÃ¼, bu Ã¶zelliÃ°i desteklemiyor
+46 %s\'in yazÃ½mÃ½ tamamlandÃ½
+47 %s normale dÃ¶nÃ¼Ã¾tÃ¼rÃ¼lemedi
+48 %s geÃ§ici dosya dizini yaratÃ½lamadÃ½
+49 SeÃ§ili bÃ¶lge iÃ§in hiÃ§ bir dÃ¶nÃ¼Ã¾Ã¼m kullanÃ½lamaz
+50 DÃ¶nÃ¼Ã¾Ã¼m baÃ¾arÃ½sÃ½z
+51 HTML.trans dosyasÃ½, %s satÃ½rÃ½nda yazÃ½m hatasÃ½
 52 Matematik
 53 Grafik
-54 İsimle kaydet
+54 Ãsimle kaydet
 55 **Please authenticate for realm \'%s\' at server \'%s\'
 56 **Realm: %s
 57 **Server: %s
@@ -66,68 +66,68 @@
 64 CSS
 65 **Saving will save following images too?
 66 URL kaydedilemedi
-67 Diske kayıt?
-68 Görüntüleri kopyala
-69 URL\'leri dönüştür
+67 Diske kayÃ½t?
+68 GÃ¶rÃ¼ntÃ¼leri kopyala
+69 URL\'leri dÃ¶nÃ¼Ã¾tÃ¼r
 70 Belgenin adresi
-71 Görüntü dizini
+71 GÃ¶rÃ¼ntÃ¼ dizini
 72 Nesne konumu
-73 CSS dosyası 1
-74 WWW için tarayıcı ve belge düzenleyici
+73 CSS dosyasÃ½ 1
+74 WWW iÃ§in tarayÃ½cÃ½ ve belge dÃ¼zenleyici
 75 **(mail issues to www-amaya@w3.org)
-76 %s karakterden uzun URL\'ler şimdilik işlenemiyor
-77 Sadece öntanımlı tip kullanılabilir
-78 Bağlantı güncellemesi: %s%% tamamlandı
-79 Kaydedilecek bir şey yok
+76 %s karakterden uzun URL\'ler Ã¾imdilik iÃ¾lenemiyor
+77 Sadece Ã¶ntanÃ½mlÃ½ tip kullanÃ½labilir
+78 BaÃ°lantÃ½ gÃ¼ncellemesi: %s%% tamamlandÃ½
+79 Kaydedilecek bir Ã¾ey yok
 80 y\'de tekrar
-81 Kullanıcı ismini girin:
-82 %d istek sırada
+81 KullanÃ½cÃ½ ismini girin:
+82 %d istek sÃ½rada
 83 **No CSS file available
-84 Aktarımı kes
-85 Önceki belge
+84 AktarÃ½mÃ½ kes
+85 Ã–nceki belge
 86 Sonraki belge
-87 Yeniden yükle
+87 Yeniden yÃ¼kle
 88 Kaydet
-89 Yazdır
+89 YazdÃ½r
 90 Ara
 91 Vurgu
 92 Kuvvetli
-93 Sabit genişlikli yazıtipi
+93 Sabit geniÃ¾likli yazÃ½tipi
 94 tekrar yok
-95 Görüntü ekle
-96 Başlık 1
-97 Başlık 2
-98 Başlık 3
-99 Noktalı liste
-100 Numaralı liste
-101 Tanım listesi
-102 Bağlantı
+95 GÃ¶rÃ¼ntÃ¼ ekle
+96 BaÃ¾lÃ½k 1
+97 BaÃ¾lÃ½k 2
+98 BaÃ¾lÃ½k 3
+99 NoktalÃ½ liste
+100 NumaralÃ½ liste
+101 TanÃ½m listesi
+102 BaÃ°lantÃ½
 103 Tablo
-104 Belgenin bir ismi yok. Şu isimle kaydediyorum:
+104 Belgenin bir ismi yok. Ãu isimle kaydediyorum:
 105 Plugin\'ler
 106 %s URL\'ini kaydederken, belirsiz hata
-107 Sunucuya bağlantı yapılamıyor
-108 %s erişimi kural gereği engellenmiş
-109 %s için işlem başarılı
-110 %s yaratıldı
-111 %s güncellendi
-112 İşlem %s durum kodu ile tamamlandı
-113 Sunucu istem yazımını anlamadı
-114 Sunucunun gönderecek yeni bilgisi
-115 Bu yöntem %s için kullanılamaz
-116 %s erişimi için lütfen kendinizi tanıtın
-117 Doğrulanıyor...
+107 Sunucuya baÃ°lantÃ½ yapÃ½lamÃ½yor
+108 %s eriÃ¾imi kural gereÃ°i engellenmiÃ¾
+109 %s iÃ§in iÃ¾lem baÃ¾arÃ½lÃ½
+110 %s yaratÃ½ldÃ½
+111 %s gÃ¼ncellendi
+112 ÃÃ¾lem %s durum kodu ile tamamlandÃ½
+113 Sunucu istem yazÃ½mÃ½nÃ½ anlamadÃ½
+114 Sunucunun gÃ¶nderecek yeni bilgisi
+115 Bu yÃ¶ntem %s iÃ§in kullanÃ½lamaz
+116 %s eriÃ¾imi iÃ§in lÃ¼tfen kendinizi tanÃ½tÃ½n
+117 DoÃ°rulanÃ½yor...
 118 %s\'e kaydedilemedi, Diske kaydedeyim mi?
-119 %s bozuk görünüyor, devam edeyim mi?
-120 URL %s %s e yönlendirilmiş, devam edeyim mi?
-121 %s yeniden yüklenemedi, devam edeyim mi?
-122 Sunucu 501 hatası veriyor: %s
-123 Sunucu 501 hatası veriyor
-124 Sunucu bu istem yöntemini kabul etmiyor
-125 Süzgeç
-126 etkin aktarımlar
-127 kuyruktaki aktarımlar
-128 İçindekiler
+119 %s bozuk gÃ¶rÃ¼nÃ¼yor, devam edeyim mi?
+120 URL %s %s e yÃ¶nlendirilmiÃ¾, devam edeyim mi?
+121 %s yeniden yÃ¼klenemedi, devam edeyim mi?
+122 Sunucu 501 hatasÃ½ veriyor: %s
+123 Sunucu 501 hatasÃ½ veriyor
+124 Sunucu bu istem yÃ¶ntemini kabul etmiyor
+125 SÃ¼zgeÃ§
+126 etkin aktarÃ½mlar
+127 kuyruktaki aktarÃ½mlar
+128 ÃÃ§indekiler
 129 **Table of links
 130 Tekrar Kipi
 131 tekrar
@@ -192,7 +192,7 @@
 190 **Templates Preferences
 191 **Allow automatic PUT redirections on these domains
 192 **Ignore style sheets
-193 Dönüşüm türü
+193 DÃ¶nÃ¼Ã¾Ã¼m tÃ¼rÃ¼
 194 **(separate each entry with a space)
 195 **No proxy on these domains
 196 **Only proxy these domains

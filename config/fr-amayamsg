@@ -297,7 +297,7 @@
 295 List des Ressources de l'utilisateur (URL URL)
 296 Profondeur du Verrou
 297 infini
-298 Temps d'Expiration
+298 Expiration du verrou
 299 Infini
 300 Autre
 301 Secondes

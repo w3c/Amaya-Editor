@@ -466,7 +466,7 @@ void DocumentInfo (Document document, View view)
    /* Document URL */
    TtaNewLabel (BaseDialog + DocInfoURLTitle,
 		BaseDialog + DocInfoForm,
-		"URL");
+		TtaGetMessage (AMAYA, AM_HREF_VALUE));
 
    /* Document type */
    TtaNewLabel (BaseDialog + DocInfoDocTypeTitle,
