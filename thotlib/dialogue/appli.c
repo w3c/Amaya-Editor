@@ -1946,9 +1946,6 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	    }
 	}
     }
-#ifdef _DEBUG
-if (mMsg != 641 && mMsg != 256)
-#endif /*_DEBUG*/
   switch (mMsg)
     {
     case WM_CREATE:
