@@ -932,22 +932,23 @@ static void         CopyAttributes (PtrElement pEl1, PtrElement pEl2, PtrDocumen
 	 pAttr2->AeNext = NULL;
 	 ok = TRUE;
 	 if (Check && pSourceDoc != pTargetDoc)
-	    /* check that the structure schema defining the attribute is
-	       known in the target document */
-	    {
-            nR = CreateNature (pAttr1->AeAttrSSchema->SsName, NULL,
-			       pTargetDoc->DocSSchema, pTargetDoc);
-	    if (nR == 0)
-	       /* can't create the schema for the target document. Don't
-		  copy this attribute */
-	       ok = FALSE;
-	    else
-	       {
-	       /* schema is loaded, changes the structure scheme of the copy */
-	       pAttr2->AeAttrSSchema = pTargetDoc->DocSSchema->SsRule[nR - 1].
-		                             SrSSchemaNat;
-	       AddSchemaGuestViews (pTargetDoc, pAttr2->AeAttrSSchema);
-	       }
+	   /* check that the structure schema defining the attribute is
+	      known in the target document */
+           if (!GetSSchemaForDoc (pAttr1->AeAttrSSchema->SsName, pTargetDoc))
+	     {
+	       nR = CreateNature (pAttr1->AeAttrSSchema->SsName, NULL,
+				  pTargetDoc->DocSSchema, pTargetDoc);
+	       if (nR == 0)
+		 /* can't create the schema for the target document. Don't
+		    copy this attribute */
+		 ok = FALSE;
+	       else
+		 {
+		   /* schema loaded. Change the structure schema of the copy */
+		   pAttr2->AeAttrSSchema = pTargetDoc->DocSSchema->
+		                                   SsRule[nR - 1].SrSSchemaNat;
+		   AddSchemaGuestViews (pTargetDoc, pAttr2->AeAttrSSchema);
+		 }
 	    }
 	 if (ok)
 	    {

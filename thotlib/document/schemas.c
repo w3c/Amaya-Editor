@@ -1121,44 +1121,30 @@ void         AddSchemaGuestViews (PtrDocument pDoc, PtrSSchema pSS)
 }
 
 /*----------------------------------------------------------------------
-   AddAllGuestViews
-   Add the guest views of presentation schema attached to pSS to the list
-   of guest views of document view pViewDescr.
-   Add also the guest views of presentation schemas attached to all
-   natures used in pSS.
-  ----------------------------------------------------------------------*/
-static void      AddAllGuestViews (PtrSSchema pSS, DocViewDescr *pViewDescr,
-				   PtrDocument pDoc)
-{
-   SRule              *pRule;
-   int                 i;
-
-   while (pSS != NULL)
-      {
-      /* get guest views in the presentation schema of this structure schema */
-      AddGuestViews (pSS, pViewDescr, pDoc);
-      /* look for nature schemas used in this structure schema */
-      for (i = 0; i < pSS->SsNRules; i++)
-         {
-	 pRule = &pSS->SsRule[i];
-	 if (pRule->SrConstruct == CsNatureSchema)
-	    if (pRule->SrSSchemaNat != NULL)
-	       /* the structure schema of this nature is loaded */
-	       AddAllGuestViews (pRule->SrSSchemaNat, pViewDescr, pDoc);
-	 }
-      pSS = pSS->SsNextExtens;
-      }
-}
-
-/*----------------------------------------------------------------------
    CreateGuestViewList
    Create the guest view list for view view of document pDoc
   ----------------------------------------------------------------------*/
 void         CreateGuestViewList (PtrDocument pDoc, int view)
 {
-   /* look for the presentation schemas of all structure schemas used in that
-      document */
-   AddAllGuestViews (pDoc->DocSSchema, &pDoc->DocView[view - 1], pDoc);
+  PtrDocSchemasDescr pPfS;
+  PtrSSchema         pSS;
+
+  if (pDoc && view > 0)
+    {
+      /* check all structure schemas used by the document */
+      pPfS = pDoc->DocFirstSchDescr;
+      while (pPfS)
+	{
+	  /* for each structure schema, check all its extensions */
+	  pSS = pPfS->PfSSchema;
+	  while (pSS)
+	    {
+	      AddGuestViews (pSS, &pDoc->DocView[view - 1], pDoc);
+	      pSS = pSS->SsNextExtens;
+	    }
+	  pPfS = pPfS->PfNext;
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
