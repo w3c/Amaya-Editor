@@ -1121,7 +1121,8 @@ static void         TextToDocument ()
 		 elType.ElTypeNum != HTML_EL_OptGroup)
 		{
 	        ancestor = parent;
-	        while (ignoreLeadingSpaces && IsCharacterLevelElement (ancestor))
+	        while (ancestor && 
+		       ignoreLeadingSpaces && IsCharacterLevelElement (ancestor))
 		   {
 		   prev = ancestor;
 		   TtaPreviousSibling (&prev);
