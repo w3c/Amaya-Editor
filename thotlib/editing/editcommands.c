@@ -3444,7 +3444,11 @@ void PasteXClipboard (unsigned char *src, int nbytes)
   if (src)
     {
       /* What is the encoding used by external applications ??? */
+#ifdef _GTK
+      buffer = TtaConvertByteToCHAR (src, UTF_8);
+#else /* _GTK */
       buffer = TtaConvertByteToCHAR (src, TtaGetDefaultCharset ());
+#endif /* _GTK */
       doc = IdentDocument (pDoc);
       dispMode = TtaGetDisplayMode (doc);
       if (dispMode == DisplayImmediately)

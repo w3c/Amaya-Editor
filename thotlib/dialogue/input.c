@@ -54,7 +54,6 @@ KEY;
   #include "gtk-functions.h"
   #include "absboxes_f.h" 
 #endif /* _GTK */
-
 #if defined(_WINGUI) || defined(_MOTIF)
   #include "appli_f.h"
   #include "input_f.h"
@@ -641,17 +640,17 @@ ThotBool WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam,
 gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
 {
   CHARSET             charset;
-  wchar_t            *str, *p;
   Document            document;
   View                view;
   KeySym              key;
   GtkWidget          *drawing_area;
   GtkEntry           *textzone;
+  wchar_t            *str, *p;
+  unsigned int        state, save;
+  unsigned char       value;
   int                 status;
   int                 PicMask;
   int                 frame;
-  unsigned int        state, save;
-  unsigned char       value;
 
   frame = (int) data;
   if (frame > MAX_FRAME)
@@ -698,10 +697,10 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
     PicMask |= THOT_MOD_CTRL;
   if (state & GDK_MOD1_MASK || state & GDK_MOD4_MASK)
     PicMask |= THOT_MOD_ALT;
-  if(event->keyval == GDK_VoidSymbol)
+  if (event->keyval == GDK_VoidSymbol)
     {
       /******* Not sure this code makes sense */
-      charset = TtaGetCharset (TtaGetEnvString ("Default_Charset"));
+      charset = TtaGetCharset (TtaGetEnvString ("Input_Charset"));
       if (charset != UNDEFINED_CHARSET)
 	{
 	  str = TtaConvertByteToWC ((unsigned char*)event->string, charset);
@@ -863,7 +862,8 @@ gboolean KeyScrolledGTK (GtkWidget *w, GdkEvent* event, gpointer data)
    Decodes the WX key press event  and calls the generic character
    handling function.
   ----------------------------------------------------------------------*/
-void CharTranslationWX ( int frame, int thot_mask, ThotKeySym thot_keysym, unsigned int value )
+void CharTranslationWX ( int frame, int thot_mask, ThotKeySym thot_keysym,
+			 unsigned int value )
 {
 #if 0
 #ifdef _WX

@@ -1360,7 +1360,11 @@ static int CopyXClipboard (unsigned char **buffer, View view)
   if (*buffer)
     TtaFreeMemory (*buffer);
   /* What is the encoding used by external applications ??? */
+#ifdef _GTK
+  *buffer = TtaConvertCHARToByte (text, UTF_8);
+#else /* _GTK */
   *buffer = TtaConvertCHARToByte (text, TtaGetDefaultCharset ());
+#endif /* _GTK */
   TtaFreeMemory (text);
   return i;
 }
@@ -1369,8 +1373,7 @@ static int CopyXClipboard (unsigned char **buffer, View view)
    TtcCopyToClipboard
   ----------------------------------------------------------------------*/
 void TtcCopyToClipboard (Document doc, View view)
-{
-  
+{ 
 #ifdef _GTK
   unsigned char     *buffer = NULL;
   int                len;
@@ -1390,7 +1393,6 @@ void TtcCopyToClipboard (Document doc, View view)
       Xbuffer = NULL;
     }
 #endif /* _GTK */
-  
 #ifdef _MOTIF
   int                  frame;
   ThotWindow           w, wind;
@@ -1422,7 +1424,6 @@ void TtcCopyToClipboard (Document doc, View view)
   /* Annule le cutbuffer courant */
   XStoreBuffer (TtDisplay, (char *)Xbuffer, ClipboardLength, 0);
 #endif /* _MOTIF */
-
 #ifdef _WINGUI
   /* Store the current selection */
   ClipboardLength = CopyXClipboard (&Xbuffer, view);
