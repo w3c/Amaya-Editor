@@ -1,8 +1,8 @@
 #!/bin/sh
 cd ../..
-THOTVERSION=2.1a
+THOTVERSION=2.1b
 THOTDIR=/tahiti/diffusion/opera
-PLATFORMS="solaris2 SUN4 SGI RS6000"
+PLATFORMS="solaris2 SUN4 SGI RS6000 osf1"
 
 DIR=/afs/.inria.fr/common/usr/local/thot/$THOTVERSION
 echo "Intallation version " $DIR

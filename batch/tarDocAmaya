@@ -12,6 +12,7 @@ COMPRESS="gzip -9"
 cd $THOTDIR
 
 $TAR - \
+doc/amaya/Autoconf.html \
 doc/amaya/Back.gif \
 doc/amaya/COPYRIGHT.html \
 doc/amaya/CSS.html \

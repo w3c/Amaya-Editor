@@ -4,7 +4,7 @@
 #
 #       amaya-$MACH-$AMAYAVERSION.tar.gz
 # 
-AMAYAVERSION=1.0b
+AMAYAVERSION=1.1
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
 PLATFORMS="solaris2 LINUX-ELF LINUX-SPARC SUN4 SGI RS6000 osf1"
@@ -56,6 +56,9 @@ do
    Thot/amaya/HTML.fr \
    Thot/amaya/HTML*.PRS \
    Thot/amaya/HTML*.TRA \
+   Thot/amaya/MathML.STR \
+   Thot/amaya/MathML*.PRS \
+   Thot/amaya/MathML*.TRA \
    Thot/fonts/Families.list \
    Thot/fonts/fonts.dir \
    Thot/fonts/icones* \

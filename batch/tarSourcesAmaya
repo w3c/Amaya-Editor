@@ -8,7 +8,7 @@
 #
 #       amaya-libs-$MACH-$AMAYAVERSION.tar.gz
 #
-AMAYAVERSION=1.0b
+AMAYAVERSION=1.1
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
 PLATFORMS="solaris2 LINUX-ELF LINUX-SPARC SUN4"
@@ -19,6 +19,7 @@ COMPRESS="gzip -9"
 cd $THOTDIR
 
 $TAR - \
+INSTALL \
 amaya/Makefile.in \
 javalib/Makefile.in \
 pluginlib/Makefile.in \
@@ -56,6 +57,10 @@ amaya/HTMLsave.c \
 amaya/HTMLstyle.c \
 amaya/HTMLstyleColor.h \
 amaya/HTMLtable.c \
+amaya/MathML.S \
+amaya/MathMLP.P \
+amaya/MathMLT.T \
+amaya/Mathedit.c \
 amaya/Text_SGML.inc \
 amaya/UIcss.c \
 amaya/amaya.h \
@@ -84,6 +89,7 @@ amaya/f/HTMLpresentation_f.h \
 amaya/f/HTMLsave_f.h \
 amaya/f/HTMLstyle_f.h \
 amaya/f/HTMLtable_f.h \
+amaya/f/Mathedit_f.h \
 amaya/f/UIcss_f.h \
 amaya/f/answer_f.h \
 amaya/f/css_f.h \
@@ -113,6 +119,7 @@ amaya/I.xpm \
 amaya/Image.xpm \
 amaya/Java.xpm \
 amaya/Link.xpm \
+amaya/Math.xpm \
 amaya/Num.xpm \
 amaya/Plugin.xpm \
 amaya/Print.xpm \
@@ -122,11 +129,16 @@ amaya/Table.xpm \
 amaya/button.xpm \
 amaya/css.xpm \
 amaya/destroy.xpm \
+amaya/fence.xpm \
 amaya/find.xpm \
 amaya/folder.xpm \
+amaya/frac.xpm \
+amaya/id.xpm \
 amaya/lcopy.xpm \
 amaya/lmerge.xpm \
 amaya/logo.xpm \
+amaya/n.xpm \
+amaya/o.xpm \
 amaya/opera.xpm \
 amaya/option.xpm \
 amaya/radio-s.xpm \
@@ -134,10 +146,15 @@ amaya/radio.xpm \
 amaya/rcopy.xpm \
 amaya/rmerge.xpm \
 amaya/save.xpm \
+amaya/sqrt.xpm \
 amaya/stopN.xpm \
 amaya/stopR.xpm \
+amaya/sub.xpm \
+amaya/subsup.xpm \
+amaya/sup.xpm \
 amaya/toggle-s.xpm \
 amaya/toggle.xpm \
+amaya/txt.xpm \
 config/amaya.keyboard \
 config/en-amayadialogue \
 config/en-amayamsg \

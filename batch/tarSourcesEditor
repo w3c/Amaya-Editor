@@ -6,7 +6,7 @@
 #
 # And the associated Librairies for supported versions.
 #
-EDITORVERSION=2.1b
+EDITORVERSION=2.1c
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
 
@@ -16,6 +16,7 @@ COMPRESS="gzip -9"
 cd $THOTDIR
 
 $TAR - \
+INSTALL \
 NEWS.Thoteditor.2.0b \
 NEWS.Thoteditor.2.1 \
 README.thoteditor \

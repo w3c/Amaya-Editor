@@ -13,7 +13,7 @@
 #       English.tar.gz
 # and   French.tar.gz
 #
-THOTVERSION=2.1b
+THOTVERSION=2.1c
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
 PLATFORMS="solaris2 LINUX-ELF LINUX-SPARC SUN4 SGI RS6000 osf1"
