@@ -1244,7 +1244,9 @@ static void CacheCallbackDialog (int ref, int typedata, char *data)
 	      libwww_updateNetworkConf (CacheStatus);
 	      /* reset the status flag */
 	      CacheStatus = 0;
+#ifndef _WX
 	      TtaDestroyDialogue (ref);
+#endif /* _WX */
 	      break;
 	    case 2:
 	      GetDefaultCacheConf ();
@@ -1556,7 +1558,9 @@ static void ProxyCallbackDialog (int ref, int typedata, char *data)
 	      libwww_updateNetworkConf (ProxyStatus);
 	      /* reset the status flag */
 	      ProxyStatus = 0;
+#ifndef _WX
 	      TtaDestroyDialogue (ref);
+#endif /* _WX */
 	      break;
 	    case 2:
 	      GetDefaultProxyConf ();
@@ -2273,7 +2277,9 @@ static void GeneralCallbackDialog (int ref, int typedata, char *data)
 	    case 1:
 	      ValidateGeneralConf ();
 	      SetGeneralConf ();
+#ifndef _WX
 	      TtaDestroyDialogue (ref);
+#endif /* _WX */
 	      break;
 	    case 2:
 	      GetDefaultGeneralConf ();
@@ -2757,7 +2763,9 @@ static void PublishCallbackDialog (int ref, int typedata, char *data)
 	      libwww_updateNetworkConf (SafePutStatus);
 	      /* reset the status flag */
 	      SafePutStatus = 0;
+#ifndef _WX
 	      TtaDestroyDialogue (ref);
+#endif /* _WX */
 	      break;
 	    case 2:
 	      GetDefaultPublishConf ();
@@ -3204,7 +3212,9 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 		}
 	      else
 		SetBrowseConf ();
+#ifndef _WX
 	      TtaDestroyDialogue (ref);
+#endif /* _WX */
 	      break;
 	    case 2:
 	      GetDefaultBrowseConf ();
@@ -3515,7 +3525,9 @@ static void ColorCallbackDialog (int ref, int typedata, char *data)
 	      break;
 	    case 1:
 	      SetColorConf ();
+#ifndef _WX
 	      TtaDestroyDialogue (ref);
+#endif /* _WX */
 	      break;
 	    case 2:
 	      GetDefaultColorConf ();
@@ -4067,7 +4079,9 @@ static void LanNegCallbackDialog (int ref, int typedata, char *data)
 	      break;
 	    case 1:
 	      SetLanNegConf ();
+#ifndef _WX
 	      TtaDestroyDialogue (ref);
+#endif /* _WX */
 	      break;
 	    case 2:
 	      GetDefaultLanNegConf ();
@@ -4385,7 +4399,9 @@ static void ProfileCallbackDialog (int ref, int typedata, char *data)
           strcpy (Profile, NewProfile);
 	      SetProfileConf ();
 	      TtaRebuildProTable (Profiles_File);
+#ifndef _WX
 	      TtaDestroyDialogue (ref);
+#endif /* _WX */
 	      break;
 	    case 2:
 	      GetDefaultProfileConf ();
@@ -4607,7 +4623,9 @@ static void TemplatesCallbackDialog (int ref, int typedata, char *data)
 	      break;
 	    case 1:
 	      SetTemplatesConf ();
+#ifndef _WX
 	      TtaDestroyDialogue (ref);
+#endif /* _WX */
 	      break;
 	    case 2:
 	      GetDefaultTemplatesConf ();
@@ -4884,7 +4902,9 @@ static void AnnotCallbackDialog (int ref, int typedata, char *data)
 	      break;
 	    case 1:
 	      SetAnnotConf ();
+#ifndef _WX
 	      TtaDestroyDialogue (ref);
+#endif /* _WX */
 	      break;
 	    case 2:
 	      GetDefaultAnnotConf ();
@@ -5305,9 +5325,8 @@ static void PreferenceCallbackDialog (int ref, int typedata, char *data)
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 1: /* OK */
-	      TtaDestroyDialogue (ref);
-	      break; /* DEFAULT */
-	    case 2:
+	      break; 
+	    case 2: /* DEFAULT */
 	      break;
 	    default:
 	      break;

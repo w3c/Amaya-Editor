@@ -147,22 +147,19 @@ void PreferenceDlgWX::OnPageChanged( wxNotebookEvent& event )
 
   wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
   wxPanel * p_new_page = (wxPanel *)p_notebook->GetPage(event.GetSelection());
-  wxPanel * p_old_page = (wxPanel *)p_notebook->GetPage(event.GetOldSelection());
 
   int page_id_geom = wxXmlResource::GetXRCID(_T("wxID_PAGE_GEOMETRY"));
-
-  if ( p_old_page->GetId() == page_id_geom )
-    {
-      // the old page was Geometry => restore the bottom buttons (ok, default)
-      XRCCTRL(*this, "wxID_OK",      wxButton)->Show();
-      XRCCTRL(*this, "wxID_DEFAULT", wxButton)->Show();
-    }
 
   if ( p_new_page->GetId() == page_id_geom )
     {
       // the new page is Geometry => hide the bottom buttons (ok, default)
       XRCCTRL(*this, "wxID_OK",      wxButton)->Hide();
       XRCCTRL(*this, "wxID_DEFAULT", wxButton)->Hide();
+    }
+  else
+    {
+      XRCCTRL(*this, "wxID_OK",      wxButton)->Show();
+      XRCCTRL(*this, "wxID_DEFAULT", wxButton)->Show();
     }
 
   event.Skip();
