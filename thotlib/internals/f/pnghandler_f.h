@@ -5,7 +5,6 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-
 extern void InitPngColors ( void );
 extern ThotDrawable PngCreate ( char *fn,
                                 ThotPictInfo *imageDesc,
@@ -32,7 +31,6 @@ extern ThotBool SavePng ( const char *filename,
                           unsigned int m_height );
 
 #else /* __STDC__ */
-
 extern void InitPngColors ( void );
 extern ThotDrawable PngCreate ( char *fn,
                                   ThotPictInfo *imageDesc,

@@ -40,6 +40,7 @@
   #include "AmayaPanel.h"
   #include "appdialogue_wx.h"
   #include "AmayaSubPanelManager.h"
+  #include "wxinclude.h"
 #endif /* _WX */
 
 #undef THOT_EXPORT
@@ -529,9 +530,11 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg,
    by the pAttr rule.
    required specifies if it's a required attribute
    currAttr gives the current value of the attribute
+   isRequiredDlg is true if the function must build a popup dlg for mandatory attributs (WX version)
   ----------------------------------------------------------------------*/
 static void MenuValues (TtAttribute * pAttr, ThotBool required,
-			PtrAttribute currAttr, PtrDocument pDoc, int view)
+			PtrAttribute currAttr, PtrDocument pDoc, int view,
+			ThotBool isRequiredDlg)
 {
    Document          doc;
    char             *tmp;
@@ -601,12 +604,22 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
 		    (DLGPROC) InitNumAttrDialogWndProc);
 #endif /* _WINGUI */
 #ifdef _WX
-	 
-	 AmayaParams p;
-	 p.param1 = (void*)AmayaAttributePanel::wxATTR_ACTION_SETUPNUM;
-	 p.param2 = (void*)required;
-	 p.param3 = (void*)i;
-	 AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, p );
+	 if (!isRequiredDlg)
+	   {
+	     AmayaParams p;
+	     p.param1 = (void*)AmayaAttributePanel::wxATTR_ACTION_SETUPNUM;
+	     p.param2 = (void*)required;
+	     p.param3 = (void*)i;
+	     AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, p );
+	   }
+	 else
+	   {
+	     CreateNumDlgWX( NumMenuAttrRequired, NumMenuAttrNumNeeded,
+			     TtaGetViewFrame(doc, view),
+			     TtaGetMessage(LIB, TMSG_ATTR),
+			     title,
+			     i);
+	   }
 #endif /* _WX */
        }
        break;
@@ -631,25 +644,40 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
 	 else
 	   TextAttrValue[0] = EOS;
 #ifdef _WX
-	 AmayaParams p;
-	 p.param1 = (void*)AmayaAttributePanel::wxATTR_ACTION_SETUPTEXT;
-	 p.param2 = (void*)required;
-	 p.param3 = (void*)TextAttrValue;
-	 AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, p );
+	 if (!isRequiredDlg)
+	   {
+	     AmayaParams p;
+	     p.param1 = (void*)AmayaAttributePanel::wxATTR_ACTION_SETUPTEXT;
+	     p.param2 = (void*)required;
+	     p.param3 = (void*)TextAttrValue;
+	     AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, p );
+	   }
+	 else
+	   {
+	     /* create a dialogue to ask the mandatory attribut value (text type) */
+	     CreateTextDlgWX ( NumMenuAttrRequired, NumMenuAttrTextNeeded, /* references */
+			       TtaGetViewFrame (doc, view), /* parent */
+			       TtaGetMessage(LIB, TMSG_ATTR), /* title */
+			       title, /* label : attribut name */
+			       TextAttrValue /* initial value */ );
+	   }
 #endif /* _WX */
+
 #ifdef _GTK
 	 TtaNewTextForm (subform, form, title, 40, 1, FALSE);
 	 TtaAttachForm (subform);
 	 TtaSetTextForm (subform, TextAttrValue);       
 #endif /* _GTK */
+
 #ifdef _WINGUI
-     if (required)
-       DialogBox (hInstance, MAKEINTRESOURCE (REQATTRDIALOG), NULL, 
-		         (DLGPROC) InitFormDialogWndProc);
-	  else
+	 if (required)
+	   DialogBox (hInstance, MAKEINTRESOURCE (REQATTRDIALOG), NULL, 
+		      (DLGPROC) InitFormDialogWndProc);
+	 else
 	   DialogBox (hInstance, MAKEINTRESOURCE (TEXTATTRDIALOG), NULL, 
-		         (DLGPROC) InitSheetDialogWndProc);
+		      (DLGPROC) InitSheetDialogWndProc);
 #endif /* _WINGUI */
+
        }
        break;
        
@@ -665,6 +693,7 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
 	 /* boucle sur les valeurs possibles de l'attribut */
 	 while (val < pAttr->AttrNEnumValues)
 	   {
+
 #if defined(_WINGUI)
 	     i = strlen (pAttr->AttrEnumValue[val]) + 1; /* for EOS */
 	     if (lgmenu + i < MAX_TXT_LEN)
@@ -673,6 +702,7 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
 		 val++;
 	       } 
 #endif /* _WINGUI */
+	     
 #ifdef _GTK
 	     i = strlen (pAttr->AttrEnumValue[val]) + 2; /* for 'B' and EOS */
 	     if (lgmenu + i < MAX_TXT_LEN)
@@ -680,8 +710,9 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
 		 bufMenu[lgmenu] = 'B';
 		 strcpy (&bufMenu[lgmenu + 1], pAttr->AttrEnumValue[val]);
 		 val++;
-	       } 
+	       }
 #endif /* _GTK */
+
 #if defined(_WX)
 	     i = strlen (pAttr->AttrEnumValue[val]) + 1; /* for EOS */
 	     if (lgmenu + i < MAX_TXT_LEN)
@@ -690,6 +721,7 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
 		 val++;
 	       } 
 #endif /* _WX */
+	     
 	     lgmenu += i;
 	   }
 	 /* current value */
@@ -698,26 +730,40 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
 	   i = currAttr->AeAttrValue - 1;
 	 if (PtrReqAttr)
 	   PtrReqAttr->AeAttrValue = i + 1;
+
 #ifdef _WX
-	 AmayaParams p;
-	 p.param1 = (void*)AmayaAttributePanel::wxATTR_ACTION_SETUPENUM;
-	 p.param2 = (void*)required;
-	 p.param3 = (void*)bufMenu;
-	 p.param4 = (void*)val;
-	 p.param5 = (void*)i;
-	 AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, p );
+	 if (!isRequiredDlg)
+	   {
+	     AmayaParams p;
+	     p.param1 = (void*)AmayaAttributePanel::wxATTR_ACTION_SETUPENUM;
+	     p.param2 = (void*)required;
+	     p.param3 = (void*)bufMenu; /* list data */
+	     p.param4 = (void*)val; /* nb items */
+	     p.param5 = (void*)i; /* selected item */
+	     AmayaSubPanelManager::GetInstance()->SendDataToPanel( WXAMAYA_PANEL_ATTRIBUTE, p );
+	   }
+	 else
+	   {
+	     CreateEnumListDlgWX( NumMenuAttrRequired, NumMenuAttrEnumNeeded,
+				  TtaGetViewFrame(doc, view),
+				  TtaGetMessage(LIB, TMSG_ATTR),
+				  title, val, bufMenu, i);
+	   }
 #endif /* _WX */
+
 #ifdef _GTK
 	 /* cree le menu des valeurs de l'attribut */
 	 TtaNewSubmenu (subform, form, 0, title, val, bufMenu, NULL, 0, FALSE);
 	 TtaAttachForm (subform);
 	 TtaSetMenuForm (subform, i);
 #endif /* _GTK */
+
 #ifdef _WINGUI
 	 nbDlgItems = val;
 	 CreateAttributeDlgWindow (pAttr->AttrName, i+1, nbDlgItems,
 				   WIN_buffMenu, required);
 #endif /* _WINGUI */
+
        }
        break;
      default: break;
@@ -807,7 +853,7 @@ void BuildReqAttrMenu (PtrAttribute pAttr, PtrDocument pDoc)
    PtrDocOfReqAttr = pDoc;
    pRuleAttr = pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1];
    /* toujours lie a la vue 1 du document */
-   MenuValues (pRuleAttr, TRUE, NULL, pDoc, 1);
+   MenuValues (pRuleAttr, TRUE, NULL, pDoc, 1, TRUE);
 #if defined(_GTK) || defined(_WX)
    TtaShowDialogue (NumMenuAttrRequired, FALSE);
    TtaWaitShowDialogue ();
@@ -1624,16 +1670,16 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
 		PtrReqAttr = NULL;
 		PtrDocOfReqAttr = NULL;
 		if (mandatory)
-			/* the callback of required attribute should call
-			the standard callback attribute */
-			AttrFormExists = TRUE;
+		  /* the callback of required attribute should call
+		     the standard callback attribute */
+		  AttrFormExists = TRUE;
 		/* memorise l'attribut concerne' par le formulaire */
 		SchCurrentAttr = AttrStruct[att];
 		NumCurrentAttr = AttrNumber[att];
 		DocCurrentAttr = LoadedDocument[doc - 1];
 		/* register the current attribut */
 		CurrentAttr = att;
-		MenuValues (pAttr, mandatory, currAttr, SelDoc, view);
+		MenuValues (pAttr, mandatory, currAttr, SelDoc, view, FALSE);
 		/* restore the toggle state */
 #if defined(_GTK) || defined(_WX)
 		if (ActiveAttr[item] == 0)
