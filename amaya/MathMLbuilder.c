@@ -1835,10 +1835,11 @@ Element                 el;
 		elType.ElTypeNum == MathML_EL_SqrtBase ||
 		elType.ElTypeNum == MathML_EL_MSTYLE ||
 		elType.ElTypeNum == MathML_EL_MERROR ||
+		elType.ElTypeNum == MathML_EL_MENCLOSE ||
 		elType.ElTypeNum == MathML_EL_MPADDED ||
 		elType.ElTypeNum == MathML_EL_MPHANTOM ||
-		elType.ElTypeNum == MathML_EL_MENCLOSE ||
 		elType.ElTypeNum == MathML_EL_CellWrapper ||
+		elType.ElTypeNum == MathML_EL_MathML ||
                 elType.ElTypeNum == MathML_EL_FencedExpression);
       }
    return result;   
