@@ -650,10 +650,11 @@ static void MoveAttrLang (Attribute oldAttr, Element *el, Document doc)
   ThotBool	sameLang;
 
   /* if all siblings have the same LANG attribute, move that attibute to
-     the parent element, unless the parent element has exception Hidden */
+     the parent element, unless the parent element has exception Hidden
+     or the parent element is the document element */
   parent = TtaGetParent (*el);
   if (parent)
-     if (TtaIsHidden (parent))
+     if (TtaIsHidden (parent) || !TtaGetParent (parent))
         parent = NULL;
   if (parent != NULL)
      {
@@ -721,6 +722,7 @@ void AttrLangCreated (NotifyAttribute *event)
 {
   Element	elem;
   int		len;
+  ElementType   elType;
   AttributeType attrType;
   Attribute	attr;
   char	       *value = TtaGetMemory (ATTRLEN); 
@@ -733,21 +735,19 @@ void AttrLangCreated (NotifyAttribute *event)
   len = ATTRLEN - 1;
   TtaGiveTextAttributeValue (event->attribute, value, &len);
   if (strcasecmp(value, "Symbol") == 0)
-     /* it's a character string in the Symbol character set, it's not really
-	a language */
-    {
+    /* it's a character string in the Symbol character set, it's not really
+       a language */
     TtaRemoveAttribute (elem, event->attribute, event->document);      
-    }
   else
-    {
-      /* if the LANG attribute is on a text string, create a SPAN element that
-	 encloses this text string and move the LANG attribute to that SPAN
-	 element */
-      AttrToSpan (elem, event->attribute, event->document);
-    }
+    /* if the LANG attribute is on a text string, create a SPAN element that
+       encloses this text string and move the LANG attribute to that SPAN
+       element */
+    AttrToSpan (elem, event->attribute, event->document);
   /* if it's the root (HTML) element, create a RealLang attribute too */
-  if (!TtaGetParent (elem))
-     /* it's the root element */
+  elType = TtaGetElementType (elem);
+  if (elType.ElTypeNum == HTML_EL_HTML &&
+      !strcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+     /* it's the HTML root element */
      {
      attrType.AttrSSchema = event->attributeType.AttrSSchema;
      attrType.AttrTypeNum = HTML_ATTR_RealLang;
