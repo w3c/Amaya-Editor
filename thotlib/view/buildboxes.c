@@ -43,6 +43,8 @@
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 
+extern Frame_Ctl   FrameTable[MAX_FRAME+1];
+
 #define MAX_BOX_INWORK 10
 static PtrAbstractBox  BoxInWork[MAX_BOX_INWORK];
 static int             BiwIndex = 0;
@@ -3799,9 +3801,9 @@ PtrAbstractBox      pAb;
 		  pFrame->FrSelectShown = FALSE;
 	       }
 
-	     saveMode = documentDisplayMode[FrameTable[frame].FrDoc - 1];
+	     saveMode = documentDisplayMode[document - 1];
 	     if (saveMode == DisplayImmediately)
-	       documentDisplayMode[FrameTable[frame].FrDoc - 1] = DeferredDisplay;
+	       documentDisplayMode[document - 1] = DeferredDisplay;
 
 	     /* On prepare le traitement de l'englobement apres modification */
 	     pFrame->FrReady = FALSE;	/* La frame n'est pas affichable */
@@ -3932,7 +3934,7 @@ PtrAbstractBox      pAb;
 
 	     /* restore the current mode and  update tables if necessary */
 	     if (saveMode == DisplayImmediately)
-	       documentDisplayMode[FrameTable[frame].FrDoc - 1] = saveMode;
+	       documentDisplayMode[document - 1] = saveMode;
 	      if (!lock)
 		/* unlock table formatting */
 		(*ThotLocalActions[T_unlock]) ();

@@ -654,43 +654,45 @@ Document	doc;
    text = TtaAllocString (length);
    if (text != NULL)
       {
-      /* decide of the presentation rule to be created or updated */
-      TtaGiveAttributeType (attr, &attrType, &attrKind);
-      if (attrType.AttrTypeNum == GraphML_ATTR_x)
-          ruleType = PRHorizPos;
-      else if (attrType.AttrTypeNum == GraphML_ATTR_y)
-          ruleType = PRVertPos;
-      else if (attrType.AttrTypeNum == GraphML_ATTR_cx)
-          ruleType = PRHorizPos;
-      else if (attrType.AttrTypeNum == GraphML_ATTR_cy)
-          ruleType = PRVertPos;
-      else if (attrType.AttrTypeNum == GraphML_ATTR_x1)
-          ruleType = PRHorizPos;
-      else if (attrType.AttrTypeNum == GraphML_ATTR_y1)
-          ruleType = PRVertPos;
-      else if (attrType.AttrTypeNum == GraphML_ATTR_x2)
-          ruleType = PRWidth;
-      else if (attrType.AttrTypeNum == GraphML_ATTR_y2)
-          ruleType = PRHeight;
-      else if (attrType.AttrTypeNum == GraphML_ATTR_dx)
-          ruleType = PRHorizPos;
-      else if (attrType.AttrTypeNum == GraphML_ATTR_dy)
-          ruleType = PRVertPos;
-      else
-	  return;
       /* get the value of the x or y attribute */
       TtaGiveTextAttributeValue (attr, text, &length);
-      ctxt = TtaGetSpecificStyleContext (doc);
-      /* the specific presentation is not a CSS rule */
-      ctxt->cssLevel = 0;
-      ctxt->destroy = FALSE;
       /* parse the attribute value (a number followed by a unit) */
       ptr = text;
       ptr = TtaSkipWCBlanks (ptr);
       ptr = ParseCSSUnit (ptr, &pval);
       if (pval.typed_data.unit != STYLE_UNIT_INVALID)
-	 TtaSetStylePresentation (ruleType, el, NULL, ctxt, pval);
-      TtaFreeMemory (ctxt);
+	{
+	  /* decide of the presentation rule to be created or updated */
+	  TtaGiveAttributeType (attr, &attrType, &attrKind);
+	  if (attrType.AttrTypeNum == GraphML_ATTR_x)
+	    ruleType = PRHorizPos;
+	  else if (attrType.AttrTypeNum == GraphML_ATTR_y)
+	    ruleType = PRVertPos;
+	  else if (attrType.AttrTypeNum == GraphML_ATTR_cx)
+	    ruleType = PRHorizPos;
+	  else if (attrType.AttrTypeNum == GraphML_ATTR_cy)
+	    ruleType = PRVertPos;
+	  else if (attrType.AttrTypeNum == GraphML_ATTR_x1)
+	    ruleType = PRHorizPos;
+	  else if (attrType.AttrTypeNum == GraphML_ATTR_y1)
+	    ruleType = PRVertPos;
+	  else if (attrType.AttrTypeNum == GraphML_ATTR_x2)
+	    ruleType = PRWidth;
+	  else if (attrType.AttrTypeNum == GraphML_ATTR_y2)
+	    ruleType = PRHeight;
+	  else if (attrType.AttrTypeNum == GraphML_ATTR_dx)
+	    ruleType = PRHorizPos;
+	  else if (attrType.AttrTypeNum == GraphML_ATTR_dy)
+	    ruleType = PRVertPos;
+	  else
+	    return;
+	  ctxt = TtaGetSpecificStyleContext (doc);
+	  /* the specific presentation is not a CSS rule */
+	  ctxt->cssLevel = 0;
+	  ctxt->destroy = FALSE;
+	  TtaSetStylePresentation (ruleType, el, NULL, ctxt, pval);
+	  TtaFreeMemory (ctxt);
+	}
       TtaFreeMemory (text);
       }
 }

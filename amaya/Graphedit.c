@@ -808,7 +808,7 @@ NotifyPresentation *event;
     {
     unit = TtaGetPRuleUnit (presRule);
     mainView = TtaGetViewFromName (doc, "Formatted_view");
-    TtaGiveBoxPosition (el, doc, mainView, unit, &x, &y);
+    /* TtaGiveBoxPosition (el, doc, mainView, unit, &x, &y);*/
     TtaGiveBoxSize (el, doc, 1, unit, &width, &height);
     if (presType == PRVertPos)
       {

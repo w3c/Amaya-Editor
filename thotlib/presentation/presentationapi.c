@@ -20,12 +20,17 @@
 #include "presentation.h"
 #include "tree.h"
 #include "typecorr.h"
+#include "appdialogue.h"
 
-#define THOT_EXPORT extern
-#include "boxes_tv.h"
-#undef THOT_EXPORT
 #define THOT_EXPORT
 #include "edit_tv.h"
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
+#ifndef NODISPLAY
+#include "frame_tv.h"
+#endif /* NODISPLAY */
+#include "boxes_tv.h"
+
 
 #include "appli_f.h"
 #include "applicationapi_f.h"
@@ -160,6 +165,7 @@ ThotBool            display;
 
 #endif /* __STDC__ */
 {
+#ifndef NODISPLAY
    PtrPRule            pPRule, pR, pRStd;
    PtrPSchema          pSPR;
    PtrSSchema          pSSR;
@@ -169,6 +175,7 @@ ThotBool            display;
    PtrAbstractBox      pAbbCur;
    NotifyAttribute     notifyAttr;
    Document            doc;
+   DisplayMode         dispMode;
    int                 x, y, dx, dy;
    int                 updateframe[MAX_VIEW_DOC];
    int                 viewSch;
@@ -177,37 +184,43 @@ ThotBool            display;
    ThotBool            attr, stop, doit;
    ThotBool            isNew, reDisp, isLined, histOpen;
 
-   /* nettoie la table des frames a reafficher */
+   /* clean up the table of frames to be redisplayed */
    for (view = 1; view <= MAX_VIEW_DOC; view++)
       updateframe[view - 1] = 0;
-   /* l'element auquel correspond le pave */
+   /* get the element */
    pEl = pAb->AbElement;
-   /* le document auquel il appartient */
+   /* get the document */
    pDoc = DocumentOfElement (pEl);
-   /* numero de cette view */
+   /* view number in the presentation schema that defines it */
    viewSch = AppliedView (pEl, NULL, pDoc, pAb->AbDocView);
-   /* rien a reafficher */
+   /* by default nothing to redisplay */
    reDisp = FALSE;
    histOpen = FALSE;
-   /* le pave est-il dans une mise en lignes ? a priori non */
+   /* by default the abstract box is not presented in a block of lines */
    isLined = FALSE;
    doit = FALSE;
    pAbbCur = pAb->AbEnclosing;
-   /* on examine les paves englobants */
+   /* check enclosing abstract boxes */
    while (!isLined && pAbbCur != NULL)
      {
        if (pAbbCur->AbLeafType == LtCompound && pAbbCur->AbInLine)
-	 /* on est dans un pave mis en lignes */
+	 /* the abstract box is presented in a block of lines */
 	 isLined = TRUE;
        else if (!pAbbCur->AbAcceptLineBreak)
-	 /* dans un pave insecable, inutile d'examiner les paves englobants */
+	 /* the abstract box doesn't accept line breaks, stop the research */
 	 pAbbCur = NULL;
        else
-	 /* passe au pave englobant */
+	 /* go upper */
 	 pAbbCur = pAbbCur->AbEnclosing;
      }
-   doc = IdentDocument (pDoc);  
-   /* traite la position verticale */
+
+   /* avoid too many redisplays */
+   doc = FrameTable[frame].FrDoc;
+   dispMode = documentDisplayMode[doc - 1];
+   if (dispMode == DisplayImmediately)
+     TtaSetDisplayMode (doc, DeferredDisplay);
+   
+   /* manage the vertical position */
    if (pAb->AbBox != NULL && Y != pAb->AbBox->BxYOrg)
      {
        /* cherche d'abord la regle de position qui s'applique a l'element */
@@ -370,7 +383,7 @@ ThotBool            display;
 	 }
      }
 
-   /* traite la position horizontale */
+   /* manage horizontal position */
    if (pAb->AbBox != NULL && X != pAb->AbBox->BxXOrg)
      /* cherche d'abord la regle de position qui s'applique a l'element */
      {
@@ -529,6 +542,10 @@ ThotBool            display;
 	 }
      }
 
+   /* restore the display mode */
+   if (dispMode == DisplayImmediately)
+     TtaSetDisplayMode (doc, dispMode);
+
    if (!BoxCreating && histOpen)
      {
      CloseHistorySequence (pDoc);
@@ -545,6 +562,7 @@ ThotBool            display;
 	   RedisplayDocViews (pDoc);
 	 }
      }
+#endif /* NODISPLAY */
 }
 
 /*----------------------------------------------------------------------
@@ -565,6 +583,7 @@ int                 frame;
 ThotBool            display;
 #endif /* __STDC__ */
 {
+#ifndef NODISPLAY
    PtrPRule            pPRule, pR, pRStd;
    PtrPSchema          pSPR;
    PtrSSchema          pSSR;
@@ -574,7 +593,7 @@ ThotBool            display;
    PtrAbstractBox      pAbbCur;
    NotifyAttribute     notifyAttr;
    Document            doc;
-   DisplayMode         oldDisplayMode;
+   DisplayMode         dispMode;
    int                 dx, dy;
    int                 heightRef, widthRef;
    int                 updateframe[MAX_VIEW_DOC];
@@ -584,26 +603,25 @@ ThotBool            display;
    ThotBool            attr, stop, doit;
    ThotBool            isNew, reDisp, ok, histOpen;
 
-   /* nettoie la table des frames a reafficher */
+   /* clean up the table of frames to be redisplayed */
    for (view = 0; view < MAX_VIEW_DOC; view++)
      updateframe[view] = 0;
-   /* l'element auquel correspond le pave */
+   /* get the element */
    pEl = pAb->AbElement;
-   /* le document auquel appartient le pave */
+   /* get the document */
    pDoc = DocumentOfElement (pEl);
-   doc = (Document) IdentDocument (pDoc);
-   /* rien a reafficher */
+   /* view number in the presentation schema that defines it */
+   viewSch = AppliedView (pEl, NULL, pDoc, pAb->AbDocView);
+   doc = FrameTable[frame].FrDoc;
+   /* nothing to redisplay */
    reDisp = FALSE;
    histOpen = FALSE;
-   oldDisplayMode = documentDisplayMode[doc - 1];
-   if (oldDisplayMode == DisplayImmediately)
+   dispMode = documentDisplayMode[doc - 1];
+   if (dispMode == DisplayImmediately)
      {
        TtaSetDisplayMode (doc, DeferredDisplay);
        reDisp = TRUE;
      }
-
-   /* view number in the presentation schema that defines it */
-   viewSch = AppliedView (pEl, NULL, pDoc, pAb->AbDocView);
    doit = FALSE;
 
    /* manage the width change of the box */
@@ -1000,7 +1018,7 @@ ThotBool            display;
      histOpen = FALSE;
      }
 
-   if (reDisp || oldDisplayMode == DisplayImmediately)
+   if (reDisp || dispMode == DisplayImmediately)
      {
        TtaSetDisplayMode (doc, DisplayImmediately);
        if (display)
@@ -1009,6 +1027,7 @@ ThotBool            display;
 	   RedisplayDocViews (pDoc);	/* reafficher ce qu'il faut */
 	 }
      }
+#endif /* NODISPLAY */
 }
 
 /*----------------------------------------------------------------------
@@ -2020,6 +2039,8 @@ TypeUnit            unit;
 
 #endif /* __STDC__ */
 {
+#ifndef NODISPLAY
+
    PtrAbstractBox      pAb;
    int                 v, frame;
    int                 x, y;
@@ -2072,6 +2093,7 @@ TypeUnit            unit;
 	       }
 	  }
      }
+#endif /* NODISPLAY */
 }
 
 
