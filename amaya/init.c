@@ -330,49 +330,80 @@ void                DocumentMetaClear (DocumentMetaDataElement *me)
 void                DocumentInfo (Document document, View view)
 {
 #ifndef _WINDOWS
-
-  /* popup title */
+  char         content [MAX_LENGTH];
+  /* Main form */
    TtaNewSheet (BaseDialog + DocInfoForm, TtaGetViewFrame (document, 1),
-		/*TtaGetMessage (AMAYA, AM_DOC_INFO_TITLE)*/
-		"AM_DOC_INFO_TITLE", 0, NULL,
-		TRUE, 2, 'L', D_DONE);
+		TtaGetMessage (AMAYA, AM_DOC_INFO_TITLE),
+		0, NULL, FALSE, 6, 'L', D_DONE);
 
-   /* title of the document */
-   TtaNewLabel (BaseDialog + DocInfoContentTitle,
+   /* Document information labels */
+   TtaNewLabel (BaseDialog + DocInfoTitle1,
 		BaseDialog + DocInfoForm,
-		/*TtaGetMessage (AMAYA, AM_DOC_INFO_CONTENT_TITLE)*/
-		"DocInfoContentTitle : ");
-   TtaNewLabel (BaseDialog + DocInfoContent,
-		BaseDialog + DocInfoForm, "  ");
+		"________________");
 
-   /* url of the document */
+   /* Document URL */
    TtaNewLabel (BaseDialog + DocInfoLocationTitle,
 		BaseDialog + DocInfoForm,
-		/*TtaGetMessage (AMAYA, AM_DOC_INFO_LOCATION_TITLE)*/
-		"DocInfoLocationTitle : ");
-   TtaNewLabel (BaseDialog + DocInfoLocation,
-		BaseDialog + DocInfoForm, DocumentURLs[document]);
+		TtaGetMessage (AMAYA, AM_DOC_INFO_LOCATION_TITLE));
 
-   /* mime type */
+   /* Mime Type */
    TtaNewLabel (BaseDialog + DocInfoMimeTypeTitle,
 		BaseDialog + DocInfoForm,
-		/*TtaGetMessage (AMAYA, AM_DOC_INFO_TYPE_TITLE)*/
-		"DocInfoMimeTypeTitle : ");
-   TtaNewLabel (BaseDialog + DocInfoMimeType,
-		BaseDialog + DocInfoForm,  
-		DocumentMeta[document]->content_type);
-
-   /* charset */
+		TtaGetMessage (AMAYA, AM_DOC_INFO_TYPE_TITLE));
+   /* Charset */
    TtaNewLabel (BaseDialog + DocInfoCharsetTitle,
 		BaseDialog + DocInfoForm,
-		/*TtaGetMessage (AMAYA, AM_DOC_INFO_CHARSET_TITLE)*/
-		"DocInfoCharsetTitle : ");
+		TtaGetMessage (AMAYA, AM_DOC_INFO_CHARSET_TITLE));
+
+   /* Content Length */
+   TtaNewLabel (BaseDialog + DocInfoContentTitle,
+		BaseDialog + DocInfoForm,
+		TtaGetMessage (AMAYA, AM_DOC_INFO_CONTENT_TITLE));
+
+   TtaNewLabel (BaseDialog + DocInfoTitle2,
+		BaseDialog + DocInfoForm,
+		"________________");
+
+   /* Document information contents */
+   TtaNewLabel (BaseDialog + DocInfoContent1,
+		BaseDialog + DocInfoForm,
+		"__________________________________");
+
+   /* Document URL */
+   if (DocumentURLs[document] != NULL)
+     usprintf (content, TEXT("%s "), DocumentURLs[document]);
+   else
+     usprintf (content, TEXT("Unknown"));
+   TtaNewLabel (BaseDialog + DocInfoLocation,
+		BaseDialog + DocInfoForm, content);
+
+   /* Mime Type */
+   if (DocumentMeta[document]->content_type != NULL)
+     usprintf (content, TEXT("%s "), DocumentMeta[document]->content_type);
+   else
+     usprintf (content, TEXT("Unknown"));
+   TtaNewLabel (BaseDialog + DocInfoMimeType,
+		BaseDialog + DocInfoForm, content);
+
+   /* Charset */
+   if (DocumentMeta[document]->charset != NULL)
+     usprintf (content, TEXT("%s "), DocumentMeta[document]->charset);
+   else
+     usprintf (content, TEXT("Unknown"));
    TtaNewLabel (BaseDialog + DocInfoCharset,
-		BaseDialog + DocInfoForm, 
-		DocumentMeta[document]->charset);
+		BaseDialog + DocInfoForm, content);
+
+   /* Content Length */
+   usprintf (content, TEXT("Unknown"));
+   TtaNewLabel (BaseDialog + DocInfoContent,
+		BaseDialog + DocInfoForm, content);
+
+   TtaNewLabel (BaseDialog + DocInfoContent2,
+		BaseDialog + DocInfoForm,
+		"__________________________________");
 
    TtaSetDialoguePosition ();
-   TtaShowDialogue (BaseDialog + DocInfoForm, FALSE);
+   TtaShowDialogue (BaseDialog + DocInfoForm, TRUE);
 
 #else /* _WINDOWS */
    /*
