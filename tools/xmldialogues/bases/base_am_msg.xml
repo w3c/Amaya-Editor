@@ -1867,8 +1867,12 @@
 	<message xml:lang="pt">Caracteres inválidos</message>
 </label>
 <label define="AM_XML_PROFILE">
-	<message xml:lang="en">With the document profile:</message>
-	<message xml:lang="fr">Avec le profil du document :</message>
+	<message xml:lang="en">For the document profile:</message>
+	<message xml:lang="fr">Pour le profil du document :</message>
+        <message xml:lang="it">Con profilo di documento:</message>
+        <message xml:lang="de">Durch gegenwärtigen Dokument Profil:</message>
+        <message xml:lang="es">Con el perfil de este documento:</message>
+        <message xml:lang="pt">Com perfil documento:</message>
 </label>
 <label define="AM_XML_WARNING">
 	<message xml:lang="en">Some tags/attributes are ignored - see Views/Show parsing errors</message>
