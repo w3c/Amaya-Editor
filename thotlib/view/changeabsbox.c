@@ -3964,54 +3964,72 @@ PtrSSchema          pSS;
    SetChange marque dans le pave pAbb que la regle de type typeRule a 
    change'.                                                
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
-static void         SetChange (PtrAbstractBox pAbb, PRuleType typeRule)
+static void         SetChange (PtrAbstractBox pAb, PRuleType typeRule)
 
 #else  /* __STDC__ */
-static void         SetChange (pAbb, typeRule)
-PtrAbstractBox      pAbb;
+static void         SetChange (pAb, typeRule)
+PtrAbstractBox      pAb;
 PRuleType           typeRule;
-
 #endif /* __STDC__ */
-
 {
-
-   switch (typeRule)
-	 {
-	    case PtWidth:
-	       pAbb->AbWidthChange = TRUE;
-	       break;
-	    case PtHeight:
-	       pAbb->AbHeightChange = TRUE;
-	       break;
-	    case PtHorizPos:
-	       pAbb->AbHorizPosChange = TRUE;
-	       break;
-	    case PtVertPos:
-	       pAbb->AbVertPosChange = TRUE;
-	       break;
-	    case PtHorizRef:
-	       pAbb->AbHorizRefChange = TRUE;
-	       break;
-	    case PtVertRef:
-	       pAbb->AbVertRefChange = TRUE;
-	       break;
-	    case PtSize:
-	       pAbb->AbSizeChange = TRUE;
-	       break;
-	    case PtDepth:
-	    case PtLineStyle:
-	    case PtLineWeight:
-	    case PtFillPattern:
-	    case PtBackground:
-	    case PtForeground:
-	       pAbb->AbAspectChange = TRUE;
-	       break;
-	    default:
-	       pAbb->AbChange = TRUE;
-	       break;
-	 }
+  switch (typeRule)
+    {
+    case PtWidth:
+      pAb->AbWidthChange = TRUE;
+      break;
+    case PtHeight:
+      pAb->AbHeightChange = TRUE;
+      break;
+    case PtMarginTop:
+    case PtMarginBottom:
+    case PtPaddingTop:
+    case PtPaddingBottom:
+    case PtBorderTopWidth:
+    case PtBorderBottomWidth:
+    case PtMarginRight:
+    case PtMarginLeft:
+    case PtPaddingRight:
+    case PtPaddingLeft:
+    case PtBorderRightWidth:
+    case PtBorderLeftWidth:
+      pAb->AbMBPChange = TRUE;
+      break;
+    case PtHorizPos:
+      pAb->AbHorizPosChange = TRUE;
+      break;
+    case PtVertPos:
+      pAb->AbVertPosChange = TRUE;
+      break;
+    case PtHorizRef:
+      pAb->AbHorizRefChange = TRUE;
+      break;
+    case PtVertRef:
+      pAb->AbVertRefChange = TRUE;
+      break;
+    case PtSize:
+      pAb->AbSizeChange = TRUE;
+      break;
+    case PtDepth:
+    case PtLineStyle:
+    case PtLineWeight:
+    case PtFillPattern:
+    case PtBackground:
+    case PtForeground:
+    case PtBorderTopColor:
+    case PtBorderRightColor:
+    case PtBorderBottomColor:
+    case PtBorderLeftColor:
+    case PtBorderTopStyle:
+    case PtBorderRightStyle:
+    case PtBorderBottomStyle:
+    case PtBorderLeftStyle:
+      pAb->AbAspectChange = TRUE;
+      break;
+    default:
+      pAb->AbChange = TRUE;
+      break;
+    }
 
 }
 

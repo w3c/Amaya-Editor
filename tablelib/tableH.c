@@ -626,6 +626,7 @@ ThotBool         force;
   int                 min, max, sum, remainder;
   int                 percent, sumPercent, n;
   int                 realMin, realMax;
+  int                 mbp;
   int                 minWithPercent, maxWithPercent;
   ThotBool             constraint, still;
   ThotBool             useMax, checkEnclosing;
@@ -638,7 +639,9 @@ ThotBool         force;
     /* the table formatting is currently in process */
     return;
 
-  pCell = GetParentCell (table->AbBox);
+  pBox = table->AbBox;
+  mbp = pBox->BxLMargin + pBox->BxRMargin + pBox->BxLPadding + pBox->BxRPadding + pBox->BxLBorder + pBox->BxRBorder;
+  pCell = GetParentCell (pBox);
   checkEnclosing = FALSE;
   constraint = GiveAttrWidth (table, &width, &percent);
   if (!constraint)
@@ -646,20 +649,21 @@ ThotBool         force;
       if (force && pCell == NULL)
 	force = FALSE;
       /* limit given by available space */
-      width = table->AbEnclosing->AbBox->BxWidth;
+      width = table->AbEnclosing->AbBox->BxW - mbp;
     }
   else if (percent != 0)
     {
       /* limit given by precent of available space */
-      width = table->AbEnclosing->AbBox->BxWidth * percent / 100;
+      width = (table->AbEnclosing->AbBox->BxW * percent / 100) - mbp;
     }
 
   if (constraint && width == 0)
     {
       /* limit given by available space */
-      width = table->AbEnclosing->AbBox->BxWidth;
+      width = table->AbEnclosing->AbBox->BxW - mbp;
       constraint = FALSE;
     }
+
   sumPercent = 0;
   min = 0;
   max = 0;
@@ -677,8 +681,9 @@ ThotBool         force;
   /* no previous column */
   pOldBox = NULL;
 #ifdef TAB_DEBUG
-printf("<<<<<<<<<<<<<<<%d\n", table->AbBox->BxWidth);
+printf("<<<<<<<<<<<<<<<%d\n", pBox->BxWidth);
 #endif
+
   minsize = (int)(((float) width /(float) cNumber) /2.);
   for (cRef = 0; cRef < cNumber; cRef++)
     {
@@ -785,7 +790,7 @@ printf ("cref=%d: Min =%d, Max=%d, colWidth=%d, colPercent=%d\n", cRef, pBox->Bx
       if (percent != 0)
 	{
 	  /* the limit is given by a precent rule */
-	  if (table->AbEnclosing->AbBox->BxWidth > 0 && pCell == NULL && percent != 100)
+	  if (table->AbEnclosing->AbBox->BxW > 0 && pCell == NULL && percent != 100)
 	    {
 	      percent = 100;
 	      SetAttrWidthPercent (table, percent);
@@ -822,16 +827,19 @@ printf ("cref=%d: Min =%d, Max=%d, colWidth=%d, colPercent=%d\n", cRef, pBox->Bx
   if (max <= width && !constraint)
     {
       /* assign the maximum width to each column */
-      ResizeWidth (pBox, pBox, NULL, max - pBox->BxWidth, 0, frame);
+      ResizeWidth (pBox, pBox, NULL, max - pBox->BxW, 0, frame);
       for (cRef = 0; cRef < cNumber; cRef++)
 	{
 	  pBox = colBox[cRef]->AbBox;
+	  /* get the new outside width */
 	  if (colPercent[cRef] != 0)
-	    delta = ((max - remainder) * colPercent[cRef] / 100) - pBox->BxWidth;
+	    delta = ((max - remainder) * colPercent[cRef] / 100);
 	  else if (colWidth[cRef] != 0)
-	    delta = colWidth[cRef] - pBox->BxWidth;
+	    delta = colWidth[cRef];
 	  else
-	    delta = pBox->BxMaxWidth - pBox->BxWidth;
+	    delta = pBox->BxMaxWidth;
+	  /* update the new inside width */
+	  delta = delta - pBox->BxLMargin - pBox->BxRMargin - pBox->BxLPadding - pBox->BxRPadding - pBox->BxLBorder - pBox->BxRBorder - pBox->BxW;
 	  ResizeWidth (pBox, pBox, NULL, delta, 0, frame);
 #ifdef TAB_DEBUG
 printf ("Width[%d]=%d\n", cRef, pBox->BxWidth);
@@ -841,18 +849,21 @@ printf ("Width[%d]=%d\n", cRef, pBox->BxWidth);
   else if (min >= width || (!constraint && i == 0))
     {
       /* assign the minimum width to each column */
-      ResizeWidth (pBox, pBox, NULL, min - pBox->BxWidth, 0, frame);
+      ResizeWidth (pBox, pBox, NULL, min - pBox->BxW, 0, frame);
       for (cRef = 0; cRef < cNumber; cRef++)
 	{
 	  pBox = colBox[cRef]->AbBox;
+	  /* get the new outside width */
 	  if (colPercent[cRef] != 0)
-	    delta = ((min - remainder) * colPercent[cRef] / 100) - pBox->BxWidth;
+	    delta = ((min - remainder) * colPercent[cRef] / 100);
 	  else if (colWidth[cRef] != 0)
-	    delta = colWidth[cRef] - pBox->BxWidth;
+	    delta = colWidth[cRef];
 	  else if (pBox->BxMaxWidth <= minsize)
-	    delta = pBox->BxMaxWidth - pBox->BxWidth;
+	    delta = pBox->BxMaxWidth;
 	  else
-	    delta = pBox->BxMinWidth - pBox->BxWidth;
+	    delta = pBox->BxMinWidth;
+	  /* update the new inside width */
+	  delta = delta - pBox->BxLMargin - pBox->BxRMargin - pBox->BxLPadding - pBox->BxRPadding - pBox->BxLBorder - pBox->BxRBorder - pBox->BxW;
 	  ResizeWidth (pBox, pBox, NULL, delta, 0, frame);
 #ifdef TAB_DEBUG
 printf ("Width[%d]=%d\n", cRef, pBox->BxWidth);
@@ -862,7 +873,7 @@ printf ("Width[%d]=%d\n", cRef, pBox->BxWidth);
   else
     {
       /* assign a specific width to each column */
-      ResizeWidth (pBox, pBox, NULL, width - pBox->BxWidth, 0, frame);
+      ResizeWidth (pBox, pBox, NULL, width - pBox->BxW, 0, frame);
       useMax = FALSE;
       if (max < width)
 	{
@@ -930,13 +941,14 @@ printf ("Width[%d]=%d\n", cRef, pBox->BxWidth);
       for (cRef = 0; cRef < cNumber; cRef++)
 	{
 	  pBox = colBox[cRef]->AbBox;
+	  /* get the new outside width */
 	  if (colPercent[cRef] != 0)
-	    i = ((width - remainder) * colPercent[cRef] / 100) - pBox->BxWidth;
+	    i = ((width - remainder) * colPercent[cRef] / 100);
 	  else if (colWidth[cRef] > 0)
-	    i = colWidth[cRef] - pBox->BxWidth;
+	    i = colWidth[cRef];
 	  else if ((colWidth[cRef] < 0 || pBox->BxMaxWidth < minsize) &&
 		   !constraint)
-	    i = pBox->BxMaxWidth - pBox->BxWidth;
+	    i = pBox->BxMaxWidth;
 	  else
 	    {
 	      /* add extra pixels */
@@ -948,10 +960,12 @@ printf ("Width[%d]=%d\n", cRef, pBox->BxWidth);
 	      else
 		px = 0;
 	      if (useMax)
-		i = pBox->BxMaxWidth + delta + px - pBox->BxWidth;
+		i = pBox->BxMaxWidth + delta + px;
 	      else
-		i = pBox->BxMinWidth + delta + px - pBox->BxWidth;
+		i = pBox->BxMinWidth + delta + px;
 	    }
+	  /* update the new inside width */
+	  i = i - pBox->BxLMargin - pBox->BxRMargin - pBox->BxLPadding - pBox->BxRPadding - pBox->BxLBorder - pBox->BxRBorder - pBox->BxW;
 	  ResizeWidth (pBox, pBox, NULL, i, 0, frame);
 #ifdef TAB_DEBUG
 printf ("Width[%d]=%d\n", cRef, pBox->BxWidth);
@@ -1141,6 +1155,7 @@ int             frame;
   PtrTabRelations     pTabRel;
   PtrAbstractBox     *colBox, rowSpanCell[MAX_COLROW];
   PtrAbstractBox      pAb, row, cell;
+  PtrBox              pBox;
   int                *colMinWidth, *colMaxWidth;
   int                *colWidth, *colPercent, *colVSpan;
   int                 colSpan_MinWidth[MAX_COLROW], colSpan_Percent[MAX_COLROW];
@@ -1167,7 +1182,8 @@ int             frame;
 
   pSS = table->AbElement->ElStructSchema;
   /* how many columns */
-  pTabRel = table->AbBox->BxColumns;
+  pBox = table->AbBox;
+  pTabRel = pBox->BxColumns;
   cNumber = 0;
   while (pTabRel != NULL)
     {
@@ -1184,7 +1200,7 @@ int             frame;
   statusColInWork = ComputeColInWork;
   ComputeColInWork = TRUE;
   /* register widths of each columns */
-  pTabRel = table->AbBox->BxColumns;
+  pTabRel = pBox->BxColumns;
   cRef = 0;
   colBox = TtaGetMemory (sizeof (PtrAbstractBox) * cNumber);
   colMinWidth = TtaGetMemory (sizeof (int) * cNumber);
@@ -1227,7 +1243,7 @@ int             frame;
   spanNumber = 0; /* no col-spanned cell */
   rspanNumber = 0; /* no row-spanned cell */
   /* process all rows */
-  pTabRel = table->AbBox->BxRows;
+  pTabRel = pBox->BxRows;
   while (pTabRel != NULL)
     {
       for (i = 0; i < MAX_RELAT_DIM && pTabRel->TaRTable[i] != NULL; i++)
@@ -1327,7 +1343,7 @@ int             frame;
 			{
 			  if (GiveAttrWidth (cell, &cellWidth, &percent))
 			    {
-			      /*percent += delta / table->AbBox.BxWidth;*/
+			      /*percent += delta / pBox.BxWidth;*/
 			      if (percent > colPercent[cRef] && span == 1)
 				colPercent[cRef] = percent;
 			    }
@@ -1467,12 +1483,13 @@ int             frame;
   /* take spanned cells into account */
   if (!GiveAttrWidth (table, &tabWidth, &tabPercent))
     /* limit given by available space */
-    tabWidth = table->AbEnclosing->AbBox->BxWidth;
+    tabWidth = table->AbEnclosing->AbBox->BxW;
   else if (tabPercent != 0)
     {
       /* the table width is given by a percent value */
-      tabWidth = table->AbEnclosing->AbBox->BxWidth * tabPercent / 100;
+      tabWidth = table->AbEnclosing->AbBox->BxW * tabPercent / 100;
     }
+  tabWidth = tabWidth - pBox->BxLMargin - pBox->BxRMargin - pBox->BxLPadding - pBox->BxRPadding - pBox->BxLBorder - pBox->BxRBorder;
   minsize = (int)(((float) tabWidth /(float) cNumber) /2.);
   if (col == NULL)
     {
@@ -1579,7 +1596,7 @@ int             frame;
     }
 
   /* now update column boxes */
-  pTabRel = table->AbBox->BxColumns;
+  pTabRel = pBox->BxColumns;
   cRef = 0;
   while (pTabRel != NULL)
     {

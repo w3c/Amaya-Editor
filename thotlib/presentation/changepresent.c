@@ -735,6 +735,20 @@ PtrElement          pEl;
 			case PtWidth:
 			  pAb->AbWidthChange = TRUE;
 			  break;
+			case PtMarginTop:
+			case PtMarginBottom:
+			case PtPaddingTop:
+			case PtPaddingBottom:
+			case PtBorderTopWidth:
+			case PtBorderBottomWidth:
+			case PtMarginRight:
+			case PtMarginLeft:
+			case PtPaddingRight:
+			case PtPaddingLeft:
+			case PtBorderRightWidth:
+			case PtBorderLeftWidth:
+			  pAb->AbMBPChange = TRUE;
+			  break;
 			case PtVertPos:
 			  pAb->AbVertPosChange = TRUE;
 			  break;
@@ -750,6 +764,14 @@ PtrElement          pEl;
 			case PtFillPattern:
 			case PtBackground:
 			case PtForeground:
+			case PtBorderTopColor:
+			case PtBorderRightColor:
+			case PtBorderBottomColor:
+			case PtBorderLeftColor:
+			case PtBorderTopStyle:
+			case PtBorderRightStyle:
+			case PtBorderBottomStyle:
+			case PtBorderLeftStyle:
 			  pAb->AbAspectChange = TRUE;
 			  break;
 			case PtFunction:
@@ -891,21 +913,23 @@ PtrPSchema          pSPR;
       pAb->AbHorizRefChange = TRUE;
       break;
     case PtHeight:
+      pAb->AbHeightChange = TRUE;
+      break;
     case PtMarginTop:
     case PtMarginBottom:
     case PtPaddingTop:
     case PtPaddingBottom:
     case PtBorderTopWidth:
     case PtBorderBottomWidth:
-      pAb->AbHeightChange = TRUE;
-      break;
-    case PtWidth:
     case PtMarginRight:
     case PtMarginLeft:
     case PtPaddingRight:
     case PtPaddingLeft:
     case PtBorderRightWidth:
     case PtBorderLeftWidth:
+      pAb->AbMBPChange = TRUE;
+      break;
+    case PtWidth:
       pAb->AbWidthChange = TRUE;
       break;
     case PtVertPos:

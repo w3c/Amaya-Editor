@@ -1160,6 +1160,10 @@ ThotBool            generic;
     case PtFillPattern:
     case PtBackground:
     case PtForeground:
+    case PtBorderTopColor:
+    case PtBorderRightColor:
+    case PtBorderBottomColor:
+    case PtBorderLeftColor:
       rule->PrPresMode = PresImmediate;
       rule->PrAttrValue = 0;
       rule->PrIntValue = value;
@@ -1230,11 +1234,61 @@ ThotBool            generic;
     case PtThickness:
     case PtLineStyle:
       break;
+    case PtBorderTopStyle:
+    case PtBorderRightStyle:
+    case PtBorderBottomStyle:
+    case PtBorderLeftStyle:
+      switch (value)
+	{
+	case STYLE_BORDERNONE:
+	  rule->PrChrValue = '0';
+	  break;
+	case STYLE_BORDERHIDDEN:
+	  rule->PrChrValue = 'H';
+	  break;
+	case STYLE_BORDERDOTTED:
+	  rule->PrChrValue = '.';
+	  break;
+	case STYLE_BORDERDASHED:
+	  rule->PrChrValue = '-';
+	  break;
+	case STYLE_BORDERSOLID:
+	  rule->PrChrValue = 'S';
+	  break;
+	case STYLE_BORDERDOUBLE:
+	  rule->PrChrValue = 'D';
+	  break;
+	case STYLE_BORDERGROOVE:
+	  rule->PrChrValue = 'G';
+	  break;
+	case STYLE_BORDERRIDGE:
+	  rule->PrChrValue = 'R';
+	  break;
+	case STYLE_BORDERINSET:
+	  rule->PrChrValue = 'I';
+	  break;
+	case STYLE_BORDEROUTSET:
+	  rule->PrChrValue = 'O';
+	  break;
+	}
+      break;
     case PtBreak1:
     case PtBreak2:
     case PtIndent:
     case PtLineSpacing:
     case PtLineWeight:
+    case PtMarginTop:
+    case PtMarginLeft:
+    case PtMarginBottom:
+    case PtMarginRight:
+    case PtBorderTopWidth:
+    case PtBorderLeftWidth:
+    case PtBorderBottomWidth:
+    case PtBorderRightWidth:
+    case PtPaddingTop:
+    case PtPaddingLeft:
+    case PtPaddingBottom:
+    case PtPaddingRight:
       rule->PrPresMode = PresImmediate;
       rule->PrMinUnit = int_unit;
       rule->PrMinValue = value;

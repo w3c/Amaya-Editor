@@ -1103,11 +1103,11 @@ PtrAbstractBox      pRefAb;
 	    pAb = pAb->AbPrevious;
 	  else if (pAb->AbFillBox)
 	    found = TRUE;
-	  else if ((pAb->AbTopStyle > 2 && pAb->AbTopBColor != -2) ||
+	  /*else if ((pAb->AbTopStyle > 2 && pAb->AbTopBColor != -2) ||
 		   (pAb->AbLeftStyle > 2 && pAb->AbLeftBColor != -2) ||
 		   (pAb->AbBottomStyle > 2 && pAb->AbBottomBColor != -2) ||
 		   (pAb->AbRightStyle > 2 && pAb->AbRightBColor != -2))
-	    found = TRUE;
+		   found = TRUE;*/
 	  else
 	    pAb = pAb->AbPrevious;
 	}
@@ -1118,11 +1118,11 @@ PtrAbstractBox      pRefAb;
           pAb = pRefAb->AbEnclosing;
           if (pAb->AbFillBox )
 	    return (pAb);
-	  else if ((pAb->AbTopStyle > 2 && pAb->AbTopBColor != -2) ||
+	  /*else if ((pAb->AbTopStyle > 2 && pAb->AbTopBColor != -2) ||
 		   (pAb->AbLeftStyle > 2 && pAb->AbLeftBColor != -2) ||
 		   (pAb->AbBottomStyle > 2 && pAb->AbBottomBColor != -2) ||
 		   (pAb->AbRightStyle > 2 && pAb->AbRightBColor != -2))
-	    return (pAb);
+		   return (pAb);*/
 	  else
 	    pAb = SearchPreviousFilledBox (pAb);
         }
@@ -1519,11 +1519,11 @@ int                *carIndex;
 			LoadPicture (frame, pCurrentBox, (PictInfo *) pAb->AbPictBackground);
 		      }
 		    /* Is it a filled box ? */
-		    if (pAb->AbFillBox ||
+		    if (pAb->AbFillBox/* ||
 			(pAb->AbTopStyle > 2 && pAb->AbTopBColor != -2) ||
 			(pAb->AbLeftStyle > 2 && pAb->AbLeftBColor != -2) ||
 			(pAb->AbBottomStyle > 2 && pAb->AbBottomBColor != -2) ||
-			(pAb->AbRightStyle > 2 && pAb->AbRightBColor != -2))
+			(pAb->AbRightStyle > 2 && pAb->AbRightBColor != -2)*/)
 		      /* register the box */
 		      AddFilledBox (pCurrentBox, pMainBox, frame);
 
@@ -2147,14 +2147,15 @@ int                 frame;
    result = FALSE;
    condition = FALSE;
    /* On prepare le reaffichage */
-   if (pAb->AbNew || pAb->AbDead || pAb->AbChange
-       || pAb->AbWidthChange || pAb->AbHeightChange
-       || pAb->AbHorizPosChange || pAb->AbVertPosChange
-       || pAb->AbHorizRefChange || pAb->AbVertRefChange
-       || pAb->AbAspectChange || pAb->AbSizeChange)
+   if (pAb->AbNew || pAb->AbDead || pAb->AbChange || pAb->AbMBPChange ||
+       pAb->AbWidthChange || pAb->AbHeightChange ||
+       pAb->AbHorizPosChange || pAb->AbVertPosChange ||
+       pAb->AbHorizRefChange || pAb->AbVertRefChange ||
+       pAb->AbAspectChange || pAb->AbSizeChange)
      {
        /* look at if the box or an enclosing box has a background */
-       if (pAb->AbNew || pAb->AbDead || pAb->AbHorizPosChange || pAb->AbVertPosChange)
+       if (pAb->AbNew || pAb->AbDead ||
+	   pAb->AbHorizPosChange || pAb->AbVertPosChange)
 	 {
 	 pCurrentAb = pAb->AbEnclosing;	   
 	   while (pCurrentAb != NULL &&
@@ -2478,17 +2479,17 @@ int                 frame;
 		     if (pAb->AbFillPattern == 2)
 		       /* change "backgroundcolor" into "nopattern" */
 		       pAb->AbFillPattern = 0;
-		     /* force filling */
-		     pAb->AbFillBox = TRUE;
+		     /* force filling
+			pAb->AbFillBox = TRUE; */
 		     /* load the picture */
 		     LoadPicture (frame, pBox, (PictInfo *) pAb->AbPictBackground);
 		   }
 		 
-		 if (pAb->AbFillBox||
+		 if (pAb->AbFillBox/* ||
 		     (pAb->AbTopStyle > 2 && pAb->AbTopBColor != -2) ||
 		     (pAb->AbLeftStyle > 2 && pAb->AbLeftBColor != -2) ||
 		     (pAb->AbBottomStyle > 2 && pAb->AbBottomBColor != -2) ||
-		     (pAb->AbRightStyle > 2 && pAb->AbRightBColor != -2))
+		     (pAb->AbRightStyle > 2 && pAb->AbRightBColor != -2)*/)
 		   /* register the box in filled list */
 		   AddFilledBox (pBox, pMainBox, frame);
 		 else
@@ -2813,6 +2814,15 @@ int                 frame;
 	     /* La boite ne depend pas de son contenu */
 	     else
 		result = TRUE;
+	  }
+	if (pAb->AbMBPChange)
+	  {
+	    /* update margins, borders and paddings */
+	    ComputeMPB (pAb, frame, TRUE);
+	    ResizeWidth (pBox, pBox, NULL, 0, 0, frame);
+	    ComputeMPB (pAb, frame, FALSE);
+	    ResizeHeight (pBox, pBox, NULL, 0, frame);
+	    pAb->AbMBPChange = FALSE;
 	  }
 	/* CHANGEMENT DE POSITION HORIZONTALE */
 	if (pAb->AbHorizPosChange)

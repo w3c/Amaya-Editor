@@ -1458,23 +1458,25 @@ FILE               *fileDescriptor;
 	if (pAb->AbDead)
 	   fprintf (fileDescriptor, " DEAD");
 	if (pAb->AbWidthChange)
-	   fprintf (fileDescriptor, " ChngWidth");
+	   fprintf (fileDescriptor, " WidthChange");
 	if (pAb->AbHeightChange)
-	   fprintf (fileDescriptor, " ChngHeight");
+	   fprintf (fileDescriptor, " HeightChange");
 	if (pAb->AbHorizPosChange)
-	   fprintf (fileDescriptor, " ChngPosH");
+	   fprintf (fileDescriptor, " HorizPosChange");
 	if (pAb->AbVertPosChange)
-	   fprintf (fileDescriptor, " ChngPosV");
+	   fprintf (fileDescriptor, " VertPosChange");
 	if (pAb->AbHorizRefChange)
-	   fprintf (fileDescriptor, " ChngAxisH");
+	   fprintf (fileDescriptor, " HorizRefChange");
 	if (pAb->AbVertRefChange)
-	   fprintf (fileDescriptor, " ChngAxisV");
+	   fprintf (fileDescriptor, " VertRefChange");
 	if (pAb->AbSizeChange)
-	   fprintf (fileDescriptor, " ChngSize");
+	   fprintf (fileDescriptor, " SizeChange");
 	if (pAb->AbAspectChange)
-	   fprintf (fileDescriptor, " ChngGraphic");
+	   fprintf (fileDescriptor, " AspectChange");
+	if (pAb->AbMBPChange)
+	   fprintf (fileDescriptor, " MBPChange");
 	if (pAb->AbChange)
-	   fprintf (fileDescriptor, " MODIFIED");
+	   fprintf (fileDescriptor, " OtherChange");
 	if (pAb->AbOnPageBreak)
 	   fprintf (fileDescriptor, " ON PAGE BOUNDARY");
 	if (pAb->AbAfterPageBreak)

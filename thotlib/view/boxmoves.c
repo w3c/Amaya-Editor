@@ -709,8 +709,7 @@ int                 frame;
 		  delta = pBox->BxRuleWidth - pBox->BxW;
 		  pBox->BxRuleWidth = width;
 		  pBox->BxContentWidth = !pBox->BxContentWidth;
-		  if (delta != 0)
-		     ResizeWidth (pBox, pSourceBox, NULL, delta, spaceDelta, frame);
+		  ResizeWidth (pBox, pSourceBox, NULL, delta, spaceDelta, frame);
 	       }
 	     else
 		/* Mise a jour de la largeur du contenu */

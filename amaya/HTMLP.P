@@ -6125,7 +6125,8 @@ RULES
  BODY:	BEGIN
 	CreateBefore(BODY_S);
 	IF NOT within NOFRAMES
-		VertPos: Top = Previous AnyElem . Bottom + 0.5 cm;
+                MarginTop: 0.5 cm;
+                VertPos: Top = Previous AnyElem . Bottom;
 	IF within NOFRAMES BEGIN
 		CreateWith(VerticalLine);
 		VertPos: Top = Previous . Bottom;
@@ -6134,15 +6135,19 @@ RULES
 	Width: Enclosing . Width;
 	Hyphenate: Yes;
 #else
-	Width: Enclosing . Width - 1 cm;
-	Height: Enclosing . Height min;
-	HorizPos: Left = Enclosing . Left + 0.5 cm;
-	Hyphenate: No;
+        HorizPos: Left = Enclosing . Left;
+        Width: Enclosing . Width;
+        Height: Enclosing . Height min;
+        Hyphenate: No;
+        MarginLeft: 0.5 cm;
+        MarginRight: 0.5 cm;
 	IF NOT within NOFRAMES
 		CreateLast(BodyBottomSpace);
 #endif
 	IN Structure_view BEGIN
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+                MarginLeft: 0;
+                MarginRight: 0;
 #ifndef PAGE
 		Width: Enclosing . Width - STRUCT_INDENT;
 		Height: Enclosed . Height;

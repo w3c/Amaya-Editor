@@ -441,7 +441,8 @@ typedef struct _AbstractBox
   ThotBool        AbSizeChange;	        /* Change the character size */
   ThotBool        AbAspectChange;       /* Change the graphical aspect: plane,
 					   color, pattern, line style */
-  ThotBool        AbChange;	/* Change of another type */
+  ThotBool        AbMBPChange;	        /* Change margins, borders, paddings */
+  ThotBool        AbChange;	        /* Change of another type */
   LeafType        AbLeafType;
   union
   {

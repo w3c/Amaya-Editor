@@ -512,6 +512,7 @@ ThotBool            ro;
    pAb->AbVertRefChange = FALSE;
    pAb->AbSizeChange = FALSE;
    pAb->AbAspectChange = FALSE;
+   pAb->AbMBPChange = FALSE;
    pAb->AbChange = FALSE;
 
    if (pEl->ElTerminal && pEl->ElLeafType == LtText)
