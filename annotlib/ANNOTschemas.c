@@ -708,6 +708,7 @@ static ThotBool SCHEMA_FreeRDFResource( void *item )
       List_delAll (&r->class->subClasses, NULL);
       TtaFreeMemory ((char *)r->class);
     }
+  TtaFreeMemory (r);
   return TRUE;
 }
 
