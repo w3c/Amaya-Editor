@@ -1737,11 +1737,7 @@ static void         CheckPseudoParagraph (Element el, Document doc)
       if (prev || attr)
         /* the Pseudo-paragraph is not the first element among its sibling */
         /* or it has attributes: turn it into an ordinary paragraph */
-	{
-	TtaRemoveTree (el, doc);
         ChangeElementType (el, HTML_EL_Paragraph);
-	TtaInsertSibling (el, prev, FALSE, doc);
-	}
     }
   else if (elType.ElTypeNum == HTML_EL_Paragraph)
     /* the element is a Paragraph */
@@ -1764,11 +1760,7 @@ static void         CheckPseudoParagraph (Element el, Document doc)
 		elType.ElTypeNum == HTML_EL_Definition ||
 		elType.ElTypeNum == HTML_EL_Data_cell ||
 		elType.ElTypeNum == HTML_EL_Heading_cell)
-		{
-		TtaRemoveTree (el, doc);
 		ChangeElementType (el, HTML_EL_Pseudo_paragraph);
-		TtaInsertFirstChild (&el, parent, doc);
-		}
 	    }
 	 }
     }

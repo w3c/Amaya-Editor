@@ -39,6 +39,9 @@ extern void CreateMMULTISCRIPTS ( Document document,
                                   View view );
 extern void CreateMTABLE ( Document document,
                            View view );
+extern void ChangeTypeOfElement ( Element elem,
+                                  Document doc,
+                                  int newTypeNum );
 extern void CreateMTEXT ( Document document,
                           View view );
 extern void CreateMI ( Document document,
@@ -158,6 +161,9 @@ extern void CreateMMULTISCRIPTS (/* Document document,
                                     View view */);
 extern void CreateMTABLE (/* Document document,
                              View view */);
+extern void ChangeTypeOfElement (/* Element elem,
+                                    Document doc,
+                                    int newTypeNum */);
 extern void CreateMTEXT (/* Document document,
                             View view */);
 extern void CreateMI (/* Document document,

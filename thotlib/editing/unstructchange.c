@@ -1604,6 +1604,8 @@ void TtcCreateElement (Document doc, View view)
 		{
 		  /* traitement des exceptions */
 		  CreationExceptions (pNew, pDoc);
+		  /* envoie un evenement ElemNew.Post a l'application */
+		  NotifySubTree (TteElemNew, pDoc, pNew, 0);
 		  /* Mise a jour des images abstraites */
 		  CreateAllAbsBoxesOfEl (pNew, pDoc);
 		  /* cree les paves du nouvel element et */
@@ -1617,8 +1619,6 @@ void TtcCreateElement (Document doc, View view)
 		  UpdateNumbers (NextElement (pNew), pNew, pDoc, TRUE);
 		  /* Indiquer que le document est modifie' */
 		  SetDocumentModified (pDoc, TRUE, 30);
-		  /* envoie un evenement ElemNew.Post a l'application */
-		  NotifySubTree (TteElemNew, pDoc, pNew, 0);
 		  if (!lock)
 		    {
 		      /* unlock table formatting */

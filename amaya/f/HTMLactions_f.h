@@ -6,9 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void ChangeTypeOfElement ( Element elem,
-                                  Document doc,
-                                  int newTypeNum );
 extern Element GetElemWithAttr ( Document doc,
                                  AttributeType attrType,
                                  char *nameVal,
@@ -53,9 +50,6 @@ extern void SetCharFontOrPhrase ( int document,
 
 #else /* __STDC__ */
 
-extern void ChangeTypeOfElement (/* Element elem,
-                                    Document doc,
-                                    int newTypeNum */);
 extern Element GetElemWithAttr (/* Document doc,
                                    AttributeType attrType,
                                    char *nameVal,

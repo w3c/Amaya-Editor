@@ -15,7 +15,6 @@
 #include "amaya.h"
 #include "css.h"
 #include "html2thot_f.h"
-#include "HTMLactions_f.h"
 #include "MathML.h"
 #include "HTML.h"
 #include "parser.h"
