@@ -14,4 +14,11 @@
 #            and will be expanded to the Amaya installation directory
 #            and the user's amaya home directory respectively.
 
-http://www.w3.org/1999/xx/annotation-ns#  $THOTDIR/config/en-annotschema
+#alpha release testing schema
+#http://www.w3.org/1999/xx/annotation-ns#
+
+#first release schema; do not change unless you also change the service
+http://www.w3.org/2000/10/annotation-ns#  $THOTDIR/config/annotschema.rdf
+
+#some Annotation subclasses that we think will be useful
+http://www.w3.org/2000/10/annotationTypes# $THOTDIR/config/annottypes.rdf
