@@ -8,7 +8,7 @@
 #
 #       amaya-libs-$MACH-$AMAYAVERSION.tgz
 #
-AMAYAVERSION=4.0
+AMAYAVERSION=4.01
 THOTDIR=$PWD/../..
 DEST=/tahiti/thottape
 
