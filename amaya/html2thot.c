@@ -5877,8 +5877,8 @@ void            CheckAbstractTree (char* pathURL, Document doc)
 		TtaInsertFirstChild (&elText, el, doc);
 	      }
 	    TtaSetAccessRight (el, ReadOnly, doc);
-	    if (pathURL != NULL && elText != NULL)
-	      TtaSetTextContent (elText, pathURL, HTMLcontext.language, doc);
+	    if (DocumentURLs[doc] != NULL && elText != NULL)
+	      TtaSetTextContent (elText, DocumentURLs[doc], HTMLcontext.language, doc);
 	    /* check all chidren of the HEAD Element, except the first one */
 	    /* which is Document_URL */
 	    TtaNextSibling (&el);
