@@ -118,6 +118,10 @@ static int          ReturnValueSelectReferMenu;
 #include "views_f.h"
 #include "word_f.h"
 
+#ifdef _WINDOWS
+static CHAR_T msgCaption [200];
+#endif /* _WINDOWS */
+
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
   InitMenuWhereToSearch 
@@ -1015,6 +1019,7 @@ View                view;
    /* compose le titre du formulaire "Recherche dans le document..." */
    ustrcpy (bufTitle, TtaGetMessage (LIB, TMSG_SEARCH_IN));
    ustrcat (bufTitle, pDoc->DocDName);
+   strcpy (msgCaption, bufTitle);
    /* feuille de dialogue Rechercher texte et structure */
    ustrcpy (string, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
    i = ustrlen (TtaGetMessage (LIB, TMSG_LIB_CONFIRM)) + 1;
@@ -1098,7 +1103,7 @@ View                view;
       InitSearchDomain (3, searchDomain);
    searchDomain->SDocument = pDoc;
    TextOK = FALSE;
-   CreateSearchDlgWindow (TtaGetViewFrame (document, view));
+   CreateSearchDlgWindow (TtaGetViewFrame (document, view), ok);
 #  endif /* _WINDOWS */ 
 }
 
@@ -1422,14 +1427,18 @@ STRING              txt;
 		{
 		  if (!AutoReplace)
 		    /* message "Plus de remplacement" */
-#           ifndef _WINDOWS
+#           ifdef _WINDOWS
+            MessageBox (NULL, TtaGetMessage (LIB, TMSG_NOTHING_TO_REPLACE), msgCaption, MB_OK | MB_ICONEXCLAMATION);
+#           else
 		    TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, TtaGetMessage (LIB, TMSG_NOTHING_TO_REPLACE))
 #           endif /* !_WINDOWS */
 			;
 		}
-#         ifndef _WINDOWS
 	      else
 		/* message "Pas trouve'" */
+#       ifdef _WINDOWS
+        MessageBox (NULL, TtaGetMessage (LIB, TMSG_NOT_FOUND), msgCaption, MB_OK | MB_ICONEXCLAMATION);
+#       else  /* !_WINDOWS */
 		TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, TtaGetMessage (LIB, TMSG_NOT_FOUND));
 #       endif /* !_WINDOWS */
 	      StartSearch = TRUE;

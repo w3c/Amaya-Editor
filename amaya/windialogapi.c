@@ -168,8 +168,9 @@ static HDC          hDC;
 static HDC          hMemDC;
 static HFONT        hFont;
 static HFONT        hOldFont;
-static ThotBool	        saveBeforeClose;
-static ThotBool         closeDontSave;
+static ThotBool	    saveBeforeClose;
+static ThotBool     closeDontSave;
+static ThotBool     selectionFound;
 static OPENFILENAME OpenFileName;
 static STRING       szFilter;
 static CHAR_T       szFileName[256];
@@ -600,12 +601,15 @@ int num_rows;
  CreateSearchDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateSearchDlgWindow (HWND parent)
+void CreateSearchDlgWindow (HWND parent, BOOL ok)
 #else  /* !__STDC__ */
-void CreateSearchDlgWindow (parent)
+void CreateSearchDlgWindow (parent, ok)
 HWND      parent;
+BOOL      ok;
 #endif /* __STDC__ */
 {  
+    selectionFound = ok;
+
 	switch (app_lang) {
            case FR_LANG:
                 DialogBox (hInstance, MAKEINTRESOURCE (FR_SEARCHDIALOG), NULL, (DLGPROC) SearchDlgProc);
@@ -2217,10 +2221,15 @@ LPARAM lParam;
 			    SetDlgItemText (hwnDlg, IDC_REPLACEDIT, _EMPTYSTR_);
 
 				iMode     = 0;
-				iLocation = 3;
 
 				CheckRadioButton (hwnDlg, IDC_NOREPLACE, IDC_AUTOMATIC, IDC_NOREPLACE);
-				CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_WHOLEDOC);
+                if (selectionFound) {
+                   CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
+                   iLocation = 2;
+                } else {
+                       CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_WHOLEDOC);
+                       iLocation = 3;
+				}
                 SetFocus (GetDlgItem (hwnDlg, IDC_SEARCHEDIT));
 				break;
 

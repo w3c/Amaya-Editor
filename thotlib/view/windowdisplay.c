@@ -1533,12 +1533,7 @@ int                 pattern;
 
    /* SelectClipRgn(TtDisplay, clipRgn); */
    if (pat == 0 && thick <= 0)
-      if (pattern > 2) {
-         /* draw an empty box instead of nothing */
-         thick = 1;
-         style = 0;
-	  } else
-            return;
+      return;
 
    if (width > thick + 1)
      width = width - thick - 1;
