@@ -45,6 +45,7 @@ extern void FreeDocumentResource ( Document doc );
 extern void DocumentClosed ( NotifyDialog * event );
 extern void UpdateContextSensitiveMenus ( Document doc );
 extern void ResetHighlightedElement ( void );
+extern void CheckSynchronize ( NotifyElement *event );
 extern void SynchronizeSourceView ( NotifyElement *event );
 extern void GetCurrentLine ( Document doc,
                              int *line,
@@ -102,6 +103,7 @@ extern void FreeDocumentResource ( Document doc );
 extern void DocumentClosed ( NotifyDialog * event );
 extern void UpdateContextSensitiveMenus ( Document doc );
 extern void ResetHighlightedElement ( void );
+extern void CheckSynchronize ( NotifyElement *event );
 extern void SynchronizeSourceView ( NotifyElement *event );
 extern void GetCurrentLine ( Document doc,
                                int *line,
