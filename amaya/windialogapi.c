@@ -150,6 +150,7 @@ static ThotWindow   wndCSSList;
 static ThotWindow   wndLangList;
 static ThotWindow   wndListRule;
 static ThotWindow   wndEditRule;
+static ThotWindow   WndClose = NULL;
 static ThotWindow   transURLWnd;
 static ThotWindow   copyImgWnd;
 static ThotWindow   WndSearchEdit;
@@ -1746,30 +1747,42 @@ LRESULT CALLBACK CloseDocDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       SetWindowText (GetDlgItem (hwnDlg, IDC_DONTSAVE),
 		  TtaGetMessage (LIB, TMSG_CLOSE_DON_T_SAVE));
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+      WndClose = hwnDlg;
+      /* set the font of the window */
+      WIN_SetDialogfont (WndClose);
       break;
       
+    case WM_CLOSE:
+    case WM_DESTROY:
+	  if (WndClose == hwnDlg)
+		{
+        WndClose = NULL;
+        EndDialog (hwnDlg, IDCANCEL);
+		}
+	  else
+		return FALSE;
+      break;
+
     case WM_COMMAND:
       switch (LOWORD (wParam))
 	{
 	case IDCANCEL:
 	  ThotCallback (NumFormClose, INTEGER_DATA, (char*)0);
-	  closeDontSave = TRUE;
-	  saveBeforeClose = FALSE;
+      WndClose = NULL;
 	  EndDialog (hwnDlg, IDCANCEL);
 	  break;
 	  
 	case ID_SAVEDOC:
 	  ThotCallback (NumFormClose, INTEGER_DATA, (char*)1);
-	  closeDontSave   = FALSE;
-	  saveBeforeClose = TRUE;
-	  EndDialog (hwnDlg, ID_SAVEDOC);
+      WndClose = NULL;
+	  EndDialog (hwnDlg, IDCANCEL);
 	  break;
 	  
 	case IDC_DONTSAVE:
+
 	  ThotCallback (NumFormClose, INTEGER_DATA, (char*)2);
-	  closeDontSave   = FALSE;
-	  saveBeforeClose = FALSE;
-	  EndDialog (hwnDlg, IDC_DONTSAVE);
+      WndClose = NULL;
+	  EndDialog (hwnDlg, IDCANCEL);
 	  break;
 	}
       break;
@@ -2444,15 +2457,19 @@ LRESULT CALLBACK ChangeFormatDlgProc (ThotWindow hwnDlg, UINT msg,
     break;
     
   case WM_COMMAND:
-    if (HIWORD (wParam) == EN_UPDATE) {
-      if (LOWORD (wParam) == IDC_INDENTPTEDIT) {
-	val = GetDlgItemInt (hwnDlg, IDC_INDENTPTEDIT, &ok, TRUE);
-	if (ok)
-	  ThotCallback (Num_zoneRecess, INTEGER_DATA, (char*) val);
-      } else if (LOWORD (wParam) == IDC_LINESPACINGEDIT) {
-	val = GetDlgItemInt (hwnDlg, IDC_LINESPACINGEDIT, &ok, TRUE);
-	if (ok)
-	  ThotCallback (Num_zoneLineSpacing, INTEGER_DATA, (char*) val);
+    if (HIWORD (wParam) == EN_UPDATE)
+	{
+      if (LOWORD (wParam) == IDC_INDENTPTEDIT)
+	  {
+	  val = GetDlgItemInt (hwnDlg, IDC_INDENTPTEDIT, &ok, TRUE);
+	  if (ok)
+	    ThotCallback (Num_zoneRecess, INTEGER_DATA, (char*) val);
+      }
+	  else if (LOWORD (wParam) == IDC_LINESPACINGEDIT)
+	  {
+	  val = GetDlgItemInt (hwnDlg, IDC_LINESPACINGEDIT, &ok, TRUE);
+      if (ok)
+	    ThotCallback (Num_zoneLineSpacing, INTEGER_DATA, (char*) val);
       }
     }
     switch (LOWORD (wParam))
@@ -3772,14 +3789,11 @@ void CreateSaveListDlgWindow (ThotWindow parent, int nb_item, char *save_list)
 /*-----------------------------------------------------------------------
  CreateCloseDocDlgWindow
  ------------------------------------------------------------------------*/
-void CreateCloseDocDlgWindow (ThotWindow parent, char *msg, ThotBool *save_befor,
-			      ThotBool *close_dont_save)
+void CreateCloseDocDlgWindow (ThotWindow parent, char *msg)
 {  
   strcpy (Message, msg);
   DialogBox (hInstance, MAKEINTRESOURCE (CLOSEDOCDIALOG), parent,
 	  (DLGPROC) CloseDocDlgProc);
-  *save_befor = saveBeforeClose;
-  *close_dont_save = closeDontSave;
 }
 
 /*-----------------------------------------------------------------------
