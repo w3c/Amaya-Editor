@@ -837,6 +837,8 @@ Document            document;
    if (!isHTML)
        isXLink = TtaSameSSchemas (elType.ElSSchema, 
 				  TtaGetSSchema (TEXT("XLink"), document));
+   else
+     isXLink = 0;
 
    /* Check if the current element is interested in double clicks */
    ok = FALSE;
@@ -961,19 +963,25 @@ Document            document;
      }
 
    /* Search the anchor or LINK element */
-   anchor = SearchAnchor (document, element, TRUE, FALSE);
-   if (anchor == NULL)
+   if (!isXLink)
      {
-       if (isHTML && (elType.ElTypeNum == HTML_EL_LINK ||
-		      elType.ElTypeNum == HTML_EL_FRAME))
-	 anchor = element;
-       else
+       anchor = SearchAnchor (document, element, TRUE, FALSE);
+       if (anchor == NULL)
 	 {
-	   elType1.ElTypeNum = HTML_EL_LINK;
-	   elType1.ElSSchema = HTMLschema;
-	   anchor = TtaGetTypedAncestor (element, elType1);
+	   if (isHTML && (elType.ElTypeNum == HTML_EL_LINK ||
+			  elType.ElTypeNum == HTML_EL_FRAME))
+	     anchor = element;
+	   else
+	     {
+	       elType1.ElTypeNum = HTML_EL_LINK;
+	       elType1.ElSSchema = HTMLschema;
+	       anchor = TtaGetTypedAncestor (element, elType1);
+	     }
 	 }
      }
+   else
+     anchor = NULL;
+
    /* if not found, search a cite or href attribute (from HTML or XLink
       namespaces) on an ancestor */
    if (anchor == NULL)
