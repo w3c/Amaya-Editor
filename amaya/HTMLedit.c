@@ -48,7 +48,7 @@ static int          OldHeight;
 
 #ifdef _WINDOWS
 extern HWND currentWindow;
-#include "windialogapi_f.h"
+#include "wininclude.h"
 #endif /* _WINDOWS */
 
 static ThotBool AttrHREFundoable = FALSE;

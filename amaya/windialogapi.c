@@ -1089,7 +1089,7 @@ STRING msg3;
 {  
 	ustrcpy (message, msg);
 	if (msg2 && *msg2 != WC_EOS)
-		ustrpcy (message2, msg2);
+		ustrcpy (message2, msg2);
 	else
 		message2[0] = WC_EOS;
 	if (msg3 && *msg3 != WC_EOS)
