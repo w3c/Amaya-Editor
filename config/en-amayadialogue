@@ -13,12 +13,12 @@
 12 Attributes
 13 Help
 14 New
-15 Open document
-16 Open in new window
+15 Open document...
+16 Open in new window...
 17 Reload document
 18 Save
-19 Save as
-20 SetUp and print
+19 Save as...
+20 Print...
 21 Close document
 22 Exit
 23 Close view
@@ -26,15 +26,15 @@
 25 Copy
 26 Paste
 27 Clear
-28 Find
-29 Spell check
+28 Find...
+29 Check spelling...
 30 IsIndex
 31 Base
 32 Meta
 33 Link
 34 Comment
 35 Paragraph
-36 Image
+36 Image...
 37 Break
 38 Heading
 39 H1
@@ -95,9 +95,9 @@
 94 Over
 95 Parentheses
 96 Multiscripts
-97 create Link
+97 create Link...
 98 create Target
-99 Change link
+99 Change link...
 100 Delete anchor
 101 Show buttonbar
 102 Show address & title
@@ -106,12 +106,12 @@
 105 Show alternate
 106 Show links
 107 Show table of contents
-108 Character style
-109 Colors
-110 Format
-111 Background image
-112 Create rule
-113 Apply class
+108 Character style...
+109 Colors...
+110 Format...
+111 Background image...
+112 Create rule...
+113 Apply class...
 114 Style sheets
 115 Information type
 116 Emphasis
@@ -133,7 +133,7 @@
 132 Sub
 133 Sup
 134 Font
-135 Transform
+135 Transform...
 136 Section numbering
 137 Make book
 138 About Amaya

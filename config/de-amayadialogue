@@ -13,12 +13,12 @@
 12 Attribute
 13 Hilfe
 14 Neu
-15 Öffne Dokument
-16 Öffne Dokument (neues Fenster)
+15 Öffne Dokument...
+16 Öffne Dokument (neues Fenster)...
 17 Neu laden
 18 Speichern
-19 Speichern unter
-20 Drucken
+19 Speichern unter...
+20 Drucken...
 21 Schließen
 22 Beenden
 23 Schließe Fenster
@@ -26,15 +26,15 @@
 25 Kopieren
 26 Einfügen
 27 Löschen
-28 Suchen/Ersetzen
-29 Rechtschreibung
+28 Suchen/Ersetzen...
+29 Rechtschreibung...
 30 Dokument mit Suchindex (ISINDEX)
 31 Basisadresse (BASE)
 32 Meta-Information (META)
 33 Verknüpfung (LINK)
 34 Kommentar (<>)
 35 Absatz (P)
-36 Grafik (IMG)
+36 Grafik (IMG)...
 37 Zeilenumbruch (BR)
 38 Überschrift (H)
 39 H1 (groß)
@@ -95,9 +95,9 @@
 94 Term mit Überschrift
 95 Term in Klammern
 96 Term mit Indices links/rechts oben/unten
-97 Markierung als Verknüfung definieren
+97 Markierung als Verknüfung definieren...
 98 Markierung als Verknüpfungsziel definieren
-99 Verknüpfungsziel ändern
+99 Verknüpfungsziel ändern...
 100 Verknüpfungsziel löschen
 101 Symbolleiste
 102 Dokumentadresse und -titel 
@@ -106,12 +106,12 @@
 105 Textbrowserfenster
 106 Verknüpfungsfenster
 107 Inhaltsverzeichnisfenster
-108 Zeichen
-109 Farben
-110 Ausrichtung
-111 Hintergrundbild
-112 Format in Stylesheet übernehmen
-113 Klasse anwenden
+108 Zeichen...
+109 Farben...
+110 Ausrichtung...
+111 Hintergrundbild...
+112 Format in Stylesheet übernehmen...
+113 Klasse anwenden...
 114 Stylesheets bearbeiten
 115 logische Formate
 116 Betont (EM)
@@ -133,7 +133,7 @@
 132 tiefgestellt (SUB)
 133 hochgestellt (SUP)
 134 Schriftgröße
-135 Umformatieren
+135 Umformatieren...
 136 Abschnittsnummern
 137 Buch zusammenfügen
 138 Info

@@ -13,12 +13,12 @@
 12 Attributs
 13 Aide
 14 Nouveau
-15 Ouvrir
-16 Ouvrir dans nouvelle fen\352tre
+15 Ouvrir...
+16 Ouvrir dans nouvelle fen\352tre...
 17 Recharger le document
 18 Sauver
-19 Sauver comme
-20 Options et imprimer
+19 Sauver comme...
+20 Imprimer...
 21 Fermer le document
 22 Quitter
 23 Fermer la vue
@@ -26,15 +26,15 @@
 25 Copier
 26 Coller
 27 D\351truire
-28 Rechercher
-29 Corriger
+28 Rechercher...
+29 Verifier orthographe...
 30 IsIndex
 31 Base
 32 Meta
 33 Link
 34 Commentaire
 35 Paragraphe
-36 Image
+36 Image...
 37 Break
 38 Heading
 39 H1
@@ -95,9 +95,9 @@
 94 Dessus
 95 Parenth\350ses
 96 Multiscripts
-97 Cr\351er lien
+97 Cr\351er lien...
 98 Cr\351er cible
-99 Changer lien
+99 Changer lien...
 100 D\351truire ancre
 101 Montrer boutons
 102 Montrer adresse et titre
@@ -106,12 +106,12 @@
 105 Montrer la vue altern\351e
 106 Montrer les liens
 107 Montrer la table des mati\350res
-108 Style de caract\350res
-109 Couleurs
-110 Format
-111 Image de fond
-112 Cr\351er une r\350gle
-113 Appliquer une classe
+108 Style de caract\350res...
+109 Couleurs...
+110 Format...
+111 Image de fond...
+112 Cr\351er une r\350gle...
+113 Appliquer une classe...
 114 Feuilles de style
 115 Types information
 116 Emphase
@@ -133,7 +133,7 @@
 132 Indice
 133 Exposant
 134 Fonte
-135 Transformer
+135 Transformer...
 136 Num\351roter les sections
 137 Construire un livre
 138 A propos de Amaya
