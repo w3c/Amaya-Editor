@@ -2214,7 +2214,6 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
       /* compute the line spacing */
       lineSpacing = PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit,
 				pAb, ViewFrameTable[frame - 1].FrMagnification);
-printf ("linespacing=%d\n", lineSpacing);
       /* compute the indent */
       if (extensibleBox)
 	{
@@ -2387,10 +2386,12 @@ printf ("linespacing=%d\n", lineSpacing);
 		
 	      /* check lines that cannot overlap */
 	      if (org < *height + top && pPreviousLine &&
-		  (pPreviousLine->LiNoOverlap ||
-		   pLine->LiNoOverlap))
+		  (pPreviousLine->LiNoOverlap || pLine->LiNoOverlap))
 		{
-		  org = *height - pPreviousLine->LiHeight + pPreviousLine->LiHorizRef + top;
+		  /* don't overlap the lines */
+		  org = *height + top;
+		  if (!pPreviousLine->LiNoOverlap)
+		    org = org - pPreviousLine->LiHeight + pPreviousLine->LiHorizRef;
 		  pLine->LiYOrg = org;
 		}
 	      else
@@ -3286,7 +3287,7 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
   int                 ascent, descent;
   int                 i, h;
   int                 pos, linespacing;
-  PtrLine             pLine;
+  PtrLine             pLine, pPreviousLine;
   PtrLine             pNextLine;
 
   pParentBox = pAb->AbBox;
@@ -3300,7 +3301,6 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
 	  descent = 0;
 	  linespacing = PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit,
 				    pAb, ViewFrameTable[frame - 1].FrMagnification);
-
 	  if (!pBox->BxAbstractBox->AbHorizEnclosing)
 	    {
 	      /* The box is out of lines (like page breaks) */
@@ -3342,16 +3342,19 @@ void EncloseInLine (PtrBox pBox, int frame, PtrAbstractBox pAb)
 		     ibox1 != pLine->LiLastPiece);
 	      if (pLine->LiPrevious)
 		{
-#ifndef IV
 		  /* new position of the current line */
-		  if (linespacing < pLine->LiPrevious->LiHorizRef + ascent)
-		    /* we refuse to overlaps 2 lines */
-		    i = pLine->LiPrevious->LiHorizRef + ascent;
+		  pPreviousLine = pLine->LiPrevious;
+		  if (linespacing < pPreviousLine->LiHorizRef + ascent &&
+		      (pPreviousLine->LiNoOverlap || pLine->LiNoOverlap))
+		    {
+		      /* don't overlap the lines */
+		      if (pPreviousLine->LiNoOverlap)
+			pos =  pPreviousLine->LiYOrg + pPreviousLine->LiHeight;
+		      else
+			pos = pPreviousLine->LiYOrg + pPreviousLine->LiHorizRef;
+		    }
 		  else
-#endif
-		    i = linespacing;
-		  pos = pLine->LiPrevious->LiYOrg + pLine->LiPrevious->LiHorizRef
-		    + i - ascent;
+		    pos = pPreviousLine->LiYOrg + pPreviousLine->LiHorizRef + linespacing - ascent;
 		  /* vertical shifting of the current line baseline */
 		  i = pos - pLine->LiYOrg + ascent - pLine->LiHorizRef;
 		}
