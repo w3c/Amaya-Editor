@@ -4044,7 +4044,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer,
   int                 openRule;
   int                 newlines;
   ThotBool            HTMLcomment;
-  ThotBool            toParse, eof;
+  ThotBool            toParse, eof, quoted;
   ThotBool            ignoreMedia, media;
   ThotBool            noRule, ignoreImport;
 
@@ -4249,9 +4249,14 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer,
 			{
 			  cssRule++;
 			  cssRule = TtaSkipBlanks (cssRule);
+			  quoted = (*cssRule == '"' || *cssRule == '\'');
+			  if (quoted)
+			    cssRule++;
 			  base = cssRule;
 			  while (*cssRule != EOS && *cssRule != ')')
 			    cssRule++;
+			  if (quoted)
+			    cssRule--;
 			  *cssRule = EOS;
 			  if (!ignoreImport)
 			    LoadStyleSheet (base, docRef, NULL, css, css->media[docRef]);
