@@ -34,8 +34,6 @@
 #define THOT_EXPORT
 #include "page_tv.h"
 
-/* #define PRINT_DEBUG*/ 
-
 #include "absboxes_f.h"
 #include "applicationapi_f.h"
 #include "attributes_f.h"
@@ -1076,12 +1074,12 @@ static void SetPage (PtrElement *pPage, int frame, PtrAbstractBox *origCutAbsBox
 {
   int                 turn, newheight, oldheight;
   ThotBool            NoBr1;
-#ifdef PRINT_DEBUG
+#ifdef PRINT_DEBUG1
   FILE               *list;
   char                localname[50];
   static int          n = 1;
 
-   sprintf (localname, "/local_home/vatton/.amaya/printpage%d.debug", n);
+   sprintf (localname, "/tmp/printpage%d.debug", n);
    n++;
    list = fopen (localname, "w");
    TtaListBoxes (1, 1, list);
@@ -1142,12 +1140,12 @@ static PtrElement  PutMark (PtrElement rootEl, int nbView, PtrDocument pDoc,
   int                 putVThread, cutChar, h, dh, normalPageHeight;
   ThotBool            stop;
   ThotBool            needBreak;
-#ifdef PRINT_DEBUG
+#ifdef PRINT_DEBUG1
   FILE               *list;
   char                localname[50];
   static int          n = 1;
    
-  sprintf (localname, "/local_home/vatton/.amaya/print%d.debug", n);
+  sprintf (localname, "/tmp/print%d.debug", n);
   n++;
   list = fopen (localname, "w");
   TtaListBoxes (1, 1, list);

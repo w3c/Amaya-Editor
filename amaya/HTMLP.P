@@ -2040,13 +2040,13 @@ RULES
 	Width: Enclosing . Width;
 #ifdef PAGE
 	Size: 11 pt;
-	HorizPos: VMiddle = Enclosing.VMiddle;
+	{HorizPos: VMiddle = Enclosing.VMiddle;}
 	Page(ThePage);
 #else
 	Height: Enclosing . Height min;
 	Size: DOC_FONTSIZE;
-	HorizPos: Left = Enclosing . Left;
 #endif
+	HorizPos: Left = Enclosing . Left;
 	VertPos: Top = Enclosing . Top;
 	PaddingBottom: 2 cm;
 	IN Structure_view BEGIN

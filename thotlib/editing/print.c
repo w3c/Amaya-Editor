@@ -1949,7 +1949,7 @@ FILE     *list;
 char      localname[50];
 static int       n = 1;
 
-   sprintf (localname, "/local_home/vatton/.amaya/printpave%d.debug", n);
+   sprintf (localname, "/tmp/printpave%d.debug", n);
    n++;
    list = fopen (localname, "w");
    NumberAbsBoxes (rootAbsBox);

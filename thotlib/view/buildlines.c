@@ -1552,14 +1552,16 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
 	       still = FALSE;
 	       wordWidth = 0;
 	       if (pBox == NULL)
-		 /* it's the first box in the line */
-		 pLine->LiLastPiece = pLine->LiFirstPiece;
+		 {
+		   /* it's the first box in the line */
+		   pLine->LiLastPiece = pLine->LiFirstPiece;
+		   pBox = pNextBox;
+		 }
 	       else if (pBox->BxType == BoPiece ||
 			pBox->BxType == BoScript ||
 			pBox->BxType == BoDotted)
 		 /* break the last word of the previous box */
 		 pLine->LiLastPiece = pLine->LiFirstPiece;
-	       pBox = pNextBox;
 	     }
 	   else
 	     {
@@ -2300,9 +2302,8 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	      (pNextBox->BxAbstractBox->AbNotInLine &&
 	       pNextBox->BxAbstractBox->AbDisplay != 'U'))
 	    {
-	      /* the current box escape the rule line */
-	      pLine->LiXOrg = left;
-	      /* Colle la boite en dessous de la precedente */
+	      /* The current box escape the rule line */
+	      /* It's placed under the previous line */
 	      pLine->LiYOrg = *height + top;
 	      if (extensibleBox)
 		/* no limit for an extensible line */
@@ -2324,22 +2325,23 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 		    pBox->BxMaxWidth = pNextBox->BxWidth;
 		  if (pBox->BxMinWidth < pNextBox->BxWidth)
 		    pBox->BxMinWidth = pNextBox->BxWidth;
-		}
-	      if (Propagate != ToSiblings || pBox->BxVertFlex)
-		{
-		  org = pBox->BxYOrg + *height + top;
-		  x = pBox->BxXOrg + pLine->LiXOrg;
+		  pLine->LiXOrg = left;
+		  x = left;
+		  if (pNextBox->BxAbstractBox->AbHorizPos.PosEdge == VertMiddle &&
+		      pNextBox->BxAbstractBox->AbHorizPos.PosRefEdge == VertMiddle &&
+		      pBox->BxWidth > pNextBox->BxWidth)
+		    x += (pBox->BxWidth - pNextBox->BxWidth) / 2;
+		  if (Propagate != ToSiblings || pBox->BxVertFlex)
+		    x += pBox->BxXOrg;
+		  XMove (pNextBox, pBox, x - pNextBox->BxXOrg, frame);
 		}
 	      else
-		{
-		  org = *height + top;
-		  x = pLine->LiXOrg;
-		}
-	      if (pNextBox->BxAbstractBox->AbHorizPos.PosEdge == VertMiddle &&
-		  pNextBox->BxAbstractBox->AbHorizPos.PosRefEdge == VertMiddle &&
-		  pBox->BxWidth > pNextBox->BxWidth)
-		x += (pBox->BxWidth - pNextBox->BxWidth) / 2;
-	      XMove (pNextBox, pBox, x - pNextBox->BxXOrg, frame);
+		pLine->LiXOrg = pBox->BxXOrg + left;
+
+	      if (Propagate != ToSiblings || pBox->BxVertFlex)
+		org = pBox->BxYOrg + *height + top;
+	      else
+		org = *height + top;
 	      YMove (pNextBox, pBox, org - pNextBox->BxYOrg, frame);
 	      *height += pLine->LiHeight;
 	      org = *height;
