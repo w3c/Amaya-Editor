@@ -78,9 +78,8 @@ void   GetClickedBox (PtrBox *result, PtrAbstractBox pRootAb, int frame,
        while (pBox)
 	 {
 #ifdef _GL
-	   if (pBox->BxBoundinBoxComputed &&
-	       pBox->BxClipW && 
-	       pBox->BxClipH)
+	   if (pBox->BxBoundinBoxComputed || 
+	      pBox->BxType == BoBlock)
 	     {
 #endif /* _GL */
 	   pAb = pBox->BxAbstractBox;

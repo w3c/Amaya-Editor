@@ -1485,14 +1485,26 @@ int GL_UnicodeDrawString (int fg,
   TranslateChars (str);
   
   GL_SetForeground (fg); 
- 	
-  width = UnicodeFontRender (GL_font, str, 
-			     x, y, end);
-  if (hyphen)
-    /* draw the hyphen */
-    GL_DrawUnicodeChar ('\255', 
-			x + width, y, 
-			GL_font, fg);
+
+  if (GL_Printing ())
+    {
+      GLText (str, 
+	      "ptmr", 
+	      12, 
+	      x, 
+	      y);
+    }
+  else
+    {
+      width = UnicodeFontRender (GL_font, str, 
+				 x, y, end);
+      if (hyphen)
+	/* draw the hyphen */
+	GL_DrawUnicodeChar ('\255', 
+			    x + width, y, 
+			    GL_font, fg);
+    }
+
   return width;
 }
 

@@ -2398,7 +2398,7 @@ PtrBox GetClickedLeafBox (int frame, int xRef, int yRef)
 		       (pAb->AbLeafType == LtCompound &&
 			pAb->AbVolume == 0)) 
 #ifdef _GL
-		       && pBox->BxClipW && pBox->BxClipH
+		       && pBox->BxBoundinBoxComputed
 #endif /* _GL */
 		       )
 #ifndef _GL
