@@ -1218,7 +1218,7 @@ unsigned char GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset,
 	    {
 #ifdef _WINDOWS
 	      car = '1'; /* West Europe Latin */
-	      pfont = &(fontset->FontIso_11);
+	      pfont = &(fontset->FontIso_1);
 	      encoding = WINDOWS_1252;
 #else /* _WINDOWS */
 	      if (c == 0x152 /*oe*/ || c == 0x153  /*OE*/ ||
