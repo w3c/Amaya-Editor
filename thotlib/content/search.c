@@ -1,21 +1,16 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA, 1999.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
 /*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
+ * This module is part of the Thot library.
  */
  
 /*
- * Search within document
+ * Search character strings within documents
  *
  * Author: V. Quint (INRIA)
  *
@@ -62,10 +57,11 @@
 #include "structschema_f.h"
 
 /*----------------------------------------------------------------------
-   ReplaceString	remplace dans l'element texte pEl la chaine	
+   ReplaceString
+   remplace dans l'element texte pEl la chaine	
    commencant au caractere firstChar et de longueur stringLen par  
    la chaine replaceStr de longueur replaceLen.                    
-   	Selectionne la chaine remplace'e si select est True.		
+   Selectionne la chaine remplace'e si select est True.		
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__

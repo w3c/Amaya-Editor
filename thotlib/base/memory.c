@@ -1303,6 +1303,8 @@ PtrDocument        *pDoc;
        pNewDoc->DocLastEdit = NULL;
        pNewDoc->DocNbEditsInHistory = 0;
        pNewDoc->DocEditSequence = FALSE;
+       pNewDoc->DocLastUndone = NULL;
+       pNewDoc->DocNbUndone = 0;
        NbUsed_Document++;
      }
 }

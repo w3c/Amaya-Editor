@@ -6,7 +6,7 @@
  */
 
 /*
- * This module handles the Undo command
+ * This module handles commands Undo and Redo
  *
  * Authors: V. Quint (INRIA)
  *          I. Vatton (INRIA)
@@ -39,7 +39,7 @@
 #include "edit_tv.h"
 #include "appdialogue_tv.h"
 
-/* maximum number of editing operations recorded in the history */
+/* maximum number of editing operations recorded in the Undo or Redo queue */
 #define MAX_EDIT_HISTORY_LENGTH 20
 
 #include "actions_f.h"
@@ -134,12 +134,6 @@ boolean undo;
    *editOp = (*editOp)->EoPreviousOp;
    (*editOp)->EoNextOp = NULL;
    last->EoPreviousOp = NULL;
-   if (last->EoType == EtDelimiter)
-      if (undo)
-         /* update the number of editing commands remaining in the history */
-         UpdateHistoryLength (-1, pDoc);
-      else
-	 UpdateRedoLength (-1, pDoc);
    return last;
 }
 
@@ -148,11 +142,12 @@ boolean undo;
    Remove and delete an editing operation from the history
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void CancelAnEdit (PtrEditOperation editOp, PtrDocument pDoc)
+static void CancelAnEdit (PtrEditOperation editOp, PtrDocument pDoc, boolean undo)
 #else  /* __STDC__ */
-static void CancelAnEdit (editOp, pDoc)
+static void CancelAnEdit (editOp, pDoc, undo)
 PtrEditOperation editOp;
 PtrDocument pDoc;
+boolean undo;
 
 #endif /* __STDC__ */
 {
@@ -161,7 +156,7 @@ PtrDocument pDoc;
    PtrEditOperation	prevOp;
 
    /* Error if there is no current history */
-   if (!pDoc->DocLastEdit)
+   if ((undo && !pDoc->DocLastEdit) || (!undo && !pDoc->DocLastUndone))
      {
       HistError (1);
       return;
@@ -169,6 +164,8 @@ PtrDocument pDoc;
    /* unchain the operation descriptor */
    if (editOp == pDoc->DocLastEdit)
       pDoc->DocLastEdit = pDoc->DocLastEdit->EoPreviousOp;
+   else if (editOp == pDoc->DocLastUndone)
+      pDoc->DocLastUndone = pDoc->DocLastUndone->EoPreviousOp;
    if (editOp->EoNextOp)
       editOp->EoNextOp->EoPreviousOp = editOp->EoPreviousOp;
    if (editOp->EoPreviousOp)
@@ -216,12 +213,44 @@ PtrDocument pDoc;
       }
 
    if (editOp->EoType == EtDelimiter)
-      /* update the number of editing commands remaining in the history */
-      UpdateHistoryLength (-1, pDoc);
+      /* update the number of editing sequences remaining in the queue */
+      if (undo)
+         UpdateHistoryLength (-1, pDoc);
+      else
+         UpdateRedoLength (-1, pDoc);
 
    /* free the editing operation descriptor */
    TtaFreeMemory (editOp);
    editOp = NULL;
+}
+
+/*----------------------------------------------------------------------
+   ClearRedoQueue
+   Clear the Redo queue of document pDoc
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void ClearRedoQueue (PtrDocument pDoc)
+#else  /* __STDC__ */
+static void ClearRedoQueue (pDoc)
+PtrDocument pDoc;
+
+#endif /* __STDC__ */
+{
+   PtrEditOperation editOp, nextEditOp;
+
+   /* free all editing operations recorded in the Redo queue */
+   editOp = pDoc->DocLastUndone;
+   while (editOp)
+      {
+      nextEditOp = editOp->EoNextOp;
+      CancelAnEdit (editOp, pDoc, FALSE);
+      editOp = nextEditOp;
+      }
+   /* reiniatilize all variables representing the Redo queue */
+   pDoc->DocLastUndone = NULL;
+   pDoc->DocNbUndone = 0;
+   /* disable the Redo command */
+   SwitchRedo (pDoc, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -238,21 +267,22 @@ PtrDocument pDoc;
 {
    PtrEditOperation editOp, nextEditOp;
 
-   /* free all editing operation recorded in the current history */
+   /* free all editing operations recorded in the Undo queue */
    editOp = pDoc->DocLastEdit;
    while (editOp)
       {
       nextEditOp = editOp->EoNextOp;
-      CancelAnEdit (editOp, pDoc);
+      CancelAnEdit (editOp, pDoc, TRUE);
       editOp = nextEditOp;
       }
-   /* reiniatilize all variable representing the current history */
+   /* reiniatilize all variables representing the Undo queue */
    pDoc->DocLastEdit = NULL;
    pDoc->DocNbEditsInHistory = 0;
    pDoc->DocEditSequence = FALSE;
-   /* disable Undo and Redo commands */
+   /* disable the Undo command */
    SwitchUndo (pDoc, FALSE);
-   SwitchRedo (pDoc, FALSE);
+   /* Clear the Redo queue */
+   ClearRedoQueue (pDoc);
 }
 
 /*----------------------------------------------------------------------
@@ -494,7 +524,7 @@ boolean removeWhenUndoing;
 
 /*----------------------------------------------------------------------
    CancelLastEditFromHistory
-   Cancel the most recent editing operation in the editing history.
+   Cancel the most recent editing operation registered in the editing history.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void CancelLastEditFromHistory (PtrDocument pDoc)
@@ -519,14 +549,46 @@ PtrDocument pDoc;
 				  pDoc->DocLastEdit->EoSavedElement);
      }
    else if (pDoc->DocLastEdit->EoType != EtAttribute)
-     /* Not an operation on elements or attributes. Error */
-     {
-      HistError (7);
+     /* Not an operation on elements or attributes */
       return;
-     }
 
    /* Remove the latest operation descriptor */
-   CancelAnEdit (pDoc->DocLastEdit, pDoc);
+   CancelAnEdit (pDoc->DocLastEdit, pDoc, TRUE);
+}
+
+/*----------------------------------------------------------------------
+   CancelOldestSequence
+
+   Cancel the oldest sequence in the Undo (if undo==TRUE) or Redo queue.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void CancelOldestSequence (PtrDocument pDoc, boolean undo)
+#else  /* __STDC__ */
+static void CancelOldestSequence (pDoc, undo)
+PtrDocument pDoc;
+boolean undo;
+#endif /* __STDC__ */
+{
+   PtrEditOperation    editOp, nextOp;
+
+   if (undo)
+      editOp = pDoc->DocLastEdit;
+   else
+      editOp = pDoc->DocLastUndone;
+   /* get the oldest descriptor */
+   while (editOp->EoPreviousOp)
+      editOp = editOp->EoPreviousOp;
+   /* delete the oldest descriptor and all following descriptors up to the
+      first Delimiter (excluded) */
+   do
+      {
+      nextOp = editOp->EoNextOp;
+      CancelAnEdit (editOp, pDoc, undo);
+      editOp = nextOp;
+      if (editOp && editOp->EoType == EtDelimiter)
+	  editOp = NULL;
+      }
+   while (editOp);
 }
 
 /*----------------------------------------------------------------------
@@ -537,7 +599,6 @@ PtrDocument pDoc;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void OpenHistorySequence (PtrDocument pDoc, PtrElement firstSel, PtrElement lastSel, int firstSelChar, int lastSelChar)
-
 #else  /* __STDC__ */
 void OpenHistorySequence (pDoc, firstSel, lastSel, firstSelChar, lastSelChar)
 PtrDocument pDoc;
@@ -547,7 +608,7 @@ int firstSelChar;
 int lastSelChar;
 #endif /* __STDC__ */
 {
-  PtrEditOperation	editOp, nextOp;
+  PtrEditOperation	editOp;
 
   /* can not open a sequence if a sequence is already open */
   if (pDoc->DocEditSequence)
@@ -570,28 +631,11 @@ int lastSelChar;
   editOp->EoFirstSelectedChar = firstSelChar;
   editOp->EoLastSelectedEl = lastSel;
   editOp->EoLastSelectedChar = lastSelChar;
-
   /* update the number of editing commands remaining in the history */
   UpdateHistoryLength (1, pDoc);
-
   /* If the history is too long, cancel the oldest sequence in the history */
   if (pDoc->DocNbEditsInHistory > MAX_EDIT_HISTORY_LENGTH)
-      {
-      /* get the last descriptor */
-      while (editOp->EoPreviousOp)
-	 editOp = editOp->EoPreviousOp;
-      /* delete the last descriptor and all following descriptors up to the
-	 first Delimiter */
-      do
-	 {
-	 nextOp = editOp->EoNextOp;
-         CancelAnEdit (editOp, pDoc);
-	 editOp = nextOp;
-	 if (editOp && editOp->EoType == EtDelimiter)
-	    editOp = NULL;
-	 }
-      while (editOp);
-      }
+      CancelOldestSequence (pDoc, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -617,9 +661,13 @@ PtrDocument pDoc;
      {
      if (pDoc->DocLastEdit->EoType == EtDelimiter)
         /* empty sequence, remove it */
-        CancelAnEdit (pDoc->DocLastEdit, pDoc);
+        CancelAnEdit (pDoc->DocLastEdit, pDoc, TRUE);
      else
+        {
 	result = TRUE;
+        /* Clear the Redo queue */
+        ClearRedoQueue (pDoc);
+	}
      /* sequence closed */
      pDoc->DocEditSequence = FALSE;
      }
@@ -650,7 +698,7 @@ PtrDocument         pDoc;
       {
       if (pDoc->DocLastEdit->EoType == EtDelimiter)
 	 stop = TRUE;
-      CancelAnEdit (pDoc->DocLastEdit, pDoc);
+      CancelAnEdit (pDoc->DocLastEdit, pDoc, TRUE);
       }
 }
 
@@ -658,23 +706,30 @@ PtrDocument         pDoc;
    UndoOperation
 
    Undo the editing operation described by editOp for document doc.
+   If reverse, editOp will decribe the reverse editing operation when
+   returning.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void	UndoOperation (PtrEditOperation editOp, Document doc)
+static void	UndoOperation (PtrEditOperation editOp, Document doc, boolean reverse)
 #else  /* __STDC__ */
-static void	UndoOperation (editOp, doc)
+static void	UndoOperation (editOp, doc, reverse)
 PtrEditOperation editOp;
 Document doc;
+boolean reverse
 
 #endif /* __STDC__ */
 {
-   PtrElement		pEl, pSibling;
+   PtrElement		pEl, pSibling,
+                        newParent, newPreviousSibling, newCreatedElement,
+                        newSavedElement, newElement;
+   PtrAttribute         newCreatedAttribute, newSavedAttribute;
    PtrDocument		pDoc;
    NotifyElement	notifyEl;
    NotifyAttribute	notifyAttr;
    int			i, nSiblings;
 
    pDoc = LoadedDocument [doc - 1];
+
    if (editOp->EoType == EtDelimiter)
       /* end of a sequence */
       {
@@ -743,8 +798,15 @@ Document doc;
           }
         }
       }
+
    if (editOp->EoType == EtAttribute)
       {
+      if (reverse)
+	 {
+	 newElement = NULL;
+	 newCreatedAttribute = NULL;
+	 newSavedAttribute = NULL;
+	 }
       notifyAttr.document = doc;
       notifyAttr.element = (Element) (editOp->EoElement);
       /* delete the attribute that has to be removed from the element */
@@ -758,6 +820,16 @@ Document doc;
          notifyAttr.attributeType.AttrTypeNum =
 			editOp->EoCreatedAttribute->AeAttrNum;
          CallEventAttribute (&notifyAttr, TRUE);
+         if (reverse)
+	    {
+	    newElement = editOp->EoElement;
+            newSavedAttribute = AddAttrToElem (NULL, editOp->EoCreatedAttribute, NULL);
+            /* if older editing operations in the history refer to the
+	       attribute that has been copied, change these references to the
+	       copy */
+            ChangeAttrPointersOlderEdits (editOp, editOp->EoCreatedAttribute,
+					  newSavedAttribute);
+	    }
          /* remove the attribute */
          TtaRemoveAttribute ((Element) (editOp->EoElement),
 			     (Attribute)(editOp->EoCreatedAttribute), doc);
@@ -779,16 +851,35 @@ Document doc;
          /* put the attribute on the element */
          TtaAttachAttribute ((Element)(editOp->EoElement),
 			     (Attribute)(editOp->EoSavedAttribute), doc);
+	 if (reverse)
+	    {
+	    newElement = editOp->EoElement;
+	    newCreatedAttribute = editOp->EoSavedAttribute;
+	    }
          /* tell the application that an attribute has been put */
          notifyAttr.attribute = (Attribute) (editOp->EoSavedAttribute);
          CallEventAttribute (&notifyAttr, FALSE);	    
          /* the attribute is no longer associated with the history block */
          editOp->EoSavedAttribute = NULL;
          }
+      if (reverse)
+	 {
+	 editOp->EoElement = newElement;
+	 editOp->EoCreatedAttribute = newCreatedAttribute;
+	 editOp->EoSavedAttribute = newSavedAttribute;
+	 }
       }
+
    if (editOp->EoType == EtElement)
       {
       /* delete the element that has to be removed from the abstract tree */
+      if (reverse)
+	 {
+         newParent = NULL;
+         newPreviousSibling = NULL;
+         newCreatedElement = NULL;
+         newSavedElement = NULL;
+	 }
       if (editOp->EoCreatedElement)
          {
          pEl = editOp->EoCreatedElement;
@@ -810,8 +901,16 @@ Document doc;
             pSibling = pSibling->ElPrevious;
             }
          notifyEl.position = nSiblings;
-         /* remove an element */
-         TtaDeleteTree ((Element)pEl, doc);
+         /* remove the element */
+	 if (!reverse)
+            TtaDeleteTree ((Element)pEl, doc);
+	 else
+	    {
+	    newPreviousSibling = pEl->ElPrevious;
+	    newParent = pEl->ElParent;
+	    newSavedElement = pEl;
+	    TtaRemoveTree ((Element)pEl, doc);
+	    }
          /* tell the application that an element has been removed */
          CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
          editOp->EoCreatedElement = NULL;
@@ -827,26 +926,18 @@ Document doc;
 				 (Element)(editOp->EoParent), doc);
          /* send event ElemPaste.Post to the application */
          NotifySubTree (TteElemPaste, pDoc, editOp->EoSavedElement, 0);
+	 if (reverse)
+	    newCreatedElement = editOp->EoSavedElement;
          editOp->EoSavedElement = NULL;
          }
+      if (reverse)
+	 {
+         editOp->EoParent = newParent;
+         editOp->EoPreviousSibling = newPreviousSibling;
+         editOp->EoCreatedElement = newCreatedElement;
+         editOp->EoSavedElement = newSavedElement;
+	 }
       }
-}
-
-/*----------------------------------------------------------------------
-   ReverseEditOperation
-
-   Reverse the editing operation described by editOp.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void ReverseEditOperation (PtrEditOperation editOp, PtrDocument pDoc)
-#else  /* __STDC__ */
-static void ReverseEditOperation (editOp, pDoc)
-PtrEditOperation editOp;
-PtrDocument pDoc;
-
-#endif /* __STDC__ */
-{
-   /**********/;
 }
 
 /*----------------------------------------------------------------------
@@ -864,9 +955,8 @@ PtrDocument pDoc;
 {
    PtrEditOperation	editOp;
 
+   /* remove the latest edit operation from the Undo queue */
    editOp = UnchainLatestOp (pDoc, TRUE);
-   /* reverse operation */
-   ReverseEditOperation (editOp, pDoc);
    /* insert it in the Redo queue */
    editOp->EoPreviousOp = pDoc->DocLastUndone;
    if (pDoc->DocLastUndone)
@@ -892,8 +982,6 @@ PtrDocument pDoc;
 
    /* remove the latest edit operation from the Redo queue */
    editOp = UnchainLatestOp (pDoc, FALSE);
-   /* reverse operation */
-   ReverseEditOperation (editOp, pDoc);
    /* insert it in the Undo queue */
    editOp->EoPreviousOp = pDoc->DocLastEdit;
    if (pDoc->DocLastEdit)
@@ -915,7 +1003,7 @@ Document doc;
 #endif /* __STDC__ */
 {
   PtrDocument		pDoc;
-  PtrEditOperation	editOp, nextOp;
+  PtrEditOperation	editOp;
   Element		firstSel, lastSel;
   int			firstSelChar, lastSelChar, i;
 
@@ -923,7 +1011,7 @@ Document doc;
   /* create a new operation descriptor, a Delimiter */
   editOp = (PtrEditOperation) TtaGetMemory (sizeof (EditOperation));
   editOp->EoType = EtDelimiter;
-  /* link the new operation descriptor in the Redo queue */
+  /* insert the new operation descriptor in the Redo queue */
   editOp->EoPreviousOp = pDoc->DocLastUndone;
   if (pDoc->DocLastUndone)
      pDoc->DocLastUndone->EoNextOp = editOp;
@@ -932,12 +1020,15 @@ Document doc;
   /* store the current selection in this descriptor */
   TtaGiveFirstSelectedElement (doc, &firstSel, &firstSelChar, &i);
   TtaGiveLastSelectedElement (doc, &lastSel, &i, &lastSelChar);
-  editOp->EoFirstSelectedEl = firstSel;
+  editOp->EoFirstSelectedEl = (PtrElement)firstSel;
   editOp->EoFirstSelectedChar = firstSelChar;
-  editOp->EoLastSelectedEl = lastSel;
+  editOp->EoLastSelectedEl = (PtrElement)lastSel;
   editOp->EoLastSelectedChar = lastSelChar;
   /* update the number of editing sequences registered in the Redo queue */
   UpdateRedoLength (1, pDoc);
+  /* If the Redo queue is too long, cancel the oldest sequence */
+  if (pDoc->DocNbUndone > MAX_EDIT_HISTORY_LENGTH)
+     CancelOldestSequence (pDoc, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -969,13 +1060,13 @@ Document            doc;
    doit = TRUE;
    while (doit)
       {
-      UndoOperation (pDoc->DocLastEdit, doc);
+      UndoOperation (pDoc->DocLastEdit, doc, FALSE);
       if (pDoc->DocLastEdit->EoType == EtDelimiter)
 	 /* end of sequence */
 	 doit = FALSE;
       /* the most recent editing operation in the history has been undone.
          Remove it from the editing history */
-      CancelAnEdit (pDoc->DocLastEdit, pDoc);
+      CancelAnEdit (pDoc->DocLastEdit, pDoc, TRUE);
       }
 }
 
@@ -1001,26 +1092,29 @@ View                view;
      /* history is empty */
       return;
 
+   /* Start a new sequence in the Redo queue */
+   OpenRedoSequence (doc);
+
+   TtaUnselect (doc);
    TtaSetDisplayMode (doc, DeferredDisplay);
    /* disable structure checking */
    TtaSetStructureChecking (FALSE, doc);
-   /* Start a new sequence in the Redo queue */
-   /*********
-   OpenRedoSequence (doc);
-   **********/
 
    /* Undo all operations belonging to a sequence of editing operations */
    doit = TRUE;
    while (doit)
       {
-      UndoOperation (pDoc->DocLastEdit, doc);
+      UndoOperation (pDoc->DocLastEdit, doc, TRUE);
       if (pDoc->DocLastEdit->EoType == EtDelimiter)
 	 /* end of sequence */
+	 {
 	 doit = FALSE;
-      /* the most recent editing operation in the history has been undone.
+         CancelAnEdit (pDoc->DocLastEdit, pDoc, TRUE);
+	 }
+      else
+         /* the most recent editing operation in the history has been undone.
          Remove it from the editing history and put it in the Redo queue */
-      /********
-      MoveEditToRedoQueue (pDoc); ****/ CancelAnEdit (pDoc->DocLastEdit, pDoc);
+         MoveEditToRedoQueue (pDoc);
       }
 }
 
@@ -1043,32 +1137,36 @@ View                view;
    int			firstSelChar, lastSelChar, i;
    boolean		doit;
 
-   return;	/********/
-
    pDoc = LoadedDocument [doc - 1];
    if (!pDoc->DocLastUndone)
      /* no undone command */
       return;
 
-   TtaSetDisplayMode (doc, DeferredDisplay);
-   /* disable structure checking */
-   TtaSetStructureChecking (FALSE, doc);
    /* Start a new sequence in the Undo queue */
    TtaGiveFirstSelectedElement (doc, &firstSel, &firstSelChar, &i);
    TtaGiveLastSelectedElement (doc, &lastSel, &i, &lastSelChar);
-   OpenHistorySequence (pDoc, firstSel, lastSel, firstSelChar, lastSelChar);
+   TtaUnselect (doc);
+   OpenHistorySequence (pDoc, (PtrElement)firstSel, (PtrElement)lastSel,
+			firstSelChar, lastSelChar);
+   TtaSetDisplayMode (doc, DeferredDisplay);
+   /* disable structure checking */
+   TtaSetStructureChecking (FALSE, doc);
 
    /* Undo all operations belonging to a sequence of editing operations */
    doit = TRUE;
    while (doit)
       {
-      UndoOperation (pDoc->DocLastUndone, doc);
+      UndoOperation (pDoc->DocLastUndone, doc, TRUE);
       if (pDoc->DocLastUndone->EoType == EtDelimiter)
 	 /* end of sequence */
+	 {
 	 doit = FALSE;
-      /* the most recent editing operation in the history has been redone.
+         CancelAnEdit (pDoc->DocLastUndone, pDoc, FALSE);
+	 }  
+      else
+         /* the most recent editing operation in the history has been redone.
          Remove it from the Redo queue and put it in the Undo queue */
-      MoveEditToUndoQueue (pDoc);
+         MoveEditToUndoQueue (pDoc);
       }
    CloseHistorySequence (pDoc);
 }
