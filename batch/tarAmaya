@@ -8,7 +8,10 @@ AMAYAVERSION=1.3
 THOTDIR=/tahiti/diffusion/Thot
 DEST=/tahiti/thottape
 PLATFORMS="solaris2 LINUX-ELF RS6000 SGI"
-#PLATFORMS="LINUX-ELF"
+
+#THOTDIR=$HOME/Thot
+#DEST=$HOME
+#PLATFORMS="osf1"
 
 TAR="tar cvbfh 200"
 COMPRESS="gzip -9"
@@ -91,10 +94,12 @@ do
    Thot/batch/MachineType \
    Thot/amaya/AmayaPage.html \
    Thot/amaya/HTML.STR \
-   Thot/amaya/HTML*.PRS \
-   Thot/amaya/HTML*.TRA \
    Thot/amaya/HTML.conf \
    Thot/amaya/HTML.trans \
+   Thot/amaya/*.en \
+   Thot/amaya/*.fr \
+   Thot/amaya/HTML*.PRS \
+   Thot/amaya/HTML*.TRA \
    Thot/amaya/*.en \
    Thot/amaya/*.fr \
    Thot/amaya/*.gif \

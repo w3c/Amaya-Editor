@@ -50,12 +50,10 @@ mkdir $DIR
    cp -p Thot/doc/amaya/StyleSheets.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Manual.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Tables.html $DIR/doc/amaya/
-   cp -p Thot/doc/amaya/AmayaArchi.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Math.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Transform.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Attributes.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Views.html $DIR/doc/amaya/
-   cp -p Thot/doc/amaya/Autoconf.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/ImageMaps.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Numbering.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Searching.html $DIR/doc/amaya/
@@ -134,17 +132,13 @@ mkdir $DIR
    cp -p Thot/doc/amaya/StyleSheets.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Manual.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Tables.html $DIR/doc/amaya/
-   cp -p Thot/doc/amaya/AmayaArchi.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Math.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Transform.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Attributes.html $DIR/doc/amaya/
-   cp -p Thot/doc/amaya/New.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Views.html $DIR/doc/amaya/
-   cp -p Thot/doc/amaya/Autoconf.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/ImageMaps.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Numbering.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Searching.html $DIR/doc/amaya/
-   cp -p Thot/doc/amaya/BinDist.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Selecting.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/Browsing.html $DIR/doc/amaya/
    cp -p Thot/doc/amaya/CSS.html $DIR/doc/amaya/

@@ -17,6 +17,289 @@ alt="Doc"></a></p>
 This file indicates the new features you can find in the latest versions of
 Amaya.</p>
 
+<h1>Amaya 1.3</h1>
+<p>
+July 10, 1998</p>
+
+<h2>New:</h2>
+<ul>
+<li>
+Print on Windows is now available.
+<li>
+"Zoom In" and "Zoom Out" functions are now available.
+<li>
+Amaya uses the standard clipboard. On Windows versions Copy/Paste takes the
+standard clipboard into account. On Unix versions, Copy form clip board and
+Paste form Clipboard are attached to the usual mouse buttons (Left and
+Middle). Consequently, selection extension is now performed by  the Shift +
+Left button of the mouse.
+<li>
+The drag now generates an auto-scroll (not available on Windows).
+<li>
+There is a new input method for Iso-Latin-1 characters. According to the
+following table one can obtain a '&atilde;' by first pressing '~' then typing
+'a'. To obtain a simple '~' you have to press '~' twice.
+</ul>
+
+<table border="1">
+<caption></caption>
+<tbody>
+<tr>
+<td>
+accent-letter
+</td>
+<td>
+~
+</td>
+<td>
+`
+</td>
+<td>
+'
+</td>
+<td>
+"
+</td>
+<td>
+*
+</td>
+<td>
+^
+</td>
+</tr>
+<tr>
+<td>
+a A
+</td>
+<td>
+&atilde; &Atilde;
+</td>
+<td>
+&agrave; &Agrave;
+</td>
+<td>
+&aacute; &Aacute;
+</td>
+<td>
+&auml; &Auml;
+</td>
+<td>
+&aring; &Aring;
+</td>
+<td>
+&acirc; &Acirc;
+</td>
+</tr>
+<tr>
+<td>
+c C
+</td>
+<td>
+
+</td>
+<td>
+&ccedil; &Ccedil;
+</td>
+<td>
+
+</td>
+<td>
+
+</td>
+<td>
+
+</td>
+<td>
+
+</td>
+</tr>
+<tr>
+<td>
+e E
+</td>
+<td>
+
+</td>
+<td>
+&egrave; &Egrave;
+</td>
+<td>
+&eacute; &Eacute;
+</td>
+<td>
+&euml; &Euml;
+</td>
+<td>
+
+</td>
+<td>
+&ecirc; &Ecirc;
+</td>
+</tr>
+<tr>
+<td>
+i I
+</td>
+<td>
+
+</td>
+<td>
+&igrave; &Igrave;
+</td>
+<td>
+&iacute; &Iacute;
+</td>
+<td>
+&iuml; &Iuml;
+</td>
+<td>
+
+</td>
+<td>
+&icirc; &Icirc;
+</td>
+</tr>
+<tr>
+<td>
+n N
+</td>
+<td>
+&ntilde; &Ntilde;
+</td>
+<td>
+
+</td>
+<td>
+
+</td>
+<td>
+
+</td>
+<td>
+
+</td>
+<td>
+
+</td>
+</tr>
+<tr>
+<td>
+o O
+</td>
+<td>
+&otilde; &Otilde;
+</td>
+<td>
+&ograve; &Ograve;
+</td>
+<td>
+&oslash; &Oslash;
+</td>
+<td>
+&ouml; &Ouml;
+</td>
+<td>
+
+</td>
+<td>
+&ocirc; &Ocirc;
+</td>
+</tr>
+<tr>
+<td>
+u U
+</td>
+<td>
+
+</td>
+<td>
+&ugrave; &Ugrave;
+</td>
+<td>
+&uacute; &Uacute;
+</td>
+<td>
+&uuml; &Uuml;
+</td>
+<td>
+
+</td>
+<td>
+&ucirc; &Ucirc;
+</td>
+</tr>
+<tr>
+<td>
+y Y
+</td>
+<td>
+
+</td>
+<td>
+&Yacute;
+</td>
+<td>
+&yacute; &Yacute;
+</td>
+<td>
+&yuml;
+</td>
+<td>
+
+</td>
+<td>
+
+</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>
+Alt and Control keys are dedicated to shortcuts
+<li><p>
+Matrices and tables (mtable) from MathML are supported.</p>
+<li>
+XML links (only simple links) are supported in MathML: any MathML element can
+have the two attributes  xml:link="simple" href="some/URL"
+<li>
+Elements deprecated in HTML 4.0 can't be created with Amaya.
+<li>
+The HTML parser replaces the obsolete elements LISTING, PLAINTEXT, XMP by PRE.
+  * The following HTML 4.0 elements are available:   ABBR, ACRONYM, BDO, DEL,
+IFRAME, INS, OBJECT, PARAM, Q, SPAN,   TBODY, TFOOT, THEAD   (BDO does not
+change the writing direction on the screen)
+<li>
+The following HTML 4.0 elements are available:   ABBR, ACRONYM, BDO, DEL,
+IFRAME, INS, OBJECT, PARAM, Q, SPAN,   TBODY, TFOOT, THEAD   (BDO does not
+change the writing direction on the screen)   * The following HTML 4.0
+attributes are available:   id, class, style, title, lang, dir, onclick (and
+all other events),   cite, datetime
+<li>
+There is a new CSS parser. In that release, it's not possible to edit CSS
+files in Amaya but this will be available very soon.
+<li>
+Tooltips are now available on Windows and are updated on Unix versions.
+<li>
+Libraries libz and libpng are updated.
+</ul>
+
+<h2>Fixed bugs:</h2>
+<ul>
+<li>
+Amaya didn't accept a table within a form. The form editing has been also
+improved.
+<li>
+Amaya is now able to manage row-spanned cells which are higher than the
+spanned rows.
+<li>
+The install is now minimum: only amaya and print are installed.
+<li>
+When accesing a protected site, an authentication dialogue appeared for  each
+URL
+<li>
+When reloading a page, Amaya wasn't sending any No-Cache headers  
+</ul>
+
 <h1>Fixed bugs in Amaya 1.2a</h1>
 <p>
 March 27, 1998</p>
