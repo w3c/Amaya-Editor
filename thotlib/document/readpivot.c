@@ -1282,6 +1282,8 @@ void ReadPRulePiv (PtrDocument pDoc, BinFile pivFile, PtrElement pEl,
   just = FALSE;
   sign = FALSE;
   immed = FALSE;
+  notRel = FALSE;
+  distAttr = FALSE;
   dimpos = FALSE;
   absolute = FALSE;
   align = (BAlignment) 0;

@@ -1707,6 +1707,7 @@ void AppendXmlAttribute (char *xmlName, AttributeType *attrType, PtrDocument pDo
   /* Search the associated presentation schema */
   pPSch = NULL;
 #ifndef NODISPLAY
+  pHSP = NULL;
   while (pPfS && !pPSch)
     {
       if (pPfS->PfSSchema && (pPfS->PfSSchema == pSS))
@@ -2577,6 +2578,7 @@ void UpdateNamespaceDeclaration (PtrDocument pDoc, PtrElement element,
   PtrNsUriDescr   uriDecl;
   ThotBool        found;
 
+  uriDecl = NULL;
   found = FALSE;
   if (pDoc->DocNsUriDecl != NULL)
     {
