@@ -43,6 +43,7 @@ extern void RemoveSpecPresTree ( PtrElement pElRoot,
                                  PtrDocument pDoc,
                                  RuleSet RulesS,
                                  int viewToApply );
+extern ThotBool TtaIsCSSPRule ( PRule pRule );
 extern void TtaRemovePRule ( Element element,
                              PRule pRule,
                              Document document );
@@ -88,6 +89,7 @@ extern void RemoveSpecPresTree (/* PtrElement pElRoot,
                                    PtrDocument pDoc,
                                    RuleSet RulesS,
                                    int viewToApply */);
+extern ThotBool TtaIsCSSPRule (/* PRule pRule */);
 extern void TtaRemovePRule (/* Element element,
                                PRule pRule,
                                Document document */);

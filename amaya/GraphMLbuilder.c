@@ -437,7 +437,7 @@ Element          el;
     {
       TtaSetStylePresentation (PRDepth, child, NULL, ctxt, pval);
       TtaPreviousSibling (&child);
-      pval.typed_data.value += 1;
+      pval.typed_data.value += 5;
     }
   TtaFreeMemory (ctxt);
 }

@@ -136,8 +136,7 @@ ThotBool            selected;
   ViewFrame          *pFrame;
   ThotBool            withbackground;
   int                 xd, yd, i;
-  int                 fg;
-  int                 bg;
+  int                 fg, bg;
   int                 op, RO;
   int                 width, height;
 
@@ -363,14 +362,15 @@ ThotBool            selected;
   PtrAbstractBox      pAb;
   int                 i, xd, yd;
   int                 op, RO;
-  int                 fg;
-  int                 bg;
+  int                 fg, bg;
+  int                 pat;
   int                 style;
   int                 width, height;
 
   pAb = pBox->BxAbstractBox;
   fg = pAb->AbForeground;
   bg = pAb->AbBackground;
+  pat = pAb->AbFillPattern;
   pFrame = &ViewFrameTable[frame - 1];
   if (pAb->AbVisibility >= pFrame->FrVisibility)
     {
@@ -460,7 +460,7 @@ ThotBool            selected;
 	    DrawRectangle (frame, 0, 0, xd, yd, width, height, RO, op, fg, bg, 4);
 	    break;
 	  case '0':
-	    DrawRectangle (frame, 0, 0, xd, yd, width, height, RO, op, fg, bg, pAb->AbFillPattern);
+	    DrawRectangle (frame, 0, 0, xd, yd, width, height, RO, op, fg, bg, pat);
 	    break;
 	  case '1':
 	  case '2':
@@ -471,7 +471,7 @@ ThotBool            selected;
 	  case '7':
 	  case '8':
 	  case 'R':
-	    DrawRectangle (frame, i, style, xd, yd, width, height, RO, op, fg, bg, pAb->AbFillPattern);
+	    DrawRectangle (frame, i, style, xd, yd, width, height, RO, op, fg, bg, pat);
 	    break;
 	  case 'g':
 	    /* Coords of the line are given by the enclosing box */
@@ -486,16 +486,16 @@ ThotBool            selected;
 	    break;
 	  case 'C':
 	    if (pBox->BxRx == 0 && pBox->BxRy == 0)
-	      DrawRectangle (frame, i, style, xd, yd, width, height, RO, op, fg, bg, pAb->AbFillPattern);
+	      DrawRectangle (frame, i, style, xd, yd, width, height, RO, op, fg, bg, pat);
 	    else
-	      DrawOval (frame, i, style, xd, yd, width, height, pBox->BxRx, pBox->BxRy, RO, op, fg, bg, pAb->AbFillPattern);
+	      DrawOval (frame, i, style, xd, yd, width, height, pBox->BxRx, pBox->BxRy, RO, op, fg, bg, pat);
 	    break;
 	  case 'L':
-	    DrawDiamond (frame, i, style, xd, yd, width, height, RO, op, fg, bg, pAb->AbFillPattern);
+	    DrawDiamond (frame, i, style, xd, yd, width, height, RO, op, fg, bg, pat);
 	    break;
 	  case 'a':
 	  case 'c':
-	    DrawEllips (frame, i, style, xd, yd, width, height, RO, op, fg, bg, pAb->AbFillPattern);
+	    DrawEllips (frame, i, style, xd, yd, width, height, RO, op, fg, bg, pat);
 	    break;
 	  case 'h':
 	    DrawHorizontalLine (frame, i, style, xd, yd, width, height, 1, RO, op, fg);
@@ -549,11 +549,11 @@ ThotBool            selected;
 	    
 	  case 'P':
 	    DrawRectangleFrame (frame, i, style, xd, yd, width,
-				height, RO, op, fg, bg, pAb->AbFillPattern);
+				height, RO, op, fg, bg, pat);
 	    break;
 	  case 'Q':
 	    DrawEllipsFrame (frame, i, style, xd, yd, width,
-			     height, RO, op, fg, bg, pAb->AbFillPattern);
+			     height, RO, op, fg, bg, pat);
 	    break;
 	  case 'W':
 	    DrawCorner (frame, i, style, xd, yd, width, height, 0, RO, op, fg);
@@ -687,8 +687,8 @@ ThotBool            selected;
   ViewFrame          *pFrame;
   int                 i, xd, yd;
   int                 op, RO;
-  int                 fg;
-  int                 bg;
+  int                 fg, bg;
+  int                 pat;
   int                 style, arrow;
   int                 width;
 
@@ -701,6 +701,7 @@ ThotBool            selected;
   pAb = pBox->BxAbstractBox;
   fg = pAb->AbForeground;
   bg = pAb->AbBackground;
+  pat = pAb->AbFillPattern;
   pFrame = &ViewFrameTable[frame - 1];
   if (pAb->AbVisibility >= pFrame->FrVisibility)
     {
@@ -778,14 +779,14 @@ ThotBool            selected;
 	  break;
 	case 'p':	/* polygon */
 	  DrawPolygon (frame, i, style, xd, yd, pBox->BxBuffer,
-		       pBox->BxNChars, RO, op, fg, bg, pAb->AbFillPattern);
+		       pBox->BxNChars, RO, op, fg, bg, pat);
 	  break;
 	case 's':	/* closed spline */
 	  /* compute control points */
 	  if (pBox->BxPictInfo == NULL)
 	    pBox->BxPictInfo = (int *) ComputeControlPoints (pBox->BxBuffer, pBox->BxNChars);
 	  DrawSpline (frame, i, style, xd, yd, pBox->BxBuffer,
-		      pBox->BxNChars, RO, op, fg, bg, pAb->AbFillPattern, (C_points *) pBox->BxPictInfo);
+		      pBox->BxNChars, RO, op, fg, bg, pat, (C_points *) pBox->BxPictInfo);
 	  break;
 	default:
 	  break;
@@ -840,6 +841,7 @@ ThotBool            selected;
   int                 nbcar, x, y;
   int                 lgspace;
   int                 fg, bg;
+  int                 pat;
   int                 RO, op;
   int                 shadow;
   int                 width;

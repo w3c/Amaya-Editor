@@ -2955,6 +2955,7 @@ ThotBool            drag;
 	      /* this element is a reference or an inclusion */
 	      doubleClickRef = TRUE;
 	  }
+#ifdef IV
 	else if (!doubleClick &&
 		 SelectedView == view &&
 		 FirstSelectedElement == LastSelectedElement &&
@@ -2963,7 +2964,7 @@ ThotBool            drag;
 		  (!graphSel && rank == FirstSelectedChar)))
 	  /* the selection doesn't change */
 	  return;
-
+#endif /* IV */
 	if (doubleClick)
 	  {
 	     FindReferredEl ();

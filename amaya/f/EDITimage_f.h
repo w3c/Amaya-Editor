@@ -28,7 +28,7 @@ extern void ComputeSRCattribute ( Element el,
                                   STRING text );
 extern void UpdateSRCattribute ( NotifyElement * event );
 extern void SRCattrModified ( NotifyAttribute * event );
-extern void CreateImage ( Document document,
+extern void CreateImage ( Document doc,
                           View view );
 extern ThotBool AddLocalImage ( CHAR_T* fullname,
                                 CHAR_T* name,
@@ -61,7 +61,7 @@ extern void ComputeSRCattribute (/* Element el,
                                     STRING text */);
 extern void UpdateSRCattribute (/* NotifyElement * event */);
 extern void SRCattrModified (/* NotifyAttribute * event */);
-extern void CreateImage (/* Document document,
+extern void CreateImage (/* Document doc,
                             View view */);
 extern ThotBool AddLocalImage (/* CHAR_T* fullname,
                                   CHAR_T* name,

@@ -50,7 +50,7 @@ extern void StartXmlParser ( Document doc,
                              CHAR_T* documentDirectory,
                              CHAR_T* pathURL,
                              ThotBool xmlDec,
-                             ThotBool withDoctype );
+                             ThotBool xmlDoctype );
 
 #else /* __STDC__ */
 
@@ -98,7 +98,7 @@ extern void StartXmlParser (/* Document doc,
                                CHAR_T* documentDirectory,
                                CHAR_T* pathURL,
                                ThotBool xmlDec,
-                               ThotBool withDoctype */);
+                               ThotBool xmlDoctype */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -842,31 +842,35 @@ int                 construct;
 		/* selection is within a GraphML element */
 		{
 		  elType.ElTypeNum = GraphML_EL_foreignObject;
-		  if (TtaCanInsertSibling (elType, sibling, before, doc))
+		  if (TtaCanInsertSibling (elType, sibling, FALSE, doc))
 		    /* insert a foreignObject element as a sibling */
 		    insertSibling = TRUE;
-		  else if (TtaCanInsertFirstChild (elType, sibling,doc))
-		    /* insert a foreignObject element as a child */
-		    insertSibling = FALSE;
-		  else if (TtaCanInsertSibling (elType,
-						TtaGetParent (sibling), before, doc))
-		    /* insert a foreignObject element as a sibling of the
-		       parent element */
-		    {
-		      sibling = TtaGetParent (sibling);
-		      insertSibling = TRUE;
-		    }
 		  else
-		    sibling = NULL;
+		    {
+		      child = TtaGetLastChild (sibling);
+		      if (TtaCanInsertSibling (elType, child, FALSE, doc))
+			{
+			  /* insert a foreignObject element as a child */
+			  sibling = child;
+			  insertSibling = TRUE;
+			}
+		      else
+			{
+			  sibling = TtaGetParent (sibling);
+			  if (TtaCanInsertSibling (elType, sibling, FALSE, doc))
+			    /* insert a foreignObject element as a sibling of the
+			       parent element */
+			    insertSibling = TRUE;
+			  else
+			    sibling = NULL;
+			}
+		    }
 		  if (sibling)
 		    {
 		      /* create a foreigObject element and insert it */
 		      TtaAskFirstCreation ();
 		      el = TtaNewElement (doc, elType);
-		      if (insertSibling)
-			TtaInsertSibling (el, sibling, before, doc);
-		      else
-			TtaInsertFirstChild (&el, sibling, doc);
+		      TtaInsertSibling (el, sibling, FALSE, doc);
 		      /* register the new element in the Undo queue */
 		      TtaRegisterElementCreate (el, doc);
 		      registered = TRUE;
