@@ -162,12 +162,12 @@ BOXES
 		if NOT within XMLcomment_line AND NOT within XMLPI_line
 		   BEGIN
 		   HorizPos: Left = Enclosing . Left;
-		   VertPos: Top = Previous AnyBox . Bottom;
+		   VertPos: Top = Previous . Bottom;
 		   END;
 		if within XMLcomment_line
-		   HorizPos: Left = Previous AnyBox . Right;
+		   HorizPos: Left = Previous . Right;
 		if within XMLPI_line
-		   HorizPos: Left = Previous AnyBox . Right;
+		   HorizPos: Left = Previous . Right;
                 END;
         END;
  
