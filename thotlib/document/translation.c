@@ -1,24 +1,10 @@
+/*
 
-/* -- Copyright (c) 1990 - 1996 Inria/CNRS  All rights reserved. -- */
+  This module handles document translation.
+  It travels the abstract trees of a document and produces an
+  external representation according to a set of translation schemas.
 
-/* ====================================================================== */
-/* |                                                                    | */
-/* |                           Projet THOT                              | */
-/* |                                                                    | */
-/* |            Ce programme lit un fichier au format Pivot             | */
-/* |            et le traduit en suivant un schema de traduction.       | */
-/* |            Les schemas de traduction sont ecrits en langage T      | */
-/* |            et compiles par le compilateur tra, qui produit         | */
-/* |            les tables de traduction utilisees ici.                 | */
-/* |                                                                    | */
-/* |                    V. Quint        Janvier 1988                    | */
-/* |                                                                    | */
-/* |            France Logiciel no de depot 88-39-001-00                | */
-/* |                                                                    | */
-/* ====================================================================== */
-
-
-/* Module Exportateur */
+*/
 
 #include "thot_sys.h"
 #include "message.h"
@@ -39,30 +25,40 @@
 #include "select.var"
 #include "edit.var"
 
-#define LgMaxOutBuffer 1000	/* longueur maximum du buffer de sortie */
+/* maximum length of an output buffer */
+#define MAX_BUFFER_LEN 1000
 
-typedef struct _fichSec
+/* maximum number of output buffers */
+#define MAX_OUTPUT_FILES 10
+
+/* information about an output file */
+typedef struct _AnOutputFile
   {
-     char                SecFileName[MAX_PATH];		/* nom du fichier */
-     FILE               *SecFileDesc;	/* descripteur du fichier */
-     int                 SecLgOutBuffer;	/* longueur occupee dans le buffer
-						   de sortie */
-     char                SecOutBuffer[LgMaxOutBuffer];	/* buffer de sortie */
+     char                OfFileName[MAX_PATH];	/* file name */
+     FILE               *OfFileDesc;		/* file descriptor */
+     int                 OfBufferLen;	/* current length of output buffer */
+     char                OfBuffer[MAX_BUFFER_LEN]; /* output buffer */
   }
-fichSec;
+AnOutputFile;
 
-static int          NbFichierSortie = 0;
+/* number of output files in use */
+static int          NOutputFiles = 0;
 
-#define MaxFichierSortie 10
-/* entree 0 : stdout    */
-/* entree 1 : fichier de sortie principal */
-/* entrees suivantes : fichiers de sortie secondaires */
-static fichSec      FichierSortie[MaxFichierSortie];
-static char         tra_filedir[MAX_PATH];	/* nom du directory  de sortie */
-static char         tra_filename[MAX_PATH];	/* nom du fichier de sortie principal */
-static char         tra_extension[MAX_PATH];	/* extension du fichier a traduire */
+/* the output files */
+static AnOutputFile   OutputFile[MAX_OUTPUT_FILES];
+	/* entry 0: stdout    */
+	/* entry 1: main output file */
+	/* other entries: secondary output files */
 
-/* procedures importees */
+/* directory of output files */
+static char         fileDirectory[MAX_PATH];
+
+/* name of main output file */
+static char         fileName[MAX_PATH];
+
+/* file extension */
+static char         fileExtension[MAX_PATH];
+
 #include "tree_f.h"
 #include "dofile_f.h"
 #include "callback_f.h"
@@ -80,16 +76,16 @@ static char         tra_extension[MAX_PATH];	/* extension du fichier a traduire 
 #include "content_f.h"
 
 /* ---------------------------------------------------------------------- */
-/* | fichierSecondaire  retourne le fichier secondaire de nom fileName. | */
+/* | GetSecondaryFile  retourne le fichier secondaire de nom fName.	| */
 /* |    Si ce fichier n'est pas ouvert, il est cree' et ouvert.         | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static int          fichierSecondaire (char *fileName, PtrDocument pDoc)
+static int          GetSecondaryFile (char *fName, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static int          fichierSecondaire (fileName, pDoc)
-char               *fileName;
+static int          GetSecondaryFile (fName, pDoc)
+char               *fName;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
@@ -100,12 +96,12 @@ PtrDocument         pDoc;
    /* fichiers secondaires ouverts */
    /* on saute les deux premiers fichiers, qui sont stdout et le fichier de */
    /* sortie principal */
-   for (i = 2; i < NbFichierSortie && strcmp (fileName, FichierSortie[i].SecFileName) != 0; i++) ;
-   if (i < NbFichierSortie &&
-       strcmp (fileName, FichierSortie[i].SecFileName) == 0)
+   for (i = 2; i < NOutputFiles && strcmp (fName, OutputFile[i].OfFileName) != 0; i++) ;
+   if (i < NOutputFiles &&
+       strcmp (fName, OutputFile[i].OfFileName) == 0)
       /* le fichier est dans la table, on retourne son rang */
       return i;
-   else if (NbFichierSortie >= MaxFichierSortie)
+   else if (NOutputFiles >= MAX_OUTPUT_FILES)
       /* table saturee */
      {
 	TtaDisplaySimpleMessage (INFO, LIB, TOO_MANY_OUTPUT_FILES);
@@ -113,42 +109,42 @@ PtrDocument         pDoc;
      }
    else
      {
-	FichierSortie[NbFichierSortie].SecFileDesc = fopen (fileName, "w");
-	if (FichierSortie[NbFichierSortie].SecFileDesc == NULL)
+	OutputFile[NOutputFiles].OfFileDesc = fopen (fName, "w");
+	if (OutputFile[NOutputFiles].OfFileDesc == NULL)
 	  {
 	     TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, CREATE_FILE_IMP),
-					    fileName);
+					    fName);
 	     return 0;
 	  }
 	else
 	   /* fichier ouvert */
 	  {
-	     strcpy (FichierSortie[NbFichierSortie].SecFileName, fileName);
-	     FichierSortie[NbFichierSortie].SecLgOutBuffer = 0;
-	     NbFichierSortie++;
-	     return (NbFichierSortie - 1);
+	     strcpy (OutputFile[NOutputFiles].OfFileName, fName);
+	     OutputFile[NOutputFiles].OfBufferLen = 0;
+	     NOutputFiles++;
+	     return (NOutputFiles - 1);
 	  }
      }
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* | Sort   ecrit le caractere c sur le terminal ou dans le fichier de  | */
-/* |    sortie, selon fichier. S'il s'agit du fichier de sortie,        | */
+/* | PutChar   ecrit le caractere c sur le terminal ou dans le fichier de  | */
+/* |    sortie, selon fileNum. S'il s'agit du fichier de sortie,        | */
 /* |    le caractere est range' dans le buffer de sortie et ce buffer   | */
 /* |    est ecrit dans le fichier des que la longueur limite des lignes | */
 /* |    est atteinte.                                                   | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         Sort (char c, int fichier, char *outbuffer, PtrDocument pDoc,
+static void         PutChar (char c, int fileNum, char *outBuffer, PtrDocument pDoc,
 			  boolean lineBreak)
 
 #else  /* __STDC__ */
-static void         Sort (c, fichier, outbuffer, pDoc, lineBreak)
+static void         PutChar (c, fileNum, outBuffer, pDoc, lineBreak)
 char                c;
-int                 fichier;
-char               *outbuffer;
+int                 fileNum;
+char               *outBuffer;
 PtrDocument         pDoc;
 boolean             lineBreak;
 
@@ -156,19 +152,19 @@ boolean             lineBreak;
 
 {
    int                 i, j;
-   PtrTSchema        pSchT;
-   FILE               *filedesc;
+   PtrTSchema          pTSch;
+   FILE               *fileDesc;
    char                tmp[2];
 
-   if (outbuffer != NULL)
-      /* la sortie doit se faire dans le buffer outbuffer. On ajoute le */
+   if (outBuffer != NULL)
+      /* la sortie doit se faire dans le buffer outBuffer. On ajoute le */
       /* caractere a sortir en fin de ce buffer */
      {
 	tmp[0] = c;
 	tmp[1] = '\0';
-	strcat (outbuffer, tmp);
+	strcat (outBuffer, tmp);
      }
-   else if (fichier == 0)
+   else if (fileNum == 0)
       /* la sortie doit se faire dans stdout. On sort le caractere */
       putchar (c);
    else
@@ -177,54 +173,54 @@ boolean             lineBreak;
 	/* on cherche le schema de traduction du document pour acceder aux */
 	/* parametres definissant la longueur de ligne et le caractere de */
 	/* fin de ligne */
-	pSchT = SchemaTrad (pDoc->DocSSchema);
-	if (pSchT != NULL)
+	pTSch = SchemaTrad (pDoc->DocSSchema);
+	if (pTSch != NULL)
 	  {
-	     filedesc = FichierSortie[fichier].SecFileDesc;
-	     if (pSchT->TsLineLength == 0)
+	     fileDesc = OutputFile[fileNum].OfFileDesc;
+	     if (pTSch->TsLineLength == 0)
 		/* pas de longueur max. des lignes de sortie, on ecrit */
 		/* directement le caractere dans le fichier de sortie */
-		putc (c, filedesc);
-	     else if (c == pSchT->TsEOL[0])
+		putc (c, fileDesc);
+	     else if (c == pTSch->TsEOL[0])
 		/*  fin de ligne, on ecrit le contenu du buffer de sortie */
 	       {
-		  for (i = 1; i <= FichierSortie[fichier].SecLgOutBuffer; i++)
-		     putc (FichierSortie[fichier].SecOutBuffer[i - 1], filedesc);
-		  fprintf (filedesc, pSchT->TsEOL);
+		  for (i = 0; i < OutputFile[fileNum].OfBufferLen; i++)
+		     putc (OutputFile[fileNum].OfBuffer[i], fileDesc);
+		  fprintf (fileDesc, pTSch->TsEOL);
 		  /* le buffer de sortie est vide maintenant */
-		  FichierSortie[fichier].SecLgOutBuffer = 0;
+		  OutputFile[fileNum].OfBufferLen = 0;
 	       }
 	     else
 		/* ce n'est pas un caractere de fin de ligne */
 	       {
-		  if (FichierSortie[fichier].SecLgOutBuffer >= LgMaxOutBuffer)
+		  if (OutputFile[fileNum].OfBufferLen >= MAX_BUFFER_LEN)
 		     /* le buffer de sorite est plein, on ecrit son contenu */
 		    {
-		       for (i = 1; i <= FichierSortie[fichier].SecLgOutBuffer; i++)
-			  putc (FichierSortie[fichier].SecOutBuffer[i - 1], filedesc);
-		       FichierSortie[fichier].SecLgOutBuffer = 0;
+		       for (i = 0; i < OutputFile[fileNum].OfBufferLen; i++)
+			  putc (OutputFile[fileNum].OfBuffer[i], fileDesc);
+		       OutputFile[fileNum].OfBufferLen = 0;
 		    }
 		  /* on met le caractere dans le buffer */
-		  FichierSortie[fichier].SecLgOutBuffer++;
-		  FichierSortie[fichier].SecOutBuffer[FichierSortie[fichier].SecLgOutBuffer - 1] = c;
+		  OutputFile[fileNum].OfBufferLen++;
+		  OutputFile[fileNum].OfBuffer[OutputFile[fileNum].OfBufferLen - 1] = c;
 		  if (lineBreak)
-		     if (FichierSortie[fichier].SecLgOutBuffer > pSchT->TsLineLength)
+		     if (OutputFile[fileNum].OfBufferLen > pTSch->TsLineLength)
 			/* le contenu du buffer depasse la longueur de ligne maximum */
 			/* on cherche le dernier blanc */
 		       {
-			  i = FichierSortie[fichier].SecLgOutBuffer;
-			  while (FichierSortie[fichier].SecOutBuffer[i - 1] != ' ' && i > 1)
+			  i = OutputFile[fileNum].OfBufferLen;
+			  while (OutputFile[fileNum].OfBuffer[i - 1] != ' ' && i > 1)
 			     i--;
-			  if (FichierSortie[fichier].SecOutBuffer[i - 1] == ' ')
+			  if (OutputFile[fileNum].OfBuffer[i - 1] == ' ')
 			     /* on ecrit tout ce qui precede ce blanc */
 			    {
-			       for (j = 1; j <= i - 1; j++)
-				  putc (FichierSortie[fichier].SecOutBuffer[j - 1], filedesc);
-			       fprintf (filedesc, pSchT->TsTranslEOL);
+			       for (j = 0; j < i - 1; j++)
+				  putc (OutputFile[fileNum].OfBuffer[j], fileDesc);
+			       fprintf (fileDesc, pTSch->TsTranslEOL);
 			       /* on decale ce qui suit le blanc */
-			       FichierSortie[fichier].SecLgOutBuffer -= i;
-			       for (j = 1; j <= FichierSortie[fichier].SecLgOutBuffer; j++)
-				  FichierSortie[fichier].SecOutBuffer[j - 1] = FichierSortie[fichier].SecOutBuffer[i + j - 1];
+			       OutputFile[fileNum].OfBufferLen -= i;
+			       for (j = 0; j < OutputFile[fileNum].OfBufferLen; j++)
+				  OutputFile[fileNum].OfBuffer[j] = OutputFile[fileNum].OfBuffer[i + j];
 			    }
 		       }
 	       }
@@ -234,16 +230,16 @@ boolean             lineBreak;
 
 
 /* ---------------------------------------------------------------------- */
-/* | SortCouleur        sort dans fichier le nom de la couleur qui se   | */
+/* | PutColor        sort dans fichier le nom de la couleur qui se	| */
 /* |     trouve au rang n dans la table des couleurs.                   | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         SortCouleur (int n, int fichier, PtrDocument pDoc, boolean lineBreak)
+static void         PutColor (int n, int fileNum, PtrDocument pDoc, boolean lineBreak)
 #else  /* __STDC__ */
-static void         SortCouleur (n, fichier, pDoc, lineBreak)
+static void         PutColor (n, fileNum, pDoc, lineBreak)
 int                 n;
-int                 fichier;
+int                 fileNum;
 PtrDocument         pDoc;
 boolean             lineBreak;
 
@@ -257,21 +253,21 @@ boolean             lineBreak;
 	ptr = Color_Table[n];
 	i = 0;
 	while (ptr[i] != '\0')
-	   Sort (ptr[i++], fichier, NULL, pDoc, lineBreak);
+	   PutChar (ptr[i++], fileNum, NULL, pDoc, lineBreak);
      }
 }
 
 /* ---------------------------------------------------------------------- */
-/* | SortMotif  sort dans fichier le nom du motif qui se trouve au rang | */
-/* |    n dans la table des motifs.                                     | */
+/* | PutPattern  sort dans fichier le nom du motif qui se trouve au	| */
+/* |    rang n dans la table des motifs.				| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         SortMotif (int n, int fichier, PtrDocument pDoc, boolean lineBreak)
+static void         PutPattern (int n, int fileNum, PtrDocument pDoc, boolean lineBreak)
 #else  /* __STDC__ */
-static void         SortMotif (n, fichier, pDoc, lineBreak)
+static void         PutPattern (n, fileNum, pDoc, lineBreak)
 int                 n;
-int                 fichier;
+int                 fileNum;
 PtrDocument         pDoc;
 boolean             lineBreak;
 
@@ -285,24 +281,24 @@ boolean             lineBreak;
 	ptr = Patterns[n];
 	i = 0;
 	while (ptr[i] != '\0')
-	   Sort (ptr[i++], fichier, NULL, pDoc, lineBreak);
+	   PutChar (ptr[i++], fileNum, NULL, pDoc, lineBreak);
      }
 }
 
 /* ---------------------------------------------------------------------- */
-/* | SortNb convertit le nombre n sous la forme d'une chaine de         | */
+/* | PutInt convertit le nombre n sous la forme d'une chaine de         | */
 /* |    caracteres et sort cette chaine de caracteres dans fichier      | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         SortNb (int n, int fichier, char *outbuffer, PtrDocument pDoc,
+static void         PutInt (int n, int fileNum, char *outBuffer, PtrDocument pDoc,
 			    boolean lineBreak)
 
 #else  /* __STDC__ */
-static void         SortNb (n, fichier, outbuffer, pDoc, lineBreak)
+static void         PutInt (n, fileNum, outBuffer, pDoc, lineBreak)
 int                 n;
-int                 fichier;
-char               *outbuffer;
+int                 fileNum;
+char               *outBuffer;
 PtrDocument         pDoc;
 boolean             lineBreak;
 
@@ -315,72 +311,68 @@ boolean             lineBreak;
    sprintf (buffer, "%d", n);
    i = 0;
    while (buffer[i] != '\0')
-      Sort (buffer[i++], fichier, outbuffer, pDoc, lineBreak);
+      PutChar (buffer[i++], fileNum, outBuffer, pDoc, lineBreak);
 }
 
 /* ---------------------------------------------------------------------- */
-/* | TraduitFeuille   traite l'element feuille pointe' par pEl, en      | */
-/* |    traduisant son contenu si tradCar est vrai. Produit le contenu  | */
-/* |    dans le fichier de sortie fichier.                              | */
+/* | TranslateLeaf   traite l'element feuille pointe' par pEl, en	| */
+/* |    traduisant son contenu si transChar est vrai. Produit le	| */
+/* |    contenu dans le fichier de sortie fileNum.			| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         TraduitFeuille (PtrElement pEl, boolean tradCar, boolean lineBreak,
-				    int fichier, PtrDocument pDoc)
+static void         TranslateLeaf (PtrElement pEl, boolean transChar, boolean lineBreak,
+				    int fileNum, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void         TraduitFeuille (pEl, tradCar, lineBreak, fichier, pDoc)
+static void         TranslateLeaf (pEl, transChar, lineBreak, fileNum, pDoc)
 PtrElement          pEl;
-boolean             tradCar;
+boolean             transChar;
 boolean             lineBreak;
-int                 fichier;
+int                 fileNum;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 
 {
-   PtrTextBuffer      pBuffT, pBuffTs, pBuffTPrec;
-   char                cs, c;
-   int                 i, j, k, b, ft, lt;
-   PtrTSchema        pSchT;
+   PtrTSchema        pTSch;
    PtrSSchema        pSS;
-   boolean             __continue, egal, stop, tradexiste;
-   PtrElement          pElAsc;
-   int                 TradTxtDebut, TradTxtFin;
-   PtrTSchema        pSc1;
-   AlphabetTransl            *pTr1;
-   PtrElement          pEl1;
-   PtrTextBuffer      pBu1;
-   StringTransl            *pTrad1;
+   PtrTextBuffer     pBufT, pNextBufT, pPrevBufT;
+   char              cs, c;
+   int               i, j, k, b, ft, lt;
+   boolean           continu, equal, stop, transExist;
+   PtrElement        pAncestor;
+   int               textTransBegin, TextTransEnd;
+   AlphabetTransl    *pTransAlph;
+   StringTransl      *pTrans;
 
-   TradTxtDebut = 0;
-   TradTxtFin = 0;
+   textTransBegin = 0;
+   TextTransEnd = 0;
    if (!(pEl->ElLeafType == LtText || pEl->ElLeafType == LtSymbol ||
 	 pEl->ElLeafType == LtGraphics || pEl->ElLeafType == LtPlyLine)
-       || !tradCar)
-      pSchT = SchemaTrad (pEl->ElSructSchema);
+       || !transChar)
+      pTSch = SchemaTrad (pEl->ElSructSchema);
    else
       /* En examinant les elements englobants, on cherche un schema de */
       /* traduction qui contienne des regles pour ce type de feuille */
      {
 	pSS = NULL;
-	tradexiste = FALSE;
-	pSchT = NULL;
-	pElAsc = pEl;
+	transExist = FALSE;
+	pTSch = NULL;
+	pAncestor = pEl;
 	do
 	  {
-	     if (pSS != pElAsc->ElSructSchema)
+	     if (pSS != pAncestor->ElSructSchema)
 		/* un schema de structure different du precedent */
 	       {
-		  pSS = pElAsc->ElSructSchema;
+		  pSS = pAncestor->ElSructSchema;
 		  /* schema de traduction de cette structure */
-		  pSchT = SchemaTrad (pSS);
-		  if (pSchT != NULL)
+		  pTSch = SchemaTrad (pSS);
+		  if (pTSch != NULL)
 		     switch (pEl->ElLeafType)
 			   {
 			      case LtText:
-				 pSc1 = pSchT;
-				 if (pSc1->TsNTranslAlphabets > 0)
+				 if (pTSch->TsNTranslAlphabets > 0)
 				    /* il y a au moins un alphabet a traduire */
 				    /* cherche les regles de traduction pour l'alphabet */
 				    /* de la feuille */
@@ -388,86 +380,80 @@ PtrDocument         pDoc;
 				      i = 0;
 				      do
 					{
-					   i++;
-					   pTr1 = &pSc1->TsTranslAlphabet[i - 1];
-					   if (pTr1->AlAlphabet == TtaGetAlphabet (pEl->ElLanguage))
-					      if (pTr1->AlBegin > 0)
+					   pTransAlph = &pTSch->TsTranslAlphabet[i++];
+					   if (pTransAlph->AlAlphabet == TtaGetAlphabet (pEl->ElLanguage))
+					      if (pTransAlph->AlBegin > 0)
 						{
-						   tradexiste = TRUE;
-						   TradTxtDebut = pTr1->AlBegin;
-						   TradTxtFin = pTr1->AlEnd;
+						   transExist = TRUE;
+						   textTransBegin = pTransAlph->AlBegin;
+						   TextTransEnd = pTransAlph->AlEnd;
 						}
 					}
-				      while (!(tradexiste || i >= pSc1->TsNTranslAlphabets));
+				      while (!transExist &&
+					     i < pTSch->TsNTranslAlphabets);
 				   }
 				 break;
 			      case LtSymbol:
-				 tradexiste = pSchT->TsSymbolFirst != 0;
+				 transExist = pTSch->TsSymbolFirst != 0;
 				 break;
 			      case LtGraphics:
 			      case LtPlyLine:
-				 tradexiste = pSchT->TsGraphicsFirst != 0;
+				 transExist = pTSch->TsGraphicsFirst != 0;
 				 break;
 			      default:
 				 break;
 			   }
 
 	       }
-	     pElAsc = pElAsc->ElParent;
+	     pAncestor = pAncestor->ElParent;
 	  }
-	while (!(tradexiste || pElAsc == NULL));
+	while (!transExist && pAncestor != NULL);
      }
-   pEl1 = pEl;
-   switch (pEl1->ElLeafType)
+   switch (pEl->ElLeafType)
 	 {
 	    case LtText /* traitement d'une feuille de texte */ :
-	       if (pEl1->ElTextLength > 0)
+	       if (pEl->ElTextLength > 0)
 		  /* la feuille n'est pas vide */
 		 {
-		    pBuffT = pEl1->ElText;	/* 1er buffer a traiter */
-		    if (TradTxtDebut == 0 || !tradCar)
+		    pBufT = pEl->ElText;	/* 1er buffer a traiter */
+		    if (textTransBegin == 0 || !transChar)
 		       /* on ne traduit pas quand la table de traduction est vide */
 		       /* parcourt les buffers de l'element */
-		       while (pBuffT != NULL)
+		       while (pBufT != NULL)
 			 {
-			    pBu1 = pBuffT;
-			    i = 1;
-			    while (pBu1->BuContent[i - 1] != '\0')
-			      {
-				 Sort (pBu1->BuContent[i - 1], fichier, NULL, pDoc, lineBreak);
-				 i++;
-			      }
-			    pBuffT = pBu1->BuNext;
+			    i = 0;
+			    while (pBufT->BuContent[i] != '\0')
+				 PutChar (pBufT->BuContent[i++], fileNum, NULL, pDoc, lineBreak);
+			    pBufT = pBufT->BuNext;
 			 }
-		    else if (pSchT != NULL)
+		    else if (pTSch != NULL)
 		       /* effectue les traductions de caracteres selon la table */
 		      {
-			 pSc1 = pSchT;
 			 /* indice dans la chaine source de la regle de traduction */
 			 b = 0;
 			 /* indice dans le buffer du caractere a traduire */
 			 i = 1;
-			 /* indice de la 1ere regle de traduction a appliquer */
-			 ft = TradTxtDebut;
+			 /* indice de la 1ere regle de traduction a appliquer*/
+			 ft = textTransBegin;
 			 /* indice de la derniere regle de traduction a appliquer */
-			 lt = TradTxtFin;
+			 lt = TextTransEnd;
 			 /* buffer source precedent */
-			 pBuffTPrec = NULL;
+			 pPrevBufT = NULL;
 			 /* 1er caractere a traduire */
-			 c = pBuffT->BuContent[i - 1];
+			 c = pBufT->BuContent[0];
 			 /* traduit la suite des buffers source */
 			 do
 			    /* Dans la table de traduction, les chaines sources sont */
 			    /* rangees par ordre alphabetique. On cherche une chaine */
 			    /* source qui commence par le caractere a traduire. */
 			   {
-			      while (c > pSc1->TsCharTransl[ft - 1].StSource[b] && ft < lt)
+			      while (c > pTSch->TsCharTransl[ft - 1].StSource[b] && ft < lt)
 				 ft++;
-			      pTrad1 = &pSc1->TsCharTransl[ft - 1];
-			      if (c == pTrad1->StSource[b])
+			      pTrans = &pTSch->TsCharTransl[ft - 1];
+			      if (c == pTrans->StSource[b])
 				 /* le caractere correspond au caractere courant de la */
 				 /* chaine source de la regle ft */
-				 if (pTrad1->StSource[b + 1] == '\0')
+				 if (pTrans->StSource[b + 1] == '\0')
 				    /* chaine complete */
 				    /* cette regle de traduction s'applique */
 				    /* on traduit */
@@ -475,87 +461,84 @@ PtrDocument         pDoc;
 				    /* egalement s'appliquer: on recherche la plus */
 				    /* longue chaine a traduire */
 				   {
-				      __continue = ft < TradTxtFin;
-				      while (__continue)
+				      continu = ft < TextTransEnd;
+				      while (continu)
 					{
 					   j = 0;
-					   egal = TRUE;
+					   equal = TRUE;
 					   /* compare la regle ft avec la suivante */
 					   do
-					      if (pSc1->TsCharTransl[ft - 1].StSource[j] ==
-						  pSc1->TsCharTransl[ft].StSource[j])
+					      if (pTSch->TsCharTransl[ft - 1].StSource[j] ==
+						  pTSch->TsCharTransl[ft].StSource[j])
 						 j++;
 					      else
-						 egal = FALSE;
-					   while (!(!egal || j > b));
-					   if (!egal)
+						 equal = FALSE;
+					   while (equal && j <= b);
+					   if (!equal)
 					      /* le debut de la regle suivante est different */
 					      /* de la regle courante */
-					      __continue = FALSE;
+					      continu = FALSE;
 					   else
 					      /* la fin de la regle suivante est-il identique */
 					      /* a la suite du texte a traduire ? */
 					     {
 						k = i;
 						cs = c;
-						pBuffTs = pBuffT;
+						pNextBufT = pBufT;
 						/* cherche le caractere suivant du texte */
 						stop = FALSE;
 						do
 						  {
 						     if (cs != '\0')
-						       {
-							  k++;
-							  cs = pBuffTs->BuContent[k - 1];
-						       }
+							  cs = pNextBufT->BuContent[k++];
 						     if (cs == '\0')
 							/* passe au buffer suivant du meme texte */
-							if (pBuffTs->BuNext != NULL)
+							if (pNextBufT->BuNext != NULL)
 							  {
-							     pBuffTs = pBuffTs->BuNext;
+							     pNextBufT = pNextBufT->BuNext;
 							     k = 1;
-							     cs = pBuffTs->BuContent[k - 1];
+							     cs = pNextBufT->BuContent[0];
 							  }
 						     if (cs == '\0')
-							__continue = FALSE;	/* fin du texte */
+							continu = FALSE;	/* fin du texte */
 						     else
 						       {
-							  __continue = FALSE;
-							  if (cs == pSc1->TsCharTransl[ft].
+							  continu = FALSE;
+							  if (cs == pTSch->TsCharTransl[ft].
 							    StSource[j])
 							    {
 							       stop = FALSE;
-							       __continue = TRUE;
+							       continu = TRUE;
 							       j++;
 							    }
-							  if (pSc1->TsCharTransl[ft].StSource[j] == '\0')
+							  if (pTSch->TsCharTransl[ft].StSource[j] == '\0')
 							    {
 							       ft++;
 							       b = j - 1;
 							       i = k;
 							       c = cs;
-							       pBuffT = pBuffTs;
-							       __continue = ft <
-								  TradTxtFin;
+							       pBufT = pNextBufT;
+							       continu = ft <
+								  TextTransEnd;
 							       stop = TRUE;
 							    }
 						       }
 						  }
-						while (!(stop || !__continue));
+						while (!stop && continu);
 					     }
 					}
 				      /* on applique la regle de traduction ft */
 				      j = 0;
-				      while (pSc1->TsCharTransl[ft - 1].StTarget[j] != '\0')
+				      while (pTSch->TsCharTransl[ft - 1].StTarget[j] != '\0')
 					{
-					   Sort (pSc1->TsCharTransl[ft - 1].StTarget[j],
-					    fichier, NULL, pDoc, lineBreak);
+					   PutChar (pTSch->TsCharTransl[ft - 1].StTarget[j],
+					    fileNum, NULL, pDoc, lineBreak);
 					   j++;
 					}
 				      /* prepare la prochaine recherche dans la table */
 				      b = 0;
-				      ft = TradTxtDebut;
-				      lt = TradTxtFin;
+				      ft = textTransBegin;
+				      lt = TextTransEnd;
 				   }
 				 else
 				    /* ce n'est pas le dernier caractere de la chaine */
@@ -568,10 +551,9 @@ PtrDocument         pDoc;
 				      /* qui contienne ce caractere a cette position dans */
 				      /* la chaine source. On ne cherchera pas au-dela de */
 				      /* cette regle. */
-				      while (c == pSc1->TsCharTransl[j - 1].StSource[b] && j <
-					     lt)
+				      while (c == pTSch->TsCharTransl[j - 1].StSource[b] && j < lt)
 					 j++;
-				      if (c != pSc1->TsCharTransl[j - 1].StSource[b])
+				      if (c != pTSch->TsCharTransl[j - 1].StSource[b])
 					 lt = j - 1;
 				      /* passe au caractere suivant de la chaine source */
 				      /* de la table de traduction */
@@ -584,8 +566,8 @@ PtrDocument         pDoc;
 				 /* chaine source de la table de traduction, on ne le */
 				 /* traduit donc pas */
 				{
-				   ft = TradTxtDebut;
-				   Sort (c, fichier, NULL, pDoc, lineBreak);
+				   ft = textTransBegin;
+				   PutChar (c, fileNum, NULL, pDoc, lineBreak);
 				}
 			      else
 				 /* on avait commence' a analyser une sequence de */
@@ -602,37 +584,34 @@ PtrDocument         pDoc;
 				      /* le premier caractere de la sequence est dans */
 				      /* le buffer precedent */
 				     {
-					pBuffT = pBuffTPrec;
-					i = pBuffT->BuLength + i - b;
+					pBufT = pPrevBufT;
+					i = pBufT->BuLength + i - b;
 				     }
-				   Sort (pBuffT->BuContent[i - 1], fichier, NULL, pDoc,
+				   PutChar (pBufT->BuContent[i - 1], fileNum, NULL, pDoc,
 					 lineBreak);
 				   b = 0;
-				   ft = TradTxtDebut;
-				   lt = TradTxtFin;
+				   ft = textTransBegin;
+				   lt = TextTransEnd;
 				}
 			      /* cherche le caractere suivant a traiter */
 			      if (c != '\0')
-				{
-				   i++;
-				   c = pBuffT->BuContent[i - 1];
-				}
+				   c = pBufT->BuContent[i++];
 			      if (c == '\0')
 				 /* passe au buffer suivant du meme element de texte */
-				 if (pBuffT->BuNext != NULL)
+				 if (pBufT->BuNext != NULL)
 				   {
-				      pBuffTPrec = pBuffT;
-				      pBuffT = pBuffT->BuNext;
+				      pPrevBufT = pBufT;
+				      pBufT = pBufT->BuNext;
 				      i = 1;
-				      c = pBuffT->BuContent[i - 1];
+				      c = pBufT->BuContent[0];
 				   }
 			   }
-			 while (!(c == '\0'));
+			 while (c != '\0');
 			 /* fin de la feuille de texte */
 			 /* Si on a commence' a analyser une sequence de caracteres, */
 			 /* on sort le debut de la sequence. */
 			 for (i = 0; i <= b - 1; i++)
-			    Sort (pSc1->TsCharTransl[ft - 1].StSource[i], fichier, NULL,
+			    PutChar (pTSch->TsCharTransl[ft - 1].StSource[i], fileNum, NULL,
 				  pDoc, lineBreak);
 		      }
 		 }
@@ -640,73 +619,72 @@ PtrDocument         pDoc;
 	    case LtSymbol:
 	    case LtGraphics:
 	    case LtPlyLine:
-	       if (pSchT != NULL)
+	       if (pTSch != NULL)
 		 {
-		    pSc1 = pSchT;
-		    if (!tradCar)
+		    if (!transChar)
 		       ft = 0;
 		    else
 		       /* cherche la premiere et la derniere regle de traduction */
 		       /* a appliquer a l'element */
-		    if (pEl1->ElLeafType == LtSymbol)
+		    if (pEl->ElLeafType == LtSymbol)
 		      {
-			 ft = pSc1->TsSymbolFirst;
-			 lt = pSc1->TsSymbolLast;
+			 ft = pTSch->TsSymbolFirst;
+			 lt = pTSch->TsSymbolLast;
 		      }
 		    else
 		      {
-			 ft = pSc1->TsGraphicsFirst;
-			 lt = pSc1->TsGraphicsLast;
+			 ft = pTSch->TsGraphicsFirst;
+			 lt = pTSch->TsGraphicsLast;
 		      }
 		    /* prend dans c le caractere qui represente la forme graphique */
-		    if (pEl1->ElLeafType == LtPlyLine)
-		       c = pEl1->ElPolyLineType;
+		    if (pEl->ElLeafType == LtPlyLine)
+		       c = pEl->ElPolyLineType;
 		    else
-		       c = pEl1->ElGraph;
+		       c = pEl->ElGraph;
 		    if (ft == 0)
 		       /* pas de traduction */
-		       Sort (c, fichier, NULL, pDoc, lineBreak);
+		       PutChar (c, fileNum, NULL, pDoc, lineBreak);
 		    else
 		       /* on traduit l'element */
 		       /* cherche le symbole dans les chaines sources de la */
 		       /* table de traduction */
 		      {
-			 while (pSc1->TsCharTransl[ft - 1].StSource[0] < c && ft < lt)
+			 while (pTSch->TsCharTransl[ft - 1].StSource[0] < c && ft < lt)
 			    ft++;
-			 if (pSc1->TsCharTransl[ft - 1].StSource[0] == c)
+			 if (pTSch->TsCharTransl[ft - 1].StSource[0] == c)
 			    /* il y a une regle de traduction pour ce symbole */
 			   {
 			      b = 0;
-			      pTrad1 = &pSc1->TsCharTransl[ft - 1];
-			      while (pTrad1->StTarget[b] != '\0')
+			      pTrans = &pTSch->TsCharTransl[ft - 1];
+			      while (pTrans->StTarget[b] != '\0')
 				{
-				   Sort (pTrad1->StTarget[b], fichier, NULL, pDoc, lineBreak);
+				   PutChar (pTrans->StTarget[b], fileNum, NULL, pDoc, lineBreak);
 				   b++;
 				}
 			   }
 			 else
 			    /* ce symbole ne se traduit pas */
-			    Sort (c, fichier, NULL, pDoc, lineBreak);
+			    PutChar (c, fileNum, NULL, pDoc, lineBreak);
 		      }
-		    if (pEl1->ElLeafType == LtPlyLine)
-		       if (pEl1->ElNPoints > 0)
+		    if (pEl->ElLeafType == LtPlyLine)
+		       if (pEl->ElNPoints > 0)
 			  /* la ligne a au moins un point de controle */
 			  /* on ecrit les coordonnees des points de controle */
 			 {
-			    pBuffT = pEl1->ElPolyLineBuffer;	/* 1er buffer a traiter */
+			    pBufT = pEl->ElPolyLineBuffer;	/* 1er buffer a traiter */
 			    /* parcourt les buffers de l'element */
-			    while (pBuffT != NULL)
+			    while (pBufT != NULL)
 			      {
-				 for (i = 0; i < pBuffT->BuLength; i++)
+				 for (i = 0; i < pBufT->BuLength; i++)
 				   {
-				      Sort (' ', fichier, NULL, pDoc, lineBreak);
-				      SortNb (pBuffT->BuPoints[i].XCoord, fichier, NULL,
+				      PutChar (' ', fileNum, NULL, pDoc, lineBreak);
+				      PutInt (pBufT->BuPoints[i].XCoord, fileNum, NULL,
 					      pDoc, lineBreak);
-				      Sort (',', fichier, NULL, pDoc, lineBreak);
-				      SortNb (pBuffT->BuPoints[i].YCoord, fichier, NULL,
+				      PutChar (',', fileNum, NULL, pDoc, lineBreak);
+				      PutInt (pBufT->BuPoints[i].YCoord, fileNum, NULL,
 					      pDoc, lineBreak);
 				   }
-				 pBuffT = pBuffT->BuNext;
+				 pBufT = pBufT->BuNext;
 			      }
 			 }
 		 }
@@ -715,32 +693,28 @@ PtrDocument         pDoc;
 	       /* Si le schema de traduction comporte un buffer */
 	       /* pour les images, le nom du fichier contenant l'image */
 	       /* est range' dans ce buffer */
-	       if (pSchT != NULL)
-		  if (pSchT->TsPictureBuffer > 0)
+	       if (pTSch != NULL)
+		  if (pTSch->TsPictureBuffer > 0)
 		    {
-		       b = pSchT->TsPictureBuffer;
-		       pSchT->TsBuffer[b - 1][0] = '\0';	/* raz du buffer */
-		       if (pEl1->ElTextLength > 0)
+		       b = pTSch->TsPictureBuffer;
+		       pTSch->TsBuffer[b - 1][0] = '\0';	/* raz du buffer */
+		       if (pEl->ElTextLength > 0)
 			  /* la feuille n'est pas vide */
 			 {
 			    j = 0;
-			    pBuffT = pEl1->ElText;	/* 1er buffer a traiter */
+			    pBufT = pEl->ElText;	/* 1er buffer a traiter */
 			    /* parcourt les buffers de l'element */
-			    while (pBuffT != NULL)
+			    while (pBufT != NULL)
 			      {
-				 pBu1 = pBuffT;
 				 i = 0;
 				 do
-				   {
-				      i++;
-				      j++;
-				      pSchT->TsBuffer[b - 1][j - 1] = pBu1->BuContent[i - 1];
-				   }
-				 while (!(pBu1->BuContent[i - 1] == '\0' || b >= MAX_TRANSL_BUFFER_LEN));
-				 pBuffT = pBu1->BuNext;
+				      pTSch->TsBuffer[b - 1][j++] = pBufT->BuContent[i++];
+				 while (pBufT->BuContent[i - 1] != '\0' &&
+					b < MAX_TRANSL_BUFFER_LEN);
+				 pBufT = pBufT->BuNext;
 			      }
 			    if (j > 0)
-			       pSchT->TsBuffer[b - 1][j - 1] = '\0';
+			       pTSch->TsBuffer[b - 1][j - 1] = '\0';
 			 }
 		    }
 	       break;
@@ -756,16 +730,16 @@ PtrDocument         pDoc;
 }
 
 /* ---------------------------------------------------------------------- */
-/* | ValCaractPres      retourne le code caractere de la valeur de la   | */
-/* |    regle de presentation specifique pointee par pPres.             | */
+/* | PresRuleValue      retourne le code caractere de la valeur de la   | */
+/* |    regle de presentation specifique pointee par pPRule.            | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static char         ValCaractPres (PtrPRule pPres)
+static char         PresRuleValue (PtrPRule pPRule)
 
 #else  /* __STDC__ */
-static char         ValCaractPres (pPres)
-PtrPRule        pPres;
+static char         PresRuleValue (pPRule)
+PtrPRule        pPRule;
 
 #endif /* __STDC__ */
 
@@ -773,24 +747,24 @@ PtrPRule        pPres;
    char                val;
 
    val = ' ';
-   switch (pPres->PrType)
+   switch (pPRule->PrType)
 	 {
 	    case PtFont:
 	    case PtStyle:
 	    case PtUnderline:
 	    case PtThickness:
 	    case PtLineStyle:
-	       val = pPres->PrChrValue;
+	       val = pPRule->PrChrValue;
 	       break;
 	    case PtJustify:
 	    case PtHyphenate:
-	       if (pPres->PrJustify)
+	       if (pPRule->PrJustify)
 		  val = 'Y';
 	       else
 		  val = 'N';
 	       break;
 	    case PtAdjust:
-	       switch (pPres->PrAdjust)
+	       switch (pPRule->PrAdjust)
 		     {
 			case AlignLeft:
 			   val = 'L';
@@ -814,168 +788,128 @@ PtrPRule        pPres;
 }
 
 
-/**** debut ajout ****/
 /* ---------------------------------------------------------------------- */
-/* | ElementVide        retourne TRUE si l'element pEl est vide ou n'a  | */
+/* | EmptyElement       retourne TRUE si l'element pEl est vide ou n'a  | */
 /* |    que des descendants vides.                                      | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static boolean      ElementVide (PtrElement pEl)
+static boolean      EmptyElement (PtrElement pEl)
 
 #else  /* __STDC__ */
-static boolean      ElementVide (pEl)
+static boolean      EmptyElement (pEl)
 PtrElement          pEl;
 
 #endif /* __STDC__ */
 
 {
-   PtrElement          pFils;
-   boolean             elvide;
+   PtrElement          pChild;
+   boolean             empty;
 
-   elvide = TRUE;
+   empty = TRUE;
    if (pEl->ElTerminal)
       /* l'element est une feuille. On traite selon le type de feuille */
       switch (pEl->ElLeafType)
 	    {
 	       case LtText:
 	       case LtPicture:
-		  elvide = (pEl->ElTextLength == 0);
+		  empty = (pEl->ElTextLength == 0);
 		  break;
 	       case LtGraphics:
 	       case LtSymbol:
-		  elvide = (pEl->ElGraph == '\0');
+		  empty = (pEl->ElGraph == '\0');
 		  break;
 	       case LtPageColBreak:
-		  /* une marque de page est consideree comme vide */
-		  elvide = TRUE;
+		  /* un saut de page est consideree comme vide */
+		  empty = TRUE;
 		  break;
 	       case LtReference:
 		  if (pEl->ElReference != NULL)
 		     if (pEl->ElReference->RdReferred != NULL)
-			elvide = FALSE;
+			empty = FALSE;
 		  break;
 	       case LtPairedElem:
-		  /* un element de paire n'est jamais considere's comme vide */
-		  elvide = FALSE;
+		  /* un element de paire n'est jamais considere' comme vide */
+		  empty = FALSE;
 		  break;
 	       case LtPlyLine:
-		  elvide = (pEl->ElNPoints == 0);
+		  empty = (pEl->ElNPoints == 0);
 		  break;
 	       default:
-		  elvide = FALSE;
+		  empty = FALSE;
 		  break;
 	    }
    else
       /* ce n'est pas une feuille, on traite recursivement tous les fils */
      {
-	pFils = pEl->ElFirstChild;
-	while (pFils != NULL && elvide)
-	   if (!ElementVide (pFils))
-	      elvide = FALSE;
+	pChild = pEl->ElFirstChild;
+	while (pChild != NULL && empty)
+	   if (!EmptyElement (pChild))
+	      empty = FALSE;
 	   else
-	      pFils = pFils->ElNext;
+	      pChild = pChild->ElNext;
      }
-   return elvide;
-}
-/**** fin ajout ****/
-
-/* ---------------------------------------------------------------------- */
-/* |    FirstSibling    returns TRUE if element pEl is the first child  | */
-/* |            of its parent, ignoring PageBreak elements.             | */
-/* ---------------------------------------------------------------------- */
-
-#ifdef __STDC__
-static boolean      FirstSibling (PtrElement pEl)
-
-#else  /* __STDC__ */
-static boolean      FirstSibling (pEl)
-PtrElement          pEl;
-
-#endif /* __STDC__ */
-
-{
-   boolean             stop;
-   PtrElement          pVois;
-
-   /* on saute les marques de page precedentes */
-   pVois = pEl->ElPrevious;
-   stop = FALSE;
-   do
-      if (pVois == NULL)
-	 stop = TRUE;
-      else if (pVois->ElTypeNumber == PageBreak + 1)
-	 pVois = pVois->ElPrevious;
-      else
-	 stop = TRUE;
-   while (!(stop));
-   /* l'element est premier s'il n'a pas de predecesseur */
-   return (pVois == NULL);
+   return empty;
 }
 
+
 /* ---------------------------------------------------------------------- */
-/* | CondSatisfaite   evalue la condition du bloc de regles pointe' par | */
-/* |    pBloc pour l'element pointe' par pEl et l'attribut pointe' par  | */
-/* |    pA s'il est different de NULL. Retourne vrai si la condition    | */
+/* | ConditionIsTrue   evalue la condition du bloc de regles pointe' par| */
+/* |    pBlock pour l'element pointe' par pEl et l'attribut pointe' par | */
+/* |    pAttr s'il est different de NULL. Retourne vrai si la condition | */
 /* |    satisfaite, faux sinon.                                         | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static boolean      CondSatisfaite (PtrTRuleBlock pBloc, PtrElement pEl,
-				    PtrAttribute pA, PtrDocument pDoc)
+static boolean      ConditionIsTrue (PtrTRuleBlock pBlock, PtrElement pEl,
+				    PtrAttribute pAttr, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static boolean      CondSatisfaite (pBloc, pEl, pA, pDoc)
-PtrTRuleBlock       pBloc;
+static boolean      ConditionIsTrue (pBlock, pEl, pAttr, pDoc)
+PtrTRuleBlock       pBlock;
 PtrElement          pEl;
-PtrAttribute         pA;
+PtrAttribute        pAttr;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 
 {
-   boolean             ret, refpossible, typeOK, stop;
-   PtrAttribute         pAttr;
-   PtrSSchema        pSchS;
-   int                 i, par;
-   PtrElement          pEl1;
-   PtrElement          pElem;
-   PtrElement          pVois;
-   PtrSSchema        pSc1;
-   SRule              *pRe1;
-   PtrAttribute         pAt1;
-   int                 ncond;
-   TranslCondition        *Cond;
-   PtrPRule        pPres;
+   PtrAttribute        pAttrEl;
+   PtrSSchema          pSS, pRefSS;
+   PtrElement          pEl1, pElem, pSibling;
+   SRule               *pSRule;
+   PtrPRule            pPRule;
+   TranslCondition     *Cond;
    PtrReference        pRef;
-   DocumentIdentifier     IDocExt;
-   PtrDocument         pDocExt;
+   DocumentIdentifier  docIdent;
+   PtrDocument         pExtDoc;
+   int                 i, par, nCond;
+   boolean             ret, possibleRef, typeOK, stop;
 
-   if (pBloc->TbNConditions == 0)
-      /* sans condition */
+   if (pBlock->TbNConditions == 0)
+      /* no condition */
       ret = TRUE;
    else
       /* il y a au moins une condition a evaluer */
      {
 	ret = TRUE;
-	ncond = 0;
+	nCond = 0;
 	/* evalue les conditions du bloc jusqu'a en trouver une fausse */
-	while (ret && ncond < pBloc->TbNConditions)
+	while (ret && nCond < pBlock->TbNConditions)
 	  {
-	     ncond++;
-	     Cond = &pBloc->TbCondition[ncond - 1];
+	     Cond = &pBlock->TbCondition[nCond++];
 	     if (!Cond->TcTarget)
 		pElem = pEl;
 	     else
-		/* la condition porte sur l'element pointe' par pEl ou pA.
+		/* la condition porte sur l'element pointe' par pEl ou pAttr.
 		   on cherche cet element pointe' */
 	       {
 		  pElem = NULL;
-		  if (pA != NULL &&
-		  pA->AeAttrSSchema->SsAttribute[pA->AeAttrNum - 1].AttrType ==
+		  if (pAttr != NULL &&
+		  pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrType ==
 		      AtReferenceAttr)
 		     /* c'est un attribut reference */
-		     pRef = pA->AeAttrReference;
+		     pRef = pAttr->AeAttrReference;
 		  else
 		     /* l'element est-il une reference ? */
 		  if (pEl->ElTerminal && pEl->ElLeafType == LtReference)
@@ -984,7 +918,7 @@ PtrDocument         pDoc;
 		     /* c'est peut-etre une inclusion */
 		     pRef = pEl->ElSource;
 		  if (pRef != NULL)
-		     pElem = ReferredElement (pRef, &IDocExt, &pDocExt);
+		     pElem = ReferredElement (pRef, &docIdent, &pExtDoc);
 	       }
 	     if (pElem == NULL)
 		ret = FALSE;
@@ -1025,23 +959,26 @@ PtrDocument         pDoc;
 		     switch (Cond->TcCondition)
 			   {
 			      case TcondFirst:
-				 ret = FirstSibling (pElem);
+				 pSibling = pElem->ElPrevious;
+				 /* on saute les marques de page precedentes */
+				 BackSkipPageBreak(&pSibling);
+				 ret = (pSibling == NULL);
 				 break;
 
 			      case TcondLast:
 				 /* on saute les marques de page suivantes */
-				 pVois = pElem->ElNext;
+				 pSibling = pElem->ElNext;
 				 stop = FALSE;
 				 do
-				    if (pVois == NULL)
+				    if (pSibling == NULL)
 				       stop = TRUE;
-				    else if (pVois->ElTypeNumber == PageBreak + 1)
-				       pVois = pVois->ElNext;
+				    else if (pSibling->ElTypeNumber == PageBreak + 1)
+				       pSibling = pSibling->ElNext;
 				    else
 				       stop = TRUE;
-				 while (!(stop));
+				 while (!stop);
 				 /* l'element est dernier s'il n'a pas de succcesseur */
-				 ret = pVois == NULL;
+				 ret = pSibling == NULL;
 				 break;
 
 			      case TcondDefined:
@@ -1060,7 +997,7 @@ PtrDocument         pDoc;
 					      pEl1->ElSructSchema->SsCode == pElem->ElSructSchema->SsCode;
 					}
 				   }
-				 while (!(ret || par >= MAX_PARAM_DOC));
+				 while (!ret && par < MAX_PARAM_DOC);
 				 break;
 
 			      case TcondReferred:
@@ -1069,7 +1006,7 @@ PtrDocument         pDoc;
 				 /* reference) est reference' au moins une fois. */
 				 ret = FALSE;
 				 pEl1 = pElem;
-				 refpossible = FALSE;
+				 possibleRef = FALSE;
 
 				 do
 				   {
@@ -1087,22 +1024,21 @@ PtrDocument         pDoc;
 					 /* l'element n'est pas reference' */
 					{
 					   /* l'element peut-il etre designe' par une reference? */
-					   pSc1 = pEl1->ElSructSchema;
+					   pRefSS = pEl1->ElSructSchema;
 					   /* on cherche toutes les references dans le schema de */
 					   /* structure de l'element */
-					   refpossible = FALSE;
+					   possibleRef = FALSE;
 					   i = 1;
 					   do
 					     {
-						i++;
-						pRe1 = &pSc1->SsRule[i - 1];
-						if (pRe1->SrConstruct == CsReference)
+						pSRule = &pRefSS->SsRule[i++];
+						if (pSRule->SrConstruct == CsReference)
 						   /* c'est une reference */
-						   if (pRe1->SrReferredType != 0)
-						      refpossible = EquivalentSRules (pRe1->SrReferredType, pSc1, pEl1->ElTypeNumber, pSc1, pEl1->ElParent);
+						   if (pSRule->SrReferredType != 0)
+						      possibleRef = EquivalentSRules (pSRule->SrReferredType, pRefSS, pEl1->ElTypeNumber, pRefSS, pEl1->ElParent);
 					     }
-					   while (!(refpossible || i >= pSc1->SsNRules));
-					   if (!refpossible)
+					   while (!possibleRef && i < pRefSS->SsNRules);
+					   if (!possibleRef)
 					     {
 						/* l'element ne peut pas etre designe par un element */
 						/* reference on cherche s'il peut etre designe' par un */
@@ -1111,22 +1047,22 @@ PtrDocument         pDoc;
 						i = 1;
 						do
 						  {
-						     i++;
-						     if (pSc1->SsAttribute[i - 1].AttrType == AtReferenceAttr)
+						     if (pRefSS->SsAttribute[i++].AttrType == AtReferenceAttr)
 							/* c'est une reference */
-							if (pSc1->SsAttribute[i - 1].AttrTypeRef != 0)
-							   refpossible = (pSc1->SsAttribute[i - 1].AttrTypeRefNature[0] == '\0'	/* meme schema de structure */
-									  && EquivalentSRules (pSc1->SsAttribute[i - 1].AttrTypeRef, pSc1, pEl1->ElTypeNumber, pSc1, pEl1->ElParent));
+							if (pRefSS->SsAttribute[i - 1].AttrTypeRef != 0)
+							   possibleRef = (pRefSS->SsAttribute[i - 1].AttrTypeRefNature[0] == '\0'	/* meme schema de structure */
+									  && EquivalentSRules (pRefSS->SsAttribute[i - 1].AttrTypeRef, pRefSS, pEl1->ElTypeNumber, pRefSS, pEl1->ElParent));
 						  }
-						while (!(refpossible || i >= pSc1->SsNAttributes));
+						while (!possibleRef &&
+						      i < pRefSS->SsNAttributes);
 					     }
-					   if (!refpossible)
+					   if (!possibleRef)
 					      /* l'element ne peut pas etre designe' par une reference
 					         type'e ; on examine l'element ascendant */
 					      pEl1 = pEl1->ElParent;
 					}
 				   }
-				 while (!refpossible && pEl1 != NULL && !ret);
+				 while (!possibleRef && pEl1 != NULL && !ret);
 				 break;
 
 			      case TcondFirstRef:
@@ -1134,10 +1070,10 @@ PtrDocument         pDoc;
 				 /* la condition est satisfaite s'il s'agit de la premiere */
 				 /* (ou de la derniere) reference a l'element reference' */
 				 pRef = NULL;
-				 if (pA != NULL &&
-				     pA->AeAttrSSchema->SsAttribute[pA->AeAttrNum - 1].AttrType == AtReferenceAttr)
+				 if (pAttr != NULL &&
+				     pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrType == AtReferenceAttr)
 				    /* c'est un attribut reference */
-				    pRef = pA->AeAttrReference;
+				    pRef = pAttr->AeAttrReference;
 				 else if (pElem->ElTerminal && pElem->ElLeafType == LtReference)
 				    /* l'element est une reference */
 				    pRef = pElem->ElReference;
@@ -1155,10 +1091,10 @@ PtrDocument         pDoc;
 				 /* element ou d'un attribut reference externe */
 				 pRef = NULL;
 				 ret = FALSE;
-				 if (pA != NULL &&
-				     pA->AeAttrSSchema->SsAttribute[pA->AeAttrNum - 1].AttrType == AtReferenceAttr)
+				 if (pAttr != NULL &&
+				     pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrType == AtReferenceAttr)
 				    /* c'est un attribut reference */
-				    pRef = pA->AeAttrReference;
+				    pRef = pAttr->AeAttrReference;
 				 else
 				    /* l'element est-il une reference ? */
 				 if (pElem->ElTerminal && pElem->ElLeafType == LtReference)
@@ -1182,16 +1118,21 @@ PtrDocument         pDoc;
 				 else
 				   {
 				      if (Cond->TcCondition == TcondFirstWithin)
-					 ret = FirstSibling (pElem);
+					 {
+					 pSibling = pElem->ElPrevious;
+					 /* on saute les marques de page precedentes */
+					 BackSkipPageBreak(&pSibling);
+					 ret = (pSibling == NULL);
+					 }
 				      if (ret)
 					{
 					   if (Cond->TcElemNature[0] == '\0')
 					      /* le type de l'ascendant est defini dans le meme schema de
 					         structure que l'element traite' */
-					      pSchS = pEl->ElSructSchema;
+					      pSS = pEl->ElSructSchema;
 					   else
 					      /* le type de l'ascendant est defini dans un autre schema */
-					      pSchS = NULL;
+					      pSS = NULL;
 					   i = 0;
 					   if (Cond->TcImmediatelyWithin)
 					      /* Condition: If immediately within n element-type */
@@ -1200,8 +1141,8 @@ PtrDocument         pDoc;
 					      /* on compte les ancetres successifs de ce type */
 					      while (pEl1 != NULL)
 						{
-						   if (pSchS != NULL)
-						      typeOK = EquivalentSRules (Cond->TcElemType, pSchS,
+						   if (pSS != NULL)
+						      typeOK = EquivalentSRules (Cond->TcElemType, pSS,
 									   pEl1->ElTypeNumber, pEl1->ElSructSchema, pEl1->ElParent);
 						   else if (strcmp (Cond->TcElemNature, pEl1->ElSructSchema->SsName) == 0)
 						      typeOK = EquivalentSRules (Cond->TcElemType,
@@ -1221,8 +1162,8 @@ PtrDocument         pDoc;
 					      /* on compte tous les ancetres de ce type */
 					      while (pEl1 != NULL)
 						{
-						   if (pSchS != NULL)
-						      typeOK = EquivalentSRules (Cond->TcElemType, pSchS,
+						   if (pSS != NULL)
+						      typeOK = EquivalentSRules (Cond->TcElemType, pSS,
 									   pEl1->ElTypeNumber, pEl1->ElSructSchema, pEl1->ElParent);
 						   else if (strcmp (Cond->TcElemNature, pEl1->ElSructSchema->SsName) == 0)
 						      typeOK = EquivalentSRules (Cond->TcElemType,
@@ -1247,43 +1188,42 @@ PtrDocument         pDoc;
 				 /* cherche si l'element ou un de ses ascendants possede */
 				 /* l'attribut cherche' avec la valeur cherchee */
 				 ret = FALSE;
-				 pSchS = pEl->ElSructSchema;
+				 pSS = pEl->ElSructSchema;
 				 pEl1 = pElem;
 				 while (pEl1 != NULL && !ret)
 				   {
-				      pAttr = pEl1->ElFirstAttr;		/* 1er attribut de l'element */
+				      pAttrEl = pEl1->ElFirstAttr;		/* 1er attribut de l'element */
 				      /* parcourt les attributs de l'element */
-				      while (pAttr != NULL && !ret)
+				      while (pAttrEl != NULL && !ret)
 					{
-					   pAt1 = pAttr;
-					   if (pAt1->AeAttrSSchema == pSchS &&
-					   pAt1->AeAttrNum == Cond->TcAttr)
+					   if (pAttrEl->AeAttrSSchema == pSS &&
+					   pAttrEl->AeAttrNum == Cond->TcAttr)
 					      /* c'est l'attribut cherche', on teste sa valeur */
-					      switch (pSchS->SsAttribute[pAt1->AeAttrNum - 1].AttrType)
+					      switch (pSS->SsAttribute[pAttrEl->AeAttrNum - 1].AttrType)
 						    {
 						       case AtNumAttr:
-							  ret = pAt1->AeAttrValue <= Cond->TcUpperBound &&
-							     pAt1->AeAttrValue >= Cond->TcLowerBound;
+							  ret = pAttrEl->AeAttrValue <= Cond->TcUpperBound &&
+							     pAttrEl->AeAttrValue >= Cond->TcLowerBound;
 							  break;
 						       case AtTextAttr:
 							  if (Cond->TcTextValue[0] == '\0')
 							     ret = TRUE;
 							  else
 							     ret = StringAndTextEqual (Cond->TcTextValue,
-										       pAt1->AeAttrText);
+										       pAttrEl->AeAttrText);
 							  break;
 						       case AtReferenceAttr:
 							  ret = TRUE;
 							  break;
 						       case AtEnumAttr:
-							  ret = pAt1->AeAttrValue == Cond->TcAttrValue ||
+							  ret = pAttrEl->AeAttrValue == Cond->TcAttrValue ||
 							     Cond->TcAttrValue == 0;
 							  break;
 						       default:
 							  break;
 						    }
 					   if (!ret)
-					      pAttr = pAt1->AeNext;
+					      pAttrEl = pAttrEl->AeNext;
 					}
 				      if (Cond->TcAscendRelLevel == -1)
 					 /* on peut poursuivre la recherche parmi les ascendants */
@@ -1298,28 +1238,28 @@ PtrDocument         pDoc;
 				 /* cherche si l'element possede la presentation cherchee */
 				 /* avec la valeur cherchee */
 				 ret = FALSE;
-				 pPres = pElem->ElFirstPRule;
+				 pPRule = pElem->ElFirstPRule;
 				 /* parcourt les presentations specifiques de l'element */
-				 while (pPres != NULL && !ret)
+				 while (pPRule != NULL && !ret)
 				   {
-				      if (pPres->PrType == Cond->TcAttr)
+				      if (pPRule->PrType == Cond->TcAttr)
 					 /* c'est la presentation cherchee, on teste sa valeur */
-					 if (pPres->PrType == PtSize || pPres->PrType == PtIndent ||
-					     pPres->PrType == PtLineSpacing ||
-					   pPres->PrType == PtLineWeight)
+					 if (pPRule->PrType == PtSize || pPRule->PrType == PtIndent ||
+					     pPRule->PrType == PtLineSpacing ||
+					   pPRule->PrType == PtLineWeight)
 					    /* c'est une presentation a valeur numerique */
-					    ret = pPres->PrMinValue <= Cond->TcUpperBound &&
-					       pPres->PrMinValue >= Cond->TcLowerBound;
-					 else if (pPres->PrType == PtFillPattern ||
-					    pPres->PrType == PtBackground ||
-					     pPres->PrType == PtForeground)
-					    ret = pPres->PrIntValue <= Cond->TcUpperBound &&
-					       pPres->PrIntValue >= Cond->TcLowerBound;
+					    ret = pPRule->PrMinValue <= Cond->TcUpperBound &&
+					       pPRule->PrMinValue >= Cond->TcLowerBound;
+					 else if (pPRule->PrType == PtFillPattern ||
+					    pPRule->PrType == PtBackground ||
+					     pPRule->PrType == PtForeground)
+					    ret = pPRule->PrIntValue <= Cond->TcUpperBound &&
+					       pPRule->PrIntValue >= Cond->TcLowerBound;
 					 else
-					    ret = Cond->TcPresValue == ValCaractPres (pPres) ||
+					    ret = Cond->TcPresValue == PresRuleValue (pPRule) ||
 					       Cond->TcPresValue == '\0';
 				      if (!ret)
-					 pPres = pPres->PrNextPRule;
+					 pPRule = pPRule->PrNextPRule;
 				   }
 				 break;
 			      case TcondPresentation:
@@ -1344,15 +1284,15 @@ PtrDocument         pDoc;
 				 break;
 			      case TcondFirstAttr:
 				 /* la condition est satisfaite si le bloc */
-				 /* attribut pA est le 1er de l'element */
-				 if (pA != NULL)
-				    ret = pA == pEl->ElFirstAttr;
+				 /* attribut pAttr est le 1er de l'element */
+				 if (pAttr != NULL)
+				    ret = pAttr == pEl->ElFirstAttr;
 				 break;
 			      case TcondLastAttr:
 				 /* la condition est satisfaite si le bloc */
-				 /* attribut pA est le dernier de l'element */
-				 if (pA != NULL)
-				    ret = pA->AeNext == NULL;
+				 /* attribut pAttr est le dernier de l'element */
+				 if (pAttr != NULL)
+				    ret = pAttr->AeNext == NULL;
 				 break;
 			      case TcondComputedPage:
 				 /* la condition est satisfaite si l'element
@@ -1372,10 +1312,9 @@ PtrDocument         pDoc;
 				 if (pElem->ElTypeNumber == PageBreak + 1)
 				    ret = pElem->ElPageType == PgUser;
 				 break;
-				 /* cas page rappel supprime */
 			      case TcondEmpty:
 				 /* la condition est satisfaite si l'element est vide */
-				 ret = ElementVide (pElem);
+				 ret = EmptyElement (pElem);
 				 break;
 			      default:
 				 break;
@@ -1390,48 +1329,45 @@ PtrDocument         pDoc;
 
 
 /* ---------------------------------------------------------------------- */
-/* | ComptValTra     retourne la valeur du compteur de numero NCompt    | */
-/* |    (defini dans le schema de traduction  pointe' par pSchT qui     | */
+/* | CounterVal     retourne la valeur du compteur de numero countNum	| */
+/* |    (defini dans le schema de traduction  pointe' par pTSch qui     | */
 /* |    s'applique au schema de structure pointe' par pSS) pour         | */
 /* |    l'element pointe' par pElNum.                                   | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static int          ComptValTra (int NCompt, PtrTSchema pSchT, PtrSSchema pSS, PtrElement pElNum)
+static int          CounterVal (int countNum, PtrTSchema pTSch, PtrSSchema pSS, PtrElement pElNum)
 
 #else  /* __STDC__ */
-static int          ComptValTra (NCompt, pSchT, pSS, pElNum)
-int                 NCompt;
-PtrTSchema        pSchT;
+static int          CounterVal (countNum, pTSch, pSS, pElNum)
+int                 countNum;
+PtrTSchema        pTSch;
 PtrSSchema        pSS;
 PtrElement          pElNum;
 
 #endif /* __STDC__ */
 
 {
-   int                 val;
-   PtrSSchema        PSchStr;
    PtrElement          pEl;
-   TCounter         *pTr1;
-   PtrElement          pEl1;
-   boolean             initattr, stop;
-   PtrAttribute         pAttr;
-   int                 valinitattr;
-   int                 level;
+   PtrSSchema          pSSch;
+   TCounter           *pCntr;
+   PtrAttribute        pAttr;
+   int                 val, valInit, level;
+   boolean             initAttr, stop;
 
-#define MaxAncetre 50
-   PtrElement          PcWithin[MaxAncetre];
+#define MAX_ANCESTOR 50
+   PtrElement          pAncest[MAX_ANCESTOR];
 
-   valinitattr = 0;
-   pTr1 = &pSchT->TsCounter[NCompt - 1];
-   if (pTr1->TnOperation == TCntrNoOp)
-      val = pTr1->TnParam1;
+   valInit = 0;
+   pCntr = &pTSch->TsCounter[countNum - 1];
+   if (pCntr->TnOperation == TCntrNoOp)
+      val = pCntr->TnParam1;
    else
      {
 	/* a priori, la valeur initiale du compteur ne depend pas d'un */
 	/* attribut */
-	initattr = FALSE;
-	if (pTr1->TnAttrInit > 0)
+	initAttr = FALSE;
+	if (pCntr->TnAttrInit > 0)
 	   /* la valeur initiale du compteur est definie par un attribut */
 	  {
 	     /* remonte a  la racine de l'arbre auquel appartient l'element */
@@ -1446,20 +1382,20 @@ PtrElement          pElNum;
 	     do
 		if (pAttr == NULL)
 		   stop = TRUE;	/* dernier attribut */
-		else if (pAttr->AeAttrNum == pTr1->TnAttrInit &&
+		else if (pAttr->AeAttrNum == pCntr->TnAttrInit &&
 			 pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
 		   stop = TRUE;	/* c'est l'attribut cherche' */
 		else
 		   pAttr = pAttr->AeNext;	/* au suivant */
-	     while (!(stop));
+	     while (!stop);
 	     if (pAttr != NULL)
 		/* la racine porte bien l'attribut qui initialise le compteur */
 	       {
-		  initattr = TRUE;
-		  valinitattr = pAttr->AeAttrValue;	/* on prend la valeur de l'attribut */
+		  initAttr = TRUE;
+		  valInit = pAttr->AeAttrValue;	/* on prend la valeur de l'attribut */
 	       }
 	  }
-	if (pTr1->TnOperation == TCntrRLevel)
+	if (pCntr->TnOperation == TCntrRLevel)
 	  {
 	     pEl = pElNum;
 	     val = 0;
@@ -1467,7 +1403,7 @@ PtrElement          pElNum;
 	     /* le calcul du compteur */
 	     while (pEl != NULL)
 	       {
-		  if (pEl->ElTypeNumber == pTr1->TnElemType1 &&
+		  if (pEl->ElTypeNumber == pCntr->TnElemType1 &&
 		      pEl->ElSructSchema == pElNum->ElSructSchema)
 		     /* l'element rencontre' a la meme type que l'element traite' */
 		     val++;	/* incremente le compteur */
@@ -1476,61 +1412,61 @@ PtrElement          pElNum;
 	  }
 	else
 	  {
-	     if (pTr1->TnElemType1 == PageBreak + 1)
+	     if (pCntr->TnElemType1 == PageBreak + 1)
 		/* c'est un compteur de pages */
 	       {
-		  PSchStr = NULL;
+		  pSSch = NULL;
 		  pEl = pElNum;
 	       }
 	     else
 	       {
 		  /* schema de structure du compteur */
-		  PSchStr = pElNum->ElSructSchema;
-		  if (pTr1->TnOperation != TCntrRank || pTr1->TnAcestorLevel == 0)
+		  pSSch = pElNum->ElSructSchema;
+		  if (pCntr->TnOperation != TCntrRank || pCntr->TnAcestorLevel == 0)
 		     /* Cherche le premier element de type TnElemType1 */
 		     /* englobant l'element a numeroter */
-		     pEl = GetTypedAncestor (pElNum, pTr1->TnElemType1, PSchStr);
+		     pEl = GetTypedAncestor (pElNum, pCntr->TnElemType1, pSSch);
 		  else
 		    {
 		       /* Cherche le nieme element de type TnElemType1 qui englobe */
 		       /* l'element a numeroter */
-		       if (pTr1->TnAcestorLevel < 0)
+		       if (pCntr->TnAcestorLevel < 0)
 			  /* on compte les ascendants en remontant de l'element */
 			  /* concerne' vers la racine */
-			  level = -pTr1->TnAcestorLevel;
+			  level = -pCntr->TnAcestorLevel;
 		       else
 			  /* on compte les ascendants en descendant de la racine vers */
 			  /* l'element concerne'. Pour cela on commence par enregistrer */
 			  /* le chemin de l'element concerne' vers la racine */
-			  level = MaxAncetre;
+			  level = MAX_ANCESTOR;
 		       pEl = pElNum;
 		       while (level > 0 && pEl != NULL)
 			 {
-			    if (pEl->ElTypeNumber == pTr1->TnElemType1 &&
+			    if (pEl->ElTypeNumber == pCntr->TnElemType1 &&
 				pEl->ElSructSchema->SsCode == pElNum->ElSructSchema->SsCode)
 			       /* cet element englobant a le type qui incremente le compteur */
 			      {
 				 level--;
-				 PcWithin[level] = pEl;
+				 pAncest[level] = pEl;
 			      }
 			    if (level > 0)
 			       pEl = pEl->ElParent;
 			 }
-		       if (pTr1->TnAcestorLevel > 0)
+		       if (pCntr->TnAcestorLevel > 0)
 			  /* il faut redescendre a partir de la racine */
-			  pEl = PcWithin[level + pTr1->TnAcestorLevel - 1];
+			  pEl = pAncest[level + pCntr->TnAcestorLevel - 1];
 		    }
 	       }
 	     if (pEl == NULL)
 		val = 0;	/* pas trouve' */
-	     else if (pTr1->TnOperation == TCntrRank)
-		if (pTr1->TnElemType1 == PageBreak + 1)
+	     else if (pCntr->TnOperation == TCntrRank)
+		if (pCntr->TnElemType1 == PageBreak + 1)
 		   /* c'est un compteur de pages */
 		  {
 		     if (pEl->ElTypeNumber == PageBreak + 1 && pEl->ElViewPSchema == 1)
 			val = 1;
-		     else if (initattr)
-			val = valinitattr;
+		     else if (initAttr)
+			val = valInit;
 		     else
 			val = 0;
 		     /* compte les marques de page qui precedent l'element */
@@ -1543,20 +1479,20 @@ PtrElement          pElNum;
 			     if (pEl->ElViewPSchema == 1)
 				val++;
 		       }
-		     while (!(pEl == NULL));
+		     while (pEl != NULL);
 		  }
 		else
 		   /* numero = rang de l'element dans la liste */
 		   /* Cherche le rang de l'element trouve' parmi ses freres */
 		  {
-		     if (initattr)
-			val = valinitattr;
+		     if (initAttr)
+			val = valInit;
 		     else
 			val = 1;
 		     while (pEl->ElPrevious != NULL)
 		       {
 			  pEl = pEl->ElPrevious;
-			  if (EquivalentType (pEl, pTr1->TnElemType1, PSchStr))
+			  if (EquivalentType (pEl, pCntr->TnElemType1, pSSch))
 			     /* on ne compte pas les eventuelles marques de page */
 			     val++;
 		       }
@@ -1564,31 +1500,28 @@ PtrElement          pElNum;
 	     else
 		/* l'element trouve est celui qui reinitialise le compteur */
 	       {
-		  if (initattr)
-		     val = valinitattr - pTr1->TnParam2;
+		  if (initAttr)
+		     val = valInit - pCntr->TnParam2;
 		  else
-		     val = pTr1->TnParam1 - pTr1->TnParam2;
+		     val = pCntr->TnParam1 - pCntr->TnParam2;
 		  /* a partir de l'element trouve', cherche en avant tous les */
 		  /* elements ayant le type qui incremente le compteur, */
 		  /* jusqu'a rencontrer celui pour lequel on calcule la valeur du */
 		  /* compteur. */
 		  do
 		    {
-		       pEl = FwdSearchElem2Types (pEl, pTr1->TnElemType2, pElNum->ElTypeNumber, PSchStr,
+		       pEl = FwdSearchElem2Types (pEl, pCntr->TnElemType2, pElNum->ElTypeNumber, pSSch,
 					 pElNum->ElSructSchema);
 		       if (pEl != NULL)
-			 {
-			    pEl1 = pEl;
-			    if (EquivalentType (pEl, pTr1->TnElemType2, PSchStr))
-			       /* on ignore les pages qui ne */
-			       /* concernent pas la vue 1 */
-			       if (pEl1->ElTypeNumber != PageBreak + 1 ||
-				   (pEl1->ElTypeNumber == PageBreak + 1 &&
-				    pEl1->ElViewPSchema == 1))
-				  val += pTr1->TnParam2;
-			 }
+			    if (EquivalentType (pEl, pCntr->TnElemType2, pSSch))
+			       /* on ignore les pages qui ne concernent */
+			       /* pas la vue 1 */
+			       if (pEl->ElTypeNumber != PageBreak + 1 ||
+				   (pEl->ElTypeNumber == PageBreak + 1 &&
+				    pEl->ElViewPSchema == 1))
+				  val += pCntr->TnParam2;
 		    }
-		  while (!(pEl == NULL || pEl == pElNum));
+		  while (pEl != NULL && pEl != pElNum);
 	       }
 	  }
      }
@@ -1597,30 +1530,28 @@ PtrElement          pElNum;
 
 
 /* ---------------------------------------------------------------------- */
-/* | ChDesc   cherche dans le sous-arbre de racine pEl (racine exclue)  | */
-/* |    exclue), un element de type TypeCh defini dans le schema de     | */
+/* | SearchDescent   cherche dans le sous-arbre de racine pEl (racine	| */
+/* |    exclue), un element de type typeNum defini dans le schema de    | */
 /* |    structure pointe' par pSS, ou si pSS est nul dans le schema de  | */
-/* |    nom NomSS.                                                      | */
+/* |    nom schemaName.                                                 | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         ChDesc (PtrElement * pEl, int TypeCh, PtrSSchema pSS, Name NomSS)
+static void         SearchDescent (PtrElement * pEl, int typeNum, PtrSSchema pSS, Name schemaName)
 
 #else  /* __STDC__ */
-static void         ChDesc (pEl, TypeCh, pSS, NomSS)
+static void         SearchDescent (pEl, typeNum, pSS, schemaName)
 PtrElement         *pEl;
-int                 TypeCh;
-PtrSSchema        pSS;
-Name                 NomSS;
+int                 typeNum;
+PtrSSchema          pSS;
+Name                schemaName;
 
 #endif /* __STDC__ */
 
 {
-   PtrElement          pElFils;
-   boolean             SchOk;
-   PtrElement          pEl1;
-   PtrSSchema        pSS1;
-
+   PtrElement          pChild;
+   PtrSSchema          pSSchema;
+   boolean             SSchemaOK;
 
    if ((*pEl)->ElTerminal)
       *pEl = NULL;		/* element terminal, echec */
@@ -1629,127 +1560,122 @@ Name                 NomSS;
    else
       /* il y a au moins un descendant direct */
      {
-	pElFils = (*pEl)->ElFirstChild;
+	pChild = (*pEl)->ElFirstChild;
 	/* cherche dans le sous-arbre de chacun des fils */
 	do
 	  {
 	     /* le fils a-t-il le type cherche' ? */
-	     pEl1 = pElFils;
 	     if (pSS == NULL)
 	       {
-		  SchOk = strcmp (NomSS, pEl1->ElSructSchema->SsName) == 0;
-		  pSS1 = pEl1->ElSructSchema;
+		  SSchemaOK = strcmp (schemaName, pChild->ElSructSchema->SsName) == 0;
+		  pSSchema = pChild->ElSructSchema;
 	       }
 	     else
 	       {
-		  SchOk = pEl1->ElSructSchema->SsCode == pSS->SsCode;
-		  pSS1 = pSS;
+		  SSchemaOK = pChild->ElSructSchema->SsCode == pSS->SsCode;
+		  pSSchema = pSS;
 	       }
-	     if (SchOk && EquivalentSRules (TypeCh, pSS1, pEl1->ElTypeNumber, pSS1, *pEl))
-		*pEl = pElFils;	/* Trouve' ! */
+	     if (SSchemaOK && EquivalentSRules (typeNum, pSSchema, pChild->ElTypeNumber, pSSchema, *pEl))
+		/* trouve' */
+		*pEl = pChild;
 	     else
 	       {
-		  *pEl = pElFils;
-		  ChDesc (pEl, TypeCh, pSS, NomSS);
+		  *pEl = pChild;
+		  SearchDescent (pEl, typeNum, pSS, schemaName);
 		  if (*pEl == NULL)
-		     pElFils = pElFils->ElNext;
+		     pChild = pChild->ElNext;
 	       }
 	  }
-	while (!(*pEl != NULL || pElFils == NULL));
+	while ((*pEl) == NULL && pChild != NULL);
      }
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* | SortContenu   sort le contenu des feuilles de l'element pEl dans   | */
+/* | PutContent   e'crit le contenu des feuilles de l'element pEl dans  | */
 /* |    dans le fichier.                                                | */
 /* |    La traduction du contenu des feuilles a lieu seulement si       | */
-/* |    tradCar est vrai.                                               | */
+/* |    transChar est vrai.                                             | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         SortContenu (PtrElement pEl, boolean tradCar, boolean lineBreak,
-				 int fichier, PtrDocument pDoc)
+static void         PutContent (PtrElement pEl, boolean transChar, boolean lineBreak,
+				 int fileNum, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void         SortContenu (pEl, tradCar, lineBreak, fichier, pDoc)
+static void         PutContent (pEl, transChar, lineBreak, fileNum, pDoc)
 PtrElement          pEl;
-boolean             tradCar;
+boolean             transChar;
 boolean             lineBreak;
-int                 fichier;
+int                 fileNum;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 {
-   PtrElement          pFils;
+   PtrElement          pChild;
 
    if (!pEl->ElTerminal)
-      /* l'element n'est pas une feuille, on sort le contenu de chacun de */
+      /* l'element n'est pas une feuille, on ecrit le contenu de chacun de */
       /* ses fils */
      {
-	pFils = pEl->ElFirstChild;
-	while (pFils != NULL)
+	pChild = pEl->ElFirstChild;
+	while (pChild != NULL)
 	  {
-	     SortContenu (pFils, tradCar, lineBreak, fichier, pDoc);
-	     pFils = pFils->ElNext;
+	     PutContent (pChild, transChar, lineBreak, fileNum, pDoc);
+	     pChild = pChild->ElNext;
 	  }
      }
    else
       /* l'element est une feuille, on sort son contenu */
-      TraduitFeuille (pEl, tradCar, lineBreak, fichier, pDoc);
+      TranslateLeaf (pEl, transChar, lineBreak, fileNum, pDoc);
 }
 
 #ifdef __STDC__
-static void         AppliqueTra (PtrTRule pRegle, PtrTSchema pSchT,
-			PtrSSchema pSchS, PtrElement pEl, boolean tradCar,
-				 boolean lineBreak, boolean * ElRemove,
-				 PtrPRule pRPres, PtrAttribute pAttribut,
+static void         ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch,
+			PtrSSchema pSSch, PtrElement pEl, boolean transChar,
+				 boolean lineBreak, boolean * removeEl,
+				 PtrPRule pRPres, PtrAttribute pAttr,
 				 PtrDocument pDoc);
-
 #else  /* __STDC__ */
-static void         AppliqueTra (	/* pRegle, pSchT, pSchS, pEl, tradCar, lineBreak,
-					   ElRemove, pRPres, pAttribut, pDoc */ );
-
+static void         ApplyTRule (/* pTRule, pTSch, pSSch, pEl, transChar, lineBreak,
+				 removeEl, pRPres, pAttr, pDoc */);
 #endif /* __STDC__ */
 
 
 /* ---------------------------------------------------------------------- */
-/* | ApplAttrPosElem    applique a l'element pointe' par pEl les regles | */
-/* |    de traduction associees a l'attribut pointe' par pAttr.         | */
+/* | ApplyAttrRulesToElem    applique a l'element pEl les regles de	| */
+/* |    traduction associees a l'attribut pAttr.			| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         ApplAttrPosElem (TOrder Posit, PtrElement pEl,
-				     PtrAttribute pAttr, boolean * ElRemove,
-				     boolean * tradCar, boolean * lineBreak,
+static void         ApplyAttrRulesToElem (TOrder position, PtrElement pEl,
+				     PtrAttribute pAttr, boolean * removeEl,
+				     boolean * transChar, boolean * lineBreak,
 				     PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void         ApplAttrPosElem (Posit, pEl, pAttr, ElRemove, tradCar, lineBreak,
+static void         ApplyAttrRulesToElem (position, pEl, pAttr, removeEl, transChar, lineBreak,
 				     pDoc)
-TOrder          Posit;
+TOrder              position;
 PtrElement          pEl;
-PtrAttribute         pAttr;
-boolean            *ElRemove;
-boolean            *tradCar;
+PtrAttribute        pAttr;
+boolean            *removeEl;
+boolean            *transChar;
 boolean            *lineBreak;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 
 {
-   PtrTRuleBlock       pBloc;
-   PtrTRule        pRegle;
-
-   PtrTSchema        pSchTAttr;
-   int                 i;
-   AttributeTransl      *pRT1;
-   TranslNumAttrCase        *pTC1;
-   PtrTRuleBlock       pBl1;
-   PtrTRule        pRe1;
+   PtrTRuleBlock       pBlock;
+   PtrTRule            pTRule;
+   PtrTSchema          pTSchAttr;
+   AttributeTransl     *pAttrTrans;
+   TranslNumAttrCase   *pTCase;
    NotifyAttribute     notifyAttr;
+   int                 i;
 
-   /* prepare et envoie le message AttrExport.Pre s'il est demande' */
+   /* prepare et envoie l'evenement AttrExport.Pre s'il est demande' */
    notifyAttr.event = TteAttrExport;
    notifyAttr.document = (Document) IdentDocument (pDoc);
    notifyAttr.element = (Element) pEl;
@@ -1760,75 +1686,73 @@ PtrDocument         pDoc;
       /* l'application ne laisse pas l'editeur ecrire l'attribut */
       return;
    /* cherche le premier bloc de regles correspondant a l'attribut */
-   pSchTAttr = SchemaTrad (pAttr->AeAttrSSchema);
-   pBloc = NULL;
-   if (pSchTAttr != NULL)
+   pTSchAttr = SchemaTrad (pAttr->AeAttrSSchema);
+   pBlock = NULL;
+   if (pTSchAttr != NULL)
      {
-	pRT1 = &pSchTAttr->TsAttrTRule[pAttr->AeAttrNum - 1];
+	pAttrTrans = &pTSchAttr->TsAttrTRule[pAttr->AeAttrNum - 1];
 	switch (pAttr->AeAttrType)
 	      {
 		 case AtNumAttr:
 		    i = 1;
-		    while (pBloc == NULL && i <= pRT1->AtrNCases)
+		    while (pBlock == NULL && i <= pAttrTrans->AtrNCases)
 		      {
-			 pTC1 = &pRT1->AtrCase[i - 1];
-			 if (pAttr->AeAttrValue <= pTC1->TaUpperBound &&
-			     pAttr->AeAttrValue >= pTC1->TaLowerBound)
-			    pBloc = pTC1->TaTRuleBlock;
+			 pTCase = &pAttrTrans->AtrCase[i - 1];
+			 if (pAttr->AeAttrValue <= pTCase->TaUpperBound &&
+			     pAttr->AeAttrValue >= pTCase->TaLowerBound)
+			    pBlock = pTCase->TaTRuleBlock;
 			 i++;
 		      }
 		    break;
 		 case AtTextAttr:
-		    if (pRT1->AtrTextValue[0] == '\0')
-		       pBloc = pRT1->AtrTxtTRuleBlock;
-		    else if (StringAndTextEqual (pRT1->AtrTextValue, pAttr->AeAttrText))
-		       pBloc = pRT1->AtrTxtTRuleBlock;
+		    if (pAttrTrans->AtrTextValue[0] == '\0')
+		       pBlock = pAttrTrans->AtrTxtTRuleBlock;
+		    else if (StringAndTextEqual (pAttrTrans->AtrTextValue, pAttr->AeAttrText))
+		       pBlock = pAttrTrans->AtrTxtTRuleBlock;
 		    break;
 		 case AtReferenceAttr:
-		    pBloc = pRT1->AtrRefTRuleBlock;
+		    pBlock = pAttrTrans->AtrRefTRuleBlock;
 		    break;
 		 case AtEnumAttr:
-		    pBloc = pRT1->AtrEnuTRuleBlock[pAttr->AeAttrValue];
-		    if (pBloc == NULL)
+		    pBlock = pAttrTrans->AtrEnuTRuleBlock[pAttr->AeAttrValue];
+		    if (pBlock == NULL)
 		       /* pas de regles de traduction pour cette valeur, on */
 		       /* prend les regles qui s'appliquent a toute valeur */
-		       pBloc = pRT1->AtrEnuTRuleBlock[0];
+		       pBlock = pAttrTrans->AtrEnuTRuleBlock[0];
 		    break;
 		 default:
 		    break;
 	      }
      }
    /* parcourt les blocs de regles de la valeur de l'attribut */
-   while (pBloc != NULL)
+   while (pBlock != NULL)
      {
-	pBl1 = pBloc;
-	if (CondSatisfaite (pBloc, pEl, pAttr, pDoc))
+	if (ConditionIsTrue (pBlock, pEl, pAttr, pDoc))
 	   /* la condition du bloc est verifiee */
 	  {
-	     pRegle = pBl1->TbFirstTRule;	/* premiere regle du bloc */
+	     pTRule = pBlock->TbFirstTRule;	/* premiere regle du bloc */
 	     /* parcourt les regles du bloc */
-	     while (pRegle != NULL)
+	     while (pTRule != NULL)
 	       {
-		  pRe1 = pRegle;
-		  if (pRe1->TrOrder == Posit)
+		  if (pTRule->TrOrder == position)
 		     /* c'est une regle a appliquer a cette position */
-		     if (pRe1->TrType == TRemove)
-			*ElRemove = TRUE;
-		     else if (pRe1->TrType == TNoTranslation)
-			*tradCar = FALSE;
-		     else if (pRe1->TrType == TNoLineBreak)
+		     if (pTRule->TrType == TRemove)
+			*removeEl = TRUE;
+		     else if (pTRule->TrType == TNoTranslation)
+			*transChar = FALSE;
+		     else if (pTRule->TrType == TNoLineBreak)
 			*lineBreak = FALSE;
 		     else
 			/* on applique la regle */
-			AppliqueTra (pRegle, pSchTAttr, pAttr->AeAttrSSchema, pEl, *tradCar, *lineBreak, ElRemove, NULL, pAttr, pDoc);
+			ApplyTRule (pTRule, pTSchAttr, pAttr->AeAttrSSchema, pEl, *transChar, *lineBreak, removeEl, NULL, pAttr, pDoc);
 		  /* passe a la regle suivante */
-		  pRegle = pRe1->TrNextTRule;
+		  pTRule = pTRule->TrNextTRule;
 	       }
 	  }
 	/* passe au bloc suivant */
-	pBloc = pBl1->TbNextBlock;
+	pBlock = pBlock->TbNextBlock;
      }
-   /* prepare et envoie le message AttrExport.Post s'il est demande' */
+   /* prepare et envoie l'evenement AttrExport.Post s'il est demande' */
    notifyAttr.event = TteAttrExport;
    notifyAttr.document = (Document) IdentDocument (pDoc);
    notifyAttr.element = (Element) pEl;
@@ -1840,44 +1764,41 @@ PtrDocument         pDoc;
 
 
 /* ---------------------------------------------------------------------- */
-/* | ApplAttrPos                                                        | */
+/* | ApplyAttrRules                                                        | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         ApplAttrPos (TOrder Posit, PtrElement pEl, boolean * ElRemove,
-		   boolean * tradCar, boolean * lineBreak, PtrDocument pDoc)
+static void         ApplyAttrRules (TOrder position, PtrElement pEl, boolean * removeEl,
+		   boolean * transChar, boolean * lineBreak, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void         ApplAttrPos (Posit, pEl, ElRemove, tradCar, lineBreak, pDoc)
-TOrder          Posit;
+static void         ApplyAttrRules (position, pEl, removeEl, transChar, lineBreak, pDoc)
+TOrder              position;
 PtrElement          pEl;
-boolean            *ElRemove;
-boolean            *tradCar;
+boolean            *removeEl;
+boolean            *transChar;
 boolean            *lineBreak;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 
 {
-   PtrAttribute         pAttr;
-   PtrTSchema        pSchT;
    PtrElement          pAsc;
-   int                 att;
-   int                 nbAttr;
-
-#define LgTableAttr 50
-   PtrAttribute         TableAttr[LgTableAttr];
+   PtrAttribute        pAttr;
+   PtrTSchema          pTSch;
+   int                 att, nAttr;
+#define MAX_ATTR_TABLE 50
+   PtrAttribute        AttrTable[MAX_ATTR_TABLE];
 
    pAttr = pEl->ElFirstAttr;	/* 1er attribut de l'element */
    /* Si on applique les regles "After", on commence par le dernier attribut */
    /* et on traitera les attributs dans l'ordre inverse */
-   if (Posit == TAfter && pAttr != NULL)
+   if (position == TAfter && pAttr != NULL)
      {
-	nbAttr = 0;
-	while (pAttr->AeNext != NULL && nbAttr < LgTableAttr)
+	nAttr = 0;
+	while (pAttr->AeNext != NULL && nAttr < MAX_ATTR_TABLE)
 	  {
-	     TableAttr[nbAttr] = pAttr;
-	     nbAttr++;
+	     AttrTable[nAttr++] = pAttr;
 	     pAttr = pAttr->AeNext;
 	  }
      }
@@ -1885,20 +1806,20 @@ PtrDocument         pDoc;
    /* parcourt les attributs de l'element */
    while (pAttr != NULL)
      {
-	pSchT = SchemaTrad (pAttr->AeAttrSSchema);
-	if (pSchT != NULL)
-	   if (pSchT->TsAttrTRule[pAttr->AeAttrNum - 1].AtrElemType == 0)
+	pTSch = SchemaTrad (pAttr->AeAttrSSchema);
+	if (pTSch != NULL)
+	   if (pTSch->TsAttrTRule[pAttr->AeAttrNum - 1].AtrElemType == 0)
 	      /* les regles de traduction de l'attribut s'appliquent a */
 	      /* n'importe quel type d'element, on les applique */
-	      ApplAttrPosElem (Posit, pEl, pAttr, ElRemove, tradCar, lineBreak,
+	      ApplyAttrRulesToElem (position, pEl, pAttr, removeEl, transChar, lineBreak,
 			       pDoc);
-	if (Posit == TAfter)
+	if (position == TAfter)
 	   /* passe a l'attribut precedent de l'element */
 	  {
-	     if (nbAttr > 0)
+	     if (nAttr > 0)
 	       {
-		  nbAttr--;
-		  pAttr = TableAttr[nbAttr];
+		  nAttr--;
+		  pAttr = AttrTable[nAttr];
 	       }
 	     else
 		pAttr = NULL;
@@ -1907,18 +1828,18 @@ PtrDocument         pDoc;
 	   /* passe a l'attribut suivant de l'element */
 	   pAttr = pAttr->AeNext;
      }
-   /* produit la traduction des attributs des elements ascendants */
-   /* qui s'appliquent aux elements du type de notre element */
-   pSchT = SchemaTrad (pEl->ElSructSchema);
-   if (pSchT != NULL)
-      if (pSchT->TsInheritAttr[pEl->ElTypeNumber - 1])
+   /* produit la traduction des attributs des elements ascendants qui */
+   /* s'appliquent aux elements du type de notre element */
+   pTSch = SchemaTrad (pEl->ElSructSchema);
+   if (pTSch != NULL)
+      if (pTSch->TsInheritAttr[pEl->ElTypeNumber - 1])
 	 /* il y a effectivement heritage d'attribut pour ce type d'element */
 	{
 	   /* cherche tous les attributs dont ce type d'element peut */
 	   /* heriter. */
 	   /* balaye la table des attributs */
 	   for (att = 1; att <= pEl->ElSructSchema->SsNAttributes; att++)
-	      if (pSchT->TsAttrTRule[att - 1].AtrElemType == pEl->ElTypeNumber)
+	      if (pTSch->TsAttrTRule[att - 1].AtrElemType == pEl->ElTypeNumber)
 		 /* cet attribut s'applique a ce type d'element */
 		{
 		   /* Y a-t-il un element ascendant qui porte cet attribut? */
@@ -1934,7 +1855,7 @@ PtrDocument         pDoc;
 			     {
 				/* applique les regles de traduction de */
 				/* l'attribut a l'element */
-				ApplAttrPosElem (Posit, pEl, pAttr, ElRemove, tradCar,
+				ApplyAttrRulesToElem (position, pEl, pAttr, removeEl, transChar,
 						 lineBreak, pDoc);
 				/* inutile de poursuivre la recherche */
 				pAttr = NULL;
@@ -1952,97 +1873,92 @@ PtrDocument         pDoc;
 }
 
 /* ---------------------------------------------------------------------- */
-/* | ApplPresPos applique a l'element pointe' par pEl les regles de     | */
+/* | ApplyPresTRules applique a l'element pointe' par pEl les regles de	| */
 /* |    traduction associees aux presentations portees par l'element.   | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         ApplPresPos (TOrder Posit, PtrElement pEl, boolean * ElRemove,
-				 boolean * tradCar, boolean * lineBreak,
-				 PtrAttribute pAttribut, PtrDocument pDoc)
+static void         ApplyPresTRules (TOrder position, PtrElement pEl, boolean * removeEl,
+				 boolean * transChar, boolean * lineBreak,
+				 PtrAttribute pAttr, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void         ApplPresPos (Posit, pEl, ElRemove, tradCar, lineBreak, pAttribut,
+static void         ApplyPresTRules (position, pEl, removeEl, transChar, lineBreak, pAttr,
 				 pDoc)
-TOrder          Posit;
+TOrder              position;
 PtrElement          pEl;
-boolean            *ElRemove;
-boolean            *tradCar;
+boolean            *removeEl;
+boolean            *transChar;
 boolean            *lineBreak;
-PtrAttribute         pAttribut;
+PtrAttribute        pAttr;
 PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 
 {
-   PtrPRule        pPres;
-   PtrTSchema        pSchT;
-   PRuleTransl       *pRT1;
-   PtrTRuleBlock       pBloc;
-   PtrTRule        pRegle;
-   TranslNumAttrCase        *pTC1;
-   int                 i;
-   char                val;
-   int                 nbRPres;
+   PtrPRule          pPRule;
+   PtrTSchema        pTSch;
+   PtrTRule          pTRule;
+   PRuleTransl       *pPRuleTr;
+   PtrTRuleBlock     pBlock;
+   TranslNumAttrCase *pTCase;
+   int               i, nPRules;
+   char              val;
+#define MAX_PRULE_TABLE 50
+   PtrPRule        PRuleTable[MAX_PRULE_TABLE];
 
-#define LgTableRPres 50
-   PtrPRule        TableRPres[LgTableRPres];
-
-   pSchT = SchemaTrad (pEl->ElSructSchema);
-   if (pSchT == NULL)
+   pTSch = SchemaTrad (pEl->ElSructSchema);
+   if (pTSch == NULL)
       return;
    /* 1ere regle de presentation specifique de l'element */
-   pPres = pEl->ElFirstPRule;
+   pPRule = pEl->ElFirstPRule;
    /* Si on applique les regles "After", on commence par la derniere regle */
    /* et on traitera les regles dans l'ordre inverse */
-   if (Posit == TAfter && pPres != NULL)
+   if (position == TAfter && pPRule != NULL)
      {
-	nbRPres = 0;
-	while (pPres->PrNextPRule != NULL && nbRPres < LgTableRPres)
+	nPRules = 0;
+	while (pPRule->PrNextPRule != NULL && nPRules < MAX_PRULE_TABLE)
 	  {
-	     TableRPres[nbRPres] = pPres;
-	     nbRPres++;
-	     pPres = pPres->PrNextPRule;
+	     PRuleTable[nPRules++] = pPRule;
+	     pPRule = pPRule->PrNextPRule;
 	  }
      }
 
    /* parcourt les regles de presentation specifique de l'element */
-   while (pPres != NULL)
+   while (pPRule != NULL)
      {
-	pRT1 = &pSchT->TsPresTRule[pPres->PrType];
-	if (pRT1->RtExist)
+	pPRuleTr = &pTSch->TsPresTRule[pPRule->PrType];
+	if (pPRuleTr->RtExist)
 	   /* il y a des regles de traduction pour cette presentation */
 	  {
 	     /* cherche le premier bloc de regles correspondant a ce */
 	     /* type de regle de presentation */
-	     pBloc = NULL;
-	     if (pSchT != NULL)
-		if (pPres->PrType == PtSize || pPres->PrType == PtIndent ||
-		    pPres->PrType == PtLineSpacing ||
-		    pPres->PrType == PtLineWeight)
+	     pBlock = NULL;
+	     if (pTSch != NULL)
+		if (pPRule->PrType == PtSize || pPRule->PrType == PtIndent ||
+		    pPRule->PrType == PtLineSpacing ||
+		    pPRule->PrType == PtLineWeight)
 		  {
-		     i = 1;
-		     while (pBloc == NULL && i <= pRT1->RtNCase)
+		     i = 0;
+		     while (pBlock == NULL && i < pPRuleTr->RtNCase)
 		       {
-			  pTC1 = &pRT1->RtCase[i - 1];
-			  if (pPres->PrMinValue <= pTC1->TaUpperBound &&
-			      pPres->PrMinValue >= pTC1->TaLowerBound)
-			     pBloc = pTC1->TaTRuleBlock;
-			  i++;
+			  pTCase = &pPRuleTr->RtCase[i++];
+			  if (pPRule->PrMinValue <= pTCase->TaUpperBound &&
+			      pPRule->PrMinValue >= pTCase->TaLowerBound)
+			     pBlock = pTCase->TaTRuleBlock;
 		       }
 		  }
-		else if (pPres->PrType == PtFillPattern ||
-			 pPres->PrType == PtBackground ||
-			 pPres->PrType == PtForeground)
+		else if (pPRule->PrType == PtFillPattern ||
+			 pPRule->PrType == PtBackground ||
+			 pPRule->PrType == PtForeground)
 		  {
-		     i = 1;
-		     while (pBloc == NULL && i <= pRT1->RtNCase)
+		     i = 0;
+		     while (pBlock == NULL && i < pPRuleTr->RtNCase)
 		       {
-			  pTC1 = &pRT1->RtCase[i - 1];
-			  if (pPres->PrIntValue <= pTC1->TaUpperBound &&
-			      pPres->PrIntValue >= pTC1->TaLowerBound)
-			     pBloc = pTC1->TaTRuleBlock;
-			  i++;
+			  pTCase = &pPRuleTr->RtCase[i++];
+			  if (pPRule->PrIntValue <= pTCase->TaUpperBound &&
+			      pPRule->PrIntValue >= pTCase->TaLowerBound)
+			     pBlock = pTCase->TaTRuleBlock;
 		       }
 		  }
 		else
@@ -2050,126 +1966,126 @@ PtrDocument         pDoc;
 		     /* cherche si cette valeur de la presentation a un */
 		     /* bloc de regles */
 		     /* Calcule d'abord la valeur caractere de la presentation */
-		     val = ValCaractPres (pPres);
-		     pBloc = NULL;
+		     val = PresRuleValue (pPRule);
+		     pBlock = NULL;
 		     i = 1;
-		     while (pBloc == NULL && pRT1->RtPRuleValue[i] != '\0' &&
+		     while (pBlock == NULL && pPRuleTr->RtPRuleValue[i] != '\0' &&
 			    i <= MAX_TRANSL_PRES_VAL + 1)
 		       {
-			  if (pRT1->RtPRuleValue[i] == val)
-			     pBloc = pRT1->RtPRuleValueBlock[i];
+			  if (pPRuleTr->RtPRuleValue[i] == val)
+			     pBlock = pPRuleTr->RtPRuleValueBlock[i];
 			  i++;
 		       }
-		     if (pBloc == NULL)
+		     if (pBlock == NULL)
 			/* pas de regles de traduction pour cette valeur, on */
 			/* prend les regles qui s'appliquent a toute valeur */
-			pBloc = pRT1->RtPRuleValueBlock[0];
+			pBlock = pPRuleTr->RtPRuleValueBlock[0];
 		  }
 	     /* parcourt les blocs de regles de la valeur de la presentation */
-	     while (pBloc != NULL)
+	     while (pBlock != NULL)
 	       {
-		  if (CondSatisfaite (pBloc, pEl, NULL, pDoc))
+		  if (ConditionIsTrue (pBlock, pEl, NULL, pDoc))
 		     /* la condition du bloc est verifiee */
 		    {
-		       pRegle = pBloc->TbFirstTRule;	/* premiere regle du bloc */
+		       pTRule = pBlock->TbFirstTRule;	/* premiere regle du bloc */
 		       /* parcourt les regles du bloc */
-		       while (pRegle != NULL)
+		       while (pTRule != NULL)
 			 {
-			    if (pRegle->TrOrder == Posit)
+			    if (pTRule->TrOrder == position)
 			       /* c'est une regle a appliquer a cette position */
-			       if (pRegle->TrType == TRemove)
-				  *ElRemove = TRUE;
-			       else if (pRegle->TrType == TNoTranslation)
-				  *tradCar = FALSE;
-			       else if (pRegle->TrType == TNoLineBreak)
+			       if (pTRule->TrType == TRemove)
+				  *removeEl = TRUE;
+			       else if (pTRule->TrType == TNoTranslation)
+				  *transChar = FALSE;
+			       else if (pTRule->TrType == TNoLineBreak)
 				  *lineBreak = FALSE;
 			       else
 				  /* on applique la regle */
-				  AppliqueTra (pRegle, pSchT, pEl->ElSructSchema, pEl, *tradCar, *lineBreak, ElRemove, pPres, pAttribut, pDoc);
+				  ApplyTRule (pTRule, pTSch, pEl->ElSructSchema, pEl, *transChar, *lineBreak, removeEl, pPRule, pAttr, pDoc);
 			    /* passe a la regle suivante */
-			    pRegle = pRegle->TrNextTRule;
+			    pTRule = pTRule->TrNextTRule;
 			 }
 		    }
 		  /* passe au bloc suivant */
-		  pBloc = pBloc->TbNextBlock;
+		  pBlock = pBlock->TbNextBlock;
 	       }
 	  }
 
-	if (Posit == TAfter)
+	if (position == TAfter)
 	   /* passe a la regle de presentation precedente de l'element */
 	  {
-	     if (nbRPres > 0)
+	     if (nPRules > 0)
 	       {
-		  nbRPres--;
-		  pPres = TableRPres[nbRPres];
+		  nPRules--;
+		  pPRule = PRuleTable[nPRules];
 	       }
 	     else
-		pPres = NULL;
+		pPRule = NULL;
 	  }
 	else
 	   /* passe a la regle de presentation suivante de l'element */
-	   pPres = pPres->PrNextPRule;
+	   pPRule = pPRule->PrNextPRule;
      }
 }
 
+
 /* ---------------------------------------------------------------------- */
-/* | produitVariable                                                    | */
+/* | PutVariable                               				| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         produitVariable (PtrElement pEl, PtrAttribute pAttribut,
-			 PtrTSchema pSchT, PtrSSchema pSchS, int NumVar,
-		boolean Ref, char *outbuffer, int fichier, PtrDocument pDoc,
+static void         PutVariable (PtrElement pEl, PtrAttribute pAttr,
+			 PtrTSchema pTSch, PtrSSchema pSS, int varNum,
+		boolean ref, char *outBuffer, int fileNum, PtrDocument pDoc,
 				     boolean lineBreak)
 
 #else  /* __STDC__ */
 
-static void         produitVariable (pEl, pAttribut, pSchT, pSchS, NumVar, Ref, outbuffer, fichier, pDoc, lineBreak)
+static void         PutVariable (pEl, pAttr, pTSch, pSS, varNum, ref, outBuffer, fileNum, pDoc, lineBreak)
 PtrElement          pEl;
-PtrAttribute         pAttribut;
-PtrTSchema        pSchT;
-PtrSSchema        pSchS;
-int                 NumVar;
-boolean             Ref;
-char               *outbuffer;
-int                 fichier;
+PtrAttribute        pAttr;
+PtrTSchema          pTSch;
+PtrSSchema          pSS;
+int                 varNum;
+boolean             ref;
+char               *outBuffer;
+int                 fileNum;
 PtrDocument         pDoc;
 boolean             lineBreak;
 
 #endif /* __STDC__ */
 {
-   TranslVariable            *pVa1;
-   int                 el, i, j, k;
-   TranslVarItem        *pVarT1;
-   PtrElement          pElRef;
-   PtrElement          pAsc;
+   TranslVariable      *varTrans;
+   TranslVarItem       *varItem;
+   PtrElement          pRefEl, pAncest;
    PtrReference        pRef;
-   TtAttribute           *pAttr1;
-   PtrAttribute         pAttr;
-   DocumentIdentifier     IDocExt;
-   PtrDocument         pDocExt;
-   PtrTextBuffer      pBuf;
-   boolean             trouve;
-   char                Nombre[20];
+   TtAttribute         *attrTrans;
+   PtrAttribute        pA;
+   DocumentIdentifier  docIdent;
+   PtrDocument         pExtDoc;
+   PtrTextBuffer       pBuf;
+   int                 item, i, j, k;
+   boolean             found;
+   char                number[20];
 
-   pAttr = NULL;
-   if (outbuffer != NULL)
+   pA = NULL;
+   if (outBuffer != NULL)
       /* on vide le buffer avant de commencer a le remplir */
-      outbuffer[0] = '\0';
-   pVa1 = &pSchT->TsVariable[NumVar - 1];
-   /* parcourt les elements qui constituent la variable */
-   for (el = 1; el <= pVa1->TrvNItems; el++)
+      outBuffer[0] = '\0';
+   varTrans = &pTSch->TsVariable[varNum - 1];
+   /* parcourt les items qui constituent la variable */
+   for (item = 0; item < varTrans->TrvNItems; item++)
      {
-	pVarT1 = &pVa1->TrvItem[el - 1];
+	varItem = &varTrans->TrvItem[item];
 	/* traite selon le type de l'element de variable */
-	switch (pVarT1->TvType)
+	switch (varItem->TvType)
 	      {
 		 case VtText:
 		    /* une constante de texte */
-		    i = pSchT->TsConstBegin[pVarT1->TvItem - 1];
-		    while (pSchT->TsConstant[i - 1] != '\0')
+		    i = pTSch->TsConstBegin[varItem->TvItem - 1];
+		    while (pTSch->TsConstant[i - 1] != '\0')
 		      {
-			 Sort (pSchT->TsConstant[i - 1], fichier, outbuffer,
+			 PutChar (pTSch->TsConstant[i - 1], fileNum, outBuffer,
 			       pDoc, lineBreak);
 			 i++;
 		      }
@@ -2180,11 +2096,11 @@ boolean             lineBreak;
 		    /* prend la valeur du compteur pour l'element */
 		    /* designe'par la reference si TrReferredObj est vrai */
 		    pRef = NULL;
-		    if (Ref)
-		       if (pAttribut != NULL &&
-			   pAttribut->AeAttrSSchema->SsAttribute[pAttribut->AeAttrNum - 1].AttrType == AtReferenceAttr)
+		    if (ref)
+		       if (pAttr != NULL &&
+			   pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrType == AtReferenceAttr)
 			  /* c'est un attribut reference */
-			  pRef = pAttribut->AeAttrReference;
+			  pRef = pAttr->AeAttrReference;
 		       else
 			  /* l'element est-il une reference ? */
 		       if (pEl->ElTerminal && pEl->ElLeafType == LtReference)
@@ -2194,133 +2110,126 @@ boolean             lineBreak;
 			  pRef = pEl->ElSource;
 		    if (pRef != NULL)
 		      {
-			 pElRef = ReferredElement (pRef, &IDocExt, &pDocExt);
-			 if (pElRef == NULL)
+			 pRefEl = ReferredElement (pRef, &docIdent, &pExtDoc);
+			 if (pRefEl == NULL)
 			    /* la reference ne designe rien */
 			    i = 0;
 			 else
 			    /* valeur du compteur pour l'element */
 			    /* designe' par la reference */
-			    i = ComptValTra (pVarT1->TvItem, pSchT, pSchS, pElRef);
+			    i = CounterVal (varItem->TvItem, pTSch, pSS, pRefEl);
 		      }
 		    else
 		       /* ce n'est pas une reference */
 		       /* valeur du compteur pour l'element meme */
-		       i = ComptValTra (pVarT1->TvItem, pSchT, pSchS, pEl);
+		       i = CounterVal (varItem->TvItem, pTSch, pSS, pEl);
 		    /* produit quelques 0 si c'est demande' */
-		    if (pVarT1->TvCounterStyle == CntArabic && pVarT1->TvLength > 0)
+		    if (varItem->TvCounterStyle == CntArabic && varItem->TvLength > 0)
 		      {
 			 j = 1;
-			 for (k = 1; k <= pVarT1->TvLength - 1; k++)
+			 for (k = 0; k < varItem->TvLength - 1; k++)
 			   {
 			      j = j * 10;
 			      if (j > i)
-				 Sort ('0', fichier, outbuffer, pDoc, lineBreak);
+				 PutChar ('0', fileNum, outBuffer, pDoc, lineBreak);
 			   }
 		      }
 		    /* convertit la valeur du compteur dans le style demande' */
-		    ConvertitNombre (i, pVarT1->TvCounterStyle, Nombre, &j);
+		    ConvertitNombre (i, varItem->TvCounterStyle, number, &j);
 		    /* sort la valeur du compteur */
 		    for (k = 0; k < j; k++)
-		       Sort (Nombre[k], fichier, outbuffer, pDoc, lineBreak);
+		       PutChar (number[k], fileNum, outBuffer, pDoc, lineBreak);
 		    break;
 		 case VtBuffer:
 		    /* le contenu d'un buffer */
-		    i = 1;
-		    while (pSchT->TsBuffer[pVarT1->TvItem - 1][i - 1] != '\0')
+		    i = 0;
+		    while (pTSch->TsBuffer[varItem->TvItem - 1][i] != '\0')
 		      {
-			 Sort (pSchT->TsBuffer[pVarT1->TvItem - 1][i - 1],
-			       fichier, outbuffer, pDoc, lineBreak);
+			 PutChar (pTSch->TsBuffer[varItem->TvItem - 1][i],
+			       fileNum, outBuffer, pDoc, lineBreak);
 			 i++;
 		      }
 		    break;
 		 case VtAttrVal:	/* la valeur d'un attribut */
 		    /* cherche si l'element traduit ou l'un de ses */
 		    /* ascendants possede cet attribut */
-		    trouve = FALSE;
-		    pAsc = pEl;
-		    while (!trouve && pAsc != NULL)
+		    found = FALSE;
+		    pAncest = pEl;
+		    while (!found && pAncest != NULL)
 		      {
-			 pAttr = pAsc->ElFirstAttr;	/* premier attribut */
-			 while (!trouve && pAttr != NULL)
-			    if (pAttr->AeAttrNum == pVarT1->TvItem
-				&& pAttr->AeAttrSSchema == pSchS)
-			       trouve = TRUE;
+			 pA = pAncest->ElFirstAttr;	/* premier attribut */
+			 while (!found && pA != NULL)
+			    if (pA->AeAttrNum == varItem->TvItem
+				&& pA->AeAttrSSchema == pSS)
+			       found = TRUE;
 			    else
-			       pAttr = pAttr->AeNext;
-			 if (!trouve)
-			    pAsc = pAsc->ElParent;
+			       pA = pA->AeNext;
+			 if (!found)
+			    pAncest = pAncest->ElParent;
 		      }
-		    if (trouve)
+		    if (found)
 		       /* l'element possede l'attribut */
 		      {
-			 switch (pAttr->AeAttrType)
+			 switch (pA->AeAttrType)
 			       {
 				  case AtNumAttr:
-				     SortNb (pAttr->AeAttrValue, fichier, outbuffer, pDoc,
+				     PutInt (pA->AeAttrValue, fileNum, outBuffer, pDoc,
 					     lineBreak);
 				     break;
 				  case AtTextAttr:
-				     pBuf = pAttr->AeAttrText;
+				     pBuf = pA->AeAttrText;
 				     while (pBuf != NULL)
 				       {
-					  i = 1;
-					  while (i <= pBuf->BuLength)
-					    {
-					       Sort (pBuf->BuContent[i - 1], fichier, outbuffer,
+					  i = 0;
+					  while (i < pBuf->BuLength)
+					       PutChar (pBuf->BuContent[i++], fileNum, outBuffer,
 						     pDoc, lineBreak);
-					       i++;
-					    }
 					  pBuf = pBuf->BuNext;
 				       }
 				     break;
 				  case AtReferenceAttr:
-				     Sort ('R', fichier, outbuffer, pDoc, lineBreak);
-				     Sort ('E', fichier, outbuffer, pDoc, lineBreak);
-				     Sort ('F', fichier, outbuffer, pDoc, lineBreak);
+				     PutChar ('R', fileNum, outBuffer, pDoc, lineBreak);
+				     PutChar ('E', fileNum, outBuffer, pDoc, lineBreak);
+				     PutChar ('F', fileNum, outBuffer, pDoc, lineBreak);
 				     break;
 				  case AtEnumAttr:
 				     i = 0;
-				     pAttr1 = &pAttr->AeAttrSSchema->SsAttribute[pVarT1->TvItem - 1];
-				     while (pAttr1->AttrEnumValue[pAttr->AeAttrValue - 1][i] != '\0')
-				       {
-					  i++;
-					  Sort (pAttr1->AttrEnumValue[pAttr->AeAttrValue - 1]
-					  [i - 1], fichier, outbuffer, pDoc,
+				     attrTrans = &pA->AeAttrSSchema->SsAttribute[varItem->TvItem - 1];
+				     while (attrTrans->AttrEnumValue[pA->AeAttrValue - 1][i] != '\0')
+					  PutChar (attrTrans->AttrEnumValue[pA->AeAttrValue - 1]
+					  [i++], fileNum, outBuffer, pDoc,
 						lineBreak);
-				       }
 				     break;
 			       }
-			 /* end case AttrType */
 		      }
 		    break;
 
 		 case VtFileDir:	/* le nom du directory de sortie */
 		    i = 0;
-		    while (tra_filedir[i] != '\0')
-		       Sort (tra_filedir[i++], fichier, outbuffer, pDoc, lineBreak);
+		    while (fileDirectory[i] != '\0')
+		       PutChar (fileDirectory[i++], fileNum, outBuffer, pDoc, lineBreak);
 		    break;
 
 		 case VtFileName:	/* le nom du fichier de sortie */
 		    i = 0;
-		    while (tra_filename[i] != '\0')
-		       Sort (tra_filename[i++], fichier, outbuffer, pDoc, lineBreak);
+		    while (fileName[i] != '\0')
+		       PutChar (fileName[i++], fileNum, outBuffer, pDoc, lineBreak);
 		    break;
 
 		 case VtExtension:	/* le nom de l'extension de fichier */
 		    i = 0;
-		    while (tra_extension[i] != '\0')
-		       Sort (tra_extension[i++], fichier, outbuffer, pDoc, lineBreak);
+		    while (fileExtension[i] != '\0')
+		       PutChar (fileExtension[i++], fileNum, outBuffer, pDoc, lineBreak);
 		    break;
 		 case VtDocumentName:	/* le nom du document */
 		    i = 0;
 		    while (pDoc->DocDName[i] != '\0')
-		       Sort (pDoc->DocDName[i++], fichier, outbuffer, pDoc, lineBreak);
+		       PutChar (pDoc->DocDName[i++], fileNum, outBuffer, pDoc, lineBreak);
 		    break;
 		 case VtDocumentDir:	/* le repertoire du document */
 		    i = 0;
 		    while (pDoc->DocDirectory[i] != '\0')
-		       Sort (pDoc->DocDirectory[i++], fichier, outbuffer, pDoc, lineBreak);
+		       PutChar (pDoc->DocDirectory[i++], fileNum, outBuffer, pDoc, lineBreak);
 		    break;
 
 		 default:
@@ -2330,166 +2239,148 @@ boolean             lineBreak;
 }
 
 #ifdef __STDC__
-static void         Traduit (PtrElement pEl, PtrDocument pDoc, boolean tradCar,
-			     boolean lineBreak, boolean MemeSiDejaTraduit);
+static void         TranslateTree (PtrElement pEl, PtrDocument pDoc, boolean transChar,
+			     boolean lineBreak, boolean enforce);
 
 #else  /* __STDC__ */
-static void         Traduit ();
-
+static void         TranslateTree (/* pEl, pDoc, transChar, lineBreak, enforce */);
 #endif /* __STDC__ */
 
 /* ---------------------------------------------------------------------- */
-/* | AppliqueTra   applique la regle de traduction pRegle du schema de  | */
-/* |    traduction pSchT (qui correspond au schema de structure pointe' | */
-/* |    par pSchS) a l'element pointe par pEl, en demandant la          | */
-/* |    traduction des caracteres contenus si tradCar est vrai.         | */
+/* | ApplyTRule   applique la regle de traduction pTRule du schema de	| */
+/* |    traduction pTSch (qui correspond au schema de structure pointe' | */
+/* |    par pSSch) a l'element pointe par pEl, en demandant la          | */
+/* |    traduction des caracteres contenus si transChar est vrai.       | */
 /* |    S'il s'agit de la traduction d'une presentation, pRPres pointe  | */
 /* |    sur la regle de presentation specifique traduite.               | */
 /* |    S'il s'agit de la traduction des regles d'un attribut,          | */
-/* |    pAttribut pointe sur l'attribut que l'on traduit.               | */
+/* |    pAttr pointe sur l'attribut que l'on traduit.			| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         AppliqueTra (PtrTRule pRegle, PtrTSchema pSchT,
-			PtrSSchema pSchS, PtrElement pEl, boolean tradCar,
-				 boolean lineBreak, boolean * ElRemove,
-				 PtrPRule pRPres, PtrAttribute pAttribut,
+static void         ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch,
+			PtrSSchema pSSch, PtrElement pEl, boolean transChar,
+				 boolean lineBreak, boolean * removeEl,
+				 PtrPRule pRPres, PtrAttribute pAttr,
 				 PtrDocument pDoc)
 #else  /* __STDC__ */
-static void         AppliqueTra (pRegle, pSchT, pSchS, pEl, tradCar, lineBreak,
-				 ElRemove, pRPres, pAttribut, pDoc)
-PtrTRule        pRegle;
-PtrTSchema        pSchT;
-PtrSSchema        pSchS;
-PtrElement          pEl;
-boolean             tradCar;
-boolean             lineBreak;
-boolean            *ElRemove;
-PtrPRule        pRPres;
-PtrAttribute         pAttribut;
-PtrDocument         pDoc;
+static void         ApplyTRule (pTRule, pTSch, pSSch, pEl, transChar, lineBreak,
+				 removeEl, pRPres, pAttr, pDoc)
+PtrTRule          pTRule;
+PtrTSchema        pTSch;
+PtrSSchema        pSSch;
+PtrElement        pEl;
+PtrPRule          pRPres;
+PtrAttribute      pAttr;
+PtrDocument       pDoc;
+boolean           transChar;
+boolean           lineBreak;
+boolean           *removeEl;
 
 #endif /* __STDC__ */
 
 {
-   int                 i, j;
-   boolean             trouve, refpossible;
-   char                c;
-   PtrElement          pElGet, pElRef;
+   PtrElement          pElGet, pRefEl;
    PtrDocument         pDocGet;
-   Name                 fname;
-   PtrSSchema        pSS;
-   Name                 n;
-   DocumentIdentifier     IDocExt;
-   PtrDocument         pDocExt;
-   PtrAttribute         pAttr;
-   PtrTextBuffer      pBuf;
-   PtrTRule        pRe1;
-   PtrTSchema        pSc1;
-   PtrAttribute         pAt1;
-   TtAttribute           *pAttr1;
-   PtrElement          pEl1;
-   BinFile             tra_inclus;
+   Name                fname;
+   PtrSSchema          pSS;
+   Name                n;
+   DocumentIdentifier  docIdent;
+   PtrDocument         pExtDoc;
+   PtrAttribute        pA;
+   PtrTextBuffer       pBuf;
+   TtAttribute         *attrTrans;
+   BinFile             includedFile;
    PtrReference        pRef;
-   int                 fichier;
+   int                 fileNum;
+   int                 i, j;
    char                secondaryFileName[MAX_PATH];
-   char               *nomASortir;
-   char                full_name[MAX_PATH];	/* nom d'un fichier a inclure */
-   PathBuffer          NomDirectory;
-   FILE               *newfile;
+   char               *nameBuffer;
+   char                fullName[MAX_PATH];	/* nom d'un fichier a inclure */
+   PathBuffer          directoryName;
+   FILE               *newFile;
    char                currentFileName[MAX_PATH];	/* nom du fichier principal */
+   boolean             found, possibleRef;
+   char                c;
 
    n[0] = '\0';
-   pRe1 = pRegle;
-   pSc1 = pSchT;
    /* on applique la regle selon son type */
-   switch (pRe1->TrType)
+   switch (pTRule->TrType)
 	 {
 	    case TCreate:
 	    case TWrite:
 	       /* regle d'ecriture dans un fichier de sortie ou au terminal */
-	       if (pRe1->TrType == TCreate)
-		  if (pRe1->TrFileNameVar == 0)
+	       if (pTRule->TrType == TCreate)
+		  if (pTRule->TrFileNameVar == 0)
 		     /* sortie sur le fichier principal courant */
-		     fichier = 1;
+		     fileNum = 1;
 		  else
 		     /* sortie sur un fichier secondaire */
 		    {
 		       /* construit le nom du fichier secondaire */
-		       produitVariable (pEl, pAttribut, pSchT, pSchS, pRe1->TrFileNameVar,
+		       PutVariable (pEl, pAttr, pTSch, pSSch, pTRule->TrFileNameVar,
 			      FALSE, secondaryFileName, 0, pDoc, lineBreak);
-		       fichier = fichierSecondaire (secondaryFileName, pDoc);
+		       fileNum = GetSecondaryFile (secondaryFileName, pDoc);
 		    }
 	       else		/* TWrite */
-		  fichier = 0;	/* on ecrit sur stdout */
+		  fileNum = 0;	/* on ecrit sur stdout */
 	       /* traitement selon le type d'objet a ecrire */
-	       switch (pRe1->TrObject)
+	       switch (pTRule->TrObject)
 		     {
 			case ToConst:
 			   /* ecriture d'une constante */
-			   i = pSc1->TsConstBegin[pRe1->TrObjectNum - 1];
-			   while (pSc1->TsConstant[i - 1] != '\0')
+			   i = pTSch->TsConstBegin[pTRule->TrObjectNum - 1];
+			   while (pTSch->TsConstant[i - 1] != '\0')
 			     {
-				Sort (pSc1->TsConstant[i - 1], fichier, NULL, pDoc, lineBreak);
+				PutChar (pTSch->TsConstant[i - 1], fileNum, NULL, pDoc, lineBreak);
 				i++;
 			     }
 			   break;
 			case ToBuffer:
 			   /* ecriture du contenu d'un buffer */
-			   i = 1;
-			   while (pSc1->TsBuffer[pRe1->TrObjectNum - 1][i - 1] != '\0')
-			     {
-				Sort (pSc1->TsBuffer[pRe1->TrObjectNum - 1][i - 1], fichier, NULL,
+			   i = 0;
+			   while (pTSch->TsBuffer[pTRule->TrObjectNum - 1][i] != '\0')
+				PutChar (pTSch->TsBuffer[pTRule->TrObjectNum - 1][i++], fileNum, NULL,
 				      pDoc, lineBreak);
-				i++;
-			     }
 			   break;
 			case ToVariable:	/* creation d'une variable */
-			   produitVariable (pEl, pAttribut, pSchT, pSchS, pRe1->TrObjectNum, pRe1->TrReferredObj, NULL, fichier, pDoc, lineBreak);
+			   PutVariable (pEl, pAttr, pTSch, pSSch, pTRule->TrObjectNum, pTRule->TrReferredObj, NULL, fileNum, pDoc, lineBreak);
 			   break;
 
 			case ToAttr:
 			   /* cherche si l'element ou un de ses ascendants possede */
 			   /* l'attribut a sortir */
-			   trouve = FALSE;
+			   found = FALSE;
 			   pSS = pEl->ElSructSchema;
-			   while (pEl != NULL && !trouve)
+			   while (pEl != NULL && !found)
 			     {
-				pAttr = pEl->ElFirstAttr;	/* 1er attribut de l'element */
+				pA = pEl->ElFirstAttr;	/* 1er attribut de l'element */
 				/* parcourt les attributs de l'element */
-				while (pAttr != NULL && !trouve)
-				  {
-				     pAt1 = pAttr;
-				     if (pAt1->AeAttrSSchema == pSS &&
-					 pAt1->AeAttrNum == pRe1->TrObjectNum)
-					trouve = TRUE;
+				while (pA != NULL && !found)
+				     if (pA->AeAttrSSchema == pSS &&
+					 pA->AeAttrNum == pTRule->TrObjectNum)
+					found = TRUE;
 				     else
-					pAttr = pAt1->AeNext;
-				  }
-				if (!trouve)
+					pA = pA->AeNext;
+				if (!found)
 				   pEl = pEl->ElParent;	/* passe a l'element ascendant */
 			     }
 			   /* si on a trouve' l'attribut, on sort sa valeur */
-			   if (trouve)
-			     {
-				pAt1 = pAttr;
-				switch (pAt1->AeAttrType)
+			   if (found)
+				switch (pA->AeAttrType)
 				      {
 					 case AtNumAttr:
 					    /* ecrit la valeur numerique de l'attribut */
-					    SortNb (pAt1->AeAttrValue, fichier, NULL, pDoc, lineBreak);
+					    PutInt (pA->AeAttrValue, fileNum, NULL, pDoc, lineBreak);
 					    break;
 					 case AtTextAttr:
 					    /* ecrit la valeur de l'attribut */
-					    pBuf = pAt1->AeAttrText;
+					    pBuf = pA->AeAttrText;
 					    while (pBuf != NULL)
 					      {
-						 i = 1;
-						 while (i <= pBuf->BuLength)
-						   {
-						      Sort (pBuf->BuContent[i - 1], fichier, NULL, pDoc, lineBreak);
-						      i++;
-						   }
+						 i = 0;
+						 while (i < pBuf->BuLength)
+						      PutChar (pBuf->BuContent[i++], fileNum, NULL, pDoc, lineBreak);
 						 pBuf = pBuf->BuNext;
 					      }
 					    break;
@@ -2498,24 +2389,20 @@ PtrDocument         pDoc;
 					    break;
 					 case AtEnumAttr:
 					    /* ecrit le nom de la valeur de l'attribut */
-					    pAttr1 = &pAt1->AeAttrSSchema->SsAttribute[pAt1->AeAttrNum - 1];
-					    i = 1;
-					    while (pAttr1->AttrEnumValue[pAt1->AeAttrValue - 1][i - 1] != '\0')
-					      {
-						 Sort (pAttr1->AttrEnumValue[pAt1->AeAttrValue - 1][i - 1],
-						       fichier, NULL, pDoc, lineBreak);
-						 i++;
-					      }
+					    attrTrans = &pA->AeAttrSSchema->SsAttribute[pA->AeAttrNum - 1];
+					    i = 0;
+					    while (attrTrans->AttrEnumValue[pA->AeAttrValue - 1][i] != '\0')
+						 PutChar (attrTrans->AttrEnumValue[pA->AeAttrValue - 1][i++],
+						       fileNum, NULL, pDoc, lineBreak);
 					    break;
 					 default:
 					    break;
 				      }
 
-			     }
 			   break;
 			case ToContent:
 			   /* produit le contenu des feuilles de l'element */
-			   SortContenu (pEl, tradCar, lineBreak, fichier, pDoc);
+			   PutContent (pEl, transChar, lineBreak, fileNum, pDoc);
 			   break;
 			case ToPRuleValue:
 			   /* produit la valeur numerique de la presentation a laquelle */
@@ -2529,42 +2416,42 @@ PtrDocument         pDoc;
 					  case PtUnderline:
 					  case PtThickness:
 					  case PtLineStyle:
-					     Sort (pRPres->PrChrValue, fichier, NULL, pDoc, lineBreak);
+					     PutChar (pRPres->PrChrValue, fileNum, NULL, pDoc, lineBreak);
 					     break;
 					  case PtIndent:
 					  case PtSize:
 					  case PtLineSpacing:
 					  case PtLineWeight:
-					     SortNb (pRPres->PrMinValue, fichier, NULL, pDoc, lineBreak);
+					     PutInt (pRPres->PrMinValue, fileNum, NULL, pDoc, lineBreak);
 					     break;
 					  case PtFillPattern:
-					     SortMotif (pRPres->PrIntValue, fichier, pDoc, lineBreak);
+					     PutPattern (pRPres->PrIntValue, fileNum, pDoc, lineBreak);
 					     break;
 					  case PtBackground:
 					  case PtForeground:
-					     SortCouleur (pRPres->PrIntValue, fichier, pDoc, lineBreak);
+					     PutColor (pRPres->PrIntValue, fileNum, pDoc, lineBreak);
 					     break;
 					  case PtJustify:
 					  case PtHyphenate:
 					     if (pRPres->PrJustify)
-						Sort ('Y', fichier, NULL, pDoc, lineBreak);
+						PutChar ('Y', fileNum, NULL, pDoc, lineBreak);
 					     else
-						Sort ('N', fichier, NULL, pDoc, lineBreak);
+						PutChar ('N', fileNum, NULL, pDoc, lineBreak);
 					     break;
 					  case PtAdjust:
 					     switch (pRPres->PrAdjust)
 						   {
 						      case AlignLeft:
-							 Sort ('L', fichier, NULL, pDoc, lineBreak);
+							 PutChar ('L', fileNum, NULL, pDoc, lineBreak);
 							 break;
 						      case AlignRight:
-							 Sort ('R', fichier, NULL, pDoc, lineBreak);
+							 PutChar ('R', fileNum, NULL, pDoc, lineBreak);
 							 break;
 						      case AlignCenter:
-							 Sort ('C', fichier, NULL, pDoc, lineBreak);
+							 PutChar ('C', fileNum, NULL, pDoc, lineBreak);
 							 break;
 						      case AlignLeftDots:
-							 Sort ('D', fichier, NULL, pDoc, lineBreak);
+							 PutChar ('D', fileNum, NULL, pDoc, lineBreak);
 							 break;
 						   }
 					     break;
@@ -2577,27 +2464,24 @@ PtrDocument         pDoc;
 			   pBuf = pEl->ElComment;
 			   while (pBuf != NULL)
 			     {
-				i = 1;
-				while (i <= pBuf->BuLength)
-				  {
-				     Sort (pBuf->BuContent[i - 1], fichier, NULL, pDoc, lineBreak);
-				     i++;
-				  }
+				i = 0;
+				while (i < pBuf->BuLength)
+				     PutChar (pBuf->BuContent[i++], fileNum, NULL, pDoc, lineBreak);
 				pBuf = pBuf->BuNext;
 			     }
 			   break;
 			case ToAllAttr:
 			   /* produit la traduction de tous les attributs de l'element */
-			   ApplAttrPos (pRe1->TrOrder, pEl, ElRemove, &tradCar, &lineBreak,
+			   ApplyAttrRules (pTRule->TrOrder, pEl, removeEl, &transChar, &lineBreak,
 					pDoc);
-			   pEl->ElTransAttr = TRUE;	/* les regles des attributs ont ete
-							 * appliquees */
+			   /* les regles des attributs ont ete appliquees */
+			   pEl->ElTransAttr = TRUE;
 			   break;
 			case ToAllPRules:
 			   /* produit la traduction de toutes les regles de presentation */
 			   /* specifique portees par l'element */
-			   ApplPresPos (pRe1->TrOrder, pEl, ElRemove, &tradCar, &lineBreak,
-					pAttribut, pDoc);
+			   ApplyPresTRules (pTRule->TrOrder, pEl, removeEl, &transChar, &lineBreak,
+					pAttr, pDoc);
 			   /* marque dans l'element que sa presentation a ete traduite */
 			   pEl->ElTransPres = TRUE;
 			   break;
@@ -2606,46 +2490,46 @@ PtrDocument         pDoc;
 			   /* traduit l'identificateur d'une paire */
 			   if (pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsPairedElement)
 			      /* l'element est bien une paire */
-			      SortNb (pEl->ElPairIdent, fichier, NULL, pDoc, lineBreak);
+			      PutInt (pEl->ElPairIdent, fileNum, NULL, pDoc, lineBreak);
 			   break;
 
 			case ToFileDir:
 			   i = 0;
-			   while (tra_filedir[i] != '\0')
-			      Sort (tra_filedir[i++], fichier, NULL, pDoc, lineBreak);
+			   while (fileDirectory[i] != '\0')
+			      PutChar (fileDirectory[i++], fileNum, NULL, pDoc, lineBreak);
 			   break;
 
 			case ToFileName:
 			   i = 0;
-			   while (tra_filename[i] != '\0')
-			      Sort (tra_filename[i++], fichier, NULL, pDoc, lineBreak);
+			   while (fileName[i] != '\0')
+			      PutChar (fileName[i++], fileNum, NULL, pDoc, lineBreak);
 			   break;
 
 			case ToExtension:
 			   i = 0;
-			   while (tra_extension[i] != '\0')
-			      Sort (tra_extension[i++], fichier, NULL, pDoc, lineBreak);
+			   while (fileExtension[i] != '\0')
+			      PutChar (fileExtension[i++], fileNum, NULL, pDoc, lineBreak);
 			   break;
 
 			case ToDocumentName:
 			   i = 0;
 			   while (pDoc->DocDName[i] != '\0')
-			      Sort (pDoc->DocDName[i++], fichier, NULL, pDoc, lineBreak);
+			      PutChar (pDoc->DocDName[i++], fileNum, NULL, pDoc, lineBreak);
 			   break;
 
 			case ToDocumentDir:
 			   i = 0;
 			   while (pDoc->DocDirectory[i] != '\0')
-			      Sort (pDoc->DocDirectory[i++], fichier, NULL, pDoc, lineBreak);
+			      PutChar (pDoc->DocDirectory[i++], fileNum, NULL, pDoc, lineBreak);
 			   break;
 
 			case ToReferredDocumentName:
 			case ToReferredDocumentDir:
 			   pRef = NULL;
-			   if (pAttribut != NULL &&
-			       pAttribut->AeAttrSSchema->SsAttribute[pAttribut->AeAttrNum - 1].AttrType == AtReferenceAttr)
+			   if (pAttr != NULL &&
+			       pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrType == AtReferenceAttr)
 			      /* c'est un attribut reference qu'on traduit */
-			      pRef = pAttribut->AeAttrReference;
+			      pRef = pAttr->AeAttrReference;
 			   else
 			      /* l'element est-il une reference ? */
 			   if (pEl->ElTerminal && pEl->ElLeafType == LtReference)
@@ -2655,53 +2539,53 @@ PtrDocument         pDoc;
 			      pRef = pEl->ElSource;
 			   if (pRef != NULL)
 			     {
-				pElRef = ReferredElement (pRef, &IDocExt, &pDocExt);
-				nomASortir = NULL;
-				if (pRe1->TrObject == ToReferredDocumentName)
+				pRefEl = ReferredElement (pRef, &docIdent, &pExtDoc);
+				nameBuffer = NULL;
+				if (pTRule->TrObject == ToReferredDocumentName)
 				  {
-				     if (pElRef != NULL && IDocExt[0] == '\0')
+				     if (pRefEl != NULL && docIdent[0] == '\0')
 					/* reference interne. On sort le nom du document lui-meme */
-					nomASortir = pDoc->DocDName;
-				     else if (IDocExt[0] != '\0')
+					nameBuffer = pDoc->DocDName;
+				     else if (docIdent[0] != '\0')
 					/* on sort le nom du document reference' */
-					nomASortir = IDocExt;
+					nameBuffer = docIdent;
 				  }
-				else if (pRe1->TrObject == ToReferredDocumentDir)
-				   if (pElRef != NULL && IDocExt[0] == '\0')
+				else if (pTRule->TrObject == ToReferredDocumentDir)
+				   if (pRefEl != NULL && docIdent[0] == '\0')
 				      /* reference interne. On sort le directory du document lui-meme */
-				      nomASortir = pDoc->DocDirectory;
-				   else if (IDocExt[0] != '\0')
+				      nameBuffer = pDoc->DocDirectory;
+				   else if (docIdent[0] != '\0')
 				     {
 					/* on sort le directory du document reference' */
-					if (pDocExt != NULL)
+					if (pExtDoc != NULL)
 					   /* le document reference' est charge' */
-					   nomASortir = pDocExt->DocDirectory;
+					   nameBuffer = pExtDoc->DocDirectory;
 					else
 					   /* le document reference' n'est pas charge' */
 					  {
-					     strncpy (NomDirectory, DocumentPath, MAX_PATH);
-					     BuildFileName (IDocExt, "PIV", NomDirectory, full_name, &i);
-					     if (full_name[0] != '\0')
+					     strncpy (directoryName, DocumentPath, MAX_PATH);
+					     BuildFileName (docIdent, "PIV", directoryName, fullName, &i);
+					     if (fullName[0] != '\0')
 						/* on a trouve' le fichier */
-						nomASortir = NomDirectory;
+						nameBuffer = directoryName;
 					  }
 				     }
-				if (nomASortir != NULL)
-				   while (*nomASortir != '\0')
+				if (nameBuffer != NULL)
+				   while (*nameBuffer != '\0')
 				     {
-					Sort (*nomASortir, fichier, NULL, pDoc, lineBreak);
-					nomASortir++;
+					PutChar (*nameBuffer, fileNum, NULL, pDoc, lineBreak);
+					nameBuffer++;
 				     }
 			     }
 			   break;
 
 			case ToReferredElem:
-			   /* traduit l'elment reference' de type pRe1->TrObjectNum */
+			   /* traduit l'elment reference' de type pTRule->TrObjectNum */
 			   pRef = NULL;
-			   if (pAttribut != NULL &&
-			       pAttribut->AeAttrSSchema->SsAttribute[pAttribut->AeAttrNum - 1].AttrType == AtReferenceAttr)
+			   if (pAttr != NULL &&
+			       pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrType == AtReferenceAttr)
 			      /* c'est un attribut reference qu'on traduit */
-			      pRef = pAttribut->AeAttrReference;
+			      pRef = pAttr->AeAttrReference;
 			   else
 			      /* l'element est-il une reference ? */
 			   if (pEl->ElTerminal && pEl->ElLeafType == LtReference)
@@ -2711,53 +2595,53 @@ PtrDocument         pDoc;
 			      pRef = pEl->ElSource;
 			   if (pRef != NULL)
 			     {
-				pElRef = ReferredElement (pRef, &IDocExt, &pDocExt);
-				if (pElRef != NULL)
-				   /* la reference designe l'element pElRef */
+				pRefEl = ReferredElement (pRef, &docIdent, &pExtDoc);
+				if (pRefEl != NULL)
+				   /* la reference designe l'element pRefEl */
 				   /* On le prend s'il a le type voulu */
 				  {
-				     if (pRe1->TrObjectNature[0] == '\0')
+				     if (pTRule->TrObjectNature[0] == '\0')
 					pSS = pEl->ElSructSchema;
 				     else
 					pSS = NULL;
 				     if (!((pSS != NULL &&
-					    EquivalentSRules (pRe1->TrObjectNum, pSS, pElRef->ElTypeNumber, pElRef->ElSructSchema, pElRef->ElParent)
+					    EquivalentSRules (pTRule->TrObjectNum, pSS, pRefEl->ElTypeNumber, pRefEl->ElSructSchema, pRefEl->ElParent)
 					   )
 					   || (pSS == NULL &&
-					       strcmp (pRe1->TrObjectNature, pElRef->ElSructSchema->SsName) == 0
-					       && EquivalentSRules (pRe1->TrObjectNum, pElRef->ElSructSchema,
-							      pElRef->ElTypeNumber, pElRef->ElSructSchema, pElRef->ElParent)
+					       strcmp (pTRule->TrObjectNature, pRefEl->ElSructSchema->SsName) == 0
+					       && EquivalentSRules (pTRule->TrObjectNum, pRefEl->ElSructSchema,
+							      pRefEl->ElTypeNumber, pRefEl->ElSructSchema, pRefEl->ElParent)
 					   )
 					 )
 					)
 					/* Il n'a pas le type voulu, on cherche dans */
 					/* le sous arbre de l'element designe' */
-					ChDesc (&pElRef, pRe1->TrObjectNum, pSS, pRe1->TrObjectNature);
+					SearchDescent (&pRefEl, pTRule->TrObjectNum, pSS, pTRule->TrObjectNature);
 				  }
-				if (pElRef != NULL)
+				if (pRefEl != NULL)
 				   /* traduit l'element reference', meme s'il a deja ete traduit */
-				   if (IDocExt[0] == '\0')
+				   if (docIdent[0] == '\0')
 				      /* reference interne */
-				      Traduit (pElRef, pDoc, tradCar, lineBreak, TRUE);
-				   else if (pDocExt != NULL)
+				      TranslateTree (pRefEl, pDoc, transChar, lineBreak, TRUE);
+				   else if (pExtDoc != NULL)
 				      /* reference externe a un document charge' */
-				      Traduit (pElRef, pDocExt, tradCar, lineBreak, TRUE);
+				      TranslateTree (pRefEl, pExtDoc, transChar, lineBreak, TRUE);
 			     }
 			   break;
 
 			case ToRefId:
 			case ToReferredRefId:
 			   pElGet = NULL;
-			   if (pRe1->TrObject == ToReferredRefId)
+			   if (pTRule->TrObject == ToReferredRefId)
 			      /* il faut traduire le label de l'element reference' */
 			     {
 				pRef = NULL;
 				/* si on traduit un attribut reference, on ne s'occupe que de */
 				/* l'attribut */
-				if (pAttribut != NULL
-				    && pAttribut->AeAttrSSchema->SsAttribute[pAttribut->AeAttrNum - 1].AttrType == AtReferenceAttr)
+				if (pAttr != NULL
+				    && pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrType == AtReferenceAttr)
 				   /* c'est un attribut reference */
-				   pRef = pAttribut->AeAttrReference;
+				   pRef = pAttr->AeAttrReference;
 				/* sinon on s'occupe de l'element */
 				else
 				  {
@@ -2778,8 +2662,8 @@ PtrDocument         pDoc;
 				   pRef = pEl->ElSource;
 				if (pRef != NULL)
 				  {
-				     pElGet = ReferredElement (pRef, &IDocExt, &pDocExt);
-				     if (pElGet == NULL && IDocExt[0] != '\0')
+				     pElGet = ReferredElement (pRef, &docIdent, &pExtDoc);
+				     if (pElGet == NULL && docIdent[0] != '\0')
 					/* reference a un document externe non charge' */
 					if (pRef != NULL)
 					   if (pRef->RdReferred != NULL)
@@ -2788,13 +2672,13 @@ PtrDocument         pDoc;
 
 						   i = 0;
 						   while (pRef->RdReferred->ReReferredLabel[i] != '\0')
-						      Sort (pRef->RdReferred->ReReferredLabel[i++], fichier, NULL,
+						      PutChar (pRef->RdReferred->ReReferredLabel[i++], fileNum, NULL,
 							    pDoc, lineBreak);
 						}
 				  }
 			     }
 
-			   if (pRe1->TrObject == ToRefId)
+			   if (pTRule->TrObject == ToRefId)
 			     {
 				/* on cherche si l'element (ou le premier de ses ascendants sur */
 				/* lequel porte une reference) est reference' et on recupere la */
@@ -2803,11 +2687,11 @@ PtrDocument         pDoc;
 				do
 				  {
 				     pSS = pElGet->ElSructSchema;
-				     refpossible = FALSE;
+				     possibleRef = FALSE;
 				     /* l'element est-il reference'? */
 				     if (pElGet->ElReferredDescr != NULL)
-					refpossible = pElGet->ElReferredDescr->ReFirstReference != NULL;
-				     if (!refpossible)
+					possibleRef = pElGet->ElReferredDescr->ReFirstReference != NULL;
+				     if (!possibleRef)
 				       {
 					  /* l'element peut-il etre designe' par un element reference? */
 					  /* on cherche tous les elements references dans le schema de */
@@ -2815,15 +2699,16 @@ PtrDocument         pDoc;
 					  i = 1;
 					  do
 					    {
-					       i++;
-					       if (pSS->SsRule[i - 1].SrConstruct == CsReference)
+					       if (pSS->SsRule[i].SrConstruct == CsReference)
 						  /* c'est une reference */
-						  if (pSS->SsRule[i - 1].SrReferredType != 0)
-						     refpossible = EquivalentSRules (pSS->SsRule[i - 1].SrReferredType, pSS, pElGet->ElTypeNumber, pSS, pElGet->ElParent);
+						  if (pSS->SsRule[i].SrReferredType != 0)
+						     possibleRef = EquivalentSRules (pSS->SsRule[i].SrReferredType, pSS, pElGet->ElTypeNumber, pSS, pElGet->ElParent);
+					       i++;
 					    }
-					  while (!(refpossible || i >= pSS->SsNRules));
+					  while (!possibleRef &&
+						 i < pSS->SsNRules);
 				       }
-				     if (!refpossible)
+				     if (!possibleRef)
 				       {
 					  /* l'element ne peut pas etre designe par un elem. reference */
 					  /* on cherche s'il peut etre designe' par un attr. reference */
@@ -2832,21 +2717,22 @@ PtrDocument         pDoc;
 					  i = 1;
 					  do
 					    {
-					       i++;
-					       if (pSS->SsAttribute[i - 1].AttrType == AtReferenceAttr)
+					       if (pSS->SsAttribute[i].AttrType == AtReferenceAttr)
 						  /* c'est une reference */
-						  if (pSS->SsAttribute[i - 1].AttrTypeRef != 0)
-						     refpossible = (pSS->SsAttribute[i - 1].AttrTypeRefNature[0] == '\0'	/* meme schema de structure */
-								    && EquivalentSRules (pSS->SsAttribute[i - 1].AttrTypeRef, pSS, pElGet->ElTypeNumber, pSS, pElGet->ElParent));
+						  if (pSS->SsAttribute[i].AttrTypeRef != 0)
+						     possibleRef = (pSS->SsAttribute[i].AttrTypeRefNature[0] == '\0'
+								    && EquivalentSRules (pSS->SsAttribute[i].AttrTypeRef, pSS, pElGet->ElTypeNumber, pSS, pElGet->ElParent));
+					       i++;
 					    }
-					  while (!(refpossible || i >= pSS->SsNAttributes));
+					  while (!possibleRef &&
+						 i < pSS->SsNAttributes);
 				       }
-				     if (!refpossible)
+				     if (!possibleRef)
 					/* l'element ne peut pas etre designe'; on examine */
 					/* l'element ascendant */
 					pElGet = pElGet->ElParent;
 				  }
-				while (!(refpossible || pElGet == NULL));
+				while (!possibleRef && pElGet != NULL);
 			     }
 
 			   if (pElGet != NULL)
@@ -2854,7 +2740,7 @@ PtrDocument         pDoc;
 			     {
 				i = 0;
 				while (pElGet->ElLabel[i] != '\0')
-				   Sort (pElGet->ElLabel[i++], fichier, NULL, pDoc, lineBreak);
+				   PutChar (pElGet->ElLabel[i++], fileNum, NULL, pDoc, lineBreak);
 			     }
 			   break;
 
@@ -2864,33 +2750,33 @@ PtrDocument         pDoc;
 	       break;
 
 	    case TChangeMainFile:
-	       produitVariable (pEl, pAttribut, pSchT, pSchS, pRe1->TrNewFileVar, FALSE, currentFileName, 0, pDoc, lineBreak);
+	       PutVariable (pEl, pAttr, pTSch, pSSch, pTRule->TrNewFileVar, FALSE, currentFileName, 0, pDoc, lineBreak);
 	       if (currentFileName[0] != '\0')
 		 {
-		    newfile = fopen (currentFileName, "w");
-		    if (newfile == NULL)
+		    newFile = fopen (currentFileName, "w");
+		    if (newFile == NULL)
 		       TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, CREATE_FILE_IMP), currentFileName);
 		    else
 		       /* on a reussi a ouvrir le nouveau fichier */
 		      {
 			 /* on vide le buffer en cours dans l'ancien fichier */
-			 for (i = 0; i < FichierSortie[1].SecLgOutBuffer; i++)
-			    putc (FichierSortie[1].SecOutBuffer[i], FichierSortie[1].SecFileDesc);
+			 for (i = 0; i < OutputFile[1].OfBufferLen; i++)
+			    putc (OutputFile[1].OfBuffer[i], OutputFile[1].OfFileDesc);
 			 /* on ferme l'ancien fichier */
-			 fclose (FichierSortie[1].SecFileDesc);
+			 fclose (OutputFile[1].OfFileDesc);
 			 /* on bascule sur le nouveau fichier */
-			 FichierSortie[1].SecLgOutBuffer = 0;
-			 FichierSortie[1].SecFileDesc = newfile;
+			 OutputFile[1].OfBufferLen = 0;
+			 OutputFile[1].OfFileDesc = newFile;
 		      }
 		 }
 	       break;
 
 	    case TSetCounter:
-	       pSchT->TsCounter[pRe1->TrCounterNum - 1].TnParam1 = pRe1->TrCounterParam;
+	       pTSch->TsCounter[pTRule->TrCounterNum - 1].TnParam1 = pTRule->TrCounterParam;
 	       break;
 
 	    case TAddCounter:
-	       pSchT->TsCounter[pRe1->TrCounterNum - 1].TnParam1 += pRe1->TrCounterParam;
+	       pTSch->TsCounter[pTRule->TrCounterNum - 1].TnParam1 += pTRule->TrCounterParam;
 	       break;
 
 	    case TGet:
@@ -2899,7 +2785,7 @@ PtrDocument         pDoc;
 	       /* cherche d'abord l'element a prendre */
 	       pElGet = pEl;
 	       pDocGet = pDoc;
-	       switch (pRe1->TrRelPosition)
+	       switch (pTRule->TrRelPosition)
 		     {
 			case RpSibling:
 			   /* Cherche un frere ayant le type voulu */
@@ -2907,37 +2793,34 @@ PtrDocument         pDoc;
 			   while (pElGet->ElPrevious != NULL)
 			      pElGet = pElGet->ElPrevious;
 			   /* cherche ensuite parmi les freres successifs */
-			   trouve = FALSE;
+			   found = FALSE;
 			   do
-			     {
-				pEl1 = pElGet;
-				if ((pEl1->ElSructSchema == pEl->ElSructSchema ||
-				     (strcmp (pRe1->TrElemNature, pEl1->ElSructSchema->SsName) == 0))
-				    && EquivalentSRules (pRe1->TrElemType, pEl1->ElSructSchema,
-						   pEl1->ElTypeNumber, pEl1->ElSructSchema, pElGet->ElParent))
-				   trouve = TRUE;
+				if ((pElGet->ElSructSchema == pEl->ElSructSchema ||
+				     (strcmp (pTRule->TrElemNature, pElGet->ElSructSchema->SsName) == 0))
+				    && EquivalentSRules (pTRule->TrElemType, pElGet->ElSructSchema,
+						   pElGet->ElTypeNumber, pElGet->ElSructSchema, pElGet->ElParent))
+				   found = TRUE;
 				else
-				   pElGet = pEl1->ElNext;
-			     }
-			   while (!(trouve || pElGet == NULL));
+				   pElGet = pElGet->ElNext;
+			   while (!found && pElGet != NULL);
 			   break;
 			case RpDescend:
 			   /* Cherche dans le sous-arbre un element ayant le type voulu. */
-			   if (pRe1->TrElemNature[0] == '\0')
+			   if (pTRule->TrElemNature[0] == '\0')
 			      pSS = pEl->ElSructSchema;
 			   else
 			      pSS = NULL;
-			   ChDesc (&pElGet, pRe1->TrElemType, pSS, pRe1->TrElemNature);
+			   SearchDescent (&pElGet, pTRule->TrElemType, pSS, pTRule->TrElemNature);
 			   break;
 			case RpReferred:
 			   /* Cherche dans le sous-arbre de l'element designe', un element
 			      ayant le type voulu. */
 			   /* cherche d'abord l'element designe' */
 			   pRef = NULL;
-			   if (pAttribut != NULL &&
-			       pAttribut->AeAttrSSchema->SsAttribute[pAttribut->AeAttrNum - 1].AttrType == AtReferenceAttr)
+			   if (pAttr != NULL &&
+			       pAttr->AeAttrSSchema->SsAttribute[pAttr->AeAttrNum - 1].AttrType == AtReferenceAttr)
 			      /* c'est un attribut reference qu'on traduit */
-			      pRef = pAttribut->AeAttrReference;
+			      pRef = pAttr->AeAttrReference;
 			   else
 			      /* l'element est-il une reference ? */
 			   if (pEl->ElTerminal && pEl->ElLeafType == LtReference)
@@ -2948,32 +2831,31 @@ PtrDocument         pDoc;
 			   if (pRef == NULL)
 			      pElGet = NULL;
 			   else
-			      pElGet = ReferredElement (pEl->ElReference, &IDocExt, &pDocExt);
+			      pElGet = ReferredElement (pEl->ElReference, &docIdent, &pExtDoc);
 			   if (pElGet != NULL)
 			      /* il y a bien un element designe'. On le prend s'il */
 			      /* a le type voulu */
 			     {
-				pEl1 = pElGet;
-				if (pRe1->TrElemNature[0] == '\0')
+				if (pTRule->TrElemNature[0] == '\0')
 				   pSS = pEl->ElSructSchema;
 				else
 				   pSS = NULL;
 				if (!((pSS != NULL &&
-				       EquivalentSRules (pRe1->TrElemType, pSS, pEl1->ElTypeNumber, pEl1->ElSructSchema, pEl1->ElParent)
+				       EquivalentSRules (pTRule->TrElemType, pSS, pElGet->ElTypeNumber, pElGet->ElSructSchema, pElGet->ElParent)
 				      )
 				      || (pSS == NULL &&
-					  strcmp (pRe1->TrElemNature, pEl1->ElSructSchema->SsName) == 0
-					  && EquivalentSRules (pRe1->TrElemType, pEl1->ElSructSchema,
-							 pEl1->ElTypeNumber, pEl1->ElSructSchema, pEl1->ElParent)
+					  strcmp (pTRule->TrElemNature, pElGet->ElSructSchema->SsName) == 0
+					  && EquivalentSRules (pTRule->TrElemType, pElGet->ElSructSchema,
+							 pElGet->ElTypeNumber, pElGet->ElSructSchema, pElGet->ElParent)
 				      )
 				    )
 				   )
 				   /* Il n'a pas le type voulu, on cherche dans */
 				   /* le sous arbre de l'element designe' */
-				   ChDesc (&pElGet, pRe1->TrElemType, pSS, pRe1->TrElemNature);
-				if (IDocExt[0] != '\0' && pDocExt != NULL)
+				   SearchDescent (&pElGet, pTRule->TrElemType, pSS, pTRule->TrElemNature);
+				if (docIdent[0] != '\0' && pExtDoc != NULL)
 				   /* reference externe a un document charge' */
-				   pDocGet = pDocExt;
+				   pDocGet = pExtDoc;
 			     }
 			   break;
 			case RpAssoc:
@@ -2982,15 +2864,15 @@ PtrDocument         pDoc;
 			   pElGet = NULL;
 			   do
 			     {
+				if (pDoc->DocAssocRoot[i] != NULL)
+				   if (pDoc->DocAssocRoot[i]->ElTypeNumber == pTRule->TrElemType)
+				      pElGet = pDoc->DocAssocRoot[i];
+				   else if (pDoc->DocAssocRoot[i]->ElFirstChild != NULL)
+				      if (pDoc->DocAssocRoot[i]->ElFirstChild->ElTypeNumber == pTRule->TrElemType)
+					 pElGet = pDoc->DocAssocRoot[i];
 				i++;
-				if (pDoc->DocAssocRoot[i - 1] != NULL)
-				   if (pDoc->DocAssocRoot[i - 1]->ElTypeNumber == pRe1->TrElemType)
-				      pElGet = pDoc->DocAssocRoot[i - 1];
-				   else if (pDoc->DocAssocRoot[i - 1]->ElFirstChild != NULL)
-				      if (pDoc->DocAssocRoot[i - 1]->ElFirstChild->ElTypeNumber == pRe1->TrElemType)
-					 pElGet = pDoc->DocAssocRoot[i - 1];
 			     }
-			   while (!(pElGet != NULL || i >= MAX_ASSOC_DOC));
+			   while (pElGet == NULL && i < MAX_ASSOC_DOC);
 			   break;
 			default:
 			   break;
@@ -2998,8 +2880,8 @@ PtrDocument         pDoc;
 	       if (pElGet != NULL)
 		  /* traduit l'element a prendre, sauf s'il a deja ete traduit et */
 		  /* qu'il s'agit d'une regle Get */
-		  Traduit (pElGet, pDocGet, tradCar, lineBreak,
-			   pRe1->TrType == TCopy);
+		  TranslateTree (pElGet, pDocGet, transChar, lineBreak,
+			   pTRule->TrType == TCopy);
 	       break;
 	    case TUse:
 	       /* On ne fait rien. Cette regle est utilisee uniquement */
@@ -3013,192 +2895,178 @@ PtrDocument         pDoc;
 	       break;
 	    case TRead:
 	       /* lecture au terminal */
-/***** supprime' ****
-      met dans fname le texte saisi au terminal
-      for (j = 1; j <= i + 1; j++)
-	pSc1->TsBuffer[pRe1->TrBuffer - 1][j - 1] = fname[j - 1];
-************************************/
 	       break;
 	    case TInclude:
 	       /* inclusion d'un fichier */
 	       /* compose le nom du fichier a ouvrir avec le nom du directory */
 	       /* des schemas... */
-	       if (pRe1->TrBufOrConst == ToConst)
+	       if (pTRule->TrBufOrConst == ToConst)
 		 {
-		    j = 1;
-		    i = pSc1->TsConstBegin[pRe1->TrInclFile - 1];
-		    while (pSc1->TsConstant[i - 1] != '\0' && j < MAX_TXT_LEN)
-		      {
-			 fname[j - 1] = pSc1->TsConstant[i - 1];
-			 j++;
-			 i++;
-		      }
-		    fname[j - 1] = '\0';
+		    j = 0;
+		    i = pTSch->TsConstBegin[pTRule->TrInclFile - 1] - 1;
+		    while (pTSch->TsConstant[i] != '\0' && j < MAX_TXT_LEN - 1)
+			 fname[j++] = pTSch->TsConstant[i++];
+		    fname[j] = '\0';
 		 }
-	       if (pRe1->TrBufOrConst == ToBuffer)
+	       else if (pTRule->TrBufOrConst == ToBuffer)
 		 {
 		    /* le nom du fichier est dans un buffer */
-		    i = 1;
-		    while (pSc1->TsBuffer[pRe1->TrInclFile - 1][i - 1] != '\0' &&
-			   i < MAX_TXT_LEN)
-		      {
-			 fname[i - 1] = pSc1->TsBuffer[pRe1->TrInclFile - 1][i - 1];
+		    i = 0;
+		    while (pTSch->TsBuffer[pTRule->TrInclFile - 1][i] != '\0' &&
+			   i < MAX_TXT_LEN - 1)
+		       {
+			 fname[i] = pTSch->TsBuffer[pTRule->TrInclFile - 1][i];
 			 i++;
-		      }
-		    fname[i - 1] = '\0';
+		       }
+		    fname[i] = '\0';
 		 }
 	       if (fname[0] == '\0')
 		  /* pas de nom de fichier */
-		  full_name[0] = '\0';
+		  fullName[0] = '\0';
 	       else
 		 {
 		    /* construit le nom de fichier */
-		    strncpy (NomDirectory, SchemaPath, MAX_PATH);
-		    BuildFileName (fname, "", NomDirectory, full_name, &i);
+		    strncpy (directoryName, SchemaPath, MAX_PATH);
+		    BuildFileName (fname, "", directoryName, fullName, &i);
 		 }
 	       /* ouvre le fichier a inclure */
-	       tra_inclus = BIOreadOpen (full_name);
-	       if (tra_inclus == 0)
+	       includedFile = BIOreadOpen (fullName);
+	       if (includedFile == 0)
 		  TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCLUDE_FILE_IMP), fname);
 	       else
 		  /* le fichier a inclure est ouvert */
 		 {
-		    while (BIOreadByte (tra_inclus, &c))
+		    while (BIOreadByte (includedFile, &c))
 		       /* on ecrit dans le fichier principal courant */
-		       Sort (c, 1, NULL, pDoc, lineBreak);
-		    BIOreadClose (tra_inclus);
+		       PutChar (c, 1, NULL, pDoc, lineBreak);
+		    BIOreadClose (includedFile);
 		 }
 	       break;
 	    default:
 	       break;
 	 }
-   /* end case TrType */
 }
 
 /* ---------------------------------------------------------------------- */
-/* | ApplReglePos       applique a l'element pointe' par pEl les regles | */
+/* | ApplyElTypeRules   applique a l'element pointe' par pEl les regles | */
 /* |    de traduction qui correspondent a son type et qui doivent       | */
-/* |    s'appliquer a la position Posit.                                | */
+/* |    s'appliquer a la position position.                             | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         ApplReglePos (TOrder Posit, boolean * tradCar,
-				  boolean * lineBreak, boolean * ElRemove,
-			     PtrElement pEl, int TypeEl, PtrTSchema pSchT,
-				  PtrSSchema pSchS, PtrDocument pDoc)
+static void         ApplyElTypeRules (TOrder position, boolean * transChar,
+				  boolean * lineBreak, boolean * removeEl,
+			     PtrElement pEl, int TypeEl, PtrTSchema pTSch,
+				  PtrSSchema pSS, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-static void         ApplReglePos (Posit, tradCar, lineBreak, ElRemove, pEl, TypeEl,
-				  pSchT, pSchS, pDoc)
-TOrder          Posit;
-boolean            *tradCar;
+static void         ApplyElTypeRules (position, transChar, lineBreak, removeEl, pEl, TypeEl,
+				  pTSch, pSS, pDoc)
+TOrder             position;
+boolean            *transChar;
 boolean            *lineBreak;
-boolean            *ElRemove;
-PtrElement          pEl;
-int                 TypeEl;
-PtrTSchema        pSchT;
-PtrSSchema        pSchS;
-PtrDocument         pDoc;
+boolean            *removeEl;
+PtrElement         pEl;
+int                TypeEl;
+PtrTSchema         pTSch;
+PtrSSchema         pSS;
+PtrDocument        pDoc;
 
 #endif /* __STDC__ */
 
 {
-   PtrTRuleBlock       pBloc;
-   PtrTRule        pRegle;
-   PtrTRuleBlock       pBl1;
-   PtrTRule        pRe1;
+   PtrTRuleBlock   pBlock;
+   PtrTRule        pTRule;
 
 
    /* premier bloc de regles correspondant au type de l'element */
-   pBloc = pSchT->TsElemTRule[TypeEl - 1];
+   pBlock = pTSch->TsElemTRule[TypeEl - 1];
    /* parcourt les blocs de regles du type de l'element */
-   while (pBloc != NULL)
+   while (pBlock != NULL)
      {
-	pBl1 = pBloc;
-	if (CondSatisfaite (pBloc, pEl, NULL, pDoc))
+	if (ConditionIsTrue (pBlock, pEl, NULL, pDoc))
 	   /* la condition du bloc est verifiee */
 	  {
-	     pRegle = pBl1->TbFirstTRule;	/* premiere regle du bloc */
+	     pTRule = pBlock->TbFirstTRule;	/* premiere regle du bloc */
 	     /* parcourt les regles du bloc */
-	     while (pRegle != NULL)
+	     while (pTRule != NULL)
 	       {
-		  pRe1 = pRegle;
-		  if (pRe1->TrOrder == Posit)
+		  if (pTRule->TrOrder == position)
 		     /* c'est une regle a appliquer a cette position */
-		     if (pRe1->TrType == TRemove)
-			*ElRemove = TRUE;
-		     else if (pRe1->TrType == TNoTranslation)
-			*tradCar = FALSE;
-		     else if (pRe1->TrType == TNoLineBreak)
+		     if (pTRule->TrType == TRemove)
+			*removeEl = TRUE;
+		     else if (pTRule->TrType == TNoTranslation)
+			*transChar = FALSE;
+		     else if (pTRule->TrType == TNoLineBreak)
 			*lineBreak = FALSE;
-		     else	/* on applique la regle */
-			AppliqueTra (pRegle, pSchT, pSchS, pEl, *tradCar, *lineBreak,
-				     ElRemove, NULL, NULL, pDoc);
+		     else
+			/* on applique la regle */
+			ApplyTRule (pTRule, pTSch, pSS, pEl, *transChar, *lineBreak,
+				     removeEl, NULL, NULL, pDoc);
 		  /* passe a la regle suivante */
-		  pRegle = pRe1->TrNextTRule;
+		  pTRule = pTRule->TrNextTRule;
 	       }
 	  }
 	/* passe au bloc suivant */
-	pBloc = pBl1->TbNextBlock;
+	pBlock = pBlock->TbNextBlock;
      }
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* | Traduit   traduit le sous-arbre dont la racine est pointee par pEl | */
-/* |    et applique les regles de traduction des feuilles si tradCar    | */
+/* | TranslateTree   traduit le sous-arbre dont la racine est pEl	| */
+/* |    et applique les regles de traduction des feuilles si transChar  | */
 /* |    est vrai.                                                       | */
 /* ---------------------------------------------------------------------- */
 
-
 #ifdef __STDC__
-static void         Traduit (PtrElement pEl, PtrDocument pDoc, boolean tradCar,
-			     boolean lineBreak, boolean MemeSiDejaTraduit)
+static void         TranslateTree (PtrElement pEl, PtrDocument pDoc, boolean transChar,
+			     boolean lineBreak, boolean enforce)
 
 #else  /* __STDC__ */
-static void         Traduit (pEl, pDoc, tradCar, lineBreak, MemeSiDejaTraduit)
+static void         TranslateTree (pEl, pDoc, transChar, lineBreak, enforce)
 PtrElement          pEl;
 PtrDocument         pDoc;
-boolean             tradCar;
+boolean             transChar;
 boolean             lineBreak;
-boolean             MemeSiDejaTraduit;
+boolean             enforce;
 
 #endif /* __STDC__ */
 
 {
-   PtrElement          pFils;
-   PtrTSchema        pSchT, pSchT1;
-   PtrSSchema        pSchS;
-   int                 TypeEl;
-   int                 i;
-   boolean             trouve;
-   boolean             ElRemove;
-   PtrSSchema        pSc1;
-   SRule              *pRe1;
-   NotifyElement       notifyEl;
+   PtrElement        pChild;
+   PtrTSchema        pTSch, pTS;
+   PtrSSchema        pSS, pParentSS;
+   SRule             *pSRule;
+   NotifyElement     notifyEl;
+   int               elemType, i;
+   boolean           found;
+   boolean           removeEl;
 
-   if (!pEl->ElTransContent || MemeSiDejaTraduit)
+   if (!pEl->ElTransContent || enforce)
      {
 	/* cherche le schema de traduction qui s'applique a l'element */
-	pSchT = SchemaTrad (pEl->ElSructSchema);
-	if (pSchT == NULL)
+	pTSch = SchemaTrad (pEl->ElSructSchema);
+	if (pTSch == NULL)
 	   return;
-	ElRemove = FALSE;
-	pSchS = pEl->ElSructSchema;
-	TypeEl = pEl->ElTypeNumber;
-	/* envoie le message ElemExport.Pre a l'application, si elle */
+	removeEl = FALSE;
+	pSS = pEl->ElSructSchema;
+	elemType = pEl->ElTypeNumber;
+	/* envoie l'evenement ElemExport.Pre a l'application, si elle */
 	/* le demande */
 	notifyEl.event = TteElemExport;
 	notifyEl.document = (Document) IdentDocument (pDoc);
 	notifyEl.element = (Element) pEl;
-	notifyEl.elementType.ElTypeNum = TypeEl;
-	notifyEl.elementType.ElSSchema = (SSchema) pSchS;
+	notifyEl.elementType.ElTypeNum = elemType;
+	notifyEl.elementType.ElSSchema = (SSchema) pSS;
 	notifyEl.position = 0;
 	if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
 	   /* l'application refuse que Thot sauve l'element */
 	   return;
-	pEl->ElTransAttr = FALSE;	/* les attributs n'ont pas ete traduits */
-	pEl->ElTransPres = FALSE;	/* la presentation n'a pas ete traduite */
+	/* les attributs n'ont pas ete traduits */
+	pEl->ElTransAttr = FALSE;
+	/* la presentation n'a pas ete traduite */
+	pEl->ElTransPres = FALSE;
 	/* s'il s'agit de l'element racine d'une nature, on prend les regles */
 	/* de presentation (s'il y en a) de la regle nature dans la structure */
 	/* englobante. */
@@ -3210,48 +3078,47 @@ boolean             MemeSiDejaTraduit;
 		 /* cherche la regle introduisant la nature dans le schema de */
 		 /* structure de l'englobant. */
 		{
-		   pSc1 = pEl->ElParent->ElSructSchema;
-		   trouve = FALSE;
+		   pParentSS = pEl->ElParent->ElSructSchema;
+		   found = FALSE;
 		   i = 0;
 		   do
 		     {
-			i++;
-			pRe1 = &pSc1->SsRule[i - 1];
-			if (pRe1->SrConstruct == CsNatureSchema)
-			   if (pRe1->SrSSchemaNat == pEl->ElSructSchema)
-			      trouve = TRUE;
+			pSRule = &pParentSS->SsRule[i++];
+			if (pSRule->SrConstruct == CsNatureSchema)
+			   if (pSRule->SrSSchemaNat == pEl->ElSructSchema)
+			      found = TRUE;
 		     }
-		   while (!(trouve || i >= pSc1->SsNRules));
-		   if (trouve)
+		   while (!found && i < pParentSS->SsNRules);
+		   if (found)
 		     {
-			pSchT1 = SchemaTrad (pEl->ElParent->ElSructSchema);
-			if (pSchT1 != NULL)
-			   if (pSchT1->TsElemTRule[i - 1] != NULL)
+			pTS = SchemaTrad (pEl->ElParent->ElSructSchema);
+			if (pTS != NULL)
+			   if (pTS->TsElemTRule[i - 1] != NULL)
 			      /* il y a des regles de traduction pour la nature, on */
 			      /* les prend */
 			     {
-				pSchT = pSchT1;
-				pSchS = pEl->ElParent->ElSructSchema;
-				TypeEl = i;
+				pTSch = pTS;
+				pSS = pEl->ElParent->ElSructSchema;
+				elemType = i;
 			     }
 		     }
 		}
-	if (pSchT != NULL)
+	if (pTSch != NULL)
 	   /* on ne traduit pas les elements dont le schema de structure n'a */
 	   /* pas de schema de traduction correspondant */
 	  {
 	     /* Cherche et applique les regles de traduction associees au type */
 	     /* de l'element et qui doivent s'appliquer avant la traduction du */
 	     /* contenu de l'element */
-	     ApplReglePos (TBefore, &tradCar, &lineBreak, &ElRemove, pEl, TypeEl,
-			   pSchT, pSchS, pDoc);
+	     ApplyElTypeRules (TBefore, &transChar, &lineBreak, &removeEl, pEl, elemType,
+			   pTSch, pSS, pDoc);
 	     /* on ne traduit les attributs que si ce n'est pas deja fait par */
 	     /* une regle Create Attributes associee au type */
 	     if (!pEl->ElTransAttr)
-		/* Parcourt les attributs de l'element et applique les regles des
-		 * attributs qui doivent ^etre appliquees avant la traduction du
-		 * contenu de l'element */
-		ApplAttrPos (TBefore, pEl, &ElRemove, &tradCar, &lineBreak, pDoc);
+		/* Parcourt les attributs de l'element et applique les regles
+		   des attributs qui doivent ^etre appliquees avant la
+		   traduction du contenu de l'element */
+		ApplyAttrRules (TBefore, pEl, &removeEl, &transChar, &lineBreak, pDoc);
 
 	     /* on ne traduit la presentation que si ce n'est pas deja fait par */
 	     /* une regle Create Presentation */
@@ -3259,25 +3126,25 @@ boolean             MemeSiDejaTraduit;
 		/* Parcourt les presentations de l'element et applique les regles
 		 * de traduction correspondantes qui doivent ^etre appliquees
 		 * avant la traduction du contenu de l'element */
-		ApplPresPos (TBefore, pEl, &ElRemove, &tradCar, &lineBreak, NULL,
+		ApplyPresTRules (TBefore, pEl, &removeEl, &transChar, &lineBreak, NULL,
 			     pDoc);
 	     /* traduit le contenu de l'element, sauf si on a deja rencontre' */
 	     /* une regle Remove pour cet element. */
-	     if (!ElRemove)
+	     if (!removeEl)
 		/* pas de regle Remove */
 		if (pEl->ElTerminal)
 		   /* c'est une feuille, applique les regles de traduction des */
 		   /* feuilles et sort le contenu dans le fichier principal */
-		   TraduitFeuille (pEl, tradCar, lineBreak, 1, pDoc);
+		   TranslateLeaf (pEl, transChar, lineBreak, 1, pDoc);
 		else
 		   /* ce n'est pas une feuille, traduit successivement tous les */
 		   /* fils de l'element */
 		  {
-		     pFils = pEl->ElFirstChild;
-		     while (pFils != NULL)
+		     pChild = pEl->ElFirstChild;
+		     while (pChild != NULL)
 		       {
-			  Traduit (pFils, pDoc, tradCar, lineBreak, MemeSiDejaTraduit);
-			  pFils = pFils->ElNext;
+			  TranslateTree (pChild, pDoc, transChar, lineBreak, enforce);
+			  pChild = pChild->ElNext;
 		       }
 		  }
 	     /* marque que les regles qui doivent etre appliquees apres */
@@ -3291,21 +3158,21 @@ boolean             MemeSiDejaTraduit;
 		/* Parcourt les presentations de l'element et applique les regles
 		 * de traduction correspondantes qui doivent ^etre appliquees
 		 * apres la traduction du contenu */
-		ApplPresPos (TAfter, pEl, &ElRemove, &tradCar, &lineBreak, NULL,
+		ApplyPresTRules (TAfter, pEl, &removeEl, &transChar, &lineBreak, NULL,
 			     pDoc);
 	     if (!pEl->ElTransAttr)
 		/* Parcourt les attributs de l'element et applique les regles des
 		 * attributs qui doivent etre appliquees apres la traduction du
 		 * contenu */
-		ApplAttrPos (TAfter, pEl, &ElRemove, &tradCar, &lineBreak, pDoc);
+		ApplyAttrRules (TAfter, pEl, &removeEl, &transChar, &lineBreak, pDoc);
 	     /* Cherche et applique les regles associees au type de l'element et
 	      * qui doivent s'appliquer apres la traduction du contenu */
-	     ApplReglePos (TAfter, &tradCar, &lineBreak, &ElRemove, pEl, TypeEl,
-			   pSchT, pSchS, pDoc);
-	     if (!MemeSiDejaTraduit)
+	     ApplyElTypeRules (TAfter, &transChar, &lineBreak, &removeEl, pEl, elemType,
+			   pTSch, pSS, pDoc);
+	     if (!enforce)
 		/* marque que l'element a ete traite' */
 		pEl->ElTransContent = TRUE;
-	     /* envoie le message ElemExport.Post a l'application, si elle */
+	     /* envoie l'evenement ElemExport.Post a l'application, si elle */
 	     /* le demande */
 	     notifyEl.event = TteElemExport;
 	     notifyEl.document = (Document) IdentDocument (pDoc);
@@ -3318,21 +3185,22 @@ boolean             MemeSiDejaTraduit;
      }
 }
 
+
 /* ---------------------------------------------------------------------- */
-/* | RazDejaTraduit     remet a zero tous les indicateurs "deja traduit"| */
+/* | ResetTranslTags   remet a zero tous les indicateurs "deja traduit" | */
 /* |    de l'arbre de racine pEl.                                       | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         RazDejaTraduit (PtrElement pEl)
+static void         ResetTranslTags (PtrElement pEl)
 #else  /* __STDC__ */
-static void         RazDejaTraduit (pEl)
+static void         ResetTranslTags (pEl)
 PtrElement          pEl;
 
 #endif /* __STDC__ */
 
 {
-   PtrElement          pFils;
+   PtrElement          pChild;
 
    if (pEl != NULL)
      {
@@ -3341,11 +3209,11 @@ PtrElement          pEl;
 	pEl->ElTransPres = FALSE;
 	if (!pEl->ElTerminal)
 	  {
-	     pFils = pEl->ElFirstChild;
-	     while (pFils != NULL)
+	     pChild = pEl->ElFirstChild;
+	     while (pChild != NULL)
 	       {
-		  RazDejaTraduit (pFils);
-		  pFils = pFils->ElNext;
+		  ResetTranslTags (pChild);
+		  pChild = pChild->ElNext;
 	       }
 	  }
      }
@@ -3366,14 +3234,14 @@ PtrDocument         pDoc;
 #endif /* _STDC__ */
 {
    /* Entree 0 : standard output */
-   FichierSortie[0].SecFileName[0] = '\0';
-   FichierSortie[0].SecFileDesc = NULL;
-   FichierSortie[0].SecLgOutBuffer = 0;
+   OutputFile[0].OfFileName[0] = '\0';
+   OutputFile[0].OfFileDesc = NULL;
+   OutputFile[0].OfBufferLen = 0;
    /* Entree 1 : fichier de sortie principal */
-   FichierSortie[1].SecFileName[0] = '\0';
-   FichierSortie[1].SecFileDesc = mainFile;
-   FichierSortie[1].SecLgOutBuffer = 0;
-   NbFichierSortie = 2;
+   OutputFile[1].OfFileName[0] = '\0';
+   OutputFile[1].OfFileDesc = mainFile;
+   OutputFile[1].OfBufferLen = 0;
+   NOutputFiles = 2;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -3392,92 +3260,90 @@ PtrDocument         pDoc;
 {
    int                 i, fich;
 
-   for (fich = 1; fich < NbFichierSortie; fich++)
+   for (fich = 1; fich < NOutputFiles; fich++)
      {
-	for (i = 0; i < FichierSortie[fich].SecLgOutBuffer; i++)
-	   putc (FichierSortie[fich].SecOutBuffer[i], FichierSortie[fich].SecFileDesc);
-	if (FichierSortie[fich].SecFileDesc != NULL)
-	   fclose (FichierSortie[fich].SecFileDesc);
+	for (i = 0; i < OutputFile[fich].OfBufferLen; i++)
+	   putc (OutputFile[fich].OfBuffer[i], OutputFile[fich].OfFileDesc);
+	if (OutputFile[fich].OfFileDesc != NULL)
+	   fclose (OutputFile[fich].OfFileDesc);
      }
 }
 
 /* ---------------------------------------------------------------------- */
 /* | ExportDocument     exporte le document pointe' par pDoc, selon le  | */
-/* |    schema de traduction de nom nomSchTrad et produit le resultat   | */
-/* |    dans le fichier de nom fileName.                                | */
+/* |    schema de traduction de nom TSchemaName et produit le resultat  | */
+/* |    dans le fichier de nom fName.					| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                ExportDocument (PtrDocument pDoc, char *fileName, char *nomSchTrad)
+void                ExportDocument (PtrDocument pDoc, char *fName, char *TSchemaName)
 
 #else  /* __STDC__ */
-void                ExportDocument (pDoc, fileName, nomSchTrad)
+void                ExportDocument (pDoc, fName, TSchemaName)
 PtrDocument         pDoc;
-char               *fileName;
-char               *nomSchTrad;
+char               *fName;
+char               *TSchemaName;
 
 #endif /* __STDC__ */
 
 {
    int                 i;
-   FILE               *tra_sortie;	/* fichier de sortie principal */
+   /* fichier de sortie principal */
+   FILE               *outputFile;
 
    /* cree le fichier de sortie principal */
-   tra_sortie = fopen (fileName, "w");
-   if (tra_sortie == NULL)
-      TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, CREATE_FILE_IMP),
-				     tra_filename);
+   outputFile = fopen (fName, "w");
+   if (outputFile == NULL)
+      TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, CREATE_FILE_IMP), fName);
    else
       /* le fichier de sortie principal a ete cree' */
      {
 	/* separe nom de directory et nom de fichier */
-	strncpy (tra_filedir, fileName, MAX_PATH);
-	tra_filedir[MAX_PATH - 1] = '\0';
-	i = strlen (tra_filedir);
-	while (i > 0 && tra_filedir[i] != DIR_SEP)
+	strncpy (fileDirectory, fName, MAX_PATH);
+	fileDirectory[MAX_PATH - 1] = '\0';
+	i = strlen (fileDirectory);
+	while (i > 0 && fileDirectory[i] != DIR_SEP)
 	   i--;
-	if (tra_filedir[i] == DIR_SEP)
+	if (fileDirectory[i] == DIR_SEP)
 	  {
-	     strcpy (tra_filename, &tra_filedir[i + 1]);
-	     tra_filedir[i + 1] = '\0';
+	     strcpy (fileName, &fileDirectory[i + 1]);
+	     fileDirectory[i + 1] = '\0';
 	  }
 	else
 	  {
-	     strcpy (tra_filename, &tra_filedir[i]);
-	     tra_filedir[i] = '\0';
+	     strcpy (fileName, &fileDirectory[i]);
+	     fileDirectory[i] = '\0';
 	  }
 	/* charge le schema de traduction du document */
-	if (!LdSchTrad (nomSchTrad, pDoc->DocSSchema) != 0)
+	if (!LdSchTrad (TSchemaName, pDoc->DocSSchema) != 0)
 	   /* echec au chargement du schema de traduction */
-	   fclose (tra_sortie);
+	   fclose (outputFile);
 	else
 	  {
 	     /* separe nom de fichier et extension */
-	     tra_extension[0] = '\0';
-	     i = strlen (tra_filename);
+	     fileExtension[0] = '\0';
+	     i = strlen (fileName);
 	     i--;
-	     while (i > 0 && tra_filename[i] != '.')
+	     while (i > 0 && fileName[i] != '.')
 		i--;
-	     if (tra_filename[i] == '.')
+	     if (fileName[i] == '.')
 	       {
-		  strncpy (tra_extension, &tra_filename[i], MAX_PATH);
-		  tra_filename[i] = '\0';
+		  strncpy (fileExtension, &fileName[i], MAX_PATH);
+		  fileName[i] = '\0';
 	       }
-	     /* charge tous les documents reference's par le document a traduire */
-	     /* LoadReferedDocuments(pDoc);  faut-il vraiment le faire???? */
-	     InitOutputFiles (tra_sortie, pDoc);
+	     InitOutputFiles (outputFile, pDoc);
 	     /* remet a zero les indicateurs "deja traduit" de tous les elements */
 	     /* du document */
-	     RazDejaTraduit (pDoc->DocRootElement);
+	     ResetTranslTags (pDoc->DocRootElement);
 	     for (i = 0; i < MAX_ASSOC_DOC; i++)
 		if (pDoc->DocAssocRoot[i] != NULL)
-		   RazDejaTraduit (pDoc->DocAssocRoot[i]);
+		   ResetTranslTags (pDoc->DocAssocRoot[i]);
 	     /* traduit l'arbre principal du document */
-	     Traduit (pDoc->DocRootElement, pDoc, TRUE, TRUE, FALSE);
+	     TranslateTree (pDoc->DocRootElement, pDoc, TRUE, TRUE, FALSE);
 	     /* traduit les arbres associe's */
 	     for (i = 0; i < MAX_ASSOC_DOC; i++)
 		if (pDoc->DocAssocRoot[i] != NULL)
-		   Traduit (pDoc->DocAssocRoot[i], pDoc, TRUE, TRUE, FALSE);
+		   TranslateTree (pDoc->DocAssocRoot[i], pDoc, TRUE, TRUE, FALSE);
 	     /* vide ce qui traine dans les buffers de sortie */
 	     /* et ferme ces fichiers */
 	     FlushOutputFiles (pDoc);
@@ -3487,5 +3353,3 @@ char               *nomSchTrad;
    fflush (stdout);
    fflush (stderr);
 }
-
-/* End Of Module export */
