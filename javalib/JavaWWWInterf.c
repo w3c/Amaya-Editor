@@ -232,13 +232,13 @@ boolean             error_html;
     JavaThotlibRelease();
     switch (mode) {
         case AMAYA_SYNC:
-	    do_execute_java_method(0, (void *) request, "Get", "()V", 0, 0);
+	    do_execute_java_method(0, (void *) request, "Get", "()I", 0, 0);
 	    break;
         case AMAYA_ASYNC:
 	    unhand(request)->callback = (jlong) GetObjectWWWCallback;
 	    unhand(request)->callback_f = (jlong) terminate;
 	    unhand(request)->callback_arg = (jlong) tcontext;
-	    do_execute_java_method(0, (void *) request, "AsyncGet", "()V", 0, 0);
+	    do_execute_java_method(0, (void *) request, "AsyncGet", "()I", 0, 0);
 	    break;
 	default:
 	    fprintf(stderr,"GetObjectWWW : unsupported mode %d\n", mode);
@@ -338,14 +338,16 @@ void               *context_tcbf;
 
 /*----------------------------------------------------------------------
   Stop Request
-  stops (kills) all active requests associated with a docid
+  stops (kills) all active requests associated with a document
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                StopRequest (int docid)
+void                StopRequest (int doc)
 #else
-void                StopRequest (docid)
-int                 docid;
+void                StopRequest (doc)
+int                 doc;
 #endif
 {
+    do_execute_java_class_method("amaya/HTTPRequest", "Stop", "(I)V",
+                                 (jint) doc);
 }
 
