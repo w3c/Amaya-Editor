@@ -44,9 +44,9 @@ EXCEPT
    Highlight:	        Invisible;
    class:		CssClass;
    PseudoClass:	        Invisible, CssPseudoClass;
-   xmlcomment_line:     Hidden;
-   xmlpi_line:          Hidden;
-   doctype_line:        Hidden, NoCut;
+   xmlcomment_line:     Hidden, NoSpellCheck;
+   xmlpi_line:          Hidden, NoSpellCheck;
+   doctype_line:        Hidden, NoSpellCheck, NoCut;
    doctype:             NoCut;
    cdata_line:          Hidden;
 
