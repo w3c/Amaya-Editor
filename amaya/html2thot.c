@@ -1988,13 +1988,7 @@ Element             el;
 			   text = TtaGetMemory (length + 1);
 			   TtaGiveTextAttributeValue (attr, text, &length);
 			     {
-			        desc = child;
-				do
-				   {
-				   leaf = desc;
-				   desc = TtaGetFirstChild (leaf);
-				   }
-				while (desc != NULL);
+			        leaf = TtaGetFirstChild (el);
 				if (leaf != NULL)
 				  {
 				  childType = TtaGetElementType (leaf);
