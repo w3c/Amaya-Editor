@@ -3435,9 +3435,10 @@ int                 doc;
 	   FrameTable[frame].WdFrame = drawing_area;
 	   FrRef[frame] = XtWindowOfObject (drawing_area);
 #endif /* _GTK */
-	   FrameTable[frame].FrWidth  = (int) dx;
-	   FrameTable[frame].FrScrollWidth  = (int) dx;
-	   FrameTable[frame].FrHeight = (int) dy;
+	   /* approximate the real size of the drawing area */
+	   FrameTable[frame].FrWidth  = (int) dx - 20;
+	   FrameTable[frame].FrScrollWidth  = (int) dx - 20;
+	   FrameTable[frame].FrHeight = (int) dy - 20;
            FrameTable[frame].WdFrame =  drawing_area;
 #else  /* _WINDOWS */
 	   /*** scrollbars ***/
