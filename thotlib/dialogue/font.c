@@ -147,11 +147,7 @@ static HFONT WIN_LoadFont (char alphabet, char family, int highlight,
        return NULL;
      }
 
-#ifdef _WIN_PRINT
    nHeight = -MulDiv(size, DOT_PER_INCH, 72);
-#else /* _WIN_PRINT */
-   nHeight = -size;
-#endif /* _WIN_PRINT */
    hFont = CreateFont (nHeight, nWidth, 0, 0, fnWeight,
                        fdwItalic, fdwUnderline, fdwStrikeOut,
                        DEFAULT_CHARSET, OUT_TT_ONLY_PRECIS, CLIP_DEFAULT_PRECIS,
@@ -1025,15 +1021,15 @@ ptrfont ThotLoadFont (char alphabet, char family, int highlight, int size,
 {
   if (unit == UnPixel)
     {
-#ifdef _WIN_PRINT
-      size = (size * PrinterDPI + ScreenDPI/ 2) / ScreenDPI;
-#else /* _WIN_PRINT */
      if (Printing)
+#ifdef _WIN_PRINT
+	  size = (size * 72 + ScreenDPI / 2) / ScreenDPI;
+#else /* _WIN_PRINT */
 	  /* adjust the font size to the printer definition */
 	  size = (size * 72 + DOT_PER_INCH / 2) / DOT_PER_INCH;
 #endif /* _WIN_PRINT */
      else
-	size = LogicalValue (size, UnPoint, NULL, 0);
+	  size = LogicalValue (size, UnPoint, NULL, 0);
       unit = UnPoint;
     }
   else if (unit == UnXHeight || unit == UnPercent)
