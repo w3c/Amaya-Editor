@@ -41,7 +41,7 @@
 #define NAME_LENGTH     32
 
 #define HTAppName     "amaya"
-#define HTAppVersion  "8.0-pre"
+#define HTAppVersion  "8.0"
 #define HTAppDate     __DATE__ 
 
 #define URL_STR       "/"
