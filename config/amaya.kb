@@ -45,6 +45,8 @@ Shift Alt <Key>W:	CreateMROW()
 Shift Alt <Key>X:	CreateMSUBSUP()
 Shift Alt <Key>Y:	CreateMUNDEROVER()
 
+Alt <Key>+:	ZoomIn()
+Alt <Key>-:	ZoomOut()
 Alt <Key>1:	CreateHeading1()
 Alt <Key>2:	CreateHeading2()
 Alt <Key>3:	CreateHeading3()

@@ -6,3 +6,12 @@ DICOPAR=$(THOTDIR)\dicopar
 THOTSYSSCH=$(THOTDIR)\amaya
 LANG=en_US
 HOME_PAGE=
+ENABLE_MULTIKEY=no
+# URL of your HTTP proxy server  (server.address:port :port is optional)
+# ex: HTTP_PROXY=http://www.imag.fr:3128
+HTTP_PROXY=
+# NO_PROXY: domain address which shouldn't be proxyfied 
+# ex: NO_PROXY=harpo.marx.edu)
+NO_PROXY=
+ENABLE_PIPELINING=
+ENABLE_CACHE=
