@@ -3905,7 +3905,8 @@ RULES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
-		Height: 0;
+		Height: Enclosed . Height;
+		VertPos: Top = Previous . Top;
 		END;
 	END;
 
@@ -7003,7 +7004,6 @@ ATTRIBUTES
 		Adjust: Enclosing =;
 		END;
 	END;
-	
  Cell_align = Cell_center :
 	BEGIN
 	CreateBefore(AttrNameAndValue);
@@ -7015,7 +7015,6 @@ ATTRIBUTES
 	   	Adjust: Left;
 		END;
 	END;
-
  Cell_align = Cell_right :
 	BEGIN
 	CreateBefore(AttrNameAndValue);
@@ -7027,7 +7026,6 @@ ATTRIBUTES
 	   	Adjust: Left;
 		END;
 	END;
-
  Cell_align = Cell_justify :
 	BEGIN
 	CreateBefore(AttrNameAndValue);
@@ -7037,7 +7035,6 @@ ATTRIBUTES
 	IN Alternate_view
 	   	Adjust: Left;
 	END;
-
  Cell_align = Cell_char :
 	BEGIN
 	CreateBefore(AttrNameAndValue);
@@ -7047,6 +7044,150 @@ ATTRIBUTES
 		END;
 	IN Alternate_view BEGIN
 	   	Adjust: Left;
+		END;
+	END;
+
+ Cell_align (Table) = Cell_left :
+	BEGIN
+	HorizPos: Left = Enclosing . Left;	
+	IN Structure_view BEGIN
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	END;
+ Cell_align (Table) = Cell_center :
+	BEGIN
+	HorizPos: VMiddle = Enclosing . VMiddle;	
+	IN Structure_view BEGIN
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	END;
+ Cell_align (Table) = Cell_right :
+	BEGIN
+	HorizPos: Right = Enclosing . Right;	
+	IN Structure_view BEGIN
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	END;
+ Cell_align (Table) = Cell_justify :
+	BEGIN
+	HorizPos: Left = Enclosing . Left;	
+	IN Structure_view BEGIN
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	END;
+ Cell_align (Table) = Cell_char :
+	BEGIN
+	HorizPos: Right = Enclosing . Right;	
+	IN Structure_view BEGIN
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	END;
+
+ Cell_align (Embed_) = Cell_left :
+	BEGIN
+	HorizPos: Left = Enclosing . Left;	
+	IN Structure_view BEGIN
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	END;
+ Cell_align (Embed_) = Cell_center :
+	BEGIN
+	HorizPos: VMiddle = Enclosing . VMiddle;	
+	IN Structure_view BEGIN
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	END;
+ Cell_align (Embed_) = Cell_right :
+	BEGIN
+	HorizPos: Right = Enclosing . Right;	
+	IN Structure_view BEGIN
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	END;
+ Cell_align (Embed_) = Cell_justify :
+	BEGIN
+	HorizPos: Left = Enclosing . Left;	
+	IN Structure_view BEGIN
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	END;
+ Cell_align (Embed_) = Cell_char :
+	BEGIN
+	HorizPos: Right = Enclosing . Right;	
+	IN Structure_view BEGIN
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	END;
+
+ Cell_align (Preformatted) = Cell_left :
+	BEGIN
+	HorizPos: Left = Enclosing . Left;	
+	IN Structure_view BEGIN
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	END;
+ Cell_align (Preformatted) = Cell_center :
+	BEGIN
+	HorizPos: VMiddle = Enclosing . VMiddle;	
+	IN Structure_view BEGIN
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	END;
+ Cell_align (Preformatted) = Cell_right :
+	BEGIN
+	HorizPos: Right = Enclosing . Right;	
+	IN Structure_view BEGIN
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	END;
+ Cell_align (Preformatted) = Cell_justify :
+	BEGIN
+	HorizPos: Left = Enclosing . Left;	
+	IN Structure_view BEGIN
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	END;
+ Cell_align (Preformatted) = Cell_char :
+	BEGIN
+	HorizPos: Right = Enclosing . Right;	
+	IN Structure_view BEGIN
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	END;
+
+ Cell_align (Object) = Cell_left :
+	BEGIN
+	HorizPos: Left = Enclosing . Left;	
+	IN Structure_view BEGIN
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	END;
+ Cell_align (Object) = Cell_center :
+	BEGIN
+	HorizPos: VMiddle = Enclosing . VMiddle;	
+	IN Structure_view BEGIN
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	END;
+ Cell_align (Object) = Cell_right :
+	BEGIN
+	HorizPos: Right = Enclosing . Right;	
+	IN Structure_view BEGIN
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	END;
+ Cell_align (Object) = Cell_justify :
+	BEGIN
+	HorizPos: Left = Enclosing . Left;	
+	IN Structure_view BEGIN
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		END;
+	END;
+ Cell_align (Object) = Cell_char :
+	BEGIN
+	HorizPos: Right = Enclosing . Right;	
+	IN Structure_view BEGIN
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
 	END;
 
