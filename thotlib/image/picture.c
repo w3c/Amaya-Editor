@@ -316,91 +316,92 @@ PictInfo           *imageDesc;
 
 #ifndef _WINDOWS
   if (pixmap != None)
-    switch (imageDesc->PicPresent)
-      {
-      case RealSize:
-      case ReScale:
-	XCopyArea (TtDisplay, pixmap, drawable, TtGraphicGC, picXOrg, picYOrg, w, h, xFrame, yFrame);
-	break;
-
-     case FillFrame:
-     case XRepeat:
-     case YRepeat:
-       {
-	 pFrame = &ViewFrameTable[frame - 1];
-	 valuemask = GCTile | GCFillStyle | GCTileStipXOrigin | GCTileStipYOrigin;
-	 values.fill_style = FillTiled;
-	 values.tile = pixmap;
-	 values.ts_x_origin = xFrame;
-	 values.ts_y_origin = yFrame;
-	 XChangeGC (TtDisplay, tiledGC, valuemask, &values);
-
-	 rect.x = pFrame->FrClipXBegin;
-	 rect.y = pFrame->FrClipYBegin;
-	 rect.width = pFrame->FrClipXEnd - rect.x;
-	 rect.height = pFrame->FrClipYEnd - rect.y;
-	 rect.x -= pFrame->FrXOrg;
-	 rect.y -= pFrame->FrYOrg;
-	 if (imageDesc->PicPresent != XRepeat)
-	     {
-	       /* picture repeated on Y axis */
-	       if (rect.y < yFrame)
-		 {
-		   /* reduce the height in delta value */
-		   rect.height = rect.height +rect.y - yFrame;
-		   rect.y = yFrame;
-		 }
-	       if (rect.height > h)
-		 rect.height = h;
-	     }
-	   else
-	     {
-	       /* only repeated on X axis */
-	       if (rect.y < picYOrg)
-		 {
-		   /* reduce the height in delta value */
-		   rect.height = rect.height +rect.y - picYOrg;
-		   rect.y = picYOrg;
-		 }
-	       if (rect.height > imageDesc->PicHArea - picYOrg)
-		 rect.height = imageDesc->PicHArea - picYOrg;
-	     }
-
-	   if (imageDesc->PicPresent != YRepeat)
-	     {
-	       /* picture repeated on X axis */
-	       if (rect.x < xFrame)
-		 {
-		   /* reduce the width in delta value */
-		   rect.width = rect.width +rect.x - xFrame;
-		   rect.x = xFrame;
-		 }
-	       if (rect.width > w)
-		 rect.width = w;
-	     }
-	 else
-	     {
-	       /* only repeated on Y axis */
-	       if (rect.x < picXOrg)
-		 {
-		   /* reduce the height in delta value */
-		   rect.width = rect.width +rect.x - picXOrg;
-		   rect.x = picXOrg;
-		 }
-	       if (rect.width > imageDesc->PicWArea - picXOrg)
-		 rect.width = imageDesc->PicWArea - picXOrg;
-	     }
-
-	   XSetClipRectangles (TtDisplay, tiledGC, 0, 0, &rect, 1, Unsorted);
-	   XFillRectangle (TtDisplay, drawable, tiledGC, xFrame, yFrame, w, h);
-	   /* remove clipping */
-	   rect.x = 0;
-	   rect.y = 0;
-	   rect.width = MAX_SIZE;
-	   rect.height = MAX_SIZE;
-	   XSetClipRectangles (TtDisplay, tiledGC, 0, 0, &rect, 1, Unsorted);
-	 }
-      }
+    {
+      switch (imageDesc->PicPresent)
+	{
+	case RealSize:
+	case ReScale:
+	  XCopyArea (TtDisplay, pixmap, drawable, TtGraphicGC, picXOrg, picYOrg, w, h, xFrame, yFrame);
+	  break;
+	  
+	case FillFrame:
+	case XRepeat:
+	case YRepeat:
+	  pFrame = &ViewFrameTable[frame - 1];
+	  valuemask = GCTile | GCFillStyle | GCTileStipXOrigin | GCTileStipYOrigin;
+	  values.fill_style = FillTiled;
+	  values.tile = pixmap;
+	  values.ts_x_origin = xFrame;
+	  values.ts_y_origin = yFrame;
+	  XChangeGC (TtDisplay, tiledGC, valuemask, &values);
+	  
+	  rect.x = pFrame->FrClipXBegin;
+	  rect.y = pFrame->FrClipYBegin;
+	  rect.width = pFrame->FrClipXEnd - rect.x;
+	  rect.height = pFrame->FrClipYEnd - rect.y;
+	  rect.x -= pFrame->FrXOrg;
+	  rect.y -= pFrame->FrYOrg;
+	  if (imageDesc->PicPresent != XRepeat)
+	    {
+	      /* clipping height is done by the box height */
+	      if (rect.y < yFrame)
+		{
+		  /* reduce the height in delta value */
+		  rect.height = rect.height + rect.y - yFrame;
+		  rect.y = yFrame;
+		}
+	      if (rect.height > h)
+		rect.height = h;
+	    }
+	  else
+	    {
+	      /* clipping height is done by the image height */
+	      if (rect.y < picYOrg)
+		{
+		  /* reduce the height in delta value */
+		  rect.height = rect.height +rect.y - picYOrg;
+		  rect.y = picYOrg;
+		}
+	      if (rect.height > imageDesc->PicHArea - picYOrg)
+		rect.height = imageDesc->PicHArea - picYOrg;
+	    }
+	  
+	  if (imageDesc->PicPresent != YRepeat)
+	    {
+	      /* clipping width is done by the box width */
+	      if (rect.x < xFrame)
+		{
+		  /* reduce the width in delta value */
+		  rect.width = rect.width +rect.x - xFrame;
+		  rect.x = xFrame;
+		}
+	      if (rect.width > w)
+		rect.width = w;
+	    }
+	  else
+	    {
+	      /* clipping width is done by the image width */
+	      if (rect.x < picXOrg)
+		{
+		  /* reduce the width in delta value */
+		  rect.width = rect.width +rect.x - picXOrg;
+		  rect.x = picXOrg;
+		}
+	      if (rect.width > imageDesc->PicWArea - picXOrg)
+		rect.width = imageDesc->PicWArea - picXOrg;
+	    }
+	  
+	  XSetClipRectangles (TtDisplay, tiledGC, 0, 0, &rect, 1, Unsorted);
+	  XFillRectangle (TtDisplay, drawable, tiledGC, xFrame, yFrame, w, h);
+	  /* remove clipping */
+	  rect.x = 0;
+	  rect.y = 0;
+	  rect.width = MAX_SIZE;
+	  rect.height = MAX_SIZE;
+	  XSetClipRectangles (TtDisplay, tiledGC, 0, 0, &rect, 1, Unsorted);
+	  break;
+	}
+    }
 #endif /* _WINDOWS */
 }
 
@@ -938,17 +939,13 @@ int                 frame;
 	       XSetClipMask (TtDisplay, TtGraphicGC, imageDesc->PicMask);
 	     }
 
-	   /*****if (picWArea < wFrame)
-	     wFrame = picWArea;
-	     if (picHArea < hFrame)
-	     hFrame = picHArea;*****/
 	   if (typeImage >= InlineHandlers)
 	     {
 	       if (PictureHandlerTable[typeImage].DrawPicture != NULL)
 		 (*(PictureHandlerTable[typeImage].DrawPicture)) (imageDesc, xFrame + xTranslate, yFrame + yTranslate);
 	     }
 	   else
-	     LayoutPicture (imageDesc->PicPixmap, drawable, picXOrg, picYOrg,
+	    LayoutPicture (imageDesc->PicPixmap, drawable, picXOrg, picYOrg,
 			    wFrame, hFrame, xFrame + xTranslate, yFrame + yTranslate, frame, imageDesc);
 	   
 	   if (imageDesc->PicMask)
@@ -1198,13 +1195,20 @@ PictInfo           *imageDesc;
 	 }
        else
 	 {
-	   if (box != NULL)
+	   if (box != NULL && (w == 0 ||h == 0 ))
 	     {
+	       /* one of box size is unknown, keep the image size */
 	       if (w == 0)
-		 /* the box size is unknown, keep the image size */
-		 w = wFrame;
+		 {
+		   w = wFrame;
+		   box->BxWidth = wFrame;
+		 }
 	       if (h == 0)
-		 h = hFrame;
+		 {
+		   h = hFrame;
+		   box->BxHeight = hFrame;
+		 }
+	       /*NewDimPicture (box->BxAbstractBox);*/
 	     }
 	 }
      }
@@ -1223,7 +1227,13 @@ PictInfo           *imageDesc;
        imageDesc->PicWArea = w;
        imageDesc->PicHArea = h;
      }
-       
+   if (box->BxType != BoPicture)
+     {
+       /* we don't use mask for background picture till we don't change
+	  clipping management */
+       FreePixmap (picMask);
+       picMask = None;
+     }
    if (!Printing || imageDesc->PicPixmap != EpsfPictureLogo)
      UpdatePictInfo (imageDesc, myDrawable, picMask);
 #endif /* _WINDOWS */

@@ -2113,7 +2113,7 @@ int                 frame;
    rect.width = MAX_SIZE;
    rect.height = MAX_SIZE;
    XSetClipRectangles (TtDisplay, TtLineGC, 0, 0, &rect, 1, Unsorted);
-   XSetClipRectangles (TtDisplay, TtGraphicGC, 0, 0, &rect, 1, Unsorted);
+   XSetClipRectangles (TtDisplay, TtGraphicGC, 0, 0, &rect, 1, Unsorted); 
    XSetClipRectangles (TtDisplay, TtGreyGC, 0, 0, &rect, 1, Unsorted);
    XFlushOutput (frame);
 #endif /* _WINDOWS */

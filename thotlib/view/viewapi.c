@@ -72,6 +72,7 @@
 #include "thotmsg_f.h"
 #include "applicationapi_f.h"
 #include "appdialogue_f.h"
+#include "frame_f.h"
 
 extern int          UserErrorCode;
 
@@ -1452,7 +1453,8 @@ PtrDocument         pDoc;
 {
    PtrElement          pElRoot;
    PtrAbstractBox      pAbbRoot;
-   int                 frame, h;
+   ViewFrame          *pFrame;
+   int                 frame, h, w;
    boolean             complete;
 
    if (Assoc)
@@ -1485,7 +1487,12 @@ PtrDocument         pDoc;
 	h = 0;
 	ChangeConcreteImage (frame, &h, pAbbRoot);
      }
-}				/* RebuildViewImage */
+   /* force to redraw all the frame */
+   pFrame = &ViewFrameTable[frame - 1];
+   GetSizesFrame (frame, &w, &h);
+   DefClip (frame, pFrame->FrXOrg, pFrame->FrYOrg, w, h);
+}
+
 
 /*----------------------------------------------------------------------
    RebuildImage recree l'image abstraite de toutes les vues            

@@ -2196,6 +2196,7 @@ BOXES
 	Height: 0.8;
 	VertPos: HRef = Next . HRef;
 	Visibility: Creator =;
+	FillPattern: nopattern;
 	IN Structure_view
 		Visibility: 0;
 	END;

@@ -181,10 +181,45 @@ View                view;
 #endif /* __STDC__ */
 {
    ElementType         elType;
+   Element             el, br, parent;
+   int                 firstChar, lastChar;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
    elType.ElTypeNum = HTML_EL_BR;
    TtaCreateElement (elType, document);
+   TtaGiveLastSelectedElement (document, &el, &firstChar, &lastChar);
+   br = TtaGetParent (el);
+   el = br;
+   TtaNextSibling (&el);
+   if (el == NULL)
+     {
+       /* Insert a text element after the BR */
+       elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+       el = TtaNewElement (document, elType);
+       TtaInsertSibling (el, br, FALSE, document);
+       /* move the selection */
+       TtaSelectString (document, el, 1, 0);
+     }
+   else
+     {
+       /* move the selection */
+       parent = el;
+       while (el != NULL && !TtaIsLeaf ( TtaGetElementType (el)))
+	 {
+	   parent = el;
+	   el = TtaGetFirstChild (parent);
+	 }
+       if (el == NULL)
+	 TtaSelectElement (document, parent);
+       else
+	 {
+	   elType = TtaGetElementType (el);
+	   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+	     TtaSelectString (document, el, 1, 0);
+	   else
+	     TtaSelectString (document, el, 0, 0);
+	 }
+     }
 }
 
 /*----------------------------------------------------------------------

@@ -1277,6 +1277,7 @@ Document            doc;
    PresentationContext context;
    PresentationValue   unused;
    ElementType         elType;
+   Element             el;
 
    unused.data = 0;
 #ifdef DEBUG_STYLES
@@ -1288,11 +1289,10 @@ Document            doc;
     */
    elType = TtaGetElementType(elem);
    if ((elType.ElTypeNum == HTML_EL_BODY) || (elType.ElTypeNum == HTML_EL_HEAD)) {
-       Element el;
        elType.ElTypeNum = HTML_EL_HTML;
 
        el = TtaGetMainRoot (doc);
-       el = TtaSearchTypedElement (elType, SearchInTree, el);
+       /*el = TtaSearchTypedElement (elType, SearchInTree, el);*/
        if (el != NULL)
            elem = el;
    }
