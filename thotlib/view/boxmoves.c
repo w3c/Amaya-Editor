@@ -2852,24 +2852,21 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
     {
       if (pCurrentAb->AbLeafType == LtSymbol)
 	{
-	  i = 0;
 	  font = pBox->BxFont;
-	  i = GetMathFontWidth (pBox->BxFont,
-				pCurrentAb->AbShape,
-				font->FontSize,
-				pBox->BxH);
-
+	  i = GetMathFontWidth (pCurrentAb->AbShape, font->FontSize,pBox->BxH);
 	  switch (pCurrentAb->AbShape)
 	    {
 	    case 'd':	/* double integral */
 	      if (i == 0)
-		i = BoxCharacterWidth (231, font)
-		  + BoxCharacterWidth (231, font) / 2;
+		i = BoxCharacterWidth (0xf3, font)
+		  + BoxCharacterWidth (0xf3, font) / 2;
+	      ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame);
 	      break;		
 	    case 'i':	/* integral */
 	    case 'c':	/* circle integral */
 	      if (i == 0)
-		i = BoxCharacterWidth (231, font);
+		i = BoxCharacterWidth (0xf3, font);
+	      ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame);
 	      break;
 	    case '(':
 	    case ')':
@@ -2877,10 +2874,11 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	    case '}':
 	    case '[':
 	    case ']':
+	    case '<':
+	    case '>':
 	      if (i == 0)
-		i = BoxCharacterWidth (230, font);
-	      ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 
-			   0, 0, 0, frame);	      
+		i = BoxCharacterWidth (0xe6, font);
+	      ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame);
 	      break;
 	    default:
 	      break;

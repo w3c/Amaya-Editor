@@ -509,7 +509,7 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
        }
      }
    if (type == 2)		/* double integral */
-      DrawIntegral (frame, thick, x + (CharacterWidth (244, font) / 2),
+      DrawIntegral (frame, thick, x + (CharacterWidth (243, font) / 2),
 		    y, l, h, -1, font, fg);
 
    else if (type == 1)		/* contour integral */

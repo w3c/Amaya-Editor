@@ -999,7 +999,7 @@ int CharRelSize (int height, unsigned char symb, int n)
 
    j = 0;
    while (j < MaxNumberOfSizes &&
-	  height > CharacterHeight ((char)symb, (ThotFont)LoadStixFont (6, j+1)))
+	  height > CharacterHeight ((char)symb, (ThotFont)LoadStixFont (n, j+1)))
       j++;
 
    return (j);

@@ -282,7 +282,7 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
   ViewFrame          *pFrame;
   int                 xd, yd, i, w;
   int                 fg, bg;
-  int                 width, height, baseline;
+  int                 width, height, baseline, size;
   PtrBox              ancestor;
   ThotBool            useStix;
 
@@ -353,7 +353,7 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 	  yd = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
 	    pBox->BxTPadding - pFrame->FrYOrg;
 	  
-	  /* box sizes have to be positive */
+	  /* box dimensions have to be positive */
 	  width = pBox->BxW;
 	  if (width < 0)
 	    width = 0;
@@ -361,6 +361,12 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 	  if (height < 0)
 	    height = 0;
 	  
+	  if (pBox->BxAbstractBox->AbSizeUnit == UnPoint ||
+		   pBox->BxAbstractBox->AbSizeUnit == UnPixel)
+	    size = FontRelSize (pBox->BxAbstractBox->AbSize);
+	  else
+	    size = pBox->BxAbstractBox->AbSize;
+
 	  if (selected &&
 	      !pFrame->FrSelectOnePosition &&
 	      pFrame->FrSelectionBegin.VsXPos != pBox->BxW)
@@ -386,14 +392,13 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 	    {
 	    case 'c':
 	      if (useStix)
-		DrawStixIntegral (frame, i, xd, yd, width, height, 1, font, fg);
+		DrawStixIntegral (frame, xd, yd, width, height, 1, size, fg);
 	      else
 		DrawIntegral (frame, i, xd, yd, width, height, 1, font, fg);
 	      break;
 	    case 'd':
 	      if (useStix)
-		DrawStixIntegral (frame, i, xd, yd, width, height, 2, font,
-				  fg);
+		DrawStixIntegral (frame, xd, yd, width, height, 2, size, fg);
 	      else
 		DrawIntegral (frame, i, xd, yd, width, height, 2, font, fg);
 	      break;
@@ -402,8 +407,7 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 	      break;
 	    case 'i':
 	      if (useStix)
-		DrawStixIntegral (frame, i, xd, yd, width, height, 0, font,
-				  fg);
+		DrawStixIntegral (frame, xd, yd, width, height, 0, size, fg);
 	      else
 		DrawIntegral (frame, i, xd, yd, width, height, 0, font, fg);
 	      break;
@@ -452,60 +456,58 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 	      break;
 	    case '(':
 	      if (useStix)
-		DrawStixParenthesis (frame, i, xd, yd, width, height, 0, font,
-				     fg);
+		DrawStixParenthesis (frame, xd, yd, width, height, 0, size,fg);
 	      else
 		DrawParenthesis (frame, i, xd, yd, width, height, 0, font, fg,
 				 baseline);
 	      break;
 	    case ')':
 	      if (useStix)
-		DrawStixParenthesis (frame, i, xd, yd, width, height, 1, font,
-				     fg);
+		DrawStixParenthesis (frame, xd, yd, width, height, 1, size,fg);
 	      else
 		DrawParenthesis (frame, i, xd, yd, width, height, 1, font, fg,
 				 baseline);
 	      break;
 	    case '{':
 	      if (useStix)
-		DrawStixBrace (frame, i, xd, yd, width, height, 0, font, fg);
+		DrawStixBrace (frame, xd, yd, width, height, 0, size, fg);
 	      else
 		DrawBrace (frame, i, xd, yd, width, height, 0, font, fg,
 			   baseline);
 	      break;
 	    case '}':
 	      if (useStix)
-		DrawStixBrace (frame, i, xd, yd, width, height, 1, font, fg);
+		DrawStixBrace (frame, xd, yd, width, height, 1, size, fg);
 	      else
 		DrawBrace (frame, i, xd, yd, width, height, 1, font, fg,
 			   baseline);
 	      break;
 	    case '[':
 	      if (useStix)
-		DrawStixBracket (frame, i, xd, yd, width, height, 0, font, fg);
+		DrawStixBracket (frame, xd, yd, width, height, 0, size, fg);
 	      else
 		DrawBracket (frame, i, xd, yd, width, height, 0, font, fg,
 			     baseline);
 	      break;
 	    case ']':
 	      if (useStix)
-		DrawStixBracket (frame, i, xd, yd, width, height, 1, font, fg);
+		DrawStixBracket (frame, xd, yd, width, height, 1, size, fg);
 	      else
 		DrawBracket (frame, i, xd, yd, width, height, 1, font, fg,
 			     baseline);
 	      break;
 	    case '<':
 	      if (useStix)
-		DrawStixPointyBracket (frame, i, xd, yd, width, height, 0,
-				       font, fg);
+		DrawStixPointyBracket (frame, xd, yd, width, height, 0, size,
+				       fg);
 	      else
 		DrawPointyBracket (frame, i, xd, yd, width, height, 0, font,
 				   fg);
 	      break;
 	    case '>':
 	      if (useStix)
-		DrawStixPointyBracket (frame, i, xd, yd, width, height, 1,
-				       font, fg);
+		DrawStixPointyBracket (frame, xd, yd, width, height, 1, size,
+				       fg);
 	      else
 		DrawPointyBracket (frame, i, xd, yd, width, height, 1, font,
 				   fg);

@@ -38,6 +38,10 @@
 #include "font_f.h"
 #include "stix.h"
 
+#define THOT_EXPORT extern
+#include "boxes_tv.h"
+#include "font_tv.h"
+
 #define LOW_HEIGHT 2
 #define MID_HEIGHT 3
 #define HIGH_HEIGHT 5
@@ -190,6 +194,188 @@ MapEntry     Stix_GeomShapes [] = {
 #define Stix_GeomShapes_length sizeof(Stix_GeomShapes) / sizeof(MapEntry)
 
 /*----------------------------------------------------------------------
+  DrawCompoundBraceStix
+  Draw a big brace with several characters from the Esstix-eight font.
+  ----------------------------------------------------------------------*/
+static void DrawCompoundBraceStix (int frame, int x, int y, int l, int h,
+				   int size, int fg,
+				   int topChar, int middleChar, int bottomChar)
+{
+  int             xm, yf, yend, ym, second, hd, delta, fillChar;
+  ThotFont        font;
+
+  fillChar = 0x50;
+  size = size + (size * ViewFrameTable[frame-1].FrMagnification / 10);
+  font = (ThotFont)LoadStixFont (8, size);
+  xm = x + ((l - CharacterWidth (topChar, font)) / 2);
+  yf = y + CharacterAscent (topChar, font);
+  hd = CharacterHeight (fillChar, font) - 2; /* 2 pixels overlap */
+  if (h < (26 * hd) / 10)
+    /* the brace is less than 2.8 times the heigth of a single character */
+    /* use two half-braces and center them */
+    {
+      if (topChar == 0x4f)
+	{  topChar = 0x48;  bottomChar = 0x47; }
+      else
+	{  topChar = 0x47;  bottomChar = 0x48; }
+      yf += (h - (2 * hd)) / 2;
+      DrawChar (topChar, frame, xm, yf, font, fg);
+      DrawChar (bottomChar, frame, xm, yf+hd, font, fg);      
+    }
+  else if (h < 4 * hd)
+    /* we can use three characters, but the two gaps are too narrow to
+       fill each of them with a single fill character. Draw the three
+       characters next to each other, centered in the box */
+    {
+      delta = (h - (3 * hd)) / 2;
+      if (delta > 0)
+	yf += delta;
+      else
+	delta -= 1;
+      DrawChar (topChar, frame, xm, yf, font, fg);
+      yf += hd;
+      if (delta < 0)
+	yf += delta;
+      DrawChar (middleChar, frame, xm, yf, font, fg);
+      yf += hd;
+      if (delta < 0)
+	yf += delta;
+      DrawChar (bottomChar, frame, xm, yf, font, fg);
+    }
+  else
+    /* use the total height */
+    {
+      DrawChar (topChar, frame, xm, yf, font, fg);
+      yend = y + h - CharacterHeight (bottomChar, font) +
+	             CharacterAscent (bottomChar, font) - 1;
+      DrawChar (bottomChar, frame, xm, yend, font, fg);
+      ym = (yf + yend) / 2;
+      DrawChar (middleChar, frame, xm, ym, font, fg);
+      delta = (h - 3*hd) / 2;
+      if (delta > 0 && hd > 0)
+	/* there are two gaps between the top, middle and bottom characters */
+	{
+	  if (delta <= hd)
+	    /* the gap is less than one character. Draw a single fill
+	       character centered in each gap */
+	    {
+	      DrawChar (fillChar, frame, xm, (ym + yf) / 2, font, fg);
+	      DrawChar (fillChar, frame, xm, (yend + ym) / 2, font, fg);
+	    }
+	  else
+	    /* draw several fill characters in each gap */
+	    {
+	      second = ym - yf;
+	      while (delta > 0)
+		{
+		  yf += hd;
+		  DrawChar (fillChar, frame, xm, yf, font, fg);
+		  DrawChar (fillChar, frame, xm, yf+second, font, fg);
+		  delta -= hd;
+		  ym -= hd;
+		  if (delta > 0)
+		    {
+		      DrawChar (fillChar, frame, xm, ym, font, fg);
+		      DrawChar (fillChar, frame, xm, ym+second+1, font, fg);
+		      delta -= hd;
+		    }
+		}
+	    }
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  DrawCompoundExtendedStix
+  Draw a big parenthesis, square bracket or integral sign with several
+  characters from the Esstix-eight font.
+  l < 0 means that the character must be aligned on the left side of its box.
+  ----------------------------------------------------------------------*/
+static void DrawCompoundExtendedStix (int frame, int x, int y, int l, int h,
+				      int size, int fg,
+				     int topChar, int fillChar, int bottomChar)
+{
+  int             xm, yf, yend, hd, delta;
+  ThotFont        font;
+
+  size = size + (size * ViewFrameTable[frame-1].FrMagnification / 10);
+  font = (ThotFont)LoadStixFont (8, size);
+  if (l < 0)
+    xm = x;
+  else
+    xm = x + ((l - CharacterWidth (topChar, font)) / 2);
+  yf = y + CharacterAscent (topChar, font);
+  hd = CharacterHeight (fillChar, font) - 2; /* 2 pixels overlap */
+  if (h > 2 * hd && h < (28 * hd) / 10)
+    /* some space between the top and bottom characters, but not enough
+       to display a single fill character. Draw only the top and bottom
+       characters, next to each other, centered in the box */
+    {
+      yf += (h - (2 * hd)) / 2;
+      DrawChar (topChar, frame, xm, yf, font, fg);
+      DrawChar (bottomChar, frame, xm, yf+hd, font, fg);
+    }
+  else
+    {
+      DrawChar (topChar, frame, xm, yf, font, fg);
+      yend = y + h - CharacterHeight (bottomChar, font) +
+	             CharacterAscent (bottomChar, font) - 1;
+      DrawChar (bottomChar, frame, xm, yend, font, fg);
+      delta = yend - yf - hd;
+      if (delta > 0 && hd > 0)
+	/* there is a gap between the top and bottom characters.
+	   fill it with some fill characters */
+	{
+	  if (delta <= hd)
+	    /* the gap is less than one character. Draw a single fill
+	       character centered in the gap */
+	    DrawChar (fillChar, frame, xm, (yend + yf) / 2, font, fg);
+	  else
+	    /* draw several fill characters */
+	    {
+	      while (delta > 0)
+		{
+		  yf += hd;
+		  DrawChar (fillChar, frame, xm, yf, font, fg);
+		  delta -= hd;
+		  yend -= hd;
+		  if (delta > 0)
+		    {
+		      DrawChar (fillChar, frame, xm, yend, font, fg);
+		      delta -= hd;
+		    }
+		}
+	    }
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  DrawCenteredStixChar draw a one glyph symbol centered in its box.
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
+void DrawCenteredStixChar (ThotFont font, unsigned char symb, int x, int y, 
+		   int l, int h, int fg, int frame)
+{
+  x = x + ((l - CharacterWidth ((char) symb, font)) / 2);
+  y = y + ((h - CharacterHeight ((char)symb, font)) / 2)
+	  + CharacterAscent ((char) symb, font);
+  DrawChar ((char) symb, frame, x, y, font, fg);
+}
+
+/*----------------------------------------------------------------------
+  DrawStixChar draw a one glyph symbol vertically centered in its box.
+  parameter fg indicates the drawing color
+  ----------------------------------------------------------------------*/
+static void DrawStixChar (ThotFont font, unsigned char symb, int x,
+				  int y, int h, int fg, int frame)
+{
+  y = y + ((h - CharacterHeight ((char)symb, font)) / 2)
+	  + CharacterAscent ((char) symb, font);
+  DrawChar ((char) symb, frame, x, y, font, fg);
+}
+
+/*----------------------------------------------------------------------
   DrawStixSigma
   ----------------------------------------------------------------------*/
 void DrawStixSigma (int frame, int x, int y,  int l, int h, ThotFont font, int fg)
@@ -204,13 +390,13 @@ void DrawStixSigma (int frame, int x, int y,  int l, int h, ThotFont font, int f
 
   if (h < LOW_CHAR)
     /* display a single glyph */
-    DrawStixChar (font, 83, x, y, l, h, fg, frame);
+    DrawCenteredStixChar (font, 83, x, y, l, h, fg, frame);
   else if (h < MID_CHAR)
     /* display a single glyph */
-    DrawStixChar (font, 45, x, y, l, h, fg, frame);
+    DrawCenteredStixChar (font, 45, x, y, l, h, fg, frame);
   else
     /* display a single glyph */
-    DrawStixChar (font, 62, x, y, l, h, fg, frame);
+    DrawCenteredStixChar (font, 62, x, y, l, h, fg, frame);
 }
 
 /*----------------------------------------------------------------------
@@ -220,50 +406,103 @@ void DrawStixSigma (int frame, int x, int y,  int l, int h, ThotFont font, int f
   - double if type = 2.
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void DrawStixIntegral (int frame, int thick, int x, int y, int l, int h,
-		       int type, ThotFont font, int fg)
+void DrawStixIntegral (int frame, int x, int y, int l, int h,
+		       int type, int size, int fg)
 {
   unsigned char   symb;
+  int             delta;
+  ThotFont        font;
 
-  /* Integrals using esstix6 charmap
-     52 - => 3x text 3 line eq
-     33 - => 2x text 2 line eq
-     69 - => 1x text for oneline eq */
-  /* display a single glyph */
-  if (h < LOW_CHAR)
-    symb = 69;
-  else if (h < MID_CHAR)
-    symb = 33;
+  font = (ThotFont)LoadStixFont (6, CharRelSize (h, 0x21, 6));
+  if (CharacterHeight (0x21, font) > (3 * h) / 4 ||
+      (type != 0 && type != 2))
+    {
+      /* Integrals using esstix6 charmap
+	 52 - => 3x text 3 line eq
+	 33 - => 2x text 2 line eq
+	 69 - => 1x text for oneline eq */
+      /* display a single glyph */
+      if (type == 0 || type == 2)
+	{
+	  if (h < LOW_CHAR)
+	    symb = 0x45;
+	  else if (h < MID_CHAR)
+	    symb = 0x21;
+	  else
+	    symb = 0x34;
+	  DrawStixChar (font, symb, x, y, h, fg, frame);
+	}
+      if (type == 2)		
+	/* double integral, display the second integral sign */
+	{
+	  delta = CharacterWidth (symb, font) / 3;
+	  if (delta < 3)
+	    delta = 3;
+	  DrawStixChar (font, symb, x+delta, y, h, fg, frame);
+	}
+      if (type == 1)	
+	/* contour integral */
+	{
+	  if (h < LOW_CHAR)
+	    symb = 0x46;
+	  else if (h < MID_CHAR)
+	    symb = 0x23;
+	  else
+	    symb = 0x35;
+	  DrawStixChar (font, symb, x, y, h, fg, frame);
+	}
+    }
   else
-    symb = 52;
-  font = (ThotFont)LoadStixFont (6, CharRelSize (h, symb, 6));
-  DrawStixChar (font, symb, x, y, l, h, fg, frame);
-
-  if (type == 2)		
-    /* double integral */
-    DrawStixIntegral (frame, thick, x + (CharacterWidth (52, font) / 2),
-		      y, l, h, -1, font, fg);
-  /*contour integral
-    else if (type == 1)	
-    DrawChar ('o', frame, x + ((l - CharacterWidth (111, font)) / 2),
-    y + (h - CharacterHeight (111, font)) / 2 + CharacterAscent (111, font),
-    font, fg);
-  */
+    /* very high character. Display it with several components from the
+       Esstix-8 font */
+    {
+      x -= l / 3;   /* in font Esstix these characters have too a wide margin*/
+      DrawCompoundExtendedStix (frame, x, y, -1, h, size, fg,
+				0x61, 0x62, 0x63);
+      if (type == 2)		
+	/* double integral, display the second integral sign */
+	DrawCompoundExtendedStix (frame, x+l/4, y, -1, h, size, fg,
+				  0x61, 0x62, 0x63);
+    }
 }
 
 /* ----------------------------------------------------------------------
   StixIntegralWidth
   ----------------------------------------------------------------------*/
-static int StixIntegralWidth (int h, ThotFont font)
+static int StixIntegralWidth (int height, int type)
 {
-  int i;
-  
-  if (h < LOW_HEIGHT)
-    i = CharacterWidth (69, font);
-  else if (h < MID_HEIGHT)
-    i = CharacterWidth (33, font);
+  int i, size;
+  ThotFont        font;
+
+  size = CharRelSize (height, 0x21, 6);
+  font = (ThotFont)LoadStixFont (6, size);  
+  if (height < LOW_CHAR)
+    {
+      if (type == 0 || type == 2)
+	i = CharacterWidth (0x45, font);
+      if (type == 2)
+	i += i/4; /* double integral, drawn as 2 single integrals */
+      if (type == 1)
+	i = CharacterWidth (0x46, font);
+    }
+  else if (height < MID_CHAR)
+    {
+      if (type == 0 || type == 2)
+	i = CharacterWidth (0x21, font);
+      if (type == 2)
+	i += i/4;
+      if (type == 1)
+	i = CharacterWidth (0x23, font);
+    }
   else 
-    i = CharacterWidth (52, font);
+    {
+      if (type == 0 || type == 2)
+	i = CharacterWidth (0x34, font);
+      if (type == 2)
+	i += i/4;
+      if (type == 1)
+	i = CharacterWidth (0x35, font);
+    }
   return i;
 }
 
@@ -271,50 +510,64 @@ static int StixIntegralWidth (int h, ThotFont font)
   DrawStixBracket draw an opening or closing bracket (depending on direction)
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void DrawStixBracket (int frame, int thick, int x, int y, int l, int h,
-		  int direction, ThotFont font, int fg)
+void DrawStixBracket (int frame, int x, int y, int l, int h,
+		      int direction, int size, int fg)
 {
   unsigned char   symb;
+  ThotFont        font;
 
-  /*  Esstix 7 : 
-      61 normal
-      33 2 line
-      48 3 line  */
-  if (h < LOW_CHAR )
+  font = (ThotFont)LoadStixFont (7, CharRelSize (h, 36, 7));
+  if (CharacterHeight (33, font) > (3 * h) / 4)
     {
-      if (direction == 0)
-	symb = 63;
+      /*  write a single Esstix 7 character: 
+	  63 normal
+	  36 2 line
+	  50 3 line  */
+      if (h < LOW_CHAR )
+	{
+	  if (direction == 0)
+	    symb = 63;
+	  else
+	    symb = 64;
+	}
+      else if (h < MID_CHAR)
+	{
+	  if (direction == 0)
+	    symb = 36;
+	  else
+	    symb = 37;
+	}
       else
-        symb = 64;
-    }
-  else if (h < MID_CHAR)
-    {
-      if (direction == 0)
-	symb = 36;
-      else
-	symb = 37;
+	{
+	  if (direction == 0)
+	    symb = 50;
+	  else
+	    symb = 51;
+	}
+      DrawCenteredStixChar (font, symb, x, y, l, h, fg, frame);
     }
   else
-    {
-      if (direction == 0)
-	symb = 50;
-      else
-	symb = 51;
-    }
-  font = (ThotFont)LoadStixFont (7, CharRelSize (h, 36, 7));
-  DrawStixChar (font, symb, x, y, l, h, fg, frame);
+    /* very high character. Display it with several components */
+    if (direction == 0)
+      /* draw an opening bracket */
+      DrawCompoundExtendedStix (frame, x, y, l, h, size, fg, 0x49, 0x4a, 0x4b);
+    else
+      /* draw a closing bracket */
+      DrawCompoundExtendedStix (frame, x, y, l, h, size, fg, 0x4c, 0x4d, 0x4e);
 }
 
 /* ----------------------------------------------------------------------
   StixBracketWidth
   ----------------------------------------------------------------------*/
-static int StixBracketWidth (int h, ThotFont font)
+static int StixBracketWidth (int height)
 {
-  int i;
-  
-  if (h < LOW_HEIGHT)
+  int             i;
+  ThotFont        font;
+
+  font = (ThotFont)LoadStixFont (7, CharRelSize (height, 36, 7));
+  if (height < LOW_HEIGHT)
     i = CharacterWidth (63, font);
-  else if (h < MID_HEIGHT)
+  else if (height < MID_HEIGHT)
     i = CharacterWidth (36, font);
   else 
     i = CharacterWidth (50, font);
@@ -326,17 +579,19 @@ static int StixBracketWidth (int h, ThotFont font)
   on direction)
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void DrawStixPointyBracket (int frame, int thick,
+void DrawStixPointyBracket (int frame,
 			    int x, int y,
 			    int l, int h,
-			    int direction, ThotFont font, int fg)
+			    int direction, int size, int fg)
 {
   unsigned char   symb;
+  ThotFont        font;
 
   if (fg < 0)
     return;
 
-  /*   Esstix 7 : 
+  font = (ThotFont)LoadStixFont (7, CharRelSize (h, 41, 7));
+  /*  write a single Esstix 7 character:
        61 normal
        33 2 line
        48 3 line  */
@@ -361,20 +616,21 @@ void DrawStixPointyBracket (int frame, int thick,
       else
 	symb = 55;
     }
-  font = (ThotFont)LoadStixFont (7, CharRelSize (h, 41, 7));
-  DrawStixChar (font, symb, x, y, l, h, fg, frame); 
+  DrawCenteredStixChar (font, symb, x, y, l, h, fg, frame); 
 }
 
 /* ----------------------------------------------------------------------
   StixPointyBracketWidth
   ----------------------------------------------------------------------*/
-static int StixPointyBracketWidth (int h, ThotFont font)
+static int StixPointyBracketWidth (int height)
 {
   int i;
-  
-  if (h < LOW_HEIGHT)
+  ThotFont        font;
+
+  font = (ThotFont)LoadStixFont (7, CharRelSize (height, 41, 7));  
+  if (height < LOW_HEIGHT)
     i = CharacterWidth (67, font);
-  else if (h < MID_HEIGHT)
+  else if (height < MID_HEIGHT)
     i = CharacterWidth (41, font);
   else 
     i = CharacterWidth (54, font);
@@ -385,50 +641,65 @@ static int StixPointyBracketWidth (int h, ThotFont font)
   DrawStixParenthesis draw a closing or opening parenthesis (direction).
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void DrawStixParenthesis (int frame, int thick, int x, int y, int l, int h,
-		      int direction, ThotFont font, int fg)
+void DrawStixParenthesis (int frame, int x, int y, int l, int h,
+		          int direction, int size, int fg)
 {
   unsigned char   symb;
+  ThotFont        font;
 
-  /*  Esstix 7 : 
-    61 normal
-    33 2 line
-    48 3 line
-  */
-  if (h < LOW_CHAR)
+  font = (ThotFont)LoadStixFont (7, CharRelSize (h, 33, 7));
+  if (CharacterHeight (33, font) > (3 * h) / 4)
     {
-      if (direction == 0)
-	symb = 61;
+      /*  write a single Esstix 7 character: 
+	  61 normal
+	  33 2 line
+	  48 3 line */
+      if (h < LOW_CHAR)
+	{
+	  if (direction == 0)
+	    symb = 61;
+	  else
+	    symb = 62;
+	}
+      else if (h < MID_CHAR)
+	{
+	  if (direction == 0)
+	    symb = 33;
+	  else
+	    symb = 35;
+	}
       else
-	symb = 62;
-    }
-  else if (h < MID_CHAR)
-    {
-      if (direction == 0)
-	symb = 33;
-      else
-	symb = 35;
+	{
+	  if (direction == 0)
+	    symb = 48;
+	  else
+	    symb = 49;
+	}
+      DrawCenteredStixChar (font, symb, x, y, l, h, fg, frame);
     }
   else
-    {
-      if (direction == 0)
-	symb = 48;
-      else
-	symb = 49;
-    }
-  font = (ThotFont)LoadStixFont (7, CharRelSize (h, 33, 7));
-  DrawStixChar (font, symb, x, y, l, h, fg, frame);
+    /* very high character. Display it with several components from the
+       Esstix-8 font */
+    if (direction == 0)
+      /* draw an opening parenthesis */
+      DrawCompoundExtendedStix (frame, x, y, l, h, size, fg, 0x5a, 0x5b, 0x5c);
+    else
+      /* draw a closing parenthesis */
+      DrawCompoundExtendedStix (frame, x, y, l, h, size, fg, 0x5d, 0x5e, 0x5f);
 }
+
 /* ----------------------------------------------------------------------
   StixParenthesisWidth
   ----------------------------------------------------------------------*/
-static int StixParenthesisWidth (int h, ThotFont font)
+static int StixParenthesisWidth (int height)
 {
   int i;
-  
-  if (h < LOW_HEIGHT)
+  ThotFont        font;
+
+  font = (ThotFont)LoadStixFont (7, CharRelSize (height, 33, 7));  
+  if (height < LOW_HEIGHT)
     i = CharacterWidth (61, font);
-  else if (h < MID_HEIGHT)
+  else if (height < MID_HEIGHT)
     i = CharacterWidth (33, font);
   else 
     i = CharacterWidth (48, font);
@@ -439,112 +710,106 @@ static int StixParenthesisWidth (int h, ThotFont font)
   DrawStixBrace draw an opening of closing brace (depending on direction).
   parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void DrawStixBrace (int frame, int thick, int x, int y, int l, int h,
-		    int direction, ThotFont font, int fg)
+void DrawStixBrace (int frame, int x, int y, int l, int h,
+		    int direction, int size, int fg)
 {
   unsigned char   symb;
-  /*
-  Esstix 7 : 
-  61 normal
-  33 2 line
-  48 3 line
-  */
-  if (h < LOW_CHAR)
+  ThotFont        font;
+
+  font = (ThotFont)LoadStixFont (7, CharRelSize (h, 38, 7));
+  if (CharacterHeight (38, font) > (3 * h) / 4)
     {
-      if (direction == 0)
-	symb = 65;
+      /*  write a single Esstix 7 character: 
+	  61 normal
+	  33 2 line
+	  48 3 line */
+      if (h < LOW_CHAR)
+	{
+	  if (direction == 0)
+	    symb = 65;
+	  else
+	    symb = 66;
+	}
+      else if (h < MID_CHAR)
+	{
+	  if (direction == 0)
+	    symb = 38;
+	  else
+	    symb = 40;
+	}
       else
-	symb = 66;
-    }
-  else if (h < MID_CHAR)
-    {
-      if (direction == 0)
-	symb = 38;
-      else
-	symb = 40;
+	{
+	  if (direction == 0)
+	    symb = 52;
+	  else
+	    symb = 53;
+	}
+      DrawCenteredStixChar (font, symb, x, y, l, h, fg, frame);
     }
   else
-    {
-      if (direction == 0)
-	symb = 52;
-      else
-	symb = 53;
-    }
-  font = (ThotFont)LoadStixFont (7, CharRelSize (h, 38, 7));
-  DrawStixChar (font, symb, x, y, l, h, fg, frame);
+    /* very high character. Display it with several components */
+    if (direction == 0)
+      /* draw an opening brace */
+      DrawCompoundBraceStix (frame, x, y, l, h, size, fg, 0x4f, 0x51, 0x52);
+    else
+      /* draw a closing parenthesis */
+      DrawCompoundBraceStix (frame, x, y, l, h, size, fg, 0x53, 0x54, 0x55);
 }
-
 
 /* ----------------------------------------------------------------------
   StixBraceWidth
   ----------------------------------------------------------------------*/
-static int StixBraceWidth (int h, ThotFont font)
+static int StixBraceWidth (int height)
 {
   int i;
-  
-  if (h < LOW_HEIGHT)
+  ThotFont        font;
+
+  font = (ThotFont)LoadStixFont (7, CharRelSize (height, 38, 7));
+  if (height < LOW_HEIGHT)
     i = CharacterWidth (65, font);
-  else if (h < MID_HEIGHT)
+  else if (height < MID_HEIGHT)
     i = CharacterWidth (38, font);
   else 
     i = CharacterWidth (52, font);
   return i;
 }
 
-
-/*----------------------------------------------------------------------
-  DrawStixChar draw a one glyph symbol.
-  parameter fg indicates the drawing color
-  ----------------------------------------------------------------------*/
-void DrawStixChar (ThotFont font, unsigned char symb, int x, int y, 
-		   int l, int h, int fg, int frame)
-{
-  x = x + ((l - CharacterWidth ((char) symb, font)) / 2);
-  y = y + ((h - CharacterHeight ((char)symb, font)) / 2)
-	  + CharacterAscent ((char) symb, font);
-  DrawChar ((char) symb, frame, x, y, font, fg);
-}
-
 /*----------------------------------------------------------------------
   GetMathFontWidth : Calculates the width of the stix char
 ----------------------------------------------------------------------*/
-int GetMathFontWidth (SpecFont fontset, char shape, int size, int height)
+int GetMathFontWidth (char shape, int size, int height)
 {
-  ThotFont      pfont = NULL;
   int           i;
 
   i = 0;
-  if (height > 0) 
-      GetMathFontFromChar (shape, fontset, (void **) &pfont,
-			   FontRelSize (height-5));
-  else
-    return 0;
-  
-  if (pfont != NULL)
+  if (StixExist && height > 0) 
     {
       switch (shape)
 	{
 	case 'd':	/* double integral */
-	  i = StixIntegralWidth (size, pfont)/2;
+	  i = StixIntegralWidth (height, 2);
+	  break;
 	case 'i':	/* integral */
+	  i = StixIntegralWidth (height, 0);
+	  break;
 	case 'c':	/* circle integral */
-	  i += StixIntegralWidth (size, pfont);
+	  i = StixIntegralWidth (height, 1);
 	  break;
 	case '(':
 	case ')':
-	  i = StixParenthesisWidth (size, pfont); 
+	  i = StixParenthesisWidth (height); 
 	  break;
 	case '{':
 	case '}':
-	  i = StixBraceWidth (size, pfont);
+	  i = StixBraceWidth (height);
 	  break;
 	case '[':
 	case ']':
-	  i = StixBracketWidth (size, pfont);	
+	  i = StixBracketWidth (height);	
 	  break;
 	case '<':
 	case '>':
-	  i = StixPointyBracketWidth (size, pfont);	
+	  i = StixPointyBracketWidth (height);	
 	  break;
 	default:
 	  break;
@@ -566,35 +831,35 @@ void GiveStixSize (ThotFont pfont, PtrAbstractBox pAb, int *width,
   switch (pAb->AbShape)
     {
     case 'd':	/* double integral */
-      *width = StixIntegralWidth (size, pfont) + 
-	StixIntegralWidth (size, pfont)/2;
-      *width = *width + *width/2;
-      *height *= 4;
-      break;      
+      *width = StixIntegralWidth (*height, 2);
+      *height *= 2;
+      break;
     case 'i':	/* integral */
+      *width = StixIntegralWidth (*height, 0);
+      *height *= 2;
+      break;
     case 'c':	/* circle integral */
-      *width = StixIntegralWidth (size, pfont);
-      *width = *width + *width;
+      *width = StixIntegralWidth (*height, 1);
       *height *= 2;
       break;
     case '(':
     case ')':
-      *width = StixParenthesisWidth (size, pfont); 
+      *width = StixParenthesisWidth (*height); 
       *width = *width + *width/2;
       break;
     case '{':
     case '}':
-      *width = StixBraceWidth (size, pfont);
+      *width = StixBraceWidth (*height);
       *width = *width + *width/2;
       break;
     case '[':
     case ']':
-      *width = StixBracketWidth (size, pfont);	
+      *width = StixBracketWidth (*height);	
       *width = *width + *width/2;
       break;
     case '<':
     case '>':
-      *width = StixPointyBracketWidth (size, pfont);	
+      *width = StixPointyBracketWidth (*width);	
       *width = *width + *width/2;
       break;
 #ifdef o

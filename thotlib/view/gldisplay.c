@@ -107,16 +107,12 @@
 /*for int  => (((int)N)<<1)*/
 #define P2(N) (N*N)
 
-
 #define	MAX_STACK	50
 #define	MIDDLE_OF(v1, v2) (((v1)+(v2))/2.0)
 #define ALLOC_POINTS    300
 
-
 #define MESA
 
-
- 
 /*----------------------------------------------------------------------
   FontOrig update and (x, y) location before DrawString
   accordingly to the ascent of the font used.
@@ -475,7 +471,7 @@ void DrawIntersection (int frame, int x, int y, int l, int h, ThotFont font,
    if (fg < 0)
      return;
    
-   DrawStixChar (font, 88, x, y, l, h, fg, frame);
+   DrawCenteredStixChar (font, 88, x, y, l, h, fg, frame);
 }
 
 /*----------------------------------------------------------------------
@@ -487,7 +483,7 @@ void DrawUnion (int frame, int x, int y, int l, int h, ThotFont font, int fg)
    if (fg < 0)
      return;
 
-   DrawStixChar (font, 87, x, y,  l, h, fg, frame);
+   DrawCenteredStixChar (font, 87, x, y,  l, h, fg, frame);
 }
 
 /*----------------------------------------------------------------------

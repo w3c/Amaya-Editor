@@ -14,8 +14,7 @@ int GetFontandIndexFromGreekChar (char  *c,
 				  char  *code,
 				  int  *encoding,
 				  int size);
-int GetMathFontWidth (SpecFont fontset,
-		      char shape,
+int GetMathFontWidth (char shape,
 		      int size,
 		      int height);
 
@@ -23,20 +22,20 @@ void GiveStixSize (ThotFont font, PtrAbstractBox pAb,
 		   int *width, int *height, int size);
 
 
-void DrawStixChar (ThotFont font, unsigned char symb, 
+void DrawCenteredStixChar (ThotFont font, unsigned char symb, 
 		   int x, int y, 
 		   int l, int h, 
 		   int fg, int frame);
-void DrawStixIntegral (int frame, int thick, int x, int y, int l, int h,
-		       int type, ThotFont font, int fg);
-void DrawStixBracket (int frame, int thick, int x, int y, int l, int h,
-		      int direction, ThotFont font, int fg);
-void DrawStixPointyBracket (int frame, int thick, int x, int y, int l, int h,
-			    int direction, ThotFont font, int fg);
-void DrawStixParenthesis (int frame, int thick, int x, int y, int l, int h,
-			  int direction, ThotFont font, int fg);
-void DrawStixBrace (int frame, int thick, int x, int y, int l, int h,
-		    int direction, ThotFont font, int fg);
+void DrawStixIntegral (int frame, int x, int y, int l, int h,
+		       int type, int size, int fg);
+void DrawStixBracket (int frame, int x, int y, int l, int h,
+		      int direction, int size, int fg);
+void DrawStixPointyBracket (int frame, int x, int y, int l, int h,
+			    int direction, int size, int fg);
+void DrawStixParenthesis (int frame, int x, int y, int l, int h,
+			  int direction, int size, int fg);
+void DrawStixBrace (int frame, int x, int y, int l, int h,
+		    int direction, int size, int fg);
 void DrawStixSigma (int frame, int x, int y, 
 		    int l, int h, 
 		    ThotFont font, int fg);

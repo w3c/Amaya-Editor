@@ -2764,7 +2764,7 @@ ATTRIBUTES
   IntVertStretch (Superscript):
 	BEGIN
 	VertPos: Top = Enclosing . Top;
-	HorizPos: Left = Base . Right + 0.3;
+	HorizPos: Left = Base . Right + 0.1;
 	IN Structure_view BEGIN
                 VertPos: Top = Previous . Bottom;
                 HorizPos: Left = Enclosing . Left;
@@ -2773,7 +2773,7 @@ ATTRIBUTES
   IntVertStretch (Subscript):
 	BEGIN
 	VertPos: Bottom = Enclosing . Bottom;
-	HorizPos: Left = Base . Right - 0.1;
+	HorizPos: Left = Base . Right - 0.3;
 	IN Structure_view BEGIN
                 VertPos: Top = Previous . Bottom;
                 HorizPos: Left = Enclosing . Left;
