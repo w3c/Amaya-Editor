@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /W3 /GX /O2 /I "..\..\annotlib" /I "..\..\annotlib\f" /I "..\amaya" /I "..\..\amaya" /I "..\..\amaya\f" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\var" /I "..\..\thotlib\include" /I "..\thotlib\internals\f" /I "..\..\..\libwww\Library\src" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I "..\annotlib" /I "..\annotlib\f" /D "NDEBUG" /D "_MBCS" /D "_LIB" /D "_WINDOWS" /D "__STDC__" /D "WIN32" /D "ANNOTATIONS" /D "ANNOT_ON_ANNOT" /YX /FD /c
+# ADD CPP /nologo /W3 /GX /O2 /I "..\..\annotlib" /I "..\..\annotlib\f" /I "..\amaya" /I "..\..\amaya" /I "..\..\amaya\f" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\var" /I "..\..\thotlib\include" /I "..\thotlib\internals\f" /I "..\..\..\libwww\Library\src" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I "..\annotlib" /I "..\annotlib\f" /D "NDEBUG" /D "_MBCS" /D "_LIB" /D "_WINDOWS" /D "__STDC__" /D "WIN32" /D "ANNOTATIONS" /D "ANNOT_ON_ANNOT" /D "_I18N_" /D "_GL" /YX /FD /c
 # ADD BASE RSC /l 0x40c /d "NDEBUG"
 # ADD RSC /l 0x40c /d "NDEBUG"
 BSC32=bscmake.exe
