@@ -1750,12 +1750,13 @@ char               *AppVersion;
    AHTNetInit ();
 
    /* Set up the default set of Authentication schemes */
-   HTAAInit ();
+   HTAA_newModule ("basic", HTBasic_generate, HTBasic_parse, NULL,
+		    HTBasic_delete);
    /* activate MDA by defaul */
    strptr = (char *) TtaGetEnvString ("ENABLE_MDA");
    if (!strptr || (strptr && *strptr && strcasecmp (strptr, "no" )))
      HTAA_newModule ("digest", HTDigest_generate, HTDigest_parse, 
-		     HTDigest_delete);
+		     HTDigest_updateInfo, HTDigest_delete);
 
    /* Get any proxy settings */
    ProxyInit ();
