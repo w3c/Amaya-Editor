@@ -86,7 +86,7 @@ static SchemaMenu_Ctl *SchemasMenuList;
 #ifdef _WINDOWS
 #define WM_ENTER (WM_USER)
 
-extern TBADDBITMAP AmayaTBBitmap;
+extern TBADDBITMAP ThotTBBitmap;
 
 static WNDPROC lpfnTextZoneWndProc = (WNDPROC) 0;
 static BOOL    doSwitchButton = TRUE;
@@ -101,6 +101,7 @@ static HWND hwndTB;
 
 static int   tipIndex = 0;
 static int   strIndex = 0;
+
 extern int   CommandToString [MAX_BUTTON];
 extern char  szTbStrings [4096];
 #endif /* AMAYA_TOOLTIPS */
@@ -1430,23 +1431,30 @@ char               *info;
 		  index = i;
                   if (procedure) {
                      w = (TBBUTTON*) TtaGetMemory (sizeof (TBBUTTON));
-                     w->iBitmap   = picture;
-                     w->idCommand = TBBUTTONS_BASE + i; 
-                     w->fsState   = TBSTATE_ENABLED;
-                     w->fsStyle   = type;
-                     w->dwData    = 0;
-                     w->iString   = i;
-#                    ifdef AMAYA_TOOLTIPS
-                     CommandToString[tipIndex++] = TBBUTTONS_BASE + i;
-                     CommandToString[tipIndex]   = -1;
-					 nCust [frame][i] = i;
-#                    endif /* AMAYA_TOOLTIPS */
-                     FrameTable[frame].Button[i] = w;
-                     FrameTable[frame].Call_Button[i] = (Proc) procedure;
-					 ToolBar_ButtonStructSize (WinToolBar[frame]);
-                     ToolBar_AddBitmap (WinToolBar[frame], i+1 , &AmayaTBBitmap);
-                     ToolBar_InsertButton (WinToolBar[frame], i, w);
-                     SendMessage (WinToolBar[frame], TB_ENABLEBUTTON, (WPARAM) (index + TBBUTTONS_BASE), (LPARAM) MAKELONG (state, 0));
+					 if (!w)
+                        WinErrorBox (NULL);
+					 else {
+                         w->iBitmap   = picture;
+                         w->idCommand = TBBUTTONS_BASE + i; 
+                         w->fsState   = TBSTATE_ENABLED;
+                         w->fsStyle   = type;
+                         w->dwData    = 0;
+                         w->iString   = i;
+#                        ifdef AMAYA_TOOLTIPS
+                         CommandToString[tipIndex++] = TBBUTTONS_BASE + i;
+                         CommandToString[tipIndex]   = -1;
+			             nCust [frame][i] = i;
+#                        endif /* AMAYA_TOOLTIPS */
+                         FrameTable[frame].Button[i] = w;
+                         FrameTable[frame].Call_Button[i] = (Proc) procedure;
+
+                         ToolBar_InsertButton (WinToolBar[frame], i, w);
+						 /*
+						 if (!SendMessage(WinToolBar[frame], TB_INSERTBUTTON, (WPARAM)i, (LPARAM)(LPTBBUTTON)w))
+                            WinErrorBox (NULL); */
+
+                         SendMessage (WinToolBar[frame], TB_ENABLEBUTTON, (WPARAM) (index + TBBUTTONS_BASE), (LPARAM) MAKELONG (state, 0));
+					 }
                   } else {
                         w = (TBBUTTON*) TtaGetMemory (sizeof (TBBUTTON));
                         w->iBitmap   = 0;
@@ -1457,8 +1465,6 @@ char               *info;
                         w->iString   = 0;
                         FrameTable[frame].Button[i] = w;
                         FrameTable[frame].Call_Button[i] = (Proc) procedure;
-                        ToolBar_ButtonStructSize (WinToolBar[frame]);
-                        ToolBar_AddBitmap (WinToolBar[frame], i+1, &AmayaTBBitmap);
                         ToolBar_InsertButton (WinToolBar[frame], i, w);
                   }
 #                 endif /* _WINDOWS */
@@ -2578,7 +2584,7 @@ int                 doc;
 	     row1 = XmCreateRowColumn (rowv, "", args, n);
 
 	     for (i = 1; i < MAX_BUTTON; i++)
-		FrameTable[frame].Button[i] = 0;
+		     TtaFreeMemory (FrameTable[frame].Button[i]);
 	     FrameTable[frame].Button[0] = row1;
 
 	     /* Row horizontal pour mettre le logo a gauche des commandes */
@@ -2859,8 +2865,10 @@ int                 frame;
 	XtRemoveCallback (XtParent (XtParent (w)), XmNdestroyCallback, (XtCallbackProc) FrameKilled, (XtPointer) frame);
 
 	XDestroyWindow (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
-        /* SendMessage (FrMainRef[frame], "WM_DESTROY", (WPARAM) 0, (LPARAM) 0); */
 #       else  /* _WINDOWS */
+        for (i = 0; i < MAX_BUTTON; i++)
+            FrameTable[frame].Button[i] = 0;
+
         DestroyWindow (FrMainRef[frame]);
 		CleanFrameCatList (frame);
 #       endif /* _WINDOWS */

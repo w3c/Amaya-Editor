@@ -523,7 +523,8 @@ struct Cat_Context* catalogue;
 		     while (twIndex < C_NUMBER && !found)
 		           if (FrameCatList[frameIndex].Cat_Table[catIndex] &&
                               FrameCatList[frameIndex].Cat_Table[catIndex]->Cat_Entries->E_ThotWidget[twIndex] == parent) {
-			      found = TRUE ;
+			      
+				 found = TRUE ;
 			      frame = frameIndex ;
 			   } else
                                  twIndex++ ;

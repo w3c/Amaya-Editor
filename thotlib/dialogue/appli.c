@@ -120,7 +120,7 @@ DWORD       dwToolBarStyles   = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TO
 DWORD       dwToolBarStyles   = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP;
 #endif /* AMAYA_TOOLTIPS */
 DWORD       dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
-TBADDBITMAP AmayaTBBitmap;
+TBADDBITMAP ThotTBBitmap;
 
 #ifdef AMAYA_TOOLTIPS
 #ifdef __STDC__
@@ -1138,11 +1138,15 @@ LPARAM      lParam;
      switch (mMsg) {
             case WM_CREATE:
                 /* Create toolbar  */
-                 AmayaTBBitmap.hInst = hInstance;
-                 AmayaTBBitmap.nID   = IDR_TOOLBAR;
+                 ThotTBBitmap.hInst = hInstance;
+                 ThotTBBitmap.nID   = IDR_TOOLBAR;
                  ToolBar = CreateWindow (TOOLBARCLASSNAME, NULL, dwToolBarStyles,
                                          0, 0, 0, 0, hwnd, (HMENU) 1, hInstance, 0) ;
 
+				 SendMessage (ToolBar, TB_BUTTONSTRUCTSIZE, (WPARAM) sizeof (TBBUTTON), 0L);
+
+				 if ((SendMessage (ToolBar, TB_ADDBITMAP, (WPARAM) MAX_BUTTON, (LPARAM) (LPTBADDBITMAP) &ThotTBBitmap)) == -1)
+                    WinErrorBox (NULL);
                  /*  ToolBar_ButtonStructSize (hwnd);
 				  ToolBar_AddBitmap (hwnd, 1, &AmayaTBBitmap); */
 
