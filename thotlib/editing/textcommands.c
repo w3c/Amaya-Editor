@@ -814,8 +814,10 @@ View                view;
    int                 k, lg, maxLength;
    int                 firstChar, lastChar;
    int                 v;
+   ThotBool            inAttr;
 
    j = 0;
+   inAttr = FALSE;
    /* Recupere la selection courante */
    if (!GetCurrentSelection (&pDoc, &pFirstEl, &pLastEl, &firstChar, &lastChar))
       /* Rien a copier */
@@ -828,7 +830,8 @@ View                view;
 
    /* Calcule la longueur du Xbuffer a produire */
    if (pFirstEl == pLastEl)
-      maxLength = lastChar - firstChar;		/* un seul element */
+     /* only one element */
+      maxLength = lastChar - firstChar;
    else
      {
 	maxLength = pFirstEl->ElVolume - firstChar;	/* volume 1er element */
@@ -854,34 +857,44 @@ View                view;
 	  }
      }
 
-   if (maxLength == 0)
-      /* Rien a recopier */
-      return 0;
+   if (pDoc == DocSelectedAttr)
+     {
+       /* Selection is within an attribute */
+       firstChar = FirstSelectedCharInAttr;
+       lastChar = LastSelectedCharInAttr;
+       maxLength = LastSelectedCharInAttr - FirstSelectedCharInAttr;
+       inAttr = TRUE;
+       clipboard = AbsBoxSelectedAttr->AbText;
+     }
+   else if (maxLength == 0)
+     /* nothing selected */
+     return 0;
+   else if (pFirstEl->ElTerminal && pFirstEl->ElLeafType == LtText)
+     clipboard = pFirstEl->ElText;
+   else
+     clipboard = NULL;
 
-   /* On reserve un volant de 100 caracteres pour ajouter des CR */
+   /* Adding 100 characters for extra CR */
    max = maxLength + lg;
-   /* Alloue un Xbuffer de la longueur voulue */
+   /* Allocate the Xbuffer with the right length */
    Xbuffer = TtaAllocString (max);
 
    if (*buffer)
      TtaFreeMemory (*buffer);
    *buffer = Xbuffer;
-   /* Recopie le texte dans le Xbuffer */
+   /* Copy the text into the Xbuffer */
    i = 0;
    lg = 0;
 
-   /* note la vue concernee */
+   /* get the current view */
    if (view > 100)
      v = 0;
    else
      v = view - 1;
 
-   pEl = pFirstEl;
    /* Teste si le premier element est de type texte */
-   if (pEl->ElTerminal && pEl->ElLeafType == LtText)
+   if (clipboard)
      {
-	clipboard = pEl->ElText;
-
 	/* On saute les firstChar premiers caracteres */
 	k = 0;
 	j = clipboard->BuLength;
@@ -924,6 +937,7 @@ View                view;
 
    /* Recopie le texte des elements suivants */
    pOldBlock = NULL;
+   pEl = pFirstEl;
    while (pEl != NULL)
      {
 	pEl = FwdSearchTypedElem (pEl, CharString + 1, NULL);

@@ -74,12 +74,6 @@ static int          SelectedPictureEdge;/* if the current selection is a
 					   is on the left side or that the
 					   whole picture is selected */
 
-/* selection in the character string of an attribute value */
-static PtrDocument  DocSelectedAttr;
-static PtrAbstractBox AbsBoxSelectedAttr;
-static int          FirstSelectedCharInAttr;
-static int          LastSelectedCharInAttr;
-static int          InitSelectedCharInAttr;
 
 
 /*----------------------------------------------------------------------

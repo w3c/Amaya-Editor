@@ -1663,11 +1663,11 @@ ThotBool          pre;
   ThotBool            result;
   NotifyOnValue       notifyEl;
   PtrDocument         pDoc;
-  int                 vue;
+  int                 view;
   ThotBool            assoc;
   ThotBool            ok = FALSE;
 
-  GetDocAndView (frame, &pDoc, &vue, &assoc);
+  GetDocAndView (frame, &pDoc, &view, &assoc);
   result = FALSE;
   pAsc = pEl;
   while (pAsc != NULL)
@@ -1719,14 +1719,18 @@ int               ym;
   PtrAbstractBox      pAb;
   PtrElement	      pEl;
   ViewFrame          *pFrame;
+  PtrDocument         pDoc;
+  int                 view;
   int                 x, width;
   int                 y, height;
   int                 xmin, xmax;
   int                 ymin, ymax;
   int                 xref, yref;
   int                 pointselect;
+  ThotBool            assoc, histOpen;
   ThotBool            still, okH, okV;
 
+  GetDocAndView (frame, &pDoc, &view, &assoc);
   pFrame = &ViewFrameTable[frame - 1];
   /* by default no selected point */
   pointselect = 0;
@@ -1790,7 +1794,9 @@ int               ym;
 	  y = pBox->BxYOrg - pFrame->FrYOrg;
 	  width = pBox->BxWidth;
 	  height = pBox->BxHeight;
-	  
+	  histOpen = !pDoc->DocEditSequence;
+	  if (histOpen)
+	    OpenHistorySequence (pDoc, pEl, pEl, 0, 0);
 	  if (pointselect != 0 && pBox->BxType != BoPicture)
 	    {
 	      pEl = pBox->BxAbstractBox->AbElement;
@@ -1826,7 +1832,7 @@ int               ym;
 		  else
 		    {
 		      /* Moving a point in a polyline */
-		      /* check if the polyline is opened or closed */
+		      /* check if the polyline is open or closed */
 		      still = (pAb->AbPolyLineShape == 'p' ||
 			       pAb->AbPolyLineShape == 's');
 		      PolyLineModification (frame, &x, &y, pBox,
@@ -1888,6 +1894,8 @@ int               ym;
 	      NewPosition (pAb, x, xref, y, yref, frame, TRUE);
 	    }
 	}
+      if (histOpen)
+	CloseHistorySequence (pDoc);
     }
 }
 
