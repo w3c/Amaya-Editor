@@ -493,7 +493,10 @@ static ThotBool BoolRule (PtrPRule pPRule, PtrElement pEl,
 		 case PresImmediate:
 		    if (pPRule->PrType == PtHyphenate ||
 			pPRule->PrType == PtVertOverflow ||
-			pPRule->PrType == PtHorizOverflow)
+			pPRule->PrType == PtHorizOverflow ||
+			pPRule->PrType == PtGather ||
+			pPRule->PrType == PtPageBreak ||
+			pPRule->PrType == PtLineBreak)
 		       val = pPRule->PrBoolValue;
 		    break;
 	      }
@@ -3682,14 +3685,27 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 	    break;
 
 	  case PtVertOverflow:
-	    pAb->AbVertEnclosing = !BoolRule (pPRule,
-					      pAb->AbElement,
+	    pAb->AbVertEnclosing = !BoolRule (pPRule, pAb->AbElement,
 					      pAb->AbDocView, &appl);
 	    break;
 
 	  case PtHorizOverflow:
-	    pAb->AbHorizEnclosing = !BoolRule (pPRule,
-					       pAb->AbElement,
+	    pAb->AbHorizEnclosing = !BoolRule (pPRule, pAb->AbElement,
+					       pAb->AbDocView, &appl);
+	    break;
+
+	  case PtGather:
+	    pAb->AbBuildAll = BoolRule (pPRule, pAb->AbElement,
+					pAb->AbDocView, &appl);
+	    break;
+
+	  case PtPageBreak:
+	    pAb->AbAcceptPageBreak = BoolRule (pPRule, pAb->AbElement,
+					       pAb->AbDocView, &appl);
+	    break;
+
+	  case PtLineBreak:
+	    pAb->AbAcceptLineBreak = BoolRule (pPRule, pAb->AbElement,
 					       pAb->AbDocView, &appl);
 	    break;
 

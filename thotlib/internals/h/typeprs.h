@@ -153,14 +153,8 @@ typedef struct _PresentationBox
 {
   Name      PbName;		  /* box name */	
   PtrPRule	PbFirstPRule;	  /* first presentation rule defining the box*/
-  ThotBool	PbAcceptPageBreak;/* indicates whether the box may be
-				     broken at the bottom of a page */
-  ThotBool	PbAcceptLineBreak;/* indicates whether the box may be
-				     broken at the end of a line */
-  ThotBool	PbBuildAll;	  /* indicates if the box image must be built
-				     in one piece or if it can be partial */
-  ThotBool	PbPageFooter;	  /* it is a footer box */
-  ThotBool	PbPageHeader;	  /* it is a header box */
+  ThotBool	PbPageFooter;	  /* it is a page footer box */
+  ThotBool	PbPageHeader;	  /* it is a page header box */
   ThotBool	PbPageBox;	  /* it is a page box */
   int	 	PbFooterHeight;	  /* if it is a page box, size of the footer
 				     in picas */
@@ -212,8 +206,8 @@ typedef enum
   PtSize, PtStyle, PtWeight, PtFont, PtUnderline, PtThickness,
   PtIndent, PtLineSpacing, PtDepth, PtAdjust,
   PtLineStyle, PtLineWeight, PtFillPattern, PtBackground, PtForeground,
-  PtHyphenate, PtVertOverflow, PtHorizOverflow,
-  PtXRadius, PtYRadius,
+  PtHyphenate, PtVertOverflow, PtHorizOverflow, PtPageBreak, PtLineBreak,
+  PtGather, PtXRadius, PtYRadius,
   /* the three following types must be the last ones */
   PtBreak1, PtBreak2, PtPictInfo
 } PRuleType;
@@ -482,7 +476,7 @@ typedef struct _PresRule
 	  DimensionRule _PrDimRule_;
 	} s4;
 	struct	/* PRuleType = PtHyphenate, PtVertOverflow,
-		   PtHorizOverflow */
+		   PtHorizOverflow, PtGather, PtPageBreak, PtLineBreak */
 	{
 	  ThotBool _PrBoolValue_;
 	} s5;
@@ -784,21 +778,6 @@ typedef struct _PresentSchema
 					  indicating which attribute compare
 					  themselves to the attribute in order
 					  to deduce a presentation */
-  ThotBool    PsAcceptPageBreak[MAX_RULES_SSCHEMA]; /* indicates for each
-					  element type, in the same order as in
-					  table StructSchema.SsRule, if the
-					  element can be broken at the bottom
-					  of a page */
-  ThotBool    PsAcceptLineBreak[MAX_RULES_SSCHEMA]; /* indicates for each 
-					  element type, in the same order as in
-					  table StructSchema.SsRule, if the
-					  element can be broken at the end of a
-					  line */
-  ThotBool    PsBuildAll[MAX_RULES_SSCHEMA];    /* indicates for each element
-					  type, in the same order as in
-					  table StructSchema.SsRule, if the
-					  image of the box must be built in one
-					  piece or if it can be divided */
   int	      PsElemTransmit[MAX_RULES_SSCHEMA]; /* for each element type,
 					  in the same order as in table
 					  StructSchema.SsRule, index in the

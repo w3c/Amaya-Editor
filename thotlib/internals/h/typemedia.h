@@ -436,34 +436,36 @@ typedef struct _AbstractBox
   TypeUnit        AbBottomBorderUnit; /* Bottom Border Unit */
   TypeUnit        AbLeftBorderUnit;   /* Left Border Unit */
 
-  ThotBool        AbAcceptLineBreak;    /* Can be split in lines */
-  ThotBool        AbAcceptPageBreak;    /* Can be split by page breaks */
-  ThotBool        AbHyphenate;	/* Contents can be hyphenated */
-  ThotBool        AbOnPageBreak;	/* The box crosses the page limit */
-  ThotBool        AbAfterPageBreak;	/* Abstract box beyond the page limit*/
-  ThotBool        AbNotInLine;	/* The abstract box is not part of the line */
-  ThotBool        AbHorizEnclosing;	/* True: horizontally enclosed box */
-  ThotBool        AbVertEnclosing;	/* True: vertically enclosed box */
-  ThotBool        AbCanBeModified;	/* Modification is allowed */
-  ThotBool        AbSelected;		/* The abstract box is selected */
-  ThotBool        AbPresentationBox;	/* A presentation box */
-  ThotBool        AbRepeatedPresBox;	/* A repeated presentation box */
-  ThotBool        AbSensitive;	/* True: the abstract box is active */
-  ThotBool        AbReadOnly;	/* Abstract box is read only */
+  ThotBool        AbBuildAll;         /* All descendant abstract boxes must
+					 always be built */
+  ThotBool        AbAcceptLineBreak;  /* Can be split in lines */
+  ThotBool        AbAcceptPageBreak;  /* Can be split by page breaks */
+  ThotBool        AbHyphenate;	      /* Contents can be hyphenated */
+  ThotBool        AbOnPageBreak;      /* The box crosses the page limit */
+  ThotBool        AbAfterPageBreak;   /* Abstract box beyond the page limit*/
+  ThotBool        AbNotInLine;	 /* The abstract box is not part of the line */
+  ThotBool        AbHorizEnclosing;   /* True: horizontally enclosed box */
+  ThotBool        AbVertEnclosing;    /* True: vertically enclosed box */
+  ThotBool        AbCanBeModified;    /* Modification is allowed */
+  ThotBool        AbSelected;	      /* The abstract box is selected */
+  ThotBool        AbPresentationBox;  /* A presentation box */
+  ThotBool        AbRepeatedPresBox;  /* A repeated presentation box */
+  ThotBool        AbSensitive;	      /* True: the abstract box is active */
+  ThotBool        AbReadOnly;	      /* Abstract box is read only */
   /* Indications of modification for the abstract box */
-  ThotBool        AbNew;	/* Newly created abstract box */
-  ThotBool        AbDead;       /* Abstract box to be destroyed */
-  ThotBool        AbWidthChange;	/* Change the horizontal dimension */
-  ThotBool        AbHeightChange;	/* Change the vertical dimension */
-  ThotBool        AbHorizPosChange;	/* Change the horizontal position */
-  ThotBool        AbVertPosChange;	/* Change the vertical axis */
-  ThotBool        AbHorizRefChange;	/* Change the horizontal axis */
-  ThotBool        AbVertRefChange;	/* Change the vertical positioning */
-  ThotBool        AbSizeChange;	        /* Change the character size */
-  ThotBool        AbAspectChange;       /* Change the graphical aspect: plane,
-					   color, pattern, line style */
-  ThotBool        AbMBPChange;	        /* Change margins, borders, paddings */
-  ThotBool        AbChange;	        /* Change of another type */
+  ThotBool        AbNew;	      /* Newly created abstract box */
+  ThotBool        AbDead;             /* Abstract box to be destroyed */
+  ThotBool        AbWidthChange;      /* Change the horizontal dimension */
+  ThotBool        AbHeightChange;     /* Change the vertical dimension */
+  ThotBool        AbHorizPosChange;   /* Change the horizontal position */
+  ThotBool        AbVertPosChange;    /* Change the vertical axis */
+  ThotBool        AbHorizRefChange;   /* Change the horizontal axis */
+  ThotBool        AbVertRefChange;    /* Change the vertical positioning */
+  ThotBool        AbSizeChange;	      /* Change the character size */
+  ThotBool        AbAspectChange;     /* Change the graphical aspect: plane,
+				         color, pattern, line style */
+  ThotBool        AbMBPChange;	      /* Change margins, borders, paddings */
+  ThotBool        AbChange;	      /* Change of another type */
   LeafType        AbLeafType;
   union
   {

@@ -242,6 +242,15 @@ static void         WrPRuleType (PtrPRule pRule, FILE * fileDescriptor)
     case PtHorizOverflow:
       fprintf (fileDescriptor, "HorizOverflow");
       break;
+    case PtGather:
+      fprintf (fileDescriptor, "Gather");
+      break;
+    case PtPageBreak:
+      fprintf (fileDescriptor, "PageBreak");
+      break;
+    case PtLineBreak:
+      fprintf (fileDescriptor, "LineBreak");
+      break;
     case PtBreak1:
       fprintf (fileDescriptor, "NoBr1");
       break;
@@ -1194,10 +1203,6 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	   fprintf (fileDescriptor, "VertEncl:N ");
 	if (pAb->AbNotInLine)
 	   fprintf (fileDescriptor, "NotInLine ");
-	fprintf (fileDescriptor, "PageBreak:");
-	wrThotBool (pAb->AbAcceptPageBreak, fileDescriptor);
-	fprintf (fileDescriptor, " LineBreak:");
-	wrThotBool (pAb->AbAcceptLineBreak, fileDescriptor);
 
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
@@ -1483,6 +1488,17 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	     for (j = 1; j <= Indent + 6; j++)
 		fprintf (fileDescriptor, " ");
 	  }
+
+	fprintf (fileDescriptor, "LineBreak:");
+	wrThotBool (pAb->AbAcceptLineBreak, fileDescriptor);
+	fprintf (fileDescriptor, " PageBreak:");
+	wrThotBool (pAb->AbAcceptPageBreak, fileDescriptor);
+	if (pAb->AbBuildAll)
+	  fprintf (fileDescriptor, " Gather");
+	fprintf (fileDescriptor, "\n");
+	for (j = 1; j <= Indent + 6; j++)
+	   fprintf (fileDescriptor, " ");
+
 	if (pAb->AbLeafType == LtCompound)
 	  {
 	     fprintf (fileDescriptor, "Line:");
@@ -2845,8 +2861,8 @@ static void         wrajust (PtrPRule pR, FILE *fileDescriptor)
 
 
 /*----------------------------------------------------------------------
-   wrjustif ecrit la regle de justification ou hyphenation pointee 
-   par pR.                                                 
+   wrjustif
+   ecrit la regle booleenne pointee par pR.
   ----------------------------------------------------------------------*/
 static void         wrjustif (PtrPRule pR, FILE *fileDescriptor)
 {
@@ -3089,6 +3105,18 @@ static void         wrsuiteregles (PtrPRule RP, FILE *fileDescriptor)
 		    break;
 		 case PtHorizOverflow:
 		    fprintf (fileDescriptor, "HorizOverflow: ");
+		    wrjustif (RP, fileDescriptor);
+		    break;
+	         case PtGather:
+		    fprintf (fileDescriptor, "Gather: ");
+		    wrjustif (RP, fileDescriptor);
+		    break;
+	         case PtPageBreak:
+		    fprintf (fileDescriptor, "PageBreak: ");
+		    wrjustif (RP, fileDescriptor);
+		    break;
+	         case PtLineBreak:
+		    fprintf (fileDescriptor, "LineBreak: ");
 		    wrjustif (RP, fileDescriptor);
 		    break;
 		 case PtDepth:

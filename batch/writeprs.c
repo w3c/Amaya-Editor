@@ -310,6 +310,15 @@ PRuleType           ruleType;
 	    case PtVertOverflow:
 	       TtaWriteByte (outfile, C_PR_VERTOVERFLOW);
 	       break;
+	    case PtGather:
+	       TtaWriteByte (outfile, C_PR_GATHER);
+	       break;
+	    case PtPageBreak:
+	       TtaWriteByte (outfile, C_PR_PAGEBREAK);
+	       break;
+	    case PtLineBreak:
+	       TtaWriteByte (outfile, C_PR_LINEBREAK);
+	       break;
 	    default:
 	       fprintf (stderr, "Invalid rule type %X\n", (int)ruleType);
 	       break;
@@ -1191,6 +1200,9 @@ PtrPRule            pPRule;
 			     case PtHyphenate:
 			     case PtVertOverflow:
 			     case PtHorizOverflow:
+			     case PtGather:
+			     case PtPageBreak:
+			     case PtLineBreak:
 				WriteBoolean (currentRule->PrBoolValue);
 				break;
 			     case PtPictInfo:
@@ -1389,9 +1401,6 @@ PtrSSchema          pSS;
 	pBox = &pPSch->PsPresentBox[i];
 	WriteName (pBox->PbName);
 	WriteRulePtr (pBox->PbFirstPRule);
-	WriteBoolean (pBox->PbAcceptPageBreak);
-	WriteBoolean (pBox->PbAcceptLineBreak);
-	WriteBoolean (pBox->PbBuildAll);
 	WriteBoolean (pBox->PbPageFooter);
 	WriteBoolean (pBox->PbPageHeader);
 	WriteBoolean (pBox->PbPageBox);
@@ -1503,15 +1512,6 @@ PtrSSchema          pSS;
 
    for (i = 0; i < pSS->SsNAttributes; i++)
       WriteShort (pPSch->PsNComparAttrs[i]);
-
-   for (i = 0; i < pSS->SsNRules; i++)
-      WriteBoolean (pPSch->PsAcceptPageBreak[i]);
-
-   for (i = 0; i < pSS->SsNRules; i++)
-      WriteBoolean (pPSch->PsAcceptLineBreak[i]);
-
-   for (i = 0; i < pSS->SsNRules; i++)
-      WriteBoolean (pPSch->PsBuildAll[i]);
 
    for (i = 0; i < pSS->SsNRules; i++)
       WriteShort (pPSch->PsElemTransmit[i]);

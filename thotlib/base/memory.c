@@ -1057,7 +1057,6 @@ void                FreeAttributePres (AttributePres *pAP)
 void                GetSchPres (PtrPSchema * pSP)
 {
    PtrPSchema          pNewSP;
-   int                 i;
 
    if (PtFree_SchPres == NULL)
       pNewSP = (PtrPSchema) TtaGetMemory (sizeof (PresentSchema));
@@ -1071,11 +1070,6 @@ void                GetSchPres (PtrPSchema * pSP)
    if (pNewSP)
      {
        memset (pNewSP, 0, sizeof (PresentSchema));
-       for (i = 0; i < MAX_RULES_SSCHEMA; i++)
-	 {
-	   pNewSP->PsAcceptPageBreak[i] = TRUE;
-	   pNewSP->PsAcceptLineBreak[i] = TRUE;
-	 }
        NbUsed_SchPres++;
      }
 }

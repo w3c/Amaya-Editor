@@ -2786,12 +2786,13 @@ static void AddItemWithinSiblimg (PtrElement pEl, ThotBool before, int *menuInd,
 /*----------------------------------------------------------------------
    PageBreakSiblingAllowed indique s'il est possible de creer un	
    saut de page comme frere de l'element pEl appartenant au	
-   	document pDoc.							
+   document pDoc.							
   ----------------------------------------------------------------------*/
 static ThotBool PageBreakSiblingAllowed (PtrElement pEl, PtrDocument pDoc)
 {
   ThotBool            allowed, withPages;
   PtrElement          pE;
+  PtrAbstractBox      pAb;
   PtrPSchema          pPS;
 
   allowed = FALSE;
@@ -2814,8 +2815,8 @@ static ThotBool PageBreakSiblingAllowed (PtrElement pEl, PtrDocument pDoc)
 	    pE = pEl->ElParent;
 	    while (pE != NULL && allowed)
 	      {
-		pPS = PresentationSchema (pE->ElStructSchema, pDoc);
-		if (!pPS->PsAcceptPageBreak[pE->ElTypeNumber - 1])
+		pAb = pE->ElAbstractBox[SelectedView - 1];
+		if (pAb && !pAb->AbAcceptPageBreak)
 		  allowed = FALSE;
 		else
 		  pE = pE->ElParent;

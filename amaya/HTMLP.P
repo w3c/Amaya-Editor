@@ -8534,11 +8534,9 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		END;
-{****
 	IN Alternate_view BEGIN
 		LineBreak: Yes;
 		END;
-****}
 	END;
 
   complex_ruby: BEGIN
@@ -8553,11 +8551,9 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		END;
-{****
 	IN Alternate_view BEGIN
 		LineBreak: Yes;
 		END;
-****}
 	END;
 
   rb:   BEGIN

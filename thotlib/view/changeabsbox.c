@@ -3581,25 +3581,31 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 		    ApplyRefAbsBoxNew (pAb, pAbNext, &pReaff, pDoc);
 		  
 		  /* traite les paves qui existaient deja */
-		  /* il faut faire une boucle de parcours des paves dupliques de l'element */
+		  /* il faut faire une boucle de parcours des paves dupliques
+		     de l'element */
 		  if (pEl->ElAbstractBox[view - 1] != NULL && pAb == NULL)
 		    {
 		      pAb = pEl->ElAbstractBox[view - 1];
 		      /* saute les paves de presentation de l'element */
-		      while (pAb->AbNext != NULL && pAb->AbPresentationBox && pAb->AbElement == pEl)
+		      while (pAb->AbNext != NULL && pAb->AbPresentationBox &&
+			     pAb->AbElement == pEl)
 			pAb = pAb->AbNext;
 
 		      appl = FALSE;
 		      /* on n'a pas applique' la regle */
-		      /* applique la regle au pave de l'element s'il n'est pas mort */
+		      /* applique la regle au pave de l'element s'il n'est
+			 pas mort */
 		      if (!pAb->AbDead)
 			{
-			  pRNA = SearchRulepAb (pDoc, pAb, &pSPR, typeRule, func, TRUE, &pAttrib);
+			  pRNA = SearchRulepAb (pDoc, pAb, &pSPR, typeRule,
+						func, TRUE, &pAttrib);
 			  if (pR == pRNA || remove)
-			    appl = ApplyPresRuleAb (pRNA, pSPR, pAb, pDoc, pAttrib);
+			    appl = ApplyPresRuleAb (pRNA, pSPR, pAb, pDoc,
+						    pAttrib);
 			}
 		      if (!appl && remove &&
-			  pR->PrType == PtFunction && pR->PrPresFunction == FnNotInLine)
+			  pR->PrType == PtFunction &&
+			  pR->PrPresFunction == FnNotInLine)
 			/* remove the NotInLine */
 			{
 			  pAb->AbNotInLine = FALSE;

@@ -92,10 +92,6 @@ static int          TransmittedCounter;		/* numero du compteur dont on traite la
 static int          TransmittedElem;	/* type de l'element dont on traite la regle
 
 					   de transmission */
-static ThotBool      InBreakRule;	/* on est dans une regle 'Break' */
-static ThotBool      InPageBreakRule;	/* on est dans une regle 'PageBreak' */
-static ThotBool      InLineBreakRule;	/* on est dans une regle 'LineBreak' */
-static ThotBool      InGatherRule;	/* on est dans une regle 'Gather' */
 static ThotBool      InInLineRule;	/* on est dans une regle 'InLine' */
 static ThotBool      IncludedColumn;
 static ThotBool      InRule;	/* on est dans une regle */
@@ -174,8 +170,6 @@ static ThotBool      AttrInitCounter;	/* on a rencontre' "Init" dans une definit
   ----------------------------------------------------------------------*/
 static void         Initialize ()
 {
-   int                 i;
-
    /* acquiert un schema de presentation */
    GetSchPres (&pPSchema);
    if (pPSchema == NULL)
@@ -190,20 +184,6 @@ static void         Initialize ()
        else
 	 {
 	   CurMinMax = CntCurVal;
-	   /* initialise les regles de presentation des elements */
-	   for (i = 0; i < MAX_RULES_SSCHEMA; i++)
-	     {
-	       pPSchema->PsAcceptPageBreak[i] = True;
-	       pPSchema->PsAcceptLineBreak[i] = True;
-	     }
-
-	   /* initialise les boites de presentation */
-	   for (i = 0; i < MAX_PRES_BOX; i++)
-	     {
-	       pPSchema->PsPresentBox[i].PbAcceptPageBreak = True;
-	       pPSchema->PsPresentBox[i].PbAcceptLineBreak = True;
-	     }
-	   
 	   /* initialise les indicateurs du compilateur */
 	   ViewDef = False;
 	   CounterDef = False;
@@ -214,10 +194,6 @@ static void         Initialize ()
 	   RuleDef = False;
 	   AttributeDef = False;
 	   NewAttributeDef = False;
-	   InBreakRule = False;
-	   InPageBreakRule = False;
-	   InLineBreakRule = False;
-	   InGatherRule = False;
 	   InInLineRule = False;
 	   IncludedColumn = False;
 	   InRule = False;
@@ -1059,10 +1035,6 @@ static void ProcessShortKeyWord (int x, indLine wi, SyntacticCode gCode)
 		 CurRule->PrType == PtBorderBottomWidth ||
 		 CurRule->PrType == PtBorderLeftWidth)
 	       EndOfNumber ();
-	   InBreakRule = False;
-	   InPageBreakRule = False;
-	   InLineBreakRule = False;
-	   InGatherRule = False;
 	   InInLineRule = False;
 	   /* verifie la validite des regles de dimensionnement relatif */
 	   /* au contenu */
@@ -1932,6 +1904,33 @@ static void         CheckDefaultRules ()
 	CurRule->PrPresMode = PresImmediate;
         CurRule->PrBoolValue = FALSE;
      }
+   if (GetTypedRule (PtGather, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle Gather par defaut, on en cree une : */
+      /* PtGather: False; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtGather;
+	CurRule->PrPresMode = PresImmediate;
+        CurRule->PrBoolValue = False;
+     }
+   if (GetTypedRule (PtPageBreak, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle PageBreak par defaut, on en cree une : */
+      /* PageBreak: True; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtPageBreak;
+	CurRule->PrPresMode = PresImmediate;
+        CurRule->PrBoolValue = True;
+     }
+   if (GetTypedRule (PtLineBreak, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle LineBreak par defaut, on en cree une : */
+      /* LineBreak: True; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtLineBreak;
+	CurRule->PrPresMode = PresImmediate;
+        CurRule->PrBoolValue = True;
+     }
    CurRule->PrNextPRule = NULL;
 }
 
@@ -2034,104 +2033,19 @@ static void         LayoutRule (FunctionType layoutFonct, indLine wi)
 
 
 /*----------------------------------------------------------------------
-   BooleanValue affecte la valeur bool au parametre de presentation courant
-   (indique' par InBreakRule, InLineBreakRule, InPageBreakRule, InGatherRule
-   ou InInLineRule) de la boite courante ou des regles par defaut.
+   BooleanValue affecte la valeur bool a la regle de presentation courante
   ----------------------------------------------------------------------*/
 static void         BooleanValue (ThotBool bool, indLine wi)
 {
-   int                 k;
-
-   if (InBreakRule)
-      /* on est dans une regle 'Break' */
-     {
-	if (DefaultRuleDef)
-	   /* on est dans les regles par defaut */
-	   /* initialise la secabilite dans toutes les boites de */
-	   /* presentation et de tous les elements */
-	  {
-	     for (k = 0; k < MAX_PRES_BOX; k++)
-	       {
-		  pPSchema->PsPresentBox[k].PbAcceptPageBreak = bool;
-		  pPSchema->PsPresentBox[k].PbAcceptLineBreak = bool;
-	       }
-	     for (k = 0; k < MAX_RULES_SSCHEMA; k++)
-	       {
-		  pPSchema->PsAcceptPageBreak[k] = bool;
-		  pPSchema->PsAcceptLineBreak[k] = bool;
-	       }
-	  }
-	else
-	   /* dans une regle specifique */
-	if (PresBoxDef)
-	   /* pour une boite de presentation */
-	  {
-	     pPSchema->PsPresentBox[CurPresBox - 1].PbAcceptPageBreak = bool;
-	     pPSchema->PsPresentBox[CurPresBox - 1].PbAcceptLineBreak = bool;
-	  }
-	else
-	   /* pour la boite d'un type d'element */
-	  {
-	     pPSchema->PsAcceptPageBreak[CurType - 1] = bool;
-	     pPSchema->PsAcceptLineBreak[CurType - 1] = bool;
-	  }
-     }
-   else if (InPageBreakRule)
-      /* on est dans une regle 'PageBreak' */
-     {
-	if (DefaultRuleDef)	/* on est dans les regles par defaut */
-	   /* initialise la secabilite dans toutes les boites de */
-	   /* presentation et de tous les elements */
-	  {
-	     for (k = 0; k < MAX_PRES_BOX; k++)
-		pPSchema->PsPresentBox[k].PbAcceptPageBreak = bool;
-	     for (k = 0; k < MAX_RULES_SSCHEMA; k++)
-		pPSchema->PsAcceptPageBreak[k] = bool;
-	  }
-	else
-	   /* dans une regle specifique */
-	if (PresBoxDef)
-	   /* pour une boite de presentation */
-	   pPSchema->PsPresentBox[CurPresBox - 1].PbAcceptPageBreak = bool;
-	else			/* pour la boite d'un type d'element */
-	   pPSchema->PsAcceptPageBreak[CurType - 1] = bool;
-     }
-   else if (InLineBreakRule)
-      /* on est dans une regle 'LineBreak' */
-     {
-	if (DefaultRuleDef)	/* on est dans les regles par defaut */
-	   /* initialise la secabilite dans toutes les boites de */
-	   /* presentation et de tous les elements */
-	  {
-	     for (k = 0; k < MAX_PRES_BOX; k++)
-		pPSchema->PsPresentBox[k].PbAcceptLineBreak = bool;
-	     for (k = 0; k < MAX_RULES_SSCHEMA; k++)
-		pPSchema->PsAcceptLineBreak[k] = bool;
-	  }
-	else
-	   /* dans une regle specifique */
-	if (PresBoxDef)
-	   /* pour une boite de presentation */
-	   pPSchema->PsPresentBox[CurPresBox - 1].PbAcceptLineBreak = bool;
-	else			/* pour la boite d'un type d'element */
-	   pPSchema->PsAcceptLineBreak[CurType - 1] = bool;
-     }
-   else if (InGatherRule)
-      /* on est dans une regle Gather */
-      if (PresBoxDef)
-	 /* pour une boite de presentation */
-	 pPSchema->PsPresentBox[CurPresBox - 1].PbBuildAll = bool;
-      else			/* pour la boite d'un type d'element */
-	 pPSchema->PsBuildAll[CurType - 1] = bool;
-   else if (InInLineRule)
+   if (InInLineRule)
       /* on est dans une regle InLine */
       {
         if (!bool)
 	   LayoutRule (FnNotInLine, wi);
       }
    else
-      /* on est dans une regle Hyphenate, VertOverflow ou
-	 HorizOverflow */
+      /* on est dans une regle Hyphenate, VertOverflow, HorizOverflow,
+         PtGather, PtPageBreak, PtLineBreak */
       {
 	CurRule->PrPresMode = PresImmediate;
 	CurRule->PrBoolValue = bool;
@@ -2676,49 +2590,13 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	/* LineSpacing */
 	CreatePRule (PtLineSpacing, wi);
 	break;
-      case KWD_Break /* Break */ :
-	CompilerMessage (wi, PRS, INFO, USE_PAGEBREAK, inputLine, LineNum);
-	if (Conditions != NULL)
-	  /* un IF precede la regle Break. Erreur */
-	  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_CONDITION,
-			   inputLine, LineNum);
-	else if (CurView != 1)
-	  /* interdit dans une vue non-principale */
-	  CompilerMessage (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW,
-			   inputLine, LineNum);
-	else
-	  {
-	    InBreakRule = True;
-	    ConditionEnd ();
-	  }
+      case KWD_PageBreak:
+	/* PageBreak */
+	CreatePRule (PtPageBreak, wi);
 	break;
-      case KWD_PageBreak /* PageBreak */ :
-	if (Conditions != NULL)
-	  /* un IF precede la regle Break. Erreur */
-	  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_CONDITION,
-			   inputLine, LineNum);
-	else if (CurView != 1)
-	  CompilerMessage (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW,
-			   inputLine, LineNum);
-	else
-	  {
-	    InPageBreakRule = True;
-	    ConditionEnd ();
-	  }
-	break;
-      case KWD_LineBreak /* LineBreak */ :
-	if (Conditions != NULL)
-	  /* un IF precede la regle Break. Erreur */
-	  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_CONDITION,
-			   inputLine, LineNum);
-	else if (CurView != 1)
-	  CompilerMessage (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW,
-			   inputLine, LineNum);
-	else
-	  {
-	    InLineBreakRule = True;
-	    ConditionEnd ();
-	  }
+      case KWD_LineBreak:
+	/* LineBreak */
+	CreatePRule (PtLineBreak, wi);
 	break;
       case KWD_InLine:
 	if (DefaultRuleDef)
@@ -2860,23 +2738,7 @@ static void ProcessLongKeyWord (int x, SyntacticCode gCode, indLine wi)
 	    }
 	break;
       case KWD_Gather /* Gather */ :
-	if (DefaultRuleDef)
-	  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_IN_DEFAULT_RULES,
-			   inputLine, LineNum);	/* pas de regle Gather dans
-						 * les regles par defaut */
-	else if (Conditions != NULL)
-	  /* un IF precede la regle Break. Erreur */
-	  CompilerMessage (wi, PRS, FATAL, FORBIDDEN_CONDITION,
-			   inputLine, LineNum);
-	else if (CurView != 1)
-	  /* interdit dans une vue non-principale */
-	  CompilerMessage (wi, PRS, FATAL, RULE_FORBIDDEN_IN_A_VIEW,
-			   inputLine, LineNum);
-	else
-	  {
-	    InGatherRule = True;
-	    ConditionEnd ();
-	  }
+	CreatePRule (PtGather, wi);
 	break;
       case KWD_Line:
 	/* Line */

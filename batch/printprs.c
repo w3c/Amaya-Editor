@@ -1227,6 +1227,18 @@ static void         wrsuiteregles (PtrPRule RP)
 		    printf ("HorizOverflow: ");
 		    wrboolean (RP);
 		    break;
+	         case PtGather:
+		    printf ("Gather: ");
+		    wrboolean (RP);
+		    break;
+	         case PtPageBreak:
+		    printf ("PageBreak: ");
+		    wrboolean (RP);
+		    break;
+	         case PtLineBreak:
+		    printf ("LineBreak: ");
+		    wrboolean (RP);
+		    break;
 		 case PtAdjust:
 		    printf ("Adjust: ");
 		    wrajust (RP);
@@ -1551,21 +1563,6 @@ int                 main (int argc, char **argv)
 		  if (pBo1->PbFirstPRule != NULL)
 		     printf ("   BEGIN\n");
 		  wrsuiteregles (pBo1->PbFirstPRule);
-		  printf ("   PageBreak: ");
-		  if (pBo1->PbAcceptPageBreak)
-		     printf ("Yes;\n");
-		  else
-		     printf ("No;\n");
-		  printf ("   LineBreak: ");
-		  if (pBo1->PbAcceptLineBreak)
-		     printf ("Yes;\n");
-		  else
-		     printf ("No;\n");
-		  printf ("   Gather: ");
-		  if (pBo1->PbBuildAll)
-		     printf ("Yes;\n");
-		  else
-		     printf ("No;\n");
 		  /* ecrit le contenu de la boite */
 		  if (pBo1->PbContent != FreeContent)
 		    {
@@ -1621,21 +1618,6 @@ int                 main (int argc, char **argv)
 	     if (pSc1->PsElemPRule[El - 1] != NULL)
 		printf ("   BEGIN\n");
 	     wrsuiteregles (pSc1->PsElemPRule[El - 1]);
-	     printf ("   PageBreak: ");
-	     if (pSc1->PsAcceptPageBreak[El - 1])
-		printf ("Yes;\n");
-	     else
-		printf ("No;\n");
-	     printf ("   LineBreak: ");
-	     if (pSc1->PsAcceptLineBreak[El - 1])
-		printf ("Yes;\n");
-	     else
-		printf ("No;\n");
-	     printf ("   Gather: ");
-	     if (pSc1->PsBuildAll[El - 1])
-		printf ("Yes;\n");
-	     else
-		printf ("No;\n");
 	     if (pSc1->PsElemPRule[El - 1] != NULL)
 		printf ("   END;\n");
 	     printf ("\n");

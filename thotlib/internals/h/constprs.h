@@ -110,6 +110,9 @@
 #define C_PR_HREF             L'h'
 #define C_PR_HORIZOVERFLOW    L'o'
 #define C_PR_VREF             L'v'
+#define C_PR_GATHER           L'G'
+#define C_PR_PAGEBREAK        L'B'
+#define C_PR_LINEBREAK        L'Z'
 /* other presentation rule types are defined in constpiv.h */
 
 /* properties computing mode */
@@ -274,6 +277,9 @@
 #define C_PR_HREF             'h'
 #define C_PR_HORIZOVERFLOW    'o'
 #define C_PR_VREF             'v'
+#define C_PR_GATHER           'G'
+#define C_PR_PAGEBREAK        'B'
+#define C_PR_LINEBREAK        'Z'
 /*  other presentation rule types are defined in constpiv.h */
 
 /* properties computing mode */

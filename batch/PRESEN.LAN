@@ -101,9 +101,7 @@ Rule1 =	  	  'VertRef' ':' HorizPosition /
 		  'HorizOverflow' ':' Boolean /
 		  'Hyphenate' ':' BoolInherit /
 		  'LineSpacing' ':' DistInherit .
-Rule2 =		  'Break' ':' Boolean /
-		  { Break is obsolete; replaced by PageBreak }
-		  'LineBreak' ':' Boolean /
+Rule2 =		  'LineBreak' ':' Boolean /
 		  'PageBreak' ':' Boolean /
 		  'InLine' ':' Boolean /
 		  'Size'  ':' SizeInherit /

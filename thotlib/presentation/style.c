@@ -445,7 +445,7 @@ static PtrPRule    *BoxRuleInsert (PtrPSchema tsch, GenericContext ctxt)
 
   BuildBoxName (ctxt, &boxname);
 
-  /* search for the BOXE in the Presentation Schema */
+  /* search for the BOX in the Presentation Schema */
   for (i = 1; i <= tsch->PsNPresentBoxes; i++)
     {
       if (!strcmp (boxname, tsch->PsPresentBox[i - 1].PbName))
@@ -457,7 +457,8 @@ static PtrPRule    *BoxRuleInsert (PtrPSchema tsch, GenericContext ctxt)
 
   if (tsch->PsNPresentBoxes >= MAX_PRES_BOX)
     {
-      fprintf (stderr, "BoxRuleInsert: PsNPresentBoxes >= MAX_PRES_BOX (%d)\n", MAX_PRES_BOX);
+      fprintf (stderr, "BoxRuleInsert: PsNPresentBoxes >= MAX_PRES_BOX (%d)\n",
+	       MAX_PRES_BOX);
       ctxt->box = 0;
       return (NULL);
     }
@@ -468,9 +469,6 @@ static PtrPRule    *BoxRuleInsert (PtrPSchema tsch, GenericContext ctxt)
   box = &tsch->PsPresentBox[tsch->PsNPresentBoxes - 1];
   strncpy (box->PbName, boxname, sizeof (box->PbName));
   box->PbFirstPRule = NULL;
-  box->PbAcceptPageBreak = TRUE;
-  box->PbAcceptLineBreak = TRUE;
-  box->PbBuildAll = TRUE;
   box->PbPageFooter = FALSE;
   box->PbPageHeader = FALSE;
   box->PbPageBox = FALSE;
@@ -1830,6 +1828,9 @@ static PresentationValue   PRuleToPresentationValue (PtrPRule rule)
     case PtPictInfo:
     case PtVertOverflow:
     case PtHorizOverflow:
+    case PtGather:
+    case PtPageBreak:
+    case PtLineBreak:
       break;
 
     case PtAdjust:

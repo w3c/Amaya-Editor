@@ -193,6 +193,15 @@ static PRuleType    ReadrdTypeRegle (BinFile file)
 	    case C_PR_HORIZOVERFLOW:
 	       return PtHorizOverflow;
 	       break;
+	    case C_PR_GATHER:
+	       return PtGather;
+	       break;
+	    case C_PR_PAGEBREAK:
+	       return PtPageBreak;
+	       break;
+	    case C_PR_LINEBREAK:
+	       return PtLineBreak;
+	       break;
 	    default:
 	       error = True;
 	       return PtVisibility;
@@ -1190,6 +1199,9 @@ void      ReadPRules (BinFile file, PtrPRule *pPRule, PtrPRule *pNextPRule)
 				     case PtHyphenate:
 				     case PtVertOverflow:
 				     case PtHorizOverflow:
+				     case PtGather:
+				     case PtPageBreak:
+				     case PtLineBreak:
 					TtaReadBool (file, &pPR->PrBoolValue);
 					break;
 				     default:
@@ -1431,9 +1443,6 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 		     pBox = &pPSch->PsPresentBox[i];
 		     TtaReadName (file, pBox->PbName);
 		     pBox->PbFirstPRule = ReadPRulePtr (file, &pNextPRule);
-		     TtaReadBool (file, &pBox->PbAcceptPageBreak);
-		     TtaReadBool (file, &pBox->PbAcceptLineBreak);
-		     TtaReadBool (file, &pBox->PbBuildAll);
 		     TtaReadBool (file, &pBox->PbPageFooter);
 		     TtaReadBool (file, &pBox->PbPageHeader);
 		     TtaReadBool (file, &pBox->PbPageBox);
@@ -1598,18 +1607,6 @@ PtrPSchema      ReadPresentationSchema (Name fileName, PtrSSchema pSS)
 		     TtaReadShort (file, &pPSch->PsNComparAttrs[i]);
 		     pPSch->PsComparAttr[i] = NULL;
 		  }
-
-	     if (!error)
-		for (i = 0; i < InitialNElems; i++)
-		   TtaReadBool (file, &pPSch->PsAcceptPageBreak[i]);
-
-	     if (!error)
-		for (i = 0; i < InitialNElems; i++)
-		   TtaReadBool (file, &pPSch->PsAcceptLineBreak[i]);
-
-	     if (!error)
-		for (i = 0; i < InitialNElems; i++)
-		   TtaReadBool (file, &pPSch->PsBuildAll[i]);
 
 	     if (!error)
 		for (i = 0; i < InitialNElems; i++)

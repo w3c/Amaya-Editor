@@ -299,7 +299,7 @@ void                FreeDeadAbstractBoxes (PtrAbstractBox pAb, int frame)
    AddAbsBoxes complete la vue dont pAbbRoot est le pave racine   
    en ajoutant des paves, en tete si head est vrai,        
    en queue sinon.                                         
-    pAbbRoot est une vraie racine de paves               
+   pAbbRoot est une vraie racine de paves               
   ----------------------------------------------------------------------*/
 void  AddAbsBoxes (PtrAbstractBox pAbbRoot, PtrDocument pDoc, ThotBool head)
 {
@@ -467,7 +467,6 @@ void  AddAbsBoxes (PtrAbstractBox pAbbRoot, PtrDocument pDoc, ThotBool head)
    englobe (a n'importe quel niveau) par un pave           
    non mis en ligne ou explicitement secable. Les marques  
    de page son traitees comme non-secables.                
-   V4 : Les paves de page sont traites comme secables.     
   ----------------------------------------------------------------------*/
 ThotBool            IsBreakable (PtrAbstractBox pAb, PtrDocument pDoc)
 {
@@ -481,7 +480,7 @@ ThotBool            IsBreakable (PtrAbstractBox pAb, PtrDocument pDoc)
    while (pAb != NULL && !unbreakable)
      {
 	if (pAb->AbLeafType == LtCompound)
-	   /* pave' compose' */
+	  /* pave' compose' */
 	  {
 	   if (pAb->AbElement->ElTypeNumber == PageBreak + 1)
 	      /* c'est une marque de saut de page, non-secable */
@@ -494,10 +493,10 @@ ThotBool            IsBreakable (PtrAbstractBox pAb, PtrDocument pDoc)
 	if (!unbreakable)
 	  {
 	     SearchPresSchema (pAb->AbElement, &pSchP, &index, &pSchS, pDoc);
-	     unbreakable = (pSchP->PsBuildAll[index - 1]);
+	     unbreakable = pAb->AbBuildAll;
 	  }
-	pAb = pAb->AbEnclosing;
 	/* passe a l'englobant */
+	pAb = pAb->AbEnclosing;
      }
    return (!unbreakable);
 }
@@ -553,149 +552,148 @@ static void KillPresEnclosing (PtrAbstractBox pAb, ThotBool head,
 			       PtrDocument pDoc, PtrAbstractBox * pAbbReDisp,
 			       int *volsupp, ThotBool exceptCrWith)
 {
-   PtrAbstractBox      pAbbEnclosing, pAbb, pAbbR;
-   ThotBool            stop;
-   PtrElement          pEl1;
+  PtrAbstractBox      pAbbEnclosing, pAbb, pAbbR;
+  ThotBool            stop;
+  PtrElement          pEl1;
 
-   *volsupp = 0;
-   /* Detruit les paves de presentation crees par les regles */
-   /* CreateBefore et CreateAfter de pAb. */
-   KillPresSibling (pAb->AbPrevious, TRUE,
-		    pDoc, &pAbbR, pAbbReDisp, volsupp, pAb, exceptCrWith);
-   KillPresSibling (pAb->AbNext, FALSE,
-		    pDoc, &pAbbR, pAbbReDisp, volsupp, pAb, exceptCrWith);
-   /* traite les paves englobants */
-   pAbbEnclosing = pAb->AbEnclosing;
-   while (pAbbEnclosing != NULL)
-      if ((head && pAbbEnclosing->AbTruncatedHead)
-	  || (!head && pAbbEnclosing->AbTruncatedTail))
-	 /* pave deja traite', on s'arrete */
-	 pAbbEnclosing = NULL;
-      else
-	{
-	   if (IsBreakable (pAbbEnclosing, pDoc))
-	     {
-	      TruncateOrCompleteAbsBox (pAbbEnclosing, TRUE, head, pDoc);
-	      if (head)
-		{
-		   pAbbEnclosing->AbTruncatedHead = TRUE;
-		   /* cherche et supprimes les paves crees par CreateFirst */
-		   pAbb = pAbbEnclosing->AbFirstEnclosed;
-		   stop = FALSE;
-		   do
-		      if (pAbb == NULL)
-			 stop = TRUE;
-		      else if (!pAbb->AbPresentationBox || pAbb->AbDead
-			     || pAbb->AbElement != pAbbEnclosing->AbElement)
-			 /* saute les marques de page de debut d'element */
-			{
-			   pEl1 = pAbb->AbElement;
-			   if (pEl1->ElTypeNumber == PageBreak + 1
-			       && pEl1->ElPageType == PgBegin)
-			      pAbb = pAbb->AbNext;
-			   else
-			      stop = TRUE;
-			}
+  *volsupp = 0;
+  /* Detruit les paves de presentation crees par les regles */
+  /* CreateBefore et CreateAfter de pAb. */
+  KillPresSibling (pAb->AbPrevious, TRUE, pDoc, &pAbbR, pAbbReDisp, volsupp,
+		   pAb, exceptCrWith);
+  KillPresSibling (pAb->AbNext, FALSE, pDoc, &pAbbR, pAbbReDisp, volsupp,
+		   pAb, exceptCrWith);
+  /* traite les paves englobants */
+  pAbbEnclosing = pAb->AbEnclosing;
+  while (pAbbEnclosing != NULL)
+    if ((head && pAbbEnclosing->AbTruncatedHead) ||
+	(!head && pAbbEnclosing->AbTruncatedTail))
+      /* pave deja traite', on s'arrete */
+      pAbbEnclosing = NULL;
+    else
+      {
+	if (IsBreakable (pAbbEnclosing, pDoc))
+	  {
+	    TruncateOrCompleteAbsBox (pAbbEnclosing, TRUE, head, pDoc);
+	    if (head)
+	      {
+		pAbbEnclosing->AbTruncatedHead = TRUE;
+		/* cherche et supprimes les paves crees par CreateFirst */
+		pAbb = pAbbEnclosing->AbFirstEnclosed;
+		stop = FALSE;
+		do
+		  if (pAbb == NULL)
+		    stop = TRUE;
+		  else if (!pAbb->AbPresentationBox || pAbb->AbDead ||
+			   pAbb->AbElement != pAbbEnclosing->AbElement)
+		    /* saute les marques de page de debut d'element */
+		    {
+		      pEl1 = pAbb->AbElement;
+		      if (pEl1->ElTypeNumber == PageBreak + 1
+			  && pEl1->ElPageType == PgBegin)
+			pAbb = pAbb->AbNext;
 		      else
+			stop = TRUE;
+		    }
+		  else
+		    {
+		      *volsupp += pAbb->AbVolume;
+		      SetDeadAbsBox (pAbb);
+		      *pAbbReDisp = Enclosing (*pAbbReDisp, pAbb);
+		      /* traite les paves qui se referent au pave detruit */
+		      ApplyRefAbsBoxSupp (pAbb, &pAbbR, pDoc);
+		      *pAbbReDisp = Enclosing (*pAbbReDisp, pAbbR);
+		      pAbb = pAbb->AbNext;
+		    }
+		while (!stop);
+		/* cherche et supprime les paves crees par CreateBefore */
+		/* mais ne supprime pas ceux crees par CreateWith */
+		pAbb = pAbbEnclosing->AbPrevious;
+		stop = FALSE;
+		do
+		  if (pAbb == NULL)
+		    stop = TRUE;
+		  else if (!pAbb->AbPresentationBox || pAbb->AbDead ||
+			   pAbb->AbElement != pAbbEnclosing->AbElement)
+		    stop = TRUE;
+		  else
+		    {
+		      if (TypeCreatedRule (pDoc, pAbbEnclosing, pAbb) != FnCreateWith)
 			{
-			   *volsupp += pAbb->AbVolume;
-			   SetDeadAbsBox (pAbb);
-			   *pAbbReDisp = Enclosing (*pAbbReDisp, pAbb);
-			   /* traite les paves qui se referent au pave detruit */
-			   ApplyRefAbsBoxSupp (pAbb, &pAbbR, pDoc);
-			   *pAbbReDisp = Enclosing (*pAbbReDisp, pAbbR);
-			   pAbb = pAbb->AbNext;
-			}
-		   while (!stop);
-		   /* cherche et supprime les paves crees par CreateBefore */
-		   /* mais ne supprime pas ceux crees par CreateWith */
-		   pAbb = pAbbEnclosing->AbPrevious;
-		   stop = FALSE;
-		   do
-		      if (pAbb == NULL)
-			 stop = TRUE;
-		      else if (!pAbb->AbPresentationBox || pAbb->AbDead
-			     || pAbb->AbElement != pAbbEnclosing->AbElement)
-			 stop = TRUE;
-		      else
-			{
-			   if (TypeCreatedRule (pDoc, pAbbEnclosing, pAbb) != FnCreateWith)
-			     {
-				*volsupp += pAbb->AbVolume;
-				SetDeadAbsBox (pAbb);
-				*pAbbReDisp = Enclosing (*pAbbReDisp, pAbb);
+			  *volsupp += pAbb->AbVolume;
+			  SetDeadAbsBox (pAbb);
+			  *pAbbReDisp = Enclosing (*pAbbReDisp, pAbb);
 				/* traite les paves qui se referent au pave detruit */
-				ApplyRefAbsBoxSupp (pAbb, &pAbbR, pDoc);
-				*pAbbReDisp = Enclosing (*pAbbReDisp, pAbbR);
-			     }
-			   pAbb = pAbb->AbPrevious;
+			  ApplyRefAbsBoxSupp (pAbb, &pAbbR, pDoc);
+			  *pAbbReDisp = Enclosing (*pAbbReDisp, pAbbR);
 			}
-		   while (!stop);
-		}
-	      else
-		{
-		   /* head = FALSE */
-		   pAbbEnclosing->AbTruncatedTail = TRUE;
-		   /* cherche et supprime les paves crees par CreateLast */
-		   pAbb = pAbbEnclosing->AbFirstEnclosed;
-		   /* cherche d'abord le dernier pave englobe */
-		   stop = FALSE;
-		   if (pAbb != NULL)
-		      do
-			 if (pAbb->AbNext == NULL)
-			    stop = TRUE;
-			 else
-			    pAbb = pAbb->AbNext;
-		      while (!stop);
-		   stop = FALSE;
-		   do
-		      if (pAbb == NULL)
-			 stop = TRUE;
-		      else if (!pAbb->AbPresentationBox || pAbb->AbDead
-			     || pAbb->AbElement != pAbbEnclosing->AbElement)
-			 stop = TRUE;
-		      else
+		      pAbb = pAbb->AbPrevious;
+		    }
+		while (!stop);
+	      }
+	    else
+	      {
+		/* head = FALSE */
+		pAbbEnclosing->AbTruncatedTail = TRUE;
+		/* cherche et supprime les paves crees par CreateLast */
+		pAbb = pAbbEnclosing->AbFirstEnclosed;
+		/* cherche d'abord le dernier pave englobe */
+		stop = FALSE;
+		if (pAbb != NULL)
+		  do
+		    if (pAbb->AbNext == NULL)
+		      stop = TRUE;
+		    else
+		      pAbb = pAbb->AbNext;
+		  while (!stop);
+		stop = FALSE;
+		do
+		  if (pAbb == NULL)
+		    stop = TRUE;
+		  else if (!pAbb->AbPresentationBox || pAbb->AbDead ||
+			   pAbb->AbElement != pAbbEnclosing->AbElement)
+		    stop = TRUE;
+		  else
+		    {
+		      *volsupp += pAbb->AbVolume;
+		      SetDeadAbsBox (pAbb);
+		      *pAbbReDisp = Enclosing (*pAbbReDisp, pAbb);
+		      /* traite les paves qui se referent au pave detruit */
+		      ApplyRefAbsBoxSupp (pAbb, &pAbbR, pDoc);
+		      *pAbbReDisp = Enclosing (*pAbbReDisp, pAbbR);
+		      pAbb = pAbb->AbPrevious;
+		    }
+		while (!stop);
+		/* cherche et supprime les paves crees par CreateAfter */
+		/* mais ne supprime pas ceux crees par CreateWith */
+		pAbb = pAbbEnclosing->AbNext;
+		stop = FALSE;
+		do
+		  if (pAbb == NULL)
+		    stop = TRUE;
+		  else if (!pAbb->AbPresentationBox || pAbb->AbDead ||
+			   pAbb->AbElement != pAbbEnclosing->AbElement)
+		    stop = TRUE;
+		  else
+		    {
+		      if (TypeCreatedRule (pDoc, pAbbEnclosing, pAbb) != FnCreateWith)
 			{
-			   *volsupp += pAbb->AbVolume;
-			   SetDeadAbsBox (pAbb);
-			   *pAbbReDisp = Enclosing (*pAbbReDisp, pAbb);
-			   /* traite les paves qui se referent au pave detruit */
-			   ApplyRefAbsBoxSupp (pAbb, &pAbbR, pDoc);
-			   *pAbbReDisp = Enclosing (*pAbbReDisp, pAbbR);
-			   pAbb = pAbb->AbPrevious;
-			}
-		   while (!stop);
-		   /* cherche et supprime les paves crees par CreateAfter */
-		   /* mais ne supprime pas ceux crees par CreateWith */
-		   pAbb = pAbbEnclosing->AbNext;
-		   stop = FALSE;
-		   do
-		      if (pAbb == NULL)
-			 stop = TRUE;
-		      else if (!pAbb->AbPresentationBox || pAbb->AbDead
-			     || pAbb->AbElement != pAbbEnclosing->AbElement)
-			 stop = TRUE;
-		      else
-			{
-			   if (TypeCreatedRule (pDoc, pAbbEnclosing, pAbb) != FnCreateWith)
-			     {
-				*volsupp += pAbb->AbVolume;
-				SetDeadAbsBox (pAbb);
-				*pAbbReDisp = Enclosing (*pAbbReDisp, pAbb);
+			  *volsupp += pAbb->AbVolume;
+			  SetDeadAbsBox (pAbb);
+			  *pAbbReDisp = Enclosing (*pAbbReDisp, pAbb);
 				/* traite les paves qui se referent au pave detruit */
-				ApplyRefAbsBoxSupp (pAbb, &pAbbR, pDoc);
-				*pAbbReDisp = Enclosing (*pAbbReDisp, pAbbR);
-			     }
-			   pAbb = pAbb->AbNext;
+			  ApplyRefAbsBoxSupp (pAbb, &pAbbR, pDoc);
+			  *pAbbReDisp = Enclosing (*pAbbReDisp, pAbbR);
 			}
-		   while (!stop);
-		}
-	     }
-	   /* passe au niveau superieur */
-	   pAbbEnclosing = pAbbEnclosing->AbEnclosing;
-	}
+		      pAbb = pAbb->AbNext;
+		    }
+		while (!stop);
+	      }
+	  }
+	/* passe au niveau superieur */
+	pAbbEnclosing = pAbbEnclosing->AbEnclosing;
+      }
 }
-
 
 /*----------------------------------------------------------------------
    SupprAbsBoxes reduit de dvol le volume du pave pAbbRoot en        
@@ -716,101 +714,100 @@ static void  SupprAbsBoxes (PtrAbstractBox pAbbRoot, PtrDocument pDoc, ThotBool 
    /* cherche le premier pave englobe' de volume inferieur a dvol et qui */
    /* soit secable */
    pAb = pAbbRoot;
-	volpres = 0;
-	/* volume des paves de presentation des elem englobants */
-	stop = FALSE;
-	do
-	   if (pAb == NULL)
-	      stop = TRUE;
-	   else if (pAb->AbEnclosing != NULL &&
-		    (pAb->AbVolume + volpres <= *dvol ||
-		     !IsBreakable (pAb, pDoc)))
-	      stop = TRUE;
+   volpres = 0;
+   /* volume des paves de presentation des elem englobants */
+   stop = FALSE;
+   do
+     if (pAb == NULL)
+       stop = TRUE;
+     else if (pAb->AbEnclosing != NULL &&
+	      (pAb->AbVolume + volpres <= *dvol || !IsBreakable (pAb, pDoc)))
+       stop = TRUE;
+     else
+       {
+	 /* premier pave du niveau inferieur */
+	 pAb = pAb->AbFirstEnclosed;
+	 if (pAb != NULL)
+	   /* si on supprime en tete, cherche le premier pave qui ne soit */
+	   /* pas un pave de presentation */
+	   /* si on supprime en queue, cherche le dernier pave qui ne soit */
+	   /* pas un pave de presentation */
+	   {
+	     if (!head)
+	       while (pAb->AbNext != NULL)
+		 pAb = pAb->AbNext;
+	     stop1 = FALSE;
+	     do
+	       if (pAb == NULL)
+		 stop1 = TRUE;
+	       else if (!pAb->AbPresentationBox)
+		 stop1 = TRUE;
+	       else if (pAb->AbFirstEnclosed != NULL &&
+			pAb->AbFirstEnclosed->AbElement == pAb->AbElement)
+		 /* un pave de presentation cree' par la regle FnCreateEnclosing */
+		 /* on le considere comme un pave' d'element structure' */
+		 stop1 = TRUE;
+	       else
+		 {
+		   volpres += pAb->AbVolume;
+		   if (head)
+		     pAb = pAb->AbNext;
+		   else
+		     pAb = pAb->AbPrevious;
+		 }
+	     while (!stop1);
+	   }
+       }
+   while (!stop);
+   if (pAb == NULL)
+     *dvol = 0;
+   else if (pAb->AbEnclosing == NULL)
+     /* don't destroy the Root box */
+     *dvol = 0;
+   else if (pAb->AbVolume + volpres > *dvol)
+     /* on ne peut rien supprimer */
+     *dvol = 0;
+   if (*dvol > 0)
+     {
+       /* on peut supprimer le pave pAb */
+       /* calcule le nouveau volume qui restera a supprimer apres la */
+       /* suppression de pAb */
+       *dvol -= pAb->AbVolume;
+       pAbbReDisp = pAb;
+       /* il faudra reafficher au moins pAb */
+       /* tous les paves englobant pAb sont coupe's. On supprime leurs */
+       /* paves de presentation. On supprime aussi ceux crees par le pave */
+       /* tue'. */
+       KillPresEnclosing (pAb, head, pDoc, &pAbbReDisp, &volsupp, FALSE);
+       *dvol -= volsupp;
+       /* detruit le pave trouve' et toute sa descendance */
+       SetDeadAbsBox (pAb);
+       /* detruit les paves freres tant qu'il reste du volume a supprimer */
+       pAbbSibling = pAb;
+       while (*dvol > 0 && pAbbSibling != NULL)
+	 {
+	   if (head)
+	     pAbbSibling = pAbbSibling->AbNext;
 	   else
-	     {
-		/* premier pave du niveau inferieur */
-		pAb = pAb->AbFirstEnclosed;
-		if (pAb != NULL)
-		   /* si on supprime en tete, cherche le premier pave qui ne soit */
-		   /* pas un pave de presentation */
-		   /* si on supprime en queue, cherche le dernier pave qui ne soit */
-		   /* pas un pave de presentation */
-		  {
-		     if (!head)
-			while (pAb->AbNext != NULL)
-			   pAb = pAb->AbNext;
-		     stop1 = FALSE;
-		     do
-			if (pAb == NULL)
-			   stop1 = TRUE;
-			else if (!pAb->AbPresentationBox)
-			   stop1 = TRUE;
-			else if (pAb->AbFirstEnclosed != NULL &&
-			  pAb->AbFirstEnclosed->AbElement == pAb->AbElement)
-			   /* un pave de presentation cree' par la regle FnCreateEnclosing */
-			   /* on le considere comme un pave' d'element structure' */
-			   stop1 = TRUE;
-			else
-			  {
-			     volpres += pAb->AbVolume;
-			     if (head)
-				pAb = pAb->AbNext;
-			     else
-				pAb = pAb->AbPrevious;
-			  }
-		     while (!stop1);
-		  }
-	     }
-	while (!stop);
-	if (pAb == NULL)
-	   *dvol = 0;
-	else if (pAb->AbEnclosing == NULL)
-	   /* don't destroy the Root box */
-	   *dvol = 0;
-	else if (pAb->AbVolume + volpres > *dvol)
-	   /* on ne peut rien supprimer */
-	   *dvol = 0;
-	if (*dvol > 0)
-	  {
-		  /* on peut supprimer le pave pAb */
-		  /* calcule le nouveau volume qui restera a supprimer apres la */
-		  /* suppression de pAb */
-		  *dvol -= pAb->AbVolume;
-		  pAbbReDisp = pAb;
-		  /* il faudra reafficher au moins pAb */
-		  /* tous les paves englobant pAb sont coupe's. On supprime leurs */
-		  /* paves de presentation. On supprime aussi ceux crees par le pave */
-		  /* tue'. */
-		  KillPresEnclosing (pAb, head, pDoc, &pAbbReDisp, &volsupp, FALSE);
-		  *dvol -= volsupp;
-		  /* detruit le pave trouve' et toute sa descendance */
-		  SetDeadAbsBox (pAb);
-		  /* detruit les paves freres tant qu'il reste du volume a supprimer */
-		  pAbbSibling = pAb;
-		  while (*dvol > 0 && pAbbSibling != NULL)
-		    {
-		       if (head)
-			  pAbbSibling = pAbbSibling->AbNext;
-		       else
-			  pAbbSibling = pAbbSibling->AbPrevious;
-		       if (pAbbSibling != NULL)
-			  /* on ne supprime pas les pave's de presentation, sauf ceux qui */
-			  /* ont ete cree's par une regle FnCreateEnclosing */
-			  if (!pAbbSibling->AbPresentationBox ||
-			      (pAbbSibling->AbPresentationBox && pAbbSibling->AbFirstEnclosed != NULL &&
-			       pAbbSibling->AbFirstEnclosed->AbElement == pAbbSibling->AbElement))
-			     SupprAbsBoxes (pAbbSibling, pDoc, head, dvol);
-		       /* traite ensuite les paves qui se referent au pave detruit */
-		    }
-		  ApplyRefAbsBoxSupp (pAb, &pAbbR, pDoc);
-		  pAbbReDisp = Enclosing (pAbbReDisp, pAbbR);
-		  pEl1 = pAbbRoot->AbElement;
-		  pDoc->DocViewModifiedAb[pAbbRoot->AbDocView - 1] =
-			Enclosing (pAbbReDisp, pDoc->DocViewModifiedAb[pAbbRoot->AbDocView - 1]);
-	  }			/* fin dvol > 0 */
+	     pAbbSibling = pAbbSibling->AbPrevious;
+	   if (pAbbSibling != NULL)
+	     /* on ne supprime pas les pave's de presentation, sauf ceux qui */
+	     /* ont ete cree's par une regle FnCreateEnclosing */
+	     if (!pAbbSibling->AbPresentationBox ||
+		 (pAbbSibling->AbPresentationBox &&
+		  pAbbSibling->AbFirstEnclosed != NULL &&
+		  pAbbSibling->AbFirstEnclosed->AbElement ==
+		                                      pAbbSibling->AbElement))
+	       SupprAbsBoxes (pAbbSibling, pDoc, head, dvol);
+	   /* traite ensuite les paves qui se referent au pave detruit */
+	 }
+       ApplyRefAbsBoxSupp (pAb, &pAbbR, pDoc);
+       pAbbReDisp = Enclosing (pAbbReDisp, pAbbR);
+       pEl1 = pAbbRoot->AbElement;
+       pDoc->DocViewModifiedAb[pAbbRoot->AbDocView - 1] =
+	 Enclosing (pAbbReDisp, pDoc->DocViewModifiedAb[pAbbRoot->AbDocView - 1]);
+     }			/* fin dvol > 0 */
 }
-
-
 
 /*----------------------------------------------------------------------
    AddVolView ajuste le volume de la vue dont le pave pAbbRoot      
@@ -820,7 +817,8 @@ static void  SupprAbsBoxes (PtrAbstractBox pAbbRoot, PtrDocument pDoc, ThotBool 
    de la vue.                                              
      pAbbRoot est une vraie racine d'image abstraite        
   ----------------------------------------------------------------------*/
-static void AddVolView (int VolOpt, PtrAbstractBox pAbbRoot, PtrElement pElMiddle, PtrDocument pDoc)
+static void AddVolView (int VolOpt, PtrAbstractBox pAbbRoot,
+			PtrElement pElMiddle, PtrDocument pDoc)
 {
    ThotBool            add, suppress, midHead, stop;
    int                 view, volprec, dvol;
@@ -1031,9 +1029,10 @@ void                DecreaseVolume (ThotBool head, int dVol, int frame)
    Si debut est vrai, on cree l'image de la vue en         
    commencant par l'element pointe' par pEl, sinon, on     
    place cet element au milieu de l'image creee.           
-   Si affiche est Vrai, l'image est reaffichee.            
+   Si display est Vrai, l'image est reaffichee.            
   ----------------------------------------------------------------------*/
-void CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, ThotBool begin, ThotBool display)
+void CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, ThotBool begin,
+		  ThotBool display)
 {
   ThotBool            openedView, creation, stop;
   PtrElement          pElAscent, pEl1;
@@ -1041,7 +1040,6 @@ void CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, ThotBool begin, Th
   int                 NumAsc, i, volsupp, frame, h;
   PtrAbstractBox      pAbbDestroyed, pAbbRemain, pAbbLastEmptyCr,
                       pAbbFirstEmptyCr, pAbbReDisp, pAbbRoot, pPrevious;
-  PtrPSchema          pPS;
   ThotBool            complete;
 
   pAbbLastEmptyCr = NULL;
@@ -1068,8 +1066,8 @@ void CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, ThotBool begin, Th
 	      stop = TRUE;
 	    else if (pElAscent->ElAbstractBox[view - 1] != NULL)
 	      stop = TRUE;
-	  /* met un element dans la pile */
 	    else
+	      /* met un element dans la pile */
 	      {
 		if (NumAsc < MaxAsc)
 		  {
@@ -1083,8 +1081,8 @@ void CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, ThotBool begin, Th
 
 	  if (pAsc[NumAsc - 1]->ElParent == NULL)
 	    /* la racine de l'arbre n'a pas de pave dans cette vue */
+	    /* c'est une creation de vue */
 	    creation = TRUE;
-	  /* c'est une creation de vue */
 	  else
 	    creation = FALSE;
 	  /* essaie de creer les paves de ces elements, en commencant par */
@@ -1100,7 +1098,8 @@ void CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, ThotBool begin, Th
 		  pEl1 = pAsc[i];
 		  /* cree juste le pave, sans sa descendance et sans */
 		  /* lui appliquer les regles de presentation. */
-		  pPrevious = AbsBoxesCreate (pAsc[i], pDoc, view, TRUE, FALSE, &complete);
+		  pPrevious = AbsBoxesCreate (pAsc[i], pDoc, view, TRUE, FALSE,
+					      &complete);
 		  if (pEl1->ElAbstractBox[view - 1] != NULL)
 		    pPrevious = pEl1->ElAbstractBox[view - 1];
 		  if (pPrevious != NULL)
@@ -1192,7 +1191,7 @@ void CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, ThotBool begin, Th
 		else
 		  pDoc->DocViewFreeVolume[view - 1] = pDoc->DocViewVolume[view - 1] / 2;
 		/* marque comme anciens tous les paves conserves (pour */
-		/* que AjoutePave travaille correctement) */
+		/* que AddAbsBoxes travaille correctement) */
 		pAbbRemain = pAbbLastEmptyCr;
 		while (pAbbRemain != NULL)
 		  {
@@ -1216,8 +1215,7 @@ void CheckAbsBox (PtrElement pEl, int view, PtrDocument pDoc, ThotBool begin, Th
 		do
 		  {
 		    pEl1 = pAsc[i - 1];
-		    pPS = PresentationSchema (pEl1->ElStructSchema, pDoc);
-		    if (pPS->PsBuildAll[pEl1->ElTypeNumber - 1])
+		    if (pAsc[i - 1]->ElAbstractBox[view - 1]->AbBuildAll)
 		      /* cet element a la regle Gather */
 		      /* cree le pave avec toute sa descendance, si */
 		      /* ce n'est pas encore fait */
