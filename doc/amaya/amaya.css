@@ -2,10 +2,10 @@
  * User's Preferences
  */
 
-BLOCKQUOTE P { text-indent : 0pt; line-height : 16pt; text-align: justify }
-LI P { text-indent : 0pt; line-height : 16pt; text-align: justify }
-P { text-indent : 15pt; line-height : 16pt; text-align: justify }
-UL P { text-indent : 0pt; line-height : 16pt; text-align: justify }
-DD P { text-indent : 0pt; line-height : 16pt; text-align: justify }
-BODY { magnification : 1 } 
+H1 {  font-family: helvetica; color: red }
+H2 {  font-family: helvetica; }
+H3 {  font-family: helvetica; }
+H4 {  font-family: helvetica; }
+H5 {  font-family: helvetica; }
+H6 {  font-family: helvetica; }
 
