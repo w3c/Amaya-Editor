@@ -253,12 +253,12 @@ extern void TtaUpdateEditorColors (void);
   ----------------------------------------------------------------------*/
 extern int TtaGetScreenDepth (void);
 
-#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    TtaFetchOneEvent
    retrieve one X-Windows Event from the queue, this is a blocking call.
   ----------------------------------------------------------------------*/
 extern void TtaFetchOneEvent (ThotEvent *ev);
+
 /*----------------------------------------------------------------------
    TtaFetchOneAvailableEvent
 
@@ -266,6 +266,7 @@ extern void TtaFetchOneEvent (ThotEvent *ev);
    available.
   ----------------------------------------------------------------------*/
 ThotBool TtaFetchOneAvailableEvent (ThotEvent *ev);
+
 /*----------------------------------------------------------------------
    TtaHandleOneEvent
    process an X-Windows Event.
@@ -276,7 +277,6 @@ extern int TtaXLookupString (ThotKeyEvent *event, char *buffer, int nbytes,
 			     KeySym *keysym, ThotComposeStatus *status);
 
 extern Display *TtaGetCurrentDisplay (void);
-#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
    TtaGiveSelectPosition: returns the mouse position for the last click 

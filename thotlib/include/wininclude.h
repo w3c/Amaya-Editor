@@ -79,7 +79,6 @@ extern void       CreateAuthenticationDlgWindow (ThotWindow parent, const char *
 extern void       CreateBackgroundImageDlgWindow (ThotWindow parent, char *image_location);
 extern void       CreateDocumentInfoDlgWindow (ThotWindow parent, const Document doc);
 extern void       CreateMakeIDDlgWindow (ThotWindow parent);
-extern void       TtaHandleOneEvent (ThotEvent *ev);
 extern ThotWindow TtaGetThotWindow (int f);
 extern BinFile    TtaReadOpen (CONST char *f);
 extern ThotWindow GetCurrentWindow ();
