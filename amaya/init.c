@@ -2686,8 +2686,8 @@ static Document LoadDocument (Document doc, char *pathname,
  	TtaSetItemOff (newdoc, 1, File, BTemplate);
 #ifdef ANNOTATIONS
       /* auto-load the annotations associated with the document */
-      if (!plainText && ANNOT_CanAnnotate(doc))
-	ANNOT_AutoLoad (newdoc, 1);
+      /* if (!plainText && ANNOT_CanAnnotate(doc))
+	 ANNOT_AutoLoad (newdoc, 1); */
 #endif /* ANNOTATIONS */
     }
   TtaFreeMemory (content_type);
@@ -2761,6 +2761,9 @@ void Reload_callback (int doc, int status, char *urlName,
 	   /* if it's an annotation, add the existing metadata */
 	   if (DocumentTypes[newdoc] == docAnnot)
 	     ANNOT_ReloadAnnotMeta (newdoc);
+	   /* auto-load the annotations associated with the document */
+	   if (ANNOT_CanAnnotate (newdoc))
+	     ANNOT_AutoLoad (newdoc, 1);
 #endif /* ANNOTATIONS */
 	   TtaHandlePendingEvents ();
 	   /* fetch and display all images referred by the document */
@@ -3373,6 +3376,9 @@ void GetHTMLDocument_callback (int newdoc, int status, char *urlName,
 		   /* if it's an annotation, add the existing metadata */
 		   if (DocumentTypes[newdoc] == docAnnot)
 		     ANNOT_LoadAnnotation (baseDoc, newdoc);
+		   /* auto-load the annotations associated with the document */
+		   if (ANNOT_CanAnnotate (newdoc))
+		       ANNOT_AutoLoad (newdoc, 1);
 #endif /* ANNOTATIONS */
 		 }
 	     }
