@@ -2464,18 +2464,19 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
    SchemaMenu_Ctl     *SCHmenu;
    Menu_Ctl           *ptrmenu;
    char               *visiStr;
-   char               *zoomStr;
    int                 i;
    int                 ref;
    int                 visiVal;
    int                 frame;
    ThotBool            found;
-
+#ifndef _GTK
+   char               *zoomStr;
+#endif /* _GTK */
 #define MIN_HEIGHT 100
 #define MIN_WIDTH 200
    w = 0;
 #ifdef _WINDOWS
-   hwndClient = 0;
+   hwndClient = 0; 
    ToolBar    = 0;
    logoFrame  = 0;
    StatusBar  = 0;
@@ -2910,13 +2911,29 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			     (gpointer)frame);
 
 	   /* Put the scrollbars */
-	   tmpw = gtk_adjustment_new (0, 0, dy, 13, dy-13, dy);
+	   tmpw = gtk_adjustment_new (0, 0, dy, 6, dy-13, dy);
 	   ConnectSignalGTK (GTK_OBJECT (tmpw),
 			     "value_changed",
 			     GTK_SIGNAL_FUNC(FrameVScrolledGTK),
 			     (gpointer)frame);
 
     	   vscrl = gtk_vscrollbar_new (GTK_ADJUSTMENT (tmpw));
+	   /* ALL the signal connecting code permits to 
+	    override the Vertical scrollbar behaviour
+	   which is wrong in amaya case (bad callback handling, bad y...), 
+	   so now it's KeyScrolledGTK that  handle it (in dialogue/input.c)*/
+	   gtk_widget_show (vscrl); 
+	   GTK_WIDGET_SET_FLAGS (GTK_WIDGET(vscrl), GTK_CAN_FOCUS);
+	   GTK_WIDGET_SET_FLAGS (GTK_WIDGET(vscrl), GTK_CAN_DEFAULT);
+	   gtk_widget_set_events (GTK_WIDGET (vscrl),  
+				  GDK_BUTTON_PRESS_MASK
+				  | GDK_BUTTON_RELEASE_MASK
+				  | GDK_KEY_PRESS_MASK
+				  | GDK_KEY_RELEASE_MASK
+				  | GDK_LEAVE_NOTIFY
+	                          | GDK_FOCUS_CHANGE_MASK
+				  );
+	   /* catch use of scrollbar */
 	   ConnectSignalGTK (GTK_OBJECT (vscrl),
 			     "key_press_event",
 			     GTK_SIGNAL_FUNC(KeyScrolledGTK),
@@ -2925,7 +2942,25 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			     "button_press_event",
 			     GTK_SIGNAL_FUNC(KeyScrolledGTK),
 			     (gpointer)frame);
-	   gtk_widget_show (vscrl);
+	   /* 
+	      those one permits use to stop the timer when user
+	      clicks and release a long time after 
+	      (outisde (leave_notify) or inside(button_release) 
+	      the scrollbar area)
+	    */
+	   ConnectSignalGTK (GTK_OBJECT (vscrl),
+			     "button_release_event",
+			     GTK_SIGNAL_FUNC(KeyScrolledGTK),
+			     (gpointer)frame);
+	  ConnectSignalGTK (GTK_OBJECT (vscrl),
+			     "leave_notify_event",
+			     GTK_SIGNAL_FUNC(KeyScrolledGTK),
+			     (gpointer)frame); 
+	   ConnectSignalGTK (GTK_OBJECT (vscrl),
+			     "key_release_event",
+			     GTK_SIGNAL_FUNC(KeyScrolledGTK),
+			     (gpointer)frame);
+
 	   gtk_table_attach (GTK_TABLE (table2), vscrl, 1, 2, 0, 1,
 			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK),
 			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK), 0, 0);

@@ -38,7 +38,7 @@ static XmString     null_string;
 #else /* _GTK */
 static gchar       *null_string;
 static ThotBool     drag = FALSE;
-#endif /* _GTK */
+#endif /*_GTK*/
 #endif /* _WINDOWS */
 
 static char         OldMsgSelect[MAX_TXT_LEN];
@@ -771,7 +771,8 @@ void FrameHScrolledGTK (GtkAdjustment *w, int frame)
        notifyDoc.horizontalValue = delta;
        CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
      }
-}
+} 
+
 /*----------------------------------------------------------------------
    Demande de scroll vertical.                                      
   ----------------------------------------------------------------------*/
@@ -782,14 +783,13 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
 #endif /* !_GTK */
 {
   int                 delta;
-  int                 view;
   int                 h, y;
   int                 start, end, total;
   int                 n;
+  int                 view;
 #ifndef _GTK
   Arg                 args[MAX_ARGS];
   XmScrollBarCallbackStruct *infos;
-#else /* _GTK */
 #endif /* !_GTK */
   float               carparpix;
   NotifyWindow        notifyDoc;
@@ -798,6 +798,7 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
   /* ne pas traiter si le document est en mode NoComputedDisplay */
   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
     return;
+  FrameToView (frame, &doc, &view);
 #ifndef _GTK
   infos = (XmScrollBarCallbackStruct *) param;
   if (infos->reason == XmCR_DECREMENT)
@@ -815,12 +816,9 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
   else
     delta = MAX_SIZE;		/* indeterminee */
 #else /* _GTK */
-  /* delta is the actual position into the page */
   delta = w->value;
 #endif /* !_GTK */
-
   notifyDoc.event = TteViewScroll;
-  FrameToView (frame, &doc, &view);
   notifyDoc.document = doc;
   notifyDoc.view = view;
   notifyDoc.verticalValue = delta;
@@ -838,9 +836,11 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
 	  XtSetArg (args[n], XmNsliderSize, &h);
 	  n++;
 	  XtGetValues (FrameTable[frame].WdScrollV, args, n);
-#else /* _GTK */
+#else /* _GTK */  
 	  /* h is the height of the page */
        	  h = w->page_size;
+	  /* Absolute move in the document */
+	  delta = w->value;
 #endif /* !_GTK */      
 	  /* Regarde ou se situe l'image abstraite dans le document */
 	  n = PositionAbsBox (frame, &start, &end, &total);
@@ -850,7 +850,7 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
 #ifndef _GTK
 	  y = (int) ((float) infos->value * carparpix);
 #else /* _GTK */
-	  y = (int) ((float) w->value * carparpix);	  
+	  y = (int) ((float) w->value * carparpix);
 #endif /* !_GTK */
       
 	  if (n == 0 || (y >= start && y <= total - end))
@@ -864,14 +864,13 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
 	      /* On detecte quand le deplacement bute en bas du document */
 #ifndef _GTK
 	      if (infos->value + h >= FrameTable[frame].FrHeight)
-#else /* _GTK */
-	      if (w->value + h >= FrameTable[frame].FrHeight)
-#endif /* !_GTK */
 		y = delta;
 	      else
-#ifndef _GTK
 		y = infos->value - start;
 #else /* _GTK */
+	      if (w->value + h >= FrameTable[frame].FrHeight)
+		y = delta;
+	      else
 	        y = w->value - start;
 #endif /* !_GTK */
 	      ShowYPosition (frame, y, delta);
@@ -911,14 +910,13 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
 	}
       else
 	VerticalScroll (frame, delta, 1);
+#else /* _GTK */
 #endif /* !_GTK */
-
-
-      notifyDoc.document = doc;
-      notifyDoc.view = view;
-      notifyDoc.verticalValue = delta;
-      notifyDoc.horizontalValue = 0;
-      CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
+    notifyDoc.document = doc;
+    notifyDoc.view = view;
+    notifyDoc.verticalValue = delta;
+    notifyDoc.horizontalValue = 0;
+    CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
     }
 }
 #endif /* !_WINDOWS */
@@ -2220,6 +2218,7 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 	  else
 	    {
 	      ClickFrame = frame;
+	      ActiveFrame = frame;
 	      ClickX = event->x;
 	      ClickY = event->y;
 	      LocateSelectionInView (frame, ClickX, ClickY, 5);
@@ -2994,8 +2993,8 @@ void UpdateScrollbars (int frame)
        tmpw->lower = 0;
        tmpw->upper = h;
        tmpw->page_size = height;
-       tmpw->page_increment = height-13;
-       tmpw->step_increment = 6;
+       tmpw->page_increment = height;
+       tmpw->step_increment = 6; 
        tmpw->value = Ypos;
        gtk_adjustment_changed (tmpw);
 #endif /* !_GTK */

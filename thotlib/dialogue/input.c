@@ -610,46 +610,133 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
    ThotInput (frame, &string[0], event->length, PicMask, KS);
    return FALSE;
 }
+
+/*----------------------------------------------------------------------
+   GtkLining
+   When user hold clicked a button or pressed a key
+   those functions are called by a timer each 100 ms
+   in order to repeat user action until he released the button
+   or move away from the widget.
+----------------------------------------------------------------------*/
+
+gboolean GtkLiningDown(gpointer data)
+{
+  int       frame;
+  Document  doc; 
+  int       view;
+  
+   frame = (int) data; 
+   FrameToView (frame, &doc, &view);
+   TtcLineDown (doc, view);
+   /* As this is a timeout function, return TRUE so that it
+     continues to get called */
+   return TRUE;
+}
+gboolean GtkLiningUp(gpointer data)
+{
+  int       frame;
+  Document  doc; 
+  int       view;
+  
+  frame = (int) data; 
+  FrameToView (frame, &doc, &view);
+  TtcLineUp (doc, view);
+  /* As this is a timeout function, return TRUE so that it
+     continues to get called */
+  return TRUE;
+}
 /*----------------------------------------------------------------------
    KeyScrolledGTK
    Capture click on the scrollbar in order to enable
    Crtl + click event, that let user go on top or bottom of the doc
+   Click on button in order to move only for one line and without calling
+   recursivly the FrameVScrolled callback.   
   ----------------------------------------------------------------------*/
 gboolean KeyScrolledGTK (GtkWidget *w, GdkEvent* event, gpointer data)
 { 
-  int y_middle;
-  int frame;
-  GdkEventKey    *eventkey;
-  GdkEventButton *eventmouse;
+  int                 frame;
+  GdkEventKey         *eventkey;
+  GdkEventButton      *eventmouse;
+  Document            doc; 
+  int                 view;
+  int                 x,y;
+  int                 height;
+  static int          timer = None; 
   
-  frame = (int) data;
+  frame = (int) data; 
+  FrameToView (frame, &doc, &view);
+  gdk_window_get_position(w->parent->parent->parent->window, &x, &y);
+  if (timer != None)
+    {
+      gtk_timeout_remove (timer);
+      timer = None;
+    } 
+  if (event->type != GDK_LEAVE_NOTIFY)
+    gtk_widget_grab_focus (GTK_WIDGET(w));  
   if (event->type == GDK_BUTTON_PRESS)
     {
       eventmouse = (GdkEventButton*) event;
-      if (eventmouse->state & GDK_CONTROL_MASK 
-	  && eventmouse->button == 1)
+      if (eventmouse->button == 1) 
 	{
-	  y_middle = w->allocation.height / 2;
-	  if (eventmouse->y > y_middle)
-	    JumpIntoView (frame, 100);			
+	  /* 16 is the pixel size of the scrollbar buttons*/
+	  height = w->allocation.height - 16;
+	  /* 
+	     Gives the real Y 
+	     (eventmouse->y GTK gives bad number on the lower button)
+	     So We use the Window manager one and calculate absolute position...
+	  */
+	  y = eventmouse->y_root - y - w->allocation.y;
+	  if (eventmouse->state & GDK_CONTROL_MASK)
+	    {
+	      if (y > height)
+		JumpIntoView (frame, 100);			
+	      else if (y < 16)
+		JumpIntoView (frame, 0);
+	    }
+	  else if  (y > height){
+	    TtcLineDown (doc, view); 
+	    timer = gtk_timeout_add (100, GtkLiningDown, (gpointer) frame);
+	  }
+	  else if  (y < 16){
+	    TtcLineUp (doc, view);	    
+	    timer = gtk_timeout_add (100, GtkLiningUp, (gpointer) frame);
+	  }
 	  else
-	    JumpIntoView (frame, 0);
-	  return FALSE;
+	    return FALSE;
+	  /* this prevent GTK Callback to act !!*/
+	  gtk_signal_emit_stop_by_name (GTK_OBJECT(w), "button_press_event");
+	  return TRUE;
 	}
-    }
+		 
+    } 
+  /*
+    Code is here, but didn't manage to always catch those events..
+    But as CRTL + UP and CTRL + DOWN work like UP and DOWN should...
+    The problem is that Key event are catched before, by the Main Window 
+    In CharTranslation GTK... We need to redesign all Key catching if we 
+    wanna catch UP and DOWN... As we sadly cannot get mouse position in a key event..
+   */
   else if (event->type == GDK_KEY_PRESS)
     {
       eventkey = (GdkEventKey*) event;
       if (eventkey->keyval == GDK_Up) 
-	{
-	  return FALSE;
+	{ 
+	  TtcLineDown (doc, view); 
+	  timer = gtk_timeout_add (50, GtkLiningDown, (gpointer) frame);
+	  /* this prevent GTK Callback to act !!*/
+	  gtk_signal_emit_stop_by_name (GTK_OBJECT(w), "key_press_event");
+	  return TRUE;
 	}
       else if (eventkey->keyval == GDK_Down)
-	{
-	  return FALSE;
+	{ 
+	  TtcLineDown (doc, view); 
+	  timer = gtk_timeout_add (50, GtkLiningDown, (gpointer) frame);
+	   /* this prevent GTK Callback to act !!*/
+	  gtk_signal_emit_stop_by_name (GTK_OBJECT(w), "key_press_event");
+	  return TRUE;
 	}
     }
-  return TRUE;
+  return FALSE;
 }
 #else /* _GTK */
 /*----------------------------------------------------------------------
