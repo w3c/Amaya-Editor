@@ -1,14 +1,9 @@
 
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
-   varpres.c -- Gestion des variables de presentation.
+  
    Manipulation des variables de presentation pour
    les images abstraites des documents.
-   V. Quint     Mai 1985 
-   France Logiciel no de depot 88-39-001-00
-   Major changes:
-   IV : Septembre 92 adaptation Tool Kit
+   V. Quint
  */
 
 #include "thot_sys.h"
@@ -28,7 +23,7 @@
 
 
 /* ---------------------------------------------------------------------- */
-/* |    MakeTypeCptTempo cree un alias temporaire qui va servir a faire | */
+/* |    MakeAliasTypeCount cree un alias temporaire qui va servir a faire | */
 /* |            une recherche multiple sur les elements du compteur     | */
 /* |            on cree l'alias  MAX_RULES_SSCHEMA  pour les elements reset   | */
 /* |            du compteur.  On cree l'alias  MAX_RULES_SSCHEMA + 1 pour les | */
@@ -36,11 +31,11 @@
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static int  MakeTypeCptTempo (Counter * pCompteur, CounterOp op, PtrSSchema pSchStr)
+static int  MakeAliasTypeCount (Counter * pCounter, CounterOp op, PtrSSchema pSchStr)
 
 #else  /* __STDC__ */
-static int  MakeTypeCptTempo (pCompteur, op, pSchStr)
-Counter           *pCompteur;
+static int  MakeAliasTypeCount (pCounter, op, pSchStr)
+Counter           *pCounter;
 CounterOp           op;
 PtrSSchema        pSchStr;
 
@@ -55,7 +50,7 @@ PtrSSchema        pSchStr;
    else if (op == CntrAdd)
       NewAlias = &pSchStr->SsRule[MAX_RULES_SSCHEMA + 1];
    else				/* on s'est trompe c'est un CntrRank */
-      return pCompteur->CnItem[0].CiElemType;
+      return pCounter->CnItem[0].CiElemType;
 
    /* initialise l'alias temporaire */
    strncpy (NewAlias->SrName, "Alias de compteur", 17);
@@ -75,12 +70,12 @@ PtrSSchema        pSchStr;
    NewAlias->SrNChoices = 0;
 
    /* initialise le constructeur choix de l;alias */
-   for (i = 0; i < pCompteur->CnNItems; i++)
+   for (i = 0; i < pCounter->CnNItems; i++)
      {
-	if (pCompteur->CnItem[i].CiCntrOp == op)
+	if (pCounter->CnItem[i].CiCntrOp == op)
 	  {
 	     NewAlias->SrChoice[NewAlias->SrNChoices] =
-		pCompteur->CnItem[i].CiElemType;
+		pCounter->CnItem[i].CiElemType;
 	     NewAlias->SrNChoices += 1;
 	  }
      }
@@ -93,16 +88,16 @@ PtrSSchema        pSchStr;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    GetCptElemVal renvoie la valeur numerique de set ou d'increment | */
+/* |    GetCounterValEl renvoie la valeur numerique de set ou d'increment | */
 /* |            associee a l'element pEl.                               | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static int          GetCptElemVal (Counter * pCompteur, PtrElement pEl, CounterOp op, PtrSSchema pSchStr)
+static int          GetCounterValEl (Counter * pCounter, PtrElement pEl, CounterOp op, PtrSSchema pSchStr)
 
 #else  /* __STDC__ */
-static int          GetCptElemVal (pCompteur, pEl, op, pSchStr)
-Counter           *pCompteur;
+static int          GetCounterValEl (pCounter, pEl, op, pSchStr)
+Counter           *pCounter;
 PtrElement          pEl;
 CounterOp           op;
 PtrSSchema        pSchStr;
@@ -112,14 +107,14 @@ PtrSSchema        pSchStr;
 {
    int                 i;
 
-   for (i = 0; i < pCompteur->CnNItems; i++)
-      if (pCompteur->CnItem[i].CiCntrOp == op)
-	 if (EquivalentType (pEl, pCompteur->CnItem[i].CiElemType, pSchStr)
+   for (i = 0; i < pCounter->CnNItems; i++)
+      if (pCounter->CnItem[i].CiCntrOp == op)
+	 if (EquivalentType (pEl, pCounter->CnItem[i].CiElemType, pSchStr)
 	     || EquivalentSRules (pEl->ElTypeNumber, pEl->ElStructSchema,
-			pCompteur->CnItem[i].CiElemType, pSchStr, pEl))
-	    if (pCompteur->CnItem[i].CiElemType != PageBreak + 1
-		|| pEl->ElViewPSchema == pCompteur->CnItem[i].CiViewNum)
-	       return pCompteur->CnItem[i].CiParamValue;
+			pCounter->CnItem[i].CiElemType, pSchStr, pEl))
+	    if (pCounter->CnItem[i].CiElemType != PageBreak + 1
+		|| pEl->ElViewPSchema == pCounter->CnItem[i].CiViewNum)
+	       return pCounter->CnItem[i].CiParamValue;
    return 0;			/* par defaut... */
 }
 
@@ -140,11 +135,11 @@ PtrSSchema        pSS;
 #endif /* __STDC__ */
 
 {
-   boolean             ret, stop;
+   boolean             result, stop;
    PtrElement          pEl;
    PtrAttribute         pAttr;
 
-   ret = FALSE;
+   result = FALSE;
    *valinit = 0;
    if (pCo->CnItem[0].CiInitAttr > 0)
      {
@@ -152,7 +147,7 @@ PtrSSchema        pSS;
 	pEl = pElNum;
 	/* cherche si l'element a numeroter ou l'un de ses ascendants */
 	/* porte l'attribut qui intialise le compteur */
-	while (!ret && pEl != NULL)
+	while (!result && pEl != NULL)
 	  {
 	     /* cet attribut est-il present sur l'element courant */
 	     pAttr = pEl->ElFirstAttr;
@@ -165,11 +160,11 @@ PtrSSchema        pSS;
 		   stop = TRUE;	/* c'est l'attribut cherche' */
 		else
 		   pAttr = pAttr->AeNext;	/* au suivant */
-	     while (!(stop));
+	     while (!stop);
 	     if (pAttr != NULL)
 		/* l'element porte l'attribut qui initialise le compteur */
 	       {
-		  ret = TRUE;
+		  result = TRUE;
 		  *valinit = pAttr->AeAttrValue;	/* on prend la valeur de l'attribut */
 	       }
 	     else
@@ -177,7 +172,7 @@ PtrSSchema        pSS;
 		pEl = pEl->ElParent;
 	  }
      }
-   return ret;
+   return result;
 }
 
 
@@ -188,26 +183,26 @@ PtrSSchema        pSS;
 /* |            presentation  pointe' par pSchP, qui s'applique au      | */
 /* |            schema de structure pointe' par pSS) pour l'element     | */
 /* |            pointe' par pElNum.                                     | */
-/* |            Vue indique la vue concernee (uniquement pour les       | */
+/* |            view indique la view concernee (uniquement pour les       | */
 /* |            compteurs de page).                                     | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-int                 MinMaxComptVal (int NCompt, PtrSSchema pSS, PtrPSchema pSchP, PtrElement pElNum, int Vue, boolean Maximum)
+int                 MinMaxComptVal (int counterNum, PtrSSchema pSS, PtrPSchema pSchP, PtrElement pElNum, int view, boolean Maximum)
 
 #else  /* __STDC__ */
-int                 MinMaxComptVal (NCompt, pSS, pSchP, pElNum, Vue, Maximum)
-int                 NCompt;
+int                 MinMaxComptVal (counterNum, pSS, pSchP, pElNum, view, Maximum)
+int                 counterNum;
 PtrSSchema        pSS;
 PtrPSchema          pSchP;
 PtrElement          pElNum;
-int                 Vue;
+int                 view;
 boolean             Maximum;
 
 #endif /* __STDC__ */
 
 {
-   int                 val, valinitattr;
+   int                 value, valueinitattr;
    int                 TypeIncr, TypeSet, TypeRank;
    PtrSSchema        pSchIncr;
    boolean             stop, pstop, initattr;
@@ -216,14 +211,14 @@ boolean             Maximum;
    PtrElement          pEl2;
    PtrSSchema        pSchStr, pSSpr;
 
-   valinitattr = 0;
-   pCo1 = &pSchP->PsCounter[NCompt - 1];
+   valueinitattr = 0;
+   pCo1 = &pSchP->PsCounter[counterNum - 1];
    initattr = FALSE;		/* a priori, la valeur initiale du compteur ne
 				   depend pas d'un attribut. */
    pstop = TRUE;
 
    /* Traitement de la partie initialisation du compteur */
-   initattr = InitCounterByAttribute (&valinitattr, pCo1, pElNum, pSS);
+   initattr = InitCounterByAttribute (&valueinitattr, pCo1, pElNum, pSS);
 
    /* Traitement des compteurs de type CntrRank */
    if (pCo1->CnItem[0].CiCntrOp == CntrRank)
@@ -235,9 +230,9 @@ boolean             Maximum;
 	  {
 	     /* c'est un compteur de pages (CntrRank of Page) */
 	     if (initattr)
-		val = valinitattr;
+		value = valueinitattr;
 	     else
-		val = 0;
+		value = 0;
 	     /* On vient de trouver la valeur minimale */
 
 	     if (Maximum)
@@ -248,11 +243,11 @@ boolean             Maximum;
 		  while (pEl2->ElParent != NULL)
 		     pEl2 = pEl2->ElParent;
 		  pSSpr = pEl2->ElStructSchema;
-		  /* vue a laquelle appartient la marque de page cherchee */
+		  /* view a laquelle appartient la marque de page cherchee */
 		  if (pCo1->CnItem[0].CiViewNum > 0)
-		     Vue = pCo1->CnItem[0].CiViewNum;
+		     view = pCo1->CnItem[0].CiViewNum;
 		  if (pCo1->CnItem[0].CiViewNum == 0 && pElNum->ElAssocNum > 0)
-		     Vue = pElNum->ElViewPSchema;
+		     view = pElNum->ElViewPSchema;
 		  /* cherche la marque de page qui precede l'element */
 		  stop = FALSE;
 		  do
@@ -264,7 +259,7 @@ boolean             Maximum;
 		       else
 			 {
 			    if (pElNum->ElStructSchema->SsCode != pSSpr->SsCode)
-			       /* Saut de page d'une vue squelette */
+			       /* Saut de page d'une view squelette */
 			       /* on ne que compte les pages etrangeres au schema */
 			       /* principal */
 			       pstop = pEl->ElStructSchema->SsCode !=
@@ -273,48 +268,48 @@ boolean             Maximum;
 			       pstop = pEl->ElStructSchema->SsCode ==
 				  pSSpr->SsCode;
 
-			    /* on ignore les pages qui ne concernent pas la vue */
+			    /* on ignore les pages qui ne concernent pas la view */
 #ifdef __COLPAGE__
 			    /* ainsi que les marques colonnes */
-			    if ((pEl->ElViewPSchema == Vue) &&
+			    if ((pEl->ElViewPSchema == view) &&
 				(pEl->ElPageType != ColBegin
 				 && pEl->ElPageType != ColUser
 				 && pEl->ElPageType != ColComputed
 				 && pEl->ElPageType != ColGroup)
 				&& (pstop))
 #else  /* __COLPAGE__ */
-			    if ((pEl->ElViewPSchema == Vue) && (pstop))
+			    if ((pEl->ElViewPSchema == view) && (pstop))
 #endif /* __COLPAGE__ */
 			       stop = TRUE;
 			 }
 		    }
-		  while (!(stop));
+		  while (!stop);
 
 		  if (pEl == NULL)	/* pas de marque de page precedente */
 		     if (initattr)
-			val = valinitattr;
+			value = valueinitattr;
 		     else
-			val = 0;
+			value = 0;
 		  else
 		     /* on prend pour valeur le numero de la marque de page */
 		     /* precedente */
-		  if ((pEl->ElViewPSchema == Vue) && (pEl->ElPageNumber > val))
-		     val = pEl->ElPageNumber;
+		  if ((pEl->ElViewPSchema == view) && (pEl->ElPageNumber > value))
+		     value = pEl->ElPageNumber;
 		  /* A partir de cette marque de page, cherche en avant les */
 		  /* suivantes jusqu'a ne plus en trouver */
 		  while (pEl != NULL)
 		    {
 		       pEl = FwdSearchTypedElem (pEl, TypeRank, NULL);
 		       if (pEl != NULL)
-			  if ((pEl->ElViewPSchema == Vue) && (pEl->ElPageNumber > val))
-			     val = pEl->ElPageNumber - 1;
+			  if ((pEl->ElViewPSchema == view) && (pEl->ElPageNumber > value))
+			     value = pEl->ElPageNumber - 1;
 		    }
 		  if (pCo1->CnPageFooter)
 		    {
 		       /* Si on est dans un compteur en bas de page, il faut */
 		       /* incrementer car on creera un saut de page en plus a */
 		       /* la fin */
-		       val++;
+		       value++;
 		    }
 	       }
 	  }
@@ -326,14 +321,14 @@ boolean             Maximum;
 	     /* englobant l'element a numeroter */
 	     pEl = GetTypedAncestor (pElNum, TypeRank, pSS);
 	     if (pEl == NULL)
-		val = 0;	/* pas found' */
+		value = 0;	/* pas found' */
 	     else
 	       {
 		  /* Cherche le rang de l'element found' parmi ses freres */
 		  if (initattr)
-		     val = valinitattr;
+		     value = valueinitattr;
 		  else
-		     val = 1;
+		     value = 1;
 		  /* On vient de trouver la valeur minimale du compteur */
 
 		  if (Maximum)
@@ -359,7 +354,7 @@ boolean             Maximum;
 			    pEl = pEl->ElNext;
 			    /* on ne compte que les elements du type a compter */
 			    if (EquivalentType (pEl, TypeRank, pSS))
-			       val++;	/* meme type, on incremente */
+			       value++;	/* meme type, on incremente */
 			 }
 		    }
 	       }
@@ -369,9 +364,9 @@ boolean             Maximum;
    else
      {
 	/* type ou alias qui fait reset */
-	TypeSet = MakeTypeCptTempo (pCo1, CntrSet, pSS);
+	TypeSet = MakeAliasTypeCount (pCo1, CntrSet, pSS);
 	/* type ou alias qui incremente */
-	TypeIncr = MakeTypeCptTempo (pCo1, CntrAdd, pSS);
+	TypeIncr = MakeAliasTypeCount (pCo1, CntrAdd, pSS);
 	pSchStr = pSS;
 
 	/* Cherche le premier element de type TypeSet */
@@ -384,9 +379,9 @@ boolean             Maximum;
 	/* l'element found' est celui qui reinitialise le compteur 
 	   Sa valeur est la valeur minimale du compteur */
 	if (initattr)
-	   val = valinitattr;
+	   value = valueinitattr;
 	else
-	   val = GetCptElemVal (pCo1, pEl, CntrSet, pSS);
+	   value = GetCounterValEl (pCo1, pEl, CntrSet, pSS);
 
 	if (Maximum)
 	  {
@@ -402,9 +397,9 @@ boolean             Maximum;
 
 	     /* l'element found' est celui qui reinitialise le compteur */
 	     if (initattr)
-		val = valinitattr;
+		value = valueinitattr;
 	     else
-		val = GetCptElemVal (pCo1, pEl, CntrSet, pSS);
+		value = GetCounterValEl (pCo1, pEl, CntrSet, pSS);
 
 	     /* a partir de l'element found', cherche en avant tous les */
 	     /* elements ayant le type qui incremente le compteur, */
@@ -422,42 +417,42 @@ boolean             Maximum;
 		     if (pEl != NULL)
 			if (EquivalentType (pEl, TypeIncr, pSchIncr))
 			   /* on a found' un element du type qui incremente */
-			   val += GetCptElemVal (pCo1, pEl, CntrAdd, pSS);
+			   value += GetCounterValEl (pCo1, pEl, CntrAdd, pSS);
 		  }
 		while (pEl != NULL && !EquivalentType (pEl, TypeSet, pSS));
 	  }
      }
-   if (val < 0)
-      val = 0;
+   if (value < 0)
+      value = 0;
 
-   return val;
+   return value;
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ComptVal retourne la valeur du compteur de numero NCompt (defini| */
+/* |    ComptVal retourne la valeur du compteur de numero counterNum (defini| */
 /* |            dans le schema de presentation  pointe' par pSchP, qui  | */
 /* |            s'applique au schema de structure pointe' par pSS) pour | */
 /* |            l'element pointe' par pElNum.                           | */
-/* |            Vue indique la vue concernee (uniquement pour les       | */
+/* |            view indique la view concernee (uniquement pour les       | */
 /* |            compteurs de page).                                     | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-int                 ComptVal (int NCompt, PtrSSchema pSS, PtrPSchema pSchP, PtrElement pElNum, int Vue)
+int                 ComptVal (int counterNum, PtrSSchema pSS, PtrPSchema pSchP, PtrElement pElNum, int view)
 
 #else  /* __STDC__ */
-int                 ComptVal (NCompt, pSS, pSchP, pElNum, Vue)
-int                 NCompt;
+int                 ComptVal (counterNum, pSS, pSchP, pElNum, view)
+int                 counterNum;
 PtrSSchema        pSS;
 PtrPSchema          pSchP;
 PtrElement          pElNum;
-int                 Vue;
+int                 view;
 
 #endif /* __STDC__ */
 
 {
-   int                 val, valinitattr, level;
+   int                 value, valueinitattr, level;
    int                 TypeIncr, TypeSet, TypeRank, TypeRLevel;
    PtrSSchema        pSchIncr;
    boolean             stop, pstop, initattr;
@@ -471,19 +466,19 @@ int                 Vue;
 #define MaxAncetre 50
    PtrElement          PcWithin[MaxAncetre];
 
-   pCo1 = &pSchP->PsCounter[NCompt - 1];
+   pCo1 = &pSchP->PsCounter[counterNum - 1];
    initattr = FALSE;		/* a priori, la valeur initiale du compteur ne
 				   depend pas d'un attribut. */
    pstop = TRUE;
    /* Traitement de la partie initialisation du compteur */
-   initattr = InitCounterByAttribute (&valinitattr, pCo1, pElNum, pSS);
+   initattr = InitCounterByAttribute (&valueinitattr, pCo1, pElNum, pSS);
 
    /* Traitement des compteurs de type CntrRLevel */
    if (pCo1->CnItem[0].CiCntrOp == CntrRLevel)
      {
 	TypeRLevel = pCo1->CnItem[0].CiElemType;
 	pEl = pElNum;
-	val = 0;
+	value = 0;
 	/* parcourt les elements englobants de l'element sur lequel porte */
 	/* le calcul du compteur */
 	while (pEl != NULL)
@@ -491,7 +486,7 @@ int                 Vue;
 	     if (pEl->ElTypeNumber == TypeRLevel &&
 	     pEl->ElStructSchema->SsCode == pElNum->ElStructSchema->SsCode)
 		/* cet element englobant a le type qui increment le compteur */
-		val++;		/* incremente le compteur */
+		value++;		/* incremente le compteur */
 	     pEl = pEl->ElParent;
 	  }
      }
@@ -512,10 +507,10 @@ int                 Vue;
 		pEl2 = pEl2->ElParent;
 	     pSSpr = pEl2->ElStructSchema;
 	     if (pCo1->CnItem[0].CiViewNum > 0)
-		/* vue a laquelle appartient la marque de page cherchee */
-		Vue = pCo1->CnItem[0].CiViewNum;
+		/* view a laquelle appartient la marque de page cherchee */
+		view = pCo1->CnItem[0].CiViewNum;
 	     if (pCo1->CnItem[0].CiViewNum == 0 && pElNum->ElAssocNum > 0)
-		Vue = pElNum->ElViewPSchema;
+		view = pElNum->ElViewPSchema;
 	     /* cherche la marque de page qui precede l'element */
 	     stop = FALSE;
 	     do
@@ -527,43 +522,43 @@ int                 Vue;
 		  else
 		    {
 		       if (pElNum->ElStructSchema->SsCode != pSSpr->SsCode)
-			  /* Saut de page d'une vue squelette */
+			  /* Saut de page d'une view squelette */
 			  /*on ne que compte les pages etrangeres au schema principal */
 			  pstop = pEl->ElStructSchema->SsCode != pSSpr->SsCode;
 		       else
 			  pstop = pEl->ElStructSchema->SsCode == pSSpr->SsCode;
 
-		       /* on ignore les pages qui ne concernent pas la vue */
+		       /* on ignore les pages qui ne concernent pas la view */
 #ifdef __COLPAGE__
 		       /* ainsi que les marques colonnes */
-		       if ((pEl->ElViewPSchema == Vue) &&
+		       if ((pEl->ElViewPSchema == view) &&
 			   (pEl->ElPageType != ColBegin &&
 			    pEl->ElPageType != ColUser &&
 			    pEl->ElPageType != ColComputed &&
 			    pEl->ElPageType != ColGroup) &&
 			   (pstop))
 #else  /* __COLPAGE__ */
-		       /* on ignore les pages qui ne concernent pas la vue */
-		       if ((pEl->ElViewPSchema == Vue) && (pstop))
+		       /* on ignore les pages qui ne concernent pas la view */
+		       if ((pEl->ElViewPSchema == view) && (pstop))
 #endif /* __COLPAGE__ */
 			  stop = TRUE;
 		    }
 	       }
-	     while (!(stop));
+	     while (!stop);
 
 	     if (pEl == NULL)	/* pas de marque de page precedente */
 		if (initattr)
 		  {
-		     val = valinitattr;
-		     if (val > 0)
-			val--;
+		     value = valueinitattr;
+		     if (value > 0)
+			value--;
 		  }
 		else
-		   val = 0;
+		   value = 0;
 
 	     else
 		/* on prend pour valeur le numero de la marque de page precedente */
-		val = pEl->ElPageNumber;
+		value = pEl->ElPageNumber;
 #ifdef __COLPAGE__
 	     if (pElNum->ElTerminal && pElNum->ElLeafType == LtPageColBreak)
 		/* cas page rappel supprime */
@@ -572,7 +567,7 @@ int                 Vue;
 		/* on numerote une marque de page  */
 #endif /* __COLPAGE__ */
 		/* on incremente la valeur */
-		val++;
+		value++;
 	  }
 
 	/* Cas standard des compteurs CntrRank */
@@ -614,7 +609,7 @@ int                 Vue;
 		     /* il faut redescendre a partir de la racine */
 		     pEl = PcWithin[level + pCo1->CnItem[0].CiAscendLevel - 1];
 	       }
-	     val = 0;
+	     value = 0;
 	     if (pEl != NULL)
 	       {
 		  /* Cherche le rang de l'element found' parmi ses freres */
@@ -647,7 +642,7 @@ int                 Vue;
 				  stop = TRUE;	/* c'est l'attribut cherche' */
 			       else
 				  pAttr = pAttr->AeNext;		/* au suivant */
-			    while (!(stop));
+			    while (!stop);
 			    if (pAttr == NULL)
 			       pElReinit = pElReinit->ElPrevious;
 			 }
@@ -659,14 +654,14 @@ int                 Vue;
 		    {
 		       if (EquivalentType (pEl, TypeRank, pSS))
 			  /* on ne compte que les elements du type a compter */
-			  val++;	/* meme type, on incremente */
+			  value++;	/* meme type, on incremente */
 		       pEl = pEl->ElPrevious;
 		    }
 		  if (pAttr != NULL)
 		     /* le compteur est reinitialise' par l'attribut pAttr */
-		     val += pAttr->AeAttrValue;
+		     value += pAttr->AeAttrValue;
 		  else if (initattr)
-		     val += valinitattr - 1;
+		     value += valueinitattr - 1;
 	       }
 	  }
      }
@@ -674,9 +669,9 @@ int                 Vue;
    else
      {
 	/* type ou alias qui fait reset */
-	TypeSet = MakeTypeCptTempo (pCo1, CntrSet, pSS);
+	TypeSet = MakeAliasTypeCount (pCo1, CntrSet, pSS);
 	/* type ou alias qui incremente */
-	TypeIncr = MakeTypeCptTempo (pCo1, CntrAdd, pSS);
+	TypeIncr = MakeAliasTypeCount (pCo1, CntrAdd, pSS);
 	pSchStr = pSS;
 
 	/* Cherche le premier element de type TypeSet */
@@ -688,9 +683,9 @@ int                 Vue;
 
 	/* l'element found' est celui qui reinitialise le compteur */
 	if (initattr)
-	   val = valinitattr;
+	   value = valueinitattr;
 	else
-	   val = GetCptElemVal (pCo1, pEl, CntrSet, pSS);
+	   value = GetCounterValEl (pCo1, pEl, CntrSet, pSS);
 
 	/* a partir de l'element found', cherche en avant tous les */
 	/* elements ayant le type qui incremente le compteur, */
@@ -708,15 +703,15 @@ int                 Vue;
 		if (pEl != NULL)
 		   if (EquivalentType (pEl, TypeIncr, pSchIncr))
 		      /* on a found' un element du type qui incremente */
-		      val += GetCptElemVal (pCo1, pEl, CntrAdd, pSS);
+		      value += GetCounterValEl (pCo1, pEl, CntrAdd, pSS);
 	     }
-	   while (!(pEl == NULL || pEl == pElNum));
+	   while (pEl != NULL && pEl != pElNum);
      }
 
-   if (val < 0)
-      val = 0;
+   if (value < 0)
+      value = 0;
 
-   return val;
+   return value;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -769,22 +764,22 @@ PtrAbstractBox             pAb;
 
 /* ---------------------------------------------------------------------- */
 /* |    NouvVariable met dans le pave pAb le texte correspondant a la  | */
-/* |            variable de numero NVar definie dans le schema de       | */
+/* |            variable de numero varNum definie dans le schema de       | */
 /* |            presentation pSchP (et qui correspond au schema de      | */
 /* |            structure pSS). pDoc pointe sur le descripteur du       | */
 /* |            document pour lequel on travaille. Si le pave avait     | */
 /* |            deja un contenu et que ce contenu ne change pas la      | */
-/* |            fonction retourne 'faux'. S'il y a un nouveau contenu,  | */
+/* |            fonction retourne 'faux'. S'il y a un isNew contenu,  | */
 /* |            elle retourne 'vrai'.                                   | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean             NouvVariable (int NVar, PtrSSchema pSS, PtrPSchema pSchP,
+boolean             NouvVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
 				  PtrAbstractBox pAb, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-boolean             NouvVariable (NVar, pSS, pSchP, pAb, pDoc)
-int                 NVar;
+boolean             NouvVariable (varNum, pSS, pSchP, pAb, pDoc)
+int                 varNum;
 PtrSSchema        pSS;
 PtrPSchema          pSchP;
 PtrAbstractBox             pAb;
@@ -798,28 +793,28 @@ PtrDocument         pDoc;
    long                tod;
    long               *pt;
    struct tm          *ptm;
-   PtrTextBuffer      Ancien, Nouveau;
+   PtrTextBuffer      isOld, isNew;
    PtrAttribute         pAttr;
    boolean             found;
-   boolean             egal;
+   boolean             equal;
    PresVariable            *pPr1;
    PresVarItem            *pVa1;
    PresConstant          *pPres1;
    TtAttribute           *pAttr1;
    PtrElement          pEl;
    Counter           *pCo1;
-   char                Nombre[20];
+   char                number[20];
    PtrTextBuffer      pBTN, pBTA, pBTAPrec;
 
    /* sauve temporairement le contenu de ce pave de presentation */
-   Ancien = pAb->AbText;
+   isOld = pAb->AbText;
    /* acquiert un buffer de texte pour y calculer la (nouvelle) valeur */
    /* de la variable */
    GetBufConst (pAb);
    pAb->AbVolume = 0;
    pAttr = NULL;
    /* remplit le buffer avec le contenu defini par la variable */
-   pPr1 = &pSchP->PsVariable[NVar - 1];
+   pPr1 = &pSchP->PsVariable[varNum - 1];
    for (f = 1; f <= pPr1->PvNItems; f++)
       /* boucle sur les elements de la variable */
      {
@@ -861,8 +856,8 @@ PtrDocument         pDoc;
 			       {
 				  case AtNumAttr:
 				     /* traduit l'entier en ASCII selon le style voulu */
-				     GetCounterValue (pAttr->AeAttrValue, pVa1->ViStyle, Nombre, &l);
-				     CopyStringToText (Nombre, pAb->AbText, &l);
+				     GetCounterValue (pAttr->AeAttrValue, pVa1->ViStyle, number, &l);
+				     CopyStringToText (number, pAb->AbText, &l);
 				     pAb->AbVolume += l;
 				     pAb->AbCreatorAttr = pAttr;
 				     break;
@@ -924,8 +919,8 @@ PtrDocument         pDoc;
 			     i -= pCo1->CnItem[1].CiParamValue;
 #endif /* __COLPAGE__ */
 		    /* traduit l'entier en ASCII */
-		    GetCounterValue (i, pVa1->ViStyle, Nombre, &l);
-		    CopyStringToText (Nombre, pAb->AbText, &l);
+		    GetCounterValue (i, pVa1->ViStyle, number, &l);
+		    CopyStringToText (number, pAb->AbText, &l);
 		    pAb->AbVolume += l;
 		    break;
 		 case VarDate:
@@ -934,18 +929,18 @@ PtrDocument         pDoc;
 		    *pt = time (NULL);
 		    ptm = localtime (pt);
 
-		    GetCounterValue (ptm->tm_year, CntArabic, Nombre, &l);
-		    CopyStringToText (Nombre, pAb->AbText, &l);
+		    GetCounterValue (ptm->tm_year, CntArabic, number, &l);
+		    CopyStringToText (number, pAb->AbText, &l);
 		    pAb->AbVolume += l;
 		    CopyStringToText ("/", pAb->AbText, &l);
 		    pAb->AbVolume += l;
-		    GetCounterValue (ptm->tm_mon + 1, CntArabic, Nombre, &l);
-		    CopyStringToText (Nombre, pAb->AbText, &l);
+		    GetCounterValue (ptm->tm_mon + 1, CntArabic, number, &l);
+		    CopyStringToText (number, pAb->AbText, &l);
 		    pAb->AbVolume += l;
 		    CopyStringToText ("/", pAb->AbText, &l);
 		    pAb->AbVolume += l;
-		    GetCounterValue (ptm->tm_mday, CntArabic, Nombre, &l);
-		    CopyStringToText (Nombre, pAb->AbText, &l);
+		    GetCounterValue (ptm->tm_mday, CntArabic, number, &l);
+		    CopyStringToText (number, pAb->AbText, &l);
 		    pAb->AbVolume += l;
 		    break;
 		 case VarFDate:
@@ -953,18 +948,18 @@ PtrDocument         pDoc;
 		    pt = &tod;
 		    *pt = time (NULL);
 		    ptm = localtime (pt);
-		    GetCounterValue (ptm->tm_mday, CntArabic, Nombre, &l);
-		    CopyStringToText (Nombre, pAb->AbText, &l);
+		    GetCounterValue (ptm->tm_mday, CntArabic, number, &l);
+		    CopyStringToText (number, pAb->AbText, &l);
 		    pAb->AbVolume += l;
 		    CopyStringToText ("/", pAb->AbText, &l);
 		    pAb->AbVolume += l;
-		    GetCounterValue (ptm->tm_mon + 1, CntArabic, Nombre, &l);
-		    CopyStringToText (Nombre, pAb->AbText, &l);
+		    GetCounterValue (ptm->tm_mon + 1, CntArabic, number, &l);
+		    CopyStringToText (number, pAb->AbText, &l);
 		    pAb->AbVolume += l;
 		    CopyStringToText ("/", pAb->AbText, &l);
 		    pAb->AbVolume += l;
-		    GetCounterValue (ptm->tm_year, CntArabic, Nombre, &l);
-		    CopyStringToText (Nombre, pAb->AbText, &l);
+		    GetCounterValue (ptm->tm_year, CntArabic, number, &l);
+		    CopyStringToText (number, pAb->AbText, &l);
 		    pAb->AbVolume += l;
 		    break;
 		 case VarDocName:
@@ -990,15 +985,15 @@ PtrDocument         pDoc;
 		    break;
 		 case VarPageNumber:
 		    /* numero de la marque de page precedente dans la */
-		    /* vue ViView */
-		    /* cherche en arriere la premiere marque de page de cette vue */
+		    /* view ViView */
+		    /* cherche en arriere la premiere marque de page de cette view */
 		    pEl = pAb->AbElement;
 		    found = FALSE;
 		    do
 		      {
 			 pEl = BackSearchTypedElem (pEl, PageBreak + 1, NULL);
 			 if (pEl != NULL)
-			    /* on ignore les pages qui ne concernent pas la vue */
+			    /* on ignore les pages qui ne concernent pas la view */
 			    if (pEl->ElViewPSchema == pVa1->ViView)
 			       found = TRUE;
 		      }
@@ -1008,8 +1003,8 @@ PtrDocument         pDoc;
 		    else
 		       i = pEl->ElPageNumber;	/* numero de la page trouvee */
 		    /* traduit le numero de page en ASCII selon le style voulu */
-		    GetCounterValue (i, pVa1->ViStyle, Nombre, &l);
-		    CopyStringToText (Nombre, pAb->AbText, &l);
+		    GetCounterValue (i, pVa1->ViStyle, number, &l);
+		    CopyStringToText (number, pAb->AbText, &l);
 		    pAb->AbVolume += l;
 		    break;
 		 default:
@@ -1021,20 +1016,20 @@ PtrDocument         pDoc;
       /* le contenu de ce pave de presentation est donc modifiable */
       pAb->AbCanBeModified = TRUE;
    pAb->AbLeafType = LtText;
-   if (Ancien == NULL)
-      egal = FALSE;		/* la variable n'avait pas de valeur */
+   if (isOld == NULL)
+      equal = FALSE;		/* la variable n'avait pas de valeur */
    else
      {
-	Nouveau = pAb->AbText;	/* nouveau contenu du pave de presentation */
-	/* compare le nouveau et l'ancien contenu du pave */
-	egal = TextsEqual (Ancien, Nouveau);
-	if (!egal)
+	isNew = pAb->AbText;	/* isNew contenu du pave de presentation */
+	/* compare le isNew et l'ancien contenu du pave */
+	equal = TextsEqual (isOld, isNew);
+	if (!equal)
 	   /* contenus differents */
-	   /* recopie le nouveau contenu dans les anciens buffers */
+	   /* recopie le isNew contenu dans les anciens buffers */
 	  {
-	     pBTA = Ancien;
+	     pBTA = isOld;
 	     pBTAPrec = NULL;
-	     pBTN = Nouveau;
+	     pBTN = isNew;
 	     while (pBTN != NULL)
 	       {
 		  if (pBTA == NULL)
@@ -1046,19 +1041,18 @@ PtrDocument         pDoc;
 		  pBTA = pBTA->BuNext;
 	       }
 	  }
-	pAb->AbText = Ancien;
+	pAb->AbText = isOld;
 	/* libere les buffers nouveaux */
 	do
 	  {
-	     pBTN = Nouveau->BuNext;
-	     FreeTextBuffer (Nouveau);
-	     Nouveau = pBTN;
+	     pBTN = isNew->BuNext;
+	     FreeTextBuffer (isNew);
+	     isNew = pBTN;
 	  }
-	while (Nouveau != NULL);
+	while (isNew != NULL);
      }
-   if (!egal)
+   if (!equal)
       /* reaffiche les references qui copient cette variable */
       ChngRef (pAb, pDoc);
-   return !egal;
+   return !equal;
 }
-/* End Of Module varpres */
