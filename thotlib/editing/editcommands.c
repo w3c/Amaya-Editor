@@ -2124,7 +2124,7 @@ static void         ContentEditing (int editType)
 	      else if ((editType == TEXT_CUT || editType == TEXT_DEL ||
 			editType == TEXT_SUP || editType == TEXT_COPY) &&
 		       (pAb->AbVolume == 0 || pAb->AbLeafType == LtGraphics ||
-			pAb->AbLeafType == LtPicture))
+			pAb->AbLeafType == LtPath || pAb->AbLeafType == LtPicture))
 		/* coupe ou copie un pave vide ou graphique ou une image */
 		pAb = NULL;
 	      else if ((editType == TEXT_CUT || editType == TEXT_COPY) &&
