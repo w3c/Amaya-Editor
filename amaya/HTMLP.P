@@ -4864,6 +4864,7 @@ RULES
 		Visibility: 1;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		NoLine;
 		END;		
 	IN Table_of_contents
 		Visibility: 0;
@@ -4881,6 +4882,7 @@ RULES
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
+		NoLine;
 		END;
 	END;
 
