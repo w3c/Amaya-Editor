@@ -15,7 +15,7 @@ PRINT
    Formatted_view;
 #endif  { PAGE }
 
-#define LINE_NUMBER_Color Grey
+#define LINE_NUMBER_Color DarkGrey2
 #define MARKUP_Color DarkIndigo1
 #define LINK_Color DarkIndigo1
 #define ATTRVALUE_Color DarkMagenta2
