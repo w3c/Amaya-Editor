@@ -227,7 +227,7 @@ PtrPRule GetRule (PtrPRule *pRSpecif, PtrPRule * pRDefault,
    cette vue (dans ce cas, il faut alors appliquer la      
    regle de la vue 1).                                     
   ----------------------------------------------------------------------*/
-PtrPRule GetRuleView (PtrPRule *pRSpecif, PtrPRule * pRDefault,
+PtrPRule GetRuleView (PtrPRule *pRSpecif, PtrPRule *pRDefault,
 		      PRuleType Typ, int Vue, PtrElement pEl,
 		      PtrAttribute pAttr, PtrSSchema pSS,
 		      PtrDocument pDoc)
@@ -2109,7 +2109,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
 			  if (pAPRule->ApMatch == CoWord)
 			    {
 			      /* check if a word matches */
-			      k += j + 2;
+			      k += j;
 			      ok = (j == 0 ||
 				    attrValue[j - 1] == SPACE) &&
 				(attrValue[k] == EOS ||
