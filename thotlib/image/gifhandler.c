@@ -238,8 +238,8 @@ static unsigned char* ReadGifImage (FILE* fd, int len, int height,
 /*----------------------------------------------------------------------
   ReadGIF
   ----------------------------------------------------------------------*/
-unsigned char* ReadGIF (FILE* fd, int* w, int* h, int* ncolors, int* cpp,
-						ThotColorStruct colrs[256])
+unsigned char *ReadGIF (FILE* fd, int* w, int* h, int* ncolors, int* cpp,
+			ThotColorStruct colrs[256])
 {
    unsigned char       buf[16];
    unsigned char      *data;
@@ -788,7 +788,7 @@ Pixmap MakeMask (Display* dsp, char* pixelindex, int w, int h, int bg)
   Make an image of appropriate depth for display from image data.
   ----------------------------------------------------------------------*/
 XImage *MakeImage (Display* dsp, unsigned char *data, int width, int height,
-				   int depth, ThotColorStruct * colrs)
+				   int depth, ThotColorStruct *colrs)
 {
   int                 linepad, shiftnum;
   int                 shiftstart, shiftstop, shiftinc;
@@ -953,7 +953,7 @@ XImage *MakeImage (Display* dsp, unsigned char *data, int width, int height,
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
-					   int depth, ThotColorStruct * colrs)
+		       int depth, ThotColorStruct * colrs)
 {
   HBITMAP             newimage;
   unsigned char      *bit_data, *bitp, *datap;
@@ -1075,237 +1075,229 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
   Allocate and return the thotColors table.
   ----------------------------------------------------------------------*/
 Pixmap DataToPixmap (unsigned char *image_data, int width, int height,
-					 int num_colors, ThotColorStruct colrs[256], int **thotColors)
+		     int ncolors, ThotColorStruct colrs[256], int **thotColors)
 {
 #ifndef _WINDOWS
-   int                 i, size;
-   int                 delta, not_right_col, not_last_row;
-   Pixmap              Img;
-   XImage             *tmpimage;
-   ThotColorStruct     tmpcolr;
-   int                *Mapping, *tcolors;
-   unsigned char      *tmpdata;
-   unsigned char      *ptr;
-   unsigned char      *ptr2;
+  Pixmap              Img;
+  XImage             *tmpimage;
+  ThotColorStruct     tmpcolr;
+  unsigned char      *tmpdata;
+  unsigned char      *ptr;
+  unsigned char      *ptr2;
+  int                 i, size;
+  int                 delta, not_right_col, not_last_row;
+  int                 cx, cy;
+  int                *cmap = NULL, *tcolors;
 
-   /* find the visual class. */
-   Mapping = (int*) TtaGetMemory (num_colors * sizeof (int));
-   tcolors = *thotColors;
-   for (i = 0; i < num_colors; i++)
-     {
-       tmpcolr.red   = colrs[i].red;
-       tmpcolr.green = colrs[i].green;
-       tmpcolr.blue  = colrs[i].blue;
-       tmpcolr.pixel = 0;
+  /* find the visual class. */
+  if (ncolors > 0)
+    {
+      tcolors = *thotColors;
+      cmap = (int*) TtaGetMemory (ncolors * sizeof (int));
+      for (i = 0; i < ncolors; i++)
+	{
+	  tmpcolr.red   = colrs[i].red;
+	  tmpcolr.green = colrs[i].green;
+	  tmpcolr.blue  = colrs[i].blue;
+	  tmpcolr.pixel = 0;
 #ifndef _GTK
-       tmpcolr.flags = DoRed | DoGreen | DoBlue;
+	  tmpcolr.flags = DoRed | DoGreen | DoBlue;
 #endif /* !_GTK */
-       if (TtIsTrueColor)
-	 Mapping[i] = i;
-       else if (TtWDepth == 1)
-	 {
-	   Mapping[i] = ((tmpcolr.red >> 5) * 11 +
+	  if (TtIsTrueColor)
+	    cmap[i] = i;
+	  else if (TtWDepth == 1)
+	    {
+	      cmap[i] = ((tmpcolr.red >> 5) * 11 +
 			 (tmpcolr.green >> 5) * 16 +
 			 (tmpcolr.blue >> 5) * 5) / (65504 / 64);
-	 }
-       else
-	 {
-	   
-	   if (tcolors == NULL)
-	     {
-	       tcolors = (int*) TtaGetMemory (num_colors * sizeof (int));
-	       memset (tcolors, 0, num_colors * sizeof (int));
-	     }
-	   tcolors[i] = TtaGetThotColor (tmpcolr.red /256,
-					 tmpcolr.green / 256,
-					 tmpcolr.blue / 256);
-	   tmpcolr.pixel = ColorPixel (tcolors[i]);
-	   Mapping[i] = tmpcolr.pixel;
-	 }
-     }
+	    }
+	  else
+	    {
+	      if (tcolors == NULL)
+		{
+		  tcolors = (int*) TtaGetMemory (ncolors * sizeof (int));
+		  memset (tcolors, 0, ncolors * sizeof (int));
+		}
+	      tcolors[i] = TtaGetThotColor (tmpcolr.red /256,
+					    tmpcolr.green / 256,
+					    tmpcolr.blue / 256);
+	      tmpcolr.pixel = ColorPixel (tcolors[i]);
+	      cmap[i] = tmpcolr.pixel;
+	    }
+	}
+      *thotColors = tcolors;
 
-   *thotColors = tcolors;
-   /*
-    * Special case:  For 2 color non-black&white images, instead
-    * of 2 dither patterns, we will always drop them to be
-    * black on white.
-    */
-   if (TtWDepth == 1 && num_colors == 2)
-     {
-       if (Mapping[0] < Mapping[1]) {
-	 Mapping[0] = 0;
-	 Mapping[1] = 64;
-       }
-       else
-	 {
-	   Mapping[0] = 64;
-	   Mapping[1] = 0;
-	 }
-     }
+      /*
+       * Special case:  For 2 color non-black&white images, instead
+       * of 2 dither patterns, we will always drop them to be
+       * black on white.
+       */
+      if (TtWDepth == 1 && ncolors == 2)
+	{
+	  if (cmap[0] < cmap[1])
+	    {
+	      cmap[0] = 0;
+	      cmap[1] = 64;
+	    }
+	  else
+	    {
+	      cmap[0] = 64;
+	      cmap[1] = 0;
+	    }
+	}
+    }
 
-   size = width * height;
-   if (size == 0)
-     tmpdata = NULL;
-   else
-     tmpdata = (unsigned char *) TtaGetMemory (size);
+  size = width * height;
+  if (size == 0)
+    tmpdata = NULL;
+  else
+    tmpdata = (unsigned char *) TtaGetMemory (size);
+  if (tmpdata == NULL)
+    {
+      /* no image to display */
+      tmpimage = None;
+      Img = (Pixmap) None;
+    }
+  else
+    {
+      ptr = image_data;
+      ptr2 = tmpdata;
+      /* use the color table */
+      while (ptr2 < tmpdata + size - 1)
+	{
+	  if (*ptr > ncolors)
+	    *ptr2 = (unsigned char) cmap[ncolors];
+	  else
+	    *ptr2 = cmap[(int) *ptr];
+	  ptr2++;
+	  ptr++;
+	}
+      if (TtWDepth == 1)
+	{
+	  ptr2 = tmpdata;
+	  for (cy = 0; cy < height; cy++)
+	    {
+	      for (cx = 0; cx < width; cx++)
+		{
+		  /* Assume high numbers are really negative. */
+		  if (*ptr2 > 128)
+		    *ptr2 = 0;
+		  else if (*ptr2 > 64)
+		    *ptr2 = 64;
+		  
+		  /* Traditional Floyd-Steinberg */
+		  if (*ptr2 < 32)
+		    {
+		      delta = *ptr2;
+		      *ptr2 = Black_Color;
+		    }
+		  else
+		    {
+		      delta = *ptr2 - 64;
+		      *ptr2 = White_Color;
+		    }
+		  if ((not_right_col = (cx < (width - 1))))
+		    *(ptr2 + 1) += delta * 7 >> 4;
+		  
+		  if ((not_last_row = (cy < (height - 1))))
+		    (*(ptr2 + width)) += delta * 5 >> 4;
+		  
+		  if (not_right_col && not_last_row)
+		    (*(ptr2 + width + 1)) += delta >> 4;
+		  
+		  if (cx && not_last_row)
+		    (*(ptr2 + width - 1)) += delta * 3 >> 4;
+		  ptr2++;
+		}
+	    }
+	}
+      tmpimage = MakeImage (TtDisplay, tmpdata, width, height, TtWDepth, colrs);
+      TtaFreeMemory (tmpdata);
+      Img = XCreatePixmap (TtDisplay, TtRootWindow, width, height, TtWDepth);
+    }
 
-   if (tmpdata == NULL)
-     {
-       tmpimage = None;
-       Img = (Pixmap) None;
-     }
-   else
-     {
-       ptr = image_data;
-       ptr2 = tmpdata;
-
-       if (TtWDepth == 1)
-	 {
-	   int                 cx, cy;
-
-	   for (ptr2 = tmpdata, ptr = image_data; ptr2 < tmpdata + (size - 1); ptr2++, ptr++)
-	     *ptr2 = Mapping[(int) *ptr];
-
-	   ptr2 = tmpdata;
-	   for (cy = 0; cy < height; cy++)
-	     {
-	       for (cx = 0; cx < width; cx++)
-		 {
-		   /* Assume high numbers are really negative. */
-		   if (*ptr2 > 128)
-		     *ptr2 = 0;
-		   else if (*ptr2 > 64)
-		     *ptr2 = 64;
-
-		   /* Traditional Floyd-Steinberg */
-		   if (*ptr2 < 32)
-		     {
-		       delta = *ptr2;
-		       *ptr2 = Black_Color;
-		     }
-		   else
-		     {
-		       delta = *ptr2 - 64;
-		       *ptr2 = White_Color;
-		     }
-		   if ((not_right_col = (cx < (width - 1))))
-		     *(ptr2 + 1) += delta * 7 >> 4;
-
-		   if ((not_last_row = (cy < (height - 1))))
-		     (*(ptr2 + width)) += delta * 5 >> 4;
-
-		   if (not_right_col && not_last_row)
-		     (*(ptr2 + width + 1)) += delta >> 4;
-
-		   if (cx && not_last_row)
-		     (*(ptr2 + width - 1)) += delta * 3 >> 4;
-		   ptr2++;
-		 }
-	     }
-	 }
-       else
-	 {
-	   for (i = 0; i < size; i++)
-	     {
-	       if (*ptr > num_colors)
-		 *ptr2++ = (unsigned char) Mapping[num_colors];
-	       else
-		 *ptr2++ = (unsigned char) Mapping[(int) *ptr];
-	       ptr++;
-	     }
-	 }
-       tmpimage = MakeImage (TtDisplay, tmpdata, width, height, TtWDepth, colrs);
-       TtaFreeMemory (tmpdata);
-       Img = XCreatePixmap (TtDisplay, TtRootWindow, width, height, TtWDepth);
-     }
-
-   if ((tmpimage == None) || (Img == (Pixmap) None))
-     {
+  if ((tmpimage == None) || (Img == (Pixmap) None))
+    {
 #ifndef _GTK 
       if (tmpimage != None)
-	 XDestroyImage (tmpimage);
-       if (Img != (Pixmap) None)
-	 XFreePixmap (TtDisplay, Img);
+	XDestroyImage (tmpimage);
+      if (Img != (Pixmap) None)
+	XFreePixmap (TtDisplay, Img);
 #endif /* _GTK */
-       Img = None;
-     }
-   else
-     {
+      Img = None;
+    }
+  else
+    {
 #ifndef _GTK 
-       XPutImage (TtDisplay, Img, GCimage, tmpimage, 0, 0, 0, 0, width, height);
-       XDestroyImage (tmpimage);
+      XPutImage (TtDisplay, Img, GCimage, tmpimage, 0, 0, 0, 0, width, height);
+      XDestroyImage (tmpimage);
 #endif /* _GTK */
     }
-   TtaFreeMemory ( Mapping);
-
-   return (Img);
+  TtaFreeMemory ( cmap);
+  return (Img);
 
 #else /* _WINDOWS */
-   if (TtIsTrueColor)
-      return WIN_MakeImage (TtDisplay, image_data, width, height, TtWDepth, colrs);
-   else
+  static int        cbBits, cbPlanes; 
+  BYTE               mapIndex;
+  int               padding, i, j, ret = 0;
+  int               cmap [MAXNUMBER];
+  BYTE*             bmBits;
+  HDC               destMemDC;  
+  HBITMAP           bmp = 0;
+  unsigned int      colorIndex;
+
+  if (TtIsTrueColor)
+    return WIN_MakeImage (TtDisplay, image_data, width, height, TtWDepth, colrs);
+  else
+    {
+      destMemDC = CreateCompatibleDC (TtDisplay);
+      WIN_InitSystemColors (TtDisplay);
+      if (width % 2)
+	padding = 1;
+      else 
+	padding = 0;
+
+      bmBits = (BYTE*) TtaGetMemory ((width + padding) * height * sizeof (BYTE));
+      if (bmBits == NULL)
 	{
-         static int        cbBits, cbPlanes; 
-         BYTE               mapIndex ;
-         int               padding, i, j, ret = 0;
-         int               Mapping [MAXNUMBER];
-         BYTE*             bmBits;
-         HDC               destMemDC;  
-         HBITMAP           bmp = 0;
-         unsigned int      colorIndex;
-
-         destMemDC = CreateCompatibleDC (TtDisplay);
-         WIN_InitSystemColors (TtDisplay);
-
-         if (width % 2)
-			padding = 1;
-		 else 
-			 padding = 0;
-
-         bmBits = (BYTE*) TtaGetMemory ((width + padding) * height * sizeof (BYTE));
-         if (bmBits == NULL)
-		 {
-            DeleteDC (destMemDC);
-            return NULL;
-         }
+	  DeleteDC (destMemDC);
+	  return NULL;
+	}
     
-         for (i = 0; i < MAXNUMBER; i++)
-             Mapping [i] = -1;
+      for (i = 0; i < MAXNUMBER; i++)
+	cmap [i] = -1;
+      bmp = CreateCompatibleBitmap (TtDisplay, width, height);
+      if ((bmp == NULL))
+	{
+	  TtaFreeMemory (bmBits);
+	  DeleteDC (destMemDC);
+	  return (Pixmap) bmp;
+	}
 
-         bmp = CreateCompatibleBitmap (TtDisplay, width, height);
-         if ((bmp == NULL))
-		 {
-            TtaFreeMemory (bmBits);
-            DeleteDC (destMemDC);
-            return (Pixmap) bmp;
-         }
-
-         SelectObject (destMemDC, bmp);
-
-         for (j = 0; j < height; j++)
-		 {
-             for (i = 0; i < width; i++)
-			 {
-                 colorIndex = (unsigned int) image_data [i + j * width];
-                 if (Mapping [colorIndex] != -1)
-                    mapIndex = (BYTE) Mapping [colorIndex];
-                 else
-				 {
-                      mapIndex = WIN_GetColorIndex (colrs [colorIndex].red, colrs [colorIndex].green, colrs [colorIndex].blue);
-                      Mapping [colorIndex] = (int) mapIndex ;  
-                 }    
-                 bmBits[i + j * (padding + width)] = mapIndex;
-             }
-         }
-         ret = SetBitmapBits (bmp, width * height, bmBits);
-
-         /* Cleanup */
-         
-         DeleteDC(destMemDC);
-         TtaFreeMemory (bmBits);
-         peInitialized = 0;	 
-         return (Pixmap) bmp;
-   }
+      SelectObject (destMemDC, bmp);
+      for (j = 0; j < height; j++)
+	{
+	  for (i = 0; i < width; i++)
+	    {
+	      colorIndex = (unsigned int) image_data [i + j * width];
+	      if (cmap [colorIndex] != -1)
+		mapIndex = (BYTE) cmap[colorIndex];
+	      else
+		{
+		  mapIndex = WIN_GetColorIndex (colrs [colorIndex].red, colrs [colorIndex].green, colrs [colorIndex].blue);
+		  cmap[colorIndex] = (int) mapIndex ;  
+		}    
+	      bmBits[i + j * (padding + width)] = mapIndex;
+	    }
+	}
+      ret = SetBitmapBits (bmp, width * height, bmBits);
+      
+      /* Cleanup */
+      DeleteDC(destMemDC);
+      TtaFreeMemory (bmBits);
+      peInitialized = 0;	 
+      return (Pixmap) bmp;
+    }
 #  endif /* _WINDOWS */
 }
 
@@ -1313,8 +1305,8 @@ Pixmap DataToPixmap (unsigned char *image_data, int width, int height,
 /*----------------------------------------------------------------------
    ReadGifToData decomresses the file and returns the picture data 
   ----------------------------------------------------------------------*/
-unsigned char *ReadGifToData (CHAR_T* datafile, int *w, int *h, int *ncolors,
-							  int *cpp, ThotColorStruct colrs[256])
+unsigned char *ReadGifToData (char *datafile, int *w, int *h, int *ncolors,
+			      int *cpp, ThotColorStruct colrs[256])
 {
    unsigned char      *bit_data;
    FILE               *fp;
@@ -1343,9 +1335,9 @@ unsigned char *ReadGifToData (CHAR_T* datafile, int *w, int *h, int *ncolors,
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-Drawable GifCreate (CHAR_T* fn, PictInfo *imageDesc, int *xif, int *yif,
-					int *wif, int *hif, unsigned long BackGroundPixel,
-					ThotBitmap * mask1, int *width, int *height, int zoom)
+Drawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
+		    int *wif, int *hif, unsigned long BackGroundPixel,
+		    ThotBitmap * mask1, int *width, int *height, int zoom)
 {
   Pixmap              pixmap = (Pixmap) 0;
   ThotColorStruct     colrs[256];
@@ -1455,9 +1447,9 @@ Drawable GifCreate (CHAR_T* fn, PictInfo *imageDesc, int *xif, int *yif,
 /*----------------------------------------------------------------------
    GifPrint  : reads a gif file and produces PostScirpt      
   ----------------------------------------------------------------------*/
-void GifPrint (CHAR_T *fn, PictureScaling pres, int xif, int yif, int wif,
-			   int hif, int PicXArea, int PicYArea, int PicWArea,
-			   int PicHArea, FILE *fd, unsigned long BackGroundPixel)
+void GifPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
+	       int hif, int PicXArea, int PicYArea, int PicWArea,
+	       int PicHArea, FILE *fd, unsigned long BackGroundPixel)
 {
    int                 delta;
    int                 xtmp, ytmp;

@@ -7,7 +7,7 @@
 
 /*
  * Authors: I. Vatton, N. Layaida (INRIA)
- *          R. Guetari (W3C/INRIA) - Unicode and Windows version
+ *          R. Guetari (W3C/INRIA) - Windows version
  */
 
 #include "thot_gui.h"
@@ -18,6 +18,9 @@
 #include "picture.h"
 #include "frame.h"
 #include "message.h"
+#ifdef _WINDOWS
+#include "wininclude.h"
+#endif /* _WINDOWS */
 
 #define THOT_EXPORT extern
 #include "picture_tv.h"
@@ -28,15 +31,8 @@
 #include "picture_f.h"
 #include "gifhandler_f.h"
 #include "memory_f.h"
-
-#define MAX(x,y)  (((x) > (y)) ? (x) : (y))
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 
-#ifdef _WINDOWS
-#include "wininclude.h"
-
-extern void png_read_init (png_structp png_ptr);
-#endif /* _WINDOWS */
 
 int Magic256[256] =    /* for halftoning */
 {
@@ -134,7 +130,7 @@ extern BOOL pic2print;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static void my_png_error (png_struct *png_ptr, STRING message)
+static void PError (png_struct *png_ptr, char *message)
 {
    fprintf(stderr,"libpng error: %s\n", message);
    longjmp(png_ptr->jmpbuf, 1);
@@ -142,7 +138,7 @@ static void my_png_error (png_struct *png_ptr, STRING message)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static void my_png_warning (png_struct *png_ptr, STRING message)
+static void PWarning (png_struct *png_ptr, char *message)
 {
    if (!png_ptr)
      return;
@@ -181,8 +177,8 @@ unsigned char *ReadPng (FILE *infile, int *width, int *height, int *ncolors,
     return(NULL);
   rewind (infile);
 
-  png_ptr = png_create_read_struct (PNG_LIBPNG_VER_STRING, (png_voidp)my_png_error,
-				    (png_voidp)my_png_error, (png_voidp)my_png_warning);
+  png_ptr = png_create_read_struct (PNG_LIBPNG_VER_STRING, (png_voidp)PError,
+				    (png_voidp)PError, (png_voidp)PWarning);
   if (png_ptr == NULL)
     return NULL;
 
@@ -504,7 +500,7 @@ void InitPngColors ()
 /*----------------------------------------------------------------------
    	ReadPngToData decompresses and return the main picture info     
   ----------------------------------------------------------------------*/
-unsigned char* ReadPngToData (STRING datafile, int *w, int *h, int *ncolors,
+unsigned char* ReadPngToData (char *datafile, int *w, int *h, int *ncolors,
 			      int *cpp, ThotColorStruct colrs[256], int *bg)
 {
      unsigned char* bit_data;
@@ -532,7 +528,7 @@ unsigned char* ReadPngToData (STRING datafile, int *w, int *h, int *ncolors,
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-Drawable PngCreate (STRING fn, PictInfo *imageDesc, int *xif, int *yif,
+Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 		    int *wif, int *hif, unsigned long BackGroundPixel,
 		    ThotBitmap *mask1, int *width, int *height, int zoom)
 {
@@ -630,7 +626,9 @@ Drawable PngCreate (STRING fn, PictInfo *imageDesc, int *xif, int *yif,
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void PngPrint (STRING fn, PictureScaling pres, int xif, int yif, int wif, int hif, int PicXArea, int PicYArea, int PicWArea, int PicHArea, FILE *fd, unsigned long BackGroundPixel)
+void PngPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
+	       int hif, int PicXArea, int PicYArea, int PicWArea,
+	       int PicHArea, FILE *fd, unsigned long BackGroundPixel)
 {
 #ifdef _WINDOWS
   return;
@@ -734,7 +732,7 @@ void PngPrint (STRING fn, PictureScaling pres, int xif, int yif, int wif, int hi
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-ThotBool IsPngFormat(CHAR_T* fn)
+ThotBool IsPngFormat(char *fn)
 {
   
    FILE *fp;

@@ -236,7 +236,7 @@ RULES
 
   TEXT_UNIT :
 	BEGIN
-	HorizPos: Left = Previous . Right;
+	HorizPos: Left = Previous AnyElem . Right;
 	VertPos: HRef = Previous . HRef;
 	Width: Enclosed . Width;
 	END;
