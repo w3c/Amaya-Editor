@@ -1,5 +1,5 @@
 #
-# spec file for package amaya (Version 4.3)
+# spec file for package amaya (Version 4.3.1)
 # 
 # Copyright  (c)  1998  S.u.S.E. GmbH  Fuerth, Germany.
 #
@@ -8,7 +8,7 @@
 
 # neededforbuild  autoconf automake mmcore mmbase mmslib xpm libz libpng libjpeg
 
-%define version 4.3
+%define version 4.3.1
 
 Vendor:       W3C World Wide Web Consortium
 Distribution: W3C
