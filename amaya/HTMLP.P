@@ -1754,12 +1754,22 @@ BOXES
 	Copy (Document_URL);
 	Adjust: Left;
 	HorizPos: Left = Previous PAGE_BREAK . Left;
+#ifdef US_PAPER
+#ifdef LANDSCAPE
+	Height:   0.6 cm;
+	VertPos: Top = Previous PAGE_BREAK . Bottom + 0.1 cm;
+#else
+	VertPos: Top = Previous PAGE_BREAK . Bottom + 0.2 cm;
+	Height:   1 cm;
+#endif
+#else
 #ifdef LANDSCAPE
 	Height:   0.8 cm;
 	VertPos: Top = Previous PAGE_BREAK . Bottom + 0.3 cm;
 #else
 	VertPos: Top = Previous PAGE_BREAK . Bottom + 0.7 cm;
 	Height:   1.2 cm;
+#endif
 #endif
 	Size : 8 pt;
 	Font: times;
@@ -1796,13 +1806,8 @@ BOXES
 	Underline: NoUnderline;
 	Content: (Value (CptPage, Arabic));
 	HorizPos: VMiddle = Next PAGE_BREAK . VMiddle;
-#ifdef LANDSCAPE
-	VertPos: Top = Next PAGE_BREAK . Top - 0.3 cm;
-	Height:   1 cm;
-#else 
 	VertPos: Top = Next PAGE_BREAK . Top - 0.5 cm;
 	Height:   1.6 cm;
-#endif
 	Size : 11 pt;
 	Font: times;
 	Style: Roman;
@@ -1877,15 +1882,15 @@ BOXES
 	ShowBox;
 #ifdef US_PAPER
 #ifdef LANDSCAPE
-	Width: 23.8 cm;
-	Height: 18.2 cm;
-	VertPos: Top = Enclosing . Top + 0.8 cm;
-	HorizPos: Left = Enclosing . Left + 2.7 cm;
+	Width: 25 cm;
+	Height: 18.4 cm;
+	VertPos: Top = Enclosing . Top;
+	HorizPos: Left = Enclosing . Left + 1.5 cm;
 #else
-	Width: 16.2 cm;
-	Height: 23.8 cm;
-	VertPos: Top = Enclosing . Top + 0.8 cm;
-	HorizPos: Left = Enclosing . Left + 2.7 cm;
+	Width: 17 cm;
+	Height: 25 cm;
+	VertPos: Top = Enclosing . Top;
+	HorizPos: Left = Enclosing . Left + 2.5 cm;
 #endif
 #else
 #ifdef LANDSCAPE
@@ -1916,15 +1921,15 @@ BOXES
 	BEGIN
 #ifdef US_PAPER
 #ifdef LANDSCAPE
-	Width: 23.8 cm;
-	Height: 18.2 cm;
-	VertPos: Top = Enclosing . Top + 1.7 cm;
-	HorizPos: Left = Enclosing . Left + 2.7 cm;
+	Width: 24 cm;
+	Height: 18.4 cm;
+	VertPos: Top = Enclosing . Top;
+	HorizPos: Left = Enclosing . Left + 1.5 cm;
 #else
-	Width: 16.2 cm;
-	Height: 23.8 cm;
-	VertPos: Top = Enclosing . Top + 1.7 cm;
-	HorizPos: Left = Enclosing . Left + 2.7 cm;
+	Width: 17 cm;
+	Height: 25 cm;
+	VertPos: Top = Enclosing . Top;
+	HorizPos: Left = Enclosing . Left + 2.5 cm;
 #endif
 #else
 #ifdef LANDSCAPE
@@ -1957,15 +1962,15 @@ BOXES
 	ShowBox;
 #ifdef US_PAPER
 #ifdef LANDSCAPE
-	Width: 25.9 cm;
-	Height: 18.6 cm;
-	VertPos: Top = Enclosing . Top + 1.7 cm;
-	HorizPos: Left = Enclosing . Left + 2.7 cm;
+	Width: 25 cm;
+	Height: 18.4 cm;
+	VertPos: Top = Enclosing . Top;
+	HorizPos: Left = Enclosing . Left + 1.5 cm;
 #else
-	Width: 16.2 cm;
-	Height: 23.8 cm;
-	VertPos: Top = Enclosing . Top + 1.7 cm;
-	HorizPos: Left = Enclosing . Left + 2.7 cm;
+	Width: 17 cm;
+	Height: 25 cm;
+	VertPos: Top = Enclosing . Top;
+	HorizPos: Left = Enclosing . Left + 2.5 cm;
 #endif
 #else
 #ifdef LANDSCAPE
