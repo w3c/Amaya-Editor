@@ -1229,7 +1229,6 @@ static void         InitEnviron ()
    /* set up the default values common to all the thotlib applications */
    TtaSetDefEnvString ("LANG", "en-us", FALSE);
    TtaSetDefEnvString ("ZOOM", "0", FALSE);
-   TtaSetDefEnvString ("VISIBILITY", "5", FALSE);
    TtaSetDefEnvString ("TOOLTIPDELAY", "500", FALSE);
    TtaSetDefEnvString ("FontMenuSize", "12", FALSE);
    TtaSetDefEnvString ("ForegroundColor", "Black", FALSE);
