@@ -2,7 +2,6 @@
 EDITORVERSION=2.0
 THOTDIR=$HOME/opera
 DEST=/tahiti/thottape
-PLATFORMS="solaris2 LINUX LINUX-ELF SUN4 SGI RS6000"
 
 TAR="tar cvbfh 200"
 COMPRESS="gzip -9"
@@ -10,6 +9,28 @@ COMPRESS="gzip -9"
 cd $THOTDIR
 
 $TAR - \
+thotlib/internals/h/indmsg.h \
+thotlib/internals/h/constind.h \
+thotlib/internals/h/typeind.h \
+thotlib/internals/var/index_tv.h \
+thotlib/internals/f/indcree_f.h \
+thotlib/internals/f/indmenu_f.h \
+thotlib/internals/f/indpres_f.h \
+thotlib/internals/f/indtable_f.h \
+thotlib/internals/f/indtri_f.h \
+thotlib/internals/f/Draw3APP_f.h \
+thotlib/internals/f/Draw3actions_f.h \
+thotlib/internals/f/PaletteAPP_f.h \
+thotlib/internals/f/Paletteactions_f.h \
+thotlib/internals/f/boutons_f.h \
+thotlib/internals/f/edition_f.h \
+thotlib/internals/f/initdraw_f.h \
+thotlib/internals/f/liens_f.h \
+thotlib/internals/f/menus_f.h \
+thotlib/internals/f/objets_f.h \
+thotlib/internals/f/paloutils_f.h \
+thotlib/internals/f/utilitaires_f.h \
+thotlib/internals/f/indcharge_f.h \
 NEWS.LibThot2.0 \
 README.2.0 \
 config/thot.keyboard \
@@ -23,8 +44,6 @@ doc/APIman-F.PIV \
 doc/Appman-E.PIV \
 doc/Appman-F.PIV \
 doc/Dialogue.PIV \
-doc/Thotman-E.PIV \
-doc/Thotman-F.PIV \
 doc/thoteditor/COPYRIGHT.html \
 doc/thoteditor/Compiling.html \
 doc/thoteditor/Configure.html \
@@ -190,9 +209,12 @@ indexlib/f/indcree_f.h \
 indexlib/f/indmenu_f.h \
 indexlib/f/indpres_f.h \
 indexlib/f/indtable_f.h \
-indexlib/f/indtri_f.h \
+schemas/Makefile \
+schemas/exc_matrix.h \
+schemas/exc_tableau.h \
 schemas/Arbre2.S \
 schemas/Draw2.S \
+schemas/Draw3.S \
 schemas/Expose.S \
 schemas/ExtIndex.S \
 schemas/Feuille.S \
@@ -206,6 +228,7 @@ schemas/RefBib.S \
 schemas/Table.S \
 schemas/Arbre2P.P \
 schemas/Draw2P.P \
+schemas/Draw3P.P \
 schemas/ExposeP.P \
 schemas/ExtIndexP.P \
 schemas/FeuilleP.P \
@@ -225,6 +248,10 @@ schemas/Draw2A.T \
 schemas/Draw2H.T \
 schemas/Draw2T.T \
 schemas/Draw2T1.T \
+schemas/Draw3A.T \
+schemas/Draw3H.T \
+schemas/Draw3T.T \
+schemas/Draw3T1.T \
 schemas/ExposeA.T \
 schemas/ExposeH.T \
 schemas/ExposeH1.T \
@@ -258,6 +285,7 @@ schemas/TableH.T \
 schemas/TableT.T \
 schemas/Arbre2.conf \
 schemas/Draw2.conf \
+schemas/Draw3.conf \
 schemas/Expose.conf \
 schemas/ExtIndex.conf \
 schemas/Feuille.conf \
@@ -270,6 +298,7 @@ schemas/Rapport.conf \
 schemas/Table.conf \
 schemas/Arbre2.fr \
 schemas/Draw2.fr \
+schemas/Draw3.fr \
 schemas/Expose.fr \
 schemas/ExtIndex.fr \
 schemas/Feuille.fr \
@@ -282,6 +311,7 @@ schemas/RefBib.fr \
 schemas/Table.fr \
 schemas/Arbre2.en \
 schemas/Draw2.en \
+schemas/Draw3.en \
 schemas/Expose.en \
 schemas/ExtIndex.en \
 schemas/Feuille.en \
@@ -302,16 +332,4 @@ thot/EDITORactions.h \
 thot/f/EDITORAPP_f.h \
 thot/f/EDITORactions_f.h \
  | $COMPRESS  > $DEST/thoteditor-src-$EDITORVERSION.tar.gz
-
-for MACH in $PLATFORMS
-do
-    $TAR - \
-    $MACH/Makefile.orig \
-    $MACH/config.h \
-    $MACH/libwww.a \
-    $MACH/libjpeg.a \
-    $MACH/libpng.a \
-    $MACH/libz.a \
-    | $COMPRESS  > $DEST/thoteditor-libs-$MACH-$EDITORVERSION.tar.gz
-done
 
