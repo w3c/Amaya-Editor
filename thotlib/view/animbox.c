@@ -121,6 +121,9 @@ static void ComputePropandAngle (AnimPath   *pop_path)
       totallength +=  sqrt ((double) x*x + y*y);
       proportion[i] = totallength;
     }
+  if (totallength == 0)
+	totallength = 1;
+
   for (i = 1; i < npoints; i++)
     {
       proportion[i] = proportion[i] / totallength;

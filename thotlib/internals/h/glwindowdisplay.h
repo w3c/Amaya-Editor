@@ -158,8 +158,12 @@ void FreeGlTexture (void *Image);
 void FreeGlTextureNoCache (void *Image);
 unsigned char *test_gradien_linear (); 
 
+#ifdef _WINDOWS
+void WinGL_Swap (HDC hDC);
+#endif /*_WINDOWS*/
+
 #ifndef _NOSHARELIST
 int GetSharedContext ();
 void SetSharedContext (int frame);
-#endif /* _SHARELIST */
+#endif /* _NOSHARELIST */
 #endif /*_GLWINDOWDISPLAY_H_*/

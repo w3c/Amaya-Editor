@@ -453,12 +453,12 @@ static void CopyToolTipText (int frame, LPTOOLTIPTEXT lpttt)
 void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
 {
  PAINTSTRUCT         ps;
- RECT                rect;
 #ifndef _GL
+ RECT                rect;
  ViewFrame          *pFrame;
  int                 xmin, xmax, ymin, ymax;
 #else
- static PFNGLADDSWAPHINTRECTWINPROC p = 0;
+ HDC hDC;
 #endif /*_GL*/
 
  if (frame > 0 && frame <= MAX_FRAME)
@@ -492,33 +492,20 @@ void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
      pFrame->FrClipXEnd = xmax;
      pFrame->FrClipYBegin = ymin;
      pFrame->FrClipYEnd = ymax;
+	 return;
  }
    }
 #else /*_GL*/
-   BeginPaint (w, &ps);
-   if (GetUpdateRect (w, &rect, FALSE))
-   {
-	   if (GL_prepare (frame))
-   {
-
-  if (p == 0)
-    p = (PFNGLADDSWAPHINTRECTWINPROC) wglGetProcAddress("glAddSwapHintRectWIN");
-
-  if (p)
-  {
-  (*p) (rect.left, rect.top, rect.right, rect.bottom);
-
-     GL_Swap (frame);
-	 (*p) (0, 0, FrameTable[frame].FrWidth, FrameTable[frame].FrHeight);
-	 }
-  else
-     GL_Swap (frame);
-   }
-   }
-   EndPaint (w, &ps);
-FrameTable[frame].DblBuffNeedSwap = TRUE;
+    hDC = BeginPaint (w, &ps);
+	WinGL_Swap (hDC);
+    EndPaint (w, &ps);
+	ReleaseDC (w, hDC);
+	return;
 #endif /*_GL*/
  }
+ BeginPaint (w, &ps);
+ EndPaint (w, &ps);
+
 }
 
 /*----------------------------------------------------------------------
@@ -528,14 +515,12 @@ FrameTable[frame].DblBuffNeedSwap = TRUE;
 void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
 						 int bottom_delta)
 {
-   int wdiff, hdiff;
-
    if ((width <= 0) || (height <= 0))
       return;
    if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
       return;
+   
    FrameTable[frame].FrTopMargin = top_delta;
-
    FrameTable[frame].FrWidth = (int) width - bottom_delta;
    FrameTable[frame].FrHeight = (int) height;
 
@@ -545,7 +530,7 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
 #else /*_GL*/
    if (GL_prepare (frame))
      {
-       GL_SwapStop (frame);
+   GL_SwapEnable (frame);
    GLResize (width, height, 0 ,0);
    ClearAll (frame);
    GL_ActivateDrawing (frame);
@@ -553,13 +538,12 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
  		0, width,
  		height);
    RebuildConcreteImage (frame);
-   GL_SwapEnable (frame);
    GL_Swap (frame);
      }
    
 #endif/*_GL*/
    /* recompute the scroll bars */
-  UpdateScrollbars (frame);
+  /*UpdateScrollbars (frame); Done in rebuildconcreteimage, no ?*/
 }
 #else /* _WINDOWS */
 
@@ -1721,8 +1705,6 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
   frame = GetMainFrameNumber (hwnd);
   GetWindowRect (hwnd, &rect);
 
-  
-
   switch (mMsg)
     {
 
@@ -1913,14 +1895,27 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
       if (mMsg == WM_DESTROY)
 	PostQuitMessage (0);
       return 0L;
-
+   
     case WM_SIZE:
       cx = LOWORD (lParam);
       cy = HIWORD (lParam);
       Wnd_ResizeContent (hwnd, cx, cy, frame);
-      SetFocus (FrRef [frame]);
-      ActiveFrame = frame;
-      return 1;
+      /*SetFocus (FrRef [frame]);
+      ActiveFrame = frame;*/
+      return 0;
+
+#ifdef _GL
+   case WM_EXITSIZEMOVE : 
+      /* Some part of the Client Area has to be repaint. */	
+	  DefWindowProc (hwnd, mMsg, wParam, lParam);
+	  DefClip (frame, -1, -1, -1, -1);
+	  if (GL_prepare (frame))
+	  {
+		RedrawFrameBottom (frame, 0, NULL);
+		GL_Swap (frame);
+	  }
+      return 0;
+#endif /*_GL*/
 
     default: 
       return (DefWindowProc (hwnd, mMsg, wParam, lParam));
@@ -1948,7 +1943,6 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
      on mouse move  */
   static int       oldXPos;
   static int       oldYPos;
-  
 
   frame = GetFrameNumber (hwnd);  
 
@@ -1958,8 +1952,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
       /*ActiveFrame = frame;*/
       FrameToView (frame, &document, &view);
       if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
-	return (DefWindowProc (hwnd, mMsg, wParam, lParam));
-      
+	     return (DefWindowProc (hwnd, mMsg, wParam, lParam));
       /*
        * If are waiting for the user to explicitely point to a document,
        * store the location and return.
@@ -2034,14 +2027,9 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
     }
   switch (mMsg)
     {
-
-    case WM_ERASEBKGND:
-      /*Make sure Win32 doesn't draw in our buffer...*/
-      return TRUE;
-	  
     case WM_PAINT: 
-      /* Some part of the Client Area has to be repaint. */
-      WIN_HandleExpose (hwnd, frame, wParam, lParam);
+      /* Some part of the Client Area has to be repaint. */	
+      WIN_HandleExpose (hwnd, frame, wParam, lParam);	   
       return 0;
 
     case WM_SIZE:
@@ -2050,11 +2038,9 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
       WIN_ChangeViewSize (frame, cx, cy, 0, 0);
       return 0;
 
-
     case WM_CREATE:
       DragAcceptFiles (hwnd, TRUE);
       return 0;
-
 
     case WM_DROPFILES:
       nNumFiles = DragQueryFile ((HDROP)wParam, 0xFFFFFFFF, NULL, 0);
@@ -2160,6 +2146,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
       }
       break;
 #endif /* IME_INPUT */
+
     case WM_LBUTTONDOWN:
       /* Activate the client window */
       SetFocus (FrRef[frame]);
@@ -2249,19 +2236,17 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
     case WM_MBUTTONDBLCLK:
     case WM_RBUTTONDBLCLK:
       /* left double click handling */
-      return 0;
+       break;
 
 
     case WM_NCMOUSEMOVE:
       /* Mouse move outside client area*/
-      return 0;
+       break;
     case WM_MOUSEMOVE:
       /* Mouse move inside client area*/
-      return 0;
-
+       break;
 
     default:
-
       break;
     }
 
@@ -3405,8 +3390,8 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd,
 		      clipwidth,
 		      clipheight); 
 
-      if (raz > 0 && GL_prepare (frame))
-	glClear (GL_COLOR_BUFFER_BIT);
+      if (raz > 0)
+		glClear (GL_COLOR_BUFFER_BIT);
 #endif /*_GL*/
     }
 }

@@ -2288,7 +2288,33 @@ void TtaAppendAnim (Element element, void *anim)
 	((PtrElement)element)->ElParent->ElAnimation = anim; 
     }
 }
+/*----------------------------------------------------------------------
+   TtaCopyPath : Copy anim linked list 
+  ----------------------------------------------------------------------*/
+void *TtaCopyPath (void *void_src)
+{
+  int npoints;
 
+  AnimPath *pop_path = (AnimPath *) void_src;
+  AnimPath *new_path = TtaGetMemory (sizeof(AnimPath));
+
+  npoints = pop_path->npoints + 1;
+
+  new_path->npoints = pop_path->npoints;
+  new_path->length = pop_path->length;
+
+  new_path->Path = TtaGetMemory (npoints * sizeof(ThotPoint));
+  new_path->Proportion = TtaGetMemory (npoints * sizeof(float));
+  new_path->Tangent_angle = TtaGetMemory (npoints * sizeof(float));
+
+  npoints --;
+
+  memcpy (new_path->Path, pop_path->Path, npoints*sizeof(ThotPoint));
+  memcpy (new_path->Proportion, pop_path->Proportion, npoints * sizeof(float));
+  memcpy (new_path->Tangent_angle, pop_path->Tangent_angle, npoints * sizeof(float));
+
+  return new_path;
+}
 /*----------------------------------------------------------------------
    TtaCopyAnim : Copy anim linked list 
   ----------------------------------------------------------------------*/
@@ -2307,6 +2333,14 @@ void *TtaCopyAnim (void *void_src)
       current->AnimType = src->AnimType;
       current->Fill = src->Fill;
       current->repeatCount = src->repeatCount;
+
+if (current->AnimType == Motion)
+{
+if (src->from)
+   current->from = TtaCopyPath (src->from);
+}
+else
+{
       if (src->from)
 	{	 
 	  current->from = TtaGetMemory (strlen (src->from) + 1);     
@@ -2317,6 +2351,7 @@ void *TtaCopyAnim (void *void_src)
 	  current->to = TtaGetMemory (strlen (src->to) + 1);     
 	  strcpy (current->to, src->to);
 	}
+}
       if (src->AttrName)
 	switch (current->AnimType)
 	  {
@@ -2459,6 +2494,7 @@ void TtaAddAnimMotionPath (void *info, void *anim)
 void TtaAddAnimMotionFromTo (void *info, void *anim)
 {    
 #ifdef _GL
+  ((Animated_Element *) anim)->from = info;
   populate_fromto_proportion (anim);  
 #endif /* _GL */ 
 }

@@ -147,7 +147,7 @@ typedef struct _PicCache {
   int              frame;
   float            TexCoordW;
   float            TexCoordH;
-  ThotBool         ForeverPic;
+  int              RefCount;
 } Pic_Cache;
 
 /*             
@@ -196,12 +196,15 @@ static int FreeAPicCache (int texbind, int frame)
     }
   if (Cache)
     {
-      if (Cache->ForeverPic)
-	return 1;
+      if (Cache->RefCount == -1)
+	     return 1;
+	  Cache->RefCount--;
+	  if (Cache->RefCount)
+	     return 1;	
       if (!Before)
-	PicCache = PicCache->next;
+			PicCache = PicCache->next;
       else
-	Before->next = Cache->next;
+			Before->next = Cache->next;
       Free_Pic_Chache (Cache);
       return 1;
     }
@@ -244,7 +247,10 @@ static void AddInPicCache (PictInfo *Image, int frame, ThotBool forever)
   Cache->width = Image->PicWidth;
   Cache->TexCoordW = Image->TexCoordW;  
   Cache->TexCoordH = Image->TexCoordH; 
-  Cache->ForeverPic = forever;
+  if (forever)
+	Cache->RefCount = -1;
+  else
+	Cache->RefCount = 1;
   strcpy (Cache->filename, Image->PicFileName);
 }
 
@@ -316,8 +322,8 @@ void FreeGlTexture (void *ImageDesc)
     {      
       if (FreeAPicCache (Image->TextureBind,
 			 ActiveFrame) == 0)
-	/*not found in cache, we free it manually.*/
-	glDeleteTextures (1,  &(Image->TextureBind));
+			/*not found in cache, we free it manually.*/
+			glDeleteTextures (1,  &(Image->TextureBind));
 #ifdef _PCLDEBUG
       g_print ("\n Image %s Freed", Image->PicFileName);      
 #endif /*_PCLDEBUG*/

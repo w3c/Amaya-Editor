@@ -191,12 +191,7 @@ ThotBool GL_Err()
   ----------------------------------------------------------------------*/
 void ClearAll (int frame)
 {  
-  if (GL_prepare (frame))
-  {
-    /* SetMainWindowBackgroundColor (frame, GL_Background[frame]); */
     glClear (GL_COLOR_BUFFER_BIT); 
-    
-  }
 }
 
 #ifndef _NOSHARELIST
@@ -308,16 +303,12 @@ void Clear (int frame, int width, int height, int x, int y)
 {
   if (GL_prepare (frame))
     { 
-      /* FrameTable[frame].DblBuffNeedSwap = TRUE;  */
-      y = y + FrameTable[frame].FrTopMargin;
-      GL_SetForeground (GL_Background[frame]); 
-      glBegin (GL_QUADS);
-      glVertex2i (x, y); 
-      glVertex2i (x, y + height);
-      glVertex2i (x +  width, y + height);
-      glVertex2i (x + width, y);
-      glEnd ();
-    } 
+	  y = y + FrameTable[frame].FrTopMargin;
+
+		GL_SetClipping (x, FrameTable[frame].FrHeight - (y+height), width, height);
+		glClear (GL_COLOR_BUFFER_BIT); 
+		GL_UnsetClippingRestore (TRUE);
+  }
 }
 #endif /*_WIN_PRINT*/
 
@@ -680,10 +671,10 @@ static void GL_SetupPixelFormat (HDC hDC)
       sizeof(PIXELFORMATDESCRIPTOR),  /* size */
       1,                              /* version */
       PFD_DRAW_TO_WINDOW |			  /* Format Must Support Window*/
-      PFD_SUPPORT_OPENGL |			   /* Format Must Support OpenGL*/
+      PFD_SUPPORT_OPENGL |			  /* Format Must Support OpenGL*/
       PFD_DOUBLEBUFFER   |            /* support double-buffering */
-      PFD_DEPTH_DONTCARE |               /* If Depth is obligated by hardware*/
-      PFD_GENERIC_ACCELERATED ,      /* We try to get hardware here => PFD_GENERIC_ACCELERATED*/       
+      PFD_DEPTH_DONTCARE |            /* If Depth is obligated by hardware*/
+      PFD_GENERIC_ACCELERATED ,       /* We try to get hardware here => PFD_GENERIC_ACCELERATED*/       
       PFD_TYPE_RGBA,                  /* color type */
       24,                             /* prefered color depth */
       0, 0, 0, 0, 0, 0,               /* color bits (ignored) */
@@ -692,7 +683,7 @@ static void GL_SetupPixelFormat (HDC hDC)
       0,                              /* no accumulation buffer */
       0, 0, 0, 0,                     /* accum bits (ignored) */
       0,                              /* depth buffer */
-      1,                              /* no stencil buffer */
+      1,                              /* stencil buffer */
       0,                              /* no auxiliary buffers */
       PFD_MAIN_PLANE,                 /* main layer */
       0,                              /* reserved */
@@ -775,9 +766,12 @@ void GL_Win32ContextInit (HWND hwndClient, int frame)
 	}
     }
   GL_SetupPixelFormat (hDC);
+
   hGLRC = wglCreateContext (hDC);
+
   GL_Windows[frame] = hDC;
   GL_Context[frame] = hGLRC;
+
   if (wglMakeCurrent (hDC, hGLRC))
     {
       SetGlPipelineState ();
@@ -795,13 +789,14 @@ void GL_Win32ContextInit (HWND hwndClient, int frame)
 	    }
 	}
     }
-#ifdef _SHARELIST
-  if (GetSharedContext () != 1) 
+#ifndef _NOSHARELIST
+  if (GetSharedContext () != -1 && GetSharedContext () != frame) 
     wglShareLists (GL_Context[GetSharedContext ()], hGLRC);
   else
     SetSharedContext (frame);
-#endif /*_SHARELIST*/
+#endif /*_NOSHARELIST*/
   ActiveFrame = frame;
+  ReleaseDC (hwndClient, GL_Windows[frame]);
 }
 
 /*----------------------------------------------------------------------
@@ -810,12 +805,14 @@ void GL_Win32ContextInit (HWND hwndClient, int frame)
 void GL_Win32ContextClose (int frame, HWND hwndClient)
 {
   /* make our context 'un-'current */
-  wglMakeCurrent (NULL, NULL);
+  /*wglMakeCurrent (NULL, NULL);*/
   /* delete the rendering context */
   if (GL_Context[frame])
     wglDeleteContext (GL_Context[frame]);
-  if (GL_Windows[frame])
-    ReleaseDC (hwndClient, GL_Windows[frame]);
+
+  /*if (GL_Windows[frame])*/
+    /*ReleaseDC (hwndClient, GL_Windows[frame]);*/
+
   GL_Windows[frame] = 0;
   GL_Context[frame] = 0;
   GL_KillFrame (frame);
@@ -2098,6 +2095,15 @@ static ThotBool NeedRedraw (int frame)
   return FALSE;
 }
 
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  WinGL_Swap : specific to windows
+  ----------------------------------------------------------------------*/
+void WinGL_Swap (HDC hDC)
+{
+  SwapBuffers (hDC);
+}
+#endif /*_WINDOWS*/
 /*----------------------------------------------------------------------
   GL_Swap : swap frontbuffer with backbuffer (display changes)
   ----------------------------------------------------------------------*/
@@ -2112,8 +2118,15 @@ void GL_Swap (int frame)
       /* glFlush (); */      
       glDisable (GL_SCISSOR_TEST);
 #ifdef _WINDOWS
+
+if (FrRef[frame])
       if (GL_Windows[frame])
-	SwapBuffers (GL_Windows[frame]);
+	  {
+	    /*GL_Windows[frame] = GetDC (FrRef[frame]);*/
+		/*wglMakeCurrent (GL_Windows[frame], GL_Context[frame]);*/
+	  	SwapBuffers (GL_Windows[frame]);
+		ReleaseDC (FrRef[frame], GL_Windows[frame] );
+	  }
 #else
       if (FrameTable[frame].WdFrame)
 	{
@@ -2130,7 +2143,7 @@ void GL_Swap (int frame)
   ----------------------------------------------------------------------*/
 ThotBool GL_prepare (int frame)
 {  
-  if (frame < MAX_FRAME && NotFeedBackMode)
+  if (frame >= 0 && frame < MAX_FRAME && NotFeedBackMode)
     {
 #ifdef _TESTSWAP
       FrameTable[frame].DblBuffNeedSwap = TRUE;
@@ -2138,9 +2151,12 @@ ThotBool GL_prepare (int frame)
       if (FrRef[frame])
 #ifdef _WINDOWS
 	if (GL_Windows[frame])
-	  if (wglMakeCurrent (GL_Windows[frame], 
-			      GL_Context[frame]))
-	    return TRUE;		
+	{
+      GL_Windows[frame] = GetDC (FrRef[frame]);
+	  wglMakeCurrent (GL_Windows[frame], GL_Context[frame]);	 
+	/*	ReleaseDC (FrRef[frame], GL_Windows[frame] ); */
+	  return TRUE;
+	}
 #else /*_WINDOWS*/
       if (FrameTable[frame].WdFrame)
 	if (gtk_gl_area_make_current (GTK_GL_AREA(FrameTable[frame].WdFrame)))
@@ -2201,7 +2217,7 @@ static void TtaChangePlay (int frame)
 		       (TIMERPROC) MyTimerProc); 
 
 	      AnimTimer = frame;*/
-          AnimTimer = SetTimer(NULL,                
+          AnimTimer = SetTimer (NULL,                
 		       frame,               
 		       FRAME_TIME,                     
 		       (TIMERPROC) MyTimerProc);
