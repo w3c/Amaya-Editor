@@ -1918,25 +1918,25 @@ ATTRIBUTES
 	 Create ' valign="baseline"';
 
  abbr: BEGIN
-	Create ' ="abbr';
+	Create ' abbr="';
 	Create Translated abbr;
 	Create DoubleQuote;
 	END;
 
  axis: BEGIN
-	Create ' ="axis';
+	Create ' axis="';
 	Create axis;
 	Create DoubleQuote;
 	END;
 
  headers: BEGIN
-	Create ' ="headers';
+	Create ' headers="';
 	Create headers;
 	Create DoubleQuote;
 	END;
 
  scope: BEGIN
-	Create ' ="scope';
+	Create ' scope="';
 	Create scope;
 	Create DoubleQuote;
 	END;
