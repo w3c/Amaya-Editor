@@ -1675,6 +1675,7 @@ boolean error_html;
 	  }
      }
 #endif /* _WINDOWS */
+
 TtaHandlePendingEvents ();
 
    return (status);
