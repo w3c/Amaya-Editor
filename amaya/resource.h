@@ -714,6 +714,7 @@
 #define IDC_VERIFYPUBLISH               1431
 #define IDC_DEFAULTNAME                 1432
 #define IDC_ENABLECACHE                 1433
+#define IDC_SAFEPUTREDIRECT             1433
 #define IDC_CACHEPROTECTEDDOCS          1434
 #define IDC_CACHEDISCONNECTEDMODE       1435
 #define IDC_CACHEEXPIREIGNORE           1436
