@@ -30,7 +30,7 @@
 28 Mejorando %s
 29 Estado desconocido Status
 30 Diálogo de Autenticación
-31 **Please authenticate for
+31 Por favor, autentíquese para
 32 Fallo de autorización para %s
 33 %s cargado pero no hay datos disponibles
 34 Transferencia interrumpida
@@ -210,12 +210,12 @@
 208 Vertical
 209 Apaisado
 210 Activar FTP (experimental)
-211 **In the current Amaya profile:
-212 **Tags/attributes are ignored - see the log file
-213 **Not available
-214 **The encoding of this document is not supported by Amaya. If you edit it, you may loose some information
-215 **Browse
-216 **File Browser
-217 **Selection
-218 **The encoding of this document is not defined. If you edit it, you may loose some information
-219 **Document encoding unknown or undefined - see the log file
+211 En el perfil actual de Amaya:
+212 Se ignoran Tags/atributos - vea el fichero de log
+213 No disponible
+214 La codificación de este documento no está soportada por Amaya. Si la edita, puede perder información
+215 Navegar
+216 Navegador de ficheros
+217 Selección
+218 La codificación de esta página no está definida. Si la edita puede perder información
+219 Codificación de documento desconocida o no definida - vea el fiechero de log

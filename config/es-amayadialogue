@@ -184,7 +184,7 @@
 182 BiDi override (bdo)
 183 Numeracón de sección
 184 Hacer libro
-185 Crear/Suprimir attributos ID...
+185 Añadir/Eliminar los ID...
 186 Mostrar fichero log
 187 Preferencias
 188 General...
@@ -196,10 +196,10 @@
 194 Negociación de idioma...
 195 Perfiles...
 196 Plantillas...
-197 **Annotate selection
-198 **Annotate document
+197 Anotar selección
+198 Anotar documento
 199 Post anotacion
-200 **Delete annotation
+200 Borrar anotación
 201 Cargar anotaciones
 202 Personalizar consulta...
 203 Filtro local...
@@ -224,7 +224,7 @@
 222 Imprimir
 223 Numerar
 224 Crear libros
-225 **Annotations
+225 Anotaciones
 226 Configurar Amaya
-227 **ShortCuts
+227 Atajos
 228 Accesibilidad en Amaya
