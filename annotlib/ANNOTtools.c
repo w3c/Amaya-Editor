@@ -553,7 +553,12 @@ Document doc;
   else
     content_length = AGetFileSize (DocumentURLs[doc]);
 
+  /* %%% this is _really_ temporary, right?! */
+#ifdef _WINDOWS
+  fp = fopen ("rdf.tmp", "w");
+#else
   fp = fopen ("/tmp/rdf.tmp", "w");
+#endif /* _WINDOWS */
   /* write the prologue */
   fprintf (fp,
 	  "<?xml version=\"1.0\" ?>\n" 
@@ -578,12 +583,18 @@ Document doc;
 		   "<a:annotates r:resource=\"%s\" />\n",
 		   annot->source_url);
 
+#if 0
 	  fprintf (fp,
 	      "<a:context>#id(%s|%d|%s|%d)</a:context>\n",
 		   annot->labf,
 		   annot->c1,
 		   annot->labl,
 		   annot->cl);
+#endif
+
+	  fprintf (fp,
+	      "<a:context>#%s</a:context>\n",
+		   annot->xptr);
 	  
 	  fprintf (fp,
 		   "<d:creator>%s</d:creator>\n",
@@ -610,8 +621,8 @@ Document doc;
  /* insert the HTML body */
   ptr = DocumentURLs[doc];
   /* skip any file: prefix */
-  if (!ustrncmp (ptr, "file:", 5))
-      ptr = ptr + 5;
+  if (IsFilePath(ptr))
+      ptr = ptr + 7;
   fp2 = fopen (ptr, "r");
   if (fp2)
     {
@@ -927,8 +938,8 @@ CHAR_T *server;
     {
       scratch_url = TtaStrdup (url);
       ExplodeURL (scratch_url, &protocol, &host, &dir, &file);
-      ustrcpy (server, host);
-      if (dir[0])
+      ustrcpy (server, host ? host : TEXT("?"));
+      if (dir && dir[0])
 	{
 	  ustrcat (server, TEXT("/"));
 	  ustrcat (server, dir);

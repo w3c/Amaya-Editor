@@ -703,7 +703,11 @@ View view;
   /* launch the request */
   res = GetObjectWWW (doc,
 		      annotPostServer,
+#ifdef _WINDOWS
+			  TEXT("rdf.tmp"),
+#else
 		      TEXT("/tmp/rdf.tmp"),
+#endif /* _WINDOWS */
 		      ctx->remoteAnnotIndex,
 		      AMAYA_FILE_POST | AMAYA_ASYNC | AMAYA_FLUSH_REQUEST,
 		      NULL,
