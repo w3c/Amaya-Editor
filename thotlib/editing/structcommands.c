@@ -3410,7 +3410,7 @@ void TtaInsertElement (ElementType elementType, Document document)
 void TtaInsertAnyElement (Document document, ThotBool before)
 {
   PtrDocument     pDoc, pSelDoc;
-  PtrElement      firstSel, lastSel, pNew, pSibling, pSel;
+  PtrElement      firstSel, lastSel, pNew, pSibling, pSel, pNextEl, pSecond;
   int             firstChar, lastChar, typeNum, nSiblings;
   PtrSSchema      pSS;
   ThotBool        isList, optional;
@@ -3436,10 +3436,6 @@ void TtaInsertAnyElement (Document document, ThotBool before)
 	return;
       else if (pSelDoc->DocReadOnly)
 	/* the document can not be modified */
-	return;
-      else if (before && firstSel->ElTerminal && firstSel->ElLeafType == LtText ||
-	       !before && lastSel->ElTerminal && lastSel->ElLeafType == LtText)
-	/* selection is not a structure element */
 	return;
       else
 	{
@@ -3484,6 +3480,65 @@ void TtaInsertAnyElement (Document document, ThotBool before)
 	  OpenHistorySequence (pDoc, firstSel, lastSel, NULL, firstChar,
 			       lastChar);
 	  TtaClearViewSelections ();
+
+          /* if the selection is in a TEXT leaf, split the leaf */
+	  if (before && firstSel->ElTerminal &&
+	      firstSel->ElLeafType == LtText && firstChar > 1 &&
+	      firstChar <= firstSel->ElTextLength + 1)
+	    {
+	      if (firstChar == firstSel->ElTextLength + 1)
+		/* insertion before the caret, which is at the end of a TEXT
+		   leaf. Insert after that text leaf */
+		{
+		  before = FALSE;
+		  lastSel = firstSel;
+		}
+	      else
+		{
+		  /* store the editing operation in the history */
+		  AddEditOpInHistory (firstSel, pDoc, TRUE, FALSE);
+		  pNextEl = firstSel->ElNext;
+		  SplitTextElement (firstSel, firstChar, pDoc, TRUE, &pSecond,
+				    FALSE);
+		  AddEditOpInHistory (firstSel, pDoc, FALSE, TRUE);
+		  AddEditOpInHistory (pSecond, pDoc, FALSE, TRUE);
+		  BuildAbsBoxSpliText (firstSel, pSecond, pNextEl, pDoc);
+		  firstSel = pSecond;
+		}
+	    }
+	  else if (!before && lastSel->ElTerminal &&
+		   lastSel->ElLeafType == LtText &&
+		   lastChar <= lastSel->ElTextLength)
+	    {
+	      if (lastChar == 0 && firstChar == 1 && firstSel == lastSel)
+		/* insertion after the caret which is at the beginning of a
+		   TEXT leaf. Insert before that text leaf */
+		{
+		  before = TRUE;
+		  firstSel = lastSel;
+		}
+	      else if (lastChar == lastSel->ElTextLength &&
+		       firstSel == lastSel && firstChar > lastChar)
+		/* a caret at the end of a TEXT leaf */
+		{
+		  before = FALSE;
+		}
+	      else if (lastChar <= lastSel->ElTextLength && lastChar > 0)
+		{
+		  if (firstSel == lastSel && lastChar < firstChar)
+		    /* it's just a caret */
+		    lastChar = firstChar;
+		  /* store the editing operation in the history */
+		  AddEditOpInHistory (lastSel, pDoc, TRUE, FALSE);
+		  pNextEl = lastSel->ElNext;
+		  SplitTextElement (lastSel, lastChar, pDoc, TRUE, &pSecond,
+				    FALSE);
+		  AddEditOpInHistory (lastSel, pDoc, FALSE, TRUE);
+		  AddEditOpInHistory (pSecond, pDoc, FALSE, TRUE);
+		  BuildAbsBoxSpliText (lastSel, pSecond, pNextEl, pDoc);
+		}
+	    }
+
 	  pNew = NewSubtree (typeNum, pSS, pDoc, TRUE, TRUE, TRUE, TRUE);
 	  if (before)
 	    {

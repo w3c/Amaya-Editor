@@ -349,10 +349,17 @@ static void SetFontOrPhraseOnElement (Document document, Element elem,
      if (TtaCanInsertFirstChild(elType, elem, document))
 	{
 	child = TtaNewElement(document, elType);
+	/* elem may be REPLACED by the new element.
+	   Register it in the history */
+	TtaRegisterElementDelete (elem, document);
 	TtaInsertFirstChild (&child, elem, document);
 	if (child == elem)
 	  /* the new TEXT element has replaced the existing empty element */
 	  substitute = TRUE;
+	else
+	  /* no replacement. Forget about element elem that was erroneously
+	     registered in the history */
+	  TtaCancelLastRegisteredOperation (document);
 	TtaRegisterElementCreate (child, document);
 	}
      }
