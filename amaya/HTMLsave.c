@@ -1062,8 +1062,6 @@ CHAR_T           *documentname;
   ThotBool            xmlDec, withDoctype, isXML;
   DocumentType        thotType;
 
-  CheckDocHeader (localFile, &xmlDec, &withDoctype, &isXML, &parsingLevel,
-		  &charset, &thotType);
   /* clean up previous log file */
   HTMLErrorsFound = FALSE;
   XMLErrorsFound = FALSE;
@@ -1086,8 +1084,13 @@ CHAR_T           *documentname;
 	  TtaSetItemOff (doc, 1, Views, BShowLogFile);
 	}
 
-  /* When the browser mode was set due to a parsing error,
-     restore the editor mode */
+  /* check if there is an XML declaration with a charset declaration */
+  CheckDocHeader (localFile, &xmlDec, &withDoctype, &isXML,
+		  &parsingLevel, &charset, &thotType);
+  DocumentMeta[doc]->xmlformat = isXML;
+
+  /* When the mode was set to browser by a parsing error,
+     restore the original mode */
   if (!ReadOnlyDocument[doc] && 
       !TtaGetDocumentAccessMode (doc))
     ChangeToEditorMode (doc);
