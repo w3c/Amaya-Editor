@@ -8184,7 +8184,7 @@ void TtaWaitShowDialogue ()
   ThotEvent              event;
 
 #ifdef _WINDOWS
-  GetMessage (&event, NULL, 0, 0))
+  GetMessage (&event, NULL, 0, 0);
   TranslateMessage (&event);
   DispatchMessage (&event);
 #else  /* _WINDOWS */
