@@ -56,6 +56,8 @@ List *annot_list;  /* a list of annotations */
    ParseIdFragment
    Extracts the id (or in this case the thotlib labels)
    from a URL and reoves this info from the URL.
+   @@@ JK This function can be removed when we decide we don't
+   need the Amaya label backward compatibilty
    ------------------------------------------------------------*/
 static void ParseIdFragment (AnnotMeta *annot, char *buff)
 {
@@ -82,6 +84,23 @@ static void ParseIdFragment (AnnotMeta *annot, char *buff)
 	}
       usscanf (c, TEXT("%s %d %s %d"), annot->labf, (&annot->c1),
 	      annot->labl, &(annot->cl));
+    }
+}
+
+/* ------------------------------------------------------------
+   ParseXptrFragment
+   Extracts the id (or in this case the thotlib labels)
+   from a URL and reoves this info from the URL.
+   ------------------------------------------------------------*/
+static void ParseXptrFragment (AnnotMeta *annot, char *buff)
+{
+  CHAR_T *c, *d;
+  
+  c = strchr (buff, TEXT('#'));
+  if (c)
+    {
+      c++;
+      annot->xptr = TtaStrdup (c);
     }
 }
 
@@ -203,7 +222,15 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
               }
         }
       else if (contains (predicate, ANNOT_NS, ANNOT_CONTEXT))
-          ParseIdFragment (annot, object);
+	{
+	  /* @@@ JK This test can be removed when we decide we don't
+	     need the amaya label backward compatibilty. Xptr should
+	     be the only mechanism we use */
+	  if (!strncmp (object, "id(", 3))
+	    ParseIdFragment (annot, object);
+	  else
+	    ParseXptrFragment (annot, object);
+	}
       else if (contains (predicate, HTTP_NS, HTTP_CONTENT_TYPE))
           annot->content_type = TtaStrdup ((char *) object);
       else if (contains (predicate, HTTP_NS, HTTP_CONTENT_LENGTH))

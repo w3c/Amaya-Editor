@@ -47,6 +47,7 @@ typedef struct _AnnotMeta {
   int     c1;
   CHAR_T labl[10];
   int     cl;
+  CHAR_T *xptr;
   CHAR_T *cdate; /* creation date of the annotation */
   CHAR_T *mdate; /* last modified date of the annotation */
   CHAR_T *author; /* author of the annotation */

@@ -19,6 +19,9 @@
 #include "ANNOTtools_f.h"
 #include "AHTURLTools_f.h"
 #include "ANNOTevent_f.h"
+#include "XPointer.h"
+#include "XPointer_f.h"
+#include "XPointerparse_f.h"
 
 /*-----------------------------------------------------------------------
    LINK_GetAnnotationIndexFile 
@@ -143,10 +146,21 @@ AnnotMeta *annot;
 
   annot_user = GetAnnotUser ();
   
-  first   = TtaSearchElementByLabel(annot->labf, TtaGetMainRoot (source_doc));
+  if (annot->xptr)
+    {
+      parserContextPtr ctx;
+      ctx = XPointer_parse (source_doc, annot->xptr);
+      first = XPointer_el (XPointer_nodeStart (ctx));
+      XPointer_free (ctx);
+    }
+  else
+    first  = TtaSearchElementByLabel(annot->labf, TtaGetMainRoot (source_doc));
+
+  /* create the anchor element */
   elType = TtaGetElementType (first);
   elType.ElTypeNum = HTML_EL_Anchor;
   anchor = TtaNewElement (source_doc, elType);
+
   /* is the user trying to annotate an anchor? */
   el = TtaGetTypedAncestor (first, elType);
   if (el)
@@ -366,6 +380,9 @@ AnnotMeta* LINK_CreateMeta (source_doc, annot_doc, labf, c1, labl, cl)
   /* Annotation type */
   annot->type = TEXT("comment");
 
+  /* Annotation XPointer */
+  annot->xptr = XPointer_build (source_doc, 1);
+
   annot_user = GetAnnotUser ();
   annot->author = TtaStrdup (annot_user);
   annot->content_type = TtaStrdup ("text/html");
@@ -435,12 +452,15 @@ void LINK_LoadAnnotationIndex (doc, annotIndex)
   while (list_ptr)
     {
       annot = (AnnotMeta *) list_ptr->object;
+      /* @@ JK: we need to do this operation,  but with the element */
+#if 0
       if ((el = TtaSearchElementByLabel (annot->labf, body)) == NULL)
 	{
 	  fprintf (stderr, "This annotation has lost its parent!\n");
 	  Annot_free (annot);
 	}
       else 
+#endif
 	{
 	  /* don't add an annotation if it's already on the list */
 	  /* @@ later, Ralph will add code to delete the old one */

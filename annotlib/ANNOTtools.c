@@ -376,6 +376,8 @@ void Annot_free (AnnotMeta *annot)
   if (annot->author) 
     free (annot->author);
   /* annot->type @@ */
+  if (annot->xptr)
+    free (annot->xptr);
   if (annot->cdate) 
     free (annot->cdate);
   if (annot->mdate) 
@@ -476,13 +478,20 @@ void AnnotList_writeIndex (CHAR_T *indexFile, List *annot_list)
 		   "<a:annotates r:resource=\"%s\" />\n",
 		   annot->source_url);
 
+	  /* @@ JK: Removed because we're now using xptr */
+#if 0
 	  fprintf (fp,
 	      "<a:context>#id(%s|%d|%s|%d)</a:context>\n",
 		   annot->labf,
 		   annot->c1,
 		   annot->labl,
 		   annot->cl);
-	  
+#endif
+
+	  fprintf (fp,
+	      "<a:context>#%s</a:context>\n",
+		   annot->xptr);
+
 	  fprintf (fp,
 		   "<d:creator>%s</d:creator>\n",
 		   annot->author);
