@@ -31,9 +31,6 @@ extern void ParseFillStrokeAttributes ( int attrType,
                                         Element el,
                                         Document doc,
                                         ThotBool delete );
-extern void ParseDirAndSpaceAttributes ( Element group,
-                                         Element el,
-                                         Document doc );
 extern void GraphMLElementComplete ( Element el,
                                      Document doc,
                                      int *error );
@@ -88,9 +85,6 @@ extern void ParseFillStrokeAttributes (/* int attrType,
                                           Element el,
                                           Document doc,
                                           ThotBool delete */);
-extern void ParseDirAndSpaceAttributes (/* Element group,
-                                           Element el,
-                                           Document doc */);
 extern void GraphMLElementComplete (/* Element el,
                                        Document doc,
                                        int *error */);

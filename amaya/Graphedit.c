@@ -188,9 +188,9 @@ ThotBool ExtendSelectGraphMLElement(event)
 	 elType.ElTypeNum != GraphML_EL_Polygon &&
 	 elType.ElTypeNum != GraphML_EL_Spline &&
 	 elType.ElTypeNum != GraphML_EL_ClosedSpline &&
-	 elType.ElTypeNum != GraphML_EL_Text_ &&
+	 elType.ElTypeNum != GraphML_EL_text_ &&
 	 elType.ElTypeNum != GraphML_EL_foreignObject &&
-	 elType.ElTypeNum != GraphML_EL_Group))
+	 elType.ElTypeNum != GraphML_EL_g))
       {
       elType.ElSSchema = graphSSchema;
       elType.ElTypeNum = GraphML_EL_GraphicsElement;
@@ -208,9 +208,9 @@ ThotBool ExtendSelectGraphMLElement(event)
 	 elType.ElTypeNum != GraphML_EL_Polygon &&
 	 elType.ElTypeNum != GraphML_EL_Spline &&
 	 elType.ElTypeNum != GraphML_EL_ClosedSpline &&
-	 elType.ElTypeNum != GraphML_EL_Text_ &&
+	 elType.ElTypeNum != GraphML_EL_text_ &&
 	 elType.ElTypeNum != GraphML_EL_foreignObject &&
-	 elType.ElTypeNum != GraphML_EL_Group))
+	 elType.ElTypeNum != GraphML_EL_g))
       {
       elType.ElSSchema = graphSSchema;
       elType.ElTypeNum = GraphML_EL_GraphicsElement;
@@ -570,37 +570,9 @@ NotifyAttribute    *event;
 }
 
 /*----------------------------------------------------------------------
- AttrDirectionModified
- -----------------------------------------------------------------------*/
-#ifdef __STDC__
-void AttrDirectionModified (NotifyAttribute *event)
-#else /* __STDC__*/
-void AttrDirectionModified(event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
-{
-  ParseDirAndSpaceAttributes (event->element, NULL, event->document);
-}
- 
-/*----------------------------------------------------------------------
- AttrSpaceModified
- -----------------------------------------------------------------------*/
-#ifdef __STDC__
-void AttrSpaceModified (NotifyAttribute *event)
-#else /* __STDC__*/
-void AttrSpaceModified(event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
-{
-  ParseDirAndSpaceAttributes (event->element, NULL, event->document);
-}
-
-/*----------------------------------------------------------------------
  GraphElemPasted
  An element has been pasted.
  If the element is an XLink, update the link.
- If its parent is a Group with an attribute "direction", create the
- corresponding internal attributes.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
 void GraphElemPasted (NotifyElement *event)
@@ -609,29 +581,7 @@ void GraphElemPasted(event)
      NotifyElement *event;
 #endif /* __STDC__*/
 {
-  Element	parent;
-  ElementType	elType;
-
   XLinkPasted (event);
-  elType = TtaGetElementType (event->element);
-  if (elType.ElTypeNum == GraphML_EL_Rectangle ||
-      elType.ElTypeNum == GraphML_EL_Line_ ||
-      elType.ElTypeNum == GraphML_EL_RoundRect ||
-      elType.ElTypeNum == GraphML_EL_Circle ||
-      elType.ElTypeNum == GraphML_EL_Oval ||
-      elType.ElTypeNum == GraphML_EL_Polyline ||
-      elType.ElTypeNum == GraphML_EL_Spline ||
-      elType.ElTypeNum == GraphML_EL_ClosedSpline ||
-      elType.ElTypeNum == GraphML_EL_Text_ ||
-      elType.ElTypeNum == GraphML_EL_foreignObject ||
-      elType.ElTypeNum == GraphML_EL_Group ||
-      elType.ElTypeNum == GraphML_EL_Polygon )
-     {
-     parent = TtaGetParent (event->element);
-     elType = TtaGetElementType (parent);
-     if (elType.ElTypeNum == GraphML_EL_Group)
-        ParseDirAndSpaceAttributes (parent, event->element, event->document);
-     }
 }
 
 /*----------------------------------------------------------------------
@@ -738,9 +688,9 @@ ThotBool   GraphicsPRuleChange (event)
           elType.ElTypeNum == GraphML_EL_Polygon ||
           elType.ElTypeNum == GraphML_EL_Spline ||
           elType.ElTypeNum == GraphML_EL_ClosedSpline ||
-          elType.ElTypeNum == GraphML_EL_Text_ ||
+          elType.ElTypeNum == GraphML_EL_text_ ||
           elType.ElTypeNum == GraphML_EL_foreignObject ||
-          elType.ElTypeNum == GraphML_EL_Group)
+          elType.ElTypeNum == GraphML_EL_g)
         {
           TtaGiveBoxPosition (el, doc, mainView, UnPoint, &xPos, &yPos);
 	  unit = TtaGetPRuleUnit (presRule);
@@ -817,7 +767,7 @@ ThotBool   GraphicsPRuleChange (event)
           elType.ElTypeNum == GraphML_EL_Polygon ||
           elType.ElTypeNum == GraphML_EL_Spline ||
           elType.ElTypeNum == GraphML_EL_ClosedSpline ||
-          elType.ElTypeNum == GraphML_EL_Text_)
+          elType.ElTypeNum == GraphML_EL_text_)
         {
 	  /* the new value is the old one plus the delta */
 	  unit = TtaGetPRuleUnit (presRule);
@@ -950,7 +900,7 @@ int                 construct;
    DisplayMode      dispMode;
    char		    shape;
    int		    c1, c2, i, j, w, h, minX, minY, maxX, maxY;
-   ThotBool	    found, automaticPlacement;
+   ThotBool	    found;
    int	            oldStructureChecking;
 
    doc = TtaGetSelectedDocument ();
@@ -992,7 +942,7 @@ int                 construct;
 	    {
 	    elType = TtaGetElementType (parent);
 	    if (elType.ElSSchema == GraphMLSSchema &&
-		(elType.ElTypeNum == GraphML_EL_Group ||
+		(elType.ElTypeNum == GraphML_EL_g ||
 		 elType.ElTypeNum == GraphML_EL_GraphML))
 		found = TRUE;
 	    else
@@ -1001,19 +951,10 @@ int                 construct;
 	}
    while (parent && !found);
 
-   automaticPlacement = FALSE;
    if (!parent)
       {
       parent = graphRoot;
       sibling = TtaGetFirstChild (graphRoot);
-      }
-   else
-      /* if parent has a "direction" attribute, the user has not to choose
-	 the position of this element */
-      {
-      attrType.AttrTypeNum = GraphML_ATTR_direction;
-      if (TtaGetAttribute (parent, attrType))
-	 automaticPlacement = TRUE;
       }
 
    TtaOpenUndoSequence (doc, first, last, c1, c2);
@@ -1101,7 +1042,7 @@ int                 construct;
 	   }
 	break;
     case 10:	/* text */
-	newType.ElTypeNum = GraphML_EL_Text_;
+	newType.ElTypeNum = GraphML_EL_text_;
 	break;
     case 11:	/* group */
 	newType.ElTypeNum = 0;
@@ -1117,16 +1058,14 @@ int                 construct;
        if (dispMode == DisplayImmediately)
          TtaSetDisplayMode (doc, DeferredDisplay);
 
-       /* for rectangles, circle, oval, and text, ask for an elastic box,
-	  except when the parent is a Group with a "direction" attribute */
-       if (!automaticPlacement)
-         if (newType.ElTypeNum == GraphML_EL_Rectangle ||
-	     newType.ElTypeNum == GraphML_EL_RoundRect ||
-	     newType.ElTypeNum == GraphML_EL_Circle ||
-	     newType.ElTypeNum == GraphML_EL_Oval ||
-	     newType.ElTypeNum == GraphML_EL_Text_ ||
-	     newType.ElTypeNum == GraphML_EL_foreignObject)
-	   TtaAskFirstCreation ();
+       /* for rectangles, circle, oval, and text, ask for an elastic box */
+       if (newType.ElTypeNum == GraphML_EL_Rectangle ||
+	   newType.ElTypeNum == GraphML_EL_RoundRect ||
+	   newType.ElTypeNum == GraphML_EL_Circle ||
+	   newType.ElTypeNum == GraphML_EL_Oval ||
+	   newType.ElTypeNum == GraphML_EL_text_ ||
+	   newType.ElTypeNum == GraphML_EL_foreignObject)
+	 TtaAskFirstCreation ();
        /* create the new element */
        newEl = TtaNewElement (doc, newType);
        if (!sibling)
@@ -1145,8 +1084,7 @@ int                 construct;
 	   TtaSetGraphicsShape (child, shape, doc);
 	   selEl = child;
 	 }
-       else if (newType.ElTypeNum == GraphML_EL_Label ||
-		newType.ElTypeNum == GraphML_EL_Text_)
+       else if (newType.ElTypeNum == GraphML_EL_Label)
 	 /* create an HTML DIV element in the new element */
 	 {
 	   /* the document is supposed to be HTML */
@@ -1170,12 +1108,6 @@ int                 construct;
 	 }
        TtaRegisterElementCreate (newEl, doc);
 
-       /* if the parent element is a Group, create the internal attribute
-	  corresponding to attribute direction of the parent element */
-       elType = TtaGetElementType (parent);
-       if (elType.ElTypeNum == GraphML_EL_Group)
-         ParseDirAndSpaceAttributes (parent, newEl, doc);
-
        /* ask Thot to display changes made in the document */
        TtaSetDisplayMode (doc, dispMode);
      }
@@ -1188,23 +1120,7 @@ int                 construct;
        shape == 's')
      /* multipoints element. Let the user enter the points */
      {
-       if (automaticPlacement)
-	 {
-	   w = 80;
-	   attrType.AttrTypeNum = GraphML_ATTR_IntWidth;
-	   attr = TtaNewAttribute (attrType);
-	   TtaAttachAttribute (newEl, attr, doc);
-	   TtaSetAttributeValue (attr, w, newEl, doc);
-	   UpdateWidthHeightAttribute (attr, newEl, doc);
-	   h = 60;
-	   attrType.AttrTypeNum = GraphML_ATTR_IntHeight;
-	   attr = TtaNewAttribute (attrType);
-	   TtaAttachAttribute (newEl, attr, doc);
-	   TtaSetAttributeValue (attr, h, newEl, doc);
-	   UpdateWidthHeightAttribute (attr, newEl, doc);
-	 }
-       else
-         TtaGiveBoxSize (parent, doc, 1, UnPoint, &w, &h);
+       TtaGiveBoxSize (parent, doc, 1, UnPoint, &w, &h);
 
        TtaChangeLimitOfPolyline (child, UnPoint, w, h, doc);
        TtcInsertGraph (doc, 1, shape);
@@ -1214,7 +1130,7 @@ int                 construct;
          TtaSetDisplayMode (doc, DeferredDisplay);
        UpdatePointsAttribute (newEl, doc, &minX, &minY, &maxX, &maxY);
        UpdateInternalAttrForPoly (newEl, child, doc, minX, minY, maxX, maxY,
-				  !automaticPlacement);
+				  TRUE);
        /* ask Thot to display changes made in the document */
        TtaSetDisplayMode (doc, dispMode);
      }
@@ -1224,7 +1140,7 @@ int                 construct;
 
 /*----------------------------------------------------------------------
    CreateGroup
-   Create a Group surrounding the selected elements
+   Create a g element surrounding the selected elements
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         CreateGroup ()
@@ -1259,9 +1175,9 @@ static void         CreateGroup ()
    prevChild = NULL;
    /* Create a Group element */
    elType = TtaGetElementType (el);
-   elType.ElTypeNum = GraphML_EL_Group;
+   elType.ElTypeNum = GraphML_EL_g;
    group = TtaNewElement (doc, elType);
-   /* insert the new Group element */
+   /* insert the new group element */
    TtaInsertSibling (group, el, TRUE, doc);
 
    attrType.AttrSSchema = elType.ElSSchema;

@@ -230,7 +230,7 @@ RULES
 		END;
 	END;
 
-   Text_:
+   text_:
 	BEGIN
 	create SOT;
 	create 'text';
@@ -240,6 +240,18 @@ RULES
 	indent -2 after;
 	create SCT after;
 	create 'text>\12' after;
+	END;
+
+   tspan:
+	BEGIN
+	create SOT;
+	create 'tspan';
+	create attributes;
+	create '>';
+	indent +2;
+	indent -2 after;
+	create SCT after;
+	create 'text>' after;
 	END;
 
    foreignObject:
@@ -254,16 +266,16 @@ RULES
 	create 'foreignObject>\12' after;
 	END;
 
-   Group:
+   g:
 	BEGIN
 	create SOT;
-	create 'group';
+	create 'g';
 	create attributes;
 	create CloseTagNL;
 	indent +2;
 	indent -2 after;
 	create SCT after;
-	create 'group>\12' after;
+	create 'g>\12' after;
 	END;
 
    GRAPHICS_UNIT:
@@ -303,14 +315,6 @@ ATTRIBUTES
         create DoubleQuote;
 	end;
 
-   linewidth:
-	BEGIN
-	create SAN;
-	create 'linewidth="';
-	create linewidth;
-	create DoubleQuote;
-	END;
-
    linestyle_ = solid_:
 	BEGIN
 	create SAN;
@@ -325,38 +329,6 @@ ATTRIBUTES
 	BEGIN
 	create SAN;
 	create 'linestyle="dotted"';
-	END;
-
-   align = left_:
-	BEGIN
-	create SAN;
-	create 'align="left"';
-	END;
-   align = center_:
-	BEGIN
-	create SAN;
-	create 'align="center"';
-	END;
-   align = right_:
-	BEGIN
-	create SAN;
-	create 'align="right"';
-	END;
-
-   valign = top_:
-	BEGIN
-	create SAN;
-	create 'valign="top"';
-	END;
-   valign = middle:
-	BEGIN
-	create SAN;
-	create 'valign="middle"';
-	END;
-   valign = bottom_:
-	BEGIN
-	create SAN;
-	create 'valign="bottom"';
 	END;
 
    arrowhead = none_:
@@ -460,40 +432,19 @@ ATTRIBUTES
 	create DoubleQuote;
 	END;
 
-   direction = left_:
+   dx:
 	BEGIN
 	create SAN;
-	create 'direction="left"';
-	END;
-   direction = right_:
-	BEGIN
-	create SAN;
-	create 'direction="right"';
-	END;
-   direction = up:
-	BEGIN
-	create SAN;
-	create 'direction="up"';
-	END;
-   direction = down:
-	BEGIN
-	create SAN;
-	create 'direction="down"';
-	END;
-
-   hspace:
-	BEGIN
-	create SAN;
-	create 'hspace="';
-	create hspace;
+	create 'dx="';
+	create dx;
 	create DoubleQuote;
 	END;
 
-   vspace:
+   dy:
 	BEGIN
 	create SAN;
-	create 'vspace="';
-	create vspace;
+	create 'dy="';
+	create dy;
 	create DoubleQuote;
 	END;
 

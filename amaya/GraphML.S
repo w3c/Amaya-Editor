@@ -35,16 +35,9 @@ STRUCT
                 (ATTR points = text;
                                 IntPosX = integer; IntPosY = integer;
                                 IntWidth = integer; IntHeight = integer;
-                      linewidth = integer;
                       linestyle_ = solid_, dashed_, dotted_;
                       arrowhead = none_, start, end_, both;
-                      align = left_, center_, right_;
-                      valign = top_, middle, bottom_;
-                      depth_ = integer;
-                                IntLeftDistance = integer;
-                                IntRightDistance = integer;
-                                IntUpDistance = integer;
-                                IntDownDistance = integer)
+                      depth_ = integer)
                 = GRAPHICS;
             Rectangle
                 (ATTR position = text;               { OBSOLETE }
@@ -52,22 +45,13 @@ STRUCT
                       x = text;                      { NEW }
                       y = text;                      { NEW }
                       width_;
-                                IntWidth;            { OBSOLETE }
                       height_;
-                                IntHeight;           { OBSOLETE }
 	              fill = text;                   { NEW }
 	              stroke = text;                 { NEW }
 	              stroke_width = text;           { NEW }
-                      linewidth;                     { OBSOLETE }
                       linestyle_;
                                 IntEmptyShape = yes_, no_;
-                      align;
-                      valign;
-                      depth_;
-                                IntLeftDistance;
-                                IntRightDistance;
-                                IntUpDistance;
-                                IntDownDistance)
+                      depth_)
                 = BEGIN
                   Label = HTML;
                   GRAPHICS;
@@ -77,19 +61,10 @@ STRUCT
                                 IntPosX; IntPosY;    { OBSOLETE }
 	              x; y;                          { NEW }
                       width_;
-                                IntWidth;
                       height_;
-                                IntHeight;
-                      linewidth;
                       linestyle_;
                                 IntEmptyShape;
-                      align;
-                      valign;
-                      depth_;
-                                IntLeftDistance;
-                                IntRightDistance;
-                                IntUpDistance;
-                                IntDownDistance)
+                      depth_)
                 = BEGIN
                   Label;
                   GRAPHICS;
@@ -98,17 +73,9 @@ STRUCT
                 (ATTR position;                      { OBSOLETE }
                                 IntPosX; IntPosY;    { OBSOLETE }
                       width_;
-                                IntWidth;
-                      linewidth;
                       linestyle_;
                                 IntEmptyShape;
-                      align;
-                      valign;
-                      depth_;
-                                IntLeftDistance;
-                                IntRightDistance;
-                                IntUpDistance;
-                                IntDownDistance)
+                      depth_)
                 = BEGIN
                   Label;
                   GRAPHICS;
@@ -117,19 +84,10 @@ STRUCT
                 (ATTR position;                      { OBSOLETE }
                                 IntPosX; IntPosY;    { OBSOLETE }
                       width_;
-                                IntWidth;
                       height_;
-                                IntHeight;
-                      linewidth;
                       linestyle_;
                                 IntEmptyShape;
-                      align;
-                      valign;
-                      depth_;
-                                IntLeftDistance;
-                                IntRightDistance;
-                                IntUpDistance;
-                                IntDownDistance)
+                      depth_)
                 = BEGIN
                   Label;
                   GRAPHICS;
@@ -138,39 +96,21 @@ STRUCT
                 (ATTR position;
                                 IntPosX; IntPosY;
                       width_;
-                                IntWidth;
                       height_;
-                                IntHeight;
                       points;
                       arrowhead;
-                      linewidth;
                       linestyle_;
-                      align;
-                      valign;
-                      depth_;
-                                IntLeftDistance;
-                                IntRightDistance;
-                                IntUpDistance;
-                                IntDownDistance)
+                      depth_)
                 = GRAPHICS;
             Polygon
                 (ATTR position;
                                 IntPosX; IntPosY;
                       width_;
-                                IntWidth;
                       height_;
-                                IntHeight;
                       points;
-                      linewidth;
                       linestyle_;
                                 IntEmptyShape;
-                      align;
-                      valign;
-                      depth_;
-                                IntLeftDistance;
-                                IntRightDistance;
-                                IntUpDistance;
-                                IntDownDistance)
+                      depth_)
                 = BEGIN
                   Label;
                   GRAPHICS;
@@ -179,57 +119,32 @@ STRUCT
                 (ATTR position;
                                 IntPosX; IntPosY;
                       width_;
-                                IntWidth;
                       height_;
-                                IntHeight;
                       points;
                       arrowhead;
-                      linewidth;
                       linestyle_;
-                      align;
-                      valign;
-                      depth_;
-                                IntLeftDistance;
-                                IntRightDistance;
-                                IntUpDistance;
-                                IntDownDistance)
+                      depth_)
                 = GRAPHICS;
             ClosedSpline
                 (ATTR position;
                                 IntPosX; IntPosY;
                       width_;
-                                IntWidth;
                       height_;
-                                IntHeight;
                       points;
-                      linewidth;
                       linestyle_;
                                 IntEmptyShape;
-                      align;
-                      valign;
-                      depth_;
-                                IntLeftDistance;
-                                IntRightDistance;
-                                IntUpDistance;
-                                IntDownDistance)
+                      depth_)
                 = BEGIN
                   Label;
                   GRAPHICS;
                   END;
-            Text_
-                (ATTR position;                      { OBSOLETE }
-                                IntPosX; IntPosY;    { OBSOLETE }
-	              x; y;                          { NEW }
+
+            text_
+                (ATTR x;
+		      y;
                       width_;
-                                IntWidth;
-                      align;
-                      valign;
-                      depth_;
-                                IntLeftDistance;
-                                IntRightDistance;
-                                IntUpDistance;
-                                IntDownDistance)
-                = HTML;
+                      depth_)
+                = LIST OF (TextComponent);
 
 	    foreignObject			{ NEW }
 	        (ATTR x; 
@@ -240,25 +155,39 @@ STRUCT
 	              stroke)
 		= BEGIN CASE OF HTML; MathML; END; END;
 	              
-            Group
+            g
                 (ATTR position;                      { OBSOLETE }
                                 IntPosX; IntPosY;    { OBSOLETE }
-                      direction = left_, right_, up, down;
-                      hspace = text;
-                      vspace = text;
-                      linewidth;
+	              fill;
+	              stroke;
+	              stroke_width;
                       linestyle_;
-                      align;
-                      valign;
                       depth_;
-                                IntLeftDistance;
-                                IntRightDistance;
-                                IntUpDistance;
-                                IntDownDistance;
                                 ShowGroup = Yes_)
                 = LIST OF (GraphicsElement);
             END;
+	
+   TextComponent = CASE OF
+	    TEXT; 
+	    desc;
+	    title;
+	    metadata;
+	    tspan
+		(ATTR x;
+	              y;
+		      dx = TEXT;
+		      dy = TEXT)
+		= LIST OF (SpanElement);
+	    END	;
 
+   SpanElement = CASE OF
+	    TEXT;
+	    desc;
+	    title;
+	    metadata;
+	    tspan; 
+	    END;
+   
 EXCEPT
 
    GraphML:             IsDraw;
@@ -272,9 +201,9 @@ EXCEPT
    Polygon:             MoveResize, HighlightChildren, NoShowBox;
    Spline:              MoveResize, HighlightChildren, NoShowBox;
    ClosedSpline:        MoveResize, HighlightChildren, NoShowBox;
-   Text_:               MoveResize;
+   text_:               MoveResize;
    foreignObject:       MoveResize;
-   Group:               MoveResize;
+   g:                   MoveResize;
    PICTURE:             MoveResize;
    TEXT:                NoMove, NoResize;
 
@@ -284,12 +213,6 @@ EXCEPT
    Ghost_restruct:      Invisible;
    IntPosX:             Invisible, NewHPos; 
    IntPosY:             Invisible, NewVPos;
-   IntWidth:            NewWidth, Invisible;
-   IntHeight:           NewHeight, Invisible;
    IntEmptyShape:       Invisible;
-   IntLeftDistance:     Invisible;
-   IntRightDistance:    Invisible;
-   IntUpDistance:       Invisible;
-   IntDownDistance:     Invisible;
 
 END

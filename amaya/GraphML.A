@@ -93,24 +93,6 @@ ATTRIBUTES
 	AttrCreate.Post -> AttrFillStrokeModified;
 	AttrDelete.Pre ->  AttrFillStrokeDelete;
 	END;
-   direction:
-	BEGIN
-	AttrModify.Post -> AttrDirectionModified;
-	AttrCreate.Post -> AttrDirectionModified;
-	AttrDelete.Post -> AttrDirectionModified;
-	END;
-   hspace:
-	BEGIN
-	AttrModify.Post -> AttrSpaceModified;
-	AttrCreate.Post -> AttrSpaceModified;
-	AttrDelete.Post -> AttrSpaceModified;
-	END;
-   vspace:
-	BEGIN
-	AttrModify.Post -> AttrSpaceModified;
-	AttrCreate.Post -> AttrSpaceModified;
-	AttrDelete.Post -> AttrSpaceModified;
-	END;
    arrowhead:
 	BEGIN
 	AttrModify.Post -> AttrArrowHeadModified;

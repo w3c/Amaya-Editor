@@ -3470,7 +3470,8 @@ ThotBool            isHTML;
               if (!ustrcmp (CSSProperties[i].name, TEXT("fill")))
 		{
 		  elType = TtaGetElementType (element);
-		  if (elType.ElTypeNum == GraphML_EL_Text_)
+		  if (elType.ElTypeNum == GraphML_EL_text_ ||
+		      elType.ElTypeNum == GraphML_EL_tspan)
 		    if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema),
 				  TEXT("GraphML")))
 		      {

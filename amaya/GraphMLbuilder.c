@@ -27,24 +27,13 @@
 
 static AttrValueMapping GraphMLAttrValueMappingTable[] =
 { 
-   {GraphML_ATTR_align, TEXT("center"), GraphML_ATTR_align_VAL_center_},
-   {GraphML_ATTR_align, TEXT("left"), GraphML_ATTR_align_VAL_left_},
-   {GraphML_ATTR_align, TEXT("right"), GraphML_ATTR_align_VAL_right_},
    {GraphML_ATTR_arrowhead, TEXT("both"), GraphML_ATTR_arrowhead_VAL_both},
    {GraphML_ATTR_arrowhead, TEXT("end"), GraphML_ATTR_arrowhead_VAL_end_},
    {GraphML_ATTR_arrowhead, TEXT("none"), GraphML_ATTR_arrowhead_VAL_none_},
    {GraphML_ATTR_arrowhead, TEXT("start"), GraphML_ATTR_arrowhead_VAL_start},
-   {GraphML_ATTR_direction, TEXT("down"), GraphML_ATTR_direction_VAL_down},
-   {GraphML_ATTR_direction, TEXT("left"), GraphML_ATTR_direction_VAL_left_},
-   {GraphML_ATTR_direction, TEXT("right"), GraphML_ATTR_direction_VAL_right_},
-   {GraphML_ATTR_direction, TEXT("up"), GraphML_ATTR_direction_VAL_up},
    {GraphML_ATTR_linestyle_, TEXT("dashed"), GraphML_ATTR_linestyle__VAL_dashed_},
    {GraphML_ATTR_linestyle_, TEXT("dotted"), GraphML_ATTR_linestyle__VAL_dotted_},
    {GraphML_ATTR_linestyle_, TEXT("solid"), GraphML_ATTR_linestyle__VAL_solid_},
-   {GraphML_ATTR_valign, TEXT("bottom"), GraphML_ATTR_valign_VAL_bottom_},
-   {GraphML_ATTR_valign, TEXT("middle"), GraphML_ATTR_valign_VAL_middle},
-   {GraphML_ATTR_valign, TEXT("top"), GraphML_ATTR_valign_VAL_top_},
-
    {0, TEXT(""), 0}			/* Last entry. Mandatory */
 };
 
@@ -410,144 +399,6 @@ ThotBoool       delete;
 }
 
 /*----------------------------------------------------------------------
-   ParseDirAndSpaceAttributes
-   Depending on the values of attributes direction, vspace and hspace
-   of element "group", create (or update) attributes IntLeftDistance,
-   IntRightDistance, IntUpDistance, IntDownDistance for all children
-   if el is NULL or for element el if it's not NULL.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void      ParseDirAndSpaceAttributes (Element group, Element el, Document doc)
-#else
-void      ParseDirAndSpaceAttributes (group, el, doc)
-Element		group;
-Element		el;
-Document	doc;
-
-#endif
-{
-   ElementType		elType;
-   Element		child;
-   AttributeType	attrType, spaceAttrType;
-   Attribute		dirAttr, spaceAttr, attr, intAttr;
-   int			length, val, dir;
-   STRING		text, ptr;
-   DisplayMode		dispMode;
-
-   elType = TtaGetElementType (group);
-   attrType.AttrSSchema = elType.ElSSchema;
-   attrType. AttrTypeNum = GraphML_ATTR_direction;
-   dirAttr = TtaGetAttribute (group, attrType);
-   if (dirAttr)
-      /* Do nothing if attribute "direction" is missing */
-      {
-      dir = TtaGetAttributeValue (dirAttr);
-
-      dispMode = TtaGetDisplayMode (doc);
-      if (dispMode == DisplayImmediately)
-         TtaSetDisplayMode (doc, DeferredDisplay);
-   
-      /* remove existing attributes Int*Distance, position, IntPosX, IntPosY
-         from all children */
-      if (el)
-         child = el;
-      else
-         child = TtaGetFirstChild (group);
-      while (child != NULL)
-         {
-         attrType. AttrTypeNum = GraphML_ATTR_IntLeftDistance;
-         attr = TtaGetAttribute (child, attrType);
-         if (attr)
-	    TtaRemoveAttribute (child, attr, doc);
-         attrType. AttrTypeNum = GraphML_ATTR_IntRightDistance;
-         attr = TtaGetAttribute (child, attrType);
-         if (attr)
-	    TtaRemoveAttribute (child, attr, doc);
-         attrType. AttrTypeNum = GraphML_ATTR_IntUpDistance;
-         attr = TtaGetAttribute (child, attrType);
-         if (attr)
-	    TtaRemoveAttribute (child, attr, doc);
-         attrType. AttrTypeNum = GraphML_ATTR_IntDownDistance;
-         attr = TtaGetAttribute (child, attrType);
-         if (attr)
-	    TtaRemoveAttribute (child, attr, doc);
-         attrType. AttrTypeNum = GraphML_ATTR_position;
-         attr = TtaGetAttribute (child, attrType);
-         if (attr)
-	    TtaRemoveAttribute (child, attr, doc);
-         attrType. AttrTypeNum = GraphML_ATTR_IntPosX;
-         attr = TtaGetAttribute (child, attrType);
-         if (attr)
-	    TtaRemoveAttribute (child, attr, doc);
-         attrType. AttrTypeNum = GraphML_ATTR_IntPosY;
-         attr = TtaGetAttribute (child, attrType);
-         if (attr)
-	    TtaRemoveAttribute (child, attr, doc);
-         if (el)
-            child = NULL;
-         else
-            TtaNextSibling (&child);
-         }
-
-      spaceAttrType.AttrSSchema = elType.ElSSchema;
-      switch (dir)
-	   {
-	   case GraphML_ATTR_direction_VAL_left_:
-		attrType. AttrTypeNum = GraphML_ATTR_IntLeftDistance;
-		spaceAttrType.AttrTypeNum = GraphML_ATTR_hspace;
-		break;
-	   case GraphML_ATTR_direction_VAL_right_:
-		attrType. AttrTypeNum = GraphML_ATTR_IntRightDistance;
-		spaceAttrType.AttrTypeNum = GraphML_ATTR_hspace;
-		break;
-	   case GraphML_ATTR_direction_VAL_up:
-		attrType. AttrTypeNum = GraphML_ATTR_IntUpDistance;
-		spaceAttrType.AttrTypeNum = GraphML_ATTR_vspace;
-		break;
-	   case GraphML_ATTR_direction_VAL_down:
-		attrType. AttrTypeNum = GraphML_ATTR_IntDownDistance;
-		spaceAttrType.AttrTypeNum = GraphML_ATTR_vspace;
-		break;
-	   }
-      val = 0;
-      spaceAttr = TtaGetAttribute (group, spaceAttrType);
-      if (spaceAttr)
-        {
-        length = TtaGetTextAttributeLength (spaceAttr) + 2;
-        text = TtaAllocString (length);
-        if (text != NULL)
-          {
-          /* get the value of the text attribute */
-          TtaGiveTextAttributeValue (spaceAttr, text, &length); 
-          /* parse the text value and extract the internal value */
-          ptr = text;
-          usscanf (ptr, TEXT("%d"), &val);
-          ptr = SkipInt (ptr);
-          ptr = SkipSep (ptr);
-          TtaFreeMemory (text);
-          }
-        }
-
-      if (el)
-         child = el;
-      else
-         child = TtaGetFirstChild (group);
-      while (child != NULL)
-         {
-         intAttr = TtaNewAttribute (attrType);
-         TtaAttachAttribute (child, intAttr, doc);
-         TtaSetAttributeValue (intAttr, val, child, doc);
-         if (el)
-            child = NULL;
-         else
-            TtaNextSibling (&child);
-         }
-
-      TtaSetDisplayMode (doc, dispMode);
-      }
-}
-
-/*----------------------------------------------------------------------
    GraphMLElementComplete
    Check the Thot structure of the GraphML element el.
   ----------------------------------------------------------------------*/
@@ -600,10 +451,9 @@ int             *error
 	  CreateEnclosingElement (el, newType, doc);
 	  }
 
-     /* if it's a Label or Text_ element, create a HTMLfragment to contain
+     /* if it's a Label element, create a HTMLfragment to contain
         the HTML elements */
-     if (elType.ElTypeNum == GraphML_EL_Label ||
-	 elType.ElTypeNum == GraphML_EL_Text_)
+     if (elType.ElTypeNum == GraphML_EL_Label)
 	{
 	child = TtaGetFirstChild (el);
 	if (child != NULL)
@@ -613,28 +463,21 @@ int             *error
 	   CreateEnclosingElement (child, elType, doc);
 	   }
 	}
-     /* if it's a Group element, process its attributes direction, vspace
-        and hspace */
-     else if (elType.ElTypeNum == GraphML_EL_Group)
-	ParseDirAndSpaceAttributes (el, NULL, doc);
-     else
-	{
-        /* if it's a graphic primitive, create a GRAPHIC_UNIT leaf as a child
+     /* if it's a graphic primitive, create a GRAPHIC_UNIT leaf as a child
 	of the element, if it has not been done when creating attributes
 	(points, arrowhead) */
-        leaf = CreateGraphicLeaf (el, doc, &closedShape, 0);
-        /* if it's a closed shape, move the FillPattern rule to that leaf */
-        if (closedShape && leaf)
+     leaf = CreateGraphicLeaf (el, doc, &closedShape, 0);
+     /* if it's a closed shape, move the FillPattern rule to that leaf */
+     if (closedShape && leaf)
+       {
+	 fillPatternRule = TtaGetPRule (el, PRFillPattern);
+	 if (fillPatternRule != NULL)
 	   {
-           fillPatternRule = TtaGetPRule (el, PRFillPattern);
-	   if (fillPatternRule != NULL)
-	      {
-	      newPRule = TtaCopyPRule (fillPatternRule);
-	      TtaAttachPRule (leaf, newPRule, doc);
-	      TtaRemovePRule (el, fillPatternRule, doc);
-	      }
+	     newPRule = TtaCopyPRule (fillPatternRule);
+	     TtaAttachPRule (leaf, newPRule, doc);
+	     TtaRemovePRule (el, fillPatternRule, doc);
 	   }
-	}
+       }
      }
 }
 

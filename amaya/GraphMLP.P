@@ -234,6 +234,18 @@ BOXES
 		END;
 	END;
 
+   TSPAN_S:
+	BEGIN
+	Content: Text 'tspan';
+	Visibility: 0;
+	IN Graph_Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
+		Style: TAG_Style; Weight: TAG_Weight;
+		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		END;
+	END;
+
    FOREIGNOBJECT_S:
 	BEGIN
 	Content: Text 'foreignObject';
@@ -246,9 +258,9 @@ BOXES
 		END;
 	END;
 
-   GROUP_S:
+   G_S:
 	BEGIN
-	Content: Text 'group';
+	Content: Text 'g';
 	Visibility: 0;
 	IN Graph_Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -328,29 +340,6 @@ BOXES
                 END;
         END;
 
-   ATTR_linewidth: BEGIN
-	Content: Text '  linewidth=';
-	Visibility: 0;
-	IN Graph_Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-   VALUE_linewidth: BEGIN
-	Content: (linewidth);
-	Visibility: 0;
-	IN Graph_Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
    ATTR_linestyle_solid: BEGIN
 	Content: Text '  linestyle=solid';
 	Visibility: 0;
@@ -377,78 +366,6 @@ BOXES
 
    ATTR_linestyle_dotted: BEGIN
 	Content: Text '  linestyle=dotted';
-	Visibility: 0;
-	IN Graph_Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
-   ATTR_align_left: BEGIN
-	Content: Text '  align=left';
-	Visibility: 0;
-	IN Graph_Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
-   ATTR_align_center: BEGIN
-	Content: Text '  align=center';
-	Visibility: 0;
-	IN Graph_Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
-   ATTR_align_right: BEGIN
-	Content: Text '  align=right';
-	Visibility: 0;
-	IN Graph_Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
-   ATTR_valign_top: BEGIN
-	Content: Text '  valign=top';
-	Visibility: 0;
-	IN Graph_Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
-   ATTR_valign_middle: BEGIN
-	Content: Text '  valign=middle';
-	Visibility: 0;
-	IN Graph_Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
-   ATTR_valign_bottom: BEGIN
-	Content: Text '  valign=bottom';
 	Visibility: 0;
 	IN Graph_Structure_view BEGIN
 		HorizPos: Left = Previous . Right;
@@ -711,8 +628,8 @@ BOXES
 		END;
 	END;
 
-   ATTR_direction_left_: BEGIN
-	Content: Text '  direction=left';
+   ATTR_dx: BEGIN
+	Content: Text '  dx=';
 	Visibility: 0;
 	IN Graph_Structure_view BEGIN
 		HorizPos: Left = Previous . Right;
@@ -722,9 +639,20 @@ BOXES
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
+   VALUE_dx: BEGIN
+	Content: (dx);
+	Visibility: 0;
+	IN Graph_Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
 
-   ATTR_direction_right_: BEGIN
-	Content: Text '  direction=right';
+   ATTR_dy: BEGIN
+	Content: Text '  dy=';
 	Visibility: 0;
 	IN Graph_Structure_view BEGIN
 		HorizPos: Left = Previous . Right;
@@ -734,76 +662,17 @@ BOXES
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
-
-   ATTR_direction_up: BEGIN
-	Content: Text '  direction=up';
+   VALUE_dy: BEGIN
+	Content: (dy);
 	Visibility: 0;
 	IN Graph_Structure_view BEGIN
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
 		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
-
-   ATTR_direction_down: BEGIN
-	Content: Text '  direction=down';
-	Visibility: 0;
-	IN Graph_Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-
-   ATTR_hspace: BEGIN
-        Content: Text '  hspace=';
-        Visibility: 0;
-        IN Graph_Structure_view BEGIN
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
-                Size: TAG_FONTSIZE;
-                Style: ATTR_Style; Weight: ATTR_Weight;
-                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-                END;
-        END;
-   VALUE_hspace: BEGIN
-        Content: (hspace);
-        Visibility: 0;
-        IN Graph_Structure_view BEGIN
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
-                Size: TAG_FONTSIZE;
-                Style: ATTR_Style; Weight: ATTR_Weight;
-                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-                END;
-        END;
-
-   ATTR_vspace: BEGIN
-        Content: Text '  vspace=';
-        Visibility: 0;
-        IN Graph_Structure_view BEGIN
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
-                Size: TAG_FONTSIZE;
-                Style: ATTR_Style; Weight: ATTR_Weight;
-                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-                END;
-        END;
-   VALUE_vspace: BEGIN
-        Content: (vspace);
-        Visibility: 0;
-        IN Graph_Structure_view BEGIN
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
-                Size: TAG_FONTSIZE;
-                Style: ATTR_Style; Weight: ATTR_Weight;
-                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-                END;
-        END;
 
    VerticalLine: BEGIN
 	Content: Graphics 'W';
@@ -1184,11 +1053,11 @@ RULES
 		END;
 	END;
 
-   Text_:
+   text_:
 	BEGIN
 	CreateBefore (TEXT_S);
 	CreateWith (VerticalLine);
-	Width: 2.5 cm UserSpecified;
+	Width: Enclosed . Width;
 	HorizPos: Left = Enclosing . Left + 1 pt  UserSpecified;
 	VertPos:  Top = Enclosing . Top + 1 pt  UserSpecified;
 	IN Graph_Structure_view BEGIN
@@ -1201,6 +1070,26 @@ RULES
 		Height: Enclosed . Height;
 		Width: Enclosing . Width;
 		END;
+	END;
+
+   tspan:
+	BEGIN
+	CreateBefore (TSPAN_S);
+	CreateWith (VerticalLine);
+	HorizPos: Left = Previous . Right;
+	VertPos:  HRef = Previous . HRef;
+	IN Graph_Structure_view BEGIN
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		Font: TAG_Font;
+		END;
+	IN Graph_Alternate_view BEGIN
+		Height: Enclosed . Height;
+	        Width: Enclosed . Width;
+		HorizPos: Left = Previous . Right;
+		VertPos:  HRef = Previous . HRef;
+		END;	
 	END;
 
    foreignObject:
@@ -1216,12 +1105,13 @@ RULES
 	IN Graph_Alternate_view BEGIN
 		Height: Enclosed . Height;
 		Width: Enclosing . Width;
+		VertPos: Top = Previous . Bottom;
 		END;
 	END;
 
-   Group:
+   g:
 	BEGIN
-	CreateBefore (GROUP_S);
+	CreateBefore (G_S);
 	CreateWith (VerticalLine);
 	IN Graph_Structure_view BEGIN
 		Size: DOC_FONTSIZE;
@@ -1232,6 +1122,18 @@ RULES
 	IN Graph_Alternate_view BEGIN
 		Height: Enclosed . Height;
 		Width: Enclosing . Width;
+		END;
+	END;
+
+   TEXT_UNIT:
+	BEGIN
+	HorizPos: Left = Previous . Right;
+        VertPos: HRef = Previous . HRef;
+	Width: Enclosed . Width;
+        Height: Enclosed . Height;
+	IN Graph_Alternate_view BEGIN
+	        Width: Enclosed . Width;
+        	VertPos: HRef = Previous . HRef;
 		END;
 	END;
 
@@ -1255,15 +1157,6 @@ ATTRIBUTES
         CreateBefore(VALUE_id);
         END;
 
-  linewidth:
-	BEGIN
-	CreateBefore (ATTR_linewidth);
-	CreateBefore (VALUE_linewidth);
-	LineWeight: linewidth pt;
-	IN Graph_Structure_view
-		LineWeight: Enclosing =;
-	END;
-
   linestyle_ = solid_:
 	BEGIN
 	CreateBefore (ATTR_linestyle_solid);
@@ -1284,50 +1177,6 @@ ATTRIBUTES
 	LineStyle: Dotted;
 	IN Graph_Structure_view
 		LineStyle: Enclosing =;
-	END;
-
-  align = left_:
-	BEGIN
-	CreateBefore (ATTR_align_left);
-	HorizPos: Left = Enclosing . Left;
-	IN Graph_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
-  align = center_:
-	BEGIN
-	CreateBefore (ATTR_align_center);
-	HorizPos: VMiddle = Enclosing . VMiddle;
-	IN Graph_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
-  align = right_:
-	BEGIN
-	CreateBefore (ATTR_align_right);
-	HorizPos: Right = Enclosing . Right;
-	IN Graph_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	END;
-
-  valign = top_:
-	BEGIN
-	CreateBefore (ATTR_valign_top);
-	VertPos: Top = Enclosing . Top;
-	IN Graph_Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
-  valign = middle:
-	BEGIN
-	CreateBefore (ATTR_valign_middle);
-	VertPos: HMiddle = Enclosing . HMiddle;
-	IN Graph_Structure_view
-		VertPos: Top = Previous . Bottom;
-	END;
-  valign = bottom_:
-	BEGIN
-	CreateBefore (ATTR_valign_bottom);
-	VertPos: Bottom = Enclosing . Bottom;
-	IN Graph_Structure_view
-		VertPos: Top = Previous . Bottom;
 	END;
 
   arrowhead = none_:
@@ -1429,64 +1278,19 @@ ATTRIBUTES
 		Height: Enclosed . Height;
 	END;
 
-  direction = left_:
-	CreateBefore (ATTR_direction_left_);
-  direction = right_:
-	CreateBefore (ATTR_direction_right_);
-  direction = up:
-	CreateBefore (ATTR_direction_up);
-  direction = down:
-	CreateBefore (ATTR_direction_down);
-
-  hspace:
+  dx:
 	BEGIN
-	CreateBefore (ATTR_hspace);
-	CreateBefore (VALUE_hspace);
+	CreateBefore (ATTR_dx);
+	CreateBefore (VALUE_dx);
 	END;
 
-  vspace:
+  dy:
 	BEGIN
-	CreateBefore (ATTR_vspace);
-	CreateBefore (VALUE_vspace);
+	CreateBefore (ATTR_dy);
+	CreateBefore (VALUE_dy);
 	END;
 
-  IntLeftDistance:
-	BEGIN
-	HorizPos: Right = Previous . Left - IntLeftDistance pt;
-	IN Graph_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	IN Graph_Alternate_view
-		HorizPos: Left = Enclosing . Left;
-	END;
-
-  IntRightDistance:
-	BEGIN
-	HorizPos: Left = Previous . Right + IntRightDistance pt;
-	IN Graph_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-	IN Graph_Alternate_view
-		HorizPos: Left = Enclosing . Left;
-	END;
-
-  IntUpDistance:
-	BEGIN
-	VertPos: Bottom = Previous . Top - IntUpDistance pt;
-	IN Graph_Structure_view
-		VertPos: Top = Previous . Bottom;
-	IN Graph_Alternate_view
-		VertPos: Top = Previous . Bottom;
-	END;
-
-  IntDownDistance:
-	BEGIN
-	VertPos: Top = Previous . Bottom + IntDownDistance pt;
-	IN Graph_Structure_view
-		VertPos: Top = Previous . Bottom;
-	IN Graph_Alternate_view
-		VertPos: Top = Previous . Bottom;
-	END;
-
-  ShowGroup (Group):
+  ShowGroup (g):
 	CreateLast (DottedBox);
 
 END
