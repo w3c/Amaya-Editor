@@ -2886,10 +2886,10 @@ void WWWToLocal (char *url)
    /* @@ JK: A patch for Windows */
   if (tmp[0] == DIR_SEP && tmp[1] == DIR_SEP && tmp[3] ==':')
     strcpy (url, tmp + 2);
-	  else
+  else
     strcpy (url, tmp);
   if (target[0])
-	  strcat (url, target);
+    strcat (url, target);
   HT_FREE (tmp);
 }
 
