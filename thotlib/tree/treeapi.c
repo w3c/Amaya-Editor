@@ -2694,6 +2694,9 @@ int                *size;
 	   case CsConstant:
 	   case CsPairedElement:
 	   case CsExtensionRule:
+		((*typesArray)[0]).ElSSchema = elementType.ElSSchema;
+		((*typesArray)[0]).ElTypeNum = 0;
+		break;
            default:
 	        TtaError (ERR_invalid_element_type);
                 break;
