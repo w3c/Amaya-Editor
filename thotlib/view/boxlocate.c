@@ -130,7 +130,7 @@ ThotBool APPgraphicModify (PtrElement pEl, int value, int frame, ThotBool pre)
   NotifyOnValue       notifyEl;
   PtrDocument         pDoc;
   int                 view;
-  ThotBool            ok = FALSE;
+  ThotBool            ok = FALSE, isGraph;
 
   GetDocAndView (frame, &pDoc, &view);
   result = FALSE;
@@ -139,6 +139,11 @@ ThotBool APPgraphicModify (PtrElement pEl, int value, int frame, ThotBool pre)
   notifyEl.document = (Document) IdentDocument (pDoc);
   notifyEl.target = (Element) pEl;
   notifyEl.value = value;
+  isGraph = (pEl && pEl->ElTerminal &&
+	     (pEl->ElLeafType == LtGraphics ||
+	      pEl->ElLeafType == LtSymbol ||
+	      pEl->ElLeafType == LtPolyLine ||
+	      pEl->ElLeafType == LtPath));
   while (pAsc)
     {
       notifyEl.element = (Element) pAsc;
@@ -163,9 +168,7 @@ ThotBool APPgraphicModify (PtrElement pEl, int value, int frame, ThotBool pre)
 	}
     }
   if (!pre)
-      if (pEl->ElLeafType == LtGraphics || pEl->ElLeafType == LtSymbol ||
-	  pEl->ElLeafType == LtPolyLine || pEl->ElLeafType == LtPath)
-	if (ThotLocalActions[T_closehistory] != NULL)
+      if (isGraph && ThotLocalActions[T_closehistory] != NULL)
 	  (*ThotLocalActions[T_closehistory]) (pDoc);
   return result;
 }
@@ -184,7 +187,11 @@ static ThotBool NotifyClick (int event, ThotBool pre, PtrElement pEl, int doc)
   result = FALSE;
   ok = FALSE;
   pAsc = pEl;
-  isGraph = (pEl && pEl->ElTerminal && pEl->ElLeafType == LtGraphics);
+  isGraph = (pEl && pEl->ElTerminal &&
+	     (pEl->ElLeafType == LtGraphics ||
+	      pEl->ElLeafType == LtSymbol ||
+	      pEl->ElLeafType == LtPolyLine ||
+	      pEl->ElLeafType == LtPath));
   notifyEl.event = event;
   notifyEl.document = doc;
   notifyEl.position = 0;
@@ -222,7 +229,7 @@ void LocateSelectionInView (int frame, int x, int y, int button)
   PtrElement          pEl = NULL, firstEl;
   PtrTextBuffer       pBuffer;
   PtrAbstractBox      pAb;
-  PtrElement          el;
+  PtrElement          el = NULL;
   ViewFrame          *pFrame;
   ViewSelection      *pViewSel;
   int                 charsNumber;
@@ -376,7 +383,7 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		    }
 		  if (MenuActionList[CMD_PasteFromClipboard].Call_Action != NULL)
 		    (*MenuActionList[CMD_PasteFromClipboard].Call_Action) (doc, view);
-		  if (x >= xOrg && x <= xOrg + pBox->BxW &&
+		  else if (x >= xOrg && x <= xOrg + pBox->BxW &&
 		      y >= yOrg && y <= yOrg + pBox->BxH)
 		    /* send event TteElemMClick.Post to the application */
 		    NotifyClick (TteElemMClick, FALSE, el, doc);
@@ -399,7 +406,7 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		  TtaSetDialoguePosition ();
 		  if (ThotLocalActions[T_insertpaste] != NULL)
 		    (*ThotLocalActions[T_insertpaste]) (TRUE, FALSE, 'R', &ok);
-		  if (x >= xOrg && x <= xOrg + pBox->BxW &&
+		  else if (x >= xOrg && x <= xOrg + pBox->BxW &&
 		      y >= yOrg && y <= yOrg + pBox->BxH)
 		    /* send event TteElemRClick.Post to the application */
 		    NotifyClick (TteElemRClick, FALSE, el, doc);
