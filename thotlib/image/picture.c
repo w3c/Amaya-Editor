@@ -455,6 +455,73 @@ static void GL_TextureBind (PictInfo *Image)
       Image->TexCoordH = GL_h;
     }  
 }
+
+/*----------------------------------------------------------------------
+ GL_TextureMap : map texture on a Quad (sort of a rectangle)
+ Drawpixel Method for software implementation, as it's much faster for those
+ Texture Method for hardware implementation as it's faster and better.
+  ----------------------------------------------------------------------*/
+static void GL_TexturePartialMap (void *ImagePt, 
+			   int xFrame, int yFrame, 
+			   int w, int h)
+{  
+  PictInfo *Image;
+  float texW, texH;
+  
+  
+  Image = ImagePt;
+
+  texW = (Image->TexCoordW * w) / Image->PicWidth;
+  texH = (Image->TexCoordH * h) / Image->PicHeight;
+
+  GL_SetPicForeground ();
+  
+   
+  glBindTexture (GL_TEXTURE_2D, 
+		 Image->TextureBind);
+ 	
+  glEnable (GL_TEXTURE_2D);
+
+  glTexParameteri (GL_TEXTURE_2D,
+		       GL_TEXTURE_MIN_FILTER,
+		   GL_NEAREST);
+      glTexParameteri (GL_TEXTURE_2D,
+		       GL_TEXTURE_MAG_FILTER,
+		       GL_NEAREST);	    
+      glTexParameteri (GL_TEXTURE_2D,
+		       GL_TEXTURE_WRAP_S,
+		       GL_CLAMP);
+      glTexParameteri (GL_TEXTURE_2D,
+		       GL_TEXTURE_WRAP_T,
+		       GL_CLAMP); 
+  /* does current Color modify texture no = GL_REPLACE, 
+     else => GL_MODULATE, GL_DECAL, ou GL_BLEND */
+  glTexEnvi( GL_TEXTURE_ENV, 
+	     GL_TEXTURE_ENV_MODE, 
+	     GL_MODULATE);
+
+  /* Not sure of the vertex order 
+     (not the faster one, I think) */
+  glBegin (GL_QUADS);
+  /* Texture coordinates are unrelative 
+     to the size of the square */      
+  /* lower left */
+  glTexCoord2i (0,    0); 
+  glVertex2i (xFrame,     yFrame + h);
+  /* upper right*/
+  glTexCoord2f (texW, 0.0); 
+  glVertex2i (xFrame + w, yFrame + h);
+  /* lower right */
+  glTexCoord2f (texW, texH); 
+  glVertex2i (xFrame + w, yFrame); 
+  /* upper left */
+  glTexCoord2f (0.0,  texH); 
+  glVertex2i (xFrame,     yFrame);      
+  glEnd ();	
+  /* State disabling */
+  glDisable (GL_TEXTURE_2D); 
+
+}
 /*----------------------------------------------------------------------
  GL_TextureMap : map texture on a Quad (sort of a rectangle)
  Drawpixel Method for software implementation, as it's much faster for those
@@ -958,18 +1025,25 @@ static void LayoutPicture (Pixmap pixmap,
 /* 	      else */
 /* 		clipWidth = delta; */
 	    }
-
+	  if (clipWidth < imageDesc->PicWidth)
+	    w = clipWidth;
+	  else
+	    w = imageDesc->PicWidth;
+	  
+	  if (clipHeight < imageDesc->PicHeight) 
+	    h = clipHeight;
+	  else
+	    h = imageDesc->PicHeight;
+	  
 	  j = 0;
 	  do
-	    {
+	    {	      
 	      i = 0;
 	      do
-		{
-		 
-		  GL_TextureMap (imageDesc, 
+		{		  
+		  GL_TexturePartialMap (imageDesc, 
 				 xFrame + i, yFrame + j,
-				 imageDesc->PicWidth, 
-				 imageDesc->PicHeight);
+				 w, h);
 		  i += imageDesc->PicWidth;
 		} 
 	      while (i < clipWidth);

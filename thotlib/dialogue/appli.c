@@ -671,19 +671,16 @@ gboolean  GL_Init (ThotWidget widget,
 {
   static ThotBool dialogfont_enabled = FALSE;
  
-  if (gtk_gl_area_make_current (GTK_GL_AREA(widget)))
-    {       
-
-      SetGlPipelineState ();
-      if (!dialogfont_enabled)
-	  {
-	    InitDialogueFonts ("");
-	    dialogfont_enabled = TRUE;
-	  } 
-      return TRUE;
-    }
-  else
-    return TRUE;   
+  while (!gtk_gl_area_make_current (GTK_GL_AREA(widget)))
+    ;
+  
+  SetGlPipelineState ();
+  if (!dialogfont_enabled)
+    {
+      InitDialogueFonts ("");
+      dialogfont_enabled = TRUE;
+    } 
+  return TRUE;   
 }
 /*----------------------------------------------------------------------
   ExposeCallbackGTK : 
@@ -2400,6 +2397,10 @@ gboolean FrameCallbackGTK (GtkWidget *widget, GdkEventButton *event, gpointer da
 #ifdef _GTK
   frame = (int )data;
 #endif /* _GTK */
+
+#ifdef _GL
+  GL_prepare (frame);  
+#endif /* _GL */
 
 #ifndef _GTK
   /* ne pas traiter si le document est en mode NoComputedDisplay */
