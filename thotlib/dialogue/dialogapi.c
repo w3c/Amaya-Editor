@@ -5827,7 +5827,13 @@ void TtaSetToggleMenu (int ref, int val, ThotBool on)
 #else /* _GTK */
 			    /* attribut active is set to the good value */
 			    if (catalogue->Cat_Type == CAT_TMENU)
+			      {
+				RemoveSignalGTK (GTK_OBJECT(w), "toggled");
 			      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(w), TRUE);
+				ConnectSignalGTK (GTK_OBJECT(w), "toggled",
+						  GTK_SIGNAL_FUNC (CallMenuGTK), 
+						  (gpointer) catalogue);
+			      }
 			      /* JK: this is what SG did: GTK_TOGGLE_BUTTON(w)->active = TRUE; */
 			    else if (catalogue->Cat_Type == CAT_SCRPOPUP)
 			      {
