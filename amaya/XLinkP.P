@@ -204,8 +204,6 @@ BOXES
 RULES
 
  XLink:	BEGIN
-        if AnnotIcon1
-           CreateFirst(Annot_gif1);
 	IN Structure_view BEGIN
 		Visibility: 0;
 		END;
@@ -218,6 +216,7 @@ RULES
 	END;
 
 ATTRIBUTES
+
   AnnotOrphIcon:
 	BEGIN
 	Visibility: 0;
@@ -260,6 +259,8 @@ ATTRIBUTES
 	BEGIN
         CreateBefore(ATTR_href);
   	CreateBefore(VALUE_href);
+        if AnnotIcon1
+           CreateFirst(Annot_gif1);
    	IN Links_view
 		Visibility: ATTR_Visibility;
 	END;
