@@ -162,9 +162,9 @@ static void         ApplyPresentMod ()
 		     /* evalue les difference entre le pave traite' et les demandes
 		        de l'utilisateur */
 		     if (pEl->ElAssocNum > 0)
-			pAb = PaveDeElem (pEl, 1);
+			pAb = AbsBoxOfEl (pEl, 1);
 		     else
-			pAb = PaveDeElem (pEl, SelectedView);
+			pAb = AbsBoxOfEl (pEl, SelectedView);
 		     if (pAb != NULL)
 		       {
 			  if (pAb->AbSizeUnit == UnPoint)
@@ -312,22 +312,22 @@ static void         ApplyPresentMod ()
 
 		     if (ChgnStandardChar || ChngStandardForm
 			 || ChngStandardGraph || ChngStandardColor)
-			SupprPresSpec (pEl, pSelDoc, TheRules, SelectedView);
+			RemoveSpecPresTree (pEl, pSelDoc, TheRules, SelectedView);
 		     if (chngChars)
-			ModifCaracteres (pEl, pSelDoc, SelectedView, locChngFontFamily,
+			ModifyChar (pEl, pSelDoc, SelectedView, locChngFontFamily,
 			  FontFamily, locChngStyle, Style, locChngBodySize, BodySize,
 			locChngUnderline, UnderlineStyle, locChngWeight, UnderlineWeight);
 		     if (chngGraphics)
-			ModifGraphiques (pEl, pSelDoc, SelectedView, locChngLineStyle,
+			ModifyGraphics (pEl, pSelDoc, SelectedView, locChngLineStyle,
 			    LineStyle, LocLineWeightUnit, LineWeight, TRUE,
 					 locChngTrame, Trame, FALSE, 0,
 					 FALSE, 0);
 		     if (chngFormat)
-			ModifLignes (pEl, pSelDoc, SelectedView, locChngCadr, Cadr,
+			ModifyLining (pEl, pSelDoc, SelectedView, locChngCadr, Cadr,
 				     locChngJustif, Justif, locChngIndent, IndentValue * IndentSign,
 				     locChngLineSp, OldLineSp, locChngHyphen, Hyphenate);
 		     if (ChngStandardGeom)
-			SupprPresSpec (pEl, pSelDoc, GeomRules, SelectedView);
+			RemoveSpecPresTree (pEl, pSelDoc, GeomRules, SelectedView);
 		     /* si on est dans un element copie' par inclusion,   */
 		     /* on met a jour les copies de cet element.          */
 		     RedisplayCopies (pEl, pSelDoc, TRUE);
@@ -760,9 +760,9 @@ View                view;
       /* pas d'element protege', on peut modifier la presentation */
      {
 	if (view > 100)
-	   pAb = PaveDeElem (pFirstSel, 1);
+	   pAb = AbsBoxOfEl (pFirstSel, 1);
 	else
-	   pAb = PaveDeElem (pFirstSel, view);
+	   pAb = AbsBoxOfEl (pFirstSel, view);
 
 	if (pAb != NULL)
 	  {
@@ -915,9 +915,9 @@ View                view;
      {
 	/* recherche le pave concerne */
 	if (view > 100)
-	   pAb = PaveDeElem (pFirstSel, 1);
+	   pAb = AbsBoxOfEl (pFirstSel, 1);
 	else
-	   pAb = PaveDeElem (pFirstSel, view);
+	   pAb = AbsBoxOfEl (pFirstSel, view);
 
 	if (pAb != NULL)
 	  {
@@ -1056,9 +1056,9 @@ View                view;
      {
 	/* recherche le pave concerne */
 	if (view > 100)
-	   pAb = PaveDeElem (pFirstSel, 1);
+	   pAb = AbsBoxOfEl (pFirstSel, 1);
 	else
-	   pAb = PaveDeElem (pFirstSel, view);
+	   pAb = AbsBoxOfEl (pFirstSel, view);
 
 	if (pAb != NULL)
 	  {

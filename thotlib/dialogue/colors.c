@@ -285,13 +285,13 @@ int                 y;
 	if (button == Button1)
 	  {
 	     /* couleur de trace' standard */
-	     ChangeCouleur (-1, FALSE);
+	     ModifyColor (-1, FALSE);
 	     ThotSelectPalette (LastBg, -1);
 	  }
 	else
 	  {
 	     /* couleur de fond standard */
-	     ChangeCouleur (-1, TRUE);
+	     ModifyColor (-1, TRUE);
 	     ThotSelectPalette (-1, LastFg);
 	  }
 	return;
@@ -303,13 +303,13 @@ int                 y;
    if (button == Button1)
      {
 	/* selectionne la couleur de trace' */
-	ChangeCouleur (color, FALSE);
+	ModifyColor (color, FALSE);
 	ThotSelectPalette (LastBg, color);
      }
    else
      {
 	/* selectionne la couleur de fond */
-	ChangeCouleur (color, TRUE);
+	ModifyColor (color, TRUE);
 	ThotSelectPalette (color, LastFg);
      }
 
@@ -628,9 +628,9 @@ View                view;
 
 	/* recherche le pave concerne */
 	if (view > 100)
-	   pAb = PaveDeElem (pFirstSel, 1);
+	   pAb = AbsBoxOfEl (pFirstSel, 1);
 	else
-	   pAb = PaveDeElem (pFirstSel, view);
+	   pAb = AbsBoxOfEl (pFirstSel, view);
 
 	if (pAb != NULL)
 	   ThotSelectPalette (pAb->AbBackground, pAb->AbForeground);

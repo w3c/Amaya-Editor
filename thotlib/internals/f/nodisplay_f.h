@@ -31,7 +31,7 @@ extern void CacheRemoveImage ( PtrElement element );
 extern int PixelEnPt ( int x );
 extern int PtEnPixel ( int x );
 extern boolean IsASavedElement ( PtrElement pEl );
-extern boolean MemesRegleSpecif ( PtrElement pEl1,
+extern boolean BothHaveNoSpecRules ( PtrElement pEl1,
                                   PtrElement pEl2 );
 extern void UnloadDocument ( PtrDocument * pDoc );
 
@@ -62,7 +62,7 @@ extern void CacheRemoveImage (/* PtrElement element */);
 extern int PixelEnPt (/* int x */);
 extern int PtEnPixel (/* int x */);
 extern boolean IsASavedElement (/* PtrElement pEl */);
-extern boolean MemesRegleSpecif (/* PtrElement pEl1,
+extern boolean BothHaveNoSpecRules (/* PtrElement pEl1,
                                     PtrElement pEl2 */);
 extern void UnloadDocument (/* PtrDocument * pDoc */);
 

@@ -76,7 +76,7 @@ extern void TransmetValCompt ( PtrElement pEl,
                                int counter,
                                PtrPSchema pSchP,
                                PtrSSchema pSchS );
-extern void MajNumeros ( PtrElement pElBegin,
+extern void UpdateNumbers ( PtrElement pElBegin,
                          PtrElement pElModif,
                          PtrDocument pDoc,
                          boolean redisp );
@@ -167,7 +167,7 @@ extern void TransmetValCompt (/* PtrElement pEl,
                                  int counter,
                                  PtrPSchema pSchP,
                                  PtrSSchema pSchS */);
-extern void MajNumeros (/* PtrElement pElBegin,
+extern void UpdateNumbers (/* PtrElement pElBegin,
                            PtrElement pElModif,
                            PtrDocument pDoc,
                            boolean redisp */);

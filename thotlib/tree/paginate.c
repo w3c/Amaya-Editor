@@ -313,7 +313,7 @@ static boolean AbortPageSelection(pDoc, schView, firstSelection, lastSelection, 
 			  /* meme langue */
 			  if (MemesAttributs(first, pEl2))
 			    /* memes attributs */
-			    if (MemesRegleSpecif(first, pEl2))
+			    if (BothHaveNoSpecRules(first, pEl2))
 			      /* meme present. */
 			      /* les elements vont fusionner, on selectionne le 1er */
 			      {
@@ -359,7 +359,7 @@ static boolean AbortPageSelection(pDoc, schView, firstSelection, lastSelection, 
 			  /* meme langue */
 			  if (MemesAttributs(last, pEl2))
 			    /* memes attributs */
-			    if (MemesRegleSpecif(last,pEl2))
+			    if (BothHaveNoSpecRules(last,pEl2))
 			      /* meme present. */
 			      /* les elements vont fusionner, on selectionne le 1er */
 			      {
@@ -641,7 +641,7 @@ static	void DisplaySelectPages (pDoc, firstPage, view, Assoc, sel, firstSelectio
   /* met a jour les numeros qui changent dans les autres vues a cause */
   /* de la creation des nouvelles marques de page */
   if (firstPage != NULL)
-    MajNumeros(NextElement(firstPage), firstPage, pDoc, TRUE);
+    UpdateNumbers(NextElement(firstPage), firstPage, pDoc, TRUE);
 
 } /* DisplaySelectPages */
 #endif /* PAGINEETIMPRIME */
@@ -1127,7 +1127,7 @@ static PtrElement InsertMark(pAb, frame, nbView, origCutAbsBox, absBoxTooHigh, s
               /* message indiquant la progression du formatage */
               pEl1->ElPageNumber = pagesCounter;
             else  /* calcule le numero de page */
-              pEl1->ElPageNumber = ComptVal(cpt, pElPage->ElStructSchema, pSchP,
+              pEl1->ElPageNumber = CounterVal(cpt, pElPage->ElStructSchema, pSchP,
                                pElPage, schView);
    }	    
   /* envoie l'evenement ElemNew.Post */
@@ -1283,7 +1283,7 @@ static PtrElement InsertMark(pAb, frame, nbView, origCutAbsBox, absBoxTooHigh, s
       pEl1->ElPageNumber = pagesCounter;
     } 
   else	/* calcule le numero de page */
-    pEl1->ElPageNumber = ComptVal(cpt, pElPage->ElStructSchema, pSchP,
+    pEl1->ElPageNumber = CounterVal(cpt, pElPage->ElStructSchema, pSchP,
 			       pElPage, schView);
   /* envoie l'evenement ElemNew.Post */
 #ifndef PAGINEETIMPRIME
@@ -2463,7 +2463,7 @@ void AddLastPageBreak(pRootEl, schView, pDoc, withAPP)
 	   pElPage->ElPageNumber = 1;
 	else
 	   /* calcule le numero de page */
-	   pElPage->ElPageNumber = ComptVal(cpt, pElPage->ElStructSchema, pSchP,
+	   pElPage->ElPageNumber = CounterVal(cpt, pElPage->ElStructSchema, pSchP,
 					 pElPage, schView);
 #ifndef PAGINEETIMPRIME
 	/* envoie l'evenement ElemNew.Post */
@@ -2766,7 +2766,7 @@ WholePageHeight = 0;
    }
  else        /* calcule le numero de page */
    pEl1->ElPageNumber =
-     ComptVal(cpt, pEl1->ElStructSchema, pSchP, pP->AbElement,schView);
+     CounterVal(cpt, pEl1->ElStructSchema, pSchP, pP->AbElement,schView);
         /* affiche un message avec le numero de page */
  DisplayPageMsg (pDoc, pRootEl, pP->AbElement, schView, Assoc, &isFirstPage)
 
@@ -3127,14 +3127,14 @@ WholePageHeight = 0;
 		  {
 		    /* calcule le numero de page */
 		    pEl1->ElPageNumber = 
-		      ComptVal(cpt, pEl1->ElStructSchema, pSchP, pP->AbElement, schView);
+		      CounterVal(cpt, pEl1->ElStructSchema, pSchP, pP->AbElement, schView);
 		    /* on met a jour les boites de presentation des compteurs des */
 		    /* pages suivantes dans le cas de la pagination depuis l'impression */
 		    /* cet appel est fait tout a la fin dans le cas d'une pagination */
 		    /* normale */
 
 #ifdef PAGINEETIMPRIME
-		    MajNumeros(NextElement(pEl1), pEl1, pDoc, TRUE);
+		    UpdateNumbers(NextElement(pEl1), pEl1, pDoc, TRUE);
 		    /* serait-ce plus rapide si on faisait durectement l'appel : */
 		    /* ChngBoiteCompteur(pEl1, pDoc, cpt, pSchP, pEl1->ElStructSchema, TRUE); */
 #endif PAGINEETIMPRIME

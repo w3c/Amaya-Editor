@@ -837,7 +837,7 @@ Document            document;
 		    if (pEl2->ElStructSchema->SsRule[pEl2->ElTypeNumber - 1].SrConstruct != CsConstant)
 		       if (MemesAttributs ((PtrElement) element, pEl2))
 			  if (((PtrElement) element)->ElSource == NULL && pEl2->ElSource == NULL)
-			     if (MemesRegleSpecif ((PtrElement) element, pEl2))
+			     if (BothHaveNoSpecRules ((PtrElement) element, pEl2))
 			       {
 #ifndef NODISPLAY
 				  /* destroy the second element of the text */

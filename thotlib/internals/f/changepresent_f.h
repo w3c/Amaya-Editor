@@ -11,24 +11,24 @@ extern int RuleSetIn ( int num,
 extern void RuleSetPut ( RuleSet RuleS1,
                          int num );
 extern void RuleSetClr ( RuleSet RuleS1 );
-extern boolean MemesRegleSpecif ( PtrElement pEl1,
+extern boolean BothHaveNoSpecRules ( PtrElement pEl1,
                                   PtrElement pEl2 );
-extern PtrAbstractBox PaveDeElem ( PtrElement pEl,
+extern PtrAbstractBox AbsBoxOfEl ( PtrElement pEl,
                                    int view );
-extern void NouvPosition ( PtrAbstractBox pAb,
+extern void NewPosition ( PtrAbstractBox pAb,
                            int deltaX,
                            int deltaY,
                            int frame,
                            boolean display );
-extern void NouvDimension ( PtrAbstractBox pAb,
+extern void NewDimension ( PtrAbstractBox pAb,
                             int deltaX,
                             int deltaY,
                             int frame,
                             boolean display );
-extern void ApplNouvRegle ( PtrDocument pDoc,
+extern void ApplyNewRule ( PtrDocument pDoc,
                             PtrPRule pPRule,
                             PtrElement pEl );
-extern void ModifGraphiques ( PtrElement pEl,
+extern void ModifyGraphics ( PtrElement pEl,
                               PtrDocument pDoc,
                               int viewToApply,
                               boolean modifLineStyle,
@@ -42,9 +42,9 @@ extern void ModifGraphiques ( PtrElement pEl,
                               int ColorBackground,
                               boolean modifLineColor,
                               int LineColor );
-extern void ChangeCouleur ( int colorNum,
+extern void ModifyColor ( int colorNum,
                             boolean Background );
-extern void ModifCaracteres ( PtrElement pEl,
+extern void ModifyChar ( PtrElement pEl,
                               PtrDocument pDoc,
                               int viewToApply,
                               boolean modifFamily,
@@ -57,7 +57,7 @@ extern void ModifCaracteres ( PtrElement pEl,
                               int underline,
                               boolean modifWeight,
                               int weightUnderline );
-extern void ModifLignes ( PtrElement pEl,
+extern void ModifyLining ( PtrElement pEl,
                           PtrDocument pDoc,
                           int viewToApply,
                           boolean modifAdjust,
@@ -70,11 +70,11 @@ extern void ModifLignes ( PtrElement pEl,
                           int LineSpacing,
                           boolean modifHyphen,
                           boolean Hyphenate );
-extern void AppliqueRegleStandard ( PtrElement pEl,
+extern void ApplyStandardRule ( PtrElement pEl,
                                     PtrDocument pDoc,
                                     PRuleType ruleType,
                                     int viewSch );
-extern void SupprPresSpec ( PtrElement pElRoot,
+extern void RemoveSpecPresTree ( PtrElement pElRoot,
                             PtrDocument pDoc,
                             RuleSet RulesS,
                             int viewToApply );
@@ -86,24 +86,24 @@ extern int RuleSetIn (/* int num,
 extern void RuleSetPut (/* RuleSet RuleS1,
                            int num */);
 extern void RuleSetClr (/* RuleSet RuleS1 */);
-extern boolean MemesRegleSpecif (/* PtrElement pEl1,
+extern boolean BothHaveNoSpecRules (/* PtrElement pEl1,
                                     PtrElement pEl2 */);
-extern PtrAbstractBox PaveDeElem (/* PtrElement pEl,
+extern PtrAbstractBox AbsBoxOfEl (/* PtrElement pEl,
                                      int view */);
-extern void NouvPosition (/* PtrAbstractBox pAb,
+extern void NewPosition (/* PtrAbstractBox pAb,
                              int deltaX,
                              int deltaY,
                              int frame,
                              boolean display */);
-extern void NouvDimension (/* PtrAbstractBox pAb,
+extern void NewDimension (/* PtrAbstractBox pAb,
                               int deltaX,
                               int deltaY,
                               int frame,
                               boolean display */);
-extern void ApplNouvRegle (/* PtrDocument pDoc,
+extern void ApplyNewRule (/* PtrDocument pDoc,
                               PtrPRule pPRule,
                               PtrElement pEl */);
-extern void ModifGraphiques (/* PtrElement pEl,
+extern void ModifyGraphics (/* PtrElement pEl,
                                 PtrDocument pDoc,
                                 int viewToApply,
                                 boolean modifLineStyle,
@@ -117,9 +117,9 @@ extern void ModifGraphiques (/* PtrElement pEl,
                                 int ColorBackground,
                                 boolean modifLineColor,
                                 int LineColor */);
-extern void ChangeCouleur (/* int colorNum,
+extern void ModifyColor (/* int colorNum,
                               boolean Background */);
-extern void ModifCaracteres (/* PtrElement pEl,
+extern void ModifyChar (/* PtrElement pEl,
                                 PtrDocument pDoc,
                                 int viewToApply,
                                 boolean modifFamily,
@@ -132,7 +132,7 @@ extern void ModifCaracteres (/* PtrElement pEl,
                                 int underline,
                                 boolean modifWeight,
                                 int weightUnderline */);
-extern void ModifLignes (/* PtrElement pEl,
+extern void ModifyLining (/* PtrElement pEl,
                             PtrDocument pDoc,
                             int viewToApply,
                             boolean modifAdjust,
@@ -145,11 +145,11 @@ extern void ModifLignes (/* PtrElement pEl,
                             int LineSpacing,
                             boolean modifHyphen,
                             boolean Hyphenate */);
-extern void AppliqueRegleStandard (/* PtrElement pEl,
+extern void ApplyStandardRule (/* PtrElement pEl,
                                       PtrDocument pDoc,
                                       PRuleType ruleType,
                                       int viewSch */);
-extern void SupprPresSpec (/* PtrElement pElRoot,
+extern void RemoveSpecPresTree (/* PtrElement pElRoot,
                               PtrDocument pDoc,
                               RuleSet RulesS,
                               int viewToApply */);

@@ -4013,7 +4013,7 @@ int                 view;
 	     else
 		/* calcule le nouveau numero de page */
 	       {
-		  pEl1->ElPageNumber = ComptVal (cpt, pPage->ElStructSchema, pSchP, pPage, view);
+		  pEl1->ElPageNumber = CounterVal (cpt, pPage->ElStructSchema, pSchP, pPage, view);
 		  if (pEl1->ElPageNumber == numpageprec)
 		     /* le numero de page n'a pas change', on s'arrete */
 		     stop = TRUE;
@@ -4058,7 +4058,7 @@ boolean             redisp;
 	    && pAbbox1->AbPSchema == pSchP)
 	   /* fait reafficher le pave de presentation si le contenu a */
 	   /* change' */
-	   if (NouvVariable (pSchP->PsPresentBox[boxType - 1].PbContVariable, pSS, pSchP, pAb, pDoc))
+	   if (NewVariable (pSchP->PsPresentBox[boxType - 1].PbContVariable, pSS, pSchP, pAb, pDoc))
 	      /* et si le pave a deja ete traite' par le mediateur */
 	      if (!pAb->AbNew)
 		{
@@ -4602,7 +4602,7 @@ PtrSSchema        pSchS;
 	     pAttr->AeAttrSSchema = pElIncluded->ElStructSchema;
 	     pAttr->AeAttrNum = att;
 	     pAttr->AeAttrType = AtNumAttr;
-	     pAttr->AeAttrValue = ComptVal (counter, pSchS, pSchP, pEl, 1);
+	     pAttr->AeAttrValue = CounterVal (counter, pSchS, pSchP, pEl, 1);
 	     AttachAttrWithValue (pElIncluded, pDocIncluded, pAttr);
 	     DeleteAttribute (NULL, pAttr);
 	  }
@@ -4933,7 +4933,7 @@ boolean             redisp;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    MajNumeros pour le document dont le contexte pDoc, met a jour  | */
+/* |    UpdateNumbers pour le document dont le contexte pDoc, met a jour  | */
 /* |            et fait reafficher les numeros qui apparaissent a partir| */
 /* |            du sous-arbre pointe par pElBegin (lui-meme compris) et | */
 /* |            qui sont affectes par les elements du sous-arbre        | */
@@ -4941,10 +4941,10 @@ boolean             redisp;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                MajNumeros (PtrElement pElBegin, PtrElement pElModif, PtrDocument pDoc, boolean redisp)
+void                UpdateNumbers (PtrElement pElBegin, PtrElement pElModif, PtrDocument pDoc, boolean redisp)
 
 #else  /* __STDC__ */
-void                MajNumeros (pElBegin, pElModif, pDoc, redisp)
+void                UpdateNumbers (pElBegin, pElModif, pDoc, redisp)
 PtrElement          pElBegin;
 PtrElement          pElModif;
 PtrDocument         pDoc;
@@ -5774,7 +5774,7 @@ PtrElement         *pLib;
 		 if (!pEl2->ElHolophrast && !pEl1->ElHolophrast)
 		    if (MemesAttributs (pEl, pEl2))
 		       if (pEl->ElSource == NULL && pEl2->ElSource == NULL)
-			  if (MemesRegleSpecif (pEl, pEl2))
+			  if (BothHaveNoSpecRules (pEl, pEl2))
 			     if (pEl1->ElStructSchema->SsRule[pEl1->ElTypeNumber - 1].SrConstruct !=
 				 CsConstant)
 				if (pEl2->ElStructSchema->SsRule[pEl2->ElTypeNumber - 1].SrConstruct

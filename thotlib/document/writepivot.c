@@ -1008,7 +1008,7 @@ boolean             subTree;
 							     if ((*pEl)->ElNext->ElStructSchema->SsRule[(*pEl)->ElNext->ElTypeNumber - 1].SrConstruct != CsConstant)
 								if (MemesAttributs (*pEl, (*pEl)->ElNext))
 								   /* il a les memes attributs */
-								   if (MemesRegleSpecif (*pEl, (*pEl)->ElNext))
+								   if (BothHaveNoSpecRules (*pEl, (*pEl)->ElNext))
 								      /* il a les memes regles de */
 								      /* presentation specifique  */
 								      if ((*pEl)->ElNext->ElComment == NULL)

@@ -138,9 +138,9 @@ boolean             LinkReference ()
 }
 
 #ifdef __STDC__
-void                NouvPosition (PtrAbstractBox pAb, int DeltaX, int DeltaY, int frame, boolean Disp)
+void                NewPosition (PtrAbstractBox pAb, int DeltaX, int DeltaY, int frame, boolean Disp)
 #else  /* __STDC__ */
-void                NouvPosition (pAb, DeltaX, DeltaY, frame, Disp)
+void                NewPosition (pAb, DeltaX, DeltaY, frame, Disp)
 PtrAbstractBox             pAb;
 int                 DeltaX;
 int                 DeltaY;
@@ -152,9 +152,9 @@ boolean             Disp;
 }
 
 #ifdef __STDC__
-void                NouvDimension (PtrAbstractBox pAb, int DeltaX, int DeltaY, int frame, boolean Disp)
+void                NewDimension (PtrAbstractBox pAb, int DeltaX, int DeltaY, int frame, boolean Disp)
 #else  /* __STDC__ */
-void                NouvDimension (pAb, DeltaX, DeltaY, frame, Disp)
+void                NewDimension (pAb, DeltaX, DeltaY, frame, Disp)
 PtrAbstractBox             pAb;
 int                 DeltaX;
 int                 DeltaY;
@@ -166,9 +166,9 @@ boolean             Disp;
 }
 
 #ifdef __STDC__
-boolean             MemesRegleSpecif (PtrElement pEl1, PtrElement pEl2)
+boolean             BothHaveNoSpecRules (PtrElement pEl1, PtrElement pEl2)
 #else  /* __STDC__ */
-boolean             MemesRegleSpecif (pEl1, pEl2)
+boolean             BothHaveNoSpecRules (pEl1, pEl2)
 PtrElement          pEl1;
 PtrElement          pEl2;
 

@@ -1551,7 +1551,7 @@ boolean             creation;
 	/* reaffiche les paves qui copient le nouvel element */
 	RedisplayCopies (newElement, pDoc, (documentDisplayMode[document - 1] == DisplayImmediately));
 	/* reaffiche les numeros suivants qui changent */
-	MajNumeros (newElement, newElement, pDoc, (documentDisplayMode[document - 1] == DisplayImmediately));
+	UpdateNumbers (newElement, newElement, pDoc, (documentDisplayMode[document - 1] == DisplayImmediately));
      }
 }
 
@@ -1947,7 +1947,7 @@ Document            document;
      {
 	/* il ne faut pas reafficher les numeros mis a jour si on est */
 	/* en mode d'affichage differe'. Or, lorsque PageHeight != 0, */
-	/* MajNumeros ne reaffiche pas les numeros qui changent. */
+	/* UpdateNumbers ne reaffiche pas les numeros qui changent. */
 #ifdef __COLPAGE__
 	savePageHeight = BreakPageHeight;
 	if (documentDisplayMode[document - 1] == DeferredDisplay)
@@ -1959,7 +1959,7 @@ Document            document;
 #endif /* __COLPAGE__ */
 	while (pE != NULL)
 	  {
-	     MajNumeros (pNext, pE, pDoc, (documentDisplayMode[document - 1] == DisplayImmediately));
+	     UpdateNumbers (pNext, pE, pDoc, (documentDisplayMode[document - 1] == DisplayImmediately));
 	     pE = pE->ElNext;
 	  }
 #ifdef __COLPAGE__
@@ -2688,7 +2688,7 @@ PtrPRule            pRule;
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
       return;
-   ApplNouvRegle (LoadedDocument[document - 1], pRule, pEl);
+   ApplyNewRule (LoadedDocument[document - 1], pRule, pEl);
    AbstractImageUpdated (LoadedDocument[document - 1]);
    RedisplayCommand (document);
    /* la nouvelle regle de presentation doit etre prise en compte dans */
@@ -2721,7 +2721,7 @@ int                 view;
    /* si le document est en mode de non calcul de l'image, on ne fait rien */
    if (documentDisplayMode[document - 1] == NoComputedDisplay)
       return;
-   AppliqueRegleStandard (pEl, LoadedDocument[document - 1], typeRuleP, view);
+   ApplyStandardRule (pEl, LoadedDocument[document - 1], typeRuleP, view);
    AbstractImageUpdated (LoadedDocument[document - 1]);
    RedisplayCommand (document);
    /* le retrait de la regle de presentation doit etre pris en compte */

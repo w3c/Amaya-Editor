@@ -1605,7 +1605,7 @@ int                 ym;
 		  /* On transmet la modification a l'editeur */
 		  x = x + pFrame->FrXOrg - pBox->BxXOrg;
 		  y = y + pFrame->FrYOrg - pBox->BxYOrg;
-		  NouvPosition (pBox->BxAbstractBox, x, y, frame, TRUE);
+		  NewPosition (pBox->BxAbstractBox, x, y, frame, TRUE);
 	       }
 	  }
 	else
@@ -1861,7 +1861,7 @@ int                 ym;
 	     /* On transmet la modification a l'editeur */
 	     width = width - pBox->BxWidth;
 	     height = height - pBox->BxHeight;
-	     NouvDimension (pBox->BxAbstractBox, width, height, frame, TRUE);
+	     NewDimension (pBox->BxAbstractBox, width, height, frame, TRUE);
 	  }
 	else
 	   /* On n'a pas trouve de boite modifiable */
@@ -1996,10 +1996,10 @@ int                 frame;
 	pAb->AbHeight.DimUserSpecified = FALSE;
 	x = x + pFrame->FrXOrg - pBox->BxXOrg;
 	y = y + pFrame->FrYOrg - pBox->BxYOrg;
-	NouvPosition (pAb, x, y, frame, TRUE);
+	NewPosition (pAb, x, y, frame, TRUE);
 	width = width - pBox->BxWidth;
 	height = height - pBox->BxHeight;
-	NouvDimension (pAb, width, height, frame, TRUE);
+	NewDimension (pAb, width, height, frame, TRUE);
      }
 
    /* Traitement de la creation interactive termine */

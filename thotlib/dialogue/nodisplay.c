@@ -177,9 +177,9 @@ PtrElement          pEl;
 }
 
 #ifdef __STDC__
-boolean             MemesRegleSpecif (PtrElement pEl1, PtrElement pEl2)
+boolean             BothHaveNoSpecRules (PtrElement pEl1, PtrElement pEl2)
 #else  /* __STDC__ */
-boolean             MemesRegleSpecif (pEl1, pEl2)
+boolean             BothHaveNoSpecRules (pEl1, pEl2)
 PtrElement          pEl1;
 PtrElement          pEl2;
 

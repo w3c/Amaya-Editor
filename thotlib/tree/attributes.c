@@ -241,7 +241,7 @@ PtrAttribute         pAttr;
 	if (pAbsBox->AbTypeNum == boxNum && pAbsBox->AbPSchema == pPSchema)
 	   /* c'est bien un pave du type cherche' */
 	   /* recalcule la valeur de la variable de presentation */
-	   if (NouvVariable (pPSchema->PsPresentBox[boxNum - 1].PbContVariable,
+	   if (NewVariable (pPSchema->PsPresentBox[boxNum - 1].PbContVariable,
 			     pAttr->AeAttrSSchema, pPSchema, pAbsBox, pDoc))
 
 	      /* la variable de presentation a change' de valeur */

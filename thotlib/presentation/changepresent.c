@@ -654,14 +654,14 @@ void RuleSetClr(RuleS1)
 }
 
 /* ---------------------------------------------------------------------- */
-/* |	MemesRegleSpecif retourne Vrai si aucun des deux elements pointes par	| */
+/* |	BothHaveNoSpecRules retourne Vrai si aucun des deux elements pointes par	| */
 /* |		pEl1 et pEl2 possedent des regles de presentation	| */
 /* |		specifique.						| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-boolean MemesRegleSpecif(PtrElement pEl1, PtrElement pEl2)
+boolean BothHaveNoSpecRules(PtrElement pEl1, PtrElement pEl2)
 #else /* __STDC__ */
-boolean MemesRegleSpecif(pEl1, pEl2)
+boolean BothHaveNoSpecRules(pEl1, pEl2)
 	PtrElement pEl1;
 	PtrElement pEl2;
 #endif /* __STDC__ */
@@ -678,14 +678,14 @@ boolean MemesRegleSpecif(pEl1, pEl2)
 
 
 /* ---------------------------------------------------------------------- */
-/* |	PaveDeElem retourne un pointeur sur le pave de l'element pEl	| */
+/* |	AbsBoxOfEl retourne un pointeur sur le pave de l'element pEl	| */
 /* |		qui appartient a la view view				| */
 /* |		et qui n'est pas un pave de presentation.		| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-PtrAbstractBox PaveDeElem(PtrElement pEl, int view)
+PtrAbstractBox AbsBoxOfEl(PtrElement pEl, int view)
 #else /* __STDC__ */
-PtrAbstractBox PaveDeElem(pEl, view)
+PtrAbstractBox AbsBoxOfEl(pEl, view)
 	PtrElement pEl;
 	int view;
 #endif /* __STDC__ */
@@ -715,7 +715,7 @@ PtrAbstractBox PaveDeElem(pEl, view)
 
 
 /* ---------------------------------------------------------------------- */
-/* |	NouvPosition est appele' par le Mediateur, lorsque		| */
+/* |	NewPosition est appele' par le Mediateur, lorsque		| */
 /* |		l'utilisateur deplace une boite a l'ecran.		| */
 /* |		pAb est le pave deplace' et deltaX et deltaY		| */
 /* |		representent l'amplitude du deplacement en pixels	| */
@@ -724,9 +724,9 @@ PtrAbstractBox PaveDeElem(pEl, view)
 /* |		recalculer l'image.					| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void NouvPosition(PtrAbstractBox pAb, int deltaX, int deltaY, int frame, boolean display)
+void NewPosition(PtrAbstractBox pAb, int deltaX, int deltaY, int frame, boolean display)
 #else /* __STDC__ */
-void NouvPosition(pAb, deltaX, deltaY, frame, display)
+void NewPosition(pAb, deltaX, deltaY, frame, display)
 	PtrAbstractBox pAb;
 	int deltaX;
 	int deltaY;
@@ -1087,7 +1087,7 @@ void NouvPosition(pAb, deltaX, deltaY, frame, display)
 
 
 /* ---------------------------------------------------------------------- */
-/* |	NouvDimension est appele par le Mediateur, lorsque l'utilisateur| */
+/* |	NewDimension est appele par le Mediateur, lorsque l'utilisateur| */
 /* |		deforme une boite a l'ecran. pAb est le pave deforme'	| */
 /* |		et deltaX,deltaY representent l'amplitude de la		| */
 /* |		deformation en pixels.					| */
@@ -1096,9 +1096,9 @@ void NouvPosition(pAb, deltaX, deltaY, frame, display)
 /* |		recalculer l'image.					| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void NouvDimension(PtrAbstractBox pAb, int deltaX, int deltaY, int frame, boolean display)
+void NewDimension(PtrAbstractBox pAb, int deltaX, int deltaY, int frame, boolean display)
 #else /* __STDC__ */
-void NouvDimension(pAb, deltaX, deltaY, frame, display)
+void NewDimension(pAb, deltaX, deltaY, frame, display)
 	PtrAbstractBox pAb;
 	int deltaX;
 	int deltaY;
@@ -1478,13 +1478,13 @@ void NouvDimension(pAb, deltaX, deltaY, frame, display)
 
 
 /* ---------------------------------------------------------------------- */
-/* |	ApplNouvRegle applique au pave courant la regle de		| */
+/* |	ApplyNewRule applique au pave courant la regle de		| */
 /* |		presentation specifique qui vient d'etre creee.		| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void ApplNouvRegle(PtrDocument pDoc, PtrPRule pPRule, PtrElement pEl)
+void ApplyNewRule(PtrDocument pDoc, PtrPRule pPRule, PtrElement pEl)
 #else /* __STDC__ */
-void ApplNouvRegle(pDoc, pPRule, pEl)
+void ApplyNewRule(pDoc, pPRule, pEl)
 	PtrDocument pDoc;
 	PtrPRule pPRule;
 	PtrElement pEl;
@@ -1574,14 +1574,14 @@ void ApplNouvRegle(pDoc, pPRule, pEl)
 
 
 /* ---------------------------------------------------------------------- */
-/* |	ModifGraphiques	applique a l'element pEl les modifications sur	| */
+/* |	ModifyGraphics	applique a l'element pEl les modifications sur	| */
 /* |		les graphiques demandes par l'utilisateur.		| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void ModifGraphiques(PtrElement pEl, PtrDocument pDoc, int viewToApply, boolean modifLineStyle, char LineStyle, boolean modifLineWeight, int LineWeight, TypeUnit LineWeightUnit, boolean modifFillPattern, int FillPattern, boolean modifColorBackground, int ColorBackground, boolean modifLineColor, int LineColor)
+void ModifyGraphics(PtrElement pEl, PtrDocument pDoc, int viewToApply, boolean modifLineStyle, char LineStyle, boolean modifLineWeight, int LineWeight, TypeUnit LineWeightUnit, boolean modifFillPattern, int FillPattern, boolean modifColorBackground, int ColorBackground, boolean modifLineColor, int LineColor)
 
 #else /* __STDC__ */
-void ModifGraphiques(pEl, pDoc, viewToApply, modifLineStyle, LineStyle, modifLineWeight, LineWeight, LineWeightUnit, modifFillPattern, FillPattern, modifColorBackground, ColorBackground, modifLineColor, LineColor)
+void ModifyGraphics(pEl, pDoc, viewToApply, modifLineStyle, LineStyle, modifLineWeight, LineWeight, LineWeightUnit, modifFillPattern, FillPattern, modifColorBackground, ColorBackground, modifLineColor, LineColor)
 	PtrElement pEl;
 	PtrDocument pDoc;
 	int viewToApply;
@@ -1619,7 +1619,7 @@ void ModifGraphiques(pEl, pDoc, viewToApply, modifLineStyle, LineStyle, modifLin
         pPRule->PrChrValue = LineStyle;
         pDoc->DocModified = TRUE;	/* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
-        ApplNouvRegle(pDoc, pPRule, pEl);
+        ApplyNewRule(pDoc, pPRule, pEl);
 	PRuleMessagePost(pEl, pPRule, pDoc, isNew);
 	}
     }
@@ -1640,7 +1640,7 @@ void ModifGraphiques(pEl, pDoc, viewToApply, modifLineStyle, LineStyle, modifLin
         pPRule->PrMinValue = LineWeight;
         pDoc->DocModified = TRUE;	/* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
-        ApplNouvRegle(pDoc, pPRule, pEl);
+        ApplyNewRule(pDoc, pPRule, pEl);
 	PRuleMessagePost(pEl, pPRule, pDoc, isNew);
 	}
     }
@@ -1660,7 +1660,7 @@ void ModifGraphiques(pEl, pDoc, viewToApply, modifLineStyle, LineStyle, modifLin
         pPRule->PrAttrValue = FALSE;
         pDoc->DocModified = TRUE; /* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
-        ApplNouvRegle(pDoc, pPRule, pEl);
+        ApplyNewRule(pDoc, pPRule, pEl);
 	PRuleMessagePost(pEl, pPRule, pDoc, isNew);
 	}
     }
@@ -1680,7 +1680,7 @@ void ModifGraphiques(pEl, pDoc, viewToApply, modifLineStyle, LineStyle, modifLin
         pPRule->PrAttrValue = FALSE;
         pDoc->DocModified = TRUE; /* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
-        ApplNouvRegle(pDoc, pPRule, pEl);
+        ApplyNewRule(pDoc, pPRule, pEl);
 	PRuleMessagePost(pEl, pPRule, pDoc, isNew);
 	}
     }
@@ -1700,7 +1700,7 @@ void ModifGraphiques(pEl, pDoc, viewToApply, modifLineStyle, LineStyle, modifLin
         pPRule->PrAttrValue = FALSE;
         pDoc->DocModified = TRUE; /* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
-        ApplNouvRegle(pDoc, pPRule, pEl);
+        ApplyNewRule(pDoc, pPRule, pEl);
 	PRuleMessagePost(pEl, pPRule, pDoc, isNew);
 	}
     }
@@ -1761,7 +1761,7 @@ static void RemoveSpecifPres(pEl, pDoc, rules, viewToApply)
 	  /* applique la regle standard de meme type que la regle courante */
 	  /* aux paves de l'element qui existent dans les vues de meme type */
 	  /* que la view active. */
-	  AppliqueRegleStandard(pEl, pDoc, ruleType, viewSch);
+	  ApplyStandardRule(pEl, pDoc, ruleType, viewSch);
 	  notifyPres.event = TtePRuleDelete;
 	  notifyPres.document = (Document)IdentDocument(pDoc);
 	  notifyPres.element = (Element)pEl;
@@ -1775,16 +1775,16 @@ static void RemoveSpecifPres(pEl, pDoc, rules, viewToApply)
 }
 
 /* ---------------------------------------------------------------------- */
-/* |	ChangeCouleur change la presentation specifique de la couleur	| */
+/* |	ModifyColor change la presentation specifique de la couleur	| */
 /* |	de fond ou de trace' (selon Background) pour tous les elements de la	| */
 /* |	selection courante.						| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void ChangeCouleur(int colorNum, boolean Background)
+void ModifyColor(int colorNum, boolean Background)
 
 #else /* __STDC__ */
-void ChangeCouleur(colorNum, Background)
+void ModifyColor(colorNum, Background)
 	int colorNum;
 	boolean Background;
 #endif /* __STDC__ */
@@ -1828,7 +1828,7 @@ void ChangeCouleur(colorNum, Background)
 		  if (Background)
 		    /* on change la couleur de fond avec la souris */
 		    {
-		      pAb = PaveDeElem(pEl, SelectedView);
+		      pAb = AbsBoxOfEl(pEl, SelectedView);
 		      if (pAb != NULL)
 			if (pAb->AbFillPattern < 2)
 			  /* on force la trame backgroundcolor si la trame du pave */
@@ -1852,7 +1852,7 @@ void ChangeCouleur(colorNum, Background)
 		      RemoveSpecifPres(pEl, SelDoc, rulesS, SelectedView);
 		    }
 		  else
-		    ModifGraphiques(pEl, SelDoc, SelectedView, FALSE, ' ', FALSE, 0, FALSE,
+		    ModifyGraphics(pEl, SelDoc, SelectedView, FALSE, ' ', FALSE, 0, FALSE,
 				  modifFillPattern, fillPatternNum, Background, colorNum, !Background, colorNum);
 		  /* si on est dans un element copie' par inclusion,   */
 		  /* on met a jour les copies de cet element. */
@@ -1869,14 +1869,14 @@ void ChangeCouleur(colorNum, Background)
 
 
 /* ---------------------------------------------------------------------- */
-/* |	ModifCaracteres	applique a l'element pEl les modifications sur	| */
+/* |	ModifyChar	applique a l'element pEl les modifications sur	| */
 /* |		les caracteres demandes par l'utilisateur.		| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void ModifCaracteres(PtrElement pEl, PtrDocument pDoc, int viewToApply, boolean modifFamily, char family, boolean modifStyle, int charStyle, boolean modifsize, int size, boolean modifUnderline, int underline, boolean modifWeight, int weightUnderline)
+void ModifyChar(PtrElement pEl, PtrDocument pDoc, int viewToApply, boolean modifFamily, char family, boolean modifStyle, int charStyle, boolean modifsize, int size, boolean modifUnderline, int underline, boolean modifWeight, int weightUnderline)
 
 #else /* __STDC__ */
-void ModifCaracteres(pEl, pDoc, viewToApply, modifFamily, family, modifStyle, charStyle, modifsize, size, modifUnderline, underline, modifWeight, weightUnderline)
+void ModifyChar(pEl, pDoc, viewToApply, modifFamily, family, modifStyle, charStyle, modifsize, size, modifUnderline, underline, modifWeight, weightUnderline)
 	PtrElement pEl;
 	PtrDocument pDoc;
 	int viewToApply;
@@ -1914,7 +1914,7 @@ void ModifCaracteres(pEl, pDoc, viewToApply, modifFamily, family, modifStyle, ch
         pPRule->PrChrValue = family;
         pDoc->DocModified = TRUE;	/* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
-        ApplNouvRegle(pDoc, pPRule, pEl);
+        ApplyNewRule(pDoc, pPRule, pEl);
 	PRuleMessagePost(pEl, pPRule, pDoc, isNew);
 	}
     }
@@ -1956,7 +1956,7 @@ void ModifCaracteres(pEl, pDoc, viewToApply, modifFamily, family, modifStyle, ch
 	  }
         pDoc->DocModified = TRUE;	/* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
-        ApplNouvRegle(pDoc, pPRule, pEl);
+        ApplyNewRule(pDoc, pPRule, pEl);
 	PRuleMessagePost(pEl, pPRule, pDoc, isNew);
 	}
     }
@@ -1977,7 +1977,7 @@ void ModifCaracteres(pEl, pDoc, viewToApply, modifFamily, family, modifStyle, ch
         pPRule->PrMinValue = size;
         pDoc->DocModified = TRUE; /* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
-        ApplNouvRegle(pDoc, pPRule, pEl);
+        ApplyNewRule(pDoc, pPRule, pEl);
         PRuleMessagePost(pEl, pPRule, pDoc, isNew);
 	}
     }
@@ -2014,7 +2014,7 @@ void ModifCaracteres(pEl, pDoc, viewToApply, modifFamily, family, modifStyle, ch
 	  }
         pDoc->DocModified = TRUE;	/* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
-        ApplNouvRegle(pDoc, pPRule, pEl);
+        ApplyNewRule(pDoc, pPRule, pEl);
 	PRuleMessagePost(pEl, pPRule, pDoc, isNew);
 	}
     }
@@ -2044,7 +2044,7 @@ void ModifCaracteres(pEl, pDoc, viewToApply, modifFamily, family, modifStyle, ch
 	  }
         pDoc->DocModified = TRUE;	/* le document est modifie' */
         /* si le pave existe, applique la nouvelle regle au pave */
-        ApplNouvRegle(pDoc, pPRule, pEl);
+        ApplyNewRule(pDoc, pPRule, pEl);
 	PRuleMessagePost(pEl, pPRule, pDoc, isNew);
 	}
     }
@@ -2052,13 +2052,13 @@ void ModifCaracteres(pEl, pDoc, viewToApply, modifFamily, family, modifStyle, ch
 
 
 /* ---------------------------------------------------------------------- */
-/* |	ModifLignes applique a l'element pEl les modifications		| */
+/* |	ModifyLining applique a l'element pEl les modifications		| */
 /* |		sur la mise en ligne demandes par l'utilisateur.	| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void ModifLignes(PtrElement pEl, PtrDocument pDoc, int viewToApply, boolean modifAdjust, int Adjust, boolean modifJustif, boolean Justif, boolean modifIndent, int ValIndent, boolean modifLineSpacing, int LineSpacing, boolean modifHyphen, boolean Hyphenate)
+void ModifyLining(PtrElement pEl, PtrDocument pDoc, int viewToApply, boolean modifAdjust, int Adjust, boolean modifJustif, boolean Justif, boolean modifIndent, int ValIndent, boolean modifLineSpacing, int LineSpacing, boolean modifHyphen, boolean Hyphenate)
 #else /* __STDC__ */
-void ModifLignes(pEl, pDoc, viewToApply, modifAdjust, Adjust, modifJustif, Justif, modifIndent, ValIndent, modifLineSpacing, LineSpacing, modifHyphen, Hyphenate)
+void ModifyLining(pEl, pDoc, viewToApply, modifAdjust, Adjust, modifJustif, Justif, modifIndent, ValIndent, modifLineSpacing, LineSpacing, modifHyphen, Hyphenate)
 	PtrElement pEl;
 	PtrDocument pDoc;
 	int viewToApply;
@@ -2107,7 +2107,7 @@ void ModifLignes(pEl, pDoc, viewToApply, modifAdjust, Adjust, modifJustif, Justi
 	  break;
 	  }
         pDoc->DocModified = TRUE;	 /* le document est modifie' */
-        ApplNouvRegle(pDoc, pPRule, pEl);
+        ApplyNewRule(pDoc, pPRule, pEl);
 	PRuleMessagePost(pEl, pPRule, pDoc, isNew);
 	}
     }
@@ -2122,7 +2122,7 @@ void ModifLignes(pEl, pDoc, viewToApply, modifAdjust, Adjust, modifJustif, Justi
         pPRule->PrPresMode = PresImmediate;
         pPRule->PrJustify = Justif;
         pDoc->DocModified = TRUE;	/* le document est modifie' */
-        ApplNouvRegle(pDoc, pPRule, pEl);
+        ApplyNewRule(pDoc, pPRule, pEl);
 	PRuleMessagePost(pEl, pPRule, pDoc, isNew);
 	}
     }
@@ -2137,7 +2137,7 @@ void ModifLignes(pEl, pDoc, viewToApply, modifAdjust, Adjust, modifJustif, Justi
         pPRule->PrPresMode = PresImmediate;
         pPRule->PrJustify = Hyphenate;
         pDoc->DocModified = TRUE;	/* le document est modifie' */
-        ApplNouvRegle(pDoc, pPRule, pEl);
+        ApplyNewRule(pDoc, pPRule, pEl);
         PRuleMessagePost(pEl, pPRule, pDoc, isNew);
         }
     }
@@ -2155,7 +2155,7 @@ void ModifLignes(pEl, pDoc, viewToApply, modifAdjust, Adjust, modifJustif, Justi
         pPRule->PrMinValue = ValIndent;
         pDoc->DocModified = TRUE;	
         /* le document est modifie' */
-        ApplNouvRegle(pDoc, pPRule, pEl);
+        ApplyNewRule(pDoc, pPRule, pEl);
 	PRuleMessagePost(pEl, pPRule, pDoc, isNew);
 	}
     }
@@ -2172,7 +2172,7 @@ void ModifLignes(pEl, pDoc, viewToApply, modifAdjust, Adjust, modifJustif, Justi
         pPRule->PrMinAttr = FALSE;
         pPRule->PrMinValue = LineSpacing;
         pDoc->DocModified = TRUE;	/* le document est modifie' */
-        ApplNouvRegle(pDoc, pPRule, pEl);
+        ApplyNewRule(pDoc, pPRule, pEl);
 	PRuleMessagePost(pEl, pPRule, pDoc, isNew);
 	}
     }
@@ -2180,14 +2180,14 @@ void ModifLignes(pEl, pDoc, viewToApply, modifAdjust, Adjust, modifJustif, Justi
 
 
 /* ---------------------------------------------------------------------- */
-/* |	AppliqueRegleStandard	applique a l'element pEl du document	| */
+/* |	ApplyStandardRule	applique a l'element pEl du document	| */
 /* |	pDoc la regle de presentation standard de type ruleType	| */
 /* |	pour la view viewSch.						| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void AppliqueRegleStandard(PtrElement pEl, PtrDocument pDoc, PRuleType ruleType, int viewSch)
+void ApplyStandardRule(PtrElement pEl, PtrDocument pDoc, PRuleType ruleType, int viewSch)
 #else /* __STDC__ */
-void AppliqueRegleStandard(pEl, pDoc, ruleType, viewSch)
+void ApplyStandardRule(pEl, pDoc, ruleType, viewSch)
 	PtrElement pEl;
 	PtrDocument pDoc;
 	PRuleType ruleType;
@@ -2288,14 +2288,14 @@ void AppliqueRegleStandard(pEl, pDoc, ruleType, viewSch)
 }
 
 /* ---------------------------------------------------------------------- */
-/* |	SupprPresSpec supprime les regles de presentation specifiques	| */
+/* |	RemoveSpecPresTree supprime les regles de presentation specifiques	| */
 /* |		contenues dans 'RulesS' attachees aux elements du	| */
 /* |		sous-arbre de racine pElRoot				| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void SupprPresSpec(PtrElement pElRoot, PtrDocument pDoc, RuleSet RulesS, int viewToApply)
+void RemoveSpecPresTree(PtrElement pElRoot, PtrDocument pDoc, RuleSet RulesS, int viewToApply)
 #else /* __STDC__ */
-void SupprPresSpec(pElRoot, pDoc, RulesS, viewToApply)
+void RemoveSpecPresTree(pElRoot, pDoc, RulesS, viewToApply)
 	PtrElement pElRoot;
 	PtrDocument pDoc;
 	RuleSet RulesS;
@@ -2312,7 +2312,7 @@ void SupprPresSpec(pElRoot, pDoc, RulesS, viewToApply)
       while (pEl != NULL)
 	{
 	  /* traite le sous-arbre de ce fils */
-	  SupprPresSpec(pEl, pDoc, RulesS, viewToApply);
+	  RemoveSpecPresTree(pEl, pDoc, RulesS, viewToApply);
 	  /* passe au fils suivant */
 	  pEl = pEl->ElNext;
 	}

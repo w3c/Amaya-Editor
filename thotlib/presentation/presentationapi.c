@@ -812,7 +812,7 @@ Document            document;
 	     else
 		/* View of associated elements */
 		v = 1;
-	     pAb = PaveDeElem ((PtrElement) element, v);
+	     pAb = AbsBoxOfEl ((PtrElement) element, v);
 	     if (pAb == NULL)
 		TtaError (ERR_element_has_no_box);
 	     else
@@ -835,7 +835,7 @@ Document            document;
 		       deltaX = PixelValue (deltaX, unit, pAb);
 		       deltaY = PixelValue (deltaY, unit, pAb);
 		    }
-		  NouvDimension (pAb, deltaX, deltaY, frame, FALSE);
+		  NewDimension (pAb, deltaX, deltaY, frame, FALSE);
 		  RedispNewGeometry (document, (PtrElement) element);
 	       }
 	  }
@@ -894,7 +894,7 @@ TypeUnit            unit;
 	     else
 		/* View of associated elements */
 		v = 1;
-	     pAb = PaveDeElem ((PtrElement) element, v);
+	     pAb = AbsBoxOfEl ((PtrElement) element, v);
 	     if (pAb == NULL)
 		TtaError (ERR_element_has_no_box);
 	     else
@@ -917,7 +917,7 @@ TypeUnit            unit;
 		       deltaX = PixelValue (deltaX, unit, pAb);
 		       deltaY = PixelValue (deltaY, unit, pAb);
 		    }
-		  NouvPosition (pAb, deltaX, deltaY, frame, FALSE);
+		  NewPosition (pAb, deltaX, deltaY, frame, FALSE);
 		  RedispNewGeometry (document, (PtrElement) element);
 	       }
 	  }
@@ -980,7 +980,7 @@ int                *height;
 	     else
 		/* View of associated elements */
 		v = 1;
-	     pAb = PaveDeElem ((PtrElement) element, v);
+	     pAb = AbsBoxOfEl ((PtrElement) element, v);
 	     if (pAb == NULL)
 		TtaError (ERR_element_has_no_box);
 	     else
@@ -1070,7 +1070,7 @@ int                *yCoord;
 	     else
 		/* View of associated elements */
 		v = 1;
-	     pAb = PaveDeElem ((PtrElement) element, v);
+	     pAb = AbsBoxOfEl ((PtrElement) element, v);
 	     if (pAb == NULL)
 		TtaError (ERR_element_has_no_box);
 	     else

@@ -969,7 +969,7 @@ PtrSSchema        pSS;
 	  {
 	     pSchP = pSS->SsPSchema;
 	     if (pSchP != NULL)
-		valcompt = ComptVal (pCond->CoCounter, pSS, pSchP, pElem, view);
+		valcompt = CounterVal (pCond->CoCounter, pSS, pSchP, pElem, view);
 	  }
 	if (pElem != NULL)
 	   switch (pCond->CoCondition)
@@ -1148,7 +1148,7 @@ PtrSSchema        pSS;
 		       if (pCond->CoValCounter == CntMinVal)
 			 {
 			    /* Calcule la valeur mini du compteur */
-			    valmini = MinMaxComptVal (pCond->CoCounter, pSS, pSchP, pElem,
+			    valmini = CounterValMinMax (pCond->CoCounter, pSS, pSchP, pElem,
 						      view, FALSE);
 			    currentCond = (valmini <= pCond->CoMaxCounter) &&
 			       (valmini >= pCond->CoMinCounter);
@@ -1156,7 +1156,7 @@ PtrSSchema        pSS;
 		       else if (pCond->CoValCounter == CntMaxVal)
 			 {
 			    /* Calcule la valeur maxi du compteur */
-			    valmaxi = MinMaxComptVal (pCond->CoCounter, pSS, pSchP, pElem,
+			    valmaxi = CounterValMinMax (pCond->CoCounter, pSS, pSchP, pElem,
 						      view, TRUE);
 			    currentCond = (valmaxi <= pCond->CoMaxCounter) &&
 			       (valmaxi >= pCond->CoMinCounter);
@@ -1496,7 +1496,7 @@ boolean             completeCreator;
 		 case FreeContent:
 		    break;
 		 case ContVariable:
-		    ok = NouvVariable (pBox->PbContVariable, pSS, pSchP, pAb, pDoc);
+		    ok = NewVariable (pBox->PbContVariable, pSS, pSchP, pAb, pDoc);
 		    break;
 		 case ContConst:
 		    ConstantCopy (pBox->PbContConstant, pSchP, pAb);
@@ -2674,7 +2674,7 @@ boolean             completeCreator;
 			   case FreeContent:
 			      break;
 			   case ContVariable:
-			      ok = NouvVariable (pBox->PbContVariable, pSS, pSchP, pAb, pDoc);
+			      ok = NewVariable (pBox->PbContVariable, pSS, pSchP, pAb, pDoc);
 			      break;
 			   case ContConst:
 			      ConstantCopy (pBox->PbContConstant, pSchP, pAb);

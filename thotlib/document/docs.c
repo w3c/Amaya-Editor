@@ -425,7 +425,7 @@ int                 accessMode;
 	if (!pAb->AbPresentationBox)
 	   /* ce n'est pas un pave de presentation, il est donc modifiable */
 	   pAb->AbCanBeModified = TRUE;
-	else if (PavPresentModifiable (pAb))
+	else if (PresAbsBoxUserEditable (pAb))
 	   pAb->AbCanBeModified = TRUE;
 	pAb->AbReadOnly = FALSE;
 	pAb->AbChange = TRUE;
@@ -733,7 +733,7 @@ PtrDocument         pDoc;
    AbstractImageUpdated (pDoc);
    RedisplayDocViews (pDoc);
    /* Reaffiche les numeros suivants qui changent */
-   MajNumeros (NextElement (pEl), pEl, pDoc, TRUE);
+   UpdateNumbers (NextElement (pEl), pEl, pDoc, TRUE);
 }
 
 

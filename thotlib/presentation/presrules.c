@@ -2619,7 +2619,7 @@ static void ApplyPage(pDoc, pAb, viewSch, pPRule, pageType)
 		    counter = CptPage(pElPage, pEl1->ElViewPSchema, &pSchP);
 		    if (counter > 0)
 		        /* calcule la valeur du compteur de pages */
-		        pEl1->ElPageNumber = ComptVal(counter, pElPage->ElStructSchema, pSchP, pElPage,
+		        pEl1->ElPageNumber = CounterVal(counter, pElPage->ElStructSchema, pSchP, pElPage,
 					       pEl1->ElViewPSchema);
 		    else	
 		        /* page non numerotee */
@@ -2637,7 +2637,7 @@ static void ApplyPage(pDoc, pAb, viewSch, pPRule, pageType)
 	          counter = CptPage(pElPage, pEl1->ElViewPSchema, &pSchP);
 	          if (counter > 0)
 	            /* calcule la valeur du compteur de pages */
-	            pEl1->ElPageNumber = ComptVal(counter, pElPage->ElStructSchema, pSchP, pElPage,
+	            pEl1->ElPageNumber = CounterVal(counter, pElPage->ElStructSchema, pSchP, pElPage,
 	                                        pEl1->ElViewPSchema);
 	          else       
 	            /* page non numerotee */
@@ -2684,7 +2684,7 @@ static void ApplyPage(pDoc, pAb, viewSch, pPRule, pageType)
 	    /* si la vue n'est pas pleine */
 	  pP = AbsBoxesCreate(pElPage, pDoc, view, TRUE, TRUE, &complete);
 	/* on met a jour les numeros des pages suivantes */
-        MajNumeros(NextElement(pElPage), pElPage, pDoc, TRUE);
+        UpdateNumbers(NextElement(pElPage), pElPage, pDoc, TRUE);
        }  /* fin de !exitingPage */
     }
   return destroyedAb;
@@ -2702,7 +2702,7 @@ static void ApplyPage(pDoc, pAb, viewSch, pPRule, pageType)
 		counter = CptPage(pElPage, pEl1->ElViewPSchema, &pSchP);
 		if (counter > 0)
 		    /* calcule la valeur du compteur de pages */
-		    pEl1->ElPageNumber = ComptVal(counter, pElPage->ElStructSchema, pSchP, pElPage,
+		    pEl1->ElPageNumber = CounterVal(counter, pElPage->ElStructSchema, pSchP, pElPage,
 					       pEl1->ElViewPSchema);
 		else	
 		    /* page non numerotee */
@@ -2726,7 +2726,7 @@ static void ApplyPage(pDoc, pAb, viewSch, pPRule, pageType)
 		    /* cree les paves de la marque de page */
 		    pP = AbsBoxesCreate(pElPage, pDoc, pAb->AbDocView, TRUE, TRUE, &complete);
 		/* on met a jour les numeros des pages suivantes */
-		MajNumeros(NextElement(pElPage), pElPage, pDoc, TRUE);
+		UpdateNumbers(NextElement(pElPage), pElPage, pDoc, TRUE);
 	    }
 	}
 	
@@ -3184,7 +3184,7 @@ void ApplyCopy(pDoc, pPRule, pAb, withDescCopy)
 			{
 			  pElSv = pAb->AbElement;
 			  pAb->AbElement = pE;
-			  found = NouvVariable(pBo1->PbContVariable, pSchS, pSchP,
+			  found = NewVariable(pBo1->PbContVariable, pSchS, pSchP,
 					       pAb, pDoc);
 			  /* on retablit le pointeur correct */
 			  pAb->AbElement = pElSv;
@@ -3907,7 +3907,7 @@ void RedispAbsBox(pAb, pDoc)
 /* |		le driver d'image ne sait pas donner une dimension a	| */
 /* |		cette image. C'est le cas lorsqu'on ne tient pas compte	| */
 /* |		de la cropping frame  (pour le CGM, par exemple.)	| */
-/* |		Cette fonction fait le meme travail que NouvDimension	| */
+/* |		Cette fonction fait le meme travail que NewDimension	| */
 /* |		sans reafficher le document a la fin, laissant ce	| */
 /* |		travail au driver d'images.				| */
 /* |		On traite le cas ou une IMAGE est dimensionnee par son	| */

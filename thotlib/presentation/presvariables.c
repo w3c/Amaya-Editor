@@ -177,7 +177,7 @@ PtrSSchema        pSS;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    MinMaxComptVal retourne la valeur minimale ou maximale (selon   | */
+/* |    CounterValMinMax retourne la valeur minimale ou maximale (selon   | */
 /* |            que Maximum est faux ou vrai) retourne la valeur du     | */
 /* |            compteur de numero NCompt (defini dans le schema de     | */
 /* |            presentation  pointe' par pSchP, qui s'applique au      | */
@@ -188,10 +188,10 @@ PtrSSchema        pSS;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-int                 MinMaxComptVal (int counterNum, PtrSSchema pSS, PtrPSchema pSchP, PtrElement pElNum, int view, boolean Maximum)
+int                 CounterValMinMax (int counterNum, PtrSSchema pSS, PtrPSchema pSchP, PtrElement pElNum, int view, boolean Maximum)
 
 #else  /* __STDC__ */
-int                 MinMaxComptVal (counterNum, pSS, pSchP, pElNum, view, Maximum)
+int                 CounterValMinMax (counterNum, pSS, pSchP, pElNum, view, Maximum)
 int                 counterNum;
 PtrSSchema        pSS;
 PtrPSchema          pSchP;
@@ -430,7 +430,7 @@ boolean             Maximum;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    ComptVal retourne la valeur du compteur de numero counterNum (defini| */
+/* |    CounterVal retourne la valeur du compteur de numero counterNum (defini| */
 /* |            dans le schema de presentation  pointe' par pSchP, qui  | */
 /* |            s'applique au schema de structure pointe' par pSS) pour | */
 /* |            l'element pointe' par pElNum.                           | */
@@ -439,10 +439,10 @@ boolean             Maximum;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-int                 ComptVal (int counterNum, PtrSSchema pSS, PtrPSchema pSchP, PtrElement pElNum, int view)
+int                 CounterVal (int counterNum, PtrSSchema pSS, PtrPSchema pSchP, PtrElement pElNum, int view)
 
 #else  /* __STDC__ */
-int                 ComptVal (counterNum, pSS, pSchP, pElNum, view)
+int                 CounterVal (counterNum, pSS, pSchP, pElNum, view)
 int                 counterNum;
 PtrSSchema        pSS;
 PtrPSchema          pSchP;
@@ -715,14 +715,14 @@ int                 view;
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    PavPresentModifiable    retourne vrai si le pave pAb est un    | */
+/* |    PresAbsBoxUserEditable    retourne vrai si le pave pAb est un    | */
 /* |            pave de presentation dont le contenu peut etre modifie' | */
 /* |            par l'utilisateur.                                      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-boolean             PavPresentModifiable (PtrAbstractBox pAb)
+boolean             PresAbsBoxUserEditable (PtrAbstractBox pAb)
 #else  /* __STDC__ */
-boolean             PavPresentModifiable (pAb)
+boolean             PresAbsBoxUserEditable (pAb)
 PtrAbstractBox             pAb;
 
 #endif /* __STDC__ */
@@ -763,7 +763,7 @@ PtrAbstractBox             pAb;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    NouvVariable met dans le pave pAb le texte correspondant a la  | */
+/* |    NewVariable met dans le pave pAb le texte correspondant a la  | */
 /* |            variable de numero varNum definie dans le schema de       | */
 /* |            presentation pSchP (et qui correspond au schema de      | */
 /* |            structure pSS). pDoc pointe sur le descripteur du       | */
@@ -774,11 +774,11 @@ PtrAbstractBox             pAb;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean             NouvVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
+boolean             NewVariable (int varNum, PtrSSchema pSS, PtrPSchema pSchP,
 				  PtrAbstractBox pAb, PtrDocument pDoc)
 
 #else  /* __STDC__ */
-boolean             NouvVariable (varNum, pSS, pSchP, pAb, pDoc)
+boolean             NewVariable (varNum, pSS, pSchP, pAb, pDoc)
 int                 varNum;
 PtrSSchema        pSS;
 PtrPSchema          pSchP;
@@ -890,17 +890,17 @@ PtrDocument         pDoc;
 		    pCo1 = &pSchP->PsCounter[pVa1->ViCounter - 1];
 		    if (pVa1->ViCounterVal == CntMaxVal)
 		       /* on cherche la valeur maximale du compteur */
-		       i = MinMaxComptVal (pVa1->ViCounter, pSS, pSchP, pAb->AbElement,
+		       i = CounterValMinMax (pVa1->ViCounter, pSS, pSchP, pAb->AbElement,
 			     pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView, TRUE);
 		    else if (pVa1->ViCounterVal == CntMinVal)
 		       /* on cherche la valeur minimale du compteur */
-		       i = MinMaxComptVal (pVa1->ViCounter, pSS, pSchP,
+		       i = CounterValMinMax (pVa1->ViCounter, pSS, pSchP,
 					   pAb->AbElement,
 				    pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView,
 					   FALSE);
 		    else
 		       /* valeur courante du compteur */
-		       i = ComptVal (pVa1->ViCounter, pSS, pSchP, pAb->AbElement,
+		       i = CounterVal (pVa1->ViCounter, pSS, pSchP, pAb->AbElement,
 				   pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView);
 #ifndef __COLPAGE__
 		    /* le cas particulier des compteurs en bas de page (ou il */
@@ -1012,7 +1012,7 @@ PtrDocument         pDoc;
 	      }
 	/* termine la mise a jour du pave */
      }
-   if (PavPresentModifiable (pAb))
+   if (PresAbsBoxUserEditable (pAb))
       /* le contenu de ce pave de presentation est donc modifiable */
       pAb->AbCanBeModified = TRUE;
    pAb->AbLeafType = LtText;

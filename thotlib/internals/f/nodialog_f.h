@@ -31,17 +31,17 @@ extern boolean IsASavedElement ( PtrElement pEl );
 extern void BuildSchPresNameMenu ( PtrSSchema pSchStr,
                                    Name name );
 extern boolean LinkReference ( void );
-extern void NouvPosition ( PtrAbstractBox pAb,
+extern void NewPosition ( PtrAbstractBox pAb,
                            int DeltaX,
                            int DeltaY,
                            int frame,
                            boolean Disp );
-extern void NouvDimension ( PtrAbstractBox pAb,
+extern void NewDimension ( PtrAbstractBox pAb,
                             int DeltaX,
                             int DeltaY,
                             int frame,
                             boolean Disp );
-extern boolean MemesRegleSpecif ( PtrElement pEl1,
+extern boolean BothHaveNoSpecRules ( PtrElement pEl1,
                                   PtrElement pEl2 );
 extern void ModPresent ( boolean OnlyChars );
 extern void ShowBox ( int frame,
@@ -189,17 +189,17 @@ extern boolean IsASavedElement (/* PtrElement pEl */);
 extern void BuildSchPresNameMenu (/* PtrSSchema pSchStr,
                                      Name name */);
 extern boolean LinkReference (/* void */);
-extern void NouvPosition (/* PtrAbstractBox pAb,
+extern void NewPosition (/* PtrAbstractBox pAb,
                              int DeltaX,
                              int DeltaY,
                              int frame,
                              boolean Disp */);
-extern void NouvDimension (/* PtrAbstractBox pAb,
+extern void NewDimension (/* PtrAbstractBox pAb,
                               int DeltaX,
                               int DeltaY,
                               int frame,
                               boolean Disp */);
-extern boolean MemesRegleSpecif (/* PtrElement pEl1,
+extern boolean BothHaveNoSpecRules (/* PtrElement pEl1,
                                     PtrElement pEl2 */);
 extern void ModPresent (/* boolean OnlyChars */);
 extern void ShowBox (/* int frame,
