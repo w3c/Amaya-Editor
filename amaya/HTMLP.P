@@ -2854,7 +2854,7 @@ RULES
 	LineBreak: No;
 	Width: Enclosing . Width;
 	VertPos: Top = Previous not MAP . Bottom;
-	MarginLeft: LIST_INDENT;
+	PaddingLeft: LIST_INDENT;
 	if not within Definition and not within List_Item BEGIN
 	        MarginTop: H4Margin;
 	        MarginBottom: H4Margin;
@@ -2862,7 +2862,7 @@ RULES
 	IN Structure_view BEGIN
 		MarginTop: 0;
 		MarginBottom: 0;
-		MarginLeft: 0;
+		PaddingLeft: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
@@ -2880,7 +2880,7 @@ RULES
 	LineBreak: No;
 	Width: Enclosing . Width;
 	VertPos: Top = Previous not MAP . Bottom;
-	MarginLeft: LIST_INDENT;
+	PaddingLeft: LIST_INDENT;
 	if not within Definition and not within List_Item BEGIN
 	        MarginTop: H4Margin;
 	        MarginBottom: H4Margin;
@@ -2888,7 +2888,7 @@ RULES
 	IN Structure_view BEGIN
 		MarginTop: 0;
 		MarginBottom: 0;
-		MarginLeft: 0;
+		PaddingLeft: 0;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
@@ -7413,10 +7413,10 @@ ATTRIBUTES
   dir (Unnumbered_List*) = ltr_:
 	BEGIN
 	HorizPos: Left = Enclosing . Left;
-	MarginLeft: LIST_INDENT;
-	MarginRight: 0;
+	PaddingLeft: LIST_INDENT;
+	PaddingRight: 0;
 	IN Structure_view BEGIN
-		MarginLeft: 0;
+		PaddingLeft: 0;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
 	IN Alternate_view
@@ -7425,10 +7425,10 @@ ATTRIBUTES
   dir (Unnumbered_List*) = rtl_:
 	BEGIN
 	HorizPos: Right = Enclosing . Right;
-	MarginLeft: 0;
-	MarginRight: LIST_INDENT;
+	PaddingLeft: 0;
+	PaddingRight: LIST_INDENT;
 	IN Structure_view BEGIN
-		MarginRight: 0;
+		PaddingRight: 0;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
 	IN Alternate_view
@@ -7437,10 +7437,10 @@ ATTRIBUTES
   dir (Numbered_List*) = ltr_:
 	BEGIN
 	HorizPos: Left = Enclosing . Left;
-	MarginLeft: LIST_INDENT;
-	MarginRight: 0;
+	PaddingLeft: LIST_INDENT;
+	PaddingRight: 0;
 	IN Structure_view BEGIN
-		MarginLeft: 0;
+		PaddingLeft: 0;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
 	IN Alternate_view
@@ -7449,10 +7449,10 @@ ATTRIBUTES
   dir (Numbered_List*) = rtl_:
 	BEGIN
 	HorizPos: Right = Enclosing . Right;
-	MarginLeft: 0;
-	MarginRight: LIST_INDENT;
+	PaddingLeft: 0;
+	PaddingRight: LIST_INDENT;
 	IN Structure_view BEGIN
-		MarginRight: 0;
+		PaddingRight: 0;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
 	IN Alternate_view
