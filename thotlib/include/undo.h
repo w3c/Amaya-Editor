@@ -86,6 +86,18 @@ extern void TtaRegisterElementDelete (Element element, Document document);
 extern void TtaRegisterElementReplace (Element element, Document document);
 
 /* ----------------------------------------------------------------------
+   TtaRegisterElementTypeChange
+    
+   Register a changing of element type in the editing history
+   Parameters:
+   element: the element concerned
+   oldElementType: the element type to be restored when undoing
+   document: the concerned document
+  ----------------------------------------------------------------------*/
+extern void TtaRegisterElementTypeChange (Element element, int oldElementType,
+				          Document document);
+
+/* ----------------------------------------------------------------------
    TtaRegisterAttributeCreate
  
    Register a single attribute creation in the editing history

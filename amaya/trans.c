@@ -1699,7 +1699,7 @@ static ThotBool TransformNode (strMatchChildren * sm)
   ApplyTransformation:
   applies the transformation based on sm matching descriptors
   ----------------------------------------------------------------------*/
-static ApplyTransformation (strMatch *sm, Document doc)
+static void ApplyTransformation (strMatch *sm, Document doc)
 {
   SSchema              sch;
   Element              elParent, elFound;
@@ -1711,7 +1711,7 @@ static ApplyTransformation (strMatch *sm, Document doc)
   DisplayMode          oldDisplayMode;
   strGenStack         *stack;
   strMatchChildren    *child;
-  int                  val, length, error;
+  int                  length, error;
   char                 buf [MAX_LENGTH];
   ThotBool             res;
 
