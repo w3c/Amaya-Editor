@@ -870,12 +870,7 @@ char               *appArgv0;
    * First case, the argv[0] indicate that it's an absolute path name.
    * i.e. start with / on unixes or \ or ?:\ on Windows.
    */
-#  ifdef _WINDOWS
-   if ((appArgv0[0] == URL_DIR_SEP) ||
-       ((appArgv0[1] == ':') && (appArgv0[2] == URL_DIR_SEP)))
-#  else  /* !_WINDOWS */
   if (appArgv0[0] == DIR_SEP)
-#  endif /* !_WINDOWS */
     strncpy (&execname[0], appArgv0, sizeof (execname));
 
   /*

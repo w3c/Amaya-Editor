@@ -337,10 +337,10 @@ char               *data;
    char                bufDir[MAX_PATH];
    char                URL_DIR_SEP;
 
-   if (data && strchr (data, '/'))
-	  URL_DIR_SEP = '/';
+   if (typedata == STRING_DATA && data && strchr (data, '/'))
+     URL_DIR_SEP = '/';
    else 
-	   URL_DIR_SEP = DIR_SEP;
+     URL_DIR_SEP = DIR_SEP;
 
    val = (int) data;
    switch (ref)
@@ -521,11 +521,10 @@ View                view;
      }
    else if (DirectoryName[0] != '\0')
      {
-       if (DirectoryName && strchr (DirectoryName, '/'))
-          URL_DIR_SEP = '/';
+       if (strchr (DirectoryName, '/'))
+	 URL_DIR_SEP = '/';
        else 
-           URL_DIR_SEP = DIR_SEP;
-
+	 URL_DIR_SEP = DIR_SEP;
 
        entry = SearchStringInBuffer(bufDir, DirectoryName, nbItems);
        if(entry != -1)

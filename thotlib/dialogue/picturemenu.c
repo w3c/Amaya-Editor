@@ -182,117 +182,122 @@ char               *txt;
 {
    PathBuffer          completeName;
    int                 i, val;
+   char                URL_DIR_SEP;
+
+   if (typedata == STRING_DATA && txt && strchr (txt, '/'))
+     URL_DIR_SEP = '/';
+   else 
+     URL_DIR_SEP = DIR_SEP;
 
    val = (int) txt;
-
    switch (ref - BaseDlgImage)
+     {
+     case _ZONE_IMAGE_FILE:
+       if (TtaCheckDirectory (txt) && txt[strlen (txt) - 1] != URL_DIR_SEP)
 	 {
-	    case _ZONE_IMAGE_FILE:
-	       if (TtaCheckDirectory (txt) && txt[strlen (txt) - 1] != DIR_SEP)
-		 {
-		    strcpy (DirectoryImage, txt);
-		    ImageName[0] = '\0';
-		 }
-	       else
-		 {
-		    /* conserve le nom du document a ouvrir */
-		    TtaExtractName (txt, DirectoryImage, ImageName);
-		    if (ImageName[0] == '\0' && !TtaCheckDirectory (DirectoryImage))
-		      {
-			 /* Le texte correspond au nom de l'image sans directory */
-			 strncpy (ImageName, DirectoryImage, 100);
-			 DirectoryImage[0] = '\0';
-		      }
-		 }
-
-	       if (TtaCheckDirectory (DirectoryImage))
-		 {
-		    /* Est-ce un nouveau directory qui contient des documents */
-		    if (!TtaIsInDocumentPath (DirectoryImage))
-		       if (TtaIsSuffixFileIn (DirectoryImage, FileExtension[IndexTypeImage]))
-			 {
-			    /* il faut ajouter le directory au path */
-			    i = strlen (DocumentPath);
-			    if (i + strlen (DirectoryImage) + 2 < MAX_PATH)
-			      {
-				 strcat (DocumentPath, PATH_STR);
-				 strcat (DocumentPath, DirectoryImage);
-				 InitPathImage ();
-				 TtaListDirectory (DirectoryImage, BaseDlgImage + _IMAGE_FORM, NULL, -1,
-						   FileExtension[IndexTypeImage], TtaGetMessage (LIB, TMSG_FILES), BaseDlgImage + _IMAGE_SEL);
-			      }
-			 }
-		 }
-	       break;
-	    case _IMAGE_SEL:
-	       if (DirectoryImage[0] == '\0')
-		 {
-		    /* compose le path complet du fichier pivot */
-		    strncpy (DirectoryImage, DocumentPath, MAX_PATH);
-		    /* recheche indirectement le directory */
-		    MakeCompleteName (txt, "", DirectoryImage, completeName, &i);
-		    /* separe directory et nom */
-		    TtaExtractName (completeName, DirectoryImage, ImageName);
-		 }
-	       else
-		 {
-		    strcpy (completeName, DirectoryImage);
-		    strcat (completeName, "/");
-		    strcat (completeName, txt);
-		    strcpy (ImageName, txt);
-		 }
-	       TtaSetTextForm (BaseDlgImage + _ZONE_IMAGE_FILE, completeName);
-	       break;
-	    case _MENU_IMAGE_TYPE:
-	       if (val != IndexTypeImage)
-		 {
-		    IndexTypeImage = val;
-		    if (TtaCheckDirectory (DirectoryImage))
-		      {
-			 /* Est-ce un nouveau directory qui contient des documents */
-			 if (!TtaIsInDocumentPath (DirectoryImage))
-			    if (TtaIsSuffixFileIn (DirectoryImage, FileExtension[IndexTypeImage]))
-			      {
-				 /* il faut ajouter le directory au path */
-				 i = strlen (DocumentPath);
-				 if (i + strlen (DirectoryImage) + 2 < MAX_PATH)
-				   {
-				      strcat (DocumentPath, ":");
-				      strcat (DocumentPath, DirectoryImage);
-				      InitPathImage ();
-				   }
-			      }
-		      }
-		    TtaListDirectory (DirectoryImage, BaseDlgImage + _IMAGE_FORM, NULL, -1,
-				      FileExtension[IndexTypeImage], TtaGetMessage (LIB, TMSG_FILES), BaseDlgImage + _IMAGE_SEL);
-		    CheckPresImage (val);
-		 }
-	       break;
-	    case _MENU_IMAGE_FRAME:
-	       if (val != IndexPresImage)
-		 {
-		    IndexPresImage = val;
-		    /* Faut-il mettre a jour la liste des fichiers */
-		    if (DirectoryImage[0] != '\0')
-		       TtaListDirectory (DirectoryImage, BaseDlgImage + _IMAGE_FORM, NULL, -1,
-					 FileExtension[IndexTypeImage], TtaGetMessage (LIB, TMSG_FILES), BaseDlgImage + _IMAGE_SEL);
-		 }
-	       break;
-	    case _ZONE_DIR_IMAGE:
-	       strcpy (DirectoryImage, txt);
-	       TtaSetTextForm (BaseDlgImage + _ZONE_IMAGE_FILE, DirectoryImage);
-	       TtaListDirectory (DirectoryImage, BaseDlgImage + _IMAGE_FORM, NULL, -1,
-				 FileExtension[IndexTypeImage], TtaGetMessage (LIB, TMSG_FILES), BaseDlgImage + _IMAGE_SEL);
-	       break;
-	    case _IMAGE_FORM:
-	       if (val == 1)
-		  /* Edition realisee */
-		  RedisplayPicture = TRUE;
-	       TtaDestroyDialogue (BaseDlgImage + _IMAGE_FORM);
-	       break;
-	    default:
-	       break;
+	   strcpy (DirectoryImage, txt);
+	   ImageName[0] = '\0';
 	 }
+       else
+	 {
+	   /* conserve le nom du document a ouvrir */
+	   TtaExtractName (txt, DirectoryImage, ImageName);
+	   if (ImageName[0] == '\0' && !TtaCheckDirectory (DirectoryImage))
+	     {
+	       /* Le texte correspond au nom de l'image sans directory */
+	       strncpy (ImageName, DirectoryImage, 100);
+	       DirectoryImage[0] = '\0';
+	     }
+	 }
+       
+       if (TtaCheckDirectory (DirectoryImage))
+	 {
+	   /* Est-ce un nouveau directory qui contient des documents */
+	   if (!TtaIsInDocumentPath (DirectoryImage))
+	     if (TtaIsSuffixFileIn (DirectoryImage, FileExtension[IndexTypeImage]))
+	       {
+		 /* il faut ajouter le directory au path */
+		 i = strlen (DocumentPath);
+		 if (i + strlen (DirectoryImage) + 2 < MAX_PATH)
+		   {
+		     strcat (DocumentPath, PATH_STR);
+		     strcat (DocumentPath, DirectoryImage);
+		     InitPathImage ();
+		     TtaListDirectory (DirectoryImage, BaseDlgImage + _IMAGE_FORM, NULL, -1,
+				       FileExtension[IndexTypeImage], TtaGetMessage (LIB, TMSG_FILES), BaseDlgImage + _IMAGE_SEL);
+		   }
+	       }
+	 }
+       break;
+     case _IMAGE_SEL:
+       if (DirectoryImage[0] == '\0')
+	 {
+	   /* compose le path complet du fichier pivot */
+	   strncpy (DirectoryImage, DocumentPath, MAX_PATH);
+	   /* recheche indirectement le directory */
+	   MakeCompleteName (txt, "", DirectoryImage, completeName, &i);
+	   /* separe directory et nom */
+	   TtaExtractName (completeName, DirectoryImage, ImageName);
+	 }
+       else
+	 {
+	   strcpy (completeName, DirectoryImage);
+	   strcat (completeName, "/");
+	   strcat (completeName, txt);
+	   strcpy (ImageName, txt);
+	 }
+       TtaSetTextForm (BaseDlgImage + _ZONE_IMAGE_FILE, completeName);
+       break;
+     case _MENU_IMAGE_TYPE:
+       if (val != IndexTypeImage)
+	 {
+	   IndexTypeImage = val;
+	   if (TtaCheckDirectory (DirectoryImage))
+	     {
+	       /* Est-ce un nouveau directory qui contient des documents */
+	       if (!TtaIsInDocumentPath (DirectoryImage))
+		 if (TtaIsSuffixFileIn (DirectoryImage, FileExtension[IndexTypeImage]))
+		   {
+		     /* il faut ajouter le directory au path */
+		     i = strlen (DocumentPath);
+		     if (i + strlen (DirectoryImage) + 2 < MAX_PATH)
+		       {
+			 strcat (DocumentPath, ":");
+			 strcat (DocumentPath, DirectoryImage);
+			 InitPathImage ();
+		       }
+		   }
+	     }
+	   TtaListDirectory (DirectoryImage, BaseDlgImage + _IMAGE_FORM, NULL, -1,
+			     FileExtension[IndexTypeImage], TtaGetMessage (LIB, TMSG_FILES), BaseDlgImage + _IMAGE_SEL);
+	   CheckPresImage (val);
+	 }
+       break;
+     case _MENU_IMAGE_FRAME:
+       if (val != IndexPresImage)
+	 {
+	   IndexPresImage = val;
+	   /* Faut-il mettre a jour la liste des fichiers */
+	   if (DirectoryImage[0] != '\0')
+	     TtaListDirectory (DirectoryImage, BaseDlgImage + _IMAGE_FORM, NULL, -1,
+			       FileExtension[IndexTypeImage], TtaGetMessage (LIB, TMSG_FILES), BaseDlgImage + _IMAGE_SEL);
+	 }
+       break;
+     case _ZONE_DIR_IMAGE:
+       strcpy (DirectoryImage, txt);
+       TtaSetTextForm (BaseDlgImage + _ZONE_IMAGE_FILE, DirectoryImage);
+       TtaListDirectory (DirectoryImage, BaseDlgImage + _IMAGE_FORM, NULL, -1,
+			 FileExtension[IndexTypeImage], TtaGetMessage (LIB, TMSG_FILES), BaseDlgImage + _IMAGE_SEL);
+       break;
+     case _IMAGE_FORM:
+       if (val == 1)
+	 /* Edition realisee */
+	 RedisplayPicture = TRUE;
+       TtaDestroyDialogue (BaseDlgImage + _IMAGE_FORM);
+       break;
+     default:
+       break;
+     }
 }
 
 
