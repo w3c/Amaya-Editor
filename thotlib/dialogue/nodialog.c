@@ -168,30 +168,6 @@ boolean             Disp;
 }
 
 #ifdef __STDC__
-boolean             PavResizable (PtrAbstractBox pAb, boolean Horiz)
-#else  /* __STDC__ */
-boolean             PavResizable (pAb, Horiz)
-PtrAbstractBox             pAb;
-boolean             Horiz;
-
-#endif /* __STDC__ */
-{
-   return TRUE;
-}
-
-#ifdef __STDC__
-boolean             PavMovable (PtrAbstractBox pAb, boolean Horiz)
-#else  /* __STDC__ */
-boolean             PavMovable (pAb, Horiz)
-PtrAbstractBox             pAb;
-boolean             Horiz;
-
-#endif /* __STDC__ */
-{
-   return TRUE;
-}
-
-#ifdef __STDC__
 boolean             MemesRegleSpecif (PtrElement pEl1, PtrElement pEl2)
 #else  /* __STDC__ */
 boolean             MemesRegleSpecif (pEl1, pEl2)
