@@ -3,7 +3,7 @@
  ***/
 
 /*----------------------------------------------------------------------
-   Compilateur du langage A.
+   Compiler of language A.
   ----------------------------------------------------------------------*/
 
 #include "thot_sys.h"
@@ -46,54 +46,48 @@ EXPORT PtrEventsSet pAppli;
 EXPORT PtrSSchema   pSSchema;
 extern int          IncNbIdent;
 
-int                 LineNum;	/* compteur de lignes dans le fichier source */
+int                 LineNum;	/* lines counter in source file */
 static Name         fileName;
 PtrSSchema          pSSchema;
 PtrEventsSet        pAppli;
-
-/* Pointeur sur la liste des schemas d'interfaces utilise's par EDITOR.A */
+/* Pointer to the list of application schemas linked with EDITOR.A */
 PtrAppName          SchemasUsed = NULL;
-
-/* Pointeur sur la liste des noms de menus effectivement utilises */
+/* Pointer to the list of menu names effectively used */
 PtrAppName          MenusUsed = NULL;
-
-/* pointeur sur la liste des noms d'items effectivement utilises */
+/* Pointer to the list of item names effectively used */
 PtrAppName          ItemsUsed = NULL;
-
-/* pointeur sur la liste des noms d'actions effectivement utilisees */
+/* Pointer to the list of action names effectively used */
 PtrAppName          ActionsUsed = NULL;
-
-/* pointeur sur la chaine des menus de la fenetre principale de l'application */
+/* Pointer to the list of menus displayed in the main application frame */
 PtrAppMenu          MainWindowMenus = NULL;
-
-/* pointeur sur la chaine des menus des frames document de l'application */
+/* Pointer to the list of menus displayed in standard document frames */
 PtrAppMenu          DocWindowMenus = NULL;
-
-/* pointeur sur la chaine des descripteurs des menus de chaque type de document */
+/* Pointer to the list of menus displayed in specific document frames */
 PtrAppDocType       DocTypeMenus = NULL;
-static boolean      FirstInPair = False;	/* on a rencontre' le mot cle "First"  */
-static boolean      SecondInPair = False;	/* on a rencontre' le mot cle "Second" */
+
+static boolean      FirstInPair = False;/* keyword "First" found             */
+static boolean      SecondInPair = False;/* keyword "Second" found           */
 static int          typeNum;
 static int          attrNum;
-static int          curEvent;	/* l'evenement courant               */
-static char        *eventAction;	/* l'action associee a cet evenement */
+static int          curEvent;		/* the current event                 */
+static char        *eventAction;	/* the action linked with the event  */
 static boolean      PreEvent;
-static boolean      DefaultSection;	/* on est dans la section DEFAULT    */
-static boolean      ElementsSection;	/* on est dans la section ELEMENTS   */
-static boolean      AttributesSection;	/* on est dans la section ATTRIBUTES */
-static boolean      MenusSection;	/* on est dans la section MENUS      */
+static boolean      DefaultSection;	/* within the section DEFAULT        */
+static boolean      ElementsSection;	/* within the section ELEMENTS       */
+static boolean      AttributesSection;	/* within the section ATTRIBUTES     */
+static boolean      MenusSection;	/* within the section MENUS          */
 static PtrAppMenu  *MenuList;
 static int          ViewNumber;
 static char         MenuName[100];
 static char         SubmenuName[100];
 static char         ItemName[100];
-static char         ItemType;	/* 'B' = Button,    'T' = Toggle,   */
+static char         ItemType;		/* 'B' = Button,    'T' = Toggle,    */
 
-				     /* 'S' = Separator, 'D' = Dynamic.  */
+				     	/* 'S' = Separator, 'D' = Dynamic.   */
 static char         ActionName[100];
 
-/* le tableau RegisteredAppEvents doit etre coherent avec le type enum APPevent
-   defini dans appaction.h */
+/* the list RegisteredAppEvents have to be conform to the type enum APPevent
+   defined into appaction.h */
 char               *RegisteredAppEvents[] =
 {
    "AttrMenu",
@@ -137,11 +131,11 @@ char               *RegisteredAppEvents[] =
 };
 
 /*----------------------------------------------------------------------
-   MenuActionList met dans la liste ActionsUsed les actions        
-   utilisees par les menus de la liste commencant par firstMenu,   
-   si elles ne sont pas deja dans la liste ActionsUsed.            
-   Fait de meme pour les noms de menus dans la liste MenusUsed     
-   et pour les noms d'items dans la liste ItemsUsed.               
+   MenuActionList adds into the list ActionsUsed actions        
+   used by the new set of menus pointed by firstMenu.   
+   If actions already exist in the list, they are not added.
+   In the same way this function adds menu names used in the set into the
+   list MenusUsed and item names into the list ItemsUsed.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         MenuActionList (PtrAppMenu firstMenu)
@@ -161,10 +155,10 @@ PtrAppMenu          firstMenu;
    boolean             found;
 
    menu = firstMenu;
-   /* parcourt la liste de menus a traiter */
+   /* check the new set of menus */
    while (menu != NULL)
      {
-	/* cherche si le nom de ce menu est deja dans la liste MenusUsed */
+	/* look at if the menu name is already in the list MenusUsed */
 	curMenu = MenusUsed;
 	found = False;
 	prevMenu = NULL;
@@ -172,17 +166,17 @@ PtrAppMenu          firstMenu;
 	  {
 	     if (curMenu->AppNameValue != NULL &&
 		 strcmp (curMenu->AppNameValue, menu->AppMenuName) == 0)
-		/* le nom du menu est dans la liste */
+		/* the menu name is already in the list */
 		found = True;
 	     else
 	       {
 		  prevMenu = curMenu;
-		  /* passe au nom de menu suivant de la liste */
+		  /* next menu name in the list MenusUsed */
 		  curMenu = curMenu->AppNextName;
 	       }
 	  }
 	if (!found)
-	   /* le nom du menu n'est pas dans la liste, on l'y met */
+	   /* the menu name is a new name, add it into the list */
 	  {
 	     curMenu = (PtrAppName) TtaGetMemory (sizeof (AppName));
 	     if (menu->AppMenuName == NULL)
@@ -196,7 +190,7 @@ PtrAppMenu          firstMenu;
 		prevMenu->AppNextName = curMenu;
 	  }
 
-	/* parcourt la liste des items du menu et des sous-menus */
+	/* check the list of item names of the new menu and its submenus */
 	item = menu->AppMenuItems;
 	menuitem = NULL;
 	while (item != NULL)
@@ -204,7 +198,7 @@ PtrAppMenu          firstMenu;
 	     /* skip menu separators */
 	     if (item->AppItemType != 'S')
 	       {
-		  /* cherche si le nom l'item est dans la liste des noms d'items */
+		  /* look at if the item name is already in the list ItemsUsed */
 		  curItem = ItemsUsed;
 		  found = False;
 		  prevItem = NULL;
@@ -212,7 +206,7 @@ PtrAppMenu          firstMenu;
 		    {
 		       if (curItem->AppNameValue != NULL && item->AppItemName != NULL &&
 			   strcmp (curItem->AppNameValue, item->AppItemName) == 0)
-			  /* le nom de l'item est dans la liste */
+			  /* the item name is already in the list */
 			  found = True;
 		       else
 			 {
@@ -222,7 +216,7 @@ PtrAppMenu          firstMenu;
 			 }
 		    }
 		  if (!found)
-		     /* le nom de l'item n'est pas dans la liste, on l'y met */
+		     /* le nom de l'item n'est pas in the list, on l'y met */
 		    {
 		       curItem = (PtrAppName) TtaGetMemory (sizeof (AppName));
 		       curItem->AppNameValue = strdup (item->AppItemName);
@@ -236,7 +230,7 @@ PtrAppMenu          firstMenu;
 	     if (item->AppItemActionName != NULL)
 		/* cet item a une action definie */
 	       {
-		  /* cherche si l'action de l'item est dans la liste des actions */
+		  /* cherche si l'action de l'item est in the list des actions */
 		  curAction = ActionsUsed;
 		  found = False;
 		  prevAction = NULL;
@@ -244,7 +238,7 @@ PtrAppMenu          firstMenu;
 		    {
 		       if (curAction->AppNameValue != NULL &&
 			   strcmp (curAction->AppNameValue, item->AppItemActionName) == 0)
-			  /* l'action de l'item est dans la liste */
+			  /* l'action de l'item est in the list */
 			  found = True;
 		       else
 			 {
@@ -254,7 +248,7 @@ PtrAppMenu          firstMenu;
 			 }
 		    }
 		  if (!found)
-		     /* l'action de l'item n'est pas dans la liste, on l'y met */
+		     /* l'action de l'item n'est pas in the list, on l'y met */
 		    {
 		       curAction = (PtrAppName) TtaGetMemory (sizeof (AppName));
 		       curAction->AppNameValue = strdup (item->AppItemActionName);
@@ -400,7 +394,7 @@ static void         NewMenuComplete ()
 	NewMenu->AppMenuItems = NULL;
 	NewMenu->AppNextMenu = NULL;
 	if (*MenuList == NULL)
-	   /* il n'y a pas encore de menus dans la liste */
+	   /* il n'y a pas encore de menus in the list */
 	   *MenuList = NewMenu;
 	else
 	  {
@@ -769,8 +763,7 @@ indLine             wi;
 			 pSSchema = ConstructAbstractSchStruct ();
 			 /* acquiert un schema */
 			 pAppli = TteNewEventsSet (pSSchema->SsCode, fileName);
-			 /* pointeur sur la chaine des descripteurs des menus des */
-			 /* differents types de document */
+			 /* Pointer to the list of schemas menus descriptors */
 			 DocTypeMenus = NULL;
 		      }
 		    else
