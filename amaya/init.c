@@ -6995,18 +6995,18 @@ void InitAmaya (NotifyEvent * event)
 
    /* initialize icons */
 #ifdef _WX
-   stopR         = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"stop.gif"), wxBITMAP_TYPE_GIF );
+   stopR         = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"stop.png"), wxBITMAP_TYPE_PNG );
    stopN         = (ThotIcon) 0;
-   iconSave      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"save.gif"), wxBITMAP_TYPE_GIF );
+   iconSave      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"save.png"), wxBITMAP_TYPE_PNG );
    iconSaveNo    = (ThotIcon) 0;
-   iconFind      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"find.gif"), wxBITMAP_TYPE_GIF );
-   iconReload    = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"reload.gif"), wxBITMAP_TYPE_GIF );
-   iconHome      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"home.gif"), wxBITMAP_TYPE_GIF );
-   iconBack      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"back.gif"), wxBITMAP_TYPE_GIF );
+   iconFind      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"find.png"), wxBITMAP_TYPE_PNG );
+   iconReload    = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"reload.png"), wxBITMAP_TYPE_PNG );
+   iconHome      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"home.png"), wxBITMAP_TYPE_PNG );
+   iconBack      = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"back.png"), wxBITMAP_TYPE_PNG );
    iconBackNo    = (ThotIcon) 0;
-   iconForward   = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"forward.gif"), wxBITMAP_TYPE_GIF );
+   iconForward   = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"forward.png"), wxBITMAP_TYPE_PNG );
    iconForwardNo = (ThotIcon) 0;
-   iconPrint     = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"print.gif"), wxBITMAP_TYPE_GIF );
+   iconPrint     = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"print.png"), wxBITMAP_TYPE_PNG );
    iconI = (ThotIcon) 0;
    iconINo = (ThotIcon) 0;
    iconB = (ThotIcon) 0;
@@ -7031,7 +7031,7 @@ void InitAmaya (NotifyEvent * event)
    iconLinkNo = (ThotIcon) 0;
    iconTable = (ThotIcon) 0;
    iconTableNo = (ThotIcon) 0;
-   iconLogo = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "logo.gif"), wxBITMAP_TYPE_GIF);
+   iconLogo = new wxBitmap( TtaGetResourcePathWX( WX_RESOURCES_ICON, "logo.png"), wxBITMAP_TYPE_PNG);
 #endif /* _WX */
 #ifdef _GTK
    stopR = (ThotIcon) TtaCreatePixmapLogo (stopR_xpm);

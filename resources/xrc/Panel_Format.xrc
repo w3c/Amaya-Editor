@@ -16,7 +16,7 @@
                       <orient>wxHORIZONTAL</orient>
                       <object class="sizeritem">
                         <object class="wxBitmapButton" name="wxID_BUTTON_EXPAND">
-                          <bitmap>../icons/expand_on.gif</bitmap>
+                          <bitmap>../icons/expand_on.png</bitmap>
                           <style>wxNO_BORDER</style>
                         </object>
                         <flag>wxALIGN_CENTRE</flag>
@@ -31,7 +31,7 @@
                       </object>
                       <object class="sizeritem">
                         <object class="wxBitmapButton" name="wxID_BUTTON_DETACH">
-                          <bitmap>../icons/detach.gif</bitmap>
+                          <bitmap>../icons/detach.png</bitmap>
                           <style>wxNO_BORDER</style>
                         </object>
                         <flag>wxALIGN_CENTRE</flag>
@@ -64,7 +64,7 @@
                                         <orient>wxHORIZONTAL</orient>
                                         <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_DEFAULT_FORMAT">
-                                            <bitmap>../icons/default.gif</bitmap>
+                                            <bitmap>../icons/default.png</bitmap>
                                             <tooltip>*DeFault*</tooltip>
                                           </object>
                                           <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
@@ -72,28 +72,28 @@
                                         </object>
                                         <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_BMPBUTTON_FORMATLEFT">
-                                            <bitmap>../icons/format_left.gif</bitmap>
+                                            <bitmap>../icons/format_left.png</bitmap>
                                             <tooltip>*LeFt*</tooltip>
                                           </object>
                                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                                         </object>
                                         <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_BMPBUTTON_FORMATRIGHT">
-                                            <bitmap>../icons/format_right.gif</bitmap>
+                                            <bitmap>../icons/format_right.png</bitmap>
                                             <tooltip>*Right*</tooltip>
                                           </object>
                                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                                         </object>
                                         <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_BMPBUTTON_FORMATCENTER">
-                                            <bitmap>../icons/format_center.gif</bitmap>
+                                            <bitmap>../icons/format_center.png</bitmap>
                                             <tooltip>*Center*</tooltip>
                                           </object>
                                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                                         </object>
                                         <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_BMPBUTTON_FORMATJUSTIFY">
-                                            <bitmap>../icons/format_justi../icons/format_justify.gif</bitmap>
+                                            <bitmap>../icons/format_justify.png</bitmap>
                                             <tooltip>*JustiFy*</tooltip>
                                           </object>
                                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
@@ -114,7 +114,7 @@
                                             <orient>wxHORIZONTAL</orient>
                                             <object class="sizeritem">
                                               <object class="wxBitmapButton" name="wxID_DEFAULT_INDENT">
-                                                <bitmap>../icons/default.gif</bitmap>
+                                                <bitmap>../icons/default.png</bitmap>
                                                 <tooltip>*DeFault*</tooltip>
                                               </object>
                                               <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
@@ -130,7 +130,7 @@
                                             </object>
                                             <object class="sizeritem">
                                               <object class="wxBitmapButton" name="wxID_APPLY_INDENT">
-                                                <bitmap stock_id="wxART_TICK_MARK"></bitmap>
+                                                <bitmap>../icons/ok.png</bitmap>
                                               </object>
                                               <flag>wxLEFT</flag>
                                               <border>2</border>
@@ -155,7 +155,7 @@
                                             <orient>wxHORIZONTAL</orient>
                                             <object class="sizeritem">
                                               <object class="wxBitmapButton" name="wxID_DEFAULT_LINESPACE">
-                                                <bitmap>../icons/default.gif</bitmap>
+                                                <bitmap>../icons/default.png</bitmap>
                                                 <tooltip>*DeFault*</tooltip>
                                               </object>
                                               <flag>wxRIGHT|wxALIGN_CENTRE_VERTICAL</flag>
@@ -171,7 +171,7 @@
                                             </object>
                                             <object class="sizeritem">
                                               <object class="wxBitmapButton" name="wxID_APPLY_LINESPACE">
-                                                <bitmap stock_id="wxART_TICK_MARK"></bitmap>
+                                                <bitmap>../icons/ok.png</bitmap>
                                               </object>
                                               <flag>wxLEFT</flag>
                                               <border>2</border>
@@ -188,7 +188,7 @@
                                         <orient>wxHORIZONTAL</orient>
                                         <object class="sizeritem">
                                           <object class="wxBitmapButton" name="wxID_APPLY">
-                                            <bitmap stock_id="wxART_TICK_MARK"></bitmap>
+                                            <bitmap>../icons/ok.png</bitmap>
                                             <tooltip>*Apply*</tooltip>
                                           </object>
                                           <option>1</option>
