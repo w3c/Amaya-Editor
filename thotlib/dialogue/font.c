@@ -233,8 +233,7 @@ int GetCharsCapacity (int volpixel)
   ----------------------------------------------------------------------*/
 int CharacterWidth (unsigned char c, ptrfont font)
 {
-#ifdef _I18N_
-#ifdef _WINDOWS
+#if defined(_I18N_) && defined(_WINDOWS)
   SIZE wsize;
   HFONT currentFont, HOldFont; 
 
@@ -242,9 +241,7 @@ int CharacterWidth (unsigned char c, ptrfont font)
   GetTextExtentPoint (TtDisplay, (LPCTSTR) (&c), 1, (LPSIZE) (&wsize));
   SelectObject (TtDisplay, currentFont);
   return wsize.cx;
-#else  /* !_WINDOWS */
-#endif /* _WINDOWS */
-#else /* !_I18N_ */
+#else /* _I18N_ && _WINDOWS */
 #if !defined(_WINDOWS) && !defined(_GTK)
   XFontStruct        *xf;
   int                 i;
@@ -311,10 +308,10 @@ int CharacterWidth (unsigned char c, ptrfont font)
 	    l = xf->per_char[c - xf->min_char_or_byte2].width;
 	}
 #endif /* _GTK */
-#endif /* !_WINDOWS */
+#endif /* _WINDOWS */
      }
    return (l);
-#endif /* !_I18N_ */
+#endif /* _I18N_ && _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
