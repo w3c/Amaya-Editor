@@ -1635,28 +1635,13 @@ BOXES
 	END;
 
  HR_Graph1: BEGIN
-	Content: Graphics 'Z';
+	Content: Graphics 'h';
 	HorizPos: Left = Enclosing . Left;
 	VertPos: Top = Enclosing . Top;
 	Width: Enclosing . Width;
 	Height: Enclosing . Height;
 	Foreground: Creator =;
-	LineWeight: 1 px;
-	Visibility: Creator =;
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
-	END;
-
- HR_Graph2: BEGIN
-	Content: Graphics 'X';
-	HorizPos: Left = Enclosing . Left;
-	VertPos: Top = Enclosing . Top;
-	Width: Enclosing . Width;
-	Height: Enclosing . Height;
-	Foreground: White;
-	LineWeight: 1 px;
+	LineWeight: Creator =;
 	Visibility: Creator =;
 	IN Structure_view
 		Visibility: 0;
@@ -3412,8 +3397,6 @@ RULES
 	CreateLast(HR_Print);
 #else
 	CreateLast(HR_Alt);
-	if not within Preformatted
-	   CreateLast(HR_Graph2);
 	CreateLast(HR_Graph1);
 #endif
 	Width: Enclosing . Width;
@@ -3421,6 +3404,8 @@ RULES
 	HorizPos: VMiddle = Enclosing . VMiddle;
 	VertPos: Top = Previous . Bottom;
 	MarginTop: 0.2;
+	MarginBottom: 0.2;
+	Clear: Both;
 	LineWeight: 1 px;
 	Foreground: Black;
 	LineBreak: No;
@@ -3428,11 +3413,13 @@ RULES
 		BEGIN
 		Height: 1;
 		MarginTop: 0;
+		MarginBottom: 0;
 		VertPos: Top = Previous . Bottom;
 		END;
 	IN Structure_view
 		BEGIN
 		MarginTop: 0;
+		MarginBottom: 0;
 		Height: 0;
 		END;
 	IN Links_view

@@ -1957,12 +1957,12 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 		       pNextBox->BxAbstractBox->AbHorizEnclosing &&
 		       (pNextBox->BxAbstractBox->AbWidth.DimAbRef == NULL ||
 			!IsParentBox (pNextBox->BxAbstractBox->AbWidth.DimAbRef->AbBox, pNextBox)))
-		  {
-			  if (pNextBox->BxWidth < pLine->LiXMax)
-		wordWidth = pNextBox->BxWidth;
-			  else
-		wordWidth = pLine->LiXMax;
-		  }
+		{
+		  /*if (pNextBox->BxWidth > pLine->LiXMax)
+		    wordWidth = pLine->LiXMax;
+		    else*/
+		    wordWidth = pNextBox->BxWidth;
+		}
 	      pBox = pNextBox;
 	      xi += pNextBox->BxWidth;
 	      if (pNextBox->BxAbstractBox->AbLeafType == LtText &&
@@ -2393,7 +2393,8 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
 	    y = boxPrev->BxYOrg + boxPrev->BxHeight;
 	  else if (pLine && pLine->LiPrevious)
 	    /* the box is set at the top of the parent box */
-	    y = pLine->LiPrevious->LiYOrg + pLine->LiPrevious->LiHeight;
+	    /*y = pLine->LiPrevious->LiYOrg + pLine->LiPrevious->LiHeight;*/
+	    y = pLine->LiYOrg;
 	  else
 	    /* the box is set at the top of the parent box */
 	    y = pBlock->BxTMargin + pBlock->BxTBorder + pBlock->BxTPadding;
@@ -2428,7 +2429,8 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
 	    y = boxPrev->BxYOrg + boxPrev->BxHeight;
 	  else if (pLine && pLine->LiPrevious)
 	    /* the box is set at the top of the parent box */
-	    y = pLine->LiPrevious->LiYOrg + pLine->LiPrevious->LiHeight;
+	    /*y = pLine->LiPrevious->LiYOrg + pLine->LiPrevious->LiHeight;*/
+	    y = pLine->LiYOrg;
 	  else
 	    /* the box is set at the top of the parent box */
 	    y = pBlock->BxTMargin + pBlock->BxTBorder + pBlock->BxTPadding;
