@@ -31,6 +31,12 @@ typedef char BOOL;
 #endif
 #endif
 
+#ifdef DAV
+#ifndef HT_DAV
+#define HT_DAV
+#endif /* HT_DAV */
+#endif /* DAV */
+
 #include "WWWLib.h"
 #include "AHTInit.h"
 #include "WWWApp.h"
@@ -45,6 +51,7 @@ typedef char BOOL;
 #include "WWWHTTP.h"		/* HTTP access module */
 #include "HTProxy.h"
 #include "HTHost.h"
+
 
 typedef struct _AHTDocIdStatus
   {
