@@ -494,14 +494,14 @@ void     ComputeRadius (PtrAbstractBox pAb, int frame, ThotBool horizRef)
   if (horizRef)
     {
       if (pAb->AbRxUnit == UnPercent)
-	pBox->BxRx = PixelValue (pAb->AbRx, UnPercent, (PtrAbstractBox) pBox->BxW, 0);
+	pBox->BxRx = PixelValue (pAb->AbRx, UnPercent, (PtrAbstractBox) ((int)pBox->BxW), 0);
       else
 	pBox->BxRx = PixelValue (pAb->AbRx, pAb->AbRxUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
     }
   else
     {
       if (pAb->AbRyUnit == UnPercent)
-	pBox->BxRy = PixelValue (pAb->AbRy, UnPercent, (PtrAbstractBox) pBox->BxH, 0);
+	pBox->BxRy = PixelValue (pAb->AbRy, UnPercent, (PtrAbstractBox) ((int)pBox->BxH), 0);
       else
 	pBox->BxRy = PixelValue (pAb->AbRy, pAb->AbRyUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
     }
@@ -1684,9 +1684,10 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 				    pParentAb = pParentAb->AbEnclosing;
 				}
 				/* inherited from the parent */
-			      val = PixelValue (pDimAb->DimValue, UnPercent,
-						(PtrAbstractBox) pParentAb->AbBox->BxW, 0);
-				/* the rule gives the outside value */
+			      val = PixelValue (pDimAb->DimValue, UnPercent, 
+						(PtrAbstractBox) ((int)pParentAb->AbBox->BxW), 0);
+		
+			      /* the rule gives the outside value */
 			      val = val - dx;
 			      InsertDimRelation (pParentAb->AbBox, pBox,
 						 pDimAb->DimSameDimension, horizRef,
@@ -1743,19 +1744,19 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			  /* Inherit from a box */
 			  pRefBox = pDimAb->DimAbRef->AbBox;
 			  if (pRefBox == NULL)
-			  {
-			    /* forwards reference */
-			    pRefBox = GetBox (pDimAb->DimAbRef);
-			    if (pRefBox != NULL)
-			      pDimAb->DimAbRef->AbBox = pRefBox;
-			  }
+			    {
+			      /* forwards reference */
+			      pRefBox = GetBox (pDimAb->DimAbRef);
+			      if (pRefBox != NULL)
+				pDimAb->DimAbRef->AbBox = pRefBox;
+			    }
 			    
 			  if (pRefBox)
 			    {
 			      if (pDimAb->DimAbRef == pParentAb)
 				{
-				/* inherited from the parent */
-				/* same dimension? */
+				  /* inherited from the parent */
+				  /* same dimension? */
 				  if (pDimAb->DimSameDimension)
 				    val = pRefBox->BxW;
 				  else
@@ -1771,7 +1772,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 				}
 			      else
 				{
-				/* same dimension? */
+				  /* same dimension? */
 				  if (pDimAb->DimSameDimension)
 				    val = pRefBox->BxWidth;
 				  else
@@ -1841,8 +1842,8 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 				    pParentAb = pParentAb->AbEnclosing;
 				}
 			      /* inherited from the parent */
-			      val = PixelValue (pDimAb->DimValue, UnPercent,
-						(PtrAbstractBox) pParentAb->AbBox->BxH, 0);
+			      val = PixelValue (pDimAb->DimValue, UnPercent, 
+						(PtrAbstractBox) ((int)pParentAb->AbBox->BxH), 0);
 			      /* the rule gives the outside value */
 			      val = val - dy;
 			      InsertDimRelation (pParentAb->AbBox, pBox,
@@ -2064,7 +2065,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 		    delta = 0;
 		  else
 		    delta = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit,
-					(PtrAbstractBox) pAb->AbEnclosing->AbBox->BxW, 0);
+					(PtrAbstractBox) ((int) pAb->AbEnclosing->AbBox->BxW), 0);
 		}
 	      else
 		/* Convert the distance value */
@@ -2124,18 +2125,18 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 		{
 		  if (pChildAb != pAb && pChildAb->AbBox != NULL)
 		    {
-		    /* Si c'est un heritage on note l'indication hors-structure */
-		    if (pChildAb->AbVertPos.PosAbRef == pAb
-			&& pChildAb->AbVertPos.PosRefEdge != Top)
-		      {
-			if (!IsYPosComplete (pChildAb->AbBox))
-			  /* la boite  est maintenant placee en absolu */
-			  pChildAb->AbBox->BxYToCompute = TRUE;
-			pChildAb->AbBox->BxYOutOfStruct = TRUE;
-			if (pChildAb->AbEnclosing == pAb->AbEnclosing)
-			  pChildAb->AbVertEnclosing = pAb->AbVertEnclosing;
-			PropagateYOutOfStruct (pChildAb, TRUE, pChildAb->AbVertEnclosing);
-		      }
+		      /* Si c'est un heritage on note l'indication hors-structure */
+		      if (pChildAb->AbVertPos.PosAbRef == pAb
+			  && pChildAb->AbVertPos.PosRefEdge != Top)
+			{
+			  if (!IsYPosComplete (pChildAb->AbBox))
+			    /* la boite  est maintenant placee en absolu */
+			    pChildAb->AbBox->BxYToCompute = TRUE;
+			  pChildAb->AbBox->BxYOutOfStruct = TRUE;
+			  if (pChildAb->AbEnclosing == pAb->AbEnclosing)
+			    pChildAb->AbVertEnclosing = pAb->AbVertEnclosing;
+			  PropagateYOutOfStruct (pChildAb, TRUE, pChildAb->AbVertEnclosing);
+			}
 		    }
 		  pChildAb = pChildAb->AbNext;
 		}
@@ -2163,7 +2164,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 		    delta = 0;
 		  else
 		    delta = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit,
-					(PtrAbstractBox) pAb->AbEnclosing->AbBox->BxH, 0);
+					(PtrAbstractBox) ((int) pAb->AbEnclosing->AbBox->BxH), 0);
 		}
 	      else
 		/* Convert the distance value */
@@ -2225,10 +2226,10 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 
 
 /*----------------------------------------------------------------------
-   ComputeAxisRelation applique la regle de positionnement donnee en 
-   parametre a` la boite d'indice pBox. L'axe              
-   horizontal ou vertical de la boite, selon que horizRef  
-   est VRAI ou FAUX est mis a` jour.                       
+  ComputeAxisRelation applique la regle de positionnement donnee en 
+  parametre a` la boite d'indice pBox. L'axe              
+  horizontal ou vertical de la boite, selon que horizRef  
+  est VRAI ou FAUX est mis a` jour.                       
   ----------------------------------------------------------------------*/
 void ComputeAxisRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horizRef)
 {
@@ -2255,7 +2256,7 @@ void ComputeAxisRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool hori
 	  localEdge = VertRef;
 	  if (rule.PosUnit == UnPercent)
 	    dist = PixelValue (rule.PosDistance, UnPercent,
-			       (PtrAbstractBox) pBox->BxW, 0);
+			       (PtrAbstractBox) ((int) pBox->BxW), 0);
 	  else
 	    dist = 0;
 	}
@@ -2265,7 +2266,7 @@ void ComputeAxisRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool hori
 	  localEdge = HorizRef;
 	  if (rule.PosUnit == UnPercent)
 	    dist = PixelValue (rule.PosDistance, UnPercent,
-			       (PtrAbstractBox) pBox->BxH, 0);
+			       (PtrAbstractBox) ((int) pBox->BxH), 0);
 	  else
 	    dist = BoxFontBase (pBox->BxFont);
 	}
@@ -2280,10 +2281,10 @@ void ComputeAxisRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool hori
 	{
 	  if (horizRef)
 	    dist = PixelValue (rule.PosDistance, UnPercent,
-			       (PtrAbstractBox) pAb->AbEnclosing->AbBox->BxW, 0);
+			       (PtrAbstractBox) ((int) pAb->AbEnclosing->AbBox->BxW), 0);
 	  else
 	    dist = PixelValue (rule.PosDistance, UnPercent,
-			       (PtrAbstractBox) pAb->AbEnclosing->AbBox->BxH, 0);
+			       (PtrAbstractBox) ((int) pAb->AbEnclosing->AbBox->BxH), 0);
 	}
       else
 	dist = PixelValue (rule.PosDistance, rule.PosUnit, pAb,

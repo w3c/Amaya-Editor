@@ -419,8 +419,9 @@ typedef struct _Animated_Element
   void                      *to;/*final value*/
   Type_anim                 AnimType;/*Color, Transform....*/
   Type_fill                 Fill;/*if anim continues forever... or not*/
-  Type_Attribute             Attr;/*class of Attr*/
+  Type_Attribute            Attr;/*class of Attr*/
   char                      *AttrName;/*permits to select attr ie opacity*/
+  int                       repeatCount;
 } Animated_Element;
 
 typedef struct _Animated_Cell

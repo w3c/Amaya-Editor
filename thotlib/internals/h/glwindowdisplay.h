@@ -56,14 +56,14 @@ void GL_Point (int fg, float width, float x, float y);
 void GL_DrawLine (int x1, int y1, int x2, int y2, ThotBool Round);
 void GL_DrawLines (ThotPoint *point, int npoints);
 
-void FDrawRectangle (int frame, int thick, int style, float x, float y, int width,
-		     int height, int fg, int bg, int pattern);
+void FDrawRectangle (int frame, int thick, int style, float x, float y, float width,
+		     float height, int fg, int bg, int pattern);
 
 void GL_DrawEmptyRectangle (int fg, int x, int y, int width, int height);
 void GL_DrawRectangle (int fg, int x, int y, int width, int height);
 
-void GL_DrawEmptyRectanglef (int fg, float x, float y, int width, int height);
-void GL_DrawRectanglef (int fg, float x, float y, int width, int height);
+void GL_DrawEmptyRectanglef (int fg, float x, float y, float width, float height);
+void GL_DrawRectanglef (int fg, float x, float y, float width, float height);
 
 void GL_DrawSegments (XSegment *point, int npoints);
 void GL_DrawArc (int x, int y, int w, int h, int angle1, int angle2, ThotBool filled);
@@ -142,4 +142,9 @@ void GL_SetPicForeground ();
 void ResetMainWindowBackgroundColor (int frame);
 void FreeGlTexture (void *Image);
 unsigned char *test_gradien_linear (); 
+
+#ifdef _SHARELIST
+int GetSharedContext ();
+void SetSharedContext (int frame);
+#endif /* _SHARELIST */
 #endif /*_GLWINDOWDISPLAY_H_*/

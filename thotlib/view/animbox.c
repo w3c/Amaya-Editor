@@ -1,10 +1,9 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2003
+ *  (c) COPYRIGHT INRIA, 2003-2003
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
-
 /*
  * Handle Animated Boxes
  *
@@ -67,6 +66,9 @@ static int Clipx, Clipy, ClipxMax, ClipyMax;
 #define Min(number, min) (number = ( (number < 0) ? min : ((number < min) ? number : min)) )
 #define Max(number, max) (number = ( (number < 0) ? max : ((number > max) ? number : max)) )
 
+/*----------------------------------------------------------------------
+  Define Minimum to be sure to get real clip.
+  ----------------------------------------------------------------------*/
 static void SetBaseClipping ()
 {
   Clipx = -1;
@@ -74,16 +76,18 @@ static void SetBaseClipping ()
   ClipyMax = -1;
   ClipxMax = -1;
 }
-
+/*----------------------------------------------------------------------
+  UpdateClipping : Define Area to be recomputed by animation
+  ----------------------------------------------------------------------*/
 static void UpdateClipping (PtrAbstractBox pAb)
 {
   while (pAb != NULL)
     {  
-      if (!(pAb->AbBox->BxClipH || pAb->AbBox->BxClipW))
-	ComputeBoundingBox (pAb->AbBox,
-			    Animated_Frame,
-			    0, 4096,
-			    0, 4096);
+      /* if (!(pAb->AbBox->BxClipH || pAb->AbBox->BxClipW)) */
+      /* 	ComputeBoundingBox (pAb->AbBox, */
+      /* 			    Animated_Frame, */
+      /* 			    0, 4096, */
+      /* 			    0, 4096); */
 
       if (pAb->AbBox->BxClipH || pAb->AbBox->BxClipW)
 	{
@@ -108,46 +112,114 @@ static void UpdateClipping (PtrAbstractBox pAb)
       pAb = pAb->AbNext;
     }
 }
-
+/*----------------------------------------------------------------------
+  interpolate_double_value : Compute a the value corresponding to a time
+  using the "regle de trois" ("rule of tree")
+  ----------------------------------------------------------------------*/
 static double interpolate_double_value (int from, int to, 
 					AnimTime current_time,
 					AnimTime duration)
 {
-  return (from + ((fmod (current_time, duration) * (to - from)) / duration));
+  return ((double)from + ((current_time / duration)  * (double)(to - from)));
 }
-
+/*----------------------------------------------------------------------
+  ApplyStrokeColorToAllBoxes : Recursivly apply the property
+  ----------------------------------------------------------------------*/
+static void ApplyStrokeColorToAllBoxes (PtrAbstractBox pAb, int result)
+{
+ while (pAb != NULL)
+    {      
+      pAb->AbBox->VisibleModification = TRUE;
+      pAb->AbForeground = result;
+      ApplyStrokeColorToAllBoxes (pAb->AbFirstEnclosed, result);
+      pAb = pAb->AbNext;
+    }
+}
+/*----------------------------------------------------------------------
+  ApplyFillColorToAllBoxes : Recursivly apply the property
+  ----------------------------------------------------------------------*/
+static void ApplyFillColorToAllBoxes (PtrAbstractBox pAb, int result)
+{
+ while (pAb != NULL)
+    {      
+      pAb->AbBox->VisibleModification = TRUE;
+      pAb->AbBackground = result; 
+      ApplyFillColorToAllBoxes (pAb->AbFirstEnclosed, result);
+      pAb = pAb->AbNext;
+    }
+}
+/*----------------------------------------------------------------------
+  ApplyOpacityToAllBoxes : Recursivly apply the property
+  ----------------------------------------------------------------------*/
 static void ApplyOpacityToAllBoxes (PtrAbstractBox pAb, int result)
 {
   while (pAb != NULL)
     {      
+      pAb->AbBox->VisibleModification = TRUE;
       pAb->AbOpacity = result;
       ApplyOpacityToAllBoxes (pAb->AbFirstEnclosed, result);
       pAb = pAb->AbNext;
     }
 }
-
+/*----------------------------------------------------------------------
+  ApplyXToAllBoxes  : Recursivly apply the property
+  ----------------------------------------------------------------------*/
 static void ApplyXToAllBoxes (PtrAbstractBox pAb, float result)
 {
   while (pAb != NULL)
     {      
+      pAb->AbBox->VisibleModification = TRUE;
       pAb->AbBox->BxXOrg = result;
-      pAb->AbBox->BxClipX = result;
-      pAb->AbHorizPosChange = TRUE;      
+      pAb->AbBox->BxClipX = result;  
       ApplyXToAllBoxes (pAb->AbFirstEnclosed, result);
       pAb = pAb->AbNext;
     }
 }
+/*----------------------------------------------------------------------
+  ApplyYToAllBoxes : Recursivly apply the property
+  ----------------------------------------------------------------------*/
 static void ApplyYToAllBoxes (PtrAbstractBox pAb, float result)
 {
   while (pAb != NULL)
     {      
+      pAb->AbBox->VisibleModification = TRUE;
       pAb->AbBox->BxYOrg = result;
       pAb->AbBox->BxClipY = result;
-      pAb->AbVertPosChange = TRUE;
       ApplyYToAllBoxes (pAb->AbFirstEnclosed, result);
       pAb = pAb->AbNext;
     }
 }
+/*----------------------------------------------------------------------
+   : Recursivly apply the property
+  ----------------------------------------------------------------------*/
+static void ApplyWidthToAllBoxes (PtrAbstractBox pAb, float result)
+{
+  while (pAb != NULL)
+    {      
+      pAb->AbBox->VisibleModification = TRUE;
+      pAb->AbBox->BxW = result;
+      pAb->AbBox->BxClipW = result;     
+      ApplyWidthToAllBoxes (pAb->AbFirstEnclosed, result);
+      pAb = pAb->AbNext;
+    }
+}
+/*----------------------------------------------------------------------
+   : Recursivly apply the property
+  ----------------------------------------------------------------------*/
+static void ApplyHeightToAllBoxes (PtrAbstractBox pAb, float result)
+{
+  while (pAb != NULL)
+    {      
+      pAb->AbBox->VisibleModification = TRUE;
+      pAb->AbBox->BxH = result;
+      pAb->AbBox->BxClipH = result;
+      ApplyHeightToAllBoxes (pAb->AbFirstEnclosed, result);
+      pAb = pAb->AbNext;
+    }
+}
+/*----------------------------------------------------------------------
+  animate_box_animate : Animate any property of an element				
+  ----------------------------------------------------------------------*/
 static void animate_box_animate (PtrElement El,
 				 Animated_Element *animated,
 				 AnimTime current_time)
@@ -159,7 +231,7 @@ static void animate_box_animate (PtrElement El,
   if (animated->AttrName == NULL)
     return;
   
-  if (strcmp (animated->AttrName, "opacity") == 0)
+  if (strcasecmp (animated->AttrName, "opacity") == 0)
     {
       
       FrameToView (Animated_Frame, &doc, &view);
@@ -176,7 +248,7 @@ static void animate_box_animate (PtrElement El,
 	    UpdateClipping (pAb->AbFirstEnclosed);
 	  }      
     }
-  else if (strcmp (animated->AttrName, "x") == 0)
+  else if (strcasecmp (animated->AttrName, "x") == 0)
     {
       FrameToView (Animated_Frame, &doc, &view);
       pAb = El->ElAbstractBox[view - 1];
@@ -184,7 +256,7 @@ static void animate_box_animate (PtrElement El,
 	if (pAb->AbFirstEnclosed)
 	  {	  
 	    
-	    /* UpdateClipping (pAb->AbFirstEnclosed); */
+	    UpdateClipping (pAb->AbFirstEnclosed);
 
 	    result = interpolate_double_value (atof ((char *) animated->from), 
 					       atof ((char *) animated->to),
@@ -197,7 +269,7 @@ static void animate_box_animate (PtrElement El,
 	  }
       
     }
-  else if (strcmp (animated->AttrName, "y") == 0)
+  else if (strcasecmp (animated->AttrName, "y") == 0)
     {
       FrameToView (Animated_Frame, &doc, &view);
       pAb = El->ElAbstractBox[view - 1];
@@ -205,7 +277,7 @@ static void animate_box_animate (PtrElement El,
 	if (pAb->AbFirstEnclosed)
 	  {	  
 	    
-	    /* 	    UpdateClipping (pAb->AbFirstEnclosed); */
+	    	    UpdateClipping (pAb->AbFirstEnclosed);
 	    
 	    result = interpolate_double_value (atof ((char *) animated->from), 
 					       atof ((char *) animated->to),
@@ -218,8 +290,50 @@ static void animate_box_animate (PtrElement El,
 	  }
       
     }
+  else if (strcasecmp (animated->AttrName, "width") == 0)
+    {
+      FrameToView (Animated_Frame, &doc, &view);
+      pAb = El->ElAbstractBox[view - 1];
+      if (pAb)
+	if (pAb->AbFirstEnclosed)
+	  {	  
+	    
+	    UpdateClipping (pAb->AbFirstEnclosed);
+	    
+	    result = interpolate_double_value (atof ((char *) animated->from), 
+					       atof ((char *) animated->to),
+					       current_time,
+					       animated->duration);
+	    ApplyWidthToAllBoxes (pAb->AbFirstEnclosed, (float) result);
+	   
+	    UpdateClipping (pAb->AbFirstEnclosed);
+	    
+	  }
+      
+    }
+else if (strcasecmp (animated->AttrName, "height") == 0)
+    {
+      FrameToView (Animated_Frame, &doc, &view);
+      pAb = El->ElAbstractBox[view - 1];
+      if (pAb)
+	if (pAb->AbFirstEnclosed)
+	  {	  
+	    
+	    UpdateClipping (pAb->AbFirstEnclosed);	    
+	    result = interpolate_double_value (atof ((char *) animated->from), 
+					       atof ((char *) animated->to),
+					       current_time,
+					       animated->duration);
+	    ApplyHeightToAllBoxes (pAb->AbFirstEnclosed, (float) result);	   
+	    UpdateClipping (pAb->AbFirstEnclosed);
+	    
+	  }
+      
+    }
 }
-
+/*----------------------------------------------------------------------
+  
+  ----------------------------------------------------------------------*/
 static PtrTransform GetTransformation (PtrTransform Trans, 
 				       TransformType _trans_type)
 {
@@ -235,7 +349,9 @@ static PtrTransform GetTransformation (PtrTransform Trans,
     }
   return Trans;   
 }
-
+/*----------------------------------------------------------------------
+  animate_box_transformation : animate the scale, translate, skew, rotate...
+  ----------------------------------------------------------------------*/
 static void animate_box_transformation (PtrElement El,
 					Animated_Element *animated,
 					AnimTime current_time)
@@ -268,13 +384,14 @@ static void animate_box_transformation (PtrElement El,
       if (Trans == NULL)
 	{
 	  Trans = TtaNewTransformTranslate (result, result, FALSE);
-	  TtaAppendTransform ((Element) El, Trans, doc);	  
+	  TtaReplaceTransform ((Element) El, Trans, doc); 
+	  /* TtaAppendTransform ((Element) El, Trans, doc); */	  
 	}
       pAb = El->ElAbstractBox[view - 1];
       if (pAb)
 	if (pAb->AbFirstEnclosed)
 	  {
-	    /* 	    UpdateClipping (pAb->AbFirstEnclosed); */
+	    	    UpdateClipping (pAb->AbFirstEnclosed);
 
 	    Trans->XScale = result;
 	    Trans->YScale = result;
@@ -304,13 +421,14 @@ static void animate_box_transformation (PtrElement El,
       if (Trans == NULL)
 	{
 	  Trans = TtaNewTransformScale (result, result, FALSE);
-	  TtaAppendTransform ((Element) El, Trans, doc);	  
+	  TtaReplaceTransform ((Element) El, Trans, doc); 
+	  /* TtaAppendTransform ((Element) El, Trans, doc);	   */
 	}
       pAb = El->ElAbstractBox[view - 1];
       if (pAb)
 	if (pAb->AbFirstEnclosed)
 	  {
-	    /* 	    UpdateClipping (pAb->AbFirstEnclosed); */
+	    UpdateClipping (pAb->AbFirstEnclosed);
 	    Trans->XScale = result;
 	    Trans->YScale = result;
 	    ComputeBoundingBox (pAb->AbFirstEnclosed->AbBox, 
@@ -336,13 +454,14 @@ static void animate_box_transformation (PtrElement El,
       if (Trans == NULL)
 	{
 	  Trans = TtaNewTransformRotate (result, 0, 0);
-	  TtaAppendTransform ((Element) El, Trans, doc);	  
+	  TtaReplaceTransform ((Element) El, Trans, doc); 
+	  /* TtaAppendTransform ((Element) El, Trans, doc);	  */ 
 	}
       pAb = El->ElAbstractBox[view - 1];
       if (pAb)
 	if (pAb->AbFirstEnclosed)
 	  {
-	    /* 	    UpdateClipping (pAb->AbFirstEnclosed); */
+	    	    UpdateClipping (pAb->AbFirstEnclosed);
 	    
 	    Trans->Angle = result;
 	    ComputeBoundingBox (pAb->AbFirstEnclosed->AbBox, 
@@ -368,13 +487,14 @@ static void animate_box_transformation (PtrElement El,
       if (Trans == NULL)
 	{
 	  Trans = TtaNewTransformSkewX (result);
-	  TtaAppendTransform ((Element) El, Trans, doc);	  
+	  TtaReplaceTransform ((Element) El, Trans, doc); 
+	  /* TtaAppendTransform ((Element) El, Trans, doc);	   */
 	}
       pAb = El->ElAbstractBox[view - 1];
       if (pAb)
 	if (pAb->AbFirstEnclosed)
 	  {
-	    /* 	    UpdateClipping (pAb->AbFirstEnclosed); */
+	    	    UpdateClipping (pAb->AbFirstEnclosed);
 	    
 	    Trans->Factor = result;
 	    ComputeBoundingBox (pAb->AbFirstEnclosed->AbBox, 
@@ -400,13 +520,14 @@ static void animate_box_transformation (PtrElement El,
       if (Trans == NULL)
 	{
 	  Trans = TtaNewTransformSkewY (result);
-	  TtaAppendTransform ((Element) El, Trans, doc);	  
+	  TtaReplaceTransform ((Element) El, Trans, doc); 
+	  /* TtaAppendTransform ((Element) El, Trans, doc);	   */
 	}
       pAb = El->ElAbstractBox[view - 1];
       if (pAb)
 	if (pAb->AbFirstEnclosed)
 	  {
-	    /* 	    UpdateClipping (pAb->AbFirstEnclosed); */
+	    	    UpdateClipping (pAb->AbFirstEnclosed);
 	    Trans->Factor = result;
 	    ComputeBoundingBox (pAb->AbFirstEnclosed->AbBox, 
 				Animated_Frame, 
@@ -418,63 +539,135 @@ static void animate_box_transformation (PtrElement El,
       break;
     }  
 }
-
-
-static void animate_box_color ()
+/*----------------------------------------------------------------------
+  animate_box_color : Animate the color propoerty
+  ----------------------------------------------------------------------*/
+static void animate_box_color (PtrElement El,
+			       Animated_Element *animated,
+			       AnimTime current_time)
 {
+  int doc, view;
+  PtrAbstractBox pAb = NULL;
+  unsigned short fromred, fromgreen, fromblue, 
+    tored, togreen, toblue, 
+    resultred, resultgreen, resultblue;
+  double         proportion;
+  int            result;
 
-}
-
-static void animate_box_motion ()
-{
-
-}
-static ThotBool is_animated_now (Animated_Element *animated, AnimTime current_time)
-{
-  if (current_time > animated->start) 
-    /* && */
-    /*       current_time < animated->start + animated->duration) */
-    {
-      return TRUE;
+  proportion = current_time / animated->duration;
+  TtaGiveRGB ((char *) animated->from, &fromred, &fromgreen, &fromblue);
+  TtaGiveRGB ((char *) animated->to, &tored, &togreen, &toblue);
+  resultred = (unsigned short) (fromred + proportion * (tored - fromred));
+  resultgreen = (unsigned short) (fromgreen + proportion * (togreen - fromgreen));
+  resultblue = (unsigned short) (fromblue + proportion * (toblue - fromblue));
+  result = TtaGetThotColor (resultred, resultgreen, resultblue);
+  FrameToView (Animated_Frame, &doc, &view);
+  pAb = El->ElAbstractBox[view - 1];
+  if (pAb)
+    {	    	
+      if (strcasecmp (animated->AttrName, "fill") == 0)
+	ApplyFillColorToAllBoxes (pAb, result);
+      else if (strcasecmp (animated->AttrName, "stroke") == 0)
+	ApplyStrokeColorToAllBoxes (pAb, result);	   
+      UpdateClipping (pAb);
     }
-  else
-    return FALSE;
 }
+/*----------------------------------------------------------------------
+  animate_box_motion : Animate the position of a box using a path
+  ----------------------------------------------------------------------*/
+static void animate_box_motion (PtrElement El,
+			       Animated_Element *animated,
+			       AnimTime current_time)
+{
+  /*AnimPath \ {path, pts_prop}*/
+  /*Get path->height = path length*/
+    /* Get prop_point = pos_point/lenght for each point*/
+  /*interpolate prop upon time*/
+  /* get propx1 < prop > propx2 in pts_prop array*/
 
-
+  /*
+    pts_prop = (pts_prop - pts_prop1) / (pts_prop2 - pts_prop1);
+    x = x1 + (pts_prop*(x2 -x1));
+    y = y1 + (pts_prop*(y2 -y1));
+    applyX
+    applyY
+  */
+}
+/*----------------------------------------------------------------------
+  is_animated_now : Compute if animation appply for this box upon time
+  ----------------------------------------------------------------------*/
+static ThotBool is_animated_now (Animated_Element *animated, AnimTime *current_time)
+{
+  if (*current_time > animated->start) 
+    {
+      *current_time = *current_time - animated->start;
+      if (*current_time < animated->duration)
+	return TRUE;
+      else if (animated->repeatCount > 1)
+	{
+	  if (animated->repeatCount > ((int)(*current_time/animated->duration)))
+	    *current_time = fmod (*current_time, animated->duration);
+	    return TRUE;
+	}
+      else
+	{
+	  switch (animated->Fill)
+	    {
+	    case Freeze:
+	      *current_time = animated->duration;
+	      return TRUE;
+	    case Otherfill:
+	      *current_time = animated->start;
+	      return TRUE;
+	    default:
+	      *current_time = animated->start;
+	      return TRUE;
+	    }
+	}
+    }
+  return FALSE;
+}
+/*----------------------------------------------------------------------
+  animate_box : animate a a box using all animation that apply on him
+  ----------------------------------------------------------------------*/
 static void animate_box (PtrElement El,
 			 AnimTime current_time)
 {
   Animated_Element *animated = NULL;
- 
+  AnimTime          rel_time;
+
   if (El)
     if (El->animation)
       {      
 	animated = (Animated_Element *) El->animation;
 	while (animated)
 	  {
-	      
-	    if (is_animated_now(animated, current_time))
+	    rel_time = current_time;
+	    if (is_animated_now(animated, &rel_time))
 	      {
 		switch (animated->AnimType)
 		  {
 		  case Color:
-		    animate_box_color ();
+		    if (animated->from && animated->to)
+		      animate_box_color (El, animated, rel_time);
 		    break;
 		  
 		  case Transformation:
-		    animate_box_transformation (El, animated, current_time);
+		    if (animated->from && animated->to)
+		      animate_box_transformation (El, animated, rel_time);
 		    break;
 		  
 		  case Motion:
-		    animate_box_motion ();
-		    break;
-		  
-		  case Set:
+		    if (animated->from && animated->to)
+		      animate_box_motion (El, animated, rel_time);
 		    break;
 		  
 		  case Animate:
-		    animate_box_animate (El, animated, current_time);
+		    if (animated->from && animated->to)
+		      animate_box_animate (El, animated, rel_time);
+		    break;
+		  
+		  case Set:
 		    break;
 		  
 		  case OtherAnim:
@@ -490,8 +683,9 @@ static void animate_box (PtrElement El,
     
 }
 #endif /* _GLANIM */
-
-
+/*----------------------------------------------------------------------
+  AnimatedBoxAdd : Add a reference to animated element in the frame
+  ----------------------------------------------------------------------*/
 void AnimatedBoxAdd (PtrElement element)
 {
 #ifdef _GLANIM 
@@ -520,7 +714,9 @@ void AnimatedBoxAdd (PtrElement element)
   /* current->El = element->ElParent; */
 #endif /* _GLANIM */
 }
-
+/*----------------------------------------------------------------------
+  AnimatedBoxDel : Delete a reference to an animated element
+  ----------------------------------------------------------------------*/
 void AnimatedBoxDel (PtrElement element)
 {
 #ifdef _GLANIM 
@@ -561,7 +757,9 @@ void AnimatedBoxDel (PtrElement element)
     }
 #endif /* _GLANIM */
 }
-
+/*----------------------------------------------------------------------
+  FreeAnimatedBox : Free Allocated resources
+  ----------------------------------------------------------------------*/
 void FreeAnimatedBox (Animated_Cell *current)
 {
 #ifdef _GLANIM 
@@ -570,9 +768,10 @@ void FreeAnimatedBox (Animated_Cell *current)
   TtaFreeMemory (current);  
 #endif /* _GLANIM */
 }
-
-
-
+/*----------------------------------------------------------------------
+  Animate_boxes : Animate All animated boxe 
+and define region that need redisplay
+  ----------------------------------------------------------------------*/
 void Animate_boxes (int frame, 
 		    AnimTime current_time)
 {

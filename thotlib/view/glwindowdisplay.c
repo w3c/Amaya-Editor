@@ -50,6 +50,33 @@
 #include "picture_f.h"
 #include "tesse_f.h"
 
+
+#ifdef _GTK
+#include <gtkgl/gtkglarea.h>
+/* Unix timer */
+#include <unistd.h>
+#include <sys/timeb.h>
+#else /*WINDOWS*/
+#include <windows.h>
+/* Win32 opengl context based on frame number*/
+static HDC   GL_Windows[50];	
+static HGLRC GL_Context[50];
+#endif /*_GTK*/
+
+#include <GL/gl.h>
+#include <GL/glu.h>
+
+#ifndef CALLBACK
+#define CALLBACK
+#endif
+
+#include "openglfont.h"
+#include "glwindowdisplay.h"
+
+#include <math.h> 
+#include <stdio.h> 
+
+
 #define ALLOC_POINTS    300
 
 /*
@@ -57,9 +84,6 @@
  * degrees to radians and so on...
  * All for EllipticSplit and/or GL_DrawArc
  */
-
-#include <math.h> 
-#include <stdio.h> 
 
 #define PRECISION float
 
@@ -111,31 +135,6 @@
 #define SLICES 360
 #define SLICES_SIZE 361
 
-#ifdef _GTK
-#include <gtkgl/gtkglarea.h>
-/* Unix timer */
-#include <unistd.h>
-#include <sys/timeb.h>
-/*#define GLU_CALLBACK_CAST (void (*)())*/
-#else /*WINDOWS*/
-#include <windows.h>
-/*
-  #ifndef CALLBACK
-  #define CALLBACK
-  #endif
-  #define GLU_CALLBACK_CAST
-*/
-#endif /*_GTK*/
-
-#include <GL/gl.h>
-#include <GL/glu.h>
-
-#ifndef CALLBACK
-#define CALLBACK
-#endif
-
-#include "openglfont.h"
-#include "glwindowdisplay.h"
 
 static ThotBool Software_Mode = TRUE;
 static ThotBool NotFeedBackMode = TRUE;
@@ -182,12 +181,57 @@ void ClearAll (int frame)
     
   }
 }
+
+#ifndef _NOSHARELIST
+
+static int Shared_Context=-1;
+/*----------------------------------------------------------------------
+  GetSharedContext : get the name of the frame used as shared context
+  ----------------------------------------------------------------------*/
+int GetSharedContext ()
+{
+  if (Shared_Context != -1)
+    return Shared_Context;
+  return -1;
+}
+/*----------------------------------------------------------------------
+  SetSharedContext : set the name of the frame used as shared context
+  ----------------------------------------------------------------------*/
+void SetSharedContext (int frame)
+{
+  Shared_Context = frame;
+}
+/*----------------------------------------------------------------------
+  GL_KillFrame : if realeasing a source sharing context, name a new one 
+as the source sharing context
+  ----------------------------------------------------------------------*/
+static void GL_KillFrame (int frame)
+{
+  int i;
+
+  if (frame != Shared_Context)
+    return;
+  for (i = 0 ; i <= MAX_FRAME; i++)
+    {  
+#ifndef _WINDOWS 
+      if (i != Shared_Context && FrameTable[i].WdFrame)
+#else /* _WINDOWS */
+	if (i != Shared_Context && GL_Context[i])
+#endif /* _WINDOWS */
+	{
+	Shared_Context = i;
+	return;
+	}
+    }
+}
+#endif /*_NOSHARELIST*/
+
 #ifdef _GTK
-/*
+/*--------------------------------------------------------------
  * Make the window background the same as the OpenGL one.  This
  * is used to avoid flickers when the widget size changes.
  * This is fixed in GTK+-2.0 but doesn't hurt.
- */
+ --------------------------------------------------------------*/
 void update_bg_colorGTK (int frame, int color)
 {
   GtkWidget *gl_widget;
@@ -260,12 +304,11 @@ void Clear (int frame, int width, int height, int x, int y)
 
 #ifdef _WINDOWS 
 
-/* Win32 opengl context based on frame number*/
-static HDC   GL_Windows[50];	
-static HGLRC GL_Context[50];
-
-
-int ChoosePixelFormatEx(HDC hdc)
+/*----------------------------------------------------------------------
+  ChoosePixelFormatEx : Get Pixel format descriptor in order to request it
+to windows
+  ----------------------------------------------------------------------*/
+int ChoosePixelFormatEx (HDC hdc)
 { 
   int wbpp = 32; 
   int wdepth = 16; 
@@ -346,7 +389,9 @@ int ChoosePixelFormatEx(HDC hdc)
     return maxindex;
   return maxindex;
 }
-
+/*----------------------------------------------------------------------
+  init_pfd : init the struct describing the screen we want
+ ----------------------------------------------------------------------*/
 void init_pfd ()
 {
   static PIXELFORMATDESCRIPTOR myPFD;
@@ -488,8 +533,10 @@ void GL_Win32ContextInit (HWND hwndClient, int frame)
 	}
     }
 #ifdef _SHARELIST
-  if (GL_Context[1]) 
-    wglShareLists (GL_Context[1], hGLRC);
+  if (GetSharedContext () != 1) 
+    wglShareLists (GL_Context[GetSharedContext ()], hGLRC);
+  else
+    SetSharedContext (frame);
 #endif /*_SHARELIST*/
   ActiveFrame = frame;
 }
@@ -508,6 +555,7 @@ void GL_Win32ContextClose (int frame, HWND hwndClient)
     ReleaseDC (hwndClient, GL_Windows[frame]);
   GL_Windows[frame] = 0;
   GL_Context[frame] = 0;
+  GL_KillFrame (frame);
 }
 #endif /*_WINDOWS*/
 
@@ -516,14 +564,23 @@ static int FillOpacity = 1000;
 static int StrokeOpacity = 1000;
 static ThotBool Fill_style = TRUE;
 
+/*------------------------------------------
+  GL_SetOpacity :
+  ---------------------------------------------*/
 void GL_SetOpacity (int opacity)
 {
   Opacity = (int) ((opacity * 255)/1000);
 }
+/*------------------------------------------
+  GL_SetStrokeOpacity :
+  ---------------------------------------------*/
 void GL_SetStrokeOpacity (int opacity)
 {
   StrokeOpacity = (int) ((opacity * 255)/1000);
 }
+/*------------------------------------------
+  GL_SetFillOpacity  :
+  ---------------------------------------------*/
 void GL_SetFillOpacity (int opacity)
 {
   FillOpacity = (int) ((opacity * 255)/1000);
@@ -535,6 +592,21 @@ static int width_previous_clip = 0;
 static int height_previous_clip = 0;
 
 
+
+/*----------------------------------------------------------------------
+  GL_DestroyFrame :
+  Close Opengl pipeline
+  ----------------------------------------------------------------------*/
+void  GL_DestroyFrame (int frame)
+{
+#ifndef _NOSHARELIST
+  GL_KillFrame (frame);
+#endif /*_NOSHARELIST*/
+  FreeAllPicCacheFromFrame (frame);
+}
+/*----------------------------------------------------------------------
+  GL_SetClipping : prevent drawing outside this rectangle
+  ----------------------------------------------------------------------*/
 void GL_SetClipping (int x, int y, int width, int height)
 {
   glEnable (GL_SCISSOR_TEST);
@@ -547,7 +619,10 @@ void GL_SetClipping (int x, int y, int width, int height)
       height_previous_clip = height;
     }
 }
-
+/*----------------------------------------------------------------------
+  GL_UnsetClippingRestore : restore previous clipping or 
+free the drawing from it
+  ----------------------------------------------------------------------*/
 void GL_UnsetClippingRestore (ThotBool Restore)
 {  
   glDisable (GL_SCISSOR_TEST);
@@ -567,6 +642,9 @@ void GL_UnsetClippingRestore (ThotBool Restore)
       height_previous_clip = 0;
     }
 }
+/*----------------------------------------------------------------------
+  GL_UnsetClipping : free the drawing from clipping
+  ----------------------------------------------------------------------*/
 void GL_UnsetClipping  (int x, int y, int width, int height)
 {  
   glDisable (GL_SCISSOR_TEST);
@@ -582,6 +660,9 @@ void GL_UnsetClipping  (int x, int y, int width, int height)
       height_previous_clip = 0;
     }
 }
+/*----------------------------------------------------------------------
+  GL_GetCurrentClipping : get  the clipping
+  ----------------------------------------------------------------------*/
 void GL_GetCurrentClipping (int *x, int *y, int *width, int *height)
 {  
   *x = x_previous_clip;
@@ -589,15 +670,6 @@ void GL_GetCurrentClipping (int *x, int *y, int *width, int *height)
   *width = width_previous_clip;
   *height= height_previous_clip;
 }
-/*----------------------------------------------------------------------
-  GL_DestroyFrame :
-  Close Opengl pipeline
-  ----------------------------------------------------------------------*/
-void  GL_DestroyFrame (int frame)
-{
-  FreeAllPicCacheFromFrame (frame);
-}
-
 /*----------------------------------------------------------------------
   GL_SetForeground : set color before drawing a or many vertex
   ----------------------------------------------------------------------*/
@@ -731,7 +803,7 @@ void  GL_DrawEmptyRectangle (int fg, int x, int y, int width, int height)
 /*----------------------------------------------------------------------
   GL_DrawEmptyRectangle Outlined rectangle
   ----------------------------------------------------------------------*/
-void  GL_DrawEmptyRectanglef (int fg, float x, float y, int width, int height)
+void  GL_DrawEmptyRectanglef (int fg, float x, float y, float width, float height)
 { 
   Fill_style = FALSE;	
   GL_SetForeground (fg);
@@ -771,7 +843,7 @@ void GL_DrawRectangle (int fg, int x, int y, int width, int height)
   GL_DrawRectangle
   (don't use glrect because it's exactly the same but require opengl 1.2)
   ----------------------------------------------------------------------*/
-void GL_DrawRectanglef (int fg, float x, float y, int width, int height)
+void GL_DrawRectanglef (int fg, float x, float y, float width, float height)
 {
   GL_SetForeground (fg);
   glBegin (GL_QUADS);
@@ -1249,7 +1321,7 @@ void DisplayBoxTransformation (void *v_trans, int x, int y)
 	{
 	case  PtElBoxTranslate:
 	  glTranslatef (Trans->XScale - ((float) x), 
-			Trans->YScale- ((float) y), 
+			Trans->YScale - ((float) y), 
 			0);
 	  return;
 	default:
@@ -1264,26 +1336,34 @@ void DisplayBoxTransformation (void *v_trans, int x, int y)
   ----------------------------------------------------*/
 static void DisplayViewBoxTransformation (PtrTransform Trans, int Width, int Height)
 {
-  
+  float x_trans, y_trans;
+  double  w_scale, h_scale; 
+  ThotBool is_translated, is_scaled;
+
+  is_translated = is_scaled = FALSE;
   while (Trans)
     {
       switch (Trans->TransType)
 	{
 	case  PtElviewboxScale:
-	  glScaled ((double) (Width / Trans->XScale), 
-		    (double) (Height / Trans->YScale), 
-		    0);
+	  w_scale = (double) (Width / Trans->XScale); 
+	  h_scale = (double) (Height / Trans->YScale);
+	  is_scaled = TRUE;
 	  break;
 	case PtElviewboxTranslate:
-	  glTranslatef (Trans->XScale, 
-			Trans->YScale, 
-			0);
+	  x_trans = Trans->XScale; 
+	  y_trans = Trans->YScale;
+	  is_translated = TRUE;
 	  break;
 	default:
 	  break;	  
 	}
       Trans = Trans->Next;
     }
+  if (is_scaled)
+    glScaled (w_scale, h_scale, (double) 0.0f);
+  if (is_translated)
+    glTranslatef (-x_trans, -y_trans, (float) 0.0f);
 }
 #endif /* _GLTRANSFORMATION */
 /*---------------------------------------------------
@@ -1422,7 +1502,9 @@ void DisplayTransformationExit ()
   glPopMatrix ();
 #endif /* _GLTRANSFORMATION */
 }
-/* Write contents of one vertex to stdout.	*/
+/*-------------------------------
+ print2DVertex: Write contents of one vertex to stdout
+-------------------------------*/
 void print2DVertex (GLint size,
 		    GLint *count, 
 		    GLfloat *buffer)
@@ -1437,8 +1519,13 @@ void print2DVertex (GLint size,
     }
   printf ("\t");
 }
-/*  Write contents of entire buffer.  (Parse tokens!)	*/
-void printBuffer(GLint size, GLfloat *buffer)
+/*---------------------------------------
+  printBuffer :
+Write contents of entire buffer.  (Parse tokens!)	
+Bounding box Debugging purpose
+(and print...)
+---------------------------------------------*/
+void printBuffer (GLint size, GLfloat *buffer)
 {
   GLint  token, count, vertex_count;
 
@@ -1495,6 +1582,9 @@ void printBuffer(GLint size, GLfloat *buffer)
 	}
     }
 }
+/*------------------------------------------------------------
+ computeisminmax : check if number is a new min or max
+  ------------------------------------------------------------*/
 static void computeisminmax (double number, double *min, double *max)
 {
   if (*min < 0)
@@ -1506,6 +1596,9 @@ static void computeisminmax (double number, double *min, double *max)
   else if (number > *max)
     *max = number;
 }
+/*------------------------------------------------------------
+ getboundingbox : Get bound values of the box
+  ------------------------------------------------------------*/
 static void getboundingbox (GLint size, GLfloat *buffer, int frame,
 			    int *xorig, int *yorig, 
 			    int *worig, int *horig)
@@ -1559,10 +1652,11 @@ static void getboundingbox (GLint size, GLfloat *buffer, int frame,
   *yorig = (int) y;
   *worig = (int) (w - x) + 1;
   *horig = (int) (h - y) + 1;
-  if (*xorig > 0)
-    *xorig += 1;
-  if (*yorig > 0)
-    *yorig += 1;
+
+  /* if (*xorig > 0) */
+/*     *xorig += 1; */
+/*   if (*yorig > 0) */
+/*     *yorig += 1; */
 }
 
 

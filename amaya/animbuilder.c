@@ -35,7 +35,9 @@
 #include "SVGedit_f.h"
 #include "anim_f.h"
 
-
+/*-----------------------------------------------
+get_int_attribute_from_el : Get a int value from an xml attribute
+  -----------------------------------------------*/
 int get_int_attribute_from_el (Element el, int Attribut_Type)
 {
 #ifdef _SVGANIM
@@ -54,6 +56,10 @@ int get_int_attribute_from_el (Element el, int Attribut_Type)
 #endif /* _SVGANIM */
 }
 
+/*-----------------------------------------------
+get_intptr_attribute_from_el : Get a int value from an xml attribute,
+but stored as an allocated ptr
+  -----------------------------------------------*/
 int *get_intptr_attribute_from_el (Element el, int Attribut_Type)
 {
 #ifdef _SVGANIM
@@ -73,6 +79,11 @@ int *get_intptr_attribute_from_el (Element el, int Attribut_Type)
 #endif /* _SVGANIM */
 }
 
+/*-----------------------------------------------
+get_char_attribute_from_el : Get a string 
+value from an xml attribute,
+but stored as an allocated ptr
+  -----------------------------------------------*/
 char *get_char_attribute_from_el (Element el, int Attribut_Type)
 {
 #ifdef _SVGANIM
@@ -112,6 +123,9 @@ char *get_char_attribute_from_el (Element el, int Attribut_Type)
 #include "xpm/animstop.xpm"
 #endif /* _WINDOWS */
 
+/*-----------------------------------------------
+  AnimPlay : Launch the timer needed to change time.
+  -----------------------------------------------*/
 void Anim_Play (Document document, View view)
 {
  TtaPlay (document, view);
@@ -125,6 +139,9 @@ static int      AnimButton;
 
 #endif /*_SVGANIM*/
 
+/*-----------------------------------------------
+  AddAnimPlayButton : Add a play button
+  -----------------------------------------------*/
 void AddAnimPlayButton (Document doc, View view)
 {
 #ifdef _GLANIM
@@ -146,17 +163,37 @@ void AddAnimPlayButton (Document doc, View view)
 #endif /*_GLANIM*/
 }
 
+/*-----------------------------------------------
+register_animated_element : store animation linked list in an element 
+  -----------------------------------------------*/
 void register_animated_element (Element animated)
 {
 #ifdef _SVGANIM
   void *anim_info;
   ElementType elType;
   double start, duration;
-  
+  int fill, repeatcount;  
   anim_info = TtaNewAnimInfo ();
   Read_time_info (animated, &start, &duration);
   TtaSetAnimationTime (anim_info, start, duration);
   elType = TtaGetElementType (animated);
+
+  switch (get_int_attribute_from_el (animated, SVG_ATTR_fill_))
+    {
+    case SVG_ATTR_fill__VAL_remove_:
+      TtaAddAnimRemove (anim_info);
+      break;
+    case SVG_ATTR_fill__VAL_freeze:
+      TtaAddAnimFreeze (anim_info);
+      break;
+    default:
+      TtaAddAnimRemove (anim_info);
+      break;
+    } 
+  repeatcount = get_int_attribute_from_el (animated, SVG_ATTR_repeatCount);
+  if (repeatcount > 1)
+    TtaAddAnimRepeatCount (repeatcount, anim_info);
+  /*repeat, repeatcount*/
   switch (elType.ElTypeNum)
     {
       
@@ -167,6 +204,8 @@ void register_animated_element (Element animated)
       break;      
 
     case SVG_EL_animateColor : 
+      TtaAddAnimAttrName ((void *) get_char_attribute_from_el (animated, SVG_ATTR_attributeName_), 
+			  anim_info);
       TtaAddAnimFrom ((void *) get_char_attribute_from_el (animated, SVG_ATTR_from), 
 		      anim_info);
       TtaAddAnimTo ((void *) get_char_attribute_from_el (animated, SVG_ATTR_to_), 

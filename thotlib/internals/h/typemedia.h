@@ -202,6 +202,9 @@ typedef struct _Box
 
   int             BxHeight;	        /* Box height including margins */
   int             BxWidth;	        /* Box width including margins */
+
+  int             BxH;	        	/* Inner height */
+  int             BxW;	        	/* Inner Width including spaces */
 #else /*_GL*/
 
   float             BxXOrg;	/* X origin from the root */
@@ -215,10 +218,11 @@ typedef struct _Box
 
   float             BxHeight;	        /* Box height including margins */
   float             BxWidth;	        /* Box width including margins */
+
+  float             BxH;	        	/* Inner height */
+  float             BxW;	        	/* Inner Width including spaces */
 #endif /* _GL */
 
-  int             BxH;	        	/* Inner height */
-  int             BxW;	        	/* Inner Width including spaces */
   int             BxTMargin;	        /* Top Margin */
   int             BxLMargin;	        /* Left Margin */
   int             BxBMargin;	        /* Bottom Margin */

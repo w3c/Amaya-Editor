@@ -1033,14 +1033,15 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
     }
 }
 /*----------------------------------------------------------------------
-  DrawRectangle draw a rectangle located at (x, y) in frame,
+  FDrawRectangle draw a rectangle located at (x, y) (as float number)
+in frame,
   of geometry width x height.
   thick indicates the thickness of the lines.
   Parameters fg, bg, and pattern are for drawing
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-void FDrawRectangle (int frame, int thick, int style, float x, float y, int width,
-		    int height, int fg, int bg, int pattern)
+void FDrawRectangle (int frame, int thick, int style, float x, float y, float width,
+		    float height, int fg, int bg, int pattern)
 {
   Pixmap              pat;
 

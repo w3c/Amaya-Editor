@@ -2448,6 +2448,9 @@ void BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta,
 #endif /* _GLTRANSFORMATION */
      }
    Propagate = savpropage;
+#ifdef _GL
+   pBox->VisibleModification = TRUE;
+#endif /* _GL */
 }
 
 

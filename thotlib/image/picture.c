@@ -250,8 +250,12 @@ static int LookupInPicCache (PictInfo *Image, int frame)
   
   while (Cache)
     {
-      if (strcasecmp (Cache->filename, filename) == 0 &&
-	  frame == Cache->frame)
+#ifdef _NOSHARELIST
+      if (strcasecmp (Cache->filename, filename) == 0 
+	  && frame == Cache->frame)
+#else /* _NOSHARELIST */
+	if (strcasecmp (Cache->filename, filename) == 0)
+#endif /* _NOSHARELIST */
 	{
 	  Image->PicWidth = (int) Cache->width;
 	  Image->PicHeight = (int) Cache->height;
@@ -329,7 +333,7 @@ but VERY VERY VERY slower
 return 1 << (int) ceilf(logf((float) p) / M_LN2);
 } 
 */
-
+#ifdef POWER2TEXSUBIMAGE
 /*----------------------------------------------------------------------
   GL_MakeTextureSize : Texture sizes must be power of two
   ----------------------------------------------------------------------*/
@@ -367,7 +371,7 @@ static void GL_MakeTextureSize(PictInfo *Image,
       Image->PicPixmap = data;
     }
 }
-
+#endif /* POWER2TEXSUBIMAGE */
 
 /*----------------------------------------------------------------------
  GL_TextureBind : Put Texture in video card's Memory at
@@ -398,12 +402,43 @@ static void GL_TextureBind (PictInfo *Image)
       GL_h = (GLfloat) Image->PicHeight/p2_h;
       /* We give te texture to opengl Pipeline system */	    
       Mode = (Image->RGBA)?GL_RGBA:GL_RGB;
-      GL_MakeTextureSize (Image, p2_w, p2_h);
       glGenTextures (1, &(Image->TextureBind));
-      glBindTexture (GL_TEXTURE_2D, Image->TextureBind);       	
-      glTexImage2D (GL_TEXTURE_2D, 0, Mode, p2_w, p2_h, 
-		    0, Mode, GL_UNSIGNED_BYTE, 
+      glBindTexture (GL_TEXTURE_2D, Image->TextureBind);
+      /*Texture Parameter : Here Faster ones...*/
+      glTexParameteri (GL_TEXTURE_2D,
+		       GL_TEXTURE_MIN_FILTER,
+		       GL_NEAREST);
+      glTexParameteri (GL_TEXTURE_2D,
+		       GL_TEXTURE_MAG_FILTER,
+		       GL_NEAREST);	    
+      glTexParameteri (GL_TEXTURE_2D,
+		       GL_TEXTURE_WRAP_S,
+		       GL_CLAMP);
+      glTexParameteri (GL_TEXTURE_2D,
+		       GL_TEXTURE_WRAP_T,
+		       GL_CLAMP); 
+      /* does current Color modify texture no = GL_REPLACE, 
+	 else => GL_MODULATE, GL_DECAL, ou GL_BLEND */
+      glTexEnvi( GL_TEXTURE_ENV, 
+		 GL_TEXTURE_ENV_MODE, 
+		 GL_MODULATE);
+#ifndef POWER2TEXSUBIMAGE
+      /* create a texture whose sizes are power of 2*/
+      glTexImage2D (GL_TEXTURE_2D, 0, Mode, 
+		    p2_w, p2_h, 0, Mode, 
+		    GL_UNSIGNED_BYTE, 
+		    NULL);
+      /* Map the texture wich isn't a power of two*/
+      glTexSubImage2D (GL_TEXTURE_2D, 0, 0, 0, 
+		       Image->PicWidth, Image->PicHeight, 
+		       Mode, GL_UNSIGNED_BYTE,
+		       (GLvoid *) Image->PicPixmap);    
+#else/*  POWER2TEXSUBIMAGE */
+      GL_MakeTextureSize (Image, p2_w, p2_h);
+      glTexImage2D (GL_TEXTURE_2D, 0, Mode, p2_w, p2_h,
+		    0, Mode, GL_UNSIGNED_BYTE,
 		    (GLvoid *) Image->PicPixmap);
+#endif /* POWER2TEXSUBIMAGE */
       TtaFreeMemory (Image->PicPixmap);
       Image->PicPixmap = None;
       Image->TexCoordW = GL_w;
@@ -422,65 +457,34 @@ static void GL_TexturePartialMap (void *ImagePt,
 {  
   PictInfo *Image;
   float    texH, texW;
-  
-  
+    
   Image = ImagePt;
-
   texH = Image->TexCoordH * ((float)(Image->PicHeight - h) / Image->PicHeight);
   texW = Image->TexCoordW * ((float)(w) / Image->PicWidth);
-
   GL_SetPicForeground ();
-  
-   
   glBindTexture (GL_TEXTURE_2D, 
-		 Image->TextureBind);
- 	
+		 Image->TextureBind); 	
   glEnable (GL_TEXTURE_2D);
-
-  glTexParameteri (GL_TEXTURE_2D,
-		       GL_TEXTURE_MIN_FILTER,
-		   GL_NEAREST);
-      glTexParameteri (GL_TEXTURE_2D,
-		       GL_TEXTURE_MAG_FILTER,
-		       GL_NEAREST);	    
-      glTexParameteri (GL_TEXTURE_2D,
-		       GL_TEXTURE_WRAP_S,
-		       GL_CLAMP);
-      glTexParameteri (GL_TEXTURE_2D,
-		       GL_TEXTURE_WRAP_T,
-		       GL_CLAMP); 
-  /* does current Color modify texture no = GL_REPLACE, 
-     else => GL_MODULATE, GL_DECAL, ou GL_BLEND */
-  glTexEnvi( GL_TEXTURE_ENV, 
-	     GL_TEXTURE_ENV_MODE, 
-	     GL_MODULATE);
-
   /* Not sure of the vertex order 
      (not the faster one, I think) */
   glBegin (GL_QUADS);
   /* Texture coordinates are unrelative 
-     to the size of the square */    
-  
+     to the size of the square */ 
   /* lower left */
-  glTexCoord2f (0,                       texH); 
-  glVertex2i   (xFrame,                     yFrame + h);
-
+  glTexCoord2f (0,  texH); 
+  glVertex2i   (xFrame, yFrame + h);
   /* upper right*/
-  glTexCoord2f (texW,           texH); 
-  glVertex2i   (xFrame + w,                 yFrame + h);
-
+  glTexCoord2f (texW, texH); 
+  glVertex2i   (xFrame + w, yFrame + h);
   /* lower right */
-  glTexCoord2f (texW,           Image->TexCoordH); 
-  glVertex2i   (xFrame + w,                 yFrame); 
-
+  glTexCoord2f (texW, Image->TexCoordH); 
+  glVertex2i   (xFrame + w, yFrame); 
   /* upper left */
-  glTexCoord2f (0,                       Image->TexCoordH); 
-  glVertex2i   (xFrame,                     yFrame);  
-   
+  glTexCoord2f (0,  Image->TexCoordH); 
+  glVertex2i   (xFrame,yFrame);     
   glEnd ();	
   /* State disabling */
   glDisable (GL_TEXTURE_2D); 
-
 }
 /*----------------------------------------------------------------------
  GL_TextureMap : map texture on a Quad (sort of a rectangle)
@@ -493,34 +497,11 @@ void GL_TextureMap (void *ImagePt,
 {  
   PictInfo *Image;
   
-  Image = ImagePt;
-  
-  GL_SetPicForeground ();
-  
-   
+  Image = ImagePt;  
+  GL_SetPicForeground (); 
   glBindTexture (GL_TEXTURE_2D, 
 		 Image->TextureBind);
- 	
   glEnable (GL_TEXTURE_2D);
-
-  glTexParameteri (GL_TEXTURE_2D,
-		       GL_TEXTURE_MIN_FILTER,
-		   GL_NEAREST);
-      glTexParameteri (GL_TEXTURE_2D,
-		       GL_TEXTURE_MAG_FILTER,
-		       GL_NEAREST);	    
-      glTexParameteri (GL_TEXTURE_2D,
-		       GL_TEXTURE_WRAP_S,
-		       GL_CLAMP);
-      glTexParameteri (GL_TEXTURE_2D,
-		       GL_TEXTURE_WRAP_T,
-		       GL_CLAMP); 
-  /* does current Color modify texture no = GL_REPLACE, 
-     else => GL_MODULATE, GL_DECAL, ou GL_BLEND */
-  glTexEnvi( GL_TEXTURE_ENV, 
-	     GL_TEXTURE_ENV_MODE, 
-	     GL_MODULATE);
-
   /* Not sure of the vertex order 
      (not the faster one, I think) */
   glBegin (GL_QUADS);
@@ -541,12 +522,8 @@ void GL_TextureMap (void *ImagePt,
   glEnd ();	
   /* State disabling */
   glDisable (GL_TEXTURE_2D); 
-
 }
-
-
 #endif /* _GL */
-
 
 #ifdef _WINDOWS
 /*----------------------------------------------------------------------
@@ -972,8 +949,8 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 #ifdef _GL
 	  x = box->BxXOrg - box->BxLMargin - pFrame->FrXOrg;
 	  y = box->BxYOrg - box->BxTMargin - pFrame->FrYOrg;
- 	  clipWidth  = pFrame->FrClipXEnd - x; 
- 	  clipHeight = pFrame->FrClipYEnd - y; 
+ 	  clipWidth  = pFrame->FrClipXEnd; 
+ 	  clipHeight = pFrame->FrClipYEnd; 
 	  if (pAb &&
 	      !TypeHasException (ExcSetWindowBackground, pAb->AbElement->ElTypeNumber,
 				 pAb->AbElement->ElStructSchema))

@@ -421,23 +421,27 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
 
   /* Origine de la boite du pave le plus englobant */
   pBox = pAb->AbBox;
-
 #ifdef _GLTRANSFORMATION 
-  pBox->BxClipX = pBox->BxXOrg;
-  pBox->BxClipY = pBox->BxYOrg;
-  pBox->BxClipW = pBox->BxW;
-  pBox->BxClipH = pBox->BxH;
   if ((pBox->BxXOrg || pBox->BxYOrg) &&
       pAb->AbElement->ElSystemOrigin)
-    {	
-      CoordinateSystemUpdate (pAb, frame,
-			      pBox->BxXOrg, pBox->BxYOrg);
-      pBox->BxXOrg = 0;
-      pBox->BxYOrg = 0;	 
+    {
+      x = 0;
+      y = 0;
     }
-#endif /* _GLTRANSFORMATION */
+  else
+    {
+      x = pBox->BxXOrg;
+      y = pBox->BxYOrg;
+    }
+  pBox->BxClipX = x;
+  pBox->BxClipY = y;
+  pBox->BxClipW = pBox->BxW;
+  pBox->BxClipH = pBox->BxH;
+#else /* _GLTRANSFORMATION */
   x = pBox->BxXOrg;
   y = pBox->BxYOrg;
+#endif /* _GLTRANSFORMATION */
+
   width = pBox->BxW;
   height = pBox->BxH;
   Peclate = (pBox->BxType == BoGhost);
@@ -468,16 +472,16 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
 		  {
 		    if (horizRef)
 		      {
-		      box1->BxXOrg += x;
+			box1->BxXOrg += x;
 #ifdef _GLTRANSFORMATION
-		      box1->BxClipX = box1->BxXOrg;
+			box1->BxClipX += x;
 #endif /* _GLTRANSFORMATION */
 		      }
 		    if (vertRef)
 		      {
-		      box1->BxYOrg += y;
+			box1->BxYOrg += y;
 #ifdef _GLTRANSFORMATION
-		      box1->BxClipY = box1->BxYOrg;
+			box1->BxClipY += y;
 #endif /* _GLTRANSFORMATION */
 		      }
 		    box1 = box1->BxNexChild;

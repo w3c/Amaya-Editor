@@ -32,11 +32,6 @@
 #include "frame_f.h"
 #include "hyphen_f.h"
 
-#ifdef _GLTRANSFORMATION 
-#include "content.h"
-#include "appli_f.h"
-#include "contentapi_f.h"
-#endif /* _GLTRANSFORMATION */
 
 #define SPACE_VALUE_MIN  3
 #define SPACE_VALUE_MAX  6
@@ -2995,11 +2990,7 @@ static void ShiftLine (PtrLine pLine, PtrAbstractBox pAb, PtrBox pBox,
 	   pLastBox = pLine->LiLastPiece;
 	if (pLastBox && pLastBox != pBox)
 	  {
-#ifndef _GLTRANSFORMATION
 	     xf = pLastBox->BxXOrg + pLastBox->BxWidth;
-#else /*  _GLTRANSFORMATION */
-	     xf = pLastBox->BxClipX + pLastBox->BxClipW;
-#endif /* _GLTRANSFORMATION*/
 	     if (x > 0)
 		xf += x;
 	  }
@@ -3018,11 +3009,7 @@ static void ShiftLine (PtrLine pLine, PtrAbstractBox pAb, PtrBox pBox,
 	   ibox1 = pLine->LiFirstBox;
 	else
 	   ibox1 = pLine->LiFirstPiece;
-#ifndef _GLTRANSFORMATION
 	xd = ibox1->BxXOrg;
-#else /*  _GLTRANSFORMATION */
-	xd = ibox1->BxClipX;
-#endif /* _GLTRANSFORMATION*/
 	if (x < 0)
 	   xd += x;
 	if (pLine->LiLastPiece == NULL)
@@ -3030,11 +3017,7 @@ static void ShiftLine (PtrLine pLine, PtrAbstractBox pAb, PtrBox pBox,
 	else
 	   pLastBox = pLine->LiLastPiece;
 	if (pLastBox != pBox)
-#ifndef _GLTRANSFORMATION
 	     xf = pLastBox->BxXOrg + pLastBox->BxWidth;
-#else /*  _GLTRANSFORMATION */
-	     xf = pLastBox->BxClipX + pLastBox->BxClipW;
-#endif /* _GLTRANSFORMATION*/
 	if (x < 0)
 	   xf -= x;
 
@@ -3306,61 +3289,6 @@ void RemoveLines (PtrBox pBox, int frame, PtrLine pFirstLine,
     }
 }
 
-#ifdef _GLTRANSFORMATION
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-static void ResetOriginTransformation (PtrAbstractBox pAb, int frame)
-{
-  PtrAbstractBox      pChildAb;
-  int                 doc, view;
-
-  pChildAb = pAb->AbFirstEnclosed;
-
-  while (pChildAb != NULL)
-    {
-      /* Is it a coordinate system */
-      if (pChildAb->AbElement->ElSystemOrigin)
-	{
-	  FrameToView (frame, &doc, &view);
-		  
-	  TtaReplaceTransform ((Element) pChildAb->AbElement, 
-			       TtaNewBoxTransformTranslate ((float) 0, 
-							    (float) 0),
-			       doc);
-	  pChildAb->AbHorizPosChange = TRUE; 
-	  pChildAb->AbVertPosChange = TRUE;  
-	}
-      ResetOriginTransformation (pChildAb, frame);    
-      /* passe au suivant */
-      pChildAb = pChildAb->AbNext;
-    }
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-static void ResetXOriginTransformation (PtrAbstractBox pAb, int frame)
-{
-  PtrAbstractBox      pChildAb;
-  int                 doc, view;
-
-  pChildAb = pAb->AbFirstEnclosed;
-
-  while (pChildAb != NULL)
-    {
-      /* Is it a coordinate system */
-      if (pChildAb->AbElement->ElSystemOrigin)
-	{
-	  FrameToView (frame, &doc, &view);
-	  TtaResetXBoxTransform ((Element) pChildAb->AbElement, 
-				 doc);	 
-	}
-      ResetOriginTransformation (pChildAb, frame);    
-      /* passe au suivant */
-      pChildAb = pChildAb->AbNext;
-    }
-}
-#endif /* _GLTRANSFORMATION */
-
 /*----------------------------------------------------------------------
   RecomputeLines recomputes a part or the whole block of lines after
   a change in the box ibox.
@@ -3382,9 +3310,6 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
    ThotBool            changeSelectEnd;
    ThotBool            status;
 
-#ifdef _GLTRANSFORMATION
-   ResetOriginTransformation (pAb, frame);
-#endif /* _GLTRANSFORMATION */
 
    /* Si la boite est eclatee, on remonte jusqu'a la boite bloc de lignes */
    while (pAb->AbBox->BxType == BoGhost)
@@ -3410,6 +3335,7 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 		 return;
 	     }
 	 }
+
 
 	/* Zone affichee avant modification */
 	if (pLine == NULL)
@@ -3460,15 +3386,18 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 	/* n'est pas encore placee dans l'image concrete   */
 	if (ReadyToDisplay && !pBox->BxXToCompute && !pBox->BxYToCompute)
 	  {
+#ifndef _GLTRANSFORMATION
 	     if (pBox->BxWidth > l)
 		l = pBox->BxWidth;
 	     l += pBox->BxXOrg;
-#ifndef _GLTRANSFORMATION
 	     if (height > pBox->BxHeight)
 	       DefClip (frame, pBox->BxXOrg, h, l, pBox->BxYOrg + height);
 	     else
 	       DefClip (frame, pBox->BxXOrg, h, l, pBox->BxYOrg + pBox->BxHeight);
-#else /* _GLTRANSFORMATION */	     
+#else /* _GLTRANSFORMATION */
+	     if (pBox->BxClipW > l)
+		l = pBox->BxClipW;
+	     l += pBox->BxClipX;
 	     if (height > pBox->BxClipH)
 	       DefClip (frame, pBox->BxClipX, h, l, pBox->BxClipY + height);
 	     else

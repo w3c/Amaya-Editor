@@ -64,14 +64,9 @@
 #ifdef _GL
 /* Some GL in it */
 #include <gtkgl/gtkglarea.h>
-#ifdef _SHARELIST
-/* in order to share textures 
-   and displays list between windows*/
-static GtkGLArea *GL_context = NULL;
-#endif /*_SHARELIST*/
 #endif/*  _GL */
 #else /* _GTK */
-#include "input_f.h"
+#include "input_f.h" 
 #include "appli_f.h"
 #endif /* _GTK */
 #ifndef _WINDOWS
@@ -3347,7 +3342,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	       g_print("OpenGL not supported!\n");
 	       exit(0);
 	     }
-#ifndef _SHARELIST	  
+#ifdef _NOSHARELIST	  
 	   if ((drawing_area = gtk_gl_area_new (attrlist)) == NULL) 
 	     {
 	       drawing_area = GetNoAlphaVisual ();
@@ -3359,28 +3354,41 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	       else
                   g_print("Warning : upgrade you Opengl implementation (ie: Mesa) to get group opacity !\n");
 	     }
-#else /*_SHARELIST*/
+#else /*_NOSHARELIST*/
 	   /* can we create a new opengl context 
 	      (or shall we share it with the first one
 	      we had in order to share display list and texture binding ?)*/	   
-	   if (GL_context == NULL)
+	   if (GetSharedContext() == -1)
 	     {
 	       if ((drawing_area = gtk_gl_area_new (attrlist)) == NULL) 
 		 {
-		   g_print("Error creating GtkGLArea!\n");
-		   exit(0);
+		   drawing_area = GetNoAlphaVisual ();
+		   if (drawing_area == NULL)
+		     {
+		       g_print("Error creating GtkGLArea!\n");
+		       exit(0);
+		     }
+		   else
+		     g_print("Warning : upgrade you Opengl implementation (ie: Mesa) to get group opacity !\n");
 		 }	       
-	       GL_context = (GtkGLArea *) drawing_area;
+	       SetSharedContext (frame);
 	     }
 	   else
 	     {
-	       if ((drawing_area = gtk_gl_area_share_new (attrlist, GL_context)) == NULL) 
+	       if ((drawing_area = gtk_gl_area_share_new (attrlist, 
+							  GTK_GL_AREA(FrameTable[GetSharedContext ()].WdFrame))) == NULL) 
 		 {
-		   g_print("Error creating GtkGLArea!\n");
-		 exit(0);
+		   drawing_area = GetNoAlphaVisual ();
+		   if (drawing_area == NULL)
+		     {
+		       g_print("Error creating GtkGLArea!\n");
+		       exit(0);
+		     }
+		   else
+		     g_print("Warning : upgrade you Opengl implementation (ie: Mesa) to get group opacity !\n");
 		 }
 	     }	       
-#endif /*_SHARELIST*/
+#endif /*_NOSHARELIST*/
 #else /*  _GL */
 	   drawing_area = gtk_drawing_area_new ();
 #endif /*  _GL */	  
@@ -3475,18 +3483,13 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			     "expose_event",
 			     GTK_SIGNAL_FUNC (ExposeCallbackGTK),
 			     (gpointer)frame); 
-#ifdef _GL
-
-	  
-	  
+#ifdef _GL	  
 	  /* when widget is initialized, 
 	      we define opengl pipeline state */
 	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
 			     "draw",
 			     GTK_SIGNAL_FUNC (GL_DrawCallback),
 			     (gpointer)frame); 
-
-
 	   /* when widget is initialized, 
 	      we define opengl pipeline state */
 	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
@@ -4046,18 +4049,6 @@ void DestroyFrame (int frame)
       XtRemoveCallback (XtParent (XtParent (w)), XmNdestroyCallback, (XtCallbackProc) FrameKilled, (XtPointer) frame);
       XDestroyWindow (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
 #else /* _GTK */
-#ifdef _GL
-	/* In case of destroying the context frame
-	   we must see if we can find another one
-	   else we'll segfault when drawing*/
-#ifdef _SHARELIST
-	if (GL_context == FrameTable[frame].WdFrame)
-	  {
-
-	  }
-#endif /*_SHARELIST*/
-	
-#endif /*_GL*/
 	gtk_widget_destroy (GTK_WIDGET (gtk_widget_get_toplevel (GTK_WIDGET (FrameTable[frame].WdFrame))));
 #endif /* _GTK */
 #else  /* _WINDOWS */

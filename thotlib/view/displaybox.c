@@ -439,11 +439,11 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected)
   ViewFrame          *pFrame;
   PtrAbstractBox      pAb;
   int                 i;
-  float               xd, yd;
   int                 fg, bg;
   int                 pat;
   int                 style;
-  int                 width, height;
+  float               xd, yd;
+  float               width, height;
 
   pAb = pBox->BxAbstractBox;
   pFrame = &ViewFrameTable[frame - 1];
@@ -2520,12 +2520,16 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 #ifdef _GL 
   /*does box need to be recomputed 
     in a new display list*/
+
+#ifndef _GLTRANSFORMATION
+ box->VisibleModification = TRUE;
+#endif/*  _GLTRANSFORMATION */
+
   if (pAb->AbLeafType == LtPolyLine ||
       pAb->AbLeafType == LtGraphics ||
       pAb->AbLeafType == LtPath)
     {
-      if (0 &&
-	  !(box->VisibleModification) &&
+      if (!(box->VisibleModification) &&
 	  !selected &&
 	  glIsList (box->DisplayList))
 	{

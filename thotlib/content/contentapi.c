@@ -2186,51 +2186,7 @@ void TtaAddTransform (Element element, void *transform,
 	 }
      }
 }
-/*----------------------------------------------------------------------
-   TtaResetXBoxTransform
 
-   Insert or Add a Transform at the beginning of a Graphics basic element
-   if a transformation of the same type exists in the list, it is replaced
-   with old_value + delta
-
-   Parameters:
-   element: the Graphics element to be modified.
-   transform: the transformation to be inserted.
-   document: the document containing the element.
-  ----------------------------------------------------------------------*/
-void TtaResetXBoxTransform (Element element, Document document)
-{
-   PtrTransform       pPa, pPrevPa;
-     
-   UserErrorCode = 0;
-   if (element == NULL)
-      TtaError (ERR_invalid_parameter);
-   else
-     /* verifies the parameter document */
-     if (document < 1 || document > MAX_DOCUMENTS)
-       TtaError (ERR_invalid_document_parameter);
-     else if (LoadedDocument[document - 1] == NULL)
-       TtaError (ERR_invalid_document_parameter);
-   else
-      /* parameter document is correct */
-     {
-       if (element)
-	 {
-	  pPa = ((PtrElement) element)->ElTransform;
-	   pPrevPa = NULL;
-	   while (pPa)
-	     {
-	       if (pPa->TransType == PtElBoxTranslate)
-		 {
-		   pPa->XScale = 0;		
-		  return;
-		 }	       
-	       pPrevPa = pPa;
-	       pPa = pPa->Next;
-	     }
-	 }
-     }
-}
 /*----------------------------------------------------------------------
    TtaInsertTransform
 
@@ -2320,63 +2276,6 @@ void TtaAppendAnim (Element element, void *anim)
     ((PtrElement)element)->ElParent->animation = anim; 
 }
 /*----------------------------------------------------------------------
-   TtaCopyAnim : Copy anim linked list 
-  ----------------------------------------------------------------------*/
-void *TtaCopyAnim (void *void_src)
-{
-  Animated_Element *dest, *current;
-  Animated_Element *src = (Animated_Element *) void_src;
-  
-  dest = TtaGetMemory (sizeof (Animated_Element));
-  current = dest;
- 
- while (src)
-   {
-     current->duration = src->duration;
-     current->start = src->start;
-     current->action_time = src->action_time;
-     current->AnimType = src->AnimType;
-     if (src->from)
-       {	 
-	 current->from = TtaGetMemory (strlen (src->from) + 1);     
-	 strcpy (current->from, src->from); 
-       }
-     if (src->to)
-       {
-	 current->to = TtaGetMemory (strlen (src->to) + 1);     
-	 strcpy (current->to, src->to);
-       }
-      if (src->AttrName)
-	switch (current->AnimType)
-	  {
-	  case Motion:
-	  case Color:
-	  case Set:
-	    break;
-	  case Transformation:
-	    current->AttrName = TtaGetMemory (sizeof (int));      
-	    *(current->AttrName) = *(src->AttrName);      
-	    break; 
-	  case Animate:
-	    current->AttrName = TtaGetMemory (strlen (src->AttrName) + 1);     
-	    strcpy (current->AttrName, src->AttrName);
-	    break;
-	  default:
-	    break; 
-	  } 
-       if (src->next)
-	 {
-	   current->next = TtaGetMemory (sizeof (Animated_Element));
-	   current = current->next; 
-	 }
-       else
-	 current->next = NULL;
-     
-     src = src->next;
-   } 
-  return (void *) dest;
-}
-/*----------------------------------------------------------------------
    TtaNewAniminfo
   ----------------------------------------------------------------------*/
 void *TtaNewAnimInfo ()
@@ -2391,9 +2290,113 @@ void *TtaNewAnimInfo ()
   anim_info->from = NULL;
   anim_info->to = NULL;
   anim_info->AttrName = NULL;
-  
+  anim_info->repeatCount = 1;
+  anim_info->Fill = Otherfill;
   return anim_info;
 }
+/*----------------------------------------------------------------------
+   TtaCopyAnim : Copy anim linked list 
+  ----------------------------------------------------------------------*/
+void *TtaCopyAnim (void *void_src)
+{
+  Animated_Element *dest, *current;
+  Animated_Element *src = (Animated_Element *) void_src;
+  
+  dest = TtaNewAnimInfo ();
+  current = dest; 
+  while (src)
+    {
+      current->duration = src->duration;
+      current->start = src->start;
+      current->action_time = src->action_time;
+      current->AnimType = src->AnimType;
+      current->Fill = src->Fill;
+      current->repeatCount = src->repeatCount;
+      if (src->from)
+	{	 
+	  current->from = TtaGetMemory (strlen (src->from) + 1);     
+	  strcpy (current->from, src->from); 
+	}
+      if (src->to)
+	{
+	  current->to = TtaGetMemory (strlen (src->to) + 1);     
+	  strcpy (current->to, src->to);
+	}
+      if (src->AttrName)
+	switch (current->AnimType)
+	  {
+	  case Motion:
+	    break;
+	  case Color:
+	    current->AttrName = TtaGetMemory (strlen (src->AttrName) + 1);     
+	    *(current->AttrName) = *(src->AttrName);  
+	    break;   
+	  case Set:
+	    break;
+	  case Transformation:
+	    current->AttrName = TtaGetMemory (sizeof (int));      
+	    *(current->AttrName) = *(src->AttrName);      
+	    break; 
+	  case Animate:
+	    current->AttrName = TtaGetMemory (strlen (src->AttrName) + 1);     
+	    strcpy (current->AttrName, src->AttrName);
+	    break;
+	  default:
+	    break; 
+	  } 
+      if (src->next)
+	{
+	  current->next = TtaNewAnimInfo ();
+	  current = current->next; 
+	}
+      else
+	current->next = NULL;
+     
+      src = src->next;
+    } 
+  return (void *) dest;
+}
+
+/*----------------------------------------------------------------------
+  TtaAppendPathSeg
+
+  Appends a path segment at the end of an animation
+
+   Parameters:
+   animation: the animation to be modified.
+   segment: the path segment to be appended.
+  ----------------------------------------------------------------------*/
+/* void TtaAppendPathSegToAnim (void *anim, PathSegment segment) */
+/* { */
+/*    PtrPathSeg       pPa, pPrevPa; */
+/*    PtrElement       pElAsc; */
+/*    Animated_Element *anim_info; */
+
+/*    if (anim) */
+/*      { */
+/*        pPa = ((PtrElement) element)->ElFirstPathSeg; */
+/*        pPrevPa = NULL; */
+/*        while (pPa) */
+/* 	 { */
+/* 	   pPrevPa = pPa; */
+/* 	   pPa = pPa->PaNext; */
+/* 	 } */
+/*        if (pPrevPa == NULL) */
+/* 	 ((PtrElement) element)->ElFirstPathSeg = (PtrPathSeg) segment; */
+/*        else */
+/* 	 { */
+/* 	   pPrevPa->PaNext = (PtrPathSeg) segment; */
+/* 	   ((PtrPathSeg) segment)->PaPrevious = pPrevPa; */
+/* 	 } */
+/*        /\* Updates the volumes of ancestors *\/ */
+/*        pElAsc = (PtrElement) element; */
+/*        while (pElAsc != NULL) */
+/* 	 { */
+/* 	   pElAsc->ElVolume++; */
+/* 	   pElAsc = pElAsc->ElParent; */
+/* 	 } */
+/*      } */
+/* } */
 /*----------------------------------------------------------------------
    TtaSetAnimTypetoMotion
   ----------------------------------------------------------------------*/
@@ -2435,6 +2438,28 @@ void TtaSetAnimTypetoSet (void *anim)
 void TtaAddAnimFrom (void *info, void *anim)
 {    
   ((Animated_Element *) anim)->from = info;
+}
+/*----------------------------------------------------------------------
+   TtaAddAnimFill
+  ----------------------------------------------------------------------*/
+void TtaAddAnimFreeze (void *anim)
+{
+  ((Animated_Element *) anim)->Fill = Freeze;
+}
+/*----------------------------------------------------------------------
+  TtaAddAnimFillRemove
+  ----------------------------------------------------------------------*/
+void TtaAddAnimRemove (void *anim)
+{    
+  
+  ((Animated_Element *) anim)->Fill = Otherfill;
+}
+/*----------------------------------------------------------------------
+   TtaAddAnimFill
+  ----------------------------------------------------------------------*/
+void TtaAddAnimRepeatCount (int repeat, void *anim)
+{
+  ((Animated_Element *) anim)->repeatCount = repeat;
 }
 /*----------------------------------------------------------------------
    TtaAddAnimTo

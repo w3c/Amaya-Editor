@@ -40,6 +40,9 @@
 #endif /* _GLTRANSFORMATION */
 
 
+
+
+
 /*----------------------------------------------------------------------
   IsXYPosComplete returns TRUE indicators when the box position is
   relative to the root box instead of the parent box.
@@ -941,17 +944,14 @@ void CoordinateSystemUpdate (PtrAbstractBox pAb, int frame,
 			     int x, int y)
 {  
 #ifdef _GLTRANSFORMATION 
-
   int    doc, view;
-  PtrBox pBox;
       
   /* est-ce un systeme de coordonnee ?*/
   FrameToView (frame, &doc, &view);
-	
-  TtaAddTransform ((Element) pAb->AbElement, 
+  TtaReplaceTransform ((Element) pAb->AbElement, 
 		   TtaNewBoxTransformTranslate ((float) x, 
 						(float) y),
-		   doc);
+		       doc);
 #endif /* _GLTRANSFORMATION */
 }
 
@@ -996,6 +996,9 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 	}
       else if (pBox->BxAbstractBox != NULL)
 	{
+#ifdef _GL
+	  pBox->VisibleModification = TRUE;
+#endif /* _GL */
 	  /* stretched box not already handled */
 	  if (pBox->BxHorizFlex &&
 	      (!pBox->BxAbstractBox->AbLeafType == LtCompound ||
@@ -1088,11 +1091,7 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 	      if (pBox->BxXOrg &&
 		  pBox->BxAbstractBox->AbElement->ElSystemOrigin)
 		{
-		  CoordinateSystemUpdate (pBox->BxAbstractBox, frame,
-					  pBox->BxXOrg, 0);
-		  delta = 0;      
-		  pBox->BxXOrg = 0; 
-		  pBox->BxAbstractBox->AbHorizPosChange = TRUE;  
+		  delta = 0;
 		}
 #endif /* _GLTRANSFORMATION */
 
@@ -1178,6 +1177,9 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 	}
       else if (pBox->BxAbstractBox != NULL)
 	{
+#ifdef _GL
+	  pBox->VisibleModification = TRUE;
+#endif /* _GL */
 	  if (pBox->BxVertFlex &&
 	  /* stretched box not already handled */
 	      (!pBox->BxAbstractBox->AbLeafType == LtCompound ||
@@ -1272,11 +1274,7 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 	      if (pBox->BxYOrg &&
 		  pBox->BxAbstractBox->AbElement->ElSystemOrigin)
 		{
-		  CoordinateSystemUpdate (pBox->BxAbstractBox, frame,
-					  0, pBox->BxYOrg);
 		  delta = 0;
-		  pBox->BxYOrg = 0;		  
-		  pBox->BxAbstractBox->AbVertPosChange = TRUE; 
 		}	      
 #endif /* _GLTRANSFORMATION */
 
@@ -1384,6 +1382,7 @@ void MoveVertRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 			  pBox->BxType != BoSplit &&
 			  pBox->BxType != BoMulScript)
 			{
+#ifndef _GLTRANSFORMATION
 			  i = pBox->BxXOrg;
 			  j = pBox->BxXOrg + pBox->BxWidth;
 			  /* add margins for graphics */
@@ -1397,10 +1396,22 @@ void MoveVertRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 			    j += delta;
 			  else
 			    i += delta;
-#ifndef _GLTRANSFORMATION
 			  DefClip (frame, i - k, pBox->BxYOrg - k, j + k,
 				   pBox->BxYOrg + pBox->BxHeight + k);
 #else/*  _GLTRANSFORMATION */
+			  i = pBox->BxClipX;
+			  j = pBox->BxClipX + pBox->BxClipW;
+			  /* add margins for graphics */
+			  if (pBox->BxLMargin < 0)
+			    k = - pBox->BxLMargin;
+			  else if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
+			    k = EXTRA_GRAPH;
+			  else
+			    k = 0;
+			  if (delta > 0)
+			    j += delta;
+			  else
+			    i += delta;
 			  DefClip (frame, i - k, pBox->BxClipY - k, j + k,
 				   pBox->BxClipY + pBox->BxClipH + k);
 #endif /*  _GLTRANSFORMATION */
@@ -1605,6 +1616,7 @@ void MoveHorizRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 			  pBox->BxType != BoSplit &&
 			  pBox->BxType != BoMulScript)
 			{
+#ifndef _GLTRANSFORMATION
 			  i = pBox->BxYOrg;
 			  j = pBox->BxYOrg + pBox->BxHeight;
 			  /* add margins for graphics */
@@ -1618,10 +1630,22 @@ void MoveHorizRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 			    j += delta;
 			  else
 			    i += delta;
-#ifndef _GLTRANSFORMATION
 			  DefClip (frame, pBox->BxXOrg - k, i - k,
 				   pBox->BxXOrg + pBox->BxWidth + k, j + k);
 #else /* _GLTRANSFORMATION */
+			  i = pBox->BxClipY;
+			  j = pBox->BxClipY + pBox->BxClipH;
+			  /* add margins for graphics */
+			  if (pBox->BxLMargin < 0)
+			    k = - pBox->BxLMargin;
+			  else if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
+			    k = EXTRA_GRAPH;
+			  else
+			    k = 0;
+			  if (delta > 0)
+			    j += delta;
+			  else
+			    i += delta;
 			  DefClip (frame, pBox->BxClipX - k, i - k,
 				   pBox->BxClipX + pBox->BxClipW + k, j + k);
 #endif /*  _GLTRANSFORMATION */
@@ -1823,8 +1847,13 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
       if (!IsDead (pCurrentAb))
 	{
 	  /* Area zone before moving */
+#ifndef _GLTRANSFORMATION
 	  i = pBox->BxXOrg;
 	  j = i + pBox->BxWidth;
+#else /* _GLTRANSFORMATION */
+	  i = pBox->BxClipX;
+	  j = i + pBox->BxClipW;
+#endif /* _GLTRANSFORMATION */
 	  /* It's not a stretchable box: clean up the history */
 	  if (!pBox->BxHorizFlex)
 	    pBox->BxMoved = NULL;
@@ -2046,6 +2075,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	  if (absoluteMove ||
 	      pCurrentAb->AbWidth.DimAbRef != NULL ||
 	      pCurrentAb->AbWidth.DimValue >= 0)
+
 	    /* the box is already built */
 	    /* or it's within a stretchable box */
 	    /* or it's within a unnested box */
@@ -2815,9 +2845,6 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	}
     }
 }
-
-
-
 /*----------------------------------------------------------------------
   XMove moves horizontally the box.
   Check positionning constraints.
@@ -2862,6 +2889,7 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 	    {
 	      if (pBox->BxType != BoSplit && pBox->BxType != BoMulScript)
 		{
+#ifndef _GLTRANSFORMATION
 		  i = pBox->BxXOrg;
 		  j = pBox->BxXOrg + pBox->BxWidth;
 		  /* add margins for graphics */
@@ -2879,10 +2907,26 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 		  else
 		    i += delta;
 		  if (pBox->BxHeight > 0)
-#ifndef _GLTRANSFORMATION
 		    DefClip (frame, i - k, pBox->BxYOrg - k, j + k,
 			     pBox->BxYOrg + pBox->BxHeight + k);
 #else /* _GLTRANSFORMATION */
+		  i = pBox->BxClipX;
+		  j = pBox->BxClipX + pBox->BxClipW;
+		  /* add margins for graphics */
+		  if (pBox->BxLMargin < 0)
+		    {
+		      i -= pBox->BxLMargin;
+		      k = 0;
+		    }
+		  else if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
+		    k = EXTRA_GRAPH;
+		  else
+		    k = 0;
+		  if (delta > 0)
+		    j += delta;
+		  else
+		    i += delta;
+		  if (pBox->BxHeight > 0)
 		  DefClip (frame, i - k, pBox->BxClipY - k, j + k,
 			   pBox->BxClipY + pBox->BxClipH + k);
 #endif /* _GLTRANSFORMATION */
@@ -2926,6 +2970,7 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 	   */
 	  if (absoluteMove)
 	    {
+
 	      XMoveAllEnclosed (pBox, delta, frame);
 	      /* we could clean up the history -> restore it */
 	      pBox->BxMoved = pFromBox;
@@ -3488,7 +3533,7 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 			    /* change the baseline */
 			    if (pPosAb->PosUnit == UnPercent)
 			      i = PixelValue (pPosAb->PosDistance, UnPercent,
-					      (PtrAbstractBox) pAb->AbBox->BxW, 0);
+					      (PtrAbstractBox) ((int)pAb->AbBox->BxW), 0);
 			    else
 			      i = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb,
 					      ViewFrameTable[frame - 1].FrMagnification);
@@ -3726,7 +3771,7 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 			    /* change the vertical axis */
 			    if (pPosAb->PosUnit == UnPercent)
 			      i = PixelValue (pPosAb->PosDistance, UnPercent, 
-					      (PtrAbstractBox) pAb->AbBox->BxH, 0);
+					      (PtrAbstractBox) ((int)pAb->AbBox->BxH), 0);
 			    else
 			      i = PixelValue (pPosAb->PosDistance, pPosAb->PosUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 			    i = i + pChildBox->BxYOrg + pChildBox->BxHorizRef - pBox->BxYOrg;
