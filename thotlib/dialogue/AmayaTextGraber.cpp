@@ -46,23 +46,23 @@ void AmayaTextGraber::OnText(wxCommandEvent& event)
   // to avoid recursive call
   // because Clear() generate a OnText event
   if (!m_Lock)
-  {
-	m_Lock = true;
-    wxString s = GetValue();
-    Clear(); // SetValue( _T("") ); // crash on windows ...
-
-    wxLogDebug( _T("AmayaTextGraber::OnText s=")+s );
-
-    // wxkeycodes are directly mapped to thot keysyms :
-    // no need to convert the wxwindows keycodes
-    wxChar c;
-    c = s.GetChar(0);
-    int thot_keysym = c;
-
-    // Call the generic function for key events management
-    ThotInput (m_AmayaFrameId, thot_keysym, 0, m_ThotMask, thot_keysym);
-	m_Lock = false;
-  }
+    {
+      m_Lock = true;
+      wxString s = GetValue();
+      Clear(); // SetValue( _T("") ); // crash on windows ...
+      
+      wxLogDebug( _T("AmayaTextGraber::OnText s=")+s );
+      
+      // wxkeycodes are directly mapped to thot keysyms :
+      // no need to convert the wxwindows keycodes
+      wxChar c;
+      c = s.GetChar(0);
+      int thot_keysym = c;
+      
+      // Call the generic function for key events management
+      ThotInput (m_AmayaFrameId, thot_keysym, 0, m_ThotMask, thot_keysym);
+      m_Lock = false;
+    }
 }
 
 void AmayaTextGraber::OnChar(wxKeyEvent& event)
@@ -134,36 +134,41 @@ void AmayaTextGraber::OnKeyDown(wxKeyEvent& event)
       ThotInput (m_AmayaFrameId, thot_keysym, 0, m_ThotMask, thot_keysym);
     }
   else if (
-         thot_keysym == WXK_F2 	   ||
-         /*thot_keysym == WXK_F3 	   ||
-         thot_keysym == WXK_F4 	   ||
-         thot_keysym == WXK_F5 	   ||
-         thot_keysym == WXK_F6 	   ||
-         thot_keysym == WXK_F7 	   ||
-         thot_keysym == WXK_F8 	   ||
-         thot_keysym == WXK_F9 	   ||
-         thot_keysym == WXK_F10    ||
-         thot_keysym == WXK_F11    ||
-         thot_keysym == WXK_F12    ||
-         thot_keysym == WXK_F13    ||
-         thot_keysym == WXK_F14    ||
-         thot_keysym == WXK_F15    ||
-         thot_keysym == WXK_F16    ||*/
-	     thot_keysym == WXK_INSERT ||
-	     thot_keysym == WXK_DELETE ||
-	     thot_keysym == WXK_HOME   ||
-	     thot_keysym == WXK_PRIOR  ||
-	     thot_keysym == WXK_NEXT   ||
-	     thot_keysym == WXK_END    ||
-	     thot_keysym == WXK_LEFT   ||
-	     thot_keysym == WXK_RIGHT  ||
-	     thot_keysym == WXK_UP     ||
-	     thot_keysym == WXK_DOWN   ||
-	     thot_keysym == WXK_ESCAPE ||
-	     thot_keysym == WXK_BACK   ||
-	     thot_keysym == WXK_RETURN ||
-	     thot_keysym == WXK_TAB
-	     )
+#ifdef _WINDOWS
+	   /* allow this key only on windows */
+	   thot_keysym == WXK_F2       ||
+#endif /* _WINDOWS */
+	   /*
+	     thot_keysym == WXK_F3     ||
+	     thot_keysym == WXK_F4     ||
+	     thot_keysym == WXK_F5     ||
+	     thot_keysym == WXK_F6     ||
+	     thot_keysym == WXK_F7     ||
+	     thot_keysym == WXK_F8     ||
+	     thot_keysym == WXK_F9     ||
+	     thot_keysym == WXK_F10    ||
+	     thot_keysym == WXK_F11    ||
+	     thot_keysym == WXK_F12    ||
+	     thot_keysym == WXK_F13    ||
+	     thot_keysym == WXK_F14    ||
+	     thot_keysym == WXK_F15    ||
+	     thot_keysym == WXK_F16    ||
+	   */
+	   thot_keysym == WXK_INSERT ||
+	   thot_keysym == WXK_DELETE ||
+	   thot_keysym == WXK_HOME   ||
+	   thot_keysym == WXK_PRIOR  ||
+	   thot_keysym == WXK_NEXT   ||
+	   thot_keysym == WXK_END    ||
+	   thot_keysym == WXK_LEFT   ||
+	   thot_keysym == WXK_RIGHT  ||
+	   thot_keysym == WXK_UP     ||
+	   thot_keysym == WXK_DOWN   ||
+	   thot_keysym == WXK_ESCAPE ||
+	   thot_keysym == WXK_BACK   ||
+	   thot_keysym == WXK_RETURN ||
+	   thot_keysym == WXK_TAB
+	   )
     {
       wxLogDebug( _T("AmayaTextGraber::SpecialKey thot_keysym=%x"), thot_keysym );
       // Call the generic function for key events management
