@@ -320,6 +320,7 @@ Document doc;
        list_item = list_item->next;
      }
 
+#ifndef _WINDOWS
    /* Fill in the form  */
    TtaNewSelector (AnnotFilterBase + mFilterSelector, 
 		   AnnotFilterBase + AnnotFilterMenu,
@@ -330,7 +331,7 @@ Document doc;
 		   NULL,
 		   TRUE,
 		   TRUE);
-
+#endif /* _WINDOWS */
 }
 
 /*---------------------------------------------------------------
@@ -394,7 +395,9 @@ ThotBool show;
     AnnotSelItem[0] = TEXT(' ');
   else
     AnnotSelItem[0] = TEXT('*');
+#ifndef _WINDOWS
   TtaSetSelector (AnnotFilterBase + mFilterSelector, -1, AnnotSelItem);
+#endif /* _WINDOWS */
 
   /* and show/hide it on the document :) */
 
@@ -537,7 +540,9 @@ ThotBool show;
   BuildAnnotFilterSelector (document, AnnotSelType);
   /* and clear the selector text */
   AnnotSelItem[0] = WC_EOS;
+#ifndef _WINDOWS
   TtaSetSelector (AnnotFilterBase + mFilterSelector, -1, TEXT(""));
+#endif /* !_WINDOWS */
 
   /*
    * Do the visible change on the document
@@ -655,7 +660,9 @@ CHAR_T             *data;
 	      AnnotSelType = val;
 	      AnnotSelItem[0] = WC_EOS;
 	      BuildAnnotFilterSelector (AnnotFilterDoc, val);
+#ifndef _WINDOWS
 	      TtaSetSelector (AnnotFilterBase + mFilterSelector, -1, TEXT(""));
+#endif /* !_WINDOWS */
 	    }
 	  break;
 
@@ -702,6 +709,7 @@ View                view;
   i += ustrlen (&s[i]) + 1;
   strcpy (&s[i], TEXT("Hide all"));
 
+#ifndef _WINDOWS
   TtaNewSheet (AnnotFilterBase + AnnotFilterMenu, 
 	       TtaGetViewFrame (document, view),
 	       TEXT("Annotation Filter  "), 4, s, TRUE, 2, 'L', 
@@ -716,6 +724,7 @@ View                view;
   TtaNewLabel (AnnotFilterBase + mAnnotFilterLabelStars,
 	       AnnotFilterBase + AnnotFilterMenu,
 	       TEXT("     a * prefix means hidden"));
+#endif /* !_WINDOWS */
 	       
   /* create the radio buttons for choosing a selector */
   i = 0;
@@ -736,12 +745,15 @@ View                view;
 
   /* display the selectors */
   BuildAnnotFilterSelector (document, BY_AUTHOR);
+
+#ifndef _WINDOWS
   /* choose the BY_AUTHOR radio button */
   TtaSetMenuForm (AnnotFilterBase + mSelectFilter, 0);
   
   /* display the menu */
   TtaSetDialoguePosition ();
   TtaShowDialogue (AnnotFilterBase + AnnotFilterMenu, TRUE);
+#endif /* _WINDOWS */
 }
 
 /***************************************************
@@ -878,6 +890,7 @@ Document            document;
 View                view;
 #endif /* __STDC__*/
 {
+#ifndef _WINDOWS
   /* initialize the base if it hasn't yet been done */
   if (AnnotTypesBase == 0)
     AnnotTypesBase =  TtaSetCallback (AnnotTypesCallbackDialog,
@@ -898,10 +911,12 @@ View                view;
   /* display the menu */
   TtaSetDialoguePosition ();
   TtaShowDialogue (AnnotTypesBase + AnnotTypesMenu, FALSE);
-
   TtaWaitShowDialogue ();
 
   return (AnnotTypesSelItem);
+#else /* !_WINDOWS */
+  return 0;
+#endif /* !_WINDOWS */
 }
 
 
