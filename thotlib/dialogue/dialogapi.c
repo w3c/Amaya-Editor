@@ -4223,6 +4223,7 @@ void TtaNewScrollPopup2 (int ref, ThotWidget parent, char *title, int number,
   struct E_List      *adbloc;
   char                menu_item [1024];
   char                equiv_item [255];
+  ThotWidget          w;
 
 #ifdef _WINDOWS
   HWND                menu;
@@ -4233,7 +4234,6 @@ void TtaNewScrollPopup2 (int ref, ThotWidget parent, char *title, int number,
   GtkWidget          *event_box;
   GtkWidget          *first = NULL;
   GList              *glist = NULL;
-  ThotWidget          w;
 
   GtkWidget          *table;
   ThotWidget          wlabel;  
@@ -4414,7 +4414,7 @@ void TtaNewScrollPopup2 (int ref, ThotWidget parent, char *title, int number,
 		    /* reserve the first char to indicate selected status */
 		    text[index] = ' ';
 		    SendMessage (listBox, LB_INSERTSTRING, i, (LPARAM) &text[index]);
-		    adbloc->E_ThotWidget[ent] = (ThotWidget) i;
+		    w = (ThotWidget) i;
 #else
 		    sprintf (menu_item, "%s", &text[index + 1]);
 		    /* \t doesn't mean anything to gtk... to we align ourself*/
