@@ -1963,26 +1963,26 @@ ThotBool PrintOnePage (PtrDocument pDoc, PtrAbstractBox pPageAb,
 #endif /* _GTK */
 
 #ifdef PRINT_DEBUG
-FILE     *list;
-char      localname[50];
-static int       n = 1;
+  FILE              *list;
+  char               localname[50];
+  static int           n = 1;
 
-   sprintf (localname, "/tmp/printpave%d.debug", n);
-   n++;
-   list = fopen (localname, "w");
-   NumberAbsBoxes (rootAbsBox);
-   ListAbsBoxes(rootAbsBox, 1, list);
-   fclose (list);
+  sprintf (localname, "/tmp/printpave%d.debug", n);
+  n++;
+  list = fopen (localname, "w");
+  NumberAbsBoxes (rootAbsBox);
+  ListAbsBoxes(rootAbsBox, 1, list);
+  fclose (list);
 #endif
 
 #ifdef _GTK
-   if (gabort)
+  if (gabort)
     return (FALSE);
-   pg_counter++;
-   sprintf(title_label, "%s [ %i ]", TtaGetMessage(LIB, TMSG_LIB_PRINT), pg_counter);
-   gtk_window_set_title (GTK_WINDOW (window),title_label);			 
-   while (gtk_events_pending())
-                gtk_main_iteration();
+  pg_counter++;
+  sprintf(title_label, "%s [ %i ]", TtaGetMessage(LIB, TMSG_LIB_PRINT), pg_counter);
+  gtk_window_set_title (GTK_WINDOW (window),title_label);			 
+  while (gtk_events_pending())
+    gtk_main_iteration();
 #endif /* _GTK */
 
 #ifdef _WINDOWS
@@ -1997,15 +1997,15 @@ static int       n = 1;
 	  AbortProc (TtPrinterDC, 0);
       if (gbAbort)
         return (FALSE);
-	  /***/
-	  /* update and display the number of pages we have printed */
-	  {
-		char print_msg [20];
-		pg_counter++;
-	    sprintf (print_msg, "Page: %d", pg_counter);
-		SetWindowText (GetDlgItem (GHwnAbort, IDC_PAGENO), print_msg);
-	  }
-	  /***/
+      /***/
+      /* update and display the number of pages we have printed */
+      {
+	char print_msg [20];
+	pg_counter++;
+	sprintf (print_msg, "Page: %d", pg_counter);
+	SetWindowText (GetDlgItem (GHwnAbort, IDC_PAGENO), print_msg);
+      }
+      /***/
     }
   else
 #endif /* _WINDOWS */
@@ -2095,33 +2095,33 @@ static int       n = 1;
 	}
 
       if (!emptyImage)
-	  /* indique au Mediateur la hauteur de la page, pour qu'il */
-	  /* n'imprime pas ce qui se trouve au-dela de cette limite */
-	  {
-	    NotePageNumber (PSfile);
-	    /* display the content of the page header and delete its contents
-	       except the break line */
-	    PrintPageHeader (PSfile, CurrentFrame, pPageAb, clipOrg);
-	    /* Register the translation between box positions in the Concrete
-	       Image and box positions in the paper page and the height of
-	       the page body to avoid text overlaping the page footer */
-	    if (pNextPageAb)
-	      {
-		box = pNextPageAb->AbBox;
- 	      ClipOnPage (CurrentFrame, clipOrg,
-			   FrameTable[CurrentFrame].FrWidth,
+	/* indique au Mediateur la hauteur de la page, pour qu'il */
+	/* n'imprime pas ce qui se trouve au-dela de cette limite */
+	{
+	  NotePageNumber (PSfile);
+	  /* display the content of the page header and delete its contents
+	     except the break line */
+	  PrintPageHeader (PSfile, CurrentFrame, pPageAb, clipOrg);
+	  /* Register the translation between box positions in the Concrete
+	     Image and box positions in the paper page and the height of
+	     the page body to avoid text overlaping the page footer */
+	  if (pNextPageAb)
+	    {
+	      box = pNextPageAb->AbBox;
+	      ClipOnPage (CurrentFrame, clipOrg,
+			  FrameTable[CurrentFrame].FrWidth,
 			  box->BxYOrg - pPageAb->AbBox->BxYOrg - pPageAb->AbBox->BxHeight);
-	      }
-	    else
-	      ClipOnPage (CurrentFrame, clipOrg, 32000, PageHeight);
-	    DisplayFrame (CurrentFrame);
-	    if (pNextPageAb)
-	      PrintPageFooter (PSfile, CurrentFrame, pNextPageAb);
-	    DrawPage (PSfile);
-	    /* annule le volume du pave espace insere' en bas de page */
-	    StorePageInfo (pPageAb->AbElement->ElPageNumber,
-			   pPageAb->AbBox->BxWidth, PageHeight);
-	  }
+	    }
+	  else
+	    ClipOnPage (CurrentFrame, clipOrg, 32000, PageHeight);
+	  DisplayFrame (CurrentFrame);
+	  if (pNextPageAb)
+	    PrintPageFooter (PSfile, CurrentFrame, pNextPageAb);
+	  DrawPage (PSfile);
+	  /* annule le volume du pave espace insere' en bas de page */
+	  StorePageInfo (pPageAb->AbElement->ElPageNumber,
+			 pPageAb->AbBox->BxWidth, PageHeight);
+	}
 
       /* repositionne le pave racine en haut de l'image pour le calcul de la */
       /* page suivante dans le paginateur */

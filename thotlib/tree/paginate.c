@@ -925,101 +925,136 @@ static int MoveCut (PtrDocument pDoc, PtrAbstractBox pAb, ThotBool NoBr1,
 /*----------------------------------------------------------------------
   SetMark place dans l'arbre de racine pAb la marque de page en fonction
   de la position des paves relativement a la limite de page.
+  The parameter notfound is TRUE when the specific cut postion is not
+  already found.
   ----------------------------------------------------------------------*/
 static void SetMark (PtrAbstractBox pAb, PtrElement rootEl, PtrDocument pDoc,
 		     int schView, ThotBool *needBreak,
 		     PtrAbstractBox *origCutAbsBox, int nbView, int frame,
-		     PtrElement *pPage)
+		     PtrElement *pPage, ThotBool notfound)
 {
-  int                 h, org, cutChar;
-  ThotBool            done;
+  PtrElement          pLast;
   PtrAbstractBox      pChild;
   ThotBool            toCut;
   PtrAbstractBox      pCreator;
+  int                 h, org, cutChar;
+  ThotBool            done;
 
-  if (pAb != NULL)
+  if (!pAb)
+    return;
+  if (pAb->AbOnPageBreak)
     {
-      if (pAb->AbOnPageBreak)
+      /* le pave' est traverse' par la limite de page */
+      if (pAb->AbFirstEnclosed == NULL)
+	/* c'est un pave' feuille */
 	{
-	/* le pave' est traverse' par la limite de page */
-	if (pAb->AbFirstEnclosed == NULL)
-	  /* c'est un pave' feuille */
-	  {
-	    /* a priori on va le couper en deux */
-	    toCut = TRUE;
-	    if (pAb->AbPresentationBox)
-	      /* c'est un pave de presentation */
-	      {
-		/* on cherche le pave qui l'a cree' pour connaitre sa regle */
-		/* de creation */
-		pCreator = pAb->AbElement->ElAbstractBox[pAb->AbDocView - 1];
-		while (pCreator->AbPresentationBox)
-		  pCreator = pCreator->AbNext;
-		/* on cherche la regle de creation */
-		if (TypeCreatedRule (pDoc, pCreator, pAb) == FnCreateWith)
-		  /* c'est une regle CreateWith, on ne fait rien */
-		  toCut = FALSE;
-		else if (pAb->AbLeafType == LtGraphics && pCreator->AbFirstEnclosed != NULL)
-		  /* c'est un graphique de presentation d'un pave compose */
-		  toCut = FALSE;
-	      }
-	    if (toCut)
-	      {
-		/* demande au mediateur sur quel caractere a lieu la coupure */
-		/* (si ce n'est pas une feuille de texte, on placera la marque */
-		/* de page avant le pave) */
-		SetPageHeight (pAb, &h, &org, &cutChar);
-		if (cutChar <= 0)
-		  /* place la marque de page avant le pave */
-		  *pPage = InsertMark (pAb, frame, nbView, origCutAbsBox,
-				       needBreak, schView, pDoc, rootEl, 0);
-		else if (cutChar >= pAb->AbElement->ElTextLength)
+	  /* a priori on va le couper en deux */
+	  toCut = TRUE;
+	  if (pAb->AbPresentationBox)
+	    /* c'est un pave de presentation */
+	    {
+	      /* on cherche le pave qui l'a cree' pour connaitre sa regle */
+	      /* de creation */
+	      pCreator = pAb->AbElement->ElAbstractBox[pAb->AbDocView - 1];
+	      while (pCreator->AbPresentationBox)
+		pCreator = pCreator->AbNext;
+	      /* on cherche la regle de creation */
+	      if (notfound)
+		{
+		  if (TypeCreatedRule (pDoc, pCreator, pAb) == FnCreateWith)
+		    /* c'est une regle CreateWith, on ne fait rien */
+		    toCut = FALSE;
+		  else if (pAb->AbLeafType == LtGraphics &&
+			   pCreator->AbFirstEnclosed != NULL)
+		    /* c'est un graphique de presentation d'un pave compose */
+		    toCut = FALSE;
+		}
+	      else if (!pCreator->AbOnPageBreak && pCreator->AbBox &&
+		       pCreator->AbBox->BxType == BoCell)
+		{
+		  /* generate a break at the end of that cell */
+		  pLast = pCreator->AbElement;
+		  while (pLast && pLast->ElNext)
+		    pLast = pLast->ElNext;
+		  if (pLast)
+		    {
+		      toCut = FALSE;
+		      /* insert a new page break after that last element */
+		      pAb = pLast->ElAbstractBox[pAb->AbDocView - 1];
+		      *pPage = InsertMark (pAb, frame, nbView, origCutAbsBox,
+					   needBreak, schView, pDoc, rootEl, 1);
+		    }
+		    
+		}
+	    }
+	  if (toCut)
+	    {
+	      /* demande au mediateur sur quel caractere a lieu la coupure */
+	      /* (si ce n'est pas une feuille de texte, on placera la marque */
+	      /* de page avant le pave) */
+	      SetPageHeight (pAb, &h, &org, &cutChar);
+	      if (cutChar <= 0)
+		/* place la marque de page avant le pave */
+		*pPage = InsertMark (pAb, frame, nbView, origCutAbsBox,
+				     needBreak, schView, pDoc, rootEl, 0);
+	      else if (cutChar >= pAb->AbElement->ElTextLength)
+		{
 		  /* la coupure tombe a la fin du pave */
 		  pAb->AbOnPageBreak = FALSE;
-		else
-		  /* coupe l'element de texte */
-		  {
-		    Cut (pAb->AbElement, cutChar, pDoc, nbView);
-		    pAb->AbOnPageBreak = FALSE;
-		    pAb = pAb->AbNext;
-		    pAb->AbAfterPageBreak = TRUE;
-		    *pPage = InsertMark (pAb, frame, nbView,
-					 origCutAbsBox, needBreak,
-					 schView, pDoc, rootEl, 0);
-		  }
-	      }
-	  }
-	else
-	  /* ce n'est pas un pave feuille, on examine tous les paves */
-	  /* englobes par ce pave' */
-	  {
-	    pAb = pAb->AbFirstEnclosed;
-	    done = FALSE;
-	    while (pAb != NULL && !done)
-	      {
-		if (pAb->AbOnPageBreak)
-		  /* la frontiere de page traverse ce pave, on place une */
-		  /* marque de page a l'interieur */
-		  {
-		    SetMark (pAb, rootEl, pDoc, schView, needBreak,
-			     origCutAbsBox, nbView, frame, pPage);
-		    done = (*pPage != NULL);
-		    if (TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema) &&
-			!done)
-		      {
-			/* the cell has to be split but the page break was not given */
-			/* look for the abstract box of the cell and skip
+		  pAb = pAb->AbNext;
+		  if (pAb)
+		    {
+		      pAb->AbAfterPageBreak = TRUE;
+		      *pPage = InsertMark (pAb, frame, nbView,
+					   origCutAbsBox, needBreak,
+					   schView, pDoc, rootEl, 0);
+		    }
+		}
+	      else
+		/* coupe l'element de texte */
+		{
+		  Cut (pAb->AbElement, cutChar, pDoc, nbView);
+		  pAb->AbOnPageBreak = FALSE;
+		  pAb = pAb->AbNext;
+		  pAb->AbAfterPageBreak = TRUE;
+		  *pPage = InsertMark (pAb, frame, nbView,
+				       origCutAbsBox, needBreak,
+				       schView, pDoc, rootEl, 0);
+		}
+	    }
+	}
+      else
+	/* ce n'est pas un pave feuille, on examine tous les paves */
+	/* englobes par ce pave' */
+	{
+	  pAb = pAb->AbFirstEnclosed;
+	  done = FALSE;
+	  while (pAb && !done)
+	    {
+	      if (pAb->AbOnPageBreak)
+		/* la frontiere de page traverse ce pave, on place une */
+		/* marque de page a l'interieur */
+		{
+		  SetMark (pAb, rootEl, pDoc, schView, needBreak,
+			   origCutAbsBox, nbView, frame, pPage, notfound);
+		  done = (*pPage != NULL);
+		  if (TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber,
+					pAb->AbElement->ElStructSchema) &&
+		      !done)
+		    {
+		      /* the cell has to be split but the page break was not given */
+		      /* look for the abstract box of the cell and skip
 			 presentation boxes */
-			pCreator = pAb->AbElement->ElAbstractBox[pAb->AbDocView - 1];
-			/*WinErrorBox (NULL, "Printing");*/
-			while (pCreator->AbPresentationBox)
-			  pCreator = pCreator->AbNext;
-			/* it's the cell abstract box */
-			pAb = pCreator;
-			/* insert the page break within the cell */
-			pChild = pCreator->AbFirstEnclosed;
-			/* locate the last child */
-			while (pChild)
+		      pCreator = pAb->AbElement->ElAbstractBox[pAb->AbDocView - 1];
+		      /*WinErrorBox (NULL, "Printing");*/
+		      while (pCreator->AbPresentationBox)
+			pCreator = pCreator->AbNext;
+		      /* it's the cell abstract box */
+		      pAb = pCreator;
+		      /* insert the page break within the cell */
+		      pChild = pCreator->AbFirstEnclosed;
+		      /* locate the last child */
+		      while (pChild)
 			{
 			  while (pChild->AbNext && !pChild->AbNext->AbAfterPageBreak)
 			    pChild = pChild->AbNext;
@@ -1027,40 +1062,42 @@ static void SetMark (PtrAbstractBox pAb, PtrElement rootEl, PtrDocument pDoc,
 			  while (pChild && pChild->AbPresentationBox)
 			    pChild = pChild->AbPrevious;
 			  if (pChild)
-			  {
-			    pCreator = pChild;
-			    if (pChild->AbLeafType == LtCompound)
-			      pChild = pCreator->AbFirstEnclosed;
-			    else
-			      pChild = NULL;
-			  }
+			    {
+			      pCreator = pChild;
+			      if (pChild->AbLeafType == LtCompound)
+				pChild = pCreator->AbFirstEnclosed;
+			      else
+				pChild = NULL;
+			    }
 			}
-			/* see if the the break can be inserted after the parent */
-			/*while (!pCreator->AbNext && pCreator->AbEnclosing &&
-			       pCreator->AbEnclosing != pAb)
-			       pCreator = pCreator->AbEnclosing;*/
-			*pPage = InsertMark (pCreator, frame, nbView, origCutAbsBox,
-					     needBreak, schView, pDoc, rootEl, 1);
-			pCreator->AbOnPageBreak = TRUE;
-			done = (*pPage != NULL);
-		      }
-		  }
-		else if (pAb->AbAfterPageBreak)
-		  if (!done)
-		    /* c'est le premier pave englobe' au-dela de la */
-		    /* frontiere, on pose une marque de page devant lui */
-		    {
-		      *pPage = InsertMark (pAb, frame, nbView, origCutAbsBox,
-					   needBreak, schView, pDoc, rootEl, 0);
-		      done = TRUE;
-		      pAb = NULL;
+		      /* see if the the break can be inserted after the parent */
+		      /*while (!pCreator->AbNext && pCreator->AbEnclosing &&
+			pCreator->AbEnclosing != pAb)
+			pCreator = pCreator->AbEnclosing;*/
+		      *pPage = InsertMark (pCreator, frame, nbView, origCutAbsBox,
+					   needBreak, schView, pDoc, rootEl, 1);
+		      pCreator->AbOnPageBreak = TRUE;
+		      done = (*pPage != NULL);
 		    }
-		if (pAb != NULL)
-		  pAb = pAb->AbNext;
-	      }
-	  }
+		}
+	      else if (pAb->AbAfterPageBreak && !done)
+		/* c'est le premier pave englobe' au-dela de la */
+		/* frontiere, on pose une marque de page devant lui */
+		{
+		  *pPage = InsertMark (pAb, frame, nbView, origCutAbsBox,
+				       needBreak, schView, pDoc, rootEl, 0);
+		  done = TRUE;
+		  pAb = NULL;
+		}
+	      if (pAb)
+		pAb = pAb->AbNext;
+	    }
 	}
     }
+  else
+    /* insert the page break here */
+    *pPage = InsertMark (pAb, frame, nbView, origCutAbsBox,
+			 needBreak, schView, pDoc, rootEl, 0);
 }
 
 
@@ -1073,7 +1110,7 @@ static void SetPage (PtrElement *pPage, int frame, PtrAbstractBox *origCutAbsBox
 		     int nbView, PtrElement rootEl)
 {
   int                 turn, newheight, oldheight;
-  ThotBool            NoBr1;
+  ThotBool            noBr1, moved;
 #ifdef PRINT_DEBUG1
   FILE               *list;
   char                localname[50];
@@ -1090,18 +1127,20 @@ static void SetPage (PtrElement *pPage, int frame, PtrAbstractBox *origCutAbsBox
   /* vers le haut pour respecter les regles NoBreak1 et NoBreak2 des */
   /* paves traverses par la frontiere de page. Le premier tour traite */
   /* les regles NoBreak2 et le 2eme tour les regles NoBreak1. */
+  moved = FALSE;
   for (turn = 1; turn <= 2; turn++)
     {
-      NoBr1 = turn == 2;
+      noBr1 = turn == 2;
       /* on traite les regles NoBreak1 au 2eme tour */
       do
 	/* on commence par la racine de la vue */
 	{
-	  newheight = MoveCut (pDoc, rootEl->ElAbstractBox[nbView - 1], NoBr1,
+	  newheight = MoveCut (pDoc, rootEl->ElAbstractBox[nbView - 1], noBr1,
 			       schView);
 	  if (newheight)
 	    {
 	      /* a new position of the page break is requested */
+	      moved = TRUE;
 	      oldheight = RealPageHeight;
 	      RealPageHeight = newheight;
 	      SetPageBreakPosition (rootEl->ElAbstractBox[nbView - 1], &RealPageHeight);
@@ -1114,8 +1153,13 @@ static void SetPage (PtrElement *pPage, int frame, PtrAbstractBox *origCutAbsBox
       while (newheight);
     }
   /* place la marque de page dans l'arbre abstrait */
-  SetMark (rootEl->ElAbstractBox[nbView - 1], rootEl, pDoc, schView,
-	   needBreak, origCutAbsBox, nbView, frame, pPage);
+  if (moved)
+    /* look for the right new position */
+    SetMark (rootEl->ElAbstractBox[nbView - 1], rootEl, pDoc, schView,
+	     needBreak, origCutAbsBox, nbView, frame, pPage, moved);
+  else
+    SetMark (*origCutAbsBox, rootEl, pDoc, schView,
+	     needBreak, origCutAbsBox, nbView, frame, pPage, moved);
 }
 
 
@@ -1133,7 +1177,7 @@ static PtrElement  PutMark (PtrElement rootEl, int nbView, PtrDocument pDoc,
 			    int frame, int schView)
 {
   PtrAbstractBox      pAb;
-  PtrAbstractBox      origCutAbsBox;
+  PtrAbstractBox      origCutAbsBox, possibleCut;
   PtrElement          pPage;
   PtrElement          pElLib;
   PtrAbstractBox      previousAbsBox, redispAb;
@@ -1158,24 +1202,48 @@ static PtrElement  PutMark (PtrElement rootEl, int nbView, PtrDocument pDoc,
   /* connaitre ce pave' s'il est plus haut qu'une page et qu'on doit */
   /* inserer une marque de page apres lui. */
   origCutAbsBox = NULL;	/* on n'a pas encore trouve' ce pave' */
+  possibleCut = NULL;
   pAb = rootEl->ElAbstractBox[nbView - 1];	/* on commence par le pave racine */
   do
     if (pAb->AbAfterPageBreak)
-      origCutAbsBox = pAb;	/* pave au-dela de la limite de page */
+      /* the page break should appear before that abstract box */
+      origCutAbsBox = pAb;
     else if (pAb->AbOnPageBreak)
       {
 	if (!pAb->AbAcceptPageBreak)
-	  /* pave insecable */
+	  /* the abstract box cannot be cut */
 	  origCutAbsBox = pAb;
 	else if (pAb->AbFirstEnclosed == NULL)
-	  origCutAbsBox = pAb;	/* pave feuille */
+	  {
+	    /* leaf box */
+	    if (TypeHasException (ExcIsCell,
+				  pAb->AbElement->ElTypeNumber,
+				  pAb->AbElement->ElStructSchema) &&
+		pAb->AbNext)
+	      {
+		/* we should cut that cell */
+		if (!possibleCut)
+		  /* if any other cut box found, we'll use that */
+		  possibleCut = pAb;
+		/*if (pAb->AbNext)*/
+		  pAb = pAb->AbNext;
+		  /*else if (!possibleCut)
+		    SearchNextAbsBox (pAb, NULL);*/
+	      }
+	    else
+	      /* insert the page-break before that abstract box */
+	      origCutAbsBox = pAb;
+	  }
 	else
 	  pAb = pAb->AbFirstEnclosed;
       }
-    else			/* le pave est avant la limite de page */
-      pAb = pAb->AbNext;	/* passe au pave suivant */
-  while (origCutAbsBox == NULL && pAb != NULL);
+    else
+      /* see the next abstract box */
+      pAb = pAb->AbNext;
+  while (origCutAbsBox == NULL && pAb);
 
+  if (origCutAbsBox == NULL && possibleCut)
+    origCutAbsBox = possibleCut;
   /* place les marques de page sans tenir compte des boites de haut et de */
   /* bas de page de hauteur variable (notes de bas de page par exemple) */
   SetPage (&pPage, frame, &origCutAbsBox, &needBreak, pDoc, schView, nbView,
@@ -1663,7 +1731,8 @@ void PaginateView (PtrDocument pDoc, int view)
 	  saveHeight = RealPageHeight;
 	  if (pDoc->DocViewModifiedAb[iview] != NULL)
 	    {
-	      shorter = ChangeConcreteImage (frame, &RealPageHeight, pDoc->DocViewModifiedAb[iview]);
+	      shorter = ChangeConcreteImage (frame, &RealPageHeight,
+					     pDoc->DocViewModifiedAb[iview]);
 	      if (!shorter)
 		RealPageHeight = saveHeight;
 	      pDoc->DocViewModifiedAb[iview] = NULL;
