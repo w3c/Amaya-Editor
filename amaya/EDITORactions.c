@@ -2556,18 +2556,19 @@ View view;
 }
 
 /*----------------------------------------------------------------------
+   FilterAnnot
    Show/Hide the annotations
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ShowAnnotations (Document document, View view)
+void                FilterAnnot (Document document, View view)
 #else
-void                ShowAnnotations (document, view)
+void                FilterAnnot (document, view)
 Document            doc;
 View                view;
 #endif
 {
 #ifdef ANNOTATIONS
-ANNOT_ShowHideAnnotations (document, view);
+AnnotFilter (document, view);
 #endif /* ANNOTATIONS */
 }
 

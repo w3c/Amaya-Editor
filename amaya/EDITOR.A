@@ -231,13 +231,12 @@ MENUS
 	Attributes_;
 
 	view:1 Annotations_ button:BAnnotate -> AnnotateDocument;
-	view:1 Annotations_ toggle:TShowAnnotations -> ShowAnnotations;
+	view:1 Annotations_ button:BFilterAnnotations -> FilterAnnot;
 	Annotations_ Separator;
 	view:1 Annotations_ button:BLoadAnnots -> LoadAnnotations;
+	view:1 Annotations_ button:BCustomQuery -> CustomQuery;
 	Annotations_ Separator;
 	view:1 Annotations_ button:BPostAnnot -> PostAnnotation;
-	Annotations_ Separator;
-	view:1 Annotations_ button:BCustomQuery -> CustomQuery;
 	Annotations_ Separator;
 	view:1 Annotations_ button:BConfigure -> ConfigAnnot;
 
