@@ -709,11 +709,15 @@ LPARAM lParam;
     case WM_INITDIALOG:
 	  FilterHwnd = hwnDlg;
 	  /* write the dialogue text */
-      SetWindowText (hwnDlg, "Annotation Local Filter Menu");
-      SetWindowText (GetDlgItem (hwnDlg, ID_ANNOTSHOW), "Show");
-      SetWindowText (GetDlgItem (hwnDlg, ID_ANNOTHIDE), "Hide");
-      SetWindowText (GetDlgItem (hwnDlg, ID_ANNOTSHOWALL), "Show all");
-	  SetWindowText (GetDlgItem (hwnDlg, ID_ANNOTHIDEALL), "Hide all");
+      SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_AFILTER));
+      SetWindowText (GetDlgItem (hwnDlg, ID_ANNOTSHOW), 
+		     TtaGetMessage (AMAYA, AM_AFILTER_SHOW));
+      SetWindowText (GetDlgItem (hwnDlg, ID_ANNOTHIDE), 
+		     TtaGetMessage (AMAYA, AM_AFILTER_HIDE));
+      SetWindowText (GetDlgItem (hwnDlg, ID_ANNOTSHOWALL), 
+		     TtaGetMessage (AMAYA, AM_AFILTER_SHOW_ALL));
+      SetWindowText (GetDlgItem (hwnDlg, ID_ANNOTHIDEALL), 
+		     TtaGetMessage (AMAYA, AM_AFILTER_HIDE_ALL));
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
       /* display the by author items */
       BuildAnnotFilterSelector (AnnotFilterDoc, AnnotSelType);
@@ -939,17 +943,17 @@ View                view;
   /* Create the dialogue form */
 #ifndef _WINDOWS
   i = 0;
-  strcpy (&s[i], TEXT("Show"));
+  strcpy (&s[i], TtaGetMessage (AMAYA, AM_AFILTER_SHOW));
   i += ustrlen (&s[i]) + 1;
-  strcpy (&s[i], TEXT("Hide"));
+  strcpy (&s[i], TtaGetMessage (AMAYA, AM_AFILTER_HIDE));
   i += ustrlen (&s[i]) + 1;
-  strcpy (&s[i], TEXT("Show all"));
+  strcpy (&s[i], TtaGetMessage (AMAYA, AM_AFILTER_SHOW_ALL));
   i += ustrlen (&s[i]) + 1;
-  strcpy (&s[i], TEXT("Hide all"));
+  strcpy (&s[i], TtaGetMessage (AMAYA, AM_AFILTER_HIDE_ALL));
 
   TtaNewSheet (AnnotFilterBase + AnnotFilterMenu, 
 	       TtaGetViewFrame (document, view),
-	       TEXT("Annotation Filter  "), 4, s, TRUE, 2, 'L', 
+	       TtaGetMessage (AMAYA, AM_AFILTER), 4, s, TRUE, 2, 'L', 
 	       D_DONE);
   
   /* an empty text */
@@ -960,20 +964,25 @@ View                view;
   /* the * = filter message */
   TtaNewLabel (AnnotFilterBase + mAnnotFilterLabelStars,
 	       AnnotFilterBase + AnnotFilterMenu,
-	       TEXT("* means hidden, - means partially hidden"));
+	       TtaGetMessage (AMAYA, AM_AFILTER_HELP));
 	       
   /* create the radio buttons for choosing a selector */
-  i = 0;
-  strcpy (&s[i], TEXT("BBy author"));
+  s[0] = TEXT('B');
+  i = 1;
+  strcpy (&s[i], TtaGetMessage (AMAYA, AM_AFILTER_BYAUTHOR));
   i += ustrlen (&s[i]) + 1;
-  strcpy (&s[i], TEXT("BBy type"));
+  s[i] = TEXT('B');
+  i++;
+  strcpy (&s[i], TtaGetMessage (AMAYA, AM_AFILTER_BYTYPE));
   i += ustrlen (&s[i]) + 1;
-  strcpy (&s[i], TEXT("BBy server"));
+  s[i] = TEXT('B');
+  i++;
+  strcpy (&s[i], TtaGetMessage (AMAYA, AM_AFILTER_BYSERVER));
 
   TtaNewSubmenu (AnnotFilterBase + mSelectFilter, 
 		 AnnotFilterBase + AnnotFilterMenu,
 		 0,
-		 TEXT("Filter options"),
+		 TtaGetMessage (AMAYA, AM_AFILTER_OPTIONS),
 		 3,
 		 s,
 		 NULL,
