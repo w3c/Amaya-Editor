@@ -1136,6 +1136,7 @@ static ThotBool     EmptyElement (PtrElement pEl)
 	    {
 	      if (!pChild->ElTerminal ||
 		  (pChild->ElLeafType != LtGraphics &&
+		   pChild->ElLeafType != LtPath &&
 		   pChild->ElLeafType != LtPolyLine) ||
 		  pEl->ElStructSchema != pChild->ElStructSchema)
 		{
