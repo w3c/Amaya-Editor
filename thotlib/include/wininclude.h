@@ -49,7 +49,7 @@ extern void       CreateAlign2DlgWindow (HWND, int);
 extern void       CreateAlign3DlgWindow (HWND, int);
 extern void       CreateSearchDlgWindow (HWND);
 extern void       CreateSaveAsDlgWindow (HWND, STRING, int, int, int, int, int, int);
-extern void       CreateOpenDocDlgWindow (HWND, STRING, int, int, int, int, int, int);
+extern void       CreateOpenDocDlgWindow (HWND, STRING, STRING, STRING, int, int, int, int, int, int);
 extern void       CreateGraphicsDlgWindow (int, int, int, HWND);
 extern void       CreateSaveListDlgWindow (HWND, int, STRING, int, int);
 extern void       CreateCloseDocDlgWindow (HWND, STRING, STRING, BOOL*, BOOL*);

@@ -26,7 +26,7 @@ extern void CreateAlign2DlgWindow (HWND, int);
 extern void CreateAlign3DlgWindow (HWND, int);
 extern void CreateSearchDlgWindow (HWND);
 extern void CreateSaveAsDlgWindow (HWND, char*, int, int, int, int, int, int);
-extern void CreateOpenDocDlgWindow (HWND, char*, int, int, int, int, int, int);
+extern void CreateOpenDocDlgWindow (HWND, char*, char*, char*, int, int, int, int, int, int);
 extern void CreateGraphicsDlgWindow (int, int, int, HWND);
 extern void CreateSaveListDlgWindow (HWND, int, char*, int, int);
 extern void CreateCloseDocDlgWindow (HWND, char*, char*, BOOL*, BOOL*);
