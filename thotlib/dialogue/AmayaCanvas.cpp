@@ -159,12 +159,9 @@ void AmayaCanvas::OnSize( wxSizeEvent& event )
 
   // get the new dimensions  
   int new_width, new_height;
-  new_width = event.GetSize().GetWidth();
-  new_height = event.GetSize().GetHeight();
-
-  wxLogDebug( _T("AmayaCanvas::OnSize: frame=%d w=%d h=%d"),
-	      m_pAmayaFrame->GetFrameId(),
-	      new_width, new_height );
+  // dont use event.GetSize() becaus it returns bad value ...
+  new_width = GetClientSize().GetWidth();
+  new_height = GetClientSize().GetHeight();
  
   // call the generic callback
   FrameResizedCallback(

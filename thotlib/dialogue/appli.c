@@ -1066,6 +1066,12 @@ ThotBool FrameResizedCallback (int frame, int new_width, int new_height)
     }
   else
     ComputeScrollBar = TRUE;
+
+#ifdef _WX
+  wxLogDebug( _T("FrameResizedCallback: new_width=%d new_height=%d (ComputeScrollBar=%s)"),
+	      new_width, new_height, ComputeScrollBar ? _T("TRUE") : _T("FALSE") );
+#endif /* _WX */
+
 #ifdef _GL
   /* store new frame size */
   FrameTable[frame].FrWidth  = new_width;
