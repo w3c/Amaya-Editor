@@ -106,18 +106,20 @@ typedef enum _ClickEvent {
 #define ConfirmSave     32
 #define ConfirmSaveList 33
 #define OptionMenu	34
-#define MAX_SUBMENUS    20
+#define MAX_SUBMENUS    400
 /* MAX_SUBMENUS references reserved for submenus of Option menu */
-#define About1		55
-#define About2		56
-#define About3		57
-#define Version		58
-#define AboutForm      	59
-#define TableForm       60
-#define TableRows       61
-#define TableCols       62
-#define TableBorder     63
-#define MAX_REF         64
+#define About1		435
+#define About2		436
+#define About3		437
+#define Version		438
+#define AboutForm      	439
+#define CSSForm         440
+#define CSSSelect       441
+#define TableForm       442
+#define TableRows       443
+#define TableCols       444
+#define TableBorder     445
+#define MAX_REF         446
 
 /* The possible GET/POST/PUT request modes */
 

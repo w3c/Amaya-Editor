@@ -43,6 +43,10 @@ static int          OldHeight;
 #include "styleparser_f.h"
 #include "tree.h"
 
+#ifdef _WINDOWS
+extern HWND currentWindow;
+#endif /* _WINDOWS */
+
 /*----------------------------------------------------------------------
    SetTargetContent sets the new value of Target.                  
   ----------------------------------------------------------------------*/

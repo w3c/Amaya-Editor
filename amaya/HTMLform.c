@@ -1235,6 +1235,10 @@ Element             el;
 
 #endif
 {
+#ifdef _WINDOWS
+   int nbOldEntries = 20;
+#endif /* _WINDOWS */
+
 #define MAX_OPTIONS 100
 #define MAX_SUBOPTIONS 20
 #define MAX_LABEL_LENGTH 50
@@ -1429,18 +1433,22 @@ Element             el;
 							   }
                                /* All children of OPTGROUP have been checked. */
                                /* create the submenu */
+#                               ifdef _WINDOWS
+                                TtaNewSubmenu (BaseDialog + OptionMenu + (nbsubmenus * nbOldEntries) + 1, BaseDialog+OptionMenu, nbitems, NULL, nbsubitems, buffmenu, NULL, FALSE);
+#                               else  /* !_WINDOWS */
                                 TtaNewSubmenu (BaseDialog+OptionMenu+nbsubmenus+1, BaseDialog+OptionMenu, nbitems, NULL, nbsubitems, buffmenu, NULL, FALSE);
+#                               endif /* _WINDOWS */
                                 if (multipleOptions)
                                    for (i = 0; i < nbsubitems; i++)
                                        if (subSelected[nbsubmenus][i])
 #                                         ifdef _WINDOWS
-                                          WIN_TtaSetToggleMenu (BaseDialog + OptionMenu + nbsubmenus + 1, i, TRUE, FrMainRef [currentFrame]);
+                                          WIN_TtaSetToggleMenu (BaseDialog + OptionMenu + (nbsubmenus * nbOldEntries) + 1, i, TRUE, FrMainRef [currentFrame]);
 #                                         else  /* !_WINDOWS */
                                           TtaSetToggleMenu (BaseDialog+OptionMenu+nbsubmenus+1, i, TRUE);
 #                                         endif /* _WINDOWS */
                                           nbsubmenus++;
                                           nbitems++;	/* item number in the main menu */
-						  }
+						  }  
                           /* Next child of SELECT */
                           TtaNextSibling (&el);
 					}
@@ -1458,8 +1466,14 @@ Element             el;
                         el = option[ReturnOption];
                         sel = selected[ReturnOption];
 					 } else { /* an item in a submenu */
+#                           ifdef _WINDOWS
+                            /* el = subOptions[ReturnOptionMenu - nbOldEntries - 1][ReturnOption]; */
+                            el = subOptions[ReturnOptionMenu / nbOldEntries ][ReturnOption];
+                            sel = subSelected[ReturnOptionMenu / nbOldEntries][ReturnOption];
+#                           else  /* _WINDOWS */
                             el = subOptions[ReturnOptionMenu - 1][ReturnOption];
                             sel = subSelected[ReturnOptionMenu - 1][ReturnOption];
+#                           endif /* _WINDOWS */
 					 }
                      modified = TtaIsDocumentModified (doc);	  
                      if (!multipleOptions)
