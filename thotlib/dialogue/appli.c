@@ -1752,11 +1752,11 @@ void               *event;
 	       while (event.type != ButtonRelease && event.type != ButtonPress)
 		 {
 		   if (event.type == MotionNotify ||
-		       (/*event.type != ConfigureNotify &&
+		       (event.type != ConfigureNotify &&
 			event.type != MapNotify &&
 			event.type != UnmapNotify &&
 			event.type != DestroyNotify &&
-			event.type != NoExpose && */
+			/*event.type != NoExpose && */
 			(event.xmotion.y > h || event.xmotion.y < 0)))
 		     {
 		       dx = event.xmotion.x - ClickX;
