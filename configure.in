@@ -651,6 +651,12 @@ CXX_OPTIONS="-D__cplusplus"
 CXXFLAGS="${CXXFLAGS} -W -x c++ ${CXX_OPTIONS}"
 
 dnl
+dnl Check for operating system (UNIX / WINDOWS / MACOSX )
+dnl TODO : how to know the OS ... add some test to detect automaticaly
+dnl
+OS_OPTIONS="-D_UNIX"
+
+dnl
 dnl Check for availability of amaya sources
 dnl
 
@@ -1194,10 +1200,10 @@ dnl
 dnl The options for each library or binary
 dnl
 
-THOT_OPTIONS="$I18N_OPTIONS $MOTIF_OPTIONS $GTK_OPTIONS $GL_OPTIONS $WX_OPTIONS $NOGUI_OPTIONS"
-AMAYA_OPTIONS="$MATH_OPTIONS $SVG_OPTIONS $GENERIC_XML_OPTIONS $I18N_OPTIONS $MOTIF_OPTIONS $GTK_OPTIONS $GL_OPTIONS $WX_OPTIONS $NOGUI_OPTIONS"
+THOT_OPTIONS="$OS_OPTIONS $I18N_OPTIONS $MOTIF_OPTIONS $GTK_OPTIONS $GL_OPTIONS $WX_OPTIONS $NOGUI_OPTIONS"
+AMAYA_OPTIONS="$OS_OPTIONS $MATH_OPTIONS $SVG_OPTIONS $GENERIC_XML_OPTIONS $I18N_OPTIONS $MOTIF_OPTIONS $GTK_OPTIONS $GL_OPTIONS $WX_OPTIONS $NOGUI_OPTIONS"
 #PLUGIN_OPTIONS="-DPLUGIN_TRACE -DXP_UNIX"
-AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS $I18N_OPTIONS"
+AMAYA_ANNOT_OPTIONS="$OS_OPTIONS $AMAYA_ANNOT_OPTIONS $I18N_OPTIONS"
 
 IMGLIBS="-ljpeg -lpng -lz"
 EXTRA_LIBS=
@@ -1400,7 +1406,7 @@ if test "$build_amaya" = "yes" ; then
 	echo Amaya configured with internationalization suppport
     fi 
     if test "$with_gl" = "yes" ; then
-	echo Amaya configured with Opengl Canvas Rendering \(experimental\)
+	echo Amaya configured with OpenGL Canvas Rendering \(experimental\)
     fi
     if test "$with_dav" = "yes" ; then
 	echo Amaya configured with WebDAV support \(experimental\)
@@ -1447,7 +1453,7 @@ if test "$with_wx" = "yes" ; then
 fi
 
 if test "$with_nogui" = "yes" ; then
-  echo "Amaya configured with no GUI toolkit"
+  echo "Amaya configured without GUI toolkit"
 fi
   
 echo ""
