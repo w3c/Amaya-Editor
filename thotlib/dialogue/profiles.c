@@ -73,18 +73,6 @@ static ThotBool             EnableEdit = TRUE;
 /*********************************************************
   String functions : set of useful functions for strings
 ***********************************************************/
-/*----------------------------------------------------------------------
-  SkipNewLineSymbol : Remove the EOF ('end of line') character
-----------------------------------------------------------------------*/
-static void   SkipNewLineSymbol (char *Astring)
-{
-  int         c = 0;
-
-  while (Astring[c] != EOS && Astring[c] != EOL)
-    c++;
-  if (Astring[c] == EOL)
-    Astring[c] = EOS;    
-}
 
 
 /*----------------------------------------------------------------------
@@ -95,17 +83,34 @@ static void   SkipAllBlanks (char *Astring)
 {
   int         c = 0;
   int         nbsp = 0;
-  
+
+  /* locate the biginning of the string */
+  while (Astring[c + nbsp] != EOS &&
+	 (Astring[c + nbsp] == SPACE || Astring[c + nbsp] == TAB ||
+	  Astring[c + nbsp] == __CR__))
+    nbsp++;
+  /* suppress blanks before */
+  while (Astring[c] != EOS)
+    {
+      Astring[c] = Astring[c + nbsp];
+      c++;
+    }
+  /* suppress blanks after the string */
+  while (c > 0 &&
+	 (Astring[c - 1] == SPACE || Astring[c - 1] == TAB ||
+	  Astring[c - 1] == __CR__ || Astring[c - 1] == EOL))
+    {
+      c--;
+      Astring[c] = EOS;
+    }
   do
     {
-      while (Astring[c+nbsp] == SPACE || Astring[c+nbsp] == TAB ||
-	     Astring[c+nbsp] == __CR__)
+      while (Astring[c + nbsp] == SPACE || Astring[c + nbsp] == TAB ||
+	     Astring[c + nbsp] == __CR__)
 	nbsp++;
-      Astring[c] = Astring[c+nbsp];
-    } 
+      Astring[c] = Astring[c + nbsp];
+    }
   while (Astring[c++] != EOS);
-
-  SkipNewLineSymbol (Astring);
 }
 
 

@@ -25,7 +25,7 @@
 ## DO NOT INCLUDE THIS SYMBOL IN YOUR PROFILE CONFIGURATION FILE
 
 ################# AMAYA EDITOR
-<editor>
+<XHTML-transitional (editor)>
 +amayabase
 +annot
 +base-module
@@ -55,7 +55,8 @@
 +views
 
 ################# XHTML-STRICT
-<XHTML-1.1>
+<XHTML-1.1 (editor)>
+&CreateRuby
 +amayabase
 +annot
 +base-module
@@ -84,7 +85,7 @@
 +views
 
 ################# AMAYA XHTML-BASIC
-<XHTML-basic>
+<XHTML-basic (editor)>
 +amayabase
 +basic-form-module
 +basic-table-module
@@ -104,8 +105,16 @@
 +text-module
 +views
 
+################# AMAYA MINI-EDITOR
+<XHTML-transitional (mini-editor)>
++amayabase
++css-style
++edit
++print
++source-view
+
 ################# AMAYA BROWSER
-<browser>
+<XHTML-transitional (browser)>
 +amayabase
 +browsing
 +config
@@ -115,16 +124,8 @@
 +views
 ShowMapAreas
 
-################# AMAYA MINI-EDITOR
-<mini-editor>
-+amayabase
-+css-style
-+edit
-+print
-+source-view
-
 ################# AMAYA MINI-BROWSER
-<mini-browser>
+<XHTML-transitional (mini-browser)>
 +amayabase
 +browsing
 +print
