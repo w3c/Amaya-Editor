@@ -6,13 +6,67 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void throwOutOfMemory ( void );
+extern double __copysign ( double __x,
+                           double __y );
+extern __long_double_t __copysignl ( __long_double_t __x,
+                                     __long_double_t __y );
+extern void InitJavaSelect ( void );
+extern void JavaSetSelectCallback ( void *val );
+extern void JavaFdSetState ( int fd,
+                             int io );
+extern void JavaFdResetState ( int fd,
+                               int io );
+extern int JavaSelect ( int n,
+                        fd_set *readfds,
+                        fd_set *writefds,
+                        fd_set *exceptfds,
+                        struct timeval *timeout );
+extern void JavaThotlibLock ( void );
+extern void JavaThotlibRelease ( void );
+extern void JavaXWindowSocketLock ( void );
+extern void JavaXWindowSocketRelease ( void );
+extern void JavaHandleOneEvent ( ThotEvent *ev );
+extern int JavaFetchEvent ( ThotEvent *ev );
+extern boolean JavaFetchAvailableEvent ( ThotEvent *ev );
 extern void InitJava ( void );
+extern void CloseJava ( void );
+extern void InitJavaEventLoop ( ThotAppContext app_ctx );
+extern int JavaPollLoop ( void );
+extern void JavaEventLoop ( void );
+extern void JavaLoadResources ( void );
+extern void throwOutOfMemory ( void );
 
 #else /* __STDC__ */
 
-extern void throwOutOfMemory (/* void */);
+extern double __copysign (/* double __x,
+                             double __y */);
+extern __long_double_t __copysignl (/* __long_double_t __x,
+                                       __long_double_t __y */);
+extern void InitJavaSelect (/* void */);
+extern void JavaSetSelectCallback (/* void *val */);
+extern void JavaFdSetState (/* int fd,
+                               int io */);
+extern void JavaFdResetState (/* int fd,
+                                 int io */);
+extern int JavaSelect (/* int n,
+                          fd_set *readfds,
+                          fd_set *writefds,
+                          fd_set *exceptfds,
+                          struct timeval *timeout */);
+extern void JavaThotlibLock (/* void */);
+extern void JavaThotlibRelease (/* void */);
+extern void JavaXWindowSocketLock (/* void */);
+extern void JavaXWindowSocketRelease (/* void */);
+extern void JavaHandleOneEvent (/* ThotEvent *ev */);
+extern int JavaFetchEvent (/* ThotEvent *ev */);
+extern boolean JavaFetchAvailableEvent (/* ThotEvent *ev */);
 extern void InitJava (/* void */);
+extern void CloseJava (/* void */);
+extern void InitJavaEventLoop (/* ThotAppContext app_ctx */);
+extern int JavaPollLoop (/* void */);
+extern void JavaEventLoop (/* void */);
+extern void JavaLoadResources (/* void */);
+extern void throwOutOfMemory (/* void */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

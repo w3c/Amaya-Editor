@@ -43,7 +43,7 @@ thotlib_Extra_Java2CCallback(struct Hthotlib_Extra* none, jlong callback,
 void
 thotlib_Extra_JavaPollLoop(struct Hthotlib_Extra* none)
 {
-    JavaPollLoop(NULL);
+    JavaPollLoop();
 }
 
 /*

@@ -683,7 +683,41 @@ ThotEvent *ev;
   status = XtAppPending (CurrentAppContext);
   if (!status) {
      XFlush(TtaGetCurrentDisplay());
+
+     do {
+	 status = blockOnFile(x_window_socket, 0);
+     } while (status < 0);
+  }
+  XtAppNextEvent (CurrentAppContext, ev);
+#endif /* _WINDOWS */
+
+  JavaXWindowSocketRelease();
+  JavaThotlibLock();
+  return(0);
+}
+
+#ifdef __STDC__
+int                 OldJavaFetchEvent (ThotEvent *ev)
+#else
+int                 OldJavaFetchEvent (ev)
+ThotEvent *ev;
+#endif
+{
+  int status;
+
+  JavaThotlibRelease();
+  JavaXWindowSocketLock();
+
+#ifdef _WINDOWS
+#else  /* !_WINDOWS */
+  /*
+   * Need to check whether something else has to be scheduled.
+   */
+  status = XtAppPending (CurrentAppContext);
+  if (!status) {
+     XFlush(TtaGetCurrentDisplay());
      status = blockOnFile(x_window_socket, 0);
+
      if ((DoJavaSelectPoll) && (BreakJavaSelectPoll)) {
 	 JavaXWindowSocketRelease();
 	 JavaThotlibLock();
@@ -875,6 +909,7 @@ int                 JavaPollLoop ()
 int                 JavaPollLoop ()
 #endif
 {
+   int status;
 #ifndef _WINDOWS
    ThotEvent           ev;
    int res;
@@ -895,44 +930,76 @@ int                 JavaPollLoop ()
     */
    DoJavaSelectPoll = 1;
    BreakJavaSelectPoll = 0;
+
 #ifdef DEBUG_SELECT
    TIMER
    fprintf(stderr,"JavaPollLoop entered\n");
 #endif
 
+   /*
+    * Release the ThotLib lock...
+    */
+   JavaThotlibRelease();
+
    /* Loop waiting for the events */
    while (1)
      {
-        while ((XWindowSocketWaitValue > 0) || (XWindowSocketLockValue > 0)) {
-	    /*
-	     * Don't block appplication thread reading events.
-	     */
-	    JavaThotlibRelease();
-            sleepThread(5);
+        /*
+	 * Block looking for events available on the X-Window socket.
+	 * The select will return an exception condition if someting
+	 * occured on the other file descriptors.
+	 */
+        status = blockOnFile(x_window_socket, 0);
+
+        if (status < 0) {
 	    JavaThotlibLock();
-	    if ((DoJavaSelectPoll) && (BreakJavaSelectPoll)) {
-	        DoJavaSelectPoll = 0;
-		BreakJavaSelectPoll = 0;
-#ifdef DEBUG_SELECT
-		TIMER
-	        fprintf(stderr,"JavaPollLoop stopped\n");
-#endif
-                return(-1);
-	    }
-	    continue;
-	}
-        while (JavaFetchEvent (&ev) < 0) {
 	    DoJavaSelectPoll = 0;
 	    BreakJavaSelectPoll = 0;
 #ifdef DEBUG_SELECT
 	    TIMER
-            fprintf(stderr,"JavaPollLoop stopped\n");
+	    fprintf(stderr,"JavaPollLoop stopped\n");
 #endif
-	    return(res);
+	    return(-1);
+	}
+
+	/*
+	 * If there is another thread waiting for the X-Windows socket
+	 * reads, sleep to let it fetch the event ...
+	 */
+        if ((XWindowSocketWaitValue > 0) || (XWindowSocketLockValue > 0)) {
+            sleepThread(5);
+	    if (BreakJavaSelectPoll) {
+		JavaThotlibLock();
+		DoJavaSelectPoll = 0;
+		BreakJavaSelectPoll = 0;
+#ifdef DEBUG_SELECT
+		TIMER
+		fprintf(stderr,"JavaPollLoop stopped\n");
+#endif
+		return(-1);
+	    }
+	    continue;
+	}
+
+	/*
+	 * Noone is waiting for this event, take back the ThotLib lock
+	 * and handle this event.
+	 */
+	JavaThotlibLock();
+	if (OldJavaFetchEvent(&ev) < 0) {
+	    DoJavaSelectPoll = 0;
+	    BreakJavaSelectPoll = 0;
+#ifdef DEBUG_SELECT
+	    TIMER
+	    fprintf(stderr,"JavaPollLoop stopped\n");
+#endif
+	    return(-1);
 	}
         JavaHandleOneEvent (&ev);
+	JavaThotlibRelease();
      }
    /*ENOTREACHED*/
+   JavaThotlibLock();
    return(0);
 }
 

@@ -67,9 +67,6 @@ extern jint amaya_APIJavaAmaya_NormalizeFile ( struct Hamaya_APIJavaAmaya* none,
 extern void amaya_APIJavaAmaya_SectionNumbering ( struct Hamaya_APIJavaAmaya* none,
                                                   jint document,
                                                   jint view );
-extern void amaya_APIJavaAmaya_LinkNumbering ( struct Hamaya_APIJavaAmaya* none,
-                                               jint document,
-                                               jint view );
 extern void amaya_APIJavaAmaya_MakeBook ( struct Hamaya_APIJavaAmaya* none,
                                           jint document,
                                           jint view );
@@ -84,8 +81,14 @@ extern void amaya_APIJavaAmaya_AmayaClose ( struct Hamaya_APIJavaAmaya* none,
                                             jint view );
 extern struct Hjava_lang_String* amaya_APIJavaAmaya_GetDocumentURL ( struct Hamaya_APIJavaAmaya* none,
                                                                      jint doc );
-extern struct Hjava_lang_String* amaya_APIJavaAmaya_GetMessage ( struct Hamaya_APIJavaAmaya* none,
-                                                                 jint msg );
+extern struct Hjava_lang_String* amaya_APIJavaAmaya_AmayaGetMessage ( struct Hamaya_APIJavaAmaya* none,
+                                                                      jint msg );
+extern void amaya_APIJavaAmaya_PopUpAuthDialog ( struct Hamaya_APIJavaAmaya* none,
+                                                 jint doc );
+extern struct Hjava_lang_String* amaya_APIJavaAmaya_GetUserString ( struct Hamaya_APIJavaAmaya* none );
+extern struct Hjava_lang_String* amaya_APIJavaAmaya_GetPasswdString ( struct Hamaya_APIJavaAmaya* none );
+extern struct Hjava_lang_String* amaya_APIJavaAmaya_GetAnswerString ( struct Hamaya_APIJavaAmaya* none );
+extern struct Hjava_lang_String* amaya_APIJavaAmaya_GetTempDirectory ( struct Hamaya_APIJavaAmaya* none );
 extern void register_amaya_APIJavaAmaya_stubs ( void );
 
 #else /* __STDC__ */
@@ -151,9 +154,6 @@ extern jint amaya_APIJavaAmaya_NormalizeFile (/* struct Hamaya_APIJavaAmaya* non
 extern void amaya_APIJavaAmaya_SectionNumbering (/* struct Hamaya_APIJavaAmaya* none,
                                                     jint document,
                                                     jint view */);
-extern void amaya_APIJavaAmaya_LinkNumbering (/* struct Hamaya_APIJavaAmaya* none,
-                                                 jint document,
-                                                 jint view */);
 extern void amaya_APIJavaAmaya_MakeBook (/* struct Hamaya_APIJavaAmaya* none,
                                             jint document,
                                             jint view */);
@@ -168,8 +168,14 @@ extern void amaya_APIJavaAmaya_AmayaClose (/* struct Hamaya_APIJavaAmaya* none,
                                               jint view */);
 extern struct Hjava_lang_String* amaya_APIJavaAmaya_GetDocumentURL (/* struct Hamaya_APIJavaAmaya* none,
                                                                        jint doc */);
-extern struct Hjava_lang_String* amaya_APIJavaAmaya_GetMessage (/* struct Hamaya_APIJavaAmaya* none,
-                                                                   jint msg */);
+extern struct Hjava_lang_String* amaya_APIJavaAmaya_AmayaGetMessage (/* struct Hamaya_APIJavaAmaya* none,
+                                                                        jint msg */);
+extern void amaya_APIJavaAmaya_PopUpAuthDialog (/* struct Hamaya_APIJavaAmaya* none,
+                                                   jint doc */);
+extern struct Hjava_lang_String* amaya_APIJavaAmaya_GetUserString (/* struct Hamaya_APIJavaAmaya* none */);
+extern struct Hjava_lang_String* amaya_APIJavaAmaya_GetPasswdString (/* struct Hamaya_APIJavaAmaya* none */);
+extern struct Hjava_lang_String* amaya_APIJavaAmaya_GetAnswerString (/* struct Hamaya_APIJavaAmaya* none */);
+extern struct Hjava_lang_String* amaya_APIJavaAmaya_GetTempDirectory (/* struct Hamaya_APIJavaAmaya* none */);
 extern void register_amaya_APIJavaAmaya_stubs (/* void */);
 
 #endif /* __STDC__ */

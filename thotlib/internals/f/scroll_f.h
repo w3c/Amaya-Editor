@@ -32,7 +32,7 @@ extern void ShowBox ( int frame,
                       int position,
                       int percent );
 extern boolean IsScrolled ( int frame,
-			    int selection );
+                            int selection );
 extern void ShowSelectedBox ( int frame,
                               boolean actif );
 extern boolean IsAbsBoxVisible ( int frame,
@@ -66,7 +66,7 @@ extern void ShowBox (/* int frame,
                         int position,
                         int percent */);
 extern boolean IsScrolled (/* int frame,
-			      int selection */);
+                              int selection */);
 extern void ShowSelectedBox (/* int frame,
                                 boolean actif */);
 extern boolean IsAbsBoxVisible (/* int frame,

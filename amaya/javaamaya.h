@@ -124,11 +124,21 @@ extern void AmayaClose (/* Document document,
 
 extern char *GetDocumentURL ( Document doc );
 extern char *AmayaGetMessage ( int msg );
+extern int PopUpAuthDialog ( int doc );
+extern char *GetUserString ( void );
+extern char *GetPasswdString ( void );
+extern char *GetAnswerString ( void );
+extern char *GetTempDirectory ( void );
 
 #else /* __STDC__ */
 
 extern char *GetDocumentURL (/* Document doc */);
 extern char *AmayaGetMessage (/* int msg */);
+extern int PopUpAuthDialog (/* int doc */);
+extern char *GetUserString (/* void */);
+extern char *GetPasswdString (/* void */);
+extern char *GetAnswerString (/* void */);
+extern char *GetTempDirectory (/* void */);
 
 #endif /* __STDC__ */
 #endif /* __AMAYA_API_H__ */

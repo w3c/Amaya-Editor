@@ -40,7 +40,12 @@ extern void amaya_APIJavaAmaya_RealTimeHTML(struct Hamaya_APIJavaAmaya*, jint, j
 extern void amaya_APIJavaAmaya_HelpAmaya(struct Hamaya_APIJavaAmaya*, jint, jint);
 extern void amaya_APIJavaAmaya_AmayaClose(struct Hamaya_APIJavaAmaya*, jint, jint);
 extern struct Hjava_lang_String* amaya_APIJavaAmaya_GetDocumentURL(struct Hamaya_APIJavaAmaya*, jint);
-extern struct Hjava_lang_String* amaya_APIJavaAmaya_GetMessage(struct Hamaya_APIJavaAmaya*, jint);
+extern struct Hjava_lang_String* amaya_APIJavaAmaya_AmayaGetMessage(struct Hamaya_APIJavaAmaya*, jint);
+extern jint amaya_APIJavaAmaya_PopUpAuthDialog(struct Hamaya_APIJavaAmaya*, jint);
+extern struct Hjava_lang_String* amaya_APIJavaAmaya_GetUserString(struct Hamaya_APIJavaAmaya*);
+extern struct Hjava_lang_String* amaya_APIJavaAmaya_GetPasswdString(struct Hamaya_APIJavaAmaya*);
+extern struct Hjava_lang_String* amaya_APIJavaAmaya_GetAnswerString(struct Hamaya_APIJavaAmaya*);
+extern struct Hjava_lang_String* amaya_APIJavaAmaya_GetTempDirectory(struct Hamaya_APIJavaAmaya*);
 
 #ifdef __cplusplus
 }

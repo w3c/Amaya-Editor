@@ -7,12 +7,22 @@
 #ifdef __STDC__
 
 extern char *GetDocumentURL ( Document doc );
-extern char *GetMessage ( int msg );
+extern char *AmayaGetMessage ( int msg );
+extern int PopUpAuthDialog ( int doc );
+extern char *GetUserString ( void );
+extern char *GetPasswdString ( void );
+extern char *GetAnswerString ( void );
+extern char *GetTempDirectory ( void );
 
 #else /* __STDC__ */
 
 extern char *GetDocumentURL (/* Document doc */);
-extern char *GetMessage (/* int msg */);
+extern char *AmayaGetMessage (/* int msg */);
+extern int PopUpAuthDialog (/* int doc */);
+extern char *GetUserString (/* void */);
+extern char *GetPasswdString (/* void */);
+extern char *GetAnswerString (/* void */);
+extern char *GetTempDirectory (/* void */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

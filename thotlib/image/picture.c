@@ -434,9 +434,9 @@ char               *fileName;
    and Corrupted_File in the other cases                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Picture_Report PictureFileOk (char *fileName, int *typeImage)
+Picture_Report PictureFileOk (char *fileName, int *typeImage)
 #else  /* __STDC__ */
-static Picture_Report PictureFileOk (fileName, typeImage)
+Picture_Report PictureFileOk (fileName, typeImage)
 char               *fileName;
 int                *typeImage;
 

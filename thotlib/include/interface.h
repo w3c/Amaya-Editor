@@ -92,6 +92,9 @@ extern Display     *TtaGetCurrentDisplay (void);
 
 #endif /* !_WINDOWS */
 extern void         TtaGiveSelectPosition (Document document, Element element, View view, int *X, int *Y);
+extern void         TtaRegisterPixmap ( char *name, Pixmap pix );
+extern Pixmap       TtaLoadImage ( char *name, char *path );
+extern Pixmap       TtaGetImage ( char *name ); 
 
 #else  /* __STDC__ */
 
@@ -131,6 +134,9 @@ extern Pixel        TtaGetButtonColor ( /* void */ );
 extern int          TtaGetScreenDepth ( /* void */ );
 extern Display     *TtaGetCurrentDisplay ( /* void */ );
 extern void         TtaGiveSelectPosition ( /* Document document, Element element, View view, int *X, int *Y */ );
+extern void         TtaRegisterPixmap (/* char *name, Pixmap pix */);
+extern Pixmap       TtaLoadImage (/* char *name, char *path */);
+extern Pixmap       TtaGetImage (/* char *name */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

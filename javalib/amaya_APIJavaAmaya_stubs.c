@@ -473,17 +473,119 @@ amaya_APIJavaAmaya_GetDocumentURL(struct Hamaya_APIJavaAmaya* none, jint doc)
 }
 
 /*
- * Java to C function GetMessage stub.
+ * Java to C function AmayaGetMessage stub.
  */
 struct Hjava_lang_String*
-amaya_APIJavaAmaya_GetMessage(struct Hamaya_APIJavaAmaya* none, jint msg)
+amaya_APIJavaAmaya_AmayaGetMessage(struct Hamaya_APIJavaAmaya* none, jint msg)
 {
 	char *res;
 
 
 	amaya_APIJavaAmaya_LOCK();
 
-	res = GetMessage((int ) msg);
+	res = AmayaGetMessage((int ) msg);
+
+	amaya_APIJavaAmaya_UNLOCK();
+
+	if (res == NULL)
+		return(NULL);
+	else;
+		return(makeJavaString(res, strlen(res)));
+}
+
+/*
+ * Java to C function PopUpAuthDialog stub.
+ */
+jint
+amaya_APIJavaAmaya_PopUpAuthDialog(struct Hamaya_APIJavaAmaya* none, jint doc)
+{
+	int res;
+
+
+	amaya_APIJavaAmaya_LOCK();
+
+	res = PopUpAuthDialog((int ) doc);
+
+	amaya_APIJavaAmaya_UNLOCK();
+
+	return((jint) res);
+}
+
+/*
+ * Java to C function GetUserString stub.
+ */
+struct Hjava_lang_String*
+amaya_APIJavaAmaya_GetUserString(struct Hamaya_APIJavaAmaya* none)
+{
+	char *res;
+
+
+	amaya_APIJavaAmaya_LOCK();
+
+	res = GetUserString();
+
+	amaya_APIJavaAmaya_UNLOCK();
+
+	if (res == NULL)
+		return(NULL);
+	else;
+		return(makeJavaString(res, strlen(res)));
+}
+
+/*
+ * Java to C function GetPasswdString stub.
+ */
+struct Hjava_lang_String*
+amaya_APIJavaAmaya_GetPasswdString(struct Hamaya_APIJavaAmaya* none)
+{
+	char *res;
+
+
+	amaya_APIJavaAmaya_LOCK();
+
+	res = GetPasswdString();
+
+	amaya_APIJavaAmaya_UNLOCK();
+
+	if (res == NULL)
+		return(NULL);
+	else;
+		return(makeJavaString(res, strlen(res)));
+}
+
+/*
+ * Java to C function GetAnswerString stub.
+ */
+struct Hjava_lang_String*
+amaya_APIJavaAmaya_GetAnswerString(struct Hamaya_APIJavaAmaya* none)
+{
+	char *res;
+
+
+	amaya_APIJavaAmaya_LOCK();
+
+	res = GetAnswerString();
+
+	amaya_APIJavaAmaya_UNLOCK();
+
+	if (res == NULL)
+		return(NULL);
+	else;
+		return(makeJavaString(res, strlen(res)));
+}
+
+/*
+ * Java to C function GetTempDirectory stub.
+ */
+struct Hjava_lang_String*
+amaya_APIJavaAmaya_GetTempDirectory(struct Hamaya_APIJavaAmaya* none)
+{
+	char *res;
+
+
+	amaya_APIJavaAmaya_LOCK();
+
+	res = GetTempDirectory();
 
 	amaya_APIJavaAmaya_UNLOCK();
 
@@ -524,6 +626,11 @@ void register_amaya_APIJavaAmaya_stubs(void)
 	addNativeMethod("amaya_APIJavaAmaya_HelpAmaya", amaya_APIJavaAmaya_HelpAmaya);
 	addNativeMethod("amaya_APIJavaAmaya_AmayaClose", amaya_APIJavaAmaya_AmayaClose);
 	addNativeMethod("amaya_APIJavaAmaya_GetDocumentURL", amaya_APIJavaAmaya_GetDocumentURL);
-	addNativeMethod("amaya_APIJavaAmaya_GetMessage", amaya_APIJavaAmaya_GetMessage);
+	addNativeMethod("amaya_APIJavaAmaya_AmayaGetMessage", amaya_APIJavaAmaya_AmayaGetMessage);
+	addNativeMethod("amaya_APIJavaAmaya_PopUpAuthDialog", amaya_APIJavaAmaya_PopUpAuthDialog);
+	addNativeMethod("amaya_APIJavaAmaya_GetUserString", amaya_APIJavaAmaya_GetUserString);
+	addNativeMethod("amaya_APIJavaAmaya_GetPasswdString", amaya_APIJavaAmaya_GetPasswdString);
+	addNativeMethod("amaya_APIJavaAmaya_GetAnswerString", amaya_APIJavaAmaya_GetAnswerString);
+	addNativeMethod("amaya_APIJavaAmaya_GetTempDirectory", amaya_APIJavaAmaya_GetTempDirectory);
 }
 

@@ -13,6 +13,7 @@
 
 
 extern void TtaSwitchButton(Document document, View view, int index);
+extern void TtaChangeButton(Document document, View view, int index, Pixmap picture);
 extern void TtaSetTextZone(Document document, View view, int index, char *text);
 extern void TtaSetMenuOff(Document document, View view, int menuID);
 extern void TtaSetMenuOn(Document document, View view, int menuID);
@@ -24,11 +25,15 @@ extern ThotWidget TtaGetViewFrame(Document document, View view);
 extern void TtaMainLoop(void);
 extern void TtaHandlePendingEvents(void);
 extern void TtaClickElement(Document *document, Element *element);
+extern Pixmap TtaCreateBitmapLogo(int width, int height, char *bits);
 extern void TtaSetCursorWatch(Document document, View view);
 extern void TtaResetCursor(Document document, View view);
 extern Pixel TtaGetMenuColor(void);
 extern Pixel TtaGetButtonColor(void);
 extern int TtaGetScreenDepth(void);
+extern void TtaRegisterPixmap(char *name, Pixmap pix);
+extern Pixmap TtaLoadImage(char *name, char *path);
+extern Pixmap TtaGetImage(char *name);
 extern void register_thotlib_APIInterface_stubs(void);
 
 #endif /* _Included_thotlib_APIInterface_stub_h */

@@ -351,8 +351,8 @@ PicType             filetype;
     /*
      * Save.
      */
-    res = PutObjectWWW(doc, localfile, remotefile, AMAYA_SYNC, filetype,
-                       (TTcbf *) NULL, (void *) NULL);
+    res = PutObjectWWW(doc, localfile, remotefile, AMAYA_SYNC | AMAYA_NOCACHE,
+                       filetype, (TTcbf *) NULL, (void *) NULL);
     if (res != HT_OK) {
         /*
 	 * The HTTP PUT method failed !
@@ -367,7 +367,8 @@ PicType             filetype;
      */
     TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_VERIFYING), "");
     strcpy(tempURL, remotefile);
-    res = GetObjectWWW(doc, tempURL, NULL, &tempfile[0], AMAYA_SYNC,
+    res = GetObjectWWW(doc, tempURL, NULL, &tempfile[0],
+                       AMAYA_SYNC | AMAYA_NOCACHE,
                        NULL, NULL, NULL, NULL, NO);
     if (res != HT_OK) {
         /*

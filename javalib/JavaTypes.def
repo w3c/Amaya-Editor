@@ -17,6 +17,7 @@
        0       Attribute     int        jint 
        0       PRule         int        jint
        0       ThotWidget    int        jint
+       0       Pixmap        int        jint
 #  These are true ints
        0       Document      int        jint
        0       View          int        jint

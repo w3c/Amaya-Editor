@@ -6,6 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern Picture_Report PictureFileOk ( char *fileName,
+                                      int *typeImage );
 extern void InitPictureHandlers ( boolean printing );
 extern void GetPictHandlersList ( int *count,
                                   char *buffer );
@@ -35,6 +37,8 @@ extern int TtaSetMainThotWindowBackgroundImage ( ThotWindow w,
 
 #else /* __STDC__ */
 
+extern Picture_Report PictureFileOk (/* char *fileName,
+                                        int *typeImage */);
 extern void InitPictureHandlers (/* boolean printing */);
 extern void GetPictHandlersList (/* int *count,
                                     char *buffer */);

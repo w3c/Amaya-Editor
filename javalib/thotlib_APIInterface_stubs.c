@@ -38,6 +38,21 @@ thotlib_APIInterface_TtaSwitchButton(struct Hthotlib_APIInterface* none, jint do
 }
 
 /*
+ * Java to C function TtaChangeButton stub.
+ */
+void
+thotlib_APIInterface_TtaChangeButton(struct Hthotlib_APIInterface* none, jint document, jint view, jint index, jint picture)
+{
+
+
+	thotlib_APIInterface_LOCK();
+
+	TtaChangeButton((Document ) document, (View ) view, (int ) index, (Pixmap ) picture);
+
+	thotlib_APIInterface_UNLOCK();
+}
+
+/*
  * Java to C function TtaSetTextZone stub.
  */
 void
@@ -234,6 +249,30 @@ thotlib_APIInterface_TtaClickElement(struct Hthotlib_APIInterface* none, struct 
 }
 
 /*
+ * Java to C function TtaCreateBitmapLogo stub.
+ */
+jint
+thotlib_APIInterface_TtaCreateBitmapLogo(struct Hthotlib_APIInterface* none, jint width, jint height, struct Hjava_lang_String* jbits)
+{
+	Pixmap res;
+	char bits[1024];
+	char *bits_ptr = &bits[0];
+
+	if (jbits != NULL)
+	  javaString2CString(jbits, bits_ptr, sizeof(bits));
+	else
+	  bits_ptr = NULL;
+
+	thotlib_APIInterface_LOCK();
+
+	res = TtaCreateBitmapLogo((int ) width, (int ) height, (char *) bits_ptr);
+
+	thotlib_APIInterface_UNLOCK();
+
+	return((jint) res);
+}
+
+/*
  * Java to C function TtaSetCursorWatch stub.
  */
 void
@@ -318,11 +357,87 @@ thotlib_APIInterface_TtaGetScreenDepth(struct Hthotlib_APIInterface* none)
 }
 
 /*
+ * Java to C function TtaRegisterPixmap stub.
+ */
+void
+thotlib_APIInterface_TtaRegisterPixmap(struct Hthotlib_APIInterface* none, struct Hjava_lang_String* jname, jint pix)
+{
+	char name[1024];
+	char *name_ptr = &name[0];
+
+	if (jname != NULL)
+	  javaString2CString(jname, name_ptr, sizeof(name));
+	else
+	  name_ptr = NULL;
+
+	thotlib_APIInterface_LOCK();
+
+	TtaRegisterPixmap((char *) name_ptr, (Pixmap ) pix);
+
+	thotlib_APIInterface_UNLOCK();
+}
+
+/*
+ * Java to C function TtaLoadImage stub.
+ */
+jint
+thotlib_APIInterface_TtaLoadImage(struct Hthotlib_APIInterface* none, struct Hjava_lang_String* jname, struct Hjava_lang_String* jpath)
+{
+	Pixmap res;
+	char name[1024];
+	char *name_ptr = &name[0];
+	char path[1024];
+	char *path_ptr = &path[0];
+
+	if (jname != NULL)
+	  javaString2CString(jname, name_ptr, sizeof(name));
+	else
+	  name_ptr = NULL;
+	if (jpath != NULL)
+	  javaString2CString(jpath, path_ptr, sizeof(path));
+	else
+	  path_ptr = NULL;
+
+	thotlib_APIInterface_LOCK();
+
+	res = TtaLoadImage((char *) name_ptr, (char *) path_ptr);
+
+	thotlib_APIInterface_UNLOCK();
+
+	return((jint) res);
+}
+
+/*
+ * Java to C function TtaGetImage stub.
+ */
+jint
+thotlib_APIInterface_TtaGetImage(struct Hthotlib_APIInterface* none, struct Hjava_lang_String* jname)
+{
+	Pixmap res;
+	char name[1024];
+	char *name_ptr = &name[0];
+
+	if (jname != NULL)
+	  javaString2CString(jname, name_ptr, sizeof(name));
+	else
+	  name_ptr = NULL;
+
+	thotlib_APIInterface_LOCK();
+
+	res = TtaGetImage((char *) name_ptr);
+
+	thotlib_APIInterface_UNLOCK();
+
+	return((jint) res);
+}
+
+/*
  * Function to register all thotlib_APIInterface stubs.
  */
 void register_thotlib_APIInterface_stubs(void)
 {
 	addNativeMethod("thotlib_APIInterface_TtaSwitchButton", thotlib_APIInterface_TtaSwitchButton);
+	addNativeMethod("thotlib_APIInterface_TtaChangeButton", thotlib_APIInterface_TtaChangeButton);
 	addNativeMethod("thotlib_APIInterface_TtaSetTextZone", thotlib_APIInterface_TtaSetTextZone);
 	addNativeMethod("thotlib_APIInterface_TtaSetMenuOff", thotlib_APIInterface_TtaSetMenuOff);
 	addNativeMethod("thotlib_APIInterface_TtaSetMenuOn", thotlib_APIInterface_TtaSetMenuOn);
@@ -334,10 +449,14 @@ void register_thotlib_APIInterface_stubs(void)
 	addNativeMethod("thotlib_APIInterface_TtaMainLoop", thotlib_APIInterface_TtaMainLoop);
 	addNativeMethod("thotlib_APIInterface_TtaHandlePendingEvents", thotlib_APIInterface_TtaHandlePendingEvents);
 	addNativeMethod("thotlib_APIInterface_TtaClickElement", thotlib_APIInterface_TtaClickElement);
+	addNativeMethod("thotlib_APIInterface_TtaCreateBitmapLogo", thotlib_APIInterface_TtaCreateBitmapLogo);
 	addNativeMethod("thotlib_APIInterface_TtaSetCursorWatch", thotlib_APIInterface_TtaSetCursorWatch);
 	addNativeMethod("thotlib_APIInterface_TtaResetCursor", thotlib_APIInterface_TtaResetCursor);
 	addNativeMethod("thotlib_APIInterface_TtaGetMenuColor", thotlib_APIInterface_TtaGetMenuColor);
 	addNativeMethod("thotlib_APIInterface_TtaGetButtonColor", thotlib_APIInterface_TtaGetButtonColor);
 	addNativeMethod("thotlib_APIInterface_TtaGetScreenDepth", thotlib_APIInterface_TtaGetScreenDepth);
+	addNativeMethod("thotlib_APIInterface_TtaRegisterPixmap", thotlib_APIInterface_TtaRegisterPixmap);
+	addNativeMethod("thotlib_APIInterface_TtaLoadImage", thotlib_APIInterface_TtaLoadImage);
+	addNativeMethod("thotlib_APIInterface_TtaGetImage", thotlib_APIInterface_TtaGetImage);
 }
 

@@ -1217,7 +1217,7 @@ static int          LoopForStop (AHTReqContext * me)
 	  exit (0);
 
 #ifdef AMAYA_JAVA
-        JavaPollLoop(app_cont);
+        JavaPollLoop();
 #else /* ! AMAYA_JAVA */
         status = XtAppPending (app_cont);
         if (status & XtIMXEvent)

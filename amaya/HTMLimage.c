@@ -449,6 +449,7 @@ int                 flags;
    Element             el, elFound;
    ElementType         elType;
 
+#ifndef AMAYA_JAVA
    /* JK: verify if StopTransfer was previously called */
    if (FilesLoading[doc] == 0)
      {
@@ -456,6 +457,7 @@ int                 flags;
 	TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_LOAD_ABORT), NULL);
 	return;
      }
+#endif
 
    /* get the root element */
    el = TtaGetMainRoot (doc);

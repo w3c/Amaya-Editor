@@ -357,6 +357,7 @@ void               *context_tcbf;
     struct Hamaya_HTTPRequest* request;
     int result;
     int flag = 0;
+    char *mimeType;
 
     if (mode & AMAYA_NOCACHE) {
         mode -= AMAYA_NOCACHE;
@@ -369,8 +370,28 @@ void               *context_tcbf;
 
     /*
      * Allocate and fill in a new HTTP Request instance.
+     * Set the ContentType ...
      */
     request = AllocHTTPRequest (doc, url, NULL, fileName);
+    switch (contentType) {
+        case xbm_type:
+	    mimeType = "image/x-xbitmap"; break;
+	case eps_type:
+	    mimeType = "application/postscript"; break;
+	case xpm_type:
+	    mimeType = "image/x-xpixmap"; break;
+	case gif_type:
+	    mimeType = "image/gif"; break;
+	case jpeg_type:
+	    mimeType = "image/jpeg"; break;
+	case png_type:
+	    mimeType = "image/png"; break;
+	case unknown_type:
+	    mimeType = "text/html"; break;
+	default:
+	    mimeType = "text/html"; break;
+    }
+    unhand(request)->mimeType = makeJavaString(mimeType, strlen(mimeType));
 
     /*
      * Call the Java WWW access implementation.

@@ -19,6 +19,7 @@ typedef struct Classthotlib_APIInterface {
 HandleTo(thotlib_APIInterface);
 
 extern void thotlib_APIInterface_TtaSwitchButton(struct Hthotlib_APIInterface*, jint, jint, jint);
+extern void thotlib_APIInterface_TtaChangeButton(struct Hthotlib_APIInterface*, jint, jint, jint, jint);
 extern void thotlib_APIInterface_TtaSetTextZone(struct Hthotlib_APIInterface*, jint, jint, jint, struct Hjava_lang_String*);
 extern void thotlib_APIInterface_TtaSetMenuOff(struct Hthotlib_APIInterface*, jint, jint, jint);
 extern void thotlib_APIInterface_TtaSetMenuOn(struct Hthotlib_APIInterface*, jint, jint, jint);
@@ -30,11 +31,15 @@ extern jint thotlib_APIInterface_TtaGetViewFrame(struct Hthotlib_APIInterface*, 
 extern void thotlib_APIInterface_TtaMainLoop(struct Hthotlib_APIInterface*);
 extern void thotlib_APIInterface_TtaHandlePendingEvents(struct Hthotlib_APIInterface*);
 extern void thotlib_APIInterface_TtaClickElement(struct Hthotlib_APIInterface*, struct Hthotlib_Document*, struct Hthotlib_Element*);
+extern jint thotlib_APIInterface_TtaCreateBitmapLogo(struct Hthotlib_APIInterface*, jint, jint, struct Hjava_lang_String*);
 extern void thotlib_APIInterface_TtaSetCursorWatch(struct Hthotlib_APIInterface*, jint, jint);
 extern void thotlib_APIInterface_TtaResetCursor(struct Hthotlib_APIInterface*, jint, jint);
 extern jint thotlib_APIInterface_TtaGetMenuColor(struct Hthotlib_APIInterface*);
 extern jint thotlib_APIInterface_TtaGetButtonColor(struct Hthotlib_APIInterface*);
 extern jint thotlib_APIInterface_TtaGetScreenDepth(struct Hthotlib_APIInterface*);
+extern void thotlib_APIInterface_TtaRegisterPixmap(struct Hthotlib_APIInterface*, struct Hjava_lang_String*, jint);
+extern jint thotlib_APIInterface_TtaLoadImage(struct Hthotlib_APIInterface*, struct Hjava_lang_String*, struct Hjava_lang_String*);
+extern jint thotlib_APIInterface_TtaGetImage(struct Hthotlib_APIInterface*, struct Hjava_lang_String*);
 
 #ifdef __cplusplus
 }

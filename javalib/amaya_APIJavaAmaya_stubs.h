@@ -38,7 +38,12 @@ extern void RealTimeHTML(Document document, View view);
 extern void HelpAmaya(Document document, View view);
 extern void AmayaClose(Document document, View view);
 extern char *GetDocumentURL(Document doc);
-extern char *GetMessage(int msg);
+extern char *AmayaGetMessage(int msg);
+extern int PopUpAuthDialog(int doc);
+extern char *GetUserString(void);
+extern char *GetPasswdString(void);
+extern char *GetAnswerString(void);
+extern char *GetTempDirectory(void);
 extern void register_amaya_APIJavaAmaya_stubs(void);
 
 #endif /* _Included_amaya_APIJavaAmaya_stub_h */
