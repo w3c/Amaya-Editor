@@ -4,7 +4,7 @@
  */
 
 #ifndef __CEXTRACT__
-#if __STDC__
+#ifdef __STDC__
 
 extern PtrDocument GetPtrDocument ( DocumentIdentifier docIdent );
 extern boolean OpenDocument ( Name docName,
@@ -19,12 +19,12 @@ extern PtrTextBuffer ReadComment ( BinFile file,
                                    boolean oldformat );
 extern void LabelStringToInt ( LabelString string,
                                int *number );
-extern void ReadAttr ( BinFile pivFile,
-                       PtrElement pEl,
-                       PtrDocument pDoc,
-                       boolean create,
-                       PtrAttribute * pReadAttr,
-                       PtrAttribute * pAttr );
+extern void ReadAttributePiv ( BinFile pivFile,
+                               PtrElement pEl,
+                               PtrDocument pDoc,
+                               boolean create,
+                               PtrAttribute * pReadAttr,
+                               PtrAttribute * pAttr );
 extern void ReadPRulePiv ( PtrDocument pDoc,
                            BinFile pivFile,
                            PtrElement pEl,
@@ -82,12 +82,12 @@ extern PtrTextBuffer ReadComment (/* BinFile file,
                                      boolean oldformat */);
 extern void LabelStringToInt (/* LabelString string,
                                  int *number */);
-extern void ReadAttr (/* BinFile pivFile,
-                         PtrElement pEl,
-                         PtrDocument pDoc,
-                         boolean create,
-                         PtrAttribute * pReadAttr,
-                         PtrAttribute * pAttr */);
+extern void ReadAttributePiv (/* BinFile pivFile,
+                                 PtrElement pEl,
+                                 PtrDocument pDoc,
+                                 boolean create,
+                                 PtrAttribute * pReadAttr,
+                                 PtrAttribute * pAttr */);
 extern void ReadPRulePiv (/* PtrDocument pDoc,
                              BinFile pivFile,
                              PtrElement pEl,

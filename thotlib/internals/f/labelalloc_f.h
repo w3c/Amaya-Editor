@@ -4,7 +4,7 @@
  */
 
 #ifndef __CEXTRACT__
-#if __STDC__
+#ifdef __STDC__
 
 extern void TtaSetLabelAllocator ( T_LabelAllocator *labelAlloc );
 extern int NewLabel ( PtrDocument pDoc );

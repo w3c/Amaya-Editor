@@ -757,11 +757,11 @@ char               *fileName;
    int                 ret, i;
    char                c;
 
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
    ret = _access (fileName, 0);
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
    ret = access (fileName, F_OK);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
    if (ret == -1)
       /* file does not exist */
      {

@@ -605,9 +605,9 @@ Drawable PngCreate(fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1)
 	Drawable *mask1;
 #endif /* __STDC__ */
 {
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
   return(NULL);
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
   int      w, h;
   Pixmap   pixmap;
   ThotColorStruct colrs[256];
@@ -646,7 +646,7 @@ Drawable PngCreate(fn, pres, xif, yif, wif, hif, BackGroundPixel, mask1)
       return (Drawable) pixmap;
 	  	  
     }
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
 }
 
 
@@ -673,9 +673,9 @@ void PngPrint(fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHAr
 	unsigned long BackGroundPixel;
 #endif /* __STDC__ */
 {
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
   return;
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
 
   int      delta;
   int      xtmp, ytmp;
@@ -781,7 +781,7 @@ void PngPrint(fn, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHAr
   fprintf((FILE *)fd, "grestore\n");
   fprintf((FILE *)fd, "\n");   
   free(buffer);
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
 }
 
 /*----------------------------------------------------------------------

@@ -18,11 +18,6 @@
 
 #define MAX_ARGS 20
 
-#ifdef NEW_WILLOWS
-#include <windows.h>
-#include <commctrl.h>
-#endif
-
 #undef EXPORT
 #define EXPORT extern
 #include "font_tv.h"
@@ -121,10 +116,10 @@ int                 number;
    char                text[100];
    char               *servername;
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    Display            *Dp;
 
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
 
    /* Initialisation du  contexte serveur */
    FrRef[0] = 0;
@@ -147,10 +142,10 @@ int                 number;
 		i = appArgc;
 	     }
      }
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
    TtaInitDialogueWindows (servername, TtaGetMessage (LIB, TMSG_LIB_CONFIRM),
 			   TtaGetMessage (LIB, TMSG_CANCEL));
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
    TtaInitDialogue (servername, TtaGetMessage (LIB, TMSG_LIB_CONFIRM),
 		    TtaGetMessage (LIB, TMSG_CANCEL), TtaGetMessage (LIB, TMSG_DONE), &app_cont, &Dp);
    if (!RootShell)
@@ -161,7 +156,7 @@ int                 number;
 	exit (1);
      }
    TtDisplay = Dp;
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
 
    /* Definition de la procedure de retour des dialogues */
    TtaDefineDialogueCallback (ThotCallback);
@@ -908,11 +903,11 @@ Pixmap              icon;
 
    /* Creation de la fenetre principale */
    UserErrorCode = 0;
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    TtaInitDialogueTranslations (InitTranslations (name));
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
    TteLoadApplications ();
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    if (TtDisplay == 0)
      {
 	/* Connexion au serveur X impossible */
@@ -920,10 +915,10 @@ Pixmap              icon;
 	exit (1);
      }
    else
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
      {
 	/* Police de caracteres utilisee dans les menus */
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 	DefaultFont = XmFontListCreate ((XFontStruct *) ThotLoadFont ('L', 'H', 0, MenuSize, UnPoint, 0), XmSTRING_DEFAULT_CHARSET);
 #endif
 	/* Compte le nombre de menus a creer */
@@ -964,7 +959,7 @@ Pixmap              icon;
 	  }
 
 	/* icone des fenetres de documents */
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 	wind_pixmap = XCreateBitmapFromData (TtDisplay, XDefaultRootWindow (TtDisplay),
 		      logowindow_bits, logowindow_width, logowindow_height);
 #endif
@@ -995,7 +990,7 @@ Pixmap              icon;
 /*----------------------------------------------------------------------
    ButtonAction                                                    
   ----------------------------------------------------------------------*/
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 #ifdef __STDC__
 static void         APP_ButtonCallback (ThotWidget w, int frame, caddr_t call_d)
 
@@ -1021,7 +1016,7 @@ caddr_t             call_d;
 	(*FrameTable[frame].Call_Button[i]) (document, view);
      }
 }
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    TtaAddButton
@@ -1050,7 +1045,7 @@ void                (*procedure) ();
 {
    int                 frame, i, n, index;
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    XmString            title_string;
    Arg                 args[MAX_ARGS];
 
@@ -1076,7 +1071,7 @@ void                (*procedure) ();
 	       {
 		  row = FrameTable[frame].Button[0];
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 		  /* Insere le nouveau bouton */
 		  n = 0;
 		  XtSetArg (args[n], XmNmarginWidth, 0);
@@ -1125,7 +1120,7 @@ void                (*procedure) ();
 		  index = i;
 		  /* force la mise a jour de la fenetre */
 		  XtManageChild (row);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 	       }
 	  }
      }
@@ -1158,7 +1153,7 @@ int                 index;
 {
    int                 frame;
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    int                 n;
    Pixel               top, bottom;
    Arg                 args[MAX_ARGS];
@@ -1182,7 +1177,7 @@ int                 index;
 	     else
 	       {
 		  /* Change l'etat du bouton */
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 		  n = 0;
 		  XtSetArg (args[n], XmNtopShadowColor, &top);
 		  n++;
@@ -1195,7 +1190,7 @@ int                 index;
 		  XtSetArg (args[n], XmNbottomShadowColor, top);
 		  n++;
 		  XtSetValues (FrameTable[frame].Button[index], args, n);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 	       }
 	  }
      }
@@ -1227,7 +1222,7 @@ Pixmap              picture;
 {
    int                 frame, n;
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
 
 #endif
@@ -1252,11 +1247,11 @@ Pixmap              picture;
 	       {
 		  /* Insere le nouvel icone */
 		  n = 0;
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 		  XtSetArg (args[n], XmNlabelPixmap, picture);
 		  n++;
 		  XtSetValues (FrameTable[frame].Button[index], args, n);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 	       }
 	  }
      }
@@ -1284,7 +1279,7 @@ View                view;
 {
    int                 frame;
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    Dimension           dy;
    Arg                 args[MAX_ARGS];
    ThotWidget          row;
@@ -1307,7 +1302,7 @@ View                view;
 	   return;
      }
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    row = FrameTable[frame].Button[0];
    XtSetArg (args[0], XmNheight, &dy);
    if (row != 0)
@@ -1330,7 +1325,7 @@ View                view;
 	XtManageChild (XtParent (row));
 	XtManageChild (XtParent (XtParent (row)));
      }
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
    /* force la mise a jour de la fenetre */
    TtaHandlePendingEvents ();
 }				/*TtcSwitchButtonBar */
@@ -1339,7 +1334,7 @@ View                view;
 /*----------------------------------------------------------------------
    TextAction                                                      
   ----------------------------------------------------------------------*/
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 #ifdef __STDC__
 static void         APP_TextCallback (ThotWidget w, int frame, XmTextVerifyCallbackStruct * call_d)
 #else  /* __STDC__ */
@@ -1366,7 +1361,7 @@ XmTextVerifyCallbackStruct *call_d;
 	(*FrameTable[frame].Call_Text[i]) (document, view, text);
      }
 }
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
    TtaAddTextZone
@@ -1396,11 +1391,11 @@ void                (*procedure) ();
    int                 frame, i, n;
    ThotWidget          w, row, rowh;
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    XmString            title_string;
    Arg                 args[MAX_ARGS];
 
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
    ThotWidget         *brother;
 
 
@@ -1423,7 +1418,7 @@ void                (*procedure) ();
 	       {
 		  row = FrameTable[frame].Text_Zone[0];
 		  /*XtManageChild(row); */
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 		  XtUnmanageChild (XtParent (XtParent (row)));
 
 		  /* Insere la nouvelle zone de texte */
@@ -1525,7 +1520,7 @@ void                (*procedure) ();
 		  XtManageChild (row);
 		  XtManageChild (XtParent (XtParent (row)));
 		  XtManageChild (XtParent (XtParent (XtParent (row))));
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 	       }
 	     else
 		i = 0;
@@ -1576,16 +1571,16 @@ char               *text;
 	  {
 	     w = FrameTable[frame].Text_Zone[index];
 	     /*XtRemoveCallback(w, XmNmodifyVerifyCallback, (XtCallbackProc)APP_TextCallback, (XtPointer)frame); */
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 	     if (w != 0)
 		XmTextSetString (w, text);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 	     /*XtAddCallback(w, XmNmodifyVerifyCallback, (XtCallbackProc)APP_TextCallback, (XtPointer)frame); */
 	  }
      }
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    XFlush (TtDisplay);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }				/*TtaSetTextZone */
 
 
@@ -1611,7 +1606,7 @@ View                view;
 {
    int                 frame;
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    Dimension           y, dy;
    Arg                 args[MAX_ARGS];
 
@@ -1629,7 +1624,7 @@ View                view;
 	   TtaError (ERR_invalid_parameter);
 	else if (FrameTable[frame].WdFrame != 0)
 	  {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 	     row = XtParent (FrameTable[frame].Text_Zone[0]);
 	     XtSetArg (args[0], XmNwidth, &dy);
 	     if (row != 0)
@@ -1656,7 +1651,7 @@ View                view;
 		  FrameResized ((int *) w, frame, NULL);
 		  XtManageChild (XtParent (XtParent (row)));
 	       }
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 	  }
      }
    /* force la mise a jour de la fenetre */
@@ -1710,27 +1705,27 @@ int                 doc;
 {
    int                 frame;
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    Arg                 args[MAX_ARGS], argument[5];
    XmString            title_string;
    Dimension           dx, dy;
 
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
    ThotWidget          Main_Wd;
    ThotWidget          Wframe;
    ThotWidget          shell;
 
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
    HMENU               menu_bar, w;
    struct Cat_Context *catalogue;
 
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
    ThotWidget          menu_bar;
    ThotWidget          w, row1, row2, rowv;
    ThotWidget          hscrl;
    ThotWidget          vscrl;
 
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
    int                 i, n;
    int                 ref;
    char                string[700];
@@ -1781,7 +1776,7 @@ int                 doc;
 		haut = 240;	/* hauteur en mm */
 	     haut = mmtopixel (haut, 0) + FrameTable[frame].FrTopMargin;
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 	     if (large < MIN_LARG)
 		dx = (Dimension) MIN_LARG;
 	     else
@@ -1791,7 +1786,7 @@ int                 doc;
 	     else
 		dy = (Dimension) haut;
 	     *volume = GetCharsCapacity ((int) dx * (int) dy);	/* volume en caracteres */
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
 	     if (X <= 0)
 		X = 92;
@@ -1802,7 +1797,7 @@ int                 doc;
 	     else
 		Y = mmtopixel (Y, 0);
 
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 	     Main_Wd = CreateWindow (tszAppName,	/* window class name */
 				     tszAppName,	/* window caption */
 				     WS_OVERLAPPEDWINDOW |
@@ -1831,11 +1826,11 @@ int                 doc;
 		  ShowWindow (Main_Wd, SW_SHOWNORMAL);
 		  UpdateWindow (Main_Wd);
 	       }
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
 /*** Creation la fenetre document ***/
 	     n = 0;
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 	     XtSetArg (args[n], XmNdefaultFontList, DefaultFont);
 	     n++;
 	     sprintf (string, "+%d+%d", X, Y);
@@ -1872,7 +1867,7 @@ int                 doc;
 
 	     XtManageChild (Main_Wd);
 	     XtAddCallback (shell, XmNdestroyCallback, (XtCallbackProc) FrameKilled, (XtPointer) frame);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
 	     /* Recherche la liste des menus a construire */
 	     SCHmenu = SchemasMenuList;
@@ -1899,7 +1894,7 @@ int                 doc;
 	     menu_bar = 0;
 /*** Parametres de creation des boutons menus ***/
 	     n = 0;
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	     n++;
 	     XtSetArg (args[n], XmNforeground, Black_Color);
@@ -1910,7 +1905,7 @@ int                 doc;
 	     n++;
 	     XtSetArg (args[n], XmNborderWidth, 0);
 	     n++;
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 	     /* saute les menus qui ne concernent pas cette vue */
 	     while (ptrmenu != NULL)
 	       {
@@ -1920,7 +1915,7 @@ int                 doc;
 		       if (menu_bar == 0)
 			 {
 /*** La barre des menus ***/
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 			    /*
 			     * Start with a fresh new Menu.
 			     */
@@ -1932,23 +1927,23 @@ int                 doc;
 			    if (menu_bar)
 			       SetMenu (Main_Wd, menu_bar);
 			    WinMenus[frame] = menu_bar;
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
 			    XtSetArg (argument[0], XmNbackground, BgMenu_Color);
 			    XtSetArg (argument[1], XmNspacing, 0);
 			    menu_bar = XmCreateMenuBar (Main_Wd, "Barre_menu", argument, 2);
 			    XtManageChild (menu_bar);
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
 			 }
 
 		       /* construit le bouton de menu */
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 		       w = CreateMenu ();
 		       AppendMenu (menu_bar, MF_POPUP, (UINT) w,
 				   TtaGetMessage (THOT, ptrmenu->MenuID));
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
 		       w = XmCreateCascadeButton (menu_bar,
 			    TtaGetMessage (THOT, ptrmenu->MenuID), args, n);
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
 		       FrameTable[frame].WdMenus[i] = w;
 		       FrameTable[frame].ActifMenus[i] = TRUE;
 		       /* Evite la construction des menus dynamiques */
@@ -1958,22 +1953,22 @@ int                 doc;
 			  FrameTable[frame].MenuSelect = ptrmenu->MenuID;
 		       else
 			  BuildPopdown (ptrmenu, ref, w, frame);
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 		       ShowWindow (menu_bar, SW_SHOWNORMAL);
 		       UpdateWindow (menu_bar);
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
 		       XtManageChild (w);
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
 		       /* Enregistre les menus dynamiques */
 		       if (ptrmenu->MenuHelp)
 			 {
 			    /* Cadre a droite le menu help */
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
 			    XtSetArg (argument[0], XmNmenuHelpWidget, w);
 			    XtSetValues (XtParent (w), argument, 1);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 			 }
 
 		    }
@@ -1992,7 +1987,7 @@ int                 doc;
 
 /*** La barre de scroll horizontale ***/
 	     n = 0;
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 	     XtSetArg (args[n], XmNbackground, Scroll_Color);
 	     n++;
 	     XtSetArg (args[n], XmNorientation, XmHORIZONTAL);
@@ -2028,10 +2023,10 @@ int                 doc;
 	     XtAddCallback (vscrl, XmNpageIncrementCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
 	     XtAddCallback (vscrl, XmNtoTopCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
 	     XtAddCallback (vscrl, XmNtoBottomCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
 /*** Creation de la zone boutons  ***/
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 #if 0
 	     WinToolBar[frame] = CreateWindow (
 						 TOOLBARCLASSNAME,	/* window class name */
@@ -2072,7 +2067,7 @@ int                 doc;
 #endif
 	     /* Row vertical pour mettre le logo au dessous des boutons */
 	     n = 0;
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 	     XtSetArg (args[n], XmNmarginWidth, 0);
 	     n++;
 	     XtSetArg (args[n], XmNmarginHeight, 0);
@@ -2205,9 +2200,9 @@ int                 doc;
 	     w = XmCreateDrawingArea (w, "", args, n);
 	     XtManageChild (w);
 	     XtAddCallback (w, XmNinputCallback, (XtCallbackProc) DrawingInput, (XtPointer) frame);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 	     FrameTable[frame].WdStatus = CreateWindow (
 							  STATUSCLASSNAME,	/* window class name */
 							  NULL,		/* window caption */
@@ -2231,7 +2226,7 @@ int                 doc;
 		  fprintf (stderr, "Created FrameTable[%d].WdStatus %X\n", frame, FrameTable[frame].WdStatus);
 	       }
 #endif
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 	     /* Row horizontal pour les messages */
 	     n = 0;
 	     XtSetArg (args[n], XmNmarginWidth, 0);
@@ -2298,7 +2293,7 @@ int                 doc;
 	     XtGetValues ((Widget) w, args, n);
 	     FrameTable[frame].FrWidth = (int) dx;
 	     FrameTable[frame].FrHeight = (int) dy;
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 	  }
 	else
 	   ChangeFrameTitle (frame, name);
@@ -2374,13 +2369,13 @@ int                 frame;
 	if (ThotLocalActions[T_rsindex] != NULL)
 	   (*ThotLocalActions[T_rsindex]) (frame);
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 	XFlushOutput (0);
 	/* Detache les procedures de callback */
 	XtRemoveCallback (XtParent (XtParent (w)), XmNdestroyCallback, (XtCallbackProc) FrameKilled, (XtPointer) frame);
 
 	XDestroyWindow (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 	FrRef[frame] = 0;
 	FrameTable[frame].WdFrame = 0;
 	FrameTable[frame].FrDoc = 0;
@@ -2563,7 +2558,7 @@ int                 menuID;
    int                 ref;
    Menu_Ctl           *ptrmenu;
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    XmFontList          font;
    Arg                 args[MAX_ARGS];
 
@@ -2595,7 +2590,7 @@ int                 menuID;
 		  /* Desactive */
 		  TtaSetPulldownOff (ref, w);
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 		  /* Visualise le bouton inactif */
 		  if (TtWDepth > 1)
 		    {
@@ -2617,7 +2612,7 @@ int                 menuID;
 		       XtManageChild (w);
 		       XmFontListFree (font);
 		    }
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 	       }
 	  }
      }
@@ -2644,7 +2639,7 @@ int                 menuID;
    int                 ref;
    Menu_Ctl           *ptrmenu;
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
 
 #endif
@@ -2675,7 +2670,7 @@ int                 menuID;
 		  /* Desactive */
 		  TtaSetPulldownOn (ref, w);
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 		  /* Visualise le bouton actif */
 		  if (TtWDepth > 1)
 		    {

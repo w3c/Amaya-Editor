@@ -342,7 +342,8 @@ int                 specific;
 			   case FnCreateAfter:
 			   case FnCreateEnclosing:
 			      rule->PrPresFunction = (FunctionType) specific;
-			      rule->PrNPresBoxes = value;
+			      rule->PrNPresBoxes = 0;
+			      rule->PrElement = TRUE;
 			      break;
 			   default:
 			      fprintf (stderr,

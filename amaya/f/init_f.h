@@ -4,7 +4,7 @@
  */
 
 #ifndef __CEXTRACT__
-#if __STDC__
+#ifdef __STDC__
 
 extern Document IsDocumentLoaded ( char *documentURL );
 extern void ExtractParameters ( char *aName,

@@ -4,7 +4,7 @@
  */
 
 #ifndef __CEXTRACT__
-#if __STDC__
+#ifdef __STDC__
 
 extern BOOL AHTReqContext_delete ( AHTReqContext * me );
 extern AHTDocId_Status *GetDocIdStatus ( int docid,

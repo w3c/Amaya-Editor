@@ -25,13 +25,6 @@
 #define EmptyPixmap (Pixmap)(-2)
 #define HL 4
 
-typedef struct POINT_
-  {
-     float               x;
-     float               y;
-  }
-POINT;
-
 static char        *Patterns_PS[] =
 {
    "2222222222222222",		/*horiz1 */

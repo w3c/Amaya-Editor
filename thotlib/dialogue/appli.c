@@ -35,7 +35,7 @@
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 static XmString     null_string;
 
 #endif
@@ -129,7 +129,7 @@ int                *info;
 }
 
 
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 /*----------------------------------------------------------------------
    WIN_HandleExpose deal with the redrawing of the Client Area when  
    a WM_PAINT has been received in MS-Windows.             
@@ -155,9 +155,9 @@ void                WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LP
 	  }
      }
 }
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    FrameToRedisplay effectue le traitement des expositions X11 des     
    frames de dialogue et de documents.                   
@@ -195,9 +195,9 @@ void               *ev;
 	  }
      }
 }
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
 
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 /*----------------------------------------------------------------------
    MSChangeTaille : function called when a view is resized under    
    MS-Windows.                                                   
@@ -213,9 +213,9 @@ void                MSChangeTaille (int frame, int width, int height, int top_de
    if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
       return;
 
-   FrameToView (frame, &doc, &vview);
-   FrameTable[frame].TopMargin = top_delta;
-   FrameTable[frame].LeftMargin = 0;
+   FrameToView (frame, &doc, &view);
+   FrameTable[frame].FrTopMargin = top_delta;
+   FrameTable[frame].FrLeftMargin = 0;
    FrameTable[frame].FrWidth = (int) width - bottom_delta;
    FrameTable[frame].FrHeight = (int) height;
 
@@ -225,10 +225,10 @@ void                MSChangeTaille (int frame, int width, int height, int top_de
    /* recompute the scroll bars
       UpdateScrollbars(frame); */
 }
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    Evenement sur une frame document.                              
   ----------------------------------------------------------------------*/
@@ -311,9 +311,9 @@ int                *info;
      }
 }				/*FrameResized */
 
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
 
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 /*----------------------------------------------------------------------
    Demande de scroll vertical.                                      
   ----------------------------------------------------------------------*/
@@ -404,9 +404,9 @@ int                 value;
 	       break;
 	 }
 }
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    Demande de scroll horizontal.                                    
   ----------------------------------------------------------------------*/
@@ -614,7 +614,7 @@ int                *param;
      }
 }				/*FrameVScrolled */
 
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
    PageUp scrolls one screen up.                                    
@@ -628,7 +628,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    XmScrollBarCallbackStruct infos;
    int                 frame;
 
@@ -637,7 +637,7 @@ View                view;
 
    infos.reason = XmCR_PAGE_DECREMENT;
    FrameVScrolled (0, frame, (int *) &infos);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -652,7 +652,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    XmScrollBarCallbackStruct infos;
    int                 frame;
 
@@ -661,7 +661,7 @@ View                view;
 
    infos.reason = XmCR_PAGE_INCREMENT;
    FrameVScrolled (0, frame, (int *) &infos);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }
 
 
@@ -677,7 +677,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    XmScrollBarCallbackStruct infos;
    int                 frame;
 
@@ -686,7 +686,7 @@ View                view;
 
    infos.reason = XmCR_TO_TOP;
    FrameVScrolled (0, frame, (int *) &infos);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -701,7 +701,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    XmScrollBarCallbackStruct infos;
    int                 frame;
 
@@ -710,7 +710,7 @@ View                view;
 
    infos.reason = XmCR_TO_BOTTOM;
    FrameVScrolled (0, frame, (int *) &infos);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }
 
 
@@ -735,7 +735,7 @@ void                InitializeOtherThings ()
    ClickX = 0;
    ClickY = 0;
    /* message de selection vide */
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    null_string = XmStringCreateSimple ("");
 #endif
 }				/*InitializeOtherThings */
@@ -761,10 +761,10 @@ View                view;
    if (idwindow != 0)
      {
 	w = FrameTable[idwindow].WdFrame;
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 	if (w != 0)
 	   XMapRaised (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
      }
 }
 
@@ -845,11 +845,11 @@ char               *name;
    int                 frame;
    char                s[200];
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
    XmString            title_string;
 
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
    if (document == 0)
       return;
    else
@@ -862,33 +862,33 @@ char               *name;
 	       {
 		  /* text est un format */
 		  sprintf (s, text, name);
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 		  title_string = XmStringCreateSimple (s);
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
 	       }
 	     else
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 		strncpy (&s[0], text, sizeof (s));
-#else  /* !NEW_WILLOWS */
+#else  /* !_WINDOWS */
 		title_string = XmStringCreateSimple (text);
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
 
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 	     SendMessage (FrameTable[frame].WdStatus, SB_SETTEXT,
 			  (WPARAM) 0, (LPARAM) & s[0]);
-#else  /* !NEW_WILLOWS */
+#else  /* !_WINDOWS */
 	     XtSetArg (args[0], XmNlabelString, title_string);
 	     XtSetValues (FrameTable[frame].WdStatus, args, 1);
 	     XtManageChild (FrameTable[frame].WdStatus);
 	     XmStringFree (title_string);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 	  }
      }
 }				/*TtaSetStatus */
 
 
 
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 /*----------------------------------------------------------------------
    WndProc :  The main MS-Windows event handler for the Thot         
    Library.                                                    
@@ -1063,9 +1063,9 @@ LRESULT CALLBACK    WndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	 }
    return DefWindowProc (hWnd, msg, wParam, lParam);
 }
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    Evenement sur une frame document.                              
    D.V. equivalent de la fontion MS-Windows ci dessus !           
@@ -1234,7 +1234,7 @@ void               *event;
 	       break;
 	 }			/*switch */
 }				/*FrameCallback */
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
 
 /*----------------------------------------------------------------------
@@ -1251,10 +1251,10 @@ int                 disp;
 
 #endif /* __STDC__ */
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    XGrabPointer (TtDisplay, win, FALSE, events, GrabModeAsync, GrabModeAsync,
 		 win, cursor, CurrentTime);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }
 
 
@@ -1270,10 +1270,10 @@ int                 disp;
 
 #endif /* __STDC__ */
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    XGrabPointer (TtDisplay, TtRootWindow, TRUE, ButtonReleaseMask, GrabModeAsync,
 		 GrabModeAsync, TtRootWindow, cursor, CurrentTime);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }
 
 
@@ -1282,9 +1282,9 @@ int                 disp;
   ----------------------------------------------------------------------*/
 void                ThotUngrab ()
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    XUngrabPointer (TtDisplay, CurrentTime);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }
 
 
@@ -1328,12 +1328,12 @@ int                 thotThotWindowid;
 
 #endif /* __STDC__ */
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    Drawable            drawable;
 
    drawable = TtaGetThotWindow (thotThotWindowid);
    XDefineCursor (TtDisplay, drawable, WaitCurs);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }
 
 
@@ -1348,12 +1348,12 @@ int                 thotThotWindowid;
 
 #endif /* __STDC__ */
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    Drawable            drawable;
 
    drawable = TtaGetThotWindow (thotThotWindowid);
    XUndefineCursor (TtDisplay, drawable);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -1377,20 +1377,20 @@ View                view;
      {
 	for (frame = 1; frame <= MAX_FRAME; frame++)
 	  {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 	     drawable = TtaGetThotWindow (frame);
 	     if (drawable != 0)
 		XDefineCursor (TtDisplay, drawable, WaitCurs);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 	  }
      }
    else
      {
 	frame = GetWindowNumber (document, view);
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 	if (frame != 0)
 	   XDefineCursor (TtDisplay, TtaGetThotWindow (frame), WaitCurs);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
      }
 }
 
@@ -1415,20 +1415,20 @@ View                view;
      {
 	for (frame = 1; frame <= MAX_FRAME; frame++)
 	  {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 	     drawable = TtaGetThotWindow (frame);
 	     if (drawable != 0)
 		XUndefineCursor (TtDisplay, drawable);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 	  }
      }
    else
      {
 	frame = GetWindowNumber (document, view);
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 	if (frame != 0)
 	   XUndefineCursor (TtDisplay, TtaGetThotWindow (frame));
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
      }
 }
 
@@ -1447,21 +1447,21 @@ int                *pave;
 #endif /* __STDC__ */
 
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    XEvent              event;
 
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
    int                 i;
    Drawable            drawable;
 
    /* Changement du curseur */
    for (i = 1; i <= MAX_FRAME; i++)
      {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 	drawable = TtaGetThotWindow (i);
 	if (drawable != 0)
 	   XDefineCursor (TtDisplay, drawable, WindowCurs);
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
      }
 
    /* Boucle d'attente de designation */
@@ -1471,20 +1471,20 @@ int                *pave;
    ClickY = 0;
    while (ClickIsDone == 1)
      {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 	XtAppNextEvent (app_cont, &event);
 	TtaHandleOneEvent (&event);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
      }				/*while */
 
    /* Restauration du curseur */
    for (i = 1; i <= MAX_FRAME; i++)
      {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 	drawable = TtaGetThotWindow (i);
 	if (drawable != 0)
 	   XUndefineCursor (TtDisplay, drawable);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
      }
 
    *frame = ClickFrame;
@@ -1508,7 +1508,7 @@ char               *text;
 
 #endif /* __STDC__ */
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    int                 n;
    Arg                 args[MAX_ARGS];
    ThotWidget          w;
@@ -1524,7 +1524,7 @@ char               *text;
 	n++;
 	XtSetValues (w, args, n);
      }
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }				/*ChangeFrameTitle */
 
 
@@ -1547,10 +1547,10 @@ int                 frame;
 	if (frame != 0)
 	  {
 	     w = FrameTable[frame].WdFrame;
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 	     if (w != 0)
 		XMapRaised (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 	  }
      }
 }				/*ChangeSelFrame */
@@ -1622,10 +1622,10 @@ int                 raz;
 {
    int                 clipx, clipy, clipwidth, clipheight;
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    XRectangle          rect;
 
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
    if (*xd < *xf && *yd < *yf && orgx < *xf && orgy < *yf)
      {
@@ -1652,7 +1652,7 @@ int                 raz;
 	   *yf = clipheight;
 	clipwidth = *xf - *xd;
 	clipheight = *yf - *yd;
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 	rect.x = 0;
 	rect.y = 0;
 	rect.width = clipwidth;
@@ -1663,7 +1663,7 @@ int                 raz;
 		 clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
 	XSetClipRectangles (TtDisplay, TtGraphicGC, clipx + FrameTable[frame].FrLeftMargin,
 		 clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 	if (raz > 0)
 	   Clear (frame, clipwidth, clipheight, clipx, clipy);
      }
@@ -1681,7 +1681,7 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    XRectangle          rect;
 
    rect.x = 0;
@@ -1692,7 +1692,7 @@ int                 frame;
    XSetClipRectangles (TtDisplay, TtGraphicGC, 0, 0, &rect, 1, Unsorted);
    XSetClipRectangles (TtDisplay, TtGreyGC, 0, 0, &rect, 1, Unsorted);
    XFlushOutput (frame);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }
 
 
@@ -1715,10 +1715,10 @@ int                 frame;
    ThotWidget          hscroll, vscroll;
    int                 n;
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
 
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
    /* Demande le volume affiche dans la fenetre */
    ComputeDisplayedChars (frame, &Xpos, &Ypos, &width, &height);
@@ -1727,7 +1727,7 @@ int                 frame;
    l = FrameTable[frame].FrWidth;
    h = FrameTable[frame].FrHeight;
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    n = 0;
    if (width + Xpos <= l)
      {
@@ -1755,9 +1755,9 @@ int                 frame;
 	n++;
 	XtSetValues (vscroll, args, n);
      }
-#ifdef NEW_WILLOWS
-#endif /* NEW_WILLOWS */
-#endif /* NEW_WILLOWS */
+#ifdef _WINDOWS
+#endif /* _WINDOWS */
+#endif /* _WINDOWS */
 }				/*UpdateScrollbars */
 
 

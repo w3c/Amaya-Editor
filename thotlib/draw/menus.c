@@ -41,14 +41,8 @@
 /*--------------------------- SYSTEM INCLUDES ------------------------------*/
 /****************************************************************************/
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <sys/types.h>
-#include <string.h>
-#include <malloc.h>
-#include <memory.h>
-#include <unistd.h>
-#include <X11/Intrinsic.h>
+#include "thot_gui.h"
+#include "thot_sys.h"
 
 /****************************************************************************/
 /*------------------------ APPLICATION  INCLUDES ---------------------------*/
@@ -163,7 +157,7 @@ extern Document CurrentDoc, DocPalette;
    * Name          Type         Usage
    * ----          ----                 -----
    * Menu       int             Idf du menu
-   * Pere               Widget          Widget de rattachement
+   * Pere               ThotWidget          ThotWidget de rattachement
    * Langue     int             Langue pour l'affichage de messaage
    *
    * Functionality : Cree le formulaire associe.
@@ -174,14 +168,14 @@ extern Document CurrentDoc, DocPalette;
 #ifdef __STDC__
 
 void 
-CreerPaletteFormeRectangle (int Menu, Widget Pere, int Langue)
+CreerPaletteFormeRectangle (int Menu, ThotWidget Pere, int Langue)
 
 #else /* __STDC__ */
 
 void 
 CreerPaletteFormeRectangle (Menu, Pere, Langue)
      int Menu;
-     Widget Pere;
+     ThotWidget Pere;
      int Langue;
 
 #endif /* __STDC__ */
@@ -400,7 +394,7 @@ CreerPaletteFormeRectangle (Menu, Pere, Langue)
    * Name          Type         Usage
    * ----          ----                 -----
    * Menu       int             Idf du menu
-   * Pere               Widget          Widget de rattachement
+   * Pere               ThotWidget          ThotWidget de rattachement
    * Langue     int             Langue pour l'affichage de messaage
    *
    * Functionality : Cree le formulaire associe.
@@ -411,14 +405,14 @@ CreerPaletteFormeRectangle (Menu, Pere, Langue)
 #ifdef __STDC__
 
 void 
-CreerPaletteTrait (int Menu, Widget Pere, int Langue)
+CreerPaletteTrait (int Menu, ThotWidget Pere, int Langue)
 
 #else /* __STDC__ */
 
 void 
 CreerPaletteTrait (Menu, Pere, Langue)
      int Menu;
-     Widget Pere;
+     ThotWidget Pere;
      int Langue;
 
 #endif /* __STDC__ */
@@ -534,7 +528,7 @@ CreerPaletteTrait (Menu, Pere, Langue)
    * Name          Type         Usage
    * ----          ----                 -----
    * Menu       int             Idf du menu
-   * Pere               Widget          Widget de rattachement
+   * Pere               ThotWidget          ThotWidget de rattachement
    * Langue     int             Langue pour l'affichage de messaage
    *
    * Functionality : Cree le formulaire associe.
@@ -545,14 +539,14 @@ CreerPaletteTrait (Menu, Pere, Langue)
 #ifdef __STDC__
 
 void 
-CreerPaletteFleche (int Menu, Widget Pere, int Langue)
+CreerPaletteFleche (int Menu, ThotWidget Pere, int Langue)
 
 #else /* __STDC__ */
 
 void 
 CreerPaletteFleche (Menu, Pere, Langue)
      int Menu;
-     Widget Pere;
+     ThotWidget Pere;
      int Langue;
 
 #endif /* __STDC__ */
@@ -570,7 +564,7 @@ CreerPaletteFleche (Menu, Pere, Langue)
    * Name          Type         Usage
    * ----          ----                 -----
    * Menu       int             Idf du menu
-   * Pere               Widget          Widget de rattachement
+   * Pere               ThotWidget          ThotWidget de rattachement
    * Langue     int             Langue pour l'affichage de messaage
    *
    * Functionality : Cree le formulaire associe.
@@ -581,14 +575,14 @@ CreerPaletteFleche (Menu, Pere, Langue)
 #ifdef __STDC__
 
 void 
-CreerPaletteLien (int Menu, Widget Pere, int Langue)
+CreerPaletteLien (int Menu, ThotWidget Pere, int Langue)
 
 #else /* __STDC__ */
 
 void 
 CreerPaletteLien (Menu, Pere, Langue)
      int Menu;
-     Widget Pere;
+     ThotWidget Pere;
      int Langue;
 
 #endif /* __STDC__ */

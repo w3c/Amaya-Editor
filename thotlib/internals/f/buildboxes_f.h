@@ -4,7 +4,7 @@
  */
 
 #ifndef __CEXTRACT__
-#if __STDC__
+#ifdef __STDC__
 
 extern C_points *ComputeControlPoints ( PtrTextBuffer buffer,
                                         int nb );

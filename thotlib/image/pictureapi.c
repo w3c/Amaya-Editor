@@ -53,12 +53,12 @@ char               *bits;
 #endif /* __STDC__ */
 
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    if (bits != NULL)
       return (XCreateBitmapFromData (TtDisplay, TtRootWindow, bits, width, height));
    else
       return (0);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -73,7 +73,7 @@ char              **d;
 #endif /* __STDC__ */
 
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    Pixmap              pixmap;
    Pixmap              PicMask;
    XpmAttributes       att;
@@ -106,5 +106,5 @@ char              **d;
 	   XFreePixmap (TtDisplay, PicMask);
      }
    return (pixmap);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }

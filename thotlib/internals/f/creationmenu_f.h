@@ -4,7 +4,7 @@
  */
 
 #ifndef __CEXTRACT__
-#if __STDC__
+#ifdef __STDC__
 
 extern boolean AskForNew_RemplRefer ( boolean * generate,
                                       Name typeName );

@@ -619,6 +619,7 @@ static int          IsThotDir (const char *path)
 }
 
 #ifdef WWW_MSWINDOWS
+#ifndef __GNUC__
 /*----------------------------------------------------------------------
    WINReg_ge - simulates getenv in the WIN32 registry              
    
@@ -660,54 +661,6 @@ static char        *WINReg_get (const char *env)
    return success ? ret : NULL;
 }
 
-#if 0				/* optional code - malloc per request. problem, no way 
-				   to recover memory from last call */
-{
-   DWORD               dwcSubKeys;
-
-   /Number of sub keys.
-
-      DWORD dwcMaxSubKey;
-   /Longest sub key size.
-
-      DWORD dwcMaxClass;
-   /Longest class string.
-
-      DWORD dwcValues;
-   /Number of values for this
-      key.
-
-	 DWORD dwcMaxValueName;
-   /Longest Value name.
-
-      DWORD dwcMaxValueData;
-   /Longest Value data.
-
-      DWORD dwcSecDesc;
-   /Security descriptor.
-
-      FILETIME ftLastWriteTime;
-   /Last write time.
-
-      success = RegQueryInfoKey (hKey, ret, &len,
-				 NULL, /Reserved.
-				 & dwcSubKeys, /Number of sub keys.
-				 & dwcMaxSubKey, /Longest sub key size.
-				 & dwcMaxClass, /Longest class string.
-				 & dwcValues, /Number of values for this key.
-				 & dwcMaxValueName, /Longest Value name.
-				 & dwcMaxValueData, /Longest Value data.
-				 & dwcSecDesc, /Security descriptor.
-				 & ftLastWriteTime)
-      /Last write time.
-	 == ERROR_SUCCESS;
-   if (ret)
-      free (ret);		/* free from last call */
-   ret = (char *) malloc (dwcMaxValueData);
-}
-#endif
-
-
 /*----------------------------------------------------------------------
    WINIni_get - simulates getenv in the Windows/Amaya.ini file     
    
@@ -720,6 +673,7 @@ static char        *WINIni_get (const char *env)
    res = GetPrivateProfileString ("Amaya", env, "", ret, sizeof (ret), "Amaya.ini");
    return res ? ret : NULL;
 }
+#endif
 #endif /* WWW_MSWINDOWS */
 
 
@@ -941,10 +895,10 @@ char               *appArgv0;
    char               *dir_end;
    char               *appName;
 
-#ifdef S_ISLNK
+#ifndef _WINDOWS
    struct stat         stat_buf;
 
-#endif /* S_ISLNK */
+#endif /* _WINDOWS */
 
    if (AppRegistryInitialized != 0)
       return;
@@ -1042,7 +996,7 @@ char               *appArgv0;
    appName = TtaStrdup (appName);
    AppRegistryEntryAppli = appName;
 
-#ifdef S_ISLNK
+#ifndef _WINDOWS
    /*
     * on Unixes, the binary path started may be a softlink
     * to the real app in the real dir.
@@ -1068,7 +1022,7 @@ char               *appArgv0;
 	       }
 	  }
      }
-#endif /* S_ISLNK */
+#endif /* _WINDOWS */
 
 #ifdef DEBUG_REGISTRY
    fprintf (stderr, "path to binary %s : %s\n", appName, execname);

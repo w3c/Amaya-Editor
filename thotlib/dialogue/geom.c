@@ -108,7 +108,7 @@ int                *y3;
 #endif /* __STDC__ */
 
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    ThotPoint          *points;
    int                 i, j;
    PtrTextBuffer       adbuff;
@@ -173,7 +173,7 @@ int                *y3;
 
    /* free the table of points */
    free ((char *) points);
-#endif /* NEW_WILLOWS */
+#endif	/* _WINDOWS */
 }
 
 /**
@@ -201,7 +201,7 @@ PtrTextBuffer       Bbuffer;
 #endif /* __STDC__ */
 
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    float               rapportX, rapportY;
    int                 width, height;
    int                 e, dx, dy;
@@ -368,7 +368,7 @@ PtrTextBuffer       Bbuffer;
      }
    else
       return nbpoints;
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }				/*PolyLineCreation */
 
 
@@ -403,7 +403,7 @@ boolean             close;
 #endif /* __STDC__ */
 
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    float               rapportX, rapportY;
    int                 width, height;
    int                 e;
@@ -537,7 +537,7 @@ boolean             close;
    /* returns to previous state of the Thot library */
    ThotUngrab ();
    XFlush (TtDisplay);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }				/*PolyModification */
 
 
@@ -574,7 +574,7 @@ boolean             close;
 #endif /* __STDC__ */
 
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    float               rapportX, rapportY;
    int                 width, height;
    int                 e, dx, dy;
@@ -766,7 +766,7 @@ boolean             close;
       return 1;
    else
       return nbpoints;
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }				/*PolyLineExtension */
 /*fin */
 
@@ -802,7 +802,7 @@ int                 DimY;
 #endif /* __STDC__ */
 
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    int                 xm, ym;
    int                 ret, e, dx, dy;
    int                 nx, ny, f;
@@ -1144,7 +1144,7 @@ int                 DimY;
    /* restore state of the Thot Library */
    ThotUngrab ();
    XFlush (TtDisplay);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }				/*UserGeometryCreate */
 
 /**
@@ -1178,7 +1178,7 @@ int                 ym;
 #endif /* __STDC__ */
 
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    int                 ret, e, dx, dy, nx, ny;
    XEvent              event;
    ThotWindow          w;
@@ -1335,7 +1335,7 @@ int                 ym;
    ThotUngrab ();
    XFlush (TtDisplay);
 
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }				/*UserGeometryMove */
 
 /**
@@ -1370,7 +1370,7 @@ int                 ym;
 #endif /* __STDC__ */
 
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 #define c_sup 0
 #define c_milieuh 1
 #define c_inf 2
@@ -1632,6 +1632,6 @@ int                 ym;
    /* restore the prvious state of the Thot Library */
    ThotUngrab ();
    XFlush (TtDisplay);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
 }				/*UserGeometryResize */

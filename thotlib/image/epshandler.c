@@ -99,11 +99,11 @@ Drawable           *PicMask;
 
 #endif /* __STDC__ */
 {
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
    return (NULL);
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    *PicMask = None;
 #endif
 
@@ -113,10 +113,8 @@ Drawable           *PicMask;
    *wif = PointToPixel (*wif);
    *hif = PointToPixel (*hif);
    return (ThotBitmap) EpsfPictureLogo;
-#endif /* !NEW_WILLOWS */
-}
-
-
+#endif /* !_WINDOWS */
+}			
 
 /*----------------------------------------------------------------------
    Print the eps picture with the right scale and positions    
@@ -140,9 +138,9 @@ unsigned long       BackGroundPixel;
 
 #endif /* __STDC__ */
 {
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
    return;
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
    float               Scx, Scy;
    int                 x, y;
    FILE               *fin;
@@ -227,8 +225,8 @@ unsigned long       BackGroundPixel;
    fprintf (fd, "%%%% end of file %s\n", fn);
    fprintf (fd, "ENDEPSFILE\n");
 
-#endif /* !NEW_WILLOWS */
-}
+#endif /* !_WINDOWS */
+}			
 
 /*----------------------------------------------------------------------
    Chech if the picture header is of an eps file                   

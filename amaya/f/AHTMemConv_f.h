@@ -4,7 +4,7 @@
  */
 
 #ifndef __CEXTRACT__
-#if __STDC__
+#ifdef __STDC__
 
 extern PRIVATE int AHTMemConv_put_character ( HTStream* me,
                                               char c );

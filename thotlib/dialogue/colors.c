@@ -68,7 +68,7 @@ int                 fground;
 	/* eteint le background precedent */
 	x = (LastBg % COLORS_COL) * wcase;
 	y = ((LastBg / COLORS_COL) + 1) * hcase;
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 	x -= 2;
 	y -= 2;
 	w = wcase + 2;
@@ -77,7 +77,7 @@ int                 fground;
 	XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y, 2, h);
 	XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y + h, w, 2);
 	XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x + w, y + 2, 2, h);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
      }
 
    if (LastFg != -1 && LastFg != fground)
@@ -85,14 +85,14 @@ int                 fground;
 	/* eteint le foreground precedent */
 	x = (LastFg % COLORS_COL) * wcase;
 	y = ((LastFg / COLORS_COL) + 1) * hcase;
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 	w = wcase - 2;
 	h = hcase - 2;
 	XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x + 2, y, w, 2);
 	XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y, 2, h);
 	XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y + h, w, 2);
 	XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x + w, y + 2, 2, h);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
      }
 
    /* nouveau background */
@@ -103,7 +103,7 @@ int                 fground;
 	  {
 	     x = (LastBg % COLORS_COL) * wcase;
 	     y = ((LastBg / COLORS_COL) + 1) * hcase;
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 	     x -= 2;
 	     y -= 2;
 	     w = wcase + 2;
@@ -112,7 +112,7 @@ int                 fground;
 	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y, 2, h);
 	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y + h, w, 2);
 	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x + w, y + 2, 2, h);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 	  }
      }
 
@@ -124,14 +124,14 @@ int                 fground;
 	  {
 	     x = (LastFg % COLORS_COL) * wcase;
 	     y = ((LastFg / COLORS_COL) + 1) * hcase;
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 	     w = wcase - 2;
 	     h = hcase - 2;
 	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x + 2, y, w, 2);
 	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y, 2, h);
 	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y + h, w, 2);
 	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x + w, y + 2, 2, h);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 	  }
      }
 }
@@ -151,7 +151,7 @@ caddr_t             call_d;
 
 #endif /* __STDC__ */
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    XtPopdown (Color_Palette);
 #endif
 }
@@ -199,7 +199,7 @@ static void         ColorsExpose ()
    max = NumberOfColors ();
    y = hcase;
    h = (max + COLORS_COL - 1) / COLORS_COL * hcase + y;
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    XClearWindow (TtDisplay, Color_Window);
 
    /* entree couleur standard */
@@ -245,7 +245,7 @@ static void         ColorsExpose ()
    LastFg = -1;
    LastBg = -1;
    ThotSelectPalette (bground, fground);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }
 
 
@@ -276,7 +276,7 @@ int                 y;
    /* Regarde si on n'a pas clique dans le titre */
    if (y < hcase)
      {
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 #define Button1 1		/* MSWindows will probably use same model */
 #endif
 	if (button == Button1)
@@ -348,7 +348,7 @@ int                 y;
 
 #endif /* __STDC__ */
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    int                 n;
    int                 width, height;
    ThotWidget          w;
@@ -566,7 +566,7 @@ int                 y;
    /* pas de selection precedente */
    LastBg = -1;
    LastFg = -1;
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }
 
 
@@ -593,13 +593,13 @@ View                view;
    PtrAbstractBox      pAb;
    PtrDocument         pDoc;
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    if (ThotLocalActions[T_colors] == NULL)
      {
 	/* Connecte le traitement des evenements */
 	TteConnectAction (T_colors, (Proc) ColorsEvent);
      }
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
    pDoc = LoadedDocument[document - 1];
    /* demande quelle est la selection courante */
@@ -618,10 +618,10 @@ View                view;
 	/* Cree la palette si elle n'existe pas */
 	if (Color_Window == 0)
 	   ThotCreatePalette (800, 100);
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 	else
 	   XtPopup (Color_Palette, XtGrabNonexclusive);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
 	/* recherche le pave concerne */
 	if (view > 100)

@@ -64,7 +64,7 @@ static struct unit_def HTML3UnitNames[] =
   ----------------------------------------------------------------------*/
 
 
-static FILE        *output = stderr;
+static FILE        *output = NULL;
 
 
 /*----------------------------------------------------------------------
@@ -792,6 +792,8 @@ int                 background;
 	else
 	   fprintf (output, "/**********************************\n");
      }
+   else if (output == NULL)
+      output = stderr;
    list = rpi = PSchema2RPI (doc, gPres, zoom, background);
 
    if (output != stderr)

@@ -372,7 +372,7 @@ extern void         TtaSetAttributeReference ();
 extern void         QueryInit ();
 extern void         QueryClose ();
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 #ifdef __STDC__
 extern XtInputCallbackProc AHTCallback_bridge (caddr_t, int *, XtInputId *);
 
@@ -380,10 +380,9 @@ extern XtInputCallbackProc AHTCallback_bridge (caddr_t, int *, XtInputId *);
 extern XtInputCallbackProc AHTCallback_bridge ();
 
 #endif /* __STDC__ */
-#else  /* NEW_WILLOWS */
+#else    /* _WINDOWS */
 LONG                AHTCallback_bridge (caddr_t, int *);
-
-#endif /* !NEW_WILLOWS */
+#endif   /* !_WINDOWS */
 
 extern HTList      *conv;	/* List of global converters */
 extern AmayaContext *Amaya;	/* Amaya's global context    */

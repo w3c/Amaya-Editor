@@ -4,7 +4,7 @@
  */
 
 #ifndef __CEXTRACT__
-#if __STDC__
+#ifdef __STDC__
 
 extern boolean IsSeparatorChar ( char car );
 extern void SmallLettering ( char *word );

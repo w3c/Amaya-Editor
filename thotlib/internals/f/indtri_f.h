@@ -4,7 +4,7 @@
  */
 
 #ifndef __CEXTRACT__
-#if __STDC__
+#ifdef __STDC__
 
 extern void Ind_indpar ( void );
 extern int codecmp ( unsigned char *s1,

@@ -46,9 +46,9 @@ unsigned long       BackGroundPixel;
 Drawable           *mask1;
 #endif /* __STDC__ */
 {
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
    return (NULL);
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
    int                 status;
    Pixmap              pixmap;
    XpmAttributes       att;
@@ -100,7 +100,7 @@ Drawable           *mask1;
 	att.valuemask = valuemask;/* reinitialises the value mask */
 	return (Drawable) pixmap;
      }
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
 }
 
 
@@ -125,9 +125,9 @@ int                 fd;
 unsigned long       BackGroundPixel;
 #endif /* __STDC__ */
 {
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
    return;
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
    int                 delta;
    int                 xtmp, ytmp;
    float               Scx, Scy;
@@ -287,7 +287,7 @@ unsigned long       BackGroundPixel;
    att.valuemask = valuemask;
 
 
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
 }			
 
 /*----------------------------------------------------------------------

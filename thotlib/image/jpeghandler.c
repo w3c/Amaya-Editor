@@ -130,7 +130,7 @@ unsigned char      *ReadJPEG (FILE * infile, int *width, int *height, ThotColorS
 
    /* Initialize our colormap until a clear policy for the 32-bit screen */
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    if (cinfo.out_color_components == 3)
      {
 	for (i = 0; i < cinfo.actual_number_of_colors; i++)
@@ -152,7 +152,7 @@ unsigned char      *ReadJPEG (FILE * infile, int *width, int *height, ThotColorS
 	     colrs[i].flags = DoRed | DoGreen | DoBlue;
 	  }
      }
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
 
    (void) jpeg_finish_decompress (&cinfo);
@@ -236,9 +236,9 @@ ThotBitmap         *mask1;
 
    buffer = ReadJpegToData (fn, &w, &h, colrs);
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    pixmap = DataToPixmap (buffer, w, h, 100, colrs);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
    free (buffer);
 
@@ -373,12 +373,12 @@ unsigned long       BackGroundPixel;
 	  {
 
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 	     fprintf ((FILE *) fd, "%02x%02x%02x",
 		      (colrs[*pt].red) >> 8,
 		      (colrs[*pt].green) >> 8,
 		      (colrs[*pt].blue) >> 8);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 	     pt++;
 	  }
 	fprintf ((FILE *) fd, "\n");

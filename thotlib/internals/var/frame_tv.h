@@ -23,7 +23,7 @@ EXPORT ThotColor Box_Color;        /* Couleur des boites actives  */
 EXPORT ThotColor RO_Color;         /* Couleur du Read Only        */
 EXPORT ThotColor InactiveB_Color;  /* Couleur des boutons inactifs*/
 
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 EXPORT WNDCLASSEX	RootShell;
 EXPORT HFONT      DefaultFont;/* default Font                */
 EXPORT HPALETTE   TtCmap;	/* Table des couleurs pour Thot		*/
@@ -35,7 +35,7 @@ EXPORT WIN_GC_BLK TtLineGC;
 EXPORT WIN_GC_BLK TtDialogueGC;
 EXPORT WIN_GC_BLK TtGraphicGC;	/* Graphic context pour les images      */
 
-#else /* NEW_WILLOWS */
+#else /* _WINDOWS */
 EXPORT ThotWidget	RootShell;
 EXPORT XmFontList DefaultFont;  /* default Font                */
 EXPORT Time	  t1;
@@ -49,7 +49,7 @@ EXPORT ThotGC     TtGreyGC;
 EXPORT ThotGC     TtLineGC;
 EXPORT ThotGC     TtDialogueGC;
 EXPORT ThotGC     TtGraphicGC;	/* Graphic context pour les images      */
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
 
 EXPORT ThotWindow TtRootWindow; /* Identification de la fenetre racine 	*/
 EXPORT int        TtWDepth;	/* Nombre de plans de l'ecran  		*/
@@ -73,9 +73,11 @@ EXPORT unsigned char	*Xbuffer;	/* Buffer pour echanges avec X */
 EXPORT int		ClipboardLength;
 EXPORT Proc		CurrentCallbackAPI;
 
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 #include <windows.h>
+#ifndef __GNUC__
 #include <commctrl.h>
+#endif
 
 extern HINSTANCE hInstance;
 extern char   *tszAppName;
@@ -94,7 +96,7 @@ extern HFONT	WIN_DefaultFont;
 extern HBITMAP	WIN_LastBitmap;
 extern HFONT    WIN_LastFont;
 
-extern struct 	WIN_DisplayDesc WIN_OpenDisplays[MAX_DISPLAY];
+extern struct 	WIN_DisplayDesc WIN_OpenDisplays[1];
 extern int 	WIN_ActifFen;		/* Numero de fenetre document active */
 extern int      WIN_DesFen;		/* ViewFrame designee par la selection */
 extern int      WIN_DesX;		/* Position X de la selection  */
@@ -103,7 +105,7 @@ extern int      WIN_DesReturn;		/* Indicateur de selection     */
 extern unsigned char	*WIN_buffer;	/* Buffer pour echanges avec Window */
 extern int		WIN_Lgbuffer;
 
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
 #endif /* !NODISPLAY */
 

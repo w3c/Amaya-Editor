@@ -529,9 +529,9 @@ SockOps             ops;
 
    HTEventCallback    *cbf = (HTEventCallback *) __RetrieveCBF (sock, (SockOps) NULL, &rqp);
 
+#ifdef WWW_XWINDOWS
    if (cbf)
      {
-#ifdef WWW_XWINDOWS
 	if (rqp)
 	  {
 	     me = HTRequest_context (rqp);
@@ -545,12 +545,12 @@ SockOps             ops;
 	     if (ops & ExceptBits)
 		RequestKillExceptXtevent (me);
 
-#endif /* WWW_XWINDOWS */
 
 	  }
      }
 
    status = HTEventrg_unregister (sock, ops);
+#endif /* WWW_XWINDOWS */
    return (status);
 }
 

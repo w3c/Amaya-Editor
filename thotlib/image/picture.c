@@ -6,6 +6,7 @@
    Picture Handling
  */
 
+#include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -52,7 +53,7 @@ static boolean      Printing;
 ThotGC              GCpicture;
 THOT_VInfo          THOT_vInfo;
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 XVisualInfo        *vptr;
 Visual             *theVisual;
 
@@ -129,12 +130,12 @@ Pixmap              pix;
 
 #endif /* __STDC__ */
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    if ((pix != None)
        && (pix != PictureLogo)
        && (pix != EpsfPictureLogo))
       XFreePixmap (TtDisplay, pix);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -290,10 +291,10 @@ int                 desory;
 	srcory = 0;
      }
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    if (SrcPix != None)
       XCopyArea (TtDisplay, SrcPix, Drawab, TtGraphicGC, srcorx, srcory, w, h, desorx, desory);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
 }
 
@@ -334,9 +335,9 @@ PictInfo           *imageDesc;
      }
    else
      {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 	XGetGeometry (TtDisplay, imageDesc->PicPixmap, &root, &xpix, &ypix, &wpix, &hpix, &bdw, &dep);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 	switch (imageDesc->PicPresent)
 	      {
 		 case RealSize:
@@ -476,9 +477,8 @@ boolean             printing;
 #endif /* __STDC__ */
 {
    int                 i;
-   XVisualInfo         vinfo, *vptr;
 
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 #if 0
    HDC                 hdc;
 
@@ -493,7 +493,9 @@ boolean             printing;
    ReleaseDC (WIN_Main_Wd, hdc);
 
 #endif /* 0 */
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
+   XVisualInfo         vinfo, *vptr;
+
    TtGraphicGC = XCreateGC (TtDisplay, TtRootWindow, 0, NULL);
    XSetForeground (TtDisplay, TtGraphicGC, Black_Color);
    XSetBackground (TtDisplay, TtGraphicGC, White_Color);
@@ -518,7 +520,7 @@ boolean             printing;
    THOT_vInfo.depth = vptr->depth;
    theVisual = DefaultVisual (TtDisplay, TtScreen);
 
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
 
    Printing = printing;
    i = 0;
@@ -668,7 +670,7 @@ int                 hlogo;
 	       break;
 	 }
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    pix = XCreatePixmap (TtDisplay, TtRootWindow, w, h, TtWDepth);
    XFillRectangle (TtDisplay, pix, TtBlackGC, x, y, w, h);
 
@@ -680,7 +682,7 @@ int                 hlogo;
    XDrawLine (TtDisplay, pix, TtWhiteGC, x, y + 1, x + w - 1, y + h - 1);
    XDrawLine (TtDisplay, pix, TtWhiteGC, x + w - 1, y + 1, x, y + h - 1);
 
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
    /* copying the logo */
    /* 2 pixels used by the enclosing rectangle */
@@ -709,28 +711,28 @@ int                 hlogo;
 	yif = y + 1;
 	pyorig = 0;
      }
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 
    /* Drawing In the Picture Box */
    XCopyArea (TtDisplay, imageDesc->PicPixmap, pix, TtDialogueGC, pxorig, pyorig,
 	      wif, hif, xif, yif);
    GetXYOrg (frame, &XOrg, &YOrg);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
    xif = box->BxXOrg + FrameTable[frame].FrLeftMargin - XOrg;
    yif = box->BxYOrg + FrameTable[frame].FrTopMargin - YOrg;
    wif = box->BxWidth;
    hif = box->BxHeight;
    Picture_Center (w, h, wif, hif, RealSize, &x, &y, &pxorig, &pyorig);
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    drawable = TtaGetThotWindow (frame);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
    if (w > wif)
       w = wif;
    if (h > hif)
       h = hif;
    x += xif;
    y += yif;
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    LayoutPicture (pix, drawable, pxorig, pyorig, w, h, x, y);
    XFreePixmap (TtDisplay, pix);
    pix = None;
@@ -747,7 +749,7 @@ int                 hlogo;
 	XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) FontDialogue)->fid);
 	XDrawString (TtDisplay, drawable, TtLineGC, fnposx, fnposy, filename, strlen (filename));
      }
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }
 
 
@@ -764,7 +766,7 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    int                 typeImage;
    char                fileName[1023];
    PictureScaling      pres;
@@ -837,7 +839,7 @@ int                 frame;
    else if (typeImage < HandlersCounter && typeImage > -1)
       (*(PictureHandlerTable[typeImage].Produce_Postscript)) (fileName, pres, xif, yif, wif, hif, PicXArea, PicYArea, PicWArea, PicHArea,
 					(FILE *) drawable, BackGroundPixel);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }
 
 
@@ -854,7 +856,7 @@ PictInfo           *imageDesc;
 
 #endif /* __STDC__ */
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    int                 typeImage;
    char                fileName[1023];
    PictureScaling      pres;
@@ -968,7 +970,7 @@ PictInfo           *imageDesc;
       UpdatePictInfo (imageDesc, myDrawable, PicMask);
 
 
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }
 
 
@@ -984,7 +986,7 @@ PictInfo           *imageDesc;
 #endif /* __STDC__ */
 {
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    if (imageDesc->PicPixmap != None)
      {
 
@@ -993,10 +995,8 @@ PictInfo           *imageDesc;
 	imageDesc->PicPixmap = None;
 	imageDesc->PicMask = None;
      }
-#endif /* NEW_WILLOWS */
-}
-
-
+#endif /* _WINDOWS */
+}				
 
 /*----------------------------------------------------------------------
    GetPictureType returns the type of the image based on the index 

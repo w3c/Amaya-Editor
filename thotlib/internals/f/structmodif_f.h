@@ -4,7 +4,7 @@
  */
 
 #ifndef __CEXTRACT__
-#if __STDC__
+#ifdef __STDC__
 
 extern void InitSave ( void );
 extern boolean IsASavedElement ( PtrElement pEl );

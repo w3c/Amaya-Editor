@@ -4,7 +4,7 @@
  */
 
 #ifndef __CEXTRACT__
-#if __STDC__
+#ifdef __STDC__
 
 extern LONG AHTCallback_bridge ( caddr_t cd,
                                  int* s );

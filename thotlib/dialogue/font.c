@@ -45,7 +45,7 @@ static boolean      UseBitStreamFamily;
 #include "registry_f.h"
 
 
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 /**
  *      WinLoadFont : Load a Windows font in a Device context.
  **/
@@ -67,7 +67,7 @@ void                WinLoadFont (HDC hdc, ptrfont font)
    SelectObject (hdc, font);
 
 }
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
 /**
  *      NumberOfFonts returns the number of fonts.
@@ -137,7 +137,7 @@ ptrfont             font;
       return (0);
    else
      {
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 	SIZE                size;
 
 	WIN_GetDeviceContext (-1);
@@ -145,7 +145,7 @@ ptrfont             font;
 	/* GetTextExtentPoint32(WIN_curHdc, ptcar, lg, &size); */
 	GetTextExtentPoint (WIN_curHdc, &c, 1, &size);
 	return (size.cx);
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
 	int                 l;
 
 	if (((XFontStruct *) font)->per_char == NULL)
@@ -154,7 +154,7 @@ ptrfont             font;
 	   l = ((XFontStruct *) font)->per_char[c - ((XFontStruct *) font)->min_char_or_byte2].width;
 
 	return l;
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
      }
 }
 
@@ -175,7 +175,7 @@ ptrfont             font;
 {
    if (font == NULL)
       return (0);
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
    else
      {
 	SIZE                size;
@@ -186,13 +186,13 @@ ptrfont             font;
 	GetTextExtentPoint (WIN_curHdc, &c, 1, &size);
 	return (size.cy);
      }
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
    else if (((XFontStruct *) font)->per_char == NULL)
       return FontHeight (font);
    else
       return ((XFontStruct *) font)->per_char[c - ((XFontStruct *) font)->min_char_or_byte2].ascent
 	 + ((XFontStruct *) font)->per_char[c - ((XFontStruct *) font)->min_char_or_byte2].descent;
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
 }
 
 /**
@@ -212,7 +212,7 @@ ptrfont             font;
 {
    if (font == NULL)
       return (0);
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
    else
      {
 	TEXTMETRIC          textMetric;
@@ -226,12 +226,12 @@ ptrfont             font;
 	else
 	   return (0);
      }
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
    else if (((XFontStruct *) font)->per_char == NULL)
       return ((XFontStruct *) font)->max_bounds.ascent;
    else
       return ((XFontStruct *) font)->per_char[c - ((XFontStruct *) font)->min_char_or_byte2].ascent;
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
 
 }
 
@@ -251,7 +251,7 @@ ptrfont             font;
 {
    if (font == NULL)
       return (0);
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
    else
      {
 	TEXTMETRIC          textMetric;
@@ -265,10 +265,10 @@ ptrfont             font;
 	else
 	   return (0);
      }
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
    else
       return ((XFontStruct *) font)->ascent;
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
 }
 
 /**
@@ -287,7 +287,7 @@ ptrfont             font;
 {
    if (font == NULL)
       return (0);
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
    else
      {
 	TEXTMETRIC          textMetric;
@@ -301,10 +301,10 @@ ptrfont             font;
 	else
 	   return (0);
      }
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
    else
       return ((XFontStruct *) font)->max_bounds.ascent + ((XFontStruct *) font)->max_bounds.descent;
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
 }
 
 /**
@@ -474,9 +474,9 @@ char                name[100];
 
 #endif /* __STDC__ */
 {
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
    return (NULL);
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
    char                tmp[200];
    XFontStruct        *result;
    int                 mincar;
@@ -504,7 +504,7 @@ char                name[100];
 	      result->per_char[HALF_EM - mincar].width = (spacewd + 1) / 2;
 	}
    return ((ptrfont) result);
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
 }
 
 /**
@@ -661,7 +661,7 @@ TypeUnit            unit;
    return LoadFont (nameX);
 }
 
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 /**
  *    WIN_LoadFont :  load a Windows TRUEType with a defined set of
  *                    characteristics.
@@ -762,7 +762,7 @@ int                 frame;
  no_win:
    return (hFont);
 }
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
 /**
  *      LoadNearestFont load the nearest possible font given a set
@@ -838,11 +838,11 @@ boolean             increase;
 	     strcpy (&TtFontName[i * MAX_FONTNAME], text);
 	     strcpy (&TtPsFontName[i * 8], PsName);
 
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 	     ptfont = WIN_LoadFont (alphabet, family, highlight, size, unit, frame);
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
 	     ptfont = LoadFont (textX);
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
 	     /* Loading failed try to find a neighbour */
 	     if (ptfont == NULL)
 	       {
@@ -997,7 +997,7 @@ char               *name;
    f4 = MenuSize - 2;
    f5 = MenuSize;
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    fontpath = TtaGetEnvString ("THOTFONT");
    if (fontpath)
      {
@@ -1037,7 +1037,7 @@ char               *name;
 	  }
 	TtaFreeMemory ((char *) currentlist);
      }
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
    /* Initialize the Thot Lib standards fonts */
    FontDialogue = IFontDialogue = LargeFontDialogue = NULL;
@@ -1116,16 +1116,16 @@ int                 frame;
 			  j++;
 		    }
 		  /* Shall we free this family ? */
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 		  if (j == MAX_FONT)
 		    {
 		       DeleteObject (TtFonts[i]);
 		       DebugBreak ();
 		    }
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
 		  if (j == MAX_FONT)
 		     XFreeFont (TtDisplay, (XFontStruct *) TtFonts[i]);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 		  TtFonts[i] = NULL;
 	       }
 	     else

@@ -24,7 +24,7 @@
 #include "memory_f.h"
 #include "fileaccess_f.h"
 
-FILE               *output = stdout;
+FILE               *output = NULL;
 static PtrSSchema   pSchemaStr;
 static PtrPSchema   pSchemaPrs;
 

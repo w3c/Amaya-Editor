@@ -88,8 +88,18 @@
 #ifdef WWW_MSWINDOWS
 #include <windows.h>
 #include <fcntl.h>
+#ifdef __GNUC__
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/socket.h>
+#include <sys/file.h>
+#include <netinet/in.h>
+#include <netdb.h>
+#include <errno.h>
+#else /* __GNUC__ */
 #include <sys\types.h>
 #include <sys\stat.h>
+#endif /* __GNUC__ */
 
 #define NETREAD(s,b,l)  recv((s),(b),(l),0)
 #define NETWRITE(s,b,l) send((s),(b),(l),0)
@@ -104,20 +114,27 @@
 #undef TTY_IS_SELECTABLE
 #endif
 
+#ifndef __GNUC__
 #include <io.h>
+#include <direct.h>
+#endif /* __GNUC__ */
+
 #include <string.h>
 #include <process.h>
 #include <time.h>
-#include <direct.h>
+
 
 #define HAVE_STDIO_H
 
 #include <stdlib.h>
+#ifndef __GNUC__
 #include <winsock.h>
+#endif /* __GNUC__ */
 
 #ifndef _CONSOLE
 #define NO_STDIO
 #endif
+
 
 #undef HAVE_GETPASS
 #undef HAVE_ALTZONE
@@ -128,11 +145,13 @@
 
 #undef HAVE_GETDOMAINNAME
 
+#ifndef __GNUC__
 #define SOCKET SOCKET		/* WinSocks socket descriptor */
 #define INVSOC INVALID_SOCKET	/* WinSocks invalid socket */
 
 #define DESIRED_WINSOCK_VERSION 0x0101	/* we'd like winsock ver 1.1... */
 #define MINIMUM_WINSOCK_VERSION 0x0101	/* ...but we'll take ver 1.1 :) */
+#endif /* ! __GNUC__ */
 /*
 
    FILE AND DIRECTORY ACCESS
@@ -141,9 +160,11 @@
    Hounslow <P.M.Hounslow@reading.ac.uk>)
 
  */
+#ifndef __GNUC__
 #define NO_UNIX_IO
 
 typedef unsigned long mode_t;
+#endif /* ! __GNUC__ */
 
 #define _IFMT           0170000	/* type of file */
 #define _IFDIR          0040000	/* directory */
@@ -237,9 +258,11 @@ typedef unsigned long mode_t;
    Return code for socket functions. We can't use -1 as return value
 
  */
+#ifndef __GNUC__
 #define EWOULDBLOCK     WSAEWOULDBLOCK
-#define EINPROGRESS     WSAEINPROGRESS
 #define ECONNREFUSED    WSAECONNREFUSED
+#endif /* __GNUC__ */
+#define EINPROGRESS     WSAEINPROGRESS
 #define ETIMEDOUT       WSAETIMEDOUT
 #define ENETUNREACH     WSAENETUNREACH
 #define EHOSTUNREACH    WSAEHOSTUNREACH
@@ -255,7 +278,6 @@ typedef unsigned long mode_t;
 #else
 #define MKDIR(a,b)      _mkdir((a))	/* CLB NT has mkdir, but only one arg */
 #endif /* WIN32 */
-
 #endif /* WWW_MSWINDOWS */
 /*
 

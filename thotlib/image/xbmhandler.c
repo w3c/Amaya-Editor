@@ -37,9 +37,9 @@ Drawable           *mask1;
 {
    Pixmap              pix;
 
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
    return (Drawable) None;
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
    int                 status;
    int                 w, h;
    Pixmap              bitmap;
@@ -62,7 +62,7 @@ Drawable           *mask1;
 	XFreePixmap (TtDisplay, bitmap);
 	return pix;
      }
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
 }
 
 
@@ -88,9 +88,9 @@ unsigned int        BackGroundPixel;
 
 #endif /* __STDC__ */
 {
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
    return;
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
    int                 delta;
    int                 xtmp, ytmp;
    float               Scx, Scy;
@@ -178,7 +178,7 @@ unsigned int        BackGroundPixel;
 	XDestroyImage (pict);
 	XFreePixmap (TtDisplay, pix);
      }
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -192,9 +192,9 @@ char               *fn;
 
 #endif /* __STDC__ */
 {
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
    return (FALSE);
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
    int                 status;
    int                 w, h;
    Pixmap              bitmap = None;
@@ -204,5 +204,5 @@ char               *fn;
    if (bitmap != None)
       XFreePixmap (TtDisplay, bitmap);
    return (status == BitmapSuccess);
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
 }

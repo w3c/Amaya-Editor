@@ -107,7 +107,7 @@ LFUNC (MSWSetImagePixels, void, (Display * dc, XImage * image,
 
 #endif /* ndef FOR_MSW */
 
-#ifndef linux
+#ifndef __GNUC__
 #ifdef NEED_STRCASECMP
 FUNC (strcasecmp, int, (char *s1, char *s2));
 

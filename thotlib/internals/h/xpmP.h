@@ -293,7 +293,7 @@ FUNC(xpmHashIntern, int, (xpmHashTable *table, char *tag, void *data));
 FUNC(strdup, char *, (char *s1));
 #endif
 
-#ifndef linux
+#ifndef __GNUC__
 #ifdef NEED_STRCASECMP                   
 FUNC(strcasecmp, int, (char *s1, char *s2));
 #endif

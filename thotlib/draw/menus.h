@@ -131,12 +131,12 @@ extern int MenuPaletteGenerale, MenuPaletteLien;
 ----------------------------- C++ INTERFACE ------------------------------
   ----------------------------------------------------------------------*/
 
-extern void CreerPaletteFormeRectangle (int MenuBase, Widget Pere, int Langue);
-extern void CreerPaletteForme     (int MenuBase, Widget Pere, int Langue);
-extern void CreerPaletteTexte	  (int MenuBase, Widget Pere, int Langue);
-extern void CreerPaletteTrait     (int MenuBase, Widget Pere, int Langue);
-extern void CreerPaletteFleche    (int MenuBase, Widget Pere, int Langue);
-extern void CreerPaletteLien 	  (int MenuBase, Widget Pere, int Langue);
+extern void CreerPaletteFormeRectangle (int MenuBase, ThotWidget Pere, int Langue);
+extern void CreerPaletteForme     (int MenuBase, ThotWidget Pere, int Langue);
+extern void CreerPaletteTexte	  (int MenuBase, ThotWidget Pere, int Langue);
+extern void CreerPaletteTrait     (int MenuBase, ThotWidget Pere, int Langue);
+extern void CreerPaletteFleche    (int MenuBase, ThotWidget Pere, int Langue);
+extern void CreerPaletteLien 	  (int MenuBase, ThotWidget Pere, int Langue);
 
 extern void TraiterEvtPaletteFormeRectangle(int ref, int typedata, char *data);
 extern void TraiterEvtPaletteForme   (int ref, int typedata, char *data);
@@ -156,15 +156,15 @@ extern void AppliquerFeuilleTrait 	(int ref, int typedata, char *data);
   ----------------------------------------------------------------------*/
 
 extern void CreerPaletteFormeRectangle 
-				 (/* int MenuBase, Widget Pere, int Langue */);
-extern void CreerPaletteForme     (/*int MenuBase, Widget Pere, int Langue*/);
-extern void CreerPaletteTexte	  (/*int MenuBase, Widget Pere, int Langue*/);
-extern void CreerPaletteTrait     (/*int MenuBase, Widget Pere, int Langue*/);
-extern void CreerPaletteFleche    (/*int MenuBase, Widget Pere, int Langue*/);
-extern void CreerPaletteLien      (/*int MenuBase, Widget Pere, int Langue*/);
+				 (/* int MenuBase, ThotWidget Pere, int Langue */);
+extern void CreerPaletteForme     (/*int MenuBase, ThotWidget Pere, int Langue*/);
+extern void CreerPaletteTexte	  (/*int MenuBase, ThotWidget Pere, int Langue*/);
+extern void CreerPaletteTrait     (/*int MenuBase, ThotWidget Pere, int Langue*/);
+extern void CreerPaletteFleche    (/*int MenuBase, ThotWidget Pere, int Langue*/);
+extern void CreerPaletteLien      (/*int MenuBase, ThotWidget Pere, int Langue*/);
 
 extern void TraiterEvtPaletteFormeRectangle
-				 (/* int MenuBase, Widget Pere, int Langue */);
+				 (/* int MenuBase, ThotWidget Pere, int Langue */);
 extern void TraiterEvtPaletteForme   (/* int ref, int typedata, char *data */);
 extern void TraiterEvtPaletteTexte   (/* int ref, int typedata, char *data */);
 extern void TraiterEvtPaletteTrait   (/* int ref, int typedata, char *data */);

@@ -43,8 +43,10 @@ XComposeStatus     *status;
   ----------------------------------------------------------------------*/
 void                LookupLoadResources ()
 {
+#ifndef _WINDOWS
    /*
     * Use the Thot XLookupString
     */
    TtaUseOwnXLookupString = 1;
+#endif /* ! _WINDOWS */
 }

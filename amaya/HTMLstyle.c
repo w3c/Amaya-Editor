@@ -72,6 +72,7 @@ int                 EvaluateClassSelector ();
 /* DEBUG_CLASS_INTERF verbose output on class interface actions */
 
 #ifdef _WINDOWS
+#ifndef __GNUC__
 int                 strncasecmp (char *s1, char *s2, size_t n)
 {
    if (n == 0)
@@ -88,7 +89,8 @@ int                 strncasecmp (char *s1, char *s2, size_t n)
    return toupper (*(unsigned char *) s1) - toupper (*(unsigned char *) s2);
 }
 
-#endif
+#endif /* ! __GNUC__ */
+#endif /* _WINDOWS */
 
 
 #define MAX_DEEP 10

@@ -4,7 +4,7 @@
  */
 
 #ifndef __CEXTRACT__
-#if __STDC__
+#ifdef __STDC__
 
 extern ContentType ReadContentType ( BinFile file );
 extern PtrPRule ReadPRulePtr ( BinFile file,

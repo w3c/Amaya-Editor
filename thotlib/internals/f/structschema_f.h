@@ -4,7 +4,7 @@
  */
 
 #ifndef __CEXTRACT__
-#if __STDC__
+#ifdef __STDC__
 
 extern void CreateDocument ( PtrDocument * pDoc );
 extern void GetSRuleFromName ( int * typeNum,

@@ -1862,12 +1862,12 @@ Document            doc;
     * !!!!!!!!!!!!!!!!! ????? Bug ????? !!!!!!!!!!!!!!!!
     * I don't know why, D.V. !!!
     */
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    frame = GetWindowFrame (XtWindow (TtaGetViewFrame (doc, 1)));
    GetSizesFrame (frame, &framexmax, &frameymax);
    DefClip (frame, 0, 0, framexmax, frameymax);
    FrameResized ((int *) TtaGetViewFrame (doc, 1), frame, NULL);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 #endif /* linux */
 }
 

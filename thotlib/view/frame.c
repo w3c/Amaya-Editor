@@ -888,9 +888,9 @@ int                 delta;
      }
    FirstCreation = FALSE;
 
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
    WIN_ReleaseDeviceContext ();
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
    return toadd;
 }				/* end of function RedrawFrameBottom */

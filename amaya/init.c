@@ -55,8 +55,10 @@
 #include "css.h"
 #include "UIcss.h"
 
-#ifdef WWW_MSWINDOWS
+#ifdef _WINDOWS
+#ifndef __GNUC__
 #include <direct.h>
+#endif
 #endif
 
 static Pixmap       stopR;
@@ -1433,9 +1435,6 @@ char               *data;
 	 }
 }
 
-#ifdef NEW_WILLOWS
-#include <errno.h>
-#endif
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef WITH_SOCKS
@@ -1516,23 +1515,23 @@ NotifyEvent        *event;
      }
    strcat (TempFileDirectory, DIR_STR);
    strcat (TempFileDirectory, ".amaya");
-#ifdef WWW_MSWINDOWS
+#ifdef _WINDOWS
    i = _mkdir (TempFileDirectory);
    if (i != 0 && errno != EEXIST)
-#else  /* WWW_MSWINDOWS */
+#else  /* _WINDOWS */
    i = mkdir (TempFileDirectory, S_IRWXU);
    if (i != 0 && errno != EEXIST)
-#endif /* !WWW_MSWINDOWS */
+#endif /* !_WINDOWS */
      {
-#ifdef WWW_MSWINDOWS
+#ifdef _WINDOWS
 	strcpy (TempFileDirectory, "C:\\TEMP\\AMAYA");
 	i = _mkdir (TempFileDirectory);
 	if (i != 0 && errno != EEXIST)
-#else  /* WWW_MSWINDOWS */
+#else  /* _WINDOWS */
 	strcpy (TempFileDirectory, "/tmp/.amaya");
 	i = mkdir (TempFileDirectory, S_IRWXU);
 	if (i != 0 && errno != EEXIST)
-#endif /* !WWW_MSWINDOWS */
+#endif /* !_WINDOWS */
 	  {
 	     fprintf (stderr, "cannot create %s\n", TempFileDirectory);
 	     exit (1);

@@ -4,7 +4,7 @@
  */
 
 #ifndef __CEXTRACT__
-#if __STDC__
+#ifdef __STDC__
 
 extern unsigned char DeleteStyleRule ( NotifyElement* event );
 extern void ChangePRule ( NotifyPresentation* event );

@@ -4,7 +4,7 @@
  */
 #define THOT_KEY_UNKNOWN	0x00	/* keys not supported by system */
 
-#ifdef NEW_WILLOWS /* -- MSWindows Key names -- */
+#ifdef _WINDOWS /* -- MSWindows Key names -- */
 
 /* see winuser.h for these defs */
 

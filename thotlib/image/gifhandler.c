@@ -255,29 +255,29 @@ ThotColorStruct     colrs[256];
 	for (i = 0; i < GifScreen.BitPixel; i++)
 	  {
 
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 	     colrs[i] = RGB (GifScreen.ColorMap[0][i],
 			     GifScreen.ColorMap[1][i],
 			     GifScreen.ColorMap[2][i]);
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
 	     colrs[i].red = GifScreen.ColorMap[0][i] * scale;
 	     colrs[i].green = GifScreen.ColorMap[1][i] * scale;
 	     colrs[i].blue = GifScreen.ColorMap[2][i] * scale;
 	     colrs[i].pixel = i;
 	     colrs[i].flags = DoRed | DoGreen | DoBlue;
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
 	  }
 	for (i = GifScreen.BitPixel; i < MAXCOLORMAPSIZE; i++)
 	  {
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 	     colrs[i] = RGB (0, 0, 0);
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
 	     colrs[i].red = 0;
 	     colrs[i].green = 0;
 	     colrs[i].blue = 0;
 	     colrs[i].pixel = i;
 	     colrs[i].flags = DoRed | DoGreen | DoBlue;
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
 	  }
 
      }
@@ -323,30 +323,30 @@ ThotColorStruct     colrs[256];
 	     for (i = 0; i < bitPixel; i++)
 	       {
 
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 		  colrs[i] = RGB (
 				    localColorMap[0][i],
 				    localColorMap[1][i],
 				    localColorMap[2][i]);
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
 		  colrs[i].red = localColorMap[0][i] * scale;
 		  colrs[i].green = localColorMap[1][i] * scale;
 		  colrs[i].blue = localColorMap[2][i] * scale;
 		  colrs[i].pixel = i;
 		  colrs[i].flags = DoRed | DoGreen | DoBlue;
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 	       }
 	     for (i = bitPixel; i < MAXCOLORMAPSIZE; i++)
 	       {
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 		  colrs[i] = RGB (0, 0, 0);
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
 		  colrs[i].red = 0;
 		  colrs[i].green = 0;
 		  colrs[i].blue = 0;
 		  colrs[i].pixel = i;
 		  colrs[i].flags = DoRed | DoGreen | DoBlue;
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 	       }
 	     data = ReadGifImage (fd, LM_to_uint (buf[4], buf[5]),
 				  LM_to_uint (buf[6], buf[7]), localColorMap,
@@ -776,7 +776,7 @@ int                 bg;
    width = w;
    height = h;
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    newmask = XCreateImage (TtDisplay, theVisual, 1, ZPixmap, 0, 0,
 			   width, height, 8, 0);
    bpl = newmask->bytes_per_line;
@@ -874,7 +874,7 @@ int                 bg;
 	XDestroyImage (newmask);
 	XFreeGC (TtDisplay, tmp_gc);
      }
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
    return (PicMask);
 
 }
@@ -906,7 +906,7 @@ ThotColorStruct    *colrs;
    unsigned long       c;
    int                 rshift, gshift, bshift;
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    switch (depth)
 	 {
 	    case 6:
@@ -1051,7 +1051,7 @@ ThotColorStruct    *colrs;
 	       fprintf (stderr, "Don't know how to format image for display of depth %d\n", depth);
 	       return (None);
 	 }
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
    return (newimage);
 }
@@ -1072,9 +1072,9 @@ ThotColorStruct     colrs[256];
 
 #endif /* __STDC__ */
 {
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
    return (NULL);
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
    int                 i, size;
    int                 delta, not_right_col, not_last_row;
    Pixmap              Img;
@@ -1094,7 +1094,7 @@ ThotColorStruct     colrs[256];
 
    Mapping = (int *) TtaGetMemory (num_colors * sizeof (int));
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    for (i = 0; i < num_colors; i++)
      {
 	tmpcolr.red = colrs[i].red;
@@ -1116,7 +1116,7 @@ ThotColorStruct     colrs[256];
 	     Mapping[i] = tmpcolr.pixel;
 	  }
      }
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
    /*
     * Special case:  For 2 color non-black&white images, instead
@@ -1229,7 +1229,7 @@ ThotColorStruct     colrs[256];
    TtaFreeMemory ((char *) Mapping);
 
    return (Img);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }
 
 
@@ -1317,9 +1317,9 @@ ThotBitmap         *mask1;
 	     i = Gif89.transparent;
 	  }
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 	*mask1 = MakeMask (TtDisplay, buffer, w, h, i);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
      }
 
    pixmap = DataToPixmap (buffer, w, h, ncolors, colrs);
@@ -1391,11 +1391,11 @@ unsigned long       BackGroundPixel;
 	   i = 256 + Gif89.transparent;
 	else
 	   i = Gif89.transparent;
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 	colrs[i].red = 65535;
 	colrs[i].green = 65535;
 	colrs[i].blue = 65535;
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
      }
 
    if (!buffer)
@@ -1467,12 +1467,12 @@ unsigned long       BackGroundPixel;
 	for (x = 0; x < wif; x++)
 	  {
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 	     fprintf ((FILE *) fd, "%02x%02x%02x",
 		      (colrs[*pt].red) >> 8,
 		      (colrs[*pt].green) >> 8,
 		      (colrs[*pt].blue) >> 8);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
 	     pt++;
 	  }

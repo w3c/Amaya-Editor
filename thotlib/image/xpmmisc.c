@@ -658,16 +658,16 @@ char              **buffer_return;
 {
    int                 fd, fcheck, len;
    char               *ptr;
-   struct stat         stats;
    FILE               *fp;
-
+   struct stat         stats;
    *buffer_return = NULL;
 
-#ifdef NEW_WILLOWS
+#if defined(_WINDOWS) && !defined(__GNUC__)
    fd = _open (filename, _O_RDONLY);
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS && ! __GNUC__*/
    fd = open (filename, O_RDONLY);
-#endif /* ! NEW_WILLOWS */
+#endif /* _WINDOWS && ! __GNUC__*/
+
    if (fd < 0)
       return XpmOpenFailed;
 

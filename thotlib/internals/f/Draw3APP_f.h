@@ -4,7 +4,7 @@
  */
 
 #ifndef __CEXTRACT__
-#if __STDC__
+#ifdef __STDC__
 
 extern void Draw3ApplicationInitialise ( void );
 extern void Draw3ActionListInit ( void );

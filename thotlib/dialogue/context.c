@@ -38,7 +38,7 @@ static ThotColorStruct cwhite;
 #include "memory_f.h"
 #include "registry_f.h"
 
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 /**
  *      WinCreateGC is an emulation of the XWindows XCreateGC under
  *         MS-Windows.
@@ -207,7 +207,7 @@ void                WinInitColors (void)
    initialized = 1;
 }
 
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
 #ifdef WWW_XWINDOWS
 /*
@@ -324,7 +324,7 @@ unsigned short     *blue;
       if (!strcasecmp (ColorName (i), colname))
 	 ColorRGB (i, red, green, blue);
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    /*
     * Lookup the color name in the X color name database
     */
@@ -338,7 +338,7 @@ unsigned short     *blue;
 	*green = color.green;
 	*blue = color.blue;
      }
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }
 
 
@@ -388,13 +388,13 @@ unsigned long      *colorpixel;
  **/
 static void         InitCurs ()
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    WindowCurs = XCreateFontCursor (TtDisplay, XC_hand2);
    VCurs = XCreateFontCursor (TtDisplay, XC_sb_v_double_arrow);
    HCurs = XCreateFontCursor (TtDisplay, XC_sb_h_double_arrow);
    HVCurs = XCreateFontCursor (TtDisplay, XC_fleur);
    WaitCurs = XCreateFontCursor (TtDisplay, XC_watch);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }
 
 /**
@@ -408,7 +408,7 @@ char               *name;
 
 #endif /* __STDC__ */
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    ThotColorStruct     col;
    boolean             found;
 
@@ -469,7 +469,7 @@ char               *name;
       RO_Color = cwhite.pixel;
    else if (TtWDepth == 1)
       RO_Color = cblack.pixel;
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }
 
 
@@ -478,12 +478,12 @@ char               *name;
  **/
 boolean             ShowReference ()
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    if (Box_Color == cwhite.pixel)
       return (FALSE);
    else
       return (TRUE);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }
 
 
@@ -492,12 +492,12 @@ boolean             ShowReference ()
  **/
 boolean             ShowReadOnly ()
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    if (RO_Color == cwhite.pixel)
       return (FALSE);
    else
       return (TRUE);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }
 /*fin */
 
@@ -507,23 +507,22 @@ boolean             ShowReadOnly ()
  **/
 static void         InitGraphicContexts ()
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    unsigned long       valuemask;
    unsigned long       white;
    unsigned long       black;
    XGCValues           GCmodel;
    Pixmap              pix;
 
-#endif /* NEW_WILLOWS */
-#ifdef NEW_WILLOWS
+#endif /* _WINDOWS */
+#ifdef _WINDOWS
    ThotGC              gcModel;
-
 #endif
 
    /*
     * Create a Graphic Context to write white on black.
     */
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    valuemask = GCForeground | GCBackground | GCFunction;
    white = ColorNumber ("White");
    black = ColorNumber ("Black");
@@ -533,43 +532,43 @@ static void         InitGraphicContexts ()
    GCmodel.foreground = White_Color;
    GCmodel.background = Black_Color;
    TtWhiteGC = XCreateGC (TtDisplay, TtRootWindow, valuemask, &GCmodel);
-#endif /* NEW_WILLOWS */
-#ifdef NEW_WILLOWS
-   gcModel = TtWhiteGC;
+#endif /* _WINDOWS */
+#ifdef _WINDOWS
+   gcModel = &TtWhiteGC;
    gcModel->capabilities = THOT_GC_PEN | THOT_GC_FOREGROUND | THOT_GC_BACKGROUND;
    gcModel->pen = GetStockObject (WHITE_PEN);
    gcModel->background = Black_Color;
    gcModel->foreground = White_Color;
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
    /*
     * Create a Graphic Context to write black on white.
     */
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    GCmodel.foreground = Button_Color;
    GCmodel.background = White_Color;
    TtBlackGC = XCreateGC (TtDisplay, TtRootWindow, valuemask, &GCmodel);
-#endif /* NEW_WILLOWS */
-#ifdef NEW_WILLOWS
-   gcModel = TtBlackGC;
+#endif /* _WINDOWS */
+#ifdef _WINDOWS
+   gcModel = &TtBlackGC;
    gcModel->capabilities = THOT_GC_PEN | THOT_GC_FOREGROUND | THOT_GC_BACKGROUND;
    gcModel->pen = GetStockObject (BLACK_PEN);
    gcModel->background = White_Color;
    gcModel->foreground = Black_Color;
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
    /*
     * Create a Graphic Context to write black on white,
     * but with a specific 10101010 pattern.
     */
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    GCmodel.foreground = Black_Color;
    GCmodel.background = White_Color;
    TtLineGC = XCreateGC (TtDisplay, TtRootWindow, valuemask, &GCmodel);
    XSetTile (TtDisplay, TtLineGC, pix);
-#endif /* NEW_WILLOWS */
-#ifdef NEW_WILLOWS
-   gcModel = TtLineGC;
+#endif /* _WINDOWS */
+#ifdef _WINDOWS
+   gcModel = &TtLineGC;
    gcModel->capabilities = THOT_GC_FOREGROUND |
    /* THOT_GC_BACKGROUND | THOT_GC_BRUSH | */ THOT_GC_PEN;
    gcModel->pen = GetStockObject (BLACK_PEN);
@@ -577,28 +576,28 @@ static void         InitGraphicContexts ()
    gcModel->foreground = Black_Color;
    /* !!!! WIN_LastBitmap created by pix = CreatePattern(...); */
    /* gcModel->brush = CreatePatternBrush(WIN_LastBitmap); */
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
    /*
     * Another Graphic Context to write black on white, for dialogs.
     */
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    TtDialogueGC = XCreateGC (TtDisplay, TtRootWindow, valuemask, &GCmodel);
-#endif /* NEW_WILLOWS */
-#ifdef NEW_WILLOWS
-   gcModel = TtDialogueGC;
+#endif /* _WINDOWS */
+#ifdef _WINDOWS
+   gcModel = &TtDialogueGC;
    gcModel->capabilities = THOT_GC_FOREGROUND | THOT_GC_BACKGROUND | THOT_GC_PEN;
    gcModel->pen = GetStockObject (BLACK_PEN);
    gcModel->background = White_Color;
    gcModel->foreground = Black_Color;
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
    /*
     * A Graphic Context to show selected objects. On X-Windows,
     * the colormap indexes are XORed to show the object without
     * destroying the colors : XOR.XOR = I ...
     */
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    GCmodel.function = GXinvert;
    GCmodel.plane_mask = Select_Color;
    if (TtWDepth > 1)
@@ -607,9 +606,9 @@ static void         InitGraphicContexts ()
       GCmodel.foreground = Select_Color;
    GCmodel.background = White_Color;
    TtInvertGC = XCreateGC (TtDisplay, TtRootWindow, valuemask | GCPlaneMask, &GCmodel);
-#endif /* NEW_WILLOWS */
-#ifdef NEW_WILLOWS
-   gcModel = TtDialogueGC;
+#endif /* _WINDOWS */
+#ifdef _WINDOWS
+   gcModel = &TtDialogueGC;
    gcModel->capabilities = THOT_GC_FOREGROUND | THOT_GC_BACKGROUND |
       THOT_GC_FUNCTION;
    gcModel->mode = R2_XORPEN;
@@ -618,24 +617,24 @@ static void         InitGraphicContexts ()
    else
       gcModel->foreground = Select_Color;
    gcModel->background = White_Color;
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
    /*
     * A Graphic Context for trame objects.
     */
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    GCmodel.function = GXcopy;
    GCmodel.foreground = Black_Color;
    TtGreyGC = XCreateGC (TtDisplay, TtRootWindow, valuemask, &GCmodel);
    XSetFillStyle (TtDisplay, TtGreyGC, FillTiled);
    XFreePixmap (TtDisplay, pix);
-#endif /* NEW_WILLOWS */
-#ifdef NEW_WILLOWS
-   gcModel = TtGreyGC;
+#endif /* _WINDOWS */
+#ifdef _WINDOWS
+   gcModel = &TtGreyGC;
    gcModel->capabilities = THOT_GC_FOREGROUND | THOT_GC_BACKGROUND |
    /* THOT_GC_BRUSH | */ THOT_GC_PEN |
       THOT_GC_FUNCTION;
-   gcModel = TtBlackGC;
+   gcModel = &TtBlackGC;
    gcModel->background = White_Color;
    gcModel->foreground = Black_Color;
    gcModel->mode = R2_XORPEN;
@@ -660,7 +659,7 @@ int                 dy;
 
 #endif /* __STDC__ */
 {
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
    HDC                 hdc;
 
    hdc = GetDC (WIN_Main_Wd);
@@ -669,9 +668,9 @@ int                 dy;
       TtWDepth = GetDeviceCaps (hdc, BITSPIXEL);
 
    ReleaseDC (WIN_Main_Wd, hdc);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    XSetErrorHandler (XWindowError);
    XSetIOErrorHandler (XWindowFatalError);
    TtScreen = DefaultScreen (TtDisplay);
@@ -708,7 +707,7 @@ void                InitDocContexts ()
    InitializeOtherThings ();
 }
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 /**
  *      SelectionEvents handle the X-Windows selection events.
  **/
@@ -843,4 +842,4 @@ void               *ev;
 	       break;
 	 }
 }
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */

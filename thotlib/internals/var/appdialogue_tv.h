@@ -10,21 +10,23 @@ EXPORT Proc		ThotLocalActions[MAX_LOCAL_ACTIONS];
 
 #ifndef NODISPLAY
 
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 #include <windows.h>
+#ifndef __GNUC__
 #include <commctrl.h>
-#endif /* NEW_WILLOWS */
+#endif
+#endif /* _WINDOWS */
 
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 
 EXPORT WNDCLASSEX       RootShell;
 
-#else /* NEW_WILLOWS */
+#else /* _WINDOWS */
 
 EXPORT XtAppContext	app_cont;
 EXPORT ThotWidget	RootShell;
 
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
 
 EXPORT Proc		CurrentCallbackAPI;
 

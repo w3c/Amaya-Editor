@@ -12,7 +12,6 @@
 #include "amaya.h"
 #include "message.h"
 #include "application.h"
-#include "conststr.h"
 #include "AHTURLTools.h"
 #include "AHTBridge.h"
 #include "AHTMemConv.h"

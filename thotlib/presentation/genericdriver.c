@@ -320,7 +320,7 @@ GenericContext      ctxt;
    box->PbFooterHeight = 0;
    box->PbHeaderHeight = 0;
    box->PbPageCounter = 0;
-   box->PbContent = ContElement;
+   box->PbContent = FreeContent;
    box->PbContElem = 0;
    box->PbContRefElem = 0;
 
@@ -1334,6 +1334,9 @@ int                 specific;
 {
    PresentationValueToPRule (val1, rule->PrType, (PRule) rule, specific);
    rule->PrViewNum = 1;
+   if ((ctxt->box != 0) && (rule->PrPresMode == PresFunction)) {
+      BuildBoxName(ctxt, &rule->PrPresBoxName);
+   }
 }
 
 #ifdef __STDC__

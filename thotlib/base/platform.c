@@ -452,7 +452,7 @@ void                ThotFile_test (char *name)
   ----------------------------------------------------------------------*/
 static void         ErrorHandler ()
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    signal (SIGBUS, SIG_DFL);
    signal (SIGSEGV, SIG_DFL);
    signal (SIGPIPE, SIG_IGN);
@@ -461,7 +461,7 @@ static void         ErrorHandler ()
 #else
    signal (SIGIOT, SIG_DFL);
 #endif
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
    exit (1);
 }
 
@@ -491,17 +491,17 @@ int                 result;
   ----------------------------------------------------------------------*/
 static void         QuitHandler ()
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    signal (SIGINT, ErrorHandler);
    signal (SIGQUIT, SIG_DFL);
    signal (SIGTERM, ErrorHandler);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
    exit (1);
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    signal (SIGINT, QuitHandler);
    signal (SIGQUIT, QuitHandler);
    signal (SIGTERM, QuitHandler);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -509,7 +509,7 @@ static void         QuitHandler ()
   ----------------------------------------------------------------------*/
 void                InitErrorHandler ()
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    signal (SIGBUS, ErrorHandler);
    signal (SIGSEGV, ErrorHandler);
 #ifdef SIGABRT
@@ -522,7 +522,7 @@ void                InitErrorHandler ()
    signal (SIGINT, QuitHandler);
    signal (SIGQUIT, QuitHandler);
    signal (SIGTERM, QuitHandler);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }
 
 
@@ -541,14 +541,10 @@ ThotFileMode        mode;
    ThotFileHandle      ret;
 
 #ifdef WWW_MSWINDOWS
-   DWORD               access = 0;
+   DWORD               access = 0;	/* access (read-write) mode  */
 
-   /access (read - write) mode
-
-      SECURITY_ATTRIBUTES secAttribs;
-   DWORD               creation;
-
-   /how to create
+   SECURITY_ATTRIBUTES secAttribs;
+   DWORD               creation;	/* how to create  */
 
       secAttribs.nLength = sizeof (secAttribs);
    secAttribs.lpSecurityDescriptor = NULL;

@@ -4,7 +4,7 @@
  */
 
 #ifndef __CEXTRACT__
-#if __STDC__
+#ifdef __STDC__
 
 extern void PrintRPI ( PRuleInfoPtr rpi );
 extern void PrintListRPI ( PRuleInfoPtr list );

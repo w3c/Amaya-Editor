@@ -4,7 +4,7 @@
  */
 
 #ifndef __CEXTRACT__
-#if __STDC__
+#ifdef __STDC__
 
 extern PtrDocument DocumentOfElement ( PtrElement pEl );
 extern void ProtectElement ( PtrElement pEl );

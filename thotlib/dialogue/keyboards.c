@@ -377,14 +377,6 @@ static ITEM         Items_Graph[] =
 #include "font_f.h"
 #include "structselect_f.h"
 
-#ifdef __STDC__
-extern ThotWidget   XmCreateBulletinBoard (ThotWidget, char *, Arg[], int);
-
-#else  /* __STDC__ */
-extern ThotWidget   XmCreateBulletinBoard ();
-
-#endif /* __STDC__ */
-
 /*----------------------------------------------------------------------
    WChar affiche le caractere ch a` la position x,y de la fenetre w
    en utilisant la police de caracteres font.              
@@ -409,7 +401,7 @@ ThotGC              GClocal;
    int                 length;
 
    length = 1;
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
    /* DrawTextEx or some such thing - @@@ */
 #else
    XSetFont (TtDisplay, GClocal, ((XFontStruct *) font)->fid);
@@ -432,9 +424,9 @@ caddr_t             call_d;
 
 #endif /* __STDC__ */
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    XtPopdown (Keyboards[index]);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -460,7 +452,7 @@ caddr_t             call_d;
 }
 
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    ExposeKbd affiche les touches du clavier.                       
   ----------------------------------------------------------------------*/
@@ -759,7 +751,7 @@ int                 number;
 	       break;
 	 }
 }
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
 
 /*----------------------------------------------------------------------
@@ -773,7 +765,7 @@ int                 kb;
 
 #endif /* __STDC__ */
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    if (kb >= 0 && kb < MAX_KEYBOARD)
      {
 	/* Faut-il charger le clavier avant de l'afficher ? */
@@ -791,7 +783,7 @@ int                 kb;
 	XMapRaised (TtDisplay, XtWindowOfObject (Keyboards[kb]));
 #endif
      }
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------

@@ -4,7 +4,7 @@
  */
 
 #ifndef __CEXTRACT__
-#if __STDC__
+#ifdef __STDC__
 
 extern int XpmCreateBufferFromImage ( Display * display,
                                       char **buffer_return,

@@ -26,14 +26,8 @@
 /*--------------------------- SYSTEM INCLUDES ------------------------------*/
 /****************************************************************************/
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <sys/types.h>
-#include <string.h>
-#include <malloc.h>
-#include <memory.h>
-#include <unistd.h>
-#include <X11/Intrinsic.h>
+#include "thot_gui.h"
+#include "thot_sys.h"
 
 /****************************************************************************/
 /*------------------------ APPLICATION  INCLUDES ---------------------------*/
@@ -117,7 +111,7 @@
    * Name          Type         Usage
    * ----          ----                 -----
    * MenuBase   int             Idf du menu
-   * Pere               Widget          Widget de rattachement
+   * Pere               ThotWidget          ThotWidget de rattachement
    * Langue     int             Langue pour l'affichage de messaage
    *
    * Functionality : Cree le formulaire associe.

@@ -9,7 +9,6 @@
 #include "view.h"
 #include "interface.h"
 #include "message.h"
-#include "conststr.h"
 #include "AHTMemConv.h"
 #include "init.h"
 #include "AHTURLTools.h"	/* defined here */

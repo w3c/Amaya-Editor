@@ -4,7 +4,7 @@
  */
 
 #ifndef __CEXTRACT__
-#if __STDC__
+#ifdef __STDC__
 
 extern int BuildSelectMenu ( char BufMenu[MAX_TXT_LEN] );
 extern void UpdateSelectMenu ( PtrDocument pDoc );

@@ -4,7 +4,6 @@
 #if defined(_WINDOWS) || defined(_CONSOLE)
 
 #define WWW_MSWINDOWS
-#include <windows.h>
 
 /****************************************************************
  *								*
@@ -57,11 +56,13 @@ typedef POINT       ThotPoint;
 #define ThotBitmapNone ((ThotBitmap)NULL)
 
 #define FOR_MSW			/* for XPM stuff ! */
+#define PIXEL_ALREADY_TYPEDEFED /* for XPM stuff ! */
 
+#include "simx.h"
 
 #else  /* defined(_WINDOWS) || defined(_CONSOLE) */
 
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 
 /************************************************************************
  *									*
@@ -116,7 +117,7 @@ typedef POINT       ThotPoint;
 
 #define FOR_MSW			/* for XPM stuff ! */
 
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
 
 /************************************************************************
  *									*
@@ -188,7 +189,7 @@ typedef XPoint      ThotPoint;
 #define ThotColorNone ((Pixel)-1)
 #define ThotBitmapNone ((ThotBitmap)-1)
 
-#endif /* ! NEW_WILLOWS */
+#endif /* ! _WINDOWS */
 #endif /* !(defined(_WINDOWS) || defined(_CONSOLE)) */
 
 /************************************************************************

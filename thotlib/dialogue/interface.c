@@ -54,7 +54,7 @@
 #include "viewapi_f.h"
 #include "applicationapi_f.h"
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    Handling of Multikey sequences used to produce ISO-Latin-1.
    The corresponding keysyms are installed in the keyboard map
@@ -1017,16 +1017,6 @@ XEvent             *event;
 
 
 /*----------------------------------------------------------------------
-   DisplayEmptyBoxLoadResources: displays the empty boxes.            
-  ----------------------------------------------------------------------*/
-void                DisplayEmptyBoxLoadResources ()
-{
-   if (ThotLocalActions[T_emptybox] == NULL)
-      TteConnectAction (T_emptybox, (Proc) DisplayEmptyBox);
-}
-
-
-/*----------------------------------------------------------------------
    TtaHandleOneEvent
 
    Processes one given event in the application.
@@ -1111,9 +1101,9 @@ XEvent             *ev;
      }
 }
 
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
 
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 /*----------------------------------------------------------------------
    TtaHandleOneWindowEvent
 
@@ -1143,7 +1133,7 @@ MSG                *msg;
   ----------------------------------------------------------------------*/
 void                TtaHandlePendingEvents ()
 {
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    XtInputMask         status;
    XEvent              ev;
 
@@ -1162,7 +1152,7 @@ void                TtaHandlePendingEvents ()
 	status = XtAppPending (app_cont);
      }
 
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }
 
 
@@ -1177,19 +1167,19 @@ void                TtaMainLoop ()
 {
    NotifyEvent         notifyEvt;
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    XEvent              ev;
    XtInputMask         status;
 
-#endif /* NEW_WILLOWS */
-#ifdef NEW_WILLOWS
+#endif /* _WINDOWS */
+#ifdef _WINDOWS
    MSG                 msg;
 
 #endif
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    TtaInstallMultiKey ();
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
    UserErrorCode = 0;
    /* Sends the message Init.Pre */
    notifyEvt.event = TteInit;
@@ -1250,6 +1240,16 @@ Pixel               TtaGetButtonColor ()
    UserErrorCode = 0;
    return (Pixel) Button_Color;
 }
+
+/*----------------------------------------------------------------------
+   DisplayEmptyBoxLoadResources: displays the empty boxes.            
+  ----------------------------------------------------------------------*/
+void                DisplayEmptyBoxLoadResources ()
+{
+   if (ThotLocalActions[T_emptybox] == NULL)
+      TteConnectAction (T_emptybox, (Proc) DisplayEmptyBox);
+}
+
 
 
 #ifdef WWW_XWINDOWS

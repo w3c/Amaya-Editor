@@ -4,7 +4,7 @@
  */
 
 #ifndef __CEXTRACT__
-#if __STDC__
+#ifdef __STDC__
 
 extern GenericContext GetGenericContext ( Document doc );
 extern void FreeGenericContext ( GenericContext ctxt );

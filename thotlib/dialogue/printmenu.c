@@ -139,7 +139,7 @@ char               *viewsToPrint;
 {
    ThotPid             pid = ThotPid_get ();
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    char                cmd[800];
    int                 res;
    char               *thotDir;
@@ -165,7 +165,7 @@ char               *viewsToPrint;
    res = system (cmd);
    if (res == -1)
       TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_ERROR_PS_TRANSLATION);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }
 
 

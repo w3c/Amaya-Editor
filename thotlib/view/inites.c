@@ -23,15 +23,15 @@
 #include "registry_f.h"
 #include "context_f.h"
 
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 COLORREF            WIN_Pix_Color[MAX_COLOR];
 
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 static ThotColorStruct def_colrs[256];
 static int          allocation_index[256];
 static int          have_colors = 0;
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
 /*----------------------------------------------------------------------
    FindOutColor finds the closest color by allocating it, or picking
    an already allocated color.
@@ -126,7 +126,7 @@ ThotColorStruct    *colr;
 	   have_colors = 0;
      }
 }
-#endif /* !NEW_WILLOWS */
+#endif /* !_WINDOWS */
 
 /*----------------------------------------------------------------------
    ColorRGB        returns the Red Green and Blue values corresponding
@@ -172,11 +172,11 @@ int                 i;
 {
    ThotColorStruct     col;
 
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
    WIN_Pix_Color[i] = PALETTERGB (RGB_Table[i].red,
 				  RGB_Table[i].green,
 				  RGB_Table[i].blue);
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
    if (Color_Table[i] != NULL)
      {
 	/* load the color */
@@ -188,7 +188,7 @@ int                 i;
 	Pix_Color[i] = col.pixel;
 	/* TODO: find the nearest color */
      }
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -262,13 +262,13 @@ char               *name;
       reducecolor = FALSE;
 
    /* set up black and white Pixels */
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
    WIN_Pix_Color[0] = PALETTERGB (255, 255, 255);
    WIN_Pix_Color[1] = PALETTERGB (0, 0, 0);
-#else  /* NEW_WILLOWS */
+#else  /* _WINDOWS */
    Pix_Color[0] = WhitePixel (TtDisplay, DefaultScreen (TtDisplay));
    Pix_Color[1] = BlackPixel (TtDisplay, DefaultScreen (TtDisplay));
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
    /* setup greyscale colors */
    for (i = 2; i < 8; i++)
@@ -488,12 +488,12 @@ int                 motif;
    unsigned long       BgPixel;
    Pixmap              trame;
 
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
    BITMAP              bitmap =
    {0, 0, 0, 1, 1, 0};
    HBITMAP             hBitmap;
 
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
 #ifdef bug649
    if (TtWDepth == 1)
@@ -522,7 +522,7 @@ int                 motif;
 	BgPixel = ColorPixel (bg);
      }
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    switch (motif)
 	 {
 	    case 1:
@@ -647,7 +647,7 @@ int                 motif;
 	 }
    XFlush (TtDisplay);
 #endif
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
    if (WIN_LastBitmap != 0)
      {
 	DeleteObject (WIN_LastBitmap);

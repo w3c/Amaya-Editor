@@ -4,7 +4,7 @@
  */
 
 #ifndef __CEXTRACT__
-#if __STDC__
+#ifdef __STDC__
 
 extern PtrElement Ind_table ( int num );
 extern PtrElement Ind_marquesuivante ( PtrElement pDesc,

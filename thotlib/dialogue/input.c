@@ -420,7 +420,7 @@ int                 command;
 }				/*MemoKey */
 
 
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 /*----------------------------------------------------------------------
    MSCharTranslation is the MS-Window front-end to the character   
    translation and handling. Decodes the MS-Window callback     
@@ -459,7 +459,7 @@ void                MSCharTranslation (HWND hWnd, int frame, UINT msg,
 
    ThotInput (frame, &string[0], len, keyboard_mask, wParam);
 }
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 
 
 #ifdef WWW_XWINDOWS

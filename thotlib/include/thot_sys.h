@@ -21,16 +21,16 @@
 #endif /* !WWW_MSWINDOWS */
 
 #else  /* defined(_WINDOWS) || defined(_CONSOLE) */
-#if defined (WILLOWS) || defined(NEW_WILLOWS)
+#if defined (WILLOWS) || defined(_WINDOWS)
 
 /*
  * MS-Windows emulation on Unix.
  */
-#ifndef NEW_WILLOWS
-#define NEW_WILLOWS
-#endif /* !NEW_WILLOWS */
+#ifndef _WINDOWS
+#define _WINDOWS
+#endif /* !_WINDOWS */
 
-#else  /* defined (WILLOWS) || defined(NEW_WILLOWS) */
+#else  /* defined (WILLOWS) || defined(_WINDOWS) */
 
 /*
  * Motif/Intrinsic/X11 on Unix
@@ -39,12 +39,12 @@
 #define WWW_XWINDOWS
 #endif /* !WWW_XWINDOWS */
 
-#endif /* !(defined (WILLOWS) || defined(NEW_WILLOWS)) */
+#endif /* !(defined (WILLOWS) || defined(_WINDOWS)) */
 #endif /* !(defined(_WINDOWS) || defined(_CONSOLE)) */
 
 #ifdef linux
 /*
- * just to imitate the Sun allocator, until Ceverything has been
+ * just to imitate the Sun allocator, until everything has been
  * cleaned with INSURE.
  */
 #define malloc(s) calloc(1,s)
@@ -62,19 +62,22 @@
 
 #ifdef WWW_MSWINDOWS
 
+/* type mappings */
+typedef char        Boolean;	/* X11/Intrinsic.h */
+#define Bool		int	/* X11/Xlib.h */
+#define None		0L	/* X11/X.h */
+
+#ifndef __GNUC__
+
+/*
+ * Ugly patches to cope with Visual C++
+ */
+
 /* preproccessor flags */
 #undef NOERROR
 
-/* type mappings */
-typedef char        Boolean;	/* X11/Intrinsic.h */
-
-#define Bool		int	/* X11/Xlib.h */
-#define None		0L	/* X11/X.h */
-/* #define MAX_MENU 20 */
+/* lacking types */
 typedef char       *caddr_t;	/* may be TCHAR for UNICODE */
-
-#define ThotPid		int
-
 
 /* added functions */
 void                bzero (void *s, size_t n);
@@ -85,9 +88,20 @@ int                 _getpid (void);
 #define stat _stat		/* stat(a,b), struct stat and probably everything else */
 #define fstat(fileno, buf) _fstat(fileno, buf)
 #define getcwd(buffer, len) _getcwd(buffer, len)
-
 #define strcasecmp(a, b) _stricmp(a, b)
+
+#endif /* ! __GNUC__ */
+
+
+/* added functions */
 #define ThotPid_get()	_getpid()
+#define ThotPid		int
+
+#ifdef __GNUC__
+#ifndef EXTERN
+#define EXTERN extern
+#endif
+#endif
 
 /*
  * Constants for PATHs
@@ -97,14 +111,22 @@ int                 _getpid (void);
 #define PATH_SEP ';'
 #define PATH_STR ";"
 
+#ifndef False
+#define False 0
+#endif
+#ifndef True
+#define True 1
+#endif
+
 #else  /* WWW_WINDOWS */
 
-#ifdef NEW_WILLOWS
+#ifdef _WINDOWS
 typedef char        Boolean;	/* X11/Intrinsic.h */
 
 #define Bool		int	/* X11/Xlib.h */
 #define None		0L	/* X11/X.h */
-#endif /* NEW_WILLOWS */
+
+#endif /* _WINDOWS */
 
 #define ThotPid_get()	getpid()
 #define ThotPid		pid_t

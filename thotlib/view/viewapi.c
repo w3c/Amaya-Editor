@@ -2971,10 +2971,10 @@ int                 color;
 {
    unsigned long       Bgcolor;
 
-#ifndef NEW_WILLOWS
+#ifndef _WINDOWS
    Bgcolor = ColorPixel (color);
    XSetWindowBackground (TtDisplay, FrRef[frame], Bgcolor);
-#endif /* NEW_WILLOWS */
+#endif /* _WINDOWS */
 }				/*SetMainWindowBackgroundColor */
 
 
