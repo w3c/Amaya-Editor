@@ -497,15 +497,14 @@ ThotBool    horiz;
   ElementType		elType;
   AttributeType	        attrType;
   Attribute             attr;
-  CHAR_T		buffer[32];
+  CHAR_T		buffer[32], unit[32];
+  int                   length;
 
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
   if (elType.ElTypeNum == GraphML_EL_circle ||
       elType.ElTypeNum == GraphML_EL_ellipse)
     {
-      /* move the center */
-      org = org + dim / 2;
       if (horiz)
 	attrType.AttrTypeNum = GraphML_ATTR_cx;
       else
@@ -534,18 +533,25 @@ ThotBool    horiz;
     /* no attribute available */
     return;
 
-  usprintf (buffer, TEXT("%dpx"), org);  
   attr = TtaGetAttribute (el, attrType);
   if (attr == NULL)
     /* element el has no position attribute */
     {
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (el, attr, doc);
+      /* by default generate pixel values */
+      usprintf (buffer, TEXT("%dpx"), org);
       TtaSetAttributeText (attr, buffer, el, doc);
       TtaRegisterAttributeCreate (attr, el, doc);
     }
   else
     {
+      /* get the current unit */
+      length = 32;
+      TtaGiveTextAttributeValue (attr, buffer, &length);
+      unit[0] = WC_EOS;
+      usscanf (buffer, TEXT("%d%s"), &length, unit);
+      usprintf (buffer, TEXT("%d%s"), org, unit);
       TtaRegisterAttributeReplace (attr, el, doc);
       TtaSetAttributeText (attr, buffer, el, doc);
     }
@@ -597,7 +603,8 @@ ThotBool    horiz;
   ElementType		elType;
   AttributeType	        attrType;
   Attribute             attr;
-  CHAR_T		buffer[32];
+  CHAR_T		buffer[32], unit[32];
+  int                   length;
 
   elType = TtaGetElementType (el);
   attrType.AttrSSchema = elType.ElSSchema;
@@ -642,18 +649,25 @@ ThotBool    horiz;
     /* no attribute available */
     return;
 
-  usprintf (buffer, TEXT("%dpx"), dim);
   attr = TtaGetAttribute (el, attrType);
   if (attr == NULL)
     /* element el has no position attribute */
     {
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (el, attr, doc);
+      /* by default generate pixel values */
+      usprintf (buffer, TEXT("%dpx"), dim);
       TtaSetAttributeText (attr, buffer, el, doc);
       TtaRegisterAttributeCreate (attr, el, doc);
     }
   else
     {
+      /* get the current unit */
+      length = 32;
+      TtaGiveTextAttributeValue (attr, buffer, &length);
+      unit[0] = WC_EOS;
+      usscanf (buffer, TEXT("%d%s"), &length, unit);
+      usprintf (buffer, TEXT("%d%s"), dim, unit);
       TtaRegisterAttributeReplace (attr, el, doc);
       TtaSetAttributeText (attr, buffer, el, doc);
     }
@@ -830,8 +844,7 @@ NotifyPresentation *event;
 	if (elType.ElTypeNum == GraphML_EL_Spline ||
 	    elType.ElTypeNum == GraphML_EL_ClosedSpline ||
 	    elType.ElTypeNum == GraphML_EL_polyline ||
-	    elType.ElTypeNum == GraphML_EL_polygon ||
-	    elType.ElTypeNum == GraphML_EL_line_)
+	    elType.ElTypeNum == GraphML_EL_polygon)
 	  TranslatePointsAttribute (el, doc, y, FALSE);
 	else
 	  {
@@ -845,8 +858,7 @@ NotifyPresentation *event;
 	if (elType.ElTypeNum == GraphML_EL_Spline ||
 	    elType.ElTypeNum == GraphML_EL_ClosedSpline ||
 	    elType.ElTypeNum == GraphML_EL_polyline ||
-	    elType.ElTypeNum == GraphML_EL_polygon ||
-	    elType.ElTypeNum == GraphML_EL_line_)
+	    elType.ElTypeNum == GraphML_EL_polygon)
 	  TranslatePointsAttribute (el, doc, x, FALSE);
 	else
 	  {
@@ -862,7 +874,8 @@ NotifyPresentation *event;
 	      elType.ElTypeNum == GraphML_EL_ellipse ||
 	      elType.ElTypeNum == GraphML_EL_polyline ||
 	      elType.ElTypeNum == GraphML_EL_polygon ||
-	      elType.ElTypeNum == GraphML_EL_line_))
+	      elType.ElTypeNum == GraphML_EL_line_ ||
+	      elType.ElTypeNum == GraphML_EL_image))
       {
 	/* the new value is the old one plus the delta */
 	height = TtaGetPRuleValue (presRule);
@@ -876,7 +889,8 @@ NotifyPresentation *event;
 	      elType.ElTypeNum == GraphML_EL_ellipse ||
 	      elType.ElTypeNum == GraphML_EL_polyline ||
 	      elType.ElTypeNum == GraphML_EL_polygon ||
-	      elType.ElTypeNum == GraphML_EL_line_))
+	      elType.ElTypeNum == GraphML_EL_line_ ||
+	      elType.ElTypeNum == GraphML_EL_image))
       {
 	/* the new value is the old one plus the delta */
 	width = TtaGetPRuleValue (presRule);

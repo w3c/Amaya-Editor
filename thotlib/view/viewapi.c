@@ -1405,8 +1405,7 @@ ThotBool            suppression;
      {
 	/* on supprime d'abord les regles de presentation liees */
 	/* a l'attribut sur l'element lui-meme */
-	RemoveAttrPresentation (pEl, LoadedDocument[document - 1], pOldAttr,
-				pEl, FALSE, NULL);
+	RemoveAttrPresentation (pEl, LoadedDocument[document - 1], pOldAttr, pEl, FALSE, NULL);
 	/* puis on supprime sur pEl et sur les elements du sous arbre pEl */
 	/* les regles de presentation liees a l'heritage de cet attribut */
 	/* par le sous-arbre s'il existe des elements heritants de celui-ci */

@@ -1117,9 +1117,11 @@ RULES
    line_:
 	BEGIN
 	CreateBefore (LINE_S);
-	Width: Enclosing . Width;
-	Height: Enclosing . Height;
-	IN Graph_Structure_view BEGIN
+        HorizPos: Left = Enclosing . Left + 1 pt UserSpecified;
+        VertPos:  Top = Enclosing . Top + 1 pt UserSpecified;
+        Width: Right = Enclosing . Left + 4 pt;
+        Height:  Bottom = Enclosing . Top + 4 pt;
+       	IN Graph_Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		Height: Enclosed . Height;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -1479,7 +1481,6 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore (ATTR_cx);
 	CreateBefore (VALUE_cx);
-   	HorizPos: VMiddle = Enclosing . Left;
 	IN Graph_Structure_view
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	IN Graph_Alternate_view
@@ -1490,7 +1491,6 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore (ATTR_cy);
 	CreateBefore (VALUE_cy);
-   	        VertPos: HMiddle = Enclosing . Top;
    	IN Graph_Structure_view
 		VertPos: Top = Previous . Bottom;
 	IN Graph_Alternate_view
@@ -1519,42 +1519,24 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore (ATTR_x1);
 	CreateBefore (VALUE_x1);
-   	HorizPos: Left = Enclosing . Left;
-	IN Graph_Structure_view
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 	END;
 
   y1:
 	BEGIN
 	CreateBefore (ATTR_y1);
 	CreateBefore (VALUE_y1);
-   	VertPos:  Top = Enclosing . Top;
-   	IN Graph_Structure_view
-		VertPos: Top = Previous . Bottom;
-	IN Graph_Alternate_view
-		VertPos: Top = Previous . Bottom;
 	END;
 
   x2:
 	BEGIN
 	CreateBefore (ATTR_x2);
 	CreateBefore (VALUE_x2);
-   	Width: Right = Enclosing . Left;
-	IN Graph_Structure_view
-		Width: Enclosing . Width - STRUCT_INDENT;
-	IN Graph_Alternate_view
-		Width: Enclosing . Width;
 	END;
 
   y2:
 	BEGIN
 	CreateBefore (ATTR_y2);
 	CreateBefore (VALUE_y2);
-   	Height:  Bottom = Enclosing . Top;
-   	IN Graph_Structure_view
-		Height: Enclosed . Height;
-	IN Graph_Alternate_view
-		Height: Enclosed . Height;
 	END;
 
   dx:

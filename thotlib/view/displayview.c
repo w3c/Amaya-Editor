@@ -1101,8 +1101,8 @@ PtrAttribute        pAttr;
 Document            document;
 #endif /* __STDC__ */
 {
-   ThotBool            inheritance, comparaison;
    PtrElement          pElChild;
+   ThotBool            inheritance, comparaison, reDisp;
 
    if (LoadedDocument[document - 1] == NULL || DocumentOfElement (pEl) == NULL)
      return;
@@ -1115,6 +1115,7 @@ Document            document;
    /* doit-on se preoccuper des heritages et comparaisons d'attributs? */
    inheritance = (pAttr->AeAttrSSchema->SsPSchema->PsNHeirElems[pAttr->AeAttrNum - 1] > 0);
    comparaison = (pAttr->AeAttrSSchema->SsPSchema->PsNComparAttrs[pAttr->AeAttrNum - 1] > 0);
+   reDisp = (documentDisplayMode[document - 1] == DisplayImmediately);
    /* d'abord on applique les regles de presentation liees */
    /* a l'attribut sur l'element lui-meme */
    ApplyAttrPRulesToElem (pEl, LoadedDocument[document - 1], pAttr, pEl, FALSE);
@@ -1139,7 +1140,7 @@ Document            document;
    RedisplayCommand (document);
    /* le nouvel attribut doit etre pris en compte dans */
    /* les copies-inclusions de l'element */
-   RedisplayCopies (pEl, LoadedDocument[document - 1], (ThotBool)(documentDisplayMode[document - 1] == DisplayImmediately));
+   RedisplayCopies (pEl, LoadedDocument[document - 1], reDisp);
 }
 
 /*----------------------------------------------------------------------

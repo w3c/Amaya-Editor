@@ -131,39 +131,41 @@ int                 button;
 
 	CloseInsertion ();
 	if (pAb != NULL)
-	   /* Initialization of the selection */
-	   if (button == 3)
+	  {
+	    /* Initialization of the selection */
+	    if (button == 3)
 	      ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE, TRUE, FALSE);
-	   else if (button == 2)
+	    else if (button == 2)
 	      ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE, FALSE, FALSE);
-	/* Extension of selection */
-	   else if (button == 0)
+	    /* Extension of selection */
+	    else if (button == 0)
 	      ChangeSelection (frame, pAb, charsNumber, TRUE, TRUE, FALSE, FALSE);
-	   else if (button == 1)
+	    else if (button == 1)
 	      ChangeSelection (frame, pAb, charsNumber, TRUE, TRUE, FALSE, TRUE);
-          else /* button == 4 */
-	    {
-	      /* check if the curseur is within the box */
-	      xOrg =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
-	      yOrg =  pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding;
-	      if (x >= xOrg && x <= xOrg + pBox->BxW &&
-		  y >= yOrg && y <= yOrg + pBox->BxH)
-		{
-		  /* send event TteElemActivate.Pre to the application */
-		  el = pAb->AbElement;
-		  notifyEl.event = TteElemClick;
-		  notifyEl.document = FrameTable[frame].FrDoc;
-		  notifyEl.element = (Element) el;
-		  notifyEl.elementType.ElTypeNum = el->ElTypeNumber;
-		  notifyEl.elementType.ElSSchema = (SSchema) (el->ElStructSchema);
-		  notifyEl.position = 0;
-		  if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-		    /* the application asks Thot to do nothing */
-		    return;
-		  /* send event TteElemActivate.Pre to the application */
-		  CallEventType ((NotifyEvent *) & notifyEl, FALSE);
-		}
-	    }
+	    else /* button == 4 */
+	      {
+		/* check if the curseur is within the box */
+		xOrg =  pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
+		yOrg =  pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding;
+		if (x >= xOrg && x <= xOrg + pBox->BxW &&
+		    y >= yOrg && y <= yOrg + pBox->BxH)
+		  {
+		    /* send event TteElemActivate.Pre to the application */
+		    el = pAb->AbElement;
+		    notifyEl.event = TteElemClick;
+		    notifyEl.document = FrameTable[frame].FrDoc;
+		    notifyEl.element = (Element) el;
+		    notifyEl.elementType.ElTypeNum = el->ElTypeNumber;
+		    notifyEl.elementType.ElSSchema = (SSchema) (el->ElStructSchema);
+		    notifyEl.position = 0;
+		    if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+		      /* the application asks Thot to do nothing */
+		      return;
+		    /* send event TteElemActivate.Pre to the application */
+		    CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+		  }
+	      }
+	  }
      }
 }
 
@@ -1775,19 +1777,24 @@ int               ym;
 			pAb = pAb->AbEnclosing;
 		      if (pAb)
 			{
-			  if (pointselect == 1 || pointselect == 7)
+			  pBox = pAb->AbBox;
+			  switch (pointselect)
 			    {
+			    case 1:
+			    case 7:
 			      if (pBox->BxHorizInverted)
 				NewDimension (pAb, x, y, frame, TRUE);
 			      else
 				NewPosition (pAb, x, y, frame, TRUE);
-			    }
-			  else
-			    {
+			      break;
+			    case 3:
+			    case 5:
 			      if (pBox->BxHorizInverted)
 				NewPosition (pAb, x, y, frame, TRUE);
 			      else
 				NewDimension (pAb, x, y, frame, TRUE);
+			      break;
+			    default: break;
 			    }
 			  DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH,
 			       pBox->BxYOrg - EXTRA_GRAPH,

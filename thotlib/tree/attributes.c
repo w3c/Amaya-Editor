@@ -29,6 +29,7 @@
 #include "select_tv.h"
 #include "edit_tv.h"
 #include "appdialogue_tv.h"
+#include "frame_tv.h"
 
 #include "applicationapi_f.h"
 #include "attributes_f.h"
@@ -67,7 +68,6 @@ ThotBool            SameAttributes (PtrElement pEl1, PtrElement pEl2)
 ThotBool            SameAttributes (pEl1, pEl2)
 PtrElement          pEl1;
 PtrElement          pEl2;
-
 #endif /* __STDC__ */
 {
    PtrAttribute        pAttr1, pAttr2;
@@ -148,14 +148,11 @@ PtrElement          pEl2;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         SetAttrReference (PtrAttribute pAttr, PtrElement pEl)
-
 #else  /* __STDC__ */
 static void         SetAttrReference (pAttr, pEl)
 PtrElement          pEl;
 PtrAttribute        pAttr;
-
 #endif /* __STDC__ */
-
 {
    PtrReference        pPR1;
 
@@ -186,19 +183,15 @@ PtrAttribute        pAttr;
    Ce lien peut ensuite etre etabli par la procedure SetReference, 
    en particulier pour un lien externe.                            
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 PtrAttribute        AttachAttrByExceptNum (int ExceptNum, PtrElement pEl, PtrElement pReferredEl, PtrDocument pDoc)
-
 #else  /* __STDC__ */
 PtrAttribute        AttachAttrByExceptNum (ExceptNum, pEl, pReferredEl, pDoc)
 int                 ExceptNum;
 PtrElement          pEl;
 PtrElement          pReferredEl;
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
-
 {
    PtrAttribute        pAttr;
    PtrReference        pRef;
@@ -310,10 +303,8 @@ PtrDocument         pDoc;
 /*----------------------------------------------------------------------
    On reaffiche un pave modifie                                    
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         RedisplayAbsBox (PtrAbstractBox pAbsBox, int boxNum, PtrPSchema pPSchema, int frame, PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr)
-
 #else  /* __STDC__ */
 static void         RedisplayAbsBox (pAbsBox, boxNum, pPSchema, frame, pEl, pDoc, pAttr)
 PtrAbstractBox      pAbsBox;
@@ -323,9 +314,7 @@ int                 frame;
 PtrElement          pEl;
 PtrDocument         pDoc;
 PtrAttribute        pAttr;
-
 #endif /* __STDC__ */
-
 {
   int                 height;
   PtrAbstractBox      pAbChild;
@@ -366,25 +355,21 @@ PtrAttribute        pAttr;
    Reafficher toutes les boites de presentation qui utilisent      
    la valeur de cet attribut.					
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                RedisplayAttribute (PtrAttribute pAttr, PtrElement pEl, PtrDocument pDoc)
-
 #else  /* __STDC__ */
 void                RedisplayAttribute (pAttr, pEl, pDoc)
 PtrAttribute        pAttr;
 PtrElement          pEl;
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
-
 {
    PtrPSchema          pPSchema;
    ThotBool            found;
    PtrAbstractBox      pAbsBox;
    PresVariable       *pPresVar;
    int                 varNum, item, presBox;
-   int                 frame, view;
+   int                 frame, view, doc = 0;
 
    /* l'attribut dont la valeur a ete modifie' apparait-il dans une */
    /* variable de presentation ? */
@@ -420,6 +405,8 @@ PtrDocument         pDoc;
 			   frame = pDoc->DocViewFrame[view];
 			   if (frame > 0)
 			     {
+			       if (doc == 0)
+				 doc = FrameTable[frame].FrDoc;
 			       /* parcourt les paves de l'element */
 			       while (pAbsBox != NULL)
 				 if (pAbsBox->AbElement != pEl)
@@ -432,7 +419,8 @@ PtrDocument         pDoc;
 				     pAbsBox = pAbsBox->AbNext;
 				   }
 			       /* on ne reaffiche pas si on est en train de calculer les pages */
-			       if (PageHeight == 0)
+			       if (PageHeight == 0 &&
+				   documentDisplayMode[doc - 1] == DisplayImmediately)
 				 DisplayFrame (frame);
 			     }
 			}
@@ -445,11 +433,9 @@ PtrDocument         pDoc;
    regles de presentation correspondant a l'attribut decrit dans   
    le bloc pointe' par pAttr.                                      
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                ApplyAttrPRulesToElem (PtrElement pEl, PtrDocument pDoc,
 		      PtrAttribute pAttr, PtrElement pElAttr, ThotBool inherit)
-
 #else  /* __STDC__ */
 void                ApplyAttrPRulesToElem (pEl, pDoc, pAttr, pElAttr, inherit)
 PtrElement          pEl;
@@ -457,9 +443,7 @@ PtrDocument         pDoc;
 PtrAttribute        pAttr;
 PtrElement          pElAttr;
 ThotBool            inherit;
-
 #endif /* __STDC__ */
-
 {
    PtrAttribute        pOldAttr;
    ThotBool            doIt;
@@ -527,20 +511,16 @@ ThotBool            inherit;
    On arrete la recursion quand on rencontre un fils portant       
    lui-meme un attribut de meme type que pAttr			
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                ApplyAttrPRulesToSubtree (PtrElement pEl, PtrDocument pDoc,
 				       PtrAttribute pAttr, PtrElement pElAttr)
-
 #else  /* __STDC__ */
 void                ApplyAttrPRulesToSubtree (pEl, pDoc, pAttr, pElAttr)
 PtrElement          pEl;
 PtrDocument         pDoc;
 PtrAttribute        pAttr;
 PtrElement          pElAttr;
-
 #endif /* __STDC__ */
-
 {
    PtrElement          pChild;
    PtrAttribute        pOldAttr;
@@ -585,18 +565,14 @@ PtrElement          pElAttr;
    regles de presentation des attributs dont les valeurs se	
    	comparent a pAttr.						
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                ApplyAttrPRules (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr)
-
 #else  /* __STDC__ */
 void                ApplyAttrPRules (pEl, pDoc, pAttr)
 PtrElement          pEl;
 PtrDocument         pDoc;
 PtrAttribute        pAttr;
-
 #endif /* __STDC__ */
-
 {
    PtrElement          pChild;
    ComparAttrTable    *attrValComp;
@@ -641,17 +617,13 @@ PtrAttribute        pAttr;
 /*----------------------------------------------------------------------
    Chaine les elements liberes par les fusions de texte.           
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                KeepFreeElements (PtrElement pEl, PtrElement * pFirstFree)
-
 #else  /* __STDC__ */
 void                KeepFreeElements (pEl, pFirstFree)
 PtrElement          pEl;
 PtrElement         *pFirstFree;
-
 #endif /* __STDC__ */
-
 {
    pEl->ElNext = *pFirstFree;
    *pFirstFree = pEl;
@@ -665,19 +637,15 @@ PtrElement         *pFirstFree;
    Le parametre force est vrai quand on veut forcer le changement  
    de langue.                                                      
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                ChangeLanguage (PtrDocument pDoc, PtrElement pEl, Language lang, ThotBool force)
-
 #else  /* __STDC__ */
 void                ChangeLanguage (pDoc, pEl, lang, force)
 PtrDocument         pDoc;
 PtrElement          pEl;
 Language            lang;
 ThotBool            force;
-
 #endif /* __STDC__ */
-
 {
    int                 view;
    PtrElement          pChild;
@@ -751,7 +719,6 @@ ThotBool            force;
    contient un attribut qui initialise un (des) compteur(s).	
    	Si oui, met a jour les valeurs de ce(s) compteur(s).		
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                UpdateCountersByAttr (PtrElement pEl, PtrAttribute pAttr, PtrDocument pDoc)
 
@@ -760,9 +727,7 @@ void                UpdateCountersByAttr (pEl, pAttr, pDoc)
 PtrElement          pEl;
 PtrAttribute        pAttr;
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
-
 {
    int                 counter;
    PtrPSchema          pPS;
@@ -809,12 +774,10 @@ PtrDocument         pDoc;
    comparaison et ne pas en chercher d'autre dans les ascendants	
    de pEl.                                                         
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                RemoveAttrPresentation (PtrElement pEl, PtrDocument pDoc,
 		                     PtrAttribute pAttr, PtrElement pElAttr,
 				     ThotBool inherit, PtrAttribute pCompAttr)
-
 #else  /* __STDC__ */
 void                RemoveAttrPresentation (pEl, pDoc, pAttr, pElAttr, inherit,
 					    pCompAttr)
@@ -847,17 +810,14 @@ PtrAttribute        pCompAttr;
    	presentation heritees de l'attribut pAttr.			
    Si pEl porte lui-meme un attribut de type pAttr, on arrete.	
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                RemoveInheritedAttrPresent (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr, PtrElement pElAttr)
-
 #else  /* __STDC__ */
 void                RemoveInheritedAttrPresent (pEl, pDoc, pAttr, pElAttr)
 PtrElement          pEl;
 PtrDocument         pDoc;
 PtrAttribute        pAttr;
 PtrElement          pElAttr;
-
 #endif /* __STDC__ */
 
 {
@@ -902,7 +862,6 @@ PtrElement          pElAttr;
    On arrete la recursion quand on rencontre un fils portant       
    lui-meme un attribut de meme type que pAttr			
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                RemoveComparAttrPresent (PtrElement pEl, PtrDocument pDoc, PtrAttribute pAttr)
 
@@ -911,7 +870,6 @@ void                RemoveComparAttrPresent (pEl, pDoc, pAttr)
 PtrElement          pEl;
 PtrDocument         pDoc;
 PtrAttribute        pAttr;
-
 #endif /* __STDC__ */
 
 {
@@ -974,21 +932,23 @@ PtrAttribute        pAttrNext;
   GetAttribute (&pAttr);
   /* on chaine cet attribut apres le dernier attribut de  l'element */
   if (pEl)
-    if (pEl->ElFirstAttr == NULL || pEl->ElFirstAttr == pAttrNext)
-      {
-      /* c'est le 1er attribut de l'element */
-      pAttrNext = pEl->ElFirstAttr;
-      pEl->ElFirstAttr = pAttr;
-      }
-    else
-      {
-      /* cherche l'attribut qui doit etre le suivant */
-      pA = pEl->ElFirstAttr;
-      while (pA->AeNext != pAttrNext)
-	pA = pA->AeNext;
-      /* chaine le nouvel attribut */
-      pA->AeNext = pAttr;
-      }
+    {
+      if (pEl->ElFirstAttr == NULL || pEl->ElFirstAttr == pAttrNext)
+	{
+	  /* c'est le 1er attribut de l'element */
+	  pAttrNext = pEl->ElFirstAttr;
+	  pEl->ElFirstAttr = pAttr;
+	}
+      else
+	{
+	  /* cherche l'attribut qui doit etre le suivant */
+	  pA = pEl->ElFirstAttr;
+	  while (pA->AeNext != pAttrNext)
+	    pA = pA->AeNext;
+	  /* chaine le nouvel attribut */
+	  pA->AeNext = pAttr;
+	}
+    }
   pAttr->AeNext = pAttrNext;
   pAttr->AeAttrSSchema = pNewAttr->AeAttrSSchema;
   pAttr->AeAttrNum = pNewAttr->AeAttrNum;
@@ -1335,7 +1295,6 @@ int                 ExceptNum;
    Return value:
    the attribute found, or NULL if the element  does not have this
    type of attribute.
-
    ---------------------------------------------------------------------- */
 #ifdef __STDC__
 Attribute           TtaGetAttribute (Element element, AttributeType attributeType)
@@ -1374,14 +1333,16 @@ AttributeType       attributeType;
 	     while (pAttr != NULL && !found)
 	       {
 		  if (pAttr->AeAttrNum == attributeType.AttrTypeNum)
-		     /* Same attribute number */
-		     if (attributeType.AttrSSchema == NULL)
+		    {
+		      /* Same attribute number */
+		      if (attributeType.AttrSSchema == NULL)
 			/* The structure schema does not interest us */
 			found = TRUE;
-		     else if (pAttr->AeAttrSSchema->SsCode ==
-			 ((PtrSSchema) (attributeType.AttrSSchema))->SsCode)
+		      else if (pAttr->AeAttrSSchema->SsCode ==
+			       ((PtrSSchema) (attributeType.AttrSSchema))->SsCode)
 			/* Same schema of structure */
 			found = TRUE;
+		    }
 		  if (found)
 		     attribute = pAttr;
 		  else
@@ -1394,7 +1355,6 @@ AttributeType       attributeType;
 
  /* ----------------------------------------------------------------------
    TtaGetTextAttributeLength
-
    Returns the length of a given attribute of type text.
 
    Parameter:
@@ -1402,7 +1362,6 @@ AttributeType       attributeType;
 
    Return values:
    length of the character string contained in the attribute.
-
    ---------------------------------------------------------------------- */
 #ifdef __STDC__
 int                 TtaGetTextAttributeLength (Attribute attribute)
@@ -1434,7 +1393,6 @@ Attribute           attribute;
 
 /* ----------------------------------------------------------------------
    TtaGiveTextAttributeValue
-
    Returns the value of a given attribute of type text.
 
    Parameters:
@@ -1445,7 +1403,6 @@ Attribute           attribute;
    Return values:
    buffer: character string representing the value of the attribute.
    length: actual length of the character string.
-
    ---------------------------------------------------------------------- */
 #ifdef __STDC__
 void                TtaGiveTextAttributeValue (Attribute attribute, CHAR_T* buffer, int *length)
