@@ -1022,7 +1022,7 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 		  elType.ElTypeNum != HTML_EL_Code &&
 		  elType.ElTypeNum != HTML_EL_Sample &&
 		  elType.ElTypeNum != HTML_EL_Keyboard &&
-		  elType.ElTypeNum != HTML_EL_Variable &&
+		  elType.ElTypeNum != HTML_EL_Variable_ &&
 		  elType.ElTypeNum != HTML_EL_Cite &&
 		  elType.ElTypeNum != HTML_EL_ABBR &&
 		  elType.ElTypeNum != HTML_EL_ACRONYM &&
@@ -2971,7 +2971,7 @@ void SetOnOffCode (Document document, View view)
   ----------------------------------------------------------------------*/
 void SetOnOffVariable (Document document, View view)
 {
-   SetCharFontOrPhrase (document, HTML_EL_Variable);
+   SetCharFontOrPhrase (document, HTML_EL_Variable_);
 }
 
 

@@ -1920,7 +1920,7 @@ void UpdateContextSensitiveMenus (Document doc)
       NewSelInElem = FALSE;
    else
      {
-	elType.ElTypeNum = HTML_EL_Variable;
+	elType.ElTypeNum = HTML_EL_Variable_;
 	if (elTypeSel.ElTypeNum == elType.ElTypeNum &&
 	    elTypeSel.ElSSchema == elType.ElSSchema)
 	   NewSelInElem = TRUE;
@@ -2694,7 +2694,7 @@ void SetCharFontOrPhrase (int document, int elemtype)
 	case HTML_EL_Code:
 	  SelectionInCODE = !remove;
 	  break;
-	case HTML_EL_Variable:
+	case HTML_EL_Variable_:
 	  SelectionInVAR = !remove;
 	  break;
 	case HTML_EL_Sample:
