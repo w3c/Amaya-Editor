@@ -205,6 +205,8 @@ static PtrTransform GetTransformation (PtrTransform Trans,
     }
   return Trans;   
 }
+#ifdef _NEXT
+
 /*----------------------------------------------------------------------
  TtaAnimationReplaceTransform 
   ----------------------------------------------------------------------*/
@@ -239,7 +241,7 @@ static void TtaAnimationReplaceTransform (AnimTime current_time,
       TtaReplaceTransform ((Element) El, TransNew, doc); 
     }
 }
-
+#endif /* _NEXT */
 
 /*----------------------------------------------------------------------
   Define Minimum to be sure to get real clip.
@@ -939,18 +941,21 @@ static void animate_box_motion (PtrElement El,
 	    Trans->XScale = x;
 	    Trans->YScale = y;
 	  }
-      /*calculate normals to the path and rotate accordingly*/ 
-      if (El->ElTransform)
-	Trans = GetTransformation (El->ElTransform, 
-				   PtElAnimRotate);
-      if (Trans == NULL)
+      /*calculate normals to the path and rotate accordingly*/
+      if (0) 
 	{
-	  Trans = TtaNewTransformAnimRotate (pop_path->Tangent_angle[i], 0, 0); 
-	  TtaReplaceTransform ((Element) El, Trans, doc); 
+	  if (El->ElTransform)
+	    Trans = GetTransformation (El->ElTransform, 
+				       PtElAnimRotate);
+	  if (Trans == NULL)
+	    {
+	      Trans = TtaNewTransformAnimRotate (pop_path->Tangent_angle[i], 0, 0); 
+	      TtaReplaceTransform ((Element) El, Trans, doc); 
+	    }
+	  Trans->TrAngle = pop_path->Tangent_angle[i];
+	  Trans->XRotate = 0;
+	  Trans->YRotate = 0;
 	}
-      Trans->TrAngle = pop_path->Tangent_angle[i];
-      Trans->XRotate = 0;
-      Trans->YRotate = 0;
     }      
 }
 
