@@ -212,7 +212,7 @@ BOXES
 	END;
 
  EmptyBox: BEGIN
-	Content: Text '[]';
+	Content: Text '<>';
 	Width : Enclosed . Width;
 	Visibility: Creator =;
 	IN Structure_view
