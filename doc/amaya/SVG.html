@@ -39,8 +39,8 @@ also some additional controls for entering SVG elements.</p>
 (the caret) to the position where you want to insert it, and then click the
 <strong>Graphics</strong> button <img src="../Icons/Graph.gif" alt="Graph" />.
 The Graphics button displays a palette that stays on the screen until you
-click the Done button. Just choose the element you want to create. The
-available graphics elements are:</p>
+click the <code>Done</code> button. Just choose the element you want to
+create. The available graphics elements are:</p>
 <ul>
   <li>A line, <code>line</code> in SVG, <svg
     xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
@@ -68,13 +68,13 @@ available graphics elements are:</p>
       <ellipse cy="10px" cx="20px" rx="15px" ry="10px" style="fill: #B795FF"/>
     </svg>
   </li>
-  <li>A polyline, in SVG,<svg xmlns="http://www.w3.org/2000/svg" width="2cm"
-    height="0.6cm">
+  <li>A polyline, <code>polyline</code> in SVG,<svg
+    xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
       <polyline points="4,16 23,0 37,16 55,6" style="stroke: #0000B2"/>
     </svg>
   </li>
-  <li>A polygon, in SVG, <svg xmlns="http://www.w3.org/2000/svg" width="2cm"
-    height="0.6cm">
+  <li>A polygon, <code>polygon</code> in SVG, <svg
+    xmlns="http://www.w3.org/2000/svg" width="2cm" height="0.6cm">
       <polygon points="2,16 15,0 28,12 45,4 46,16 17,16 14,11"
                style="fill: #C8FF95"/>
     </svg>
@@ -97,9 +97,9 @@ available graphics elements are:</p>
       </foreignObject>
     </svg>
   </li>
-  <li>A SVG text, in SVG<svg xmlns="http://www.w3.org/2000/svg" width="4.5cm"
-    height="0.6cm">
-      <text y="11px" x="11px" style="stroke: #FF5F00">A simple text in SVG
+  <li>A SVG text, <code>text</code> in SVG<svg
+    xmlns="http://www.w3.org/2000/svg" width="9.5cm" height="1.2cm">
+      <text y="12px" x="13px" style="stroke: #FF5F00">A simple text in SVG
       </text>
     </svg>
   </li>
@@ -107,8 +107,51 @@ available graphics elements are:</p>
 
 <p></p>
 
-<p>Amaya generates SVG drawings as blocks, between paragraphs. If you wish to
-display a drawing inline, you have to edit the source code.</p>
+<p>When you select a shape in the palette and the selection is in the HTML
+structure of the document, Amaya creates a new SVG element just at the
+beginning of the current selection and the selected shape into this new SVG.
+Amaya generates SVG drawings as blocks, between paragraphs. If you wish to
+display a drawing inline, today you have let Amaya creates it between
+paragrahs then edit the source code to move it.</p>
+
+<p>When the current selected element is a SVG element, the new shape is added
+to the current SVG drawing. The new created shape is added after and then can
+overlap previous ones.</p>
+
+<p>The creation of a shape needs some direct interactions with the user:</p>
+<ul>
+  <li>To create a rectangle, you must first select the position of the left
+    corner by pressing the left mouse button. Keep the button pressed down and
+    move to the position of the opposite corner, then release the button. The
+    shape is now defined.</li>
+  <li>To create a circle or an ellipse, you must first select the position of
+    the center by pressing the left mouse button. Keep the button pressed down
+    and move right and/or bottom, then release the button. The shape is now
+    defined.</li>
+  <li>For a polyline and polygon, enter each point by clicking the
+    corresponding position with the left mouse button. To indicate the last
+    point, click with the middle or right button.</li>
+</ul>
+
+<p>For inserting a mathematical expression into a SVG drawing, you have just
+to click in the <strong>Math</strong> palette when the selection in whitin a
+SVG. Amaya will generate a SVG foreignObject to embed the MathML mark-up.</p>
+
+<h2>Moving graphics</h2>
+<ul>
+  <li>By direct manipulation - combining the <strong>Control key</strong> with
+    the <strong>Left button</strong> of the mouse within a shape allows you to
+    move this shape.</li>
+  <li>By editing attributes.</li>
+</ul>
+
+<h2>Resizing graphics</h2>
+<ul>
+  <li>By direct manipulation - combining the <strong>Control key</strong> with
+    the <strong>Middle</strong> or the <strong>Right button</strong> of the
+    mouse within a shape allows you to resize this shape.</li>
+  <li>By editing attributes.</li>
+</ul>
 
 <p></p>
 </div>
