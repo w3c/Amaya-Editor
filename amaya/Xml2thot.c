@@ -5480,7 +5480,7 @@ static void   XmlParse (FILE *infile, CHARSET charset, ThotBool *xmlDec,
 void StartXmlParser (Document doc, char *fileName,
 		     char *documentName, char *documentDirectory,
 		     char *pathURL, ThotBool withDec,
-		     ThotBool withDoctype,  ThotBool externalDoc)
+		     ThotBool withDoctype, ThotBool externalDoc)
 {
   Element         el, oldel;
   CHARSET         charset;  
