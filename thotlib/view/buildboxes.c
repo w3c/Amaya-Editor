@@ -2946,7 +2946,7 @@ int                 frame;
    pFrame = &ViewFrameTable[frame - 1];
    if (pFrame->FrAbstractBox != NULL)
      {
-       AnyWidthUpdate = TRUE;
+	   AnyWidthUpdate = TRUE;
        pAb = pFrame->FrAbstractBox;
        if (pAb->AbBox != NULL)
 	 {
@@ -3029,6 +3029,10 @@ int                 frame;
 	     }
 	   else
 	     RedrawFrameBottom (frame, 0);
+	   /* recompute scrolls */
+	   CheckScrollingWidth (frame);
+	   UpdateScrollbars (frame);
+
 	   /* Restaure la selection */
 	   ShowSelection (pAb, FALSE);
 	 }

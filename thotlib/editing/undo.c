@@ -761,7 +761,7 @@ PtrDocument pDoc;
      HistError (9);
   else
      {
-     if (pDoc->DocLastEdit->EoType == EtDelimiter)
+     if (pDoc->DocLastEdit && pDoc->DocLastEdit->EoType == EtDelimiter)
         /* empty sequence, remove it */
         CancelAnEdit (pDoc->DocLastEdit, pDoc, TRUE);
      else
