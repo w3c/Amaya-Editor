@@ -2332,7 +2332,7 @@
 </label>
 <label define="BEditTopics">
 	<message xml:lang="en">New Topic</message>
-	<message xml:lang="fr">Nouveau topique</message>
+	<message xml:lang="fr">Nouvelle rubrique</message>
 </label>
 <label define="BViewBookmarks">
 	<message xml:lang="en">View Bookmarks</message>
