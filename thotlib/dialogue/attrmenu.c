@@ -380,7 +380,6 @@ LRESULT CALLBACK InitSheetDialogWndProc (ThotWindow hwnd, UINT iMsg,
 	    TextAttrValue[i] = EOS;
 	  ThotCallback (NumMenuAttrText, STRING_DATA, TextAttrValue);
 	  ThotCallback (NumMenuAttr, INTEGER_DATA, (char *) 1);
-      DestroyWindow (hwnd);
 	  break;
 	  
 	case ID_DELETE:
