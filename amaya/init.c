@@ -2977,8 +2977,8 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	   TtaSetMenuOff (doc, 1, Links);
 	   if (DocumentTypes[doc] == docMath)
 	     {
-	       TtaSetItemOff (doc, structView, XMLTypes, BShowLibrary);
-	       TtaSetItemOff (doc, structView, XMLTypes, BAddNewModel);
+	       TtaSetItemOff (doc, 1, XMLTypes, BShowLibrary);
+	       TtaSetItemOff (doc, 1, XMLTypes, BAddNewModel);
 	     }
 	   else
 	     {
