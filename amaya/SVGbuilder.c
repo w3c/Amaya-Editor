@@ -2986,7 +2986,7 @@ void SVGAttributeComplete (Attribute attr, Element el, Document doc)
 	  /* set the RealLang attribute */
 	  {
 	    attrType1.AttrSSchema = attrType.AttrSSchema ;
-	    attrType1.AttrTypeNum = MathML_ATTR_RealLang;
+	    attrType1.AttrTypeNum = SVG_ATTR_RealLang;
 	    if (!TtaGetAttribute (el, attrType1))
 	      /* it's not present. Add it */
 	      {
