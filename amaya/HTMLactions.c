@@ -1016,6 +1016,150 @@ Document            document;
 }
 
 /*----------------------------------------------------------------------
+  DisplayUrlAnchor    Display the url when an anchor is selectionned 
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void     DisplayUrlAnchor (Element element, Document document)
+#else  /* __STDC__ */
+static void     DisplayUrlAnchor (element, document)
+Element             element;
+Document            document;
+#endif /* __STDC__ */
+{
+   AttributeType       attrType;
+   Attribute           attr, HrefAttr = NULL;
+   Element             anchor, ancestor;
+   ElementType         elType, elType1;
+   SSchema             HTMLschema, XLinkSchema;
+   ThotBool	       ok, isHTML, isXLink;
+   STRING              url, pathname, documentname;
+   int                 length;
+
+   elType = TtaGetElementType (element);
+   HTMLschema = TtaGetSSchema (TEXT("HTML"), document);
+   isHTML = TtaSameSSchemas (elType.ElSSchema, HTMLschema);
+   if (!isHTML)
+     isXLink = TtaSameSSchemas (elType.ElSSchema, 
+				TtaGetSSchema (TEXT("XLink"), document));
+   else
+     isXLink = 0;
+   
+   /* Check if the current element is interested in display url */
+   ok = FALSE;
+   if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
+       elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
+       elType.ElTypeNum == HTML_EL_GRAPHICS_UNIT ||
+       elType.ElTypeNum == HTML_EL_SYMBOL_UNIT)
+     /* it's a basic element. It is interested whatever its namespace */
+     ok = TRUE;
+   else if (isHTML &&
+	    (elType.ElTypeNum == HTML_EL_LINK ||
+	     elType.ElTypeNum == HTML_EL_FRAME ||
+	     elType.ElTypeNum == HTML_EL_Anchor))
+     ok = TRUE;
+   else if (isXLink)
+     ok = TRUE;
+   
+   /* Search the anchor or LINK element */
+   if (!isXLink)
+     {
+       anchor = SearchAnchor (document, element, TRUE, FALSE);
+       if (anchor == NULL)
+	 {
+	   if (isHTML && (elType.ElTypeNum == HTML_EL_LINK ||
+			  elType.ElTypeNum == HTML_EL_FRAME))
+	     anchor = element;
+	   else
+	     {
+	       elType1.ElTypeNum = HTML_EL_LINK;
+	       elType1.ElSSchema = HTMLschema;
+	       anchor = TtaGetTypedAncestor (element, elType1);
+	     }
+	 }
+     }
+   else
+     anchor = NULL;
+   
+   /* if not found, search a cite or href attribute (from HTML or XLink
+      namespaces) on an ancestor */
+   if (anchor == NULL)
+     {
+       ancestor = element;
+       XLinkSchema = TtaGetSSchema (TEXT("XLink"), document);
+       do
+	 {
+	   attrType.AttrSSchema = HTMLschema;
+	   attrType.AttrTypeNum = HTML_ATTR_HREF_;
+	   attr = TtaGetAttribute (ancestor, attrType);
+	   if (!attr)
+	     {
+	       attrType.AttrTypeNum = HTML_ATTR_cite;
+	       attr = TtaGetAttribute (ancestor, attrType);
+	     }
+	   if (!attr)
+	     {
+	       attrType.AttrSSchema = XLinkSchema;
+	       attrType.AttrTypeNum = XLink_ATTR_href_;
+	       attr = TtaGetAttribute (ancestor, attrType);
+	     }
+	   if (attr)
+	     anchor = ancestor;
+	   else
+	     ancestor = TtaGetParent (ancestor);
+	 }
+       while (anchor == NULL && ancestor != NULL);
+     }
+   
+   /* Search the HREF attribute */
+   if (anchor != NULL)
+     {
+       elType = TtaGetElementType (anchor);
+       attrType.AttrSSchema = HTMLschema;
+       /* search the HREF or CITE attribute */
+       if (isHTML &&
+	   (elType.ElTypeNum == HTML_EL_Quotation ||
+	    elType.ElTypeNum == HTML_EL_Block_Quote ||
+	    elType.ElTypeNum == HTML_EL_INS ||
+	    elType.ElTypeNum == HTML_EL_DEL))
+	 attrType.AttrTypeNum = HTML_ATTR_cite;
+       else if (isHTML && elType.ElTypeNum == HTML_EL_FRAME)
+	 attrType.AttrTypeNum = HTML_ATTR_FrameSrc;
+       else
+	 if (isHTML)
+	   attrType.AttrTypeNum = HTML_ATTR_HREF_;
+	 else
+	   {
+	     attrType.AttrSSchema = TtaGetSSchema (TEXT("XLink"), document);
+	     attrType.AttrTypeNum = XLink_ATTR_href_;
+	   }
+       
+       HrefAttr = TtaGetAttribute (anchor, attrType);
+     }
+   
+   if (HrefAttr != NULL)
+     {
+       /* Get a buffer for the target URL */
+       length = TtaGetTextAttributeLength (HrefAttr);
+       length++;
+       url = TtaAllocString (length);
+       if (url != NULL)
+	 {
+	   /* Get the URL itself */
+	   TtaGiveTextAttributeValue (HrefAttr, url, &length);
+	   /* Normalize the URL */
+	   pathname = TtaAllocString (MAX_LENGTH);
+	   documentname = TtaAllocString (MAX_LENGTH);
+	   NormalizeURL (url, document, pathname, documentname, NULL);
+	   /* Display the URL in the status line */
+	   TtaSetStatus (document, 1, pathname, NULL);
+	   TtaFreeMemory (pathname);
+	   TtaFreeMemory (documentname);
+	   TtaFreeMemory (url);
+	 }
+     }
+}
+
+/*----------------------------------------------------------------------
   DoAction         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1084,7 +1228,10 @@ NotifyElement      *event;
 
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &usedouble);  
   if (usedouble)
-    return TRUE;
+    {
+      DisplayUrlAnchor (event->element, event->document);
+      return TRUE;
+    }
   else
     /* don't let Thot perform normal operation */
     return (ActivateElement (event->element, event->document));

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    "DTD/xhtml1-1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Naviguer avec Amaya</title>
-  <meta name="GENERATOR" content="amaya V3.2.1" />
+  <meta name="GENERATOR" content="amaya V3.9" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -39,25 +39,26 @@ alt="editor-mode" /> indique que la fenêtre est en mode éditeur : vous pouvez
 bouton, vous faites passer la fenêtre en mode navigation. Le bouton prend
 ainsi cette représentation <img src="../Icons/Browser.gif" alt="browser-mode"
 /> et vous pouvez seulement naviguer et remplir les formulaires. cette option
-est également disponible à partir de l'option<strong> Mode Editeur</strong> du
+est également disponible à partir de l'option <strong>Mode Editeur</strong> du
 menu d'Édition, ou bien par le raccourci clavier (Shift-Control-asterisk par
 défaut pour Linux).</p>
 
 <h3><a name="Activating">Activer un lien</a></h3>
 
 <p>Les liens sont habituellement présentés en bleu (ou soulignés en noir et
-blanc). Comme <strong>Amaya</strong> est un éditeur, par défaut, un simple
-clic déplacera seulement le point d'insertion. Ainsi, pour activer un lien,
-vous devrez effectuer un <em>double clic</em> dessus. Ce comportement peut
-être modifié ainsi que d'autres paramètres par l'intermédiaire du menu
-Spécial/Préférences/Générales. En modifiant "cliquer deux fois pour suivre un
-lien", vous pourrez naviguer de document en document à l'aide d'un
-simple-clic. Dans ce cas, vous ne pouvez pas mettre aisément le point
-d'insertion à l'intérieur des liens : vous devez soit utiliser une sélection
-étendue soit déplacer le point d'insertion à l'intérieur des liens à l'aide
-des flèches. Il est également possible d'utiliser le clavier pour activer les
-liens, ainsi que les formulaires de contrôles. La commande au clavier est
-<strong>Alt-Return</strong> par défaut.</p>
+blanc). Comme <strong>Amaya</strong> est un éditeur, vous devez effectuer un
+double clic sur un lien pour l'activer. Un simple clic déplace seulement le
+point d'insertion et affiche l'URI complète du lien dans la barre d'état de la
+fenêtre principale. Ce comportement par défaut peut être modifié ainsi que
+d'autres paramètres par l'intermédiaire du menu Spécial/Préférences/Générales.
+En modifiant "cliquer deux fois pour suivre un lien", vous pourrez naviguer de
+document en document à l'aide d'un simple-clic. Dans ce cas, vous ne pouvez
+pas mettre aisément le point d'insertion à l'intérieur des liens : vous devez
+soit utiliser une sélection étendue soit déplacer le point d'insertion à
+l'intérieur des liens à l'aide des flèches. Il est également possible
+d'utiliser le clavier pour activer les liens, ainsi que les formulaires de
+contrôles. La commande au clavier est <strong>Alt-Return</strong> par
+défaut.</p>
 
 <p>Le document récupéré par cette opération <em>remplace</em> normalement le
 document courant dans la même fenêtre et conserve le mode (éditeur ou
@@ -68,7 +69,7 @@ d'éviter la perte des derniers changements.</p>
 <h3><a name="L515">Ancres cibles</a></h3>
 
 <p>Certaines parties du texte peuvent être affichées avec une icône en forme
-de cible<a name="target"> <img src="../Icons/target.gif" alt=" target "
+de cible <a name="target"><img src="../Icons/target.gif" alt=" target "
 /></a>. Ces icônes ne font pas partie du document et peuvent donc être soit
 visualisées soit cachées juste en modifiant le statut <strong>Montrer les
 cibles</strong> de la fenêtre courante, qui est une option du menu
@@ -94,7 +95,7 @@ permet de <a href="Links.html.fr#L245">créer des liens</a> plus vite.</p>
       une nouvelle fenêtre. Ces deux commandes font apparaître une boîte de
       dialogue dans laquelle vous pouvez entrer soit un nom de fichier local
       soit un URI. La boîte de dialogue contient également un navigateur de
-      fichier qui vous aide à repérer les fichiers locaux.
+      fichier qui vous aide à repérer les fichiers locaux. 
       <p>Quand le document est correctement spécifié, cliquez sur le bouton
       <strong>Confirmer</strong>.</p>
     </dd>
