@@ -490,7 +490,9 @@ static unsigned char *ReadPng (FILE *infile, int *width, int *height, int *ncolo
 			  colors[i].red = cr;
 			  colors[i].green = cg;
 			  colors[i].blue = cb;
+#ifndef _GTK
 			  colors[i].flags = DoRed|DoGreen|DoBlue;
+#endif
 			  *ncolors = i + 1;
 			}
 		      else
