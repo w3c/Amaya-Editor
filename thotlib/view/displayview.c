@@ -439,20 +439,13 @@ void FreeView (PtrDocument pDoc, DocViewNumber view)
   ----------------------------------------------------------------------*/
 void  CloseDocumentView (PtrDocument pDoc, int view, ThotBool closeDoc)
 {
-  int                 d;
-  if (pDoc && pDoc->DocViewRootAb[view])
+  if (pDoc /*&& pDoc->DocViewRootAb[view]*/)
     {
       /* check if the document already exist */
-      d = 0;
-      while (d < MAX_DOCUMENTS - 1 && LoadedDocument[d] != pDoc)
-	d++;
-      if (LoadedDocument[d] == pDoc)
-	{
-	  FreeView (pDoc, view);
-	  if (closeDoc && NumberOfOpenViews (pDoc) < 1)
-	    /* the last view of the document is closed */
-	    TCloseDocument (pDoc);
-	}
+      FreeView (pDoc, view);
+      if (closeDoc && NumberOfOpenViews (pDoc) < 1)
+	/* the last view of the document is closed */
+	TCloseDocument (pDoc);
     }
 }
 
