@@ -45,6 +45,7 @@ my @rest = ();
 
 #to avoid problems
 %texts = ();
+@list_of_references_that_dont_have_a_translate = ();
 
 # open $in_textlfile only if it exists and is readable
 	if (!(-r $file)) { print "file $file not found\n"}
