@@ -43,6 +43,9 @@ Extensions 2.3:
   - When some text is pasted from another application line breaks are
     kept in the HTML document.
 
+* Performances
+  - Large documents are handled more efficiently.
+
 * libwww:
   - It's now possible to say that the proxy should ONLY be used with a given
     list of domains.
@@ -64,7 +67,7 @@ Extensions 2.3:
     Motif. Implementation is not complete yet and contributions are welcome.
     This version is currently only able to display document views and many
     user actions are disabled.
-    See Autoconf.html to learn how to build this version.
+    See Autoconf.html for more info on how to build this version.
 
 Fixed bugs 2.3:
 ---------------
