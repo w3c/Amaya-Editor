@@ -1031,18 +1031,24 @@ caddr_t             call_d;
    toplevel: the application toplevel Shell.
   ----------------------------------------------------------------------*/
 
-static ThotWidget liteClue;
+static ThotWidget liteClue = NULL;
 
 #ifdef __STDC__
 void                InitClue (ThotWidget toplevel)
 #else  /* __STDC__ */
-void                TtaAddButton (toplevel)
+void                InitClue (toplevel)
 ThotWidget          toplevel;
 
 #endif /* __STDC__ */
 {
+   Arg                 args[MAX_ARGS];
+   int                 n;
+   if (liteClue != NULL) return;
    liteClue = XtVaCreatePopupShell("popup_shell", xcgLiteClueWidgetClass,
                                    toplevel, NULL);
+   n = 0;
+   XtSetArg (args[n], XtNfont, DefaultFont);
+   n++;
 }
 #endif /* _WINDOWS */
 
@@ -1155,7 +1161,7 @@ char               *info;
                        * Add tooltip to the icon.
                        */
 #ifndef _WINDOWS
-		      XcgLiteClueAddWidget(liteClue, w,  info, 0, 0);
+		      XcgLiteClueAddWidget(liteClue, w,  info, strlen(info), 0);
 #endif /* _WINDOWS */
                   }
 	       }

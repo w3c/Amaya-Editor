@@ -604,30 +604,30 @@ char               *pathname;
 	if (!opened)
 	  {
 	     /* Add a button */
-	     TtaAddButton (doc, 1, stopR, StopTransfer, NULL);
-	     TtaAddButton (doc, 1, iconBack, GotoPreviousHTML, NULL);
-	     TtaAddButton (doc, 1, iconForward, GotoNextHTML, NULL);
-	     TtaAddButton (doc, 1, iconReload, Reload, NULL);
+	     TtaAddButton (doc, 1, stopR, StopTransfer, TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT));
+	     TtaAddButton (doc, 1, iconBack, GotoPreviousHTML, TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS));
+	     TtaAddButton (doc, 1, iconForward, GotoNextHTML, TtaGetMessage (AMAYA, AM_BUTTON_NEXT));
+	     TtaAddButton (doc, 1, iconReload, Reload, TtaGetMessage (AMAYA, AM_BUTTON_RELOAD));
 	     TtaAddButton (doc, 1, None, NULL, NULL);
 
-	     TtaAddButton (doc, 1, iconSave, SaveDocument, NULL);
-	     TtaAddButton (doc, 1, iconPrint, TtcPrint, NULL);
-	     TtaAddButton (doc, 1, iconFind, TtcSearchText, NULL);
+	     TtaAddButton (doc, 1, iconSave, SaveDocument, TtaGetMessage (AMAYA, AM_BUTTON_SAVE));
+	     TtaAddButton (doc, 1, iconPrint, TtcPrint, TtaGetMessage (AMAYA, AM_BUTTON_PRINT));
+	     TtaAddButton (doc, 1, iconFind, TtcSearchText, TtaGetMessage (AMAYA, AM_BUTTON_SEARCH));
 	     TtaAddButton (doc, 1, None, NULL, NULL);
 
-	     IButton = TtaAddButton (doc, 1, iconI, SetCharEmphasis, NULL);
-	     BButton = TtaAddButton (doc, 1, iconB, SetCharStrong, NULL);
-	     TTButton = TtaAddButton (doc, 1, iconT, SetCharCode, NULL);
-	     TtaAddButton (doc, 1, iconCSS, InitCSSDialog, NULL);
+	     IButton = TtaAddButton (doc, 1, iconI, SetCharEmphasis, TtaGetMessage (AMAYA, AM_BUTTON_ITALICS));
+	     BButton = TtaAddButton (doc, 1, iconB, SetCharStrong, TtaGetMessage (AMAYA, AM_BUTTON_BOLD));
+	     TTButton = TtaAddButton (doc, 1, iconT, SetCharCode, TtaGetMessage (AMAYA, AM_BUTTON_CODE));
+	     TtaAddButton (doc, 1, iconCSS, InitCSSDialog, TtaGetMessage (AMAYA, AM_BUTTON_CSS));
 	     TtaAddButton (doc, 1, None, NULL, NULL);
 
-	     TtaAddButton (doc, 1, iconImage, CreateImage, NULL);
-	     TtaAddButton (doc, 1, iconH1, CreateHeading1, NULL);
-	     TtaAddButton (doc, 1, iconH2, CreateHeading2, NULL);
-	     TtaAddButton (doc, 1, iconH3, CreateHeading3, NULL);
-	     TtaAddButton (doc, 1, iconBullet, CreateList, NULL);
-	     TtaAddButton (doc, 1, iconNum, CreateNumberedList, NULL);
-	     TtaAddButton (doc, 1, iconDL, CreateDefinitionList, NULL);
+	     TtaAddButton (doc, 1, iconImage, CreateImage, TtaGetMessage (AMAYA, AM_BUTTON_IMG));
+	     TtaAddButton (doc, 1, iconH1, CreateHeading1, TtaGetMessage (AMAYA, AM_BUTTON_H1));
+	     TtaAddButton (doc, 1, iconH2, CreateHeading2, TtaGetMessage (AMAYA, AM_BUTTON_H2));
+	     TtaAddButton (doc, 1, iconH3, CreateHeading3, TtaGetMessage (AMAYA, AM_BUTTON_H3));
+	     TtaAddButton (doc, 1, iconBullet, CreateList, TtaGetMessage (AMAYA, AM_BUTTON_UL));
+	     TtaAddButton (doc, 1, iconNum, CreateNumberedList, TtaGetMessage (AMAYA, AM_BUTTON_OL));
+	     TtaAddButton (doc, 1, iconDL, CreateDefinitionList, TtaGetMessage (AMAYA, AM_BUTTON_DL));
 
 	     TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_LOCATION), TRUE, TextURL);
 	     TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_TITLE), TRUE, TextTitle);

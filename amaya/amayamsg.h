@@ -7,7 +7,7 @@
 
 int                 AMAYA;
 
-/* Index of tamaya message table */
+/* Index of amaya message table */
 
 #define AM_FILES                        0
 #define AM_OPEN_URL	                1
@@ -108,5 +108,23 @@ int                 AMAYA;
 #define AM_AUTHENTICATION_ERROR        96
 #define AM_UNKNOWN_URL                 97
 #define AM_SERVER_INTERNAL_ERROR       98
+#define AM_BUTTON_INTERRUPT            99
+#define AM_BUTTON_PREVIOUS             100
+#define AM_BUTTON_NEXT                 101
+#define AM_BUTTON_RELOAD               102
+#define AM_BUTTON_SAVE                 103
+#define AM_BUTTON_PRINT                104
+#define AM_BUTTON_SEARCH               105
+#define AM_BUTTON_ITALICS              106
+#define AM_BUTTON_BOLD                 107
+#define AM_BUTTON_CODE                 108
+#define AM_BUTTON_CSS                  109
+#define AM_BUTTON_IMG                  110
+#define AM_BUTTON_H1                   111
+#define AM_BUTTON_H2                   112
+#define AM_BUTTON_H3                   113
+#define AM_BUTTON_UL                   114
+#define AM_BUTTON_OL                   115
+#define AM_BUTTON_DL                   116
 
-#define AMAYA_MSG_MAX                  99
+#define AMAYA_MSG_MAX                  117

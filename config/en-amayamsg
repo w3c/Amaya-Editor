@@ -97,3 +97,21 @@
 96 HTTP 403 Error: The server forbids this operation on this ressource
 97 HTTP 404 Error: The server cannot find the requested URL
 98 HTTP 500 Error: The server has encountered an inernal error
+99 Interrupt Transfer
+100 Previous Document
+101 Next Document
+102 Reload
+103 Save
+104 Print
+105 Search
+106 Italics
+107 Bold
+108 Fixed Font
+109 Style Sheet
+110 Add Image
+111 Heading Size 1
+112 Heading Size 2
+113 Heading Size 3
+114 Bulleted List
+115 Enunered List
+116 Definition List
