@@ -1531,9 +1531,19 @@ void         ProxyConfMenu (Document document, View view)
 static void GetGeneralConf (void)
 {
   char       ptr[MAX_LENGTH];
+  int        oldzoom;
 
   TtaGetEnvInt ("DOUBLECLICKDELAY", &DoubleClickDelay);
-  TtaGetEnvInt ("ZOOM", &Zoom);
+  TtaGetEnvInt ("FontZoom", &Zoom);
+  TtaGetEnvInt ("ZOOM", &oldzoom);
+  if (Zoom == 0)
+    {
+      if (oldzoom == 0)
+	/* standard size */
+	Zoom = 100;
+      else
+	Zoom = 100 + (oldzoom * 10);
+    }
   TtaGetEnvBoolean ("ENABLE_MULTIKEY", &Multikey);
   TtaGetEnvBoolean ("ENABLE_BG_IMAGES", &BgImages);
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
@@ -1573,15 +1583,10 @@ static void ValidateGeneralConf (void)
   char        old_AppTmpDir [MAX_LENGTH];
   int         i;
 
+#ifdef _WINDOWS
   /* normalize and validate the zoom factor */
-  change = 1;
-  if (Zoom > 10)
-    Zoom = 10;
-  else if (Zoom < -10)
-    Zoom = -10;
-  else 
-    change = 0;
   SetDlgItemInt (GeneralHwnd, IDC_ZOOM, Zoom, TRUE);
+#endif /* _WINDOWS */
 
   /* 
   **validate the tmp dir
@@ -1614,8 +1619,10 @@ static void ValidateGeneralConf (void)
       else
 	change++;
     }
+#ifdef _WINDOWS
   if (change)
     SetDlgItemText (GeneralHwnd, IDC_TMPDIR, AppTmpDir);
+#endif /* _WINDOWS */
 
   /* if AppTmpDir changed, update the cache dir env variables */
   GetEnvString ("APP_TMPDIR", old_AppTmpDir);
@@ -1683,7 +1690,7 @@ static void RecalibrateZoom ()
   int               doc, view;
 
   /* recalibrate the zoom settings in all the active documents and
-   active views*/
+   active views */
   for (doc = 1; doc < DocumentTableLength; doc++)
     {
       if (DocumentURLs[doc])
@@ -1708,8 +1715,8 @@ static void UpdateShowTargets ()
   int               visibility;
   int               doc;
 
-  /* recalibrate the zoom settings in all the active documents and
-   active views*/
+  /* recalibrate settings in all the active documents and
+   active views */
   for (doc = 1; doc < DocumentTableLength; doc++)
     {
       if (DocumentURLs[doc])
@@ -1757,10 +1764,10 @@ static void SetGeneralConf (void)
   ThotBool    old;
 
   TtaSetEnvInt ("DOUBLECLICKDELAY", DoubleClickDelay, TRUE);
-  TtaGetEnvInt ("ZOOM", &oldZoom);
+  TtaGetEnvInt ("FontZoom", &oldZoom);
   if (oldZoom != Zoom)
     {
-      TtaSetEnvInt ("ZOOM", Zoom, TRUE);
+      TtaSetEnvInt ("FontZoom", Zoom, TRUE);
       TtaSetFontZoom (Zoom);
       /* recalibrate the zoom settings in all the active documents */
       RecalibrateZoom ();
@@ -1811,7 +1818,7 @@ static void GetDefaultGeneralConf ()
   char       ptr[MAX_LENGTH];
 
   TtaGetDefEnvInt ("DOUBLECLICKDELAY", &DoubleClickDelay);
-  TtaGetDefEnvInt ("ZOOM", &Zoom);
+  TtaGetDefEnvInt ("FontZoom", &Zoom);
   GetDefEnvToggle ("ENABLE_MULTIKEY", &Multikey, 
 		       GeneralBase + mToggleGeneral, 0);
   GetDefEnvToggle ("ENABLE_BG_IMAGES", &BgImages,
@@ -2150,8 +2157,8 @@ void GeneralConfMenu (Document document, View view)
    TtaNewNumberForm (GeneralBase + mZoom,
 		     GeneralBase + GeneralMenu,
 		     TtaGetMessage (AMAYA, AM_ZOOM),
-		     -10,
 		     10,
+		     1000,
 		     FALSE);   
    TtaNewNumberForm (GeneralBase + mDoubleClickDelay,
 		     GeneralBase + GeneralMenu,

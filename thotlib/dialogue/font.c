@@ -1394,7 +1394,7 @@ SpecFont ThotLoadFont (char alphabet, int family, int highlight, int size,
 	      size = FontPointSize (size);
 	      unit = UnPoint;
 	    }
-	  size = size + (size * FontZoom / 10);
+	  size = size * FontZoom / 100;
 	}
       zoom = ViewFrameTable[frame - 1].FrMagnification;
       if (zoom)
