@@ -48,6 +48,7 @@ echo "Platform ------->" $MACH
    Amaya/config/amaya.keyboard \
    Amaya/config/amaya.profiles \
    Amaya/config/annot.schemas \
+   Amaya/config/fonts.* \
    Amaya/config/lib_files.dat \
    Amaya/config/libconfig/*.css \
    Amaya/config/libconfig/*.png \

@@ -93,6 +93,7 @@ Amaya/config/*thot.rc \
 Amaya/config/thot.color \
 Amaya/config/*rdf \
 Amaya/config/annot.schemas \
+Amaya/config/fonts.* \
 Amaya/config/lib_files.dat \
 Amaya/config/libconfig/*.css \
 Amaya/config/libconfig/*.png \
