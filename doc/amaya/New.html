@@ -17,6 +17,73 @@ alt="Doc"></a></p>
 This file indicates the new features you can find in the latest versions of
 Amaya.</p>
 
+<h1>Amaya 1.3b</h1>
+<p>
+October 14, 1998</p>
+
+<h2>New Features:</h2>
+<ul>
+<li>
+Whenever there's an authentication failure, Amaya will ask the user if he
+wants to retry or abandon the operation.
+</li>
+<li><p>
+It's now possible to configure different network related timeouts thru the
+registry file</p>
+</li>
+<li>
+Amaya now uses the DEFLATE transfer encoding in the HTTP headers
+</li>
+<li>
+It's now possible to double-click within Windows selectors (Open Document,
+Spell-checker, etc.)
+</li>
+</ul>
+
+<h2>Fixed bugs 1.3b:</h2>
+<ul>
+<li>
+Amaya generated line breaks into script and style elements. That has been
+fixed now.
+</li>
+<li>
+Sometimes the Backward and/or Forward buttons didn't work fine if you had
+successively loaded local and HTTP documents. Now it works.
+</li>
+<li>
+There was still a bug in vertical table formatting.
+</li>
+<li>
+While saving a remote document which was just edited, Amaya reported a failure
+of the operation, even if it was a success
+</li>
+<li>
+When Amaya save a document locally, the user can now give a relative path or
+the "~/xxx" path for images but the corresponding directory need to be created
+before.
+</li>
+<li>
+While browsing a protected site, Amaya could prompt the user many times for
+its password (bug inside the new libwww)
+</li>
+<li>
+When a paragraph was right aligned and updated, the current line could be not
+redisplayed correctly.
+</li>
+<li>
+When changing the type of an existing element (for instance changing a H2 into
+a Paragraph), the following elements (H2 elements in that case) were not
+renumbered correctly.
+</li>
+<li>
+The Windows version couldn't print the help page of Math.
+</li>
+<li>
+When MULTI_KEY is active the input method has been modified to support the
+&oacute; character.
+</li>
+</ul>
+
 <h1>Amaya 1.3a</h1>
 <p>
 September 25, 1998</p>
@@ -477,6 +544,8 @@ URL
 When reloading a page, Amaya wasn't sending any No-Cache headers
 </li>
 </ul>
+<hr>
+
 
 <h1>Fixed bugs in Amaya 1.2a</h1>
 <p>
@@ -610,6 +679,8 @@ further work on the MathML application
 other minor bugs
 </li>
 </ul>
+<hr>
+
 
 <h1>Fixed bugs in Amaya 1.1c</h1>
 <p>
