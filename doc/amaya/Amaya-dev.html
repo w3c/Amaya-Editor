@@ -3,7 +3,8 @@
 <html>
 <head>
   <title>Writing source code for Amaya</title>
-  <meta name="GENERATOR" content="amaya V2.3">
+  <meta name="GENERATOR" content="amaya V2.5">
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
 
 <body lang="en">
@@ -26,7 +27,7 @@ sub-directories. The libwww is stored in a separated hierarchy and its root
 directory <strong>libwww</strong> must be a sibling of the Amaya root
 directory.</p>
 
-<p><img src="Icons/Sources.gif" alt="Amaya folder"></p>
+<p><img src="../Icons/Sources.gif" alt="Amaya folder"></p>
 <ul>
   <li>the directory <strong>amaya</strong> includes source files of the Amaya
     application: c code (.c), common structures and variables ( h). A
@@ -341,8 +342,8 @@ for German, and so on.</p>
     for Italian, ....
     <p>You can do it so using the follow shell script and by adding your
     target language code (de, it, ...):</p>
-    <p> <code>  ls -d en-* | sed "s/en-\(.*\)/cp &amp;
-    target_language_code-\1/" | sh</code></p>
+    <p><code>ls -d en-* | sed "s/en-\(.*\)/cp &amp; target_language_code-\1/"
+    | sh</code></p>
   </li>
   <li>Open your new files and translate each message to the new language. Be
     careful of respecting the sense of the text (whether it is a C sprintf
