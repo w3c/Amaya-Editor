@@ -389,14 +389,47 @@ void             SetGraphicDepths (Document doc, Element el)
 }
 
 /*----------------------------------------------------------------------
+   CopyTRefContent
+   Copy the text leaves of the subtree pointed by source as children
+   of element el, which is of type tref.
+  ----------------------------------------------------------------------*/
+void CopyTRefContent (Element source, Element el, Document doc)
+{
+  Element        text, copy, child;
+  ElementType    elType, commentType;
+
+  elType = TtaGetElementType (el);
+  elType.ElTypeNum = SVG_EL_TEXT_UNIT;
+  commentType.ElSSchema = elType.ElSSchema;
+  commentType.ElTypeNum = SVG_EL_XMLcomment;
+  text = source;
+  do
+    {
+      text = TtaSearchTypedElementInTree (elType, SearchForward, source, text);
+      /* ignore text elements that are within comments */
+      if (text && !TtaGetTypedAncestor (text, commentType))
+	{
+	  copy = TtaNewTranscludedElement (doc, text);
+	  /* insert that leaf as the last child of the tref element */
+	  child = TtaGetLastChild (el);
+	  if (child)
+	    TtaInsertSibling (copy, child, FALSE, doc);
+	  else
+	    TtaInsertFirstChild (&copy, el, doc);
+	}
+    }
+  while (text);
+}
+
+/*----------------------------------------------------------------------
    CopyUseContent
    Copy the subtree pointed by the href URI as a subtree of element el,
    which is of type use or tref.
   ----------------------------------------------------------------------*/
 void  CopyUseContent (Element el, Document doc, char *href)
 {
-  Element              source, curEl, copy, child, nextChild, text, elFound;
-  ElementType          elType, commentType;
+  Element              source, curEl, copy, child, nextChild, elFound;
+  ElementType          elType;
   Attribute            attr;
   AttributeType        attrType;
   SearchDomain         direction;
@@ -483,33 +516,7 @@ void  CopyUseContent (Element el, Document doc, char *href)
 	}
       else
 	/* it's a tref element. Copy all the contents of the source element */
-	{
-	  text = source;
-	  elType.ElTypeNum = SVG_EL_TEXT_UNIT;
-	  commentType.ElSSchema = elType.ElSSchema;
-	  commentType.ElTypeNum = SVG_EL_XMLcomment;
-	  do
-	    {
-	      text = TtaSearchTypedElementInTree (elType, SearchForward,
-						  source, text);
-	      /* ignore text elements that are within comments */
-	      if (text && !TtaGetTypedAncestor (text, commentType))
-		{
-		  copy = TtaNewTranscludedElement (doc, text);
-		  /* remove the id attribute from the copy */
-		  attr = TtaGetAttribute (copy, attrType);
-		  if (attr)
-		    TtaRemoveAttribute (copy, attr, doc);
-		  /* insert it as the last child of the tref element */
-		  child = TtaGetLastChild (el);
-		  if (child)
-		    TtaInsertSibling (copy, child, FALSE, doc);
-		  else
-		    TtaInsertFirstChild (&copy, el, doc);
-		}
-	    }
-	  while (text);
-	}
+	CopyTRefContent (source, el, doc);
 
       TtaSetStructureChecking (oldStructureChecking, doc);
     }

@@ -30,6 +30,9 @@ extern void ParseCSSequivAttribute ( int attrType,
                                      ThotBool delete );
 extern void SetGraphicDepths ( Document doc,
                                Element el );
+extern void CopyTRefContent ( Element source,
+			      Element el,
+			      Document doc);
 extern void CopyUseContent ( Element el,
                              Document doc,
                              char *href );
@@ -117,6 +120,9 @@ extern void ParseCSSequivAttribute (/* int attrType,
                                        ThotBool delete */);
 extern void SetGraphicDepths (/* Document doc,
                                  Element el */);
+extern void CopyTRefContent (/* Element source,
+				Element el,
+				Document doc */);
 extern void CopyUseContent (/* Element el,
                                Document doc,
                                char *href */);

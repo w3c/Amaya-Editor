@@ -4815,11 +4815,22 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
           extAttrType.AttrTypeNum = SVG_ATTR_id;
 	  idEl = GetElemWithAttr (externalDoc, extAttrType, extUseId, NULL);
 	}
-      /* Detach the target subtree and insert it as a child of the use element */
+      /* do the actual copy */
       if (idEl != NULL)
 	{
-	  TtaRemoveTree (idEl, externalDoc);
-	  TtaInsertFirstChild (&idEl, extEl, doc);
+	  elType = TtaGetElementType (extEl);
+	  if (elType.ElTypeNum == SVG_EL_tref &&
+	      elType.ElSSchema == extAttrType.AttrSSchema)
+	    /* it's a tref element: do a "flat" copy */
+	    CopyTRefContent (idEl, extEl, doc);
+	  else
+	    {
+	      /* it's a use element */
+	      /* Detach the target subtree and insert it as a child of the
+		 use element */
+	      TtaRemoveTree (idEl, externalDoc);
+	      TtaInsertFirstChild (&idEl, extEl, doc);
+	    }
 	}
       /* Copy the style sheets related to the external document */
       /* MoveExtDocCSSs (externalDoc, doc);*/
