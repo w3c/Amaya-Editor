@@ -198,7 +198,7 @@ ThotBool            extendSel;
        TtcScrollLeft (doc, view);
    else if (xDelta > 0 && x + xDelta > pFrame->FrXOrg + w)
        TtcScrollRight (doc, view);
-   else if (yDelta < 0 && pFrame->FrYOrg > 0 && y + yDelta < pFrame->FrYOrg)
+   else if (yDelta < 0 && y + yDelta < pFrame->FrYOrg)
      {
        /* try to select up to the top of the current displayed frame */
        do
