@@ -82,79 +82,97 @@ static int p2 (int p)
    Opengl texture have size that is a power of 2
    So we add black points in the resize process 
    (but they won't be displayed as we crop the texture to a Quad of the orignal size)
-   TODO : cut big texture in small ones (Much Faster display...)
-   See Gliv project
+   TODO : - cut big texture in small ones (Much Faster display...)
+          @See Gliv project
+	  - Png supporting 256 levels of transparency ?
   ----------------------------------------------------------------------*/
-static unsigned char *GL_MakeTexture(unsigned char *rgb_data, int w, int h)
+static unsigned char *GL_MakeTexture( GdkImlibImage *imageDesc, int w, int h)
 {
   unsigned char      *data;
   int                 GL_w, GL_h;
-  int                 xx, yy, w4;
+  int                 x, y;
   unsigned char      *ptr1, *ptr2;
+  unsigned char      red, blue, green;
   
   GL_w = p2(w);
   GL_h = p2(h);
-  
-  if (GL_w != w || GL_h != h)
+  red = imageDesc->shape_color.r;
+  green = imageDesc->shape_color.g;
+  blue =  imageDesc->shape_color.b;
+ 
+  /* In this algo, just remember that a 
+     RGB pixel value is a list of 3 value in source data
+     and 4 for destination RGBA texture */
+  data = TtaGetMemory (sizeof (unsigned char) * GL_w * GL_h * 4);
+  ptr1 = imageDesc->rgb_data;
+  ptr2 = data;
+  for (y = 0; y < h; y++)
     {
-      w4 = (GL_w - w) * 3;
-      /* TTAGETMEMORY !!!*/
-      data = malloc (GL_w * GL_h * 3);
-      ptr1 = rgb_data;
-      ptr2 = data;
-      for (yy = 0; yy < h; yy++)
-	{
-	  for (xx = 0; xx < w; xx++)
-	    {
-	      *ptr2++ = *ptr1++;*ptr2++ = *ptr1++;*ptr2++ = *ptr1++;
-	    }
-	  while (xx++ < GL_w)
-	    {
-	      *ptr2++ = 0;*ptr2++ = 0;*ptr2++ = 0;
-	    }			  
-	}	
-      while (yy++ < GL_h)
-	{
-	  *ptr2++ = 0;*ptr2++ = 0;*ptr2++ = 0;
+      /* pixel by pixel*/
+      for (x = 0; x < w; x++)
+	{		    
+	  *ptr2 = *ptr1++;/*red*/
+	  *(ptr2 + 1) = *ptr1++;/*green*/
+	  *(ptr2 + 2) = *ptr1++;/*blue*/
+	  /*alpha*/
+	  if (red == *ptr2 && green == *(ptr2+1) && blue ==  *(ptr2+2))
+	    *(ptr2+3) = 0;
+	  else
+	    *(ptr2+3) = 255;
+	  /*next pixel */
+	  ptr2 += 4;
 	}
-      return data; 
+      while (x++ < GL_w)
+	{
+	  *ptr2++ = 0;*ptr2++ = 0;*ptr2++ = 0;*ptr2++ = 0;
+	}			  
+    }	
+  while (y++ < GL_h)
+    {
+      *ptr2++ = 0;*ptr2++ = 0;*ptr2++ = 0;*ptr2++ = 0;
     }
-  else
-    return rgb_data;
+  return data; 
 }
 
 /*----------------------------------------------------------------------
  GL_TextureMap : map texture on a Quad (sort of a rectangle)
   ----------------------------------------------------------------------*/
-static void GL_TextureMap (unsigned char *Pixmap, int picXOrg, int picYOrg, int xFrame, int yFrame, int w , int h)
+static void GL_TextureMap (PictInfo *Image, int xFrame, int yFrame, int w , int h)
 {
   int       p2_w, p2_h;
   GLfloat   GL_w, GL_h;
 
   /* Texture like display list ... must use !!*/
   /* glBindTexture(GL_TEXTURE_2D,  identifiant); */
-  if (Pixmap)
+  if (Image->PicPixmap)
     { 
       /* The other Way  with texture... but without texture power...(mippmapping)*/
       /* glRasterPos2i (xFrame,  yFrame); */
       /*       glDrawPixels( w, h, */
       /* 		    GL_RGB, */
       /* 		    GL_UNSIGNED_BYTE, */
-      /* 		    (GLvoid *)Pixmap); */      
-
-      p2_w = p2(w);
-      p2_h = p2(h);      
+      /* 		    (GLvoid *)Pixmap); */   
+   
+      /* 
+	 Another way is to split texture in 256x256 pieces and render them on different quads
+	 Declared to be the faster
+      */
+      p2_w = p2 (Image->PicWidth);
+      p2_h = p2 (Image->PicHeight);
       glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA, p2_w, p2_h, 0,
-		    GL_RGB, GL_UNSIGNED_BYTE, (GLvoid *)Pixmap);      
-      glColor4f (1.0, 1.0, 1.0, 1.0);
-      
-      /* caus' we have resized the picture to match a power of 2
-       We don't want to see all the picture, just the w and h portion*/
-      GL_h = (GLfloat) h/p2_h; 
-      GL_w = (GLfloat) w/p2_w;  
+		    GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid *) Image->PicPixmap); 
+      glColor4f (1.0, 1.0, 1.0, 1.0);      
+      /* We have resized the picture to match a power of 2
+       We don't want to see all the picture, just the w and h 
+       portion*/
+      GL_w = (GLfloat) Image->PicWidth/p2_w;
+      GL_h = (GLfloat) Image->PicHeight/p2_h;
       /* Texture mapping */
-      glEnable (GL_TEXTURE_2D);
-      /* Not sure of the vertex order (not the faster one, I think) */
+      glEnable (GL_TEXTURE_2D); 
+      glEnable (GL_BLEND); 
+      glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+      /* Not sure of the vertex order 
+	 (not the faster one, I think) */
       glBegin (GL_QUADS);
       /* Texture coordinates are unrelative 
 	 to the size of the square */      
@@ -172,7 +190,7 @@ static void GL_TextureMap (unsigned char *Pixmap, int picXOrg, int picYOrg, int 
       glVertex2i (xFrame,     yFrame);      
       glEnd ();
       glDisable (GL_TEXTURE_2D);
-      
+      glDisable (GL_BLEND);
     }
 }
 #endif /* _GL */
@@ -454,19 +472,14 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
   int               i, j, iw, jh;
   HRGN              hrgn;
 #else /* _WINDOWS */
-#ifndef _GTK
   XRectangle        rect;
+#ifndef _GTK
   XGCValues         values;
   unsigned int      valuemask;
+#else /* _GTK*/
+  GdkImlibImage     *im;
 #endif /* _GTK */
 #endif /* _WINDOWS */
-#ifdef _GTK
-  XRectangle         rect;
-  /*  GdkImlibBorder     rect_border;*/
-  /*GdkImlibImage     *im;*/
-  /*  GdkGCValues       *GCvalues;*/
-
-#endif
 
   if (picXOrg < 0)
     {
@@ -510,20 +523,24 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	      XSetClipOrigin (TtDisplay, TtGraphicGC, xFrame - picXOrg, yFrame - picYOrg);
 	      XSetClipMask (TtDisplay, TtGraphicGC, imageDesc->PicMask);
 	    }
-	  XCopyArea (TtDisplay, pixmap, drawable, TtGraphicGC, picXOrg, picYOrg, w, h, xFrame, yFrame);
+	  XCopyArea (TtDisplay, pixmap, drawable, TtGraphicGC, 
+		     picXOrg, picYOrg, w, h, xFrame, yFrame);
 	   if (imageDesc->PicMask)
 	     {
 	       XSetClipMask (TtDisplay, TtGraphicGC, None);
 	       XSetClipOrigin (TtDisplay, TtGraphicGC, 0, 0);
 	     }
-#else /* _GTK */
+#else /* _GTK */ 
 #ifndef _GL
+	   im = gdk_imlib_load_image (imageDesc->PicFileName);
+	   gdk_imlib_render(im, w, h);
 	   if (imageDesc->PicMask)
 	     {
 	       gdk_gc_set_clip_origin (TtGraphicGC, xFrame - picXOrg, yFrame - picYOrg);
-	       gdk_gc_set_clip_mask (TtGraphicGC, (GdkPixmap *)imageDesc->PicMask);
+	       gdk_gc_set_clip_mask (TtGraphicGC, (GdkPixmap *)gdk_imlib_move_mask (im));
 	     }
-	   gdk_draw_pixmap ((GdkDrawable *)drawable, TtGraphicGC,(GdkPixmap *) pixmap, 
+	   gdk_draw_pixmap ((GdkDrawable *)drawable, TtGraphicGC,
+			    (GdkPixmap *) im->pixmap, 
 			    picXOrg, picYOrg, xFrame, yFrame, w ,h);
 	   if (imageDesc->PicMask)
 	     {
@@ -531,7 +548,8 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	       gdk_gc_set_clip_origin (TtGraphicGC, 0, 0);
 	     }		   
 #else /* _GL */
-	   GL_TextureMap((unsigned char *)imageDesc->PicPixmap, picXOrg, picYOrg, xFrame, yFrame, w ,h);
+	   
+	   GL_TextureMap(imageDesc, xFrame, yFrame, w ,h);
 #endif /* _GL */
 #endif /* !_GTK */
 #else /* _WINDOWS */
@@ -1531,7 +1549,6 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 #ifdef _GTK
 #ifndef _GTK2
   GdkImlibImage      *im = None;
-  GdkImlibImage      *im_crop = None;
 #ifndef _GL
   GdkPixmap          *drw = None;
 #else /* _GL*/
@@ -1598,7 +1615,11 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 #endif /* _WIN_PRINT */
 #else  /* _WINDOWS */
 #ifdef _GTK
+#ifndef _GL
       drw = (GdkPixmap *) PictureLogo;
+#else /* _GL*/
+      drw = (unsigned char *) PictureLogo;
+#endif /* _GL*/
 #else /* ! _GTK */
       drw = PictureLogo;
 #endif /* ! _GTK */
@@ -1693,9 +1714,9 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      imageDesc->PicMask = (Pixmap) gdk_imlib_move_mask (im);
 #else /* _GL */
 	      /* opengl draw in the other way...*/
-	      gdk_imlib_flip_image_vertical(im);
+	      gdk_imlib_flip_image_vertical (im);
 	      /* opengl texture have size that is a power of 2*/
-	      drw = GL_MakeTexture(im->rgb_data, w ,h);
+	      drw = GL_MakeTexture (im, w ,h);
 #endif /* _GL */
 #else /* _GTK2 */
 	      im = gdk_pixbuf_new_from_file(fileName, &error);
@@ -1749,10 +1770,10 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      /* opengl draw in the other way...*/
 	      gdk_imlib_flip_image_vertical (im);
 	      /* opengl texture have size that is a power of 2*/
-	      drw = GL_MakeTexture(im->rgb_data, w ,h);
+	      drw = GL_MakeTexture (im, (gint)wBox , (gint)hBox);
 #endif /* _GL */
-	      width = im->rgb_width;
-	      height = im->rgb_height;
+	      width = (gint) wBox;
+	      height = (gint) hBox;
 #endif /* _GTK */
 	      /* intrinsic width and height */
 	      imageDesc->PicWidth  = width;
@@ -1765,7 +1786,11 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
       if (drw == None)
 	{
 #ifdef _GTK
-	  drw = (GdkPixmap *) PictureLogo;
+#ifndef _GL
+      drw = (GdkPixmap *) PictureLogo;
+#else /* _GL*/
+      drw = (unsigned char *) PictureLogo;
+#endif /* _GL*/
 #else /* ! _GTK */
 	  drw = PictureLogo;
 #endif /* ! GTK */
