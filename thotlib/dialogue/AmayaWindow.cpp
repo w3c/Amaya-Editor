@@ -63,7 +63,8 @@ AmayaWindow::AmayaWindow (  int            window_id
 	   -1, _T(""), pos, size, style ),
   m_WindowId( window_id ),
   m_IsClosing( FALSE ),
-  m_Kind( kind )
+  m_Kind( kind ),
+  m_ShouldCleanUp( false )
 {
   wxLogDebug( _T("AmayaWindow::AmayaWindow: window_id=%d"), m_WindowId );
 }

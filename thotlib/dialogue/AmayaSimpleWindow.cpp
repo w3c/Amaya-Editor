@@ -89,7 +89,7 @@ AmayaSimpleWindow::~AmayaSimpleWindow()
 void AmayaSimpleWindow::OnCloseButton(wxCommandEvent& event)
 {
   // just close this window
-  Close();
+  Close( );
 }
 
 /*
@@ -125,8 +125,8 @@ void AmayaSimpleWindow::OnClose(wxCloseEvent& event)
   
   // simulate a idle event to force the windows to be closed
   // (maybe a bug in wxWindow)
-  wxIdleEvent idle_event;
-  wxPostEvent(this, idle_event);
+  //  wxIdleEvent idle_event;
+  //  wxPostEvent(this, idle_event);
 
   m_IsClosing = FALSE;
 
@@ -155,6 +155,8 @@ AmayaFrame * AmayaSimpleWindow::GetActiveFrame() const
  */
 bool AmayaSimpleWindow::AttachFrame( AmayaFrame * p_frame )
 {
+  wxLogDebug( _T("AmayaSimpleWindow::AttachFrame window_id=%d"), m_WindowId );
+
   m_pFrame = p_frame;
   m_pFrame->SetActive(TRUE);
   m_pFrame->SetPageParent( NULL ); // no page parent
@@ -175,6 +177,7 @@ bool AmayaSimpleWindow::AttachFrame( AmayaFrame * p_frame )
  */
 AmayaFrame * AmayaSimpleWindow::DetachFrame()
 {
+  wxLogDebug( _T("AmayaSimpleWindow::DetachFrame window_id=%d"), m_WindowId );
   AmayaFrame * p_frame = m_pFrame;
   if (m_pFrame)
     {
@@ -187,7 +190,8 @@ AmayaFrame * AmayaSimpleWindow::DetachFrame()
 
   // if we detach the frame form a simple window, it's because we want to kill the window
   // so close it
-  //Close();
+  //  Close();
+  //TtaHandlePendingEvents();
 
   return p_frame;
 }
