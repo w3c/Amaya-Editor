@@ -3376,6 +3376,7 @@ void GetFallbackCharacter (int code, unsigned char *fallback, Language *lang)
     }
 }
 
+#ifndef _I18N_
 /*----------------------------------------------------------------------
    PutNonISOlatin1Char     
    Put a Unicode character belonging to an element in the input buffer.
@@ -3443,6 +3444,7 @@ static void PutNonISOlatin1Char (int code, char *prefix)
        HTMLcontext.mergeText = FALSE;
      }
 }
+#endif /* _I18N_ */
 
 #ifdef LC
 /*----------------------------------------------------------------------

@@ -2180,9 +2180,9 @@ static unsigned char *HandleXMLstring (unsigned char *data, int *length,
   wchar_t        wcharRead;
   int            tmplen;
   unsigned char  tmpbuf[10];
+  int            nbBytesRead = 0;
 #endif /* _I18N_ */
   unsigned char *entityName;
-  int            nbBytesRead = 0;
   int            i = 0, j = 0;
   int            max;
   int            k, l, m;
