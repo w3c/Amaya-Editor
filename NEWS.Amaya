@@ -45,6 +45,9 @@ Fixed bugs 2.1a:
 * SGML entites and spaces weren't being handled correctly when
   saving a document or when browsing a URL. 
 
+* Relative URLs beginning with a "../../ " path were being simplifed into
+  "../"
+
 =============================================================
 2.1a
 =============================================================
