@@ -667,6 +667,7 @@ int OpenViewByName (PtrDocument pDoc, Name viewName, int X, int Y,
    PtrSSchema          pSS;
    NotifyDialog        notifyDoc;
    int                 view, freeView, ret;
+   int                 doc_id, schView, window_id, page_id, page_position;
 
    freeView = 0;
    view = 1;
@@ -691,12 +692,10 @@ int OpenViewByName (PtrDocument pDoc, Name viewName, int X, int Y,
 		ret = CreateAbstractImage (pDoc, view, pSS, 1, FALSE, NULL);
 
                 /* look for the current windows, current page, and current page position (top/bottom)*/
-		int doc_id = IdentDocument(pDoc);
-		int schView = -1; /* pDoc->DocView[view - 1].DvPSchemaView;*/
+		doc_id = IdentDocument(pDoc);
+		schView = -1; /* pDoc->DocView[view - 1].DvPSchemaView;*/
       
-		int window_id = TtaGetDocumentWindowId( doc_id, schView );
-		int page_id;
-		int page_position;
+		window_id = TtaGetDocumentWindowId( doc_id, schView );
 		TtaGetDocumentPageId( doc_id, schView, &page_id, &page_position );
 		
 		OpenCreatedView (pDoc, ret, X, Y, width, height, TRUE, TRUE,
@@ -724,6 +723,7 @@ void OpenViewByMenu (PtrDocument pDoc, int menuItem, PtrElement subTree,
    NotifyDialog        notifyDoc;
    int                 X, Y, width, height, theView, view;
    ThotBool            viewHasBeenOpen;
+   int                 doc_id, schView, window_id, page_id, page_position;
 
    viewHasBeenOpen = TRUE;
 
@@ -746,12 +746,10 @@ void OpenViewByMenu (PtrDocument pDoc, int menuItem, PtrElement subTree,
 				     selectedView, FALSE, subTree);
 
           /* look for the current windows, current page, and current page position (top/bottom)*/
-	  int doc_id = IdentDocument(pDoc);
-	  int schView = -1; /* pDoc->DocView[view - 1].DvPSchemaView;*/
+	  doc_id = IdentDocument(pDoc);
+	  schView = -1; /* pDoc->DocView[view - 1].DvPSchemaView;*/
 
-	  int window_id = TtaGetDocumentWindowId( doc_id, schView );
-	  int page_id;
-	  int page_position;
+	  window_id = TtaGetDocumentWindowId( doc_id, schView );
 	  TtaGetDocumentPageId( doc_id, schView, &page_id, &page_position );
 	
           OpenCreatedView (pDoc, view, X, Y, width, height, TRUE, TRUE,
