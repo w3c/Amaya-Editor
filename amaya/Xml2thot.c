@@ -1263,9 +1263,7 @@ static ThotBool     XmlCloseElement (char *mappedName)
   ----------------------------------------------------------------------*/
 static void  NsDeclarationStart (char *ns_prefix, char *ns_uri)
 
-{
-  int i;
-  
+{  
   if (Ns_Level >= MAX_NS_TABLE)
     {
       XmlParseError (errorNotWellFormed, "**FATAL** Too many namespace declarations ", 0);
@@ -1279,22 +1277,16 @@ static void  NsDeclarationStart (char *ns_prefix, char *ns_uri)
   CurNs_Level ++;
 
   /* Filling up the table of namespaces declared for the whole document */
-  if (ns_uri == NULL)
-    return;
-  for (i = 0; i < Ns_Level; i++)
-    {
-      /* Uri Reference already loaded with the same prefix */
-      if ((strcmp (ns_uri, Ns_Uri[i]) == 0) &&
-	  ((Ns_Prefix[i] == NULL && ns_prefix == NULL) ||
-	   (Ns_Prefix[i] != NULL && ns_prefix != NULL &&
-	    (strcmp (ns_prefix, Ns_Prefix[i]) == 0))))
-	return;
-    }
-  Ns_Uri[Ns_Level] = TtaStrdup (ns_uri);
+  if (ns_uri != NULL)
+    Ns_Uri[Ns_Level] = TtaStrdup (ns_uri);
+  else
+    Ns_Uri[Ns_Level] = NULL;
+  
   if (ns_prefix != NULL)
     Ns_Prefix[Ns_Level] = TtaStrdup (ns_prefix);
   else
     Ns_Prefix[Ns_Level] = NULL;
+  
   Ns_Level ++;
  
 }
@@ -1308,14 +1300,16 @@ static void  NsDeclarationEnd (char *ns_prefix)
 {
   int i;
 
-  i = Ns_Level -1;
+  i = Ns_Level - 1;
+  if (i < 0)
+    return;
 
-  if (Ns_Prefix[i])
+  if (Ns_Prefix[i] != NULL)
     {
       TtaFreeMemory (Ns_Prefix[i]);
       Ns_Prefix[i] = NULL;
     }
-  if (Ns_Uri[i])
+  if (Ns_Uri[i] != NULL)
     {
       TtaFreeMemory (Ns_Uri[i]);
       Ns_Uri[i] = NULL;
@@ -1346,12 +1340,12 @@ static void  NsStartProcessing (Element newElement)
     {
       TtaSetNamespaceDeclaration (XMLcontext.doc, newElement,
 				  CurNs_Prefix[i], CurNs_Uri[i]);
-      if (CurNs_Prefix[i])
+      if (CurNs_Prefix[i] != NULL)
 	{
 	  TtaFreeMemory (CurNs_Prefix[i]);
 	  CurNs_Prefix[i] = NULL;
 	}
-      if (CurNs_Uri[i])
+      if (CurNs_Uri[i] != NULL)
 	{
 	  TtaFreeMemory (CurNs_Uri[i]);
 	  CurNs_Uri[i] = NULL;
