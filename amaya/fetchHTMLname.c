@@ -23,19 +23,16 @@
 #include "fetchHTMLname_f.h"
 #include "fetchXMLname_f.h"
 
-/* mapping table of HTML attributes */
-
-static AttributeMapping HTMLAttributeMappingTable[] =
+/* mapping table of Xhtml attributes */
+AttributeMapping XhtmlAttributeMappingTable[] =
 {
    /* The first entry MUST be unknown_attr */
-   /* The rest of this table MUST be in alphabetical order */
-   {TEXT("unknown_attr"), TEXT(""), 'A', HTML_ATTR_Invalid_attribute, L_Transitional},
-
-   {TEXT("abbr"), TEXT(""), 'A', HTML_ATTR_abbr, L_Transitional},
-   {TEXT("accept"), TEXT(""), 'A', HTML_ATTR_accept, L_Transitional},
-   {TEXT("accept-charset"), TEXT("form"), 'A', HTML_ATTR_accept_charset, L_Transitional},
-   {TEXT("accesskey"), TEXT(""), 'A', HTML_ATTR_accesskey, L_Transitional},
-   {TEXT("action"), TEXT(""), 'A', HTML_ATTR_Script_URL, L_Transitional},
+   {TEXT("unknown_attr"), TEXT(""), 'A', HTML_ATTR_Invalid_attribute, L_Basic},
+   {TEXT("abbr"), TEXT(""), 'A', HTML_ATTR_abbr, L_Basic},
+   {TEXT("accept"), TEXT(""), 'A', HTML_ATTR_accept, L_Basic},
+   {TEXT("accept-charset"), TEXT("form"), 'A', HTML_ATTR_accept_charset, L_Basic},
+   {TEXT("accesskey"), TEXT(""), 'A', HTML_ATTR_accesskey, L_Basic},
+   {TEXT("action"), TEXT(""), 'A', HTML_ATTR_Script_URL, L_Basic},
    {TEXT("align"), TEXT("applet"), 'A', HTML_ATTR_Alignment, L_Transitional},
    {TEXT("align"), TEXT("caption"), 'A', HTML_ATTR_Position, L_Transitional},
    {TEXT("align"), TEXT("col"), 'A', HTML_ATTR_Cell_align, L_Transitional},
@@ -63,9 +60,9 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {TEXT("align"), TEXT("thead"), 'A', HTML_ATTR_Cell_align, L_Transitional},
    {TEXT("align"), TEXT("tr"), 'A', HTML_ATTR_Cell_align, L_Transitional},
    {TEXT("alink"), TEXT("body"), 'A', HTML_ATTR_ActiveLinkColor, L_Transitional},
-   {TEXT("alt"), TEXT(""), 'A', HTML_ATTR_ALT, L_Transitional},
-   {TEXT("archive"), TEXT(""), 'A', HTML_ATTR_archive, L_Transitional},
-   {TEXT("axis"), TEXT(""), 'A', HTML_ATTR_axis, L_Transitional},
+   {TEXT("alt"), TEXT(""), 'A', HTML_ATTR_ALT, L_Basic},
+   {TEXT("archive"), TEXT(""), 'A', HTML_ATTR_archive, L_Basic},
+   {TEXT("axis"), TEXT(""), 'A', HTML_ATTR_axis, L_Basic},
 
    {TEXT("background"), TEXT(""), 'A', HTML_ATTR_background_, L_Transitional},
    {TEXT("bgcolor"), TEXT(""), 'A', HTML_ATTR_BackgroundColor, L_Transitional},
@@ -76,33 +73,33 @@ static AttributeMapping HTMLAttributeMappingTable[] =
 
    {TEXT("cellspacing"), TEXT(""), 'A', HTML_ATTR_cellspacing, L_Transitional},
    {TEXT("cellpadding"), TEXT(""), 'A', HTML_ATTR_cellpadding, L_Transitional},
-   {TEXT("char"), TEXT(""), 'A', HTML_ATTR_char, L_Transitional},
-   {TEXT("charoff"), TEXT(""), 'A', HTML_ATTR_charoff, L_Transitional},
-   {TEXT("charset"), TEXT(""), 'A', HTML_ATTR_charset, L_Transitional},
-   {TEXT("checked"), TEXT(""), 'A', HTML_ATTR_Checked, L_Transitional},
-   {TEXT("cite"), TEXT(""), 'A', HTML_ATTR_cite, L_Transitional},
-   {TEXT("class"), TEXT(""), 'A', HTML_ATTR_Class, L_Transitional},
-   {TEXT("classid"), TEXT(""), 'A', HTML_ATTR_classid, L_Transitional},
+   {TEXT("char"), TEXT(""), 'A', HTML_ATTR_char, L_Basic},
+   {TEXT("charoff"), TEXT(""), 'A', HTML_ATTR_charoff, L_Basic},
+   {TEXT("charset"), TEXT(""), 'A', HTML_ATTR_charset, L_Basic},
+   {TEXT("checked"), TEXT(""), 'A', HTML_ATTR_Checked, L_Basic},
+   {TEXT("cite"), TEXT(""), 'A', HTML_ATTR_cite, L_Basic},
+   {TEXT("class"), TEXT(""), 'A', HTML_ATTR_Class, L_Basic},
+   {TEXT("classid"), TEXT(""), 'A', HTML_ATTR_classid, L_Basic},
    {TEXT("clear"), TEXT("br"), 'A', HTML_ATTR_Clear, L_Transitional},
-   {TEXT("code"), TEXT(""), 'A', HTML_ATTR_code, L_Transitional},
-   {TEXT("codebase"), TEXT(""), 'A', HTML_ATTR_codebase, L_Transitional},
-   {TEXT("codetype"), TEXT(""), 'A', HTML_ATTR_codetype, L_Transitional},
+   {TEXT("code"), TEXT(""), 'A', HTML_ATTR_code, L_Basic},
+   {TEXT("codebase"), TEXT(""), 'A', HTML_ATTR_codebase, L_Basic},
+   {TEXT("codetype"), TEXT(""), 'A', HTML_ATTR_codetype, L_Basic},
    {TEXT("color"), TEXT("basefont"), 'A', HTML_ATTR_BaseFontColor, L_Transitional},
    {TEXT("color"), TEXT(""), 'A', HTML_ATTR_color, L_Transitional},
    {TEXT("cols"), TEXT("frameset"), 'A', HTML_ATTR_ColWidth, L_Transitional},
-   {TEXT("cols"), TEXT("textarea"), 'A', HTML_ATTR_Columns, L_Transitional},
-   {TEXT("colspan"), TEXT(""), 'A', HTML_ATTR_colspan_, L_Transitional},
+   {TEXT("cols"), TEXT("textarea"), 'A', HTML_ATTR_Columns, L_Basic},
+   {TEXT("colspan"), TEXT(""), 'A', HTML_ATTR_colspan_, L_Basic},
    {TEXT("compact"), TEXT(""), 'A', HTML_ATTR_COMPACT, L_Transitional},
-   {TEXT("content"), TEXT(""), 'A', HTML_ATTR_meta_content, L_Transitional},
-   {TEXT("coords"), TEXT(""), 'A', HTML_ATTR_coords, L_Transitional},
+   {TEXT("content"), TEXT(""), 'A', HTML_ATTR_meta_content, L_Basic},
+   {TEXT("coords"), TEXT(""), 'A', HTML_ATTR_coords, L_Basic},
 
-   {TEXT("data"), TEXT(""), 'A', HTML_ATTR_data, L_Transitional},
-   {TEXT("datapagesize"), TEXT("table"), 'A', HTML_ATTR_datapagesize, L_Transitional},
-   {TEXT("datetime"), TEXT(""), 'A', HTML_ATTR_datetime, L_Transitional},
-   {TEXT("declare"), TEXT("object"), 'A', HTML_ATTR_declare, L_Transitional},
-   {TEXT("defer"), TEXT("script"), 'A', HTML_ATTR_defer, L_Transitional},
-   {TEXT("dir"), TEXT(""), 'A', HTML_ATTR_dir, L_Transitional},
-   {TEXT("disabled"), TEXT(""), 'A', HTML_ATTR_disabled, L_Transitional},
+   {TEXT("data"), TEXT(""), 'A', HTML_ATTR_data, L_Basic},
+   {TEXT("datapagesize"), TEXT("table"), 'A', HTML_ATTR_datapagesize, L_Basic},
+   {TEXT("datetime"), TEXT(""), 'A', HTML_ATTR_datetime, L_Basic},
+   {TEXT("declare"), TEXT("object"), 'A', HTML_ATTR_declare, L_Basic},
+   {TEXT("defer"), TEXT("script"), 'A', HTML_ATTR_defer, L_Basic},
+   {TEXT("dir"), TEXT(""), 'A', HTML_ATTR_dir, L_Basic},
+   {TEXT("disabled"), TEXT(""), 'A', HTML_ATTR_disabled, L_Basic},
 
    {TEXT("enctype"), TEXT(""), 'A', HTML_ATTR_ENCTYPE, L_Transitional},
    {TEXT("event"), TEXT("script"), 'A', HTML_ATTR_event, L_Transitional},
@@ -117,41 +114,41 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {TEXT("headers"), TEXT(""), 'A', HTML_ATTR_headers, L_Transitional},
 #ifdef GRAPHML
    {TEXT("height"), TEXT("svg"), 'A', HTML_ATTR_SvgHeight, L_Transitional},
-#endif
-   {TEXT("height"), TEXT(""), 'A', HTML_ATTR_Height_, L_Transitional},
-   {TEXT("href"), TEXT(""), 'A', HTML_ATTR_HREF_, L_Transitional},
-   {TEXT("hreflang"), TEXT(""), 'A', HTML_ATTR_hreflang, L_Transitional},
+#endif /* GRAPHML */
+   {TEXT("height"), TEXT(""), 'A', HTML_ATTR_Height_, L_Basic},
+   {TEXT("href"), TEXT(""), 'A', HTML_ATTR_HREF_, L_Basic},
+   {TEXT("hreflang"), TEXT(""), 'A', HTML_ATTR_hreflang, L_Basic},
    {TEXT("hspace"), TEXT(""), 'A', HTML_ATTR_hspace, L_Transitional},
-   {TEXT("http-equiv"), TEXT(""), 'A', HTML_ATTR_http_equiv, L_Transitional},
+   {TEXT("http-equiv"), TEXT(""), 'A', HTML_ATTR_http_equiv, L_Basic},
 
-   {TEXT("id"), TEXT(""), 'A', HTML_ATTR_ID, L_Transitional},
+   {TEXT("id"), TEXT(""), 'A', HTML_ATTR_ID, L_Basic},
    {TEXT("ismap"), TEXT(""), 'A', HTML_ATTR_ISMAP, L_Transitional},
 
-   {TEXT("label"), TEXT(""), 'A', HTML_ATTR_label, L_Transitional},
-   {TEXT("lang"), TEXT(""), 'A', HTML_ATTR_Langue, L_Transitional},
-   {TEXT("language"), TEXT("script"), 'A', HTML_ATTR_script_language, L_Transitional},
-   {TEXT("link"), TEXT("body"), 'A', HTML_ATTR_LinkColor, L_Transitional},
-   {TEXT("longdesc"), TEXT(""), 'A', HTML_ATTR_longdesc, L_Transitional},
+   {TEXT("label"), TEXT(""), 'A', HTML_ATTR_label, L_Basic},
+   {TEXT("lang"), TEXT(""), 'A', HTML_ATTR_Langue, L_Basic},
+   {TEXT("language"), TEXT("script"), 'A', HTML_ATTR_script_language, L_Basic},
+   {TEXT("link"), TEXT("body"), 'A', HTML_ATTR_LinkColor, L_Basic},
+   {TEXT("longdesc"), TEXT(""), 'A', HTML_ATTR_longdesc, L_Basic},
 
    {TEXT("marginheight"), TEXT(""), 'A', HTML_ATTR_marginheight, L_Transitional},
    {TEXT("marginwidth"), TEXT(""), 'A', HTML_ATTR_marginwidth, L_Transitional},
-   {TEXT("maxlength"), TEXT(""), 'A', HTML_ATTR_MaxLength, L_Transitional},
-   {TEXT("media"), TEXT(""), 'A', HTML_ATTR_media, L_Transitional},
-   {TEXT("method"), TEXT(""), 'A', HTML_ATTR_METHOD, L_Transitional},
-   {TEXT("mode"), TEXT(""), 'A', HTML_ATTR_mode, L_Transitional},
-   {TEXT("multiple"), TEXT(""), 'A', HTML_ATTR_Multiple, L_Transitional},
+   {TEXT("maxlength"), TEXT(""), 'A', HTML_ATTR_MaxLength, L_Basic},
+   {TEXT("media"), TEXT(""), 'A', HTML_ATTR_media, L_Basic},
+   {TEXT("method"), TEXT(""), 'A', HTML_ATTR_METHOD, L_Basic},
+   {TEXT("mode"), TEXT(""), 'A', HTML_ATTR_mode, L_Basic},
+   {TEXT("multiple"), TEXT(""), 'A', HTML_ATTR_Multiple, L_Basic},
 
-   {TEXT("N"), TEXT(""), 'C', 0, L_Transitional},
-   {TEXT("name"), TEXT("applet"), 'A', HTML_ATTR_applet_name, L_Transitional},
-   {TEXT("name"), TEXT("frame"), 'A', HTML_ATTR_FrameName, L_Transitional},
-   {TEXT("name"), TEXT("iframe"), 'A', HTML_ATTR_FrameName, L_Transitional},
-   {TEXT("name"), TEXT("meta"), 'A', HTML_ATTR_meta_name, L_Transitional},
-   {TEXT("name"), TEXT("param"), 'A', HTML_ATTR_Param_name, L_Transitional},
-   {TEXT("name"), TEXT(""), 'A', HTML_ATTR_NAME, L_Transitional},
-   {TEXT("nohref"), TEXT(""), 'A', HTML_ATTR_nohref, L_Transitional},
-   {TEXT("noresize"), TEXT(""), 'A', HTML_ATTR_no_resize, L_Transitional},
-   {TEXT("noshade"), TEXT(""), 'A', HTML_ATTR_NoShade, L_Transitional},
-   {TEXT("nowrap"), TEXT(""), 'A', HTML_ATTR_No_wrap, L_Transitional},
+   {TEXT("N"), TEXT(""), 'C', 0, L_Basic},
+   {TEXT("name"), TEXT("applet"), 'A', HTML_ATTR_applet_name, L_Basic},
+   {TEXT("name"), TEXT("frame"), 'A', HTML_ATTR_FrameName, L_Basic},
+   {TEXT("name"), TEXT("iframe"), 'A', HTML_ATTR_FrameName, L_Basic},
+   {TEXT("name"), TEXT("meta"), 'A', HTML_ATTR_meta_name, L_Basic},
+   {TEXT("name"), TEXT("param"), 'A', HTML_ATTR_Param_name, L_Basic},
+   {TEXT("name"), TEXT(""), 'A', HTML_ATTR_NAME, L_Basic},
+   {TEXT("nohref"), TEXT(""), 'A', HTML_ATTR_nohref, L_Basic},
+   {TEXT("noresize"), TEXT(""), 'A', HTML_ATTR_no_resize, L_Basic},
+   {TEXT("noshade"), TEXT(""), 'A', HTML_ATTR_NoShade, L_Basic},
+   {TEXT("nowrap"), TEXT(""), 'A', HTML_ATTR_No_wrap, L_Basic},
 
    {TEXT("object"), TEXT("applet"), 'A', HTML_ATTR_object, L_Transitional},
    {TEXT("onblur"), TEXT(""), 'A', HTML_ATTR_onblur, L_Transitional},
@@ -173,19 +170,19 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {TEXT("onsubmit"), TEXT("form"), 'A', HTML_ATTR_onsubmit, L_Transitional},
    {TEXT("onunload"), TEXT(""), 'A', HTML_ATTR_onunload, L_Transitional},
 
-   {TEXT("profile"), TEXT("head"), 'A', HTML_ATTR_profile, L_Transitional},
+   {TEXT("profile"), TEXT("head"), 'A', HTML_ATTR_profile, L_Basic},
    {TEXT("prompt"), TEXT(""), 'A', HTML_ATTR_Prompt, L_Transitional},
 
-   {TEXT("readonly"), TEXT(""), 'A', HTML_ATTR_readonly, L_Transitional},
-   {TEXT("rel"), TEXT(""), 'A', HTML_ATTR_REL, L_Transitional},
-   {TEXT("rev"), TEXT(""), 'A', HTML_ATTR_REV, L_Transitional},
+   {TEXT("readonly"), TEXT(""), 'A', HTML_ATTR_readonly, L_Basic},
+   {TEXT("rel"), TEXT(""), 'A', HTML_ATTR_REL, L_Basic},
+   {TEXT("rev"), TEXT(""), 'A', HTML_ATTR_REV, L_Basic},
    {TEXT("rows"), TEXT("frameset"), 'A', HTML_ATTR_RowHeight, L_Transitional},
-   {TEXT("rows"), TEXT("textarea"), 'A', HTML_ATTR_Rows, L_Transitional},
-   {TEXT("rowspan"), TEXT(""), 'A', HTML_ATTR_rowspan_, L_Transitional},
-   {TEXT("rules"), TEXT("table"), 'A', HTML_ATTR_rules_, L_Transitional},
+   {TEXT("rows"), TEXT("textarea"), 'A', HTML_ATTR_Rows, L_Basic},
+   {TEXT("rowspan"), TEXT(""), 'A', HTML_ATTR_rowspan_, L_Basic},
+   {TEXT("rules"), TEXT("table"), 'A', HTML_ATTR_rules_, L_Basic},
 
-   {TEXT("scheme"), TEXT("meta"), 'A', HTML_ATTR_scheme, L_Transitional},
-   {TEXT("scope"), TEXT(""), 'A', HTML_ATTR_scope, L_Transitional},
+   {TEXT("scheme"), TEXT("meta"), 'A', HTML_ATTR_scheme, L_Basic},
+   {TEXT("scope"), TEXT(""), 'A', HTML_ATTR_scope, L_Basic},
    {TEXT("scrolling"), TEXT(""), 'A', HTML_ATTR_scrolling, L_Transitional},
    {TEXT("selected"), TEXT(""), 'A', HTML_ATTR_Selected, L_Transitional},
    {TEXT("shape"), TEXT(""), 'A', HTML_ATTR_shape, L_Transitional},
@@ -199,41 +196,41 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {TEXT("src"), TEXT("frame"), 'A', HTML_ATTR_FrameSrc, L_Transitional},
    {TEXT("src"), TEXT("iframe"), 'A', HTML_ATTR_FrameSrc, L_Transitional},
    {TEXT("src"), TEXT("script"), 'A', HTML_ATTR_script_src, L_Transitional},
-   {TEXT("src"), TEXT(""), 'A', HTML_ATTR_SRC, L_Transitional},
-   {TEXT("standby"), TEXT(""), 'A', HTML_ATTR_standby, L_Transitional},
-   {TEXT("start"), TEXT(""), 'A', HTML_ATTR_Start, L_Transitional},
-   {TEXT("style"), TEXT(""), 'A', HTML_ATTR_Style_, L_Transitional},
-   {TEXT("summary"), TEXT("table"), 'A', HTML_ATTR_summary, L_Transitional},
+   {TEXT("src"), TEXT(""), 'A', HTML_ATTR_SRC, L_Basic},
+   {TEXT("standby"), TEXT(""), 'A', HTML_ATTR_standby, L_Basic},
+   {TEXT("start"), TEXT(""), 'A', HTML_ATTR_Start, L_Basic},
+   {TEXT("style"), TEXT(""), 'A', HTML_ATTR_Style_, L_Basic},
+   {TEXT("summary"), TEXT("table"), 'A', HTML_ATTR_summary, L_Basic},
 
-   {TEXT("tabindex"), TEXT(""), 'A', HTML_ATTR_tabindex, L_Transitional},
-   {TEXT("target"), TEXT(""), 'A', HTML_ATTR_target_, L_Transitional},
-   {TEXT("text"), TEXT(""), 'A', HTML_ATTR_TextColor, L_Transitional},
-   {TEXT("title"), TEXT(""), 'A', HTML_ATTR_Title, L_Transitional},
+   {TEXT("tabindex"), TEXT(""), 'A', HTML_ATTR_tabindex, L_Basic},
+   {TEXT("target"), TEXT(""), 'A', HTML_ATTR_target_, L_Basic},
+   {TEXT("text"), TEXT(""), 'A', HTML_ATTR_TextColor, L_Basic},
+   {TEXT("title"), TEXT(""), 'A', HTML_ATTR_Title, L_Basic},
    {TEXT("type"), TEXT("button"), 'A', HTML_ATTR_Button_type, L_Transitional},
-   {TEXT("type"), TEXT("li"), 'A', HTML_ATTR_ItemStyle, L_Transitional},
-   {TEXT("type"), TEXT("link"), 'A', HTML_ATTR_Link_type, L_Transitional},
-   {TEXT("type"), TEXT("a"), 'A', HTML_ATTR_Link_type, L_Transitional},
-   {TEXT("type"), TEXT("object"), 'A', HTML_ATTR_Object_type, L_Transitional},
-   {TEXT("type"), TEXT("ol"), 'A', HTML_ATTR_NumberStyle, L_Transitional},
-   {TEXT("type"), TEXT("param"), 'A', HTML_ATTR_Param_type, L_Transitional},
+   {TEXT("type"), TEXT("li"), 'A', HTML_ATTR_ItemStyle, L_Basic},
+   {TEXT("type"), TEXT("link"), 'A', HTML_ATTR_Link_type, L_Basic},
+   {TEXT("type"), TEXT("a"), 'A', HTML_ATTR_Link_type, L_Basic},
+   {TEXT("type"), TEXT("object"), 'A', HTML_ATTR_Object_type, L_Basic},
+   {TEXT("type"), TEXT("ol"), 'A', HTML_ATTR_NumberStyle, L_Basic},
+   {TEXT("type"), TEXT("param"), 'A', HTML_ATTR_Param_type, L_Basic},
    {TEXT("type"), TEXT("script"), 'A', HTML_ATTR_content_type, L_Transitional},
    {TEXT("type"), TEXT("style"), 'A', HTML_ATTR_Notation, L_Transitional},
-   {TEXT("type"), TEXT("ul"), 'A', HTML_ATTR_BulletStyle, L_Transitional},
-   {TEXT("type"), TEXT(""), SPACE, DummyAttribute, L_Transitional},
+   {TEXT("type"), TEXT("ul"), 'A', HTML_ATTR_BulletStyle, L_Basic},
+   {TEXT("type"), TEXT(""), SPACE, DummyAttribute, L_Basic},
 
-   {TEXT("usemap"), TEXT(""), 'A', HTML_ATTR_USEMAP, L_Transitional},
+   {TEXT("usemap"), TEXT(""), 'A', HTML_ATTR_USEMAP, L_Basic},
 
-   {TEXT("valign"), TEXT("tbody"), 'A', HTML_ATTR_Row_valign, L_Transitional},
-   {TEXT("valign"), TEXT("td"), 'A', HTML_ATTR_Cell_valign, L_Transitional},
-   {TEXT("valign"), TEXT("tfoot"), 'A', HTML_ATTR_Row_valign, L_Transitional},
-   {TEXT("valign"), TEXT("th"), 'A', HTML_ATTR_Cell_valign, L_Transitional},
-   {TEXT("valign"), TEXT("thead"), 'A', HTML_ATTR_Row_valign, L_Transitional},
-   {TEXT("valign"), TEXT("tr"), 'A', HTML_ATTR_Row_valign, L_Transitional},
-   {TEXT("value"), TEXT("li"), 'A', HTML_ATTR_ItemValue, L_Transitional},
-   {TEXT("value"), TEXT("param"), 'A', HTML_ATTR_Param_value, L_Transitional},
-   {TEXT("value"), TEXT(""), 'A', HTML_ATTR_Value_, L_Transitional},
-   {TEXT("valuetype"), TEXT("param"), 'A', HTML_ATTR_valuetype, L_Transitional},
-   {TEXT("version"), TEXT(""), 'A', 0, L_Transitional},
+   {TEXT("valign"), TEXT("tbody"), 'A', HTML_ATTR_Row_valign, L_Basic},
+   {TEXT("valign"), TEXT("td"), 'A', HTML_ATTR_Cell_valign, L_Basic},
+   {TEXT("valign"), TEXT("tfoot"), 'A', HTML_ATTR_Row_valign, L_Basic},
+   {TEXT("valign"), TEXT("th"), 'A', HTML_ATTR_Cell_valign, L_Basic},
+   {TEXT("valign"), TEXT("thead"), 'A', HTML_ATTR_Row_valign, L_Basic},
+   {TEXT("valign"), TEXT("tr"), 'A', HTML_ATTR_Row_valign, L_Basic},
+   {TEXT("value"), TEXT("li"), 'A', HTML_ATTR_ItemValue, L_Basic},
+   {TEXT("value"), TEXT("param"), 'A', HTML_ATTR_Param_value, L_Basic},
+   {TEXT("value"), TEXT(""), 'A', HTML_ATTR_Value_, L_Basic},
+   {TEXT("valuetype"), TEXT("param"), 'A', HTML_ATTR_valuetype, L_Basic},
+   {TEXT("version"), TEXT(""), 'A', 0, L_Basic},
    {TEXT("vlink"), TEXT("body"), 'A', HTML_ATTR_VisitedLinkColor, L_Transitional},
    {TEXT("vspace"), TEXT(""), 'A', HTML_ATTR_vspace, L_Transitional},
 
@@ -243,24 +240,25 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {TEXT("width"), TEXT("hr"), 'A', HTML_ATTR_Width__, L_Transitional},
    {TEXT("width"), TEXT("iframe"), 'A', HTML_ATTR_Width__, L_Transitional},
    {TEXT("width"), TEXT("image"), 'A', HTML_ATTR_Width__, L_Transitional},
-   {TEXT("width"), TEXT("img"), 'A', HTML_ATTR_Width__, L_Transitional},
-   {TEXT("width"), TEXT("object"), 'A', HTML_ATTR_Width__, L_Transitional},
+   {TEXT("width"), TEXT("img"), 'A', HTML_ATTR_Width__, L_Basic},
+   {TEXT("width"), TEXT("object"), 'A', HTML_ATTR_Width__, L_Basic},
    {TEXT("width"), TEXT("pre"), 'A', HTML_ATTR_Width__, L_Transitional},
 #ifdef GRAPHML
    {TEXT("width"), TEXT("svg"), 'A', HTML_ATTR_SvgWidth, L_Transitional},
-#endif
+#endif /* GRAPHML */
    {TEXT("width"), TEXT("table"), 'A', HTML_ATTR_Width__, L_Transitional},
    {TEXT("width"), TEXT("td"), 'A', HTML_ATTR_Width__, L_Transitional},
    {TEXT("width"), TEXT("th"), 'A', HTML_ATTR_Width__, L_Transitional},
 #ifdef GRAPHML
    {TEXT("width"), TEXT("xmlgraphics"), 'A', HTML_ATTR_Width__, L_Transitional},
-#endif
-   {TEXT("zzghost"), TEXT(""), 'A', HTML_ATTR_Ghost_restruct, L_Transitional},
-   {TEXT(""), TEXT(""), EOS, 0, L_Transitional}		/* Last entry. Mandatory */
+#endif /* GRAPHML */
+
+   {TEXT("zzghost"), TEXT(""), 'A', HTML_ATTR_Ghost_restruct, L_Basic},
+   {TEXT(""), TEXT(""), EOS, 0, L_Basic}		/* Last entry. Mandatory */
 };
 
 /* define a pointer to let other parser functions access the local table */
-AttributeMapping *pHTMLAttributeMapping = HTMLAttributeMappingTable;
+AttributeMapping *pHTMLAttributeMapping = XhtmlAttributeMappingTable;
 
 
 /*----------------------------------------------------------------------
@@ -435,14 +433,14 @@ Document            doc;
   *schema = NULL;
   i = 0;
   do
-    if (!ustrcasecmp (HTMLAttributeMappingTable[i].XMLattribute, Attr))
-      if (HTMLAttributeMappingTable[i].XMLelement[0] == EOS)
+    if (!ustrcasecmp (XhtmlAttributeMappingTable[i].XMLattribute, Attr))
+      if (XhtmlAttributeMappingTable[i].XMLelement[0] == EOS)
         {
 	  entry = i;
 	  *schema = TtaGetDocumentSSchema (doc);
 	}
      else if (elemEntry >= 0 &&
-	      !ustrcasecmp (HTMLAttributeMappingTable[i].XMLelement, pHTMLGIMapping[elemEntry].XMLname))
+	      !ustrcasecmp (XhtmlAttributeMappingTable[i].XMLelement, pHTMLGIMapping[elemEntry].XMLname))
        {
 	 entry = i;
 	 *schema = TtaGetDocumentSSchema (doc);
@@ -451,10 +449,10 @@ Document            doc;
 	i++;
     else
       i++;
-  while (entry < 0 && HTMLAttributeMappingTable[i].AttrOrContent != EOS);
+  while (entry < 0 && XhtmlAttributeMappingTable[i].AttrOrContent != EOS);
 
   if (entry >= 0)
-    return (&HTMLAttributeMappingTable[entry]);
+    return (&XhtmlAttributeMappingTable[entry]);
   else
     return (NULL);
 }
