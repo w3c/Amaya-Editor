@@ -3905,6 +3905,11 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   FrameTable[frame].FrHeight = (int) height;
 	   FrameTable[frame].WdScrollH = hscrl;
 	   FrameTable[frame].WdScrollV = vscrl;
+	   if (w == NULL)
+		   w = (ThotMenu)CreateWindow ("STATIC", "", 
+			       WS_CHILD | SS_LEFT,
+			       0, 0, 0, 0, Main_Wd, (HMENU) frame, 
+			       hInstance, NULL); 
 	   FrameTable[frame].WdFrame = (ThotMenu) w;
 #endif /* _WINDOWS */
 	   FrameTable[frame].FrScrollOrg = 0;
@@ -4014,8 +4019,6 @@ void DestroyFrame (int frame)
 #endif /*_GL*/
 	gtk_widget_destroy (GTK_WIDGET (gtk_widget_get_toplevel (GTK_WIDGET (FrameTable[frame].WdFrame))));
 #endif /* _GTK */
-      for (i = 0; i < MAX_BUTTON; i++)
-	FrameTable[frame].Button[i] = 0;
 #else  /* _WINDOWS */
       FrameTable[frame].Text_Zone = 0;
       if (hAccel[frame])
@@ -4023,6 +4026,16 @@ void DestroyFrame (int frame)
 	  DestroyAcceleratorTable (hAccel[frame]);
 	  hAccel[frame] = NULL;
 	}
+#endif /* _WINDOWS */
+      FrRef[frame] = 0;
+      FrameTable[frame].WdFrame = 0;
+      FrameTable[frame].WdStatus = NULL;
+      /* Elimine les evenements ButtonRelease, DestroyNotify, FocusOut */
+      ClearConcreteImage (frame);
+      ThotFreeFont (frame);	/* On libere les polices de caracteres utilisees */
+    }
+      FrameTable[frame].FrDoc = 0;
+#ifdef _WINDOWS
       /* clean the whole CatList of the frame */
       CleanFrameCatList (frame, 0);
       for (i = 0; i < MAX_BUTTON; i++)
@@ -4031,19 +4044,12 @@ void DestroyFrame (int frame)
 	  FrameTable[frame].Button[i] = 0;
 	  FrameTable[frame].ButtonId[i] = -1;
 	}
-#endif /* _WINDOWS */
-      FrRef[frame] = 0;
-      FrameTable[frame].WdFrame = 0;
-      FrameTable[frame].WdStatus = NULL;
-      FrameTable[frame].FrDoc = 0;
-      /* Elimine les evenements ButtonRelease, DestroyNotify, FocusOut */
-      ClearConcreteImage (frame);
-      ThotFreeFont (frame);	/* On libere les polices de caracteres utilisees */
-    }
-#ifdef _WINDOWS
   if (FrMainRef[frame])
     DestroyWindow (FrMainRef[frame]);
-#endif /* _WINDAUB */
+#else /* _WINDOWS */
+      for (i = 0; i < MAX_BUTTON; i++)
+	FrameTable[frame].Button[i] = 0;
+#endif /* _WINDOWS */
 }
 
 
