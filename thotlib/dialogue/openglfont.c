@@ -30,9 +30,9 @@
 #include "memory_f.h"
 /*for ttafileexists*/
 #include "fileaccess.h"
-#include "openglfonts.h"
 #include "font_f.h"
 #include "glwindowdisplay.h"
+#include "openglfonts.h"
 
 #ifdef _SUPERS
 /* 
@@ -179,25 +179,36 @@ static void FreeACharCache (Char_Cache_index *Cache)
   if (Cache->next)
     FreeACharCache (Cache->next);
   if (Cache->glyph.data)
-    /* TODO: test the cache type to avoid freeing a path
-       GL_DeleteDisplayList */
-    TtaFreeMemory (Cache->glyph.data);
+    {
+      /* the cache data can be of tow different type */
+      if (Cache->glyph.data_type == GL_GLYPH_DATATYPE_GLLIST)
+	glDeleteLists(*((GLuint*)Cache->glyph.data), 1); /* a glList */
+      else if (Cache->glyph.data_type == GL_GLYPH_DATATYPE_FTBITMAP)
+	TtaFreeMemory (Cache->glyph.data); /* a freetype bitmap */
+    }
   TtaFreeMemory (Cache);  
 }
 
 /*----------------------------------------------------------------------
  Char index lookup 
   ----------------------------------------------------------------------*/
-static GL_glyph *Char_index_lookup_cache (GL_font *font, unsigned int idx,
-					  unsigned int *glyph_index)
+GL_glyph *Char_index_lookup_cache (GL_font *font, unsigned int idx,
+				   unsigned int *glyph_index, ThotBool isPoly)
 {
   Char_Cache_index *Cache;
 
+  GL_glyph_DataType data_type;
+  if (isPoly)
+    data_type = GL_GLYPH_DATATYPE_GLLIST;
+  else
+    data_type = GL_GLYPH_DATATYPE_FTBITMAP;
+  
+  /* look for an existing font in the cache */
   Cache = font->Cache;
   if (Cache)
     while (1)
       {
-	if (Cache->index == idx /* && Cache->type == type (bitmap/path) */)
+	if (Cache->index == idx  && (Cache->glyph.data_type == data_type) )
 	  {
 	    *glyph_index = Cache->character;
 	    return (&Cache->glyph);  
@@ -207,6 +218,7 @@ static GL_glyph *Char_index_lookup_cache (GL_font *font, unsigned int idx,
 	else break;      
       }
 
+  /* nothing has been found : now create a new cache entry */
   if (Cache)
     {
       Cache->next = (Char_Cache_index*)TtaGetMemory (sizeof (Char_Cache_index));
@@ -219,58 +231,22 @@ static GL_glyph *Char_index_lookup_cache (GL_font *font, unsigned int idx,
     }
   Cache->index = idx;
   Cache->character = FT_Get_Char_Index (font->face, idx);
-  Cache->next = NULL;  
+  Cache->next = NULL;
 
-  if (GL_TransText ())
+  if (isPoly)
+    /* here the Cache->glyph.data is filled with a glList */
+    /* must be freed with glDeleteLists */
     MakePolygonGlyph (font, Cache->character, &Cache->glyph);
   else
+    /* here the Cache->glyph.data is filled with a FT bitmap */
+    /* must be freed with TtaFreeMemory */
     MakeBitmapGlyph (font, Cache->character, &Cache->glyph);
   
   *glyph_index = Cache->character;
+
+  /* return the new cache entry */
   return (&Cache->glyph);  
 }
-
-/*----------------------------------------------------------------------
-  Char index lookup 
-  ----------------------------------------------------------------------*/
-GL_glyph *Char_index_lookup_cache_poly (GL_font *font, unsigned int idx,
-					unsigned int *glyph_index)
-{
-  Char_Cache_index *Cache;
-
-  Cache = font->Cache;
-  if (Cache)
-    while (1)
-      {
-	if (Cache->index == idx)
-	  {
-	    *glyph_index = Cache->character;
-	    return (&Cache->glyph);  
-	  }
-	
-	if (Cache->next)
-	  Cache = Cache->next;      
-	else break;      
-      }
-
-  if (Cache)
-    {
-      Cache->next = (Char_Cache_index*)TtaGetMemory (sizeof (Char_Cache_index));
-      Cache = Cache->next;  
-    }
-  else 
-    {
-      font->Cache = (Char_Cache_index*)TtaGetMemory (sizeof (Char_Cache_index));
-      Cache = font->Cache;      
-    }
-  Cache->index = idx;
-  Cache->character = FT_Get_Char_Index (font->face, idx);
-  Cache->next = NULL;  
-  
-  *glyph_index = Cache->character;
-  return (&Cache->glyph);  
-}
-
 
 /*----------------------------------------------------------------------
  Freetype library Handling
@@ -589,7 +565,7 @@ int gl_font_char_width (void *gl_void_font, wchar_t c)
   GL_font* font = (GL_font *) gl_void_font;
   unsigned int glyph_index;
     
-  return SUPERSAMPLING ((Char_index_lookup_cache (font, c, &glyph_index))->advance);
+  return SUPERSAMPLING ((Char_index_lookup_cache (font, c, &glyph_index, GL_TransText()))->advance);
   
 }
 
@@ -643,7 +619,7 @@ static float FaceKernAdvance (FT_Face face, unsigned int index1,
       if (kernAdvance.x)
 	return (float) (kernAdvance.x >> 16); 
     }
-  return (0x0);
+ return (0x0);
 }
 
 /*----------------------------------------------------------------------
@@ -661,7 +637,7 @@ static void FontBBox (GL_font *font, wchar_t *string, int length,
   glyph = NULL;
   *llx = *lly = *llz = *urx = *ury = *urz = 0;
   c = string;
-  glyph = Char_index_lookup_cache (font, c[0], (unsigned int*)&left);
+  glyph = Char_index_lookup_cache (font, c[0], (unsigned int*)&left, GL_TransText());
   right = 0;
   i = 0;
   while (i < length)
@@ -676,13 +652,13 @@ static void FontBBox (GL_font *font, wchar_t *string, int length,
 	  *ury = (*ury > bbox.yMax) ? *ury: bbox.yMax;
 	}
       i++;
-      glyph = Char_index_lookup_cache (font, c[i], (unsigned int*)&right);
+      glyph = Char_index_lookup_cache (font, c[i], (unsigned int*)&right,GL_TransText());
       if (font->kerning)
 	*urx += FaceKernAdvance (font->face, 
 				 left, right);
       left = right;
     }
-  glyph = Char_index_lookup_cache (font, c[i], (unsigned int*)&left);
+  glyph = Char_index_lookup_cache (font, c[i], (unsigned int*)&left,GL_TransText());
   
   if (left)
     {
@@ -756,12 +732,19 @@ static void MakeBitmapGlyph (GL_font *font, unsigned int g,
 			}	    
 		    }	      
 		}
+	      else
+		{
+#ifdef _TRACE_GLGLYPH
+		  printf("MakeBitmapGlyph(Warning): the bitmap glyph is empty (g = %d)\n", g);
+#endif /* #ifdef _TRACE_GLGLYPH */
+		}
 	      
 	      FT_Glyph_Get_CBox (Glyph, 
 				 ft_glyph_bbox_subpixels, 
 				 &(BitmapGlyph->bbox));
 	      
 	      BitmapGlyph->data = data;
+	      BitmapGlyph->data_type = GL_GLYPH_DATATYPE_FTBITMAP; /* must be freed with TtaFreeMemory */
 	      BitmapGlyph->advance = (int) (Glyph->advance.x >> 16);
 	      BitmapGlyph->pos.x = bitmap->left;
 	      BitmapGlyph->pos.y = source->rows - bitmap->top;   
@@ -774,11 +757,12 @@ static void MakeBitmapGlyph (GL_font *font, unsigned int g,
       }
       else
       {
-#ifdef _WX
-	  wxPrintf( _T("FT_Load_Glyph error") );
-#endif /* _WX */
+#ifdef _TRACE_GLGLYPH
+	printf( "MakeBitmapGlyph(Error): FT_Load_Glyph error\n" );
+#endif /* #ifdef _TRACE_GLGLYPH */
       }    
     }
+  BitmapGlyph->data_type = GL_GLYPH_DATATYPE_NONE;
   BitmapGlyph->data = NULL;
   BitmapGlyph->advance = 0;
   BitmapGlyph->pos.x = 0;
@@ -982,7 +966,7 @@ int UnicodeFontRender (void *gl_font, wchar_t *text, float x, float y, int size)
   for (n = 0; n < size; n++)
     {
       /* convert character code to glyph index */
-      glyph = Char_index_lookup_cache (font, text[n], (unsigned int*)&glyph_index);
+      glyph = Char_index_lookup_cache (font, text[n], (unsigned int*)&glyph_index, GL_TransText());
       /* retrieve kerning distance 
 	 and move pen position */
       if (use_kerning && previous && glyph_index)

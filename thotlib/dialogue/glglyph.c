@@ -31,9 +31,9 @@
 /*for ttafileexists*/
 #include "fileaccess.h"
 #include "glglyph.h"
+#include "openglfonts.h"
 #include "font_f.h"
 #include "glwindowdisplay.h"
-
 
 #ifdef _SUPERS
 /* 
@@ -363,6 +363,7 @@ void MakePolygonGlyph (GL_font *font, unsigned int g, GL_glyph *BitmapGlyph)
       return;
     }
 
+  BitmapGlyph->data_type = GL_GLYPH_DATATYPE_NONE;
   BitmapGlyph->data = 0;
   BitmapGlyph->advance = 0;
   BitmapGlyph->pos.y = 0;
@@ -431,6 +432,14 @@ void MakePolygonGlyph (GL_font *font, unsigned int g, GL_glyph *BitmapGlyph)
 	}
       free (path);
       BitmapGlyph->data = glList;
+      /* datatype is important in order to delete the data with glDeleteLists and not TtaFreeMemory */
+      BitmapGlyph->data_type = GL_GLYPH_DATATYPE_GLLIST;
+    }
+  else
+    {
+#ifdef _TRACE_GLGLYPH
+      printf("MakePolygonGlyph(Warning): the glyph poly is empty (g = %d)\n", g);
+#endif /* #ifdef _TRACE_GLGLYPH */
     }
   /*
     BitmapGlyph->pos.x = bitmap->left;
@@ -472,14 +481,13 @@ int UnicodeFontRenderPoly (void *gl_font, wchar_t *text, float x, float y, int s
   while (n < size && text[n])
     {
       /* convert character code to glyph index */
-      glyph = Char_index_lookup_cache_poly (font, text[n], &glyph_index);
+      glyph = Char_index_lookup_cache (font, text[n], &glyph_index, true);
       if (glyph)
 	{
 #ifdef _TRACE_GL_BUGS_GLISLIST
-  if (glyph->data) printf ( "GLBUG - UnicodeFontRenderPoly : glIsList=%s (pose prb sur certaines machines)\n", glIsList (glyph->data) ? "yes" : "no" );
+  if (glyph->data) printf ( "GLBUG - UnicodeFontRenderPoly : glIsList=%s (should be yes)\n", glIsList (*((GLuint *)glyph->data)) ? "yes" : "no" );
 #endif /* _TRACE_GL_BUGS_GLISLIST */
-	  if (glyph->data &&
-	      glIsList (*((GLuint *)glyph->data)))
+	  if (glyph->data && glyph->data_type == GL_GLYPH_DATATYPE_GLLIST)
 	    {
 	      /* retrieve kerning distance 
 		 and move pen position */
@@ -495,6 +503,12 @@ int UnicodeFontRenderPoly (void *gl_font, wchar_t *text, float x, float y, int s
 	      glTranslatef (pen_x, -pen_y, 0.0f);
 	      glCallList (*((GLuint *)glyph->data));
 	      glTranslatef (-pen_x, pen_y, 0.0f);
+	    }
+	  else
+	    {
+#ifdef _TRACE_GLGLYPH
+	      printf("UnicodeFontRenderPoly(Error): GL_glyph not created correctly\n");
+#endif /* _TRACE_GLGLYPH */
 	    }
 	  /* increment pen position*/
 	  pen_x += glyph->advance;

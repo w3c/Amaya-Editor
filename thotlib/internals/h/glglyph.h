@@ -42,15 +42,26 @@
 #define FT_OUTLINE_REVERSE_FILL ft_outline_reverse_fill
 #endif
 
-
+/*
+ * A GL_glyph can be of tow types
+ * a glList or a bitmap
+ * it's necessary to indicate the type of the data to be able to free it.
+ */
+enum GL_glyph_DataType
+  {
+    GL_GLYPH_DATATYPE_NONE,
+    GL_GLYPH_DATATYPE_GLLIST, /* a glList */
+    GL_GLYPH_DATATYPE_FTBITMAP /* a freetype bitmap */
+  };
 
 typedef struct _GL_glyph
 {
-  FT_BBox   bbox;
-  FT_Vector pos;
-  FT_Vector dimension;  
-  int       advance;
-  void      *data;
+  FT_BBox           bbox;
+  FT_Vector         pos;
+  FT_Vector         dimension;  
+  int               advance;
+  void             *data;
+  GL_glyph_DataType data_type;
 } GL_glyph;
 
 typedef struct _Cache_index {
@@ -97,11 +108,4 @@ typedef struct F_Slot {
 #define FALSE 0
 #endif 
 
-GL_glyph *Char_index_lookup_cache_poly (GL_font *font,	
-					unsigned int idx,
-					unsigned int *glyph_index);
-
 #endif /* GLGLYPH */
-
-
-
