@@ -1890,7 +1890,7 @@ View                view;
 	if (htmlDoc)
 	   {
 	   TtaExtractName (localFile, tempdir, documentname);
-	   RestartHTMLParser (DocumentMeta[htmlDoc], localFile, tempdir, documentname);
+	   RestartHTMLParser (htmlDoc, localFile, tempdir, documentname);
 
 	   /* fetch and display all images referred by the document */
 	   DocNetworkStatus[htmlDoc] = AMAYA_NET_ACTIVE;
