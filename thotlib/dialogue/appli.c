@@ -2446,12 +2446,12 @@ int                 frame;
    XFlushOutput (frame);
 #endif /* _GTK */
 #else  /* _WINDOWS */
-   /* >>>>>>>>>>>>  WIN_GetDeviceContext (frame); <<<<<<<<<<<<< */
+   WIN_GetDeviceContext (frame);
    SelectClipRgn(TtDisplay, NULL); 
    if (clipRgn && !DeleteObject (clipRgn))
       WinErrorBox (NULL);
    clipRgn = (HRGN) 0;
-   /* >>>>>>>>>>>>  WIN_ReleaseDeviceContext (); <<<<<<<<<<<< */
+   WIN_ReleaseDeviceContext ();
 #endif /* _WINDOWS */
 }
 

@@ -991,7 +991,7 @@ int                 height;
           /* deja prete */
           /* on ne s'occupe pas de la hauteur de page */
 #         ifdef _WINDOWS
-          /* @@@@@@@@@@@@ WIN_GetDeviceContext (frame); @@@@@@@@@@@@ */
+          WIN_GetDeviceContext (frame);
 #         endif /* _WINDOWS */
           h = 0;
           if (assoc) {
@@ -1033,7 +1033,7 @@ int                 height;
           if (ThotLocalActions[T_chattr] != NULL)
              (*ThotLocalActions[T_chattr]) (pDoc);
 #         ifdef _WINDOWS
-          /* @@@@@@@@@@@@ WIN_ReleaseDeviceContext (); @@@@@@@@@@@@ */
+          WIN_ReleaseDeviceContext ();
 #         endif /* _WINDOWS */
    }
 }

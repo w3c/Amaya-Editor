@@ -182,7 +182,7 @@ int                 y2;
    y1 += FrameTable[frame].FrTopMargin;
    x2 += FrameTable[frame].FrLeftMargin;
    y2 += FrameTable[frame].FrTopMargin;
-   /* >>>>>>>>>>>> WIN_GetDeviceContext (frame); <<<<<<<<<<<< */
+   WIN_GetDeviceContext (frame);
 
    if (TtLineGC.thick <= 1) {
 	  switch (TtLineGC.style) {
@@ -213,7 +213,7 @@ int                 y2;
    LineTo (TtDisplay, x2, y2);
 
    SelectObject (TtDisplay, hOldPen);
-   /* >>>>>>>>>>>> WIN_ReleaseDeviceContext (); <<<<<<<<<<<< */
+   WIN_ReleaseDeviceContext ();
    if (!DeleteObject (pen))
       WinErrorBox (WIN_Main_Wd);
    pen = (HPEN) 0;
@@ -294,7 +294,7 @@ int                 fg;
 
    LoadColor (0, RO, active, fg);
 
-   /* >>>>>>>>>>>> WIN_GetDeviceContext (frame); <<<<<<<<<<<< */
+   WIN_GetDeviceContext (frame);
    WinLoadGC (TtDisplay, fg, RO);
    SetMapperFlags (TtDisplay, 1);
    hOldFont = WinLoadFont (TtDisplay, font);
@@ -303,7 +303,7 @@ int                 fg;
       ClipError (frame);
    TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (USTRING) str, 1);   
    SelectObject (TtDisplay, hOldFont);
-   /* >>>>>>>>>>>> WIN_ReleaseDeviceContext (); <<<<<<<<<<<< */
+   WIN_ReleaseDeviceContext ();
 
    FinishDrawing (0, RO, active);
 }
@@ -362,7 +362,7 @@ int                 shadow;
    if (lg > 0 && w != None) {
       ptcar = &buff[i - 1];
       /* Dealing with BR tag for windows */
-      /* >>>>>>>>>>>> WIN_GetDeviceContext (frame); <<<<<<<<<<<< */
+      WIN_GetDeviceContext (frame);
       SetMapperFlags (TtDisplay, 1);
       hOldFont = WinLoadFont (TtDisplay, font);
       GetTextExtentPoint (TtDisplay, ptcar, lg, &size);
@@ -503,7 +503,7 @@ int                 shadow;
 	  } 
       FinishDrawing (0, RO, active);
       SelectObject (TtDisplay, hOldFont);
-      /* >>>>>>>>>>>> WIN_ReleaseDeviceContext (); <<<<<<<<<<<< */
+      /* >>>>>>>>>>>>>>> WIN_ReleaseDeviceContext (); <<<<<<<<<<<<<<< */
       return (width);
      } else
      return (0);
@@ -1051,7 +1051,7 @@ int                 fg;
    pattern = (Pixmap) CreatePattern (0, RO, active, fg, fg, 1);
    if (pattern != 0)
      {
-      /* >>>>>>>>>>>> WIN_GetDeviceContext (frame); <<<<<<<<<<<< */
+      WIN_GetDeviceContext (frame);
       result = SelectClipRgn (TtDisplay, clipRgn);  
       if (result == ERROR)
          ClipError (frame);
@@ -1063,7 +1063,7 @@ int                 fg;
       hOldPen = SelectObject (TtDisplay, hPen) ;
       Polyline (TtDisplay, point, 4);
       SelectObject (TtDisplay, hOldPen);
-      /* >>>>>>>>>>>> WIN_ReleaseDeviceContext (); <<<<<<<<<<<< */
+      WIN_ReleaseDeviceContext ();
 	  if (!DeleteObject (hPen))
          WinErrorBox (WIN_Main_Wd);
       hPen = (HPEN) 0;
@@ -1532,7 +1532,7 @@ int                 pattern;
    x += thick / 2;
    y += thick / 2;
 
-   /* @@@@@@@@@@ WIN_GetDeviceContext (frame); @@@@@@@@@@ */
+   WIN_GetDeviceContext (frame);
    pat = (Pixmap) CreatePattern (0, RO, active, fg, bg, pattern);
 
    /* SelectClipRgn(TtDisplay, clipRgn); */
@@ -1591,7 +1591,7 @@ int                 pattern;
          WinErrorBox (WIN_Main_Wd);
       hBrush = (HBRUSH)0;
    }
-   /* @@@@@@@@@@ WIN_ReleaseDeviceContext (); @@@@@@@@@@ */
+   WIN_ReleaseDeviceContext ();
 }
 
 /*----------------------------------------------------------------------
@@ -1771,7 +1771,7 @@ int                 pattern;
 
    /* Draw the border */
    if (thick > 0) {
-      /* >>>>>>>>>>>> WIN_GetDeviceContext (frame); <<<<<<<<<<<< */
+      WIN_GetDeviceContext (frame);
       result = SelectClipRgn (TtDisplay, clipRgn);  
       if (result == ERROR)
          ClipError (frame);
@@ -1785,7 +1785,7 @@ int                 pattern;
       Polyline (TtDisplay, points, nb);
       FinishDrawing (0, RO, active);
 	  SelectObject (TtDisplay, hOldPen);
-      /* >>>>>>>>>>>> WIN_ReleaseDeviceContext (); <<<<<<<<<<<< */
+      WIN_ReleaseDeviceContext ();
 	  if (!DeleteObject (hPen))
          WinErrorBox (WIN_Main_Wd);
       hPen = (HPEN) 0;
@@ -2040,7 +2040,7 @@ C_points           *controls;
 
    /* Draw the border */
    InitDrawing (0, style, thick, RO, active, fg);
-   /* >>>>>>>>>>>> WIN_GetDeviceContext (frame); <<<<<<<<<<<< */
+   WIN_GetDeviceContext (frame);
    Polyline (TtDisplay, points, npoints) ;
 
    /* Forward arrow */
@@ -2049,6 +2049,7 @@ C_points           *controls;
 
    FinishDrawing (0, RO, active);
    /* free the table of points */
+   WIN_ReleaseDeviceContext ();
    free (points);
 }
 
@@ -2159,7 +2160,7 @@ C_points           *controls;
    /* Draw the border */
    if (thick > 0) {
       InitDrawing (0, style, thick, RO, active, fg);
-      /* >>>>>>>>>>>> WIN_GetDeviceContext (frame); <<<<<<<<<<<< */
+      WIN_GetDeviceContext (frame);
       result = SelectClipRgn (TtDisplay, clipRgn);  
       if (result == ERROR)
          ClipError (frame);
@@ -2173,7 +2174,7 @@ C_points           *controls;
       Polyline (TtDisplay, points, npoints);
       FinishDrawing (0, RO, active);
 	  SelectObject (TtDisplay, hOldPen);
-      /* >>>>>>>>>>>> WIN_ReleaseDeviceContext (); <<<<<<<<<<<< */
+      WIN_ReleaseDeviceContext ();
 	  if (!DeleteObject (hPen))
          WinErrorBox (WIN_Main_Wd);
       hPen = (HPEN) 0;
@@ -2229,7 +2230,7 @@ int                 pattern;
    if (thick == 0 && pat == 0)
       return;
 
-   /* >>>>>>>>>>>> WIN_GetDeviceContext (frame); <<<<<<<<<<<< */
+   WIN_GetDeviceContext (frame);
 
    arc = (int) ((3 * DOT_PER_INCHE) / 25.4 + 0.5);
 
@@ -2294,7 +2295,7 @@ int                 pattern;
          WinErrorBox (WIN_Main_Wd);
       hBrush = (HBRUSH)0;
    }
-   /* >>>>>>>>>>>> WIN_ReleaseDeviceContext (); <<<<<<<<<<<< */
+   WIN_ReleaseDeviceContext ();
 }
 
 /*----------------------------------------------------------------------
@@ -2343,7 +2344,7 @@ int                 pattern;
 
    if (pattern > 2 && pat == 0 && thick <= 0)
       return;
-   /* >>>>>>>>>>>> WIN_GetDeviceContext (frame); <<<<<<<<<<<< */
+   WIN_GetDeviceContext (frame);
 
    WinLoadGC (TtDisplay, fg, RO);
 
@@ -2418,7 +2419,7 @@ int                 pattern;
          WinErrorBox (WIN_Main_Wd);
       hBrush = (HBRUSH)0;
    }
-   /* >>>>>>>>>>>> WIN_ReleaseDeviceContext (); <<<<<<<<<<<< */
+   WIN_ReleaseDeviceContext ();
 }
 
 /*----------------------------------------------------------------------
@@ -2624,13 +2625,13 @@ int                 fg;
 	       point[2].y = y;
 	       break;
 	 }
-   /* >>>>>>>>>>>> WIN_GetDeviceContext (frame); <<<<<<<<<<<< */
+   WIN_GetDeviceContext (frame);
    WinLoadGC (TtDisplay, fg, RO);
    pen = CreatePen (PS_SOLID, thick, RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue));
    hOldPen = SelectObject (TtDisplay, pen);
    Polyline (TtDisplay, point, 3);
    SelectObject (TtDisplay, hOldPen);
-   /* >>>>>>>>>>>> WIN_ReleaseDeviceContext (); <<<<<<<<<<<< */
+   WIN_ReleaseDeviceContext ();
    if (!DeleteObject (pen))
       WinErrorBox (WIN_Main_Wd);
    pen = (HPEN) 0;
@@ -2738,10 +2739,10 @@ int          color;
 #endif /* __STDC__ */
 {
    COLORREF cr;
-   /* @@@@@@@@@@ WIN_GetDeviceContext (frame) ; @@@@@@@@@@ */
+   WIN_GetDeviceContext (frame) ;
    cr = ColorPixel (color);
    SetBkColor (TtDisplay, (COLORREF)ColorPixel (color)); 
-   /* @@@@@@@@@@ WIN_ReleaseDeviceContext (); @@@@@@@@@@ */
+   WIN_ReleaseDeviceContext ();
 }
 
 /*----------------------------------------------------------------------
@@ -2766,12 +2767,12 @@ int                 y;
    w = FrRef[frame];
    if (w != None)
      {
-	/* >>>>>>>>>>>> WIN_GetDeviceContext (frame); <<<<<<<<<<<< */
+	WIN_GetDeviceContext (frame);
 	hBrush = CreateSolidBrush (ColorPixel (BackgroundColor[frame]));
 	hOldBrush = SelectObject (TtDisplay, hBrush);
 	PatBlt (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, PATCOPY);
 	SelectObject (TtDisplay, hOldBrush);
-    /* >>>>>>>>>>>>>> WIN_ReleaseDeviceContext (); <<<<<<<<<<<< */
+    WIN_ReleaseDeviceContext ();
 	if (!DeleteObject (hBrush))
        WinErrorBox (WIN_Main_Wd);
     hBrush = (HBRUSH) 0;
@@ -2798,7 +2799,7 @@ ThotGC              GClocal;
    HFONT hOldFont;
    int   result;
 
-   /* >>>>>>>>>>>> WIN_GetDeviceContext (GetFrameNumber (w)); <<<<<<<<<<<< */
+   WIN_GetDeviceContext (GetFrameNumber (w));
    SetMapperFlags (TtDisplay, 1);
    hOldFont = WinLoadFont(TtDisplay, font);
    result = SelectClipRgn (TtDisplay, clipRgn);  
@@ -2808,6 +2809,7 @@ ThotGC              GClocal;
       WinErrorBox (NULL); */
    TextOut(TtDisplay, x, y, string, ustrlen(string));
    SelectObject (TtDisplay, hOldFont);
+   WIN_ReleaseDeviceContext();
 }
 
 
@@ -2830,15 +2832,14 @@ int                 y;
    ThotWindow          w;
 
    w = FrRef[frame];
-   if (w != None)
-     {
-       if (TtDisplay)
-	 WIN_ReleaseDeviceContext ();
+   if (w != None) {
+      if (TtDisplay)
+         WIN_ReleaseDeviceContext ();
        
-       WIN_GetDeviceContext (frame);
-       
-       PatBlt (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, PATINVERT);
-     }
+      WIN_GetDeviceContext (frame); 
+      PatBlt (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, PATINVERT);
+      WIN_ReleaseDeviceContext ();
+   }
 }
 
 
@@ -2861,7 +2862,7 @@ int yf;
 {
    if (FrRef[frame] != None) {
 	  RECT cltRect;
-      /* >>>>>>>>>>>> WIN_GetDeviceContext (frame); <<<<<<<<<<<< */
+      WIN_GetDeviceContext (frame);
 
 	  GetClientRect (FrRef [frame], &cltRect);
       if (autoScroll)
@@ -2872,7 +2873,7 @@ int yf;
 	  /********
 	  ScrollWindow (FrRef [frame], xf - xd, yf - yd, &cltRect, &cltRect);
 	   ********/
-      /* >>>>>>>>>>>> WIN_ReleaseDeviceContext (); <<<<<<<<<<<< */
+      WIN_ReleaseDeviceContext ();
    }
 }
 

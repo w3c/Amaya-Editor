@@ -472,48 +472,48 @@ LPARAM lParam;
    if ((msg != WM_SYSKEYDOWN) && (msg != WM_KEYDOWN) && (msg != WM_CHAR))
       return;
 
+   /* If you ignore this test, Back Space will be treated twice. This because */
+   /* if you press the Back space key, Windows generates a message WM_KEYDOWN */
+   /* with a parameter wParam == VK_BACK and another message  WM_CHAR  with a */
+   /* parameter wParam == VK_BACK and in both cases, ThotInput will  insert a */
+   /* a backspace and deletes two characters                                  */
+   if (msg == WM_KEYDOWN && wParam == VK_BACK)
+      return;
+
+   /* If the message is WM_CHAR then this is a character to insert and  not a */
+   /* particular key as a short cut for example                               */
    if (msg == WM_CHAR)
       specialKey = FALSE;
    else
+      /* if the message is WM_KEYDOWN or WM_SYSKEYDOWN then we have to suppose */
+	  /* that we have to deal with something else than a character to  insert: */
+	  /* a short cut for example                                               */
       specialKey = TRUE;
 
+   /* Is the Shift key pressed ?? */
    status = GetKeyState (VK_SHIFT);
    if (HIBYTE (status)) 
+      /* Yes it is */
       keyboard_mask |= THOT_MOD_SHIFT;
 
+   /* Is the Control key pressed ?? */
    status = GetKeyState (VK_CONTROL);
    if (HIBYTE (status)) {
+      /* Yes it is */
       keyboard_mask |= THOT_MOD_CTRL;
       escChar = TRUE;
    } 
 
+   /* Alt key is a particular key for Windows. It generates a WM_SYSKEYDOWN and */
+   /* usulally we have not to trap this event and let Windows do.  In our case, */
+   /* we do not use the standard accelerator tables as in common Windows appli. */
+   /* Is the Alt key pressed ?? */
    status = GetKeyState (VK_MENU);
    if (HIBYTE (status)) {
+      /* Yes it is */
       keyboard_mask |= THOT_MOD_ALT;
       escChar = TRUE;
    }
-
-/* 
-   if ((wParam == VK_CANCEL) ||
-       (wParam == VK_BACK)   ||
-       (wParam == VK_RETURN) ||
-       (wParam == VK_ESCAPE) ||
-       (wParam == VK_PRIOR)  ||
-       (wParam == VK_NEXT)   ||
-       (wParam == VK_END)    ||
-       (wParam == VK_HOME)   ||
-       (wParam == VK_LEFT)   ||
-       (wParam == VK_UP)     ||
-       (wParam == VK_RIGHT)  ||
-       (wParam == VK_DOWN)   ||
-       (wParam == VK_INSERT) ||
-       (wParam == VK_F2)     ||
-       (wParam == VK_DELETE))  
-       (wParam == VK_SHIFT)  ||
-       (wParam == VK_CONTROL))   
-      len = 0;
-   else
-       len = 1; */
 
    if ((msg == WM_SYSKEYDOWN || msg == WM_KEYDOWN) && 
        wParam != 0xBB && wParam != 0xBD)
@@ -523,6 +523,8 @@ LPARAM lParam;
 
    /* Alt + '+' return 0xBB and this needs to be converted into Alt + '+' */
    /* Alt + '-' return 0xBD and this needs to be converted into Alt + '-' */
+   /* There are probabely some other cases to deal  with in the  same way */ 
+   /* than Alt + '+' or Alt + '-'                                         */
    if (keyboard_mask & THOT_MOD_ALT) {
       if (wParam == 0xBD)
          wParam = '-';
@@ -535,34 +537,6 @@ LPARAM lParam;
 
    string[0] = (CHAR_T) wParam;
    ThotInput (frame, &string[0], len, keyboard_mask, wParam);
-
-#  if 0
-   if (msg == WM_CHAR) {
-      len = 1;
-      string[0] = (CHAR_T) wParam;
-      ThotInput (frame, &string[0], len, keyboard_mask, wParam);
-   } else if ((wParam == VK_CANCEL)  ||
-			  (wParam == VK_RETURN)  ||
-			  (wParam == VK_ESCAPE)  ||
-			  (wParam == VK_PRIOR)   ||
-			  (wParam == VK_NEXT)    ||
-			  (wParam == VK_END)     ||
-			  (wParam == VK_HOME)    ||
-			  (wParam == VK_LEFT)    ||
-			  (wParam == VK_UP)      ||
-			  (wParam == VK_RIGHT)   ||
-			  (wParam == VK_DOWN)    ||
-			  (wParam == VK_INSERT)  ||
-			  (wParam == VK_F2)      ||
-			  (wParam == VK_DELETE)  ||
-			  (wParam >= 0x30 && wParam <= 0x39)) 
-              /* (wParam == VK_SHIFT)  ||
-			  (wParam == VK_CONTROL))   */
-   {
-	  string[0] = (CHAR_T) wParam;
-	  ThotInput (frame, &string[0], len, keyboard_mask, wParam);
-   }
-#  endif /* 0 */
 }
 #endif /* _WINDOWS */
 
