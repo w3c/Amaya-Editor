@@ -610,7 +610,7 @@ void PasteWithin (PtrElement * pFirstPastedEl, PtrDocument pDoc,
        CsReference &&
        pSavedEl->ElTypeNumber == pEl->ElTypeNumber &&
        FirstSavedElement->PeNext == NULL &&
-       !ustrcmp (pSavedEl->ElStructSchema->SsName, pEl->ElStructSchema->SsName))
+       !strcmp (pSavedEl->ElStructSchema->SsName, pEl->ElStructSchema->SsName))
       /* l'element dans lequel on colle est une reference du meme type
          que l'element a coller, et il n'y a qu'un element a coller */
      {
@@ -680,8 +680,8 @@ void PasteWithin (PtrElement * pFirstPastedEl, PtrDocument pDoc,
 			  ok = TRUE;
 			  pSavedEl = pSavedChild;
 			  if (pEl->ElTypeNumber == pSavedChild->ElTypeNumber)
-			    if (!ustrcmp (pEl->ElStructSchema->SsName,
-					  pSavedChild->ElStructSchema->SsName))
+			    if (!strcmp (pEl->ElStructSchema->SsName,
+					 pSavedChild->ElStructSchema->SsName))
 			      {
 				/* le contenu est du meme type que l'element a
 				   l'interieur duquel on colle. On prend le

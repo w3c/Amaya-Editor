@@ -230,7 +230,7 @@ ThotBool     IsCapital (char *string)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-ThotBool            IsIso (char *string)
+ThotBool IsIso (char *string)
 {
    int                 iso = 1;
    int                 i = 0;
@@ -251,7 +251,7 @@ ThotBool            IsIso (char *string)
    retourne -3  si le mot est present dans le dict                          
    retourne >=0 si le mot n'est pas dans le dict (indice de sa place future) 
   ----------------------------------------------------------------------*/
-int WordInDictionary (char word[MAX_WORD_LEN], PtrDict dict)
+int WordInDictionary (unsigned char *word, PtrDict dict)
 {
    int                 inf, sup, med, rescomp, size;
 
@@ -297,12 +297,12 @@ int WordInDictionary (char word[MAX_WORD_LEN], PtrDict dict)
    0 si le mot est inconnu ou vide                         
    -1 s'il n'y a pas de dictionnaire pour verifier ce mot   
   ----------------------------------------------------------------------*/
-int CheckWord (char word[MAX_WORD_LEN], Language language, PtrDict dict)
+int CheckWord (unsigned char *word, Language language, PtrDict dict)
 {
    ThotBool            present = TRUE;
    int                 res;
-   char                word1[MAX_WORD_LEN];
-   char                wordmin[MAX_WORD_LEN];
+   unsigned char       word1[MAX_WORD_LEN];
+   unsigned char       wordmin[MAX_WORD_LEN];
    PtrDict             globalDict;
    PtrDict             personalDict;
    PtrDict             dictsigle;
@@ -369,7 +369,7 @@ int CheckWord (char word[MAX_WORD_LEN], Language language, PtrDict dict)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static int          Insert (int x, int pWord, PtrDict dict)
+static int Insert (int x, int pWord, PtrDict dict)
 {
    int                 i, k;
 
@@ -400,7 +400,7 @@ static int          Insert (int x, int pWord, PtrDict dict)
    1 si le mot a pu etre ajoute dans le dictionnaire 
    par defaut : tous les mots nouveaux sont insecables        
   ----------------------------------------------------------------------*/
-static int          InsertWord (PtrDict dict, char word[MAX_WORD_LEN])
+static int InsertWord (PtrDict dict, char word[MAX_WORD_LEN])
 {
    int                 size, place, i, k;
 
@@ -448,14 +448,14 @@ static int          InsertWord (PtrDict dict, char word[MAX_WORD_LEN])
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static void         Cmp (char wordtest[], PtrDict dict)
+static void Cmp (unsigned char *wordtest, PtrDict dict)
 {
   int                 dist[MAX_WORD_LEN][MAX_WORD_LEN];
   unsigned char       wordcmp[MAX_WORD_LEN];
+  unsigned char       currentWord[MAX_WORD_LEN];
   int                 Lg, idx, sup, pWord, seuilCourant;
   int                 i, j, k, x, y, z;
   int                 difference, iteration, size, largeur, word;
-  unsigned char       currentWord[MAX_WORD_LEN];
   int                 minimum;
   int                 deb, fin;
   int                 derniere_ligne = MAX_WORD_LEN; /* last computed line */
@@ -669,9 +669,9 @@ static void         SaveDictFile (PtrDict docDict)
    (s'il n'y a plus de place : ferme et ouvre avec plus d'espace) 
    creation eventuelle et initialisation de ChkrFileDict             
   ----------------------------------------------------------------------*/
-void                AddWord (char word[MAX_WORD_LEN], PtrDict * pDict)
+void AddWord (unsigned char *word, PtrDict * pDict)
 {
-   char                word1[MAX_WORD_LEN];
+   unsigned char       word1[MAX_WORD_LEN];
    int                 ret;
    Name                DiNom;
    ThotBool            OKinsere = TRUE;

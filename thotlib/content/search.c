@@ -17,6 +17,7 @@
  */
 
 #include "thot_sys.h"
+#include "ustring.h"
 #include "constmedia.h"
 #include "typemedia.h"
 #include "fileaccess.h"
@@ -63,14 +64,14 @@
    Selectionne la chaine remplace'e si select est True.		
   ----------------------------------------------------------------------*/
 void ReplaceString (PtrDocument pDoc, PtrElement pEl, int firstChar,
-		    int stringLen, CHAR_T replaceStr[THOT_MAX_CHAR],
+		    int stringLen, unsigned char *replaceStr,
 		    int replaceLen, ThotBool select)
 {
   PtrTextBuffer       pBuf1, pBuf2, pBufn;
   PtrAbstractBox      pAb;
   PtrElement          pAsc;
   NotifyOnTarget      notifyEl;
-  unsigned char      *s;
+  CHAR_T             *s;
   int                 ibuf1, ibuf2, len, diff, dvol, view, i;
   ThotBool            DontReplace;
   ThotBool            visible;
@@ -271,12 +272,16 @@ void ReplaceString (PtrDocument pDoc, PtrElement pEl, int firstChar,
   ----------------------------------------------------------------------*/
 static ThotBool EquivalentChar (CHAR_T c1, CHAR_T c2, ThotBool caseEquiv)
 {
+  int                 v1, v2;
+
   if (caseEquiv)
     {
-      if ((c1 >= 'A' && c1 <= 'Z') || (c1 >= '\300' && c1 <= '\336'))
-	c1 = (CHAR_T) ((int) (c1) + 32);
-      if ((c2 >= 'A' && c2 <= 'Z') || (c2 >= '\300' && c2 <= '\336'))
-	c2 = (CHAR_T) ((int) (c2) + 32);
+      v1 = (int) c1;
+      v2 = (int) c2;
+      if ((v1 >= 65 && v1 <= 90) || (v1 >= 192 && v1 <= 294))
+	c1 = (CHAR_T) (v1 + 32);
+      if ((v2 >= 65 && v2 <= 90) || (c2 >= 192 && c2 <= 294))
+	c2 = (CHAR_T) (v2 + 32);
     }
   return (c1 == c2);
 }
@@ -287,7 +292,7 @@ static ThotBool EquivalentChar (CHAR_T c1, CHAR_T c2, ThotBool caseEquiv)
    indiquee par (pBuf,ind).                                
   ----------------------------------------------------------------------*/
 static ThotBool SameString (PtrTextBuffer pBuf, int ind, ThotBool caseEquiv,
-			    CHAR_T strng[THOT_MAX_CHAR], int strngLen)
+			    CHAR_T *strng, int strngLen)
 {
   ThotBool            equal, stop;
   int                 ind2;
@@ -326,7 +331,7 @@ static ThotBool SameString (PtrTextBuffer pBuf, int ind, ThotBool caseEquiv,
 ThotBool ContentAndStringEqual (PtrElement firstEl, int firstChar,
 				PtrElement lastEl, int lastChar,
 				ThotBool caseEquiv,
-				CHAR_T strng[THOT_MAX_CHAR], int strngLen)
+				CHAR_T *strng, int strngLen)
 {
   PtrTextBuffer       pBuf;
   ThotBool            ok;
@@ -354,9 +359,9 @@ ThotBool ContentAndStringEqual (PtrElement firstEl, int firstChar,
    texte du a des regles de presentation specifiques ou des        
    attributs differents.                                           
   ----------------------------------------------------------------------*/
-static void FwdSearchString (PtrTextBuffer pBuf, int ind, ThotBool * found,
+static void FwdSearchString (PtrTextBuffer pBuf, int ind, ThotBool *found,
 			     int *firstChar, ThotBool caseEquiv,
-			     CHAR_T strng[THOT_MAX_CHAR])
+			     CHAR_T *strng)
 {
   int                 ir;
   int                 ix;
@@ -441,7 +446,7 @@ static void FwdSearchString (PtrTextBuffer pBuf, int ind, ThotBool * found,
   ----------------------------------------------------------------------*/
 static void BackSearchString (PtrTextBuffer pBuf, int ind, ThotBool * found,
 			      int *firstChar, ThotBool caseEquiv,
-			      CHAR_T strng[THOT_MAX_CHAR], int strngLen)
+			      CHAR_T *strng, int strngLen)
 {
   int                 ir;
   int                 ix;
@@ -506,17 +511,15 @@ static void BackSearchString (PtrTextBuffer pBuf, int ind, ThotBool * found,
 }
 
 /*----------------------------------------------------------------------
-   SearchText recherche dans le document pDoc la chaine de		
-   caracteres decrite par les variables strng et strngLen.		
-   A l'appel, les variables firstEl, firstChar, lastEl,            
-   lastChar indiquent la region ou on cherche.                     
+   SearchText looks for the string described by text and textLen.
+   Parameters firstEl, firstChar, lastEl, lastChar give the search context.
    Au retour, elles indiquent la chaine trouvee si la fonction     
    retourne Vrai. (La fonction retourne faux en cas d'echec).      
   ----------------------------------------------------------------------*/
-ThotBool SearchText (PtrDocument pDoc, PtrElement * firstEl, int *firstChar,
-		     PtrElement * lastEl, int *lastChar, ThotBool forward,
-		     ThotBool caseEquiv, CHAR_T strng[THOT_MAX_CHAR],
-		     int strngLen)
+ThotBool SearchText (PtrDocument pDoc, PtrElement *firstEl, int *firstChar,
+		     PtrElement *lastEl, int *lastChar, ThotBool forward,
+		     ThotBool caseEquiv, unsigned char *text,
+		     int textLen)
 {
   PtrElement          pEl;
   int                 i;
@@ -558,7 +561,7 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement * firstEl, int *firstChar,
 		   a tester */
 		ibuf = *firstChar - i;
 		ichar = *firstChar;
-		FwdSearchString (pBuf, ibuf, &found, &ichar, caseEquiv, strng);
+		FwdSearchString (pBuf, ibuf, &found, &ichar, caseEquiv, text);
 	      }
 	  while (!found && pEl != NULL)
 	    {
@@ -579,7 +582,7 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement * firstEl, int *firstChar,
 		      {
 			ichar = 1;
 			FwdSearchString (pEl->ElText, 1, &found, &ichar,
-					 caseEquiv, strng);
+					 caseEquiv, text);
 		      }
 		}
 	    }
@@ -604,7 +607,7 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement * firstEl, int *firstChar,
 		/* pointe par pBuf du 1er caractere a tester */
 		ichar = *firstChar - 1;
 		BackSearchString (pBuf, ibuf, &found, &ichar, caseEquiv,
-				  strng, strngLen);
+				  text, textLen);
 	      }
 	  while (!found && pEl != NULL)
 	    {
@@ -628,12 +631,12 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement * firstEl, int *firstChar,
 			  pBuf = pBuf->BuNext;
 			ichar = pEl->ElTextLength;
 			BackSearchString (pBuf, pBuf->BuLength, &found, &ichar,
-					  caseEquiv, strng, strngLen);
+					  caseEquiv, text, textLen);
 		      }
 		}
 	    }
 	  if (found)
-	    ichar = ichar - strngLen + 1;
+	    ichar = ichar - textLen + 1;
 	}
       if (found)
 	/* on a trouve' la chaine cherchee */
@@ -647,7 +650,7 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement * firstEl, int *firstChar,
 	      {
 		if (forward)
 		  {
-		    if (ichar + strngLen - 1 > *lastChar)
+		    if (ichar + textLen - 1 > *lastChar)
 		      /* la chaine trouvee se termine au-dela du caractere ou
 		         il faut s'arreter, on fait comme si on n'avait pas
 			 trouve' */
@@ -677,7 +680,7 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement * firstEl, int *firstChar,
 	  *firstChar = ichar;
 	  /* *lastChar est le rang du caractere qui suit le dernier */
 	  /* caractere de la chaine trouvee dans le buffer */
-	  *lastChar = ichar + strngLen;
+	  *lastChar = ichar + textLen;
 	  result = TRUE;
 	}
     }

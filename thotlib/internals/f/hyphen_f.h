@@ -6,8 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void SmallLettering ( unsigned char *word );
 extern ThotBool IsSeparatorChar ( CHAR_T c );
-extern void SmallLettering ( STRING word );
 extern int HyphenLastWord ( ptrfont font,
                             Language language,
                             PtrTextBuffer *buffer,
@@ -18,8 +18,8 @@ extern ThotBool CanHyphen ( PtrBox pBox );
 
 #else /* __STDC__ */
 
+extern void SmallLettering (/* unsigned char *word */);
 extern ThotBool IsSeparatorChar (/* CHAR_T c */);
-extern void SmallLettering (/* STRING word */);
 extern int HyphenLastWord (/* ptrfont font,
                               Language language,
                               PtrTextBuffer *buffer,

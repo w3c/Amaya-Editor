@@ -1900,8 +1900,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
     {
     if (pAttr->AeAttrText)
       {
-	len = 100;
-	CopyBuffer2MBs (pAttr->AeAttrText, 0, buffer, len);
+	CopyBuffer2MBs (pAttr->AeAttrText, 0, buffer, 99);
 	attrValue = buffer;
       }
     else

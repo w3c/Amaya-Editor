@@ -14,12 +14,12 @@ extern void SetCapital ( char *string );
 extern ThotBool IsUpperCase ( char *string );
 extern ThotBool IsCapital ( char *string );
 extern ThotBool IsIso ( char *string );
-extern int WordInDictionary ( char word[MAX_WORD_LEN],
+extern int WordInDictionary ( unsigned char *word,
                               PtrDict dict );
-extern int CheckWord ( char word[MAX_WORD_LEN],
+extern int CheckWord ( unsigned char *word,
                        Language language,
                        PtrDict dict );
-extern void AddWord ( char word[MAX_WORD_LEN],
+extern void AddWord ( unsigned char *word,
                       PtrDict * pDict );
 extern void GiveProposal ( Language language,
                            PtrDict docDict );
@@ -40,12 +40,12 @@ extern void SetCapital (/* char *string */);
 extern ThotBool IsUpperCase (/* char *string */);
 extern ThotBool IsCapital (/* char *string */);
 extern ThotBool IsIso (/* char *string */);
-extern int WordInDictionary (/* char word[MAX_WORD_LEN],
+extern int WordInDictionary (/* unsigned char *word,
                                 PtrDict dict */);
-extern int CheckWord (/* char word[MAX_WORD_LEN],
+extern int CheckWord (/* unsigned char *word,
                          Language language,
                          PtrDict dict */);
-extern void AddWord (/* char word[MAX_WORD_LEN],
+extern void AddWord (/* unsigned char *word,
                         PtrDict * pDict */);
 extern void GiveProposal (/* Language language,
                              PtrDict docDict */);

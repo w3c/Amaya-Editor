@@ -39,6 +39,27 @@ static CHAR_T sepcar[] =
 #include "uconvert_f.h"
 #include "ustring_f.h"
 
+
+/*----------------------------------------------------------------------
+   SmallLettering convertit les caracte`res majuscules en minuscules.   
+  ----------------------------------------------------------------------*/
+void SmallLettering (unsigned char *word)
+{
+  unsigned char c;
+  int           j;
+
+  j = 0;
+  while (word[j] != 0)
+    {
+      c = word[j];
+      if (c >= 65 && c <= 90)
+	word[j] = c + 32;		/* Majuscules */
+      else if (c >= 192 && c <= 222)
+	word[j] = c + 32;		/* Majuscules accentue'es */
+      j++;
+    }
+}
+
 /*----------------------------------------------------------------------
    PatternHyphen  cherche pour le mot word le premier point de     
    coupure qui pre'ce`de le caracte`re de rang length (le  
@@ -60,6 +81,8 @@ static int PatternHyphen (STRING word, int length, Language language,
    status = 0;
    /* current patterns concern only iso-latin characters */
    iso = TtaConvertCHARToIso (word, ISO_8859_1);
+   /* Convertit le mot en minuscule */
+   SmallLettering (iso);
    pHyphen = TtaGetPatternHyphenList (iso, language);
    TtaFreeMemory (iso);
    if (pHyphen == NULL)
@@ -98,27 +121,6 @@ ThotBool IsSeparatorChar (CHAR_T c)
 	 return (TRUE);
      }
    return (FALSE);
-}
-
-
-/*----------------------------------------------------------------------
-   SmallLettering convertit les caracte`res majuscules en minuscules.   
-  ----------------------------------------------------------------------*/
-void SmallLettering (STRING word)
-{
-   CHAR_T       c;
-   int           j;
-
-   j = 0;
-   while (word[j] != 0)
-     {
-	c = word[j];
-	if (c >= 65 && c <= 90)
-	   word[j] = (CHAR_T) (c + 32);		/* Majuscules */
-	else if (c >= 192 && c <= 222)
-	   word[j] = (CHAR_T) (c + 32);		/* Majuscules accentue'es */
-	j++;
-     }
 }
 
 
@@ -242,8 +244,6 @@ static int NextWord (ptrfont font, PtrTextBuffer * buffer, int *rank,
 static int WordHyphen (STRING word, int length, Language language,
 		       ThotBool *hyphen)
 {
-   /* Convertit le mot en minuscule */
-   SmallLettering (word);
    return PatternHyphen (word, length, language, hyphen);
 }
 

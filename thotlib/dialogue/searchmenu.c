@@ -36,50 +36,50 @@
 /* pointer to the search domain for the the current command */
 static PtrSearchContext SearchingD = NULL;
 /* document where we are searching a page */
-static PtrDocument  SearchedPageDoc;
+static PtrDocument   SearchedPageDoc;
 /* document to which the CurrRef belongs */
-static PtrDocument  CurrRefDoc;
-static PtrDocument  DocTextOK;
+static PtrDocument   CurrRefDoc;
+static PtrDocument   DocTextOK;
 
 /* root of the tree where we are searching a page */
-static PtrElement   SearchedPageRoot;
+static PtrElement    SearchedPageRoot;
 /* element whose references we are looking for */
-static PtrElement   CurrRefElem;
-static PtrElement   ElemTextOK;
+static PtrElement    CurrRefElem;
+static PtrElement    ElemTextOK;
 
 /* document view for which we are searching a page */
-static int          ViewSearchedPageDoc;
+static int           ViewSearchedPageDoc;
 /* presentation scheme view for which we are searching a page */
-static int          SearchedPageSchView;
+static int           SearchedPageSchView;
 /* number of the searched page */
-static int          SearchedPageNumber;
+static int           SearchedPageNumber;
 /* precedent searched string */
-static char           pPrecedentString[THOT_MAX_CHAR];
+static unsigned char pPrecedentString[THOT_MAX_CHAR];
 /* searched string */
-static char           pSearchedString[THOT_MAX_CHAR];
+static unsigned char pSearchedString[THOT_MAX_CHAR];
 /* length of the searched string */
-static int          SearchedStringLen;
+static int           SearchedStringLen;
 /* the replace string */
-static char           pReplaceString[THOT_MAX_CHAR];
+static unsigned char pReplaceString[THOT_MAX_CHAR];
 /* length of the replace string */
-static int          ReplaceStringLen;
+static int           ReplaceStringLen;
 /* pointer to the current reference */
-static PtrReference CurrRef;
+static PtrReference  CurrRef;
 
 /* indicating whether there's a character Upper/lower case distinction */
-static ThotBool     UpperLower = TRUE;
+static ThotBool      UpperLower = TRUE;
 /* find and replace strings */
-static ThotBool     WithReplace;
+static ThotBool      WithReplace;
 /* pointer to the external document containing the current reference */
 static PtrExternalDoc pExtCurrDoc;
-static ThotBool     AutoReplace;
-static ThotBool     StartSearch;
-static ThotBool     ReplaceDone;
-static ThotBool     DoReplace;
-static ThotBool     TextOK = FALSE;
-static ThotBool     SearchAfter;
-static int          FirstCharTextOK;
-static int          LastCharTextOK;
+static ThotBool      AutoReplace;
+static ThotBool      StartSearch;
+static ThotBool      ReplaceDone;
+static ThotBool      DoReplace;
+static ThotBool      TextOK = FALSE;
+static ThotBool      SearchAfter;
+static int           FirstCharTextOK;
+static int           LastCharTextOK;
 
 #include "absboxes_f.h"
 #include "actions_f.h"
