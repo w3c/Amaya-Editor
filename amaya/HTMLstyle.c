@@ -106,6 +106,24 @@ Document            doc;
      {
 	switch (cour)
 	      {
+		 case '/':
+		    cour = readfunc ();
+		    if (cour == '*') {
+		        /* Skip the comments */
+			do {
+			    cour = readfunc ();
+			    if (cour == '*') {
+				cour = readfunc ();
+				if (cour == '/') break;
+			    }
+		        } while (cour != '\0');
+		    } else {
+			CSS_CHECK_BUFFER
+			    buffer[index++] = '/';
+			CSS_CHECK_BUFFER
+			    buffer[index++] = cour;
+		    }
+	            continue;
 		 case '<':
 		    cour = readfunc ();
 		    if (cour != '!')
@@ -379,7 +397,7 @@ static HTML3StyleAttribute HTML3StyleAttributes[] =
    #define SKIP_BLANK(ptr) \
    { while (((*(ptr)) == SPACE) || ((*(ptr)) == '\b') || \
    ((*(ptr)) == EOL) || ((*(ptr)) == '\r')) ptr++; } */
-#define SKIP_WORD(ptr) { while (isalnum(*ptr)) ptr++; }
+#define SKIP_WORD(ptr) { while ((isalnum(*ptr)) || (*ptr == '-')) ptr++; }
 #define SKIP_PROPERTY(ptr) { while ((*ptr) && (*ptr != ';') && \
                                     (*ptr != '}') && (*ptr != ',')) ptr++; }
 #define SKIP_INT(ptr) { while (isdigit(*ptr)) ptr++; }
@@ -807,8 +825,11 @@ char               *param;
 	       sprintf (buffer, "background-color : #%02X%02X%02X", red, green, blue);
 	       break;
 	    case DRIVERP_FONT_SIZE:
-	       if (unit == DRIVERP_UNIT_REL)
-		  switch (settings->value.typed_data.value)
+	       if (unit == DRIVERP_UNIT_REL) {
+		  if (real) {
+		      sprintf (buffer, "font-size : %g", fval);
+		      add_unit = 1;
+		  } else switch (settings->value.typed_data.value)
 			{
 			   case 1:
 			      strcpy (buffer, "font-size : xx-small");
@@ -828,13 +849,16 @@ char               *param;
 			   case 6:
 			      strcpy (buffer, "font-size : x-large");
 			      break;
-			   default:
-			      if (settings->value.typed_data.value > 6)
-				 strcpy (buffer, "font-size : xx-large");
+			   case 7:
+			   case 8:
+			   case 9:
+			   case 10:
+			   case 11:
+			   case 12:
+			      strcpy (buffer, "font-size : xx-large");
 			      break;
 			}
-	       else
-		 {
+	       } else {
 		    if (real)
 		       sprintf (buffer, "font-size : %g", fval);
 		    else

@@ -2953,17 +2953,11 @@ followed by a colon and the counting function to be applied to the counter.
 The counter declaration ends with a semi-colon.</P>
 <P>
 The counting function indicates how the counter values will be calculated.
-Three types of counting functions are available: <TT>Rank</TT>, <TT>SET</TT>,
-and <TT>RLEVEL</TT>.</P>
-
-<DIV class="subsubsection">
-<H4><A name=sectd4241><TT>RANK</TT> counters</A></H4>
-<P>
-The first type is used to count the elements of a list or aggregate: it
-assigns to the counter the rank of the element in the list or aggregate.  More
-precisely, the function</P>
+Three types of counting functions are available.  The first type is used to
+count the elements of a list or aggregate: it assigns to the counter the rank
+of the element in the list or aggregate.  More precisely, the function</P>
 <PRE>
-RANK OF ElemID [ CondAttr ] [ LevelAsc ] [ INIT AttrID ]
+RANK OF ElemID [ LevelAsc ] [ INIT AttrID ]
         [ 'REINIT' AttrID ]
 </PRE>
 <P>
@@ -2981,23 +2975,14 @@ partial expansion.  To resolve this ambiguity, the <TT>ElemID</TT> alone
 refers to the type defined in the structure schema while the <TT>ElemID</TT>
 preceded by a star refers to the included type.</P>
 <P>
-The type name <TT>ElemID</TT> can be followed by a condition on the presence
-or absence of a logical attribute associated with the element.  This is
-indicated by the keyword <TT>WITH</TT> or <TT>WITHOUT</TT> and an attribute
-name, just after the type name.  It means that elements of that type are
-counted only if they have (do not have, respectively) that attribute,
-whatever its value.</P>
-<P>
-The type name <TT>ElemID</TT>, and the condition on an attribute if it is
-present, can be followed by an integer.  That number
+The type name <TT>ElemID</TT> can be followed by an integer.  That number
 represents the relative level, among the ancestors of the creating element, of
 the element whose rank is asked.  If that relative level <I>n</I> is unsigned,
 the <I>n</I><SUP>th</SUP> element of type <TT>ElemID</TT> encountered when
 travelling the logical structure from the root to the creating element is
-taken into account.  If there is a condition on the presence of an attribute,
-only those elements satisfying the condition are taken into account.  If the
-relative level is negative, the logical structure is travelled in the other
-direction, from the creating element to the root.</P>
+taken into account.  If the relative level is negative, the logical structure
+is travelled in the other direction, from the creating element to the
+root.</P>
 <P>
 The function can end with the keyword <TT>INIT</TT> followed by the name of a
 numeric attribute (and only a numeric attribute).  Then, the rank of the first
@@ -3029,15 +3014,11 @@ that view that are taken into account.  As in the preceding form, the
 followed by the name of a numeric attribute which sets the value of the first
 page's number.  This attribute must be a local attribute of the document
 itself, and not of one of its components.</P>
-</DIV>
-
-<DIV class="subsubsection">
-<H4><A name=sectd4242><TT>SET ADD</TT> counters</A></H4>
 <P>
 The second counting function is used to count the occurrences of a certain
 element type in a specified context.  The instruction</P>
 <PRE>
-SET n ON Type1 [ CondAttr ] ADD m ON Type2 [CondAttr ] [ INIT AttrID ]
+SET n ON Type1 ADD m ON Type2 [ INIT AttrID ]
 </PRE>
 <P>
 says that when the document is traversed from beginning to end (in the order
@@ -3049,12 +3030,6 @@ encountered.</P>
 <P>
 As with the <TT>RANK</TT> function, the type names can be preceded by a star
 to resolve the ambiguity of included elements.</P>
-<P>
-As with the <TT>RANK</TT> function, the type names can be followed by a
-condition on the presence or absence of an attribute.  This condition is
-written in the same way as in the <TT>RANK</TT> function, with the same
-meaning: elements are taken into account only if they satisfy the
-condition.</P>
 <P>
 If the function ends with the keyword <TT>INIT</TT> followed by the name of an
 attribute and if the document possesses this attribute, the value of this
@@ -3072,28 +3047,16 @@ into account.</P>
 The definition of a counter can contain several <TT>SET</TT> functions and
 several <TT>ADD</TT> functions, each with a different value.  The total number
 of counting functions must not be greater than 6.</P>
-</DIV>
-
-<DIV class="subsubsection">
-<H4><A name=sectd4243><TT>RLEVEL</TT> counters</A></H4>
 <P>
 The third counting function is used to count the elements of a certain type
-encountered when travelling the document's tree from the creating element to
-the root of the logical tree.  The creating element is counted if it is of
-that type.  That function is written</P>
+encountered when travelling from the creating element to the root of the
+logical structure.  The creating element is included if it is of that type.
+That function is written</P>
 <PRE>
-RLEVEL OF Type [ CondAttr ]
+RLEVEL OF Type
 </PRE>
 <P>
 where <TT>Type</TT> represents the type of the elements to be counted.</P>
-<P>
-As with the <TT>RANK</TT> function, the type name can be followed by a
-condition on the presence or absence of an attribute.  This condition is
-written in the same way as in the <TT>RANK</TT> function, with the same
-meaning: elements are taken into account only if they satisfy the
-condition.</P>
-</DIV>
-
 <P>
 The formal definition of counter declarations is:</P>
 <PRE>
@@ -3102,18 +3065,17 @@ The formal definition of counter declarations is:</P>
      Counter      = CounterID ':' CounterFunc ';' .
      CounterID    = NAME .
      CounterFunc  = 'RANK' 'OF' TypeOrPage [ SLevelAsc ]
-                          [ 'INIT' AttrID ] [ 'REINIT' AttrID ] /
+                    [ 'INIT' AttrID ] [ 'REINIT' AttrID ] /
                     SetFunction &lt; SetFunction >
-                          AddFunction &lt; AddFunction >
-                          [ 'INIT' AttrID ] /
-                    'RLEVEL' 'OF' ElemID [ CondAttr ] .
+                    AddFunction &lt; AddFunction >
+                    [ 'INIT' AttrID ] /
+                    'RLEVEL' 'OF' ElemID .
      SLevelAsc    = [ '-' ] LevelAsc .
      LevelAsc     =  NUMBER .
      SetFunction  = 'SET' CounterValue 'ON' TypeOrPage .
      AddFunction  = 'ADD' CounterValue 'ON' TypeOrPage .
      TypeOrPage   = 'Page' [ '(' ViewID ')' ] / 
-                    [ '*' ] ElemID [ CondAttr ] .
-     CondAttr     = 'WITH' AttrID / 'WITHOUT' AttrID .
+                    [ '*' ] ElemID .
      CounterValue = NUMBER .
 </PRE>
 <BLOCKQUOTE class="example">
@@ -8435,14 +8397,13 @@ CounterFunc     = 'RANK' 'OF' TypeOrPage [ SLevelAsc ]
                   SetFunction &lt; SetFunction >
                   AddFunction &lt; AddFunction >
                   [ 'INIT' AttrID ] /
-                  'RLEVEL' 'OF' ElemID [ CondAttr ] .
+                  'RLEVEL' 'OF' ElemID .
 SLevelAsc       = [ '-' ] LevelAsc .
 LevelAsc        = NUMBER .
 SetFunction     = 'SET' CounterValue 'ON' TypeOrPage .
 AddFunction     = 'ADD' CounterValue 'ON' TypeOrPage .
 TypeOrPage      = 'Page' [ '(' ViewID ')' ] /
-                  [ '*' ] ElemID [ CondAttr ] .
-CondAttr        = 'WITH' AttrID / 'WITHOUT' AttrID .
+                  [ '*' ] ElemID .
 CounterValue    = NUMBER .
 
 ConstSeq        = Const &lt; Const > .

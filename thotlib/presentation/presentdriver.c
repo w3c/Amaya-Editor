@@ -313,11 +313,22 @@ int                 specific;
 	    case PtBreak2:
 	    case PtLineSpacing:
 	    case PtLineWeight:
-	    case PtSize:
 	       {
 		  rule->PrPresMode = PresImmediate;
 		  rule->PrMinAttr = 0;
 		  rule->PrMinUnit = int_unit;
+		  rule->PrMinValue = value;
+		  break;
+	       }
+	    case PtSize:
+	       {
+		  if ((real) && (int_unit == UnRelative)) {
+		      int_unit = UnPercent;
+		      value *= 10;
+		  }
+		  rule->PrMinUnit = int_unit;
+		  rule->PrPresMode = PresImmediate;
+		  rule->PrMinAttr = 0;
 		  rule->PrMinValue = value;
 		  break;
 	       }
@@ -476,7 +487,19 @@ PRule               pRule;
    switch (int_unit)
       {
 	 case UnRelative:
-	    unit = DRIVERP_UNIT_REL;
+	    switch (rule->PrType) {
+		case PtBreak1:
+		case PtBreak2:
+		case PtIndent:
+		case PtSize:
+		case PtLineSpacing:
+		case PtLineWeight:
+		    unit = DRIVERP_UNIT_EM;
+		    break;
+		default:
+		    unit = DRIVERP_UNIT_REL;
+		    break;
+	    }
 	    if (value % 10)
 	      {
 		 DRIVERP_UNIT_SET_FLOAT (unit);
