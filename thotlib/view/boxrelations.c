@@ -626,12 +626,17 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
       /* top margin */
       if (pAb->AbTopMarginUnit == UnPercent)
 	pBox->BxTMargin = PixelValue (pAb->AbTopMargin, UnPercent, (PtrAbstractBox) dim, 0);
-      else if (pAb->AbTopMarginUnit != UnAuto)
+      else if (pAb->AbTopMarginUnit == UnAuto)
+	pBox->BxTMargin = 0;
+      else
 	pBox->BxTMargin = PixelValue (pAb->AbTopMargin, pAb->AbTopMarginUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+
       /* bottom margin */
       if (pAb->AbBottomMarginUnit == UnPercent)
 	pBox->BxBMargin = PixelValue (pAb->AbBottomMargin, UnPercent, (PtrAbstractBox) dim, 0);
-      else if (pAb->AbBottomMarginUnit != UnAuto)
+      else if (pAb->AbBottomMarginUnit == UnAuto)
+	pBox->BxBMargin = 0;
+      else
 	pBox->BxBMargin = PixelValue (pAb->AbBottomMargin, pAb->AbBottomMarginUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 
       /* top padding */
@@ -655,12 +660,6 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
 	pBox->BxBBorder = PixelValue (pAb->AbBottomBorder, UnPercent, (PtrAbstractBox) dim, 0);
       else
 	pBox->BxBBorder = PixelValue (pAb->AbBottomBorder, pAb->AbBottomBorderUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
-
-      /* Manage auto margins */
-      if (pAb->AbTopMarginUnit == UnAuto)
-	pBox->BxTMargin = 0;
-      else if (pAb->AbBottomMarginUnit == UnAuto)
-	pBox->BxBMargin = 0;
      }
 }
 

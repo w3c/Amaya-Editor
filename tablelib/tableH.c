@@ -851,7 +851,7 @@ printf ("Specific Widths ...\n");
 	}
       else
 	addExtra = FALSE;
-      if (max < delta)
+      if (max == 0 || max < delta)
 	{
 	  /* extend the maximum of each stretchable column */
 	  useMax = TRUE;

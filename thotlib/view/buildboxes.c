@@ -1868,7 +1868,6 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
       pCurrentBox->BxYToCompute = FALSE;
       enclosedWidth = ComputeDimRelation (pAb, frame, TRUE);
       enclosedHeight = ComputeDimRelation (pAb, frame, FALSE);
-      CheckMBP (pAb, pCurrentBox, frame, TRUE);
       if (pAb->AbLeafType != LtCompound)
 	{
 	  /* Positionnement des axes de la boite construite */
@@ -2155,6 +2154,8 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
       if (enclosedWidth && enclosedHeight && pAb->AbLeafType == LtCompound)
 	GiveEnclosureSize (pAb, frame, &width, &height);
       ChangeDefaultHeight (pCurrentBox, pCurrentBox, height, frame);
+      /* recheck auto and % margins */
+      CheckMBP (pAb, pCurrentBox, frame, TRUE);
       
       /* Positionnement des origines de la boite construite */
       i = 0;
@@ -3713,12 +3714,12 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	    /* the box width doesn't depend on the contents */
 	    result = TRUE;
 
+	  /* check auto margins */
+	  CheckMBP (pAb, pCurrentBox, frame, TRUE);
 	  if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'C' &&
 	      pAb->AbRxUnit == UnPercent)
 	    /* update radius of the rectangle with rounded corners */
 	    ComputeRadius (pAb, frame, TRUE);
-	  /* check auto margins */
-	  CheckMBP (pAb, pCurrentBox, frame, TRUE);
 	  
 	  /* Check table consistency */
 	  if (pCurrentBox->BxType == BoColumn && ThotLocalActions[T_checktable])
@@ -3782,6 +3783,8 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	    /* the box height doesn't depend on the contents */
 	    result = TRUE;
 
+	  /* recheck auto and % margins */
+	  CheckMBP (pAb, pCurrentBox, frame, TRUE);
 	  if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'C' &&
 	      pAb->AbRyUnit == UnPercent)
 	    /* update radius of the rectangle with rounded corners */

@@ -912,7 +912,7 @@ int PixelValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
       break;
     case UnPercent:
       i = val * (int) pAb;
-      dist = i / 100;
+      dist = (i + 50) / 100;
       break;
     case UnAuto:
       /* should not occur: reserved for margins */

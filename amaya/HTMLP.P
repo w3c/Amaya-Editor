@@ -4641,7 +4641,7 @@ RULES
 	CreateWith(VerticalLine);
 	Width: Enclosing . Width;
 	VertPos: Top = Previous not MAP . Bottom;
-	if not within Division
+	{if not within Division
 	   MarginTop: VSpaceBeforeH2;
 	if within 1 Division
 	   MarginTop: VSpaceBeforeH3;
@@ -4650,7 +4650,8 @@ RULES
 	if within 3 Division
 	   MarginTop: VSpaceBeforeH5;
 	if within >3 Division
-	   MarginTop: VSpaceBeforeH6;
+	   MarginTop: VSpaceBeforeH6;}
+         MarginTop: 0;
 	IN Structure_view BEGIN
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Width: Enclosing . Width - STRUCT_INDENT;
