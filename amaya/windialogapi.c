@@ -41,10 +41,12 @@ extern int         currentFrame;
 #define APPALLFILESFILTER    TEXT("All files (*.*)\0*.*\0")
 
 #define MAX_BUFF 4096
+/* JK: I think that some of these widgets, which are general, should
+   go into the thotlib, such as IDC_LANGEDIT. We have a dupllication of
+   IDC refs between thotlib and Amaya */
 #define IDC_WORDBUTTON    20000
 #define IDC_EDITRULE      20001
 #define IDC_LANGEDIT      20002
-#define ICD_SPELLWORDEDIT 20003
 #define IDC_CSSEDIT       20004
 
 #define OPT1               1110
@@ -91,8 +93,6 @@ static CHAR_T       message [300];
 static CHAR_T       message2 [300];
 static CHAR_T       message3 [300];
 static CHAR_T       wndTitle [100];
-static CHAR_T       currentLabel [100];
-static CHAR_T       currentRejectedchars [100];
 static CHAR_T       currentPathName [100];
 static CHAR_T       winCurLang [100];
 static CHAR_T       currentFileToPrint [MAX_PATH];
@@ -172,7 +172,6 @@ static ThotWindow         WndSearchEdit;
 static ThotWindow         GraphPal = NULL;
 static ThotWindow         MathPal = NULL;
 static ThotWindow         GreekPal = NULL;
-static ThotWindow         SpellChecker = NULL;
 
 static UINT         itemIndex;
 static UINT         nbClass;
@@ -187,14 +186,10 @@ static ThotBool     initialized = 0;
 static PRINTDLG     Pdlg;
 static char         text[1024];
 
-ThotWindow          wordButton;
-ThotWindow          hwnListWords;
-ThotWindow          hwndCurrentWord;
-ThotWindow          hwndLanguage;
+
 ThotWindow          ghwndAbort;
 ThotWindow          ghwndMain;
 ThotWindow          MakeIDHwnd;
-CHAR_T              currentWord [MAX_WORD_LEN];
 ThotBool            gbAbort;
 
 
@@ -2134,212 +2129,7 @@ LPARAM lParam;
   return TRUE;
 }
 
-/*-----------------------------------------------------------------------
- SpellCheckDlgProc
- ------------------------------------------------------------------------*/
-#ifdef __STDC__
-LRESULT CALLBACK SpellCheckDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK SpellCheckDlgProc (hwnDlg, msg, wParam, lParam)
-ThotWindow   hwndParent;
-UINT   msg;
-WPARAM wParam;
-LPARAM lParam;
-#endif /* __STDC__ */
-{
-  ThotBool ok;	  
-  int  val;
 
-  static int  iLocation;
-  static int  iIgnore;
-
-  switch (msg)
-    {
-    case WM_INITDIALOG:
-	  SpellChecker = hwnDlg;
-      hwndLanguage = GetDlgItem (hwnDlg, IDC_LANG);
-      wordButton = GetDlgItem (hwnDlg, IDC_CURWORD);
-      SetWindowText (GetDlgItem (hwnDlg, IDC_LABEL), currentLabel);
-      SetWindowText (GetDlgItem (hwnDlg, IDC_BEFORE), TtaGetMessage (LIB, TMSG_BEFORE_SEL));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_WITHIN), TtaGetMessage (LIB, TMSG_WITHIN_SEL));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_AFTER), TtaGetMessage (LIB, TMSG_AFTER_SEL));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_WHOLEDOC), TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_NBPROPOSALS), TtaGetMessage (CORR, Number_Propositions));
-      
-      SetWindowText (GetDlgItem (hwnDlg, ID_SKIPNEXT), TtaGetMessage (CORR, Pass_Without));
-      SetWindowText (GetDlgItem (hwnDlg, ID_SKIPDIC), TtaGetMessage (CORR, Pass_With));
-      SetWindowText (GetDlgItem (hwnDlg, ID_REPLACENEXT), TtaGetMessage (CORR, Replace_Without));
-      SetWindowText (GetDlgItem (hwnDlg, ID_REPLACEDIC), TtaGetMessage(CORR, Replace_With));
-      
-      SetWindowText (GetDlgItem (hwnDlg, IDC_IGNORE1), TtaGetMessage (CORR, Capitals));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_IGNORE2), TtaGetMessage (CORR, Arabics));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_IGNORE3), TtaGetMessage (CORR, Romans));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_IGNORE4), TtaGetMessage (CORR, Specials));
-      
-      SetWindowText (GetDlgItem (hwnDlg, IDC_CHECKGROUP), TtaGetMessage (CORR, What));
-      
-      SetWindowText (GetDlgItem (hwnDlg, IDC_IGNOREGROUP), TtaGetMessage (CORR, Ignore));
-      
-      SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
-      
-      hwnListWords = CreateWindow (TEXT("listbox"), NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
-				   13, 72, 150, 70, hwnDlg, (HMENU) 1, 
-				   (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
-      
-      hwndCurrentWord = CreateWindow (TEXT("EDIT"), NULL, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
-				      13, 146, 150, 20, hwnDlg, (HMENU) IDC_LANGEDIT, 
-				      (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
-      
-      
-      CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
-	  CheckDlgButton (hwnDlg, IDC_IGNORE1, BST_CHECKED);
-	  CheckDlgButton (hwnDlg, IDC_IGNORE2, BST_CHECKED);
-	  CheckDlgButton (hwnDlg, IDC_IGNORE3, BST_CHECKED);
-	  CheckDlgButton (hwnDlg, IDC_IGNORE4, BST_CHECKED);
-
-      SetDlgItemInt (hwnDlg, IDC_EDITPROPOSALS, 3, FALSE);
-      SetDlgItemText (hwnDlg, IDC_EDITIGNORE, currentRejectedchars);
-      iLocation = 2;
-      SetWindowText (hwndCurrentWord, TEXT(""));
-      WIN_DisplayWords ();
-      break;
-
-	case WM_CLOSE:
-	case WM_DESTROY:
-	  SpellChecker = NULL;
-	  hwndLanguage = NULL;
-	  EndDialog (hwnDlg, ID_DONE);
-	  break;      
-
-    case WM_COMMAND:
-      if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_SELCHANGE) {
-	itemIndex = SendMessage (hwnListWords, LB_GETCURSEL, 0, 0);
-	itemIndex = SendMessage (hwnListWords, LB_GETTEXT, itemIndex, (LPARAM) currentWord);
-	SetDlgItemText (hwnDlg, IDC_LANGEDIT, currentWord);
-      } else if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_DBLCLK) {
-	if (LB_ERR == (itemIndex = SendMessage (hwnListWords, LB_GETCURSEL, 0, 0L)))
-	  break;
-	itemIndex = SendMessage (hwnListWords, LB_GETTEXT, itemIndex, (LPARAM) currentWord);
-	SetDlgItemText (hwnDlg, IDC_LANGEDIT, currentWord);
-	ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, currentWord);
-	ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (CHAR_T*) iLocation);
-	ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (CHAR_T*) 3);
-	if (iLocation == 3) {
-	  CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
-	  iLocation = 2;
-	}
-	return 0;
-      } 
-      if (HIWORD (wParam) == EN_UPDATE)
-	{
-	  if (LOWORD (wParam) == IDC_EDITPROPOSALS)
-	    {
-	      val = GetDlgItemInt (hwnDlg, IDC_EDITPROPOSALS, &ok, TRUE);
-	      if (ok)
-		ThotCallback (SpellingBase + ChkrCaptureNC, INTEGER_DATA, (CHAR_T*) val);
-	    }
-	  else if (LOWORD (wParam) == IDC_EDITIGNORE)
-	    {
-	      GetDlgItemText (hwnDlg, IDC_EDITIGNORE, currentRejectedchars, sizeof (currentRejectedchars) + 1);
-	      ThotCallback (SpellingBase + ChkrSpecial, STRING_DATA, currentRejectedchars);
-	    }
-	  else if (LOWORD (wParam) == IDC_LANGEDIT) 
-	    GetDlgItemText (hwnDlg, IDC_LANGEDIT, currentWord, sizeof (currentWord) + 1);
-	}
-      
-      switch (LOWORD (wParam))
-	{
-	case IDC_BEFORE:
-	  iLocation = 0;
-	  break;
-	  
-	case IDC_WITHIN:
-	  iLocation = 1;
-	  break;
-	  
-	case IDC_AFTER:
-	  iLocation = 2;
-	  break;
-	  
-	case IDC_WHOLEDOC:
-	  iLocation = 3;
-	  break;
-	  
-	case IDC_IGNORE1:
-	  ThotCallback (SpellingBase + ChkrMenuIgnore, INTEGER_DATA, (CHAR_T*) 0);
-	  break;
-	  
-	case IDC_IGNORE2:
-	  ThotCallback (SpellingBase + ChkrMenuIgnore, INTEGER_DATA, (CHAR_T*) 1);
-	  break;
-	  
-	case IDC_IGNORE3: 
-	  ThotCallback (SpellingBase + ChkrMenuIgnore, INTEGER_DATA, (CHAR_T*) 2);
-	  break;
-	  
-	case IDC_IGNORE4:
-	  ThotCallback (SpellingBase + ChkrMenuIgnore, INTEGER_DATA, (CHAR_T*) 3);
-	  break;
-	  
-	case ID_SKIPNEXT:
-	  ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, currentWord);
-	  ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (CHAR_T*) iLocation);
-	  ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (CHAR_T*) 1);
-	  if (iLocation == 3) {
-	    CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
-	    iLocation = 2;
-	  }
-	  break;
-	  
-	case ID_SKIPDIC:
-	  ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, currentWord);
-	  ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (CHAR_T*) iLocation);
-	  ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (CHAR_T*) 2);
-	  if (iLocation == 3)
-	    {
-	      CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
-	      iLocation = 2;
-	    }
-	  break;
-	  
-	case ID_REPLACENEXT:
-	  ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, currentWord);
-	  ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (CHAR_T*) iLocation);
-	  ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (CHAR_T*) 3);
-	  if (iLocation == 3)
-	    {
-	      CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
-	      iLocation = 2;
-	    }
-	  break;
-	  
-	case ID_REPLACEDIC:
-	  ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, currentWord);
-	  ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (CHAR_T*) iLocation);
-	  ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (CHAR_T*) 4);
-	  if (iLocation == 3)
-	    {
-	      CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
-	      iLocation = 2;
-	    }
-	  break;
-	  
-	case IDC_WORDBUTTON:
-	  GetWindowText (wordButton, currentWord, MAX_WORD_LEN);
-	  SetWindowText (hwndCurrentWord, currentWord);
-	  break;
-	  
-	case ID_DONE:
-	  SpellChecker = NULL;
-      hwndLanguage = NULL;
-	  EndDialog (hwnDlg, ID_DONE);
-	  break;	  
-	}
-      break;
-    default: return FALSE;
-    }
-  return TRUE;
-}
 
 /*-----------------------------------------------------------------------
  InitConfirmDlgProc
@@ -3929,49 +3719,6 @@ STRING class_list;
   classList   = class_list;
   WithEdit = FALSE;
   DialogBox (hInstance, MAKEINTRESOURCE (APPLYCLASSDIALOG), NULL/*parent*/, (DLGPROC) ApplyClassDlgProc);
-}
-
-/*-----------------------------------------------------------------------
- CreateSpellCheckDlgWindow
- ------------------------------------------------------------------------*/
-#ifdef __STDC__
-void CreateSpellCheckDlgWindow (ThotWindow parent, STRING label, STRING rejectedChars,
-								int spellingBase, int chkrSelectProp, int chkrMenuOR, 
-							    int chkrFormCorrect, int chkrMenuIgnore, int chkrCaptureNC, int chkrSpecial)
-#else  /* !__STDC__ */
-void CreateSpellCheckDlgWindow (parent, label, rejectedChars, spellingBase, 
-								chkrSelectProp, chkrMenuOR, chkrFormCorrect, chkrMenuIgnore, chkrCaptureNC, chkrSpecial)
-ThotWindow  parent;
-STRING label;
-STRING rejectedChars;
-int   spellingBase;
-int   chkrSelectProp;
-int   chkrMenuOR;
-int   chkrFormCorrect;
-int   chkrMenuIgnore;
-int   chkrCaptureNC;
-int   chkrSpecial;
-#endif /* __STDC__ */
-{  
-  SpellingBase    = spellingBase;
-  ChkrSelectProp  = chkrSelectProp;
-  ChkrMenuOR      = chkrMenuOR;
-  ChkrFormCorrect = chkrFormCorrect;
-  ChkrMenuIgnore  = chkrMenuIgnore;
-  ChkrCaptureNC   = chkrCaptureNC;
-  ChkrSpecial     = chkrSpecial;
-
-  ustrcpy (currentLabel, label);
-  ustrcpy (currentRejectedchars, rejectedChars); 
-  /* to have the same behavior as under Unix, we need to destroy the
-     dialog if it already existed */
-  if (SpellChecker) 
-  {
-    EndDialog (SpellChecker, ID_DONE);
-	SpellChecker = NULL;
-	hwndLanguage = NULL;
-  }
-  DialogBox (hInstance, MAKEINTRESOURCE (SPELLCHECKDIALOG), NULL, (DLGPROC) SpellCheckDlgProc);
 }
 
 /*-----------------------------------------------------------------------
