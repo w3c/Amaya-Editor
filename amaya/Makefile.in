@@ -25,8 +25,7 @@ CONFIGFILES=XKeysymDB thot.ini amaya.keyboard en-amayadialogue \
 DICOFILES= *.ptn alphabet clavier
 
 AMAYAFILES= HTML.STR HTML.conf HTML.trans HTML.en HTML.fr\
-           HTML*.PRS HTML*.TRA \
-	   MathML.STR MathMLP.PRS MathML*.TRA
+           HTML*.PRS HTML*.TRA
 
 FONTSFILES=Families.list fonts.dir icones*
 
@@ -111,11 +110,11 @@ force :
 #include the fragment "amaya/Makefile.libwww" for libwww if configured in
 @www_frag@
 
-#include the fragment "amaya/Makefile.math" for math if configured in
-@math_frag@
-
 #include the fragment "amaya/Makefile.graph" for graphics if configured in
 @graph_frag@
+
+#include the fragment "amaya/Makefile.math" for math if configured in
+@math_frag@
 
 #include the fragment "ilulib/Makefile.ilu" for ILU if configured in
 @ilu_frag@
@@ -136,7 +135,7 @@ AMAYA_OPTION_INCLUDES= $(AMAYA_JAVA_INCLUDES) $(AMAYA_PLUGIN_INCLUDES) \
 	 $(AMAYA_GRAPH_INCLUDES) $(AMAYA_ILU_INCLUDES)
 
 AMAYA_OPTION_OBJ= $(AMAYA_JAVA_OBJ) $(AMAYA_PLUGIN_OBJ) \
-         $(AMAYA_LIBWWW_OBJ) $(AMAYA_MATH_OBJ) $(AMAYA_GRAPH_OBJ) \
+         $(AMAYA_LIBWWW_OBJ) $(AMAYA_GRAPH_OBJ) $(AMAYA_MATH_OBJ) \
          $(AMAYA_ILU_OBJ)
 
 AMAYA_SRC= $(AMAYA_JAVA_SRC) $(AMAYA_PLUGIN_SRC) \
@@ -163,7 +162,7 @@ AMAYA_LIBS= ../thotlib/libThotEditor.a ../tablelib/libThotTable.a \
 
 HTML2THOT_LIBS= ../thotlib/libThotKernel.a
 
-amaya_schemas : compHTML compHTMLP compHTMLT math_schema graph_schema
+amaya_schemas : compHTML compHTMLP compHTMLT graph_schema math_schema
 
 amaya_src : HTML.h 
 
