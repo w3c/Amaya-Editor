@@ -463,9 +463,7 @@ void GiveStixSize (ThotFont pfont, PtrAbstractBox pAb, int *width,
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void GetMathFontFromChar (char typesymb,
-    			  SpecFont fontset,
-			  void **font,
+void GetMathFontFromChar (char typesymb, SpecFont fontset, void **font,
 			  int height)
 {
   switch (typesymb)

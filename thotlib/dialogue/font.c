@@ -1800,15 +1800,15 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 		   c == 0x2147 /* ExponentialE */ ||
 		   c == 0x2148 /* ImaginaryI */)
 	    {
+	      code = '1'; /* West Europe Latin */
+	      pfont = &(fontset->FontIso_1);
 #ifdef _WINGUI
 	      encoding = WINDOWS_1252;
 #endif /* _WINGUI */
 #if defined(_GTK) || defined(_WX) 
 	      encoding = ISO_8859_1;
-#endif /* #if defined(_GTK) || defined(_WX) */
-        
-	      code = '1'; /* West Europe Latin */
-	      pfont = &(fontset->FontIso_1);
+#endif /* defined(_GTK) || defined(_WX) */
+#ifndef _GL
 	      if (c == 0x2148 /* ImaginaryI */)
 		c = 105;
 	      else if (c == 0x2146 /* DifferentialD */)
@@ -1817,6 +1817,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 		c = 104;
 	      else /* ExponentialE */
 		c = 101;
+#endif /* _GL */
 	    }
 	  else if (c == 0x152  /*oe*/     || c == 0x153  /*OE*/ ||
 		   c == 0x178  /*ydiaeresis*/ ||
@@ -1863,6 +1864,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 		  encoding = ISO_8859_1;
 		  code = '1';
 		  pfont = &(fontset->FontIso_1);
+#ifndef _GL
 		  if (c == 0x2C6)       /*circ*/
 		    c = 94;
 		  else if (c == 0x2DC)  /*tilde*/
@@ -1888,6 +1890,7 @@ int GetFontAndIndexFromSpec (CHAR_T c, SpecFont fontset, ThotFont *font)
 		      else if (c == 0x2026) /* horizontal ellipsis */
 			c = 188;
 		    }
+#endif /* _GL */
 		}
 #endif /* #if defined(_GTK) || defined(_WX) */
 	    }
