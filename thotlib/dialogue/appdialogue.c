@@ -1250,7 +1250,7 @@ Pixmap              icon;
 	while (ptrmenu != NULL)
 	  {
 	     /* Enregistre le widget du menu */
-	     FrameTable[0].ActifMenus[i] = TRUE;
+	     FrameTable[0].EnabledMenus[i] = TRUE;
 	     BuildPopdown (ptrmenu, ref, FrameTable[0].WdMenus[i], 0, 0);
 	     ptrmenu = ptrmenu->NextMenu;
 	     ref += MAX_ITEM;
@@ -1260,7 +1260,7 @@ Pixmap              icon;
 	/* Les autres entrees de menus sont inactives */
 	while (i < MAX_MENU)
 	  {
-	     FrameTable[0].ActifMenus[i] = FALSE;
+	     FrameTable[0].EnabledMenus[i] = FALSE;
 	     i++;
 	  }
      }
@@ -1291,6 +1291,10 @@ caddr_t             call_d;
      {
 #ifdef _WINDOWS
 	doSwitchButton = FALSE;
+#else /* _WINDOWS */
+	if (!FrameTable[frame].EnabledButton[i])
+	  /* the button is not active */
+	  return;
 #endif /* _WINDOWS */
 	CloseInsertion ();
 	FrameToView (frame, &document, &view);
@@ -1365,7 +1369,8 @@ ThotWidget   toplevel;
    procedure: procedure to be executed when the new entry is
    selected by the user. Null creates a cascade button.
    info: text to display when the cursor stays on the button.
-   Parameters type and state are only used on Windows versions.
+   type: button type, only used on Windows versions.
+   state: TRUE to enable the button, false to disable it.
    Returns index
   ----------------------------------------------------------------------*/
 #ifndef _WIN_PRINT
@@ -1456,6 +1461,7 @@ boolean    state;
 		    }
 		}
 	      FrameTable[frame].Button[i] = w;
+	      FrameTable[frame].EnabledButton[i] = state;
 	      index = i;
 	      /* force la mise a jour de la fenetre */
 	      XtManageChild (row);
@@ -1646,7 +1652,7 @@ int                 index;
    view: the concerned view.
    index: the index.
    picture: the new icon.
-   state: the new state
+   state: TRUE to enable the button, false to disable it.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaChangeButton (Document document, View view, int index, ThotIcon picture, boolean state)
@@ -1696,6 +1702,7 @@ boolean             state;
 	      XtSetArg (args[n], XmNlabelPixmap, picture);
 	      n++;
 	      XtSetValues (FrameTable[frame].Button[index], args, n);
+	      FrameTable[frame].EnabledButton[index] = state;
 #endif /* _WINDOWS */
 	    }
 	}
@@ -2602,7 +2609,7 @@ int                 doc;
 		   w = XmCreateCascadeButton (menu_bar, TtaGetMessage (THOT, ptrmenu->MenuID), args, n);
 #                  endif /* !_WINDOWS */
 		   FrameTable[frame].WdMenus[i] = w;
-		   FrameTable[frame].ActifMenus[i] = TRUE;
+		   FrameTable[frame].EnabledMenus[i] = TRUE;
 		   /* Evite la construction des menus dynamiques */
 		   if (ptrmenu->MenuAttr)
 		     FrameTable[frame].MenuAttr = ptrmenu->MenuID;
@@ -2634,7 +2641,7 @@ int                 doc;
 	   /* Les autres entrees de menus sont inactives */
 	   while (i < MAX_MENU)
 	     {
-	       FrameTable[frame].ActifMenus[i] = FALSE;
+	       FrameTable[frame].EnabledMenus[i] = FALSE;
 	       i++;
 	     }
 
@@ -3467,13 +3474,13 @@ int                 menuID;
    if (menu != -1)
      {
        menu--;
-       if (FrameTable[frame].ActifMenus[menu])
+       if (FrameTable[frame].EnabledMenus[menu])
 	 {
 	   /* Get the button widget */
 	   w = FrameTable[frame].WdMenus[menu];
 	   if (w != 0)
 	     {
-	       FrameTable[frame].ActifMenus[menu] = FALSE;
+	       FrameTable[frame].EnabledMenus[menu] = FALSE;
 	       ref = (menu * MAX_ITEM) + frame + MAX_LocalMenu;
 	       /* Disable */
 #ifdef _WINDOWS
@@ -3551,13 +3558,13 @@ int                 menuID;
    if (menu != -1)
      {
        menu--;
-       if (!FrameTable[frame].ActifMenus[menu])
+       if (!FrameTable[frame].EnabledMenus[menu])
 	 {
 	   /* Get the button widget */
 	   w = FrameTable[frame].WdMenus[menu];
 	   if (w != 0)
 	     {
-	       FrameTable[frame].ActifMenus[menu] = TRUE;
+	       FrameTable[frame].EnabledMenus[menu] = TRUE;
 	       ref = (menu * MAX_ITEM) + frame + MAX_LocalMenu;
 	       /* Enaable */
 #         ifdef _WINDOWS

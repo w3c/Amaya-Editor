@@ -48,11 +48,10 @@ DEFAULT
    Foreground: Enclosing =;
    END;
 
-{ ---- Pages ---- }
-#ifdef PAGE
-
 BOXES
 
+{ ---- Pages ---- }
+#ifdef PAGE
   URLhead:
 	BEGIN
 	Background : White;
@@ -137,6 +136,22 @@ BOXES
 	IF Not One(CptPage) CreateBefore (BottomSpace);
 	Underline: NoUnderline;
 	END;
+#else
+
+  RightSpace:
+	BEGIN
+	Fillpattern : nopattern;
+	Underline: NoUnderline;
+	Content: Text '   ';
+	Justify: No;
+	HorizPos: Left = BODY . Right;
+	VertPos: Top = Enclosing . Top;
+	Height:   1;
+	Size : 12 pt;
+	Font: times;
+	Style: Roman;
+	END;
+
 #endif
 
 RULES
@@ -168,12 +183,13 @@ RULES
 	END;
 
  BODY: BEGIN
+	HorizPos: Left = Enclosing . Left + 1;
 #ifdef PAGE
 	Width: Enclosing . Width - 2;
 #else
+	CreateWith (RightSpace);
 	Width: Enclosed . Width;
 #endif
-	HorizPos: Left = Enclosing . Left + 1;
 	END;
 
  Line_: BEGIN

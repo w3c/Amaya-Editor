@@ -722,7 +722,7 @@ Document            doc;
 #ifdef _WINDOWS 
        WIN_TtaSwitchButton (document, 1, 5, iconEditor, TB_INDETERMINATE, TRUE);
 #else  /* _WINDOWS */
-       TtaChangeButton (document, 1, 5, iconBrowser, FALSE);
+       TtaChangeButton (document, 1, 5, iconBrowser, TRUE);
 #endif /* _WINDOWS */
        TtaChangeButton (document, 1, 11, iconINo, FALSE);
        TtaChangeButton (document, 1, 12, iconBNo, FALSE);
@@ -1651,7 +1651,7 @@ boolean             logFile;
 #ifdef _WINDOWS 
 	     WIN_TtaSwitchButton (doc, 1, 5, iconEditor, TB_INDETERMINATE, TRUE);
 #else  /* _WINDOWS */
-	     TtaChangeButton (doc, 1, 5, iconBrowser, FALSE);
+	     TtaChangeButton (doc, 1, 5, iconBrowser, TRUE);
 #endif /* _WINDOWS */
 	   }
 	 else

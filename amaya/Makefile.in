@@ -279,7 +279,7 @@ $(AMAYA)/TextFileP.PRS : $(AMAYA)/TextFileP.P ../bin/prs
 	$$STR $(ALL_AMAYA_OPTIONS) TextFile ;\
 	$$PRS $(ALL_AMAYA_OPTIONS) TextFileP ;\
 	$$PRS $(ALL_AMAYA_OPTIONS) -DPAGE TextFileP TextFilePP ;\
-	$$PRS $(ALL_AMAYA_OPTIONS) -DUS_PAPER TextFileP TextFilePPUS ;\
+	$$PRS $(ALL_AMAYA_OPTIONS) -DUS_PAPER TextFileP TextFilePPUS
 
 #
 # Traduction schemas compilation
