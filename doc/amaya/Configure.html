@@ -38,11 +38,13 @@ or <strong>Thot/config/thot.rc</strong> (Windows)
 This file  is used to define global parameters of Thot applications (Amaya is
 a Thot application). Inside this file, there's a section called
 <code>[amaya]</code> where are specified the configuration options concerning:
-<a href="#L138">the default home page</a>, <a href="#Multi-key">control the
-multi-key support</a>, <a href="#Specifying">proxies</a>,<a href="#L139">
-default colors</a>, <a href="#Default">the default zoom-factor</a>,<a
+<a href="#L138">the default home page</a>, <a href="#Specifying">the proxies
+<a/>, <a href="#Network">the network timeouts</a>, <a href="#Cache">the 
+cache</a>, <a href="#Multi-key"> the multi-key support</a>, 
+<a href="#L139">default colors</a>, 
+<a href="#Default">the default zoom-factor</a>,<a
 href="#L140"> the colors palette</a>, <a href="#L141">the dialogue
-language</a>, <a href="#Personnal">the personall dictionary</a>, and<a
+language</a>, <a href="#Personnal">the personal dictionary</a>, and <a
 href="#L242"> the default printer command</a>.</p>
 </li>
 <li>
@@ -112,6 +114,25 @@ set no_proxy=harpo.marx.edu zeppo.marx.edu chico.marx.edu</pre>
 Please consult your system's documentation for more complete information on
 how to specify environment variables.</p>
 
+<h3><a name="Network">Network timeouts</a></h3>
+<p>
+Starting from version 1.3b, you can customize different network timeouts
+by means of the following registry file directives:</p>
+<dl>
+<dt><strong>DNS_Timeout</strong> [in seconds, default 60 s]</dt>
+<dd>
+Timeout while consulting a domain name server
+</dd>
+<dt><strong>PersistCx_Timeout</strong> [in seconds, default 60 s]</dt>
+<dd>
+Timeout before closing an idle persistent connection (keep-alive)
+</dd>
+<dt><strong>Net_Event_Timeout</strong> [in milliseconds, default 20s]</dt>
+<dd>
+Timeout while waiting for a network event (e.g., while opening a connection)
+</dd>
+</dl>
+
 <h3><a name="Cache">Cache</a></h3>
 <p>
 As of version 1.3a, Amaya provides a cache thru libwww. The cache is enabled
@@ -120,15 +141,15 @@ by default and is stored in a directory which is called
 <p>
 Three registry files entries allow you to control the cache:</p>
 <dl>
-<dt><strong>EnableCache</strong> [YES/NO, default YES]</dt>
+<dt><strong>Enable_Cache</strong> [YES/NO, default YES]</dt>
 <dd>
 Activates or desactivates the cache
 </dd>
-<dt><strong>CacheSize</strong> [size in megabytes, default 5 megabytes]</dt>
+<dt><strong>Cache_Size</strong> [size in megabytes, default 5 megabytes]</dt>
 <dd>
 Gives the size of the cache repository
 </dd>
-<dt><strong>CacheDir</strong> [path, the default is the .amaya temporary
+<dt><strong>Cache_Dir</strong> [path, the default is the .amaya temporary
 directory]</dt>
 <dd>
 The directory path where you want to create the libwww-cache directory
