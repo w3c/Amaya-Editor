@@ -964,25 +964,6 @@ char                itemType;
 
 
 /*----------------------------------------------------------------------
-   mmtopixel convertit des mm en pixels.                           
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int          mmtopixel (int N, int horiz)
-#else  /* __STDC__ */
-static int          mmtopixel (N, horiz)
-int                 N;
-int                 horiz;
-
-#endif /* __STDC__ */
-{
-   if (horiz)
-      return (DOT_PER_INCHE * N * 10) / 254;
-   else
-      return (DOT_PER_INCHE * N * 10) / 254;
-}
-
-
-/*----------------------------------------------------------------------
    BuildSubmenu construit un sous-menu attache' a l'item item     
    du menu ref.                                            
   ----------------------------------------------------------------------*/
@@ -2735,21 +2716,16 @@ int                 doc;
 	   /* Verification des dimensions */
 	   if (width == 0)
 	     width = 180;	/* largeur en mm */
-	   width = mmtopixel (width, 1);
 	   if (height == 0)
 	     height = 240;	/* hauteur en mm */
-	   height = mmtopixel (height, 0) + FrameTable[frame].FrTopMargin;
+	   height = height + FrameTable[frame].FrTopMargin;
 	   
 #ifdef _WINDOWS
 	   /*** Build the document window ***/
 	   if (X < 0)
 	     X = 2;
-	   else
-	     X = mmtopixel (X, 1);
 	   if (Y < 0)
 	     Y = 2;
-	   else
-	     Y = mmtopixel (Y, 0);
 	   Main_Wd = CreateWindowEx (0L, TEXT("Amaya"),    /* window class name */
 				     NULL,	/* window caption    */
 				     WS_OVERLAPPEDWINDOW, /* window style            */
@@ -2789,12 +2765,8 @@ int                 doc;
 	     dy = (Dimension) height;
 	   if (X < 0)
 	     X = 2;
-	   else
-	     X = mmtopixel (X, 1);
 	   if (Y < 0)
 	     Y = 2;
-	   else
-	     Y = mmtopixel (Y, 0);
 
 #ifdef _GTK
 	   /*** Build the document window ***/
