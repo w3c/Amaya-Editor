@@ -1590,6 +1590,7 @@ void BM_bookmarksSort (List **bookmark_list)
       ConvertContainerToList (&list_tmp, tmp_entry->child);
       tmp_entry = tmp_entry->next;
     }
+  List_delAll (bookmark_list, NULL);
   *bookmark_list = list_tmp;
 #endif /* BOOKMARKS */
 }
