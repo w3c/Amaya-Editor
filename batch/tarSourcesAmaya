@@ -134,6 +134,7 @@ Amaya/cpp/i386/*.asm \
 Amaya/cpp/i386/*.ifile \
 Amaya/cpp/i386/t-* \
 Amaya/cpp/i386/x-* \
+Amaya/dicopar/*.dic \
 Amaya/dicopar/*.ptn \
 Amaya/dicopar/alphabet \
 Amaya/dicopar/clavier \
