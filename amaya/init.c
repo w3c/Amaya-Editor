@@ -1200,6 +1200,8 @@ char               *pathname;
 		  ActiveTransfer (doc);
 	       }
 	  }
+	else
+	  TtaSetTextZone (doc, 1, 2, "");
      }
    TtaFreeMemory (temppath);
    return (doc);

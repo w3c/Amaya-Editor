@@ -637,7 +637,6 @@ Document       doc;
 	}
       TtaFreeMemory (DocumentURLs[doc]);
       DocumentURLs[doc] = NULL;
-      TtaSetTextZone (doc, 1, 2, "");
       RemoveDocCSSs (doc, TRUE);
       RemoveDocumentImages (doc);
     }
