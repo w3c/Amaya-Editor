@@ -37,6 +37,8 @@
         utilisateur</a>
         <ul>
           <li><a href="#L90">Gérer des feuilles de style CSS externes</a></li>
+          <li><a href="#L2881">Créer et mettre à jour certaines propriétés
+            CSS</a></li>
         </ul>
       </li>
       <li><a href="#Visualiser">Visualiser le style appliqué</a></li>
@@ -146,6 +148,17 @@ l'utilisateur :</p>
 l'utilisateur, mais les commandes <strong>Ajouter</strong> et
 <strong>Retirer</strong> concernent uniquement les feuilles de style
 externes.</p>
+
+<h4 id="L2881">Créer et mettre à jour certaines propriétés CSS</h4>
+
+<p>Les outils <a href="#Couleurs">Couleurs</a>, <a
+href="#Caract">Caractères</a> et <a href="#Format">Format</a> décrits plus
+loin permettent d'engendrer des propriétés CSS directement dans un fichier
+feuille de style.</p>
+
+<p>Quand la propriété de style est appliquée alors que la sélection se trouve
+dans une feuille de style, Amaya insère la propriété CSS à la position
+courante.</p>
 
 <h3 id="Visualiser">Visualiser le style appliqué</h3>
 

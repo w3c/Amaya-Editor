@@ -2039,7 +2039,7 @@ ThotBool RedrawFrameTop (int frame, int scroll)
 			bVol = pFrame->FrVolume - pFrame->FrAbstractBox->AbVolume;
 		      
 		      /* Volume to add */
-		      top = (h / 4 - y) * l;
+		      top = (h / 2 - y) * l;
 		      delta = 0;
 		      /* Volume of the area to recompute */
 		      if (topBox)
@@ -2074,7 +2074,7 @@ ThotBool RedrawFrameTop (int frame, int scroll)
 		      RedrawFrameTop (frame, 0);
 		    }
 		  y = bottom - pRootBox->BxYOrg - pRootBox->BxHeight;
-		  if (pFrame->FrAbstractBox->AbTruncatedTail && y >= 0)
+		  if (pFrame->FrAbstractBox->AbTruncatedTail && y > 0)
 		    {
 		      /* it lacks some abstract image at the bottom of the frame */
 		      /* cleanup the bottom of the frame */
@@ -2082,7 +2082,7 @@ ThotBool RedrawFrameTop (int frame, int scroll)
 		      /* don't loop is volume didn't change */
 		      tVol = pFrame->FrAbstractBox->AbVolume;
 		      /* Volume to add */
-		      bottom = (y + h / 4) * l;
+		      bottom = y * l;
 		      IncreaseVolume (FALSE, GetCharsCapacity (bottom, frame), frame);
 		      tVol -= pFrame->FrAbstractBox->AbVolume;
 		      /* Image should be completed */

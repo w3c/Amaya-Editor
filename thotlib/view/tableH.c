@@ -553,9 +553,9 @@ static void CheckRowHeights (PtrAbstractBox table, int frame)
 	      while (j < irow && row != rowList[j])
 		j++;
 	      sum = box->BxHeight;
-	      if (row->AbBox)
+	      //if (row->AbBox)
 		/* add the extra space on top of the cell */
-		/*sum = sum + box->BxYOrg - row->AbBox->BxYOrg*/;
+		//sum = sum + box->BxYOrg - row->AbBox->BxYOrg;
 	      if (j + pTabSpan->TaSpanNumber[i] > irow)
 		/* update the span value if necessary */
 		pTabSpan->TaSpanNumber[i] = irow - j;

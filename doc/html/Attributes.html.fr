@@ -4,7 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Editer des Attributs</title>
-  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
+  />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -17,11 +18,11 @@
       <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
         src="../images/amaya.gif" /></p>
       </td>
-      <td><p><a href="Creating.html.fr" accesskey="p"><img
-        alt="previous" src="../images/left.gif" /></a> <a
-        href="Manual.html.fr" accesskey="t"><img alt="top"
-        src="../images/up.gif" /></a> <a href="EditChar.html.fr"
-        accesskey="n"><img alt="next" src="../images/right.gif" /></a></p>
+      <td><p><a href="Creating.html.fr" accesskey="p"><img alt="previous"
+        src="../images/left.gif" /></a> <a href="Manual.html.fr"
+        accesskey="t"><img alt="top" src="../images/up.gif" /></a> <a
+        href="EditChar.html.fr" accesskey="n"><img alt="next"
+        src="../images/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -47,8 +48,7 @@ effacer un attribut.</p>
 <p>Pour éditer un attribut, sélectionnez d'abord l'élément approprié. Vous
 devez sélectionner l'élément entier et pas seulement un caractère à
 l'intérieur de l'élément. Pour cela, utilisez <a
-href="Selecting.html.fr#Selecting1">la touche ESC (sur les stations Unix) ou
-la touche F2 (sur les stations Windows)</a> . Quand l'élément a été
+href="Selecting.html.fr#Selecting1">la touche F2</a> . Quand l'élément a été
 sélectionné, choisissez dans le menu <strong>Attributs</strong> l'attribut à
 éditer. <strong>Amaya</strong> agit alors en fonction de l'attribut choisi
 :</p>

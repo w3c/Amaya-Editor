@@ -223,12 +223,16 @@ static ThotBool NeedRedraw (int frame)
 {
   ViewFrame          *pFrame;
 
-  pFrame = &ViewFrameTable[frame - 1];
-  if (pFrame->FrReady &&
-      pFrame->FrAbstractBox && 
-      pFrame->FrAbstractBox->AbElement)
-    return TRUE;
-  return FALSE;
+  if (frame > 0)
+    {
+      pFrame = &ViewFrameTable[frame - 1];
+      if (pFrame->FrReady && pFrame->FrAbstractBox && 
+	  pFrame->FrAbstractBox->AbElement)
+	return TRUE;
+      else
+	return FALSE;
+    }
+  return TRUE;
 }
 
 
@@ -717,12 +721,9 @@ ThotBool GL_prepare (int frame)
   ----------------------------------------------------------------------*/
 void GL_Swap (int frame)
 {
-  if (frame >= 0 && frame < MAX_FRAME && 
-      SwapOK[frame] && 
-      NeedRedraw (frame))
+  if (frame >= 0 && frame < MAX_FRAME && SwapOK[frame] && NeedRedraw (frame))
     {   
       glDisable (GL_SCISSOR_TEST);
-
 #ifdef _WINGUI
       if (FrRef[frame])
         if (GL_Windows[frame])
@@ -731,14 +732,12 @@ void GL_Swap (int frame)
             ReleaseDC (FrRef[frame], GL_Windows[frame] );
           }
 #endif /* _WINGUI */
-
 #ifdef _GTK      
       if (FrameTable[frame].WdFrame)
       {
         gtk_gl_area_swapbuffers (GTK_GL_AREA(FrameTable[frame].WdFrame));
       }
 #endif /* #ifdef _GTK */
-
 #ifdef _WX
       if (FrameTable[frame].WdFrame)
       {
@@ -748,7 +747,6 @@ void GL_Swap (int frame)
 	FrameTable[frame].WdFrame->SwapBuffers();
       }
 #endif /* _WX */
-
       glEnable (GL_SCISSOR_TEST); 
       FrameTable[frame].DblBuffNeedSwap = FALSE;
     }
