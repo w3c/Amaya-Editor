@@ -270,7 +270,7 @@ void BM_bufferCat (BM_dyn_buffer *me, char *src)
   int                 lg;
 
   lg = strlen (src) + 1;
-  if ((int)strlen (me->buffer) + lg > me->lgbuffer)
+  if ((unsigned int)strlen (me->buffer) + lg > me->lgbuffer)
     {
       /* it is necessary to extend the buffer */
       if (lg < PARAM_INCREMENT)
@@ -294,9 +294,9 @@ void BM_bufferCat (BM_dyn_buffer *me, char *src)
 void BM_bufferCopy (BM_dyn_buffer *me, char *src)
 {
   void               *status;
-  int                 lg;
+  unsigned int        lg;
 
-  lg = strlen (src) + 1;
+  lg = (unsigned int) strlen (src) + 1;
   if (lg > me->lgbuffer)
     {
       /* it is necessary to extend the buffer */
