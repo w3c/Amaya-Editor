@@ -75,11 +75,12 @@ extern void OpenNew ( Document document,
                       int docProfile );
 extern void GoToHome ( Document doc,
                        View view );
-extern Document InitDocView ( Document doc,
-                              char *docname,
-                              DocumentType docType,
-                              Document sourceOfDoc,
-                              ThotBool readOnly );
+extern Document InitDocAndView ( Document doc,
+                                 char *docname,
+                                 DocumentType docType,
+                                 Document sourceOfDoc,
+                                 ThotBool readOnly,
+                                 int profile );
 extern void ParseAsHTML ( Document document,
                           View view );
 extern void Reload_callback ( int doc,
@@ -263,11 +264,12 @@ extern void OpenNew (/* Document document,
                         int docProfile */);
 extern void GoToHome (/* Document doc,
                          View view */);
-extern Document InitDocView (/* Document doc,
-                                char *docname,
-                                DocumentType docType,
-                                Document sourceOfDoc,
-                                ThotBool readOnly */);
+extern Document InitDocAndView (/* Document doc,
+                                   char *docname,
+                                   DocumentType docType,
+                                   Document sourceOfDoc,
+                                   ThotBool readOnly,
+                                   int profile */);
 extern void ParseAsHTML (/* Document document,
                             View view */);
 extern void Reload_callback (/* int doc,

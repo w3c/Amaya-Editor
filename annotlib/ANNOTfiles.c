@@ -80,7 +80,7 @@ Document ANNOT_NewDocument (Document doc, AnnotMode mode)
   else
     tmp = "annotation";
 
-  annotDoc = InitDocView (0, tmp, docAnnot, 0, FALSE);
+  annotDoc = InitDocAndView (0, tmp, docAnnot, 0, FALSE, L_Other);
 
   if (annotDoc == 0) 
     {

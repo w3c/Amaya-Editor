@@ -1898,12 +1898,12 @@ void GoToHome (Document doc, View view)
 
 
 /*----------------------------------------------------------------------
-   InitDocView prepares the main view of a new document.
+   InitDocAndView prepares the main view of a new document.
    logFile is TRUE if the new view is created to display a log file
    sourceOfDoc is not zero when we're opening the source view of a document.
   ----------------------------------------------------------------------*/
-Document InitDocView (Document doc, char *docname, DocumentType docType,
-		      Document sourceOfDoc, ThotBool readOnly)
+Document InitDocAndView (Document doc, char *docname, DocumentType docType,
+			 Document sourceOfDoc, ThotBool readOnly, int profile)
 {
   View          mainView, structView, altView, linksView, tocView;
   Document      old_doc;
@@ -1977,7 +1977,7 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
        requested_doc = 0;
      }
 
-   /* open the document */
+   /* Init the new document */
    if (docType == docText || docType == docCSS ||
        docType == docSource || docType == docLog)
      doc = TtaInitDocument ("TextFile", docname, requested_doc);
@@ -2056,6 +2056,11 @@ Document InitDocView (Document doc, char *docname, DocumentType docType,
 	   TtaCloseDocument (doc);
 	   return (0);
 	 }
+       
+       /* store the profile of the new document */
+       /* and update the menus according to it */
+       TtaSetDocumentProfile (doc, profile);
+       TtaUpdateMenus (doc, 1, readOnly);
 
        /* By default no log file */
        TtaSetItemOff (doc, 1, Views, BShowLogFile);
@@ -2554,7 +2559,7 @@ static Document LoadDocument (Document doc, char *pathname,
   char               *content_type;
   char               *http_content_type;
   int                 i, j;
-  int                 parsingLevel, docprofile;
+  int                 parsingLevel;
   ThotBool            unknown;
   ThotBool            plainText;
   ThotBool            xmlDec, withDoctype, isXML;
@@ -2809,7 +2814,7 @@ static Document LoadDocument (Document doc, char *pathname,
 	      if (/*TtaIsDocumentModified (doc) || */docType == docCSS)
 		{
 		  /* open a new window to display the new document */
-		  newdoc = InitDocView (0, documentname, docType, 0, FALSE);
+		  newdoc = InitDocAndView (0, documentname, docType, 0, FALSE, parsingLevel);
 		  ResetStop (doc);
 		  /* clear the status line of previous document */
 		  TtaSetStatus (doc, 1, " ", NULL);
@@ -2817,12 +2822,12 @@ static Document LoadDocument (Document doc, char *pathname,
 		}
 	      else
 		/* replace the current document by a new one */
-		newdoc = InitDocView (doc, documentname, docType, 0, FALSE);
+		newdoc = InitDocAndView (doc, documentname, docType, 0, FALSE, parsingLevel);
 	    }
 	  else if (method == CE_ABSOLUTE  || method == CE_HELP ||
 		   method == CE_FORM_POST || method == CE_FORM_GET)
 	    /* replace the current document by a new one */
-	    newdoc = InitDocView (doc, documentname, docType, 0, FALSE);
+	    newdoc = InitDocAndView (doc, documentname, docType, 0, FALSE, parsingLevel);
 #ifdef ANNOTATIONS
 	  else if (method == CE_ANNOT && docType == docHTML)
 	    {
@@ -2840,23 +2845,20 @@ static Document LoadDocument (Document doc, char *pathname,
 	    }
 	  else if (docType != DocumentTypes[doc])
 	    /* replace the current document by a new one */
-	    newdoc = InitDocView (doc, documentname, docType, 0, FALSE);
+	    newdoc = InitDocAndView (doc, documentname, docType, 0, FALSE, parsingLevel);
 	  else
-	    /* document already initialized */
-	    newdoc = doc;
+	    {
+	      /* document already initialized */
+	      newdoc = doc;
+	      /* store the profile of the new document */
+	      /* and update the menus according to it */
+	      TtaSetDocumentProfile (newdoc, parsingLevel);
+	      TtaUpdateMenus (newdoc, 1, ReadOnlyDocument[newdoc]);
+	    }
 	}
       else
 	newdoc = doc;
 
-      /* store the document profile and */
-      /* update the menus according to the profile of the new document */
-      docprofile = TtaGetDocumentProfile (newdoc);
-      if (docprofile != parsingLevel)
-	{
-	  TtaSetDocumentProfile (newdoc, parsingLevel);
-	  TtaUpdateMenus (newdoc, 1, ReadOnlyDocument[newdoc]);
-	}
-     	
       if (docType == docImage)
       /* create an HTML container */
 	{
@@ -3435,7 +3437,7 @@ void ShowSource (Document document, View view)
        }
      TtaExtractName (tempdocument, tempdir, documentname);
      /* open a window for the source code */
-     sourceDoc = InitDocView (0, documentname, docSource, document, FALSE);   
+     sourceDoc = InitDocAndView (0, documentname, docSource, document, FALSE, L_Other);   
      if (sourceDoc > 0)
        {
 	 DocumentSource[document] = sourceDoc;
@@ -4044,11 +4046,11 @@ Document GetHTMLDocument (const char *documentPath, char *form_data,
 	 }
        else if (CE_event == CE_LOG)
 	   /* need to create a new window for the document */
-	     newdoc = InitDocView (doc, documentname, docLog, 0, FALSE);
+	     newdoc = InitDocAndView (doc, documentname, docLog, 0, FALSE, L_Other);
        else if (CE_event == CE_HELP)
 	 {
 	   /* need to create a new window for the document */
-	   newdoc = InitDocView (doc, documentname, docType, 0, TRUE);
+	   newdoc = InitDocAndView (doc, documentname, docType, 0, TRUE, L_Other);
 	   if (newdoc)
 	     {
 	       /* help document has to be in read-only mode */
@@ -4061,7 +4063,7 @@ Document GetHTMLDocument (const char *documentPath, char *form_data,
        else if (CE_event == CE_ANNOT)
 	 {
 	   /* need to create a new window for the document */
-	   newdoc = InitDocView (doc, documentname, docAnnot, 0, FALSE);
+	   newdoc = InitDocAndView (doc, documentname, docAnnot, 0, FALSE, L_Other);
 	   /* we're downloading an annotation, fix the accept_header
 	      (thru the content_type variable) to application/rdf */
 	   content_type = "application/rdf";
@@ -4070,7 +4072,7 @@ Document GetHTMLDocument (const char *documentPath, char *form_data,
        else if (doc == 0 || InNewWindow)
 	 {
 	   /* In case of initial document, open the view before loading */
-	   newdoc = InitDocView (0, documentname, docType, 0, FALSE);
+	   newdoc = InitDocAndView (0, documentname, docType, 0, FALSE, L_Other);
 	   /* now the new window is open */
 	   if (CE_event == CE_RELATIVE || CE_event == CE_ABSOLUTE)
 	     /* don't free the current loaded document */
@@ -5246,7 +5248,7 @@ static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
   W3Loading = doc;
   BackupDocument = doc;
   TtaExtractName (tempdoc, DirectoryName, DocumentName);
-  newdoc = InitDocView (doc, DocumentName, docType, 0, FALSE);
+  newdoc = InitDocAndView (doc, DocumentName, docType, 0, FALSE, L_Other);
   if (newdoc != 0)
     {
       /* load the saved file */

@@ -81,7 +81,7 @@ void NewXHTMLTransitional (Document document, View view)
   ----------------------------------------------------------------------*/
 void NewMathML (Document document, View view)
 {
-  OpenNew (document, view, docMath, L_Other);
+  OpenNew (document, view, docMath, L_MathML);
 }
 
 /*----------------------------------------------------------------------
@@ -121,7 +121,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
   NormalizeURL (url, 0, pathname, documentname, NULL);
   if (doc == 0 || InNewWindow)
     {
-      doc = InitDocView (0, documentname, docType, 0, FALSE);
+      doc = InitDocAndView (0, documentname, docType, 0, FALSE, profile);
       InitDocHistory (doc);
       InNewWindow = FALSE;
     }
@@ -132,7 +132,7 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
 		     DocumentMeta[doc]->initial_url,
 		     DocumentMeta[doc]->form_data,
 		     DocumentMeta[doc]->method);
-      doc = InitDocView (doc, documentname, docType, 0, FALSE);
+      doc = InitDocAndView (doc, documentname, docType, 0, FALSE, profile);
     }
   TtaFreeMemory (documentname);
   TtaFreeMemory (pathname);
@@ -149,10 +149,6 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
 
   /* store the document profile */
   TtaSetDocumentProfile (doc, profile);
-  
-  /* update the menus according to the profile of the new document */
-  if (profile != L_Other)
-    TtaUpdateMenus (doc, 1, ReadOnlyDocument[doc]);
 
   ResetStop (doc);
   language = TtaGetDefaultLanguage ();
