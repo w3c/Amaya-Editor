@@ -787,7 +787,7 @@ void RedisplayNewContent (PtrElement pEl, PtrDocument pDoc, int dVol,
 			  int skipView, PtrAbstractBox pAbEl)
 {
    PtrAbstractBox      pAb;
-   PictInfo           *picture1, *picture2;
+   ThotPictInfo       *picture1, *picture2;
    int                 view, frame, h;
 
    for (view = 0; view < MAX_VIEW_DOC; view++)
@@ -823,8 +823,8 @@ void RedisplayNewContent (PtrElement pEl, PtrDocument pDoc, int dVol,
 		   case LtPicture:
 		     if (pAbEl != NULL)
 		       {
-			 picture1 = (PictInfo *) pAbEl->AbPictInfo;
-			 picture2 = (PictInfo *) pAb->AbPictInfo;
+			 picture1 = (ThotPictInfo *) pAbEl->AbPictInfo;
+			 picture2 = (ThotPictInfo *) pAb->AbPictInfo;
 			 /* on fait une maj de pAb->AbPictInfo */
 			 if (picture2 != NULL)
 			   {

@@ -668,11 +668,11 @@ char GiveTextParams (PtrTextBuffer *pBuffer, int *ind, int *nChars,
 static void GivePictureSize (PtrAbstractBox pAb, int zoom, int *width,
 			     int *height)
 {
-  PictInfo           *picture;
+  ThotPictInfo       *picture;
   PtrBox              box;
  
   box = pAb->AbBox;
-  picture = (PictInfo *) box->BxPictInfo;
+  picture = (ThotPictInfo *) box->BxPictInfo;
   if (pAb->AbVolume == 0 || picture == NULL)
     {
       *width = 0;
@@ -1936,7 +1936,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
   PtrBox              pCurrentBox;
   TypeUnit            unit;
   SpecFont            font;
-  PictInfo           *picture;
+  ThotPictInfo       *picture;
   BoxType             boxType;
   char                script = 'L';
   int                 width, i;
@@ -2176,7 +2176,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 	  break;
 	case LtPicture:
 	  pCurrentBox->BxType = BoPicture;
-	  picture = (PictInfo *) pAb->AbPictInfo;
+	  picture = (ThotPictInfo *) pAb->AbPictInfo;
 	  pCurrentBox->BxPictInfo = pAb->AbPictInfo;
 	  if (!pAb->AbPresentationBox && pAb->AbVolume &&
 	      pCurrentBox->BxPictInfo)
@@ -2290,7 +2290,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLine,
 	      /* force filling */
 	      pAb->AbFillBox = TRUE;
 	      /* load the picture */
-	      picture = (PictInfo *) pAb->AbPictBackground;
+	      picture = (ThotPictInfo *) pAb->AbPictBackground;
 	      if (picture->PicPixmap == None)
 		LoadPicture (frame, pCurrentBox, picture);
 	    }
@@ -2712,7 +2712,7 @@ void RemoveBoxes (PtrAbstractBox pAb, ThotBool rebuild, int frame)
 	  else if (pAb->AbLeafType == LtPath)
 	    FreePath (pBox);
 	  else if (pAb->AbLeafType == LtPicture)
-	    CleanPictInfo ((PictInfo *)pBox->BxPictInfo);
+	    CleanPictInfo ((ThotPictInfo *)pBox->BxPictInfo);
 	  else if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
 	    {
 	      /* libere les boites generees pour la mise en lignes */
@@ -3079,7 +3079,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
   PtrBox              pLastBox;
   PtrBox              pBox;
   TypeUnit            unit;
-  PictInfo           *imageDesc;
+  ThotPictInfo       *imageDesc;
   Propagation         savpropage;
   ViewFrame          *pFrame;
   AbDimension        *pDimAb;
@@ -3551,7 +3551,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		  /* force filling */
 		  pAb->AbFillBox = TRUE;
 		  /* load the picture */
-		  LoadPicture (frame, pBox, (PictInfo *) pAb->AbPictBackground);
+		  LoadPicture (frame, pBox, (ThotPictInfo *) pAb->AbPictBackground);
 		}
 	    }
 	  else if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'C')
@@ -3675,7 +3675,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		  if (pAb->AbChange)
 		    {
 		      /* the picture change, RAZ the structure */
-		      CleanPictInfo ((PictInfo *) pBox->BxPictInfo);
+		      CleanPictInfo ((ThotPictInfo *) pBox->BxPictInfo);
 		      if (pAb->AbWidth.DimAbRef == NULL &&  pAb->AbWidth.DimValue == -1)
 			{
 			  /* use the content width */
@@ -3691,7 +3691,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 			  pBox->BxHorizRef = 0;
 			}
 		      SetCursorWatch (frame);
-		      LoadPicture (frame, pBox, (PictInfo *) pBox->BxPictInfo);
+		      LoadPicture (frame, pBox, (ThotPictInfo *) pBox->BxPictInfo);
 		      ResetCursorWatch (frame);
 		      GivePictureSize (pAb,
 				       ViewFrameTable[frame - 1].FrMagnification,
@@ -3883,7 +3883,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		  GiveTextSize (pAb, frame, &width, &height, &i);
 		  break;
 		case LtPicture:
-		  imageDesc = (PictInfo *) pBox->BxPictInfo;
+		  imageDesc = (ThotPictInfo *) pBox->BxPictInfo;
 		  pBox->BxW = 0;
 		  LoadPicture (frame, pBox, imageDesc);
 		  GivePictureSize (pAb, ViewFrameTable[frame - 1].FrMagnification,
@@ -3926,7 +3926,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	    {
 	      /* the box width is constrained */
 	      if (pAb->AbLeafType == LtPicture)
-		LoadPicture (frame, pBox, (PictInfo *) pBox->BxPictInfo);
+		LoadPicture (frame, pBox, (ThotPictInfo *) pBox->BxPictInfo);
 	      result = TRUE;
 	    }
 
@@ -3968,7 +3968,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		  GiveTextSize (pAb, frame, &width, &height, &i);
 		  break;
 		case LtPicture:
-		  imageDesc = (PictInfo *) pBox->BxPictInfo;
+		  imageDesc = (ThotPictInfo *) pBox->BxPictInfo;
 		  pBox->BxH = 0;
 		  LoadPicture (frame, pBox, imageDesc);
 		  GivePictureSize (pAb, ViewFrameTable[frame -1].FrMagnification, &width, &height);
@@ -4008,7 +4008,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 	    {
 	      /* the box height is constrained */
 	      if (pAb->AbLeafType == LtPicture)
-		LoadPicture (frame, pBox, (PictInfo *) pBox->BxPictInfo);
+		LoadPicture (frame, pBox, (ThotPictInfo *) pBox->BxPictInfo);
 	      result = TRUE;
 	    }
 

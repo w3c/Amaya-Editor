@@ -5,6 +5,7 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
+
 extern void DisplayOpaqueGroup ( PtrAbstractBox pAb,
                                  int frame,
                                  int xmin,
@@ -43,7 +44,7 @@ extern Picture_Report PictureFileOk ( char *fileName,
 extern void CreateGifLogo ( void );
 extern void InitPictureHandlers ( ThotBool printing );
 extern void DrawPicture ( PtrBox box,
-                          PictInfo *imageDesc,
+                          ThotPictInfo *imageDesc,
                           int frame,
                           int x,
                           int y,
@@ -63,7 +64,7 @@ extern void *PutTextureOnImageDesc ( unsigned char *pattern,
                                      int width,
                                      int height );
 extern ThotBool Ratio_Calculate ( PtrAbstractBox pAb,
-                                  PictInfo *imageDesc,
+                                  ThotPictInfo *imageDesc,
                                   int width,
                                   int height,
                                   int w,
@@ -80,7 +81,7 @@ extern void ClipAndBoxUpdate ( PtrAbstractBox pAb,
                                int frame );
 extern void LoadPicture ( int frame,
                           PtrBox box,
-                          PictInfo *imageDesc );
+                          ThotPictInfo *imageDesc );
 extern int GetPictureType ( int index );
 extern int GetPictTypeIndex ( int picType );
 extern int GetPictPresIndex ( PictureScaling picPresent );
@@ -90,6 +91,7 @@ extern unsigned char *GetScreenshot ( int frame,
                                       char *pngurl );
 
 #else /* __STDC__ */
+
 extern void DisplayOpaqueGroup ( PtrAbstractBox pAb,
                                    int frame,
                                    int xmin,
@@ -128,7 +130,7 @@ extern Picture_Report PictureFileOk ( char *fileName,
 extern void CreateGifLogo ( void );
 extern void InitPictureHandlers ( ThotBool printing );
 extern void DrawPicture ( PtrBox box,
-                            PictInfo *imageDesc,
+                            ThotPictInfo *imageDesc,
                             int frame,
                             int x,
                             int y,
@@ -148,7 +150,7 @@ extern void *PutTextureOnImageDesc ( unsigned char *pattern,
                                        int width,
                                        int height );
 extern ThotBool Ratio_Calculate ( PtrAbstractBox pAb,
-                                    PictInfo *imageDesc,
+                                    ThotPictInfo *imageDesc,
                                     int width,
                                     int height,
                                     int w,
@@ -165,7 +167,7 @@ extern void ClipAndBoxUpdate ( PtrAbstractBox pAb,
                                  int frame );
 extern void LoadPicture ( int frame,
                             PtrBox box,
-                            PictInfo *imageDesc );
+                            ThotPictInfo *imageDesc );
 extern int GetPictureType ( int index );
 extern int GetPictTypeIndex ( int picType );
 extern int GetPictPresIndex ( PictureScaling picPresent );

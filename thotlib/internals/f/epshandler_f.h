@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern ThotDrawable EpsCreate ( char *fn,
-                                PictInfo *imageDesc,
+                                ThotPictInfo *imageDesc,
                                 int *xif,
                                 int *yif,
                                 int *wif,
@@ -29,7 +29,7 @@ extern ThotBool IsEpsFormat ( char *fn );
 #else /* __STDC__ */
 
 extern ThotDrawable EpsCreate ( char *fn,
-                                  PictInfo *imageDesc,
+                                  ThotPictInfo *imageDesc,
                                   int *xif,
                                   int *yif,
                                   int *wif,

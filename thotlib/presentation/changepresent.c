@@ -911,11 +911,11 @@ static PtrAbstractBox     NextAbstractBox (PtrAbstractBox pAb)
 static void RemoveFunctionPRule (PtrPRule pPres, PtrAbstractBox pAb,
 				 PtrDocument pDoc)
 {
-  PictInfo      *image;
+  ThotPictInfo  *image;
 
   if (pPres->PrPresFunction == FnBackgroundPicture && pAb->AbPictBackground)
     {
-      image = (PictInfo *)pAb->AbPictBackground;
+      image = (ThotPictInfo *)pAb->AbPictBackground;
       CleanPictInfo (image);
       TtaFreeMemory (image->PicFileName);
       TtaFreeMemory (pAb->AbPictBackground);
@@ -923,7 +923,7 @@ static void RemoveFunctionPRule (PtrPRule pPres, PtrAbstractBox pAb,
     }
   else if (pPres->PrPresFunction == FnPictureMode &&
 	   pAb->AbPictBackground)
-    ((PictInfo *) (pAb->AbPictBackground))->PicPresent = FillFrame;
+    ((ThotPictInfo *) (pAb->AbPictBackground))->PicPresent = FillFrame;
   else if (pPres->PrPresFunction == FnShowBox)
     pAb->AbFillBox = FALSE;
   

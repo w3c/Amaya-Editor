@@ -34,7 +34,7 @@
 /*----------------------------------------------------------------------
   CleanPictInfo frees the picture information but not the structure itself
   ----------------------------------------------------------------------*/
-void CleanPictInfo (PictInfo *imageDesc)
+void CleanPictInfo (ThotPictInfo *imageDesc)
 {
   if (imageDesc)
     {
@@ -78,7 +78,7 @@ void CleanPictInfo (PictInfo *imageDesc)
   ----------------------------------------------------------------------*/
 void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype)
 {
-  PictInfo           *imageDesc = NULL;
+  ThotPictInfo       *imageDesc = NULL;
   char               *ptr = NULL;
   PictureScaling      picPresent;
   int                 len;
@@ -87,12 +87,12 @@ void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype)
   if (!pAb->AbPresentationBox && pAb->AbElement->ElLeafType == LtPicture)
     {
       /* image element -> attach the element descriptor to the abtract box */
-      imageDesc = (PictInfo *) pAb->AbElement->ElPictInfo;
+      imageDesc = (ThotPictInfo *) pAb->AbElement->ElPictInfo;
       if (imageDesc == NULL)
 	{
 	  /* Create the element descriptor */
-	  imageDesc = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
-	  memset (imageDesc, 0, sizeof (PictInfo));
+	  imageDesc = (ThotPictInfo *) TtaGetMemory (sizeof (ThotPictInfo));
+	  memset (imageDesc, 0, sizeof (ThotPictInfo));
 	  pAb->AbElement->ElPictInfo = (int *) imageDesc;
 	  pAb->AbPictInfo = (int *) imageDesc;
 	}
@@ -107,11 +107,11 @@ void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype)
   else if (pAb->AbPresentationBox)
     {
       /*  It's a presentation box -> Create the descriptor */
-      imageDesc = (PictInfo *) pAb->AbPictInfo;
+      imageDesc = (ThotPictInfo *) pAb->AbPictInfo;
       if (imageDesc == NULL)
 	{
-	  imageDesc = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
-	  memset (imageDesc, 0, sizeof (PictInfo));
+	  imageDesc = (ThotPictInfo *) TtaGetMemory (sizeof (ThotPictInfo));
+	  memset (imageDesc, 0, sizeof (ThotPictInfo));
 	  pAb->AbPictInfo = (int *) imageDesc;
 	}
       else
@@ -122,11 +122,11 @@ void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype)
   else if (pAb->AbLeafType == LtCompound)
     {
       /*  It's a background image -> Create the descriptor */
-      imageDesc = (PictInfo *) pAb->AbPictBackground;
+      imageDesc = (ThotPictInfo *) pAb->AbPictBackground;
       if (imageDesc == NULL)
 	{
-	  imageDesc = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
-	  memset (imageDesc, 0, sizeof (PictInfo));
+	  imageDesc = (ThotPictInfo *) TtaGetMemory (sizeof (ThotPictInfo));
+	  memset (imageDesc, 0, sizeof (ThotPictInfo));
 	  pAb->AbPictBackground = (int *) imageDesc;
 	}
       else
@@ -177,11 +177,11 @@ void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype)
   ----------------------------------------------------------------------*/
 void CopyPictInfo (int *Imdcopie, int *Imdsource)
 {
-   PictInfo           *imagec;
-   PictInfo           *images;
+   ThotPictInfo           *imagec;
+   ThotPictInfo           *images;
 
-   imagec = (PictInfo *) Imdcopie;
-   images = (PictInfo *) Imdsource;
+   imagec = (ThotPictInfo *) Imdcopie;
+   images = (ThotPictInfo *) Imdsource;
    imagec->PicWArea = images->PicWArea;
    imagec->PicHArea = images->PicHArea;
    imagec->PicWidth = images->PicWidth;

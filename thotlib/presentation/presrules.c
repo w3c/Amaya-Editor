@@ -3162,7 +3162,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
   ThotBool            appl;
   ThotBool            insidePage, afterPageBreak;
   AbPosition         *pPavP1;
-  PictInfo           *image;
+  ThotPictInfo       *image;
 
   appl = FALSE;
   if (pPRule && pAb && pAb->AbElement)
@@ -3251,7 +3251,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		      if (pAb->AbPictBackground)
 			/* remove the background image */
 			{
-			  image = (PictInfo *)pAb->AbPictBackground;
+			  image = (ThotPictInfo *)pAb->AbPictBackground;
 			  CleanPictInfo (image);
 			  TtaFreeMemory (image->PicFileName);
 			  TtaFreeMemory (pAb->AbPictBackground);
@@ -3294,7 +3294,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		    {
 		      if (pAb->AbElement->ElPictInfo == NULL)
 			NewPictInfo (pAb, "", UNKNOWN_FORMAT);
-		      ((PictInfo *) (pAb->AbElement->ElPictInfo))->PicPresent =
+		      ((ThotPictInfo *) (pAb->AbElement->ElPictInfo))->PicPresent =
 			(PictureScaling)pPRule->PrPresBox[0];
 		      appl = TRUE;
 		    }
@@ -3302,7 +3302,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		    {
 		      if (pAb->AbPictInfo == NULL)
 			NewPictInfo (pAb, "", UNKNOWN_FORMAT);
-		      ((PictInfo *) (pAb->AbPictInfo))->PicPresent =
+		      ((ThotPictInfo *) (pAb->AbPictInfo))->PicPresent =
 			(PictureScaling)pPRule->PrPresBox[0];
 		      appl = TRUE;
 		    }
@@ -3310,7 +3310,7 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 		    {
 		      if (pAb->AbPictBackground == NULL)
 			NewPictInfo (pAb, "", UNKNOWN_FORMAT);
-		      ((PictInfo *) (pAb->AbPictBackground))->PicPresent =
+		      ((ThotPictInfo *) (pAb->AbPictBackground))->PicPresent =
 			(PictureScaling)pPRule->PrPresBox[0];
 		      appl = TRUE;
 		    }

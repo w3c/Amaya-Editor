@@ -215,7 +215,7 @@ static void FreePicCache (Pic_Cache *Cache)
 /*----------------------------------------------------------------------
  AddInPicCache : Add a new Pic
   ----------------------------------------------------------------------*/
-static void AddInPicCache (PictInfo *Image, int frame, ThotBool forever)
+static void AddInPicCache (ThotPictInfo *Image, int frame, ThotBool forever)
 {
   Pic_Cache *Cache = PicCache;
 
@@ -250,7 +250,7 @@ static void AddInPicCache (PictInfo *Image, int frame, ThotBool forever)
  LookupInPicCache : Look in cache, if find an image with the same filename
  in the same frame (Tex Id are frame dependant)
   ----------------------------------------------------------------------*/
-static int LookupInPicCache (PictInfo *Image, int frame)
+static int LookupInPicCache (ThotPictInfo *Image, int frame)
 {
   Pic_Cache *Cache = PicCache;
   char *filename = Image->PicFileName;
@@ -289,9 +289,9 @@ static int LookupInPicCache (PictInfo *Image, int frame)
   ----------------------------------------------------------------------*/
 void FreeGlTextureNoCache (void *imageDesc)
 {
-  PictInfo *img;
+  ThotPictInfo *img;
   
-  img = (PictInfo *)imageDesc;
+  img = (ThotPictInfo *)imageDesc;
   if (img->TextureBind && glIsTexture (img->TextureBind))
     {      
       glDeleteTextures (1,  &(img->TextureBind));
@@ -311,9 +311,9 @@ void FreeGlTextureNoCache (void *imageDesc)
   ----------------------------------------------------------------------*/
 void FreeGlTexture (void *imagedesc)
 {
-  PictInfo *img;
+  ThotPictInfo *img;
   
-  img = (PictInfo *)imagedesc;
+  img = (ThotPictInfo *)imagedesc;
   if (img->TextureBind /*&& glIsTexture (img->TextureBind)*/)
     /* ce patch permet de fixer le probleme des images qui ne s'affichent pas */
     /* opengl dit que la texture n'en est pas une alors que s'en est bien une */
@@ -386,7 +386,7 @@ return 1 << (int) ceilf(logf((float) p) / M_LN2);
 /*----------------------------------------------------------------------
   GL_MakeTextureSize : Texture sizes must be power of two
   ----------------------------------------------------------------------*/
-static void GL_MakeTextureSize (PictInfo *img, int GL_w, int GL_h)
+static void GL_MakeTextureSize (ThotPictInfo *img, int GL_w, int GL_h)
 {
   unsigned char      *data, *ptr1, *ptr2;
   int                 xdiff, x, y, nbpixel;
@@ -424,7 +424,7 @@ static void GL_MakeTextureSize (PictInfo *img, int GL_w, int GL_h)
  GL_TextureBind : Put Texture in video card's Memory at
  a power of 2 size for height and width 
   ----------------------------------------------------------------------*/
-static void GL_TextureBind (PictInfo *img, ThotBool IsPixmap)
+static void GL_TextureBind (ThotPictInfo *img, ThotBool IsPixmap)
 {
   int           p2_w, p2_h;
   GLfloat       GL_w, GL_h;   
@@ -505,7 +505,7 @@ static void GL_TextureBind (PictInfo *img, ThotBool IsPixmap)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static void PrintPoscriptImage (PictInfo *img, int x, int y, 
+static void PrintPoscriptImage (ThotPictInfo *img, int x, int y, 
 				int w, int h, int frame)
 {
   unsigned char *pixels;  
@@ -556,7 +556,7 @@ static void PrintPoscriptImage (PictInfo *img, int x, int y,
  Drawpixel Method for software implementation, as it's much faster for those
  Texture Method for hardware implementation as it's faster and better.
   ----------------------------------------------------------------------*/
-static void GL_TexturePartialMap (PictInfo *desc, int dx, int dy,
+static void GL_TexturePartialMap (ThotPictInfo *desc, int dx, int dy,
 				  int x, int y, int w, int h, int frame)
 {
  float    texH, texW;
@@ -610,7 +610,7 @@ static void GL_TexturePartialMap (PictInfo *desc, int dx, int dy,
  Drawpixel Method for software implementation, as it's much faster for those
  Texture Method for hardware implementation as it's faster and better.
   ----------------------------------------------------------------------*/
-void GL_TextureMap (PictInfo *desc, int x, int y, int w, int h, int frame)
+void GL_TextureMap (ThotPictInfo *desc, int x, int y, int w, int h, int frame)
 {  
   GL_SetPicForeground (); 
 
@@ -804,7 +804,7 @@ void DisplayOpaqueGroup (PtrAbstractBox pAb, int frame,
 	  GL_SetOpacity (1000);
 	  GL_SetStrokeOpacity (1000);
 	  
-	  GL_TextureMap ((PictInfo*)pAb->AbBox->Pre_computed_Pic,  
+	  GL_TextureMap ((ThotPictInfo*)pAb->AbBox->Pre_computed_Pic,  
 			 x, y, width, height, frame); 
 	  
 	}
@@ -813,7 +813,7 @@ void DisplayOpaqueGroup (PtrAbstractBox pAb, int frame,
       GL_SetStrokeOpacity (pAb->AbOpacity);
 
      
-      GL_TextureMap ((PictInfo*)pAb->AbBox->Post_computed_Pic,
+      GL_TextureMap ((ThotPictInfo*)pAb->AbBox->Post_computed_Pic,
 		     x, y, width, height, frame);
 
       GL_SetFillOpacity (1000);
@@ -980,7 +980,7 @@ ThotBool DisplayGradient (PtrAbstractBox pAb, PtrBox box,
   glStencilOp (GL_KEEP, GL_KEEP, GL_KEEP);
 
   /*then draw the gradient*/
-  GL_TextureMap ((PictInfo*)box->Pre_computed_Pic, x, y, width, height, frame);
+  GL_TextureMap ((ThotPictInfo*)box->Pre_computed_Pic, x, y, width, height, frame);
 
   /* disable stenciling, */
   glStencilFunc (GL_NOTEQUAL, 1, 1);
@@ -1263,7 +1263,7 @@ static void Picture_Center (int picWArea, int picHArea, int wFrame,
    SetPictureClipping clips the picture into boundaries.              
   ----------------------------------------------------------------------*/
 static void SetPictureClipping (int *picWArea, int *picHArea, int wFrame,
-				int hFrame, PictInfo *imageDesc)
+				int hFrame, ThotPictInfo *imageDesc)
 {
    if ((imageDesc->PicWArea == 0 && imageDesc->PicHArea == 0) ||
        (imageDesc->PicWArea > MAX_PICT_SIZE ||
@@ -1288,7 +1288,7 @@ static void SetPictureClipping (int *picWArea, int *picHArea, int wFrame,
   ----------------------------------------------------------------------*/
 static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg,
 			   int picYOrg, int w, int h, int xFrame, int yFrame,
-			   int t, int l, int frame, PictInfo *imageDesc,
+			   int t, int l, int frame, ThotPictInfo *imageDesc,
 			   PtrBox box)
 {
   ViewFrame*        pFrame;
@@ -1632,14 +1632,14 @@ Picture_Report PictureFileOk (char *fileName, int *typeImage)
 void CreateGifLogo ()
 {
 #if defined(_WINGUI) || defined (_GL) 
-  PictInfo            *imageDesc;
+  ThotPictInfo        *imageDesc;
   unsigned long       Bgcolor = 0;
   int                 xBox = 0, yBox = 0;
   int                 wBox = 0, hBox = 0;
   int                 width = 0, height = 0, index;
   ThotPixmap          drw;
   
-  imageDesc = (PictInfo*)TtaGetMemory (sizeof (PictInfo));
+  imageDesc = (ThotPictInfo*)TtaGetMemory (sizeof (ThotPictInfo));
   index = 0;
   while (PictureIdType[index] != gif_type)
     index++;
@@ -1790,7 +1790,7 @@ static void SimpleName (char *filename, char *simplename)
 /*----------------------------------------------------------------------
    DrawEpsBox draws the eps logo into the picture box.            
   ----------------------------------------------------------------------*/
-static void DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
+static void DrawEpsBox (PtrBox box, ThotPictInfo *imageDesc, int frame,
 			int wlogo, int hlogo)
 {
 #ifdef _WINGUI
@@ -1928,7 +1928,7 @@ static void DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
   Parameters x, y, w, h give the displayed area of the box.
   Parameters t l give top and left extra margins.
   ----------------------------------------------------------------------*/
-void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame,
+void DrawPicture (PtrBox box, ThotPictInfo *imageDesc, int frame,
 		  int x, int y, int w, int h, int t, int l)
 {
   PathBuffer          fileName;
@@ -2268,9 +2268,9 @@ ThotBool TtaFileCopyUncompress (CONST char *sourceFile, CONST char *targetFile)
 void *PutTextureOnImageDesc (unsigned char *pattern, int width, int height)
 {
 #ifdef _GL
-  PictInfo *imageDesc = NULL;
+  ThotPictInfo *imageDesc = NULL;
 
-  imageDesc = (PictInfo*)malloc (sizeof (PictInfo));  
+  imageDesc = (ThotPictInfo*)malloc (sizeof (ThotPictInfo));  
   imageDesc->PicFileName = NULL;  /*"testinggrad";*/
   imageDesc->RGBA = TRUE;
   imageDesc->PicWidth = width;
@@ -2289,7 +2289,7 @@ void *PutTextureOnImageDesc (unsigned char *pattern, int width, int height)
   constained values (w, h).
   Apply the image ratio when only one dimension is constained.
   ----------------------------------------------------------------------*/
-ThotBool Ratio_Calculate (PtrAbstractBox pAb, PictInfo *imageDesc,
+ThotBool Ratio_Calculate (PtrAbstractBox pAb, ThotPictInfo *imageDesc,
 			  int width, int height, int w, int h, int frame)
 {
   PtrBox      box;
@@ -2405,11 +2405,11 @@ void ClipAndBoxUpdate (PtrAbstractBox pAb, PtrBox box, int w, int h,
   ----------------------------------------------------------------------*/
 void *Group_shot (int x, int y, int width, int height, int frame, ThotBool is_rgba)
 {
-  PictInfo *imageDesc = NULL;
+  ThotPictInfo *imageDesc = NULL;
 
   if (GL_prepare (frame))
     {
-      imageDesc = (PictInfo *)malloc (sizeof (PictInfo));  
+      imageDesc = (ThotPictInfo *)malloc (sizeof (ThotPictInfo));  
       imageDesc->PicFileName = "testing";
       imageDesc->RGBA = TRUE;
       imageDesc->PicWidth = width;
@@ -2445,7 +2445,7 @@ void *Group_shot (int x, int y, int width, int height, int frame, ThotBool is_rg
    Requests the picture handlers to get the corresponding RGB or RGBA buffer
    and make a Texture or it (aka load into video card memory)   
   ----------------------------------------------------------------------*/
-void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
+void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
 {
   PathBuffer          fileName;
   PictureScaling      pres;
@@ -2738,7 +2738,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 /*----------------------------------------------------------------------
    Requests the picture handlers to get the corresponding pixmaps    
   ----------------------------------------------------------------------*/
-void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
+void LoadPicture (int frame, PtrBox box, ThotPictInfo *imageDesc)
 {
   PathBuffer          fileName;
   PictureScaling      pres;

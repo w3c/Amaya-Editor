@@ -39,7 +39,7 @@
 #include "appdialogue_tv.h"
 
 /* Thot Clipboard information */
-static PictInfo     PictClipboard;
+static ThotPictInfo PictClipboard;
 static LeafType     ClipboardType;
 static Language     ClipboardLanguage = 0;
 
@@ -1478,7 +1478,7 @@ static void SaveInClipboard (int *charsDelta, int *spacesDelta, int *xDelta,
 {
   PtrTextBuffer       pTargetBuffer;
   ViewFrame          *pFrame;
-  PictInfo           *image;
+  ThotPictInfo       *image;
   int                 i;
 
   /* detruit la sauvegarde precedente */
@@ -1499,7 +1499,7 @@ static void SaveInClipboard (int *charsDelta, int *spacesDelta, int *xDelta,
 	    }
 	  else if (pAb->AbLeafType == LtPicture)
 	    {
-	      image = (PictInfo *) pAb->AbPictInfo;
+	      image = (ThotPictInfo *) pAb->AbPictInfo;
 	      i = strlen (image->PicFileName);
 	      /* nom du fichier image */
 	      CopyMBs2Buffer ((unsigned char*)image->PicFileName, clipboard, 0, i);
@@ -1551,7 +1551,7 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
   PtrDocument         pDoc;
   PtrTextBuffer       pTargetBuffer;
   PtrTextBuffer       pSourceBuffer;
-  PictInfo           *image;
+  ThotPictInfo       *image;
   ViewFrame          *pFrame;
   ViewSelection      *pViewSel, *pViewSelEnd;
   SpecFont             font;
@@ -1716,7 +1716,7 @@ static void RemoveSelection (int charsDelta, int spacesDelta, int xDelta,
       case LtPicture:
 	pAb->AbVolume = 0;
 	/* met a jour la boite */
-	image = (PictInfo *) pBox->BxPictInfo;
+	image = (ThotPictInfo *) pBox->BxPictInfo;
 	if (image->PicPixmap != 0)
 	  {
 	    if (defaultWidth)
@@ -1840,7 +1840,7 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
   int                 adjust;
   int                 height;
   int                 width;
-  PictInfo           *image;
+  ThotPictInfo       *image;
 
    font = pBox->BxFont;
    width = 2; /* see GiveTextSize function */
@@ -1929,7 +1929,7 @@ static void PasteClipboard (ThotBool defaultHeight, ThotBool defaultWidth,
 	    case LtPicture:
 	       pCurrentBuffer = pAb->AbElement->ElText;
 	       /* met a jour la boite */
-	       image = (PictInfo *) pBox->BxPictInfo;
+	       image = (ThotPictInfo *) pBox->BxPictInfo;
 	       CopyPictInfo ((int *) image, (int *) &PictClipboard);
 	       i = clipboard->BuLength;
 	       ustrncpy (pCurrentBuffer->BuContent, clipboard->BuContent, i);

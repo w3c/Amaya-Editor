@@ -908,7 +908,7 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
       TtaWriteByte (pivFile, C_PR_PICTURE);
       PutShort (pivFile, 0);
       PutShort (pivFile, 0);
-      switch (((PictInfo *)(pEl1->ElPictInfo))->PicPresent)
+      switch (((ThotPictInfo *)(pEl1->ElPictInfo))->PicPresent)
 	{
 	case RealSize:
 	  TtaWriteByte (pivFile, C_PIV_REALSIZE);
@@ -929,7 +929,7 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
 	  TtaWriteByte (pivFile, ' ');
 	  break;
 	}
-      PutShort (pivFile, ((PictInfo *)(pEl1->ElPictInfo))->PicType);
+      PutShort (pivFile, ((ThotPictInfo *)(pEl1->ElPictInfo))->PicType);
     }
 
   /* ecrit les regles de presentation de l'element */

@@ -38,7 +38,7 @@
    XpmCreate reads and produces the bitmap read from the file      
    fn. updates the wif, hif, xif , yif                     
   ----------------------------------------------------------------------*/
-ThotDrawable XpmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
+ThotDrawable XpmCreate (char *fn, ThotPictInfo *imageDesc, int *xif, int *yif,
 		    int *wif, int *hif, int bgColor, int *width,
 		    int *height, int zoom)
 {

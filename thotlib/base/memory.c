@@ -969,8 +969,8 @@ void FreeAbstractBox (PtrAbstractBox pAb)
 
   if (pAb->AbLeafType == LtCompound && pAb->AbPictBackground)
     {
-      TtaFreeMemory (((PictInfo *)pAb->AbPictBackground)->PicFileName);
-      CleanPictInfo ((PictInfo *)pAb->AbPictBackground);
+      TtaFreeMemory (((ThotPictInfo *)pAb->AbPictBackground)->PicFileName);
+      CleanPictInfo ((ThotPictInfo *)pAb->AbPictBackground);
       TtaFreeMemory (pAb->AbPictBackground);
       pAb->AbPictBackground = NULL;
     }

@@ -61,7 +61,7 @@ typedef struct
   ThotBool       created;        /* Used for ExtraHandlers */
   ThotWidget     wid;            /* Used for ExtraHandlers */
   void          *pluginInstance; /* Used for ExtraHandlers */
-} PictInfo;
+} ThotPictInfo;
 
 typedef enum
 {

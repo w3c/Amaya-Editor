@@ -256,7 +256,7 @@ void JpegPrintErrorMsg (int ErrorNumber)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-ThotDrawable JpegCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
+ThotDrawable JpegCreate (char *fn, ThotPictInfo *imageDesc, int *xif, int *yif,
 		     int *wif, int *hif, int bgColor, int *width,
 		     int *height, int zoom)
 {

@@ -202,7 +202,7 @@ static void SetContent (Element element, unsigned char *content,
 {
   PtrTextBuffer       pBuf, pNextBuff;
   PtrElement          pEl;
-  PictInfo           *image;
+  ThotPictInfo       *image;
   int                 length, delta = 0, i;
   int                 max;
 #ifndef NODISPLAY
@@ -287,7 +287,7 @@ static void SetContent (Element element, unsigned char *content,
       if (pEl->ElLeafType == LtPicture && pEl->ElPictInfo)
 	{
 	  /* Releases the  pixmap */
-	  image = (PictInfo *)pEl->ElPictInfo;
+	  image = (ThotPictInfo *)pEl->ElPictInfo;
 	  CleanPictInfo (image);
 	  /* the new image may be in a different format */
 	  image->PicType = -1;
@@ -2318,10 +2318,10 @@ void TtaCopyPage (Element destination, Element source)
    Returns a pointer to the  PictInfo structure that's associated with
    element. Returns NULL if element doesn't have such structure.
   ----------------------------------------------------------------------*/
-static PictInfo *GetImageDesc (Element element)
+static ThotPictInfo *GetImageDesc (Element element)
 {
    PtrAbstractBox   pAb;
-   PictInfo        *imageDesc;
+   ThotPictInfo    *imageDesc;
    int              view;
    ThotBool         found;
 
@@ -2352,13 +2352,13 @@ static PictInfo *GetImageDesc (Element element)
        if (!found)
 	 TtaError (ERR_invalid_element_type);
        else
-	 imageDesc = (PictInfo *) pAb->AbPictBackground;
+	 imageDesc = (ThotPictInfo *) pAb->AbPictBackground;
      }
    else if (((PtrElement) element)->ElTerminal &&
 	    ((PtrElement) element)->ElLeafType != LtPicture)
      TtaError (ERR_invalid_element_type);
    else
-       imageDesc = (PictInfo *) (((PtrElement) element)->ElPictInfo);
+       imageDesc = (ThotPictInfo *) (((PtrElement) element)->ElPictInfo);
    return imageDesc;
 }
 
@@ -2375,7 +2375,7 @@ static PictInfo *GetImageDesc (Element element)
 PicType TtaGetPictureType (Element element)
 {
    PicType          pictType;
-   PictInfo        *imageDesc;
+   ThotPictInfo    *imageDesc;
    int              typeImage;
 
    pictType = unknown_type;
@@ -2398,7 +2398,7 @@ PicType TtaGetPictureType (Element element)
 void TtaSetPictureType (Element element, char *mime_type)
 {
    PicType          typeImage;
-   PictInfo        *imageDesc;
+   ThotPictInfo    *imageDesc;
 
    if (!element || !mime_type || *mime_type == EOS)
      return;

@@ -8,7 +8,7 @@
 
 extern void JpegPrintErrorMsg ( int ErrorNumber );
 extern ThotDrawable JpegCreate ( char *fn,
-                                 PictInfo *imageDesc,
+                                 ThotPictInfo *imageDesc,
                                  int *xif,
                                  int *yif,
                                  int *wif,
@@ -31,7 +31,7 @@ extern ThotBool IsJpegFormat ( char *fn );
 
 extern void JpegPrintErrorMsg ( int ErrorNumber );
 extern ThotDrawable JpegCreate ( char *fn,
-                                   PictInfo *imageDesc,
+                                   ThotPictInfo *imageDesc,
                                    int *xif,
                                    int *yif,
                                    int *wif,

@@ -2959,7 +2959,7 @@ void DeleteElement (PtrElement *pEl, PtrDocument pDoc)
   PtrPRule            pRule, pNextRule;
   PtrElement          pEl1;
   PtrCopyDescr        pCD, pNextCD;
-  PictInfo           *image;
+  ThotPictInfo       *image;
   int                 c;
 
   if (*pEl && (*pEl)->ElStructSchema)
@@ -2988,7 +2988,7 @@ void DeleteElement (PtrElement *pEl, PtrDocument pDoc)
 	      /* frees the image descriptor */
 	      if (pEl1->ElLeafType == LtPicture && pEl1->ElPictInfo)
 		{
-		  image = (PictInfo *)pEl1->ElPictInfo;
+		  image = (ThotPictInfo *)pEl1->ElPictInfo;
 		  CleanPictInfo (image);
 		  TtaFreeMemory (image->PicFileName);
 		  TtaFreeMemory (pEl1->ElPictInfo);

@@ -1233,7 +1233,7 @@ unsigned char *ReadGifToData (char *datafile, int *w, int *h, int *ncolors,
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-ThotDrawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
+ThotDrawable GifCreate (char *fn, ThotPictInfo *imageDesc, int *xif, int *yif,
 		    int *wif, int *hif, int bgColor, int *width,
 		    int *height, int zoom)
 {

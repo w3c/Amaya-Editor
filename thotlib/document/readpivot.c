@@ -86,15 +86,15 @@ extern HWND         WIN_Main_Wd;
 static void SetImageRule (PtrElement pEl, int w, int h,
 			  int typeimage, PictureScaling presimage)
 {
-  PictInfo           *image;
+  ThotPictInfo           *image;
 
   if (pEl != NULL)
     {
-      image = (PictInfo *) pEl->ElPictInfo;
+      image = (ThotPictInfo *) pEl->ElPictInfo;
       if (image == NULL)
 	{
-	  image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
-	  memset (image, 0, sizeof (PictInfo));
+	  image = (ThotPictInfo *) TtaGetMemory (sizeof (ThotPictInfo));
+	  memset (image, 0, sizeof (ThotPictInfo));
 	  pEl->ElPictInfo = (int *) image;
 	}
       image->PicFileName = NULL;
@@ -1887,7 +1887,7 @@ static  LabelString         label;
   PageType            pageType;
   ReferenceType       refType;
   NotifyElement       notifyEl;
-  PictInfo           *image;
+  ThotPictInfo       *image;
   int                 i, j, n, view, l, elType;
   int                 rule, n1, n2, n3, n4;
   char                script;
@@ -2306,7 +2306,7 @@ static  LabelString         label;
 			      if (leafType == tt_Picture)
 				{
 				  /* complete the Picture information block */
-				  image = (PictInfo *)pEl->ElPictInfo;
+				  image = (ThotPictInfo *)pEl->ElPictInfo;
 				  if (image != NULL)
 				    {
 				      l = ustrlen (pBuf->BuContent) * 2;

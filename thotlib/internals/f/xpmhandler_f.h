@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern ThotDrawable XpmCreate ( char *fn,
-                                PictInfo *imageDesc,
+                                ThotPictInfo *imageDesc,
                                 int *xif,
                                 int *yif,
                                 int *wif,
@@ -29,7 +29,7 @@ extern ThotBool IsXpmFormat ( char *fn );
 #else /* __STDC__ */
 
 extern ThotDrawable XpmCreate ( char *fn,
-                                  PictInfo *imageDesc,
+                                  ThotPictInfo *imageDesc,
                                   int *xif,
                                   int *yif,
                                   int *wif,

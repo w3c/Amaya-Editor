@@ -38,7 +38,7 @@ ThotBool CallEventAttribute (NotifyAttribute * notifyAttr, ThotBool pre)
    return FALSE;
 }
 
-void CleanPictInfo (PictInfo *esc)
+void CleanPictInfo (ThotPictInfo *esc)
 {
 }
 

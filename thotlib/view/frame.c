@@ -411,7 +411,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
   PtrAbstractBox      pChild, pAb, pParent, pNext;
   PtrDocument         pDoc;
   ViewFrame          *pFrame;
-  PictInfo           *imageDesc;
+  ThotPictInfo       *imageDesc;
   PictureScaling      pres;
   int                 x, y, xd, yd;
   int                 xbg, ybg;
@@ -591,7 +591,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
 	    height = ymax - yd + 1;
 	}
 
-      imageDesc = (PictInfo *) pFrom->AbPictBackground;
+      imageDesc = (ThotPictInfo *) pFrom->AbPictBackground;
       if (pFrom->AbSelected)
 	/* draw the box selection */
 	DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height, 0, BgSelColor, 2);
@@ -1047,7 +1047,7 @@ static void ComputeBoundingBoxes (int frame, int xmin, int xmax, int ymin,
   PtrBox              pBox, box;
   PtrBox              topBox;
   ViewFrame          *pFrame;
-  /* PictInfo           *imageDesc; */
+  /* ThotPictInfo       *imageDesc; */
   int                 plane;
   int                 nextplane;
   int                 winTop, winBottom;

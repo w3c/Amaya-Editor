@@ -1998,7 +1998,7 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
   PtrPresentationBox  pBox;
   FunctionType        funct;
   TypeUnit            unit;
-  PictInfo           *image;
+  ThotPictInfo       *image;
   int                 view, vis;
   int                 viewSch, viewIndex;
   int                 lqueue, pqueue;
@@ -2447,7 +2447,7 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 	       if (pAb->AbBox &&
 		   pAb->AbLeafType == LtPicture && pAb->AbPresentationBox)
 		 {
-		   image = (PictInfo *)pAb->AbPictInfo;
+		   image = (ThotPictInfo *)pAb->AbPictInfo;
 		   CleanPictInfo (image);
 		   TtaFreeMemory (pAb->AbPictInfo);
 		   pAb->AbPictInfo = NULL;
@@ -2456,7 +2456,7 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 	       if (pAb->AbLeafType == LtCompound && pAb->AbPictBackground)
 		 {
 		   /* in this particular case we need to free filename */
-		   image = (PictInfo *)pAb->AbPictBackground;
+		   image = (ThotPictInfo *)pAb->AbPictBackground;
 		   TtaFreeMemory (image->PicFileName);
 		   CleanPictInfo (image);
 		   TtaFreeMemory (pAb->AbPictBackground);
@@ -2612,7 +2612,7 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 	       if (pAbbCreated->AbLeafType == LtPicture)
 		 {
 		   /* a priori l'image prendra les dimensions de son pave' */
-		   ((PictInfo *) (pAbbCreated->AbPictInfo))->PicPresent = ReScale;
+		   ((ThotPictInfo *) (pAbbCreated->AbPictInfo))->PicPresent = ReScale;
 		   if (!pAbbCreated->AbWidth.DimIsPosition
 		       && pAbbCreated->AbWidth.DimValue < 0
 		       && pAbbCreated->AbWidth.DimAbRef == NULL
@@ -2622,7 +2622,7 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 		     /* le pave prend la hauteur et la largeur de son
 			contenu */
 		     /* l'image doit etre affichee telle quelle */
-		     ((PictInfo *) (pAbbCreated->AbPictInfo))->PicPresent = RealSize;
+		     ((ThotPictInfo *) (pAbbCreated->AbPictInfo))->PicPresent = RealSize;
 		 }
 	     }
 	 }

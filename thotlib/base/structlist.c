@@ -996,7 +996,7 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
    PtrSRule            pRe1;
    AbDimension        *pPavDim;
    PtrAttribute        pAt1;
-   PictInfo           *image;
+   ThotPictInfo       *image;
 
    if (pAb != NULL)
      {
@@ -1351,7 +1351,7 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	switch (pAb->AbLeafType)
 	   {
 	   case LtCompound:
-	      image = (PictInfo *) pAb->AbPictBackground;
+	      image = (ThotPictInfo *) pAb->AbPictBackground;
 	      if (image != NULL)
 		 {
 		 fprintf (fileDescriptor, "Picture: w = %d h = %d, name = \"",
@@ -1382,7 +1382,7 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 		 fprintf (fileDescriptor, "N");
 	      break;
 	   case LtPicture:
-	      image = (PictInfo *) pAb->AbPictInfo;
+	      image = (ThotPictInfo *) pAb->AbPictInfo;
 	      if (image == NULL)
 		 fprintf (fileDescriptor, "AbPictInfo = NULL");
 	      else
@@ -1657,7 +1657,7 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
    PtrBox              box1;
    ThotBool            loop;
    BoxRelation        *pRe1;
-   PictInfo           *image;
+   ThotPictInfo       *image;
    int                 i, j, t, b, l, r;
 
    if (pAb->AbBox != NULL)
@@ -1963,7 +1963,7 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 			 fprintf (fileDescriptor, "\'");
 			 break;
 		      case LtPicture:
-			 image = (PictInfo *) pAb->AbPictInfo;
+			 image = (ThotPictInfo *) pAb->AbPictInfo;
 			 fprintf (fileDescriptor, "PICTURE\n");
 			 for (j = 1; j <= Indent + 6; j++)
 			    fprintf (fileDescriptor, " ");

@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void CleanPictInfo ( PictInfo *imageDesc );
+extern void CleanPictInfo ( ThotPictInfo *imageDesc );
 extern void NewPictInfo ( PtrAbstractBox pAb,
                           PathBuffer filename,
                           int imagetype );
@@ -15,7 +15,7 @@ extern void CopyPictInfo ( int *Imdcopie,
 
 #else /* __STDC__ */
 
-extern void CleanPictInfo ( PictInfo *imageDesc );
+extern void CleanPictInfo ( ThotPictInfo *imageDesc );
 extern void NewPictInfo ( PtrAbstractBox pAb,
                             PathBuffer filename,
                             int imagetype );

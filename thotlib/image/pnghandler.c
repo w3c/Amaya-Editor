@@ -658,7 +658,7 @@ static unsigned char *ReadPngToData (char *datafile, int *w, int *h,
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-ThotDrawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
+ThotDrawable PngCreate (char *fn, ThotPictInfo *imageDesc, int *xif, int *yif,
 		    int *wif, int *hif, int bgColor, int *width,
 		    int *height, int zoom)
 {

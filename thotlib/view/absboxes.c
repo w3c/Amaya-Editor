@@ -97,7 +97,7 @@ void FreeAbView (PtrAbstractBox pAb, int frame)
   PtrTextBuffer       pBT, pNextBT;
   PtrPathSeg          pPa, pNextPa;
   PtrDelayedPRule     pDelPR, pNextDelPR;
-  PictInfo           *image;
+  ThotPictInfo       *image;
   ThotBool            libAb;
 
   if (pAb != NULL)
@@ -183,7 +183,7 @@ void FreeAbView (PtrAbstractBox pAb, int frame)
 	    if (pAb->AbPresentationBox)
 	      {
 		/* c'est une boite de presentation image */
-		image = (PictInfo *)pAb->AbPictInfo;
+		image = (ThotPictInfo *)pAb->AbPictInfo;
 		CleanPictInfo (image);
 		TtaFreeMemory (pAb->AbPictInfo);
 		pAb->AbPictInfo = NULL;
@@ -193,7 +193,7 @@ void FreeAbView (PtrAbstractBox pAb, int frame)
 	    if (pAb->AbPictBackground != NULL)
 	      {
 		/* in this particular case we need to free filename */
-		image = (PictInfo *)pAb->AbPictBackground;
+		image = (ThotPictInfo *)pAb->AbPictBackground;
 		TtaFreeMemory (image->PicFileName);
 		/* ce n'est pas un element image */
 		CleanPictInfo (image);

@@ -84,7 +84,7 @@ static void GetPictureBoundaries (char *fn, int *xif, int *yif, int *wif,
 /*----------------------------------------------------------------------
    Read the bounding box of an eps file  no picture to produce here
   ----------------------------------------------------------------------*/
-ThotDrawable EpsCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
+ThotDrawable EpsCreate (char *fn, ThotPictInfo *imageDesc, int *xif, int *yif,
 		    int *wif, int *hif, int bgColor, int *width,
 		    int *height, int zoom)
 {
