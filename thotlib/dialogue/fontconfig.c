@@ -130,15 +130,14 @@ static int AdvanceNextWord (unsigned char *line, int indline)
 {
   while (line[indline] != EOS && !isnum (line[indline]))
     {
-      while (line[indline] != EOS &&
-	     (line[indline] == EOL || line[indline] == __CR__))
-	indline++;
-      while (line[indline] != EOS && line[indline] == '#')
+      if (line[indline] == '#')
 	{
 	  /* skip to the end of the current line */
 	  while (line[indline] != EOS && line[indline] != EOL)
 	    indline++;
 	}
+	  else
+	indline++;
     }
   return indline;
 }

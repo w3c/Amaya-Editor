@@ -2581,7 +2581,13 @@ void ThotFreeAllFonts (void)
     FreeAFont (i);
   TtaFreeMemory (FontFamily);
   
+#ifdef _GTK
+  if (DefaultFont)
+	  gdk_font_unref (DefaultFont);
+#endif /* _GTK */
 #ifdef _GL
+  if (DefaultGLFont)
+	  gl_font_delete (DefaultGLFont);
   FTLibraryFree ();
 #endif /*_GL*/
   /*Free the font config structure
