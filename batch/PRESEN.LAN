@@ -159,12 +159,12 @@ Rule5 =           'MarginTop' ':' MarginWidth /
 MarginWidth =     InheritParent / 'Auto' / Distance .
 PaddingWidth =    InheritParent / Distance .
 BorderWidth =     InheritParent / 'Thin' / 'Medium' / 'Thick' / Distance .
-BorderColor =     InheritParent / 'Transparent' / ColorName .
+BorderColor =     InheritParent / 'Transparent' / FontColorName .
 BorderStyle =     InheritParent /
                   'None' / 'Hidden' / 'Dotted' / 'Dashed' / 'Solid' /
                   'Double' / 'Groove' / 'Ridge' / 'Inset' / 'Outset' .
 InheritParent =   'Enclosing' '=' .
-ColorName =       NAME .
+FontColorName =   NAME .
 
 FileName =	  STRING .
 PictMode =	  'NormalSize' / 'Scale' / 'RepeatXY' / 'RepeatX' / 'RepeatY' .
@@ -267,8 +267,7 @@ MinSize =	  NUMBER .
 PercentSizeA =	  PercentSize / AttrName .
 PercentSize =	  NUMBER .
 
-NameInherit =	  Link '=' / FontStyleName .
-FontStyleName =	  NAME .
+NameInherit =	  Link '=' / FontColorName .
 StyleInherit =	  Link '=' / 'Roman' / 'Italics' / 'Oblique' /
 		  { the next three values are obsolete }
 		  'Bold' / 'BoldItalics' / 'BoldOblique' .

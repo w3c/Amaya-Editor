@@ -5026,12 +5026,9 @@ indLine             wi;
 		 }
 	       break;
 
-	    case RULE_ColorName:
-               ColorName (wi, wl);
-	       break;
-
-	    case RULE_FontStyleName:
+	    case RULE_FontColorName:
 	       if (CurRule->PrType == PtFillPattern)
+		 /* Pattern name */
 		 {
 		    /* cherche le nom dans le tableau des trames Thot */
 		    CopyName (n, wi, wl);
@@ -5055,11 +5052,15 @@ indLine             wi;
 		      }
 		 }
 	       else if (CurRule->PrType == PtBackground ||
-			CurRule->PrType == PtForeground)
+			CurRule->PrType == PtForeground ||
+			CurRule->PrType == PtBorderTopColor ||
+			CurRule->PrType == PtBorderRightColor ||
+			CurRule->PrType == PtBorderBottomColor ||
+			CurRule->PrType == PtBorderLeftColor)
 		  /* color name */
 		  ColorName (wi, wl);
 	       else
-		  /* FontStyleName */
+		  /* font name */
 		  CurRule->PrChrValue = inputLine[wi - 1];
 	       break;
 	    case RULE_AttrVal:

@@ -165,12 +165,12 @@ number
    79	MarginWidth =     InheritParent / 'Auto' / Distance .
    80	PaddingWidth =    InheritParent / Distance .
    81	BorderWidth =     InheritParent / 'Thin' / 'Medium' / 'Thick' / Distance .
-   82	BorderColor =     InheritParent / 'Transparent' / ColorName .
+   82	BorderColor =     InheritParent / 'Transparent' / FontColorName .
    83	BorderStyle =     InheritParent /
 	                  'None' / 'Hidden' / 'Dotted' / 'Dashed' / 'Solid' /
 	                  'Double' / 'Groove' / 'Ridge' / 'Inset' / 'Outset' .
    84	InheritParent =   'Enclosing' '=' .
-   86	ColorName =       NAME .
+   86	FontColorName =   NAME .
 	
    77	FileName =	  STRING .
    78	PictMode =	  'NormalSize' / 'Scale' / 'RepeatXY' / 'RepeatX' / 'RepeatY' .
@@ -273,8 +273,7 @@ number
   126	PercentSizeA =	  PercentSize / AttrName .
   132	PercentSize =	  NUMBER .
 	
-   65	NameInherit =	  Link '=' / FontStyleName .
-  133	FontStyleName =	  NAME .
+   65	NameInherit =	  Link '=' / FontColorName .
    68	StyleInherit =	  Link '=' / 'Roman' / 'Italics' / 'Oblique' /
 			  { the next three values are obsolete }
 			  'Bold' / 'BoldItalics' / 'BoldOblique' .
@@ -284,26 +283,26 @@ number
    67	ThicknessInherit = Link '=' / 'Thick' / 'Thin' .
 	
    11	AttrList =	  Attr < Attr > .
-  134	Attr =		  AttrName [ '(' FSTypeName ')' ] [ AttrRelat ] ':'
+  133	Attr =		  AttrName [ '(' FSTypeName ')' ] [ AttrRelat ] ':'
 			  ViewRuleList .
    21	AttrName =	  NAME .
-  135	FSTypeName =	  [ FirstSec ] TypeName .
-  136	AttrRelat =	  '=' AttrValue / '>' [ '-' ] MinVal / '<' [ '-' ] MaxVal /
+  134	FSTypeName =	  [ FirstSec ] TypeName .
+  135	AttrRelat =	  '=' AttrValue / '>' [ '-' ] MinVal / '<' [ '-' ] MaxVal /
 			  'IN' '[' ['-'] MinInterval '.' '.' ['-'] MaxInterval ']' /
 			  'GREATER' AttrName / 'LESS' AttrName / 'EQUAL' AttrName .
-  137	AttrValue =	  [ '-' ] ValEqual / TextEqual / AttrVal .
-  138	MinVal =	  NUMBER .
-  139	MaxVal =	  NUMBER .
-  140	MinInterval =	  NUMBER .
-  141	MaxInterval =	  NUMBER .
-  142	ValEqual =	  NUMBER .
-  143	TextEqual =	  STRING .
-  144	AttrVal =	  NAME .
+  136	AttrValue =	  [ '-' ] ValEqual / TextEqual / AttrVal .
+  137	MinVal =	  NUMBER .
+  138	MaxVal =	  NUMBER .
+  139	MinInterval =	  NUMBER .
+  140	MaxInterval =	  NUMBER .
+  141	ValEqual =	  NUMBER .
+  142	TextEqual =	  STRING .
+  143	AttrVal =	  NAME .
 	
    73	Creation =	  Create [ 'Repeated' ] .
    49	SeqCondition =	  Condition < 'AND' Condition > .
-  146	Condition =	  [ 'NOT' ] [ 'Target' ] ElemCondition .
-  147	ElemCondition =	  'First' / 'Last' /
+  145	Condition =	  [ 'NOT' ] [ 'Target' ] ElemCondition .
+  146	ElemCondition =	  'First' / 'Last' /
 			  'Referred' / 'FirstRef' / 'LastRef' /
 			  'ExternalRef' / 'InternalRef' / 'CopyRef' /
 			  'AnyAttributes' / 'FirstAttr' / 'LastAttr' /
@@ -315,29 +314,29 @@ number
 			  [ ExtStruct ] /
 			  TypeName / AttrName .
 	
-  150	ParentLevel =	  [ GreaterLess ] RelLevel .
-  151	GreaterLess =	  '>' / '<' .
-  152	RelLevel =	  NUMBER.
+  149	ParentLevel =	  [ GreaterLess ] RelLevel .
+  150	GreaterLess =	  '>' / '<' .
+  151	RelLevel =	  NUMBER.
    39	MaxMinValue =	  'MaxRangeVal' / 'MinRangeVal' .
-  148	CounterCond =	  '<' MaxCounterVal / '>' MinCounterVal / '=' CounterValEqual / 
+  147	CounterCond =	  '<' MaxCounterVal / '>' MinCounterVal / '=' CounterValEqual / 
 	                  'IN' '[' ['-'] MinCounterInter '.' '.' ['-'] MaxCounterInter ']' .
-  149	CondPage =	  'Even' / 'Odd' / 'One' .
-  145	Create =	  'Create' / 'CreateBefore' / 'CreateAfter' /
+  148	CondPage =	  'Even' / 'Odd' / 'One' .
+  144	Create =	  'Create' / 'CreateBefore' / 'CreateAfter' /
 			  'CreateLast' / 'CreateFirst' / 'CreateWith' /
 			  'CreateEnclosing'.
 			  { Create is obsolete; replaced by CreateFirst }
-  153	MaxCounterVal =	  NUMBER .
-  154	MinCounterVal =	  NUMBER .
-  155	CounterValEqual = NUMBER .
-  157	MaxCounterInter = NUMBER .
-  156	MinCounterInter = NUMBER .
+  152	MaxCounterVal =	  NUMBER .
+  153	MinCounterVal =	  NUMBER .
+  154	CounterValEqual = NUMBER .
+  156	MaxCounterInter = NUMBER .
+  155	MinCounterInter = NUMBER .
 	
    74	BoxNameList =	  BoxName < ',' BoxName > .
 	
    12	TransmitList =	  Transmit < Transmit > .
-  158	Transmit =	  TypeOrCounter 'To' ExternalAttr '(' TypeName ')' ';' .
-  159	TypeOrCounter =	  CounterName / TypeName .
-  160	ExternalAttr =	  NAME .
+  157	Transmit =	  TypeOrCounter 'To' ExternalAttr '(' TypeName ')' ';' .
+  158	TypeOrCounter =	  CounterName / TypeName .
+  159	ExternalAttr =	  NAME .
 	
 	END
 	
@@ -347,25 +346,25 @@ number
 
 code  character  numbers of rules using the key-word
 
-1001      ;       1   3   4  16  27  33  40   8  46  48  45  45  45  45  45 158
+1001      ;       1   3   4  16  27  33  40   8  46  48  45  45  45  45  45 157
 1002      ,       3   4  36  74
 1003      :      16  33  40  50  50  50  50  50  50  50  50  50  50  50  51  51
                  51  51  51  51  51  51  51  51  51  51  51  51  51  51  51  52
                  53  53  53  53  53  53  53  54  54  54  54  54  54  54  54  54
-                 54  54  54  54  54  54  54  54  54  54  54  93 134
-1004      -      20 106 108 118 121 136 136 136 136 137 148 148
-1005      (      19  36  37  52  52  52  52  88  72 134 147 147 158
-1006      )      19  36  37  52  52  52  52  88  72 134 147 147 158
+                 54  54  54  54  54  54  54  54  54  54  54  93 133
+1004      -      20 106 108 118 121 135 135 135 135 136 147 147
+1005      (      19  36  37  52  52  52  52  88  72 133 146 146 157
+1006      )      19  36  37  52  52  52  52  88  72 133 146 146 157
 1007      *      19  90  92  93  95  97  99 121
-1008      =      27  84  76  58  59 108 118  61  70 121  65  68  69  66  67 136
-                148
-1009      .      90  92  56  55  57  71 136 136 148 148
+1008      =      27  84  76  58  59 108 118  61  70 121  65  68  69  66  67 135
+                147
+1009      .      90  92  56  55  57  71 135 135 147 147
 1010      %      99 104 121
 1011      +     106 108 118 121
-1012      >     136 151 148
-1013      <     136 151 148
-1014      [     136 148
-1015      ]     136 148
+1012      >     135 150 147
+1013      <     135 150 147
+1014      [     135 147
+1015      ]     135 147
 
 
 
@@ -416,7 +415,7 @@ code  key-word      numbers of rules using the key-word
 1141  LOWERCASE          38
 1142  FORWARD            40
 1143  BEGIN               8  46  48
-1144  IN                 43 104 136 148
+1144  IN                 43 104 135 147
 1145  Otherwise          44
 1146  IF                 47
 1147  VertRef            50
@@ -505,16 +504,16 @@ code  key-word      numbers of rules using the key-word
 1230  nil                58  59
 1231  UserSpecified      58  59  57
 1232  Refering           90  92
-1233  First              94 147
+1233  First              94 146
 1234  Second             94
 1235  Enclosed           95  87
 1236  Previous           95  87
 1237  Next               95
 1238  Refered            95
-1239  Referred           95 147
+1239  Referred           95 146
 1240  Creator            95  87
 1241  Root               95
-1242  NOT                96 146
+1242  NOT                96 145
 1243  AnyElem            97
 1244  AnyBox             97
 1245  ElemWithAttr       97
@@ -550,40 +549,40 @@ code  key-word      numbers of rules using the key-word
 1275  Underlined         66
 1276  Overlined          66
 1277  CrossedOut         66
-1278  GREATER           136
-1279  LESS              136
-1280  EQUAL             136
+1278  GREATER           135
+1279  LESS              135
+1280  EQUAL             135
 1281  Repeated           73
 1282  AND                49
-1283  Target            146
-1284  Last              147
-1285  FirstRef          147
-1286  LastRef           147
-1287  ExternalRef       147
-1288  InternalRef       147
-1289  CopyRef           147
-1290  AnyAttributes     147
-1291  FirstAttr         147
-1292  LastAttr          147
-1293  UserPage          147
-1294  StartPage         147
-1295  ComputedPage      147
-1296  Empty             147
-1297  Immediately       147
-1298  Within            147
+1283  Target            145
+1284  Last              146
+1285  FirstRef          146
+1286  LastRef           146
+1287  ExternalRef       146
+1288  InternalRef       146
+1289  CopyRef           146
+1290  AnyAttributes     146
+1291  FirstAttr         146
+1292  LastAttr          146
+1293  UserPage          146
+1294  StartPage         146
+1295  ComputedPage      146
+1296  Empty             146
+1297  Immediately       146
+1298  Within            146
 1299  MaxRangeVal        39
 1300  MinRangeVal        39
-1301  Even              149
-1302  Odd               149
-1303  One               149
-1304  Create            145
-1305  CreateBefore      145
-1306  CreateAfter       145
-1307  CreateLast        145
-1308  CreateFirst       145
-1309  CreateWith        145
-1310  CreateEnclosing   145
-1311  To                158
+1301  Even              148
+1302  Odd               148
+1303  One               148
+1304  Create            144
+1305  CreateBefore      144
+1306  CreateAfter       144
+1307  CreateLast        144
+1308  CreateFirst       144
+1309  CreateWith        144
+1310  CreateEnclosing   144
+1311  To                157
 
 
 
@@ -597,14 +596,14 @@ their right part.
  code  symbol        rule numbers
 
     1  PresentModel     
-    2  TypeName            1  15  18  19  75  88  90  92  72  93  97 135 147 147
-                           158 159
+    2  TypeName            1  15  18  19  75  88  90  92  72  93  97 134 146 146
+                           157 158
     3  ViewList            1
     4  PrintViewList       1
     5  CounterList         1
     6  ConstList           1
     7  VarList             1
-    8  ViewRuleList        1  40  93 134
+    8  ViewRuleList        1  40  93 133
     9  BoxList             1
    10  PresentList         1
    11  AttrList            1
@@ -613,12 +612,12 @@ their right part.
    14  ViewName           13  15  19  37  43
    15  PrintView           4   4
    16  Counter             5   5
-   17  CounterName        16  37 147 147 159
+   17  CounterName        16  37 146 146 158
    18  CountFunction      16
    19  TypeOrPage         18  22  23
    20  RelAncestorLevel   18
    21  AttrName           18  18  18  24  24  36  37  97 100 102 109 111 110 112
-                            64 120 122 124 123 125 126 134 136 136 136 147
+                            64 120 122 124 123 125 126 133 135 135 135 146
    22  SetRule            18  18
    23  AddRule            18  18
    24  CondAttr           18  19
@@ -636,7 +635,7 @@ their right part.
    36  Function           35  35
    37  CounterAttrPage    36
    38  CounterStyle       36
-   39  MaxMinValue        37 147
+   39  MaxMinValue        37 146
    40  Box                 9   9
    41  BoxName            40  40  52  52  75  97  74  74
    42  RulesAndCondRules   8  46
@@ -683,15 +682,15 @@ their right part.
    83  BorderStyle        54  54  54  54
    84  InheritParent      79  80  81  82  83
    85  Distance           79  80  81  90  92  56  55  99  62
-   86  ColorName          82
+   86  FontColorName      82  65
    87  Link               76 107  62  61  70  63  65  68  69  66  67
-   88  ExtStruct          75  75 147
+   88  ExtStruct          75  75 146
    89  HorizAxis          58  90  56
    90  RefVPosition       58
    91  VertAxis           59  92  55
    92  RefHPosition       59
    93  Present            10  10
-   94  FirstSec           93  97 135
+   94  FirstSec           93  97 134
    95  Reference          56  55  57
    96  NBoxType           95  95  95  95  95  95
    97  BoxType            95  96
@@ -730,45 +729,44 @@ their right part.
   130  MaxSize           123
   131  MinSize           125
   132  PercentSize       126
-  133  FontStyleName      65
-  134  Attr               11  11
-  135  FSTypeName        134
-  136  AttrRelat         134
-  137  AttrValue         136
-  138  MinVal            136
-  139  MaxVal            136
-  140  MinInterval       136
-  141  MaxInterval       136
-  142  ValEqual          137
-  143  TextEqual         137
-  144  AttrVal           137
-  145  Create             73
-  146  Condition          49  49
-  147  ElemCondition     146
-  148  CounterCond       147
-  149  CondPage          147
-  150  ParentLevel       147
-  151  GreaterLess       150
-  152  RelLevel          150
-  153  MaxCounterVal     148
-  154  MinCounterVal     148
-  155  CounterValEqual   148
-  156  MinCounterInter   148
-  157  MaxCounterInter   148
-  158  Transmit           12  12
-  159  TypeOrCounter     158
-  160  ExternalAttr      158
+  133  Attr               11  11
+  134  FSTypeName        133
+  135  AttrRelat         133
+  136  AttrValue         135
+  137  MinVal            135
+  138  MaxVal            135
+  139  MinInterval       135
+  140  MaxInterval       135
+  141  ValEqual          136
+  142  TextEqual         136
+  143  AttrVal           136
+  144  Create             73
+  145  Condition          49  49
+  146  ElemCondition     145
+  147  CounterCond       146
+  148  CondPage          146
+  149  ParentLevel       146
+  150  GreaterLess       149
+  151  RelLevel          149
+  152  MaxCounterVal     147
+  153  MinCounterVal     147
+  154  CounterValEqual   147
+  155  MinCounterInter   147
+  156  MaxCounterInter   147
+  157  Transmit           12  12
+  158  TypeOrCounter     157
+  159  ExternalAttr      157
 
 
 
 *** REFERENCES TO BASIC TYPES ***
 
 Numbers of the rules using NAME
-   2  14  17  28  31  34  41  86 133  21 144 160
+   2  14  17  28  31  34  41  86  21 143 159
 
 Numbers of the rules using NUMBER
-  25  26  32 101 105 103 113 114 115 116 117 127 128 129 130 131 132 138 139 140
- 141 142 152 153 154 155 157 156
+  25  26  32 101 105 103 113 114 115 116 117 127 128 129 130 131 132 137 138 139
+ 140 141 151 152 153 154 156 155
 
 Numbers of the rules using STRING
-  30  77 143
+  30  77 142
