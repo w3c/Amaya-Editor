@@ -7,6 +7,7 @@
 #ifdef __STDC__
 
 extern ThotBool TtaIsDocumentSelected ( Document document );
+extern ThotBool TtaIsColumnRowSelected ( Document document );
 extern void TtaSelectElement ( Document document,
                                Element selectedElement );
 extern void TtaSelectView ( Document document,
@@ -46,6 +47,7 @@ extern void TtaGiveLastSelectedElement ( Document document,
 #else /* __STDC__ */
 
 extern ThotBool TtaIsDocumentSelected ( Document document );
+extern ThotBool TtaIsColumnRowSelected ( Document document );
 extern void TtaSelectElement ( Document document,
                                  Element selectedElement );
 extern void TtaSelectView ( Document document,

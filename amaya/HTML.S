@@ -784,7 +784,7 @@ STRUCT
   map								{ MAP }
      (ATTR NAME) =
 	 { name }
-	LIST OF (ElemOrArea);
+	LIST OF (Element);
 
   AREA								{ AREA }
      (ATTR shape; coords; HREF_; target_; nohref = Yes_; ALT;

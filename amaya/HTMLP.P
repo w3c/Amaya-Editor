@@ -3093,6 +3093,8 @@ RULES
 #endif
 	Width: Enclosing . Width;
 	VertPos: Top = Previous not MAP . Bottom;
+	{MarginTop: 1 em;
+	MarginBottom: 1 em;}
 	if not within List_Item BEGIN
 	    MarginTop: 0.2;
 	    MarginBottom: 0.4;
@@ -4333,24 +4335,19 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	LineBreak: No;
-	MarginTop: VSpaceBeforeH2;
-	Gather: Yes;
+	MarginTop: 0; {VSpaceBeforeH2}
 	Width: Enclosing . Width;
 	VertPos: Top = Previous not MAP . Bottom;
 	IN Structure_view BEGIN
 		Visibility: Enclosing =;
-	        Gather: No;
 		Font: Enclosing =;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
-		MarginTop: 0;	
 		END;
 	IN Links_view
 		Visibility: 0;
 	IN Alternate_view BEGIN
-		MarginTop: 0;
-		Width: Enclosing . Width;
 		VertPos: Top = Previous . Bottom;
 		Line;
 		END;
@@ -4757,17 +4754,7 @@ RULES
 	CreateWith(VerticalLine);
 	Width: Enclosing . Width;
 	VertPos: Top = Previous not MAP . Bottom;
-	{if not within Division
-	   MarginTop: VSpaceBeforeH2;
-	if within 1 Division
-	   MarginTop: VSpaceBeforeH3;
-	if within 2 Division
-	   MarginTop: VSpaceBeforeH4;
-	if within 3 Division
-	   MarginTop: VSpaceBeforeH5;
-	if within >3 Division
-	   MarginTop: VSpaceBeforeH6;}
-         MarginTop: 0;
+        MarginTop: 0;
 	IN Structure_view BEGIN
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Width: Enclosing . Width - STRUCT_INDENT;

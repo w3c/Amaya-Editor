@@ -1296,7 +1296,7 @@ void CreateHeading6 (Document document, View view)
   ----------------------------------------------------------------------*/
 void CreateMap (Document doc, View view)
 {
-  CreateHTMLelement (HTML_EL_MAP, doc);
+  CreateHTMLelement (HTML_EL_map, doc);
 }
 
 /*----------------------------------------------------------------------

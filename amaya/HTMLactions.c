@@ -1872,8 +1872,6 @@ void UpdateContextSensitiveMenus (Document doc)
        TtaSetItemOn (doc, 1, Types, BSelectColumn);
        TtaSetItemOn (doc, 1, Types, BCreateColumnB);
        TtaSetItemOn (doc, 1, Types, BCreateColumnA);
-       TtaSetItemOn (doc, 1, Types, BPasteBefore);
-       TtaSetItemOn (doc, 1, Types, BPasteAfter);
      }
    if (withinTable && inMath && !MTableMenuActive)
      {
@@ -1888,8 +1886,19 @@ void UpdateContextSensitiveMenus (Document doc)
        TtaSetItemOn (doc, 1, XMLTypes, BMSelectColumn);
        TtaSetItemOn (doc, 1, XMLTypes, BMCreateColumnB);
        TtaSetItemOn (doc, 1, XMLTypes, BMCreateColumnA);
-       TtaSetItemOn (doc, 1, XMLTypes, BMPasteBefore);
-       TtaSetItemOn (doc, 1, XMLTypes, BMPasteAfter);
+     }
+   if (withinTable && TtaIsColumnRowSelected (doc))
+     {
+       if (inMath)
+	 {
+	   TtaSetItemOn (doc, 1, XMLTypes, BMPasteBefore);
+	   TtaSetItemOn (doc, 1, XMLTypes, BMPasteAfter);
+	 }
+       else
+	 {
+	   TtaSetItemOn (doc, 1, Types, BPasteBefore);
+	   TtaSetItemOn (doc, 1, Types, BPasteAfter);
+	 }
      }
 
    if (!withHTML)

@@ -93,7 +93,7 @@ typedef int        *PRule;
 
 /* Units */
 #define UNIT_INVALID	0	/* invalid unit : for parsing   */
-#define UNIT_REL		1	/* relative : e.g. to font size */
+#define UNIT_REL	1	/* relative : e.g. to font size */
 #define UNIT_PT		2	/* typo points : 1/72 inches    */
 #define UNIT_PC		3	/* typo points : 1/6 inches     */
 #define UNIT_IN		4	/* inches                       */
@@ -103,8 +103,8 @@ typedef int        *PRule;
 #define UNIT_PX		8	/* defined in pixels            */
 #define UNIT_PERCENT	9	/* a relative size in percent   */
 #define UNIT_XHEIGHT	10	/* defined / size of x char     */
-#define UNIT_BOX	        11	/* this is a box number         */
-#define VALUE_AUTO        12      /* not a unit: value = auto     */
+#define UNIT_BOX	11	/* this is a box number         */
+#define VALUE_AUTO      12      /* not a unit: value = auto     */
 
 /* values for rules PRBorderStyle */
 #define BorderStyleNone 1

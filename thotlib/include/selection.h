@@ -18,6 +18,13 @@
   ----------------------------------------------------------------------*/
 extern ThotBool TtaIsDocumentSelected (Document document);
 
+
+/*----------------------------------------------------------------------
+  TtaIsColumnRowSaved answers TRUE if there is a column or a row in
+  the Thot Clicboard.
+  ----------------------------------------------------------------------*/
+extern ThotBool TtaIsColumnRowSelected (Document document);
+
 /*----------------------------------------------------------------------
   TtaSelectWord selects the word around the current point in an element
   ----------------------------------------------------------------------*/

@@ -18,6 +18,7 @@
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "edit_tv.h"
+#include "modif_tv.h"
 #include "select_tv.h"
 #include "appdialogue_tv.h"
 
@@ -44,6 +45,27 @@ ThotBool TtaIsDocumentSelected (Document document)
       return (FALSE);
    else
       return (TRUE);
+}
+
+/*----------------------------------------------------------------------
+  TtaIsColumnRowSaved answers TRUE if there is a column or a row in
+  the Thot Clicboard.
+  ----------------------------------------------------------------------*/
+ThotBool TtaIsColumnRowSelected (Document document)
+{
+   PtrDocument         docsel;
+   PtrElement          firstSelection, lastSelection;
+   int                 firstChar, lastChar;
+
+   if (!GetCurrentSelection (&docsel, &firstSelection, &lastSelection,
+			     &firstChar, &lastChar))
+      return (FALSE);
+   else if (LoadedDocument[document - 1] != docsel)
+      return (FALSE);
+   else if (WholeColumnSaved || TableRowsSaved)
+       return (TRUE);
+   else
+      return (FALSE);
 }
 
 /*----------------------------------------------------------------------
