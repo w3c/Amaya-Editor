@@ -90,7 +90,7 @@ Extract the distribution
 ------------------------
 
 Move the distribution to a right directory (your $HOME for example).
-Extract the source tar file: amaya-src-1.2a.tar.gz
+Extract the source tar file: amaya-src-release.tar.gz
 
 Set up the environment and start the compiling
 ----------------------------------------------

@@ -20,7 +20,6 @@ cd $THOTDIR
 $TAR - \
 Thot/README.amaya \
 Thot/README \
-Thot/Windows/*.* \
 Thot/config.guess \
 Thot/config.h.in \
 Thot/config.sub \

@@ -810,7 +810,7 @@ extern volatile noshare int errno;	/* noshare to avoid PSECT conflict */
 
 /* syslog.h */
 #ifdef HAVE_SYSLOG_H
-#include <sys/syslog.h>
+#include <syslog.h>
 #endif
 
 /* socket.h */

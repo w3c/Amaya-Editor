@@ -7,8 +7,8 @@
 AMAYAVERSION=1.3a
 THOTDIR=/tahiti/diffusion/Thot
 DEST=/tahiti/thottape
-#PLATFORMS="solaris2 LINUX-ELF RS6000 SGI"
-PLATFORMS="RS6000"
+PLATFORMS="solaris2 LINUX-ELF RS6000 SGI"
+#PLATFORMS="RS6000"
 
 #THOTDIR=$HOME/Thot
 #DEST=$HOME
@@ -78,7 +78,6 @@ do
    Thot/doc/amaya/Keyboard.html \
    Thot/doc/amaya/Printing.html \
    Thot/doc/amaya/Changing.html \
-   Thot/doc/amaya/Publishing.html \
    Thot/doc/amaya/Configure.html \
    Thot/doc/amaya/Links.html \
    Thot/doc/amaya/Put.html \

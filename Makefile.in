@@ -28,7 +28,11 @@ srcdir	= $(THOTDIR)
 
 @SET_MAKE@
 
-default : tools thotlib tablelib batch amaya thot
+default : tools thotlib tablelib batch amaya_prog thot_prog
+
+thot : tools thotlib tablelib thot_prog
+
+amaya : tools thotlib tablelib amaya_prog
 
 Options:
 	@CP@ Options.orig Options
@@ -47,7 +51,7 @@ thotlib: rebuild force
 	@(if test -d thotlib ; then cd thotlib ; \
 	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" all ; fi)
 
-thot: rebuild force
+thot_prog: rebuild force
 	@(if test -d thot ; then cd thot ; \
 	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" thot ; fi)
 
@@ -60,7 +64,7 @@ html2piv: rebuild force
 	@(if test -d amaya ; then cd amaya ; \
 	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" html2piv ; fi)
 
-amaya: rebuild force bin/str
+amaya_prog: rebuild force bin/str
 	@(if test -d amaya ; then cd amaya ; \
 	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" amaya ; fi)
 

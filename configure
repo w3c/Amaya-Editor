@@ -901,7 +901,7 @@ echo "$ac_t""$ac_cv_prog_cc_g" 1>&6
   if test "$ac_test_CFLAGS" = set; then
     CFLAGS="$ac_save_CFLAGS"
   elif test $ac_cv_prog_cc_g = yes; then
-    CFLAGS="-g -O2"
+    CFLAGS="-O2"
   else
     CFLAGS="-O2"
   fi
@@ -3276,7 +3276,7 @@ else
 fi
 done
 
-for ac_hdr in syslog.h
+for ac_hdr in sys/syslog.h syslog.h
 do
 ac_safe=`echo "$ac_hdr" | sed 'y%./+-%__p_%'`
 echo $ac_n "checking for $ac_hdr""... $ac_c" 1>&6
