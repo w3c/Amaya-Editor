@@ -1993,7 +1993,7 @@ boolean             check;
 		  /* exception Hidden is not associated with this elment type*/
 		  {
 		     stop = TRUE;
-		     if (pEl->ElFirstChild != NULL)
+		     if (!pEl->ElTerminal && pEl->ElFirstChild != NULL)
 			/* get the structure rule defining the element type */
 			if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct ==
 			    CsChoice)
@@ -2003,9 +2003,8 @@ boolean             check;
 			     stop = FALSE;
 			  }
 		  }
-		else
+		else if (pEl->ElTerminal || pEl->ElFirstChild == NULL)
 		   /* this element type has exception Hidden */
-		if (pEl->ElTerminal || pEl->ElFirstChild == NULL)
 		   /* the element has no child */
 		   stop = TRUE;
 		else

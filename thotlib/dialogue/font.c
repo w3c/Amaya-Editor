@@ -52,9 +52,9 @@ static boolean      UseBitStreamFamily;
 
 
 #ifdef _WINDOWS
-/**
+/*----------------------------------------------------------------------
  *      WinLoadFont : Load a Windows font in a Device context.
- **/
+  ----------------------------------------------------------------------*/
 void                WinLoadFont (HDC hdc, ptrfont font)
 {
 #if 0
@@ -75,17 +75,17 @@ void                WinLoadFont (HDC hdc, ptrfont font)
 }
 #endif /* _WINDOWS */
 
-/**
+/*----------------------------------------------------------------------
  *      NumberOfFonts returns the number of fonts.
- **/
+  ----------------------------------------------------------------------*/
 int                 NumberOfFonts ()
 {
    return MaxNumberOfSizes + 1;
 }
 
-/**
+/*----------------------------------------------------------------------
  *      PointToPixel convert from points to pixels.
- **/
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 PointToPixel (int value)
 #else  /* __STDC__ */
@@ -97,9 +97,9 @@ int                 value;
    return ((value * DOT_PER_INCHE) / DOT_PER_INCHE);
 }
 
-/**
+/*----------------------------------------------------------------------
  *      GetCharsCapacity converts from pixel volume to char size
- **/
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 GetCharsCapacity (int volpixel)
 
@@ -113,9 +113,9 @@ int                 volpixel;
    return volpixel / 200;
 }
 
-/**
+/*----------------------------------------------------------------------
  *      PixelToPoint convert from pixels to points.
- **/
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 PixelToPoint (int value)
 #else  /* __STDC__ */
@@ -127,16 +127,15 @@ int                 value;
    return ((value * DOT_PER_INCHE + DOT_PER_INCHE / 2) / DOT_PER_INCHE);
 }
 
-/**
+/*----------------------------------------------------------------------
  *      CharacterWidth returns the width of a char in a given font.
- **/
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 CharacterWidth (unsigned char c, ptrfont font)
 #else  /* __STDC__ */
 int                 CharacterWidth (c, font)
 unsigned char       c;
 ptrfont             font;
-
 #endif /* __STDC__ */
 {
    if (font == NULL)
@@ -155,29 +154,27 @@ ptrfont             font;
 	int                 l;
 
 	if (((XFontStruct *) font)->per_char == NULL)
-	   l = ((XFontStruct *) font)->max_bounds.width;
+	  l = ((XFontStruct *) font)->max_bounds.width;
+	else if (c < ((XFontStruct *) font)->min_char_or_byte2)
+	  l = 0;
 	else
-	   l = ((XFontStruct *) font)->per_char[c - ((XFontStruct *) font)->min_char_or_byte2].width;
+	  l = ((XFontStruct *) font)->per_char[c - ((XFontStruct *) font)->min_char_or_byte2].width;
 
 	return l;
 #endif /* !_WINDOWS */
      }
 }
 
-/**
+/*----------------------------------------------------------------------
  *      CharacterHeight returns the height of a char in a given font.
- **/
-
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 CharacterHeight (unsigned char c, ptrfont font)
-
 #else  /* __STDC__ */
 int                 CharacterHeight (c, font)
 unsigned char       c;
 ptrfont             font;
-
 #endif /* __STDC__ */
-
 {
    if (font == NULL)
       return (0);
@@ -201,20 +198,16 @@ ptrfont             font;
 #endif /* !_WINDOWS */
 }
 
-/**
+/*----------------------------------------------------------------------
  *      CharacterAscent returns the ascent of a char in a given font.
- **/
-
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 CharacterAscent (unsigned char c, ptrfont font)
-
 #else  /* __STDC__ */
 int                 CharacterAscent (c, font)
 unsigned char       c;
 ptrfont             font;
-
 #endif /* __STDC__ */
-
 {
    if (font == NULL)
       return (0);
@@ -241,19 +234,15 @@ ptrfont             font;
 
 }
 
-/**
+/*----------------------------------------------------------------------
  *      FontAscent returns a global ascent for a font.
- **/
-
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 FontAscent (ptrfont font)
-
 #else  /* __STDC__ */
 int                 FontAscent (font)
 ptrfont             font;
-
 #endif /* __STDC__ */
-
 {
    if (font == NULL)
       return (0);
@@ -277,19 +266,15 @@ ptrfont             font;
 #endif /* !_WINDOWS */
 }
 
-/**
+/*----------------------------------------------------------------------
  *      FontHeight returns the height of a given font.
- **/
-
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 FontHeight (ptrfont font)
-
 #else  /* __STDC__ */
 int                 FontHeight (font)
 ptrfont             font;
-
 #endif /* __STDC__ */
-
 {
    if (font == NULL)
       return (0);
@@ -313,11 +298,11 @@ ptrfont             font;
 #endif /* !_WINDOWS */
 }
 
-/**
+/*----------------------------------------------------------------------
  *  PixelValue computes the pixel size for a given logical unit.
  *		pAb is the current Pave except for UnPercent unit
  *		here it hold the comparison value.
- **/
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 PixelValue (int val, TypeUnit unit, PtrAbstractBox pAb)
 #else  /* __STDC__ */
@@ -325,7 +310,6 @@ int                 PixelValue (val, unit, pAb)
 int                 val;
 TypeUnit            unit;
 PtrAbstractBox      pAb;
-
 #endif /* __STDC__ */
 {
    int                 dist, i;
@@ -358,11 +342,11 @@ PtrAbstractBox      pAb;
    return (dist);
 }
 
-/**
+/*----------------------------------------------------------------------
  *  PixelValue computes the logical value for a given pixel size.
  *		pAb is the current Pave except for UnPercent unit
  *		here it hold the comparison value.
- **/
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 LogicalValue (int val, TypeUnit unit, PtrAbstractBox pAb)
 #else  /* __STDC__ */
@@ -370,7 +354,6 @@ int                 LogicalValue (val, unit, pAb)
 int                 val;
 TypeUnit            unit;
 PtrAbstractBox      pAb;
-
 #endif /* __STDC__ */
 {
    int                 dist, i;
@@ -409,19 +392,15 @@ PtrAbstractBox      pAb;
 }
 
 
-/**
+/*----------------------------------------------------------------------
  *      FontBase returns the shifting of the base line for a given font.
- **/
-
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 FontBase (ptrfont font)
-
 #else  /* __STDC__ */
 int                 FontBase (font)
 ptrfont             font;
-
 #endif /* __STDC__ */
-
 {
    if (font == NULL)
       return (0);
@@ -429,15 +408,14 @@ ptrfont             font;
       return (FontAscent (font));
 }
 
-/**
+/*----------------------------------------------------------------------
  *   FontRelSize converts between a size in points and the logical size.
- **/
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 FontRelSize (int size)
 #else  /* __STDC__ */
 int                 FontRelSize (size)
 int                 size;
-
 #endif /* __STDC__ */
 {
    int                 j;
@@ -449,15 +427,14 @@ int                 size;
    return (j);
 }
 
-/**
+/*----------------------------------------------------------------------
  *   FontPointSize convert a logical size to the point value.
- **/
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 FontPointSize (int size)
 #else  /* __STDC__ */
 int                 FontPointSize (size)
 int                 size;
-
 #endif /* __STDC__ */
 {
 
@@ -469,15 +446,14 @@ int                 size;
    return (LogicalPointsSizes[size]);
 }
 
-/**
+/*----------------------------------------------------------------------
  *      LoadFont load a given font designed by its name.
- **/
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 ptrfont             LoadFont (char name[100])
 #else  /* __STDC__ */
 ptrfont             LoadFont (name)
 char                name[100];
-
 #endif /* __STDC__ */
 {
 #ifdef _WINDOWS
@@ -513,9 +489,9 @@ char                name[100];
 #endif /* !_WINDOWS */
 }
 
-/**
+/*----------------------------------------------------------------------
  *      FontIdentifier computes the name of a Thot font.
- **/
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                FontIdentifier (char alphabet, char family, int highlight, int size, TypeUnit unit, char r_name[10], char r_nameX[100])
 #else  /* __STDC__ */
@@ -646,9 +622,9 @@ char                r_nameX[100];
 	    StylesTable[highlight], size);
 }
 
-/**
+/*----------------------------------------------------------------------
  *      ReadFont do a raw Thot font loading (bypasses the font cache).
- **/
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 ptrfont             ReadFont (char alphabet, char family, int highlight, int size, TypeUnit unit)
 #else  /* __STDC__ */
@@ -668,10 +644,10 @@ TypeUnit            unit;
 }
 
 #ifdef _WINDOWS
-/**
+/*----------------------------------------------------------------------
  *    WIN_LoadFont :  load a Windows TRUEType with a defined set of
  *                    characteristics.
- **/
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static HFONT        WIN_LoadFont (char alphabet, char family, int highlight,
 				  int size, TypeUnit unit, int frame)
@@ -770,11 +746,11 @@ int                 frame;
 }
 #endif /* _WINDOWS */
 
-/**
+/*----------------------------------------------------------------------
  *      LoadNearestFont load the nearest possible font given a set
  *		of attributes like alphabet, family, the size and for
  *		a given frame.
- **/
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static ptrfont      LoadNearestFont (char alphabet, char family, int highlight, int size, TypeUnit unit, int frame, boolean increase)
 #else  /* __STDC__ */
@@ -916,11 +892,11 @@ boolean             increase;
    return (ptfont);
 }
 
-/**
+/*----------------------------------------------------------------------
  *      ThotLoadFont try to load a font given a set
  *		of attributes like alphabet, family, the size and for
  *		a given frame.
- **/
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 ptrfont             ThotLoadFont (char alphabet, char family, int highlight, int size, TypeUnit unit, int frame)
 #else  /* __STDC__ */
@@ -931,7 +907,6 @@ int                 highlight;
 int                 size;
 TypeUnit            unit;
 int                 frame;
-
 #endif /* __STDC__ */
 {
    /* pas de family inferieure a 6 points */
@@ -941,9 +916,9 @@ int                 frame;
 }
 
 
-/**
+/*----------------------------------------------------------------------
  *      InitDialogueFonts initialize the standard fonts used by the Thot Toolkit.
- **/
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                InitDialogueFonts (char *name)
 #else  /* __STDC__ */
@@ -1080,9 +1055,9 @@ char               *name;
    FirstRemovableFont = 3;
 }
 
-/**
+/*----------------------------------------------------------------------
  *      ThotFreeFont free the font familly loaded by a frame.
- **/
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ThotFreeFont (int frame)
 #else  /* __STDC__ */

@@ -658,9 +658,9 @@ int                *height;
 		else if (pFirstAb->AbBox->BxType == BoGhost)
 		   /* On descend dans la hierarchie */
 		   pFirstAb = pFirstAb->AbFirstEnclosed;
-	     /* Sinon c'est la boite du pave */
 		else
 		  {
+		     /* Sinon c'est la boite du pave */
 		     pBox = pFirstAb->AbBox;
 		     still = FALSE;
 		  }
@@ -711,7 +711,7 @@ int                *height;
 	     else
 		*width = pCurrentBox->BxWidth;
 	  }
-     }				/* FnLine */
+     }
    /* La boite est une composition geometrique */
    else
      {

@@ -4147,7 +4147,6 @@ static void         InitAutomaton ()
    GetNextInputChar        returns the next character in the imput
    file or buffer.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 char                GetNextInputChar (void)
 #else

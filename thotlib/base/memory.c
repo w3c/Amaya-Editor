@@ -1128,8 +1128,8 @@ AttributePres      *pAP;
 {
   if (pAP)
     {
-      TtaFreeMemory (pAP);
       pAP->ApNextAttrPres = NULL;
+      TtaFreeMemory (pAP);
     }
 }
 
@@ -1871,7 +1871,13 @@ PtrBox              pBox;
    pBox->BxAbstractBox = NULL;
    pBox->BxPrevious = NULL;
    pBox->BxNext = NULL;
-   /* On retire l'indicateur de fin de* bloc */
+   /* free lines for box block of lines */
+   if (pBox->BxType = BoBlock)
+     {
+       pBox->BxFirstLine = NULL;
+       pBox->BxLastLine = NULL;
+     }
+   /* On retire l'indicateur de fin de bloc */
    pBox->BxEndOfBloc = 0;
    pBox->BxType = BoComplete;
    NextBox = pBox->BxNexChild;
