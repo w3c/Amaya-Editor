@@ -110,9 +110,6 @@ void               *input, HTAlertPar * reply;
 		    else
 #endif
 		       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_WRITE), me->urlName);
-		    if (Amaya->open_requests == 1)
-		      /* only call this function if there are no other current requests */
-		      TtaHandlePendingEvents ();
 		 }
 	       break;
 

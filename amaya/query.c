@@ -660,12 +660,6 @@ int                 status;
    if (AmayaIsAlive  && ((me->method == METHOD_POST) ||
 			 (me->method == METHOD_PUT)))
      {
-       /* JK: Experimental */
-       if (me->method == METHOD_PUT) 
-	 {
-	   TtaHandlePendingEvents ();
-	 }
-
        /* output the status of the request */
        if (status == 200)
 	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REQUEST_SUCCEEDED), me->urlName);
@@ -701,7 +695,7 @@ int                 status;
 	     }
 	   else if (errorElement == HTERR_INTERNAL)
 	     {
-	       if ((error->length > 0) && (error->length <= 2) &&
+	       if ((error->length > 0) && (error->length <= 25) &&
 		   (error->par) && (((char *) error->par)[0] != EOS))
 		 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_CAUSE), (char *) (error->par));
 	       else
