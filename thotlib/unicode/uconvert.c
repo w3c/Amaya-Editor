@@ -608,48 +608,47 @@ wchar_t TtaGetUnicodeFromChar (const unsigned char c, CHARSET encoding)
   TtaWC2MB converts a wide character into a multibyte character.
   Returns the number of bytes in the multibyte character or -1
   ----------------------------------------------------------------------*/
-int TtaWC2MB (wchar_t wchar, char *mbchar, CHARSET encoding)
+int TtaWC2MB (wchar_t src, char *dest, CHARSET encoding)
 {
   unsigned char   leadByteMark;
-  unsigned char  *mbcptr = mbchar;
-  wchar_t         wc = wchar;
+  unsigned char  *mbcptr = dest;
   int             nbBytes = 1;
 
   if (encoding ==  UTF_8)
     {
-      if (wc < 0x80)
+      if (src < 0x80)
 	{
 	  nbBytes  = 1;
 	  leadByteMark = 0x00;
 	}
-      else if (wc < 0x800)
+      else if (src < 0x800)
 	{
 	  nbBytes      = 2;
 	  leadByteMark = 0xC0;
 	}
-      else if (wc < 0x10000)
+      else if (src < 0x10000)
 	{
 	  nbBytes      = 3;
 	  leadByteMark = 0xE0;
 	}
-      else if (wc < 0x200000)
+      else if (src < 0x200000)
 	{
 	  nbBytes      = 4;
 	  leadByteMark = 0xF0;
 	}
-      else if (wc < 0x4000000)
+      else if (src < 0x4000000)
 	{
 	  nbBytes      = 5;
 	  leadByteMark = 0xF8;
 	}
-      else if (wc < 0x7FFFFFFF)
+      else if (src < 0x7FFFFFFF)
 	{
 	  nbBytes      = 6;
 	  leadByteMark = 0xFC;
 	}
       else
 	{
-	  *mbchar = '?';
+	  *dest = '?';
 	  return -1;
 	}
 
@@ -657,209 +656,122 @@ int TtaWC2MB (wchar_t wchar, char *mbchar, CHARSET encoding)
       switch (nbBytes)
 	{
 	case 6:
-	  *--mbcptr = (wc | 0x80) & 0xBF;
-	  wc >>= 6;
+	  *--mbcptr = (src | 0x80) & 0xBF;
+	  src >>= 6;
 	case 5:
-	  *--mbcptr = (wc | 0x80) & 0xBF;
-	  wc >>= 6;
+	  *--mbcptr = (src | 0x80) & 0xBF;
+	  src >>= 6;
 	case 4:
-	  *--mbcptr = (wc | 0x80) & 0xBF;
-	  wc >>= 6;
+	  *--mbcptr = (src | 0x80) & 0xBF;
+	  src >>= 6;
 	case 3:
-	  *--mbcptr = (wc | 0x80) & 0xBF;
-	  wc >>= 6;
+	  *--mbcptr = (src | 0x80) & 0xBF;
+	  src >>= 6;
 	case 2:
-	  *--mbcptr = (wc | 0x80) & 0xBF;
-	  wc >>= 6;
+	  *--mbcptr = (src | 0x80) & 0xBF;
+	  src >>= 6;
 	case 1:
-	  *--mbcptr = wc | leadByteMark;
+	  *--mbcptr = src | leadByteMark;
 	}
     }
   else
     {
-      *mbchar++ = TtaGetCharFromUnicode (wchar, encoding);
-      *mbchar   = 0;
+      *dest++ = TtaGetCharFromUnicode (src, encoding);
+      *dest   = 0;
     }
   return nbBytes;
 }
 
+/*----------------------------------------------------------------------
+  TtaWCS2MBs converts a wide character into a multibyte string according to
+  the charset.                                                                
+  Return the number of bytes in the multibyte character or -1
+  The pointer to the source multibyte string is updated.
+  ----------------------------------------------------------------------*/
+int TtaWC2MBs (wchar_t *src, unsigned char **dest, CHARSET encoding)
+{
+  wchar_t         wc = src[0];
+  int             nbBytes;
+
+  nbBytes = TtaWC2MB (wc, *dest, encoding);
+  if (nbBytes > 0)
+    {
+      *dest += nbBytes;
+      return nbBytes;
+    }
+  else
+    return -1;
+}
+
+
 
 /*----------------------------------------------------------------------
-  TtaMBS2WCS converts a multibyte string into a wide character string
-  according to the charset.
+  TtaMBs2WCS converts a multibyte string into a wide character according
+  to the charset.
   Returns the number of bytes in the multibyte character or -1
+  The pointer to the source multibyte string is updated.
   ----------------------------------------------------------------------*/
-int TtaMBS2WCS (unsigned char** src, wchar_t** target, CHARSET encoding)
+int TtaMBs2WC (unsigned char **src, wchar_t *dest, CHARSET encoding)
 {
   unsigned char *ptrSrc = *src;
-  wchar_t       *ptrTarget = *target;
   wchar_t        res;
   int            nbBytesConverted = 0;
   int            nbBytesToConvert;
 
   if (encoding ==  UTF_8)
     {
-      while (*ptrSrc)
-	{
-	  if (*ptrSrc < 0xC0)
-	    nbBytesToConvert = 1;
-	  else if (*ptrSrc < 0xE0)
-	    nbBytesToConvert = 2;
-	  else if (*ptrSrc < 0xF0)
-	    nbBytesToConvert = 3;
-	  else if (*ptrSrc < 0xF8)
-	    nbBytesToConvert = 4;
-	  else if (*ptrSrc < 0xFC)
-	    nbBytesToConvert = 5;
-	  else if (*ptrSrc <= 0xFF)
-	    nbBytesToConvert = 6;
+      if (*ptrSrc < 0xC0)
+	nbBytesToConvert = 1;
+      else if (*ptrSrc < 0xE0)
+	nbBytesToConvert = 2;
+      else if (*ptrSrc < 0xF0)
+	nbBytesToConvert = 3;
+      else if (*ptrSrc < 0xF8)
+	nbBytesToConvert = 4;
+      else if (*ptrSrc < 0xFC)
+	nbBytesToConvert = 5;
+      else if (*ptrSrc <= 0xFF)
+	nbBytesToConvert = 6;
                  
-	  nbBytesConverted += nbBytesToConvert;
-	  res = 0;
-	  switch (nbBytesToConvert)
-	    {
-	    case 6:
-	      res += *ptrSrc++;
-	      res <<= 6;
-	    case 5:
-	      res += *ptrSrc++;
-	      res <<= 6;
-	    case 4:
-	      res += *ptrSrc++;
-	      res <<= 6;
-	    case 3:
-	      res += *ptrSrc++;
-	      res <<= 6;
-	    case 2:
-	      res += *ptrSrc++;
-	      res <<= 6;
-	    case 1:
-	      res += *ptrSrc++;
-	    }
-
-	  res -= offset[nbBytesToConvert - 1];
-	  if (res <= 0xFFFF)
-	    *ptrTarget++ = res;
-	  else 
-	    *ptrTarget++ = '?';
+      nbBytesConverted += nbBytesToConvert;
+      res = 0;
+      switch (nbBytesToConvert)
+	{
+	case 6:
+	  res += *ptrSrc++;
+	  res <<= 6;
+	case 5:
+	  res += *ptrSrc++;
+	  res <<= 6;
+	case 4:
+	  res += *ptrSrc++;
+	  res <<= 6;
+	case 3:
+	  res += *ptrSrc++;
+	  res <<= 6;
+	case 2:
+	  res += *ptrSrc++;
+	  res <<= 6;
+	case 1:
+	  res += *ptrSrc++;
 	}
-      *ptrTarget = 0L;
+
+      res -= offset[nbBytesToConvert - 1];
+      if (res <= 0xFFFF)
+	*dest = res;
+      else 
+	*dest = '?';
     }
   else
     {
-      while (*ptrSrc)
-	{
-	  *ptrTarget = TtaGetUnicodeFromChar (*ptrSrc, encoding);
-	  nbBytesConverted++;
-	  ptrSrc++;
-	  ptrTarget++;
-	}
-      *ptrTarget = 0;
+      *dest = TtaGetUnicodeFromChar (*ptrSrc, encoding);
+      nbBytesConverted++;
+      ptrSrc++;
     }
-
-    if (nbBytesConverted > 0)
-       return nbBytesConverted;
-    else
-      return -1;
-
-}
-
-
-/*----------------------------------------------------------------------
-  TtaWCS2MBS:
-  converts a wide character string into a multibyte string according to
-  the charset.                                                                
-  Return value: -1 if fails
-  Number of bytes in the multibyte character
-  ----------------------------------------------------------------------*/
-int TtaWCS2MBS (wchar_t** src, unsigned char** target, CHARSET encoding)
-{
-  wchar_t          *ptrSrc = *src;
-  wchar_t           wc = *ptrSrc++;
-  unsigned char    *ptrTarget = *target;
-  unsigned char     leadByteMark;
-  int               nbBytesConverted = 0;
-  int               nbBytesToConvert;
-  
-  if (encoding ==  UTF_8)
-    {
-      while (*ptrSrc)
-	{
-
-	  if (wc < 0x80)
-	    {
-	      nbBytesToConvert = 1;
-	      leadByteMark     = 0x00;
-	    }
-	  else if (wc < 0x800)
-	    {
-	      nbBytesToConvert = 2;
-	      leadByteMark     = 0xC0;
-	    }
-	  else if (wc < 0x10000) {
-	    nbBytesToConvert = 3;
-	    leadByteMark     = 0xE0;
-	  }
-	  else if (wc < 0x200000)
-	    {
-	      nbBytesToConvert = 4;
-	      leadByteMark     = 0xF0;
-	    }
-	  else if (wc < 0x4000000)
-	    {
-	      nbBytesToConvert = 5;
-	      leadByteMark     = 0xF8;
-	    }
-	  else if (wc < 0x7FFFFFFF)
-	    {
-	      nbBytesToConvert = 6;
-	      leadByteMark     = 0xFC;
-	    }
-	  else
-	    {
-	      *ptrTarget++ = '?';
-	      nbBytesToConvert = 1;
-	    }
-
-	  ptrTarget += nbBytesToConvert;
-	  nbBytesConverted += nbBytesToConvert;
-	  switch (nbBytesToConvert)
-	    {
-	    case 6:
-	      *--ptrTarget = (wc | 0x80) & 0xBF;
-	      wc >>= 6;
-	    case 5:
-	      *--ptrTarget = (wc | 0x80) & 0xBF;
-	      wc >>= 6;
-	    case 4:
-	      *--ptrTarget = (wc | 0x80) & 0xBF;
-	      wc >>= 6;
-	    case 3:
-	      *--ptrTarget = (wc | 0x80) & 0xBF;
-	      wc >>= 6;
-	    case 2:
-	      *--ptrTarget = (wc | 0x80) & 0xBF;
-	      wc >>= 6;
-	    case 1:
-	      *--ptrTarget = wc | leadByteMark;
-	    }
-	  ptrTarget += nbBytesToConvert;
-	}
-      *ptrTarget = 0;
-    }
+  *src = ptrSrc;
+  if (nbBytesConverted > 0)
+    return nbBytesConverted;
   else
-    {
-      while (*ptrSrc) {
-	*ptrTarget = TtaGetCharFromUnicode (*ptrSrc, encoding);
-	nbBytesConverted++;
-	ptrSrc++;
-	ptrTarget++;
-      }
-      *ptrTarget = 0;
-
-	} 
-    if (nbBytesConverted > 0)
-       return nbBytesConverted;
     return -1;
 }
 

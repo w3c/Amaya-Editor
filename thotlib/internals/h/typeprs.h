@@ -581,7 +581,7 @@ typedef struct _PresConstant
 {
   BasicType PdType;                       /* type of the constant */
   char      PdAlphabet;                   /* alphabet of the constant */
-  CHAR_T    PdString[MAX_PRES_CONST_LEN]; /* constant presentation string,
+  char      PdString[MAX_PRES_CONST_LEN]; /* constant presentation string,
 					     terminated by a NUL character */
 } PresConstant;
 

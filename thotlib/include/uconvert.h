@@ -24,20 +24,20 @@ extern unsigned char TtaGetCharFromUnicode (const wchar_t wc, CHARSET encoding);
 extern wchar_t TtaGetUnicodeFromChar (const unsigned char c, CHARSET encoding);
 
 /*----------------------------------------------------------------------
-  TtaMBS2WCS converts a multibyte string into a wide character string
-  according to the charset.
+  TtaMBs2WCS converts a multibyte string into a wide character according
+  to the charset.
   Returns the number of bytes in the multibyte character or -1
+  The pointer to the source multibyte string is updated.
   ----------------------------------------------------------------------*/
-extern int TtaMBS2WCS (unsigned char** src, wchar_t** target, CHARSET encoding);
+extern int TtaMBs2WC (unsigned char **src, wchar_t *dest, CHARSET encoding);
 
 /*----------------------------------------------------------------------
-  TtaWCS2MBS:
-  converts a wide character string into a multibyte string according to
+  TtaWCS2MBs converts a wide character into a multibyte string according to
   the charset.                                                                
-  Return value: -1 if fails
-  Number of bytes in the multibyte character
+  Return the number of bytes in the multibyte character or -1
+  The pointer to the source multibyte string is updated.
   ----------------------------------------------------------------------*/
-extern int TtaWCS2MBS (wchar_t** src, unsigned char** target, CHARSET encoding );
+extern int TtaWC2MBs (wchar_t *src, unsigned char **dest, CHARSET encoding);
 
 /*----------------------------------------------------------------------
   TtaGetNextWideCharFromMultibyteString: Looks for the next Wide character 

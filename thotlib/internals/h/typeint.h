@@ -21,17 +21,18 @@
 #include "language.h"
 
 /* document internal identifier: unique identifier for the storage system */
-typedef CHAR_T DocumentIdentifier[MAX_DOC_IDENT_LEN];
+typedef char DocumentIdentifier[MAX_DOC_IDENT_LEN];
 
 /* document external identifier: document name for the user */
-typedef CHAR_T ADocumentName[MAX_NAME_LENGTH];
+typedef char ADocumentName[MAX_NAME_LENGTH];
 
 /* element access mode */
-typedef enum {
-	AccessReadOnly,
-	AccessReadWrite,
-	AccessHidden,
-	AccessInherited
+typedef enum
+{
+  AccessReadOnly,
+  AccessReadWrite,
+  AccessHidden,
+  AccessInherited
 } ElemAccessRight;
 
 /* pointers */
@@ -45,30 +46,31 @@ typedef struct _AbstractBox *PtrAbstractBox;
 typedef struct _CopyDescriptor *PtrCopyDescr;
 
 /* the reference types */
-typedef enum { 
-	RefFollow, 
-	RefInclusion
+typedef enum
+{ 
+  RefFollow, 
+  RefInclusion
 } ReferenceType;
 
 /* descriptor of an external document containing one or more references to a
 given element */
 typedef struct _ExternalDoc
 {
-	PtrExternalDoc		EdNext;
-	DocumentIdentifier	EdDocIdent;
+  PtrExternalDoc		EdNext;
+  DocumentIdentifier	EdDocIdent;
 } ExternalDoc;
 
 /* Descriptor representing an element copied by a Copy presentation rule
    applied to a referenced element */
 typedef struct _CopyDescriptor
 {
-	PtrAbstractBox	CdCopiedAb;	/* the abstract box that is a copy */
-	PtrElement	CdCopiedElem;	/* the copied element */
-	PtrPRule	CdCopyRule;	/* the Copy presentation rule */
-	PtrCopyDescr	CdPrevious;	/* previous copy descriptor for the
-					   same element */
-	PtrCopyDescr	CdNext;		/* next copy descriptor for the same
-					   element */
+  PtrAbstractBox  CdCopiedAb;	/* the abstract box that is a copy */
+  PtrElement	  CdCopiedElem;	/* the copied element */
+  PtrPRule	  CdCopyRule;	/* the Copy presentation rule */
+  PtrCopyDescr	  CdPrevious;	/* previous copy descriptor for the
+				   same element */
+  PtrCopyDescr	  CdNext;		/* next copy descriptor for the same
+				   element */
 } CopyDescriptor;
 
 /* an element Label: an identifier that is unique in the document to which the
@@ -114,17 +116,17 @@ typedef struct _ReferredElemDescriptor
 /* a reference attached to a reference element or a reference attribute */
 typedef struct _ReferenceDescriptor
 {
-    PtrReference	RdNext;		/* next reference to the same element*/
-    PtrReference    	RdPrevious;	/* previous reference to the same
+  PtrReference	RdNext;		/* next reference to the same element*/
+  PtrReference    	RdPrevious;	/* previous reference to the same
 					   element */ 
-    PtrReferredDescr	RdReferred;	/* descriptor of the referenced
+  PtrReferredDescr	RdReferred;	/* descriptor of the referenced
 					   element */
-    PtrElement		RdElement;	/* the referencing element, even if it
+  PtrElement		RdElement;	/* the referencing element, even if it
 					   is a reference by attribute */
-    PtrAttribute	RdAttribute;	/* corresponding attribute or NULL if
-					   not a reference by attribute */
-    ReferenceType       RdTypeRef;	/* reference type */
-    ThotBool        	RdInternalRef;	/* the reference and the designated
+  PtrAttribute	RdAttribute;	/* corresponding attribute or NULL if
+				   not a reference by attribute */
+  ReferenceType       RdTypeRef;	/* reference type */
+  ThotBool        	RdInternalRef;	/* the reference and the designated
 					   element are in the same document if
 					   True, in different documents if
 					   false */
@@ -137,12 +139,12 @@ typedef struct _HandlePSchema *PtrHandlePSchema;
    (aka style sheets) to the main pres. schema they extend */
 typedef struct _HandlePSchema
 {
-    PtrPSchema	       HdPSchema;      /* pointer to the presentation schema
+  PtrPSchema	       HdPSchema;    /* pointer to the presentation schema
 					  extension */
-    PtrHandlePSchema   HdNextPSchema;  /* handle of the next presentation
-					  schema extension */     
-    PtrHandlePSchema   HdPrevPSchema;  /* handle of the previous presentation
-					  schema extension */
+  PtrHandlePSchema   HdNextPSchema;  /* handle of the next presentation
+					schema extension */     
+  PtrHandlePSchema   HdPrevPSchema;  /* handle of the previous presentation
+					schema extension */
 } HandlePSchema;
 
 typedef struct _DocSchemasDescr *PtrDocSchemasDescr;
@@ -152,12 +154,12 @@ typedef struct _DocSchemasDescr *PtrDocSchemasDescr;
    document. The presentation schema extensions are also linked from there */
 typedef struct _DocSchemasDescr
 {
-    PtrDocSchemasDescr PfNext;          /* next block for the same document */
-    PtrSSchema         PfSSchema;       /* the structure schema of interest */
-    PtrPSchema         PfPSchema;       /* the presentation schema associated
-					   with this structure schema */
-    PtrHandlePSchema   PfFirstPSchemaExtens; /* first extension for this
-					        presentation schema */
+  PtrDocSchemasDescr PfNext;          /* next block for the same document */
+  PtrSSchema         PfSSchema;       /* the structure schema of interest */
+  PtrPSchema         PfPSchema;       /* the presentation schema associated
+					 with this structure schema */
+  PtrHandlePSchema   PfFirstPSchemaExtens; /* first extension for this
+					      presentation schema */
 } DocSchemasDescr;
 
 typedef struct _TextBuffer *PtrTextBuffer;
@@ -195,76 +197,71 @@ typedef struct _AttributeBlock
 /* origin of a page break */
 typedef enum
 {
-	PgComputed,
-	PgBegin,
-	PgUser,
-	PgRepeat,
-	ColBegin,
-	ColComputed,
-	ColUser,
-	ColGroup
+  PgComputed,
+  PgBegin,
+  PgUser,
+  PgRepeat,
+  ColBegin,
+  ColComputed,
+  ColUser,
+  ColGroup
 } PageType;
 
 /* nature of a leaf element in the internal representation */
 typedef enum
 {
-	LtText,
-	LtSymbol,
-	LtGraphics,
-	LtPicture,
-	LtCompound,
-	LtPageColBreak,
-	LtReference,
-	LtPairedElem,
-	LtPolyLine,
-        LtPath
+  LtText,
+  LtSymbol,
+  LtGraphics,
+  LtPicture,
+  LtCompound,
+  LtPageColBreak,
+  LtReference,
+  LtPairedElem,
+  LtPolyLine,
+  LtPath
 } LeafType;
 
 typedef CHAR_T Buffer[THOT_MAX_CHAR];
-
 /* a control point in a polyline (polygon or spline) */
 typedef struct _PolyLinePoint
 {
-	int		XCoord;	    /* coordinates from the box origin */
-	int		YCoord;	    /* expressed in millipoint */
+  int		XCoord;	    /* coordinates from the box origin */
+  int		YCoord;	    /* expressed in millipoint */
 }PolyLinePoint;
-
 #define MAX_POINT_POLY	THOT_MAX_CHAR / sizeof(PolyLinePoint)
-
-#ifndef AMAYA_H__	
-typedef CHAR_T PathBuffer[MAX_PATH];
-#endif 
 
 /* Description of a text buffer */
 typedef struct _TextBuffer
 {
-	PtrTextBuffer	BuNext;		/* Next buffer */
-	PtrTextBuffer	BuPrevious;	/* Previous buffer */
-	int 		BuLength;	/* actual length (number of characters
-					   or number of polyline points */
-    union
+  PtrTextBuffer	BuNext;		/* Next buffer */
+  PtrTextBuffer	BuPrevious;	/* Previous buffer */
+  int 		BuLength;	/* actual length (number of characters
+				   or number of polyline points */
+  union
+  {
+    struct
     {
-	struct
-	{
-	    Buffer	_BuContent_;	/* character string */
-	} s0;
-	struct
-	{
-	    PolyLinePoint _BuPoints_[MAX_POINT_POLY]; /* control points */
-	} s1;
-    } u;
+      Buffer	_BuContent_;	/* character string */
+    } s0;
+    struct
+    {
+      PolyLinePoint _BuPoints_[MAX_POINT_POLY]; /* control points */
+    } s1;
+  } u;
 } TextBuffer;
-
 #define BuContent u.s0._BuContent_
 #define BuPoints u.s1._BuPoints_
+
+typedef char            PathBuffer[MAX_PATH];
 
 /* type of a SVG path segment */
 typedef enum
 {
-	PtLine,
-        PtCubicBezier,
-        PtQuadraticBezier,
-        PtEllipticalArc
+  PtLine,
+  PtCubicBezier,
+  PtQuadraticBezier,
+  PtEllipticalArc
 } PathSegType;
 
 typedef struct _PathSeg *PtrPathSeg;
@@ -272,35 +269,35 @@ typedef struct _PathSeg *PtrPathSeg;
 /* Description of a SVG path segment */
 typedef struct _PathSeg
 {
-	PtrPathSeg      PaNext;	      /* Next segment in the same path */
-        PtrPathSeg      PaPrevious;   /* Previous segment in the same path */
-        PathSegType     PaShape;      /* Shape of that segment */
-        ThotBool        PaNewSubpath; /* This segment starts a new subpath */
-        /* all coordinates are expressed in millipoint from the box origin */
-        int	        XStart;	      /* coordinates of start point */
-	int	        YStart;
-        int             XEnd;         /* coordinates of end point */
-	int             YEnd;
-    union
-    {
-	struct
-	{   /* PaShape = PtCubicBezier or PtQuadraticBezier */
-	    /* a quadratic Bezier curve uses only the first control point */
-	    int         _XCtrlStart_; /* coordinates of control point at the */
-	    int         _YCtrlStart_; /* beginning of the curve */
-	    int         _XCtrlEnd_;   /* coordinates of control point at the */
-	    int         _YCtrlEnd_;   /* end of the curve */
-	} s0;
-	struct
-	{   /* PaShape = PtEllipticalArc */
-	    int         _XRadius_;
-	    int         _YRadius_;
-	    int         _XAxisRotation_;
-	    ThotBool    _LargeArc_;
-	    ThotBool    _Sweep_;      /* draw the arc in a "positive-angle" */
-	                              /* direction */
-	} s1;
-    } u;
+  PtrPathSeg      PaNext;	      /* Next segment in the same path */
+  PtrPathSeg      PaPrevious;   /* Previous segment in the same path */
+  PathSegType     PaShape;      /* Shape of that segment */
+  ThotBool        PaNewSubpath; /* This segment starts a new subpath */
+  /* all coordinates are expressed in millipoint from the box origin */
+  int	        XStart;	      /* coordinates of start point */
+  int	        YStart;
+  int             XEnd;         /* coordinates of end point */
+  int             YEnd;
+  union
+  {
+    struct
+    {   /* PaShape = PtCubicBezier or PtQuadraticBezier */
+      /* a quadratic Bezier curve uses only the first control point */
+      int         _XCtrlStart_; /* coordinates of control point at the */
+      int         _YCtrlStart_; /* beginning of the curve */
+      int         _XCtrlEnd_;   /* coordinates of control point at the */
+      int         _YCtrlEnd_;   /* end of the curve */
+    } s0;
+    struct
+    {   /* PaShape = PtEllipticalArc */
+      int         _XRadius_;
+      int         _YRadius_;
+      int         _XAxisRotation_;
+      ThotBool    _LargeArc_;
+      ThotBool    _Sweep_;      /* draw the arc in a "positive-angle" */
+      /* direction */
+    } s1;
+  } u;
 } PathSeg;
 
 #define XCtrlStart u.s0._XCtrlStart_
@@ -320,137 +317,137 @@ typedef struct _PasteElemDescr *PtrPasteElem;
 
 typedef struct _PasteElemDescr
 {
-	PtrPasteElem	PePrevious;	/* descriptor of the previous element
-					   to be pasted */
-	PtrPasteElem	PeNext;		/* descriptor of the next element to
-					   be pasted */
-	PtrElement	PeElement;	/* the element to be paste */
-	int	 	PeElemLevel;	/* level in the abstract tree of the
-					   original element */
-	int		PeAscendTypeNum[MAX_PASTE_LEVEL];  /* type number of
-					   the former ancestors of the element
-					   to be pasted */
-	PtrSSchema	PeAscendSSchema[MAX_PASTE_LEVEL]; /* structure schema
-					   of the former ancestors */
-	PtrElement	PeAscend[MAX_PASTE_LEVEL]; /* former ancestor element*/
+  PtrPasteElem	PePrevious;	/* descriptor of the previous element
+				   to be pasted */
+  PtrPasteElem	PeNext;		/* descriptor of the next element to
+				   be pasted */
+  PtrElement	PeElement;	/* the element to be paste */
+  int	 	PeElemLevel;	/* level in the abstract tree of the
+				   original element */
+  int		PeAscendTypeNum[MAX_PASTE_LEVEL];  /* type number of
+						      the former ancestors of the element
+						      to be pasted */
+  PtrSSchema	PeAscendSSchema[MAX_PASTE_LEVEL]; /* structure schema
+						     of the former ancestors */
+  PtrElement	PeAscend[MAX_PASTE_LEVEL]; /* former ancestor element*/
 } PasteElemDescr;
 
 /* an element of an abstract tree */
 typedef struct _ElementDescr
 {
-    PtrElement		ElParent;	/* Parent in the abstract tree */
-    PtrElement		ElPrevious;	/* Previous sibling in the abs. tree */
-    PtrElement		ElNext;		/* next sibling in the abs. tree */
-    PtrReferredDescr	ElReferredDescr;/* Pointer on the referenced element
+  PtrElement		ElParent;	/* Parent in the abstract tree */
+  PtrElement		ElPrevious;	/* Previous sibling in the abs. tree */
+  PtrElement		ElNext;		/* next sibling in the abs. tree */
+  PtrReferredDescr	ElReferredDescr;/* Pointer on the referenced element
 					   descriptor if there are references
 					   to this element */
-    PtrAttribute     	ElFirstAttr;	/* pointer on the element first
+  PtrAttribute     	ElFirstAttr;	/* pointer on the element first
 					   attribute, NULL if no attribute */
-    PtrPRule    	ElFirstPRule;	/* pointer on the first rule of the
-					   specific presentation rule string
-					   to beiedapply to the element */
-    PtrAbstractBox	ElAbstractBox[MAX_VIEW_DOC]; /* pointer on the first
-					   abstract box corresponding to the
-					   element for each view of the doc. */
-    PtrSSchema    	ElStructSchema;	/* pointer on the structure schema
+  PtrPRule    	ElFirstPRule;	/* pointer on the first rule of the
+				   specific presentation rule string
+				   to beiedapply to the element */
+  PtrAbstractBox	ElAbstractBox[MAX_VIEW_DOC]; /* pointer on the first
+							abstract box corresponding to the
+							element for each view of the doc. */
+  PtrSSchema    	ElStructSchema;	/* pointer on the structure schema
 					   where te element type is defined */
-    int			ElTypeNumber;	/* number of the rule defining the type
+  int			ElTypeNumber;	/* number of the rule defining the type
 					   of the element in the structure
 					   schema */
-    int		    	ElVolume;    	/* volume (number of characters) of the
+  int		    	ElVolume;    	/* volume (number of characters) of the
 					   element subtree */
-    PtrCopyDescr    	ElCopyDescr; 	/* beginning of the string of the
+  PtrCopyDescr    	ElCopyDescr; 	/* beginning of the string of the
 					   descriptors of the abstract boxes
 					   that copy the element by a Copy
 					   presentation rule */
-    ThotBool        	ElIsCopy;	/* the element is a copy that cannot
+  ThotBool        	ElIsCopy;	/* the element is a copy that cannot
 					   be modified  (parameter or copy by
 					   inclusion) */
-    PtrReference    	ElSource;	/* pointer on the reference block
+  PtrReference    	ElSource;	/* pointer on the reference block
 					   designating the source of which the
 					   element is a copy by inclusion,
 					   NULL if the element is not a copy
 					   by inclusion */
-    int			ElLineNb;	/* line number in the source file */
-    LabelString		ElLabel;	/* element unique identifier */
-    PtrElement		ElCopy;		/* copy of the element made by the
+  int			ElLineNb;	/* line number in the source file */
+  LabelString		ElLabel;	/* element unique identifier */
+  PtrElement		ElCopy;		/* copy of the element made by the
 					   latest call to function CopyTree */
-    ElemAccessRight	ElAccess;	/* access rights to the element */
-    ThotBool		ElHolophrast;	/* holophrasted element */
-    ThotBool		ElTransContent;	/* element contents have been alreay
+  ElemAccessRight	ElAccess;	/* access rights to the element */
+  ThotBool		ElHolophrast;	/* holophrasted element */
+  ThotBool		ElTransContent;	/* element contents have been alreay
 					   translated */
-    ThotBool		ElTransAttr;	/* element attributes have been alreay
+  ThotBool		ElTransAttr;	/* element attributes have been alreay
 					   translated */
-    ThotBool		ElTransPres;	/* element presentation rules have been
+  ThotBool		ElTransPres;	/* element presentation rules have been
 					   alreay translated */
-    ThotBool 		ElTerminal;	/* the element is a leaf in the tree */
-    union
+  ThotBool 		ElTerminal;	/* the element is a leaf in the tree */
+  union
+  {
+    struct				/* ElTerminal = False */
     {
-	struct				/* ElTerminal = False */
+      PtrElement _ElFirstChild_;	/* first child element */
+    } s0;
+    struct				/* ElTerminal = True */
+    {
+      LeafType _ElLeafType_;	/* type of leaf */
+      union
+      {
+	struct			/* ElLeafType = LtText */
 	{
-	    PtrElement _ElFirstChild_;	/* first child element */
+	  PtrTextBuffer _ElText_;  	/* pointer on the buffer
+					   containing the
+					   beginning of the text */
+	  int           _ElTextLength_;/* text length */
+	  Language      _ElLanguage_;	/* text language */
 	} s0;
-	struct				/* ElTerminal = True */
+	struct			/*ElLeafType = LtGraphics or LtSymbol*/
 	{
-	    LeafType _ElLeafType_;	/* type of leaf */
-	    union
-	    {
-		struct			/* ElLeafType = LtText */
-		{
-		    PtrTextBuffer _ElText_;  	/* pointer on the buffer
-						   containing the
-						   beginning of the text */
-		    int           _ElTextLength_;/* text length */
-		    Language      _ElLanguage_;	/* text language */
-		} s0;
-		struct			/*ElLeafType = LtGraphics or LtSymbol*/
-		{
-		    wchar_t       _ElWideChar_; /* Wide char code if
-						   ElGraph = '?' */
-		    char          _ElGraph_;	/* code of element */
-		} s1;
-		struct			/* ElLeafType = LtPageColBreak */
-		{
-		    ThotBool      _ElPageModified_;/* the page was modified */
-		    PageType      _ElPageType_;    /* origin of the page */
-		    int           _ElPageNumber_;  /* page number */
-		    int           _ElViewPSchema_; /* view number in the
-						      presentation schema */
-		} s2;
-		struct			/* ElLeafType = LtReference */
-		{
-		    PtrReference  _ElReference_;   /* pointer on the referenced
-						      element */
-		} s3;
-		struct			/* ElLeafType = LtPairedElem */
-		{
-		    int		  _ElPairIdent_;   /* unique identifier of the
-						      pair in the document */
-		    PtrElement	  _ElOtherPairedEl_;/* pointer on the other
-						     element in the same pair*/
-		} s4;
-		struct			/* ElLeafType = LtPolyLine */
-		{
-		    PtrTextBuffer _ElPolyLineBuffer_; /* buffer containing the
-						     points defining the line*/
-		    int		  _ElNPoints_;	     /* number of points */
-		    char 	  _ElPolyLineType_;  /* type of line */
-		} s5;
-	        struct                  /* ElLeafType = LtPath */
-                {
-                    PtrPathSeg    _ElFirstPathSeg_;  /* first segment of the
-							path segments list */
-                } s6;
-		struct			/* TypeImage = LtPicture */
-		{
-		    PtrTextBuffer _ElPictureName_;/* pointer on the buffer
-						   containing thepicture name*/
-		    int           _ElNameLength_; /* picture name length */
-		    int           *_ElPictInfo_;  /* info about the picture */
-		} s7;
-	    } u;
+	  wchar_t       _ElWideChar_; /* Wide char code if
+					 ElGraph = '?' */
+	  char          _ElGraph_;	/* code of element */
 	} s1;
-    } u;
+	struct			/* ElLeafType = LtPageColBreak */
+	{
+	  ThotBool      _ElPageModified_;/* the page was modified */
+	  PageType      _ElPageType_;    /* origin of the page */
+	  int           _ElPageNumber_;  /* page number */
+	  int           _ElViewPSchema_; /* view number in the
+					    presentation schema */
+	} s2;
+	struct			/* ElLeafType = LtReference */
+	{
+	  PtrReference  _ElReference_;   /* pointer on the referenced
+					    element */
+	} s3;
+	struct			/* ElLeafType = LtPairedElem */
+	{
+	  int		  _ElPairIdent_;   /* unique identifier of the
+					      pair in the document */
+	  PtrElement	  _ElOtherPairedEl_;/* pointer on the other
+					       element in the same pair*/
+	} s4;
+	struct			/* ElLeafType = LtPolyLine */
+	{
+	  PtrTextBuffer _ElPolyLineBuffer_; /* buffer containing the
+					       points defining the line*/
+	  int		  _ElNPoints_;	     /* number of points */
+	  char 	  _ElPolyLineType_;  /* type of line */
+	} s5;
+	struct                  /* ElLeafType = LtPath */
+	{
+	  PtrPathSeg    _ElFirstPathSeg_;  /* first segment of the
+					      path segments list */
+	} s6;
+	struct			/* TypeImage = LtPicture */
+	{
+	  PtrTextBuffer _ElPictureName_;/* pointer on the buffer
+					   containing thepicture name*/
+	  int           _ElNameLength_; /* picture name length */
+	  int           *_ElPictInfo_;  /* info about the picture */
+	} s7;
+      } u;
+    } s1;
+  } u;
 } ElementDescr;
 
 #define ElFirstChild u.s0._ElFirstChild_
@@ -499,33 +496,33 @@ typedef struct _GuestViewDescr *PtrGuestViewDescr;
    that can be hosted by a document view (see clause MERGE in language P) */
 typedef struct _GuestViewDescr
 {
-        PtrSSchema        GvSSchema;       /* structure schema of the present.
-					      schema that defines the view */
-        int               GvPSchemaView;   /* number of the view in the present
-					      schema that defines it */
-        PtrGuestViewDescr GvNextGuestView; /* next guest view for the same
-					      document view */
+  PtrSSchema        GvSSchema;       /* structure schema of the present.
+					schema that defines the view */
+  int               GvPSchemaView;   /* number of the view in the present
+					schema that defines it */
+  PtrGuestViewDescr GvNextGuestView; /* next guest view for the same
+					document view */
 } GuestViewDescr;
 
 /* descriptor of a document view */
 typedef struct _DocViewDescr
 {
-	PtrSSchema	  DvSSchema;    /* structure schema of the presentation
-					   schema that defines the view */
-	int		  DvPSchemaView;/* number of the view in the
-					   presentation schema */
-	ThotBool          DvSync;	/* this view must be synchronized with
-					   the active view */
-        PtrGuestViewDescr DvFirstGuestView; /* list of guest views for that
-					   document view */
+  PtrSSchema	  DvSSchema;    /* structure schema of the presentation
+				   schema that defines the view */
+  int		  DvPSchemaView;/* number of the view in the
+				   presentation schema */
+  ThotBool          DvSync;	/* this view must be synchronized with
+				   the active view */
+  PtrGuestViewDescr DvFirstGuestView; /* list of guest views for that
+					 document view */
 } DocViewDescr;
 
 /* type of an editing operation recorded in the history */
 typedef enum
 {
-        EtDelimiter,    /* Sequence delimiter */
-        EtElement,      /* Operation on elements */
-        EtAttribute     /* operation on an attribute */
+  EtDelimiter,    /* Sequence delimiter */
+  EtElement,      /* Operation on elements */
+  EtAttribute     /* operation on an attribute */
 } EditOpType;
  
 typedef struct _EditOperation *PtrEditOperation;
@@ -538,38 +535,38 @@ typedef struct _EditOperation
   PtrEditOperation EoPreviousOp;      /* previous operation in the editing
                                          history */
   EditOpType       EoType;            /* type of operation */
-union
+  union
   {
-  struct        /* EoType = EtDelimiter */
-     {
-     PtrElement    _EoFirstSelectedEl_;  /* first selected element */
-     int           _EoFirstSelectedChar_;/* index of first selected character
-                                            in the first selected element,
-                                            if it's acharacter string */
-     PtrElement    _EoLastSelectedEl_;  /* last selected element */
-     int           _EoLastSelectedChar_;/* index of last selected character in
-                                           the last selected element, if it's a
-                                           character string */
-     } s0;
-  struct        /* EoType = EtElement */
-     {
-     PtrElement    _EoParent_;          /* parent of elements to be inserted to
-                                           undo the operation */
-     PtrElement    _EoPreviousSibling_; /* previous sibling of first element to
-                                           be inserted to undo the operation */
-     PtrElement    _EoCreatedElement_;  /* element to be removed to undo the
-                                           operation */
-     PtrElement    _EoSavedElement_;    /* copy of the element to be inserted
-                                           to undo the operation */
-     } s1;
-  struct      /* EoType = EtAttribute */
+    struct        /* EoType = EtDelimiter */
     {
-    PtrElement     _EoElement_;         /* the element to which the attribute
-                                           belongs */
-    PtrAttribute   _EoCreatedAttribute_;/* attribute to be removed to undo the
-                                           operation */
-    PtrAttribute   _EoSavedAttribute_;  /* copy of the attribute to be inserted
-                                           to undo the operation */
+      PtrElement    _EoFirstSelectedEl_;  /* first selected element */
+      int           _EoFirstSelectedChar_;/* index of first selected character
+					     in the first selected element,
+					     if it's acharacter string */
+      PtrElement    _EoLastSelectedEl_;  /* last selected element */
+      int           _EoLastSelectedChar_;/* index of last selected character in
+					    the last selected element, if it's a
+					    character string */
+    } s0;
+    struct        /* EoType = EtElement */
+    {
+      PtrElement    _EoParent_;          /* parent of elements to be inserted to
+					    undo the operation */
+      PtrElement    _EoPreviousSibling_; /* previous sibling of first element to
+					    be inserted to undo the operation */
+      PtrElement    _EoCreatedElement_;  /* element to be removed to undo the
+					    operation */
+      PtrElement    _EoSavedElement_;    /* copy of the element to be inserted
+					    to undo the operation */
+    } s1;
+    struct      /* EoType = EtAttribute */
+    {
+      PtrElement     _EoElement_;         /* the element to which the attribute
+					     belongs */
+      PtrAttribute   _EoCreatedAttribute_;/* attribute to be removed to undo the
+					     operation */
+      PtrAttribute   _EoSavedAttribute_;  /* copy of the attribute to be inserted
+					     to undo the operation */
     } s2;
   } u;
 } EditOperation;
@@ -648,7 +645,7 @@ typedef struct _DocumentDescr
   /* information used while reading the pivot file */
   int		  DocPivotVersion;/* pivot version number */
   PtrReferredDescr DocLabels;	  /* external labels */
-  UCHAR_T	  DocCheckingMode;/* check document structure against the
+  unsigned char   DocCheckingMode;/* check document structure against the
 				     structure schemas */
   ThotBool	  DocPivotError;  /* a format error has been detected */
   

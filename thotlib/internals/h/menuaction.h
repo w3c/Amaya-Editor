@@ -24,7 +24,7 @@
 typedef struct _AppName *PtrAppName;
 typedef struct _AppName
 {
-  CHAR_T*    AppNameValue;
+  char      *AppNameValue;
   PtrAppName AppNextName;
   ThotBool   AppStandardName;
   /* TRUE when that action is declared in the section FUNCTION */
@@ -35,11 +35,11 @@ typedef struct _AppName
 typedef struct _AppMenuItem *PtrAppMenuItem;
 typedef struct _AppMenuItem
 {
-  CHAR_T*        AppItemName;
-  CHAR_T*        AppItemActionName;
+  char          *AppItemName;
+  char          *AppItemActionName;
   PtrAppMenuItem AppSubMenu;
-  CHAR_T         AppItemType;
-  ThotBool        AppStandardAction;
+  char           AppItemType;
+  ThotBool       AppStandardAction;
   PtrAppMenuItem AppNextItem;
 } AppMenuItem;
 
@@ -47,7 +47,7 @@ typedef struct _AppMenuItem
 typedef struct _AppMenu *PtrAppMenu;
 typedef struct _AppMenu
 {
-  CHAR_T*        AppMenuName;
+  char          *AppMenuName;
   int            AppMenuView;
   PtrAppMenuItem AppMenuItems;
   PtrAppMenu     AppNextMenu;
@@ -57,7 +57,7 @@ typedef struct _AppMenu
 typedef struct _AppDocType *PtrAppDocType;
 typedef struct _AppDocType
 {
-  CHAR_T*       AppDocTypeName;
+  char         *AppDocTypeName;
   PtrAppMenu    AppDocTypeMenus;
   PtrAppDocType AppNextDocType;
 } AppDocType;

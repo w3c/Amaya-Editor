@@ -19,7 +19,7 @@
 #include "typecorr.h"
 #include "typetra.h"
 
-typedef UCHAR_T RuleSet[32];
+typedef unsigned char RuleSet[32];
 
 /* List of pointers used */
 typedef struct _Box *PtrBox;
@@ -579,6 +579,6 @@ typedef SearchContext *PtrSearchContext;
 /* Declaration for dialogue */
 
 /* List of the pointers used */
-typedef CHAR_T    FontName[30];
+typedef char    FontName[30];
 
 #endif

@@ -143,8 +143,9 @@ void XpmPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
 	     colorTab[i].blue = color.blue;
 	  }
      }
-   DataToPrint (image.data, pres, xif, yif, wif, hif, picW, picH, fd,
-		image.ncolors, -1, bgColor, image.colorTable);
+   DataToPrint ((unsigned char *)image.data, pres, xif, yif, wif, hif, picW,
+		picH, fd, image.ncolors, -1, bgColor,
+		(ThotColorStruct *)image.colorTable);
    XpmFreeXpmInfo (&info);
    XpmFreeXpmImage (&image);
    att.valuemask = valuemask;

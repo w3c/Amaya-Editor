@@ -7,24 +7,20 @@
 #ifdef __STDC__
 
 extern void TtaSetTextContent ( Element element,
-                                CHAR_T* content,
+                                unsigned char *content,
                                 Language language,
                                 Document document );
 extern void TtaSetPictureContent ( Element element,
-                                   char *content,
+                                   unsigned char *content,
                                    Language language,
                                    Document document,
                                    char *mime_type );
-extern void InsertText ( PtrElement pEl,
-                         int position,
-                         STRING content,
-                         Document document );
 extern void TtaAppendTextContent ( Element element,
-                                   CHAR_T* content,
+                                   unsigned char *content,
                                    Document document );
 extern void TtaInsertTextContent ( Element element,
                                    int position,
-                                   STRING content,
+                                   unsigned char *content,
                                    Document document );
 extern void TtaDeleteTextContent ( Element element,
                                    int position,
@@ -103,7 +99,7 @@ extern PicType TtaGetPictureType ( Element element );
 extern void TtaSetPictureType ( Element element,
                                 char *mime_type );
 extern void TtaGiveSubString ( Element element,
-                               STRING buffer,
+                               unsigned char *buffer,
                                int position,
                                int length );
 extern char TtaGetGraphicsShape ( Element element );
@@ -119,24 +115,20 @@ extern int TtaGetPageView ( Element pageElement );
 #else /* __STDC__ */
 
 extern void TtaSetTextContent (/* Element element,
-                                  CHAR_T* content,
+                                  unsigned char *content,
                                   Language language,
                                   Document document */);
 extern void TtaSetPictureContent (/* Element element,
-                                     char *content,
+                                     unsigned char *content,
                                      Language language,
                                      Document document,
                                      char *mime_type */);
-extern void InsertText (/* PtrElement pEl,
-                           int position,
-                           STRING content,
-                           Document document */);
 extern void TtaAppendTextContent (/* Element element,
-                                     CHAR_T* content,
+                                     unsigned char *content,
                                      Document document */);
 extern void TtaInsertTextContent (/* Element element,
                                      int position,
-                                     STRING content,
+                                     unsigned char *content,
                                      Document document */);
 extern void TtaDeleteTextContent (/* Element element,
                                      int position,
@@ -215,7 +207,7 @@ extern PicType TtaGetPictureType (/* Element element */);
 extern void TtaSetPictureType (/* Element element,
                                   char *mime_type */);
 extern void TtaGiveSubString (/* Element element,
-                                 STRING buffer,
+                                 unsigned char *buffer,
                                  int position,
                                  int length */);
 extern char TtaGetGraphicsShape (/* Element element */);

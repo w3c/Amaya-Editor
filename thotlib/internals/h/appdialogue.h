@@ -13,9 +13,9 @@
 /* Structure of an item in the Actions Table */
 typedef struct _Action_Ctl
 {
-  char*         ActionName;    /* External name of the action           */
+  char         *ActionName;    /* External name of the action           */
   Proc 		Call_Action;   /* Address C procedure                   */
-  char*         ActionEquiv;   /* Displayed text for shortcuts          */
+  char         *ActionEquiv;   /* Displayed text for shortcuts          */
   ThotBool	ActionActive[MAX_FRAME];
 }Action_Ctl;
 
@@ -50,16 +50,16 @@ typedef struct _Menu_Ctl
   ThotBool	MenuSelect;	/* This menu is the select menu		*/
   ThotBool	MenuHelp;	/* This menu is the help menu		*/
   int		ItemsNb;	/* Number of items in the menu menu	*/
-  Item_Ctl	*ItemsList;	/* Pointer to the first item structure	*/
+  Item_Ctl     *ItemsList;	/* Pointer to the first item structure	*/
   struct _Menu_Ctl	*NextMenu;	/* Next menu		    	*/
 }Menu_Ctl;
 
 /* Structure to associate menus and specific structure schemas */
 typedef struct _SchemaMenu_Ctl
 {
-  CHAR_T*   SchemaName;                  /* Structure schema name     */
-  Menu_Ctl* SchemaMenu;	                 /* Pointer to the first menu */
-  struct    _SchemaMenu_Ctl *NextSchema; /* Next association          */
+  char      *SchemaName;                  /* Structure schema name     */
+  Menu_Ctl  *SchemaMenu;	                 /* Pointer to the first menu */
+  struct     _SchemaMenu_Ctl *NextSchema; /* Next association          */
 }SchemaMenu_Ctl;
 
 /*

@@ -29,30 +29,29 @@ typedef enum
 } SyntacticType;
 
 /* an input line to be parsed */
-typedef UCHAR_T lineBuffer[LINE_LENGTH];
-
+typedef unsigned char lineBuffer[LINE_LENGTH];
 /* current position in the input line */
-typedef int	indLine;
+typedef int	      indLine;
 
 /* a key-word in the source language */
 typedef struct _SrcKeywordDesc
 {
-	CHAR_T        SrcKeyword[KEWWORD_LENGTH];	/* the key word */
-	int           SrcKeywordLen;			/* its length */
-	SyntacticCode SrcKeywordCode;			/* its syntactic type*/
+  char          SrcKeyword[KEWWORD_LENGTH];	/* the key word */
+  int           SrcKeywordLen;			/* its length */
+  SyntacticCode SrcKeywordCode;			/* its syntactic type*/
 } SrcKeywordDesc;
 
 /* an identifier in the source language */
 typedef struct _SrcIdentDesc
 {
-	CHAR_T        SrcIdentifier[IDENTIFIER_LENGTH]; /* the identifier */
-	int           SrcIdentLen;		/* length of the identifier */
-	SyntacticCode SrcIdentCode;		/* syntactic type of the
-						   identifier */
-	int	          SrcIdentDefRule;	/* number of the rule which
-						   defines the identifier */
-	int	          SrcIdentRefRule;	/* number of the rule where the
-						   identifier is referred to */
+  char          SrcIdentifier[IDENTIFIER_LENGTH]; /* the identifier */
+  int           SrcIdentLen;		/* length of the identifier */
+  SyntacticCode SrcIdentCode;		/* syntactic type of the
+					   identifier */
+  int	          SrcIdentDefRule;	/* number of the rule which
+					   defines the identifier */
+  int	          SrcIdentRefRule;	/* number of the rule where the
+					   identifier is referred to */
 } SrcIdentDesc;
 
 /* a coded syntactical rule */

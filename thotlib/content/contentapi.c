@@ -27,6 +27,7 @@
 #include "content.h"
 #include "frame.h"
 #include "typecorr.h"
+#include "ustring.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT
@@ -52,413 +53,34 @@
 #include "viewapi_f.h"
 #include "writepivot_f.h"
 
-
-/*----------------------------------------------------------------------
-   TtaSetTextContent
-
-   Changes the content of a Text basic element. The full content (if any) is
-   deleted and replaced by the new one.
-   This function can also be used for changing the content (the file name)
-   of a Picture basic element.
-   Parameters:
-   element: the Text element to be modified.
-   content: new content for that element.
-   language: language of that Text element.
-   document: the document containing that element.
-  ----------------------------------------------------------------------*/
-void TtaSetTextContent (Element element, CHAR_T* content, Language language,
-			Document document)
-{
-   PtrTextBuffer       pBuf, pPreviousBuff, pNextBuff;
-   CHAR_T*             ptr;
-   int                 length, l, delta = 0;
-   PtrElement          pEl;
-
-#ifndef NODISPLAY
-   PtrDocument         selDoc;
-   PtrElement          firstSelection, lastSelection;
-   int                 firstChar, lastChar;
-   ThotBool            selOk, changeSelection;
-
-#endif
-
-   UserErrorCode = 0;
-   if (element == NULL)
-	TtaError (ERR_invalid_parameter);
-   else if (!((PtrElement) element)->ElTerminal)
-	TtaError (ERR_invalid_element_type);
-   else if (((PtrElement) element)->ElLeafType != LtText &&
-	    ((PtrElement) element)->ElLeafType != LtPicture)
-	TtaError (ERR_invalid_element_type);
-   else
-     {
-	/* verifies the parameter document */
-	if (document < 1 || document > MAX_DOCUMENTS)
-	     TtaError (ERR_invalid_document_parameter);
-	else if (LoadedDocument[document - 1] == NULL)
-	     TtaError (ERR_invalid_document_parameter);
-	else
-	   /* parameter document is correct */
-	  {
-	     if (content)
-	       length = ustrlen (content);
-	     else
-	       length = 0;
-#ifndef NODISPLAY
-	     /* modifies the selection if the element is within it */
-	     selOk = GetCurrentSelection (&selDoc, &firstSelection,
-					  &lastSelection, &firstChar,
-					  &lastChar);
-	     changeSelection = FALSE;
-	     if (selOk && content != NULL)
-		if (selDoc == LoadedDocument[document - 1])
-		  {
-		  if ((PtrElement) element == firstSelection)
-		     /* The selection starts in the element */
-		     {
-		     TtaSelectElement (document, NULL);
-		     changeSelection = TRUE;
-		     if (firstChar > length + 1)
-		        /* Selection begins beyond the new length */
-			firstChar = length+1;
-		     }
-		  if ((PtrElement) element == lastSelection)
-		     /* The selection ends in the element */
-		     {
-		     if (!changeSelection)
-			TtaSelectElement (document, NULL);
-		     changeSelection = TRUE;
-		     if (lastChar > length + 1)
-		        /* Selection ends beyond the new length */
-			lastChar = length + 1;
-		     }
-		  }
-#endif
-	     if (((PtrElement) element)->ElLeafType == LtText)
-		((PtrElement) element)->ElLanguage = language;
-	     if (content != NULL)
-	       {
-	       ptr = content;
-	       delta = length - ((PtrElement) element)->ElTextLength;
-	       ((PtrElement) element)->ElTextLength = length;
-	       ((PtrElement) element)->ElVolume = length;
-	       pPreviousBuff = NULL;
-	       pBuf = ((PtrElement) element)->ElText;
-
-	       do
-	         {
-		  if (pBuf == NULL)
-		     GetTextBuffer (&pBuf);
-		  if (length >= THOT_MAX_CHAR)
-		     l = THOT_MAX_CHAR - 1;
-		  else
-		     l = length;
-		  if (l > 0)
-		    {
-		       ustrncpy (pBuf->BuContent, ptr, l);
-		       ptr += l;
-		       length -= l;
-		    }
-		  pBuf->BuLength = l;
-		  pBuf->BuContent[l] = EOS;
-		  pBuf->BuPrevious = pPreviousBuff;
-		  if (pPreviousBuff == NULL)
-		     ((PtrElement) element)->ElText = pBuf;
-		  else
-		     pPreviousBuff->BuNext = pBuf;
-		  pPreviousBuff = pBuf;
-		  pBuf = pBuf->BuNext;
-		  pPreviousBuff->BuNext = NULL;
-	         }
-	       while (length > 0);
-
-	       while (pBuf != NULL)
-		  /* Release the remaining buffers */
-	         {
-		  pNextBuff = pBuf->BuNext;
-#ifdef NODISPLAY
-		  FreeTextBuffer (pBuf);
-#else
-		  DeleteBuffer (pBuf, ActiveFrame);
-#endif
-		  pBuf = pNextBuff;
-	         }
-	       /* Updates the volumes of the ancestors */
-	       pEl = ((PtrElement) element)->ElParent;
-	       while (pEl != NULL)
-	         {
-		  pEl->ElVolume += delta;
-		  pEl = pEl->ElParent;
-	         }
-	       if (((PtrElement) element)->ElLeafType == LtPicture)
-	         {
-		  /* Releases the  pixmap */
-		  if (((PtrElement) element)->ElPictInfo != NULL)
-		     FreePictInfo ((PictInfo *) (((PtrElement) element)->ElPictInfo));
-	         }
-	       }
-#ifndef NODISPLAY
-	     RedisplayLeaf ((PtrElement) element, document, delta);
-	     /* Sets up a new selection if the element is within it */
-	     if (changeSelection)
-	       {
-		  if (firstChar == 0)
-		     TtaSelectElement (document, (Element) firstSelection);
-		  else
-		     {
-		     if (lastSelection == firstSelection)
-		        TtaSelectString (document, (Element) firstSelection,
-				         firstChar, lastChar);
-		     else
-		        TtaSelectString (document, (Element) firstSelection,
-				         firstChar, 0);
-		     }
-		  if (lastSelection != firstSelection)
-		     TtaExtendSelection (document, (Element) lastSelection,
-					 lastChar);
-	       }
-#endif
-	  }
-     }
-}
-
-/*----------------------------------------------------------------------
-   TtaSetPictureContent
-
-   N.B. For the moment, this function is identical to TtaSetTextContent,
-   except that we also give a MIME type. It should evolve with time.
-
-   Changes the content of a Text basic element. The full content (if any) is
-   deleted and replaced by the new one.
-   This function can also be used for changing the content (the file name)
-   of a Picture basic element.
-   Parameters:
-   element: the Text element to be modified.
-   content: new content for that element.
-   language: language of that Text element.
-   document: the document containing that element.
-   mime_type: MIME tpye of the picture
-  ----------------------------------------------------------------------*/
-void TtaSetPictureContent (Element element, char *content, Language language,
-			   Document document, char *mime_type)
-{
-  PtrTextBuffer       pBuf, pPreviousBuff, pNextBuff;
-   CHAR_T*             ptr;
-   int                 length, l, delta = 0;
-   PtrElement          pEl;
-
-#ifndef NODISPLAY
-   PtrDocument         selDoc;
-   PtrElement          firstSelection, lastSelection;
-   int                 firstChar, lastChar;
-   ThotBool            selOk, changeSelection;
-
-#endif
-
-   UserErrorCode = 0;
-   if (element == NULL)
-	TtaError (ERR_invalid_parameter);
-   else if (!((PtrElement) element)->ElTerminal)
-	TtaError (ERR_invalid_element_type);
-   else if (((PtrElement) element)->ElLeafType != LtText &&
-	    ((PtrElement) element)->ElLeafType != LtPicture)
-	TtaError (ERR_invalid_element_type);
-   else
-     {
-	/* verifies the parameter document */
-	if (document < 1 || document > MAX_DOCUMENTS)
-	     TtaError (ERR_invalid_document_parameter);
-	else if (LoadedDocument[document - 1] == NULL)
-	     TtaError (ERR_invalid_document_parameter);
-	else
-	   /* parameter document is correct */
-	  {
-	     if (content)
-	       length = ustrlen (content);
-	     else
-	       length = 0;
-#ifndef NODISPLAY
-	     /* modifies the selection if the element is within it */
-	     selOk = GetCurrentSelection (&selDoc, &firstSelection,
-					  &lastSelection, &firstChar,
-					  &lastChar);
-	     changeSelection = FALSE;
-	     if (selOk && content != NULL)
-		if (selDoc == LoadedDocument[document - 1])
-		  {
-		  if ((PtrElement) element == firstSelection)
-		     /* The selection starts in the element */
-		     {
-		     TtaSelectElement (document, NULL);
-		     changeSelection = TRUE;
-		     if (firstChar > length + 1)
-		        /* Selection begins beyond the new length */
-			firstChar = length+1;
-		     }
-		  if ((PtrElement) element == lastSelection)
-		     /* The selection ends in the element */
-		     {
-		     if (!changeSelection)
-			TtaSelectElement (document, NULL);
-		     changeSelection = TRUE;
-		     if (lastChar > length + 1)
-		        /* Selection ends beyond the new length */
-			lastChar = length + 1;
-		     }
-		  }
-#endif
-	     if (((PtrElement) element)->ElLeafType == LtText)
-		((PtrElement) element)->ElLanguage = language;
-	     if (content != NULL)
-	       {
-	       ptr = content;
-	       delta = length - ((PtrElement) element)->ElTextLength;
-	       ((PtrElement) element)->ElTextLength = length;
-	       ((PtrElement) element)->ElVolume = length;
-	       pPreviousBuff = NULL;
-	       pBuf = ((PtrElement) element)->ElText;
-
-	       do
-	         {
-		  if (pBuf == NULL)
-		     GetTextBuffer (&pBuf);
-		  if (length >= THOT_MAX_CHAR)
-		     l = THOT_MAX_CHAR - 1;
-		  else
-		     l = length;
-		  if (l > 0)
-		    {
-		       ustrncpy (pBuf->BuContent, ptr, l);
-		       ptr += l;
-		       length -= l;
-		    }
-		  pBuf->BuLength = l;
-		  pBuf->BuContent[l] = EOS;
-		  pBuf->BuPrevious = pPreviousBuff;
-		  if (pPreviousBuff == NULL)
-		     ((PtrElement) element)->ElText = pBuf;
-		  else
-		     pPreviousBuff->BuNext = pBuf;
-		  pPreviousBuff = pBuf;
-		  pBuf = pBuf->BuNext;
-		  pPreviousBuff->BuNext = NULL;
-	         }
-	       while (length > 0);
-
-	       while (pBuf != NULL)
-		  /* Release the remaining buffers */
-	         {
-		  pNextBuff = pBuf->BuNext;
-#ifdef NODISPLAY
-		  FreeTextBuffer (pBuf);
-#else
-		  DeleteBuffer (pBuf, ActiveFrame);
-#endif
-		  pBuf = pNextBuff;
-	         }
-	       /* Updates the volumes of the ancestors */
-	       pEl = ((PtrElement) element)->ElParent;
-	       while (pEl != NULL)
-	         {
-		  pEl->ElVolume += delta;
-		  pEl = pEl->ElParent;
-	         }
-	       if (((PtrElement) element)->ElLeafType == LtPicture)
-	         {
-		  /* Releases the  pixmap */
-		  if (((PtrElement) element)->ElPictInfo != NULL)
-		     FreePictInfo ((PictInfo *) (((PtrElement) element)->ElPictInfo));
-	         }
-	       }
-#ifndef NODISPLAY
-	     /* @@ Probably create the pictinfo el here and add the mime type. 
-		Redisplayleaf is doing so further down */
-	     RedisplayLeaf ((PtrElement) element, document, delta);
-	     /* Sets up a new selection if the element is within it */
-	     if (changeSelection)
-	       {
-		  if (firstChar == 0)
-		     TtaSelectElement (document, (Element) firstSelection);
-		  else
-		     {
-		     if (lastSelection == firstSelection)
-		        TtaSelectString (document, (Element) firstSelection,
-				         firstChar, lastChar);
-		     else
-		        TtaSelectString (document, (Element) firstSelection,
-				         firstChar, 0);
-		     }
-		  if (lastSelection != firstSelection)
-		     TtaExtendSelection (document, (Element) lastSelection,
-					 lastChar);
-	       }
-#endif
-	  }
-     }
-}
-
 /*----------------------------------------------------------------------
    InsertText   inserts the string "content" in the element 
    pEl (which must be of type text), at the position
    "position". If "document" is null, we have not to consider
    the selction nor the displaying
   ----------------------------------------------------------------------*/
-void InsertText (PtrElement pEl, int position, STRING content,
-		 Document document)
-
+static void InsertText (PtrElement pEl, int position, unsigned char *content,
+			Document document)
 {
-   PtrTextBuffer       pBuf, pPreviousBuff, newBuf;
-   STRING              ptr;
-   int                 stringLength, l, delta, lengthBefore;
-   PtrElement          pElAsc;
-
+  PtrTextBuffer       pBuf, pPreviousBuff, newBuf;
+  unsigned char      *ptr;
+  int                 length, l, delta, lengthBefore, i;
+  int                 max;
+  PtrElement          pElAsc;
 #ifndef NODISPLAY
-   PtrDocument         selDoc;
-   PtrElement          firstSelection, lastSelection;
-   int                 firstChar, lastChar;
-   ThotBool            selOk, changeSelection = FALSE;
-#endif
+  PtrDocument         selDoc;
+  PtrElement          firstSelection, lastSelection;
+  int                 firstChar, lastChar;
+  ThotBool            selOk, changeSelection = FALSE;
+#endif /* NODISPLAY */
+   
+  length = strlen (content);
+  if (length > 0)
+    {
+      /* corrects the parameter position */
+      if (position > pEl->ElTextLength)
+	position = pEl->ElTextLength;
 
-   stringLength = ustrlen (content);
-   if (stringLength > 0)
-     {
-	/* corrects the parameter position */
-	if (position > pEl->ElTextLength)
-	   position = pEl->ElTextLength;
-#ifndef NODISPLAY
-	if (document > 0)
-	  {
-	     /* modifies the selection if the element belongs to it */
-	     selOk = GetCurrentSelection (&selDoc, &firstSelection, &lastSelection, &firstChar, &lastChar);
-	     changeSelection = FALSE;
-	     if (selOk)
-		if (selDoc == LoadedDocument[document - 1])
-		   if (pEl == firstSelection || pEl == lastSelection)
-		      /* The selection starts and/or stops in the element */
-		      /* First, we abort the selection */
-		     {
-			TtaSelectElement (document, NULL);
-			changeSelection = TRUE;
-			if (lastChar > 1)
-			   lastChar -= 1;
-			if (pEl == firstSelection)
-			   /* The element is at the begenning of the selection */
-			  {
-			     if (firstChar > position)
-				firstChar += stringLength;
-			  }
-			if (pEl == lastSelection)
-			   /* The element is at the end of the selection */
-			  {
-			     if (position < lastChar)
-				lastChar += stringLength;
-			  }
-		     }
-	  }
-#endif
-	delta = stringLength;
-	pEl->ElTextLength += stringLength;
-	pEl->ElVolume += stringLength;
 	/* looks for the buffer pBuf where the insertion has to be done */
 	pBuf = pEl->ElText;
 	lengthBefore = 0;
@@ -500,31 +122,99 @@ void InsertText (PtrElement pEl, int position, STRING content,
 	  {
 	   /* Creates a buffer for the second part of the text */
 	     newBuf = NewTextBuffer (pBuf);
-	     ustrcpy (newBuf->BuContent, pBuf->BuContent + lengthBefore);
+	     strcpy (newBuf->BuContent, pBuf->BuContent + lengthBefore);
 	     newBuf->BuLength = pBuf->BuLength - lengthBefore;
 	  }
-	pBuf->BuContent[lengthBefore] = EOS;
+	pBuf->BuContent[lengthBefore] = WC_EOS;
 	pBuf->BuLength = lengthBefore;
+
 	/* If there is enough space in the buffer, add a string at its end */
 	ptr = content;
-	while (stringLength > 0)
+	max = length;
+#ifdef _I18N
+	l = 0;
+	length = 0;
+#else /* _I18N */
+	l = 0;
+#endif /* _I18N */
+	while (l < max)
 	  {
-	    if (stringLength < THOT_MAX_CHAR - lengthBefore)
-	      l = stringLength;
+#ifdef _I18N
+	    i = 0;
+	    while (i < THOT_MAX_CHAR - lengthBefore && l < max)
+	      {
+		l += TtaMBs2WC (&ptr, (wchar_t *)&pBuf->BuContent[i], UTF_8);
+		i++;
+	      }
+	    length += i;
+#else /* _I18N */
+	    if (max - l < THOT_MAX_CHAR - lengthBefore)
+	      i = max - l;
 	    else
-	      l = THOT_MAX_CHAR - lengthBefore - 1;
-	    ustrncpy (pBuf->BuContent + lengthBefore, ptr, l);
-	    pBuf->BuLength += l;
-	    pBuf->BuContent[pBuf->BuLength] = EOS;
+	      i = THOT_MAX_CHAR - lengthBefore - 1;
+	    strncpy (&(pBuf->BuContent[lengthBefore]), ptr, i);
+	    ptr += i;
+	    l += i;
+#endif /* _I18N */
+	    pBuf->BuLength += i;
+	    pBuf->BuContent[pBuf->BuLength] = WC_EOS;
 	    lengthBefore = 0;
-	    stringLength -= l;
-	    ptr = &ptr[l];
-	    if (stringLength > 0)
+	    if (l < max)
 	      {
 		pPreviousBuff = pBuf;
 		pBuf = NewTextBuffer (pPreviousBuff);
 	      }
 	  }
+
+	delta = length;
+	pEl->ElTextLength += length;
+	pEl->ElVolume += length;
+
+#ifndef NODISPLAY
+      if (document > 0)
+	{
+	  /* modifies the selection if the element belongs to it */
+	  selOk = GetCurrentSelection (&selDoc, &firstSelection, &lastSelection, &firstChar, &lastChar);
+	  changeSelection = FALSE;
+	  if (selOk && selDoc == LoadedDocument[document - 1] &&
+	      (pEl == firstSelection || pEl == lastSelection))
+	    /* The selection starts and/or stops in the element */
+	    /* First, we abort the selection */
+	    {
+	      TtaSelectElement (document, NULL);
+	      changeSelection = TRUE;
+	      if (lastChar > 1)
+		lastChar -= 1;
+	      if (pEl == firstSelection)
+		/* The element is at the begenning of the selection */
+		{
+		  if (firstChar > position)
+		    firstChar += length;
+		}
+	      if (pEl == lastSelection &&
+		  /* The element is at the end of the selection */
+		  position < lastChar)
+		lastChar += length;
+	    }
+	  RedisplayLeaf (pEl, document, delta);
+	  /* Sets up a new selection if the element is within it */
+	  if (changeSelection)
+	    {
+	      if (firstChar > 0)
+		if (lastSelection == firstSelection)
+		  TtaSelectString (document, (Element) firstSelection,
+				   firstChar, lastChar);
+		else
+		  TtaSelectString (document, (Element) firstSelection,
+				   firstChar, 0);
+	      else
+		TtaSelectElement (document, (Element) firstSelection);
+	      if (lastSelection != firstSelection)
+		TtaExtendSelection (document, (Element) lastSelection,
+				    lastChar);
+	    }
+	}
+#endif /* NODISPLAY */
 	/* Updates the volumes of ancestors */
 	pElAsc = pEl->ElParent;
 	while (pElAsc != NULL)
@@ -532,29 +222,226 @@ void InsertText (PtrElement pEl, int position, STRING content,
 	     pElAsc->ElVolume += delta;
 	     pElAsc = pElAsc->ElParent;
 	  }
+    }
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+static void SetContent (Element element, unsigned char *content,
+			Language language, Document document)
+{
+  PtrTextBuffer       pBuf, pPreviousBuff, pNextBuff;
+  unsigned char      *ptr;
+  int                 length, l, delta = 0, i;
+  int                 max;
+  PtrElement          pEl;
 #ifndef NODISPLAY
-	if (document > 0)
-	  {
-	     RedisplayLeaf (pEl, document, delta);
-	     /* Sets up a new selection if the element is within it */
-	     if (changeSelection)
-	       {
-		  if (firstChar > 0)
-		     if (lastSelection == firstSelection)
-			TtaSelectString (document, (Element) firstSelection,
-					 firstChar, lastChar);
-		     else
-			TtaSelectString (document, (Element) firstSelection,
-					 firstChar, 0);
-		  else
-		     TtaSelectElement (document, (Element) firstSelection);
-		  if (lastSelection != firstSelection)
-		     TtaExtendSelection (document, (Element) lastSelection,
-					 lastChar);
-	       }
-	  }
-#endif
-     }
+  PtrDocument         selDoc;
+  PtrElement          firstSelection, lastSelection;
+  int                 firstChar, lastChar;
+  ThotBool            selOk, changeSelection;
+#endif /* NODISPLAY */
+
+  UserErrorCode = 0;
+  pEl = NULL;
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (!((PtrElement) element)->ElTerminal)
+    TtaError (ERR_invalid_element_type);
+  else if (((PtrElement) element)->ElLeafType != LtText &&
+	   ((PtrElement) element)->ElLeafType != LtPicture)
+    TtaError (ERR_invalid_element_type);
+  else if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    {
+      /* parameter document is correct */
+      pEl = (PtrElement) element;
+      if (pEl->ElLeafType == LtText)
+	pEl->ElLanguage = language;
+      
+      /* store the contents of the element */
+      if (content != NULL)
+	{
+	  ptr = content;
+	  pBuf = pEl->ElText;
+	  pPreviousBuff = NULL;
+	  max = strlen (content);
+#ifdef _I18N
+	  l = 0;
+	  length = 0;
+#else /* _I18N */
+	  length = max;
+	  l = 0;
+#endif /* _I18N */
+	  do
+	    {
+	      if (pBuf == NULL)
+		GetTextBuffer (&pBuf);
+#ifdef _I18N
+	      i = 0;
+	      while (i < THOT_MAX_CHAR && l < max)
+		{
+		  l += TtaMBs2WC (&ptr, (wchar_t *)&pBuf->BuContent[i], UTF_8);
+		  i++;
+		}
+	      length += i;
+#else /* _I18N */
+	      if (max - l >= THOT_MAX_CHAR)
+		i = THOT_MAX_CHAR - 1;
+	      else
+		i = max - l;
+	      if (i > 0)
+		{
+
+		  strncpy (pBuf->BuContent, ptr, i);
+		  ptr += i;
+		  l += i;
+		}
+#endif /* _I18N */
+	      pBuf->BuLength = i;
+	      pBuf->BuContent[i] = WC_EOS;
+	      pBuf->BuPrevious = pPreviousBuff;
+	      if (pPreviousBuff == NULL)
+		pEl->ElText = pBuf;
+	      else
+		pPreviousBuff->BuNext = pBuf;
+	      pPreviousBuff = pBuf;
+	      pBuf = pBuf->BuNext;
+	      pPreviousBuff->BuNext = NULL;
+	    }
+	  while (l < max);
+	}
+      else
+	{
+	  length = 0;
+	  /* point to the first buffer to be released */
+	  pBuf = pEl->ElText;
+	  if (pBuf)
+	  pBuf = pBuf->BuNext;
+	}
+
+      delta = length - pEl->ElTextLength;
+      pEl->ElTextLength = length;
+      pEl->ElVolume = length;
+      /* Release the remaining buffers */
+      while (pBuf != NULL)
+	{
+	  pNextBuff = pBuf->BuNext;
+#ifdef NODISPLAY
+	  FreeTextBuffer (pBuf);
+#else /* NODISPLAY */
+	  DeleteBuffer (pBuf, ActiveFrame);
+#endif /* NODISPLAY */
+	  pBuf = pNextBuff;
+	}
+      if (pEl->ElLeafType == LtPicture && pEl->ElPictInfo != NULL)
+	/* Releases the  pixmap */
+	FreePictInfo ((PictInfo *) ((pEl)->ElPictInfo));
+
+#ifndef NODISPLAY
+      /* modifies the selection if the element is within it */
+      selOk = GetCurrentSelection (&selDoc, &firstSelection,
+				   &lastSelection, &firstChar,
+				   &lastChar);
+      changeSelection = FALSE;
+      if (selOk && selDoc == LoadedDocument[document - 1])
+	{
+	  if (pEl == firstSelection)
+	    /* The selection starts in the element */
+	    {
+	      TtaSelectElement (document, NULL);
+	      changeSelection = TRUE;
+	      if (firstChar > length + 1)
+		/* Selection begins beyond the new length */
+		firstChar = length + 1;
+	    }
+	  if (pEl == lastSelection)
+	    /* The selection ends in the element */
+	    {
+	      if (!changeSelection)
+		TtaSelectElement (document, NULL);
+	      changeSelection = TRUE;
+	      if (lastChar > length + 1)
+		/* Selection ends beyond the new length */
+		lastChar = length + 1;
+	    }
+	}
+      RedisplayLeaf (pEl, document, delta);
+      /* Sets up a new selection if the element is within it */
+      if (changeSelection)
+	{
+	  if (firstChar == 0)
+	    TtaSelectElement (document, (Element) firstSelection);
+	  else
+	    {
+	      if (lastSelection == firstSelection)
+		TtaSelectString (document, (Element) firstSelection,
+				 firstChar, lastChar);
+	      else
+		TtaSelectString (document, (Element) firstSelection,
+				 firstChar, 0);
+	    }
+	  if (lastSelection != firstSelection)
+	    TtaExtendSelection (document, (Element) lastSelection,
+				lastChar);
+	}
+#endif /* NODISPLAY */
+      /* Updates the volumes of the ancestors */
+      pEl = pEl->ElParent;
+      while (pEl != NULL)
+	{
+	  pEl->ElVolume += delta;
+	  pEl = pEl->ElParent;
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+   TtaSetTextContent
+
+   Changes the content of a Text basic element. The full content (if any) is
+   deleted and replaced by the new one.
+   This function can also be used for changing the content (the file name)
+   of a Picture basic element.
+   Parameters:
+   element: the Text element to be modified.
+   content: new content for that element coded in ISO-Latin or UTF-8.
+   language: language of that Text element.
+   document: the document containing that element.
+  ----------------------------------------------------------------------*/
+void TtaSetTextContent (Element element, unsigned char *content,
+			Language language, Document document)
+{
+  SetContent (element, content, language, document);
+}
+
+/*----------------------------------------------------------------------
+   TtaSetPictureContent
+
+   N.B. For the moment, this function is identical to TtaSetTextContent,
+   except that we also give a MIME type. It should evolve with time.
+   Changes the content of a Text basic element. The full content (if any) is
+   deleted and replaced by the new one.
+   This function can also be used for changing the content (the file name)
+   of a Picture basic element.
+   Parameters:
+   element: the Text element to be modified.
+   content: new content for that element coded in ISO-Latin or UTF-8..
+   language: language of that Text element.
+   document: the document containing that element.
+   mime_type: MIME tpye of the picture
+  ----------------------------------------------------------------------*/
+void TtaSetPictureContent (Element element, unsigned char *content,
+			   Language language, Document document, char *mime_type)
+{
+  SetContent (element, content, language, document);
+#ifndef NODISPLAY
+  /* @@ Probably create the pictinfo el here and add the mime type. 
+     Redisplayleaf is doing so further down */
+#endif /* NODISPLAY */
 }
 
 
@@ -567,7 +454,8 @@ void InsertText (PtrElement pEl, int position, STRING content,
    content: the character string to be appended.
    document: the document containing that element.
   ----------------------------------------------------------------------*/
-void TtaAppendTextContent (Element element, CHAR_T* content, Document document)
+void TtaAppendTextContent (Element element, unsigned char *content,
+			   Document document)
 {
    UserErrorCode = 0;
    if (element == NULL)
@@ -601,7 +489,7 @@ void TtaAppendTextContent (Element element, CHAR_T* content, Document document)
    content: the character string to be inserted.
    document: the document containing the text element.
   ----------------------------------------------------------------------*/
-void TtaInsertTextContent (Element element, int position, STRING content,
+void TtaInsertTextContent (Element element, int position, unsigned char *content,
 			   Document document)
 {
    UserErrorCode = 0;
@@ -636,88 +524,81 @@ void TtaInsertTextContent (Element element, int position, STRING content,
 void TtaDeleteTextContent (Element element, int position, int length,
 			   Document document)
 {
-   PtrTextBuffer       pBufFirst, pBufLast, pBufNext;
-   STRING              dest, source;
-   int                 delta, lengthBefore, firstDeleted, lastDeleted,
-                       l;
-   PtrElement          pElAsc;
-
+  PtrTextBuffer       pBufFirst, pBufLast, pBufNext;
+  STRING              dest, source;
+  int                 delta, lengthBefore, firstDeleted;
+  int                 lastDeleted, l, i;
+  PtrElement          pElAsc, pEl;
 #ifndef NODISPLAY
-   PtrDocument         selDoc;
-   PtrElement          firstSelection, lastSelection;
-   int                 firstChar, lastChar;
-   ThotBool            selOk, changeSelection;
+  PtrDocument         selDoc;
+  PtrElement          firstSelection, lastSelection;
+  int                 firstChar, lastChar;
+  ThotBool            selOk, changeSelection;
+#endif /* NODISPLAY */
 
-#endif
-
-   UserErrorCode = 0;
-   if (element == NULL)
-      TtaError (ERR_invalid_parameter);
-   else if (!((PtrElement) element)->ElTerminal)
-      TtaError (ERR_invalid_element_type);
-   else if (((PtrElement) element)->ElLeafType != LtText &&
-	    ((PtrElement) element)->ElLeafType != LtPicture)
-      TtaError (ERR_invalid_element_type);
-   else
-      /* verifies the parameter document */
-   if (document < 1 || document > MAX_DOCUMENTS)
+  UserErrorCode = 0;
+  pEl = (PtrElement) element;
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (!pEl->ElTerminal)
+    TtaError (ERR_invalid_element_type);
+  else if (pEl->ElLeafType != LtText &&
+	   pEl->ElLeafType != LtPicture)
+    TtaError (ERR_invalid_element_type);
+  else
+    /* verifies the parameter document */
+    if (document < 1 || document > MAX_DOCUMENTS)
       TtaError (ERR_invalid_document_parameter);
-   else if (LoadedDocument[document - 1] == NULL)
+    else if (LoadedDocument[document - 1] == NULL)
       TtaError (ERR_invalid_document_parameter);
-   else
-      /* parameter document is correct */
-      if (length < 0 || position <= 0 ||
-	  position > ((PtrElement) element)->ElTextLength)
+    else if (length < 0 || position <= 0 || position > pEl->ElTextLength)
       TtaError (ERR_invalid_parameter);
-   else if (length > 0)
-     {
+    else if (length > 0)
+      {
 	/* verifies that the parameter length is not too big */
-	if (position + length > ((PtrElement) element)->ElTextLength + 1)
-	   length = ((PtrElement) element)->ElTextLength - position + 1;
+	if (position + length > pEl->ElTextLength + 1)
+	  length = pEl->ElTextLength - position + 1;
 #ifndef NODISPLAY
 	/* modifies the selection if the element belongs to it */
 	selOk = GetCurrentSelection (&selDoc, &firstSelection, &lastSelection,
 				     &firstChar, &lastChar);
 	changeSelection = FALSE;
-	if (selOk)
-	   if (selDoc == LoadedDocument[document - 1])
-	      if ((PtrElement) element == firstSelection ||
-		  (PtrElement) element == lastSelection)
-		 /* The selection starts and/or stops in the element */
-		 /* First, we abort the selection */
-		{
-		   TtaSelectElement (document, NULL);
-		   changeSelection = TRUE;
-		   if (lastChar > 1)
-		      lastChar -= 1;
-		   if ((PtrElement) element == firstSelection)
-		      /* The element is at the begenning of the selection */
-		     {
-			if (firstChar > position)
-			  {
-			     firstChar -= length;
-			     if (firstChar < position)
-				firstChar = position;
-			  }
-		     }
-		   if ((PtrElement) element == lastSelection)
-		      /* The element is at the end of the selection */
-		     {
-			if (position < lastChar)
-			  {
-			     lastChar -= length;
-			     if (lastChar < position)
-				lastChar = position;
-			  }
-		     }
-		}
-#endif
+	if (selOk && selDoc == LoadedDocument[document - 1] &&
+	    (pEl == firstSelection || pEl == lastSelection))
+	  /* The selection starts and/or stops in the element */
+	  /* First, we abort the selection */
+	  {
+	    TtaSelectElement (document, NULL);
+	    changeSelection = TRUE;
+	    if (lastChar > 1)
+	      lastChar -= 1;
+	    if (pEl == firstSelection)
+	      /* The element is at the begenning of the selection */
+	      {
+		if (firstChar > position)
+		  {
+		    firstChar -= length;
+		    if (firstChar < position)
+		      firstChar = position;
+		  }
+	      }
+	    if (pEl == lastSelection)
+	      /* The element is at the end of the selection */
+	      {
+		if (position < lastChar)
+		  {
+		    lastChar -= length;
+		    if (lastChar < position)
+		      lastChar = position;
+		  }
+	      }
+	  }
+#endif /* NODISPLAY */
 	delta = length;
-	((PtrElement) element)->ElTextLength -= delta;
-	((PtrElement) element)->ElVolume -= delta;
-	/* Looks for the buffer pBufFirst where the string to be suppressed
-	   starts*/
-	pBufFirst = ((PtrElement) element)->ElText;
+	pEl->ElTextLength -= delta;
+	pEl->ElVolume -= delta;
+	/* Looks for the buffer where the string to be suppressed starts*/
+	pBufFirst = pEl->ElText;
 	lengthBefore = 0;
 	while (pBufFirst->BuNext != NULL &&
 	       lengthBefore + pBufFirst->BuLength < position)
@@ -748,9 +629,9 @@ void TtaDeleteTextContent (Element element, int position, int length,
 		     pBufLast->BuNext->BuPrevious = pBufLast->BuPrevious;
 #ifdef NODISPLAY
 		  FreeTextBuffer (pBufLast);
-#else
+#else /* NODISPLAY */
 		  DeleteBuffer (pBufLast, ActiveFrame);
-#endif
+#endif /* NODISPLAY */
 		  pBufLast = pBufNext;
 	       }
 	     else
@@ -762,7 +643,7 @@ void TtaDeleteTextContent (Element element, int position, int length,
 	   /* The text following the string to be suppressed is moved at 
 	      the position of the begenning of the string to suppress */
 	  {
-	     dest = pBufFirst->BuContent + firstDeleted - 1;
+	     dest = &pBufFirst->BuContent[firstDeleted - 1];
 	     l = length;
 	  }
 	else
@@ -771,20 +652,20 @@ void TtaDeleteTextContent (Element element, int position, int length,
 	      and the text remaining in the other buffer is moved at the
 	      begenning of the buffer */
 	  {
-	     pBufFirst->BuContent[firstDeleted - 1] = EOS;
+	     pBufFirst->BuContent[firstDeleted - 1] = WC_EOS;
 	     pBufFirst->BuLength = firstDeleted - 1;
 	     dest = pBufLast->BuContent;
 	     l = lastDeleted;
 	  }
 	/* The text following the part to be suppresses is moved */
-	source = pBufLast->BuContent + lastDeleted - 1;
-	do
+	source = &pBufLast->BuContent[lastDeleted];
+	i = 0;
+	while (source[i] != WC_EOS)
 	  {
-	     source++;
-	     *dest = *source;
-	     dest++;
+	    dest[i] = source[i];
+	    i++;
 	  }
-	while (*source != EOS);
+	dest[i] = WC_EOS;
 	pBufLast->BuLength -= l;
 	/* If the buffers of the begening and the end of the suppresses string
 	   are empty, they are released. A buffer is kept for the element */
@@ -795,14 +676,14 @@ void TtaDeleteTextContent (Element element, int position, int length,
 	     if (pBufFirst->BuPrevious != NULL)
 		pBufFirst->BuPrevious->BuNext = pBufFirst->BuNext;
 	     else
-		((PtrElement) element)->ElText = pBufFirst->BuNext;
+		pEl->ElText = pBufFirst->BuNext;
 	     if (pBufFirst->BuNext != NULL)
 		pBufFirst->BuNext->BuPrevious = pBufFirst->BuPrevious;
 #ifdef NODISPLAY
 	     FreeTextBuffer (pBufFirst);
-#else
+#else /* NODISPLAY */
 	     DeleteBuffer (pBufFirst, ActiveFrame);
-#endif
+#endif /* NODISPLAY */
 	  }
 	if (pBufFirst != pBufLast)
 	   if (pBufLast->BuLength == 0 &&
@@ -812,17 +693,17 @@ void TtaDeleteTextContent (Element element, int position, int length,
 		if (pBufLast->BuPrevious != NULL)
 		   pBufLast->BuPrevious->BuNext = pBufLast->BuNext;
 		else
-		   ((PtrElement) element)->ElText = pBufLast->BuNext;
+		   pEl->ElText = pBufLast->BuNext;
 		if (pBufLast->BuNext != NULL)
 		   pBufLast->BuNext->BuPrevious = pBufLast->BuPrevious;
 #ifdef NODISPLAY
 		FreeTextBuffer (pBufLast);
-#else
+#else /* NODISPLAY */
 		DeleteBuffer (pBufLast, ActiveFrame);
-#endif
+#endif /* NODISPLAY */
 	     }
 	/* Updates the volumes of the ancestors */
-	pElAsc = ((PtrElement) element)->ElParent;
+	pElAsc = pEl->ElParent;
 	while (pElAsc != NULL)
 	  {
 	     pElAsc->ElVolume -= delta;
@@ -830,7 +711,7 @@ void TtaDeleteTextContent (Element element, int position, int length,
 	  }
 #ifndef NODISPLAY
 	/* Redisplays the element */
-	RedisplayLeaf ((PtrElement) element, document, -delta);
+	RedisplayLeaf (pEl, document, -delta);
 	/* Sets up a new selection if the element belongs to it */
 	if (changeSelection)
 	  {
@@ -847,7 +728,7 @@ void TtaDeleteTextContent (Element element, int position, int length,
 		TtaExtendSelection (document, (Element) lastSelection,
 				    lastChar);
 	  }
-#endif
+#endif /* NODISPLAY */
      }
 }
 
@@ -855,7 +736,6 @@ void TtaDeleteTextContent (Element element, int position, int length,
    TtaSplitText
 
    Divides a text element into two elements.
-
    Parameters:
    element: the text element to be divided. A new text element containing
    the second part of the text is created as the next sibling.
@@ -1094,7 +974,7 @@ void TtaSetSymbolCode (Element element, wchar_t code, Document document)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-static ThotBool     PolylineOK (Element element, Document document)
+static ThotBool PolylineOK (Element element, Document document)
 {
    ThotBool            ok;
 
@@ -1309,13 +1189,10 @@ void TtaChangeLimitOfPolyline (Element element, TypeUnit unit, int x, int y,
 
    Transform a polyline element into a path and return the SVG
    representation of that path.
-
    Parameters:
    el: the element to be transformed
-
    Return value:
    the SVG path expression
-
    ---------------------------------------------------------------------- */
 STRING  TtaTransformCurveIntoPath (Element el)
 {
@@ -1444,9 +1321,9 @@ PathSegment  TtaNewPathSegLine (int xstart, int ystart, int xend, int yend,
    Return value:
    the created path segment.
    ---------------------------------------------------------------------- */
-PathSegment  TtaNewPathSegCubic (int xstart, int ystart, int xend, int yend,
+PathSegment TtaNewPathSegCubic (int xstart, int ystart, int xend, int yend,
 				int xctrl1, int yctrl1, int xctrl2, int yctrl2,
-				 ThotBool newSubpath)
+				ThotBool newSubpath)
 {
    PtrPathSeg       pPa;
 
@@ -1480,7 +1357,7 @@ PathSegment  TtaNewPathSegCubic (int xstart, int ystart, int xend, int yend,
    Return value:
    the created path segment.
    ---------------------------------------------------------------------- */
-PathSegment   TtaNewPathSegQuadratic (int xstart, int ystart, int xend, int yend,
+PathSegment TtaNewPathSegQuadratic (int xstart, int ystart, int xend, int yend,
 				    int xctrl, int yctrl, ThotBool newSubpath)
 {
    PtrPathSeg       pPa;
@@ -1626,32 +1503,26 @@ void TtaAppendPathSeg (Element element, PathSegment segment, Document document)
    destination: identifier of the page element to be modified.
    source : identifier of the source page element.
   ----------------------------------------------------------------------*/
-void                TtaCopyPage (Element destination, Element source)
+void TtaCopyPage (Element destination, Element source)
 {
-   UserErrorCode = 0;
-   if (destination == NULL || source == NULL)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
-   else if (!((PtrElement) destination)->ElTerminal ||
-	    ((PtrElement) destination)->ElLeafType != LtPageColBreak)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
-   else if (!((PtrElement) source)->ElTerminal ||
-	    ((PtrElement) source)->ElLeafType != LtPageColBreak)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
-   else
-     {
-	((PtrElement) destination)->ElPageType =
-	   ((PtrElement) source)->ElPageType;
-	((PtrElement) destination)->ElPageNumber =
-	   ((PtrElement) source)->ElPageNumber;
-	((PtrElement) destination)->ElViewPSchema =
-	   ((PtrElement) source)->ElViewPSchema;
-     }
+  PtrElement          pS, pD;
+
+  UserErrorCode = 0;
+  pS = (PtrElement) source;
+  pD = (PtrElement) destination;
+  if (destination == NULL || source == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (!pD->ElTerminal || pD->ElLeafType != LtPageColBreak)
+    TtaError (ERR_invalid_parameter);
+  else if (!pS->ElTerminal ||
+	   pS->ElLeafType != LtPageColBreak)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      pD->ElPageType = pS->ElPageType;
+      pD->ElPageNumber = pS->ElPageNumber;
+      pD->ElViewPSchema = pS->ElViewPSchema;
+    }
 }
 
 
@@ -1725,7 +1596,6 @@ static PictInfo * GetImageDesc (Element element)
      TtaError (ERR_invalid_element_type);
    else
        imageDesc = (PictInfo *) (((PtrElement) element)->ElPictInfo);
-
    return imageDesc;
 }
 
@@ -1804,67 +1674,74 @@ void TtaSetPictureType (Element element, char *mime_type)
    element of type Text.
    buffer: the buffer that will contain the substring. This buffer
    must be at least of size length.
+   In _I18N mode the length corresponds to the UTF-8 string.
    position: the rank of the first character of the substring.
    rank must be strictly positive.
    length: the length of the substring. Must be strictly positive.
    Return parameter:
    buffer: (the buffer contains the substring).
+   In _I18N mode returns a UTF-8 string.
   ----------------------------------------------------------------------*/
-void TtaGiveSubString (Element element, STRING buffer, int position,
+void TtaGiveSubString (Element element, unsigned char *buffer, int position,
 		       int length)
 {
-   PtrTextBuffer       pBuf;
-   STRING              ptr;
-   int                 len, l;
+  PtrTextBuffer       pBuf;
+  PtrElement          pEl;
+  unsigned char      *ptr;
+  int                 l;
+#ifdef _I18N
+  int                 i;
+#endif /* _I18N */
 
-   UserErrorCode = 0;
-   if (element == NULL)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
-   else if (position < 1 || length < 1)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
-   else if (!((PtrElement) element)->ElTerminal)
-     {
-	TtaError (ERR_invalid_element_type);
-     }
-   else if (((PtrElement) element)->ElLeafType != LtText &&
-	    ((PtrElement) element)->ElLeafType != LtPicture)
-     {
-	TtaError (ERR_invalid_element_type);
-     }
-   else
-     {
-	len = 0;
-	pBuf = ((PtrElement) element)->ElText;
-	if (pBuf != NULL)
-	   len = pBuf->BuLength;
-	ptr = buffer;
-	position--;
-	/* The begenning buffer is not considered */
-	while (pBuf != NULL && len <= position)
-	  {
-	     position -= len;
-	     pBuf = pBuf->BuNext;
-	     len = pBuf->BuLength;
-	  }
-	/* pying into the buffer */
-	while (pBuf != NULL && length > 0)
-	  {
-	     if (length + position < pBuf->BuLength)
-		l = length;
-	     else
-		l = pBuf->BuLength - position;
-	     ustrncpy (ptr, pBuf->BuContent + position, l);
-	     ptr = ptr + l;
-	     length = length - l;
-	     pBuf = pBuf->BuNext;
-	     position = 0;
-	  }
-	*ptr = EOS;
-     }
+  UserErrorCode = 0;
+  pEl = (PtrElement) element;
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (position < 1 || length < 1)
+    TtaError (ERR_invalid_parameter);
+  else if (!pEl->ElTerminal)
+    TtaError (ERR_invalid_element_type);
+  else if (pEl->ElLeafType != LtText &&
+	   pEl->ElLeafType != LtPicture)
+    TtaError (ERR_invalid_element_type);
+  else
+    {
+      l = 0;
+      pBuf = pEl->ElText;
+      ptr = buffer;
+      position--;
+      /* The begenning buffer is not considered */
+      while (pBuf != NULL && pBuf->BuLength <= position)
+	{
+	  position -= pBuf->BuLength;
+	  pBuf = pBuf->BuNext;
+	}
+      /* copying into the buffer */
+      l = 0;
+      while (pBuf != NULL && length > 0)
+	{
+#ifdef _I18N
+	  i = position;
+	  while (i < pBuf->BuLength && l < length)
+	    {
+	      l += TtaWC2MBs ((wchar_t *)&pBuf->BuContent[i], &ptr, UTF_8);
+	      i++;
+	    }
+	  length -= l;
+#else /* _I18N */
+	  if (length + position < pBuf->BuLength)
+	    l = length;
+	  else
+	    l = pBuf->BuLength - position;
+	  strncpy (ptr, pBuf->BuContent + position, l);
+	  ptr = ptr + l;
+	  length = length - l;
+#endif /* _I18N */
+	  pBuf = pBuf->BuNext;
+	  position = 0;
+	}
+      *ptr = EOS;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1878,24 +1755,26 @@ void TtaGiveSubString (Element element, STRING buffer, int position,
    a single character representing the shape of the graphics element or
    symbol contained in the element.
   ----------------------------------------------------------------------*/
-char                TtaGetGraphicsShape (Element element)
+char TtaGetGraphicsShape (Element element)
 {
-   char                content;
+  PtrElement          pEl;
+  char                content;
 
    UserErrorCode = 0;
+   pEl = (PtrElement) element;
    content = EOS;
    if (element == NULL)
      TtaError (ERR_invalid_parameter);
-   else if (!((PtrElement) element)->ElTerminal)
+   else if (!pEl->ElTerminal)
      TtaError (ERR_invalid_element_type);
-   else if (((PtrElement) element)->ElLeafType != LtSymbol &&
-	    ((PtrElement) element)->ElLeafType != LtGraphics &&
-	    ((PtrElement) element)->ElLeafType != LtPolyLine)
+   else if (pEl->ElLeafType != LtSymbol &&
+	    pEl->ElLeafType != LtGraphics &&
+	    pEl->ElLeafType != LtPolyLine)
      TtaError (ERR_invalid_element_type);
-   else if (((PtrElement) element)->ElLeafType == LtPolyLine)
-     content = ((PtrElement) element)->ElPolyLineType;
+   else if (pEl->ElLeafType == LtPolyLine)
+     content = pEl->ElPolyLineType;
    else
-     content = ((PtrElement) element)->ElGraph;
+     content = pEl->ElGraph;
    return content;
 }
 
@@ -1985,7 +1864,7 @@ void TtaGivePolylinePoint (Element element, int rank, TypeUnit unit,
    Return value:
    page number of that page element.
   ----------------------------------------------------------------------*/
-int                 TtaGetPageNumber (Element pageElement)
+int TtaGetPageNumber (Element pageElement)
 {
    int                 pageNumber;
 
@@ -2011,7 +1890,7 @@ int                 TtaGetPageNumber (Element pageElement)
    Return value:
    view of that page.
   ----------------------------------------------------------------------*/
-int                 TtaGetPageView (Element pageElement)
+int TtaGetPageView (Element pageElement)
 {
    int                 pageView;
 

@@ -39,48 +39,30 @@ typedef struct _PatternList *PtrPattern;
 
 struct Pattern
 {
-	UCHAR_T	CarPattern[MAX_LET_PATTERN];
-	CHAR_T	PoidsPattern[MAX_LET_PATTERN];
+  unsigned char CarPattern[MAX_LET_PATTERN];
+  char          PoidsPattern[MAX_LET_PATTERN];
 };
 
 struct PatternList
 {
-	int	Charge; 	/* booleen si patterns de langue charges */
-	int	NbPatt;		/* Nbre effectif de pattern */
-	int	ind_pattern[MAX_LET_PATTERN];
+  int	Charge; 	/* booleen si patterns de langue charges */
+  int	NbPatt;		/* Nbre effectif de pattern */
+  int	ind_pattern[MAX_LET_PATTERN];
                                 /* indice de patterns de meme taille */
-	struct Pattern	liste_pattern[MAX_PATTERN];
+  struct Pattern	liste_pattern[MAX_PATTERN];
                                 /* Tableau des patterns et poids */
 };
 
 struct Langue_Ctl
 {
-  CHAR_T             LangName[MAX_NAME_LENGTH];      /* Nom de la langue                           */
-  char               LangCode[MAX_NAME_LENGTH];      /* Code de la langue (RFC1766)                */
-  char               LangAlphabet;                   /* Alphabet associe a la langue               */
-  CHAR_T             LangPrincipal[MAX_NAME_LENGTH]; /* Name du dictionnaire principal             */
-  CHAR_T             LangSecondary[MAX_NAME_LENGTH]; /* Name du dictionnaire secondaire            */
-  Dictionary         LangDict[MAX_DICTS];            /* Pointeurs vers les dictionnaires           */
-  CHAR_T             LangPattern[MAX_NAME_LENGTH];   /* Name de la liste de patterns d'hyphenation */
-  struct PatternList LangTabPattern;                 /* Pointeur sur la liste de patterns          */
+  char        LangName[MAX_NAME_LENGTH];      /* Nom de la langue                     */
+  char        LangCode[MAX_NAME_LENGTH];      /* Code de la langue (RFC1766)          */
+  char        LangAlphabet;                   /* Alphabet associe a la langue         */
+  char        LangPrincipal[MAX_NAME_LENGTH]; /* Name du dictionnaire principal       */
+  char        LangSecondary[MAX_NAME_LENGTH]; /* Name du dictionnaire secondaire      */
+  Dictionary  LangDict[MAX_DICTS];            /* Pointeurs vers les dictionnaires     */
+  char        LangPattern[MAX_NAME_LENGTH];   /* Name de la liste de patterns d'hyphenation */
+  struct PatternList LangTabPattern;          /* Pointeur sur la liste de patterns   */
 };
-
-#ifndef __CEXTRACT__
-#ifdef __STDC__
-
-extern ThotBool TtaLoadDocumentDictionary ( PtrDocument document, int *pDict, ThotBool ToCreate );
-extern STRING TtaGetHyphenList ( CHAR_T word[30], Language languageId );
-extern int *TtaGetPatternHyphenList( CHAR_T word[100], Language languageId );
-extern ThotBool TtaExistPatternList ( Language languageId );
-
-#else /* __STDC__ */
-
-extern ThotBool TtaLoadDocumentDictionary (/* PtrDocument document, int *pDict, ThotBool ToCreate */);
-extern STRING  TtaGetHyphenList (/* char word[30], Language languageId */);
-extern int *TtaGetPatternHyphenList(/* char word[100], Language languageId */);
-extern ThotBool TtaExistPatternList (/* Language languageId */);
-
-#endif /* __STDC__ */
-#endif /* __CEXTRACT__ */
 
 #endif

@@ -36,12 +36,12 @@
 
 
 /*----------------------------------------------------------------------
-   	NewTextBuffer acquiert un nouveau buffer de texte, l'initialise	
-   	le chaine apres le buffer pBuf et le rattache au meme element	
-   	feuille.							
-   	Retourne un pointeur sur le nouveau buffer.			
+  NewTextBuffer acquiert un nouveau buffer de texte, l'initialise	
+  le chaine apres le buffer pBuf et le rattache au meme element	
+  feuille.							
+  Retourne un pointeur sur le nouveau buffer.			
   ----------------------------------------------------------------------*/
-PtrTextBuffer       NewTextBuffer (PtrTextBuffer pBuf)
+PtrTextBuffer NewTextBuffer (PtrTextBuffer pBuf)
 {
    PtrTextBuffer       pNewBuf;
 
@@ -56,11 +56,11 @@ PtrTextBuffer       NewTextBuffer (PtrTextBuffer pBuf)
 
 
 /*----------------------------------------------------------------------
-   	CreateTextBuffer  cree un premier buffer de texte pour un 	
-   	element feuille							
-   	pEl est l'element feuille qui doit etre de type texte.		
+  CreateTextBuffer  cree un premier buffer de texte pour un 	
+  element feuille							
+  pEl est l'element feuille qui doit etre de type texte.		
   ----------------------------------------------------------------------*/
-void                CreateTextBuffer (PtrElement pEl)
+void CreateTextBuffer (PtrElement pEl)
 {
    PtrTextBuffer       pBuf;
 
@@ -71,10 +71,10 @@ void                CreateTextBuffer (PtrElement pEl)
 }
 
 /*----------------------------------------------------------------------
-   	DeleteTextBuffer  supprime un buffer de texte dont le pointeur est	
-   	passe' en parametre.						
+  DeleteTextBuffer  supprime un buffer de texte dont le pointeur est	
+  passe' en parametre.						
   ----------------------------------------------------------------------*/
-void                DeleteTextBuffer (PtrTextBuffer *pBuf)
+void DeleteTextBuffer (PtrTextBuffer *pBuf)
 {
    if (*pBuf != NULL)
      {
@@ -89,15 +89,14 @@ void                DeleteTextBuffer (PtrTextBuffer *pBuf)
 
 
 /*----------------------------------------------------------------------
-   	SplitTextElement   coupe en deux un element feuille de type texte.	
-   	pEl: l'element de texte a couper.				
-   	rank: indice du caractere devant lequel on coupe		
-   	pDoc: document auquel appartient l'element a couper
-        elBreak: appel par la procedure BreakElement
-
+  SplitTextElement   coupe en deux un element feuille de type texte.	
+  pEl: l'element de texte a couper.				
+  rank: indice du caractere devant lequel on coupe		
+  pDoc: document auquel appartient l'element a couper
+  elBreak: appel par la procedure BreakElement
   au retour:
-	pSecondPart: l'element de texte correspondant a la partie
-		     apres la coupure.
+  pSecondPart: l'element de texte correspondant a la partie
+  apres la coupure.
   ----------------------------------------------------------------------*/
 void SplitTextElement (PtrElement pEl, int rank, PtrDocument pDoc,
 		       ThotBool withAppEvent, PtrElement *pSecondPart,
@@ -484,7 +483,7 @@ ThotBool MergeTextElements (PtrElement pEl, PtrElement *pFreeEl, PtrDocument pDo
    	de buffers de texte pointee par pBuf et retourne un pointeur	
    	sur le premier buffer de la copie realisee.			
   ----------------------------------------------------------------------*/
-PtrTextBuffer       CopyText (PtrTextBuffer pBuf, PtrElement pEl)
+PtrTextBuffer CopyText (PtrTextBuffer pBuf, PtrElement pEl)
 {
    PtrTextBuffer       pBufSource1, pBufSource2, pBufCopy1, pBufCopy2,
                        ret;
@@ -516,7 +515,7 @@ PtrTextBuffer       CopyText (PtrTextBuffer pBuf, PtrElement pEl)
    create a copy of the string of path elements pointed to by firstPathEl
    and return a pointer to the first element of the copy.
   ----------------------------------------------------------------------*/
-PtrPathSeg       CopyPath (PtrPathSeg firstPathEl)
+PtrPathSeg CopyPath (PtrPathSeg firstPathEl)
 {
    PtrPathSeg    pSourcePa, pPrevPa, pPa, first;
 
@@ -548,7 +547,7 @@ PtrPathSeg       CopyPath (PtrPathSeg firstPathEl)
    un texte contenu dans une suite de buffers. Retourne TRUE si    
    les contenus sont egaux.                                        
   ----------------------------------------------------------------------*/
-ThotBool            StringAndTextEqual (STRING String, PtrTextBuffer pBuf)
+ThotBool StringAndTextEqual (STRING String, PtrTextBuffer pBuf)
 {
    ThotBool            equal;
    int                 l, lenRest;
@@ -599,7 +598,7 @@ ThotBool            StringAndTextEqual (STRING String, PtrTextBuffer pBuf)
    TextsEqual compare deux textes contenus dans des suites de     
    buffers. Retourne TRUE si les deux textes sont egaux.		
   ----------------------------------------------------------------------*/
-ThotBool            TextsEqual (PtrTextBuffer pBuf1, PtrTextBuffer pBuf2)
+ThotBool TextsEqual (PtrTextBuffer pBuf1, PtrTextBuffer pBuf2)
 {
    ThotBool            equal;
    PtrTextBuffer       pTB1, pTB2;
@@ -668,7 +667,7 @@ ThotBool            TextsEqual (PtrTextBuffer pBuf1, PtrTextBuffer pBuf2)
    pCopyBuf.							
    Retourne dans len le nombre de caracteres copie's.		
   ----------------------------------------------------------------------*/
-void                CopyTextToText (PtrTextBuffer pSrceBuf, PtrTextBuffer pCopyBuf, int *len)
+void CopyTextToText (PtrTextBuffer pSrceBuf, PtrTextBuffer pCopyBuf, int *len)
 {
    PtrTextBuffer       pTBSrce, pTBDest;
 
@@ -710,7 +709,7 @@ void                CopyTextToText (PtrTextBuffer pSrceBuf, PtrTextBuffer pCopyB
    de buffers.                                                     
    Retourne dans LgCopiee le nombre de caracteres copie's.         
   ----------------------------------------------------------------------*/
-void                CopyStringToText (CHAR_T* srceStrn, PtrTextBuffer pCopyBuf, int *LgCopiee)
+void CopyStringToText (CHAR_T* srceStrn, PtrTextBuffer pCopyBuf, int *LgCopiee)
 {
    PtrTextBuffer       pTBDest;
    CHAR_T*             pSrce;
@@ -763,7 +762,7 @@ void                CopyStringToText (CHAR_T* srceStrn, PtrTextBuffer pCopyBuf, 
    A l'appel, len contient la longueur maximum a copier.           
    Au retour, len contient le nombre de caracteres copie's.        
   ----------------------------------------------------------------------*/
-void                CopyTextToString (PtrTextBuffer pSrceBuf, CHAR_T* pStrCpy, int *len)
+void CopyTextToString (PtrTextBuffer pSrceBuf, CHAR_T* pStrCpy, int *len)
 {
    int                 LgMax;
    int                 l;
@@ -802,7 +801,7 @@ void                CopyTextToString (PtrTextBuffer pSrceBuf, CHAR_T* pStrCpy, i
    ClearText annule le texte contenu dans le buffer pBuf  
    et libere les buffers suivants.                                 
   ----------------------------------------------------------------------*/
-void                ClearText (PtrTextBuffer pBuf)
+void ClearText (PtrTextBuffer pBuf)
 {
    PtrTextBuffer       pNextBuf;
 
@@ -827,7 +826,7 @@ void                ClearText (PtrTextBuffer pBuf)
    des points de contro^le de la polyline.                 
    On saute le point 0 (coordonnees du point limite).      
   ----------------------------------------------------------------------*/
-void                AddPointInPolyline (PtrTextBuffer firstBuffer, int rank, int x, int y)
+void AddPointInPolyline (PtrTextBuffer firstBuffer, int rank, int x, int y)
 {
    PtrTextBuffer       pBuf, pNextBuf;
    int                 i, j;
@@ -923,7 +922,7 @@ void                AddPointInPolyline (PtrTextBuffer firstBuffer, int rank, int
    Le pointeur firstBuffer peut e^tre modifie' par la      
    proce'dure.                                             
   ----------------------------------------------------------------------*/
-void                DeletePointInPolyline (PtrTextBuffer * firstBuffer, int rank)
+void DeletePointInPolyline (PtrTextBuffer * firstBuffer, int rank)
 {
    PtrTextBuffer       pBuf;
    int                 j;
@@ -964,7 +963,7 @@ void                DeletePointInPolyline (PtrTextBuffer * firstBuffer, int rank
    de la polyline.
    On saute le point 0 (coordonnees du point limite).      
   ----------------------------------------------------------------------*/
-void                ModifyPointInPolyline (PtrTextBuffer firstBuffer, int rank, int x, int y)
+void ModifyPointInPolyline (PtrTextBuffer firstBuffer, int rank, int x, int y)
 {
    PtrTextBuffer       pBuf;
 
@@ -995,86 +994,121 @@ void                ModifyPointInPolyline (PtrTextBuffer firstBuffer, int rank, 
    TtaGetTextLength
 
    Returns the length of a Text basic element.
-
    Parameter:
    element: the element of interest. This element must be a basic
    element of type Text.
-
    Return value:
-   textLength (number of characters) of the character string
-   contained in the element.
-
+   textLength: the number of characters contained in the element.
+   In _I18N mode the length corresponds to the UTF-8 string.
   ----------------------------------------------------------------------*/
-int                 TtaGetTextLength (Element element)
+int TtaGetTextLength (Element element)
 {
-   int                 textLength;
+  PtrElement          pEl;
+  int                 length;
+#ifdef _I18N
+  PtrTextBuffer       pBuf;
+  unsigned char       c[10], *ptr;
+  int                 i, l;
+#endif /* _I18N */
 
-   UserErrorCode = 0;
-   textLength = 0;
-   if (element == NULL)
-     TtaError (ERR_invalid_parameter);
-   else if (!((PtrElement) element)->ElTerminal)
-     TtaError (ERR_invalid_element_type);
-   else if (((PtrElement) element)->ElLeafType != LtText &&
-	    ((PtrElement) element)->ElLeafType != LtPicture)
-     TtaError (ERR_invalid_element_type);
-   else
-     textLength = ((PtrElement) element)->ElTextLength;
-   return textLength;
+  UserErrorCode = 0;
+  length = 0;
+  pEl = (PtrElement) element;
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (!pEl->ElTerminal)
+    TtaError (ERR_invalid_element_type);
+  else if (pEl->ElLeafType != LtText && pEl->ElLeafType != LtPicture)
+    TtaError (ERR_invalid_element_type);
+  else
+    length = pEl->ElTextLength;
+#ifdef _I18N
+  pBuf = pEl->ElText;
+  l = 0;
+  while (pBuf != NULL && length > 0)
+    {
+      i = 0;
+      while (i < pBuf->BuLength && l < length)
+	{
+	  ptr = c;
+	  l += TtaWC2MBs ((wchar_t *)&pBuf->BuContent[i], &ptr, UTF_8);
+	  i++;
+	}
+      /* next buffer */
+      length -= pBuf->BuLength;
+      pBuf = pBuf->BuNext;
+    }
+  return l;
+#else /* _I18N */
+  return length;
+#endif /* _I18N */
 }
 
 /*----------------------------------------------------------------------
    TtaGiveTextContent
 
    Returns the content of a Text basic element.
-
    Parameters:
    element: the element of interest. This element must be a basic
    element of type Text.
-   buffer: the buffer that will contain the text.
+   buffer: the buffer that will contain the text. This buffer
+   must be at least of size length.
    length: maximum length of that buffer.
-
+   In _I18N mode the length corresponds to the UTF-8 string.
    Return parameters:
    buffer: (the buffer contains the text).
    length: actual length of the text in the buffer.
    language: language of the text.
-
+   In _I18N mode returns a UTF-8 string.
   ----------------------------------------------------------------------*/
-void TtaGiveTextContent (Element element, STRING buffer, int *length, Language * language)
+void TtaGiveTextContent (Element element, unsigned char *buffer, int *length,
+			 Language *language)
 {
-   PtrTextBuffer       pBuf;
-   STRING              ptr;
-   int                 len, l;
+  PtrElement          pEl;
+  PtrTextBuffer       pBuf;
+  unsigned char      *ptr;
+  int                 len, l;
+#ifdef _I18N
+  int                 i;
+#endif /* _I18N */
 
-   UserErrorCode = 0;
-   if (element == NULL || buffer == NULL)
-	TtaError (ERR_invalid_parameter);
-   else if (!((PtrElement) element)->ElTerminal)
-	TtaError (ERR_invalid_element_type);
-   else if (((PtrElement) element)->ElLeafType != LtText &&
-	    ((PtrElement) element)->ElLeafType != LtPicture)
-	TtaError (ERR_invalid_element_type);
-   else
-     {
-	len = 0;
-	pBuf = ((PtrElement) element)->ElText;
-	ptr = buffer;
-	if (*length > 0)
-	  while (pBuf != NULL && len < (*length) - 1)
+  UserErrorCode = 0;
+  pEl = (PtrElement) element;
+  if (element == NULL || buffer == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (!pEl->ElTerminal)
+    TtaError (ERR_invalid_element_type);
+  else if (pEl->ElLeafType != LtText && pEl->ElLeafType != LtPicture)
+    TtaError (ERR_invalid_element_type);
+  else
+    {
+      len = 0;
+      pBuf = pEl->ElText;
+      ptr = buffer;
+      while (pBuf != NULL && len < (*length) - 1)
+	{
+#ifdef _I18N
+	  l = 0;
+	  while (l < pBuf->BuLength && len < *length)
 	    {
-	      if ((*length) < len + pBuf->BuLength + 1)
-		l = (*length) - len;
-	      else
-		l = pBuf->BuLength + 1;
-	      ustrncpy (ptr, pBuf->BuContent, l);
-	      ptr = ptr + (l - 1);
-	      len = len + (l - 1);
-	      pBuf = pBuf->BuNext;
+	      len += TtaWC2MBs ((wchar_t *) &pBuf->BuContent[l], &ptr, UTF_8);
+	      l++;
 	    }
-	*length = len;
-	*ptr = EOS;
-	*language = ((PtrElement) element)->ElLanguage;
-     }
+#else /* _I18N */
+	  if ((*length) < len + pBuf->BuLength + 1)
+	    l = (*length) - len;
+	  else
+	    l = pBuf->BuLength + 1;
+	  ustrncpy (ptr, pBuf->BuContent, l);
+	  ptr = ptr + (l - 1);
+	  len = len + (l - 1);
+#endif /* _I18N */
+	  pBuf = pBuf->BuNext;
+	}
+      *length = len;
+      *ptr = EOS;
+      *language = pEl->ElLanguage;
+    }
 }
 
 

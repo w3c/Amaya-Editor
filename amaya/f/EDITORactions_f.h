@@ -63,6 +63,8 @@ extern void CreateBlockQuote ( Document document,
                                View view );
 extern void CreatePreformatted ( Document document,
                                  View view );
+extern void CreateRuby ( Document document,
+                         View view );
 extern void CreateAddress ( Document document,
                             View view );
 extern void CreateTable ( Document document,
@@ -242,6 +244,8 @@ extern void CreateBlockQuote (/* Document document,
                                  View view */);
 extern void CreatePreformatted (/* Document document,
                                    View view */);
+extern void CreateRuby (/* Document document,
+                           View view */);
 extern void CreateAddress (/* Document document,
                               View view */);
 extern void CreateTable (/* Document document,
