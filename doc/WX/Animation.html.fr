@@ -13,7 +13,7 @@
 <body xml:lang="fr" lang="fr">
 
 <div>
-<img alt="Amaya" src="../../resources/icons/22x22/logo.png" />
+<img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" />
 
 <p class="nav"><a href="SVG.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html"
@@ -61,8 +61,8 @@ s'arrête et la couleur de la barre reflète le type d'animation :</p>
   <li>bleu clair pour <code>animateTransform</code></li>
 </ul>
 
-<p class="figure"><img alt="Animation view"
-src="../images/timeline_view.png" /></p>
+<p class="figure"><img alt="Animation view" src="../images/timeline_view.png"
+/></p>
 </div>
 
 <h3>Edition des animations</h3>

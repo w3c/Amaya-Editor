@@ -4,8 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Publication</title>
-  <meta name="GENERATOR" content="amaya 9.0.1, see http://www.w3.org/Amaya/"
-  />
+  <meta name="GENERATOR" content="amaya 9.1, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -13,8 +12,7 @@
 <body xml:lang="fr" lang="fr">
 
 <div>
-<img alt="Amaya"
-src="../../resources/icons/22x22/logo.png" />
+<img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" />
 
 <p class="nav"><a href="SpellChecking.html.fr" accesskey="p"><img
 alt="previous" src="../../resources/icons/misc/left.png" /></a> <a

@@ -13,8 +13,7 @@
 <body xml:lang="fr" lang="fr">
 
 <div>
-<img alt="Amaya"
-src="../../resources/icons/22x22/logo.png" />
+<img alt="Amaya" src="../../resources/icons/22x22/logo.png" class="logo" />
 
 <p class="nav"><a href="Attributes.html.fr" accesskey="p"><img alt="previous"
 src="../../resources/icons/misc/left.png" /></a> <a href="Manual.html.fr"
@@ -35,10 +34,9 @@ certains caractères non disponibles au clavier comme :</p>
 <ul>
   <li>Pour obtenir un espace non sécable, vous devez taper <code>Control -
     espace</code>.
-    <p>Ce caractère sera <a
-    href="Browsing.html.fr#entite">sauvé
-    comme une entité</a> (<code>&amp;nbsp;</code>) et est visualisé dans la
-    vue source avec le caractère coloré suivant : <span
+    <p>Ce caractère sera <a href="Browsing.html.fr#entite">sauvé comme une
+    entité</a> (<code>&amp;nbsp;</code>) et est visualisé dans la vue source
+    avec le caractère coloré suivant : <span
     style="color: #008BB2">~</span></p>
   </li>
   <li>Pour obtenir un &euro; (euro), vous devez taper <code>Alt -

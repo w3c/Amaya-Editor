@@ -48,6 +48,10 @@ p.Note, p.ProcedureNote
   display: inline;
 }
 
+.logo {
+  margin-top: 0.8em;
+}
+
 .characters td {
 border : thin solid black;
 padding: 4px

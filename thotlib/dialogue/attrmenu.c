@@ -1857,8 +1857,10 @@ void CloseAttributeDialogues (PtrDocument pDoc)
 	 TtaDestroyDialogue (NumMenuAttrRequired);
 	 TtaDestroyDialogue (NumMenuAttr);
        }
+#ifndef _WX
      SchCurrentAttr = NULL;
      DocCurrentAttr = NULL;
+#endif /* _WX */
    }
 }
 
