@@ -455,8 +455,17 @@ static ThotBool parse_file (librdf_world *world, librdf_model *model,
   int count = 0 ;
   ThotBool res;
 
-  uri = librdf_new_uri (world, (unsigned char *) filename);
-  base_uri = librdf_new_uri (world, (unsigned char *) base);
+  /* redland expects a specific coded file URI */
+
+  if (!IsHTTPPath (filename) && !IsFilePath (filename))
+    uri = librdf_new_uri_from_filename (world, (const char *) filename);
+  else
+    uri = librdf_new_uri (world, (unsigned char *) filename);
+
+  if (!IsHTTPPath (base) && !IsFilePath (base))
+    base_uri = librdf_new_uri_from_filename (world, (const char *) base);
+  else
+    base_uri = librdf_new_uri (world, (unsigned char *) base);
 
   if (ntriples)
     /* parse the file as triplets */
@@ -1934,28 +1943,38 @@ ThotBool BM_parse (int ref, char *filename, char *base)
 
   if (filename && *filename)
     {
-      char *file_uri, *base_uri;
       librdf_world *world;
       librdf_model *model; 
       librdf_storage *storage;
-      
+      char *local_filename;
+      char *local_base;
+
       if (!BM_Context_get (ref, &world, &model, &storage))
 	return FALSE;
 
-      /* redland expects a file URI */
-      if (!IsFilePath (filename))
-	file_uri =  ANNOT_MakeFileURL ((const char *) filename);
+      if (!IsHTTPPath (filename) && IsFilePath (filename))
+	{
+	  local_filename = TtaStrdup (filename);
+	  WWWToLocal (local_filename);
+	}
       else
-	file_uri = filename;
-      if (!IsHTTPPath (base) && !IsFilePath (base))
-	base_uri = ANNOT_MakeFileURL ((const char *) base);
-      else
-	base_uri = base;
-      res = parse_file (world, model, file_uri, base_uri, FALSE);
-      if (filename != file_uri)
-	TtaFreeMemory (file_uri);
-      if (base != base_uri)
-	TtaFreeMemory (base_uri);
+	local_filename = filename;
+
+      if (!IsHTTPPath (base) && IsFilePath (base))
+	{
+	  local_base =  TtaStrdup (base);
+	  WWWToLocal (local_base);
+	}
+      else 
+	local_base = base; 
+
+      res = parse_file (world, model, local_filename, local_base, FALSE);
+
+      if (filename != local_filename)
+	TtaFreeMemory (local_filename);
+
+      if (base != local_base)
+	TtaFreeMemory (local_base);
     }
 
   return res;
