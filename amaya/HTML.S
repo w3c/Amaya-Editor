@@ -292,7 +292,7 @@ STRUCT
 	Subscript = Basic_Set;					{ SUB }
 	Superscript = Basic_Set;				{ SUP }
 	Span = Basic_Set;					{ SPAN }
-	BDO = Basic_Set;					{ BDO }
+	BDO (ATTR !dir) = Basic_Set;				{ BDO }
 	Object;							{ OBJECT }
 	Embed_;							{ EMBED }
 	IFRAME;							{ IFRAME }

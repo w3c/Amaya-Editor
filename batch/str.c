@@ -2263,9 +2263,10 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
 		   if (attrNum > 0)
 		     {
 		       /* attribute already defined */
-		       if (pSSchema->SsAttribute->TtAttr[attrNum - 1]->AttrGlobal)
-			 /* the global attribute cannot be */
-			 /* used as local attribute */
+		       if (pSSchema->SsAttribute->TtAttr[attrNum - 1]->AttrGlobal &&
+			   !MandatoryAttr)
+			 /* the global attribute cannot be used as local
+			    attribute, except if it's to make it mandatory */
 			 CompilerMessage (wi, STR, FATAL, STR_GLOBAL_ATTR,
 					  inputLine, LineNum);
 		     }
