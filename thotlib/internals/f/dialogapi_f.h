@@ -112,6 +112,16 @@ extern void TtaNewDialogSheet ( int ref,
                                 CHAR_T button );
 extern void TtaAttachForm ( int ref );
 extern void TtaDetachForm ( int ref );
+extern void TtaNewSizedSelector ( int ref,
+                                  int ref_parent,
+                                  STRING title,
+                                  int number,
+                                  STRING text,
+                                  int width,
+                                  int height,
+                                  STRING label,
+                                  ThotBool withText,
+                                  ThotBool react );
 extern void TtaNewSelector ( int ref,
                              int ref_parent,
                              STRING title,
@@ -261,6 +271,16 @@ extern void TtaNewDialogSheet (/* int ref,
                                   CHAR_T button */);
 extern void TtaAttachForm (/* int ref */);
 extern void TtaDetachForm (/* int ref */);
+extern void TtaNewSizedSelector (/* int ref,
+                                    int ref_parent,
+                                    STRING title,
+                                    int number,
+                                    STRING text,
+                                    int width,
+                                    int height,
+                                    STRING label,
+                                    ThotBool withText,
+                                    ThotBool react */);
 extern void TtaNewSelector (/* int ref,
                                int ref_parent,
                                STRING title,

@@ -42,35 +42,43 @@
    document.                                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreateDocument (PtrDocument * pDoc)
+void          CreateDocument (PtrDocument *pDoc, Document *document)
 #else  /* __STDC__ */
-void                CreateDocument (pDoc)
-PtrDocument        *pDoc;
+void          CreateDocument (pDoc, document)
+PtrDocument  *pDoc;
+Document     *document;
 #endif /* __STDC__ */
 {
-   int                 doc;
+  Document        doc;
 
-   /* cherche un pointeur de descripteur de document libre */
-   doc = 0;
-   while (doc < MAX_DOCUMENTS && LoadedDocument[doc] != NULL)
-      doc++;
-   if (doc >= MAX_DOCUMENTS)
-     {
-	TtaDisplaySimpleMessage (INFO, LIB, TMSG_TOO_MANY_DOCS);
-	*pDoc = NULL;
-     }
-   else
-     {
-	/* acquiert un descripteur de document */
-	GetDocument (&LoadedDocument[doc]);
-	*pDoc = LoadedDocument[doc];
-	/* initialise le mode d'affichage */
-	documentDisplayMode[doc] = DisplayImmediately;
-	(*pDoc)->DocBackUpInterval = CurSaveInterval;
-	(*pDoc)->DocCheckingMode = DEFAULT_CHECK_MASK;
-	(*pDoc)->DocCharset = ISO_8859_1;
-	(*pDoc)->DocDefaultCharset = TRUE;
-     }
+  if (*document == 0 || *document >= MAX_DOCUMENTS)
+    {
+      /* cherche un pointeur de descripteur de document libre */
+      doc = 0;
+      while (doc < MAX_DOCUMENTS && LoadedDocument[doc] != NULL)
+	doc++;
+      if (doc >= MAX_DOCUMENTS)
+	{
+	  TtaDisplaySimpleMessage (INFO, LIB, TMSG_TOO_MANY_DOCS);
+	  *pDoc = NULL;
+	  *document = 0;
+	  return;
+	}
+      else
+	*document = doc + 1;
+    }
+  else
+    doc = *document - 1;
+
+  /* acquiert un descripteur de document */
+  GetDocument (&LoadedDocument[doc]);
+  *pDoc = LoadedDocument[doc];
+  /* initialise le mode d'affichage */
+  documentDisplayMode[doc] = DisplayImmediately;
+  (*pDoc)->DocBackUpInterval = CurSaveInterval;
+  (*pDoc)->DocCheckingMode = DEFAULT_CHECK_MASK;
+  (*pDoc)->DocCharset = ISO_8859_1;
+  (*pDoc)->DocDefaultCharset = TRUE;
 }
 
 

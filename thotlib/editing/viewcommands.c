@@ -404,97 +404,98 @@ PathBuffer          directory;
 CHAR_T*             fileName;
 #endif /* __STDC__ */
 {
-   FILE               *file;
-   PtrDocument         pDoc;
-   PathBuffer          fullName;
-   NotifyDialog        notifyDoc;
-   Name                PSchemaName;
-   int                 i;
-   ThotBool            ok;
+  FILE               *file;
+  PtrDocument         pDoc;
+  PathBuffer          fullName;
+  NotifyDialog        notifyDoc;
+  Name                PSchemaName;
+  Document            doc;
+  int                 i;
+  ThotBool            ok;
 
-   if (fileName[0] != WC_EOS && SSchemaName[0] != WC_EOS)
-      /* les parametres d'entree sont valides */
-      {
+  if (fileName[0] != WC_EOS && SSchemaName[0] != WC_EOS)
+    /* les parametres d'entree sont valides */
+    {
       if (directory[0] == WC_EOS)
-	 /* pas de directory precise'. On prend le path des documents */
-	 ustrncpy (directory, DocumentPath, MAX_PATH);
+	/* pas de directory precise'. On prend le path des documents */
+	ustrncpy (directory, DocumentPath, MAX_PATH);
       /* construit le nom complet du fichier a importer */
       MakeCompleteName (fileName, TEXT(""), directory, fullName, &i);
       TtaDisplaySimpleMessage (INFO, LIB, TMSG_IMPORTING_FILE);
       /* ouvre le fichier a importer */
       file = ufopen (fullName, TEXT("r"));
       if (file != NULL)
-	 /* le fichier a importer est ouvert */
-	 {
-	 /* on cree un descripteur de document */
-	 CreateDocument (&pDoc);
+	/* le fichier a importer est ouvert */
+	{
+	  /* on cree un descripteur de document */
+	  doc = 0;
+	 CreateDocument (&pDoc, &doc);
 	 if (pDoc != NULL)
-	    {
-	    /* pas de preference pour un schema de presentation particulier */
-	    PSchemaName[0] = EOS;
-	    /* charge le schema de structure et le schema de presentation */
-	    LoadSchemas (SSchemaName, PSchemaName, &pDoc->DocSSchema, NULL,
-			 FALSE);
-	    if (pDoc->DocSSchema != NULL)
+	   {
+	     /* pas de preference pour un schema de presentation particulier */
+	     PSchemaName[0] = EOS;
+	     /* charge le schema de structure et le schema de presentation */
+	     LoadSchemas (SSchemaName, PSchemaName, &pDoc->DocSSchema, NULL, FALSE);
+	     if (pDoc->DocSSchema != NULL)
 	       {
-	       /* envoie l'evenement de creation a l'application qui le demande */
-	       notifyDoc.event = TteDocCreate;
-	       notifyDoc.document = (Document) IdentDocument (pDoc);
-	       notifyDoc.view = 0;
-	       if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
-		  {
-		  /* cree la representation interne d'un document minimum */
-		  pDoc->DocRootElement = NewSubtree (pDoc->DocSSchema->SsRootElem,
-					     pDoc->DocSSchema, pDoc, 0, TRUE,
-					     TRUE, TRUE, TRUE);
-		  /* supprime les elements exclus */
-		  RemoveExcludedElem (&pDoc->DocRootElement, pDoc);
-		  }
+		 /* send the event notification to the application */
+		 notifyDoc.event = TteDocCreate;
+		 notifyDoc.document = doc;
+		 notifyDoc.view = 0;
+		 if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
+		   {
+		     /* cree la representation interne d'un document minimum */
+		     pDoc->DocRootElement = NewSubtree (pDoc->DocSSchema->SsRootElem,
+							pDoc->DocSSchema, pDoc, 0, TRUE,
+							TRUE, TRUE, TRUE);
+		     /* supprime les elements exclus */
+		     RemoveExcludedElem (&pDoc->DocRootElement, pDoc);
+		   }
 	       }
-	    if (pDoc->DocRootElement == NULL)
+	     if (pDoc->DocRootElement == NULL)
 	       /* on n'a pas pu charger les schemas ou l'application a refuse'*/
 	       UnloadDocument (&pDoc);
-	    else
+	     else
 	       {
-	       /* complete le descripteur du document */
-	       pDoc->DocRootElement->ElAccess = AccessReadWrite;
-	       CheckLanguageAttr (pDoc, pDoc->DocRootElement);
-	       ustrncpy (pDoc->DocDName, fileName, MAX_NAME_LENGTH);
-	       pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
-	       ustrncpy (pDoc->DocIdent, fileName, MAX_DOC_IDENT_LEN);
-	       pDoc->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
-	       ustrncpy (pDoc->DocDirectory, directory, MAX_PATH);
-	       /* conserve le path actuel des schemas dans le contexte du doc. */
-	       ustrncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
-	       /* lit le fichier a importer et met son contenu dans le document */
-	       ok = ReadImportFile (file, pDoc);
-	       if (!ok)
-		  /* echec */
-		  TtaDisplaySimpleMessage (INFO, LIB, TMSG_IMPORT_FILE_IMP);
-	       /* indique a l'application interessee qu'un document a ete cree' */
-	       notifyDoc.event = TteDocCreate;
-	       notifyDoc.document = (Document) IdentDocument (pDoc);
-	       notifyDoc.view = 0;
-	       CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
-	       /* traitement des attributs requis */
-	       AttachMandatoryAttributes (pDoc->DocRootElement, pDoc);
-	       if (pDoc->DocSSchema != NULL)
-		  /* le document n'a pas ete ferme' pendant l'attente des */
-		  /* attributs requis */
-		  {
-		  /* traitement des exceptions */
-		  if (ThotLocalActions[T_createtable] != NULL)
-		     (*ThotLocalActions[T_createtable]) (pDoc->DocRootElement,
-							 pDoc);
-		  /* ouvre les vues du document cree' */
-		  OpenDefaultViews (pDoc);
-		  }
+		 /* complete le descripteur du document */
+		 pDoc->DocRootElement->ElAccess = AccessReadWrite;
+		 CheckLanguageAttr (pDoc, pDoc->DocRootElement);
+		 ustrncpy (pDoc->DocDName, fileName, MAX_NAME_LENGTH);
+		 pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
+		 ustrncpy (pDoc->DocIdent, fileName, MAX_DOC_IDENT_LEN);
+		 pDoc->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
+		 ustrncpy (pDoc->DocDirectory, directory, MAX_PATH);
+		 /* conserve le path actuel des schemas dans le contexte du doc. */
+		 ustrncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
+		 /* lit le fichier a importer et met son contenu dans le document */
+		 ok = ReadImportFile (file, pDoc);
+		 if (!ok)
+		   /* echec */
+		   TtaDisplaySimpleMessage (INFO, LIB, TMSG_IMPORT_FILE_IMP);
+		 /* indique a l'application interessee qu'un document a ete cree' */
+		 notifyDoc.event = TteDocCreate;
+		 notifyDoc.document = doc;
+		 notifyDoc.view = 0;
+		 CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
+		 /* traitement des attributs requis */
+		 AttachMandatoryAttributes (pDoc->DocRootElement, pDoc);
+		 if (pDoc->DocSSchema != NULL)
+		   /* le document n'a pas ete ferme' pendant l'attente des */
+		   /* attributs requis */
+		   {
+		     /* traitement des exceptions */
+		     if (ThotLocalActions[T_createtable] != NULL)
+		       (*ThotLocalActions[T_createtable]) (pDoc->DocRootElement,
+							   pDoc);
+		     /* ouvre les vues du document cree' */
+		     OpenDefaultViews (pDoc);
+		   }
 	       }
-	    }
+	   }
 	 /* fermeture du fichier imnporte' */
 	 fclose (file);
-	 }
-      }
+	}
+    }
 }
 
 

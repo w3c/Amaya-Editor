@@ -1278,186 +1278,176 @@ opened temporarely.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void	UpdateInclusionElements (PtrDocument pDoc, ThotBool loadExternalDoc,
+void	      UpdateInclusionElements (PtrDocument pDoc, ThotBool loadExternalDoc,
 ThotBool removeExclusions)
 #else  /* __STDC__ */
-void	UpdateInclusionElements (pDoc, loadExternalDoc, removeExclusions)
-PtrDocument	pDoc;
-ThotBool		loadExternalDoc;
-ThotBool		removeExclusions;
+void	      UpdateInclusionElements (pDoc, loadExternalDoc, removeExclusions)
+PtrDocument   pDoc;
+ThotBool      loadExternalDoc;
+ThotBool      removeExclusions;
 #endif /* __STDC__ */
-
 {
-   PtrDocument           pSourceDoc;
-   PtrDocument           pExternalDoc[MAX_EXT_DOC];
-   PtrElement            pSource;
-   PtrReference          pRef;
-   PtrReferredDescr      pRefD;
-   SRule                *pSRule;
-   DocumentIdentifier    docIdent;
-   ThotBool              ok = FALSE;
-   int                   d, extDocNum;
-   NotifyOnTarget	 notifyEl;
+  PtrDocument           pSourceDoc;
+  PtrDocument           pExternalDoc[MAX_EXT_DOC];
+  PtrElement            pSource;
+  PtrReference          pRef;
+  PtrReferredDescr      pRefD;
+  SRule                *pSRule;
+  DocumentIdentifier    docIdent;
+  ThotBool              ok = FALSE;
+  Document              doc, newdoc;
+  int                   d, extDocNum;
+  NotifyOnTarget	 notifyEl;
 
-   /* nettoie la table des documents externes charge's */
-   for (extDocNum = 0; extDocNum < MAX_EXT_DOC; extDocNum++)
-      pExternalDoc[extDocNum] = NULL;
+  /* nettoie la table des documents externes charge's */
+  for (extDocNum = 0; extDocNum < MAX_EXT_DOC; extDocNum++)
+    pExternalDoc[extDocNum] = NULL;
 
-   /* parcourt la chaine des descripteurs d'elements references */
-   /* du document, pour traiter toutes les references */
-   pRefD = pDoc->DocReferredEl->ReNext;
-   while (pRefD != NULL)
-     {
-        pRef = pRefD->ReFirstReference;
-        /* premiere reference a l'element reference' courant */
-        /* parcourt toutes les references designant l'element */
-        /* reference' courant */
-        while (pRef != NULL)
-          {
-             if (pRef->RdTypeRef == RefInclusion)
-                /* il s'agit bien d'une reference d'inclusion */
-                if (pRef->RdElement->ElSource == pRef)
-                   /* c'est bien une inclusion avec expansion, */
-                   /* on copie l'arbre abstrait de l'element inclus */
-                  {
-                     pSource = ReferredElement (pRef,
-                                                &docIdent,
-                                                &pSourceDoc);
+  /* parcourt la chaine des descripteurs d'elements references */
+  /* du document, pour traiter toutes les references */
+  doc = IdentDocument (pDoc);
+  pRefD = pDoc->DocReferredEl->ReNext;
+  while (pRefD != NULL)
+    {
+      pRef = pRefD->ReFirstReference;
+      /* premiere reference a l'element reference' courant */
+      /* parcourt toutes les references designant l'element */
+      /* reference' courant */
+      while (pRef != NULL)
+	{
+	  if (pRef->RdTypeRef == RefInclusion)
+	    /* il s'agit bien d'une reference d'inclusion */
+	    if (pRef->RdElement->ElSource == pRef)
+	      /* c'est bien une inclusion avec expansion, */
+	      /* on copie l'arbre abstrait de l'element inclus */
+	      {
+		pSource = ReferredElement (pRef, &docIdent, &pSourceDoc);
+		
+		/* Ici il faut faire beaucoup d'attention car le target 
+		   de l'inclusion ou source peut etre dans le meme document
+		   ou dans un document externe. */
+		notifyEl.event = TteElemFetchInclude;
+		notifyEl.target = (Element) pSource;
+		if (docIdent[0] == EOS)
+		  notifyEl.targetdocument = doc;
+		else if (pSourceDoc != NULL)
+		  notifyEl.targetdocument = IdentDocument (pSourceDoc);
+		else
+		  notifyEl.targetdocument = 0;
+		notifyEl.element = (Element) pRef->RdElement;
+		notifyEl.document = doc;
+		/* Ici c'est possible que notifyEl.target ou notifyEl.targetdocument
+		   soient egaux a NULL. Par exemple, quand la cible ou source d'une
+		   inclusion n'est pas dans le meme document que l'inclusion. */
+		
+		if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+		  /* l'application accepte le traitement */ 
+		  {
+		    if (loadExternalDoc)
+		      /* l'element inclus est-il accessible ? */
+		      {
+			if (pSource == NULL &&
+			    !DocIdentIsNull (docIdent) &&
+			    pSourceDoc == NULL)
+			  /* il y a bien un objet a inclure qui */
+			  /* appartient au document docIdent et ce */
+			  /* document n'est pas charge'. */
+			  /* On le charge. Cherche une entree libre */
+			  /* dans la table des documents externes */
+			  /* charge's. */
+			  {
+			    extDocNum = 0;
+			    while (pExternalDoc[extDocNum] != NULL &&
+				   extDocNum < MAX_EXT_DOC - 1)
+			      extDocNum++;
+			    if (pExternalDoc[extDocNum] == NULL)
+			      /* on a trouve' une entree libre, on */
+			      /* charge  le document externe */
+			      {
+				newdoc = 0;
+				CreateDocument (&pExternalDoc[extDocNum], &newdoc);
+				if (pExternalDoc[extDocNum] != NULL)
+				  {
+				    CopyDocIdent (&pExternalDoc[extDocNum]->DocIdent,
+						  docIdent);
+				    ok = OpenDocument (NULL,
+						       pExternalDoc[extDocNum],
+						       FALSE,
+						       FALSE,
+						       NULL,
+						       FALSE,
+						       removeExclusions);
+				  }
+				if (pExternalDoc[extDocNum] != NULL)
+				  {
+				    CopyDocIdent (&pExternalDoc[extDocNum]->DocIdent,
+						  docIdent);
+				    if (!ok)
+				      {
+					/* echec a l'ouverture du */
+					/* document. */
+					TtaDisplayMessage (INFO,
+							   TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), docIdent);
+					FreeDocument (pExternalDoc[extDocNum]);
+					pExternalDoc[extDocNum] = NULL;
+				      }
+				  }
+			      }
+			  }
+			pSRule = &pRef->RdElement->ElStructSchema->SsRule[pRef->RdElement->ElTypeNumber - 1];
+		      }
+		    /* inclusion d'un document externe */
+		    CopyIncludedElem (pRef->RdElement, pDoc);
+		    
+		    /* Envoyer le message post de TteElemFetchInclude */
+		    pSource = ReferredElement (pRef, &docIdent, &pSourceDoc);
+		    
+		    notifyEl.event = TteElemFetchInclude;
+		    notifyEl.target = (Element) pSource;
+		    if (docIdent[0] == EOS)
+		      notifyEl.targetdocument = (Document) IdentDocument (pDoc);
+		    else if (pSourceDoc != NULL)
+		      notifyEl.targetdocument = (Document) IdentDocument (pSourceDoc);
+		    else
+		      notifyEl.targetdocument = 0;
+		    notifyEl.element = (Element) pRef->RdElement;
+		    notifyEl.document = doc;
+		    
+		    /* Ici notifyEl.target et notifyEl.targetdocument
+		       sont differents de NULL si loadExternalDoc == TRUE.
+		       Dans le cas ou la cible (source) d'une
+		       inclusion n'est pas dans le meme document que l'inclusion,
+		       le document externe a ete ouvert temporairement. */
+		    
+		    CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+		  } 
+	      }
+	  pRef = pRef->RdNext;
+	  /* passe a la reference suivante */
+	}
+      pRefD = pRefD->ReNext;
+      /* passe au descripteur d'element reference' suivant */
+    }
 
-                     /* Ici il faut faire beaucoup d'attention car le target 
-                        de l'inclusion ou source peut etre dans le meme document
-                        ou dans un document externe. */
-                      
-                     notifyEl.event = TteElemFetchInclude;
-                     notifyEl.target = (Element) pSource;
-                     if (docIdent[0] == EOS)
-                          notifyEl.targetdocument = (Document) IdentDocument (pDoc);
-                     else if (pSourceDoc != NULL)
-                          notifyEl.targetdocument = (Document) IdentDocument (pSourceDoc);
-                     else
-                          notifyEl.targetdocument = (Document) 0;
-                     notifyEl.element = (Element) pRef->RdElement;
-                     notifyEl.document = (Document) IdentDocument (pDoc);
-                     /* Ici c'est possible que notifyEl.target ou notifyEl.targetdocument
-                        soient egaux a NULL. Par exemple, quand la cible ou source d'une
-                        inclusion n'est pas dans le meme document que l'inclusion. */
-
-                     if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-                        /* l'application accepte le traitement */ 
-                       {
-                          if (loadExternalDoc)
-                             /* l'element inclus est-il accessible ? */
-                            {
-                               if (pSource == NULL)
-                                  if (!DocIdentIsNull (docIdent))
-                                     if (pSourceDoc == NULL)
-                                        /* il y a bien un objet a inclure qui */
-                                        /* appartient au document docIdent et ce */
-                                        /* document n'est pas charge'. */
-                                        /* On le charge. Cherche une entree libre */
-                                        /* dans la table des documents externes */
-                                        /* charge's. */
-                                       {
-                                          extDocNum = 0;
-                                          while ( (pExternalDoc[extDocNum] != NULL) &&
-                                                  (extDocNum < MAX_EXT_DOC - 1) )
-                                             extDocNum++;
-                                          if (pExternalDoc[extDocNum] == NULL)
-                                             /* on a trouve' une entree libre, on */
-                                             /* charge  le document externe */
-                                            {
-                                               CreateDocument (&pExternalDoc[extDocNum]);
-                                               if (pExternalDoc[extDocNum] != NULL)
-                                                 {
-                                                    CopyDocIdent (&pExternalDoc[extDocNum]->DocIdent,
-                                                                  docIdent);
-                                                    ok = OpenDocument (
-                                                            NULL,
-                                                            pExternalDoc[extDocNum],
-                                                            FALSE,
-                                                            FALSE,
-                                                            NULL,
-                                                            FALSE,
-                                                            removeExclusions);
-                                                 }
-                                               if (pExternalDoc[extDocNum] != NULL)
-                                                 {
-                                                    CopyDocIdent (
-                                                       &pExternalDoc[extDocNum]->DocIdent,
-                                                       docIdent);
-                                                    if (!ok)
-                                                      {
-                                                         /* echec a l'ouverture du */
-                                                         /* document. */
-                                                         TtaDisplayMessage (
-                                                             INFO,
-                                                             TtaGetMessage (
-                                                                LIB,
-                                                                TMSG_LIB_MISSING_FILE),
-                                                             docIdent);
-                                                         FreeDocument (pExternalDoc[extDocNum]);
-                                                         pExternalDoc[extDocNum] = NULL;
-                                                      }
-                                                 }
-                                            }
-                                       }
-                               pSRule = &pRef->RdElement->ElStructSchema->SsRule[pRef->RdElement->ElTypeNumber - 1];
-                            }
-                          /* inclusion d'un document externe */
-                          CopyIncludedElem (pRef->RdElement, pDoc);
-
-                          /* Envoyer le message post de TteElemFetchInclude */
-                          pSource = ReferredElement (pRef,
-                                                &docIdent,
-                                                &pSourceDoc);
-
-                          notifyEl.event = TteElemFetchInclude;
-                          notifyEl.target = (Element) pSource;
-                          if (docIdent[0] == EOS)
-                               notifyEl.targetdocument = (Document) IdentDocument (pDoc);
-                          else if (pSourceDoc != NULL)
-                               notifyEl.targetdocument = (Document) IdentDocument (pSourceDoc);
-                          else
-                               notifyEl.targetdocument = (Document) 0;
-                          notifyEl.element = (Element) pRef->RdElement;
-                          notifyEl.document = (Document) IdentDocument (pDoc);
-
-                          /* Ici notifyEl.target et notifyEl.targetdocument
-                             sont differents de NULL si loadExternalDoc == TRUE.
-                             Dans le cas ou la cible (source) d'une
-                             inclusion n'est pas dans le meme document que l'inclusion,
-                             le document externe a ete ouvert temporairement. */
-
-                          CallEventType ((NotifyEvent *) & notifyEl, FALSE);
-                       } 
-                  }
-             pRef = pRef->RdNext;
-             /* passe a la reference suivante */
-          }
-        pRefD = pRefD->ReNext;
-        /* passe au descripteur d'element reference' suivant */
-     }
-
-   /* on decharge les documents externes qui ont ete charge's */
-   /* pour copier des elements inclus */
-   if (loadExternalDoc)
-      for (extDocNum = 0; extDocNum < MAX_EXT_DOC; extDocNum++)
-         if (pExternalDoc[extDocNum] != NULL)
-           {
-              DeleteAllTrees (pExternalDoc[extDocNum]);
-              FreeDocumentSchemas (pExternalDoc[extDocNum]);
-              /* cherche le document dans la table */
-              /* des documents */
-              d = 0;
-              while ( (LoadedDocument[d] != pExternalDoc[extDocNum]) &&
-                      (d < MAX_DOCUMENTS - 1) )
-                 d++;
-              /* libere l'entree de la table des documents */
-              if (LoadedDocument[d] == pExternalDoc[extDocNum])
-                 LoadedDocument[d] = NULL;
-              /* libere tout le document */
-              FreeDocument (pExternalDoc[extDocNum]);
-           }
-
+  /* on decharge les documents externes qui ont ete charge's */
+  /* pour copier des elements inclus */
+  if (loadExternalDoc)
+    for (extDocNum = 0; extDocNum < MAX_EXT_DOC; extDocNum++)
+      if (pExternalDoc[extDocNum] != NULL)
+	{
+	  DeleteAllTrees (pExternalDoc[extDocNum]);
+	  FreeDocumentSchemas (pExternalDoc[extDocNum]);
+	  /* cherche le document dans la table */
+	  /* des documents */
+	  d = 0;
+	  while (LoadedDocument[d] != pExternalDoc[extDocNum] &&
+		 d < MAX_DOCUMENTS - 1)
+	    d++;
+	  /* libere l'entree de la table des documents */
+	  if (LoadedDocument[d] == pExternalDoc[extDocNum])
+	    LoadedDocument[d] = NULL;
+	  /* libere tout le document */
+	  FreeDocument (pExternalDoc[extDocNum]);
+	}
 }
 

@@ -47,9 +47,14 @@ extern void CreateMN ( Document document,
                        View view );
 extern void CreateMO ( Document document,
                        View view );
+extern void MathSelectionChanged ( NotifyElement * event );
 extern void InitMathML ( void );
 extern void CreateMathEntity ( Document document,
                                View view );
+extern void CreateInvisibleTimes ( Document document,
+                                   View view );
+extern void CreateApplyFunction ( Document document,
+                                  View view );
 extern void SetMathCharFont ( Document doc,
                               int attribute );
 extern void MtextCreated ( NotifyElement *event );
@@ -76,6 +81,7 @@ extern ThotBool MathAttrBackgroundDelete ( NotifyAttribute *event );
 extern void AttrStretchyChanged ( NotifyAttribute *event );
 extern void AttrSpacingCreated ( NotifyAttribute *event );
 extern ThotBool AttrSpacingDelete ( NotifyAttribute *event );
+extern ThotBool AttrLinethicknessDelete ( NotifyAttribute *event );
 extern void AttrBevelledChanged ( NotifyAttribute *event );
 extern void AttrScriptlevelCreated ( NotifyAttribute *event );
 extern ThotBool AttrScriptlevelDelete ( NotifyAttribute *event );
@@ -84,6 +90,7 @@ extern void FencedSeparatorModified ( NotifyOnTarget *event );
 extern void AttrSeparatorsChanged ( NotifyAttribute *event );
 extern void AttrScriptShiftCreated ( NotifyAttribute *event );
 extern ThotBool AttrScriptShiftDelete ( NotifyAttribute *event );
+
 #else /* __STDC__ */
 
 extern void AddMathButton (/* Document doc,
@@ -127,9 +134,14 @@ extern void CreateMN (/* Document document,
                          View view */);
 extern void CreateMO (/* Document document,
                          View view */);
+extern void MathSelectionChanged (/* NotifyElement * event */);
 extern void InitMathML (/* void */);
 extern void CreateMathEntity (/* Document document,
                                  View view */);
+extern void CreateInvisibleTimes (/* Document document,
+                                     View view */);
+extern void CreateApplyFunction (/* Document document,
+                                    View view */);
 extern void SetMathCharFont (/* Document doc,
                                 int attribute */);
 extern void MtextCreated (/* NotifyElement *event */);
@@ -156,6 +168,7 @@ extern ThotBool MathAttrBackgroundDelete (/* NotifyAttribute *event */);
 extern void AttrStretchyChanged (/* NotifyAttribute *event */);
 extern void AttrSpacingCreated (/* NotifyAttribute *event */);
 extern ThotBool AttrSpacingDelete (/* NotifyAttribute *event */);
+extern ThotBool AttrLinethicknessDelete (/* NotifyAttribute *event */);
 extern void AttrBevelledChanged (/* NotifyAttribute *event */);
 extern void AttrScriptlevelCreated (/* NotifyAttribute *event */);
 extern ThotBool AttrScriptlevelDelete (/* NotifyAttribute *event */);

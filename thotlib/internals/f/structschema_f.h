@@ -6,7 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void CreateDocument ( PtrDocument * pDoc );
+extern void CreateDocument ( PtrDocument *pDoc,
+                             Document *document );
 extern void GetSRuleFromName ( int *typeNum,
                                PtrSSchema * pSS,
                                Name typeName,
@@ -115,7 +116,8 @@ extern ThotBool CanSplitElement ( PtrElement firstEl,
 
 #else /* __STDC__ */
 
-extern void CreateDocument (/* PtrDocument * pDoc */);
+extern void CreateDocument (/* PtrDocument *pDoc,
+                               Document *document */);
 extern void GetSRuleFromName (/* int *typeNum,
                                  PtrSSchema * pSS,
                                  Name typeName,

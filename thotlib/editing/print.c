@@ -2523,39 +2523,40 @@ static void         LoadReferedDocuments (pDoc)
 PtrDocument         pDoc;
 #endif /* __STDC__ */
 {
-   PtrReferredDescr    pRefD;
-   PtrDocument         pDocRef;
-   int                 doc;
-   ThotBool            found;
+  PtrReferredDescr    pRefD;
+  PtrDocument         pDocRef;
+  int                 doc;
+  ThotBool            found;
 
-   pRefD = pDoc->DocReferredEl;
-   if (pRefD != NULL)
+  pRefD = pDoc->DocReferredEl;
+  if (pRefD != NULL)
+    pRefD = pRefD->ReNext;
+  /* cherche tous les descripteurs d'elements reference's externes */
+  while (pRefD != NULL)
+    {
+      if (pRefD->ReExternalRef)
+	/* c'est un descripteur d'element reference' externe */
+	{
+	  /* le document contenant cet element externe est-il charge'? */
+	  found = FALSE;
+	  for (doc = 0; doc < MAX_DOCUMENTS && !found; doc++)
+	    if (LoadedDocument[doc] != NULL)
+	      if (SameDocIdent (LoadedDocument[doc]->DocIdent, pRefD->ReExtDocument))
+		found = TRUE;
+	  if (!found)
+	    /* le document reference' n'est pas charge', on le charge */
+	    {
+	      doc = 0;
+	      CreateDocument (&pDocRef, &doc);
+	      if (pDocRef != NULL)
+		{
+		  CopyDocIdent (&pDocRef->DocIdent, pRefD->ReExtDocument);
+		  OpenDocument (TEXT(""), pDocRef, TRUE, FALSE, NULL, FALSE, FALSE);
+		}
+	    }
+	}
       pRefD = pRefD->ReNext;
-   /* cherche tous les descripteurs d'elements reference's externes */
-   while (pRefD != NULL)
-     {
-	if (pRefD->ReExternalRef)
-	   /* c'est un descripteur d'element reference' externe */
-	  {
-	     /* le document contenant cet element externe est-il charge'? */
-	     found = FALSE;
-	     for (doc = 0; doc < MAX_DOCUMENTS && !found; doc++)
-		if (LoadedDocument[doc] != NULL)
-		   if (SameDocIdent (LoadedDocument[doc]->DocIdent, pRefD->ReExtDocument))
-		      found = TRUE;
-	     if (!found)
-		/* le document reference' n'est pas charge', on le charge */
-	       {
-		  CreateDocument (&pDocRef);
-		  if (pDocRef != NULL)
-		    {
-		       CopyDocIdent (&pDocRef->DocIdent, pRefD->ReExtDocument);
-		       OpenDocument (TEXT(""), pDocRef, TRUE, FALSE, NULL, FALSE, FALSE);
-		    }
-	       }
-	  }
-	pRefD = pRefD->ReNext;
-     }
+    }
 }
 
 		    
@@ -2905,7 +2906,8 @@ char              **argv;
    InitPictureHandlers (TRUE);
 
    /* initialise un contexte de document */
-   CreateDocument (&TheDoc);
+   i = 0;
+   CreateDocument (&TheDoc, &i);
 
    /* load the document */
    if (TheDoc != NULL)

@@ -38,8 +38,6 @@ extern void SetIntVertStretchAttr ( Element el,
 extern void CheckMTable ( Element elMTABLE,
                           Document doc,
                           ThotBool placeholder );
-extern void SetMcharContent ( Element el,
-                              Document doc );
 extern void SetFontstyleAttr ( Element el,
                                Document doc );
 extern void SetIntAddSpaceAttr ( Element el,
@@ -49,7 +47,7 @@ extern void ChangeTypeOfElement ( Element elem,
                                   int newTypeNum );
 extern ThotBool ChildOfMRowOrInferred ( Element el );
 extern void CheckFence ( Element el,
-			 Document doc );
+                         Document doc );
 extern void CreateFencedSeparators ( Element fencedExpression,
                                      Document doc,
                                      ThotBool record );
@@ -117,8 +115,6 @@ extern void SetIntVertStretchAttr (/* Element el,
 extern void CheckMTable (/* Element elMTABLE,
                             Document doc,
                             ThotBool placeholder */);
-extern void SetMcharContent (/* Element el,
-                                Document doc */);
 extern void SetFontstyleAttr (/* Element el,
                                  Document doc */);
 extern void SetIntAddSpaceAttr (/* Element el,
@@ -128,7 +124,7 @@ extern void ChangeTypeOfElement (/* Element elem,
                                     int newTypeNum */);
 extern ThotBool ChildOfMRowOrInferred (/* Element el */);
 extern void CheckFence (/* Element el,
-			   Document doc */);
+                           Document doc */);
 extern void CreateFencedSeparators (/* Element fencedExpression,
                                        Document doc,
                                        ThotBool record */);

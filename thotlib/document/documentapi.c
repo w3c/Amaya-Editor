@@ -162,52 +162,51 @@ STRING              documentName;
 int                 accessMode;
 #endif /* __STDC__ */
 {
-   PtrDocument         pDoc;
-   Document            document;
-   int                 lg;
-   ThotBool            ok;
+  PtrDocument         pDoc;
+  Document            document;
+  int                 lg;
+  ThotBool            ok;
 
-   UserErrorCode = 0;
-   document = 0;
-   /* initializes the document context */
-   CreateDocument (&pDoc);
-   if (pDoc == NULL)
-      /* too many opened documents */
+  UserErrorCode = 0;
+  document = 0;
+  /* initializes the document context */
+  CreateDocument (&pDoc, &document);
+  if (pDoc == NULL)
+    /* too many opened documents */
      TtaError (ERR_too_many_documents);
-   else
-     {
-	lg = ustrlen (documentName);
-	if (lg >= MAX_NAME_LENGTH)
-	   TtaError (ERR_string_too_long);
-	else
-	  {
-	     ustrncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
-	     pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
+  else
+    {
+      lg = ustrlen (documentName);
+      if (lg >= MAX_NAME_LENGTH)
+	TtaError (ERR_string_too_long);
+      else
+	{
+	  ustrncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
+	  pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
 	     /* suppresses the .PIV suffix if found */
-	     if (lg > 4)
-		if (ustrcmp (&(pDoc->DocDName[lg - 4]), TEXT(".PIV")) == 0)
-		   pDoc->DocDName[lg - 4] = EOS;
-	     GetDocIdent (&pDoc->DocIdent, pDoc->DocDName);
-	     ustrncpy (pDoc->DocDirectory, DocumentPath, MAX_PATH);
-	     ok = OpenDocument (pDoc->DocDName, pDoc, TRUE, FALSE, NULL,
-				FALSE, TRUE);
-	     if (!ok)
-		/* acces failure to an objectpivot */
-	       {
-		  UnloadDocument (&pDoc);
-		  TtaError (ERR_cannot_open_pivot_file);
+	  if (lg > 4)
+	    if (ustrcmp (&(pDoc->DocDName[lg - 4]), TEXT(".PIV")) == 0)
+	      pDoc->DocDName[lg - 4] = EOS;
+	  GetDocIdent (&pDoc->DocIdent, pDoc->DocDName);
+	  ustrncpy (pDoc->DocDirectory, DocumentPath, MAX_PATH);
+	  ok = OpenDocument (pDoc->DocDName, pDoc, TRUE, FALSE, NULL,
+			     FALSE, TRUE);
+	  if (!ok)
+	    /* acces failure to an objectpivot */
+	    {
+	      UnloadDocument (&pDoc);
+	      TtaError (ERR_cannot_open_pivot_file);
+	    }
+	  else
+	    {
+	      /* keep the actual schema path into the document context */
+		 ustrncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
+		 if (!pDoc->DocReadOnly)
+		   pDoc->DocReadOnly = (accessMode == 0);
 	       }
-	     else
-	       {
-		  /* keep the actual schema path into the document context */
-		  ustrncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
-		  document = IdentDocument (pDoc);
-		  if (!pDoc->DocReadOnly)
-		     pDoc->DocReadOnly = (accessMode == 0);
-	       }
-	  }
-     }
-   return document;
+	}
+    }
+  return document;
 }
 
 /*----------------------------------------------------------------------
@@ -1354,18 +1353,13 @@ SSchema             schema;
 
    Return value:
    name of the associated presentation schema.
-
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 CHAR_T*              TtaGetPSchemaName (SSchema schema)
-
 #else  /* __STDC__ */
 CHAR_T*              TtaGetPSchemaName (schema)
 SSchema             schema;
-
 #endif /* __STDC__ */
-
 {
    UserErrorCode = 0;
    if (schema == NULL)
@@ -1380,19 +1374,18 @@ SSchema             schema;
    return ISObuffer;
 }
 
-/* ChSchStruct recursively searches the schema which name is "name" within
-   nature schema and extension schema used by pSS. It returns a pointer
-   which references this schema or NULL if not found. */
+/*----------------------------------------------------------------------
+  ChSchStruct recursively searches the schema which name is "name" within
+  nature schema and extension schema used by pSS. It returns a pointer
+  which references this schema or NULL if not found.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static SSchema      ChSchStruct (PtrSSchema pSS, CHAR_T* name)
-
 #else  /* __STDC__ */
 static SSchema      ChSchStruct (pSS, name)
 PtrSSchema          pSS;
 CHAR_T*             name;
-
 #endif /* __STDC__ */
-
 {
    int                 nRegle;
    SSchema             ret;

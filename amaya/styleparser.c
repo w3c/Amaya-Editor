@@ -2031,25 +2031,19 @@ ThotBool            isHTML;
     ;
   else
     {
-      ptr = cssRule;
-      cssRule = ParseCSSFontStyle (element, tsch, context, cssRule, css, isHTML);
-      if (ptr == cssRule)
-	cssRule = ParseCSSFontVariant (element, tsch, context, cssRule, css, isHTML);
-      if (ptr == cssRule)
-	cssRule = ParseCSSFontWeight (element, tsch, context, cssRule, css, isHTML);
-      cssRule = ParseCSSFontSize (element, tsch, context, cssRule, css, isHTML);
-      if (*cssRule == TEXT('/'))
+      while (*cssRule != TEXT(';') && *cssRule != WC_EOS && *cssRule != TEXT(','))
 	{
-	  cssRule++;
-	  SkipWCBlanksAndComments (cssRule);
-	  cssRule = SkipWord (cssRule);
-	}
-      cssRule = ParseCSSFontFamily (element, tsch, context, cssRule, css, isHTML);
-      cssRule = SkipWCBlanksAndComments (cssRule);
-      while (*cssRule != TEXT(';') && *cssRule != WC_EOS)
-	{
-	  /* now skip remainding info */
-	  cssRule++;
+	  ptr = cssRule;
+	  cssRule = ParseCSSFontStyle (element, tsch, context, cssRule, css, isHTML);
+	  if (ptr == cssRule)
+	    cssRule = ParseCSSFontVariant (element, tsch, context, cssRule, css, isHTML);
+	  if (ptr == cssRule)
+	    cssRule = ParseCSSFontWeight (element, tsch, context, cssRule, css, isHTML);
+	  if (ptr == cssRule)
+	    cssRule = ParseCSSFontSize (element, tsch, context, cssRule, css, isHTML);
+	  if (ptr == cssRule)
+	    cssRule = ParseCSSFontFamily (element, tsch, context, cssRule, css, isHTML);
+	  cssRule = SkipWCBlanksAndComments (cssRule);
 	}
     }
   return (cssRule);

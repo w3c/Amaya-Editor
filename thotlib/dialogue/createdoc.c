@@ -75,6 +75,7 @@ STRING              data;
 #endif /* __STDC__ */
 {
    PtrDocument         pDoc;
+   int                i;
 
    if ((int) data == 0)
       /* reprends le dialogue courant */
@@ -86,7 +87,7 @@ STRING              data;
 	     /* confirme la creation */
 	     {
 		/* acquiert un contexte de document */
-		CreateDocument (&pDoc);
+		CreateDocument (&pDoc, &i);
 		if (pDoc != NULL)
 		   /* cree un document dans ce contexte */
 		   NewDocument (&pDoc, ClassDocToCreate, NameDocToCreate,

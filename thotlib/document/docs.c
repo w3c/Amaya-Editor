@@ -153,7 +153,7 @@ PtrDocument         pDoc;
 
 
 /*----------------------------------------------------------------------
-   TtaNewDocument
+   TtaInitDocument
 
    Creates the internal representation of a new document according to a given
    structure schema. No file is created immediately, but the backup files
@@ -166,25 +166,25 @@ PtrDocument         pDoc;
    documentName: name of the document to be created (maximum length 19
    characters). The directory name is not part of this parameter
    (see TtaSetDocumentPath).
+   document: the requested document or 0.
 
    Return value:
    the document that has been created or 0 if the document has not
    been created.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Document            TtaNewDocument (CHAR_T* structureSchema, CHAR_T* documentName)
+Document            TtaInitDocument (CHAR_T* structureSchema, CHAR_T* documentName, Document document)
 #else  /* __STDC__ */
-Document            TtaNewDocument (structureSchema, documentName)
+Document            TtaInitDocument (structureSchema, documentName, document)
 CHAR_T*             structureSchema;
 CHAR_T*             documentName;
+Document            document;
 #endif /* __STDC__ */
 { 
   PtrDocument         pDoc;
-  Document            document;
   int                 i;
   
   UserErrorCode = 0;
-  document = 0;
   pDoc = NULL;
   if (documentName[0] == WC_EOS)
     /* No name provided by the user */
@@ -192,7 +192,7 @@ CHAR_T*             documentName;
   else
     {
       /* initializes a document context */
-      CreateDocument (&pDoc);
+      CreateDocument (&pDoc, &document);
       if (pDoc == NULL)
 	/* No free context document */
 	TtaError (ERR_too_many_documents);
@@ -252,17 +252,48 @@ CHAR_T*             documentName;
 		  /* if path, keep only the first directory */
 		  i = 1;
 		  while (pDoc->DocDirectory[i - 1] != WC_EOS &&
-                 pDoc->DocDirectory[i - 1] != WC_PATH_SEP && i < MAX_PATH)
-                i++;
-          pDoc->DocDirectory[i - 1] = WC_EOS;
+			 pDoc->DocDirectory[i - 1] != WC_PATH_SEP &&
+			 i < MAX_PATH)
+		    i++;
+		  pDoc->DocDirectory[i - 1] = WC_EOS;
 		  /* Read-Write document */
 		  pDoc->DocReadOnly = FALSE;
-		  document = IdentDocument (pDoc);
 		}
 	    }
 	}
     }
   return document;
+}
+
+
+/*----------------------------------------------------------------------
+   TtaNewDocument
+
+   Creates the internal representation of a new document according to a given
+   structure schema. No file is created immediately, but the backup files
+   (.BAK and .SAV) and the document file (.PIV see TtaNewDocument) will be created
+   in the first directory of the document path (see TtaSetDocumentPath).
+
+   Parameters:
+   structureSchema: name of the structure schema that defines the type of
+   document to be created.
+   documentName: name of the document to be created (maximum length 19
+   characters). The directory name is not part of this parameter
+   (see TtaSetDocumentPath).
+
+   Return value:
+   the document that has been created or 0 if the document has not
+   been created.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+Document            TtaNewDocument (CHAR_T* structureSchema, CHAR_T* documentName)
+#else  /* __STDC__ */
+Document            TtaNewDocument (structureSchema, documentName)
+CHAR_T*             structureSchema;
+CHAR_T*             documentName;
+#endif /* __STDC__ */
+{
+  TtaInitDocument (structureSchema, documentName, 0);
 }
 
 
@@ -282,16 +313,16 @@ STRING              fileName;
 #endif /* __STDC__ */
 {
    PathBuffer          directoryBuffer;
+   CHAR_T              URL_DIR_SEP;
    int                 i, j, len;
    ThotBool            ok;
-   CHAR_T                URL_DIR_SEP;
 
    if (fileName && ustrchr (fileName, TEXT('/')))
-	  URL_DIR_SEP = TEXT('/');
+     URL_DIR_SEP = TEXT('/');
    else 
-	   URL_DIR_SEP = DIR_SEP;
+     URL_DIR_SEP = DIR_SEP;
 
-   CreateDocument (pDoc);
+   CreateDocument (pDoc, &i);
    if (pDoc != NULL)
      {
        directoryBuffer[0] = EOS;

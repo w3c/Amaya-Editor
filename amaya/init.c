@@ -1573,9 +1573,10 @@ ThotBool     readOnly;
 {
   View                mainView, structView, altView, linksView, tocView;
   Document            old_doc;
-  int                 x, y, w, h;
-  ThotBool            isOpen, reinitialized;
   CHAR_T             *tmp;
+  int                 x, y, w, h;
+  int                 requested_doc;
+  ThotBool            isOpen, reinitialized;
 #ifdef _WINDOWS
 
   Window_Curs = IDC_WINCURSOR;
@@ -1620,28 +1621,33 @@ ThotBool     readOnly;
 	UpdateContextSensitiveMenus (doc);
 	TtaFreeView (doc, 1);
 	isOpen = TRUE;
+	/* use the same document identifier */
+	requested_doc = doc;
 	old_doc = 0;	/* the previous document doesn't exist any more */
 	/* The toolkit has to do its job now */
 	TtaHandlePendingEvents ();
      }
    else
-      /* open the new document in a fresh window */
-      isOpen = FALSE;
+     {
+       /* open the new document in a fresh window */
+       isOpen = FALSE;
+       requested_doc = 0;
+     }
 
    /* open the document */
    if (docType == docText ||
        docType == docCSS ||
        docType == docSource ||
        docType == docLog)
-     doc = TtaNewDocument (TEXT("TextFile"), docname);
+     doc = TtaInitDocument (TEXT("TextFile"), docname, requested_doc);
    else if (docType == docAnnot)
-     doc = TtaNewDocument (TEXT("Annot"), docname);
+     doc = TtaInitDocument (TEXT("Annot"), docname, requested_doc);
    else if (docType == docSVG)
-     doc = TtaNewDocument (TEXT("GraphML"), docname);
+     doc = TtaInitDocument (TEXT("GraphML"), docname, requested_doc);
    else if (docType == docMath)
-     doc = TtaNewDocument (TEXT("MathML"), docname);
+     doc = TtaInitDocument (TEXT("MathML"), docname, requested_doc);
    else
-     doc = TtaNewDocument (TEXT("HTML"), docname);
+     doc = TtaInitDocument (TEXT("HTML"), docname, requested_doc);
    if (doc >= DocumentTableLength)
      {
        TtaCloseDocument (doc);

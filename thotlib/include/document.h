@@ -34,6 +34,29 @@ typedef int        *SSchema;
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+
+/*----------------------------------------------------------------------
+   TtaInitDocument
+
+   Creates the internal representation of a new document according to a given
+   structure schema. No file is created immediately, but the backup files
+   (.BAK and .SAV) and the document file (.PIV see TtaNewDocument) will be created
+   in the first directory of the document path (see TtaSetDocumentPath).
+
+   Parameters:
+   structureSchema: name of the structure schema that defines the type of
+   document to be created.
+   documentName: name of the document to be created (maximum length 19
+   characters). The directory name is not part of this parameter
+   (see TtaSetDocumentPath).
+   document: the requested document or 0.
+
+   Return value:
+   the document that has been created or 0 if the document has not
+   been created.
+  ----------------------------------------------------------------------*/
+extern Document     TtaInitDocument (CHAR_T* structureSchema, CHAR_T* documentName, Document document);
+
 /*----------------------------------------------------------------------
    TtaNewDocument
 
@@ -756,6 +779,7 @@ extern void  TtaSetDocumentCharset (Document document,
 
 #else  /* __STDC__ */
 
+extern Document     TtaInitDocument (/*CHAR_T* structureSchema, CHAR_T* documentName, Document document*/);
 extern Document     TtaNewDocument ( /* CHAR_T* structureSchema, CHAR_T* documentName */ );
 extern Document     TtaOpenDocument ( /* char *documentName, int accessMode */ );
 extern void         TtaSaveDocument ( /* Document document, char *documentName */ );

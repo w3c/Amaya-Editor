@@ -65,49 +65,43 @@
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Document            TtaAllocateDocument (STRING documentName,
-                                         STRING documentIdentifier,
-                                         STRING documentSchemasPath)
-
+Document        TtaAllocateDocument (STRING documentName,
+				     STRING documentIdentifier,
+				     STRING documentSchemasPath)
 #else  /* __STDC__ */
-Document            TtaAllocateDocument (documentName,
-                                         documentIdentifier,
-                                         documentSchemasPath)
-STRING              documentName;
-STRING              documentIdentifier;
-STRING              documentSchemasPath;
-
+Document        TtaAllocateDocument (documentName,
+				     documentIdentifier,
+				     documentSchemasPath)
+STRING          documentName;
+STRING          documentIdentifier;
+STRING          documentSchemasPath;
 #endif /* __STDC__ */
-
 {
-   Document            doc;
-   PtrDocument         pDoc;
+  Document            doc;
+  PtrDocument         pDoc;
 
-   UserErrorCode = 0;
-   pDoc = NULL;
-   doc = 0;
-   CreateDocument (&pDoc);
-   if (pDoc == NULL)
-      TtaError (ERR_too_many_documents);
-   else
-     {
-	pDoc->DocSSchema = NULL;
-	pDoc->DocRootElement = NULL;
-	pDoc->DocLabels = NULL;
-	/* on donne son nom au document */
-	ustrncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
-	pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
-	/* on acquiert un identificateur pour le document */
-	GetDocIdent (&pDoc->DocIdent, documentIdentifier);
-        /* on stocke le path de schemas du document */
-        ustrncpy (pDoc->DocSchemasPath,
-                 documentSchemasPath,
-                 MAX_PATH);
-	/* document en lecture-ecriture */
-	pDoc->DocReadOnly = FALSE;
-	doc = IdentDocument (pDoc);
-     }
-   return doc;
+  UserErrorCode = 0;
+  pDoc = NULL;
+  doc = 0;
+  CreateDocument (&pDoc, &doc);
+  if (pDoc == NULL)
+    TtaError (ERR_too_many_documents);
+  else
+    {
+      pDoc->DocSSchema = NULL;
+      pDoc->DocRootElement = NULL;
+      pDoc->DocLabels = NULL;
+      /* on donne son nom au document */
+      ustrncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
+      pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
+      /* on acquiert un identificateur pour le document */
+      GetDocIdent (&pDoc->DocIdent, documentIdentifier);
+      /* on stocke le path de schemas du document */
+      ustrncpy (pDoc->DocSchemasPath, documentSchemasPath, MAX_PATH);
+      /* document en lecture-ecriture */
+      pDoc->DocReadOnly = FALSE;
+    }
+  return doc;
 }
 
 

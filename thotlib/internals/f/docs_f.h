@@ -6,6 +6,9 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern Document TtaInitDocument ( CHAR_T* structureSchema,
+                                  CHAR_T* documentName,
+                                  Document document );
 extern Document TtaNewDocument ( CHAR_T* structureSchema,
                                  CHAR_T* documentName );
 extern void LoadDocument ( PtrDocument * pDoc,
@@ -27,6 +30,9 @@ extern void BackupOnFatalErrorLoadResources ( void );
 
 #else /* __STDC__ */
 
+extern Document TtaInitDocument (/* CHAR_T* structureSchema,
+                                    CHAR_T* documentName,
+                                    Document document */);
 extern Document TtaNewDocument (/* CHAR_T* structureSchema,
                                    CHAR_T* documentName */);
 extern void LoadDocument (/* PtrDocument * pDoc,
