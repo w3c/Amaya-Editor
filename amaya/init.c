@@ -1969,8 +1969,6 @@ static void BrowserForm (Document doc, View view, char *urlname)
        strcat (s, DocumentName);
      }
 
-   if (LinkAsXmlCSS || LinkAsCSS)
-     strcpy (ScanFilter, "*.css");
    TtaListDirectory (DirectoryName, BaseDialog + FileBrowserForm,
 		     TtaGetMessage (LIB, TMSG_DOC_DIR),
 		     BaseDialog + BrowserDirSelect, ScanFilter,
@@ -5797,6 +5795,10 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	/* Browse button */
 	{
 #ifndef _WINDOWS
+	  if (LinkAsXmlCSS || LinkAsCSS)
+	    strcpy (ScanFilter, "*.css");
+	  else if (!strcmp (ScanFilter, "*.css"))
+	    strcpy (ScanFilter, "*");
 	  WidgetParent = HrefAttrBrowser;
 	  BrowserForm (AttrHREFdocument, 1, &AttrHREFvalue[0]);
 #endif /* !_WINDOWS */

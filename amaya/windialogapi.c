@@ -60,9 +60,6 @@ extern int         ActiveFrame;
 #define REPEAT_Y              2
 #define NO_REPEAT             3
 
-#define IMG_FILE              1
-#define TEXT_FILE             2
-
 int                WIN_IndentValue;
 int                WIN_OldLineSp;
 int                WIN_NormalLineSpacing;
@@ -284,8 +281,8 @@ LRESULT CALLBACK CSSDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       SetWindowText (GetDlgItem (hwnDlg, IDC_CSSFILES),
 		  TtaGetMessage (AMAYA, AM_CSS_FILE));
       wndCSSList = CreateWindow ("listbox", NULL,
-				 WS_CHILD | WS_VISIBLE | LBS_STANDARD,
-				 5, 10, 300, 120, hwnDlg, (HMENU) 1, 
+				 WS_CHILD | WS_VISIBLE | LBS_STANDARD | WS_VSCROLL | WS_TABSTOP,
+				 5, 5, 310, 120, hwnDlg, (HMENU) 1, 
 				 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE),
 				 NULL);
 
@@ -1118,7 +1115,7 @@ LRESULT CALLBACK MimeTypeDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       
       wndMTlist = CreateWindow ("listbox", NULL,
 				WS_CHILD | WS_VISIBLE | LBS_STANDARD | WS_VSCROLL | WS_TABSTOP,
-				10, 5, 310, 100, hwnDlg, (HMENU) 1, 
+				5, 5, 310, 100, hwnDlg, (HMENU) 1, 
 				(HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
       /* set the font of the window */
       if (newFont)
@@ -3572,15 +3569,13 @@ void       CreateTitleDlgWindow (ThotWindow parent, char *title)
  ------------------------------------------------------------------------*/
 void CreateHRefDlgWindow (ThotWindow parent, char *HRefValue,
 			  int doc_select, int dir_select, int doc_type)
-{  	
+{
   docSelect = doc_select;
   dirSelect = dir_select;
   strcpy (TmpDocName, HRefValue);
     
-  if (doc_type == TEXT_FILE)
-    szFilter = APPFILENAMEFILTER;
-  else if (doc_type == IMG_FILE)
-    szFilter = APPIMAGENAMEFILTER;
+  if (doc_type == docCSS)
+    szFilter = APPCSSNAMEFILTER;
   else 
     szFilter = APPALLFILESFILTER;
 
@@ -3741,11 +3736,8 @@ void CreateOpenImgDlgWindow (ThotWindow parent, char *imgName, int doc_select,
 {  
   docSelect = doc_select;
   dirSelect = dir_select;
-  strcpy ( UrlToOpen, imgName);
-    
-  if (doc_type == TEXT_FILE)
-    szFilter = APPFILENAMEFILTER;
-  else if (doc_type == IMG_FILE)
+  strcpy ( UrlToOpen, imgName);    
+  if (doc_type == docImage)
     szFilter = APPIMAGENAMEFILTER;
   else 
     szFilter = APPALLFILESFILTER;

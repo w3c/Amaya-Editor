@@ -765,8 +765,14 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo,
 	TtaSetDialoguePosition ();
 	TtaShowDialogue (BaseDialog + AttrHREFForm, TRUE);
 #else  /* _WINDOWS */
-    CreateHRefDlgWindow (TtaGetViewFrame (doc, 1), AttrHREFvalue,
-			 DocSelect, DirSelect, 2);
+	if ((LinkAsXmlCSS || LinkAsCSS)
+	  /* select a CSS file */
+	  CreateHRefDlgWindow (TtaGetViewFrame (doc, 1), AttrHREFvalue,
+			       DocSelect, DirSelect, docCSS);
+	else
+	  /* select any file */
+	  CreateHRefDlgWindow (TtaGetViewFrame (doc, 1), AttrHREFvalue,
+			       DocSelect, DirSelect, docText);
 #endif  /* _WINDOWS */
      }
 }

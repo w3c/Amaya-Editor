@@ -740,7 +740,7 @@ char *GetImageURL (Document document, View view)
      return (LastURLImage);
 #else /* _WINDOWS */
    CreateOpenImgDlgWindow (TtaGetViewFrame (document, view), LastURLImage, -1,
-			   -1, 1) ;
+			   -1, docImage);
    return (LastURLImage);
 #endif /* _WINDOWS */
 }
