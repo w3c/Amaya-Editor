@@ -1636,7 +1636,7 @@ Element             parent;
 #endif
 {
    ElementType         parentType, newElType, elType;
-   Element             newEl, ancestor;
+   Element             newEl, ancestor, prev, last, nprev;
    boolean	       ret;
 
    if (parent == NULL)
@@ -1663,10 +1663,38 @@ Element             parent;
 	      newEl = TtaNewElement (theDocument, newElType);
 	      /* insert the new Pseudo_paragraph element */
 	      InsertElement (&newEl);
-	      /* insert the Text element in the tree */
 	      if (newEl != NULL)
 	        {
+	          /* insert the Text element in the tree */
 	          TtaInsertFirstChild (el, newEl, theDocument);
+		  /* if the previous siblings of the new Pseudo_paragraph */
+		  /* element are character-level elements, move them within */
+		  /* the Pseudo_paragraph */
+		  prev = newEl;
+		  TtaPreviousSibling (&prev);
+		  if (prev != NULL)
+		     /* there is at least one previous sibling */
+		     {
+		     last = *el;
+		     while (prev != NULL)
+			{
+			/* get the sibling to be processed next */
+			nprev = prev;
+			TtaPreviousSibling (&nprev);
+		        if (!IsCharacterLevelElement (prev))
+			   /* this sibling is not a character-level element */
+			   /* stop */
+			   nprev = NULL;
+			else
+			   /* move the current sibling */
+		           {
+		           TtaRemoveTree (prev, theDocument);
+		           TtaInsertSibling (prev, last, TRUE, theDocument);
+			   last = prev;
+		           }
+			prev = nprev;
+			}
+		     }
 	          BlockInCharLevelElem (newEl);
 		  ret = TRUE;
 	        }
