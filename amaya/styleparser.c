@@ -4824,7 +4824,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 		   words, one for each class it matches */
 		attrmatch[0] = Txtword;
 		specificity += 10;
-	        if (!strcmp (names[0], "*"))
+	        if (names[0] && !strcmp (names[0], "*"))
 		  names[0] = NULL;
 	      }
 	  }
@@ -4854,7 +4854,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 		else
 		  specificity += 10;
 		pseudoclasses[0]= deb;
-		if (!strcmp (names[0], "*"))
+		if (names[0] && !strcmp (names[0], "*"))
 		  names[0] = NULL;
 	      }
 	  }
@@ -4877,7 +4877,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	      {
 		ids[0] = deb;
 		specificity += 100;
-		if (!strcmp (names[0], "*"))
+		if (names[0] && !strcmp (names[0], "*"))
 		  names[0] = NULL;
 	      }
 	  }
@@ -4973,7 +4973,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	    else
 	      {
 	      selector++;
-	      if (!strcmp (names[0], "*"))
+	      if (names[0] && !strcmp (names[0], "*"))
 		names[0] = NULL;
 	      }
 	  }
