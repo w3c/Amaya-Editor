@@ -18,26 +18,31 @@ class InitConfirmDlgWX : public wxDialog
 
 public: 
     
-    // Constructor.
-    InitConfirmDlgWX( wxWindow* parent, const wxString & title, const wxString & label );
+  // Constructor.
+  InitConfirmDlgWX( wxWindow* parent,
+		    const wxString & title,
+		    const wxString & extrabutton,
+		    const wxString & confirmbutton,
+		    const wxString & label );
     
-    // Destructor.                  
-    ~InitConfirmDlgWX();
+  // Destructor.                  
+  ~InitConfirmDlgWX();
 
 private:
     // Override base class functions of a wxDialog.
-    void OnOK( wxCommandEvent &event );
-    void OnCancel( wxCommandEvent& event );
+  void OnExtraButton( wxCommandEvent& event );
+  void OnConfirmButton( wxCommandEvent& event );
+  void OnCancelButton( wxCommandEvent& event );
 
-    void OnInit( wxInitDialogEvent& event );
-    void OnSize( wxSizeEvent& event );
-
-    // Any class wishing to process wxWindows events must use this macro
-    DECLARE_EVENT_TABLE()
-
+  // Any class wishing to process wxWindows events must use this macro
+  DECLARE_EVENT_TABLE()
+    
 private:
       wxString m_Label;
       wxString m_Title;
+      wxString m_ExtraButton;
+      wxString m_ConfirmButton;
+      wxString m_CancelButton;
 };
 
 #endif  //__INITCONFIRMDLGWX_H__

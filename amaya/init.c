@@ -1905,7 +1905,7 @@ void ConfirmError (Document document, View view, char *label,
 			       extrabutton, confirmbutton, label);
 #endif /* _WINGUI */
 #ifdef _WX
-  CreateInitConfirmDlgWX (TtaGetViewFrame (document, view), NULL, label);
+  CreateInitConfirmDlgWX (TtaGetViewFrame (document, view), NULL, extrabutton, confirmbutton, label);
 #endif /* _WX */
 }
 
@@ -1987,7 +1987,7 @@ void InitConfirm (Document document, View view, char *label)
   CreateInitConfirmDlgWindow (TtaGetViewFrame (document, view), NULL, NULL, label);
 #endif /* _WINGUI */
 #ifdef _WX
-  CreateInitConfirmDlgWX (TtaGetViewFrame (document, view), NULL, label);
+  CreateInitConfirmDlgWX (TtaGetViewFrame (document, view), NULL, NULL, NULL, label);
 #endif /* _WX */
 }
 

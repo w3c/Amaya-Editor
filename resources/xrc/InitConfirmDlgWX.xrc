@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
   <object class="wxDialog" name="InitConfirmDlgWX">
     <title></title>
@@ -27,15 +27,22 @@
           <object class="sizeritem">
             <flag>wxALL</flag>
             <border>5</border>
-            <object class="wxButton" name="wxID_OK">
-              <label>OK</label>
+            <object class="wxButton" name="wxID_EXTRABUTTON">
+              <label>EXTRABUTTON</label>
             </object>
           </object>
           <object class="sizeritem">
             <flag>wxALL</flag>
             <border>5</border>
-            <object class="wxButton" name="wxID_CANCEL">
-              <label>Cancel</label>
+            <object class="wxButton" name="wxID_CONFIRMBUTTON">
+              <label>CONFIRMBUTTON</label>
+            </object>
+          </object>
+          <object class="sizeritem">
+            <flag>wxALL</flag>
+            <border>5</border>
+            <object class="wxButton" name="wxID_CANCELBUTTON">
+              <label>CANCELBUTTON</label>
             </object>
           </object>
         </object>

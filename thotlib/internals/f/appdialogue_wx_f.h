@@ -40,6 +40,7 @@ extern int TtaAttachPanel ( int window_id );
 extern ThotBool TtaDetachPanel ( int panel_id,
                                  int window_id );
 extern ThotBool TtaFrameIsActive ( int frame_id );
+extern ThotBool TtaFrameIsClosed ( int frame_id );
 extern void TtaInitializeURLBar ( int frame_id,
                                   const char * label,
                                   ThotBool editable,
@@ -85,6 +86,7 @@ extern int TtaAttachPanel ( int window_id );
 extern ThotBool TtaDetachPanel ( int panel_id,
                                    int window_id );
 extern ThotBool TtaFrameIsActive ( int frame_id );
+extern ThotBool TtaFrameIsClosed ( int frame_id );
 extern void TtaInitializeURLBar ( int frame_id,
                                     const char * label,
                                     ThotBool editable,

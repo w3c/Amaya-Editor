@@ -720,6 +720,23 @@ ThotBool TtaFrameIsActive( int frame_id )
 }
 
 /*----------------------------------------------------------------------
+  TtaFrameIsClosed check if the frame is closed or not
+  closed = not current document associated
+  params:
+    + frame_id : frame identifier
+  returns:
+    + true if closed
+  ----------------------------------------------------------------------*/
+ThotBool TtaFrameIsClosed( int frame_id )
+{
+#ifdef _WX
+  return FrameTable[frame_id].FrDoc > 0;
+#else
+  return TRUE;
+#endif /* #ifdef _WX */
+}
+
+/*----------------------------------------------------------------------
   TtaInitializeURLBar initialize urlbar with given parameters
   params:
     + frame_id : frame identifier

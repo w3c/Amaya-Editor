@@ -8,12 +8,16 @@
 
 extern void CreateInitConfirmDlgWX ( ThotWindow parent,
                                      char *title,
+                                     char *extrabutton,
+                                     char *confirmbutton,
                                      char *label );
 
 #else /* __STDC__ */
 
 extern void CreateInitConfirmDlgWX ( ThotWindow parent,
                                        char *title,
+                                       char *extrabutton,
+                                       char *confirmbutton,
                                        char *label );
 
 #endif /* __STDC__ */

@@ -16,30 +16,54 @@
 //-----------------------------------------------------------------------------
 
 BEGIN_EVENT_TABLE(InitConfirmDlgWX, wxDialog)
-  // Note that the ID here isn't a XRCID, it is one of the standard wx ID's.
-  EVT_BUTTON( wxID_OK, InitConfirmDlgWX::OnOK )
-  EVT_BUTTON( wxID_CANCEL, InitConfirmDlgWX::OnCancel )
-//    EVT_INIT_DIALOG( InitConfirmDlgWX::OnInit )
+  EVT_BUTTON( XRCID("wxID_EXTRABUTTON"), InitConfirmDlgWX::OnExtraButton )
+  EVT_BUTTON( XRCID("wxID_CONFIRMBUTTON"), InitConfirmDlgWX::OnConfirmButton )
+  EVT_BUTTON( XRCID("wxID_CANCELBUTTON"), InitConfirmDlgWX::OnCancelButton )
+
   EVT_SIZE( InitConfirmDlgWX::OnSize )
 END_EVENT_TABLE()
 
 //-----------------------------------------------------------------------------
 // Public members
 //-----------------------------------------------------------------------------
-InitConfirmDlgWX::InitConfirmDlgWX(wxWindow* parent, const wxString & title, const wxString & label)
-{    
+InitConfirmDlgWX::InitConfirmDlgWX( wxWindow* parent,
+				    const wxString & title,
+				    const wxString & extrabutton,
+				    const wxString & confirmbutton,
+				    const wxString & label ) : wxDialog()
+{
   wxXmlResource::Get()->LoadDialog(this, parent, wxT("InitConfirmDlgWX"));
-  m_Label = label;
-  m_Title = title;
-    
-  SetTitle( m_Title );
+  m_Label         = label;
+  m_Title         = title;
+  m_ExtraButton   = extrabutton;
+  m_ConfirmButton = confirmbutton;
+  m_CancelButton  = _T("Cancel");
 
-  XRCCTRL(*this, "wxAmayaLabelId", wxStaticText)->SetValidator( wxGenericValidator(&m_Label) );
+  wxLogDebug( _T("InitConfirmDlgWX::InitConfirmDlgWX - title=")+m_Title+
+	      _T("\textrabutton=")+m_ExtraButton+
+	      _T("\tconfirmbutton=")+m_ConfirmButton+
+	      _T("\tlabel=")+m_Label );
+ 
+  // update dialog labels with given ones
+  SetTitle( m_Title );
+  XRCCTRL(*this, "wxAmayaLabelId", wxStaticText)->SetValidator(     wxGenericValidator(&m_Label) );
+  XRCCTRL(*this, "wxID_EXTRABUTTON",   wxButton)->SetLabel( m_ExtraButton );
+  XRCCTRL(*this, "wxID_CONFIRMBUTTON", wxButton)->SetLabel( m_ConfirmButton );
+  XRCCTRL(*this, "wxID_CANCELBUTTON",        wxButton)->SetLabel( m_CancelButton );
+  
+  // now hide unused button (destroy it)
+  if (m_ExtraButton.IsEmpty())
+    XRCCTRL(*this, "wxID_EXTRABUTTON",   wxButton)->Destroy();
+  if (m_ConfirmButton.IsEmpty())
+    XRCCTRL(*this, "wxID_CONFIRMBUTTON",   wxButton)->Destroy();
+  if (m_CancelButton.IsEmpty())
+    XRCCTRL(*this, "wxID_CANCELBUTTON",   wxButton)->Destroy();
+    
 
   // TODO : trouver une facon de redimensionner le dialogue pour qu'il prenne la taille du nouveau label
-  GetSizer()->Fit( this );
-  GetSizer()->SetSizeHints( this );  
-  Layout();
+  //  GetSizer()->Fit( this );
+  //  GetSizer()->SetSizeHints( this );  
+  //  Layout();
   
   SetAutoLayout( TRUE );
 }
@@ -49,18 +73,25 @@ InitConfirmDlgWX::~InitConfirmDlgWX()
 {
 }
 
-void InitConfirmDlgWX::OnOK( wxCommandEvent& event )
+void InitConfirmDlgWX::OnExtraButton( wxCommandEvent& event )
 {
   ThotCallback (BaseDialog + ConfirmForm, INTEGER_DATA, (char*) 1);
-  EndModal( wxID_OK );
+  EndModal( 0 );
 }
 
-void InitConfirmDlgWX::OnCancel( wxCommandEvent& event )
+void InitConfirmDlgWX::OnConfirmButton( wxCommandEvent& event )
+{
+  ThotCallback (BaseDialog + ConfirmForm, INTEGER_DATA, (char*) 2);
+  EndModal( 0 );
+}
+
+void InitConfirmDlgWX::OnCancelButton( wxCommandEvent& event )
 {
   ThotCallback (BaseDialog + ConfirmForm, INTEGER_DATA, (char*) 0); 
-  EndModal( wxID_CANCEL );
+  EndModal( 0 );
 }
 
+#if 0
 void InitConfirmDlgWX::OnSize( wxSizeEvent& event )
 {
   wxLogDebug(_T("InitConfirmDlgWX - OnSize: w=%d h=%d"),
@@ -74,22 +105,6 @@ void InitConfirmDlgWX::OnSize( wxSizeEvent& event )
   //  forward the event to parents
   event.Skip();
 }
-
-/*
-void InitConfirmDlgWX::OnInit( wxInitDialogEvent& event )
-{
-    
-    wxSize s = GetSizer()->CalcMin();
-    wxLogDebug( _T("CalcMin: w=%d h=%d"), s.GetWidth(), s.GetHeight() );
-    wxSize s2 = GetSizer()->GetSize();
-    wxLogDebug( _T("GetSize: w=%d h=%d"), s2.GetWidth(), s2.GetHeight() );
-    
-    GetSizer()->Fit( this );
-    GetSizer()->RecalcSizes();
-    GetSizer()->Layout();
-    Layout();
-    XRCCTRL(*this, "wxID_OK", wxButton)->Layout();
-}
-*/
+#endif /* 0 */
 
 #endif /* _WX */

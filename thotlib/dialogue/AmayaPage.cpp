@@ -495,16 +495,17 @@ void AmayaPage::OnClose(wxCloseEvent& event)
     {
       p_AmayaFrame = m_pTopFrame;
       frame_id     = m_pTopFrame->GetFrameId();
-      //      DetachFrame(1);
+
+      // try to close the frame : the user can choose to close or not with a dialog
       p_AmayaFrame->OnClose( event );
-      /*
-      if ( FrameTable[frame_id].WdFrame != 0)
+      
+      // if the user don't want to close then just reattach the frame
+      if ( TtaFrameIsClosed (frame_id) )
 	{
 	  // if the frame didnt die, just re-attach it
 	  AttachFrame(p_AmayaFrame, 1);
 	  m_IsClosed = FALSE;
 	}
-      */
     }
 
   // Kill bottom frame
@@ -512,16 +513,17 @@ void AmayaPage::OnClose(wxCloseEvent& event)
     { 
       p_AmayaFrame = m_pBottomFrame;
       frame_id     = m_pBottomFrame->GetFrameId();
-      //      DetachFrame(2);
+      // try to close the frame : the user can choose to close or not with a dialog
       p_AmayaFrame->OnClose( event );
-      /*
-      if (FrameTable[frame_id].WdFrame != 0)
+      
+      // if the user don't want to close then just reattach the frame
+      if ( TtaFrameIsClosed (frame_id) )
 	{
 	  // if the frame didnt die, just re-attach it
 	  AttachFrame(p_AmayaFrame, 2);
 	  m_IsClosed = FALSE;
 	}
-      */
+      
     }
 
   // Reactivate the menu bar (nothing is done if the window is goind to die)
