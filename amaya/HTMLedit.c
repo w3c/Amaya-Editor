@@ -900,11 +900,12 @@ ThotBool            createLink;
 		if (first == last && c1 == 0 && cN == 0 && createLink &&
 		    !TtaSameSSchemas (elType.ElSSchema, HTMLSSchema))
 		   /* a single element is selected and it's not a HTML elem
-		      neither a character string */
+		      nor a character string */
 		  {
 		    if (UseLastTarget)
 		      /* points to the last created target */
-		      SetREFattribute (el, doc, TargetDocumentURL, TargetName);
+		      SetREFattribute (first, doc, TargetDocumentURL,
+				       TargetName);
 		    else
 		      /* select the destination */
 		      SelectDestination (doc, first, TRUE);
