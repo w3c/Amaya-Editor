@@ -60,7 +60,7 @@ Element             colhead;
 }
 
 /*----------------------------------------------------------------------
-   SetColumnWidth  computes the value of attribute Column_width    
+   SetColumnWidth  computes the value of attribute Col_width_percent
    for each column of the table whose first Column_head is 
    firstcolhead.                                           
   ----------------------------------------------------------------------*/
@@ -238,7 +238,7 @@ Document            doc;
 	     TtaNextSibling (&group);
 	  }
 	/* the maximum volume of cells in each column is known (attribute */
-	/* IntMaxVol). Compute the relative width (attribute Column_width) */
+	/* IntMaxVol). Compute the relative width (attribute Col_width_percent) */
 	/* of each column */
 	/* compute first the number of columns (nb) and the sum of maximum */
 	/* volumes (total) */
@@ -305,7 +305,7 @@ Document            doc;
 			 }
 		       colwidth = (100 * vol) / total;
 		    }
-		  attrType.AttrTypeNum = HTML_ATTR_Column_width;
+		  attrType.AttrTypeNum = HTML_ATTR_Col_width_percent;
 		  attr = TtaGetAttribute (colhead, attrType);
 		  if (attr != NULL)
 		     TtaSetAttributeValue (attr, colwidth, colhead, doc);

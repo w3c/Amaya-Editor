@@ -13,8 +13,8 @@
 THOTDIR = ..
 THOTSCH = ${THOTDIR}/amaya:${THOTDIR}/schemas
 COMPSCH = ${THOTDIR}/amaya
-COMPSTR = ${THOTDIR}/batch/compilstr
-COMPPRS = ${THOTDIR}/batch/compilprs
+COMPSTR = str
+COMPPRS = prs
 COMPTRA = ${THOTDIR}/batch/compiltra
 
 #

@@ -5591,8 +5591,11 @@ dans des paragraphes s affichent a cote de leur cadre...
 	LineWeight: Border pt;
 	END;
 
- Column_width:
-	Width: Enclosing . Width * Column_width %;
+ Col_width_percent:
+	Width: Enclosing . Width * Col_width_percent %;
+
+ Col_width_pxl:
+	Width: Col_width_pxl px;
 
  Ref_column:
 	BEGIN

@@ -287,8 +287,9 @@ STRUCT
 	? tfoot = LIST OF (Table_row);
 	Table_foot = CONSTANT C_Foot;
 	END;
-  Column_head (ATTR Column_width = INTEGER; IntMaxVol = Integer) =
-	CONSTANT C_Head with Column_width ?= 100;
+  Column_head (ATTR Col_width_percent = INTEGER; Col_width_pxl = INTEGER;
+		    IntMaxVol = Integer) =
+	CONSTANT C_Head with Col_width_percent ?= 100;
   Table_row (ATTR Row_align = Row_left, Row_center, Row_right;
 		  Row_valign = Row_top, Row_middle, Row_bottom, Row_baseline) =
 	LIST OF (Table_cell);
@@ -380,7 +381,8 @@ EXCEPT
 	Table_cell:	NoHMove, NoHResize;
 	Data_cell:	NoHMove, NoHResize;
 	Heading_cell:	NoHMove, NoHResize;
-	Column_width:	Invisible;
+	Col_width_percent:	Invisible;
+	Col_width_pxl:	Invisible;
 	ColExt:		Invisible;
 	RowExt:		Invisible;
 	Ref_column:	Invisible;

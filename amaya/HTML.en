@@ -19,11 +19,7 @@ PICTURE_UNIT: IMG
 REFERENCE_UNIT: Reference
 PAGE_BREAK: Page_break
 
-C_Empty: ?
-C_Foot: ?
-C_Head: ?
 Comment\240: Comment
-Document_URL: ?
 StyleRule: Style rule
 Block_Quote: BLOCKQUOTE
 Address: ADDRESS
@@ -135,8 +131,6 @@ Align: align
 NoShade: noshade
 Size_: size
 Width__: width
-IntWidthPercent: ?
-IntWidthPxl: ?
 WidthElement: width
 NAME: name
 Alignment: align
@@ -150,9 +144,6 @@ USEMAP: usemap
 SRC: src
 ALT: alt
 Font_size: size
-IntSizeIncr: ?
-IntSizeDecr: ?
-IntSizeRel: ?
 color: color
 codebase: codebase
 code: code
@@ -165,7 +156,6 @@ COMPACT: compact
 NumberStyle: type
 Start: start
 ItemStyle: type
-IntItemStyle: ?
 ItemValue: value
 Script_URL: action
 METHOD: method
@@ -183,19 +173,13 @@ Table_align: align
 cellspacing: cellspacing
 cellpadding: cellpadding
 Position: align
-Column_width: ?
-IntMaxVol: ?
 Row_align: align
 Row_valign: valign
-Ref_column: ?
-ColExt: ?
-RowExt: ?
 colspan: colspan
 rowspan: rowspan
 Cell_align: align
 Cell_valign: valign
 Word_wrap: nowrap
-Ref_IMG: ?
 shape: shape
 coords: coords
 nohref: nohref
@@ -203,7 +187,6 @@ x_coord: x
 y_coord: y
 width\240: width
 height\240: height
-AreaRef_IMG: ?
 left_: left
 center_: center
 right_: right

@@ -104,6 +104,7 @@ int                 lineNum;
 	TtaDisplayMessage (INFO, TtaGetMessage (COMPIL, COMPIL_STRING), inputline, buffer);
      }
    TtaDisplaySimpleMessage (level, origin, msgCode);
+   error = True;
 }
 
 
@@ -146,4 +147,5 @@ char               *string;
 	TtaDisplayMessage (INFO, TtaGetMessage (COMPIL, COMPIL_STRING), inputline, buffer);
      }
    TtaDisplayMessage (level, TtaGetMessage (origin, msgCode), string);
+   error = True;
 }
