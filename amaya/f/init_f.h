@@ -13,6 +13,7 @@ extern void ExtractSuffix ( char *aName,
                             char *aSuffix );
 extern void ResetStop ( Document document );
 extern void ActiveTransfer ( Document document );
+extern void UpdateTransfer ( Document document );
 extern void StopTransfer ( Document document,
                            View view );
 extern void SetCharEmphasis ( Document document,
@@ -71,6 +72,7 @@ extern void ExtractSuffix (/* char *aName,
                               char *aSuffix */);
 extern void ResetStop (/* Document document */);
 extern void ActiveTransfer (/* Document document */);
+extern void UpdateTransfer (/* Document document */);
 extern void StopTransfer (/* Document document,
                              View view */);
 extern void SetCharEmphasis (/* Document document,

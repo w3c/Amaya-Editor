@@ -537,7 +537,11 @@ boolean             with_images;
 					   pImage->originalName, imageType);
 		  if (res)
 		    {
-		       FilesLoading[document] = 2;
+#ifdef AMAYA_JAVA
+		      FilesLoading[document] = 2;
+#else
+		      DocNetworkStatus[document] |= AMAYA_NET_ERROR;
+#endif /* AMAYA_JAVA */
 		       ResetStop (document);
 		       sprintf (msg, "%s %s \n%s\n%s",
 		                TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
@@ -562,8 +566,12 @@ boolean             with_images;
 
    if (res)
      {
-	FilesLoading[document] = 2;
-	ResetStop (document);
+#ifdef AMAYA_JAVA
+       FilesLoading[document] = 2;
+#else
+       DocNetworkStatus[document] |= AMAYA_NET_ERROR;
+#endif /* AMAYA_JAVA */
+        ResetStop (document);
 	sprintf (msg, "%s %s \n%s\n%s",
 		 TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
 		 DocumentURLs[document],

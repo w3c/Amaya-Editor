@@ -122,6 +122,17 @@ typedef char        AmayaReadChar ();
 /* don't follow redirections */
 #define AMAYA_NOREDIR	128
 
+#ifndef AMAYA_JAVA
+/*
+ * Flags to indicate the status of the network requests associated
+ * to a document.
+ */
+
+#define AMAYA_NET_INACTIVE 1
+#define AMAYA_NET_ERROR    2
+#define AMAYA_NET_ACTIVE   4
+#endif
+
 /*
  * Flags for HTParse, specifying which parts of the URL are needed
  */
@@ -186,6 +197,11 @@ THOT_EXPORT char        *DocumentURLs[DocumentTableLength];
 /* The whole document is loaded when the corresponding value
    in FilesLoading is equal to 0 */
 THOT_EXPORT int          FilesLoading[DocumentTableLength];
+/* Gives the status (error, success) of the download of the objects of
+   a document */
+#ifndef AMAYA_JAVA
+THOT_EXPORT int          DocNetworkStatus[DocumentTableLength];
+#endif
 THOT_EXPORT Document     W3Loading;	/* the document being loaded */
 THOT_EXPORT int          IButton;
 THOT_EXPORT int          BButton;

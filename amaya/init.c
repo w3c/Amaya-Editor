@@ -247,16 +247,22 @@ Document            document;
 #endif
 {
 #ifndef AMAYA_JAVA
-   if (FilesLoading[document] > 0)
+   if (FilesLoading[document] != 0)
      {
-	if (FilesLoading[document] == 1)
-	   TtaSetStatus (document, 1, TtaGetMessage (AMAYA,
-						 AM_DOCUMENT_LOADED), NULL);
-
-	FilesLoading[document] = 0;
-	if (TtaGetViewFrame (document, 1) != 0)
-	   /* this document is displayed */
-	   TtaChangeButton (document, 1, 1, stopN);
+       FilesLoading[document]--;
+       if (FilesLoading[document] == 0)
+	 /* The last object associated to the document has been loaded */
+	 {
+	   if (TtaGetViewFrame (document, 1) != 0) 
+	     /* this document is displayed */
+	     {
+	       if(!(DocNetworkStatus[document] & AMAYA_NET_ERROR))
+		 /* if there was no error message, display the LOADED message */
+		 TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
+	       TtaChangeButton (document, 1, 1, stopN);
+	     }
+	   DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
+	 }
      }
 #endif
 }
@@ -273,13 +279,29 @@ Document            doc;
 #endif
 {
 #ifndef AMAYA_JAVA
-   FilesLoading[document] = 1;
-   if (TtaGetViewFrame (document, 1) != 0)
-      /* this document is displayed */
-      TtaChangeButton (document, 1, 1, stopR);
+  DocNetworkStatus[document] = AMAYA_NET_ACTIVE;
+  FilesLoading[document] = 1;
+  if (TtaGetViewFrame (document, 1) != 0)
+    /* this document is displayed */
+    TtaChangeButton (document, 1, 1, stopR);
 #endif
 }
 
+/*----------------------------------------------------------------------
+   UpdateTransfer updates the status of the current transfer
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                UpdateTransfer (Document document)
+#else
+void                UpdateTransfer (document)
+Document            doc;
+
+#endif
+{
+#ifndef AMAYA_JAVA
+    FilesLoading[document]++;
+#endif
+}
 
 /*----------------------------------------------------------------------
    StopTransfer stops the current transfer                            
@@ -293,16 +315,20 @@ View                view;
 
 #endif
 {
-   if (FilesLoading[document] != 0)
-     {
-#ifndef AMAYA_JAVA
-	TtaChangeButton (document, 1, 1, stopN);
-#endif
-	StopRequest (document);
-#ifndef AMAYA_JAVA
-	FilesLoading[document] = 0;
-#endif
-     }
+#ifdef AMAYA_JAVA
+  if (FilesLoading[document] != 0)
+    {
+      StopRequest (document);
+    }
+#else
+  if (DocNetworkStatus[document] & AMAYA_NET_ACTIVE)
+    {
+      TtaChangeButton (document, 1, 1, stopN);
+      StopRequest (document);
+      FilesLoading[document] = 0;
+      DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
+    }
+#endif /* AMAYA_JAVA */
 }
 
 /*----------------------------------------------------------------------
@@ -672,7 +698,7 @@ char               *pathname;
 
 	     TtaAddButton (doc, 1, iconSave, SaveDocument,
 			   TtaGetMessage (AMAYA, AM_BUTTON_SAVE));
-	     TtaAddButton (doc, 1, iconPrint, PrintAs,
+	     TtaAddButton (doc, 1, iconPrint, TtcPrint,
 			   TtaGetMessage (AMAYA, AM_BUTTON_PRINT));
 	     TtaAddButton (doc, 1, iconFind, TtcSearchText,
 			   TtaGetMessage (AMAYA, AM_BUTTON_SEARCH));
@@ -889,7 +915,7 @@ View                view;
        return(0);
    }
    FilesLoading[newdoc]++;
-#endif
+#endif 
 
    tempfile[0] = EOS;
    toparse = 0;
@@ -897,9 +923,9 @@ View                view;
    if (IsW3Path (pathname))
      {
 	/* load the document from the Web */
-	toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile,
-	                        AMAYA_SYNC | AMAYA_NOCACHE,
-	                        NULL, NULL, NULL, NULL, YES);
+       toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile,
+			       AMAYA_SYNC | AMAYA_NOCACHE,
+			       NULL, NULL, NULL, NULL, YES);
 	TtaHandlePendingEvents ();
      }
    if (toparse != -1)
@@ -914,7 +940,9 @@ View                view;
      }
 #ifdef AMAYA_JAVA
    FilesLoading[newdoc]--;
-#endif
+#else
+   ResetStop(newdoc);
+#endif /* AMAYA_JAVA */
 }
 
 /*----------------------------------------------------------------------
@@ -1268,12 +1296,12 @@ DoubleClickEvent    DC_event;
 	         return(0);
 	     }
              FilesLoading[newdoc]++;
-#endif
+#endif /* AMAYA_JAVA */
 	     W3Loading = newdoc;	/* this document is currently in load */
 	     ActiveTransfer (newdoc);
 	     if (IsW3Path (pathname))
 	       {
-		  /* load the document from the Web */
+		 /* load the document from the Web */
 		  if (DC_event & DC_FORM_POST)
 		    {
 		       toparse = GetObjectWWW (newdoc, pathname, form_data, tempfile,
@@ -1291,8 +1319,8 @@ DoubleClickEvent    DC_event;
 			    /* keep the real name */
 			    NormalizeURL (pathname, 0, tempdocument, documentname);
 			 }
-		       else
-			  toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, YES);
+		       else 
+			   toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, YES);
 		    }
 		  TtaHandlePendingEvents ();
 	       }
@@ -1304,7 +1332,9 @@ DoubleClickEvent    DC_event;
 		  if (res == 0) {
 #ifdef AMAYA_JAVA
 		     FilesLoading[newdoc]--;
-#endif
+#else
+		     ResetStop(newdoc);
+#endif /* AMAYA_JAVA */
 		     return (res);
 		  }
 		  newdoc = res;
@@ -1326,11 +1356,15 @@ DoubleClickEvent    DC_event;
 		       TtaSetTextZone (newdoc, 1, 1, s);
 		    }
 		  W3Loading = 0;	/* loading is complete now */
-		  ResetStop (newdoc);
+#ifdef AMAYA_JAVA
+		  ResetStop(newdoc);
+#endif /* AMAYA_JAVA */
 	       }
 #ifdef AMAYA_JAVA
              FilesLoading[newdoc]--;
-#endif
+#else
+	     ResetStop(newdoc);
+#endif /* AMAYA_JAVA */
 	  }
      }
    return (newdoc);
@@ -1729,19 +1763,10 @@ NotifyEvent        *event;
 {
    int                 i;
    char               *s;
-   Language	       lang;
 
    if (AmayaInitialized)
       return;
    AmayaInitialized = 1;
-
-   /* remove unused languages */
-   lang = TtaGetLanguageIdFromName ("ISO_latin_1");
-   TtaRemoveLanguage (lang);
-   lang = TtaGetLanguageIdFromName ("Symbol");
-   TtaRemoveLanguage (lang);
-   lang = TtaGetLanguageIdFromName ("Greek");
-   TtaRemoveLanguage (lang);
 
    /* initialize status */
    SelectionDoc = 0;

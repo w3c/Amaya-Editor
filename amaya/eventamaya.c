@@ -377,7 +377,11 @@ boolean             error_html;
 	TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_BAD_URL), urlName);
 
 	if (error_html)
-	   FilesLoading[doc] = 2;	/* so we can show the error message */
+#ifdef AMAYA_JAVA
+          FilesLoading[doc] = 2;	/* so we can show the error message */
+#else 
+	  DocNetworkStatus[doc] |= AMAYA_NET_ERROR; /* so we can show the error message */
+#endif /* AMAYA_JAVA */
 	return(AMAYA_NET_STATUS_FAILED);
 
      }
@@ -393,7 +397,11 @@ boolean             error_html;
 		      urlName);
 
 	if (error_html)
-	   FilesLoading[doc] = 2;	/* so we can show the error message */
+#ifdef AMAYA_JAVA
+          FilesLoading[doc] = 2;	/* so we can show the error message */
+#else 
+	  DocNetworkStatus[doc] |= AMAYA_NET_ERROR; /* so we can show the error message */
+#endif /* AMAYA_JAVA */
 	return(AMAYA_NET_STATUS_FAILED);
      }
 
@@ -416,8 +424,11 @@ boolean             error_html;
 			   urlName);
 
 	     if (error_html)
-		FilesLoading[doc] = 2;	/* so we can show the error message */
-
+#ifdef AMAYA_JAVA
+	       FilesLoading[doc] = 2;	/* so we can show the error message */
+#else 
+	       DocNetworkStatus[doc] |= AMAYA_NET_ERROR; /* so we can show the error message */
+#endif /* AMAYA_JAVA */
 	     return(AMAYA_NET_STATUS_FAILED);
 	  }
      }
@@ -446,8 +457,11 @@ boolean             error_html;
 		      urlName);
 
 	if (error_html)
-	   FilesLoading[doc] = 2;	/* so we can show the error message */
-
+#ifdef AMAYA_JAVA
+	  FilesLoading[doc] = 2;	/* so we can show the error message */
+#else 
+	  DocNetworkStatus[doc] |= AMAYA_NET_ERROR; /* so we can show the error message */
+#endif /* AMAYA_JAVA */
 	return(AMAYA_NET_STATUS_FAILED);
      }
 
@@ -470,7 +484,11 @@ boolean             error_html;
 	TtaFreeMemory (ref);
 
 	if (error_html)
-	   FilesLoading[doc] = 2;	/* so we can show the error message */
+#ifdef AMAYA_JAVA
+	  FilesLoading[doc] = 2;	/* so we can show the error message */
+#else 
+	  DocNetworkStatus[doc] |= AMAYA_NET_ERROR; /* so we can show the error message */
+#endif /* AMAYA_JAVA */
 	return (AMAYA_NET_STATUS_FAILED);
      }
 

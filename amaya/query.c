@@ -507,7 +507,7 @@ int                 status;
 	TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REDIRECTIONS_LIMIT),
 		      NULL);
 	if (me->error_html)
-	   FilesLoading[me->docid] = 2;		/* so we can show the error message */
+	   DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR; /* so we can show the error message */
      }
 
    /*
@@ -1382,7 +1382,7 @@ boolean             error_html;
 		      urlName);
 
 	if (error_html)
-	   FilesLoading[docid] = 2;	/* so we can show the error message */
+	  DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR; /* so we can show the error message */
 	return HT_ERROR;
 
      }
@@ -1395,7 +1395,7 @@ boolean             error_html;
 		      urlName);
 
 	if (error_html)
-	   FilesLoading[docid] = 2;	/* so we can show the error message */
+	  DocNetworkStatus[docid] |= AMAYA_NET_ERROR; /* so we can show the error message */
 	return HT_ERROR;
      }
 
@@ -1416,8 +1416,7 @@ boolean             error_html;
 			   urlName);
 
 	     if (error_html)
-		FilesLoading[docid] = 2;	/* so we can show the error message */
-
+	       DocNetworkStatus[docid] |= AMAYA_NET_ERROR; /* so we can show the error message */
 	     return HT_ERROR;
 	  }
      }
@@ -1446,7 +1445,7 @@ boolean             error_html;
 		      urlName);
 
 	if (error_html)
-	   FilesLoading[docid] = 2;	/* so we can show the error message */
+	  DocNetworkStatus[docid] |= AMAYA_NET_ERROR; /* so we can show the error message */
 
 	return HT_ERROR;
      }
@@ -1466,7 +1465,7 @@ boolean             error_html;
 	TtaFreeMemory (ref);
 
 	if (error_html)
-	   FilesLoading[docid] = 2;	/* so we can show the error message */
+	  DocNetworkStatus[docid] |= AMAYA_NET_ERROR; /* so we can show the error message */
 	return (HT_ERROR);
      }
 
@@ -1600,7 +1599,7 @@ generated
 	  {
 	    status = HT_ERROR;
 	    /* show an error message on the status bar */
-	    FilesLoading[me->docid] = 2;
+	  DocNetworkStatus[me->docid] |= AMAYA_NET_ERROR;
 	    TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
 			  me->status_urlName);
 	  }

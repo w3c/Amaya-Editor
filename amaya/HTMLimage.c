@@ -275,9 +275,7 @@ int                 status;
 	/* an image of the document is now loaded */
 
 	/* update the stop button status */
-	FilesLoading[doc]--;
-	if (FilesLoading[doc] == 1)
-	   ResetStop (doc);
+        ResetStop (doc);
 
 	/* the image could not be loaded */
 	if (status != HT_LOADED)
@@ -378,13 +376,14 @@ int                 flags;
 	      ctxEl->currentElement = el;
 	      ctxEl->nextElement = NULL;
 	      update = FALSE;	/* the image is not loaded yet */
-	      FilesLoading[doc]++;
 #ifdef AMAYA_JAVA
+	      FilesLoading[doc]++;
 	      i = GetObjectWWW (doc, pathname, NULL, tempfile,
 		                AMAYA_ASYNC | flags, NULL, NULL,
 				(void *) JavaImageLoaded,
 				(void *) desc, NO);
 #else /* !AMAYA_JAVA */
+	      UpdateTransfer(doc);
 	      i = GetObjectWWW (doc, pathname, NULL, tempfile,
 	                        AMAYA_ASYNC, NULL, NULL,
 				(void *) ImageLoaded,
@@ -449,14 +448,18 @@ int                 flags;
    Element             el, elFound;
    ElementType         elType;
 
-   /* JK: verify if StopTransfer was previously called */
+#ifdef AMAYA_JAVA
    if (FilesLoading[doc] == 0)
      {
-#ifndef AMAYA_JAVA
-	/* transfer interrupted */
-	TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_LOAD_ABORT), NULL);
-#endif
-	return;
+#else 
+   /* JK: verify if StopTransfer was previously called */
+   if (DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
+     {
+       /* transfer interrupted */
+       TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_LOAD_ABORT), NULL);
+       DocNetworkStatus[doc] |= AMAYA_NET_ERROR;
+#endif  /* AMAYA_JAVA */
+       return;
      }
 
    /* get the root element */
@@ -469,7 +472,6 @@ int                 flags;
 #ifndef AMAYA_JAVA
    /* We are currently fetching images for this document */
    /* during this time LoadImage has not to stop transfer */
-   FilesLoading[doc]++;
 #endif
    /* search all elements having an attribute SRC */
    do
@@ -477,7 +479,7 @@ int                 flags;
 	TtaHandlePendingEvents ();
 	/* verify if StopTransfer is called */
 #ifndef AMAYA_JAVA
-	if (FilesLoading[doc] == 0)
+	if (DocNetworkStatus[doc] & AMAYA_NET_INACTIVE)
 	   return;
 #endif
 	/* search the next element having an attribute SRC */
@@ -489,10 +491,9 @@ int                 flags;
    while (el != NULL);
 
    /* Images fetching is now finished */
-#ifndef AMAYA_JAVA
-   FilesLoading[doc]--;
-   if (FilesLoading[doc] < 2)
-      /* all images are loaded in the current document */
-      ResetStop (doc);
-#endif
 }
+
+
+
+
+
