@@ -15,7 +15,6 @@
 #include "fileaccess.h"
 #include "appdialogue.h"
 #include "fileaccess.h"
-#include "thotdir.h"
 #include "application.h"
 
 #undef THOT_EXPORT

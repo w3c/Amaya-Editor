@@ -1426,6 +1426,7 @@ int MenuChoixElem (PtrSSchema pSS, int rule, PtrElement pEl, char *menuBuf,
   ----------------------------------------------------------------------*/
 void ChoiceMenuCallback (int item, char *natureName)
 {
+#ifdef IV
    Name             SSchemaName;
 
    if (natureName != NULL)
@@ -1455,6 +1456,7 @@ void ChoiceMenuCallback (int item, char *natureName)
 	ChosenTypeNum = ChoiceMenuTypeNum[item - 1];
 	ChosenTypeSSchema = ChoiceMenuSSchema[item - 1];
      }
+#endif /* IV */
 }
 
 /*----------------------------------------------------------------------

@@ -24,10 +24,10 @@ extern void SVGEntityCreated ( unsigned char *entityValue,
                                char *entityName,
                                Document doc );
 extern void ParseCSSequivAttribute ( int attrType,
-				     Attribute attr,
-				     Element el,
-				     Document doc,
-				     ThotBool delete );
+                                     Attribute attr,
+                                     Element el,
+                                     Document doc,
+                                     ThotBool delete );
 extern void SetGraphicDepths ( Document doc,
                                Element el );
 extern void CopyUseContent ( Element el,
@@ -87,10 +87,10 @@ extern void SVGEntityCreated (/* unsigned char *entityValue,
                                  char *entityName,
                                  Document doc */);
 extern void ParseCSSequivAttribute (/* int attrType,
-				       Attribute attr,
-				       Element el,
-				       Document doc,
-				       ThotBool delete */);
+                                       Attribute attr,
+                                       Element el,
+                                       Document doc,
+                                       ThotBool delete */);
 extern void SetGraphicDepths (/* Document doc,
                                  Element el */);
 extern void CopyUseContent (/* Element el,

@@ -29,7 +29,6 @@
 #include "typegrm.h"
 #include "fileaccess.h"
 #include "fileaccess.h"
-#include "thotdir.h"
 
 #define MAX_SRULE_RECURS 15   /* maximum of included rule levels within a rule */
 #define MAX_EXTERNAL_TYPES 20 /* maximum of different external document types */
@@ -690,7 +689,6 @@ static void CopyLocReqAttr (SRule *pRule)
   ----------------------------------------------------------------------*/
 static void         NewRule (indLine wi)
 {
-   int                 i;
    PtrSRule            pRule;
 
    AllocateNewRule (pSSchema);

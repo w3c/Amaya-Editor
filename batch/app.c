@@ -27,7 +27,6 @@
 #include "menuaction.h"
 #include "registry.h"
 #include "fileaccess.h"
-#include "thotdir.h"
 
 #include "parser_f.h"
 #include "compilmsg_f.h"

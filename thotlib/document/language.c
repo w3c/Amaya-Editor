@@ -272,7 +272,7 @@ void InitLanguage ()
    /* Loading the default system languages */
    i = 0;
    strcpy (LangTable[i].LangName, "ISO_latin_1");
-   strcpy (LangTable[i].LangCode, "x-Latin1");
+   strcpy (LangTable[i].LangCode, "la");
    LangTable[i].LangAlphabet = 'L';
    strcpy (LangTable[i].LangPrincipal, "Usigle");
    strcpy (LangTable[i].LangSecondary, "Uname");

@@ -37,7 +37,7 @@ typedef struct _HTURI
   ConvertToLowerCase
   Converts a string to lowercase.
   ----------------------------------------------------------------------*/
-void         ConvertToLowerCase (char *string)
+void ConvertToLowerCase (char *string)
 {
  int i;
  
@@ -420,41 +420,6 @@ char *DocImageMimeType (Document doc)
   return (mime_type);
 }
 
-/*----------------------------------------------------------------------
-   ExtractSuffix extract suffix from document nane.                
-  ----------------------------------------------------------------------*/
-void ExtractSuffix (char *aName, char *aSuffix)
-{
-   int               lg, i;
-   char             *ptr, *oldptr;
-
-   if (!aSuffix || !aName)
-     /* bad suffix */
-     return;
-
-   aSuffix[0] = EOS;
-   lg = strlen (aName);
-   if (lg)
-     {
-	/* the name is not empty */
-	oldptr = ptr = &aName[0];
-	do
-	  {
-	     ptr = strrchr (oldptr, '.');
-	     if (ptr)
-		oldptr = &ptr[1];
-	  }
-	while (ptr);
-
-	i = (int) (oldptr) - (int) (aName);	/* name length */
-	if (i > 1)
-	  {
-	     aName[i - 1] = EOS;
-	     if (i != lg)
-		strcpy (aSuffix, oldptr);
-	  }
-     }
-}
 
 /*----------------------------------------------------------------------
   IsHTMLName                                                         
@@ -471,7 +436,7 @@ ThotBool IsHTMLName (const char *path)
     return (FALSE);
 
   strcpy (temppath, path);
-  ExtractSuffix (temppath, suffix);
+  TtaExtractSuffix (temppath, suffix);
   i = 0;
   while (suffix[i] != EOS)
     {
@@ -494,7 +459,7 @@ ThotBool IsHTMLName (const char *path)
       else if (!strcmp (nsuffix, "gz"))
 	{
 	  /* take into account compressed files */
-	  ExtractSuffix (temppath, suffix);       
+	  TtaExtractSuffix (temppath, suffix);       
 	  /* Normalize the suffix */
 	  i = 0;
 	  while (suffix[i] != EOS && i < MAX_LENGTH -1)
@@ -516,7 +481,7 @@ ThotBool IsHTMLName (const char *path)
 	}
       else
 	/* check if there is another suffix */
-	ExtractSuffix (temppath, suffix);
+	TtaExtractSuffix (temppath, suffix);
     }
    return (FALSE);
 }
@@ -534,7 +499,7 @@ ThotBool IsXMLName (const char *path)
       return (FALSE);
 
    strcpy (temppath, path);
-   ExtractSuffix (temppath, suffix);
+   TtaExtractSuffix (temppath, suffix);
 
    if (!strcasecmp (suffix, "xml") ||
        !strcasecmp (suffix, "xht") ||
@@ -544,7 +509,7 @@ ThotBool IsXMLName (const char *path)
    else if (!strcmp (suffix, "gz"))
      {
        /* take into account compressed files */
-       ExtractSuffix (temppath, suffix);       
+       TtaExtractSuffix (temppath, suffix);       
        if (!strcasecmp (suffix, "xml") ||
 	   !strcasecmp (suffix, "xht") ||
 	   !strcmp (suffix, "xhtm") ||
@@ -570,14 +535,14 @@ ThotBool IsMathMLName (const char *path)
       return (FALSE);
 
    strcpy (temppath, path);
-   ExtractSuffix (temppath, suffix);
+   TtaExtractSuffix (temppath, suffix);
 
    if (!strcasecmp (suffix, "mml"))
      return (TRUE);
    else if (!strcmp (suffix, "gz"))
      {
        /* take into account compressed files */
-       ExtractSuffix (temppath, suffix);       
+       TtaExtractSuffix (temppath, suffix);       
        if (!strcasecmp (suffix, "mml"))
 	 return (TRUE);
        else
@@ -600,14 +565,14 @@ ThotBool IsSVGName (const char *path)
       return (FALSE);
 
    strcpy (temppath, path);
-   ExtractSuffix (temppath, suffix);
+   TtaExtractSuffix (temppath, suffix);
 
    if (!strcasecmp (suffix, "svg"))
      return (TRUE);
    else if (!strcmp (suffix, "gz"))
      {
        /* take into account compressed files */
-       ExtractSuffix (temppath, suffix);       
+       TtaExtractSuffix (temppath, suffix);       
        if (!strcasecmp (suffix, "svg"))
 	 return (TRUE);
        else
@@ -630,14 +595,14 @@ ThotBool IsCSSName (const char *path)
       return (FALSE);
 
    strcpy (temppath, path);
-   ExtractSuffix (temppath, suffix);
+   TtaExtractSuffix (temppath, suffix);
 
    if (!strcasecmp (suffix, "css"))
      return (TRUE);
    else if (!strcmp (suffix, "gz"))
      {
        /* take into account compressed files */
-       ExtractSuffix (temppath, suffix);       
+       TtaExtractSuffix (temppath, suffix);       
        if (!strcasecmp (suffix, "css"))
 	 return (TRUE);
        else
@@ -662,7 +627,7 @@ ThotBool IsImageName (const char *path)
       return (FALSE);
 
    strcpy (temppath, path);
-   ExtractSuffix (temppath, suffix);
+   TtaExtractSuffix (temppath, suffix);
 
    /* Normalize the suffix */
    i = 0;
@@ -720,7 +685,7 @@ ThotBool IsTextName (const char *path)
      return (FALSE);
 
    strcpy (temppath, path);
-   ExtractSuffix (temppath, suffix);
+   TtaExtractSuffix (temppath, suffix);
 
    /* Normalize the suffix */
    i = 0;
@@ -736,7 +701,7 @@ ThotBool IsTextName (const char *path)
    else if (!strcmp (nsuffix, "gz"))
      {
        /* take into account compressed files */
-       ExtractSuffix (temppath, suffix);       
+       TtaExtractSuffix (temppath, suffix);       
        /* Normalize the suffix */
        i = 0;
        while (suffix[i] != EOS && i < MAX_LENGTH -1)
@@ -1350,7 +1315,7 @@ ThotBool             HasKnownFileSuffix (const char *path)
        strcpy (temppath, root);
        TtaFreeMemory (root);
        /* Get the suffix */
-       ExtractSuffix (temppath, suffix); 
+       TtaExtractSuffix (temppath, suffix); 
 
        if( suffix[0] == EOS)
 	 /* no suffix */
@@ -1362,7 +1327,7 @@ ThotBool             HasKnownFileSuffix (const char *path)
        if (!strcmp (suffix, "gz"))
 	 /* skip the compressed suffix */
 	 {
-	 ExtractSuffix (temppath, suffix);
+	 TtaExtractSuffix (temppath, suffix);
 	 if(suffix[0] == EOS)
 	   /* no suffix */
 	   return (FALSE);

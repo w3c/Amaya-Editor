@@ -30,7 +30,6 @@
 #include "typegrm.h"
 #include "typeint.h"
 #include "fileaccess.h"
-#include "thotdir.h"
 
 typedef char        fname[30];	/* nom de fichier */
 

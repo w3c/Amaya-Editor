@@ -22,8 +22,6 @@ extern ThotBool ImageElement ( Document doc,
                                char **url,
                                Element *image );
 extern char *DocImageMimeType ( Document doc );
-extern void ExtractSuffix ( char *aName,
-                            char *aSuffix );
 extern ThotBool IsHTMLName ( const char *path );
 extern ThotBool IsXMLName ( const char *path );
 extern ThotBool IsMathMLName ( const char *path );
@@ -83,8 +81,6 @@ extern ThotBool ImageElement (/* Document doc,
                                  char **url,
                                  Element *image */);
 extern char *DocImageMimeType (/* Document doc */);
-extern void ExtractSuffix (/* char *aName,
-                              char *aSuffix */);
 extern ThotBool IsHTMLName (/* const char *path */);
 extern ThotBool IsXMLName (/* const char *path */);
 extern ThotBool IsMathMLName (/* const char *path */);

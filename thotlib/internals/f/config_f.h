@@ -8,16 +8,6 @@
 
 extern void ConfigInit ( void );
 extern void ConfigFree ( void );
-extern void TtaConfigReadConfigFiles ( char *aSchemaPath );
-extern int ConfigMakeDocTypeMenu ( char *BufMenu,
-                                   int *lgmenu,
-                                   ThotBool doc );
-extern void TtaConfigSSchemaExternalName ( char *nameUser,
-                                           char *nameSchema,
-                                           int Typ );
-extern void ConfigSSchemaInternalName ( char *nameUser,
-                                        char *nameSchema,
-                                        ThotBool Doc );
 extern int ConfigMakeMenuPres ( char *schema,
                                 char *BufMenu );
 extern void ConfigGetPSchemaName ( int choix,
@@ -78,16 +68,6 @@ extern ThotBool ConfigDefaultTypoSchema ( PtrSSchema pSS,
 
 extern void ConfigInit (/* void */);
 extern void ConfigFree (/* void */);
-extern void TtaConfigReadConfigFiles (/* char *aSchemaPath */);
-extern int ConfigMakeDocTypeMenu (/* char *BufMenu,
-                                     int *lgmenu,
-                                     ThotBool doc */);
-extern void TtaConfigSSchemaExternalName (/* char *nameUser,
-                                             char *nameSchema,
-                                             int Typ */);
-extern void ConfigSSchemaInternalName (/* char *nameUser,
-                                          char *nameSchema,
-                                          ThotBool Doc */);
 extern int ConfigMakeMenuPres (/* char *schema,
                                   char *BufMenu */);
 extern void ConfigGetPSchemaName (/* int choix,

@@ -5673,8 +5673,8 @@ void                InitAmaya (NotifyEvent * event)
      /* old documents are restored */
      return;
    if (appArgc % 2 == 0)
-      /* The last argument in the command line is the document to be opened */
-      s = appArgv[appArgc - 1];
+     /* The last argument in the command line is the document to be opened */
+     s = appArgv[appArgc - 1];
 #ifdef _WINDOWS
    sprintf (LostPicturePath, "%s\\amaya\\lost.gif",
 	     TtaGetEnvString ("THOTDIR"));              

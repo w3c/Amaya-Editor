@@ -29,7 +29,6 @@
 #include "typemedia.h"
 #include "registry.h"
 #include "application.h"
-#include "thotdir.h"
 #define THOT_EXPORT
 #include "platform_tv.h"
 

@@ -19,7 +19,6 @@
 #include "fileaccess.h"
 #include "appdialogue.h"
 #include "fileaccess.h"
-#include "thotdir.h"
 #include "application.h"
 
 #undef THOT_EXPORT
@@ -248,8 +247,8 @@ void NewDocument (PtrDocument *pDoc, char *SSchemaName, char *docName,
 	 (*pDoc)->DocDirectory[i] = EOS;
 	 /* on suppose que le mon de schema est dans la langue de */
 	 /* l'utilisateur: on le traduit en nom interne */
-	 ConfigSSchemaInternalName (SSchemaName, docType, TRUE);
-	 if (docType[0] == EOS)
+	 /*ConfigSSchemaInternalName (SSchemaName, docType, TRUE);
+	   if (docType[0] == EOS)*/
 	    /* ce nom n'est pas dans le fichier langue, on le prend */
 	    /* tel quel */
 	    strncpy (docType, SSchemaName, MAX_NAME_LENGTH);

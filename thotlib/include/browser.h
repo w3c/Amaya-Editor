@@ -11,6 +11,11 @@
 #ifndef __CEXTRACT__
 
 /*----------------------------------------------------------------------
+   TtaExtractSuffix extract suffix from a file nane.                
+  ----------------------------------------------------------------------*/
+extern void TtaExtractSuffix (char *aName, char *aSuffix);
+
+/*----------------------------------------------------------------------
    TtaListDirectory
    reads the content of a directory.
    aDirectory specifies the directory to read  (!=/afs). 
@@ -26,14 +31,6 @@
   ----------------------------------------------------------------------*/
 extern void TtaListDirectory (char *aDirectory, int formRef, char *dirTitle,
 			      int dirRef, char *suffix, char *fileTitle, int fileRef);
-
-/*----------------------------------------------------------------------
-   TtaIsSuffixFileIn
-   returns TRUE if the directory contains any file with the requested
-   suffix.
-  ----------------------------------------------------------------------*/
-extern ThotBool TtaIsSuffixFileIn (char *aDirectory, char *suffix);
-
 #endif /* __CEXTRACT__ */
 
 #endif

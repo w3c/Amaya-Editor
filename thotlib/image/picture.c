@@ -23,7 +23,6 @@
 #include "epsflogo.h"
 #include "interface.h"
 #include "fileaccess.h"
-#include "thotdir.h"
 #include "png.h"
 #include "fileaccess.h"
 

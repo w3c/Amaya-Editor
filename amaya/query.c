@@ -1744,8 +1744,8 @@ static void RecCleanCache (char *dirname)
   HANDLE          hFindFile;
   ThotBool        status;
   WIN32_FIND_DATA ffd;
-  char          t_dir [MAX_LENGTH];
-  char *      ptr;
+  char            t_dir [MAX_LENGTH];
+  char           *ptr;
 
   /* create a t_dir name to start searching for files */
   if ((strlen (dirname) + 10) > MAX_LENGTH)

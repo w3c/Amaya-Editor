@@ -24,7 +24,6 @@
 #include "message.h"
 #include "dictionary.h"
 #include "fileaccess.h"
-#include "thotdir.h"
 
 #define MAX_DICTS        2	/* Maximum number of dictionaries related to a given language */
 #define MAXLIGNE        80	/* Length of a line in the dictionary                         */

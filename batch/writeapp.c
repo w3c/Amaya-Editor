@@ -19,7 +19,6 @@
 #include "logo.xbm"
 #include "registry.h"
 #include "fileaccess.h"
-#include "thotdir.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern

@@ -14,7 +14,6 @@
 
 #include "thot_gui.h"
 #include "thot_sys.h"
-#include "thotdir.h"
 #include "constmedia.h"
 #include "constmenu.h"
 #include "typemedia.h"
@@ -78,7 +77,7 @@ void ConfigInit ()
       export_items[i] = NULL;
       export_items_menu[i] = NULL;
     }
-  TtaConfigReadConfigFiles (SchemaPath);
+  /* TtaConfigReadConfigFiles (SchemaPath);*/
 }
 
 /*----------------------------------------------------------------------
@@ -434,7 +433,7 @@ void                ConfigFree (void)
 	  }
      }
    }
-
+#ifdef IV
 /*----------------------------------------------------------------------
    TtaConfigReadConfigFiles (re)initialise les tables des schemas de
    structure (documents, natures et extensions) qui ont    
@@ -448,7 +447,6 @@ void TtaConfigReadConfigFiles (char *aSchemaPath)
   ThotBool            import;
   char               *Dir;
   PathBuffer          DirBuffer;
-  ThotDirBrowse       thotDir;
 #define NAME_LENGTH     100
 #define MAX_NAME         80
 #define SELECTOR_NB_ITEMS 5
@@ -492,47 +490,6 @@ void TtaConfigReadConfigFiles (char *aSchemaPath)
 	    /* c'est bien un directory */
 	    {
 	      /* commande "ls" sur le directory */
-	      thotDir.buf = fname;
-	      thotDir.bufLen = sizeof (fname) / sizeof (char);
-	      thotDir.PicMask = ThotDirBrowse_FILES;
-	      if (ThotDirBrowse_first (&thotDir, Dir, "*.", suffix) == 1)
-		do
-		  {
-		    namesOfDocType (fname, &nameOrig, &nameTrans, &typ, &import);
-		    if (nameOrig != NULL)
-		      {
-			if (typ == CONFIG_DOCUMENT_STRUCT || typ == CONFIG_EXCLUSION)
-			  {
-			    doc_items[nbitemdoc] = nameOrig;
-			    doc_items_menu[nbitemdoc] = nameTrans;
-			    if (import)
-			      doc_import[nbitemdoc] = TRUE;
-			    nbitemdoc++;
-			  }
-			if (typ == CONFIG_NATURE_STRUCT)
-			  {
-			    nat_items[nbitemnat] = nameOrig;
-			    nat_items_menu[nbitemnat] = nameTrans;
-			    nbitemnat++;
-			  }
-			if (typ == CONFIG_EXCLUSION)
-			  {
-			    nat_items[nbitemnat] = TtaGetMemory (strlen (nameOrig) + 1);
-			    nat_items_menu[nbitemnat] = TtaGetMemory (strlen (nameTrans) + 1);
-			    strcpy (nat_items[nbitemnat], nameOrig);
-			    strcpy (nat_items_menu[nbitemnat], nameTrans);
-			    nbitemnat++;
-			  }
-			if (typ == CONFIG_EXTENSION_STRUCT)
-			  {
-			    ext_items[nbitemext] = nameOrig;
-			    ext_items_menu[nbitemext] = nameTrans;
-			    nbitemext++;
-			  }
-		      }
-		  }
-		while (ThotDirBrowse_next (&thotDir) == 1);
-	      ThotDirBrowse_close (&thotDir);
 	    }
 	  /* continue a chercher les directories dans le path des schemas */
 	  i++;
@@ -540,7 +497,6 @@ void TtaConfigReadConfigFiles (char *aSchemaPath)
 	}
     }
 }
-
 
 /*----------------------------------------------------------------------
    ConfigMakeDocTypeMenu cree dans BufMenu la liste des schemas de 
@@ -704,6 +660,7 @@ void ConfigSSchemaInternalName (char *nameUser, char *nameSchema,
 	      i++;
 	}
 }
+#endif /* IV */
 
 
 /*----------------------------------------------------------------------

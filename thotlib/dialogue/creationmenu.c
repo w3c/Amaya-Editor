@@ -36,6 +36,7 @@
 void BuildChoiceMenu (char *bufMenu, Name menuTitle, int nbEntries,
 		      ThotBool natureChoice)
 {
+#ifdef IV
    int                 menu;
    char                bufMenuB[MAX_TXT_LEN];
    char               *src, *dest;
@@ -97,6 +98,7 @@ void BuildChoiceMenu (char *bufMenu, Name menuTitle, int nbEntries,
       mediator has called ChoiceMenuCallback */
    TtaWaitShowDialogue ();
 #endif /* !_WINDOWS */
+#endif /* IV */
 }
 
 

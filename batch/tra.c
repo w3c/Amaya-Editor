@@ -30,7 +30,6 @@
 #include "tramsg.h"
 #include "message.h"
 #include "fileaccess.h"
-#include "thotdir.h"
 
 #define THOT_EXPORT
 #include "compil_tv.h"

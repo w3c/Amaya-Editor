@@ -6,10 +6,9 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void ExtractFileName ( char *word );
-extern ThotBool TtaIsSuffixFileIn ( char *aDirectory,
-                                    char *suffix );
-extern void TtaListDirectory ( char *aDirectory,
+extern void TtaExtractSuffix ( char *aName,
+                               char *aSuffix );
+extern void TtaListDirectory ( char *dirname,
                                int formRef,
                                char *dirTitle,
                                int dirRef,
@@ -19,10 +18,9 @@ extern void TtaListDirectory ( char *aDirectory,
 
 #else /* __STDC__ */
 
-extern void ExtractFileName (/* char *word */);
-extern ThotBool TtaIsSuffixFileIn (/* char *aDirectory,
-                                      char *suffix */);
-extern void TtaListDirectory (/* char *aDirectory,
+extern void TtaExtractSuffix (/* char *aName,
+                                 char *aSuffix */);
+extern void TtaListDirectory (/* char *dirname,
                                  int formRef,
                                  char *dirTitle,
                                  int dirRef,

@@ -14,7 +14,6 @@
 #include "constpiv.h"
 #include "typecorr.h"
 #include "appdialogue.h"
-#include "thotdir.h"
 #include "fileaccess.h"
 
 #ifdef NODISPLAY

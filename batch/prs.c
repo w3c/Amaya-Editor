@@ -28,7 +28,6 @@
 #include "fileaccess.h"
 #include "prsdef.h"
 #include "fileaccess.h"
-#include "thotdir.h"
 
 #define THOT_EXPORT
 #include "compil_tv.h"
