@@ -120,8 +120,9 @@ typedef enum _ClickEvent {
 #define ConfirmSave     32
 #define ConfirmSaveList 33
 #define OptionMenu	34
-#define MAX_SUBMENUS    400
 /* MAX_SUBMENUS references reserved for submenus of Option menu */
+/* Do not insert new entries here */
+#define MAX_SUBMENUS    400
 #define About1		435
 #define About2		436
 #define About3		437
@@ -131,7 +132,9 @@ typedef enum _ClickEvent {
 #define TableRows       441
 #define TableCols       442
 #define TableBorder     443
-#define MAX_REF         444
+#define MathEntityForm  444
+#define MathEntityText  445
+#define MAX_REF         446
 
 /* The possible GET/POST/PUT request modes */
 
@@ -203,6 +206,7 @@ THOT_EXPORT CHAR_T       Answer_name[NAME_LENGTH];
 THOT_EXPORT CHAR_T       Answer_password[NAME_LENGTH];
 THOT_EXPORT CHAR_T       Display_password[NAME_LENGTH];
 THOT_EXPORT CHAR_T       ScanFilter[NAME_LENGTH]; /* to scan directories    */
+THOT_EXPORT CHAR_T       MathMLEntityName[MAX_LENGTH]; /* entity name typed by the user for a MathML expression */
 THOT_EXPORT CharUnit*    LastURLName;	/* last URL requested               */
 THOT_EXPORT CharUnit*    DirectoryName;	/* local path of the document       */
 THOT_EXPORT CharUnit*    DocumentName;	/* document name                    */

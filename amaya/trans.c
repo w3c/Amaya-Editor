@@ -2812,7 +2812,10 @@ Document            doc;
 	{ /* for each node above the first selected */
 	  chglev = TRUE;
 	  node = node->Parent;
-	  sm = node->Matches;
+	  if (node)
+	     sm = node->Matches;
+	  else
+	     sm = NULL;
 	  while (sm != NULL)
 	    {		/* for each matching of the node */
 	      if (!ustrcmp (sm->MatchSymb->Tag, TEXT("pattern_root")))
@@ -2839,7 +2842,7 @@ Document            doc;
 	      sm = sm->Next;
 	    }
 	}
-      while (node != strMatchEnv.SourceTree);
+      while (node && node != strMatchEnv.SourceTree);
       TtaFreeMemory (tag);
       if (i > 0)
 	/* if at least one transformation have been matched, apply the best  one */

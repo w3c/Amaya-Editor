@@ -119,6 +119,93 @@ static  functName  functionName[] =
 };
 
 /*----------------------------------------------------------------------
+   RemoveAttr
+   Remove attribute of type attrTypeNum from element el, if it exists
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void RemoveAttr (Element el, Document doc, int attrTypeNum)
+#else /* __STDC__*/
+static void RemoveAttr (el, doc, attrTypeNum)
+     Element el;
+     Document doc;
+     int attrTypeNum;
+#endif /* __STDC__*/
+{
+  ElementType	elType;
+  AttributeType attrType;
+  Attribute	attr;
+
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = attrTypeNum;
+  attr = TtaGetAttribute (el, attrType);
+  if (attr != NULL)
+      TtaRemoveAttribute (el, attr, doc);
+}
+
+/*----------------------------------------------------------------------
+   MathSetAttributes
+   Set attributes of element el according to its content.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void MathSetAttributes (Element el, Document doc, Element* selEl)
+#else /* __STDC__*/
+static void MathSetAttributes (el, doc, selEl)
+     Element el;
+     Document doc;
+     Element* selEl;
+#endif /* __STDC__*/
+{
+  ElementType	elType, parentType;
+  Element	parent, grandParent;
+
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum == MathML_EL_MO)
+     {
+     SetIntAddSpaceAttr (el, doc);
+     parent = TtaGetParent (el);
+     if (parent != NULL)
+	{
+	parentType = TtaGetElementType (parent);
+	if (parentType.ElTypeNum != MathML_EL_Base &&
+	    parentType.ElTypeNum != MathML_EL_UnderOverBase)
+	   SetIntVertStretchAttr (el, doc, 0, selEl);
+	else
+	   {
+	   grandParent = TtaGetParent (parent);
+	   if (grandParent != NULL)
+	      SetIntVertStretchAttr (grandParent, doc, parentType.ElTypeNum,
+				     selEl);
+	   }
+	}
+     }
+  else
+     /* it's not an operator (mo). Remove all attributes that can be set only
+       on operators, except if it's a mstyle element. */
+     if (elType.ElTypeNum == MathML_EL_MSTYLE)
+       {
+	 RemoveAttr (el, doc, MathML_ATTR_IntAddSpace);
+	 RemoveAttr (el, doc, MathML_ATTR_form);
+	 RemoveAttr (el, doc, MathML_ATTR_fence);
+	 RemoveAttr (el, doc, MathML_ATTR_separator);
+	 RemoveAttr (el, doc, MathML_ATTR_lspace);
+	 RemoveAttr (el, doc, MathML_ATTR_rspace);
+	 RemoveAttr (el, doc, MathML_ATTR_separator);
+	 RemoveAttr (el, doc, MathML_ATTR_stretchy);
+	 RemoveAttr (el, doc, MathML_ATTR_symmetric);
+	 RemoveAttr (el, doc, MathML_ATTR_maxsize);
+	 RemoveAttr (el, doc, MathML_ATTR_minsize);
+	 RemoveAttr (el, doc, MathML_ATTR_largeop);
+	 RemoveAttr (el, doc, MathML_ATTR_movablelimits);
+	 RemoveAttr (el, doc, MathML_ATTR_accent);
+       }
+  if (elType.ElTypeNum == MathML_EL_MI)
+     SetFontstyleAttr (el, doc);
+  else
+     RemoveAttr (el, doc, MathML_ATTR_IntFontstyle);		
+}
+
+/*----------------------------------------------------------------------
    SplitTextInMathML
    Split element el and the enclosing element (MO, MI, MN or MTEXT).
    Parameter index indicates the position where the text has to be split.
@@ -163,7 +250,7 @@ ThotBool            *mrowCreated;
   if (index <= TtaGetElementVolume (el))
     {
       if (withinMrow)
-	TtaRegisterElementReplace (el, doc);
+	TtaRegisterElementReplace (parent, doc);
       TtaSplitText (el, index-1, doc);
     }
   /* take the second part of the split text */
@@ -196,6 +283,8 @@ ThotBool            *mrowCreated;
   /* move the second part of text into the duplicated parent */
   TtaRemoveTree (el, doc);
   TtaInsertFirstChild (&el, added, doc);
+  MathSetAttributes (parent, doc, NULL);
+  MathSetAttributes (added, doc, NULL);
   if (withinMrow)
      TtaRegisterElementCreate (added, doc);
   /* resume structure checking */
@@ -390,33 +479,6 @@ Document doc;
 	 }
 }
 
-
-/*----------------------------------------------------------------------
-   RemoveAttr
-   Remove attribute of type attrTypeNum from element el, if it exists
- -----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void RemoveAttr (Element el, Document doc, int attrTypeNum)
-#else /* __STDC__*/
-static void RemoveAttr (el, doc, attrTypeNum)
-     Element el;
-     Document doc;
-     int attrTypeNum;
-#endif /* __STDC__*/
-{
-  ElementType	elType;
-  AttributeType attrType;
-  Attribute	attr;
-
-  elType = TtaGetElementType (el);
-  attrType.AttrSSchema = elType.ElSSchema;
-  attrType.AttrTypeNum = attrTypeNum;
-  attr = TtaGetAttribute (el, attrType);
-  if (attr != NULL)
-      TtaRemoveAttribute (el, attr, doc);
-}
-
-
 /*----------------------------------------------------------------------
    RegenerateFencedSeparators
    el must be a FencedExpression element.
@@ -508,7 +570,7 @@ int                 construct;
 	return;
 	}
 
-      surround = TtaIsSelectionEmpty ();
+      surround = !TtaIsSelectionEmpty ();
       
       TtaSetDisplayMode (doc, DeferredDisplay);
 
@@ -984,9 +1046,6 @@ STRING              data;
     case MenuMaths:
       /* the user has selected an entry in the math menu */
       doc = TtaGetSelectedDocument ();
-      if (!doc || !TtaGetDocumentAccessMode (doc))
-	/* the document is in ReadOnly mode */
-	return;
 
       if ((int) data == 13)
 	/* the user asks for the Symbol palette */
@@ -996,7 +1055,9 @@ STRING              data;
 	}
       else if (doc > 0)
 	/* there is a selection */
-        CreateMathConstruct (((int) data) +1);
+        if (TtaGetDocumentAccessMode (doc))
+	   /* the document is in not in ReadOnly mode */
+           CreateMathConstruct (((int) data) +1);
       break;
 
     default:
@@ -1354,11 +1415,12 @@ void CreateCharStringElement (typeNum, doc)
 {
    ElementType    elType;
    Element        firstSel, lastSel, first, last, el, newEl, nextEl,
-                  leaf, lastLeaf, nextLeaf, parent;
+                  leaf, lastLeaf, nextLeaf, parent, selEl;
    int            firstChar, lastChar, i, j, oldStructureChecking;
    ThotBool       nonEmptySel, done, mrowCreated, same;
 
    done = FALSE;
+   /* get the current selection */
    TtaGiveFirstSelectedElement (doc, &firstSel, &firstChar, &i);
    TtaGiveLastSelectedElement (doc, &lastSel, &j, &lastChar);
 
@@ -1397,6 +1459,7 @@ void CreateCharStringElement (typeNum, doc)
    TtaOpenUndoSequence (doc, firstSel, lastSel, firstChar, lastChar);
    oldStructureChecking = TtaGetStructureChecking (doc);
    TtaSetStructureChecking (0, doc);
+   selEl = NULL;
 
    /* if the selection starts on the first character of a text string and
       the whole text string is selected, then the selection starts on the
@@ -1439,7 +1502,8 @@ void CreateCharStringElement (typeNum, doc)
 	    TtaUnselect (doc);
 	    TtaRegisterElementReplace (firstSel, doc);
 	    ChangeTypeOfElement (firstSel, doc, typeNum);
-	    TtaSelectElement (doc, firstSel);
+            MathSetAttributes (firstSel, doc, NULL);
+	    selEl = firstSel;
 	    done = TRUE;
 	    }
      }
@@ -1541,13 +1605,14 @@ void CreateCharStringElement (typeNum, doc)
 	    TtaDeleteTree (el, doc);
 	    el = nextEl;
 	    }
+         MathSetAttributes (newEl, doc, NULL);
 	 TtaRegisterElementCreate (newEl, doc);
 	 /* if there is a parent MROW element, delete it if it's no longer
 	    needed */
 	 parent = TtaGetParent (newEl);
 	 CheckMROW (&parent, doc);
 	 /* select the new element */
-	 TtaSelectElement (doc, newEl);
+	 selEl = newEl;
 	 } 
        }
      }
@@ -1555,6 +1620,8 @@ void CreateCharStringElement (typeNum, doc)
    TtaSetStructureChecking ((ThotBool)oldStructureChecking, doc);
    TtaCloseUndoSequence (doc);
    TtaSetDisplayMode (doc, DisplayImmediately);
+   if (selEl)
+      TtaSelectElement (doc, selEl);
 }
 
 /*----------------------------------------------------------------------
@@ -1611,33 +1678,6 @@ void CreateMO (document, view)
 #endif /* __STDC__*/
 {
    CreateCharStringElement (MathML_EL_MO, document);
-}
-
-/*----------------------------------------------------------------------
-CreateMathEntity
- -----------------------------------------------------------------------*/
-#ifdef __STDC__
-void CreateMathEntity (Document document, View view)
-#else /* __STDC__*/
-void CreateMathEntity (document, view)
-     Document document;
-     View view;
-#endif /* __STDC__*/
-{
-  Element     firstSel;
-  int         firstChar, i;
-  ElementType elType;
-
-   TtaGiveFirstSelectedElement (document, &firstSel, &firstChar, &i);
-
-   /* if not within a MathML element, nothing to do */
-   elType = TtaGetElementType (firstSel);
-   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
-      return;
-
-  /* @@@@@@@@ */
-
-   /***** Attribute EntityName="&InvisibleTimes;" ****/
 }
 
 /*----------------------------------------------------------------------
@@ -1710,68 +1750,6 @@ CHAR_T  alphabet;
         ret = MathML_EL_MO;
      }
   return ret;
-}
-
-/*----------------------------------------------------------------------
-   MathSetAttributes
-   Set attributes of element el according to its content.
- -----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void MathSetAttributes (Element el, Document doc, Element* selEl)
-#else /* __STDC__*/
-static void MathSetAttributes (el, doc, selEl)
-     Element el;
-     Document doc;
-     Element* selEl;
-#endif /* __STDC__*/
-{
-  ElementType	elType, parentType;
-  Element	parent, grandParent;
-
-  elType = TtaGetElementType (el);
-  if (elType.ElTypeNum == MathML_EL_MO)
-     {
-     SetIntAddSpaceAttr (el, doc);
-     parent = TtaGetParent (el);
-     if (parent != NULL)
-	{
-	parentType = TtaGetElementType (parent);
-	if (parentType.ElTypeNum != MathML_EL_Base &&
-	    parentType.ElTypeNum != MathML_EL_UnderOverBase)
-	   SetIntVertStretchAttr (el, doc, 0, selEl);
-	else
-	   {
-	   grandParent = TtaGetParent (parent);
-	   if (grandParent != NULL)
-	      SetIntVertStretchAttr (grandParent, doc, parentType.ElTypeNum,
-				     selEl);
-	   }
-	}
-     }
-  else
-     /* it's not an operator (mo). Remove all attributes that can be set only
-       on operators, except if it's a mstyle element. */
-     if (elType.ElTypeNum == MathML_EL_MSTYLE)
-     {
-     RemoveAttr (el, doc, MathML_ATTR_IntAddSpace);
-     RemoveAttr (el, doc, MathML_ATTR_form);
-     RemoveAttr (el, doc, MathML_ATTR_fence);
-     RemoveAttr (el, doc, MathML_ATTR_separator);
-     RemoveAttr (el, doc, MathML_ATTR_lspace);
-     RemoveAttr (el, doc, MathML_ATTR_rspace);
-     RemoveAttr (el, doc, MathML_ATTR_separator);
-     RemoveAttr (el, doc, MathML_ATTR_stretchy);
-     RemoveAttr (el, doc, MathML_ATTR_symmetric);
-     RemoveAttr (el, doc, MathML_ATTR_maxsize);
-     RemoveAttr (el, doc, MathML_ATTR_minsize);
-     RemoveAttr (el, doc, MathML_ATTR_largeop);
-     RemoveAttr (el, doc, MathML_ATTR_movablelimits);
-     RemoveAttr (el, doc, MathML_ATTR_accent);
-     }
-  if (elType.ElTypeNum == MathML_EL_MI)
-     SetFontstyleAttr (el, doc);
-  else
-     RemoveAttr (el, doc, MathML_ATTR_IntFontstyle);		
 }
 
 /*----------------------------------------------------------------------
@@ -1940,7 +1918,8 @@ static void SeparateFunctionNames (firstEl, lastEl, doc, newSelEl, newSelChar)
 
 {
   ElementType    elType;
-  Element        el, nextEl, textEl, nextTextEl, newEl, newText, prevEl;
+  Element        el, nextEl, textEl, nextTextEl, firstTextEl, newEl, newText,
+                 cur, prev, next, prevEl;
   Language       lang;
   int            len, flen, firstChar, i, func;
 #define BUFLEN 200
@@ -1968,9 +1947,12 @@ static void SeparateFunctionNames (firstEl, lastEl, doc, newSelEl, newSelChar)
        /* if the MI element has to be split, its pieces will replace itself */
        prevEl = el;
        textEl = TtaGetFirstChild (el);
+       firstTextEl = NULL;
        /* process all children of this MI element */
        while (textEl)
 	  {
+	  if (!firstTextEl)
+	     firstTextEl = textEl;
 	  /* check the next child to be processed */
 	  nextTextEl = textEl;
 	  TtaNextSibling (&nextTextEl);
@@ -2000,8 +1982,46 @@ static void SeparateFunctionNames (firstEl, lastEl, doc, newSelEl, newSelChar)
 		       if (ustrncmp (functionName[func], &text[i], flen) == 0)
 			 /* this substring is a function name */
 			 {
-			 /* create a MI for the text preceding the function
-			    name  */
+			 /* this element will be deleted */
+			 if (!split)
+			    TtaRegisterElementDelete (el, doc);
+			 /* create a MI for all text pieces preceding the
+			    function name  */
+			 newEl = NULL;
+			 prev = NULL;
+			 if (firstTextEl && firstTextEl != textEl)
+			   {
+			   elType.ElTypeNum = MathML_EL_MI;
+			   newEl = TtaNewElement (doc, elType);
+			   TtaInsertSibling (newEl, prevEl, FALSE, doc);
+			   prevEl = newEl;
+			   cur = firstTextEl;
+			   next = cur; TtaNextSibling (&next);
+			   TtaRemoveTree (cur, doc);
+			   TtaInsertFirstChild (&cur, newEl, doc);
+			   prev = cur;
+			   cur = next;
+			   while (cur && cur != textEl)
+			     {
+			       next = cur; TtaNextSibling (&next);
+			       TtaRemoveTree (cur, doc);
+			       TtaInsertSibling (cur, prev, FALSE, doc);
+			       /* if the selection is in this part of the
+				  original element, move it to the new piece
+				  of text */
+			       if (cur == *newSelEl)
+				  *newSelEl = cur;
+			       prev = cur;
+			       cur = next;
+			     }
+			   TtaRegisterElementCreate (newEl, doc);	   
+			   if (!firstElChanged)
+			     {
+			     *firstEl = newEl;
+			     firstElChanged = TRUE;
+			     }
+			   }
+			 firstTextEl = NULL;
 			 if (i > firstChar)
 			   {
 			   elType.ElTypeNum = MathML_EL_MI;
@@ -2096,7 +2116,6 @@ static void SeparateFunctionNames (firstEl, lastEl, doc, newSelEl, newSelChar)
 	  /* the original MI element has been replaced by its pieces.
 	     Delete it */
 	  {
-	  TtaRegisterElementDelete (el, doc);
 	  TtaDeleteTree (el, doc);
 	  }
        }
@@ -2481,6 +2500,165 @@ static void ParseMathString (theText, theElem, doc)
 }
 
 /*----------------------------------------------------------------------
+   SetAttrParseMe
+   associate a IntParseMe attribute with element el in document doc
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void SetAttrParseMe (Element el, Document doc)
+#else /* __STDC__*/
+static void SetAttrParseMe (el, doc)
+     Element el;
+     Document doc;
+#endif /* __STDC__*/
+{
+  ElementType    elType;
+  AttributeType  attrType;
+  Attribute      attr;
+
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = MathML_ATTR_IntParseMe;
+  attr = TtaNewAttribute (attrType);
+  TtaAttachAttribute (el, attr, doc);
+  TtaSetAttributeValue (attr, MathML_ATTR_IntParseMe_VAL_yes_, el, doc);
+}
+
+/*----------------------------------------------------------------------
+ CreateMathEntity
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void CreateMathEntity (Document document, View view)
+#else /* __STDC__*/
+void CreateMathEntity (document, view)
+     Document document;
+     View view;
+#endif /* __STDC__*/
+{
+   Element       firstSel, lastSel, el, el1;
+   ElementType   elType, elType1;
+   Attribute     attr;
+   AttributeType attrType;
+   int           firstChar, lastChar, i, len;
+   ThotBool      before, done;
+   CHAR_T        value[8];
+   CHAR_T        alphabet;
+   Language      lang;
+   STRING        buffer;
+
+   if (!TtaIsSelectionEmpty ())
+      return;
+   TtaGiveFirstSelectedElement (document, &firstSel, &firstChar, &i);
+
+   /* if not within a MathML element, nothing to do */
+   elType = TtaGetElementType (firstSel);
+   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
+      return;
+   
+   MathMLEntityName[0] = EOS;
+#ifdef _WINDOWS
+   CreateMathEntityDlgWindow (TtaGetViewFrame (document, view));
+
+#else
+   TtaNewForm (BaseDialog + MathEntityForm, TtaGetViewFrame (document, view), 
+	       TtaGetMessage (1, BMEntity), TRUE, 1, 'L', D_CANCEL);
+   TtaNewTextForm (BaseDialog + MathEntityText, BaseDialog + MathEntityForm,
+		   TtaGetMessage (AMAYA, AM_MATH_ENTITY_NAME), NAME_LENGTH, 1,
+		   FALSE);
+   TtaSetTextForm (BaseDialog + MathEntityText, MathMLEntityName);
+   TtaSetDialoguePosition ();
+   TtaShowDialogue (BaseDialog + MathEntityForm, FALSE);
+   TtaWaitShowDialogue ();
+#endif /* _WINDOWS */
+   if (MathMLEntityName[0] != EOS)
+     {
+      if (!TtaIsSelectionEmpty ())
+	 return;
+      TtaGiveFirstSelectedElement (document, &firstSel, &firstChar, &i);
+      /* if not within a MathML element, nothing to do */
+      elType = TtaGetElementType (firstSel);
+      if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
+         return;
+      TtaGiveLastSelectedElement (document, &lastSel, &i, &lastChar);
+      TtaOpenUndoSequence (document, firstSel, lastSel, firstChar, lastChar);
+      done = FALSE;
+      before = TRUE;
+      elType1.ElSSchema = elType.ElSSchema;
+      elType1.ElTypeNum = MathML_EL_TEXT_UNIT;
+      el = TtaNewTree (document, elType1, _EMPTYSTR_);
+      if (elType.ElTypeNum == MathML_EL_Construct)
+	/* this element is an empty expression. Replace it by a mtext element*/
+	{
+	TtaRegisterElementDelete (firstSel, document);
+	/* if it's a placeholder, delete attribute IntPlaceholder */
+        attrType.AttrSSchema = elType.ElSSchema;
+        attrType.AttrTypeNum = MathML_ATTR_IntPlaceholder;
+	attr = TtaGetAttribute (firstSel, attrType);
+	if (attr != NULL)
+	   RemoveAttr (firstSel, document, MathML_ATTR_IntPlaceholder);
+	/* create and insert the mtext element, with a text child */
+	elType1.ElTypeNum = MathML_EL_MTEXT;
+	el1 = TtaNewTree (document, elType1, _EMPTYSTR_);
+	TtaInsertFirstChild (&el1, firstSel, document);
+	TtaInsertFirstChild (&el, el1, document);
+	SetAttrParseMe (el1, document);
+	done = TRUE;
+	TtaRegisterElementCreate (el1, document);
+	}
+      else if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+	 if (firstChar > 1)
+	   {
+	     len = TtaGetTextLength (firstSel);
+	     if (firstChar > len)
+	       /* the caret is at the end of that character string */
+	       /* Create the new element after the character string */
+	       before = FALSE;
+	     else
+	       {
+		 /* split the text to insert the Math element */
+		 TtaRegisterElementReplace (firstSel, document);
+		 TtaSplitText (firstSel, firstChar-1, document);
+		 /* take the second part of the split text element */
+		 TtaNextSibling (&firstSel);
+		 TtaRegisterElementCreate (firstSel, document);
+	       }
+	   }
+     if (!done)
+       {
+	 TtaInsertSibling (el, firstSel, before, document);
+         TtaRegisterElementCreate (el, document);
+       }
+     attrType.AttrSSchema = elType.ElSSchema;
+     attrType.AttrTypeNum = MathML_ATTR_EntityName;
+     attr =  TtaNewAttribute (attrType);
+     TtaAttachAttribute (el, attr, document);
+     len = ustrlen (MathMLEntityName);
+     buffer = (STRING) TtaGetMemory (sizeof (CHAR_T) * (len+3));
+     usprintf (buffer, TEXT("&%s;"), MathMLEntityName);
+     TtaSetAttributeText (attr, buffer, el, document);
+     TtaFreeMemory (buffer);
+     MapMathMLEntity (MathMLEntityName, value, 8, &alphabet);
+     if (alphabet == EOS)
+       /* unknown entity */
+       {
+       value[0] = '?';
+       value[1] = EOS;
+       lang = TtaGetLanguageIdFromAlphabet('L');
+       }
+     else
+       lang = TtaGetLanguageIdFromAlphabet(alphabet);
+     TtaSetTextContent (el, value, lang, document);
+     TtaSetAccessRight (el, ReadOnly, document);
+
+     ParseMathString (el, TtaGetParent (el), document);
+
+     /* @@@@@@@@ */
+     TtaCloseUndoSequence (document);
+     }
+
+   /***** Attribute EntityName="&InvisibleTimes;" ****/
+}
+
+/*----------------------------------------------------------------------
    MtextCreated
    A new MTEXT element has just been created by the user, not with a
    command, but simply by starting to type some text.
@@ -2492,18 +2670,8 @@ void MtextCreated(event)
      NotifyElement *event;
 #endif /* __STDC__*/
 {
-  ElementType    elType;
-  AttributeType  attrType;
-  Attribute      attr;
-
   /* associate a IntParseMe attribute with the new MTEXT element */
-  elType = TtaGetElementType (event->element);
-  attrType.AttrSSchema = elType.ElSSchema;
-  attrType.AttrTypeNum = MathML_ATTR_IntParseMe;
-  attr = TtaNewAttribute (attrType);
-  TtaAttachAttribute (event->element, attr, event->document);
-  TtaSetAttributeValue (attr, MathML_ATTR_IntParseMe_VAL_yes_,
-			event->element, event->document);
+  SetAttrParseMe (event->element, event->document);
 }
 
 /*----------------------------------------------------------------------
@@ -2937,9 +3105,10 @@ void MathAttrFontsizeCreated(event)
 #endif /* __STDC__*/
 {
 #define buflen 200
-  STRING           value = (STRING) TtaGetMemory (sizeof (CHAR_T) * buflen);
+  STRING           value;
   int              length;
 
+  value = (STRING) TtaGetMemory (sizeof (CHAR_T) * buflen);
   value[0] = EOS;
   length = TtaGetTextAttributeLength (event->attribute);
   if (length >= buflen)
@@ -2948,6 +3117,7 @@ void MathAttrFontsizeCreated(event)
      TtaGiveTextAttributeValue (event->attribute, value, &length);
   /* associate a CSS property font-size with the element */
   SetFontsize (event->document, event->element, value);
+  TtaFreeMemory (value);
 }
  
  
@@ -2982,9 +3152,10 @@ void MathAttrFontfamilyCreated (event)
      NotifyAttribute *event;
 #endif /* __STDC__*/
 {
-  STRING           value = (STRING) TtaGetMemory (sizeof (CHAR_T) * buflen);
+  STRING           value;
   int              length;
 
+  value = (STRING) TtaGetMemory (sizeof (CHAR_T) * buflen);
   value[0] = EOS;
   length = TtaGetTextAttributeLength (event->attribute);
   if (length >= buflen)
@@ -2992,6 +3163,7 @@ void MathAttrFontfamilyCreated (event)
   if (length > 0)
      TtaGiveTextAttributeValue (event->attribute, value, &length);  
   SetFontfamily (event->document, event->element, value);
+  TtaFreeMemory (value);
 }
 
 
@@ -3025,9 +3197,10 @@ void MathAttrColorCreated (event)
      NotifyAttribute *event;
 #endif /* __STDC__*/
 {
-  STRING           value = (STRING) TtaGetMemory (sizeof (CHAR_T) * buflen);
+  STRING           value;
   int              length;
 
+  value = (STRING) TtaGetMemory (sizeof (CHAR_T) * buflen);
   value[0] = EOS;
   length = TtaGetTextAttributeLength (event->attribute);
   if (length >= buflen)
@@ -3035,6 +3208,7 @@ void MathAttrColorCreated (event)
   if (length > 0)
      TtaGiveTextAttributeValue (event->attribute, value, &length);  
   HTMLSetForegroundColor (event->document, event->element, value);
+  TtaFreeMemory (value);
 }
 
 
@@ -3064,9 +3238,10 @@ void MathAttrBackgroundCreated (event)
      NotifyAttribute *event;
 #endif /* __STDC__*/
 {
-  STRING           value = (STRING) TtaGetMemory (sizeof (CHAR_T) * buflen);
+  STRING           value;
   int              length;
 
+  value = (STRING) TtaGetMemory (sizeof (CHAR_T) * buflen);
   value[0] = EOS;
   length = TtaGetTextAttributeLength (event->attribute);
   if (length >= buflen)
@@ -3074,6 +3249,7 @@ void MathAttrBackgroundCreated (event)
   if (length > 0)
      TtaGiveTextAttributeValue (event->attribute, value, &length);  
   HTMLSetBackgroundColor (event->document, event->element, value);
+  TtaFreeMemory (value);
 }
 
 

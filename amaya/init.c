@@ -4252,9 +4252,18 @@ CharUnit*           data;
      case TableBorder:
        TBorder = val;
        break;
+     case MathEntityForm:
+       /* ********* MathML entity form ********* */
+       if (val == 0)
+	   /* no answer */
+	   MathMLEntityName[0] = EOS;
+       break;
+     case MathEntityText:
+       ustrncpy (MathMLEntityName, data, MAX_LENGTH);
+       MathMLEntityName[MAX_LENGTH - 1] = EOS;
+       break;
      }
 }
-
 
 /*----------------------------------------------------------------------
   RestoreOneAmayaDoc restores a saved file

@@ -2324,29 +2324,35 @@ PtrElement          pNew;
 	      pNew->ElParent->ElFirstChild = pNew;
 	/* updates the volume of the ancestor elements */
 
-	pAsc = pNew->ElParent;
-	while (pAsc != NULL)
+	if (pNew->ElVolume > 0)
 	  {
-	     pAsc->ElVolume = pAsc->ElVolume + pNew->ElVolume;
-	     pAsc = pAsc->ElParent;
+	    pAsc = pNew->ElParent;
+	    while (pAsc != NULL)
+	      {
+		pAsc->ElVolume = pAsc->ElVolume + pNew->ElVolume;
+		pAsc = pAsc->ElParent;
+	      }
 	  }
 	pE = pNew;
-	/* makes the text leaves of the element inherit the language defined by the 
-	  first ancestor element */
+	/* makes the text leaves of the element inherit the language defined
+	   by the first ancestor element */
 	LeavesInheritLanguage (pE);
 	while (pE->ElNext != NULL)
 	  {
 	     pE = pE->ElNext;
 	     pE->ElParent = pOld->ElParent;
-	     /* makes the texte leaves of the element inherit the language defined by the 
-	        first ancestor element */
+	     /* makes the texte leaves of the element inherit the language
+	        defined by the first ancestor element */
 	     LeavesInheritLanguage (pE);
 	     /* updates the volume of the ancestor elements */
-	     pAsc = pE->ElParent;
-	     while (pAsc != NULL)
+	     if (pE->ElVolume > 0)
 	       {
-		  pAsc->ElVolume = pAsc->ElVolume + pE->ElVolume;
-		  pAsc = pAsc->ElParent;
+		 pAsc = pE->ElParent;
+		 while (pAsc != NULL)
+		   {
+		     pAsc->ElVolume = pAsc->ElVolume + pE->ElVolume;
+		     pAsc = pAsc->ElParent;
+		   }
 	       }
 	  }
 	pE->ElNext = pOld;
