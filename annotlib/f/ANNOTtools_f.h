@@ -78,7 +78,7 @@ extern char *GetTempName ( const char *dir,
                            const char *prefix );
 extern void GetServerName ( char *url,
                             char *server );
-extern char *ANNOT_GetHTMLTitle ( Document doc );
+extern char * ANNOT_GetHTMLTitle ( Document doc );
 extern void ANNOT_SetType ( Document doc,
                             RDFResourceP type );
 extern char * ANNOT_MakeFileURL ( const char *path );
@@ -161,7 +161,7 @@ extern char *GetTempName (/* const char *dir,
                              const char *prefix */);
 extern void GetServerName (/* char *url,
                               char *server */);
-extern char *ANNOT_GetHTMLTitle (/* Document doc */);
+extern char * ANNOT_GetHTMLTitle (/* Document doc */);
 extern void ANNOT_SetType (/* Document doc,
                               RDFResourceP type */);
 extern char * ANNOT_MakeFileURL (/* const char *path */);

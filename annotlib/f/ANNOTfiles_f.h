@@ -16,15 +16,15 @@ extern void ANNOT_ReloadAnnotMeta ( Document annotDoc );
 extern void ANNOT_InitDocumentMeta ( Document doc,
                                      Document docAnnot,
                                      AnnotMeta *annot,
-                                     char *title );
+                                     char *source_doc_title );
 extern void ANNOT_InitDocumentBody ( Document docAnnot,
-                                     char *title );
+                                     char *source_doc_title );
 extern Element ANNOT_AddThreadItem ( Document doc,
                                      AnnotMeta *annot );
 extern void ANNOT_InitDocumentStructure ( Document doc,
                                           Document docAnnot,
                                           AnnotMeta *annot,
-                                          ThotBool initBody );
+                                          AnnotMode mode );
 extern void ANNOT_PrepareAnnotView ( Document document );
 extern ThotBool ANNOT_LocalSave ( Document doc_annot,
                                   char *html_filename );
@@ -41,15 +41,15 @@ extern void ANNOT_ReloadAnnotMeta (/* Document annotDoc */);
 extern void ANNOT_InitDocumentMeta (/* Document doc,
                                        Document docAnnot,
                                        AnnotMeta *annot,
-                                       char *title */);
+                                       char *source_doc_title */);
 extern void ANNOT_InitDocumentBody (/* Document docAnnot,
-                                       char *title */);
+                                       char *source_doc_title */);
 extern Element ANNOT_AddThreadItem (/* Document doc,
                                        AnnotMeta *annot */);
 extern void ANNOT_InitDocumentStructure (/* Document doc,
                                             Document docAnnot,
                                             AnnotMeta *annot,
-                                            ThotBool initBody */);
+                                            AnnotMode mode */);
 extern void ANNOT_PrepareAnnotView (/* Document document */);
 extern ThotBool ANNOT_LocalSave (/* Document doc_annot,
                                     char *html_filename */);

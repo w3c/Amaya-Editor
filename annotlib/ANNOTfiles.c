@@ -162,8 +162,9 @@ AnnotMeta *GetMetaData (Document doc, Document doc_annot)
 
 /*-----------------------------------------------------------------------
   ANNOT_LoadAnnotation
-  Initializes an annotation document by adding a BODY part
-  and adding META elements for title, author, date, and type
+  If an annotation has already been loaded, we open a window and show
+  its body.
+  (@@ JK: weird function!)
   -----------------------------------------------------------------------*/
 #ifdef __STDC__
 void ANNOT_LoadAnnotation (Document doc, Document docAnnot)
@@ -179,7 +180,7 @@ void ANNOT_LoadAnnotation (doc, annotDoc)
      we copy it from the existing metadata */
   annot = GetMetaData (doc, docAnnot);
   if (annot)
-    ANNOT_InitDocumentStructure (doc, docAnnot, annot, FALSE);
+    ANNOT_InitDocumentStructure (doc, docAnnot, annot, ANNOT_initNone);
 }
 
 /*-----------------------------------------------------------------------
@@ -202,7 +203,7 @@ void ANNOT_ReloadAnnotMeta (annotDoc)
   if (!annot)
     return;
   /* initialize the meta data */
-  ANNOT_InitDocumentStructure (source_doc, annotDoc, annot, FALSE);
+  ANNOT_InitDocumentStructure (source_doc, annotDoc, annot, ANNOT_initNone);
 }
 
 /*-----------------------------------------------------------------------
@@ -210,26 +211,18 @@ void ANNOT_ReloadAnnotMeta (annotDoc)
   Initializes an annotation document by adding a BODY part
   and adding META elements for title, author, date, and type
   -----------------------------------------------------------------------*/
-#ifdef __STDC__
-void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot, char *title)
-#else /* __STDC__*/
-void  ANNOT_InitDocumentMeta (doc, docAnnot, annot, title)
-     Document   doc;
-     Document   docAnnot;
-     AnnotMeta *annot;
-     char    *title;
-#endif /* __STDC__*/
+void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot, char *source_doc_title)
 {
-  ElementType elType;
-  Element     root, head, el;
-  Attribute           attr;
-  AttributeType       attrType;
-  STRING      user;
-  STRING      doc_anchor;
-  STRING      source_url;
-  char     *cdate;
-  char     *mdate;
-  char     *type;
+  ElementType    elType;
+  Element        root, head, el;
+  Attribute      attr;
+  AttributeType  attrType;
+  STRING         user;
+  STRING         doc_anchor;
+  STRING         source_url;
+  char          *cdate;
+  char          *mdate;
+  char          *type;
 
   user = annot->author;
   source_url = annot->source_url;
@@ -348,9 +341,10 @@ void  ANNOT_InitDocumentMeta (doc, docAnnot, annot, title)
   sprintf (doc_anchor, "%s#%s", DocumentURLs[doc], annot->name);
   TtaSetAttributeText (attr, doc_anchor, el, docAnnot);
   TtaFreeMemory (doc_anchor);
-  /* use the title parameter as the value of the source document field */
+  /* use the source_doc_title parameter as the value of the source
+     document field */
   el = TtaGetFirstChild (el);
-  TtaSetTextContent (el, title,
+  TtaSetTextContent (el, source_doc_title,
 		     TtaGetDefaultLanguage (), docAnnot);
   /* RDF type metadata */
   elType.ElTypeNum = Annot_EL_RDFtype;
@@ -365,13 +359,7 @@ void  ANNOT_InitDocumentMeta (doc, docAnnot, annot, title)
   Initializes an annotation document by adding a BODY part
   and adding META elements for title, author, date, and type
   -----------------------------------------------------------------------*/
-#ifdef __STDC__
-void  ANNOT_InitDocumentBody (Document docAnnot, char *title)
-#else /* __STDC__*/
-void  ANNOT_InitDocumentBody (docAnnot, title)
-Document docAnnot;
-char *title;
-#endif /* __STDC__*/
+void  ANNOT_InitDocumentBody (Document docAnnot, char *source_doc_title)
 {
   ElementType elType;
   Element     root, head, body, el, child;
@@ -403,8 +391,9 @@ char *title;
   el = TtaSearchTypedElement (elType, SearchInTree, root);
   el = TtaGetFirstChild (el);
   /* @@ maybe parse the URL here */
-  tmp = TtaGetMemory (strlen (title) + sizeof ("Annotation of ") + 1);
-  sprintf (tmp, "Annotation of %s", title);
+  tmp = TtaGetMemory (strlen (source_doc_title)
+		      + sizeof ("Annotation of ") + 1);
+  sprintf (tmp, "Annotation of %s", source_doc_title);
   TtaSetTextContent (el, tmp,
 		     TtaGetDefaultLanguage (), docAnnot);
   TtaFreeMemory (tmp);
@@ -585,34 +574,38 @@ Element ANNOT_AddThreadItem (Document doc, AnnotMeta *annot)
    Initializes an annotation document by adding a BODY part
    and adding META elements for title, author, date, and type
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void  ANNOT_InitDocumentStructure (Document doc, Document docAnnot, AnnotMeta *annot, ThotBool initBody)
-#else /* __STDC__*/
-void  ANNOT_InitDocumentStructure (doc, docAnnot, annot, initBody)
-     Document document;
-     Document docAnnot;
-     AnnotMeta *annot;
-     char    *title;
-     ThotBool  initBody;
-
-#endif /* __STDC__*/
+void  ANNOT_InitDocumentStructure (Document doc, Document docAnnot, 
+				   AnnotMeta *annot, AnnotMode mode)
 {
-  char  *title;
+  char *source_doc_title;
+  char *text;
 
   /* avoid refreshing the document while we're constructing it */
   TtaSetDisplayMode (docAnnot, NoComputedDisplay);
+  
+   /* prepare the title of the annotation */
+  source_doc_title = ANNOT_GetHTMLTitle (doc);
 
-  if (annot->title && annot->title[0] != EOS)
-    title = annot->title;
-  else
-    title = DocumentURLs[doc];
+  if (mode & ANNOT_initATitle)
+    {
+      annot->title = TtaStrdup (source_doc_title);
+      if (mode & ANNOT_isReplyTo)
+	text = "Reply to ";
+      else
+	text = "Annotation of ";
+      annot->title = TtaGetMemory (strlen (text)
+				   + strlen (source_doc_title) + 1);
+      sprintf (annot->title, "%s%s", text, source_doc_title);
+    }
 
   /* initialize the meta data */
-  ANNOT_InitDocumentMeta (doc, docAnnot, annot, title);
+  ANNOT_InitDocumentMeta (doc, docAnnot, annot, source_doc_title);
+
   /* initialize the html body */
-  if (initBody)
-    ANNOT_InitDocumentBody (docAnnot, title);
+  if (mode & ANNOT_initBody)
+    ANNOT_InitDocumentBody (docAnnot, source_doc_title);
+
+  TtaFreeMemory (source_doc_title);
 
   /* show the document */
   TtaSetDisplayMode (docAnnot, DisplayImmediately);

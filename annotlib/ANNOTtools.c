@@ -1337,34 +1337,87 @@ void GetServerName (char *url, char *server)
 
 /*-----------------------------------------------------------------------
    ANNOT_GetHTMLTitle
-   Returns the HTML title of the given document or NULL if this
-   element doesn't exist.
-  -----------------------------------------------------------------------*/
-char *ANNOT_GetHTMLTitle (Document doc)
+   If doc is of type (X)HTML, returns the HTML title if it's not empty.
+   If doc is of type Annotation, returns the title of the annotation if
+   it's not empty.
+   Otherwise, returns the URL of the document.
+   The caller must free the returned string.
+   -----------------------------------------------------------------------*/
+char * ANNOT_GetHTMLTitle (Document doc)
 {
   Element          el;
   int              length;
   Language         lang;
-  char          *title;
+  char            *title;
   ElementType      elType;
   
-   /* only HTML documents can be annotated */
-  elType.ElSSchema = TtaGetDocumentSSchema (doc);
-  elType.ElTypeNum = HTML_EL_TITLE;
-  /* find the title */
-  el = TtaGetRootElement (doc);
-  el = TtaSearchTypedElement (elType, SearchInTree, el);
-  /* no title */
-  if (!el)
-    return NULL;
-  /* find the text content */
-  el = TtaGetLastChild (el);
-  /* no content */
-  if (!el)
-    return NULL;
-  length = TtaGetTextLength (el) + 1;
-  title = TtaGetMemory (length);
-  TtaGiveTextContent (el, title, &length, &lang);
+  title = NULL;
+  if (DocumentTypes[doc] == docHTML || DocumentTypes[doc] == docXml)
+    {
+      /* only HTML documents and XHTML documents have a title */
+      /* @@ JK: should get the XHTML or HTML doc schema here */
+      elType.ElSSchema = TtaGetDocumentSSchema (doc);
+      elType.ElTypeNum = HTML_EL_TITLE;
+      /* find the title */
+      el = TtaGetRootElement (doc);
+      el = TtaSearchTypedElement (elType, SearchInTree, el);
+      /* found a title */
+      if (el)
+	{
+	  /* find the text content */
+	  el = TtaGetLastChild (el);
+	  /* with some content */
+	  if (el)
+	    {
+	      length = TtaGetTextLength (el) + 1;
+	      if (length > 1)
+		{
+		  title = TtaGetMemory (length);
+		  TtaGiveTextContent (el, title, &length, &lang);
+		  /* discard an empty title */
+		  if (title[0] == EOS)
+		    {
+		      TtaFreeMemory (title);
+		      title = NULL;
+		    }
+		}
+	    }
+	}
+    }
+  else if (DocumentTypes[doc] == docAnnot)
+    {
+      elType.ElSSchema = TtaGetDocumentSSchema (doc);
+      elType.ElTypeNum = Annot_EL_ATitle;
+      /* find the title */
+      el = TtaGetRootElement (doc);
+      el = TtaSearchTypedElement (elType, SearchInTree, el);
+      /* found a title */
+      if (el)
+	{
+	  /* find the text content */
+	  el = TtaGetLastChild (el);
+	  /* with some content */
+	  if (el)
+	    {
+	      length = TtaGetTextLength (el) + 1;
+	      if (length > 1)
+		{
+		  title = TtaGetMemory (length);
+		  TtaGiveTextContent (el, title, &length, &lang);
+		  /* discard an empty title */
+		  if (title[0] == EOS)
+		    {
+		      TtaFreeMemory (title);
+		      title = NULL;
+		    }
+		}
+	    }
+	}
+    }
+  /* if we didn't get a title, use the document's URL instead */
+  if (title == NULL)
+    title = TtaStrdup (DocumentURLs[doc]);
+
   return (title);
 }
 

@@ -182,7 +182,10 @@ AnnotThreadList   AnnotThread[DocumentTableLength];
 typedef enum _AnnotMode {
   ANNOT_useSelection = 0,
   ANNOT_useDocRoot = 1,
-  ANNOT_isReplyTo = 2
+  ANNOT_isReplyTo = 2,
+  ANNOT_initNone = 4,
+  ANNOT_initATitle = 8,
+  ANNOT_initBody = 16
 } AnnotMode;
 
 /* Definition de constantes pour les annotations */

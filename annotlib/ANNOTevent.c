@@ -659,8 +659,6 @@ void ANNOT_Create (Document doc, View view, AnnotMode mode)
   AnnotMeta  *annot;
   XPointerContextPtr ctx;
   char       *xptr;
-  char       *title;
-  ThotBool    free_title;
   ThotBool    useDocRoot = mode & ANNOT_useDocRoot;
   ThotBool    isReplyTo = mode & ANNOT_isReplyTo;
 
@@ -738,31 +736,14 @@ void ANNOT_Create (Document doc, View view, AnnotMode mode)
   /* update the XPointer */
   annot->xptr = xptr;
 
-  /* prepare the title of the annotation */
-  title = ANNOT_GetHTMLTitle (doc);
-  if (!title || title[0] == EOS)
-    {
-      if (title)
-	TtaFreeMemory (title);
-      free_title = FALSE;
-      title = DocumentURLs[doc];
-    }
-  else
-    free_title = TRUE;
-  
-  annot->title = TtaGetMemory (sizeof ("Annotation of ")
-			       + strlen (title)
-			       + 1);
-  sprintf (annot->title, "Annotation of %s", title);
-  if (free_title)
-    TtaFreeMemory (title);
+  /* initialize everything */
+  mode |= ANNOT_initATitle | ANNOT_initBody;
+  ANNOT_InitDocumentStructure (doc, doc_annot, annot, mode);
 
-  ANNOT_InitDocumentStructure (doc, doc_annot, annot, TRUE);
-
-  /* @@ JK: do I need to do this? */
+  /* turn on/off entries in the menu bar */
   UpdateContextSensitiveMenus (doc);
 
-  /* add the annotation icon */
+  /* add the annotation icon to the source document */
   TtaUnselect (doc);
   LINK_AddLinkToSource (doc, annot);
 
