@@ -46,6 +46,7 @@ ShowButtons
 ShowAddress
 ZoomIn
 ZoomOut
+&TransformType
 
 <Editor_WX>
 +config_WX
@@ -54,6 +55,7 @@ ZoomOut
 +edit
 ZoomIn
 ZoomOut
+&EmptyTransformMenu
 
 ################# AMAYA BROWSER
 <Browser>
@@ -402,7 +404,6 @@ HelpXml
 &CreateDoctypeHtmlTransitional
 &CreateDoctypeHtmlStrict
 &SaveDocument
-&TransformType
 &TtcCutSelection
 &TtcDeleteSelection
 &TtcPaste

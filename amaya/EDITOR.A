@@ -115,7 +115,9 @@ MENUS
 	Edit_ Separator;
 	Edit_ button:BFind -> TtcSearchText;
 	Edit_ button:BSpellCheck -> SpellCheck;
+	Edit_.TranformMenu button:BEmptyTransformMenu -> EmptyTransformMenu;
 	Edit_ button:BTransform -> TransformType;
+	Edit_ Separator;
 	Edit_ button:BConfigure -> ConfigAmaya;
 	Edit_.Coptions button:BConfigGeneral -> ConfigGeneral;
 	Edit_.Coptions button:BConfigBrowse -> ConfigBrowse;

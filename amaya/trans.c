@@ -2397,6 +2397,13 @@ void InitTransform ()
 }
 
 /*----------------------------------------------------------------------
+   EmptyTransformMenu
+  ----------------------------------------------------------------------*/
+void EmptyTransformMenu (Document doc, View view)
+{
+}
+
+/*----------------------------------------------------------------------
    callback of  the transform entry of Edit menu 
   ----------------------------------------------------------------------*/
 void TransformType (Document doc, View view)
@@ -2562,7 +2569,8 @@ void TransformType (Document doc, View view)
 	     (!TtaIsAncestor (node->Elem, myFirstSelect)));
       TtaFreeMemory (tag);
       if (i > 0)
-	{ /* if some transformations have been matched, shows the menu */
+	{    
+	  /* if some transformations have been matched, shows the menu */
 	  TtaNewPopup (TransBaseDialog + TransMenu, TtaGetViewFrame (doc, 1), 
 		       TtaGetMessage (AMAYA, AM_TRANS), i, menuBuf,
 		       NULL, 'L');
