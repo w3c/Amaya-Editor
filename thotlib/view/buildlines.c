@@ -2150,7 +2150,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   PtrLine             pLine;
   PtrAbstractBox      pChildAb;
   PtrAbstractBox      pAb, pRootAb;
-  PtrBox              pBoxToBreak;
+  PtrBox              pBoxToBreak, box;
   PtrBox              pNextBox;
   AbPosition         *pPosAb;
   int                 x, lineSpacing, indentLine;
@@ -2164,7 +2164,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   ThotBool            extensibleBox;
   ThotBool            full;
   ThotBool            still;
-  ThotBool            toLineSpace;
+  ThotBool            toLineSpace, standard;
 
   /* Fill the block box */
   noWrappedWidth = 0;
@@ -2213,6 +2213,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 			    pAb, ViewFrameTable[frame - 1].FrMagnification);
   /* space added at the top and bottom of the paragraph */
   spacing = lineSpacing - BoxFontHeight (pBox->BxFont);
+  standard = (spacing >= 0);
   if (spacing > 0)
     spacing /= 2;
   else
@@ -2391,17 +2392,17 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 		toLineSpace = TRUE;
 		
 	      /* check lines that cannot overlap */
-	      if (org < *height + top && pPreviousLine &&
-		  (pPreviousLine->LiNoOverlap || pLine->LiNoOverlap))
+	      if (org < *height + top &&
+		  pPreviousLine &&
+		  (pPreviousLine->LiNoOverlap || pLine->LiNoOverlap ||
+		   standard))
 		{
 		  /* don't overlap the lines */
 		  org = *height + top;
 		  if (!pPreviousLine->LiNoOverlap)
 		    org = org - pPreviousLine->LiHeight + pPreviousLine->LiHorizRef;
-		  pLine->LiYOrg = org;
 		}
-	      else
-		pLine->LiYOrg = org;
+	      pLine->LiYOrg = org;
 	      /* prepare information for the next line */
 	      *height = org - top + pLine->LiHeight;
 	      org = org + pLine->LiHorizRef + lineSpacing;

@@ -1627,6 +1627,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 		  if (!inLine && pAb->AbWidth.DimUnit == UnAuto)
 		    {
 		      pAb->AbWidth.DimAbRef = pParentAb;
+		      pAb->AbWidth.DimValue = 0;
 		    }
 		  if (inLine && pAb->AbLeafType == LtText)
 		    /* inherited from the contents */
@@ -1767,10 +1768,6 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 		}
 	      else
 		{
-		  if (pAb->AbHeight.DimUnit == UnAuto)
-		    {
-		      ;
-		    }
 		  pDimAb = &pAb->AbHeight;
 		  pEl = pAb->AbElement;
 		  if (inLine && pAb->AbLeafType == LtText)
