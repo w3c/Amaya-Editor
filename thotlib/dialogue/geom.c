@@ -511,12 +511,12 @@ PtrTextBuffer    Bbuffer;
 		    /* any other button : end of user input */
 		    ret = 1;
 		}
-	      break;
 	      else
 		{
-		  newsx = lastx;
+		  newx = lastx;
 		  newy = lasty;
 		}
+	      break;
 
 	    default: break;
 	    }
