@@ -87,7 +87,7 @@ void CallbackSaveDocMenu (int ref, int typedata, char *txt)
 {
   PathBuffer          ptTranslatedName;
   PathBuffer          BufDir;
-  char               *URL_DIR_SEP;
+  char                URL_DIR_SEP;
   int                 i, nbitem;
   int                 val;
 

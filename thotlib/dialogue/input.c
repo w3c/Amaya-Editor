@@ -1075,7 +1075,7 @@ void      TtaAddAccessKey (Document doc, unsigned int key, void *param)
       k = tolower (key);
       next = DocAccessKey[doc - 1];
       ptr = NULL;
-      while (next != NULL && next->K_EntryCode != k)
+      while (next != NULL && next->K_EntryCode != (int) k)
 	{
 	  ptr = next;
 	  next = next->K_Other;
@@ -1135,7 +1135,7 @@ void      TtaRemoveAccessKey (Document doc, unsigned int key)
       k = tolower (key);
       next = DocAccessKey[doc - 1];
       ptr = NULL;
-      while (next != NULL && next->K_EntryCode != k)
+      while (next != NULL && next->K_EntryCode != (int) k)
 	{
 	  ptr = next;
 	  next = next->K_Other;

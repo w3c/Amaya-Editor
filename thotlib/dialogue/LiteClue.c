@@ -481,7 +481,7 @@ static void Enter_event(Widget w, XtPointer client_data, XEvent * xevent, Boolea
 	   help for next watched widget
 	*/
 	if ((event->time -  cw->liteClue.HelpPopDownTime) > 
-			cw->liteClue.cancelWaitPeriod ) 
+			(unsigned) cw->liteClue.cancelWaitPeriod ) 
 		current_waitPeriod = cw->liteClue.waitPeriod,timeout_event;
 	else
 		current_waitPeriod = 0;
