@@ -340,6 +340,10 @@ THOT_EXPORT char       MathMLEntityName[MAX_LENGTH]; /* entity name typed by the
 THOT_EXPORT char       IdElemName[MAX_LENGTH]; /* element name typed by the user from the MakeID menu */
 THOT_EXPORT char       IdStatus[50]; /* element name typed by the user from the MakeID menu */
 THOT_EXPORT char       ImgFilter[NAME_LENGTH];
+THOT_EXPORT char       DirectoryImage[MAX_LENGTH];
+THOT_EXPORT char       LastURLImage[MAX_LENGTH];
+THOT_EXPORT char       ImageName[MAX_LENGTH];
+THOT_EXPORT char       ImgAlt[MAX_LENGTH];
 THOT_EXPORT char      *LastURLName;	/* last URL requested               */
 THOT_EXPORT char      *DirectoryName;	/* local path of the document       */
 THOT_EXPORT char      *DocumentName;	/* document name                    */

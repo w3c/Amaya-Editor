@@ -225,16 +225,6 @@ LRESULT CALLBACK AltDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       break;
       
     case WM_COMMAND:
-#ifdef IV
-      if (HIWORD (wParam) == EN_UPDATE)
-	{
-	  if (LOWORD (wParam) == IDC_GETALT)
-	    {
-	      GetDlgItemText (hwnDlg, IDC_GETALT, AltText, sizeof (AltText) - 1);
-	      ThotCallback (BaseImage + ImageAlt, STRING_DATA, AltText);
-	    }
-	}
-#endif /* IV */
       switch (LOWORD (wParam))
 	{
 	case ID_CONFIRM:
@@ -1513,17 +1503,10 @@ LRESULT CALLBACK OpenImgDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	
 	SetDlgItemText (hwnDlg, IDC_GETURL, UrlToOpen);
 	UrlToOpen[0] = EOS;
-	SetDlgItemText (hwnDlg, IDC_GETALT, "");
-	AltText[0] = EOS;
+	SetDlgItemText (hwnDlg, IDC_GETALT, ImgAlt);
 	break;
 	
       case WM_COMMAND:
-	if (HIWORD (wParam) == EN_UPDATE)
-	  if (LOWORD (wParam) == IDC_GETALT)
-	    {
-	      GetDlgItemText (hwnDlg, IDC_GETALT, AltText, sizeof (AltText) - 1);
-	      ThotCallback (BaseImage + ImageAlt, STRING_DATA, AltText);
-	    }
 	switch (LOWORD (wParam))
 	  {
 	  case ID_CONFIRM:
@@ -1552,7 +1535,7 @@ LRESULT CALLBACK OpenImgDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	    OpenFileName.nFilterIndex      = 1L;
 	    OpenFileName.lpstrFile         = (LPTSTR) TmpDocName;
 	    OpenFileName.nMaxFile          = MAX_LENGTH;
-	    OpenFileName.lpstrInitialDir   = (LPTSTR) DirectoryName;
+	    OpenFileName.lpstrInitialDir   = (LPTSTR) DirectoryImage;
 	    OpenFileName.lpstrTitle        = TtaGetMessage (AMAYA, AM_FILES);
 	    OpenFileName.nFileOffset       = 0;
 	    OpenFileName.nFileExtension    = 0;
@@ -3756,7 +3739,7 @@ void CreateOpenImgDlgWindow (ThotWindow parent, char *imgName, int doc_select,
     SzFilter = APPIMAGENAMEFILTER;
   else 
     SzFilter = APPALLFILESFILTER;
-  
+  strcpy (AltText, ImgAlt);
   DialogBox (hInstance, MAKEINTRESOURCE (OPENIMAGEDIALOG), parent,
 	  (DLGPROC) OpenImgDlgProc);
 }

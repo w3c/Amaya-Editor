@@ -22,10 +22,6 @@
 
 static Document   BgDocument;
 static int        RepeatValue;
-static char       DirectoryImage[MAX_LENGTH];
-static char       LastURLImage[MAX_LENGTH];
-static char       ImageName[MAX_LENGTH];
-static char       ImgAlt[MAX_LENGTH];
 static ThotBool   CreateNewImage;
 
 #include "AHTURLTools_f.h"
@@ -675,8 +671,16 @@ char *GetImageURL (Document document, View view)
    char               tempfile[MAX_LENGTH];
    char               s[MAX_LENGTH];
    int                i;
+#endif /* _WINGUI */
 
-   /* Dialogue form for open URL or local */
+   if (LastURLImage[0] == EOS)
+     {
+	strcpy (LastURLImage, DirectoryImage);
+	strcat (LastURLImage, DIR_STR);
+	strcat (LastURLImage, ImageName);
+   }
+#ifndef _WINGUI
+	/* Dialogue form for open URL or local */
    i = 0;
    strcpy (&s[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
    i += strlen (&s[i]) + 1;
@@ -697,15 +701,7 @@ char *GetImageURL (Document document, View view)
 		     TtaGetMessage (AMAYA, AM_IMAGES_LOCATION),
 		     BaseImage + ImageDir, ImgFilter,
 		     TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
-   if (LastURLImage[0] != EOS)
-     TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
-   else
-     {
-	strcpy (LastURLImage, DirectoryImage);
-	strcat (LastURLImage, DIR_STR);
-	strcat (LastURLImage, ImageName);
-	TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
-     }
+   TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
    TtaSetTextForm (BaseImage + ImageAlt, ImgAlt);
    TtaNewTextForm (BaseImage + ImageFilter, BaseImage + FormImage,
 		   TtaGetMessage (AMAYA, AM_PARSE), 10, 1, TRUE);
@@ -1160,7 +1156,7 @@ void CreateImage (Document doc, View view)
   ElementType        elType;
   Attribute          attr;
   AttributeType      attrType;
-  char              *name, *value, *docname;
+  char              *name, *value;
   int                c1, i, j, cN, length;
   NotifyOnTarget     event;
 
@@ -1168,6 +1164,7 @@ void CreateImage (Document doc, View view)
   if (firstSelEl)
     /* some element is selected */
     {
+	  ImgAlt[0] = EOS;
       TtaGiveLastSelectedElement (doc, &lastSelEl, &j, &cN);
       /* Get the type of the first selected element */
       elType = TtaGetElementType (firstSelEl);
@@ -1215,7 +1212,6 @@ void CreateImage (Document doc, View view)
 	     to initialize the image dialogue box */
 	  attrType.AttrTypeNum = HTML_ATTR_ALT;
 	  attr = TtaGetAttribute (firstSelEl, attrType);
-	  ImgAlt[0] = EOS;
 	  if (attr)
 	    {
 	      length = TtaGetTextAttributeLength (attr) + 1;
