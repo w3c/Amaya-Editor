@@ -78,6 +78,18 @@ typedef int        *PRule;
 #define PRPageInside 63
 #define LAST_PRES_RULE_TYPE 63
 
+/* values for rules PRBorder*Style */
+#define BorderStyleNone 1
+#define BorderStyleHidden 2
+#define BorderStyleDotted 3
+#define BorderStyleDashed 4
+#define BorderStyleSolid 5
+#define BorderStyleDouble 6
+#define BorderStyleGroove 7
+#define BorderStyleRidge 8
+#define BorderStyleInset 9
+#define BorderStyleOutset 10
+
 /* values for rule PRStyle */
 #define StyleRoman 1
 #define StyleItalics 2

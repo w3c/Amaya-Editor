@@ -3060,6 +3060,45 @@ static void  ParseCSSRule (Element element, PSchema tsch,
     TtaSetDisplayMode (context->doc, dispMode);
 }
 
+/*----------------------------------------------------------------------
+ AddBorderStyleValue
+ -----------------------------------------------------------------------*/
+static void AddBorderStyleValue (char *buffer, int value)
+{
+  switch (value)
+    {
+    case STYLE_BORDERNONE:
+      strcat (buffer, "none");
+      break;
+    case STYLE_BORDERHIDDEN:
+      strcat (buffer, "hidden");
+      break;
+    case STYLE_BORDERDOTTED:
+      strcat (buffer, "dotted");
+      break;
+    case STYLE_BORDERDASHED:
+      strcat (buffer, "dashed");
+      break;
+    case STYLE_BORDERSOLID:
+      strcat (buffer, "solid");
+      break;
+    case STYLE_BORDERDOUBLE:
+      strcat (buffer, "double");
+      break;
+    case STYLE_BORDERGROOVE:
+      strcat (buffer, "groove");
+      break;
+    case STYLE_BORDERRIDGE:
+      strcat (buffer, "ridge");
+      break;
+    case STYLE_BORDERINSET:
+      strcat (buffer, "inset");
+      break;
+    case STYLE_BORDEROUTSET:
+      strcat (buffer, "outset");
+      break;
+    }
+}
 
 /*----------------------------------------------------------------------
  PToCss:  translate a PresentationSetting to the
@@ -3096,44 +3135,149 @@ void PToCss (PresentationSetting settings, char *buffer, int len, Element el)
     {
     case PRVisibility:
       break;
-    case PRFont:
-      switch (settings->value.typed_data.value)
-	{
-	case STYLE_FONT_HELVETICA:
-	  strcpy (buffer, "font-family: helvetica");
-	  break;
-	case STYLE_FONT_TIMES:
-	  strcpy (buffer, "font-family: times");
-	  break;
-	case STYLE_FONT_COURIER:
-	  strcpy (buffer, "font-family: courier");
-	  break;
-	}
+    case PRHeight:
+      if (real)
+	sprintf (buffer, "height: %g", fval);
+      else
+	sprintf (buffer, "height: %d", settings->value.typed_data.value);
+      add_unit = 1;
       break;
-    case PRStyle:
-      switch (settings->value.typed_data.value)
-	{
-	case STYLE_FONT_ROMAN:
-	  strcpy (buffer, "font-style: normal");
-	  break;
-	case STYLE_FONT_ITALICS:
-	  strcpy (buffer, "font-style: italic");
-	  break;
-	case STYLE_FONT_OBLIQUE:
-	  strcpy (buffer, "font-style: oblique");
-	  break;
-	}
+    case PRWidth:
+      if (real)
+	sprintf (buffer, "width: %g", fval);
+      else
+	sprintf (buffer, "width: %d", settings->value.typed_data.value);
+      add_unit = 1;
       break;
-    case PRWeight:
-      switch (settings->value.typed_data.value)
-	{
-	case STYLE_WEIGHT_BOLD:
-	  strcpy (buffer, "font-weight: bold");
-	  break;
-	case STYLE_WEIGHT_NORMAL:
-	  strcpy (buffer, "font-weight: normal");
-	  break;
-	}
+    case PRMarginTop:
+      if (real)
+	sprintf (buffer, "margin-top: %g", fval);
+      else
+	sprintf (buffer, "margin-top: %d",settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case PRMarginBottom:
+      if (real)
+	sprintf (buffer, "margin-bottom: %g", fval);
+      else
+	sprintf (buffer, "margin-bottom: %d",
+		 settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case PRMarginLeft:
+      if (real)
+	sprintf (buffer, "margin-left: %g", fval);
+      else
+	sprintf (buffer, "margin-left: %d",
+		  settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case PRMarginRight:
+      if (real)
+	sprintf (buffer, "margin-right: %g", fval);
+      else
+	sprintf (buffer, "margin-right: %d",
+		  settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case PRPaddingTop:
+      if (real)
+	sprintf (buffer, "padding-top: %g", fval);
+      else
+	sprintf (buffer, "padding-top: %d",settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case PRPaddingBottom:
+      if (real)
+	sprintf (buffer, "padding-bottom: %g", fval);
+      else
+	sprintf (buffer, "padding-bottom: %d",
+		 settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case PRPaddingLeft:
+      if (real)
+	sprintf (buffer, "padding-left: %g", fval);
+      else
+	sprintf (buffer, "padding-left: %d",
+		  settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case PRPaddingRight:
+      if (real)
+	sprintf (buffer, "padding-right: %g", fval);
+      else
+	sprintf (buffer, "padding-right: %d",
+		  settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case PRBorderTopWidth:
+      if (real)
+	sprintf (buffer, "border-top-width: %g", fval);
+      else
+	sprintf (buffer, "border-top-width: %d",
+		 settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case PRBorderBottomWidth:
+      if (real)
+	sprintf (buffer, "border-bottom-width: %g", fval);
+      else
+	sprintf (buffer, "border-bottom-width: %d",
+		 settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case PRBorderLeftWidth:
+      if (real)
+	sprintf (buffer, "border-left-width: %g", fval);
+      else
+	sprintf (buffer, "border-left-width: %d",
+		 settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case PRBorderRightWidth:
+      if (real)
+	sprintf (buffer, "border-right-width: %g", fval);
+      else
+	sprintf (buffer, "border-right-width: %d",
+		 settings->value.typed_data.value);
+      add_unit = 1;
+      break;
+    case PRBorderTopColor:
+      TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
+      elType = TtaGetElementType(el);
+      sprintf (buffer, "border-top-color: #%02X%02X%02X", red, green, blue);
+      break;
+    case PRBorderRightColor:
+      TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
+      elType = TtaGetElementType(el);
+      sprintf (buffer, "border-right-color: #%02X%02X%02X", red, green, blue);
+      break;
+    case PRBorderBottomColor:
+      TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
+      elType = TtaGetElementType(el);
+      sprintf (buffer, "border-bottom-color: #%02X%02X%02X", red, green, blue);
+      break;
+    case PRBorderLeftColor:
+      TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
+      elType = TtaGetElementType(el);
+      sprintf (buffer, "border-left-color: #%02X%02X%02X", red, green, blue);
+      break;
+    case PRBorderTopStyle:
+      strcpy (buffer, "border-top-style: ");
+      AddBorderStyleValue (buffer, settings->value.typed_data.value);
+      break;
+    case PRBorderRightStyle:
+      strcpy (buffer, "border-right-style: ");
+      AddBorderStyleValue (buffer, settings->value.typed_data.value);
+      break;
+    case PRBorderBottomStyle:
+      strcpy (buffer, "border-bottom-style: ");
+      AddBorderStyleValue (buffer, settings->value.typed_data.value);
+      break;
+    case PRBorderLeftStyle:
+      strcpy (buffer, "border-left-style: ");
+      AddBorderStyleValue (buffer, settings->value.typed_data.value);
       break;
     case PRSize:
       if (unit == STYLE_UNIT_REL)
@@ -3184,6 +3328,45 @@ void PToCss (PresentationSetting settings, char *buffer, int len, Element el)
 	  add_unit = 1;
 	}
       break;
+    case PRStyle:
+      switch (settings->value.typed_data.value)
+	{
+	case STYLE_FONT_ROMAN:
+	  strcpy (buffer, "font-style: normal");
+	  break;
+	case STYLE_FONT_ITALICS:
+	  strcpy (buffer, "font-style: italic");
+	  break;
+	case STYLE_FONT_OBLIQUE:
+	  strcpy (buffer, "font-style: oblique");
+	  break;
+	}
+      break;
+    case PRWeight:
+      switch (settings->value.typed_data.value)
+	{
+	case STYLE_WEIGHT_BOLD:
+	  strcpy (buffer, "font-weight: bold");
+	  break;
+	case STYLE_WEIGHT_NORMAL:
+	  strcpy (buffer, "font-weight: normal");
+	  break;
+	}
+      break;
+    case PRFont:
+      switch (settings->value.typed_data.value)
+	{
+	case STYLE_FONT_HELVETICA:
+	  strcpy (buffer, "font-family: helvetica");
+	  break;
+	case STYLE_FONT_TIMES:
+	  strcpy (buffer, "font-family: times");
+	  break;
+	case STYLE_FONT_COURIER:
+	  strcpy (buffer, "font-family: courier");
+	  break;
+	}
+      break;
     case PRUnderline:
       switch (settings->value.typed_data.value)
 	{
@@ -3197,6 +3380,8 @@ void PToCss (PresentationSetting settings, char *buffer, int len, Element el)
 	  strcpy (buffer, "text-decoration: line-through");
 	  break;
 	}
+      break;
+    case PRThickness:
       break;
     case PRIndent:
       if (real)
@@ -3213,6 +3398,8 @@ void PToCss (PresentationSetting settings, char *buffer, int len, Element el)
 	sprintf (buffer, "line-height: %d",
 		  settings->value.typed_data.value);
       add_unit = 1;
+      break;
+    case PRDepth:
       break;
     case PRAdjust:
       switch (settings->value.typed_data.value)
@@ -3234,7 +3421,21 @@ void PToCss (PresentationSetting settings, char *buffer, int len, Element el)
 	  break;
 	}
       break;
-    case PRHyphenate:
+    case PRLineStyle:
+      break;
+    case PRLineWeight:
+      elType = TtaGetElementType(el);
+#ifdef _SVG
+      if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG"))
+#endif /* _SVG */
+	{
+	  if (real)
+	    sprintf (buffer, "stroke-width: %g", fval);
+	  else
+	    sprintf (buffer, "stroke-width: %d",
+		      settings->value.typed_data.value);
+	}
+      add_unit = 1;
       break;
     case PRFillPattern:
       break;
@@ -3259,50 +3460,11 @@ void PToCss (PresentationSetting settings, char *buffer, int len, Element el)
 #endif /* _SVG */
 	sprintf (buffer, "color: #%02X%02X%02X", red, green, blue);
       break;
-    case PRLineWeight:
-      elType = TtaGetElementType(el);
-#ifdef _SVG
-      if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG"))
-#endif /* _SVG */
-	{
-	  if (real)
-	    sprintf (buffer, "stroke-width: %g", fval);
-	  else
-	    sprintf (buffer, "stroke-width: %d",
-		      settings->value.typed_data.value);
-	}
-      add_unit = 1;
+    case PRHyphenate:
       break;
-
-    case PRMarginTop:
-      if (real)
-	sprintf (buffer, "marging-top: %g", fval);
-      else
-	sprintf (buffer, "marging-top: %d",
-		  settings->value.typed_data.value);
-      add_unit = 1;
+    case PRVertOverflow:
       break;
-    case PRMarginLeft:
-      if (real)
-	sprintf (buffer, "margin-left: %g", fval);
-      else
-	sprintf (buffer, "margin-left: %d",
-		  settings->value.typed_data.value);
-      add_unit = 1;
-      break;
-    case PRHeight:
-      if (real)
-	sprintf (buffer, "height: %g", fval);
-      else
-	sprintf (buffer, "height: %d", settings->value.typed_data.value);
-      add_unit = 1;
-      break;
-    case PRWidth:
-      if (real)
-	sprintf (buffer, "width: %g", fval);
-      else
-	sprintf (buffer, "width: %d", settings->value.typed_data.value);
-      add_unit = 1;
+    case PRHorizOverflow:
       break;
     case PRLine:
       if (settings->value.typed_data.value == STYLE_INLINE)
