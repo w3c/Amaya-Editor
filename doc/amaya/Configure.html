@@ -30,26 +30,27 @@
 <h2>Configuring Amaya</h2>
 
 <p><strong>Amaya</strong> uses different configuration files to get initial
-values for global parameters, dialogs, shortcuts, window size and position,
+values for global parameters, dialogues, shortcuts, window size and position,
 user's style sheet, etc. You can change most of the configuration parameters
-by means of specific preferences menus. This document gives a walk-through of
-the different <a href="#preferences">preference menus</a>, then gives more
-specific information on how to configure the <a href="#shortcuts">keyboard
-shortcuts</a>.</p>
+by means of specific preferences menus. This document outlines the
+configuration directory and file <a href="#Conventions">conventions</a>, gives
+a walk-through of the different <a href="#preferences">preference menus</a>,
+and gives specific information on how to configure the <a
+href="#shortcuts">keyboard shortcuts</a>.</p>
 
-<h2>Conventions</h2>
+<h3><a name="Conventions">Conventions</a></h3>
 
-<h3><a name="L979">The <strong>Amaya/Config</strong> directory</a></h3>
+<h4><a name="L979">The <strong>Amaya/Config</strong> directory</a></h4>
 
 <p>This is the directory where most of the default values and all the dialogue
-messages are stored. The directory's parent is the one where you installed
-Amaya.</p>
+messages are stored. The directory's parent is the one where Amaya was
+installed.</p>
 
-<h3><a name="AmayaHome">The AmayaHome Directory</a></h3>
+<h4><a name="AmayaHome">The AmayaHome Directory</a></h4>
 
 <p>Amaya stores the user preferences as well as other user configuration files
 in a directory which we call the <strong>AmayaHome</strong> directory. The
-following table shows where this directory is stored under different
+following table shows where this directory is stored within different
 architectures:</p>
 
 <table border="1" summary="directory structure" align="center">
@@ -105,11 +106,11 @@ new versions of Amaya and may contain the following files:</p>
 <strong>amaya.css</strong> files are loaded at launch time. If you change
 them, you will need to quit and restart Amaya to take them into account.</p>
 
-<h3><a name="AmayaTemp">The AmayaTemp Directory</a></h3>
+<h4><a name="AmayaTemp">The AmayaTemp Directory</a></h4>
 
 <p>Amaya stores all the temporary files it creates during its execution in a
 directory which we call the <strong>AmayaTemp</strong> directory. The
-following table shows where this directory is stored under different
+following table shows where this directory is stored within different
 architectures:</p>
 
 <table border="1" summary="directory structure" align="center">
@@ -144,22 +145,32 @@ impact subsequent executions of Amaya.</p>
 <h3><a name="preferences">Preferences Menus</a></h3>
 
 <p>These menus are found under the <strong>Special/Preference</strong> menu.
-There are five different preference menus available: <a
+There are nine different preference menus available: <a
 href="#General">general</a>, <a href="#Publishing">publishing</a>, <a
 href="#Cache">cache</a>, <a href="#Specifying1">proxy</a>, <a
-href="#color">colors</a>, <a href="#HTML">geometry</a>, <a
-href="#Profiles">profiles</a>, and <a href="#Templates">templates</a>. In all
-of these menus, we find three common action buttons:</p>
-<dl>
-  <dt><strong>Apply</strong></dt>
-    <dd>This button will validate and store the options shown in the
-    menu.</dd>
-  <dt><strong>Defaults</strong></dt>
-    <dd>This button will restore, but not save, the default values. You need
-      to use the Apply button to validate the options.</dd>
-  <dt><strong>Done</strong></dt>
-    <dd>This button dismisses the menu.</dd>
-</dl>
+href="#color">colors</a>, <a href="#HTML">Window geometry</a>, <a
+href="#lang">language negotiation</a>, <a href="#Profiles">profiles</a>, and
+<a href="#Templates">templates</a>. In each of these menus, there are three
+common action buttons:</p>
+
+<table border="0" cellspacing="10" cellpadding="5" summary="action button
+chart">
+  <tbody>
+    <tr>
+      <th bgcolor="C0C0C0">Apply</th>
+      <td>This button validates and store the options shown in the menu.</td>
+    </tr>
+    <tr>
+      <th bgcolor="C0C0C0">Defaults</th>
+      <td>This button restores, but not save, the default values. Use the
+        Apply button to validate the options.</td>
+    </tr>
+    <tr>
+      <th bgcolor="C0C0C0">Done</th>
+      <td>This button dismisses the menu.</td>
+    </tr>
+  </tbody>
+</table>
 
 <h4><a name="General">General preferences</a></h4>
 
@@ -192,25 +203,25 @@ Preferences Menu"></p>
       <br>
     </dd>
   <dt><strong>Double click delay</strong> (Unix platforms only)</dt>
-    <dd>This option allows one to control the delay under which two mouse
-      clicks are classed as a double-click. This option is only taken into
-      account at launch time.<br>
+    <dd>This option allows one to control the delay for which two mouse clicks
+      are classed as a double-click. This option is only taken into account at
+      launch time.<br>
       <br>
     </dd>
   <dt><strong>Menu Font size</strong> (Unix platforms only)</dt>
     <dd>Specifies the font size of all the Amaya menus. This option is only
-      taken into account at launch time.<br>
-      <br>
+      taken into account at launch time.
+      <p><br>
+      </p>
     </dd>
   <dt><strong>Font Zoom</strong></dt>
     <dd>It's possible to zoom in and zoom out, document window by document
       window. Each document (text and images) displayed within a zoomed window
       will be displayed larger or smaller than its real size according of the
       current zoom.<br>
-      That option allows you to change the default font zoom for all winodws.
+      That option allows you to change the default font zoom for all windows.
       This change affects only font sizes but not images and is reflected
       immediately in all open document windows.<br>
-      <br>
     </dd>
   <dt><strong>Dialogue language</strong></dt>
     <dd>Specifies the language for all of Amaya's menus and dialogue messages.
@@ -239,7 +250,7 @@ Preferences Menu"></p>
       the same directory (i.e. <strong>Amaya/config</strong>) and must use the
       correct ISO 639 code as a prefix (it- for Italian, de- for German,
       etc.). The specific HTML.code file also has to be created.</p>
-      <br>
+      <p></p>
     </dd>
   <dt><strong><a name="Enable">Enable multi-key</a></strong></dt>
     <dd>Enables or disables the optional multi-key input method.
@@ -250,16 +261,20 @@ Preferences Menu"></p>
       <p>Character sequences used by the standard multi-key input method and
       the optional multi-key input method are summarized in <a
       href="Keyboard.html#Keyboard">two different tables</a>.</p>
+      <p></p>
     </dd>
-  <dt> </dt>
-  <dt><strong>Show background images</strong></dt>
+  <dt> <strong>Show background images</strong></dt>
     <dd>Controls whether background images should be shown. This option is
-      only effective when loading a new document.</dd>
+      only effective when loading a new document.
+      <p></p>
+    </dd>
   <dt><strong>Double click activates link</strong></dt>
     <dd>Since the first version of Amaya, users need to double click on a link
       to activate it. This allows one to differentiate between the edition of
       a link or its activation. You can override this behavior by deactivating
-      this option.</dd>
+      this option.
+      <p></p>
+    </dd>
 </dl>
 
 <h4><a name="Publishing">Publishing preferences</a></h4>
@@ -279,7 +294,7 @@ Preferences Menu"></p>
       warn you.</dd>
   <dt><strong>Default name for URLs finishing in '/'</strong></dt>
     <dd>An HTTP server usually associate the URLs that finish in  '/' with a
-      default name, e.g., Overview.html. This option allows you to specify the
+      default name, e.g., Overview.html. This option allows specifying the
       default name that Amaya should use when publishing such a URL. Please
       consult with your Webmaster to find out what the default name is for
       your server.</dd>
@@ -287,10 +302,10 @@ Preferences Menu"></p>
     <dd>According to the HTTP/1.1 specification, PUT operations should not be
       automatically redirected unless it can be confirmed by the user, since
       this might change the conditions under which the request was issued. You
-      can avoid having Amaya prompt you with a PUT redirection warning by
-      entering the name of the server's domain to which you are publishing.
-      You may specify one or more domains, each separated with a
-      <em>space</em>, e.g., <code>www.w3.org groucho.marx.edu</code>.</dd>
+      can avoid having Amaya prompt with a PUT redirection warning by entering
+      the name of the server's domain to which you are publishing. You may
+      specify one or more domains, each separated with a <em>space</em>, e.g.,
+      <code>www.w3.org groucho.marx.edu</code>.</dd>
 </dl>
 
 <h4><a name="Cache">Cache preferences</a></h4>
@@ -307,15 +322,19 @@ erasing the cache directory.</p>
     <dd>Activates or deactivates the cache</dd>
   <dt><strong>Cache protected documents</strong></dt>
     <dd>By default, documents which are protected by a password are stored in
-      the cache. You can use this flag to override this behavior.</dd>
+      the cache. Use this flag to override this behavior.</dd>
   <dt><strong>Disconnected mode</strong></dt>
     <dd>Always retrieves documents from the cache.</dd>
   <dt><strong>Ignore Expires: header</strong></dt>
     <dd>Does not expire cache entries.</dd>
   <dt><strong>Cache  directory</strong></dt>
-    <dd>Gives the parent directory for the libwww-cache directory. Note that
-      changing this directory does not erase the contents of the previous one.
-      You will have to remove it yourself.</dd>
+    <dd>Gives the parent directory for the libwww-cache directory. Changing
+      this directory does not erase the contents of the previous one. You will
+      have to remove it yourself.<br>
+      <strong>Note:</strong> File protection mechanisms prevent the use of NFS
+      (Network File System) directories for the cache directory as NFS allows
+      reuse by multiple processes or users.  Use a 'local' directory for the
+      cache.</dd>
   <dt><strong>Cache size</strong></dt>
     <dd>Gives the size, in megabytes, of the cache repository.</dd>
   <dt><strong>Cache entry size limit</strong></dt>
@@ -328,7 +347,7 @@ erasing the cache directory.</p>
 Preferences Menu"></p>
 
 <p>You can specify a proxy and a set of domains where the proxy should or
-shouldn' t be used by means of this menu.</p>
+should not be used by means of this menu.</p>
 <dl>
   <dt><strong>HTTP proxy</strong></dt>
     <dd>Gives the proxy that should be used for HTTP requests. You must
@@ -346,7 +365,7 @@ shouldn' t be used by means of this menu.</p>
 </dl>
 <dl>
   <dt><strong>Proxy domain list</strong></dt>
-    <dd>Gives a list of space separated domains where you want to us or not
+    <dd>Gives a list of space separated domains where you want to use or not
       use your proxy. For example:
       <pre>harpo.marx.edu zeppo.marx.edu chico.marx.edu
                     ^--------------^----> space separated entries
@@ -361,23 +380,31 @@ shouldn' t be used by means of this menu.</p>
 <p style="text-align: center"><img src="../Icons/ColorMenu.gif" alt="Color
 Preferences Menu"></p>
 
-<p>This menu allows you to change the foreground and background colors for the
-document. The Unix version also provides entries for changing the menu colors.
-To change menu colors under Windows, you will need to use the standard Windows
-configuration control, found in the Control Panel directory.</p>
+<p>This menu allows selection of the foreground and background colors for
+documents. The Unix version also provides entries for changing the menu
+colors. To change menu colors in Windows, you will need to use the standard
+Windows configuration control, found in the Control Panel folder.</p>
+
+<p>Colors may be selected by name, hex code, or rgb format.</p>
+
+<p>Valid names are: Aqua, Black, Blue, Fuchsia, Gray, Green, Lime, Maroon,
+Navy, Olive, Purple, Red, Silver, Teal, Yellow, and White.</p>
+
+<p>Valid hexcode format is #FF00FF as an example.</p>
+
+<p>Valid rgb format is rgb(255, 0, 255) as an example.</p>
+
+<p>If you enter an invalid color, the default colors will be used instead.</p>
+
+<p>In Windows, you can also select colors by means of a color palette.</p>
 
 <p><strong>Note:</strong> the color changes will be effective when you open a
 new document window or when reloading a document.</p>
 
-<p>Under Windows, you can select colors by means of a color palette. The Unix
-interface is a bit clumsy for the moment and you have to type in the color
-name. If you type an invalid color name, the default colors will be used
-instead.</p>
-
 <p>Setting or changing colors for links, visited links, and active links is
 done through the Amaya.css style sheet.</p>
 
-<h4><a name="HTML">Geometry preferences</a></h4>
+<h4><a name="HTML">Window geometry preferences</a></h4>
 
 <p style="text-align: center"><img src="../Icons/GeomMenu.gif" alt="Geometry
 Preferences Menu"></p>
@@ -389,10 +416,10 @@ those belonging to the views of the document where you called this menu. Also,
 note that the position of the windows on the screen isn't saved yet. These
 changes will be reflected when you open new document windows.</p>
 
-<h4>Language negotiation preferences</h4>
+<h4><a name="lang">Language negotiation preferences</a></h4>
 
 <p style="text-align: center"><img src="../Icons/LangueNegotiation.gif"
-alt="Language negotiaiton menu"></p>
+alt="Language negotiation menu"></p>
 
 <p>If a document exists in different languages and your server is configured
 to do language negotiation, you can use this menu to enter your language
@@ -425,7 +452,7 @@ alt="Templates "></p>
 may use for creating your own documents. This menu allows you to specify the
 URL of a template server, which may be either local to your station or stored
 in some server. You'll need to quit Amaya to validate this option. When you
-launch Amaya again., there will be a new  <code>File/New/From Templat</code>e
+launch Amaya again., there will be a new <code>File/New/From Template</code>
 entry. Following this entry will open a new document showing you the results
 of browsing the template URL. The idea is that this page acts as an index to
 the templates available in your station or in the template server. A sample
@@ -450,8 +477,8 @@ command.</p>
  Key = '&lt;Key>' KeyValue / '&lt;Key>' SpecialKey ;
  Modifier = 'Ctrl' / 'Alt' / 'Meta' ;
  KeyValue = 'a' / 'b' / ... ;
- SpecialKey = 'Escape' / 'Delete' / 'Space' / 'BackSpace' / 
-              'Enter' / 'Up' / 'Down' / 'Left' / 'Right' / 
+ SpecialKey = 'Escape' / 'Delete' / 'Space' / 'BackSpace' /
+              'Enter' / 'Up' / 'Down' / 'Left' / 'Right' /
               'Home' / 'End' / 'F1' / ... / 'L1' / ... / 'R1' / ... ;
  IdentCommand = 'TtcInsertChar(' Char ')' / NAME '()' ;
  Char = KeyValue / OctalValue ;  OctalValue = '\' NUMBER ; </pre>
