@@ -1437,16 +1437,15 @@ void                DesBPosition (frame, xm, ym)
 int                 frame;
 int                 xm;
 int                 ym;
-
 #endif /* __STDC__ */
 {
    PtrBox            pBox;
    PtrAbstractBox             pAb;
-   boolean             encore, okH, okV;
-   int                 x, large;
-   int                 y, haut;
-   int                 xr, Xmin;
-   int                 yr, Xmax;
+   boolean             still, okH, okV;
+   int                 x, width;
+   int                 y, height;
+   int                 xr, xmin;
+   int                 yr, xmax;
    int                 ymin;
    int                 ymax;
    ViewFrame            *pFrame;
@@ -1472,38 +1471,38 @@ int                 ym;
 	   pAb = pBox->BxAbstractBox;
 
 	if (pointselect != 0)
-	   encore = FALSE;
+	   still = FALSE;
 	else
 	   /* ctrl click */
-	   encore = TRUE;
+	   still = TRUE;
 
 	/* On boucle tant que l'on ne trouve pas une boite deplacable */
-	while (encore)
+	while (still)
 	  {
 	     if (pAb == NULL)
 		pBox = NULL;
 	     else
 		pBox = pAb->AbBox;
 	     if (pBox == NULL)
-		encore = FALSE;	/* Il n'y a pas de boite */
+		still = FALSE;	/* Il n'y a pas de boite */
 	     /* On regarde si le deplacement est autorise */
 	     else
 	       {
-		  okH = CanBeTranslated (pAb, frame, TRUE, &Xmin, &Xmax);
+		  okH = CanBeTranslated (pAb, frame, TRUE, &xmin, &xmax);
 		  okV = CanBeTranslated (pAb, frame, FALSE, &ymin, &ymax);
 		  if (okH || okV)
-		     encore = FALSE;
+		     still = FALSE;
 	       }
 
 	     /* Si on n'a pas trouve, il faut remonter */
-	     if (encore)
+	     if (still)
 		/* On passe a la boite englobante */
 		if (pAb != NULL)
 		   pAb = pAb->AbEnclosing;
 		else
 		  {
 		     pBox = NULL;
-		     encore = FALSE;
+		     still = FALSE;
 		  }
 	  }
 
@@ -1512,8 +1511,8 @@ int                 ym;
 	  {
 	     x = pBox->BxXOrg - pFrame->FrXOrg;
 	     y = pBox->BxYOrg - pFrame->FrYOrg;
-	     large = pBox->BxWidth;
-	     haut = pBox->BxHeight;
+	     width = pBox->BxWidth;
+	     height = pBox->BxHeight;
 
 	     if (pointselect != 0)
 	       {
@@ -1524,8 +1523,8 @@ int                 ym;
 		       y = pBox->BxYOrg - pFrame->FrYOrg;
 		       TtaDisplayMessage (INFO, TtaGetMessage(LIB, MOVING_BOX), AbsBoxType (pBox->BxAbstractBox));
 		       /* Note si le trace est ouvert ou ferme */
-		       encore = (pAb->AbPolyLineShape == 'p' || pAb->AbPolyLineShape == 's');
-		       PolyLineModification (frame, x, y, pAb->AbPolyLineBuffer, pBox->BxBuffer, pBox->BxNChars, pointselect, encore);
+		       still = (pAb->AbPolyLineShape == 'p' || pAb->AbPolyLineShape == 's');
+		       PolyLineModification (frame, x, y, pAb->AbPolyLineBuffer, pBox->BxBuffer, pBox->BxNChars, pointselect, still);
 		       /* Pour les courbes il faut recalculer les points de controle */
 		       if (pBox->BxPictInfo != NULL)
 			 {
@@ -1533,9 +1532,10 @@ int                 ym;
 			    pBox->BxPictInfo = (int *) ComputeControlPoints (pBox->BxBuffer, pBox->BxNChars);
 			 }
 		       /* on force le reaffichage de la boite */
-		       DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + large + EXTRA_GRAPH, pBox->BxYOrg + haut + EXTRA_GRAPH);
+		       DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + width + EXTRA_GRAPH, pBox->BxYOrg + height + EXTRA_GRAPH);
 		       AfFinFenetre (frame, 0);
-		       SetSelect (frame, FALSE);	/* Reaffiche la selection */
+		       /* Reaffiche la selection */
+		       SetSelect (frame, FALSE);
 		       NewContent (pAb);
 		       APPgraphicModify (pBox->BxAbstractBox->AbElement, pointselect, frame, FALSE);
 		    }
@@ -1550,10 +1550,10 @@ int                 ym;
 			      xr = x;
 			      break;
 			   case Right:
-			      xr = x + large;
+			      xr = x + width;
 			      break;
 			   case VertMiddle:
-			      xr = x + large / 2;
+			      xr = x + width / 2;
 			      break;
 			   case VertRef:
 			      xr = x + pBox->BxVertRef;
@@ -1569,10 +1569,10 @@ int                 ym;
 			      yr = y;
 			      break;
 			   case Bottom:
-			      yr = y + haut;
+			      yr = y + height;
 			      break;
 			   case HorizMiddle:
-			      yr = y + haut / 2;
+			      yr = y + height / 2;
 			      break;
 			   case HorizRef:
 			      yr = y + pBox->BxHorizRef;
@@ -1584,12 +1584,12 @@ int                 ym;
 
 		  TtaDisplayMessage (INFO, TtaGetMessage(LIB, MOVING_BOX), AbsBoxType (pBox->BxAbstractBox));
 		  /* On retablit les positions par rapport a la fenetre */
-		  Xmin -= pFrame->FrXOrg;
-		  Xmax -= pFrame->FrXOrg;
+		  xmin -= pFrame->FrXOrg;
+		  xmax -= pFrame->FrXOrg;
 		  ymin -= pFrame->FrYOrg;
 		  ymax -= pFrame->FrYOrg;
 		  /* On initialise la boite fantome */
-		  UserGeometryMove (frame, &x, &y, large, haut, xr, yr, Xmin, Xmax, ymin, ymax, xm, ym);
+		  UserGeometryMove (frame, &x, &y, width, height, xr, yr, xmin, xmax, ymin, ymax, xm, ym);
 
 		  /* On transmet la modification a l'editeur */
 		  x = x + pFrame->FrXOrg - pBox->BxXOrg;
@@ -1714,11 +1714,11 @@ int                 ym;
 {
    PtrBox            pBox;
    PtrAbstractBox             pAb;
-   boolean             encore, okH, okV;
-   int                 x, large;
-   int                 y, haut;
-   int                 xr, Xmin;
-   int                 yr, Xmax;
+   boolean             still, okH, okV;
+   int                 x, width;
+   int                 y, height;
+   int                 xr, xmin;
+   int                 yr, xmax;
    int                 ymin;
    int                 ymax;
    ViewFrame            *pFrame;
@@ -1745,9 +1745,9 @@ int                 ym;
 	   pAb = pBox->BxAbstractBox;
 
 	/* ctrlClick */
-	encore = TRUE;
+	still = TRUE;
 	/* On boucle tant que l'on ne trouve pas une boite modifiable */
-	while (encore)
+	while (still)
 	  {
 	     if (pAb == NULL)
 		pBox = NULL;
@@ -1755,25 +1755,25 @@ int                 ym;
 		pBox = pAb->AbBox;
 
 	     if (pBox == NULL)
-		encore = FALSE;	/* Il n'y a pas de boite */
+		still = FALSE;	/* Il n'y a pas de boite */
 	     /* On regarde si les modifications sont autorisees */
 	     else
 	       {
-		  okH = DModifiable (pAb, frame, TRUE, &Xmin, &Xmax);
+		  okH = DModifiable (pAb, frame, TRUE, &xmin, &xmax);
 		  okV = DModifiable (pAb, frame, FALSE, &ymin, &ymax);
 		  if (okH || okV)
-		     encore = FALSE;
+		     still = FALSE;
 	       }
 
 	     /* Si on n'a pas trouve, il faut remonter */
-	     if (encore)
+	     if (still)
 		/* On passe a la boite englobante */
 		if (pAb != NULL)
 		   pAb = pAb->AbEnclosing;
 		else
 		  {
 		     pBox = NULL;
-		     encore = FALSE;
+		     still = FALSE;
 		  }
 	  }
 
@@ -1782,8 +1782,8 @@ int                 ym;
 	  {
 	     x = pBox->BxXOrg - pFrame->FrXOrg;
 	     y = pBox->BxYOrg - pFrame->FrYOrg;
-	     large = pBox->BxWidth;
-	     haut = pBox->BxHeight;
+	     width = pBox->BxWidth;
+	     height = pBox->BxHeight;
 
 	     /* On note les coordonnees du point de reference */
 	     switch (pBox->BxHorizEdge)
@@ -1792,16 +1792,16 @@ int                 ym;
 			 xr = x;
 			 break;
 		      case Right:
-			 xr = x + large;
+			 xr = x + width;
 			 break;
 		      case VertMiddle:
-			 xr = x + large / 2;
+			 xr = x + width / 2;
 			 break;
 		      case VertRef:
 			 xr = x + pBox->BxVertRef;
 			 break;
 		      default:
-			 xr = x + large;
+			 xr = x + width;
 			 break;
 		   }
 
@@ -1811,38 +1811,38 @@ int                 ym;
 			 yr = y;
 			 break;
 		      case Bottom:
-			 yr = y + haut;
+			 yr = y + height;
 			 break;
 		      case HorizMiddle:
-			 yr = y + haut / 2;
+			 yr = y + height / 2;
 			 break;
 		      case HorizRef:
 			 yr = y + pBox->BxHorizRef;
 			 break;
 		      default:
-			 yr = y + haut;
+			 yr = y + height;
 			 break;
 		   }
 
 	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, MODIFYING_BOX), AbsBoxType (pBox->BxAbstractBox));
 	     /* On retablit les positions par rapport a la fenetre */
-	     Xmin -= pFrame->FrXOrg;
+	     xmin -= pFrame->FrXOrg;
 	     if (okH)
-		Xmax -= pFrame->FrXOrg;
+		xmax -= pFrame->FrXOrg;
 	     else
-		Xmax = Xmin;
+		xmax = xmin;
 	     ymin -= pFrame->FrYOrg;
 	     if (okV)
 		ymax -= pFrame->FrYOrg;
 	     else
 		ymax = ymin;
 	     /* On initialise la boite fantome */
-	     UserGeometryResize (frame, x, y, &large, &haut, xr, yr, Xmin, Xmax, ymin, ymax, xm, ym);
+	     UserGeometryResize (frame, x, y, &width, &height, xr, yr, xmin, xmax, ymin, ymax, xm, ym);
 
 	     /* On transmet la modification a l'editeur */
-	     large = large - pBox->BxWidth;
-	     haut = haut - pBox->BxHeight;
-	     NouvDimension (pBox->BxAbstractBox, large, haut, frame, TRUE);
+	     width = width - pBox->BxWidth;
+	     height = height - pBox->BxHeight;
+	     NouvDimension (pBox->BxAbstractBox, width, height, frame, TRUE);
 	  }
 	else
 	   /* On n'a pas trouve de boite modifiable */
@@ -1865,9 +1865,9 @@ int                 frame;
 #endif /* __STDC__ */
 {
    int                 x, y;
-   int                 large, haut;
+   int                 width, height;
    int                 xr, yr;
-   int                 Xmin, Xmax;
+   int                 xmin, xmax;
    int                 Ymin, Ymax;
    ViewFrame            *pFrame;
    PtrAbstractBox             pAb;
@@ -1882,22 +1882,22 @@ int                 frame;
    pFrame = &FntrTable[frame - 1];
 
    /* Il faut verifier que la boite reste visible dans la fenetre */
-   DimFenetre (frame, &large, &haut);
+   DimFenetre (frame, &width, &height);
    if (pBox->BxXOrg < pFrame->FrXOrg)
       x = 0;
-   else if (pBox->BxXOrg > pFrame->FrXOrg + large)
-      x = large;
+   else if (pBox->BxXOrg > pFrame->FrXOrg + width)
+      x = width;
    else
       x = pBox->BxXOrg - pFrame->FrXOrg;
 
    if (pBox->BxYOrg < pFrame->FrYOrg)
       y = 0;
-   else if (pBox->BxYOrg > pFrame->FrYOrg + haut)
-      y = haut;
+   else if (pBox->BxYOrg > pFrame->FrYOrg + height)
+      y = height;
    else
       y = pBox->BxYOrg - pFrame->FrYOrg;
-   large = pBox->BxWidth;
-   haut = pBox->BxHeight;
+   width = pBox->BxWidth;
+   height = pBox->BxHeight;
    pAb = pBox->BxAbstractBox;
 
    /* On note les coordonnees du point de reference */
@@ -1907,10 +1907,10 @@ int                 frame;
 	       xr = x;
 	       break;
 	    case Right:
-	       xr = x + large;
+	       xr = x + width;
 	       break;
 	    case VertMiddle:
-	       xr = x + large / 2;
+	       xr = x + width / 2;
 	       break;
 	    case VertRef:
 	       xr = x + pBox->BxVertRef;
@@ -1926,10 +1926,10 @@ int                 frame;
 	       yr = y;
 	       break;
 	    case Bottom:
-	       yr = y + haut;
+	       yr = y + height;
 	       break;
 	    case HorizMiddle:
-	       yr = y + haut / 2;
+	       yr = y + height / 2;
 	       break;
 	    case HorizRef:
 	       yr = y + pBox->BxHorizRef;
@@ -1939,14 +1939,14 @@ int                 frame;
 	       break;
 	 }
 
-   modPosition = (CanBeTranslated (pAb, frame, TRUE, &Xmin, &Xmax)
+   modPosition = (CanBeTranslated (pAb, frame, TRUE, &xmin, &xmax)
 		  || CanBeTranslated (pAb, frame, FALSE, &Ymin, &Ymax));
    if (!modPosition)
      {
 	pAb->AbHorizPos.PosUserSpecified = FALSE;
 	pAb->AbVertPos.PosUserSpecified = FALSE;
      }
-   modDimension = (DModifiable (pAb, frame, TRUE, &Xmin, &Xmax)
+   modDimension = (DModifiable (pAb, frame, TRUE, &xmin, &xmax)
 		   || DModifiable (pAb, frame, FALSE, &Ymin, &Ymax));
    if (!modDimension)
      {
@@ -1956,16 +1956,16 @@ int                 frame;
    if (modPosition || modDimension)
      {
 	/* Determine les limites de deplacement de la boite */
-	GiveMovingArea (pAb, frame, TRUE, &Xmin, &Xmax);
+	GiveMovingArea (pAb, frame, TRUE, &xmin, &xmax);
 	GiveMovingArea (pAb, frame, FALSE, &Ymin, &Ymax);
 	TtaDisplayMessage (INFO, TtaGetMessage(LIB, CREATING_BOX), AbsBoxType (pAb));
 	/* On retablit les positions par rapport a la fenetre */
-	Xmin -= pFrame->FrXOrg;
-	Xmax -= pFrame->FrXOrg;
+	xmin -= pFrame->FrXOrg;
+	xmax -= pFrame->FrXOrg;
 	Ymin -= pFrame->FrYOrg;
 	Ymax -= pFrame->FrYOrg;
-	UserGeometryCreate (frame, &x, &y, xr, yr, &large, &haut,
-		      Xmin, Xmax, Ymin, Ymax,
+	UserGeometryCreate (frame, &x, &y, xr, yr, &width, &height,
+		      xmin, xmax, Ymin, Ymax,
 		      pAb->AbHorizPos.PosUserSpecified,
 		      pAb->AbVertPos.PosUserSpecified,
 		      pAb->AbWidth.DimUserSpecified,
@@ -1979,9 +1979,9 @@ int                 frame;
 	x = x + pFrame->FrXOrg - pBox->BxXOrg;
 	y = y + pFrame->FrYOrg - pBox->BxYOrg;
 	NouvPosition (pAb, x, y, frame, TRUE);
-	large = large - pBox->BxWidth;
-	haut = haut - pBox->BxHeight;
-	NouvDimension (pAb, large, haut, frame, TRUE);
+	width = width - pBox->BxWidth;
+	height = height - pBox->BxHeight;
+	NouvDimension (pAb, width, height, frame, TRUE);
      }
 
    /* Traitement de la creation interactive termine */
