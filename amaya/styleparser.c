@@ -588,6 +588,7 @@ static char *ParseCSSColor (char *cssRule, PresentationValue * val)
       cssRule = ptr;
     }
   val->typed_data.real = FALSE;
+  cssRule = SkipBlanksAndComments (cssRule);
   return (cssRule);
 }
 
@@ -2918,14 +2919,22 @@ static char *ParseCSSForeground (Element element, PSchema tsch,
 					  CSSInfoPtr css, ThotBool isHTML)
 {
   PresentationValue   best;
+  char               *p;
 
+  p = cssRule;
   cssRule = ParseCSSColor (cssRule, &best);
   if (best.typed_data.unit != UNIT_INVALID && DoApply)
      {
        if (tsch)
 	 cssRule = CheckImportantRule (cssRule, context);
-       /* install the new presentation */
-       TtaSetStylePresentation (PRForeground, element, tsch, context, best);
+       if (*cssRule != EOS && *cssRule !=';')
+	 {
+	   cssRule = SkipProperty (cssRule, FALSE);
+	   CSSParseError ("Invalid value", p, cssRule);
+	 }
+       else
+	 /* install the new presentation */
+	 TtaSetStylePresentation (PRForeground, element, tsch, context, best);
      }
    return (cssRule);
 }
