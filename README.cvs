@@ -3,4 +3,64 @@ sources. You will aso neet the <a href="http://www.w3.org/Library/">libwww</a>
 sources for compiling the Amaya Application. Extract it in a sibling directory
 of your Amaya extract tree, configure will look for it there.</p>
 
+<p>One need cvs-1.10, perl, gcc, gmake installed as the main make(1),
+autoconf, automake and al., X11 and Motif developpement headers and libraries:
+
+<p>
+<pre>
+CVSROOT=:pserver:anonymous@dev.w3.org:/sources/public
+export CVSROOT
+</pre>
+
+<p>
+Just checking out requires 8 Megs for libwww and 38 megs for Amaya
+Building will easilly double the size, so it's better having 100Megs available.
+
+<p>
+Extract libwww tree:
+<pre>
+cvs -z3 get libwww
+</pre>
+[...]
+<p>
+Prepare it for compilation:
+<pre>
+cd libwww
+config/winConfigure.pl
+[...]
+aclocal; autoheader; automake; autoconf
+cd ..
+</pre>
+<p>
+Extract Amaya tree:
+<pre>
+cvs -z3 get Amaya
+[...]
+</pre>
+<p>
+Configure Amaya:
+<pre>
+cd Amaya
+mkdir `uname`
+cd `uname`
+../configure
+[...]
+</pre>
+<p>
+Compile Amaya:
+<pre>
+make
+[...]
+</pre>
+<p>
+If everything went well:
+<pre>
+bin/amaya
+</pre>
+<p>
+Otherwise <a href="http://www.w3.org/Amaya/#L362">join</a> the
+Amaya mailing-list <a href="mailto:www-amaya@w3.org" >www-amaya@w3.org</a>
+and post your problems here.
+
+
 <p>$Date$ $Author$</p>
