@@ -786,6 +786,11 @@
 #define IDC_LANGELEM                    1496
 #define IDC_INHERITEDLANG               1497
 #define IDC_LNGEDIT                     1498
+#define IDC_UNDERLINEGROUP              1499
+#define IDC_FONTFAMILYGROUP             1500
+#define IDC_CHARSTYLEGROUP              1501
+#define IDC_BOLDGROUP                   1502
+#define IDC_BODYSIZEGROUP               1503
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -831,7 +836,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        537
 #define _APS_NEXT_COMMAND_VALUE         40052
-#define _APS_NEXT_CONTROL_VALUE         1499
+#define _APS_NEXT_CONTROL_VALUE         1504
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

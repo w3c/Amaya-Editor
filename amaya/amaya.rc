@@ -384,72 +384,6 @@ BEGIN
     PUSHBUTTON      "Browse",IDC_BROWSE,93,101,36,14
 END
 
-DE_CHARACTERSDIALOG DIALOG DISCARDABLE  100, 100, 202, 181
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Characters"
-FONT 8, "MS Sans Serif"
-BEGIN
-    DEFPUSHBUTTON   "Apply",ID_APPLY,41,157,50,14
-    PUSHBUTTON      "Done",ID_DONE,101,157,50,14
-    GROUPBOX        "Font family",IDC_STATIC,7,0,64,65,WS_GROUP
-    CONTROL         "Times",IDC_TIMES,"Button",BS_AUTORADIOBUTTON,11,9,43,11
-    CONTROL         "Helvetica",IDC_HELVETICA,"Button",BS_AUTORADIOBUTTON,11,
-                    20,46,11
-    CONTROL         "Courier",IDC_COURIER,"Button",BS_AUTORADIOBUTTON,11,31,
-                    45,11
-    CONTROL         "Default",IDC_DEFAULTFAMILY,"Button",BS_AUTORADIOBUTTON,
-                    11,43,44,11
-    GROUPBOX        "Characters style",IDC_STATIC,7,77,63,71,WS_GROUP
-    CONTROL         "Roman",IDC_ROMAN,"Button",BS_AUTORADIOBUTTON,13,86,43,
-                    11
-    CONTROL         "Italic",IDC_ITALIC,"Button",BS_AUTORADIOBUTTON,13,96,42,
-                    11
-    CONTROL         "Oblique",IDC_OBLIQUE,"Button",BS_AUTORADIOBUTTON,13,107,
-                    44,12
-    CONTROL         "Default",IDC_DEFAULTSTYLE,"Button",BS_AUTORADIOBUTTON | 
-                    BS_LEFT,13,119,49,12
-    GROUPBOX        "Underline",IDC_STATIC,75,0,53,72,WS_GROUP
-    CONTROL         "Normal",IDC_NORMAL,"Button",BS_AUTORADIOBUTTON,82,9,47,
-                    10
-    CONTROL         "Underline",IDC_UNDERLINE,"Button",BS_AUTORADIOBUTTON,82,
-                    20,49,10
-    CONTROL         "Overline",IDC_OVERLINE,"Button",BS_AUTORADIOBUTTON,82,
-                    33,39,11
-    CONTROL         "Cross out",IDC_CROSSOUT,"Button",BS_AUTORADIOBUTTON,82,
-                    46,47,9
-    CONTROL         "Default",IDC_DEFAULTUNDERLINE,"Button",
-                    BS_AUTORADIOBUTTON,82,58,49,11
-    GROUPBOX        "Body size (pt)",IDC_STATIC,137,0,55,153,WS_GROUP
-    CONTROL         "6 pt",IDC_06PT,"Button",BS_AUTORADIOBUTTON,144,8,33,13
-    CONTROL         "10 pt",IDC_10PT,"Button",BS_AUTORADIOBUTTON,144,30,33,
-                    10
-    CONTROL         "8 pt",IDC_08PT,"Button",BS_AUTORADIOBUTTON,144,19,33,12
-    CONTROL         "12 pt",IDC_12PT,"Button",BS_AUTORADIOBUTTON,144,40,33,
-                    13
-    CONTROL         "14 pt",IDC_14PT,"Button",BS_AUTORADIOBUTTON,144,52,33,
-                    13
-    CONTROL         "16 pt",IDC_16PT,"Button",BS_AUTORADIOBUTTON,144,64,33,
-                    13
-    CONTROL         "20 pt",IDC_20PT,"Button",BS_AUTORADIOBUTTON,144,76,33,
-                    13
-    CONTROL         "24 pt",IDC_24PT,"Button",BS_AUTORADIOBUTTON,144,87,33,
-                    13
-    CONTROL         "30 pt",IDC_30PT,"Button",BS_AUTORADIOBUTTON,144,99,33,
-                    12
-    CONTROL         "40 pt",IDC_40PT,"Button",BS_AUTORADIOBUTTON,144,111,33,
-                    11
-    CONTROL         "60 pt",IDC_60PT,"Button",BS_AUTORADIOBUTTON,144,122,33,
-                    12
-    CONTROL         "Default",IDC_DEFAULTSIZE,"Button",BS_AUTORADIOBUTTON,
-                    144,133,37,14
-    GROUPBOX        "Bold",IDC_STATIC,75,76,53,56
-    CONTROL         "Normal",IDC_NORMALBOLD,"Button",BS_AUTORADIOBUTTON,82,
-                    87,38,10
-    CONTROL         "Bold",IDC_BOLD,"Button",BS_AUTORADIOBUTTON,82,98,30,10
-    CONTROL         "Default",IDC_DEFAULTBOLD,"Button",BS_AUTORADIOBUTTON,82,
-                    111,39,10
-END
-
 DE_CREATERULEDIALOG DIALOG DISCARDABLE  100, 100, 148, 138
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Use as class"
@@ -1134,11 +1068,6 @@ BEGIN
         HORZGUIDE, 115
     END
 
-    DE_CHARACTERSDIALOG, DIALOG
-    BEGIN
-        VERTGUIDE, 82
-    END
-
     DE_CREATERULEDIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
@@ -1295,70 +1224,51 @@ BEGIN
     LTEXT           "",IDC_URLMESSAGE,7,14,283,13
 END
 
-EN_CHARACTERSDIALOG DIALOG DISCARDABLE  100, 100, 202, 181
+CHARACTERSDIALOG DIALOG DISCARDABLE  100, 100, 250, 226
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Characters"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "Apply",ID_APPLY,41,157,50,14
-    PUSHBUTTON      "Done",ID_DONE,101,157,50,14
-    GROUPBOX        "Font family",IDC_STATIC,7,0,64,65,WS_GROUP
-    CONTROL         "Times",IDC_TIMES,"Button",BS_AUTORADIOBUTTON,11,9,43,11
-    CONTROL         "Helvetica",IDC_HELVETICA,"Button",BS_AUTORADIOBUTTON,11,
-                    20,46,11
-    CONTROL         "Courier",IDC_COURIER,"Button",BS_AUTORADIOBUTTON,11,31,
-                    45,11
-    CONTROL         "Default",IDC_DEFAULTFAMILY,"Button",BS_AUTORADIOBUTTON,
-                    11,43,44,11
-    GROUPBOX        "Characters style",IDC_STATIC,7,77,63,71,WS_GROUP
-    CONTROL         "Roman",IDC_ROMAN,"Button",BS_AUTORADIOBUTTON,13,86,43,
-                    11
-    CONTROL         "Italic",IDC_ITALIC,"Button",BS_AUTORADIOBUTTON,13,96,42,
-                    11
-    CONTROL         "Oblique",IDC_OBLIQUE,"Button",BS_AUTORADIOBUTTON,13,107,
-                    44,12
-    CONTROL         "Default",IDC_DEFAULTSTYLE,"Button",BS_AUTORADIOBUTTON | 
-                    BS_LEFT,13,119,49,12
-    GROUPBOX        "Underline",IDC_STATIC,75,0,53,72,WS_GROUP
-    CONTROL         "Normal",IDC_NORMAL,"Button",BS_AUTORADIOBUTTON,82,9,47,
-                    10
-    CONTROL         "Underline",IDC_UNDERLINE,"Button",BS_AUTORADIOBUTTON,82,
-                    20,49,10
-    CONTROL         "Overline",IDC_OVERLINE,"Button",BS_AUTORADIOBUTTON,82,
-                    33,39,11
-    CONTROL         "Cross out",IDC_CROSSOUT,"Button",BS_AUTORADIOBUTTON,82,
-                    46,47,9
-    CONTROL         "Default",IDC_DEFAULTUNDERLINE,"Button",
-                    BS_AUTORADIOBUTTON,82,58,49,11
-    GROUPBOX        "Body size (pt)",IDC_STATIC,137,0,55,153,WS_GROUP
-    CONTROL         "6 pt",IDC_06PT,"Button",BS_AUTORADIOBUTTON,144,8,33,13
-    CONTROL         "10 pt",IDC_10PT,"Button",BS_AUTORADIOBUTTON,144,30,33,
-                    10
-    CONTROL         "8 pt",IDC_08PT,"Button",BS_AUTORADIOBUTTON,144,19,33,12
-    CONTROL         "12 pt",IDC_12PT,"Button",BS_AUTORADIOBUTTON,144,40,33,
-                    13
-    CONTROL         "14 pt",IDC_14PT,"Button",BS_AUTORADIOBUTTON,144,52,33,
-                    13
-    CONTROL         "16 pt",IDC_16PT,"Button",BS_AUTORADIOBUTTON,144,64,33,
-                    13
-    CONTROL         "20 pt",IDC_20PT,"Button",BS_AUTORADIOBUTTON,144,76,33,
-                    13
-    CONTROL         "24 pt",IDC_24PT,"Button",BS_AUTORADIOBUTTON,144,87,33,
-                    13
-    CONTROL         "30 pt",IDC_30PT,"Button",BS_AUTORADIOBUTTON,144,99,33,
-                    12
-    CONTROL         "40 pt",IDC_40PT,"Button",BS_AUTORADIOBUTTON,144,111,33,
-                    11
-    CONTROL         "60 pt",IDC_60PT,"Button",BS_AUTORADIOBUTTON,144,122,33,
-                    12
-    CONTROL         "Default",IDC_DEFAULTSIZE,"Button",BS_AUTORADIOBUTTON,
-                    144,133,37,14
-    GROUPBOX        "Bold",IDC_STATIC,75,76,53,56
-    CONTROL         "Normal",IDC_NORMALBOLD,"Button",BS_AUTORADIOBUTTON,82,
-                    87,38,10
-    CONTROL         "Bold",IDC_BOLD,"Button",BS_AUTORADIOBUTTON,82,98,30,10
-    CONTROL         "Default",IDC_DEFAULTBOLD,"Button",BS_AUTORADIOBUTTON,82,
-                    111,39,10
+    DEFPUSHBUTTON   "",ID_APPLY,21,204,101,14
+    PUSHBUTTON      "",ID_DONE,131,204,95,14
+    GROUPBOX        "",IDC_FONTFAMILYGROUP,7,0,71,88,WS_GROUP
+    CONTROL         "",IDC_TIMES,"Button",BS_AUTORADIOBUTTON,12,9,61,11
+    CONTROL         "",IDC_HELVETICA,"Button",BS_AUTORADIOBUTTON,12,28,63,11
+    CONTROL         "",IDC_COURIER,"Button",BS_AUTORADIOBUTTON,12,47,61,11
+    CONTROL         "",IDC_DEFAULTFAMILY,"Button",BS_AUTORADIOBUTTON,12,68,
+                    61,11
+    GROUPBOX        "",IDC_CHARSTYLEGROUP,6,110,74,84,WS_GROUP
+    CONTROL         "",IDC_ROMAN,"Button",BS_AUTORADIOBUTTON,12,122,43,11
+    CONTROL         "",IDC_ITALIC,"Button",BS_AUTORADIOBUTTON,12,138,42,11
+    CONTROL         "",IDC_OBLIQUE,"Button",BS_AUTORADIOBUTTON,12,154,44,12
+    CONTROL         "",IDC_DEFAULTSTYLE,"Button",BS_AUTORADIOBUTTON | 
+                    BS_LEFT,12,174,49,12
+    GROUPBOX        "",IDC_UNDERLINEGROUP,87,0,67,99,WS_GROUP
+    CONTROL         "",IDC_NORMAL,"Button",BS_AUTORADIOBUTTON,95,15,54,10
+    CONTROL         "",IDC_UNDERLINE,"Button",BS_AUTORADIOBUTTON,95,31,56,10
+    CONTROL         "",IDC_OVERLINE,"Button",BS_AUTORADIOBUTTON,95,48,55,11
+    CONTROL         "",IDC_CROSSOUT,"Button",BS_AUTORADIOBUTTON,95,66,54,9
+    CONTROL         "",IDC_DEFAULTUNDERLINE,"Button",BS_AUTORADIOBUTTON,95,
+                    82,53,11
+    GROUPBOX        "",IDC_BODYSIZEGROUP,161,0,80,199,WS_GROUP
+    CONTROL         "",IDC_06PT,"Button",BS_AUTORADIOBUTTON,173,13,61,13
+    CONTROL         "",IDC_10PT,"Button",BS_AUTORADIOBUTTON,173,44,63,10
+    CONTROL         "",IDC_08PT,"Button",BS_AUTORADIOBUTTON,173,28,61,12
+    CONTROL         "",IDC_12PT,"Button",BS_AUTORADIOBUTTON,173,57,64,13
+    CONTROL         "",IDC_14PT,"Button",BS_AUTORADIOBUTTON,173,72,60,13
+    CONTROL         "",IDC_16PT,"Button",BS_AUTORADIOBUTTON,173,86,61,13
+    CONTROL         "",IDC_20PT,"Button",BS_AUTORADIOBUTTON,173,104,61,13
+    CONTROL         "",IDC_24PT,"Button",BS_AUTORADIOBUTTON,173,118,60,13
+    CONTROL         "",IDC_30PT,"Button",BS_AUTORADIOBUTTON,173,134,60,12
+    CONTROL         "",IDC_40PT,"Button",BS_AUTORADIOBUTTON,173,148,63,11
+    CONTROL         "",IDC_60PT,"Button",BS_AUTORADIOBUTTON,174,165,63,12
+    CONTROL         "",IDC_DEFAULTSIZE,"Button",BS_AUTORADIOBUTTON,173,178,
+                    63,14
+    GROUPBOX        "",IDC_BOLDGROUP,88,140,66,57
+    CONTROL         "",IDC_NORMALBOLD,"Button",BS_AUTORADIOBUTTON,94,151,56,
+                    8
+    CONTROL         "",IDC_BOLD,"Button",BS_AUTORADIOBUTTON,94,165,56,8
+    CONTROL         "",IDC_DEFAULTBOLD,"Button",BS_AUTORADIOBUTTON,94,179,57,
+                    8
 END
 
 INITCONFIRMDIALOG DIALOG DISCARDABLE  100, 100, 265, 81
@@ -2337,10 +2247,12 @@ BEGIN
         BOTTOMMARGIN, 67
     END
 
-    EN_CHARACTERSDIALOG, DIALOG
+    CHARACTERSDIALOG, DIALOG
     BEGIN
-        LEFTMARGIN, 7
-        VERTGUIDE, 82
+        RIGHTMARGIN, 202
+        BOTTOMMARGIN, 181
+        HORZGUIDE, 204
+        HORZGUIDE, 218
     END
 
     INITCONFIRMDIALOG, DIALOG
@@ -3241,73 +3153,6 @@ BEGIN
     PUSHBUTTON      "Terminer",ID_DONE,101,116,38,15
 END
 
-FR_CHARACTERSDIALOG DIALOG DISCARDABLE  100, 100, 221, 182
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Caractères"
-FONT 8, "MS Sans Serif"
-BEGIN
-    DEFPUSHBUTTON   "Appliquer",ID_APPLY,48,163,50,14
-    PUSHBUTTON      "Terminer",ID_DONE,108,163,50,14
-    GROUPBOX        "Police",IDC_STATIC,9,6,64,58,WS_GROUP
-    CONTROL         "Times",IDC_TIMES,"Button",BS_AUTORADIOBUTTON,11,14,43,
-                    11
-    CONTROL         "Helvetica",IDC_HELVETICA,"Button",BS_AUTORADIOBUTTON,11,
-                    25,46,11
-    CONTROL         "Courier",IDC_COURIER,"Button",BS_AUTORADIOBUTTON,11,36,
-                    45,11
-    CONTROL         "Défault",IDC_DEFAULTFAMILY,"Button",BS_AUTORADIOBUTTON,
-                    11,48,44,11
-    GROUPBOX        "Style de caractères",IDC_STATIC,9,68,70,71,WS_GROUP
-    CONTROL         "Romain",IDC_ROMAN,"Button",BS_AUTORADIOBUTTON,11,80,43,
-                    11
-    CONTROL         "Italique",IDC_ITALIC,"Button",BS_AUTORADIOBUTTON,11,92,
-                    42,11
-    CONTROL         "Oblique",IDC_OBLIQUE,"Button",BS_AUTORADIOBUTTON,11,104,
-                    44,12
-    CONTROL         "Défault",IDC_DEFAULTSTYLE,"Button",BS_AUTORADIOBUTTON | 
-                    BS_LEFT,11,116,49,12
-    GROUPBOX        "Souligné",IDC_STATIC,83,6,62,72,WS_GROUP
-    CONTROL         "Non souligné",IDC_NORMAL,"Button",BS_AUTORADIOBUTTON,87,
-                    15,54,10
-    CONTROL         "Sousligné",IDC_UNDERLINE,"Button",BS_AUTORADIOBUTTON,87,
-                    25,49,10
-    CONTROL         "Surligné",IDC_OVERLINE,"Button",BS_AUTORADIOBUTTON,87,
-                    38,47,11
-    CONTROL         "Biffé",IDC_CROSSOUT,"Button",BS_AUTORADIOBUTTON,87,51,
-                    47,9
-    CONTROL         "Défault",IDC_DEFAULTUNDERLINE,"Button",
-                    BS_AUTORADIOBUTTON,87,63,49,11
-    GROUPBOX        "Corps (pt)",IDC_STATIC,153,5,54,153,WS_GROUP
-    CONTROL         "6 pt",IDC_06PT,"Button",BS_AUTORADIOBUTTON,155,14,45,13
-    CONTROL         "10 pt",IDC_10PT,"Button",BS_AUTORADIOBUTTON,155,36,46,
-                    10
-    CONTROL         "8 pt",IDC_08PT,"Button",BS_AUTORADIOBUTTON,155,25,42,12
-    CONTROL         "12 pt",IDC_12PT,"Button",BS_AUTORADIOBUTTON,155,46,43,
-                    13
-    CONTROL         "14 pt",IDC_14PT,"Button",BS_AUTORADIOBUTTON,155,56,42,
-                    13
-    CONTROL         "16 pt",IDC_16PT,"Button",BS_AUTORADIOBUTTON,155,70,45,
-                    13
-    CONTROL         "20 pt",IDC_20PT,"Button",BS_AUTORADIOBUTTON,155,81,43,
-                    13
-    CONTROL         "24 pt",IDC_24PT,"Button",BS_AUTORADIOBUTTON,155,91,42,
-                    13
-    CONTROL         "30 pt",IDC_30PT,"Button",BS_AUTORADIOBUTTON,155,104,40,
-                    12
-    CONTROL         "40 pt",IDC_40PT,"Button",BS_AUTORADIOBUTTON,155,116,39,
-                    11
-    CONTROL         "60 pt",IDC_60PT,"Button",BS_AUTORADIOBUTTON,155,128,42,
-                    12
-    CONTROL         "Défault",IDC_DEFAULTSIZE,"Button",BS_AUTORADIOBUTTON,
-                    155,138,42,14
-    GROUPBOX        "Gras",IDC_STATIC,83,83,52,56
-    CONTROL         "Normal",IDC_NORMALBOLD,"Button",BS_AUTORADIOBUTTON,89,
-                    94,38,10
-    CONTROL         "Gras",IDC_BOLD,"Button",BS_AUTORADIOBUTTON,89,105,31,10
-    CONTROL         "Défault",IDC_DEFAULTBOLD,"Button",BS_AUTORADIOBUTTON,89,
-                    118,39,10
-END
-
 FR_CREATERULEDIALOG DIALOG DISCARDABLE  100, 100, 148, 138
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Appliquer classe"
@@ -3485,11 +3330,6 @@ BEGIN
     BEGIN
         RIGHTMARGIN, 147
         BOTTOMMARGIN, 131
-    END
-
-    FR_CHARACTERSDIALOG, DIALOG
-    BEGIN
-        VERTGUIDE, 170
     END
 
     FR_CREATERULEDIALOG, DIALOG

@@ -778,17 +778,8 @@ int   font_size;
     fontUnderline = font_underline;
     fontSize      = font_size;
 
-	switch (app_lang) {
-           case FR_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (FR_CHARACTERSDIALOG), NULL, (DLGPROC) CharacterDlgProc);
-				break;
-           case DE_LANG:
-                DialogBox (hInstance, MAKEINTRESOURCE (DE_CHARACTERSDIALOG), NULL, (DLGPROC) CharacterDlgProc);
-				break;
-           default:
-                DialogBox (hInstance, MAKEINTRESOURCE (EN_CHARACTERSDIALOG), NULL, (DLGPROC) CharacterDlgProc);
-				break;
- 	}
+
+	DialogBox (hInstance, MAKEINTRESOURCE (CHARACTERSDIALOG), NULL, (DLGPROC) CharacterDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -2894,6 +2885,48 @@ LPARAM lParam;
 {
     switch (msg) {
 	       case WM_INITDIALOG:
+                SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_CHAR));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_FONTFAMILYGROUP), TtaGetMessage (LIB, TMSG_FONT_FAMILY));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_TIMES), TEXT("Times"));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_HELVETICA), TEXT("Helvetica"));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_COURIER), TEXT("Courrier"));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_DEFAULTFAMILY), TtaGetMessage (LIB, TMSG_UNCHANGED));
+
+				SetWindowText (GetDlgItem (hwnDlg, IDC_CHARSTYLEGROUP), TtaGetMessage (LIB, TMSG_STYLE));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_ROMAN), TtaGetMessage (LIB, TMSG_ROMAN));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_ITALIC), TtaGetMessage (LIB, TMSG_ITALIC));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_OBLIQUE), TtaGetMessage (LIB, TMSG_OBLIQUE));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_DEFAULTSTYLE), TtaGetMessage (LIB, TMSG_UNCHANGED));
+
+				SetWindowText (GetDlgItem (hwnDlg, IDC_UNDERLINEGROUP), TtaGetMessage (LIB, TMSG_LINE));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_NORMAL), TtaGetMessage (LIB, TMSG_NORMAL));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_UNDERLINE), TtaGetMessage (LIB, TMSG_UNDERLINE));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_OVERLINE), TtaGetMessage (LIB, TMSG_OVERLINE));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_CROSSOUT), TtaGetMessage (LIB, TMSG_CROSS_OUT));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_DEFAULTUNDERLINE), TtaGetMessage (LIB, TMSG_UNCHANGED));
+
+				SetWindowText (GetDlgItem (hwnDlg, IDC_BOLDGROUP), TtaGetMessage (LIB, TMSG_BOLDNESS));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_NORMALBOLD), TtaGetMessage (LIB, TMSG_NOT_BOLD));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_BOLD), TtaGetMessage (LIB, TMSG_BOLD));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_DEFAULTBOLD), TtaGetMessage (LIB, TMSG_UNCHANGED));
+
+				SetWindowText (GetDlgItem (hwnDlg, IDC_BODYSIZEGROUP), TtaGetMessage (LIB, TMSG_BODY_SIZE_PTS));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_06PT), TEXT(" 6 pt"));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_08PT), TEXT(" 8 pt"));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_10PT), TEXT("10 pt"));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_12PT), TEXT("12 pt"));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_14PT), TEXT("14 pt"));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_16PT), TEXT("16 pt"));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_20PT), TEXT("20 pt"));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_24PT), TEXT("24 pt"));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_30PT), TEXT("30 pt"));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_40PT), TEXT("40 pt"));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_60PT), TEXT("60 pt"));
+				SetWindowText (GetDlgItem (hwnDlg, IDC_DEFAULTSIZE), TtaGetMessage (LIB, TMSG_UNCHANGED));
+
+				SetWindowText (GetDlgItem (hwnDlg, ID_APPLY), TtaGetMessage (LIB, TMSG_APPLY));
+				SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
+
                 switch (fontNum) {
                        case 1:  CheckRadioButton (hwnDlg, IDC_TIMES, IDC_DEFAULTFAMILY, IDC_TIMES);
                                 break;
