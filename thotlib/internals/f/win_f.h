@@ -9,7 +9,7 @@ extern HFONT   WinLoadFont (HDC, ptrfont);
 extern int     WIN_InitSystemColors ();
 extern void    WIN_GetDeviceContext (int);
 extern void    WIN_ReleaseDeviceContext ();
-extern BOOL    WIN_TtaInitDialogue (char*, char*, char*, char*);
+extern BOOL    WIN_TtaInitDialogue (char*);
 extern void    WIN_TtaSetPulldownOff (int, ThotWidget, HWND);
 extern void    WIN_TtaSetPulldownOn (int, ThotWidget, HWND);
 extern void    WIN_TtaSetToggleMenu (int, int, boolean, HWND);
