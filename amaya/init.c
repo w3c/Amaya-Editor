@@ -1036,6 +1036,7 @@ void SetTableMenuOn (Document doc, View view)
   ----------------------------------------------------------------------*/
 void UpdateEditorMenus (Document doc)
 {
+  View       view;
   int        profile;
   ThotBool   isXhtml11;
 
@@ -1047,8 +1048,6 @@ void UpdateEditorMenus (Document doc)
   TtaUpdateMenus (doc, 1, FALSE);
   /* Update the doctype menu */
   UpdateDoctypeMenu (doc);
-#ifdef IV
-  View       view;
   /* structure information is active only in the structure view */
   TtaSetItemOff (doc, 1, Types, BStyle);
   TtaSetItemOff (doc, 1, Types, BComment);
@@ -1213,7 +1212,6 @@ void UpdateEditorMenus (Document doc)
 	  SetTableMenuOff (doc, view); /* no table commands */
 	}
     }
-#endif /* IV */
 }
 
 
@@ -2340,7 +2338,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
   int           x, y, w, h;
   int           requested_doc;
   Language	lang;
-  ThotBool      isOpen, reinitialized, show;
+  ThotBool      isOpen, reinitialized = FALSE, show;
 
 
   /* specific to wxWidgets user interface */
@@ -2611,8 +2609,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	   return (0);
 	 }
 
-       /* do we have to redraw buttons and menus? */
-       reinitialized = FALSE;
        /* store the profile of the new document */
        /* and update the menus according to it */
        TtaSetDocumentProfile (doc, profile);
@@ -2627,9 +2623,12 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
        TtaSetMenuOff (doc, 1, Cooperation_);
 #endif  /* DAV */
 
+       /* do we have to redraw buttons and menus? */
+       reinitialized = (docType != DocumentTypes[doc]);
        if (docType == docSource || docType == docLog ||
 	   docType == docLibrary || docType == docBookmark)
 	 {
+	   reinitialized = FALSE;
 	   TtaSetItemOff (doc, 1, File, BHtmlBasic);
 	   TtaSetItemOff (doc, 1, File, BHtmlStrict);
 	   TtaSetItemOff (doc, 1, File, BHtml11);
@@ -2913,9 +2912,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	     TtaSetMenuOff (doc, 1, Bookmarks_);
 #endif /* BOOKMARKS */
 	 }
-       else
-	 /* do we have to redraw buttons and menus? */
-	 reinitialized = (docType != DocumentTypes[doc]);
      }
 
 #if _WX

@@ -781,8 +781,6 @@ static void SyncBoundingboxesReal (PtrAbstractBox pInitAb,
 	      CoordinateSystemUpdate (pAb, frame, 
 				      pAb->AbBox->BxXOrg, 
 				      pAb->AbBox->BxYOrg);
-	      /* pAb->AbBox->BxXOrg = 0; */
-	      /* pAb->AbBox->BxYOrg = 0; */
 	      SyncBoundingboxesReal (pAb, XFrame, YFrame, frame);
 	    }
 	  else 
@@ -857,8 +855,6 @@ static void SyncBoundingboxes (PtrAbstractBox pInitAb,
 		  CoordinateSystemUpdate (pAb, frame, 
 					  pAb->AbBox->BxXOrg, 
 					  pAb->AbBox->BxYOrg);
-		  /* pAb->AbBox->BxXOrg = 0; */
-		  /* pAb->AbBox->BxYOrg = 0; */
 		  SyncBoundingboxesReal (pAb, XFrame, YFrame, frame);
 		}
 	      else
@@ -868,11 +864,6 @@ static void SyncBoundingboxes (PtrAbstractBox pInitAb,
 	}
       pAb = pAb->AbNext;
     }
-  /*   box = pInitAb->AbBox; */
-  /*   box->BxClipX = x; */
-  /*   box->BxClipY = y; */
-  /*   box->BxClipW = w; */
-  /*   box->BxClipH = h; */
 }
 
 /*----------------------------------------------------------------------
