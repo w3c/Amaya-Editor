@@ -22,7 +22,10 @@ Fixed bugs 2.1a:
     ignored.
   - CSS comments within style elements were lost.
   - Amaya misinterpreded complex selectors.
- 
+
+* SGML entites and spaces weren't being handled correctly when
+  saving a document or when browsing a URL. 
+
 =============================================================
 2.1a
 =============================================================
