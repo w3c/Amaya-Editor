@@ -1719,13 +1719,10 @@ void TtaRedirectFocus()
 {
 #ifdef _WX
   wxLogDebug( _T("TtaRedirectFocus") );
-  AmayaWindow * p_window = TtaGetWindowFromId(TtaGetActiveWindowId());
-  if (p_window)
-    {
-      AmayaPage *   p_page   = p_window->GetActivePage();
-      if (p_page)
-	p_page->SetFocus();
-    }
+  int active_frame_id = TtaGiveActiveFrame();
+  AmayaFrame * p_frame = TtaGetFrameFromId( active_frame_id );
+  if (p_frame)
+    p_frame->GetCanvas()->SetFocus();
 #endif /* _WX */
 }
 
@@ -1838,7 +1835,7 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
 	  wxString s(thot_keysym);
 	  if (s.IsAscii())
 	    {
-	      wxLogDebug( _T("AmayaWindow::CheckShortcutKey : thot_keysym=%x s=")+s, thot_keysym );
+	      wxLogDebug( _T("TtaHandleShortcutKey : thot_keysym=%x s=")+s, thot_keysym );
 	      s.MakeLower();
 	      thot_keysym = s.GetChar(0);
 	    }
@@ -1857,7 +1854,7 @@ ThotBool TtaHandleShortcutKey( wxKeyEvent& event )
 	    thot_keysym == WXK_HOME ||
 	    thot_keysym == WXK_END))
     {
-      wxLogDebug( _T("AmayaWindow::CheckShortcutKey : special shortcut thot_keysym=%x"), thot_keysym );
+      wxLogDebug( _T("TtaHandleShortcutKey : special shortcut thot_keysym=%x"), thot_keysym );
       ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym);
       return true;
     }
@@ -1930,7 +1927,12 @@ ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
 	  return true;
 	}
 #endif /* 0 */
-      
+
+      if (p_win_focus)
+	wxLogDebug(_T("focus = %s"), p_win_focus->GetClassInfo()->GetClassName());
+      else
+	wxLogDebug(_T("no focus"));
+
       /* do not allow special key outside the canvas */
       if (!p_gl_canvas && !p_splitter && !p_notebook && !p_scrollbar && proceed_key )
 	{
@@ -1962,7 +1964,7 @@ ThotBool TtaHandleSpecialKey( wxKeyEvent& event )
 	    thotMask |= THOT_MOD_ALT;
 	  if (event.ShiftDown())
 	    thotMask |= THOT_MOD_SHIFT;
-	  wxLogDebug( _T("AmayaWindow::SpecialKey thot_keysym=%x"), thot_keysym );
+	  wxLogDebug( _T("TtaHandleSpecialKey: thot_keysym=%x"), thot_keysym );
 	  ThotInput (TtaGiveActiveFrame(), thot_keysym, 0, thotMask, thot_keysym);
 	  return true;
 	}

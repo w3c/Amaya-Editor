@@ -3477,12 +3477,10 @@ void ChangeSelFrame (int frame)
 
   if (ActiveFrame != frame)
     {
-      /* check if a new document is selected */
-      if (ActiveFrame == 0)
-	doc = 0;
-      else
-	doc = FrameTable[frame].FrDoc;
       ActiveFrame = frame;
+
+      /* the active frame changed so update the application focus */
+      TtaRedirectFocus();
     }
 }
 

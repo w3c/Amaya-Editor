@@ -807,7 +807,12 @@ void AmayaFrame::RaiseFrame()
       // raise the page parent
       AmayaPage * p_page = GetPageParent();
       if (p_page)
-	p_page->RaisePage();
+	{
+	  // first : the page must be warnned this frame is now active
+	  p_page->SetActiveFrame( this );
+	  // now we can raise it
+	  p_page->RaisePage();
+	}
     }
   else if ( p_window->GetKind() == WXAMAYAWINDOW_SIMPLE)
     {

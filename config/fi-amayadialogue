@@ -252,73 +252,74 @@
 250 Näytä kohteet
 251 Lähennä
 252 Loitonna
-253 Näytä rakenne
-254 Näytä lähdekoodi
-255 Näytä linkit
-256 Show alternate
-257 Näytä sisällysluettelo
-258 Aikajana
-259 **&Split view
-260 Fontin tyyli...
-261 Värit...
-262 Muoto...
-263 Taustakuva...
-264 Tee sääntö...
-265 Käytä luokkaa...
-266 **Show applied style...
-267 Linkki...
-268 Avaa...
-269 Poista käytöstä...
-270 Ota käyttöön...
-271 Poista...
-272 Valinnan lisätiedot
-273 Dokumentin lisätiedot
-274 Siirrä valintaan
-275 Tallenna valinta XPointer:iin
-276 Siirrä XPointer:iin
-277 Vastaa merkintään
-278 Lähetä palvelimelle
-279 Poista
-280 Lataa
-281 Mukauta tiedustelu...
-282 Paikalliset rajoitukset...
-283 **View Bookmarks
-284 **New Bookmark
-285 **New Topic
-286 **New Separator
-287 **Move Item
-288 Lukitse objekti...
-289 Vapauta objekti...
-290 Näytä objektin ominaisuudet...
-291 Kopioi lukitustiedot...
-292 Lukittu?
-293 Tietoja Amayasta
-294 Lisätietoa Amayasta W3C:ssä
-295 Hakemisto
-296 Selaaminen
-297 Näkymät
-298 Valinta
-299 Dokumentti
-300 Elementtien luominen
-301 Asetukset
-302 Fontit
-303 Rakenteen muunto
-304 Linkit
-305 Taulukot
-306 Kuvakartat
-307 Matematiikka
-308 Grafiikka
-309 XML-tuki
-310 Tyylitiedostot (CSS)
-311 Etsiminen
-312 Oikeinkirjoituksen tarkastus
-313 Julkaisu
-314 WebDAV
-315 Tulostus
-316 Numerointi
-317 Koosteen valmistus
-318 Merkinnät
-319 **&Bookmarks
-320 Asetuksien määritys
-321 Näppäinkomennot
-322 Amayan helppokäyttötoiminnot
+253 **Show &formatted view
+254 Näytä rakenne
+255 Näytä lähdekoodi
+256 Näytä linkit
+257 Show alternate
+258 Näytä sisällysluettelo
+259 Aikajana
+260 **&Split view
+261 Fontin tyyli...
+262 Värit...
+263 Muoto...
+264 Taustakuva...
+265 Tee sääntö...
+266 Käytä luokkaa...
+267 **Show applied style...
+268 Linkki...
+269 Avaa...
+270 Poista käytöstä...
+271 Ota käyttöön...
+272 Poista...
+273 Valinnan lisätiedot
+274 Dokumentin lisätiedot
+275 Siirrä valintaan
+276 Tallenna valinta XPointer:iin
+277 Siirrä XPointer:iin
+278 Vastaa merkintään
+279 Lähetä palvelimelle
+280 Poista
+281 Lataa
+282 Mukauta tiedustelu...
+283 Paikalliset rajoitukset...
+284 **View Bookmarks
+285 **New Bookmark
+286 **New Topic
+287 **New Separator
+288 **Move Item
+289 Lukitse objekti...
+290 Vapauta objekti...
+291 Näytä objektin ominaisuudet...
+292 Kopioi lukitustiedot...
+293 Lukittu?
+294 Tietoja Amayasta
+295 Lisätietoa Amayasta W3C:ssä
+296 Hakemisto
+297 Selaaminen
+298 Näkymät
+299 Valinta
+300 Dokumentti
+301 Elementtien luominen
+302 Asetukset
+303 Fontit
+304 Rakenteen muunto
+305 Linkit
+306 Taulukot
+307 Kuvakartat
+308 Matematiikka
+309 Grafiikka
+310 XML-tuki
+311 Tyylitiedostot (CSS)
+312 Etsiminen
+313 Oikeinkirjoituksen tarkastus
+314 Julkaisu
+315 WebDAV
+316 Tulostus
+317 Numerointi
+318 Koosteen valmistus
+319 Merkinnät
+320 **&Bookmarks
+321 Asetuksien määritys
+322 Näppäinkomennot
+323 Amayan helppokäyttötoiminnot

@@ -709,9 +709,13 @@ void ShowSelectedBox (int frame, ThotBool active)
    int                 ymin, ymax;
    int                 x, y, dx, dy, w, h;
 
+#ifndef _WX
+   /* do not update the ActiveFrame when drawing because the selected frame is not allways the drawn one */
    if (active)
      /* make the window active */
       ChangeSelFrame (frame);
+#endif /* _WX */
+
    pFrame = &ViewFrameTable[frame - 1];
    if (pFrame->FrSelectionBegin.VsBox != NULL && pFrame->FrReady)
      {

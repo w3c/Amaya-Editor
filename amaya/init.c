@@ -4600,6 +4600,43 @@ void ShowSource (Document doc, View view)
        }
      TtaFreeMemory (localFile);
      }
+
+  /* the new opened view must get the focus */
+  TtaRedirectFocus();
+}
+
+/*----------------------------------------------------------------------
+  ShowFormatted
+  Open the formatted view(s) of a document. (or give it focus)
+  ----------------------------------------------------------------------*/
+void ShowFormatted (Document doc, View view)
+{
+  View                structView;
+  int                 x, y, w, h;
+  char                structureName[30];
+
+  if (DocumentTypes[doc] == docSource)
+    /* work on the formatted document */
+    doc = GetDocFromSource (doc);
+  strcpy (structureName, "Formatted_view");  
+  structView = TtaGetViewFromName (doc, structureName);
+  if (structView != 0 && TtaIsViewOpen (doc, structView))
+    TtaRaiseView (doc, structView);
+  else
+    {
+      TtaGetViewGeometry (doc, structureName, &x, &y, &w, &h);
+      structView = TtaOpenView (doc, structureName, x, y, w, h);
+      if (structView != 0)
+	{
+	  TtcSwitchButtonBar (doc, structView); /* no button bar */
+	  TtcSwitchCommands (doc, structView); /* no command open */
+	  UpdateEditorMenus (doc);
+	}
+    }
+  SetWindowTitle (doc, doc, 0);
+
+  /* the new opened view must get the focus */
+  TtaRedirectFocus();
 }
 
 /*----------------------------------------------------------------------
@@ -4631,6 +4668,9 @@ void ShowStructure (Document doc, View view)
 	}
     }
   SetWindowTitle (doc, doc, 0);
+
+  /* the new opened view must get the focus */
+  TtaRedirectFocus();
 }
 
 /*----------------------------------------------------------------------
@@ -4662,6 +4702,9 @@ void ShowAlternate (Document doc, View view)
 	  UpdateEditorMenus (doc);
 	}
     }
+
+  /* the new opened view must get the focus */
+  TtaRedirectFocus();
 }
 
 
@@ -4694,6 +4737,9 @@ void ShowLinks (Document doc, View view)
 	  UpdateEditorMenus (doc);
 	}
     }
+
+  /* the new opened view must get the focus */
+  TtaRedirectFocus();
 }
 
 
@@ -4726,6 +4772,9 @@ void ShowToC (Document doc, View view)
 	  UpdateEditorMenus (doc);
 	}
     }
+
+  /* the new opened view must get the focus */
+  TtaRedirectFocus();
 }
 
 

@@ -164,6 +164,7 @@ class AmayaWindow : public wxFrame
   bool              m_ShouldCleanUp;
   static int        m_ActiveWindowId;
   int               m_ActiveFrameId;
+  bool              m_MustCheckFocusIsNotLost;
 };
 
 #endif // __AMAYAWINDOW_H__

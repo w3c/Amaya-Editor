@@ -294,6 +294,7 @@ MENUS
 	Views toggle:TZoomIn -> ZoomIn;
 	Views toggle:TZoomOut -> ZoomOut;
 	Views Separator;
+	Views button:BShowFormatted -> ShowFormatted;
 	Views button:BShowStructure -> ShowStructure;
 	Views button:BShowSource -> ShowSource;
 	Views button:BShowLinks -> ShowLinks;

@@ -2665,6 +2665,10 @@
 	<message xml:lang="fi">Loitonna</message>
 	<message xml:lang="ru">Уменьшить</message>
 </label>
+<label define="BShowFormatted">
+	<message xml:lang="en">Show &amp;formatted view</message>
+	<message xml:lang="fr">Montrer la vue &amp;formatée</message>
+</label>
 <label define="BShowStructure">
 	<message xml:lang="en">Show &amp;structure</message>
 	<message xml:lang="fr">Montrer la &amp;structure</message>

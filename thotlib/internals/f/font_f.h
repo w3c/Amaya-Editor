@@ -31,8 +31,8 @@ extern int LogicalValue ( int val,
 extern int FontBase ( ThotFont font );
 extern int BoxFontBase ( SpecFont specfont );
 extern int CharRelSize ( int height,
-			 unsigned char symb,
-			 int n );
+                         unsigned char symb,
+                         int n );
 extern int FontRelSize ( int size );
 extern int ThotFontPointSize ( int size );
 extern ThotFont LoadFont ( char *name );
@@ -105,8 +105,8 @@ extern int LogicalValue ( int val,
 extern int FontBase ( ThotFont font );
 extern int BoxFontBase ( SpecFont specfont );
 extern int CharRelSize ( int height,
-			 unsigned char symb,
-			 int n );
+                           unsigned char symb,
+                           int n );
 extern int FontRelSize ( int size );
 extern int ThotFontPointSize ( int size );
 extern ThotFont LoadFont ( char *name );

@@ -490,6 +490,7 @@ ShowAlternate
 ShowLinks
 ShowSource
 ShowStructure
+ShowFormatted
 ShowToC
 # ShowTimeLineWindow
 TtcCloseView

@@ -252,73 +252,74 @@
 250 Anker anzeigen
 251 Schrift vergrößern
 252 Schrift verkleinern
-253 Struktur
-254 Quelltext
-255 Verweise
-256 Textbrowser
-257 Inhaltsverzeichnis
-258 Zeitliche Reihenfolge
-259 &Ansicht teilen
-260 Schrift...
-261 Farbe...
-262 Ausrichtung...
-263 Hintergrundbild...
-264 Regel erzeugen...
-265 Klasse übernehmen...
-266 Zugewiesenes Format anzeigen...
-267 Verknüpfen...
-268 Öffnen...
-269 Deaktivieren...
-270 Aktivieren...
-271 Entfernen...
-272 Zur Markierung
-273 Zum Dokument
-274 Auf Markierung verschieben
-275 Als XPointer speichern
-276 Auf XPointer verschieben
-277 Beantworten
-278 Veröffentlichen
-279 Löschen
-280 Laden
-281 Abfrage bearbeiten...
-282 Filter...
-283 Lesezeichen ansehen
-284 Neues Lesezeichen
-285 Neue Überschrift
-286 Neues Trennelement
-287 Item verschieben
-288 Resource sperren...
-289 Resource entsperren...
-290 Resourceeigenschaften anzeigen...
-291 Sperrinformation kopieren...
-292 Gesperrt?
-293 Info
-294 Über Amaya
-295 Index
-296 Browsen
-297 Ansichten
-298 Markieren
-299 Dokument
-300 Elemente
-301 Attribute
-302 Zeichen
-303 Transformieren
-304 Verweise
-305 Tabellen
-306 Aktive Bildbereiche
-307 Formeln
-308 SVG
-309 XML
-310 Formate/Formatvorlagen
-311 Suchen/Ersetzen
-312 Rechtschreibprüfung
-313 Speichern/Veröffentlichen
-314 WebDAV
-315 Drucken
-316 Abschnitte numerieren
-317 Buch erstellen
-318 Anmerkungen
-319 &Lesezeichen
-320 Konfiguration
-321 Tastenkürzel
-322 Benutzerfreundlichkeit
+253 **Show &formatted view
+254 Struktur
+255 Quelltext
+256 Verweise
+257 Textbrowser
+258 Inhaltsverzeichnis
+259 Zeitliche Reihenfolge
+260 &Ansicht teilen
+261 Schrift...
+262 Farbe...
+263 Ausrichtung...
+264 Hintergrundbild...
+265 Regel erzeugen...
+266 Klasse übernehmen...
+267 Zugewiesenes Format anzeigen...
+268 Verknüpfen...
+269 Öffnen...
+270 Deaktivieren...
+271 Aktivieren...
+272 Entfernen...
+273 Zur Markierung
+274 Zum Dokument
+275 Auf Markierung verschieben
+276 Als XPointer speichern
+277 Auf XPointer verschieben
+278 Beantworten
+279 Veröffentlichen
+280 Löschen
+281 Laden
+282 Abfrage bearbeiten...
+283 Filter...
+284 Lesezeichen ansehen
+285 Neues Lesezeichen
+286 Neue Überschrift
+287 Neues Trennelement
+288 Item verschieben
+289 Resource sperren...
+290 Resource entsperren...
+291 Resourceeigenschaften anzeigen...
+292 Sperrinformation kopieren...
+293 Gesperrt?
+294 Info
+295 Über Amaya
+296 Index
+297 Browsen
+298 Ansichten
+299 Markieren
+300 Dokument
+301 Elemente
+302 Attribute
+303 Zeichen
+304 Transformieren
+305 Verweise
+306 Tabellen
+307 Aktive Bildbereiche
+308 Formeln
+309 SVG
+310 XML
+311 Formate/Formatvorlagen
+312 Suchen/Ersetzen
+313 Rechtschreibprüfung
+314 Speichern/Veröffentlichen
+315 WebDAV
+316 Drucken
+317 Abschnitte numerieren
+318 Buch erstellen
+319 Anmerkungen
+320 &Lesezeichen
+321 Konfiguration
+322 Tastenkürzel
+323 Benutzerfreundlichkeit

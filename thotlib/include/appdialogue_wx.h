@@ -67,6 +67,8 @@ extern ThotBool TtaHandleShortcutKey( wxKeyEvent& event );
 extern ThotBool TtaHandleSpecialKey( wxKeyEvent& event );
 extern ThotBool TtaIsSpecialKey( int wx_keycode );
 
+extern void TtaRedirectFocus();
+
 #endif /* #define __APPDIALOGUE_WX_H__ */
 
 #endif /* _WX */

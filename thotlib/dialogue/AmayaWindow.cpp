@@ -74,7 +74,8 @@ AmayaWindow::AmayaWindow (  int            window_id
   m_IsClosing( FALSE ),
   m_Kind( kind ),
   m_ShouldCleanUp( false ),
-  m_ActiveFrameId( 0 )
+  m_ActiveFrameId( 0 ),
+  m_MustCheckFocusIsNotLost( false )
 {
   wxLogDebug( _T("AmayaWindow::AmayaWindow: window_id=%d"), m_WindowId );
   SetIcon( AmayaApp::GetAppIcon() );
@@ -439,6 +440,21 @@ void AmayaWindow::OnIdle( wxIdleEvent& event )
       TtaCleanUpWindow( GetWindowId() );
     }
 
+  // this flag is used to process on idle time the possible lost focus
+  // it can not be procced in OnActivate callback because the wxWindow::FindFocus is allways NULL (bug)
+  if (m_MustCheckFocusIsNotLost)
+    {
+      wxWindow *       p_win_focus         = wxWindow::FindFocus();
+      if (p_win_focus)
+	wxLogDebug(_T("AmayaWindow::OnIdle - focus = %s"), p_win_focus->GetClassInfo()->GetClassName());
+      else
+	{
+	  wxLogDebug(_T("AmayaWindow::OnIdle - no focus"));
+	  TtaRedirectFocus();
+	}
+      m_MustCheckFocusIsNotLost = false;
+    }
+
   event.Skip();
 }
 
@@ -457,23 +473,18 @@ void AmayaWindow::OnActivate( wxActivateEvent & event )
   if (event.GetActive())
     {
       wxLogDebug( _T("AmayaWindow::OnActivate - window_id=%d"), m_WindowId );
+
+      // update the active-window indicator to be able to know the last active window everytime
       m_ActiveWindowId = GetWindowId();
 
       // update internal thotlib global var : ActiveFrame
+      // this is necessary because when a window is closed, the active frame must be updated
       AmayaFrame * p_frame = GetActiveFrame();
       if (p_frame)
 	ChangeSelFrame(p_frame->GetFrameId());
-      
-      // if the focus is on the combobox, do not redirect focus because
-      // the combobox popuplist generates a OnActivate event.
-      /*      wxWindow *       p_win_focus         = wxWindow::FindFocus();
-      wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
-      if (p_win_focus)
-      wxLogDebug( _T("AmayaWindow::OnActivate - focus=%s"), p_win_focus->GetClassInfo()->GetClassName() );
-      if (p_win_focus && !p_combo_box)*/
-	// force the focus to be back on active frame because sometime (wxWidgets bug ?)
-	// the focus disapears => big acessibility problemes.
-	TtaRedirectFocus();
+
+      // just chek on idle time if the focus is lost 
+      m_MustCheckFocusIsNotLost = true;
     }
 
   event.Skip();

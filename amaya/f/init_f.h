@@ -111,6 +111,8 @@ extern void ZoomOut ( Document document,
                       View view );
 extern void ShowSource ( Document doc,
                          View view );
+extern void ShowFormatted ( Document doc,
+                            View view );
 extern void ShowStructure ( Document doc,
                             View view );
 extern void ShowAlternate ( Document doc,
@@ -288,6 +290,8 @@ extern void ZoomOut ( Document document,
                         View view );
 extern void ShowSource ( Document doc,
                            View view );
+extern void ShowFormatted ( Document doc,
+                              View view );
 extern void ShowStructure ( Document doc,
                               View view );
 extern void ShowAlternate ( Document doc,
