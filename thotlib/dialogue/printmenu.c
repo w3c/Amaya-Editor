@@ -881,7 +881,9 @@ void TtaPrint (Document document, char *viewNames, char *cssNames)
 	     {
 	       if (firstGenericXML)
 		 {
-		   strcat (pDoc->DocSchemasPath, ":");
+		   k = strlen (pDoc->DocSchemasPath);
+		   pDoc->DocSchemasPath[k] = PATH_SEP;
+		   pDoc->DocSchemasPath[k + 1] = EOS;
 		   strcat (pDoc->DocSchemasPath, pDoc->DocDirectory);
 		   firstGenericXML = FALSE;
 		 }
