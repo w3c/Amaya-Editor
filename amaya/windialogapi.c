@@ -2282,7 +2282,7 @@ LRESULT CALLBACK InitConfirmDlgProc (ThotWindow hwnDlg, UINT msg,
       SetWindowText (hwnDlg, Message);
       ptr = TtaGetMessage (LIB, TMSG_LIB_CONFIRM);
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), Message2);
-	if (strcmp (Message, ptr))
+	if (strcmp (Message2, ptr))
 	  /* generate a button show */
       SetWindowText (GetDlgItem (hwnDlg, ID_MIDDLE), Message3);
 	SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
@@ -3916,7 +3916,7 @@ void CreateInitConfirmDlgWindow (ThotWindow parent, char *extrabutton,
   }
   else
   {
-    strcpy (Message, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+    strcpy (Message2, TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
     DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRMDIALOG), parent,
                (DLGPROC) InitConfirmDlgProc);
   }
