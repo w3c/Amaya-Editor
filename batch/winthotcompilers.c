@@ -260,7 +260,7 @@ char* fileName;
 #endif /* __STDC__ */
 {
     FILE*   f; 
-    HANDLE  hLib;
+    HINSTANCE  hLib;
     FARPROC ptrMainProc;
     CHAR_T  msg [1024];
     CHAR_T  seps[]   = TEXT(" \t=$()\n\r");
@@ -740,8 +740,18 @@ char* fileName;
                                              WorkFileName = TtaAllocString (len + 13);
                                              usprintf (WorkFileName, TEXT("%s\\greek.sgml"), WorkPath);
 									  }
-                
-                                      if ((result = Copy_File (hwnd, SrcFileName, WorkFileName)) != FATAL_EXIT_CODE) {
+									  /* 2000/10/09 JK: we make an expection here so that we can
+									     compile the T schemas outside of the Amaya directory. A 
+										 better solution may be to pass the extra IMPORTS as 
+									     arguments. We do an unecessary mem allocation, but we
+									     don't have much time to rewrite the code properly 
+									     today.
+									  */
+                                      if (TtaFileExist (SrcFileName))
+										  result = Copy_File (hwnd, SrcFileName, WorkFileName);
+									  else
+										  result = 0;
+                                      if (result != FATAL_EXIT_CODE) {
                                          if (SrcFileName) {
 										     free (SrcFileName);
 										     SrcFileName = NULL;
@@ -767,8 +777,12 @@ char* fileName;
                                                 WorkFileName = TtaAllocString (len + 15);
                                                 usprintf (WorkFileName, TEXT("%s\\Text_SGML.inc"), WorkPath);
 										 }
-
-                                         if ((result = Copy_File (hwnd, SrcFileName, WorkFileName)) != FATAL_EXIT_CODE) {
+										 /* JK: same exception as when compiling the greek inclusion */
+                                         if (TtaFileExist (SrcFileName))
+										   result = Copy_File (hwnd, SrcFileName, WorkFileName);
+									     else
+										   result = 0;                    
+                                         if (result != FATAL_EXIT_CODE) {
 										    if (SrcFileName) {
 										        free (SrcFileName);
 										        SrcFileName = NULL;
@@ -903,6 +917,11 @@ char* fileName;
 			     free (SrcFileName);
 				 SrcFileName = NULL;
 			  }
+			  if (WorkFileName) {
+                 free (WorkFileName);
+                 WorkFileName = NULL;
+			  }
+
 			  for (i = 0; i < indexBinFiles; i++) {
 #ifdef _I18N_
                   char sfname[MAX_LENGTH];
