@@ -437,9 +437,9 @@ Document            doc;
 	elType.ElSSchema = *schema;
 
 #ifndef STANDALONE
-	if (!ptr || !ustrcmp (ptr, TEXT("MATHML")))
+	if (!ptr || !ustrcmp (ptr, TEXT("MathML")))
 	  MapXMLElementType (MATH_TYPE, gi, &elType, &ptr, &c, doc);
-	if (elType.ElTypeNum == 0 && (!ptr || !ustrcmp (ptr, TEXT("GRAPHML"))))
+	if (elType.ElTypeNum == 0 && (!ptr || !ustrcmp (ptr, TEXT("GraphML"))))
 	  MapXMLElementType (GRAPH_TYPE, gi, &elType, &ptr, &c, doc);
 #endif
 	if (elType.ElTypeNum == 0)
