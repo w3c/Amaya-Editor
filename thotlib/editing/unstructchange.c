@@ -865,9 +865,10 @@ void PasteCommand ()
 		  else
 		    {
 		      GetCellSpans (pEl, &colspan, &rowspan);
-		      if ((colspan == 0 || colspan - back > 1) &&
-			  ((before && back > 0) || !before))
-			/* extend this previous cell instead of pasting the new cell */
+		      if ((back > 0 && (colspan - back > 1 || before)) ||
+			  (back == 0 && colspan > 1 && !before))
+			/* extend this previous cell instead of pasting the
+			   new cell */
 			{
 			  extendedCell[nbextended] = pEl;
 			  nbextended++;
@@ -889,59 +890,6 @@ void PasteCommand ()
 				rowspan--;
 			      }
 			}
-#ifdef IV
-		      else if (before && back == 0 &&
-			       (rowspan > 1 || rowspan == 0))
-			/* there is a cell here and we can paste a new cell
-			   before it, but it spans several rows. In these
-			   spanned rows, we will paste cells after the
-			   previous column */
-			{
-			  pRealCol = pColHead;
-			  /* get the previous column */
-			  pColHead = pColHead->ElPrevious;
-			  if (pColHead)
-			    /* there is a previous column */
-			    {
-			      before = FALSE;
-			      if (rowspan != 0)
-				{
-			          nRowsTempCol = rowspan;
-			          savebefore = TRUE;
-				}
-			    }
-			  else
-			    /* no previous column. get the next column that
-			       has a cell in the current row and paste before
-			       in the spanned rows */
-			    {
-			      pColHead = pRealCol;
-			      do
-				{
-				  pCe = GetCellInRow (pRow, pColHead, FALSE,
-						      &back);
-				  if (!pCe)
-				    pColHead = NextColumnInTable (pColHead,
-								  pTable);
-				}
-			      while (!pCe && pColHead);
-			      if (pColHead)
-				{
-				  before = TRUE;
-				  if (rowspan != 0)
-				    {
-				      nRowsTempCol = rowspan;
-				      savebefore = TRUE;
-				    }
-				}
-			      else
-				/* no cell in the spanned row */
-				{
-				  /* What should we do? */;
-				} 
-			    }
-			}
-#endif
 		    }
 		  if (pRow)
 		    pNextRow = NextRowInTable (pRow, pTable);
