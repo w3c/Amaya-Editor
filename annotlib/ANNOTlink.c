@@ -614,6 +614,7 @@ void LINK_LoadAnnotationIndex (doc, annotIndex, mark_visible)
   List *annot_list, *list_ptr;
   AnnotMeta *annot;
   AnnotMeta *old_annot;
+  DisplayMode dispMode;
 
   if (!annotIndex || !(TtaFileExist (annotIndex)))
     /* there are no annotations */
@@ -626,7 +627,9 @@ void LINK_LoadAnnotationIndex (doc, annotIndex, mark_visible)
     return;
 
   /* avoid refreshing the document while adding the annotation links */
-  TtaSetDisplayMode (doc, NoComputedDisplay);
+  dispMode = TtaGetDisplayMode (doc);
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, DeferredDisplay);
 
   /* Insert the annotations in the body */
   view = TtaGetViewFromName (doc, "Formatted_view");
@@ -674,8 +677,10 @@ void LINK_LoadAnnotationIndex (doc, annotIndex, mark_visible)
 	}
        List_delFirst (&list_ptr);
     }
+
   /* show the document */
-  TtaSetDisplayMode (doc, DisplayImmediately);  
+  if (dispMode == DisplayImmediately)
+    TtaSetDisplayMode (doc, dispMode);
 }
 
 /*-----------------------------------------------------------------------
