@@ -1,7 +1,3 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
-
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -28,7 +24,7 @@
 extern int          UserErrorCode;
 extern int          AvecControleStruct;
 
-static Name          nameBuffer;
+static Name          bufferName;
 
 /* ----------------------------------------------------------------------
    TtaNewAttribute
@@ -114,8 +110,8 @@ Document            document;
 #endif /* __STDC__ */
 
 {
-   PtrAttribute         pAttr;
-   boolean             obligatoire;
+   PtrAttribute        pAttr;
+   boolean             obligatory;
 
    UserErrorCode = 0;
    if (element == NULL || attribute == NULL)
@@ -123,7 +119,7 @@ Document            document;
 	TtaError (ERR_invalid_parameter);
      }
    else
-      /* verifie le parametre document */
+      /* to verify parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
 	TtaError (ERR_invalid_document_parameter);
@@ -133,17 +129,17 @@ Document            document;
 	TtaError (ERR_invalid_document_parameter);
      }
    else
-      /* parametre document correct */
-      /* l'element porte-t-il deja un attribut du meme type ? */
+      /* parameter document is correct */
+      /* has the element an attribute of the same type ? */
    if (AttributeValue ((PtrElement) element, (PtrAttribute) attribute) != NULL)
-      /* oui, erreur */
+      /* yes, error */
      {
 	TtaError (ERR_duplicate_attribute);
      }
    else
-      /* peut-on appliquer l'attribut a l'element ? */
-   if (AvecControleStruct && !CanAssociateAttr ((PtrElement) element, NULL, (PtrAttribute) attribute, &obligatoire))
-      /* non, erreur */
+      /* can wa apply the attribute to the element ? */
+   if (AvecControleStruct && !CanAssociateAttr ((PtrElement) element, NULL, (PtrAttribute) attribute, &obligatory))
+      /* no, error */
      {
 	TtaError (ERR_attribute_element_mismatch);
      }
@@ -167,8 +163,7 @@ Document            document;
 	if (pAttr->AeAttrType == AtReferenceAttr)
 	   if (pAttr->AeAttrReference != NULL)
 	      pAttr->AeAttrReference->RdElement = (PtrElement) element;
-	/* traitement special a l'ajout d'un attribut a un */
-	/* element d'un objet Draw */
+	/* Special processing when adding an attribute to an element of a Draw object */
 	DrawAjAttr (&pAttr, (PtrElement) element);
 #ifndef NODISPLAY
 	DisplayAttribute ((PtrElement) element, pAttr, document);
@@ -176,7 +171,7 @@ Document            document;
      }
 }
 
-	/* AttrOfElement verifie que l'attribut appartient bien a l'element */
+	/* AttrOfElement verifies that the attribute belongs to the element */
 #ifdef __STDC__
 static boolean      AttrOfElement (Attribute attribute, Element element)
 #else  /* __STDC__ */
@@ -187,7 +182,7 @@ Element             element;
 #endif /* __STDC__ */
 
 {
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
    boolean             ok;
 
    if (element == NULL)
@@ -234,9 +229,9 @@ Document            document;
 #endif /* __STDC__ */
 
 {
-   PtrAttribute         pAttr;
-   boolean             trouve;
-   boolean             obligatoire;
+   PtrAttribute        pAttr;
+   boolean             found;
+   boolean             obligatory;
 
    UserErrorCode = 0;
    if (element == NULL || attribute == NULL)
@@ -246,32 +241,32 @@ Document            document;
    else
      {
 	pAttr = ((PtrElement) element)->ElFirstAttr;
-	trouve = FALSE;
-	while (pAttr != NULL && !trouve)
+	found = FALSE;
+	while (pAttr != NULL && !found)
 	  {
 	     if (pAttr->AeAttrSSchema->SsCode ==
 		 ((PtrAttribute) attribute)->AeAttrSSchema->SsCode)
 		if (pAttr->AeAttrNum == ((PtrAttribute) attribute)->AeAttrNum)
-		   trouve = TRUE;
-	     if (!trouve)
+		   found = TRUE;
+	     if (!found)
 		pAttr = pAttr->AeNext;
 	  }
-	if (!trouve)
+	if (!found)
 	  {
 	     TtaError (ERR_attribute_element_mismatch);
 	  }
 	else
 	  {
 	     (void) CanAssociateAttr ((PtrElement) element, pAttr, pAttr,
-					 &obligatoire);
-	     if (!obligatoire)
-		/* on interdit d'enlever l'attribut Langue d'un element */
-		/* racine d'un arbre abstrait */
+					 &obligatory);
+	     if (!obligatory)
+		/* We prohibit to suppress the attbibute language of an element */
+		/* which is the root of an abstract tree */
 		if (((PtrElement) element)->ElParent == NULL)
 		   if (pAttr->AeAttrNum == 1)
-		      obligatoire = TRUE;
-	     if (obligatoire)
-		/* l'attribut est obligatoire pour ce type d'element */
+		      obligatory = TRUE;
+	     if (obligatory)
+		/* The attribute is required for this kind of element */
 	       {
 		  TtaError (ERR_mandatory_attribute);
 	       }
@@ -281,8 +276,7 @@ Document            document;
 #ifndef NODISPLAY
 		  UndisplayHeritAttr ((PtrElement) element, pAttr, document, TRUE);
 #endif
-		  /* traitement special a la suppression d'un */
-		  /* attribut a un element d'un objet Draw */
+		  /* Special processig to suppress an attribute of an element of type object Draw */
 		  DrawSupprAttr (pAttr, (PtrElement) element);
 #ifndef NODISPLAY
 		  UndisplayAttribute ((PtrElement) element, (PtrAttribute) attribute, document);
@@ -320,7 +314,7 @@ Document            document;
 #endif /* __STDC__ */
 
 {
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
    boolean             ok;
 
    UserErrorCode = 0;
@@ -339,7 +333,7 @@ Document            document;
      {
 	if (pAttr->AeAttrType == AtNumAttr)
 	   if (abs (value) > 65535)
-	      /* la forme pivot represente les entiers sur 2 octets */
+	      /* the pivot form represents integers coded on two bytes */
 	     {
 		TtaError (ERR_invalid_attribute_value);
 	     }
@@ -424,7 +418,7 @@ Document            document;
 	   GetBufTexte (&pAttr->AeAttrText);
 	else
 	   ClearText (pAttr->AeAttrText);
-	/* met le nouveau contenu */
+	/* Sets the new value */
 	CopyStringToText (buffer, pAttr->AeAttrText, &lg);
 	if (pAttr->AeAttrNum == 1)
 	  {
@@ -511,43 +505,43 @@ AttributeType       attributeType;
 
 #endif /* __STDC__ */
 {
-   PtrAttribute         pAttr;
-   PtrAttribute         attribute;
-   boolean             trouve;
-   boolean             erreur;
+   PtrAttribute        pAttr;
+   PtrAttribute        attribute;
+   boolean             found;
+   boolean             error;
 
    UserErrorCode = 0;
    attribute = NULL;
    if (element == NULL || (attributeType.AttrSSchema == NULL && attributeType.AttrTypeNum != 1))
-      /* attributeType.AttrTypeNum = 1 : attribut Langue dans tout schema */
+      /* attributeType.AttrTypeNum = 1 : attribute Language in the whole schema */
       TtaError (ERR_invalid_parameter);
    else
      {
-	erreur = FALSE;
-	/* on ne fait pas d'autre verification si c'est l'attribut "Langue" */
+	error = FALSE;
+	/* No other verification if the attibute is "language" */
 	if (attributeType.AttrTypeNum != 1)
 	   if (attributeType.AttrTypeNum < 1 ||
 	       attributeType.AttrTypeNum > ((PtrSSchema) (attributeType.AttrSSchema))->SsNAttributes)
-	      erreur = TRUE;
-	if (erreur)
+	      error = TRUE;
+	if (error)
 	   TtaError (ERR_invalid_attribute_type);
 	else
 	  {
 	     attribute = NULL;
 	     pAttr = ((PtrElement) element)->ElFirstAttr;
-	     trouve = FALSE;
-	     while (pAttr != NULL && !trouve)
+	     found = FALSE;
+	     while (pAttr != NULL && !found)
 	       {
 		  if (pAttr->AeAttrNum == attributeType.AttrTypeNum)
-		     /* meme numero d'attribut */
+		     /* Same attribute number */
 		     if (attributeType.AttrSSchema == NULL)
-			/* on ne s'interesse pas au schems de structure */
-			trouve = TRUE;
+			/* The structure schema does not interest us */
+			found = TRUE;
 		     else if (pAttr->AeAttrSSchema->SsCode ==
 			      ((PtrSSchema) (attributeType.AttrSSchema))->SsCode)
-			/* meme schema de structure */
-			trouve = TRUE;
-		  if (trouve)
+			/* Same schema of structure */
+			found = TRUE;
+		  if (found)
 		     attribute = pAttr;
 		  else
 		     pAttr = pAttr->AeNext;
@@ -642,13 +636,13 @@ int                *attrKind;
 {
    int                 i;
    PtrElement          pEl;
-   boolean             trouve, nouveau;
-   PtrSSchema        pSS;
+   boolean             found, newCshema;
+   PtrSSchema          pSS;
    SRule              *pRe1;
 
 #define MaxSch 20
-   PtrSSchema        attrStruct[MaxSch];
-   int                 att, nbsch;
+   PtrSSchema          attrStruct[MaxSch];
+   int                 att, schNumber;
 
    pSS = NULL;
    att = 0;
@@ -660,81 +654,78 @@ int                *attrKind;
       TtaError (ERR_invalid_parameter);
    else
      {
-	trouve = FALSE;
-	nbsch = 0;
+	found = FALSE;
+	schNumber = 0;
 	pEl = (PtrElement) element;
-	/* cherche tous les schemas de structure utilises par les */
-	/* elements ascendants */
-	while (pEl != NULL && !trouve)
+	/* looks for all structure schemacs used by the ancestors elements */
+	while (pEl != NULL && !found)
 	  {
-	     /* schema de struct de l'element courant */
+	     /* the structure schema of the current element */
 	     pSS = pEl->ElSructSchema;
-	     /* on parcourt toutes les extensions de schema de ce schema */
+	     /* one go throw all extension schemas of this one */
 	     do
 	       {
-		  /* on a deja traite' ce schema de structure ? */
-		  nouveau = TRUE;
-		  for (i = 1; i <= nbsch; i++)	/* parcourt la table */
-		     if (pSS == attrStruct[i - 1])	/* deja dans la table */
-			nouveau = FALSE;
-		  if (nouveau)
-		     /* l'element utilise un schema de structure pas encore */
-		     /* rencontre' */
+		  /* is this schema already treated ? */
+		  newCshema = TRUE;
+		  for (i = 1; i <= schNumber; i++)	/* glance of the table */
+		     if (pSS == attrStruct[i - 1])	/* already in the table */
+			newCshema = FALSE;
+		  if (newCshema)
+		     /* The element uses a structure schema not found yet */
 		    {
-		       /* conserve le schema de structure dans la table */
-		       if (nbsch < MaxSch)
+		       /* Puts the structure schema in the table */
+		       if (schNumber < MaxSch)
 			 {
-			    nbsch++;
-			    attrStruct[nbsch - 1] = pSS;
+			    schNumber++;
+			    attrStruct[schNumber - 1] = pSS;
 			 }
-		       /* teste tous les attributs globaux de ce schema */
+		       /* verifies all the global attributes of this schema */
 		       att = 0;
-		       while (att < pSS->SsNAttributes && !trouve)
+		       while (att < pSS->SsNAttributes && !found)
 			 {
 			    att++;
-			    /* on saute les attributs locaux */
+			    /* The local attributes are not considered */
 			    if (pSS->SsAttribute[att - 1].AttrGlobal)
 			       if (strcmp (name, pSS->SsAttribute[att - 1].AttrName) == 0)
-				  trouve = TRUE;
+				  found = TRUE;
 			 }
 		    }
-		  if (!trouve)
-		     /* passe a l'extension de schema suivante */
+		  if (!found)
+		     /* Go to the next extension schema*/
 		     pSS = pSS->SsNextExtens;
 	       }
-	     while (pSS != NULL && !trouve);
-	     pEl = pEl->ElParent;	/* passe a l'element ascendant */
+	     while (pSS != NULL && !found);
+	     pEl = pEl->ElParent;	/* Go the the ancestor element */
 	  }
-	if (!trouve)
+	if (!found)
 	  {
-	     /* cherche parmi les attributs locaux de l'element */
-	     /* prend d'abord la regle qui definit cet element */
+	     /* looks in the local attributes of the element */
+	     /* at first, looks at the rule defining this element */
 	     pSS = ((PtrElement) element)->ElSructSchema;
 	     pRe1 = &pSS->SsRule[((PtrElement) element)->ElTypeNumber - 1];
 	     do
 	       {
 		  if (pRe1 != NULL)
-		     /* teste les attributs locaux definis dans cette regle */
-		     for (i = 1; i <= pRe1->SrNLocalAttrs && !trouve; i++)
+		     /* verify the local attributes defined in this rule */
+		     for (i = 1; i <= pRe1->SrNLocalAttrs && !found; i++)
 		       {
 			  att = pRe1->SrLocalAttr[i - 1];
 			  if (strcmp (name, pSS->SsAttribute[att - 1].AttrName) == 0)
-			     trouve = TRUE;
+			     found = TRUE;
 		       }
-		  if (!trouve)
+		  if (!found)
 		    {
-		       /* passe a l'extension suivante du schema de structure */
+		       /* Go to the next extension of the structure schema */
 		       pSS = pSS->SsNextExtens;
-		       /* cherche dans cette extension de schema la regle */
-		       /* d'extension pour l'element */
+		       /* looks in schema extension the extension rule for the element */
 		       if (pSS != NULL)
 			  pRe1 = ExtensionRule (((PtrElement) element)->ElSructSchema,
 				       ((PtrElement) element)->ElTypeNumber, pSS);
 		    }
 	       }
-	     while (pSS != NULL && !trouve);
+	     while (pSS != NULL && !found);
 	  }
-	if (!trouve)
+	if (!found)
 	  {
 	     TtaError (ERR_invalid_parameter);
 	  }
@@ -789,7 +780,7 @@ AttributeType       attributeType;
 {
 
    UserErrorCode = 0;
-   nameBuffer[0] = '\0';
+   bufferName[0] = '\0';
    if (attributeType.AttrSSchema == NULL)
      {
 	TtaError (ERR_invalid_attribute_type);
@@ -801,9 +792,9 @@ AttributeType       attributeType;
      }
    else
      {
-	strncpy (nameBuffer, ((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1].AttrName, MAX_NAME_LENGTH);
+	strncpy (bufferName, ((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1].AttrName, MAX_NAME_LENGTH);
      }
-   return nameBuffer;
+   return bufferName;
 }
 
 /* ----------------------------------------------------------------------
@@ -919,7 +910,7 @@ Attribute           attribute;
 #endif /* __STDC__ */
 
 {
-   int                 length;
+   int                length;
    PtrTextBuffer      pBT;
 
    UserErrorCode = 0;
@@ -1020,7 +1011,7 @@ Attribute          *attributeFound;
 
 {
    PtrElement          pEl;
-   PtrAttribute         pAttr;
+   PtrAttribute        pAttr;
    boolean             ok;
 
    UserErrorCode = 0;
@@ -1060,15 +1051,14 @@ Attribute          *attributeFound;
 	     *elementFound = (Element) pEl;
 	     pAttr = pEl->ElFirstAttr;
 	     if (pAttr != NULL)
-		/* si on cherche un attribut quelconque, on retourne le 1er */
-		/* attribut de l'element trouve', sinon, on parcourt les */
-		/* attributs de l'element jusqu'a trouver le bon attribut */
+		/* if we look at any attribute, we find the first attribut of the given element, */
+		/* else we go over the attributs of the element until we find the right one */
 		if (searchedAttribute.AttrSSchema != NULL)
 		   do
 		      if (pAttr->AeAttrSSchema->SsCode ==
 			  ((PtrSSchema) (searchedAttribute.AttrSSchema))->SsCode
 			  && pAttr->AeAttrNum == searchedAttribute.AttrTypeNum)
-			 /* c'est l'attribut cherche' */
+			 /* the expected attribute */
 			 *attributeFound = (Attribute) pAttr;
 		      else
 			 pAttr = pAttr->AeNext;
