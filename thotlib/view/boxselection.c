@@ -673,11 +673,14 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 			}
 		      /* intermediate boxes */
 		      pBox = pViewSel->VsBox->BxNexChild;
-		      while (pBox != pViewSelEnd->VsBox)
+		      while (pBox != pViewSelEnd->VsBox ||
+			     pViewSelEnd->VsIndBox == 0)
 			{
 			  DefBoxRegion (frame, pBox, -1, -1, -1, -1);
 			  pBox = pBox->BxNexChild;
 			}
+		      if (pBox)
+			DefBoxRegion (frame, pBox, 0, pViewSelEnd->VsXPos, -1, -1);
 		    }
 		  else if (graphSel /* && firstChar > 0*/)
 		    DefBoxRegion (frame, pBox, -1, -1, -1, -1);
