@@ -1102,6 +1102,7 @@ char               *appArgv0;
    thot_dir_env=getenv("THOTDIR");
    if ((thot_dir_env != NULL) && (IsThotDir (thot_dir_env)))
      {
+        strcpy(execname, thot_dir_env);
 	AddRegisterEntry ("System", "THOTDIR", thot_dir_env,
 			  REGISTRY_INSTALL, TRUE);
 	goto load_system_settings;
@@ -1195,12 +1196,12 @@ char               *appArgv0;
    /*
     * load the system settings, stored in THOTDIR/config/thot.ini .
     */
-   strcpy (filename, execname);
+   strcpy (filename, &execname[0]);
    strcat (filename, DIR_STR);
    strcat (filename, THOT_CONFIG_FILENAME);
    strcat (filename, DIR_STR);
    strcat (filename, THOT_INI_FILENAME);
-   if (TtaFileExist (filename))
+   if (TtaFileExist (&filename[0]))
      {
 #ifdef DEBUG_REGISTRY
 	fprintf (stderr, "reading system %s from %s\n",
@@ -1211,14 +1212,15 @@ char               *appArgv0;
 	dir_end -= 3;
      }
    else
-      fprintf (stderr, "System wide %s not found\n", THOT_INI_FILENAME);
+      fprintf (stderr, "System wide %s not found at %s\n",
+               THOT_INI_FILENAME, &filename[0]);
 
    if (home_dir != NULL)
      {
 	strcpy (filename, home_dir);
 	strcat (filename, DIR_STR);
 	strcat (filename, THOT_RC_FILENAME);
-	if (TtaFileExist (filename))
+	if (TtaFileExist (&filename[0]))
 	  {
 #ifdef DEBUG_REGISTRY
 	     fprintf (stderr, "reading user's %s from %s\n",
