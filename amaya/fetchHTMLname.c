@@ -342,6 +342,8 @@ static AttributeMapping HTMLAttributeMappingTable[] =
    {TEXT("vspace"), TEXT(""), TEXT('A'), HTML_ATTR_vspace},
 
    {TEXT("width"), TEXT("applet"), TEXT('A'), HTML_ATTR_Width__},
+   {TEXT("width"), TEXT("col"), TEXT('A'), HTML_ATTR_Width__},
+   {TEXT("width"), TEXT("colgroup"), TEXT('A'), HTML_ATTR_Width__},
    {TEXT("width"), TEXT("hr"), TEXT('A'), HTML_ATTR_Width__},
    {TEXT("width"), TEXT("iframe"), TEXT('A'), HTML_ATTR_Width__},
    {TEXT("width"), TEXT("image"), TEXT('A'), HTML_ATTR_Width__},
