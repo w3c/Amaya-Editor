@@ -296,8 +296,11 @@ static void WrPRuleType (PtrPRule pRule, FILE * fileDescriptor)
 static void WrText (PtrTextBuffer pBT, int ind, int length, FILE *fileDescriptor)
 {
   PtrTextBuffer       b;
+  int                 i, l;
+#ifdef _I18N_
   unsigned char       mbc[50];
-  int                 i, l, n;
+  int                 n;
+#endif /* _I18N_ */
 
   l = 0;
   b = pBT;
