@@ -883,26 +883,26 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
 	  if (pAb->AbEnclosing == pRefAb &&
 	      pBox->BxVertFlex && pBox->BxType == BoCell)
 	    {
-	    if (!pBox->BxVertInverted &&
-	      (rule.PosRefEdge != Top || rule.PosEdge != Top))
-	      {
-		/* a specific patch for vertically extended cells */
-		pAb->AbVertPos.PosRefEdge = Top;
-		pAb->AbVertPos.PosEdge = Top;
-		rule.PosRefEdge = Top;
-		rule.PosEdge = Top;
-	      }
-	    else if (pBox->BxVertInverted &&
-	      (rule.PosRefEdge != Top || rule.PosEdge != Bottom))
-	      {
-		/* a specific patch for vertacally extended cells */
-		pAb->AbVertPos.PosRefEdge = Bottom;
-		pAb->AbVertPos.PosEdge = Bottom;
-		pAb->AbVertPos.PosDistance = 0;
-		rule.PosRefEdge = Top;
-		rule.PosEdge = Bottom;
-		rule.PosDistance = 0;
-	      }
+	      if (!pBox->BxVertInverted &&
+		  (rule.PosRefEdge != Top || rule.PosEdge != Top))
+		{
+		  /* a specific patch for vertically extended cells */
+		  pAb->AbVertPos.PosRefEdge = Top;
+		  pAb->AbVertPos.PosEdge = Top;
+		  rule.PosRefEdge = Top;
+		  rule.PosEdge = Top;
+		}
+	      else if (pBox->BxVertInverted &&
+		       (rule.PosRefEdge != Top || rule.PosEdge != Bottom))
+		{
+		  /* a specific patch for vertacally extended cells */
+		  pAb->AbVertPos.PosRefEdge = Bottom;
+		  pAb->AbVertPos.PosEdge = Bottom;
+		  pAb->AbVertPos.PosDistance = 0;
+		  rule.PosRefEdge = Top;
+		  rule.PosEdge = Bottom;
+		  rule.PosDistance = 0;
+		}
 	    }
 	  if (pAb->AbEnclosing == pRefAb && !pBox->BxVertFlex)
 	    /* it's not a stretchable box and it depends on its enclosing */
@@ -995,8 +995,16 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
 	      pRefBox->BxAbstractBox->AbElement &&
 	      pRefBox->BxAbstractBox->AbElement->ElSystemOrigin)
 	    {
-	      x = 0;
-	      y = 0;
+	      if (pRefBox->BxAbstractBox->AbNext != pAb)
+		{
+		  x = 0;
+		  y = 0;
+		}
+	      else
+		{
+		  x = pRefBox->BxXOrg;
+		  y = pRefBox->BxYOrg;
+		}
 	    }
 	  else
 	    {
