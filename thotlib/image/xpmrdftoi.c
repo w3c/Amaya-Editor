@@ -128,8 +128,9 @@ OpenReadFile(filename, mdata)
     xpmData *mdata;
 {
 #ifndef NO_ZPIPE
-    char *compressfile, buf[BUFSIZ];
+    char buf[BUFSIZ];
 # ifdef STAT_ZFILE
+    char *compressfile;
     struct stat status;
 # endif
 #endif
