@@ -230,6 +230,33 @@ static void InitFormLanguage (Document doc, View view,
 }
 
 #ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+LRESULT CALLBACK TextAttrProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+  switch (msg)
+    {
+    case WM_KEYDOWN:
+      switch (wParam)
+        {
+        case VK_RETURN:
+          SendMessage(GetParent (hwnd), WM_ENTER, 0, 0);
+          return 0;
+        }
+      break;
+
+    case WM_KEYUP:
+    case WM_CHAR:
+      switch (wParam)
+        {
+        case VK_RETURN:
+          return 0;
+        }
+    }
+
+  /* Call the original window procedure for default processing */
+  return CallWindowProc (lpfnTextZoneWndProc, hwnd, msg, wParam, lParam);
+}
 
 /*----------------------------------------------------------------------
  InitFormDialogWndProc
@@ -270,9 +297,9 @@ LRESULT CALLBACK InitFormDialogWndProc (ThotWindow hwnd, UINT iMsg,
  
       if (lpfnTextZoneWndProc == (WNDPROC) 0)
 	lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (hwnEdit, GWL_WNDPROC,
-						       (DWORD) TextZoneProc);
+						       (DWORD) TextAttrProc);
       else
-	SetWindowLong (hwnEdit, GWL_WNDPROC, (DWORD) TextZoneProc);
+	SetWindowLong (hwnEdit, GWL_WNDPROC, (DWORD) TextAttrProc);
       
       /* Create Confirm button */
       confirmButton = CreateWindow ("BUTTON",
@@ -446,9 +473,9 @@ LRESULT CALLBACK InitSheetDialogWndProc (ThotWindow hwnd, UINT iMsg,
 				
       if (lpfnTextZoneWndProc == (WNDPROC) 0)
 	lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (hwnEdit, GWL_WNDPROC,
-						       (DWORD) TextZoneProc);
+						       (DWORD) TextAttrProc);
       else
-	SetWindowLong (hwnEdit, GWL_WNDPROC, (DWORD) TextZoneProc);
+	SetWindowLong (hwnEdit, GWL_WNDPROC, (DWORD) TextAttrProc);
       
       /* Create Apply button */
       applyButton = CreateWindow ("BUTTON",
@@ -628,9 +655,9 @@ LRESULT CALLBACK InitNumAttrDialogWndProc (ThotWindow hwnd, UINT iMsg,
       SetDlgItemInt (hwnd, ID_EDITVALUE, formValue, TRUE);
       if (lpfnTextZoneWndProc == (WNDPROC) 0)
 	lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (hwnEdit, GWL_WNDPROC,
-						       (DWORD) TextZoneProc);
+						       (DWORD) TextAttrProc);
       else
-	SetWindowLong (hwnEdit, GWL_WNDPROC, (DWORD) TextZoneProc);
+	SetWindowLong (hwnEdit, GWL_WNDPROC, (DWORD) TextAttrProc);
       
       /* Create Apply button */
       applyButton = CreateWindow ("BUTTON",
