@@ -704,7 +704,9 @@
 #define IDC_DICONTENTLEN_VAL            1558
 #define IDC_DIURL_VAL                   1559
 #define IDC_PAGENO                      1560
+#define IDC_DICONTENTLOC                1560
 #define IDC_CHARSET                     1561
+#define IDC_DICONTENTLOC_VAL            1561
 #define IDC_MIMETYPE                    1562
 #define IDC_MTEDIT                      1564
 #define IDC_STATUS                      1566

@@ -3439,7 +3439,7 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
       /* set up the other fields */
 
       /* document URL */
-      SetDlgItemText (hwnDlg, IDC_DIURL, "LOCATION");
+      SetDlgItemText (hwnDlg, IDC_DIURL, "URL");
       if (DocumentURLs[doc] != NULL)
 	content = DocumentURLs[doc];
       else
@@ -3469,6 +3469,14 @@ LRESULT CALLBACK DocumentInfoDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam
       else
 	content = TtaGetMessage (AMAYA, AM_UNKNOWN);
       SetDlgItemText (hwnDlg, IDC_DICONTENTLEN_VAL, content);
+
+	  /* content location */
+      SetDlgItemText (hwnDlg, IDC_DICONTENTLOC, "CONTENT LOCATION");
+      if (DocumentMeta[doc] && DocumentMeta[doc]->content_location != NULL)
+	     content = DocumentMeta[doc]->content_location;
+      else
+	     content = TtaGetMessage (AMAYA, AM_UNKNOWN);
+      SetDlgItemText (hwnDlg, IDC_DICONTENTLOC_VAL, content);
       break;
 
     case WM_CLOSE:
