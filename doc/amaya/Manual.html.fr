@@ -16,8 +16,7 @@ BODY { background-color : #FFFFFF }
 /></a> <a href="Manual.html"><img border="0" src="../Icons/doc48x.gif"
 alt="Doc" /></a></p>
 
-<h1 style="text-align : center">Amaya User Manual<span
-style="font-size: 30pt"></span></h1>
+<h1 style="text-align : center">Manuel d'utilisation d'Amaya</h1>
 <hr />
 
 <p><strong>Version:</strong>  3.2 - Juillet 2000</p>
@@ -28,16 +27,16 @@ style="font-size: 30pt"></span></h1>
     <dd>Charles McCathieNevile, John Russell</dd>
 </dl>
 
-<p>Ce manuel présente l'utilisation  interface d'Amaya pour les plates-formes
-Unix. L'utilisation interface de Windows peut être légèrement différente dans
+<p>Ce manuel présente l'utilisation  interface d'Amaya pour les stations Unix.
+L'utilisation interface de Windows peut être légèrement différente dans
 certains cas. Ce  manuel d'utilisation n'est pas complet. Son but est
 simplement d'aider les utilisateurs à découvrir les principales
 caractéristiques du software. Ce document est organisé comme un livre. Vous
 pouvez utiliser la commande "<a href="MakeBook.html#L1065">Construire un
-livre</a>" pour construire et imprimer la totalité du manuel.  </p>
+livre</a>" pour construire et imprimer la totalité du manuel.</p>
 
 <p>Beaucoup de commandes dans  <strong>Amaya</strong> sont les mêmes que
-celles fournies par  les éditeurs et les processeurs communs.. Elles ne sont
+celles fournies par  les éditeurs et les processeurs communs. Elles ne sont
 pas présentées ici.  Seuls les aspects spécifiques d' <strong>Amaya</strong>
 sont décrits.</p>
 <hr />
@@ -60,13 +59,13 @@ sont décrits.</p>
       </li>
       <li><a href="Selecting.html#Selecting">Sélectionner</a>
         <ul>
-          <li><a href="Selecting.html#Selecting1">Sélectionner par Structure
-            </a></li>
+          <li><a href="Selecting.html#Selecting1">Sélectionner par
+            Structure</a></li>
           <li><a href="Selecting.html#Selecting2">Sélectionner des
           images</a></li>
         </ul>
       </li>
-      <li><a href="Searching.html#Searching">Chercher et remplacer le
+      <li><a href="Searching.html#Searching">Chercher et remplacer un
         texte</a></li>
       <li><a href="Views.html#Views">Afficher des vues</a>
         <ul>
@@ -77,15 +76,14 @@ sont décrits.</p>
       </li>
       <li><a href="Creating.html#Creating">Créer de nouveaux éléments</a>
         <ul>
-          <li><a href="Keyboard.html#Keyboard">Entrer des caractères 
+          <li><a href="Keyboard.html#Keyboard">Entrer des caractères
             ISO-Latin-1</a></li>
           <li><a href="Keyboard.html#Standard">Support multi-touches
             standard</a></li>
           <li><a href="Keyboard.html#Optional">Support multi-touches
             optionnel</a></li>
-          <li><a href="Creating.html#Types">Boutons et menu Eléments 
-          </a></li>
-          <li><a href="Creating.html#Structure">menu Structure </a></li>
+          <li><a href="Creating.html#Types">Boutons et menu Eléments</a></li>
+          <li><a href="Creating.html#Structure">menu Structure</a></li>
           <li><a href="Creating.html#L906">La touche Entrée (ou
             retour-charriot)</a></li>
           <li><a href="Creating.html#Changing">Changer le titre d'un
@@ -105,14 +103,14 @@ sont décrits.</p>
       </li>
       <li><a href="Changing.html#Changing">Editer la structure du document</a>
         <ul>
-          <li><a href="Changing.html#L653">Changer le type de l'élément
-          </a></li>
+          <li><a href="Changing.html#L653">Changer le type de
+          l'élément</a></li>
           <li><a href="Changing.html#L631">Changer la structure du
             document</a></li>
           <li><a href="Changing.html#L141">La commande Transformer</a></li>
           <li><a href="Changing.html#Inserting">Insérer une Division</a></li>
-          <li><a href="Changing.html#Back">Les touches  Back Space et  Delete
-            </a></li>
+          <li><a href="Changing.html#Back">Les touches  Back Space et
+            Delete</a></li>
         </ul>
       </li>
       <li><a
@@ -124,7 +122,7 @@ sont décrits.</p>
           colonne</a></li>
           <li><a href="Tables.html#Adding1">Ajouter un nouvelle ligne, un
             nouveau  tbody</a></li>
-          <li><a href="Tables.html#Removing">Supprimer une colonne </a></li>
+          <li><a href="Tables.html#Removing">Supprimer une colonne</a></li>
           <li><a href="Tables.html#Adding2">Ajouter quelquechose aprés une
             table</a></li>
         </ul>
@@ -135,7 +133,7 @@ sont décrits.</p>
             mathématique</a></li>
           <li><a href="Math.html#Entering1">Entrer des caractères</a></li>
           <li><a href="Math.html#Structure">Editer la structure</a></li>
-          <li><a href="Math.html#Math_Struc">Math_Structure vue</a></li>
+          <li><a href="Math.html#Math_Struc">La vue Math_Structure</a></li>
           <li><a href="Math.html#Links">Les liens dans MathML</a></li>
           <li><a href="Math.html#Current">Limites courantes</a></li>
         </ul>
@@ -165,8 +163,8 @@ sont décrits.</p>
             pour un élément ou une classe</a></li>
           <li><a href="StyleSheets.html#Managing">Diriger des feuilles de
             style externes CSS</a></li>
-          <li><a href="StyleSheets.html#L1371">Style à travers des éléments 
-            HTML </a></li>
+          <li><a href="StyleSheets.html#L1371">Style à travers des éléments
+            HTML</a></li>
         </ul>
       </li>
       <li><a href="Attributes.html#Attributes">Editer des attributs</a>
@@ -174,8 +172,8 @@ sont décrits.</p>
           <li><a href="Attributes.html#L1073">Editer des attributs avec le
             menu Attributs</a></li>
           <li><a href="Attributes.html#Copying">Copier des attributs</a></li>
-          <li><a href="Attributes.html#Editing">Editer des attributs dans la 
-            Structure vue </a></li>
+          <li><a href="Attributes.html#Editing">Editer des attributs dans la
+            Vue structure</a></li>
         </ul>
       </li>
       <li><a href="SpellChecking.html#Spell">Vérifier l'orthographe</a></li>
@@ -196,12 +194,11 @@ sont décrits.</p>
     <ul>
       <li><a href="Configure.html#Conventions">Conventions</a>
         <ul>
-          <li><a href="Configure.html#L979">L'annuaire d'Amaya/Config
-          </a></li>
-          <li><a href="Configure.html#AmayaHome">L'annuaire d'AmayaHome
-          </a></li>
-          <li><a href="Configure.html#AmayaTemp">L'annuaire d' AmayaTemp
-          </a></li>
+          <li><a href="Configure.html#L979">L'annuaire d'Amaya/Config</a></li>
+          <li><a href="Configure.html#AmayaHome">L'annuaire
+          d'AmayaHome</a></li>
+          <li><a href="Configure.html#AmayaTemp">L'annuaire d'
+          AmayaTemp</a></li>
         </ul>
       </li>
       <li><a href="Configure.html#preferences">Les  Menus Préférences</a></li>
@@ -213,31 +210,31 @@ sont décrits.</p>
 
 <h2><a name="L920" id="L920">Démarrer Amaya</a></h2>
 
-<p>Pour démarrer  <strong>Amaya</strong> dans une plate-forme Unix:</p>
+<p>Pour démarrer  <strong>Amaya</strong> dans une station  Unix:</p>
 <pre>    amaya [-display host] [document]</pre>
 
-<p>Le paramètre [-display host] est optionnel. Il délimite l'écran d'acceuil
-lointain quand Amaya doit afficher des pages Web. Si ce paramètre est omis,
-Amaya affiche dans l'écran d'accueil local. </p>
+<p>Le paramètre [-display host] est optionnel. Il détermine  l'écran d'acceuil
+distant  quand Amaya doit afficher des pages Web. Si ce paramètre est omis,
+Amaya affiche dans l'écran d'accueil local.</p>
 
-<p>Le paramètre <code>[document]</code> est optionnel. C'est le nom de
-classeur ou le URI du premier document.  <strong>Amaya</strong> devrait
-l'afficher quand il démarre. Si aucun paramètre n'est donné, un document par
-défaut est présenté. Le document par défaut pourrait être votre  <em>home
-page</em> (voir  <a href="Configure.html#L138">comment configurer votre Home
-Page</a>) ou la page de bienvenue d'Amaya. </p>
+<p>Le paramètre <code>[document]</code> est optionnel. C'est le nom de fichier
+ou le URI du premier document.  <strong>Amaya</strong> devrait l'afficher
+quand il démarre. Si aucun paramètre n'est donné, un document par défaut est
+présenté. Le document par défaut pourrait être votre  <em>home page</em> (voir
+<a href="Configure.html#L138">comment configurer votre Home Page</a>) ou la
+page de bienvenue d'Amaya.</p>
 
 <h2><a name="L932" id="L932">Editer des pages Web avec Amaya</a></h2>
 
 <p><strong>Amaya</strong> ne vous permet pas seulement de naviguer des
 documents sur le Web, il vous permet aussi de les éditer et de les <a
 href="Publishing.html#Saving">sauver</a> soit localement soit dans des
-serveurs Web lointains. </p>
+serveurs Web distants. .</p>
 
 <p>Nous tentons de faire Amaya aussi robuste que  possible. Une session
 d'Amaya peut néanmoins faillir. Si cela arrive,  Amaya tente de sauver les
-documents modifiés dans les classeurs d'aide.  Quand l'utilisateur redémarre
-une nouvelle session d'Amaya, la recharge des classeurs d'aide est
+documents modifiés dans les fichiers d'aide.  Quand l'utilisateur redémarre
+une nouvelle session d'Amaya, la recharge des fichiers  d'aide est
 automatiquement proposée.</p>
 
 <p>Chaque section suivante décrit brièvement  comment utiliser une fonction
@@ -249,7 +246,7 @@ spécifique d'Amaya:</p>
   <li><a rel="Chapter" href="Searching.html#Searching">Chercher et remplacer
     un texte</a></li>
   <li><a rel="Chapter" href="Views.html#Views">Afficher des vues</a></li>
-  <li><a rel="Chapter" href="Creating.html#Creating">Créer de nouveauc
+  <li><a rel="Chapter" href="Creating.html#Creating">Créer de nouveaux
     éléments</a></li>
   <li><a rel="Chapter" href="Links.html#Creating">Créer et changer des liens
     et des ancres</a></li>
@@ -282,13 +279,13 @@ rel="Chapter">Configurer Amaya</a>).</p>
 <p>La page sur  <a href="Access.html#Access" rel="Chapter">Accessibilité dans
 Amaya</a> décrit l'accessibilité d'Amaya, et explique comment l'utiliser pour
 produire des pages pouvant être utilisées aussi bien par les non connaisseurs
-que par les connaisseurs. </p>
+que par les connaisseurs.</p>
 <hr />
 
 <p><a name="There" id="There">Il y a également une brève introduction qui
 décrit quelques uns des différents types qui peuvent être utilisés dans Amaya
 (comme les en-têtes, les listes, les citations) et qui explique comment les
-utiliser. </a></p>
+utiliser.</a></p>
 <ul>
   <li><a href="HTML-elements/infoTypes.html#Informatio"
     rel="Chapter">Informations types dans  HTML</a></li>
