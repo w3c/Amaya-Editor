@@ -2907,8 +2907,8 @@ char               *attrstr;
      attrstr = ParseHTMLURL (attrstr, &url);
 
    attrstr = ParseHTML3StyleColor (attrstr, &best);
-   if (best.unit != DRIVERP_UNIT_INVALID)
-     setColor = False;
+   if (best.unit == DRIVERP_UNIT_INVALID)
+     setColor = FALSE;
 
    if (url || setColor)
      {
