@@ -3324,9 +3324,19 @@ static char *ParseCSSBackgroundAttachment (Element element, PSchema tsch,
 {
   cssRule = SkipBlanksAndComments (cssRule);
   if (!strncasecmp (cssRule, "scroll", 6))
-    cssRule = SkipWord (cssRule);
+    {
+      /* force no-repeat for that background image */
+      ParseCSSBackgroundPosition (element, tsch, context,
+				  "no-repeat", css, isHTML);
+      cssRule = SkipWord (cssRule);
+    }
   else if (!strncasecmp (cssRule, "fixed", 5))
-    cssRule = SkipWord (cssRule);
+    {
+      /* force no-repeat for that background image */
+      ParseCSSBackgroundPosition (element, tsch, context,
+				  "no-repeat", css, isHTML);
+      cssRule = SkipWord (cssRule);
+    }
   return (cssRule);
 }
 
@@ -3363,6 +3373,9 @@ static char *ParseCSSBackgroundPosition (Element element, PSchema tsch,
 
   if (ok && DoApply)
     {
+      /* force no-repeat for that background image */
+      ParseCSSBackgroundPosition (element, tsch, context,
+				  "no-repeat", css, isHTML);
       /* force realsize for the background image */
       repeat.typed_data.value = REALSIZE;
       repeat.typed_data.unit = UNIT_REL;

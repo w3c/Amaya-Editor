@@ -927,7 +927,7 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	picPresent = ReScale;
       else
 	/* a background image is repeated */
-	picPresent = RealSize;
+	picPresent = FillFrame;
     }
 
   if ((picPresent == ReScale || picPresent == RealSize) &&
