@@ -351,6 +351,10 @@ ThotBool GL_DrawAll ()
 		    }
 		}
 	    }
+#ifdef _WX
+	  if (was_animation)
+	    TtaHandlePendingEvents();
+#endif /* _WX */
 #ifdef _GTK
 	  if (was_animation)
 	    while (gtk_events_pending ())
