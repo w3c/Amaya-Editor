@@ -5933,8 +5933,9 @@ void TtaShowDialogue (int ref, ThotBool remanent)
 	    ShowReturn = 1;
 	    ShowCat = catalogue;
 	  }
-
+	
 	catalogue->Cat_Widget->Show();
+	catalogue->Cat_Widget->Raise();
       }
 #endif /* _WX */
 
