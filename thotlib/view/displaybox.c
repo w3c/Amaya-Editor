@@ -1388,28 +1388,26 @@ int                 ymax;
       if (yd + height > ymax)
 	height = ymax - yd;
     }
+
+  /* is the box selected? */
+  selected = pAb->AbSelected;
+  /* Search for the enclosing box */
+  if (pAb->AbEnclosing == NULL)
+    mbox = box;
   else
     {
-      /* is the box selected? */
-       selected = pAb->AbSelected;
-      /* Search for the enclosing box */
-      if (pAb->AbEnclosing == NULL)
-	mbox = box;
-      else
+      mbox = pAb->AbEnclosing->AbBox;
+      if (mbox->BxType == BoGhost)
 	{
-	  mbox = pAb->AbEnclosing->AbBox;
-	  if (mbox->BxType == BoGhost)
+	  selected = selected || mbox->BxAbstractBox->AbSelected;
+	  while (mbox->BxType == BoGhost &&
+		 mbox->BxAbstractBox->AbEnclosing != NULL)
 	    {
+	      mbox = mbox->BxAbstractBox->AbEnclosing->AbBox;
 	      selected = selected || mbox->BxAbstractBox->AbSelected;
-	      while (mbox->BxType == BoGhost &&
-		     mbox->BxAbstractBox->AbEnclosing != NULL)
-		{
-		  mbox = mbox->BxAbstractBox->AbEnclosing->AbBox;
-		  selected = selected || mbox->BxAbstractBox->AbSelected;
-		}
 	    }
-	} 
-    }
+	}
+    } 
 
   if (pAb->AbVolume == 0 ||
       (pAb->AbLeafType == LtPolyLine && box->BxNChars == 1))
