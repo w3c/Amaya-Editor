@@ -144,7 +144,7 @@ static int pg_counter = 0;
 /* permits to cancel current printing */
 static int gabort = FALSE;
 #endif /* _GTK */
-
+static int button_quit = FALSE;
 #ifdef _WINDOWS
 HBITMAP          WIN_LastBitmap = 0;
 
@@ -2162,7 +2162,8 @@ static void  ClientSend (ThotWindow clientWindow, char *name, int messageID)
 void DisplayConfirmMessage (char *text)
 {
 #ifdef _GTK
-    gtk_window_set_title (GTK_WINDOW (window),text);
+    gtk_window_set_title (GTK_WINDOW (window),text); 
+    button_quit = TRUE;
 #else	/* _GTK */
   ClientSend (thotWindow, text, TMSG_LIB_STRING);
 #endif /* _GTK */
@@ -2178,6 +2179,7 @@ void DisplayMessage (char *text, int msgType)
     {
 #ifdef _GTK
       gtk_window_set_title (GTK_WINDOW (window),text);
+      button_quit = TRUE;
 #else	/* _GTK */
       ClientSend (thotWindow, text, TMSG_LIB_STRING);
 #endif /* _GTK */
@@ -2187,8 +2189,8 @@ void DisplayMessage (char *text, int msgType)
 	  if ((unlink (tempDir)) == -1)
 	    fprintf (stderr, "Cannot remove directory %s\n", tempDir);
 	}
-#ifdef _GTK
-      gtk_exit (1);
+#ifdef _GTK 
+      gtk_main_iteration_do(TRUE);
 #else	/* _GTK */
       exit (1);
 #endif /* _GTK */
@@ -2249,7 +2251,12 @@ static void LoadReferedDocuments (PtrDocument pDoc)
 /* Callback that cancel printing */
 void set_cancel( GtkWidget    *widget, void *nothing )
 {
-    gabort = TRUE;
+    if (button_quit){
+	gtk_main_quit();
+	gtk_exit (1);
+    }
+    else
+	gabort = TRUE;
 }
 /* Create and display dialog box 
    that permits cancel and viewing page number */
@@ -2260,15 +2267,12 @@ void gtk_print_dialog(){
   GtkWidget *vbox;
   int timer;
   
-  /* #include "amaya.h" */
-  /* AMAYA = TtaGetMessageTable ("amayamsg", AMAYA_MSG_MAX); */
-
   /* create a new window */
    window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
    gtk_window_set_policy (GTK_WINDOW (window), FALSE, FALSE, TRUE);
 
    gtk_container_set_border_width (GTK_CONTAINER (window), 0);
-   gtk_window_set_title (GTK_WINDOW (window),"Print Box");
+   gtk_window_set_title (GTK_WINDOW (window),TtaGetMessage(LIB, TMSG_LIB_PRINT));
 
    vbox = gtk_vbox_new (FALSE, 5);
    gtk_container_set_border_width (GTK_CONTAINER (vbox), 10);
@@ -2276,12 +2280,13 @@ void gtk_print_dialog(){
    gtk_widget_show(vbox);
    /* Create a GtkAdjusment object to hold the range of the
       progress bar */
-    adj = (GtkAdjustment *) gtk_adjustment_new (0, 1, 150, 0, 0, 0);
+    adj = (GtkAdjustment *) gtk_adjustment_new (0, 1, 5, 0, 0, 0);
     pbar = gtk_progress_bar_new_with_adjustment (adj);
 
      gtk_progress_bar_set_bar_style (GTK_PROGRESS_BAR (pbar),
                                     GTK_PROGRESS_CONTINUOUS);
 
+     /* For a ping-pong style progress bar*/
      /*gtk_progress_set_activity_mode (GTK_PROGRESS (pbar),
        TRUE);*/
 
@@ -2290,17 +2295,16 @@ void gtk_print_dialog(){
       %p - percentage
       %v - value
       %l - lower range value
-      %u - upper range value */
-    gtk_progress_set_format_string (GTK_PROGRESS (pbar), "Page : %v");
+      %u - upper range value 
+   we use only %v as we don't have the total page*/
+    gtk_progress_set_format_string (GTK_PROGRESS (pbar), "%v");
     gtk_progress_set_show_text (GTK_PROGRESS (pbar), TRUE);
 
     gtk_container_add (GTK_CONTAINER (vbox), pbar);
     gtk_widget_show_now(pbar);
-    gtk_widget_show(vbox);
- 
+    gtk_widget_show(vbox); 
     /* Creates a new button with the label "Printing". */
-    /* button = gtk_button_new_with_label (TtaGetMessage(AMAYA, AM_CANCEL)); */
-    button = gtk_button_new_with_label ("cancel");
+    button = gtk_button_new_with_label (TtaGetMessage(LIB, TMSG_CANCEL));
     /* This will cause the window to be destroyed by calling
       gtk_widget_destroy(window) when "clicked".  The destroy
       signal could come from here, or the window manager. */
@@ -2383,11 +2387,6 @@ int main (int argc, char **argv)
 
   TtaInitializeAppRegistry (argv[0]);
   argCounter = 1;
-#ifdef _GTK
-  /* Initialization of gtk libraries */
-   gtk_init_check (&argc, &argv);
-   gtk_print_dialog();
-#endif /* _GTK */
 
   /* if present the argument -lang should be the first */
   if (!strcmp (argv[argCounter], "-lang"))
@@ -2397,6 +2396,12 @@ int main (int argc, char **argv)
     }
   /* Initialise la table des messages d'erreurs */
   TtaGetMessageTable ("libdialogue", TMSG_LIB_MSG_MAX);
+
+#ifdef _GTK
+  /* Initialization of gtk libraries */
+   gtk_init_check (&argc, &argv);
+   gtk_print_dialog();
+#endif /* _GTK */
 
   while (argCounter < argc)
     {
@@ -2745,7 +2750,12 @@ int main (int argc, char **argv)
    TtaFreeMemory (realName);
 #ifndef _WINDOWS
 #ifdef _GTK
-   gtk_exit (0);
+   if (!button_quit)
+       gtk_exit (0);
+   else{      
+       gtk_main ();
+       return (0);
+       }
 #endif /* _GTK */	
    exit (0);
 #endif /* _WINDOWS */
