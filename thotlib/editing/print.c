@@ -788,24 +788,7 @@ int                *volume;
   while (FrRef[i] != 0)
     i++;
 
-#ifdef _WINDOWS
-  if (TtPrinterDC)
-    {
-    FrRef[i] = (ThotWindow)i;
-    /* initialiser visibilite et zoom de la fenetre */
-    /* cf. procedure InitializeFrameParams */
-    pFrame = &ViewFrameTable[i - 1];
-    pFrame->FrVisibility = 5;	/* visibilite mise a 5 */
-    pFrame->FrMagnification = 0;	/* zoom a 0 */
-    
-    /* On initialise la table des frames  (attention MYSTERES)*/
-    FrameTable[i].FrDoc = IdentDocument (pDoc);
-    RemoveClipping(i);
-    *volume = 16000;
-    return (i);
-    }
-#endif /* _WINDOWS */
-
+#ifndef _WINDOWS
   if (i == 1)
     {
       /* On construit le nom du fichier PostScript */
@@ -1546,19 +1529,22 @@ int                *volume;
   else
     {
       PSfile = (FILE *) FrRef[1];
-      FrRef[i] = (ThotWindow) PSfile;    }
+      FrRef[i] = (ThotWindow) PSfile;
+    }
+#endif /* _WINDOWS */
 
   /* initialize visibility and zoom for the window */
   /* cf. procedure InitializeFrameParams */
   pFrame = &ViewFrameTable[i - 1];
   pFrame->FrVisibility = 5;	/* visibilite mise a 5 */
-   pFrame->FrMagnification = 0;	/* zoom a 0 */
-
-   /* initialize frames tabe because it's used by display functions */
-   FrameTable[i].FrDoc = IdentDocument (pDoc);
-   RemoveClipping(i);
-   *volume = 16000;
-   return (i);
+  pFrame->FrMagnification = 0;	/* zoom a 0 */
+  
+  /* initialize frames tabe because it's used by display functions */
+  FrameTable[i].FrDoc = IdentDocument (pDoc);
+  FrameTable[i].FrView = i;
+  RemoveClipping(i);
+  *volume = 16000;
+  return (i);
 }
 
 /*----------------------------------------------------------------------
