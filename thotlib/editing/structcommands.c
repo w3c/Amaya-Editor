@@ -2818,7 +2818,7 @@ void CreateNewElement (int typeNum, PtrSSchema pSS, PtrDocument pDoc,
 			firstSel->ElTerminal &&
 			((firstSel->ElLeafType == LtText && firstChar > 0 &&
 			  SelPosition)                      ||
-			 firstSel->ElLeafType == LtPicture  ||
+			 (firstSel->ElLeafType == LtPicture && SelPosition)  ||
 			 firstSel->ElLeafType == LtGraphics ||
 			 firstSel->ElLeafType == LtPolyLine ||
 			 firstSel->ElLeafType == LtPath     ||
