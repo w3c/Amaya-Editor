@@ -25,6 +25,7 @@
 static int         CSScase;
 static char        CSSpath[500];
 static Document    CSSdocument;
+static Element    *CSSlink = NULL;
 /* Use the same order of CSSCategory defined in css.h */
 static char       *DisplayCategory[]={
   "[x] " /*CSS_Unknown*/,
@@ -502,27 +503,39 @@ static void CallbackCSS (int ref, int typedata, char *data)
   PInfoPtr        pInfo;
   Element         el;
   Element         firstSel, lastSel;
-  char           *ptr = NULL;
+  char           *ptr = NULL, *localname = NULL;
   int             j, firstChar, lastChar;
-  int             val, category;
+  int             val, category, sty;
 
   val = (int) data;
   category = 0;
+  sty = 0; /* document style order */
   if (CSSpath[0] != EOS)
     {
+      /* point the URI */
+      ptr = &CSSpath[String_length];
+      localname = TtaGetMessage (AMAYA, AM_LOCAL_CSS);
       /* get the category */
       while (category < DisplayCategory_length)
 	{
 	  if (!strncmp (DisplayCategory[category], CSSpath, 2))
-	    break;
+	    {
+	      if (category == CSS_DOCUMENT_STYLE)
+		{
+		  j = strlen (localname);
+		  /* the document style order */
+		  scanf (&ptr[j], "%d", &sty);
+		  ptr[j] = EOS;
+		}
+	      break;
+	    }
 	  else
 	    category++;
 	}
       if (category == DisplayCategory_length)
 	category = 0;
-      /* get the URI */
-      ptr = &CSSpath[String_length];
     }
+
   switch (ref - BaseCSS)
     {
     case CSSForm:
@@ -540,14 +553,26 @@ static void CallbackCSS (int ref, int typedata, char *data)
 	      break;
 	    case 2:
 	      /* disable the CSS file, but not remove */
-	      if (!strcmp (ptr, TtaGetMessage (AMAYA, AM_LOCAL_CSS)))
-		RemoveStyleSheet (NULL, CSSdocument, TRUE, FALSE, NULL);
+	      if (category == CSS_DOCUMENT_STYLE)
+		{
+		  css = SearchCSS (CSSdocument, NULL, NULL, &pInfo);
+		  while (pInfo && sty && pInfo->PiNext)
+		    {
+		      pInfo = pInfo->PiNext;
+		      sty--;
+		    }
+		  if (pInfo)
+		  RemoveStyleSheet (NULL, CSSdocument, TRUE, FALSE, pInfo->PiLink);
+		}
 	      else
-		RemoveStyleSheet (ptr, CSSdocument, TRUE, FALSE, NULL);
+		{
+		  css = SearchCSS (CSSdocument, ptr, NULL, &pInfo);
+		  RemoveStyleSheet (ptr, CSSdocument, TRUE, FALSE, NULL);
+		}
       	      break;
 	    case 3:
 	      /* enable the CSS file */
-	      if (!strcmp (ptr, TtaGetMessage (AMAYA, AM_LOCAL_CSS)))
+	      if (category == CSS_DOCUMENT_STYLE)
 		{
 		  /* style element */
 		  css = SearchCSS (CSSdocument, NULL, NULL, &pInfo);
@@ -625,6 +650,8 @@ static void CallbackCSS (int ref, int typedata, char *data)
 	}
       /* clean CSSpath */
       CSSpath[0] = EOS;
+      TtaFreeMemory (CSSlink);
+      CSSlink = NULL;
       break;
     case CSSSelect:
       strcpy (CSSpath, data);      
@@ -652,16 +679,20 @@ static void InitCSSDialog (Document doc, char *s)
   CSSInfoPtr          css;
   PInfoPtr            pInfo;
   char                buf[400];
-  char               *ptr;
+  char               *ptr, *localname;
   int                 i, select;
-  int                 len, nb;
+  int                 len, nb, sty;
   int                 index, size;  
 
   CSSdocument = doc;
-  css = CSSList;
+  localname = TtaGetMessage (AMAYA, AM_LOCAL_CSS);
+  /* clean up the list of links */
+  TtaFreeMemory (CSSlink);
+  CSSlink = NULL;
   buf[0] = 0;
   index = 0;
-  nb = 0;
+  nb = 0; /* number of entries */
+  sty = 0; /* number of style elements */
   size = 400;
 #ifndef _WINDOWS
   /* create the form */
@@ -670,6 +701,8 @@ static void InitCSSDialog (Document doc, char *s)
 #endif /* !_WINDOWS */
   select = -1;
   i = 0;
+  css = CSSList;
+  /* count the number of menu entries */
   while (css)
     {
       pInfo = css->infos[doc];
@@ -688,54 +721,94 @@ static void InitCSSDialog (Document doc, char *s)
 	       /* only en external sheet can be removed */
 	       (CSScase == 4 && pInfo->PiCategory == CSS_EXTERNAL_STYLE)))
 	    {
-	      /* filter enabled and disabled entries */
-	      /* build the CSS list:
-		 use the dialogue encoding for buf and UTF-8 for CSS path  */
-	      if (pInfo->PiCategory == CSS_DOCUMENT_STYLE)
-		  ptr = TtaStrdup (TtaGetMessage (AMAYA, AM_LOCAL_CSS));
-	      else
-		{
-		  if (css->url == NULL)
-		    ptr = TtaConvertMbsToByte (css->localName,
-					       TtaGetDefaultCharset ());
-		  else
-		    ptr = TtaConvertMbsToByte (css->url,
-					       TtaGetDefaultCharset ());
-		}
-	      len = strlen (ptr) + 1; /* + EOS */
-	      if (size < len + String_length)
-		break;
-	      /* display the category */
-	      strcpy (&buf[index], DisplayCategory[pInfo->PiCategory]);
-	      index += String_length;
-	      strcpy (&buf[index], ptr);
-	      TtaFreeMemory (ptr);
-	      index += len;
 	      nb++;
-	      size -= len;
-	      if (select == -1 &&
-		  (CSScase < 4 || pInfo->PiCategory == CSS_EXTERNAL_STYLE))
-		{
-		  if (pInfo->PiCategory == CSS_DOCUMENT_STYLE)
-		    {
-		      strcpy (CSSpath, DisplayCategory[CSS_DOCUMENT_STYLE]);
-		      strcat (CSSpath, TtaGetMessage (AMAYA, AM_LOCAL_CSS));
-		    }
-		  else
-		    {
-		      strcpy (CSSpath, DisplayCategory[pInfo->PiCategory]);
-		      if (css->url)
-			strcat (CSSpath, css->url);
-		      else
-			strcat (CSSpath, css->localName);
-		    }
-		  select = i;
-		}
-	      i++;
+	      if (pInfo->PiCategory != CSS_DOCUMENT_STYLE)
+		/* count the number of style element */ 
+		sty++;
 	    }
 	  pInfo = pInfo->PiNext;
 	}
       css = css->NextCSS;
+    }
+
+  if (nb > 0)
+    {
+      i = 0;
+      /* create the link list */
+      CSSlink = (Element *) TtaGetMemory (sty * sizeof (Element));
+      sty = 0;
+      /* initialize menu entries */
+      css = CSSList;
+      while (css)
+	{
+	  pInfo = css->infos[doc];
+	  while (pInfo)
+	    {
+	      if (pInfo &&
+		  pInfo->PiCategory != CSS_EMBED &&
+		  /* the document style cannot be open */
+		  ((CSScase == 1 && pInfo->PiCategory != CSS_DOCUMENT_STYLE) ||
+		   /* it's impossible to disable an imported style sheet */
+		   (CSScase == 2 && pInfo->PiEnabled &&
+		    pInfo->PiCategory != CSS_IMPORT) ||
+		   /* it's impossible to enable an imported style sheet */
+		   (CSScase == 3 && !pInfo->PiEnabled &&
+		    pInfo->PiCategory != CSS_IMPORT) ||
+		   /* only en external sheet can be removed */
+		   (CSScase == 4 && pInfo->PiCategory == CSS_EXTERNAL_STYLE)))
+		{
+		  /* filter enabled and disabled entries */
+		  /* build the CSS list:
+		     use the dialogue encoding for buf and UTF-8 for CSS path  */
+		  if (pInfo->PiCategory == CSS_DOCUMENT_STYLE)
+		    {
+		      ptr = TtaGetMemory (strlen (localname) + 11);
+		      sprintf (ptr, "%s%d", localname, sty);
+		      CSSlink[sty++] = pInfo->PiLink;
+		    }
+		  else
+		    {
+		      if (css->url == NULL)
+			ptr = TtaConvertMbsToByte (css->localName,
+						   TtaGetDefaultCharset ());
+		      else
+			ptr = TtaConvertMbsToByte (css->url,
+						   TtaGetDefaultCharset ());
+		    }
+		  len = strlen (ptr) + 1; /* + EOS */
+		  if (size < len + String_length)
+		    break;
+		  /* display the category */
+		  strcpy (&buf[index], DisplayCategory[pInfo->PiCategory]);
+		  index += String_length;
+		  strcpy (&buf[index], ptr);
+		  index += len;
+		  size -= len;
+		  if (select == -1 &&
+		      (CSScase < 4 || pInfo->PiCategory == CSS_EXTERNAL_STYLE))
+		    {
+		      if (pInfo->PiCategory == CSS_DOCUMENT_STYLE)
+			{
+			  strcpy (CSSpath, DisplayCategory[CSS_DOCUMENT_STYLE]);
+			  strcat (CSSpath, ptr);
+			}
+		      else
+			{
+			  strcpy (CSSpath, DisplayCategory[pInfo->PiCategory]);
+			  if (css->url)
+			    strcat (CSSpath, css->url);
+			  else
+			    strcat (CSSpath, css->localName);
+			}
+		      select = i;
+		    }
+		  TtaFreeMemory (ptr);
+		  i++;
+		}
+	      pInfo = pInfo->PiNext;
+	    }
+	  css = css->NextCSS;
+	}
     }
 
   /* display the form */
