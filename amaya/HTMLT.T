@@ -16,7 +16,8 @@ RULES
 #ifdef XML
 	if HtmlDTD = Frameset
 	   BEGIN
-	   Create '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN"\12                      "xhtml1-frameset.dtd">\12';
+	   Create '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN"\12';
+	   Create '                      "xhtml1-frameset.dtd">\12';
 	   Create '<html xmlns="http://www.w3.org/Profiles/xhtml1-frameset"';
 	   END;
 	if not HtmlDTD = Frameset
@@ -27,9 +28,11 @@ RULES
 	Create Namespaces;
 #else
 	if HtmlDTD = Frameset
-	   Create '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN"\12   "http://www.w3.org/TR/REC-html40/frameset.dtd">\12';
+	   Create '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN"\12';
+	   Create '   "http://www.w3.org/TR/REC-html40/frameset.dtd">\12';
         if not HtmlDTD = Frameset
-	   Create '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"\12   "http://www.w3.org/TR/REC-html40/loose.dtd">\12';
+	   Create '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"\12';
+	   Create '   "http://www.w3.org/TR/REC-html40/loose.dtd">\12';
 	Create '<html';
 #endif
 	Create Attributes;
