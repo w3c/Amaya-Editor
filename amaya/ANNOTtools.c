@@ -17,6 +17,12 @@
 
 #include "annot.h"
 
+#ifdef _WINDOWS
+#define TMPDIR "TMP"
+#else
+#define TMPDIR "TMPDIR"
+#endif /* _WINDOWS */
+
 /*-----------------------------------------------------------------------
    Procedure SearchAnnotation (doc, annotDoc)
   -----------------------------------------------------------------------
@@ -178,41 +184,49 @@ const char *prefix;
 
   /* save the value of TMPDIR */
 #ifdef _WINDOWS
-  tmp = getenv ("TMP");
+  tmp = getenv (TMPDIR);
 #else
-  tmp = getenv ("TMPDIR");
+  tmp = getenv (TMPDIR);
 #endif /* _WINDOWS */
+
   if (tmp)
-     tmpdir = TtaStrdup (tmp);
+    {
+      tmpdir = TtaStrdup (tmp);
+    }
   else
-     tmpdir = NULL;
+    tmpdir = NULL;
 
   /* remove TMPDIR from the environment */
-   if (tmpdir)
+  if (tmpdir)
+    {
+      tmp = TtaGetMemory (strlen (tmpdir) + 2);
+      sprintf (tmp, "%s=", TMPDIR);
 #ifdef _WINDOWS
-	 _putenv ("TMP=");
+      _putenv (tmp);
 #else
-     unsetenv ("TMPDIR");
+      putenv (tmp);
+    }
 #endif /* _WINDOWS */
 
+  /* create the tempname */
 #ifdef _WINDOWS
+  /* @@ this function is broken under windows :-/ */
   name = _tempnam (dir, prefix);
 #else
   name = tempnam (dir, prefix);
 #endif /* _WINDOWS */
+
   /* restore the value of TMPDIR */
   if (tmpdir)
-  {
+    {
 #ifdef _WINDOWS
-    tmp = TtaGetMemory (strlen (tmpdir) + 5);
-	sprintf (tmp, "TMP=%s", tmpdir);
-	_putenv (tmp);
-	TtaFreeMemory (tmp);
+      _putenv (tmpdir);
 #else
-    setenv ("TMPDIR", tmpdir, 0);
+      putenv (tmpdir);
 #endif /* _WINDOWS */
-	TtaFreeMemory (tmpdir);
-  }
+      /* no need to free this string */
+      /* TtaFreeMemory (tmpdir); */
+    }
   return (name);
 }
 

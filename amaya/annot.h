@@ -43,7 +43,7 @@
 #include "HTMLtable_f.h"
 
 /* Annotation modules */
-#include "ANNOTutils_f.h"
+#include "ANNOTtools_f.h"
 #include "ANNOTlink_f.h"
 #include "ANNOTevent_f.h"
 #include "ANNOTfiles_f.h"

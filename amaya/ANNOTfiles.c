@@ -17,42 +17,6 @@
 #include "annot.h"
 
 /*-----------------------------------------------------------------------
-   Procedure ANNOT_GetNumber (document)
-  -----------------------------------------------------------------------
-   Returns a new annotation number
-  -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static int ANNOT_GetNumber (Document document)
-#else /* __STDC__*/
-static int ANNOT_GetNumber (document)
-     Document document;
-#endif /* __STDC__*/
-{
-  STRING fname;
-  char   *annot_user;
-  int    cpt;
-
-  cpt = 1;
-
-  /* @@ potential mem bug */
-  annot_user = GetAnnotUser ();
-  fname = TtaGetMemory (150);
-  sprintf (fname, "Annotation_%s_%d", annot_user, cpt);
-
-  /* we search the first annotation file name which isn't in the annotation index file or in the
-     current open documents */
-  while (SearchAnnotation (document, fname) || IsInTable (fname))
-  {
-    cpt++;
-    sprintf (fname, "Annotation_%s_%d", annot_user, cpt);
-  }
-
-  TtaFreeMemory (fname);
-  return cpt;
-}
-
-/*-----------------------------------------------------------------------
    Procedure ANNOT_SetPath (document)
   -----------------------------------------------------------------------
    Ajoute le repertoire du document d'annotations a la liste des

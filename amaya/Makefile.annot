@@ -12,14 +12,14 @@ AMAYA_ANNOT_OBJ= \
 	ANNOTevent.o \
 	ANNOTfiles.o \
 	ANNOTlink.o \
-	ANNOTutils.o
+	ANNOTtools.o
 
 AMAYA_ANNOT_SRC= \
 	annot.h \
 	ANNOTevent.c \
 	ANNOTfiles.c \
 	ANNOTlink.c \
-	ANNOTutils.c
+	ANNOTtools.c
 
 AMAYA_ANNOT_LIBS=
 
