@@ -9,7 +9,6 @@
  * variables for the spelling checker
  */
 
-THOT_EXPORT int	       CORR;	/* identifier for messages issued by the checker  */
 THOT_EXPORT int	       NC;	/* maximum number of corrections */
 THOT_EXPORT char       ChkrCorrection[MAX_PROPOSAL_CHKR+1][MAX_WORD_LEN];  /* corrections */
 THOT_EXPORT char       ChkrErrWord[MAX_WORD_LEN];               /* erroneous words */

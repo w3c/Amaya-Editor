@@ -850,7 +850,6 @@ void SpellCheckLoadResources ()
 {
    if (SpellingBase == 0)
      {
-	CORR = TtaGetMessageTable ("corrdialogue", MSG_MAX_CHECK);
 	SpellingBase = TtaSetCallback ((Proc)CallbackChecker, ChkrMaxDialogue);
 	/* Initialisation des variables globales */
 	ParametrizeChecker ();
