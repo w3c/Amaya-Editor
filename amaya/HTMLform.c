@@ -997,8 +997,11 @@ void SubmitForm (Document doc, Element element)
     {
       if (action)
 	{
-	  ParseForm (doc, elForm, element, button_type);
-	  DoSubmit (doc, method, action);
+	  if (CanReplaceCurrentDocument (doc, 1))
+	    {
+	      ParseForm (doc, elForm, element, button_type);
+	      DoSubmit (doc, method, action);
+	    }
 	}
       else
 	InitConfirm3L (doc, 1, "No action", NULL, NULL, NO);
