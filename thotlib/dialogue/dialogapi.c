@@ -4250,6 +4250,7 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
   ThotWidget          wlabel;
   GSList             *GSListTmp = NULL;
   ThotWidget          tmpw;
+  GtkStyle *current_style;
 #endif /* _GTK */
 
 #if defined (_WINDOWS) || defined (_GTK)
@@ -4486,8 +4487,9 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		  tmpw = gtk_label_new (&text[index + 1]);
 		  gtk_misc_set_alignment (GTK_MISC (tmpw), 0.0, 0.5);
 		  gtk_widget_show_all (tmpw);
-		  tmpw->style = gtk_style_copy (tmpw->style);
-		  tmpw->style->font=DefaultFont;
+		  current_style = gtk_style_copy(gtk_widget_get_style(tmpw));
+		  current_style->font = DefaultFont;
+		  gtk_widget_set_style(tmpw, current_style);
 		  gtk_label_set_justify (GTK_LABEL (tmpw), GTK_JUSTIFY_LEFT);
 		  gtk_container_add (GTK_CONTAINER(w), tmpw);
 		  gtk_object_set_data (GTK_OBJECT(w), "Label", (gpointer)tmpw);
@@ -4849,8 +4851,10 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 #ifdef _GTK
 		      w = gtk_menu_item_new_with_label (&text[index + 1]);
 		      gtk_widget_show_all (w);
-		      w->style = gtk_style_copy (w->style);
-		      w->style->font=DefaultFont;
+		      current_style = gtk_style_copy(gtk_widget_get_style(w));
+		      current_style->font = DefaultFont;
+		      gtk_widget_set_style(w, current_style);
+
 		      adbloc->E_ThotWidget[ent] = w;
 #else /* _GTK */
 		      w = XmCreateCascadeButton (menu, &text[index + 1], args, n);
@@ -4867,8 +4871,9 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 #else  /* _WINDOWS */
 #ifdef _GTK
 		      w =  gtk_menu_item_new ();
-		      w->style = gtk_style_copy (w->style);
-		      w->style->font=DefaultFont;
+		      current_style = gtk_style_copy(gtk_widget_get_style(w));
+		      current_style->font = DefaultFont;
+		      gtk_widget_set_style(w, current_style);
 		      gtk_widget_show_all (w);
 		      gtk_menu_append (GTK_MENU (menu),w);
 		      adbloc->E_ThotWidget[ent] = w;

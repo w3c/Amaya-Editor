@@ -689,9 +689,11 @@ static void CreateKeyboard (int number, char *title, PtrFont pFont,
   GtkWidget *button1;
   GtkWidget *label;
   char                string[10];
-  int                 param;
+  int                 param;  
+  GtkStyle *current_style;
   
-  
+
+
   w = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (w), title);
   gtk_window_set_position (GTK_WINDOW (w), GTK_WIN_POS_MOUSE);
@@ -752,17 +754,18 @@ static void CreateKeyboard (int number, char *title, PtrFont pFont,
 	  string[0] = it->index;
 	  string[1] = EOS;
 	  button1 = gtk_button_new ();
-	  gtk_widget_show (button1);
 	  gtk_box_pack_start (GTK_BOX(vbox5), button1, TRUE, TRUE, 0);
 	  label = gtk_label_new (string);
-	  label->style = gtk_style_copy (label->style);
-	  label->style->font = pFont;
+	  current_style = gtk_style_copy(gtk_widget_get_style(label));
+	  current_style->font = pFont;
+	  gtk_widget_set_style(label, current_style);
 	  gtk_widget_show (label);
 	  gtk_container_add (GTK_CONTAINER (button1), label);
 	  ConnectSignalGTK (GTK_OBJECT (button1),
 			    "clicked",
 			    GTK_SIGNAL_FUNC (KbdCallbackHandler),
 			    (gpointer)(param + (int)(it->value)));
+	  gtk_widget_show (button1);
 	}
     }
   else
@@ -786,8 +789,9 @@ static void CreateKeyboard (int number, char *title, PtrFont pFont,
 	  gtk_widget_show (button1);
 	  gtk_box_pack_start (GTK_BOX(vbox5), button1, TRUE, TRUE, 0);
 	  label = gtk_label_new (string);
-	  label->style = gtk_style_copy (label->style);
-	  label->style->font = pFont;
+	  current_style = gtk_style_copy(gtk_widget_get_style(label));
+	  current_style->font = pFont;
+	  gtk_widget_set_style(label, current_style);
 	  gtk_widget_show (label);
 	  ConnectSignalGTK (GTK_OBJECT (button1),
 			    "clicked",
