@@ -62,6 +62,17 @@ ThotBool TtaReadByte (BinFile file, unsigned char *bval)
   *bval = (char) v;
   return TRUE;
 }
+/*----------------------------------------------------------------------
+   TtaRead4Byte reads a 4 characters (or bytes) value.
+  ----------------------------------------------------------------------*/
+ThotBool TtaRead4Byte (BinFile file, unsigned char bval[4])
+{
+  if (fread (bval, 4, 1, file) == 0)
+    {
+      return FALSE;
+    } 
+  return TRUE;
+}
 
 /*----------------------------------------------------------------------
    TtaReadWideChar reads a wide character value.
@@ -253,6 +264,96 @@ ThotBool TtaReadInteger (BinFile file, int *sval)
      }
 }
 
+union ieee754_float {
+  float f;
+  /* This is the IEEE 754 float-precision format.  */
+  struct {
+#if defined(i386) || defined(__i386)
+#if     __BYTE_ORDER == __BIG_ENDIAN
+    unsigned int negative:1;
+    unsigned int exponent:8;
+    unsigned int mantissa:23;
+#endif
+#if     __BYTE_ORDER == __LITTLE_ENDIAN
+    unsigned int mantissa:23;
+    unsigned int exponent:8;
+    unsigned int negative:1;
+#endif
+#else
+#if defined(_BIG_ENDIAN)
+    unsigned int negative:1;
+    unsigned int exponent:8;
+    unsigned int mantissa:23;
+#endif
+#if defined(_LITTLE_ENDIAN)
+    unsigned int mantissa:23;
+    unsigned int exponent:8;
+    unsigned int negative:1;
+#endif
+#endif
+  } ieee;
+};
+
+float readFloat(unsigned int *bytes) 
+{
+  union ieee754_float f;
+
+  f.ieee.negative = ((*bytes >> 31) != 0);
+  f.ieee.exponent = (*bytes >> 23) & 0xff;
+  f.ieee.mantissa = (f.ieee.exponent == 0)? (*bytes & 0x7fffff) << 1 : (*bytes & 0x7fffff) | 0x800000;
+  return f.f;
+}
+/*----------------------------------------------------------------------
+  TtaReadInteger reads an integer.
+  ----------------------------------------------------------------------*/
+ThotBool TtaReadFloat (BinFile file, float *sval)
+{
+  char      car;
+  long      val;
+  unsigned char test[4];
+
+  *sval = 0;
+  val = 0;
+
+  if (!TtaRead4Byte (file, test))
+    return (FALSE);
+  *sval = readFloat ((unsigned int *) test);
+  return (TRUE);
+
+
+  if (!TtaReadByte (file, &car))
+    return (FALSE);
+  else
+    {
+      val = car;
+      if (!TtaReadByte (file, &car))
+	return (FALSE);
+      else
+	{
+	  val = (val << 8) + car;
+	  if (!TtaReadByte (file, &car))
+	    return (FALSE);
+	  else
+	    {
+	      val = (val << 8) + car;
+	      if (!TtaReadByte (file, &car))
+		{
+		  return (FALSE);
+		}
+	      else
+		{
+		  val = (val << 8) + car;
+
+		  *sval = val;
+ 
+
+		  return (TRUE);
+		}
+	    }
+	}
+    }
+}
+
 /*----------------------------------------------------------------------
    TtaReadName reads a Wide Character string value.
   ----------------------------------------------------------------------*/
@@ -336,6 +437,16 @@ void TtaWriteClose (BinFile file)
 ThotBool TtaWriteByte (BinFile file, char bval)
 {
   if (fwrite ((char *) &bval, sizeof (char), 1, file) == 0)
+    return FALSE;
+  else
+    return TRUE;
+}
+/*----------------------------------------------------------------------
+   TtaWrite4Byte writes a 4 characters (or bytes) value.
+  ----------------------------------------------------------------------*/
+ThotBool TtaWrite4Byte (BinFile file, unsigned char bval[4])
+{
+  if (fwrite ((char *) bval, 4, 1, file) == 0)
     return FALSE;
   else
     return TRUE;

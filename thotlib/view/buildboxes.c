@@ -35,6 +35,7 @@
 #include "appdialogue_tv.h"
 
 #ifdef _GL
+#include "displaybox_f.h"
 #include "animbox_f.h"
 #include <GL/gl.h>
 #endif /* _GL */

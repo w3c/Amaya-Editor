@@ -59,7 +59,34 @@ extern void TtaGiveTextContent ( Element element,
                                  Language *language );
 extern void *TtaCopyPath ( void *void_src );
 extern void *TtaCopyAnim ( void *void_src );
+extern void TtaReplaceTransform ( Element element,
+                                  void *transform,
+                                  Document document );
 extern void *TtaCopyTransform ( void *void_pPa );
+extern void *TtaNewBoxTransformTranslate ( float x,
+                                           float y );
+extern void *TtaNewTransformTranslate ( float x,
+                                        float y,
+                                        ThotBool viewbox );
+extern void *TtaNewTransformAnimTranslate ( float x,
+                                            float y );
+extern void *TtaNewTransformAnimRotate ( float angle,
+                                         float x_scale,
+                                         float y_scale );
+extern void *TtaNewTransformRotate ( float angle,
+                                     float x_scale,
+                                     float y_scale );
+extern void *TtaNewTransformSkewX ( float factor );
+extern void *TtaNewTransformSkewY ( float factor );
+extern void *TtaNewTransformScale ( float x_scale,
+                                    float y_scale,
+                                    ThotBool viewbox );
+extern void *TtaNewTransformMatrix ( float a,
+                                     float b,
+                                     float c,
+                                     float d,
+                                     float e,
+                                     float f );
 
 #else /* __STDC__ */
 
@@ -116,7 +143,34 @@ extern void TtaGiveTextContent (/* Element element,
                                    Language *language */);
 extern void *TtaCopyPath (/* void *void_src */);
 extern void *TtaCopyAnim (/* void *void_src */);
+extern void TtaReplaceTransform (/* Element element,
+                                    void *transform,
+                                    Document document */);
 extern void *TtaCopyTransform (/* void *void_pPa */);
+extern void *TtaNewBoxTransformTranslate (/* float x,
+                                             float y */);
+extern void *TtaNewTransformTranslate (/* float x,
+                                          float y,
+                                          ThotBool viewbox */);
+extern void *TtaNewTransformAnimTranslate (/* float x,
+                                              float y */);
+extern void *TtaNewTransformAnimRotate (/* float angle,
+                                           float x_scale,
+                                           float y_scale */);
+extern void *TtaNewTransformRotate (/* float angle,
+                                       float x_scale,
+                                       float y_scale */);
+extern void *TtaNewTransformSkewX (/* float factor */);
+extern void *TtaNewTransformSkewY (/* float factor */);
+extern void *TtaNewTransformScale (/* float x_scale,
+                                      float y_scale,
+                                      ThotBool viewbox */);
+extern void *TtaNewTransformMatrix (/* float a,
+                                       float b,
+                                       float c,
+                                       float d,
+                                       float e,
+                                       float f */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

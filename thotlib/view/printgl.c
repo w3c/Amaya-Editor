@@ -1,38 +1,364 @@
+/*
+ *
+ *  (c) COPYRIGHT INRIA, 1996-2003
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+
+/*
+ * Printing OpenGL Handling
+ * Authors:  P. Cheyrou-lagreze (INRIA) - Opengl Version
+ */
 #ifdef _GL
+
+#include "ustring.h"
+#include "math.h"
+#include "thot_sys.h"
+#include "constmedia.h"
+#include "typemedia.h"
+#include "frame.h"
+#include "appdialogue.h"
+#include "picture.h"
+
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
+#include "boxes_tv.h"
+#include "font_tv.h"
+#include "frame_tv.h"
+#include "units_tv.h"
+#include "edit_tv.h"
+#include "appdialogue_tv.h"
+#include "thotcolor_tv.h"
+
+#include "appli_f.h"
+#include "buildboxes_f.h"
+#include "displaybox_f.h"
+#include "displayselect_f.h"
+#include "boxlocate_f.h"
+#include "buildlines_f.h"
+#include "context_f.h"
+#include "font_f.h"
+#include "inites_f.h"
+#include "memory_f.h"
+#include "units_f.h"
+#include "xwindowdisplay_f.h"
+#include "frame_f.h"
+#include "animbox_f.h"
+#include "picture_f.h"
+#include "tesse_f.h"
+#include "applicationapi_f.h"
+
+#include "glwindowdisplay_f.h"
+#include "glwindowdisplay.h"
+
 
 #include <string.h>
 #include <sys/types.h>
 #include <stdarg.h>
 #include <time.h>
+
+
+#ifdef _GTK
+
+#include <gtk/gtk.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <gdk/gdk.h>
+#include <gtkgl/gdkgl.h>
+
+static GdkGLContext *context = NULL;
+static GdkPixmap    *pixmap = NULL;
+static GdkGLPixmap  *glpixmap = NULL;
+static GdkVisual    *visual = NULL;
+
+#endif /* _GTK */
+
+#include "GL/gl.h"
+
+#include "ustring.h"
+#include "math.h"
+#include "thot_sys.h"
+#include "message.h"
+#include "constmedia.h"
+#include "typemedia.h"
+#include "frame.h"
+#include "picture.h"
+
+
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
+#include "boxes_tv.h"
+#include "font_tv.h"
+#include "frame_tv.h"
+#include "units_tv.h"
+#include "edit_tv.h"
+#include "thotcolor_tv.h"
+
+#include "glwindowdisplay.h"
 #include "glprint.h"
 
 
+#include "buildlines_f.h"
+#include "font_f.h"
+#include "initpses_f.h"
+#include "memory_f.h"
+#include "units_f.h"
 
+
+#define FEEDBUFFERSIZE 32768
+static  GLfloat      feedBuffer[FEEDBUFFERSIZE];
+
+/*if not in feedback mode*/
+static ThotBool      NotFeedBackMode = TRUE;
+/*if just computing bounding box*/
+static ThotBool      CompBoundingBox = FALSE;
+
+/*Control When swapping applies*/
+static ThotBool      SwapOK[MAX_FRAME];
+
+static GLrgb         LastRgb;
+static GLfloat       LastLineWidth;
 
 /* The GL context. GL is not thread safe (we should create a
    local GLcontext during GLBeginPage) */
-
 GLcontext *GL = NULL;
+ 
+/*#define FILE_STREAM GL->stream;*/
+#define FILE_STREAM ((FILE*) FrRef[1])
 
+
+#define GL_HEIGHT 2048
+#define GL_WIDTH 2048
+
+/*----------------------------------------------------------------------
+  GetGLContext : Main program : init an offscreen rendering context 
+  in order to use OpenGL drawing results  as a base for printing                                      
+  ----------------------------------------------------------------------*/
+void GetGLContext ()
+{
+  int i;
+#ifdef _GTK
+  /*       Parameters of the opengl Buffers
+	   More tweaks we have the less memory we use !!
+	   => ie depth, stencil, shadow...
+	   double buffering or not...
+  */  
+  int attrlist[] =
+    {
+      GDK_GL_RGBA,
+      GDK_GL_RED_SIZE,1,
+      GDK_GL_GREEN_SIZE,1,
+      GDK_GL_BLUE_SIZE,1,
+      GDK_GL_ALPHA_SIZE,1,
+      GDK_GL_STENCIL_SIZE, 1,
+      GDK_GL_NONE
+    }; 
+
+  /* Is opengl working ? */
+  if(gdk_gl_query() == FALSE) 
+    {
+      g_print("OpenGL not supported!\n");
+      exit(0);
+    }
+
+  /* select and use visual as default so all widgets are OpenGL renderable */
+  visual = gdk_gl_choose_visual (attrlist);
+  if (visual == NULL)
+    {
+      g_print("Error creating GtkGLArea!\n");
+      exit(0);
+    }
+  gtk_widget_set_default_colormap(gdk_colormap_new(visual, TRUE));
+  gtk_widget_set_default_visual(visual);
+
+  /* FrameTable[1].WdFrame = visual;  */
+
+  context  = gdk_gl_context_new (visual);
+  pixmap = gdk_pixmap_new (NULL, GL_HEIGHT, GL_WIDTH, visual->depth);
+  glpixmap = gdk_gl_pixmap_new (visual, pixmap);
+  gdk_gl_pixmap_make_current (glpixmap, context);
+
+
+#endif /* _GTK */
+
+  SetGlPipelineState ();
+  GLResize (GL_HEIGHT, GL_WIDTH,0,0);
+  glScissor (0, 0, GL_HEIGHT, GL_WIDTH);
+  GL_Err();
+
+  for (i = 0; i < 4; i++)
+    LastRgb[i] = -1.;
+
+  LastLineWidth = -1.;
+
+  GL_SetTransText (TRUE);
+}
+
+
+
+static ThotBool NeedRedraw (int frame)
+{
+  ViewFrame          *pFrame;
+
+  pFrame = &ViewFrameTable[frame - 1];
+  if (pFrame->FrReady &&
+      pFrame->FrAbstractBox && 
+      pFrame->FrAbstractBox->AbElement)
+    return TRUE;
+  return FALSE;
+}
+/*---------------------------------------------------
+  GL_NotInFeedbackMode : if all openGL operation are
+  permitted or not.		    
+  ----------------------------------------------------*/
+ThotBool GL_NotInFeedbackMode ()
+{
+  return NotFeedBackMode;
+}
+
+/*---------------------------------------------------
+  InitPrintBox :  	     
+ ----------------------------------------------------*/
+void InitPrintBox ()
+{
+  if (NotFeedBackMode && !CompBoundingBox)
+    {
+      NotFeedBackMode = FALSE;  
+      glFeedbackBuffer (FEEDBUFFERSIZE, GL_3D_COLOR, feedBuffer);
+      glRenderMode (GL_FEEDBACK);
+    }
+}
+/*---------------------------------------------------
+  ClosePrintBox :  	     
+  ----------------------------------------------------*/
+void FinishPrintBox ()
+{  
+  if (NotFeedBackMode == FALSE && !CompBoundingBox)
+    {  
+      GLParseFeedbackBuffer (feedBuffer); 
+      NotFeedBackMode = TRUE;
+    }
+}
+/*---------------------------------------------------
+  PrintBox :  	     
+  ----------------------------------------------------*/
+void PrintBox (PtrBox box, int frame, 
+	       int xmin, int xmax, 
+	       int ymin, int ymax)
+{
+  CompBoundingBox = TRUE;
+  glFeedbackBuffer (FEEDBUFFERSIZE, GL_3D_COLOR, feedBuffer);
+  NotFeedBackMode = FALSE;  
+  glRenderMode (GL_FEEDBACK);
+  DisplayBox (box, frame, xmin, xmax, ymin, ymax);
+  NotFeedBackMode = TRUE;
+  GLParseFeedbackBuffer (feedBuffer);
+  NotFeedBackMode = TRUE;
+  CompBoundingBox = FALSE;
+}
+
+/*---------------------------------------------------
+  ComputeBoundingBox :
+  Modify Bounding Box according to opengl feedback mechanism
+  (after transformation, coordinates may have changed)			    
+  ----------------------------------------------------*/
+void ComputeBoundingBox (PtrBox box, int frame, 
+			 int xmin, int xmax, 
+			 int ymin, int ymax)
+{
+  GLfloat feedBuffer[FEEDBUFFERSIZE];
+  GLint   size;
+  
+  if (NotFeedBackMode)
+    {
+      CompBoundingBox = TRUE;
+      /* gdk_gl_pixmap_make_current (glpixmap, context); */
+
+      glFeedbackBuffer (FEEDBUFFERSIZE, GL_2D, feedBuffer);
+      NotFeedBackMode = FALSE;  
+      glRenderMode (GL_FEEDBACK);
+
+      DisplayBox (box, frame, xmin, xmax, ymin, ymax);
+
+      size = glRenderMode (GL_RENDER);
+      NotFeedBackMode = TRUE;
+      CompBoundingBox = FALSE;
+      if (size > 0)
+	{
+	  if (size > FEEDBUFFERSIZE)
+	    size = FEEDBUFFERSIZE;
+
+	  box->BxClipX = -1;
+	  box->BxClipY = -1;
+	  getboundingbox (size, feedBuffer, frame,
+			  &box->BxClipX,
+			  &box->BxClipY,
+			  &box->BxClipW,
+			  &box->BxClipH);    
+  
+	  /* printBuffer (size, feedBuffer); */ 
+	  
+	  box->BxBoundinBoxComputed = TRUE; 
+	}
+      else
+	{
+	  box->BxClipX = box->BxXOrg;
+	  box->BxClipY = box->BxYOrg;
+	  box->BxClipW = box->BxW;
+	  box->BxClipH = box->BxH;
+	  box->BxBoundinBoxComputed = FALSE; 
+	}   
+    }
+}
+
+/*---------------------------------------------------
+  ComputeFilledBox :
+  Modify Bounding Box according to opengl feedback mechanism
+  (after transformation, coordinates may have changed)			    
+  ----------------------------------------------------*/
+void ComputeFilledBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
+{
+  GLfloat feedBuffer[4096];
+  GLint size;
+  
+  if (NotFeedBackMode)
+    {
+      box->BxBoundinBoxComputed = TRUE; 
+      glFeedbackBuffer (2048, GL_2D, feedBuffer);
+      NotFeedBackMode = FALSE;
+      glRenderMode (GL_FEEDBACK);
+      DrawFilledBox (box->BxAbstractBox, frame, xmin, xmax, ymin, ymax);
+      size = glRenderMode (GL_RENDER);
+      NotFeedBackMode = TRUE;
+      if (size > 0)
+	{
+	  box->BxClipX = -1;
+	  box->BxClipY = -1;
+	  getboundingbox (size, feedBuffer, frame,
+			  &box->BxClipX,
+			  &box->BxClipY,
+			  &box->BxClipW,
+			  &box->BxClipH);     
+	  box->BxBoundinBoxComputed = TRUE; 
+	  /* printBuffer (size, feedBuffer); */
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  GL_prepare: If a modif has been done
+  ----------------------------------------------------------------------*/
+ThotBool GL_prepare (int frame)
+{  
+#ifdef _GTK
+  if (gdk_gl_pixmap_make_current (glpixmap, context) != TRUE)
+    return FALSE;
+#endif /* _GTK */
+  return TRUE;
+}
 
 /* system */
 
-static void *GLMalloc (size_t size)
-{
-  void *ptr;
-
-  if (!size) 
-    return(NULL);
-  ptr = malloc(size);  
-  return(ptr);
-}
-
-static void GLFree (void *ptr)
-{
-  if (!ptr) 
-    return;
-  free(ptr);
-}
 
 #define GLSameColor(rgb1, rgb2) (!(rgb1[0] != rgb2[0] || \
                                                     rgb1[1] != rgb2[1] || \
@@ -50,172 +376,29 @@ static void GLWriteByte (FILE *stream, unsigned char byte)
 }
 
 
-static void GLPrintPostScriptHeader(void)
+
+void GLPrintPostScriptColor(void *v_rgb)
 {
-  GLfloat rgb[4];
-  time_t now;
+  GLrgb rgb;
 
-  time(&now);
+ rgb[0] = *((float *) v_rgb);
+ rgb[1] = *((float *) v_rgb + 1);
+ rgb[2] = *((float *) v_rgb + 2);
 
-  if(FORMAT == GL_PS)
-    fprintf (GL->stream, "%%!PS-Adobe-3.0\n");
-  else
-    fprintf (GL->stream, "%%!PS-Adobe-3.0 EPSF-3.0\n");
-
-  fprintf (GL->stream, 
-	   "%%%%Title: %s\n"
-	   "%%%%Creator: Amaya\n"
-	   "%%%%For: %s\n"
-	   "%%%%CreationDate: %s"
-	   "%%%%LanguageLevel: 3\n"
-	   "%%%%DocumentData: Clean7Bit\n"
-	   "%%%%Pages: 1\n",
-	   GL->title, 
-	   GL->producer, 
-	   ctime(&now));
-
-  if(FORMAT == GL_PS)
+  if (!GLSameColor(LastRgb, rgb))
     {
-      fprintf (GL->stream, 
-	       "%%%%Orientation: %s\n"
-	       "%%%%DocumentMedia: Default %d %d 0 () ()\n",
-	       (GL_LANDSCAPE) ? "Landscape" : "Portrait",
-	       (GL_LANDSCAPE) ? GL->viewport[3] : GL->viewport[2],
-	       (GL_LANDSCAPE) ? GL->viewport[2] : GL->viewport[3]);
-    }
-
-  fprintf (GL->stream,
-	   "%%%%BoundingBox: %d %d %d %d\n"
-	   "%%%%EndComments\n",
-	   (GL_LANDSCAPE) ? GL->viewport[1] : GL->viewport[0],
-	   (GL_LANDSCAPE) ? GL->viewport[0] : GL->viewport[1],
-	   (GL_LANDSCAPE) ? GL->viewport[3] : GL->viewport[2],
-	   (GL_LANDSCAPE) ? GL->viewport[2] : GL->viewport[3]);
-
-  /* RGB color: r g b
-     Font choose: size fontname FC
-     String primitive: (string) x y size fontname S
-     Point primitive: x y size P
-     Line width: width W
-     Flat-shaded line: x2 y2 x1 y1 L
-     Flat-shaded triangle: x3 y3 x2 y2 x1 y1 T*/
-
-  fprintf (GL->stream,
-	   "%%%%BeginProlog\n"
-	   "/GLdict 64 dict def GLdict begin\n"
-	   "1 setlinecap 1 setlinejoin\n"
-	   "/BD { bind def } bind def\n"
-	   "/C  { setrgbcolor } BD\n"
-	   "/G  { setgray } BD\n"
-	   "/W  { setlinewidth } BD\n"
-	   "/FC { findfont exch scalefont setfont } BD\n"
-	   "/S  { FC moveto show } BD\n"
-	   "/P  { newpath 0.0 360.0 arc closepath fill } BD\n"
-	   "/L  { newpath moveto lineto stroke } BD\n"
-	   "/SL { C moveto C lineto stroke } BD\n"
-	   "/T  { newpath moveto lineto lineto closepath fill } BD\n");
-
-  /* Flat-shaded triangle with middle color:
-     x3 y3 r3 g3 b3 x2 y2 r2 g2 b2 x1 y1 r1 g1 b1 Tm */
-  fprintf (GL->stream,
-	   /* stack : x3 y3 r3 g3 b3 x2 y2 r2 g2 b2 x1 y1 r1 g1 b1 */
-	   "/Tm { 3 -1 roll 8 -1 roll 13 -1 roll add add 3 div\n" /* r = (r1+r2+r3)/3 */
-	   /* stack : x3 y3 g3 b3 x2 y2 g2 b2 x1 y1 g1 b1 r */
-	   "      3 -1 roll 7 -1 roll 11 -1 roll add add 3 div\n" /* g = (g1+g2+g3)/3 */
-	   /* stack : x3 y3 b3 x2 y2 b2 x1 y1 b1 r g b */
-	   "      3 -1 roll 6 -1 roll 9 -1 roll add add 3 div" /* b = (b1+b2+b3)/3 */
-	   /* stack : x3 y3 x2 y2 x1 y1 r g b */
-	   " C T } BD\n");
-
-  fprintf (GL->stream,
-	   "end\n"
-	   "%%%%EndProlog\n"
-	   "%%%%BeginSetup\n"
-	   "/DeviceRGB setcolorspace\n"
-	   "GLdict begin\n"
-	   "%%%%EndSetup\n"
-	   "%%%%Page: 1 1\n"
-	   "%%%%BeginPageSetup\n");
-
-  fprintf (GL->stream, 
-	   "%%%%EndPageSetup\n"
-	   "mark\n"
-	   "gsave\n"
-	   "1.0 1.0 scale\n");
-	  
-  if(GL_DRAW_BACKGROUND)
-    {
-      glGetFloatv(GL_COLOR_CLEAR_VALUE, rgb);
-
-      fprintf (GL->stream,
-	       "%g %g %g C\n"
-	       "newpath %d %d moveto %d %d lineto %d %d lineto %d %d lineto\n"
-	       "closepath fill\n",
-	       rgb[0], rgb[1], rgb[2], 
-	       GL->viewport[0], GL->viewport[1], GL->viewport[2], 
-	       GL->viewport[1], GL->viewport[2], GL->viewport[3], 
-	       GL->viewport[0], GL->viewport[3]);
-    }
-}
-
-
-void GLPrintPostScriptColor(GLrgb rgb)
-{
-  if (!GLSameColor(GL->lastrgb, rgb))
-    {
-      GL->lastrgb[0] = rgb[0];
-      GL->lastrgb[1] = rgb[1];
-      GL->lastrgb[2] = rgb[2];
+      LastRgb[0] = rgb[0];
+      LastRgb[1] = rgb[1];
+      LastRgb[2] = rgb[2];
 
       if (rgb[0] == 0 && rgb[1] == 0 && rgb[2] == 0)
-	fprintf (GL->stream, "0 G\n");
+	fprintf (FILE_STREAM, "0 G\n");
       else
-	fprintf (GL->stream, "%g %g %g C\n", rgb[0], rgb[1], rgb[2]);
+	fprintf (FILE_STREAM, "%g %g %g C\n", rgb[0], rgb[1], rgb[2]);
     }
 }
 
 
-
-static void GLPrintPostScriptFooter(void)
-{
-  fprintf (GL->stream,
-	   "grestore\n"
-	   "showpage\n"
-	   "cleartomark\n"
-	   "%%%%PageTrailer\n"
-	   "%%%%Trailer\n"
-	   "end\n"
-	   "%%%%EOF\n");
-}
-
-static void GLPrintPostScriptBeginViewport(GLint viewport[4])
-{
-  GLfloat rgb[4];
-  int x = viewport[0], y = viewport[1], w = viewport[2], h = viewport[3];
-
-  glRenderMode (GL_FEEDBACK);
-
-  fprintf (GL->stream, 
-	   "gsave\n"
-	   "1.0 1.0 scale\n");
-	  
-  if (GL_DRAW_BACKGROUND)
-    {
-      glGetFloatv(GL_COLOR_CLEAR_VALUE, rgb);
-     
-      fprintf (GL->stream,
-	       "%g %g %g C\n"
-	       "newpath %d %d moveto %d %d lineto %d %d lineto %d %d lineto\n"
-	       "closepath fill\n",
-	       rgb[0], rgb[1], rgb[2], 
-	       x, y, x+w, y, x+w, y+h, x, y+h);
-      fprintf (GL->stream,
-	       "newpath %d %d moveto %d %d lineto %d %d lineto %d %d lineto\n"
-	       "closepath clip\n",
-	       x, y, x+w, y, x+w, y+h, x, y+h);
-    }
-
-}
 
 
 /****************
@@ -258,8 +441,8 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
 	      used    -= i;
 
 	      GLPrintPostScriptColor (vertices[0].rgb);
-	      fprintf (GL->stream, "%g %g %g P\n", 
-		       vertices[0].xyz[0], vertices[0].xyz[1], 0.5*psize);
+	      fprintf (FILE_STREAM, "%g -%g %g P\n", 
+		       vertices[0].xyz[0], GL_HEIGHT - vertices[0].xyz[1], 0.5*psize);
 
 	      break;
 
@@ -274,22 +457,22 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
 	      current += i;
 	      used    -= i;
 
-	      if (GL->lastlinewidth != lwidth)
+	      if (LastLineWidth != lwidth)
 		{
-		  GL->lastlinewidth = lwidth;
-		  fprintf (GL->stream, "%g W\n", GL->lastlinewidth);
+		  LastLineWidth = lwidth;
+		  fprintf (FILE_STREAM, "%g W\n", LastLineWidth);
 		}
 	      if (dash)
 		{
-		  fprintf (GL->stream, "[%d] 0 setdash\n", dash);
+		  fprintf (FILE_STREAM, "[%d] 0 setdash\n", dash);
 		}
 	      GLPrintPostScriptColor (vertices[0].rgb);
-	      fprintf (GL->stream, "%g %g %g %g L\n",
-		       vertices[1].xyz[0], vertices[1].xyz[1],
-		       vertices[0].xyz[0], vertices[0].xyz[1]);   
+	      fprintf (FILE_STREAM, "%g -%g %g -%g L\n",
+		       vertices[1].xyz[0], GL_HEIGHT - vertices[1].xyz[1],
+		       vertices[0].xyz[0], GL_HEIGHT - vertices[0].xyz[1]);   
 	      if (dash)
 		{
-		  fprintf (GL->stream, "[] 0 setdash\n");
+		  fprintf (FILE_STREAM, "[] 0 setdash\n");
 		}
 	      break;
 
@@ -309,10 +492,10 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
 		    {
                       flag = 0;
 		      GLPrintPostScriptColor (vertices[0].rgb);
-		      fprintf (GL->stream, "%g %g %g %g %g %g T\n",
-			       vertices[2].xyz[0], vertices[2].xyz[1],
-			       vertices[1].xyz[0], vertices[1].xyz[1],
-			       vertices[0].xyz[0], vertices[0].xyz[1]);
+		      fprintf (FILE_STREAM, "%g -%g %g -%g %g -%g T\n",
+			       vertices[2].xyz[0], GL_HEIGHT - vertices[2].xyz[1],
+			       vertices[1].xyz[0], GL_HEIGHT - vertices[1].xyz[1],
+			       vertices[0].xyz[0], GL_HEIGHT - vertices[0].xyz[1]);
 		      vertices[1] = vertices[2];
 		    }
 		  else
@@ -365,85 +548,207 @@ GLint GLParseFeedbackBuffer (GLfloat *current)
 }
 
 
-static GLint GLPrintPostScriptEndViewport (void)
+GLint GLText (const char *str,
+	      const int fg,
+	      const void *font,
+	      const unsigned int fontsize, 
+	      const int x, 
+	      const int y,
+	      const int length)
 {
-  GLint res;
+  char fontname[35];
+  int i, width;
 
-  fprintf (GL->stream, "grestore\n");
-  return res;
+  width = 0;
+  GL_SetPrintForeground (fg); 
+  GetPostscriptNameFromFont ((PtrFont) font, fontname);
+  fprintf (FILE_STREAM, fontname);
+  fprintf (FILE_STREAM, "(");
+  for (i = 0; i < length; i++)
+    {
+      fprintf (FILE_STREAM, "%c", str[i]); 
+      width += CharacterWidth (42, (PtrFont) font);     
+    }
+  fprintf (FILE_STREAM, ") %d %d %d s\n", 
+	   width, x, -y);
+
+  /* fprintf (FILE_STREAM, "(%s) %g %g %d /%s S\n", */
+  /* 	   str,  */
+  /* 	   x, y, */
+  /* 	   fontsize,  */
+  /* 	   fontname); */
+
+  return width;
 }
 
 
-/* The public routines */
-GLint GLBeginPage (char *title, 
-		   char *producer, 
-		   GLint viewport[4], 
-		   FILE *stream, const char *filename)
+/*----------------------------------------------------------------------
+   Transcode emit the PostScript code for the given char.
+  ----------------------------------------------------------------------*/
+static void Transcode (FILE *fout, int encoding, unsigned char car)
 {
-  int i;
-
-  GL = (GLcontext*) GLMalloc (sizeof (GLcontext));  
-  GL->title = title;
-  GL->producer = producer;
-  GL->filename = filename;
-  for (i = 0; i < 4; i++)
-      GL->lastrgb[i] = -1.;
-  for (i = 0; i < 4; i++)
-      GL->viewport[i] = viewport[i];
-  GL->lastlinewidth = -1.;
-  GL->stream = stream;
-
-  GLPrintPostScriptHeader();
-  return 1;
+  switch (car)
+    {
+    case '(':
+      fprintf (fout, "\\(");
+      break;
+    case ')':
+      fprintf (fout, "\\)");
+      break;
+    case '*':
+      if (encoding == 0)
+	fprintf (fout, "*");
+      else
+	fprintf (fout, "\\267");
+      break;
+    case '\\':
+      fprintf (fout, "\\\\");
+      break;
+    case START_ENTITY:
+      fprintf (fout, "&");
+      break;
+    default:
+      if (car >= ' ' && car <= '~')
+	fprintf (fout, "%c", car);
+      else
+	fprintf (fout, "\\%o", car);
+    }
 }
 
-GLint GLEndPage (void)
+int GLString (unsigned char *buff, int lg, int frame, int x, int y,
+		PtrFont font, int boxWidth, int bl, int hyphen,
+		int startABlock, int fg, int shadow)
 {
-  GLint res;
-  
-  GLPrintPostScriptFooter ();
+  FILE               *fout;
+  int                 j, i, encoding, width;
+  int                 noJustifiedWhiteSp;
+  int                 X,Y;
+  int                 NbWhiteSp;
+  char                fontname[35];
+  static  int         SameBox = 0;
 
-  fflush (GL->stream);
-
-  
-  GLFree (GL);
-  GL = NULL;
-
-  return res;
+  fout = (FILE *) FILE_STREAM;
+  encoding = 0;
+  if (y < 0)
+    return 0;
+  width = 0;
+  if (lg > 0)
+    {
+      /* noJustifiedWhiteSp is > 0 if writing a fixed lenght is needed */
+      /* and equal to 0 if a justified space is to be printed */  
+      noJustifiedWhiteSp = startABlock;
+      /* Is this a new box ? */
+      if (SameBox == 0)
+      {
+	/* store the start position for the justified box */
+	SameBox = 1;
+	X = x;
+	Y = y;
+	NbWhiteSp = 0;
+	if (fg >= 0)
+	  {
+	    /* Do we need to change the current color ? */
+	    GL_SetPrintForeground (fg); 
+	    /* Do we need to change the current font ? */
+	    GetPostscriptNameFromFont (font, fontname);
+	    fprintf (fout, fontname);
+	    fprintf (fout, "(");
+	  }
+      }
+      
+      if (shadow)
+	{
+	  /* replace each character by a star */
+	  j = 0;
+	  while (j < lg)
+	    {
+	      buff[j++] = '*';
+	      width += CharacterWidth (42, font);
+	    }
+	  buff[lg] = EOS;
+	  bl = 0;
+	}
+      else
+	{
+	  buff[lg] = EOS;
+	  /* Add the justified white space */
+	  if (bl > 0)
+	    {
+	      NbWhiteSp += bl;
+	      if (fg >= 0)
+		{
+		  for (i = 1; i <= bl; i++)
+		    fprintf (fout, "%c", ' ');
+		  /* Transcode (fout, encoding, ' '); */
+		}
+	    }
+	  /* Emit the chars */
+	  for (j = 0; j < lg; j++)
+	    {
+	      /* compute the width of the string */
+	      width += CharacterWidth (buff[j], font);
+	      /* enumerate the white spaces */
+	      if (buff[j] == ' ')
+		{
+		  if (noJustifiedWhiteSp == 0)
+		    {
+		      /* write a justified white space */
+		      NbWhiteSp++;
+		      if (fg >= 0)
+			fputs (" ", fout);
+		    }
+		  else if (fg >= 0)
+		    /* write a fixed lenght white space */
+		    fputs ("\\240", fout);
+		}
+	      else
+		{
+		  noJustifiedWhiteSp = 0;
+		  if (fg >= 0)
+		    Transcode (fout, encoding, buff[j]);
+		}
+	    }
+	}
+    }
+  else if (bl > 0)
+    {
+      /* store previous spaces */
+      NbWhiteSp += bl;
+      if (fg >= 0)
+	{
+	  for (i = 1; i <= bl; i++)
+	    fprintf (fout, "%c", ' ');
+	}
+    }
+   
+  /* Is an hyphen needed ? */
+  if (hyphen && fg >= 0)
+    fprintf (fout, "%c", '\255');
+  /* is this the end of the box */
+  if (boxWidth != 0 && SameBox == 1 )
+    {
+      /* now let Postscript justify the text with the right width */
+      if (boxWidth < 0)
+	boxWidth = - boxWidth + width;
+      else if (boxWidth < width)
+	/* not enough space to display the last piece of text */
+	boxWidth = width;
+      /* Is justification needed ? */
+      if (fg >= 0)
+	{
+	  if (NbWhiteSp == 0)
+	    fprintf (fout, ") %d %d %d s\n", boxWidth, X, -Y);
+	  else
+	    fprintf (fout, ") %d %d %d %d j\n", NbWhiteSp, boxWidth, X, -Y);
+	}
+      SameBox = 0; 
+      NbWhiteSp = 0;
+    }
+  return (width);
 }
 
-GLint GLBeginViewport (GLint viewport[4])
-{
-  if (FORMAT == GL_EPS)
-    GLPrintPostScriptBeginViewport (viewport);
-       
-  return GL_SUCCESS;
-}
 
-GLint GLEndViewport (void)
-{
-  GLint res;
 
-  if (FORMAT == GL_EPS)
-    res = GLPrintPostScriptEndViewport ();
-
-  return res;
-}
-
-GLint GLText (const char *str, 
-	      const char *fontname, 
-	      GLshort fontsize, 
-	      GLfloat x, GLfloat y)
-{
-
-  fprintf (GL->stream, "(%s) %g %g %d /%s S\n",
-	   str, 
-	   x, y,
-	   fontsize, 
-	   fontname);
-
-  return 1;
-}
 
 
 GLint GLDrawPixelsPoscript (GLsizei width, GLsizei height,
@@ -457,7 +762,7 @@ GLint GLDrawPixelsPoscript (GLsizei width, GLsizei height,
   int Mode;
   unsigned char *current;
 
-  stream = GL->stream;
+  stream = FILE_STREAM;
   x = x + xorig;
   y = y + yorig;
 
@@ -552,5 +857,59 @@ GLint GLLineWidth(GLfloat value)
   return 1;
 }
 
-#endif /* _GL
- */
+
+
+
+
+
+/*----------------------------------------------------------------------
+  GL_Swap : swap frontbuffer with backbuffer (display changes)
+  ----------------------------------------------------------------------*/
+void GL_Swap (int frame)
+{
+  if (frame >= 0 && frame < MAX_FRAME && 
+      SwapOK[frame] && 
+      NeedRedraw (frame))
+    {
+      /* gl_synchronize ();  */
+      glFinish ();
+      glFlush ();   
+      FrameTable[frame].DblBuffNeedSwap = FALSE;
+    }
+}
+
+
+/*----------------------------------------------------------------------
+  GL_SwapStop : Prevent savage swapping (causes flickering)
+  ----------------------------------------------------------------------*/
+void GL_SwapStop (int frame)
+{
+  SwapOK[frame] = FALSE;
+}
+/*----------------------------------------------------------------------
+  GL_SwapGet : 
+  ----------------------------------------------------------------------*/
+ThotBool GL_SwapGet (int frame)
+{
+  return SwapOK[frame];
+}
+/*----------------------------------------------------------------------
+  GL_SwapEnable : 
+  ----------------------------------------------------------------------*/
+void GL_SwapEnable (int frame)
+{
+  SwapOK[frame] = TRUE;
+}
+
+
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  WinGL_Swap : specific to windows
+  ----------------------------------------------------------------------*/
+void WinGL_Swap (HDC hDC)
+{
+ 
+}
+#endif /*_WINDOWS*/
+
+#endif /* _GL */

@@ -712,7 +712,11 @@ int BoxCharacterWidth (CHAR_T c, SpecFont specfont)
   if (font == NULL)
     return 6;
   else
+#ifndef _GL
     return CharacterWidth (car, font);
+#else /*_GL*/
+  return CharacterWidth (c, font);
+#endif /*_GL*/
 #else /* _I18N_ */
   return CharacterWidth (c, specfont);
 #endif /* _I18N_ */
@@ -1460,8 +1464,13 @@ char *GetPostscriptNameFromFont (void * font, char *fontname)
 	  c2 = TtPsFontName[i + 2]; /* Style normal bold italique */	 
 	}
       
-      sprintf (fontname, 
-	       "%c%c%c", c0, c1, c2);
+     /*  sprintf (fontname,  */
+/* 	       "%c%c%c", c0, c1, c2); */
+
+
+      sprintf (fontname,  
+	       "%c%c%c %s sf\n", c0, c1, c2,  &TtPsFontName[i + 3]);
+
       return fontname;
    /*  } */
 

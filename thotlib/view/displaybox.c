@@ -41,6 +41,7 @@
 #include "frame_f.h"
 #include "appli_f.h"
 #include "glgradient_f.h"
+#include "glprint.h"
 #endif /*_GL*/
 
 #include "stix.h"
@@ -140,6 +141,93 @@ static void DisplayImage (PtrBox pBox, int frame, int xmin, int xmax,
 	}
     }
 }
+
+/*----------------------------------------------------------------------
+  AnimatedBoxAdd : Add a reference to animated element in the frame
+  ----------------------------------------------------------------------*/
+void AnimatedBoxAdd (PtrElement element)
+{
+#ifdef _GL 
+  Animated_Cell *current;
+
+  if (FrameTable[ActiveFrame].Animated_Boxes == NULL)
+    {
+      FrameTable[ActiveFrame].Animated_Boxes = TtaGetMemory (sizeof(Animated_Cell));
+      current = (Animated_Cell *) FrameTable[ActiveFrame].Animated_Boxes;
+    }
+  else
+    {
+      current = (Animated_Cell *) FrameTable[ActiveFrame].Animated_Boxes;
+      while (current->Next)
+	{
+	  if (current->El == element)
+	    return;
+	  current = current->Next;
+	}
+      
+      current->Next = TtaGetMemory (sizeof(Animated_Cell));
+      current = current->Next;
+    }
+  current->Next = NULL;
+  current->El = element;
+  /* current->El = element->ElParent; */
+#endif /* _GL */
+}
+/*----------------------------------------------------------------------
+  AnimatedBoxDel : Delete a reference to an animated element
+  ----------------------------------------------------------------------*/
+void AnimatedBoxDel (PtrElement element)
+{
+#ifdef _GL 
+  Animated_Cell *current, *previous;
+  ThotBool not_found = TRUE;
+  
+  if (element->ElAnimation)
+    {
+      if (FrameTable[ActiveFrame].Animated_Boxes != NULL)
+	{
+	  previous = NULL;
+	  current = (Animated_Cell *) FrameTable[ActiveFrame].Animated_Boxes;
+	  while (current && not_found)
+	    {
+	      if (current->El == element)
+		not_found = FALSE;
+	      else
+		{
+		  previous = current;	  
+		  current = current->Next;
+		}	      
+	    }
+	  
+	  if (not_found)
+	    return;
+
+	  if (previous)
+	    {	      
+	      if (previous && current && current->Next)
+		previous->Next = current->Next;
+	      else
+		previous->Next = NULL;
+	    }	  
+	  else
+	    FrameTable[ActiveFrame].Animated_Boxes = NULL;
+	  TtaFreeMemory (current);
+	}
+    }
+#endif /* _GL */
+}
+/*----------------------------------------------------------------------
+  FreeAnimatedBox : Free Allocated resources
+  ----------------------------------------------------------------------*/
+void FreeAnimatedBox (Animated_Cell *current)
+{
+#ifdef _GL 
+  if (current->Next)
+    FreeAnimatedBox (current->Next);
+  TtaFreeMemory (current);  
+#endif /* _GL */
+}
+
 #ifdef _WINDOWS
 /*----------------------------------------------------------------------
   WinFontExist : Test existence of a font based on its filename
@@ -1596,13 +1684,18 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	}
 
       /* allocate a buffer to store converted characters */
-#ifndef _GL
+#ifdef _GL
+      if (Printing && !GL_TransText ())
+	{
+#endif /* _GL */
       if ((script == 'Z')||(script == 'A' ))
 	wbuffer = TtaGetMemory ((pBox->BxNChars + 1) * sizeof(wchar_t));
       else
 	buffer = TtaGetMemory (pBox->BxNChars + 1);
-#else /*_GL*/
-      wbuffer = TtaGetMemory ((pBox->BxNChars + 1) * sizeof(wchar_t));
+#ifdef _GL
+	}
+      else
+	wbuffer = TtaGetMemory ((pBox->BxNChars + 1) * sizeof(wchar_t));
 #endif /*_GL*/
       nbcar = 0;
       org = x;
@@ -1651,16 +1744,21 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      org -= x;
 		      if (org == 0)
 			org = -1;
-#ifndef _GL
-		      if ((script == 'Z')||(script == 'A'))
-			x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,
-					 org, bl, x, blockbegin, fg, shadow);
+#ifdef _GL
+		      if (Printing && !GL_TransText ())
+			{
+#endif /*_GL*/
+			  if ((script == 'Z')||(script == 'A'))
+			    x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,
+					      org, bl, x, blockbegin, fg, shadow);
+			  else
+			    x += DrawString (buffer, nbcar, frame, x, y1, prevfont,
+					     org, bl, x, blockbegin, fg, shadow);
+#ifdef _GL		      
+			}
 		      else
-			x += DrawString (buffer, nbcar, frame, x, y1, prevfont,
-					 org, bl, x, blockbegin, fg, shadow);
-#else /*_GL*/
-		      x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,
-					org, bl, x, blockbegin, fg, shadow);
+			x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,
+					  org, bl, x, blockbegin, fg, shadow);
 #endif /*_GL*/
 		      width = width - x;
 		    }
@@ -1686,8 +1784,11 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 			  width = width + org;
 			  org -= x;
 			  if (org == 0)
-			    org = -1;			  
-#ifndef _GL
+			    org = -1;	
+#ifdef _GL
+		      if (Printing && !GL_TransText ())
+			{
+#endif /*_GL*/
 			  if ((script == 'Z')||(script == 'A' ))
 			    x += WDrawString (wbuffer, nbcar, frame, x, y1,
 					      prevfont, org, bl, 0, blockbegin,
@@ -1700,7 +1801,9 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 					       prevfont, org, bl, 0, blockbegin,
 					       fg, shadow);
 			    }
-#else /*_GL*/
+#ifdef _GL
+			}
+		      else
 			  x += WDrawString (wbuffer, nbcar, frame, x, y1,
 					    prevfont, org, bl, 0, blockbegin,
 					    fg, shadow);
@@ -1725,16 +1828,22 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      /* display previous chars handled */
 		      if (nbcar > 0)
 			{
-#ifndef _GL
+#ifdef _GL
+		      if (Printing && !GL_TransText ())
+			{
+#endif /*_GL*/
 			  if ((script == 'Z')||(script == 'A'))
 			    x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,  
 					      0, bl, 0, blockbegin, fg, shadow);
 			  else
 			    x += DrawString (buffer, nbcar, frame, x, y1, prevfont,  
 					     0, bl, 0, blockbegin, fg, shadow);
-#else /*_GL*/
-			  x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,  
-					      0, bl, 0, blockbegin, fg, shadow);
+#ifdef _GL
+			}
+		      else
+			x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,  
+					  0, bl, 0, blockbegin, fg, shadow);
+			
 
 #endif /*_GL*/
 			  /* all previous spaces are declared */
@@ -1782,14 +1891,18 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      /* a new space is handled */
 		      bl++;
 		    }
-#ifndef _GL
-		  else if ((script == 'Z')||(script == 'A'))
+#ifdef _GL
+		  else if (Printing && !GL_TransText ())
+			{
+#endif /*_GL*/
+		  if ((script == 'Z')||(script == 'A'))
 		    /* add the new char */
 		    wbuffer[nbcar++] = val;
 		  else
 		    /* add the new char */
 		    buffer[nbcar++] = val;
-#else /*_GL*/
+#ifdef _GL
+			}
 		  else 
 		    /* add the new char */
 		    wbuffer[nbcar++] = val;
@@ -1852,17 +1965,22 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		Call the function in any case to let Postscript justify the
 		text of the box.
 	      */
-#ifndef _GL
-	      if ((script == 'Z')||(script == 'A'))
-		x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont, width,
-				 bl, hyphen, blockbegin, fg, shadow);
-	      else
+#ifdef _GL
+	      if (Printing && !GL_TransText ())
+		{
+#endif /*_GL*/
+		  if ((script == 'Z')||(script == 'A'))
+		    x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont, width,
+				      bl, hyphen, blockbegin, fg, shadow);
+		  else
 	     
-		x += DrawString (buffer, nbcar, frame, x, y1, prevfont, width,
-				 bl, hyphen, blockbegin, fg, shadow);
-#else /*_GL*/
-	      x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont, width,
-				 bl, hyphen, blockbegin, fg, shadow);
+		    x += DrawString (buffer, nbcar, frame, x, y1, prevfont, width,
+				     bl, hyphen, blockbegin, fg, shadow);
+#ifdef _GL
+		}
+	      else
+		x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont, width,
+				  bl, hyphen, blockbegin, fg, shadow);
 #endif /*_GL*/
 	      if (pBox->BxUnderline != 0)
 		{
@@ -2606,6 +2724,10 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
       /* clipping on the height */
       if (yd + height > ymax)
 	height = ymax - yd;
+
+#ifdef _GL
+      InitPrintBox ();
+#endif /* _GL */
     }
   /* is the box selected? */
   selected = (pAb->AbSelected || box == pFrame->FrSelectionBegin.VsBox);
@@ -2632,7 +2754,8 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 #ifdef _GL 
   /*does box need to be recomputed 
     in a new display list*/
-  if (FrameTable[frame].FrView == 1)
+  if (FrameTable[frame].FrView == 1 &&
+       !Printing)
     {
 
       /* box->VisibleModification = TRUE; */
@@ -2720,19 +2843,6 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
     /* Path */
     DisplayPath (box, frame, selected);
 
-#ifdef _GL
-  if (FrameTable[frame].FrView == 1)
-    {
-      GL_SetFillOpacity (1000);
-      GL_SetStrokeOpacity (1000);
-      box->VisibleModification = FALSE;  
-      if ((pAb->AbLeafType == LtPolyLine ||
-/* 	  pAb->AbLeafType == LtGraphics || */
-	  pAb->AbLeafType == LtPath) && 
-	  !selected)
-	glEndList ();
-    }
-#endif /*_GL*/
 
   /* then display borders */
   if (yd + height >= ymin
@@ -2742,6 +2852,22 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
     DisplayBorders (box, frame,
 		    xd - x, yd - y,
 		    width, height);
+
+#ifdef _GL
+  if (Printing)
+    FinishPrintBox ();
+  else if (FrameTable[frame].FrView == 1)
+      {
+	GL_SetFillOpacity (1000);
+	GL_SetStrokeOpacity (1000);
+	box->VisibleModification = FALSE;  
+	if ((pAb->AbLeafType == LtPolyLine ||
+	     /* 	  pAb->AbLeafType == LtGraphics || */
+	     pAb->AbLeafType == LtPath) && 
+	    !selected)
+	  glEndList ();
+      }
+#endif /*_GL*/
 }
 
 

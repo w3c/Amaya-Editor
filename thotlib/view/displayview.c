@@ -95,6 +95,53 @@ SelectionDescriptor;
 static SelectionDescriptor NewDocSelection[MAX_DOCUMENTS];
 
 /*----------------------------------------------------------------------
+   FrameToView retourne, sous la forme qui convient a l'API Thot, 
+   les parametres identifiant le document et la vue        
+   qui correspondent a une frame donnee.                   
+  ----------------------------------------------------------------------*/
+void FrameToView (int frame, int *doc, int *view)
+{
+   int                 i;
+   PtrDocument         pDoc;
+
+   *doc = FrameTable[frame].FrDoc;
+   *view = 0;
+   if (*doc == 0)
+      return;
+   else
+     {
+	pDoc = LoadedDocument[*doc - 1];
+	*view = 0;
+	if (pDoc != NULL)
+	  {
+	     GetViewFromFrame (frame, pDoc, &i);
+	     *view = i;
+	  }
+     }
+}
+/*----------------------------------------------------------------------
+   GetViewFromFrame retourne le pointeur sur le numero de vue (viewNum)      
+   dans le document pDoc, correspondant a`                 	
+   la fenetre de numero nframe.
+  ----------------------------------------------------------------------*/
+void GetViewFromFrame (int nframe, PtrDocument pDoc, int *viewNum)
+{
+  int                 view;
+
+  *viewNum = 0;
+  view = 0;
+  /* cherche d'abord dans les vues de l'arbre principal */
+  do
+    {
+      if (pDoc->DocView[view].DvPSchemaView > 0 &&
+	  pDoc->DocViewFrame[view] == nframe)
+	*viewNum = view + 1;
+      else
+	view++;
+    }
+  while (view < MAX_VIEW_DOC && *viewNum == 0);
+}
+/*----------------------------------------------------------------------
    RedisplayDocViews demande le reaffichage de toutes les vues du	
    document pDoc.						
   ----------------------------------------------------------------------*/
@@ -486,7 +533,7 @@ static void CleanImageView (int View, PtrDocument pDoc, ThotBool complete)
    frame = pDoc->DocViewFrame[View - 1];
 
 #ifdef _GL
-   TtaNoPlay (frame);
+   FrameTable[frame].Anim_play = FALSE;
    if (FrameTable[frame].Animated_Boxes)
      {	    
        FreeAnimatedBox (FrameTable[frame].Animated_Boxes);

@@ -1048,7 +1048,7 @@ static void ComputeBoundingBoxes (int frame, int xmin, int xmax, int ymin, int y
     pBox->BxBoundinBoxComputed = FALSE;
 }
 
-
+#ifdef _TESTPRINT
 /*----------------------------------------------------------------------------------
   PrintBoxes : Print each box.
   --------------------------------------------------------------------------------*/
@@ -1245,6 +1245,7 @@ void PrintBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 	}
     }
 }
+#endif /* _TESTPRINT */
 #endif /*_GL*/
 
 #ifndef _GL

@@ -522,7 +522,7 @@ static void PrintPoscriptImage (PictInfo *Image,
     if (pixels)
       {
 
-	if (w != width || height != h)
+	/* if (w != width || height != h) */
 	  /*try reloading with a magnification factor*/;
 
 	Mode = (Image->RGBA)?GL_RGBA:GL_RGB;

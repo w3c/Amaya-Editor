@@ -942,7 +942,7 @@ static void GL_TextMap (float x, float y, int width, int height,
 }
 
 #define MAX_STRING 128
-
+#define MAX_BITMAP_ALLOC 4096
 /*--------------------------------------------------------
   UnicodeFontRender : Render an unicode string 
   (no more than a word)
@@ -966,7 +966,7 @@ int UnicodeFontRender (void *gl_font,
   GL_glyph           *bitmaps[MAX_STRING];
   GL_font            *font;
   GL_glyph           *glyph;
-  unsigned char      m_data[1024];
+  unsigned char      m_data[MAX_BITMAP_ALLOC];
   unsigned char      *data;
   float		     maxy, miny, shift;
   int                Width, Height, width, bitmap_alloc;
@@ -1069,7 +1069,7 @@ int UnicodeFontRender (void *gl_font,
     return 0;
   
   bitmap_alloc = sizeof (unsigned char)*Height*Width;
-  if (bitmap_alloc >= 1024)
+  if (bitmap_alloc >= MAX_BITMAP_ALLOC)
     {
       data = TtaGetMemory (bitmap_alloc); 
       if (data == NULL)
@@ -1100,7 +1100,7 @@ int UnicodeFontRender (void *gl_font,
 		      Width,
 		      Height);
     }
-  if (data && bitmap_alloc > 1024)
+  if (data && bitmap_alloc > MAX_BITMAP_ALLOC)
     TtaFreeMemory (data);
   
   y -= SUPERSAMPLING (maxy + miny);

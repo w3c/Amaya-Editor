@@ -7,9 +7,6 @@
 #ifdef __STDC__
 
 extern int GetFrameNumber ( ThotWindow win );
-extern void FrameToView ( int frame,
-                          int *doc,
-                          int *view );
 extern void FrameKilled ( int *w,
                           int frame,
                           int *info );
@@ -89,9 +86,6 @@ extern void UpdateScrollbars ( int frame );
 #else /* __STDC__ */
 
 extern int GetFrameNumber (/* ThotWindow win */);
-extern void FrameToView (/* int frame,
-                            int *doc,
-                            int *view */);
 extern void FrameKilled (/* int *w,
                             int frame,
                             int *info */);

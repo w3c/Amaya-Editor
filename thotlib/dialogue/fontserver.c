@@ -343,8 +343,8 @@ int GetFontFilename (char script, int family, int highlight, int size,
        {
 	 strcpy (filename, s);  
 	 ok = 1;
-	 if (strstr (filename, "gz"))
-	   ok = 0;
+	 /* if (strstr (filename, "gz")) */
+/* 	   ok = 0; */
 	 if (script == 'E')
 	   if (strstr (filename, "esstix") == NULL)
 	     ok = 0;

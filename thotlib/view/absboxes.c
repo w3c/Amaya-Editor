@@ -41,6 +41,7 @@
 #include "tree_f.h"
 #include "ustring_f.h"
 #include "views_f.h"
+#include "displaybox_f.h"
 
 #ifdef _GL
 #include "animbox_f.h"

@@ -51,9 +51,10 @@
 #include "units_f.h"
 #include "xwindowdisplay_f.h"
 #include "tesse_f.h"
-
+#include "spline_f.h"
 #include "glwindowdisplay.h"
 #include "stix.h"
+#include "glprint.h"
 
 /*
  * Math Macros conversion from
@@ -109,7 +110,6 @@
 #define MESA
 
 
-    
  
 /*----------------------------------------------------------------------
   FontOrig update and (x, y) location before DrawString
@@ -147,14 +147,14 @@ static void DoDrawOneLine (int frame, int x1, int y1, int x2, int y2)
   ----------------------------------------------------------------------*/
 void DrawChar (char car, int frame, int x, int y, PtrFont font, int fg)
 {
-   ThotWindow          w;
+  ThotWindow          w;
 
-   w = FrRef[frame];
-   if (w == None)
-      return;
+  w = FrRef[frame];
+  if (w == None)
+    return;
    
-   y = y + FrameTable[frame].FrTopMargin;
-   GL_DrawUnicodeChar ((CHAR_T) car, (float) x, (float) y, font, fg);
+  y = y + FrameTable[frame].FrTopMargin;
+  GL_DrawUnicodeChar ((CHAR_T) car, (float) x, (float) y, font, fg);
 }
 
 /*----------------------------------------------------------------------
@@ -178,30 +178,81 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
   register int        j;
 
   w = FrRef[frame];
-  y += FrameTable[frame].FrTopMargin;
-  /* compute the width of the string */
-  width = 0;
-  if (lg > 0 && w)
+  y += FrameTable[frame].FrTopMargin; 
+  if (Printing)
     {
-      /* Dealing with BR tag for windows */
-      if (shadow)
+      width = GL_DrawString (buff, lg, frame, x, y, font,
+			boxWidth, bl, hyphen, 
+			startABlock, fg, shadow);
+    }
+  else
+    {
+      /* compute the width of the string */
+      width = 0;
+      if (lg > 0 && w)
 	{
-	  /* replace each character by a star */
-	  j = 0;
-	  while (j < lg)
+	  /* Dealing with BR tag for windows */
+	  if (shadow)
 	    {
-	      buff[j++] = '*';
-	      width += CharacterWidth (42, font);
-	    }
+	      /* replace each character by a star */
+	      j = 0;
+	      while (j < lg)
+		{
+		  buff[j++] = '*';
+		  width += CharacterWidth (42, font);
+		}
 	  
+	    }
+	  if (fg >= 0)
+	    {
+	      width = GL_UnicodeDrawString (fg, (CHAR_T *) buff, 
+					    (float) x, (float) y, hyphen, font, lg);
+	    }
 	}
-      if (fg >= 0)
-	  width = GL_UnicodeDrawString (fg, (CHAR_T *) buff, 
-					(float) x, (float) y, hyphen, font, lg);
     }
   return (width);
 }
+#ifndef _WIN_PRINT
+/*----------------------------------------------------------------------
+  WDrawString draw a char string of lg chars beginning in buff.
+  Drawing starts at (x, y) in frame and using font.
+  boxWidth gives the width of the final box or zero,
+  this is used only by the thot formmating engine.
+  bl indicates that there are one or more spaces before the string
+  hyphen indicates whether an hyphen char has to be added.
+  startABlock is 1 if the text is at a paragraph beginning
+  (no justification of first spaces).
+  parameter fg indicates the drawing color
+  Returns the lenght of the string drawn.
+  ----------------------------------------------------------------------*/
+int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
+		 PtrFont font, int boxWidth, int bl, int hyphen,
+		 int startABlock, int fg, int shadow)
+{
+  int j;
 
+  if (lg < 0)
+    return 0;
+  
+  y += FrameTable[frame].FrTopMargin;
+  if (shadow)
+    {
+      /* replace each character by a star */
+      j = 0;
+      while (j < lg)
+	{
+	  buff[j++] = '*';
+	}
+    }
+  return (GL_UnicodeDrawString (fg, 
+				buff, 
+				(float) x,
+				(float) y, 
+				hyphen,
+				(void *)font, 
+				lg));
+}
+#endif /*_WIN_PRINT*/
 /*----------------------------------------------------------------------
   DisplayUnderline draw the underline, overline or cross line
   added to some text of lenght lg, using font and located
@@ -972,39 +1023,6 @@ void DrawRectangle (int frame, int thick, int style, int x, int y, int width,
     glDisable (GL_POLYGON_STIPPLE);      
 }
 
-/*----------------------------------------------------------------------
-  FDrawRectangle draw a rectangle located at (x, y) (as float number)
-  in frame,
-  of geometry width x height.
-  thick indicates the thickness of the lines.
-  Parameters fg, bg, and pattern are for drawing
-  color, background color and fill pattern.
-  ----------------------------------------------------------------------*/
-void FDrawRectangle (int frame, int thick, int style, float x, float y, float width,
-		     float height, int fg, int bg, int pattern)
-{
-  if (width <= 0 || height <= 0)
-    return;
-  if (thick == 0 && pattern == 0)
-    return;
-  y += FrameTable[frame].FrTopMargin;
-  if (pattern == 2) 
-    { 
-      GL_DrawRectanglef (bg, 
-			 x + thick/2, y + thick/2, 
-			 width - thick/2, height - thick/2);
-    }
-  /* Draw the border */
-  if (thick > 0 && fg >= 0)
-    {     
-      InitDrawing (style, thick, fg); 
-      GL_DrawEmptyRectanglef (fg, 
-			      x,  y, 
-			      width, 
-			      height, 
-			      thick);
-    }
-}
 /*----------------------------------------------------------------------
   DrawDiamond draw a diamond.
   Parameters fg, bg, and pattern are for drawing

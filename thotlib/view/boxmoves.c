@@ -17,17 +17,13 @@
 #include "constmedia.h"
 #include "typemedia.h"
 #include "appdialogue.h"
-#ifdef _GL
 #include "frame.h"
-#endif /* _GL */
 
 #define THOT_EXPORT extern
 #include "boxes_tv.h"
 #include "appdialogue_tv.h"
-#ifdef _GL
 #include "frame_tv.h"
-#endif /* _GL */
-
+#include "content_f.h"
 #include "boxmoves_f.h"
 #include "boxrelations_f.h"
 #include "buildboxes_f.h"
@@ -37,17 +33,11 @@
 #include "frame_f.h"
 #include "memory_f.h"
 #include "windowdisplay_f.h"
+#include "displayview_f.h"
 #include "stix.h"
-
-#ifdef _GL 
 #include "content.h"
 #include "appli_f.h"
 #include "contentapi_f.h"
-#endif /* _GL */
-
-
-
-
 
 /*----------------------------------------------------------------------
   IsXYPosComplete returns TRUE indicators when the box position is
@@ -955,8 +945,8 @@ void CoordinateSystemUpdate (PtrAbstractBox pAb, int frame,
   /* est-ce un systeme de coordonnee ?*/
   FrameToView (frame, &doc, &view);
   TtaReplaceTransform ((Element) pAb->AbElement, 
-		   TtaNewBoxTransformTranslate ((float) x, 
-						(float) y),
+		       TtaNewBoxTransformTranslate ((float) x, 
+						    (float) y),
 		       doc);
 #endif /* _GL */
 }

@@ -2606,6 +2606,85 @@ static  LabelString         label;
 			}
 		      
 		    }
+		  
+		  if (*tag == C_PIV_TRANS_START)
+		    {
+		      PtrTransform        Trans = NULL;
+		      float               transvalue;
+
+
+		      while (*tag == C_PIV_TRANS_START)
+			{
+			  if (Trans)
+			    {
+			      Trans->Next = TtaNewTransform ();
+			      Trans = Trans->Next;
+			    }
+			  else
+			    {
+			      Trans = TtaNewTransform ();
+			      pEl->ElParent->ElTransform = Trans;
+			    }
+
+			  TtaReadInteger (pivFile, &n1);
+			  Trans->TransType = n1;
+			    switch (n1)
+			      {
+				case PtElBoxTranslate:
+				case PtElviewboxScale:
+				case PtElviewboxTranslate:
+				case PtElScale:
+				case PtElAnimTranslate:
+				case PtElTranslate: 
+				TtaReadFloat (pivFile, &transvalue);
+				Trans->XScale = transvalue;
+				TtaReadFloat (pivFile, &transvalue);
+				Trans->YScale = transvalue;
+				break;
+				case PtElAnimRotate:
+				case PtElRotate:
+				TtaReadFloat (pivFile, &transvalue);
+				Trans->XRotate = transvalue;
+				TtaReadFloat (pivFile, &transvalue);
+				Trans->YRotate = transvalue;
+				TtaReadFloat (pivFile, &transvalue);
+				Trans->TrAngle = transvalue;
+				break;
+				case PtElMatrix:
+				TtaReadFloat (pivFile, &transvalue);
+				Trans->AMatrix = transvalue;
+				TtaReadFloat (pivFile, &transvalue);
+				Trans->BMatrix = transvalue;
+				TtaReadFloat (pivFile, &transvalue);
+				Trans->CMatrix = transvalue;
+				TtaReadFloat (pivFile, &transvalue);
+				Trans->DMatrix = transvalue;
+				TtaReadFloat (pivFile, &transvalue);
+				Trans->EMatrix = transvalue;
+				TtaReadFloat (pivFile, &transvalue);
+				Trans->FMatrix = transvalue;
+				break;
+				case PtElSkewX:
+				case PtElSkewY:
+				TtaReadFloat (pivFile, &transvalue);
+				Trans->TrFactor = transvalue;
+				break;	  
+				default:
+				break;	  
+			      }  
+			    if (!TtaReadByte (pivFile, tag))
+			      PivotError (pivFile,
+					  "PivotError: TransFormation");
+			}
+		      Trans->Next = NULL; 
+
+		      if (*tag != C_PIV_TRANS_END)
+			PivotError (pivFile, "PivotError: End");
+
+		      if (!TtaReadByte (pivFile, tag))
+			PivotError (pivFile, "PivotError: End 1");
+		    }
+
 		  if (*tag != C_PIV_END)
 		    PivotError (pivFile, "PivotError: End");
 		  

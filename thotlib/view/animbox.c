@@ -56,6 +56,7 @@
 #include "font_f.h"
 #include "boxlocate_f.h"
 #include "frame_f.h"
+#include "displayview_f.h"
 
 
 #ifdef _GL
@@ -1147,91 +1148,7 @@ static ThotBool animate_box (PtrElement El, AnimTime current_time)
   return (isnotfinished || willbenotfinished);    
 }
 #endif /* _GL */
-/*----------------------------------------------------------------------
-  AnimatedBoxAdd : Add a reference to animated element in the frame
-  ----------------------------------------------------------------------*/
-void AnimatedBoxAdd (PtrElement element)
-{
-#ifdef _GL 
-  Animated_Cell *current;
 
-  if (FrameTable[ActiveFrame].Animated_Boxes == NULL)
-    {
-      FrameTable[ActiveFrame].Animated_Boxes = TtaGetMemory (sizeof(Animated_Cell));
-      current = (Animated_Cell *) FrameTable[ActiveFrame].Animated_Boxes;
-    }
-  else
-    {
-      current = (Animated_Cell *) FrameTable[ActiveFrame].Animated_Boxes;
-      while (current->Next)
-	{
-	  if (current->El == element)
-	    return;
-	  current = current->Next;
-	}
-      
-      current->Next = TtaGetMemory (sizeof(Animated_Cell));
-      current = current->Next;
-    }
-  current->Next = NULL;
-  current->El = element;
-  /* current->El = element->ElParent; */
-#endif /* _GL */
-}
-/*----------------------------------------------------------------------
-  AnimatedBoxDel : Delete a reference to an animated element
-  ----------------------------------------------------------------------*/
-void AnimatedBoxDel (PtrElement element)
-{
-#ifdef _GL 
-  Animated_Cell *current, *previous;
-  ThotBool not_found = TRUE;
-  
-  if (element->ElAnimation)
-    {
-      if (FrameTable[ActiveFrame].Animated_Boxes != NULL)
-	{
-	  previous = NULL;
-	  current = (Animated_Cell *) FrameTable[ActiveFrame].Animated_Boxes;
-	  while (current && not_found)
-	    {
-	      if (current->El == element)
-		not_found = FALSE;
-	      else
-		{
-		  previous = current;	  
-		  current = current->Next;
-		}	      
-	    }
-	  
-	  if (not_found)
-	    return;
-
-	  if (previous)
-	    {	      
-	      if (previous && current && current->Next)
-		previous->Next = current->Next;
-	      else
-		previous->Next = NULL;
-	    }	  
-	  else
-	    FrameTable[ActiveFrame].Animated_Boxes = NULL;
-	  TtaFreeMemory (current);
-	}
-    }
-#endif /* _GL */
-}
-/*----------------------------------------------------------------------
-  FreeAnimatedBox : Free Allocated resources
-  ----------------------------------------------------------------------*/
-void FreeAnimatedBox (Animated_Cell *current)
-{
-#ifdef _GL 
-  if (current->Next)
-    FreeAnimatedBox (current->Next);
-  TtaFreeMemory (current);  
-#endif /* _GL */
-}
 /*----------------------------------------------------------------------
   Animate_boxes : Animate All animated boxe 
 and define region that need redisplay

@@ -9,9 +9,6 @@
 extern void populate_path_proportion ( void *anim_info );
 extern void populate_values_proportion ( void *anim_info );
 extern void populate_fromto_proportion ( void *anim_info );
-extern void AnimatedBoxAdd ( PtrElement element );
-extern void AnimatedBoxDel ( PtrElement element );
-extern void FreeAnimatedBox ( Animated_Cell *current );
 extern ThotBool Animate_boxes ( int frame,
                                 AnimTime current_time );
 
@@ -20,9 +17,6 @@ extern ThotBool Animate_boxes ( int frame,
 extern void populate_path_proportion (/* void *anim_info */);
 extern void populate_values_proportion (/* void *anim_info */);
 extern void populate_fromto_proportion (/* void *anim_info */);
-extern void AnimatedBoxAdd (/* PtrElement element */);
-extern void AnimatedBoxDel (/* PtrElement element */);
-extern void FreeAnimatedBox (/* Animated_Cell *current */);
 extern ThotBool Animate_boxes (/* int frame,
                                   AnimTime current_time */);
 

@@ -8,9 +8,6 @@
 
 extern ThotBool PaginatedView ( PtrDocument pDoc,
                                 int view );
-extern void GetViewFromFrame ( int nframe,
-                               PtrDocument pDoc,
-                               int *viewNum );
 extern void GetDocAndView ( int frame,
                             PtrDocument *pDoc,
                             int *viewNum );
@@ -58,9 +55,6 @@ extern void TtcCloseView ( Document document,
 
 extern ThotBool PaginatedView (/* PtrDocument pDoc,
                                   int view */);
-extern void GetViewFromFrame (/* int nframe,
-                                 PtrDocument pDoc,
-                                 int *viewNum */);
 extern void GetDocAndView (/* int frame,
                               PtrDocument *pDoc,
                               int *viewNum */);

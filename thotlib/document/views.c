@@ -101,28 +101,7 @@ ThotBool            PaginatedView (PtrDocument pDoc, int view)
   return paginate;
 }
 
-/*----------------------------------------------------------------------
-   GetViewFromFrame retourne le pointeur sur le numero de vue (viewNum)      
-   dans le document pDoc, correspondant a`                 	
-   la fenetre de numero nframe.
-  ----------------------------------------------------------------------*/
-void GetViewFromFrame (int nframe, PtrDocument pDoc, int *viewNum)
-{
-  int                 view;
 
-  *viewNum = 0;
-  view = 0;
-  /* cherche d'abord dans les vues de l'arbre principal */
-  do
-    {
-      if (pDoc->DocView[view].DvPSchemaView > 0 &&
-	  pDoc->DocViewFrame[view] == nframe)
-	*viewNum = view + 1;
-      else
-	view++;
-    }
-  while (view < MAX_VIEW_DOC && *viewNum == 0);
-}
 
 /*----------------------------------------------------------------------
    GetDocAndView retourne le pointeur sur le document (pDoc) et le

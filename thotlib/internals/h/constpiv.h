@@ -33,7 +33,9 @@
 #define C_PIV_HOLOPHRAST 23	/* holophrasted element mark */
 #define C_PIV_POLYLINE 24	/* polyline mark */
 #define C_PIV_PATH 25		/* graphics path mark */
-#define C_PIV_DOC_END 26	/* document ending mark */
+#define C_PIV_TRANS_START 26    /* transformation mark*/
+#define C_PIV_TRANS_END 27      /* transformation mark*/
+#define C_PIV_DOC_END 28	/* document ending mark */
 
 /* specific presentation rule type codes */
 #define C_PR_BREAK1 '1'

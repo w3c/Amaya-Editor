@@ -13,6 +13,7 @@
  *
  */
 #ifndef _WIN_PRINT
+#ifndef _GL
 
 #include "ustring.h"
 #include "math.h"
@@ -2124,3 +2125,4 @@ void PaintWithPattern (int frame, int x, int y, int width, int height,
      }
 }
 #endif /* _WIN_PRINT */
+#endif /* _GL */

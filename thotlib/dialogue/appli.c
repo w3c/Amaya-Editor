@@ -344,32 +344,6 @@ int GetFrameNumber (ThotWindow win)
   return (-1);
 }
 
-/*----------------------------------------------------------------------
-   FrameToView retourne, sous la forme qui convient a l'API Thot, 
-   les parametres identifiant le document et la vue 
-   qui correspondent a une frame donnee.
-  ----------------------------------------------------------------------*/
-void FrameToView (int frame, int *doc, int *view)
-{
-   int                 i;
-   PtrDocument         pDoc;
-
-   *doc = FrameTable[frame].FrDoc;
-   *view = 0;
-   if (*doc == 0)
-      return;
-   else
-     {
-	pDoc = LoadedDocument[*doc - 1];
-	*view = 0;
-	if (pDoc != NULL)
-	  {
-	     GetViewFromFrame (frame, pDoc, &i);
-	     *view = i;
-	  }
-     }
-}
-
 
 /*----------------------------------------------------------------------
    Evenement sur une frame document.                             
@@ -3471,7 +3445,7 @@ void UpdateScrollbars (int frame)
 #ifdef _GL
   if (FrameTable[frame].Scroll_enabled == FALSE)
     return;
-#endif _GL
+#endif /* _GL */
   /* Get the displayed volume */
   ComputeDisplayedChars (frame, &x, &y, &width, &height);
   hscroll = FrameTable[frame].WdScrollH;

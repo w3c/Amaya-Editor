@@ -1285,7 +1285,59 @@ void *TtaCopyAnim (void *void_src)
     } 
   return (void *) dest;
 }
+/*----------------------------------------------------------------------
+   TtaReplaceTransform
 
+   Insert or Replace a Transform at the beginning of a Graphics basic element
+   if a transformation of the same type exists in the list, it is replaced
+   Parameters:
+   element: the Graphics element to be modified.
+   transform: the path segment to be inserted.
+   document: the document containing the element.
+  ----------------------------------------------------------------------*/
+void TtaReplaceTransform (Element element, void *transform, 
+			 Document document)
+{
+   PtrTransform       pPa, pPrevPa;
+
+   UserErrorCode = 0;
+   if (element == NULL)
+      TtaError (ERR_invalid_parameter);
+   else
+     /* verifies the parameter document */
+     if (document < 1 || document > MAX_DOCUMENTS)
+       TtaError (ERR_invalid_document_parameter);
+     else if (LoadedDocument[document - 1] == NULL)
+       TtaError (ERR_invalid_document_parameter);
+   else
+      /* parameter document is correct */
+     {
+       if (element && transform)
+	 {
+	  pPa = ((PtrElement) element)->ElTransform;
+	   pPrevPa = NULL;
+	   while (pPa)
+	     {
+	       if (pPa->TransType == ((PtrTransform)transform)->TransType)
+		 {
+		   if (pPrevPa == NULL)
+		     ((PtrElement) element)->ElTransform = (PtrTransform) transform;
+		   else
+		     pPrevPa->Next = (PtrTransform) transform;
+		   ((PtrTransform) transform)->Next = pPa->Next;
+		   TtaFreeMemory (pPa);	
+		  return;
+		 }	       
+	       pPrevPa = pPa;
+	       pPa = pPa->Next;
+	     }
+	   if (pPrevPa == NULL)
+	     ((PtrElement) element)->ElTransform = (PtrTransform) transform;
+	   else
+	     pPrevPa->Next = (PtrTransform) transform;
+	 }
+     }
+}
 
 /*----------------------------------------------------------------------
   TtaCopyTransform
@@ -1335,4 +1387,140 @@ void *TtaCopyTransform(void *void_pPa)
       pPa = pPa->Next;
     }
   return (void *) result_first;  
+}
+/*----------------------------------------------------------------------
+   TtaNewBoxTransformTranslate
+   ---------------------------------------------------------------------- */
+void *TtaNewBoxTransformTranslate (float x, float y)   
+{
+   PtrTransform pPa;
+
+   pPa = TtaNewTransform ();
+   pPa->TransType = PtElBoxTranslate;
+   pPa->XScale = x;
+   pPa->YScale = y;
+   return (pPa);
+}
+
+/*----------------------------------------------------------------------
+   TtaNewTransformTranslate
+   ---------------------------------------------------------------------- */
+void *TtaNewTransformTranslate (float x, float y, ThotBool viewbox)   
+{
+   PtrTransform pPa;
+
+   pPa = TtaNewTransform ();
+   if (viewbox)
+     pPa->TransType = PtElviewboxTranslate;
+   else
+     pPa->TransType = PtElTranslate;
+   pPa->XScale = x;
+   pPa->YScale = y;
+   return (pPa);
+}
+/*----------------------------------------------------------------------
+   TtaNewTransformAnimTranslate
+   ---------------------------------------------------------------------- */
+void *TtaNewTransformAnimTranslate (float x, float y)   
+{
+   PtrTransform pPa;
+
+   pPa = TtaNewTransform ();
+   pPa->TransType = PtElAnimTranslate;
+   pPa->XScale = x;
+   pPa->YScale = y;
+   return (pPa);
+}
+/*----------------------------------------------------------------------
+   TtaNewTransformAnimRotate
+   ---------------------------------------------------------------------- */
+void *TtaNewTransformAnimRotate (float angle, float x_scale, 
+			     float y_scale)				   
+{
+   PtrTransform pPa;
+
+   pPa = TtaNewTransform ();
+   pPa->TransType = PtElAnimRotate;
+   pPa->TrAngle = angle;
+   pPa->XRotate = x_scale;
+   pPa->YRotate = y_scale;
+   return (pPa);
+}
+
+/*----------------------------------------------------------------------
+   TtaNewTransformRotate
+   ---------------------------------------------------------------------- */
+void *TtaNewTransformRotate (float angle, float x_scale, 
+			     float y_scale)				   
+{
+   PtrTransform pPa;
+
+   pPa = TtaNewTransform ();
+   pPa->TransType = PtElRotate;
+   pPa->TrAngle = angle;
+   pPa->XRotate = x_scale;
+   pPa->YRotate = y_scale;
+   return (pPa);
+}
+
+/*----------------------------------------------------------------------
+   TtaNewTransformSkewX
+   ---------------------------------------------------------------------- */
+void *TtaNewTransformSkewX (float factor)
+				   
+{
+   PtrTransform pPa;
+
+   pPa = TtaNewTransform ();
+   pPa->TransType = PtElSkewX;
+   pPa->TrFactor = factor;
+   return (pPa);
+}
+
+/*----------------------------------------------------------------------
+  TtaNewTransformSkewY
+  ---------------------------------------------------------------------- */
+void *TtaNewTransformSkewY (float factor)
+{
+   PtrTransform pPa;
+
+   pPa = TtaNewTransform ();
+   pPa->TransType = PtElSkewY;
+   pPa->TrFactor = factor;
+   return (pPa);
+}
+/*----------------------------------------------------------------------
+   TtaNewTransformScale
+   ---------------------------------------------------------------------- */
+void *TtaNewTransformScale (float x_scale, float y_scale, ThotBool viewbox)	   
+{
+   PtrTransform pPa;
+
+   pPa = TtaNewTransform ();
+   if (viewbox)
+     pPa->TransType = PtElviewboxScale;
+   else
+     pPa->TransType = PtElScale;   
+   pPa->XScale = x_scale;
+   pPa->YScale = y_scale;
+   return (pPa);
+}
+
+/*----------------------------------------------------------------------
+  TtaNewTransformMatrix
+  ---------------------------------------------------------------------- */
+void *TtaNewTransformMatrix (float a, float b, float c,
+			     float d, float e, float f)
+{
+   PtrTransform pPa;
+
+   pPa = TtaNewTransform ();
+   pPa->TransType = PtElMatrix;
+   pPa->AMatrix = a;
+   pPa->BMatrix = b;
+   pPa->CMatrix = c;
+   pPa->DMatrix = d;
+   pPa->EMatrix = e;
+   pPa->FMatrix = f;
+   return (pPa);
 }

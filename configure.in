@@ -763,8 +763,10 @@ if test "$with_gl" = "yes" ; then
 	fi
 AC_SUBST(GL_INCLUDES)
 AC_SUBST(GL_LIBRARIES)
-PRINTIFNOTGL=" "
-NOPRINT="#"
+dnl PRINTIFNOTGL=" "
+dnl #NOPRINT="#"
+NOPRINT=""
+PRINTIFNOTGL=" print_prog"
 else
 NOPRINT=""
 PRINTIFNOTGL=" print_prog"

@@ -6,6 +6,12 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void FrameToView ( int frame,
+                          int *doc,
+                          int *view );
+extern void GetViewFromFrame ( int nframe,
+                               PtrDocument pDoc,
+                               int *viewNum );
 extern void RedisplayDocViews ( PtrDocument pDoc );
 extern void AbstractImageUpdated ( PtrDocument pDoc );
 extern void BuildAbstractBoxes ( PtrElement pEl,
@@ -61,6 +67,12 @@ extern DisplayMode TtaGetDisplayMode ( Document document );
 
 #else /* __STDC__ */
 
+extern void FrameToView (/* int frame,
+                            int *doc,
+                            int *view */);
+extern void GetViewFromFrame (/* int nframe,
+                                 PtrDocument pDoc,
+                                 int *viewNum */);
 extern void RedisplayDocViews (/* PtrDocument pDoc */);
 extern void AbstractImageUpdated (/* PtrDocument pDoc */);
 extern void BuildAbstractBoxes (/* PtrElement pEl,

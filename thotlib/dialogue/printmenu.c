@@ -125,7 +125,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    strcpy (printArgv[printArgc], ptr);
    printArgc++;
 #else /* !_WINDOWS */
-   sprintf (cmd, "%s/print", BinariesDirectory);
+   sprintf (cmd, "%s/print", BinariesDirectory); 
    strcat (cmd, " -lang ");
    strcat (cmd, ptr);
 #endif /* !_WINDOWS */
@@ -593,9 +593,16 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    i = strlen (cmd);
 
    sprintf (&cmd[i], " -removedir %s/%s.PIV &", dir, name);
-   res = system (cmd);
-   if (res == -1)
-      TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_ERROR_PS_TRANSLATION);
+
+#ifdef _PCLDEBUG
+    printf ("\n/usr/bin/ddd bin/%s\n", cmd); 
+   /* res = system (cmd);  */
+#else /* _PCLDEBUG */
+   res = system (cmd); 
+#endif /* _PCLDEBUG */
+    if (res == -1) 
+       TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_ERROR_PS_TRANSLATION); 
+
 #endif /* _WINDOWS */
  
 }
@@ -896,16 +903,6 @@ void TtaPrint (Document document, char *viewNames, char *cssNames)
    /* make an automatic backup */
    if (ok)
      { 
-#ifdef _GLPRINT
-       {
-	 int frame;
-	 
-	 frame = 0;
-	 while (document != FrameTable[frame].FrDoc)
-	   frame++;	 
-	 PrintGL (frame);
-       }
-#else /* _GL */
        if (PaperPrint)
 	 Print (PrintDocName,
 		PrintDirName,
@@ -934,7 +931,6 @@ void TtaPrint (Document document, char *viewNames, char *cssNames)
 		viewNames,
 		cssNames,
 		document);
-#endif /* _GL */
      }
    /* restores the presentation scheme */
    strcpy (pDoc->DocSSchema->SsDefaultPSchema, savePres);

@@ -175,9 +175,11 @@ DISPLAY_OBJ = \
 	view/hyphen.o \
         view/tesse.o \
 	view/glgradient.o \
-	view/printgl.o \
 	dialogue/glglyph.o \
 	dialogue/openglfont.o \
+	view/glwindowdisplay.o \
+	view/gldisplay.o \
+	view/spline.o
 
 EDITOR_OBJ = \
 	base/alloca.o \
@@ -246,9 +248,9 @@ EDITOR_OBJ = \
 	view/unstructlocate.o\
 	view/viewapi.o \
 	view/xwindowdisplay.o \
-	view/gldisplay.o \
-	view/glwindowdisplay.o \
-	view/animbox.o
+	view/animbox.o \
+	view/gltimer.o \
+	view/glbox.o
 
 base/registry.o : @srcdir@/base/registry.c
 	$(CC) $(CFLAGS) $(THOT_OPTIONS) $(INCLUDES) \
@@ -280,6 +282,7 @@ PRINT_OBJ= \
 	tree/paginatePP.o \
 	view/initpses.o \
 	view/psdisplay.o \
+	view/printgl.o \
 	editing/print.o
 
 tree/paginatePP.o : @srcdir@/tree/paginate.c @srcdir@/include/thot_sys.h

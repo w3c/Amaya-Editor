@@ -173,6 +173,20 @@ void PrintBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 void PrintBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax);
 ThotBool GL_Printing ();
 
+void TtaChangePlay (int frame);
+double ComputeThotCurrentTime (int frame);
+ThotBool GL_Err ();
+void update_bg_colorGTK (int frame, int color);
+int GL_DrawString (unsigned char *buff, int lg, int frame, int x, int y,
+		PtrFont font, int boxWidth, int bl, int hyphen,
+		   int startABlock, int fg, int shadow);
+
+void getboundingbox (int size, float *buffer, int frame,
+		     int *xorig, int *yorig, 
+		     int *worig, int *horig);
+
+void GL_SetPrintForeground (int fg);
+
 #ifdef _WINDOWS
 void WinGL_Swap (HDC hDC);
 #endif /*_WINDOWS*/

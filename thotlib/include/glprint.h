@@ -123,11 +123,19 @@ extern "C" {
   /*Graphic stuff*/
   GLint GLParseFeedbackBuffer (GLfloat *current);
 
-  void GLPrintPostScriptColor(GLrgb rgb);
-
+  void GLPrintPostScriptColor(void *rgb);
+ 
   /*Text*/
-  GLint GLText (const char *str, const char *fontname, GLshort fontsize, 
-		GLfloat x, GLfloat y);
+  GLint GLText (const char *str, 
+		const int fg, 
+		const void *font, 
+		const unsigned int fontsize, 
+		const int x, 
+		const int y, 
+		const int length);
+  int GLString (unsigned char *buff, int lg, int frame, int x, int y,
+		PtrFont font, int boxWidth, int bl, int hyphen,
+		int startABlock, int fg, int shadow);
 
   /*Pictures*/
   GLint GLDrawPixelsPoscript(GLsizei width, GLsizei height,
@@ -136,6 +144,8 @@ extern "C" {
 			    unsigned char *pixels, 
 			     GLfloat x, GLfloat y);
 
+  void FinishPrintBox();
+  void InitPrintBox ();
 
 #ifdef __cplusplus
 };

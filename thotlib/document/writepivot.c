@@ -90,6 +90,13 @@ static void PutInteger (BinFile pivFile, int n)
 }
 
 /*----------------------------------------------------------------------
+   PutInteger ecrit un entier long dans le fichier, sur 4 octets      
+  ----------------------------------------------------------------------*/
+static void PutFloat (BinFile pivFile, float n)
+{
+   TtaWrite4Byte (pivFile, (char*) (&n));
+}
+/*----------------------------------------------------------------------
    PutDimensionType ecrit dans le fichier un type de dimension sur	
    1 octet.								
   ----------------------------------------------------------------------*/
@@ -817,6 +824,7 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
   NotifyAttribute     notifyAttr;
   int                 i, c;
   ThotBool            stop;
+  PtrTransform        Trans;
 
   /* on ecrit effectivement la forme pivot de l'element */
   pEl1 = *pEl;
@@ -1117,6 +1125,51 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
 		default:
 		  break;
 		}
+	      /*Add transformation informations in pivot file*/
+	      if (pEl1->ElParent && pEl1->ElParent->ElTransform)
+		{
+		  Trans = pEl1->ElParent->ElTransform;
+		  while (Trans)
+		    {
+		      TtaWriteByte (pivFile, (char) C_PIV_TRANS_START);
+		      PutInteger (pivFile, Trans->TransType);
+		      switch (Trans->TransType)
+			{
+			case PtElBoxTranslate:
+			case PtElviewboxScale:
+			case PtElviewboxTranslate:
+			case PtElScale:
+			case PtElAnimTranslate:
+			case PtElTranslate:
+			  PutFloat (pivFile, Trans->XScale);  
+			  PutFloat (pivFile, Trans->YScale); 		
+			  break;
+			case PtElAnimRotate:
+			case PtElRotate:
+			  PutFloat (pivFile, Trans->XRotate);
+			  PutFloat (pivFile, Trans->YRotate);
+			  PutFloat (pivFile, Trans->TrAngle);	    
+			  break;
+			case PtElMatrix:
+			  PutFloat (pivFile, Trans->AMatrix);
+			  PutFloat (pivFile, Trans->BMatrix);
+			  PutFloat (pivFile, Trans->CMatrix);
+			  PutFloat (pivFile, Trans->DMatrix);
+			  PutFloat (pivFile, Trans->EMatrix);
+			  PutFloat (pivFile, Trans->FMatrix);
+			  break;
+			case PtElSkewX:
+			case PtElSkewY:
+			  PutFloat (pivFile, Trans->TrFactor);
+			  break;	  
+			default:
+			  break;	  
+			}
+		      Trans = Trans->Next;
+		    }
+		  TtaWriteByte (pivFile, (char) C_PIV_TRANS_END);
+		}
+
 	      if (pEl1->ElLeafType != LtReference)
 		TtaWriteByte (pivFile, (char) C_PIV_END);
 	    }

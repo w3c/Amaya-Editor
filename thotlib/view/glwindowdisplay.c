@@ -50,6 +50,7 @@
 #include "picture_f.h"
 #include "tesse_f.h"
 #include "applicationapi_f.h"
+#include "registry_f.h"
 
 #include "glprint.h"
 
@@ -139,39 +140,45 @@ static HGLRC GL_Context[MAX_FRAME];
 #define SLICES 360
 #define SLICES_SIZE 361
 
-/* Animation Smoothness*/
-#define FPS 25 /*Frame Per Second*/
 #define INTERVAL 0.02 /*1/FPS*/ /* should be 1/25 ... 1/50 */
 
-#define FRAME_TIME 5 /*(INTERVAL*1000) */
-/* milliseconds */
-
+#define REALY(A) (A + FrameTable[frame].FrTopMargin)
 
 /*--------- STATICS ------*/
 
 /*Current Thickness*/
 static int      S_thick;
 
-/* background color*/
-static int      GL_Background[MAX_FRAME];
 
 /*if no 3d card available*/
 static ThotBool Software_Mode = TRUE;
 
 /*if just computing bounding box*/
-static ThotBool NotFeedBackMode = TRUE;
- 
-/*if just computing bounding box*/
 static ThotBool PRINTINGMode = FALSE;
 
-/*One Timer to rule them all */
-static int      AnimTimer = 0; 
 
-/*Control When swapping applies*/
-static ThotBool SwapOK[MAX_FRAME];
+#ifdef _GLPRINT
+static ThotBool TransText = FALSE;
+#else /* _GLPRINT */
+static ThotBool TransText = FALSE;
+#endif /* _GLPRINT */
 
-#define REALY(A) (A + FrameTable[frame].FrTopMargin)
 
+/*---------------------------------------------------
+  GL_TransText : If text must be texture or polygon
+  ----------------------------------------------------*/
+ThotBool GL_TransText ()
+{
+  return TransText;
+}
+
+/*---------------------------------------------------
+  GL_SetTransText : If text must be texture or polygon
+  ----------------------------------------------------*/
+void GL_SetTransText (ThotBool value)
+{
+  TransText = value;
+}
 
 ThotBool GL_Printing () 
 {
@@ -278,52 +285,7 @@ void update_bg_colorGTK (int frame, int color)
 }
 
 #endif /*_GTK*/
-/*----------------------------------------------------------------------
-  ResetMainWindowBackgroundColor :                          
-  ----------------------------------------------------------------------*/
-void ResetMainWindowBackgroundColor (int frame)
-{
-  unsigned short red, green, blue;
-  int color = GL_Background[frame];
-  
-#ifdef _GTK
-  update_bg_colorGTK (frame, color);
-#endif /*_GTK*/
-  GL_Background[frame] = color;
-  TtaGiveThotRGB (color, &red, &green, &blue);
-  /* the 0.0 for alpha is needed for group opacity */
-  glClearColor ((float)red/255, (float)green/255, (float)blue/255, 0.0);
-} 
-/*----------------------------------------------------------------------
-  SetMainWindowBackgroundColor :                          
-  ----------------------------------------------------------------------*/
-void SetMainWindowBackgroundColor (int frame, int color)
-{
-  unsigned short red, green, blue;
 
-#ifdef _GTK
-  update_bg_colorGTK (frame, color);
-#endif /*_GTK*/
-  GL_Background[frame] = color;
-  TtaGiveThotRGB (color, &red, &green, &blue);
-  /* the 0.0 for alpha is needed for group opacity */
-  glClearColor ((float)red/255, (float)green/255, (float)blue/255, 0.0);
-}
-
-/*----------------------------------------------------------------------
-  Clear clear the area of frame located at (x, y) and of size width x height.
-  ----------------------------------------------------------------------*/
-void Clear (int frame, int width, int height, int x, int y)
-{
-  if (GL_prepare (frame))
-    { 
-	  y = y + FrameTable[frame].FrTopMargin;
-
-		GL_SetClipping (x, FrameTable[frame].FrHeight - (y+height), width, height);
-		glClear (GL_COLOR_BUFFER_BIT); 
-		GL_UnsetClippingRestore (TRUE);
-  }
-}
 #endif /*_WIN_PRINT*/
 
 #ifdef _WINDOWS 
@@ -960,7 +922,7 @@ void GL_SetPrintForeground (int fg)
   rgb[1] = (float) green;
   rgb[2] = (float) blue;
  
-  GLPrintPostScriptColor(rgb);
+  GLPrintPostScriptColor(&rgb);
     
 } 
 /*----------------------------------------------------------------------
@@ -1455,47 +1417,15 @@ void GL_DrawUnicodeChar (CHAR_T const c, float x, float y,
 		     1);
 }
 
-#ifndef _WIN_PRINT
-/*----------------------------------------------------------------------
-  WDrawString draw a char string of lg chars beginning in buff.
-  Drawing starts at (x, y) in frame and using font.
-  boxWidth gives the width of the final box or zero,
-  this is used only by the thot formmating engine.
-  bl indicates that there are one or more spaces before the string
-  hyphen indicates whether an hyphen char has to be added.
-  startABlock is 1 if the text is at a paragraph beginning
-  (no justification of first spaces).
-  parameter fg indicates the drawing color
-  Returns the lenght of the string drawn.
-  ----------------------------------------------------------------------*/
-int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
-		 PtrFont font, int boxWidth, int bl, int hyphen,
-		 int startABlock, int fg, int shadow)
+int GL_DrawString (unsigned char *buff, int lg, int frame, int x, int y,
+		PtrFont font, int boxWidth, int bl, int hyphen,
+		int startABlock, int fg, int shadow)
 {
-  int j;
-
-  if (lg < 0)
-    return 0;
-  
-  y += FrameTable[frame].FrTopMargin;
-  if (shadow)
-    {
-      /* replace each character by a star */
-      j = 0;
-      while (j < lg)
-	{
-	  buff[j++] = '*';
-	}
-    }
-  return (GL_UnicodeDrawString (fg, 
-				buff, 
-				(float) x,
-				(float) y, 
-				hyphen,
-				(void *)font, 
-				lg));
+    return GLString (buff, lg, frame, x, y, font, 
+ 		   boxWidth, bl, hyphen,  
+ 		   startABlock, fg, shadow); 
 }
-#endif /*_WIN_PRINT*/
+
 /*----------------------------------------------------------------------
   GL_DrawString : Draw a string in a texture or a bitmap 
   ----------------------------------------------------------------------*/
@@ -1507,24 +1437,25 @@ int GL_UnicodeDrawString (int fg,
 			  int end)
 {
   int width;
-  char fontname[3];
 
   if (end <= 0 || fg < 0 || GL_font == NULL)
-    return 0;
-  str[end] = EOS;
+    return 0; 
+  str[end] = EOS; 
   TranslateChars (str);
 
-  if (GL_Printing ())
-    {
-      GL_SetPrintForeground (fg); 
-
-      GetPostscriptNameFromFont (GL_font, fontname);
-
-      GLText ((char *)str, 
-	      fontname, 
-	      GL_Font_Get_Size (GL_font), 
-	      x, 
-	      y);
+  if (Printing)
+    {      
+      GL_SetTransText (TRUE);
+      GL_SetForeground (fg); 
+      width = UnicodeFontRender (GL_font, str, 
+				 x, y, end);
+      if (hyphen)
+	/* draw the hyphen */
+	GL_DrawUnicodeChar ('\255', 
+			    x + width, y, 
+			    GL_font, fg);
+      width = 0;
+      GL_SetTransText (FALSE);
     }
   else
     {
@@ -1958,10 +1889,11 @@ static void computeisminmax (double number, double *min, double *max)
   else if (number > *max)
     *max = number;
 }
+
 /*------------------------------------------------------------
  getboundingbox : Get bound values of the box
   ------------------------------------------------------------*/
-static void getboundingbox (GLint size, GLfloat *buffer, int frame,
+void getboundingbox (GLint size, GLfloat *buffer, int frame,
 			    int *xorig, int *yorig, 
 			    int *worig, int *horig)
 {
@@ -2016,263 +1948,10 @@ static void getboundingbox (GLint size, GLfloat *buffer, int frame,
   *worig = (int) (w - x) + 1;
   *horig = (int) (h - y) + 1;
 }
-/*---------------------------------------------------
-  GL_NotInFeedbackMode : if all openGL operation are
-  permitted or not.		    
-  ----------------------------------------------------*/
-ThotBool GL_NotInFeedbackMode ()
-{
-  return NotFeedBackMode;
-}
-
-#ifdef _GLPRINT
-static ThotBool TransText = FALSE;
-#else /* _GLPRINT */
-static ThotBool TransText = FALSE;
-#endif /* _GLPRINT */
 
 
-/*---------------------------------------------------
-  GL_TransText : If text must be texture or polygon
-  ----------------------------------------------------*/
-ThotBool GL_TransText ()
-{
-  return TransText;
-}
-
-/*---------------------------------------------------
-  GL_SetTransText : set if text must be texture or polygon
-  ----------------------------------------------------*/
-void GL_SetTransText (ThotBool value)
-{
-  TransText = value;
-}
-
-#define FEEDBUFFERSIZE 32768
-
-/*---------------------------------------------------
-  PrintBox :  	    
-  ----------------------------------------------------*/
-void PrintBox (PtrBox box, int frame, 
-	       int xmin, int xmax, 
-	       int ymin, int ymax)
-{
-  GLfloat feedBuffer[FEEDBUFFERSIZE];
-
-  glFeedbackBuffer (FEEDBUFFERSIZE, GL_3D_COLOR, feedBuffer);
-  NotFeedBackMode = FALSE;  
-  glRenderMode (GL_FEEDBACK);
-  DisplayBox (box, frame, xmin, xmax, ymin, ymax);
-  NotFeedBackMode = TRUE;
-  GLParseFeedbackBuffer (feedBuffer);
-  NotFeedBackMode = TRUE;
-}
-/*---------------------------------------------------
-  ComputeBoundingBox :
-  Modify Bounding Box according to opengl feedback mechanism
-  (after transformation, coordinates may have changed)			    
-  ----------------------------------------------------*/
-void ComputeBoundingBox (PtrBox box, int frame, 
-			 int xmin, int xmax, 
-			 int ymin, int ymax)
-{
-  GLfloat feedBuffer[FEEDBUFFERSIZE];
-  GLint   size;
-  
-  if (NotFeedBackMode)
-    {
-      glFeedbackBuffer (FEEDBUFFERSIZE, GL_2D, feedBuffer);
-      NotFeedBackMode = FALSE;  
-      glRenderMode (GL_FEEDBACK);
-      DisplayBox (box, frame, xmin, xmax, ymin, ymax);
-      size = glRenderMode (GL_RENDER);
-      NotFeedBackMode = TRUE;
-      if (size > 0)
-	{
-	  if (size > FEEDBUFFERSIZE)
-	    size = FEEDBUFFERSIZE;
-
-	  box->BxClipX = -1;
-	  box->BxClipY = -1;
-	  getboundingbox (size, feedBuffer, frame,
-			  &box->BxClipX,
-			  &box->BxClipY,
-			  &box->BxClipW,
-			  &box->BxClipH);    
-  
-	  /* printBuffer (size, feedBuffer); */ 
-	  
-	  box->BxBoundinBoxComputed = TRUE; 
-	}
-      else
-	{
-	  box->BxClipX = box->BxXOrg;
-	  box->BxClipY = box->BxYOrg;
-	  box->BxClipW = box->BxW;
-	  box->BxClipH = box->BxH;
-	  box->BxBoundinBoxComputed = FALSE; 
-	}   
-    }
-}
-
-/*---------------------------------------------------
-  ComputeBoundingBox :
-  Modify Bounding Box according to opengl feedback mechanism
-  (after transformation, coordinates may have changed)			    
-  ----------------------------------------------------*/
-void ComputeFilledBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
-{
-  GLfloat feedBuffer[4096];
-  GLint size;
-  
-  if (NotFeedBackMode)
-    {
-      box->BxBoundinBoxComputed = TRUE; 
-      glFeedbackBuffer (2048, GL_2D, feedBuffer);
-      NotFeedBackMode = FALSE;
-      glRenderMode (GL_FEEDBACK);
-      DrawFilledBox (box->BxAbstractBox, frame, xmin, xmax, ymin, ymax);
-      size = glRenderMode (GL_RENDER);
-      NotFeedBackMode = TRUE;
-      if (size > 0)
-	{
-	  box->BxClipX = -1;
-	  box->BxClipY = -1;
-	  getboundingbox (size, feedBuffer, frame,
-			  &box->BxClipX,
-			  &box->BxClipY,
-			  &box->BxClipW,
-			  &box->BxClipH);     
-	  box->BxBoundinBoxComputed = TRUE; 
-	  /* printBuffer (size, feedBuffer); */
-	}
-    }
-}
-/*----------------------------------------------------------------------
-  GL_SwapStop : Prevent savage swapping (causes flickering)
-  ----------------------------------------------------------------------*/
-void GL_SwapStop (int frame)
-{
-  SwapOK[frame] = FALSE;
-}
-/*----------------------------------------------------------------------
-  GL_SwapGet : 
-  ----------------------------------------------------------------------*/
-ThotBool GL_SwapGet (int frame)
-{
-  return SwapOK[frame];
-}
-/*----------------------------------------------------------------------
-  GL_SwapEnable : 
-  ----------------------------------------------------------------------*/
-void GL_SwapEnable (int frame)
-{
-  SwapOK[frame] = TRUE;
-}
-
-static ThotBool NeedRedraw (int frame)
-{
-  ViewFrame          *pFrame;
-
-  pFrame = &ViewFrameTable[frame - 1];
-  if (pFrame->FrReady &&
-      pFrame->FrAbstractBox && 
-      pFrame->FrAbstractBox->AbElement)
-    return TRUE;
-  return FALSE;
-}
-
-#ifdef _WINDOWS
-/*----------------------------------------------------------------------
-  WinGL_Swap : specific to windows
-  ----------------------------------------------------------------------*/
-void WinGL_Swap (HDC hDC)
-{
-  /* glSwapBuffers (hDC); */
-  SwapBuffers (hDC);
-}
-#endif /*_WINDOWS*/
-/*----------------------------------------------------------------------
-  GL_Swap : swap frontbuffer with backbuffer (display changes)
-  ----------------------------------------------------------------------*/
-void GL_Swap (int frame)
-{
-  if (frame >= 0 && frame < MAX_FRAME && 
-      SwapOK[frame] && 
-      NeedRedraw (frame))
-    {
-      /* gl_synchronize ();  */
-      /* glFinish (); */
-      /* glFlush (); */      
-      glDisable (GL_SCISSOR_TEST);
-
-      /* glReadBuffer(GL_BACK); */
-      /* glAccum (GL_LOAD, 1); */
-
-#ifdef _WINDOWS
-
-      if (FrRef[frame])
-	if (GL_Windows[frame])
-	  {
-	    /*GL_Windows[frame] = GetDC (FrRef[frame]);*/
-	    /*wglMakeCurrent (GL_Windows[frame], GL_Context[frame]);*/
-	    SwapBuffers (GL_Windows[frame]);
-	    /*or*/
-	    /* glSwapBuffers(GL_Windows[frame]); */
-
-	    ReleaseDC (FrRef[frame], GL_Windows[frame] );
-	  }
-#else
-      if (FrameTable[frame].WdFrame)
-	{
-	  gtk_gl_area_swapbuffers (GTK_GL_AREA(FrameTable[frame].WdFrame));
-	}
-#endif /*_WINDOWS*/
 
 
-      /* glDrawBuffer(GL_BACK); */
-      /* glAccum (GL_RETURN, 1); */
-
-      /* glReadBuffer (GL_FRONT); */
-      /*       glRasterPos2i (0, 0); */
-      /*       glCopyPixels (0, 0,  */
-      /* 		    FrameTable[frame].FrWidth, FrameTable[frame].FrHeight,  */
-      /* 		    GL_COLOR); */
-      /*       glDrawBuffer (GL_BACK); */
-      /*       glReadBuffer (GL_BACK); */
-
-      glEnable (GL_SCISSOR_TEST); 
-      FrameTable[frame].DblBuffNeedSwap = FALSE;
-    }
-}
-
-/*----------------------------------------------------------------------
-  GL_prepare: If a modif has been done
-  ----------------------------------------------------------------------*/
-ThotBool GL_prepare (int frame)
-{  
-  if (frame >= 0 && frame < MAX_FRAME && NotFeedBackMode)
-    {
-#ifdef _TESTSWAP
-      FrameTable[frame].DblBuffNeedSwap = TRUE;
-#endif /*_TESTSWAP*/
-      if (FrRef[frame])
-#ifdef _WINDOWS
-	if (GL_Windows[frame])
-	  {
-	    GL_Windows[frame] = GetDC (FrRef[frame]);
-	    wglMakeCurrent (GL_Windows[frame], GL_Context[frame]);	 
-	    /*	ReleaseDC (FrRef[frame], GL_Windows[frame] ); */
-	    return TRUE;
-	  }
-#else /*_WINDOWS*/
-      if (FrameTable[frame].WdFrame)
-	if (gtk_gl_area_make_current (GTK_GL_AREA(FrameTable[frame].WdFrame)))
-	  return TRUE;
-#endif /*_WINDOWS*/
-    }
-  return FALSE;
-}
 
 /*----------------------------------------------------------------------
   GL_realize : can we cancel if no modifs ?
@@ -2287,6 +1966,7 @@ void GL_realize (int frame)
 #endif /*_TESTSWAP*/
   return;
 }
+
 /*----------------------------------------------------------------------
   GL_ActivateDrawing : Force Recalculation of the frame and redisplay
   ----------------------------------------------------------------------*/
@@ -2297,71 +1977,8 @@ void GL_ActivateDrawing(int frame)
 }
 
 
-/*----------------------------------------------------------------------
-  TtaChangePlay : Activate Animation
-  ----------------------------------------------------------------------*/
-static void TtaChangePlay (int frame)
-{
-  ThotBool remove;
 
-  if (frame && frame <= MAX_FRAME)
-    if (FrameTable[frame].Animated_Boxes)
-      {
-	FrameTable[frame].Anim_play = (FrameTable[frame].Anim_play ? FALSE : TRUE);
-	if (FrameTable[frame].Anim_play)
-	  {
-	    if (AnimTimer == 0)
-#ifdef _GTK
-	      AnimTimer = gtk_timeout_add (FRAME_TIME,
-					   (gpointer) GL_DrawAll, 
-					   (gpointer)   NULL); 
-	   	      
-#else /*_GTK*/
-#ifdef _WINDOWS
-	    {
-	      /* SetTimer(FrMainRef[frame],                
-		 frame,               
-		 FRAME_TIME,                     
-		 (TIMERPROC) MyTimerProc); 
-
-		 AnimTimer = frame;*/
-	      AnimTimer = SetTimer (NULL,                
-				    frame,               
-				    FRAME_TIME,                     
-				    (TIMERPROC) MyTimerProc);
-	    }    
-#endif /*_WINDOWS*/
-#endif /*_GTK*/
-	    FrameTable[frame].BeginTime = 0;
-	    FrameTable[frame].LastTime = 0;
-	  }
-	else
-	  if (AnimTimer)
-	    {
-	      remove = FALSE;
-	      for (frame = 0; frame < MAX_FRAME; frame++)
-		{
-		  if (FrameTable[frame].Anim_play)
-		    remove = TRUE;
-		}
-	      if (remove)
-		{
-
-#ifdef _GTK
-		  gtk_timeout_remove (AnimTimer); 	
-#else /*_GTK*/
-#ifdef _WINDOWS
-		  /*KillTimer (FrMainRef[AnimTimer], AnimTimer);*/
-		  KillTimer (NULL, AnimTimer);
-#endif /*_WINDOWS*/
-#endif /*_GTK*/
-		  AnimTimer = 0; 
-		}
-	    }
-      }  
-}
-
-
+#ifdef _OUT
 void PrintGL (int frame)
 {
   char             file[2048];
@@ -2423,67 +2040,7 @@ void PrintGL (int frame)
       fflush (stdout);
     }
 }
-
-/*----------------------------------------------------------------------
-  TtaPlay : Activate/Deactivate Animation (restart)
-  ----------------------------------------------------------------------*/
-void TtaPlay (Document doc, View view)
-{
-  int frame;
-
-  frame = GetWindowNumber (doc, view);
-  TtaChangePlay (frame);
-  FrameTable[frame].BeginTime = 0;
-  FrameTable[frame].LastTime = 0; 
-}
-
-/*----------------------------------------------------------------------
-  TtaNoPlay : Make sure we deactivate/reset all Animation of this frame
-  And reset Time (Stop)
-  ----------------------------------------------------------------------*/
-void TtaNoPlay (int frame)
-{
-  if (frame && frame < MAX_FRAME)
-    if (FrameTable[frame].Anim_play)
-      {
-	TtaChangePlay (frame);
-	FrameTable[frame].BeginTime = 0;
-	FrameTable[frame].LastTime = 0;
-      }
-}
-
-/*----------------------------------------------------------------------
-  TtaPause : Make sure we pause all Animation of this frame
-  ----------------------------------------------------------------------*/
-void TtaPause (int frame)
-{
-  if (frame && frame < MAX_FRAME)
-    if (FrameTable[frame].Anim_play)
-      {
-	TtaChangePlay (frame);
-	FrameTable[frame].BeginTime = 0;
-	FrameTable[frame].LastTime = 0;
-      }
-}
-/*----------------------------------------------------------------------
-  SetFrameCurrentTime : Position current time
-  ----------------------------------------------------------------------*/
-void TtaSetFrameCurrentTime (AnimTime current_time, int frame)
-{
-  FrameTable[frame].LastTime = current_time;
-}
-/*----------------------------------------------------------------------
-  SetDocumentCurrentTime : Position current time
-  ----------------------------------------------------------------------*/
-void TtaSetDocumentCurrentTime (double current_time, Document doc)
-{
-  int frame;
-
-  frame = GetWindowNumber (doc, 1);  
-  Animate_boxes (frame, current_time);
-  FrameTable[frame].LastTime = current_time;
-  GL_DrawAll ();
-}
+#endif /* _OUT */
 
 #define MAX_TIMEFUNC 50
 static void (*TimeFunc[MAX_TIMEFUNC]) (Document doc, double current_time);
@@ -2507,7 +2064,7 @@ void TtaRegisterTimeEvent(void (*pfunc) (Document doc, double current_time))
 /*----------------------------------------------------------------------
   GetCurrentTime : Get Current Time
   ----------------------------------------------------------------------*/
-static AnimTime ComputeAmayaCurrentTime (int frame)
+AnimTime ComputeThotCurrentTime (int frame)
 {
 #ifdef _GTK
   /* draw and calculate draw time 
@@ -2547,92 +2104,7 @@ static AnimTime ComputeAmayaCurrentTime (int frame)
     current_time = FrameTable[frame].LastTime; 
   return current_time;
 }
-/*----------------------------------------------------------------------
-  GL_DrawAll : Really Draws opengl !!
-  ----------------------------------------------------------------------*/
-ThotBool GL_DrawAll ()
-{  
-  int              frame;
-  AnimTime         current_time; 
-  ThotBool         was_animation = FALSE; 
-  char             out[128];
-  unsigned int     i;
-  static ThotBool  frame_animating = FALSE;  
-  static double    lastime;
 
-  if (!FrameUpdating)
-    {
-      FrameUpdating = TRUE;     
-      if (!frame_animating)
-	{	  
-	  frame_animating = TRUE; 
-	  for (frame = 0 ; frame < MAX_FRAME; frame++)
-	    {
-	      if (FrRef[frame] != 0)
-		{
-		  if (FrameTable[frame].Animated_Boxes &&
-		      FrameTable[frame].Anim_play)
-		    {
-		      current_time = ComputeAmayaCurrentTime (frame);  
-		      if ((current_time + 1) > 0.0001)
-			{
-			  glDisable (GL_SCISSOR_TEST);
-			  if (Animate_boxes (frame, current_time))
-			    TtaPause (frame);
-			  else
-			    was_animation = TRUE;
-			  FrameTable[frame].LastTime = current_time;
-			  glEnable (GL_SCISSOR_TEST);
-			}
-		      else
-			{
-			  current_time = FrameTable[frame].LastTime;
-			}
-		    }	    
-		  if (FrameTable[frame].DblBuffNeedSwap)
-		    {
-		      if (documentDisplayMode[FrameTable[frame].FrDoc - 1] 
-			  != NoComputedDisplay)
-			{
-			  if (GL_prepare (frame))
-			    {
-			      RedrawFrameBottom (frame, 0, NULL); 
-
-			      if (was_animation)
-				{
-				  lastime = current_time - lastime;
-				  if (IS_ZERO(lastime))
-				    {
-				      sprintf (out, "t: %2.3f s - %2.0f fps", 
-					       current_time, 
-					       (double) 1 / lastime);
-
-				      i = 0;
-				      TtaSetStatus (FrameTable[frame].FrDoc, 
-						    FrameTable[frame].FrView, 
-						    out, 
-						    NULL);
-				      lastime = current_time;
-				    }
-				}
-			      GL_Swap (frame);  
-			    }
-			  GL_Err ();
-			}
-		    }
-		}
-	    }	
-#ifdef _GTK
-	  if (was_animation)
-	    while (gtk_events_pending ())
-	      gtk_main_iteration ();
-#endif /*_GTK*/
-	  frame_animating  = FALSE;      
-	}  
-      FrameUpdating = FALSE;     
-    }
-  return TRUE;  
-}
 
 #define GLU_ERROR_MSG "\nSorry, Amaya requires GLU 1.2 or later.\n"
 /*----------------------------------------------------------------------
@@ -3001,6 +2473,41 @@ void saveBuffer (char *filename, int width, int height)
 	   (unsigned int) height);
   free (Data);
 }
+
+/*----------------------------------------------------------------------
+  FDrawRectangle draw a rectangle located at (x, y) (as float number)
+  in frame,
+  of geometry width x height.
+  thick indicates the thickness of the lines.
+  Parameters fg, bg, and pattern are for drawing
+  color, background color and fill pattern.
+  ----------------------------------------------------------------------*/
+void FDrawRectangle (int frame, int thick, int style, float x, float y, float width,
+		     float height, int fg, int bg, int pattern)
+{
+  if (width <= 0 || height <= 0)
+    return;
+  if (thick == 0 && pattern == 0)
+    return;
+  y += FrameTable[frame].FrTopMargin;
+  if (pattern == 2) 
+    { 
+      GL_DrawRectanglef (bg, 
+			 x + thick/2, y + thick/2, 
+			 width - thick/2, height - thick/2);
+    }
+  /* Draw the border */
+  if (thick > 0 && fg >= 0)
+    {     
+      InitDrawing (style, thick, fg); 
+      GL_DrawEmptyRectanglef (fg, 
+			      x,  y, 
+			      width, 
+			      height, 
+			      thick);
+    }
+}
+
 
 #ifdef PICK
 void processHits2 (GLint hits, GLuint buffer[], int sw)

@@ -2136,7 +2136,7 @@ if test "$ac_test_CFLAGS" = set; then
   CFLAGS=$ac_save_CFLAGS
 elif test $ac_cv_prog_cc_g = yes; then
   if test "$GCC" = yes; then
-    CFLAGS="-O2"
+    CFLAGS="-g -O2"
   else
     CFLAGS="-g"
   fi
@@ -14248,8 +14248,8 @@ echo "$as_me: WARNING: Disabling opengl build !" >&2;}
 	fi
 
 
-PRINTIFNOTGL=" "
-NOPRINT="#"
+NOPRINT=""
+PRINTIFNOTGL=" print_prog"
 else
 NOPRINT=""
 PRINTIFNOTGL=" print_prog"

@@ -146,6 +146,7 @@ extern int          errno;
 static int pg_counter = 0;
 /* permits to cancel current printing */
 static int gabort = FALSE;
+
 #endif /* _GTK */
 static int button_quit = FALSE;
 #ifdef _WINDOWS
@@ -682,6 +683,8 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
 	  
 	  fprintf (PSfile, "%%%%BeginProlog\n");
 	  fprintf (PSfile, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Fonctions generales%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n");
+
+
 	  fprintf (PSfile, "/setpatterndict 18 dict def\n");
 	  fprintf (PSfile, "setpatterndict begin\n");
 	  fprintf (PSfile, "/bitison\n");
@@ -967,6 +970,35 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
 	  fprintf (PSfile, "  grestore\n");
 	  fprintf (PSfile, "} bind def\n\n");
 
+#ifdef _GL
+	  fprintf (PSfile,
+		 /*   "/GL 64 dict def GL begin\n" */
+		   "1 setlinecap 1 setlinejoin\n"
+		   "/BD { bind def } bind def\n"
+		   "/C  { setrgbcolor } BD\n"
+		   "/G  { setgray } BD\n"
+		   "/W  { setlinewidth } BD\n"
+		   "/FC { findfont exch scalefont setfont } BD\n"
+		   "/S  { FC moveto show } BD\n"
+		   "/P  { newpath 0.0 360.0 arc closepath fill } BD\n"
+		   "/L  { newpath moveto lineto stroke } BD\n"
+		   "/SL { C moveto C lineto stroke } BD\n"
+		   "/T  { newpath moveto lineto lineto closepath fill } BD\n");
+
+	  /* Flat-shaded triangle with middle color:
+	     x3 y3 r3 g3 b3 x2 y2 r2 g2 b2 x1 y1 r1 g1 b1 Tm */
+	  fprintf (PSfile,
+		   /* stack : x3 y3 r3 g3 b3 x2 y2 r2 g2 b2 x1 y1 r1 g1 b1 */
+		   "/Tm { 3 -1 roll 8 -1 roll 13 -1 roll add add 3 div\n" /* r = (r1+r2+r3)/3 */
+		   /* stack : x3 y3 g3 b3 x2 y2 g2 b2 x1 y1 g1 b1 r */
+		   "      3 -1 roll 7 -1 roll 11 -1 roll add add 3 div\n" /* g = (g1+g2+g3)/3 */
+		   /* stack : x3 y3 b3 x2 y2 b2 x1 y1 b1 r g b */
+		   "      3 -1 roll 6 -1 roll 9 -1 roll add add 3 div" /* b = (b1+b2+b3)/3 */
+		   /* stack : x3 y3 x2 y2 x1 y1 r g b */
+		   " C T } BD\n");
+	 /*  fprintf (PSfile, "end\n"); */
+#endif /* _GL */
+
 	  fprintf (PSfile, "/DumpImage { %%%% Wim Him Wdr Hdr DumpImage\n");
 	  fprintf (PSfile, "       /Hdr exch def /Wdr exch def /Him exch def /Wim exch def\n");
 	  fprintf (PSfile, "       Wdr Hdr scale\n");
@@ -1190,6 +1222,7 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
 	  
 	  fprintf (PSfile, "%%%%%%%%%%%%%%%%%%%%%% Loading font commands %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n\n");
 	  
+
 	  fprintf (PSfile, "/pagecounter 0 def\n\n");
 	  
 	  fprintf (PSfile, "/pagenumberok 		%% int pagenumberok ThotBool\n");
@@ -1368,6 +1401,8 @@ static int OpenPSFile (PtrDocument pDoc, int *volume)
 	  fprintf (PSfile, "  gsave VectMatrice 0 get setmatrix		%% init CTM\n");
 	  fprintf (PSfile, "  gsave UserMatrice concat\n");
 	  fprintf (PSfile, "  %%100 dict begin				%% working dict\n");
+
+
 	  NumberOfPages = 0;
 	  fflush (PSfile);
 	}
@@ -2308,6 +2343,7 @@ void gtk_print_dialog(){
     while (gtk_events_pending ())
 	gtk_main_iteration ();
 }
+
 #endif /* _GTK */	    
 /*----------------------------------------------------------------------
    Main program                                                           
@@ -2382,8 +2418,16 @@ int main (int argc, char **argv)
 
 #ifdef _GTK
   /* Initialization of gtk libraries */
-   gtk_init_check (&argc, &argv);
-   gtk_print_dialog();
+  gtk_init_check (&argc, &argv);
+
+#ifdef _GL
+   /* init an offscreen rendering context 
+    in order to use OpenGL drawing results 
+   as a base for printing. */
+   GetGLContext ();
+#endif /* _GL */
+
+  gtk_print_dialog ();
 #endif /* _GTK */
 
   while (argCounter < argc)
@@ -2745,7 +2789,9 @@ int main (int argc, char **argv)
       }
 #else  /* _WINDOWS */
       sprintf (cmd, "/bin/rm -rf %s\n", tempDir);
-      system (cmd);
+      
+      /* system (cmd); */
+
 #endif /* _WINDOWS */
     }
    TtaFreeMemory (realName);
