@@ -600,7 +600,7 @@ ThotBool BM_addTopic (BookmarkP me, ThotBool generateID)
 
   char topicid[MAX_LENGTH];
   char *base_uri = GetLocalBookmarksBaseURI ();
-  char *template = "#amTopic%d";
+  char *template = "#amtopic%d";
   static int genid_counter = 1;
   char *tmp;
 

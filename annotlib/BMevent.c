@@ -33,6 +33,7 @@
 #include "XPointer_f.h"
 #include "XPointerparse_f.h"
 #include "init_f.h"
+#include "AHTURLTools_f.h"
 
 static char *LocalBookmarksFile;
 static char *LocalBookmarksBaseURI;
@@ -67,6 +68,9 @@ void BM_Init (void)
   
   redland_init ();
   
+  /* The TopicURL menu */
+  InitTopicURL ();
+
   /* the local bookmark file name */
   ptr =  TtaGetEnvString ("APP_HOME");
   if (ptr != NULL)
@@ -174,6 +178,32 @@ void BM_ViewBookmarks (Document doc, View view)
  
   List_delAll (&list, BMList_delItem);
 }
+
+/*-----------------------------------------------------------------------
+  BM_ImportTopics
+  Imports a topic hierarchy
+  -----------------------------------------------------------------------*/
+void BM_ImportTopics (Document doc, View view)
+{
+  char *url, *normalized_url;
+
+  url = GetTopicURL (doc, view);
+  if (url && !IsHTTPPath (url))
+    {
+      if (!IsFilePath (url))
+	normalized_url = FixFileURL (url);
+      else
+	normalized_url = url;
+
+      /* @@ JK: warning, the parsing is not so easy. We have to avoid
+	 accepting statements that are already in the bookmakrs. Otherwise,
+	 we cannot sort them (infinite loop */
+      BM_parse (normalized_url, normalized_url);
+      if (url != normalized_url)
+	TtaFreeMemory (normalized_url);
+    }
+}
+
 
 /*-----------------------------------------------------------------------
   -----------------------------------------------------------------------*/

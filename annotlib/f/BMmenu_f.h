@@ -13,6 +13,9 @@ extern void BM_BookmarkMenu ( Document doc,
 extern void BM_TopicMenu ( Document doc,
                            View view,
                            BookmarkP bookmark );
+extern void InitTopicURL ( void );
+extern char *GetTopicURL ( Document document,
+                           View view );
 
 #else /* __STDC__ */
 
@@ -23,6 +26,9 @@ extern void BM_BookmarkMenu (/* Document doc,
 extern void BM_TopicMenu (/* Document doc,
                              View view,
                              BookmarkP bookmark */);
+extern void InitTopicURL (/* void */);
+extern char *GetTopicURL (/* Document document,
+                             View view */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

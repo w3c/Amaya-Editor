@@ -33,4 +33,12 @@
 #define mTMTopicTree            9
 #define MAX_TOPICMENU_DLG       10
 
+#define TopicURLMenu            1
+#define mTUMURL                 2
+#define mTUMDir                 3
+#define mTUMSel                 4
+#define mTUMFilter              5
+#define mTUML1                  6
+#define mTUML2                  7
+#define MAX_TOPICURLMENU_DLG    8
 #endif /* _BM_MENU_H__ */

@@ -36,9 +36,15 @@ static char    s[MAX_LENGTH]; /* general purpose buffer */
 
 static int       BookmarkBase;
 static int       TopicBase;
+static int       TopicURLBase;
+
 static BookmarkP aBookmark;
 static Document  BTopicTree; /* points to a thot sorted topic tree */
 static Document  TTopicTree; /* points to a thot sorted topic tree */
+
+static char TopicDirectory[MAX_LENGTH];
+static char TopicFilter[NAME_LENGTH];
+static char LastURLTopic[MAX_LENGTH];
 
 /*----------------------------------------------------------------------
   Bookmark_new_init
@@ -671,3 +677,181 @@ void BM_TopicMenu (Document doc, View view, BookmarkP bookmark)
 }
 
 
+/*----------------------------------------------------------------------
+  TopicURLCallbackDialog
+  callback of the Bookmark menu
+  ----------------------------------------------------------------------*/
+static void TopicURLCallbackDialog (int ref, int typedata, char *data)
+{
+  int                 val;
+  char                tempname[MAX_LENGTH];
+  char                tempfile[MAX_LENGTH];
+  if (ref == -1)
+    {
+      /* removes the bookmark menu */
+      TtaDestroyDialogue (TopicURLBase + TopicURLMenu);
+    }
+  else
+    {
+      /* has the user changed the options? */
+      val = (int) data;
+      switch (ref - TopicURLBase)
+	{
+	case BookmarkMenu:
+	  switch (val) 
+	    {
+	    case 0: /* cancel */
+	      LastURLTopic[0] = EOS;
+	      TtaDestroyDialogue (ref);
+	      break;
+	    case 1: /* confirm */
+	      /* ControlURIs (LastURLTopic); */
+	      if (LastURLTopic[0] != EOS)
+		TtaDestroyDialogue (ref);
+	      break;
+	    case 2: /* clear */
+	      LastURLTopic[0] = EOS;
+	      TtaSetTextForm (TopicURLBase + mTUMURL, LastURLTopic);
+	      TtaSetTextForm (TopicURLBase + mTUMURL, LastURLTopic);
+	      break;
+	    case 3: /* filter button */
+	      /* reinitialize directories and document lists */
+	      TtaListDirectory (TopicDirectory, ref,
+				"Topic directory",
+				TopicURLBase + mTUMDir,
+				TopicFilter,
+				TtaGetMessage (AMAYA, AM_FILES), 
+				TopicURLBase + mTUMSel);
+	      break;
+
+	    default:
+	      break;
+	    }
+	  break;
+
+	case mTUMDir:
+	  if (!strcmp (data, ".."))
+	    {
+	      /* suppress last directory */
+	      strcpy (tempname, TopicDirectory);
+	      TtaExtractName (tempname, TopicDirectory, tempfile);
+	    }
+	  else
+	    {
+	      strcat (TopicDirectory, DIR_STR);
+	      strcat (TopicDirectory, data);
+	    }
+#ifndef _WINDOWS
+	  TtaSetTextForm (TopicURLBase + mTUMURL, TopicDirectory);
+#endif /* !_WINDOWS */
+	  TtaListDirectory (TopicDirectory, 
+			    TopicURLBase + TopicURLMenu,
+			    TtaGetMessage (LIB, TMSG_DOC_DIR), 
+			    TopicURLBase + mTUMDir,
+			    TopicFilter,
+			    TtaGetMessage (AMAYA, AM_FILES),
+			    TopicURLBase + mTUMSel);
+	  break;
+
+	case mTUMSel:
+	  if (TopicDirectory[0] == EOS)
+	    /* set path on current directory */
+	    getcwd (TopicDirectory, MAX_LENGTH);
+	  /* construct the full name of the topic */
+	  strcpy (LastURLTopic, TopicDirectory);
+	  val = strlen (LastURLTopic) - 1;
+	  if (LastURLTopic[val] != DIR_SEP)
+	    strcat (LastURLTopic, DIR_STR);
+	  strcat (LastURLTopic, data);
+#ifndef _WINDOWS
+	  TtaSetTextForm (TopicURLBase + mTUMURL, LastURLTopic);
+#endif /* !_WINDOWS */
+	  break;
+
+    case mTUMFilter: /* Filter value */
+      if (strlen(data) <= NAME_LENGTH)
+	strcpy (TopicFilter, data);
+#ifndef _WINDOWS
+      else
+	TtaSetTextForm (TopicURLBase + mTUMFilter, TopicFilter);
+#endif /* !_WINDOWS */
+      break;
+
+	default:
+	  break;
+
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void InitTopicURL (void)
+{
+   /* set path on current directory */
+   getcwd (TopicDirectory, MAX_LENGTH);
+   LastURLTopic[0] = EOS;
+   strcpy (TopicFilter, "*.rdf");
+}
+
+/*----------------------------------------------------------------------
+  GetTopicURL Gets the URL of a topic hierarchy to download
+  ----------------------------------------------------------------------*/
+char *GetTopicURL (Document document, View view)
+{
+#ifndef _WINDOWS
+   char               s[MAX_LENGTH];
+   int                 i;
+
+   if (TopicURLBase == 0)
+     TopicURLBase = TtaSetCallback (TopicURLCallbackDialog, MAX_TOPICURLMENU_DLG);
+
+   /* Dialogue form for open URL or local */
+   i = 0;
+   strcpy (&s[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+   i += strlen (&s[i]) + 1;
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_CLEAR));
+   i += strlen (&s[i]) + 1;
+   strcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
+
+   TtaNewSheet (TopicURLBase + TopicURLMenu, 
+		TtaGetViewFrame (document, view),
+		"Import Topic hierarchy",
+		3, s, TRUE, 2, 'L', D_CANCEL);
+
+   TtaNewTextForm (TopicURLBase + mTUMURL, 
+		   TopicURLBase + TopicURLMenu, 
+		   "URL:", 50, 1, FALSE);
+   TtaNewLabel (TopicURLBase + mTUML1, TopicURLBase + TopicURLMenu, " ");
+
+   TtaListDirectory (TopicDirectory, 
+		     TopicURLBase + TopicURLMenu,
+		     TtaGetMessage (LIB, TMSG_DOC_DIR), 
+		     TopicURLBase + mTUMDir, 
+		     TopicFilter,
+		     TtaGetMessage (AMAYA, AM_FILES), 
+		     TopicURLBase + mTUMSel);
+
+   if (LastURLTopic[0] != EOS)
+      TtaSetTextForm (TopicURLBase + mTUMURL, LastURLTopic);
+   else
+     {
+	strcpy (LastURLTopic, TopicDirectory);
+	strcat (LastURLTopic, DIR_STR);
+	TtaSetTextForm (TopicURLBase + mTUMURL, LastURLTopic);
+     }
+
+   TtaNewTextForm (TopicURLBase + mTUMFilter, TopicURLBase + TopicURLMenu,
+		   TtaGetMessage (AMAYA, AM_PARSE), 10, 1, TRUE);
+   TtaSetTextForm (TopicURLBase + mTUMFilter, TopicFilter);
+   TtaNewLabel (TopicURLBase + mTUML2, TopicURLBase + TopicURLMenu, " ");
+
+   TtaSetDialoguePosition ();
+
+   TtaShowDialogue (TopicURLBase + TopicURLMenu, FALSE);
+   TtaWaitShowDialogue ();
+
+#endif /* _WINDOWS */
+   return (LastURLTopic);
+
+}
