@@ -332,7 +332,7 @@ int                 specific;
    PtrPRule            rule = (PtrPRule) pRule;
 
    PresentationValueToPRule (val, rule->PrType, pRule, specific);
-   RedisplayNewPRule (doc, el, pRule);
+   /*** RedisplayNewPRule (doc, el, pRule); ***/
    return (0);
 }
 
