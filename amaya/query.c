@@ -1865,11 +1865,6 @@ char 	     *content_type;
    if (mode & AMAYA_FORM_POST)
      {
        me->method = METHOD_POST;
-       if (postString)
-	 {
-	   me->mem_ptr = TtaStrdup (postString);
-	   me->block_size = strlen (postString);
-	 }
        HTRequest_setMethod (me->request, METHOD_POST);
      }
    else 
