@@ -39,10 +39,11 @@ static ThotBool     AttrFormExists = FALSE;
 static ThotBool     MandatoryAttrFormExists = FALSE;
 
 #define LgMaxAttrText 500
-static PtrSSchema   SchCurrentAttr = NULL;
 static PtrDocument  DocCurrentAttr = NULL;
-static char         TextAttrValue[LgMaxAttrText];
 static int          NumCurrentAttr = 0;
+static PtrSSchema   SchCurrentAttr = NULL;
+static char         TextAttrValue[LgMaxAttrText];
+static char         LangAttrValue[LgMaxAttrText];
 static int          CurrentAttr;
 /* return value of the input form */
 static int          NumAttrValue;
@@ -1466,9 +1467,9 @@ static void AttachAttrToRange (PtrAttribute pAttr, int lastChar,
    CallbackValAttrMenu
    handles the callback of the form which captures the attribute values.
    Applies to the selected elements the attributes chosen by the user.
-   ref: reference to the dialogue element who called back this function
+   ref: reference to the dialogue element that called this function
    valmenu: selected or captured value in this dialogue element
-   valtexte: pointer to the captured text in this dialogue element
+   valtext: pointer to the captured text in this dialogue element
   ----------------------------------------------------------------------*/
 void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
 {
@@ -1542,7 +1543,10 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
 		    }
 		}
 	      GetAttribute (&pAttrNew);
-	      pAttrNew->AeAttrSSchema = SchCurrentAttr;
+	      if (NumCurrentAttr == 1)
+	        pAttrNew->AeAttrSSchema = firstSel->ElStructSchema;
+	      else
+	        pAttrNew->AeAttrSSchema = SchCurrentAttr;
 	      pAttrNew->AeAttrNum = NumCurrentAttr;
 	      pAttrNew->AeDefAttr = FALSE;
 	      pAttrNew->AeAttrType = SchCurrentAttr->SsAttribute->TtAttr[NumCurrentAttr - 1]->AttrType;
@@ -1771,18 +1775,24 @@ void CallbackAttrMenu (int refmenu, int att, int frame)
   ----------------------------------------------------------------------*/
 void CallbackLanguageMenu (int ref, int val, char *txt)
 {
+  ThotBool   doit;
+  char       TmpTextAttrValue[LgMaxAttrText];
+  int        TmpNumCurrentAttr;
+
+  doit = FALSE;
   switch (ref)
     {
     case NumSelectLanguage:
       /* retour de la langue choisie par l'utilisateur */
       if (txt == NULL)
-	TextAttrValue[0] = EOS;
+	LangAttrValue[0] = EOS;
       else
-	  strncpy (TextAttrValue, TtaGetLanguageCodeFromName (txt), LgMaxAttrText);
+	strncpy (LangAttrValue, TtaGetLanguageCodeFromName (txt), LgMaxAttrText);
 #ifndef _WINDOWS 
       TtaNewLabel (NumLabelHeritedLanguage, NumFormLanguage, "");
 #endif /* _WINDOWS */
-      CallbackValAttrMenu (NumMenuAttr, 1, NULL);
+      val = 1;
+      doit = TRUE;
       break;
     case NumFormLanguage:
       /* retour du formulaire lui-meme */
@@ -1794,10 +1804,20 @@ void CallbackLanguageMenu (int ref, int val, char *txt)
 	case 1:
 	case 2:
 	  /* appliquer la nouvelle valeur */
-	  CallbackValAttrMenu (NumMenuAttr, val, NULL);
+	  doit = TRUE;
 	  break;
 	}
       break;
+    }
+  if (doit)
+    {
+      strcpy (TmpTextAttrValue, TextAttrValue);
+      strcpy (TextAttrValue, LangAttrValue);
+      TmpNumCurrentAttr = NumCurrentAttr;
+      NumCurrentAttr = 1;
+      CallbackValAttrMenu (NumMenuAttr, val, NULL);
+      strcpy (TextAttrValue, TmpTextAttrValue);
+      NumCurrentAttr = TmpNumCurrentAttr;
     }
 }
 
