@@ -29,7 +29,6 @@
 #define SPACE     ' '
 #define TAB      '\t'
 #define NEW_LINE '\n'
-#define EOS         0
 #define CR         13
 
 #define ERROR_CMD          0
@@ -185,8 +184,11 @@ const char* src;
 const char* dest;
 #endif /* __STDC__ */
 {
-     Copy_File (hwnd, src, dest);
+	int ret;
+
+    ret = Copy_File (hwnd, src, dest);
      _unlink (src);
+	 return (ret);
 }
 
 /*----------------------------------------------------------------------
@@ -884,7 +886,7 @@ int       iCmdShow;
      MSG         msg;
      WNDCLASSEX  wndClass;
      BOOL        ok;
-     int         argc ;
+     int         argc;
      char**      argv;
      char*       dir_end;
      char*       BinPath;
