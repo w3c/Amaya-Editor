@@ -536,6 +536,7 @@ char      *url;
 {
   char    *ptr;
   char    *documentname;
+  char     url_sep;
   int      len;
   boolean  noFile;
 
@@ -545,7 +546,11 @@ char      *url;
       documentname = TtaGetMemory (MAX_LENGTH);
       /* check whether the file name exists */
       len = strlen (url) - 1;
-      noFile = (url[len] == DIR_SEP);
+      if (IsW3Path)
+	url_sep = '/';
+      else 
+	url_sep = DIR_SEP;
+      noFile = (url[len] == url_sep);
       if (noFile)
 	url[len] = EOS;
       TtaExtractName (url, ptr, documentname);
@@ -557,7 +562,7 @@ char      *url;
       TtaFreeMemory (documentname);
       /* restore the url */
       if (noFile)
-	url[len] = DIR_SEP;
+	url[len] = url_sep;
       return (ptr);
     }
   else
