@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base version="25" last_update="Tue Oct 31 11:02:34 CET 2000">
+<base version="27" last_update="Fri Nov 10 09:29:00 CET 2000">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -1449,6 +1449,8 @@
 	<message xml:lang="en">Add/Remove IDs...</message>
 	<message xml:lang="fr">Ajouter/Retirer des attributs ID...</message>
 	<message xml:lang="es">Crear/Suprimir attributos ID...</message>
+	<message xml:lang="it">Aggiungi/Togli ID...</message>
+	<message xml:lang="de">IDs hinzufügen/entfernen...</message>
 </label>
 <label define="BShowLogFile">
 	<message xml:lang="en">Show log file</message>
@@ -1530,10 +1532,14 @@
 <label define="BAnnotateSelection">
 	<message xml:lang="en">Annotate selection</message>
 	<message xml:lang="fr">Annoter la séléction</message>
+	<message xml:lang="it">Annota la selezione</message>
+	<message xml:lang="de">Auswahl kommentieren</message>
 </label>
 <label define="BAnnotateDocument">
 	<message xml:lang="en">Annotate document</message>
 	<message xml:lang="fr">Annoter le document</message>
+	<message xml:lang="it">Annota il documento</message>
+	<message xml:lang="de">Dokument kommentieren</message>
 </label>
 <label define="BPostAnnot">
 	<message xml:lang="en">Post annotation</message>
@@ -1545,6 +1551,8 @@
 <label define="BDeleteAnnot">
 	<message xml:lang="en">Delete annotation</message>
 	<message xml:lang="fr">Détruire l'annotation</message>
+	<message xml:lang="it">Elimina l'annotazione</message>
+	<message xml:lang="de">Kommentierung entfernen</message>
 </label>
 <label define="BLoadAnnotations">
 	<message xml:lang="en">Load annotations</message>
@@ -1734,6 +1742,8 @@
 <label define="BHelpAnnotation">
 	<message xml:lang="en">Annotations</message>
 	<message xml:lang="fr">Annotations</message>
+	<message xml:lang="it">Annotazioni</message>
+	<message xml:lang="de">Kommentierungen</message>
 </label>
 <label define="BHelpConfigure">
 	<message xml:lang="en">Configuring Amaya</message>
@@ -1746,6 +1756,8 @@
 <label define="BHelpShortCuts">
 	<message xml:lang="en">ShortCuts</message>
 	<message xml:lang="fr">Raccourcis clavier</message>
+	<message xml:lang="it">Scelte rapide</message>
+	<message xml:lang="de">Tastenkürzel</message>
 </label>
 <label define="BHelpAccess">
 	<message xml:lang="en">Accessibility in Amaya</message>
