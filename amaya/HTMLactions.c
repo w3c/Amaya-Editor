@@ -43,6 +43,17 @@ boolean             remove;
    ElementType         elType;
 
    child = TtaGetFirstChild (elem);
+   if (child == NULL)
+     /* empty element. Create a text element in it */
+     {
+     elType = TtaGetElementType (elem);
+     elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+     if (TtaCanInsertFirstChild(elType, elem, document))
+	{
+	child = TtaNewElement(document, elType);
+	TtaInsertFirstChild (&child, elem, document);
+	}
+     }
    while (child != NULL)
      {
 	next = child;
@@ -338,14 +349,14 @@ Document            doc
    int                 firstChar, lastChar;
    boolean             NewSelInElem;
 
-                       TtaGiveFirstSelectedElement (doc, &firstSel, &firstChar, &lastChar);
+   TtaGiveFirstSelectedElement (doc, &firstSel, &firstChar, &lastChar);
    /* 
     * elements PICTURE, Big_text, Small_text, Subscript, Superscript, Font_ 
     * are not permitted in a Preformatted element. The corresponding
     * entries in the menus must be turned off 
     */
-   if                  (firstSel == NULL)
-                          NewSelInElem = FALSE;
+   if (firstSel == NULL)
+     NewSelInElem = FALSE;
    else
      {
 	elType.ElSSchema = TtaGetDocumentSSchema (doc);
