@@ -745,6 +745,9 @@ static ThotBool FollowTheLink (Element anchor, Element elSource,
 	   s = (char *)TtaConvertMbsToByte ((unsigned char *)utf8path,
 					    TtaGetDefaultCharset ());
 	   length = strlen (s);
+	   TtaFreeMemory (s);
+	   s = NULL;
+
 	   if (info)
 	     length += strlen (info);
 	   if (length < MAX_LENGTH)

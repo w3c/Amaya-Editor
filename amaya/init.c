@@ -7171,6 +7171,8 @@ void InitAmaya (NotifyEvent * event)
    sprintf (ptr, "%s%c%s.css", s, DIR_SEP, HTAppName);
    UserCSS = TtaStrdup (ptr);
    InitUserStyleSheet (UserCSS);
+   TtaFreeMemory (ptr);
+   ptr = NULL;
 
    /* Initialize environment variables if they are not defined */
    TtaSetEnvBoolean ("SECTION_NUMBERING", FALSE, FALSE);

@@ -2437,18 +2437,21 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	case WM_ERASEBKGND:
       return 1;
 
-    case WM_PAINT: 
+    case WM_PAINT:
       /* Some part of the Client Area has to be repaint. */	
       WIN_HandleExpose (hwnd, frame, wParam, lParam);	   
       return 0;
 
-    case WM_SIZE:	
-		/*disable focus selection on text zon */
+    case WM_SIZE:
+	  if (frame != -1)
+	  {
+		 /*disable focus selection on text zon */
 		SendMessage (GetWindow(FrameTable[frame].Text_Zone, GW_CHILD),  
-					EM_SETSEL,     1,      1);  
-      cx         = LOWORD (lParam);
-      cy         = HIWORD (lParam);
-      WIN_ChangeViewSize (frame, cx, cy, 0, 0);
+					EM_SETSEL, 1, 1);  
+        cx         = LOWORD (lParam);
+        cy         = HIWORD (lParam);
+        WIN_ChangeViewSize (frame, cx, cy, 0, 0);
+	  }
       return 0;
 
     case WM_CREATE:

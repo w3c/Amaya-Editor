@@ -3971,6 +3971,7 @@ void UpdateLineBlock (PtrAbstractBox pAb, PtrLine pLine, PtrBox pBox,
 	      /* The block  min width is larger than its inside width */
 	      /* use the min width */
 	      pParentBox->BxContentWidth = FALSE;
+		  pLine = NULL;
 	      RecomputeLines (pAb, NULL, NULL, frame);
 	    }
 	  else

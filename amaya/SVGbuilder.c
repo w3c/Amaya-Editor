@@ -1202,7 +1202,7 @@ static char *GetFloat (char *ptr, float* number)
 {
   int      i;
   char     *start, c;
-  float     val;
+  float     val = 0.;
   ThotBool negative, decimal, exponent, useDotForFloat;
 
    /* test if the system uses dot or comma in the float syntax */

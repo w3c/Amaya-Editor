@@ -619,6 +619,7 @@ void      CheckLargeOp (Element el, Document doc)
              pval.typed_data.value = 0;
 	     }
 	   TtaSetStylePresentation (PRSize, content, NULL, ctxt, pval);
+	   TtaFreeMemory (ctxt);
 	   }
 	 }
        }
