@@ -36,6 +36,9 @@
 #include "templates_f.h"
 #include "XMLparser_f.h"
 #include "UIcss_f.h"
+#ifdef EXPAT_PARSER
+#include "Xml2thot_f.h"
+#endif /* EXPAT_PARSER */
 
 #ifdef ANNOTATIONS
 #include "annotlib.h"
@@ -401,6 +404,8 @@ static CHAR_T*      docURL = NULL;	  /* path or URL of the document */
 static char         PreviousFileBuffer[INPUT_FILE_BUFFER_SIZE+1];
 static ThotBool     NotToReadFile = FALSE;
 static int	    LastCharInPreviousFileBuffer = 0;
+static int          PreviousNumberOfLinesRead = 0;
+static int          PreviousNumberOfCharRead = 0;
 
 /* input buffer */
 #define MaxBufferLength 1000
@@ -1175,6 +1180,10 @@ char                c;
       TextToDocument ();
    HTMLcontext.mergeText = FALSE;
    StartOfTagIndx = CurrentBufChar - 1;
+   PreviousNumberOfCharRead = NumberOfCharRead - 1;
+   /* Is there an EOL or CR character inside tag ?? */
+   PreviousNumberOfLinesRead = NumberOfLinesRead;
+
 }
 
 /*----------------------------------------------------------------------
@@ -3042,7 +3051,7 @@ CHAR_T              c;
    CHAR_T        theGI[MaxMsgLength];
 #ifndef EXPAT_PARSER
    CHAR_T        schemaName[MaxMsgLength];
-#endif
+#endif /* EXPAT_PARSER */
    int		 i;
 
    if (HTMLcontext.parsingTextArea)
@@ -3086,22 +3095,16 @@ CHAR_T              c;
 	  !ustrcmp (theGI, TEXT("svg")) ||
 	  !ustrcmp (theGI, TEXT("xmlgraphics")))
 	/* a <math> or <svg> tag has been read */
-#ifdef EXPAT_PARSER
-	StopParsing ();
-#else
 	{
-	  /* Parse the corresponding element with the XML parser */
-	  if (!ustrcmp (theGI, TEXT("math")))
-	     ustrcpy (schemaName, TEXT("MathML"));
-	  else
-	     ustrcpy (schemaName, TEXT("GraphML"));
 	  /* get back to the beginning of the tag in the input buffer */
 	  /* "NotToReadFile" boolean means that we get back in the */
 	  /* previous input buffer */	
 	  /* That case happens when the "<" and ">" characters for that */
-	  /* tag has not been read in the same input buffer */
+	  /* tag have not been read in the same input buffer */
 	  if ((StartOfTagIndx <= 0) || (StartOfTagIndx > CurrentBufChar))
 	    {
+	      NumberOfCharRead = PreviousNumberOfCharRead;
+	      NumberOfLinesRead = PreviousNumberOfLinesRead;
 	      NotToReadFile = TRUE;
 	      if (StartOfTagIndx < 0)
 		CurrentBufChar = LastCharInPreviousFileBuffer;
@@ -3110,18 +3113,36 @@ CHAR_T              c;
 	    }
 	  else
 	    CurrentBufChar = StartOfTagIndx;
+	  /* Parse the corresponding element with the XML parser */
+#ifdef EXPAT_PARSER
+	  if (!StartXmlSubTreeParser (stream,
+				      FileBuffer,
+				      &CurrentBufChar,
+				      INPUT_FILE_BUFFER_SIZE,
+				      HTMLcontext.doc,
+				      &HTMLcontext.lastElement,
+				      &HTMLcontext.lastElementClosed,
+				      HTMLcontext.language,
+				      &NumberOfLinesRead,
+				      &NumberOfCharRead))
+	    StopParsing ();   /* the XML parser raised an error */
+#else /* EXPAT_PARSER */
+	  if (!ustrcmp (theGI, TEXT("math")))
+	     ustrcpy (schemaName, TEXT("MathML"));
+	  else
+	     ustrcpy (schemaName, TEXT("GraphML"));
 	  if (!XMLparse (stream, &CurrentBufChar, schemaName,
 			 HTMLcontext.doc, &HTMLcontext.lastElement,
 			 &HTMLcontext.lastElementClosed,
 			 HTMLcontext.language))
 	    StopParsing ();   /* the XML parser raised an error */
+#endif /* EXPAT_PARSER */
 	  /* the whole element has been read by the XML parser */
 	  /* reset the automaton state */
 	  NormalTransition = FALSE;
 	  currentState = 0;
 	  CharProcessed = TRUE;
 	}
-#endif /* EXPAT_PARSER */
       else
         ProcessStartGI (theGI);
       }
