@@ -11,8 +11,8 @@
  * events sent by Expat. It builds the Thot abstract tree corresponding
  * to an XML file.
  *
- * Author: V. Quint
- *         L. Carcone 
+ * Authors: L. Carcone
+ *          V. Quint 
  */
 
 #define THOT_EXPORT extern
@@ -33,6 +33,7 @@
 #include "fetchHTMLname_f.h"
 #include "fetchXMLname_f.h"
 #include "html2thot_f.h"
+#include "Xml2thot_f.h"
 #include "init_f.h"
 #ifdef GRAPHML
 #include "GraphMLbuilder_f.h"
@@ -122,55 +123,52 @@ static PtrParserCtxt    XLinkParserCtxt = NULL;
 
 
 /* parser stack */
-	          /* maximum stack height */
+	                /* maximum stack height */
 #define MAX_STACK_HEIGHT   200
-                  /* XML element name */
+                        /* XML element name */
 static USTRING       nameElementStack[MAX_STACK_HEIGHT]; 
-                  /* element in the Thot abstract tree */
+                        /* element in the Thot abstract tree */
 static Element       elementStack[MAX_STACK_HEIGHT];
-                  /* element language */
+                        /* element language */
 static Language	     languageStack[MAX_STACK_HEIGHT];
 static PtrParserCtxt parserCtxtStack[MAX_STACK_HEIGHT];
 static ThotBool      preserveSpaceStack[MAX_STACK_HEIGHT];
-                  /* first free element on the stack */
+                        /* first free element on the stack */
 static int           stackLevel = 0;
 
 
 static gzFile      stream = 0;
-                 /* Indicates if the parser has to treat white space */
+                        /* Indicates if the parser has to treat white space */
 static ThotBool    SpacePreserved = FALSE;
-                 /* path or URL of the document */
+                        /* path or URL of the document */
 static CHAR_T*     docURL = NULL;
 
 
 /* information about the Thot document under construction */
-                /* the HTML structure schema */
+                        /* Document structure schema */
 static SSchema      DocumentSSchema = NULL;
-                /* root element of the document */
+                        /* root element of the document */
 static Element      rootElement;
-                /* type of the root element */
+                        /* type of the root element */
 static ElementType  rootElType;
-                /* the last start tag encountered is invalid */
-static ThotBool     UnknownTag = FALSE;
-
-                /* last attribute created */
-static Attribute    lastAttribute = NULL;
-                /* element with which the last
-		   attribute has been associated */
-static Attribute    lastAttrElement = NULL;
-                /* entry in the AttributeMappingTable
-		   of the attribute being created */
-static AttributeMapping* lastMappedAttr = NULL;
-                /* the last attribute encountered is invalid */
-static ThotBool     UnknownAttr = FALSE;
-
-/* information about the Thot document under construction */
-static CHAR_T	    currentElementContent = ' ';
-static CHAR_T	    currentMappedName[40];
-static Attribute    currentAttribute = NULL;
-static ThotBool	    HTMLStyleAttribute = FALSE;
-static ThotBool	    XMLrootClosed = FALSE;
+                        /* name of the root element */
 static CHAR_T       XMLrootName[100];
+                        /* root element is closed */
+static ThotBool	    XMLrootClosed = FALSE;
+                        /* the last start tag encountered is invalid */
+static ThotBool     UnknownTag = FALSE;
+                        /* last attribute created */
+static Attribute    currentAttribute = NULL;
+                        /* element with which the last */
+                        /* attribute has been associated */
+static Element      lastAttrElement = NULL;
+                        /* entry in the AttributeMappingTable */
+		        /* of the attribute being created */
+static AttributeMapping* lastMappedAttr = NULL;
+
+static ThotBool	    HTMLStyleAttribute = FALSE;
+static CHAR_T	    currentElementContent = ' ';
+static CHAR_T	    currentElementName[40];
 
 /* "Extra" counters for the characters and the lines read */
 static int          extraLineRead = 0;
@@ -191,14 +189,11 @@ static int          htmlCharRead = 0;
 #ifdef __STDC__
 static void   StartOfXmlStartTag (CHAR_T *GIname);
 static void   InsertElement (Element *el);
-static void   PutMathMLEntity (USTRING entityValue, Language lang,
-			       STRING entityName, Document doc);
 static void   XmlInsertElement (Element *el);
 static void   DisableExpatParser ();
 #else
 static void   StartOfXmlStartTag (GIname);
 static void   InsertElement (el);
-static void   PutMathMLEntity (entityValue, lang, entityName, doc);
 static void   XmlInsertElement (el);
 static void   DisableExpatParser ();
 #endif
@@ -275,6 +270,124 @@ STRING      tagName;
 	ChangeXmlParserContextDTD (TEXT("HTML"));
       else
 	currentParserCtxt = NULL;
+}
+
+/*----------------------------------------------------------------------
+   InitXmlParserContexts
+   Create the chain of parser contexts decribing all recognized XML DTDs
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void            InitXmlParserContexts (void)
+#else
+static void            InitXmlParserContexts ()
+#endif
+{
+   PtrParserCtxt	ctxt, prevCtxt;
+
+   firstParserCtxt = NULL;
+   prevCtxt = NULL;
+   ctxt = NULL;
+
+   /* create and initialize a context for the XHTML parser */
+   ctxt = TtaGetMemory (sizeof (XMLparserContext));
+   if (prevCtxt == NULL)
+      firstParserCtxt = ctxt;
+   else
+      prevCtxt->NextParserCtxt = ctxt;
+   ctxt->NextParserCtxt = NULL;
+   ctxt->SSchemaName = TtaAllocString (MAX_SS_NAME_LENGTH);
+   ustrcpy (ctxt->SSchemaName, TEXT("HTML"));
+   ctxt->UriName = TtaAllocString (MAX_URI_NAME_LENGTH);
+   ustrcpy (ctxt->UriName, XHTML_URI);
+   ctxt->XMLSSchema = NULL;
+   ctxt->XMLtype = XHTML_TYPE;
+   ctxt->MapAttribute = (Proc) MapHTMLAttribute;
+   ctxt->MapAttributeValue = (Proc) MapHTMLAttributeValue;
+   ctxt->MapEntity = (Proc) XhtmlMapEntity;
+   /* ctxt->EntityCreated = (Proc) XhtmlEntityCreated; */
+   ctxt->EntityCreated = NULL;
+   ctxt->InsertElem = (Proc) XhtmlInsertElement;
+   ctxt->ElementComplete = (Proc) XhtmlElementComplete;
+   ctxt->AttributeComplete = NULL;
+   ctxt->GetDTDName = NULL;
+   prevCtxt = ctxt;
+   xhtmlParserCtxt = ctxt;
+
+   /* create and initialize a context for the MathML parser */
+   ctxt = TtaGetMemory (sizeof (XMLparserContext));
+   if (prevCtxt == NULL)
+      firstParserCtxt = ctxt;
+   else
+      prevCtxt->NextParserCtxt = ctxt;
+   ctxt->NextParserCtxt = NULL;
+   ctxt->SSchemaName = TtaAllocString (MAX_SS_NAME_LENGTH);
+   ustrcpy (ctxt->SSchemaName, TEXT("MathML"));
+   ctxt->UriName = TtaAllocString (MAX_URI_NAME_LENGTH);
+   ustrcpy (ctxt->UriName, MathML_URI);
+   ctxt->XMLSSchema = NULL;
+   ctxt->XMLtype = MATH_TYPE;
+   ctxt->MapAttribute = (Proc) MapMathMLAttribute;
+   ctxt->MapAttributeValue = (Proc) MapMathMLAttributeValue;
+   ctxt->MapEntity = (Proc) MapMathMLEntity;
+   /*   ctxt->EntityCreated = (Proc) MathMLEntityCreated; */
+   ctxt->EntityCreated = (Proc) PutMathMLEntity;
+   ctxt->InsertElem = (Proc) XmlInsertElement;
+   ctxt->ElementComplete = (Proc) MathMLElementComplete;
+   ctxt->AttributeComplete = (Proc) MathMLAttributeComplete;
+   ctxt->GetDTDName = (Proc) MathMLGetDTDName;
+   prevCtxt = ctxt;
+
+#ifdef GRAPHML
+   /* create and initialize a context for the GraphML parser */
+   ctxt = TtaGetMemory (sizeof (XMLparserContext));
+   if (prevCtxt == NULL)
+      firstParserCtxt = ctxt;
+   else
+      prevCtxt->NextParserCtxt = ctxt;
+   ctxt->NextParserCtxt = NULL;
+   ctxt->SSchemaName = TtaAllocString (MAX_SS_NAME_LENGTH);
+   ustrcpy (ctxt->SSchemaName, TEXT("GraphML"));
+   ctxt->UriName = TtaAllocString (MAX_URI_NAME_LENGTH);
+   ustrcpy (ctxt->UriName, GraphML_URI);
+   ctxt->XMLSSchema = NULL;
+   ctxt->XMLtype = GRAPH_TYPE;
+   ctxt->MapAttribute = (Proc) MapGraphMLAttribute;
+   ctxt->MapAttributeValue = (Proc) MapGraphMLAttributeValue;
+   ctxt->MapEntity = (Proc) MapGraphMLEntity;
+   ctxt->EntityCreated = (Proc) GraphMLEntityCreated;
+   ctxt->InsertElem = (Proc) XmlInsertElement;
+   ctxt->ElementComplete = (Proc) GraphMLElementComplete;
+   ctxt->AttributeComplete = (Proc) GraphMLAttributeComplete;
+   ctxt->GetDTDName = (Proc) GraphMLGetDTDName;
+   prevCtxt = ctxt;
+#endif /* GRAPHML */
+
+   /* create and initialize a context for the XLink parser */
+   ctxt = TtaGetMemory (sizeof (XMLparserContext));
+   if (prevCtxt == NULL)
+      firstParserCtxt = ctxt;
+   else
+      prevCtxt->NextParserCtxt = ctxt;
+   ctxt->NextParserCtxt = NULL;	/* last context */
+   ctxt->SSchemaName = TtaAllocString (MAX_SS_NAME_LENGTH);
+   ustrcpy (ctxt->SSchemaName, TEXT("XLink"));
+   ctxt->UriName = TtaAllocString (MAX_URI_NAME_LENGTH);
+   ustrcpy (ctxt->UriName, XLink_URI);
+   ctxt->XMLSSchema = NULL;
+   ctxt->XMLtype = XLINK_TYPE;
+   ctxt->MapAttribute = (Proc) MapXLinkAttribute;
+   ctxt->MapAttributeValue = (Proc) MapXLinkAttributeValue;
+   ctxt->MapEntity = NULL;
+   ctxt->EntityCreated = NULL;
+   ctxt->InsertElem = NULL;
+   ctxt->ElementComplete = NULL;
+   ctxt->AttributeComplete = (Proc) XLinkAttributeComplete;
+   ctxt->GetDTDName = NULL;
+   XLinkParserCtxt = ctxt;
+   prevCtxt = ctxt;
+
+   currentParserCtxt = NULL;
+
 }
 
 /*----------------------------------------------------------------------
@@ -743,125 +856,6 @@ Element             el;
 }
 
 /*----------------------------------------------------------------------
-   InitXmlParserContexts
-   Create the chain of parser contexts decribing all recognized XML DTDs
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void            InitXmlParserContexts (void)
-#else
-static void            InitXmlParserContexts ()
-#endif
-{
-   PtrParserCtxt	ctxt, prevCtxt;
-
-   firstParserCtxt = NULL;
-   prevCtxt = NULL;
-   ctxt = NULL;
-
-   /* create and initialize a context for the XHTML parser */
-   ctxt = TtaGetMemory (sizeof (XMLparserContext));
-   if (prevCtxt == NULL)
-      firstParserCtxt = ctxt;
-   else
-      prevCtxt->NextParserCtxt = ctxt;
-   ctxt->NextParserCtxt = NULL;
-   ctxt->SSchemaName = TtaAllocString (MAX_SS_NAME_LENGTH);
-   ustrcpy (ctxt->SSchemaName, TEXT("HTML"));
-   ctxt->UriName = TtaAllocString (MAX_URI_NAME_LENGTH);
-   ustrcpy (ctxt->UriName, XHTML_URI);
-   ctxt->XMLSSchema = NULL;
-   ctxt->XMLtype = XHTML_TYPE;
-   ctxt->MapAttribute = (Proc) MapHTMLAttribute;
-   ctxt->MapAttributeValue = (Proc) MapHTMLAttributeValue;
-   ctxt->MapEntity = (Proc) XhtmlMapEntity;
-   /* ctxt->EntityCreated = (Proc) XhtmlEntityCreated; */
-   ctxt->EntityCreated = NULL;
-   ctxt->InsertElem = (Proc) XhtmlInsertElement;
-   ctxt->ElementComplete = (Proc) XhtmlElementComplete;
-   ctxt->AttributeComplete = NULL;
-   ctxt->GetDTDName = NULL;
-   prevCtxt = ctxt;
-   xhtmlParserCtxt = ctxt;
-
-   /* create and initialize a context for the MathML parser */
-   ctxt = TtaGetMemory (sizeof (XMLparserContext));
-   if (prevCtxt == NULL)
-      firstParserCtxt = ctxt;
-   else
-      prevCtxt->NextParserCtxt = ctxt;
-   ctxt->NextParserCtxt = NULL;
-   ctxt->SSchemaName = TtaAllocString (MAX_SS_NAME_LENGTH);
-   ustrcpy (ctxt->SSchemaName, TEXT("MathML"));
-   ctxt->UriName = TtaAllocString (MAX_URI_NAME_LENGTH);
-   ustrcpy (ctxt->UriName, MathML_URI);
-   ctxt->XMLSSchema = NULL;
-   ctxt->XMLtype = MATH_TYPE;
-   ctxt->MapAttribute = (Proc) MapMathMLAttribute;
-   ctxt->MapAttributeValue = (Proc) MapMathMLAttributeValue;
-   ctxt->MapEntity = (Proc) MapMathMLEntity;
-   /*   ctxt->EntityCreated = (Proc) MathMLEntityCreated; */
-   ctxt->EntityCreated = (Proc) PutMathMLEntity;
-   ctxt->InsertElem = (Proc) XmlInsertElement;
-   ctxt->ElementComplete = (Proc) MathMLElementComplete;
-   ctxt->AttributeComplete = (Proc) MathMLAttributeComplete;
-   ctxt->GetDTDName = (Proc) MathMLGetDTDName;
-   prevCtxt = ctxt;
-
-#ifdef GRAPHML
-   /* create and initialize a context for the GraphML parser */
-   ctxt = TtaGetMemory (sizeof (XMLparserContext));
-   if (prevCtxt == NULL)
-      firstParserCtxt = ctxt;
-   else
-      prevCtxt->NextParserCtxt = ctxt;
-   ctxt->NextParserCtxt = NULL;
-   ctxt->SSchemaName = TtaAllocString (MAX_SS_NAME_LENGTH);
-   ustrcpy (ctxt->SSchemaName, TEXT("GraphML"));
-   ctxt->UriName = TtaAllocString (MAX_URI_NAME_LENGTH);
-   ustrcpy (ctxt->UriName, GraphML_URI);
-   ctxt->XMLSSchema = NULL;
-   ctxt->XMLtype = GRAPH_TYPE;
-   ctxt->MapAttribute = (Proc) MapGraphMLAttribute;
-   ctxt->MapAttributeValue = (Proc) MapGraphMLAttributeValue;
-   ctxt->MapEntity = (Proc) MapGraphMLEntity;
-   ctxt->EntityCreated = (Proc) GraphMLEntityCreated;
-   ctxt->InsertElem = (Proc) XmlInsertElement;
-   ctxt->ElementComplete = (Proc) GraphMLElementComplete;
-   ctxt->AttributeComplete = (Proc) GraphMLAttributeComplete;
-   ctxt->GetDTDName = (Proc) GraphMLGetDTDName;
-   prevCtxt = ctxt;
-#endif /* GRAPHML */
-
-   /* create and initialize a context for the XLink parser */
-   ctxt = TtaGetMemory (sizeof (XMLparserContext));
-   if (prevCtxt == NULL)
-      firstParserCtxt = ctxt;
-   else
-      prevCtxt->NextParserCtxt = ctxt;
-   ctxt->NextParserCtxt = NULL;	/* last context */
-   ctxt->SSchemaName = TtaAllocString (MAX_SS_NAME_LENGTH);
-   ustrcpy (ctxt->SSchemaName, TEXT("XLink"));
-   ctxt->UriName = TtaAllocString (MAX_URI_NAME_LENGTH);
-   ustrcpy (ctxt->UriName, XLink_URI);
-   ctxt->XMLSSchema = NULL;
-   ctxt->XMLtype = XLINK_TYPE;
-   ctxt->MapAttribute = (Proc) MapXLinkAttribute;
-   ctxt->MapAttributeValue = (Proc) MapXLinkAttributeValue;
-   ctxt->MapEntity = NULL;
-   ctxt->EntityCreated = NULL;
-   ctxt->InsertElem = NULL;
-   ctxt->ElementComplete = NULL;
-   ctxt->AttributeComplete = (Proc) XLinkAttributeComplete;
-   ctxt->GetDTDName = NULL;
-   XLinkParserCtxt = ctxt;
-   prevCtxt = ctxt;
-
-   currentParserCtxt = NULL;
-
-}
-
-
-/*----------------------------------------------------------------------
    GetXmlElType
    Search in the mapping tables the entry for the element type of
    name Xmlname and returns the corresponding Thot element type.
@@ -988,7 +982,7 @@ USTRING          mappedName;
 
    ret = FALSE;
 #ifdef LC
-   printf ("\nCloseElement %s \n", mappedName);
+   /* printf ("\nCloseElement %s \n", mappedName); */
 #endif /* LC */
 
    if (stackLevel > 0)
@@ -1102,7 +1096,7 @@ CHAR_T   *name;
   if (UnknownTag)
     return;
 
-  if (XMLcontext.lastElement != NULL && currentMappedName[0] != WC_EOS)
+  if (XMLcontext.lastElement != NULL && currentElementName[0] != WC_EOS)
     {
       if (!ustrcmp (nameElementStack[stackLevel - 1], TEXT("pre"))   ||
 	  !ustrcmp (nameElementStack[stackLevel - 1], TEXT("style")) ||
@@ -1300,7 +1294,7 @@ CHAR_T*             GIname;
   /* search the XML element name in the corresponding mapping table */
   elType.ElSSchema = NULL;
   elType.ElTypeNum = 0;
-  currentMappedName[0] = WC_EOS;
+  currentElementName[0] = WC_EOS;
   GetXmlElType (GIname, &elType, &mappedName,
 		&currentElementContent, XMLcontext.doc);
 
@@ -1318,7 +1312,7 @@ CHAR_T*             GIname;
       return;
     }
   else
-    ustrcpy (currentMappedName, mappedName);
+    ustrcpy (currentElementName, mappedName);
   
   /* element found in the corresponding DTD */
   if (currentParserCtxt != NULL &&
@@ -1375,9 +1369,6 @@ CHAR_T*             GIname;
       preserveSpaceStack[stackLevel] = FALSE;
       stackLevel++;
     }
-  
-  currentAttribute = NULL;
-  HTMLStyleAttribute = FALSE;
 }
 
 /*----------------------  StartElement  (end)  -----------------------*/
@@ -1411,7 +1402,7 @@ CHAR_T     *GIname;
    /* search the XML element name in the corresponding mapping table */
    elType.ElSSchema = NULL;
    elType.ElTypeNum = 0;
-   currentMappedName[0] = WC_EOS;
+   currentElementName[0] = WC_EOS;
    GetXmlElType (GIname, &elType, &mappedName,
 		 &currentElementContent, XMLcontext.doc);
    
@@ -1541,7 +1532,7 @@ STRING      data;
 	     }
 	 }
        
-#ifdef LC
+#ifdef LC2
        printf ("\n  removeLeadingSpaces %d, newLine %d, previousEndingSpace %d",
 	       removeLeadingSpaces, newLine, previousEndingSpace);
 #endif /* LC */
@@ -1634,60 +1625,67 @@ int      i1, i2=0, i3=0;
 #ifdef __STDC__
 static void         XhtmlCreateAttr (Element el,
 				     AttributeType attrType,
-				     CHAR_T* text,
-				     ThotBool invalid)
+				     CHAR_T*  text,
+				     ThotBool invalid,
+				     Document doc)
 #else
 static void         XhtmlCreateAttr (el,
 				     attrType,
 				     text,
-				     invalid)
-Element             el;
-AttributeType       attrType;
-CHAR_T*             text;
-ThotBool            invalid;
+				     invalid,
+				     doc)
+Element          el;
+AttributeType    attrType;
+CHAR_T*          text;
+ThotBool         invalid;
+Document         doc;
 
 #endif
 {
-   int                 attrKind;
-   int                 length;
-   CHAR_T*             buffer;
-   Attribute           attr, oldAttr;
+  int            attrKind;
+  int            length;
+  CHAR_T*        buffer;
+  Attribute      attr, oldAttr;
 
-   if (attrType.AttrTypeNum != 0)
-     {
-	oldAttr = TtaGetAttribute (el, attrType);
-	if (oldAttr != NULL)
-	   /* this attribute already exists */
-	   attr = oldAttr;
-	else
-	   /* create a new attribute and attach it to the element */
-	  {
-	     attr = TtaNewAttribute (attrType);
-	     TtaAttachAttribute (el, attr, XMLcontext.doc);
-	  }
-	lastAttribute = attr;
-	lastAttrElement = el;
-	TtaGiveAttributeType (attr, &attrType, &attrKind);
-	if (attrKind == 0)	/* enumerate */
-	   TtaSetAttributeValue (attr, 1, el, XMLcontext.doc);
+  if (attrType.AttrTypeNum != 0)
+    {
+      oldAttr = TtaGetAttribute (el, attrType);
+      if (oldAttr != NULL)
+	/* this attribute already exists */
+	attr = oldAttr;
+      else
+	{
+	  /* create a new attribute and attach it to the element */
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (el, attr, doc);
+	}
+
+      currentAttribute = attr;
+      lastAttrElement = el;
+      TtaGiveAttributeType (attr, &attrType, &attrKind);
+
+      if (attrKind == 0)	/* enumerate */
+	TtaSetAttributeValue (attr, 1, el, doc);
+
+      if (attrType.AttrTypeNum == HTML_ATTR_Border)
 	/* attribute BORDER without any value (ThotBool attribute) is */
 	/* considered as BORDER=1 */
-	if (attrType.AttrTypeNum == HTML_ATTR_Border)
-	   TtaSetAttributeValue (attr, 1, el, XMLcontext.doc);
-	if (invalid)
-	   /* Copy the name of the invalid attribute as the content */
-	   /* of the Invalid_attribute attribute. */
-	  {
-	     length = ustrlen (text) + 2;
-	     length += TtaGetTextAttributeLength (attr);
-	     buffer = TtaAllocString (length + 1);
-	     TtaGiveTextAttributeValue (attr, buffer, &length);
-	     ustrcat (buffer, TEXT(" "));
-	     ustrcat (buffer, text);
-	     TtaSetAttributeText (attr, buffer, el, XMLcontext.doc);
-	     TtaFreeMemory (buffer);
-	  }
-     }
+	TtaSetAttributeValue (attr, 1, el, doc);
+
+      if (invalid)
+	{
+	  /* Copy the name of the invalid attribute as the content */
+	  /* of the Invalid_attribute attribute. */
+	  length = ustrlen (text) + 2;
+	  length += TtaGetTextAttributeLength (attr);
+	  buffer = TtaAllocString (length + 1);
+	  TtaGiveTextAttributeValue (attr, buffer, &length);
+	  ustrcat (buffer, TEXT(" "));
+	  ustrcat (buffer, text);
+	  TtaSetAttributeText (attr, buffer, el, doc);
+	  TtaFreeMemory (buffer);
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1695,10 +1693,14 @@ ThotBool            invalid;
    End of a XML attribute that belongs to the HTML DTD
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         XhtmlEndOfAttrName (CHAR_T *attrName)
+static void         XhtmlEndOfAttrName (CHAR_T  *attrName,
+					Element  el,
+					Document doc)
 #else
-static void         XhtmlEndOfAttrName (attrName)
-CHAR_T         *attrName;
+static void         XhtmlEndOfAttrName (attrName, el, doc)
+CHAR_T   *attrName;
+Element   el;
+Document  doc;
 
 #endif
 {
@@ -1715,47 +1717,33 @@ CHAR_T         *attrName;
    invalidAttr = FALSE;
    attrType.AttrTypeNum = 0;
 
-   mapAttr = MapHTMLAttribute (attrName, &attrType,
-			       /*nameElementStack[stackLevel-1],*/
-			       currentMappedName,
-			       XMLcontext.doc);
+   mapAttr = MapHTMLAttribute (attrName, &attrType, currentElementName, doc);
 
    if (attrType.AttrTypeNum <= 0)
-      /* this attribute is not in the mapping table */
      {
+       /* this attribute is not in the mapping table */
        if (ustrcasecmp (attrName, TEXT("xml:lang")) == 0)
 	 /* attribute xml:lang is not considered as invalid, but it is
 	    ignored */
 	 lastMappedAttr = NULL;
        else
 	 {
-	   if (ustrlen (attrName) > MaxMsgLength - 30)
-	     attrName[MaxMsgLength - 30] = WC_EOS;
-	   usprintf (msgBuffer,
-		     TEXT("Unknown attribute %s"),
-		     attrName);
-	   XmlParseError (XMLcontext.doc, msgBuffer, 0);
+	   usprintf (msgBuffer, TEXT("Unknown attribute %s"), attrName);
+	   XmlParseError (doc, msgBuffer, 0);
 	   /* attach an Invalid_attribute to the current element */
-	   mapAttr = MapHTMLAttribute (TEXT("unknown_attr"),
-					&attrType,
-					nameElementStack[stackLevel-1],
-					XMLcontext.doc);
+	   mapAttr = MapHTMLAttribute (TEXT("unknown_attr"), &attrType,
+				       currentElementName, doc);
 	   invalidAttr = TRUE;
-	   UnknownAttr = TRUE;
 	 }
      }
-   else
-        UnknownAttr = FALSE;
 
-
-   if (attrType.AttrTypeNum > 0 &&
-       XMLcontext.lastElement != NULL &&
+   if (attrType.AttrTypeNum > 0 && el != NULL &&
        (!XMLcontext.lastElementClosed ||
 	(XMLcontext.lastElement != rootElement)))
      {
        lastMappedAttr = mapAttr;
-       translation = lastMappedAttr->AttrOrContent;
-       
+
+       translation = lastMappedAttr->AttrOrContent;       
        switch (translation)
 	 {
 	 case 'C':	/* Content */
@@ -1764,33 +1752,32 @@ CHAR_T         *attrName;
 	   
 	 case 'A':
 	   /* create an attribute for current element */
-	   XhtmlCreateAttr (XMLcontext.lastElement, attrType, attrName, invalidAttr);
+	   XhtmlCreateAttr (el, attrType, attrName, invalidAttr, doc);
 	   if (attrType.AttrTypeNum == HTML_ATTR_HREF_)
 	     {
-	       elType = TtaGetElementType (XMLcontext.lastElement);
+	       elType = TtaGetElementType (el);
 	       if (elType.ElTypeNum == HTML_EL_Anchor)
 		 /* attribute HREF for element Anchor */
 		 /* create attribute PseudoClass = link */
 		 {
 		   attrType.AttrTypeNum = HTML_ATTR_PseudoClass;
 		   attr = TtaNewAttribute (attrType);
-		   TtaAttachAttribute (XMLcontext.lastElement, attr, XMLcontext.doc);
-		   TtaSetAttributeText (attr, TEXT("link"),
-					XMLcontext.lastElement, XMLcontext.doc);
+		   TtaAttachAttribute (el, attr, doc);
+		   TtaSetAttributeText (attr, TEXT("link"), el, doc);
 		 }
 	     }
 	   else
 	     if (attrType.AttrTypeNum == HTML_ATTR_Checked)
 	       {
 		 /* create Default-Checked attribute */
-		 child = TtaGetFirstChild (XMLcontext.lastElement);
+		 child = TtaGetFirstChild (el);
 		 if (child != NULL)
 		   {
 		     attrType.AttrTypeNum = HTML_ATTR_DefaultChecked;
 		     attr = TtaNewAttribute (attrType);
-		     TtaAttachAttribute (child, attr, XMLcontext.doc);
+		     TtaAttachAttribute (child, attr, doc);
 		     TtaSetAttributeValue (attr, HTML_ATTR_DefaultChecked_VAL_Yes_,
-					   child, XMLcontext.doc);
+					   child, doc);
 		   }
 	       }
 	     else 
@@ -1799,9 +1786,9 @@ CHAR_T         *attrName;
 		   /* create Default-Selected attribute */
 		   attrType.AttrTypeNum = HTML_ATTR_DefaultSelected;
 		   attr = TtaNewAttribute (attrType);
-		   TtaAttachAttribute (XMLcontext.lastElement, attr, XMLcontext.doc);
+		   TtaAttachAttribute (el, attr, doc);
 		   TtaSetAttributeValue (attr, HTML_ATTR_DefaultSelected_VAL_Yes_,
-					 XMLcontext.lastElement, XMLcontext.doc);
+					 el, doc);
 		 }
 	   break;
 	   
@@ -1817,62 +1804,51 @@ CHAR_T         *attrName;
 
 /*----------------------------------------------------------------------
    XmlEndOfAttrName
-   End of a XML attribute that doesn't belongs to the HTML DTD
+   End of a XML attribute that doesn't belongs to the XHTML DTD
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         XmlEndOfAttrName (CHAR_T *attrName)
+static void     XmlEndOfAttrName (CHAR_T *attrName,
+				  Element el,
+				  Document doc)
 #else
-static void         XmlEndOfAttrName (attrName)
-CHAR_T         *attrName;
+static void     XmlEndOfAttrName (attrName, el, doc)
+CHAR_T     *attrName;
+Element     el;
+Document    doc;
 
 #endif
 {
    AttributeType       attrType;
-   Attribute           attr, oldAttr;
+   Attribute           attr;
    CHAR_T              msgBuffer[MaxMsgLength];
 
    attrType.AttrTypeNum = 0;
 
-   (*(currentParserCtxt->MapAttribute)) (attrName, &attrType,
-					 /*nameElementStack[stackLevel-1],*/
-					 currentMappedName,
-					 XMLcontext.doc);
-
+   if (currentParserCtxt->MapAttribute)
+       (*(currentParserCtxt->MapAttribute)) (attrName, &attrType,
+					     currentElementName, doc);
+       
    if (attrType.AttrTypeNum <= 0)
-     /* not found. Is it a HTML attribute (style, class, id for instance) */
-     MapHTMLAttribute (attrName, &attrType,
-		       nameElementStack[stackLevel-1], XMLcontext.doc);
+     /* Not found. Is it a HTML attribute (style, class, id for instance) */
+     MapHTMLAttribute (attrName, &attrType, currentElementName, doc);
 
    if (attrType.AttrTypeNum <= 0)
       /* this attribute is not in a mapping table */
      {
-       if (ustrlen (attrName) > MaxMsgLength - 30)
-	   attrName[MaxMsgLength - 30] = WC_EOS;
-       usprintf (msgBuffer,
-		 TEXT("Unknown attribute %s"),
-		 attrName);
-       XmlParseError (XMLcontext.doc, msgBuffer, 0);
-       UnknownAttr = TRUE;
+       usprintf (msgBuffer, TEXT("Unknown XML attribute %s"), attrName);
+       XmlParseError (doc, msgBuffer, 0);
      }
    else
      {
        if (ustrcasecmp (attrName, TEXT("style")) == 0)
 	   HTMLStyleAttribute = TRUE;
-       oldAttr = TtaGetAttribute (XMLcontext.lastElement, attrType);
-       if (oldAttr)
-           /* this attribute already exists for the current element */
-	   /* Expat detects this kind of error if it happens in the source
-              file.  So, that's not the case here. The attribute was set
-              when the element was created by the Thot library. Thot does
-              that when the structure schema has a "with" clause in the
-	      element definition */
-	   currentAttribute = oldAttr;
-       else
+       attr = TtaGetAttribute (el, attrType);
+       if (!attr)
 	 {
 	   attr = TtaNewAttribute (attrType);
-	   TtaAttachAttribute (XMLcontext.lastElement, attr, XMLcontext.doc);
-	   currentAttribute = attr;
+	   TtaAttachAttribute (el, attr, doc);
 	 }
+       currentAttribute = attr;
      }
 }
 
@@ -1882,9 +1858,9 @@ CHAR_T         *attrName;
    Create the corresponding Thot attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ThotBool      EndOfAttrName (CHAR_T *attrName)
+static void      EndOfAttrName (CHAR_T *attrName)
 #else
-static ThotBool      EndOfAttrName (attrName)
+static void      EndOfAttrName (attrName)
 CHAR_T         *attrName;
 
 #endif
@@ -1893,16 +1869,19 @@ CHAR_T         *attrName;
    CHAR_T         *bufName;
    CHAR_T         *ptr;
    CHAR_T          msgBuffer[MaxMsgLength];
-   ThotBool        attrOK;
 
    if (UnknownTag)
-     return FALSE;
+     return;
 
-   /* look for a NS_SEP in the tag name (namespaces) and ignore */ 
-   /* the prefix if there is one */
+   currentAttribute = NULL;
+   lastMappedAttr = NULL;
+   HTMLStyleAttribute = FALSE;
+   
+   /* look for a NS_SEP in the tag name (namespaces) */ 
+   /* and ignore the prefix if there is one */
    buffer = TtaGetMemory (strlen (attrName) + 1);
    ustrcpy (buffer, (CHAR_T*) attrName);
-   if ((ptr = ustrrchr (buffer, NS_SEP)))
+   if ((ptr = ustrrchr (buffer, NS_SEP)) != NULL)
      {
        *ptr = WC_EOS;
        ptr++;
@@ -1922,23 +1901,20 @@ CHAR_T         *attrName;
    if (currentParserCtxt == NULL)
      {
        usprintf (msgBuffer,
-		 TEXT("Unknown Namepaces for attribute :\"%s\""),
-		 attrName);
+		 TEXT("Unknown Namepaces for attribute :\"%s\""), attrName);
        XmlParseError (XMLcontext.doc, msgBuffer, 0);
-       attrOK = FALSE;
      }
    else
      {
        if (ustrcmp (currentParserCtxt->SSchemaName, TEXT("HTML")) == 0)
-	 XhtmlEndOfAttrName (bufName);
+	 XhtmlEndOfAttrName (bufName, XMLcontext.lastElement, XMLcontext.doc);
        else
-	 XmlEndOfAttrName (bufName);
-       attrOK = TRUE;
+	 XmlEndOfAttrName (bufName, XMLcontext.lastElement, XMLcontext.doc);
      }
    
    TtaFreeMemory (buffer);
    TtaFreeMemory (bufName);
-   return attrOK;
+   return;
 }
 
 /*----------------------------------------------------------------------
@@ -2007,14 +1983,13 @@ CHAR_T*             val;
 
   if (value < 0)
     {
-      if (ustrlen (val) > MaxMsgLength - 40)
-          val[MaxMsgLength - 40] = WC_EOS;
       usprintf (msgBuffer, TEXT("Unknown attribute value \"type=%s\""), val);
       XmlParseError (XMLcontext.doc, msgBuffer, 0);
       usprintf (msgBuffer, TEXT("type=%s"), val);
       MapHTMLAttribute (TEXT("unknown_attr"), &attrType,
 			 NULL, XMLcontext.doc);
-      XhtmlCreateAttr (XMLcontext.lastElement, attrType, msgBuffer, TRUE);
+      XhtmlCreateAttr (XMLcontext.lastElement, attrType,
+		       msgBuffer, TRUE, XMLcontext.doc);
     }
   else
     {
@@ -2061,43 +2036,40 @@ CHAR_T     *attrValue;
    int		     attrKind, val;
    UCHAR_T           msgBuffer[MaxMsgLength];
 
-   if (currentAttribute != NULL)
+   TtaGiveAttributeType (currentAttribute, &attrType, &attrKind);
+   switch (attrKind)
      {
-       TtaGiveAttributeType (currentAttribute, &attrType, &attrKind);
-       switch (attrKind)
+     case 0:       /* enumerate */
+       (*(currentParserCtxt->MapAttributeValue)) (attrValue, attrType, &val);
+       if (val <= 0)
 	 {
-	 case 0:       /* enumerate */
-	   (*(currentParserCtxt->MapAttributeValue)) (attrValue, attrType, &val);
-	   if (val <= 0)
-	     {
-	       usprintf (msgBuffer,
-			 TEXT("Unknown attribute value %s"), attrValue);
-	       XmlParseError (XMLcontext.doc, msgBuffer, 0);	
-	     }
-	   else
-	       TtaSetAttributeValue (currentAttribute, val,
-				     XMLcontext.lastElement, XMLcontext.doc);
-	   break;
-	 case 1:       /* integer */
-	   usscanf (attrValue, TEXT("%d"), &val);
-	   TtaSetAttributeValue (currentAttribute, val,
-				 XMLcontext.lastElement, XMLcontext.doc);
-	   break;
-	 case 2:       /* text */
-	   TtaSetAttributeText (currentAttribute, attrValue,
-				XMLcontext.lastElement, XMLcontext.doc);
-	   if (HTMLStyleAttribute)
-	       ParseHTMLSpecificStyle (XMLcontext.lastElement, attrValue,
-				       XMLcontext.doc, 1, FALSE);
-	   break;
-	 case 3:       /* reference */
-	   break;
+	   usprintf (msgBuffer, TEXT("Unknown attribute value %s"), attrValue);
+	   XmlParseError (XMLcontext.doc, msgBuffer, 0);	
 	 }
-
-       if (currentParserCtxt != NULL && !HTMLStyleAttribute)
-	 (*(currentParserCtxt->AttributeComplete)) (currentAttribute,
-						    XMLcontext.lastElement, XMLcontext.doc);
+       else
+	 TtaSetAttributeValue (currentAttribute, val,
+			       XMLcontext.lastElement, XMLcontext.doc);
+       break;
+     case 1:       /* integer */
+       usscanf (attrValue, TEXT("%d"), &val);
+       TtaSetAttributeValue (currentAttribute, val,
+			     XMLcontext.lastElement, XMLcontext.doc);
+       break;
+     case 2:       /* text */
+       TtaSetAttributeText (currentAttribute, attrValue,
+			    XMLcontext.lastElement, XMLcontext.doc);
+       if (HTMLStyleAttribute)
+	 ParseHTMLSpecificStyle (XMLcontext.lastElement, attrValue,
+				 XMLcontext.doc, 1, FALSE);
+       break;
+     case 3:       /* reference */
+       break;
      }
+   
+   if (currentParserCtxt != NULL && !HTMLStyleAttribute)
+     (*(currentParserCtxt->AttributeComplete)) (currentAttribute,
+						XMLcontext.lastElement,
+						XMLcontext.doc);
    
    HTMLStyleAttribute = FALSE;
    currentAttribute = NULL;
@@ -2127,18 +2099,13 @@ CHAR_T     *attrValue;
    int                 val;
    int                 length;
    int                 attrKind;
-   ThotBool            done;
+   ThotBool            done = FALSE;
    CHAR_T              msgBuffer[MaxMsgLength];
 
-
-   if (lastMappedAttr == NULL)
-       return;
-
-   done = FALSE;
    /* treatments of some particular HTML attributes */
    if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("style")))
      {
-       TtaSetAttributeText (lastAttribute, attrValue,
+       TtaSetAttributeText (currentAttribute, attrValue,
 			    lastAttrElement, XMLcontext.doc);
        ParseHTMLSpecificStyle (XMLcontext.lastElement, attrValue,
 			       XMLcontext.doc, 1, FALSE);
@@ -2170,19 +2137,18 @@ CHAR_T     *attrValue;
 	   break;
 
 	 case 'A':
-	   if (lastAttribute != NULL)
+	   if (currentAttribute != NULL)
 	     {
-	       TtaGiveAttributeType (lastAttribute, &attrType, &attrKind);
+	       TtaGiveAttributeType (currentAttribute, &attrType, &attrKind);
 	       switch (attrKind)
 		 {
 		 case 0:	/* enumerate */
 		   MapHTMLAttributeValue (attrValue, attrType, &val);
 		   if (val < 0)
 		     {
-		       TtaGiveAttributeType (lastAttribute, &attrType, &attrKind);
+		       TtaGiveAttributeType (currentAttribute,
+					     &attrType, &attrKind);
 		       attrName = TtaGetAttributeName (attrType);
-		       if (ustrlen (attrValue) > MaxMsgLength - 30)
-			   attrValue[MaxMsgLength - 30] = WC_EOS;
 		       usprintf (msgBuffer,
 				 TEXT("Unknown attribute value \"%s = %s\""),
 				 attrName, attrValue);
@@ -2191,16 +2157,17 @@ CHAR_T     *attrValue;
 		       /* remove the attribute and replace it by an */
 		       /* Invalid_attribute */
 		       TtaRemoveAttribute (lastAttrElement,
-					   lastAttribute, XMLcontext.doc);
+					   currentAttribute, XMLcontext.doc);
 		       usprintf (msgBuffer, TEXT("%s=%s"), attrName, attrValue);
 		       MapHTMLAttribute (TEXT("unknown_attr"),
 					  &attrType,
 					  NULL,
 					  XMLcontext.doc);
-		       XhtmlCreateAttr (lastAttrElement, attrType, msgBuffer, TRUE);
+		       XhtmlCreateAttr (lastAttrElement, attrType,
+					msgBuffer, TRUE, XMLcontext.doc);
 		     }
 		   else
-		       TtaSetAttributeValue (lastAttribute, val,
+		       TtaSetAttributeValue (currentAttribute, val,
 					     lastAttrElement, XMLcontext.doc);
 		   break;
 		 case 1:	/* integer */
@@ -2209,18 +2176,18 @@ CHAR_T     *attrValue;
 		     {
 		       /* border="border" for a table */
 		       val = 1;
-		       TtaSetAttributeValue (lastAttribute, val,
+		       TtaSetAttributeValue (currentAttribute, val,
 					     lastAttrElement, XMLcontext.doc);
 		     }
 		   else
 		     {
 		       if (usscanf (attrValue, TEXT("%d"), &val))
-			   TtaSetAttributeValue (lastAttribute, val,
+			   TtaSetAttributeValue (currentAttribute, val,
 						 lastAttrElement, XMLcontext.doc);
 		       else
 			 {
 			   TtaRemoveAttribute (lastAttrElement,
-					       lastAttribute, XMLcontext.doc);
+					       currentAttribute, XMLcontext.doc);
 			   usprintf (msgBuffer,
 				     TEXT("Invalid attribute value \"%s\""),
 				     attrValue);
@@ -2229,9 +2196,9 @@ CHAR_T     *attrValue;
 		     }
 		   break;
 		 case 2:	/* text */
-		   if (!UnknownAttr)
+		   if (currentAttribute != NULL)
 		     {
-		       TtaSetAttributeText (lastAttribute, attrValue,
+		       TtaSetAttributeText (currentAttribute, attrValue,
 					    lastAttrElement, XMLcontext.doc);
 		       if (attrType.AttrTypeNum == HTML_ATTR_Langue)
 			 {
@@ -2270,13 +2237,13 @@ CHAR_T     *attrValue;
 		     /* append it to the current Invalid_attribute */
 		     {
 		       length = ustrlen (attrValue) + 2;
-		       length += TtaGetTextAttributeLength (lastAttribute);
+		       length += TtaGetTextAttributeLength (currentAttribute);
 		       buffer = TtaAllocString (length + 1);
-		       TtaGiveTextAttributeValue (lastAttribute,
+		       TtaGiveTextAttributeValue (currentAttribute,
 						  buffer, &length);
 		       ustrcat (buffer, TEXT("="));
 		       ustrcat (buffer, attrValue);
-		       TtaSetAttributeText (lastAttribute, buffer,
+		       TtaSetAttributeText (currentAttribute, buffer,
 					    lastAttrElement, XMLcontext.doc);
 		       TtaFreeMemory (buffer);
 		     }
@@ -2304,11 +2271,9 @@ CHAR_T     *attrValue;
       else
 	 if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("size")))
 	   {
-	     TtaGiveAttributeType (lastAttribute, &attrType, &attrKind);
+	     TtaGiveAttributeType (currentAttribute, &attrType, &attrKind);
 	     if (attrType.AttrTypeNum == HTML_ATTR_Font_size)
-	         CreateAttrIntSize (attrValue,
-				    lastAttrElement,
-				    XMLcontext.doc);
+	         CreateAttrIntSize (attrValue, lastAttrElement, XMLcontext.doc);
 	   }
       else
 	 if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("shape")))
@@ -2387,15 +2352,15 @@ CHAR_T     *attrValue;
    Put that value in the current Thot attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfAttrValue (CHAR_T *attrValue)
+static void    EndOfAttrValue (CHAR_T *attrValue)
 #else
-static void         EndOfAttrValue (attrValue)
+static void    EndOfAttrValue (attrValue)
 CHAR_T     *attrValue;
 
 #endif
 {
 
-   if (UnknownTag) 
+   if (lastMappedAttr == NULL  && currentAttribute == NULL) 
        return;
 
    if (currentParserCtxt != NULL)
@@ -2731,7 +2696,7 @@ int              length;
    int            i;
 
 #ifdef LC
-   printf ("\n Hndl_CharacterData - length = %d - ", length);
+   /* printf ("\n Hndl_CharacterData - length = %d - ", length); */
 #endif /* LC */
 
    buffer = TtaAllocString (length + 1);
@@ -2917,7 +2882,6 @@ const XML_Char **attlist;
    CHAR_T         *ptr;
    PtrParserCtxt   elementParserCtxt = NULL;
    CHAR_T          msgBuffer[MaxMsgLength];
-   ThotBool        attrOK;
 
 #ifdef LC
    printf ("\n Hndl_ElementStart '%s'\n", name);
@@ -2989,7 +2953,7 @@ const XML_Char **attlist;
 #ifdef LC
 	   printf ("\n  attr %s :", bufAttr);
 #endif /* LC */
-	   attrOK = EndOfAttrName (bufAttr);
+	   EndOfAttrName (bufAttr);
 	   TtaFreeMemory (bufAttr);
 
 	   /* Specific context for attribute name is unknown */
@@ -2998,7 +2962,7 @@ const XML_Char **attlist;
 	   
 	   /* Filling of the attribute value */
 	   attlist++;
-	   if (*attlist != NULL && attrOK)
+	   if (*attlist != NULL)
 	     {
 	       bufAttr = TtaGetMemory ((strlen (*attlist)) + 1);
 	       strcpy (bufAttr, *attlist);
@@ -3495,10 +3459,9 @@ Document            doc;
    XMLcontext.lastElementClosed = FALSE;
 
    /* initialize global variables */
-   lastAttribute = NULL;
+   currentAttribute = NULL;
    lastAttrElement = NULL;
    lastMappedAttr = NULL;
-   UnknownAttr = FALSE;
    XMLcontext.readingAnAttrValue = FALSE;
    XMLcontext.mergeText = FALSE;
    SpacePreserved = FALSE;
@@ -3572,10 +3535,9 @@ ThotBool  *endOfFile;
   htmlLineRead = *nbLineRead;
   htmlCharRead = *nbCharRead;
 
-  lastAttribute = NULL;
+  currentAttribute = NULL;
   lastAttrElement = NULL;
   lastMappedAttr = NULL;
-  UnknownAttr = FALSE;
   XMLcontext.readingAnAttrValue = FALSE;
   UnknownTag = FALSE;
   rootElement = NULL;
@@ -3840,10 +3802,9 @@ ThotBool    withDoctype;
   XMLcontext.lastElement = NULL;
   XMLcontext.lastElementClosed = FALSE;
   XMLabort = FALSE;
-  lastAttribute = NULL;
+  currentAttribute = NULL;
   lastAttrElement = NULL;
   lastMappedAttr = NULL;
-  UnknownAttr = FALSE;
   XMLcontext.readingAnAttrValue = FALSE;
   UnknownTag = FALSE;
   rootElement = NULL;
