@@ -12,6 +12,10 @@
  * Authors: I. Vatton (INRIA)
  *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  */
+#ifdef _WX
+  #include "wx/wx.h"
+  #include "wx/gdicmn.h"
+#endif /* _WX */
 
 #include "thot_gui.h"
 #include "thot_sys.h"
@@ -117,9 +121,9 @@ static ThotBool FindColor (int disp, char *name, char *colorplace,
    *colorpixel = col;
 #endif /* _WINGUI */
    
-#if defined(_MOTIF) || defined(_GTK)
+#if defined(_MOTIF) || defined(_GTK) || defined(_WX)
    *colorpixel = ColorPixel (col);
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
+#endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WX) */
    
    return (TRUE);
 
@@ -489,6 +493,12 @@ void ThotInitDisplay (char* name, int dx, int dy)
 #endif /* _GTK */
 
 #ifdef _WX  
+
+#ifdef _GL
+   TtWDepth = wxDisplayDepth(); 
+   /* not used : TtCmap = gdk_colormap_new (gdk_rgb_get_visual (), TRUE);*/
+#endif /*_GL */
+
    InitDocColors (name);
    InitColors (name);
    InitGraphicContexts ();
