@@ -228,7 +228,7 @@ int                 ymax;
   if (yd + height > ymax)
     height = ymax - yd;
   imageDesc = (PictInfo *) pAb->AbPictBackground;
-  if (imageDesc)
+  if (imageDesc && imageDesc->PicHeight && imageDesc->PicWidth)
     {
       xorg = pBox->BxXOrg + pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
       yorg = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding;
