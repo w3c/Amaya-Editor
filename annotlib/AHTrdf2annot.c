@@ -607,7 +607,13 @@ List *RDF_parseFile (char *file_name, List **rdf_model)
    /* remember the base name for anoynmous subjects */
   ctx.base_uri = full_file_name;
 #ifdef AM_REDLAND
-  uri = raptor_new_uri ((unsigned char *) full_file_name);
+  {
+    unsigned char *tmp;
+    
+    tmp = raptor_uri_filename_to_uri_string ((const char *) file_name);
+    uri = raptor_new_uri ((const unsigned char *) tmp);
+    free (tmp);
+  }
 #else
   uri = full_file_name;
 #endif /* AM_REDLAND */
