@@ -52,7 +52,7 @@ extern void GetCurrentLine ( Document doc,
 extern void GotoLine ( Document doc,
                        int line,
                        int index,
-                       ThotBool position );
+                       ThotBool selpos );
 extern ThotBool SimpleClickInLog ( NotifyElement *event );
 extern ThotBool DoubleClickInLog ( NotifyElement *event );
 extern void SelectionChanged ( NotifyElement *event );
@@ -108,7 +108,7 @@ extern void GetCurrentLine (/* Document doc,
 extern void GotoLine (/* Document doc,
                          int line,
                          int index,
-                         ThotBool position */);
+                         ThotBool selpos */);
 extern ThotBool SimpleClickInLog (/* NotifyElement *event */);
 extern ThotBool DoubleClickInLog (/* NotifyElement *event */);
 extern void SelectionChanged (/* NotifyElement *event */);

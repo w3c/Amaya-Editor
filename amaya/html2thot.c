@@ -4979,7 +4979,10 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 	  else if (!withinQuote &&
 		   DocumentTypes[doc] != docCSS &&
 		   DocumentTypes[doc] != docLog &&
-		   (charRead == '"' || (LgBuffer == 0 && withinString)))
+		   ((charRead == '"' && withinString) ||
+		    (charRead == '"' && !withinString &&
+		     LgBuffer > 0 && inputBuffer[LgBuffer-1] == '=') ||
+		    (LgBuffer == 0 && withinString)))
 	    {
 	      if (charRead == '"')
 		withinString = !withinString;
@@ -5130,7 +5133,8 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 		  el = GetANewText (el, elType, doc);
 		}
 	    }
-	  else if (DocumentTypes[doc] == docCSS &&
+	  else if ((DocumentTypes[doc] == docCSS ||
+		    DocumentTypes[doc] == docText) &&
 		   (charRead == '*' || charRead == '/' ||
 		    (LgBuffer == 0 && withinComment)))
 	    {
