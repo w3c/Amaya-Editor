@@ -93,7 +93,7 @@ document.</p>
 <ol>
   <li><a href="Selecting.html.fr#Selecting">Sélectionnez</a> le contenu de
     l'ancre à créer</li>
-  <li>Cliquez sur le bouton  <img alt="Link " src="../Icons/Link.gif"
+  <li>Cliquez sur le bouton <img alt="Link " src="../Icons/Link.gif"
     align="middle" /> , ou choisir <strong>Créer/changer lien</strong> du menu
     <strong>Liens</strong>, ou encore utiliser le raccourci clavier (par
     défaut Ctrl Shift L)</li>
@@ -108,8 +108,8 @@ document.</p>
         <ul>
           <li>Tapez sur n'importe quelle touche. Cela fera surgir une boîte de
             dialogue: entrez l'URI du document cible et taper sur la touche
-            <strong>Enter ou Return</strong> pour confirmer.  Le lien est
-            créé.</li>
+            <strong>Enter ou Return</strong> pour confirmer. Le lien est
+          créé.</li>
         </ul>
       </li>
       <li>Si l'élément cible n'est pas visualisé:

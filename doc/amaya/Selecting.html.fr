@@ -3,7 +3,7 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Selecting</title>
+  <title>Sélectionner</title>
   <meta name="GENERATOR" content="amaya V3.2.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
@@ -29,19 +29,19 @@
 <div id="Selecting">
 <h2>Sélectionner</h2>
 
-<p>De nombreuses commandes  <strong>Amaya</strong> agissent sur la sélection
+<p>De nombreuses commandes <strong>Amaya</strong> agissent sur la sélection
 courante. La sélection courante peut être changée de différentes manières.</p>
 <dl>
   <dt>Sélectionner avec la souris.</dt>
     <dd>Comme à l'ordinaire,vous pouvez cliquer sur le bouton gauche de la
       souris pour déplacer le point d'insertion.
       <p>Pour sélectionner du texte, glissez sur une zone, déplacez la souris
-      en maintenant  le bouton gauche enfoncé et relâchez-la quand la partie
+      en maintenant le bouton gauche enfoncé et relâchez-la quand la partie
       désirée a été selectionnée.</p>
       <p>Vous pouvez aussi étendre la sélection en cliquant sur le bouton
       gauche de la souris en combinaison avec la touche Shift.</p>
       <p>Vous pouvez sélectionner un élément entier, comme un item de liste,
-      en cliquant sur sa puce ou sur son numéro.</p>
+      en cliquant surS sa puce ou sur son numéro.</p>
     </dd>
   <dt>Sélectionner avec les touches de direction.</dt>
     <dd>Les quatre touches de direction du clavier déplacent le point
@@ -53,39 +53,39 @@ courante. La sélection courante peut être changée de différentes manières.</p>
 
 <p>Quelque soit la manière dont vous effectuez la sélection courante, le type
 du premier élément sélectionné est affiché en bas de la fenêtre. Il est suivi
-par les  types des éléments qui l'englobent. Cela peut être utile quand la
+par les types des éléments qui l'englobent. Cela peut être utile quand la
 structure du document est complexe.</p>
 
 <h3><a name="Selecting1">Sélectionner par la structure</a></h3>
 
-<p>La  Vue structure est particulièrement commode pour sélectionner rapidement
-de gros éléments. Il suffit de cliquer sur l'étiquette bleue  représentant
+<p>La Vue structure est particulièrement commode pour sélectionner rapidement
+de gros éléments. Il suffit de cliquer sur l'étiquette bleue représentant
 l'élément, ou sur le nom d'un de ses attributs, ou encore sur sa ligne
-verticale bleue. Un gros élément comme une  table complexe ou une longue liste
+verticale bleue. Un gros élément comme une table complexe ou une longue liste
 peut être sélectionné par un simple clic.</p>
 
-<p>Le fait de cliquer sur un caractère noir  dans la Vue structure vue
+<p>Le fait de cliquer sur un caractère noir dans la Vue structure vue
 sélectionne uniquement ce caractère.</p>
 
-<p>Un texte en caractères gras dans la Vue stucture  représente la valeur d'un
+<p>Un texte en caractères gras dans la Vue stucture représente la valeur d'un
 attribut pouvant être édité directement à partir du clavier. Une sélection
 dans une telle valeur d'attribut ne peut pas être étendue en dehors de cet
 attribut.</p>
 
 <p>Il est également possible d'utiliser le clavier pour sélectionner par la
 structure dans n'importe quelle vue. Pressez la touche Esc (F2 sur Windows)
-pour  sélectionner  l'élément "parent" dans la structure du document. Pressez
-la touche ESC (F2 sur Windows) plusieurs fois pour augmenter d'un niveau la
+pour sélectionner l'élément "parent" dans la structure du document. Pressez la
+touche ESC (F2 sur Windows) plusieurs fois pour augmenter d'un niveau la
 structure sélectionnée jusqu'à sélectionner la racine du document. Il est
-encore possible de sélectionner des éléments "fils":  la touche "raccourci
+encore possible de sélectionner des éléments "fils": la touche "raccourci
 clavier par défaut" est control-moins ("-"). Pour sélectionner l'élément
 suivant ou l'élément précédent au même niveau, utilisez control-k (pour le
 suivant) et control-j (pour le précédent).</p>
 
 <h3><a name="Selecting2">Sélectionner des images</a></h3>
 
-<p>Si vous cliquez sur la partie gauche d'une  image, le point d'insertion est
-placé sur  le côté gauche de l'image. Ceci vous permet de taper le texte avant
+<p>Si vous cliquez sur la partie gauche d'une image, le point d'insertion est
+placé sur le côté gauche de l'image. Ceci vous permet de taper le texte avant
 l'image. Si vous cliquez sur la partie droite d'une image, le point
 d'insertion est placé sur le côté droit de cette image. Ceci vous permet de
 taper le texte aprés l'image.</p>
@@ -95,10 +95,10 @@ se déplacera d'un côté de l'image vers l'image elle-même (en la sélectionnant)
 puis vers l'autre côté.</p>
 
 <p>Si vous voulez sélectionner toute l'image, cliquez n'importe où à
-l'intérieur de l'image et déplacez un peu la souris tout en maintenant  le
+l'intérieur de l'image et déplacez un peu la souris tout en maintenant le
 bouton enfoncé. Ne sortez pas de l'image avant d'avoir relâcher le bouton.
 L'image entière est alors sélectionnée. Vous pouvez utiliser les commandes
-"copier", "couper" et"coller" pour déplacer ou  dupliquer l'élément de l'image
+"copier", "couper" et"coller" pour déplacer ou dupliquer l'élément de l'image
 avec tous ses attributs.</p>
 </div>
 

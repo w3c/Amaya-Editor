@@ -3,12 +3,12 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>About the author</title>
+  <title>À propos de l'auteur</title>
   <meta name="GENERATOR" content="amaya V3.2.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="fr" lang="fr">
 
 <table border="0" width="100%" summary="toc">
   <tbody>
@@ -27,18 +27,20 @@
 </table>
 
 <div>
-<h1>About the author</h1>
+<h1>À propos de l'auteur</h1>
 
-<p>A web page should always contain some information which enables a reader to
-find out who wrote it or is responsible for it. This can include an email
-address (which can be linked), a URI, or even a physical address. The type <a
+<p>Une page web devrait toujours contenir certaines informations qui
+permettent au lecteur de connaître qui a écrit la page ou qui en est
+responsable. Ceci peut inclure une adresse email (qui peut être liée), un URL,
+ou bien une adresse physique. Le type <a
 href="http://www.w3.org/TR/REC-html40/struct/global.html#edef-ADDRESS"><code>ADDRESS</code></a>
-is used to identify this information, and it can contain other block-level
-elements such as paragraphs, headings, and lists.</p>
+est utilisé pour identifier cette information, et il peut contenir d'autres
+niveaux blocs d'éléments comme les paragraphes, les entêtes et les listes.</p>
 
-<p>There is a default style for address elements in most browsers but the
-author can also use <a href="../StyleSheets.html">style sheets</a> to provide
-a suggested presentation.</p>
+<p>Il existe un style par défaut pour les adresses des éléments dans la
+plupart des navigateurs mais l'auteur peut également utiliser <a
+href="../StyleSheets.html">les feuilles de style</a> pour fournir une
+présentation suggestive.</p>
 </div>
 
 <p align="right"><a href="lists.html.fr"><img alt="previous" border="0"

@@ -43,7 +43,7 @@ CSS et les deux dernières entrées aux <a href="#L1371">éléments HTML</a>.</p>
 
 <p>Chacune des quatre entrées du menu <strong>Style</strong> appelle une boîte
 de dialogue qui permet l'association d'un attribut de <code>style</code> aux
-éléments courants sélectionnés:<strong>  </strong><strong></strong></p>
+éléments courants sélectionnés:<strong> </strong><strong></strong></p>
 <ul>
   <li><h3><span style="font-size: 12pt"><span
     style="font-weight: normal">L'option</span> Style de caractères<span
@@ -105,7 +105,7 @@ dans le <code>HEAD</code> document, et tous les éléments correspondant au
 sélecteur sont visualisés dans le nouveau style.</p>
 
 <p>Quand vous avez créé de nouvelles classes avec la commande <strong>Créer
-une règle</strong>, vous pouvez associer  ces classes à certains éléments dans
+une règle</strong>, vous pouvez associer ces classes à certains éléments dans
 le document. Choisissez <strong>Appliquer une classe</strong> depuis le menu
 <strong>Style</strong>. Une boîte de dialogue surgit, affichant toutes les
 classes existantes. Choisissez une de ces classes. Les éléments sélectionnés
@@ -148,7 +148,7 @@ feuilles de style qui donnent les préférences de l'utilisateur, mais les
 commandes Ajouter et Retirer concernent uniquement les feuilles de style
 reliées. La figure suivante montre la liste des feuilles de style CSS
 proposées pour la commande Ouvrir. Si aucune feuille de style CSS n'est
-actuellement appliquée à un  document, une boîte de dialogue expliquera
+actuellement appliquée à un document, une boîte de dialogue expliquera
 "qu'aucun fichier CSS n'est disponible".</p>
 
 <p><img alt="css.gif" src="../Icons/css.gif" /></p>
@@ -164,7 +164,7 @@ d'associer du style aux chaînes de caractères. Deux entrées depuis le menu
 <h4>Créer des éléments de style HTML</h4>
 
 <p>La commande<strong> Types information</strong> du menu
-<strong>Style</strong>  présente un sous-menu offrant un choix d'éléments HTML
+<strong>Style</strong> présente un sous-menu offrant un choix d'éléments HTML
 qui définissent des styles abstraits. Sélectionnez tout d'abord une chaîne de
 caractères dans votre page et ensuite choisissez une commande dans ce menu. La
 chaîne de caractères sélectionnée reçoit le style correspondant. Trois de ces

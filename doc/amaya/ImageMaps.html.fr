@@ -14,7 +14,7 @@
   <tbody>
     <tr>
       <td><p><img border="0" alt="W3C"
-        src="http://www.w3.org/Icons/WWW/w3c_home" />             <img
+        src="http://www.w3.org/Icons/WWW/w3c_home" />            <img
         border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
       <td><p align="right"><a href="Math.html.fr"><img alt="previous" border="0"
@@ -141,9 +141,9 @@ href="Links.html.fr#L245">créer des liens</a>.</p>
 <h3><a name="L1171">Redimensionner des zones actives</a></h3>
 <ul>
   <li>Par manipulation directe - en combinant la <strong>touche
-    Control</strong> et le  <strong>bouton du milieu</strong> ou le
+    Control</strong> et le <strong>bouton du milieu</strong> ou le
     <strong>bouton droit</strong> de la souris à l'intérieur de la zone
-    active, vous pourrez  redimensionner cette zone.</li>
+    active, vous pourrez redimensionner cette zone.</li>
   <li>En éditant l'attribut <strong>coords</strong> de la zone dans la vue.
     <p></p>
   </li>

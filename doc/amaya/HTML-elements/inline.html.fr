@@ -43,7 +43,7 @@ séparément.</p>
 
 <p>L'élément <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-DFN"><code>DFN</code></a>
-est utilisé pour marquer une <dfn>définition en ligne</dfn>  (un mot qui est
+est utilisé pour marquer une <dfn>définition en ligne</dfn> (un mot qui est
 donné comme un exemple de définition)</p>
 
 <p><a href="../StyleSheets.html">Les feuilles de style</a> peuvent être
@@ -58,7 +58,7 @@ l'élément d'information "citation" - l'élément HTML <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-Q"><code>Q</code></a>.
 Cet élément est sélectionné depuis le sous-menu <strong>Éléments</strong>
 caractères du menu <strong>Style</strong>, ou sur linux avec le raccourci
-clavier Alt-t, Alt-q. Il est possible de donner  l'URI de la source pour la
+clavier Alt-t, Alt-q. Il est possible de donner l'URI de la source pour la
 citation, utilisant l'attribut <code>cite</code>.</p>
 
 <p><a href="../StyleSheets.html">Les feuilles de style</a> peuvent être
@@ -98,7 +98,7 @@ utilisant les éléments <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ABBR"><code>ABBR</code></a>
 et <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ACRONYM"><code>ACRONYM</code></a>
-disponibles dans le sous-menu  <strong>types information</strong> du menu
+disponibles dans le sous-menu <strong>types information</strong> du menu
 <strong>Style</strong>. Pour unix, il y a également le raccourci Alt-t, Alt-a
 pour les acronymes. Ceci permet la reconnaissance des différents types de
 systèmes. L'attribut <code>title</code> peut également être utilisé pour
@@ -158,7 +158,7 @@ mise en évidence appropriée. Par exemple, placez le curseur quelque part sur
 un élément <code>STRONG</code>, utilisez la touche <kbd>F2</kbd> (windows) ou
 la touche <kbd>Esc</kbd> (Unix) pour sélectionner l'élément, et ensuite
 utilisez le raccourci clavier, menu item, ou le bouton <img
-src="../../Icons/Strong.gif" alt="Strong" />  - l'élément <code>STRONG</code>
+src="../../Icons/Strong.gif" alt="Strong" /> - l'élément <code>STRONG</code>
 sera désactivé.</p>
 
 <p><a href="../StyleSheets.html">Les feuilles de style</a> peuvent être

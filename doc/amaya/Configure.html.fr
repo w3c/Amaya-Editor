@@ -217,7 +217,7 @@ alt="General Preferences Menu" /></p>
     </dd>
   <dt><strong><a name="Enable">Activer le multi-touche</a></strong></dt>
     <dd>Activer ou désactiver la méthode optionnelle d'entrée multi-touches.
-      <p>La méthode optionnelle d'entrée  (Multi-Key) est basée sur une
+      <p>La méthode optionnelle d'entrée (Multi-Key) est basée sur une
       séquence de deux touches commençant avec "l'accent" suivi de la
       "lettre". Par exemple pour obtenir un 'ã' tapez d'abord '~' puis tapez
       'a'. Pour obtenir un '~' vous devez tapez '~' deux fois.</p>
@@ -242,7 +242,7 @@ alt="General Preferences Menu" /></p>
     </dd>
   <dt><strong>Activer le FTP (expérimental)</strong></dt>
     <dd>Amaya permet de suivre les URLs de type FTP. Ce support est
-      expérimental et il n'est pas encore débugué. Par exemple,  les URLs FTP
+      expérimental et il n'est pas encore débugué. Par exemple, les URLs FTP
       nécessitent une authentification de l'utilisateur, l'authentification de
       l'information n'étant pas toujours mémorisée. Aussi, le fait de taper
       sur le bouton Stop pendant un téléchargement FTP peut faire planter
@@ -376,11 +376,11 @@ ou ne devrait pas être utilisé par le biais de ce menu.</p>
       de fonctionner sur un port autre que 80, alors, comme un URL, vous devez
       ajouter un caractère ":" au nom du proxy, suivi par le numéro du port.
       <p>Par exemple:</p>
-      <pre>   groucho.marx.edu
-            </pre>
+      <pre>  groucho.marx.edu
+          </pre>
       <p>déclare un proxy appelé groucho.marx.edu fonctionne par défaut sur le
       port 80, et</p>
-      <pre>   groucho.marx.edu:1234
+      <pre>  groucho.marx.edu:1234
             </pre>
       <p>déclare un proxy appelé groucho.marx.edu, fonctionnant sur le port
       1234</p>
@@ -487,7 +487,7 @@ lancement d'Amaya.</p>
 <p style="text-align: center"><img src="../Icons/TemplatesMenu.gif"
 alt="Templates " /></p>
 
-<p>Un  <strong>modèle de page</strong> est un modèle, ou un squelette de
+<p>Un <strong>modèle de page</strong> est un modèle, ou un squelette de
 document que vous, pouvez utiliser pour créer vos propres documents. Ce menu
 vous permet de spécifier l'URL du serveur du modèle de page, qui pourra être
 soit localisé sur votre station soit stocké dans un serveur particulier. Vous

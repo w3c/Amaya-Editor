@@ -74,7 +74,7 @@ la place.</p>
 le document courant à une adresse différente, un serveur Web lointain ou un
 fichier local.</p>
 
-<p> Vous pouvez:</p>
+<p>Vous pouvez:</p>
 <ul>
   <li>sauver le document sur un disque local,</li>
   <li>sauver le document sur un URI lointain,</li>
@@ -116,7 +116,7 @@ sont utilisés comme suit:</p>
     de les déplacer vers une adresse lointaine, la désactivation de la
     conversion en URI est nécessaire afin d'éviter le référencement des
     adresses initiales.</li>
-  <li>Le champ <strong>Adresse du document</strong>  indique l'adresse où le
+  <li>Le champ <strong>Adresse du document</strong> indique l'adresse où le
     fichier HTML a été écrit. Ce peut être un fichier dans le système du
     fichier local (par exemple "/pub/html/welcome.html") ou le nom d'un URI
     lointain (par exemple "http://www.w3.org/pub/WWW/Welcome.html").

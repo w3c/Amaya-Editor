@@ -33,7 +33,7 @@
 boîte de dialogue <strong>Rechercher</strong>. On appelle cette boîte soit en
 choisissant <strong>Rechercher</strong> dans le menu <strong>Édition</strong>,
 soit en cliquant sur le bouton correspondant <img src="../Icons/find.gif"
-alt="find " />, ou encore en utilisant le raccourci clavier  (control-shift-%
+alt="find " />, ou encore en utilisant le raccourci clavier (control-shift-%
 sur Unix, control-f sur Windows)</p>
 
 <p>Cette procédure vous permet de rechercher ou de remplacer du texte selon
@@ -78,7 +78,7 @@ différents critères:</p>
         uniquement dans la partie sélectionnée, depuis son début jusqu'à sa
         fin.</li>
       <li><strong>Après la sélection</strong>: la recherche commence à la fin
-        de la partie sélectionnée et redescend  jusqu'à la fin du
+        de la partie sélectionnée et redescend jusqu'à la fin du
       document.</li>
       <li><strong>Dans tout le document</strong>: la recherche est effectuée
         dans tout le document du début jusqu'à la fin, sans tenir compte des
@@ -93,7 +93,7 @@ recherchée est trouvée, elle est sélectionnée et le document est positionné de
 telle sorte que la chaîne soit visible; vous pouvez alors aller au prochain
 résultat de la recherche en cliquant de nouveau sur le bouton
 <strong>Confirmer</strong>. Si la chaîne n'est pas trouvée, Le message "Pas
-trouvé"  apparaît au dessus du bouton Confirmer  .</p>
+trouvé" apparaît au dessus du bouton Confirmer .</p>
 
 <p>L'option de recherche ou de remplacement peut être abandonnée à n'importe
 quel moment en cliquant sur le bouton <strong>Terminer</strong>.</p>

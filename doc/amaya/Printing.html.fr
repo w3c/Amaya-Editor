@@ -54,7 +54,7 @@ PostScript en votre langage d'imprimante spécifique.</p>
 
 <p>Cette commande vous permet d'établir différents paramètres et options.
 Notez que certains paramètres et certaines options reprennent leur valeur par
-défaut quand vous naviguez un autre document.  Cette propriété dépend de la
+défaut quand vous naviguez un autre document. Cette propriété dépend de la
 station.</p>
 
 <h4>Stations Unix</h4>
@@ -64,7 +64,7 @@ station.</p>
   <li>le format du papier: A4. US</li>
   <li>l'orientation: Portrait, Paysage</li>
   <li>la disposition (le nombre de pages imprimées sur la même feuille de
-    papier): 1, 2, 4 pages par feuille </li>
+    papier): 1, 2, 4 pages par feuille</li>
   <li>la destination: fichier, ou imprimer</li>
 </ul>
 
@@ -79,14 +79,14 @@ station.</p>
   <li>Sans feuilles de style</li>
 </ul>
 
-<h4>Stations Windows </h4>
+<h4>Stations Windows</h4>
 
 <p>Sur les stations Windows, une boîte de dialogue vous proposera en premier
 lieu les options suivantes:</p>
 <ul>
   <li>Table des matières</li>
   <li>Table des liens</li>
-  <li>Imprimer l'URL </li>
+  <li>Imprimer l'URL</li>
   <li>Sans feuilles de style</li>
 </ul>
 
@@ -98,10 +98,10 @@ Cette commande imprime le document courant avec le paramètre d'impression par
 défaut ou avec les valeurs précédemment fixées grâce à la commande
 <strong>Paramétrer et imprimer</strong>.
 
-<p>Sur les stations Windows, la première fois que vous lancer la commande 
+<p>Sur les stations Windows, la première fois que vous lancer la commande
 <strong>Imprimer</strong>, le dialogue standard de Windows sera visualiser et
 vous laissera vérifier que l'imprimante par défaut est correcte. Les commandes
- <strong>Imprimer</strong> suivantes seront lancées sans aucun dialogue.</p>
+<strong>Imprimer</strong> suivantes seront lancées sans aucun dialogue.</p>
 
 <h3>Contrôler les ruptures de page avec CSS</h3>
 

@@ -30,8 +30,8 @@
 <h2>Vues</h2>
 
 <p><strong>Amaya</strong> peut présenter différentes <em>vues</em> d'un
-document simultanément.  Chaque vue est exposée dans une fenêtre différente,
-ce qui vous permet de voir clairement ce qui se passe quand vous rédigez des
+document simultanément. Chaque vue est exposée dans une fenêtre différente, ce
+qui vous permet de voir clairement ce qui se passe quand vous rédigez des
 documents complexes. C'est également une aide pour se déplacer à travers un
 document.</p>
 
@@ -46,7 +46,7 @@ document.</p>
       instantannées du document.</dd>
   <dt><a name="Structure">Vue structure</a></dt>
     <dd>Cette vue montre la structure actuelle du document qui est en train
-      d'être rédigé. Chaque élément est représenté par son nom  d'étiquette,
+      d'être rédigé. Chaque élément est représenté par son nom d'étiquette,
       suivi de ses attributs, sur la même ligne. Les éléments qu'il contient
       sont représentés dessous, le long d'une ligne verticale bleue qui montre
       l'étendue de l'élément. Les parties visualisées en noir peuvent être
@@ -106,14 +106,14 @@ vues.</p>
 synchronisation explicitement, en utilisant la commande
 <strong>Synchroniser</strong> du menu <strong>Fichier</strong>. Quand vous
 avez effectué une série d'éditions dans la vue source, vous devez entrer la
-commande <strong>Synchroniser</strong>  depuis cette vue pour mettre à jour
+commande <strong>Synchroniser</strong> depuis cette vue pour mettre à jour
 toutes les autres vues du document. Inversement, quand vous avez effectué des
 changements dans une autre vue, entrez la commande
 <strong>Synchroniser</strong> pour mettre à jour la vue source.</p>
 
 <p>Synchroniser un document depuis la Vue source fera revalider le document
 par Amaya. Si des erreurs de balisage ont été introduites dans la vue source,
-Amaya tentera de les corriger du  mieux qu'il pourra. Vous devriez vérifier le
+Amaya tentera de les corriger du mieux qu'il pourra. Vous devriez vérifier le
 document dans la vue structure ou bien dans la vue formatée après avoir édité
 dans le source pour s'assurer que la synchronisation a effectué ce que vous
 attendiez.</p>

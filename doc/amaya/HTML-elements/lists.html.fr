@@ -3,7 +3,7 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Heading elements</title>
+  <title>éléments d'une liste</title>
   <meta name="GENERATOR" content="amaya V3.2.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
@@ -27,10 +27,10 @@
 </table>
 
 <div>
-<h1>Eléments d'une  liste</h1>
+<h1>Éléments d'une  liste</h1>
 
 <p>Il y a trois types de liste dans HTML. Les deux types simples sont: liste
-ordonnée et liste non ordonnée.  Il y a aussi une liste de définitions. Les
+ordonnée et liste non ordonnée. Il y a aussi une liste de définitions. Les
 listes sont des structures de type bloc, mais elles peuvent être créées à
 l'intérieur d'autres listes.</p>
 
@@ -58,7 +58,7 @@ l'intérieur d'autres listes.</p>
       </ol>
     </dd>
   <dt>Listes non ordonnées</dt>
-    <dd>Les listes ordonnées et les  listes  non ordonnées partagent quelques
+    <dd>Les listes ordonnées et les listes non ordonnées partagent quelques
       caractéristiques:
       <ul>
         <li>Listes simples</li>
@@ -70,20 +70,20 @@ l'intérieur d'autres listes.</p>
 </dl>
 
 <p>Les trois types de listes peuvent toutes les trois être créées avec la
-barre d'outil en utilisant les boutons  <img src="../../Icons/OList.gif"
+barre d'outil en utilisant les boutons <img src="../../Icons/OList.gif"
 alt="Bulleted List" />, <img src="../../Icons/NumList.gif" alt="Numbered List"
 />, <img src="../../Icons/DL.gif" alt="Definition List" />. Tous les types de
-liste peuvent être créés à partir du menu  <strong>Eléments,</strong> ou en
-utilisant les raccourcis clavier. Les raccourcis clavier par défaut  dans les
+liste peuvent être créés à partir du menu <strong>Eléments,</strong> ou en
+utilisant les raccourcis clavier. Les raccourcis clavier par défaut dans les
 systèmes unix sont <kbd>control-l control-o</kbd> pour une liste ordonnée,
-<kbd>control-l control-u</kbd> pour une liste non ordonnée, et  <kbd>control-l
+<kbd>control-l control-u</kbd> pour une liste non ordonnée, et <kbd>control-l
 control-d</kbd> pour une liste de définitions.</p>
 
 <p><a href="../StyleSheets.html">Les Feuilles de style </a> peuvent être
 utilisées pour changer la présentation des listes. Il est possible de changer
 le style des puces de liste, et de changer le style du texte, par exemple en
-utilisant une police de caractères différente  pour les termes de définition
-et pour les définitions effectives.</p>
+utilisant une police de caractères différente pour les termes de définition et
+pour les définitions effectives.</p>
 </div>
 
 <p align="right"><a href="headings.html.fr"><img alt="previous" border="0"
