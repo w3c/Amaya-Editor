@@ -13,8 +13,8 @@
 <table border="0">
   <tbody>
     <tr>
-      <td><p><img alt="W3C" src="../images/w3c_home" /> <img
-        alt="Amaya" src="../images/amaya.gif" /></p>
+      <td><p><img alt="W3C" src="../images/w3c_home" /> <img alt="Amaya"
+        src="../images/amaya.gif" /></p>
       </td>
       <td><p><a href="Manual.html" accesskey="t"><img alt=""
         src="../images/up.gif" /></a> <a href="Selecting.html"
@@ -32,31 +32,36 @@ When used as a browser, it behaves like many other Web browsers, except for
 <a href="#Activating">activating links</a>. In normal operation
 <strong>Amaya</strong> allows you to browse and edit documents
 simultaneously, but you can change this standard behavior for each document
-window independently. The <img src="../images/Editor.gif" alt="editor-mode" />
-button shows up that the window is in editor mode: you can edit the current
-document and browse in this window. By clicking on that button, you switch
-the window to browser mode. The button is then displayed as <img
+window independently. The <img src="../images/Editor.gif" alt="editor-mode"
+/> button shows up that the window is in editor mode: you can edit the
+current document and browse in this window. By clicking on that button, you
+switch the window to browser mode. The button is then displayed as <img
 src="../images/Browser.gif" alt="browser-mode" /> and you can only browse and
 fill in forms. This option is also available from the Edit menu option
 <strong>Editor Mode</strong>, and as a keyboard shortcut (the default is
 <strong>Shift-Control-*</strong>).</p>
 
+<p>Amaya allows you to browse and edit HTML documents as well as some XML
+documents types : XHTML, MathML and SVG. It allows you to browse the others
+XML documents types, to display their content and to apply the associated CSS
+style sheets.</p>
+
 <p>HTML documents are read by default as ISO-latin-1 files. Without any
 information about the charset in the HTTP header or in a META element, a HTML
-document is considered as encoded in ISO-latin-1. XHTML documents are read by
+document is considered as encoded in ISO-latin-1. XML documents are read by
 default as UTF 8 files. When there is no information about the charset in the
-HTTP header, in the XML declaration, or in a META element, a XHTML document
-is considered as encoded in UTF 8. As the default charset is different for
-HTML documents and XHTML documents, it often occurs that authors created
-ISO-latin-1 XHTML documents which don't provide information about the
-charset. As soon as a character analyzed by the XML parser doesn't match a
-valid UTF 8 character (it should occur if the document is encoded in
-ISO-latin-1 but parsed as an UTF 8 file), the document is considered as
-invalid: the parsing is stopped and an error message is displayed. In that
-specific case, the command "<strong>Reopen in ISO-latin-1</strong>" is
-activated. That command allows you to reopen the document with a charset set
-to ISO-latin-1. The reopen document is now considered as modified (a charset
-has been added) and can be saved.</p>
+HTTP header, in the XML declaration, or in a META element, an XML document is
+considered as encoded in UTF 8. As the default charset is different for HTML
+documents and XML documents, it often occurs that authors created ISO-latin-1
+XML documents which don't provide information about the charset. As soon as a
+character analyzed by the XML parser doesn't match a valid UTF 8 character
+(it should occur if the document is encoded in ISO-latin-1 but parsed as an
+UTF 8 file), the document is considered as invalid: the parsing is stopped
+and an error message is displayed. In that specific case, the command
+"<strong>Reopen in ISO-latin-1</strong>" is activated. That command allows
+you to reopen the document with a charset set to ISO-latin-1. The reopen
+document is now considered as modified (a charset has been added) and can be
+saved.</p>
 
 <p><a name="entities">Amaya interprets character entities</a>. When the
 corresponding character is not available, it displays a '?' (or it displays
