@@ -3235,7 +3235,7 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
 	    /* background images are enabled */
 	    {
 	      callblock = (BackgroundImageCallbackPtr) TtaGetMemory (sizeof (BackgroundImageCallbackBlock));
-	      if (callblock != NULL)
+	      if (callblock)
 		{
 		  callblock->el = element;
 		  callblock->tsch = tsch;
@@ -3283,7 +3283,7 @@ static char *ParseCSSBackgroundRepeat (Element element, PSchema tsch,
   PresentationValue   repeat;
 
   repeat.typed_data.value = REALSIZE;
-  repeat.typed_data.unit = UNIT_REL;
+  repeat.typed_data.unit = UNIT_BOX;
   repeat.typed_data.real = FALSE;
   cssRule = SkipBlanksAndComments (cssRule);
   if (!strncasecmp (cssRule, "no-repeat", 9))
@@ -3351,7 +3351,9 @@ static char *ParseCSSBackgroundPosition (Element element, PSchema tsch,
   else if (!strncasecmp (cssRule, "bottom", 6))
     cssRule = SkipWord (cssRule);
   else if (isdigit (*cssRule) || *cssRule == '.')
-    cssRule = SkipWord (cssRule);
+    {
+      cssRule = SkipWord (cssRule);
+    }
   else
     ok = FALSE;
 
@@ -3364,7 +3366,7 @@ static char *ParseCSSBackgroundPosition (Element element, PSchema tsch,
       /* check if it's an important rule */
       if (tsch)
 	cssRule = CheckImportantRule (cssRule, context);
-      TtaSetStylePresentation (PRPictureMode, element, tsch, context, repeat);
+      /*TtaSetStylePresentation (PRPictureMode, element, tsch, context, repeat);*/
     }
   return (cssRule);
 }
