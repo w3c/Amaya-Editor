@@ -27,13 +27,14 @@
 </table>
 
 <div id="Browsing" xml:lang="fr" lang="fr">
-<h2>Naviguer et Éditer</h2>
+<h2>Naviguer</h2>
 
 <p><strong>Amaya</strong> est essentiellement un éditeur avec des capacités
 de navigation. Il vous permet de naviguer et d´éditer des documents
 simultanément. Lorsqu'il est utilisé comme navigateur, il se comporte comme
-beaucoup d'autres navigateurs Web, excepté pour ce qui est d'<a
-href="#Activating">activer les liens</a>.</p>
+beaucoup d'autres navigateurs Web, excepté pour l'<a
+href="#Activating">activation les liens</a> et pour l'<a
+href="#form">utilisation des formulaires</a>.</p>
 
 <p>Amaya vous permet d'afficher et d'éditer des documents HTML ainsi que
 certains types de documents XML : XHTML, MathML (expressions mathématiques)
@@ -41,36 +42,6 @@ et SVG (graphique). Il vous permet aussi d'accéder aux autres types de
 documents XML et de visualiser leur contenu selon les feuilles de style CSS
 qui leur sont associées. Pour ces documents, quelques fonctions d'édition
 sont disponibles.</p>
-
-<p><strong>Note sur le codage des caractères</strong></p>
-
-<p>Les documents HTML sont lus par défaut comme des fichiers ISO-latin-1.
-Sans information sur le "charset" dans l'en-tête HTTP ou dans un élément
-META, un document HTML est considéré comme codé en ISO-latin-1. Les documents
-XML (y compris XHTML) sont lus par défaut comme des fichiers UTF 8. Quand il
-n'y a pas d'information sur le "charset" dans l'en-tête HTTP, dans la
-déclaration XML, ou dans un élément META, un document XML est considéré comme
-codé en UTF 8. Comme les codages par défaut de HTML et de XML sont
-différents, il arrive souvent que des auteurs aient créé des documents XML
-codés en ISO-latin-1 qui ne fournissent pas d'informations explicites sur
-leur codage. Dès qu'un caractère analysé par Amaya ne correspond pas à un
-caractère UTF 8 valide (cela doit arriver si le document est codé en
-ISO-latin-1 mais lu comme un fichier UTF 8), le document est considéré comme
-incorrect: le traitement s'arrête et un message d'erreur est affiché. Ce
-message propose soit de recharger le document comme un document HTML, soit de
-montrer les erreurs. Dans le premier cas, le document est rechargé avec le
-"charset" correspondant à l'ISO-latin-1. Le document est maintenant considéré
-comme modifié (un charset a été ajouté) et peut être sauvé.</p>
-
-<p><a name="entite"><strong>Amaya</strong> interprète les entités
-caractères</a>. Quand il ne dispose pas du caractère correspondant, il
-affiche un '?' (ou il affiche le nom de l'entité lorsqu'elle figure dans un
-attribut ou quand elle est inconnue). Lorsque le document est sauvé, ces
-entités caractères sont restaurées, sauf si le document est codé en ISO
-Latin-1 et que l'entité correspond à un caractère ISO Latin-1. Dans ce cas
-c'est simplement le code ISO Latin 1 du caractère qui est sauvé. Si le
-document est codé en ASCII, Amaya convertit en entités les caractères ISO
-Latin-1 qui n'existent pas en ASCII.</p>
 
 <h3><a name="Activating">Activer un lien, parcourir les liens</a></h3>
 
@@ -191,9 +162,39 @@ liens</a> plus vite.</p>
       document vient alors remplacer le document courant.</p>
     </dd>
   <dt>Liens hypertexte</dt>
-    <dd><a href="#Activating">Activer un lien</a> pour obtenir le document
-      correspondant.</dd>
+    <dd>En <a href="#Activating">activant un lien</a> vous chargez le
+      document correspondant.</dd>
 </dl>
+
+<p><strong>Note sur le codage des caractères</strong></p>
+
+<p>Les documents HTML sont chargés par défaut comme des fichiers ISO-latin-1.
+Sans information sur le "charset" dans l'en-tête HTTP ou dans un élément
+META, un document HTML est considéré comme codé en ISO-latin-1. Les documents
+XML (y compris XHTML) sont lus par défaut comme des fichiers UTF 8. Quand il
+n'y a pas d'information sur le "charset" dans l'en-tête HTTP, dans la
+déclaration XML, ou dans un élément META, un document XML est considéré comme
+codé en UTF 8. Comme les codages par défaut de HTML et de XML sont
+différents, il arrive souvent que des auteurs aient créé des documents XML
+codés en ISO-latin-1 qui ne fournissent pas d'informations explicites sur
+leur codage. Dès qu'un caractère analysé par Amaya ne correspond pas à un
+caractère UTF 8 valide (cela doit arriver si le document est codé en
+ISO-latin-1 mais lu comme un fichier UTF 8), le document est considéré comme
+incorrect: le traitement s'arrête et un message d'erreur est affiché. Ce
+message propose soit de recharger le document comme un document HTML, soit de
+montrer les erreurs. Dans le premier cas, le document est rechargé avec le
+"charset" correspondant à l'ISO-latin-1. Le document est maintenant considéré
+comme modifié (un charset a été ajouté) et peut être sauvé.</p>
+
+<p><a name="entite" id="entite"><strong>Amaya</strong> interprète les entités
+caractères</a>. Quand il ne dispose pas du caractère correspondant, il
+affiche un '?' (ou il affiche le nom de l'entité lorsqu'elle figure dans un
+attribut ou quand elle est inconnue). Lorsque le document est sauvé, ces
+entités caractères sont restaurées, sauf si le document est codé en ISO
+Latin-1 et que l'entité correspond à un caractère ISO Latin-1. Dans ce cas
+c'est simplement le code ISO Latin 1 du caractère qui est sauvé. Si le
+document est codé en ASCII, Amaya convertit en entités les caractères ISO
+Latin-1 qui n'existent pas en ASCII.</p>
 
 <h3><a name="Moving">Aller en arrière et en avant</a></h3>
 
@@ -245,46 +246,62 @@ de raccourcis clavier à la Emacs.</p>
 </ul>
 </div>
 
-<h2><a name="form" id="form">Formulaires</a></h2>
+<h2><a name="form" id="form">Utiliser les formulaires</a></h2>
 
-<p>Certains widgets utilisés par Amaya dans les formulaires HTML (dans les
+<p>Certains widgets utilisés par Amaya dans les formulaires HTML (les
 éléments <strong>form</strong>) sont différents de ceux utilisés dans les
 navigateurs courants. Cela vient du fait qu'Amaya doit permettre à la fois la
-création et l'utilisation des formulaires. Cette section répertorie les
+création et l'utilisation des formulaires. Cette section indique les
 différences les plus significatives.</p>
 
-<h3>Formulaire sélecteur input, sélection simple (GTK et WIN32)</h3>
+<h3>Menus simples</h3>
 
-<p>Pour activer ce sélecteur, l'utilisateur doit cliquer deux fois sur
-l'entrée. Cela fait apparaître un popup listant toutes les entrées. Ce popup
-est ensuite utilisable soit avec le clavier, soit avec la souris.</p>
+<p>Pour utiliser un menu comme celui qui suit ce paragraphe, il faut cliquer
+deux fois sur l'entrée affichée (ici, "pomme") ou sur le bouton à droite.
+Cela fait apparaître un popup listant toutes les entrées du menu. Ce popup
+est ensuite utilisable avec le clavier ou avec la souris.</p>
 
-<p>Avec le clavier, vous devez au préalable selectionner une entrée grâce aux
-touches flèches puis valider avec la touche <strong>Entrée</strong>. Les
-touches <strong>PageUp</strong> et <strong>PageDown</strong> permettent de
-faire défiler plus rapidement la liste des entrées. Vous pouvez annuler
-l'action de ce popup en appuyant sur la touche <code>F2</code> à n'importe
-quel moment.</p>
+<form action="null">
 
-<p>Avec la souris, il y a deux types de comportement. Un simple clic permet à
-l'utilisateur de selectionner une entrée tandis qu'un double clic sur une
-entrée signifie que l'utilisateur veut activer la selection. Vous pouvez
-utiliser l'ascenseur pour naviguer plus rapidement dans la liste des entrées.
+  <select name="fruit">
+    <option selected="selected">pomme</option>
+    <option>orange</option>
+    <option>citron</option>
+    <option>banane</option>
+    <option>fraise</option>
+  </select>
+</form>
+
+<p>Avec le clavier, passez d'une entrée à l'autre avec les touches flèches
+puis sélectionnez l'entrée courante avec la touche <strong>Enter</strong>.
+Vous pouvez annuler l'action de ce popup en appuyant sur la touche
+<code>Esc</code> à n'importe quel moment.</p>
+
+<p>Avec la souris, il y a deux types de comportement. Un simple clic permet
+de sélectionner une entrée tandis qu'un double clic sur une entrée signifie
+que vous voulez activer cette entrée. Avec les menus très longs, vous pouvez
+utiliser l'ascenseur pour vous déplacer rapidement dans la liste des entrées.
 Pour annuler l'action du popup, vous devez cliquer n'inporte où en dehors du
-popup (NB, cette option n'est pas encore opérationnelle sous GTK).</p>
+popup.</p>
 
-<h3>Formulaire sélecteur input, sélection multiple</h3>
+<h3>Menus à sélection multiple</h3>
 
-<p>Le comportement de ce widget est similaire au précédent en ce qu'il
-supporte seulement un basculement d'état de sélection à la fois. Vous devez
-l'appeler autant de fois que vous devez changer l'état d'une sélection.
-Lorsque ce widget est activé, il montre l'état courant des sélections, en
-concaténant un caractère '&gt;' aux entrées sélectionnées (Win32) ou par
-l'utilisation d'une barre de couleur bleue (GTK). Comme pécédemment, vous
-pouvez annuler l'action de ce widget soit en utilisant la touche
-<code>F2</code> soit en cliquant à l'extérieur du widget (Win32
-uniquement).</p>
+<p>Certains menus, comme celui qui suit ce paragraphe, autorisent la
+sélection de plusieurs entrées. Leur comportement est similaire à celui d'un
+menu simple mais le fait d'agir sur une entrée avec la touche
+<strong>Enter</strong> ou en cliquant avec la souris fait basculer l'état de
+cette entrée : si elle était sélectionnée elle ne l'est plus et
+inversement.</p>
 
-<p></p>
+<form action="null">
+
+  <select name="fruit" multiple="multiple">
+    <option>pomme</option>
+    <option>orange</option>
+    <option selected="selected">citron</option>
+    <option selected="selected">banane</option>
+    <option>fraise</option>
+  </select>
+</form>
 </body>
 </html>
