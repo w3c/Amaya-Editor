@@ -2553,7 +2553,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	   h = 500;
 	   w = 800;
 	 }
-       else if (docType == docLibrary && method == CE_RELATIVE)
+       else if (docType == docLibrary)
 	 {
 	   x += 500;
 	   y += 200;
