@@ -45,7 +45,6 @@
 
 #include "xmlparse.h"
 #define NS_SEP '|'
-
 /* maximum length of a Thot structure schema name */
 #define MAX_SS_NAME_LENGTH 32
 
@@ -101,12 +100,12 @@ typedef struct _XMLparserContext
     Proc	   GetDTDName;		/* returns the name of the DTD to be
 					   used for parsing the contents of an
 					   element that uses a different DTD */
-    ThotBool       DefaultLineBreak;    /* default treatmant for white-space */
+    ThotBool       DefaultLineBreak;    /* default treatment for white-space */
     ThotBool       DefaultLeadingSpace;   
     ThotBool       DefaultTrailingSpace;  
     ThotBool       DefaultContiguousSpace;
 
-                                        /* preserve treatmant for white-space */
+                                        /* preserve treatment for white-space */
     ThotBool       PreserveLineBreak;    
     ThotBool       PreserveLeadingSpace;   
     ThotBool       PreserveTrailingSpace;  
@@ -3123,11 +3122,7 @@ const XML_Char **attlist;
   
    /* initialize root element name and parser context if not done yet */
    if (XMLrootName[0] == WC_EOS)
-     {
-       strcpy (XMLrootName, (CHAR_T*) name);
-       if (firstParserCtxt == NULL)
-	 InitXmlParserContexts ();
-     }
+     strcpy (XMLrootName, (CHAR_T*) name);
 
    /* Treatment for the GI */
    if (XMLcontext.parsingTextArea)
@@ -3156,8 +3151,6 @@ const XML_Char **attlist;
 	 {
 	   bufName = TtaGetMemory (strlen (buffer) + 1);
 	   ustrcpy (bufName, buffer);
-	   if (currentParserCtxt == NULL)
-	     ChangeXmlParserContextTagName (bufName);
 	 }
 
        /* We stop parsing if context is null, ie,
@@ -3190,7 +3183,7 @@ const XML_Char **attlist;
 	   EndOfAttrName (bufAttr);
 	   TtaFreeMemory (bufAttr);
 
-	   /* Specific context for attribute name is unknown */
+	   /* Element context if attribute name is unknown */
 	   if (currentParserCtxt == NULL)
 	     currentParserCtxt = elementParserCtxt;
 	   
@@ -3335,7 +3328,7 @@ const XML_Char  *uri;
 
 {   
 
-#ifdef LC2
+#ifdef LC
   printf ("\n Hndl_NameSpaceStart");
   printf ("\n   prefix : %s; uri : %s", prefix, uri);
 #endif /* LC */
@@ -3356,7 +3349,7 @@ const XML_Char  *prefix;
 #endif  /* __STDC__ */
 
 {
-#ifdef LC2
+#ifdef LC
   printf ("\n Hndl_NameSpaceEnd");
   printf ("\n   prefix : %s", prefix);
 #endif /* LC */
@@ -3711,8 +3704,106 @@ Document            doc;
 }
 
 /*----------------------------------------------------------------------
-   StartXmlSubTreeParser
-   Parses the current file (or buffer) starting at the current position
+   ParseXmlSubTree
+   Parse the buffer given in parameter and complete the corresponding
+   Thot abstract tree.
+
+   doc: document to which the abstract tree belongs
+   el: the previous sibling (if isclosed) or parent of the tree to be built
+   lang: current language
+   Return TRUE if the parsing of the sub-tree has no error.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool    ParseXmlSubTree (char     *xmlBuffer,
+			     Element  *el,
+			     ThotBool *isclosed,
+			     Document  doc,
+			     Language  lang)
+#else
+ThotBool    ParseXmlSubTree (xmlBuffer, el, isclosed, doc, lang)
+
+char      *xmlBuffer;
+Element   *el;
+ThotBool  *isclosed;
+Document   doc;
+Language   lang;
+#endif
+{
+  int          tmpLen = 0;
+  ElementType  elType;
+  CHAR_T      *schemaName;
+
+  if (xmlBuffer == NULL)
+    return FALSE;
+
+  /* Initialize global variables */
+  XMLcontext.doc = doc;
+  XMLcontext.language = lang;
+  XMLcontext.lastElement = *el;
+  XMLcontext.lastElementClosed = *isclosed;
+  DocumentSSchema = TtaGetDocumentSSchema (doc);
+  htmlLineRead = 1;
+  htmlCharRead = 0;
+
+  currentAttribute = NULL;
+  lastAttrElement = NULL;
+  lastMappedAttr = NULL;
+  XMLcontext.readingAnAttrValue = FALSE;
+  UnknownTag = FALSE;
+  rootElement = NULL;
+  XMLcontext.mergeText = FALSE;
+  XMLcontext.parsingCSS = FALSE;
+  XMLrootName[0] = WC_EOS;
+  XMLrootClosed = FALSE;
+  XMLabort = FALSE;
+  stackLevel = 1;
+
+  /* Specific initialization for expat */
+  InitializeExpatParser ();
+
+  /* initialize all parser contexts */
+  if (firstParserCtxt == NULL)
+    InitXmlParserContexts ();
+  elType = TtaGetElementType (XMLcontext.lastElement);
+  schemaName = TtaGetSSchemaName(elType.ElSSchema);
+  ChangeXmlParserContextDTD (schemaName);
+
+  /* Initialize local counters */
+  extraLineRead = 0;
+  extraOffset = 0;
+
+  /* Parse virtual DOCTYPE */
+  if (!XML_Parse (parser, DECL_DOCTYPE, DECL_DOCTYPE_LEN, 0))
+    {
+      XmlParseError (XMLcontext.doc,
+		     (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
+      XMLabort = TRUE;
+    }
+
+  /* Parse the input XML buffer and complete the Thot document */
+  if (!XMLabort)
+    {
+      tmpLen = strlen (xmlBuffer);
+      if (!XML_Parse (parser, xmlBuffer, tmpLen, 1))
+	{
+	  if (!XMLrootClosed)
+	    {
+	      XmlParseError (XMLcontext.doc, (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
+	      XMLabort = TRUE;
+	    }
+	}
+    }
+
+  /* Free expat parser */ 
+  FreeXmlParserContexts ();
+  FreeExpatParser ();
+
+  return (!XMLabort);
+}
+
+/*----------------------------------------------------------------------
+   ParseIncludedXml
+   Parse the current file (or buffer) starting at the current position
    and complete the corresponding Thot abstract tree.
 
    doc: document to which the abstract tree belongs
@@ -3723,33 +3814,39 @@ Document            doc;
    Return TRUE if the parsing of the sub-tree has no error.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool    StartXmlSubTreeParser (FILE *infile,
-				   char *htmlBuffer,
-				   int  *index,
-				   int   fileBufferLength,
-				   Document doc,
-				   Element *el,
-				   ThotBool *isclosed,
-				   Language lang,
-				   int  *nbLineRead,
-				   int  *nbCharRead,
-				   ThotBool *endOfFile)
+ThotBool    ParseIncludedXml (FILE  *infile,
+			      char  *htmlBuffer,
+			      char  *fileBuffer,
+			      int   *index,
+			      int    fileBufferLength,
+			      STRING DTDname,
+			      Document doc,
+			      Element *el,
+			      ThotBool *isclosed,
+			      Language lang,
+			      int  *nbLineRead,
+			      int  *nbCharRead,
+			      ThotBool *endOfFile)
 #else
-ThotBool    StartXmlSubTreeParser (infile,
-				   htmlBuffer,
-				   index,
-				   fileBufferLength,
-				   doc,
-				   el,
-				   isclosed,
-				   lang,
-				   nbLineRead,
-				   nbCharRead,
-				   endOfFile)
+ThotBool    ParseIncludedXml (infile,
+			      htmlBuffer,
+			      fileBuffer,
+			      index,
+			      fileBufferLength,
+			      DTDname,
+			      doc,
+			      el,
+			      isclosed,
+			      lang,
+			      nbLineRead,
+			      nbCharRead,
+			      endOfFile)
 FILE      *infile;
 char      *htmlBuffer;
+char      *fileBuffer;
 int       *index;
 int        fileBufferLength;
+STRING     DTDname;
 Document   doc;
 Element   *el;
 ThotBool  *isclosed;
@@ -3759,14 +3856,17 @@ int       *nbCharRead;
 ThotBool  *endOfFile;
 #endif
 {
-  ThotBool   endOfParsing = FALSE;
-  int        res;
-  int        tmpLen = 0;
-  int        offset = 0;
-  CHAR_T    *tmpBuffer = NULL;
-  int        i;
+  ThotBool     endOfParsing = FALSE;
+  int          res;
+  int          tmpLen = 0;
+  int          offset = 0;
+  int          i;
+  ElementType  elType;
+  CHAR_T      *schemaName;
+  CHAR_T      *tmpBuffer = NULL;
 
-  printf ("\n StartXmlSubTreeParser\n");
+  if (infile == NULL && htmlBuffer == NULL)
+    return TRUE;
 
   /* Initialize global variables */
   XMLcontext.doc = doc;
@@ -3793,19 +3893,22 @@ ThotBool  *endOfFile;
   /* Specific initialization for expat */
   InitializeExpatParser ();
 
+  /* initialize all parser contexts */
+  if (firstParserCtxt == NULL)
+    InitXmlParserContexts ();
+  if (DTDname != NULL)
+    ChangeXmlParserContextDTD (DTDname);
+  else
+    {
+      elType = TtaGetElementType (XMLcontext.lastElement);
+      schemaName = TtaGetSSchemaName(elType.ElSSchema);
+      ChangeXmlParserContextDTD (schemaName);
+    }
+
   /* Initialize local counters */
   extraLineRead = 0;
   extraOffset = 0;
 
-  /* Parse virtual DECL_XML */
-  /*
-  if (!XML_Parse (parser, DECL_XML, DECL_XML_LEN, 0))
-    {
-      XmlParseError (XMLcontext.doc,
-		     (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
-      XMLabort = TRUE;
-    }
-  */
   /* Parse virtual DOCTYPE */
   if (!XML_Parse (parser, DECL_DOCTYPE, DECL_DOCTYPE_LEN, 0))
     {
@@ -3819,40 +3922,20 @@ ThotBool  *endOfFile;
       extraOffset = XML_GetCurrentByteIndex (parser);
     }
 
-  /* Parse the input file and complete the Thot document */
+  /* Parse the input file or HTML buffer and complete the Thot document */
   while (!endOfParsing && !XMLabort)
     {
-      if (*index == 0)
-	/* read the HTML/XML file sequentialy */
+      if (htmlBuffer != NULL)
 	{
-	  res = gzread (infile, htmlBuffer, fileBufferLength);
-	  if (res < fileBufferLength)
-	    {
-	      *endOfFile = TRUE;
-	      endOfParsing = TRUE;
-	    }
-	  if (!XML_Parse (parser, htmlBuffer, res, *endOfFile))
-	    {
-	      if (XMLrootClosed)
-		  endOfParsing = TRUE;
-	      else
-		{
-		  XmlParseError (XMLcontext.doc, (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
-		  XMLabort = TRUE;
-		}
-	    }
-	}
-      else
-	{    
 	  /* parse the HTML/XML buffer */
 	  tmpLen = strlen (htmlBuffer) - *index;
 	  tmpBuffer = TtaGetMemory (tmpLen);
 	  for (i = 0; i < tmpLen; i++)
 	    tmpBuffer[i] = htmlBuffer[*index + i];	  
-	  if (!XML_Parse (parser, tmpBuffer, tmpLen, *endOfFile))
+	  if (!XML_Parse (parser, tmpBuffer, tmpLen, 1))
 	    {
 	      if (XMLrootClosed)
-		  endOfParsing = TRUE;
+		endOfParsing = TRUE;
 	      else
 		{
 		  XmlParseError (XMLcontext.doc, (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
@@ -3863,6 +3946,53 @@ ThotBool  *endOfFile;
 	    {
 	      *index = 0;
 	      extraOffset =  extraOffset + tmpLen;
+	    }
+	}
+      else
+	{
+	  if (*index == 0)
+	    /* read the HTML/XML file sequentialy */
+	    {
+	      res = gzread (infile, fileBuffer, fileBufferLength);
+	      if (res < fileBufferLength)
+		{
+		  *endOfFile = TRUE;
+		  endOfParsing = TRUE;
+		}
+	      if (!XML_Parse (parser, fileBuffer, res, *endOfFile))
+		{
+		  if (XMLrootClosed)
+		    endOfParsing = TRUE;
+		  else
+		    {
+		      XmlParseError (XMLcontext.doc,
+ (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
+		      XMLabort = TRUE;
+		    }
+		}
+	    }
+	  else
+	    {    
+	      /* parse the file buffer */
+	      tmpLen = strlen (fileBuffer) - *index;
+	      tmpBuffer = TtaGetMemory (tmpLen);
+	      for (i = 0; i < tmpLen; i++)
+		tmpBuffer[i] = fileBuffer[*index + i];	  
+	      if (!XML_Parse (parser, tmpBuffer, tmpLen, *endOfFile))
+		{
+		  if (XMLrootClosed)
+		    endOfParsing = TRUE;
+		  else
+		    {
+		      XmlParseError (XMLcontext.doc, (CHAR_T *) XML_ErrorString (XML_GetErrorCode (parser)), 0);
+		      XMLabort = TRUE;
+		    }
+		}
+	      else
+		{
+		  *index = 0;
+		  extraOffset =  extraOffset + tmpLen;
+		}
 	    }
 	}
     }

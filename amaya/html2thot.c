@@ -3065,9 +3065,7 @@ static void         EndOfStartGI (c)
 CHAR_T              c;
 #endif
 {
-#ifndef EXPAT_PARSER
   CHAR_T        schemaName[20];
-#endif
   CHAR_T        theGI[MaxMsgLength];
   int		 i;
 
@@ -3130,19 +3128,27 @@ CHAR_T              c;
 	    }
 	  else
 	    CurrentBufChar = StartOfTagIndx;
+
+	  if (!ustrcmp (theGI, TEXT("math")))
+	     ustrcpy (schemaName, TEXT("MathML"));
+	  else
+	     ustrcpy (schemaName, TEXT("GraphML"));
+	  /* Parse the corresponding element with the XML parser */
 	  /* Parse the corresponding element with the XML parser */
 #ifdef EXPAT_PARSER
-	  if (!StartXmlSubTreeParser (stream,
-				      FileBuffer,
-				      &CurrentBufChar,
-				      INPUT_FILE_BUFFER_SIZE,
-				      HTMLcontext.doc,
-				      &HTMLcontext.lastElement,
-				      &HTMLcontext.lastElementClosed,
-				      HTMLcontext.language,
-				      &NumberOfLinesRead,
-				      &NumberOfCharRead,
-				      &EndOfHtmlFile))
+	  if (!ParseIncludedXml (stream,
+				 InputText,
+				 FileBuffer,
+				 &CurrentBufChar,
+				 INPUT_FILE_BUFFER_SIZE,
+				 schemaName,
+				 HTMLcontext.doc,
+				 &HTMLcontext.lastElement,
+				 &HTMLcontext.lastElementClosed,
+				 HTMLcontext.language,
+				 &NumberOfLinesRead,
+				 &NumberOfCharRead,
+				 &EndOfHtmlFile))
 	    StopParsing ();   /* the XML parser raised an error */
 #else /* EXPAT_PARSER */
 	  if (!ustrcmp (theGI, TEXT("math")))
@@ -6978,9 +6984,10 @@ Document   doc;
        InputText = html_buff; 
        /* InputText = HTMLbuf; */
        CurrentBufChar = 0;
-#ifdef EXPAT_PARSER
-       if (!XMLparse (NULL, &CurrentBufChar, schemaName, doc, &lastelem,
-		      &isclosed, TtaGetDefaultLanguage()))
+#ifdef LC
+       /* temporary flag until the end of XML transformations work */
+       if (!ParseXmlSubTree (InputText, &lastelem, &isclosed,
+			     doc, TtaGetDefaultLanguage()))
 #else /* EXPAT_PARSER */
        if (!XMLparse (NULL, &CurrentBufChar, schemaName, doc, &lastelem,
 		      &isclosed, TtaGetDefaultLanguage()))

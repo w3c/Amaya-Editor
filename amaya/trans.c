@@ -1006,7 +1006,11 @@ Document        doc;
        printf("%s\n\n",bufHTML);
 #endif
 	TtaSetStructureChecking (0, doc);
-	ParseSubTree (bufHTML, myFirstSelect, isClosed, doc);
+	if (DocumentMeta[doc]->xmlformat)
+	  ParseXmlSubTree (bufHTML, &myFirstSelect, &isClosed,
+			   doc, TtaGetDefaultLanguage());
+	else
+	  ParseSubTree (bufHTML, myFirstSelect, isClosed, doc);
 	courEl = myFirstSelect;
 	if (isClosed)
 	  TtaNextSibling (&courEl);
