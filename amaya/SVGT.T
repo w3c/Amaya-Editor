@@ -9,10 +9,12 @@ CONST
    SOT = '<g:';		{ Start of opening tag }
    SCT = '</g:';	{ Start of closing tag }
    SAN = ' g:';		{ Start of attribute name }
+   SUA = 'g:';          { Start of unknown attribute }
 #else
    SOT = '<';		{ Start of opening tag }
    SCT = '</';		{ Start of closing tag }
    SAN = ' ';		{ Start of attribute name }
+   SUA = '';            { Start of unknown attribute }
 #endif
    DoubleQuote = '"';
    CloseTagNL = '>\12';
@@ -392,6 +394,16 @@ RULES
    XMLPI_line:
 	if not last create '\12' after;
 
+   Unknown_namespace:
+	BEGIN
+	NoTranslation;
+	Create '\12';
+        Create Content;
+	Remove;
+	Create Attributes;
+	Create '>';
+	END;
+
    SVG_Image: BEGIN
 	Remove;
 	END;
@@ -693,6 +705,12 @@ ATTRIBUTES
 	create title_;
 	create DoubleQuote;
 	END;
+
+   Unknown_attribute:
+	BEGIN
+	create SUA;
+	Create Unknown_attribute;
+	END;	
 
 TextTRANSLATE
 	BEGIN

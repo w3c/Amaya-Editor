@@ -15,12 +15,18 @@ VIEWS
 #define ATTR_Style Roman
 #define ATTR_Weight Normal
 #define ATTR_Visibility 6
+#define INVALID_Style Roman
+#define INVALID_Weight Normal
+#define INVALID_Visibility 7
+#define INVALID_Font Helvetica
 #ifdef BLACK_WHITE
 #define ATTR_Color Black
 #define ATTRVALUE_Color Black
+#define INVALID_Color Black
 #else
 #define ATTR_Color Blue
 #define ATTRVALUE_Color Black
+#define INVALID_Color Red
 #endif
 
 DEFAULT
@@ -97,6 +103,33 @@ BOXES
                 Foreground: ATTR_Color;
                 END;
         END;
+
+  UnknownAttrValue: BEGIN
+	Content: (AttributeValue);
+	Visibility: 0;
+	IN Structure_view BEGIN
+                HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+                Font: INVALID_Font;
+		Style: INVALID_Style;
+		Visibility: INVALID_Visibility;
+		Foreground: INVALID_Color;
+		END;	
+	END;
+
+ Unknown_End: BEGIN
+	Content: Text '>';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: INVALID_Style;
+		Visibility: INVALID_Visibility;
+		Foreground: Creator =;
+		END;
+	END;
 
   ATTR_href_enclosing: BEGIN
 	Visibility: 0;
@@ -226,6 +259,13 @@ ATTRIBUTES
 		Visibility: 0;
 	IN Links_view
 		Visibility: 5;
+	END;
+
+  Unknown_attribute:
+	BEGIN
+	CreateBefore(UnknownAttrValue);
+	if LastAttr
+	   CreateAfter(Unknown_End);
 	END;
 
 {****

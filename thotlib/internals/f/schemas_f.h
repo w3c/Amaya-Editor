@@ -64,16 +64,18 @@ extern void BuildDocNatureTable ( PtrDocument pDoc );
 extern void SearchNatures ( PtrDocument pDoc,
                             PtrSSchema natureTable[10 ],
                             int *natureTableLen );
-extern void TtaAppendXMLAttribute ( char *XMLName,
-                                    AttributeType *attrType );
-extern void TtaGetXMLAttributeType ( char *XMLName,
+extern void TtaAppendXmlAttribute ( char *XMLName,
+                                    AttributeType *attrType,
+                                    Document document );
+extern void TtaGetXmlAttributeType ( char *XMLName,
                                      AttributeType *attrType );
-extern void TtaAppendXMLElement ( char *XMLName,
+extern void TtaAppendXmlElement ( char *XMLName,
                                   ElementType *elType,
-                                  char **mappedName );
-extern void TtaGetXMLElementType ( char *XMLName,
+                                  char **mappedName,
+                                  Document document );
+extern void TtaGetXmlElementType ( char* XMLName,
                                    ElementType *elType,
-                                   char **mappedName );
+                                   char** mappedName );
 extern void TtaChangeGenericSchemaNames ( char *sSchemaUri,
                                           char *sSchemaName,
                                           Document document );
@@ -138,16 +140,18 @@ extern void BuildDocNatureTable (/* PtrDocument pDoc */);
 extern void SearchNatures (/* PtrDocument pDoc,
                               PtrSSchema natureTable[10 ],
                               int *natureTableLen */);
-extern void TtaAppendXMLAttribute (/* char *XMLName,
-                                      AttributeType *attrType */);
-extern void TtaGetXMLAttributeType (/* char *XMLName,
+extern void TtaAppendXmlAttribute (/* char *XMLName,
+                                      AttributeType *attrType,
+                                      Document document */);
+extern void TtaGetXmlAttributeType (/* char *XMLName,
                                        AttributeType *attrType */);
-extern void TtaAppendXMLElement (/* char *XMLName,
+extern void TtaAppendXmlElement (/* char *XMLName,
                                     ElementType *elType,
-                                    char **mappedName */);
-extern void TtaGetXMLElementType (/* char *XMLName,
+                                    char **mappedName,
+                                    Document document */);
+extern void TtaGetXmlElementType (/* char* XMLName,
                                      ElementType *elType,
-                                     char **mappedName */);
+                                     char** mappedName */);
 extern void TtaChangeGenericSchemaNames (/* char *sSchemaUri,
                                             char *sSchemaName,
                                             Document document */);

@@ -2194,6 +2194,35 @@ void      MathMLElementComplete (Element el, Document doc, int *error)
 }
 
 /*----------------------------------------------------------------------
+   UnknownMathMLNameSpace
+   Create an element that belongs to a non-supported namespace
+  ----------------------------------------------------------------------*/
+void               UnknownMathMLNameSpace (ParserData *context, char* content)
+{
+   ElementType     elType;
+   AttributeType   attrType;
+   Element         elInv, elText;
+   Attribute       attr;
+
+   /* Create a new Invalid_element */
+   elType.ElSSchema = GetXMLSSchema (MATH_TYPE, context->doc);
+   elType.ElTypeNum = MathML_EL_Unknown_namespace;
+   elInv = TtaNewElement (context->doc, elType);
+   if (elInv != NULL)
+     {
+       XmlSetElemLineNumber (elInv);
+       InsertXmlElement (&elInv);
+       context->lastElementClosed = TRUE;
+       elType.ElTypeNum = MathML_EL_TEXT_UNIT;
+       elText = TtaNewElement (context->doc, elType);
+       XmlSetElemLineNumber (elText);
+       TtaInsertFirstChild (&elText, elInv, context->doc);
+       TtaSetTextContent (elText, content, context->language, context->doc);
+       TtaSetAccessRight (elText, ReadOnly, context->doc);
+   }
+}
+
+/*----------------------------------------------------------------------
  SetFontfamily
  -----------------------------------------------------------------------*/
 void SetFontfamily (Document doc, Element el, char *value)

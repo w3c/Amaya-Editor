@@ -125,6 +125,18 @@ ATTRIBUTES
  	  remove;
 	end;
 
+      Unknown_attribute:
+	begin
+        if XLink begin
+           remove;
+           end;
+        if NOT XLink begin
+           create nsdcl;
+	   create ' xlink:';
+	   create Unknown_attribute;
+	   end;
+	end;
+
 {****
    role = TEXT;
 

@@ -540,6 +540,35 @@ void SVGElementComplete (Element el, Document doc, int *error)
 }
 
 /*----------------------------------------------------------------------
+   UnknownSVGNameSpace
+   Create an element that belongs to a non-supported namespace
+  ----------------------------------------------------------------------*/
+void               UnknownSVGNameSpace (ParserData *context, char* content)
+{
+   ElementType     elType;
+   AttributeType   attrType;
+   Element         elInv, elText;
+   Attribute       attr;
+
+   /* Create a new Invalid_element */
+   elType.ElSSchema = GetXMLSSchema (GRAPH_TYPE, context->doc);
+   elType.ElTypeNum = SVG_EL_Unknown_namespace;
+   elInv = TtaNewElement (context->doc, elType);
+   if (elInv != NULL)
+     {
+       XmlSetElemLineNumber (elInv);
+       InsertXmlElement (&elInv);
+       context->lastElementClosed = TRUE;
+       elType.ElTypeNum = SVG_EL_TEXT_UNIT;
+       elText = TtaNewElement (context->doc, elType);
+       XmlSetElemLineNumber (elText);
+       TtaInsertFirstChild (&elText, elInv, context->doc);
+       TtaSetTextContent (elText, content, context->language, context->doc);
+       TtaSetAccessRight (elText, ReadOnly, context->doc);
+     }
+}
+
+/*----------------------------------------------------------------------
  UpdatePositionOfPoly
  Set position, width and height for an element polyline or polygon.
  Change coords of control points accordingly.

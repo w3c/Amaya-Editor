@@ -529,6 +529,23 @@ BOXES
 		END;	
 	END;
 
+ VALUE_Unknown_attribute: BEGIN
+	Content: (Unknown_attribute);
+	Visibility: 0;
+	HorizPos: Left = Previous . Right;
+	VertPos: HRef = Previous . HRef;
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Style: INVALID_Style;
+		Visibility: INVALID_Visibility;
+#ifdef BLACK_WHITE
+		Underline: CrossedOut;
+#else
+		Foreground: INVALID_Color;
+#endif
+		END;	
+	END;
+
 { LC 22/08/01
  VALUE_EntityName: BEGIN
         Content: (EntityName);
@@ -3664,7 +3681,7 @@ RULES
 		   HorizPos: Left = Enclosing . Left;
 		   VertPos: Top = Previous . Bottom;
 		   END;
-		if NOT within Invalid_element
+		if NOT within Invalid_element AND NOT within Unknown_namespace
 		   Style: Enclosing =;
 		if within Text_Input
 		   Visibility: 0;
@@ -4191,6 +4208,24 @@ RULES
 	END;
 
   Invalid_element:
+	BEGIN
+	Visibility: 0;
+	if NOT AnyAttributes
+	  CreateAfter(INVALID_E);
+	IN Structure_view BEGIN
+		Size: TAG_FONTSIZE;
+		Visibility: INVALID_Visibility;
+		Style: INVALID_Style; Weight: INVALID_Weight;
+#ifdef BLACK_WHITE
+		Underline: CrossedOut;
+#else
+		Foreground: INVALID_Color;
+#endif
+		Font: INVALID_Font;
+		END;
+	END;
+
+  Unknown_namespace:
 	BEGIN
 	Visibility: 0;
 	if NOT AnyAttributes
@@ -6411,10 +6446,32 @@ ATTRIBUTES
 	   CreateAfter(VALUE_Invalid_attribute);
 	if Invalid_element and LastAttr
 	   CreateAfter(INVALID_E);
+	if Unknown_namespace
+	   CreateAfter(VALUE_Invalid_attribute);
 	if Anchor
 	   CreateBefore(VALUE_Invalid_attribute);
-	if NOT TEXT_UNIT and NOT PICTURE_UNIT and NOT Invalid_element and NOT Anchor
+	if NOT TEXT_UNIT and NOT PICTURE_UNIT and NOT Invalid_element  and NOT Unknown_namespace and NOT Anchor
 	   CreateBefore(VALUE_Invalid_attribute);
+	END;
+
+  Unknown_attribute:
+	BEGIN
+	if TEXT_UNIT
+	   CreateBefore(VALUE_Unknown_attribute);
+	if PICTURE_UNIT
+	   CreateBefore(VALUE_Unknown_attribute);
+	if Invalid_element
+	   CreateAfter(VALUE_Unknown_attribute);
+	if Invalid_element and LastAttr
+	   CreateAfter(INVALID_E);
+	if Unknown_namespace
+	   CreateAfter(VALUE_Unknown_attribute);
+	if Unknown_namespace and LastAttr
+	   CreateAfter(INVALID_E);
+	if Anchor
+	   CreateBefore(VALUE_Unknown_attribute);
+	if NOT TEXT_UNIT and NOT PICTURE_UNIT and NOT Invalid_element  and NOT Unknown_namespace and NOT Anchor
+	   CreateBefore(VALUE_Unknown_attribute);
 	END;
 
 { LC 22/08/01

@@ -26,6 +26,7 @@ ATTR
    onkeyup = Text;		{ onkeyup }
 
    Invalid_attribute = Text;
+   Unknown_attribute = Text;
    Ghost_restruct = Text;
    Highlight = Yes_;    { to show the HTML element corresponding to the
 			  current selection in the source view }
@@ -50,7 +51,7 @@ STRUCT
 	HEAD;
       ? BODY;	{ only one of BODY, document type }
       ? FRAMESET;
-	END + (Invalid_element, Comment\240, XMLPI);
+	END + (Invalid_element, Unknown_namespace, Comment\240, XMLPI);
 
   BODY								{ BODY }
      (ATTR onload = Text; onunload = Text;
@@ -64,6 +65,8 @@ STRUCT
 	LIST OF (Element) + (INS, DEL);
 
   Invalid_element (ATTR Error_type = UnknownTag, BadPosition) = TEXT;
+
+  Unknown_namespace = TEXT;
 
   Comment\240 = LIST OF (Comment_line = TEXT);
 
@@ -857,6 +860,7 @@ EXCEPT
 	TEXT:		NoMove, NoResize;
 	PICTURE:	MoveResize;
 	Invalid_element:NoCreate;
+	Unknown_namespace:NoCreate;
 	Pseudo_paragraph: ParagraphBreak, Hidden;
 	Basic_Elem:	Hidden;
 	Paragraph:	ParagraphBreak;
@@ -892,6 +896,7 @@ EXCEPT
 	Ref_IMG:	Invisible;
 	AreaRef_IMG:	Invisible;
 	Invalid_attribute: Invisible;
+	Unknown_attribute: Invisible;
 	Highlight:	Invisible;
 	PseudoClass:	Invisible, CssPseudoClass;
 	Default_Value:	Invisible;

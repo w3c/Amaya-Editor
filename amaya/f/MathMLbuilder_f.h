@@ -53,6 +53,8 @@ extern void MathMLScriptShift ( Document doc,
 extern void MathMLElementComplete ( Element el,
                                     Document doc,
                                     int *error );
+extern void UnknownMathMLNameSpace ( ParserData *context,
+                                     char* content );
 extern void SetFontfamily ( Document doc,
                             Element el,
                             char *value );
@@ -125,6 +127,8 @@ extern void MathMLScriptShift (/* Document doc,
 extern void MathMLElementComplete (/* Element el,
                                       Document doc,
                                       int *error */);
+extern void UnknownMathMLNameSpace (/* ParserData *context,
+                                       char* content */);
 extern void SetFontfamily (/* Document doc,
                               Element el,
                               char *value */);

@@ -4,7 +4,7 @@ static AttributeMapping XLinkAttributeMappingTable[] =
 {
    /* The first entry MUST be unknown_attr */
    /* The rest of this table MUST be in alphabetical order */
-   {"unknown_attr", "", 'A', XLink_ATTR_Invalid_attribute, L_OtherValue},
+   {"unknown_attr", "", 'A', XLink_ATTR_Unknown_attribute, L_OtherValue},
    {"actuate", "", 'A', XLink_ATTR_actuate, L_OtherValue},
    {"from", "", 'A', XLink_ATTR_from, L_OtherValue},
    {"href", "", 'A', XLink_ATTR_href_, L_OtherValue},

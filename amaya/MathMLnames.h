@@ -50,7 +50,7 @@ static AttributeMapping MathMLAttributeMappingTable[] =
 {
    /* The first entry MUST be unknown_attr */
    /* The rest of this table MUST be in alphabetical order */
-   {"unknown_attr", "", 'A', MathML_ATTR_Invalid_attribute, L_OtherValue},
+   {"unknown_attr", "", 'A', MathML_ATTR_Unknown_attribute, L_OtherValue},
 
    {"accent", "", 'A', MathML_ATTR_accent, L_OtherValue},
    {"accentunder", "", 'A', MathML_ATTR_accentunder, L_OtherValue},

@@ -1235,6 +1235,10 @@ ATTRIBUTES
 		BEGIN
 		END;
 
+ Unknown_attribute:
+		BEGIN
+		END;
+
  xml_space = xml_space_default:
 		BEGIN
 		END;

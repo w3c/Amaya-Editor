@@ -15,7 +15,7 @@ ATTR
    xml_space = xml_space_default, xml_space_preserve;
 
    { global attributes for internal processing }
-   Invalid_attribute = text;
+   Unknown_attribute = text;
    Ghost_restruct = text;
    Highlight = Yes_;        { to show the SVG element corresponding to the
 			      current selection in the source view }
@@ -31,7 +31,7 @@ STRUCT
 	      height_ = text;
 	      width_ = text;
 	      Charset = text)
-        = LIST OF (GraphicsElement) + (XMLcomment, XMLPI);
+        = LIST OF (GraphicsElement) + (XMLcomment, XMLPI, Unknown_namespace);
 
    g
         (ATTR fill = text;
@@ -318,6 +318,8 @@ STRUCT
 
    XMLPI = LIST OF (XMLPI_line = TEXT);
 
+   Unknown_namespace = TEXT;
+	
 EXCEPT
 
    SVG:                 IsDraw, MoveResize, NoMove;
@@ -347,11 +349,12 @@ EXCEPT
    GRAPHICS:	        SelectParent;
    PICTURE:             NoMove, NoResize, SelectParent;
    TEXT:                NoMove, NoResize;
+   Unknown_namespace:   NoCreate;
 
    id:                  CssId;
    class:               CssClass;
    PseudoClass:	        Invisible, CssPseudoClass;
-   Invalid_attribute:   Invisible;
+   Unknown_attribute:   Invisible;
    Highlight:	        Invisible; 
    Ghost_restruct:      Invisible;
    Namespace:	        Invisible;

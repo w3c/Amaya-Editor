@@ -1103,27 +1103,31 @@ extern ThotBool TtaHasHiddenException (ElementType elType);
 /*----------------------------------------------------------------------
   TtaAppendXMLAttribute
   ----------------------------------------------------------------------*/
-extern void TtaAppendXMLAttribute (char *XMLName, AttributeType *attrType);
+extern void TtaAppendXmlAttribute (char *XMLName, AttributeType *attrType,
+				   Document document);
 
 /*----------------------------------------------------------------------
   TtaGetXMLAttributeType
   ----------------------------------------------------------------------*/
-extern void TtaGetXMLAttributeType (char *XMLName, AttributeType *attrType);
+extern void TtaGetXmlAttributeType (char *XMLName, AttributeType *attrType);
 
 /*----------------------------------------------------------------------
   TtaAppendXMLElement
   ----------------------------------------------------------------------*/
-extern void TtaAppendXMLElement (char *XMLName, ElementType *elType, char **mappedName);
+extern void TtaAppendXmlElement (char *XMLName, ElementType *elType,
+				 char **mappedName, Document doc);
 
 /*----------------------------------------------------------------------
   TtaGetXMLElementType
   ----------------------------------------------------------------------*/
-extern void TtaGetXMLElementType (char *XMLElementName, ElementType *elType, char **mappedName);
+extern void TtaGetXmlElementType (char *XMLElementName, ElementType *elType,
+				  char **mappedName);
 
 /*----------------------------------------------------------------------
   TtaChangeGenericSSchemaName
   ----------------------------------------------------------------------*/
-extern void TtaChangeGenericSchemaNames (char *sSchemauri, char *sSchemaName, Document doc);
+extern void TtaChangeGenericSchemaNames (char *sSchemauri, char *sSchemaName,
+					 Document doc);
 
 #endif /* __CEXTRACT__ */
 

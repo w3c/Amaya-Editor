@@ -40,6 +40,8 @@ extern void CopyUseContent ( Element el,
 extern void SVGElementComplete ( Element el,
                                  Document doc,
                                  int *error );
+extern void UnknownSVGNameSpace ( ParserData *context,
+                                  char* content );
 extern void UpdatePositionOfPoly ( Element el,
                                    Document doc,
                                    int minX,
@@ -103,6 +105,8 @@ extern void CopyUseContent (/* Element el,
 extern void SVGElementComplete (/* Element el,
                                    Document doc,
                                    int *error */);
+extern void UnknownSVGNameSpace (/* ParserData *context,
+                                    char* content */);
 extern void UpdatePositionOfPoly (/* Element el,
                                      Document doc,
                                      int minX,

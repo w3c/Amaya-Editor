@@ -106,13 +106,13 @@ void        MapGenericXmlAttribute (char *attrName,
 
   attrType->AttrTypeNum = 0;
   /* Search for the attribute XMLName in the structure schema */
-  TtaGetXMLAttributeType (attrName, attrType);
+  TtaGetXmlAttributeType (attrName, attrType);
 
   if (attrType->AttrTypeNum <= 0)
     {
       /* The attribute is not yet present in the tree */
       /* Create a new global attribute */
-      TtaAppendXMLAttribute (attrName, attrType);
+      TtaAppendXmlAttribute (attrName, attrType, doc);
     }
 }
 
@@ -129,12 +129,12 @@ void        MapGenericXmlElement (char *XMLName,
 
   elType->ElTypeNum = 0;
   /* Search for the element XMLName in the structure schema */
-  TtaGetXMLElementType (XMLName, elType, mappedName);
+  TtaGetXmlElementType (XMLName, elType, mappedName);
 
   if (elType->ElTypeNum <= 0)
     {
       /* The element is not yet present in the tree */
       /* Create a new rule in the generic schema */
-      TtaAppendXMLElement (XMLName, elType, mappedName);
+      TtaAppendXmlElement (XMLName, elType, mappedName, doc);
     }
 }

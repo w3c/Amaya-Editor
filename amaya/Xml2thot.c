@@ -91,6 +91,8 @@ typedef struct _XMLparserContext
     Proc	   GetDTDName;		/* returns the name of the DTD to be
 					   used for parsing the contents of an
 					   element that uses a different DTD */
+    Proc	   UnknownNameSpace;  	/* action to be called if an element 
+					   belongs to a not-suported namespace */
     ThotBool       DefaultLineBreak;    /* default treatment for white-space */
     ThotBool       DefaultLeadingSpace;   
     ThotBool       DefaultTrailingSpace;  
@@ -110,58 +112,70 @@ XMLparserContext;
 static PtrParserCtxt	firstParserCtxt = NULL;
 /* current context */
 static PtrParserCtxt	currentParserCtxt = NULL;
+/* XHTML context */
+static PtrParserCtxt	XhtmlParserCtxt = NULL;
 /* Generic XML context */
 static PtrParserCtxt	XmlGenericParserCtxt = NULL;
 
 #define MAX_URI_NAME_LENGTH  60
 #define XHTML_URI            "http://www.w3.org/1999/xhtml"
 #define MathML_URI           "http://www.w3.org/1998/Math/MathML"
-#define SVG_URI          "http://www.w3.org/2000/svg"
+#define SVG_URI              "http://www.w3.org/2000/svg"
 #define XLink_URI            "http://www.w3.org/1999/xlink"
 #define NAMESPACE_URI        "http://www.w3.org/XML/1998/namespace"
 
+/* NameSpace Table */
+#define MAX_NS_TABLE   50
+                     /* NameSpace prefix (if defined) */
+static char         *Ns_Prefix[MAX_NS_TABLE]; 
+                     /* NameSpace URI */
+static char         *Ns_Uri[MAX_NS_TABLE]; 
+                     /* first free element on the table */
+static int           Ns_Level = 0;
 
 /* Parser Stack */
-	                /* maximum stack height */
+	             /* maximum stack height */
 #define MAX_STACK_HEIGHT   100
-                        /* XML element name */
+                     /* XML element name */
 static char         *nameElementStack[MAX_STACK_HEIGHT]; 
-                        /* element in the Thot abstract tree */
+                     /* element in the Thot abstract tree */
 static Element       elementStack[MAX_STACK_HEIGHT];
-                        /* element language */
+                     /* element language */
 static Language	     languageStack[MAX_STACK_HEIGHT];
-                        /* is space preserved for that element */
+                     /* is space preserved for that element */
 static char	     spacePreservedStack[MAX_STACK_HEIGHT];
-                        /* context of the element */
+                     /* context of the element */
 static PtrParserCtxt parserCtxtStack[MAX_STACK_HEIGHT];
-                        /* first free element on the stack */
+                     /* first free element on the stack */
 static int           stackLevel = 0;
 
-                        /*  */
+
 static gzFile        stream = 0;
-                        /* path or URL of the document */
+                     /* path or URL of the document */
 static char         *docURL = NULL;
 
 /* information about the Thot document under construction */
-                        /* Document structure schema */
+                     /* Document structure schema */
 static SSchema       DocumentSSchema = NULL;
-                        /* root element of the document */
+                     /* root element of the document */
 static Element       RootElement;
-                        /* name of the root element */
+                     /* name of the root element */
 static char          XMLRootName[100];
-                        /* root element is closed */
+                     /* root element is closed */
 static ThotBool	     XMLrootClosed = FALSE;
-                        /* the last start tag encountered is invalid */
-static ThotBool      UnknownTag = FALSE;
-                        /* last attribute created */
+                     /* the last start tag is unknown in the current NS */
+static ThotBool      UnknownElement = FALSE;
+                     /* the last start tag belongs to a non-supported NS */
+static ThotBool      UnknownNS = FALSE;
+                     /* last attribute created */
 static Attribute     currentAttribute = NULL;
-                        /* last created attribute is "unknown_attr"*/
+                     /* last created attribute is "unknown_attr"*/
 static ThotBool      UnknownAttr;
-                        /* element with which the last */
-                        /* attribute has been associated */
+                     /* element with which the last */
+                     /* attribute has been associated */
 static Element       lastAttrElement = NULL;
-                        /* entry in the AttributeMappingTable */
-		        /* of the attribute being created */
+                     /* entry in the AttributeMappingTable */
+                     /* of the attribute being created */
 static AttributeMapping* lastMappedAttr = NULL;
 
 static ThotBool	    ParsingSubTree = FALSE;
@@ -198,7 +212,7 @@ static  int         SUBTREE_ROOT_LEN = 20;
 /* maximum size of error messages */
 #define MaxMsgLength 200
 
-static void   StartOfXmlStartElement (char *uriName, char *elementName);
+static void   StartOfXmlStartElement (char *name);
 static void   DisableExpatParser ();
 static void   XhtmlCheckInsert (Element *el, Element parent, Document doc, ThotBool *inserted);
 static void   XmlCheckInsert (Element *el, Element parent, Document doc, ThotBool *inserted);
@@ -227,45 +241,33 @@ static void     ChangeXmlParserContextDTD (char *DTDname)
 
 /*----------------------------------------------------------------------
    ChangeXmlParserContextUri
-   Get the parser context correponding to a given uri
+   Get the parser context correponding to a given namespace uri
   ----------------------------------------------------------------------*/
-static void     ChangeXmlParserContextUri (char *uriName)
+static int     ChangeXmlParserContextUri (char *uriName)
 
 {
+  int    i;
+
   currentParserCtxt = firstParserCtxt;
   while (currentParserCtxt != NULL &&
 	 strcmp (uriName, currentParserCtxt->UriName))
     currentParserCtxt = currentParserCtxt->NextParserCtxt;
 
-  /* Return the corresponding Thot schema */
+  /* Initialize the corresponding Thot schema */
   if (currentParserCtxt != NULL &&
       currentParserCtxt != XmlGenericParserCtxt &&
       currentParserCtxt->XMLSSchema == NULL) 
     currentParserCtxt->XMLSSchema = 
       GetXMLSSchema (currentParserCtxt->XMLtype, XMLcontext.doc);
-}
 
-#ifdef LC
-/*----------------------------------------------------------------------
-   ChangeXmlParserContextRootName
-   Get the parser context correponding to a given tag
-  ----------------------------------------------------------------------*/
-static void     ChangeXmlParserContextTagName (char *tagName)
-
-{
-  if (!strcmp (tagName, "math"))
-    ChangeXmlParserContextDTD ("MathML");
-  else
-    if (!strcmp (tagName, "svg") ||
-	!strcmp (tagName, "xmlgraphics"))
-      ChangeXmlParserContextDTD ("SVG");
-    else
-      if (!strcmp (tagName, "html"))
-	ChangeXmlParserContextDTD ("HTML");
-      else
-	currentParserCtxt = NULL;
+  /* Return the rank of this namespace */
+   for (i = 0; i < Ns_Level; i++)
+     {
+       if (strcmp (uriName, Ns_Uri[i]) == 0)
+	 return i;
+     }
+   return Ns_Level;
 }
-#endif /* LC */
 
 /*----------------------------------------------------------------------
    InitXmlParserContexts
@@ -301,6 +303,7 @@ static void    InitXmlParserContexts (void)
    ctxt->ElementComplete = (Proc) XhtmlElementComplete;
    ctxt->AttributeComplete = NULL;
    ctxt->GetDTDName = NULL;
+   ctxt->UnknownNameSpace = UnknownXhtmlNameSpace;
    ctxt->DefaultLineBreak = TRUE;
    ctxt->DefaultLeadingSpace = TRUE;   
    ctxt->DefaultTrailingSpace = TRUE;  
@@ -309,6 +312,7 @@ static void    InitXmlParserContexts (void)
    ctxt->PreserveLeadingSpace = FALSE;   
    ctxt->PreserveTrailingSpace = FALSE;  
    ctxt->PreserveContiguousSpace = FALSE;
+   XhtmlParserCtxt = ctxt;
    prevCtxt = ctxt;
 
    /* create and initialize a context for MathML */
@@ -332,6 +336,7 @@ static void    InitXmlParserContexts (void)
    ctxt->ElementComplete = (Proc) MathMLElementComplete;
    ctxt->AttributeComplete = (Proc) MathMLAttributeComplete;
    ctxt->GetDTDName = (Proc) MathMLGetDTDName;
+   ctxt->UnknownNameSpace = UnknownMathMLNameSpace;
    ctxt->DefaultLineBreak = TRUE;
    ctxt->DefaultLeadingSpace = TRUE;   
    ctxt->DefaultTrailingSpace = TRUE;  
@@ -363,6 +368,7 @@ static void    InitXmlParserContexts (void)
    ctxt->ElementComplete = (Proc) SVGElementComplete;
    ctxt->AttributeComplete = (Proc) SVGAttributeComplete;
    ctxt->GetDTDName = (Proc) SVGGetDTDName;
+   ctxt->UnknownNameSpace = UnknownSVGNameSpace;
    ctxt->DefaultLineBreak = TRUE;
    ctxt->DefaultLeadingSpace = TRUE;   
    ctxt->DefaultTrailingSpace = TRUE;  
@@ -394,6 +400,7 @@ static void    InitXmlParserContexts (void)
    ctxt->ElementComplete = NULL;
    ctxt->AttributeComplete = (Proc) XLinkAttributeComplete;
    ctxt->GetDTDName = NULL;
+   ctxt->UnknownNameSpace = NULL;
    ctxt->DefaultLineBreak = TRUE;
    ctxt->DefaultLeadingSpace = TRUE;   
    ctxt->DefaultTrailingSpace = TRUE;  
@@ -426,6 +433,7 @@ static void    InitXmlParserContexts (void)
    ctxt->ElementComplete = (Proc) XmlElementComplete;
    ctxt->AttributeComplete = (Proc) XmlAttributeComplete;
    ctxt->GetDTDName = NULL;
+   ctxt->UnknownNameSpace = NULL;
    ctxt->DefaultLineBreak = TRUE;
    ctxt->DefaultLeadingSpace = TRUE;   
    ctxt->DefaultTrailingSpace = TRUE;  
@@ -1361,7 +1369,7 @@ static void   XhtmlCheckContext (char *elName,
 		 /* Table cell within a table, without a tr. Assume tr */
 		 {
 		   /* simulate a <TR> tag */
-		   StartOfXmlStartElement (NULL, "tr");
+		   StartOfXmlStartElement ("tr");
 		 }
 	       else
 		 *isAllowed = FALSE;
@@ -1394,7 +1402,7 @@ static void   XhtmlCheckContext (char *elName,
 		   /* Assume tr */
 		   {
 		     /* simulate a <tr> tag */
-		     StartOfXmlStartElement (NULL, "tr");
+		     StartOfXmlStartElement ("tr");
 		   }
 		 else
 		   *isAllowed = FALSE;
@@ -1513,7 +1521,7 @@ static void   GetXmlElType (char *uriName,
    The name of an element type has been read from a start tag.
    Create the corresponding Thot element according to the mapping table.
   ----------------------------------------------------------------------*/
-static void       StartOfXmlStartElement (char *uriName, char *elementName)
+static void       StartOfXmlStartElement (char *name)
 {
   ElementType     elType;
   Element         newElement;
@@ -1523,117 +1531,202 @@ static void       StartOfXmlStartElement (char *uriName, char *elementName)
   ThotBool        elInStack = FALSE;
   ThotBool        highEnoughLevel = TRUE;
   ThotBool        isAllowed = TRUE;
+  char           *buffer, *ptr, *elementName;
+  char           *nsName = NULL;
+  int             nslevel;
+  static int      old_nslevel;
+  PtrParserCtxt   savParserCtxt = NULL;
       
-  UnknownTag = FALSE;
-
   /* ignore tag <P> within PRE for Xhtml elements */
   if (currentParserCtxt != NULL &&
       (strcmp (currentParserCtxt->SSchemaName, "HTML") == 0) &&
       (XmlWithinStack (HTML_EL_Preformatted, currentParserCtxt->XMLSSchema)) &&
       (strcasecmp (elementName, "p") == 0))
     {
-       UnknownTag = TRUE;
+       UnknownElement = TRUE;
        return;
     }
 
   if (stackLevel == MAX_STACK_HEIGHT)
     {
       XmlParseError (errorNotWellFormed, "**FATAL** Too many XML levels", 0);
-      UnknownTag = TRUE;
+      UnknownElement = TRUE;
       return;
     }
 
-  /* search the XML element name in the corresponding mapping table */
-  elType.ElSSchema = NULL;
-  elType.ElTypeNum = 0;
-  currentElementName[0] = EOS;
-  GetXmlElType (uriName, elementName, &elType, &mappedName,
-		&currentElementContent, &highEnoughLevel);
-
-  if (mappedName == NULL)
+  UnknownNS = FALSE;
+  UnknownElement = FALSE;
+  /* Look for the context associated with that element */
+  savParserCtxt = currentParserCtxt;
+  buffer = TtaGetMemory ((strlen (name) + 1));
+  strcpy (buffer, (char*) name);
+  if ((ptr = strrchr (buffer, NS_SEP)) != NULL)
     {
-      if (strcmp (currentParserCtxt->SSchemaName, "HTML") == 0)
-	strcpy (schemaName, "XHTML");
-      else if (strcmp (currentParserCtxt->SSchemaName, "SVG") == 0)
-	strcpy (schemaName, "SVG");
-      else
-	strcpy (schemaName, currentParserCtxt->SSchemaName);
-      if (highEnoughLevel)
+      *ptr = EOS;
+      ptr++;
+      elementName = TtaGetMemory ((strlen (ptr) + 1));
+      strcpy (elementName, ptr);
+      nsName = TtaGetMemory ((strlen (buffer) + 1));
+      strcpy (nsName, buffer);
+      if ((currentParserCtxt != NULL &&
+	   strcmp (nsName, currentParserCtxt->UriName)) ||
+	  (currentParserCtxt == NULL))
+	nslevel = ChangeXmlParserContextUri (nsName);
+#ifndef XML_GENERIC
+      if (currentParserCtxt == NULL)
 	{
-	  /* element not found in the corresponding DTD */
-	  /* don't process that element */
-	  sprintf (msgBuffer, "Unknown %s element %s",
-		   schemaName , elementName);
-	  XmlParseError (errorParsing, msgBuffer, 0);
-	  UnknownTag = TRUE;
- 	}
-      else
-	{
-	  /* element invalid for the current profile */
-	  /* doesn't process that element */
-	  sprintf (msgBuffer,
-		    "Unknown %s element %s for the current profile",
-		    schemaName, elementName);
-	  XmlParseError (errorParsingProfile, msgBuffer, 0);
-	  UnknownTag = TRUE;
+	  UnknownNS = TRUE;
+	  currentParserCtxt = savParserCtxt;
 	}
-      return;
+#endif /* XML_GENERIC */
+    }
+  else
+    {
+      elementName = TtaGetMemory (strlen (buffer) + 1);
+      strcpy (elementName, buffer);
+    }
+  
+  if (currentParserCtxt == NULL)
+    {
+#ifdef XML_GENERIC
+      /* We assign the generic XML context by default */ 
+      currentParserCtxt = XmlGenericParserCtxt;
+#else /* XML_GENERIC */
+      /* We stop parsing if the context is null */
+      sprintf (msgBuffer, 
+	       "Namespace not supported for the element :\"%s\"", name);
+      XmlParseError (errorNotWellFormed, msgBuffer, 0);
+      DisableExpatParser ();
+#endif /* XML_GENERIC */
    }
-  else
-    strcpy (currentElementName, mappedName);
-  
-  /* Element found in the corresponding DTD */
+
   if (currentParserCtxt != NULL)
-    (*(currentParserCtxt->CheckContext))(mappedName, elType, &isAllowed);
-  if (!isAllowed)
-    /* Element not allowed in the current structural context */
     {
-      sprintf (msgBuffer,
-		"The XML element %s is not allowed here", elementName);
-      XmlParseError (errorParsing, msgBuffer, 0);
-      UnknownTag = TRUE;
-      elInStack = FALSE;
-    }
-  else
-    {
-      newElement = NULL;
-      /* create a Thot element */
-      if (currentElementContent == 'E')
-	/* empty XML element. Create all children specified */
-	/* in the Thot structure schema */
-	newElement = TtaNewTree (XMLcontext.doc, elType, "");
+      /* search the XML element name in the corresponding mapping table */
+      elType.ElSSchema = NULL;
+      elType.ElTypeNum = 0;
+      currentElementName[0] = EOS;
+      if (UnknownNS)
+	{
+	  /* The element belongs to a no-supported namespace */
+	  sprintf (msgBuffer, 
+		   "Namespace not supported for the element :\"%s\"", name);
+	  XmlParseError (errorParsing, msgBuffer, 0);
+	  if (nslevel != old_nslevel)
+	    {
+	      if (Ns_Prefix[nslevel] != NULL)
+		sprintf (msgBuffer, "<%s xmlns:%s=\"%s\"", elementName,
+			 Ns_Prefix[nslevel], Ns_Uri[nslevel]);
+	      else
+		sprintf (msgBuffer, "<%s xmlns=\"%s\"",
+			 elementName, Ns_Uri[nslevel]);
+	      old_nslevel = nslevel;
+ 	    }
+	  else
+	    {
+	      if (Ns_Prefix[nslevel] != NULL)
+		sprintf (msgBuffer, "<%s:%s", Ns_Prefix[nslevel], elementName);
+	      else
+		sprintf (msgBuffer, "<%s", elementName);
+	    }
+
+	  /* create an Unknown_namespace element */
+	  (*(currentParserCtxt->UnknownNameSpace))(&XMLcontext, msgBuffer);
+	}
       else
-	/* the HTML element may have children. Create only */
-	/* the corresponding Thot element, without any child */
-	newElement = TtaNewElement (XMLcontext.doc, elType);
+	{
+	  GetXmlElType (nsName, elementName, &elType, &mappedName,
+			&currentElementContent, &highEnoughLevel);
+	  
+	  if (mappedName == NULL)
+	    {
+	      if (strcmp (currentParserCtxt->SSchemaName, "HTML") == 0)
+		strcpy (schemaName, "XHTML");
+	      else
+		strcpy (schemaName, currentParserCtxt->SSchemaName);
+	      if (highEnoughLevel)
+		{
+		  /* element not found in the corresponding DTD */
+		  /* don't process that element */
+		  sprintf (msgBuffer, "Unknown %s element %s",
+			   schemaName , elementName);
+		  XmlParseError (errorParsing, msgBuffer, 0);
+		  UnknownElement = TRUE;
+		}
+	      else
+		{
+		  /* element invalid for the current profile */
+		  /* don't process that element */
+		  sprintf (msgBuffer,
+			   "Unknown %s element %s for the current profile",
+			   schemaName, elementName);
+		  XmlParseError (errorParsingProfile, msgBuffer, 0);
+		  UnknownElement = TRUE;
+		}
+	      return;
+	    }
+	  else
+	    strcpy (currentElementName, mappedName);
+	  
+	  /* Element found in the corresponding DTD */
+	  if (currentParserCtxt != NULL)
+	    (*(currentParserCtxt->CheckContext))(mappedName, elType, &isAllowed);
+	  if (!isAllowed)
+	    /* Element not allowed in the current structural context */
+	    {
+	      sprintf (msgBuffer,
+		       "The XML element %s is not allowed here", elementName);
+	      XmlParseError (errorParsing, msgBuffer, 0);
+	      UnknownElement = TRUE;
+	      elInStack = FALSE;
+	    }
+	  else
+	    {
+	      newElement = NULL;
+	      /* create a Thot element */
+	      if (currentElementContent == 'E')
+		/* empty XML element. Create all children specified */
+		/* in the Thot structure schema */
+		newElement = TtaNewTree (XMLcontext.doc, elType, "");
+	      else
+		/* the HTML element may have children. Create only */
+		/* the corresponding Thot element, without any child */
+		newElement = TtaNewElement (XMLcontext.doc, elType);
+	      
+	      XmlSetElemLineNumber (newElement);
+	      InsertXmlElement (&newElement);
+	      
+	      if (newElement != NULL && elType.ElTypeNum == 1)
+		/* If an empty Text element has been created, the */
+		/* following character data must go to that element */
+		XMLcontext.mergeText = TRUE;
+	      
+	      elementStack[stackLevel] = newElement;
+	      nameElementStack[stackLevel] = mappedName;
+	      elInStack = TRUE;
+	    }
+	  
+	  if (elInStack)
+	    {
+	      languageStack[stackLevel] = XMLcontext.language;
+	      parserCtxtStack[stackLevel] = currentParserCtxt;
+	      spacePreservedStack[stackLevel] = ' ';
+	      stackLevel++;
+	    }
+	}
+    }
       
-      XmlSetElemLineNumber (newElement);
-      InsertXmlElement (&newElement);
-
-      if (newElement != NULL && elType.ElTypeNum == 1)
-	/* If an empty Text element has been created, the */
-	/* following character data must go to that element */
-	XMLcontext.mergeText = TRUE;
-
-      elementStack[stackLevel] = newElement;
-      nameElementStack[stackLevel] = mappedName;
-      elInStack = TRUE;
-    }
-  
-  if (elInStack)
-    {
-      languageStack[stackLevel] = XMLcontext.language;
-      parserCtxtStack[stackLevel] = currentParserCtxt;
-      spacePreservedStack[stackLevel] = ' ';
-      stackLevel++;
-    }
+  TtaFreeMemory (elementName);
+  TtaFreeMemory (buffer);
+  if (nsName != NULL)
+    TtaFreeMemory (nsName);
 }
 
 /*----------------------------------------------------------------------
    EndOfXmlStartElement
    Function called at the end of a start tag.
   ----------------------------------------------------------------------*/
-static void       EndOfXmlStartElement (char *elementName)
+static void       EndOfXmlStartElement (char *name)
 {
   ElementType     elType;
   AttributeType   attrType;
@@ -1641,7 +1734,7 @@ static void       EndOfXmlStartElement (char *elementName)
   int             length;
   char           *text;
 
-  if (UnknownTag)
+  if (UnknownElement || UnknownNS)
     return;
 
   if (XMLcontext.lastElement != NULL && currentElementName[0] != EOS)
@@ -1697,6 +1790,7 @@ static void       EndOfXmlStartElement (char *elementName)
 	      }
 	}
     }
+
   XmlWhiteSpaceHandling ();
 }
 
@@ -1709,13 +1803,19 @@ static void       EndOfXmlStartElement (char *elementName)
    EndOfXmlElement
    Terminate all corresponding Thot elements.
   ----------------------------------------------------------------------*/
-static void       EndOfXmlElement (char *uriName, char *elementName)
+static void       EndOfXmlElement (char *name)
 {
    ElementType    elType;
+   char          *nsName = NULL;
+   char          *elementName;
+   char          *buffer;
+   char          *ptr;
    char           msgBuffer[MaxMsgLength];
    char           schemaName[MAX_SS_NAME_LENGTH];
    char          *mappedName = NULL;
    ThotBool       highEnoughLevel = TRUE;
+   PtrParserCtxt  savParserCtxt = NULL;
+   int            nslevel;
 
    if (XMLcontext.parsingTextArea)
      if (strcasecmp (elementName, "textarea") != 0)
@@ -1723,56 +1823,87 @@ static void       EndOfXmlElement (char *uriName, char *elementName)
        /* The end tag is not the one closing the current textarea, */
        /* consider it as plain text */
        return;
-   
-   /* Ignore the virtual root of a XML sub-tree */
-   if (strcmp (elementName, SUBTREE_ROOT) == 0)
-     return;
 
-   /* search the XML element name in the corresponding mapping table */
-   elType.ElSSchema = NULL;
-   elType.ElTypeNum = 0;
-   currentElementName[0] = EOS;
-   GetXmlElType (uriName, elementName, &elType, &mappedName,
-		 &currentElementContent, &highEnoughLevel);
-
-   if (mappedName == NULL)
+   /* Look for the context associated with that element */
+   savParserCtxt = currentParserCtxt;
+   buffer = TtaGetMemory ((strlen (name) + 1));
+   strcpy (buffer, (char*) name);
+   if ((ptr = strrchr (buffer, NS_SEP)) != NULL)
      {
-       if (strcmp (currentParserCtxt->SSchemaName, "HTML") == 0)
-	 strcpy (schemaName, "XHTML");
-       else if (strcmp (currentParserCtxt->SSchemaName, "SVG") == 0)
-	 strcpy (schemaName, "SVG");
-       else
-	 strcpy (schemaName, currentParserCtxt->SSchemaName);
-       if (highEnoughLevel)
-	 {
-	   /* element not found in the corresponding DTD */
-	   /* don't process that element */
-	   sprintf (msgBuffer, "Unknown %s element %s",
-		     schemaName, elementName);
-	   XmlParseError (errorParsing, msgBuffer, 0);
-	   UnknownTag = TRUE;
-	 }
-       else
-	 {
-	   /* element invalid for the current profile */
-	   /* doesn't process that element */
-	   sprintf (msgBuffer,
-		     "Unknown %s element %s for the current profile",
-		     schemaName, elementName);
-	   XmlParseError (errorParsingProfile, msgBuffer, 0);
-	   UnknownTag = TRUE;
-	 }
+       *ptr = EOS;
+       ptr++;
+       elementName = TtaGetMemory ((strlen (ptr) + 1));
+       strcpy (elementName, ptr);
+       nsName = TtaGetMemory ((strlen (buffer) + 1));
+       strcpy (nsName, buffer);
+       if ((currentParserCtxt != NULL &&
+	    strcmp (buffer, currentParserCtxt->UriName)) ||
+	   (currentParserCtxt == NULL))
+	 nslevel = ChangeXmlParserContextUri (buffer);
+#ifndef XML_GENERIC
+      if (currentParserCtxt == NULL)
+	{
+	  UnknownNS = TRUE;
+	  currentParserCtxt = savParserCtxt;
+	}
+#endif /* XML_GENERIC */
      }
    else
      {
-       /* element found in the corresponding DTD */
-       if (!XmlCloseElement (mappedName))
+       elementName = TtaGetMemory (strlen (buffer) + 1);
+       strcpy (elementName, buffer);
+     }
+ 
+   if (currentParserCtxt == NULL)
+     {
+#ifdef XML_GENERIC
+       /* We assign the generic XML context by default */ 
+       currentParserCtxt = XmlGenericParserCtxt;
+#else /* XML_GENERIC */
+       /* We stop parsing if the context is null */ 
+       sprintf (msgBuffer, 
+		"Namespace not supported for the element :\"%s\"", name);
+       XmlParseError (errorNotWellFormed, msgBuffer, 0);
+       DisableExpatParser ();
+#endif /* XML_GENERIC */
+     }
+
+   if (currentParserCtxt != NULL)
+     {
+       /* search the XML element name in the corresponding mapping table */
+       elType.ElSSchema = NULL;
+       elType.ElTypeNum = 0;
+       currentElementName[0] = EOS;
+      if (UnknownNS)
+	{
+	  /* create an Unknown_namespace element */
+	  sprintf (msgBuffer, "</%s", elementName);
+	  (*(currentParserCtxt->UnknownNameSpace))(&XMLcontext, msgBuffer);
+	}
+      else
 	 {
-	   /* the end tag does not close any current element */
-	   sprintf (msgBuffer, "Unexpected end tag %s", elementName);
-	   XmlParseError (errorParsing, msgBuffer, 0);
+	   GetXmlElType (nsName, elementName, &elType, &mappedName,
+			 &currentElementContent, &highEnoughLevel);
+	   if (mappedName == NULL)
+	       /* element not found in the corresponding DTD */
+	       UnknownElement = TRUE;
+	   else
+	     {
+	       /* element found in the corresponding DTD */
+	       if (!XmlCloseElement (mappedName))
+		 {
+		   /* the end tag does not close any current element */
+		   sprintf (msgBuffer, "Unexpected end tag %s", elementName);
+		   XmlParseError (errorParsing, msgBuffer, 0);
+		 }
+	     }
 	 }
      }
+   
+   TtaFreeMemory (elementName);
+   TtaFreeMemory (buffer);
+   if (nsName != NULL)
+     TtaFreeMemory (nsName);
 }
 /*---------------------  EndElement  (end)  --------------------------*/
 
@@ -1963,7 +2094,8 @@ void PutInXmlElement (char *data, int length)
 	   else
 	     {
 	       /* create a TEXT element */
-	       elType.ElSSchema = currentParserCtxt->XMLSSchema;
+	       if (currentParserCtxt->XMLSSchema != NULL)
+		 elType.ElSSchema = currentParserCtxt->XMLSSchema;
 	       elType.ElTypeNum = 1;
 	       elText = TtaNewElement (XMLcontext.doc, elType);
 	       XmlSetElemLineNumber (elText);
@@ -2082,11 +2214,68 @@ static unsigned char *HandleXMLstring (unsigned char *data, int length,
   buffer[j] = EOS;
   return buffer;
 }
-
 /*----------------------  Data  (end)  ---------------------------*/
 
 
 /*--------------------  Attributes  (start)  ---------------------*/
+/*----------------------------------------------------------------------
+  UnknownXmlAttribute
+  Creation of filling of an "unknown_attr" attribute
+  ----------------------------------------------------------------------*/
+static void      UnknownXmlAttribute (char *xmlAttr)
+     
+{
+   AttributeType attrType;
+   Attribute     attr;
+   char         *buffer;
+   ThotBool      level = TRUE;
+   int           length;
+
+   if (currentParserCtxt != NULL)
+     {
+       /* Attach an Invalid_attribute to the current element */
+       attrType.AttrSSchema = currentParserCtxt->XMLSSchema;
+       if (currentParserCtxt == XhtmlParserCtxt)
+	 attrType.AttrTypeNum = HTML_ATTR_Unknown_attribute;
+	 else
+	   (*(currentParserCtxt->MapAttribute)) ("unknown_attr", &attrType,
+						 currentElementName,
+						 &level, XMLcontext.doc);
+       if (attrType.AttrTypeNum > 0)
+	 {
+	   attr = TtaGetAttribute (XMLcontext.lastElement, attrType);
+	   if (attr == NULL)
+	     {
+	       attr = TtaNewAttribute (attrType);
+	       TtaAttachAttribute (XMLcontext.lastElement, attr, XMLcontext.doc);
+	       length = strlen (xmlAttr);
+	       buffer = TtaGetMemory (length + 2);
+	       strcpy (buffer, " ");
+	       strcat (buffer, xmlAttr);
+	       TtaSetAttributeText (attr, buffer,
+				    XMLcontext.lastElement,
+				    XMLcontext.doc);
+	     }
+	   else
+	     {
+	       /* Copy the name of the attribute as the content */
+	       /* of the Invalid_attribute attribute. */
+	       length = strlen (xmlAttr) + 2;
+	       length += TtaGetTextAttributeLength (attr);
+	       buffer = TtaGetMemory (length + 1);
+	       TtaGiveTextAttributeValue (attr, buffer, &length);
+	       strcat (buffer, " ");
+	       strcat (buffer, xmlAttr);
+	       TtaSetAttributeText (attr, buffer,
+				    XMLcontext.lastElement,
+				    XMLcontext.doc);
+	       TtaFreeMemory (buffer);
+	     }
+	   currentAttribute = attr;
+	 }
+     }
+   return;
+}
 
 /*----------------------------------------------------------------------
    EndOfXhtmlAttributeName   
@@ -2106,12 +2295,12 @@ static void EndOfXhtmlAttributeName (char *attrName, Element el,
    UnknownAttr = FALSE;
    attrType.AttrTypeNum = 0;
 
-   mapAttr = MapHTMLAttribute (attrName, &attrType,
-			       currentElementName, &highEnoughLevel, doc);
+   mapAttr = MapHTMLAttribute (attrName, &attrType, currentElementName,
+			       &highEnoughLevel, doc);
 
    if (attrType.AttrTypeNum <= 0)
      {
-       /* this attribute is not in the mapping table */
+       /* this attribute is not in the HTML mapping table */
        if (strcasecmp (attrName, "xml:lang") == 0)
 	 /* attribute xml:lang is not considered as invalid, but it is ignored */
 	 lastMappedAttr = NULL;
@@ -2129,11 +2318,6 @@ static void EndOfXhtmlAttributeName (char *attrName, Element el,
 			 attrName);
 	       XmlParseError (errorParsingProfile, msgBuffer, 0);
 	     }
-	   /* attach an Invalid_attribute to the current element */
-	   mapAttr = MapHTMLAttribute ("unknown_attr", &attrType,
-				       currentElementName,
-				       &highEnoughLevel, doc);
-	   UnknownAttr = TRUE;
 	 }
      }
    
@@ -2211,54 +2395,51 @@ static void EndOfXmlAttributeName (char *attrName, char *uriName,
    char             msgBuffer[MaxMsgLength];
    ThotBool         level = TRUE;
    char             schemaName[MAX_SS_NAME_LENGTH];
-#ifdef XML_GENERIC   
+   int              length;
+   char            *buffer;
    ElementType      elType;
    ThotBool         isnew;
-#endif /* XML_GENERIC */
 
    attrType.AttrTypeNum = 0;
 
-#ifdef XML_GENERIC   
-   if (strcmp (currentParserCtxt->SSchemaName, "XML") == 0)
+   if (currentParserCtxt != NULL)
      {
-       if (uriName != NULL)
+       if (currentParserCtxt == XmlGenericParserCtxt)
 	 {
-	   isnew = FALSE;
-	   attrType.AttrSSchema = GetGenericXMLSSchemaByUri (uriName, XMLcontext.doc, &isnew);
-	   if (isnew)
-	     TtaChangeGenericSchemaNames (uriName, NULL, XMLcontext.doc);
+	   if (uriName != NULL)
+	     {
+	       isnew = FALSE;
+	       attrType.AttrSSchema = GetGenericXMLSSchemaByUri (uriName, XMLcontext.doc, &isnew);
+	       if (isnew)
+		 TtaChangeGenericSchemaNames (uriName, NULL, XMLcontext.doc);
+	     }
+	   else
+	     {
+	       elType = TtaGetElementType (XMLcontext.lastElement);
+	       attrType.AttrSSchema = elType.ElSSchema;
+	     }
+	   MapGenericXmlAttribute (attrName, &attrType, doc);
 	 }
        else
 	 {
-	   elType = TtaGetElementType (XMLcontext.lastElement);
-	   attrType.AttrSSchema = elType.ElSSchema;
+	   if (currentParserCtxt->MapAttribute)
+	     (*(currentParserCtxt->MapAttribute)) (attrName, &attrType,
+						   currentElementName,
+						   &level, doc);
 	 }
-       MapGenericXmlAttribute (attrName, &attrType, doc);
      }
-   else
-     { 
-       if (currentParserCtxt->MapAttribute)
-	 (*(currentParserCtxt->MapAttribute)) (attrName, &attrType,
-					       currentElementName,
-					       &level, doc);
-     }
-#else /* XML_GENERIC */
-       if (currentParserCtxt->MapAttribute)
-	 (*(currentParserCtxt->MapAttribute)) (attrName, &attrType,
-					       currentElementName,
-					       &level, doc);
-#endif /* XML_GENERIC */
-
+   
    if (attrType.AttrTypeNum <= 0)
-     /* this attribute is not in a mapping table */
      {
-       if (strcmp (currentParserCtxt->SSchemaName, "SVG") == 0)
-	 strcpy (schemaName, "SVG");
-       else
-	 strcpy (schemaName, currentParserCtxt->SSchemaName);
+       /* This attribute is not in the corresponding mapping table */
+       strcpy (schemaName, currentParserCtxt->SSchemaName);
        sprintf (msgBuffer, "Unknown %s attribute %s",
 		schemaName, attrName);
        XmlParseError (errorParsing, msgBuffer, 0);
+       /* Attach an Invalid_attribute to the current element */
+       /* It may be a valid attribute that is not yet defined in Amaya tables */
+       UnknownXmlAttribute (attrName);
+       UnknownAttr = TRUE;
      }
    else
      {
@@ -2279,32 +2460,41 @@ static void EndOfXmlAttributeName (char *attrName, char *uriName,
   A XML attribute has been read. 
   Create the corresponding Thot attribute.
   ----------------------------------------------------------------------*/
-static void EndOfAttributeName (char *xmlName)
+static void      EndOfAttributeName (char *xmlName)
      
 {
-   char     *buffer;
-   char     *attrName;
-   char     *ptr = NULL;
+   AttributeType attrType;
+   Attribute     attr;
+   char         *buffer;
+   char         *attrName;
+   char         *ptr = NULL;
+   ThotBool      level = TRUE;
+   int           length, nslevel;
+   PtrParserCtxt savParserCtxt = NULL;
+   unsigned char msgBuffer[MaxMsgLength];
 
    currentAttribute = NULL;
    lastMappedAttr = NULL;
+   UnknownAttr = FALSE;
    HTMLStyleAttribute = FALSE;
    XMLSpaceAttribute = FALSE;
  
-   if (UnknownTag)
+   if (UnknownElement)
+     /* The corresponding element id unknown in the current DTD */ 
      return;
 
    /* look for a NS_SEP in the tag name (namespaces) */ 
    /* and ignore the prefix if there is one */
+   savParserCtxt = currentParserCtxt;
    buffer = TtaGetMemory (strlen (xmlName) + 1);
    strcpy (buffer, (char*) xmlName);
    if ((ptr = strrchr (buffer, NS_SEP)) != NULL)
      {
+       /* This attribute belongs to a specific namespace */
        *ptr = EOS;
        ptr++;
-
        /* Specific treatment to get round a bug in EXPAT parser */
-       /* This one replaces first "xml:" prefix by the namespaces URI */
+       /* It replaces first "xml:" prefix by the namespaces URI */
        if (strcmp (buffer, NAMESPACE_URI) == 0)
 	 {
 	   attrName = TtaGetMemory (strlen (ptr) + 5);
@@ -2317,21 +2507,58 @@ static void EndOfAttributeName (char *xmlName)
 	   strcpy (attrName, ptr);
 	   if (currentParserCtxt != NULL &&
 	       strcmp (buffer, currentParserCtxt->UriName))
-	     ChangeXmlParserContextUri (buffer);
+	     nslevel = ChangeXmlParserContextUri (buffer);
+
+	   if (currentParserCtxt == NULL)
+	     {
+#ifdef XML_GENERIC
+	       /* We assign the generic XML context by default */ 
+	       currentParserCtxt = XmlGenericParserCtxt;
+#else /* XML_GENERIC */
+	       currentParserCtxt = savParserCtxt;
+	     }
+#endif /* XML_GENERIC */
+	   if (UnknownNS)
+	     {
+	       currentParserCtxt = savParserCtxt;
+	       /* This attribute is related to an element that */
+	       /* belongs to a no-supported namespace */
+	       sprintf (msgBuffer, 
+			"Namespace not supported for the attribute :\"%s\"",
+			xmlName);
+	       XmlParseError (errorParsing, msgBuffer, 0);
+	       /* Create an unknown attribute  */
+	       if (nslevel != Ns_Level)
+		 {
+		   if (Ns_Prefix[nslevel] != NULL)
+		     sprintf (msgBuffer, "%s:%s",
+			      Ns_Prefix[nslevel], attrName);
+		   else
+		     sprintf (msgBuffer, "<\"%s\":%s",
+			      Ns_Uri[nslevel], attrName);
+		 }
+	       UnknownXmlAttribute (msgBuffer);
+	       UnknownAttr = TRUE;
+	     }
 	 }
      }
    else
      {
+       /* This attribute belongs to a same namespace as the element */
        attrName = TtaGetMemory (strlen (buffer) + 1);
        strcpy (attrName, buffer);
+       if (UnknownNS)
+	 /* The corresponding element belongs to a no-supported namespace */ 
+	 {
+	   sprintf (msgBuffer, 
+		    "Namespace not supported for the attribute :\"%s\"", xmlName);
+	   XmlParseError (errorParsing, msgBuffer, 0);
+	   /* Create an unknown attribute  */
+	   UnknownXmlAttribute (attrName);
+	   UnknownAttr = TRUE;
+	 }
      }
-   
-#ifdef XML_GENERIC
-   /* We assign the generic XML context by default */ 
-   if (currentParserCtxt == NULL)
-     currentParserCtxt = XmlGenericParserCtxt;
-#endif /* XML_GENERIC */
-   
+
    /* Is it a xml:space attribute */
    if (strncmp (attrName, "xml:space", 9) == 0)
      XMLSpaceAttribute = TRUE;
@@ -2339,8 +2566,8 @@ static void EndOfAttributeName (char *xmlName)
    /* the attribute xml:lang is replaced by the attribute "lang" */
    if (strncmp (attrName, "xml:lang", 8) == 0)
      strcpy (attrName, "lang");
-   
-   if (currentParserCtxt != NULL)
+
+   if (currentParserCtxt != NULL && !UnknownAttr)
      {
        if (strcmp (currentParserCtxt->SSchemaName, "HTML") == 0)
 	 EndOfXhtmlAttributeName (attrName,
@@ -2366,6 +2593,8 @@ static void EndOfXmlAttributeValue (char *attrValue)
    AttributeType    attrType;
    int		    attrKind, val;
    unsigned char    msgBuffer[MaxMsgLength];
+   int              length;
+   char            *buffer;
 
    TtaGiveAttributeType (currentAttribute, &attrType, &attrKind);
    switch (attrKind)
@@ -2387,11 +2616,30 @@ static void EndOfXmlAttributeValue (char *attrValue)
 			     XMLcontext.lastElement, XMLcontext.doc);
        break;
      case 2:       /* text */
-       TtaSetAttributeText (currentAttribute, attrValue,
-			    XMLcontext.lastElement, XMLcontext.doc);
-       if (HTMLStyleAttribute)
-	 ParseHTMLSpecificStyle (XMLcontext.lastElement, attrValue,
-				 XMLcontext.doc, 1, FALSE);
+       if (UnknownAttr)
+	 {
+	   /* This is the content of an invalid attribute */
+	   /* Append it to the current Invalid_attribute */
+	   length = strlen (attrValue) + 4;
+	   length += TtaGetTextAttributeLength (currentAttribute);
+	   buffer = TtaGetMemory (length + 1);
+	   TtaGiveTextAttributeValue (currentAttribute,
+				      buffer, &length);
+	   strcat (buffer, "=\"");
+	   strcat (buffer, attrValue); 
+	   strcat (buffer, "\"");
+	   TtaSetAttributeText (currentAttribute, buffer,
+				XMLcontext.lastElement, XMLcontext.doc);
+	   TtaFreeMemory (buffer);
+	 }
+       else
+	 {
+	   TtaSetAttributeText (currentAttribute, attrValue,
+				XMLcontext.lastElement, XMLcontext.doc);
+	   if (HTMLStyleAttribute)
+	     ParseHTMLSpecificStyle (XMLcontext.lastElement, attrValue,
+				     XMLcontext.doc, 1, FALSE);
+	 }
        break;
      case 3:       /* reference */
        break;
@@ -2405,28 +2653,53 @@ static void EndOfXmlAttributeValue (char *attrValue)
 
 /*----------------------------------------------------------------------
    EndOfAttributeValue
-   An attribute value has been read from the HTML file.
+   An attribute value has been read from the parsed file.
    Put that value in the current Thot attribute.
   ----------------------------------------------------------------------*/
 static void       EndOfAttributeValue (unsigned char *attrValue,
 				       unsigned char *attrName)
 {
-  unsigned char *buffer;
+   unsigned char *buffer;
+   char          *bufferNS;
+   int            length;
 
   if ((lastMappedAttr || currentAttribute) && currentParserCtxt)
     {
       buffer = HandleXMLstring (attrValue, strlen (attrValue),
 				currentParserCtxt->XMLtype, NULL);
+
+      /* White-space attribute */
       if (XMLSpaceAttribute)
 	XmlWhiteSpaceInStack (buffer);
-      if (strcmp (currentParserCtxt->SSchemaName, "HTML") == 0)
-	EndOfHTMLAttributeValue (buffer, lastMappedAttr,
-				 currentAttribute, lastAttrElement,
-				 UnknownAttr, &XMLcontext, TRUE);
+      
+      if (UnknownAttr)
+	{
+	  /* This is the content of an invalid attribute */
+	  /* Append it to the current Invalid_attribute */
+	  length = strlen (attrValue) + 4;
+	  length += TtaGetTextAttributeLength (currentAttribute);
+	  bufferNS = TtaGetMemory (length + 1);
+	  TtaGiveTextAttributeValue (currentAttribute,
+				     bufferNS, &length);
+	  strcat (bufferNS, "=\"");
+	  strcat (bufferNS, attrValue); 
+	  strcat (bufferNS, "\"");
+	  TtaSetAttributeText (currentAttribute, bufferNS,
+			       XMLcontext.lastElement, XMLcontext.doc);
+	  TtaFreeMemory (bufferNS);
+	}
       else
-	EndOfXmlAttributeValue (buffer);
+	{
+	  if (strcmp (currentParserCtxt->SSchemaName, "HTML") == 0)
+	    EndOfHTMLAttributeValue (buffer, lastMappedAttr,
+				     currentAttribute, lastAttrElement,
+				     UnknownAttr, &XMLcontext, TRUE);
+	  else
+	    EndOfXmlAttributeValue (buffer);
+	}
       TtaFreeMemory (buffer);
     }
+  
   currentAttribute = NULL;
   HTMLStyleAttribute = FALSE;
   XMLSpaceAttribute = FALSE;
@@ -3181,14 +3454,9 @@ static void       Hndl_ElementStart (void *userData,
 				     const XML_Char **attlist)
 
 {
-   char          *buffer = NULL;
    unsigned char *attrName = NULL;
    unsigned char *attrValue = NULL;
-   char          *elementName = NULL;
-   char          *uriName = NULL;
-   char          *ptr = NULL;
    PtrParserCtxt  elementParserCtxt = NULL;
-   char           msgBuffer[MaxMsgLength];
    
 #ifdef EXPAT_PARSER_DEBUG
    printf ("\n Hndl_ElementStart '%s'\n", name);
@@ -3201,57 +3469,16 @@ static void       Hndl_ElementStart (void *userData,
        /* If a start tag appears, consider it as plain text */
      }
    else
-     {
-       /* Look for the context associated with that element */
-       buffer = TtaGetMemory ((strlen (name) + 1));
-       strcpy (buffer, (char*) name);
-       if ((ptr = strrchr (buffer, NS_SEP)) != NULL)
-	 {
-	   *ptr = EOS;
-	   ptr++;
-	   elementName = TtaGetMemory ((strlen (ptr) + 1));
-	   strcpy (elementName, ptr);
-	   uriName = TtaGetMemory ((strlen (buffer) + 1));
-	   strcpy (uriName, buffer);
-	   
-	   if ((currentParserCtxt != NULL &&
-		strcmp (uriName, currentParserCtxt->UriName)) ||
-	       (currentParserCtxt == NULL))
-	     ChangeXmlParserContextUri (uriName);
-	 }
-       else
-	 {
-	   elementName = TtaGetMemory (strlen (buffer) + 1);
-	   strcpy (elementName, buffer);
-	 }
-       
-#ifdef XML_GENERIC
-       /* We assign the generic XML context by default */ 
-       if (currentParserCtxt == NULL)
-	 currentParserCtxt = XmlGenericParserCtxt;
-#else /* XML_GENERIC */
-       /* We stop parsing if the context is null, ie,
-	  if Thot doesn't know the corresponding namespace */ 
-       if (currentParserCtxt == NULL)
-	 {
-	   sprintf (msgBuffer, 
-		    "Namespace not supported for the element :\"%s\"", name);
-	   XmlParseError (errorNotWellFormed, msgBuffer, 0);
-	   DisableExpatParser ();
-	   return;
-	 }
-#endif /* XML_GENERIC */
-       
-       /* We save the element current context */
-       elementParserCtxt = currentParserCtxt;
-       
+     {     
        /* Ignore the virtual root of a XML sub-tree when */
        /* we are parsing the result of a transformation */
-       if (strcmp (elementName, SUBTREE_ROOT) != 0)
+       if (strcmp ((char*) name, SUBTREE_ROOT) != 0)
 	 {
 	   /* Treatment called at the beginning of start tag */
-	   StartOfXmlStartElement (uriName, elementName);
-	   
+	   StartOfXmlStartElement ((char*) name);
+	   /* We save the element current context */
+	   elementParserCtxt = currentParserCtxt;
+
 	   /*-------  Treatment of the attributes -------*/
 	   while (*attlist != NULL)
 	     {
@@ -3291,7 +3518,7 @@ static void       Hndl_ElementStart (void *userData,
 	     }
 
 	   /*----- Treatment called at the end of start tag -----*/
-	   EndOfXmlStartElement (elementName);
+	   EndOfXmlStartElement ((char*) name);
 	   
 	   /*----- We are immediately after a start tag -----*/
 	   ImmediatelyAfterTag = TRUE;
@@ -3301,11 +3528,6 @@ static void       Hndl_ElementStart (void *userData,
 	     /* This is the first parsed element */
 	     strcpy (XMLRootName, (char*) name);
 	 }
-       
-       if (uriName != NULL)
-	 TtaFreeMemory (uriName);
-       TtaFreeMemory (elementName);
-       TtaFreeMemory (buffer);
      }
 }
 
@@ -3317,70 +3539,19 @@ static void     Hndl_ElementEnd (void *userData,
 				 const XML_Char *name)
 
 {
-   char       *uriName = NULL;
-   char       *elementName;
-   char       *buffer;
-   char       *ptr;
-   char        msgBuffer[MaxMsgLength];
-
 #ifdef EXPAT_PARSER_DEBUG
    printf ("\n Hndl_ElementEnd '%s'", name);
 #endif /* EXPAT_PARSER_DEBUG */
-
+   
    ImmediatelyAfterTag = FALSE;
-
-   /* Look for the context associated with that element */
-   buffer = TtaGetMemory ((strlen (name) + 1));
-   strcpy (buffer, (char*) name);
-   if ((ptr = strrchr (buffer, NS_SEP)) != NULL)
-     {
-       *ptr = EOS;
-       ptr++;
-       elementName = TtaGetMemory ((strlen (ptr) + 1));
-       strcpy (elementName, ptr);
-       uriName = TtaGetMemory ((strlen (buffer) + 1));
-       strcpy (uriName, buffer);
-
-       if ((currentParserCtxt != NULL &&
-	    strcmp (buffer, currentParserCtxt->UriName)) ||
-	   (currentParserCtxt == NULL))
-	 ChangeXmlParserContextUri (buffer);
-     }
-   else
-     {
-       elementName = TtaGetMemory (strlen (buffer) + 1);
-       strcpy (elementName, buffer);
-     }
-
-#ifdef XML_GENERIC
-   /* We assign the generic XML context by default */ 
-   if (currentParserCtxt == NULL)
-     currentParserCtxt = XmlGenericParserCtxt;
-#else /* XML_GENERIC */
-   /* We stop parsing if the context is null, ie,
-      if Thot doesn't know the corresponding namespace */ 
-   if (currentParserCtxt == NULL)
-     {
-       sprintf (msgBuffer, 
-		"Namespace not supported for the element :\"%s\"", name);
-       XmlParseError (errorNotWellFormed, msgBuffer, 0);
-       DisableExpatParser ();
-       return;
-     }
-#endif /* XML_GENERIC */
    
    /* Ignore the virtual root of a XML sub-tree */
-   if (strcmp (elementName, SUBTREE_ROOT) != 0)
-     EndOfXmlElement (uriName, elementName);
-
+   if (strcmp ((char*) name, SUBTREE_ROOT) != 0)
+     EndOfXmlElement ((char*) name);
+   
    /* Is it the end tag of the root element ? */
    if (!strcmp (XMLRootName, (char*) name) && stackLevel == 1)
      XMLrootClosed = TRUE;
-
-   if (uriName != NULL)
-     TtaFreeMemory (uriName);   
-   TtaFreeMemory (elementName);   
-   TtaFreeMemory (buffer);   
 }
 
 /*----------------------------------------------------------------------
@@ -3414,10 +3585,42 @@ static void     Hndl_NameSpaceStart (void *userData,
 				     const XML_Char *uri)
 
 {
+  int    len;
+
 #ifdef EXPAT_PARSER_DEBUG
   printf ("\n Hndl_NameSpaceStart");
   printf ("\n   prefix : %s; uri : %s", prefix, uri);
 #endif /* EXPAT_PARSER_DEBUG */
+
+  /* Filling up the NameSpace table */
+
+  if (stackLevel >= MAX_NS_TABLE)
+    {
+      XmlParseError (errorNotWellFormed, "**FATAL** Too many NameSpaces", 0);
+      DisableExpatParser ();
+      return;
+    }
+
+  if ((char*) prefix != NULL)
+    {
+      len = strlen ((char*) prefix);
+      Ns_Prefix[Ns_Level] = TtaGetMemory (len + 1);
+      strcpy (Ns_Prefix[Ns_Level], (char*) prefix);
+    }
+  else
+    Ns_Prefix[Ns_Level] = NULL;
+
+  if ((char*) uri != NULL)
+    {
+      len = strlen ((char*) uri);
+      Ns_Uri[Ns_Level] = TtaGetMemory (len + 1);
+      strcpy (Ns_Uri[Ns_Level], (char*) uri);
+    }
+  else
+    Ns_Prefix[Ns_Level] = NULL;
+
+  Ns_Level ++;
+ 
 }
 
 /*----------------------------------------------------------------------
@@ -3545,8 +3748,9 @@ void             FreeXmlParserContexts (void)
 
 {
   PtrParserCtxt  ctxt, nextCtxt;
+  int            i;
 
-   /* free parser contexts */
+   /* Free parser contexts */
    ctxt = firstParserCtxt;
    while (ctxt != NULL)
       {
@@ -3558,6 +3762,15 @@ void             FreeXmlParserContexts (void)
       }
    firstParserCtxt = NULL;
    currentParserCtxt = NULL;
+
+   /* Free NameSpace table */
+   for (i = 0; i < Ns_Level; i++)
+     {
+       if (Ns_Prefix[i] != NULL)
+	 TtaFreeMemory (Ns_Prefix[i]);
+       if (Ns_Uri[i] != NULL)
+	 TtaFreeMemory (Ns_Uri[i]);
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -3585,6 +3798,7 @@ static void    DisableExpatParser ()
   XML_SetUnknownEncodingHandler (Parser, NULL, 0);
   XML_SetUnparsedEntityDeclHandler (Parser, NULL);
 }
+
 /*----------------------------------------------------------------------
    FreeExpatParser
   ----------------------------------------------------------------------*/
@@ -3595,7 +3809,6 @@ static void     FreeExpatParser ()
   XML_ParserFree (Parser);
   Parser = NULL;
 }
-
 
 /*----------------------------------------------------------------------
    InitializeExpatParser
@@ -3755,7 +3968,7 @@ static void  InitializeXmlParsingContext (Document doc,
   lastAttrElement = NULL;
   lastMappedAttr = NULL;
   ImmediatelyAfterTag = FALSE;
-  UnknownTag = FALSE;
+  UnknownElement = FALSE;
   XMLRootName[0] = EOS;
   XMLrootClosed = FALSE;
   IgnoreCommentAndPi = FALSE;
@@ -3766,6 +3979,7 @@ static void  InitializeXmlParsingContext (Document doc,
   
   /* initialize the stack of opened elements */
   stackLevel = 1;
+  Ns_Level = 0;
   elementStack[0] = RootElement;
 }
 
@@ -4326,9 +4540,9 @@ void StartXmlParser (Document doc,
 		     ThotBool xmlDoctype)
 {
   Element         el, oldel;
-  char           *s;
   char            tempname[MAX_LENGTH];
   char            temppath[MAX_LENGTH];
+  char           *s;
   int             error;
   ThotBool        isXHTML;
   CHARSET         charset;
@@ -4411,11 +4625,12 @@ void StartXmlParser (Document doc,
 	InitXmlParserContexts ();
 
       /* Select root context */
-      if (strcmp (TtaGetSSchemaName (DocumentSSchema), "HTML") == 0)
+      s = TtaGetSSchemaName (DocumentSSchema);
+      if (strcmp (s, "HTML") == 0)
 	ChangeXmlParserContextDTD ("HTML");
-      else if (strcmp (TtaGetSSchemaName (DocumentSSchema), "SVG") == 0)
+      else if (strcmp (s, "SVG") == 0)
 	ChangeXmlParserContextDTD ("SVG");
-      else if (strcmp (TtaGetSSchemaName (DocumentSSchema), "MathML") == 0)
+      else if (strcmp (s, "MathML") == 0)
 	ChangeXmlParserContextDTD ("MathML");
       else
 #ifdef XML_GENERIC

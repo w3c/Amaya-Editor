@@ -79,12 +79,4 @@ ATTRIBUTES
 	create 'xml:space="preserve"';
 	END;
 
-   Namespace:
-	begin
-        create SAN;
-        create 'xmlns="';
-        create Namespace;
-        create DoubleQuote;
-	end;
-
 END

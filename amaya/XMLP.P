@@ -4,10 +4,9 @@
 
 PRESENTATION XML;
 
-VIEWS
+VIEWS 
    Formatted_view,
-   Structure_view merge with Structure_view,
-   Alternate_view merge with Alternate_view;
+   Structure_view merge with Structure_view;
 
 #define STRUCT_INDENT 1.5
 #define TAG_FONTSIZE 12 pt
@@ -18,7 +17,10 @@ VIEWS
 #define ATTR_Style Roman
 #define ATTR_Weight Normal
 #define ATTR_Visibility 6
-#define ALT_Visibility 8
+#define COMMENT_Visibility 5
+#define COMMENT_Font Helvetica
+#define COMMENT_Style Italics
+#define COMMENT_Weight Normal
  
 #ifdef BLACK_WHITE
 #define TAG_Color Black
@@ -50,13 +52,6 @@ DEFAULT
 	Width: Enclosed . Width;
 	HorizRef: Enclosed . HRef;
 	END;
-   IN Alternate_view
-	BEGIN
-	VertPos: Top = Previous . Bottom;
-	Width: Enclosing . Width;
-	Height: Enclosed . Height;
-	HorizRef: Enclosed . HRef;
-	END;
    END;
 
 BOXES
@@ -69,8 +64,10 @@ BOXES
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
 		Font: TAG_Font;
-		Style: TAG_Style; Weight: TAG_Weight;
-		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		Style: TAG_Style;
+		Weight: TAG_Weight;
+		Visibility: TAG_Visibility;
+		Foreground: TAG_Color;
 		END;
 	END;
 
@@ -83,78 +80,38 @@ BOXES
 		Height: Creator . Height;
 		Width: 1.1;
 		LineWeight: 1 px;
-		Visibility: TAG_Visibility;  Foreground: TAG_Color;
+		Visibility: TAG_Visibility;
+		Foreground: TAG_Color;
 		END;
 	END;
 
-  ATTR_id: BEGIN
-        Content: Text ' id=';
-        Visibility: 0;
-        IN Structure_view BEGIN
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
-                Size: TAG_FONTSIZE;
-                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
-                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-                END;
-        END;
-  VALUE_id: BEGIN
-        Content: (id);
-        Visibility: 0;
-        IN Structure_view BEGIN
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
-                Size: TAG_FONTSIZE;
-                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
-                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-                END;
-        END;
+ AttrName: BEGIN
+	Content: (Text ' ' AttributeName Text '=');
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+ 		Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;
+		Foreground: ATTR_Color;
+		END;
+	END;
 
-  ATTR_class: BEGIN
-        Content: Text ' class=';
-        Visibility: 0;
-        IN Structure_view BEGIN
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
-                Size: TAG_FONTSIZE;
-                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
-                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-                END;
-        END;
-  VALUE_class: BEGIN
-        Content: (class);
-        Visibility: 0;
-        IN Structure_view BEGIN
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
-                Size: TAG_FONTSIZE;
-                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
-                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-                END;
-        END;
- 
-  ATTR_style: BEGIN
-        Content: Text ' style=';
-        Visibility: 0;
-        IN Structure_view BEGIN
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
-                Size: TAG_FONTSIZE;
-                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
-                Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-                END;
-        END;
-  VALUE_style: BEGIN
-        Content: (style_);
-        Visibility: 0;
-        IN Structure_view BEGIN
-                HorizPos: Left = Previous . Right;
-                VertPos: HRef = Previous . HRef;
-                Size: TAG_FONTSIZE;
-                Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
-                Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-                END;
-        END;
+ AttrValue: BEGIN
+	Content: (AttributeValue);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style;
+		Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;
+		Foreground: ATTRVALUE_Color;
+		END;
+	END;
 
   ATTR_xml_space_default: BEGIN
 	Content: Text ' xml:space=default';
@@ -179,31 +136,6 @@ BOXES
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
-{
-
-  ATTR_xlink_href: BEGIN
-	Content: Text '  xlink:href=';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-  VALUE_xlink_href: BEGIN
-	Content: (xlink_href);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-}
 
    Comment_Start:
 	BEGIN
@@ -255,55 +187,52 @@ BOXES
 
 RULES
 
+   Document:
+	BEGIN
+	Depth: 0;
+	Adjust: Left;
+	Indent: 0;
+	Font: Times;
+	Style: Roman;
+	Weight: Normal;
+	LineWeight: 0;
+        Width: Enclosing . Width;
+	Height: Enclosing . Height min;
+	Size: DOC_FONTSIZE;
+	HorizPos: Left = Enclosing . Left;
+	PaddingBottom: 2 cm;
+	MarginLeft: 0.5 cm;
+	IN Structure_view BEGIN
+		Visibility: 10;
+		Size: DOC_FONTSIZE;
+		Width: Enclosing . Width;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left;
+		PaddingLeft: 0.4;
+		Font: Helvetica;
+		END;
+	END;
+
    XML:
 	BEGIN
+	Width: Enclosing . Width;
+	VertPos: Top = Enclosing . Top;
 	CreateBefore(ElementName);
-        CreateWith(VerticalLine);
-	HorizRef: *.Bottom;
-        if within XML BEGIN
-           Width: Enclosing . Width;
-           Height: Enclosing . Height;
-	   END;
-        if NOT within XML BEGIN
-           Width: 10 cm;
-           Height: 5 cm;
-           VertPos: Top = Previous . Bottom;
-	   Foreground: transparent;
-	   Background: Black;
-	   FillPattern: backgroundcolor;
-	END;
-	PageBreak: No;
-	LineBreak: No;
-	Adjust: Left;
-	Hyphenate: No;
-	Gather: Yes;
-	LineWeight: 1 pt;
+	CreateWith(VerticalLine);
 	IN Structure_view BEGIN
-	        Visibility: 0;
+		VertPos: Top = Previous . Bottom;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-        	Height	: Enclosed . Height;
-		Font: TAG_Font;
-		Foreground: Enclosing =;
-	        Background: Enclosing =;
-	        FillPattern: nopattern;
-		END;
-	IN Alternate_view BEGIN
-		Width: Enclosing . Width;
-        	Height	: Enclosed . Height;
-	   	MarginTop: 0;
-	   	MarginBottom: 0;
-		Foreground: Enclosing =;
-	        Background: Enclosing =;
-	        FillPattern: nopattern;
-		END;		
+	        END;
 	END;
 
    XMLcomment:
 	BEGIN
 	Visibility: 0;
 	IN Structure_view BEGIN
-		Visibility: 10;
+		Visibility: COMMENT_Visibility;
+		Font: COMMENT_Font;
+		Style: COMMENT_Style; Weight: COMMENT_Weight;
 		Width: Enclosing . Width ;
 		END;
 	END;
@@ -312,10 +241,11 @@ RULES
         BEGIN
         IF First CreateFirst(Comment_Start);
         IF Last CreateLast(Comment_End);
+	Visibility: 0;
 	IN Structure_view BEGIN
-	        HorizPos: Left = Enclosing . Left;
-	        VertPos: Top = Previous . Bottom + 0.2;
-	        Width: Enclosed . Width;
+		Visibility: COMMENT_Visibility;
+		Width: Enclosed . Width;
+		VertPos: Top = Previous . Bottom + 0.2;
 		END;
         END;
 
@@ -323,8 +253,10 @@ RULES
 	BEGIN
 	Visibility: 0;
 	IN Structure_view BEGIN
-		Visibility: 10;
-		Width: Enclosing . Width ;
+		Visibility: COMMENT_Visibility;
+		Font: COMMENT_Font;
+		Style: COMMENT_Style; Weight: COMMENT_Weight;
+		Width: Enclosing . Width;
 		END;
 	END;
 
@@ -332,18 +264,36 @@ RULES
         BEGIN
         IF First CreateFirst(PI_Start);
         IF Last CreateLast(PI_End);
+	Visibility: 0;
 	IN Structure_view BEGIN
-	        HorizPos: Left = Enclosing . Left;
-	        VertPos: Top = Previous . Bottom + 0.2;
-	        Width: Enclosed . Width;
+		Visibility: COMMENT_Visibility;
+		Width: Enclosed . Width;
+		VertPos: Top = Previous . Bottom + 0.2;
 		END;
         END;
 
+{
+   foo:
+	BEGIN
+	CreateBefore(ElementName);
+	CreateWith(VerticalLine);
+	LineBreak: Yes;
+	Width: Enclosing . Width;
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Previous . Bottom + 0.2;
+	IN Structure_view BEGIN
+		Size: Enclosing =;
+		Width: Enclosing . Width - STRUCT_INDENT;
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+		VertPos: Top = Previous . Bottom;
+		END;
+	END;
+}
+ 
    TEXT_UNIT:
 	BEGIN
-	HorizRef: Enclosed . HRef;
 	HorizPos: Left = Previous . Right;
-        VertPos: HRef = Previous . HRef;
+	VertPos: HRef = Previous . HRef;
 	Width: Enclosed . Width;
         Height: Enclosed . Height;
 	IN Structure_view BEGIN
@@ -361,68 +311,46 @@ RULES
                    VertPos: HRef = Previous . HRef;
 		   END;
 		END;
-	IN Alternate_view BEGIN
-	        Width: Enclosed . Width;
-        	VertPos: HRef = Previous . HRef;
-		END;
 	END;
 
    GRAPHICS_UNIT:
 	BEGIN
-	Width: Enclosing . Width;
+	Visibility: Enclosing =;
 	Height: Enclosing . Height;
+	Width: Enclosing . Width;	
 	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
+	   Visibility: 0;
 	END;
 
    PICTURE_UNIT:
 	BEGIN
-	Width: Enclosing . Width;
-        Height: Enclosing . Height;
-	IN Structure_view
-		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
+	CreateBefore(ElementName);
+	LineBreak: No;
+	PageBreak: No;
+	HorizRef: * . Bottom;
+	IN Structure_view BEGIN
+		Height: 0;
+		Width: 0;
+		Visibility: 1;
+		VertPos: Top = Previous . Bottom;
+		HorizPos: Left = Enclosing . Left;
+		END;
 	END;
 
 ATTRIBUTES
 
-  id:
-        BEGIN
-        CreateBefore(ATTR_id);
-        CreateBefore(VALUE_id);
-        END;
-
-  class:
-        BEGIN
-        CreateBefore(ATTR_class);
-        CreateBefore(VALUE_class);
-        END;
- 
-  style_:
-        BEGIN
-        CreateBefore(ATTR_style);
-        CreateBefore(VALUE_style);
-        END;
- 
   xml_space = xml_space_default:
 	CreateBefore (ATTR_xml_space_default);
 
   xml_space = xml_space_preserve:
 	CreateBefore (ATTR_xml_space_preserve);
 
-  Highlight:
+{ 
+  bar:
 	BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
 	END;
+}
 
-{
-  xlink_href:
-	BEGIN
-	CreateBefore (ATTR_xlink_href);
-	CreateBefore (VALUE_xlink_href);
-	END;
-} 
- 
 END

@@ -387,7 +387,7 @@ ThotBool      XhtmlCannotContainText (ElementType elType)
   Complete Xhtml elements.
   Check its attributes and its contents.
   ----------------------------------------------------------------------*/
-void XhtmlElementComplete (Element el, Document doc, int *error)
+void       XhtmlElementComplete (Element el, Document doc, int *error)
 
 {
    ElementType    elType, newElType, childType;
@@ -821,6 +821,35 @@ Element         PutInContent (char *ChrString, ParserData *context)
 }
 
 /*----------------------------------------------------------------------
+   UnknownXhtmlNameSpace
+   Create an element that belongs to a non-supported namespace
+  ----------------------------------------------------------------------*/
+void               UnknownXhtmlNameSpace (ParserData *context, char* content)
+{
+   ElementType     elType;
+   AttributeType   attrType;
+   Element         elInv, elText;
+   Attribute       attr;
+
+   /* Create a new Invalid_element */
+   elType.ElSSchema = GetXMLSSchema (XHTML_TYPE, context->doc);
+   elType.ElTypeNum = HTML_EL_Unknown_namespace;
+   elInv = TtaNewElement (context->doc, elType);
+   if (elInv != NULL)
+     {
+       XmlSetElemLineNumber (elInv);
+       InsertXmlElement (&elInv);
+       context->lastElementClosed = TRUE;
+       elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+       elText = TtaNewElement (context->doc, elType);
+       XmlSetElemLineNumber (elText);
+       TtaInsertFirstChild (&elText, elInv, context->doc);
+       TtaSetTextContent (elText, content, context->language, context->doc);
+       TtaSetAccessRight (elText, ReadOnly, context->doc);
+     }
+}
+
+/*----------------------------------------------------------------------
    CreateHTMLAttribute
    create an attribute of type attrType for the element el.
   ----------------------------------------------------------------------*/
@@ -1220,31 +1249,27 @@ void EndOfHTMLAttributeValue (char *attrValue,
 					    &attrType, &attrKind);
 		      attrName = TtaGetAttributeName (attrType);
 		      sprintf (msgBuffer,
-			       "Unknown attribute value \"%s = %s\"",
+			       "Invalid attribute value \"%s = %s\"",
 			       attrName, attrValue);
 		      if (isXML)
 			XmlParseError (errorParsing, msgBuffer, 0);
 		      else
-			HTMLParseError (context->doc, msgBuffer);
-		      
-		      /* remove the attribute and replace it by an */
-		      /* Invalid_attribute */
-		      TtaRemoveAttribute (lastAttrElement,
-					  currentAttribute, context->doc);
-		      if (isXML)
-			MapHTMLAttribute ("unknown_attr", &attrType,
-					  NULL, &level, context->doc);
-		      else
 			{
+			  HTMLParseError (context->doc, msgBuffer);
+		      /* remove the attribute and replace it by an */
+		      /* Invalid_attribute (not for XHTML) */
+			  TtaRemoveAttribute (lastAttrElement,
+					      currentAttribute, context->doc);
 			  attrType.AttrSSchema = 
 			    TtaGetDocumentSSchema (context->doc);
 			  attrType.AttrTypeNum =
 			    pHTMLAttributeMapping[0].ThotAttribute;
+			  sprintf (msgBuffer, "%s=%s", attrName, attrValue);
+			  CreateHTMLAttribute (lastAttrElement, attrType,
+					       msgBuffer, TRUE, context->doc,
+					       &currentAttribute,
+					       &lastAttrElement);
 			}
-		      sprintf (msgBuffer, "%s=%s", attrName, attrValue);
-		      CreateHTMLAttribute (lastAttrElement, attrType,
-					   msgBuffer, TRUE, context->doc,
-					   &currentAttribute, &lastAttrElement);
 		    }
 		  else
 		    TtaSetAttributeValue (currentAttribute, val,
@@ -1331,19 +1356,22 @@ void EndOfHTMLAttributeValue (char *attrValue,
 					 lastAttrElement);
 		    }
 		  else
-		    /* this is the content of an invalid attribute */
-		    /* append it to the current Invalid_attribute */
 		    {
-		      length = strlen (attrValue) + 2;
-		      length += TtaGetTextAttributeLength (currentAttribute);
-		      buffer = TtaGetMemory (length + 1);
-		      TtaGiveTextAttributeValue (currentAttribute,
-						 buffer, &length);
-		      strcat (buffer, "=");
-		      strcat (buffer, attrValue);
-		      TtaSetAttributeText (currentAttribute, buffer,
-					   lastAttrElement, context->doc);
-		      TtaFreeMemory (buffer);
+		      /* this is the content of an invalid attribute */
+		      /* append it to the current Invalid_attribute */
+		      if (!isXML)
+			{
+			  length = strlen (attrValue) + 2;
+			  length += TtaGetTextAttributeLength (currentAttribute);
+			  buffer = TtaGetMemory (length + 1);
+			  TtaGiveTextAttributeValue (currentAttribute,
+						     buffer, &length);
+			  strcat (buffer, "=");
+			  strcat (buffer, attrValue);
+			  TtaSetAttributeText (currentAttribute, buffer,
+					       lastAttrElement, context->doc);
+			  TtaFreeMemory (buffer);
+			}
 		    }
 		  break;
 		case 3:	/* reference */

@@ -1742,6 +1742,9 @@ Document       GetDocFromSource (Document sourceDoc)
         if (DocumentTypes[i] == docHTML ||
 	    DocumentTypes[i] == docAnnot ||
 	    DocumentTypes[i] == docSVG ||
+#ifdef XML_GENERIC      
+	    DocumentTypes[i] == docXml ||
+#endif /* XML_GENERIC */
 	    DocumentTypes[i] == docMath)
            if (DocumentSource[i] == sourceDoc)
 	      xmlDoc = i;

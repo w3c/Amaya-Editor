@@ -1002,6 +1002,16 @@ RULES
 #endif
 	END;
 
+ Unknown_namespace:
+	BEGIN
+	   NoTranslation;
+	   Create '\12';
+	   Create Content;
+	   Remove;
+	   Create Attributes;
+	   Create '>';
+	END;
+
  Comment\240: BEGIN
 	NoLineBreak;
  	Create '<!--';
@@ -2145,6 +2155,11 @@ ATTRIBUTES
 #ifndef XML
 	Create Invalid_attribute;
 #endif
+	END;
+
+ Unknown_attribute:
+	BEGIN
+	Create Unknown_attribute;
 	END;
 
  IntEntity:

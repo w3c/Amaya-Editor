@@ -334,21 +334,27 @@ int       MapXMLAttribute (int XMLtype, char *attrName,
   *highEnoughLevel = TRUE;
   i = 1;
   *thotType = 0;
-
-   /* Select the right table */
-   if (XMLtype == XHTML_TYPE)
-     ptr = XHTMLAttributeMappingTable;
-   else if (XMLtype == MATH_TYPE)
-     ptr = MathMLAttributeMappingTable;
-   else if (XMLtype == GRAPH_TYPE)
-     ptr = SVGAttributeMappingTable;
-   else if (XMLtype == XLINK_TYPE)
-     ptr = XLinkAttributeMappingTable;
-   else
-     ptr = NULL;
-
+  
+  /* Select the right table */
+  if (XMLtype == XHTML_TYPE)
+    ptr = XHTMLAttributeMappingTable;
+  else if (XMLtype == MATH_TYPE)
+    ptr = MathMLAttributeMappingTable;
+  else if (XMLtype == GRAPH_TYPE)
+    ptr = SVGAttributeMappingTable;
+  else if (XMLtype == XLINK_TYPE)
+    ptr = XLinkAttributeMappingTable;
+  else
+    ptr = NULL;
+  
   if (ptr == NULL)
     return -1;
+  
+  if (strcmp (attrName, "unknown_attr") == 0)
+    {
+      *thotType = ptr[0].ThotAttribute;
+      return 0;
+    }
 
   /* look for the first concerned entry in the table */
   while (ptr[i].XMLattribute[0] < attrName[0] && 

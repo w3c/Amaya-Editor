@@ -39,7 +39,7 @@ static AttributeMapping SVGAttributeMappingTable[] =
 {
    /* The first entry MUST be unknown_attr */
    /* The rest of this table MUST be in alphabetical order */
-   {"unknown_attr", "", 'A', SVG_ATTR_Invalid_attribute, L_OtherValue},
+   {"unknown_attr", "", 'A', SVG_ATTR_Unknown_attribute, L_OtherValue},
 
    {"class", "", 'A', SVG_ATTR_class, L_OtherValue},
    {"cx", "", 'A', SVG_ATTR_cx, L_OtherValue},

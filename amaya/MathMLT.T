@@ -13,10 +13,12 @@ CONST
    SOT = '<m:';         { Start of opening tag }
    SCT = '</m:';        { Start of closing tag }
    SAN = ' m:';         { Start of attribute name }
+   SUA = 'm:';          { Start of unknown attribute }
 #else
    SOT = '<';           { Start of opening tag }
    SCT = '</';          { Start of closing tag }
    SAN = ' ';           { Start of attribute name }
+   SUA = '';            { Start of unknown attribute }
 #endif
 
 RULES
@@ -46,26 +48,36 @@ RULES
 	end;
 
    XMLcomment:
-        BEGIN
+        begin
         NoLineBreak;
         Create '<!--';
 	NoTranslation;
         Create '-->\12' after;
-        END;
+        end;
 
    XMLcomment_line:
 	if not last create '\12' after;
 
    XMLPI:
-        BEGIN
+        begin
         NoLineBreak;
         Create '<?';
 	NoTranslation;
         Create '?>\12' after;
-        END;
+        end;
 
    XMLPI_line:
 	if not last create '\12' after;
+
+   Unknown_namespace:
+	begin
+	NoTranslation;
+	Create '\12';
+	Create Content;
+	Remove;
+	Create Attributes;
+	Create '>';
+	end;
 
    MROW:
 	begin
@@ -90,6 +102,7 @@ RULES
 	create SCT after;
 	create 'msqrt>\12' after;
   	end;
+
    SqrtBase:
 	if empty
 		begin
@@ -1476,6 +1489,12 @@ ATTRIBUTES
 	create SAN;
 	create 'xml:space="preserve"';
 	end;
+
+   Unknown_attribute:
+	begin
+	create SUA;
+	Create Unknown_attribute;
+	end;	
 
 TextTRANSLATE
 	BEGIN

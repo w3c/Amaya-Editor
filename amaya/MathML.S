@@ -21,7 +21,7 @@ ATTR
    { generic attributes for internal use }
    Highlight = Yes_;            { to show the MathML element corresponding to
 	                          the current selection in the source view }
-   Invalid_attribute = TEXT;	{ to store an unknown attribute }
+   Unknown_attribute = TEXT;	{ to store an unknown attribute }
    EntityName = TEXT;		{ the content of the Thot element is the name
 				  of an entity }
    Ghost_restruct = TEXT;	{ to help structure transformation }
@@ -40,11 +40,13 @@ STRUCT
 	        altimg = TEXT;
 	        alttext = TEXT;
 	        Charset = TEXT)
-	  = MROW + (XMLcomment, XMLPI);
+	  = MROW + (XMLcomment, XMLPI, Unknown_namespace);
 
    XMLcomment = LIST OF (XMLcomment_line = TEXT);
 
    XMLPI = LIST OF (XMLPI_line = TEXT) ; 
+
+   Unknown_namespace = TEXT;
 
    { Presentation: all presentation constructs }
    Construct (ATTR IntPlaceholder = yes_) = CASE OF
@@ -416,6 +418,7 @@ EXCEPT
    MathML:		NoMove, NoResize;
    XMLcomment_line:	Hidden;
    XMLPI_line:  	Hidden;
+   Unknown_namespace:   NoCreate;
    Construct:		Hidden;
    Numerator:		Hidden;
    Denominator:	 	Hidden;
@@ -457,7 +460,7 @@ EXCEPT
    PseudoClass:	        Invisible, CssPseudoClass;
    { attributes for internal use }
    Highlight:	        Invisible;
-   Invalid_attribute:	Invisible;
+   Unknown_attribute:	Invisible;
    EntityName:	        Invisible; 
    Ghost_restruct:	Invisible;
    IntPlaceholder:   	Invisible;
