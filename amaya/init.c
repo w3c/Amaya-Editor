@@ -3389,6 +3389,11 @@ static Document LoadDocument (Document doc, char *pathname,
   charsetname[0] = EOS;
   local_content_type[0] = EOS;
   http_content_type = HTTP_headers (http_headers, AM_HTTP_CONTENT_TYPE);
+  /* sometimes video or audio content is sent with an erroneous mime-type
+     "text/plain". In that case, ignore the mime-type (glitch) */
+  if (http_content_type && !strcmp (http_content_type, "text/plain") &&
+      IsUndisplayedName (pathname))
+    http_content_type = NULL;
   /* make a copy we can modify */
   if (http_content_type)
     content_type = TtaStrdup (http_content_type);

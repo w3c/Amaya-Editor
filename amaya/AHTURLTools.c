@@ -724,6 +724,11 @@ ThotBool IsUndisplayedName (const char *path)
        !strcasecmp (suffix, "tar") ||
        !strcasecmp (suffix, "tgz") ||
        !strcasecmp (suffix, "ddl") ||
+       !strcasecmp (suffix, "ddl") ||
+       !strcasecmp (suffix, "mpg") ||
+       !strcasecmp (suffix, "mpeg") ||
+       !strcasecmp (suffix, "wmv") ||
+       !strcasecmp (suffix, "wma") ||
        !strcasecmp (suffix, "o"))
      ret = TRUE;
    else if (!strcmp (suffix, "gz"))
@@ -738,6 +743,10 @@ ThotBool IsUndisplayedName (const char *path)
 	   !strcasecmp (suffix, "eps") ||
 	   !strcasecmp (suffix, "tar") ||
 	   !strcasecmp (suffix, "ddl") ||
+	   !strcasecmp (suffix, "mpg") ||
+	   !strcasecmp (suffix, "mpeg") ||
+	   !strcasecmp (suffix, "wmv") ||
+	   !strcasecmp (suffix, "wma") ||
 	   !strcasecmp (suffix, "o"))
 	 ret = TRUE;
        else
