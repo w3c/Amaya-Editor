@@ -786,6 +786,8 @@ static void TimelineParseCoordAttribute (Attribute attr, Element el, Document do
       ptr = ParseCSSUnit (ptr, &pval);
       if (pval.typed_data.unit != STYLE_UNIT_INVALID)
 	{
+	  if (pval.typed_data.unit == STYLE_UNIT_BOX)
+	    pval.typed_data.unit = STYLE_UNIT_PX;
 	  /* decide of the presentation rule to be created or updated */
 	  TtaGiveAttributeType (attr, &attrType, &attrKind);
 	  if (attrType.AttrTypeNum == Timeline_ATTR_x)
@@ -889,6 +891,8 @@ static ThotBool TimelineParseWidthHeightAttribute (Attribute attr, Element el, D
       ptr = ParseCSSUnit (ptr, &pval);
       if (pval.typed_data.unit != STYLE_UNIT_INVALID)
 	{
+	  if (pval.typed_data.unit == STYLE_UNIT_BOX)
+	    pval.typed_data.unit = STYLE_UNIT_PX;
 	  if (ruleType != PRXRadius && ruleType != PRYRadius)
 	    /* it's not attribute ry or ry for a rectangle */
 	    {

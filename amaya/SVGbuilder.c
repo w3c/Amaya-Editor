@@ -1728,6 +1728,8 @@ void ParseCoordAttribute (Attribute attr, Element el, Document doc)
       ptr = text;
       ptr = TtaSkipBlanks (ptr);
       ptr = ParseCSSUnit (ptr, &pval);
+      if (pval.typed_data.unit == STYLE_UNIT_BOX)
+	pval.typed_data.unit = STYLE_UNIT_PX;
       if (pval.typed_data.unit != STYLE_UNIT_INVALID)
 	{
 	  /* decide of the presentation rule to be created or updated */
@@ -1846,6 +1848,8 @@ ThotBool ParseWidthHeightAttribute (Attribute attr, Element el, Document doc,
       ptr = text;
       ptr = TtaSkipBlanks (ptr);
       ptr = ParseCSSUnit (ptr, &pval);
+      if (pval.typed_data.unit == STYLE_UNIT_BOX)
+	pval.typed_data.unit = STYLE_UNIT_PX;
       if (pval.typed_data.unit != STYLE_UNIT_INVALID)
 	 {
 	 if (ruleType != PRXRadius && ruleType != PRYRadius)
@@ -1943,7 +1947,9 @@ void ParseBaselineShiftAttribute (Attribute attr, Element el, Document doc,
 	 {
 	   /* parse <percentage> or <length> */
 	   ptr = ParseCSSUnit (ptr, &pval);
-	   if (pval.typed_data.unit == STYLE_UNIT_PERCENT)
+	   if (pval.typed_data.unit == STYLE_UNIT_BOX)
+	     pval.typed_data.unit = STYLE_UNIT_EM;
+	   else if (pval.typed_data.unit == STYLE_UNIT_PERCENT)
 	     /* it's a percentage */
 	     {
 	       /* convert it into a relative size */

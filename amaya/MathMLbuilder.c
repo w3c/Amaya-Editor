@@ -2498,11 +2498,13 @@ void MathMLScriptShift (Document doc, Element el, char *value, int attr)
        value = ParseCSSUnit (value, &pval);
        if (pval.typed_data.unit != STYLE_UNIT_INVALID)
 	  {
-	  /* the specific presentation to be created is not a CSS rule */
-	  ctxt->cssSpecificity = 0;
-          if (attr == MathML_ATTR_superscriptshift)
-	    pval.typed_data.value = - pval.typed_data.value;
-	  TtaSetStylePresentation (PRVertPos, script, NULL, ctxt, pval);
+	    if (pval.typed_data.unit == STYLE_UNIT_BOX)
+	      pval.typed_data.unit = STYLE_UNIT_EM;
+	    /* the specific presentation to be created is not a CSS rule */
+	    ctxt->cssSpecificity = 0;
+	    if (attr == MathML_ATTR_superscriptshift)
+	      pval.typed_data.value = - pval.typed_data.value;
+	    TtaSetStylePresentation (PRVertPos, script, NULL, ctxt, pval);
 	  }
        }
     TtaFreeMemory (ctxt);
@@ -3014,6 +3016,8 @@ void HandleRowspacingAttribute (Attribute attr, Element el, Document doc,
 		  ptr = ParseCSSUnit (ptr, &pval);
 		  if (pval.typed_data.unit != STYLE_UNIT_INVALID)
 		    {
+		      if (pval.typed_data.unit == STYLE_UNIT_BOX)
+			pval.typed_data.unit = STYLE_UNIT_EM;
 		      /* if the value is an integer, make it a real to avoid
 			 errors in dividing small integers, such as "1cm" */
 		      if (!pval.typed_data.real)
@@ -3089,6 +3093,8 @@ void HandleRowspacingAttribute (Attribute attr, Element el, Document doc,
 			    }
 			  else
 			    {
+			      if (pval.typed_data.unit == STYLE_UNIT_BOX)
+				pval.typed_data.unit = STYLE_UNIT_EM;
 			      /* if the value is an integer, make it a real to
 				 avoid errors in dividing small integers,
 				 such as "1cm" */
@@ -3300,6 +3306,8 @@ void HandleColumnspacingAttribute (Attribute attr, Element el, Document doc,
 				}
 			      else
 				{
+				  if (pval.typed_data.unit == STYLE_UNIT_BOX)
+				    pval.typed_data.unit = STYLE_UNIT_EM;
 				  /* if the value is an integer, make it a real
 				     to avoid errors in dividing small
 				     integers, such as "1cm" */
@@ -3798,6 +3806,8 @@ void HandleFramespacingAttribute (Attribute attr, Element el, Document doc,
 	    ptr = ParseCSSUnit (ptr, &pval);
 	  if (pval.typed_data.unit != STYLE_UNIT_INVALID)
 	    {
+	      if (pval.typed_data.unit == STYLE_UNIT_BOX)
+		pval.typed_data.unit = STYLE_UNIT_EM;
 	      horizPadding = pval.typed_data.value;
 	      horizPaddingUnit = pval.typed_data.unit;
 	      horizPaddingReal = pval.typed_data.real;
@@ -3818,6 +3828,8 @@ void HandleFramespacingAttribute (Attribute attr, Element el, Document doc,
 		    ptr = ParseCSSUnit (ptr, &pval);
 		  if (pval.typed_data.unit != STYLE_UNIT_INVALID)
 		    {
+		      if (pval.typed_data.unit == STYLE_UNIT_BOX)
+			pval.typed_data.unit = STYLE_UNIT_EM;
 		      vertPadding = pval.typed_data.value;
 		      vertPaddingUnit = pval.typed_data.unit;
 		      vertPaddingReal = pval.typed_data.real;
@@ -4449,6 +4461,8 @@ void MathMLSpacingAttr (Document doc, Element el, char *value, int attr)
       /***** we should accept namedspace for width *****/
       if (pval.typed_data.unit != STYLE_UNIT_INVALID)
 	{
+	  if (pval.typed_data.unit == STYLE_UNIT_BOX)
+	    pval.typed_data.unit = STYLE_UNIT_PX;
 	  /* the specific presentation to be created is not a CSS rule */
 	  ctxt->cssSpecificity = 0;
 	  TtaSetStylePresentation (ruleType, el, NULL, ctxt, pval);
