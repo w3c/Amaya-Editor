@@ -415,6 +415,7 @@ Document            document;
    int                 lg;
    PtrAttribute        pAttr;
    PtrAttribute        pAttrNouv;
+   Language	       lang;
 
    UserErrorCode = 0;
    pAttr = (PtrAttribute) attribute;
@@ -435,6 +436,7 @@ Document            document;
 	/* Sets the new value */
 	CopyStringToText (buffer, pAttr->AeAttrText, &lg);
 	if (pAttr->AeAttrNum == 1)
+	  /* language attribute */
 	  {
 	     GetAttribute (&pAttrNouv);
 	     pAttrNouv->AeAttrSSchema = pAttr->AeAttrSSchema;
@@ -443,8 +445,9 @@ Document            document;
 	     pAttrNouv->AeAttrType = pAttr->AeAttrType;
 	     GetTextBuffer (&pAttrNouv->AeAttrText);
 	     CopyStringToText (buffer, pAttrNouv->AeAttrText, &lg);
-	     AttachAttrToRange (pAttrNouv, 0, 0, (PtrElement) element, (PtrElement) element,
-				LoadedDocument[document - 1]);
+	     lang = TtaGetLanguageIdFromName (buffer);
+	     ChangeLanguage (LoadedDocument[document - 1],
+			     (PtrElement) element, lang, FALSE);
 	  }
 #ifndef NODISPLAY
 	if (element != NULL)
