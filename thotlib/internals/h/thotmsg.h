@@ -35,6 +35,7 @@ int indexTable ;
 #define VAL_CHARACTER		14
 #define VAL_SPACE		15
 #define OUTPUT_MODE		16
+#define INVALID_SCH_PATH		17
 
-#define THOT_MAX_MSG			17
+#define THOT_MAX_MSG			18
 #endif
