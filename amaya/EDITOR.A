@@ -41,6 +41,7 @@ MENUS
 	view:1 File.New1 button:BTemplate -> NewTemplate;
 
 	view:1 File button:BOpenDoc -> OpenDoc;
+	view:1 File button:BOpenInNewTab -> OpenDocInNewTab;
 	view:1 File button:BOpenInNewWindow -> OpenDocInNewWindow;
 	view:1 File button:BReload -> Reload;
 	view:1 File button:BBack -> GotoPreviousHTML;

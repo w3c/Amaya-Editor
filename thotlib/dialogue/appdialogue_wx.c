@@ -541,6 +541,20 @@ ThotBool TtaClosePage( int window_id, int page_id )
   return FALSE;
 #endif /* #ifdef _WX */
 }
+/*----------------------------------------------------------------------
+  TtaGetActiveWindowId returns the last active window id
+  params:
+  returns:
+    + int : last active window_id
+  ----------------------------------------------------------------------*/
+int TtaGetActiveWindowId()
+{
+#ifdef _WX 
+  return AmayaWindow::GetActiveWindowId();
+#else
+  return -1;
+#endif /* #ifdef _WX */
+}
 
 /*----------------------------------------------------------------------
   TtaGetFreePageId returns a free page id for the given window

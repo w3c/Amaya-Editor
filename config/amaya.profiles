@@ -305,6 +305,7 @@ GotoNextHTML
 HelpBrowsing
 NextLinkOrFormElement
 OpenDoc
+OpenDocInNewTab
 OpenDocInNewWindow
 PreviousLinkOrFormElement
 Reload

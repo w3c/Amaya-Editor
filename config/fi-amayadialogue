@@ -25,301 +25,302 @@
 23 Uusi CSS tyylitiedosto...
 24 Valmiista mallista
 25 Avaa dokumentti...
-26 Avaa uudessa ikkunassa...
-27 Päivitä dokumentti
-28 Takaisin
-29 Eteenpäin
-30 Tallenna
-31 Tallenna nimellä...
-32 Päivitä
-33 Muuta tyyppi
-34 Poista tyyppi
-35 **&Add a doctype
-36 Aseta tyypiksi XHTML 1.1
-37 **Change to XHTML 1.0 &Transitional
-38 Aseta tyypiksi XHTML 1.0 Strict
-39 Aseta tyypiksi XHTML 1.0 Basic
-40 Aseta tyypiksi HTML 4.01 Transitional
-41 Aseta tyypiksi HTML 4.01 Strict
-42 **Force a Character Coding
-43 Unicode (UTF-8)
-44 Western (ISO-8859-1)
-45 Western (ISO-8859-15)
-46 Western (Windows-1252)
-47 Central Europe (ISO-8859-2)
-48 Central Europe (Windows-1250)
-49 South Europe (ISO-8859-3)
-50 Baltic (ISO-8859-4)
-51 Baltic (Windows-1257)
-52 Cyrillic (ISO-8859-5)
-53 Cyrillic (Windows-1251)
-54 Cyrillic (KOI8-R)
-55 Arabic (ISO-8859-6)
-56 Arabic (Windows-1256)
-57 Greek (ISO-8859-7)
-58 Greek (Windows-1253)
-59 Hebrew (ISO-8859-8)
-60 Hebrew (Windows-1255)
-61 Turkish (ISO-8859-9)
-62 Turkish (Windows-125)
-63 Japanese (ISO-2022-JP)
-64 Japanese (EUC-JP)
-65 Japanese (Shift-JIS)
-66 Näytä käännösvirheet
-67 Tietoja dokumentista
-68 Tulostusasetukset...
-69 Tulosta
-70 **Close &tab
-71 Sulje ikkuna
-72 Sulje Amaya
-73 Sulje näkymä
-74 Kumoa
-75 Tee uudelleen
-76 Leikkaa
-77 Kopioi
-78 Liitä
-79 Poista
-80 **&Insert
-81 &Lisää
-82 Etsi...
-83 Tarkista oikeinkirjoitus...
-84 Muunna...
-85 Asetukset
-86 Yleiset...
-87 Selaus...
-88 Julkaisu...
-89 Välimuisti...
-90 Välityspalvelin...
-91 Värit...
-92 Ikkunan asetukset...
-93 Kieliasetukset...
-94 Profiilit...
-95 Mallit...
-96 Muuta otsake...
-97 Otsakke koolla
-98 h1
-99 h2
-100 h3
-101 h4
-102 h5
-103 h6
-104 Luettelo
-105 Pistein erotettu luettelo (ul)
-106 Numeroitu luettelo (ol)
-107 Määrittelyluettelo (dl)
-108 Lopetus (dt)
-109 Määrittely (dd)
-110 Lomake
-111 lomake
-112 Painike (input)
-113 Valintalaatikko (input)
-114 Tiedosto valikko (input)
-115 Piilotettu (input)
-116 Kuva (input)...
-117 Salasana (input)
-118 Pyöreä valintalaatikko (input)
-119 Tyhjennä (input)
-120 Lähetä (input)
-121 Teksti (input)
-122 kenttäasetus
-123 nimike
-124 Valikko (option)
-125 Alavalikko (optgroup)
-126 tekstialue
-127 Objekti
-128 objekti
-129 Parametri (param)
-130 Taulukko
-131 taulukko
-132 nimike
-133 pystyriviryhmä
-134 pystyrivi
-135 Taulukon otsikko
-136 Taulukon sisältö
-137 Taulukon alaotsikko
-138 **Change to Data cell (td)
-139 **Change to Heading cell (th)
-140 **Join with the cell at the right
-141 **Join with the cell below
-142 **Shrink horizontal extend
-143 **Shrink vertical extend
-144 **Select the row
-145 **Insert a row
-146 **Append a row
-147 **Select the column
-148 **Insert a column
-149 **Append a column
-150 **Paste before
-151 **Paste after
-152 **Map area
-153 **Insert a map
-154 Ympyrä (area)
-155 Monikulmio (area)
-156 Nelikulmio (area)
-157 &Rakenne
-158 tyyli
-159 Merkintä
-160 perus
-161 meta
-162 linkki
-163 skripti
-164 ei skriptiä
-165 Pykälä (p)
-166 Valmiiksi muotoiltu (pre)
-167 osoite
-168 Vaakaviiva (hr)
-169 Kuva (img)...
-170 Rivinvaihto (br)
-171 Tyhjä rivi (div)
-172 sisennetty kappale
-173 Sisäinen lomake (iframe)
-174 ruby
-175 Osien numerointi
-176 Valmista kooste
-177 **Insert time stamp
-178 Tiedon tyyppi
-179 Korostus (em)
-180 voimakas
-181 siteeraus
-182 Määrittely (dfn)
-183 koodi
-184 Muuttuja (var)
-185 Malli (samp)
-186 Näppäimistä (kbd)
-187 Lyhenne (abbr)
-188 kirjainsana
-189 Lisäys (ins)
-190 Poisto (del)
-191 Kirjainmerkki
-192 Kursivoitu (i)
-193 Lihavoitu (b)
-194 Teletyyppi (tt)
-195 iso
-196 pieni
-197 Alaindeksi (sub)
-198 Yläindeksi (sup)
-199 Lainaus/Siteeraus (q)
-200 BiDi syrjäyttävänä (bdo)
-201 Uusi kaava (math)
-202 **Basic &Elements
-203 Teksti (mtext)
-204 Tunniste (mi)
-205 Numero (mn)
-206 Operaattori (mo)
-207 Välilyönti (mspace)
-208 Merkki (&xxx;)
-209 InvisibleTimes
-210 Käytä funktiota
-211 **&Constructions
-212 Juuri (mroot)
-213 Neliöjuuri (msqrt)
-214 Sisällytä (menclose)
-215 Murtoluku (mfrac)
-216 Ala- ja yläindeksi (msubsup)
-217 Alaindeksi (msub)
-218 Yläindeksi (msup)
-219 Ylle ja alle (munderover)
-220 Alle (munder)
-221 Yli (mover)
-222 Sulkeet (mrow)
-223 Multiscript (mmultiscripts)
-224 **&Matrices
-225 Matriisi (mtable)
-226 **Join with the cell at the right
-227 **Join with the cell below
-228 **Shrink horizontal extend
-229 **Shrink vertical extend
-230 **Select the row
-231 **Insert a row
-232 **Append a row
-233 **Select the column
-234 **Insert a column
-235 **Append a column
-236 **Paste before
-237 **Paste after
-238 **Show the graphic library
-239 **Add the selected graphics in the library
-240 Merkintä
-241 **XML elements...
-242 Linkki edelliseen kohteeseen
-243 Luo tai muuta linkki...
-244 Luo kohde
-245 Poista linkki
-246 Lisää/Poista elementti...
-247 Näytä painikerivi
-248 Näytä osoite
-249 Näytä kartta alueet
-250 Näytä kohteet
-251 Lähennä
-252 Loitonna
-253 Näytä rakenne
-254 Näytä lähdekoodi
-255 Näytä linkit
-256 Show alternate
-257 Näytä sisällysluettelo
-258 Aikajana
-259 Fontin tyyli...
-260 Värit...
-261 Muoto...
-262 Taustakuva...
-263 Tee sääntö...
-264 Käytä luokkaa...
-265 **Show applied style...
-266 Linkki...
-267 Avaa...
-268 Poista käytöstä...
-269 Ota käyttöön...
-270 Poista...
-271 Valinnan lisätiedot
-272 Dokumentin lisätiedot
-273 Siirrä valintaan
-274 Tallenna valinta XPointer:iin
-275 Siirrä XPointer:iin
-276 Vastaa merkintään
-277 Lähetä palvelimelle
-278 Poista
-279 Lataa
-280 Mukauta tiedustelu...
-281 Paikalliset rajoitukset...
-282 **Configure...
-283 **View Bookmarks
-284 **New Bookmark
-285 **New Topic
-286 **New Separator
-287 **Move Item
-288 Lukitse objekti...
-289 Vapauta objekti...
-290 Näytä objektin ominaisuudet...
-291 Kopioi lukitustiedot...
-292 Lukittu?
-293 Asetukset...
-294 Tietoja Amayasta
-295 Lisätietoa Amayasta W3C:ssä
-296 Hakemisto
-297 Selaaminen
-298 Näkymät
-299 Valinta
-300 Dokumentti
-301 Elementtien luominen
-302 Asetukset
-303 Fontit
-304 Rakenteen muunto
-305 Linkit
-306 Taulukot
-307 Kuvakartat
-308 Matematiikka
-309 Grafiikka
-310 XML-tuki
-311 Tyylitiedostot (CSS)
-312 Etsiminen
-313 Oikeinkirjoituksen tarkastus
-314 Julkaisu
-315 WebDAV
-316 Tulostus
-317 Numerointi
-318 Koosteen valmistus
-319 Merkinnät
-320 **&Bookmarks
-321 Asetuksien määritys
-322 Näppäinkomennot
-323 Amayan helppokäyttötoiminnot
+26 **Open in new &tab...
+27 Avaa uudessa ikkunassa...
+28 Päivitä dokumentti
+29 Takaisin
+30 Eteenpäin
+31 Tallenna
+32 Tallenna nimellä...
+33 Päivitä
+34 Muuta tyyppi
+35 Poista tyyppi
+36 **&Add a doctype
+37 Aseta tyypiksi XHTML 1.1
+38 **Change to XHTML 1.0 &Transitional
+39 Aseta tyypiksi XHTML 1.0 Strict
+40 Aseta tyypiksi XHTML 1.0 Basic
+41 Aseta tyypiksi HTML 4.01 Transitional
+42 Aseta tyypiksi HTML 4.01 Strict
+43 **Force a Character Coding
+44 Unicode (UTF-8)
+45 Western (ISO-8859-1)
+46 Western (ISO-8859-15)
+47 Western (Windows-1252)
+48 Central Europe (ISO-8859-2)
+49 Central Europe (Windows-1250)
+50 South Europe (ISO-8859-3)
+51 Baltic (ISO-8859-4)
+52 Baltic (Windows-1257)
+53 Cyrillic (ISO-8859-5)
+54 Cyrillic (Windows-1251)
+55 Cyrillic (KOI8-R)
+56 Arabic (ISO-8859-6)
+57 Arabic (Windows-1256)
+58 Greek (ISO-8859-7)
+59 Greek (Windows-1253)
+60 Hebrew (ISO-8859-8)
+61 Hebrew (Windows-1255)
+62 Turkish (ISO-8859-9)
+63 Turkish (Windows-125)
+64 Japanese (ISO-2022-JP)
+65 Japanese (EUC-JP)
+66 Japanese (Shift-JIS)
+67 Näytä käännösvirheet
+68 Tietoja dokumentista
+69 Tulostusasetukset...
+70 Tulosta
+71 **Close &tab
+72 Sulje ikkuna
+73 Sulje Amaya
+74 Sulje näkymä
+75 Kumoa
+76 Tee uudelleen
+77 Leikkaa
+78 Kopioi
+79 Liitä
+80 Poista
+81 **&Insert
+82 &Lisää
+83 Etsi...
+84 Tarkista oikeinkirjoitus...
+85 Muunna...
+86 Asetukset
+87 Yleiset...
+88 Selaus...
+89 Julkaisu...
+90 Välimuisti...
+91 Välityspalvelin...
+92 Värit...
+93 Ikkunan asetukset...
+94 Kieliasetukset...
+95 Profiilit...
+96 Mallit...
+97 Muuta otsake...
+98 Otsakke koolla
+99 h1
+100 h2
+101 h3
+102 h4
+103 h5
+104 h6
+105 Luettelo
+106 Pistein erotettu luettelo (ul)
+107 Numeroitu luettelo (ol)
+108 Määrittelyluettelo (dl)
+109 Lopetus (dt)
+110 Määrittely (dd)
+111 Lomake
+112 lomake
+113 Painike (input)
+114 Valintalaatikko (input)
+115 Tiedosto valikko (input)
+116 Piilotettu (input)
+117 Kuva (input)...
+118 Salasana (input)
+119 Pyöreä valintalaatikko (input)
+120 Tyhjennä (input)
+121 Lähetä (input)
+122 Teksti (input)
+123 kenttäasetus
+124 nimike
+125 Valikko (option)
+126 Alavalikko (optgroup)
+127 tekstialue
+128 Objekti
+129 objekti
+130 Parametri (param)
+131 Taulukko
+132 taulukko
+133 nimike
+134 pystyriviryhmä
+135 pystyrivi
+136 Taulukon otsikko
+137 Taulukon sisältö
+138 Taulukon alaotsikko
+139 **Change to Data cell (td)
+140 **Change to Heading cell (th)
+141 **Join with the cell at the right
+142 **Join with the cell below
+143 **Shrink horizontal extend
+144 **Shrink vertical extend
+145 **Select the row
+146 **Insert a row
+147 **Append a row
+148 **Select the column
+149 **Insert a column
+150 **Append a column
+151 **Paste before
+152 **Paste after
+153 **Map area
+154 **Insert a map
+155 Ympyrä (area)
+156 Monikulmio (area)
+157 Nelikulmio (area)
+158 &Rakenne
+159 tyyli
+160 Merkintä
+161 perus
+162 meta
+163 linkki
+164 skripti
+165 ei skriptiä
+166 Pykälä (p)
+167 Valmiiksi muotoiltu (pre)
+168 osoite
+169 Vaakaviiva (hr)
+170 Kuva (img)...
+171 Rivinvaihto (br)
+172 Tyhjä rivi (div)
+173 sisennetty kappale
+174 Sisäinen lomake (iframe)
+175 ruby
+176 Osien numerointi
+177 Valmista kooste
+178 **Insert time stamp
+179 Tiedon tyyppi
+180 Korostus (em)
+181 voimakas
+182 siteeraus
+183 Määrittely (dfn)
+184 koodi
+185 Muuttuja (var)
+186 Malli (samp)
+187 Näppäimistä (kbd)
+188 Lyhenne (abbr)
+189 kirjainsana
+190 Lisäys (ins)
+191 Poisto (del)
+192 Kirjainmerkki
+193 Kursivoitu (i)
+194 Lihavoitu (b)
+195 Teletyyppi (tt)
+196 iso
+197 pieni
+198 Alaindeksi (sub)
+199 Yläindeksi (sup)
+200 Lainaus/Siteeraus (q)
+201 BiDi syrjäyttävänä (bdo)
+202 Uusi kaava (math)
+203 **Basic &Elements
+204 Teksti (mtext)
+205 Tunniste (mi)
+206 Numero (mn)
+207 Operaattori (mo)
+208 Välilyönti (mspace)
+209 Merkki (&xxx;)
+210 InvisibleTimes
+211 Käytä funktiota
+212 **&Constructions
+213 Juuri (mroot)
+214 Neliöjuuri (msqrt)
+215 Sisällytä (menclose)
+216 Murtoluku (mfrac)
+217 Ala- ja yläindeksi (msubsup)
+218 Alaindeksi (msub)
+219 Yläindeksi (msup)
+220 Ylle ja alle (munderover)
+221 Alle (munder)
+222 Yli (mover)
+223 Sulkeet (mrow)
+224 Multiscript (mmultiscripts)
+225 **&Matrices
+226 Matriisi (mtable)
+227 **Join with the cell at the right
+228 **Join with the cell below
+229 **Shrink horizontal extend
+230 **Shrink vertical extend
+231 **Select the row
+232 **Insert a row
+233 **Append a row
+234 **Select the column
+235 **Insert a column
+236 **Append a column
+237 **Paste before
+238 **Paste after
+239 **Show the graphic library
+240 **Add the selected graphics in the library
+241 Merkintä
+242 **XML elements...
+243 Linkki edelliseen kohteeseen
+244 Luo tai muuta linkki...
+245 Luo kohde
+246 Poista linkki
+247 Lisää/Poista elementti...
+248 Näytä painikerivi
+249 Näytä osoite
+250 Näytä kartta alueet
+251 Näytä kohteet
+252 Lähennä
+253 Loitonna
+254 Näytä rakenne
+255 Näytä lähdekoodi
+256 Näytä linkit
+257 Show alternate
+258 Näytä sisällysluettelo
+259 Aikajana
+260 Fontin tyyli...
+261 Värit...
+262 Muoto...
+263 Taustakuva...
+264 Tee sääntö...
+265 Käytä luokkaa...
+266 **Show applied style...
+267 Linkki...
+268 Avaa...
+269 Poista käytöstä...
+270 Ota käyttöön...
+271 Poista...
+272 Valinnan lisätiedot
+273 Dokumentin lisätiedot
+274 Siirrä valintaan
+275 Tallenna valinta XPointer:iin
+276 Siirrä XPointer:iin
+277 Vastaa merkintään
+278 Lähetä palvelimelle
+279 Poista
+280 Lataa
+281 Mukauta tiedustelu...
+282 Paikalliset rajoitukset...
+283 **Configure...
+284 **View Bookmarks
+285 **New Bookmark
+286 **New Topic
+287 **New Separator
+288 **Move Item
+289 Lukitse objekti...
+290 Vapauta objekti...
+291 Näytä objektin ominaisuudet...
+292 Kopioi lukitustiedot...
+293 Lukittu?
+294 Asetukset...
+295 Tietoja Amayasta
+296 Lisätietoa Amayasta W3C:ssä
+297 Hakemisto
+298 Selaaminen
+299 Näkymät
+300 Valinta
+301 Dokumentti
+302 Elementtien luominen
+303 Asetukset
+304 Fontit
+305 Rakenteen muunto
+306 Linkit
+307 Taulukot
+308 Kuvakartat
+309 Matematiikka
+310 Grafiikka
+311 XML-tuki
+312 Tyylitiedostot (CSS)
+313 Etsiminen
+314 Oikeinkirjoituksen tarkastus
+315 Julkaisu
+316 WebDAV
+317 Tulostus
+318 Numerointi
+319 Koosteen valmistus
+320 Merkinnät
+321 **&Bookmarks
+322 Asetuksien määritys
+323 Näppäinkomennot
+324 Amayan helppokäyttötoiminnot

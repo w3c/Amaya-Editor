@@ -2050,7 +2050,8 @@ void  OpenDoc (Document doc, View view)
      {
        /* load the new document */
        DontReplaceOldDoc = FALSE;
-           /* no specific type requested */
+       InNewWindow       = FALSE;
+       /* no specific type requested */
        InitOpenDocForm (doc, view, "",
 			TtaGetMessage (AMAYA, AM_OPEN_DOCUMENT), docText);
      }
@@ -2060,13 +2061,26 @@ void  OpenDoc (Document doc, View view)
   ----------------------------------------------------------------------*/
 void OpenDocInNewWindow (Document document, View view)
 {
-   DontReplaceOldDoc = TRUE;
-   /* no specific type requested */
-   InitOpenDocForm (document, view, "",
-		    TtaGetMessage (AMAYA, AM_OPEN_IN_NEW_WINDOW),
-	   docText);
+  DontReplaceOldDoc = TRUE;
+  InNewWindow       = TRUE;
+  /* no specific type requested */
+  InitOpenDocForm (document, view, "",
+		   TtaGetMessage (AMAYA, AM_OPEN_IN_NEW_WINDOW),
+		   docText);
 }
 
+/*----------------------------------------------------------------------
+  Open a new document into a new tab (page)
+  ----------------------------------------------------------------------*/
+void OpenDocInNewTab (Document document, View view)
+{
+  DontReplaceOldDoc = TRUE;
+  InNewWindow       = FALSE;
+  /* no specific type requested */
+  InitOpenDocForm (document, view, "",
+		   TtaGetMessage (AMAYA, AM_OPEN_IN_NEW_TAB),
+		   docText);
+}
 
 /*----------------------------------------------------------------------
   OpenNew: create a new document
@@ -2388,19 +2402,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
   int           page_position = 0;
   /* ------------------------------------ */
   
-  if (oldDoc == 0 && inNewWindow == FALSE)
-    {
-      /* if the oldDoc doesn't exist and we don't want to open a new window 
-       * try to find an existing document and reuse its window */
-      View     activeView;
-      TtaGetActiveView( &oldDoc, &activeView );
-      /* now if there is no active document,
-	 then really create a new window even if inNewWindow was FALSE */
-      /* TODO: trouver une meilleur methode pour ne pas afficher un CSS ds la meme fenetre que les erreurs (docLog) */
-      if (oldDoc == 0 || DocumentTypes[oldDoc] == docLog)
-	inNewWindow = TRUE;
-    }
-
 #ifdef _WINGUI
   Window_Curs = IDC_WINCURSOR;
 #endif /* _WINGUI */
@@ -2466,18 +2467,18 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
        /* open the new document in the same window but in a fresh page */
        requested_doc = 0;
 #ifdef _WX
-       /* get the old document window */
        isOpen = TRUE;
-       window_id = TtaGetDocumentWindowId( doc, -1 );
        if (docType == docSource)
 	 {
 	   /* if the document is a source view, open it into the same page as formatted view */
+	   window_id = TtaGetDocumentWindowId( doc, -1 );
 	   TtaGetDocumentPageId( doc, -1, &page_id, &page_position );
 	   page_position = 2;     
 	 }
        else
 	 {
-	   page_id = TtaGetFreePageId( window_id );
+	   window_id = TtaGetActiveWindowId();
+	   page_id   = TtaGetFreePageId( window_id );
 	   page_position = 1;
 	 }
 #else /* _WX */
@@ -6846,6 +6847,8 @@ void InitAmaya (NotifyEvent * event)
    AmayaInitialized = 1;
    W3Loading = 0;
    BackupDocument = 0;
+   /* the first window should be open in a new window */
+   InNewWindow = TRUE;   
    /* initialize status */
    SelectionDoc = 0;
    ParsedDoc = 0;

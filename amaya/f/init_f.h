@@ -70,6 +70,8 @@ extern void OpenDoc ( Document doc,
                       View view );
 extern void OpenDocInNewWindow ( Document document,
                                  View view );
+extern void OpenDocInNewTab ( Document document,
+                              View view );
 extern void OpenNew ( Document document,
                       View view,
                       int docType,
@@ -239,6 +241,8 @@ extern void OpenDoc ( Document doc,
                         View view );
 extern void OpenDocInNewWindow ( Document document,
                                    View view );
+extern void OpenDocInNewTab ( Document document,
+                                View view );
 extern void OpenNew ( Document document,
                         View view,
                         int docType,

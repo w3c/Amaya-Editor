@@ -15,6 +15,7 @@ extern void          TtaCleanUpWindow( int window_id );
 extern int           TtaGetFrameId( int window_id, int page_id, int position );
 extern int           TtaGetFrameDocumentId( int frame_id );
 extern ThotBool      TtaRegisterWidgetWX( int ref, void * p_widget );
+extern int           TtaGetActiveWindowId();
 
 /* constants used to identify different type of ressources */
 typedef enum

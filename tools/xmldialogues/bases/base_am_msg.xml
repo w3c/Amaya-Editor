@@ -121,6 +121,10 @@
 	<message xml:lang="pt">>Abrir documento...</message>
 	<message xml:lang="fi">Avaa dokumentti...</message>
 </label>
+<label define="AM_OPEN_IN_NEW_TAB">
+	<message xml:lang="en">Open in new tab...</message>
+	<message xml:lang="fr">Ouvrir dans un nouvel onglet...</message>
+</label>
 <label define="AM_OPEN_IN_NEW_WINDOW">
 	<message xml:lang="en">Open in new window...</message>
 	<message xml:lang="fr">Ouvrir dans nouvelle fenêtre...</message>

@@ -45,6 +45,9 @@
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaWindow, wxFrame)
 
+/* contains the last activated window id. */
+int AmayaWindow::m_ActiveWindowId = -1;
+
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaWindow
@@ -399,6 +402,13 @@ void AmayaWindow::CleanUp()
 {
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  OnIdle
+ * Description:  not used
+ *--------------------------------------------------------------------------------------
+ */
 void AmayaWindow::OnIdle( wxIdleEvent& event )
 {
   if (m_ShouldCleanUp)
@@ -411,13 +421,36 @@ void AmayaWindow::OnIdle( wxIdleEvent& event )
   event.Skip();
 }
 
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  OnActivate
+ * Description:  this is used to keep udated a internal window_id to know what is the
+ *               last activated window.
+ *               activated = highlighted
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaWindow::OnActivate( wxActivateEvent & event )
+{  
+  if (event.GetActive())
+    {
+      wxLogDebug( _T("AmayaWindow::OnActivate - window_id=%d"), m_WindowId );
+      m_ActiveWindowId = GetWindowId();
+    }
+
+  event.Skip();
+}
+
+
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
  *  the callbacks are assigned to an event type
  *----------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE(AmayaWindow, wxFrame)
-  EVT_SIZE( AmayaWindow::OnSize )
-  EVT_IDLE( AmayaWindow::OnIdle ) // Process a wxEVT_IDLE event  
+  EVT_SIZE(      AmayaWindow::OnSize )
+  EVT_IDLE(      AmayaWindow::OnIdle ) // Process a wxEVT_IDLE event  
+  EVT_ACTIVATE(  AmayaWindow::OnActivate )
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

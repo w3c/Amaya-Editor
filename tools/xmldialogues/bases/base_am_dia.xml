@@ -269,6 +269,10 @@
 	<message xml:lang="pt">Abrir documento...</message>
 	<message xml:lang="fi">Avaa dokumentti...</message>
 </label>
+<label define="BOpenInNewTab">
+	<message xml:lang="en">Open in new &amp;tab...</message>
+	<message xml:lang="fr">Ouvrir dans un nouvel on&amp;glet...</message>
+</label>
 <label define="BOpenInNewWindow">
 	<message xml:lang="en">Open in new &amp;window...</message>
 	<message xml:lang="fr">Ouvrir dans nou&amp;velle fenêtre...</message>
