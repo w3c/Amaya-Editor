@@ -406,17 +406,17 @@ void ThotInitDisplay (char* name, int dx, int dy)
        Tim Lesher http://mlarchive.ima.com/windev/1999/0273.html */
    if (TtWDepth == 16)
    {
-    LPBITMAPINFOHEADER pDib;
-	HDC hdc;
-	HBITMAP hbm;
-    int iDibSize;
+     LPBITMAPINFOHEADER pDib;
+     HDC hdc;
+     HBITMAP hbm;
+     int iDibSize;
 
-	iDibSize = sizeof( BITMAPINFOHEADER ) + 256 * sizeof ( DWORD );
-	pDib = (LPBITMAPINFOHEADER) malloc( iDibSize );
-    memset( pDib, 0, iDibSize );
+     iDibSize = sizeof (BITMAPINFOHEADER) + 256 * sizeof (DWORD);
+     pDib = (LPBITMAPINFOHEADER) malloc(iDibSize);
+     memset (pDib, 0, iDibSize);
         
-    /* Use old-style BMIH for compatibility, and leave biBitCount zero */
-    pDib->biSize = sizeof( BITMAPINFOHEADER );
+     /* Use old-style BMIH for compatibility, and leave biBitCount zero */
+     pDib->biSize = sizeof(BITMAPINFOHEADER);
         
     /* Need to call GetDIBits twice: the first one just fills in the */
     /* biBitCount member; the second fills in the bitfields or palette */
@@ -428,18 +428,16 @@ void ThotInitDisplay (char* name, int dx, int dy)
     if (!ReleaseDC (NULL, hdc))
       WinErrorBox (NULL, "ReleaseDC: ThotInitDisplay");
 
-	/* printf( "Current video mode is %lu-bit.\n", pDib->biBitCount ); */
-
+    /* printf( "Current video mode is %lu-bit.\n", pDib->biBitCount ); */
     if (BI_BITFIELDS == pDib->biCompression)
-    {
+      {
         DWORD * pdwFields = (DWORD*) (pDib+1);
-       /* 0xf800: == 565 BGR;
-	      0x7c00  == 555 BGR; */
-
-		if (pdwFields[0] == 0x7c00)
-            TtWDepth = 15;
-	}
-    free( pDib );
+	/* 0xf800: == 565 BGR;
+	   0x7c00  == 555 BGR; */
+	if (pdwFields[0] == 0x7c00)
+	  TtWDepth = 15;
+      }
+    free (pDib);
    }
 
    InitDocColors (name);
@@ -448,7 +446,7 @@ void ThotInitDisplay (char* name, int dx, int dy)
      DeleteObject (WIN_LastBitmap);
    WIN_LastBitmap = 0;
    InitCurs ();
-   DOT_PER_INCH = GetDeviceCaps(TtDisplay, LOGPIXELSY);
+   DOT_PER_INCH = 80 /*GetDeviceCaps (TtDisplay, LOGPIXELSY)*/;
    InitDialogueFonts (name);
 
    /* Initialization of Picture Drivers */

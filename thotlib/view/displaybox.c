@@ -1176,11 +1176,11 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   int                 charleft;
   int                 buffleft;
   int                 indbuff, bl;
-  int                 indmax;
+  int                 indmax, psW, w;
   int                 nbcar, x, y, y1;
   int                 lgspace, whitespace;
   int                 fg, bg, fgbox, bgbox;
-  int                 width, org, xpos;
+  int                 width, xpos;
   int                 left, right;
   ThotBool            shadow;
   ThotBool            blockbegin, withinSel = FALSE;
@@ -1453,7 +1453,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
       else
 	buffer = (unsigned char *)TtaGetMemory (pBox->BxNChars + 1);
       nbcar = 0;
-      org = x;
+      psW = 0; /* width used to justify a PostScript string */
       xpos = x; /* position of the new displayed character */
       while (charleft > 0)
 	{
@@ -1505,10 +1505,6 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		{
 		  if (nbcar > 0)
 		    {
-		      width = width + org;
-		      org -= x;
-		      if (org == 0)
-			org = -1;
 		      /* enter or leave a selected region */
 #ifdef _GL
 		      if (script == 'Z' || script == 'A' ||
@@ -1516,13 +1512,13 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 #else /*_GL*/
 		      if (script == 'Z' || script == 'A')
 #endif /*_GL*/
-			x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,
-					  org, bl, 0, blockbegin, fg);
+			w = WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,
+					     0, bl, 0, blockbegin, fg);
 		      else
-			x += DrawString (buffer, nbcar, frame, x, y1, prevfont,
-					 org, bl, 0, blockbegin, fg);
-		      width = width - x;
-		      org = x;
+			w = DrawString (buffer, nbcar, frame, x, y1, prevfont,
+					    0, bl, 0, blockbegin, fg);
+		      x += w;
+		      psW += w;
 		      bl = 0; /* all previous spaces are managed */
 		    }
 		  withinSel = !withinSel;
@@ -1540,71 +1536,40 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		  /* display previous chars handled */
 		  if (nbcar > 0)
 		    {
-		      width = width + org;
-		      org -= x;
-		      if (org == 0)
-			org = -1;
+		      width -= psW;
+		      if (psW == 0)
+			/* justify only the current string */
+			psW = 1;
+		      else
+			/* there is a previous string */
+			psW = -psW;
 #ifdef _GL
 		      if (script == 'Z' || script == 'A' ||
 			  !Printing || GL_TransText ())
 #else /*_GL*/
 		      if (script == 'Z' || script == 'A')
 #endif /*_GL*/
-			x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,
-					  org, bl, x, blockbegin, fg);
+			w = WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,
+					 psW, bl, x, blockbegin, fg);
 		      else
-			x += DrawString (buffer, nbcar, frame, x, y1, prevfont,
-					 org, bl, x, blockbegin, fg);
-		      width = width - x;
+			w = DrawString (buffer, nbcar, frame, x, y1, prevfont,
+					psW, bl, x, blockbegin, fg);
 		      bl = 0; /* all previous spaces are managed */
 		    }
+		  else
+		    w = 0;
+		  psW = 0; /* the ps justification is done */
 		  nbcar = 0;
 		  prevfont = nextfont;
+		  x += w;
+		  width -= w;
 		  DrawRectangle (frame, 1, 5, x, y, 6, pBox->BxH - 1, fg, 0, 0);
 		  x += 6;
-		  org = x;
+		  width -= 6;
 		  xpos = x;
 		}
 	      else
 		{
-		  if (prevfont != nextfont)
-		    {
-		      /* display previous chars handled */
-#ifdef _WINDOWS
-		      if (nbcar > 0)
-#else /* WINDOWS */
-		      if (nbcar > 0 || Printing)
-#endif /* WINDOWS */
-			{
-			  width = width + org;
-			  org -= x;
-			  if (org == 0)
-			    org = -1;	
-#ifdef _GL
-			  if (script == 'Z' || script == 'A' ||
-			      !Printing || GL_TransText ())
-#else /*_GL*/
-		          if (script == 'Z' || script == 'A')
-#endif /*_GL*/
-			    x += WDrawString (wbuffer, nbcar, frame, x, y1,
-					      prevfont, org, bl, 0, blockbegin,
-					      fg);
-			  else
-			    {
-			      if ( prevfont == NULL)
-				prevfont = nextfont;
-			      x += DrawString (buffer, nbcar, frame, x, y1,
-					       prevfont, org, bl, 0, blockbegin,
-					       fg);
-			    }
-			  width = width - x;
-			  org = x;
-			  bl = 0; /* all previous spaces are managed */
-			}
-		      nbcar = 0;
-		      prevfont = nextfont;
-		      xpos = x;
-		    }
 		  if (c == SPACE || c == TAB ||
 		      c == NEW_LINE || c == UNBREAKABLE_SPACE ||
 		      c == EN_QUAD || c == EM_QUAD ||
@@ -1615,7 +1580,14 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      c == HAIR_SPACE || c == MEDIUM_SPACE)
 		    {
 		      /* display previous chars handled */
+		      if (prevfont == NULL)
+			prevfont = nextfont;
+#ifdef _WINDOWS
 		      if (nbcar > 0)
+#else /* WINDOWS */
+			/* PostScript should register the start position */
+		      if (nbcar > 0 || Printing)
+#endif /* WINDOWS */
 			{
 #ifdef _GL
 			  if (script == 'Z' || script == 'A' ||
@@ -1623,11 +1595,13 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 #else /*_GL*/
 			  if (script == 'Z' || script == 'A')
 #endif /*_GL*/
-			    x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,  
-					      0, bl, 0, blockbegin, fg);
-			  else
-			    x += DrawString (buffer, nbcar, frame, x, y1, prevfont,  
+			    w = WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,  
 					     0, bl, 0, blockbegin, fg);
+			  else
+			    w = DrawString (buffer, nbcar, frame, x, y1, prevfont,  
+					    0, bl, 0, blockbegin, fg);
+			  psW += w; /* the ps justification is done */
+			  x += w;
 			  bl = 0; /* all previous spaces are managed */
 			}
 		  
@@ -1661,18 +1635,50 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 			}
 		      else if (c != EOS)
 			lg = CharacterWidth (c, nextfont);
-#ifdef _WINDOWS
-			x += lg;
-#else /* _WINDOWS */
-			/*if (Printing)
-			org -= lg;
-			else*/
-			x += lg;
-#endif /* _WINDOWS */
+		      x += lg;
+		      psW +=lg;
 		      xpos = x;
 		    }
 		  else
 		    {
+		      if (prevfont != nextfont)
+			{
+			  /* display previous chars handled */
+			  if (nbcar > 0)
+			    {
+			      width -= psW;
+			      if (psW == 0)
+				/* justify only the current string */
+				psW = 1;
+			      else
+				/* there is a previous string */
+				psW = -psW;
+#ifdef _GL
+			      if (script == 'Z' || script == 'A' ||
+				  !Printing || GL_TransText ())
+#else /*_GL*/
+				if (script == 'Z' || script == 'A')
+#endif /*_GL*/
+				  w = WDrawString (wbuffer, nbcar, frame, x, y1,
+						   prevfont, psW, bl, 0, blockbegin,
+						   fg);
+				else
+				  {
+				    if ( prevfont == NULL)
+				      prevfont = nextfont;
+				    w = DrawString (buffer, nbcar, frame, x, y1,
+						    prevfont, psW, bl, 0, blockbegin,
+						    fg);
+				  }
+			      psW = 0; /* the ps justification is done */
+			      width -= w;
+			      x += w;
+			      bl = 0; /* all previous spaces are managed */
+			    }
+			  nbcar = 0;
+			  prevfont = nextfont;
+			  xpos = x;
+			}
 #ifdef _GL
 		      if (script == 'Z' || script == 'A' ||
 			  !Printing || GL_TransText ())
@@ -1744,7 +1750,12 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		 Call the function in any case to let Postscript justify the
 		 text of the box.
 	      */
+#ifdef _WINDOWS
 	      if (nbcar > 0)
+#else /* WINDOWS */
+		/* PostScript can now justify the displayed string */
+	      if (nbcar > 0 || Printing)
+#endif /* WINDOWS */
 		{
 #ifdef _GL
 		  if (script == 'Z' || script == 'A' ||

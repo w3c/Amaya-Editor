@@ -290,42 +290,43 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
     return 0;
   y += FrameTable[frame].FrTopMargin;
 
+  /* Is this a new box ? */
+  if (SameBox == 0)
+    {
+      /* store the start position for the justified box */
+      SameBox = 1;
+      X = x;
+      Y = y;
+      NbWhiteSp = 0;
+      if (fg >= 0)
+	{
+	  /* Do we need to change the current color ? */
+	  CurrentColor (fout, fg);
+	  /* Do we need to change the current font ? */
+	  encoding = CurrentFont (fout, font);
+	  fprintf (fout, "(");
+	}
+    }
+      
+  buff[lg] = EOS;
+  /* Add the justified white space */
+  if (bl > 0)
+    {
+      NbWhiteSp += bl;
+      if (fg >= 0)
+	{
+	  for (i = 1; i <= bl; i++)
+	    fprintf (fout, "%c", ' ');
+	  /* Transcode (fout, encoding, ' '); */
+	}
+    }
+
   width = 0;
   if (lg > 0)
     {
       /* noJustifiedWhiteSp is > 0 if writing a fixed lenght is needed */
       /* and equal to 0 if a justified space is to be printed */  
       noJustifiedWhiteSp = startABlock;
-      /* Is this a new box ? */
-      if (SameBox == 0)
-	{
-	  /* store the start position for the justified box */
-	  SameBox = 1;
-	  X = x;
-	  Y = y;
-	  NbWhiteSp = 0;
-	  if (fg >= 0)
-	    {
-	      /* Do we need to change the current color ? */
-	      CurrentColor (fout, fg);
-	      /* Do we need to change the current font ? */
-	      encoding = CurrentFont (fout, font);
-	      fprintf (fout, "(");
-	    }
-	}
-      
-      buff[lg] = EOS;
-      /* Add the justified white space */
-      if (bl > 0)
-	{
-	  NbWhiteSp += bl;
-	  if (fg >= 0)
-	    {
-	      for (i = 1; i <= bl; i++)
-		fprintf (fout, "%c", ' ');
-	      /* Transcode (fout, encoding, ' '); */
-	    }
-	}
       /* Emit the chars */
       for (j = 0; j < lg; j++)
 	{
@@ -351,16 +352,6 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 	      if (fg >= 0)
 		Transcode (fout, encoding, buff[j]);
 	    }
-	}
-    }
-  else if (bl > 0)
-    {
-      /* store previous spaces */
-      NbWhiteSp += bl;
-      if (fg >= 0)
-	{
-	  for (i = 1; i <= bl; i++)
-	    fprintf (fout, "%c", ' ');
 	}
     }
    
@@ -416,41 +407,42 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
     return 0;
   y += FrameTable[frame].FrTopMargin;
 
+  /* Is this a new box ? */
+  if (SameBox == 0)
+    {
+      /* store the start position for the justified box */
+      SameBox = 1;
+      X = x;
+      Y = y;
+      NbWhiteSp = 0;
+      if (fg >= 0)
+	{
+	  /* Do we need to change the current color ? */
+	  CurrentColor (fout, fg);
+	  /* Do we need to change the current font ? */
+	  encoding = CurrentFont (fout, font);
+	  fprintf (fout, "(");
+	}
+    }
+  
+  buff[lg] = EOS;
+  /* Add the justified white space */
+  if (bl > 0)
+    {
+      NbWhiteSp += bl;
+      if (fg >= 0)
+	{
+	  for (i = 1; i <= bl; i++)
+	    fprintf (fout, "%c", ' ');
+	}
+    }
+
   width = 0;
   if (lg > 0)
     {
       /* noJustifiedWhiteSp is > 0 if writing a fixed lenght is needed */
       /* and equal to 0 if a justified space is to be printed */  
       noJustifiedWhiteSp = startABlock;
-      /* Is this a new box ? */
-      if (SameBox == 0)
-	{
-	  /* store the start position for the justified box */
-	  SameBox = 1;
-	  X = x;
-	  Y = y;
-	  NbWhiteSp = 0;
-	  if (fg >= 0)
-	    {
-	      /* Do we need to change the current color ? */
-	      CurrentColor (fout, fg);
-	      /* Do we need to change the current font ? */
-	      encoding = CurrentFont (fout, font);
-	      fprintf (fout, "(");
-	    }
-	}
-      
-      buff[lg] = EOS;
-      /* Add the justified white space */
-      if (bl > 0)
-	{
-	  NbWhiteSp += bl;
-	  if (fg >= 0)
-	    {
-	      for (i = 1; i <= bl; i++)
-		fprintf (fout, "%c", ' ');
-	    }
-	}
       /* Emit the chars */
       for (j = 0; j < lg; j++)
 	{
@@ -476,16 +468,6 @@ int WDrawString (wchar_t *buff, int lg, int frame, int x, int y,
 	      if (fg >= 0)
 		fprintf (fout, "%c", (char)buff[j]);
 	    }
-	}
-    }
-  else if (bl > 0)
-    {
-      /* store previous spaces */
-      NbWhiteSp += bl;
-      if (fg >= 0)
-	{
-	  for (i = 1; i <= bl; i++)
-	    fprintf (fout, "%c", ' ');
 	}
     }
 

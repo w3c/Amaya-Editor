@@ -295,20 +295,37 @@ void SetupPixelFormatPrintGL (HDC hDC, int frame)
 }
 #endif /*_WINDOWS*/
 
+extern  int ColorPs;
 /*----------------------------------------------------------------------
   GL_SetPrintForeground: set the foreground color.
   ----------------------------------------------------------------------*/
 void GL_SetPrintForeground (int fg)
 {
-  unsigned short red, green, blue;
-  float rgb[3];
+  unsigned short      red, green, blue;
+  float               fact;
 
-  TtaGiveThotRGB (fg, &red, &green, &blue);
+  if (fg != ColorPs)
+    {
+      TtaGiveThotRGB (fg, &red, &green, &blue);
+      if (red == 0 && green == 0 && blue == 0)
+	fprintf (FILE_STREAM, "0 setgray\n");
+      else
+	{
+	  /* write the Postscript command */
+	  fact = 255;
+	  fprintf (FILE_STREAM, "%f %f %f setrgbcolor\n",
+		   ((float) red) / fact, ((float) green) / fact, ((float) blue) / fact);
+	}
+      ColorPs = fg;
+    }
+  /*******
+  float rgb[3];
   rgb[0] = (float) red;
   rgb[1] = (float) green;
   rgb[2] = (float) blue;
  
-  GLPrintPostScriptColor (&rgb);    
+  GLPrintPostScriptColor (&rgb);
+  ******/  
 }
 
 /*----------------------------------------------------------------------
@@ -701,43 +718,44 @@ int GLString (unsigned char *buff, int lg, int frame, int x, int y,
   encoding = 0;
   if (y < 0)
     return 0;
+
+  /* Is this a new box ? */
+  if (SameBox == 0)
+    {
+      /* store the start position for the justified box */
+      SameBox = 1;
+      X = x;
+      Y = y;
+      NbWhiteSp = 0;
+      if (fg >= 0)
+	{
+	  /* Do we need to change the current color ? */
+	  GL_SetPrintForeground (fg); 
+	  /* Do we need to change the current font ? */
+	  GetPostscriptNameFromFont (font, fontname);
+	  fprintf (fout, fontname);
+	  fprintf (fout, "(");
+	}
+    }
+      
+  buff[lg] = EOS;
+  /* Add the justified white space */
+  if (bl > 0)
+    {
+      NbWhiteSp += bl;
+      if (fg >= 0)
+	{
+	  for (i = 1; i <= bl; i++)
+	    fprintf (fout, "%c", ' ');
+	}
+    }
+
   width = 0;
   if (lg > 0)
     {
       /* noJustifiedWhiteSp is > 0 if writing a fixed lenght is needed */
       /* and equal to 0 if a justified space is to be printed */  
       noJustifiedWhiteSp = startABlock;
-      /* Is this a new box ? */
-      if (SameBox == 0)
-      {
-	/* store the start position for the justified box */
-	SameBox = 1;
-	X = x;
-	Y = y;
-	NbWhiteSp = 0;
-	if (fg >= 0)
-	  {
-	    /* Do we need to change the current color ? */
-	    GL_SetPrintForeground (fg); 
-	    /* Do we need to change the current font ? */
-	    GetPostscriptNameFromFont (font, fontname);
-	    fprintf (fout, fontname);
-	    fprintf (fout, "(");
-	  }
-      }
-      
-      buff[lg] = EOS;
-      /* Add the justified white space */
-      if (bl > 0)
-	{
-	  NbWhiteSp += bl;
-	  if (fg >= 0)
-	    {
-	      for (i = 1; i <= bl; i++)
-		fprintf (fout, "%c", ' ');
-	      /* Transcode (fout, encoding, ' '); */
-	    }
-	}
       /* Emit the chars */
       for (j = 0; j < lg; j++)
 	{
@@ -763,16 +781,6 @@ int GLString (unsigned char *buff, int lg, int frame, int x, int y,
 	      if (fg >= 0)
 		Transcode (fout, encoding, buff[j]);
 	    }
-	}
-    }
-  else if (bl > 0)
-    {
-      /* store previous spaces */
-      NbWhiteSp += bl;
-      if (fg >= 0)
-	{
-	  for (i = 1; i <= bl; i++)
-	    fprintf (fout, "%c", ' ');
 	}
     }
    

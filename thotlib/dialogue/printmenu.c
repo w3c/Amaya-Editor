@@ -579,30 +579,30 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 #ifdef _WINDOWS
 #ifndef _WINDOWS_DLL
    {
-    STARTUPINFO si;
-    PROCESS_INFORMATION pi;
+     STARTUPINFO si;
+     PROCESS_INFORMATION pi;
 
-   cmd[j] = EOS;
-   i = strlen (cmd);
-   sprintf (&cmd[i], " -removedir %s\\%s.PIV", dir, name);
+     cmd[j] = EOS;
+     i = strlen (cmd);
+     sprintf (&cmd[i], " -removedir %s\\%s.PIV", dir, name);
 
-    ZeroMemory( &si, sizeof(si) );
-    si.cb = sizeof(si);
-    ZeroMemory( &pi, sizeof(pi) );
+     ZeroMemory(&si, sizeof(si));
+     si.cb = sizeof (si);
+     ZeroMemory(&pi, sizeof(pi));
 
-	CreateProcess ( NULL,   /* No module name (use command line). */
-        cmd,               /* Command line. */
-        NULL,             /* Process handle not inheritable. */
-        NULL,             /* Thread handle not inheritable. */
-        FALSE,            /* Set handle inheritance to FALSE. */
-        0,                /* No creation flags. */
-        NULL,             /* Use parent's environment block. */
-        NULL,             /** Use parent's starting directory. */
-        &si,              /* Pointer to STARTUPINFO structure.*/
-        &pi );            /* Pointer to PROCESS_INFORMATION structure.*/
-	/*do we have to wait until process die ?*/
-	/* WaitForInputIdle()*/ 
-}
+     CreateProcess ( NULL,   /* No module name (use command line). */
+		     cmd,               /* Command line. */
+		     NULL,             /* Process handle not inheritable. */
+		     NULL,             /* Thread handle not inheritable. */
+		     FALSE,            /* Set handle inheritance to FALSE. */
+		     0,                /* No creation flags. */
+		     NULL,             /* Use parent's environment block. */
+		     NULL,             /** Use parent's starting directory. */
+		     &si,              /* Pointer to STARTUPINFO structure.*/
+		     &pi );            /* Pointer to PROCESS_INFORMATION structure.*/
+     /*do we have to wait until process die ?*/
+     /* WaitForInputIdle()*/ 
+   }
 #else /*_WINDOWSDLL*/
    printArgv[printArgc] = TtaStrdup ("-removedir");
    printArgc++;
@@ -634,7 +634,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    for (i = 0; i < printArgc; i++)
        TtaFreeMemory (printArgv[i]);
    if (TtPrinterDC)
-   { 
+     {
        DeleteDC (TtPrinterDC);
        TtPrinterDC = (HDC) 0;
      }
@@ -644,9 +644,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 #if defined(_GTK) || defined(_MOTIF)
    cmd[j] = EOS;
    i = strlen (cmd);
-
    sprintf (&cmd[i], " -removedir %s/%s.PIV &", dir, name);
-
 #ifdef _PCLDEBUG
     printf ("\n/usr/bin/ddd bin/%s\n", cmd); 
    /* res = system (cmd);  */
@@ -654,8 +652,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
    res = system (cmd); 
 #endif /* _PCLDEBUG */
     if (res == -1) 
-       TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_ERROR_PS_TRANSLATION); 
-
+       TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_ERROR_PS_TRANSLATION);
 #endif /* #if defined(_GTK) || defined(_MOTIF) */
 
 }

@@ -2901,7 +2901,7 @@ int main (int argc, char **argv)
   TtWPrinterDepth = GetDeviceCaps (TtPrinterDC, PLANES);
   hCurrentInstance = hInst;
   TtDisplay = GetDC (NULL);
-  ScreenDPI = GetDeviceCaps (TtDisplay, LOGPIXELSY);
+  ScreenDPI = 80 /*GetDeviceCaps (TtDisplay, LOGPIXELSY)*/;
   DOT_PER_INCH = ScreenDPI;
   ReleaseDC (NULL, TtDisplay);
   TtDisplay = NULL;
