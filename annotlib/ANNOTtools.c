@@ -1171,6 +1171,36 @@ static void Container_sortByDate (Container **list)
 	break;
     }
 }
+
+/*------------------------------------------------------------
+   AnnotThread_markOrphan
+   Marks as orphan all the top annotation entries following the
+   root entry.
+   ------------------------------------------------------------*/
+static void  AnnotThread_markOrphan (Container *root)
+{
+  Container *tmp_entry;
+  Container *tmp_entry2;
+
+  if (!root)
+    return;
+
+  /* skip the first entry, as it holds all the thread items that
+     have been accounted for */
+  tmp_entry = root->next;
+  /* for each sibling, find the first annotation entry and mark
+     it as orphan */
+  while (tmp_entry)
+    {
+      tmp_entry2 = tmp_entry;
+      while (tmp_entry2 && tmp_entry2->annot == NULL)
+	tmp_entry2 = tmp_entry2->child;
+      if (tmp_entry2)
+	tmp_entry2->annot->is_orphan_item = TRUE;
+      tmp_entry = tmp_entry->next;
+    }
+}
+
 #endif /* ANNOT_ON_ANNOT */
 
 /*------------------------------------------------------------
@@ -1189,7 +1219,6 @@ void AnnotThread_sortThreadList (List **thread_list)
   Container *root;
   HTArray *keys;
   char *url;
-  ThotBool is_orphan; 
 
   list_cur = *thread_list;
 
@@ -1297,19 +1326,17 @@ void AnnotThread_sortThreadList (List **thread_list)
       tmp_entry = tmp_entry->next;
     }
 
+  /* mark the root orphan annotations as such. After all the above sorts,
+     these are all the siblings of the first container */
+  AnnotThread_markOrphan (root);
+
   /* copy the result to annot_list. The children of root are live replies.
    The brothers of root have messages that have lost their in-reply-to parents */
   annot_list = NULL;
   tmp_entry = root;
-  is_orphan = FALSE;
   while (tmp_entry)
     {
-      if (is_orphan)
-	{
-	  tmp_entry->child->annot->is_orphan_item = TRUE;
-	}
       ConvertContainerToList (&annot_list, tmp_entry->child);
-      is_orphan = TRUE;
       tmp_entry = tmp_entry->next;
     }
   *thread_list = annot_list;
