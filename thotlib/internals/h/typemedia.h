@@ -121,8 +121,11 @@ typedef struct _DimRelations
 typedef struct _Box
 {
   PtrAbstractBox  BxAbstractBox;/* Pointer on the associated abstract box */
+  PtrBox          BxPrevious;	        /* Previous displayable box */
+  PtrBox          BxNext;	        /* Next displayable box */
+  PtrBox          BxNextBackground;	/* Next background box to display */
   int	          BxNChars;	/* Total number of characters in the box */
-  int             BxIndChar;	/* Position of the box in the document */
+  int             BxIndChar;	/* 0 or position of the split box */
   int             BxXOrg;	/* X origin from the root */
   int             BxYOrg;	/* Y origin from the root */
   int             BxHeight;	        /* Current height */
@@ -138,8 +141,6 @@ typedef struct _Box
   PtrDimRelations BxWidthRelations;	/* Dependencies in width */
   PtrDimRelations BxHeightRelations;	/* Dependencies in height */
   ptrfont         BxFont;	        /* Font bound to the box */
-  PtrBox          BxPrevious;	        /* Previous displayable box */
-  PtrBox          BxNext;	        /* Next displayable box */
   PtrBox          BxMoved;	        /* Linking of moved boxes */
   PtrBox          BxHorizInc;	        /* Box linking to the enclosing one */
   PtrBox          BxVertInc;	        /* Box linking to the enclosing one */
@@ -164,7 +165,7 @@ typedef struct _Box
   BoxType         BxType;
   union
   {
-    struct
+    struct /* BoPiece */
     {
       PtrBox     _BxNexChild_;	/* Next split box */
       int	 _BxNSpaces_;	/* Number of spaces in the text */
@@ -172,7 +173,7 @@ typedef struct _Box
       int	 _BxSpaceWidth_;/* >0 of the box is justified */
       int	 _BxFirstChar_;	/* First character in buffer */
     } s0;
-    struct
+    struct /* BoPicture */
     {
       int	 *_BxPictInfo_;  /* Image pointer in memory
 				    List of control points for a spline
@@ -181,7 +182,7 @@ typedef struct _Box
       float 	 _BxXRatio_;
       float 	 _BxYRation_;
     } s1;
-    struct
+    struct /* BoBlock */
     {
       PtrLine 	 _BxFirstLine_;	/* First line if applicable */
       PtrLine 	 _BxLastLine_;	/* Last line */
@@ -189,6 +190,7 @@ typedef struct _Box
     } s2;
   } u;
 } Box;
+
 #define BxNexChild u.s0._BxNexChild_
 #define BxNSpaces u.s0._BxNSpaces_
 #define BxNPixels u.s0._BxNPixels_
@@ -378,7 +380,7 @@ typedef struct _AbstractBox
 } AbstractBox;
 
 #define AbPictBackground u.s0._AbPictBackground_
-#define AbFillBox u.s0.__AbFillBox__
+#define AbFillBox u.s0._AbFillBox_
 #define AbInLine u.s0._AbInLine_
 #define AbTruncatedHead u.s0._AbTruncatedHead_
 #define AbTruncatedTail u.s0._AbTruncatedTail_

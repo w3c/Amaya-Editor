@@ -978,6 +978,7 @@ FILE               *fileDescriptor;
      {
 	pPa1 = pAb;
 	fprintf (fileDescriptor, "\n%d ", pPa1->AbNum);	/* numero du pave */
+
 	for (i = 1; i <= Indent; i++)
 	   fprintf (fileDescriptor, " ");
 	pRe1 = &pPa1->AbElement->
@@ -995,9 +996,45 @@ FILE               *fileDescriptor;
 	fprintf (fileDescriptor, " TypeNum:%d", pPa1->AbTypeNum);
 	fprintf (fileDescriptor, " El:%s", pPa1->AbElement->ElLabel);
 	fprintf (fileDescriptor, " Vol:%d", pPa1->AbVolume);
-	fprintf (fileDescriptor, " View%d", pPa1->AbDocView);
+
+	fprintf (fileDescriptor, "\n");
+	for (j = 1; j <= Indent + 6; j++)
+	   fprintf (fileDescriptor, " ");
+	fprintf (fileDescriptor, "View:%d", pPa1->AbDocView);
 	fprintf (fileDescriptor, " Visib:%d", pPa1->AbVisibility);
-	fprintf (fileDescriptor, " Font:%c", pPa1->AbFont);
+	fprintf (fileDescriptor, " Actif:");
+	wrboolean (pPa1->AbSensitive, fileDescriptor);
+	fprintf (fileDescriptor, " R/O:");
+	wrboolean (pPa1->AbReadOnly, fileDescriptor);
+	fprintf (fileDescriptor, " Modif:");
+	wrboolean (pPa1->AbCanBeModified, fileDescriptor);
+	fprintf (fileDescriptor, " AbstractBox Pres:");
+	wrboolean (pPa1->AbPresentationBox, fileDescriptor);
+	if (!pPa1->AbHorizEnclosing)
+	   fprintf (fileDescriptor, " HorizEncl:N");
+	if (!pPa1->AbVertEnclosing)
+	   fprintf (fileDescriptor, " VertEncl:N");
+	if (pPa1->AbNotInLine)
+	   fprintf (fileDescriptor, " NotInLine");
+
+	fprintf (fileDescriptor, "\n");
+	for (j = 1; j <= Indent + 6; j++)
+	   fprintf (fileDescriptor, " ");
+	fprintf (fileDescriptor, "Pattern:%d", pPa1->AbFillPattern);
+	fprintf (fileDescriptor, " Background:%d", pPa1->AbBackground);
+	fprintf (fileDescriptor, " Foreground:%d", pPa1->AbForeground);
+	fprintf (fileDescriptor, " LineStyle:%c", pPa1->AbLineStyle);
+	fprintf (fileDescriptor, " LineWeight:%d", pPa1->AbLineWeight);
+	wrTypeUnit (pPa1->AbLineWeightUnit, fileDescriptor);
+	fprintf (fileDescriptor, " PageBreak:");
+	wrboolean (pPa1->AbAcceptPageBreak, fileDescriptor);
+	fprintf (fileDescriptor, " LineBreak:");
+	wrboolean (pPa1->AbAcceptLineBreak, fileDescriptor);
+
+	fprintf (fileDescriptor, "\n");
+	for (j = 1; j <= Indent + 6; j++)
+	   fprintf (fileDescriptor, " ");
+	fprintf (fileDescriptor, "Font:%c", pPa1->AbFont);
 	fprintf (fileDescriptor, " HighL:%d", pPa1->AbHighlight);
 	fprintf (fileDescriptor, " Size:%d", pPa1->AbSize);
 	wrTypeUnit (pPa1->AbSizeUnit, fileDescriptor);
@@ -1027,71 +1064,64 @@ FILE               *fileDescriptor;
 	wrboolean (pPa1->AbJustify, fileDescriptor);
 	fprintf (fileDescriptor, " Hyphen:");
 	wrboolean (pPa1->AbHyphenate, fileDescriptor);
-	if (pPa1->AbNotInLine)
-	   fprintf (fileDescriptor, " NotInLine");
 
 	fprintf (fileDescriptor, " Linespace:%d", pPa1->AbLineSpacing);
 	wrTypeUnit (pPa1->AbLineSpacingUnit, fileDescriptor);
-	fprintf (fileDescriptor, " Pattern:%d", pPa1->AbFillPattern);
-	fprintf (fileDescriptor, " Background:%d", pPa1->AbBackground);
-	fprintf (fileDescriptor, " Foreground:%d", pPa1->AbForeground);
-	fprintf (fileDescriptor, " LineStyle:%c", pPa1->AbLineStyle);
-	fprintf (fileDescriptor, " LineWeight:%d", pPa1->AbLineWeight);
-	wrTypeUnit (pPa1->AbLineWeightUnit, fileDescriptor);
-	fprintf (fileDescriptor, " Modif:");
-	wrboolean (pPa1->AbCanBeModified, fileDescriptor);
-	fprintf (fileDescriptor, " PageBreak:");
-	wrboolean (pPa1->AbAcceptPageBreak, fileDescriptor);
-	fprintf (fileDescriptor, " LineBreak:");
-	wrboolean (pPa1->AbAcceptLineBreak, fileDescriptor);
-	fprintf (fileDescriptor, " Actif:");
-	wrboolean (pPa1->AbSensitive, fileDescriptor);
-	fprintf (fileDescriptor, " R/O:");
-	wrboolean (pPa1->AbReadOnly, fileDescriptor);
-	fprintf (fileDescriptor, " AbstractBox Pres:");
-	wrboolean (pPa1->AbPresentationBox, fileDescriptor);
-	if (!pPa1->AbHorizEnclosing)
-	   fprintf (fileDescriptor, " HorizEncl:N");
-	if (!pPa1->AbVertEnclosing)
-	   fprintf (fileDescriptor, " VertEncl:N");
-	fprintf (fileDescriptor, " Nature:");
+
+	fprintf (fileDescriptor, "\n");
+	for (j = 1; j <= Indent + 6; j++)
+	   fprintf (fileDescriptor, " ");
+	fprintf (fileDescriptor, "Nature:");
 	switch (pPa1->AbLeafType)
 	      {
 		 case LtCompound:
-		    fprintf (fileDescriptor, "comp");
+		    fprintf (fileDescriptor, "COMP");
 		    break;
 		 case LtPicture:
-		    fprintf (fileDescriptor, "picture\n");
+		    fprintf (fileDescriptor, "PICTURE");
 		    for (i = 1; i <= Indent + 6; i++)
 		       fprintf (fileDescriptor, " ");
 		    break;
 		 case LtText:
-		    fprintf (fileDescriptor, "text ");
+		    fprintf (fileDescriptor, "TEXT ");
 
 		    break;
 		 case LtPolyLine:
-		    fprintf (fileDescriptor, "polyline ");
+		    fprintf (fileDescriptor, "POLYLINE ");
 		    break;
 		 case LtPageColBreak:
-		    fprintf (fileDescriptor, "page");
+		    fprintf (fileDescriptor, "PAGE");
 		    break;
 		 case LtSymbol:
-		    fprintf (fileDescriptor, "symbol");
+		    fprintf (fileDescriptor, "SYMBOL");
 		    break;
 		 case LtGraphics:
-		    fprintf (fileDescriptor, "graphics");
+		    fprintf (fileDescriptor, "GRAPHICS");
 		    break;
 		 case LtReference:
-		    fprintf (fileDescriptor, "refer");
+		    fprintf (fileDescriptor, "REFER");
 		    break;
 		 default:
 		    fprintf (fileDescriptor, "AbLeafType ????");
 		    break;
 	      }
+
+	fprintf (fileDescriptor, "\n\n");
+	for (j = 1; j <= Indent + 6; j++)
+	   fprintf (fileDescriptor, " ");
 	switch (pPa1->AbLeafType)
 	      {
 		 case LtCompound:
-
+		    image = (PictInfo *) pPa1->AbPictBackground;
+		    if (image != NULL)
+		      fprintf (fileDescriptor, "x = %d, y = %d, w = %d, h = %d, name = %s",
+			       image->PicXArea, image->PicYArea, image->PicWArea, image->PicHArea,
+			       image->PicFileName);
+		    fprintf (fileDescriptor, "Fill-Background:");
+		    if (pPa1->AbFillBox)
+		      fprintf (fileDescriptor, "Y");
+		    else
+		      fprintf (fileDescriptor, "N");
 		    break;
 		 case LtPicture:
 		    image = (PictInfo *) pPa1->AbPictInfo;
@@ -1104,7 +1134,8 @@ FILE               *fileDescriptor;
 		    break;
 		 case LtText:
 		 case LtReference:
-		    fprintf (fileDescriptor, "language=%s\n", TtaGetLanguageName (pPa1->AbLanguage));
+		    fprintf (fileDescriptor, "language=%s", TtaGetLanguageName (pPa1->AbLanguage));
+		    fprintf (fileDescriptor, "\n");
 		    for (i = 1; i <= Indent + 6; i++)
 		       fprintf (fileDescriptor, " ");
 		    fprintf (fileDescriptor, " \'");
@@ -1112,7 +1143,8 @@ FILE               *fileDescriptor;
 		    fprintf (fileDescriptor, "\'");
 		    break;
 		 case LtPolyLine:
-		    fprintf (fileDescriptor, "type=%c\n", pPa1->AbPolyLineShape);
+		    fprintf (fileDescriptor, "type=%c", pPa1->AbPolyLineShape);
+		    fprintf (fileDescriptor, "\n");
 		    for (i = 1; i <= Indent + 6; i++)
 		       fprintf (fileDescriptor, " ");
 		    for (i = 0; i < pPa1->AbVolume && i < 8; i++)
@@ -1229,13 +1261,13 @@ FILE               *fileDescriptor;
 	fprintf (fileDescriptor, "\n");
 	if (pPa1->AbPreviousRepeated != NULL)
 	  {
-	     fprintf (fileDescriptor, " AbstractBox duplique precedent : ");
+	     fprintf (fileDescriptor, " AbstractBox repeats previous: ");
 	     fprintf (fileDescriptor, "%d ", pPa1->AbPreviousRepeated->AbNum);
 	     fprintf (fileDescriptor, "\n");
 	  }
 	if (pPa1->AbNextRepeated != NULL)
 	  {
-	     fprintf (fileDescriptor, " AbstractBox duplique suivant  : ");
+	     fprintf (fileDescriptor, " AbstractBox repeats next: ");
 	     fprintf (fileDescriptor, "%d ", pPa1->AbNextRepeated->AbNum);
 	     fprintf (fileDescriptor, "\n");
 	  }
@@ -1245,11 +1277,11 @@ FILE               *fileDescriptor;
 		fprintf (fileDescriptor, " ");
 	     fprintf (fileDescriptor, "line:");
 	     wrboolean (pPa1->AbInLine, fileDescriptor);
-	     /* on affiche systematiquement CT et CQ meme si */
-	     /* c'est un pave mis en ligne */
-	     fprintf (fileDescriptor, " CT:");
+	     /* display Truncated-Head and Truncated-Tail */
+	     /* even if it's a lines block */
+	     fprintf (fileDescriptor, " Truncated-Head:");
 	     wrboolean (pPa1->AbTruncatedHead, fileDescriptor);
-	     fprintf (fileDescriptor, " CQ:");
+	     fprintf (fileDescriptor, " Truncated-Tail:");
 	     wrboolean (pPa1->AbTruncatedTail, fileDescriptor);
 
 	     fprintf (fileDescriptor, "\n");
@@ -1259,10 +1291,10 @@ FILE               *fileDescriptor;
 		  if (f->AbEnclosing != pAb)
 		     if (f->AbEnclosing == NULL)
 			fprintf (fileDescriptor,
-				 "AbstractBox suivant : AbEnclosing=NULL\n");
+				 "Next AbstractBox: AbEnclosing=NULL\n");
 		     else
 			fprintf (fileDescriptor,
-			      "AbstractBox suivant : erreur AbEnclosing\n");
+			      "Next AbstractBox: bad AbEnclosing\n");
 		  ListAbsBoxes (f, Indent + 2, fileDescriptor);
 		  f = f->AbNext;
 	       }
@@ -1275,12 +1307,10 @@ FILE               *fileDescriptor;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         wrnumber (int i, FILE * fileDescriptor)
-
 #else  /* __STDC__ */
 static void         wrnumber (i, fileDescriptor)
 int                 i;
 FILE               *fileDescriptor;
-
 #endif /* __STDC__ */
 
 {
@@ -1290,15 +1320,12 @@ FILE               *fileDescriptor;
 /*----------------------------------------------------------------------
    wrtext ecrit du texte
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         wrtext (char *Text, FILE * fileDescriptor)
-
 #else  /* __STDC__ */
 static void         wrtext (Text, fileDescriptor)
 char               *Text;
 FILE               *fileDescriptor;
-
 #endif /* __STDC__ */
 
 {
@@ -1314,13 +1341,11 @@ FILE               *fileDescriptor;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         ListBoxTree (PtrAbstractBox pAb, int Indent, FILE * fileDescriptor)
-
 #else  /* __STDC__ */
 static void         ListBoxTree (pAb, Indent, fileDescriptor)
 PtrAbstractBox      pAb;
 int                 Indent;
 FILE               *fileDescriptor;
-
 #endif /* __STDC__ */
 
 {
@@ -1352,20 +1377,6 @@ FILE               *fileDescriptor;
 		fprintf (fileDescriptor, " ");
 	     fprintf (fileDescriptor, " Characters:");
 	     wrnumber (pAb->AbVolume, fileDescriptor);
-	     if (!pAb->AbHorizEnclosing)
-		fprintf (fileDescriptor, " Not-Horiz-Enclosed");
-	     if (!pAb->AbVertEnclosing)
-		fprintf (fileDescriptor, " Not-Vert-Enclosed");
-	     /* On liste les relations hors-structure */
-	     if (pBox->BxXOutOfStruct)
-		fprintf (fileDescriptor, " XRelation-Out-Enclosing");
-	     if (pBox->BxYOutOfStruct)
-		fprintf (fileDescriptor, " YRelation-Out-Enclosing");
-	     if (pBox->BxWOutOfStruct)
-		fprintf (fileDescriptor, " HDimRelation-Out-Enclosing");
-	     if (pBox->BxHOutOfStruct)
-		fprintf (fileDescriptor, " VDimRelation-Out-Enclosing");
-
 	     if (pAb->AbLeafType == LtText)
 	       {
 		  fprintf (fileDescriptor, " Spaces:");
@@ -1402,28 +1413,53 @@ FILE               *fileDescriptor;
 		wrnumber (pBox->BxNexChild->BxYOrg, fileDescriptor);
 	     else
 		wrnumber (pBox->BxYOrg, fileDescriptor);
+
+	     fprintf (fileDescriptor, "\n");
+	     for (j = 1; j <= Indent; j++)
+		fprintf (fileDescriptor, " ");
+	     if (!pAb->AbHorizEnclosing)
+		fprintf (fileDescriptor, " Not-Horiz-Enclosed");
+	     if (!pAb->AbVertEnclosing)
+		fprintf (fileDescriptor, " Not-Vert-Enclosed");
+	     /* On liste les relations hors-structure */
+	     if (pBox->BxXOutOfStruct)
+		fprintf (fileDescriptor, " XRelation-Out-Enclosing");
+	     if (pBox->BxYOutOfStruct)
+		fprintf (fileDescriptor, " YRelation-Out-Enclosing");
+	     if (pBox->BxWOutOfStruct)
+		fprintf (fileDescriptor, " HDimRelation-Out-Enclosing");
+	     if (pBox->BxHOutOfStruct)
+		fprintf (fileDescriptor, " VDimRelation-Out-Enclosing");
+
 	     fprintf (fileDescriptor, " Nature:");
 	     switch (pAb->AbLeafType)
 		   {
 		      case LtCompound:
 			 if (pBox->BxType == BoGhost)
-			    fprintf (fileDescriptor, "BREAK-COMP");
+			    fprintf (fileDescriptor, "GHOST");
 			 else if (pAb->AbInLine)
-			    fprintf (fileDescriptor, "LINES");
+			   {
+			     fprintf (fileDescriptor, "LINES");
+			     fprintf (fileDescriptor, "\n");
+			     for (j = 1; j <= Indent; j++)
+			       fprintf (fileDescriptor, " ");
+			     fprintf (fileDescriptor, " Max_Line_Width:");
+			     wrnumber (pBox->BxMaxWidth, fileDescriptor);
+			   }
 			 else
 			    fprintf (fileDescriptor, "COMP");
 			 break;
 		      case LtText:
 			 if (pBox->BxType == BoSplit)
 			   {
-			      fprintf (fileDescriptor, "BREAK-TEXT\n");
+			      fprintf (fileDescriptor, "SPLIT_TEXT\n");
 			      box1 = pBox->BxNexChild;
 			      while (box1 != NULL)
 				{
 				   for (j = 1; j <= Indent + 6; j++)
 				      fprintf (fileDescriptor, " ");
 				   fprintf (fileDescriptor, "(");
-				   fprintf (fileDescriptor, "Place:");
+				   fprintf (fileDescriptor, "Start:");
 				   wrnumber (box1->BxIndChar, fileDescriptor);
 				   fprintf (fileDescriptor, " Characters:");
 				   wrnumber (box1->BxNChars, fileDescriptor);

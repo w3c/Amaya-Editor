@@ -1391,6 +1391,7 @@ boolean            *breakLine
 
    *full = TRUE;
    *adjust = TRUE;
+   *breakLine = FALSE;
    toCut = FALSE;
    still = TRUE;
    maxX = pLine->LiXMax;
@@ -1415,9 +1416,11 @@ boolean            *breakLine
 	/* La coupure forcee arrive avant la fin de ligne */
 	if (found && width + xi <= maxX)
 	  {
-	     ManageBreakLine (pBox, width, breakWidth, boxLength, nSpaces, newIndex, pNewBuff, pRootAb);
 	     *adjust = FALSE;
 	     still = FALSE;
+	     *breakLine = TRUE;
+	     if (pBox->BxNChars > 1)
+	       ManageBreakLine (pBox, width, breakWidth, boxLength, nSpaces, newIndex, pNewBuff, pRootAb);
 	  }
 	/* La boite entre dans toute entiere dans la ligne */
 	else if (pBox->BxWidth + xi <= maxX)
@@ -1471,6 +1474,8 @@ boolean            *breakLine
 	   if (found && width + xi <= maxX)
 	     {
 		still = FALSE;
+		*adjust = FALSE;
+		*breakLine = TRUE;
 		if (pNextBox->BxNChars == 1)
 		  /* just the Break character in the box */
 		  /* it's not necessary to cut it */
@@ -1478,7 +1483,6 @@ boolean            *breakLine
 		else
 		  {
 		    ManageBreakLine (pNextBox, width, breakWidth, boxLength, nSpaces, newIndex, pNewBuff, pRootAb);
-		    *adjust = FALSE;
 		    if (pNextBox->BxNexChild != NULL)
 		      {
 			pBox = pNextBox->BxNexChild;
@@ -1735,21 +1739,23 @@ int                *height;
    PtrAbstractBox      pAb;
    PtrBox              pBoxToBreak;
    PtrBox              pNextBox;
-   boolean             full;
-   boolean             still;
-   boolean             toLineSpace;
-   int                 x, lineSpacing, indentLine;
-   int                 org, width;
    AbPosition         *pPosAb;
+   int                 x, lineSpacing, indentLine;
+   int                 org, width, noWrappedWidth;
+   int                 lostPixels;
    boolean             toAdjust;
    boolean             breakLine;
    boolean             orgXComplete;
    boolean             orgYComplete;
    boolean             extensibleBox;
+   boolean             full;
+   boolean             still;
+   boolean             toLineSpace;
 
    extensibleBox = pBox->BxContentWidth;
    /* Remplissage de la boite bloc de ligne */
    x = 0;
+   noWrappedWidth = 0;
    pAb = pBox->BxAbstractBox;
    /* evalue si le positionnement en X et en Y doit etre absolu */
    IsXYPosComplete (pBox, &orgXComplete, &orgYComplete);
@@ -1949,26 +1955,42 @@ int                *height;
 		    }
 	       }
 
+	     pNextBox = GetNextBox (pLine->LiLastBox->BxAbstractBox);
+	     /* is there a breaked box */
+	     if (pLine->LiLastPiece == NULL)
+	       pBoxToBreak = NULL;
+	     else
+	       {
+		 /* there is a breaked box */
+		 pBoxToBreak = pLine->LiLastPiece->BxNexChild;
+		 if (pBoxToBreak != NULL)
+		   /* is it empty ? */
+		   if (pBoxToBreak->BxNChars > 0)
+		     pNextBox = pLine->LiLastBox;
+		   else if (pNextBox == NULL)
+		     pNextBox = pLine->LiLastBox;
+		   else
+		     pBoxToBreak = NULL;
+	       }
+
+	     /* Update the no wrapped width of the block */
+	     noWrappedWidth += pLine->LiRealLength;
+	     if (breakLine || !full)
+	       {
+		 if (noWrappedWidth > pBox->BxMaxWidth)
+		   pBox->BxMaxWidth = noWrappedWidth;
+		 noWrappedWidth = 0;
+	       }
+	     else if (pBoxToBreak != NULL)
+	       {
+		 /* take in account undisplayed spaces */
+		 lostPixels = pBoxToBreak->BxIndChar - pLine->LiLastPiece->BxNChars - pLine->LiLastPiece->BxIndChar;
+		 lostPixels = lostPixels * CharacterWidth (_SPACE_, pBoxToBreak->BxFont);
+	       }
+
 	     /* Est-ce la derniere ligne du bloc de ligne ? */
 	     if (full)
 	       {
-		  pNextBox = GetNextBox (pLine->LiLastBox->BxAbstractBox);
-		  if (pLine->LiLastPiece == NULL)
-		     pBoxToBreak = NULL;
-		  else
-		    {
-		       pBoxToBreak = pLine->LiLastPiece->BxNexChild;
-		       /* Est-ce qu'il y a une boite coupee ? */
-		       if (pBoxToBreak != NULL)
-			  /* Est-ce une boite vide ? */
-			  if (pBoxToBreak->BxNChars > 0)
-			     pNextBox = pLine->LiLastBox;
-			  else if (pNextBox == NULL)
-			     pNextBox = pLine->LiLastBox;
-			  else
-			     pBoxToBreak = NULL;
-		    }
-
 		  if (pNextBox == NULL)
 		    {
 		       /* Il n'y a plus de boite a traiter */

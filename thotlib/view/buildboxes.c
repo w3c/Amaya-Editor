@@ -321,18 +321,15 @@ int                *height;
 
 #endif /* __STDC__ */
 {
-   ptrfont             font;
    PtrBox              pBox;
    PictInfo           *picture;
 
    pBox = pAb->AbBox;
    picture = (PictInfo *) pBox->BxPictInfo;
-/***todo: revoir la condition suivante... definition d'une image vide */
    if (pAb->AbVolume == 0 || picture == NULL)
      {
-	font = pBox->BxFont;
-	*width = 0 ; /*CharacterWidth (109, font);	'm' */
-	*height = 0 ; /* FontHeight (font);*/
+	*width = 0;
+	*height = 0;
      }
    else
      {
@@ -1175,6 +1172,7 @@ int                *carIndex;
 	   ComputeAxisRelation (pAb->AbHorizRef, pCurrentBox, frame, FALSE);
 
 	/* Positionnement des origines de la boite construite */
+	i = 0;
 	if (!inLines)
 	  {
 	     ComputePosRelation (pAb->AbHorizPos, pCurrentBox, frame, TRUE);
