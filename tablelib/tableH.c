@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA 1997-2001
+ *  (c) COPYRIGHT INRIA 1997-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -882,7 +882,7 @@ printf ("Width[%d]=%d\n", cRef, box->BxWidth);
 #ifdef TAB_DEBUG
 printf(">>>>>>>>>>>>>>>>>%d\n", table->AbBox->BxWidth);
 #endif
-  if (table->AbBox->BxRows != NULL && table->AbBox->BxRows->TaRTable[0]->AbEnclosing != NULL)
+  if (table->AbBox->BxRows && table->AbBox->BxRows->TaRTable[0]->AbEnclosing)
     RecordEnclosing (table->AbBox->BxRows->TaRTable[0]->AbEnclosing->AbBox, FALSE);
   else
     RecordEnclosing (table->AbBox, FALSE);

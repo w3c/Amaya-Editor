@@ -172,7 +172,7 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
   PtrBox              boxes[200];
   int                 width, baseline;
   int                 nSpaces, delta;
-  int                 x, d;
+  int                 x;
   int                 i, j, k, max;
   ThotBool            rtl;
 
@@ -200,17 +200,7 @@ static void Adjust (PtrBox pParentBox, PtrLine pLine, int frame,
       if (!pBox->BxAbstractBox->AbHorizEnclosing ||
 	  (pBox->BxAbstractBox->AbNotInLine &&
 	   pBox->BxAbstractBox->AbDisplay != 'U'))
-	{
-#ifdef IV
-	  if (pBox->BxAbstractBox->AbHorizPos.PosEdge == VertMiddle &&
-	      pBox->BxAbstractBox->AbHorizPos.PosRefEdge == VertMiddle)
-	    d = (pLine->LiXMax - pBox->BxWidth) / 2;
-	  else
-	    d = 0;
-	  XMove (pBox, NULL, x + d - pBox->BxXOrg, frame);
-#endif
-	  YMove (pBox, NULL, baseline - pBox->BxHorizRef - pBox->BxYOrg, frame);
-	}
+	YMove (pBox, NULL, baseline - pBox->BxHorizRef - pBox->BxYOrg, frame);
       else if (!pBox->BxAbstractBox->AbNotInLine)
 	{
 	  boxes[max++] = pBox;
@@ -359,7 +349,7 @@ void Align (PtrBox pParentBox, PtrLine pLine, int delta, int frame,
 {
   PtrBox              pBox, pBoxInLine;
   PtrBox              boxes[200];
-  int                 baseline, x, d;
+  int                 baseline, x;
   int                 i, j, k, max;
   ThotBool            rtl;
 
@@ -386,17 +376,7 @@ void Align (PtrBox pParentBox, PtrLine pLine, int delta, int frame,
       if (!pBox->BxAbstractBox->AbHorizEnclosing ||
 	  (pBox->BxAbstractBox->AbNotInLine &&
 	   pBox->BxAbstractBox->AbDisplay != 'U'))
-	{
-#ifdef IV
-	  if (pBox->BxAbstractBox->AbHorizPos.PosEdge == VertMiddle &&
-	      pBox->BxAbstractBox->AbHorizPos.PosRefEdge == VertMiddle)
-	    d = (pLine->LiXMax - pBox->BxWidth) / 2;
-	  else
-	    d = 0;
-	  XMove (pBox, NULL, x + d - pBox->BxXOrg, frame);
-#endif
-	  YMove (pBox, NULL, baseline - pBox->BxHorizRef - pBox->BxYOrg, frame);
-	}
+	YMove (pBox, NULL, baseline - pBox->BxHorizRef - pBox->BxYOrg, frame);
       else if (!pBox->BxAbstractBox->AbNotInLine)
 	{
 	  boxes[max++] = pBox;
@@ -2314,13 +2294,13 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
       /* ----------------------------------------- */
       while (full)
 	{
-	  /* Initialize the new line */
+	  /* Initialize a new line */
 	  pLine->LiPrevious = pPreviousLine;
-	  /* regarde si la boite deborde des lignes */
 	  if (!pNextBox->BxAbstractBox->AbHorizEnclosing ||
 	      (pNextBox->BxAbstractBox->AbNotInLine &&
 	       pNextBox->BxAbstractBox->AbDisplay != 'U'))
 	    {
+	      /* the current box escape the rule line */
 	      pLine->LiXOrg = left;
 	      /* Colle la boite en dessous de la precedente */
 	      pLine->LiYOrg = *height + top;
@@ -2334,6 +2314,17 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	      pLine->LiLastBox = pNextBox;
 	      pLine->LiFirstPiece = NULL;
 	      pLine->LiLastPiece = NULL;
+	      pLine->LiRealLength = pNextBox->BxWidth;
+	      /* the paragraph should be large enough
+		 ( for math with display:block by example) */
+	      if (pNextBox->BxAbstractBox->AbNotInLine &&
+		   pNextBox->BxAbstractBox->AbDisplay != 'U')
+		{
+		  if (pNextBox->BxWidth > pBox->BxMaxWidth)
+		    pBox->BxMaxWidth = pNextBox->BxWidth;
+		  if (pBox->BxMinWidth < pNextBox->BxWidth)
+		    pBox->BxMinWidth = pNextBox->BxWidth;
+		}
 	      if (Propagate != ToSiblings || pBox->BxVertFlex)
 		{
 		  org = pBox->BxYOrg + *height + top;
@@ -2345,8 +2336,9 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 		  x = pLine->LiXOrg;
 		}
 	      if (pNextBox->BxAbstractBox->AbHorizPos.PosEdge == VertMiddle &&
-		  pNextBox->BxAbstractBox->AbHorizPos.PosRefEdge == VertMiddle)
-		x += (pLine->LiXMax - pNextBox->BxWidth) / 2;
+		  pNextBox->BxAbstractBox->AbHorizPos.PosRefEdge == VertMiddle &&
+		  pBox->BxWidth > pNextBox->BxWidth)
+		x += (pBox->BxWidth - pNextBox->BxWidth) / 2;
 	      XMove (pNextBox, pBox, x - pNextBox->BxXOrg, frame);
 	      YMove (pNextBox, pBox, org - pNextBox->BxYOrg, frame);
 	      *height += pLine->LiHeight;
@@ -2356,6 +2348,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	    }
 	  else if (!pNextBox->BxAbstractBox->AbNotInLine)
 	    {
+	      /* put boxes in line */
 	      /* line indent */
 	      pLine->LiXOrg = left;
 	      if (pPreviousLine || pAb->AbTruncatedHead)
@@ -2463,9 +2456,9 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	      pNextBox = pLine->LiLastBox;
 	    }
 
-	  /* Est-ce la derniere ligne du bloc de ligne ? */
 	  if (full)
 	    {
+	      /* It's the last line */
 	      if (pNextBox == NULL)
 		{
 		  /* Il n'y a plus de boite a traiter */
