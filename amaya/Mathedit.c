@@ -2124,8 +2124,8 @@ static ThotBool MathMoveBackward ()
 void                InitMathML ()
 {
 #ifndef _WINDOWS 
-   iconMath = TtaCreatePixmapLogo (Math_xpm);
-   iconMathNo = TtaCreatePixmapLogo (MathNo_xpm);
+   iconMath = (ThotIcon) TtaCreatePixmapLogo (Math_xpm);
+   iconMathNo = (ThotIcon) TtaCreatePixmapLogo (MathNo_xpm);
    mIcons[0] = TtaCreatePixmapLogo (Bmath_xpm);
    mIcons[1] = TtaCreatePixmapLogo (root_xpm);
    mIcons[2] = TtaCreatePixmapLogo (sqrt_xpm);
