@@ -911,4 +911,14 @@ void BM_RefreshTopicTree ()
       BTopicTree = BM_GetTopicTree ();
       BM_InitTreeWidget (tree, BTopicTree, (void *) BookmarkMenuSelect_cbf);
     }
+
+  if (aTopic)
+    {
+      tree = TtaCatWidget (TopicBase + mTMTopicTree);
+      tree = TtaClearTree (tree);
+      if (TTopicTree)
+	TtaCloseDocument (TTopicTree);
+      TTopicTree = BM_GetTopicTree ();
+      BM_InitTreeWidget (tree, TTopicTree, (void *) TopicMenuSelect_cbf);
+    }
 }

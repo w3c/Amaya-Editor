@@ -641,6 +641,11 @@ ThotBool BM_ItemDelete (NotifyElement *event)
   /* show the document */
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, dispMode);
+
+  /* refresh the bookmark and topic widgets if they are open */
+  BM_RefreshTopicTree ();
+
   /* don't let Thot perform the normal operation */
   return TRUE;
 }
+
