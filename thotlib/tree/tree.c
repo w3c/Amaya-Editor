@@ -551,7 +551,7 @@ PtrSSchema          pSS;
 	 /* searches the element's attributes */
 	{
 	   pAttr = pEl->ElFirstAttr;
-	   while (pAttr != NULL && !ret)
+	   while (pAttr != NULL && pAttr->AeAttrSSchema != NULL && !ret)
 	     {
 		if ((pSS == NULL || pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
 		    && pAttr->AeAttrNum == attrNum)

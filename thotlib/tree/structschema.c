@@ -61,9 +61,9 @@ PtrDocument        *pDoc;
 
    /* cherche un pointeur de descripteur de document libre */
    doc = 0;
-   while (LoadedDocument[doc] != NULL && doc < MAX_DOCUMENTS - 1)
+   while (doc < MAX_DOCUMENTS && LoadedDocument[doc] != NULL)
       doc++;
-   if (LoadedDocument[doc] != NULL)
+   if (doc >= MAX_DOCUMENTS)
      {
 	TtaDisplaySimpleMessage (INFO, LIB, TMSG_TOO_MANY_DOCS);
 	*pDoc = NULL;

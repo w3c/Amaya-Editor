@@ -1032,6 +1032,11 @@ Attribute          *attributeFound;
 	TtaError (ERR_invalid_parameter);
 	ok = FALSE;
      }
+   else if (((PtrElement) element)->ElStructSchema == NULL)
+     {
+	TtaError (ERR_invalid_parameter);
+	ok = FALSE;
+     }
    else if (searchedAttribute.AttrSSchema == NULL)
       searchedAttribute.AttrTypeNum = 0;
    else if (searchedAttribute.AttrTypeNum < 1 ||

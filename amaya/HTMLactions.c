@@ -238,7 +238,7 @@ void *context;
   elSource = ctx->elSource;
   docSchema = TtaGetDocumentSSchema (doc);
 
-  if (doc != targetDocument && anchor != NULL) 
+  if ((doc != targetDocument || url[0] == '#') && anchor != NULL) 
     {
       /* search PseudoAttr attribute */
       attrType.AttrSSchema = docSchema;

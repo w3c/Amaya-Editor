@@ -1032,7 +1032,12 @@ char               *pathname;
 
    doc = TtaNewDocument ("HTML", tempname);
    TtaFreeMemory (tempname);
-   if (doc < DocumentTableLength)
+   if (doc >= DocumentTableLength)
+     {
+       TtaCloseDocument (doc);
+       doc = 0;
+     }
+   else if (doc > 0)
      {
 	/* assign a presentation model to the document */
 	if (TtaGetScreenDepth () > 1)
