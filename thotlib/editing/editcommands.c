@@ -911,12 +911,8 @@ int                 prev;
 		  LastInsertAttr = pBox->BxAbstractBox->AbCreatorAttr;
 		  LastInsertAttrElem = pBox->BxAbstractBox->AbElement;
 		  APPattrModify (LastInsertAttr, LastInsertAttrElem, frame, TRUE);
-		  /* register the editing operation in the history */
-		  /***** when undoing this operation, the whole element having
-			 this attribute will be selected.  How to record the
-			 current selection, which is within the attribute
-			 value? ******/
-		  RegisterInHistory (LastInsertAttrElem, frame, 0, 0);
+		  /* Don't register the editing operation in the history:
+		     procedure NewContent does the job */
 	       }
 	  }
 	else if (LastInsertElText != pBox->BxAbstractBox->AbElement)

@@ -1092,7 +1092,12 @@ PtrAbstractBox      pAb;
 			 break;
 		   }
 	     /* reafficher l'attribut */
+	     /********  when undoing this operation, the whole element having
+                 this attribute will be selected.  How to record the current
+                 selection, which is within the attribute value? ************/
+	     OpenHistorySequence (pDoc, pEl, pEl, 0, 0);
 	     AttachAttrWithValue (pEl, pDoc, pNewAttr);
+	     CloseHistorySequence (pDoc);
 	     DeleteAttribute (NULL, pNewAttr);
 	     AbstractImageUpdated (pDoc);
 	     RedisplayDocViews (pDoc);

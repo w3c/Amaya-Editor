@@ -791,11 +791,11 @@ View                view;
 	    /* put the attribute on the element */
 	    TtaAttachAttribute ((Element)(LastEdit->EoElement),
 				 (Attribute)(LastEdit->EoSavedAttribute), doc);
-	    /* the attribute is no longer associated with the history block */
-	    LastEdit->EoSavedAttribute = NULL;
 	    /* tell the application that an attribute has been put */
 	    notifyAttr.attribute = (Attribute) (LastEdit->EoSavedAttribute);
 	    CallEventAttribute (&notifyAttr, FALSE);	    
+	    /* the attribute is no longer associated with the history block */
+	    LastEdit->EoSavedAttribute = NULL;
 	    }
 	 }
       if (LastEdit->EoType == EtElement)
