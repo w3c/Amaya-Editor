@@ -19,6 +19,9 @@ extern void DeleteStyleElement ( Document doc,
                                  Element el );
 extern void StyleChanged ( NotifyOnTarget *event );
 extern void UpdateStylePost ( NotifyAttribute * event );
+extern void SetStyleString ( Document doc,
+                             Element el,
+                             PRule presRule );
 extern void GetHTMLStyleString ( Element el,
                                  Document doc,
                                  char *buf,
@@ -60,6 +63,9 @@ extern void DeleteStyleElement ( Document doc,
                                    Element el );
 extern void StyleChanged ( NotifyOnTarget *event );
 extern void UpdateStylePost ( NotifyAttribute * event );
+extern void SetStyleString ( Document doc,
+                               Element el,
+                               PRule presRule );
 extern void GetHTMLStyleString ( Element el,
                                    Document doc,
                                    char *buf,

@@ -887,6 +887,52 @@ static void SpecificSettingsToCSS (Element el, Document doc,
     strcat (css_rules, string);
 }
 
+
+/*----------------------------------------------------------------------
+  SetStyleString returns a string corresponding to the CSS
+  description of the presentation attribute applied to an element.
+  ----------------------------------------------------------------------*/
+void SetStyleString (Document doc, Element el, PRule presRule)
+{
+  char               *buf;
+  int                 len;
+  int                 first, last;
+#define STYLELEN 1000
+
+   if (DocumentTypes[doc] == docCSS && el)
+     {
+       buf = (char *)TtaGetMemory (STYLELEN);
+       buf[0] = EOS;
+       TtaApplyAllSpecificSettings (el, doc, SpecificSettingsToCSS, &buf[0]);
+       TtaRemovePRule (el,  presRule, doc);
+       if (buf[0] != EOS)
+	 strcat (buf, "; ");
+       len = strlen (buf);
+       if (len)
+	 {
+	   // not necessary to open the undo sequence
+	   TtaGiveFirstSelectedElement (doc, &el, &first, &last);
+	   TtaRegisterElementReplace (el, doc);
+	   if (TtaIsSelectionEmpty ())
+	     {
+	       /* insert a new text */
+	       if (TtaGetElementVolume (el) == 0)
+		 TtaSetTextContent (el, (unsigned char *)buf, Latin_Script, doc);
+	       else
+		 {
+		   TtaInsertTextContent (el, first, (unsigned char *)buf, doc);
+		   len += first;
+		 }
+	     }
+	   else
+	     /* replace the current text */
+	     TtaSetTextContent (el, (unsigned char *)buf, Latin_Script, doc);
+	   TtaSelectString (doc, el, len, len-1);
+	 }
+       TtaFreeMemory (buf);
+     }
+}
+
 /*----------------------------------------------------------------------
   GetHTMLStyleString : return a string corresponding to the CSS
   description of the presentation attribute applied to an element.

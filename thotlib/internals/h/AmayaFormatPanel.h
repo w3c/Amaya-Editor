@@ -58,6 +58,7 @@ class AmayaFormatPanel : public AmayaSubPanel
   void OnFormatRightChanged( wxCommandEvent& event );
   void OnFormatCenterChanged( wxCommandEvent& event );
   void OnFormatJustifyChanged( wxCommandEvent& event );
+  void OnAlignChangedButton( wxCommandEvent& event );
   void OnDefaultFormat( wxCommandEvent& event );
   void OnDefaultIndent( wxCommandEvent& event );
   void OnDefaultLineSpace( wxCommandEvent& event );

@@ -249,7 +249,7 @@ void AmayaFormatPanel::OnFormatLeftChanged( wxCommandEvent& event )
   XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATJUSTIFY", wxBitmapButton)->SetBackgroundColour( m_OffColour );
   XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_FORMAT",wxBitmapButton)->SetBackgroundColour(m_OffColour);
   ThotCallback (NumMenuAlignment, INTEGER_DATA, (char*) 0);
-  ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
+  //ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
 }
 
 /*
@@ -267,7 +267,7 @@ void AmayaFormatPanel::OnFormatRightChanged( wxCommandEvent& event )
   XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATJUSTIFY", wxBitmapButton)->SetBackgroundColour( m_OffColour );
   XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_FORMAT",wxBitmapButton)->SetBackgroundColour(m_OffColour);
   ThotCallback (NumMenuAlignment, INTEGER_DATA, (char*) 1);
-  ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
+  //ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
 }
 
 /*
@@ -285,7 +285,7 @@ void AmayaFormatPanel::OnFormatCenterChanged( wxCommandEvent& event )
   XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATJUSTIFY", wxBitmapButton)->SetBackgroundColour( m_OffColour );
   XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_FORMAT",wxBitmapButton)->SetBackgroundColour(m_OffColour);
   ThotCallback (NumMenuAlignment, INTEGER_DATA, (char*) 2);
-  ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
+  //ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
 }
 
 /*
@@ -303,6 +303,18 @@ void AmayaFormatPanel::OnFormatJustifyChanged( wxCommandEvent& event )
   XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATJUSTIFY", wxBitmapButton)->SetBackgroundColour( m_OnColour );
   XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_FORMAT",wxBitmapButton)->SetBackgroundColour(m_OffColour);
   ThotCallback (NumMenuAlignment, INTEGER_DATA, (char*) 3);
+  //ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFormatPanel
+ *      Method:  OnAlignChangedButton
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaFormatPanel::OnAlignChangedButton( wxCommandEvent& event )
+{
   ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
 }
 
@@ -318,7 +330,6 @@ void AmayaFormatPanel::IndentChanged()
   XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_INDENT",wxBitmapButton)->SetBackgroundColour(m_OffColour);
   int indent_value = XRCCTRL(*m_pPanelContentDetach,"wxID_SPIN_FORMATINDENT",wxSpinCtrl)->GetValue();
   ThotCallback (NumZoneRecess, INTEGER_DATA, (char*)indent_value);
-  ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
 }
 
 /*
@@ -343,6 +354,7 @@ void AmayaFormatPanel::OnIndentChanged( wxSpinEvent& event )
 void AmayaFormatPanel::OnIndentChangedButton( wxCommandEvent& event )
 {
   IndentChanged();
+  ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
 }
 
 /*
@@ -357,7 +369,6 @@ void AmayaFormatPanel::LineSpaceChanged()
   XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_LINESPACE",wxBitmapButton)->SetBackgroundColour(m_OffColour);
   int linespace_value = XRCCTRL(*m_pPanelContentDetach,"wxID_SPIN_FORMATLINESPACE",wxSpinCtrl)->GetValue();
   ThotCallback (NumZoneLineSpacing, INTEGER_DATA, (char*)linespace_value);
-  ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
 }
 
 /*
@@ -382,6 +393,7 @@ void AmayaFormatPanel::OnLineSpaceChanged( wxSpinEvent& event )
 void AmayaFormatPanel::OnLineSpaceChangedButton( wxCommandEvent& event )
 {
   LineSpaceChanged();
+  ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
 }
 
 /*
@@ -399,7 +411,7 @@ void AmayaFormatPanel::OnDefaultFormat( wxCommandEvent& event )
   XRCCTRL(*m_pPanelContentDetach, "wxID_BMPBUTTON_FORMATJUSTIFY", wxBitmapButton)->SetBackgroundColour( m_OffColour );
   XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_FORMAT",wxBitmapButton)->SetBackgroundColour(m_OnColour);
   ThotCallback (NumMenuAlignment, INTEGER_DATA, (char*) 4);
-  ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
+  //ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
 }
 
 /*
@@ -414,7 +426,7 @@ void AmayaFormatPanel::OnDefaultIndent( wxCommandEvent& event )
   XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_INDENT",wxBitmapButton)->SetBackgroundColour(m_OnColour);
   //  XRCCTRL(*m_pPanelContentDetach,"wxID_SPIN_FORMATINDENT",wxSpinCtrl)->SetValue(_T(""));
   ThotCallback (NumMenuRecessSense, INTEGER_DATA, (char*) 2);
-  ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
+  //ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
 }
 
 /*
@@ -429,7 +441,7 @@ void AmayaFormatPanel::OnDefaultLineSpace( wxCommandEvent& event )
   XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_LINESPACE",wxBitmapButton)->SetBackgroundColour(m_OnColour);
   //  XRCCTRL(*m_pPanelContentDetach,"wxID_SPIN_FORMATLINESPACE",wxSpinCtrl)->SetValue(_T(""));
   ThotCallback (NumMenuLineSpacing, INTEGER_DATA, (char*) 3);
-  ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
+  //ThotCallback (NumFormPresFormat, INTEGER_DATA, (char*) 1); /* Apply */
 }
 
 
@@ -447,6 +459,7 @@ BEGIN_EVENT_TABLE(AmayaFormatPanel, AmayaSubPanel)
   EVT_BUTTON( XRCID("wxID_BMPBUTTON_FORMATRIGHT"),   AmayaFormatPanel::OnFormatRightChanged ) 
   EVT_BUTTON( XRCID("wxID_BMPBUTTON_FORMATCENTER"),  AmayaFormatPanel::OnFormatCenterChanged ) 
   EVT_BUTTON( XRCID("wxID_BMPBUTTON_FORMATJUSTIFY"), AmayaFormatPanel::OnFormatJustifyChanged ) 
+  EVT_BUTTON( XRCID("wxID_APPLY_ALIGN"), AmayaFormatPanel::OnAlignChangedButton ) 
 
   EVT_BUTTON( XRCID("wxID_DEFAULT_FORMAT"),    AmayaFormatPanel::OnDefaultFormat ) 
   EVT_BUTTON( XRCID("wxID_DEFAULT_INDENT"),    AmayaFormatPanel::OnDefaultIndent ) 

@@ -443,14 +443,7 @@ void ModifyColor (int colorNum, ThotBool Background)
 	           }
 	   }
 
-	if (ThotLocalActions[T_openhistory] != NULL)
-	  (*(Proc6)ThotLocalActions[T_openhistory]) (
-		(void *)SelDoc,
-		(void *)pElFirstSel,
-		(void *)pElLastSel,
-		(void *)NULL,
-		(void *)firstChar,
-		(void *)lastChar);
+	OpenHistorySequence (SelDoc, pElFirstSel, pElLastSel, NULL, firstChar, lastChar);
 	/* parcourt les elements selectionnes */
 	pEl = pElFirstSel;
 	while (pEl != NULL)
@@ -503,12 +496,13 @@ void ModifyColor (int colorNum, ThotBool Background)
 	     /* cherche l'element a traiter ensuite */
 	     pEl = NextInSelection (pEl, pElLastSel);
 	  }
-	/* tente de fusionner les elements voisins et reaffiche les paves */
-	/* modifie's et la selection */
-	if (ThotLocalActions[T_closehistory] != NULL)
-	  (*(Proc1)ThotLocalActions[T_closehistory]) ((void *)SelDoc);
-	SelectRange (SelDoc, oldFirstSel, oldLastSel, oldFirstChar,
-		     oldLastChar);
+	CloseHistorySequence (SelDoc);
+	/* try to collapse text elements except in TextFile
+	 where the presentation generates strings */
+	if (SelDoc && SelDoc->DocSSchema &&
+	    strcmp (SelDoc->DocSSchema->SsName, "TextFile"))
+	  SelectRange (SelDoc, oldFirstSel, oldLastSel, oldFirstChar,
+		       oldLastChar);
      }
 }
 
@@ -1372,27 +1366,29 @@ static void         ApplyPresentMod (int applyDomain)
 		     compound element, apply the properties to this selected
 		     element, otherwise, don't apply format properties */
 		  {
-		  if (pPrevBlock && ElemIsWithinSubtree (pEl, pPrevBlock))
-		     pBlock = NULL;
-		  else
-		     {
-		       pBlock = GetEnclosingBlock (pEl, pSelDoc);
-		       if (pBlock == NULL && !pEl->ElTerminal)
-			 pBlock = pEl;
-		     }
-		  if (pBlock)
-		     {
-		       pPrevBlock = pBlock;
-		       if (pBlock->ElParent &&
-			   pBlock->ElPrevious == NULL &&
-			   pBlock->ElNext == NULL &&
-			   (TypeHasException (ExcHidden,
-					      pBlock->ElTypeNumber,
-					      pBlock->ElStructSchema)/* ||
-			    TypeHasException (ExcIsTable,
-					      pBlock->ElTypeNumber,
-					      pBlock->ElStructSchema)*/))
-			 /* specific rules are linked to the parent element */
+		    if (pSelDoc && pSelDoc->DocSSchema &&
+			!strcmp (pSelDoc->DocSSchema->SsName, "TextFile"))
+		      {
+			pBlock = NULL;
+		      }
+		    else if (pPrevBlock && ElemIsWithinSubtree (pEl, pPrevBlock))
+		      pBlock = NULL;
+		    else
+		      {
+			pBlock = GetEnclosingBlock (pEl, pSelDoc);
+			if (pBlock == NULL && !pEl->ElTerminal)
+			  pBlock = pEl;
+		      }
+		    if (pBlock)
+		      {
+			pPrevBlock = pBlock;
+			if (pBlock->ElParent &&
+			    pBlock->ElPrevious == NULL &&
+			    pBlock->ElNext == NULL &&
+			    (TypeHasException (ExcHidden,
+					       pBlock->ElTypeNumber,
+					       pBlock->ElStructSchema)))
+			  /* specific rules are linked to the parent element */
 			 pElem = pBlock->ElParent;
 		       else
 			 pElem = pBlock;
@@ -1466,10 +1462,12 @@ static void         ApplyPresentMod (int applyDomain)
 
 	    RuleSetClr (TheRules);
 	  }
-	/* tente de fusionner les elements voisins et reaffiche les paves */
-	/* modifie's et la selection */
 	CloseHistorySequence (pSelDoc);
-	SelectRange (pSelDoc, pFirstSel, pLastSel, firstChar, lastChar);
+	/* try to collapse text elements except in TextFile
+	 where the presentation generates strings */
+	if (pSelDoc && pSelDoc->DocSSchema &&
+	    strcmp (pSelDoc->DocSSchema->SsName, "TextFile"))
+	  SelectRange (pSelDoc, pFirstSel, pLastSel, firstChar, lastChar);
       }
 }
 

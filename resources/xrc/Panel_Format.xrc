@@ -98,6 +98,13 @@
                                           </object>
                                           <flag>wxALIGN_CENTRE_VERTICAL</flag>
                                         </object>
+                                        <object class="sizeritem">
+                                          <object class="wxBitmapButton" name="wxID_APPLY_ALIGN">
+                                            <bitmap>../icons/16x16/ok.png</bitmap>
+                                          </object>
+                                          <flag>wxLEFT</flag>
+                                          <border>4</border>
+                                        </object>
                                       </object>
                                       <flag>wxEXPAND</flag>
                                     </object>
@@ -123,7 +130,7 @@
                                             <object class="sizeritem">
                                               <object class="wxSpinCtrl" name="wxID_SPIN_FORMATINDENT">
                                                 <min>0</min>
-                                                <size>40,-1</size>
+                                                <size>30,-1</size>
                                               </object>
                                               <option>1</option>
                                               <flag>wxEXPAND</flag>
@@ -164,7 +171,7 @@
                                             <object class="sizeritem">
                                               <object class="wxSpinCtrl" name="wxID_SPIN_FORMATLINESPACE">
                                                 <min>0</min>
-                                                <size>40,-1</size>
+                                                <size>30,-1</size>
                                               </object>
                                               <option>1</option>
                                               <flag>wxEXPAND</flag>

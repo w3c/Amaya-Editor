@@ -487,7 +487,13 @@ ThotBool ChangePRule (NotifyPresentation *event)
     if (elType.ElSSchema != HTMLschema)
       /* it's not an HTML element */
       {
-	if (TtaGetConstruct (el) == ConstructBasicType)
+	if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "TextFile"))
+	  {
+	    /* should generate the CSS rule */
+	    SetStyleString (doc, el, presRule);
+	    ret = TRUE; /* don't let Thot perform normal operation */
+	  }
+	else if (TtaGetConstruct (el) == ConstructBasicType)
 	  /* it's a basic type. Move the PRule to the parent element */
 	  {
 	    el = TtaGetParent (el);
@@ -677,7 +683,10 @@ ThotBool ChangePRule (NotifyPresentation *event)
       }
     }
   /* set the Style_ attribute ? */
-  SetStyleAttribute (doc, el);
+  if (DocumentTypes[doc] == docHTML ||
+      DocumentTypes[doc] == docMath ||
+      DocumentTypes[doc] == docSVG)
+    SetStyleAttribute (doc, el);
   TtaSetDocumentModified (doc);
   return (ret);
 }
