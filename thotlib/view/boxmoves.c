@@ -2152,7 +2152,6 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
   PtrDimRelations     pDimRel;
   BoxRelation        *pRelation;
   SpecFont            font;
-  float               value;
   int                 i, j, k, diff, val;
   int                 orgTrans, middleTrans, endTrans;
   ThotBool            notEmpty;
@@ -2619,7 +2618,6 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	{
 	  i = 0;
 	  font = pBox->BxFont;
-	  value = 1 + ((float) (pBox->BxH * 0.6) / (float) BoxFontHeight (font));
 	  switch (pCurrentAb->AbShape)
 	    {
 	    case 'd':	/* double integral */
@@ -2635,7 +2633,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	    case '}':
 	    case '[':
 	    case ']':
-	      i = (int) ((float) BoxCharacterWidth (230, font) * value);
+	      i = BoxCharacterWidth (230, font);
 	      ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame);
 	      break;
 	    default:

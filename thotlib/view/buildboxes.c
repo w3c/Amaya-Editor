@@ -426,7 +426,6 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
   SpecFont            font;
   PtrBox              box;
   int                 hfont;
-  float               value;
 
   box = pAb->AbBox;
   font = box->BxFont;
@@ -440,7 +439,6 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
   else
     {
       *height = hfont * 2;
-      value = 1 + ((float) (box->BxH * 0.3) / (float) hfont);
       switch (pAb->AbShape)
 	{
 	case 'c':	/*integrale curviligne */
@@ -479,7 +477,7 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
 	case ']':
 	case '{':
 	case '}':
-	  *width = (int) ((float) BoxCharacterWidth (230, font) * value);
+	  *width = BoxCharacterWidth (230, font);
 	  *height = hfont;
 	  break;
 	case '<':
