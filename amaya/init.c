@@ -2818,7 +2818,7 @@ NotifyEvent        *event;
    ObjectName[0] = EOS;
    SaveImgsURL = TtaGetMemory (MAX_LENGTH);
    SaveImgsURL[0] = EOS;
-   strcpy (ScanFilter, ".*html*");
+   strcpy (ScanFilter, ".*htm*");
    SaveAsHTML = TRUE;
    SaveAsText = FALSE;
    CopyImages = TRUE;

@@ -236,13 +236,11 @@ void *context;
   anchor = ctx->anchor;
   url = ctx->url;
   elSource = ctx->elSource;
-
   docSchema = TtaGetDocumentSSchema (doc);
 
-  if (anchor != NULL) 
+  if (doc != targetDocument && anchor != NULL) 
     {
       /* search PseudoAttr attribute */
-      docSchema = TtaGetDocumentSSchema (doc);
       attrType.AttrSSchema = docSchema;
       attrType.AttrTypeNum = HTML_ATTR_PseudoClass;
       PseudoAttr = TtaGetAttribute (anchor, attrType);
@@ -259,8 +257,6 @@ void *context;
 	TtaSetAttributeText (PseudoAttr, "visited", anchor, doc);
     }
 
-  /*TtaSetSelectionMode (TRUE);*/
-  
   if (url[0] == '#' && targetDocument != 0)
     {
       /* attribute HREF contains the NAME of a target anchor */

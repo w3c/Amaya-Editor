@@ -27,7 +27,11 @@
 #include "html2thot_f.h"
 
 #define MAX_BUFFER_LENGTH 200
-
+#define MAX_CSS_LENGTH 2000
+static char         CSSbuffer[MAX_CSS_LENGTH + 1];
+static int          CSSindex = 0;
+static int          CSScomment = MAX_CSS_LENGTH;
+static boolean      HTMLcomment = FALSE;
 extern boolean      NonPPresentChanged;
 
 /* CSSLEVEL2 adding new features to the standard */
@@ -71,15 +75,6 @@ int  strncasecmp (char *s1, char *s2, size_t n)
 
 
 
-#define CSS_CHECK_BUFFER					\
-{								\
-    if (index >= (buffer_size - 2)) {				\
-        char *next =(char *)TtaRealloc(buffer, buffer_size * 2); \
-	if (next == NULL) return(EOS);				\
-	buffer_size *= 2;					\
-	buffer = next;						\
-    }}
-
 /*----------------------------------------------------------------------
    CSSparser :  is the front-end function called by the HTML parser
    when detecting a <STYLE TYPE="text/css"> indicating it's the
@@ -90,107 +85,101 @@ int  strncasecmp (char *s1, char *s2, size_t n)
    prevent prehistoric browser from displaying the CSS as a text
    content. It will stop on any sequence "<x" where x is different
    from ! and will return x as to the caller. Theorically x should
-   be equal to / for the </STYLE> end of style marker but who knows !
+   be equal to / for the </STYLE> end of style. In this case CSSparsing 
+   will be FALSE.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char                CSSparser (AmayaReadChar readfunc, Document doc)
+char                CSSparser (Document doc, boolean *CSSparsing)
 #else
-char                CSSparser (readfunc, doc)
+char                CSSparser (doc, CSSparsing)
 AmayaReadChar       readfunc;
 Document            doc;
+boolean            *CSSparsing;
 #endif
 {
-  char               *buffer = NULL;
-  int                 buffer_size = 2000;
-  int                 index = 0;
-  boolean	      endOfFile;
-  char                cour = readfunc (&endOfFile);
-  
-  buffer = TtaGetMemory (buffer_size);
-  if (buffer == NULL)
-    return (EOS);
+  char                c;
+  boolean             toParse;
 
-  while (cour != EOS)
+  *CSSparsing = TRUE;
+  toParse = FALSE;
+  c = SPACE;
+  while (CSSindex < MAX_CSS_LENGTH && c != EOS && *CSSparsing)
     {
-      switch (cour)
+      c = GetNextInputChar ();
+      CSSbuffer[CSSindex] = c;
+      switch (c)
 	{
+	case '*':
+	  if (CSSindex > 0 && CSSbuffer[CSSindex - 1] == '/')
+	    /* start a comment */
+	    CSScomment = CSSindex - 1;
+	  break;
 	case '/':
-	  cour = readfunc (&endOfFile);
-	  if (cour == '*')
+	  if (CSSindex > 0 && CSSbuffer[CSSindex - 1] == '*' && CSScomment != MAX_CSS_LENGTH)
 	    {
-	      /* Skip the comments */
-	      do
-		{
-		  cour = readfunc (&endOfFile);
-		  if (cour == '*')
-		    {
-		      cour = readfunc (&endOfFile);
-		      if (cour == '/')
-			break;
-		    }
-		}
-	      while (cour != '\0');
+	      /* close a comment */
+	      CSSindex = CSScomment - 1; /* incremented later */
+	      CSScomment = MAX_CSS_LENGTH;
 	    }
-	  else
+	  else if (CSSindex > 0 && CSSbuffer[CSSindex - 1] ==  '<')
 	    {
-	      CSS_CHECK_BUFFER
-		buffer[index++] = '/';
-	      CSS_CHECK_BUFFER
-		buffer[index++] = cour;
-	    }
-	  continue;
+	      /* this is the closing tag ! */
+	      *CSSparsing = FALSE;
+	      CSSindex -= 2; /* remove </ from the CSS string */
+	    }	    
+	  break;
 	case '<':
-	  cour = readfunc (&endOfFile);
-	  if (cour != '!')
+	  c = GetNextInputChar ();
+	  if (c == '!')
 	    {
-	      /* Ok we consider this as a closing tag ! */
-	      if (index > 0)
+	      if (CSSindex > 0)
+		/* Ok we consider this as a closing tag ! */
+		*CSSparsing = FALSE;
+	      else
 		{
-		  CSS_CHECK_BUFFER
-		    buffer[index++] = EOS;
-		  ParseHTMLStyleHeader (NULL, buffer, doc, TRUE);
-		  index = 0;
+		  /* CSS within an HTML comment */
+		  HTMLcomment = TRUE;
+		  CSSindex++;
+		  CSSbuffer[CSSindex] = c;
 		}
-	      TtaFreeMemory (buffer);
-	      return (cour);
 	    }
-	  cour = readfunc (&endOfFile);
-	  continue;
+	  else if (c == '/')
+	    /* Ok we consider this as a closing tag ! */
+	    *CSSparsing = FALSE;
+	  else if (c == EOS)
+	    CSSindex++;
+	  break;
 	case '-':
-	  cour = readfunc (&endOfFile);
-	  if (cour != '-')
+	  if (CSSindex > 0 && CSSbuffer[CSSindex - 1] == '-' && HTMLcomment)
+	    /* CSS within an HTML comment */
+	    CSSindex = - 1; /* incremented later */
+	  break;
+	case '>':
+	  if (HTMLcomment)
 	    {
-	      CSS_CHECK_BUFFER
-		buffer[index++] = '-';
-	      continue;
+	      CSSindex--;
+	      toParse = TRUE;
 	    }
-	  cour = readfunc (&endOfFile);
-	  if (cour != '>')
-	    {
-	      CSS_CHECK_BUFFER
-		buffer[index++] = '-';
-	      CSS_CHECK_BUFFER
-		buffer[index++] = '-';
-	      continue;
-	    }
-	  cour = readfunc (&endOfFile);
-	  continue;
+	  break;
+	case '}':
+	  toParse = TRUE;
+	  break;
 	}
-      CSS_CHECK_BUFFER
-	buffer[index++] = cour;
-      cour = readfunc (&endOfFile);
+      if (c != EOS)
+	CSSindex++;
+      if  (CSSindex >= MAX_CSS_LENGTH || !*CSSparsing || toParse)
+	{
+	  CSSbuffer[CSSindex] = EOS;
+	  /* parse a not empty string */
+	  if (CSSindex > 0)
+	    ParseHTMLStyleHeader (NULL, CSSbuffer, doc, TRUE);
+	  toParse = FALSE;
+	  CSSindex = 0;
+	}
     }
-
-  if (index > 0)
-    {
-      /* give this piece of CSS to the parser */
-      CSS_CHECK_BUFFER
-	buffer[index++] = EOS;
-      ParseHTMLStyleHeader (NULL, buffer, doc, TRUE);
-    }
-  TtaFreeMemory (buffer);
-  return (cour);
+  return (c);
 }
+
 
 /************************************************************************
  *									*  

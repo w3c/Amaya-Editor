@@ -40,8 +40,6 @@ extern void FreeHTMLParser ();
 extern char GetNextInputChar ( void );
 extern void HTMLparse ( FILE * infile,
                         char *HTMLbuf );
-extern void ReadTextFile ( FILE * infile,
-                           char *textbuf );
 extern void CheckAbstractTree ( char *pathURL );
 extern void InitializeParser ( Element lastelem,
                                boolean isclosed,
@@ -89,8 +87,6 @@ extern void FreeHTMLParser ();
 extern char GetNextInputChar (/* void */);
 extern void HTMLparse (/* FILE * infile,
                           char *HTMLbuf */);
-extern void ReadTextFile (/* FILE * infile,
-                             char *textbuf */);
 extern void CheckAbstractTree (/* char *pathURL */);
 extern void InitializeParser (/* Element lastelem,
                                  boolean isclosed,

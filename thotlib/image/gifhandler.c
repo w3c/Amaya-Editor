@@ -1315,8 +1315,13 @@ ThotColorStruct     colrs[256];
 	     }
 	  } else {
 	         for (i = 0; i < size; i++) {
+		   if (*ptr < 0)
+		     *ptr2++ = (unsigned char) Mapping[0];
+		   else if (*ptr > num_colors)
+		     *ptr2++ = (unsigned char) Mapping[num_colors];
+		   else
 		     *ptr2++ = (unsigned char) Mapping[(int) *ptr];
-		     ptr++;
+		   ptr++;
 		 }
 	  }
 	  tmpimage = MakeImage (TtDisplay, tmpdata, width, height, TtWDepth, colrs);

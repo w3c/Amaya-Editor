@@ -146,7 +146,10 @@ PtrAbstractBox      pAb;
 	   /* descend la hierarchie */
 	   while (!pNextAb->AbDead && pNextAb->AbBox->BxType == BoGhost)
 	     {
-		pNextAb = pNextAb->AbFirstEnclosed;
+	       if (pNextAb->AbFirstEnclosed->AbDead)
+		 pNextAb->AbBox->BxType = BoComplete;
+	       else
+		 pNextAb = pNextAb->AbFirstEnclosed;
 		/* recherche le dernier pave fils */
 		while (pNextAb->AbNext != NULL)
 		   pNextAb = pNextAb->AbNext;

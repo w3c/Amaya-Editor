@@ -117,21 +117,21 @@ int                 NbFree_DelayR;
 int                 NbUsed_DelayR;
 PtrDelayedPRule     PtFree_DelayR;
 
-PtrBox              PtFree_Box;
 int                 NbFree_Box;
 int                 NbUsed_Box;
+PtrBox              PtFree_Box;
 
-PtrPosRelations     PtFree_PosB;
 int                 NbFree_PosB;
 int                 NbUsed_PosB;
-PtrDimRelations     PtFree_BDim;
+PtrPosRelations     PtFree_PosB;
 
 int                 NbFree_BDim;
 int                 NbUsed_BDim;
+PtrDimRelations     PtFree_BDim;
 
-PtrLine             PtFree_Line;
 int                 NbFree_Line;
 int                 NbUsed_Line;
+PtrLine             PtFree_Line;
 
 int                 NbFree_Dict;
 int                 NbUsed_Dict;
@@ -214,20 +214,23 @@ void                FreeAll ()
       PtFree_TextBuff = PtFree_TextBuff->BuNext;
       TtaFreeMemory (ptr);
     }
-    
+  NbFree_TextBuff = 0;
+
   while (PtFree_Element != NULL)
     {
       ptr = (void *)PtFree_Element;
       PtFree_Element = PtFree_Element->ElNext;
       TtaFreeMemory (ptr);
     }
-    
+  NbFree_Element = 0;
+
   while (PtFree_Attr != NULL)
     {
       ptr = (void *)PtFree_Attr;
       PtFree_Attr = PtFree_Attr->AeNext;
       TtaFreeMemory (ptr);
     }
+  NbFree_Attr = 0;
     
   while (PtFree_DescRef != NULL)
     {
@@ -235,6 +238,7 @@ void                FreeAll ()
       PtFree_DescRef = PtFree_DescRef->ReNext;
       TtaFreeMemory (ptr);
     }
+  NbFree_DescRef = 0;
     
   while (PtFree_ExternalDoc != NULL)
     {
@@ -242,6 +246,7 @@ void                FreeAll ()
       PtFree_ExternalDoc = PtFree_ExternalDoc->EdNext;
       TtaFreeMemory (ptr);
     }
+  NbFree_ExternalDoc = 0;
     
   while (PtFree_DescCopy != NULL)
     {
@@ -249,6 +254,7 @@ void                FreeAll ()
       PtFree_DescCopy = PtFree_DescCopy->CdNext;
       TtaFreeMemory (ptr);
     }
+  NbFree_DescCopy = 0;
     
   while (PtFree_Reference != NULL)
     {
@@ -256,6 +262,7 @@ void                FreeAll ()
       PtFree_Reference = PtFree_Reference->RdNext;
       TtaFreeMemory (ptr);
     }
+  NbFree_Reference = 0;
     
   while (PtFree_OutputRef != NULL)
     {
@@ -263,6 +270,7 @@ void                FreeAll ()
       PtFree_OutputRef = PtFree_OutputRef->OrNext;
       TtaFreeMemory (ptr);
     }
+  NbFree_OutputRef = 0;
     
   while (PtFree_ElemRefChng != NULL)
     {
@@ -270,6 +278,7 @@ void                FreeAll ()
       PtFree_ElemRefChng = PtFree_ElemRefChng->CrNext;
       TtaFreeMemory (ptr);
     }
+  NbFree_ElemRefChng = 0;
     
   while (PtFree_InputRef != NULL)
     {
@@ -277,6 +286,7 @@ void                FreeAll ()
       PtFree_InputRef = PtFree_InputRef->ErNext;
       TtaFreeMemory (ptr);
     }
+  NbFree_InputRef = 0;
     
   while (PtFree_UpdateRefFile != NULL)
     {
@@ -284,6 +294,7 @@ void                FreeAll ()
       PtFree_UpdateRefFile = PtFree_UpdateRefFile->RcNext;
       TtaFreeMemory (ptr);
     }
+  NbFree_UpdateRefFile = 0;
     
   while (PtFree_AbsBox != NULL)
     {
@@ -291,6 +302,7 @@ void                FreeAll ()
       PtFree_AbsBox = PtFree_AbsBox->AbNext;
       TtaFreeMemory (ptr);
     }
+  NbFree_AbsBox = 0;
     
   while (PtFree_Document != NULL)
     {
@@ -298,6 +310,7 @@ void                FreeAll ()
       PtFree_Document = PtFree_Document->DocNext;
       TtaFreeMemory (ptr);
     }
+  NbFree_Document = 0;
     
   while (PtFree_SchPres != NULL)
     {
@@ -305,6 +318,7 @@ void                FreeAll ()
       PtFree_SchPres = PtFree_SchPres->PsNext;
       TtaFreeMemory (ptr);
     }
+  NbFree_SchPres = 0;
     
   while (PtFree_HandleSchPres != NULL)
     {
@@ -312,6 +326,7 @@ void                FreeAll ()
       PtFree_HandleSchPres = PtFree_HandleSchPres->HdNextPSchema;
       TtaFreeMemory (ptr);
     }
+  NbFree_HandleSchPres = 0;
     
   while (PtFree_SchStruct != NULL)
     {
@@ -319,6 +334,7 @@ void                FreeAll ()
       PtFree_SchStruct = PtFree_SchStruct->SsNextExtens;
       TtaFreeMemory (ptr);
     }
+  NbFree_SchStruct = 0;
     
   while (PtFree_ExtenBlock != NULL)
     {
@@ -326,6 +342,7 @@ void                FreeAll ()
       PtFree_ExtenBlock = PtFree_ExtenBlock->EbNextBlock;
       TtaFreeMemory (ptr);
     }
+  NbFree_ExtenBlock = 0;
     
   while (PtFree_PresRule != NULL)
     {
@@ -333,6 +350,7 @@ void                FreeAll ()
       PtFree_PresRule = PtFree_PresRule->PrNextPRule;
       TtaFreeMemory (ptr);
     }
+  NbFree_PresRule = 0;
     
   while (PtFree_CondPresRule != NULL)
     {
@@ -340,6 +358,7 @@ void                FreeAll ()
       PtFree_CondPresRule = PtFree_CondPresRule->CoNextCondition;
       TtaFreeMemory (ptr);
     }
+  NbFree_CondPresRule = 0;
     
   while (PtFree_DelayR != NULL)
     {
@@ -347,6 +366,7 @@ void                FreeAll ()
       PtFree_DelayR = PtFree_DelayR->DpNext;
       TtaFreeMemory (ptr);
     }
+  NbFree_DelayR = 0;
     
   while (PtFree_Box != NULL)
     {
@@ -354,6 +374,7 @@ void                FreeAll ()
       PtFree_Box = PtFree_Box->BxNext;
       TtaFreeMemory (ptr);
     }
+  PtFree_Box = 0;
     
   while (PtFree_PosB != NULL)
     {
@@ -361,6 +382,7 @@ void                FreeAll ()
       PtFree_PosB = PtFree_PosB->PosRNext;
       TtaFreeMemory (ptr);
     }
+  NbFree_PosB = 0;
     
   while (PtFree_BDim != NULL)
     {
@@ -368,6 +390,7 @@ void                FreeAll ()
       PtFree_BDim = PtFree_BDim->DimRNext;
       TtaFreeMemory (ptr);
     }
+  NbFree_BDim = 0;
     
   while (PtFree_Line != NULL)
     {
@@ -375,6 +398,7 @@ void                FreeAll ()
       PtFree_Line = PtFree_Line->LiNext;
       TtaFreeMemory (ptr);
     }
+  NbFree_Line = 0;
     
   while (PtFree_Dict != NULL)
     {
@@ -382,6 +406,7 @@ void                FreeAll ()
       PtFree_Dict = PtFree_Dict->DictNext;
       TtaFreeMemory (ptr);
     }
+  NbFree_Dict = 0;
 }
 
 

@@ -550,6 +550,8 @@ PtrDocument        *pDoc;
              if(PrintingDoc == d+1)
                PrintingDoc = 0;
 	     *pDoc = NULL;
+             /* libere les contextes inutilises */
+	     FreeAll ();
 	  }
      }
 }

@@ -6902,15 +6902,15 @@ char                GetNextInputChar ()
 }
 
 /*----------------------------------------------------------------------
-   HTMLparse       parse either the HTML file infile or the text
+   HTMLread       parse either the HTML file infile or the text
    buffer HTMLbuf and build the equivalent Thot
    abstract tree.
    One parameter should be NULL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                HTMLparse (FILE * infile, char *HTMLbuf)
+static void         HTMLread (FILE * infile, char *HTMLbuf)
 #else
-void                HTMLparse (infile, HTMLbuf)
+static void         HTMLread (infile, HTMLbuf)
 FILE               *infile;
 char               *HTMLbuf;
 
@@ -6921,14 +6921,20 @@ char               *HTMLbuf;
    PtrTransition       trans;
    boolean             endBuffer;
 
-   currentState = 0;
+   if (infile != NULL)
+     {
+       currentState = 0;
+       numberOfCharRead = 0;
+       numberOfLinesRead = 1;
+     }
+
    InputText = HTMLbuf;
    InputFile = infile;
    endBuffer = FALSE;
-   charRead = EOS;
-   numberOfCharRead = 0;
-   numberOfLinesRead = 1;
-
+   if (ParsingCSS)
+     charRead = SPACE;
+   else
+     charRead = EOS;
    /* read the HTML file sequentially */
    do
      {
@@ -6998,7 +7004,7 @@ char               *HTMLbuf;
 		/* beginning of a new input line */
 		EmptyLine = TRUE;
 	       }
-	     else
+	     else if (!ParsingCSS)
 		/* it's not an end of line */
 	       {
 		  if ((int) charRead == 9)
@@ -7060,12 +7066,12 @@ char               *HTMLbuf;
 			      (int) charRead == 12)
 			     /* a delimiter has been read */
 			     match = TRUE;
-		       if (match)
+		       if (match || ParsingCSS)
 			  /* transition found. Activate the transition */
 			 {
 			    /* call the procedure associated with the transition */
-			    NormalTransition = TRUE;
-			    if (trans->action != NULL)
+			    NormalTransition = !ParsingCSS;
+			    if (NormalTransition && trans->action != NULL)
 			       (*(trans->action)) (charRead);
 			    if (NormalTransition)
 			      {
@@ -7091,13 +7097,13 @@ char               *HTMLbuf;
 			    if (ParsingCSS)
 			      {
 #ifndef STANDALONE
-				 charRead = CSSparser (GetNextInputChar, theDocument);
+				 charRead = CSSparser (theDocument, &ParsingCSS);
 				 /* when returning from the CSS parser, a '<' has been
 				    read by the CSS parser and the following character,
 				    which is in charRead */
 #endif /* !STANDALONE */
-				 currentState = 1;
-				 ParsingCSS = FALSE;
+				 if (!ParsingCSS)
+				   currentState = 1;
 			      }
 			 }
 		       else
@@ -7118,10 +7124,35 @@ char               *HTMLbuf;
      }
    while ((infile != NULL && !feof (infile) && !ferror (infile)) ||
 	  (HTMLbuf != NULL && !endBuffer));
-   /* end of HTML file */
-   EndOfDocument ();
+   if (infile != NULL)
+     /* end of HTML file */
+     EndOfDocument ();
 }
 
+
+/*----------------------------------------------------------------------
+   HTMLparse       parse either the HTML file infile or the text
+   buffer HTMLbuf and build the equivalent Thot
+   abstract tree.
+   One parameter should be NULL.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         HTMLparse (FILE * infile, char *HTMLbuf)
+#else
+void         HTMLparse (infile, HTMLbuf)
+FILE               *infile;
+char               *HTMLbuf;
+
+#endif
+{
+  currentState = 0;
+  numberOfCharRead = 0;
+  numberOfLinesRead = 1;
+  HTMLread (infile, HTMLbuf);
+  if (infile == NULL)
+    /* end of HTML file */
+    EndOfDocument ();
+}
 
 /*----------------------------------------------------------------------
    ReadTextFile
@@ -7130,24 +7161,32 @@ char               *HTMLbuf;
    buffer textbuf. One parameter should be NULL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ReadTextFile (FILE * infile, char *textbuf)
+static void         ReadTextFile (FILE * infile, char *textbuf, boolean beginning)
 #else
-void                ReadTextFile (infile, textbuf)
+static void         ReadTextFile (infile, textbuf, beginning)
 FILE               *infile;
 char		   *textbuf;
+boolean             beginning;
 #endif
 {
    unsigned char       charRead;
    boolean             endBuffer;
 
+   if (infile != NULL)
+     {
+       numberOfCharRead = 0;
+       numberOfLinesRead = 1;
+     }
+
    InputText = textbuf;
    InputFile = infile;
    endBuffer = FALSE;
-   numberOfCharRead = 0;
-   numberOfLinesRead = 1;
-   /* create a PRE element by simulating a PRE tag */
-   StartOfTag (SPACE);
-   ProcessStartGI ("PRE");
+   if (beginning)
+     {
+       /* create a PRE element by simulating a PRE tag */
+       StartOfTag (SPACE);
+       ProcessStartGI ("PRE");
+     }
 
    /* read the text file sequentially */
    do
@@ -7179,8 +7218,9 @@ char		   *textbuf;
      }
    while ((infile != NULL && !feof (infile) && !ferror (infile)) ||
 	  (textbuf != NULL && !endBuffer));
-   /* end of HTML file */
-   EndOfDocument ();
+   if (infile != NULL)
+     /* end of HTML file */
+     EndOfDocument ();
 }
 
 
@@ -8247,85 +8287,6 @@ Document            doc;
    curChar = 0;
 }
 
-#ifdef HANDLE_COMPRESSED_FILES
-
-/*----------------------------------------------------------------------
-   ReadCompressedFile
-   load and uncompress a file in memory.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static char       *ReadCompressedFile (char *filename)
-#else
-static char       *ReadCompressedFile (filename)
-char              *filename;
-#endif
-{
-  gzFile           stream = NULL;
-  char            *buffer, *p;
-  int              bufsize = 2000;
-  int              index = 0;
-  int              res, c, diff, nbNul;
-  boolean          ok;
-
-  stream = gzopen (filename, "r");
-  if (stream == NULL)
-    return (NULL);
-  buffer = TtaGetMemory (bufsize + 1);
-  if (buffer == NULL)
-    return (NULL);
-  ok = TRUE;
-  while (ok)
-    {
-      res = gzread (stream, buffer + index, bufsize - index);
-      if (res < 0)
-	{
-	  TtaFreeMemory (buffer);
-	  buffer = NULL;
-	  ok = FALSE;
-	}
-      else if (res == 0)
-	{
-	  /* end of file */
-	  buffer[index] = EOS;
-	  break;
-	}
-      else
-	{
-	  /* remove null characters */
-	  c = 0;
-	  while (c < res)
-	    {
-	      if (buffer[index+c] == EOS)
-		{
-		  nbNul = 0;
-		  while (buffer[index+c+nbNul] == EOS)
-		     nbNul++;
-		  res-= nbNul;
-		  diff = res - c;
-		  if (diff > 0)
-		    strncpy (&buffer[index+c], &buffer[index+c+nbNul], diff);
-		}
-	      else
-		c++;
-	    }
-	}
-      index += res;
-      if (index >= bufsize)
-	{
-	  bufsize *= 2;
-	  p = TtaRealloc (buffer, bufsize + 1);
-	  if (p == NULL)
-	    {
-	      TtaFreeMemory (buffer);
-	      ok = FALSE;
-	    }
-	  buffer = p;
-	}
-    }
-  gzclose (stream);
-  return (buffer);
-}
-#endif
 
 #ifdef STANDALONE
 /*----------------------------------------------------------------------
@@ -8430,20 +8391,39 @@ boolean	            PlainText;
 {
    FILE               *infile;
    Element             el, oldel;
-   int		       length;
    char               *s;
    char                tempname[MAX_LENGTH];
    char                temppath[MAX_LENGTH];
+   char               *buffer = NULL;
 #ifdef HANDLE_COMPRESSED_FILES
-   char               *cbuf = NULL;
+   gzFile              stream = NULL;
+   int                 bufsize = 2000;
+   int                 res, c, diff, nbNul;
 #endif
+   int		       length;
+   boolean             beginning = TRUE;
 
    theDocument = doc;
    infile = fopen (htmlFileName, "r");
    if (infile != 0)
      {
 #ifdef HANDLE_COMPRESSED_FILES
-        cbuf = ReadCompressedFile(htmlFileName);
+       stream = gzopen (htmlFileName, "r");
+       if (stream != NULL)
+	 {
+	   buffer = TtaGetMemory (bufsize + 1);
+	   buffer[bufsize] = EOS;
+	   if (buffer != NULL)
+	     res = gzread (stream, buffer, bufsize);
+	   if (res < 0)
+	     {
+	       TtaFreeMemory (buffer);
+	       buffer = NULL;
+	     }
+	   else if (res == 0)
+	       /* end of file */
+	       buffer[0] = EOS;
+	 }
 #endif
 	WithinTable = 0;
 	if (documentName[0] == EOS && !TtaCheckDirectory (documentDirectory))
@@ -8512,25 +8492,61 @@ boolean	            PlainText;
 	   MathMLSSchema = NULL;
 #endif
 	   /* parse the input file and build the Thot document */
+           if (buffer != NULL)
+	     {
+	       currentState = 0;
+	       numberOfCharRead = 0;
+	       numberOfLinesRead = 1;
+	       while (res > 0)
+		 {
+		   /* remove null characters */
+		   c = 0;
+		   while (c < res)
+		     {
+		       if (buffer[c] == EOS)
+			 {
+			   nbNul = 0;
+			   while (buffer[c+nbNul] == EOS)
+			     nbNul++;
+			   res-= nbNul;
+			   diff = res - c;
+			   if (diff > 0)
+			     strncpy (&buffer[c], &buffer[c+nbNul], diff);
+			 }
+		       else
+			 c++;
+		     }
+		   /* complete the buffer */
+		   for (c = res; c < bufsize; c++)
+		     buffer[c] = EOS;
+		   if (beginning && buffer != NULL &&
+		       !strncmp (buffer, "<!DOCTYPE HTML", 14))
+		     PlainText = FALSE;
+		   curChar = 0;
+		   if (PlainText)
+		     ReadTextFile (NULL, buffer, beginning);
+		   else
+		     HTMLread (NULL, buffer);
+		   if (res >= bufsize)
+		     {
+		       /* continue */
+		       res = gzread (stream, buffer, bufsize);
+		       beginning = FALSE;
+		     }
+		   else
+		     res = 0;
+		 }
+	       TtaFreeMemory (buffer);
+	       /* end of HTML file */
+	       EndOfDocument ();
+	     }
+	   else if (PlainText)
+	     ReadTextFile (infile, NULL, beginning);
+	   else
+	     HTMLread (infile, NULL);
 #ifdef HANDLE_COMPRESSED_FILES
-           if (cbuf != NULL)
-	      {
-	      if (PlainText)
-		 ReadTextFile (NULL, cbuf);
-	      else
-	         HTMLparse (NULL, cbuf);
-	      TtaFreeMemory (cbuf);
-	      } 
-	   else
-	      if (PlainText)
-		 ReadTextFile (infile, NULL);
-	      else
-	         HTMLparse (infile, NULL);
-#else
-	   if (PlainText)
-	      ReadTextFile (infile, NULL);
-	   else
-	      HTMLparse (infile, NULL);
+	   if (stream != NULL)
+	     gzclose (stream);
 #endif
 	   /* completes all unclosed elements */
 	   el = lastElement;

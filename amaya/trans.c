@@ -1011,6 +1011,7 @@ Document            doc;
 	TtaSetStructureChecking (0, doc);
 	InitializeParser (myFirstSelect, isClosed, doc);
 	HTMLparse (NULL, bufHTML);
+
 	TtaSetStructureChecking (1, doc);
 	typeEl.ElSSchema = TtaGetDocumentSSchema (doc);
 	typeEl.ElTypeNum = HTML_EL_Invalid_element;

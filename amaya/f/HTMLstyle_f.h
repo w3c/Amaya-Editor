@@ -6,8 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern char CSSparser ( AmayaReadChar readfunc,
-                        Document doc );
+extern char CSSparser ( Document doc,
+			boolean *CSSparsing );
 extern char *SkipBlanks ( char *ptr );
 extern boolean IsBlank ( char *ptr );
 extern char *SkipProperty ( char *ptr );
@@ -89,8 +89,8 @@ extern void HTMLResetAvisitedColor ( Document doc );
 
 #else /* __STDC__ */
 
-extern char CSSparser (/* AmayaReadChar readfunc,
-                          Document doc */);
+extern char CSSparser (/* Document doc,
+			  boolean *CSSparsing */);
 extern char *SkipBlanks (/* char *ptr */);
 extern boolean IsBlank (/* char *ptr */);
 extern char *SkipProperty (/* char *ptr */);
