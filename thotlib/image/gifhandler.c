@@ -1068,7 +1068,6 @@ ThotColorStruct* colrs;
   int                 shiftstart, shiftstop, shiftinc;
   int                 linepad, shiftnum;
   int                 bytesperline;
-  int                 bmap_order;
   int                 rshift, gshift, bshift;
 
   switch (depth)
@@ -1488,7 +1487,7 @@ int                 zoom;
   unsigned char*      buffer = (unsigned char*)0;
   unsigned char*      buffer2 = (unsigned char*)0;
   int                 w, h;
-  int                 i, ratio;
+  int                 i;
   int                 ncolors, cpp;
 
   Gif89.transparent = -1;
@@ -1496,20 +1495,20 @@ int                 zoom;
   Gif89.inputFlag = -1;
   Gif89.disposal = 0;
 
-# ifdef _WINDOWS
+#ifdef _WINDOWS
   bgRed   = -1;
   bgGreen = -1;
   bgBlue  = -1;
-# endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
   buffer = ReadGifToData (fn, &w, &h, &ncolors, &cpp, colrs);
   /* return image dimensions */
   *width = w;
   *height = h;
   if (buffer == NULL) {
-#    ifdef _WINDOWS
+#ifdef _WINDOWS
      WinErrorBox (NULL, TEXT("GifCreate(1): buffer == 0x00000000"));
-#    endif /* _WINDOWS */
+#endif /* _WINDOWS */
      return (ThotBitmapNone);
   }
 
@@ -1527,19 +1526,19 @@ int                 zoom;
 	*yif = PixelValue (h, UnPixel, NULL, zoom);
     }
 
-# ifdef _WINDOWS
+#ifdef _WINDOWS
   if (TtDisplay == (HDC) 0)
      WIN_GetDeviceContext (-1);
-# endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
-# ifndef _WIN_PRINT
+#ifndef _WIN_PRINT
   if ((*xif != 0 && *yif != 0) && (w != *xif || h != *yif)) {
      /* xif and yif contain width and height of the box */	  
      if ((*xif * *yif) > 4000000 ) {
-        ratio = 4000000 / (*xif * *yif);
-        *xif = ratio * *xif;
-        *yif = ratio * *yif;
-	 } 
+        i = 4000000 / (*xif * *yif);
+        *xif = i * *xif;
+        *yif = i * *yif;
+	 }
      buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);
      TtaFreeMemory (buffer);
      buffer = buffer2;
@@ -1547,24 +1546,24 @@ int                 zoom;
      w = *xif;
      h = *yif;
   }
-# endif /* _WIN_PRINT */
+#endif /* _WIN_PRINT */
   
-  if (buffer == NULL) {
+  if (buffer == NULL)
     return (ThotBitmapNone);	
-  }
+
   if (Gif89.transparent != -1)
     {
       if (Gif89.transparent < 0)
 	i = 256 + Gif89.transparent;
       else
 	i = Gif89.transparent;
-#     ifndef _WINDOWS
+#ifndef _WINDOWS
       *mask1 = MakeMask (TtDisplay, buffer, w, h, i);
-#     else  /* _WINDOWS */
+#else  /* _WINDOWS */
       bgRed   = colrs[i].red;
       bgGreen = colrs[i].green;
       bgBlue  = colrs[i].blue;
-#     endif /* _WINDOWS */
+#endif /* _WINDOWS */
     }
   
    pixmap = DataToPixmap (buffer, w, h, ncolors, colrs, &(imageDesc->PicColors));
@@ -1572,9 +1571,9 @@ int                 zoom;
      imageDesc->PicNbColors = ncolors;
    TtaFreeMemory (buffer);
    if (pixmap == None) {
-#     ifdef _WINDOWS
+#ifdef _WINDOWS
       WinErrorBox (NULL, TEXT("GifCreate(2): pixmap == 0x00000000"));
-#     endif /* _WINDOWS */
+#endif /* _WINDOWS */
      return (ThotBitmapNone);
    } else
      {

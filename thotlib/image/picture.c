@@ -60,6 +60,7 @@
 
 #include "appli_f.h"
 #include "epshandler_f.h"
+#include "boxmoves_f.h"
 #include "fileaccess_f.h"
 #include "font_f.h"
 #include "frame_f.h"

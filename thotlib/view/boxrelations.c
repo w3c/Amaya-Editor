@@ -544,7 +544,6 @@ ThotBool            horizRef;
 #endif /* __STDC__ */
 {
   PtrBox              pBox;
-  int                 dim, i;
 
   pBox = pAb->AbBox;
   if (horizRef)

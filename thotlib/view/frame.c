@@ -40,6 +40,7 @@
 #include "buildboxes_f.h"
 #include "displaybox_f.h"
 #include "displayselect_f.h"
+#include "exceptions_f.h"
 #include "font_f.h"
 #include "frame_f.h"
 #include "picture_f.h"

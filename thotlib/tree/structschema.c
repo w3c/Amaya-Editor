@@ -29,11 +29,12 @@
 #include "platform_tv.h"
 #include "appdialogue_tv.h"
 
-#include "tree_f.h"
 #include "exceptions_f.h"
 #include "memory_f.h"
+#include "schemas_f.h"
 #include "schemastr_f.h"
 #include "structschema_f.h"
+#include "tree_f.h"
 
 /*----------------------------------------------------------------------
    CreateDocument acquiert et initialise un contexte de document.    

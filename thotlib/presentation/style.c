@@ -31,9 +31,12 @@
 
 #include "changeabsbox_f.h"
 #include "changepresent_f.h"
+#include "context_f.h"
 #include "exceptions_f.h"
 #include "memory_f.h"
 #include "style_f.h"
+#include "uaccess_f.h"
+
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
