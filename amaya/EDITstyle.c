@@ -1326,7 +1326,7 @@ View                view;
 #  ifndef _WINDOWS
   TtaNewSelector (BaseDialog + AClassSelect, BaseDialog + AClassForm,
 		  TtaGetMessage (AMAYA, AM_SEL_CLASS),
-		  NbClass, ListBuffer, 5, NULL, FALSE, FALSE);
+		  NbClass, ListBuffer, 5, NULL, FALSE, TRUE);
 #  endif /* !_WINDOWS */
 
   /* preselect the entry corresponding to the class of the first selected
@@ -1403,19 +1403,22 @@ CHAR_T*             data;
   switch (ref - BaseDialog)
     {
     case ClassForm:
-      if (typedata == INTEGER_DATA && val == 1)
+      if (val == 1)
 	UpdateClass (DocReference);
       TtaDestroyDialogue (BaseDialog + ClassForm);
       break;
     case ClassSelect:
+      ustrcpy (CurrentClass, data);
+      break;
     case AClassSelect:
-      if (typedata == STRING_DATA)
-	ustrcpy (CurrentClass, data);
+      ustrcpy (CurrentClass, data);
+      DoApplyClass (ApplyClassDoc);
       break;
     case AClassForm:
-      if (typedata == INTEGER_DATA && val == 1)
+      if (val == 1)
 	DoApplyClass (ApplyClassDoc);
-      TtaDestroyDialogue (BaseDialog + AClassForm);
+      else
+	TtaDestroyDialogue (BaseDialog + AClassForm);
       break;
     default:
       break;
