@@ -41,6 +41,7 @@ AmayaNotebook::AmayaNotebook( wxWindow * p_parent_window,
 
 			   wxNB_MULTILINE /* only windows */ )
 	   ,m_pAmayaWindow( p_amaya_window )
+	   ,m_MContextFrameId(0)
 {
   SetImageList( AmayaApp::GetDocumentIconList() );
 }
@@ -212,13 +213,29 @@ void AmayaNotebook::OnContextMenu( wxContextMenuEvent & event )
 		 event.GetPosition().y );
 
   long flags  = 0;
-  int tab_pos = HitTest(ScreenToClient(event.GetPosition()), &flags);
-  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNotebook::OnContextMenu - tab_pos=%d, flags=%d"), tab_pos, flags );
+  int page_id = HitTest(ScreenToClient(event.GetPosition()), &flags);
+  TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNotebook::OnContextMenu - page_id=%d, flags=%d"), page_id, flags );
 
-  wxMenu * p_menu = TtaGetContextMenu( m_pAmayaWindow->GetWindowId() );
+  // store the aimed frame, it's possible that it is not the current active one
+  int window_id     = m_pAmayaWindow->GetWindowId();
+  m_MContextFrameId = TtaGetFrameId( window_id, page_id, 1 );
+
+  wxMenu * p_menu = TtaGetContextMenu( window_id );
   PopupMenu(p_menu, ScreenToClient(event.GetPosition()));
 
 //  event.Skip();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaNotebook
+ *      Method:  GetMContextFrame
+ * Description:  return the aimed frame by the last context menu
+ *--------------------------------------------------------------------------------------
+ */
+int AmayaNotebook::GetMContextFrame()
+{
+  return m_MContextFrameId;
 }
 
 #if 0
@@ -234,6 +251,7 @@ void AmayaNotebook::OnChar(wxKeyEvent& event)
   event.Skip();
 }
 #endif /* 0 */
+
 
 BEGIN_EVENT_TABLE(AmayaNotebook, wxNotebook)
   EVT_CLOSE(	                  AmayaNotebook::OnClose )

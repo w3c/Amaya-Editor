@@ -226,6 +226,7 @@ bool AmayaNormalWindow::DetachPage( int position )
 bool AmayaNormalWindow::ClosePage( int page_id )
 {
   AmayaPage * p_page  = NULL;
+  int old_page_id = m_pNotebook->GetSelection(); 
   p_page = GetPage( page_id );
   // close it
   p_page->Close();
@@ -233,16 +234,15 @@ bool AmayaNormalWindow::ClosePage( int page_id )
     {
       m_pNotebook->DeletePage(page_id);
       m_pNotebook->UpdatePageId();
-      TtaHandlePendingEvents ();
+      //TtaHandlePendingEvents ();
       
-      // we force page_id-1 because m_pNotebook->GetSelection() returns a bad value ...
-      // OnPageChanged event is not generated so the selected page id is not updated 
-      // internaly into wxWidgets. It's bug!
-      // page_id-1 is the precedent page : it supposes that the notebook behaviour
-      // is to switch to precedent page when a page is deleted ... maybe it's not the case 
-      // on every plateforme.
-      if (page_id - 1 >= 0)
-	m_pNotebook->SetSelection( page_id - 1 );
+      // we force old_page_id to regivefocus to the last active page before the close
+      if (old_page_id < 0)
+	old_page_id = 0;
+      if (old_page_id >= m_pNotebook->GetPageCount())
+	old_page_id = m_pNotebook->GetPageCount()-1;
+      if (old_page_id > 0)
+	m_pNotebook->SetSelection( old_page_id );
 
       // here GetSelection should return the right value acording to SetSelection above.
       if (m_pNotebook->GetSelection() >= 0)
@@ -251,11 +251,10 @@ bool AmayaNormalWindow::ClosePage( int page_id )
 	  if (p_selected_page)
 	    {
 	      p_selected_page->SetSelected( TRUE );
-
-
-		  // try to avoid refresh because it forces a total canvas redraw (it's not very optimized)
-	        // the page need a refresh to repaint its canvas
-	        //p_selected_page->Refresh();
+	      
+	      // try to avoid refresh because it forces a total canvas redraw (it's not very optimized)
+	      // the page need a refresh to repaint its canvas
+	      //p_selected_page->Refresh();
 	    }
 	}
 
@@ -338,12 +337,17 @@ void AmayaNormalWindow::OnMenuItem( wxCommandEvent& event )
   action_id = FindMenuActionFromMenuItemID (DocumentMenuList, id);
 
   TTALOGDEBUG_2( TTA_LOG_DIALOG, _T("AmayaNormalWindow::OnMenuItem id=%d action_id=%d"), id, action_id );
-
-  /* ok now execute the callback */
-  Document            doc;
-  View                view;
-  FrameToView (TtaGiveActiveFrame(), &doc, &view);
+  
+  /* if this menu is the context menu it's possible that the current active document is not the wanted one */
+  wxMenu *   p_context_menu = TtaGetContextMenu( GetWindowId() );
+  Document   doc;
+  View       view;
+  if (p_menu == p_context_menu)
+    FrameToView (m_pNotebook->GetMContextFrame(), &doc, &view);
+  else
+    FrameToView (TtaGiveActiveFrame(), &doc, &view);
   TtaExecuteMenuActionFromActionId(action_id, doc, view, FALSE);
+
 }
 
 /*

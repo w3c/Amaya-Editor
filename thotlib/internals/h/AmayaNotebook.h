@@ -65,6 +65,8 @@ class AmayaNotebook : public wxNotebook
   int GetPageId( const AmayaPage * p_page );
   AmayaWindow * GetWindowParent()
     { return m_pAmayaWindow; } 
+  
+  int GetMContextFrame();
 
   void UpdatePageId();
 
@@ -80,6 +82,7 @@ class AmayaNotebook : public wxNotebook
 
  protected:
   AmayaWindow *  m_pAmayaWindow; // amaya parent window
+  int            m_MContextFrameId;
 };
 
 #endif // __AMAYANOTEBOOK_H__
