@@ -220,7 +220,7 @@ RULES
 
 ATTRIBUTES
 
-  AnnotOrphIcon:
+  AnnotOrphIcon (XLink):
 	BEGIN
 	Visibility: 0;
         CreateFirst(Annotorph_gif);
