@@ -158,6 +158,7 @@ int                 fileRef;
 
 #endif /* __STDC__ */
 {
+#  ifndef _WINDOWS
    struct stat;
    char               *addr1;
    char                word[4 * NAME_LENGTH];
@@ -276,4 +277,7 @@ int                 fileRef;
 	     TtaSetSelector (fileRef, -1, "");
 	  }
      }
+#  else /*_WINDOWS */
+   WIN_ListDirectory (dirRef, formRef, aDirectory, suffix);
+#  endif /* _WINDOWS */
 }

@@ -510,7 +510,11 @@ char               *name;
    if (!strcasecmp("appname", name)) return(AppRegistryEntryAppli);
 
    if ((!strcasecmp (name, "cwd")) || (!strcasecmp (name, "pwd"))) {
+#      ifndef _WINDOWS
        return(getcwd(&CurrentDir[0], sizeof(CurrentDir)));
+#      else  /* _WINDOWS */
+       return(_getcwd(&CurrentDir[0], sizeof(CurrentDir)));
+#      endif /* _WINDPWS */
    }
 
    /*
@@ -981,12 +985,12 @@ char               *appArgv0;
     * First case, the argv[0] indicate that it's an absolute path name.
     * i.e. start with / on unixes or \ or ?:\ on Windows.
     */
-#ifdef _WINDOWS
+#  ifdef _WINDOWS
    if ((appArgv0[0] == DIR_SEP) ||
        ((appArgv0[1] == ':') && (appArgv0[2] == DIR_SEP)))
-#else  /* !_WINDOWS */
+#  else  /* !_WINDOWS */
    if (appArgv0[0] == DIR_SEP)
-#endif /* !_WINDOWS */
+#  endif /* !_WINDOWS */
      {
 	strncpy (&execname[0], appArgv0, sizeof (execname));
      }
@@ -996,7 +1000,11 @@ char               *appArgv0;
     */
    else if (TtaFileExist (appArgv0))
      {
+#       ifndef _WINDOWS
 	getcwd (&execname[0], sizeof (execname));
+#       else  /* _WINDOWS */
+	_getcwd (&execname[0], sizeof (execname));
+#       endif /* _WINDOWS */
 	strcat (execname, DIR_STR);
 	strcat (execname, appArgv0);
      }
@@ -1022,11 +1030,11 @@ char               *appArgv0;
 	path[sizeof (path) - 1] = '\0';
 
 	execname_len = sizeof (execname);
-#ifdef _WINDOWS
+#       ifdef _WINDOWS
 	MakeCompleteName (appArgv0, "EXE", path, execname, &execname_len);
-#else
+#       else
 	MakeCompleteName (appArgv0, "", path, execname, &execname_len);
-#endif
+#       endif
 	if (execname[0] == '\0')
 	  {
 	     fprintf (stderr,

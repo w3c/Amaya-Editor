@@ -132,17 +132,21 @@ int                 _getpid (void);
 /*
  * Constants for PATHs
  */
-#if defined(__GNUC__) || defined(__GNUWIN32)
-#define DIR_SEP '/'
-#define DIR_STR "/"
-#define PATH_SEP ':'
-#define PATH_STR ":"
-#else  !__GNUC__ 
+/*
+  #if defined(__GNUC__) || defined(__GNUWIN32)
+  #define DIR_SEP '/'
+  #define DIR_STR "/"
+  #define PATH_SEP ':'
+  #define PATH_STR ":"
+  #else  !__GNUC__ 
+*/
 #define DIR_SEP '\\'
 #define DIR_STR "\\"
 #define PATH_SEP ';'
 #define PATH_STR ";"
-#endif /* __GNUC__ */
+/*
+#endif 
+*/
 
 #ifndef False
 #define False 0

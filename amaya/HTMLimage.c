@@ -58,11 +58,7 @@ LoadedImageDesc   **desc;
    else if (IsHTTPPath (pathname))
      {
 	/* It is an image loaded from the Web */
-#       ifndef _WINDOWS
 	sprintf (localname, "%s%s%d%s", TempFileDirectory, DIR_STR, doc, DIR_STR);
-#       else  /* !_WINDOWS */
-	sprintf (localname, "C:\\TEMP\\AMAYA\\%d\\", doc);
-#       endif /* _WINDOWS */
 	strcat (localname, name);
      }
    else

@@ -907,6 +907,8 @@ View                view;
 
 #endif
 {
+   /* For Windoz have a look to OPENFILENAME structure and
+      GetOpenFileName function */
    int               i;
    char              s[MAX_LENGTH];
 
@@ -1233,11 +1235,7 @@ char               *documentname;
 		  return (0);
 	       }
 	     /* we have to rename the temporary file */
-#            ifndef _WINDOWS
 	     sprintf (tempdir, "%s%s%d%s", TempFileDirectory, DIR_STR, newdoc, DIR_STR);
-#            else  /* _WINDOWS */
-	     sprintf (tempdir, "C:\\TEMP\\AMAYA\\%d\\", newdoc);
-#            endif /* _WINDOWS */
 	     strcpy (tempdocument, tempdir);
 	     strcat (tempdocument, documentname);
 	     if (doc != newdoc)

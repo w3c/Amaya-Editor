@@ -1403,11 +1403,7 @@ boolean error_html;
      }
 
    /*create a tempfilename */
-#  ifdef _WINDOWS
-   sprintf (outputfile, "C:\\TEMP\\AMAYA\\%d\\%04dAM", docid, object_counter);
-#  else  /* _WINDOWS */
-   sprintf (outputfile, "%s/%d/%04dAM", TempFileDirectory, docid, object_counter);
-#  endif /* _WINDOWS */
+   sprintf (outputfile, "%s%c%d%c%04dAM", TempFileDirectory, DIR_SEP, docid, DIR_SEP, object_counter);
 
    /* update the object_counter */
    object_counter++;

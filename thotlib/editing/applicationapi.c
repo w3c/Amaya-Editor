@@ -429,6 +429,11 @@ char               *aName;
 	if (i != lg)
 	   strcpy (aName, oldptr);
      }
+#    ifdef _WINDOWS
+     lg = strlen (aName);
+     if (aName[lg - 4] == '.')
+	aName[lg - 4] = '\0';
+#    endif /* _WINDOWS */
 }
 
 /* end of module */

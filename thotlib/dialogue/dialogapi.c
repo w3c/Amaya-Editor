@@ -143,6 +143,10 @@ static ThotAppContext Def_AppCont;
 static Display*       GDp;
 #endif
 
+#ifdef _WINDOWS
+static int cyValue = 10;
+#endif /* _WINDOWS */
+
 static ThotTranslations TextTranslations;
 static ThotWidget       MainShell;
 
@@ -269,6 +273,43 @@ ThotWindow win;
 }
 
 #ifdef _WINDOWS
+#ifdef __STDC__
+static boolean isOnlyBlank (const char* text)
+#else  /* __STDC__ */
+static boolean isOnlyBlank (text)
+const char* text;
+#endif /* __STDC__ */
+{
+    char *pText = text;
+    while (pText && *pText == ' ')
+	  pText++;
+    if (*pText == '\0')
+       return TRUE;
+    return FALSE;
+}
+
+#ifdef __STDC__
+void WIN_ListDirectory (int ref, int parentRef, char* directory, char* suffix)
+#else  /* __STDC__ */
+void WIN_ListDirectory (ref, parentRef, directory, suffix)
+int   ref; 
+int   parentRef; 
+char* directory; 
+char* suffix;
+#endif /* __STDC__ */
+{
+   struct Cat_Context *parentCatalogue = CatEntry (parentRef);
+   char*               dirPath = (char*) TtaGetMemory (strlen (directory) + strlen (suffix) + 2) ;
+   HWND                hWnd;
+
+   hWnd = CreateWindow ("listbox", NULL, WS_CHILDWINDOW | WS_VISIBLE | LBS_STANDARD,
+			10, cyValue, 140, 100, parentCatalogue->Cat_Widget, (HMENU) 1, hInstance, NULL);
+   cyValue += 110;
+   sprintf (dirPath, "*%s", suffix);
+   /* sprintf (dirPath, "%s%c*.*", directory, DIR_SEP); */
+   SendMessage (hWnd, LB_DIR, 0x37, (LPARAM) suffix);
+}
+
 /*----------------------------------------------------------------------
    GetMainFrameNumber :  returns the Thot window number associated to an     
    MS-Windows window.                                          
@@ -621,13 +662,11 @@ char*     commandLine;
     *pArgv = argv;
     argc   = 0;
     GetModuleFileName (hInst, argv0, sizeof (argv0));
-    /* argv[argc++] = argv0; */
+    argv[argc++] = argv0;
     for (nowAt = nowAt_start;;) {
-        if (!*ptr) {
-	   argv[0] = (char*) malloc (6) ;
-           strcpy (argv[0], "amaya");
+        if (!*ptr) 
            return (argc);
-	}
+	
         if (lookFor) {
            if (*ptr == lookFor) {
 	      nowAt = nowAt_start;
@@ -1050,6 +1089,9 @@ caddr_t             call_d;
 #                 ifndef _WINDOWS
 		  if (catalogue->Cat_Widget != 0)
 		     XtManageChild (catalogue->Cat_Widget);
+#                 else  /* _WINDOWS */
+                  ShowWindow (catalogue->Cat_Widget, SW_SHOWNORMAL);
+		  UpdateWindow (catalogue->Cat_Widget);
 #                 endif /* _WINDOWS */
 	       }
 
@@ -1078,6 +1120,11 @@ caddr_t             call_d;
 
 	XtManageChild (w);
 	XtManageChild (XtParent (w));
+#       else  /* _WINDOWS */
+        ShowWindow (w, SW_SHOWNORMAL);
+	UpdateWindow (w);
+	ShowWindow (GetParent (w), SW_SHOWNORMAL);
+	UpdateWindow (GetParent (w));
 #       endif /* _WINDOWS */
      }
 }
@@ -2310,6 +2357,9 @@ struct Cat_Context *catalogue;
 #            ifndef _WINDOWS
 	     w = XtParent (catalogue->Cat_Widget);
 	     XtDestroyWidget (catalogue->Cat_Widget);
+#            else  /* _WINDOWS */
+	     w = GetParent (catalogue->Cat_Widget);
+	     DestroyWindow (w);
 #            endif /* _WINDOWS */
 	     catalogue->Cat_Widget = 0;
 	  }
@@ -2326,6 +2376,9 @@ struct Cat_Context *catalogue;
 		  {
 		     /* Recuperation du widget parent en sautant le widget titre */
 #                    ifdef _WINDOWS
+		     if (w == 0 && ent != 0)
+			w = GetParent (adbloc->E_ThotWidget[ent]);
+
 		     DestroyWindow (adbloc->E_ThotWidget[ent]);
 #                    else  /* _WINDOWS */
 		     if (w == 0 && ent != 0)
@@ -2776,10 +2829,9 @@ ThotWidget          parent;
    struct Cat_Context *catalogue;
    ThotWidget          menu;
 
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
-
-#endif /* _WINDOWS */
+#  endif /* _WINDOWS */
 
    if (ref == 0)
       TtaError (ERR_invalid_reference);
@@ -2793,11 +2845,11 @@ ThotWidget          parent;
 	else if (catalogue->Cat_Widget != 0)
 	  {
 	     menu = catalogue->Cat_Widget;
-#ifndef _WINDOWS
+#            ifndef _WINDOWS
 	     XtSetArg (args[0], XmNsubMenuId, menu);
 	     XtSetValues (parent, args, 1);
 	     XtManageChild (parent);
-#endif /* _WINDOWS */
+#            endif /* _WINDOWS */
 	  }
      }
 }
@@ -3192,7 +3244,7 @@ struct E_List     **adbloc;
    /* Recupere le Row-Column racine du formulaire */
    w = (*adbloc)->E_ThotWidget[0];
 #  ifdef _WINDOWS
-   /* row = !!!!! */
+   row = GetParent (w);
 #  else  /* _WINDOWS */
    row = XtParent (w);
 #  endif /* !_WINDOWS */
@@ -5126,6 +5178,9 @@ int                 cattype;
    XmString            title_string;
 #  endif /* _WINDOWS */
 
+#  ifdef _WINDOWS
+   cyValue = 10;
+#  endif /* _WINDOWS */
    if (ref == 0)
      {
 	TtaError (ERR_invalid_reference);
@@ -5428,8 +5483,10 @@ int                 cattype;
 			     w, 0, hInstance, 0); 
 
 	fprintf (stderr, "Created ComboBox %X\n", form);
+	/*
 	ShowWindow (form, SW_SHOWNORMAL);
 	UpdateWindow (form);
+	*/
 	catalogue->Cat_Widget = form;
         WIN_AddFrameCatalogue (parent, catalogue) ;
         bIndex   =  0;
@@ -6385,6 +6442,12 @@ char               *text;
 	XtSetArg (args[n], XmNborderColor, Button_Color);
 	n++;
 	w = XmCreateLabel (w, "Dialogue", args, n);
+#       else  /* _WINDOWS */
+	if (!isOnlyBlank (text)) {
+	   w = CreateWindow ("STATIC", text, WS_CHILD | WS_VISIBLE | SS_LEFT, 10, cyValue, 100, 30, 
+			     parentCatalogue->Cat_Widget, (HMENU) ref, hInstance, NULL);
+	   cyValue += 40;
+	}
 #       endif /* _WINDOWS */
 
 	catalogue->Cat_Widget = w;
@@ -6477,10 +6540,10 @@ boolean             react;
 	/*_____________________________________________________________ Sinon __*/
 	else
 	  {
-	     row = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
-
-#            ifndef _WINDOWS
 	     /* Cree a l'interieur Row-Column du formulaire */
+	     row = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
+#            ifndef _WINDOWS
+	     row = AddInFormulary (parentCatalogue, &i, &ent, &adbloc);
 	     n = 0;
 	     XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	     n++;
@@ -6548,6 +6611,10 @@ boolean             react;
 		  n++;
 		  /*XtSetArg(args[n], XmNscrollVertical, FALSE); n++; */
 		  w = XmCreateText (row, "Dialogue", args, n);
+#                 else  /* _WINDOWS */
+		  w = CreateWindow ("EDIT", "", WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER, 
+				    10, cyValue, 200, 30, parentCatalogue->Cat_Widget, (HMENU) ref, hInstance, NULL);
+		  cyValue += 40;
 #                 endif /* _WINDOWS */
 	       }
 	     else
@@ -6558,6 +6625,9 @@ boolean             react;
 		  XtSetArg (args[n], XmNrows, (short) height);
 		  n++;
 		  w = XmCreateScrolledText (row, "Dialogue", args, n);
+#                 else  /* _WINDOWS */
+		  /* Create a multi-line edit windows *
+		   * TODO TODO TODO TODO TODO TODO    */
 #                 endif /* !_WINDOWS */
 	       }
 #            ifndef _WINDOWS 
@@ -6565,12 +6635,19 @@ boolean             react;
 	     /* Si la feuille de saisie est reactive */
 	     if (react)
 		XtAddCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallTextChange, catalogue);
-#            endif /* !_WINDOWS */
+#            else  /* _WINDOWS */
+	     ShowWindow (w, SW_SHOWNORMAL);
+	     UpdateWindow (w);
+#            endif /* _WINDOWS */
 	     catalogue->Cat_Ref = ref;
 	     catalogue->Cat_Type = CAT_TEXT;
 	     /* L'entree Cat_Entries contient le numero du widget texte */
 	     catalogue->Cat_Entries = (struct E_List *) w;
+#            ifndef _WINDOWS
 	     catalogue->Cat_Widget = row;
+#            else  /* _WINDOWS */
+	     catalogue->Cat_Widget = w;
+#            endif /* _WINDOWS */
 	     catalogue->Cat_PtParent = parentCatalogue;
 	     adbloc->E_ThotWidget[ent] = (ThotWidget) catalogue;
 	     adbloc->E_Free[ent] = 'N';
@@ -6622,6 +6699,8 @@ char               *text;
 	/* Si la feuille de saisie est reactive */
 	if (catalogue->Cat_React)
 	   XtAddCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallTextChange, catalogue);
+#       else  /* _WINDOWS */
+	SetWindowText (w, text) ;
 #       endif /* _WINDOWS */
      }
 }
@@ -6980,6 +7059,9 @@ boolean             remanent;
 	n++;
 	XtSetValues (w, args, n);
 	XtManageChild (w);
+#       else  /* _WINDOWS */
+	ShowWindow (w, SW_SHOWNORMAL);
+	UpdateWindow (w);
 #       endif /* _WINDOWS */
      }
    /*===========> Active un formulaire */
