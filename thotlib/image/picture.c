@@ -1,9 +1,4 @@
 
-/* -- Copyright (c) 1994 Inria/CNRS  All rights reserved. -- */
-
-/*
- */
-
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
@@ -157,7 +152,6 @@ static char         reverseByte[0x100] =
 #include "pres.f"
 #include "inites.f"
 #include "font.f"
-#include "transform.f"
 
 /* ---------------------------------------------------------------------- */
 /* |    IsFormat retourne True si le fichier de nom fn contient une     | */
@@ -1064,27 +1058,6 @@ int                 frame;
 	       {
 		  ReadImage (frame, box, imageDesc);
 		  myDrawable = imageDesc->imagePixmap;
-
-		  GetStretchSize (wcf, hcf, wif, hif, pres, &presW, &presH);
-		  if ((pres == ReScale) && (presW == wif) && (presH == hif))
-		    {
-		       /* nothing to do */
-		    }
-		  else
-		    {
-		       if (IsSameResolution (typeImage))
-			  XGetGeometry (GDp (0), myDrawable, &root, &xpix, &ypix,
-					&wcf, &hcf, &bdw, &dep);
-		       XGetImage (GDp (0), myDrawable, 0, 0, wcf, hcf,
-				  AllPlanes, ZPixmap);
-		       maskImage = XGetImage (GDp (0), myDrawable, 0, 0, wcf, hcf,
-					      AllPlanes, ZPixmap);
-		       myDrawable = StretchPixmap (maskImage, presW, presH);
-		       mask1 = StretchPixmap (maskImage, presW, presH);
-		    }
-
-		  if (imageDesc->imagePixmap != myDrawable)
-		     SetImageDescPixmap (imageDesc, myDrawable, mask1);
 	       }
 	     else
 	       {
