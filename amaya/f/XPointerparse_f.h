@@ -5,16 +5,36 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-parserContextPtr XPointer_parse (Document doc, char *buffer);
-void XPointer_free (parserContextPtr ctx);
-void XPointer_select (parserContextPtr ctx);
-Element XPointer_el (nodeInfo *node);
-int XPointer_startC (nodeInfo *node);
-int XPointer_endC (nodeInfo *node);
-nodeInfo *XPointer_nodeStart (parserContextPtr ctx);
-nodeInfo *XPointer_nodeEnd (parserContextPtr ctx);
+
+extern int LookupSymbol ( parserContextPtr ctx,
+                          char *s );
+extern void XPointer_select ( parserContextPtr ctx );
+extern void XPointer_free ( parserContextPtr ctx );
+extern ThotBool XPointer_isRangeTo ( parserContextPtr ctx );
+extern ThotBool XPointer_isStringRange ( nodeInfo *node );
+extern nodeInfo *XPointer_nodeStart ( parserContextPtr ctx );
+extern nodeInfo *XPointer_nodeEnd ( parserContextPtr ctx );
+extern Element XPointer_el ( nodeInfo *node );
+extern int XPointer_startC ( nodeInfo *node );
+extern int XPointer_endC ( nodeInfo *node );
+extern parserContextPtr XPointer_parse ( Document doc,
+                                         char *buffer );
 
 #else /* __STDC__ */
+
+extern int LookupSymbol (/* parserContextPtr ctx,
+                            char *s */);
+extern void XPointer_select (/* parserContextPtr ctx */);
+extern void XPointer_free (/* parserContextPtr ctx */);
+extern ThotBool XPointer_isRangeTo (/* parserContextPtr ctx */);
+extern ThotBool XPointer_isStringRange (/* nodeInfo *node */);
+extern nodeInfo *XPointer_nodeStart (/* parserContextPtr ctx */);
+extern nodeInfo *XPointer_nodeEnd (/* parserContextPtr ctx */);
+extern Element XPointer_el (/* nodeInfo *node */);
+extern int XPointer_startC (/* nodeInfo *node */);
+extern int XPointer_endC (/* nodeInfo *node */);
+extern parserContextPtr XPointer_parse (/* Document doc,
+                                           char *buffer */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

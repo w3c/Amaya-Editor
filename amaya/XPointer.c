@@ -688,8 +688,8 @@ View view;
   {
     parserContextPtr ctx;
     fprintf (stderr, "final expression is: %s\n", xptr_expr);
-    printf ("first el is %d\n", firstEl);
-    printf ("last el is %d\n", lastEl);
+    printf ("first el is %p\n", firstEl);
+    printf ("last el is %p\n", lastEl);
     /* now, let's try to parse what we generated */
     ctx = XPointer_parse (doc, xptr_expr);
     XPointer_free (ctx);

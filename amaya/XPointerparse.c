@@ -817,9 +817,9 @@ parserContextPtr XPointer_parse (Document doc, char *buffer)
   else
     {
       if (context->nodeStart.el)
-	printf ("el 1 is %d\n", context->nodeStart.el);
+	printf ("el 1 is %p\n", context->nodeStart.el);
       if (context->nodeEnd.el)
-	printf ("el 2 is %d\n", context->nodeEnd.el);
+	printf ("el 2 is %p\n", context->nodeEnd.el);
     }
   XPointer_select (context);
 #endif /*  XPTR_ACTION_DEBUG */

@@ -5,11 +5,28 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-Element SearchSiblingIndex (Element root, char *el_name, int *index);
-Element SearchAttrId (Element root, char *val);
-char * XPointer_build (Document doc, View view);
-ThotBool SearchTextPosition (Element *mark, int *firstCh);
+
+extern Element SearchAttrId ( Element root,
+                              char *val );
+extern Element SearchSiblingIndex ( Element root,
+                                    char *el_name,
+                                    int *index );
+extern ThotBool SearchTextPosition ( Element *mark,
+                                     int *firstCh );
+extern char * XPointer_build ( Document doc,
+                               View view );
+
 #else /* __STDC__ */
+
+extern Element SearchAttrId (/* Element root,
+                                char *val */);
+extern Element SearchSiblingIndex (/* Element root,
+                                      char *el_name,
+                                      int *index */);
+extern ThotBool SearchTextPosition (/* Element *mark,
+                                       int *firstCh */);
+extern char * XPointer_build (/* Document doc,
+                                 View view */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
