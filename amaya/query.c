@@ -2743,51 +2743,6 @@ char *value;
 }
 
 /*----------------------------------------------------------------------
-  QGetFileSize
-  Returns 0 and the filesize in the 2nd parameter.
-  Otherwise, returns -1.
-  ---------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static ThotBool QGetFileSize (CHAR_T* fileName, unsigned long *file_size)
-#else
-static ThotBool QGetFileSize (fileName, file_size)
-CHAR_T*        fileName;
-unsigned long* file_size;
-#endif /* __STDC__ */
-{
-  int fd;
-  struct stat file_stat;
-
-  if (!TtaFileExist (fileName))
-    return -1;
-
-  /* verify the file's size */
-#ifndef _WINDOWS
-  if ((fd = uopen (fileName, O_RDONLY)) == -1)
-#else 
-    if ((fd = uopen (fileName, _O_RDONLY | _O_BINARY)) == -1)
-#endif /* _WINDOWS */
-      {
-	/* if we could not open the file, exit */
-	/*error msg here */
-	return (-1);
-      }
-  
-  fstat (fd, &file_stat);
-
-#ifdef _WINDOWS
-  _close (fd);
-#else /* _WINDOWS */
-  close (fd);
-#endif /* _WINDOWS */
-  
-  *file_size = (unsigned long) file_stat.st_size;
-
-   return 0;
-}
-
-/*----------------------------------------------------------------------
   InvokeGetObjectWWW_callback
   A simple function to invoke a callback function whenever there's an error
   in GetObjectWWW
@@ -3130,7 +3085,7 @@ CHAR_T*       content_type;
        /* @@@ a very ugly patch :)))
 	I'm copying here some of the functionality I use in the PUT
        I need to put the common parts in another module */
-       QGetFileSize (formdata, &filesize);
+       AM_GetFileSize (formdata, &filesize);
        filesize = filesize + strlen ("w3c_annotate=");
        me->block_size = filesize;
 
@@ -3313,7 +3268,7 @@ void               *context_tcbf;
      }
 
    /* get the size of the file */
-   if (QGetFileSize (fileName, &file_size) || file_size == 0)
+   if (!AM_GetFileSize (fileName, &file_size) || file_size == 0L)
      {
 	/* file was empty */
 	/*errmsg here */
@@ -3755,7 +3710,4 @@ ThotBool AHTFTPURL_flag (void)
 {
   return (FTPURL_flag);
 }
-
-
-
 

@@ -55,6 +55,8 @@ extern ThotBool NormalizeFile ( CHAR_T* src,
                                 ConvertionType convertion );
 extern STRING MakeRelativeURL ( STRING aName,
                                 STRING relatedName );
+extern ThotBool AM_GetFileSize ( CHAR_T* filename,
+                                 unsigned long *file_size );
 
 #else /* __STDC__ */
 
@@ -107,6 +109,8 @@ extern ThotBool NormalizeFile (/* CHAR_T* src,
                                   ConvertionType convertion */);
 extern STRING MakeRelativeURL (/* STRING aName,
                                   STRING relatedName */);
+extern ThotBool AM_GetFileSize (/* CHAR_T* filename,
+                                   unsigned long *file_size */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -2142,4 +2142,36 @@ STRING           relatedName;
   return (return_value);
 }
 
+/*----------------------------------------------------------------------
+  AM_GetFileSize
+  Returns TRUE and the filesize in the 2nd parameter.
+  Otherwise, in case of a system error, returns FALSE, with a 
+  filesize of 0L.
+  ---------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool AM_GetFileSize (CHAR_T* filename, unsigned long *file_size)
+#else
+ThotBool AM_GetFileSize (filename, file_size)
+CHAR_T*        filename;
+unsigned long* file_size;
+#endif /* __STDC__ */
+{
+  ThotFileHandle handle = ThotFile_BADHANDLE;
+  ThotFileInfo info;
 
+  *file_size = 0L;
+  if (!TtaFileExist (filename))
+    return FALSE;
+
+  handle = TtaFileOpen (filename, ThotFile_READWRITE);
+  if (handle == ThotFile_BADHANDLE)
+    /* ThotFile_BADHANDLE */
+    return FALSE;
+   if (TtaFileStat (handle, &info) == 0)
+     /* bad stat */
+     info.size = 0L;
+   TtaFileClose (handle);
+   *file_size = (unsigned long) info.size;
+
+   return TRUE;
+}
