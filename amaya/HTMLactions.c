@@ -1569,7 +1569,10 @@ void UpdateTitle (Element el, Document doc)
    Element             textElem, next, sibling;
    ElementType         elType, siblingType;
    Language            lang;
-   char               *text, *src;
+   char               *text;
+#ifndef _WX
+   char               *src;
+#endif /* _WX */
    int                 length, i, l;
 
    if (TtaGetViewFrame (doc, 1) == 0)

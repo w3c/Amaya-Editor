@@ -2494,6 +2494,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
     return;
   pres = DefaultPres;
   GetPictureFileName (imageDesc->PicFileName, fileName);
+  zoom = ViewFrameTable[frame - 1].FrMagnification;
 
 #ifdef _NOSHARELIST
  /* For the Sync Image*/
@@ -2550,9 +2551,9 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	{
 	  /* one of box size is unknown, keep the image size */
 	  if (w == 0)
-	    w = wBox = imageDesc->PicWidth;
+	    w = wBox = PixelValue (imageDesc->PicWidth, UnPixel, NULL, zoom);
 	  if (h == 0)
-	    h = hBox = imageDesc->PicHeight;
+	    h = hBox = PixelValue (imageDesc->PicHeight, UnPixel, NULL, zoom);
 	  ClipAndBoxUpdate (pAb, box, w, h, top, bottom, left, right, frame);
 	  imageDesc->PicWArea = w;
 	  imageDesc->PicHArea = h;
@@ -2635,7 +2636,6 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      if(box->BxH)
 		yBox = h;
 	    }
-	  zoom = ViewFrameTable[frame - 1].FrMagnification;
 	  /* intrinsic width and height */
 	  imageDesc->PicPixmap = (ThotPixmap) 
 	    (*(PictureHandlerTable[typeImage].Produce_Picture)) (
@@ -2762,7 +2762,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
   int                 yBox = 0;
   int                 wBox = 0;
   int                 hBox = 0;
-  int                 w, h;
+  int                 w, h, zoom;
   int                 width, height;
   int                 left, right, top, bottom;
 #ifdef _WINGUI
@@ -2791,6 +2791,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
     return;
 
   GetPictureFileName (imageDesc->PicFileName, fileName);
+  zoom = ViewFrameTable[frame - 1].FrMagnification;
   typeImage = imageDesc->PicType;
   if (typeImage >= InlineHandlers)
     return;
@@ -2975,9 +2976,9 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	{
 	  /* one of box size is unknown, keep the image size */
 	  if (w == 0)
-	    w = wBox = imageDesc->PicWidth;
+	    w = wBox =  PixelValue (imageDesc->PicWidth, UnPixel, NULL, zoom);
 	  if (h == 0)
-	    h = hBox = imageDesc->PicHeight;
+	    h = hBox =  PixelValue (imageDesc->PicHeight, UnPixel, NULL, zoom);
 	  ClipAndBoxUpdate (pAb, box, w, h, top, bottom, left, right, frame);
 	}
     }

@@ -575,7 +575,7 @@ static void Print (char *name, char *dir, char *thotSch, char *thotDoc,
 		TtPrinterDC, TtIsTrueColor, 
 		TtWDepth, name, dir, hInstance, buttonCommand);
 
-   FreeLibrary (hLib);
+   /*FreeLibrary (hLib);*/
 
    EnableWindow (FrRef[frame], TRUE);
    SetFocus (FrRef[frame]);
