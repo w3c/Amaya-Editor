@@ -1074,7 +1074,6 @@ void UpdateEditorMenus (Document doc)
 #ifdef _SVG
 	  SwitchIconGraph (doc, 1, TRUE);
 	  SwitchIconLibrary (doc, 1, TRUE);
-	  SwitchIconAnim (doc, 1, TRUE);
 #ifdef _GL
 	  SwitchIconAnimPlay (doc, 1, TRUE);
 #endif /*_GL*/
@@ -1270,7 +1269,7 @@ void CheckParsingErrors (Document doc)
   if (ErrFile)
     {
       /* Active the menu entry */
-      TtaSetItemOn (doc, 1, Views, BShowLogFile);
+      TtaSetItemOn (doc, 1, File, BShowLogFile);
       if (XMLCharacterNotSupported || XMLInvalidToken)
 	{
 	  /* Invalid characters */
@@ -1365,7 +1364,7 @@ void CheckParsingErrors (Document doc)
       CleanUpParsingErrors ();
     }
   else
-      TtaSetItemOff (doc, 1, Views, BShowLogFile);
+      TtaSetItemOff (doc, 1, File, BShowLogFile);
 }
 
 
@@ -2140,7 +2139,7 @@ void UpdateDoctypeMenu (Document doc)
  
   docType = DocumentTypes[doc];
   if (docType != docText && docType != docCSS &&
-      docType != docSource && docType != docLog &&
+      docType != docSource && docType != docLog && docType != docBookmark &&
       TtaGetDocumentAccessMode (doc))
     {
       /* look for a MathML or SVG nature within the document */
@@ -2487,9 +2486,15 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 #ifndef _WX
        /* get the geometry of the main view */
        if (docType == docAnnot)
-	 tmp = "Annot_Formatted_view";
+	 {
+	   tmp = "Annot_Formatted_view";
+	   profile = L_Annot;
+	 }
        else if (docType == docBookmark)
-	 tmp = "Topics_Formatted_view";
+	 {
+	   tmp = "Topics_Formatted_view";
+	   profile = L_Bookmarks;
+	 }
        else if (sourceOfDoc && docType == docSource)
 	 tmp = "Source_view";
        else
@@ -2506,6 +2511,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	 {
 	   h = 300;
 	   w = 580;
+	   profile = L_MathML;
 	 }
        else if (method == CE_HELP )
 	 {
@@ -2514,7 +2520,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	   h = 500;
 	   w = 800;
 	 }
-       else if (docType == docLibrary)
+       else if (docType == docLibrary || docType == docBookmark)
 	 {
 	   x += 500;
 	   y += 200;
@@ -2581,7 +2587,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
        /* and update the menus according to it */
        TtaSetDocumentProfile (doc, profile);
        /* By default no log file */
-       TtaSetItemOff (doc, 1, Views, BShowLogFile);
+       TtaSetItemOff (doc, 1, File, BShowLogFile);
 #ifndef BOOKMARKS
        /* if bookmarks are not enabled, disable the menu */
        TtaSetMenuOff (doc, 1, Bookmarks_);
@@ -2594,7 +2600,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
        /* do we have to redraw buttons and menus? */
        reinitialized = (docType != DocumentTypes[doc]);
        if (docType == docSource || docType == docLog ||
-	   docType == docLibrary) /*  || docType == docBookmark) */
+	   docType == docLibrary || docType == docBookmark)
 	 {
 	   reinitialized = FALSE;
 	   TtaSetItemOff (doc, 1, File, BHtmlBasic);
@@ -2639,7 +2645,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	   if (docType == docBookmark)
 	     {
 	       /* make it be possible to bookmark a bookmark file */
-	       /* TtaSetItemOff (doc, 1, Bookmarks_, BBookmarkFile); */
+	        TtaSetItemOff (doc, 1, Bookmarks_, BBookmarkFile);
 	       /* TtaSetMenuOff (doc, 1, Edit_); */
 	     }
 	   else 
@@ -2674,7 +2680,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	     TtcSwitchCommands (doc, 1); /* no command open */
 	   isOpen = TRUE;
 	 }
-       else if (!isOpen)
+       else if (!isOpen && docType != docBookmark)
 	 {
 #ifdef _WX
 	   iBack = TtaAddToolBarButton( window_id,
@@ -2817,7 +2823,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 #ifdef _SVG
 	   AddGraphicsButton (doc, 1);
 	   AddLibraryButton (doc, 1);
-	   AddAnimButton (doc, 1);
 #ifdef _GL
 	   AddAnimPlayButton (doc, 1);
 #endif /*_GL*/
@@ -2832,6 +2837,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	       TtaSetItemOff (doc, 1, Views, BShowAlternate);
 	       TtaSetItemOff (doc, 1, Views, BShowToC);
 	       TtaSetItemOff (doc, 1, Views, BShowSource);
+	       TtaSetItemOff (doc, 1, Views, BShowTimeLine);
 #ifdef BOOKMARKS
 	       TtaSetMenuOff (doc, 1, Bookmarks_);
 #endif /* BOOKMARKS */
@@ -2953,6 +2959,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	   TtaSetItemOff (doc, 1, Views, BShowAlternate);
 	   TtaSetItemOff (doc, 1, Views, BShowLinks);
 	   TtaSetItemOff (doc, 1, Views, BShowToC);
+	   TtaSetItemOff (doc, 1, Views, BShowTimeLine);
 	   TtaSetMenuOff (doc, 1, Doctype1);
 	   TtaSetMenuOff (doc, 1, Types);
 	   TtaSetMenuOff (doc, 1, Links);
@@ -2973,7 +2980,6 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 #ifdef _SVG
 	   SwitchIconGraph (doc, 1, FALSE);
 	   SwitchIconLibrary (doc, 1, FALSE);
-	   SwitchIconAnim (doc, 1, FALSE);
 #endif /* _SVG */
 	 }
        else
@@ -2988,19 +2994,28 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	       TtaSetItemOn (doc, 1, Views, BShowToC);
 	       TtaSetItemOn (doc, 1, Types, BTitle);
 	       if (profile == L_Strict || profile == L_Basic)
-		 TtaSetMenuOff (doc, 1, XMLTypes);
+		 {
+		   TtaSetMenuOff (doc, 1, XMLTypes);
+		   TtaSetItemOff (doc, 1, Views, BShowTimeLine);
+		 }
+	       else
+		 TtaSetItemOn (doc, 1, Views, BShowTimeLine);
 	     }
 	   else
 	     {
 	       TtaSetItemOff (doc, 1, Views, TShowMapAreas);
+	       TtaSetItemOff (doc, 1, Views, BShowToC);
 	       if (DocumentTypes[doc] == docSVG)
 		 {
 		   TtaSetItemOn (doc, 1, Views, BShowAlternate);
 		   TtaSetItemOff (doc, 1, Types, BTitle);
+		   TtaSetItemOn (doc, 1, Views, BShowTimeLine);
 		 }
 	       else
-		 TtaSetItemOff (doc, 1, Views, BShowAlternate);
-	       TtaSetItemOff (doc, 1, Views, BShowToC);
+		 {
+		   TtaSetItemOff (doc, 1, Views, BShowAlternate);
+		   TtaSetItemOff (doc, 1, Views, BShowTimeLine);
+		 }
 	     }
 	 }
      }
@@ -3133,7 +3148,7 @@ void ReparseAs (Document doc, View view, ThotBool asHTML,
 	    TtaFreeMemory (DocumentURLs[i]);
 	    DocumentURLs[i] = NULL;
 	    /* switch off the button Show Log file */
-	    TtaSetItemOff (doc, 1, Views, BShowLogFile);
+	    TtaSetItemOff (doc, 1, File, BShowLogFile);
 	  }
       }
 
@@ -3324,7 +3339,7 @@ static Document LoadDocument (Document doc, char *pathname,
      else if (IsCSSName (pathname))
 	{
 	  docType = docCSS;
-	  docProfile = L_Other;
+	  docProfile = L_CSS;
 	  unknown = FALSE;
 	}
      else if (IsTextName (pathname))
@@ -3344,14 +3359,14 @@ static Document LoadDocument (Document doc, char *pathname,
      else if (IsMathMLName (pathname))
 	{
 	  docType = docMath;
-	  docProfile = L_Other;
+	  docProfile = L_MathML;
 	  isXML = TRUE;
 	  unknown = FALSE;
 	}
      else if (IsSVGName (pathname))
 	{
 	  docType = docSVG;
-	  docProfile = L_Other;
+	  docProfile = L_SVG;
 	  isXML = TRUE;
 	  unknown = FALSE;
 	}
@@ -3359,7 +3374,7 @@ static Document LoadDocument (Document doc, char *pathname,
       else if (IsXMLName (pathname))
 	{
 	  docType = docXml;
-	  docProfile = L_Other;
+	  docProfile = L_XML;
 	  isXML = TRUE;
 	  unknown = FALSE;
 	}
@@ -4980,7 +4995,7 @@ Document GetAmayaDoc (char *urlname, char *form_data,
                                    FALSE /* replaceOldDoc */,
                                    TRUE /* inNewWindow */,
 	                           documentname, (DocumentType)docAnnot, 0, FALSE,
-				   L_Other, (ClickEvent)method);
+				   L_Annot, (ClickEvent)method);
 	  /* we're downloading an annotation, fix the accept_header
 	     (thru the content_type variable) to application/rdf */
 	  content_type = "application/rdf";

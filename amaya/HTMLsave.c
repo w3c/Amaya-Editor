@@ -1241,7 +1241,7 @@ void RestartParser (Document doc, char *localFile,
 	  TtaFreeMemory (DocumentURLs[i]);
 	  DocumentURLs[i] = NULL;
 	  /* switch off the button Show Parsing errors file */
-	  TtaSetItemOff (doc, 1, Views, BShowLogFile);
+	  TtaSetItemOff (doc, 1, File, BShowLogFile);
 	}
 
   /* check if there is an XML declaration with a charset declaration */

@@ -57,6 +57,7 @@ extern ThotBool SimpleClickInLog ( NotifyElement *event );
 extern ThotBool DoubleClickInLog ( NotifyElement *event );
 extern ThotBool RightClickInLog ( NotifyElement *event );
 extern void SelectionChanged ( NotifyElement *event );
+extern ThotBool HTMLElementTypeInMenu ( NotifyElement *event );
 extern void SetCharFontOrPhrase ( int document,
                                   int elemtype );
 
@@ -113,6 +114,7 @@ extern ThotBool SimpleClickInLog ( NotifyElement *event );
 extern ThotBool DoubleClickInLog ( NotifyElement *event );
 extern ThotBool RightClickInLog ( NotifyElement *event );
 extern void SelectionChanged ( NotifyElement *event );
+extern ThotBool HTMLElementTypeInMenu ( NotifyElement *event );
 extern void SetCharFontOrPhrase ( int document,
                                     int elemtype );
 

@@ -32,25 +32,13 @@
 #include "AHTURLTools_f.h"
 #include "html2thot_f.h"
 #include "styleparser_f.h"
-
 #include "SVGedit_f.h"
 
 #ifdef _SVG
 #include "Timeline.h"
 
-#ifndef _WINGUI
-#include "xpm/anim.xpm"
-#include "xpm/animNo.xpm"
-#endif /* _WINGUI */
-
-static ThotIcon   iconAnim;
-static ThotIcon   iconAnimNo;
-static int      AnimButton;
-
 #ifdef _WINGUI
 #include "wininclude.h"
-#define iconAnim 27
-#define iconAnimNo 27
 #else
 #define min(A,B) ((A<B)?A:B)
 #define max(A,B) ((B>A)?B:A)
@@ -436,10 +424,6 @@ void InitSVGAnim ()
 #ifdef _SVG
   int k;
 
-#ifdef _GTK
-  iconAnim = TtaCreatePixmapLogo (Anim_xpm);
-  iconAnimNo = TtaCreatePixmapLogo (AnimNo_xpm);
-#endif /* _GTK */  
 #ifdef _GL
   TtaRegisterTimeEvent (&Set_slider_position_from_doc);
 #endif /* _GL */
@@ -2840,20 +2824,6 @@ static void Enlarge_timeline (Document basedoc, Document timelinedoc, int x)
 
 
 /*----------------------------------------------------------------------
-  SwitchIconAnim
-  ----------------------------------------------------------------------*/
-void SwitchIconAnim (Document doc, View view, ThotBool state)
-{
-#ifdef _SVG
-  if (state)
-    TtaChangeButton (doc, view, AnimButton, iconAnim, state);
-  else
-    TtaChangeButton (doc, view, AnimButton, iconAnimNo, state);
-#endif /* _SVG */
-}
-
-
-/*----------------------------------------------------------------------
   ShowTimeLineWindow
   displays the Timeline window of a document
   ----------------------------------------------------------------------*/
@@ -2876,21 +2846,6 @@ void ShowTimeLineWindow (Document document, View view)
     }
 #endif /* _SVG */
 }
-
-/*----------------------------------------------------------------------
-  AddAnimButton    
-  Add the Animation button on Amaya main toolbar
-  ----------------------------------------------------------------------*/
-void AddAnimButton (Document doc, View view)
-{
-#ifdef _SVG
-  AnimButton = TtaAddButton (doc, 1, iconAnim, 
-			     (Proc)ShowTimeLineWindow, "ShowTimeLineWindow",
-			     TtaGetMessage (AMAYA, AM_BUTTON_ANIM),
-			     TBSTYLE_BUTTON, TRUE);
-#endif /* _SVG */
-}
-
 
 /*----------------------------------------------------------------------
   ShowSource

@@ -14,13 +14,8 @@ extern void InitSVGAnim ( void );
 extern void Read_time_info ( Element el,
                              double* start,
                              double* duration );
-extern void SwitchIconAnim ( Document doc,
-                             View view,
-                             ThotBool state );
 extern void ShowTimeLineWindow ( Document document,
                                  View view );
-extern void AddAnimButton ( Document doc,
-                            View view );
 extern void ShowSourceOfTimeline ( Document document,
                                    View view );
 extern void Set_slider_position ( Document basedoc,
@@ -54,13 +49,8 @@ extern void InitSVGAnim ( void );
 extern void Read_time_info ( Element el,
                                double* start,
                                double* duration );
-extern void SwitchIconAnim ( Document doc,
-                               View view,
-                               ThotBool state );
 extern void ShowTimeLineWindow ( Document document,
                                    View view );
-extern void AddAnimButton ( Document doc,
-                              View view );
 extern void ShowSourceOfTimeline ( Document document,
                                      View view );
 extern void Set_slider_position ( Document basedoc,

@@ -19,6 +19,10 @@
 #define L_Transitional      0x08 /* accept all values except Ruby */
 #define L_MathML            0x10 /* accept only MathML values */
 #define L_SVG               0x20 /* accept only SVG values */
+#define L_Annot             0x40 /* accept only Annot values */
+#define L_Bookmarks         0x80 /* accept only Bookmarks values */
+#define L_XML               0x100 /* accept only XML values */
+#define L_CSS               0x200 /* accept only CSS values */
 
 /* Values for the profiles */
 #define L_BasicValue        0x0F /* allowed in all XHTML profiles */

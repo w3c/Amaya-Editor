@@ -6,38 +6,42 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void TtaShowElementMenu ( Document doc,
+                                 View view );
 extern void CallbackElemToBeCreated ( int ref,
-				      int val,
-				      char *txt );
-extern void BuildChoiceMenu ( char *bufMenu,
+                                      int val,
+                                      char *txt );
+extern void BuildChoiceMenu ( char *menuBuf,
                               char *menuTitle,
                               int nbEntries,
                               ThotBool natureChoice );
 extern void InsertSeparatorInMenu ( int *prevMenuInd,
                                     int *nbEntries,
                                     int *menuInd,
-                                    char *bufMenu );
+                                    char *menuBuf );
 extern void BuildPasteMenu ( int RefMenu,
-                             char *bufMenu,
+                             char *menuBuf,
                              Name title,
                              int nbEntries,
                              char button );
 
 #else /* __STDC__ */
 
+extern void TtaShowElementMenu ( Document doc,
+                                   View view );
 extern void CallbackElemToBeCreated ( int ref,
-				      int val,
-				      char *txt );
-extern void BuildChoiceMenu ( char *bufMenu,
+                                        int val,
+                                        char *txt );
+extern void BuildChoiceMenu ( char *menuBuf,
                                 char *menuTitle,
                                 int nbEntries,
                                 ThotBool natureChoice );
 extern void InsertSeparatorInMenu ( int *prevMenuInd,
                                       int *nbEntries,
                                       int *menuInd,
-                                      char *bufMenu );
+                                      char *menuBuf );
 extern void BuildPasteMenu ( int RefMenu,
-                               char *bufMenu,
+                               char *menuBuf,
                                Name title,
                                int nbEntries,
                                char button );

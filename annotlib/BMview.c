@@ -697,7 +697,7 @@ Document BM_NewDocument (Document requested_doc, int ref)
                             TRUE /* inNewWindow */,
 	                    (char *) ((ref == 0) ? "bookmarks.rdf" : ptr), 
 			    docBookmark, 0, FALSE, 
-			    L_Other, CE_ABSOLUTE);
+			    L_Bookmarks, CE_ABSOLUTE);
     }
 
 
@@ -723,6 +723,8 @@ Document BM_NewDocument (Document requested_doc, int ref)
       ptr = GetLocalBookmarksFile ();
       DocumentURLs[doc] = TtaStrdup (ptr);
       TtaSetTextZone (doc, 1, DocumentURLs[doc]);
+      /* update menu entries */
+      UpdateEditorMenus (doc);
       
       if (DocumentMeta[doc])
 	DocumentMetaClear (DocumentMeta[doc]);

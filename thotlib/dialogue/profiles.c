@@ -589,7 +589,7 @@ int Prof_BelongDoctype (char *name, int docProfile, ThotBool RO)
 	{
 	  /* check the profile value */
 	  if (FunctionMask[middle] == 0)
-	    /* not defind */
+	    /* not defined */
 	    return -1;
 	  else if (FunctionMask[middle] & docProfile)
 	    {
@@ -597,7 +597,7 @@ int Prof_BelongDoctype (char *name, int docProfile, ThotBool RO)
 		/* refused */
 		return 0;
 	      else
-		/* acceped */
+		/* accepted */
 		return 1;
 	    }
 	  else
@@ -648,6 +648,10 @@ void Prof_InitTable (char *prof_file)
 	    }
 	  else
 	    strcpy (UserProfile, "Editor");
+
+#ifdef _WX
+	  strcat (UserProfile, "_WX");
+#endif /* _WX */
 
 	  /* Fill a profile and module tables */
 	  while (fgets (ProfileBuff, sizeof (ProfileBuff), profFile))
@@ -708,7 +712,17 @@ void Prof_InitTable (char *prof_file)
 	      else if (strstr (DoctypeTable->ProEntries[j].ProName, "Ruby"))
 		FunctionMask[i] = (FunctionMask[i] | L_RubyValue);
 	      else if (strstr (DoctypeTable->ProEntries[j].ProName, "MathML"))
-		FunctionMask[i] = (FunctionMask[i] | L_MathMLValue);
+		FunctionMask[i] = (FunctionMask[i] | L_MathML);
+	      else if (strstr (DoctypeTable->ProEntries[j].ProName, "SVG"))
+		FunctionMask[i] = (FunctionMask[i] | L_SVG);
+	      else if (strstr (DoctypeTable->ProEntries[j].ProName, "Annot"))
+		FunctionMask[i] = (FunctionMask[i] | L_Annot);
+	      else if (strstr (DoctypeTable->ProEntries[j].ProName, "Bookmarks"))
+		FunctionMask[i] = (FunctionMask[i] | L_Bookmarks);
+	      else if (strstr (DoctypeTable->ProEntries[j].ProName, "XML"))
+		FunctionMask[i] = (FunctionMask[i] | L_XML);
+	      else if (strstr (DoctypeTable->ProEntries[j].ProName, "CSS"))
+		FunctionMask[i] = (FunctionMask[i] | L_CSS);
 	    }
 	}
     }

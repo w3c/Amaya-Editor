@@ -544,12 +544,12 @@ void UpdateStylePost (NotifyAttribute * event)
 	    /* the CSS parser detected an error */
 	    fclose (ErrFile);
 	    ErrFile = NULL;
-	    TtaSetItemOn (doc, 1, Views, BShowLogFile);
+	    TtaSetItemOn (doc, 1, File, BShowLogFile);
 	    CSSErrorsFound = FALSE;
 	    InitInfo ("", TtaGetMessage (AMAYA, AM_CSS_ERROR));
 	  }
 	else
-	  TtaSetItemOff (doc, 1, Views, BShowLogFile);
+	  TtaSetItemOff (doc, 1, File, BShowLogFile);
 	TtaFreeMemory (style);
      }
 }

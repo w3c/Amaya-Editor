@@ -1656,7 +1656,7 @@ void CloseLogs (Document doc)
 	TtaFreeMemory (DocumentURLs[i]);
 	DocumentURLs[i] = NULL;
 	/* switch off the button Show Log file */
-	TtaSetItemOff (doc, 1, Views, BShowLogFile);
+	TtaSetItemOff (doc, 1, File, BShowLogFile);
 	DocumentSource[i] = 0;
 	/* restore the default document type */
 	DocumentTypes[i] = docHTML;
@@ -1675,7 +1675,7 @@ void FreeDocumentResource (Document doc)
   if (doc == 0)
     return;
 
-  TtaSetItemOff (doc, 1, Views, BShowLogFile);
+  TtaSetItemOff (doc, 1, File, BShowLogFile);
   /* unmap the Save as form */
   TtaDestroyDialogue (BaseDialog + SaveForm);
   if (doc == ParsedDoc)
@@ -1737,7 +1737,7 @@ void FreeDocumentResource (Document doc)
 		    TtaFreeMemory (DocumentURLs[i]);
 		    DocumentURLs[i] = NULL;
 		    /* switch off the button Show Log file */
-		    TtaSetItemOff (doc, 1, Views, BShowLogFile);
+		    TtaSetItemOff (doc, 1, File, BShowLogFile);
 		  }
 	      }
 	  RemoveDocCSSs (doc);

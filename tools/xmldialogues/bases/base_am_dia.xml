@@ -662,6 +662,16 @@
 	<message xml:lang="tr">Japanese (Shift-JIS)</message>
 	<message xml:lang="de">Japanisch (Shift-JIS)</message>
 </label>
+<label define="BShowLogFile">
+	<message xml:lang="en">Show parsing &amp;errors</message>
+	<message xml:lang="fr">Montrer les &amp;erreurs</message>
+	<message xml:lang="de">Parserfehler anzeigen</message>
+	<message xml:lang="it">Mostra le errore</message>
+	<message xml:lang="es">Errores &amp;sintácticos</message>
+	<message xml:lang="pt">Exibir erros de gramática (parsing)</message>
+	<message xml:lang="fi">Näytä käännösvirheet</message>
+	<message xml:lang="tr">Pars hatalarını göster</message>
+</label>
 <label define="BDocInfo">
 	<message xml:lang="en">Document &amp;Information</message>
 	<message xml:lang="fr">Infor&amp;mations sur le document</message>
@@ -2401,15 +2411,14 @@
 	<message xml:lang="pt">Reduzir (Zoom out)</message>
 	<message xml:lang="fi">Loitonna</message>
 </label>
-<label define="BShowLogFile">
-	<message xml:lang="en">Show parsing &amp;errors</message>
-	<message xml:lang="fr">Montrer les &amp;erreurs</message>
-	<message xml:lang="de">Parserfehler anzeigen</message>
-	<message xml:lang="it">Mostra le errore</message>
-	<message xml:lang="es">Errores &amp;sintácticos</message>
-	<message xml:lang="pt">Exibir erros de gramática (parsing)</message>
-	<message xml:lang="fi">Näytä käännösvirheet</message>
-	<message xml:lang="tr">Pars hatalarını göster</message>
+<label define="BShowTimeLine">
+	<message xml:lang="en">Timeline</message>
+	<message xml:lang="fr">Ligne de temps</message>
+	<message xml:lang="de">Zeitliche Reihenfolge</message>
+	<message xml:lang="fi">Aikajana</message>
+	<message xml:lang="it">Timeline</message>
+	<message xml:lang="es">Planificación</message>
+	<message xml:lang="tr">Zaman sırası</message>
 </label>
 <label define="BShowStructure">
 	<message xml:lang="en">Show &amp;structure</message>

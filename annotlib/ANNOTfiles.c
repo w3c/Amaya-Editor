@@ -86,7 +86,7 @@ Document ANNOT_NewDocument (Document doc, AnnotMode mode)
   annotDoc = InitDocAndView (doc,
                              FALSE /* replaceOldDoc */,
                              TRUE /* inNewWindow */,
-                             tmp, docAnnot, 0, FALSE, L_OtherValue, CE_ABSOLUTE);
+                             tmp, docAnnot, 0, FALSE, L_Annot, CE_ABSOLUTE);
 
   if (annotDoc == 0) 
     {
@@ -103,6 +103,8 @@ Document ANNOT_NewDocument (Document doc, AnnotMode mode)
       DocumentMeta[annotDoc]->method = CE_ABSOLUTE;
       DocumentMeta[annotDoc]->xmlformat = TRUE;
       DocumentSource[annotDoc] = 0;
+      /* update menu entries */
+      UpdateEditorMenus (annotDoc);
       /* set the charset to be UTF-8 by default */
       TtaSetDocumentCharset (annotDoc, TtaGetCharset ("UTF-8"), FALSE);
       DocumentMeta[annotDoc]->charset = TtaStrdup ("UTF-8");

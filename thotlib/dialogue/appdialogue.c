@@ -654,27 +654,27 @@ void FreeMenus ()
   ----------------------------------------------------------------------*/
 void TteAddMenuAction (char *actionName, Proc procedure, ThotBool state)
 {
-   char               *ptr;
-   int                 lg;
-   int                 i;
+  char               *ptr;
+  int                 lg;
+  int                 i;
 
-   if ((actionName == NULL) || (!Prof_BelongTable(actionName))) 
-       return;			/* pas de nom d'action declare */
-
-   lg = strlen (actionName);
-   if (FreeMenuAction < MaxMenuAction && lg != 0)
-     {
-	/* Alloue une chaine de caractere pour le nom de l'action */
-	ptr = (char *)TtaGetMemory (lg + 1);
-	strcpy (ptr, actionName);
-	MenuActionList[FreeMenuAction].ActionName = ptr;
-	MenuActionList[FreeMenuAction].Call_Action = procedure;
-	MenuActionList[FreeMenuAction].ActionEquiv = NULL;
-	/* Cette nouvelle action n'est active pour aucune frame */
-	for (i = 0; i < MAX_FRAME; i++)
-	   MenuActionList[FreeMenuAction].ActionActive[i] = state;
-	FreeMenuAction++;
-     }
+  if (actionName == NULL || !Prof_BelongTable (actionName))
+    return;			/* pas de nom d'action declare */
+  
+  lg = strlen (actionName);
+  if (FreeMenuAction < MaxMenuAction && lg != 0)
+    {
+      /* Alloue une chaine de caractere pour le nom de l'action */
+      ptr = (char *)TtaGetMemory (lg + 1);
+      strcpy (ptr, actionName);
+      MenuActionList[FreeMenuAction].ActionName = ptr;
+      MenuActionList[FreeMenuAction].Call_Action = procedure;
+      MenuActionList[FreeMenuAction].ActionEquiv = NULL;
+      /* Cette nouvelle action n'est active pour aucune frame */
+      for (i = 0; i < MAX_FRAME; i++)
+	MenuActionList[FreeMenuAction].ActionActive[i] = state;
+      FreeMenuAction++;
+    }
 }
 
 
@@ -1017,7 +1017,7 @@ void TteAddMenuItem (WindowType windowtype, char *schemaName, int menuID,
  
 
   /* checks if the item is present in the user profile */
-  if (actionName == NULL || Prof_BelongTable(actionName))
+  if (actionName == NULL || Prof_BelongTable (actionName))
     { 
       /* ajoute l'item dans le menu */
       i = 0;

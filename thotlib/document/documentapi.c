@@ -74,7 +74,8 @@ int TtaGetDocumentProfile (Document document)
 
   UserErrorCode = 0;
   /* verifies the parameter document */
-  if (document < 1 || document > MAX_DOCUMENTS || LoadedDocument[document - 1] == NULL)
+  if (document < 1 || document > MAX_DOCUMENTS ||
+      LoadedDocument[document - 1] == NULL)
     {
       TtaError (ERR_invalid_document_parameter);
       return (UNDEFINED_CHARSET);

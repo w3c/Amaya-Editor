@@ -3293,13 +3293,13 @@
 	<message xml:lang="tr">çıkış bildirisi</message>
 </label>
 <label define="AM_BUTTON_ANIM">
-	<message xml:lang="en">Timeline</message>
-	<message xml:lang="fr">Ligne de temps</message>
-	<message xml:lang="de">Zeitliche Reihenfolge</message>
-	<message xml:lang="fi">Aikajana</message>
-	<message xml:lang="it">Timeline</message>
-	<message xml:lang="es">Planificación</message>
-	<message xml:lang="tr">Zaman sırası</message>
+	<message xml:lang="en">Animation</message>
+	<message xml:lang="fr">Animation</message>
+	<message xml:lang="de">Animation</message>
+	<message xml:lang="fi">Animaatio</message>
+	<message xml:lang="it">Animazione</message>
+	<message xml:lang="es">Animación</message>
+	<message xml:lang="tr">Hareket</message>
 </label>
 <label define="AM_BUTTON_SVG_LIBRARY">
 	<message xml:lang="en">SVG Library</message>

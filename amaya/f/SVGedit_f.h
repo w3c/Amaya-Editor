@@ -16,6 +16,7 @@ extern void AddGraphicsButton ( Document doc,
 extern void SwitchIconGraph ( Document doc,
                               View view,
                               ThotBool state );
+extern ThotBool SVGElementTypeInMenu ( NotifyElement *event );
 extern void SVGCreated ( NotifyElement * event );
 extern ThotBool SVGWillBeDeleted ( NotifyElement * event );
 extern void TspanCreated ( NotifyElement * event );
@@ -37,6 +38,7 @@ extern void AddGraphicsButton ( Document doc,
 extern void SwitchIconGraph ( Document doc,
                                 View view,
                                 ThotBool state );
+extern ThotBool SVGElementTypeInMenu ( NotifyElement *event );
 extern void SVGCreated ( NotifyElement * event );
 extern ThotBool SVGWillBeDeleted ( NotifyElement * event );
 extern void TspanCreated ( NotifyElement * event );
