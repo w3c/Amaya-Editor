@@ -33,7 +33,9 @@
 #include "appdialogue.h"
 #include "fileaccess.h"
 #include "document.h"
-
+#ifdef _WINDOWS
+#include "wininclude.h"
+#endif /* _WINDOWS */
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "platform_tv.h"

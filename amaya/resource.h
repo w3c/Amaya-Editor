@@ -718,6 +718,8 @@
 #define IDC_FGCOLOR                     1450
 #define IDC_BGCOLOR                     1451
 #define IDC_ALTTEXT                     1452
+#define IDC_FGCOLOR2                    1452
+#define IDC_BGCOLOR2                    1453
 #define IDC_CHANGCOLOR                  1454
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
@@ -753,9 +755,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        508
+#define _APS_NEXT_RESOURCE_VALUE        509
 #define _APS_NEXT_COMMAND_VALUE         40048
-#define _APS_NEXT_CONTROL_VALUE         1455
+#define _APS_NEXT_CONTROL_VALUE         1456
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

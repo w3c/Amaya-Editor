@@ -43,6 +43,9 @@
 #ifndef AMAYA_JAVA
 #include "query_f.h"
 #endif
+#include "fileaccess.h"
+#include "../thotlib/internals/f/inites_f.h"
+
 #ifdef _WINDOWS
 #include "resource.h"
 #include "wininclude.h"
@@ -66,7 +69,6 @@ static int CacheSize;
 static int MaxCacheFile;
 
 /* Proxy menu options */
-static boolean ColorMenuConf = FALSE;
 #ifdef _WINDOWS
 static HWND ProxyHwnd = NULL;
 #endif _WINDOWS
@@ -81,7 +83,6 @@ static CHAR_T TmpDir [MAX_LENGTH+1];
 static HWND GeneralHwnd = NULL;
 #endif _WINDOWS
 static int GeneralBase;
-static int ToolTipDelay;
 static int DoubleClickDelay;
 static int Zoom;
 static boolean Multikey;
@@ -138,6 +139,7 @@ static void WIN_RefreshPublishMenu (HWND hwnDlg);
 LRESULT CALLBACK WIN_GeometryDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK WIN_ColorDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshColorMenu (HWND hwnDlg);
+static boolean CreateDir (const STRING dirname);
 #else
 LRESULT CALLBACK WIN_GeneralDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshGeneralMenu (/* HWND hwnDlg */);
@@ -150,6 +152,7 @@ static void WIN_RefreshPublishMenu (/* HWND hwnDlg */);
 LRESULT CALLBACK WIN_GeometryDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK WIN_ColorDlgProc (HWND, UINT, WPARAM, LPARAM);
 static void WIN_RefreshColorMenu (/* HWND hwnDlg */);
+static boolean      CreateDir (const STRING dirname);
 #endif /* __STDC__ */
 #endif /* _WINDOWS */
 
@@ -157,6 +160,7 @@ static void WIN_RefreshColorMenu (/* HWND hwnDlg */);
 static void         GetEnvString (const STRING name, STRING value);
 static void         GetDefEnvToggle (const STRING name, boolean *value, int ref, int entry);
 static void         GetDefEnvString (const STRING name, STRING value);
+static boolean      NormalizeDirName (STRING dirname, const STRING end_path);
 #ifndef _WINDOWS
 static void         CacheCallbackDialog (int ref, int typedata, STRING data);
 static void         RefreshCacheMenu (void);
@@ -164,6 +168,7 @@ static void         RefreshCacheMenu (void);
 static void         GetCacheConf (void);
 static void         GetDefaultCacheConf (void);
 static void         SetCacheConf (void);
+static void         ValidateCacheConf (void);
 #ifndef _WINDOWS
 static void         ProxyCallbackDialog(int ref, int typedata, STRING data);
 static void         RefreshProxyMenu (void);
@@ -178,6 +183,7 @@ static void         RefreshGeneralMenu (void);
 static void         GetGeneralConf (void);
 static void         GetDefaultGeneralConf (void);
 static void         SetGeneralConf (void);
+static void         ValidateGeneralConf (void);
 #ifndef _WINDOWS
 static void	    PublishCallbackDialog(int ref, int typedata, STRING data);
 static void         RefreshPublishMenu (void);
@@ -197,10 +203,12 @@ static void         GeometryCallbackDialog(int ref, int typedata, STRING data);
 #endif /* !_WINDOWS */
 static void         RestoreDefaultGeometryConf (void);
 static void         SetGeometryConf (void);
-#else
+
+#else /* __STDC__ */
 static void         GetEnvString (/* const STRING name, STRING value */);
 static void         GetDefEnvToggle (/* const STRING name, boolean *value, int ref, int entry */);
 static void         GetDefEnvString (/* const STRING name, STRING value */);
+static boolean      NormalizeDirName (/* STRING dirname, const STRING end_path */);
 #ifndef _WINDOWS
 static void         CacheCallbackDialog (/* int ref, int typedata, STRING data */);
 static void         RefreshCacheMenu (/* void */);
@@ -208,6 +216,7 @@ static void         RefreshCacheMenu (/* void */);
 static void         GetCacheConf (/* void */);
 static void         GetDefaultCacheConf (/* void */);
 static void         SetCacheConf (/* void */);
+static void         ValidateCacheConf (/* void */);
 #ifndef _WINDOWS
 static void         ProxyCallbackDialog(/* int ref, int typedata, STRING data */);
 static void         RefreshProxyMenu (/* void */);
@@ -222,6 +231,7 @@ static void         RefreshGeneralMenu (/* void */);
 static void         GetGeneralConf (/* void */);
 static void         GetDefaultGeneralConf (/* void */);
 static void         SetGeneralConf (/* void */);
+static void         ValidateGeneralConf (/* void */);
 #ifndef _WINDOWS
 static void	    PublishCallbackDialog(/*int ref, int typedata, STRING data*/);
 static void         RefreshPublishMenu (/* void */);
@@ -258,13 +268,13 @@ void InitAmayaDefEnv (void)
 void InitAmayaDefEnv ()
 #endif /* __STDC__ */
 {
-  STRING s;
+  STRING ptr;
 
   /* browsing editing options */
-  s = TtaGetEnvString ("THOTDIR");
-  if (s != NULL)
+  ptr = TtaGetEnvString ("THOTDIR");
+  if (ptr != NULL)
     {
-      ustrcpy (HomePage, s);
+      ustrcpy (HomePage, ptr);
       ustrcat (HomePage, AMAYA_PAGE);
     }
   else
@@ -299,11 +309,17 @@ void InitAmayaDefEnv ()
   TtaSetDefEnvString ("MAX_CACHE_ENTRY_SIZE", "3", FALSE);
   TtaSetDefEnvString ("CACHE_SIZE", "10", FALSE);
   if (TempFileDirectory)
-    TtaSetDefEnvString ("CACHE_DIR", TempFileDirectory, FALSE);
+  {
+    sprintf (s, "%s%clibwww-cache%c", TempFileDirectory, DIR_SEP,DIR_SEP);
+    TtaSetDefEnvString ("CACHE_DIR", s, FALSE);
+	TtaSetDefEnvString ("ENABLE_CACHE", "yes", FALSE);
+  }
   else
+  {
     TtaSetDefEnvString ("CACHE_DIR", "", FALSE);
+	TtaSetDefEnvString ("ENABLE_CACHE", "yes", FALSE);
+  }
   TtaSetDefEnvString ("CACHE_PROTECTED_DOCS", "yes", FALSE);
-  TtaSetDefEnvString ("ENABLE_CACHE", "yes", FALSE);
   TtaSetDefEnvString ("CACHE_DISCONNECTED_MODE", "no", FALSE);
   TtaSetDefEnvString ("CACHE_EXPIRE_IGNORE", "no", FALSE);
   /* appearance */
@@ -404,6 +420,108 @@ STRING value;
     value[0] = EOS;
 }
 
+/*----------------------------------------------------------------------
+  NormalizeDirName
+  verifies if dirname finishes with end_path. If this is so, it returns FALSE
+  Otherwise, adds end_path to dirname and returns TRUE.
+  end_path should begin with a DIR_SEP char 
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static boolean NormalizeDirName (STRING dirname, const STRING end_path)
+#else
+static boolean NormalizeDirName (dirname, end_path)
+STRING dirname;
+const STRING end_path;
+#endif /* __STDC__ */
+{
+  boolean result = FALSE;
+  STRING ptr;
+
+  if (dirname[0] != EOS)
+    {
+	  /* if dirname has no end DIR_SEP, add it */
+	  if (dirname [strlen (dirname) -1] != DIR_SEP)
+	  {
+		  strcat (dirname, DIR_STR);
+		  result = TRUE;
+	  }
+      ptr = strstr (dirname, end_path);
+      if (ptr)
+	{
+	  if (ustrcasecmp (ptr, end_path))
+	    /* end_path missing, add it to the parent dir */
+	    {
+	      /* avoid adding two DIR_SEPS */
+	   	  ustrcat (dirname, &end_path[1]);
+	      result = TRUE;
+	    }
+	}
+      else
+	/* no DIR_SEP, so we add the end_path */
+	{
+	  ustrcat (dirname, &end_path[1]);
+	  result = TRUE;
+	}
+    }
+      else 
+	/* empty dirname! */
+	result = TRUE;
+  
+  return result;
+}
+
+#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  CreateDir
+  verifies if dirname finishes with end_path. If this is so, it returns FALSE
+  Otherwise, adds end_path to dirname and returns TRUE.
+  end_path should begin with a DIR_SEP char 
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static boolean CreateDir (const STRING dirname)
+#else
+static boolean CreateDir (dirname)
+STRING dirname;
+const STRING end_path;
+#endif /* __STDC__ */
+{
+ int i;
+#ifdef _WINDOWS
+       i = umkdir (dirname);
+#else /* _WINDOWS */
+       i = umkdir (dirname, S_IRWXU);
+#endif /* _WINDOWS */
+       if (i != 0 && errno != EEXIST)
+		   return FALSE;
+	   else
+		   return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  AmCopyFile
+  Copies a file from one dir to another dir. If the file doesn't exist,
+  doesn't do anything.  
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void AmCopyFile (const STRING source_dir, const STRING dest_dir, const STRING filename)
+#else
+static void AmCopyFile (source_dir, dest_dir, filename)
+const STRING source_dir;
+const STRING dest_dir;
+const STRING filename;
+#endif /* __STDC__ */
+{
+ CHAR_T source_file [MAX_LENGTH+1];
+ 
+ sprintf (source_file, "%s%c%s", source_dir, DIR_SEP, filename);
+ if (TtaFileExist (source_file))
+ {
+   sprintf (s, "%s%c%s", dest_dir, DIR_SEP, filename);
+   TtaFileCopy (source_file, s);
+ }
+}
+#endif /* _WINDOWS */
+
 /*********************
 ** Cache configuration menu
 ***********************/
@@ -427,7 +545,7 @@ LPARAM lParam;
   switch (msg)
     {
     case WM_INITDIALOG:
-	  CacheHwnd = hwnDlg;
+      CacheHwnd = hwnDlg;
       WIN_RefreshCacheMenu (hwnDlg);
       break;
       
@@ -446,7 +564,16 @@ LPARAM lParam;
 	    case IDC_CACHEDIRECTORY:
 	      GetDlgItemText (hwnDlg, IDC_CACHEDIRECTORY, CacheDirectory,
 			      sizeof (CacheDirectory) - 1);
+		  CacheStatus |= AMAYA_CACHE_RESTART;
 	      break;
+		case IDC_CACHESIZE:
+	      CacheSize = GetDlgItemInt (hwnDlg, IDC_CACHESIZE, FALSE, FALSE);
+		  CacheStatus |= AMAYA_CACHE_RESTART;
+	      break;
+		case IDC_MAXCACHEFILE:
+          MaxCacheFile = GetDlgItemInt (hwnDlg, IDC_MAXCACHEFILE, FALSE, FALSE);
+		  CacheStatus |= AMAYA_CACHE_RESTART;
+          break;			
 	    }
 	}
       switch (LOWORD (wParam))
@@ -470,6 +597,7 @@ LPARAM lParam;
 
 	  /* action buttons */
 	case ID_APPLY:
+	  ValidateCacheConf ();
 	  SetCacheConf ();
 	  libwww_updateNetworkConf (CacheStatus);
 	  CacheStatus = 0;
@@ -531,6 +659,7 @@ STRING              data;
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 1:
+	      ValidateCacheConf ();
 	      SetCacheConf ();
 #ifdef AMAYA_JAVA
 #else      
@@ -626,6 +755,59 @@ static void GetCacheConf ()
   GetEnvString ("CACHE_DIR", CacheDirectory);
   TtaGetEnvInt ("CACHE_SIZE", &CacheSize);
   TtaGetEnvInt ("MAX_CACHE_ENTRY_SIZE", &MaxCacheFile);
+}
+
+/*----------------------------------------------------------------------
+  ValidateCacheConf
+  Validates the entries in the Cache nonf menu. If there's an invalid
+  entry, we then use the default value. We need this because
+  the Windows interface isn't rich enough to do it (e.g., negative numbers
+  in the integer entries)
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void ValidateCacheConf (void)
+#else
+static void ValidateCacheConf ()
+#endif /* __STDC__ */
+{
+ boolean change;
+
+#ifdef _WINDOWS
+ /* validate the cache size */
+ change = TRUE;
+ if (CacheSize < 1)
+   CacheSize =1;
+ else if (CacheSize > 100)
+   CacheSize = 100;
+ else
+   change = FALSE;
+ if (change)
+   SetDlgItemInt (CacheHwnd, IDC_CACHESIZE, CacheSize, FALSE);
+ 
+ /* validate the cache entry size */
+ change = TRUE;
+ if (MaxCacheFile < 1)
+   MaxCacheFile = 1;
+ else if (MaxCacheFile > 5)
+   MaxCacheFile = 5;
+ else
+   change = FALSE;
+ if (change)
+   SetDlgItemInt (CacheHwnd, IDC_MAXCACHEFILE, MaxCacheFile, FALSE);
+#endif /* _WINDOWS */
+
+ /* validate the cache dir */
+ /* what we do is add a DIR_STRlibwww-cacheDIR_STR */
+ if (CacheDirectory[0] != EOS)
+   /* n.b., this variable may be empty */
+   change = NormalizeDirName (CacheDirectory, DIR_STR"libwww-cache"DIR_STR);
+
+  if (change)
+#ifdef _WINDOWS
+    SetDlgItemText (CacheHwnd, IDC_CACHEDIRECTORY, CacheDirectory);
+#else
+    TtaSetTextForm (CacheBase + mCacheDirectory, CacheDirectory);
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -769,19 +951,19 @@ View                view;
    TtaNewTextForm (CacheBase + mCacheDirectory,
 		   CacheBase + CacheMenu,
 		   TtaGetMessage (AMAYA, AM_CACHE_DIR),
-		   20,
+		   40,
 		   1,
 		   TRUE);
    TtaNewNumberForm (CacheBase + mCacheSize,
 		     CacheBase + CacheMenu,
 		     TtaGetMessage (AMAYA, AM_CACHE_SIZE),
-		     0,
+		     1,
 		     100,
 		     TRUE);
    TtaNewNumberForm (CacheBase + mMaxCacheFile,
 		     CacheBase + CacheMenu,
 		     TtaGetMessage (AMAYA, AM_CACHE_ENTRY_SIZE),
-		     0,
+		     1,
 		     5,
 		     TRUE);
 #endif /* !_WINDOWS */
@@ -798,23 +980,23 @@ View                view;
   if (!CacheHwnd)
     /* only activate the menu if it isn't active already */
     {
-	  	   switch (app_lang)
-	   { 
-	   case FR_LANG:
-           DialogBox (hInstance, MAKEINTRESOURCE (FR_CACHEMENU), NULL, 
-		  (DLGPROC) WIN_CacheDlgProc);
-	       break;
-	   case DE_LANG:
-		   DialogBox (hInstance, MAKEINTRESOURCE (DE_CACHEMENU), NULL, 
-		  (DLGPROC) WIN_CacheDlgProc);
-	       break;
-	   default:
-		   DialogBox (hInstance, MAKEINTRESOURCE (EN_CACHEMENU), NULL, 
-		  (DLGPROC) WIN_CacheDlgProc);
-		}
-  }
+      switch (app_lang)
+	{ 
+	case FR_LANG:
+	  DialogBox (hInstance, MAKEINTRESOURCE (FR_CACHEMENU), NULL, 
+		     (DLGPROC) WIN_CacheDlgProc);
+	  break;
+	case DE_LANG:
+	  DialogBox (hInstance, MAKEINTRESOURCE (DE_CACHEMENU), NULL, 
+		     (DLGPROC) WIN_CacheDlgProc);
+	  break;
+	default:
+	  DialogBox (hInstance, MAKEINTRESOURCE (EN_CACHEMENU), NULL, 
+		     (DLGPROC) WIN_CacheDlgProc);
+	}
+    }
   else
-     SetFocus (CacheHwnd);
+    SetFocus (CacheHwnd);
 #endif /* !_WINDOWS */
 }
 
@@ -841,7 +1023,7 @@ LPARAM lParam;
   switch (msg)
     {
     case WM_INITDIALOG:
-	  ProxyHwnd = hwnDlg;
+      ProxyHwnd = hwnDlg;
       WIN_RefreshProxyMenu (hwnDlg);
       break;
       
@@ -1152,7 +1334,7 @@ LPARAM lParam;
   switch (msg)
     {
     case WM_INITDIALOG:
-	  GeneralHwnd = hwnDlg;
+      GeneralHwnd = hwnDlg;
       WIN_RefreshGeneralMenu (hwnDlg);
       break;
    
@@ -1172,14 +1354,14 @@ LPARAM lParam;
 	      GetDlgItemText (hwnDlg, IDC_HOMEPAGE, HomePage, 
 			      sizeof (HomePage) - 1);
 	      break;
-        case IDC_APPHOME:
-		  GetDlgItemText (hwnDlg, IDC_APPHOME, AppHome,
-			       sizeof (AppHome) - 1);
-		  break;
-        case IDC_TMPDIR:
-		  GetDlgItemText (hwnDlg, IDC_TMPDIR, TmpDir,
-			       sizeof (TmpDir) - 1);
-		  break;
+	    case IDC_APPHOME:
+	      GetDlgItemText (hwnDlg, IDC_APPHOME, AppHome,
+			      sizeof (AppHome) - 1);
+	      break;
+	    case IDC_TMPDIR:
+	      GetDlgItemText (hwnDlg, IDC_TMPDIR, TmpDir,
+			      sizeof (TmpDir) - 1);
+	      break;
 	    case IDC_DIALOGUELANG:
 	      GetDlgItemText (hwnDlg, IDC_DIALOGUELANG, DialogueLang,
 			      sizeof (DialogueLang) - 1);
@@ -1203,6 +1385,7 @@ LPARAM lParam;
 
 	  /* action buttons */
 	case ID_APPLY:
+	  ValidateGeneralConf ();
 	  SetGeneralConf ();	  
 	  break;
 	case ID_DONE:
@@ -1255,6 +1438,7 @@ STRING              data;
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 1:
+	      ValidateGeneralConf ();
 	      SetGeneralConf ();
 	      break;
 	    case 2:
@@ -1264,10 +1448,6 @@ STRING              data;
 	    default:
 	      break;
 	    }
-	  break;
-
-	case mToolTipDelay:
-	  ToolTipDelay = val;
 	  break;
 
 	case mDoubleClickDelay:
@@ -1328,7 +1508,6 @@ static void GetGeneralConf (void)
 static void GetGeneralConf ()
 #endif /* __STDC__ */
 {
-  TtaGetEnvInt ("TOOLTIPDELAY", &ToolTipDelay);
   TtaGetEnvInt ("DOUBLECLICKDELAY", &DoubleClickDelay);
   TtaGetEnvInt ("ZOOM", &Zoom);
   TtaGetEnvBoolean ("ENABLE_MULTIKEY", &Multikey);
@@ -1344,6 +1523,119 @@ static void GetGeneralConf ()
 }
 
 /*----------------------------------------------------------------------
+  ValidateGeneralConf
+  Validates the entries in the General conf menu. If there's an invalid
+  entry, we then use the default value. We need this because
+  the Windows interface isn't rich enough to do it (e.g., negative numbers
+  in the integer entries)
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void ValidateGeneralConf (void)
+#else
+static void ValidateGeneralConf ()
+#endif /* __STDC__ */
+{
+  boolean change;
+  CHAR_T lang[3];
+  STRING ptr;
+#ifdef _WINDOWS
+  CHAR_T old_AppHome [MAX_LENGTH+1];
+  int i;
+
+  /* normalize and validate the zoom factor */
+  change = TRUE;
+  if (Zoom > 10)
+    Zoom = 10;
+  else if (Zoom < -10)
+    Zoom = -10;
+  else 
+    change = FALSE;
+  SetDlgItemInt (GeneralHwnd, IDC_ZOOM, Zoom, TRUE);
+
+  /* validate the tmp dir */
+  if (!TtaCheckDirectory (TmpDir) && !CreateDir (TmpDir)) 
+    {
+      /* try to create the directory. If it doesn't work, then
+	 restore the default value */
+      GetDefEnvString ("TMPDIR", TmpDir);
+      if (!CreateDir (TmpDir))
+	{
+	  sprintf (s, "Error creating directory %s", TmpDir);
+	  MessageBox (GeneralHwnd, s, "MenuConf:VerifyGeneralConf", MB_OK);
+	  exit (1);
+	}
+      SetDlgItemText (GeneralHwnd, IDC_TMPDIR, TmpDir);
+    }
+
+  /* normalize and validate the user's preferences dir */
+  /* what we do is add a \\amaya if it's missing */
+  GetEnvString ("APP_HOME", old_AppHome);
+  if (AppHome[0] == EOS)
+    /* empty variable, we restore the last known value */
+    {
+      GetEnvString ("APP_HOME", AppHome);
+      change = TRUE;
+    }
+  else
+    change = NormalizeDirName (AppHome, DIR_STR"amaya"DIR_STR);
+  
+  /* try to create the APP_HOME dir */
+  if (!TtaCheckDirectory (AppHome) && !CreateDir (AppHome))
+    {
+      GetDefEnvString ("APP_HOME", AppHome);
+      change = TRUE;
+      
+      if (!CreateDir (AppHome))
+	{
+	  sprintf (s, "Error creating directory %s", AppHome);
+	  MessageBox (GeneralHwnd, s, "MenuConf:VerifyGeneralConf", MB_OK);
+	  exit (1);
+	}
+    } 
+  
+  /* create the temporary subdirectories that go inside APP_HOME */
+  for (i = 0; i < DocumentTableLength; i++)
+    {
+      sprintf (s, "%s%c%d", AppHome, DIR_SEP, i);
+      CreateDir (s);
+    }
+  /* move the amaya.css, amaya.kbd and whatever else we find to this
+     new directory! */
+  if (ustrcasecmp (old_AppHome, AppHome))
+    {
+      AmCopyFile (old_AppHome, AppHome, "amaya.css");
+      AmCopyFile (old_AppHome, AppHome, "amaya.kbd");
+      /* add here other files that you'd like to copy */
+    }
+  if (change)
+    SetDlgItemText (GeneralHwnd, IDC_APPHOME, AppHome);
+#endif /* _WINDOWS */
+  
+  /* validate the dialogue language */
+  change = FALSE;
+  ptr = TtaGetEnvString ("THOTDIR");
+  if (ustrcmp (DialogueLang, "en-us"))
+    {
+      change = TRUE;
+      DialogueLang[2] = EOS;
+    }
+  ustrncpy (lang, DialogueLang, 2);
+  lang[2] = EOS;
+  sprintf (s, "%s%cconfig%c%s-amayamsg", ptr, DIR_SEP, DIR_SEP, lang);
+  if (!TtaFileExist (s))
+  {
+    GetDefEnvString ("LANG", DialogueLang);
+    change = TRUE;
+  }
+  if (change)
+#ifdef _WINDOWS
+    SetDlgItemText (GeneralHwnd, IDC_DIALOGUELANG, DialogueLang);
+#else
+  TtaSetTextForm (GeneralBase + mDialogueLang, DialogueLang);
+#endif /* WINDOWS */
+}
+
+/*----------------------------------------------------------------------
   SetGeneralConf
   Updates the registry General values and calls the General functions
   to take into account the changes
@@ -1356,7 +1648,6 @@ static void SetGeneralConf ()
 {
   int oldZoom;
 
-  TtaSetEnvInt ("TOOLTIPDELAY", ToolTipDelay, TRUE);
   TtaSetEnvInt ("DOUBLECLICKDELAY", DoubleClickDelay, TRUE);
   TtaGetEnvInt ("ZOOM", &oldZoom);
   if (oldZoom != Zoom)
@@ -1378,6 +1669,8 @@ static void SetGeneralConf ()
 #ifdef _WINDOWS
   TtaSetEnvString ("TMPDIR", TmpDir, TRUE);
   TtaSetEnvString ("APP_HOME", AppHome, TRUE);
+  ustrcpy (TempFileDirectory, AppHome);
+  TtaAppendDocumentPath (TempFileDirectory);
 #endif /* _WINDOWS */
 
   TtaSaveAppRegistry ();
@@ -1393,7 +1686,6 @@ static void GetDefaultGeneralConf ()
 static void GetDefaultGeneralConf ()
 #endif /*__STDC__*/
 {
-  TtaGetDefEnvInt ("TOOLTIPDELAY", &ToolTipDelay);
   TtaGetDefEnvInt ("DOUBLECLICKDELAY", &DoubleClickDelay);
   TtaGetDefEnvInt ("ZOOM", &Zoom);
   GetDefEnvToggle ("ENABLE_MULTIKEY", &Multikey, 
@@ -1432,7 +1724,7 @@ HWND hwnDlg;
   CheckDlgButton (hwnDlg, IDC_DOUBLECLICK, (DoubleClick) 
 		  ? BST_CHECKED : BST_UNCHECKED);
   SetDlgItemText (hwnDlg, IDC_DIALOGUELANG, DialogueLang);
-  SetDlgItemInt (hwnDlg, IDC_ZOOM, Zoom, FALSE);
+  SetDlgItemInt (hwnDlg, IDC_ZOOM, Zoom, TRUE);
   SetDlgItemText (hwnDlg, IDC_TMPDIR, TmpDir);
   SetDlgItemText (hwnDlg, IDC_APPHOME, AppHome);
 }
@@ -1449,7 +1741,6 @@ static void RefreshGeneralMenu ()
 static void RefreshGeneralMenu ()
 #endif /* __STDC__ */
 {
-  TtaSetNumberForm (GeneralBase + mToolTipDelay, ToolTipDelay);
   TtaSetNumberForm (GeneralBase + mDoubleClickDelay, DoubleClickDelay);
   TtaSetNumberForm (GeneralBase + mZoom, Zoom);
   TtaSetToggleMenu (GeneralBase + mToggleGeneral, 0, Multikey);
@@ -1498,18 +1789,13 @@ STRING              pathname;
 		   FALSE);
    TtaNewLabel (GeneralBase + mGeneralEmpty1, GeneralBase + GeneralMenu, " ");
    /* second line */
-   TtaNewNumberForm (GeneralBase + mToolTipDelay,
-		     GeneralBase + GeneralMenu,
-		     TtaGetMessage (AMAYA, AM_TOOLTIP_DELAY),
-		     0,
-		     65000,
-		     FALSE);   
    TtaNewNumberForm (GeneralBase + mDoubleClickDelay,
 		     GeneralBase + GeneralMenu,
 		     TtaGetMessage (AMAYA, AM_DOUBLECLICK_DELAY),
 		     0,
 		     65000,
 		     FALSE);   
+   TtaNewLabel (GeneralBase + mGeneralEmpty4, GeneralBase + GeneralMenu, " ");
    /* third line */
    TtaNewNumberForm (GeneralBase + mFontMenuSize,
 		     GeneralBase + GeneralMenu,
@@ -1602,7 +1888,7 @@ LPARAM lParam;
   switch (msg)
     {
     case WM_INITDIALOG:
-	  PublishHwnd = hwnDlg;
+      PublishHwnd = hwnDlg;
       WIN_RefreshPublishMenu (hwnDlg);
       break;
 
@@ -1912,12 +2198,12 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
+ int fgcolor, bgcolor;
   switch (msg)
     {
     case WM_INITDIALOG:
       ColorHwnd = hwnDlg;
       WIN_RefreshColorMenu (hwnDlg);
-      ColorMenuConf = TRUE;
       break;
 
     case WM_CLOSE:
@@ -1930,12 +2216,16 @@ LPARAM lParam;
     case WM_COMMAND:
       switch (LOWORD (wParam))
 	{
-	  
 	  /* action buttons */
-    case IDC_CHANGCOLOR:
-         ThotCreatePalette (200, 200);
-         break;
-
+	case IDC_CHANGCOLOR:
+	  TtcGetPaletteColors (&fgcolor, &bgcolor);
+	  if (fgcolor != -1)
+	    ustrcpy (FgColor, ColorName (fgcolor));
+	  if (bgcolor != -1)
+	    ustrcpy (BgColor, ColorName (bgcolor));
+	  WIN_RefreshColorMenu (ColorHwnd);
+	  SetFocus (ColorHwnd);
+	  break;
 	case ID_APPLY:
 	  SetColorConf ();	  
 	  /* reset the status flag */
@@ -2061,7 +2351,7 @@ STRING              pathname;
    TtaNewSheet (ColorBase + ColorMenu, 
 		TtaGetViewFrame (document, view),
 		TtaGetMessage (AMAYA, AM_COLOR_MENU),
-		2, s, TRUE, 2, 'L', D_DONE);
+		2, s, TRUE, 1, 'L', D_DONE);
    /* first line */
    TtaNewTextForm (ColorBase + mFgColor,
 		   ColorBase + ColorMenu,
@@ -2087,7 +2377,9 @@ STRING              pathname;
 		   TtaGetMessage (AMAYA, AM_MENU_BG_COLOR),
 		   20,
 		   1,
-		   FALSE);  
+		   FALSE);
+  TtaNewLabel (ColorBase + mColorEmpty1, ColorBase + ColorMenu,
+	       TtaGetMessage (AMAYA, AM_GEOMETRY_CHANGE));     
 #endif /* !_WINDOWS */
  
    /* load and display the current values */
@@ -2101,22 +2393,22 @@ STRING              pathname;
    if (!ColorHwnd)
     /* only activate the menu if it isn't active already */
     {
-	  switch (app_lang)
-	   {
-	   case FR_LANG:
-           DialogBox (hInstance, MAKEINTRESOURCE (FR_COLORMENU), NULL, 
-		  (DLGPROC) WIN_ColorDlgProc);
-	       break;
-	   case DE_LANG:
-		   DialogBox (hInstance, MAKEINTRESOURCE (DE_COLORMENU), NULL, 
-		  (DLGPROC) WIN_ColorDlgProc);
-	       break;
-	   default:
-		   DialogBox (hInstance, MAKEINTRESOURCE (EN_COLORMENU), NULL, 
-		  (DLGPROC) WIN_ColorDlgProc);
-		}
-  }
-  else
+      switch (app_lang)
+	{
+	case FR_LANG:
+	  DialogBox (hInstance, MAKEINTRESOURCE (FR_COLORMENU), NULL, 
+		     (DLGPROC) WIN_ColorDlgProc);
+	  break;
+	case DE_LANG:
+	  DialogBox (hInstance, MAKEINTRESOURCE (DE_COLORMENU), NULL, 
+		     (DLGPROC) WIN_ColorDlgProc);
+	  break;
+	default:
+	  DialogBox (hInstance, MAKEINTRESOURCE (EN_COLORMENU), NULL, 
+		     (DLGPROC) WIN_ColorDlgProc);
+	}
+    }
+   else
      SetFocus (ColorHwnd);
 #endif /* !_WINDOWS */
 }
@@ -2518,12 +2810,3 @@ static void SetGeometryConf ()
   /* save the options */
   TtaSaveAppRegistry ();
 }
-
-
-
-
-
-
-
-
-

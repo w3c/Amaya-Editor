@@ -19,12 +19,13 @@
 /* defines to include elsewhere
 *********************************/
 
-#ifndef _WINDOWS
+#ifdef _WINDOWS
+#include <string.h>
 #endif /* !_WINDOWS */
 #define AMAYA_WWW_CACHE
 #define AMAYA_LOST_UPDATE
 
-#define CACHE_DIR_NAME DIR_STR"libwww-cache"
+#define CACHE_DIR_NAME DIR_STR"libwww-cache"DIR_STR
 #define DEFAULT_CACHE_SIZE 10
 #define DEFAULT_MAX_CACHE_ENTRY_SIZE 3
 #define DEFAULT_MAX_SOCKET 32
@@ -131,7 +132,7 @@ char *filename;
 #endif /* __STDC__ */
 {
 #ifdef _WINDOWS
-  return 0;
+  return ((TtaFileExist (filename)) ? 0 : -1);
 #else
   int status;
   struct flock lock;
@@ -154,7 +155,6 @@ char *filename;
 	close (fd_cachelock);
       fd_cachelock = 0;
     }
-  
   return (status);
 #endif /* _WINDOWS */
 }
@@ -199,15 +199,11 @@ char *filename;
 #endif __STDC__
 {
 #ifdef _WINDOWS
- int fd;
-  fd = _open (filename, _O_WRONLY | _O_BINARY);
-  if (fd != -1)
-    {
-      _close (fd);
-      return 0;
-    }
-  else
+  /* if the lock is set, we can't unlink the file under Windows */
+  if (unlink (filename))
     return -1;
+  else
+    return 0;
 #else
   struct flock lock;
   int fd, status;
@@ -1250,8 +1246,6 @@ HTList             *c;
 			HTThroughLine, 1.0, 0.0, 0.0);
       HTConversion_add (c, "image/xpm",  "www/present", 
 			HTThroughLine, 1.0, 0.0, 0.0);
-      HTConversion_add (c, "application/postscript",  
-			"www/present", HTThroughLine, 1.0, 0.0, 0.0);
 
    /* Define here the equivalences between MIME types and file extensions for
     the types that Amaya can display */
@@ -1466,11 +1460,15 @@ View view;
 #endif /* __STDC__ */
 {
 #ifdef AMAYA_WWW_CACHE
-  char *strptr;
+  char *real_dir;
   char *cache_dir;
+  char *strptr;
   int cache_size;
   int cache_expire;
   int cache_disconnect;
+  int i;
+  boolean error;
+  STRING ptr;
 
   if (!HTCacheMode_enabled ())
     /* don't do anything if we're not using a cache */
@@ -1481,25 +1479,60 @@ View view;
   cache_expire = HTCacheMode_expires ();
   cache_disconnect = HTCacheMode_disconnected ();
 
+  /* get something we can work on :) */
+  real_dir = TtaGetMemory (strlen (cache_dir) + 20);
+#ifdef _WINDOWS
+  if (!_strnicmp (cache_dir, "file:", 5))
+#else
+    if (!strncasecmp (cache_dir, "file:", 5))
+#endif /* _WINDOWS */
+      {
+	strptr = strchr (cache_dir, ':');
+	strptr++;
+	strptr++;
+      }
+
+  /* convert libwww's internal's cache dir name to one
+     corresponding to the filesystem */
+  i = 0;
+  while (cache_dir[i])
+    {
+      if (cache_dir[i] == '/')
+	real_dir[i] = DIR_SEP;
+      else
+	real_dir[i] = cache_dir[i];
+      i++;
+    }
+
+  /* safeguard... abort the operation if cache_dir doesn't end with
+     CACHE_DIR_NAME */
+  error = TRUE;
+  ptr = strrchr (real_dir, DIR_SEP);  
+#ifdef _WINDOWS
+  if (ptr && *ptr && !_stricmp (ptr, CACHE_DIR_NAME))
+#else
+    if (ptr && *ptr && !strcasecmp (ptr, CACHE_DIR_NAME))
+#endif /* _WINDOWS */
+      error = FALSE;
+  if (error)
+    return;  
+  
   /* remove the concurrent cache lock */
 #ifdef DEBUG_LIBWWW
   fprintf (stderr, "Clearing the cache lock\n");
 #endif /* DEBUG_LIBWWW */
   clear_cachelock ();
   HTCacheTerminate ();
-  HTCacheMode_setEnabled (NO);
-  strptr = TtaGetMemory (strlen (cache_dir) + 20);
-  strcpy (strptr, cache_dir);
-  strcat (strptr, DIR_STR);
-
-  RecCleanCache (strptr);
+  HTCacheMode_setEnabled (FALSE);
+  
+  RecCleanCache (real_dir);
 
   HTCacheMode_setExpires (cache_expire);
   HTCacheMode_setDisconnected (cache_disconnect);
   HTCacheInit (cache_dir, cache_size);
   /* set a new concurrent cache lock */
-  strcat (strptr, ".lock");
-  if (set_cachelock (strptr) == -1)
+  strcat (real_dir, ".lock");
+  if (set_cachelock (real_dir) == -1)
     /* couldn't open the .lock file, so, we close the cache to
        be in the safe side */
     {
@@ -1507,12 +1540,12 @@ View view;
       fprintf (stderr, "couldnt set the cache lock\n");
 #endif /* DEBUG_LIBWWW */
       HTCacheTerminate ();
-      HTCacheMode_setEnabled (NO);
+      HTCacheMode_setEnabled (FALSE);
     }
 #ifdef DEBUG_LIBWWW
   fprintf (stderr, "set a cache lock\n");
 #endif /* DEBUG_LIBWWW */
-  TtaFreeMemory (strptr);
+  TtaFreeMemory (real_dir);
   TtaFreeMemory (cache_dir);
 #endif /* AMAYA_WWW_CACHE */
 }
@@ -1658,12 +1691,15 @@ static void Cacheinit ()
 #else /* AMAYA_WWW_CACHE */
   char *strptr;
   char *cache_dir = NULL;
+  char *real_dir = NULL;
   char *cache_lockfile;
   int cache_size;
   int cache_entry_size;
   boolean cache_enabled;
   boolean cache_locked;
   boolean tmp_bool;
+
+int i;
 
   /* activate cache? */
   strptr = (char *) TtaGetEnvString ("ENABLE_CACHE");
@@ -1683,21 +1719,40 @@ static void Cacheinit ()
   strptr = (char *) TtaGetEnvString ("CACHE_DIR");
   if (strptr && *strptr) 
     {
-      cache_dir = TtaGetMemory (strlen (strptr) + strlen (CACHE_DIR_NAME) + 1);
-      strcpy (cache_dir, strptr);
+      real_dir = TtaGetMemory (strlen (strptr) + strlen (CACHE_DIR_NAME) + 20);
+      strcpy (real_dir, strptr);
+	  if (*(real_dir + strlen (real_dir) - 1) != DIR_SEP)
+	    strcat (real_dir, DIR_STR);
     }
   else
     {
-      cache_dir = TtaGetMemory (strlen (TempFileDirectory) 
-				+ strlen (CACHE_DIR_NAME) + 1);
-      strcpy (cache_dir, TempFileDirectory);
+      real_dir = TtaGetMemory (strlen (TempFileDirectory)
+                               + strlen (CACHE_DIR_NAME) + 20);
+      sprintf (real_dir, "%s%c%s", TempFileDirectory, DIR_SEP, CACHE_DIR_NAME);
     }
-  strcat (cache_dir, CACHE_DIR_NAME);
+
+  /* compatiblity with previous versions of Amaya: does real_dir
+     include CACHE_DIR_NAME? If not, add it */
+  strptr = strstr (real_dir, CACHE_DIR_NAME);
+  if (!strptr)
+  {
+    strcat (real_dir, CACHE_DIR_NAME);
+  }
+  else
+    {
+      i = strlen (CACHE_DIR_NAME);
+	  if (strptr[i] != EOS)
+          strcat (real_dir, CACHE_DIR_NAME);
+    }
+
+ 
+  cache_dir = TtaGetMemory (strlen (real_dir) + 10);
+  strcpy (cache_dir, real_dir);
 
   /* get the cache size (or use a default one) */
-    strptr = (char *) TtaGetEnvString ("CACHE_SIZE");
+  strptr = (char *) TtaGetEnvString ("CACHE_SIZE");
   if (strptr && *strptr) 
-      cache_size = atoi (strptr);
+    cache_size = atoi (strptr);
   else
     cache_size = DEFAULT_CACHE_SIZE;
 
@@ -1708,8 +1763,8 @@ static void Cacheinit ()
   if (cache_enabled) 
     {
       /* how to remove the lock? force remove it? */
-      cache_lockfile = TtaGetMemory (strlen (cache_dir) + 20);
-      strcpy (cache_lockfile, cache_dir);
+      cache_lockfile = TtaGetMemory (strlen (real_dir) + 20);
+      strcpy (cache_lockfile, real_dir);
       strcat (cache_lockfile, DIR_STR".lock");
       cache_locked = FALSE;
       if (TtaFileExist (cache_lockfile)
@@ -1748,7 +1803,7 @@ static void Cacheinit ()
 	       be in the safe side */
 	    {
 	      HTCacheTerminate ();
-	      HTCacheMode_setEnabled (NO);
+	      HTCacheMode_setEnabled (FALSE);
 #ifdef DEBUG_LIBWWW
 	      fprintf (stderr, "couldnt set the cache lock\n");
 #endif /* DEBUG_LIBWWW */
@@ -1760,7 +1815,7 @@ static void Cacheinit ()
 	}
       else 
 	{
-	  HTCacheMode_setEnabled (NO);
+	  HTCacheMode_setEnabled (FALSE);
 #ifdef DEBUG_LIBWWW
 	  fprintf (stderr, "lock detected, starting libwww without a cache/n");
 #endif /* DEBUG_LIBWWW */
@@ -1768,10 +1823,22 @@ static void Cacheinit ()
       TtaFreeMemory (cache_lockfile);
     }
   else
-      HTCacheMode_setEnabled (NO);
-
+    {
+      HTCacheMode_setEnabled (FALSE);
+    }
   if (cache_dir)
     TtaFreeMemory (cache_dir);
+  /* warn the user if the cache isn't active */
+  if (cache_enabled && !HTCacheMode_enabled ())
+    {
+#ifdef _WINDOWS   
+      MessageBox (NULL, TtaGetMessage (AMAYA, AM_CANT_CREATE_CACHE), 
+		  "query.c:InitCache", MB_OK);
+#else /* !_WINDOWS */
+      TtaDisplayMessage (CONFIRM, TtaGetMessage (AMAYA, AM_CANT_CREATE_CACHE),
+			 NULL);
+#endif /* _WINDOWS */
+    }
 #endif /* AMAYA_WWW_CACHE */
 }
 

@@ -35,7 +35,8 @@
 #include "winsys.h"
 #endif /* _WINDOWS */
 
-static boolean ColorMenuConf = FALSE;
+static int fgcolor, bgcolor;
+static boolean applyToSelection = TRUE;
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -361,21 +362,19 @@ int                 y;
    if (y < 60 || y > 345) {
 	  if (button == Button1) {
 	     /* couleur de trace' standard */
-		  if (ColorMenuConf) {
-             ColorMenuConf = FALSE;
-             TtaSetEnvString ("ForegroundColor", "Black", TRUE);
-		  } else {
-	          ModifyColor (-1, FALSE);
-	          ThotSelectPalette (LastBg, -1);
-		  }
+		 fgcolor = -1;
+		 if (applyToSelection)
+		 {
+	         ModifyColor (-1, FALSE);
+	         ThotSelectPalette (LastBg, -1);
+		 }
 	  } else {
 	       /* couleur de fond standard */
-		  if (ColorMenuConf) {
-			  ColorMenuConf = FALSE;
-             TtaSetEnvString ("BackgroundColor", "Gray", TRUE);
-		  } else {
-	       ModifyColor (-1, TRUE);
-	       ThotSelectPalette (-1, LastFg);
+		  bgcolor = -1;
+		  if (applyToSelection)
+		  {
+	        ModifyColor (-1, TRUE);
+	        ThotSelectPalette (-1, LastFg);
 		  }
 	  }
 	  return;
@@ -387,23 +386,21 @@ int                 y;
    if (button == Button1)
      {
 	/* selectionne la couleur de trace' */
-       if (ColorMenuConf) {
-          ColorMenuConf = FALSE;
-          TtaSetEnvString ("ForegroundColor", ColorName (color), TRUE);
-	   } else {
-      	ModifyColor (color, FALSE);
-	    ThotSelectPalette (LastBg, color);
+       fgcolor = color;
+	   if (applyToSelection)
+	   {
+         ModifyColor (color, FALSE);
+	     ThotSelectPalette (LastBg, color);
 	   }
      }
    else
      {
 	/* selectionne la couleur de fond */
-       if (ColorMenuConf) {
-          ColorMenuConf = FALSE;
-          TtaSetEnvString ("BackgroundColor", ColorName (color), TRUE);
-	   } else {
-    	ModifyColor (color, TRUE);
-    	ThotSelectPalette (color, LastFg);
+	   bgcolor = color;
+	   if (applyToSelection)
+	   {
+          ModifyColor (color, TRUE);
+          ThotSelectPalette (color, LastFg);
 	   }
      }
 
@@ -1118,4 +1115,26 @@ View                view;
 	    ThotCreatePalette (KbX, KbY);
 #   endif /* _WINDOWS */
      }
+}
+
+/*----------------------------------------------------------------------
+   TtcGetPaletteColors
+   Displays the color palette and returns the foreground and background
+   colors chosen by the user.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void TtcGetPaletteColors (int *fg, int *bg)
+#else  /* __STDC__ */
+void TtcGetPaletteColors (fg, bg)
+int *fg;
+int *bg;
+#endif /* __STDC__ */
+{ 
+	applyToSelection = FALSE;
+#ifdef _WINDOWS
+	ThotCreatePalette (200, 200);
+	*fg = fgcolor;
+	*bg = bgcolor;
+	applyToSelection = TRUE;
+#endif /* _WINDOWS */
 }

@@ -29,15 +29,15 @@
 #define MAX_PROXYMENU_DLG 4
 
 #define GeneralMenu          1
-#define mToolTipDelay        2
-#define mDoubleClickDelay    3
-#define mZoom                4
-#define mHomePage            5
-#define mDialogueLang        6
-#define mFontMenuSize        7
-#define mGeneralEmpty1       8
-#define mGeneralEmpty2       9
-#define mGeneralEmpty3       10
+#define mDoubleClickDelay    2
+#define mZoom                3
+#define mHomePage            4
+#define mDialogueLang        5
+#define mFontMenuSize        6
+#define mGeneralEmpty1       7
+#define mGeneralEmpty2       8
+#define mGeneralEmpty3       9
+#define mGeneralEmpty4       10
 #define mToggleGeneral       11
 #define MAX_GENERALMENU_DLG  12
 
@@ -51,7 +51,8 @@
 #define mBgColor            3
 #define mMenuFgColor        4
 #define mMenuBgColor        5
-#define MAX_COLORMENU_DLG   6
+#define mColorEmpty1        6
+#define MAX_COLORMENU_DLG   7
 
 #define GeometryMenu         1
 #define mGeometryLabel1      2

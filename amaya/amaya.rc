@@ -1094,20 +1094,6 @@ BEGIN
                     IDC_STATIC,39,18,213,16
 END
 
-DE_COLORMENU DIALOG DISCARDABLE  0, 0, 186, 90
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Color Preferences"
-FONT 8, "MS Sans Serif"
-BEGIN
-    DEFPUSHBUTTON   "Defaults",ID_DEFAULTS,71,69,50,14
-    PUSHBUTTON      "Done",ID_DONE,129,69,50,14
-    DEFPUSHBUTTON   "Apply",ID_APPLY,7,69,56,14
-    LTEXT           "Document foreground color",IDC_STATIC,7,7,87,8
-    EDITTEXT        IDC_FGCOLOR,7,20,96,12,ES_AUTOHSCROLL
-    EDITTEXT        IDC_BGCOLOR,7,47,96,12,ES_AUTOHSCROLL
-    LTEXT           "Document background color",IDC_STATIC,7,36,91,8
-END
-
 DE_GENERALMENU DIALOG DISCARDABLE  0, 0, 202, 230
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "General Preferences"
@@ -1129,10 +1115,9 @@ BEGIN
     CONTROL         "Double click activates link",IDC_DOUBLECLICK,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,7,188,99,10
     LTEXT           "Amaya user directory",IDC_STATIC,7,39,66,8
-    EDITTEXT        IDC_APPHOME,7,51,96,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_APPHOME,7,51,188,14,ES_AUTOHSCROLL
     LTEXT           "Temporary directory",IDC_STATIC,7,69,63,8
     EDITTEXT        IDC_TMPDIR,7,81,188,14,ES_AUTOHSCROLL
-    LTEXT           "\\amaya",IDC_STATIC,108,51,37,15
 END
 
 EN_PUBLISHMENU DIALOG DISCARDABLE  0, 0, 179, 101
@@ -1152,7 +1137,7 @@ BEGIN
                     BS_AUTOCHECKBOX | WS_TABSTOP,7,19,105,10
 END
 
-EN_CACHEMENU DIALOG DISCARDABLE  0, 0, 243, 178
+DE_CACHEMENU DIALOG DISCARDABLE  0, 0, 243, 178
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Cache Preferences"
 FONT 8, "MS Sans Serif"
@@ -1203,6 +1188,21 @@ BEGIN
     PUSHBUTTON      "Done",ID_DONE,150,47,50,14
     EDITTEXT        IDC_GETALT,7,23,253,17,ES_AUTOHSCROLL
     LTEXT           "Alternate Text",IDC_ALTTEXT,7,7,161,12
+END
+
+DE_COLORMENU DIALOG DISCARDABLE  0, 0, 248, 90
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Color Preferences"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Defaults",ID_DEFAULTS,134,69,50,14
+    PUSHBUTTON      "Done",ID_DONE,191,69,50,14
+    DEFPUSHBUTTON   "Apply",ID_APPLY,7,69,56,14
+    LTEXT           "Document foreground color",IDC_STATIC,7,7,87,8
+    LTEXT           "Document background color",IDC_STATIC,7,36,91,8
+    PUSHBUTTON      "Change colors",IDC_CHANGCOLOR,70,69,57,14
+    EDITTEXT        IDC_FGCOLOR,7,20,96,12,ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_BGCOLOR,7,49,96,12,ES_AUTOHSCROLL | ES_READONLY
 END
 
 
@@ -1419,14 +1419,6 @@ BEGIN
         BOTTOMMARGIN, 58
     END
 
-    DE_COLORMENU, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 179
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 83
-    END
-
     DE_GENERALMENU, DIALOG
     BEGIN
         LEFTMARGIN, 7
@@ -1443,7 +1435,7 @@ BEGIN
         BOTTOMMARGIN, 94
     END
 
-    EN_CACHEMENU, DIALOG
+    DE_CACHEMENU, DIALOG
     BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 236
@@ -1465,6 +1457,14 @@ BEGIN
         RIGHTMARGIN, 260
         TOPMARGIN, 7
         BOTTOMMARGIN, 61
+    END
+
+    DE_COLORMENU, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 241
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 83
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -2483,10 +2483,9 @@ BEGIN
     CONTROL         "Double click activates link",IDC_DOUBLECLICK,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,7,188,99,10
     LTEXT           "Amaya user directory",IDC_STATIC,7,39,66,8
-    EDITTEXT        IDC_APPHOME,7,51,96,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_APPHOME,7,51,188,14,ES_AUTOHSCROLL
     LTEXT           "Temporary directory",IDC_STATIC,7,69,63,8
     EDITTEXT        IDC_TMPDIR,7,81,188,14,ES_AUTOHSCROLL
-    LTEXT           "\\amaya",IDC_STATIC,108,51,37,14
 END
 
 EN_GETSAVEDIALOG DIALOG DISCARDABLE  100, 100, 263, 65
@@ -2641,19 +2640,19 @@ BEGIN
                     IDC_STATIC,39,18,213,16
 END
 
-EN_COLORMENU DIALOG DISCARDABLE  0, 0, 202, 90
+EN_COLORMENU DIALOG DISCARDABLE  0, 0, 248, 90
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Color Preferences"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "Defaults",ID_DEFAULTS,80,69,50,14
-    PUSHBUTTON      "Done",ID_DONE,145,69,50,14
+    DEFPUSHBUTTON   "Defaults",ID_DEFAULTS,134,69,50,14
+    PUSHBUTTON      "Done",ID_DONE,191,69,50,14
     DEFPUSHBUTTON   "Apply",ID_APPLY,7,69,56,14
     LTEXT           "Document foreground color",IDC_STATIC,7,7,87,8
     LTEXT           "Document background color",IDC_STATIC,7,36,91,8
-    LTEXT           "",IDC_FGCOLOR,7,17,91,14
-    LTEXT           "",IDC_BGCOLOR,7,46,96,16
-    PUSHBUTTON      "Change colors",IDC_CHANGCOLOR,107,23,79,17
+    PUSHBUTTON      "Change colors",IDC_CHANGCOLOR,70,69,57,14
+    EDITTEXT        IDC_FGCOLOR,7,20,96,12,ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_BGCOLOR,7,49,96,12,ES_AUTOHSCROLL | ES_READONLY
 END
 
 EN_GETALTERNATEDIALOG DIALOG DISCARDABLE  0, 0, 267, 68
@@ -2914,7 +2913,7 @@ BEGIN
     EN_COLORMENU, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 195
+        RIGHTMARGIN, 241
         TOPMARGIN, 7
         BOTTOMMARGIN, 83
     END
@@ -4114,23 +4113,24 @@ BEGIN
     PUSHBUTTON      "Terminer",ID_DONE,235,45,50,14
     PUSHBUTTON      "Restaurer la géometrie défaut",ID_DEFAULTS,117,45,113,
                     14
-    LTEXT           "Ces changements seront effectifs lors de l'ouverture d'une fenetre.",
+    LTEXT           "Ces changements seront effectifs lors de l'ouverture d'une fenêtre.",
                     IDC_STATIC,43,20,213,16
 END
 
-FR_COLORMENU DIALOG DISCARDABLE  0, 0, 186, 90
+FR_COLORMENU DIALOG DISCARDABLE  0, 0, 244, 90
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Configuration des Couleurs"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "Défauts",ID_DEFAULTS,71,69,50,14
-    PUSHBUTTON      "Terminer",ID_DONE,129,69,50,14
+    DEFPUSHBUTTON   "Défauts",ID_DEFAULTS,131,69,50,14
+    PUSHBUTTON      "Terminer",ID_DONE,187,69,50,14
     DEFPUSHBUTTON   "Appliquer",ID_APPLY,7,69,56,14
     LTEXT           "Couleur avant plan des documents",IDC_STATIC,7,7,110,8
-    EDITTEXT        IDC_FGCOLOR,7,20,96,12,ES_AUTOHSCROLL
-    EDITTEXT        IDC_BGCOLOR,7,47,96,12,ES_AUTOHSCROLL
-    LTEXT           "Couleur arriere plan des documents",IDC_STATIC,7,36,112,
-                    8
+    LTEXT           "Couleur arrrière plan des documents",IDC_STATIC,7,36,
+                    114,8
+    PUSHBUTTON      "Changer couleurs",IDC_CHANGCOLOR,70,69,57,14
+    EDITTEXT        IDC_FGCOLOR2,7,20,96,12,ES_AUTOHSCROLL | ES_READONLY
+    EDITTEXT        IDC_BGCOLOR2,7,49,96,12,ES_AUTOHSCROLL | ES_READONLY
 END
 
 FR_GENERALMENU DIALOG DISCARDABLE  0, 0, 202, 230
@@ -4155,10 +4155,9 @@ BEGIN
     CONTROL         "Activer les liens avec un double-click",IDC_DOUBLECLICK,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,188,133,10
     LTEXT           "Répertoire utilisateur",IDC_STATIC,7,39,65,8
-    EDITTEXT        IDC_APPHOME,7,51,106,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_APPHOME,7,51,188,14,ES_AUTOHSCROLL
     LTEXT           "Répertoire temporaire",IDC_STATIC,7,69,68,8
     EDITTEXT        IDC_TMPDIR,7,81,188,14,ES_AUTOHSCROLL
-    LTEXT           "\\amaya",IDC_STATIC,116,51,53,14
 END
 
 FR_PUBLISHMENU DIALOG DISCARDABLE  0, 0, 179, 101
@@ -4188,7 +4187,6 @@ BEGIN
     PUSHBUTTON      "Terminer",ID_DONE,184,156,50,14
     PUSHBUTTON      "Défauts",ID_DEFAULTS,67,156,50,14
     LTEXT           "Répertoire du cache",IDC_STATIC,8,68,66,8
-    EDITTEXT        IDC_CACHEDIRECTORY,8,79,106,12,ES_AUTOHSCROLL
     CONTROL         "Activer le cache",IDC_ENABLECACHE,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,8,13,66,8
     CONTROL         "Stocker dans le cache les documents protégés",
@@ -4196,15 +4194,15 @@ BEGIN
                     WS_TABSTOP,8,25,164,10
     CONTROL         "Mode deconnecté",IDC_CACHEDISCONNECTEDMODE,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,8,39,74,10
-    CONTROL         "Ignore l'en-tete Expires:",IDC_CACHEEXPIREIGNORE,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,8,53,89,10
+    CONTROL         "Ignorer l'en-tete Expires:",IDC_CACHEEXPIREIGNORE,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,8,53,91,10
     LTEXT           "Taille du cache (Mo)",IDC_STATIC,8,94,66,8
     EDITTEXT        IDC_CACHESIZE,8,105,42,12,ES_AUTOHSCROLL | ES_NUMBER
     LTEXT           "Taille maximale des entrées du cache (Mo)",IDC_STATIC,8,
                     120,135,8,WS_TABSTOP
     EDITTEXT        IDC_MAXCACHEFILE,8,131,42,12,ES_AUTOHSCROLL | ES_NUMBER
     PUSHBUTTON      "Vider le cache",ID_FLUSHCACHE,122,156,56,14
-    LTEXT           "\\libwww-cache",IDC_STATIC,119,79,66,12
+    EDITTEXT        IDC_CACHEDIRECTORY,8,79,202,12,ES_AUTOHSCROLL
 END
 
 FR_PROXYMENU DIALOG DISCARDABLE  0, 0, 190, 114
@@ -4460,7 +4458,7 @@ BEGIN
     FR_COLORMENU, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 179
+        RIGHTMARGIN, 237
         TOPMARGIN, 7
         BOTTOMMARGIN, 83
     END

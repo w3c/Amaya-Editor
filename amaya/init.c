@@ -4144,7 +4144,25 @@ NotifyEvent        *event;
 #endif /* _WINDOWS */
      }
    if (i != 0 && errno != EEXIST)
-     exit (1);
+	 /* try to use the default directory then */
+   {
+     s = TtaGetDefEnvString ("APP_HOME");
+     if (!TtaCheckDirectory (s))
+       {
+#ifdef _WINDOWS
+	 i = _mkdir (s);
+#else /* _WINDOWS */
+	 i = mkdir (s, S_IRWXU);
+#endif /* _WINDOWS */
+	 if (i != 0 && errno != EEXIST)
+	   exit (1);
+       }
+     /* if the default entry works, we'll update the user's
+	registry and save it, to avoid doing this work over again */
+     TtaSetEnvString ("APP_HOME", s, TRUE);
+     TtaSaveAppRegistry ();	 
+   }
+
    /* add the temporary directory in document path */
    ustrcpy (TempFileDirectory, s);
    TtaAppendDocumentPath (TempFileDirectory);

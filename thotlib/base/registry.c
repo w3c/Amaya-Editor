@@ -442,7 +442,9 @@ FILE               *output;
       next = cour->next;
       while (next != NULL && !ustrcasecmp (next->appli, cour->appli))
 	{
-	  if (next->level == REGISTRY_USER)
+	  if (next->level == REGISTRY_USER
+	      && ustrcasecmp (next->name, "APP_HOME")
+	      && ustrcasecmp (next->name, "TMP_DIR"))
 	    fprintf (output, "%s=%s\n", next->name, next->orig);
 	  next = next->next;
 	}
@@ -1118,16 +1120,17 @@ void                TtaSaveAppRegistry ()
       the default values */
    ptr = TtaGetEnvString ("TMPDIR");
    if (ptr && ustrcasecmp (ptr, WIN_DEF_TMPDIR))
-	  WINReg_set ("TmpDir", TtaGetEnvString ("TMPDIR"));
+     WINReg_set ("TmpDir", TtaGetEnvString ("TMPDIR"));
    else
-	   WINReg_set ("TmpDir", "");
-
-   usprintf (filename, "%s%c%s", WIN_DEF_TMPDIR, DIR_SEP, AppRegistryEntryAppli);
+     WINReg_set ("TmpDir", "");
+   
+   usprintf (filename, "%s%c%s", WIN_DEF_TMPDIR, DIR_SEP, 
+	     AppRegistryEntryAppli);
    ptr = TtaGetEnvString ("APP_HOME");
    if (ptr && ustrcasecmp (filename, ptr))
-      WINReg_set ("AppHome", TtaGetEnvString ("APP_HOME"));
+     WINReg_set ("AppHome", TtaGetEnvString ("APP_HOME"));
    else
-	   WINReg_set ("AppHome", "");
+     WINReg_set ("AppHome", "");
 #endif /* _WINDOWS */
 }
 
@@ -1253,7 +1256,7 @@ static void         InitEnviron ()
    /* The predefined path to documents */
    pT = TtaGetEnvString ("THOTDOC");
    if (pT == NULL)
-      DocumentPath[0] = EOS;
+      DocumentPath[0] = EOS; 
    else
       ustrncpy (DocumentPath, pT, MAX_PATH);
 
@@ -1285,20 +1288,25 @@ static void         InitEnviron ()
 #ifndef _WINDOWS
    TtaSetDefEnvString ("BackgroundColor", "gainsboro", FALSE);
    pT = TtaGetEnvString ("TMPDIR");
-   if (!pT || *pT == EOS)
-     {
-       pT = "/tmp";
-       TtaSetDefEnvString ("TMPDIR", pT, FALSE);
-     }
+   if (pT && *pT != EOS)
+     TtaSetEnvString ("TMPDIR", pT, FALSE);
+   else
+     pT = "/tmp";
+   /* set up a default env string anyway */
+   TtaSetDefEnvString ("TMPDIR", "/tmp", TRUE);
 #else
    TtaSetDefEnvString ("BackgroundColor", "LightGrey1", FALSE);
-   /* get the tmpdir from the registry or use a default name if it doesn't exist */
+   /* get the tmpdir from the registry or use a default name if it
+      doesn't exist */
    pT = WINReg_get ("TmpDir");
-   if (!pT || *pT == EOS)
-       pT = WIN_DEF_TMPDIR;
-   TtaSetDefEnvString ("TMPDIR", pT, TRUE);
+   if (pT && *pT != EOS)
+     TtaSetEnvString ("TMPDIR", pT, FALSE);
+   else
+     pT = WIN_DEF_TMPDIR;
+   /* set up a default env string anyway */
+   TtaSetDefEnvString ("TMPDIR", WIN_DEF_TMPDIR, TRUE);
 #endif /* _WINDOWS */
-
+   
    /* create the TMPDIR dir if it doesn't exist */
    if (!TtaCheckDirectory (pT))
      {
@@ -1309,8 +1317,27 @@ static void         InitEnviron ()
 #endif /* _WINDOWS */
        if (i != 0 && errno != EEXIST)
 	 {
-	   fprintf (stderr, "Couldn't create directory %s\n", pT);
-	   exit (1);
+	   /* try to use the default tmpdir */
+	   pT= TtaGetDefEnvString ("TMPDIR");
+	   if (!TtaCheckDirectory (pT))
+	     {
+#ifdef _WINDOWS
+	       i = umkdir (pT);
+#else /* _WINDOWS */
+	       i = umkdir (pT, S_IRWXU);
+#endif /* _WINDOWS */
+	       if (i != 0 && errno != EEXIST)
+		 {
+		   fprintf (stderr, "Couldn't create directory %s\n", pT);
+		   exit (1);
+		 }
+	     }	 
+	   /* update the registry entry */
+	   TtaSetEnvString ("TMPDIR", pT, TRUE);
+#ifdef _WINDOWS
+	   /* clear the wrong WIN32 registry entry */
+	   WINReg_set ("TmpDir", "");
+#endif /* _WINDOWS */
 	 }
      }
 }
@@ -1378,123 +1405,124 @@ char* appArgv0;
    */
 
 # ifdef _WINDOWS
-  if (appArgv0[0] == DIR_SEP || (appArgv0[1] == ':' && appArgv0[2] == DIR_SEP))
+   if (appArgv0[0] == DIR_SEP 
+       || (appArgv0[1] == ':' && appArgv0[2] == DIR_SEP))
      ustrncpy (&execname[0], appArgv0, sizeof (execname));
 # else  /* 1_WINDOWS */
-  if (appArgv0[0] == DIR_SEP)
+   if (appArgv0[0] == DIR_SEP)
      ustrncpy (&execname[0], appArgv0, sizeof (execname));
 # endif /* _WINDOWS */
-
+   
   /*
    * second case, the argv[0] indicate a relative path name.
    * The exec name is obtained by appending the current directory.
    */
-  else if (TtaFileExist (appArgv0))
-    {
-      ugetcwd (&execname[0], sizeof (execname));
-      ustrcat (execname, DIR_STR);
-      ustrcat (execname, appArgv0);
-    }
-  /*
-   * Last case, we were just given the application name.
-   * Use the PATH environment variable to search the exact binary location.
-   */
-  else
-    {
-      my_path = getenv ("PATH");
-      if (my_path == NULL)
-	{
-	  fprintf (stderr, "TtaInitializeAppRegistry cannot found PATH environment\n");
-	  exit (1);
-	}
-      /*
-       * make our own copy of the string, in order to preserve the
-       * enviroment variables. Then search for the binary along the
-       * PATH.
-       */
-      len = sizeof (path) - 1;
-      ustrncpy (path, my_path, len);
-      path[len] = EOS;
-
-      execname_len = sizeof (execname);
+   else if (TtaFileExist (appArgv0))
+     {
+       ugetcwd (&execname[0], sizeof (execname));
+       ustrcat (execname, DIR_STR);
+       ustrcat (execname, appArgv0);
+     }
+   /*
+    * Last case, we were just given the application name.
+    * Use the PATH environment variable to search the exact binary location.
+    */
+   else
+     {
+       my_path = getenv ("PATH");
+       if (my_path == NULL)
+	 {
+	   fprintf (stderr, "TtaInitializeAppRegistry cannot found PATH environment\n");
+	   exit (1);
+	 }
+       /*
+	* make our own copy of the string, in order to preserve the
+	* enviroment variables. Then search for the binary along the
+	* PATH.
+	*/
+       len = sizeof (path) - 1;
+       ustrncpy (path, my_path, len);
+       path[len] = EOS;
+       
+       execname_len = sizeof (execname);
 #     ifdef _WINDOWS
-      MakeCompleteName (appArgv0, "EXE", path, execname, &execname_len);
+       MakeCompleteName (appArgv0, "EXE", path, execname, &execname_len);
 #     else
-      MakeCompleteName (appArgv0, "", path, execname, &execname_len);
+       MakeCompleteName (appArgv0, "", path, execname, &execname_len);
 #     endif
-      if (execname[0] == EOS)
-	{
-	  fprintf (stderr, "TtaInitializeAppRegistry internal error\n");
-	  fprintf (stderr, "\tcannot find path to binary : %s\n", appArgv0);
-	  exit (1);
-	}
-    }
-
-  /*
-   * Now that we have a complete path up to the binary, extract the
-   * application name.
-   */
-  appName = &execname[0];
-  while (*appName)
-    /* go to the ending NUL */
-    appName++;
-
-  do
-    appName--;
-  while (appName > execname && *appName != DIR_SEP);
-  if (*appName == DIR_SEP)
-    /* dir_end used for relative links ... */
-    dir_end = appName++;
-  
-  appName = TtaStrdup (appName);
+       if (execname[0] == EOS)
+	 {
+	   fprintf (stderr, "TtaInitializeAppRegistry internal error\n");
+	   fprintf (stderr, "\tcannot find path to binary : %s\n", appArgv0);
+	   exit (1);
+	 }
+     }
+   
+   /*
+    * Now that we have a complete path up to the binary, extract the
+    * application name.
+    */
+   appName = &execname[0];
+   while (*appName)
+     /* go to the ending NUL */
+     appName++;
+   
+   do
+     appName--;
+   while (appName > execname && *appName != DIR_SEP);
+   if (*appName == DIR_SEP)
+     /* dir_end used for relative links ... */
+     dir_end = appName++;
+   
+   appName = TtaStrdup (appName);
 #ifdef _WINDOWS
    /* remove the .exe extension. */
    ptr = ustrchr (appName, '.');
    if (ptr && !ustrcasecmp (ptr, ".exe"))
-	 *ptr = EOS;
+     *ptr = EOS;
    ptr = appName;
    while (*ptr)
-   {
-	*ptr = tolower (*ptr);
-	ptr++;
-   }
-
+     {
+       *ptr = tolower (*ptr);
+       ptr++;
+     }
+   
 #endif /* _WINDOWS */
-  AppRegistryEntryAppli = appName;
-
+   AppRegistryEntryAppli = appName;
+   
 #ifdef HAVE_LSTAT
-  /*
-   * on Unixes, the binary path started may be a softlink
-   * to the real app in the real dir.
-   */
-  if (lstat (execname, &stat_buf) == 0 && S_ISLNK (stat_buf.st_mode))
-    {
-      len = readlink (execname, filename, sizeof (filename));
-      if (len > 0)
-	{
-	  filename[len] = 0;
-	  /*
-	   * Two cases : can be an absolute link to the binary
-	   * or a relative link.
-	   */
-	  if (filename[0] == DIR_SEP)
-	    ustrcpy (execname, filename);
-	  else
-	    ustrcpy (dir_end + 1, filename);
-	}
-    }
+   /*
+    * on Unixes, the binary path started may be a softlink
+    * to the real app in the real dir.
+    */
+   if (lstat (execname, &stat_buf) == 0 && S_ISLNK (stat_buf.st_mode))
+     {
+       len = readlink (execname, filename, sizeof (filename));
+       if (len > 0)
+	 {
+	   filename[len] = 0;
+	   /*
+	    * Two cases : can be an absolute link to the binary
+	    * or a relative link.
+	    */
+	   if (filename[0] == DIR_SEP)
+	     ustrcpy (execname, filename);
+	   else
+	     ustrcpy (dir_end + 1, filename);
+	 }
+     }
 #endif /* HAVE_LSTAT */
-
+   
 #ifdef DEBUG_REGISTRY
    fprintf (stderr, "path to binary %s : %s\n", appName, execname);
 #endif
-
+   
    /* get the THOTDIR for this application. It's under a bin dir */
    dir_end = execname;
    while (*dir_end)
      /* go to the ending NUL */
-      dir_end++;
-
+     dir_end++;
+   
    /* remove the application name */
    ok = FALSE;
    do
@@ -1598,20 +1626,26 @@ char* appArgv0;
       $HOME/.appname or $HOME\appname */
    /* No this should NOT be a call to TtaGetEnvString */
 # ifdef _WINDOWS
-   /* get app home from the registry. If it doesn't exist, use a default value
-      computed from the tmpdir and the appname */
-   ptr = WINReg_get ("AppHome");
-   if (!ptr || *ptr == EOS)
-       usprintf (app_home, "%s%c%s", WIN_DEF_TMPDIR, DIR_SEP, AppRegistryEntryAppli);
-   else
-     ustrcpy (app_home, ptr);
+   /* compute the default app_home value from the tmpdir and appname */
+   usprintf (app_home, "%s%c%s", WIN_DEF_TMPDIR, DIR_SEP, AppRegistryEntryAppli);
 # else /* !_WINDOWS */
    ptr = getenv ("HOME");
    sprintf (app_home, "%s%c.%s", ptr, DIR_SEP, AppRegistryEntryAppli); 
 #endif _WINDOWS
    /* store the value of APP_HOME in the registry */
-   AddRegisterEntry ("System", "APP_HOME", app_home, REGISTRY_INSTALL, TRUE);
-   
+   AddRegisterEntry (AppRegistryEntryAppli, "APP_HOME", app_home,
+		     REGISTRY_SYSTEM, TRUE);
+
+#ifdef _WINDOWS
+   /* read the user's personal APP_HOME (if it exists) */
+   ptr = WINReg_get ("AppHome");
+   if (ptr && *ptr != EOS)
+   { 
+     ustrcpy (app_home, ptr);
+     AddRegisterEntry (AppRegistryEntryAppli, "APP_HOME", app_home, REGISTRY_USER, TRUE);
+   }
+#endif / *_WINDOWS */
+
    /* read the user's preferences (if they exist) */
    if (app_home != NULL && *app_home != EOS)
      {
