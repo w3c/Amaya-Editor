@@ -9998,8 +9998,11 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(ATTR_SRC);
 	CreateBefore(VALUE_FRAMESRC);
-	CreateLast (ATTR_FRAMESRC);
-	CreateLast (VALUE_FRAMESRC1);
+	if FRAME
+	   BEGIN
+	   CreateLast (ATTR_FRAMESRC);
+	   CreateLast (VALUE_FRAMESRC1);
+	   END;
 	END;
 
   frameborder = Border1:
