@@ -1,0 +1,284 @@
+0 Errore X11: %s\n
+1 Vista non trovata.
+2 Errore durante il caricamento del dizionario: %s\n 
+3 File mancante: %s\n
+4 Impossibile scrivere: %s
+5 Schema non trovato: %s
+6 Conferma
+7 Il file dell'alfabeto è inesistente
+8 Impossibile aprire il documento %s
+9 Errore nel formato pivot: %s
+10 La nuova vista non può rimpiazzare la vecchia
+11 Schemi incompatibili. Ricompila %s
+12 Numero di finestra non corretto
+13 Errore fatale: fonti di Thot non trovate
+14 Documento con colonne. Riimpagina.
+15 Memoria esaurita
+16 Errore fatale: impossibile connettersi a  X
+17 Vista modificata prima della creazione
+18 Seleziona prima
+19 Non c\'è posto per la fonte %s
+20 La struttura del documento %s non è valida
+21 Il documento %s non può essere editato nè salvato
+22 Tabella delle regole piena.
+23 Lo schema di struttura %s è stato modificato
+24 File non corretto: %s.STR
+25 File non corretto: %s.PRS
+26 Directory non trovata: %s
+27 Impossibile stampare
+28 Impossibile cambiare presentazione
+29 Impossibile salvare in PostScript
+30 Impossibile importare il file
+31 La vista è vuota
+32 Non consentito, elemento a sola lettura
+33 Impossibile copiare componenti accoppiati
+34 Creo il dizionario per il documento %s
+35 Tipo di immagine
+36 Presentazione dell\'immagine
+37 File dell'immagine
+38 Il documento %s è stato stampato
+39 Da pagina ...
+40 ... a pagina
+41 Numero di copie
+42 Scala (%)
+43 1 pagina per foglio
+44 2 pagine per foglio
+45 4 pagine per foglio
+46 Pagine per foglio
+47 Impaginazione
+48 Viste da stampare
+49 Stampa con presentazione %s
+50 Questa è una copia
+51 Caricamento di "%s" fallito
+52 La variabile d\'ambiente %s è indefinita
+53 Un elemento non può riferirsi a sè stesso
+54 Attributo richiesto, non cancellato
+55 Natura non consentita qui
+56 %s : componente obbligatorio
+57 Seleziona solo un componente
+58 L\'elemento %s non può essere incollato qui
+59 Non puoi modificare una scatola qui
+60 %s
+61 Not any view is selected for printing
+62 Digita la presentazione per %s
+63 Lettura del documento...
+64 Seleziona un elemento
+65 File thot.keyboard non trovato
+66 X clipboard non modificata
+67 Impossibile copiare componenti differenti. Raggruppa.
+68 Non consentito, documento a sola lettura
+69 Un documento non può includere sè stesso
+70 Modifica della scatola %s
+71 Spostamento della scatola %s
+72 Documento scritto: %s
+73 Scrittura in corso ...
+74 Riferimento vuoto.
+75 Non copiare i salti pagina!
+76 Hai selezionato un elemento %s. Dovevi selezionare un elemento %s.
+77 Modifica della lista delle directory
+78 Stampa
+79 Esportazione del documento %s in corso...
+80 Caricamento del dizionario %s
+81 Scrittura del file PostScript in corso...
+82 Importazione del file in corso...
+83 Quale forma del documento vuoi caricare?
+84 Una polyline deve contenere almeno due punti
+85 Digita un valore per l'attributo %s
+86 Vecchio formato pivot. Salvare il documento con Thot.
+87 Crea la scatola %s
+88 Memoria insufficiente
+89 Seleziona un elemento %s
+90 Questo elemento non può essere incorporato
+91 Designa l\'elemento da riferire
+92 Troppi documenti.
+93 Documento vuoto, non scritto.
+94 Impossibile inserire qui
+95 Non c\'è nulla da cancellare
+96 Attributo obbligatorio.
+97 Tutte le viste sono già state create.
+98 Documento vuoto.
+99 Non cambiare il documento!
+100 Troppe viste.
+101 Non c\'è nulla da incollare.
+102 Impossibile aprire una nuova finestra. Chiudi una finestra.
+103 *** Thot: Errore non recuperabile ***
+104 i documenti modificati, se ve ne sono, saranno salvati
+105 Cosí com'è
+106 In scala
+107 Ripetuta
+108 Ripetuta in X
+109 Ripetuta in Y
+110 Fine del file prematura
+111 Manca la bounding box nel file PostScript %s
+112 Impossibile aprire il file delle divisioni sillabiche: %s
+113 Lettura del file delle divisioni sillabiche in corso: %s
+114 Parola troppo lunga per la divisione: %s. Sei sicuro che sia corretta?
+115 Pixmap : Errore di allocazione dei colori
+116 Pixmap : Apertura del file fallita
+117 Pixmap : File non valido
+118 Pixmap : Memoria insufficiente
+119 Pixmap : Errore di allocazione dei colori
+120 Impossibile includere il file %s
+121 Impossibile creare il file %s
+122 Manca lo schema di traduzione per %s
+123 File .TRA incorretto: %s
+124 Troppi file di output
+125 Manca la dimensione della finestra per la vista %s
+126 %s non è un fratello valido per %s (%s)
+127 %s non è un figlio valido per %s (%s)
+128 L'attributo richiede %s per l\'elemento %s
+129 %s, pagina %d
+130 %s : tipo sconosciuto.
+131 Lingua
+132 Attributi
+133 Cerca riferimento
+134 Presentazione standard
+135 Applica
+136 Caratteri
+137 Sottolineatura
+138 Grafica
+139 Formattazione
+140 Predefinito
+141 Allineamento
+142 Indentazione
+143 Stampa
+144 Alimentazione manuale
+145 Opzioni
+146 A4
+147 US
+148 Formato della carta
+149 Fatto
+150 Directory
+151 Nome del documento
+152 Il documento %s esiste già. Vuoi sovrascriverlo?
+153 Il pulsante sinistro cambia il colore del testo
+154 Il pulsante centrale e quello destro cambiano il colore dello sfondo
+155 Famiglia
+156 Normale
+157 Grassetto
+158 Italico
+159 Obliquo
+160 Normale
+161 Grassetto
+162 Normale
+163 Sottolineato
+164 Sbarrato
+165 Dimensione (pt)
+166 Indentazione (pt)
+167 Interlinea (pt)
+168 Interlinea
+169 Giustificazione
+170 Sí
+171 No
+172 Salva il documento
+173 Chiudi, non salvare
+174 Stile dei caratteri
+175 Colori
+176 Cancella
+177 Destinazione
+178 File PostScript
+179 Stampante
+180 Cerca
+182 MAIUSCOLE = minuscole
+183 Rimpiazza con
+184 Rimpiazza
+185 Non rimpiazzare
+186 Rimpiazza su richiesta
+187 Rimpiazzamento automatico
+188 Dove cercare
+189 Prima della selezione
+190 Nella selezione
+191 Dopo la selezione
+192 L\'intero documento
+193 Non rimpiazzare
+194 Colori di default
+195 prima di chiuderlo
+196 Chiudi un documento
+197 Senza_nome
+198 Crea un documento
+199 Tipo di documento
+200 Rinomina
+201 Simboli matematici
+202 Grafica
+203 Alfabeto latino
+204 Alfabeto greco
+205 Presentazione
+206 File
+207 Aprire un documento
+208 Tipo di documento
+209 Viste
+210 Cambia filtro
+211 Valore non modificato
+212 Incrementa
+213 Decrementa
+214 Visibilità
+215 Scarto sulla dimensione dei caratteri
+216 Zoom
+217 Salva con nome
+218 Salva
+219 Thot
+220 Formattazione
+221 Copia
+222 Testo
+223 Grafica
+224 Simbolo
+225 Immagine
+226 Tipo di elemento
+227 dopo
+228 prima
+229 intorno
+230 Includi
+231 Incolla
+232 da creare
+233 Inserisci
+234 Salto pagina
+235 (Sola lettura)
+236 Ingloba
+237 Cambia tipo
+238 Lingua dell'elemento
+239 Lingua ereditata: 
+240 Non modificate il documento!
+241 Non trovato
+242 Cerca in
+243 Cerca gli elementi vuoti
+244 Cerca i riferimenti vuoti
+245 Cerca i riferimenti a questo elemento
+246 Collegamento
+247 Riferimento nel documento
+248 Cerca
+249 Elemento a sola lettura
+250 Nulla da rimpiazzare
+251 Apri
+252 Caratteri standard
+253 Grafica standard
+254 Formato standard
+255 Geometria standard
+256 pt
+257 Stile delle linee
+258 Spessore delle linee
+259 Motivo di riempimento
+260 Dividi
+261 Tipo di oggetto
+262 Vai a pagina numero: 
+263 Any
+264 Attributo da cercare
+265 Tipo da cercare
+266 Nature
+267 Valore dell\'attributo:
+268 Attributo sconosciuto
+269 Crea l\'elemento riferito
+270 Mostra l\'elemento riferito
+271 Modo di inserzione
+272 Annulla
+273 Errore nella traduzione in PostScript
+274 Comando rifiutato dallo spooler "%s"
+275 Impossibile creare "%s"
+276 Presentazione generale
+277 Impossibile collegare il nuovo elemento
+278 Codifica dei caratteri
+279 Nessuna lingua
+280 Soprassegnato
+281 Formato del documento
+282 Eventi
+283 Rimuovi l\'attributo
+

@@ -1,0 +1,207 @@
+0 File
+1 File
+2 File
+3 File
+4 File
+5 Edita
+6 Struttura
+7 Elementi
+8 Collegamenti
+9 Viste
+10 Stile
+11 Speciale
+12 Attributi
+13 Aiuto
+14 Nuovo
+15 Nuovo documento HTML...
+16 Modello
+17 Nuovo stile CSS...
+18 Apri documento...
+19 Apri in una nuova finestra...
+20 Ricarica documento
+21 Precedente
+22 Successivo
+23 Salva
+24 Salva con nome...
+25 Sincronizza
+26 Imposta e stampa...
+27 Stampa
+28 Chiudi
+29 Esci
+30 Chiudi vista
+31 Ritratta
+32 Rifai
+33 Taglia
+34 Copia
+35 Incolla
+36 Cancella
+37 Modo Editor
+38 Trova...
+39 Controllo ortografico...
+40 Trasforma...
+41 Annota
+42 Carica annotazioni
+43 BASE
+44 META
+45 LINK
+46 SCRIPT
+47 STYLE
+48 Commento
+49 Indirizzo (ADDRESS)
+50 Zona attiva (AREA)
+51 Cerchio
+52 Poligono
+53 Rettangolo
+54 BLOCKQUOTE
+55 A capo (BR)
+56 Divisione (DIV)
+57 Modulo
+58 FORM
+59 Pulsante (INPUT)
+60 Checkbox (INPUT)
+61 Selettore di file (INPUT)
+62 Controllo nascosto (INPUT)
+63 Image (INPUT)...
+64 Password (INPUT)
+65 Pulsante radio (INPUT)
+66 Reset (INPUT)
+67 Invia (INPUT)
+68 Testo (INPUT)
+69 Gruppo di campi (FIELDSET)
+70 Etichetta (LABEL)
+71 Menu (OPTION)
+72 Sottomenu (OPTGROUP)
+73 Area testo (TEXTAREA)
+74 Intestazione
+75 H1
+76 H2
+77 H3
+78 H4
+79 H5
+80 H6
+81 Riga orizzontale (HR)
+82 Cornice (IFRAME)
+83 Immagine (IMG)...
+84 Lista
+85 Lista puntata (UL)
+86 Lista numerata (OL)
+87 Lista di definizioni (DL)
+88 Termine (DT)
+89 Definizione (DD)
+90 Math
+91 MATH
+92 Radice (mroot)
+93 Radice quadrata (msqrt)
+94 Frazione (mfrac)
+95 Pedice e indice (msubsup)
+96 Pedice (msub)
+97 Indice (msup)
+98 Sotto e sopra (munderover)
+99 Sotto (munder)
+100 Sopra (mover)
+101 Parentesi (mf)
+102 Multiscripts (mmultiscripts)
+103 Matrice (mtable)
+104 Cancella colonna della matrice
+105 NOSCRIPT
+106 Oggetto
+107 OBJECT
+108 Parametro (PARAM)
+109 Paragrafo (P)
+110 Preformattato (PRE)
+111 Tabella
+112 TABLE
+113 Legenda (CAPTION)
+114 COLGROUP
+115 COL
+116 Intestazione (THEAD)
+117 Corpo (TBODY)
+118 TFOOT
+119 Linea (TR)
+120 Cella dati (TD)
+121 Cella intestazione (TH)
+122 Cancella colonna della tabella
+123 Collega al precedente obiettivo
+124 Crea o cambia collegamento...
+125 Crea obiettivo
+126 Cancella ancora
+127 Mostra barra dei pulsanti
+128 Mostra indirizzo e titolo
+129 Mostra le zone attive
+130 Mostra obiettivi
+131 Ingrandisci
+132 Rimpicciolisci
+133 Mostra struttura
+134 Mostra la vista alternativa
+135 Mostra collegamenti
+136 Mostra sommario
+137 Mostra sorgente
+138 Stile dei caratteri...
+139 Colori...
+140 Formattazione...
+141 Immagine di sfondo...
+142 Crea una regola...
+143 Applica una classe...
+144 Fogli di stile
+145 Collegamento...
+146 Apri...
+147 Disabilita...
+148 Abilita...
+149 Rimuovi...
+150 Tipo di informazione
+151 Enfasi
+152 Forte
+153 Cita
+154 Definizione
+155 Codice
+156 Variabile
+157 Sample
+158 Tastiera
+159 Abbreviazione
+160 Acronimo
+161 Inserzione
+162 Cancellazione
+163 Elementi carattere
+164 Italico
+165 Grassetto
+166 Macchina da scrivere
+167 Grande
+168 Piccolo
+169 Pedice
+170 Indice
+171 Citazione
+172 BiDi (BDO)
+173 Numerazione delle sezioni
+174 Crea libro
+175 Mostra il log file
+176 Preferenze
+177 Generali...
+178 Pubblicazione...
+179 Cache...
+180 Proxy...
+181 Colori...
+182 Dimensioni della finestra...
+183 Negoziazione della lingua...
+184 Profili...
+185 Modelli...
+186 Informazioni su Amaya
+187 Informazioni su Amaya al W3C
+188 Navigazione
+189 Selezione
+190 Ricerca
+191 Viste
+192 Creazione elementi
+193 Collegamenti
+194 Ristrutturazione
+195 Tabelle
+196 Matematica
+197 Zone attive
+198 Fogli di stile
+199 Attributi
+200 Controllo ortografico
+201 Pubblicazione
+202 Stampa
+203 Numerazione
+204 Creare un libro
+205 Configurazione di Amaya
+206 Accessibility in Amaya
