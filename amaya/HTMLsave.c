@@ -2637,7 +2637,7 @@ void BackUpDocs ()
 	  sprintf (pathname, "%s%c%d%s", TempFileDirectory, DIR_SEP, doc, docname);
 
 	/* write the backup file */
-        DocumentURLs[doc] = pathname;
+        DocumentURLs[doc] = TtaStrdup (pathname);
         SaveDocument (doc, 1);
 	/* register the backup file name and the original document name */
 	fprintf (f, "\"%s\" \"%s\" %d\n", pathname, ptr, DocumentTypes[doc]);

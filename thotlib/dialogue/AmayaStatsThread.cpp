@@ -50,7 +50,7 @@
  * Description:  create a new AmayaStatsThread
  *--------------------------------------------------------------------------------------
  */
-AmayaStatsThread::AmayaStatsThread() : wxThread(wxTHREAD_DETACHED)
+AmayaStatsThread::AmayaStatsThread() : wxThread(wxTHREAD_JOINABLE/*wxTHREAD_DETACHED*/)
 {
 }
 
@@ -108,17 +108,7 @@ void * AmayaStatsThread::Entry()
       wxInputStream * p_inputstream = sock.GetInputStream(_T("http://wam.inrialpes.fr/software/amaya/stats/"));
       if (p_inputstream)
 	{
-	  p_inputstream->Read(buffer, 128);
-	  
-	  // before doing any GUI calls we must ensure that this thread is the only
-	  // one doing it!
-	  wxMutexGuiEnter();
-
-	  /* the stats request has been send, we desactivate the 
-	   * SEND_STATS flag to avoid counting a amaya user twice */
-	  TtaSetEnvBoolean ("SEND_STATS", FALSE, TRUE);
-
-	  wxMutexGuiLeave();
+	  p_inputstream->Read(buffer, 128);	  
 	}
       delete p_inputstream;     
     }

@@ -472,6 +472,7 @@ int TtaGiveActiveFrame()
 
 ThotBool GL_DrawAll()
 {
+  return false;
 }
 
 #ifdef _WX

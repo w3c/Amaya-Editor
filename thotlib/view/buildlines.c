@@ -90,19 +90,21 @@ PtrBox GetNextBox (PtrAbstractBox pAb, int frame)
 		    pNextAb->AbBox->BxType == BoFloatGhost)
 	     {
 		/* descend la hierarchie */
-		while (loop)
-		   if (pNextAb->AbBox == NULL)
-		     {
-		       if (pNextAb->AbNext)
-			 pNextAb = pNextAb->AbNext;
-		       else
-			 loop = FALSE;
-		     }
-		   else if (pNextAb->AbBox->BxType == BoGhost ||
-			    pNextAb->AbBox->BxType == BoFloatGhost)
+		while (loop && pNextAb)
+		  {
+		    if (pNextAb->AbBox == NULL)
+		      {
+			if (pNextAb->AbNext)
+			  pNextAb = pNextAb->AbNext;
+			else
+			  loop = FALSE;
+		      }
+		    else if (pNextAb->AbBox->BxType == BoGhost ||
+			     pNextAb->AbBox->BxType == BoFloatGhost)
 		      pNextAb = pNextAb->AbFirstEnclosed;
-		   else
+		    else
 		      loop = FALSE;
+		  }
 		loop = TRUE;
 		pAb = pNextAb;
 	     }

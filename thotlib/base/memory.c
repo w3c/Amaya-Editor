@@ -435,8 +435,6 @@ void                FreeAll ()
     {
       ptr = (void *)PtFree_Box;
       PtFree_Box = PtFree_Box->BxNexChild;
-      if (PtFree_Box)
-	PtFree_Box->BxNexChild = NULL;
       TtaFreeMemory (ptr);
     }
   PtFree_Box = 0;
@@ -1968,7 +1966,7 @@ PtrBox FreeBox (PtrBox pBox)
      }
    pBox->BxHeightRelations = NULL;
    pBox->BxPrevious = NULL;
-   pBox->BxNext = NULL;
+   //pBox->BxNext = NULL;
 #ifdef DEBUG_MEMORY
    TtaFreeMemory (pBox);
 #else

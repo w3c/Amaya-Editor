@@ -4149,6 +4149,7 @@ static char GetNextChar (FILE *infile, char* buffer, int *index,
 		    {
 		      /* translate the ISO-latin-1 character into a UTF-8 string */
 		      ptr = fallback;
+		      fallback[1] = EOS;
 		      wcharRead = TtaGetWCFromChar (charRead, HTMLcontext.encoding);
 		      res = TtaWCToMBstring (wcharRead, &ptr);
 		      /* handle the first character */

@@ -3292,7 +3292,7 @@ void HandleColumnspacingAttribute (Attribute attr, Element el, Document doc,
 	}
       TtaNextSibling (&row);
     }
-
+  TtaFreeMemory (ctxt);
   if (value)
     TtaFreeMemory (value);
 }

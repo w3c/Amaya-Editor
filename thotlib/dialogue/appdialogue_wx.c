@@ -2502,6 +2502,7 @@ void TtaSendStatsInfo()
 	  wxSocketBase::Initialize();
 
       AmayaStatsThread * pThread = new AmayaStatsThread();
+      pThread->SetConcurrency(0);
       if ( pThread->Create() != wxTHREAD_NO_ERROR )
 	{
 	  TTALOGDEBUG_0( TTA_LOG_SOCKET, _T("TtaSendStatsInfo -> Cant't create thread") );      
@@ -2510,6 +2511,9 @@ void TtaSendStatsInfo()
 	{
 	  TTALOGDEBUG_0( TTA_LOG_SOCKET, _T("TtaSendStatsInfo -> Cant't start thread") );
 	}
+      /* the stats request has been send, we desactivate the 
+       * SEND_STATS flag to avoid counting a amaya user twice */
+      TtaSetEnvBoolean ("SEND_STATS", FALSE, TRUE);
       
       /* remember the request has been already send to stats server in oder to count
        * only on time each users */
