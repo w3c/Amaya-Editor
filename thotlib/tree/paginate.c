@@ -1500,7 +1500,7 @@ void PaginateView (PtrDocument pDoc, int view)
   schView = AppliedView (pDoc->DocDocElement, NULL, pDoc, view);
   pRootEl = pDoc->DocDocElement;
   frame = pDoc->DocViewFrame[iview];
-  
+  pPage = NULL;
 #ifndef PAGINEETIMPRIME
   sel = AbortPageSelection (pDoc, schView, &firstSelection, &lastSelection, &FirstSelectedChar, &LastSelectedChar);
 #endif /* PAGINEETIMPRIME */
@@ -1670,7 +1670,7 @@ void PaginateView (PtrDocument pDoc, int view)
 	    }
 	}
     }
-  while (!shorter || somthingAdded || rootAbsBox->AbTruncatedTail);
+  while (pPage || somthingAdded || rootAbsBox->AbTruncatedTail);
 
    /* Ajoute le saut de page qui manque eventuellement a la fin */
    lastPage = AddLastPageBreak (pRootEl, schView, pDoc, TRUE);
