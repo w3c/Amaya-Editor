@@ -448,7 +448,14 @@ int MapXMLAttribute (int XMLtype, char *attrName, char *elementName,
 	}
       else
 	{
-	  *thotType = ptr[i].ThotAttribute;
+	  /* Special case for the 'name' attribute for 
+	     elements 'a' and 'map' in xhtml1.1 profile */
+	  if ((profile == L_Xhtml11) &&
+	      !strcmp (attrName, "name") &&
+	      (!strcmp (elementName, "a") || !strcmp (elementName, "map")))
+	    *checkProfile = FALSE;
+	  else
+	    *thotType = ptr[i].ThotAttribute;
 	  return (i);
 	}
     }
