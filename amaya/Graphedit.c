@@ -1341,11 +1341,7 @@ Document            doc;
 View                view;
 #endif
 {
-# ifndef _WINDOWS
-  TtaAddButton (doc, 1, iconGraphics, ShowGraphicsPalette, TtaGetMessage (AMAYA, AM_BUTTON_GRAPHICS));
-# else  /* _WINDOWS */
-  WIN_TtaAddButton (doc, 1, iconGraphics, ShowGraphicsPalette, TtaGetMessage (AMAYA, AM_BUTTON_GRAPHICS), TBSTYLE_BUTTON, TBSTATE_ENABLED);
-# endif /* _WINDOWS */
+  TtaAddButton (doc, 1, iconGraphics, ShowGraphicsPalette, TtaGetMessage (AMAYA, AM_BUTTON_GRAPHICS), TBSTYLE_BUTTON, TRUE);
 }
 
 #endif /* GRAPHML */

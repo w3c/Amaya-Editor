@@ -122,7 +122,7 @@ ThotDirBrowse      *me;
       return 0;
    return 1;
 #else  /* _WINDOWS && !__GNUC__ */
-   int                 i;
+   unsigned int        i;
    int                 ls_car;
    boolean             notEof;
    struct stat         fileStat;

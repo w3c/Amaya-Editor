@@ -18,15 +18,24 @@
 #include "amaya.h"
 #include "css.h"
 #include "trans.h"
-
 #include "interface.h"
-
 #include "MathML.h"
 #ifdef GRAPHML
 #include "GraphML.h"
 #endif
-#ifndef _WINDOWS
+
+#define FormMaths 0
+#define MenuMaths 1
+#define MAX_MATHS  2
+
+#ifdef _WINDOWS
+#define iconMath   21 
+#define iconMathNo 21 
+#else /* _WINDOWS */
+static ThotIcon	   iconMath;
+static ThotIcon	   iconMathNo;
 #include "Math.xpm"
+#include "MathNo.xpm"
 #include "Bmath.xpm"
 #include "root.xpm"
 #include "sqrt.xpm"
@@ -42,11 +51,7 @@
 #include "matrix.xpm"
 #include "greek.xpm"
 #endif /* _WINDOWS */
-#define FormMaths 0
-#define MenuMaths 1
-#define MAX_MATHS  2
 
-static Pixmap	iconMath;
 static Pixmap	mIcons[14];
 static int	MathsDialogue;
 static boolean	InitMaths;
@@ -59,7 +64,6 @@ static Element	LastDeletedElement = NULL;
 #include "trans_f.h"
 #ifdef _WINDOWS
 #include "wininclude.h"
-#define iconMath 21 
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -888,27 +892,26 @@ Document            doc;
 View                view;
 #endif
 {
-# ifndef _WINDOWS
   TtaAddButton (doc, 1, iconMath, CreateMathMenu,
-		TtaGetMessage (AMAYA, AM_BUTTON_MATH));
-# else  /* _WINDOWS */
-  WIN_TtaAddButton (doc, 1, iconMath, CreateMathMenu,
-		    TtaGetMessage (AMAYA, AM_BUTTON_MATH), TBSTYLE_BUTTON,
-		    TBSTATE_ENABLED);
-# endif /* _WINDOWS */
+		TtaGetMessage (AMAYA, AM_BUTTON_MATH), TBSTYLE_BUTTON, TRUE);
 }
 
-#ifdef _WINDOWS
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void SwitchIconMath (Document doc, View view, boolean state)
+void              SwitchIconMath (Document doc, View view, boolean state)
 #else  /* __STDC__ */
-void SwitchIconMath (state)
-boolean state;
+void              SwitchIconMath (doc, view, state)
+Document          doc;
+ View             view;
+boolean           state;
 #endif /* __STDC__ */
 {
-   WIN_TtaChangeButton (doc, view, 24, iconMath, state);
+  if (state)
+    TtaChangeButton (doc, view, 24, iconMath, state);
+  else
+    TtaChangeButton (doc, view, 24, iconMathNo, state);
 }
-#endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
   CreateMath
@@ -1112,6 +1115,7 @@ void                InitMathML ()
 {
 #  ifndef _WINDOWS 
    iconMath = TtaCreatePixmapLogo (Math_xpm);
+   iconMathNo = TtaCreatePixmapLogo (MathNo_xpm);
    TtaRegisterPixmap("Math", iconMath);
    mIcons[0] = TtaCreatePixmapLogo (Bmath_xpm);
    mIcons[1] = TtaCreatePixmapLogo (root_xpm);

@@ -72,13 +72,14 @@ extern void         TtaSetMainLoop (ExternalInitMainLoop init,
    Parameters:
    document: the concerned document.
    view: the concerned view.
-   picture: label of the new entry. None creates a space between buttons.
+   picture: the displayed pixmap. None (0) creates a space between buttons.
    procedure: procedure to be executed when the new entry is
    selected by the user. Null creates a cascade button.
    info: text to display when the cursor stays on the button.
+   Parameters type and state are only used on Windows versions.
    Returns index
   ----------------------------------------------------------------------*/
-extern int          TtaAddButton (Document document, View view, Pixmap icon, void (*procedure) (), STRING info);
+extern int          TtaAddButton (Document document, View view, ThotIcon icon, void (*procedure) (), STRING info, BYTE type, boolean state);
 
 /*----------------------------------------------------------------------
    TtaGetButtonCallback
@@ -118,8 +119,9 @@ extern void         TtaSwitchButton (Document document, View view, int index);
    view: the concerned view.
    index: the index.
    picture: the new icon.
+   state: the new state
   ----------------------------------------------------------------------*/
-extern void         TtaChangeButton (Document document, View view, int index, Pixmap picture);
+extern void         TtaChangeButton (Document document, View view, int index, ThotIcon picture, boolean state);
 
 /*----------------------------------------------------------------------
    TtaAddTextZone
@@ -389,10 +391,10 @@ extern void         TtaSetMainLoop ( /* ExternalInitMainLoop init,
 				    ExternalLockMainLoop lock,
 				    ExternalUnlockMainLoop unlock */ );
 
-extern int          TtaAddButton ( /*Document document, View view, Pixmap icon, void (*procedure) (), STRING info */ );
+extern int          TtaAddButton ( /*Document document, View view, ThotIcon icon, void (*procedure) (), STRING info, BYTE type, boolean state */ );
 extern void        *TtaGetButtonCallback ( /*Document document, View view, int index */);
 extern void         TtaSwitchButton ( /*Document document, View view, int index */ );
-extern void         TtaChangeButton ( /*Document document, View view, int index, Pixmap picture */ );
+extern void         TtaChangeButton ( /*Document document, View view, int index, ThotIcon picture, boolean state */ );
 extern int          TtaAddTextZone ( /*Document document, View view, STRING label, boolean editable, void (*procedure) () */ );
 extern void         TtaSetTextZone ( /*Document document, View view, int index, STRING text */ );
 extern void         TtaSetMenuOff ( /*Document document, View view, int menuID */ );

@@ -1144,7 +1144,7 @@ void                   BackUpDocs ()
         DocumentURLs[doc] = pathname;
         SaveDocument (doc, 1);
 	/* register the backup file name and the original document name */
-	fprintf (f, "%s %s\n", pathname, ptr);
+	fprintf (f, "%s %s %d\n", pathname, ptr, DocumentTypes[doc]);
 	TtaFreeMemory (ptr);
       }
   /* now close the crash file */

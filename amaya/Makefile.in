@@ -30,8 +30,9 @@ CONFIGFILES=XKeysymDB thot.ini amaya.keyboard \
 
 DICOFILES= *.ptn *.dic alphabet clavier
 
-AMAYAFILES= HTML.STR HTML.conf HTML.trans HTML.en HTML.fr\
-           HTML*.PRS HTML*.TRA AmayaPage.html
+AMAYAFILES= HTML.STR HTML.conf HTML.trans HTML.en HTML.fr \
+           HTML*.PRS HTML*.TRA AmayaPage.html \
+	   TextFile.STR TextFile*.PRS TextFile*.TRA
 
 FONTSFILES=Families.list fonts.dir icones*
 
@@ -55,7 +56,7 @@ amaya : ../thotlib/libThotEditor.a ../tablelib/libThotTable.a amaya_schemas amay
 all : amaya_schemas amaya_src ../bin/amaya
 
 clean :
-	$(RM) *.o *.h *.c EDITOR* HTML* MathML* GraphML* logo.*
+	$(RM) *.o *.h *.c EDITOR* HTML* TextFile* MathML* GraphML* logo.*
 
 ../bin/print : 
 	@(cd ../thotlib ; $(MAKE) print)
@@ -159,7 +160,8 @@ AMAYA_OPTION_SCHEMAS= $(AMAYA_JAVA_SCHEMAS) $(AMAYA_PLUGIN_SCHEMAS) \
          $(AMAYA_LIBWWW_SCHEMAS) $(AMAYA_MATH_SCHEMAS) $(AMAYA_GRAPH_SCHEMAS) \
          $(AMAYA_ILU_SCHEMAS)
 
-AMAYA_INCLUDES= -I. -I.. -I@top_srcdir@/thotlib/include -I@srcdir@ -I@srcdir@/f \
+AMAYA_INCLUDES= -I. -I.. -I@top_srcdir@/thotlib/include -I@srcdir@ \
+		-I@srcdir@/f -I@srcdir@/xpm \
                 -I@top_srcdir@/libpng/zlib $(AMAYA_OPTION_INCLUDES)
 
 AMAYA_LIBS= ../thotlib/libThotEditor.a ../tablelib/libThotTable.a \
@@ -167,7 +169,7 @@ AMAYA_LIBS= ../thotlib/libThotEditor.a ../tablelib/libThotTable.a \
 
 HTML2THOT_LIBS= ../thotlib/libThotKernel.a
 
-amaya_schemas : compHTML compHTMLP compHTMLT graph_schema math_schema
+amaya_schemas : compHTML compHTMLP compHTMLT compTextFile  compTextFileP compTextFileT graph_schema math_schema
 
 amaya_src : HTML.h $(AMAYA_SRC)
 
@@ -185,6 +187,7 @@ amaya_src : HTML.h $(AMAYA_SRC)
 
 AMAYA_OBJ = \
 	HTMLAPP.o \
+	TextFileAPP.o \
 	EDITORAPP.o \
 	init.o \
 	EDITORactions.o \
@@ -252,6 +255,41 @@ $(AMAYA)/HTMLT.TRA : $(AMAYA)/HTMLT.T ../bin/tra
 	$$TRA $(ALL_AMAYA_OPTIONS) -DXML HTMLT HTMLTX;\
 	$$TRA $(ALL_AMAYA_OPTIONS) HTMLTT
 
+
+#
+# TextFile schemas compilation
+#
+compTextFile: $(AMAYA)/TextFile.STR
+$(AMAYA)/TextFile.STR : $(AMAYA)/TextFile.S ../bin/str
+	STR=`pwd`/../bin/str;PRS=`pwd`/../bin/prs;TRA=`pwd`/../bin/tra;\
+	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
+	$$STR $(ALL_AMAYA_OPTIONS) TextFile ;\
+	$$PRS $(ALL_AMAYA_OPTIONS) TextFileP ;\
+	$$PRS $(ALL_AMAYA_OPTIONS) -DPAGE TextFileP TextFilePP ;\
+	$$PRS $(ALL_AMAYA_OPTIONS) -DUS_PAPER TextFileP TextFilePPUS ;\
+	$$TRA $(ALL_AMAYA_OPTIONS) TextFileT
+
+#
+# Presentation schemas compilation
+#
+compTextFileP: $(AMAYA)/TextFileP.PRS
+$(AMAYA)/TextFileP.PRS : $(AMAYA)/TextFileP.P ../bin/prs
+	PRS=`pwd`/../bin/prs ; \
+	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
+	$$STR $(ALL_AMAYA_OPTIONS) TextFile ;\
+	$$PRS $(ALL_AMAYA_OPTIONS) TextFileP ;\
+	$$PRS $(ALL_AMAYA_OPTIONS) -DPAGE TextFileP TextFilePP ;\
+	$$PRS $(ALL_AMAYA_OPTIONS) -DUS_PAPER TextFileP TextFilePPUS ;\
+
+#
+# Traduction schemas compilation
+#
+compTextFileT: $(AMAYA)/TextFileT.TRA
+$(AMAYA)/TextFileT.TRA : $(AMAYA)/TextFileT.T ../bin/tra
+	TRA=`pwd`/../bin/tra ; \
+	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR ;\
+	$$TRA $(ALL_AMAYA_OPTIONS) TextFileT
+
 #
 # Interface schemas compilation
 #
@@ -266,6 +304,17 @@ HTML.h HTMLAPP.c : @srcdir@/HTML.STR @srcdir@/HTML.A
 	THOTDIR=$(THOTDIR) ; export THOTDIR ; \
 	../bin/app $(ALL_AMAYA_OPTIONS) HTML.A
 
+TextFileAPP.o : TextFileAPP.c
+	$(CC) $(CFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c TextFileAPP.c -o $@
+
+TextFile.h TextFileAPP.c : @srcdir@/TextFile.STR @srcdir@/TextFile.A
+	(if test "@srcdir@" != "" -a "@srcdir@" != "." ; then \
+	    $(CP) @srcdir@/TextFile.A .  ; \
+	    $(CP) @srcdir@/TextFile.STR .  ; \
+	fi)
+	THOTDIR=$(THOTDIR) ; export THOTDIR ; \
+	../bin/app $(ALL_AMAYA_OPTIONS) TextFile.A
+
 EDITORAPP.o : EDITORAPP.c
 	$(CC) $(CFLAGS) $(ALL_AMAYA_OPTIONS) $(INCLUDES) -c EDITORAPP.c -o $@
 
@@ -273,7 +322,7 @@ EDITORAPP.c : @srcdir@/EDITOR.A
 	(if test "@srcdir@" != "" -a "@srcdir@" != "." -a \
 	         "@srcdir@" != "../amaya" ; then \
 	    $(CP) @srcdir@/EDITOR.A . ; \
-	    $(CP) @srcdir@/logo.xpm . ; \
+	    $(CP) @srcdir@/xpm/logo.xpm . ; \
 	fi)
 	THOTDIR=$(THOTDIR) ; export THOTDIR ; \
 	../bin/app $(ALL_AMAYA_OPTIONS) EDITOR.A

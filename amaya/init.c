@@ -18,36 +18,47 @@
 #include "css.h"
 #include "trans.h"
 
-#ifndef _WINDOWS
+
+#ifdef _WINDOWS
+#include "resource.h"
+#else /* _WINDOWS */
 #include "stopN.xpm"
 #include "stopR.xpm"
 #include "save.xpm"
 #include "find.xpm"
+#include "Reload.xpm"
+#include "Browser.xpm"
+#include "Editor.xpm"
+#include "Print.xpm"
 #include "Back.xpm"
 #include "BackNo.xpm"
 #include "Forward.xpm"
 #include "ForwardNo.xpm"
-#include "Reload.xpm"
 #include "I.xpm"
+#include "INo.xpm"
 #include "B.xpm"
+#include "BNo.xpm"
 #include "T.xpm"
+#include "TNo.xpm"
 #include "H1.xpm"
+#include "H1No.xpm"
 #include "H2.xpm"
+#include "H2No.xpm"
 #include "H3.xpm"
+#include "H3No.xpm"
 #include "Num.xpm"
+#include "NumNo.xpm"
 #include "Bullet.xpm"
-#include "Print.xpm"
+#include "BulletNo.xpm"
 #include "Image.xpm"
+#include "ImageNo.xpm"
 #include "DL.xpm"
+#include "DLNo.xpm"
 #include "Link.xpm"
+#include "LinkNo.xpm"
 #include "Table.xpm"
-#include "Browser.xpm"
-#include "Editor.xpm"
+#include "TableNo.xpm"
 #endif /* !_WINDOWS */
-
-#ifdef _WINDOWS
-#include "resource.h"
-#endif /* _WINDOWS */
 
 #ifdef AMAYA_PLUGIN
 #include "plugin.h"
@@ -99,76 +110,99 @@ static STRING       Manual[] = {
 };
 
 #ifndef _WINDOWS
-static Pixmap       stopR;
-static Pixmap       stopN;
-static Pixmap       iconSave;
-static Pixmap       iconFind;
-static Pixmap       iconReload;
-static Pixmap       iconI;
-static Pixmap       iconB;
-static Pixmap       iconT;
-static Pixmap       iconImage;
-static Pixmap       iconBack;
-static Pixmap       iconBackNo;
-static Pixmap       iconForward;
-static Pixmap       iconForwardNo;
-static Pixmap       iconH1;
-static Pixmap       iconH2;
-static Pixmap       iconH3;
-static Pixmap       iconPrint;
-static Pixmap       iconBullet;
-static Pixmap       iconNum;
-static Pixmap       iconDL;
-static Pixmap       iconLink;
-static Pixmap       iconTable;
-static Pixmap       iconBrowser;
-static Pixmap       iconEditor;
+static ThotIcon       stopR;
+static ThotIcon       stopN;
+static ThotIcon       iconSave;
+static ThotIcon       iconFind;
+static ThotIcon       iconReload;
+static ThotIcon       iconI;
+static ThotIcon       iconINo;
+static ThotIcon       iconB;
+static ThotIcon       iconBNo;
+static ThotIcon       iconT;
+static ThotIcon       iconTNo;
+static ThotIcon       iconImage;
+static ThotIcon       iconImageNo;
+static ThotIcon       iconBack;
+static ThotIcon       iconBackNo;
+static ThotIcon       iconForward;
+static ThotIcon       iconForwardNo;
+static ThotIcon       iconH1;
+static ThotIcon       iconH1No;
+static ThotIcon       iconH2;
+static ThotIcon       iconH2No;
+static ThotIcon       iconH3;
+static ThotIcon       iconH3No;
+static ThotIcon       iconPrint;
+static ThotIcon       iconBullet;
+static ThotIcon       iconBulletNo;
+static ThotIcon       iconNum;
+static ThotIcon       iconNumNo;
+static ThotIcon       iconDL;
+static ThotIcon       iconDLNo;
+static ThotIcon       iconLink;
+static ThotIcon       iconLinkNo;
+static ThotIcon       iconTable;
+static ThotIcon       iconTableNo;
+static ThotIcon       iconBrowser;
+static ThotIcon       iconEditor;
 #ifdef AMAYA_PLUGIN
-static Pixmap       iconPlugin;
+static ThotIcon       iconPlugin;
 #endif /* AMAYA_PLUGIN */
 #ifdef AMAYA_JAVA
-static Pixmap       iconJava;
+static ThotIcon       iconJava;
 #endif /* AMAYA_JAVA */
 #endif /* _WINDOWS */
 
 #ifdef _WINDOWS
 #define stopR          0
+#define stopN          0
 #define iconBack       1
+#define iconBackNo     1
 #define iconForward    2
-#define iconReload    3
-#define iconSave      4
+#define iconForwardNo  2
+#define iconReload     3
+#define iconSave       4
 #define iconPrint      5
 #define iconFind       6
-#define iconI         7
-#define iconB         8
+#define iconI          7
+#define iconINo        7
+#define iconB          8
+#define iconBNo        8
 #define iconT          9
-#define iconCSS       10
-#define iconImage    11
+#define iconTNo        9
+#define iconImage     11
+#define iconImageNo   11
 #define iconH1        12
+#define iconH1No      12
+#define iconH2        13
 #define iconH2        13
 #define iconH3        14
+#define iconH3        14
+#define iconBullet    15
 #define iconBullet    15
 #define iconNum       16
+#define iconNumNo     16
 #define	iconDL        17
+#define	iconDLNo      17
 #define iconLink      18
+#define iconLinkNo    18
 #define iconTable     19
+#define iconTableNo   19
 #ifdef AMAYA_PLUGIN
 #define iconPlugin    20
 #endif AMAYA_PLUGIN
-#define stopN         21
-#define iconBackNo    22
-#define iconForwardNo 23
 #define iconBrowser   24
-#define iconEditor    25
+#define iconEditor    24
 
-static BOOL itemChecked = FALSE;
-extern int  currentFrame;
-extern int  menu_item;
-extern CHAR LostPicturePath [512];
+static boolean itemChecked = FALSE;
+extern int     currentFrame;
+extern int     menu_item;
+extern CHAR    LostPicturePath [512];
 
-BOOL        tbStringsInitialized = FALSE;
-int         tipIndex;
-int         iString;
+boolean        tbStringsInitialized = FALSE;
+int            tipIndex;
+int            iString;
 
 #include "wininclude.h"
 #endif /* _WINDOWS */
@@ -480,29 +514,21 @@ boolean		    on;
 #endif
 {
   int		index;
-#ifdef _WINDOWS
-  BYTE          state;
-  int           picture;
-#else /* !_WINDOWS */
-  Pixmap	picture;
-#endif /* _WINDOWS */
+  boolean       state;
+  ThotIcon	picture;
 
   if (back)
     {
       index = 2;
       if (on)
 	{
-#ifdef _WINDOWS 
 	  state   = TRUE;
-#endif /* _WINDOWS */
 	  picture = iconBack;
 	  TtaSetItemOn (document, 1, File, BBack);
 	}
       else
 	{
-#ifdef _WINDOWS 
           state = FALSE;
-#endif /* _WINDOWS */
 	  picture = iconBackNo;
 	  TtaSetItemOff (document, 1, File, BBack);
 	}
@@ -512,26 +538,18 @@ boolean		    on;
       index = 3;
       if (on)
 	{
-#ifdef _WINDOWS 
 	  state = TRUE;
-#endif /* _WINDOWS */
 	  picture = iconForward;
 	  TtaSetItemOn (document, 1, File, BForward);
         }
       else
 	{
-#ifdef _WINDOWS 
 	  state = FALSE;
-#endif /* _WINDOWS */
 	  picture = iconForwardNo;
 	  TtaSetItemOff (document, 1, File, BForward);
 	}
     }
-#ifdef _WINDOWS
-  WIN_TtaChangeButton (document, 1, index, picture, state);
-#else  /* !_WINDOWS */
-  TtaChangeButton (document, 1, index, picture);
-#endif /* _WINDOWS */
+  TtaChangeButton (document, 1, index, picture, state);
 }
 
 /*----------------------------------------------------------------------
@@ -557,11 +575,7 @@ Document            document;
 	     (DocNetworkStatus[document] & AMAYA_NET_ACTIVE))
 	    /* if there was no error message, display the LOADED message */
 	    TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
-#ifdef _WINDOWS
-	  WIN_TtaChangeButton (document, 1, 1, stopN, FALSE);
-#else  /* !_WINDOWS */
-	  TtaChangeButton (document, 1, 1, stopN);
-#endif /* _WINDOWS */
+	  TtaChangeButton (document, 1, 1, stopN, FALSE);
 	}
       DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
     }
@@ -585,11 +599,7 @@ Document            doc;
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
   if (TtaGetViewFrame (document, 1) != 0)
     /* this document is displayed */
-#ifdef _WINDOWS 
-    WIN_TtaChangeButton (document, 1, 1 , stopR, TRUE);
-#else  /* _WINDOWS */
-    TtaChangeButton (document, 1, 1, stopR);
-#endif /* _WINDOWS */
+    TtaChangeButton (document, 1, 1 , stopR, TRUE);
 #endif
 }
 
@@ -612,11 +622,7 @@ Document            doc;
 #if !defined(AMAYA_JAVA) && !defined(AMAYA_ILU)
   if (TtaGetViewFrame (document, 1) != 0)
     /* this document is displayed */
-#ifdef _WINDOWS 
-    WIN_TtaChangeButton (document, 1, 1 , stopR, TRUE);
-#else  /* _WINDOWS */
-    TtaChangeButton (document, 1, 1, stopR);
-#endif /* _WINDOWS */
+    TtaChangeButton (document, 1, 1 , stopR, TRUE);
 #endif
 }
 
@@ -711,26 +717,28 @@ Document            doc;
      TtaUnselect (document);
    if (TtaGetDocumentAccessMode (document))
      {
-       /* the document is in ReadWrite mode */
+       /* the document is in ReadOnly mode */
+       TtaSetToggleItem (document, 1, Edit_, TEditMode, FALSE);
 #ifdef _WINDOWS 
        WIN_TtaSwitchButton (document, 1, 5, iconEditor, TB_INDETERMINATE, TRUE);
-       WIN_TtaChangeButton (document, 1, 11, iconI, FALSE);
-       WIN_TtaChangeButton (document, 1, 12, iconB, FALSE);
-       WIN_TtaChangeButton (document, 1, 13, iconT, FALSE);
-       WIN_TtaChangeButton (document, 1, 15, iconImage, FALSE);
-       WIN_TtaChangeButton (document, 1, 16, iconH1, FALSE);
-       WIN_TtaChangeButton (document, 1, 17, iconH2, FALSE);
-       WIN_TtaChangeButton (document, 1, 18, iconH3, FALSE);
-       WIN_TtaChangeButton (document, 1, 19, iconBullet, FALSE);
-       WIN_TtaChangeButton (document, 1, 20, iconNum, FALSE);
-       WIN_TtaChangeButton (document, 1, 21, iconDL, FALSE);
-       WIN_TtaChangeButton (document, 1, 22, iconLink, FALSE);
-       WIN_TtaChangeButton (document, 1, 23, iconTable, FALSE);
-       SwitchIconMath (document, 1, FALSE);
 #else  /* _WINDOWS */
-       TtaSetToggleItem (document, 1, Edit_, TEditMode, FALSE);
-       TtaChangeButton (document, 1, 5, iconBrowser);
+       TtaChangeButton (document, 1, 5, iconBrowser, FALSE);
 #endif /* _WINDOWS */
+       TtaChangeButton (document, 1, 11, iconINo, FALSE);
+       TtaChangeButton (document, 1, 12, iconBNo, FALSE);
+       TtaChangeButton (document, 1, 13, iconTNo, FALSE);
+       TtaChangeButton (document, 1, 15, iconImageNo, FALSE);
+       TtaChangeButton (document, 1, 16, iconH1No, FALSE);
+       TtaChangeButton (document, 1, 17, iconH2No, FALSE);
+       TtaChangeButton (document, 1, 18, iconH3No, FALSE);
+       TtaChangeButton (document, 1, 19, iconBulletNo, FALSE);
+       TtaChangeButton (document, 1, 20, iconNumNo, FALSE);
+       TtaChangeButton (document, 1, 21, iconDLNo, FALSE);
+       TtaChangeButton (document, 1, 22, iconLinkNo, FALSE);
+       TtaChangeButton (document, 1, 23, iconTableNo, FALSE);
+#ifdef MATHML
+       SwitchIconMath (document, 1, FALSE);
+#endif /* MATHML */
        /* change the document status */
        if (DocumentTypes[document] == docHTML)
 	 DocumentTypes[document] = docReadOnly;
@@ -822,25 +830,27 @@ Document            doc;
    else
      {
        /* the document is in ReadWrite mode */
+       TtaSetToggleItem (document, 1, Edit_, TEditMode, TRUE);
 #ifdef _WINDOWS 
        WIN_TtaSwitchButton (document, 1, 5, iconEditor, TB_INDETERMINATE, FALSE);
-       WIN_TtaChangeButton (document, 1, 11, iconI, TRUE);
-       WIN_TtaChangeButton (document, 1, 12, iconB, TRUE);
-       WIN_TtaChangeButton (document, 1, 13, iconT, TRUE);
-       WIN_TtaChangeButton (document, 1, 15, iconImage, TRUE);
-       WIN_TtaChangeButton (document, 1, 16, iconH1, TRUE);
-       WIN_TtaChangeButton (document, 1, 17, iconH2, TRUE);
-       WIN_TtaChangeButton (document, 1, 18, iconH3, TRUE);
-       WIN_TtaChangeButton (document, 1, 19, iconBullet, TRUE);
-       WIN_TtaChangeButton (document, 1, 20, iconNum, TRUE);
-       WIN_TtaChangeButton (document, 1, 21, iconDL, TRUE);
-       WIN_TtaChangeButton (document, 1, 22, iconLink, TRUE);
-       WIN_TtaChangeButton (document, 1, 23, iconTable, TRUE);
-       SwitchIconMath (document, 1, TRUE);
 #else  /* _WINDOWS */
-       TtaSetToggleItem (document, 1, Edit_, TEditMode, TRUE);
-       TtaChangeButton (document, 1, 5, iconEditor);
+       TtaChangeButton (document, 1, 5, iconEditor, TRUE);
 #endif /* _WINDOWS */
+       TtaChangeButton (document, 1, 11, iconI, TRUE);
+       TtaChangeButton (document, 1, 12, iconB, TRUE);
+       TtaChangeButton (document, 1, 13, iconT, TRUE);
+       TtaChangeButton (document, 1, 15, iconImage, TRUE);
+       TtaChangeButton (document, 1, 16, iconH1, TRUE);
+       TtaChangeButton (document, 1, 17, iconH2, TRUE);
+       TtaChangeButton (document, 1, 18, iconH3, TRUE);
+       TtaChangeButton (document, 1, 19, iconBullet, TRUE);
+       TtaChangeButton (document, 1, 20, iconNum, TRUE);
+       TtaChangeButton (document, 1, 21, iconDL, TRUE);
+       TtaChangeButton (document, 1, 22, iconLink, TRUE);
+       TtaChangeButton (document, 1, 23, iconTable, TRUE);
+#ifdef MATHML
+       SwitchIconMath (document, 1, TRUE);
+#endif /* MATHML */
        /* change the document status */
        if (DocumentTypes[document] == docReadOnly)
 	 DocumentTypes[document] = docHTML;
@@ -945,11 +955,7 @@ Document            doc;
   IncludedDocument = 0;
   if (TtaGetViewFrame (document, 1) != 0)
     /* this document is displayed */
-#ifdef _WINDOWS
-    WIN_TtaChangeButton (document, 1, 1 , stopR, TRUE);
-#else  /* _WINDOWS */
-    TtaChangeButton (document, 1, 1, stopR);
-#endif /* _WINDOWS */
+    TtaChangeButton (document, 1, 1 , stopR, TRUE);
 }
 
 
@@ -1005,11 +1011,7 @@ View                view;
   else if (DocNetworkStatus[document] & AMAYA_NET_ACTIVE)
     {
       if (TtaGetViewFrame (document, 1) != 0)
-#ifndef _WINDOWS
-	TtaChangeButton (document, 1, 1, stopN);
-#else
-	WIN_TtaChangeButton (document, 1, 1, stopN, FALSE);
-#endif /* !_WINDOWS */
+	TtaChangeButton (document, 1, 1, stopN, FALSE);
       StopRequest (document);
       FilesLoading[document] = 0;
       DocNetworkStatus[document] = AMAYA_NET_INACTIVE;
@@ -1333,74 +1335,58 @@ View                view;
    logFile is TRUE if the new view is created to display a log file
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Document     InitDocView (Document doc, STRING pathname, boolean logFile)
+static Document     InitDocView (Document doc, STRING docname, DocumentType docType, boolean logFile)
 #else
-static Document     InitDocView (doc, pathname, logFile)
+static Document     InitDocView (doc, docname, logFile)
 Document            doc;
-STRING              pathname;
+STRING              docname;
+DocumentType        docType;
 boolean             logFile;
 #endif
 {
-   STRING              tempname;
-   STRING              temppath;
-   View                mainView, structView, altView, linksView, tocView;
-   Document            old_doc;
-   boolean             opened;
-   int                 x, y, w, h;
-#  ifdef _WINDOWS
-   int                 indexButton = 0;
-#  endif /* _WINDOWS */
+  View                mainView, structView, altView, linksView, tocView;
+  Document            old_doc;
+  boolean             opened, reinitialized;
+  int                 x, y, w, h;
+#ifdef _WINDOWS
+  int                 indexButton = 0;
 
-#  ifdef _WINDOWS
-   Window_Curs = IDC_WINCURSOR;
-   /* bmpID = IDB_AMAYALOGO; */
-#  endif /* _WINDOWS */
-
-   old_doc = doc;		/* previous document */
-   if (doc != 0 && !TtaIsDocumentModified (doc))
-     {
-        /* close the Alternate view if it is open */
-	altView = TtaGetViewFromName (doc, "Alternate_view");
-	if (altView != 0)
-	   if (TtaIsViewOpened (doc, altView))
-	     {
-	       TtaCloseView (doc, altView);
-	     }
-        /* close the Structure view if it is open */
-	structView = TtaGetViewFromName (doc, "Structure_view");
-	if (structView != 0)
-	   if (TtaIsViewOpened (doc, structView))
-	     {
-		TtaCloseView (doc, structView);
-	     }
+  Window_Curs = IDC_WINCURSOR;
+#endif /* _WINDOWS */
+  old_doc = doc;		/* previous document */
+  if (doc != 0 && !TtaIsDocumentModified (doc))
+    {
+      if (DocumentTypes[doc] == docReadOnly || DocumentTypes[doc] == docHTML)
+	{
+	  TtaSetToggleItem (doc, 1, Views, TShowMapAreas, FALSE);
+	  TtaSetToggleItem (doc, 1, Special, TSectionNumber, FALSE);
+	  /* close the Alternate view if it is open */
+	  altView = TtaGetViewFromName (doc, "Alternate_view");
+	  if (altView != 0 && TtaIsViewOpened (doc, altView))
+	    TtaCloseView (doc, altView);
+	  /* close the Structure view if it is open */
+	  structView = TtaGetViewFromName (doc, "Structure_view");
+	  if (structView != 0 && TtaIsViewOpened (doc, structView))
+	    TtaCloseView (doc, structView);
 #ifdef MATHML
-	structView = TtaGetViewFromName (doc, "Math_Structure_view");
-	if (structView != 0)
-	   if (TtaIsViewOpened (doc, structView))
-	      TtaCloseView (doc, structView);
+	  structView = TtaGetViewFromName (doc, "Math_Structure_view");
+	  if (structView != 0 && TtaIsViewOpened (doc, structView))
+	    TtaCloseView (doc, structView);
 #endif /* MATHML */
 #ifdef GRAPHML
-	structView = TtaGetViewFromName (doc, "Graph_Structure_view");
-	if (structView != 0)
-	   if (TtaIsViewOpened (doc, structView))
-	      TtaCloseView (doc, structView);
+	  structView = TtaGetViewFromName (doc, "Graph_Structure_view");
+	  if (structView != 0 && TtaIsViewOpened (doc, structView))
+	    TtaCloseView (doc, structView);
 #endif /* GRAPHML */
-        /* close the Links view if it is open */
-	linksView = TtaGetViewFromName (doc, "Links_view");
-	if (linksView != 0)
-	   if (TtaIsViewOpened (doc, linksView))
-	     {
-		TtaCloseView (doc, linksView);
-	     }
-        /* close the Table_of_contents view if it is open */
-	tocView = TtaGetViewFromName (doc, "Table_of_contents");
-	if (tocView != 0)
-	   if (TtaIsViewOpened (doc, tocView))
-	     {
-		TtaCloseView (doc, tocView);
-	     }
-	TtaSetToggleItem (doc, 1, Views, TShowMapAreas, FALSE);
-	TtaSetToggleItem (doc, 1, Special, TSectionNumber, FALSE);
+	  /* close the Links view if it is open */
+	  linksView = TtaGetViewFromName (doc, "Links_view");
+	  if (linksView != 0 && TtaIsViewOpened (doc, linksView))
+	    TtaCloseView (doc, linksView);
+	  /* close the Table_of_contents view if it is open */
+	  tocView = TtaGetViewFromName (doc, "Table_of_contents");
+	  if (tocView != 0 && TtaIsViewOpened (doc, tocView))
+	    TtaCloseView (doc, tocView);
+	}
 	/* remove the current selection */
 	TtaUnselect (doc);
 	UpdateContextSensitiveMenus (doc);
@@ -1412,15 +1398,10 @@ boolean             logFile;
       opened = FALSE;
 
    /* open the main view */
-   temppath = TtaGetMemory (MAX_LENGTH);
-   tempname = TtaGetMemory (MAX_LENGTH);
-   TtaExtractName (pathname, temppath, tempname);
-   if (tempname[0] == EOS)
-      /* there is a slash at the end of the path */
-      ustrcpy (tempname, "noname.html");
-
-   doc = TtaNewDocument ("HTML", tempname);
-   TtaFreeMemory (tempname);
+   if (docType == docText || docType == docTextRO)
+     doc = TtaNewDocument ("TextFile", docname);
+   else
+     doc = TtaNewDocument ("HTML", docname);
    if (doc >= DocumentTableLength)
      {
        TtaCloseDocument (doc);
@@ -1428,159 +1409,328 @@ boolean             logFile;
      }
    else if (doc > 0)
      {
-	/* assign a presentation model to the document */
-	if (TtaGetScreenDepth () > 1)
-	   TtaSetPSchema (doc, "HTMLP");
-	else
-	   TtaSetPSchema (doc, "HTMLPBW");
-	/* open the main view */
-	TtaSetNotificationMode (doc, 1);
-	TtaGetViewGeometry (doc, "Formatted_view", &x, &y, &w, &h);
-	/* change the position slightly to avoid hiding completely the main
-	   view of other documents */
-	x += (((int) doc) - 1) * 5;
-	y += (((int) doc) - 1) * 5;
-	if (logFile)
-	  mainView = TtaOpenMainView (doc, x, y, w, 60);
-	else
-	  mainView = TtaOpenMainView (doc, x, y, w, h);
-	if (mainView == 0)
-	  {
-	     TtaCloseDocument (doc);
-	     TtaFreeMemory (temppath);
-	     return (0);
-	  }
-	LoadUserStyleSheet (doc);
-	if (!opened)
-	  {
-	     DocumentTypes[doc] = docHTML;
-	     /* Add a button */
-#        ifndef _WINDOWS
-	     TtaAddButton (doc, 1, stopN, StopTransfer,
-			   TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT));
-	     TtaAddButton (doc, 1, iconBackNo, GotoPreviousHTML,
-			   TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS));
-	     TtaAddButton (doc, 1, iconForwardNo, GotoNextHTML,
-			   TtaGetMessage (AMAYA, AM_BUTTON_NEXT));
-	     TtaAddButton (doc, 1, iconReload, Reload,
-			   TtaGetMessage (AMAYA, AM_BUTTON_RELOAD));
-	     TtaAddButton (doc, 1, iconEditor, SetBrowserEditor,
-			   TtaGetMessage (AMAYA, AM_BUTTON_BrowseEdit));
-	     TtaAddButton (doc, 1, None, NULL, NULL);
+       if (docType == docText || docType == docTextRO)
+	   TtaSetPSchema (doc, "TextFileP");
+       else
+	 {
+	   /* assign a presentation model to the document */
+	   if (TtaGetScreenDepth () > 1)
+	     TtaSetPSchema (doc, "HTMLP");
+	   else
+	     TtaSetPSchema (doc, "HTMLPBW");
+	 }
 
-	     TtaAddButton (doc, 1, iconSave, SaveDocument,
-			   TtaGetMessage (AMAYA, AM_BUTTON_SAVE));
-	     TtaAddButton (doc, 1, iconPrint, TtcPrint,
-			   TtaGetMessage (AMAYA, AM_BUTTON_PRINT));
-	     TtaAddButton (doc, 1, iconFind, TtcSearchText,
-			   TtaGetMessage (AMAYA, AM_BUTTON_SEARCH));
-	     TtaAddButton (doc, 1, None, NULL, NULL);
+       /* open the main view */
+       TtaGetViewGeometry (doc, "Formatted_view", &x, &y, &w, &h);
+       TtaSetNotificationMode (doc, 1);
+       /* change the position slightly to avoid hiding completely the main
+	  view of other documents */
+       x += (((int) doc) - 1) * 5;
+       y += (((int) doc) - 1) * 5;
+       if (logFile)
+	 mainView = TtaOpenMainView (doc, x, y, w, 60);
+       else
+	 mainView = TtaOpenMainView (doc, x, y, w, h);
+       
+       if (mainView == 0)
+	 {
+	   TtaCloseDocument (doc);
+	   return (0);
+	 }
+       LoadUserStyleSheet (doc);
+       if (!opened)
+	 {
+#ifdef _WINDOWS
+	   tipIndex = 0;
+	   iString  = 0;
+#endif /* _WINDOWS */
 
-	     IButton =  TtaAddButton (doc, 1, iconI, SetCharEmphasis,
-				     TtaGetMessage (AMAYA, AM_BUTTON_ITALICS));
-	     BButton =  TtaAddButton (doc, 1, iconB, SetCharStrong,
-				      TtaGetMessage (AMAYA, AM_BUTTON_BOLD));
-	     TTButton = TtaAddButton (doc, 1, iconT, SetCharCode,
-				      TtaGetMessage (AMAYA, AM_BUTTON_CODE));
-	     TtaAddButton (doc, 1, None, NULL, NULL);
-
-	     TtaAddButton (doc, 1, iconImage, CreateImage,
-			   TtaGetMessage (AMAYA, AM_BUTTON_IMG));
-	     TtaAddButton (doc, 1, iconH1, CreateHeading1,
-			   TtaGetMessage (AMAYA, AM_BUTTON_H1));
-	     TtaAddButton (doc, 1, iconH2, CreateHeading2,
-			   TtaGetMessage (AMAYA, AM_BUTTON_H2));
-	     TtaAddButton (doc, 1, iconH3, CreateHeading3,
-			   TtaGetMessage (AMAYA, AM_BUTTON_H3));
-	     TtaAddButton (doc, 1, iconBullet, CreateList,
-			   TtaGetMessage (AMAYA, AM_BUTTON_UL));
-	     TtaAddButton (doc, 1, iconNum, CreateNumberedList,
-			   TtaGetMessage (AMAYA, AM_BUTTON_OL));
-	     TtaAddButton (doc, 1, iconDL, CreateDefinitionList,
-			   TtaGetMessage (AMAYA, AM_BUTTON_DL));
-	     TtaAddButton (doc, 1, iconLink, CreateOrChangeLink,
-			   TtaGetMessage (AMAYA, AM_BUTTON_LINK));
-	     TtaAddButton (doc, 1, iconTable, CreateTable,
-			   TtaGetMessage (AMAYA, AM_BUTTON_TABLE));
-
-#        else /* _WINDOWS */
-	     tipIndex = 0;
-	     iString  = 0;
-
-	     WIN_TtaAddButton (doc, 1, stopR, StopTransfer, TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT), TBSTYLE_BUTTON, FALSE);
-	     WIN_TtaAddButton (doc, 1, iconBack, GotoPreviousHTML, TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS), TBSTYLE_BUTTON, FALSE);
-	     WIN_TtaAddButton (doc, 1, iconForward, GotoNextHTML, TtaGetMessage (AMAYA, AM_BUTTON_NEXT), TBSTYLE_BUTTON, FALSE);
-	     WIN_TtaAddButton (doc, 1, iconReload, Reload, TtaGetMessage (AMAYA, AM_BUTTON_RELOAD), TBSTYLE_BUTTON, TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, iconEditor, SetBrowserEditor, TtaGetMessage (AMAYA, AM_BUTTON_BrowseEdit), TBSTYLE_BUTTON, TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, 0, NULL, NULL, TBSTYLE_SEP, TBSTATE_ENABLED); /* SEPARATOR */
-
-	     WIN_TtaAddButton (doc, 1, iconSave, SaveDocument, TtaGetMessage (AMAYA, AM_BUTTON_SAVE), TBSTYLE_BUTTON, TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, iconPrint, TtcPrint, TtaGetMessage (AMAYA, AM_BUTTON_PRINT), TBSTYLE_BUTTON, TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, iconFind, TtcSearchText,	TtaGetMessage (AMAYA, AM_BUTTON_SEARCH), TBSTYLE_BUTTON, TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, 0, NULL, NULL, TBSTYLE_SEP, TBSTATE_ENABLED);  /* SEPARATOR */
-
-	     IButton =  WIN_TtaAddButton (doc, 1, iconI, SetCharEmphasis, TtaGetMessage (AMAYA, AM_BUTTON_ITALICS), TBSTYLE_CHECK, TBSTATE_ENABLED);
-	     BButton =  WIN_TtaAddButton (doc, 1, iconB, SetCharStrong, TtaGetMessage (AMAYA, AM_BUTTON_BOLD), TBSTYLE_CHECK, TBSTATE_ENABLED);
-	     TTButton = WIN_TtaAddButton (doc, 1, iconT, SetCharCode, TtaGetMessage (AMAYA, AM_BUTTON_CODE), TBSTYLE_CHECK, TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, 0, NULL, NULL, TBSTYLE_SEP, TBSTATE_ENABLED);  /* SEPARATOR */
-
-	     WIN_TtaAddButton (doc, 1, iconImage, CreateImage, TtaGetMessage (AMAYA, AM_BUTTON_IMG), TBSTYLE_BUTTON, TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, iconH1, CreateHeading1, TtaGetMessage (AMAYA, AM_BUTTON_H1), TBSTYLE_BUTTON, TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, iconH2, CreateHeading2, TtaGetMessage (AMAYA, AM_BUTTON_H2), TBSTYLE_BUTTON, TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, iconH3, CreateHeading3, TtaGetMessage (AMAYA, AM_BUTTON_H3), TBSTYLE_BUTTON, TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, iconBullet, CreateList, TtaGetMessage (AMAYA, AM_BUTTON_UL), TBSTYLE_BUTTON, TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, iconNum, CreateNumberedList, TtaGetMessage (AMAYA, AM_BUTTON_OL), TBSTYLE_BUTTON, TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, iconDL, CreateDefinitionList, TtaGetMessage (AMAYA, AM_BUTTON_DL), TBSTYLE_BUTTON, TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, iconLink, CreateOrChangeLink, TtaGetMessage (AMAYA, AM_BUTTON_LINK), TBSTYLE_BUTTON, TBSTATE_ENABLED);
-	     WIN_TtaAddButton (doc, 1, iconTable, CreateTable, TtaGetMessage (AMAYA, AM_BUTTON_TABLE), TBSTYLE_BUTTON, TBSTATE_ENABLED);
-#        endif /* _WINDOWS */
-
+	   /* Add a button */
+	   TtaAddButton (doc, 1, stopN, StopTransfer,
+			 TtaGetMessage (AMAYA, AM_BUTTON_INTERRUPT),
+			 TBSTYLE_BUTTON, FALSE);
+	   TtaAddButton (doc, 1, iconBackNo, GotoPreviousHTML,
+			 TtaGetMessage (AMAYA, AM_BUTTON_PREVIOUS),
+			 TBSTYLE_BUTTON, FALSE);
+	   TtaAddButton (doc, 1, iconForwardNo, GotoNextHTML,
+			 TtaGetMessage (AMAYA, AM_BUTTON_NEXT),
+			 TBSTYLE_BUTTON, FALSE);
+	   TtaAddButton (doc, 1, iconReload, Reload,
+			 TtaGetMessage (AMAYA, AM_BUTTON_RELOAD),
+			 TBSTYLE_BUTTON, TRUE);
+	   TtaAddButton (doc, 1, iconEditor, SetBrowserEditor,
+			 TtaGetMessage (AMAYA, AM_BUTTON_BrowseEdit),
+			 TBSTYLE_BUTTON, TRUE);
+	   /* SEPARATOR */
+	   TtaAddButton (doc, 1, None, NULL, NULL, TBSTYLE_BUTTON, FALSE);
+	   TtaAddButton (doc, 1, iconSave, SaveDocument,
+			 TtaGetMessage (AMAYA, AM_BUTTON_SAVE),
+			 TBSTYLE_BUTTON, TRUE);
+	   TtaAddButton (doc, 1, iconPrint, TtcPrint,
+			 TtaGetMessage (AMAYA, AM_BUTTON_PRINT),
+			 TBSTYLE_BUTTON, TRUE);
+	   TtaAddButton (doc, 1, iconFind, TtcSearchText,
+			 TtaGetMessage (AMAYA, AM_BUTTON_SEARCH),
+			 TBSTYLE_BUTTON, TRUE);
+	   /* SEPARATOR */
+	   TtaAddButton (doc, 1, None, NULL, NULL, TBSTYLE_BUTTON, FALSE);
+	   IButton =  TtaAddButton (doc, 1, iconI, SetCharEmphasis,
+				    TtaGetMessage (AMAYA, AM_BUTTON_ITALICS),
+				    TBSTYLE_CHECK, TRUE);
+	   BButton =  TtaAddButton (doc, 1, iconB, SetCharStrong,
+				    TtaGetMessage (AMAYA, AM_BUTTON_BOLD),
+				    TBSTYLE_CHECK, TRUE);
+	   TTButton = TtaAddButton (doc, 1, iconT, SetCharCode,
+				    TtaGetMessage (AMAYA, AM_BUTTON_CODE),
+				    TBSTYLE_CHECK, TRUE);
+	   /* SEPARATOR */
+	   TtaAddButton (doc, 1, None, NULL, NULL, TBSTYLE_BUTTON, FALSE);
+	   TtaAddButton (doc, 1, iconImage, CreateImage,
+			 TtaGetMessage (AMAYA, AM_BUTTON_IMG),
+			 TBSTYLE_BUTTON, TRUE);
+	   TtaAddButton (doc, 1, iconH1, CreateHeading1,
+			 TtaGetMessage (AMAYA, AM_BUTTON_H1),
+			 TBSTYLE_BUTTON, TRUE);
+	   TtaAddButton (doc, 1, iconH2, CreateHeading2,
+			 TtaGetMessage (AMAYA, AM_BUTTON_H2),
+			 TBSTYLE_BUTTON, TRUE);
+	   TtaAddButton (doc, 1, iconH3, CreateHeading3,
+			 TtaGetMessage (AMAYA, AM_BUTTON_H3),
+			 TBSTYLE_BUTTON, TRUE);
+	   TtaAddButton (doc, 1, iconBullet, CreateList,
+			 TtaGetMessage (AMAYA, AM_BUTTON_UL),
+			 TBSTYLE_BUTTON, TRUE);
+	   TtaAddButton (doc, 1, iconNum, CreateNumberedList,
+			 TtaGetMessage (AMAYA, AM_BUTTON_OL),
+			 TBSTYLE_BUTTON, TRUE);
+	   TtaAddButton (doc, 1, iconDL, CreateDefinitionList,
+			 TtaGetMessage (AMAYA, AM_BUTTON_DL),
+			 TBSTYLE_BUTTON, TRUE);
+	   TtaAddButton (doc, 1, iconLink, CreateOrChangeLink,
+			 TtaGetMessage (AMAYA, AM_BUTTON_LINK),
+			 TBSTYLE_BUTTON, TRUE);
+	   TtaAddButton (doc, 1, iconTable, CreateTable,
+			 TtaGetMessage (AMAYA, AM_BUTTON_TABLE),
+			 TBSTYLE_BUTTON, TRUE);
+	   
 #        ifdef AMAYA_PLUGIN 
-	     TtaAddButton (doc, 1, iconPlugin, TtaCreateFormPlugin,
-			   TtaGetMessage (AMAYA, AM_BUTTON_PLUGIN));
+	   TtaAddButton (doc, 1, iconPlugin, TtaCreateFormPlugin,
+			 TtaGetMessage (AMAYA, AM_BUTTON_PLUGIN),
+			 TBSTYLE_BUTTON, TRUE);
 #        endif /* AMAYA_PLUGIN */
 
 #ifdef AMAYA_JAVA
-	     TtaAddButton (doc, 1, iconJava, CreateFormJava,
-			   TtaGetMessage (AMAYA, AM_BUTTON_JAVA));
+	   TtaAddButton (doc, 1, iconJava, CreateFormJava,
+			 TtaGetMessage (AMAYA, AM_BUTTON_JAVA),
+			 TBSTYLE_BUTTON, TRUE);
 #endif /* AMAYA_JAVA */
 #ifdef MATHML
-	     AddMathButton (doc, 1);
+	   AddMathButton (doc, 1);
 #endif /* MATHML */
 #ifdef GRAPHML
-	     AddGraphicsButton (doc, 1);
+	   AddGraphicsButton (doc, 1);
 #endif /* GRAPHML */
-#        ifdef _WINDOWS
-         tbStringsInitialized = TRUE;
-#        endif /* _WINDOWS */
-	     TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_LOCATION), TRUE,
-			     TextURL);
-	     TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_TITLE), TRUE,
-			     TextTitle);
+#ifdef _WINDOWS
+	   tbStringsInitialized = TRUE;
+#endif /* _WINDOWS */
+	   TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_LOCATION), TRUE,
+			   TextURL);
+	   TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_TITLE), TRUE,
+			   TextTitle);
+	   /* initial state for menu entries */
+	   TtaSetItemOff (doc, 1, File, BBack);
+	   TtaSetItemOff (doc, 1, File, BForward);
+	   TtaSetToggleItem (doc, 1, Views, TShowButtonbar, TRUE);
+	   TtaSetToggleItem (doc, 1, Views, TShowTextZone, TRUE);
+	   TtaSetToggleItem (doc, 1, Views, TShowMapAreas, FALSE);
+	   TtaSetToggleItem (doc, 1, Views, TShowTargets, FALSE);
 
-	     /* save the path or URL of the document */
-	     TtaSetDocumentDirectory (doc, temppath);
-	     /* disable auto save */
-	     TtaSetDocumentBackUpInterval (doc, 0);
-
-	     TtaSetToggleItem (doc, 1, Views, TShowButtonbar, TRUE);
-	     TtaSetToggleItem (doc, 1, Views, TShowTextZone, TRUE);
-	     TtaSetToggleItem (doc, 1, Views, TShowMapAreas, FALSE);
-
-	     /* if we open the new document in a new view, control */
-	     /* is transferred from previous document to new document */
-	     if (old_doc != doc && old_doc != 0)
-	       {
-		  ResetStop (old_doc);
-		  /* clear the status line of previous document */
-		  TtaSetStatus (old_doc, 1, " ", NULL);
-		  ActiveTransfer (doc);
-	       }
-	  }
-	else
-	  TtaSetTextZone (doc, 1, 2, "");
+	   /* if we open the new document in a new view, control */
+	   /* is transferred from previous document to new document */
+	   if (old_doc != doc && old_doc != 0)
+	     {
+	       ResetStop (old_doc);
+	       /* clear the status line of previous document */
+	       TtaSetStatus (old_doc, 1, " ", NULL);
+	       ActiveTransfer (doc);
+	     }
+	 }
+       else
+	 {
+	   /* the window already exists */
+	   TtaSetTextZone (doc, 1, 2, "");
+	 }
      }
-   TtaFreeMemory (temppath);
+
+   /* store the new document type */
+   reinitialized = FALSE;
+   if (docType == docImage)
+     {
+       if (DocumentTypes[doc] == docReadOnly || DocumentTypes[doc] == docTextRO)
+	 {
+	   /* we need to update menus and buttons */
+	   reinitialized = TRUE;
+	   /* document in ReadOnly mode */
+	   DocumentTypes[doc] = docImageRO;
+	 }
+       else if (DocumentTypes[doc] == docHTML || DocumentTypes[doc] == docText)
+	 {
+	   /* we need to update menus and buttons */
+	   reinitialized = TRUE;
+	   /* document in ReadWrite mode */
+	   DocumentTypes[doc] = docImage;
+	 }
+     }
+   else if (docType == docImageRO)
+     {
+       /* document in ReadOnly mode */
+       DocumentTypes[doc] = docImageRO;
+     }
+   else if (docType == docText)
+     {
+       if (DocumentTypes[doc] == docReadOnly || DocumentTypes[doc] == docImageRO)
+	 {
+	   /* we need to update menus and buttons */
+	   reinitialized = TRUE;
+	   /* document in ReadOnly mode */
+	   DocumentTypes[doc] = docTextRO;
+	 }
+       else if (DocumentTypes[doc] == docHTML || DocumentTypes[doc] == docImage)
+	 {
+	   /* we need to update menus and buttons */
+	   reinitialized = TRUE;
+	   /* document in ReadWrite mode */
+	   DocumentTypes[doc] = docText;
+	 }
+     }
+   else if (docType == docTextRO)
+     {
+       /* document in ReadOnly mode */
+       DocumentTypes[doc] = docTextRO;
+      }
+   else if (docType == docReadOnly)
+     {
+       /* document in ReadOnly mode */
+       DocumentTypes[doc] = docReadOnly;
+      }
+   else
+     {
+       if (DocumentTypes[doc] == docTextRO || DocumentTypes[doc] == docImageRO)
+	 {
+	   /* we need to update menus and buttons */
+	   reinitialized = TRUE;
+	   /* document in ReadOnly mode */
+	   DocumentTypes[doc] = docReadOnly;
+	 }
+       else if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docImage)
+	 {
+	   /* we need to update menus and buttons */
+	   reinitialized = TRUE;
+	   /* document in ReadWrite mode */
+	   DocumentTypes[doc] = docHTML;
+	 }
+     }
+
+   if (reinitialized || !opened)
+     /* now update menus and buttons according to the document status */
+     if (DocumentTypes[doc] == docReadOnly ||
+	 DocumentTypes[doc] == docImageRO ||
+	 DocumentTypes[doc] == docText ||
+	 DocumentTypes[doc] == docTextRO)
+       {
+	 if (DocumentTypes[doc] != docText)
+	   {
+	     /* the document is in ReadOnly mode */
+	     TtaSetItemOff (doc, 1, File, BSave);
+	     TtaSetItemOff (doc, 1, Edit_, BCut);
+	     TtaSetItemOff (doc, 1, Edit_, BPaste);
+	     TtaSetItemOff (doc, 1, Edit_, BClear);
+	     TtaSetItemOff (doc, 1, Edit_, BSpellCheck);
+	     TtaSetItemOff (doc, 1, Edit_, BTransform);
+	     TtaSetToggleItem (doc, 1, Edit_, TEditMode, FALSE);
+#ifdef _WINDOWS 
+	     WIN_TtaSwitchButton (doc, 1, 5, iconEditor, TB_INDETERMINATE, TRUE);
+#else  /* _WINDOWS */
+	     TtaChangeButton (doc, 1, 5, iconBrowser, FALSE);
+#endif /* _WINDOWS */
+	   }
+	 else
+	   TtaSetToggleItem (doc, 1, Edit_, TEditMode, TRUE);
+
+	 if (DocumentTypes[doc] == docText ||
+	     DocumentTypes[doc] == docTextRO)
+	   {
+	     TtaSetItemOff (doc, 1, Views, TShowMapAreas);
+	     TtaSetItemOff (doc, 1, Views, TShowTargets);
+	     TtaSetItemOff (doc, 1, Views, BShowStructure);
+	     TtaSetItemOff (doc, 1, Views, BShowAlternate);
+	     TtaSetItemOff (doc, 1, Views, BShowLinks);
+	     TtaSetItemOff (doc, 1, Views, BShowToC);
+	   }
+
+	 TtaChangeButton (doc, 1, 11, iconINo, FALSE);
+	 TtaChangeButton (doc, 1, 12, iconBNo, FALSE);
+	 TtaChangeButton (doc, 1, 13, iconTNo, FALSE);
+	 TtaChangeButton (doc, 1, 15, iconImageNo, FALSE);
+	 TtaChangeButton (doc, 1, 16, iconH1No, FALSE);
+	 TtaChangeButton (doc, 1, 17, iconH2No, FALSE);
+	 TtaChangeButton (doc, 1, 18, iconH3No, FALSE);
+	 TtaChangeButton (doc, 1, 19, iconBulletNo, FALSE);
+	 TtaChangeButton (doc, 1, 20, iconNumNo, FALSE);
+	 TtaChangeButton (doc, 1, 21, iconDLNo, FALSE);
+	 TtaChangeButton (doc, 1, 22, iconLinkNo, FALSE);
+	 TtaChangeButton (doc, 1, 23, iconTableNo, FALSE);
+#ifdef MATHML
+	 SwitchIconMath (doc, 1, FALSE);
+#endif /* MATHML */
+	 TtaSetMenuOff (doc, 1, Types);
+	 TtaSetMenuOff (doc, 1, Links);
+	 TtaSetMenuOff (doc, 1, Style);
+	 TtaSetMenuOff (doc, 1, Special);
+	 TtaSetMenuOff (doc, 1, Attributes_);
+       }
+     else if (DocumentTypes[doc] == docHTML ||
+	      DocumentTypes[doc] == docImage)
+       {
+	 if (reinitialized)
+	   {
+	     /* the document is in ReadWrite mode */
+#ifdef _WINDOWS 
+	     WIN_TtaSwitchButton (doc, 1, 5, iconEditor, TB_INDETERMINATE, FALSE);
+#else  /* _WINDOWS */
+	     TtaChangeButton (doc, 1, 5, iconEditor, TRUE);
+#endif /* _WINDOWS */
+	     TtaChangeButton (doc, 1, 11, iconI, TRUE);
+	     TtaChangeButton (doc, 1, 12, iconB, TRUE);
+	     TtaChangeButton (doc, 1, 13, iconT, TRUE);
+	     TtaChangeButton (doc, 1, 15, iconImage, TRUE);
+	     TtaChangeButton (doc, 1, 16, iconH1, TRUE);
+	     TtaChangeButton (doc, 1, 17, iconH2, TRUE);
+	     TtaChangeButton (doc, 1, 18, iconH3, TRUE);
+	     TtaChangeButton (doc, 1, 19, iconBullet, TRUE);
+	     TtaChangeButton (doc, 1, 20, iconNum, TRUE);
+	     TtaChangeButton (doc, 1, 21, iconDL, TRUE);
+	     TtaChangeButton (doc, 1, 22, iconLink, TRUE);
+	     TtaChangeButton (doc, 1, 23, iconTable, TRUE);
+#ifdef MATHML
+	     SwitchIconMath (doc, 1, TRUE);
+#endif /* MATHML */
+
+ 	     TtaSetItemOn (doc, 1, Views, TShowMapAreas);
+	     TtaSetItemOn (doc, 1, Views, TShowTargets);
+	     TtaSetItemOn (doc, 1, Views, BShowStructure);
+	     TtaSetItemOn (doc, 1, Views, BShowAlternate);
+	     TtaSetItemOn (doc, 1, Views, BShowLinks);
+	     TtaSetItemOn (doc, 1, Views, BShowToC);
+
+	     TtaSetMenuOn (doc, 1, Types);
+	     TtaSetMenuOn (doc, 1, Links);
+	     TtaSetMenuOn (doc, 1, Style);
+	     TtaSetMenuOn (doc, 1, Special);
+	     TtaSetMenuOn (doc, 1, Attributes_);
+	   }
+	 TtaSetToggleItem (doc, 1, Edit_, TEditMode, TRUE);
+       }
    return (doc);
 }
 
@@ -1709,35 +1859,40 @@ boolean		    history;
 #endif
 {
   Document            newdoc = 0;
+  DocumentType        docType;
   STRING              tempdocument;
   STRING              tempdir;
   STRING              s;
   int                 i, j;
-  boolean	       PlainText;
-  boolean	       HTMLfile;
-  boolean	       IMAGEfile;
+  boolean	      otherFile;
+  boolean             plainText;
 
-  PlainText = FALSE;
-  HTMLfile = FALSE;
-  IMAGEfile = FALSE;
-
+  docType = docHTML;
+  otherFile = TRUE;
   tempdir = tempdocument = NULL;
   if (content_type == NULL || content_type[0] == EOS)
     /* no content type */
     {
       /* local document */
       /* try to guess the document type after its file name extension */
-      if (IsHTMLName (pathname))
-	HTMLfile = TRUE;
-      else if (IsXMLName (pathname))
+      if (IsHTMLName (pathname) || IsXMLName (pathname))
+	{
 	/* Let's try to process this file as an HTML document written in XML */
-	HTMLfile = TRUE;
+	  docType = docHTML;
+	  otherFile = FALSE;
+	}
       else if (!IsImageName (pathname))
-	PlainText = TRUE;
+	{
+	  docType = docText;
+	  otherFile = FALSE;
+	}
       else if (tempfile[0] != EOS)
+	{
 	/* It's a document loaded from the Web */
 	/* Let's suppose it's HTML */
-	HTMLfile = TRUE;
+	  docType = docHTML;
+	  otherFile = FALSE;
+	}
       }
    else
      /* the server returned a content type */
@@ -1756,15 +1911,21 @@ boolean		    history;
 	   if (ustrcasecmp (content_type, "text") == 0)
 	     {
 	       if (ustrncasecmp (&content_type[i+1], "html", 4) == 0)
-		 HTMLfile = TRUE;
+		 {
+		   docType = docHTML;
+		   otherFile = FALSE;
+		 }
 	       else
-		 PlainText = TRUE;
+		 {
+		   docType = docText;
+		   otherFile = FALSE;
+		 }
 	     }
 	 }
      }
 
   /* Is the document an image */
-  if (!PlainText && !HTMLfile)
+  if (otherFile)
     {
       if (content_type && !ustrcmp (content_type, "image") 
 	  && tempfile[0] != EOS)
@@ -1780,24 +1941,23 @@ boolean		    history;
 	  if (IsImageType (&content_type[i]))
 	    {
 	      CreateHTMLContainer (pathname, documentname, tempfile, FALSE);
-	      HTMLfile = 1;
-	      IMAGEfile = 1;
+	      docType = docImage;
+	      otherFile = FALSE;
 	    }
 	}
-      else
-	if (IsImageName (pathname) && tempfile[0] == EOS)
-	  {
-	    /* It's a local image file, so we create a temporary container */
-	    sprintf (tempfile, "%s%c%d%c%s", 
-		     TempFileDirectory, DIR_SEP, 0, DIR_SEP, "contain.html");
-	    CreateHTMLContainer (pathname, documentname, tempfile, TRUE);
-	    /* make amayua think that the container is the image */
-	    HTMLfile = 1;
-	    IMAGEfile = 1;
-	  }
+      else if (IsImageName (pathname) && tempfile[0] == EOS)
+	{
+	  /* It's a local image file, so we create a temporary container */
+	  sprintf (tempfile, "%s%c%d%c%s", 
+		   TempFileDirectory, DIR_SEP, 0, DIR_SEP, "contain.html");
+	  CreateHTMLContainer (pathname, documentname, tempfile, TRUE);
+	  /* make amaya think that the container is the image */
+	      docType = docImage;
+	      otherFile = FALSE;
+	}
     }
 
-  if (!PlainText && !HTMLfile && tempfile[0] != EOS)
+  if (otherFile && tempfile[0] != EOS)
     {
       /* The document is not an HTML file and cannot be parsed */
       /* rename the temporary file */
@@ -1822,26 +1982,14 @@ boolean		    history;
 	  /* save the URL of the old document in the history, if the same
 	     window is reused, i.e. if the old document has not been
 	     modified */
-	  if (history)
-	    if (!TtaIsDocumentModified (doc))
-	      AddDocHistory (doc, DocumentURLs[doc], 
-			     DocumentMeta[doc]->form_data,
-			     DocumentMeta[doc]->method);
-	  /* free the previous document */
-	  newdoc = InitDocView (doc, pathname, FALSE);
+	  if (history && !TtaIsDocumentModified (doc))
+	    AddDocHistory (doc, DocumentURLs[doc], 
+			   DocumentMeta[doc]->form_data,
+			   DocumentMeta[doc]->method);
 	}
-      else 
-	  newdoc = doc;
 
-      if (IMAGEfile)
-	{
-	  if (DocumentTypes[newdoc] == docReadOnly)
-	    /* document in ReadOnly mode */
-	    DocumentTypes[newdoc] = docImageRO;
-	  else
-	    /* document in ReadWrite mode */
-	    DocumentTypes[newdoc] = docImage;
-	}
+      /* free the previous document and prepare the window for the new one */
+      newdoc = InitDocView (doc, documentname, docType, FALSE);
 
       /* what we have to do if doc and targetDocument are different */
       if (tempfile[0] != EOS)
@@ -1863,7 +2011,7 @@ boolean		    history;
 	      TtaFileCopy (tempfile, tempdocument);
 	      TtaFileUnlink (tempfile);
 	      /* if it's an IMAGEfile, we copy it too to the new directory */
-	      if (IMAGEfile) 
+	      if (DocumentTypes[doc] == docImage || DocumentTypes[doc] == docImageRO) 
 		  MoveImageFile (doc, newdoc, documentname);
 	    }
 	  else
@@ -1915,11 +2063,13 @@ boolean		    history;
 
       tempdir = TtaGetMemory (MAX_LENGTH);
       TtaExtractName (tempdocument, tempdir, documentname);
-      StartParser (newdoc, tempdocument, documentname, tempdir, pathname, PlainText);
+      plainText = (DocumentTypes[doc] == docText || DocumentTypes[doc] == docTextRO);
+      StartParser (newdoc, tempdocument, documentname, tempdir, pathname, plainText);
       TtaFreeMemory (tempdir);
-      if (HTMLErrorsFound)
-         TtaSetItemOn (newdoc, 1, Special, BShowLogFile);
-      else
+      if (!plainText)
+	if (HTMLErrorsFound)
+	  TtaSetItemOn (newdoc, 1, Special, BShowLogFile);
+	else
           TtaSetItemOff (doc, 1, Special, BShowLogFile);
       if (newdoc != doc)
 	/* the document is displayed in a different window */
@@ -2062,7 +2212,7 @@ View                view;
    position = RelativePosition (document, &distance);
 
    W3Loading = document;	/* this document is currently in load */
-   newdoc = InitDocView (document, pathname, FALSE);
+   /*newdoc = InitDocView (document, documentname, DocumentTypes[document], FALSE);*/
 
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
    /* Check against concurrent loading on the same frame */
@@ -2728,13 +2878,13 @@ void *context;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 Document            GetHTMLDocument (const STRING documentPath, 
-									 STRING form_data, 
-									 Document doc, 
-									 Document baseDoc, 
-									 ClickEvent CE_event, 
-									 boolean history, 
-									 TTcbf *cbf, 
-									 void *ctx_cbf)
+				     STRING form_data, 
+				     Document doc, 
+				     Document baseDoc, 
+				     ClickEvent CE_event, 
+				     boolean history, 
+				     TTcbf *cbf, 
+				     void *ctx_cbf)
 #else
 Document            GetHTMLDocument (documentPath, const STRING form_data, doc, baseDoc, CE_event, history, void *cbf, void *ctx_cbf)
 STRING              documentPath;
@@ -2792,13 +2942,7 @@ void               *ctx_cbf;
      NormalizeURL (tempdocument, 0, pathname, documentname, NULL);
 
    if (parameters[0] == EOS)
-     {
-       if (CE_event == CE_FORM_POST)
-	 /* we need to ask the server again */
-	 newdoc = 0;
-       else
-	 newdoc = IsDocumentLoaded (pathname, form_data);
-     }
+     newdoc = IsDocumentLoaded (pathname, form_data);
    else
      {
        /* we need to ask the server */
@@ -2855,57 +2999,35 @@ void               *ctx_cbf;
 	   /* In case of initial document, open the view before loading */
 	   if (doc == 0)
 	     {
-	       newdoc = InitDocView (doc, pathname, (boolean)(CE_event == CE_LOG));
+	       /* need to create a new window for the document */
+	       if (CE_event == CE_LOG)
+		   newdoc = InitDocView (doc, documentname, docTextRO, TRUE);
+	       else if (CE_event == CE_HELP)
+		   newdoc = InitDocView (doc, documentname, docReadOnly, FALSE);
+	       else
+		   newdoc = InitDocView (doc, documentname, docHTML, FALSE);
 	       if (newdoc == 0)
 		 /* cannot display the new document */
 		 ok = FALSE;
 	       else
 		 {
-		   TtaSetItemOff (newdoc, 1, File, BBack);
-		   TtaSetItemOff (newdoc, 1, File, BForward);
 		   if (CE_event == CE_HELP || CE_event == CE_LOG)
 		     {
-		       DocumentTypes[newdoc] = docReadOnly;
 		       /* help document has to be in read-only mode */
 		       TtcSwitchCommands (newdoc, 1); /* no command filed */
 		       
 		       TtaSetItemOff (newdoc, 1, File, BNew);
 		       TtaSetItemOff (newdoc, 1, File, BOpenDoc);
 		       TtaSetItemOff (newdoc, 1, File, BOpenInNewWindow);
-		       TtaSetItemOff (newdoc, 1, File, BSave);
-		       TtaSetItemOff (newdoc, 1, Edit_, BCut);
-		       TtaSetItemOff (newdoc, 1, Edit_, BPaste);
-		       TtaSetItemOff (newdoc, 1, Edit_, BClear);
-		       TtaSetItemOff (newdoc, 1, Edit_, BSpellCheck);
-		       TtaSetItemOff (newdoc, 1, Edit_, BTransform);
 		       if (CE_event == CE_HELP)
-			 {
-			   TtaSetToggleItem (newdoc, 1, Views, TShowTextZone, FALSE);
-			   TtaSetToggleItem (newdoc, 1, Edit_, TEditMode, FALSE);
-#              ifdef _WINDOWS
-               WIN_TtaChangeButton (newdoc, 1, 5, iconBrowser, FALSE);
-#              else  /* !_WINDOWS */
-			   TtaChangeButton (newdoc, 1, 5, iconBrowser);
-#              endif /* _WINDOWS */
-			 }
+			 TtaSetToggleItem (newdoc, 1, Views, TShowTextZone, FALSE);
 		       else
 			 {
 			   TtaSetItemOff (newdoc, 1, File, BReload);
 			   /* invalid the menu Views */
 			   TtaSetMenuOff (newdoc, 1, Views);
 			 }
-		       TtaSetMenuOff (newdoc, 1, Types);
-		       TtaSetMenuOff (newdoc, 1, Links);
-		       TtaSetMenuOff (newdoc, 1, Style);
-		       TtaSetMenuOff (newdoc, 1, Special);
-		       TtaSetMenuOff (newdoc, 1, Attributes_);
 		       TtaSetMenuOff (newdoc, 1, Help_);
-		     }
-		   else
-		     {
-		       /* it's a simple HTML document */
-		       DocumentTypes[newdoc] = docHTML;
-		       TtaSetToggleItem (newdoc, 1, Edit_, TEditMode, TRUE);
 		     }
 		 }
 	     }
@@ -3588,12 +3710,13 @@ STRING              data;
   Return the new recovered document
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int       RestoreOneAmayaDoc (Document doc,STRING tempdoc, STRING docname)
+static int       RestoreOneAmayaDoc (Document doc, STRING tempdoc, STRING docname, DocumentType docType)
 #else
-int       RestoreOneAmayaDoc (doc, tempdoc, docname)
-Document  doc;
-STRING    tempdoc;
-STRING    docname;
+static int       RestoreOneAmayaDoc (doc, tempdoc, docname, docType)
+Document         doc;
+STRING           tempdoc;
+STRING           docname;
+DocumentType     docType;
 #endif
 {
   CHAR                tempfile[MAX_LENGTH];
@@ -3602,7 +3725,8 @@ STRING    docname;
 
   W3Loading = doc;
   BackupDocument = doc;
-  newdoc = InitDocView (doc, docname, FALSE);
+  TtaExtractName (docname, DirectoryName, DocumentName);
+  newdoc = InitDocView (doc, DocumentName, docType, FALSE);
   if (newdoc != 0)
     {
       /* load the saved file */
@@ -3628,7 +3752,6 @@ STRING    docname;
 	  ustrcpy (DocumentURLs[newdoc], docname);
 	  TtaSetTextZone (newdoc, 1, 1, docname);
 	  /* change its directory name */
-	  TtaExtractName (docname, DirectoryName, DocumentName);
 	  TtaSetDocumentDirectory (newdoc, DirectoryName);
 	}
       W3Loading = 0;		/* loading is complete now */
@@ -3655,40 +3778,47 @@ STRING    docname;
 static boolean        RestoreAmayaDocs ()
 {
   FILE               *f;
+  DocumentType        docType;
   CHAR                tempname[MAX_LENGTH], tempdoc[MAX_LENGTH];
-  CHAR                docname[MAX_LENGTH];
+  CHAR                docname[MAX_LENGTH];  
   boolean             aDoc;
 
   /* check if Amaya has crashed */
   sprintf (tempname, "%s%cCrash.amaya", TempFileDirectory, DIR_SEP);
   /* no document is opened */
   aDoc = FALSE;
-  if (TtaFileExist (tempname)) {
-     InitConfirm (0, 0, TtaGetMessage (AMAYA, AM_RELOAD_FILES));
-     if (UserAnswer)
+  if (TtaFileExist (tempname))
+    {
+      InitConfirm (0, 0, TtaGetMessage (AMAYA, AM_RELOAD_FILES));
+      if (UserAnswer)
         f = fopen (tempname, "r");
-     else
-         f = NULL;
+      else
+	f = NULL;
 
-     if (f != NULL) {
-        InNewWindow = TRUE;
-        tempdoc[0] = EOS;
-        fscanf (f, "%s %s\n", tempdoc, docname);
-        while (tempdoc[0] != EOS && TtaFileExist (tempdoc)) {
-              if (UserAnswer) {
-                 if (RestoreOneAmayaDoc (0, tempdoc, docname))
+      if (f != NULL)
+	{
+	  InNewWindow = TRUE;
+	  tempdoc[0] = EOS;
+	  fscanf (f, "%s %s\n", tempdoc, docname);
+	  while (tempdoc[0] != EOS && TtaFileExist (tempdoc))
+	    {
+              if (UserAnswer)
+		{
+		  if (RestoreOneAmayaDoc (0, tempdoc, docname, docType))
                     aDoc = TRUE;
-			  } else /* unlink this saved file */
-                     TtaFileUnlink (tempdoc);
+		}
+	      else
+		/* unlink this saved file */
+		TtaFileUnlink (tempdoc);
               /*next saved file */
               tempdoc[0] = EOS;
-              fscanf (f, "%s %s\n", tempdoc, docname);
-		}
-        InNewWindow = FALSE;	  
-        fclose (f);
-	 }
-     TtaFileUnlink (tempname);
-  }
+              fscanf (f, "%s %s %d\n", tempdoc, docname, docType);
+	    }
+	  InNewWindow = FALSE;	  
+	  fclose (f);
+	}
+      TtaFileUnlink (tempname);
+    }
   return (aDoc);
 }
 
@@ -3741,8 +3871,11 @@ NotifyEvent        *event;
    iconFind = TtaCreatePixmapLogo (find_xpm);
    iconReload = TtaCreatePixmapLogo (Reload_xpm);
    iconI = TtaCreatePixmapLogo (I_xpm);
+   iconINo = TtaCreatePixmapLogo (INo_xpm);
    iconB = TtaCreatePixmapLogo (B_xpm);
+   iconBNo = TtaCreatePixmapLogo (BNo_xpm);
    iconT = TtaCreatePixmapLogo (T_xpm);
+   iconTNo = TtaCreatePixmapLogo (TNo_xpm);
    iconBack = TtaCreatePixmapLogo (Back_xpm);
    iconBackNo = TtaCreatePixmapLogo (BackNo_xpm);
    iconForward = TtaCreatePixmapLogo (Forward_xpm);
@@ -3750,15 +3883,24 @@ NotifyEvent        *event;
    iconBrowser = TtaCreatePixmapLogo (Browser_xpm);
    iconEditor = TtaCreatePixmapLogo (Editor_xpm);
    iconH1 = TtaCreatePixmapLogo (H1_xpm);
+   iconH1No = TtaCreatePixmapLogo (H1No_xpm);
    iconH2 = TtaCreatePixmapLogo (H2_xpm);
+   iconH2No = TtaCreatePixmapLogo (H2No_xpm);
    iconH3 = TtaCreatePixmapLogo (H3_xpm);
+   iconH3No = TtaCreatePixmapLogo (H3No_xpm);
    iconPrint = TtaCreatePixmapLogo (Print_xpm);
    iconBullet = TtaCreatePixmapLogo (Bullet_xpm);
+   iconBulletNo = TtaCreatePixmapLogo (BulletNo_xpm);
    iconNum = TtaCreatePixmapLogo (Num_xpm);
+   iconNumNo = TtaCreatePixmapLogo (NumNo_xpm);
    iconImage = TtaCreatePixmapLogo (Image_xpm);
+   iconImageNo = TtaCreatePixmapLogo (ImageNo_xpm);
    iconDL = TtaCreatePixmapLogo (DL_xpm);
+   iconDLNo = TtaCreatePixmapLogo (DLNo_xpm);
    iconLink = TtaCreatePixmapLogo (Link_xpm);
+   iconLinkNo = TtaCreatePixmapLogo (LinkNo_xpm);
    iconTable = TtaCreatePixmapLogo (Table_xpm);
+   iconTableNo = TtaCreatePixmapLogo (TableNo_xpm);
 #  ifdef AMAYA_PLUGIN
    iconPlugin = TtaCreatePixmapLogo (Plugin_xpm);
    TtaRegisterPixmap("Plugin", iconPlugin);
@@ -3777,14 +3919,22 @@ NotifyEvent        *event;
    TtaRegisterPixmap("Forward", iconForward);
    TtaRegisterPixmap("ForwardNo", iconForwardNo);
    TtaRegisterPixmap("H1", iconH1);
+   TtaRegisterPixmap("H1No", iconH1);
    TtaRegisterPixmap("H2", iconH2);
+   TtaRegisterPixmap("H2No", iconH2);
    TtaRegisterPixmap("H3", iconH3);
+   TtaRegisterPixmap("H3No", iconH3);
    TtaRegisterPixmap("Print", iconPrint);
    TtaRegisterPixmap("Bullet", iconBullet);
+   TtaRegisterPixmap("BulletNo", iconBullet);
    TtaRegisterPixmap("Numbered", iconNum);
+   TtaRegisterPixmap("NumberedNo", iconNum);
    TtaRegisterPixmap("Definition", iconDL);
+   TtaRegisterPixmap("DefinitionNo", iconDL);
    TtaRegisterPixmap("Link", iconLink);
+   TtaRegisterPixmap("LinkNo", iconLink);
    TtaRegisterPixmap("Table", iconTable);
+   TtaRegisterPixmap("TableNo", iconTable);
    iconJava = TtaCreatePixmapLogo (Java_xpm);
    TtaRegisterPixmap("Java", iconJava);
 #  endif /* AMAYA_JAVA */

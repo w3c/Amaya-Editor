@@ -30,6 +30,7 @@
 /* Included headerfiles */
 #include "EDITOR.h"
 #include "HTML.h"
+#include "TextFile.h"
 #include "amayamsg.h"
 
 #define MAX_LENGTH     512
@@ -232,6 +233,7 @@ typedef enum
   docHTML,
   docReadOnly,
   docText,
+  docTextRO,
   docImage,
   docImageRO
 } DocumentType;

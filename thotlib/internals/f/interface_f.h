@@ -3,9 +3,9 @@
  *   Manual editing not recommended.
  */
 
-#ifndef _WINDOWS
 #ifndef __CEXTRACT__
 #ifdef __STDC__
+
 extern int TtaXLookupString ( ThotKeyEvent *event,
                               STRING buffer,
                               int nbytes,
@@ -41,6 +41,7 @@ extern void TtaGiveSelectPosition ( Document document,
                                     View view,
                                     int *X,
                                     int *Y );
+extern void TtaSetMultikey ( boolean value );
 
 #else /* __STDC__ */
 
@@ -79,7 +80,7 @@ extern void TtaGiveSelectPosition (/* Document document,
                                       View view,
                                       int *X,
                                       int *Y */);
+extern void TtaSetMultikey (/* boolean value */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
-#endif /* !_WINDOWS */

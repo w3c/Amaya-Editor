@@ -28,14 +28,10 @@
 #include "amaya.h"
 
 #else /* !STANDALONE */
-#define HANDLE_COMPRESSED_FILES
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "css.h"
-
-#ifdef HANDLE_COMPRESSED_FILES
 #include "zlib.h"
-#endif
 
 #include "language.h"
 
@@ -494,41 +490,38 @@ UnicodeFallbackEntry	UnicodeFallbackTable[] =
 };
 
 typedef struct _ElemToBeChecked *PtrElemToBeChecked;
-
 typedef struct _ElemToBeChecked
   {
-     Element               Elem;	 /* the element to be checked */
+     Element               Elem;	/* the element to be checked */
      PtrElemToBeChecked    nextElemToBeChecked;
   }
 ElemToBeChecked;
 
 typedef struct _ClosedElement *PtrClosedElement;
-
 typedef struct _ClosedElement
-  {				/* an element closed by a start tag */
-     int                 tagNum;	 /* rank (in GIMappingTable) of closed
+  {				        /* an element closed by a start tag */
+     int                 tagNum;	/* rank (in GIMappingTable) of closed
 					    element */
-     PtrClosedElement    nextClosedElem; /* next element closed by the same
+     PtrClosedElement    nextClosedElem;/* next element closed by the same
 					    start tag */
   }
 ClosedElement;
 
 #define MaxGIlength 14
 typedef UCHAR GI[MaxGIlength];
- 
+
 typedef struct _GIMapping
-  {                             /* mapping of a HTML element */
+  {                                     /* mapping of a HTML element */
      GI                  htmlGI;        /* name of the HTML element */
      CHAR                htmlContents;  /* info about the contents of the HTML element:
                                            'E'=empty,  space=some contents */
      int                 ThotType;      /* type of the Thot element or attribute */
-     PtrClosedElement    firstClosedElem;       /* first element closed by the start
-                                                   tag htmlGI */
+     PtrClosedElement    firstClosedElem;/* first element closed by the start
+					    tag htmlGI */
   }
 GIMapping;
 
 /* mapping table of HTML elements */
-
 static GIMapping    HTMLGIMappingTable[] =
 {
    /* This table MUST be in alphabetical order */
@@ -1191,7 +1184,7 @@ static int          LgBuffer = 0;	  /* actual length of text in input
 /* information about the Thot document under construction */
 static Document     theDocument = 0;	  /* the Thot document */
 static Language     currentLanguage;	  /* language used in the document */
-static SSchema      HTMLSSchema = NULL;	  /* the HTML structure schema */
+static SSchema      DocumentSSchema = NULL;	  /* the HTML structure schema */
 static Element      rootElement;	  /* root element of the document */
 static Element      lastElement = NULL;	  /* last element created */
 static boolean      lastElementClosed = FALSE;/* last element is complete */
@@ -1284,7 +1277,6 @@ void                ParseAreaCoords (Element element, Document document)
 void                ParseAreaCoords (element, document)
 Element             element;
 Document            document;
-
 #endif
 {
    ElementType         elType;
@@ -1525,10 +1517,10 @@ Document	    doc;
       if (!ustrcasecmp (HTMLGIMappingTable[i].htmlGI, gi))
 	{
 	  
-	  if (HTMLSSchema == NULL && ! (doc == (Document) 0))
+	  if (DocumentSSchema == NULL && ! (doc == (Document) 0))
 	    elType->ElSSchema = TtaGetSSchema ("HTML", doc);
 	  else	    
-	    elType->ElSSchema = HTMLSSchema;
+	    elType->ElSSchema = DocumentSSchema;
 	  elType->ElTypeNum = HTMLGIMappingTable[i].ThotType;
 	  return;
 	}
@@ -1621,14 +1613,14 @@ int                 elemEntry;
 	 if (HTMLAttributeMappingTable[i].XMLelement[0] == EOS)
 	       {
 	       entry = i;
-	       *schema = HTMLSSchema;
+	       *schema = DocumentSSchema;
 	       }
 	 else if (elemEntry >= 0 &&
 		  !ustrcasecmp (HTMLAttributeMappingTable[i].XMLelement,
 				HTMLGIMappingTable[elemEntry].htmlGI))
 	       {
 	       entry = i;
-	       *schema = HTMLSSchema;
+	       *schema = DocumentSSchema;
 	       }
 	 else
 	       i++;
@@ -1667,10 +1659,10 @@ Document            doc;
 	 if (tableEntry != NULL)
 	   {
 	       attrType->AttrTypeNum = tableEntry->ThotAttribute;
-	       if (HTMLSSchema == NULL && doc != (Document) 0)
+	       if (DocumentSSchema == NULL && doc != (Document) 0)
 		   attrType->AttrSSchema = TtaGetSSchema ("HTML", doc);
 	       else	    
-		   attrType->AttrSSchema = HTMLSSchema;
+		   attrType->AttrSSchema = DocumentSSchema;
 	   }
 	 else
 	   {
@@ -1705,7 +1697,7 @@ STRING              tag;
 
    thotAttr = -1;
    lastElemEntry = -1;
-   schema = HTMLSSchema;
+   schema = DocumentSSchema;
    if (tag[0] != EOS)
    lastElemEntry = MapGI (tag, &schema, theDocument);
    if (lastElemEntry >= 0 || tag[0] == EOS)
@@ -1832,7 +1824,7 @@ void                InitMapping ()
 	     if (i > 0)
 		/* a GI has been read */
 	       {
-		  schema = HTMLSSchema;
+		  schema = DocumentSSchema;
 		  entry = MapGI (name, &schema, theDocument);
 #ifdef DEBUG
 		  if (entry < 0)
@@ -1890,7 +1882,7 @@ void                InitMapping ()
 	name[i] = EOS;
 	i = 0;
 	ptr++;
-	schema = HTMLSSchema;
+	schema = DocumentSSchema;
 	entry = MapGI (name, &schema, theDocument);
 #ifdef DEBUG
 	if (entry < 0)
@@ -1921,7 +1913,7 @@ void                InitMapping ()
 		  i = 0;
 		  newCE = (PtrClosedElement) TtaGetMemory (sizeof (ClosedElement));
 		  newCE->nextClosedElem = NULL;
-		  schema = HTMLSSchema;
+		  schema = DocumentSSchema;
 		  newCE->tagNum = MapGI (name, &schema, theDocument);
 #ifdef DEBUG
 		  if (newCE->tagNum < 0)
@@ -2236,7 +2228,7 @@ static void         TextToDocument ()
 	  }
 	elType = TtaGetElementType (parent);
 	if (elType.ElTypeNum == HTML_EL_STYLE_ &&
-	    elType.ElSSchema == HTMLSSchema && ParsingCSS)
+	    elType.ElSSchema == DocumentSSchema && ParsingCSS)
 	  {
 #ifndef STANDALONE
 	     ApplyCSSRules (parent, inputBuffer, theDocument, FALSE);
@@ -2245,9 +2237,9 @@ static void         TextToDocument ()
 	     return;
 	  }
 	if (ignoreLeadingSpaces)
-	   if (!Within (HTML_EL_Preformatted, HTMLSSchema) &&
-	       !Within (HTML_EL_STYLE_, HTMLSSchema) &&
-	       !Within (HTML_EL_SCRIPT, HTMLSSchema))
+	   if (!Within (HTML_EL_Preformatted, DocumentSSchema) &&
+	       !Within (HTML_EL_STYLE_, DocumentSSchema) &&
+	       !Within (HTML_EL_SCRIPT, DocumentSSchema))
 	      /* suppress leading spaces */
 	      while (inputBuffer[i] <= SPACE && inputBuffer[i] != EOS)
 		 i++;
@@ -2259,7 +2251,7 @@ static void         TextToDocument ()
 	     else
 	       {
 		  /* create a TEXT element */
-		  elType.ElSSchema = HTMLSSchema;
+		  elType.ElSSchema = DocumentSSchema;
 		  elType.ElTypeNum = HTML_EL_TEXT_UNIT;
 		  elText = TtaNewElement (theDocument, elType);
 		  InsertElement (&elText);
@@ -2300,40 +2292,40 @@ CHAR                c;
 static void         PutInBuffer (UCHAR c)
 #else
 static void         PutInBuffer (c)
-UCHAR       c;
-
+UCHAR               c;
 #endif
 {
-   int                 len;
+  int                 len;
 
-   /* put the character into the buffer if it is not an ignored char. */
-   if ((int) c == 9)		/* HT */
-      len = 8;			/* HT = 8 spaces */
-   else
-      len = 1;
-   if (c != EOS)
-     {
-	if (LgBuffer + len >= AllmostFullBuffer && currentState == 0)
-	   TextToDocument ();
-	if (LgBuffer + len >= MaxBufferLength)
+  /* put the character into the buffer if it is not an ignored char. */
+  if ((int) c == 9)		/* HT */
+    len = 8;			/* HT = 8 spaces */
+  else
+    len = 1;
+  if (c != EOS)
+    {
+      if (LgBuffer + len >= AllmostFullBuffer && currentState == 0)
+	TextToDocument ();
+      if (LgBuffer + len >= MaxBufferLength)
+	{
+	  if (currentState == 0)
+	    TextToDocument ();
+	  else
+	    ParseHTMLError (theDocument, "Panic: buffer overflow");
+	  LgBuffer = 0;
+	}
+
+      if (len == 1)
+	inputBuffer[LgBuffer++] = c;
+      else
+	/* HT */
+	do
 	  {
-	     if (currentState == 0)
-		TextToDocument ();
-	     else
-		ParseHTMLError (theDocument, "Panic: buffer overflow");
-	     LgBuffer = 0;
+	    inputBuffer[LgBuffer++] = SPACE;
+	    len--;
 	  }
-	if (len == 1)
-	   inputBuffer[LgBuffer++] = c;
-	else
-	   /* HT */
-	   do
-	     {
-		inputBuffer[LgBuffer++] = SPACE;
-		len--;
-	     }
-	   while (len > 0);
-     }
+	while (len > 0);
+    }
 }
 
 
@@ -2411,11 +2403,11 @@ Element             parent;
 	  {
 	   elType = TtaGetElementType (ancestor);
 	   if (CannotContainText (elType) &&
-	       !Within (HTML_EL_Option_Menu, HTMLSSchema))
+	       !Within (HTML_EL_Option_Menu, DocumentSSchema))
 	      /* Element ancestor cannot contain text directly. Create a */
 	      /* Pseudo_paragraph element as the parent of the text element */
 	      {
-	      newElType.ElSSchema = HTMLSSchema;
+	      newElType.ElSSchema = DocumentSSchema;
 	      newElType.ElTypeNum = HTML_EL_Pseudo_paragraph;
 	      newEl = TtaNewElement (theDocument, newElType);
 	      /* insert the new Pseudo_paragraph element */
@@ -2458,7 +2450,7 @@ Element             parent;
 	   /* A basic element cannot be a child of a Text_Area */
 	   /* create a Inserted_Text element as a child of Text_Area */
 	  {
-	     newElType.ElSSchema = HTMLSSchema;
+	     newElType.ElSSchema = DocumentSSchema;
 	     newElType.ElTypeNum = HTML_EL_Inserted_Text;
 	     newEl = TtaNewElement (theDocument, newElType);
 	     InsertElement (&newEl);
@@ -2852,7 +2844,7 @@ Element             el;
 	     TtaInsertSibling (child, desc, TRUE, theDocument);
 	 }
        /* copy attribute data into SRC attribute of Object_Image */
-       attrType.AttrSSchema = HTMLSSchema;
+       attrType.AttrSSchema = DocumentSSchema;
        attrType.AttrTypeNum = HTML_ATTR_data;
        attr = TtaGetAttribute (el, attrType);
        if (attr != NULL)
@@ -2964,7 +2956,7 @@ Element             el;
 	       /* create the Frames element if it does not exist */
 	       if (elFrames == NULL)
 		 {
-		    newElType.ElSSchema = HTMLSSchema;
+		    newElType.ElSSchema = DocumentSSchema;
 		    newElType.ElTypeNum = HTML_EL_Frames;
 		    elFrames = TtaNewElement (theDocument, newElType);
 		    TtaInsertSibling (elFrames, child, TRUE, theDocument);
@@ -2994,7 +2986,7 @@ Element             el;
       child = TtaGetFirstChild (el);
       if (child != NULL)
 	{
-	  attrType.AttrSSchema = HTMLSSchema;
+	  attrType.AttrSSchema = DocumentSSchema;
 	  attrType.AttrTypeNum = HTML_ATTR_Value_;
 	  attr = TtaGetAttribute (el, attrType);
 	  if (attr != NULL)
@@ -3070,7 +3062,7 @@ Element             el;
        else
 	 {
 	   /* save the text into Default_Value attribute */
-	   attrType.AttrSSchema = HTMLSSchema;
+	   attrType.AttrSSchema = DocumentSSchema;
 	   attrType.AttrTypeNum = HTML_ATTR_Default_Value;
 	   if (TtaGetAttribute (el, attrType) == NULL)
 	     /* attribute Default_Value is missing */
@@ -3094,7 +3086,7 @@ Element             el;
     case HTML_EL_Radio_Input:
     case HTML_EL_Checkbox_Input:
        /* put an attribute Checked if it is missing */
-       attrType.AttrSSchema = HTMLSSchema;
+       attrType.AttrSSchema = DocumentSSchema;
        attrType.AttrTypeNum = HTML_ATTR_Checked;
        if (TtaGetAttribute (el, attrType) == NULL)
 	  /* attribute Checked is missing */
@@ -3113,7 +3105,7 @@ Element             el;
     case HTML_EL_PICTURE_UNIT:
 #ifdef STANDALONE
        /* copy value of attribute SRC into the content of the element */
-       attrType.AttrSSchema = HTMLSSchema;
+       attrType.AttrSSchema = DocumentSSchema;
        attrType.AttrTypeNum = HTML_ATTR_SRC;
        attr = TtaGetAttribute (el, attrType);
        if (attr != NULL)
@@ -3141,7 +3133,7 @@ Element             el;
     case HTML_EL_LINK:
        /* A LINK element is complete. If it is a link to a style sheet, */
        /* load that style sheet. */
-       attrType.AttrSSchema = HTMLSSchema;
+       attrType.AttrSSchema = DocumentSSchema;
        attrType.AttrTypeNum = HTML_ATTR_REL;
        attr = TtaGetAttribute (el, attrType);
        if (attr != NULL)
@@ -3153,7 +3145,7 @@ Element             el;
 	    if ((!ustrcasecmp (name1, "STYLESHEET")) || (!ustrcasecmp (name1, "STYLE")))
 	      {
 		 /* it's a link to a style sheet. Load that style sheet */
-		 attrType.AttrSSchema = HTMLSSchema;
+		 attrType.AttrSSchema = DocumentSSchema;
 		 attrType.AttrTypeNum = HTML_ATTR_HREF_;
 		 attr = TtaGetAttribute (el, attrType);
 		 if (attr != NULL)
@@ -3299,7 +3291,7 @@ boolean             onStartTag;
    /* the closed HTML element corresponds to a Thot element. */
    stop = FALSE;
    /* type of the element to be closed */
-   elType.ElSSchema = HTMLSSchema;
+   elType.ElSSchema = DocumentSSchema;
    elType.ElTypeNum = HTMLGIMappingTable[entry].ThotType;
    if (StackLevel > 0)
      {
@@ -3485,7 +3477,7 @@ STRING              val;
      {
 	sprintf (msgBuffer, "Unknown attribute value \"TYPE = %s\"", val);
 	ParseHTMLError (theDocument, msgBuffer);
-	attrType.AttrSSchema = HTMLSSchema;
+	attrType.AttrSSchema = DocumentSSchema;
 	attrType.AttrTypeNum = HTMLAttributeMappingTable[0].ThotAttribute;
 	sprintf (msgBuffer, "type=%s", val);
 	CreateAttr (lastElement, attrType, msgBuffer, TRUE);
@@ -3497,7 +3489,7 @@ STRING              val;
 	  sprintf (msgBuffer, "Duplicate attribute \"TYPE = %s\"", val);
 	else
 	  {
-	     elType.ElSSchema = HTMLSSchema;
+	     elType.ElSSchema = DocumentSSchema;
 	     elType.ElTypeNum = value;
 	     newChild = TtaNewTree (theDocument, elType, "");
 	     TtaInsertFirstChild (&newChild, lastElement, theDocument);
@@ -3855,17 +3847,17 @@ int                 entry;
        if (ok)
 	 /* refuse BODY within BODY */
 	 if (ustrcmp (HTMLGIMappingTable[entry].htmlGI, "BODY") == 0)
-	   if (Within (HTML_EL_BODY, HTMLSSchema))
+	   if (Within (HTML_EL_BODY, DocumentSSchema))
 	     ok = FALSE;
        if (ok)
 	 /* refuse HEAD within HEAD */
 	 if (ustrcmp (HTMLGIMappingTable[entry].htmlGI, "HEAD") == 0)
-	   if (Within (HTML_EL_HEAD, HTMLSSchema))
+	   if (Within (HTML_EL_HEAD, DocumentSSchema))
 	     ok = FALSE;
        if (ok)
 	 /* refuse STYLE within STYLE */
 	 if (ustrcmp (HTMLGIMappingTable[entry].htmlGI, "STYLE") == 0)
-	   if (Within (HTML_EL_STYLE_, HTMLSSchema))
+	   if (Within (HTML_EL_STYLE_, DocumentSSchema))
 	     ok = FALSE;
        return ok;
      }
@@ -3926,7 +3918,7 @@ boolean		    position;
    Element             elInv, elText;
    Attribute	       attr;
 
-   elType.ElSSchema = HTMLSSchema;
+   elType.ElSSchema = DocumentSSchema;
    elType.ElTypeNum = HTML_EL_Invalid_element;
    elInv = TtaNewElement (theDocument, elType);
    InsertElement (&elInv);
@@ -3938,7 +3930,7 @@ boolean		    position;
 	TtaInsertFirstChild (&elText, elInv, theDocument);
 	TtaSetTextContent (elText, content, currentLanguage, theDocument);
 	TtaSetAccessRight (elText, ReadOnly, theDocument);
-	attrType.AttrSSchema = HTMLSSchema;
+	attrType.AttrSSchema = DocumentSSchema;
 	attrType.AttrTypeNum = HTML_ATTR_Error_type;
 	attr = TtaNewAttribute (attrType);
 	TtaAttachAttribute (elInv, attr, theDocument);
@@ -3973,12 +3965,12 @@ STRING              GIname;
   SSchema	      schema;
 
   /* ignore tag <P> within PRE */
-  if (Within (HTML_EL_Preformatted, HTMLSSchema))
+  if (Within (HTML_EL_Preformatted, DocumentSSchema))
     if (ustrcasecmp (GIname, "P") == 0)
       return;
 
   /* search the HTML element name in the mapping table */
-  schema = HTMLSSchema;
+  schema = DocumentSSchema;
   entry = MapGI (GIname, &schema, theDocument);
   lastElemEntry = entry;
   if (entry < 0)
@@ -4025,7 +4017,7 @@ STRING              GIname;
 		else
 		  /* create a Thot element */
 		  {
-		    elType.ElSSchema = HTMLSSchema;
+		    elType.ElSSchema = DocumentSSchema;
 		    elType.ElTypeNum = HTMLGIMappingTable[entry].ThotType;
 		    if (HTMLGIMappingTable[entry].htmlContents == 'E')
 		      /* empty HTML element. Create all children specified */
@@ -4148,7 +4140,7 @@ CHAR                c;
    if (!ok)
       {
       /* search the HTML tag in the mapping table */
-      schema = HTMLSSchema;
+      schema = DocumentSSchema;
       entry = MapGI (inputBuffer, &schema, theDocument);
       if (entry < 0)
         {
@@ -4176,7 +4168,7 @@ CHAR                c;
 	     i = 1;
 	     do
 	       {
-		  schema = HTMLSSchema;
+		  schema = DocumentSSchema;
 		  entry = MapGI (msgBuffer, &schema, theDocument);
 		  ok = CloseElement (entry, -1, FALSE);
 		  msgBuffer[1]++;
@@ -4193,7 +4185,7 @@ CHAR                c;
 	  /* try to close another type of list */
 	  {
 	    ok = TRUE;
-	    schema = HTMLSSchema;
+	    schema = DocumentSSchema;
 	    if (!CloseElement (MapGI ("OL", &schema, theDocument), -1, FALSE) &&
 		!CloseElement (MapGI ("UL", &schema, theDocument), -1, FALSE) &&
 		!CloseElement (MapGI ("MENU", &schema, theDocument), -1, FALSE) &&
@@ -4307,7 +4299,7 @@ CHAR                c;
 	   ParseHTMLError (theDocument, msgBuffer);
 	   /* attach an Invalid_attribute to the current element */
 	   tableEntry = &HTMLAttributeMappingTable[0];
-	   schema = HTMLSSchema;
+	   schema = DocumentSSchema;
 	   IgnoreAttr = TRUE;
 	   }
      }
@@ -4349,7 +4341,7 @@ CHAR                c;
 			 child = TtaGetFirstChild (lastElement);
 			 if (child != NULL)
 			   {
-			      attrType.AttrSSchema = HTMLSSchema;
+			      attrType.AttrSSchema = DocumentSSchema;
 			      attrType.AttrTypeNum = HTML_ATTR_DefaultChecked;
 			      attr = TtaNewAttribute (attrType);
 			      TtaAttachAttribute (child, attr, theDocument);
@@ -4359,7 +4351,7 @@ CHAR                c;
 		    else if (attrType.AttrTypeNum == HTML_ATTR_Selected)
 		      {
 			 /* create Default-Selected attribute */
-			 attrType.AttrSSchema = HTMLSSchema;
+			 attrType.AttrSSchema = DocumentSSchema;
 			 attrType.AttrTypeNum = HTML_ATTR_DefaultSelected;
 			 attr = TtaNewAttribute (attrType);
 			 TtaAttachAttribute (lastElement, attr, theDocument);
@@ -4674,7 +4666,7 @@ CHAR                c;
 			/* Invalid_attribute */
 			TtaRemoveAttribute (lastAttrElement, lastAttribute,
 					    theDocument);
-			attrType.AttrSSchema = HTMLSSchema;
+			attrType.AttrSSchema = DocumentSSchema;
 			attrType.AttrTypeNum = HTMLAttributeMappingTable[0].ThotAttribute;
 			sprintf (msgBuffer, "%s=%s", attrName, inputBuffer);
 			CreateAttr (lastAttrElement, attrType, msgBuffer, TRUE);
@@ -5202,7 +5194,7 @@ CHAR                c;
    Element             elComment, elCommentLine, child, lastChild;
 
    /* create a Thot element Comment */
-   elType.ElSSchema = HTMLSSchema;
+   elType.ElSSchema = DocumentSSchema;
    elType.ElTypeNum = HTML_EL_Comment_;
    elComment = TtaNewElement (theDocument, elType);
    if (lastElementClosed && (lastElement == rootElement))
@@ -5261,7 +5253,7 @@ UCHAR       c;
 	   TtaAppendTextContent (CommentText, inputBuffer, theDocument);
 	   InitBuffer ();
 	   /* create a new Comment_line element */
-	   elType.ElSSchema = HTMLSSchema;
+	   elType.ElSSchema = DocumentSSchema;
 	   elType.ElTypeNum = HTML_EL_Comment_line;
 	   elCommentLine = TtaNewElement (theDocument, elType);
 	   /* inserts the new Comment_line element after the previous one */
@@ -5701,11 +5693,7 @@ boolean *endOfFile;
       {
       if (CurCharInFileBuffer == 0)
          {
-#ifdef HANDLE_COMPRESSED_FILES
          res = gzread (InputFile, FileBuffer, INPUT_FILE_BUFFER_SIZE);
-#else
-         res = fread (FileBuffer, 1, INPUT_FILE_BUFFER_SIZE, InputFile);
-#endif
          if (res <= 0)
             /* error or end of file */
             {
@@ -5849,19 +5837,19 @@ STRING              HTMLbuf;
 		         /* Replace new line by a space, except if an entity is
 			    being read */
 			 if (currentState == 30 &&
-			     Within (HTML_EL_Preformatted, HTMLSSchema) &&
-	                     !Within (HTML_EL_Option_Menu, HTMLSSchema))
+			     Within (HTML_EL_Preformatted, DocumentSSchema) &&
+	                     !Within (HTML_EL_Option_Menu, DocumentSSchema))
 			   charRead = '\n'; /* new line character */
 			 else
 		           charRead = SPACE;
 		      }
 		   else
 		      /* new line in a text element */
-		      if ((Within (HTML_EL_Preformatted, HTMLSSchema) &&
-			      !Within (HTML_EL_Option_Menu, HTMLSSchema)) ||
-			   Within (HTML_EL_Text_Area, HTMLSSchema) ||
-			   Within (HTML_EL_SCRIPT, HTMLSSchema) ||
-			   Within (HTML_EL_STYLE_, HTMLSSchema))
+		      if ((Within (HTML_EL_Preformatted, DocumentSSchema) &&
+			      !Within (HTML_EL_Option_Menu, DocumentSSchema)) ||
+			   Within (HTML_EL_Text_Area, DocumentSSchema) ||
+			   Within (HTML_EL_SCRIPT, DocumentSSchema) ||
+			   Within (HTML_EL_STYLE_, DocumentSSchema))
 			/* within preformatted text */
 			if (AfterTagPRE)
 			   /* ignore NL after a <PRE> tag */
@@ -5896,9 +5884,9 @@ STRING              HTMLbuf;
 		       else
 			  /* in a text element. Replace HT by space except in */
 			  /* preformatted text */
-		          if (!Within (HTML_EL_Preformatted, HTMLSSchema) &&
-			      !Within (HTML_EL_STYLE_, HTMLSSchema) &&
-			      !Within (HTML_EL_SCRIPT, HTMLSSchema))
+		          if (!Within (HTML_EL_Preformatted, DocumentSSchema) &&
+			      !Within (HTML_EL_STYLE_, DocumentSSchema) &&
+			      !Within (HTML_EL_SCRIPT, DocumentSSchema))
 			     charRead = SPACE;
 		    }
 		  if (charRead == SPACE)
@@ -5906,9 +5894,9 @@ STRING              HTMLbuf;
 		    {
 		       if (currentState == 12 ||
 			   (currentState == 0 &&
-				!Within (HTML_EL_Preformatted, HTMLSSchema) &&
-				!Within (HTML_EL_STYLE_, HTMLSSchema) &&
-				!Within (HTML_EL_SCRIPT, HTMLSSchema)))
+				!Within (HTML_EL_Preformatted, DocumentSSchema) &&
+				!Within (HTML_EL_STYLE_, DocumentSSchema) &&
+				!Within (HTML_EL_SCRIPT, DocumentSSchema)))
 			  /* reading text in a comment or in an element
 			     that is not preformatted text */
 			  /* ignore spaces at the beginning of an input line */
@@ -5962,7 +5950,7 @@ STRING              HTMLbuf;
 			       if (trans->newState == 2)
 				  /* the current character is not '/', '!', '<'
 				     or space */
-				  if (Within (HTML_EL_SCRIPT, HTMLSSchema))
+				  if (Within (HTML_EL_SCRIPT, DocumentSSchema))
 				     /* we are within a SCRIPT element */
 				     {
 				     /* put '<' and the character read in the
@@ -6048,67 +6036,111 @@ STRING              HTMLbuf;
    buffer textbuf. One parameter should be NULL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void        ReadTextFile (FILE * infile, STRING textbuf)
+static void        ReadTextFile (FILE *infile, STRING textbuf, Document doc, STRING pathURL)
 #else
-static void        ReadTextFile (infile, textbuf)
-FILE               *infile;
+static void        ReadTextFile (infile, textbuf, doc, pathURL)
+FILE              *infile;
 STRING	           textbuf;
+Document           doc;
+STRING	           pathURL;
 #endif
 {
-   UCHAR       charRead;
-   boolean             endOfFile;
+  Element             parent, el, prev;
+  ElementType         elType;
+  UCHAR               charRead;
+  boolean             endOfFile;
 
-   InputText = textbuf;
-   InputFile = infile;
-   endOfFile = FALSE;
-   numberOfCharRead = 0;
-   numberOfLinesRead = 1;
+  InputText = textbuf;
+  InputFile = infile;
+  LgBuffer = 0;
+  endOfFile = FALSE;
+  numberOfCharRead = 0;
+  numberOfLinesRead = 1;
 
-   /* initialize input buffer */
-   charRead = GetNextInputChar (&endOfFile);
+  /* initialize input buffer */
+  charRead = GetNextInputChar (&endOfFile);
+  parent = TtaGetMainRoot (doc);
+  elType = TtaGetElementType (parent);
+  el = TtaGetLastChild (parent);
+  if (el == NULL)
+    {
+      /* insert the Document_URL element */
+      elType.ElTypeNum = TextFile_EL_Document_URL;
+      prev = TtaNewTree (doc, elType, "");
+      TtaInsertFirstChild (&prev, parent, doc);
+      if (pathURL != NULL && prev != NULL)
+	{
+	  el = TtaGetFirstChild (prev);     
+	  TtaSetTextContent (el, pathURL, currentLanguage, doc);
+	}
+      /* insert the BODY element */
+      elType.ElTypeNum = TextFile_EL_BODY;
+      el = TtaNewElement (doc, elType);
+      if (prev != NULL)
+	TtaInsertSibling (el, prev,  FALSE, doc);
+      else
+	TtaInsertFirstChild (&el, parent, doc);
+      parent = el;
+    }
+  prev = el = NULL;
 
-   /* if we are reading a file and the fist line is "<!DOCTYPE HTML...", then
-      parse that file as an HTML file */
-   if (InputFile != NULL && !ustrncasecmp (FileBuffer, "<!DOCTYPE HTML", 14))
-      {
-      prevChar = charRead;
-      HTMLparse (infile, textbuf);
-      }
-   else
-      /* its definitely not an HTML file */
-      {
-      /* create a PRE element by simulating a PRE tag */
-      StartOfTag (SPACE);
-      ProcessStartGI ("PRE");
-      /* read the text file sequentially */
-      while (!endOfFile)
-        {
-	if (charRead != EOS)
-	  {
-	     /* Check the character read */
-	     /* Consider LF and FF as the end of an input line. */
-	     if ((int) charRead == 10)
-		/* LF = end of line */
-		/* generate a Thot new line character */
-		charRead = '\n';
-	     else
-		/* it's not an end of line */
-	        /* Ignore non printable characters except HT, LF, FF. */
-		if ((charRead < SPACE || (int) charRead >= 254 ||
-		    	((int) charRead >= 127 && (int) charRead <= 159))
-			   && (int) charRead != 9)
-		     /* it's not a printable character, ignore it */
-		     charRead = EOS;
-	     if (charRead != EOS)
-		/* a valid character has been read */
-		PutInBuffer (charRead);
-	  }
-	/* read next character from the source */
-	charRead = GetNextInputChar (&endOfFile);
-        }
-      /* end of HTML file */
-      EndOfDocument ();
-      }
+  /* read the text file sequentially */
+  while (!endOfFile)
+    {
+      if (el == NULL)
+	{
+	  /* create a new line */
+	  elType.ElTypeNum = TextFile_EL_Line_;
+	  el = TtaNewTree (doc, elType, "");
+	  if (prev != NULL)
+	    /* new line after the previous */
+	    TtaInsertSibling (el, prev,  FALSE, doc);
+	  else
+	    /* first line */
+	    TtaInsertFirstChild (&el, parent, doc);
+	  prev = el;
+	  /* get the text element */
+	  el = TtaGetFirstChild (el);
+	}
+
+      /* Check the character read */
+      /* Consider LF and FF as the end of an input line. */
+      if ((int) charRead == EOL || (int) charRead == 0)
+	{
+	  /* LF = end of line */
+	  inputBuffer[LgBuffer] = EOS;
+	  if (LgBuffer != 0)
+	    TtaAppendTextContent (el, inputBuffer, doc);
+	  LgBuffer = 0;
+	  el = NULL;
+	  charRead = EOS;
+	}
+      else if ((charRead < SPACE || (int) charRead >= 254 ||
+		((int) charRead >= 127 && (int) charRead <= 159))
+	       && (int) charRead != 9)
+	/* it's not an end of line */
+	/* Ignore non printable characters except HT, LF, FF. */
+	/* it's not a printable character, ignore it */
+	charRead = EOS;
+      if (charRead != EOS)
+	{
+	  /* a valid character has been read */
+	  if (LgBuffer + 1 >= AllmostFullBuffer)
+	    {
+	      /* store the current buffer contents and continue */
+	      inputBuffer[LgBuffer] = EOS;
+	      TtaAppendTextContent (el, inputBuffer, doc);
+	      LgBuffer = 0;
+	    }
+	  inputBuffer[LgBuffer++] = charRead;
+	}
+
+      /* read next character from the source */
+      charRead = GetNextInputChar (&endOfFile);
+    }
+  /* close the document */
+  if (LgBuffer != 0)
+    TtaAppendTextContent (el, inputBuffer, doc);
 }
 
 
@@ -6555,7 +6587,7 @@ STRING              pathURL;
 	if (elHead == NULL)
 	   /* there is no HEAD element. Create one */
 	  {
-	     newElType.ElSSchema = HTMLSSchema;
+	     newElType.ElSSchema = DocumentSSchema;
 	     newElType.ElTypeNum = HTML_EL_HEAD;
 	     elHead = TtaNewTree (theDocument, newElType, "");
 	     TtaInsertFirstChild (&elHead, rootElement, theDocument);
@@ -6565,7 +6597,7 @@ STRING              pathURL;
 	  {
 	     headElType = TtaGetElementType (elHead);
 	     /* create a Document_URL element as the first child of HEAD */
-	     newElType.ElSSchema = HTMLSSchema;
+	     newElType.ElSSchema = DocumentSSchema;
 	     newElType.ElTypeNum = HTML_EL_Document_URL;
 	     el = TtaGetFirstChild (elHead);
 	     if (el != NULL)
@@ -6609,7 +6641,7 @@ STRING              pathURL;
 		        /* create the BODY element if it does not exist */
 		        if (elBody == NULL)
 		          {
-			    newElType.ElSSchema = HTMLSSchema;
+			    newElType.ElSSchema = DocumentSSchema;
 			    newElType.ElTypeNum = HTML_EL_BODY;
 			    elBody = TtaNewElement (theDocument, newElType);
 			    TtaInsertSibling (elBody, elHead, FALSE, theDocument);
@@ -6660,7 +6692,7 @@ STRING              pathURL;
 		  /* create the BODY element if it does not exist */
 		  if (elBody == NULL)
 		    {
-		       newElType.ElSSchema = HTMLSSchema;
+		       newElType.ElSSchema = DocumentSSchema;
 		       newElType.ElTypeNum = HTML_EL_BODY;
 		       elBody = TtaNewElement (theDocument, newElType);
 		       if (previous == NULL)
@@ -6734,7 +6766,7 @@ STRING              pathURL;
 		       if (elType.ElTypeNum != HTML_EL_Term_List)
 			 {
 			    /* create a Term_List element before the first Term element */
-			    newElType.ElSSchema = HTMLSSchema;
+			    newElType.ElSSchema = DocumentSSchema;
 			    newElType.ElTypeNum = HTML_EL_Term_List;
 			    termList = TtaNewElement (theDocument, newElType);
 			    TtaInsertSibling (termList, firstTerm, TRUE, theDocument);
@@ -6763,7 +6795,7 @@ STRING              pathURL;
 			 {
 			    /* Create a Definition_Item element surrounding the */
 			    /* Term_List element */
-			    newElType.ElSSchema = HTMLSSchema;
+			    newElType.ElSSchema = DocumentSSchema;
 			    newElType.ElTypeNum = HTML_EL_Definition_Item;
 			    newEl = TtaNewElement (theDocument, newElType);
 			    TtaInsertSibling (newEl, termList, TRUE, theDocument);
@@ -6785,7 +6817,7 @@ STRING              pathURL;
 				 /* the element following the Term_List element is not */
 				 /* a Definition. Create a Definition element surrounding */
 				 /* that element */
-				 newElType.ElSSchema = HTMLSSchema;
+				 newElType.ElSSchema = DocumentSSchema;
 				 newElType.ElTypeNum = HTML_EL_Definition;
 				 newEl = TtaNewElement (theDocument, newElType);
 				 TtaInsertSibling (newEl, termList, FALSE, theDocument);
@@ -6831,7 +6863,7 @@ STRING              pathURL;
 			  /* this Definition is not within a Definition_Item */
 			 {
 			    /* create a Definition_Item */
-			    newElType.ElSSchema = HTMLSSchema;
+			    newElType.ElSSchema = DocumentSSchema;
 			    newElType.ElTypeNum = HTML_EL_Definition_Item;
 			    newEl = TtaNewElement (theDocument, newElType);
 			    TtaInsertSibling (newEl, el, TRUE, theDocument);
@@ -6876,7 +6908,7 @@ STRING              pathURL;
 				   elType.ElTypeNum == HTML_EL_Comment_);
 			    /* create a Definition_List element before the */
 			    /* first Definition_Item element */
-			    newElType.ElSSchema = HTMLSSchema;
+			    newElType.ElSSchema = DocumentSSchema;
 			    newElType.ElTypeNum = HTML_EL_Definition_List;
 			    glossary = TtaNewElement (theDocument, newElType);
 			    TtaInsertSibling (glossary, firstEntry, TRUE,
@@ -6948,7 +6980,7 @@ STRING              pathURL;
 				 elType.ElTypeNum == HTML_EL_Comment_);
 			    /* create a HTML_EL_Unnumbered_List element before
 			       the first List_Item element */
-			    newElType.ElSSchema = HTMLSSchema;
+			    newElType.ElSSchema = DocumentSSchema;
 			    newElType.ElTypeNum = HTML_EL_Unnumbered_List;
 			    list = TtaNewElement (theDocument, newElType);
 			    TtaInsertSibling (list, firstEntry, TRUE,
@@ -7026,7 +7058,7 @@ STRING              pathURL;
         if (elBody != NULL)
 	  if (TtaGetFirstChild (elBody) == NULL)
 	     {
-	     newElType.ElSSchema = HTMLSSchema;
+	     newElType.ElSSchema = DocumentSSchema;
 	     newElType.ElTypeNum = HTML_EL_Element;
 	     newEl = TtaNewElement (theDocument, newElType);
 	     TtaInsertFirstChild (&newEl, elBody, theDocument);
@@ -7065,7 +7097,7 @@ Document            doc;
      {
 	/* initialize the stack with ancestors of lastelem */
 	theDocument = doc;
-	HTMLSSchema = TtaGetDocumentSSchema (theDocument);
+	DocumentSSchema = TtaGetDocumentSSchema (theDocument);
 	rootElement = TtaGetMainRoot (theDocument);
 	if (isclosed)
 	   elem = TtaGetParent (lastelem);
@@ -7083,7 +7115,7 @@ Document            doc;
 		       LanguageStack[i + 1] = LanguageStack[i];
 		       ThotLevel[i + 1] = ThotLevel[i] + 1;
 		    }
-		  schema = HTMLSSchema;
+		  schema = DocumentSSchema;
 		  GINumberStack[1] = MapGI (tag, &schema, theDocument);
 		  ElementStack[1] = elem;
 		  ThotLevel[1] = 1;
@@ -7207,77 +7239,73 @@ int                 main (int argc, char **argv)
 int                 main (argc, argv)
 int                 argc;
 char              **argv;
-
 #endif
 {
-   FILE               *infile;
-   CHAR                htmlFileName[200];
-   CHAR                pivotFileName[200];
-   CHAR                documentDirectory[200];
-   CHAR                documentName[200];
-   Element             el, oldel;
-   int                 returnCode;
-   boolean	       PlainText;
+  Element             el, oldel;
+  Document            doc;
+  FILE               *infile;
+  STRING              pathURL = NULL;
+  CHAR                htmlFileName[200];
+  CHAR                pivotFileName[200];
+  CHAR                documentDirectory[200];
+  CHAR                documentName[200];
+  int                 returnCode;
+  boolean	       plainText;
 
-   /* check the number of arguments in command line */
-   returnCode = 0;
-   if (argc != 3)
-      /* command line is not OK */
-     {
-	fprintf (stderr, "Usage: html2thot html_file Thot_file\n");
-	returnCode = 1;
-     }
-   else
-     {
-	TtaInitializeAppRegistry (argv[0]);
-	/* get the input file name from the command line */
-	argv++;
-	ustrcpy (htmlFileName, *argv);
-	/*  open the input file */
-	infile = fopen (htmlFileName, "r");
-	if (infile == 0)
-	   /* error */
-	  {
-	     fprintf (stderr, "Cannot open %s\n", htmlFileName);
-	     returnCode = 2;
-	  }
-	else
-	  {
-	     /* input file OK. Get the output file name from the command line */
-	     argv++;
-	     ustrcpy (pivotFileName, *argv);
-	     /* the file to be parsed is supposed to be HTML */
-	     PlainText = FALSE;
-	     /* initialize mapping table */
-	     InitMapping ();
-	     /* initialize automaton for the HTML parser */
-	     InitAutomaton ();
-	     /* initialize the Thot toolkit */
-	     TtaInitialize ("HTMLThot");
-	     /* extract directory and file name from second argument */
-	     TtaExtractName (pivotFileName, documentDirectory, documentName);
-	     if (documentName[0] == EOS && !TtaCheckDirectory (documentDirectory))
-	       {
-		  ustrcpy (documentName, documentDirectory);
-		  documentDirectory[0] = EOS;
-	       }
-	     TtaSetDocumentPath (documentDirectory);
-	     docURL = htmlFileName;
-	     /* create a Thot document of type HTML */
-	     theDocument = TtaNewDocument ("HTML", pivotFileName);
-	     if (theDocument == 0)
-	       {
-		  fprintf (stderr, "Cannot create file %s.PIV\n", pivotFileName);
-		  returnCode = 3;
-	       }
-	     else
-		/* set the notification mode for the new document */
-		TtaSetNotificationMode (theDocument, 1);
-
-	     if (returnCode != 0)
-	       {
-		  /* problem occured */
-	       }
+  /* check the number of arguments in command line */
+  returnCode = 0;
+  if (argc != 3)
+    /* command line is not OK */
+    {
+      fprintf (stderr, "Usage: html2thot html_file Thot_file\n");
+      returnCode = 1;
+    }
+  else
+    {
+      TtaInitializeAppRegistry (argv[0]);
+      /* get the input file name from the command line */
+      argv++;
+      ustrcpy (htmlFileName, *argv);
+      /*  open the input file */
+      infile = fopen (htmlFileName, "r");
+      if (infile == 0)
+	{
+	  fprintf (stderr, "Cannot open %s\n", htmlFileName);
+	  returnCode = 2;
+	}
+      else
+	{
+	  /* input file OK. Get the output file name from the command line */
+	  argv++;
+	  ustrcpy (pivotFileName, *argv);
+	  /* the file to be parsed is supposed to be HTML */
+	  plainText = FALSE;
+	  /* initialize mapping table */
+	  InitMapping ();
+	  /* initialize automaton for the HTML parser */
+	  InitAutomaton ();
+	  /* initialize the Thot toolkit */
+	  TtaInitialize ("HTMLThot");
+	  /* extract directory and file name from second argument */
+	  TtaExtractName (pivotFileName, documentDirectory, documentName);
+	  if (documentName[0] == EOS && !TtaCheckDirectory (documentDirectory))
+	    {
+	      ustrcpy (documentName, documentDirectory);
+	      documentDirectory[0] = EOS;
+	    }
+	  TtaSetDocumentPath (documentDirectory);
+	  docURL = htmlFileName;
+	  /* create a Thot document of type HTML */
+	  doc = TtaNewDocument ("HTML", pivotFileName);
+	  theDocument = doc;
+	  if (doc == 0)
+	    {
+	      fprintf (stderr, "Cannot create file %s.PIV\n", pivotFileName);
+	      returnCode = 3;
+	    }
+	  else
+	    /* set the notification mode for the new document */
+	    TtaSetNotificationMode (doc, 1);
 #else  /* STANDALONE */
 /*----------------------------------------------------------------------
    StartParser loads the file Directory/htmlFileName for
@@ -7286,180 +7314,193 @@ char              **argv;
    distant) path or URL of the html document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                StartParser (Document doc, STRING htmlFileName, STRING documentName, STRING documentDirectory, STRING pathURL, boolean PlainText)
+void                StartParser (Document doc, STRING htmlFileName, STRING documentName, STRING documentDirectory, STRING pathURL, boolean plainText)
 #else
-void                StartParser (doc, htmlFileName, documentName, documentDirectory, pathURL, PlainText)
+void                StartParser (doc, htmlFileName, documentName, documentDirectory, pathURL, plainText)
 Document            doc;
 STRING              htmlFileName;
 STRING              documentName;
 STRING              documentDirectory;
 STRING              pathURL;
-boolean	            PlainText;
-
+boolean	            plainText;
 #endif
 {
-   FILE               *infile;
-#ifdef HANDLE_COMPRESSED_FILES
-   gzFile              stream = NULL;
-#endif
-   Element             el, oldel;
-   AttributeType       attrType;
-   Attribute           attr;
-   int		       length;
-   STRING              s;
-   CHAR                tempname[MAX_LENGTH];
-   CHAR                temppath[MAX_LENGTH];
+  gzFile              stream = NULL;
+  FILE               *infile;
+  Element             el, oldel;
+  AttributeType       attrType;
+  Attribute           attr;
+  STRING              s;
+  CHAR                tempname[MAX_LENGTH];
+  CHAR                temppath[MAX_LENGTH];
+  int		       length;
+  boolean             isHTML;
 
-   theDocument = doc;
-   FirstElemToBeChecked = NULL;
-   LastElemToBeChecked = NULL;
-   lastElement = NULL;
-   lastElementClosed = FALSE;
-   lastElemEntry = 0;
-   lastAttribute = NULL;
-   lastAttrElement = NULL;
-   lastAttrEntry = NULL;
-   IgnoreAttr = FALSE;
-   CommentText = NULL;
-   UnknownTag = FALSE;
-   ReadingHREF = FALSE;
-   MergeText = FALSE;
-   LgEntityName = 0;
-   EntityTableEntry = 0;
-   CharRank = 0;
-   infile = fopen (htmlFileName, "r");
-   if (infile != 0)
-     {
-#ifdef HANDLE_COMPRESSED_FILES
-	stream = gzopen (htmlFileName, "r");
-#endif
-        FileBuffer[0] = EOS;
-	CurCharInFileBuffer = 0;
-	LastCharInFileBuffer = 0;
-	WithinTable = 0;
-	if (documentName[0] == EOS && !TtaCheckDirectory (documentDirectory))
-	  {
-	     ustrcpy (documentName, documentDirectory);
-	     documentDirectory[0] = EOS;
-	     s = (STRING) TtaGetEnvString ("PWD");
-	     /* set path on current directory */
-	     if (s != NULL)
-		ustrcpy (documentDirectory, s);
-	     else
-		documentDirectory[0] = EOS;
-	  }
-	TtaAppendDocumentPath (documentDirectory);
-	/* create a Thot document of type HTML */
-#endif /* STANDALONE */
-	/* the Thot document has been successfully created */
+  theDocument = doc;
+  FirstElemToBeChecked = NULL;
+  LastElemToBeChecked = NULL;
+  lastElement = NULL;
+  lastElementClosed = FALSE;
+  lastElemEntry = 0;
+  lastAttribute = NULL;
+  lastAttrElement = NULL;
+  lastAttrEntry = NULL;
+  IgnoreAttr = FALSE;
+  CommentText = NULL;
+  UnknownTag = FALSE;
+  ReadingHREF = FALSE;
+  MergeText = FALSE;
+  LgEntityName = 0;
+  EntityTableEntry = 0;
+  CharRank = 0;
+  stream = gzopen (htmlFileName, "r");
+  if (stream != 0)
+    {
+      FileBuffer[0] = EOS;
+      CurCharInFileBuffer = 0;
+      LastCharInFileBuffer = 0;
+      WithinTable = 0;
+      if (documentName[0] == EOS && !TtaCheckDirectory (documentDirectory))
 	{
-#ifndef STANDALONE
-	   length = ustrlen (pathURL);
-	   if (ustrcmp (pathURL, htmlFileName) == 0)
-	      {
-	      docURL = TtaGetMemory (length+1);
-	      ustrcpy (docURL, pathURL);
-	      }
-	   else
-	      {
-	      length += ustrlen (htmlFileName) + 20;
-	      docURL = TtaGetMemory (length+1);
-	      sprintf (docURL, "%s temp file: %s", pathURL, htmlFileName);
-	      }
+	  ustrcpy (documentName, documentDirectory);
+	  documentDirectory[0] = EOS;
+	  s = (STRING) TtaGetEnvString ("PWD");
+	  /* set path on current directory */
+	  if (s != NULL)
+	    ustrcpy (documentDirectory, s);
+	  else
+	    documentDirectory[0] = EOS;
+	}
+      TtaAppendDocumentPath (documentDirectory);
+      /* create a Thot document of type HTML */
 #endif /* STANDALONE */
-	   /* do not allow the user to edit the document while parsing */
-	   /**** TtaSetDocumentAccessMode(theDocument, 0);  ****/
-	   /* do not check the Thot abstract tree against the structure */
-	   /* schema while building the Thot document. */
-	   TtaSetStructureChecking (0, theDocument);
-	   /* set the notification mode for the new document */
-	   TtaSetNotificationMode (theDocument, 1);
-	   currentLanguage = TtaGetDefaultLanguage ();
-	   HTMLSSchema = TtaGetDocumentSSchema (theDocument);
-	   rootElement = TtaGetMainRoot (theDocument);
+      /* the Thot document has been successfully created */
+      {
 #ifndef STANDALONE
-#ifndef INCR_DISPLAY
-	   TtaSetDisplayMode (theDocument, NoComputedDisplay);
-#endif /* INCR_DISPLAY */
-	   /* add the default attribute HTML_ATTR_PrintURL */
-	   attrType.AttrSSchema = HTMLSSchema;
-	   attrType.AttrTypeNum = HTML_ATTR_PrintURL;
-	   attr = TtaGetAttribute (rootElement, attrType);
-	   if (attr == 0)
-	     {
-	       attr = TtaNewAttribute (attrType);
-	       TtaAttachAttribute (rootElement, attr, theDocument);
-	     }
-
-	   /* delete all element except the root element */
-	   el = TtaGetFirstChild (rootElement);
-	   while (el != NULL)
-	     {
-		oldel = el;
-		TtaNextSibling (&el);
-		TtaDeleteTree (oldel, theDocument);
-	     }
-	   /* save the path or URL of the document */
-	   TtaExtractName (pathURL, temppath, tempname);
-	   TtaSetDocumentDirectory (doc, temppath);
-	   /* disable auto save */
-	   TtaSetDocumentBackUpInterval (doc, 0);
+	length = ustrlen (pathURL);
+	if (ustrcmp (pathURL, htmlFileName) == 0)
+	  {
+	    docURL = TtaGetMemory (length+1);
+	    ustrcpy (docURL, pathURL);
+	  }
+	else
+	  {
+	    length += ustrlen (htmlFileName) + 20;
+	    docURL = TtaGetMemory (length+1);
+	    sprintf (docURL, "%s temp file: %s", pathURL, htmlFileName);
+	  }
 #endif /* STANDALONE */
-	   /* initialize parsing environment */
-	   InitializeHTMLParser (NULL, FALSE, 0);
-	   /* parse the input file and build the Thot document */
-#ifdef HANDLE_COMPRESSED_FILES
-	   if (PlainText)
-	      ReadTextFile (stream, NULL);
-	   else
-	      HTMLparse (stream, NULL);
-           if (stream != NULL)
-             gzclose (stream);
-#else
-	   if (PlainText)
-	      ReadTextFile (infile, NULL);
-	   else
-	      HTMLparse (infile, NULL);
-#endif
-	   fclose (infile);
-	   /* completes all unclosed elements */
-	   el = lastElement;
-	   while (el != NULL)
-	     {
+	/* do not check the Thot abstract tree against the structure */
+	/* schema while building the Thot document. */
+	TtaSetStructureChecking (0, doc);
+	/* set the notification mode for the new document */
+	TtaSetNotificationMode (doc, 1);
+	currentLanguage = TtaGetDefaultLanguage ();
+#ifndef STANDALONE
+	DocumentSSchema = TtaGetDocumentSSchema (doc);
+	/* is the current document a HTML document */
+	isHTML = (ustrcmp(TtaGetSSchemaName (DocumentSSchema), "HTML") == 0);
+	if (plainText)
+	  {
+	    if (isHTML)
+	      {
+		/* change the document type */
+		TtaFreeView (doc, 1);
+		doc = TtaNewDocument ("TextFile", documentName);
+		TtaSetPSchema (doc, "TextFileP");
+		DocumentSSchema = TtaGetDocumentSSchema (doc);
+		isHTML = FALSE;
+	      }
+	    
+	    /* default ATTR_PrintURL */
+	    attrType.AttrSSchema = DocumentSSchema;
+	    attrType.AttrTypeNum = TextFile_ATTR_PrintURL;
+	  }
+	else
+	  {
+	    if (!isHTML)
+	      {
+		/* change the document type */
+		TtaFreeView (doc, 1);
+		doc = TtaNewDocument ("HTML", documentName);
+		if (TtaGetScreenDepth () > 1)
+		  TtaSetPSchema (doc, "HTMLP");
+		else
+		  TtaSetPSchema (doc, "HTMLPBW");
+		DocumentSSchema = TtaGetDocumentSSchema (doc);
+		isHTML = TRUE;
+	      }
+	    /* default ATTR_PrintURL */
+	    attrType.AttrSSchema = DocumentSSchema;
+	    attrType.AttrTypeNum = HTML_ATTR_PrintURL;
+	  }
+	
+	TtaSetDisplayMode (doc, NoComputedDisplay);
+	/* add the default attribute HTML_ATTR_PrintURL */
+	rootElement = TtaGetMainRoot (doc);
+	attr = TtaGetAttribute (rootElement, attrType);
+	if (attr == 0)
+	  {
+	    attr = TtaNewAttribute (attrType);
+	    TtaAttachAttribute (rootElement, attr, doc);
+	  }
+	
+	/* delete all element except the root element */
+	el = TtaGetFirstChild (rootElement);
+	while (el != NULL)
+	  {
+	    oldel = el;
+	    TtaNextSibling (&el);
+	    TtaDeleteTree (oldel, doc);
+	  }
+	
+	/* save the path or URL of the document */
+	TtaExtractName (pathURL, temppath, tempname);
+	TtaSetDocumentDirectory (doc, temppath);
+	/* disable auto save */
+	TtaSetDocumentBackUpInterval (doc, 0);
+#endif /* STANDALONE */
+	/* parse the input file and build the Thot document */
+	if (plainText)
+	  ReadTextFile (stream, NULL, doc, pathURL);
+	else
+	  {
+	    /* initialize parsing environment */
+	    InitializeHTMLParser (NULL, FALSE, 0);
+	    HTMLparse (stream, NULL);
+	    /* completes all unclosed elements */
+	    el = lastElement;
+	    while (el != NULL)
+	      {
 		ElementComplete (el);
 		el = TtaGetParent (el);
-	     }
+	      }
+	    /* check the Thot abstract tree */
+	    CheckAbstractTree (pathURL);
+	  }
+	gzclose (stream);
 #ifdef STANDALONE
-	   /* check the Thot abstract tree */
-	   CheckAbstractTree (NULL);
-	   /* save and close the Thot document */
-	   TtaSaveDocument (theDocument, pivotFileName);
-	   TtaCloseDocument (theDocument);
+	/* save and close the Thot document */
+	TtaSaveDocument (doc, pivotFileName);
+	TtaCloseDocument (doc);
 #else  /* STANDALONE */
-	   /* check the Thot abstract tree */
-	   CheckAbstractTree (pathURL);
-#ifdef AMAYA_JAVA
-	   handleLinkHeaders (theDocument);
-#endif /* AMAYA_JAVA */
-	   TtaFreeMemory (docURL);
-#ifndef INCR_DISPLAY
-	   TtaSetDisplayMode (theDocument, DisplayImmediately);
-#endif /* INCR_DISPLAY */
+        #ifdef AMAYA_JAVA
+	handleLinkHeaders (doc);
+        #endif /* AMAYA_JAVA */
+	TtaFreeMemory (docURL);
+	TtaSetDisplayMode (doc, DisplayImmediately);
 #endif /* STANDALONE */
-	   /* check the Thot abstract tree against the structure schema. */
-	   TtaSetStructureChecking (1, theDocument);
-	   /* allow the user to edit the document */
-	   /***** TtaSetDocumentAccessMode(theDocument, 1); ****/
-	   HTMLSSchema = NULL;
-	}
-	/* close the HTML file */
-     }
+	/* check the Thot abstract tree against the structure schema. */
+	TtaSetStructureChecking (1, doc);
+	DocumentSSchema = NULL;
+      }
+    }
 #ifdef STANDALONE
-   /* quit the Thot toolkit */
-   TtaQuit ();
+  /* quit the Thot toolkit */
+  TtaQuit ();
 }
 #else  /* STANDALONE */
-   TtaSetDocumentUnmodified (theDocument);
+   TtaSetDocumentUnmodified (doc);
    theDocument = 0;
 #endif /* STANDALONE */
 }

@@ -24,7 +24,6 @@
 #endif
 
 #if defined(_WINDOWS) || defined(_CONSOLE)
-
 #define WWW_MSWINDOWS
 
 /****************************************************************
@@ -69,12 +68,10 @@ typedef struct _FontInfo
   int            FiAscent;
   int            FiHeights[256];
   int            FiWidths[256];
-# ifdef _WINDOWS
   int            PFiHeight;
   int            PFiAscent;
   int            PFiHeights[256];
   int            PFiWidths[256];
-# endif /* _WINDOWS */
   HFONT          FiFont;
 }FontInfo;
 typedef FontInfo *ptrfont;
@@ -84,7 +81,7 @@ typedef HWND        ThotWindow;
 typedef HBITMAP     ThotBitmap;
 typedef COLORREF    ThotColor;
 typedef COLORREF    Pixel;
-typedef char       *Pixmap;
+typedef void       *Pixmap;
 typedef HCURSOR     ThotCursor;
 typedef HBITMAP     Drawable;
 typedef POINT       ThotPoint;
@@ -97,7 +94,8 @@ typedef void       *KeySym;
 typedef void       *XtPointer;
 typedef void       *XtIntervalId;
 typedef void       *XtInputId;
-
+typedef int         ThotIcon;
+#define None            0
 #define TBBUTTONS_BASE 50000
 #define ThotColorNone ((COLORREF)~1)	/* anything in high byte is bad COLORREF */
 #define ThotBitmapNone ((ThotBitmap)NULL)
@@ -109,7 +107,6 @@ typedef void       *XtInputId;
 typedef XColor    ThotColorStruct;
 
 #else  /* defined(_WINDOWS) || defined(_CONSOLE) */
-
 #ifdef _WINDOWS
 
 /************************************************************************
@@ -181,21 +178,24 @@ typedef XColor    ThotColorStruct;
 #define THOT_TrueColor		TrueColor
 #define THOT_DirectColor	DirectColor
 
-typedef Widget      ThotWidget;
-typedef Window      ThotWindow;
-typedef Drawable    ThotBitmap;
-typedef GC          ThotGC;
-typedef unsigned long ThotColor;
-typedef XColor      ThotColorStruct;
-typedef int        *ptrfont;
-typedef Cursor      ThotCursor;
-typedef XPoint      ThotPoint;
-typedef XEvent      ThotEvent;
-typedef XKeyEvent   ThotKeyEvent;
+typedef Widget         ThotWidget;
+typedef Window         ThotWindow;
+typedef Drawable       ThotBitmap;
+typedef GC             ThotGC;
+typedef unsigned long  ThotColor;
+typedef XColor         ThotColorStruct;
+typedef int           *ptrfont;
+typedef Cursor         ThotCursor;
+typedef XPoint         ThotPoint;
+typedef XEvent         ThotEvent;
+typedef XKeyEvent      ThotKeyEvent;
 typedef XComposeStatus ThotComposeStatus;
-typedef XtAppContext ThotAppContext;
+typedef XtAppContext   ThotAppContext;
 typedef XtTranslations ThotTranslations;
-
+typedef Pixmap         ThotIcon;
+/* button states */
+#define TBSTYLE_BUTTON  0
+#define TBSTYLE_CHECK   1
 #define ThotColorNone ((Pixel)-1)
 #define ThotBitmapNone ((ThotBitmap)-1)
 

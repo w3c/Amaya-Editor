@@ -721,10 +721,12 @@ org_w3c_thotlib_Extra_TtaNewButton(jint document,
     /* Register the callback and add the button */
     if (infos[0] == '\0')
 	button = TtaAddButton (document, 1, pixmap,
-	                       ButtonCCallbacks[callback], NULL);
+	                       ButtonCCallbacks[callback], NULL,
+			       TBSTYLE_BUTTON, TRUE);
     else	
 	button = TtaAddButton (document, 1, pixmap,
-			       ButtonCCallbacks[callback], infos);
+			       ButtonCCallbacks[callback], infos,
+			       TBSTYLE_BUTTON, TRUE);
 
     return(button);
 }

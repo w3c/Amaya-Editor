@@ -142,10 +142,10 @@ extern void ShowLogFile ( Document doc,
                           View view );
 extern void FlushCache ( Document doc,
                          View view );
+extern void ConfigAppearance ( Document doc,
+                               View view );
 extern void ConfigBrEd ( Document doc,
                          View view );
-extern void ConfigAppearance ( Document doc,
-			       View view );
 extern void ConfigNetwork ( Document doc,
                             View view );
 extern void SaveOptions ( Document doc,
@@ -287,15 +287,16 @@ extern void DeleteAnchor (/* Document doc,
                              View view */);
 extern void ShowLogFile (/* Document doc,
                             View view */);
-extern void CleanCache (/* Document doc,
+extern void FlushCache (/* Document doc,
                            View view */);
-extern void ConfigBrEd (/* Document doc,
-                         View view */);
 extern void ConfigAppearance (/* Document doc,
-			       View view */);
+                                 View view */);
+extern void ConfigBrEd (/* Document doc,
+                           View view */);
 extern void ConfigNetwork (/* Document doc,
-                            View view */);
+                              View view */);
 extern void SaveOptions (/* Document doc,
-                          View view */);
+                            View view */);
+
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -18,7 +18,11 @@
 #define _TYPEBASE_H_
 
 #ifndef HAVE_BOOLEAN
+#ifdef _WINDOWS
+typedef BOOL boolean;
+#else  /* !_WINDOWS */
 typedef unsigned char boolean;
+#endif /* _WINDOWS */
 
 #define HAVE_BOOLEAN
 #endif

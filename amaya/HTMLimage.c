@@ -735,6 +735,8 @@ int                 flags;
 #endif  /* AMAYA_JAVA || AMAYA_ILU */
        return FALSE;
      }
+   else if (DocumentTypes[doc] == docText || DocumentTypes[doc] == docTextRO)
+     return FALSE;
 
    /* register the current URL */
    currentURL = TtaStrdup (DocumentURLs[doc]);

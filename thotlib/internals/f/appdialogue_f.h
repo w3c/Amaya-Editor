@@ -42,9 +42,11 @@ extern void APP_ButtonCallback ( ThotWidget w,
 extern void InitClue ( ThotWidget toplevel );
 extern int TtaAddButton ( Document document,
                           View view,
-                          Pixmap picture,
+                          ThotIcon picture,
                           void (*procedure) (),
-                          STRING info );
+                          STRING info,
+                          BYTE type,
+                          boolean state );
 extern void * TtaGetButtonCallback ( Document document,
                                      View view,
                                      int index );
@@ -54,7 +56,8 @@ extern void TtaSwitchButton ( Document document,
 extern void TtaChangeButton ( Document document,
                               View view,
                               int index,
-                              Pixmap picture );
+                              ThotIcon picture,
+                              boolean state );
 extern void TtcSwitchButtonBar ( Document document,
                                  View view );
 extern int TtaAddTextZone ( Document document,
@@ -153,9 +156,11 @@ extern void APP_ButtonCallback (/* ThotWidget w,
 extern void InitClue (/* ThotWidget toplevel */);
 extern int TtaAddButton (/* Document document,
                             View view,
-                            Pixmap picture,
+                            ThotIcon picture,
                             void (*procedure) (),
-                            STRING info */);
+                            STRING info,
+                            BYTE type,
+                            boolean state */);
 extern void * TtaGetButtonCallback (/* Document document,
                                        View view,
                                        int index */);
@@ -165,7 +170,8 @@ extern void TtaSwitchButton (/* Document document,
 extern void TtaChangeButton (/* Document document,
                                 View view,
                                 int index,
-                                Pixmap picture */);
+                                ThotIcon picture,
+                                boolean state */);
 extern void TtcSwitchButtonBar (/* Document document,
                                    View view */);
 extern int TtaAddTextZone (/* Document document,

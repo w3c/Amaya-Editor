@@ -33,6 +33,9 @@ extern void TtaGiveNextSelectedElement ( Document document,
                                          Element * selectedElement,
                                          int *firstCharacter,
                                          int *lastCharacter );
+extern void TtaGiveNextElement ( Document document,
+                                 Element * element,
+                                 Element last );
 extern void TtaGiveLastSelectedElement ( Document document,
                                          Element * selectedElement,
                                          int *firstCharacter,
@@ -67,6 +70,9 @@ extern void TtaGiveNextSelectedElement (/* Document document,
                                            Element * selectedElement,
                                            int *firstCharacter,
                                            int *lastCharacter */);
+extern void TtaGiveNextElement (/* Document document,
+                                   Element * element,
+                                   Element last */);
 extern void TtaGiveLastSelectedElement (/* Document document,
                                            Element * selectedElement,
                                            int *firstCharacter,

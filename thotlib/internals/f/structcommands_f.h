@@ -23,6 +23,7 @@ extern void CreateNewElement ( int typeNum,
                                PtrSSchema pSS,
                                PtrDocument pDoc,
                                boolean Before );
+extern void TtaSetTransformCallback ( Func callbackFunc );
 extern void SurroundMenuInput ( int item );
 extern void TtcSurround ( Document document,
                           View view );
@@ -49,6 +50,7 @@ extern void CreateNewElement (/* int typeNum,
                                  PtrSSchema pSS,
                                  PtrDocument pDoc,
                                  boolean Before */);
+extern void TtaSetTransformCallback (/* Func callbackFunc */);
 extern void SurroundMenuInput (/* int item */);
 extern void TtcSurround (/* Document document,
                             View view */);

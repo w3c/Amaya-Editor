@@ -1361,172 +1361,158 @@ ThotWidget   toplevel;
    Parameters:
    document: the concerned document.
    view: the concerned view.
-   picture: label of the new entry. None creates a space between buttons.
+   picture: the displayed pixmap. None (0) creates a space between buttons.
    procedure: procedure to be executed when the new entry is
    selected by the user. Null creates a cascade button.
    info: text to display when the cursor stays on the button.
+   Parameters type and state are only used on Windows versions.
    Returns index
   ----------------------------------------------------------------------*/
 #ifndef _WIN_PRINT
-#ifdef _WINDOWS
 #ifdef __STDC__
-int WIN_TtaAddButton (Document document, View view, int picture, void (*procedure) (), STRING info, BYTE type, BOOL state)
+int        TtaAddButton (Document document, View view, ThotIcon picture, void (*procedure) (), STRING info, BYTE type, boolean state)
 #else  /* __STDC__ */
-int WIN_TtaAddButton (document, view, picture, procedure, info, type, state)
-Document document;
-View     view;
-int      picture;
-void     (*procedure) ();
-STRING    info;
-BYTE     type;
-BOOL     state;
+int        TtaAddButton (document, view, picture, procedure, info, type, state)
+Document   document;
+View       view;
+ThotIcon   picture;
+void       (*procedure) ();
+STRING     info;
+BYTE       type;
+boolean    state;
 #endif /* __STDC__ */
-#else  /* !_WINDOWS */
-#ifdef __STDC__
-int                 TtaAddButton (Document document, View view, Pixmap picture, void (*procedure) (), STRING info)
-#else  /* __STDC__ */
-int                 TtaAddButton (document, view, picture, procedure, info)
-Document            document;
-View                view;
-Pixmap              picture;
-void                (*procedure) ();
-STRING              info;
-#endif /* __STDC__ */
-#endif /* _WINDOWS */
 {
-   int                 frame, i, index;
+  int                 frame, i, index;
+#ifndef _WINDOWS
+  int                 n;
+  XmString            title_string;
+  Arg                 args[MAX_ARGS];
+  ThotWidget          w, row;
+#else  /* _WINDOWS */
+  TBBUTTON* w;
+#endif
 
-#  ifndef _WINDOWS
-   int                 n;
-   XmString            title_string;
-   Arg                 args[MAX_ARGS];
-   ThotWidget          w, row;
-#  else  /* _WINDOWS */
-   TBBUTTON* w;
-#  endif
-
-   UserErrorCode = 0;
-   index = 0;
-   /* verifie le parametre document */
-   if (document == 0 && view == 0)
-      TtaError (ERR_invalid_parameter);
-   else
-     {
-	frame = GetWindowNumber (document, view);
-	if (frame == 0 || frame > MAX_FRAME)
-	   TtaError (ERR_invalid_parameter);
-	else if (FrameTable[frame].WdFrame != 0)
-	  {
-	     i = 0;
-	     while (i < MAX_BUTTON && FrameTable[frame].Button[i] != 0)
-               i++;
-	     if (i < MAX_BUTTON)
-	       {
-
-		  /* Insere le nouveau bouton */
-#                 ifndef _WINDOWS
-		  row = FrameTable[frame].Button[0];
-		  n = 0;
-		  XtSetArg (args[n], XmNmarginWidth, 0);
+  UserErrorCode = 0;
+  index = 0;
+  /* verifie le parametre document */
+  if (document == 0 && view == 0)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      frame = GetWindowNumber (document, view);
+      if (frame == 0 || frame > MAX_FRAME)
+	TtaError (ERR_invalid_parameter);
+      else if (FrameTable[frame].WdFrame != 0)
+	{
+	  i = 0;
+	  while (i < MAX_BUTTON && FrameTable[frame].Button[i] != 0)
+	    i++;
+	  if (i < MAX_BUTTON)
+	    {
+	      /* Insere le nouveau bouton */
+#ifndef _WINDOWS
+	      row = FrameTable[frame].Button[0];
+	      n = 0;
+	      XtSetArg (args[n], XmNmarginWidth, 0);
+	      n++;
+	      XtSetArg (args[n], XmNmarginHeight, 0);
+	      n++;
+	      XtSetArg (args[n], XmNbackground, BgMenu_Color);
+	      n++;
+	      XtSetArg (args[n], XmNtraversalOn, FALSE);
+	      n++;
+	      if (picture == None)
+		{
+		  /* insere une chaine vide */
+		  title_string = XmStringCreateSimple ("  ");
+		  XtSetArg (args[n], XmNlabelString, title_string);
 		  n++;
-		  XtSetArg (args[n], XmNmarginHeight, 0);
+		  XtSetArg (args[n], XmNforeground, Black_Color);
 		  n++;
-		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
+		  XtSetArg (args[n], XmNheight, (Dimension) 30);
 		  n++;
-		  XtSetArg (args[n], XmNtraversalOn, FALSE);
+		  w = XmCreateLabel (row, "Logo", args, n);
+		  XtManageChild (w);
+		  XmStringFree (title_string);
+		}
+	      else
+		{
+		  /* insere l'icone du bouton */
+		  XtSetArg (args[n], XmNlabelType, XmPIXMAP);
 		  n++;
-		  if (picture == None)
+		  XtSetArg (args[n], XmNlabelPixmap, picture);
+		  n++;
+		  if (procedure == NULL)
 		    {
-		       /* insere une chaine vide */
-		       title_string = XmStringCreateSimple ("  ");
-		       XtSetArg (args[n], XmNlabelString, title_string);
-		       n++;
-		       XtSetArg (args[n], XmNforeground, Black_Color);
-		       n++;
-		       XtSetArg (args[n], XmNheight, (Dimension) 30);
-		       n++;
-		       w = XmCreateLabel (row, "Logo", args, n);
-		       XtManageChild (w);
-		       XmStringFree (title_string);
+		      w = XmCreateCascadeButton (row, "dialogue", args, n);
+		      XtManageChild (w);
 		    }
 		  else
 		    {
-		       /* insere l'icone du bouton */
-		       XtSetArg (args[n], XmNlabelType, XmPIXMAP);
-		       n++;
-		       XtSetArg (args[n], XmNlabelPixmap, picture);
-		       n++;
-		       if (procedure == NULL)
-			 {
-			    w = XmCreateCascadeButton (row, "dialogue", args, n);
-			    XtManageChild (w);
-			 }
-		       else
-			 {
-			    w = XmCreatePushButton (row, "dialogue", args, n);
-			    XtManageChild (w);
-			    XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) APP_ButtonCallback, (XtPointer) frame);
-			    FrameTable[frame].Call_Button[i] = (Proc) procedure;
-			 }
+		      w = XmCreatePushButton (row, "dialogue", args, n);
+		      XtManageChild (w);
+		      XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) APP_ButtonCallback, (XtPointer) frame);
+		      FrameTable[frame].Call_Button[i] = (Proc) procedure;
 		    }
+		}
+	      FrameTable[frame].Button[i] = w;
+	      index = i;
+	      /* force la mise a jour de la fenetre */
+	      XtManageChild (row);
+#else  /* _WINDOWS */
+	      index = i;
+	      if (procedure) {
+		w = (TBBUTTON*) TtaGetMemory (sizeof (TBBUTTON));
+		if (!w)
+		  WinErrorBox (NULL);
+		else {
+		  w->iBitmap      = picture;
+		  w->idCommand    = TBBUTTONS_BASE + i; 
+		  w->fsState      = TBSTATE_ENABLED;
+		  w->fsStyle      = type;
+		  w->bReserved[0] = 0;
+		  w->bReserved[1] = 0;
+		  w->dwData       = 0;
+		  w->iString      = -1;
+		  CommandToString[frame][tipIndex++] = TBBUTTONS_BASE + i;
+		  CommandToString[frame][tipIndex]   = -1;
+		  nCust [frame][i] = i;
 		  FrameTable[frame].Button[i] = w;
-		  index = i;
-		  /* force la mise a jour de la fenetre */
-		  XtManageChild (row);
-#                 else  /* _WINDOWS */
-		  index = i;
-                  if (procedure) {
-                     w = (TBBUTTON*) TtaGetMemory (sizeof (TBBUTTON));
-					 if (!w)
-                        WinErrorBox (NULL);
-					 else {
-                         w->iBitmap      = picture;
-                         w->idCommand    = TBBUTTONS_BASE + i; 
-                         w->fsState      = TBSTATE_ENABLED;
-                         w->fsStyle      = type;
-						 w->bReserved[0] = 0;
-						 w->bReserved[1] = 0;
-                         w->dwData       = 0;
-                         w->iString      = -1;
-                         CommandToString[frame][tipIndex++] = TBBUTTONS_BASE + i;
-                         CommandToString[frame][tipIndex]   = -1;
-			             nCust [frame][i] = i;
-                         FrameTable[frame].Button[i] = w;
-                         FrameTable[frame].Call_Button[i] = (Proc) procedure;
-
-                         ToolBar_InsertButton (WinToolBar[frame], i, w);
-                         SendMessage (WinToolBar[frame], TB_ENABLEBUTTON, (WPARAM) (index + TBBUTTONS_BASE), (LPARAM) MAKELONG (state, 0));
-					 }
-                  } else {
-                        w = (TBBUTTON*) TtaGetMemory (sizeof (TBBUTTON));
-                        w->iBitmap   = 0;
-                        w->idCommand = 0; 
-                        w->fsState   = TBSTATE_ENABLED;
-                        w->fsStyle   = type;
-                        w->dwData    = 0;
-                        w->iString   = 0;
-                        FrameTable[frame].Button[i] = w;
-                        FrameTable[frame].Call_Button[i] = (Proc) procedure;
-                        ToolBar_InsertButton (WinToolBar[frame], i, w);
-                  }
-#                 endif /* _WINDOWS */
-                  if (info != NULL) {
-#                    ifdef _WINDOWS
-                     if (!tbStringsInitialized) {                   
-		                ustrcat (&szTbStrings [strIndex], info);
-	                    strIndex += (ustrlen (info) + 1);
-					 }
-#                    else  /* !_WINDOWS */
-		     XcgLiteClueAddWidget(liteClue, w,  info, ustrlen(info), 0);
-#                    endif /* _WINDOWS */
-                  }
-	       }
-	  }
-     }
-
-   TtaHandlePendingEvents ();
-   return (index);
-}				/*TtaAddButton */
+		  FrameTable[frame].Call_Button[i] = (Proc) procedure;
+		  
+		  ToolBar_InsertButton (WinToolBar[frame], i, w);
+		  SendMessage (WinToolBar[frame], TB_ENABLEBUTTON, (WPARAM) (index + TBBUTTONS_BASE), (LPARAM) MAKELONG (state, 0));
+		}
+	      } else {
+		w = (TBBUTTON*) TtaGetMemory (sizeof (TBBUTTON));
+		w->iBitmap   = 0;
+		w->idCommand = 0; 
+		w->fsState   = TBSTATE_ENABLED;
+		w->fsStyle   = (BYTE)type;
+		w->dwData    = 0;
+		w->iString   = 0;
+		FrameTable[frame].Button[i] = w;
+		FrameTable[frame].Call_Button[i] = (Proc) procedure;
+		ToolBar_InsertButton (WinToolBar[frame], i, w);
+	      }
+#endif /* _WINDOWS */
+	      if (info != NULL) {
+#ifdef _WINDOWS
+		if (!tbStringsInitialized) {                   
+		  ustrcat (&szTbStrings [strIndex], info);
+		  strIndex += (ustrlen (info) + 1);
+		}
+#else  /* !_WINDOWS */
+		XcgLiteClueAddWidget(liteClue, w,  info, ustrlen(info), 0);
+#endif /* _WINDOWS */
+	      }
+	    }
+	}
+    }
+  
+  TtaHandlePendingEvents ();
+  return (index);
+}
 #endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
@@ -1660,74 +1646,62 @@ int                 index;
    view: the concerned view.
    index: the index.
    picture: the new icon.
+   state: the new state
   ----------------------------------------------------------------------*/
-#ifdef _WINDOWS
 #ifdef __STDC__
-void                WIN_TtaChangeButton (Document document, View view, int index, int picture, BOOL state)
+void                TtaChangeButton (Document document, View view, int index, ThotIcon picture, boolean state)
 #else  /* __STDC__ */
-void                WIN_TtaChangeButton (document, view, index, picture, state)
+void                TtaChangeButton (document, view, index, picture, state)
 Document            document;
 View                view;
 int                 index;
-int                 picture;
-BOOL                state;
+ThotIcon            picture;
+boolean             state;
 #endif /* __STDC__ */
-#else  /* !_WINDOWS */
-#ifdef __STDC__
-void                TtaChangeButton (Document document, View view, int index, Pixmap picture)
-#else  /* __STDC__ */
-void                TtaChangeButton (document, view, index, picture)
-Document            document;
-View                view;
-int                 index;
-Pixmap              picture;
-
-#endif /* __STDC__ */
-#endif /* _WINDOWS */
 {
+#ifndef _WINDOWS
+  Arg                 args[MAX_ARGS];
+  int                 n;
+#endif
+  int                 frame;
 
-#  ifndef _WINDOWS
-   Arg                 args[MAX_ARGS];
-   int                 n;
-#  endif
-   int                 frame;
-
-   UserErrorCode = 0;
-   /* verifie le parametre document */
-   if (document == 0 && view == 0)
-      TtaError (ERR_invalid_parameter);
-#  ifndef _WINDOWS
+  UserErrorCode = 0;
+  /* verifie le parametre document */
+  if (document == 0 && view == 0)
+    TtaError (ERR_invalid_parameter);
+#ifndef _WINDOWS
    else if (picture == None)
       TtaError (ERR_invalid_parameter);
-#  endif /* !_WINDOWS */
-   else
-     {
-	frame = GetWindowNumber (document, view);
-	if (frame == 0 || frame > MAX_FRAME)
-	   TtaError (ERR_invalid_parameter);
-	else if (FrameTable[frame].WdFrame != 0)
-	  {
-#        ifdef _WINDOWS
-	     if (index > MAX_BUTTON || index <= 0 || FrameTable[frame].Button[index - 1] == 0)
-#        else  /* !_WINDOWS */
-	     if (index >= MAX_BUTTON || index <= 0 || FrameTable[frame].Button[index] == 0)
-#        endif /* _WINDOWS */
-		TtaError (ERR_invalid_parameter);
-	     else
-	       {
-		  /* Insere le nouvel icone */
-#                 ifdef _WINDOWS
-          SendMessage (WinToolBar[frame], TB_ENABLEBUTTON, (WPARAM) (index + TBBUTTONS_BASE - 1), (LPARAM) MAKELONG (state, 0));
-#                 else  /* !_WINDOWS */
-		  n = 0;
-		  XtSetArg (args[n], XmNlabelPixmap, picture);
-		  n++;
-		  XtSetValues (FrameTable[frame].Button[index], args, n);
-#                 endif /* _WINDOWS */
-	       }
-	  }
-     }
-}				/*TtaChangeButton */
+#endif /* !_WINDOWS */
+  else
+    {
+      frame = GetWindowNumber (document, view);
+      if (frame == 0 || frame > MAX_FRAME)
+	TtaError (ERR_invalid_parameter);
+      else if (FrameTable[frame].WdFrame != 0)
+	{
+#ifdef _WINDOWS
+	  if (index > MAX_BUTTON || index <= 0 || FrameTable[frame].Button[index - 1] == 0)
+#else  /* !_WINDOWS */
+	  if (index >= MAX_BUTTON || index <= 0 || FrameTable[frame].Button[index] == 0)
+#endif /* _WINDOWS */
+	    TtaError (ERR_invalid_parameter);
+	  else
+	    {
+	      /* Insere le nouvel icone */
+#ifdef _WINDOWS
+	      SendMessage (WinToolBar[frame], TB_ENABLEBUTTON, (WPARAM) (index + TBBUTTONS_BASE - 1), (LPARAM) MAKELONG (state, 0));
+#else  /* !_WINDOWS */
+	      n = 0;
+	      XtSetArg (args[n], XmNlabelPixmap, picture);
+	      n++;
+	      XtSetValues (FrameTable[frame].Button[index], args, n);
+#endif /* _WINDOWS */
+	    }
+	}
+    }
+}
+
 
 #ifdef _WINDOWS
 #ifdef __STDC__
@@ -1765,7 +1739,7 @@ BOOL                state;
 	       }
 	  }
      }
-}				/*TtaChangeButton */
+}
 
 #ifdef __STDC__
 void                WIN_TtaShowButton (Document document, View view, int index)
@@ -2167,7 +2141,7 @@ void                (*procedure) ();
    /* force la mise a jour de la fenetre */
    TtaHandlePendingEvents ();
    return (i);
-}				/*TtaAddTextZone */
+}
 
 
 /*----------------------------------------------------------------------

@@ -57,7 +57,7 @@ extern void StartParser ( Document doc,
                           STRING documentName,
                           STRING documentDirectory,
                           STRING pathURL,
-                          boolean PlainText );
+                          boolean plainText );
 
 #else /* __STDC__ */
 
@@ -112,7 +112,7 @@ extern void StartParser (/* Document doc,
                             STRING documentName,
                             STRING documentDirectory,
                             STRING pathURL,
-                            boolean PlainText */);
+                            boolean plainText */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -41,29 +41,29 @@ BackgroundImageCallbackBlock, *BackgroundImageCallbackPtr;
 
 #define MAX_BUFFER_LENGTH 200
 /*
- * A HTMLStyleValueParser is a function used to parse  the
+ * A PropertyParser is a function used to parse  the
  * description substring associated to a given style attribute
  * e.g. : "red" for a color attribute or "12pt bold helvetica"
  * for a font attribute.
  */
 #ifdef __STDC__
-typedef char    *(*HTMLStyleValueParser) (PresentationTarget target,
-					  PresentationContext context,
-					  STRING cssRule,
-					  CSSInfoPtr css,
-					  boolean isHTML);
+typedef char    *(*PropertyParser) (PresentationTarget target,
+				    PresentationContext context,
+				    STRING cssRule,
+				    CSSInfoPtr css,
+				    boolean isHTML);
 #else
-typedef char    *(*HTMLStyleValueParser) ();
+typedef char    *(*PropertyParser) ();
 #endif
 
 
-/* Description of the set of CSS Style Attributes supported */
-typedef struct HTMLStyleAttribute
+/* Description of the set of CSS properties supported */
+typedef struct CSSProperty
   {
      STRING               name;
-     HTMLStyleValueParser parsing_function;
+     PropertyParser parsing_function;
   }
-HTMLStyleAttribute;
+CSSProperty;
 
 #define MAX_DEEP 10
 #include "HTMLstyleColor.h"
@@ -97,7 +97,7 @@ CHAR                c;
 struct unit_def
 {
    STRING              sign;
-   int                 unit;
+   unsigned int        unit;
 };
 
 static struct unit_def CSSUnitNames[] =
@@ -110,7 +110,7 @@ static struct unit_def CSSUnitNames[] =
    {"em", DRIVERP_UNIT_EM},
    {"px", DRIVERP_UNIT_PX},
    {"ex", DRIVERP_UNIT_XHEIGHT},
-   {"%", DRIVERP_UNIT_PERCENT},
+   {"%", DRIVERP_UNIT_PERCENT}
 };
 
 #define NB_UNITS (sizeof(CSSUnitNames) / sizeof(struct unit_def))
@@ -206,7 +206,7 @@ PresentationValue  *pval;
   int                 minus = 0;
   int                 valid = 0;
   int                 f = 0;
-  int                 uni;
+  unsigned int        uni;
   boolean             real = FALSE;
 
   pval->typed_data.unit = DRIVERP_UNIT_REL;
@@ -417,7 +417,7 @@ int                  len
   float               fval = 0;
   unsigned short      red, green, blue;
   int                 add_unit = 0;
-  int                 unit, i;
+  unsigned int        unit, i;
   boolean             real = FALSE;
 
   buffer[0] = EOS;
@@ -2037,7 +2037,8 @@ PresentationValue  *val;
   unsigned short      redval = (unsigned short) -1;
   unsigned short      greenval = 0;	/* composant of each RGB       */
   unsigned short      blueval = 0;	/* default to red if unknown ! */
-  int                 i, len, r, g, b;
+  unsigned int        i, len;
+  int                 r, g, b;
   int                 best = 0;	/* best color in list found */
   boolean             failed;
 
@@ -3185,7 +3186,7 @@ boolean             isHTML;
  * NOTE : Long attribute name MUST be placed before shortened ones !
  *        e.g. "FONT-SIZE" must be placed before "FONT"
  */
-static HTMLStyleAttribute HTMLStyleAttributes[] =
+static CSSProperty CSSProperties[] =
 {
    {"font-family", ParseCSSFontFamily},
    {"font-style", ParseCSSFontStyle},
@@ -3249,7 +3250,7 @@ static HTMLStyleAttribute HTMLStyleAttributes[] =
    {"list-style-position", ParseCSSListStylePosition},
    {"list-style", ParseCSSListStyle}
 };
-#define NB_CSSSTYLEATTRIBUTE (sizeof(HTMLStyleAttributes) / sizeof(HTMLStyleAttribute))
+#define NB_CSSSTYLEATTRIBUTE (sizeof(CSSProperties) / sizeof(CSSProperty))
 
 /*----------------------------------------------------------------------
    ParseCSSRule : parse a CSS Style string                        
@@ -3270,7 +3271,8 @@ boolean             isHTML;
 {
   PresentationValue   unused;
   STRING              p = NULL;
-  int                 lg , i;
+  int                 lg;
+  unsigned int        i;
   boolean             found;
 
   while (*cssRule != EOS)
@@ -3280,8 +3282,8 @@ boolean             isHTML;
       /* look for the type of property */
       for (i = 0; i < NB_CSSSTYLEATTRIBUTE && !found; i++)
 	{
-	  lg = ustrlen (HTMLStyleAttributes[i].name);
-	  if (!ustrncasecmp (cssRule, HTMLStyleAttributes[i].name, lg))
+	  lg = ustrlen (CSSProperties[i].name);
+	  if (!ustrncasecmp (cssRule, CSSProperties[i].name, lg))
 	    {
 	      cssRule += lg;
 	      found = TRUE;
@@ -3301,8 +3303,8 @@ boolean             isHTML;
 	      cssRule = TtaSkipBlanks (cssRule);
 	    }
 	  /* try to parse the attribute associated to this attribute */
-	  if (HTMLStyleAttributes[i].parsing_function != NULL)
-	    p = HTMLStyleAttributes[i].parsing_function (target, context, cssRule, css, isHTML);
+	  if (CSSProperties[i].parsing_function != NULL)
+	    p = CSSProperties[i].parsing_function (target, context, cssRule, css, isHTML);
 	  
 	  /* Update the rendering */
 	  if (context->drv->UpdatePresentation != NULL)
