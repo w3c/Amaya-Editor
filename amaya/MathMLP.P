@@ -2427,6 +2427,7 @@ ATTRIBUTES
 	HorizPos: Left = Base . Right - 0.1;
 	IN Structure_view BEGIN
                 VertPos: Top = Previous . Bottom;
+                HorizPos: Left = Enclosing . Left;
 		END;
 	END;
   IntVertStretch (Base):

@@ -342,7 +342,7 @@ AttributeType	attrType;
         attrType.AttrSSchema = elType.ElSSchema;
         attrType.AttrTypeNum = MathML_ATTR_IntPlaceholder;
 	attr = TtaGetAttribute (*el, attrType);
-	if (attr != NULL)
+	if (attr != NULL || elType.ElTypeNum == MathML_EL_Construct1)
 	   /* this element is a placeholder. Delete it */
 	   {
 	   if (record)
@@ -3473,9 +3473,11 @@ void NewMathString (NotifyElement *event)
  -----------------------------------------------------------------------*/
 void MathElementPasted (NotifyElement *event)
 {
-   Element	placeholderEl, parent;
-   ElementType	elType, elTypeParent;
-   int          oldStructureChecking;
+   Element	 placeholderEl, parent, prev;
+   ElementType	 elType, elTypeParent;
+   Attribute     attr;
+   AttributeType attrType;
+   int           oldStructureChecking;
 
    /* if the pasted element is an XLink, update the link */
    XLinkPasted (event);
@@ -3517,6 +3519,23 @@ void MathElementPasted (NotifyElement *event)
 					FALSE/****/);
      placeholderEl = InsertPlaceholder (event->element, FALSE, event->document,
 					FALSE/****/);
+     /* if the previous sibling is a Construct1, turn it into and
+	ordinary placeholder */
+     prev = event->element;  TtaPreviousSibling (&prev);
+     if (prev)
+       {
+	 elType = TtaGetElementType (prev);
+	 if (elType.ElTypeNum == MathML_EL_Construct1)
+	   {
+	     attrType.AttrSSchema = elType.ElSSchema;
+	     attrType.AttrTypeNum = MathML_ATTR_IntPlaceholder;
+	     attr = TtaNewAttribute (attrType);
+	     TtaAttachAttribute (prev, attr, event->document);
+	     TtaSetAttributeValue (attr, MathML_ATTR_IntPlaceholder_VAL_yes_,
+				   prev, event->document);
+	     ChangeTypeOfElement (prev, event->document, MathML_EL_Construct);
+	   }
+       }
      }
 
    TtaSetStructureChecking ((ThotBool)oldStructureChecking, event->document);
@@ -3646,10 +3665,12 @@ void DeleteMColumn (Document document, View view)
  -----------------------------------------------------------------------*/
 void MathElementDeleted (NotifyElement *event)
 {
-   Element	sibling, placeholderEl, parent, child, grandChild;
-   ElementType	parentType;
-   int		i, newTypeNum;
-   int          oldStructureChecking;
+   Element	 sibling, placeholderEl, parent, child, grandChild, next, prev;
+   ElementType	 parentType, elType;
+   AttributeType attrType;
+   Attribute     attr;
+   int		 i, newTypeNum;
+   int           oldStructureChecking;
 
    if (event->info == 1 || event->info == 2)
       /* call from Undo command or Return key. Don't do anything */
@@ -3682,8 +3703,57 @@ void MathElementDeleted (NotifyElement *event)
       for (i = 1; i < event->position && sibling != NULL; i++)
          TtaNextSibling (&sibling);
       if (sibling != NULL)
+	{
          placeholderEl = InsertPlaceholder (sibling, FALSE, event->document,
 					    FALSE/*****/);
+	 /* if sibling is a placeholder, if it has no next sibling and if its
+	    previous sibling is a stretchable msubsup, transform this
+	    placeholder into a Construct1 */
+	 next = sibling; TtaNextSibling (&next);
+	 if (!next)
+	   /* element sibling has no following sibling */
+	   {
+	     elType = TtaGetElementType (sibling);
+	     if (elType.ElTypeNum == MathML_EL_Construct)
+	       {
+		 attrType.AttrTypeNum = MathML_ATTR_IntPlaceholder;
+		 attrType.AttrSSchema = elType.ElSSchema;
+		 attr = TtaGetAttribute (sibling, attrType);
+		 if (attr)
+		   /* element sibling is a placeholder */
+		   {
+		     prev = sibling;  TtaPreviousSibling (&prev);
+		     if (prev)
+		       {
+			 elType = TtaGetElementType (prev);
+			 if (elType.ElTypeNum == MathML_EL_MSUBSUP ||
+			     elType.ElTypeNum == MathML_EL_MSUB ||
+			     elType.ElTypeNum == MathML_EL_MSUP ||
+			     elType.ElTypeNum == MathML_EL_MUNDEROVER ||
+			     elType.ElTypeNum == MathML_EL_MUNDER ||
+			     elType.ElTypeNum == MathML_EL_MOVER )
+			   /* the previous element is a msubsup, msub, msup,
+			      munderover, munder or mover */
+			   {
+			     attrType.AttrSSchema = elType.ElSSchema;
+			     attrType.AttrTypeNum = MathML_ATTR_IntVertStretch;
+			     if (TtaGetAttribute (prev, attrType))
+			       /* it has an attribute IntVertStretch */
+			       {
+				 /* the place holder has to be transformed into
+				    a Construct1, to allow presentation rules
+				    to operate correctly. */
+				 TtaRemoveAttribute (sibling, attr,
+						     event->document);
+				 ChangeTypeOfElement (sibling, event->document,
+						      MathML_EL_Construct1);
+			       }
+			   }
+		       }
+		   }
+	       }
+	    }
+	}
       }
    IsLastDeletedElement = FALSE;
    LastDeletedElement = NULL;

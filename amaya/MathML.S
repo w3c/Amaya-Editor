@@ -350,15 +350,20 @@ STRUCT
 	  = LIST OF (Construct);
 
       XLink;     { for annotations }
-      END;	 { End of Construct definition }
 
-   Construct1 = CASE OF	{ *** to solve the integral problem. ***
-	                  This definition must be the same as Construct. }
+		 { Construct1 is used as a placeholder after a msubsup,
+		   msup, msub, munderover, munder or mover that stretches
+		   vertically. This allows P rules to play correctly. }
+	         { This definition must be the same as Construct. }
+      Construct1
+	  = CASE OF
 	        MTEXT; MI; MN; MO; MS; MSPACE; MROW; MFRAC; BevelledMFRAC;
 	        MSQRT; MENCLOSE; MROOT; MSTYLE; MERROR; MPADDED; MPHANTOM;
 	        MFENCED; MF; MSUB; MSUP; MSUBSUP; MUNDER; MOVER; MUNDEROVER;
 	        MMULTISCRIPTS; MTABLE; MGLYPH; MACTION; XLink;
 	        END;
+
+      END;	 { End of Construct definition }
 
    TableRow = CASE OF
 		MTR;
@@ -424,6 +429,7 @@ EXCEPT
    XMLPI_line:  	Hidden;
    Unknown_namespace:   NoCreate;
    Construct:		Hidden;
+   Construct1:		Hidden;
    Numerator:		Hidden;
    Denominator:	 	Hidden;
    RootBase:		Hidden, NoCut;

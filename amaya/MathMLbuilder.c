@@ -303,17 +303,17 @@ ThotBool     ElementNeedsPlaceholder (Element el)
 	}
   return ret;
 }
- 
+
 /*----------------------------------------------------------------------
   CreatePlaceholders
   ----------------------------------------------------------------------*/
 static void	CreatePlaceholders (Element el, Document doc)
 {
-   Element	sibling, prev, constr, child;
-   Attribute	attr;
-   ElementType	elType;
-   AttributeType	attrType;
-   ThotBool	create;
+   Element	 sibling, prev, constr, child;
+   Attribute	 attr;
+   ElementType	 elType;
+   AttributeType attrType;
+   ThotBool	 create, stretchableSubsup;
 
    if (!el)
       return;
@@ -368,6 +368,7 @@ static void	CreatePlaceholders (Element el, Document doc)
       }
    if (prev != NULL && create)
       {
+	stretchableSubsup = FALSE;
 	elType = TtaGetElementType (prev);
 	/* don't insert a placeholder after the last element if it's a MF */
 	if (elType.ElTypeNum == MathML_EL_MF)
@@ -385,9 +386,25 @@ static void	CreatePlaceholders (Element el, Document doc)
 	         create = FALSE;
 	      }
 	   }
+	else if (elType.ElTypeNum == MathML_EL_MSUBSUP ||
+		 elType.ElTypeNum == MathML_EL_MSUB ||
+		 elType.ElTypeNum == MathML_EL_MSUP ||
+		 elType.ElTypeNum == MathML_EL_MUNDEROVER ||
+		 elType.ElTypeNum == MathML_EL_MUNDER ||
+		 elType.ElTypeNum == MathML_EL_MUNDEROVER)
+	  {
+	    attrType.AttrSSchema = elType.ElSSchema;
+	    attrType.AttrTypeNum = MathML_ATTR_IntVertStretch;
+	    if (TtaGetAttribute (prev, attrType))
+	      stretchableSubsup = TRUE;
+	  }
+
 	if (create)
 	   {
-           elType.ElTypeNum = MathML_EL_Construct;
+	   if (stretchableSubsup)
+	     elType.ElTypeNum = MathML_EL_Construct1;
+	   else
+	     elType.ElTypeNum = MathML_EL_Construct;
 	   constr = TtaNewElement (doc, elType);
 	   TtaInsertSibling (constr, prev, FALSE, doc);
 	   attrType.AttrSSchema = elType.ElSSchema;
@@ -396,7 +413,7 @@ static void	CreatePlaceholders (Element el, Document doc)
 	   TtaAttachAttribute (constr, attr, doc);
 	   TtaSetAttributeValue (attr, MathML_ATTR_IntPlaceholder_VAL_yes_,
 				 constr, doc);
-	   } 
+	   }
       }
 }
 
@@ -705,11 +722,11 @@ static void SetIntHorizStretchAttr (Element el, Document doc)
    Put a IntVertStretch attribute on element el if its base element
    (Base for a MSUBSUP, MSUP or MSUB; UnderOverBase for a MUNDEROVER,
    a MUNDER of a MOVER) contains only a MO element that is a vertically
-   stretchable symbol.
+   stretchable symbol (integral).
  -----------------------------------------------------------------------*/
 void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 {
-  Element	child, sibling, textEl, symbolEl, parent, operator;
+  Element	child, sibling, textEl, symbolEl, parent, operator, next;
   ElementType	elType;
   Attribute	attr;
   AttributeType	attrType;
@@ -891,36 +908,37 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
 			  {
 			    sibling = parent;
 			    TtaNextSibling (&sibling);
-			    if (!sibling)
-			      /* the msubsup or munderover has no next sibling.
-				 Add a Construct1 element as the next sibling,
-				 to allow P rules to operate correctly */
-			      {
-				elType.ElTypeNum = MathML_EL_Construct1;
-				elType.ElSSchema = MathMLSSchema;
-				sibling = TtaNewElement (doc, elType);
-				TtaInsertSibling (sibling, parent, FALSE, doc);
-				TtaRegisterElementCreate (sibling, doc);
-			      }
-			    else
+			    if (sibling)
+			      /* the msubsup of munderover element has a next
+				 sibling */
 			      {
 				elType = TtaGetElementType (sibling);
 				if (elType.ElTypeNum == MathML_EL_Construct &&
 				    elType.ElSSchema == MathMLSSchema)
+				  /* the next sibling is a Construct */
 				  {
-				    TtaRegisterElementDelete (sibling, doc);
-				    TtaRemoveTree (sibling, doc);
-				    ChangeElementType (sibling,
-						       MathML_EL_Construct1);
-				    TtaInsertSibling (sibling, parent, FALSE,
-						      doc);
-				    TtaRegisterElementCreate (sibling, doc);
+				    next = sibling;
+				    TtaNextSibling (&next);
+				    if (!next)
+				      /* there is no other sibling after the
+					 Construct. Change it into Construct1*/
+				      {
+				       TtaRegisterElementDelete (sibling, doc);
+				       TtaRemoveTree (sibling, doc);
+				       ChangeElementType (sibling,
+							 MathML_EL_Construct1);
+				       TtaInsertSibling (sibling, parent,
+							 FALSE, doc);
+				       TtaRegisterElementCreate (sibling, doc);
+				       /* force the msubsup element to be
+					  reformatted and to take into account
+					  its new next sibling */
+				       TtaRemoveTree (parent, doc);
+				       TtaInsertSibling (parent, sibling, TRUE,
+							 doc);
+				      }
 				  }
 			      }
-			    /* force the msubsup element to be reformatted and
-			       take into account its new next sibling */
-			    TtaRemoveTree (parent, doc);
-			    TtaInsertSibling (parent, sibling, TRUE, doc);
 			  } 
 		      }
 		    }
@@ -2003,6 +2021,7 @@ void      MathMLElementComplete (Element el, Document doc, int *error)
        case MathML_EL_MathML:
 	  /* Create placeholders within the MathML element */
 	  CreatePlaceholders (TtaGetFirstChild (el), doc);
+	  break;
        case MathML_EL_MI:
 	  SetFontstyleAttr (el, doc);
 	  break;
