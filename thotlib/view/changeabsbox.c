@@ -554,6 +554,7 @@ PtrAttribute       *pAttr;
 			pRule = pRuleView1;
 	       }
 	     else if (pSP != NULL)
+	       pSchP = pSP;
 	       /* the rule is relative to an additional schema */
 	     *pSPR = pSchP;
 	     *pSSR = pSchS;
