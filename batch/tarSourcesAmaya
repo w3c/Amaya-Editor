@@ -53,6 +53,7 @@ $TAR $DEST/amaya-src-$AMAYAVERSION.tgz \
 ${AMAYADIR}/README.amaya \
 ${AMAYADIR}/README \
 ${AMAYADIR}/README.gl \
+${AMAYADIR}/README.wx \
 ${AMAYADIR}/config.guess \
 ${AMAYADIR}/config.h.in \
 ${AMAYADIR}/config.sub \
