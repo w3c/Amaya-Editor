@@ -250,26 +250,18 @@ void DrawChar (char car, int frame, int x, int y, ptrfont font, int fg)
   parameter fg indicates the drawing color
   Returns the lenght of the string drawn.
   ----------------------------------------------------------------------*/
-int DrawString (STRING buff, int i, int lg, int frame, int x, int y,
-		ptrfont font, int boxWidth, int bl, int hyphen, int startABlock,
-		int fg, int shadow)
+int DrawString (CHAR_T *buff, int i, int lg, int frame, int x, int y,
+		ptrfont font, int boxWidth, int bl, int hyphen,
+		int startABlock, int fg, int shadow)
 {
   HDC                 display;
   HFONT               hOldFont;
-  STRING              ptcar;
-  SIZE                size;
+  /*SIZE                size;*/
   int                 j, width;
-#ifdef _I18N_
-  GCP_RESULTS         results;
-  USHORT              auGlyphs [2000];
-  CHAR_T              szNewText [2000];
-  UINT                infoFlag;
-  int                 anDX [2000];
-#endif /* _I18N_ */
+  char               *ptcar;
 
   if (lg <= 0)
     return 0;
-
 #ifdef _WIN_PRINT
   if (y < 0)
     return 0;
@@ -281,6 +273,7 @@ int DrawString (STRING buff, int i, int lg, int frame, int x, int y,
   SelectClipRgn (display, clipRgn);
 #endif /* _WIN_PRINT */
 
+  width = 0;
   SetMapperFlags (display, 1);
   hOldFont = WinLoadFont (display, font);
   ptcar = TtaGetMemory (lg + 1);
@@ -289,31 +282,47 @@ int DrawString (STRING buff, int i, int lg, int frame, int x, int y,
       /* replace each character by a star */
       j = 0;
       while (j < lg)
-	ptcar[j++] = '*';
+	{
+	  ptcar[j++] = '*';
+	  width += CharacterWidth (ptcar[j++], font);
+	}
       ptcar[lg] = EOS;
     }
   else
     {
-      if (buff[i - 1] == '\212' || buff[i - 1] == '\12')
+      if (buff[i - 1] == BREAK_LINE || buff[i - 1] == NEW_LINE)
 	{
 	  /* skip the Control return char */
 	  i++;
 	  lg--;
 	}
-      ustrncpy (ptcar, &buff[i - 1], lg);
+#ifdef _I18N_
+      j = 0;
+      while (j < lg)
+	{
+	  ptcar[j] = TtaGetCharFromWC (buff[i - 1], ISO_8859_1);
+	  j++;
+	  i++;
+	}
+#else /* _I18N_ */
+      strncpy (ptcar, &buff[i - 1], lg);
+#endif /* I18N_ */
       ptcar[lg] = EOS;
       TranslateChars (ptcar);
+      j = 0;
+      while (j < lg)
+	width += CharacterWidth (ptcar[j++], font);
     }
-  /* get the string size */
-  GetTextExtentPoint (display, ptcar, lg, &size);
-  width = size.cx;
+  /* get the string size
+     GetTextExtentPoint (display, ptcar, lg, &size);
+     width = size.cx;*/
   if (fg >= 0)
     {
       /* not transparent -> draw charaters */
       y += FrameTable[frame].FrTopMargin;
       SetTextColor (display, ColorPixel (fg));
       SetBkMode (display, TRANSPARENT);
-      TextOut (display, x, y, (STRING) ptcar, lg);
+      TextOut (display, x, y, ptcar, lg);
       if (hyphen)
 	/* draw the hyphen */
 	TextOut (display, x + width, y, "\255", 1);
@@ -322,7 +331,7 @@ int DrawString (STRING buff, int i, int lg, int frame, int x, int y,
   TtaFreeMemory (ptcar);
   SelectObject (display, hOldFont);
   DeleteObject (ActiveFont);
-  ActiveFont = (HFONT)0;
+  ActiveFont = 0;
   return (width);
 }
 

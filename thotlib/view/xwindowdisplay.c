@@ -253,7 +253,7 @@ int DrawString (CHAR_T *buff, int i, int lg, int frame, int x, int y,
 	      i++;
 	    }
 #else /* _I18N_ */
-	  ustrncpy (ptcar, &buff[i - 1], lg);
+	  strncpy (ptcar, &buff[i - 1], lg);
 #endif /* I18N_ */
 	  ptcar[lg] = EOS;
 	  TranslateChars (ptcar);
@@ -279,10 +279,8 @@ int DrawString (CHAR_T *buff, int i, int lg, int frame, int x, int y,
 #endif /* _GTK */
 	}
       TtaFreeMemory (ptcar);
-      return (width);
     }
-  else
-    return (0);
+  return (width);
 }
 
 /*----------------------------------------------------------------------

@@ -752,7 +752,6 @@ void ChangeLanguageLeaves (PtrElement pEl, Language lang)
 
    if (pEl == NULL)
       return;
-#ifdef IV
    if (!pEl->ElTerminal)
       /* The element is not a leaf. We recursively process all of the */
       /* element's subtree */
@@ -766,10 +765,14 @@ void ChangeLanguageLeaves (PtrElement pEl, Language lang)
 	     pChild = pChild->ElNext;
 	  }
      }
-   else if (pEl->ElLeafType == LtText && pEl->ElLanguage != lang)
-     /* changes the language of the element */
+   else if (pEl->ElLeafType == LtText &&
+	    pEl->ElLanguage != lang && pEl->ElLanguage  >= 4)
+     /*
+       Changes the language of the element:
+       lang < 4 when a specific alphabet is selected in the non
+       Unicode version
+     */
      pEl->ElLanguage = lang;
-#endif /* IV */
 }
 
 
