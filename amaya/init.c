@@ -4640,6 +4640,9 @@ NotifyEvent        *event;
        /* Create a temporary sub-directory for storing the HTML and image files */
        usprintf (tempname, TEXT("%s%c%d"), TempFileDirectory, DIR_SEP, i);
        TtaMakeDirectory (tempname);
+       /* adding the CSS directory */
+       if (i == 0)
+	 TtaAppendDocumentPath (tempname);
      }
 
    /* allocate working buffers */

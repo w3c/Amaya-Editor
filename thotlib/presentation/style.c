@@ -2111,8 +2111,8 @@ PSchema             tsch;
 Document            doc;
 #endif
 {
-  PRule               rule;
-  PtrPRule            pRule = NULL;
+  PRule               rule, nextRule;
+  PtrPRule            pRule;
   PtrSSchema	      pSS;
   AttributePres      *attrs;
   DisplayMode         dispMode;
@@ -2126,7 +2126,7 @@ Document            doc;
   dispMode = TtaGetDisplayMode (doc);
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, DeferredDisplay);
-
+  pRule = NULL;
   if (el != NULL)
     {
       do
@@ -2134,8 +2134,10 @@ Document            doc;
 	  rule = (PRule) ((PtrElement) el)->ElFirstPRule;
 	  while (rule)
 	    {
+	      nextRule = rule;
+	      TtaNextPRule (el, &nextRule);
 	      TtaRemovePRule (el, rule, doc);
-	      TtaNextPRule (el, &rule);
+	      rule = nextRule;
 	    }
 	}
       while (rule != NULL);

@@ -582,7 +582,7 @@ Document            document;
    if (buttonCommand || TtPrinterDC == 0) {
        EnumPrinters (PRINTER_ENUM_LOCAL, NULL, 5, (LPBYTE) "", 0, &dwNeeded, &dwReturned) ;
 
-       // Alloue de l’espace pour le tableau PRINTER_INFO_5
+       // Alloue de l'espace pour le tableau PRINTER_INFO_5
        if (pInfo5)
           HeapFree (GetProcessHeap (), 0, pInfo5) ;
 

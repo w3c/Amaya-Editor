@@ -2,6 +2,28 @@ This file lists the bugs that have been fixed and the extensions that
 have been introduced in Amaya and Thot since version 1.4 of Amaya.
  
 =============================================================
+2.5
+=============================================================
+
+Compatibility changes 2.5:
+--------------------------
+ 
+Extensions 2.5:
+---------------
+
+* CSS:
+  - CSS rules of User preferences are now taken into account when
+    documents are printed. We encourage the user to create two different
+    sections in his/her User preferences CSS file
+    "@media screen {...} @media print {...}"
+
+Fixed bugs 2.5:
+---------------
+
+* CSS:
+  - Amaya didn't well remove specific Background colors.
+
+=============================================================
 2.4
 =============================================================
 

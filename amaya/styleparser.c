@@ -3604,7 +3604,7 @@ Element             el;
 {
    CHAR_T             css_command[100];
 
-   usprintf (css_command, TEXT("background: xx"));
+   usprintf (css_command, TEXT("background: red"));
    ParseHTMLSpecificStyle (el, css_command, doc, TRUE);
 }
 
@@ -3638,7 +3638,8 @@ Element             el;
 {
    CHAR_T             css_command[100];
 
-   usprintf (css_command, TEXT("color: xx"));
+   /* it's not necessary to well know the current color but it must be valid */
+   usprintf (css_command, TEXT("color: red"));
    ParseHTMLSpecificStyle (el, css_command, doc, TRUE);
 }
 
@@ -3803,7 +3804,7 @@ ThotBool            withUndo;
   int                 openRule;
   ThotBool            HTMLcomment;
   ThotBool            toParse, eof;
-  ThotBool            ignoreMedia;
+  ThotBool            ignoreMedia, media;
   ThotBool            noRule;
 
   CSScomment = MAX_CSS_LENGTH;
@@ -3811,6 +3812,7 @@ ThotBool            withUndo;
   CSSindex = 0;
   toParse = FALSE;
   noRule = FALSE;
+  media =  FALSE;
   ignoreMedia = FALSE;
   import = MAX_CSS_LENGTH;
   eof = FALSE;
@@ -3843,7 +3845,7 @@ ThotBool            withUndo;
 	      import = CSSindex;
 	      break;
 	    case ';':
-	      if (import != MAX_CSS_LENGTH)
+	      if (import != MAX_CSS_LENGTH && !media)
 		{
 		  if (ustrncasecmp (&CSSbuffer[import+1], TEXT("import"), 6))
 		    /* it's not an import */
@@ -3902,9 +3904,13 @@ ThotBool            withUndo;
 	      if (HTMLcomment)
 		noRule = TRUE;
 	      break;
+	    case ' ':
+	      if (import != MAX_CSS_LENGTH && openRule == 0)
+		media = !ustrncmp (&CSSbuffer[import+1], TEXT("media"), 5);
+	      break;
 	    case '{':
 	      openRule++;
-	      if (import != MAX_CSS_LENGTH && openRule == 1)
+	      if (import != MAX_CSS_LENGTH && openRule == 1 && media)
 		{
 		  /* is it the screen concerned? */
 		  CSSbuffer[CSSindex+1] = EOS;
@@ -3925,9 +3931,10 @@ ThotBool            withUndo;
 		  noRule = TRUE;
 		  ignoreMedia = FALSE;
 		}
-	      else if (ignoreMedia && openRule == 0)
+	      else if ((ignoreMedia || media) && openRule == 0)
 		{
 		  ignoreMedia = FALSE;
+		  media = FALSE;
 		  noRule = TRUE;
 		}
 	      else

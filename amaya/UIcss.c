@@ -210,10 +210,13 @@ Document            doc;
 
 
 /*----------------------------------------------------------------------
-  CssToPrint stores CSS files to be sent to print in the print
+  CssToPrint stores CSS files to be sent to print into the printing
   directory.
-  Return the list of temporary file names. The returned string should
-  be freed by the caller.
+  Return the list of temporary file names. That list includes:
+  - first the User style sheet
+  - after expternal style sheets
+  - the the Document style sheet
+  The returned string should be freed by the caller.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 STRING              CssToPrint (Document doc, STRING printdir)
@@ -243,8 +246,8 @@ STRING              printdir;
 	    if ( css->category == CSS_DOCUMENT_STYLE)
 	      /* there is an internal style in the document */
 	      length += ustrlen (printdir) + 5;
-	    else if (css->category == CSS_EXTERNAL_STYLE)
-	      /* that external CSS file concerns the document */
+	    else
+	      /* that external or user style sheet concerns the document */
 	      length += ustrlen (css->localName) + 1;
 	  css = css->NextCSS;
 	}
@@ -253,7 +256,24 @@ STRING              printdir;
 	  ptr = TtaAllocString (length + 1);
 	  length = 0;
 
-	  /* Add first the list of external CSS files */
+	  /* Add first the User style sheet */
+	  css = CSSList;
+	  while (css != NULL)
+	    {
+	      if (css->enabled[doc] &&
+		  css->category == CSS_USER_STYLE)
+		{
+		  /* add that file name to the list */
+		  ustrcpy (&ptr[length], css->localName);
+		  length += ustrlen (css->localName);
+		  ptr[length++] = SPACE;
+		  css = NULL;
+		}
+	      else
+		css = css->NextCSS;
+	    }
+
+	  /* Add after the list of external CSS files */
 	  css = CSSList;
 	  while (css != NULL)
 	    {
@@ -268,7 +288,7 @@ STRING              printdir;
 	      css = css->NextCSS;
 	    }
 
-	  /* look for style elements within the document */
+	  /* Then look for style elements within the document */
 	  el = TtaGetMainRoot (doc);
 	  elType = TtaGetElementType (el);
 	  elType.ElTypeNum = HTML_EL_HEAD;
