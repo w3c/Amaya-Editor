@@ -89,7 +89,8 @@ AmayaSimpleWindow::~AmayaSimpleWindow()
 void AmayaSimpleWindow::OnCloseButton(wxCommandEvent& event)
 {
   // just close this window
-  Close( );
+  if (m_pFrame)
+    Close( );
 }
 
 /*
@@ -118,16 +119,14 @@ void AmayaSimpleWindow::OnClose(wxCloseEvent& event)
 	  AttachFrame( m_pFrame );
 	}
       else
-	event.Skip();
+	{
+	  m_pFrame = NULL;
+	  event.Skip();
+	}
     }
   else
     event.Skip();
   
-  // simulate a idle event to force the windows to be closed
-  // (maybe a bug in wxWindow)
-  //  wxIdleEvent idle_event;
-  //  wxPostEvent(this, idle_event);
-
   m_IsClosing = FALSE;
 
   // !! DO NOT SKIP THE EVENT !!
@@ -161,10 +160,18 @@ bool AmayaSimpleWindow::AttachFrame( AmayaFrame * p_frame )
   m_pFrame->SetActive(TRUE);
   m_pFrame->SetPageParent( NULL ); // no page parent
   m_pFrame->Show();
-  // now I am your parent.
+ 
+ // now I am your parent.
   m_pFrame->Reparent( this );
+ 
+  // update the page title (same as bottom frame)
+  if (m_pFrame)
+    m_pFrame->SetFrameTitle(m_pFrame->GetFrameTitle());
+  
+  // insert the frame into the window
   m_pTopSizer->Insert( 0, m_pFrame, 1, wxEXPAND );
   Layout();
+
   SetAutoLayout(TRUE);
 }
 
@@ -191,7 +198,8 @@ AmayaFrame * AmayaSimpleWindow::DetachFrame()
   // if we detach the frame form a simple window, it's because we want to kill the window
   // so close it
   //  Close();
-  //TtaHandlePendingEvents();
+  //  TtaHandlePendingEvents();
+  //m_ShouldCleanUp = true;
 
   return p_frame;
 }

@@ -79,8 +79,8 @@ public:
   void     SetWindowTitle( const wxString & window_name );
   wxString GetWindowTitle();
   
-  void     SetPageTitle(const wxString & page_name);
-  wxString GetPageTitle();
+  void     SetFrameTitle(const wxString & frame_name);
+  wxString GetFrameTitle();
 
   void     SetFrameURL( const wxString & new_url );
   wxString GetFrameURL();
@@ -142,7 +142,7 @@ protected:
   int          m_FrameId;        // amaya frame id
   bool         m_IsActive;
   bool         m_ToDestroy;
-  wxString     m_PageTitle;
+  wxString     m_FrameTitle;
   wxString     m_WindowTitle;
   wxString     m_StatusBarText;
   wxString     m_FrameUrl;

@@ -292,17 +292,16 @@ int TtaMakeFrame( const char * schema_name,
     }
   
   /* save frame parameters */
-  FrameTable[frame_id].WdFrame 	  = p_AmayaFrame;
-  //      FrameTable[frame_id].WdStatus 	  = p_AmayaWindow->GetStatusBar(); /* this attribut is set when TtaAttachFrame is called */
+  FrameTable[frame_id].WdFrame 	      = p_AmayaFrame;
   FrameTable[frame_id].WdScrollH      = p_AmayaFrame->GetScrollbarH();
   FrameTable[frame_id].WdScrollV      = p_AmayaFrame->GetScrollbarV();
   FrameTable[frame_id].FrWindowId     = -1; /* this attribut is set when TtaAttachFrame is called */
   FrameTable[frame_id].FrPageId       = -1; /* this attribut is set when TtaAttachFrame is called */
-  FrameTable[frame_id].FrTopMargin    = 0;// TODO
-  FrameTable[frame_id].FrScrollOrg    = 0;// TODO
-  FrameTable[frame_id].FrScrollWidth  = 0;// TODO
-  FrameTable[frame_id].FrWidth        = width;// TODO
-  FrameTable[frame_id].FrHeight       = height;// TODO
+  FrameTable[frame_id].FrTopMargin    = 0; // TODO
+  FrameTable[frame_id].FrScrollOrg    = 0; // TODO
+  FrameTable[frame_id].FrScrollWidth  = 0; // TODO
+  FrameTable[frame_id].FrWidth        = width;
+  FrameTable[frame_id].FrHeight       = height;
   
   /* get registry default values for visibility */
   char * visiStr = TtaGetEnvString ("VISIBILITY");
@@ -320,11 +319,10 @@ int TtaMakeFrame( const char * schema_name,
   /* Initialise la couleur de fond */
   /* SG : not used */
   /*BackgroundColor[frame_id] = DefaultBColor;*/
-  
-  
+
   /* the document title will be used to name the frame's page */
-  p_AmayaFrame->SetPageTitle( TtaConvMessageToWX( doc_name ) );
-  
+  p_AmayaFrame->SetFrameTitle( TtaConvMessageToWX( doc_name ) );
+
   /* Window volume in characters */
   *volume = GetCharsCapacity (width * height * 5);
   FrameTable[frame_id].FrDoc   		= doc_id;

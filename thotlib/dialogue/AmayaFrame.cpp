@@ -60,7 +60,7 @@ AmayaFrame::AmayaFrame(
 	      )
   :  wxPanel( p_parent_window )
      ,m_FrameId( frame_id )
-     ,m_PageTitle()
+     ,m_FrameTitle()
      ,m_WindowTitle()
      ,m_pPageParent( NULL )
      ,m_pMenuBar( NULL )
@@ -449,13 +449,18 @@ void AmayaFrame::OnSize( wxSizeEvent& event )
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaFrame
- *      Method:  SetPageTitle
- * Description:  set the page name (tab name)
+ *      Method:  SetFrameTitle
+ * Description:  set the frame name =>
+ *               used to set the page name (tab name) or the window parent name
  *--------------------------------------------------------------------------------------
  */
-void AmayaFrame::SetPageTitle(const wxString & page_name)
+void AmayaFrame::SetFrameTitle(const wxString & frame_name)
 {
-  m_PageTitle = page_name;
+  m_FrameTitle = frame_name;
+
+  // do not update window title if the title is empty
+  if ( m_FrameTitle.IsEmpty() && frame_name.IsEmpty() )
+    return;
 
   AmayaPage * p_page = GetPageParent();
   if (p_page)
@@ -466,24 +471,25 @@ void AmayaFrame::SetPageTitle(const wxString & page_name)
 	int page_id = p_notebook->GetPageId(p_page);
 	if (page_id >= 0)
 	  p_notebook->SetPageText( page_id,
-				   wxString(m_PageTitle).Truncate(10) + (m_PageTitle.Len() > 10 ? _T("...") : _T("")) );
+				   wxString(m_FrameTitle).Truncate(10) + (m_FrameTitle.Len() > 10 ? _T("...") : _T("")) );
       }
   }
 
   // update also the window title
-  SetWindowTitle( m_PageTitle );
+  SetWindowTitle( m_FrameTitle );
 }
 
 /*
  *--------------------------------------------------------------------------------------
  *       Class:  AmayaFrame
- *      Method:  GetPageTitle
- * Description:  get the page name (tab name)
+ *      Method:  GetFrameTitle
+ * Description:  get the frame name 
+ *               used to setup the page name or window parent name
  *--------------------------------------------------------------------------------------
  */
-wxString AmayaFrame::GetPageTitle()
+wxString AmayaFrame::GetFrameTitle()
 {
-  return m_PageTitle;
+  return m_FrameTitle;
 }
 
 /*
@@ -726,7 +732,7 @@ void AmayaFrame::SetActive( bool active )
     }
 
   // update the window title
-  SetWindowTitle( GetWindowTitle() );
+  SetFrameTitle( GetFrameTitle() );
   
   // this frame is active update its page
   AmayaPage * p_page = GetPageParent();
@@ -759,12 +765,32 @@ bool AmayaFrame::IsActive()
   return m_IsActive;
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaFrame
+ *      Method:  RaiseFrame
+ * Description:  popup the frame container and activate it
+ *--------------------------------------------------------------------------------------
+ */
 void AmayaFrame::RaiseFrame()
 {
- // this frame is active update its page
-  AmayaPage * p_page = GetPageParent();
-  if (p_page)
-      p_page->RaisePage();
+  AmayaWindow * p_window = GetWindowParent();
+  if ( !p_window )
+    return;
+  
+  if ( p_window->GetKind() == WXAMAYAWINDOW_NORMAL)
+    {
+      // raise the page parent
+      AmayaPage * p_page = GetPageParent();
+      if (p_page)
+	p_page->RaisePage();
+    }
+  else if ( p_window->GetKind() == WXAMAYAWINDOW_SIMPLE)
+    {
+      // raise the window parent
+      p_window->Raise();
+      SetActive( TRUE );
+    }
 }
 
 void AmayaFrame::SetStatusBarText( const wxString & text )

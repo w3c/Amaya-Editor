@@ -3362,7 +3362,7 @@ void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
 #ifdef _WX
   p_frame = FrameTable[frame].WdFrame;
   if ( p_frame )
-    p_frame->SetPageTitle( TtaConvMessageToWX( (char *)title ) );
+    p_frame->SetFrameTitle( TtaConvMessageToWX( (char *)title ) );
 #else /* _WX */
   /* Add the Amaya version */
   s = (unsigned char *)TtaGetMemory (strlen ((const char *)title) + strlen (HTAppVersion) + 10);

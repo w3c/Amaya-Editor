@@ -39,7 +39,6 @@
 #include "AmayaPage.h"
 #include "AmayaNotebook.h"
 
-
 IMPLEMENT_DYNAMIC_CLASS(AmayaPage, wxPanel)
 
 /*
@@ -198,7 +197,7 @@ AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
  
   // update the page title (same as bottom frame)
   if (p_frame)
-    p_frame->SetPageTitle(p_frame->GetPageTitle());
+    p_frame->SetFrameTitle(p_frame->GetFrameTitle());
   
   // update the window menubar with the current frame
   if (p_frame && p_frame->IsActive() && GetWindowParent())

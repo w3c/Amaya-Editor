@@ -1620,19 +1620,23 @@ void UpdateTitle (Element el, Document doc)
 	     }
 	   TtaNextSibling (&next);
 	 }
-
-	if (DocumentTypes[doc] != docSource)
-	  TtaChangeWindowTitle (doc, 0, text, UTF_8);
-    	if (DocumentTypes[doc] == docSource || DocumentSource[doc])
-	  {
-	    src = (char *)TtaGetMemory (length + 9);
-	    sprintf (src, "Source: %s", text);
-	    if (DocumentTypes[doc] == docSource)
-	      TtaChangeWindowTitle (doc, 1, src, UTF_8);
+       if (DocumentTypes[doc] != docSource)
+	 TtaChangeWindowTitle (doc, 0, text, UTF_8);
+       if (DocumentTypes[doc] == docSource || DocumentSource[doc])
+	 {
+#ifdef _WX
+	   /* with wx, document source use the document filename as title,
+	    * nothing is done here*/
+#else /* _WX */
+	   src = (char *)TtaGetMemory (length + 9);
+	   sprintf (src, "Source: %s", text);
+	   if (DocumentTypes[doc] == docSource)
+	     TtaChangeWindowTitle (doc, 1, src, UTF_8);
 	    else
 	      TtaChangeWindowTitle (DocumentSource[doc], 1, src, UTF_8);
-	    TtaFreeMemory (src);
-	  }
+	   TtaFreeMemory (src);
+#endif /* _WX */
+	 }
 	TtaFreeMemory (text);
      }
 
