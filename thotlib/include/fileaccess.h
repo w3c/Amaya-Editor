@@ -105,6 +105,7 @@ extern boolean TtaWriteInteger ( BinFile file,
                                  int lval );
 extern boolean TtaCompareFiles ( CONST char *file1,
                                  CONST char *file2 );
+extern boolean TtaCheckDirectory ( char *directory );
 
 #else /* __STDC__ */
 
@@ -149,6 +150,7 @@ extern boolean TtaWriteInteger (/* BinFile file,
                                    int lval */);
 extern boolean TtaCompareFiles (/* CONST char *file1,
                                    CONST char *file2 */);
+extern boolean TtaCheckDirectory (/* char *directory */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -862,11 +862,9 @@ Document doc;
   else
     {
     *****/
-# ifndef _WINDOWS  
-      ustrcpy (tmpfilename, "/tmp/amayatrans.tmp");
-# else  /* _WINDOWS */
-      ustrcpy (tmpfilename, "C:\\TEMP\\amayatrans.tmp");
-# endif /* _WINDOWS */
+      ustrcpy (tmpfilename, TtaGetEnvString ("TMPDIR"));
+      ustrcat (tmpfilename, DIR_SEP);
+      ustrcat (tmpfilename, "amayatrans.tmp");
       TtaExportTree (subTree, doc, tmpfilename, "HTMLT");     
       StatBuffer = (struct stat *) TtaGetMemory (sizeof (struct stat));
       status = stat (tmpfilename, StatBuffer);

@@ -2,7 +2,7 @@
 THOTSYSSCH=$(THOTDIR)\amaya
 DICOPAR=$(THOTDIR)\dicopar
 
-[amaya.exe]
+[amaya]
 THOTSYSSCH=$(THOTDIR)\amaya
 LANG=en_US
 HOME_PAGE=

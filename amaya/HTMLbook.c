@@ -396,11 +396,7 @@ Document            document;
 	 }
        else
 	 {
-#          ifdef _WINDOWS
-	   ustrcpy (PSdir,"C:\\TEMP");
-#          else  /* !_WINDOWS */
-	   ustrcpy (PSdir,"/tmp");
-#          endif /* !_WINDOWS */
+	   ustrcpy (PSdir, TtaGetEnvString ("TMPDIR"));
 	   lg = ustrlen (PSdir);
 	 }
        ustrcpy (docName, TtaGetDocumentName (document));

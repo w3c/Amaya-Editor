@@ -551,55 +551,6 @@ STRING              path;
      }
 }
 
-
-/*----------------------------------------------------------------------
-   TtaCheckDirectory
-
-   Ckecks that a directory exists and can be accessed.
-
-   Parameter:
-   directory: the directory name.
-   Return value:
-   TRUE if the directory is OK, FALSE if not.
-	
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-boolean             TtaCheckDirectory (STRING directory)
-
-#else  /* __STDC__ */
-boolean             TtaCheckDirectory (directory)
-STRING              directory;
-
-#endif /* __STDC__ */
-
-{
-#ifdef WWW_MSWINDOWS
-   DWORD               attribs;
-
-   /* NEW_WINDOWS - mark for furthur security stuff - EGP
-      SECURITY_INFORMATION secInfo;
-      SECURITY_DESCRIPTOR secDesc; */
-   attribs = GetFileAttributes (directory);
-   if (attribs == 0xFFFFFFFF)
-      return FALSE;
-   else if (!(attribs & FILE_ATTRIBUTE_DIRECTORY))
-      return FALSE;
-   return TRUE;
-#else  /* WWW_MSWINDOWS */
-   struct stat         fileStat;
-
-   /* does the directory exist ? */
-   if (ustrlen (directory) < 1)
-      return (FALSE);
-   else if (stat (directory, &fileStat) != 0)
-      return (FALSE);
-   else if (S_ISDIR (fileStat.st_mode))
-      return (TRUE);
-   else
-      return (FALSE);
-#endif /* !WWW_MSWINDOWS */
-}
-
 /*----------------------------------------------------------------------
    TtaCheckPath
 

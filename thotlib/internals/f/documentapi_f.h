@@ -20,7 +20,6 @@ extern boolean TtaExportDocument ( Document document,
 extern void TtaCloseDocument ( Document document );
 extern void TtaRemoveDocument ( Document document );
 extern void TtaSetDocumentPath ( STRING path );
-extern boolean TtaCheckDirectory ( STRING directory );
 extern boolean TtaCheckPath ( PathBuffer path );
 extern boolean TtaIsInDocumentPath ( STRING directory );
 extern void TtaAppendDocumentPath ( STRING directory );
@@ -95,7 +94,6 @@ extern boolean TtaExportDocument (/* Document document,
 extern void TtaCloseDocument (/* Document document */);
 extern void TtaRemoveDocument (/* Document document */);
 extern void TtaSetDocumentPath (/* STRING path */);
-extern boolean TtaCheckDirectory (/* STRING directory */);
 extern boolean TtaCheckPath (/* PathBuffer path */);
 extern boolean TtaIsInDocumentPath (/* STRING directory */);
 extern void TtaAppendDocumentPath (/* STRING directory */);

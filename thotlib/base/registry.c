@@ -31,7 +31,6 @@
 #include "registry.h"
 #include "application.h"
 #include "thotdir.h"
-
 #define THOT_EXPORT
 #include "platform_tv.h"
 
@@ -43,15 +42,13 @@
 /* for Marc.Baudoin@hsc.fr (Marc Baudoin) */
 #ifdef _WINDOWS
 #include <direct.h>
-#define THOT_RC_FILENAME	"thot.rc"
-#define THOT_INI_FILENAME       "thot.rc"
+#define THOT_INI_FILENAME       "win-thot.rc"
 STRING WIN_Home;
 
 #else /* !_WINDOWS */
-#define THOT_RC_FILENAME	".thotrc"
-#define THOT_INI_FILENAME       "thot.ini"
+#define THOT_INI_FILENAME       "unix-thot.ini"
 #endif /* ! _WINDOWS */
-
+#define THOT_RC_FILENAME	"thot.rc"
 
 #define THOT_CONFIG_FILENAME    "config"
 #define THOT_BIN_FILENAME	"bin"
@@ -84,6 +81,11 @@ static RegistryEntry AppRegistryEntry = NULL;
 static STRING        AppRegistryEntryAppli = NULL;
 static CHAR          CurrentDir[MAX_PATH];
 static STRING        Thot_Dir;
+
+#ifdef _WINDOWS
+/* @@why do we need this here? */
+int errno;
+#endif
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -1044,21 +1046,16 @@ static STRING          WINIni_get (CONST STRING env)
 void                TtaSaveAppRegistry ()
 {
 
-#ifndef WWW_MSWINDOWS
    STRING home_dir;
    CHAR                filename[MAX_PATH];
    FILE               *output;
-
-#endif /* !WWW_MSWINDOWS */
 
    if (!AppRegistryInitialized)
       return;
    if (!AppRegistryModified)
       return;
 
-
-#ifndef WWW_MSWINDOWS
-   home_dir = TtaGetEnvString ("HOME");
+   home_dir = TtaGetEnvString ("APP_HOME");
    if (home_dir != NULL)
      {
 	ustrcpy (filename, home_dir);
@@ -1067,7 +1064,7 @@ void                TtaSaveAppRegistry ()
      }
    else
      {
-	fprintf (stderr, "Cannot save Registry no HOME dir\n");
+	fprintf (stderr, "Cannot save Registry no APP_HOME dir\n");
 	return;
      }
    output = fopen (filename, "w");
@@ -1081,7 +1078,6 @@ void                TtaSaveAppRegistry ()
    AppRegistryModified = 0;
 
    fclose (output);
-#endif /* !WWW_MSWINDOWS */
 }
 
 
@@ -1176,6 +1172,7 @@ static void         InitEnviron ()
    STRING pT;
    STRING Thot_Sys_Sch;
    STRING Thot_Sch;
+   int    i;
 
    /* default values for various global variables */
    FirstCreation = FALSE;
@@ -1232,11 +1229,39 @@ static void         InitEnviron ()
    TtaSetDefEnvString ("TOOLTIPDELAY", "500", FALSE);
    TtaSetDefEnvString ("FontMenuSize", "12", FALSE);
    TtaSetDefEnvString ("ForegroundColor", "Black", FALSE);
+
 #ifndef _WINDOWS
    TtaSetDefEnvString ("BackgroundColor", "gainsboro", FALSE);
+   pT = TtaGetEnvString ("TMPDIR");
+   if (!pT || *pT == EOS)
+     {
+       TtaSetDefEnvString ("TMPDIR", "/tmp", FALSE);
+       pT = "/tmp";
+     }
 #else
    TtaSetDefEnvString ("BackgroundColor", "LightGrey1", FALSE);
+   pT = TtaGetEnvString ("TMPDIR");
+   if (!pT || *pT == EOS)
+     {
+       TtaSetDefEnvString ("TMPDIR", "c:\\temp", FALSE);
+       pT = "c:\\temp";
+     }
 #endif /* _WINDOWS */
+
+   /* create the TMPDIR dir if it doesn't exist */
+   if (!TtaCheckDirectory (pT))
+     {
+#ifdef _WINDOWS
+       i = _mkdir (pT);
+#else /* _WINDOWS */
+       i = mkdir (pT, S_IRWXU);
+#endif /* _WINDOWS */
+   if (i != 0 && errno != EEXIST)
+     {
+       fprintf (stderr, "Couldn't create directory %s\n", pT);
+       exit (1);
+     }
+   }
 }
 
 /*----------------------------------------------------------------------
@@ -1258,16 +1283,16 @@ STRING appArgv0;
    PathBuffer execname;
    PathBuffer path;
    STRING     home_dir;
+   CHAR       app_home[MAX_PATH];
    CHAR       filename[MAX_PATH];
    STRING     my_path;
    STRING     dir_end = NULL;
    STRING appName;
 #  ifdef _WINDOWS
+   CHAR      *ptr;
 #  ifndef __CYGWIN32__
    extern int _fmode;
 #  endif
-   STRING pHome;
-   int   hLen;
 #  else /* ! _WINDOWS */
    struct stat         stat_buf;
 #  endif /* _WINDOWS */
@@ -1296,7 +1321,9 @@ STRING appArgv0;
 
   /* No this should NOT be a call to TtaGetEnvString */
 # ifdef _WINDOWS
-  home_dir = NULL;
+  /* @@@ put her*ge the registry call to see what's the user dir,
+     and also create here the 1/2/3 dirs */
+  home_dir = "c:\\temp";
 # else /* _WINDOWS */
   home_dir = getenv ("HOME");
 # endif /* _WINDOWS */
@@ -1380,7 +1407,21 @@ STRING appArgv0;
   if (*appName == DIR_SEP)
     /* dir_end used for relative links ... */
     dir_end = appName++;
+  
   appName = TtaStrdup (appName);
+#ifdef _WINDOWS
+   /* remove the .exe extension. */
+   ptr = ustrchr (appName, '.');
+   if (ptr && !ustrcasecmp (ptr, ".exe"))
+	 *ptr = EOS;
+   ptr = appName;
+   while (*ptr)
+   {
+	*ptr = tolower (*ptr);
+	ptr++;
+   }
+
+#endif /* _WINDOWS */
   AppRegistryEntryAppli = appName;
 
 #ifdef HAVE_LSTAT
@@ -1518,10 +1559,22 @@ STRING appArgv0;
    else
      fprintf (stderr, "System wide %s not found at %s\n", THOT_INI_FILENAME, &filename[0]);
 
-#  ifndef _WINDOWS
-   if (home_dir != NULL)
+   /* find (or create) the APP_HOME directory:
+      $HOME/.appname or $HOME\appname */
+   ustrcpy (app_home, home_dir);
+   ustrcat (app_home , DIR_STR);
+#ifndef _WINDOWS
+   ustrcat (app_home, ".");
+#endif _WINDOWS
+   ustrcat (app_home, AppRegistryEntryAppli);
+
+   /* store the value of APP_HOME in the registry */
+   AddRegisterEntry ("System", "APP_HOME", app_home, REGISTRY_INSTALL, TRUE);
+   
+   /* read the user's preferences (if they exist) */
+   if (app_home != NULL)
      {
-	ustrcpy (filename, home_dir);
+    ustrcpy (filename, app_home);
 	ustrcat (filename, DIR_STR);
 	ustrcat (filename, THOT_RC_FILENAME);
 	if (TtaFileExist (&filename[0]))
@@ -1552,25 +1605,12 @@ STRING appArgv0;
      }
    else
       fprintf (stderr, "User's %s not found\n", THOT_INI_FILENAME);
-#  endif /* !_WINDOWS */
-
+   
 #ifdef DEBUG_REGISTRY
    PrintEnv (stderr);
 #endif
-
    InitEnviron ();
    AppRegistryModified = 0;
-#  ifdef _WINDOWS
-   hLen = ustrlen (execname);
-   WIN_Home = (STRING) TtaGetMemory (hLen + 1);
-   ustrcpy (WIN_Home, execname);
-   pHome = &WIN_Home [hLen];
-   while (*pHome != DIR_SEP) {
-         pHome --;
-         hLen--;	
-   } 
-   WIN_Home [hLen] = 0;
-#  endif /* _WINDOWS */
 }
 
 
