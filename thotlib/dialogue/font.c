@@ -1184,7 +1184,7 @@ STRING              name;
 	if (ndir > 0)
 	  {
 	     ndir += ncurrent;
-	     dirlist = TtaAllocString (ndir );
+	     dirlist = (STRING*) TtaGetMemory (ndir * sizeof(STRING));
 
 	     if (currentlist != NULL)
 #ifdef SYSV
