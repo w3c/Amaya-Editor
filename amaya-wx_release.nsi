@@ -209,7 +209,7 @@ Section "Amaya" SecAmaya
   File WindowsWX\bin\wxmsw*u_gl_vc_custom.dll
   File WindowsWX\bin\wxbase*u_vc_custom.dll
   File WindowsWX\bin\wxbase*u_xml_vc_custom.dll
-;  File WindowsWX\bin\thotprinter.exe
+  File WindowsWX\bin\thotprinter.dll
 
   SetDetailsPrint textonly
   DetailPrint "Installing Amaya resources : icons, dialogues"
