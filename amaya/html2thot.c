@@ -6178,7 +6178,7 @@ STRING              fileName;
 	    endOfFile = TRUE;
 	  else
 	    FileBuffer[res] = EOS;
-	  /* if we are reading a file with "<html ...>" */
+	  /* check if we are reading a file with "<html ...>" */
 	  i = 0;
 	  while (!endOfFile && i < res)
 	    {
@@ -6186,7 +6186,7 @@ STRING              fileName;
 		i++;
 	      else
 		{
-		  /* we've found the document type */
+		  /* we've found <html  */
 		  i += 5;
 		  /* stop the research */
 		  endOfFile = TRUE;
@@ -6196,6 +6196,61 @@ STRING              fileName;
 			 FileBuffer[i] == TAB ||
 			 FileBuffer[i] == __CR__ ||
 			 FileBuffer[i] == '>')
+		     isXHTML = TRUE;
+		}
+	    }
+	}
+      gzclose (stream);
+    }
+  return (isXHTML);
+}
+
+
+/*----------------------------------------------------------------------
+  ContentIsXML parses the HTML file to detect if it's XHML document.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool            ContentIsXML (STRING fileName)
+#else
+ThotBool            ContentIsXML (fileName)
+STRING              fileName;
+#endif
+{
+  gzFile              stream;
+  int                 res, i;
+  ThotBool            endOfFile, isXHTML;
+
+  isXHTML = FALSE;
+  stream = gzopen (WideChar2ISO (fileName), "r");
+  if (stream != 0)
+    {
+      InputText = NULL;
+      LgBuffer = 0;
+      endOfFile = FALSE;
+      while (!endOfFile)
+	{
+	  res = gzread (stream, FileBuffer, INPUT_FILE_BUFFER_SIZE);
+	  if (res <= 0)
+	    endOfFile = TRUE;
+	  else
+	    FileBuffer[res] = EOS;
+	  /* check if the file contains "<?xml ..." */
+	  i = 0;
+	  while (!endOfFile && i < res)
+	    {
+	      if (ustrncasecmp(&FileBuffer[i], TEXT("<?xml"), 5))
+		i++;
+	      else
+		{
+		  /* we've found <?xml */
+		  i += 5;
+		  /* stop the research */
+		  endOfFile = TRUE;
+		  if (FileBuffer[i] == SPACE ||
+			 FileBuffer[i] == BSPACE ||
+			 FileBuffer[i] == EOL ||
+			 FileBuffer[i] == TAB ||
+			 FileBuffer[i] == __CR__)
 		     isXHTML = TRUE;
 		}
 	    }

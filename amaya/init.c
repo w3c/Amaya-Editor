@@ -2113,12 +2113,15 @@ ThotBool	    history;
   if (content_type == NULL || content_type[0] == EOS)
     /* no content type */
     {
-      /* local document */
       /* try to guess the document type after its file name extension */
       if (IsHTMLName (pathname))
 	{
-	/* it's an HTML document */
+	  /* it seems to be an HTML document */
 	  docType = docHTML;
+	  /* it may be an XHTML document. Look for <?xml ...?> in it */
+	  if ((tempfile[0] != EOS && ContentIsXML (tempfile)) ||
+	      (tempfile[0] == EOS && ContentIsXML (pathname)))
+	     XHTMLdoc = TRUE;
 	  otherFile = FALSE;
 	}
       else if (IsXMLName (pathname))
@@ -2150,6 +2153,8 @@ ThotBool	    history;
 	/* Let's suppose it's HTML */
 	  docType = docHTML;
 	  otherFile = FALSE;
+	  if (ContentIsXML (tempfile))
+	     XHTMLdoc = TRUE;
 	}
       }
    else
@@ -2168,16 +2173,26 @@ ThotBool	    history;
 	     content_type[j] = EOS;
 	   if (!ustrcasecmp (content_type, TEXT("text")))
 	     {
-	       if (!ustrncasecmp (&content_type[i+1], html_EXT2, 4) ||
-		   !ustrncasecmp (&content_type[i+1], TEXT("xhtml"), 5))
+	       if (!ustrncasecmp (&content_type[i+1], html_EXT2, 4))
 		 {
 		   /* it's an HTML document */
 		   docType = docHTML;
 		   otherFile = FALSE;
+		   /* check if it's an XHTML document */
+		   if ((tempfile[0] != EOS && ContentIsXML (tempfile)) ||
+		       (tempfile[0] == EOS && ContentIsXML (pathname)))
+		     XHTMLdoc = TRUE;
+		 }
+	       else if (!ustrncasecmp (&content_type[i+1], TEXT("xhtml"), 5))
+		 {
+		   /* it's an XHTML document */
+		   docType = docHTML;
+		   XHTMLdoc = TRUE;
+		   otherFile = FALSE;
 		 }
 	       else if (!ustrncasecmp (&content_type[i+1], _XMLElement_, 3))
 		 {
-		   /* it's a document written in XML: check its doctype */
+		   /* it's an XML document: check its content */
 		   if ((tempfile[0] != EOS && IsXHTMLDocType (tempfile)) ||
 		       (tempfile[0] == EOS && IsXHTMLDocType (pathname)))
 		     {
