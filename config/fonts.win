@@ -2,18 +2,18 @@
 #        1-17 iso, then 
 #	50 unicode,
 #        51 symbol,stix...;
-#1 = serif;normale face;bold face;italic face  
-#2 = sans-serif;normale face;bold face;italic face  
-#3 = monospace;normale face;bold face;italic face  
-#4 = cursive;normale face;bold face;italic face  
-#5 = fantasy;normale face;bold face;italic face 
+#1 = serif;normale face;bold face;italic face;bold italic face;  
+#2 = sans-serif;normale face;bold face;italic face  ;bold italic face;
+#3 = monospace;normale face;bold face;italic face ;bold italic face; 
+#4 = cursive;normale face;bold face;italic face  ;bold italic face;
+#5 = fantasy;normale face;bold face;italic face ;bold italic face;
 #example  *-Comic Sans MS-* or *-Impact-* ...
 
 
 1;#easteurope
-1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;
-2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;
-3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;
+1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;4=*-Times New Roman-bi;
+2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;4=*-Arial-bi;
+3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;4=*-Lucida Console-bi;
 
 
 
@@ -21,17 +21,17 @@
 
 
 2;#baltic
-1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;
-2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;
-3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;
+1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;4=*-Times New Roman-bi;
+2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;4=*-Arial-bi;
+3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;4=*-Lucida Console-bi;
 
 
 
 
 3;#russian
-1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;
-2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;
-3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;
+1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;4=*-Times New Roman-bi;
+2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;4=*-Arial-bi;
+3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;4=*-Lucida Console-bi;
 
 
 
@@ -39,9 +39,9 @@
 
 
 6;#arabic
-1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;
-2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;
-3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;
+1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;4=*-Times New Roman-bi;
+2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;4=*-Arial-bi;
+3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;4=*-Lucida Console-bi;
 
 
 
@@ -49,9 +49,9 @@
 
 
 7;#greek
-1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;
-2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;
-3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;
+1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;4=*-Times New Roman-bi;
+2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;4=*-Arial-bi;
+3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;4=*-Lucida Console-bi;
 
 
 
@@ -59,23 +59,23 @@
 
 
 8;#hebrew;
-1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;
-2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;
-3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;
+1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;4=*-Times New Roman-bi;
+2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;4=*-Arial-bi;
+3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;4=*-Lucida Console-bi;
 
 
 
 
 9;#Latin5 (Turkish)
-1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;
-2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;
-3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;
+1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;4=*-Times New Roman-bi;
+2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;4=*-Arial-bi;
+3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;4=*-Lucida Console-bi;
 
 
 10;#Latin6 (Nordic)
-1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;
-2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;
-3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;
+1;1=*-Times New Roman-*;2=*-Times New Roman-b;3=*-Times New Roman-i;4=*-Times New Roman-bi;
+2;1=*-Arial-*;2=*-Arial-b;3=*-Arial-i;4=*-Arial-bi;
+3;1=*-Lucida Console-*;2=*-Lucida Console-b;3=*-Lucida Console-i;4=*-Lucida Console-bi;
 
 
 
@@ -90,6 +90,6 @@
 
 
 0;#Unicode (.or ... JAPANESe)
-1;1=*-MS Gothic-*;2=*-MS Gothic-*;3=*-MS Gothic-*;
-2;1=*-MS Gothic-*;2=*-MS Gothic-*;3=*-MS Gothic-*;
-3;1=*-MS Gothic-*;2=*-MS Gothic-*;3=*-MS Gothic-*;
+1;1=*-MS Gothic-*;2=*-MS Gothic-*;3=*-MS Gothic-*;4=*-MS Gothic-*;
+2;1=*-MS Gothic-*;2=*-MS Gothic-*;3=*-MS Gothic-*;4=*-MS Gothic-*;
+3;1=*-MS Gothic-*;2=*-MS Gothic-*;3=*-MS Gothic-*;4=*-MS Gothic-*;
