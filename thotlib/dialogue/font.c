@@ -427,8 +427,8 @@ ptrfont             font;
 
 /*----------------------------------------------------------------------
  *  PixelValue computes the pixel size for a given logical unit.
- *		pAb is the current Pave except for UnPercent unit
- *		here it hold the comparison value.
+ *		pAb is the current abstract box except for UnPercent unit
+ *		where it holds the comparison value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 PixelValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
@@ -484,14 +484,17 @@ int                 zoom;
        i = val * (int) pAb;
        dist = i / 100;
        break;
+     case UnAuto:
+       /* should not occur: reserved for margins */
+       break;
      }
    return (dist);
 }
 
 /*----------------------------------------------------------------------
  *  LogicalValue computes the logical value for a given pixel size.
- *		pAb is the current Pave except for UnPercent unit
- *		here it hold the comparison value.
+ *		pAb is the current abstract box except for UnPercent unit
+ *		where it holds the comparison value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 LogicalValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
@@ -545,6 +548,9 @@ int                 zoom;
 	   i = val * 100;
 	   dist = i / (int) pAb;
 	 }
+       break;
+     case UnAuto:
+       /* Should not occur. Auto is reserved for margins */
        break;
      }
    return (dist);
