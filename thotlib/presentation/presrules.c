@@ -29,7 +29,6 @@
 #include "absboxes_f.h"
 #include "abspictures_f.h"
 #include "buildboxes_f.h"
-#include "indpres_f.h"
 #include "memory_f.h"
 #include "structmodif_f.h"
 #include "changeabsbox_f.h"

@@ -33,7 +33,6 @@ static ThotColorStruct cwhite;
 #include "checkermenu_f.h"
 #include "font_f.h"
 #include "picture_f.h"
-#include "indmenu_f.h"
 #include "inites_f.h"
 #include "memory_f.h"
 #include "registry_f.h"

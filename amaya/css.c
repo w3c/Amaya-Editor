@@ -1880,7 +1880,9 @@ PSchema             gPres;
 {
    char               *decl_end;
    char                saved;
+#if 0
    CSSInfoPtr          css;
+#endif
 
 #ifdef DEBUG_CSS
    fprintf (stderr, "MergeNewCSS(\"%s\",..)\n", attrstr);
