@@ -46,6 +46,8 @@ extern struct Hjava_lang_String* thotlib_APIDocument_TtaGetPSchemaName(struct Ht
 extern jint thotlib_APIDocument_TtaGetSSchema(struct Hthotlib_APIDocument*, struct Hjava_lang_String*, jint);
 extern jint thotlib_APIDocument_TtaSameSSchemas(struct Hthotlib_APIDocument*, jint, jint);
 extern void thotlib_APIDocument_TtaGiveSchemasOfDocument(struct Hthotlib_APIDocument*, struct Hjava_lang_String*, struct Hjava_lang_String*, struct Hjava_lang_String*);
+extern void thotlib_APIDocument_TtaNextSchemaExtension(struct Hthotlib_APIDocument*, jint, struct Hthotlib_SSchema*);
+extern void thotlib_APIDocument_TtaNextNature(struct Hthotlib_APIDocument*, jint, struct Hthotlib_SSchema*);
 extern jint thotlib_APIDocument_TtaIsDocumentModified(struct Hthotlib_APIDocument*, jint);
 extern jint thotlib_APIDocument_TtaGetDocumentAccessMode(struct Hthotlib_APIDocument*, jint);
 extern jint thotlib_APIDocument_TtaGetDocumentBackUpInterval(struct Hthotlib_APIDocument*, jint);

@@ -112,6 +112,11 @@
 111 La réponse du serveur n'a pas de corps
 112 Cette opération n'est pas permise pour %s
 113 L'accès à %s requiert votre authentification
-114 Le serveur reporte une erreur 501:
-115 Le serveur reporte une erreur 501
-116 Le serveur ne supporte pas cette methode d'accès
+114 V\351rification ...
+115 La sauvegarde distante de %s a \351chou\351e, Sauvegarder sur disque ?
+116 La sauvegarde distante de %s semble corompue, ignorer ?
+117 URL %s redirig\351e sur %s, ignorer ?
+118 Le relecture de %s a \351chou\351e, ignorer ?
+119 Le serveur reporte une erreur 501:
+120 Le serveur reporte une erreur 501
+121 Le serveur ne supporte pas cette methode d'accès

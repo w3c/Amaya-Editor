@@ -44,6 +44,8 @@ extern char *TtaGetPSchemaName(SSchema schema);
 extern SSchema TtaGetSSchema(char *name, Document document);
 extern int TtaSameSSchemas(SSchema schema1, SSchema schema2);
 extern void TtaGiveSchemasOfDocument(char *documentName, char *structureName, char *presentationName);
+extern void TtaNextSchemaExtension(Document document, SSchema *extension);
+extern void TtaNextNature(Document document, SSchema *nature);
 extern int TtaIsDocumentModified(Document document);
 extern int TtaGetDocumentAccessMode(Document document);
 extern int TtaGetDocumentBackUpInterval(Document document);

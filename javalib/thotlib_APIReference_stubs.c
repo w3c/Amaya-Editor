@@ -72,6 +72,25 @@ thotlib_APIReference_TtaCopyAttributeReference(struct Hthotlib_APIReference* non
 }
 
 /*
+ * Java to C function TtaGiveReferredElement stub.
+ */
+void
+thotlib_APIReference_TtaGiveReferredElement(struct Hthotlib_APIReference* none, jint element, struct Hthotlib_Element* jtarget, struct Hjava_lang_String* jtargetDocumentName, struct Hthotlib_Document* jtargetDocument)
+{
+	Element *target;
+	char targetDocumentName[1024];
+	Document *targetDocument;
+
+	/* convert arg struct Hthotlib_Element* jtarget to Element *target */
+	JavaElement2CElementPtr(jtarget,&target);
+	javaString2CString(jtargetDocumentName, targetDocumentName, sizeof(targetDocumentName));
+	/* convert arg struct Hthotlib_Document* jtargetDocument to Document *targetDocument */
+	JavaDocument2CDocumentPtr(jtargetDocument,&targetDocument);
+
+	TtaGiveReferredElement((Element ) element, (Element *) target, (char *) targetDocumentName, (Document *) targetDocument);
+}
+
+/*
  * Java to C function TtaIsElementTypeReference stub.
  */
 jint
@@ -103,6 +122,25 @@ thotlib_APIReference_TtaSameReferences(struct Hthotlib_APIReference* none, jint 
 }
 
 /*
+ * Java to C function TtaGiveReferenceAttributeValue stub.
+ */
+void
+thotlib_APIReference_TtaGiveReferenceAttributeValue(struct Hthotlib_APIReference* none, jint attribute, struct Hthotlib_Element* jtarget, struct Hjava_lang_String* jtargetDocumentName, struct Hthotlib_Document* jtargetDocument)
+{
+	Element *target;
+	char targetDocumentName[1024];
+	Document *targetDocument;
+
+	/* convert arg struct Hthotlib_Element* jtarget to Element *target */
+	JavaElement2CElementPtr(jtarget,&target);
+	javaString2CString(jtargetDocumentName, targetDocumentName, sizeof(targetDocumentName));
+	/* convert arg struct Hthotlib_Document* jtargetDocument to Document *targetDocument */
+	JavaDocument2CDocumentPtr(jtargetDocument,&targetDocument);
+
+	TtaGiveReferenceAttributeValue((Attribute ) attribute, (Element *) target, (char *) targetDocumentName, (Document *) targetDocument);
+}
+
+/*
  * Java to C function TtaIsElementReferred stub.
  */
 jint
@@ -128,6 +166,26 @@ thotlib_APIReference_TtaSameReferenceAttributes(struct Hthotlib_APIReference* no
 	res = TtaSameReferenceAttributes((Attribute ) attribute1, (Attribute ) attribute2);
 
 	return((jint) res);
+}
+
+/*
+ * Java to C function TtaNextLoadedReference stub.
+ */
+void
+thotlib_APIReference_TtaNextLoadedReference(struct Hthotlib_APIReference* none, jint target, jint targetDocument, struct Hthotlib_Element* jreferenceElement, struct Hthotlib_Attribute* jreferenceAttribute, struct Hthotlib_Document* jreferenceDocument)
+{
+	Element *referenceElement;
+	Attribute *referenceAttribute;
+	Document *referenceDocument;
+
+	/* convert arg struct Hthotlib_Element* jreferenceElement to Element *referenceElement */
+	JavaElement2CElementPtr(jreferenceElement,&referenceElement);
+	/* convert arg struct Hthotlib_Attribute* jreferenceAttribute to Attribute *referenceAttribute */
+	JavaAttribute2CAttributePtr(jreferenceAttribute,&referenceAttribute);
+	/* convert arg struct Hthotlib_Document* jreferenceDocument to Document *referenceDocument */
+	JavaDocument2CDocumentPtr(jreferenceDocument,&referenceDocument);
+
+	TtaNextLoadedReference((Element ) target, (Document ) targetDocument, (Element *) referenceElement, (Attribute *) referenceAttribute, (Document *) referenceDocument);
 }
 
 /*
@@ -167,10 +225,13 @@ void register_thotlib_APIReference_stubs(void)
 	addExternalNativeFunc("thotlib_APIReference_TtaCopyReference", thotlib_APIReference_TtaCopyReference);
 	addExternalNativeFunc("thotlib_APIReference_TtaSetAttributeReference", thotlib_APIReference_TtaSetAttributeReference);
 	addExternalNativeFunc("thotlib_APIReference_TtaCopyAttributeReference", thotlib_APIReference_TtaCopyAttributeReference);
+	addExternalNativeFunc("thotlib_APIReference_TtaGiveReferredElement", thotlib_APIReference_TtaGiveReferredElement);
 	addExternalNativeFunc("thotlib_APIReference_TtaIsElementTypeReference", thotlib_APIReference_TtaIsElementTypeReference);
 	addExternalNativeFunc("thotlib_APIReference_TtaSameReferences", thotlib_APIReference_TtaSameReferences);
+	addExternalNativeFunc("thotlib_APIReference_TtaGiveReferenceAttributeValue", thotlib_APIReference_TtaGiveReferenceAttributeValue);
 	addExternalNativeFunc("thotlib_APIReference_TtaIsElementReferred", thotlib_APIReference_TtaIsElementReferred);
 	addExternalNativeFunc("thotlib_APIReference_TtaSameReferenceAttributes", thotlib_APIReference_TtaSameReferenceAttributes);
+	addExternalNativeFunc("thotlib_APIReference_TtaNextLoadedReference", thotlib_APIReference_TtaNextLoadedReference);
 	addExternalNativeFunc("thotlib_APIReference_TtaNextUnloadedReferringDocument", thotlib_APIReference_TtaNextUnloadedReferringDocument);
 	addExternalNativeFunc("thotlib_APIReference_TtaSearchReferenceElement", thotlib_APIReference_TtaSearchReferenceElement);
 }

@@ -275,6 +275,8 @@ THOT_EXPORT int          IButton;
 THOT_EXPORT int          BButton;
 THOT_EXPORT int          TTButton;
 
+THOT_EXPORT char AmayaLastHTTPErrorMsg [];
+
 #define IMAGE_NOT_LOADED	0
 #define IMAGE_LOCAL		1
 #define IMAGE_LOADED		2

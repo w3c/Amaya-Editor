@@ -77,6 +77,20 @@ thotlib_APIAttribute_TtaSetAttributeText(struct Hthotlib_APIAttribute* none, jin
 }
 
 /*
+ * Java to C function TtaNextAttribute stub.
+ */
+void
+thotlib_APIAttribute_TtaNextAttribute(struct Hthotlib_APIAttribute* none, jint element, struct Hthotlib_Attribute* jattribute)
+{
+	Attribute *attribute;
+
+	/* convert arg struct Hthotlib_Attribute* jattribute to Attribute *attribute */
+	JavaAttribute2CAttributePtr(jattribute,&attribute);
+
+	TtaNextAttribute((Element ) element, (Attribute *) attribute);
+}
+
+/*
  * Java to C function TtaGetAttribute stub.
  */
 jint
@@ -159,6 +173,26 @@ thotlib_APIAttribute_TtaGetTextAttributeLength(struct Hthotlib_APIAttribute* non
 }
 
 /*
+ * Java to C function TtaSearchAttribute stub.
+ */
+void
+thotlib_APIAttribute_TtaSearchAttribute(struct Hthotlib_APIAttribute* none, jlong jsearchedAttribute, jint scope, jint element, struct Hthotlib_Element* jelementFound, struct Hthotlib_Attribute* jattributeFound)
+{
+	AttributeType searchedAttribute;
+	Element *elementFound;
+	Attribute *attributeFound;
+
+	/* convert arg jlong jsearchedAttribute to AttributeType searchedAttribute */
+	Javalong2CAttributeType(jsearchedAttribute,&searchedAttribute);
+	/* convert arg struct Hthotlib_Element* jelementFound to Element *elementFound */
+	JavaElement2CElementPtr(jelementFound,&elementFound);
+	/* convert arg struct Hthotlib_Attribute* jattributeFound to Attribute *attributeFound */
+	JavaAttribute2CAttributePtr(jattributeFound,&attributeFound);
+
+	TtaSearchAttribute((AttributeType ) searchedAttribute, (SearchDomain ) scope, (Element ) element, (Element *) elementFound, (Attribute *) attributeFound);
+}
+
+/*
  * Function to register all thotlib_APIAttribute stubs.
  */
 void register_thotlib_APIAttribute_stubs(void)
@@ -168,10 +202,12 @@ void register_thotlib_APIAttribute_stubs(void)
 	addExternalNativeFunc("thotlib_APIAttribute_TtaRemoveAttribute", thotlib_APIAttribute_TtaRemoveAttribute);
 	addExternalNativeFunc("thotlib_APIAttribute_TtaSetAttributeValue", thotlib_APIAttribute_TtaSetAttributeValue);
 	addExternalNativeFunc("thotlib_APIAttribute_TtaSetAttributeText", thotlib_APIAttribute_TtaSetAttributeText);
+	addExternalNativeFunc("thotlib_APIAttribute_TtaNextAttribute", thotlib_APIAttribute_TtaNextAttribute);
 	addExternalNativeFunc("thotlib_APIAttribute_TtaGetAttribute", thotlib_APIAttribute_TtaGetAttribute);
 	addExternalNativeFunc("thotlib_APIAttribute_TtaGetAttributeName", thotlib_APIAttribute_TtaGetAttributeName);
 	addExternalNativeFunc("thotlib_APIAttribute_TtaSameAttributeTypes", thotlib_APIAttribute_TtaSameAttributeTypes);
 	addExternalNativeFunc("thotlib_APIAttribute_TtaGetAttributeValue", thotlib_APIAttribute_TtaGetAttributeValue);
 	addExternalNativeFunc("thotlib_APIAttribute_TtaGetTextAttributeLength", thotlib_APIAttribute_TtaGetTextAttributeLength);
+	addExternalNativeFunc("thotlib_APIAttribute_TtaSearchAttribute", thotlib_APIAttribute_TtaSearchAttribute);
 }
 

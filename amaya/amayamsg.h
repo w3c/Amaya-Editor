@@ -123,8 +123,13 @@ int                 AMAYA;
 #define AM_NO_DATA                    111
 #define AM_METHOD_NOT_ALLOWED         112
 #define AM_PLEASE_AUTHENTICATE        113
-#define AM_SERVER_INTERNAL_ERROR_500_CAUSE 114
-#define AM_SERVER_INTERNAL_ERROR_500_NO_CAUSE 115
-#define AM_SERVER_NOT_IMPLEMENTED_501_ERROR 116
-#define AMAYA_MSG_MAX                 117
+#define AM_VERIFYING                  114
+#define AM_SAVING_FAILED              115
+#define AM_SAVE_COMPARE_FAILED        116
+#define AM_SAVE_REDIRECTED            117
+#define AM_SAVE_RELOAD_FAILED         118
+#define AM_SERVER_INTERNAL_ERROR_500_CAUSE 119
+#define AM_SERVER_INTERNAL_ERROR_500_NO_CAUSE 120
+#define AM_SERVER_NOT_IMPLEMENTED_501_ERROR 121
+#define AMAYA_MSG_MAX                 122
 

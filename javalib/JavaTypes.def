@@ -28,4 +28,9 @@
        0       AttributeType long       jlong    yes
 #  Tricky : interfacing directy with objects when using
 #  pointer to objects.
+       1       Document      Document   "struct Hthotlib_Document*" yes
        1       Element       Element    "struct Hthotlib_Element*" yes
+       1       ElementType   ElementType "struct Hthotlib_ElementType*" yes
+       1       Attribute     Attribute  "struct Hthotlib_Attribute*" yes
+       1       AttributeType AttributeType  "struct Hthotlib_AttributeType*" yes
+       1       SSchema       SSchema    "struct Hthotlib_SSchema*" yes

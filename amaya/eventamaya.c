@@ -384,7 +384,7 @@ boolean             error_html;
    /*
     * do we support this protocol?
     */
-   if (IsValidGetProtocol (urlName) == NO)
+   if (IsValidProtocol (urlName) == NO)
      {
 	outputfile[0] = EOS;	/* file could not be opened */
 	TtaSetStatus (doc, 1,
@@ -588,7 +588,7 @@ void               *context_tcbf;
    /*
     * do we support this protocol?
     */
-   if (IsValidPutProtocol (urlName) == NO)
+   if (IsValidProtocol (urlName) == NO)
      {
 	/* return error */
 	TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_PUT_UNSUPPORTED_PROTOCOL),

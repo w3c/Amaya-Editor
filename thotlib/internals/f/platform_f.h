@@ -32,6 +32,8 @@ extern int TtaFileStat ( ThotFileHandle handle,
                          ThotFileInfo * pInfo );
 extern void TtaFileCopy ( char *sourceFileName,
                           char *targetFileName );
+extern boolean TtaCompareFiles ( char *file1,
+                                 char *file2 );
 
 #else /* __STDC__ */
 
@@ -61,6 +63,8 @@ extern int TtaFileStat (/* ThotFileHandle handle,
                            ThotFileInfo * pInfo */);
 extern void TtaFileCopy (/* char *sourceFileName,
                             char *targetFileName */);
+extern boolean TtaCompareFiles (/* char *file1,
+                                   char *file2 */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -42,6 +42,7 @@ extern Element TtaGetCommonAncestor(Element element1, Element element2);
 extern Element TtaGetTypedAncestor(Element element, ElementType ancestorType);
 extern ElementType TtaGetElementType(Element element);
 extern char *TtaGetElementTypeName(ElementType elementType);
+extern void TtaGiveTypeFromName(ElementType *elementType, char *name);
 extern int TtaSameTypes(ElementType type1, ElementType type2);
 extern char *TtaGetElementLabel(Element element);
 extern int TtaGetElementVolume(Element element);

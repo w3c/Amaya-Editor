@@ -19,10 +19,13 @@ extern jint thotlib_APIReference_TtaNewInclusion(struct Hthotlib_APIReference*, 
 extern void thotlib_APIReference_TtaCopyReference(struct Hthotlib_APIReference*, jint, jint);
 extern void thotlib_APIReference_TtaSetAttributeReference(struct Hthotlib_APIReference*, jint, jint, jint, jint, jint);
 extern void thotlib_APIReference_TtaCopyAttributeReference(struct Hthotlib_APIReference*, jint, jint, jint);
+extern void thotlib_APIReference_TtaGiveReferredElement(struct Hthotlib_APIReference*, jint, struct Hthotlib_Element*, struct Hjava_lang_String*, struct Hthotlib_Document*);
 extern jint thotlib_APIReference_TtaIsElementTypeReference(struct Hthotlib_APIReference*, jlong);
 extern jint thotlib_APIReference_TtaSameReferences(struct Hthotlib_APIReference*, jint, jint);
+extern void thotlib_APIReference_TtaGiveReferenceAttributeValue(struct Hthotlib_APIReference*, jint, struct Hthotlib_Element*, struct Hjava_lang_String*, struct Hthotlib_Document*);
 extern jint thotlib_APIReference_TtaIsElementReferred(struct Hthotlib_APIReference*, jint);
 extern jint thotlib_APIReference_TtaSameReferenceAttributes(struct Hthotlib_APIReference*, jint, jint);
+extern void thotlib_APIReference_TtaNextLoadedReference(struct Hthotlib_APIReference*, jint, jint, struct Hthotlib_Element*, struct Hthotlib_Attribute*, struct Hthotlib_Document*);
 extern void thotlib_APIReference_TtaNextUnloadedReferringDocument(struct Hthotlib_APIReference*, jint, jint, struct Hjava_lang_String*);
 extern jint thotlib_APIReference_TtaSearchReferenceElement(struct Hthotlib_APIReference*, jint, jint);
 

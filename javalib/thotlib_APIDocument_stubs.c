@@ -463,6 +463,34 @@ thotlib_APIDocument_TtaGiveSchemasOfDocument(struct Hthotlib_APIDocument* none, 
 }
 
 /*
+ * Java to C function TtaNextSchemaExtension stub.
+ */
+void
+thotlib_APIDocument_TtaNextSchemaExtension(struct Hthotlib_APIDocument* none, jint document, struct Hthotlib_SSchema* jextension)
+{
+	SSchema *extension;
+
+	/* convert arg struct Hthotlib_SSchema* jextension to SSchema *extension */
+	JavaSSchema2CSSchemaPtr(jextension,&extension);
+
+	TtaNextSchemaExtension((Document ) document, (SSchema *) extension);
+}
+
+/*
+ * Java to C function TtaNextNature stub.
+ */
+void
+thotlib_APIDocument_TtaNextNature(struct Hthotlib_APIDocument* none, jint document, struct Hthotlib_SSchema* jnature)
+{
+	SSchema *nature;
+
+	/* convert arg struct Hthotlib_SSchema* jnature to SSchema *nature */
+	JavaSSchema2CSSchemaPtr(jnature,&nature);
+
+	TtaNextNature((Document ) document, (SSchema *) nature);
+}
+
+/*
  * Java to C function TtaIsDocumentModified stub.
  */
 jint
@@ -595,6 +623,8 @@ void register_thotlib_APIDocument_stubs(void)
 	addExternalNativeFunc("thotlib_APIDocument_TtaGetSSchema", thotlib_APIDocument_TtaGetSSchema);
 	addExternalNativeFunc("thotlib_APIDocument_TtaSameSSchemas", thotlib_APIDocument_TtaSameSSchemas);
 	addExternalNativeFunc("thotlib_APIDocument_TtaGiveSchemasOfDocument", thotlib_APIDocument_TtaGiveSchemasOfDocument);
+	addExternalNativeFunc("thotlib_APIDocument_TtaNextSchemaExtension", thotlib_APIDocument_TtaNextSchemaExtension);
+	addExternalNativeFunc("thotlib_APIDocument_TtaNextNature", thotlib_APIDocument_TtaNextNature);
 	addExternalNativeFunc("thotlib_APIDocument_TtaIsDocumentModified", thotlib_APIDocument_TtaIsDocumentModified);
 	addExternalNativeFunc("thotlib_APIDocument_TtaGetDocumentAccessMode", thotlib_APIDocument_TtaGetDocumentAccessMode);
 	addExternalNativeFunc("thotlib_APIDocument_TtaGetDocumentBackUpInterval", thotlib_APIDocument_TtaGetDocumentBackUpInterval);

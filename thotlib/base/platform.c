@@ -670,3 +670,62 @@ char               *targetFileName;
 	  }
      }
 }
+
+/*----------------------------------------------------------------------
+  TtaCompareFiles
+  Compare the content of two files.
+  Returns FALSE if one of the files is not available for reading or
+  if their content differs, TRUE if they are identical.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean             TtaCompareFiles(char *file1, char *file2)
+#else
+boolean             TtaCompareFiles(file1, file2)
+char               *file1;
+char               *file2;
+
+#endif
+{
+    FILE *f1;
+    FILE *f2;
+    char buffer1[512];
+    char buffer2[512];
+    size_t res1;
+    size_t res2;
+
+    if (file1 == NULL) return(FALSE);
+    if (file2 == NULL) return(FALSE);
+    f1 = fopen(file1,"r");
+    if (f1 == NULL) return(FALSE);
+    f2 = fopen(file2,"r");
+    if (f2 == NULL) {
+	fclose(f1);
+        return(FALSE);
+    }
+    while (1) {
+        res1 = fread(&buffer1[0], 1, sizeof(buffer1), f1);
+        res2 = fread(&buffer2[0], 1, sizeof(buffer2), f2);
+	if (res1 != res2) {
+	    fclose(f1);
+	    fclose(f2);
+	    return(FALSE);
+	}
+        if (memcmp(&buffer1[0], &buffer2[0], res2)) {
+	    fclose(f1);
+	    fclose(f2);
+	    return(FALSE);
+	}
+	res1 = feof(f1);
+	res2 = feof(f2);
+	if (res1 != res2) {
+	    fclose(f1);
+	    fclose(f2);
+	    return(FALSE);
+	}
+	if (res1) break;
+    }
+    fclose(f1);
+    fclose(f2);
+    return(TRUE);
+}
+

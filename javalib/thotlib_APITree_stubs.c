@@ -139,7 +139,7 @@ thotlib_APITree_TtaInsertFirstChild(struct Hthotlib_APITree* none, struct Hthotl
 	Element *newElement;
 
 	/* convert arg struct Hthotlib_Element* jnewElement to Element *newElement */
-	JavaElement2CElement(jnewElement,&newElement);
+	JavaElement2CElementPtr(jnewElement,&newElement);
 
 	TtaInsertFirstChild((Element *) newElement, (Element ) parent, (Document ) document);
 }
@@ -264,7 +264,7 @@ thotlib_APITree_TtaNextAssociatedRoot(struct Hthotlib_APITree* none, jint docume
 	Element *root;
 
 	/* convert arg struct Hthotlib_Element* jroot to Element *root */
-	JavaElement2CElement(jroot,&root);
+	JavaElement2CElementPtr(jroot,&root);
 
 	TtaNextAssociatedRoot((Document ) document, (Element *) root);
 }
@@ -306,7 +306,7 @@ thotlib_APITree_TtaPreviousSibling(struct Hthotlib_APITree* none, struct Hthotli
 	Element *element;
 
 	/* convert arg struct Hthotlib_Element* jelement to Element *element */
-	JavaElement2CElement(jelement,&element);
+	JavaElement2CElementPtr(jelement,&element);
 
 	TtaPreviousSibling((Element *) element);
 }
@@ -320,7 +320,7 @@ thotlib_APITree_TtaNextSibling(struct Hthotlib_APITree* none, struct Hthotlib_El
 	Element *element;
 
 	/* convert arg struct Hthotlib_Element* jelement to Element *element */
-	JavaElement2CElement(jelement,&element);
+	JavaElement2CElementPtr(jelement,&element);
 
 	TtaNextSibling((Element *) element);
 }
@@ -430,6 +430,22 @@ thotlib_APITree_TtaGetElementTypeName(struct Hthotlib_APITree* none, jlong jelem
 	res = TtaGetElementTypeName((ElementType ) elementType);
 
 	return(makeJavaString(res, sizeof(res)));
+}
+
+/*
+ * Java to C function TtaGiveTypeFromName stub.
+ */
+void
+thotlib_APITree_TtaGiveTypeFromName(struct Hthotlib_APITree* none, struct Hthotlib_ElementType* jelementType, struct Hjava_lang_String* jname)
+{
+	ElementType *elementType;
+	char name[1024];
+
+	/* convert arg struct Hthotlib_ElementType* jelementType to ElementType *elementType */
+	JavaElementType2CElementTypePtr(jelementType,&elementType);
+	javaString2CString(jname, name, sizeof(name));
+
+	TtaGiveTypeFromName((ElementType *) elementType, (char *) name);
 }
 
 /*
@@ -737,7 +753,7 @@ thotlib_APITree_TtaNextCopiedElement(struct Hthotlib_APITree* none, struct Hthot
 	Element *element;
 
 	/* convert arg struct Hthotlib_Element* jelement to Element *element */
-	JavaElement2CElement(jelement,&element);
+	JavaElement2CElementPtr(jelement,&element);
 
 	TtaNextCopiedElement((Element *) element);
 }
@@ -877,6 +893,7 @@ void register_thotlib_APITree_stubs(void)
 	addExternalNativeFunc("thotlib_APITree_TtaGetTypedAncestor", thotlib_APITree_TtaGetTypedAncestor);
 	addExternalNativeFunc("thotlib_APITree_TtaGetElementType", thotlib_APITree_TtaGetElementType);
 	addExternalNativeFunc("thotlib_APITree_TtaGetElementTypeName", thotlib_APITree_TtaGetElementTypeName);
+	addExternalNativeFunc("thotlib_APITree_TtaGiveTypeFromName", thotlib_APITree_TtaGiveTypeFromName);
 	addExternalNativeFunc("thotlib_APITree_TtaSameTypes", thotlib_APITree_TtaSameTypes);
 	addExternalNativeFunc("thotlib_APITree_TtaGetElementLabel", thotlib_APITree_TtaGetElementLabel);
 	addExternalNativeFunc("thotlib_APITree_TtaGetElementVolume", thotlib_APITree_TtaGetElementVolume);

@@ -22,6 +22,7 @@ extern int PutObjectWWW ( int doc,
                           char *fileName,
                           char *urlName,
                           int mode,
+                          PicType contentType,
                           TTcbf * terminate_cbf,
                           void *context_tcbf );
 
@@ -43,6 +44,7 @@ extern int PutObjectWWW (/* int doc,
                             char *fileName,
                             char *urlName,
                             int mode,
+                            PicType contentType,
                             TTcbf * terminate_cbf,
                             void *context_tcbf */);
 

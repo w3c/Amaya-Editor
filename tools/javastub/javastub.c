@@ -668,8 +668,9 @@ void dump_stubs(FILE *out) {
 			 t->itype, a->name, t->name);
 		  for (p = 0;p < t->indir;p++) fprintf(out,"*");
 		  fprintf(out,"%s */\n", a->name);
-		  fprintf(out,"\tJava%s2C%s(",t->jname,t->name);
-		  fprintf(out,"j%s,&%s);\n", a->name, a->name);
+		  fprintf(out,"\tJava%s2C%s",t->jname,t->name);
+		  for (p = 0;p < t->indir;p++) fprintf(out,"Ptr");
+		  fprintf(out,"(j%s,&%s);\n", a->name, a->name);
 	       }
 	    }
 	}

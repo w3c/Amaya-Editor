@@ -44,6 +44,7 @@ extern jint thotlib_APITree_TtaGetCommonAncestor(struct Hthotlib_APITree*, jint,
 extern jint thotlib_APITree_TtaGetTypedAncestor(struct Hthotlib_APITree*, jint, jlong);
 extern jlong thotlib_APITree_TtaGetElementType(struct Hthotlib_APITree*, jint);
 extern struct Hjava_lang_String* thotlib_APITree_TtaGetElementTypeName(struct Hthotlib_APITree*, jlong);
+extern void thotlib_APITree_TtaGiveTypeFromName(struct Hthotlib_APITree*, struct Hthotlib_ElementType*, struct Hjava_lang_String*);
 extern jint thotlib_APITree_TtaSameTypes(struct Hthotlib_APITree*, jlong, jlong);
 extern struct Hjava_lang_String* thotlib_APITree_TtaGetElementLabel(struct Hthotlib_APITree*, jint);
 extern jint thotlib_APITree_TtaGetElementVolume(struct Hthotlib_APITree*, jint);

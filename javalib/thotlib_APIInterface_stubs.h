@@ -23,6 +23,7 @@ extern void TtaSetStatus(Document document, View view, char *text, char *name);
 extern ThotWidget TtaGetViewFrame(Document document, View view);
 extern void TtaMainLoop(void);
 extern void TtaHandlePendingEvents(void);
+extern void TtaClickElement(Document *document, Element *element);
 extern void TtaSetCursorWatch(Document document, View view);
 extern void TtaResetCursor(Document document, View view);
 extern Pixel TtaGetMenuColor(void);

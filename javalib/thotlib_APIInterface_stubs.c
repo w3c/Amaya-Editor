@@ -144,6 +144,23 @@ thotlib_APIInterface_TtaHandlePendingEvents(struct Hthotlib_APIInterface* none)
 }
 
 /*
+ * Java to C function TtaClickElement stub.
+ */
+void
+thotlib_APIInterface_TtaClickElement(struct Hthotlib_APIInterface* none, struct Hthotlib_Document* jdocument, struct Hthotlib_Element* jelement)
+{
+	Document *document;
+	Element *element;
+
+	/* convert arg struct Hthotlib_Document* jdocument to Document *document */
+	JavaDocument2CDocumentPtr(jdocument,&document);
+	/* convert arg struct Hthotlib_Element* jelement to Element *element */
+	JavaElement2CElementPtr(jelement,&element);
+
+	TtaClickElement((Document *) document, (Element *) element);
+}
+
+/*
  * Java to C function TtaSetCursorWatch stub.
  */
 void
@@ -223,6 +240,7 @@ void register_thotlib_APIInterface_stubs(void)
 	addExternalNativeFunc("thotlib_APIInterface_TtaGetViewFrame", thotlib_APIInterface_TtaGetViewFrame);
 	addExternalNativeFunc("thotlib_APIInterface_TtaMainLoop", thotlib_APIInterface_TtaMainLoop);
 	addExternalNativeFunc("thotlib_APIInterface_TtaHandlePendingEvents", thotlib_APIInterface_TtaHandlePendingEvents);
+	addExternalNativeFunc("thotlib_APIInterface_TtaClickElement", thotlib_APIInterface_TtaClickElement);
 	addExternalNativeFunc("thotlib_APIInterface_TtaSetCursorWatch", thotlib_APIInterface_TtaSetCursorWatch);
 	addExternalNativeFunc("thotlib_APIInterface_TtaResetCursor", thotlib_APIInterface_TtaResetCursor);
 	addExternalNativeFunc("thotlib_APIInterface_TtaGetMenuColor", thotlib_APIInterface_TtaGetMenuColor);

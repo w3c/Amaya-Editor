@@ -17,7 +17,12 @@
  * Includes auto-generated interface Java classes.
  */
 
+#include "thotlib_Document.h"
+#include "thotlib_SSchema.h"
 #include "thotlib_Element.h"
+#include "thotlib_ElementType.h"
+#include "thotlib_Attribute.h"
+#include "thotlib_AttributeType.h"
 
 /*
  * Includes auto-generated interface to stubs.

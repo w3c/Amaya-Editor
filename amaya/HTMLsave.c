@@ -62,7 +62,8 @@ URL_elem            URL_elem_tab[] =
 
 
 /*----------------------------------------------------------------------
-   SetAbsoluteURLs : change relative URLs to absolute ones.        
+   SetAbsoluteURLs
+   change relative URLs to absolute ones within an HTML document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetAbsoluteURLs (Document document, View view)
@@ -143,6 +144,7 @@ View                view;
 
 /*----------------------------------------------------------------------
    SaveHTMLDocumentAs                                              
+   Entry point called whenether the user select the SaveAs function
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SaveDocumentAs (Document document, View view)
@@ -226,6 +228,8 @@ char               *documentName;
 }
 
 /*----------------------------------------------------------------------
+  InitSaveForm
+  Draw the Save As Dialog and prepare for input.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                InitSaveForm (Document document, View view, char *pathname)
@@ -268,6 +272,11 @@ char               *pathname;
 }
 
 /*----------------------------------------------------------------------
+  AddNoName
+  This function is called whenether one tries to save a document
+  without name (just the directory path e.g. http://www.w3.org/pub/WWW/ )
+  It ask the user whether an extra name suffix should be added or
+  abort.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static boolean      AddNoName (Document document, View view, char *url, boolean *ok)
@@ -302,14 +311,118 @@ boolean            *ok;
 }
 
 /*----------------------------------------------------------------------
+  SafeSaveFileThroughNet
+  Send a file through the Network (using the PUT HTTP method) and double
+  check for errors using a following GET.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          SaveDocumentThroughNet (Document document, View view, boolean confirm)
+static int          SafeSaveFileThroughNet (Document doc, char *localfile,
+                          char *remotefile, PicType filetype)
 #else
-static int          SaveDocumentThroughNet (document, view, confirm)
+static int          SafeSaveFileThroughNet (doc, localfile, remotefile, filetype)
+Document            doc;
+char               *localfile;
+char               *remotefile;
+PicType             filetype;
+
+#endif
+{
+    int res;
+    char msg[10000];
+    char tempfile[MAX_LENGTH]; /* Name of the file used to refetch */
+    char tempURL[MAX_LENGTH];  /* May be redirected */
+    char *no_reread_check;
+    char *no_write_check;
+
+    no_reread_check = TtaGetEnvString("NO_REREAD_CHECK");
+    no_write_check = TtaGetEnvString("NO_WRITE_CHECK");
+
+    /*
+     * Save.
+     */
+    res = PutObjectWWW(doc, localfile, remotefile, AMAYA_SYNC, filetype,
+                       (TTcbf *) NULL, (void *) NULL);
+    if (res != HT_OK) {
+        /*
+	 * The HTTP PUT method failed !
+	 */
+        return(res);
+    }
+
+    if (no_reread_check != NULL) return(HT_OK);
+
+    /*
+     * Refetch
+     */
+    TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_VERIFYING), "");
+    strcpy(tempURL, remotefile);
+    res = GetObjectWWW(doc, tempURL, NULL, &tempfile[0], AMAYA_SYNC,
+                       NULL, NULL, NULL, NULL, NO);
+    if (res != HT_OK) {
+        /*
+	 * The HTTP GET method failed !
+	 */
+	sprintf (msg, TtaGetMessage (AMAYA, AM_SAVE_RELOAD_FAILED),
+		 remotefile);
+	InitConfirm (doc, 1, msg);
+	if (!UserAnswer) {
+	   /* Trigger the error */
+	   return (res);
+	}
+	/* Ignore the read failure */
+	return(HT_OK);
+    }
+
+    /*
+     * Compare URLs In case of redirection.
+     */
+    if (strcmp(remotefile, tempURL)) {
+        /*
+	 * Warning : redirect...
+	 */
+	sprintf (msg, TtaGetMessage (AMAYA, AM_SAVE_REDIRECTED),
+		 remotefile, tempURL);
+	InitConfirm (doc, 1, msg);
+	if (!UserAnswer) {
+	   /* Trigger the error */
+	   TtaFileUnlink(tempfile);
+	   return(HT_ERROR);
+	}
+    }
+
+    if (no_write_check != NULL) return(HT_OK);
+
+    /*
+     * Compare content.
+     */
+    if (! TtaCompareFiles(tempfile, localfile)) {
+	sprintf (msg, TtaGetMessage (AMAYA, AM_SAVE_COMPARE_FAILED),
+		 remotefile);
+	InitConfirm (doc, 1, msg);
+	if (!UserAnswer) {
+	   /* Trigger the error */
+	   TtaFileUnlink(tempfile);
+	   return(HT_ERROR);
+	}
+    }
+    TtaFileUnlink(tempfile);
+    return(HT_OK);
+}
+
+/*----------------------------------------------------------------------
+  SaveDocumentThroughNet
+  Save a document and the included images to a remote network location.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static int          SaveDocumentThroughNet (Document document, View view,
+					 boolean confirm, boolean with_images)
+#else
+static int          SaveDocumentThroughNet (document, view, confirm,
+                                         with_images)
 Document            document;
 View                view;
 boolean             confirm;
+boolean             with_images;
 
 #endif
 {
@@ -335,7 +448,7 @@ boolean             confirm;
    strcat (tempname, documentname);
    TtaExportDocument (document, tempname, "HTMLT");
 
-   if (confirm)
+   if (confirm && with_images)
      {
 	TtaNewForm (BaseDialog + ConfirmSave, TtaGetViewFrame (document, view), 
 	            TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 1, 'L', D_CANCEL);
@@ -395,7 +508,10 @@ boolean             confirm;
    ActiveTransfer (document);
    TtaHandlePendingEvents ();
 
-   pImage = ImageURLs;
+   if (with_images)
+      pImage = ImageURLs;
+   else
+      pImage = NULL;
    while (pImage != NULL)
      {
 	if (pImage->document == document)
@@ -403,15 +519,17 @@ boolean             confirm;
 	     if (pImage->status == IMAGE_MODIFIED)
 	       {
 		  imageType = (int) TtaGetPictureType ((Element) pImage->elImage);
-		  res = PutObjectWWW (document, pImage->localName,
-				      pImage->originalName, AMAYA_SYNC, imageType,
-				      (TTcbf *) NULL, (void *) NULL);
+		  res = SafeSaveFileThroughNet(document, pImage->localName,
+					   pImage->originalName, imageType);
 		  if (res != HT_OK)
 		    {
 		       FilesLoading[document] = 2;
 		       ResetStop (document);
-		       sprintf (msg, "%s %s \n%s", TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
-				pImage->originalName, TtaGetMessage (AMAYA, AM_SAVE_DISK));
+		       sprintf (msg, "%s %s \n%s\n%s",
+		                TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
+				pImage->originalName, 
+				AmayaLastHTTPErrorMsg,
+				TtaGetMessage (AMAYA, AM_SAVE_DISK));
 		       InitConfirm (document, view, msg);
 		       /* JK: to erase the last status message */
 		       TtaSetStatus (document, view, "", NULL);
@@ -425,15 +543,18 @@ boolean             confirm;
 	  }
 	pImage = pImage->nextImage;
      }
-   res = PutObjectWWW (document, tempname, DocumentURLs[document], AMAYA_SYNC, unknown_type,
-		       (TTcbf *) NULL, (void *) NULL);
+   res = SafeSaveFileThroughNet (document, tempname, DocumentURLs[document],
+                             unknown_type);
 
    if (res != HT_OK)
      {
 	FilesLoading[document] = 2;
 	ResetStop (document);
-	sprintf (msg, "Failed to save to URL %s. Save to disk ?",
-		 DocumentURLs[document]);
+	sprintf (msg, "%s %s \n%s\n%s",
+		 TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
+		 DocumentURLs[document],
+		 AmayaLastHTTPErrorMsg,
+		 TtaGetMessage (AMAYA, AM_SAVE_DISK));
 	InitConfirm (document, view, msg);
 	/* JK: to erase the last status message */
 	TtaSetStatus (document, view, "", NULL);
@@ -447,6 +568,9 @@ boolean             confirm;
 }
 
 /*----------------------------------------------------------------------
+  SaveDocument
+  Entry point called whenether the user select the Save menu entry or
+  press the Save button.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SaveDocument (Document document, View view)
@@ -494,7 +618,7 @@ View                view;
 	   TtaFreeMemory (DocumentURLs[SavingDocument]);
 	   DocumentURLs[SavingDocument] = (char *) TtaStrdup (tempname);
 	 }
-       if (ok && SaveDocumentThroughNet (document, view, FALSE) == 0)
+       if (ok && SaveDocumentThroughNet (document, view, FALSE, TRUE) == 0)
 	 {
 	   TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_SAVED), DocumentURLs[document]);
 	   SavingDocument = (Document) None;
@@ -537,7 +661,8 @@ NotifyDialog       *event;
 
 
 /*----------------------------------------------------------------------
-  UpdateImages: changes image SRCs and saves image files if CopyImages is TRUE.
+  UpdateImages
+  changes image SRCs and saves image files if CopyImages is TRUE.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void            UpdateImages (char *imgbase, boolean dst_is_local, char *newURL)
@@ -744,6 +869,11 @@ char                  *newURL;
 
 
 /*----------------------------------------------------------------------
+  DoSaveAs
+  This function is called when the user press the OK button on the
+  Save As dialog. This is tricky, one must take care of a lot of
+  parameters, whether initial and final location are local or remote
+  and recomputes URLs accordingly.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                DoSaveAs (void)
@@ -761,10 +891,15 @@ void                DoSaveAs ()
    char               *file;
    boolean             src_is_local;
    boolean             dst_is_local, ok;
+   boolean             with_images;
    int                 res;
 
    src_is_local = !IsW3Path (DocumentURLs[SavingDocument]);
    dst_is_local = !IsW3Path (DirectoryName);
+
+   if (CopyImages) with_images = TRUE;
+   else with_images = FALSE;
+
    if (!dst_is_local)
      {
        if (DocumentName[0] == '\0')
@@ -957,7 +1092,7 @@ void                DoSaveAs ()
 	TtaSetTextZone (SavingDocument, 1, 1, DocumentURLs[SavingDocument]);
 	/* now save the file as through the normal process of saving */
 	/* to a remote URL. */
-	res = SaveDocumentThroughNet (SavingDocument, 1, TRUE);
+	res = SaveDocumentThroughNet (SavingDocument, 1, TRUE, with_images);
 
 	if (res)
 	  {
@@ -997,7 +1132,7 @@ void                DoSaveAs ()
 	TtaSetTextZone (SavingDocument, 1, 1, DocumentURLs[SavingDocument]);
 	/* now save the file as through the normal process of saving
 	 * to a remote URL. */
-	res = SaveDocumentThroughNet (SavingDocument, 1, TRUE);
+	res = SaveDocumentThroughNet (SavingDocument, 1, TRUE, with_images);
 
 	if (res)
 	  {

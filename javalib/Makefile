@@ -7,7 +7,7 @@ APICLASSES=Application Document Tree Content Attribute Reference \
         Language Presentation View Selection Interface Registry \
 	Dialog
         
-CLASSES=Element
+CLASSES=Element SSchema Document ElementType Attribute AttributeType
 
 all : 
 	@(mv -f JavaTypes.err JavaTypes.err.old ; \
