@@ -3900,8 +3900,12 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
 #define	 COPY_BUFFER_SIZE	1024
   gzFile       infile;
   char         bufferRead[COPY_BUFFER_SIZE];
-  int          res;
+  int          res, i,  parsingLevel, tmpLineRead = 0;
   ThotBool     endOfFile = FALSE;
+  ThotBool     xmlDec, docType, isXML;
+  DocumentType thotType;
+  char         charsetname[MAX_LENGTH];
+
   
   if (fileName == NULL && xmlBuffer == NULL)
     return FALSE;
@@ -3921,14 +3925,14 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
   /* general initialization */
   RootElement = NULL;
   if (fileName != NULL && DTDname!= NULL &&
-      strcmp (DTDname, "SVG") == 0)
+      ((strcmp (DTDname, "SVG") == 0) || (strcmp (DTDname, "MathML") == 0)))
     {
-      /* We are parsing an external SVG image */
+      /* We are parsing an external image */
       svgEl = ChangeSvgImageType (el, doc);
       if (svgEl == NULL)
 	return FALSE;
       InitializeXmlParsingContext (doc, svgEl, isclosed, TRUE);
-      ChangeXmlParserContextDTD ("SVG");
+      ChangeXmlParserContextDTD (DTDname);
       /* When we parse an external xml file, we don't consider comments and PI */
       IgnoreCommentAndPi = TRUE;
     }
@@ -3993,7 +3997,18 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
       docURL = TtaGetMemory (tmpLen + 1);
       strcpy (docURL, fileName);
 
-      /* Reading of the file */
+      /* Initialize global counters */
+      extraLineRead = 0;
+      extraOffset = 0;
+      htmlLineRead = 0;
+      htmlCharRead = 0;
+
+      /* check if there is an XML declaration with a charset declaration */
+      if (fileName[0] != EOS)
+	CheckDocHeader (fileName, &xmlDec, &docType, &isXML,
+			&parsingLevel, &charset, charsetname, &thotType);
+
+      /* Parse the input file and complete the Thot document */
       infile = gzopen (fileName, "r");
       if (infile != 0)
 	{
@@ -4003,14 +4018,51 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
 	      res = gzread (infile, bufferRead, COPY_BUFFER_SIZE);      
 	      if (res < COPY_BUFFER_SIZE)
 		endOfFile = TRUE;
-	      
-	      if (!XML_Parse (Parser, bufferRead, res, endOfFile))
-		XmlParseError (errorNotWellFormed,
-			       (char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
+	      i = 0;
+	      if (!docType)
+		/* There is no DOCTYPE Declaration 
+		   We include a virtual DOCTYPE declaration so that EXPAT parser
+		   doesn't stop processing when it finds an external entity */	  
+		{
+		  if (xmlDec)
+		    /* There is a XML declaration */
+		    /* We look for the first '>' character */
+		    {
+		      while ((bufferRead[i] != '>') && i < res)
+			i++;
+		      if (i < res)
+			{
+			  i++;
+			  if (!XML_Parse (Parser, bufferRead, i, FALSE))
+			    XmlParseError (errorNotWellFormed,
+					   (char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
+			  res = res - i;
+			}
+		    }
+		  
+		  /* Virtual DOCTYPE Declaration */
+		  if (!XMLNotWellFormed)
+		    {
+		      tmpLineRead = XML_GetCurrentLineNumber (Parser);
+		      if (!XML_Parse (Parser, DECL_DOCTYPE, DECL_DOCTYPE_LEN, 0))
+			XmlParseError (errorNotWellFormed,
+				       (char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
+		      docType = TRUE;
+		      extraLineRead = XML_GetCurrentLineNumber (Parser) - tmpLineRead;
+		    }
+		}
+
+	      /* Standard EXPAT processing */
+	      if (!XMLNotWellFormed)
+		{
+		  if (!XML_Parse (Parser, &bufferRead[i], res, endOfFile))
+		    XmlParseError (errorNotWellFormed,
+				   (char *) XML_ErrorString (XML_GetErrorCode (Parser)), 0);
+		}
 	    }
-	}
+	} 
     }
-  
+
   /* Free expat parser */ 
   FreeXmlParserContexts ();
   FreeExpatParser ();
@@ -4267,7 +4319,7 @@ static void   XmlParse (FILE     *infile,
    else
        return;
 
-   /* Initialize local counters */
+   /* Initialize global counters */
    extraLineRead = 0;
    extraOffset = 0;
    htmlLineRead = 0;
@@ -4399,7 +4451,6 @@ void StartXmlParser (Document doc,
       /* Is the current document a XHTML document */
       isXHTML = (strcmp (TtaGetSSchemaName (DocumentSSchema),
 			  "HTML") == 0);
-      LoadUserStyleSheet (doc);
 
       TtaSetDisplayMode (doc, NoComputedDisplay);
 
@@ -4466,6 +4517,10 @@ void StartXmlParser (Document doc,
 	  TtaFreeMemory (docURL);
 	  docURL = NULL;
 	}
+
+      /* Load specific user style */
+      LoadUserStyleSheet (doc);
+
       TtaSetDisplayMode (doc, DisplayImmediately);
 
       /* Check the Thot abstract tree against the structure schema. */

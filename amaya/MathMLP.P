@@ -183,6 +183,7 @@ BOXES
 		END;	
 	END;
 
+{ LC 10/10/01
  VALUE_EntityName: BEGIN
         Content: (EntityName);
         Visibility: 0;
@@ -201,6 +202,7 @@ BOXES
 		   HorizPos: Left = Previous . Right;
                 END;
         END;
+}
  
  ATTR_xml_space_default: BEGIN
 	Content: Text ' xml:space=default';
@@ -2299,6 +2301,7 @@ ATTRIBUTES
   edge:
 	CreateBefore(AttrNameAndValue);
 
+{ LC 10/10/01
   EntityName:
 	BEGIN
 	CreateBefore(VALUE_EntityName);
@@ -2308,6 +2311,7 @@ ATTRIBUTES
 		VertPos: Top = Previous VALUE_EntityName . Bottom;
 		END;
 	END;
+}
 
   Highlight:
 	BEGIN

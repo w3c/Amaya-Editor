@@ -520,7 +520,7 @@ void DisplayImage (Document doc, Element el, char *imageName, char *mime_type)
 {
   ElementType         elType;
   int                 modified, i;
-  ThotBool            is_svg;
+  ThotBool            is_svg, is_mml;
   ThotBool            xmlDec, withDoctype, isXML;
   DocumentType        thotType;
   int                 parsingLevel;
@@ -536,13 +536,19 @@ void DisplayImage (Document doc, Element el, char *imageName, char *mime_type)
       /** for the moment, the above function won't identify SVG images.
 	  So, we do the job here.
 	  This block should at some time be integrated with the above one */
+      is_svg = FALSE;
+      is_mml = FALSE;
+
       if (TtaGetPictureType (el) == unknown_type)
 	{
 	  is_svg = FALSE;
+	  is_mml = FALSE;
 	  if (mime_type)
 	    {
 	      if (!strncmp (mime_type, "image/svg", 9))
 		is_svg = TRUE;
+	      if (!strncmp (mime_type, "text/mathml", 11))
+		is_mml = TRUE;
 	    }
 	  else
 	    {
@@ -550,25 +556,35 @@ void DisplayImage (Document doc, Element el, char *imageName, char *mime_type)
 	      for (i = strlen (imageName); i > 0 && imageName[i] != '.'; i--);
 	      if (imageName[i] == '.' && !strcmp (&imageName[i+1], "svg"))
 		is_svg = TRUE;
+	      if (imageName[i] == '.' && !strcmp (&imageName[i+1], "mml"))
+		is_mml = TRUE;
 	      else /* try sniffing */
 		{
 		  CheckDocHeader (imageName, &xmlDec, &withDoctype, &isXML,
 				  &parsingLevel, &charset, charsetname, &thotType);
 		  if (isXML && thotType == docSVG)
 		    is_svg = TRUE;
+		  if (isXML && thotType == docMath)
+		    is_mml = TRUE;
 		}
 	    }
 	}
-      else
-	is_svg = FALSE;
 
       if (is_svg)
 	{
 	  TtaSetPictureType (el, "image/svg");
 	  /* parse the SVG file and include the parsed tree at the
 	     position of the image element */
-	  ParseXmlSubTree (NULL, imageName, el, FALSE,
-				doc, TtaGetDefaultLanguage(), "SVG");
+	  ParseXmlSubTree (NULL, imageName, el, FALSE, doc, 
+			   TtaGetDefaultLanguage(), "SVG");
+	}
+      else if (is_mml)
+	{
+	  TtaSetPictureType (el, "image/mathml");
+	  /* parse the MathML file and include the parsed tree at the
+	     position of the image element */
+	  ParseXmlSubTree (NULL, imageName, el, FALSE, doc, 
+			   TtaGetDefaultLanguage(), "MathML");
 	}
       else
 	{
