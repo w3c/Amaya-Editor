@@ -1,17 +1,18 @@
-#override
+# personnal keyboard
 
 <Key>Delete:	TtcDeleteSelection()
 <Key>F2:	TtcParentElement()
 <Key>Return:	TtcCreateElement()
 <Key>Home:	TtcStartOfLine()
 <Key>End:	TtcEndOfLine()
-<Key>Up:	TtcPreviousLine()
-<Key>Down:	TtcNextLine()
 <Key>L6:	TtcCopyToClipboard()
 <Key>L8:	TtcPasteFromClipboard()
 <Key>F6:	TtcCopyToClipboard()
 <Key>F8:	TtcPasteFromClipboard()
 
+Ctrl <Key>Return:	CreateBreak("\212")
+Ctrl <Key>Space:	TtcInsertChar("\240")
+Ctrl <Key>-:	TtcChildElement()
 Ctrl <Key>a:	TtcStartOfLine()
 Ctrl <Key>b:	TtcPreviousElement()
 Ctrl <Key>c:	TtcCopySelection()
@@ -27,11 +28,7 @@ Ctrl <Key>x:	TtcCutSelection()
 Ctrl <Key>z:	TtcUndo()
 Ctrl <Key>D:    DeleteAnchor()
 
-Ctrl <Key>Return:	CreateBreak("\212")
-Ctrl <Key>Space:	TtcInsertChar("\240")
-
-Ctrl <Key>-:	TtcChildElement()
-
+# Alt commands
 Alt <Key>E:	CreateMath()
 Alt <Key>F:	CreateMFRAC()
 Alt <Key>M:	CreateMMULTISCRIPTS()
@@ -45,7 +42,6 @@ Alt <Key>W:	CreateMROW()
 Alt <Key>X:	CreateMSUBSUP()
 Alt <Key>Y:	CreateMUNDEROVER()
 
-Alt <Key>+:	ZoomIn()
 Alt <Key>-:	ZoomOut()
 Alt <Key>1:	CreateHeading1()
 Alt <Key>2:	CreateHeading2()
@@ -56,4 +52,5 @@ Alt <Key>6:	CreateHeading6()
 Alt <Key>F3:	TtcSearchText()
 Alt <Key>F4:	TtcCloseDocument()
 
+Shift Alt <Key>+:	ZoomIn()
 

@@ -13,6 +13,7 @@ Extensions 2.1:
     cannot be saved.
   - like other entries Quotation, Subscript, Superscript, and BDO can be set
     and unset from the menu "Character element".
+  - Button icons are redesigned and there is a new button Home now.
 
 * Thot API: Due to a conflict with the libjpeg definition the Thot type boolean
   has been renamed ThotBool.
@@ -21,6 +22,7 @@ Extensions 2.1:
   some attributes are taken into account when formatting mathematical
   expressions.
 
+* LbWWW: 
 
 Fixed bugs 2.1:
 ---------------
@@ -34,6 +36,12 @@ Fixed bugs 2.1:
   - The end of the style element was not detected when it included an unclosed
     CSS comment.
 
+* Amaya crashed when following a redirection to an invalid URL.
+
+* Amaya could crash after a copy/paste of a mathematical formula from one
+  page to another.
+
+* It was impossible to set font-size to 20 in the preference menu.
   
 =============================================================
 2.0

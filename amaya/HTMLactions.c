@@ -1552,13 +1552,17 @@ int                 elemtype;
    int                 length, firstSelectedChar, lastSelectedChar, i;
    ThotBool            remove, done, toset;
 
+   TtaGiveFirstSelectedElement (document, &selectedEl, &firstSelectedChar,
+				&lastSelectedChar);
+   if (selectedEl == NULL)
+     /* no selection available */
+     return;
+
    toset = TRUE;
    TtaClearViewSelections ();
    dispMode = TtaGetDisplayMode (document);
    if (dispMode == DisplayImmediately)
      TtaSetDisplayMode (document, DeferredDisplay);
-   TtaGiveFirstSelectedElement (document, &selectedEl, &firstSelectedChar,
-				&lastSelectedChar);
    /* get the first leaf in the first selected element */
    elem = selectedEl;
    do

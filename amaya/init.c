@@ -1373,6 +1373,7 @@ View            view;
    else
      ustrcpy (LastURLName, s);
    InNewWindow = FALSE;
+   CurrentDocument = doc;
    CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (STRING) 1);
 }
 
@@ -1968,7 +1969,7 @@ int                 method;
 STRING              tempfile;
 STRING              documentname;
 STRING              content_type;
-ThotBool		    history;
+ThotBool	    history;
 #endif
 {
   CSSInfoPtr          css;

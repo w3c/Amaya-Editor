@@ -613,7 +613,7 @@ int                 key;
    int                 value;
    int                 modtype;
    int                 command;
-   ThotBool            found, UPPERlower;
+   ThotBool            found;
 #  ifdef _WINDOWS
    ThotBool            endOfSearch = FALSE;
 #  endif /* _WINDOWS */
@@ -661,22 +661,8 @@ int                 key;
 	   /* search a second level entry */
 	   ptr = Automata_current;
 	   Automata_current = NULL;
-	   UPPERlower = FALSE;
-	   while (!found && (ptr != NULL || !UPPERlower))
+	   while (!found && ptr != NULL)
 	     {
-	       if (ptr == NULL && !UPPERlower)
-		 {
-		   /* try other upper/lower list */
-		   UPPERlower = TRUE;
-		   if (modtype == THOT_MOD_S_CTRL)
-		     modtype = THOT_MOD_CTRL;
-		   else if (modtype == THOT_MOD_CTRL)
-		     modtype = THOT_MOD_S_CTRL;
-		   else if (modtype == THOT_MOD_S_ALT)
-		     modtype = THOT_MOD_ALT;
-		   else if (modtype == THOT_MOD_ALT)
-		     modtype = THOT_MOD_S_ALT;
-		 }
 	       if (ptr != NULL)
 		 {
 		   if (ptr->K_EntryCode == key && modtype == ptr->K_Modifier)
@@ -706,36 +692,22 @@ int                 key;
 	   else
 	     ptr = Automata_normal;
 
-	   UPPERlower = FALSE;
-#          ifdef _WINDOWS
+#ifdef _WINDOWS
 	   endOfSearch = FALSE;
-	   while (!endOfSearch && (ptr != NULL || !UPPERlower))
-#          else  /* !_WINDOWS */
-           while (!found && (ptr != NULL || !UPPERlower))
-#            endif /* _WINDOWS */
+	   while (!endOfSearch && ptr != NULL)
+#else  /* !_WINDOWS */
+           while (!found && ptr != NULL)
+#endif /* _WINDOWS */
 	     {
-	       if (ptr == NULL && !UPPERlower)
-		 {
-		   /* try other upper/lower list */
-		   UPPERlower = TRUE;
-		   if (modtype == THOT_MOD_S_CTRL)
-		     ptr = Automata_ctrl;
-		   else if (modtype == THOT_MOD_CTRL)
-		     ptr = Automata_CTRL;
-		   else if (modtype == THOT_MOD_S_ALT)
-		     ptr = Automata_alt;
-		   else if (modtype == THOT_MOD_ALT)
-		     ptr = Automata_ALT;
-		 }
 	       if (ptr != NULL)
 		 {
 		   if (ptr->K_EntryCode == key)
 		     {
-#                        ifdef _WINDOWS
+#ifdef _WINDOWS
 		       endOfSearch = TRUE;
 		       if (specialKey)
 			 {
-#                            endif /* _WINDOWS */
+#endif /* _WINDOWS */
 			   /* On entre dans un automate */
 			   found = TRUE;
 			   Automata_current = ptr->K_Next;
@@ -745,9 +717,9 @@ int                 key;
 			       value = (UCHAR_T) ptr->K_Value;
 			       command = ptr->K_Command;
 			     }
-#                             ifdef _WINDOWS
+#ifdef _WINDOWS
 			 }
-#                        endif /* _WINDOWS */
+#endif /* _WINDOWS */
 		     }
 		   else
 		     ptr = ptr->K_Other;
