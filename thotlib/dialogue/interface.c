@@ -41,8 +41,8 @@
 #include "wininclude.h"
 #else /* _WINDOWS */
 #include <X11/Intrinsic.h>
-#include <locale.h>
 #endif /* _WINDOWS */
+#include <locale.h>
 
 #define MAX_ARGS 20
 
