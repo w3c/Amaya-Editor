@@ -4,6 +4,7 @@
 
 void register_biss_awt_API_stubs(void)
 {
+#ifndef _WINDOWS
       addNativeMethod("biss_awt_kernel_NativeLib_initStdColor",
 		      biss_awt_kernel_NativeLib_initStdColor);
       addNativeMethod("biss_awt_kernel_NativeLib_getNextEvent",
@@ -108,4 +109,5 @@ void register_biss_awt_API_stubs(void)
 		      biss_awt_kernel_NativeLib_setWindowTitle);
       addNativeMethod("biss_awt_kernel_NativeLib_showWindow",
 		      biss_awt_kernel_NativeLib_showWindow);
+#endif
 }
