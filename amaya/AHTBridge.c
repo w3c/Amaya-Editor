@@ -62,14 +62,9 @@ static const SockOps ReadBits = FD_READ | FD_ACCEPT | FD_CLOSE;
 static const SockOps WriteBits = FD_WRITE | FD_CONNECT;
 static const SockOps ExceptBits = FD_OOB;
 
-#ifdef DEBUG_PERSISTENT
-
 #define SOCK_TABLE_SIZE 67
 #define HASH(s) ((s) % SOCK_TABLE_SIZE)
 static XtInputId persSockets[SOCK_TABLE_SIZE];
-
-#endif /* DEBUG_PERSISTENT */
-
 
 /* Private functions */
 
@@ -103,45 +98,34 @@ XtInputId          *id;
    HTRequest          *rqp = NULL;
    AHTReqContext      *me;
    SockOps             ops;	
-#ifdef DEBUG_PERSISTENT
    int                 v;
-#endif /* DEBUG_PERSISTENT */
    int 		       socket = *s;
    HTEventCallback    *cbf;
 
    /* Libwww 5.0a does not take into account the ops parameter
       in the invocation of for this function call */
-   
+
    ops = FD_WRITE;
    cbf = (HTEventCallback *) __RetrieveCBF (socket, ops, &rqp);
-
+   
+   v = HASH (socket);
+   if (persSockets[v]) 
+     {
+       persSockets[v] = 0;
+       /* we're not sure what can be the value of rqp */
+       rqp = NULL;
+     }
+   
    /* if rqp is NULL, we are dealing with a persistent socket shutdown */
    if (!(cbf) || !(rqp) || rqp->priority == HT_PRIORITY_OFF) 
      {
-#ifdef DEBUG_LIBWWW
-       HTTrace ("Callback.... No callback found\n");
-#endif
-       /* remove the Xt input which caused this callback */
-#     ifdef WWW_XWINDOWS
-       XtRemoveInput (*id);
-#     endif
-       
-       /* if it's a persistent socket, remove it from the table */
-
        if (cbf)
-	 (*cbf) (socket, 0, FD_CLOSE);
-       
-#if DEBUG_PERSISTENT
-       v = HASH (socket);
-       if (persSockets[v]) 
-	 {
-	   persSockets[v] = 0;
-	   if (cbf)
-	     (*cbf) (socket, 0, FD_CLOSE);
-	 }
+	 (*cbf) (socket, 0, FD_READ);
 
-#endif /* DEBUG_PERSISTENT */
-
+   /* remove the Xt input which caused this callback */
+#  ifdef WWW_XWINDOWS
+       XtRemoveInput (*id);
+#  endif
        return (0);
      }
    
@@ -486,9 +470,7 @@ HTPriority          p;
   AHTReqContext      *me;      /* current request */
   int                 status;  /* libwww status associated with 
 				  the socket number */
-#ifdef DEBUG_PERSISTENT
   int                 v;
-#endif /* DEBUG_PERSISTENT */
 
 #ifdef DEBUG_LIBWWW
 	  fprintf(stderr, "HTEvent_register\n");
@@ -496,14 +478,19 @@ HTPriority          p;
   if (sock == INVSOC)
     return (0);
 
-
   /* get the request associated to the socket number */
+
+#ifndef _WINDOWS
+  v = HASH (sock);
+  if (persSockets[v] != 0)
+    {
+      XtRemoveInput (persSockets[v]);
+      persSockets[v] = 0;      
+    }
+#endif
 
   if (rqp == NULL) 
     {
-
-
-
 #ifndef _WINDOWS 
       if (ops == FD_CLOSE)
 	{
@@ -511,51 +498,22 @@ HTPriority          p;
 	  fprintf(stderr, "HTEvent_register: ***** RQP is NULL @@@@@\n");
 #endif /* DEBUG_LIBWWW */
 
-#if DEBUG_PERSISTENT
-	  v = HASH (sock);
-	  if (persSockets[v] != 0) 
-	    {
-	      XtRemoveInput (persSockets[v]);
-	    }
-
 	  persSockets[v] = XtAppAddInput (app_cont, 
 					  sock,
 					  (XtPointer) XtInputReadMask,
 					  (XtInputCallbackProc) AHTCallback_bridge,
 					  (XtPointer) XtInputReadMask);
-#endif /* DEBUG_PERSISTENT */
-
-	  XtAppAddInput (app_cont, 
-			 sock,
-			 (XtPointer) XtInputReadMask,
-			 (XtInputCallbackProc) AHTCallback_bridge,
-			 (XtPointer) XtInputReadMask);
 	} /* *fd_close */
-
-
 
 #endif /* !_WINDOWS */
     }
   else /* rqp */
     {
       me = HTRequest_context (rqp);
-
-#if DEBUG_PERSISTENT
-
-       
-#ifndef _WINDOWS
-      v = HASH (sock);
-      if (persSockets[v] != 0) {
-	XtRemoveInput (persSockets[v]);
-	persSockets[v] = 0;
-      }	  
-
-#endif /* DEBUG_PERSISTENT */
-
-#endif /* _WINDOWS */
-	  /* Erase any trailing events */
+      
+      /* Erase any trailing events */
       /*	  HTEventrg_unregister (sock, FD_ALL); */
-
+      
 #ifndef _WINDOWS
        if (ops & ReadBits)
 	 {
@@ -610,10 +568,7 @@ SockOps             ops;
    AHTReqContext      *me;
 #endif /* _WINDOWS */
 
-#ifdef DEBUG_PERSISTENT
    int                 v;
-#endif /* DEBUG_PERSISTENT */
-
 
    /* Libwww 5.0a does not take into account the third parameter
       **  for this function call */
@@ -630,15 +585,12 @@ SockOps             ops;
    fprintf (stderr, "AHTEventUnregister: cbf = %d, sock = %d, rqp = %d, ops= %x", cbf, sock, rqp, ops);
 #endif /* DEBUG_LIBWWW */
 
-#if DEBUG_PERSISTENT
-
    v = HASH (sock);
-   if (persSockets[v] != 0) {
-     XtRemoveInput (persSockets[v]);
-     persSockets[v] = 0;
-   }
-
-#endif /* DEBUG_PERSISTENT */
+   if (persSockets[v] != 0) 
+     {
+       XtRemoveInput (persSockets[v]);
+       persSockets[v] = 0;
+     }
 
    if (cbf)
      {

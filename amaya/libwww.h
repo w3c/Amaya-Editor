@@ -23,6 +23,10 @@
 #include "HTBInit.h"
 #include "WWWHTTP.h"		/* HTTP access module */
 #include "HTProxy.h"
+#include "HTHost.h"
+
+/* a definition missing in HTHost.h ! */
+extern int HTHost_catchClose (SOCKET soc, HTRequest * request, SockOps ops);
 
 typedef struct _AHTDocIdStatus
   {

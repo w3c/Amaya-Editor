@@ -306,6 +306,16 @@ AHTReqContext      *me;
 	  AHTFWriter_FREE (me->request->output_stream);
 	  
 	HTRequest_delete (me->request);
+
+	if (me->output)
+	  {	
+#ifdef DEBUG_LIBWWW       
+	    fprintf (stderr, "AHTReqContext_delete: URL is  %s, closing "
+		     "FILE %p\n", me->urlName, me->output); 
+#endif
+	    fclose (me->output);
+	    me->output = NULL;
+	  }
 	  
 	if (me->error_stream != (char *) NULL)
 	  HT_FREE (me->error_stream);
@@ -448,12 +458,10 @@ static void         Thread_deleteAll ()
   AHTOpen_file
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 AHTOpen_file (HTRequest * request, void * param, int mode)
+int                 AHTOpen_file (HTRequest * request)
 #else
-int                 AHTOpen_file (request, param, mode)
+int                 AHTOpen_file (request)
 HTRequest           *request;
-void                *param;
-int                  mode;
 
 #endif /* __STDC__ */
 {
@@ -462,8 +470,30 @@ int                  mode;
   me = HTRequest_context (request);
 
 #ifdef DEBUG_LIBWWW
-  fprintf(stderr, "AHTOpen_file\n");
+  fprintf(stderr, "AHTOpen_file: start\n");
 #endif /* DEBUG_LIBWWW */
+
+  if (me->reqStatus == HT_ABORT) 
+    {
+#ifdef DEBUG_LIBWWW
+      fprintf(stderr, "AHTOpen_file: caught an abort request, skipping it\n");
+#endif /* DEBUG_LIBWWW */
+
+      return HT_OK;
+    }
+
+  if (HTRequest_outputStream (me->request)) 
+    {
+
+#ifdef DEBUG_LIBWWW
+      fprintf(stderr, "AHTOpen_file: output stream already existed for url %s\n", me->urlName);
+#endif /* DEBUG_LIBWWW */      
+      return HT_OK;
+    }
+
+#ifdef DEBUG_LIBWWW
+      fprintf(stderr, "AHTOpen_file: opening output stream for url %s\n", me->urlName);
+#endif /* DEBUG_LIBWWW */      
 
   if (!(me->output) && 
       (me->output != stdout) && 
@@ -476,6 +506,9 @@ int                  mode;
 #endif /* !_WINDOWS */
 
       me->outputfile[0] = '\0';	/* file could not be opened */
+#ifdef DEBUG_LIBWWW
+      fprintf(stderr, "AHTOpen_file: couldn't open output stream for url %s\n", me->urlName);
+#endif
       TtaSetStatus (me->docid, 1, 
 		    TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE),
 		    me->outputfile);
@@ -577,12 +610,12 @@ int                 status;
 	/* Start request with new credentials */
 
 	if (HTRequest_outputStream (me->request) != NULL) {
+	  AHTFWriter_FREE (request->output_stream);
+	  if (me->output != stdout) { /* Are we writing to a file? */
 #ifdef DEBUG_LIBWWW
 	  fprintf (stderr, "redirection_handler: New URL is  %s, closing "
 		             "FILE %p\n", me->urlName, me->output); 
 #endif 
-	  AHTFWriter_FREE (request->output_stream);
-	  if (me->output != stdout) { /* Are we writing to a file? */
 	    fclose (me->output);
 	    me->output = NULL;
 	  }
@@ -683,11 +716,21 @@ int                 status;
 	       if (me->error_stream)
 		 {	/* if the stream is non-empty */
 		   fprintf (me->output, me->error_stream);/* output the errors */
-		   error_flag = 0;
-		   
+		   /* Clear the error context, so that we can deal with
+		      this answer as if it were a normal reply */
+		    HTError_deleteAll( HTRequest_error (request));
+		    HTRequest_setError (request, NULL);
+		    error_flag = 0;
 		 }
 	     }		        /* if error_stack */
-	 }			/* if != HT_ABORT */
+	 }
+
+       /* if != HT_ABORT */
+       
+#ifdef DEBUG_LIBWWW       
+       fprintf (stderr, "terminate_handler: URL is  %s, closing "
+		"FILE %p\n", me->urlName, me->output); 
+#endif
        fclose (me->output);
        me->output = NULL;
      }
@@ -953,7 +996,8 @@ static void         AHTNetInit (void)
 
   HTNet_addBefore (HTCredentialsFilter, "http://*", NULL, 6);
   HTNet_addBefore (HTProxyFilter, NULL, NULL, 10);
-  HTNet_addBefore (AHTOpen_file, NULL, NULL, 11);
+  /*  HTNet_addBefore (AHTOpen_file, NULL, NULL, 11); */
+  HTHost_setActivateRequestCallback (AHTOpen_file);
 
 /*      register AFTER filters
 **      The AFTER filters handle error messages, logging, redirection,
@@ -1486,6 +1530,10 @@ boolean       error_html;
    {
      /* in case of error, free all allocated memory and exit */
      if (me->output) {
+#ifdef DEBUG_LIBWWW      
+       fprintf (stderr, "tGetObjectWWW:: URL is  %s, closing "
+		"FILE %p\n", me->urlName, me->output); 
+#endif
        fclose (me->output);
        me->output = NULL;
      }
@@ -1515,9 +1563,15 @@ boolean       error_html;
 
       /* in case of error, close any open files, free all allocated
 	 memory and exit */
-      if (me->output && me->output != stdout)
-	 fclose (me->output);
-
+     if (me->output && me->output != stdout) {
+#ifdef DEBUG_LIBWWW      
+       fprintf (stderr, "GetObjectWWW: URL is  %s, closing "
+		"FILE %p\n", me->urlName, me->output); 
+#endif
+       fclose (me->output);
+       me->output = NULL;
+     }
+     
       if (me->reqStatus == HT_ERR) {
 	status = HT_ERROR;
 	/* show an error message on the status bar */
@@ -1810,11 +1864,11 @@ int                 docid;
 
    HTNet              *reqNet;
    HTHost             *reqHost;
-   int                *reqSock;
-
+   HTChannel          *reqChannel;
+   int                 reqSock;
+   
    if (Amaya)
      {
-	cur = Amaya->reqlist;
 	docid_status = (AHTDocId_Status *) GetDocIdStatus (docid,
 						       Amaya->docid_status);
 	/* verify if there are any requests at all associated with docid */
@@ -1824,6 +1878,55 @@ int                 docid;
 
 	open_requests = docid_status->counter;
 
+	/* First, kill all pending requests */
+	/* We first inhibit the activation of pending requests */
+	HTHost_disable_PendingReqLaunch ();
+	cur = Amaya->reqlist;
+	while ((me = (AHTReqContext *) HTList_nextObject (cur))) 
+	  {
+	     if (me->docid == docid && me->reqStatus == HT_NEW)
+	       {
+		 reqNet = HTRequest_net (me->request);
+		 reqSock = HTNet_socket (reqNet);
+		 reqChannel = HTChannel_find(reqSock);
+		 reqHost = HTChannel_host (reqChannel);
+
+
+		   HTRequest_kill (me->request); 
+		   /* HTRequest_setNet (me->request, NULL);
+		   */
+
+		 if ((me->mode & AMAYA_ASYNC) ||
+		     (me->mode & AMAYA_IASYNC))
+		   {
+		     AHTReqContext_delete (me);
+		   }
+		 
+		 if (HTHost_isIdle (reqHost) ) {
+#ifdef DEBUG_LIBWWW
+		   fprintf (stderr, "Host is idle, killing socket %d\n",
+			    reqSock);;
+#endif /* DEBUG_LIBWWW */
+
+		   HTEvent_unregister (reqSock, FD_ALL);
+		   HTEvent_register(reqSock, NULL, (SockOps) FD_READ,
+				    HTHost_catchClose,  HT_PRIORITY_MAX);
+		   close (reqSock);
+		   /*	
+   		   if (reqChannel && reqHost)
+		   HTHost_clearChannel(reqHost, HT_OK);
+		   HTHost_catchClose (reqSock, NULL, FD_CLOSE);
+		   */
+		 }
+
+		 cur = Amaya->reqlist;
+		 open_requests--;		   
+	       }
+	  }
+	/* enable the activation of pending requests */
+	HTHost_enable_PendingReqLaunch ();
+
+	cur = Amaya->reqlist;
 	while ((me = (AHTReqContext *) HTList_nextObject (cur)))
 	  {
 	     if (me->docid == docid)
@@ -1842,16 +1945,19 @@ int                 docid;
 			   case HT_WAITING:
 			   default:
 			      me->reqStatus = HT_ABORT;
+
 #                 ifndef _WINDOWS
 			      RequestKillAllXtevents (me);
 #                 endif _WINDOWS
-			      
+ 
 			      reqNet = HTRequest_net (me->request);
 			      reqSock = HTNet_socket (reqNet);
-			      reqHost = HTNet_host (reqNet);
+			      reqChannel = HTChannel_find(reqSock);
+			      reqHost = HTChannel_host (reqChannel);
 
-                              HTRequest_kill (me->request);
-			      HTRequest_setNet (me->request, NULL);
+                              HTRequest_kill (me->request); 
+			      /*			      HTRequest_setNet (me->request, NULL); */
+
 			      if ((me->mode & AMAYA_ASYNC) ||
 				  (me->mode & AMAYA_IASYNC))
 				{
@@ -1859,13 +1965,36 @@ int                 docid;
 				     
 				}
 
+			      /* if there are no more requests, then close
+				 the connection */
+
 			      if (HTHost_isIdle (reqHost) ) {
-				 HTHost_catchClose (reqSock, NULL, FD_READ);
+#ifdef                        DEBUG_LIBWWW
+				fprintf (stderr, "Host is idle, "
+					 "killing socket %d\n",
+					 reqSock);
+#endif                        /* DEBUG_LIBWWW */
+                                HTEvent_unregister (reqSock, FD_ALL);
+				HTEvent_register(reqSock,
+						 NULL,
+						 (SockOps) FD_READ,
+						 HTHost_catchClose,
+						 HT_PRIORITY_MAX);
+				close (reqSock);				
+				HTHost_clearChannel (reqHost, HT_ERROR);
+				/*
+				if (reqChannel && reqHost)
+				  HTHost_clearChannel(reqHost, HT_OK);
+				HTHost_catchClose (reqSock, NULL, FD_CLOSE);
+				*/
+#ifdef                          DEBUG_LIBWWW				
+				fprintf (stderr, "After killing, "
+					 "HTHost_isIdle gives %d\n",
+					 HTHost_isIdle (reqHost));
+#endif                          /* DEBUG_LIBWWW */
 			      }
 				     
-				  
 			      cur = Amaya->reqlist;
-			      
 			      open_requests--;
 
 			      break;
@@ -1874,7 +2003,11 @@ int                 docid;
 	       }		/* if me docid */
 	  }			/* while */
      }				/* if amaya open requests */
-}				/* StopRequest */
+
+   TtaSetStatus (docid, 1, 
+		 "OK, I've stopped this file", NULL);
+   
+} /* StopRequest */
 
 /*
   end of Module query.c

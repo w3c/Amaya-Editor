@@ -9,9 +9,7 @@
 extern AHTDocId_Status *GetDocIdStatus ( int docid,
                                          HTList * documents );
 extern boolean AHTReqContext_delete ( AHTReqContext * me );
-extern int AHTOpen_file ( HTRequest * request,
-                          void * param,
-                          int mode );
+extern int AHTOpen_file ( HTRequest * request );
 extern void QueryInit ( void );
 extern void QueryClose ( void );
 extern int GetObjectWWW ( int docid,
@@ -48,9 +46,7 @@ extern void StopRequest ( int docid );
 extern AHTDocId_Status *GetDocIdStatus (/* int docid,
                                            HTList * documents */);
 extern boolean AHTReqContext_delete (/* AHTReqContext * me */);
-extern int AHTOpen_file (/* HTRequest * request,
-                            void * param,
-                            int mode */);
+extern int AHTOpen_file (/* HTRequest * request*/);
 extern void QueryInit (/* void */);
 extern void QueryClose (/* void */);
 extern int GetObjectWWW (/* int docid,
