@@ -214,6 +214,7 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
   PtrPSchema          pSP, pSPattr;
   PtrHandlePSchema    pHd;
   int                 l, valNum;
+  PtrAttributePres    prevAttrBlock, attrBlock;
 
   pRule = NULL;
   *pSPR = NULL;
@@ -255,6 +256,7 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
 	pRule = pRuleView1;
       *pSPR = pSchP;
       *pSSR = pSchS;
+      prevAttrBlock = NULL;
 
       /* fetch all rules that apply to any element type in all extensions of
 	 the document's P schema */
@@ -278,7 +280,8 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
 		{
 		  SimpleSearchRulepEl (&pRuleView1, pEl, view, typeRule,
 				       typeFunc, &pR, pDoc);
-		  if (pR && RuleHasHigherPriority (pR, pSP, pRule, *pSPR))
+		  if (pR && RuleHasHigherPriority (pR, pSP, NULL,
+						   pRule, *pSPR, NULL))
 		    {
 		      pRule = pR;
 		      *pSPR = pSP;
@@ -311,6 +314,7 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
 		pR = pSP->PsElemPRule->ElemPres[index - 1];
 	      SimpleSearchRulepEl (&pRuleView1, pEl, view, typeRule, typeFunc,
 				   &pR, pDoc);
+	      prevAttrBlock = NULL;
 	      if (!pR && view > 1)
 		/* no rule for the view of interest, take the rule associated
 		   with the element type for the main view, unless the default
@@ -323,7 +327,8 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
 		    pRule = pRuleView1;
 		}
 	      else
-		if (pR && RuleHasHigherPriority (pR, pSP, pRule, *pSPR))
+		if (pR && RuleHasHigherPriority (pR, pSP, NULL,
+						 pRule, *pSPR, NULL))
 		    {
 		      pRule = pR;
 		      *pSPR = pSP;
@@ -337,8 +342,8 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
 	      if (presNum == 0)
 		{
 		  if (pSchP->PsNInheritedAttrs->Num[pEl->ElTypeNumber - 1])
+		    /* this element inherits some attributes */
 		    {
-		      /* this element type inherit from some attributes */
 		      if ((inheritTable = pSchP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1]) == NULL)
 			{
 			  /* inheritance table does not exist. Create it */
@@ -354,48 +359,65 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
 			    pFirstAncest = pEl;
 			  else
 			    pFirstAncest = pEl->ElParent;
-			  if ((pA = GetTypedAttrAncestor (pFirstAncest, l,
-							  pEl->ElStructSchema,
-							  &pElAttr)) != NULL)
-			  /* pEl inherits from attribute l and an ancestor */
-			  /* has this attribute */
-			  {
-			    /* process all values of the attribute, in case
-			       of a text attribute with multiple values */
-			    valNum = 1;
-			    do
+			  /* look for all ancestors having this attribute */
+			  do
+			    {
+			    if ((pA = GetTypedAttrAncestor (pFirstAncest, l,
+							   pEl->ElStructSchema,
+							   &pElAttr)) != NULL)
+			      /* pEl inherits from attribute l and an */
+			      /* ancestor has this attribute */
 			      {
-				pR = AttrPresRule (pA, pEl, TRUE, NULL, pSP,
-						   &valNum);
-				/* check all rules for this value */
-				while (pR)
+				pFirstAncest = pElAttr->ElParent;
+				/* process all values of the attribute, in case
+			           of a text attribute with multiple values */
+				valNum = 1;
+				do
 				  {
-				    if (pR->PrType == typeRule &&
-					(typeRule != PtFunction ||
-					 typeFunc == FnAny ||
-					 pR->PrPresFunction == typeFunc) &&
-					pR->PrViewNum == view)
-				      if (pR->PrCond == NULL ||
-					  CondPresentation (pR->PrCond,pEl, pA,
-							    pElAttr, view,
+				    /* first rule for this value of the attr */
+				    pR = AttrPresRule (pA, pEl, TRUE, NULL,
+						    pSP, &valNum, &attrBlock);
+				    /* check all rules for this value */
+				    while (pR)
+				      {
+				      if (pR->PrType == typeRule &&
+					  (typeRule != PtFunction ||
+					   typeFunc == FnAny ||
+					   pR->PrPresFunction == typeFunc) &&
+					  pR->PrViewNum == view)
+					if (pR->PrCond == NULL ||
+					    CondPresentation (pR->PrCond,pEl,
+							    pA, pElAttr, view,
 							    pA->AeAttrSSchema,
 							    pDoc))
-					if (RuleHasHigherPriority (pR, pSP,
-								 pRule, *pSPR))
-					  {
+					  if (RuleHasHigherPriority (pR, pSP,
+					       attrBlock, pRule, *pSPR, prevAttrBlock))
+					    {
 					    pRule = pR;
 					    *pSPR = pSP;
 					    *pAttr = pA;
 					    *pSSR = pA->AeAttrSSchema;
-					  }
-				    if (pR->PrType <= typeRule)
-				      pR = pR->PrNextPRule;
-				    else
-				      pR = NULL;
+					    prevAttrBlock = attrBlock;
+					    }
+				      if (pR->PrType <= typeRule)
+					pR = pR->PrNextPRule;
+				      else
+					pR = NULL;
+				      }
 				  }
+				while (valNum > 0);
+			        /* look for more ancestors having this
+				   attribute only if it's a P schema extension
+				   and if the attribute is id or class */
+				if (view != 1 || !pHd ||
+				    !(AttrHasException (ExcCssClass, pA->AeAttrNum,
+							pA->AeAttrSSchema) ||
+				      AttrHasException (ExcCssId, pA->AeAttrNum,
+							pA->AeAttrSSchema)))
+				  pA = NULL;
 			      }
-			    while (valNum > 0);
-			  }
+			    }
+			  while (pA);
 			  }
 		    }
 		}
@@ -404,24 +426,24 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
 		 element */
 	      if (attr)
 		{
-		  /* check all attributes of element */
-		  pA = pEl->ElFirstAttr; /* first attribute of element */
-		  while (pA != NULL)
-		    {
-		      if (pHd == NULL)
-			/* main presentation schema. Take the schema associated
-			   with the attribute's S schema */
-			pSPattr = PresentationSchema (pA->AeAttrSSchema, pDoc);
-		      else 
-			pSPattr = pSP;
+		/* check all attributes of element */
+		pA = pEl->ElFirstAttr; /* first attribute of element */
+		while (pA != NULL)
+		  {
+		    if (pHd == NULL)
+		      /* main presentation schema. Take the schema associated
+			 with the attribute's S schema */
+		      pSPattr = PresentationSchema (pA->AeAttrSSchema, pDoc);
+		    else 
+		      pSPattr = pSP;
 		      /* process all values of the attribute, in case of a
-			 text attribute with multiple values */
+		      text attribute with multiple values */
 		      valNum = 1;
 		      do
-			{
+		        {
 			  pR = AttrPresRule (pA, pEl, FALSE, NULL, pSPattr,
-					     &valNum);
-			  /* look at all rules for this value */
+					     &valNum, &attrBlock);
+		          /* look at all rules for this value */
 			  while (pR != NULL)
 			    {
 			      if (pR->PrType == typeRule &&
@@ -433,12 +455,13 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
 				    CondPresentation (pR->PrCond, pEl, pA,
 					   pEl, view, pA->AeAttrSSchema, pDoc))
 				  if (RuleHasHigherPriority (pR, pSPattr,
-							     pRule, *pSPR))
+				      attrBlock, pRule, *pSPR, prevAttrBlock))
 				    {
 				      pRule = pR;
 				      *pAttr = pA;
 				      *pSPR = pSPattr;
 				      *pSSR = pA->AeAttrSSchema;
+				      prevAttrBlock = attrBlock;
 				    }
 			      if (pR->PrType <= typeRule)
 				/* regle suivante */
@@ -1442,6 +1465,7 @@ void ChangeFirstLast (PtrElement pEl, PtrDocument pDoc, ThotBool first,
   PtrElement          pElAttr, pFirstAncest;
   int                 l, valNum;
   InheritAttrTable   *inheritTable;
+  PtrAttributePres    attrBlock;
 
   if (pEl != NULL)
     {
@@ -1487,7 +1511,7 @@ void ChangeFirstLast (PtrElement pEl, PtrDocument pDoc, ThotBool first,
 		      do
 			{
 			  pRPres = AttrPresRule (pAttr, pEl, TRUE, NULL,
-						 pSchP, &valNum);
+						 pSchP, &valNum, &attrBlock);
 			  /* traite les regles de creation associees a
 			     l'attribut*/
 			  ApplFunctionPresRules (pRPres, pSchP, pAttr, pDoc,
@@ -1513,7 +1537,7 @@ void ChangeFirstLast (PtrElement pEl, PtrDocument pDoc, ThotBool first,
 	      do
 		{
 		  pRPres = AttrPresRule (pAttr, pEl, FALSE, NULL, pSchP,
-					 &valNum);
+					 &valNum, &attrBlock);
 		  /* traite les regles de creation associees a l'attribut */
 		  ApplFunctionPresRules (pRPres, pSchP, pAttr, pDoc, pEl,
 					 change, first);
@@ -3477,6 +3501,7 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
   PtrHandlePSchema    pHd;
   TypeUnit            unit;
   int                 view, viewSch, val, valNum;
+  PtrAttributePres    attrBlock;
   ThotBool            appl, stop, sameType, found;
   ThotBool            existingView;
   ThotBool            createBox, complete;
@@ -3497,7 +3522,8 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
     do
       {
       /* pR: premiere regle correspondant a cette valeur de l'attribut */
-      pR = AttrPresRule (pAttr, pEl, inherit, pAttrComp, pSchP, &valNum);
+      pR = AttrPresRule (pAttr, pEl, inherit, pAttrComp, pSchP, &valNum,
+			 &attrBlock);
       firstOfType = pR;
       /* traite toutes les regles associees a cette valeur d'attribut dans */
       /* ce schema de presentation */

@@ -50,6 +50,7 @@
 #include "presvariables_f.h"
 #include "references_f.h"
 #include "schemas_f.h"
+#include "structlist_f.h"
 #include "structmodif_f.h"
 #include "tree_f.h"
 
@@ -2032,10 +2033,13 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
    as a list of space separated values. Should be 1 for the first call.
    valueNum is updated to indicate the rank of the next value to be
    processed. 0 indicates that there is no more values.
+   When returning, attrBlock contains a pointer to the block of presentation
+   rules to which the returned rule belongs.
   ----------------------------------------------------------------------*/
 PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
 		       ThotBool inheritRule, PtrAttribute pAttrComp,
-		       PtrPSchema pSchP, int *valueNum)
+		       PtrPSchema pSchP, int *valueNum,
+		       PtrAttributePres *attrBlock)
 {
   PtrPRule            pRule;
   PtrAttribute        pAt2;
@@ -2049,6 +2053,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
   ThotBool            found, ok;
 
   pRule = NULL;
+  *attrBlock = NULL;
 
   if (pSchP == NULL)
     {
@@ -2216,6 +2221,8 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
   /* selon le type de l'attribut on cherche le debut de la chaine  */
   /* de regles de presentation */
   if (pAPRule)
+    {
+    *attrBlock = pAPRule;
     switch (pAttr->AeAttrType)
       {
       case AtNumAttr:
@@ -2311,6 +2318,7 @@ PtrPRule AttrPresRule (PtrAttribute pAttr, PtrElement pEl,
 	pRule = NULL;
 	break;
       }
+    }
   return pRule;
 }
 
@@ -2484,6 +2492,7 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
    int                 l, valNum;
    InheritAttrTable   *inheritTable;
    PtrHandlePSchema    pHd;
+   PtrAttributePres    attrBlock;
 
    pAbbCreated = NULL;
    if (pAb != NULL)
@@ -2609,7 +2618,7 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 				 do
 				   {
 				     pRule = AttrPresRule (pAttr, pEl, TRUE,
-							 NULL, pSchP, &valNum);
+					     NULL, pSchP, &valNum, &attrBlock);
 				     if (pRule && !pRule->PrDuplicate)
 				        ApplCrPresRule (pAttr->AeAttrSSchema,
 						   pSchP, &pAbbCreated, pAttr,
@@ -2660,7 +2669,7 @@ PtrAbstractBox TruncateOrCompleteAbsBox (PtrAbstractBox pAb, ThotBool truncate,
 		       do
 			 {
 			   pRule = AttrPresRule (pAttr, pEl, FALSE, NULL,
-						 pSchP, &valNum);
+						 pSchP, &valNum, &attrBlock);
 			   if (pRule && !pRule->PrDuplicate)
 			      ApplCrPresRule (pAttr->AeAttrSSchema, pSchP,
 				  &pAbbCreated, pAttr, pDoc, pAb, head, pRule);
@@ -2999,6 +3008,7 @@ static void ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
   ThotBool            stop, useView1;
   PtrPSchema          pSchP;
   PtrHandlePSchema    pHd;
+  PtrAttributePres    attrBlock;
   TypeUnit            unit;
 
   /* on cherchera d'abord dans le schema de presentation principal de */
@@ -3016,7 +3026,8 @@ static void ApplyVisibRuleAttr (PtrElement pEl, PtrAttribute pAttr,
 	{
 	  /* cherche la premiere regle de presentation pour cette valeur */
 	  /* de l'attribut, dans ce schema de presentation */
-	  pR = AttrPresRule (pAttr, pEl, inheritRule, NULL, pSchP, &valNum);
+	  pR = AttrPresRule (pAttr, pEl, inheritRule, NULL, pSchP, &valNum,
+			     &attrBlock);
 	  pRuleView1 = NULL;
 	  if (pR != NULL)
 	    if (pR->PrType == PtVisibility)
@@ -3352,12 +3363,17 @@ static void ComputeVisib (PtrElement pEl, PtrDocument pDoc,
   If pPS1 or pPS2 is NULL, it means that the corresponding rule has no
   presentation schema, i.e. it is a specific rule attached to an element
   in a document.
+  attrBlock1 and attrBlock2 point at the block of presentation rules to which
+  the rules belong, if they are rules for attributes. NULL otherwise.
   ----------------------------------------------------------------------*/
 ThotBool RuleHasHigherPriority (PtrPRule pRule1, PtrPSchema pPS1,
-				PtrPRule pRule2, PtrPSchema pPS2)
+				PtrAttributePres attrBlock1,
+				PtrPRule pRule2, PtrPSchema pPS2,
+				PtrAttributePres attrBlock2)
 {
   ThotBool          higher;
   StyleSheetOrigin  Origin1, Origin2;
+  PtrAttributePres  pBlock;
 
   higher = TRUE;
   if (pRule2)
@@ -3394,8 +3410,49 @@ ThotBool RuleHasHigherPriority (PtrPRule pRule1, PtrPSchema pPS1,
 	    higher = pRule1->PrImportant;
 	  else
 	    /* no rule is important, or both are */
-	    /* take selectivity into account */
-	    higher = (pRule1->PrSpecificity >= pRule2->PrSpecificity);
+	    {
+	      /* take selectivity into account */
+	      if (pRule1->PrSpecificity != pRule2->PrSpecificity)
+		higher = (pRule1->PrSpecificity > pRule2->PrSpecificity);
+	      else
+		/* both rules have the same specificity. Take the order into
+		   account */
+		{
+		  if (pPS1 != pPS2)
+		    /* they come from different P schemas, the rule from the
+		       latest P schema wins */
+		    higher = TRUE;
+		  else
+		    /* both rules come from the same P schema */
+		    {
+		      if (pRule1->PrCSSURL == pRule2->PrCSSURL)
+			/* they come from the same CSS file, compare the line
+			   numbers */
+			higher = (pRule1->PrCSSLine >= pRule2->PrCSSLine);
+		      else
+			/* at least one rule comes from an imported CSS file */
+			{
+			  /* priority is given by the order of the attribute
+			     blocks */
+			  if (attrBlock1 && attrBlock2)
+			    {
+			      pBlock = attrBlock1;
+			      while (pBlock)
+				{
+				  if (pBlock == attrBlock2)
+				    /* the 2nd rule has a higher priority */
+				    {
+				      higher = FALSE;
+				      pBlock = NULL;
+				    }
+				  else
+				    pBlock = pBlock->ApNextAttrPres;
+				}
+			    }
+			} 
+		    }
+		}
+	    }
 	}
     }
   return higher;
@@ -3422,6 +3479,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
   PtrPRule           selectedRule[PtPictInfo];
   PtrPSchema         schemaOfSelectedRule[PtPictInfo];
   PtrAttribute       attrOfSelectedRule[PtPictInfo];
+  PtrAttributePres   attrBlockOfSelectedRule[PtPictInfo];
   int                i, view, l, valNum;
   PtrPRule           pRuleView, pRule, ruleToApply, pR;
   PtrHandlePSchema   pHd;
@@ -3429,6 +3487,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
   PtrAttribute       pAttr;
   PtrElement         pElAttr, pFirstAncest;
   PtrSSchema	     pSSattr;
+  PtrAttributePres   attrBlock;
   InheritAttrTable   *inheritTable;
   ThotBool           stop, apply;
 
@@ -3438,6 +3497,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
       selectedRule[i] = NULL;
       schemaOfSelectedRule[i] = NULL;
       attrOfSelectedRule[i] = NULL;
+      attrBlockOfSelectedRule[i] = NULL;
     }
 
   /* get all rules associated with the element type in the main presentation */
@@ -3477,6 +3537,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 		      selectedRule[pRuleView->PrType] = pRuleView;
 		      schemaOfSelectedRule[pRuleView->PrType] = pSchP;      
 		      attrOfSelectedRule[pRuleView->PrType] = NULL;
+		      attrBlockOfSelectedRule[pRuleView->PrType] = NULL;
 		    }
 		  else if (fileDescriptor)
 		    DisplayPRule (pRuleView, fileDescriptor, pEl, pSchP);
@@ -3522,13 +3583,15 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 		      (pRule->PrType == PtFunction &&
 		       pRule->PrPresFunction == FnBackgroundPicture))
 		    {
-		      if (RuleHasHigherPriority (pRule, pSchPres,
-					  selectedRule[pRule->PrType],
-					  schemaOfSelectedRule[pRule->PrType]))
+		      if (RuleHasHigherPriority (pRule, pSchPres, NULL,
+				       selectedRule[pRule->PrType],
+				       schemaOfSelectedRule[pRule->PrType],
+				       attrBlockOfSelectedRule[pRule->PrType]))
 			{
 			  selectedRule[pRule->PrType] = pRule;
 			  schemaOfSelectedRule[pRule->PrType] = pSchPres;
 			  attrOfSelectedRule[pRule->PrType] = NULL;
+			  attrBlockOfSelectedRule[pRule->PrType] = NULL;
 			}
 		    }
 		  else if (fileDescriptor)
@@ -3579,13 +3642,15 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 		      (pRule->PrType == PtFunction &&
 		       pRule->PrPresFunction == FnBackgroundPicture))
 		    {
-		      if (RuleHasHigherPriority (pRule, pSchPres,
-						 selectedRule[pRule->PrType],
-						 schemaOfSelectedRule[pRule->PrType]))
+		      if (RuleHasHigherPriority (pRule, pSchPres, NULL,
+				   selectedRule[pRule->PrType],
+				   schemaOfSelectedRule[pRule->PrType],
+				   attrBlockOfSelectedRule[pRule->PrType]))
 			{
 			  selectedRule[pRule->PrType] = pRule;
 			  schemaOfSelectedRule[pRule->PrType] = pSchPres;      
 			  attrOfSelectedRule[pRule->PrType] = NULL;
+			  attrBlockOfSelectedRule[pRule->PrType] = NULL;
 			}
 		    }
 		  else if (fileDescriptor)
@@ -3610,6 +3675,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 	    {
 	      inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber - 1];
 	      if (!inheritTable)
+		/* inheritance table does not exist. Create it */
 		{
 		  CreateInheritedAttrTable (pEl, pDoc);
 		  inheritTable = pSP->PsInheritedAttr->ElInherit[pEl->ElTypeNumber-1];
@@ -3618,19 +3684,24 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 		if ((*inheritTable)[l - 1])
 		  /* pEl inherits attribute l */
 		  {
-		    /* is this attribute present on an ancestor? */
-		    if ((*inheritTable)[l - 1] == 'S')
-		      pFirstAncest = pEl;
-		    else
-		      pFirstAncest = pEl->ElParent;
+		  /* is this attribute present on an ancestor? */
+		  if ((*inheritTable)[l - 1] == 'S')
+		    pFirstAncest = pEl;
+		  else
+		    pFirstAncest = pEl->ElParent;
+		  /* look for all ancestors having this attribute */
+		  do
+		    {
 		    if ((pAttr = GetTypedAttrAncestor (pFirstAncest, l,
 						       pEl->ElStructSchema,
 						       &pElAttr)) != NULL)
 		      {
+		      pFirstAncest = pElAttr->ElParent;
 		      apply = TRUE;
 		      /* exceptions for attributes related to tables */
 		      if (ThotLocalActions[T_ruleattr] != NULL)
-			(*ThotLocalActions[T_ruleattr]) (pEl, pAttr, pDoc, &apply);
+			(*ThotLocalActions[T_ruleattr]) (pEl, pAttr, pDoc,
+							 &apply);
 		      if (apply)
 		        {
 			view = AppliedView (pEl, pAttr, pDoc, viewNb);
@@ -3651,7 +3722,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 			  {
 			    /* first rule for this value of the attribute */
 			    pR = AttrPresRule (pAttr, pEl, TRUE, NULL,
-					       pSchPres, &valNum);
+					       pSchPres, &valNum, &attrBlock);
 			    /* look at all rules associated with this value */
 			    while (pR != NULL)
 			      {
@@ -3679,13 +3750,15 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 				      /* immediately */
 				      {
 					if (RuleHasHigherPriority (ruleToApply,
-					      pSchPres,
-					      selectedRule[ruleToApply->PrType],
-					      schemaOfSelectedRule[ruleToApply->PrType]))
+					     pSchPres, attrBlock,
+					     selectedRule[ruleToApply->PrType],
+					     schemaOfSelectedRule[ruleToApply->PrType],
+					     attrBlockOfSelectedRule[ruleToApply->PrType]))
 					  {
 					    selectedRule[ruleToApply->PrType] = ruleToApply;
 					    schemaOfSelectedRule[ruleToApply->PrType] = pSchPres;      
 					    attrOfSelectedRule[ruleToApply->PrType] = pAttr;
+					    attrBlockOfSelectedRule[ruleToApply->PrType] = attrBlock;
 					  }
 				      }
 				    else if (fileDescriptor)
@@ -3704,7 +3777,18 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 			  }
 			while (valNum > 0);
 			}
+		      /* look for more ancestors having this attribute only if
+			 it's a P schema extension and if the attribute is
+			 id or class */
+		      if (pDoc->DocView[viewNb-1].DvPSchemaView != 1 || !pHd ||
+			  !(AttrHasException (ExcCssClass, pAttr->AeAttrNum,
+					      pAttr->AeAttrSSchema) ||
+			    AttrHasException (ExcCssId, pAttr->AeAttrNum,
+					      pAttr->AeAttrSSchema)))
+			pAttr = NULL;
 		      }
+		    }
+		  while (pAttr);
 		  }
 	    }
 
@@ -3742,7 +3826,8 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 		  do
 		    {
 		      /* first rule for this value of the attribute */
-		      pR = AttrPresRule (pAttr, pEl, FALSE, NULL, pSchPattr, &valNum);
+		      pR = AttrPresRule (pAttr, pEl, FALSE, NULL, pSchPattr,
+					 &valNum, &attrBlock);
 		      /* look for all rules associated with this value */
 		      while (pR != NULL)
 			{
@@ -3769,13 +3854,15 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 				   immediately */
 				{
 				  if (RuleHasHigherPriority (ruleToApply,
-				           pSchPattr,
+					   pSchPattr, attrBlock,
 					   selectedRule[ruleToApply->PrType],
-					   schemaOfSelectedRule[ruleToApply->PrType]))
+					   schemaOfSelectedRule[ruleToApply->PrType],
+					   attrBlockOfSelectedRule[ruleToApply->PrType]))
 				    {
 				      selectedRule[ruleToApply->PrType] = ruleToApply;
 				      schemaOfSelectedRule[ruleToApply->PrType] = pSchPattr;      
 				      attrOfSelectedRule[ruleToApply->PrType] = pAttr;
+				      attrBlockOfSelectedRule[ruleToApply->PrType] = attrBlock;
 				    }
 				}
 			      else if (fileDescriptor)
@@ -3829,9 +3916,10 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 			       queuePA, queuePS, queuePP, queuePR, lqueue);
 	      }
 	    else if (!selectedRule[pRule->PrType] ||
-		     RuleHasHigherPriority (pRule, NULL,
-					    selectedRule[pRule->PrType],
-					    schemaOfSelectedRule[pRule->PrType]))
+		     RuleHasHigherPriority (pRule, NULL, NULL,
+				       selectedRule[pRule->PrType],
+				       schemaOfSelectedRule[pRule->PrType],
+				       attrBlockOfSelectedRule[pRule->PrType]))
 	      {
 		if (pRule->PrSpecifAttr == 0)
 		  /* this rule does not depend on an attribute */
@@ -3852,6 +3940,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 		selectedRule[pRule->PrType] = pRule;
 		schemaOfSelectedRule[pRule->PrType] = pSchP;      
 		attrOfSelectedRule[pRule->PrType] = pAttr;
+		attrBlockOfSelectedRule[pRule->PrType] = NULL;
 	      }
 	  }
       pRule = pRule->PrNextPRule;

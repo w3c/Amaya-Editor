@@ -1212,6 +1212,7 @@ static ThotBool AttrCreatePresBox (PtrAttribute pAttr, PtrAbstractBox pAb,
   PtrPRule            pPRule;
   PtrPSchema          pSchP;
   PtrHandlePSchema    pHd;
+  PtrAttributePres    attrBlock;
 
   ret = FALSE;
   if (pAb->AbPresentationBox)
@@ -1230,7 +1231,7 @@ static ThotBool AttrCreatePresBox (PtrAttribute pAttr, PtrAbstractBox pAb,
 	  do
 	    {
 	      pPRule = AttrPresRule (pAttr, pAb->AbElement, FALSE, NULL, pSchP,
-				     &valNum);
+				     &valNum, &attrBlock);
 	      /* saute les regles precedant les  fonctions */
 	      stop = FALSE;
 	      do
@@ -1865,6 +1866,7 @@ FunctionType TypeCreatedRule (PtrDocument pDoc, PtrAbstractBox pAbbCreator,
   ThotBool            ok;
   PtrPSchema          pSchP;
   PtrHandlePSchema    pHd;
+  PtrAttributePres    attrBlock;
 
   result = FnLine;
   /* cherche les regles de creation en ignorant les attributs */
@@ -1893,7 +1895,7 @@ FunctionType TypeCreatedRule (PtrDocument pDoc, PtrAbstractBox pAbbCreator,
 	      do
 		{
 		  pPRuleCre = AttrPresRule (pA, pAbbCreator->AbElement, FALSE,
-					    NULL, pSchP, &valNum);
+					    NULL, pSchP, &valNum, &attrBlock);
 		  ok = PageCreateRule (pPRuleCre, pSchP, pAbbCreated, &result);
 		}
 	      while (valNum > 0);

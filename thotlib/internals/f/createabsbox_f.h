@@ -67,7 +67,8 @@ extern PtrPRule AttrPresRule ( PtrAttribute pAttr,
                                ThotBool inheritRule,
                                PtrAttribute pAttrComp,
                                PtrPSchema pSchP,
-                               int *valueNum );
+                               int *valueNum,
+			       PtrAttributePres *attrBlock);
 extern PtrAbstractBox TruncateOrCompleteAbsBox ( PtrAbstractBox pAb,
                                                  ThotBool truncate,
                                                  ThotBool head,
@@ -86,8 +87,10 @@ extern void WaitingRule ( PtrPRule pR,
                           int *lqueue );
 extern ThotBool RuleHasHigherPriority ( PtrPRule pRule1,
                                         PtrPSchema pPS1,
+					PtrAttributePres attrBlock1,
                                         PtrPRule pRule2,
-                                        PtrPSchema pPS2 );
+                                        PtrPSchema pPS2,
+					PtrAttributePres attrBlock2 );
 extern void ApplyPresRules ( PtrElement pEl,
                              PtrDocument pDoc,
                              DocViewNumber viewNb,
@@ -175,7 +178,8 @@ extern PtrPRule AttrPresRule (/* PtrAttribute pAttr,
                                  ThotBool inheritRule,
                                  PtrAttribute pAttrComp,
                                  PtrPSchema pSchP,
-                                 int *valueNum */);
+                                 int *valueNum,
+			         PtrAttributePres *attrBlock */);
 extern PtrAbstractBox TruncateOrCompleteAbsBox (/* PtrAbstractBox pAb,
                                                    ThotBool truncate,
                                                    ThotBool head,
@@ -194,8 +198,10 @@ extern void WaitingRule (/* PtrPRule pR,
                             int *lqueue */);
 extern ThotBool RuleHasHigherPriority (/* PtrPRule pRule1,
                                           PtrPSchema pPS1,
+					  PtrAttributePres attrBlock1,
                                           PtrPRule pRule2,
-                                          PtrPSchema pPS2 */);
+                                          PtrPSchema pPS2,
+				          PtrAttributePres attrBlock2 */);
 extern void ApplyPresRules (/* PtrElement pEl,
                                PtrDocument pDoc,
                                DocViewNumber viewNb,
