@@ -480,10 +480,10 @@ static void GetTime (char *s, PtrDocument pDoc)
 {
   time_t         tp;
   struct tm     *tmptr;
-#ifdef _WINGUI
+#ifdef _WINDOWS
   wchar_t        ws[DATESTRLEN];
   unsigned char *ptr;
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
   ThotBool   set_gmtime, set_isodate;
 
   time (&tp);
@@ -501,14 +501,14 @@ static void GetTime (char *s, PtrDocument pDoc)
       tmptr =  localtime (&tp);
       if (set_isodate)
 	{
-#ifdef _WINGUI
+#ifdef _WINDOWS
 	  wcsftime(ws, DATESTRLEN, L"%A %d %B %Y - %H:%M:%S", tmptr);
 	  ptr = TtaConvertWCToByte (ws, pDoc->DocCharset);
 	  strncpy (s, ptr, DATESTRLEN);
 	  TtaFreeMemory (ptr);
-#else /* _WINGUI */
+#else /* _WINDOWS */
 	  strftime(s, DATESTRLEN, "%A %d %B %Y - %H:%M:%S", tmptr);
-#endif /* _WINGUI */
+#endif /* _WINDOWS */
 	}
       else
 	strftime(s, DATESTRLEN, "%Y-%m-%d %H:%M:%S", tmptr);
