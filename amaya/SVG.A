@@ -6,6 +6,7 @@ DEFAULT
 	ElemClick.Pre -> SimpleClick;
 	ElemRClick.Pre -> SimpleRClick;
 	ElemPaste.Post -> GraphElemPasted;
+        AttrMenu.Pre -> GlobalSVGAttrInMenu;
 	PRuleCreate.Pre -> GraphicsPRuleChange;
 	PRuleModify.Pre -> GraphicsPRuleChange;
         ElemSelect.Post -> GraphicsSelectionChanged;

@@ -1962,10 +1962,41 @@ void                MathSelectionChanged (NotifyElement * event)
   ----------------------------------------------------------------------*/
 ThotBool  GlobalMathAttrInMenu (NotifyAttribute * event)
 {
-   ElementType         elType;
+   ElementType         elType, parentType;
+   Element             parent;
    char               *attr;
 
    elType = TtaGetElementType (event->element);
+
+   /* don't put any attribute on Thot elements that are not MathML elements */
+   if (elType.ElTypeNum == MathML_EL_XMLcomment ||
+       elType.ElTypeNum == MathML_EL_XMLcomment_line ||
+       elType.ElTypeNum == MathML_EL_XMLPI ||
+       elType.ElTypeNum == MathML_EL_XMLPI_line ||
+       elType.ElTypeNum == MathML_EL_Unknown_namespace ||
+       elType.ElTypeNum == MathML_EL_DOCTYPE ||
+       elType.ElTypeNum == MathML_EL_DOCTYPE_line)
+     return TRUE;
+
+   /* don't put any attribute on text fragments that are within DOCTYPE,
+      comments, PIs, etc. */
+   if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+     {
+       parent = TtaGetParent (event->element);
+       if (parent)
+	 {
+	   parentType = TtaGetElementType (parent);
+	   if (parentType.ElTypeNum == MathML_EL_XMLcomment ||
+	       parentType.ElTypeNum == MathML_EL_XMLcomment_line ||
+	       parentType.ElTypeNum == MathML_EL_XMLPI ||
+	       parentType.ElTypeNum == MathML_EL_XMLPI_line ||
+	       parentType.ElTypeNum == MathML_EL_Unknown_namespace ||
+	       parentType.ElTypeNum == MathML_EL_DOCTYPE ||
+	       parentType.ElTypeNum == MathML_EL_DOCTYPE_line)
+	     return TRUE;
+	 }
+     }
+
    attr = GetXMLAttributeName (event->attributeType, elType, event->document);
    if (attr[0] == EOS)
       return TRUE;	/* don't put an invalid attribute in the menu */

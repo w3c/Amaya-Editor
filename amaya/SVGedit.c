@@ -1019,6 +1019,68 @@ void           GraphElemPasted (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
+   GlobalSVGAttrInMenu
+   Called by Thot when building the Attributes menu.
+   Prevent Thot from including a global attribute in the menu if the selected
+   element does not accept this attribute.
+  ----------------------------------------------------------------------*/
+ThotBool  GlobalSVGAttrInMenu (NotifyAttribute * event)
+{
+   ElementType         elType, parentType;
+   Element             parent;
+   char               *attr;
+
+   elType = TtaGetElementType (event->element);
+
+   /* don't put any attribute on Thot elements that are not SVG elements */
+   if (elType.ElTypeNum == SVG_EL_XMLcomment ||
+       elType.ElTypeNum == SVG_EL_XMLcomment_line ||
+       elType.ElTypeNum == SVG_EL_XMLPI ||
+       elType.ElTypeNum == SVG_EL_XMLPI_line ||
+       elType.ElTypeNum == SVG_EL_Unknown_namespace ||
+       elType.ElTypeNum == SVG_EL_DOCTYPE ||
+       elType.ElTypeNum == SVG_EL_DOCTYPE_line)
+     return TRUE;
+
+   /* don't put any attribute on text fragments that are within DOCTYPE,
+      comments, PIs, etc. */
+   if (elType.ElTypeNum == SVG_EL_TEXT_UNIT)
+     {
+       parent = TtaGetParent (event->element);
+       if (parent)
+	 {
+	   parentType = TtaGetElementType (parent);
+	   if (parentType.ElTypeNum == SVG_EL_XMLcomment ||
+	       parentType.ElTypeNum == SVG_EL_XMLcomment_line ||
+	       parentType.ElTypeNum == SVG_EL_XMLPI ||
+	       parentType.ElTypeNum == SVG_EL_XMLPI_line ||
+	       parentType.ElTypeNum == SVG_EL_Unknown_namespace ||
+	       parentType.ElTypeNum == SVG_EL_DOCTYPE ||
+	       parentType.ElTypeNum == SVG_EL_DOCTYPE_line)
+	     return TRUE;
+	 }
+     }
+
+   attr = GetXMLAttributeName (event->attributeType, elType, event->document);
+   if (attr[0] == EOS)
+      return TRUE;	/* don't put an invalid attribute in the menu */
+
+   /* handle only Global attributes */
+   if (event->attributeType.AttrTypeNum != SVG_ATTR_id &&
+       event->attributeType.AttrTypeNum != SVG_ATTR_class &&
+       event->attributeType.AttrTypeNum != SVG_ATTR_style_ &&
+       event->attributeType.AttrTypeNum != SVG_ATTR_xml_space)
+     /* it's not a global attribute. Accept it */
+     return FALSE;
+
+   if (strcmp (TtaGetSSchemaName (elType.ElSSchema),"SVG"))
+     /* it's not a SVG element, don't put a SVG attribute in the menu */
+     return TRUE;
+
+   return FALSE;
+}
+
+/*----------------------------------------------------------------------
  GraphicsPRuleChanged
  A presentation rule is going to be changed by Thot.
  -----------------------------------------------------------------------*/

@@ -2441,10 +2441,44 @@ void AttrItemStyle (NotifyAttribute * event)
   ----------------------------------------------------------------------*/
 ThotBool GlobalAttrInMenu (NotifyAttribute * event)
 {
-   ElementType         elType;
+   ElementType         elType, parentType;
+   Element             parent;
    char               *attr;
 
    elType = TtaGetElementType (event->element);
+
+   /* don't put any HTML attribute on Thot elements that are not
+      HTML elements */
+   if (elType.ElTypeNum == HTML_EL_Invalid_element ||
+       elType.ElTypeNum == HTML_EL_Unknown_namespace ||
+       elType.ElTypeNum == HTML_EL_Comment_ ||
+       elType.ElTypeNum == HTML_EL_Comment_line ||
+       elType.ElTypeNum == HTML_EL_XMLPI ||
+       elType.ElTypeNum == HTML_EL_PI_line ||
+       elType.ElTypeNum == HTML_EL_DOCTYPE ||
+       elType.ElTypeNum == HTML_EL_DOCTYPE_line)
+     return TRUE;
+
+   /* don't put any attribute on text fragments that are within DOCTYPE,
+      comments, PIs, etc. */
+   if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+     {
+       parent = TtaGetParent (event->element);
+       if (parent)
+	 {
+	   parentType = TtaGetElementType (parent);
+	   if (parentType.ElTypeNum == HTML_EL_Invalid_element ||
+	       parentType.ElTypeNum == HTML_EL_Unknown_namespace ||
+	       parentType.ElTypeNum == HTML_EL_Comment_ ||
+	       parentType.ElTypeNum == HTML_EL_Comment_line ||
+	       parentType.ElTypeNum == HTML_EL_XMLPI ||
+	       parentType.ElTypeNum == HTML_EL_PI_line ||
+	       parentType.ElTypeNum == HTML_EL_DOCTYPE ||
+	       parentType.ElTypeNum == HTML_EL_DOCTYPE_line)
+	     return TRUE;
+	 }
+     }
+
    attr = GetXMLAttributeName (event->attributeType, elType, event->document);
    if (attr[0] == EOS)
       return TRUE;	/* don't put an invalid attribute in the menu */
