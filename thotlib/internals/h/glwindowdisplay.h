@@ -99,8 +99,8 @@ void GL_SetOpacity (int opacity);
 void GL_ActivateDrawing();
 
 ThotBool GL_DrawAll ();
-
-
+void GL_DestroyFrame (int frame);
+void ClearAll(int frame);
 ThotBool GL_prepare (int frame);
 void GL_realize (int frame);
 

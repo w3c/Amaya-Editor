@@ -71,10 +71,14 @@ extern char  *ColorName (int num);
 /* path to help */
 #define ct_timeline_help_file "timeline_help.html"
 
+#ifndef _GL
+#define ct_image_slider_filename "slider.gif"
+#else /*_GL*/
+#define ct_image_slider_filename "slidergl.gif"
+#endif /*_GL*/
 /* path to images used in the interface */
 #define ct_image_c1_filename "collapse1.png"
 #define ct_image_c2_filename "collapse2.png"
-#define ct_image_slider_filename "slider.gif"
 #define ct_image_toolbar "timelinetoolbar_sh4.png"
 #define ct_image_anim_color "anim_color_sh.png"
 #define ct_image_anim_motion "anim_motion_sh.png"

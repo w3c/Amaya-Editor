@@ -730,7 +730,7 @@ static void UnmapMenu (ThotWidget w, struct Cat_Context *catalogue, caddr_t call
   Callback for a menu button                                         
   ----------------------------------------------------------------------*/
 #ifndef _GTK
-static void CallMenu (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
+static ThotBool CallMenu (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 #else /* _GTK */
 static ThotBool CallMenuGTK (ThotWidget w, struct Cat_Context *catalogue)
 #endif /* _GTK */

@@ -458,10 +458,10 @@ void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
 
  if (frame > 0 && frame <= MAX_FRAME)
  {
+#ifndef _GL
    /* Do not redraw if the document is in NoComputedDisplay mode. */
    if (documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
    {
-#ifndef _GL
      BeginPaint (w, &ps);
      GetClientRect (w, &rect);
      /* save the previous clipping */
@@ -485,12 +485,12 @@ void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
      pFrame->FrClipXEnd = xmax;
      pFrame->FrClipYBegin = ymin;
      pFrame->FrClipYEnd = ymax;
+   }
 #else /*_GL*/
 	 BeginPaint (w, &ps);
-	 GL_Swap (frame);
+	 FrameTable[frame].DblBuffNeedSwap = TRUE;
      EndPaint (w, &ps);
 #endif /*_GL*/
-   }
  }
 }
 
@@ -512,24 +512,13 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
    /* need to recompute the content of the window */
    RebuildConcreteImage (frame);
 #else /*_GL*/
-
    GL_prepare (frame);	
    GLResize (width, height, 0 ,0);
    ClearAll (frame);
    GL_ActivateDrawing (frame);
-   RebuildConcreteImage (frame);    
-   GL_DrawAll ();
-/*
-     GLResize (width, height, 0 ,0);
-   if (GL_prepare (frame))
-   {
-     DefRegion (frame, 0, 
+   DefRegion (frame, 0, 
  		0, width,
  		height);
-      RedrawFrameBottom (frame, 0, NULL);
-	  GL_realize (frame);
-   }
-   */
 #endif/*_GL*/
    /* recompute the scroll bars */
   UpdateScrollbars (frame);
@@ -793,8 +782,6 @@ gboolean FrameResizedGTK (GtkWidget *widget,
  		   0, 0,
  		   width, height);	
 	FrameRedraw (frame, width, height);
-	glFlush();
-	glFinish ();
 	GL_Swap (frame);
 	FrameTable[frame].DblBuffNeedSwap = TRUE;
 	while (gtk_events_pending ()) 
@@ -2308,8 +2295,8 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
     default:
       break;
     }
-#ifdef _GL2
-  GL_DrawAll (NULL, -1);
+#ifdef _GL
+  GL_DrawAll ();
 #endif /*GL*/
   return (DefWindowProc (hwnd, mMsg, wParam, lParam));
 }
@@ -3421,18 +3408,6 @@ void  DefineClipping (int frame, int orgx, int orgy, int *xd, int *yd, int *xf, 
 		    - (clipy + clipheight),
 		    clipwidth,
 		    clipheight);
-	
-	/*
-	  g_print ("\n%i x, %i y, %i W, %i H, %i FW, %i FH\t", 
-		 clipx,
-		    FrameTable[frame].FrHeight
-		    + FrameTable[frame].FrTopMargin
-		    - (clipy + clipheight),
-		    clipwidth,
-		    clipheight,
-		 FrameTable[frame].FrWidth,
-		 FrameTable[frame].FrHeight);
-	*/
 	if (raz > 0)
 	  /*ClearAll (frame);*/
 	  Clear (frame, clipwidth, clipheight, 

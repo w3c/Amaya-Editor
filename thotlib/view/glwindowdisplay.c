@@ -223,7 +223,7 @@ void SetMainWindowBackgroundColor (int frame, int color)
 #endif /*_GTK*/
   GL_Background[frame] = color;
   TtaGiveThotRGB (color, &red, &green, &blue);
-  glClearColor (red/255, green/255, blue/255, 0.0);
+  glClearColor ((float)red/255, (float)green/255, (float)blue/255, 0.0);
 }
 
 /*----------------------------------------------------------------------
@@ -1582,17 +1582,13 @@ void GL_Swap (int frame)
   if (frame < MAX_FRAME)
     {
       glFinish ();
-      glFlush ();
-     
+      glFlush ();     
 #ifdef _WINDOWS
-
-	 /*GetDC (FrRef[frame]);*/
-	  if (GL_Windows[frame])
-		SwapBuffers (GL_Windows[frame]);
-	  /*ReleaseDC (FrRef[frame], GL_Windows[frame]);*/
+      if (GL_Windows[frame])
+	SwapBuffers (GL_Windows[frame]);
 #else
-  if (FrameTable[frame].WdFrame)
-    gtk_gl_area_swapbuffers (GTK_GL_AREA(FrameTable[frame].WdFrame));
+      if (FrameTable[frame].WdFrame)
+	gtk_gl_area_swapbuffers (GTK_GL_AREA(FrameTable[frame].WdFrame));
 #endif /*_WINDOWS*/
     }
   
@@ -1607,16 +1603,16 @@ ThotBool GL_prepare (int frame)
   if (frame < MAX_FRAME)
     {
       FrameTable[frame].DblBuffNeedSwap = TRUE;
-    if (FrRef[frame])
+      if (FrRef[frame])
 #ifdef _WINDOWS
-      if (GL_Windows[frame])
-	if (wglMakeCurrent (GL_Windows[frame], 
-			           GL_Context[frame]))
-	return TRUE;		
+	if (GL_Windows[frame])
+	  if (wglMakeCurrent (GL_Windows[frame], 
+			      GL_Context[frame]))
+	    return TRUE;		
 #else /*_WINDOWS*/
-    if (FrameTable[frame].WdFrame)
-      if (gtk_gl_area_make_current (GTK_GL_AREA(FrameTable[frame].WdFrame)))
-	return TRUE;
+      if (FrameTable[frame].WdFrame)
+	if (gtk_gl_area_make_current (GTK_GL_AREA(FrameTable[frame].WdFrame)))
+	  return TRUE;
 #endif /*_WINDOWS*/
     }
   return FALSE;
@@ -1629,8 +1625,10 @@ void GL_realize (int frame)
 {
 
   FrameTable[frame].DblBuffNeedSwap = TRUE;
-  /* FrameTable[frame].DblBuffNeedSwap = FALSE;
-     GL_Swap (frame);*/
+#ifdef _WINDOWS
+  /*GL_Swap (frame);*/
+  /*FrameTable[frame].DblBuffNeedSwap = FALSE;*/
+#endif /*_WINDOWS*/
   return;
 }
 /*----------------------------------------------------------------------
@@ -1731,10 +1729,8 @@ ThotBool GL_DrawAll ()
 			      != NoComputedDisplay)
 			    {
 			      if (GL_prepare (frame))
-			    {
-			      
+			    {			      
 			      RedrawFrameBottom (frame, 0, NULL);
-			      glFinish ();glFlush();
 			      GL_Swap (frame);  
 			      /* All transformation resetted*/   
 			      /*glLoadIdentity (); */
@@ -1928,9 +1924,6 @@ void GL_window_copy_area (int frame,
       /*  If not in software mode,
 	  glcopypixels is 1000x slower than a redraw	*/
       
-      if (glMatroxBUG (frame, xf, yf, width, height))
-	return;
-      
 
       /* Horizontal Scroll problems...*/
       if (xf < 0)
@@ -1984,6 +1977,15 @@ void GL_window_copy_area (int frame,
 	    (y_source + height + 
 	    FrameTable[frame].FrTopMargin);
 
+	/*Hardware rendering faster than Reading pixel from buffer
+	  (here glcopypixels)*/
+	if (glMatroxBUG (frame, xf, yf, width, height))
+		{
+		FrameTable[frame].DblBuffNeedSwap = TRUE;
+		return;
+		}
+
+
 	  /* Copy from backbuffer to backbuffer */
 	  glFinish ();
 	  glDisable (GL_BLEND);
@@ -2012,7 +2014,6 @@ void GL_window_copy_area (int frame,
 	  glEnable (GL_BLEND);
 	  /*copy from back to front */
 	  GL_realize (frame);	  
-	  FrameTable[frame].DblBuffNeedSwap = TRUE;
 	}
 }
 /*-----------------------------------
@@ -2090,7 +2091,6 @@ int glMatroxBUG (int frame, int x, int y,
     {
       DefRegion (frame, x, y, 
 		 width+x, y+height);
-      RedrawFrameBottom (frame, 0, NULL);
       return 1;      
     }
   return 0;  
