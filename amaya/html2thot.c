@@ -5216,7 +5216,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 		      end = strstr (&FileBuffer[i], "?>");
 		      /* check whether there is an encoding */
 		      ptr = strstr (&FileBuffer[i], "encoding");
-		      if (ptr)
+		      if (ptr && ptr < end)
 			{
 			  beg = strstr (ptr, "\"");
 			  if (beg && beg < end)
