@@ -14,7 +14,8 @@ extern void AddAccessKey ( NotifyAttribute *event );
 extern ThotBool RemoveAccessKey ( NotifyAttribute *event );
 extern void RemoveLink ( Element el,
                          Document doc );
-extern ThotBool DeleteLink ( NotifyElement * event );
+extern ThotBool DeleteLink ( NotifyElement *event );
+extern ThotBool CheckMandatory ( NotifyAttribute *event );
 extern void SetREFattribute ( Element element,
                               Document doc,
                               char *targetURL,
@@ -41,7 +42,7 @@ extern void CreateRemoveIDAttribute ( char *elName,
                                       Document doc,
                                       ThotBool createID,
                                       ThotBool inSelection );
-extern void ElementCreated ( NotifyElement * event );
+extern void ElementCreated ( NotifyElement *event );
 extern void ElementDeleted ( NotifyElement *event );
 extern void RegisterURLSavedElements ( Document doc );
 extern void ChangeURI ( Element el,
@@ -133,7 +134,8 @@ extern void AddAccessKey (/* NotifyAttribute *event */);
 extern ThotBool RemoveAccessKey (/* NotifyAttribute *event */);
 extern void RemoveLink (/* Element el,
                            Document doc */);
-extern ThotBool DeleteLink (/* NotifyElement * event */);
+extern ThotBool DeleteLink (/* NotifyElement *event */);
+extern ThotBool CheckMandatory (/* NotifyAttribute *event */);
 extern void SetREFattribute (/* Element element,
                                 Document doc,
                                 char *targetURL,
@@ -160,7 +162,7 @@ extern void CreateRemoveIDAttribute (/* char *elName,
                                         Document doc,
                                         ThotBool createID,
                                         ThotBool inSelection */);
-extern void ElementCreated (/* NotifyElement * event */);
+extern void ElementCreated (/* NotifyElement *event */);
 extern void ElementDeleted (/* NotifyElement *event */);
 extern void RegisterURLSavedElements (/* Document doc */);
 extern void ChangeURI (/* Element el,

@@ -2754,7 +2754,10 @@ static void Build_timeline (Document basedoc, char* timelineName)
   /* timeline has been built */
   TtaSetStructureChecking (oldStructureChecking, dt[basedoc].timelinedoc);
 	
-  dt[basedoc].timelineView = TtaOpenMainView (dt[basedoc].timelinedoc, x_timeline, y_timeline, w_timeline, h_timeline);
+  dt[basedoc].timelineView = TtaOpenMainView (dt[basedoc].timelinedoc,
+					      x_timeline, y_timeline,
+					      w_timeline, h_timeline,
+					      FALSE, TRUE);
 
   if (dt[basedoc].timelineView)
     {

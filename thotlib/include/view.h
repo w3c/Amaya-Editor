@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001.
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -24,20 +24,23 @@ DisplayMode;
 
 
 /*----------------------------------------------------------------------
-   TtaOpenMainView
+  TtaOpenMainView
 
-   Opens the main view of a document. This document must have a PSchema
-   (see TtaSetPSchema).
-   Parameters:
-   document: the document for which a window must be open.
-   x, y: coordinate (in millimeters) of the upper left corner of the
-   window that will display the view.
-   w, h: width and height (in millimeters) of the upper left corner of the
-   window that will display the view.
-   Return value:
-   the view opened or 0 if the view cannot be opened.
-  ----------------------------------------------------------------------*/
-extern View TtaOpenMainView (Document document, int x, int y, int w, int h);
+  Opens the main view of a document. This document must have a PSchema
+  (see TtaSetPSchema).
+  Parameters:
+  document: the document for which a window must be open.
+  x, y: coordinate (in millimeters) of the upper left corner of the
+  window that will display the view.
+  w, h: width and height (in millimeters) of the upper left corner of the
+  window that will display the view.
+  withMenu is TRUE when menus are displayed
+  withButton is TRUE when buttons are displayed
+  Return value:
+  the view opened or 0 if the view cannot be opened.
+   ----------------------------------------------------------------------*/
+extern View TtaOpenMainView (Document document, int x, int y, int w, int h,
+			     ThotBool withMenu, ThotBool withButton);
 
 /*----------------------------------------------------------------------
    TtaGetViewXYWH 

@@ -274,7 +274,7 @@ typedef struct _GETHTMLDocument_context
   char      *initial_url;
   char      *form_data;
   ClickEvent method;
-  ThotBool   InNewWindow;
+  ThotBool   inNewWindow;
   TTcbf     *cbf;
   void      *ctx_cbf;
 } GETHTMLDocument_context;
@@ -2478,7 +2478,11 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
        x = x + (doc - 1) * 10;
        y = y + (doc - 1) * 10;
        /* open the main view */
-       mainView = TtaOpenMainView (doc, x, y, w, h);
+       if (docType == docLog || docType == docLibrary)
+	 /* without menu bar */
+	 mainView = TtaOpenMainView (doc, x, y, w, h, FALSE, TRUE);
+       else
+	 mainView = TtaOpenMainView (doc, x, y, w, h, TRUE, TRUE);
        
        if (mainView == 0)
 	 {
@@ -2682,10 +2686,8 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   AddLibraryButton (doc, 1);
 #endif /* _SVGLIB */
 #ifdef _SVGANIM
-
 	   AddAnimButton (doc, 1);
 	   AddAnimPlayButton (doc, 1);
-	   
 #endif /* _SVGANIM */
 #endif /* _SVG */
 	   if (docType == docAnnot)
@@ -2766,10 +2768,7 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	 /* we need to update menus and buttons */
 	 reinitialized = TRUE;
        else if (docType == docMath || docType == docAnnot ||
-#ifdef XML_GENERIC      
-	        docType == docXml ||
-#endif /* XML_GENERIC */
-		docType == docSource)
+	        docType == docXml || docType == docSource)
 	 reinitialized = TRUE;
      }
 
@@ -3049,7 +3048,7 @@ static Document LoadDocument (Document doc, char *pathname,
 			      char *form_data, char *initial_url,
 			      int method, char *tempfile,
 			      char *documentname, AHTHeaders *http_headers,
-			      ThotBool history, ThotBool *InNewWindow)
+			      ThotBool history, ThotBool *inNewWindow)
 {
   CSSInfoPtr          css;
   Document            newdoc = 0;
@@ -3733,12 +3732,12 @@ static Document LoadDocument (Document doc, char *pathname,
       if (ReadOnlyDocument[newdoc])
 	SetDocumentReadOnly (newdoc);
 
-      if (*InNewWindow || newdoc != doc)
+      if (*inNewWindow || newdoc != doc)
 	/* the document is displayed in a different window */
 	/* reset the history of the new window */
 	InitDocHistory (newdoc);
       /* the document is loaded now */
-      *InNewWindow = FALSE;
+      *inNewWindow = FALSE;
       /* hide template entry if no template server is configured */
       if (TtaGetEnvString ("TEMPLATE_URL") == NULL)
  	TtaSetItemOff (newdoc, 1, File, BTemplate);
@@ -4087,12 +4086,8 @@ void ShowSource (Document document, View view)
 #endif /* _SVGANIM */
    if (DocumentTypes[document] != docHTML &&
        DocumentTypes[document] != docSVG &&
-#ifdef XML_GENERIC      
        DocumentTypes[document] != docXml &&
-#endif /* XML_GENERIC */
-#ifdef _SVGLIB
        DocumentTypes[document] != docLibrary &&
-#endif /* _SVGLIB */
        DocumentTypes[document] != docMath)
      /* it's not an HTML or an XML document */
      return;
@@ -4107,11 +4102,8 @@ void ShowSource (Document document, View view)
      if (TtaIsDocumentModified (document))
        {
 	 SetNamespacesAndDTD (document);
-	 if (
-#ifdef _SVGLIB
-       DocumentTypes[document] == docLibrary ||
-#endif /* _SVGLIB */
-       DocumentTypes[document] == docHTML)
+	 if (DocumentTypes[document] == docLibrary ||
+	     DocumentTypes[document] == docHTML)
 	   {
 	     if (TtaGetDocumentProfile (document) == L_Xhtml11)
 	       TtaExportDocumentWithNewLineNumbers (document, tempdocument,
@@ -4439,7 +4431,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
   char               *form_data;
   char               *s;
   int                 i;
-  ThotBool            InNewWindow;
+  ThotBool            inNewWindow;
   ThotBool            ok, keep;
   ThotBool            stopped_flag = FALSE;
   ThotBool            local_link;
@@ -4457,7 +4449,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
   ctx_cbf = ctx->ctx_cbf;
   method = ctx->method;
   local_link = ctx->local_link;
-  InNewWindow = ctx->InNewWindow;
+  inNewWindow = ctx->inNewWindow;
   ok = TRUE;
   pathname = TtaGetMemory (MAX_LENGTH + 1);
   strncpy (pathname, urlName, MAX_LENGTH);
@@ -4481,7 +4473,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
      tempfile[0] = EOS;
    
   /* now the new window is open */
-  if (InNewWindow && (method == CE_RELATIVE || method == CE_ABSOLUTE))
+  if (inNewWindow && (method == CE_RELATIVE || method == CE_ABSOLUTE))
     /* don't free the current loaded document */
     method = CE_INIT;
    if (!local_link)
@@ -4497,7 +4489,7 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
 	   res = LoadDocument (newdoc, pathname, form_data, 
 			       initial_url, method,
 			       tempfile, documentname,
-			       http_headers, ctx->history, &InNewWindow);
+			       http_headers, ctx->history, &inNewWindow);
 	   W3Loading = 0;		/* loading is complete now */
 	   if (res == 0)
 	     {
@@ -4785,7 +4777,7 @@ Document GetAmayaDoc (char *documentPath, char *form_data,
    ctx->cbf = cbf;
    ctx->ctx_cbf = ctx_cbf;
    ctx->local_link = 0;
-   ctx->InNewWindow = InNewWindow;
+   ctx->inNewWindow = InNewWindow;
 
    toparse = 0;
    if (newdoc == 0)
@@ -6628,23 +6620,21 @@ void InitAmaya (NotifyEvent * event)
    InitMathML ();
 #ifdef _SVG
    InitSVG ();
-#endif /* _SVG */
 #ifdef _SVGANIM
    InitSVGAnim ();
 #endif /* _SVGANIM */
 #ifdef _SVGLIB
-  InitSVGLibraryManagerStructure ();
+   InitSVGLibraryManagerStructure ();
+   InitLibrary();
 #endif /* _SVGLIB */
+#endif /* _SVG */
 /* MKP: disable "Cooperation" menu if DAV is not defined or
  *      initialize davlib module otherwise */
 #ifdef DAV
    InitDAV ();
 #endif /* DAV */
-#ifdef _SVGLIB
-   InitLibrary();
-#endif /* _SVGLIB */
    URL_list = NULL;
-    URL_list_len = 0;
+   URL_list_len = 0;
    InitStringForCombobox ();   
    CurrentDocument = 0;
    DocBook = 0;

@@ -1278,7 +1278,7 @@ static ThotBool SelectAbsBoxes (PtrElement pEl, ThotBool createView)
 				  /* open the new view */
 				  OpenCreatedView (SelectedDocument,
 						   createdView,
-						   X, Y, width, height);
+						   X, Y, width, height, TRUE, TRUE);
 				  /* tell the application that */
 				  /* the view has been opened */
 				  notifyDoc.event = TteViewOpen;

@@ -47,9 +47,6 @@ extern int TtaAddButton ( Document document,
                           char *info,
                           unsigned char type,
                           ThotBool state );
-extern void *TtaGetButtonCallback ( Document document,
-                                    View view,
-                                    int index );
 extern void TtaSwitchButton ( Document doc,
                               View view,
                               int index );
@@ -88,7 +85,9 @@ extern int MakeFrame ( char *schema,
                        int width,
                        int height,
                        int *volume,
-                       int doc );
+                       int doc,
+                       ThotBool withMenu,
+                       ThotBool withButton );
 extern void DestroyFrame ( int frame );
 extern int FindMenu ( int frame,
                       int menuID,
@@ -167,9 +166,6 @@ extern int TtaAddButton (/* Document document,
                             char *info,
                             unsigned char type,
                             ThotBool state */);
-extern void *TtaGetButtonCallback (/* Document document,
-                                      View view,
-                                      int index */);
 extern void TtaSwitchButton (/* Document doc,
                                 View view,
                                 int index */);
@@ -208,7 +204,9 @@ extern int MakeFrame (/* char *schema,
                          int width,
                          int height,
                          int *volume,
-                         int doc */);
+                         int doc,
+                         ThotBool withMenu,
+                         ThotBool withButton */);
 extern void DestroyFrame (/* int frame */);
 extern int FindMenu (/* int frame,
                         int menuID,

@@ -33,7 +33,9 @@ extern void OpenCreatedView ( PtrDocument pDoc,
                               int X,
                               int Y,
                               int width,
-                              int height );
+                              int height,
+                              ThotBool withMenu,
+                              ThotBool withButton );
 extern int OpenViewByName ( PtrDocument pDoc,
                             Name viewName,
                             int X,
@@ -81,7 +83,9 @@ extern void OpenCreatedView (/* PtrDocument pDoc,
                                 int X,
                                 int Y,
                                 int width,
-                                int height */);
+                                int height,
+                                ThotBool withMenu,
+                                ThotBool withButton */);
 extern int OpenViewByName (/* PtrDocument pDoc,
                               Name viewName,
                               int X,

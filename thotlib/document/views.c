@@ -372,7 +372,7 @@ void OpenDefaultViews (PtrDocument pDoc)
      pDoc->DocViewFrame[0] = MakeFrame (pSS->SsName, schView, pDoc->DocDName,
 					X, Y, width, height,
 					&pDoc->DocViewVolume[0],
-					IdentDocument (pDoc));
+					IdentDocument (pDoc), TRUE, TRUE);
      }
   if (pDoc->DocViewFrame[0] == 0)
      /* echec creation fenetre */
@@ -543,7 +543,8 @@ int CreateAbstractImage (PtrDocument pDoc, int v, PtrSSchema pSS,
    		     fenetre en mm.					
   ----------------------------------------------------------------------*/
 void OpenCreatedView (PtrDocument pDoc, int view, int X, int Y,
-		      int width, int height)
+		      int width, int height,
+		      ThotBool withMenu, ThotBool withButton)
 {
   PtrSSchema          pSS;
   int                 volume = 0;
@@ -559,7 +560,8 @@ void OpenCreatedView (PtrDocument pDoc, int view, int X, int Y,
       /* creation d'une fenetre pour la vue */
       pSS = pDoc->DocSSchema;
       frame = MakeFrame (pSS->SsName, schView,  pDoc->DocDName, X, Y,
-			     width, height, &volume, IdentDocument (pDoc));
+			 width, height, &volume, IdentDocument (pDoc),
+			 withMenu, withButton);
     } 
   if (frame == 0)
     {
@@ -646,7 +648,8 @@ static ThotBool GetViewByName (PtrDocument pDoc, Name viewName, int *view,
 /*----------------------------------------------------------------------
    OpenViewByName ouvre la vue de nom viewName			
   ----------------------------------------------------------------------*/
-int OpenViewByName (PtrDocument pDoc, Name viewName, int X, int Y, int width, int height)
+int OpenViewByName (PtrDocument pDoc, Name viewName, int X, int Y,
+		    int width, int height)
 {
    PtrSSchema          pSS;
    NotifyDialog        notifyDoc;
@@ -673,7 +676,7 @@ int OpenViewByName (PtrDocument pDoc, Name viewName, int X, int Y, int width, in
 	     if (!CallEventType ((NotifyEvent *) & notifyDoc, TRUE))
 	        {
 		ret = CreateAbstractImage (pDoc, view, pSS, 1, FALSE, NULL);
-		OpenCreatedView (pDoc, ret, X, Y, width, height);
+		OpenCreatedView (pDoc, ret, X, Y, width, height, TRUE, TRUE);
 		notifyDoc.event = TteViewOpen;
 		notifyDoc.document = (Document) IdentDocument (pDoc);
 		notifyDoc.view = ret;
@@ -716,7 +719,7 @@ void OpenViewByMenu (PtrDocument pDoc, int menuItem, PtrElement subTree,
 	 view = CreateAbstractImage (pDoc, AllViews[theView - 1].VdView,
 				     AllViews[theView - 1].VdSSchema,
 				     selectedView, FALSE, subTree);
-	 OpenCreatedView (pDoc, view, X, Y, width, height);
+	 OpenCreatedView (pDoc, view, X, Y, width, height, TRUE, TRUE);
 	 if (viewHasBeenOpen)
 	    {
 	    notifyDoc.event = TteViewOpen;

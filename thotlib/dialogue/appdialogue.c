@@ -1702,23 +1702,23 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 		  if (info != NULL && procedure != NULL)
 		    XcgLiteClueAddWidget(liteClue, w,  info, strlen(info), 0);
 #endif /* _GTK */
-	      FrameTable[frame].CheckedButton[i] = FALSE;
+		  FrameTable[frame].CheckedButton[i] = FALSE;
 #else  /* _WINDOWS */
 		  w = (ThotButton) TtaGetMemory (sizeof (TBBUTTON));
 		  FrameTable[frame].Button[i] = w;
 		  FrameTable[frame].Call_Button[i] = (Proc) procedure;
-	      FrameTable[frame].CheckedButton[i] = FALSE;
+		  FrameTable[frame].CheckedButton[i] = FALSE;
 		  if (!w)
 		    WinErrorBox (NULL, "TtaAddButton");
 		  else
 		    {
 		      w->fsState      = TBSTATE_ENABLED;
 		      w->fsStyle      = type;
-			  FrameTable[frame].ButtonId[i] = TBBUTTONS_BASE + i;
-			  w->idCommand    = FrameTable[frame].ButtonId[i]; 
-			  w->bReserved[0] = 0;
-			  w->bReserved[1] = 0;
-			  w->dwData       = 0;
+		      FrameTable[frame].ButtonId[i] = TBBUTTONS_BASE + i;
+		      w->idCommand    = FrameTable[frame].ButtonId[i]; 
+		      w->bReserved[0] = 0;
+		      w->bReserved[1] = 0;
+		      w->dwData       = 0;
 		      if (procedure)
 			{
 			  w->iBitmap      = picture;
@@ -1753,6 +1753,7 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
   return (index);
 }
 
+#ifdef IV
 /*----------------------------------------------------------------------
    TtaGetButtonCallback
 
@@ -1770,24 +1771,24 @@ void *TtaGetButtonCallback (Document document, View view, int index)
    UserErrorCode = 0;
    /* verifie le parametre document */
    if (document == 0 && view == 0)
-      return(NULL);
+      return (NULL);
    else
      {
 	frame = GetWindowNumber (document, view);
 	if (frame == 0 || frame > MAX_FRAME)
-	   return(NULL);
+	   return (NULL);
 	else if (FrameTable[frame].WdFrame != 0)
 	  {
-	     if (index >= MAX_BUTTON || index <= 0
-		 || FrameTable[frame].Button[index] == 0)
-		return(FrameTable[frame].Call_Button[index]);
+	     if (index < MAX_BUTTON && index > 0 &&
+		 FrameTable[frame].Button[index] != 0)
+		return (FrameTable[frame].Call_Button[index]);
 	     else
-	        return(NULL);
+	        return (NULL);
 	  }
      }
    return(NULL);
 }
-
+#endif /* IV */
 
 /*----------------------------------------------------------------------
    TtaSwitchButton
@@ -2902,20 +2903,21 @@ void TtaUpdateMenus (Document doc, View view, ThotBool RO)
 }
 
 /*----------------------------------------------------------------------
-   MakeFrame
-   Cree une frame a` la position X,Y et aux dimensions width et       
-   height (s'ils sont positifs).                                        
-   Le parametre texte donne le titre de la fenetre.                      
-   Le parametre schema donne le nom du sche'ma pour lequel on cre'e   
-   la fenetre de document (NULL pour la fenetre application).       
-   Le parametre name donne le titre de la fenetre.                       
-   Le paramentre doc donne le numero du document.                     
-   Retourne :                                                         
-   - Le volume affichable dans la fenetre en equivalent caracteres.   
-   - L'indice de la fenetre allouee ou 0 en cas d'echec.              
+  MakeFrame
+  Create a frame at position X,Y and dimensions width,height (if >0).
+  - name gives the title of the window.
+  - schema gives the schema name of the current document.
+  - view is the view number.
+  - doc gives the document index.
+  - withMenu is TRUE when menus are displayed
+  - withButton is TRUE when buttons are displayed
+   Returns:
+   - volume: the number of characters that can be displayed in the window.
+   - the allocated window index or 0.
   ----------------------------------------------------------------------*/
 int  MakeFrame (char *schema, int view, char *name, int X, int Y,
-		int width, int height, int *volume, int doc)
+		int width, int height, int *volume, int doc,
+		ThotBool withMenu, ThotBool withButton)
 {
 #ifdef _WINDOWS
    ThotMenu            menu_bar, w;
@@ -3061,12 +3063,19 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	       WinToolBar[frame]           = ToolBar;
 	       FrameTable[frame].WdStatus  = StatusBar;
 	       /* and show it up. */
-	       
-	       menu_bar = CreateMenu ();
-	       if (!menu_bar) 
-		 WinErrorBox (Main_Wd, "MakeFrame");
-	       else 
-		 WinMenus[frame] = menu_bar;
+	       if (withMenu)
+		 {
+		   menu_bar = CreateMenu ();
+		   if (!menu_bar) 
+		     WinErrorBox (Main_Wd, "MakeFrame");
+		   else 
+		     WinMenus[frame] = menu_bar;
+		 }
+	       else
+		 {
+		   menu_bar = NULL;
+		   WinMenus[frame] = NULL;
+		 }
 	     }
 #else /* _WINDOWS */
 	   if (width < MIN_WIDTH)
@@ -3151,21 +3160,23 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 #endif /* _WINDOWS */
 	   
 	   /* Look for the menu list to be built */
-	   SCHmenu = SchemasMenuList;
 	   ptrmenu = NULL;
-	   while (SCHmenu != NULL && ptrmenu == NULL)
+	   if (withMenu)
 	     {
-	       if (!strcmp (schema, SCHmenu->SchemaName))
-		 /* that document has specific menus */
-		 ptrmenu = SCHmenu->SchemaMenu;
-	       else
-		 /* next schema */
-		 SCHmenu = SCHmenu->NextSchema;
+	       SCHmenu = SchemasMenuList;
+	       while (SCHmenu && ptrmenu == NULL)
+		 {
+		   if (!strcmp (schema, SCHmenu->SchemaName))
+		     /* that document has specific menus */
+		     ptrmenu = SCHmenu->SchemaMenu;
+		   else
+		     /* next schema */
+		     SCHmenu = SCHmenu->NextSchema;
+		 }
+	       if (ptrmenu == NULL)
+		 /* the document uses standard menus */
+		 ptrmenu = DocumentMenuList;
 	     }
-	   if (ptrmenu == NULL)
-	     /* the document uses standard menus */
-	     ptrmenu = DocumentMenuList;
-	   
 	   /**** Build menus ****/
 	   FrameTable[frame].FrMenus = ptrmenu;
 	   /* reference du menu construit */
@@ -3177,7 +3188,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   FrameTable[frame].MenuPaste = -1;
 	   FrameTable[frame].MenuUndo = -1;
 	   FrameTable[frame].MenuRedo = -1;
-
 #ifdef _GL
 	   FrameTable[frame].DblBuffNeedSwap = TRUE;
 	   FrameTable[frame].BeginTime = 0;
@@ -3276,6 +3286,8 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	       i++;
 	     }
 
+	   for (i = 1; i < MAX_BUTTON; i++)
+	     FrameTable[frame].Button[i] = NULL;
 #ifndef _WINDOWS
 #ifdef _GTK
 	   /* Creation of the toolbar 
@@ -3283,8 +3295,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	      it's difficulte to manipulate it */
 	   toolbar = gtk_hbox_new (FALSE, 0);
 	   gtk_widget_show (toolbar);
-	   for (i=1; i<MAX_BUTTON ; i++)
-	     FrameTable[frame].Button[i] = NULL;
 	   /* Put the logo */
 	   amaya_pixmap = gdk_pixmap_create_from_xpm_d (DefaultWindow->window, &amaya_mask,
 						      &DefaultWindow->style->bg[GTK_STATE_NORMAL],
@@ -3293,7 +3303,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   gtk_widget_show (logo_pixmap);
 	   gdk_pixmap_unref (amaya_pixmap);
 	   gdk_bitmap_unref (amaya_mask);
-
 #ifdef _GL
 	   /* Is opengl working ? */
 	   if(gdk_gl_query() == FALSE) 
@@ -3313,7 +3322,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	      we had in order to share display list and texture binding ?)*/	   
 	   if (GL_context == NULL)
 	     {
-	       
 	       if ((drawing_area = gtk_gl_area_new (attrlist)) == NULL) 
 		 {
 		   g_print("Error creating GtkGLArea!\n");
@@ -3703,9 +3711,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM);
 	   n++;
 	   hbox1 = XmCreateRowColumn (table1, "", args, n);
-	   
-	   for (i = 1; i < MAX_BUTTON; i++)
-	     FrameTable[frame].Button[i] = 0;
 	   FrameTable[frame].Button[0] = hbox1;
 
 	   /*XmCreateSeparator (table1, "", args, n);*/

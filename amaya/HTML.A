@@ -137,6 +137,10 @@ ATTRIBUTES
 	BEGIN
 	AttrModify.Post -> SRCattrModified;
 	END;
+   HREF_:
+	BEGIN
+	AttrDelete.Pre -> CheckMandatory;
+	END;
    coords:
      	BEGIN
       	AttrModify.Post -> CoordsModified;
@@ -154,31 +158,31 @@ ATTRIBUTES
 
    Width__:
 	BEGIN
-	AttrCreate.Pre -> StoreWidth;
+	AttrCreate.Pre ->  StoreWidth;
 	AttrCreate.Post -> AttrWidthModified;
-	AttrModify.Pre -> StoreWidth;
+	AttrModify.Pre ->  StoreWidth;
 	AttrModify.Post -> AttrWidthModified;
 	AttrDelete.Pre ->  AttrWidthDelete;	
 	END;
 
    IntWidthPxl:
    	BEGIN
-	AttrModify.Pre -> StoreWidth;
+	AttrModify.Pre ->  StoreWidth;
    	AttrModify.Post -> GraphicsModified;
     	END;
    
    Height_:
    	BEGIN
-	AttrCreate.Pre -> StoreHeight;
+	AttrCreate.Pre ->  StoreHeight;
 	AttrCreate.Post -> GraphicsModified;
-	AttrModify.Pre -> StoreHeight;
+	AttrModify.Pre ->  StoreHeight;
 	AttrModify.Post -> AttrHeightModified;
 	AttrDelete.Pre ->  AttrHeightDelete;	
    	END;
     
    IntHeightPxl:
    	BEGIN
-	AttrModify.Pre -> StoreHeight;
+	AttrModify.Pre ->  StoreHeight;
    	AttrModify.Post -> GraphicsModified;
    	END;
 
@@ -204,6 +208,7 @@ ATTRIBUTES
 	BEGIN
 	AttrMenu.Pre ->    AttrNAMEinMenu;
 	AttrExport.Pre ->  CheckValidID;	
+	AttrDelete.Pre ->  CheckMandatory;
 	END;
 
    Font_size:

@@ -1936,6 +1936,7 @@ static void ContentEditing (int editType)
   PtrTextBuffer       pBuffer;
   Propagation         savePropagate;
   PtrLine             pLine;
+  NotifyAttribute     notifyAttr;
   int                 x, y;
   int                 i, j;
   int                 spacesDelta, charsDelta;
@@ -2147,6 +2148,14 @@ static void ContentEditing (int editType)
 		  /* delete on an empty attribute value removes the attribute */
 		  pAttr = pAb->AbCreatorAttr;
 		  pEl = pAb->AbElement;
+    notifyAttr.event = TteAttrDelete;
+  notifyAttr.document = doc;
+  notifyAttr.element = (Element) pEl;
+  notifyAttr.attribute = (Attribute) pAttr;
+  notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
+  notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
+  if (!CallEventAttribute (&notifyAttr, TRUE))
+    {
 		  if (pDoc->DocEditSequence)
 		    /* close the previous sequence */
 		    CloseHistorySequence (pDoc);
@@ -2154,6 +2163,9 @@ static void ContentEditing (int editType)
 		  TtaRemoveAttribute ((Element) pEl, (Attribute) pAttr, doc);
 		  CloseHistorySequence (pDoc);
 		  SelectElement (pDoc, pEl, FALSE, FALSE);
+    }
+	notifyAttr.attribute = NULL;
+      CallEventAttribute (&notifyAttr, FALSE);
 		  return;
 		}
 	      else if (FirstSelectedElement != LastSelectedElement ||

@@ -2451,7 +2451,8 @@ Document CreateNewSVGFileofSVGSelected (char *url)
       TtaSetStructureChecking ((ThotBool)oldStructureChecking, newSVGDoc);
       /* get the width and height before opening the svg file */
 
-      SVGView = TtaOpenMainView (newSVGDoc, 0, 0, width_box - x_box, height_box - y_box);
+      SVGView = TtaOpenMainView (newSVGDoc, 0, 0, width_box - x_box,
+				 height_box - y_box, FALSE, TRUE);
 
     }
 #endif /* _SVGLIB */

@@ -10,7 +10,9 @@ extern View TtaOpenMainView ( Document document,
                               int x,
                               int y,
                               int w,
-                              int h );
+                              int h,
+                              ThotBool withMenu,
+                              ThotBool withButton );
 extern View TtaOpenView ( Document document,
                           char *viewName,
                           int x,
@@ -88,7 +90,9 @@ extern View TtaOpenMainView (/* Document document,
                                 int x,
                                 int y,
                                 int w,
-                                int h */);
+                                int h,
+                                ThotBool withMenu,
+                                ThotBool withButton */);
 extern View TtaOpenView (/* Document document,
                             char *viewName,
                             int x,

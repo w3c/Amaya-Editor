@@ -258,9 +258,33 @@ void RemoveLink (Element el, Document doc)
 /*----------------------------------------------------------------------
    DeleteLink                                              
   ----------------------------------------------------------------------*/
-ThotBool DeleteLink (NotifyElement * event)
+ThotBool DeleteLink (NotifyElement *event)
 {
   RemoveLink (event->element, event->document);
+  return FALSE;		/* let Thot perform normal operation */
+}
+
+/*----------------------------------------------------------------------
+  CheckMandatory checks the attribute could be removed.
+  ----------------------------------------------------------------------*/
+ThotBool CheckMandatory (NotifyAttribute *event)
+{
+  AttributeType       attrType;
+  char               *name;
+
+  attrType.AttrSSchema = event->attributeType.AttrSSchema;
+  attrType.AttrTypeNum = event->attributeType.AttrTypeNum;
+  name = TtaGetSSchemaName (attrType.AttrSSchema);
+  if (!strcmp (name, "HTML"))
+    {
+      if (attrType.AttrTypeNum == HTML_ATTR_HREF_)
+	/* check if there is a name */
+	attrType.AttrTypeNum = HTML_ATTR_NAME;
+      else
+	attrType.AttrTypeNum = HTML_ATTR_HREF_;
+      if (!TtaGetAttribute (event->element, attrType))
+	return TRUE;
+    }
   return FALSE;		/* let Thot perform normal operation */
 }
 
@@ -615,7 +639,7 @@ void SelectDestination (Document doc, Element el, ThotBool withUndo)
    int                 length;
 #ifndef _WINDOWS
    int                 i;
-   char              s[MAX_LENGTH];
+   char                s[MAX_LENGTH];
 #endif
    ThotBool            isHTML;
 
@@ -1768,7 +1792,7 @@ static void         CheckPseudoParagraph (Element el, Document doc)
    ElementCreated
    An element has been created in a HTML document.
   ----------------------------------------------------------------------*/
-void                ElementCreated (NotifyElement * event)
+void ElementCreated (NotifyElement *event)
 {
   CheckPseudoParagraph (event->element, event->document);
 }
