@@ -11,7 +11,7 @@
  * Authors: I. Vatton (INRIA)
  *          R. Guetari (W3C/INRIA) Windows version
  *          D. Veillard (W3C/INRIA): Windows NT/95 routines
- *	    P. Cheyrou-lagreze (INRIA) - Opengl Version
+ *          P. Cheyrou-lagreze (INRIA) - Opengl Version
  *
  */
 
@@ -32,6 +32,7 @@
 #include "units_tv.h"
 #include "edit_tv.h"
 #include "boxes_tv.h"
+
 #undef THOT_EXPORT
 #define THOT_EXPORT
 #include "font_tv.h"
@@ -1042,7 +1043,7 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 {
   int                 i, j, deb;
   int                 val;
-  unsigned int        mask;
+  unsigned int		  mask;
   char                text[10], PsName[10], textX[100];
 #if defined (_WINDOWS) && !defined (_GL)
   SIZE                wsize;
@@ -1256,7 +1257,9 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	  if (ptfont == NULL)
 	    ptfont = FontDialogue;
 	}
+#ifdef VERYSLOW
     }
+#endif /* VERYSLOW */
 
   if (ptfont && size == requestedsize)
     {
