@@ -2229,7 +2229,10 @@ void MathSelectionChanged (NotifyElement *event)
   /* update the displayed style information */
   SynchronizeAppliedStyle (event);
 
-  TtaGetEnvBoolean ("ENABLE_MATHFRAME", &drawFrame);
+  if (!TtaGetEnvBoolean ("ENABLE_MATHFRAME", &drawFrame))
+    /* the environment variable is not defined. By default, draw a frame
+       around the <math> elements that contain the current selection */
+    drawFrame = TRUE;
   if (drawFrame)
     {
       el = event->element;
