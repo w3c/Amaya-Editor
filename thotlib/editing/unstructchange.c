@@ -639,6 +639,13 @@ void PasteCommand ()
 	      /* paste a column in a table */
 	      /* look for the current column position */
 	      pColHead = GetColHeadOfCell (pCell);
+	      pTable = pColHead;
+	      while (pTable &&
+		     !TypeHasException (ExcIsTable,
+					pTable->ElTypeNumber,
+					pTable->ElStructSchema))
+		pTable = pTable->ElParent;
+
 	      cellType.ElTypeNum = pCell->ElTypeNumber;
 	      cellType.ElSSchema = (SSchema) pCell->ElStructSchema;
 	      if (!before)
@@ -654,15 +661,13 @@ void PasteCommand ()
 	      /* look for the first row */
 	      pRow = pCell->ElParent;
 	      if (pRow && pColHead)
+		/* search the next row in the same table */
 		{
+		  /***** could be implemented more efficiently *****/
 		  pRow = FwdSearchTypedElem (pColHead, pRow->ElTypeNumber,
 					     pRow->ElStructSchema);
-		  pTable = pColHead;
-		  while (pTable &&
-			 !TypeHasException (ExcIsTable,
-					    pTable->ElTypeNumber,
-					    pTable->ElStructSchema))
-		    pTable = pTable->ElParent;
+		  if (pRow && !ElemIsWithinSubtree (pRow, pTable))
+		    pRow = NULL;
 		}
 	      else
 		pRow = NULL;
