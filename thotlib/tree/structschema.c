@@ -329,11 +329,13 @@ ThotBool            EquivalentSRules (int typeNum1, PtrSSchema pSS1,
 		       break;
 		    case CsNatureSchema:
 		       if (pSRule->SrSSchemaNat == NULL)
-			  /* structure schema is not loaded */
-			  ret = FALSE;
+			 /* structure schema is not loaded. Compare names */
+			 ret = !strcmp (pSRule->SrOrigName,
+				pSS2->SsRule->SrElem[typeNum2 -1]->SrOrigName);
 		       else
-			  ret = SameSRules (pSRule->SrSSchemaNat->SsRootElem,
-				      pSRule->SrSSchemaNat, typeNum2, pSS2);
+			 /* schema is loaded, compare rules */
+			 ret = SameSRules (pSRule->SrSSchemaNat->SsRootElem,
+				        pSRule->SrSSchemaNat, typeNum2, pSS2);
 		       break;
 		    case CsChoice:
 		       if (pSRule->SrNChoices == -1)
