@@ -1002,7 +1002,7 @@ static void         AHTProtocolInit (void)
 #endif
 
    /* initialize pipelining */
-  strptr = (char *) TtaGetEnvString ("PIPELINING");
+  strptr = (char *) TtaGetEnvString ("ENABLE_PIPELINING");
   if (strptr && *strptr && strcasecmp (strptr,"yes" ))
     HTTP_setConnectionMode (HTTP_11_NO_PIPELINING);
 }
