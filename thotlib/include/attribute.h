@@ -220,6 +220,12 @@ extern int TtaGetAttributeValue (Attribute attribute);
    ---------------------------------------------------------------------- */
 extern char *TtaGetAttributeValueName (AttributeType attributeType, int value);
 
+/*----------------------------------------------------------------------
+   TtaIsValidID
+   Returns TRUE if the attribute value is valid for an ID
+   else if the parameter update is TRUE updates the string name.
+  ----------------------------------------------------------------------*/
+extern ThotBool TtaIsValidID (Attribute attr, ThotBool update);
 
 /* ----------------------------------------------------------------------
    TtaGetAttributeValueFromName

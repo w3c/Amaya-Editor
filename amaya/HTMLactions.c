@@ -556,24 +556,19 @@ void CheckUniqueName (Element el, Document doc, Attribute attr,
 	}
       else if (!strcmp (name, "id"))
 	{
-	  length = TtaGetTextAttributeLength (attr) + 1;
-	  name = (char *)TtaGetMemory (length);
-	  TtaGiveTextAttributeValue (attr, name, &length);
-	  if (name[0] == '.' ||
-	       name[0] == '_' ||
-	       name[0] == '-' ||
-	       name[0] == ' ' ||
-	       (name[0] >= 48 && name[0] <= 57) ||/*  '0' '9'  */
-		strstr (name, " "))
+	  if (!TtaIsValidID (attr, FALSE))
 	    {
+	      length = TtaGetTextAttributeLength (attr) + 1;
+	      name = (char *)TtaGetMemory (length);
+	      TtaGiveTextAttributeValue (attr, name, &length);
 	      sprintf (msgBuffer, "Invalid ID value %s", name);
 	      lineNum = TtaGetElementLineNumber(el);
 	      if (DocumentMeta[doc] && DocumentMeta[doc]->xmlformat)
 		XmlParseError (errorParsing, (unsigned char *)msgBuffer, lineNum);
 	      else
 		HTMLParseError (doc, msgBuffer, lineNum);
+	      TtaFreeMemory (name);
 	    }
-	  TtaFreeMemory (name);
 	}
     }
 }

@@ -1804,29 +1804,39 @@ void GetExtraMargins (PtrBox pBox, PtrAbstractBox pFrom,
 	      if (add)
 		{
 		  /* add values if necessary */
-		  if (pParent->AbBox->BxType == BoFloatBlock || first)
+		  if ( pAb->AbBox->BxType == BoFloatGhost && pFrom != pAb)
 		    {
-		      *l += box->BxLMargin;
-		      if (pFrom != pAb)
-			*l += box->BxLBorder + box->BxLPadding;
+		      *l += box->BxLBorder;
+		      *r += box->BxRBorder;
+		      *t += box->BxTBorder;
+		      *b += box->BxBBorder;
 		    }
-		  if (pParent->AbBox->BxType == BoFloatBlock || last)
+		  else
 		    {
-		      *r += box->BxRMargin;
-		      if (pFrom != pAb)
-			*r += box->BxRBorder + box->BxRPadding;
-		    }
-		  if (pParent->AbBox->BxType == BoBlock || first)
-		    {
-		      *t += box->BxTMargin;
-		      if (pFrom != pAb)
-			*t += box->BxTBorder + box->BxTPadding;
-		    }
-		  if (pParent->AbBox->BxType == BoBlock || last)
-		    {
-		      *b += box->BxBMargin;
-		      if (pFrom != pAb)
-			*b += box->BxBBorder + box->BxBPadding;
+		      if (pParent->AbBox->BxType == BoFloatBlock || first)
+			{
+			  *l += box->BxLMargin;
+			  if (pFrom != pAb)
+			    *l += box->BxLBorder + box->BxLPadding;
+			}
+		      if (pParent->AbBox->BxType == BoFloatBlock || last)
+			{
+			  *r += box->BxRMargin;
+			  if (pFrom != pAb)
+			    *r += box->BxRBorder + box->BxRPadding;
+			}
+		      if (pParent->AbBox->BxType == BoBlock || first)
+			{
+			  *t += box->BxTMargin;
+			  if (pFrom != pAb)
+			    *t += box->BxTBorder + box->BxTPadding;
+			}
+		      if (pParent->AbBox->BxType == BoBlock || last)
+			{
+			  *b += box->BxBMargin;
+			  if (pFrom != pAb)
+			    *b += box->BxBBorder + box->BxBPadding;
+			}
 		    }
 		}
 	      /* search previous and next abstract boxes */

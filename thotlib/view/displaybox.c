@@ -1933,7 +1933,6 @@ void DisplayBorders (PtrBox box, PtrAbstractBox pFrom, int frame,
       pFrom->AbBox->BxType == BoCell)
     /* cell borders are displayed by a presentation box */
     return;
-
   from = pFrom->AbBox;
   /* position in the frame */
   xFrame = box->BxXOrg - ViewFrameTable[frame - 1].FrXOrg;

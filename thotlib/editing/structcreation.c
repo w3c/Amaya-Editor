@@ -918,7 +918,7 @@ void NewContent (PtrAbstractBox pAb)
   PtrDocument         pDoc;
   PtrElement          pEl, pAncest;
   PtrAttribute        pAttr, pNewAttr;
-  unsigned char       text[10];
+  unsigned char       text[10], *tmp;
   char               *name;
   int                 dVol, len, view, i;
   ThotBool            selInAttr;
@@ -953,31 +953,15 @@ void NewContent (PtrAbstractBox pAb)
 		ClearText (pNewAttr->AeAttrText);
 	      /* special treatments for id, name and accesskey attributes */
 	      name = pAttr->AeAttrSSchema->SsAttribute->TtAttr[pAttr->AeAttrNum - 1]->AttrName;
-	      if (!strcmp (name, "id") ||
-		  (!strcmp (name, "name") &&
-		   !strcmp (pAttr->AeAttrSSchema->SsName, "HTML")))
-		{
-		  if (pAb->AbText->BuContent[0] == '.' ||
-		      pAb->AbText->BuContent[0] == '_' ||
-		      pAb->AbText->BuContent[0] == '-' ||
-		      pAb->AbText->BuContent[0] == ' ' ||
-		      (pAb->AbText->BuContent[0] >= 48 && /*  '0'  */
-		       pAb->AbText->BuContent[0] <= 57))/*  '9'  */
-		    pAb->AbText->BuContent[0] = 'L';
-		  /* no space allowed within the attribute value */
-		  i = 1;
-		  while (i < pAb->AbText->BuLength)
-		    {
-		      if (pAb->AbText->BuContent[i] == ' ')
-			pAb->AbText->BuContent[i] = EOS;
-		      i++;
-		    }
-		}
-	      else if (!strcmp (name, "accesskey") &&
-		       !strcmp (pAttr->AeAttrSSchema->SsName, "HTML"))
+	      if (!strcmp (name, "accesskey") &&
+		  !strcmp (pAttr->AeAttrSSchema->SsName, "HTML"))
 		/* only one character is allowed */
 		pAb->AbText->BuContent[1] = EOS;
 	      CopyTextToText (pAb->AbText, pNewAttr->AeAttrText, &len);
+	      if (!strcmp (name, "id") ||
+		  (!strcmp (name, "name") &&
+		   !strcmp (pAttr->AeAttrSSchema->SsName, "HTML")))
+		TtaIsValidID ((Attribute)pNewAttr, TRUE);
 	      /* the Abstract box will be regerated by AttachAttrWithValue */
 	      ClearText (pAb->AbText);
 	      break;

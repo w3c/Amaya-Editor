@@ -718,10 +718,11 @@ void CopyTextToText (PtrTextBuffer pSrceBuf, PtrTextBuffer pCopyBuf, int *len)
   if necessary.
   Returns the number of (wide )characters added in buffers.
   ----------------------------------------------------------------------*/
-int CopyMBs2Buffer (unsigned char *src, PtrTextBuffer pBuf, int pos, int max)
+int CopyMBs2Buffer (unsigned char *src, PtrTextBuffer pBuf, int pos, int slength)
 {
   PtrTextBuffer       pNext;
   int                 l, length;
+  int                 max = slength;
 
   /* number of wide characters added */
   length = 0;

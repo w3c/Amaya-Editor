@@ -1642,10 +1642,10 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
   ----------------------------------------------------------------------*/
 ThotBool MakeUniqueName (Element el, Document doc, ThotBool doIt)
 {
-  ElementType	    elType;
+  ElementType	    elType, foundType;
   AttributeType     attrType;
   Attribute         attr;
-  Element	    image;
+  Element	    image, elFound;
   char             *value;
   char              url[MAX_LENGTH];
   int               length, i;
@@ -1706,13 +1706,33 @@ ThotBool MakeUniqueName (Element el, Document doc, ThotBool doIt)
 	    {
 	      TtaGiveTextAttributeValue (attr, value, &length);
 	      i = 0;
-	      while (SearchNAMEattribute (doc, value, attr, el))
+	      elFound = SearchNAMEattribute (doc, value, attr, el);
+	      while (elFound)
 		{
-		  /* Yes. Avoid duplicate NAMEs */
-		  change = TRUE;
-		  i++;
-		  sprintf (&value[length], "%d", i);
-		  result = TRUE;
+		  /* skip form elements */
+		  foundType = TtaGetElementType (elFound);
+		  if (!strcmp(TtaGetSSchemaName (foundType.ElSSchema), "HTML") &&
+		      foundType.ElTypeNum != HTML_EL_Input &&
+		       foundType.ElTypeNum != HTML_EL_Text_Input &&
+		       foundType.ElTypeNum != HTML_EL_Password_Input &&
+		       foundType.ElTypeNum != HTML_EL_File_Input &&
+		       foundType.ElTypeNum != HTML_EL_Checkbox_Input &&
+		       foundType.ElTypeNum != HTML_EL_Radio_Input &&
+		       foundType.ElTypeNum != HTML_EL_Submit_Input &&
+		       foundType.ElTypeNum != HTML_EL_Reset_Input &&
+		       foundType.ElTypeNum != HTML_EL_Button_Input &&
+		       foundType.ElTypeNum != HTML_EL_Hidden_Input)
+		    {
+		      /* Yes. Avoid duplicate NAMEs */
+		      change = TRUE;
+		      i++;
+		      sprintf (&value[length], "%d", i);
+		      result = TRUE;
+		      /* recheck the new value */
+		      elFound = SearchNAMEattribute (doc, value, attr, el);
+		    }
+		  else
+		    elFound = NULL;
 		}
 	      
 	      if (change && doIt)

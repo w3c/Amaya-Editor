@@ -2843,7 +2843,6 @@ void TtaGivePolylinePoint (Element element, int rank, TypeUnit unit,
 
 /*----------------------------------------------------------------------
    TtaGetPageNumber
-
    Returns the page number of a Page basic element.
    Parameter:
    pageElement: the page element.
@@ -2869,7 +2868,6 @@ int TtaGetPageNumber (Element pageElement)
 
 /*----------------------------------------------------------------------
    TtaGetPageView
-
    Returns the view corresponding to a Page basic element.
    Parameter:
    pageElement: the page element.
@@ -2892,3 +2890,4 @@ int TtaGetPageView (Element pageElement)
       pageView = ((PtrElement) pageElement)->ElViewPSchema;
    return pageView;
 }
+

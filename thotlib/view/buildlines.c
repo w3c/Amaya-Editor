@@ -1677,6 +1677,9 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int frame, int indent,
 	    pBox = box = NULL;
 	  else
 	    {
+	      if (box && pLine->LiFirstBox == pBox)
+		/* update the line */
+		pLine->LiFirstBox = pBox;
 	      pBox = box;
 	      box = NULL;
 	    }
@@ -1990,7 +1993,7 @@ static ThotBool IsFloatSet (PtrBox box, PtrBox floatBox, PtrBox pBlock)
   - notComplete = TRUE if all enclosed boxes are not managed yet.
   - breakLine = TRUE if the end of the line correspond to a break element.
   ----------------------------------------------------------------------*/
-static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
+static int FillLine (PtrLine pLine, PtrBox first, PtrBox pBlock, PtrAbstractBox pRootAb,
 		     ThotBool extensibleBlock, ThotBool xAbs, ThotBool yAbs,
 		     ThotBool notComplete, ThotBool *full, ThotBool *adjust,
 		     ThotBool *breakLine, int frame, int indent,
@@ -2024,7 +2027,7 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
   ascent = 0;
   descent = 0;
   /* the first managed box */
-  pNextBox = pLine->LiFirstBox;
+  pNextBox = first;
   /* evaluate the temporary height of the line */
   if (pNextBox && pNextBox->BxAbstractBox && pNextBox->BxWidth &&
       pNextBox->BxAbstractBox->AbFloat == 'N' &&
@@ -2043,7 +2046,9 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
       if (pLine->LiFirstPiece == NULL &&
 	  (pNextBox->BxType == BoSplit || pNextBox->BxType == BoMulScript))
 	pLine->LiFirstPiece = pNextBox->BxNexChild;
-      if (pLine->LiFirstPiece)
+      if (pLine->LiFirstPiece &&
+	  /* and belong to the current box */
+	  pLine->LiFirstPiece->BxAbstractBox == pNextBox->BxAbstractBox)
 	{
 	  /* the first piece must be inserted in the line */
 	  pBox = pLine->LiFirstPiece;
@@ -2296,11 +2301,13 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 		    pNextBox->BxWidth + xi > pLine->LiXMax)))
 		/* accept to cut the line here */ 
 		still = FALSE;
-	      else if (pBlock->BxType == BoFloatBlock &&
+	      else if (/*pBlock->BxType == BoFloatBlock &&*/
 		       ((pBox->BxAbstractBox->AbFloat == 'N' &&
+			 pBox->BxAbstractBox->AbDisplay == 'B' &&
 			 pBox->BxAbstractBox->AbLeafType == LtCompound) ||
 			(pNextBox && pNextBox->BxAbstractBox &&
 			 pNextBox->BxAbstractBox->AbFloat == 'N' &&
+			 pNextBox->BxAbstractBox->AbDisplay == 'B' &&
 			 pNextBox->BxAbstractBox->AbLeafType == LtCompound)))
 		{
 		  /* only one compound box by line */
@@ -2807,6 +2814,7 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
 	      PtrBox *floatL, PtrBox *floatR)
 {
   PtrBox              boxPrevL, boxPrevR;
+  PtrBox              pNextBox;
   int                 x, y, w;
   int                 orgX, orgY;
 
@@ -2931,7 +2939,8 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
     *floatL = box;
   else
     *floatR = box;
-  return FillLine (pLine, pBlock, pRootAb, extensibleBlock, xAbs, yAbs,
+  pNextBox = GetNextBox (box->BxAbstractBox, frame);
+  return FillLine (pLine, pNextBox, pBlock, pRootAb, extensibleBlock, xAbs, yAbs,
 		   notComplete, full, adjust, breakLine, frame, indent,
 		   top, bottom, left, right, floatL, floatR);
 }
@@ -3423,7 +3432,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	      pLine->LiFirstBox = pNextBox;
 	      pLine->LiFirstPiece = pBoxToBreak;
 	      /* Fill the line */
-	      minWidth = FillLine (pLine, pBox, pRootAb, extensibleBox,
+	      minWidth = FillLine (pLine, pNextBox, pBox, pRootAb, extensibleBox,
 				   xAbs, yAbs, pAb->AbTruncatedTail,
 				   &full, &toAdjust, &breakLine, frame,
 				   indent, top, bottom, left, right,
@@ -3489,7 +3498,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 		      pBox->BxContentWidth = TRUE;
 		      pLine->LiXMax = pLine->LiRealLength;
 		    }
-		  if (!pBox->BxContentWidth && !extensibleBox)
+		  if (/*!pBox->BxContentWidth &&*/ !extensibleBox)
 		    Align (pBox, pLine, frame, TRUE, xAbs, yAbs);
 		  else
 		    Align (pBox, pLine, frame, FALSE, xAbs, yAbs);
@@ -3612,7 +3621,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	      pLine->LiLastBox = NULL;
 	      pLine->LiLastPiece = NULL;
 	      pLine->LiYOrg = *height;
-	      minWidth = FillLine (pLine, pBox, pRootAb, extensibleBox,
+	      minWidth = FillLine (pLine, pNextBox, pBox, pRootAb, extensibleBox,
 				   xAbs, yAbs, pAb->AbTruncatedTail,
 				   &full, &toAdjust, &breakLine, frame,
 				   0, top, bottom, left, right,

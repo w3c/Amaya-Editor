@@ -1431,6 +1431,7 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
   int                 firstChar, lastChar, att;
   int                 act;
   ThotBool            lock = TRUE;
+  ThotBool            isID = FALSE, isACCESS = FALSE;
 
   act = 0; /* apply by default */
   switch (ref)
@@ -1457,6 +1458,16 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
 	  TtaDestroyDialogue (NumMenuAttr);
 	  AttrFormExists = FALSE;
 	}
+      tmp = SchCurrentAttr->SsAttribute->TtAttr[NumCurrentAttr - 1]->AttrName;
+      isACCESS = (!strcmp (tmp, "accesskey") &&
+		  !strcmp (SchCurrentAttr->SsName, "HTML"));
+      isID = (!strcmp (tmp, "id") ||
+	      (!strcmp (tmp, "name") &&
+	       !strcmp (SchCurrentAttr->SsName, "HTML")));
+      if ((isACCESS || isID) && TextAttrValue[0] == EOS)
+	return;
+      if (!strcmp (tmp, "class") && TextAttrValue[0] == EOS)
+	return;
       act = valmenu;
       break;
     }
@@ -1543,32 +1554,18 @@ void CallbackValAttrMenu (int ref, int valmenu, char *valtext)
 			GetTextBuffer (&(pAttrNew->AeAttrText));
 		      else
 			ClearText (pAttrNew->AeAttrText);
-		      /* special treatments for id, name and accesskey attributes */
-		      tmp = SchCurrentAttr->SsAttribute->TtAttr[NumCurrentAttr - 1]->AttrName;
-		      if (!strcmp (tmp, "id") ||
-			  (!strcmp (tmp, "name") &&
-			   !strcmp (SchCurrentAttr->SsName, "HTML")))
-			{
-			  if (TextAttrValue[0] == '.' ||
-			      TextAttrValue[0] == '_' ||
-			      TextAttrValue[0] == '-' ||
-			      TextAttrValue[0] == ' ' ||
-			      (TextAttrValue[0] >= 48 && /*  '0'  */
-			       TextAttrValue[0] <= 57))/*  '9'  */
-			    TextAttrValue[0] = 'L';
-			  /* no space allowed within the attribute value */
-			  tmp = strstr (TextAttrValue, " ");
-			  if (tmp)
-			    *tmp = EOS;
-			}
-		      else if (!strcmp (tmp, "accesskey") &&
-			       !strcmp (SchCurrentAttr->SsName, "HTML"))
+		      /* special treatment for accesskey attributes */
+		      if (isACCESS)
 			/* only one character is allowed */
 			TextAttrValue[1] = EOS;
 
 		      tmp = (char *)TtaConvertByteToMbs ((unsigned char *)TextAttrValue, TtaGetDefaultCharset ());
 		      CopyMBs2Buffer ((unsigned char *)tmp, pAttrNew->AeAttrText, 0, strlen (tmp));
 		      TtaFreeMemory (tmp);
+		      /* special treatments for id, name and accesskey attributes */
+		      tmp = SchCurrentAttr->SsAttribute->TtAttr[NumCurrentAttr - 1]->AttrName;
+		      if (isID)
+			TtaIsValidID ((Attribute)pAttrNew, TRUE);
 		    }
 		  /* applique les attributs a la partie selectionnee */
 		  AttachAttrToRange (pAttrNew, lastChar, firstChar, lastSel,

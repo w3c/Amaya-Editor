@@ -2751,7 +2751,7 @@ RULES
 	NoBreak2 : 2;
 #endif
 	Width: auto{Enclosing . Width};
-	{Display: Block;}
+	Display: Block;
 	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: PMargin;
 	MarginBottom: PMargin;
@@ -2793,7 +2793,7 @@ RULES
 	CreateWith(VerticalLine);
 	LineBreak: No;
 	Width: auto{Enclosing . Width};
-	{Display: Block;}
+	Display: Block;
 	VertPos: Top = Previous not MAP . Bottom;
 	MarginTop: H4Margin;
 	MarginBottom: H4Margin;
@@ -2843,7 +2843,7 @@ RULES
 	CreateWith(VerticalLine);
 	MarginLeft: LIST_INDENT;
 	Width: auto{Enclosing . Width};
-	{Display: Block;}
+	Display: Block;
 	HorizPos: Left = Enclosing . Left;
 	IN Structure_view BEGIN
 		MarginLeft: 0;
@@ -2863,7 +2863,7 @@ RULES
 	   ListStyleType: Square;
 	LineBreak: No;
 	Width: auto{Enclosing . Width};
-	{Display: Block;}
+	Display: Block;
 	VertPos: Top = Previous not MAP . Bottom;
 	PaddingLeft: LIST_INDENT;
 	if not within Definition and not within List_Item BEGIN
@@ -2890,7 +2890,7 @@ RULES
 	ListStyleType: Decimal;
 	LineBreak: No;
 	Width: auto{Enclosing . Width};
-	{Display: Block;}
+	Display: Block;
 	VertPos: Top = Previous not MAP . Bottom;
 	PaddingLeft: LIST_INDENT;
 	if not within Definition and not within List_Item BEGIN
@@ -3068,7 +3068,7 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	Width: auto{Enclosing . Width};
-	{Display: Block;}
+	Display: Block;
 	VertPos: Top = Previous not MAP . Bottom;
 	Gather: Yes;
 	MarginTop: H4Margin;
@@ -3245,8 +3245,7 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	Width: auto{Enclosing . Width};
-	{Display: Block;}
-	Clear: both;
+	Display: Block;
 	VertPos: Top = Previous not MAP . Bottom + 0.6;
 	MarginTop: H4Margin;
 	MarginBottom: H4Margin;
@@ -3299,12 +3298,14 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	Width: Enclosed . Width;
-	VertPos: Top = Enclosing . Top - 0.6;
+	{VertPos: Top = Enclosing . Top - 0.6;}
 	HorizPos: Left = Enclosing . Left;
         PaddingLeft: 0.3;
         PaddingRight: 0.3;
+	MarginTop: -0.5;
 	MarginBottom: 0.5;
 	Background: Enclosing =;
+	Display: Block;
         Showbox;
 	FillPattern: backgroundcolor;
         Depth: Enclosing - 2;
@@ -3314,6 +3315,7 @@ RULES
 		VertPos: Top = Previous . Bottom;
         	PaddingLeft: 0;
         	PaddingRight: 0;
+		MarginTop: 0;
 		MarginBottom: 0;
 		NoLine;
 		END;
@@ -3321,6 +3323,7 @@ RULES
 		VertPos: Top = Enclosing . Top;
        		PaddingLeft: 0;
         	PaddingRight: 0;
+		MarginTop: 0;
 		MarginBottom: 0.8;
 		END;
 	END;
@@ -4505,7 +4508,7 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	Width: auto{Enclosing . Width};
-	{Display: Block;}
+	Display: Block;
 	VertPos: Top = Previous not MAP . Bottom;
         MarginTop: 0;
 	IN Structure_view BEGIN
@@ -4525,7 +4528,7 @@ RULES
 	CreateBefore(ElementName);
 	CreateWith(VerticalLine);
 	Width: auto{Enclosing . Width};
-	{Display: Block;}
+	Display: Block;
 	VertPos: Top = Previous not MAP . Bottom + 0.4;
 	Adjust: VMiddle;
 	IN Structure_view BEGIN

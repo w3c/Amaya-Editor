@@ -914,10 +914,8 @@ int TtaSameAttributeTypes (AttributeType type1, AttributeType type2)
    TtaGetAttributeValue
 
    Returns the value of a given attribute of type integer or enumerate.
-
    Parameter:
    attribute: the attribute of interest.
-
    Return value:
    Value of that attribute.
 
@@ -968,6 +966,68 @@ char *TtaGetAttributeValueOriginalName (AttributeType attType, int value)
   return bufferName;
 }
 
+/*----------------------------------------------------------------------
+   TtaIsValidID
+   Returns TRUE if the attribute value is valid for an ID
+   else if the parameter update is TRUE updates the string name.
+  ----------------------------------------------------------------------*/
+ThotBool TtaIsValidID (Attribute attr, ThotBool update)
+{
+  PtrAttribute        pAttr = (PtrAttribute)attr;
+  CHAR_T        *s;
+  unsigned char *tmp;
+  int            i;
+  ThotBool       ok;
+
+  if (pAttr == NULL || pAttr->AeAttrType != AtTextAttr ||
+      pAttr->AeAttrText == NULL || pAttr->AeAttrText->BuContent[0] == EOS)
+    /* invalid ID */
+    return FALSE;
+  else
+    {
+      i = 0;
+      ok  = TRUE;
+      s = pAttr->AeAttrText->BuContent;
+      while (s[i] != EOS)
+	{
+	  if (s[i] == ':' || s[i] == '_' ||
+	      (s[i] >= 'A' && s[i] <= 'Z') ||
+	      (s[i] >= 'a' && s[i] <= 'z') ||
+	      (s[i] >= 0xC0 && s[i] <= 0xD6) ||
+	      (s[i] >= 0xD8 && s[i] <= 0xF6) ||
+	      (s[i] >= 0xF8 && s[i] <= 0x2FF) ||
+	      (s[i] >= 0x370 && s[i] <= 0x37D) ||
+	      (s[i] >= 0x37F && s[i] <= 0x1FFF) ||
+	      (s[i] >= 0x200C && s[i] <= 0x200D) ||
+	      (s[i] >= 0x2070 && s[i] <= 0x218F) ||
+	      (s[i] >= 0x2C00 && s[i] <= 0x2FEF) ||
+	      (s[i] >= 0x3001 && s[i] <= 0xD7FF) ||
+	      (s[i] >= 0xF900 && s[i] <= 0xFDCF) ||
+	      (s[i] >= 0xFDF0 && s[i] <= 0xFFFD) ||
+	      (s[i] >= 0x10000 && s[i] <= 0xEFFFF) ||
+	      (i > 0 &&
+	       (s[i] == '-' || s[i] == '.' || s[i] == 0xB7 ||
+		(s[i] >= '0' && s[i] <= '9') ||
+		(s[i] >= 0x0300 && s[i] <= 0x036F) ||
+		(s[i] >= 0x203F && s[i] <= 0x2040))))
+	    i++;
+	  else
+	    {
+	      /* fix the invalid ID */
+	      ok = FALSE;
+	      if (update)
+		{
+		  if (i == 0)
+		    s[i] = 'L';
+		  else
+		    s[i] = '_';
+		}
+	      i++;
+	    }
+	}
+      return ok;
+    }
+}
 
 /* ----------------------------------------------------------------------
    TtaGetAttributeValueName

@@ -429,7 +429,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
   int                 wbg, hbg;
   int                 w, h, view;
   int                 t, b, l, r;
-  ThotBool            setWindow, isLast;
+  ThotBool            setWindow, isLast, start;
 
   if (pBox == NULL || pFrom == NULL || pFrom->AbBox == NULL)
     return;
@@ -438,9 +438,16 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
 	    TypeHasException (ExcNoShowBox, pFrom->AbElement->ElTypeNumber,
 			      pFrom->AbElement->ElStructSchema)))
     return;
+
+  pFrame = &ViewFrameTable[frame - 1];
+  x = pFrame->FrXOrg;
+  y = pFrame->FrYOrg;
+  GetSizesFrame (frame, &w, &h);
+  t = b = l = r = 0;
   from = pFrom->AbBox;
   pAb = pBox->BxAbstractBox;
-  if (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
+  if ((pBox->BxType == BoGhost /*&& pAb->AbDisplay != 'B'*/) ||
+      pBox->BxType == BoFloatGhost)
     {
       /* check the block type to detect what border to apply */
       if (pBox == from && pBox->BxType == BoGhost)
@@ -463,13 +470,14 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
 	  isLast = (last && pNext == NULL);
 	  if (pChild->AbBox && !pChild->AbPresentationBox)
 	    {
+	      /* draw each child boxes */
 	      DrawFilledBox (pChild->AbBox, pFrom, frame, xmin, xmax, ymin,
 			     ymax, selected, first, isLast, topdown);
 	      first = FALSE;
 	    }
 	  pChild = pNext;
 	}
-      return;
+     return;
     }
   else if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
     {
@@ -484,33 +492,55 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
 	}
       return;
     }
-  pFrame = &ViewFrameTable[frame - 1];
-  x = pFrame->FrXOrg;
-  y = pFrame->FrYOrg;
-  GetSizesFrame (frame, &w, &h);
-  GetExtraMargins (pBox, pFrom, &t, &b, &l, &r);
-  if (pBox == from)
+
+  if (pBox->BxType == BoGhost && pAb->AbDisplay == 'B')
     {
-      /* display borders and fill of the current box */
-      l += pBox->BxLMargin;
-      b += pBox->BxBMargin;
-      t += pBox->BxTMargin;
-      r += pBox->BxRMargin;
+      GetExtraMargins (pBox, pFrom, &t, &b, &l, &r);
+      pParent = pAb->AbEnclosing;
+      while (pParent && pParent->AbBox && pParent->AbBox->BxType == BoGhost)
+	pParent = pParent->AbEnclosing;
+      /* the default area to be painted with the background */
+      if (pParent && pParent->AbBox)
+	{
+	  l += pParent->AbBox->BxLMargin;
+	  b += pParent->AbBox->BxBMargin;
+	  t += pParent->AbBox->BxTMargin;
+	  r += pParent->AbBox->BxRMargin;
+	  xd = pParent->AbBox->BxXOrg + l;
+	  yd = pParent->AbBox->BxYOrg + t;
+	  width = pParent->AbBox->BxWidth - l - r;
+	  height = pParent->AbBox->BxHeight - t - b;
+	}
     }
-  /* the default area to be painted with the background */
-  xd = pBox->BxXOrg + l;
-  yd = pBox->BxYOrg + t;
-  width = pBox->BxWidth - l - r;
-  height = pBox->BxHeight - t - b;
+  else
+    {
+      if (pBox == from)
+	{
+	  /* display borders and fill of the current box */
+	  l = pBox->BxLMargin;
+	  b = pBox->BxBMargin;
+	  t = pBox->BxTMargin;
+	  r = pBox->BxRMargin;
+	}
+      else
+	GetExtraMargins (pBox, pFrom, &t, &b, &l, &r);
+      /* the default area to be painted with the background */
+      xd = pBox->BxXOrg + l;
+      yd = pBox->BxYOrg + t;
+      width = pBox->BxWidth - l - r;
+      height = pBox->BxHeight - t - b;
+    }
   /* clipping on the origin */
   if (xd < x)
     {
       width = width - x + xd;
+      l = l - x + xd;
       xd = x;
     }
   if (yd < y)
     {
       height = height - y + yd;
+      t = t - y + yd;
       yd = y;
     }
   /* clipping on the width */

@@ -43,6 +43,8 @@ extern int TtaSameAttributeTypes ( AttributeType type1,
 extern int TtaGetAttributeValue ( Attribute attribute );
 extern char *TtaGetAttributeValueOriginalName ( AttributeType attType,
                                                 int value );
+extern ThotBool TtaIsValidID ( Attribute attr,
+                               ThotBool update );
 extern char *TtaGetAttributeValueName ( AttributeType attType,
                                         int value );
 extern int TtaGetAttributeValueFromOriginalName ( char *name,
@@ -104,6 +106,8 @@ extern int TtaSameAttributeTypes ( AttributeType type1,
 extern int TtaGetAttributeValue ( Attribute attribute );
 extern char *TtaGetAttributeValueOriginalName ( AttributeType attType,
                                                   int value );
+extern ThotBool TtaIsValidID ( Attribute attr,
+                                 ThotBool update );
 extern char *TtaGetAttributeValueName ( AttributeType attType,
                                           int value );
 extern int TtaGetAttributeValueFromOriginalName ( char *name,
