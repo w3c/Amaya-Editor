@@ -783,7 +783,6 @@ void                KeyboardMap (int kb)
   ----------------------------------------------------------------------*/
 void GraphicsLoadResources ()
 {
-#ifndef _GTK
    int                 i;
 
    if (ThotLocalActions[T_keyboard] == NULL)
@@ -806,7 +805,6 @@ void GraphicsLoadResources ()
 #endif /* _WINDOWS */
    if (GraphicsIcons == NULL)
      GraphicsIcons = FontDialogue;
-#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -815,7 +813,6 @@ void GraphicsLoadResources ()
   ----------------------------------------------------------------------*/
 void                KeyboardsLoadResources ()
 {
-#ifndef _GTK
   int                 i;
 
   if (ThotLocalActions[T_keyboard] == NULL)
@@ -838,7 +835,6 @@ void                KeyboardsLoadResources ()
     /* Fonte 'ivsymb' inaccessible */
     SymbolIcons = FontDialogue;
 #endif /* _WINDOWS */
-#endif /* _GTK */
 }
 
 

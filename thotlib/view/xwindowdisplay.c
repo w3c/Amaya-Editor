@@ -2578,7 +2578,7 @@ void WChaine (ThotWindow w, char *string, int x, int y, ptrfont font,
 	      ThotGC GClocal)
 {
 #ifdef _GTK
-   gdk_draw_string (w, font, GClocal, x, y, string); 
+   gdk_draw_string (w, font, GClocal, x, y+gdk_string_height (font, string), string); 
 #else /* _GTK */
    XSetFont (TtDisplay, GClocal, ((XFontStruct *) font)->fid);
    FontOrig (font, string[0], &x, &y);

@@ -84,7 +84,6 @@ static ThotBool     IsRegistered = FALSE;
   ----------------------------------------------------------------------*/
 static void ThotSelectPalette (int bground, int fground)
 {
-#ifndef _GTK
 #ifdef _WINDOWS
    BgColor = bground;
    FgColor = fground;
@@ -111,10 +110,17 @@ static void ThotSelectPalette (int bground, int fground)
 	y -= 2;
 	w = wcase + 2;
 	h = hcase + 2;
+#ifndef _GTK
 	XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x + 2, y, w, 2);
 	XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y, 2, h);
 	XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y + h, w, 2);
 	XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x + w, y + 2, 2, h);
+#else /* _GTK */
+	gdk_draw_rectangle (Color_Window, TtInvertGC, TRUE, x + 2, y, w, 2);
+	gdk_draw_rectangle (Color_Window, TtInvertGC, TRUE, x, y, 2, h);
+	gdk_draw_rectangle (Color_Window, TtInvertGC, TRUE, x, y + h, w, 2);
+	gdk_draw_rectangle (Color_Window, TtInvertGC, TRUE, x + w, y + 2, 2, h);
+#endif /* !_GTK */
      }
 
    if (LastFg != -1 && LastFg != fground)
@@ -124,10 +130,17 @@ static void ThotSelectPalette (int bground, int fground)
 	y = ((LastFg / COLORS_COL) + 1) * hcase;
 	w = wcase - 2;
 	h = hcase - 2;
+#ifndef _GTK
 	XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x + 2, y, w, 2);
 	XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y, 2, h);
 	XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y + h, w, 2);
 	XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x + w, y + 2, 2, h);
+#else /* _GTK */
+	gdk_draw_rectangle (Color_Window, TtInvertGC, TRUE, x + 2, y, w, 2);
+	gdk_draw_rectangle (Color_Window, TtInvertGC, TRUE, x, y, 2, h);
+	gdk_draw_rectangle (Color_Window, TtInvertGC, TRUE, x, y + h, w, 2);
+	gdk_draw_rectangle (Color_Window, TtInvertGC, TRUE, x + w, y + 2, 2, h);
+#endif /* !_GTK */
      }
 
    /* nouveau background */
@@ -142,10 +155,17 @@ static void ThotSelectPalette (int bground, int fground)
 	     y -= 2;
 	     w = wcase + 2;
 	     h = hcase + 2;
+#ifndef _GTK
 	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x + 2, y, w, 2);
 	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y, 2, h);
 	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y + h, w, 2);
 	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x + w, y + 2, 2, h);
+#else /* _GTK */
+	gdk_draw_rectangle (Color_Window, TtInvertGC, TRUE, x + 2, y, w, 2);
+	gdk_draw_rectangle (Color_Window, TtInvertGC, TRUE, x, y, 2, h);
+	gdk_draw_rectangle (Color_Window, TtInvertGC, TRUE, x, y + h, w, 2);
+	gdk_draw_rectangle (Color_Window, TtInvertGC, TRUE, x + w, y + 2, 2, h);
+#endif /* !_GTK */
 	  }
      }
 
@@ -159,14 +179,20 @@ static void ThotSelectPalette (int bground, int fground)
 	     y = ((LastFg / COLORS_COL) + 1) * hcase;
 	     w = wcase - 2;
 	     h = hcase - 2;
+#ifndef _GTK
 	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x + 2, y, w, 2);
 	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y, 2, h);
 	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x, y + h, w, 2);
 	     XFillRectangle (TtDisplay, Color_Window, TtInvertGC, x + w, y + 2, 2, h);
+#else /* _GTK */
+	gdk_draw_rectangle (Color_Window, TtInvertGC, TRUE, x + 2, y, w, 2);
+	gdk_draw_rectangle (Color_Window, TtInvertGC, TRUE, x, y, 2, h);
+	gdk_draw_rectangle (Color_Window, TtInvertGC, TRUE, x, y + h, w, 2);
+	gdk_draw_rectangle (Color_Window, TtInvertGC, TRUE, x + w, y + 2, 2, h);
+#endif /* !_GTK */
 	  }
      }
 #endif /* _WINDOWS */
-#endif /* _GTK */
 }
 
 
@@ -186,9 +212,12 @@ static void KillPalette (ThotWidget w, int index, caddr_t call_d)
    ColorsExpose
    redisplays a color keyboard.
   ----------------------------------------------------------------------*/
-static void ColorsExpose ()
-{
 #ifndef _GTK
+static void ColorsExpose ()
+#else /* _GTK */
+static gboolean ColorsExposeGTK (GtkWidget *widget, GdkEventExpose *ev)
+#endif /* !_GTK */
+{
    int                 max, y, w, h;
 #ifndef _WINDOWS 
    char               *ptr;
@@ -211,11 +240,14 @@ static void ColorsExpose ()
    y = hcase;
    h = (max + COLORS_COL - 1) / COLORS_COL * hcase + y;
 #ifndef _WINDOWS
+#ifndef _GTK
    XClearWindow (TtDisplay, Color_Window);
+#endif /* !_GTK */
 
    /* entree couleur standard */
    if (SmallFontDialogue == NULL)
       KeyboardsLoadResources ();
+#ifndef _GTK
    XSetForeground (TtDisplay, TtLineGC, ColorPixel (0));
    XFillRectangle (TtDisplay, Color_Window, TtLineGC, 0, 0, w, hcase - 2);
    XSetForeground (TtDisplay, TtLineGC, ColorPixel (1));
@@ -223,33 +255,59 @@ static void ColorsExpose ()
    WChaine (Color_Window, ptr,
 	    (w / 2) - (XTextWidth ((XFontStruct *) SmallFontDialogue, ptr, strlen (ptr)) / 2),
 	    0, FontDialogue, TtLineGC);
+#else /* _GTK */
+   gdk_rgb_gc_set_foreground (TtLineGC, ColorPixel (0));
+   gdk_draw_rectangle (Color_Window, TtLineGC, TRUE, 0, 0, w, hcase - 2);
+   gdk_rgb_gc_set_foreground (TtLineGC, ColorPixel (1));
+   ptr = TtaGetMessage (LIB, TMSG_STD_COLORS);
+   WChaine (Color_Window, ptr,
+	    (w / 2) - (gdk_text_width (SmallFontDialogue, ptr, strlen (ptr)) / 2),
+	    0, FontDialogue, TtLineGC);
+#endif /* !_GTK */
 
    /* grille */
+#ifndef _GTK
    XSetLineAttributes (TtDisplay, TtLineGC, 1, LineSolid, CapButt, JoinMiter);
    for (x = wcase; x < w; x += wcase)
       XDrawLine (TtDisplay, Color_Window, TtLineGC, x, y, x, h);
    for (y = hcase; y < h; y += hcase)
       XDrawLine (TtDisplay, Color_Window, TtLineGC, 0, y, w, y);
-
+#else /* _GTK */
+   gdk_gc_set_line_attributes (TtLineGC, 1, GDK_LINE_SOLID, GDK_CAP_BUTT, GDK_JOIN_MITER);
+   for (x = wcase; x < w; x += wcase)
+     gdk_draw_line (Color_Window, TtLineGC, x, y, x, h);
+   for (y = hcase; y < h; y += hcase)
+     gdk_draw_line (Color_Window, TtLineGC, 0, y, w, y);
+#endif /* !_GTK */
    /* items */
    if (TtWDepth == 1)
       for (i = 0; i < max; i++)
 	{
 	   x = (i % COLORS_COL) * wcase;
 	   y = ((i / COLORS_COL) + 1) * hcase;
+#ifndef _GTK
 	   WChaine (Color_Window, ColorName (i),
 		    x + (wcase / 2) - (XTextWidth ((XFontStruct *) SmallFontDialogue, ColorName (i), strlen (ColorName (i))) / 2),
 		    y, SmallFontDialogue, TtLineGC);
+#else /* _GTK */
+	   WChaine (Color_Window, ColorName (i),
+		    x + (wcase / 2) - (gdk_text_width (SmallFontDialogue, ColorName (i), strlen (ColorName (i))) / 2),
+		    y, SmallFontDialogue, TtLineGC);
+#endif /* !_GTK */
 	}
    else
       for (i = 0; i < max; i++)
 	{
 	   x = (i % COLORS_COL) * wcase;
 	   y = ((i / COLORS_COL) + 1) * hcase;
+#ifndef _GTK
 	   XSetForeground (TtDisplay, TtLineGC, ColorPixel (i));
 	   XFillRectangle (TtDisplay, Color_Window, TtLineGC, x + 1, y + 1, wcase - 2, hcase - 2);
+#else /* _GTK */
+	   gdk_rgb_gc_set_foreground (TtLineGC, ColorPixel (i));
+	   gdk_draw_rectangle (Color_Window, TtLineGC, TRUE, x + 1, y + 1, wcase - 2, hcase - 2);
+#endif /* !_GTK */
 	}
-
    /* show the current selection */
    fground = LastFg;
    bground = LastBg;
@@ -257,7 +315,6 @@ static void ColorsExpose ()
    LastBg = -1;
    ThotSelectPalette (bground, fground);
 #endif /* _WINDOWS */
-#endif /* _GTK */
 }
 
 
@@ -265,8 +322,17 @@ static void ColorsExpose ()
    ColorsPress
    handles a click on the color palette
   ----------------------------------------------------------------------*/
+#ifndef _GTK
 static void ColorsPress (int button, int x, int y)
+#else /*_GTK*/
+static gboolean ColorsPressGTK (GtkWidget *widget, GdkEventButton *event, gpointer data)
+#endif /* !_GTK */
 {
+#ifdef _GTK
+  int button = event->button;
+  int x = event->x;
+  int y = event->y;
+#endif /* _GTK */
   int                 color, li, co;
 #ifndef _WINDOWS
   int                 wcase, hcase;
@@ -920,19 +986,24 @@ ThotBool ThotCreatePalette (int x, int y)
    LastFg = -1;
 #else /* !_GTK */
    /* create the color selection in GTK, it's possible to add some elements by adding it into the tmpw_vbox container */
-
+   int                 width, height;
    ThotWidget tmpw_vbox;
    ThotWidget tmpw_colsel;
+   ThotWidget tmpw_draw;
+   ThotWidget tmpw_label;
    ThotWidget tmpw_frame;
    ThotWidget tmpw_hbox;
    ThotWidget tmpw_button;
  
+   if (SmallFontDialogue == NULL)
+     SmallFontDialogue = ReadFont ('L', 'H', 0, 9, UnPoint);
+
    /* create the window */
    Color_Palette = gtk_window_new (GTK_WINDOW_TOPLEVEL);
    gtk_window_set_title (GTK_WINDOW (Color_Palette), TtaGetMessage (LIB, TMSG_COLORS));
    ConnectSignalGTK (Color_Palette,
 		     "delete_event",
-		     GTK_SIGNAL_FUNC(DoNotKillWindowGTK),
+		     GTK_SIGNAL_FUNC(gtk_true),
 		     (gpointer)NULL);
 
    /* create the vbox whitch containe all the widget */
@@ -940,9 +1011,50 @@ ThotBool ThotCreatePalette (int x, int y)
    gtk_container_set_border_width (GTK_CONTAINER (tmpw_vbox), 5);
    gtk_container_add (GTK_CONTAINER (Color_Palette), tmpw_vbox);
 
+   /* put the labels */
+   tmpw_label = gtk_label_new (TtaGetMessage (LIB, TMSG_BUTTON_1));
+   gtk_box_pack_start (GTK_BOX (tmpw_vbox), tmpw_label, FALSE, FALSE, 0);
+   tmpw_label = gtk_label_new (TtaGetMessage (LIB, TMSG_BUTTON_2));
+   gtk_box_pack_start (GTK_BOX (tmpw_vbox), tmpw_label, FALSE, FALSE, 0);
+   
+   /* Evalue la largeur et la hauteur de la palette */
+   if (TtWDepth == 1)
+      /* Affiche le nom des couleurs sur un ecran N&B */
+      width = CharacterWidth ('m', FontDialogue) * 12 * COLORS_COL;
+   else
+      /* Affiche les couleurs sur un ecran couleur */
+      width = CharacterWidth ('m', FontDialogue) * 4 * COLORS_COL;
+   height = ((NumberOfColors () + COLORS_COL - 1) / COLORS_COL + 1) * FontHeight (FontDialogue);
+
    /* create the frame for decoration */
    tmpw_frame = gtk_frame_new (NULL);
-   gtk_box_pack_start (GTK_BOX (tmpw_vbox), tmpw_frame, FALSE, FALSE, 0);
+   gtk_box_pack_start (GTK_BOX (tmpw_vbox), tmpw_frame, TRUE, TRUE, 0);
+
+   /* put the drawing area */
+   tmpw_draw = gtk_drawing_area_new ();
+   gtk_drawing_area_size (tmpw_draw, width, height);
+   gtk_container_add (GTK_CONTAINER (tmpw_frame), tmpw_draw);
+   gtk_widget_set_events (GTK_WIDGET (tmpw_draw),  
+			  GDK_BUTTON_PRESS_MASK
+		
+			
+			
+		
+			  | GDK_EXPOSURE_MASK
+			
+			  );
+   ConnectSignalGTK (tmpw_draw,
+		     "expose_event",
+		     GTK_SIGNAL_FUNC (ColorsExposeGTK),
+		     (gpointer)tmpw_draw);
+   ConnectSignalGTK (tmpw_draw,
+		     "button_press_event",
+		     GTK_SIGNAL_FUNC(ColorsPressGTK),
+		     (gpointer)tmpw_draw);
+
+   /* create the frame for decoration */
+   tmpw_frame = gtk_frame_new (NULL);
+   gtk_box_pack_start (GTK_BOX (tmpw_vbox), tmpw_frame, TRUE, TRUE, 0);
 
    /* create the color selection */
    tmpw_colsel = gtk_color_selection_new ();
@@ -971,12 +1083,14 @@ ThotBool ThotCreatePalette (int x, int y)
 		     "clicked",
 		     GTK_SIGNAL_FUNC (EndPalette),
 		     (gpointer)NULL);
-
    /* move the colorpalette at the good position */
    gtk_widget_set_uposition (Color_Palette, x, y);
    /* show it */
    gtk_widget_show_all(GTK_WIDGET(Color_Palette));
-   Color_Window = GTK_WIDGET(Color_Palette)->window;
+   Color_Window = GTK_WIDGET(tmpw_draw)->window;
+   /* pas de selection precedente */
+   LastBg = -1;
+   LastFg = -1;
 #endif /* _GTK */
 #endif /* _WINDOWS */
    return TRUE;

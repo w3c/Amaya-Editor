@@ -1058,6 +1058,9 @@ static int CopyXClipboard (unsigned char **buffer, View view)
   ----------------------------------------------------------------------*/
 void TtcCopyToClipboard (Document doc, View view)
 {
+#ifdef _GTK
+  ThotWidget tmpw;
+#endif /* _GTK */
 #ifndef _WINDOWS
 #ifndef _GTK
    int                  frame;
@@ -1097,6 +1100,13 @@ void TtcCopyToClipboard (Document doc, View view)
    /* Annule le cutbuffer courant */
    XStoreBuffer (TtDisplay, Xbuffer, ClipboardLength, 0);
 #else /* _GTK */
+   /*   tmpw = gtk_entry_new ();
+   gtk_widget_realize (tmpw);
+   gtk_entry_set_text (GTK_ENTRY(tmpw), Xbuffer);
+   gtk_editable_select_region (GTK_EDITABLE (tmpw), 1, -1);
+   gtk_editable_copy_clipboard (GTK_EDITABLE (tmpw));
+   gtk_widget_destroy (tmpw);*/
+
    /* dont exist in GTK1.2*/
    /*gtk_clipboard_set_text (gtk_clipboard_get (GDK_NONE), Xbuffer, ClipboardLength);*/
    /*   printf("le clipboard vaut: %s\n",Xbuffer);*/

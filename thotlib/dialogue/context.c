@@ -136,7 +136,13 @@ static void         InitCurs ()
    HCurs = XCreateFontCursor (TtDisplay, XC_sb_h_double_arrow);
    HVCurs = XCreateFontCursor (TtDisplay, /*XC_fleur*/XC_plus);
    WaitCurs = XCreateFontCursor (TtDisplay, XC_watch);
-#endif
+#else /* !_GTK */
+   WindowCurs = gdk_cursor_new (GDK_UMBRELLA);
+   VCurs = gdk_cursor_new (GDK_UMBRELLA);
+   HCurs = gdk_cursor_new (GDK_UMBRELLA);
+   HVCurs = gdk_cursor_new (GDK_UMBRELLA);
+   WaitCurs = gdk_cursor_new (GDK_WATCH);
+#endif /* _GTK */
 #endif /* _WINDOWS */
 }
 
@@ -198,7 +204,7 @@ static void InitColors (char* name)
      TtIsTrueColor = FALSE;
    /* Depending on the display Black and White order may be inverted */
   // if (XWhitePixel (TtDisplay, TtScreen) == 0)
-  test =  gdk_color_white (TtCmap, &cwhite);
+  test = gdk_color_white (TtCmap, &cwhite);
   test = gdk_color_black (TtCmap, &cblack);
    if (cwhite.pixel == 0)
      {

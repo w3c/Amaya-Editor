@@ -178,7 +178,7 @@ typedef GdkGC         *ThotGC;
 typedef unsigned long  ThotColor;
 typedef XColor         ThotColorStruct;
 typedef GdkFont       *ptrfont;
-typedef Cursor         ThotCursor;
+typedef GdkCursor     *ThotCursor;
 typedef XPoint         ThotPoint;
 typedef GdkEvent      *ThotEvent;
 typedef XKeyEvent      ThotKeyEvent;
