@@ -2992,6 +2992,7 @@ LPARAM lParam;
 	  break;
 	case ID_DEFAULTS:
 	  RestoreDefaultGeometryConf ();
+	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	}
       break;	     
