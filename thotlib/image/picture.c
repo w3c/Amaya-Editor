@@ -1055,10 +1055,10 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 					jy);
 		  i += ix;
 		} 
-	      while (i < w && ix);
+	      while (i < w && ix > 0);
 	      j += jy;
 	    } 
-	  while (j < h && jy);
+	  while (j < h && jy > 0);
 	}
 #else /* _GL */
       dx = pFrame->FrClipXBegin;
