@@ -338,6 +338,7 @@ void                StyleChanged (NotifyAttribute * event)
   int                 previousEnd, nextEnd;
   int                 braces;
 
+  /* get the new content of the style element */
   buffer = GetStyleContents (event->element);
   /* compare both strings */
   i = 0;
@@ -346,112 +347,124 @@ void                StyleChanged (NotifyAttribute * event)
   pEnd = ptr1;
   braces = 0;
   if (!OldBuffer)
-    /* This is a brand new style element */
-    ApplyCSSRules (event->element, ptr1, event->document, FALSE);
+    {
+      if (buffer)
+	/* This is a brand new style element */
+	ApplyCSSRules (event->element, buffer, event->document, FALSE);
+    }
   else
     {
-      /* handle only differences */
-      while (OldBuffer[i] == *ptr1 && *ptr1 != EOS)
+      if (!buffer)
+	/* the style element has been cleared. Remove the style made by the
+	   previous content */
+	ApplyCSSRules (event->element, OldBuffer, event->document, TRUE);
+      else
 	{
-	  if (i > 0 && OldBuffer[i-1] == '{')
-	    braces++;
-	  if (i > 0 &&
-	      (OldBuffer[i-1] == '}' ||
-	       ((OldBuffer[i-1] == ';' || OldBuffer[i-1] == '>') &&
-		braces == 0)))
+	  /* handle only differences */
+	  if (buffer)
+	    while (OldBuffer[i] == *ptr1 && *ptr1 != EOS)
+	      {
+		if (i > 0 && OldBuffer[i-1] == '{')
+		  braces++;
+		if (i > 0 &&
+		    (OldBuffer[i-1] == '}' ||
+		     ((OldBuffer[i-1] == ';' || OldBuffer[i-1] == '>') &&
+		      braces == 0)))
+		  {
+		    if (OldBuffer[i-1] == '}')
+		      braces--;
+		    previousEnd = i;
+		    pEnd = ptr1;
+		  }
+		i++;
+		ptr1++;
+	      }
+
+	  /* now ptr1 and OldBuffer[i] point to different strings */
+	  if (*ptr1 != EOS)
 	    {
-	      if (OldBuffer[i-1] == '}')
-		braces--;
-	      previousEnd = i;
-	      pEnd = ptr1;
-	    }
-	  i++;
-	ptr1++;
-	}
-      
-      /* now ptr1 and OldBuffer[i] point to different strings */
-      if (*ptr1 != EOS)
-	{
-	  ptr2 = ptr1 + strlen (ptr1);
-	  j = i + strlen (&OldBuffer[i]);
-	  nextEnd = j;
-	  nEnd = ptr2;
-	  braces = 0;
-	  while (OldBuffer[j] == *ptr2 && ptr2 != ptr1)
-	    {
-	      if (j > i && OldBuffer[j-1] == '{')
-		braces++;
-	      if (j > i &&
-		  (OldBuffer[j-1] == '}' ||
-		   ((OldBuffer[j-1] == '@' || OldBuffer[j-1] == '<') &&
-		    braces == 0)))
+	      ptr2 = ptr1 + strlen (ptr1);
+	      j = i + strlen (&OldBuffer[i]);
+	      nextEnd = j;
+	      nEnd = ptr2;
+	      braces = 0;
+	      while (OldBuffer[j] == *ptr2 && ptr2 != ptr1)
 		{
-		  if (OldBuffer[j-1] == '}')
-		    braces--;
-		  nextEnd = j;
-		  nEnd = ptr2;
+		  if (j > i && OldBuffer[j-1] == '{')
+		    braces++;
+		  if (j > i &&
+		      (OldBuffer[j-1] == '}' ||
+		       ((OldBuffer[j-1] == '@' || OldBuffer[j-1] == '<') &&
+			braces == 0)))
+		    {
+		      if (OldBuffer[j-1] == '}')
+			braces--;
+		      nextEnd = j;
+		      nEnd = ptr2;
+		    }
+		  j--;
+		  ptr2--;
 		}
-	      j--;
-	      ptr2--;
-	    }
-	  if (ptr1 != ptr2)
-	    {
-	      /* take complete CSS rules */
-	      OldBuffer[nextEnd] = EOS;
-	      *nEnd = EOS;
-	  
-	      /* remove previous rules */
-	      ptr1 = &OldBuffer[previousEnd];
-	      ptr2 = ptr1;
-	      do
+	      if (ptr1 != ptr2)
 		{
-		  while (*ptr2 != '}' && *ptr2 != EOS)
-		    ptr2++;
-		  if (*ptr2 != EOS)
-		    ptr2++;
-		  /* cut here */
-		  c = *ptr2;
-		  *ptr2 = EOS;
-		  ApplyCSSRules (event->element, ptr1, event->document, TRUE);
-		  /**** update image contexts
-			url1 = GetCSSBackgroundURL (ptr1);
-			if (url1 != NUL)
-			{
-			sprintf (path, "%s%s%d%s", TempFileDirectory, DIR_STR,
-			         event->document, DIR_STR, url1);
-			pImage = SearchLoadedImage (path, event->document);
-			
+		  /* take complete CSS rules */
+		  OldBuffer[nextEnd] = EOS;
+		  *nEnd = EOS;
+
+		  /* remove previous rules */
+		  ptr1 = &OldBuffer[previousEnd];
+		  ptr2 = ptr1;
+		  do
+		    {
+		      while (*ptr2 != '}' && *ptr2 != EOS)
+			ptr2++;
+		      if (*ptr2 != EOS)
+			ptr2++;
+		      /* cut here */
+		      c = *ptr2;
+		      *ptr2 = EOS;
+		      ApplyCSSRules (event->element, ptr1, event->document,
+				     TRUE);
+		      /**** update image contexts
+		      url1 = GetCSSBackgroundURL (ptr1);
+		      if (url1 != NUL)
+		        {
+			 sprintf (path, "%s%s%d%s", TempFileDirectory, DIR_STR,
+			          event->document, DIR_STR, url1);
+			 pImage = SearchLoadedImage (path, event->document);
 			}
-		  ***/
-		  *ptr2 = c;
-		  ptr1 = ptr2;
+		      ***/
+		      *ptr2 = c;
+		      ptr1 = ptr2;
+		    }
+		  while (*ptr2 != EOS);
+
+		  /* add new rules */
+		  ptr1 = pEnd;
+		  ptr2 = ptr1;
+		  do
+		    {
+		      while (*ptr2 != '}' && *ptr2 != EOS)
+			ptr2++;
+		      if (*ptr2 != EOS)
+			ptr2++;
+		      /* cut here */
+		      c = *ptr2;
+		      *ptr2 = EOS;
+		      ApplyCSSRules (event->element, ptr1, event->document,
+				     FALSE);
+		      *ptr2 = c;
+		      ptr1 = ptr2;
+		    }
+		  while (*ptr2 != EOS);
 		}
-	      while (*ptr2 != EOS);
-	      
-	      /* add new rules */
-	      ptr1 = pEnd;
-	      ptr2 = ptr1;
-	      do
-		{
-		  while (*ptr2 != '}' && *ptr2 != EOS)
-		    ptr2++;
-		  if (*ptr2 != EOS)
-		    ptr2++;
-		  /* cut here */
-		  c = *ptr2;
-		  *ptr2 = EOS;
-		  ApplyCSSRules (event->element, ptr1, event->document, FALSE);
-		  *ptr2 = c;
-		  ptr1 = ptr2;
-		}
-	      while (*ptr2 != EOS);
 	    }
 	}
-      
       TtaFreeMemory (OldBuffer);
       OldBuffer = NULL;
     }
-  TtaFreeMemory (buffer);
+  if (buffer)
+    TtaFreeMemory (buffer);
 }
 
 
