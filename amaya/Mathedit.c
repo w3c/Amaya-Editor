@@ -5515,6 +5515,9 @@ void DeleteMColumn (Document document, View view)
    TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
    if (el != NULL)
      {
+       if (TtaIsReadOnly (el))
+	 /* the selected element is read-only */
+	 return;
        elType = TtaGetElementType (el);
        if (elType.ElSSchema == GetMathMLSSchema (document))
 	 {

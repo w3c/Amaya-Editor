@@ -1884,10 +1884,16 @@ void DeleteColumn (Document document, View view)
   int                 firstchar, lastchar, len;
   ThotBool            selBefore;
 
+  if (!TtaGetDocumentAccessMode (document))
+    /* the document is in ReadOnly mode */
+    return;
   /* get the first selected element */
   TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
   if (el != NULL)
     {
+      if (TtaIsReadOnly (el))
+	/* the selected element is read-only */
+	return;
       elType = TtaGetElementType (el);
       HTMLSSchema = TtaGetSSchema ("HTML", document);
       if (elType.ElSSchema == HTMLSSchema &&
