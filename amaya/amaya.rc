@@ -26,30 +26,33 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 // Dialog
 //
 
-GENERALMENU DIALOG DISCARDABLE  100, 100, 202, 230
+GENERALMENU DIALOG DISCARDABLE  100, 100, 214, 207
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "General Preferences"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "Apply",ID_APPLY,7,209,50,14
-    PUSHBUTTON      "Done",ID_DONE,145,209,50,14
-    PUSHBUTTON      "Defaults",ID_DEFAULTS,76,209,50,14
-    LTEXT           "Home Page",IDC_THOMEPAGE,8,68,65,11
-    EDITTEXT        IDC_HOMEPAGE,8,82,187,13,ES_AUTOHSCROLL | NOT WS_TABSTOP
-    LTEXT           "Font zoom (-10...10)",IDC_TZOOM,7,99,116,10
-    EDITTEXT        IDC_ZOOM,7,113,41,12,ES_AUTOHSCROLL
-    LTEXT           "Dialogue language",IDC_TDIALOGUELANG,7,129,105,8
-    EDITTEXT        IDC_DIALOGUELANG,7,141,60,12,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "Apply",ID_APPLY,7,186,50,14
+    PUSHBUTTON      "Done",ID_DONE,157,186,50,14
+    PUSHBUTTON      "Defaults",ID_DEFAULTS,76,186,50,14
+    LTEXT           "Home Page",IDC_THOMEPAGE,8,66,65,11
+    EDITTEXT        IDC_HOMEPAGE,10,77,200,13,ES_AUTOHSCROLL | NOT 
+                    WS_TABSTOP
+    LTEXT           "Font zoom (-10...10)",IDC_TZOOM,7,97,84,10
+    EDITTEXT        IDC_ZOOM,7,108,22,12,ES_AUTOHSCROLL
+    LTEXT           "Dialogue language",IDC_TDIALOGUELANG,97,98,105,8
+    EDITTEXT        IDC_DIALOGUELANG,97,108,21,12,ES_AUTOHSCROLL
     CONTROL         "Enable multikey",IDC_MULTIKEY,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,7,162,127,8
+                    WS_TABSTOP,7,128,200,8
     CONTROL         "Show background images",IDC_BGIMAGES,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,7,174,157,10
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,140,200,10
     CONTROL         "Double click activates link",IDC_DOUBLECLICK,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,7,188,171,10
-    LTEXT           "Amaya user directory",IDC_TAPPHOME,7,7,111,8
-    EDITTEXT        IDC_APPHOME,7,19,188,14,ES_AUTOHSCROLL | ES_READONLY
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,154,200,10
+    LTEXT           "Amaya user directory",IDC_TAPPHOME,7,8,111,8
+    EDITTEXT        IDC_APPHOME,7,19,200,14,ES_AUTOHSCROLL | ES_READONLY
     LTEXT           "Temporary directory",IDC_TTMPDIR,7,37,135,8
-    EDITTEXT        IDC_TMPDIR,7,49,188,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_TMPDIR,7,48,200,14,ES_AUTOHSCROLL
+    CONTROL         "FTP support (experimental)",IDC_ENABLEFTP,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,168,200,10
 END
 
 PUBLISHMENU DIALOG DISCARDABLE  0, 0, 204, 125
@@ -220,9 +223,9 @@ BEGIN
     GENERALMENU, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 195
+        RIGHTMARGIN, 207
         TOPMARGIN, 7
-        BOTTOMMARGIN, 223
+        BOTTOMMARGIN, 200
     END
 
     PUBLISHMENU, DIALOG
@@ -300,56 +303,6 @@ END
 #endif    // APSTUDIO_INVOKED
 
 #endif    // Neutral resources
-/////////////////////////////////////////////////////////////////////////////
-
-
-/////////////////////////////////////////////////////////////////////////////
-// German (Germany) resources
-
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)
-#ifdef _WIN32
-LANGUAGE LANG_GERMAN, SUBLANG_GERMAN
-#pragma code_page(1252)
-#endif //_WIN32
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Dialog
-//
-
-DE_TEMPLATESMENU DIALOG DISCARDABLE  100, 100, 198, 68
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Templates Preferences"
-FONT 8, "MS Sans Serif"
-BEGIN
-    DEFPUSHBUTTON   "Apply",ID_APPLY,7,47,50,14
-    PUSHBUTTON      "Done",ID_DONE,141,47,50,14
-    PUSHBUTTON      "Defaults",ID_DEFAULTS,76,47,50,14
-    LTEXT           "Enter the URL of the templates server",-1,7,7,152,11
-    EDITTEXT        IDC_TEMPLATESURL,7,22,184,13,ES_AUTOHSCROLL | NOT 
-                    WS_TABSTOP
-END
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// DESIGNINFO
-//
-
-#ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO DISCARDABLE 
-BEGIN
-    DE_TEMPLATESMENU, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 191
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 61
-    END
-END
-#endif    // APSTUDIO_INVOKED
-
-#endif    // German (Germany) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
