@@ -641,11 +641,78 @@ static char *ParseCSSColor (char *cssRule, PresentationValue * val)
   val->typed_data.real = FALSE;
   val->typed_data.value = 0;
   ptr = TtaGiveRGB (cssRule, &redval, &greenval, &blueval);
-  if (!strncasecmp (cssRule, "inherit", 7))
+  if (!strncasecmp (cssRule, "InactiveCaptionText", 19))
+    {
+      cssRule += 19;
+    }
+  else if (!strncasecmp (cssRule, "ThreeDLightShadow", 17))
+    {
+      cssRule += 17;
+    }
+  else if (!strncasecmp (cssRule, "ThreeDDarkShadow", 16))
+    {
+      cssRule += 16;
+    }
+  else if (!strncasecmp (cssRule, "ButtonHighlight", 15) ||
+	   !strncasecmp (cssRule, "InactiveCaption", 15) ||
+	   !strncasecmp (cssRule, "ThreeDHighlight", 15))
+    {
+      cssRule += 15;
+    }
+  else if (!strncasecmp (cssRule, "InactiveBorder", 14) ||
+	   !strncasecmp (cssRule, "InfoBackground", 14))
+    {
+      cssRule += 14;
+    }
+  else if (!strncasecmp (cssRule, "ActiveCaption", 13) ||
+	   !strncasecmp (cssRule, "HighlightText", 13))
+    {
+      cssRule += 13;
+    }
+  else if (!strncasecmp (cssRule, "ActiveBorder", 12) ||
+	   !strncasecmp (cssRule, "AppWorkspace", 12) ||
+	   !strncasecmp (cssRule, "ButtonShadow", 12) ||
+	   !strncasecmp (cssRule, "ThreeDShadow", 12))
+    {
+      cssRule += 12;
+    }
+  else if (!strncasecmp (cssRule, "CaptionText", 11) ||
+	   !strncasecmp (cssRule, "WindowFrame", 11))
+    {
+      cssRule += 11;
+    }
+  else if (!strncasecmp (cssRule, "Background", 10) ||
+	   !strncasecmp (cssRule, "ButtonFace", 10) ||
+	   !strncasecmp (cssRule, "ButtonText", 10) ||
+	   !strncasecmp (cssRule, "ThreeDFace", 10) ||
+	   !strncasecmp (cssRule, "WindowText", 10))
+    {
+      cssRule += 10;
+    }
+  else if (!strncasecmp (cssRule, "Highlight", 9) ||
+	   !strncasecmp (cssRule, "Scrollbar", 9))
+    {
+      cssRule += 9;
+    }
+  else if (!strncasecmp (cssRule, "GrayText", 8) ||
+	   !strncasecmp (cssRule, "InfoText", 8) ||
+	   !strncasecmp (cssRule, "MenuText", 8))
+    {
+      cssRule += 8;
+    }
+  else if (!strncasecmp (cssRule, "inherit", 7))
     {
       cssRule += 7;
-      return (cssRule);
     }
+  else if (!strncasecmp (cssRule, "Window", 6))
+    {
+      cssRule += 6;
+    }
+  else if (!strncasecmp (cssRule, "Menu", 5))
+    {
+      cssRule += 5;
+    }
+
   if (ptr == cssRule)
     {
       cssRule = SkipWord (cssRule);
