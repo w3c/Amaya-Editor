@@ -828,7 +828,11 @@ void ThotInput (int frame, unsigned char *string, unsigned int nb,
     frame = 0;
   FrameToView (frame, &document, &view);
 #ifdef _I18N_
+#ifdef _GTK
   if (key == GDK_VoidSymbol)
+#else  /*_GTK*/
+  if (key == NULL)
+#endif /* _GTK*/
     {
       charset = TtaGetCharset (TtaGetEnvString ("Default_Charset"));
       if (charset != UNDEFINED_CHARSET)
