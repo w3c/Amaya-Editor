@@ -1841,13 +1841,16 @@ int                 viewToApply;
 #endif /* __STDC__ */
 {
    PtrPRule            pPRule, pR, pRS;
-   int                 viewSch;
    NotifyPresentation  notifyPres;
+   RuleSet             rulesS;
+   int                 viewSch;
+   boolean             found;
 
    /* type de cette view */
    viewSch = AppliedView (pEl, NULL, pDoc, viewToApply);
    pPRule = pEl->ElFirstPRule;
    pR = NULL;
+   found = FALSE;
    /* parcourt les regles de presentation specifiques de l'element */
    while (pPRule != NULL)
       if (pPRule->PrViewNum != viewSch || !RuleSetIn (pPRule->PrType, rules))
@@ -1858,6 +1861,7 @@ int                 viewToApply;
 	}
       else
 	{
+	   found = TRUE;
 	   /* la regle concerne la view traitee */
 	   /* retire la regle de la chaine des regles de presentation */
 	   /* specifique de l'element */
@@ -1890,6 +1894,15 @@ int                 viewToApply;
 	   /* passe a la regle suivante */
 	   pPRule = pRS;
 	}
+
+   if (!found && RuleSetIn (PtBackground, rules) && pEl->ElParent)
+     {
+       RuleSetClr (rulesS);
+       RuleSetPut (rulesS, PtFillPattern);
+       RuleSetPut (rulesS, PtBackground);
+       RuleSetPut (rulesS, PtFunction);
+       RemoveSpecifPres (pEl->ElParent, pDoc, rulesS, viewToApply);
+     }
 }
 
 /*----------------------------------------------------------------------
