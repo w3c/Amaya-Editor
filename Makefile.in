@@ -56,8 +56,8 @@ amaya_prog: rebuild force bin/str
 	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" amaya ; fi)
 
 wxwidgets: rebuild force
-	@(if test -d "$(WX_BUILDDIR)" ; then cd $(WX_BUILDDIR) ; \
-	  $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" CXX="$(CXX)" CXXFLAGS="$(CXXFLAGS)" ; fi)
+	@(if test -d "$(WX_BUILDDIR)" ; then cd "$(WX_BUILDDIR)" ; \
+	  $(MAKE) ; fi)
 
 @NOPRINT@print_prog: rebuild force bin/str
 @NOPRINT@	@(if test -d thotlib ; then cd thotlib ; \
