@@ -254,6 +254,8 @@ Display            *dpy;
       TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_X11_ERR), DisplayString (dpy));
    else
       TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_LIB_X11_ERR), DisplayString (dpy));
+   if (ThotLocalActions[T_backuponfatal] != NULL)
+     (*ThotLocalActions[T_backuponfatal]) ();
    return (0);
 }
 #endif /* _WINDOWS */
@@ -874,3 +876,4 @@ void               *ev;
 	 }
 }
 #endif /* _WINDOWS */
+

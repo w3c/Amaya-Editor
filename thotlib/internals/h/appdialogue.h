@@ -177,7 +177,9 @@ typedef struct _SchemaMenu_Ctl
 #define T_checkcolumn			97
 #define T_cleartable			98
 #define T_resizetable                   99
-#define MAX_LOCAL_ACTIONS 100
+#define T_backuponfatal			100
+
+#define MAX_LOCAL_ACTIONS 101
 
 /* Indices des actions internes accessibles au clavier et
    non presentees dans les menus */

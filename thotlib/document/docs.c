@@ -805,7 +805,6 @@ static boolean      simpleSave (pDoc, name, withEvent)
 PtrDocument         pDoc;
 char               *name;
 boolean             withEvent;
-
 #endif /* __STDC__ */
 {
    BinFile             pivotFile;
@@ -1150,4 +1149,31 @@ int                 mode;
 		     break;
 	       }
    return ok;
+}
+
+
+/*----------------------------------------------------------------------
+  BackupAll sauvegarde les fichiers modifies en cas de CRASH majeur
+  ----------------------------------------------------------------------*/
+void BackupAll()
+{
+  int             doc;
+
+  /* parcourt la table des documents */
+  for (doc = 0; doc < MAX_DOCUMENTS; doc++)
+    if (LoadedDocument[doc] != NULL)
+      /* il y a un document pour cette entree de la table */
+      if (LoadedDocument[doc]->DocModified)
+	WriteDocument(LoadedDocument[doc], 3);
+}
+
+/*----------------------------------------------------------------------
+  BackupOnFatalErrorLoadResources
+  intialise la resource de sauvegarde les fichiers modifies en cas de 
+  CRASH majeur
+  ----------------------------------------------------------------------*/
+void BackupOnFatalErrorLoadResources()
+{
+  if (ThotLocalActions[T_backuponfatal] == NULL)
+    TteConnectAction (T_backuponfatal, (Proc) BackupAll);
 }

@@ -74,6 +74,7 @@ extern void         SelectionMenuLoadResources ();
 extern void         DisplayEmptyBoxLoadResources ();
 extern void         SpellCheckLoadResources ();
 extern void         TableHLoadResources ();
+extern void	    BackupOnFatalErrorLoadResources ();
 
 
 #ifndef __CEXTRACT__

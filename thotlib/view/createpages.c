@@ -54,6 +54,7 @@
 #include "boxpositions_f.h"
 #include "schemas_f.h"
 #include "presvariables_f.h"
+#include "applicationapi_f.h"
 
 
 #ifdef __COLPAGE__
