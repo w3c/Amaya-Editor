@@ -2313,7 +2313,8 @@ void CheckNewLines (NotifyOnTarget *event)
   char       *content;
   int         firstSelChar, lastSelChar, length, i, j;
   Language    lang;
-  ThotBool    pre, para, changed, selChanged, newParagraph, undoSeqExtended;
+  ThotBool    pre, para, changed, selChanged, newParagraph, undoSeqExtended,
+              prevCharEOL;
 
   if (!event->target)
     return;
@@ -2366,12 +2367,11 @@ void CheckNewLines (NotifyOnTarget *event)
   TtaGiveTextContent (leaf, content, &length, &lang);
   changed = FALSE;
   selChanged = FALSE;
+  prevCharEOL = FALSE;
   j = 0;
   for (i = 0; i < length; i++)
     {
       if (content[i] == (char) EOL)
-	/******** we could do that only when there are two EOL in a row,
-                  even with some spaces in between @@@@@@@ *******/
 	{
 	  if (!para)
 	    /* replace the new line by a space */
@@ -2382,6 +2382,8 @@ void CheckNewLines (NotifyOnTarget *event)
 	  else
 	    /* We are within a paragraph. Break that paragraph */
 	    {
+	      /******** we could do that only when there are two EOL in a row,
+                        even with some spaces in between @@@@@@@ *******/
 	      /* create new elements to duplicate the ancestors of the
 		 leaf until the paragraph (included) */
 	      child = NULL; newLeaf = NULL; prev = NULL;
@@ -2435,26 +2437,50 @@ void CheckNewLines (NotifyOnTarget *event)
 	      j = 0;
 	      changed = TRUE;
 	      ancestor = el;
+	      prevCharEOL = TRUE;
 	    }
 	}
       if (content[i] == SPACE)
 	/* this is a space */
 	{
 	  if (j == 0)
-	    /* beginning of the text element. Keep that space */
-	    j++;
-	  else
+	    /* beginning of the text element */
 	    {
-	      if (content[j-1] != SPACE)
-		/* the previous character is not a space. Keep that space */
-		content[j++] = SPACE;
-	      else
-		/* the previous character is a space. Remove the current char*/
+	      /* if this space is after a newline, remove it */
+	      if (prevCharEOL)
 		{
 		  changed = TRUE;
 		  if (selEl)
 		    /* the selection is in this piece of text */
-		    if (firstSelChar >= i)
+		    if (firstSelChar >= j)
+		      /* it is after the current position. Update it */
+		      {
+			firstSelChar--;
+			selChanged = TRUE;
+		      }
+		}
+	      else
+		/* Keep that space */
+		{
+		  if (i > j)
+		    content[j] = content[i];
+		  j++;
+		}
+	    }
+	  else
+	    {
+	      if (content[j-1] != SPACE && !prevCharEOL)
+		/* the previous character is not a space nor a newline.
+		   Keep that space */
+		content[j++] = SPACE;
+	      else
+		/* the previous character is a space or a new line.
+		   Remove the current space */
+		{
+		  changed = TRUE;
+		  if (selEl)
+		    /* the selection is in this piece of text */
+		    if (firstSelChar >= j)
 		      /* it is after the current position. Update it */
 		      {
 			firstSelChar--;
@@ -2472,9 +2498,12 @@ void CheckNewLines (NotifyOnTarget *event)
 		/* some characters have been deleted. Move this character */
 		content[j] = content[i];
 	      j++;
+	      prevCharEOL = FALSE;
 	    }
 	}
     }
+
+  /* all the content of the modified element has been processed */
   content[j] = EOS;
   if (changed)
     /* we have made changes in the text buffer, update the element */
