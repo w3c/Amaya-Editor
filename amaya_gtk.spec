@@ -8,13 +8,13 @@
 
 # neededforbuild  autoconf automake mmcore mmbase mmslib xpm libz libpng libjpeg
 
-%define version 8.3
+%define version 8.7
 
 Vendor:       W3C World Wide Web Consortium
 Distribution: W3C
 Name:         amaya_gtk
 Release:      1
-Copyright:    Copyright 1995-2003 (MIT) (INRIA), (L)GPL compatible
+Copyright:    Copyright 1995-2004 (MIT) (INRIA), (L)GPL compatible
 Group:        X11/Applications/Networking
 URL:          http://www.w3.org/Amaya/
 Autoreqprov:  on
@@ -44,6 +44,10 @@ Authors:
     Vincent.Quint@w3.org, Laurent.Carcone@w3.org
 
 %changelog
+* Tue Oct 15 2004 Irene Vatton (Irene.Vatton@w3.org>
+  Possibility to install GTK and WX amaya versions
+* Tue Jul 06 2004 Irene Vatton (Irene.Vatton@w3.org>
+  Updated for amaya-8.6
 * Tue Feb 24 2004 Irene Vatton (Irene.Vatton@w3.org>
   Updated for amaya-8.3
 * Fri Jan 30 2003 Nabil Layaida (Nabil.Layaida@inria.fr>
@@ -91,7 +95,7 @@ make install prefix=$RPM_BUILD_ROOT/usr/share
 %doc README.amaya
 /usr/share/Amaya/
 %post 
-/bin/ln -s /usr/share/Amaya/applis/bin/amaya /usr/bin/amaya
+/bin/ln -s /usr/share/Amaya/gtk/bin/amaya /usr/bin/amaya
 %postun
 rm -f /usr/bin/amaya
 

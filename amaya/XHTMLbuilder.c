@@ -435,8 +435,6 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
 	 }
        if (data)
 	 TtaFreeMemory (data);
-       /* Check the mandatory ALT attribute */
-       CheckALTAttribute (el, doc);
        break;
 
      case HTML_EL_IFRAME:	  /* it's an iframe */

@@ -8,7 +8,7 @@
 
 # neededforbuild  autoconf automake mmcore mmbase mmslib xpm libz libpng libjpeg
 
-%define version 8.6
+%define version 8.7
 
 Vendor:       W3C World Wide Web Consortium
 Distribution: W3C
@@ -46,6 +46,8 @@ Authors:
     Vincent.Quint@w3.org, Laurent.Carcone@w3.org
 
 %changelog
+* Tue Oct 15 2004 Irene Vatton (Irene.Vatton@w3.org>
+  Possibility to install GTK and WX amaya versions
 * Tue Jul 06 2004 Irene Vatton (Irene.Vatton@w3.org>
   First WX amaya version
 * Tue Feb 24 2004 Irene Vatton (Irene.Vatton@w3.org>
@@ -97,7 +99,8 @@ make install prefix=$RPM_BUILD_ROOT/usr/share
 %doc README.amaya
 /usr/share/Amaya/
 %post
-/bin/ln -s /usr/share/Amaya/applis/bin/amaya /usr/bin/amaya
+/bin/ln -s /usr/share/Amaya/wx/bin/amaya /usr/bin/amaya_wx
+/bin/ln -s /usr/bin/amaya_wx /usr/bin/amaya
 %postun
 rm -f /usr/bin/amaya
 

@@ -167,8 +167,8 @@ STRUCT
 	map; MAP;						{ MAP }
 	XLink;							{ Annotations }
 	External_Object						{ IMG type=svg}
-	    (ATTR SRC; ALT; longdesc;
-		{ src  alt  longdesc }
+	    (ATTR SRC;
+		{ src }
 		  Height_; Width__;
 		{ height   width }
 		  IntWidthPercent; IntWidthPxl;
