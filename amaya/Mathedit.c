@@ -3181,6 +3181,7 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
 	      elType.ElTypeNum = MathML_EL_Construct;
 	      newEl = TtaNewElement (doc, elType);
 	      TtaInsertFirstChild (&newEl, parent, doc);
+	      TtaRegisterElementCreate (newEl, doc);
 	      if (newSelEl != NULL)
 	         newSelEl = newEl;
 	      }
@@ -4272,8 +4273,11 @@ void MathElementDeleted (NotifyElement *event)
 	grandChild = TtaGetFirstChild (child);
 	if (grandChild != NULL)
 	   {
+	   TtaRegisterElementDelete (grandChild, event->document);
 	   TtaRemoveTree (grandChild, event->document);
 	   TtaInsertSibling (grandChild, parent, TRUE, event->document);
+	   TtaRegisterElementCreate (grandChild, event->document);
+	   TtaRegisterElementDelete (parent, event->document);
 	   TtaDeleteTree (parent, event->document);
 	   placeholderEl = InsertPlaceholder (grandChild, FALSE,
 					      event->document, FALSE/******/);
