@@ -2824,10 +2824,10 @@ CHAR_T*             styleString;
   ParseCSSBackgroundImage: parse a CSS BackgroundImage attribute string.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static CHAR_T*      ParseCSSBackgroundImage (Element element, PSchema tsch,
+static CHAR_T      *ParseCSSBackgroundImage (Element element, PSchema tsch,
                     PresentationContext context, CHAR_T* cssRule, CSSInfoPtr css, ThotBool isHTML)
 #else
-static CHAR_T*      ParseCSSBackgroundImage (element, tsch, context, cssRule, css, isHTML)
+static CHAR_T      *ParseCSSBackgroundImage (element, tsch, context, cssRule, css, isHTML)
 Element             element;
 PSchema             tsch;
 PresentationContext context;
@@ -2838,7 +2838,7 @@ ThotBool            isHTML;
 {
   Element                    el;
   GenericContext             gblock;
-  PresentationContextBlock*  sblock;
+  PresentationContext        sblock;
   BackgroundImageCallbackPtr callblock;
   PresentationValue          image, value;
   CHAR_T*                    url;
@@ -3154,7 +3154,7 @@ ThotBool            isHTML;
   cssRule = SkipWCBlanksAndComments (cssRule);
   while (*cssRule != TEXT(';') && *cssRule != WC_EOS && *cssRule != TEXT(','))
     {
-      /* perhaps a Backgroud Image */
+      /* perhaps a Background Image */
       if (!ustrncasecmp (cssRule, TEXT("url"), 3))
          cssRule = ParseCSSBackgroundImage (element, tsch, context, cssRule,
 					    css, isHTML);

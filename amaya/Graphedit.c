@@ -914,7 +914,10 @@ Element          el;
 		      UpdateAttrText (child, doc, attrType, val, TRUE);
 		      attrType.AttrTypeNum = GraphML_ATTR_x2;
 		    }
-		  UpdateAttrText (child, doc, attrType, val, TRUE);
+		  else
+		    attrType.AttrTypeNum = 0;
+		  if (attrType.AttrTypeNum != 0)
+		    UpdateAttrText (child, doc, attrType, val, TRUE);
 		}
 	      /* check if the SVG width includes that element */
 	      TtaGiveBoxPosition (child, doc, 1, unit, &x, &dummy);
@@ -983,7 +986,10 @@ Element          el;
 		      UpdateAttrText (child, doc, attrType, val, TRUE);
 		      attrType.AttrTypeNum = GraphML_ATTR_y2;
 		    }
-		  UpdateAttrText (child, doc, attrType, val, TRUE);
+		  else
+		    attrType.AttrTypeNum = 0;
+		  if (attrType.AttrTypeNum != 0)
+		    UpdateAttrText (child, doc, attrType, val, TRUE);
 		}
 	      /* check if the SVG height includes that element */
 	      TtaGiveBoxPosition (child, doc, 1, unit, &dummy, &y);
