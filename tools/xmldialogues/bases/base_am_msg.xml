@@ -20,7 +20,7 @@
 <label define="AM_OPEN_URL">
 	<message xml:lang="en">Open</message>
 	<message xml:lang="fr">Ouvrir</message>
-	<message xml:lang="de">Datei</message>
+	<message xml:lang="de">Öffnen</message>
 	<message xml:lang="it">Apri</message>
 	<message xml:lang="tr">Git</message>
 	<message xml:lang="es">Abrir</message>

@@ -462,7 +462,7 @@
 <label define="BDivision">
 	<message xml:lang="en">Division (div)</message>
 	<message xml:lang="fr">Division (div)</message>
-	<message xml:lang="de">logischer Textabschnitt (div)</message>
+	<message xml:lang="de">Logischer Textabschnitt (div)</message>
 	<message xml:lang="it">Divisione (div)</message>
 	<message xml:lang="tr">Bölme (div)</message>
 	<message xml:lang="es">División (div)</message>
@@ -1124,7 +1124,7 @@
 <label define="BShowLogFile">
 	<message xml:lang="en">Show parsing errors</message>
 	<message xml:lang="fr">Montrer les erreurs</message>
-	<message xml:lang="de">Logdatei anzeigen</message>
+	<message xml:lang="de">Parsefehler anzeigen</message>
 	<message xml:lang="it">Mostra le errore</message>
 	<message xml:lang="es">Mostrar fichero log</message>
 </label>
@@ -1227,7 +1227,7 @@
 	<message xml:lang="en">Link...</message>
 	<message xml:lang="fr">Ajouter...</message>
 	<message xml:lang="it">Collegamento...</message>
-	<message xml:lang="de">Mit neuem verknüpfen...</message>
+	<message xml:lang="de">Mit Neuem verknüpfen...</message>
 	<message xml:lang="es">Enlace...</message>
 </label>
 <label define="BOpenCSS">
@@ -1511,14 +1511,14 @@
 <label define="BConfigLanNeg">
 	<message xml:lang="en">Language Negotiation...</message>
 	<message xml:lang="fr">Négociation de Langues...</message>
-	<message xml:lang="de">Akzeptierte sprachen...</message>
+	<message xml:lang="de">Akzeptierte Sprachen...</message>
 	<message xml:lang="it">Negoziazione della lingua...</message>
 	<message xml:lang="es">Negociación de idioma...</message>
 </label>
 <label define="BConfigProfile">
 	<message xml:lang="en">Profiles...</message>
 	<message xml:lang="fr">Profils...</message>
-	<message xml:lang="de">Profiles...</message>
+	<message xml:lang="de">Profile...</message>
 	<message xml:lang="it">Profili...</message>
 	<message xml:lang="es">Perfiles...</message>
 </label>
@@ -1574,7 +1574,7 @@
 <label define="BFilterAnnotations">
 	<message xml:lang="en">Local filter...</message>
 	<message xml:lang="fr">Filtrer local...</message>
-	<message xml:lang="de">Lokaler filter...</message>
+	<message xml:lang="de">Lokaler Filter...</message>
 	<message xml:lang="it">Filtro locale...</message>
 	<message xml:lang="es">Filtro local...</message>
 </label>
