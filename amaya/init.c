@@ -1934,9 +1934,6 @@ static void BrowserForm (Document doc, View view, char *urlname)
 
    if (LinkAsXmlCSS || LinkAsCSS)
      strcpy (ScanFilter, "*.css");
-   else
-     strcpy (ScanFilter, "*.*htm*");
-
    TtaListDirectory (DirectoryName, BaseDialog + FileBrowserForm,
 		     TtaGetMessage (LIB, TMSG_DOC_DIR),
 		     BaseDialog + BrowserDirSelect, ScanFilter,
@@ -1960,7 +1957,7 @@ static void BrowserForm (Document doc, View view, char *urlname)
   The parameter title gives the title of the the form.
   ----------------------------------------------------------------------*/
 static void InitOpenDocForm (Document doc, View view, char *name, char *title,
-			                                 DocumentType docType)
+			     DocumentType docType)
 {
   char              s[MAX_LENGTH];
   ThotBool          remote;
@@ -2072,6 +2069,8 @@ void OpenNew (Document document, View view, int docType, int docProfile)
 
   if (NewDocType == docHTML)
     {
+      /* will scan html documents */
+      strcpy (ScanFilter, "*.*htm*");
       if (docProfile == L_Basic)
 	InitOpenDocForm (document, view, "New.html", TtaGetMessage (1, BHtmlBasic), docHTML);
       else if (docProfile == L_Strict)
@@ -2082,11 +2081,23 @@ void OpenNew (Document document, View view, int docType, int docProfile)
 	InitOpenDocForm (document, view, "New.html", TtaGetMessage (1, BHtmlTransitional), docHTML);
    }
   else if (NewDocType == docMath)
+    {
+      /* will scan html documents */
+      strcpy (ScanFilter, "*.mml");
     InitOpenDocForm (document, view, "New.mml", TtaGetMessage (1, BMathml), docMath);
+    }
   else if (NewDocType == docSVG)
-    InitOpenDocForm (document, view, "New.svg", TtaGetMessage (1, BSvg), docSVG);
+    {
+      /* will scan html documents */
+      strcpy (ScanFilter, "*.svg");
+      InitOpenDocForm (document, view, "New.svg", TtaGetMessage (1, BSvg), docSVG);
+    }
   else
-    InitOpenDocForm (document, view, "New.css", TtaGetMessage (1, BCss), docCSS);
+    {
+      /* will scan html documents */
+      strcpy (ScanFilter, "*.css");
+      InitOpenDocForm (document, view, "New.css", TtaGetMessage (1, BCss), docCSS);
+    }
 }
 
 /*----------------------------------------------------------------------

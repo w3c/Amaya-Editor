@@ -706,7 +706,7 @@ static void InitCSSDialog (Document doc, char *s)
    LinkCSS
    Add a new link to a CSS file
   ----------------------------------------------------------------------*/
-void                LinkCSS (Document doc, View view)
+void LinkCSS (Document doc, View view)
 {
   SSchema           docSchema;
 
