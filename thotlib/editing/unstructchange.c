@@ -498,9 +498,7 @@ void                PasteCommand ()
 		pClose = firstSel->ElNext;
 		FwdSkipPageBreak (&pClose);
 		/* coupe la feuille de texte */
-		SplitTextElement (firstSel, firstChar, pDoc, TRUE);
-		/* deuxieme partie du texte */
-		pFollowing = firstSel->ElNext;
+		SplitTextElement (firstSel, firstChar, pDoc, TRUE, &pFollowing);
 		/* met a jour la selection */
 		if (firstSel == lastSel)
 		  {
@@ -939,6 +937,8 @@ void                TtcCreateElement (doc, view)
 			       pElDelete = pElem;
 			       createAfter = TRUE;
 			       pElReplicate = pParent;
+			       while (TtaGetParent (pElReplicate) != pListEl)
+				  pElReplicate = TtaGetParent (pElReplicate);
 			    }
 			  else if (pElem->ElNext != NULL && pElem->ElPrevious == NULL)
 			    {
@@ -947,6 +947,8 @@ void                TtcCreateElement (doc, view)
 			       pElDelete = pElem;
 			       createAfter = FALSE;
 			       pElReplicate = pParent;
+			       while (TtaGetParent (pElReplicate) != pListEl)
+				  pElReplicate = TtaGetParent (pElReplicate);
 			    }
 			  else
 			    {

@@ -121,18 +121,23 @@ PtrTextBuffer      *pBuf;
    	SplitTextElement   coupe en deux un element feuille de type texte.	
    	pEl: l'element de texte a couper.				
    	rank: indice du caractere devant lequel on coupe		
-   	pDoc: document auquel appartient l'element a couper		
+   	pDoc: document auquel appartient l'element a couper
+
+  au retour:
+	pSecondPart: l'element de texte correspondant a la partie
+		     apres la coupure.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                SplitTextElement (PtrElement pEl, int rank, PtrDocument pDoc, boolean withAppEvent)
+void                SplitTextElement (PtrElement pEl, int rank, PtrDocument pDoc, boolean withAppEvent, PtrElement *pSecondPart)
 
 #else  /* __STDC__ */
-void                SplitTextElement (pEl, rank, pDoc, withAppEvent)
+void                SplitTextElement (pEl, rank, pDoc, withAppEvent, pSecondPart)
 PtrElement          pEl;
 int                 rank;
 PtrDocument         pDoc;
 boolean             withAppEvent;
+PtrElement	    *pSecondPart;
 
 #endif /* __STDC__ */
 
@@ -148,6 +153,7 @@ boolean             withAppEvent;
    int                 nSiblings;
    boolean             dontCut;
 
+   *pSecondPart = NULL;
    if (pEl != NULL)
      {
 	dontCut = FALSE;
@@ -190,6 +196,7 @@ boolean             withAppEvent;
 	/* copie l'element de texte avec attributs et presentation specifique */
 	pEl2 = ReplicateElement (pEl, pDoc);
 	pEl2->ElVolume = 0;
+	*pSecondPart = pEl2;
 	/* acquiert un buffer de texte pour la 2eme partie */
 	CreateTextBuffer (pEl2);
 	/* chaine le nouvel element */

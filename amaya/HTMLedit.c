@@ -1741,6 +1741,7 @@ boolaen             link;
    ElementType         elType;
    Element             elAnchor;
    int                 typeNum;
+   SSchema             docSchema;
 
    attr = NULL;
    elType = TtaGetElementType (element);
@@ -1751,11 +1752,13 @@ boolaen             link;
       /* search an ancestor of type Anchor */
       typeNum = HTML_EL_Anchor;
 
-   if (elType.ElTypeNum == typeNum)
+   docSchema = TtaGetDocumentSSchema (doc);
+   if (elType.ElTypeNum == typeNum && elType.ElSSchema == docSchema)
       elAnchor = element;
    else
      {
 	elType.ElTypeNum = typeNum;
+	elType.ElSSchema = docSchema;
 	elAnchor = TtaGetTypedAncestor (element, elType);
      }
 

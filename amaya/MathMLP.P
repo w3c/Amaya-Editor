@@ -827,7 +827,7 @@ RULES
    SYMBOL_UNIT:
 	BEGIN
 	Height: Enclosing . Height;
-	Width: Enclosing . Width;
+	Width: Enclosed . Width;
 	VertPos: Nil;
 	HorizPos: Nil;
 	IN Math_Structure_view BEGIN

@@ -877,6 +877,8 @@ PtrDocument         pDoc;
    PtrAbstractBox      pAb, pAbb;
    int                 view, lastView;
 
+   if (pEl == NULL || pDoc == NULL)
+      return;
    if (AssocView (pEl))
       /* vue d'elements associes */
       lastView = 1;

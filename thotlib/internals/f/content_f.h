@@ -12,7 +12,8 @@ extern void DeleteTextBuffer ( PtrTextBuffer * pBuf );
 extern void SplitTextElement ( PtrElement pEl,
                                int rank,
                                PtrDocument pDoc,
-                               boolean withAppEvent );
+                               boolean withAppEvent,
+			       PtrElement *pSecondPart );
 extern boolean MergeTextElements ( PtrElement pEl,
                                    PtrElement * pFreeEl,
                                    PtrDocument pDoc,
@@ -53,7 +54,8 @@ extern void DeleteTextBuffer (/* PtrTextBuffer * pBuf */);
 extern void SplitTextElement (/* PtrElement pEl,
                                  int rank,
                                  PtrDocument pDoc,
-                                 boolean withAppEvent */);
+                                 boolean withAppEvent,
+			         PtrElement *pSecondPart */);
 extern boolean MergeTextElements (/* PtrElement pEl,
                                      PtrElement * pFreeEl,
                                      PtrDocument pDoc,

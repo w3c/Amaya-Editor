@@ -1249,7 +1249,7 @@ PtrDocument         pDoc;
 				      /* parcourt les attributs de l'element */
 				      while (pAttrEl != NULL && !ret)
 					{
-					   if (pAttrEl->AeAttrSSchema == pSS &&
+					   if (pAttrEl->AeAttrSSchema->SsCode == pSS->SsCode &&
 					       pAttrEl->AeAttrNum == Cond->TcAttr)
 					      /* c'est l'attribut cherche', on teste sa valeur */
 					      switch (pSS->SsAttribute[pAttrEl->AeAttrNum - 1].AttrType)
@@ -1321,7 +1321,7 @@ PtrDocument         pDoc;
 				 ret = FALSE;
 				 if (pAttr != NULL)
 				   if (pElem->ElTypeNumber == Cond->TcAttr &&
-				       pElem->ElStructSchema == pAttr->AeAttrSSchema)
+				       pElem->ElStructSchema->SsCode == pAttr->AeAttrSSchema->SsCode)
 				      ret = TRUE;
 				 break;
 			      case TcondPresentation:
@@ -1466,7 +1466,7 @@ PtrElement          pElNum;
 	     while (pEl != NULL)
 	       {
 		  if (pEl->ElTypeNumber == pCntr->TnElemType1 &&
-		      pEl->ElStructSchema == pElNum->ElStructSchema)
+		      pEl->ElStructSchema->SsCode == pElNum->ElStructSchema->SsCode)
 		     /* l'element rencontre' a la meme type que l'element traite' */
 		     val++;	/* incremente le compteur */
 		  pEl = pEl->ElParent;
@@ -1914,7 +1914,8 @@ PtrDocument         pDoc;
 			/* parcourt les attributs de chaque ascendant */
 			pAttr = pAsc->ElFirstAttr;
 			while (pAttr != NULL)
-			   if (pAttr->AeAttrSSchema == pEl->ElStructSchema &&
+			   if (pAttr->AeAttrSSchema->SsCode ==
+				pEl->ElStructSchema->SsCode &&
 			       pAttr->AeAttrNum == att)
 			      /* on a trouve' */
 			     {
@@ -2226,7 +2227,7 @@ boolean             lineBreak;
 			 pA = pAncest->ElFirstAttr;	/* premier attribut */
 			 while (!found && pA != NULL)
 			    if (pA->AeAttrNum == varItem->TvItem
-				&& pA->AeAttrSSchema == pSS)
+				&& pA->AeAttrSSchema->SsCode == pSS->SsCode)
 			       found = TRUE;
 			    else
 			       pA = pA->AeNext;
@@ -2419,13 +2420,12 @@ boolean            *removeEl;
 			   /* cherche si l'element ou un de ses ascendants possede */
 			   /* l'attribut a sortir */
 			   found = FALSE;
-			   pSS = pEl->ElStructSchema;
 			   while (pEl != NULL && !found)
 			     {
 				pA = pEl->ElFirstAttr;	/* 1er attribut de l'element */
 				/* parcourt les attributs de l'element */
 				while (pA != NULL && !found)
-				   if (pA->AeAttrSSchema == pSS &&
+				   if (pA->AeAttrSSchema->SsCode == pSSch->SsCode &&
 				       pA->AeAttrNum == pTRule->TrObjectNum)
 				      found = TRUE;
 				   else
@@ -2895,7 +2895,7 @@ boolean            *removeEl;
 			   /* cherche ensuite parmi les freres successifs */
 			   found = FALSE;
 			   do
-			      if ((pElGet->ElStructSchema == pEl->ElStructSchema ||
+			      if ((pElGet->ElStructSchema->SsCode == pEl->ElStructSchema->SsCode ||
 				   (strcmp (pTRule->TrElemNature, pElGet->ElStructSchema->SsName) == 0))
 				  && EquivalentSRules (pTRule->TrElemType, pElGet->ElStructSchema,
 						       pElGet->ElTypeNumber, pElGet->ElStructSchema, pElGet->ElParent))

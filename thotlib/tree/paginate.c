@@ -693,10 +693,10 @@ int                 nbView;
 
 {
    PtrAbstractBox      pAb;
+   PtrElement	       pSecond;
    int                 dvol;
-   PtrAbstractBox      pAb1;
 
-   SplitTextElement (pEl, cutChar + 1, pDoc, TRUE);
+   SplitTextElement (pEl, cutChar + 1, pDoc, TRUE, &pSecond);
    /* reduit le volume du pave de l'element precedant le point de */
    /* coupure et de ses paves englobants, si ces paves existent dans la */
    /* vue traitee. */
@@ -714,9 +714,8 @@ int                 nbView;
 	/* repercute la difference de volume sur les paves englobants */
 	do
 	  {
-	     pAb1 = pAb;
-	     pAb1->AbVolume -= dvol;
-	     pAb = pAb1->AbEnclosing;
+	     pAb->AbVolume -= dvol;
+	     pAb = pAb->AbEnclosing;
 	  }
 	while (!(pAb == NULL));
      }
@@ -727,8 +726,8 @@ int                 nbView;
       else if (pDoc->DocAssocFrame[pEl->ElAssocNum - 1] != 0)
 	 pDoc->DocAssocFreeVolume[pEl->ElAssocNum - 1] = THOT_MAXINT;
    /* cree les paves de la deuxieme partie */
-   CreateNewAbsBoxes (pEl->ElNext, pDoc, nbView);
-   ApplDelayedRule (pEl->ElNext, pDoc);
+   CreateNewAbsBoxes (pSecond, pDoc, nbView);
+   ApplDelayedRule (pSecond, pDoc);
 }
 
 /*----------------------------------------------------------------------

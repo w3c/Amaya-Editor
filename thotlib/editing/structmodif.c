@@ -671,7 +671,7 @@ Language            lang;
 #endif /* __STDC__ */
 
 {
-   PtrElement          pEl, pNextEl;
+   PtrElement          pEl, pNextEl, pSecond;
    PtrDocument         pDoc;
    PtrAttribute        pAttr;
    int                 len;
@@ -685,14 +685,13 @@ Language            lang;
 	  {
 	     DestroyAbsBoxes (pEl, pDoc, TRUE);
 	     AbstractImageUpdated (pDoc);
-	     SplitTextElement (pEl, charIndex, pDoc, TRUE);
+	     SplitTextElement (pEl, charIndex, pDoc, TRUE, &pNextEl);
 	     CreateAllAbsBoxesOfEl (pEl, pDoc);
 	     AbstractImageUpdated (pDoc);
-	     pNextEl = pEl->ElNext;
 	     if (pEl->ElTextLength > 0 && pNextEl->ElTextLength > 0)
 	       {
-		  SplitTextElement (pNextEl, 1, pDoc, TRUE);
-		  CreateAllAbsBoxesOfEl (pNextEl->ElNext, pDoc);
+		  SplitTextElement (pNextEl, 1, pDoc, TRUE, &pSecond);
+		  CreateAllAbsBoxesOfEl (pSecond, pDoc);
 		  AbstractImageUpdated (pDoc);
 		  pEl = pNextEl;
 	       }
@@ -1079,7 +1078,7 @@ boolean             block;
 {
    PtrElement          firstSel, lastSel, pAncest, pE, pNextEl, pPrevEl,
                        pPrev, pNext, pChild, pEl2, pEl, pCompleteElem,
-                       pSibling, pClose;
+                       pSibling, pClose, pSecond;
    PtrDocument         pDoc;
    PtrAbstractBox      pAb;
    NotifyElement       notifyEl;
@@ -1160,11 +1159,16 @@ boolean             block;
 		       }
 		     else
 		       {
-			  SplitTextElement (pEl, firstChar, pDoc, TRUE);
-			  /* modifie le volume des paves contenant la 1ere partie du texte */
-			  for (view = 0; view < MAX_VIEW_DOC; view++)
-			     if (pEl->ElNext->ElTextLength > 0)
-			       {
+			  SplitTextElement (pEl, firstChar, pDoc, TRUE, &pNext);
+			  if (pEl->ElParent == NULL)
+			     /* pEl has been deleted by the application.
+				we are lost! */
+			     return;
+			  else
+			    /* modifie le volume des paves contenant la 1ere partie du texte */
+			    for (view = 0; view < MAX_VIEW_DOC; view++)
+			       if (pNext->ElTextLength > 0)
+			         {
 				  pAb = pEl->ElAbstractBox[view];
 				  if (pAb != NULL)
 				    {
@@ -1183,9 +1187,8 @@ boolean             block;
 					 }
 				       while (pAb != NULL);
 				    }
-			       }
+			         }
 			  pPrev = pEl;
-			  pNext = pEl->ElNext;
 			  nextChar = 1;
 		       }
 		  }
@@ -1450,6 +1453,8 @@ int                 lastChar;
    int                 NSelectedEls, index, prevLen, len;
    boolean             discreteSelection;
 
+   if (firstSel == NULL)
+      return;
    pLast = NULL;
    pFirstFree = NULL;		/* pas d'element a liberer */
    pEl = firstSel;

@@ -191,22 +191,32 @@ NotifyElement      *event;
    char                documentURL[MAX_LENGTH];
    Document            targetDocument;
    View                view;
+   SSchema             docSchema;
+   boolean	       ok;
 
-   /* Check if the current element is a text, an image or a graphics */
+   docSchema = TtaGetDocumentSSchema (event->document);
+
+   /* Check if the current element is interested in double click */
+   ok = FALSE;
    elType = TtaGetElementType (event->element);
-   if (elType.ElTypeNum != HTML_EL_LINK &&
-       elType.ElTypeNum != HTML_EL_C_Empty &&
-       elType.ElTypeNum != HTML_EL_PICTURE_UNIT &&
-       elType.ElTypeNum != HTML_EL_TEXT_UNIT &&
-       elType.ElTypeNum != HTML_EL_GRAPHICS_UNIT &&
-       elType.ElTypeNum != HTML_EL_SYMBOL_UNIT &&
-       elType.ElTypeNum != HTML_EL_Radio_Input &&
-       elType.ElTypeNum != HTML_EL_Checkbox_Input &&
-       elType.ElTypeNum != HTML_EL_Frame &&
-       elType.ElTypeNum != HTML_EL_Option_Menu &&
-       elType.ElTypeNum != HTML_EL_Submit_Input &&
-       elType.ElTypeNum != HTML_EL_Reset_Input)
-      /* DoubleClick is disabled on other elements */
+   if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
+       elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
+       elType.ElTypeNum == HTML_EL_GRAPHICS_UNIT ||
+       elType.ElTypeNum == HTML_EL_SYMBOL_UNIT)
+     ok = TRUE;
+   else
+     if (elType.ElSSchema == docSchema)
+	if (elType.ElTypeNum == HTML_EL_LINK ||
+	    elType.ElTypeNum == HTML_EL_C_Empty ||
+	    elType.ElTypeNum == HTML_EL_Radio_Input ||
+	    elType.ElTypeNum == HTML_EL_Checkbox_Input ||
+	    elType.ElTypeNum == HTML_EL_Frame ||
+	    elType.ElTypeNum == HTML_EL_Option_Menu ||
+	    elType.ElTypeNum == HTML_EL_Submit_Input ||
+	    elType.ElTypeNum == HTML_EL_Reset_Input)
+	   ok = TRUE;
+   if (!ok)
+      /* DoubleClick is disabled */
       return FALSE;
 
    if (W3Loading)
@@ -228,7 +238,7 @@ NotifyElement      *event;
    else if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
      {
        /* it is a double click on graphic submit element? */
-       attrType.AttrSSchema = elType.ElSSchema;
+       attrType.AttrSSchema = docSchema;
        attrType.AttrTypeNum = HTML_ATTR_NAME;
        attr = TtaGetAttribute (event->element, attrType);
        if (attr)
@@ -243,13 +253,15 @@ NotifyElement      *event;
 	/* is it an option menu ? */
 	elFound = TtaGetParent (event->element);
 	elType = TtaGetElementType (elFound);
-	if (elType.ElTypeNum == HTML_EL_Option)
+	if (elType.ElTypeNum == HTML_EL_Option &&
+	    elType.ElSSchema == docSchema)
 	  {
 	     SelectOneOption (event->document, elFound);
 	     return TRUE;
 	  }
      }
-   else if (elType.ElTypeNum == HTML_EL_Option_Menu)
+   else if (elType.ElTypeNum == HTML_EL_Option_Menu &&
+	    elType.ElSSchema == docSchema)
      {
 	/* it is an option menu */
 	elFound = TtaGetFirstChild (event->element);
@@ -260,12 +272,14 @@ NotifyElement      *event;
 	     return TRUE;
 	  }
      }
-   else if (elType.ElTypeNum == HTML_EL_Checkbox_Input)
+   else if (elType.ElTypeNum == HTML_EL_Checkbox_Input &&
+	    elType.ElSSchema == docSchema)
      {
 	SelectCheckbox (event->document, event->element);
 	return TRUE;
      }
-   else if (elType.ElTypeNum == HTML_EL_Radio_Input)
+   else if (elType.ElTypeNum == HTML_EL_Radio_Input &&
+	    elType.ElSSchema == docSchema)
      {
 	SelectOneRadio (event->document, event->element);
 	return TRUE;
@@ -274,18 +288,20 @@ NotifyElement      *event;
    /* Search the anchor or LINK element */
    anchor = SearchAnchor (event->document, event->element, TRUE);
    if (anchor == NULL)
-      if (elType.ElTypeNum == HTML_EL_LINK)
+      if (elType.ElTypeNum == HTML_EL_LINK &&
+	  elType.ElSSchema == docSchema)
 	 anchor = event->element;
       else
 	{
 	   elType.ElTypeNum = HTML_EL_LINK;
+	   elType.ElSSchema = docSchema;
 	   anchor = TtaGetTypedAncestor (event->element, elType);
 	}
 
    if (anchor != NULL)
      {
 	/* search HREF attribute */
-	attrType.AttrSSchema = elType.ElSSchema;
+	attrType.AttrSSchema = docSchema;
 	attrType.AttrTypeNum = HTML_ATTR_HREF_;
 	HrefAttr = TtaGetAttribute (anchor, attrType);
      }
@@ -303,10 +319,11 @@ NotifyElement      *event;
 	if (url != NULL)
 	  {
 	     elType = TtaGetElementType (anchor);
-	     if (elType.ElTypeNum == HTML_EL_Anchor)
+	     if (elType.ElTypeNum == HTML_EL_Anchor &&
+		 elType.ElSSchema == docSchema)
 	       {
 		  /* attach an attribute PseudoClass = active */
-		  attrType.AttrSSchema = elType.ElSSchema;
+		  attrType.AttrSSchema = docSchema;
 		  attrType.AttrTypeNum = HTML_ATTR_PseudoClass;
 		  PseudoAttr = TtaGetAttribute (anchor, attrType);
 		  if (PseudoAttr == NULL)
@@ -334,8 +351,7 @@ NotifyElement      *event;
 		  strcpy (documentURL, url);
 		  url[0] = EOS;
 		  /* is the source element an image map */
-		  elType = TtaGetElementType (event->element);
-		  attrType.AttrSSchema = elType.ElSSchema;
+		  attrType.AttrSSchema = docSchema;
 		  attrType.AttrTypeNum = HTML_ATTR_ISMAP;
 		  attr = TtaGetAttribute (event->element, attrType);
 		  if (attr != NULL) {

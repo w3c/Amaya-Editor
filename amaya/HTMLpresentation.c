@@ -62,7 +62,9 @@ static boolean MakeASpan (elem, span, doc)
   ret = FALSE;
   *span = NULL;
   elType = TtaGetElementType (elem);
-  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+  if (elType.ElSSchema == TtaGetDocumentSSchema (doc))
+    /* it's an HTML element */
+    if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
      {
      parent = TtaGetParent (elem);
      if (parent != NULL)
@@ -153,23 +155,38 @@ static void  AttrToSpan (elem, attr, doc)
      Document doc;
 #endif /* __STDC__*/
 {
-  Element	span;
+  Element	span, parent;
   Attribute	newAttr;
   AttributeType	attrType;
+  ElementType   elType;
   int		kind, len;
 #define ATTRLEN 64
   char		oldValue[ATTRLEN];
 
-  if (MakeASpan (elem, &span, doc))
+  elType = TtaGetElementType (elem);
+  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
+     /* it's a character string */
      {
-     TtaGiveAttributeType (attr, &attrType, &kind);
-     newAttr = TtaNewAttribute (attrType);
-     TtaAttachAttribute (span, newAttr, doc);
-     len = ATTRLEN - 1;
-     TtaGiveTextAttributeValue (attr, oldValue, &len);
-     TtaRemoveAttribute (elem, attr, doc);
-     TtaSetAttributeText (newAttr, oldValue, span, doc);
-     }  
+     parent = TtaGetParent (elem);
+     elType = TtaGetElementType (parent);
+     if (elType.ElSSchema == TtaGetDocumentSSchema (doc))
+        /* the parent element is an HTML element */
+	/* Create a Span element and move to attribute to this Span element */
+        MakeASpan (elem, &span, doc);
+     else
+        /* move the attribute to the parent element */
+	span = parent;
+     if (span != NULL)
+        {
+        TtaGiveAttributeType (attr, &attrType, &kind);
+        newAttr = TtaNewAttribute (attrType);
+        TtaAttachAttribute (span, newAttr, doc);
+        len = ATTRLEN - 1;
+        TtaGiveTextAttributeValue (attr, oldValue, &len);
+        TtaRemoveAttribute (elem, attr, doc);
+        TtaSetAttributeText (newAttr, oldValue, span, doc);
+        }
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -325,6 +342,7 @@ NotifyPresentation *event;
   Element	     elem, span, body, root;
   PRule	             presRule;
   Document	     doc;
+  SSchema	     HTMLschema;
 #define STYLELEN 1000
   int                presType;
   boolean            ret;
@@ -335,14 +353,29 @@ NotifyPresentation *event;
   presRule = event->pRule;
   elType = TtaGetElementType (elem);
   ret = FALSE;
+  HTMLschema = TtaGetDocumentSSchema (doc);
 
   /* if it's a background rule on element BODY, move it to element HTML */
   /* if it's a rule on element HTML and it's not a background rule, move
      it to element BODY */
   if (event->event != TtePRuleDelete)
-    {
-      if (elType.ElTypeNum == HTML_EL_BODY 
-	  && (presType == PRFillPattern || presType == PRBackground || presType == PRShowBox))
+    if (elType.ElSSchema != HTMLschema)
+      /* it's not an HTML element */
+      {
+      if (TtaGetConstruct (elem) == ConstructBasicType)
+	 /* it's a basic type. Move the PRule to the parent element */
+	 {
+	 elem = TtaGetParent (elem);
+	 MovePRule (presRule, event->element, elem, doc);
+	 ret = TRUE; /* don't let Thot perform normal operation */
+	 }
+      }
+    else
+      /* it's an HTML element */
+      {
+      if (elType.ElTypeNum == HTML_EL_BODY
+	  && (presType == PRFillPattern || presType == PRBackground ||
+	      presType == PRShowBox))
 	{
 	  root = TtaGetParent (elem);
 	  if (presType == PRBackground)
@@ -396,7 +429,7 @@ NotifyPresentation *event;
 	      elem = span;
 	      ret = TRUE; /* don't let Thot perform normal operation */
 	    }
-	}
+	  }
     }
   /* set the Style_ attribute ? */
   SetStyleAttribute (doc, elem);

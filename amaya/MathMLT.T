@@ -6,6 +6,9 @@
 TRANSLATION MathML;
 
 LineLength 78;
+
+CONST
+   tagend = '>\12';
 	
 RULES
 
@@ -15,7 +18,9 @@ RULES
 
    MROW:
 	begin
-	create '<mrow>\12';
+	create '<mrow';
+	create Attributes;
+	create tagend;
 	indent +2;
 	indent -2 after;
 	create '</mrow>\12' after;
@@ -23,7 +28,9 @@ RULES
 
    MROOT :
         begin
-	create '<mroot>\12';
+	create '<mroot';
+	create Attributes;
+	create tagend;
 	indent +2;
 	indent -2 after;
 	create '</mroot>\12' after;
@@ -31,7 +38,9 @@ RULES
 
    MSQRT :
         begin
-	create '<msqrt>\12';
+	create '<msqrt';
+	create Attributes;
+	create tagend;
 	indent +2;
 	indent -2 after;
 	create '</msqrt>\12' after;
@@ -39,7 +48,9 @@ RULES
 
    MFRAC :
 	begin
-	create '<mfrac>\12';
+	create '<mfrac';
+	create Attributes;
+	create tagend;
 	indent +2;
 	indent -2 after;
 	create '</mfrac>\12' after;
@@ -47,7 +58,9 @@ RULES
 
    MSUBSUP :
 	begin
-	create '<msubsup>\12';
+	create '<msubsup';
+	create Attributes;
+	create tagend;
 	indent +2;
 	indent -2 after;
 	create '</msubsup>\12' after;
@@ -55,7 +68,9 @@ RULES
 
    MSUB :
 	begin
-	create '<msub>\12';
+	create '<msub';
+	create Attributes;
+	create tagend;
 	indent +2;
 	indent -2 after;
 	create '</msub>\12' after;
@@ -63,7 +78,9 @@ RULES
 
    MSUP :
 	begin
-	create '<msup>\12';
+	create '<msup';
+	create Attributes;
+	create tagend;
 	indent +2;
 	indent -2 after;
 	create '</msup>\12' after;
@@ -71,7 +88,9 @@ RULES
 
    MUNDER :
 	begin
-	create '<munder>\12';
+	create '<munder';
+	create Attributes;
+	create tagend;
 	indent +2;
 	indent -2 after;
 	create '</munder>\12' after;
@@ -79,7 +98,9 @@ RULES
 
    MOVER :
 	begin
-	create '<mover>\12';
+	create '<mover';
+	create Attributes;
+	create tagend;
 	indent +2;
 	indent -2 after;
 	create '</mover>\12' after;
@@ -87,7 +108,9 @@ RULES
 
    MUNDEROVER :
 	begin
-	create '<munderover>\12';
+	create '<munderover';
+	create Attributes;
+	create tagend;
 	indent +2;
 	indent -2 after;
 	create '</munderover>\12' after;
@@ -95,7 +118,9 @@ RULES
 
    MMULTISCRIPTS :
 	begin
-	create '<mmultiscripts>\12';
+	create '<mmultiscripts';
+	create Attributes;
+	create tagend;
 	indent +2;
 	indent -2 after;
 	create '</mmultiscripts>\12' after;
@@ -117,37 +142,49 @@ RULES
 
    MF :
 	begin
-	create '<mf>';
+	create '<mf';
+	create Attributes;
+	create '>';
 	create '</mf>\12' after;
 	end;
 
    MI :
 	begin
-	create '<mi>';
+	create '<mi';
+	create Attributes;
+	create '>';
 	create '</mi>\12' after;
 	end;
 
    MO :
 	begin
-	create '<mo>';
+	create '<mo';
+	create Attributes;
+	create '>';
 	create '</mo>\12' after;
 	end;
 
    MN :
 	begin
-	create '<mn>';
+	create '<mn';
+	create Attributes;
+	create '>';
 	create '</mn>\12' after;
 	end;
 
    MS :
 	begin
-	create '<ms>';
+	create '<ms';
+	create Attributes;
+	create '>';
 	create '</ms>\12' after;
 	end;
 
    MTEXT :
 	begin
-	create '<mtext>';
+	create '<mtext';
+	create Attributes;
+	create '>';
 	create '</mtext>\12' after;
 	end;
 
@@ -160,7 +197,9 @@ RULES
 	begin
 	if NOT Within MF
 		begin
-		create '<mo>';
+		create '<mo';
+		create Attributes;
+		create '>';
 		create '</mo>\12' after;
 		end;
 	end;
@@ -176,9 +215,9 @@ SYMBTRANSLATE
         BEGIN
 	'i'     -> '&Integral;';
         'S'     -> '&Sum;';
-        'P'     -> '&;';
-        'U'     -> '&Union;';
-        'I'     -> '&Intersection;';
+        'P'     -> '&PI;';
+        'U'     -> '&Cap;';
+        'I'     -> '&Cup;';
         END;
 
 END

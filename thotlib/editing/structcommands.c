@@ -727,7 +727,7 @@ PtrElement          pParent;
   ----------------------------------------------------------------------*/
 void                CopyCommand ()
 {
-   PtrElement          firstSel, lastSel, pEl, pCopy, pE, pElAttr;
+   PtrElement          firstSel, lastSel, pEl, pCopy, pE, pElAttr, pSecond;
    PtrPasteElem        pSave;
    PtrDocument         pSelDoc;
    PtrAttribute        pAttrLang, pAttrHerit;
@@ -798,10 +798,10 @@ void                CopyCommand ()
 			       if (pEl == firstSel && firstChar > 1)
 				  /* coupe le premier element sauve' */
 				 {
-				    SplitTextElement (pCopy, firstChar,
-						      pSelDoc, FALSE);
 				    pE = pCopy;
-				    pCopy = pCopy->ElNext;
+				    SplitTextElement (pCopy, firstChar,
+						      pSelDoc, FALSE,&pSecond);
+				    pCopy = pSecond;
 				    /* supprime la premiere partie */
 				    DeleteElement (&pE);
 				    if (firstSel == lastSel)
@@ -815,8 +815,7 @@ void                CopyCommand ()
 				     /* coupe le dernier element sauve' */
 				    {
 				       SplitTextElement (pCopy, lastChar,
-							 pSelDoc, FALSE);
-				       pE = pCopy->ElNext;
+							 pSelDoc, FALSE, &pE);
 				       /* supprime la deuxieme partie */
 				       DeleteElement (&pE);
 				    }
@@ -2459,7 +2458,7 @@ boolean             Before;
 #endif /* __STDC__ */
 
 {
-  PtrElement          firstSel, lastSel, pNew, pF, pSibling, pEl;
+  PtrElement          firstSel, lastSel, pNew, pF, pSibling, pEl, pSecond;
   PtrElement          pElem, pElSplit, pSplitEl;
   ElementType	      elType, selType;
   PtrDocument         pSelDoc;
@@ -2776,10 +2775,11 @@ boolean             Before;
 		      {
 			DestroyAbsBoxes (firstSel, pSelDoc, TRUE);
 			AbstractImageUpdated (pSelDoc);
-			SplitTextElement (firstSel, firstChar, pSelDoc, TRUE);
+			SplitTextElement (firstSel, firstChar, pSelDoc, TRUE,
+					  &pSecond);
 			CreateAllAbsBoxesOfEl (firstSel, pSelDoc);
-			if (firstSel->ElNext != NULL)
-			  CreateAllAbsBoxesOfEl (firstSel->ElNext, pSelDoc);
+			if (pSecond != NULL)
+			  CreateAllAbsBoxesOfEl (pSecond, pSelDoc);
 		      }
 		  if (pNew == NULL)
 		    pNew = NewSubtree (typeNum, pSS, pSelDoc,

@@ -818,6 +818,8 @@ void               *param;
    PtrPSchema               pSc1;
    int                      cst;
     
+   if (target == NULL)
+      return;
    rule = ((PtrElement) el)->ElFirstPRule;
    /*
     * for each rule corresponding to the same context i.e. identical

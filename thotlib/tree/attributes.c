@@ -408,7 +408,7 @@ int                *lastChar;
 	   CreateNewAbsBoxes (*pFirstSel, pDoc, 0);
 	   ApplDelayedRule (*pFirstSel, pDoc);
 	}
-   if (*lastChar > 0)
+   if (*lastChar > 0 && *pLastSel != NULL)
       if ((*pLastSel)->ElTerminal && (*pLastSel)->ElLeafType == LtText)
 	 SplitAfterSelection (*pLastSel, *lastChar, pDoc);
 }

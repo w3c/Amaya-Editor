@@ -223,11 +223,14 @@ MathEntity        MathEntityTable[] =
    {"Agr", 65, 'G'},
    {"ApplyFunction", 32, 'L'},  /* render as white space */
    {"Bgr", 66, 'G'},
+   {"Cap", 199, 'G'},
+   {"Cup", 200, 'G'},
    {"Delta", 68, 'G'},
    {"EEgr", 72, 'G'},
    {"Egr", 69, 'G'},
    {"Gamma", 71, 'G'},
    {"Igr", 73, 'G'},
+   {"Integral", 242, 'G'},
    {"InvisibleTimes", 0, ' '},
    {"Kgr", 75, 'G'},
    {"KHgr", 67, 'G'},
@@ -2661,9 +2664,9 @@ Element             el;
 		        TtaInsertSibling (child, prev, FALSE, theDocument);
 		        prev = child;
 		        }
+		     /* Create placeholders within the MathML element */
+		     CreatePlaceholders (firstChild, theDocument);
 		     }
-		  /* Create placeholders within the MathML element */
-		  CreatePlaceholders (firstChild, theDocument);
 		  }
 		break;
 #endif /* MATHML */

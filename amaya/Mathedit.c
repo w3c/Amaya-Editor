@@ -691,7 +691,7 @@ void ParseMathString (event)
 #endif /* __STDC__*/
 {
 
-  Element	el, textEl, prevEl, curEl, firstEl, selEl, newSelEl;
+  Element	el, textEl, prevEl, curEl, firstEl, selEl, newSelEl, newTextEl;
   Document	doc;
   ElementType	elType;
   int		len, i, charType, curElType, curLen, firstSelChar, lastSelChar,
@@ -761,9 +761,9 @@ void ParseMathString (event)
 		   before = FALSE;
 	        TtaInsertSibling (curEl, prevEl, before, doc);
 	        elType.ElTypeNum = MathML_EL_TEXT_UNIT;
-	        textEl = TtaNewElement (doc, elType);
-	        TtaInsertFirstChild (&textEl, curEl, doc);
-	        TtaSetTextContent (textEl, NULL, lang, doc);
+	        newTextEl = TtaNewElement (doc, elType);
+	        TtaInsertFirstChild (&newTextEl, curEl, doc);
+	        TtaSetTextContent (newTextEl, NULL, lang, doc);
 	        curLen = 0;
 	        spaceBefore = FALSE;
 	        prevEl = curEl;
@@ -772,7 +772,7 @@ void ParseMathString (event)
 	      if (selEl != NULL && newSelEl == NULL)
 	        if (i >= firstSelChar - 1)
 		  {
-		  newSelEl = textEl;
+		  newSelEl = newTextEl;
 		  newSelChar = curLen + 1;
 		  }
 
@@ -787,7 +787,7 @@ void ParseMathString (event)
 	        newChar[0] = text[i]; newChar[1] = '\0';
 	        curLen++;
 	        }
-	      TtaAppendTextContent (textEl, newChar, doc);
+	      TtaAppendTextContent (newTextEl, newChar, doc);
 	      }
 	    }
 	  /* end of parsing */
@@ -797,7 +797,7 @@ void ParseMathString (event)
 	    MathSetAttributes (curEl, doc);
 	  if (selEl != NULL && newSelEl == NULL)
 	     {
-	     newSelEl = textEl;
+	     newSelEl = newTextEl;
 	     newSelChar = curLen + 1;
 	     }
 	  }
@@ -816,7 +816,7 @@ void ParseMathString (event)
 
      /* set a new selection */
      if (newSelEl != NULL)
-	TtaSelectString (doc, newSelEl, newSelChar, newSelChar);
+	TtaSelectString (doc, newSelEl, newSelChar, newSelChar-1);
      }
 }
 

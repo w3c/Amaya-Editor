@@ -740,6 +740,7 @@ Document            document;
 #endif /* __STDC__ */
 
 {
+   PtrElement	secondPart;
 
    UserErrorCode = 0;
    if (element == NULL)
@@ -774,7 +775,7 @@ Document            document;
    else
      {
 	SplitTextElement ((PtrElement) element, position + 1,
-			  LoadedDocument[document - 1], FALSE);
+			  LoadedDocument[document - 1], FALSE, &secondPart);
 #ifndef NODISPLAY
 	RedisplaySplittedText ((PtrElement) element, position, document);
 #endif

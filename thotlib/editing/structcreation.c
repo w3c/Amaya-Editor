@@ -388,7 +388,7 @@ PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 {
-   PtrElement          pEl;
+   PtrElement          pEl, pSecond;
    int                 view, dVol;
    PtrAbstractBox      pAb;
    boolean             assoc;
@@ -400,8 +400,8 @@ PtrDocument         pDoc;
 	/* on coupe en deux l'element feuille dans l'arbre abstrait */
 	/* ce qui cree un deuxieme element feuille juste apres l'element */
 	/* initial */
-	SplitTextElement (*firstSel, *firstChar, pDoc, TRUE);
-	if ((*firstSel)->ElNext->ElNext == NULL)
+	SplitTextElement (*firstSel, *firstChar, pDoc, TRUE, &pSecond);
+	if (pSecond->ElNext == NULL)
 	   /* l'element qui a ete coupe etait le dernier et ne l'est plus */
 	   ChangeFirstLast (*firstSel, pDoc, FALSE, TRUE);
 	/* on met a jour le pave' de l'element dans toutes les vues ou */
@@ -465,7 +465,7 @@ PtrDocument         pDoc;
 
 #endif /* __STDC__ */
 {
-   PtrElement          pNextEl;
+   PtrElement          pNextEl, pSecond;
 
    if (lastChar > 1 && lastChar <= lastSel->ElTextLength)
       /* il faut effectivement couper l'element */
@@ -474,10 +474,10 @@ PtrDocument         pDoc;
 	pNextEl = lastSel->ElNext;
 	FwdSkipPageBreak (&pNextEl);
 	/* on coupe en deux la feuille de texte dans l'arbre abstrait */
-	SplitTextElement (lastSel, lastChar, pDoc, TRUE);
+	SplitTextElement (lastSel, lastChar, pDoc, TRUE, &pSecond);
 	/* construit les paves de la 2eme partie et met a jours ceux de */
 	/* la premiere partie */
-	BuildAbsBoxSpliText (lastSel, lastSel->ElNext, pNextEl, pDoc);
+	BuildAbsBoxSpliText (lastSel, pSecond, pNextEl, pDoc);
      }
 }
 
@@ -3231,9 +3231,7 @@ PtrElement         *pFree;
    /* abstraction faite des marques de page */
    pNextEl = lastSel->ElNext;
    FwdSkipPageBreak (&pNextEl);
-   SplitTextElement (lastSel, lastChar, pDoc, TRUE);
-   /* deuxieme partie de la feuille de texte cree apres la 1ere partie */
-   pFollow = lastSel->ElNext;
+   SplitTextElement (lastSel, lastChar, pDoc, TRUE, &pFollow);
    if (create)
      {
 	if (page)
@@ -4575,10 +4573,8 @@ int                 item;
 				   {
 				      pNextEl = firstSel->ElNext;
 				      FwdSkipPageBreak (&pNextEl);
-				      SplitTextElement (firstSel, firstChar, pDoc, TRUE);
 				      /* coupe la feuille de texte */
-				      pFollow = firstSel->ElNext;
-				      /* deuxieme partie */
+				      SplitTextElement (firstSel, firstChar, pDoc, TRUE, &pFollow);
 				      /* met a jour la selection */
 				      if (firstSel == lastSel)
 					{
