@@ -1316,7 +1316,8 @@ static void         CreateMathMenu (Document doc, View view)
 		   0, NULL, TRUE, 1, 'L', D_DONE);
       TtaNewIconMenu (MathsDialogue + MenuMaths, MathsDialogue + FormMaths, 0,
 		   NULL, 14, mIcons, FALSE);
-      TtaSetMenuForm (MathsDialogue + MenuMaths, 0);
+      /* do not need to initialise the selection into the palette */
+      /*TtaSetMenuForm (MathsDialogue + MenuMaths, 0);*/
       TtaSetDialoguePosition ();
     }
   TtaShowDialogue (MathsDialogue + FormMaths, TRUE); 
