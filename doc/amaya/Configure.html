@@ -1,27 +1,28 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
-                      "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html>
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Configuring Amaya</title>
   <style type="text/css">
 .menuItems { color: #E55500}</style>
-  <meta name="GENERATOR" content="amaya V3.2">
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="GENERATOR" content="amaya V3.2" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
-<body lang="en">
+<body xml:lang="en" lang="en">
 
 <table border="0" width="100%" summary="toc">
   <tbody>
     <tr>
-      <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"> <img
-        border="0" alt="Amaya" src="../Icons/amaya.gif"></p>
+      <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
+        border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
       <td><p align="right"><a href="MakeBook.html"><img alt="previous"
-        border="0" src="../Icons/left.gif"></a><a href="Manual.html"><img
-        alt="top" border="0" src="../Icons/up.gif"></a><a
-        href="Access.html"><img alt="next" border="0"
-        src="../Icons/right.gif"></a></p>
+        border="0" src="../Icons/left.gif" /></a><a href="Manual.html"><img
+        alt="top" border="0" src="../Icons/up.gif" /></a><a
+        href="Access.html"><img alt="next" border="0" src="../Icons/right.gif"
+        /></a></p>
       </td>
     </tr>
   </tbody>
@@ -176,33 +177,33 @@ summary="action button chart">
 <h4><a name="General">General preferences</a></h4>
 
 <p style="text-align: center"><img src="../Icons/GeneralMenu.gif"
-alt="General Preferences Menu"></p>
+alt="General Preferences Menu" /></p>
 <dl>
   <dt></dt>
   <dt><strong>Amaya user directory</strong> (Windows platforms only, not shown
   in the included figure)</dt>
-    <dd>Specifies the directory where the user preferences are stored.<br>
+    <dd>Specifies the directory where the user preferences are stored.<br />
       <strong>Note:</strong> the user can't change the location of this
-      directory.<br>
-      <br>
+      directory.<br />
+      <br />
     </dd>
   <dt><strong>Amaya temporary directory</strong> (Windows platforms only, not
   shown in the figure)</dt>
     <dd>Specifies the directory where Amaya will store its temporary files,
       for example, while printing a document. If not specified, the default
-      temporary directory will be <code>c:\temp</code>.<br>
+      temporary directory will be <code>c:\temp</code>.<br />
       <strong>Note:</strong> changing this directory will not erase the
       previous one. You will have to remove the old directory manually. If the
       <a href="#Cache">cache</a> was located under the previous temporary
-      directory, a new cache will be created under the new directory.<br>
-      <br>
+      directory, a new cache will be created under the new directory.<br />
+      <br />
     </dd>
   <dt><strong>Home Page</strong></dt>
     <dd>Specifies the URI that Amaya will load when launched or when the user
       presses the home page button. An example is
-      <code>http://www.w3.org</code>.<br>
-      <strong>Note:</strong> A complete URI must be used.<br>
-      <br>
+      <code>http://www.w3.org</code>.<br />
+      <strong>Note:</strong> A complete URI must be used.<br />
+      <br />
     </dd>
   <dt><strong><a name="Enable">Enable multi-key</a></strong></dt>
     <dd>Enables or disables the optional multi-key input method.
@@ -234,29 +235,29 @@ alt="General Preferences Menu"></p>
       Also, pressing the Stop button during an FTP download may crash Amaya.
       Albeit these problems, we added this option to Amaya so that other
       developer's may help us to debug it faster. By default this option is
-      turned off.<br>
+      turned off.<br />
     </dd>
   <dt><strong>Menu Font size</strong> (Unix platforms only)</dt>
     <dd>Specifies the font size of all the Amaya menus. This option is only
       taken into account at launch time.
-      <p><br>
+      <p><br />
       </p>
     </dd>
   <dt><strong>Font Zoom</strong></dt>
     <dd>It's possible to zoom in and zoom out, document window by document
       window. Each document (text and images) displayed within a zoomed window
       will be displayed larger or smaller than its real size according of the
-      current zoom.<br>
+      current zoom.<br />
       That option allows you to change the default font zoom for all windows.
       This change affects only font sizes but not images and is reflected
-      immediately in all open document windows.<br>
-      <br>
+      immediately in all open document windows.<br />
+      <br />
     </dd>
   <dt><strong>Double click delay</strong> (Unix platforms only)</dt>
     <dd>This option allows one to control the delay for which two mouse clicks
       are classed as a double-click. This option is only taken into account at
-      launch time.<br>
-      <br>
+      launch time.<br />
+      <br />
     </dd>
   <dt><strong>Dialogue language</strong></dt>
     <dd>Specifies the language for all of Amaya's menus and dialogue messages.
@@ -292,7 +293,7 @@ alt="General Preferences Menu"></p>
 <h4><a name="Publishing">Publishing preferences</a></h4>
 
 <p style="text-align: center"><img src="../Icons/PublishMenu.gif"
-alt="Publish Preferences Menu"></p>
+alt="Publish Preferences Menu" /></p>
 <dl>
   <dt><strong>Use ETAGS and preconditions</strong></dt>
     <dd>HTTP/1.1 introduces new headers that allow to avoid the <a
@@ -323,7 +324,7 @@ alt="Publish Preferences Menu"></p>
 <h4><a name="Cache">Cache preferences</a></h4>
 
 <p style="text-align: center"><img src="../Icons/CacheMenu.gif"
-alt="Cache Preferences Menu"></p>
+alt="Cache Preferences Menu" /></p>
 
 <p>Amaya provides a cache through libwww. By default, the cache is enabled by
 default and is stored in the <strong>AmayaTemp/libwww-cache</strong>
@@ -342,7 +343,7 @@ erasing the cache directory.</p>
   <dt><strong>Cache  directory</strong></dt>
     <dd>Gives the parent directory for the libwww-cache directory. Changing
       this directory does not erase the contents of the previous one. You will
-      have to remove it yourself.<br>
+      have to remove it yourself.<br />
       <strong>Note:</strong> File protection mechanisms prevent the use of NFS
       (Network File System) directories for the cache directory as NFS allows
       reuse by multiple processes or users.  Use a 'local' directory for the
@@ -356,7 +357,7 @@ erasing the cache directory.</p>
 <h4><a name="Proxy">Proxy preferences</a></h4>
 
 <p style="text-align: center"><img src="../Icons/ProxyMenu.gif"
-alt="Proxy Preferences Menu"></p>
+alt="Proxy Preferences Menu" /></p>
 
 <p>You can specify a proxy and a set of domains where the proxy should or
 should not be used by means of this menu.</p>
@@ -390,7 +391,7 @@ should not be used by means of this menu.</p>
 <h4><a name="color">Color preferences</a></h4>
 
 <p style="text-align: center"><img src="../Icons/ColorMenu.gif"
-alt="Color Preferences Menu"></p>
+alt="Color Preferences Menu" /></p>
 
 <p>This menu allows selection of the default foreground and background colors
 for documents. It allows also to control the colors: used by Amaya to display
@@ -427,7 +428,7 @@ done through the Amaya.css style sheet.</p>
 <h4><a name="HTML">Window geometry preferences</a></h4>
 
 <p style="text-align: center"><img src="../Icons/GeomMenu.gif"
-alt="Geometry Preferences Menu"></p>
+alt="Geometry Preferences Menu" /></p>
 
 <p>This menu allows you to save the current window position and size size of
 the different views of a document (formatted, structure, alternate, links, and
@@ -439,7 +440,7 @@ windows.</p>
 <h4><a name="lang">Language negotiation preferences</a></h4>
 
 <p style="text-align: center"><img src="../Icons/LangueNegotiation.gif"
-alt="Language negotiation menu"></p>
+alt="Language negotiation menu" /></p>
 
 <p>If a document exists in different languages and your server is configured
 to do language negotiation, you can use this menu to enter your language
@@ -453,7 +454,7 @@ transparently request any of these versions.</p>
 <h4><a name="Profiles">Profiles</a></h4>
 
 <p style="text-align: center"><img src="../Icons/ProfilesMenu.gif"
-alt="Profiles  menu"></p>
+alt="Profiles  menu" /></p>
 
 <p>In Amaya, a <strong>profile</strong> defines the look and feel of of the
 Amaya user interface. You can use profiles to hide or display the Amaya
@@ -466,7 +467,7 @@ Any profile change will be effective upon the next launch of Amaya.</p>
 <h4><a name="Templates">Templates</a></h4>
 
 <p style="text-align: center"><img src="../Icons/TemplatesMenu.gif"
-alt="Templates "></p>
+alt="Templates " /></p>
 
 <p>A <strong>template</strong> is a model, or skeleton, of a document that you
 may use for creating your own documents. This menu allows you to specify the
@@ -629,13 +630,13 @@ by default located in the directory <code>Amaya/config</code>.</p>
 </div>
 
 <p align="right"><a href="MakeBook.html"><img alt="previous" border="0"
-src="../Icons/left.gif"></a><a href="Manual.html"><img alt="top" border="0"
-src="../Icons/up.gif"></a> <a href="Access.html"><img alt="next" border="0"
-src="../Icons/right.gif"></a></p>
-<hr>
+src="../Icons/left.gif" /></a><a href="Manual.html"><img alt="top" border="0"
+src="../Icons/up.gif" /></a> <a href="Access.html"><img alt="next" border="0"
+src="../Icons/right.gif" /></a></p>
+<hr />
 <address>
-  <a href="mailto:vatton@w3.org">Irène Vatton</a><br>
-  <br>
+  <a href="mailto:vatton@w3.org">Irène Vatton</a><br />
+  <br />
 
 </address>
 </body>

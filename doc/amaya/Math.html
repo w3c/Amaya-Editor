@@ -1,25 +1,24 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
-                      "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html>
+<?xml version="1.0" encoding="iso-8859-1"?>
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Editing Mathematics</title>
-  <meta name="GENERATOR" content="amaya V3.2">
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="GENERATOR" content="amaya V3.2" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
-<body lang="en">
+<body xml:lang="en" lang="en">
 
 <table border="0" width="100%" summary="toc">
   <tbody>
     <tr>
-      <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"> <img
-        border="0" alt="Amaya" src="../Icons/amaya.gif"></p>
+      <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
+        border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
       <td><p align="right"><a href="Tables.html"><img alt="previous"
-        border="0" src="../Icons/left.gif"></a> <a href="Manual.html"><img
-        alt="top" border="0" src="../Icons/up.gif"></a> <a
+        border="0" src="../Icons/left.gif" /></a> <a href="Manual.html"><img
+        alt="top" border="0" src="../Icons/up.gif" /></a> <a
         href="ImageMaps.html"><img alt="next" border="0"
-        src="../Icons/right.gif"></a></p>
+        src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -73,7 +72,8 @@ create new constructs within a formula. If the caret is not in a formula, a
 <code>Math</code> element is created first to accept the new construct. The
 available constructs are:</p>
 <ul>
-  <li>Root with index, <code>mroot</code> in MathML:  <math>
+  <li>Root with index, <code>mroot</code> in MathML:  <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <mroot>
         <mrow>
           <mi>x</mi>
@@ -84,7 +84,8 @@ available constructs are:</p>
       </mroot>
     </math>
   </li>
-  <li>Square root, <code>msqrt</code>: <math>
+  <li>Square root, <code>msqrt</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <msqrt>
         <mrow>
           <mi>x</mi>
@@ -94,13 +95,15 @@ available constructs are:</p>
       </msqrt>
     </math>
   </li>
-  <li>Enclose, <code>menclose</code>: <math>
+  <li>Enclose, <code>menclose</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <menclose>
         <mn>1234</mn>
       </menclose>
     </math>
   </li>
-  <li>Fraction, <code>mfrac</code>: <math>
+  <li>Fraction, <code>mfrac</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <mfrac>
         <mn>1</mn>
         <mrow>
@@ -111,7 +114,8 @@ available constructs are:</p>
       </mfrac>
     </math>
   </li>
-  <li>Expression with subscript and superscript, <code>msubsup</code>: <math>
+  <li>Expression with subscript and superscript, <code>msubsup</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <msubsup>
         <mi>x</mi>
         <mrow>
@@ -122,7 +126,7 @@ available constructs are:</p>
         <mi>n</mi>
       </msubsup>
     </math>
-     or <math>
+     or <math xmlns="http://www.w3.org/1998/Math/MathML">
       <mrow>
         <msubsup>
           <mo>&Integral;</mo>
@@ -133,21 +137,24 @@ available constructs are:</p>
       </mrow>
     </math>
   </li>
-  <li>Expression with a subscript, <code>msub</code>: <math>
+  <li>Expression with a subscript, <code>msub</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <msub>
         <mi>x</mi>
         <mi>i</mi>
       </msub>
     </math>
   </li>
-  <li>Expression with a superscript, <code>msup</code>: <math>
+  <li>Expression with a superscript, <code>msup</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <msup>
         <mi>x</mi>
         <mi>n</mi>
       </msup>
     </math>
   </li>
-  <li>Expression with under- and overscript, <code>munderover</code>: <math>
+  <li>Expression with under- and overscript, <code>munderover</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <munderover>
         <mo>&Sum;</mo>
         <mrow>
@@ -159,14 +166,16 @@ available constructs are:</p>
       </munderover>
     </math>
   </li>
-  <li>Expression with underscript, <code>munder</code>: <math>
+  <li>Expression with underscript, <code>munder</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <munder>
         <mi>x</mi>
         <mo>-</mo>
       </munder>
     </math>
   </li>
-  <li>Expression with overscript, <code>mover</code>: <math>
+  <li>Expression with overscript, <code>mover</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <mrow>
         <mi>x</mi>
         <mover>
@@ -177,7 +186,8 @@ available constructs are:</p>
       </mrow>
     </math>
   </li>
-  <li>Expression within parentheses, <code>mrow</code>: <math>
+  <li>Expression within parentheses, <code>mrow</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <mrow>
         <mo fence="true">(</mo>
         <mrow>
@@ -190,7 +200,8 @@ available constructs are:</p>
     </math>
   </li>
   <li>Expression with prescripts and tensor indices,
-    <code>mmultiscripts</code>: <math>
+    <code>mmultiscripts</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <mmultiscripts>
         <mi>X</mi>
         <mi>i</mi>
@@ -201,7 +212,8 @@ available constructs are:</p>
       </mmultiscripts>
     </math>
   </li>
-  <li>Matrix or table, <code>mtable</code>: <math>
+  <li>Matrix or table, <code>mtable</code>: <math
+    xmlns="http://www.w3.org/1998/Math/MathML">
       <mtable>
         <mtr>
           <mtd>
@@ -224,7 +236,8 @@ available constructs are:</p>
   </li>
 </ul>
 
-<p>The last item of the <strong>Math</strong> palette (<math>
+<p>The last item of the <strong>Math</strong> palette (<math
+xmlns="http://www.w3.org/1998/Math/MathML">
   <mi>&alpha;&beta;&gamma;</mi>
 </math>
  ) displays another palette from which you can insert mathematical symbols and
@@ -246,7 +259,7 @@ string and generates elements <code>mo</code> (operator), <code>mn</code>
 (number), <code>mi</code> (identifier), and <code>mtext</code> automatically.
 For instance, to enter</p>
 
-<p><math>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML">
   <mrow>
     <mi>x</mi>
     <mo>=</mo>
@@ -302,7 +315,7 @@ href="Views.html#Structure">Show Structure</a> item from the
 <p>You can edit math expressions either in the main view or in the
 Math_Structure view. The Math_Structure view is especially helpful to avoid
 ambiguity. Consider the following example:</p>
-<math mode="display">
+<math xmlns="http://www.w3.org/1998/Math/MathML" mode="display">
   <mrow>
     <mi>x</mi>
     <mo>=</mo>
@@ -331,7 +344,7 @@ href="http://www.w3.org/TR/WD-xlink">XML Linking Language (XLink)</a>. Only
 the simple unidirectional hyperlinks are available, but you can associate a
 link with any part of a formula. For example, the fraction in the formula
 below is a link to the W3C home page:</p>
-<math>
+<math xmlns="http://www.w3.org/1998/Math/MathML">
   <mrow>
     <mi>y</mi>
     <mo>=</mo>
@@ -401,9 +414,9 @@ UnderBar, prime, Prime.</p>
 </div>
 
 <p align="right"><a href="Tables.html"><img alt="previous" border="0"
-src="../Icons/left.gif"></a> <a href="Manual.html"><img alt="top" border="0"
-src="../Icons/up.gif"></a> <a href="ImageMaps.html"><img alt="next" border="0"
-src="../Icons/right.gif"></a></p>
-<hr>
+src="../Icons/left.gif" /></a> <a href="Manual.html"><img alt="top" border="0"
+src="../Icons/up.gif" /></a> <a href="ImageMaps.html"><img alt="next"
+border="0" src="../Icons/right.gif" /></a></p>
+<hr />
 </body>
 </html>
