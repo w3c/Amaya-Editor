@@ -105,6 +105,8 @@ extern boolean TtaWriteShort ( BinFile file,
                                int sval );
 extern boolean TtaWriteInteger ( BinFile file,
                                  int lval );
+extern boolean TtaCompareFiles ( char *file1,
+                                 char *file2 );
 
 #else /* __STDC__ */
 
@@ -149,6 +151,8 @@ extern boolean TtaWriteShort (/* BinFile file,
                                  int sval */);
 extern boolean TtaWriteInteger (/* BinFile file,
                                    int lval */);
+extern boolean TtaCompareFiles (/* char *file1,
+                                   char *file2 */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

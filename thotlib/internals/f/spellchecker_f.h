@@ -6,69 +6,49 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern boolean minMAJ ( char *chaine );
-extern void majuscule ( char *chaine );
-extern void capital ( char *chaine );
-extern char tomin ( char caract );
-extern boolean ismajuscule ( char *chaine );
-extern boolean iscapital ( char *chaine );
-extern boolean isiso ( char *chaine );
-extern int existmot ( char mot[MAX_WORD_LEN],
-                      PtrDict dico );
-extern int Corr_verifiermot ( char mot[MAX_WORD_LEN],
-                              Language langue,
-                              PtrDict dico );
-extern void Corr_ajoutermot ( char mot[MAX_WORD_LEN],
-                              PtrDict * pDict );
-extern void Corr_init_correction ( void );
-extern void Corr_proposer ( Language langue,
-                            PtrDict dicodocu );
-extern void param_defauts ( int lettres );
-extern int Corr_Param ( void );
-extern void Corr_remplacermot ( char motorigine[MAX_WORD_LEN],
-                                char motnouveau[MAX_WORD_LEN] );
-extern boolean CorrChangeSelection ( void );
-extern boolean TestListCar ( char car,
-                             char *listcar );
-extern boolean AUnNombre ( char mot[MAX_CHAR] );
-extern boolean EstUnNombre ( char mot[MAX_CHAR] );
-extern boolean EnRomain ( char mot[MAX_CHAR] );
-extern void Corr_errsuivant ( char mot[MAX_CHAR],
-                              PtrDict dicodocu );
-extern void sauverdicofichier ( PtrDict dicodocu );
+extern void SetUpperCase ( char *string );
+extern void SetCapital ( char *string );
+extern boolean IsUpperCase ( char *string );
+extern boolean IsCapital ( char *string );
+extern boolean IsIso ( char *string );
+extern int WordInDictionary ( char word[MAX_WORD_LEN],
+			      PtrDict dict );
+extern int  CheckWord (char word[MAX_WORD_LEN],
+		       Language language,
+		       PtrDict dict);
+extern void AddWord ( char word[MAX_WORD_LEN],
+		      PtrDict * pDict );
+extern void GiveProposal ( Language language,
+                            PtrDict docDict );
+extern int ParametrizeChecker ( void );
+extern void WordReplace ( char orgWord[MAX_WORD_LEN],
+                                char newWord[MAX_WORD_LEN] );
+extern boolean CheckChangeSelection ( void );
+extern void NextSpellingError ( char word[MAX_CHAR],
+                              PtrDict docDict );
 
 #else /* __STDC__ */
 
-extern boolean minMAJ (/* char *chaine */);
-extern void majuscule (/* char *chaine */);
-extern void capital (/* char *chaine */);
-extern char tomin (/* char caract */);
-extern boolean ismajuscule (/* char *chaine */);
-extern boolean iscapital (/* char *chaine */);
-extern boolean isiso (/* char *chaine */);
-extern int existmot (/* char mot[MAX_WORD_LEN],
-                        PtrDict dico */);
-extern int Corr_verifiermot (/* char mot[MAX_WORD_LEN],
-                                Language langue,
-                                PtrDict dico */);
-extern void Corr_ajoutermot (/* char mot[MAX_WORD_LEN],
-                                PtrDict * pDict */);
-extern void Corr_init_correction (/* void */);
-extern void Corr_proposer (/* Language langue,
-                              PtrDict dicodocu */);
-extern void param_defauts (/* int lettres */);
-extern int Corr_Param (/* void */);
-extern void Corr_remplacermot (/* char motorigine[MAX_WORD_LEN],
-                                  char motnouveau[MAX_WORD_LEN] */);
-extern boolean CorrChangeSelection (/* void */);
-extern boolean TestListCar (/* char car,
-                               char *listcar */);
-extern boolean AUnNombre (/* char mot[MAX_CHAR] */);
-extern boolean EstUnNombre (/* char mot[MAX_CHAR] */);
-extern boolean EnRomain (/* char mot[MAX_CHAR] */);
-extern void Corr_errsuivant (/* char mot[MAX_CHAR],
-                                PtrDict dicodocu */);
-extern void sauverdicofichier (/* PtrDict dicodocu */);
+extern void SetUpperCase (/* char *string */);
+extern void SetCapital (/* char *string */);
+extern boolean IsUpperCase (/* char *string */);
+extern boolean IsCapital (/* char *string */);
+extern boolean IsIso (/* char *string */);
+extern int WordInDictionary (/* char word[MAX_WORD_LEN],
+				PtrDict dict */);
+extern int  CheckWord (/*char word[MAX_WORD_LEN],
+			 Language language,
+			 PtrDict dict*/);
+extern void AddWord (/* char word[MAX_WORD_LEN],
+			PtrDict * pDict */);
+extern void GiveProposal (/* Language language,
+                              PtrDict docDict */);
+extern int ParametrizeChecker (/* void */);
+extern void WordReplace (/* char orgWord[MAX_WORD_LEN],
+                                  char newWord[MAX_WORD_LEN] */);
+extern boolean CheckChangeSelection (/* void */);
+extern void NextSpellingError (/* char word[MAX_CHAR],
+                                PtrDict docDict */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

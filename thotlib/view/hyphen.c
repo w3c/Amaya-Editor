@@ -59,31 +59,31 @@ boolean            *addHyphen;
 #endif /* __STDC__ */
 {
    int                 i, k;
-   int                 retour;
-   int                *ptcoup;
+   int                 status;
+   int                *pHyphen;
 
    *addHyphen = FALSE;
-   retour = 0;
+   status = 0;
 
-   ptcoup = TtaGetPatternHyphenList (word, language);
-   if (ptcoup == NULL)
+   pHyphen = TtaGetPatternHyphenList (word, language);
+   if (pHyphen == NULL)
       /* Pas de point de coupure */
-      return retour;
+      return status;
 
    /* On recherche le dernier point de coupure <= length */
    i = 0;
-   k = ptcoup[i];
+   k = pHyphen[i];
    while (k != 0 && k <= length)
      {
 	if (k <= length)
 	  {
-	     retour = k;
+	     status = k;
 	     *addHyphen = TRUE;
 	  }
 	i++;
-	k = ptcoup[i];
+	k = pHyphen[i];
      }
-   return retour;
+   return status;
 }
 
 /*----------------------------------------------------------------------
@@ -91,287 +91,50 @@ boolean            *addHyphen;
    retourne TRUE si c'est un separateur               
    FALSE sinon                               
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
-boolean             IsSeparatorChar (char car)
-
+boolean             IsSeparatorChar (char c)
 #else  /* __STDC__ */
-boolean             IsSeparatorChar (car)
-char                car;
-
+boolean             IsSeparatorChar (c)
+char                c;
 #endif /* __STDC__ */
-
 {
-   int                 i, lg;
+   int              i, lg;
 
    lg = sizeof (sepcar);
    for (i = 0; i < lg; i++)
      {
-	if (car == sepcar[i])
+	if (c == sepcar[i])
 	   return (TRUE);
      }
    return (FALSE);
-}				/*IsSeparatorChar */
+}
 
 
 /*----------------------------------------------------------------------
    SmallLettering convertit les caracte`res majuscules en minuscules.   
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                SmallLettering (char *word)
-
 #else  /* __STDC__ */
 void                SmallLettering (word)
 char               *word;
-
 #endif /* __STDC__ */
-
 {
-   unsigned char       car;
+   unsigned char       c;
    int                 j;
 
    j = 0;
    while (word[j] != 0)
      {
-	car = word[j];
-	if (car >= 65 && car <= 90)
-	   word[j] = (char) (car + 32);		/* Majuscules */
-	else if (car >= 192 && car <= 222)
-	   word[j] = (char) (car + 32);		/* Majuscules accentue'es */
+	c = word[j];
+	if (c >= 65 && c <= 90)
+	   word[j] = (char) (c + 32);		/* Majuscules */
+	else if (c >= 192 && c <= 222)
+	   word[j] = (char) (c + 32);		/* Majuscules accentue'es */
 	j++;
      }
 }
 
-#ifdef IV
-/*----------------------------------------------------------------------
-   Voyelle rend la valeur VRAI si le caracte`re est une voyelle.   
-   La fonction ne prend pas en compte les majuscules.      
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static boolean      Voyelle (unsigned char c)
-
-#else  /* __STDC__ */
-static boolean      Voyelle (c)
-unsigned char       c;
-
-#endif /* __STDC__ */
-
-{
-   if (c < 224)
-     {
-	/* lettre non accentuee */
-	if (c == 97 || c == 101 | c == 105
-	    || c == 111 || c == 117 || c == 121)
-	   return TRUE;
-	else
-	   return FALSE;
-     }
-   else if (c <= 229)
-      return TRUE;		/* a majuscule accente' */
-   else if (c < 232)
-      return FALSE;
-   else if (c < 240)
-      return TRUE;		/* e et i majuscules accente's */
-   else if (c < 242)
-      return FALSE;
-   else if (c < 247)
-      return TRUE;		/* o majuscule accente' */
-   else if (c < 249)
-      return FALSE;
-   else if (c < 253)
-      return TRUE;		/* u majuscule accente' */
-   else
-      return FALSE;
-}
-
-/*----------------------------------------------------------------------
-   Consonne rend la valeur VRAI si le caracte`re est une consonne. 
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static boolean      Consonne (unsigned char c)
-
-#else  /* __STDC__ */
-static boolean      Consonne (c)
-unsigned char       c;
-
-#endif /* __STDC__ */
-
-{
-   return (!Voyelle (c));
-}
-
-static char        *tablePrefixes[] =
-{"anti", "inter", "p\351ri", "\351pi",
- "micro", "hyper", "super", "infra"}
-                   ;
-
-/*----------------------------------------------------------------------
-   FrenchHyphen  cherche pour le mot word le premier point de      
-   coupure qui pre'ce`de le caracte`re de rang length (le  
-   rang du premier caracte`re est 0) et retourne 0 si      
-   aucune coupure n'est possible ou le rang du caracte`re  
-   devant lequel on peut couper.                           
-   Si la coupure est possible, indique dans addHyphen s'il 
-   faut inse'rer un tiret a` la position de coupure ou non.
-   Cette proce'dure effectue une coupure syllabique pour   
-   la langue franc,aise uniquement, d'apre`s les re`gles   
-   de Grevisse (le bon usage).                             
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int          FrenchHyphen (char *word, int length, boolean * addHyphen)
-
-#else  /* __STDC__ */
-static int          FrenchHyphen (word, length, addHyphen)
-char               *word;
-int                 length;
-boolean            *addHyphen;
-
-#endif /* __STDC__ */
-
-{
-   int                 index;
-   int                 wordlength;
-   int                 nbPrefixes, prefixe, lgPrefixe;
-   boolean             stop;
-   boolean             found;
-
-   /* cherche s'il y a dans le mot un caractere de coupure */
-   index = 1;
-   stop = FALSE;
-   do
-      if (word[index] == '\0' || index >= length)
-	 /* on a atteint la fin du mot ou la fin de la zone consideree */
-	 /* dans le mot sans rien trouver */
-	 stop = TRUE;
-      else if (word[index] == '-' || word[index] == '/')
-	 /* on a trouve' un caractere de coupure */
-	{
-	   *addHyphen = FALSE;
-	   return (index + 1);
-	}
-      else
-	 /* on passe au caractere suivant du mot */
-	 index++;
-   while (!stop);
-
-   /* il n'y a pas de caractere de coupure dans la partie du mot qui */
-   /* nous interesse */
-   wordlength = strlen (word);	/* longueur du mot complet */
-   /* on part de la fin de la partie du mot concernee */
-   index = length;
-   /* on doit laisser au moins 3 lettres apres la coupure */
-   if (index > wordlength - 3)
-      index = wordlength - 3;
-   found = FALSE;
-   /* on cherche d'abord s'il existe un prefixe dans la partie a couper */
-   nbPrefixes = sizeof (tablePrefixes) / sizeof (char *);
-
-   for (prefixe = 0; prefixe < nbPrefixes && !found; prefixe++)
-      /* on compare le debut du mot avec chaque entree de la table */
-      /* des prefixes */
-     {
-	lgPrefixe = strlen (tablePrefixes[prefixe]);
-	if (strncmp (word, tablePrefixes[prefixe], lgPrefixe) == 0)
-	   /* le mot commence par ce prefixe */
-	   if (index < lgPrefixe)
-	      /* on ne coupe pas un prefixe */
-	     {
-		index = 0;
-		found = TRUE;
-	     }
-	   else if (index < lgPrefixe + 3)
-	      /* on coupe juste apres le prefixe */
-	     {
-		index = lgPrefixe;
-		found = TRUE;
-	     }
-     }
-
-   /* on cherche une coupure syllabique dans la partie de mot a traiter */
-   while (index > 2 && !found)	/* on doit laisser au moins 2 lettres */
-      /* avant la coupure */
-     {
-	if (Consonne (word[index]))
-	   /* le caractere courant est un consonne */
-	  {
-	     if (Voyelle (word[index + 1]))
-	       {
-		  /* c'est une consonne suivie d'une voyelle */
-		  if (Voyelle (word[index - 1]))
-		     /* et precedee d'une voyelle, on coupe V-CV */
-		    {
-		       found = TRUE;
-		       /* sauf si on est dans le cas "cooCV", comme "cooperer" */
-		       if (index == 3)
-			  if (strncmp (word, "coop", 4) == 0)
-			     found = FALSE;
-		    }
-		  else if (Consonne (word[index - 1]) && Voyelle (word[index - 2]))
-		     /* sequence VC-CV */
-		     if ((word[index] == 'l' || word[index] == 'r') &&
-			 !(word[index - 1] == 'l' || word[index - 1] == 'r'))
-		       {
-			  if (index > 3)
-			     /* on coupe V-CCV */
-			    {
-			       found = TRUE;
-			       index--;
-			    }
-		       }
-		     else if (((word[index] == 'h')
-			       && (word[index - 1] == 'c'
-				   || word[index - 1] == 'p'
-				   || word[index - 1] == 't'))
-			      || ((word[index] == 'n')
-				  && (word[index - 1] == 'g')))
-			/* on ne coupe pas ch ph th gn */
-			found = FALSE;
-		     else
-			/* on coupe VC-CV */
-			found = TRUE;
-	       }
-	     if (!found)
-		if (Consonne (word[index - 1]) && Consonne (word[index - 2]))
-		   /* sequence CC-C */
-		  {
-		     /* a priori, on coupe CC-C */
-		     found = TRUE;
-		     if ((word[index] == 'l' || word[index] == 'r') &&
-			 !(word[index - 1] == 'l' || word[index - 1] == 'r'))
-			if (index > 3)
-			   index--;	/* coupe C-CC */
-			else
-			   found = FALSE;
-		     if (found)
-			if (((word[index] == 'h')
-			     && (word[index - 1] == 'c'
-				 || word[index - 1] == 'p'
-				 || word[index - 1] == 't'))
-			    || ((word[index] == 'n')
-				&& (word[index - 1] == 'g')))
-			   /* on ne coupe pas ch ph th gn */
-			   found = FALSE;
-		  }
-	  }
-	if (!found)
-	   /* passe au caractere precedent du mot */
-	   index--;
-     }
-   if (found && index > 0)
-     {
-	*addHyphen = TRUE;	/* il faudra inserer un tiret a la position */
-	/* qu'on a trouvee */
-	/* on coupe avant la lettre pointee par index */
-	return index;
-     }
-   else
-      /* pas de coupure possible dans la zone consideree du mot */
-      return 0;
-}
-#endif
 
 /*----------------------------------------------------------------------
    NextWord isole le mot suivant dans la suite des buffers de      
@@ -385,7 +148,6 @@ boolean            *addHyphen;
    - la longueur des se'parateurs qui pre'ce`dent le       
    de'but du mot.                                        
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static int          NextWord (ptrfont font, PtrTextBuffer * buffer, int *rank, char word[MAX_CHAR], int *width)
 
@@ -396,37 +158,35 @@ PtrTextBuffer      *buffer;
 int                *rank;
 char                word[MAX_CHAR];
 int                *width;
-
 #endif /* __STDC__ */
-
 {
    int                 i, j;
-   int                 lg, nbcar;
-   boolean             encore;
+   int                 lg, nbChars;
+   boolean             still;
    boolean             changedebut;
    PtrTextBuffer       adbuff;
 
    /* Initialisations */
    word[0] = '\0';
    lg = 0;
-   nbcar = 0;
+   nbChars = 0;
    j = 0;
-   encore = TRUE;
+   still = TRUE;
    /* La position du debut du mot */
    adbuff = *buffer;
    i = *rank;
    /* A priori le debut du mot est correctement repere */
    changedebut = FALSE;
 
-   while (encore)
+   while (still)
      {
 	if (j == MAX_CHAR - 1)
 	   /* Le mot est trop long */
-	   encore = FALSE;
+	   still = FALSE;
 	else if (i >= adbuff->BuLength)
 	   /* Il faut changer de buffer */
 	   if (adbuff->BuNext == NULL)
-	      encore = FALSE;
+	      still = FALSE;
 	   else
 	     {
 		adbuff = adbuff->BuNext;
@@ -445,25 +205,25 @@ int                *width;
 		     if (j == 1)
 			/* Il faut comptabiliser le caractere precedent */
 			lg += CharacterWidth ((unsigned char) word[j - 1], font);
-		     nbcar += j + 1;
+		     nbChars += j + 1;
 		     j = 0;
 		  }
 		else
-		   encore = FALSE;
+		   still = FALSE;
 	     else if (IsSeparatorChar (word[j]))
 	       {
 		  /* On ne traite pas les separateurs en debut de mot */
 		  if (j != 0)
 		    {
 		       word[j] = '\0';
-		       encore = FALSE;
+		       still = FALSE;
 		    }
 		  else
 		    {
 		       /* Le debut du mot est deplace */
 		       changedebut = TRUE;
 		       lg += CharacterWidth ((unsigned char) word[j], font);
-		       nbcar++;
+		       nbChars++;
 		    }
 	       }
 	     else
@@ -485,11 +245,11 @@ int                *width;
 
    /* Termine le mot */
    word[j] = '\0';
-   if (nbcar == 0)
+   if (nbChars == 0)
       *width = 0;
    else
       *width = lg;
-   return nbcar;
+   return nbChars;
 }
 
 /*----------------------------------------------------------------------
@@ -502,20 +262,15 @@ int                *width;
    Le parame`tre language donne l'indice de la langue dans 
    la table des langues courante.                          
   ----------------------------------------------------------------------*/
-
-
 #ifdef __STDC__
 static int          WordHyphen (char *word, int length, Language language, boolean * hyphen)
-
 #else  /* __STDC__ */
 static int          WordHyphen (word, length, language, hyphen)
 char               *word;
 int                 length;
 Language            language;
 boolean            *hyphen;
-
 #endif /* __STDC__ */
-
 {
 
    /* Convertit le mot en minuscule */
@@ -537,29 +292,24 @@ boolean            *hyphen;
    - un indicateur qui vaut VRAI s'il faut engendrer un    
    tiret d'hyphe'nation.                                 
   ----------------------------------------------------------------------*/
-
-
 #ifdef __STDC__
-int                 HyphenLastWord (ptrfont font, Language langue, PtrTextBuffer * buffer, int *rank, int *width, boolean * hyphen)
-
+int                 HyphenLastWord (ptrfont font, Language language, PtrTextBuffer * buffer, int *rank, int *width, boolean * hyphen)
 #else  /* __STDC__ */
-int                 HyphenLastWord (font, langue, buffer, rank, width, hyphen)
+int                 HyphenLastWord (font, language, buffer, rank, width, hyphen)
 ptrfont             font;
-Language            langue;
+Language            language;
 PtrTextBuffer      *buffer;
 int                *rank;
 int                *width;
 boolean            *hyphen;
-
 #endif /* __STDC__ */
-
 {
    PtrTextBuffer       adbuff;
    int                 i, lghyphen;
-   int                 longueur, nbcar;
-   int                 largeur, lgcar;
+   int                 longueur, nbChars;
+   int                 largeur, charWidth;
    int                 longretour, lgreste;
-   int                 lgmot;
+   int                 wordLength;
    char                mot[MAX_CHAR];
 
    /* Si la coupure de mots est active */
@@ -582,7 +332,7 @@ boolean            *hyphen;
 	      return longretour;
 
 	/* Longueur et largeur des separateurs avant le mot */
-	nbcar = NextWord (font, &adbuff, &i, mot, &largeur);
+	nbChars = NextWord (font, &adbuff, &i, mot, &largeur);
 	/* Largeur du tiret d'hyphenantion */
 	lghyphen = CharacterWidth (173, font);
 	/* Espace restant dans la ligne */
@@ -591,24 +341,24 @@ boolean            *hyphen;
 
 	if (mot != NULL)
 	   /* On a isole un mot assez long */
-	   lgmot = strlen (mot);	/* nombre de caraceteres du mot isole */
-	if (lgmot > 4 && lgreste > 0)
+	   wordLength = strlen (mot);	/* nombre de caraceteres du mot isole */
+	if (wordLength > 4 && lgreste > 0)
 	  {
 	     /* Recherche le nombre de caracteres du mot qui rentrent */
 	     /* dans la ligne */
 	     longueur = 0;
-	     lgcar = CharacterWidth ((unsigned char) mot[longueur], font);
-	     while (lgreste >= lgcar && longueur < lgmot)
+	     charWidth = CharacterWidth ((unsigned char) mot[longueur], font);
+	     while (lgreste >= charWidth && longueur < wordLength)
 	       {
-		  lgreste -= lgcar;
+		  lgreste -= charWidth;
 		  longueur++;
-		  lgcar = CharacterWidth ((unsigned char) mot[longueur], font);
+		  charWidth = CharacterWidth ((unsigned char) mot[longueur], font);
 	       }
 
 	     if (longueur > 1)
 	       {
 		  /* Recherche un point de coupure pour le mot */
-		  longueur = WordHyphen (mot, longueur, langue, hyphen);
+		  longueur = WordHyphen (mot, longueur, language, hyphen);
 		  if (longueur > 0)
 		    {
 		       /* On a trouve un point de coupure */
@@ -617,7 +367,7 @@ boolean            *hyphen;
 		       else
 			  *width = largeur;	/* 1ere partie du mot */
 
-		       longretour = longueur + nbcar;	/* nombre de caracteres */
+		       longretour = longueur + nbChars;	/* nombre de caracteres */
 		       while (longueur > 0)
 			 {
 			    if (i >= adbuff->BuLength)
@@ -639,14 +389,15 @@ boolean            *hyphen;
 			 {
 			    /* Il faut changer de buffer */
 			    i++;
-			    *rank = i - adbuff->BuLength;	/* nouvelle position */
+			    /* nouvelle position */
+			    *rank = i - adbuff->BuLength;
 			    adbuff = adbuff->BuNext;
 			 }
 		       else
 			  *rank = i + 1;
 		       *buffer = adbuff;
 		    }
-	       }		/*if (longueur > 1) */
+	       }
 	  }
      }
    return longretour;
@@ -658,45 +409,39 @@ boolean            *hyphen;
    coupure des mots et l'autorisation de coupure pour la   
    boi^te donne'e.                                         
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 boolean             CanHyphen (PtrBox pBox)
-
 #else  /* __STDC__ */
 boolean             CanHyphen (pBox)
 PtrBox              pBox;
-
 #endif /* __STDC__ */
-
 {
-   Language            langue;
+  Language            language;
 
-   if (!TextInserting && pBox->BxAbstractBox->AbHyphenate)
-     {
-	langue = pBox->BxAbstractBox->AbLanguage;
-/*PhL */ if (TtaExistPatternList (langue))
-	   /*PhL *//* il existe une table de pattern */
-/*PhL */ return TRUE;
-/*PhL */
-	else
-	  {
-	     /* pas de table de patterns : on cherche a charger un dico */
-	     if (langue == 0)
-		/* On saute la langue ISOlatin-1 */
-		return FALSE;
-	     /*PhL *//*   else if (langue == TtaGetLanguageIdFromName("Fran\347ais")) */
-	     /*PhL *//*      return TRUE; */
-	     else if (TtaGetPrincipalDictionary (langue) != NULL)
-		/* Traitement par le dictionnaire de la langue */
-		return TRUE;
-	     else if (TtaGetSecondaryDictionary (langue) != NULL)
-		/* Pas de traitement de coupure possible */
-		return FALSE;
-	     else
-		return FALSE;
-/*PhL */
-	  }
-     }
-   else
-      return FALSE;
+  if (!TextInserting && pBox->BxAbstractBox->AbHyphenate)
+    {
+      language = pBox->BxAbstractBox->AbLanguage;
+      if (TtaExistPatternList (language))
+	/* il existe une table de pattern */
+	return TRUE;      
+      else
+	{
+	  /* pas de table de patterns : on cherche a charger un dico */
+	  if (language == 0)
+	    /* On saute la langue ISOlatin-1 */
+	    return FALSE;
+	  /*   else if (language == TtaGetLanguageIdFromName("Fran\347ais")) */
+	  /*      return TRUE; */
+	  else if (TtaGetPrincipalDictionary (language) != NULL)
+	    /* Traitement par le dictionnaire de la langue */
+	    return TRUE;
+	  else if (TtaGetSecondaryDictionary (language) != NULL)
+	    /* Pas de traitement de coupure possible */
+	    return FALSE;
+	  else
+	    return FALSE;	  
+	}
+    }
+  else
+    return FALSE;
 }

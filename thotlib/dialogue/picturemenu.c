@@ -59,23 +59,10 @@ static boolean      RedisplayPicture;
 static char         ImageName[100] = "";
 static char         DirectoryImage[MAX_PATH] = "";
 
+#include "browser_f.h"
+#include "fileaccess_f.h"
 #include "picture_f.h"
-
-#ifdef __STDC__
-extern void         UnsetEntryMenu (int, int);
-extern boolean      TtaIsSuffixFileIn (char *, char *);
-extern void         TtaListDirectory (char *, int, char *, int, char *, char *, int);
-extern void         MakeCompleteName (Name, char *, PathBuffer, PathBuffer, int *);
-extern void         EntreeMenu (int *, char *, char[]);
-
-#else
-extern void         UnsetEntryMenu ();
-extern boolean      TtaIsSuffixFileIn ();
-extern void         TtaListDirectory ();
-extern void         MakeCompleteName ();
-extern void         EntreeMenu ();
-
-#endif /* __STDC__ */
+#include "savedoc_f.h"
 
 /*----------------------------------------------------------------------
    CheckPresImage
@@ -87,9 +74,7 @@ static void         CheckPresImage (int indexType)
 #else  /* __STDC__ */
 static void         CheckPresImage (indexType)
 int                 indexType;
-
 #endif /* __STDC__ */
-
 {
    if (indexType == 1)
      {

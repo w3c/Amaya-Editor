@@ -35,122 +35,81 @@ extern struct Langue_Ctl TypoLangTable[MAX_LANGUAGES];
 extern int          FreeEntry;
 
 static char        *dictPath;	/* environment variable DICOPAR */
-static boolean      alphabetLoaded;
-static unsigned     reverseCode[NbLtr];
 static PtrDict      dictTable[MaxDictionaries];
 
+unsigned            ReverseCode[NbLtr];
 unsigned char       Code[256];	/* Alphabet characters */
 
 #include "memory_f.h"
 #include "fileaccess_f.h"
 #include "thotmsg_f.h"
-
 #include "platform_f.h"
 
-/***************************** ALPHABET ************************************/
-boolean             Corr_alphabet ()
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+static void           LoadAlphabet ()
 {
-   FILE               *falpha;
-   Buffer              alphaName;
-   boolean             ret = FALSE;
-   unsigned char       x;
-   int                 i;
-
-   if (dictPath != NULL)
-      strcpy (alphaName, dictPath);
-   else
-      strcpy (alphaName, "");
-
-   strcat (alphaName, "/alphabet");	/* iso alphabet */
-   if ((falpha = fopen (alphaName, "r")) != NULL)
-     {
-	ret = TRUE;
-	for (i = 0; i < 256; i++)
-	   Code[i] = (unsigned char) 100;
-	i = 1;
-	while ((fscanf (falpha, "%c ", &x) != EOF) && (i < NbLtr))
-	  {
-	     Code[x] = (unsigned char) i;
-	     reverseCode[i++] = (unsigned char) x;
-	  }
-	fclose (falpha);
-     }
-   return (ret);
+  FILE               *falpha;
+  Buffer              alphaName;
+  unsigned char       x;
+  int                 i;
+  
+  if (dictPath != NULL)
+    strcpy (alphaName, dictPath);
+  else
+    strcpy (alphaName, "");
+  
+  strcat (alphaName, "/alphabet");	/* iso alphabet */
+  if ((falpha = fopen (alphaName, "r")) != NULL)
+    {
+      for (i = 0; i < 256; i++)
+	Code[i] = (unsigned char) 100;
+      i = 1;
+      while ((fscanf (falpha, "%c ", &x) != EOF) && (i < NbLtr))
+	{
+	  Code[x] = (unsigned char) i;
+	  ReverseCode[i++] = (unsigned char) x;
+	}
+      fclose (falpha);
+    }
+  else
+    TtaDisplaySimpleMessage (INFO, LIB, TMSG_MISSING_ALPHABET);
 }
 
-/***************************** asci2code *********************************/
+
+/*----------------------------------------------------------------------
+  Resolves the common characters for two consecutive words 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                asci2code (char *string)
+void                TreateDictionary (PtrDict dict)
 #else  /* __STDC__ */
-void                asci2code (string)
-char               *string;
-
-#endif /* __STDC__ */
-{
-   int                 i;
-
-   i = 0;
-   while (string[i] != '\0')
-     {
-	string[i] = Code[(unsigned char) string[i]];
-	i++;
-     }
-}				/*asci2code */
-
-
-/***************************** code2asci *********************************/
-#ifdef __STDC__
-void                code2asci (char *string)
-#else  /* __STDC__ */
-void                code2asci (string)
-char               *string;
-
-#endif /* __STDC__ */
-{
-   int                 i = 0;
-
-   while (string[i] != '\0')
-     {
-	string[i] = reverseCode[(unsigned char) string[i]];
-	i++;
-     }
-}				/*code2asci */
-
-
-/************************ Corr_pretraitement *****************************/
-/* 
- * Resolves the common characters for two consecutive words 
- */
-#ifdef __STDC__
-void                Corr_pretraitement (PtrDict dict)
-#else  /* __STDC__ */
-void                Corr_pretraitement (dict)
+void                TreateDictionary (dict)
 PtrDict             dict;
-
 #endif /* __STDC__ */
 {
    int                 word, i;
    char                lastWord[MAX_WORD_LEN];
    char                currentWord[MAX_WORD_LEN];
 
-   /* An empty dictionary is not considered  (nbmots = -1) */
-   if (dict->nbmots >= 0)
+   /* An empty dictionary is not considered  (DictNbWords = -1) */
+   if (dict->DictNbWords >= 0)
      {
 	lastWord[0] = 0;
 	currentWord[0] = 0;
 
-	for (word = 0; word < dict->nbmots; word++)
+	for (word = 0; word < dict->DictNbWords; word++)
 	  {
 	     int                 k = 0;
 
 	     strcpy (lastWord, currentWord);
-	     strcpy (currentWord, &dict->chaine[dict->pdico[word]]);
+	     strcpy (currentWord, &dict->DictString[dict->DictWords[word]]);
 
 	     if (strlen (lastWord) != strlen (currentWord))
 	       {
 		  /* changing the size of the word */
 		  /* => no calculation for the common letters */
-		  dict->commun[word] = 1;
+		  dict->DictCommon[word] = 1;
 	       }
 	     else
 	       {
@@ -158,13 +117,13 @@ PtrDict             dict;
 		  /* to avoid the remake of the calculation */
 		  while (currentWord[k] == lastWord[k])
 		     k++;
-		  dict->commun[word] = k + 1;
+		  dict->DictCommon[word] = k + 1;
 	       }
 	  }
-	for (i = word; i < dict->MAXmots; i++)
-	   dict->commun[i] = 1;
+	for (i = word; i < dict->DictMaxWords; i++)
+	   dict->DictCommon[i] = 1;
      }
-}				/*Corr_pretraitement */
+}
 
 
 /*----------------------------------------------------------------------
@@ -176,7 +135,6 @@ static void         ReleaseDictionary (PtrDict * pDictionary)
 #else  /* __STDC__ */
 static void         ReleaseDictionary (pDictionary)
 PtrDict            *pDictionary;
-
 #endif /* __STDC__ */
 {
    int                 d;
@@ -210,49 +168,46 @@ static void         CreateDictionary (PtrDict * pDictionary, PtrDocument documen
 static void         CreateDictionary (pDictionary, document)
 PtrDict            *pDictionary;
 PtrDocument         document;
-
 #endif /* __STDC__ */
 {
-   int                 d;
+  int                 d;
 
-   /* Looks for a pointer to the descriptor of a free dictionary */
-   d = 0;
-   while (d < MaxDictionaries && dictTable[d] != NULL)
-      d++;
-
-   if (d < MaxDictionaries && dictTable[d] != NULL)
-     {
-	/* If a dictionary FILE is loaded but not used, one release it */
-	d = 0;
-	while (d < MaxDictionaries && dictTable[d]->DictDoc == document)
-	   d++;
-
-	if (d == MaxDictionaries || dictTable[d]->DictReadOnly == TRUE)
-	  {
-	     /* Looking for a dictionary FILE */
-	     d = 0;
-	     while (d < MaxDictionaries && dictTable[d]->DictReadOnly == TRUE)
-		d++;
-	  }
-	/* Flushing the dictionary FILE  */
-	if (d < MaxDictionaries)
-	  {
-	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_ERR_LOADING_DICO),
-				dictTable[d]->DictNom);
-	     ReleaseDictionary (&dictTable[d]);
-
-	  }
-     }				/* end of if (dictTable[d] != NULL) */
-
-   if (d < MaxDictionaries)
-
-     {
-	/* Getting a descriptor of a dictionary */
-	GetDictionary (&dictTable[d]);
-	*pDictionary = dictTable[d];
-	(*pDictionary)->DictDoc = document;
-     }
-}				/*CreateDictionary */
+  /* Looks for a pointer to the descriptor of a free dictionary */
+  d = 0;
+  while (d < MaxDictionaries && dictTable[d] != NULL)
+    d++;
+  
+  if (d < MaxDictionaries && dictTable[d] != NULL)
+    {
+      /* If a dictionary FILE is loaded but not used, one release it */
+      d = 0;
+      while (d < MaxDictionaries && dictTable[d]->DictDoc == document)
+	d++;
+      
+      if (d == MaxDictionaries || dictTable[d]->DictReadOnly == TRUE)
+	{
+	  /* Looking for a dictionary FILE */
+	  d = 0;
+	  while (d < MaxDictionaries && dictTable[d]->DictReadOnly == TRUE)
+	    d++;
+	}
+      /* Flushing the dictionary FILE  */
+      if (d < MaxDictionaries)
+	{
+	  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_ERR_LOADING_DICO),
+			     dictTable[d]->DictName);
+	  ReleaseDictionary (&dictTable[d]);
+	}
+    }
+  
+  if (d < MaxDictionaries)
+    {
+      /* Getting a descriptor of a dictionary */
+      GetDictionary (&dictTable[d]);
+      *pDictionary = dictTable[d];
+      (*pDictionary)->DictDoc = document;
+    }
+}
 
 
 /*----------------------------------------------------------------------
@@ -266,7 +221,6 @@ static void         SearchDictName (pDictionary, dictName, dictDirectory)
 PtrDict            *pDictionary;
 char               *dictName;
 char               *dictDirectory;
-
 #endif /* __STDC__ */
 {
    int                 d;
@@ -276,7 +230,7 @@ char               *dictDirectory;
    d = 0;
    while (d < MaxDictionaries && (dictTable[d] != NULL) && (!found))
      {
-	found = (strcmp (dictTable[d]->DictNom, dictName) == 0
+	found = (strcmp (dictTable[d]->DictName, dictName) == 0
 	       && strcmp (dictTable[d]->DictDirectory, dictDirectory) == 0);
 	d++;
      }
@@ -284,7 +238,7 @@ char               *dictDirectory;
       *pDictionary = dictTable[d - 1];
    else
       *pDictionary = NULL;
-}				/*SearchDictName */
+}
 
 
 /*----------------------------------------------------------------------
@@ -302,148 +256,152 @@ char               *dictDirectory;
 
 #endif /* __STDC__ */
 {
-   int                 ret, i;
-   char                tempbuffer[MAX_CHAR];
+  int                 ret, i;
+  char                tempbuffer[MAX_CHAR];
 
-   FindCompleteName (dictName, "dic", dictDirectory, tempbuffer, &i);
-   if (TtaFileExist (tempbuffer) == 0)	/* Unknown file */
-     {
-	/* Looks for not pre-treated dictionary */
-	FindCompleteName (dictName, "DIC", dictDirectory, tempbuffer, &i);
-	if (TtaFileExist (tempbuffer) == 0)
-	  {			/* File .DIC unknown */
-	     /* Looks for a dictionary LEX not pre-treated */
-	     FindCompleteName (dictName, "LEX", dictDirectory, tempbuffer, &i);
-	     if (TtaFileExist (tempbuffer) == 0)	/* unknown file */
-		ret = -1;	/* unknown file */
-	     else
-		ret = 2;	/* File .LEX exists */
-	  }
-	else
-	   ret = 0;		/* File .DIC exists */
-     }
-   else
-      ret = 1;			/* file .dic */
-   return (ret);
-}				/*TestDictionary */
-
-
-/*----------------------------------------------------------------------
-   Create                                                                  
-   Creates a dictionary from a pre-treated file.                           
-   PROCEDURE PORTABLE ON VAX                                               
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int          Create (FILE * dictFile, PtrDict dict)
-#else  /* __STDC__ */
-static int          Create (dictFile, dict)
-FILE               *dictFile;
-PtrDict             dict;
-
-#endif /* __STDC__ */
-{
-   int                 i;
-
-   /* Loading ... */
-   i = 1;
-   while (i <= dict->nbcars)
-     {
-	TtaReadByte (dictFile, &(dict->chaine[i - 1]));
-	i++;
-     }
-
-   i = 1;
-   while (i <= dict->nbmots)
-     {
-	TtaReadByte (dictFile, &(dict->commun[i - 1]));
-	i++;
-     }
-
-   for (i = 0; i < dict->nbmots; i++)
-      TtaReadInteger (dictFile, &dict->pdico[i]);
-
-   for (i = 0; i < MAX_WORD_LEN; i++)
-      TtaReadInteger (dictFile, &dict->plgdico[i]);
-
-   /* Loaded */
-   dict->DictCharge = TRUE;
-   return (1);			/* OK */
-}				/* end of Create */
+  FindCompleteName (dictName, "dic", dictDirectory, tempbuffer, &i);
+  if (TtaFileExist (tempbuffer) == 0)	/* Unknown file */
+    {
+      /* Looks for not pre-treated dictionary */
+      FindCompleteName (dictName, "DIC", dictDirectory, tempbuffer, &i);
+      if (TtaFileExist (tempbuffer) == 0)
+	{
+	  /* File .DIC unknown: looks for a dictionary LEX not pre-treated */
+	  FindCompleteName (dictName, "LEX", dictDirectory, tempbuffer, &i);
+	  if (TtaFileExist (tempbuffer) == 0)
+	    /* unknown file */
+	    ret = -1;
+	  else
+	    /* File .LEX exists */
+	    ret = 2;
+	}
+      else
+	/* File .DIC exists */
+	ret = 0;
+    }
+  else
+    /* file .dic */
+    ret = 1;
+  return (ret);
+}
 
 
 /*----------------------------------------------------------------------
-   Load                                                               
-   Returns 1 if a dictionary is loaded else returs 0                 
+   ReadDictionary reads a dictionary from a pre-treated file.       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          Load (FILE * dictFile, PtrDict dict)
+static void         ReadDictionary (FILE * dictFile, PtrDict dict)
 #else  /* __STDC__ */
-static int          Load (dictFile, dict)
+static void         ReadDictionary (dictFile, dict)
 FILE               *dictFile;
 PtrDict             dict;
-
 #endif /* __STDC__ */
 {
-   char                wordGotten[MAX_WORD_LEN];
-   char                lineGotten[MAXLIGNE];
-   char               *plineGotten;
-   int                 i, k, length, nbGotten, last_word;
-   int                 MaxWord, maxWord;
-   int                 currentLength = 0;
-   int                 nbChar = 0;	/* Number of characters in the dictionary  */
+  int              i;
+
+  if (!dict->DictLoaded)
+    {
+      /* Loading ... */
+      i = 0;
+      while (i < dict->DictNbChars)
+	{
+	  TtaReadByte (dictFile, &(dict->DictString[i]));
+	  i++;
+	}
+      
+      i = 0;
+      while (i < dict->DictNbWords)
+	{
+	  TtaReadByte (dictFile, &(dict->DictCommon[i]));
+	  i++;
+	}
+      
+      for (i = 0; i < dict->DictNbWords; i++)
+	TtaReadInteger (dictFile, &dict->DictWords[i]);
+      
+      for (i = 0; i < MAX_WORD_LEN; i++)
+	TtaReadInteger (dictFile, &dict->DictLengths[i]);
+      
+      /* Loaded */
+      dict->DictLoaded = TRUE;
+    }
+}
+
+
+/*----------------------------------------------------------------------
+   LoadDict returns 1 if a dictionary is loaded else returns 0
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static int          LoadDict (FILE * dictFile, PtrDict dict)
+#else  /* __STDC__ */
+static int          LoadDict (dictFile, dict)
+FILE               *dictFile;
+PtrDict             dict;
+#endif /* __STDC__ */
+{
+   char             wordGotten[MAX_WORD_LEN];
+   char             lineGotten[MAXLIGNE];
+   char            *plineGotten;
+   int              i, k, length, nbGotten, last_word;
+   int              MaxWord, maxWord;
+   int              currentLength = 0;
+   int              nbChar = 0;  /* Number of characters in the dictionary  */
 
    /* Dictionary being loaded ... */
-   MaxWord = dict->MAXcars;
-   maxWord = dict->MAXmots;
-   plineGotten = &lineGotten[0];	/* pointer on the first character read */
+   MaxWord = dict->DictMaxChars;
+   maxWord = dict->DictMaxWords;
+   /* pointer on the first character read */
+   plineGotten = &lineGotten[0];
 
    /* Loading the dictionary */
    while (fgets (plineGotten, MAXLIGNE, dictFile) != NULL)
      {
 	nbGotten = sscanf (plineGotten, "%s", wordGotten);
 	if ((nbGotten > 0)
-	    && (dict->nbmots < maxWord - 1)
+	    && (dict->DictNbWords < maxWord - 1)
 	    && ((length = strlen (wordGotten)) < MAX_WORD_LEN)
 	    && (length + nbChar + 1 < MaxWord - 1))
 	  {
-	     dict->nbmots++;
+	     dict->DictNbWords++;
 	     plineGotten = plineGotten + length;
-	     dict->pdico[dict->nbmots] = nbChar;
+	     dict->DictWords[dict->DictNbWords] = nbChar;
 	     if (length != currentLength)
 	       {
 		  for (k = currentLength + 1; k <= length; k++)
-		     dict->plgdico[k] = dict->nbmots;
+		     dict->DictLengths[k] = dict->DictNbWords;
 		  currentLength = length;
 	       }
 	     for (k = 0; k < length; k++)
-		dict->chaine[nbChar++] = (char) Code[(unsigned char) wordGotten[k]];
-	     dict->chaine[nbChar++] = '\0';	/* End of a word */
+		dict->DictString[nbChar++] = (char) Code[(unsigned char) wordGotten[k]];
+	     /* End of a word */
+	     dict->DictString[nbChar++] = '\0';
 
 	     /* going to the next word: reading the next line */
-	     plineGotten = &lineGotten[0];	/* pointer on the first character read */
+	     plineGotten = &lineGotten[0]; /* pointer on the first character read */
 	  }
-	else if (nbGotten != -1)	/* not the end of the dictionary */
+	else if (nbGotten != -1)
+	  /* not the end of the dictionary */
 	  {
 	     /* impossible to load the dictionary */
 	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_ERR_LOADING_DICO),
-				dict->DictNom);
+				dict->DictName);
 	     /* Release the dictionary */
-	     ReleaseDictionary (&dict);		/* => dict = nil */
+	     ReleaseDictionary (&dict);	/* => dict = nil */
 	     return (0);
 	  }
      }
 
    /* Adding an empty word at the end of the dictionary */
-   last_word = dict->nbmots + 1;
-   dict->pdico[last_word] = nbChar;
+   last_word = dict->DictNbWords + 1;
+   dict->DictWords[last_word] = nbChar;
    /* Updating the pointers */
    for (i = currentLength + 1; i < MAX_WORD_LEN; i++)
-      dict->plgdico[i] = last_word;
-   dict->chaine[nbChar] = '\0';
-   dict->nbcars = nbChar;
-   dict->DictCharge = TRUE;
+      dict->DictLengths[i] = last_word;
+   dict->DictString[nbChar] = '\0';
+   dict->DictNbChars = nbChar;
+   dict->DictLoaded = TRUE;
    return (1);
-}				/*Load */
+}
 
 
 /*----------------------------------------------------------------------
@@ -464,172 +422,173 @@ Language            lang;
 boolean             readonly;
 boolean             treated;
 boolean             toTreat;
-
 #endif /* __STDC__ */
 {
-   char                tempbuffer[MAX_CHAR];
-   boolean             new = FALSE;
-   boolean             ret;
-   FILE               *dictFile;
-   PtrDict             pdict;
-   int                 i, im, ic;
+  char                tempbuffer[MAX_CHAR];
+  boolean             new = FALSE;
+  boolean             ret;
+  FILE               *dictFile;
+  PtrDict             pdict;
+  int                 i, im, ic;
 
-   *pDictionary = NULL;
-   /* Opening the file */
-   if (treated)
-      FindCompleteName (dictName, "dic", dictDirectory, tempbuffer, &i);
-   else
-     {
-	if (toTreat)
-	   FindCompleteName (dictName, "DIC", dictDirectory, tempbuffer, &i);
-	else
-	   FindCompleteName (dictName, "LEX", dictDirectory, tempbuffer, &i);
-     }
-   if (readonly == FALSE)
-     {				/* Alterable dictionary */
-	if (TtaFileExist (tempbuffer) != 0)
-	  {
-	     dictFile = fopen (tempbuffer, "rw");	/* updating the dictionary */
-	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_DICO), dictName);
-	  }
-	else
-	  {
-	     new = TRUE;
-	     dictFile = fopen (tempbuffer, "w+");	/* new dictionary */
-	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_NEW_DICO), dictName);
-	  }
-     }
-   else
-     {
-	/* READONLY dictionary (generally pre-treated) */
-	if (treated == TRUE)
-	   dictFile = TtaReadOpen (tempbuffer);
-	else
-	   dictFile = fopen (tempbuffer, "r");
-	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_DICO), dictName);
-     }
-
-   if (dictFile == NULL)
-      return;			/* Inacessible dictionary: *pDictionary = NULL */
-
-   /* Loading the dictionary */
-   /* creation of the structures of the dictionary */
-   /* if no memory, a dictionary related to another document will be flushed */
-   CreateDictionary (pDictionary, document);
-   if (*pDictionary == NULL)
-     {
-	fclose (dictFile);
-	return;			/* no memory */
-     }
-
-   pdict = *pDictionary;
-   pdict->DictDoc = document;
-   pdict->DictLangue = lang;
-   strcpy (pdict->DictDirectory, dictDirectory);
-   strcpy (pdict->DictNom, dictName);
-   pdict->DictReadOnly = readonly;
-
-   /* calculation of the memory size needed by the dictionary */
-   if (new == FALSE)
-     {
-	if (treated)		/* dictionary already treated */
-	  {
-	     ret = TtaReadInteger (dictFile, &i);
-	     if (ret == FALSE)
-	       {
-		  TtaReadClose (dictFile);
-		  return;	/* no memory */
-	       }
-	     pdict->MAXmots = i;
-	     pdict->nbmots = i;
-	     TtaReadInteger (dictFile, &i);
-	     pdict->MAXcars = i;
-	     pdict->nbcars = i;
-	  }
-	else
-	  {
-	     /* Get the length of strings required at the begenning of the file. */
-	     tempbuffer[0] = '\0';
-	     fgets (tempbuffer, 100, dictFile);
-	     if (tempbuffer[0] != '\0')
-	       {
-		  if (sscanf (tempbuffer, "%d%d", &im, &ic) == 2)
-		    {
-		       pdict->MAXmots = im;
-		       pdict->MAXcars = ic;
-		    }
-		  else
-		    {
-		       /* The head of the file does not contain the words number ... */
-		       /* -> one go to the begenning of the file */
-		       /* fseek(dictFile, 0L, 0); */
-		       /* impossible to load this dictionary */
-		       TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_ERR_LOADING_DICO), dictName);
-		       /* Release the dictionary */
-		       ReleaseDictionary (pDictionary);
-		       *pDictionary = NULL;
-		       fclose (dictFile);
-		       return;
-		    }
-	       }
-	     else
-	       {
-		  /* Only a FILE dictionary may be empty at the starting */
-		  if (readonly != FALSE)
-		    {
-		       fclose (dictFile);
-		       return;	/* Error while reading, the FILE dictionary is empty */
-		    }
-
-	       }		/* end of else (scanf) */
-	  }			/* end of else (treated) */
-     }				/* end of if (new == FALSE) */
-   /* Provide space for 50 words and 600 characters if not readonly */
-   if (GetStringInDict (pDictionary, readonly) == -1)
-     {
-	/* Not enough memory to open this dictionary */
-	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_NO_LOAD), dictName);
-	/* Release the allocated dictionary */
-	ReleaseDictionary (pDictionary);
+  *pDictionary = NULL;
+  /* Opening the file */
+  if (treated)
+    FindCompleteName (dictName, "dic", dictDirectory, tempbuffer, &i);
+  else
+    {
+      if (toTreat)
+	FindCompleteName (dictName, "DIC", dictDirectory, tempbuffer, &i);
+      else
+	FindCompleteName (dictName, "LEX", dictDirectory, tempbuffer, &i);
+    }
+  if (readonly == FALSE)
+    {
+      /* Alterable dictionary */
+      if (TtaFileExist (tempbuffer) != 0)
+	{
+	  dictFile = fopen (tempbuffer, "rw");
+	  /* updating the dictionary */
+	  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_DICO), dictName);
+	}
+      else
+	{
+	  new = TRUE;
+	  dictFile = fopen (tempbuffer, "w+");
+	  /* new dictionary */
+	  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_NEW_DICO), dictName);
+	}
+    }
+  else
+    {
+      /* READONLY dictionary (generally pre-treated) */
+      if (treated == TRUE)
+	dictFile = TtaReadOpen (tempbuffer);
+      else
+	dictFile = fopen (tempbuffer, "r");
+      TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_DICO), dictName);
+    }
+  
+  if (dictFile == NULL)
+    /* Inacessible dictionary: *pDictionary = NULL */
+    return;
+  
+  /* Loading the dictionary */
+  /* creation of the structures of the dictionary */
+  /* if no memory, a dictionary related to another document will be flushed */
+  CreateDictionary (pDictionary, document);
+  if (*pDictionary == NULL)
+    {
+      fclose (dictFile);
+      /* no memory */
+      return;
+    }
+  
+  pdict = *pDictionary;
+  pdict->DictDoc = document;
+  pdict->DictLanguage = lang;
+  strcpy (pdict->DictDirectory, dictDirectory);
+  strcpy (pdict->DictName, dictName);
+  pdict->DictReadOnly = readonly;
+  
+  /* calculation of the memory size needed by the dictionary */
+  if (new == FALSE)
+    {
+      if (treated)
+	/* dictionary already treated */
+	{
+	  ret = TtaReadInteger (dictFile, &i);
+	  if (ret == FALSE)
+	    {
+	      TtaReadClose (dictFile);
+	      /* no memory */
+	      return;
+	    }
+	  pdict->DictMaxWords = i;
+	  pdict->DictNbWords = i;
+	  TtaReadInteger (dictFile, &i);
+	  pdict->DictMaxChars = i;
+	  pdict->DictNbChars = i;
+	}
+      else
+	{
+	  /* Get the length of strings required at the begenning of the file. */
+	  tempbuffer[0] = '\0';
+	  fgets (tempbuffer, 100, dictFile);
+	  if (tempbuffer[0] != '\0')
+	    {
+	      if (sscanf (tempbuffer, "%d%d", &im, &ic) == 2)
+		{
+		  pdict->DictMaxWords = im;
+		  pdict->DictMaxChars = ic;
+		}
+	      else
+		{
+		  /* The head of the file does not contain the words number ... */
+		  /* -> one go to the begenning of the file */
+		  /* fseek(dictFile, 0L, 0); */
+		  /* impossible to load this dictionary */
+		  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_ERR_LOADING_DICO), dictName);
+		  /* Release the dictionary */
+		  ReleaseDictionary (pDictionary);
+		  *pDictionary = NULL;
+		  fclose (dictFile);
+		  return;
+		}
+	    }
+	  else
+	    {
+	      /* Only a FILE dictionary may be empty at the starting */
+	      if (readonly != FALSE)
+		{
+		  fclose (dictFile);
+		  /* Error while reading, the FILE dictionary is empty */
+		  return;
+		}
+	    }
+	}
+    }
+  
+  /* Provide space for 50 words and 600 characters if not readonly */
+  if (GetStringInDict (pDictionary, readonly) == -1)
+    {
+      /* Not enough memory to open this dictionary */
+      TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_NO_LOAD), dictName);
+      /* Release the allocated dictionary */
+      ReleaseDictionary (pDictionary);
+      *pDictionary = NULL;
+    }
+  else if (treated == TRUE)
+    /* Read the pre-treated file */
+    ReadDictionary (dictFile, pdict);
+  else if (!pdict->DictLoaded)
+    {
+      /* Reading a not treated file */
+      if (LoadDict (dictFile, pdict) == 1)
+	{
+	  if (toTreat)
+	    /* pre-treatement of the dictionary */
+	    TreateDictionary (pdict);
+	}
+      else
+	/* The loading of the dictionary failed */
 	*pDictionary = NULL;
-	fclose (dictFile);
-	return;
-     }				/* end of if GetStringInDict == -1 */
-
-   if (treated == TRUE)
-     {				/* Read the pre-treated file */
-	if (Create (dictFile, pdict) != 1)
-	   *pDictionary = NULL;	/* Problem while reading the pre-treated file */
-     }
-   else
-     {				/* Reading a not treated file */
-	if (Load (dictFile, pdict) == 1)
-	  {
-	     if (toTreat)
-		/* pre-treatement of the dictionary */
-		Corr_pretraitement (pdict);
-	  }
-	else
-	   *pDictionary = NULL;	/* The loading of the dictionary failed */
-     }				/* end of if (treated == TRUE) */
-   fclose (dictFile);
-}				/*PrepareDictionary */
+    }
+  fclose (dictFile);
+}
 
 
 /*----------------------------------------------------------------------
-   LoadDict                                                         
-   Returns -1 if the dictionary can't be loaded.                     
-   0 if the dictionary was already loaded.                  
-   1 if the dictionary is loaded.                           
-   returns in pdico : a pointer to dictionary                        
-   cree le dictionnaire si toCreate = TRUE                          
+  LoadTreatedDict returns -1 if the dictionary can't be loaded.   
+  0 if the dictionary was already loaded.
+  1 if the dictionary is loaded.
+  Returns in pDictionary : a pointer to dictionary and creates it if
+  toCreate = TRUE
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
-static int          LoadDict (PtrDict * pDictionary, Language lang, PtrDocument document, char *dictName, char *dictDirectory, boolean readonly, boolean toCreate)
-
+int                 LoadTreatedDict (PtrDict * pDictionary, Language lang, PtrDocument document, char *dictName, char *dictDirectory, boolean readonly, boolean toCreate)
 #else  /* __STDC__ */
-static int          LoadDict (pDictionary, lang, document, dictName, dictDirectory, readonly, toCreate)
+int                 LoadTreatedDict (pDictionary, lang, document, dictName, dictDirectory, readonly, toCreate)
 PtrDict            *pDictionary;
 Language            lang;
 PtrDocument         document;
@@ -637,9 +596,7 @@ char               *dictName;
 char               *dictDirectory;
 boolean             readonly;
 boolean             toCreate;
-
 #endif /* __STDC__ */
-
 {
    PtrDict             pdict;
    int                 i;
@@ -669,7 +626,7 @@ boolean             toCreate;
 			 ret = -1;
 			 break;
 		      }
-		    /* else: crate the new dictionary not readonly */
+		    /* else: create the new dictionary not readonly */
 		 case (0):
 		    /* file .DIC */
 		    PrepareDictionary (&pdict, dictName, document,
@@ -688,9 +645,9 @@ boolean             toCreate;
 			       dictDirectory, lang, readonly, FALSE, FALSE);
 		    ret = (pdict == NULL) ? -1 : 1;
 		    break;
-	      }			/* end of switch */
+	      }
 
-     }				/* end of if (pdict == NULL) */
+     }
    else
       /* The dictionary was already loaded by anther document */
       /* just update the dictionary context */
@@ -698,23 +655,19 @@ boolean             toCreate;
 
    *pDictionary = pdict;
    return ret;
-}				/*LoadDict */
+}
 
 
 /*----------------------------------------------------------------------
-   Corr_ReloadDict: reload a dictionary                            
+   ReloadDictionary: reload a dictionary                            
    returns TRUE if the FILE dictionary is found and well loaded       
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
-boolean             Corr_ReloadDict (PtrDict * pDictionary)
-
+boolean             ReloadDictionary (PtrDict * pDictionary)
 #else  /* __STDC__ */
-boolean             Corr_ReloadDict (pDictionary)
+boolean             ReloadDictionary (pDictionary)
 PtrDict            *pDictionary;
-
 #endif /* __STDC__ */
-
 {
    PtrDict             pdict;
    PtrDocument         document;
@@ -735,7 +688,7 @@ PtrDict            *pDictionary;
 	if (dictTable[d] == pdict)
 	  {
 	     /* Getting information about the dictionary */
-	     strcpy (dictName, pdict->DictNom);
+	     strcpy (dictName, pdict->DictName);
 	     document = pdict->DictDoc;
 	     /* Release the string and the list of words ... */
 	     FreeStringInDict (pdict);
@@ -745,13 +698,13 @@ PtrDict            *pDictionary;
 	  }
      }
 
-   d = LoadDict (pDictionary, '\0', document, dictName,
+   d = LoadTreatedDict (pDictionary, '\0', document, dictName,
 		 document->DocDirectory, FALSE, TRUE);
    if (d == -1)
       return (FALSE);
 
    return (TRUE);
-}				/*Corr_ReloadDict */
+}
 
 
 /*----------------------------------------------------------------------
@@ -772,41 +725,8 @@ void                Dict_Init ()
 	/* The environment variable DICOPAR does not exist */
 	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_MISSING_DICOPAR), "DICOPAR");
      }
-   alphabetLoaded = Corr_alphabet ();
-   if (alphabetLoaded == FALSE)
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_MISSING_ALPHABET);
-}				/* end proc Dict_Init */
-
-
-/*----------------------------------------------------------------------
-   TtaLoadDocumentDictionary loads the document dictionary.          
-   Returns -1 if the dictionary can't be loaded.                     
-   Returns 1 if the dictionary is loaded.                            
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-boolean             TtaLoadDocumentDictionary (PtrDocument document, int *pDictionary, boolean ToCreate)
-#else  /* __STDC__ */
-boolean             TtaLoadDocumentDictionary (document, pDictionary, ToCreate)
-PtrDocument         document;
-int                *pDictionary;
-boolean             ToCreate;
-
-#endif /* __STDC__ */
-{
-   /* int        res; */
-   char               *dicodoc;
-
-   /* dictionary name = document name */
-   *pDictionary = (int) NULL;
-
-   dicodoc = (char *) TtaGetEnvString ("DICODOC");
-   if (dicodoc != NULL)
-      (void) LoadDict ((PtrDict *) pDictionary, 0, document, dicodoc,
-		       document->DocDirectory, FALSE, ToCreate);
-   else
-      (void) LoadDict ((PtrDict *) pDictionary, 0, document, document->DocDName, document->DocDirectory, FALSE, ToCreate);
-   return (*pDictionary != '\0');
-}				/*TtaLoadDocumentDictionary */
+   LoadAlphabet ();
+}
 
 
 /*----------------------------------------------------------------------
@@ -823,16 +743,12 @@ boolean             ToCreate;
    languageId: name of the concerned language.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 boolean             TtaLoadLanguageDictionaries (Language languageId)
-
 #else  /* __STDC__ */
 boolean             TtaLoadLanguageDictionaries (languageId)
 Language            languageId;
-
 #endif /* __STDC__ */
-
 {
    int                 lang;
    PtrDict             dictPtr;
@@ -850,7 +766,7 @@ Language            languageId;
 	/* Loading the main dictionary */
 	if (LangTable[lang].LangPrincipal[0] != '\0')
 	  {
-	     ret = LoadDict (&dictPtr, lang, NULL, LangTable[lang].LangPrincipal, dictPath, TRUE, FALSE);
+	     ret = LoadTreatedDict (&dictPtr, lang, NULL, LangTable[lang].LangPrincipal, dictPath, TRUE, FALSE);
 	     if (ret > 0)
 		LangTable[lang].LangDict[0] = (Dictionary) dictPtr;
 	  }
@@ -862,13 +778,13 @@ Language            languageId;
 	/* Loading the secondary dictionary */
 	if (LangTable[lang].LangSecondary[0] != '\0')
 	  {
-	     ret = LoadDict (&dictPtr, lang, NULL, LangTable[lang].LangSecondary, dictPath, TRUE, FALSE);
+	     ret = LoadTreatedDict (&dictPtr, lang, NULL, LangTable[lang].LangSecondary, dictPath, TRUE, FALSE);
 	     if (ret > 0)
 		LangTable[lang].LangDict[1] = (Dictionary) dictPtr;
 	  }
      }
    return (LangTable[lang].LangDict[0] != NULL || LangTable[lang].LangDict[1] != NULL);
-}				/*TtaLoadLanguageDictionaries */
+}
 
 
 /*----------------------------------------------------------------------
@@ -887,13 +803,10 @@ Language            languageId;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             TtaLoadTypoDictionaries (Language languageId)
-
 #else  /* __STDC__ */
 boolean             TtaLoadTypoDictionaries (languageId)
 Language            languageId;
-
 #endif /* __STDC__ */
-
 {
    int                 lang;
    PtrDict             dictPtr;
@@ -911,7 +824,7 @@ Language            languageId;
 	/* Loading the main dictionary */
 	if (TypoLangTable[lang].LangPrincipal[0] != '\0')
 	  {
-	     ret = LoadDict (&dictPtr, lang, NULL,
+	     ret = LoadTreatedDict (&dictPtr, lang, NULL,
 		  TypoLangTable[lang].LangPrincipal, dictPath, TRUE, FALSE);
 	     if (ret > 0)
 		TypoLangTable[lang].LangDict[0] = (Dictionary) dictPtr;
@@ -924,7 +837,7 @@ Language            languageId;
 	/* Loading the secondary dictionary */
 	if (TypoLangTable[lang].LangSecondary[0] != '\0')
 	  {
-	     ret = LoadDict (&dictPtr, lang, NULL,
+	     ret = LoadTreatedDict (&dictPtr, lang, NULL,
 		  TypoLangTable[lang].LangSecondary, dictPath, TRUE, FALSE);
 	     if (ret > 0)
 		TypoLangTable[lang].LangDict[1] = (Dictionary) dictPtr;
@@ -932,7 +845,7 @@ Language            languageId;
      }
    return (TypoLangTable[lang].LangDict[0] != NULL
 	   || TypoLangTable[lang].LangDict[1] != NULL);
-}				/*TtaLoadTypoDictionaries */
+}
 
 
 /*----------------------------------------------------------------------
@@ -944,16 +857,12 @@ Language            languageId;
    languageId: identifier of the language.
 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                TtaUnLoadLanguageDictionaries (Language languageId)
-
 #else  /* __STDC__ */
 void                TtaUnLoadLanguageDictionaries (languageId)
 Language            languageId;
-
 #endif /* __STDC__ */
-
 {
    int                 i, j;
 
@@ -964,7 +873,7 @@ Language            languageId;
 	ReleaseDictionary ((PtrDict *) & LangTable[i].LangDict[j]);
 	LangTable[i].LangDict[j] = NULL;
      }
-}				/*TtaUnLoadDictionaries */
+}
 
 
 /*----------------------------------------------------------------------
@@ -974,18 +883,13 @@ Language            languageId;
 
    Parameters:
    languageId: identifier of the language.
-
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                TtaUnLoadTypoDictionaries (Language languageId)
-
 #else  /* __STDC__ */
 void                TtaUnLoadTypoDictionaries (languageId)
 Language            languageId;
-
 #endif /* __STDC__ */
-
 {
    int                 i, j;
 
@@ -996,7 +900,7 @@ Language            languageId;
 	ReleaseDictionary ((PtrDict *) & TypoLangTable[i].LangDict[j]);
 	TypoLangTable[i].LangDict[j] = NULL;
      }
-}				/*TtaUnLoadTypoDictionaries */
+}
 
 
 /*----------------------------------------------------------------------
@@ -1007,18 +911,13 @@ Language            languageId;
    Return value:
    the pointer to that dictionary or NULL if there is no dictionary for
    this language.
-
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 Dictionary          TtaGetPrincipalDictionary (Language languageId)
-
 #else  /* __STDC__ */
 Dictionary          TtaGetPrincipalDictionary (languageId)
 Language            languageId;
-
 #endif /* __STDC__ */
-
 {
    int                 i;
 
@@ -1033,7 +932,7 @@ Language            languageId;
    /* Loading dictionaries if exist */
    TtaLoadLanguageDictionaries (languageId);
    return (LangTable[i].LangDict[0]);
-}				/*TtaGetPrincipalDictionary */
+}
 
 
 /*----------------------------------------------------------------------
@@ -1044,18 +943,13 @@ Language            languageId;
    Return value:
    the pointer to that dictionary or NULL if there is no dictionary for
    this language.
-
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 Dictionary          TtaGetPrincipalTypoDictionary (Language languageId)
-
 #else  /* __STDC__ */
 Dictionary          TtaGetPrincipalTypoDictionary (languageId)
 Language            languageId;
-
 #endif /* __STDC__ */
-
 {
    int                 i;
 
@@ -1070,7 +964,7 @@ Language            languageId;
    /* Loading dictionaries if exist */
    TtaLoadTypoDictionaries (languageId);
    return (TypoLangTable[i].LangDict[0]);
-}				/*TtaGetPrincipalTypoDictionary */
+}
 
 
 /*----------------------------------------------------------------------
@@ -1081,18 +975,13 @@ Language            languageId;
    Return value:
    the pointer to that dictionary or NULL if there is no dictionary for
    this language.
-
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 Dictionary          TtaGetSecondaryDictionary (Language languageId)
-
 #else  /* __STDC__ */
 Dictionary          TtaGetSecondaryDictionary (languageId)
 Language            languageId;
-
 #endif /* __STDC__ */
-
 {
    int                 i;
 
@@ -1104,7 +993,7 @@ Language            languageId;
 	return NULL;
      }
    return (LangTable[i].LangDict[1]);
-}				/*TtaGetSecondaryDictionary */
+}
 
 
 /*----------------------------------------------------------------------
@@ -1115,18 +1004,13 @@ Language            languageId;
    Return value:
    the pointer to that dictionary or NULL if there is no dictionary for
    this language.
-
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 Dictionary          TtaGetSecondaryTypoDictionary (Language languageId)
-
 #else  /* __STDC__ */
 Dictionary          TtaGetSecondaryTypoDictionary (languageId)
 Language            languageId;
-
 #endif /* __STDC__ */
-
 {
    int                 i;
 

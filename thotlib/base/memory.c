@@ -1995,26 +1995,26 @@ PtrSearchContext   *pSearch;
 #endif /* __STDC__ */
 
 {
-   PtrSearchContext    s;
-
-   if (pSearch != NULL)
-     {
-	s = (PtrSearchContext) TtaGetMemory (sizeof (SearchContext));
-	/* Initialisation des champs */
-	*pSearch = s;
-	if (s)
-	  {
-	    memset (s, 0, sizeof (SearchContext));
-	    s->SDocument = NULL;
-	    s->STree = 0;
-	    s->SStartElement = NULL;
-	    s->SStartChar = 0;
-	    s->SEndElement = NULL;
-	    s->SEndChar = 0;
-	    s->SStartToEnd = TRUE;
-	    s->SWholeDocument = FALSE;
-	  }
-     }
+  PtrSearchContext    s;
+  
+  if (pSearch != NULL)
+    {
+      s = (PtrSearchContext) TtaGetMemory (sizeof (SearchContext));
+      /* Initialisation des champs */
+      *pSearch = s;
+      if (s)
+	{
+	  memset (s, 0, sizeof (SearchContext));
+	  s->SDocument = NULL;
+	  s->STree = 0;
+	  s->SStartElement = NULL;
+	  s->SStartChar = 0;
+	  s->SEndElement = NULL;
+	  s->SEndChar = 0;
+	  s->SStartToEnd = TRUE;
+	  s->SWholeDocument = FALSE;
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -2028,12 +2028,12 @@ PtrSearchContext   *pSearch;
 #endif /* __STDC__ */
 
 {
-   if (pSearch != NULL)
-      if (*pSearch != NULL)
-	{
-	   free (*pSearch);
-	   *pSearch = NULL;
-	}
+  if (pSearch != NULL)
+    if (*pSearch != NULL)
+      {
+	free (*pSearch);
+	*pSearch = NULL;
+      }
 }
 
 
@@ -2047,31 +2047,31 @@ void                FreeStringInDict (pDict)
 PtrDict             pDict;
 #endif /* __STDC__ */
 {
-   PtrChaine           pCh1;
-   PtrCommuns          pCommun;
-   PtrMots             pMot;
+   PtrString           pString;
+   PtrCommons          pCommon;
+   PtrWords            pWord;
    int                 i;
 
-   pCh1 = pDict->chaine;
-   if (pCh1 != NULL)
-      free (pCh1);
+   pString = pDict->DictString;
+   if (pString != NULL)
+      free (pString);
 
-   pMot = pDict->pdico;
-   if (pMot != NULL)
-      free (pMot);
+   pWord = pDict->DictWords;
+   if (pWord != NULL)
+      free (pWord);
 
-   pCommun = pDict->commun;
-   if (pCommun != NULL)
-      free (pCommun);
+   pCommon = pDict->DictCommon;
+   if (pCommon != NULL)
+      free (pCommon);
 
    /* maj du contexte du dictionnaire : chaine et mots */
-   pDict->nbcars = 0;
-   pDict->chaine = NULL;
-   pDict->nbmots = -1;
-   pDict->pdico = NULL;
-   pDict->commun = NULL;
+   pDict->DictNbChars = 0;
+   pDict->DictString = NULL;
+   pDict->DictNbWords = -1;
+   pDict->DictWords = NULL;
+   pDict->DictCommon = NULL;
    for (i = 0; i < MAX_WORD_LEN; i++)
-      pDict->plgdico[i] = 0;
+      pDict->DictLengths[i] = 0;
 }
 
 /*----------------------------------------------------------------------
@@ -2084,7 +2084,6 @@ static void        *GetDictContext (n)
 unsigned int        n;
 #endif /* __STDC__ */
 {
-
    if (n > 0)
       return ((char *) malloc ((size_t) n));
    return (NULL);
@@ -2107,29 +2106,29 @@ boolean             readonly;
    unsigned int        i;
 
    pdict = *pDict;
-   pdict->MAXcars += (pdict->DictReadOnly == FALSE) ? 600 : 2;
-   i = pdict->MAXcars;
+   pdict->DictMaxChars += (pdict->DictReadOnly == FALSE) ? 600 : 2;
+   i = pdict->DictMaxChars;
    /* alloue la chaine necessaire */
-   pdict->chaine = (PtrChaine) GetDictContext (i);
-   if (pdict->chaine == NULL)
+   pdict->DictString = (PtrString) GetDictContext (i);
+   if (pdict->DictString == NULL)
      {
 	FreeStringInDict (pdict);
 	return (-1);
      }
 
-   pdict->MAXmots += (pdict->DictReadOnly == FALSE) ? 50 : 2;
-   i = pdict->MAXmots;
-   pdict->commun = (PtrCommuns) GetDictContext (i);
-   if (pdict->commun == NULL)
+   pdict->DictMaxWords += (pdict->DictReadOnly == FALSE) ? 50 : 2;
+   i = pdict->DictMaxWords;
+   pdict->DictCommon = (PtrCommons) GetDictContext (i);
+   if (pdict->DictCommon == NULL)
      {
 	FreeStringInDict (pdict);
 	return (-1);
      }
 
    /* ATTENTION : ce sont des entiers */
-   pdict->pdico = (PtrMots) GetDictContext (i * sizeof (int));
+   pdict->DictWords = (PtrWords) GetDictContext (i * sizeof (int));
 
-   if (pdict->pdico == NULL)
+   if (pdict->DictWords == NULL)
      {
 	FreeStringInDict (pdict);
 	return (-1);
@@ -2147,18 +2146,17 @@ void                GetDictionary (PtrDict * pDict)
 #else  /* __STDC__ */
 void                GetDictionary (pDict)
 PtrDict            *pDict;
-
 #endif /* __STDC__ */
 {
    int                 i;
    PtrDict             pdict;
 
    if (PtFree_Dict == NULL)
-      *pDict = (PtrDict) GetDictContext (sizeof (Dictionnaire));
+      *pDict = (PtrDict) GetDictContext (sizeof (WordDict));
    else
      {
 	*pDict = PtFree_Dict;
-	PtFree_Dict = (*pDict)->DictSuivant;
+	PtFree_Dict = (*pDict)->DictNext;
 	NbFree_Dict--;
      }
 
@@ -2168,24 +2166,24 @@ PtrDict            *pDict;
 
 	/* initialise le contexte de dictionnaire */
 	pdict = *pDict;
-	pdict->DictNom[0] = '\0';
+	pdict->DictName[0] = '\0';
 	pdict->DictDirectory[0] = '\0';
-	pdict->DictReadOnly = TRUE;
 	/* readonly */
-	pdict->DictCharge = FALSE;
+	pdict->DictReadOnly = TRUE;
 	/* contenu non charge' */
-	pdict->DictModifie = FALSE;
+	pdict->DictLoaded = FALSE;
 	/* contenu non modifie' */
-	pdict->chaine = NULL;
-	pdict->pdico = NULL;
-	pdict->commun = NULL;
+	pdict->DictModified = FALSE;
+	pdict->DictString = NULL;
+	pdict->DictWords = NULL;
+	pdict->DictCommon = NULL;
 
 	for (i = 0; i < MAX_WORD_LEN; i++)
-	   pdict->plgdico[i] = 0;
-	pdict->MAXmots = 0;
-	pdict->MAXcars = 0;
-	pdict->nbmots = -1;
-	pdict->nbcars = 0;
+	   pdict->DictLengths[i] = 0;
+	pdict->DictMaxWords = 0;
+	pdict->DictMaxChars = 0;
+	pdict->DictNbWords = -1;
+	pdict->DictNbChars = 0;
      }
 }
 
@@ -2198,10 +2196,9 @@ void                FreeDictionary (PtrDict pDict)
 #else  /* __STDC__ */
 void                FreeDictionary (pDict)
 PtrDict             pDict;
-
 #endif /* __STDC__ */
 {
-   pDict->DictSuivant = PtFree_Dict;
+   pDict->DictNext = PtFree_Dict;
    PtFree_Dict = pDict;
    NbFree_Dict++;
    NbUsed_Dict--;

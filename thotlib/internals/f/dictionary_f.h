@@ -6,11 +6,15 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern boolean Corr_alphabet ( void );
-extern void asci2code ( char *string );
-extern void code2asci ( char *string );
-extern void Corr_pretraitement ( PtrDict dict );
-extern boolean Corr_ReloadDict ( PtrDict * pDictionary );
+extern void TreateDictionary ( PtrDict dict );
+extern int  LoadTreatedDict (PtrDict * pDictionary,
+			     Language lang,
+			     PtrDocument document,
+			     char *dictName,
+			     char *dictDirectory,
+			     boolean readonly,
+			     boolean toCreate);
+extern boolean ReloadDictionary ( PtrDict * pDictionary );
 extern void Dict_Init ( void );
 extern boolean TtaLoadDocumentDictionary ( PtrDocument document,
                                            int *pDictionary,
@@ -26,11 +30,15 @@ extern Dictionary TtaGetSecondaryTypoDictionary ( Language languageId );
 
 #else /* __STDC__ */
 
-extern boolean Corr_alphabet (/* void */);
-extern void asci2code (/* char *string */);
-extern void code2asci (/* char *string */);
-extern void Corr_pretraitement (/* PtrDict dict */);
-extern boolean Corr_ReloadDict (/* PtrDict * pDictionary */);
+extern void TreateDictionary (/* PtrDict dict */);
+extern int  LoadTreatedDict (/*PtrDict * pDictionary,
+			     Language lang,
+			     PtrDocument document,
+			     char *dictName,
+			     char *dictDirectory,
+			     boolean readonly,
+			     boolean toCreate*/);
+extern boolean ReloadDictionary (/* PtrDict * pDictionary */);
 extern void Dict_Init (/* void */);
 extern boolean TtaLoadDocumentDictionary (/* PtrDocument document,
                                              int *pDictionary,

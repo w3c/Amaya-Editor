@@ -521,7 +521,7 @@ int                 delta;
      }
 
    return toadd;
-}				/* function RedrawFrameTop */
+}
 
 
 /*----------------------------------------------------------------------
@@ -529,19 +529,14 @@ int                 delta;
    from the most englobing box down to pBox itself.
    It ensure unicity of boxes referenced in adbloc.
   ----------------------------------------------------------------------*/
-
-
 #ifdef __STDC__
 static void         AddBoxToCreate (PtrBox * tocreate, PtrBox pBox, int frame)
-
 #else  /* __STDC__ */
 static void         AddBoxToCreate (tocreate, pBox, frame)
 PtrBox             *tocreate;
 PtrBox              pBox;
 int                 frame;
-
 #endif /* __STDC__ */
-
 {
    PtrAbstractBox      pAbbox1;
    int                 i;
@@ -575,7 +570,8 @@ int                 frame;
    if (*tocreate == NULL
        && pBox->BxAbstractBox->AbVisibility >= ViewFrameTable[frame - 1].FrVisibility)
       *tocreate = pBox;
-}				/*function AddBoxToCreate */
+}
+
 
 /*----------------------------------------------------------------------
    RedrawFrameBottom redraw from top to bottom a frame.
@@ -588,20 +584,16 @@ int                 frame;
    Return non zero if new abstract boxes were added in order
    to build the corresponding abstract image.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 boolean             RedrawFrameBottom (int frame, int delta)
-
 #else  /* __STDC__ */
 boolean             RedrawFrameBottom (frame, delta)
 int                 frame;
 int                 delta;
-
 #endif /* __STDC__ */
-
 {
    PtrBox              pBox;
-   PtrBox              min /*, max */ ;
+   PtrBox              min;
    int                 y, x, vol, h, l;
    int                 height, bottom;
    int                 framexmin;
@@ -948,20 +940,19 @@ int                 delta;
 #endif /* _WINDOWS */
 
    return toadd;
-}				/* end of function RedrawFrameBottom */
+}
+
 
 /*----------------------------------------------------------------------
    DisplayFrame display one view of the document in frame.
    If a part of the abstract image is selected, the
    corresponding concrete image is centered in the frame.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                DisplayFrame (int frame)
 #else  /* __STDC__ */
 void                DisplayFrame (frame)
 int                 frame;
-
 #endif /* __STDC__ */
 {
    ViewFrame          *pFrame;
