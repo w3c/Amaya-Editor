@@ -471,7 +471,7 @@ void AmayaAttributePanel::SetupEnumValue( const char * enums, int nb_enum, int s
       i_item++;
     }
   m_pRBEnum = new wxRadioBox( m_pPanel_Enum, -1, _T(""), wxDefaultPosition, wxDefaultSize,
-			      choices, 0, wxRA_SPECIFY_COLS | wxNO_BORDER );
+			      choices/*, 0, wxRA_SPECIFY_COLS | wxNO_BORDER*/ );
   if (selected != -1)
     m_pRBEnum->SetSelection(selected);
   p_sizer->Prepend(m_pRBEnum, 0, wxALL|wxEXPAND, 0);
