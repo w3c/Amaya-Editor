@@ -2764,11 +2764,11 @@ int SetFloat (PtrBox box, PtrBox pBlock, PtrLine pLine, PtrAbstractBox pRootAb,
   if ((boxPrevL && y < boxPrevL->BxYOrg + boxPrevL->BxHeight) ||
       (boxPrevR && y < boxPrevR->BxYOrg + boxPrevR->BxHeight))
     {
-      if (box->BxWidth < w + MIN_SPACE &&
-	  (pBlock->BxType == BoBlock ||
-	   (boxPrevL && y == boxPrevL->BxYOrg) ||
-	   (boxPrevR && y == boxPrevR->BxYOrg)))
+      if (box->BxWidth < w + MIN_SPACE)
 	{
+	  /****if ((pBlock->BxType == BoFloatBlock &&
+	       boxPrevL && y == boxPrevL->BxYOrg) ||
+	       (boxPrevR && y == boxPrevR->BxYOrg))*****/
 	  /* it's possible to display the floating box at the current position */
 	  if (boxPrevL && y < boxPrevL->BxYOrg + boxPrevL->BxHeight &&
 	      box->BxAbstractBox->AbFloat == 'L')
