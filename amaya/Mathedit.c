@@ -3912,44 +3912,73 @@ ThotBool            MathStyleAttrInMenu (NotifyAttribute * event)
 
 /*----------------------------------------------------------------------
  MathPresentAttrCreated
- An attribute fontsize has been created or updated by the user.
+ An attribute fontsize, mathsize, lspace, rspace, linethickness has been
+ created or updated by the user.
  -----------------------------------------------------------------------*/
 void MathPresentAttrCreated (NotifyAttribute *event)
 {
 #define buflen 200
-  char            *value;
-  int              length, attrKind;
-  AttributeType    attrType;
+  char          *value;
+  int            length, attrKind;
+  AttributeType  attrType;
+  ThotBool       doit;
 
-  value = TtaGetMemory (buflen);
-  value[0] = EOS;
-  length = TtaGetTextAttributeLength (event->attribute);
-  if (length >= buflen)
-     length = buflen - 1;
-  if (length > 0)
-     TtaGiveTextAttributeValue (event->attribute, value, &length);
+  doit = TRUE;
   TtaGiveAttributeType (event->attribute, &attrType, &attrKind);
-  /* associate a CSS property with the element */
-  if (attrType.AttrTypeNum == MathML_ATTR_linethickness)
-     MathMLlinethickness (event->document, event->element, value);
-  else
-     MathMLAttrToStyleProperty (event->document, event->element, value,
-			        attrType.AttrTypeNum);
-  TtaFreeMemory (value);
+  if (attrType.AttrTypeNum == MathML_ATTR_fontsize)
+    /* it's a fontsize attribute. If the same element has a mathsize
+       attribute, don't change the element size */
+    {
+      attrType.AttrTypeNum = MathML_ATTR_mathsize;
+      if (TtaGetAttribute (event->element, attrType))
+	doit = FALSE;
+    }
+  if (doit)
+    {
+      value = TtaGetMemory (buflen);
+      value[0] = EOS;
+      length = TtaGetTextAttributeLength (event->attribute);
+      if (length >= buflen)
+	length = buflen - 1;
+      if (length > 0)
+	TtaGiveTextAttributeValue (event->attribute, value, &length);
+      /* associate a CSS property with the element */
+      if (attrType.AttrTypeNum == MathML_ATTR_linethickness)
+	MathMLlinethickness (event->document, event->element, value);
+      else
+	MathMLAttrToStyleProperty (event->document, event->element, value,
+				   attrType.AttrTypeNum);
+      TtaFreeMemory (value);
+    }
 }
  
 /*----------------------------------------------------------------------
  MathAttrFontsizeDelete
- The user is deleting an attribute fontsize.
+ The user is deleting an attribute fontsize or mathsize.
  -----------------------------------------------------------------------*/
 ThotBool MathAttrFontsizeDelete (NotifyAttribute *event)
 {
-  /* ask the CSS handler to remove the effect of the CSS property
-     font-size */
-  /* in the statement below, "10pt" is meaningless. It's here just to
-     make the CSS parser happy */
-  ParseHTMLSpecificStyle (event->element, "font-size: 10pt",
-			  event->document, 0, TRUE);
+  int            attrKind;
+  AttributeType  attrType;
+  ThotBool       doit;
+
+  doit = TRUE;
+  TtaGiveAttributeType (event->attribute, &attrType, &attrKind);
+  if (attrType.AttrTypeNum == MathML_ATTR_fontsize)
+    /* it's a fontsize attribute. If the same element has a mathsize
+       attribute, don't change the element size */
+    {
+      attrType.AttrTypeNum = MathML_ATTR_mathsize;
+      if (TtaGetAttribute (event->element, attrType))
+	doit = FALSE;
+    }
+  if (doit)
+    /* ask the CSS handler to remove the effect of the CSS property
+       font-size */
+    /* in the statement below, "10pt" is meaningless. It's here just to
+       make the CSS parser happy */
+    ParseHTMLSpecificStyle (event->element, "font-size: 10pt",
+			    event->document, 0, TRUE);
   return FALSE; /* let Thot perform normal operation */
 }
 
@@ -4020,32 +4049,62 @@ ThotBool MathAttrFontfamilyDelete (NotifyAttribute *event)
 
 /*----------------------------------------------------------------------
  MathAttrColorCreated
- An attribute color has been created or modified by the user.
+ An attribute color or mathcolor has been created or modified by the user.
  -----------------------------------------------------------------------*/
 void MathAttrColorCreated (NotifyAttribute *event)
 {
-  char            *value;
-  int              length;
+  AttributeType  attrType;
+  char          *value;
+  int            attrKind, length;
+  ThotBool       doit;
 
-  value = TtaGetMemory (buflen);
-  value[0] = EOS;
-  length = TtaGetTextAttributeLength (event->attribute);
-  if (length >= buflen)
-     length = buflen - 1;
-  if (length > 0)
-     TtaGiveTextAttributeValue (event->attribute, value, &length);  
-  HTMLSetForegroundColor (event->document, event->element, value);
-  TtaFreeMemory (value);
+  doit = TRUE;
+  TtaGiveAttributeType (event->attribute, &attrType, &attrKind);
+  if (attrType.AttrTypeNum == MathML_ATTR_color)
+    /* it's a color attribute. If the same element has a mathcolor
+       attribute, don't change the element color */
+    {
+      attrType.AttrTypeNum = MathML_ATTR_mathcolor;
+      if (TtaGetAttribute (event->element, attrType))
+	doit = FALSE;
+    }
+  if (doit)
+    {
+      value = TtaGetMemory (buflen);
+      value[0] = EOS;
+      length = TtaGetTextAttributeLength (event->attribute);
+      if (length >= buflen)
+	length = buflen - 1;
+      if (length > 0)
+	TtaGiveTextAttributeValue (event->attribute, value, &length);  
+      HTMLSetForegroundColor (event->document, event->element, value);
+      TtaFreeMemory (value);
+    }
 }
 
 
 /*----------------------------------------------------------------------
  MathAttrColorDelete
- The user is deleting an attribute color.
+ The user is deleting an attribute color or mathcolor.
  -----------------------------------------------------------------------*/
 ThotBool MathAttrColorDelete (NotifyAttribute *event)
 {
-  HTMLResetForegroundColor (event->document, event->element);
+  int            attrKind;
+  AttributeType  attrType;
+  ThotBool       doit;
+
+  doit = TRUE;
+  TtaGiveAttributeType (event->attribute, &attrType, &attrKind);
+  if (attrType.AttrTypeNum == MathML_ATTR_color)
+    /* it's a color attribute. If the same element has a mathcolor
+       attribute, don't change the element's color */
+    {
+      attrType.AttrTypeNum = MathML_ATTR_mathcolor;
+      if (TtaGetAttribute (event->element, attrType))
+	doit = FALSE;
+    }
+  if (doit)
+    HTMLResetForegroundColor (event->document, event->element);
   return FALSE; /* let Thot perform normal operation */
 }
 
@@ -4060,31 +4119,61 @@ void MathAttrFormChanged (NotifyAttribute *event)
 
 /*----------------------------------------------------------------------
  MathAttrBackgroundCreated
- An attribute background has been created or modified by the user.
+ An attribute background or mathbackground has been created or modified
+ by the user.
  -----------------------------------------------------------------------*/
 void MathAttrBackgroundCreated (NotifyAttribute *event)
 {
-  char            *value;
-  int              length;
+  char          *value;
+  AttributeType  attrType;
+  int            attrKind, length;
+  ThotBool       doit;
 
-  value = TtaGetMemory (buflen);
-  value[0] = EOS;
-  length = TtaGetTextAttributeLength (event->attribute);
-  if (length >= buflen)
-     length = buflen - 1;
-  if (length > 0)
-     TtaGiveTextAttributeValue (event->attribute, value, &length);  
-  HTMLSetBackgroundColor (event->document, event->element, value);
-  TtaFreeMemory (value);
+  doit = TRUE;
+  TtaGiveAttributeType (event->attribute, &attrType, &attrKind);
+  if (attrType.AttrTypeNum == MathML_ATTR_background_)
+    /* it's a background attribute. If the same element has a mathbackground
+       attribute, don't change the element background */
+    {
+      attrType.AttrTypeNum = MathML_ATTR_mathbackground;
+      if (TtaGetAttribute (event->element, attrType))
+	doit = FALSE;
+    }
+  if (doit)
+    {
+      value = TtaGetMemory (buflen);
+      value[0] = EOS;
+      length = TtaGetTextAttributeLength (event->attribute);
+      if (length >= buflen)
+	length = buflen - 1;
+      if (length > 0)
+	TtaGiveTextAttributeValue (event->attribute, value, &length);  
+      HTMLSetBackgroundColor (event->document, event->element, value);
+      TtaFreeMemory (value);
+    }
 }
-
 
 /*----------------------------------------------------------------------
  MathAttrBackgroundDelete
- The user is deleting an attribute background.
+ The user is deleting an attribute background or mathbackground.
  -----------------------------------------------------------------------*/
 ThotBool MathAttrBackgroundDelete (NotifyAttribute *event)
 {
+  int            attrKind;
+  AttributeType  attrType;
+  ThotBool       doit;
+
+  doit = TRUE;
+  TtaGiveAttributeType (event->attribute, &attrType, &attrKind);
+  if (attrType.AttrTypeNum == MathML_ATTR_background_)
+    /* it's a background attribute. If the same element has a mathbackground
+       attribute, don't change the element background */
+    {
+      attrType.AttrTypeNum = MathML_ATTR_mathbackground;
+      if (TtaGetAttribute (event->element, attrType))
+	doit = FALSE;
+    }
+  if (doit)
   HTMLResetBackgroundColor (event->document, event->element);
   return FALSE; /* let Thot perform normal operation */
 }

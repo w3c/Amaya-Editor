@@ -2431,7 +2431,7 @@ void MathMLSpacingAttr (Document doc, Element el, char *value, int attr)
   ----------------------------------------------------------------------*/
 void MathMLAttributeComplete (Attribute attr, Element el, Document doc)
 {
-   AttributeType     attrType;
+   AttributeType     attrType, depAttrType;
    int		     attrKind;
    ElementType       elType;
 #define buflen 50
@@ -2522,10 +2522,26 @@ void MathMLAttributeComplete (Attribute attr, Element el, Document doc)
 	   switch (attrType.AttrTypeNum)
 	     {
 	     case MathML_ATTR_color:
+	       /* deprecated attribute */
+	       /* if the same element has a mathcolor attribute, ignore
+		  the color attribute */
+	       depAttrType.AttrSSchema = attrType.AttrSSchema ;
+	       depAttrType.AttrTypeNum = MathML_ATTR_mathcolor;
+	       if (!TtaGetAttribute (el, depAttrType))
+                  HTMLSetForegroundColor (doc, el, value);
+	       break;
 	     case MathML_ATTR_mathcolor:
                HTMLSetForegroundColor (doc, el, value);
 	       break;
 	     case MathML_ATTR_background_:
+	       /* deprecated attribute */
+	       /* if the same element has a mathbackground attribute, ignore
+		  the background attribute */
+	       depAttrType.AttrSSchema = attrType.AttrSSchema;
+	       depAttrType.AttrTypeNum = MathML_ATTR_mathbackground;
+	       if (!TtaGetAttribute (el, depAttrType))
+                  HTMLSetBackgroundColor (doc, el, value);
+	       break;
 	     case MathML_ATTR_mathbackground:
                HTMLSetBackgroundColor (doc, el, value);
 	       break;
@@ -2536,6 +2552,15 @@ void MathMLAttributeComplete (Attribute attr, Element el, Document doc)
 	       MathMLlinethickness (doc, el, value);
 	       break;
 	     case MathML_ATTR_fontsize:
+	       /* deprecated attribute */
+	       /* if the same element has a mathsize attribute, ignore
+		  the fontsize attribute */
+	       depAttrType.AttrSSchema = attrType.AttrSSchema;
+	       depAttrType.AttrTypeNum = MathML_ATTR_mathsize;
+	       if (!TtaGetAttribute (el, depAttrType))
+		 MathMLAttrToStyleProperty (doc, el, value,
+					    attrType.AttrTypeNum);
+	       break;
 	     case MathML_ATTR_mathsize:
 	     case MathML_ATTR_lspace:
 	     case MathML_ATTR_rspace:
