@@ -72,6 +72,13 @@ Document ANNOT_NewDocument (Document doc, AnnotMode mode)
   annot_dir = GetAnnotDir ();
   docname = TtaGetDocumentName (doc);
   tmpname = GetTempName (annot_dir, "annot");
+
+  if (!tmpname) 
+    {
+     fprintf (stderr, "(ANNOT_NewDocument) ERROR : tmpnam couldn't create the annotation file\n");
+     return 0;
+    }
+  
   fname = TtaGetMemory (strlen (tmpname) + 20);
   sprintf (fname, "%s.html", tmpname);
   TtaFreeMemory (tmpname);
