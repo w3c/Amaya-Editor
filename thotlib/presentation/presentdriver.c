@@ -302,7 +302,7 @@ int                 specific;
       rule->PrMinValue = value;
       break;
     case PtSize:
-      if (real && int_unit == UnRelative)
+      if (int_unit == UnRelative)
 	{
 	  int_unit = UnPercent;
 	  value *= 10;
