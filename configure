@@ -13347,11 +13347,7 @@ echo "${ECHO_T}yes" >&6
         done
 	LDFLAGS=$LDFLAGS_OLD
 	LIBS=$LIBS_OLD
-  if test "$with_mac" = "yes" ; then
-      GL_OPTIONS=""
-      GL_INCLUDES="-I/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/"
-      GL_LIBRARIES=""
-  else
+
     if test "$gl_inc" = "" ; then
       { echo "$as_me:$LINENO: WARNING: Opengl headers (gl.h) not found !!" >&5
 echo "$as_me: WARNING: Opengl headers (gl.h) not found !!" >&2;}
@@ -13376,10 +13372,15 @@ echo "$as_me: WARNING: Disabling opengl build !" >&2;}
       GL_LIBRARIES=
       exit 1;
     fi
-    fi
 
-    GL_LIBRARIES="-L/usr/lib -L/usr/X11R6/lib -lGL -lGLU"
-    GL_OPTIONS="-D_GL"
+    if test "$with_mac" = "yes" ; then
+      GL_OPTIONS="-D_GL"
+      GL_INCLUDES="-I/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers/"
+      GL_LIBRARIES=""
+    else
+      GL_LIBRARIES="-L/usr/lib -L/usr/X11R6/lib -lGL -lGLU"
+      GL_OPTIONS="-D_GL"
+    fi
 
 
 
@@ -13428,8 +13429,8 @@ echo "$as_me: WARNING: Disabling opengl build !" >&2;}
   # checking for freetype lib (fonts library)
   if test "$with_mac" = "yes" ; then
      # we use a static version of freetype lib for mac osx
-     FREETYPE_INCLUDES=""
-     FREETYPE_LIBRARIES=""
+     FREETYPE_INCLUDES="-I/opt/local/include -I/opt/local/include/freetype2 -I/usr/X11R6/include/freetype2/freetype"
+     FREETYPE_LIBRARIES="-lfreetype"
   else
      if test ! -f $(which freetype-config) ; then
        { { echo "$as_me:$LINENO: error: Cannot find freetype library (font load/display routines). Please install it." >&5
