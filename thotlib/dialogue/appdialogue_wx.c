@@ -855,7 +855,8 @@ void APP_Callback_ToolBarButtonActivate (int frame_id, int button_id)
       CloseTextInsertion ();
       FrameToView (frame_id, &document, &view);
       TtaSetButtonActivatedStatus (TRUE);
-      (*(Proc2)WindowTable[window_id].Call_Button[button_id]) ((void *)document, (void *)view);
+      if (WindowTable[window_id].Call_Button[button_id])
+	(*(Proc2)WindowTable[window_id].Call_Button[button_id]) ((void *)document, (void *)view);
       TtaSetButtonActivatedStatus (FALSE);
     }
 #endif /* _WX */
@@ -914,13 +915,14 @@ int TtaAddToolBarButton( int window_id,
 						      ,button_id /* the id used to identify the button when clicked */
 						      ,*picture
 						      ,wxDefaultPosition
-						      ,wxSize(32,32)
-						      ,wxBU_AUTODRAW | wxNO_BORDER | wxBU_EXACTFIT );
+						      ,wxDefaultSize
+						      ,wxBU_AUTODRAW | wxNO_BORDER );
       p_button->SetToolTip( TtaConvMessageToWX( tooltip ) );
       p_toolbar->AddTool( p_button );
       WindowTable[window_id].Button[button_id]               = p_button;
       WindowTable[window_id].Button[button_id]->Enable( status );
       WindowTable[window_id].Call_Button[button_id]          = procedure;
+      p_window->Layout();
     }
   else
     {
@@ -952,5 +954,52 @@ wxString TtaConvMessageToWX( const char * p_message )
    * If needed it's possible to add a conditionnal variable to choose the p_message encoding.
    * See TtaGetMessageTable to understand how MessageTable are filled (in which encoding) */
   return wxString( wxConvUTF8.cMB2WC(p_message), *wxConvCurrent );
+}
+#endif /* _WX */
+
+/*----------------------------------------------------------------------
+  TtaGetResourcesPathWX - 
+  this function returns a amaya resource path.
+  this path is independant of opearting system.
+  differents resources types are:
+    - WX_RESOURCES_ICON
+    - WX_RESOURCES_XRC
+  params:
+    + type : type of required resource path
+    + filename : the filename of the resource
+  returns:
+    + wxString : a string containing the right path
+  ----------------------------------------------------------------------*/
+#ifdef _WX
+wxString TtaGetResourcePathWX( wxResourceType type, const char * filename )
+{
+  wxString path;
+  switch ( type )
+    {
+      case WX_RESOURCES_ICON:
+	{
+	  wxString amaya_directory( TtaGetEnvString ("THOTDIR"), *wxConvCurrent );
+#ifdef _WINDOWS
+	  path = amaya_directory + _T("\\resources\\icons\\") + wxString( filename, *wxConvCurrent );
+#endif /* _WINDOWS */
+#ifdef _UNIX
+	  path = amaya_directory + _T("/resources/icons/") + wxString( filename, *wxConvCurrent );
+#endif /* _UNIX */
+	}
+	break;
+      case WX_RESOURCES_XRC:
+	{
+	  wxString amaya_directory( TtaGetEnvString ("THOTDIR"), *wxConvCurrent );
+#ifdef _WINDOWS
+	  path = amaya_directory + _T("\\resources\\xrc\\") + wxString( filename, *wxConvCurrent );
+#endif /* _WINDOWS */
+#ifdef _UNIX
+	  path = amaya_directory + _T("/resources/xrc/") + wxString( filename, *wxConvCurrent );
+#endif /* _UNIX */
+	}
+	break;
+    }
+  wxLogDebug( _T("TtaGetResourcePathWX: path=")+path );
+  return path;
 }
 #endif /* _WX */
