@@ -1465,8 +1465,14 @@ void StopTransfer (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
+  CompleteUrl
+  In case of a user typed url without protocol specification
+  and filepath like url (the ~ or / url beginning), 
+  we add the http:// (more conveniant when you often type urls)
+  so that you can now enter w3.org directly in the url bar.
+  Return TRUE if the URL changed.
   ----------------------------------------------------------------------*/
-static int  CompleteUrl(char **url)
+static ThotBool  CompleteUrl(char **url)
 {
     char *s;
 
@@ -1482,19 +1488,13 @@ static int  CompleteUrl(char **url)
       if (TtaFileExist (*url) == 0)
       {
 	  s = TtaGetMemory (MAX_LENGTH);
-	  /*  In case of a user typed url without protocol specification
-	      and filepath like url (the ~ or / url beginning), 
-	      we add the http:// (more conveniant when you often type urls)
-	      so that you can now enter w3.org directly in the url bar */
 	  strcpy (s, "http://");
 	  strcat (s, *url);
 	  *url = s;
-	  return 1;
+	  return TRUE;
       }
-      else
-	  return 0;
   }
-  return 0;
+  return FALSE;
 }
 
 
@@ -1507,26 +1507,27 @@ static void TextURL (Document doc, View view, char *text)
 {
   char             *s = NULL;
   char             *url;
-  ThotBool          change;
+  ThotBool          change, updated;
 
-  change = FALSE;
+  updated = FALSE;
   if (text)
     {
       /* remove any trailing '\n' chars that may have gotten there
 	 after a cut and pase */
       change = RemoveNewLines (text);
-
       if (IsW3Path (text))
 	url = text;
       else
 	{
 	  s = TtaGetMemory (MAX_LENGTH);
-	  CompleteUrl(&text);
+	  updated = CompleteUrl(&text);
 	  change = NormalizeFile (text, s, AM_CONV_NONE);
+	  if (updated)
+	    /* free the allocated string */
+	    TtaFreeMemory (text);
 	  url = s;
 	}
- 
-      if (!CanReplaceCurrentDocument (doc, view))
+      if (!InNewWindow && !CanReplaceCurrentDocument (doc, view))
 	{
 	  /* restore the previous value @@ */
 	  AddURLInCombobox (DocumentURLs[doc], FALSE);
@@ -1534,19 +1535,11 @@ static void TextURL (Document doc, View view, char *text)
 	  /* cannot load the new document */
 	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), text);
 	  /* abort the command */
+	  TtaFreeMemory (s);
 	  return;
 	}
-
-      /* do the same thing as a callback form open document form */
-#ifdef IV
-      if (change)
-	{
-	  /* change the text value */
-	  /*TtaSetTextZone (doc, view, url, URL_list);*/
-	  CallbackDialogue (BaseDialog + URLName, STRING_DATA, url);
-	}
       else
-#endif
+	/* do the same thing as a callback form open document form */
 	CallbackDialogue (BaseDialog + URLName, STRING_DATA, url);
       TtaFreeMemory (s);
       InNewWindow = FALSE;
@@ -5116,12 +5109,12 @@ void CallbackDialogue (int ref, int typedata, char *data)
 {
   char              tempfile[MAX_LENGTH];
   char              tempname[MAX_LENGTH];
-  char              sep, *tmp;
+  char              sep, *tmp, *ptr;
   int               val;
 #ifndef _GTK
   int               i;
 #endif /* _GTK */
-  ThotBool          change;
+  ThotBool          change, updated;
 
   tmp = NULL;
   if (typedata == STRING_DATA && data && strchr (data, '/'))
@@ -5207,7 +5200,13 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	    }
 	  else if (DocumentName[0] != EOS)
 	    {
-	      CompleteUrl (&DocumentName);  
+	      ptr = DocumentName;
+	      updated = CompleteUrl (&ptr);
+	      if (updated)
+		{
+		  strcpy (DocumentName, ptr);
+		  TtaFreeMemory (ptr);
+		}
 	      /* update the list of URLs */
 	      if (InNewWindow)
 		GetAmayaDoc (DocumentName, NULL, 0, 0, Loading_method,
@@ -5255,17 +5254,18 @@ void CallbackDialogue (int ref, int typedata, char *data)
 
     case URLName:
       RemoveNewLines (data);
-      CompleteUrl (&data); 
-      if (IsW3Path (data))
+      ptr = data;
+      updated = CompleteUrl (&ptr);
+      if (IsW3Path (ptr))
 	{
 	  /* save the URL name */
-	  strcpy (LastURLName, data);
+	  strcpy (LastURLName, ptr);
 	  DocumentName[0] = EOS;
 	}
       else
 	{
 	  LastURLName[0] = EOS;
-	  change = NormalizeFile (data, tempfile, AM_CONV_NONE);
+	  change = NormalizeFile (ptr, tempfile, AM_CONV_NONE);
 	  if (!IsW3Path (tempfile))
 	    {
 	      if (TtaCheckDirectory (tempfile))
@@ -5282,7 +5282,9 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	      strcpy (LastURLName, tempfile);
 	      DocumentName[0] = EOS;
 	    }
-	}       
+	}
+      if (updated)
+	TtaFreeMemory (ptr);
       break;
 
     case DirSelect:
