@@ -21,6 +21,7 @@
 #include "constmedia.h"
 #include "typemedia.h"
 #include "fileaccess.h"
+#include "zlib.h"
 
 #include "fileaccess_f.h"
 #include "memory_f.h"
