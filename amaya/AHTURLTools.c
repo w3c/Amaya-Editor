@@ -1081,7 +1081,7 @@ char *GetLocalPath (Document doc, char  *url)
       /* check whether the file name exists */
       len = strlen (url) - 1;
       if (IsW3Path (url))
-         url_sep = '/';
+         url_sep = URL_SEP;
       else 
           url_sep = DIR_SEP;
       noFile = (url[len] == url_sep);
@@ -1124,6 +1124,14 @@ char *GetLocalPath (Document doc, char  *url)
 	    strcat (ptr, documentname);
 	}
       TtaFreeMemory (documentname);
+      /* substitute invalid chars in file names by a _ */
+      n = ptr;
+      while (*n)
+	{
+	  if (*n == '*' || *n == ',')
+	    *n = '_';
+	  n++;
+	}
       /* restore the url */
       if (noFile)
 	url[len] = url_sep;
