@@ -3639,11 +3639,6 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 			  if (ruleToApply && DoesViewExist (pEl, pDoc, viewNb))
 			    /* this rule applies to the element */
 			    {
-if (!strcmp (pEl->ElLabel, "L134"))
-  {
-    if (ruleToApply->PrType == PtFillPattern)
-      printf ("pattern2: %d\n", ruleToApply->PrIntValue);
-  }
 			      if (viewSch == 1 &&
 				  (ruleToApply->PrType != PtFunction ||
 				   (ruleToApply->PrType == PtFunction &&
