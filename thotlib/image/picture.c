@@ -1217,8 +1217,11 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame, int x,
   int                 xFrame, yFrame;
   ThotColor           BackGroundPixel;
 #ifdef _WIN_PRINT
-  LPBITMAPINFO        lpBmpInfo;
-  LPBYTE              lpBits;
+  BITMAPINFOHEADER    bi;
+  BITMAPINFOHEADER   *pbi;
+  RGBQUAD            *pquad;
+  HBITMAP             hBmp;
+  int                 i;
 #endif /* _WIN_PRINT */
   
   if (w == 0 && h == 0)
@@ -1311,25 +1314,69 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame, int x,
 	    WinErrorBox (NULL, "DrawPicture (1)");
 	  else
 	  {
-	    lpBmpInfo = CreateBitmapInfoStruct(FrRef[frame], imageDesc->PicPixmap);
+	    /* Initialize BITMAPINFOHEADER structure */
+	    bi.biSize = sizeof (BITMAPINFOHEADER);
+	    bi.biWidth = imageDesc->PicWidth;
+	    bi.biHeight = imageDesc->PicHeight;
+	    bi.biPlanes = 1;
+	    bi.biCount = TtWDepth;
+	    bi.biCompression = BI_RGB;
+	    bi.biSizeImage = bi.bWidth * bi.bHeight / 2;
+	    bi.biXPelsPerMeter = 0;
+	    bi.biYPelsPerMeter = 0;
+	    bi.biClrUsed = 0;
+	    bibiClrImportant = 0;
+	    /* create the device independant bitmap */
+	    hBmp = CreateDIBitmap (TtDisplay, &bi, OL, NULL, NULL, 0);
+	    /* allocate memory for BITMAPINFOHEADER structure */
+	    pbi = (BITMAPINFOHEADER *) HeapAlloc (GetProcessHeap (), HEAP_ZERO_MEMORY,
+						  sizeof (BITMAPINFOHEADER) + 16 * sizeof (RGBQUAD));
+	    if (!pbi) 
+	      WinErrorBox (NULL, "DrawPicture (2)");
+	    else
+	      {
+		*pbi = bi;
+		pquad = &((LPBITMAPINFO *) pbi)->bmiColors[0];
+		for (i = 0; i < 16; i++)
+		  {
+		    pquad->rgbBlue = i * 16;
+		    pquad->rgbRed = 0;
+		    pquad->rgbGreen = 0;
+		  }
+		if (!GetDIBits (TtDisplay, (HBITMAP) (imageDesc->PicPixmap), 0,
+				imageDesc->PicHeight, NULL,
+				(LPBITMAPINFO)pbi, DIB_RGB_COLORS)) 
+		  WinErrorBox (NULL, "DrawPicture (3)");
+		else
+		  StretchDIBits (TtDisplay, x, y, w, h, 0, 0,
+				 imageDesc->PicWidth,
+				 imageDesc->PicHeight,
+				 NULL, (LPBITMAPINFO)pbi, DIB_RGB_COLORS, SRCCOPY);
+		HeapFree (GetProcessHeap (), TtDisplay);
+	      }
+#ifdef IV
+  LPBITMAPINFO        lpBmpInfo;
+  LPBYTE              lpBits;
+	    lpBmpInfo = CreateBitmapInfoStruct(TtPrinterDC, imageDesc->PicPixmap);
 	    lpBits = GlobalAlloc (GMEM_FIXED, lpBmpInfo->bmiHeader.biSizeImage);
 	    if (!lpBits) 
 	      WinErrorBox (NULL, "DrawPicture (2)");
-        else
-		{
-	      if (!GetDIBits (TtDisplay, (HBITMAP) (imageDesc->PicPixmap), 0,
-		                 (UINT)lpBmpInfo->bmiHeader.biHeight,
-			              lpBits, lpBmpInfo, DIB_RGB_COLORS)) 
-	        WinErrorBox (NULL, "DrawPicture (3)");
-		  else
+	    else
+	      {
+		if (!GetDIBits (TtDisplay, (HBITMAP) (imageDesc->PicPixmap), 0,
+				(UINT)lpBmpInfo->bmiHeader.biHeight,
+				lpBits, lpBmpInfo, DIB_RGB_COLORS)) 
+		  WinErrorBox (NULL, "DrawPicture (3)");
+		else
 		  {
-            StretchDIBits (TtPrinterDC, x, y, w, h, 0, 0,
-	                       lpBmpInfo->bmiHeader.biWidth,
-	                       lpBmpInfo->bmiHeader.biHeight,
-	                       lpBits, lpBmpInfo, DIB_RGB_COLORS, SRCCOPY);
-            GlobalFree (lpBits);
+		    StretchDIBits (TtPrinterDC, x, y, w, h, 0, 0,
+				   lpBmpInfo->bmiHeader.biWidth,
+				   lpBmpInfo->bmiHeader.biHeight,
+				   lpBits, lpBmpInfo, DIB_RGB_COLORS, SRCCOPY);
+		    GlobalFree (lpBits);
 		  }
-		}
+	      }
+#endif /* IV */
 	  }
 	  WIN_ReleaseDeviceContext ();
 #endif /* _WIN_PRINT */

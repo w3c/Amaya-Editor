@@ -1173,7 +1173,10 @@ HBITMAP WIN_MakeImage (HDC hDC, unsigned char *data, int width, int height,
     }
 
   newimage = CreateCompatibleBitmap (hDC, width, height);
-  SetBitmapBits (newimage, width * height * (depth/8), bit_data);
+  if (depth < 8)
+    SetBitmapBits (newimage, width * height, bit_data);
+  else
+    SetBitmapBits (newimage, width * height * (depth / 8), bit_data);
   TtaFreeMemory (bit_data);
   return (newimage);
 }
@@ -1204,17 +1207,18 @@ Pixmap DataToPixmap (unsigned char *image_data, int width, int height,
   return (img);
 #else /* _WINDOWS */
 
-  static int        cbBits, cbPlanes; 
+  return WIN_MakeImage (TtDisplay, image_data, width, height, TtWDepth, colrs, bperpix);
+#ifdef IV
+
+  HBITMAP           bmp = 0;
   BYTE              mapIndex;
   BYTE             *bmBits;
   HDC               destMemDC;  
-  HBITMAP           bmp = 0;
   int               padding, i, j, ret = 0;
   int               cmap[MAXNUMBER];
   unsigned int      col;
 
   if (TtIsTrueColor)
-    return WIN_MakeImage (TtDisplay, image_data, width, height, TtWDepth, colrs,bperpix);
   else
     {
       destMemDC = CreateCompatibleDC (TtDisplay);
@@ -1267,6 +1271,7 @@ Pixmap DataToPixmap (unsigned char *image_data, int width, int height,
       peInitialized = 0;	 
       return (Pixmap) bmp;
     }
+#endif /* IV */
 #  endif /* _WINDOWS */
 }
 
