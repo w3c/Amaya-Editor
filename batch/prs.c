@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, Grif, 1996.
+ *  (c) COPYRIGHT INRIA 1996.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -5066,7 +5066,9 @@ SyntacticCode       pr;
 }
 
 /*----------------------------------------------------------------------
-   RuleBefore                                                      
+   RuleBefore
+   Return TRUE if pPRule1 must occur before pPRule2 in a sequence of
+   presentation rules.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static ThotBool      RuleBefore (PtrPRule pPRule1, PtrPRule pPRule2)
@@ -5081,41 +5083,51 @@ PtrPRule            pPRule2;
 {
    ThotBool             ret;
 
-   /* on classe d'abord dans l'ordre des types de regle */
+   /* first criterion is the rule type */
    if (pPRule1->PrType != pPRule2->PrType)
       ret = pPRule1->PrType < pPRule2->PrType;
    else
-      /* meme type */
-   if (pPRule1->PrType == PtFunction)
-     {
-	/* c'est une fonction de presentation, on classe */
-	/* d'abord dans l'ordre des codes de fonction. */
-	if (pPRule1->PrPresFunction != pPRule2->PrPresFunction)
-	  {
+      /* same type */
+      if (pPRule1->PrType == PtFunction)
+         {
+	 /* both rules are presentation functions, next criterion is */
+	 /* the function code. */
+	 if (pPRule1->PrPresFunction != pPRule2->PrPresFunction)
+	    {
 #ifdef __COLPAGE__
-	     if (((pPRule1->PrPresFunction == FnPage) || (pPRule1->PrPresFunction == FnColumn) ||
+	     if (((pPRule1->PrPresFunction == FnPage) ||
+		  (pPRule1->PrPresFunction == FnColumn) ||
 		  (pPRule1->PrPresFunction == FnSubColumn)) &&
-		 ((pPRule2->PrPresFunction == FnPage) || (pPRule2->PrPresFunction == FnColumn) ||
+		 ((pPRule2->PrPresFunction == FnPage) ||
+		  (pPRule2->PrPresFunction == FnColumn) ||
 		  (pPRule2->PrPresFunction == FnSubColumn)))
-		/* fonctions equivalentes (Page, Column, Included Column), on */
-		/* classe dans l'ordre des vues */
+		/* equivalent functions (Page, Column, Included Column), */
+		/* the next criterion is the view number */
 		ret = pPRule1->PrViewNum < pPRule2->PrViewNum;
 	     else
 #endif /* __COLPAGE__ */
+	        /* same presentation function */
 		ret = pPRule1->PrPresFunction < pPRule2->PrPresFunction;
-	  }
-	else
-	  {
-	     /* meme fonction, on classe dans l'ordre des vues */
-	     ret = pPRule1->PrViewNum < pPRule2->PrViewNum;
-	  }
-     }
-   else
-     {
-	/* ce n'est pas une fonction de presentation, on classe */
-	/* dans l'ordre des vues */
-	ret = pPRule1->PrViewNum < pPRule2->PrViewNum;
-     }
+	    }
+	 else
+	    {
+	    /* same presentation function, the next criterion is the view
+	       number */
+	    ret = pPRule1->PrViewNum < pPRule2->PrViewNum;
+	    }
+         }
+      else
+         {
+	 /* It's not a presentation function, the next criterion is the
+	    view number */
+	 if (pPRule1->PrViewNum != pPRule2->PrViewNum)
+	    ret = pPRule1->PrViewNum < pPRule2->PrViewNum;
+	 else
+	    /* same type and same view: rule with no condition or with
+	       the default condition ("otherwise") must occur first */
+	    ret = (!pPRule1->PrCond ||
+		   pPRule1->PrCond->CoCondition == PcDefaultCond);
+         }
    return ret;
 }
 

@@ -7113,9 +7113,10 @@ RULES
 #endif
 	Adjust: Enclosing =;
 	Width: Enclosing . Width;
-	VertPos: Top = Previous NOT MAP . Bottom;
 	if NOT within Definition and NOT within List_Item
 	    VertPos: Top = Previous NOT MAP . Bottom + 0.4;
+	otherwise
+	    VertPos: Top = Previous NOT MAP . Bottom;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
