@@ -292,11 +292,16 @@ static void GlyphMakeMesh (GlyphPath *path, int contourFlag)
   /*                                 1, the outline will be filled using   */
   /*                                 the even-odd fill rule (only works    */
   /*                                 with the smooth raster).              */
-  /*                                                                       */ 
+  /*       
+                                                                */ 
+#ifdef _GLPRINT
   if (contourFlag & FT_OUTLINE_EVEN_ODD_FILL) 
     gluTessProperty (tobj, GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_ODD);
   else
     gluTessProperty (tobj, GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_NONZERO); 
+#else /* _GLPRINT */
+gluTessProperty (tobj, GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_ODD);
+#endif /* _GLPRINT */
   /*   FT_OUTLINE_REVERSE_FILL    :: By default, outside contours of an    */
   /*                                 outline are oriented in clock-wise    */
   /*                                 direction, as defined in the TrueType */
@@ -306,9 +311,11 @@ static void GlyphMakeMesh (GlyphPath *path, int contourFlag)
   /*                                 fonts).  This flag is ignored by the  */
   /*                                 scan-converter.  However, it is very  */
   /*                                 important for the auto-hinter.        */
+#ifdef _GLPRINT
   if (contourFlag & FT_OUTLINE_REVERSE_FILL)
     gluTessProperty (tobj, GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_NEGATIVE);
   else
+#endif /* _GLPRINT */
     gluTessProperty (tobj, GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_POSITIVE);
   gluTessProperty (tobj, GLU_TESS_TOLERANCE, 0);
   gluTessNormal (tobj, 0.0f, 0.0f, 1.0f);  
@@ -395,6 +402,7 @@ void MakePolygonGlyph (GL_font *font,
 	    {
 	      switch (ftOutline.tags[p])
 		{
+#ifdef _GLPRINT
 		case FT_CURVE_TAG_CONIC:
 		  p += Conic (p, first, last, ftOutline, path);
 		  break;
@@ -402,6 +410,7 @@ void MakePolygonGlyph (GL_font *font,
 		  p += Cubic (p, first, last, ftOutline, path);
 		  break;
 		case FT_CURVE_TAG_ON:
+#endif /* _GLPRINT */
 		default:
 		  GlyphPolyNewPoint (ftOutline.points[p].x, ftOutline.points[p].y, path);
 		}
