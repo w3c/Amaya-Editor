@@ -447,8 +447,10 @@ void AHTError_MemPrint (HTRequest *request)
 	switch (index)
 	  {
 	  case HTERR_NO_REMOTE_HOST:
+	  case HTERR_NO_HOST:
 	  case HTERR_SYSTEM:
 	  case HTERR_INTERNAL:
+	  case HTERR_CSO_SERVER:
 	    if (pres->par != NULL)
 	      {
 		if (me->method == METHOD_PUT) 
