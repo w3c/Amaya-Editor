@@ -1208,7 +1208,9 @@ PictInfo           *imageDesc;
 		   h = hFrame;
 		   box->BxHeight = hFrame;
 		 }
-	       /*NewDimPicture (box->BxAbstractBox);*/
+	       /* Do you have to extend the clipping */
+	       DefClip (frame, box->BxXOrg, box->BxYOrg, box->BxXOrg + box->BxWidth,
+			box->BxYOrg + box->BxHeight);
 	     }
 	 }
      }
