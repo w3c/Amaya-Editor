@@ -599,6 +599,7 @@ void DrawArrow (int frame, int thick, int style, int x, int y, int l, int h,
 	ArrowDrawing (frame, x, y, xf - thick + 1, yf, thick, fg);
      }
 }
+
 /*----------------------------------------------------------------------
   DrawIntegral draws an integral. depending on type :
   - simple if type = 0
@@ -649,8 +650,8 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
       DrawChar ('o', frame, x + ((l - CharacterWidth (111, font)) / 2),
 		y + (h - CharacterHeight (111, font)) / 2 + CharacterAscent (111, font),
 		font, fg);
-
 }
+
 /*----------------------------------------------------------------------
   DrawBracket draw an opening or closing bracket (depending on direction)
   parameter fg indicates the drawing color
@@ -660,9 +661,7 @@ void DrawBracket (int frame, int thick, int x, int y, int l, int h,
 {
   int                 xm, yf, yend;
 
-
   /* Symbol */
-
   if (FontHeight (font) >= h)
     {
       /* With only one glyph */

@@ -71,19 +71,13 @@ void DrawStixSigma (int frame, int x, int y,  int l, int h, ThotFont font, int f
 
    if (h < LOW_CHAR)
      /* display a single glyph */
-     {
        DrawStixChar (font, 83, x, y, l, h, fg, frame);
-     }
    else if (h < MID_CHAR)
 	/* display a single glyph */
-     {
        DrawStixChar (font, 45, x, y, l, h, fg, frame);
-     }
    else
     /* display a single glyph */
-     {
        DrawStixChar (font, 62, x, y, l, h, fg, frame);
-     }
 }
 /*----------------------------------------------------------------------
   DrawStixIntegral draws an integral. depending on type :
@@ -362,8 +356,8 @@ void DrawStixChar (ThotFont font, unsigned char symb, int x, int y,
 		   int l, int h, int fg, int frame)
 {
   x = x + ((l - CharacterWidth ((char) symb, font)) / 2);
-  y = y + ((h - CharacterHeight ((char)symb, font)) / 2) 
-    + CharacterAscent ((char) symb, font);
+  y = y + ((h - CharacterHeight ((char)symb, font)) / 2)
+	  + CharacterAscent ((char) symb, font);
   DrawChar ((char) symb, frame, x, y, font, fg);
 }
 

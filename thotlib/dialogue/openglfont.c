@@ -557,40 +557,37 @@ static void FontBBox (GL_font *font, wchar_t *string, int length,
   cache = Char_index_lookup_cache (font, c[0], GL_TransText());
   glyph = &(cache->glyph);
   left =  cache->character;
+  if (left)
+    {
+      bbox = glyph->bbox;
+      bbox.yMin = bbox.yMin >> 6;
+      bbox.yMax = bbox.yMax >> 6;
+      *lly = (*lly < bbox.yMin) ? *lly: bbox.yMin;
+      *ury = (*ury > bbox.yMax) ? *ury: bbox.yMax;
+    }
   right = 0;
   i = 1;
   while (i < length)
     {
+      /* get info about the next character */
+      cache = Char_index_lookup_cache (font, c[i], GL_TransText());
+      glyph = &(cache->glyph);
+      right = left;
+      left =  cache->character;
+      if (font->kerning)
+	*urx += FaceKernAdvance (font->face, right, left);
       if (left)
 	{
 	  bbox = glyph->bbox;
-	  bbox.yMin = bbox.yMin >> 6;
-	  bbox.yMax = bbox.yMax >> 6;
-	  *lly = (*lly < bbox.yMin) ? *lly: bbox.yMin;
-	  *ury = (*ury > bbox.yMax) ? *ury: bbox.yMax;
+	  *llx = (float) (bbox.xMin >> 6);
+	  if (font->kerning)
+	    *urx -= FaceKernAdvance (font->face, left, right);
+	  *urx +=  (float) glyph->advance;
+	  *urx += bbox.xMax >> 6;
 	}
       i++;
-      if (i <length)
-	{
-	  /* get info about the next character */
-	  cache = Char_index_lookup_cache (font, c[i], GL_TransText());
-	  glyph = &(cache->glyph);
-	  right = left;
-	  left =  cache->character;
-	  if (font->kerning)
-	    *urx += FaceKernAdvance (font->face, right, left);
-	}
     }
   
-  if (left)
-    {
-      bbox = glyph->bbox;
-      *llx = (float) (bbox.xMin >> 6);
-      if (font->kerning)
-	*urx -= FaceKernAdvance (font->face, left, right);
-      *urx +=  (float) glyph->advance;
-      *urx += bbox.xMax >> 6;
-    }
 }
 
 /************** Generic Calls *****************/ 
