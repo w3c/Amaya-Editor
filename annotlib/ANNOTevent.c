@@ -334,11 +334,6 @@ void ANNOT_Init ()
   /* create the directory where we'll store the annotations if it
      doesn't exist */
   TtaMakeDirectory (annotDir);
-
-#ifdef BOOKMARKS
-  /* initialize the bookmarks environment */
-  BM_Init ();
-#endif /* BOOKMARKS */
 }
 
 /*-----------------------------------------------------------------------
@@ -374,10 +369,6 @@ void ANNOT_Quit ()
   ANNOT_FreeConf ();
   SCHEMA_FreeAnnotSchema ();
   schema_init = FALSE;
-#ifdef BOOKMARKS
-  /* free the bookmark environment */
-  BM_Quit ();
-#endif /* BOOKMARKS */
 }
 
 /*-----------------------------------------------------------------------
