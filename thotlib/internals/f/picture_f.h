@@ -51,7 +51,9 @@ extern void DrawPicture ( PtrBox box,
                           int x,
                           int y,
                           int w,
-                          int h );
+                          int h,
+                          int t,
+                          int l );
 extern void UnmapImage ( PictInfo *imageDesc );
 extern unsigned char *ZoomPicture ( unsigned char *cpic,
                                     int cWIDE,
@@ -131,7 +133,9 @@ extern void DrawPicture ( PtrBox box,
                             int x,
                             int y,
                             int w,
-                            int h );
+                            int h,
+                            int t,
+                            int l );
 extern void UnmapImage ( PictInfo *imageDesc );
 extern unsigned char *ZoomPicture ( unsigned char *cpic,
                                       int cWIDE,

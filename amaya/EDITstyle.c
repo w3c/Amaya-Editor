@@ -934,7 +934,7 @@ void GetHTMLStyleString (Element el, Document doc, char *buf, int *len)
    HTMLSetBackgroundImage:
    repeat = repeat value
    image = url of background image
-   generate is TRUE when the style attribute must b generated.
+   generate is TRUE when the style attribute must be generated.
   ----------------------------------------------------------------------*/
 void HTMLSetBackgroundImage (Document doc, Element el, int repeat,
 			     char *image, ThotBool generate)

@@ -2499,21 +2499,23 @@ static void InitFloats (PtrBox pBlock, PtrLine pLine, PtrBox *floatL,
   PtrFloat            pfloat;
   int                 y;
 
+  *floatL = NULL;
+  *floatR = NULL;
   if (pLine)
-    y = pLine->LiYOrg + top;
+    y = pLine->LiYOrg + pLine->LiHeight + top;
   else
-    y = 0;
+    y = top;
   if (yAbs)
     y += pBlock->BxYOrg;
+
   pfloat = pBlock->BxLeftFloat;
-  *floatL = NULL;
   while (pfloat && pfloat->FlBox && pfloat->FlBox->BxYOrg < y)
     {
       *floatL = pfloat->FlBox;
       pfloat = pfloat->FlNext;
     }
+
   pfloat = pBlock->BxRightFloat;
-  *floatR = NULL;
   while (pfloat && pfloat->FlBox && pfloat->FlBox->BxYOrg < y)
     {
       *floatR = pfloat->FlBox;
@@ -3793,7 +3795,7 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 	     {
 	       /* regarde si cette ligne fait bien parti de ce bloc de lignes */
 	       pLine = pBox->BxFirstLine;
-	       while (pLine != pFirstLine && pLine != NULL)
+	       while (pLine != pFirstLine && pLine)
 		 pLine = pLine->LiNext;
 	       if (pLine == NULL)
 		 /* cette ligne ne fait plus parti du bloc de lignes */
@@ -3823,7 +3825,8 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 
 	status = ReadyToDisplay;
 	ReadyToDisplay = FALSE;
-	RemoveLines (pBox, frame, pLine, FALSE, &changeSelectBegin, &changeSelectEnd);
+	RemoveLines (pBox, frame, pLine, FALSE, &changeSelectBegin,
+		     &changeSelectEnd);
 	if (pBox->BxFirstLine == NULL)
 	  {
 	    /* fait reevaluer la mise en lignes et on recupere */

@@ -2031,7 +2031,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	      middleTrans = pBox->BxWidth / 2 - (pBox->BxWidth + delta + diff) / 2;
 	      endTrans = 0;
 	    }
-
+	  
 	  /* inside width */
 	  pBox->BxW += delta;
 #ifdef _GL

@@ -801,18 +801,19 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
       pAb->AbHorizPosChange = FALSE;
       return;
     }
-  else if (pRefAb && pRefAb->AbFloat != 'N' &&
-      (pRefAb->AbLeafType == LtPicture ||
-       (pRefAb->AbLeafType == LtCompound &&
-	!pRefAb->AbWidth.DimIsPosition &&
-	pRefAb->AbWidth.DimAbRef == NULL)))
+  else if (pRefAb && pRefAb->AbBox &&
+	   (pRefAb->AbBox->BxType == BoGhost ||
+	    pRefAb->AbBox->BxType == BoFloatGhost))
     {
+printf ("Related to a ghost box \n");
       /* the box position is computed by the line formatter */
-      pAb->AbVertPosChange = FALSE;
-      pAb->AbHorizPosChange = FALSE;
+      if (horizRef)
+	pAb->AbHorizPosChange = FALSE;
+      else
+	pAb->AbVertPosChange = FALSE;
       return;
     }
-  
+
   if (horizRef)
     {
       /* Horizontal rule */

@@ -439,7 +439,8 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
 	      if (pres == DefaultPres)
 		pres = FillFrame;
 	      if (pres == YRepeat || pres == FillFrame || !pFrom->AbTruncatedHead)
-		DrawPicture (pBox, imageDesc, frame,  xbg - x, ybg - y, wbg, hbg);
+		DrawPicture (pBox, imageDesc, frame, xbg - x, ybg - y,
+			     wbg, hbg, t, l);
 	    }
 	}
     }
@@ -1057,8 +1058,7 @@ static void ComputeBoundingBoxes (int frame, int xmin, int xmax, int ymin,
 		      }
 		    if (!userSpec)
 		      {
-			if (pBox->BxType == BoSplit || 
-			    pBox->BxType == BoMulScript)
+			if (pBox->BxType == BoSplit || pBox->BxType == BoMulScript)
 			  while (pBox->BxNexChild)
 			    {
 			      pBox = pBox->BxNexChild;
@@ -1066,10 +1066,9 @@ static void ComputeBoundingBoxes (int frame, int xmin, int xmax, int ymin,
 			    }
 			else
 			  ComputeBoundingBox (pBox, frame, xmin, xmax, ymin, ymax);
-
 		      }
 		  }
-		} 
+		}
 	      if (pAb->AbElement && FormattedFrame)
 		{
 		  if (pAb->AbElement->ElSystemOrigin)

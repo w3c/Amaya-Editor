@@ -118,8 +118,8 @@ static void DisplayImage (PtrBox pBox, int frame, int xmin, int xmax,
            pBox->BxTPadding + FrameTable[frame].FrTopMargin - y;
       width = pBox->BxW;
       height = pBox->BxH;
-      DrawPicture (pBox, (PictInfo *) pBox->BxPictInfo, frame, xd, yd, width,
-	height);
+      DrawPicture (pBox, (PictInfo *) pBox->BxPictInfo, frame, xd, yd,
+		   width, height, t, l);
       /* Should the end of de line be filled with dots */
       if (pBox->BxEndOfBloc > 0)
 	{

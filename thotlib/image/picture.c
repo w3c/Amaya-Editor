@@ -158,7 +158,7 @@ static Pic_Cache *PicCache = NULL;
 static void Free_Pic_Chache (Pic_Cache *Cache)
 {
 #ifdef _TRACE_GL_BUGS_GLISTEXTURE
-  if (Cache->texbind) printf ( "GLBUG - Free_Pic_Chache : glIsTexture=%s (pose prb sur certaines machines)\n", glIsTexture (Cache->texbind) ? "yes" : "no" );
+  if (Cache->texbind) printf ( "GLBUG - Free_Pic_Chache : glIsTexture=%s\n", glIsTexture (Cache->texbind) ? "yes" : "no" );
 #endif /* _TRACE_GL_BUGS_GLISTEXTURE */
   if ( glIsTexture(Cache->texbind) )
     glDeleteTextures (1, 
@@ -317,7 +317,7 @@ void FreeGlTextureNoCache (void *ImageDesc)
   Image = (PictInfo *)ImageDesc;
 
 #ifdef _TRACE_GL_BUGS_GLISTEXTURE
-  if (Image->TextureBind) printf ( "GLBUG - FreeGlTextureNoCache : glIsTexture=%s (pose prb sur certaines machines)\n", glIsTexture (Image->TextureBind) ? "yes" : "no" );
+  if (Image->TextureBind) printf ( "GLBUG - FreeGlTextureNoCache : glIsTexture=%s\n", glIsTexture (Image->TextureBind) ? "yes" : "no" );
 #endif /* _TRACE_GL_BUGS_GLISTEXTURE */  
   if (Image->TextureBind && 
       glIsTexture (Image->TextureBind))
@@ -341,7 +341,7 @@ void FreeGlTexture (void *imagedesc)
   
   img = (PictInfo *)imagedesc;
 #ifdef _TRACE_GL_BUGS_GLISTEXTURE
-  if (img->TextureBind) printf ( "GLBUG - FreeGlTexture : glIsTexture=%s (pose prb sur certaines machines)\n", glIsTexture (img->TextureBind) ? "yes" : "no" );
+  if (img->TextureBind) printf ( "GLBUG - FreeGlTexture : glIsTexture=%s\n", glIsTexture (img->TextureBind) ? "yes" : "no" );
 #endif /* _TRACE_GL_BUGS_GLISTEXTURE */
   if (img->TextureBind
       /* ce patch permet de fixer le probleme des images qui ne s'affichent pas */
@@ -350,7 +350,7 @@ void FreeGlTexture (void *imagedesc)
       /* && glIsTexture (img->TextureBind) */ )
     {
 #ifdef _TRACE_GL_PICTURE
-      printf ( "FreeGlTexture :\n\tfilename=%s\n\twidth=%d\n\theight=%d\n\tTexU=%f\n\tTexV=%f\n\tTexBind=%d\n\tglIsTexture=%s (pose prb sur certaines machines)\n", 
+      printf ( "FreeGlTexture :\n\tfilename=%s\n\twidth=%d\n\theight=%d\n\tTexU=%f\n\tTexV=%f\n\tTexBind=%d\n\tglIsTexture=%s\n", 
 	       img->PicFileName,
 	       img->PicWidth,
 	       img->PicHeight,
@@ -462,7 +462,7 @@ static void GL_TextureBind (PictInfo *img, ThotBool IsPixmap)
   GLint		Mode;
   
 #ifdef _TRACE_GL_BUGS_GLISTEXTURE
-  if (img->TextureBind) printf ( "GLBUG - GL_TextureBind : glIsTexture=%s (pose prb sur certaines machines)\n", glIsTexture (img->TextureBind) ? "yes" : "no" );
+  if (img->TextureBind) printf ( "GLBUG - GL_TextureBind : glIsTexture=%s\n", glIsTexture (img->TextureBind) ? "yes" : "no" );
 #endif /* _TRACE_GL_BUGS_GLISTEXTURE */
   /* Put texture in 3d card memory */
   if (!glIsTexture (img->TextureBind) &&
@@ -592,7 +592,7 @@ static void PrintPoscriptImage (PictInfo *img, int x, int y,
   ----------------------------------------------------------------------*/
 static void GL_TexturePartialMap (PictInfo *desc, int xFrame, int yFrame, 
 				  int w, int h, int frame)
-{  
+{
   float    texH, texW;
     
   texH = desc->TexCoordH * ((float)(desc->PicHeight - h) / desc->PicHeight);
@@ -615,16 +615,16 @@ static void GL_TexturePartialMap (PictInfo *desc, int xFrame, int yFrame,
 	 to the size of the square */ 
       /* lower left */
       glTexCoord2f (0,  texH); 
-      glVertex2i   (xFrame, yFrame + h);
+      glVertex2i (xFrame, yFrame + h);
       /* upper right*/
       glTexCoord2f (texW, texH); 
-      glVertex2i   (xFrame + w, yFrame + h);
+      glVertex2i (xFrame + w, yFrame + h);
       /* lower right */
-      glTexCoord2f (texW, desc->TexCoordH); 
-      glVertex2i   (xFrame + w, yFrame); 
+      glTexCoord2f (texW, (float)desc->TexCoordH); 
+      glVertex2i (xFrame + w, yFrame); 
       /* upper left */
-      glTexCoord2f (0,  desc->TexCoordH); 
-      glVertex2i   (xFrame,yFrame);     
+      glTexCoord2f (0, (float)desc->TexCoordH); 
+      glVertex2i (xFrame,yFrame);     
       glEnd ();	
 
       /* State disabling */
@@ -1315,22 +1315,22 @@ static void SetPictureClipping (int *picWArea, int *picHArea, int wFrame,
   LayoutPicture performs the layout of pixmap on the screen described
   by the drawable.
   if picXOrg or picYOrg are postive, the copy operation is shifted
+  Parameters t l give top and left extra margins.
   ----------------------------------------------------------------------*/
 static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg,
-			   int picYOrg, int w, int h, int xFrame,
-			   int yFrame, int frame, PictInfo *imageDesc,
+			   int picYOrg, int w, int h, int xFrame, int yFrame,
+			   int t, int l, int frame, PictInfo *imageDesc,
 			   PtrBox box)
 {
   ViewFrame*        pFrame;
   PtrAbstractBox    pAb;
   PictureScaling    picPresent;
   int               x, y, ix, jy;
-  int               t, b, l, r;
   int               clipWidth, clipHeight;
-#ifdef _GL
-  int               i, j;
-#else /* _GL */
   int               delta, dx, dy;
+#ifdef _GL
+  int               i, j, iw, jh;
+#else /* _GL */
 #ifdef _WINGUI
   HDC               hMemDC;
   BITMAP            bm;
@@ -1352,7 +1352,7 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
 
 #ifdef _GL
 #ifdef _TRACE_GL_BUGS_GLISTEXTURE
-  if (imageDesc->TextureBind) printf ( "GLBUG - LayoutPicture : glIsTexture=%s (pose prb sur certaines machines)\n", glIsTexture (imageDesc->TextureBind) ? "yes" : "no" );
+  if (imageDesc->TextureBind) printf ( "GLBUG - LayoutPicture : glIsTexture=%s\n", glIsTexture (imageDesc->TextureBind) ? "yes" : "no" );
 #endif /* _TRACE_GL_BUGS_GLISTEXTURE */
   if (!glIsTexture (imageDesc->TextureBind))
     return;
@@ -1398,13 +1398,12 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
   if ((picPresent == ReScale || picPresent == RealSize) &&
       pAb->AbLeafType != LtCompound)
     {
-      /* shift in the source image */
-      GetExtraMargins (box, NULL, &t, &b, &l, &r);
       /* size of the copied zone */
       clipWidth = pFrame->FrClipXEnd - pFrame->FrClipXBegin;
       clipHeight = pFrame->FrClipYEnd - pFrame->FrClipYBegin;
-      x = pFrame->FrClipXBegin - l - box->BxXOrg - box->BxLMargin;
-      y = pFrame->FrClipYBegin - t - box->BxYOrg - box->BxTMargin;
+      /* shift in the source image */
+      x = pFrame->FrClipXBegin - box->BxXOrg - l - box->BxLMargin;
+      y = pFrame->FrClipYBegin - box->BxYOrg - t - box->BxTMargin;
 #ifdef _GL
       GL_TextureMap (imageDesc, xFrame, yFrame, w, h, frame);
 #else /*_GL*/
@@ -1422,7 +1421,6 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
 	  XSetClipOrigin (TtDisplay, TtGraphicGC, 0, 0);
 	}
 #endif /* _MOTIF */
-      
 #ifdef _GTK
       if (imageDesc->PicMask)
 	{
@@ -1471,12 +1469,12 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
   else
     {
       /* give origins in the concrete image */
-#ifdef _GL
-      GetExtraMargins (box, NULL, &t, &b, &l, &r);
-      x = box->BxXOrg + l - pFrame->FrXOrg;
-      y = box->BxYOrg + t - pFrame->FrYOrg;
-      clipWidth  = pFrame->FrClipXEnd;
-      clipHeight = pFrame->FrClipYEnd;
+#ifdef Obsolate
+      /*#ifdef _GL*/
+      x = box->BxClipX + l - pFrame->FrXOrg;
+      y = box->BxClipY + t - pFrame->FrYOrg;
+      clipWidth  = pFrame->FrClipXEnd - pFrame->FrClipXBegin;
+      clipHeight = pFrame->FrClipYEnd - pFrame->FrClipYBegin;
       if (pAb &&
 	  !TypeHasException (ExcSetWindowBackground, pAb->AbElement->ElTypeNumber,
 			     pAb->AbElement->ElStructSchema))
@@ -1498,6 +1496,7 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
 	}
       else
 	h = imageDesc->PicHeight;
+printf ("Display \"%s\" x=%d y=%d w=%d h=%d\n", imageDesc->PicFileName, x, y, w, h);
       if (w > 0 && h > 0)
 	{
 	  j = 0;
@@ -1523,7 +1522,8 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
 	    } 
 	  while (j < h && jy > 0);
 	}
-#else /* _GL */
+      /*#else /* _GL */*/
+#endif /* Obsolate*/
       dx = pFrame->FrClipXBegin;
       dy = pFrame->FrClipYBegin;
       x = xFrame - picXOrg + pFrame->FrXOrg;
@@ -1603,6 +1603,66 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
 	    }
 	}
       
+#ifdef _GL /*new*/
+      if (picPresent == YRepeat && w > imageDesc->PicWidth)
+	w = imageDesc->PicWidth;
+      if (picPresent == XRepeat && h > imageDesc->PicHeight)
+	h = imageDesc->PicHeight;
+/*printf ("Display \"%s\" x=%d y=%d w=%d h=%d\n", imageDesc->PicFileName, x, y, w, h);*/
+      if (w > 0 && h > 0)
+	{
+	  j = 0;
+	  /* initial shift */
+	  jy = dy;
+	  do
+	    {
+	      i = 0;
+	      /* initial shift */
+	      ix = dx;
+	      do
+		{
+		  /* check if the limits of the copied zone */
+		  iw = imageDesc->PicWArea - ix;
+		  if (i + iw > w)
+		    iw = w - i;
+		  jh = imageDesc->PicHArea - jy;
+		  if (j + jh > h)
+		    jh = h - j;
+		  GL_TexturePartialMap (imageDesc, i, j, iw, jh, frame);
+		  i += iw;
+		  ix = 0;
+		} while (i < w);
+	      j += jh;
+	      jy = 0;
+	    }
+	  while (j < h);
+#ifdef IV
+      if (w > 0 && h > 0)
+	{
+	  j = 0;
+	  jy = imageDesc->PicHeight;
+	  do
+	    {	      
+	      i = 0;
+	      ix = imageDesc->PicWidth;
+	      do
+		{		  
+		  if (x + i + ix > w)
+		    ix += w - (x + i + ix);
+		  if (y + j + jy > h)
+		    jy += h - (y + j + jy);
+		  GL_TexturePartialMap (imageDesc, 
+					x + i, y + j,
+					ix, jy, frame);
+		  i += ix;
+		} 
+	      while (i < w && ix > 0);
+	      j += jy;
+	    } 
+	  while (j < h && jy > 0);
+#endif
+	}
+#else /* _GL */ /*new*/
 #if defined(_MOTIF) || defined(_GTK)
       ix = -pFrame->FrXOrg;
       jy = -pFrame->FrYOrg;
@@ -1656,9 +1716,7 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
 	  gdk_gc_set_clip_origin (tiledGC, 0, 0);
 	}
 #endif /* _GTK */
-
-#endif /* #if defined(_MOTIF) || defined(_GTK) */
-      
+#endif /* #if defined(_MOTIF) || defined(_GTK) */      
 #ifdef _WINGUI
       hMemDC  = CreateCompatibleDC (TtDisplay);
       bitmapTiled = CreateCompatibleBitmap (TtDisplay, w, h);
@@ -2167,8 +2225,8 @@ static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
    y += yFrame;
 
 #ifndef _GL
-   LayoutPicture (pixmap, drawable, picXOrg, picYOrg, w, h, x, y, frame,
-		  imageDesc, box);
+   LayoutPicture (pixmap, drawable, picXOrg, picYOrg, w, h, x, y, 0, 0,
+		  frame, imageDesc, box);
 #endif /*_GL*/
 
 #ifdef _WINGUI
@@ -2205,9 +2263,10 @@ static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame,
 /*----------------------------------------------------------------------
   DrawPicture draws the picture in the frame window.
   Parameters x, y, w, h give the displayed area of the box.
+  Parameters t l give top and left extra margins.
   ----------------------------------------------------------------------*/
 void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame,
-		  int x, int y, int w, int h)
+		  int x, int y, int w, int h, int t, int l)
 {
   PathBuffer          fileName;
   PictureScaling      pres;
@@ -2284,7 +2343,7 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame,
       else
 	{
 #ifdef _TRACE_GL_BUGS_GLISTEXTURE
-  if (imageDesc->TextureBind) printf ( "GLBUG - DrawPicture : glIsTexture=%s (pose prb sur certaines machines)\n", glIsTexture (imageDesc->TextureBind) ? "yes" : "no" );
+  if (imageDesc->TextureBind) printf ( "GLBUG - DrawPicture : glIsTexture=%s\n", glIsTexture (imageDesc->TextureBind) ? "yes" : "no" );
 #endif /* _TRACE_GL_BUGS_GLISTEXTURE */
           if ((pres == ReScale &&
 	       (imageDesc->PicWArea != w || imageDesc->PicHArea != h)) ||
@@ -2310,10 +2369,10 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame,
 			    &picXOrg, &picYOrg);
 	  
 	  if (typeImage < InlineHandlers)
-	    LayoutPicture ((ThotPixmap) imageDesc->PicPixmap, drawable,
-			   picXOrg, picYOrg, w, h, 
-			   x + xTranslate, y + yTranslate, frame,
-			   imageDesc, box);
+            LayoutPicture ((ThotPixmap) imageDesc->PicPixmap, drawable,
+		           picXOrg, picYOrg, w, h, 
+			   x + xTranslate, y + yTranslate, 
+		           t, l, frame, imageDesc, box);
 	}
     }
   else if (typeImage < InlineHandlers && typeImage > -1)
@@ -2976,7 +3035,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
     }
 
 #ifdef _TRACE_GL_BUGS_GLISTEXTURE
-  if (imageDesc->TextureBind) printf ( "GLBUG - LoadPicture : glIsTexture=%s (pose prb sur certaines machines)\n", glIsTexture (imageDesc->TextureBind) ? "yes" : "no" );
+  if (imageDesc->TextureBind) printf ( "GLBUG - LoadPicture : glIsTexture=%s\n", glIsTexture (imageDesc->TextureBind) ? "yes" : "no" );
 #endif /* _TRACE_GL_BUGS_GLISTEXTURE */
   /* Picture didn't load (corrupted, don't exists...)
      or format isn't supported*/
