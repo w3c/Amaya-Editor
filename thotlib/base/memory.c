@@ -1033,7 +1033,10 @@ void GetAttributePres (AttributePres **pAP)
 
   pNewAP = (AttributePres *) TtaGetMemory (sizeof (AttributePres));
   if (pNewAP)
-    memset (pNewAP, 0, sizeof (AttributePres));
+    {
+      memset (pNewAP, 0, sizeof (AttributePres));
+      pNewAP->ApMatch = 0;
+    }
   *pAP = pNewAP;
 }
 

@@ -97,19 +97,19 @@ static void InsertPosRelation (PtrBox pOrginBox, PtrBox pTargetBox,
   int                 i;
   ThotBool            loop;
   ThotBool            empty;
-  PtrPosRelations     pPreviousPosRel;
+  PtrPosRelations     pPreviousPosRel, pNext;
   PtrPosRelations     pPosRel;
   BoxRelation        *pRelation;
 
   i = 0;
-  /* PcFirst sens de la dependance dans les positionnements entre soeurs */
+  /* add a relation from origin to target */
   if (op != OpHorizRef && op != OpVertRef && op != OpWidth && op != OpHeight)
     {
-      /* On recherche une entree libre */
+      /* look for an empty entry */
       pPosRel = pOrginBox->BxPosRelations;
       pPreviousPosRel = NULL;
       loop = TRUE;
-      while (loop && pPosRel != NULL)
+      while (loop && pPosRel)
 	{
 	  i = 0;
 	  pPreviousPosRel = pPosRel;
@@ -126,14 +126,16 @@ static void InsertPosRelation (PtrBox pOrginBox, PtrBox pTargetBox,
 	      i--;
 	    }
 	  else
+	    /* next block */
 	    pPosRel = pPosRel->PosRNext;
-	  /* Bloc suivant */
 	}
 
-      /* Faut-il creer un nouveau bloc de relations ? */
       if (loop)
 	{
+	  /* add a new block */
+	  pNext = pPosRel;
 	  GetPosBlock (&pPosRel);
+	  pPosRel->PosRNext = pNext;
 	  if (pPreviousPosRel == NULL)
 	    pOrginBox->BxPosRelations = pPosRel;
 	  else
@@ -146,20 +148,20 @@ static void InsertPosRelation (PtrBox pOrginBox, PtrBox pTargetBox,
       pRelation->ReOp = op;
     }
 
-  /* Deuxieme sens de la dependance */
+  /* add a relation from target to origin */
   if (op != OpHorizInc && op != OpVertInc)
     {
-      /* On recherche une entree libre */
+      /* look for an empty entry */
       pPosRel = pTargetBox->BxPosRelations;
       pPreviousPosRel = NULL;
       loop = TRUE;
-      while (loop && pPosRel != NULL)
+      while (loop && pPosRel)
 	{
 	  i = 0;
 	  pPreviousPosRel = pPosRel;
 	  do
 	    {
-	      empty = pPosRel->PosRTable[i].ReBox == NULL;
+	      empty = (pPosRel->PosRTable[i].ReBox == NULL);
 	      i++;
 	    }
 	  while (i != MAX_RELAT_POS && !empty);
@@ -170,14 +172,16 @@ static void InsertPosRelation (PtrBox pOrginBox, PtrBox pTargetBox,
 	      i--;
 	    }
 	  else
-	    /* Bloc suivant */
+	    /* next block */
 	    pPosRel = pPosRel->PosRNext;
 	}
 
-      /* Faut-il creer un nouveau bloc de relations ? */
       if (loop)
 	{
+	  /* add a new block */
+	  pNext = pPosRel;
 	  GetPosBlock (&pPosRel);
+	  pPosRel->PosRNext = pNext;
 	  if (pPreviousPosRel == NULL)
 	    pTargetBox->BxPosRelations = pPosRel;
 	  else
@@ -200,7 +204,7 @@ static void InsertPosRelation (PtrBox pOrginBox, PtrBox pTargetBox,
 static void InsertDimRelation (PtrBox pOrginBox, PtrBox pTargetBox,
 			       ThotBool sameDimension, ThotBool horizRef)
 {
-  PtrDimRelations     pPreviousDimRel;
+  PtrDimRelations     pPreviousDimRel, pNext;
   PtrDimRelations     pDimRel;
   int                 i;
   ThotBool            loop;
@@ -210,7 +214,7 @@ static void InsertDimRelation (PtrBox pOrginBox, PtrBox pTargetBox,
     horizRef = !horizRef;
 
   i = 0;
-  /* On determine la dimension affectee */
+  /* add a relation from origin to target */
   if (horizRef)
     if (sameDimension)
       pDimRel = pOrginBox->BxWidthRelations;
@@ -221,7 +225,7 @@ static void InsertDimRelation (PtrBox pOrginBox, PtrBox pTargetBox,
   else
     pDimRel = pOrginBox->BxWidthRelations;
 
-  /* On recherche une entree libre */
+  /* look for an empty entry */
   pPreviousDimRel = NULL;
   loop = TRUE;
   while (loop && pDimRel != NULL)
@@ -230,7 +234,7 @@ static void InsertDimRelation (PtrBox pOrginBox, PtrBox pTargetBox,
       pPreviousDimRel = pDimRel;
       do
 	{
-	  empty = pDimRel->DimRTable[i] == NULL;
+	  empty = (pDimRel->DimRTable[i] == NULL);
 	  i++;
 	}
       while (i != MAX_RELAT_DIM && !empty);
@@ -241,18 +245,24 @@ static void InsertDimRelation (PtrBox pOrginBox, PtrBox pTargetBox,
 	  i--;
 	}
       else
+	/* next block */
 	pDimRel = pDimRel->DimRNext;
     }
 
   /* Faut-il creer un nouveau bloc de relations ? */
   if (loop)
     {
+      /* add a new block */
+      pNext = pDimRel;
       GetDimBlock (&pDimRel);
+      pDimRel->DimRNext = pNext;
       if (pPreviousDimRel == NULL)
-	if (horizRef)
-	  pOrginBox->BxWidthRelations = pDimRel;
-	else
-	  pOrginBox->BxHeightRelations = pDimRel;
+	{
+	  if (horizRef)
+	    pOrginBox->BxWidthRelations = pDimRel;
+	  else
+	    pOrginBox->BxHeightRelations = pDimRel;
+	}
       else
 	pPreviousDimRel->DimRNext = pDimRel;
       i = 0;
