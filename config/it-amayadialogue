@@ -11,7 +11,7 @@
 10 Stile
 11 Speciale
 12 Attributi
-13 **Annotations
+13 Annotazioni
 14 Aiuto
 15 Nuovo
 16 Nuovo documento HTML...
@@ -89,15 +89,15 @@
 88 Termine (dt)
 89 Definizione (dd)
 90 Math
-91 math (math)
-92 **Plain text (mtext)
-93 **Identifier (mi)
-94 **Number (mn)
-95 **Operator (mo)
-96 **Character (mchar)
+91 Nuova formula (math)
+92 Testo (mtext)
+93 Identificatore (mi)
+94 Numero (mn)
+95 Operatore (mo)
+96 Carattere (mchar)
 97 Radice (mroot)
 98 Radice quadrata (msqrt)
-99 **Enclose (menclose)
+99 Ingloba (menclose)
 100 Frazione (mfrac)
 101 Pedice e indice (msubsup)
 102 Pedice (msub)
@@ -191,11 +191,11 @@
 190 Profili...
 191 Modelli...
 192 Annota
-193 **Show annotations
+193 Mostra annotazioni
 194 Carica annotazioni
-195 **Post annotation
-196 **Customize query...
-197 **Configuration...
+195 Registra annotazione
+196 Personalizza la richiesta
+197 Configurazione...
 196 Informazioni su Amaya
 197 Informazioni su Amaya al W3C
 198 Navigazione

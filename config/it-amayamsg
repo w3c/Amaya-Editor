@@ -69,7 +69,7 @@
 68 Collocazione dell'oggetto
 69 CSS file
 70 il editor/browser del W3C
-71 ** (mail issues to www-amaya@w3.org)
+71 (scrivere a www-amaya@w3.org per informazioni)
 72 Impossibile gestire URL composti da piú di %s caratteri
 73 È consentito il solo tipo di default
 74 Aggiornamento dei collegamenti: %s%% è stato fatto
@@ -186,16 +186,16 @@
 185 Preferenze sui modelli
 186 Consenti la redirezione automatica dei PUT su questi domini
 187 Ignora gli stili CSS
-188 **Transform type
-189 **(separate each entry with a space)
-190 **No proxy on these domains
-191 **Only proxy these domains
-192 **Character name
-193 **Amaya user directory
-194 **Temporary directory
-195 **Use palette
-196 **Language Negotiation
-197 **The XML parsing failed - please check your document
+188 Trasforma tipo
+189 (separa ogni campo con uno spazio)
+190 Escludi l'utilizzo del proxy su questi domini
+191 Utilizza il proxy solo su questi domini
+192 Nome del carattere
+193 Directory dell'utente
+194 Directory temporanea
+195 Usa la palette
+196 Negoziazione della lingua
+197 Errore XML - si consiglia di verificare il documento
 198 **Configuration for annotations
 199 **Annotation user
 200 **Annotation post server
