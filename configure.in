@@ -519,10 +519,19 @@ dnl
 dnl Check for additionnal packages
 dnl use AC_CONFIG_SUBDIRS to launch configure in the subdir
 dnl
-AC_ARG_WITH(i18n,            [  --with-18n              enable I18N support (experimental) ])
+AC_ARG_WITH(i18n,            [  --with-i18n             enable I18N support (experimental) ])
 dnl
 dnl I18N support disabled by default
 dnl
+
+if test "$with_i18n" = "" ; then
+  if test "$enable_i18n" = "yes" ; then
+    with_i18n="yes"
+  else
+    with_i18n="no"
+  fi
+
+fi  
 if test "$with_i18n" = "yes" ; then
    I18N_OPTIONS=-D_I18N_
 else

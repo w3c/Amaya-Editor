@@ -18,7 +18,7 @@ ac_help="$ac_help
 ac_help="$ac_help
   --without-graphic-libs    doesn't use provided libjpeg, libpng."
 ac_help="$ac_help
-  --with-18n              enable I18N support (experimental) "
+  --with-i18n             enable I18N support (experimental) "
 ac_help="$ac_help
   --with-gl               enable Opengl canvas (experimental) "
 ac_help="$ac_help
@@ -6460,6 +6460,15 @@ if test "${with_i18n+set}" = set; then
   :
 fi
 
+
+if test "$with_i18n" = "" ; then
+  if test "$enable_i18n" = "yes" ; then
+    with_i18n="yes"
+  else
+    with_i18n="no"
+  fi
+
+fi  
 if test "$with_i18n" = "yes" ; then
    I18N_OPTIONS=-D_I18N_
 else
@@ -6482,7 +6491,7 @@ if test "$with_gl" = "" ; then
 fi  
 if test "$with_gl" = "yes" ; then
   	echo $ac_n "checking OpenGL""... $ac_c" 1>&6
-echo "configure:6486: checking OpenGL" >&5
+echo "configure:6495: checking OpenGL" >&5
 	for ac_dir in               		\
 		/usr/include/GL			\
 		/usr/include 			\
