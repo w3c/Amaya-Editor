@@ -88,6 +88,10 @@ typedef enum
   warningMessage
 } ErrorType;
 
+#define MATHML_XSLT_NAME     "pmathml.xsl"
+#define MATHML_XSLT_URI      "http://www.w3.org/Math/Group/XSL/"
+
+
 #endif /* PARSER_H */
 
 

@@ -2601,7 +2601,6 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
 	   UpdateEditorMenus (doc);
        }
      }
-   
    return (doc);
 }
 
