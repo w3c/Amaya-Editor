@@ -1589,7 +1589,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 #else /* _GTK */
 	      /* load the picture using ImLib */
 	      im = gdk_imlib_load_image (fileName);	      
-	      if (pres == FillFrame)
+	      if (pres == RealSize)
 		{
 		  /* if it's a background, dont rescale the picture */
 		  w = im->rgb_width;
@@ -1600,7 +1600,7 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	      imageDesc->PicMask = (GdkPixmap *)gdk_imlib_move_mask (im);
 	      width = im->rgb_width;
 	      height = im->rgb_height;
-	      if (pres == FillFrame)
+	      if (pres == RealSize)
 		{
 		  wFrame = im->rgb_width;
 		  hFrame = im->rgb_height;
