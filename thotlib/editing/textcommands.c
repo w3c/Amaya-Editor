@@ -155,10 +155,11 @@ ThotBool            toend;
    xDelta and yDelta.                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         LocateLeafBox (int frame, int x, int y, int xDelta, int yDelta, PtrBox pFrom, ThotBool extendSel)
+static void         LocateLeafBox (int frame, View view, int x, int y, int xDelta, int yDelta, PtrBox pFrom, ThotBool extendSel)
 #else  /* __STDC__ */
-static void         LocateLeafBox (frame, x, y, xDelta, yDelta, pFrom, extendSel)
+static void         LocateLeafBox (frame, view, x, y, xDelta, yDelta, pFrom, extendSel)
 int                 frame;
+View                view;
 int                 x;
 int                 y;
 int                 xDelta;
@@ -194,15 +195,15 @@ ThotBool            extendSel;
    doc = FrameTable[frame].FrDoc;
    GetSizesFrame (frame, &w, &h);
    if (xDelta < 0 && pFrame->FrXOrg > 0 && x + xDelta < 0)
-       TtcScrollLeft (doc, 1);
+       TtcScrollLeft (doc, view);
    else if (xDelta > 0 && x + xDelta > pFrame->FrXOrg + w)
-       TtcScrollRight (doc, 1);
+       TtcScrollRight (doc, view);
    else if (yDelta < 0 && pFrame->FrYOrg > 0 && y + yDelta < pFrame->FrYOrg)
      {
        do
 	 {
 	   org = pLastBox->BxYOrg;
-	   TtcLineUp (doc, 1);
+	   TtcLineUp (doc, view);
 	   /* update the new position */
 	   if (org != pLastBox->BxYOrg)
 	     y = y + org - pLastBox->BxYOrg;
@@ -215,7 +216,7 @@ ThotBool            extendSel;
        do
 	 {
 	   org = pLastBox->BxYOrg;
-	   TtcLineDown (doc, 1);
+	   TtcLineDown (doc, view);
 	   /* update the new position */
 	   if (org != pLastBox->BxYOrg)
 	     y = y + org - pLastBox->BxYOrg;
@@ -439,7 +440,7 @@ ThotBool            extendSel;
 		   if (pBoxBegin->BxXOrg + pViewSel->VsXPos + 4 < pFrame->FrXOrg)
 		     {
 		       if (pFrame->FrXOrg > 0)
-			 TtcScrollLeft (doc, 1);
+			 TtcScrollLeft (doc, view);
 		     }
 		   else if (pBoxBegin->BxXOrg + pViewSel->VsXPos > pFrame->FrXOrg + w)
 		     HorizontalScroll (frame, pBoxBegin->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg - w, 0);
@@ -450,7 +451,7 @@ ThotBool            extendSel;
 		   x = pBox->BxXOrg + xpos;
 		   y = pBox->BxYOrg + (pBox->BxHeight / 2);
 		   xDelta = -2;
-		   LocateLeafBox (frame, x, y, xDelta, 0, pBox, extendSel);
+		   LocateLeafBox (frame, view, x, y, xDelta, 0, pBox, extendSel);
 		 }
 	     }
 	   /* Get the last X position */
@@ -504,7 +505,7 @@ ThotBool            extendSel;
 		   if (pBoxEnd->BxXOrg + pViewSelEnd->VsXPos > pFrame->FrXOrg + w)
 		     {
 		       if (FrameTable[frame].FrScrollOrg + FrameTable[frame].FrScrollWidth > pFrame->FrXOrg + w)
-			 TtcScrollRight (doc, 1);
+			 TtcScrollRight (doc, view);
 		     }
 		   else if (pBoxEnd->BxXOrg + pViewSelEnd->VsXPos - 4 < pFrame->FrXOrg)
 		     HorizontalScroll (frame, pBoxEnd->BxXOrg + pViewSelEnd->VsXPos - 4 - pFrame->FrXOrg, 0);
@@ -514,7 +515,7 @@ ThotBool            extendSel;
 		   x = pBox->BxXOrg + pBox->BxWidth;
 		   y = pBox->BxYOrg + (pBox->BxHeight / 2);
 		   xDelta = 2;
-		   LocateLeafBox (frame, x, y, xDelta, 0, pBox, extendSel);
+		   LocateLeafBox (frame, view, x, y, xDelta, 0, pBox, extendSel);
 		 }
 	     }
 	   /* Get the last X position */
@@ -573,7 +574,7 @@ ThotBool            extendSel;
 	       else
 		 RightExtended = TRUE;
 
-	       LocateLeafBox (frame, x, y, 0, yDelta, pBox, extendSel);
+	       LocateLeafBox (frame, view, x, y, 0, yDelta, pBox, extendSel);
 	     }
 	   break;
 	   
@@ -603,7 +604,7 @@ ThotBool            extendSel;
 	       else if (extendSel)
 		 LeftExtended = TRUE;
 
-	       LocateLeafBox (frame, x, y, 0, yDelta, pBox, extendSel);
+	       LocateLeafBox (frame, view, x, y, 0, yDelta, pBox, extendSel);
 	     }
 	   break;
 	 }
