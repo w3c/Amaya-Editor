@@ -216,7 +216,7 @@
 214 Invalid XML - Show parsing errors?
 215 Invalid characters - Reload as HTML or show parsing errors?
 216 Invalid characters
-217 With the current Amaya profile:
+217 With the document profile:
 218 Some tags/attributes are ignored - see Views/Show parsing errors
 219 The encoding of this document is not supported by Amaya
 220 Editing and saving this document will change its type

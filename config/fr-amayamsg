@@ -216,7 +216,7 @@
 214 XML invalide - Montrer les erreurs ?
 215 Caractères invalides - Recharger en HTML ou montrer les erreurs ?
 216 Caractères invalides
-217 Avec le profil Amaya courant :
+217 Avec le profil du document :
 218 Des balises/attributs sont ignorés - voir Vues/Montrer les erreurs
 219 Le codage de ce document n'est pas supporté par Amaya
 220 Editer et sauver ce document changera son type

@@ -1867,12 +1867,8 @@
 	<message xml:lang="pt">Caracteres inválidos</message>
 </label>
 <label define="AM_XML_PROFILE">
-	<message xml:lang="en">With the current Amaya profile:</message>
-	<message xml:lang="fr">Avec le profil Amaya courant :</message>
-	<message xml:lang="it">Con profilo attuale di Amaya:</message>
-	<message xml:lang="de">Durch gegenwärtigen Amaya Profil:</message>
-	<message xml:lang="es">Con el perfil actual de Amaya:</message>
-	<message xml:lang="pt">Com perfil Amaya atual:</message>
+	<message xml:lang="en">With the document profile:</message>
+	<message xml:lang="fr">Avec le profil du document :</message>
 </label>
 <label define="AM_XML_WARNING">
 	<message xml:lang="en">Some tags/attributes are ignored - see Views/Show parsing errors</message>

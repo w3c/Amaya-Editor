@@ -2678,12 +2678,12 @@ static void           ProcessStartGI (char* GIname)
 	  !(pHTMLGIMapping[entry].Level &
 	    TtaGetDocumentProfile(HTMLcontext.doc))) 
 	{
-	  /* Invalid element for the current profile */
+	  /* Invalid element for the document profile */
 	  /* don't process that element */
 	  if (strlen (GIname) > MaxMsgLength - 20)
 	    GIname[MaxMsgLength - 20] = EOS;
 	  sprintf (msgBuffer,
-		   "Invalid start element <%s> for the current profile",
+		   "Invalid start element <%s> for the document profile",
 		   GIname);
 	  HTMLParseError (HTMLcontext.doc, msgBuffer);
 	  XMLErrorsFoundInProfile = TRUE;
@@ -2936,11 +2936,11 @@ static void        EndOfEndTag (char c)
 	       !(pHTMLGIMapping[entry].Level &
 		 TtaGetDocumentProfile(HTMLcontext.doc))) 
 	{
-	  /* Invalid element for the current profile */
+	  /* Invalid element for the document profile */
 	  if (strlen (inputBuffer) > MaxMsgLength - 20)
 	    inputBuffer[MaxMsgLength - 20] = EOS;
 	  sprintf (msgBuffer,
-		   "Invalid end element <%s> for the current profile",
+		   "Invalid end element <%s> for the document profile",
 		   inputBuffer);
 	  HTMLParseError (HTMLcontext.doc, msgBuffer);
 	  XMLErrorsFoundInProfile = TRUE;
@@ -3080,11 +3080,11 @@ static void            EndOfAttrName (char c)
 	 }
        else
 	 {
-	   /* attribute invalid for the current profile */
+	   /* attribute invalid for the document profile */
 	   if (strlen (inputBuffer) > MaxMsgLength - 30)
 	     inputBuffer[MaxMsgLength - 30] = EOS;
 	   sprintf (msgBuffer,
-		    "Invalid attribut \"%s\" for the current profile",
+		    "Invalid attribute \"%s\" for the document profile",
 		    inputBuffer);
 	   HTMLParseError (HTMLcontext.doc, msgBuffer);
 	   XMLErrorsFoundInProfile = TRUE;

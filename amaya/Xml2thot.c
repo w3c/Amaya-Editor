@@ -1663,10 +1663,10 @@ static void       StartOfXmlStartElement (char *name)
 		}
 	      else
 		{
-		  /* element invalid for the current profile */
+		  /* element invalid for the document profile */
 		  /* don't process that element */
 		  sprintf (msgBuffer,
-			   "Unknown %s element %s for the current profile",
+			   "Unknown %s element %s for the document profile",
 			   schemaName, elementName);
 		  XmlParseError (errorParsingProfile, msgBuffer, 0);
 		  UnknownElement = TRUE;
@@ -2441,7 +2441,7 @@ static void EndOfXhtmlAttributeName (char *attrName, Element el,
 	   else
 	     {
 	       sprintf (msgBuffer,
-			 "Unknown XHTML attribute %s for the current profile",
+			 "Unknown XHTML attribute %s for the document profile",
 			 attrName);
 	       XmlParseError (errorParsingProfile, msgBuffer, 0);
 	     }

@@ -216,7 +216,7 @@
 214 XML inválido - mostrar erros na leitura?
 215 Caracteres inválidos - recarregar como HTML ou mostrar erros sintáticos?
 216 Caracteres inválidos
-217 Com perfil Amaya atual:
+217 **With the document profile:
 218 Algumas marcas(tags)/atributos são ignorados - veja Vistas/Exibir erros de gramática (parsing)
 219 A codificação deste documento não é suportada por Amaya
 220 Editar ou salvar este documento vai mudar seu tipo
