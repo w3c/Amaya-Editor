@@ -172,7 +172,7 @@ int                 i;
 
 #  ifdef _WINDOWS
    /* Pix_Color[i] = PALETTERGB (RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue); */
-   Pix_Color[i] = GetNearestColor (TtDisplay, PALETTERGB (RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue));
+   Pix_Color[i] = RGB (RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue);
 #  else  /* _WINDOWS */
    ThotColorStruct     col;
    if (Color_Table[i] != NULL)
@@ -267,8 +267,8 @@ char               *name;
 
    /* set up black and white Pixels */
 #  ifdef _WINDOWS
-   Pix_Color[0] = PALETTERGB (255, 255, 255);
-   Pix_Color[1] = PALETTERGB (0, 0, 0);
+   Pix_Color[0] = RGB (255, 255, 255);
+   Pix_Color[1] = RGB (0, 0, 0);
 #  else  /* _WINDOWS */
    Pix_Color[0] = WhitePixel (TtDisplay, DefaultScreen (TtDisplay));
    Pix_Color[1] = BlackPixel (TtDisplay, DefaultScreen (TtDisplay));

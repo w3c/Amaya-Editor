@@ -126,6 +126,7 @@ static unsigned char MirrorBytes[0x100] = {
 };
 
 #ifdef _WINDOWS 
+extern boolean  peInitialized;
 
 int bgRed;
 int bgGreen;
@@ -419,7 +420,10 @@ PictInfo           *imageDesc;
 # ifdef _WINDOWS
   HDC     hMemDC;
   HBRUSH  hBrush;
+  BITMAP  bm;
+  POINT   ptOrg, ptSize;
   int     x, y;
+  int     nbPalColors ;
 # endif /* _WINDOWS */
 
 
@@ -443,15 +447,33 @@ PictInfo           *imageDesc;
 #            ifndef _WINDOWS
 	     XCopyArea (TtDisplay, pixmap, drawable, TtGraphicGC, picXOrg, picYOrg, w, h, xFrame, yFrame);
 #            else /* _WINDOWS */
+		 WIN_InitSystemColors ();
+		 
+		 SelectPalette (TtDisplay, TtCmap, FALSE);
+		 nbPalColors = RealizePalette (TtDisplay);
+		 
 		 if (imageDesc->bgRed == -1 && imageDesc->bgGreen == -1 && imageDesc->bgBlue == -1) {
 	        hMemDC = CreateCompatibleDC (TtDisplay);
 	        SelectObject (hMemDC, pixmap);
+			SetMapMode (hMemDC, GetMapMode (TtDisplay));
+			GetObject (pixmap, sizeof (BITMAP), (LPVOID) &bm) ;
+			ptSize.x = bm.bmWidth;
+			ptSize.y = bm.bmHeight;
+			DPtoLP (TtDisplay, &ptSize, 1);
+			ptOrg.x = 0;
+			ptOrg.y = 0;
+			DPtoLP (hMemDC, &ptOrg, 1);
 	     
-	        BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
+	        /* BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY); */
+	        BitBlt (TtDisplay, xFrame, yFrame, ptSize.x, ptSize.y, hMemDC, ptOrg.x, ptOrg.y, SRCCOPY);
 	        DeleteDC (hMemDC);
          } else {
                WIN_LayoutTransparentPicture (pixmap, xFrame, yFrame, w, h, imageDesc->bgRed, imageDesc->bgGreen, imageDesc->bgBlue);
          }
+		 
+		 DeleteObject (TtCmap);
+		 
+		 peInitialized = FALSE;
 #            endif /* _WINDOWS */
 	     break;
 	  

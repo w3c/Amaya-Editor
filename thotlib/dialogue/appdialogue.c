@@ -89,7 +89,7 @@ static SchemaMenu_Ctl *SchemasMenuList;
 extern TBADDBITMAP AmayaTBBitmap;
 
 static WNDPROC lpfnTextZoneWndProc = (WNDPROC) 0;
-static int     currentFrame;
+int     currentFrame;
 
 HWND hwndClient ;
 HWND ToolBar ;
@@ -184,7 +184,8 @@ LPARAM lParam;
            case WM_KEYDOWN: 
                 switch (wParam) { 
                        case VK_RETURN: 
-                            SendMessage(FrMainRef [currentFrame], WM_ENTER, 0, 0); 
+                            /* SendMessage(FrMainRef [currentFrame], WM_ENTER, 0, 0); */
+                            SendMessage(GetParent (hwnd), WM_ENTER, 0, 0); 
                             return 0; 
 				} 
                 break; 

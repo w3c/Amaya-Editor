@@ -37,7 +37,7 @@ extern XImage *MakeImage ( Display* dsp,
                            int height,
                            int depth,
                            ThotColorStruct * colrs );
-extern Pixmap DataToPixmap ( char *image_data,
+extern Pixmap DataToPixmap (unsigned char *image_data,
                              int width,
                              int height,
                              int num_colors,

@@ -103,7 +103,10 @@ int                 fg;
    /* DeleteObject (TtLineGC.pen); */
    TtLineGC.capabilities |= THOT_GC_FOREGROUND;
    /* TtLineGC.foreground = Pix_Color[fg]; */
-   TtLineGC.foreground = fg;
+   if (RO && ShowReadOnly () && fg == 1)
+      TtLineGC.foreground = RO_Color;
+   else
+       TtLineGC.foreground = fg;
    /* TtLineGC.pen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue)); */
 #  else  /* _WINDOWS */
    if (active && ShowReference ())
@@ -209,10 +212,8 @@ int                 y2;
    pen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue));
    SelectObject (TtDisplay, pen);
 
-   /* WinLoadGC (fgColor); */
    MoveToEx (TtDisplay, x1, y1, NULL);
    LineTo (TtDisplay, x2, y2);
-   /* WinUnloadGC (); */
    DeleteObject (pen);
    WIN_ReleaseDeviceContext ();
 #  else  /* _WINDOWS */
@@ -297,7 +298,7 @@ int                 fg;
 
 #  ifdef _WINDOWS
    WIN_GetDeviceContext (frame);
-   WinLoadGC (fg);
+   WinLoadGC (fg, RO);
    SetMapperFlags (TtDisplay, 1);
    WinLoadFont (TtDisplay, font);
    TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (unsigned char*) str, 1);   
@@ -383,7 +384,7 @@ int                 fg;
 #     ifndef _WINDOWS 
       LoadColor (0, RO, active, fg);
 #     else /* _WINDOWS */
-	  WinLoadGC (fg);
+	  WinLoadGC (fg, RO);
 #     endif /* _WINDOWS */
 
       if (!ShowSpace) {
@@ -1442,7 +1443,7 @@ int                 pattern;
 	XFreePixmap (TtDisplay, pat);
 #       else /* _WINDOWS */
 	WIN_GetDeviceContext (frame);
-	WinLoadGC (fg);
+	WinLoadGC (fg, RO);
 	hBrush = CreateSolidBrush (Pix_Color[bg]);
 	hBrush = SelectObject (TtDisplay, hBrush);
 	PatBlt (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, width, height, PATCOPY);
@@ -2511,7 +2512,7 @@ int                 fg;
    FinishDrawing (0, RO, active);
 #  else /* _WINDOWS */
    WIN_GetDeviceContext (frame);
-   WinLoadGC (fg);
+   WinLoadGC (fg, RO);
    pen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[TtLineGC.foreground].red, RGB_colors[TtLineGC.foreground].green, RGB_colors[TtLineGC.foreground].blue));
    SelectObject (TtDisplay, pen);
    Polyline (TtDisplay, point, 3);

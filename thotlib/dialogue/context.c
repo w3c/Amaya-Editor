@@ -70,24 +70,26 @@ ThotGC              WinCreateGC (void)
  *   Full description of Device Context Attributes : Petzolt p 102
  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void WinLoadGC (int fg)
+void WinLoadGC (int fg, int RO)
 #else  /* __STDC__ */
-void WinLoadGC (fg)
+void WinLoadGC (fg, RO)
 int fg;
+int RO;
 #endif /* __STDC__ */
 {
    
    if (TtLineGC.capabilities & THOT_GC_PEN) {
-	   /*
-      TtLineGC.pen = CreatePen (PS_SOLID, 1, RGB (RGB_colors[fg].red, RGB_colors[fg].green, RGB_colors[fg].blue));
-      SelectObject (TtDisplay, TtLineGC.pen);
-	  */
-	  TtLineGC.foreground = fg;
+	  if (RO && fg == 1)
+         TtLineGC.foreground = RO_Color;
+      else
+	      TtLineGC.foreground = fg;
    }
 
    if (TtLineGC.capabilities & THOT_GC_FOREGROUND)
-      /* SetTextColor (TtDisplay, TtLineGC.foreground); */
-       SetTextColor (TtDisplay, Pix_Color[fg]);
+      if (RO && fg == 1)
+         SetTextColor (TtDisplay, Pix_Color[RO_Color]);
+      else         
+         SetTextColor (TtDisplay, Pix_Color[fg]);
 
    if (TtLineGC.capabilities & THOT_GC_BACKGROUND) {
       SetBkMode (TtDisplay, OPAQUE);
@@ -181,9 +183,10 @@ void WinInitColors ()
 
    /* fill-in the Pix_Color table */
    for (i = 0; i < MAX_COLOR; i++) 
-       Pix_Color[i] = PALETTERGB (RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue);
+       Pix_Color[i] = RGB (RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue);
 
    /* initialize some standard colors. */
+#  if 0
    Black_Color     = GetNearestColor (TtDisplay, PALETTERGB (0, 0, 0));
    White_Color     = GetNearestColor (TtDisplay, PALETTERGB (255, 255, 255));
    Scroll_Color    = GetNearestColor (TtDisplay, PALETTERGB (190, 190, 190));
@@ -193,6 +196,18 @@ void WinInitColors ()
    Box_Color       = GetNearestColor (TtDisplay, PALETTERGB (255, 0, 0));
    RO_Color        = GetNearestColor (TtDisplay, PALETTERGB (0, 0, 205));
    InactiveB_Color = GetNearestColor (TtDisplay, PALETTERGB (255, 0, 0));
+#  endif /* 0 */
+
+   Black_Color     =   1;
+   White_Color     =   0;
+   Scroll_Color    =   4;
+   Button_Color    =   4;
+   Select_Color    =  83;
+   BgMenu_Color    =   4;
+   Box_Color       =  12;
+   RO_Color        =  79;
+   InactiveB_Color =  12;
+
 
    /* set up the default background colors for all views. */
    for (i = 0; i < (sizeof (BackgroundColor) / sizeof (BackgroundColor[0])); i++)
@@ -469,9 +484,11 @@ char               *name;
       Box_Color = cwhite.pixel;
    else if (TtWDepth == 1)
       Box_Color = cblack.pixel;
+#  endif /* !_WINDOWS */
 
    /* color for read-only sections */
    found = FindColor (0, name, "ReadOnlyColor", "DarkGreen3", &(RO_Color));
+#  ifndef _WINDOWS 
    if (!found)
       RO_Color = cwhite.pixel;
    else if (TtWDepth == 1)
