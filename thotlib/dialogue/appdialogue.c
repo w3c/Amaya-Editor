@@ -2395,7 +2395,6 @@ int                 doc;
    ThotWidget          vscrl;
    SchemaMenu_Ctl     *SCHmenu;
    Menu_Ctl           *ptrmenu;
-   PtrDocument         pDoc;
    STRING	       visiStr, zoomStr;
    int                 i, n;
    int                 ref;

@@ -834,7 +834,7 @@ Document            document;
 {
    PtrDocument         pDoc;
    SRule              *pRule;
-   PtrElement          pRoot, pEl;
+   PtrElement          pRoot;
    PtrSSchema          curExtension;
    int                 numAssoc, numAssocLibre;
    boolean             found;
