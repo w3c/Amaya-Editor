@@ -37,6 +37,7 @@
 #include "buildboxes_f.h"
 #include "displayselect_f.h"
 #include "editcommands_f.h"
+#include "exceptions_f.h"
 #include "font_f.h"
 #include "frame_f.h"
 #include "memory_f.h"

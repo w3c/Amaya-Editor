@@ -1696,13 +1696,12 @@ int                 view;
 ThotBool            Assoc;
 #endif /* __STDC__ */
 {
-  PtrPSchema          pSchP;
   PtrElement          pRootEl, firstPage, pPage;
-  PtrElement          pEl1;
   PtrAbstractBox      rootAbsBox, pP;
   PtrAbstractBox      previousPageAbBox;
 #ifdef PAGINEETIMPRIME
-  int                 h;
+  PtrPSchema          pSchP;
+  int                 h, cpt;
 #else /*  PAGINEETIMPRIME */
   PtrElement          firstSelection, lastSelection;
   int                 FirstSelectedChar = 0, LastSelectedChar = 0;
@@ -1710,7 +1709,7 @@ ThotBool            Assoc;
 #endif /* PAGINEETIMPRIME */
   int                 schView;
   int                 v, clipOrg;
-  int                 frame, volume, volprec, iview, cpt;
+  int                 frame, volume, volprec, iview;
   ThotBool            shorter;
   ThotBool            complete;
   ThotBool            isFirstPage;
