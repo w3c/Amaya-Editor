@@ -924,7 +924,7 @@ static void BuildAnnotTypesSelector ()
   RDFClassP		annotClass;
 
   nb_entries = 0;
-  if (&typesList)
+  if (typesList)
     List_delAll (&typesList, List_delCharObj);
   ustrcpy (s, TEXT(""));
   i = 0;
@@ -1181,7 +1181,7 @@ View                view;
 	  int entry;
 
 	  entry = nb_entries - ReturnOptionMenu - 1;
-	  for (item = typesList; item && (entry > 0); item=item->next, entry);
+	  for (item = typesList; item && (--entry > 0); item=item->next);
 	  if (item->object)
 	    result = ((TypeSelector *) item->object)->type;
 	}
