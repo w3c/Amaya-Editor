@@ -10,6 +10,7 @@
 #define CONST
 
 #include "ustring.h"
+#include "thot_sys.h"
 #include "appstruct.h"
 #include "appaction.h"
 #include "memory.h"
