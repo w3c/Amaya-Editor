@@ -388,7 +388,7 @@ static HFONT WIN_LoadFont (char script, int family, int highlight, int size)
    int        fdwStrikeOut;
  
    nHeight = 0;
-   nHeight = MulDiv(size, DOT_PER_INCH, 80);
+   nHeight = -MulDiv(size, DOT_PER_INCH, 80);
   hFont = GetWinFontConfig (script, family, highlight, nHeight);
  
    if (hFont)

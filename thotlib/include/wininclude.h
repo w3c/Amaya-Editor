@@ -85,7 +85,7 @@ extern void       CreateMakeIDDlgWindow (ThotWindow parent);
 extern ThotWindow TtaGetThotWindow (int f);
 extern BinFile    TtaReadOpen (CONST char *f);
 extern ThotWindow GetCurrentWindow ();
-extern void       KbdCallbackHandler (ThotWidget, int, caddr_t);
+extern void       KbdCallbackHandler (ThotWidget w, unsigned int param, caddr_t call_d);
 extern void       CheckTtCmap ();
 
 #endif /* _WIN_FCT_ */

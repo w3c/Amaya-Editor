@@ -1961,7 +1961,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
        * store the location and return.
        */
       if (ClickIsDone == 1 &&
-	  (mMsg == WM_LBUTTONDOWN || mMsg == WM_RBUTTONDOWN)
+	  (mMsg == WM_LBUTTONDOWN || mMsg == WM_RBUTTONDOWN))
 	{
 	  ClickIsDone = 0;
 	  ClickFrame = frame;
