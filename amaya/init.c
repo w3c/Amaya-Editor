@@ -4562,12 +4562,15 @@ CHAR_T*             data;
 
        /* *********Browser DocSelect*********** */
      case BrowserDocSelect:
+       /* set path on current directory */
        if (DirectoryName[0] == EOS)
-	 /* set path on current directory */
 	 ugetcwd (DirectoryName, MAX_LENGTH);
 
        /* Extract suffix from document name */
        ustrcpy (DocumentName, data);
+
+       if (WidgetParent == OpenDocBrowser)
+	 LastURLName[0] = WC_EOS;
 
        /* construct the document full name */
        tempfile = TtaAllocString (MAX_LENGTH);
