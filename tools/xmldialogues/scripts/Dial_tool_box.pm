@@ -26,9 +26,9 @@ BEGIN {
 my $base_repertory = "";  #"/$home/opera/Amaya/tools/xmldialogues/xmldoc/";
 my $name_of_base = "";#"base_am_msg.xml";
 
-my $head_line; #to store the head line
-my $base_message; #to store the tag named like
-my $control; #to store the contro block									
+my $head_line = ""; #to store the head line
+my $base_message = ""; #to store the tag named like
+my $control = ""; #to store the contro block									
 my %labels = (); #to store the all the label whith teir text
 my @labels = (); #to keep the label sort (en francais ordre) 
 
@@ -66,17 +66,17 @@ my $base = $base_repertory . $name_of_base ;
 sub ask1 {
 my $textunicode = Unicode::String->new ();
 my $text;
-	print "Quelle etiquette voulez vous ajouter?\n";
+	print "\tWhat label would you like to add?\n";
 	$THE_label = <STDIN>;
 	chomp $THE_label;
 	if ($labels{$THE_label}) {
-		print "L'etiquette que vous voulez ajouter existe deja\n";
+		print "\tThe label you want to add already exists !\n";
 		return 0;
 	}
 	else {
 		$labels{$THE_label} = "<label define=\"$THE_label\">";
 		do {
-			print "Quel est le texte anglais de cette nouvelle etiquette?\n";
+			print "\tWhat the english text for  this label ($THE_label)?\n";
 			$text = <STDIN>;chomp $text;
 			print "Are you OK for: $text ?(y or n)\n";
 			$_ = <STDIN>;
@@ -96,7 +96,7 @@ my $text;
 }
 #------------------------------------------------------------------------------
 sub ask2 {
-	print "Quelle etiquette voulez vous supprimmer?\n";
+	print "\tWhat label would you like to delete?\n";
 	$THE_label = <STDIN>;
 	chomp $THE_label;
 	if (defined ($labels{$THE_label}) ){
@@ -104,7 +104,7 @@ sub ask2 {
 		return 1;
 	}
 	else {
-		print "L'etiquette que vous voulez supprimmer n'existe pas\n";
+		print "\tThe label you want to delete never exists !\n";
 		return 0;
 	}
 
@@ -212,7 +212,7 @@ sub start_  {
 		}
 		$labels {$current_label} .= ">" ; 			
 	}	
-	elsif ($tag eq "control") {
+	elsif ($tag eq "control") { #into $control
 		$control = "\n<$tag>";
 		$current_block= $tag;
 	}

@@ -66,10 +66,10 @@ BEGIN {
 	my $codage ; 	#because the codage is an attribute of <language> and the
 						#coresspondig language is nown after as a char
 sub export {
-	$base = shift ;
-	$where = shift ;
-	$sufix = shift ;
-	$head_name = shift;
+	$base = shift ; #complete name of the base
+	$where = shift ; # where out put files ares 
+	$sufix = shift ; # sufix of messages files
+	$head_name = shift; # name of the ".h"
 	
 	$reference_value = 0;# to avoid problem when many calls
 
