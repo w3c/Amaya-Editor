@@ -3139,13 +3139,17 @@ int PutObjectWWW (int docid, char *fileName, char *urlName, int mode,
 	   ptr2 = strstr (urlName, ptr1);
 	   if (ptr2) 
 	     {
-           wc2iso_strcpy (url_name, urlName);
+	       wc2iso_strcpy (url_name, urlName);
 	       me->default_put_name = TtaStrdup (url_name);
 	       me->default_put_name[strlen (me->default_put_name) - strlen (ptr1)] = EOS;
-	       HTRequest_setDefaultPutName (me->request, me->default_put_name);
 	     }
 	 }
      }
+   else 
+     me->default_put_name = TtaStrdup (urlName);
+   
+   if (me->default_put_name)
+     HTRequest_setDefaultPutName (me->request, me->default_put_name);
 
    me->mode = mode;
    me->incremental_cbf = (TIcbf *) NULL;
