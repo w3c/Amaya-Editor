@@ -6490,14 +6490,11 @@ if test "$with_gl" = "yes" ; then
   	echo $ac_n "checking OpenGL""... $ac_c" 1>&6
 echo "configure:6492: checking OpenGL" >&5
 	for ac_dir in               		\
-		/usr/include/GL			\
 		/usr/include 			\
-		/usr/X11R6/include/GL   	\
 		/usr/X11R6/include 		\
 		/usr/local/include		\
-		/usr/local/include/GL		\
 		; \
-	do  if test -r "$ac_dir/gl.h" ; then
+	do  if test -r "$ac_dir/GL/gl.h" ; then
                 gl_inc="yes"
 		GL_INC_I="$ac_dir"
 		if test "$ac_dir" != "/usr/include" ; then
@@ -6507,7 +6504,7 @@ echo "configure:6492: checking OpenGL" >&5
     	    fi
 	done	
   	echo $ac_n "checking GLU""... $ac_c" 1>&6
-echo "configure:6511: checking GLU" >&5	
+echo "configure:6508: checking GLU" >&5	
 	for ac_dir in               		\
 		/usr/include/GL			\
 		/usr/include 			\
@@ -6528,7 +6525,7 @@ echo "configure:6511: checking GLU" >&5
     	    fi
 	done	
   	echo $ac_n "checking GTKGLAREA""... $ac_c" 1>&6
-echo "configure:6532: checking GTKGLAREA" >&5	
+echo "configure:6529: checking GTKGLAREA" >&5	
 	for ac_dir in               		\
 		/usr/include/GL			\
 		/usr/include 			\
@@ -6550,13 +6547,13 @@ echo "configure:6532: checking GTKGLAREA" >&5
     	    fi
 	done	
   	echo $ac_n "checking freetype""... $ac_c" 1>&6
-echo "configure:6554: checking freetype" >&5	
+echo "configure:6551: checking freetype" >&5	
 	for ac_dir in               		\
 		/usr/include 			\
 		/usr/X11R6/include 		\
 		/usr/local/include		\
 		; \
-	do  if test -r "$ac_dir/ft2build.h" ; then
+	do  if test -r "$ac_dir/ft2buildet.h" ; then
                 freetype_inc="yes"
 		GL_INCLUDES="$GL_INCLUDES `freetype-config --cflags`"
        	 	break	
@@ -6569,14 +6566,17 @@ echo "configure:6554: checking freetype" >&5
 	    	GL_OPTIONS=	
 	        GL_INCLUDES=	
 		GL_LIBRARIES=
+	        exit 1;
 	fi
 	if test "$glu_inc" = "" ; then
 	 	echo "configure: warning: Glu headers (glu.h) not found !!" 1>&2
 	   	echo "configure: warning: Disabling opengl build !" 1>&2
+	
 	   	with_gl="no"
 	    	GL_OPTIONS=	
 	        GL_INCLUDES=	
 		GL_LIBRARIES=
+	        exit 1;
 	fi
 	if test "$gtkgl_inc" = "" ; then
 	 	echo "configure: warning: Gtkglarea headers (gktglarea.h) not found !!" 1>&2
@@ -6585,6 +6585,7 @@ echo "configure:6554: checking freetype" >&5
 	    	GL_OPTIONS=	
 	        GL_INCLUDES=	
 		GL_LIBRARIES=
+	        exit 1;
 	fi
 	if test "$freetype_inc" = "" ; then
 	 	echo "configure: warning: Freetype 2 headers (ft2build.h) not found !!" 1>&2
@@ -6593,6 +6594,7 @@ echo "configure:6554: checking freetype" >&5
 	    	GL_OPTIONS=	
 	        GL_INCLUDES=
 		GL_LIBRARIES=
+	        exit 1;
 	fi
 	if test "$gl_inc" = "yes" ; then
 		if test "$glu_inc" = "yes" ; then

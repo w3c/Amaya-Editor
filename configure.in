@@ -634,14 +634,17 @@ if test "$with_gl" = "yes" ; then
 	    	GL_OPTIONS=	
 	        GL_INCLUDES=	
 		GL_LIBRARIES=
+	        exit 1;
 	fi
 	if test "$glu_inc" = "" ; then
 	 	AC_MSG_WARN(Glu headers (glu.h) not found !!)
 	   	AC_MSG_WARN(Disabling opengl build !)
+	
 	   	with_gl="no"
 	    	GL_OPTIONS=	
 	        GL_INCLUDES=	
 		GL_LIBRARIES=
+	        exit 1;
 	fi
 	if test "$gtkgl_inc" = "" ; then
 	 	AC_MSG_WARN(Gtkglarea headers (gktglarea.h) not found !!)
@@ -650,6 +653,7 @@ if test "$with_gl" = "yes" ; then
 	    	GL_OPTIONS=	
 	        GL_INCLUDES=	
 		GL_LIBRARIES=
+	        exit 1;
 	fi
 	if test "$freetype_inc" = "" ; then
 	 	AC_MSG_WARN(Freetype 2 headers (ft2build.h) not found !!)
@@ -658,6 +662,7 @@ if test "$with_gl" = "yes" ; then
 	    	GL_OPTIONS=	
 	        GL_INCLUDES=
 		GL_LIBRARIES=
+	        exit 1;
 	fi
 	if test "$gl_inc" = "yes" ; then
 		if test "$glu_inc" = "yes" ; then
