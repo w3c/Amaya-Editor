@@ -813,8 +813,8 @@ int         motif;
 	       bitmap.bmWidth = gray0_width;
 	       bitmap.bmHeight = gray0_height;
 	       bitmap.bmWidthBytes = sizeof (gray0_bits);
-	       /* hBitmap = CreateBitmapIndirect (&bitmap); */
-	       hBitmap = CreateBitmap (gray0_width, gray0_height, 1, 1, NULL);
+	       hBitmap = CreateBitmapIndirect (&bitmap);
+	       /* hBitmap = CreateBitmap (gray0_width, gray0_height, 1, 1, NULL); */
 	       SetBitmapBits (hBitmap, sizeof (gray0_bits), gray0_bits);
 	       break;
 	    case 3:

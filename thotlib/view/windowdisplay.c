@@ -1550,13 +1550,13 @@ int                 pattern;
    y = y + (thick+1) / 2;
 
    WinLoadGC (TtDisplay, fg, RO);
-   /*if (pat != 0) {*/
+   if (pat != 0) {
       hBrush = CreateSolidBrush (ColorPixel (bg));
       hOldBrush = SelectObject (TtDisplay, hBrush);
-   /*} else {
+   } else {
          SelectObject (TtDisplay, GetStockObject (NULL_BRUSH));
 		 hBrush = (HBRUSH) 0;
-   }*/
+   }
 
    if (thick > 0) {
       if (thick <= 1) {
