@@ -4558,8 +4558,8 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
 	       s = HTTP_headers (http_headers, AM_HTTP_REASON);
 	       if (!s)
 		 s = "";
-	       sprintf (tempdocument, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), s);
-	       InitConfirm3L (newdoc, 1, tempdocument, pathname, NULL, FALSE);
+	       sprintf (tempdocument, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), pathname);
+	       InitConfirm3L (newdoc, 1, tempdocument, s, NULL, FALSE);
 	     }
 	 }
 
