@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>Welcome to Amaya</title>
+  <title>Bienvenue à Amaya</title>
   <meta name="generator"
   content="amaya 9.0-pre, see http://www.w3.org/Amaya/" />
   <link href="amaya.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="fr" lang="fr">
 
 <div id="logo">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.0" height="150px"
@@ -75,50 +75,50 @@
 </svg>
 </div>
 
-<h1>Welcome to Amaya 9.0</h1>
+<h1>Bienvenue à Amaya 9.0</h1>
 
-<p>Amaya is a Web client that acts both as a browser and as an authoring
-tool. It has been designed by <a onclick="" href="http://www.w3.org/">W3C</a>
-and <a onclick="" href="http://www.inria.fr/">INRIA</a> with the primary
-purpose of demonstrating new Web technologies and helping users to generate
-valid Web pages.<br />
-With Amaya, you can manipulate rich Web pages containing forms, tables, and
-the most advanced features from <acronym
-title="Hypertext Markup Language">XHTML</acronym>. You can create and edit
-complex <a href="../doc/html/Math.html">mathematical expressions</a> within
-Web pages. You can style your documents using Cascading Style Sheets.</p>
+<p>Amaya est un client Web qui sert à la fois de navigateur et d'outil
+d'édition. Il a été conçu par le <a onclick=""
+href="http://www.w3.org/">W3C</a> et l'<a onclick=""
+href="http://www.inria.fr/">INRIA</a> avec pour but essentiel la
+démonstration des nouvelles technologies Web et aider les utilisateurs à
+créer des pages Web valides.<br />
+Avec Amaya, vous pouvez manipuler des pages Web contenant des formulaires,
+des tables et les caractéristiques les plus avancées de XHTML. Vous pouvez
+créer et éditer des <a href="../doc/html/Math.html.fr">expressions
+mathématiques</a> dans les pages Web. Vous pouvez présenter vos documents à
+l'aide de feuilles de style CSS.</p>
 
 <div class="body">
-<p>Did you know?</p>
+<p>Le saviez-vous ?</p>
 <dl>
-  <dt>Amaya is a structured editor</dt>
-    <dd>With the F2 key you can select the enclosing structure, so editing
-      functions (copy, paste, attributes, etc.) will apply to these
-      structured elements.</dd>
-  <dt>Document can be edited throught sychronized views</dt>
-    <dd>The View menu allows you to open Structure view, Source view, etc. A
-      click on the bottom red line opens or closes a second view.</dd>
-  <dt>Document can be published directly on a server</dt>
-    <dd>With the http PUT method you can write on a server provided you're
-      allowed.</dd>
-  <dt>Links can be created by a simple click</dt>
-    <dd>To create a link you can directly click a target (use Show targets to
-      display available targets).</dd>
-  <dt>Amaya provides avanced commands</dt>
-    <dd>Like Section numbering, Generation of table of contents, Insertion of
-      time stamp , Strructure transformation.</dd>
+  <dt>Amaya est un éditeur structuré</dt>
+    <dd>Avec la touche F2 vous pouvez sélectionner la structure englobante,
+      ainsi les fonctions d'édition (copier, coller, attributs, etc.)
+      s'appliqueront à ces éléments structurés.</dd>
+  <dt>Un document peut être édité à travers plusieurs vues synchronisées</dt>
+    <dd>Le menu Vues vous permet d'ouvrir la vue Structure, Source, etc. Un
+      clic sur la ligne rouge ouvre ou ferme la seconde vue.</dd>
+  <dt>Un document peut être publié directement sur un serveur Web</dt>
+    <dd>Avec la méthode http PUT vous pouvez écrire sur un serveur à
+      condition que vous y soyez autorisé.</dd>
+  <dt>Les liens peuvent être créés par un simple clic</dt>
+    <dd>Pour créer un lien vous pouvez directement cliquer sur une cible ou
+      un autre document (utiliser Montrer les cibles pour visualiser les
+      cibles disponibles).</dd>
+  <dt>Amaya offre des commandes avancées</dt>
+    <dd>Comme la numérotation des sections, la génération d'une table des
+      matières, l'insertion d'une date de mis à jour, la transformation de
+      structure.</dd>
 </dl>
 </div>
 
-<p class="bottom">Permission to use, copy, modify, and distribute this
-software and its documentation for any purpose and without fee or royalty is
-hereby granted, provided that the full text of the <a
-href="http://www.w3.org/Consortium/Legal/copyright-software.html"><acronym
-title="Massachusetts Institute of Technology">MIT</acronym> and INRIA
-Copyright Statement</a> appears with <strong>all</strong> copies of the
-software and documentation or portions thereof, including modifications that
-you make.</p>
-
-<p></p>
+<p class="bottom">Il est permis d'utiliser, de copier, de modifier et de
+distribuer ce logiciel et sa documentation dans n'importe quel but et sans
+rétribution ou droits d'auteur, pourvu que tout le texte de <a
+href="http://www.w3.org/Consortium/Legal/copyright-software.html">déclaration
+du droit de copie du MIT et de l'INRIA</a> apparaisse sur TOUTES les copies
+du logiciel et de sa documentation ou portions de celle-ci, incluant les
+modifications que vous effectuez.</p>
 </body>
 </html>
