@@ -258,7 +258,7 @@ LRESULT CALLBACK XMLDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
 	  SetWindowText (GetDlgItem (hwnDlg, IDC_XMLELEM),
 			 TtaGetMessage (LIB, TMSG_EL_TYPE));
-      wndXMLList = GetDlgItem (hwnDlg, IDC_XMLLIST),
+      wndXMLList = GetDlgItem (hwnDlg, IDC_XMLLIST);
       /* set the font of the window */
       WIN_SetDialogfont (wndXMLList);
       SendMessage (wndXMLList, LB_RESETCONTENT, 0, 0);
@@ -315,7 +315,21 @@ LRESULT CALLBACK XMLDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  if (WinCurXML[0] != EOS)
 	    ThotCallback (NumSelectElemToBeCreated, STRING_DATA, WinCurXML);
 	  ThotCallback (NumFormElemToBeCreated, INTEGER_DATA, (char*) 1);
-	  break;
+	  if (WinCurXML[0] != EOS)
+	  {
+	  /* reinitialize the list */
+      wndXMLList = GetDlgItem (hwnDlg, IDC_XMLLIST);
+    while (i < NbItem && ItemList[index] != EOS)
+      {
+		if (i == NbItem - 1)
+	SendMessage (wndXMLList, LB_INSERTSTRING, i, (LPARAM) &ItemList[index]); 
+	index += strlen (&ItemList[index]) + 1;
+	i++;
+      }
+    SetWindowText (GetDlgItem (hwnDlg, IDC_XMLEDIT), "");
+	XMLnum = -1;
+	  }
+ 	  break;
 	case ID_DONE:
 	  ThotCallback (NumFormElemToBeCreated, INTEGER_DATA, (char*) 0);
 	  XMLForm = NULL;
@@ -3646,6 +3660,9 @@ void CreateXMLDlgWindow (ThotWindow parent, int nb_item, char *buffer,
 {
   NbItem     = (UINT)nb_item;
   ItemList    = buffer;
+  if (XMLForm)
+	  /* the dialog box is already open */
+	  return;
   if (NbItem == 0)
     /* no entry */
     MessageBox (parent, TtaGetMessage (LIB, TMSG_NO_ELEMENT),

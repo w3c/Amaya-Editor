@@ -131,8 +131,7 @@ void TtaShowElementMenu (Document doc, View view)
 	}
       /* generate the form with two buttons Isert and Done */
 #ifdef _WINGUI
-      CreateXMLDlgWindow (TtaGetViewFrame (doc, 1), nbItem, menuBuf,
-			  withTextInput);
+      CreateXMLDlgWindow (NULL, nbItem, menuBuf, withTextInput);
 #endif /* _WINGUI */
 #ifdef _GTK
       if (nbItem > 0)
@@ -233,6 +232,9 @@ void CallbackElemToBeCreated (int ref, int val, char *txt)
 		    {
 		      CreateNewElement (typeNum, pSS, pDoc, FALSE);
 		      nbItem = BuildElementSelector (pDoc, pSS, menuBuf);
+#ifdef _WINGUI
+             CreateXMLDlgWindow (NULL, nbItem, menuBuf, TRUE);
+#endif /* _WINGUI */
 #ifdef _GTK
 		      if (nbItem > 0)
 			{
