@@ -1275,11 +1275,10 @@ static void         GivePageHeight (frame, org, height)
 int                 frame;
 int                 org;
 int                 height;
-boolean             EnPt;
 
 #endif /* __STDC__ */
 {
-   int                 y, h;
+   int                 y, h, framexmin, framexmax;
    ViewFrame          *pFrame;
 
    if (height != 0)
@@ -1293,6 +1292,8 @@ boolean             EnPt;
 	pFrame->FrClipYBegin = y;
 	pFrame->FrYOrg = y;
 	pFrame->FrClipYEnd = h;
+        /* set the clipping to the frame size before generating postscript (RedrawFrameBottom) */
+	DefineClipping (frame, pFrame->FrXOrg, pFrame->FrYOrg, &framexmin, &y, &framexmax, &h, 1);
      }
 }
 
@@ -1504,11 +1505,10 @@ PtrElement          pPageEl;
 	  }
      }
 
-   if (NewTopMargin != TopMargin || Repaginate)
       /* le cadrage vertical dans la feuille de papier change */
       /* on conserve la nouvelle marge */
       /* Si on est en mode repagination, il faut repositionner le pave racine            en fonction de la marge */
-     {
+      /* il faut le faire aussi en mode non repagination (cf. UnSetTopMargin) */
 	TopMargin = NewTopMargin;
 	/* on modifie la position verticale du pave racine */
 	pPos = &RootAbsBox->AbVertPos;
@@ -1520,7 +1520,6 @@ PtrElement          pPageEl;
 	pPos->PosUserSpecified = FALSE;
 	RootAbsBox->AbVertPosChange = TRUE;
 	change = TRUE;
-     }
 
    if (NewLeftMargin != LeftMargin)
       /* le cadrage horizontal dans la feuille de papier change */
@@ -1548,6 +1547,36 @@ PtrElement          pPageEl;
      }
 }
 #endif /* __COLPAGE__ */
+
+/*----------------------------------------------------------------------
+   UnSetTopMargin remet l'image abstraite a sa position initiale
+   en supprimant le decalage vertical introduit par la marge      
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         UnSetTopMargin()
+#else  /* __STDC__ */
+static void         UnSetTopMargin()
+
+
+#endif /* __STDC__ */
+{
+   AbPosition         *pPos;
+   int                 pageHeight;
+   boolean             change;
+      /* repositionne le pave racine en haut de l'image pour le calcul de la */
+      /* page suivante (si pagination et aussi pour evaluation de clipOrg) */
+      /* le pave racine avait ete decale par SetMargins */
+      pPos = &RootAbsBox->AbVertPos;
+      pPos->PosAbRef = NULL;
+      pPos->PosDistance = 0;
+      pPos->PosEdge = Top;
+      pPos->PosRefEdge = Top;
+      pPos->PosUnit = UnPoint;
+      pPos->PosUserSpecified = FALSE;
+      RootAbsBox->AbVertPosChange = TRUE;
+      pageHeight = 0;
+      change = ChangeConcreteImage (CurrentFrame, &pageHeight, RootAbsBox);
+}
 
 /*----------------------------------------------------------------------
    NextPage    On cherche dans l'image abstraite     		
@@ -1720,6 +1749,7 @@ int                 lastPage;
 	 {
 	   if (pPageAb != pHeaderAb)
 	     {
+               UnSetTopMargin(); /* on retire le decalage introduit par les marges */
 	       KillAbsBoxBeforePage (pPageAb, CurrentFrame, TheDoc, CurrentView, &clipOrg);
 	       if (pPageAb->AbFirstEnclosed != NULL &&
 		   !pPageAb->AbFirstEnclosed->AbPresentationBox)
@@ -1887,6 +1917,7 @@ int                 lastPage;
 	     /* la 1ere page n'est pas le haut de l'image, on detruit */
 	     /* tout ce qui precede */
 	     {
+               UnSetTopMargin (); /* on retire le decalage introduit par les marges */
 	       KillAbsBoxBeforePage (pPageAb, CurrentFrame, TheDoc, CurrentView, &clipOrg);
 	       if (pPageAb->AbFirstEnclosed != NULL &&
 		   !pPageAb->AbFirstEnclosed->AbPresentationBox)
@@ -2002,7 +2033,9 @@ int                 lastPage;
 		     pNextPageAb->AbFirstEnclosed = pSpaceAb;
 		   /* on signale la creation du pave */
 		   h = 0;
-		   ChangeConcreteImage (CurrentFrame, &h, pSpaceAb);
+		   /* on met a jour l'image depuis la racine (pour que la hauteur */
+		   /*  du filet soit correctement calculee */
+		   ChangeConcreteImage (CurrentFrame, &h, RootAbsBox);
 		   /* demande la nouvelle position du saut de page */
 		   /* pour donner la hauteur effective a l'impression */
 		   /* cf. appel a SetPageHeight */
@@ -2458,7 +2491,9 @@ boolean             assoc;
 		    pNextPageAb->AbFirstEnclosed = pSpaceAb;
 		  /* on signale la creation du pave au Mediateur */
 		  h = 0;
-		  ChangeConcreteImage (CurrentFrame, &h, pSpaceAb);
+		   /* on met a jour l'image depuis la racine (pour que la hauteur */
+		   /*  du filet soit correctement calculee */
+		  ChangeConcreteImage (CurrentFrame, &h, RootAbsBox);
 		  /* demande au Mediateur la nouvelle position du saut de page */
 		  /* pour lui donner la hauteur effective a l'impression */
 		  /* cf. appel a SetPageHeight */
