@@ -140,6 +140,8 @@ class AmayaWindow : public wxFrame
   void OnSize( wxSizeEvent& event );
   void OnIdle( wxIdleEvent& event );
   void OnActivate( wxActivateEvent & event );
+  void OnKeyDown(wxKeyEvent& event);
+
  protected:
   DECLARE_EVENT_TABLE()
 

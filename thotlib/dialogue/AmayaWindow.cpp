@@ -19,13 +19,13 @@
 #include "libmsg.h"
 #include "frame.h"
 #include "registry_wx.h"
+#include "thot_key.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "font_tv.h"
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
-
 #include "font_f.h"
 #include "appli_f.h"
 #include "profiles_f.h"
@@ -34,6 +34,7 @@
 #include "dialogapi_f.h"
 #include "callback_f.h"
 #include "appdialogue_wx_f.h"
+#include "input_f.h"
 
 #include "AmayaWindow.h"
 #include "AmayaPanel.h"
@@ -480,6 +481,54 @@ void AmayaWindow::OpenPanel()
 {
 }
 
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaWindow
+ *      Method:  OnText
+ * Description:  manage menu shortcut
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaWindow::OnKeyDown(wxKeyEvent& event)
+{
+  // update special keys status
+  // convert wx key stats to thot key stats 
+  int thotMask = 0;
+  if (event.ControlDown())
+    thotMask |= THOT_MOD_CTRL;
+  if (event.AltDown())
+    thotMask |= THOT_MOD_ALT;
+  if (event.ShiftDown())
+    thotMask |= THOT_MOD_SHIFT;
+
+  // get keycode of the current pressed key
+  int thot_keysym = event.GetKeyCode();
+  
+  wxLogDebug( _T("AmayaWindow::OnKeyDown thotmask=%x, thot_keysym=%x"), thotMask, thot_keysym );
+  
+  if ( event.ControlDown() || event.AltDown() )
+    {      
+      // le code suivant permet de convertire les majuscules
+      // en minuscules pour les racourcis clavier specifiques a amaya.
+      // OnKeyDown recoit tout le temps des majuscule que Shift soit enfonce ou pas.
+      if (!event.ShiftDown())
+	{
+	  // shift key was not pressed
+	  // force the lowercase
+	  wxString s((wxChar)thot_keysym);
+	  if (s.IsAscii())
+	    {
+	      wxLogDebug( _T("AmayaWindow::OnKeyDown : thot_keysym=%x s=")+s, thot_keysym );
+	      s.MakeLower();
+	      wxChar c = s.GetChar(0);
+	      thot_keysym = (int)c;
+	    }
+	}
+      // Call the generic function for key events management
+      ThotInput (GetActiveFrame()->GetFrameId(), thot_keysym, 0, thotMask, thot_keysym);
+    }
+  else
+    event.Skip();
+}
 
 /*----------------------------------------------------------------------
  *  this is where the event table is declared
@@ -489,6 +538,7 @@ BEGIN_EVENT_TABLE(AmayaWindow, wxFrame)
   EVT_SIZE(      AmayaWindow::OnSize )
   EVT_IDLE(      AmayaWindow::OnIdle ) // Process a wxEVT_IDLE event  
   EVT_ACTIVATE(  AmayaWindow::OnActivate )
+  EVT_KEY_DOWN(  AmayaWindow::OnKeyDown)
 END_EVENT_TABLE()
 
 #endif /* #ifdef _WX */

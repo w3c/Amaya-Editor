@@ -30,7 +30,7 @@ class AmayaTextGraber : public wxTextCtrl
 #endif /* #ifdef __WXDEBUG__ */
     
     static int  m_ThotMask;
-	static bool m_Lock;
+    static bool m_Lock;
 
     int m_AmayaFrameId;
     

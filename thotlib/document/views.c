@@ -78,6 +78,10 @@
 
 #include "appdialogue_wx_f.h"
 
+#ifdef _WX
+#include "AmayaFrame.h"
+#endif /* _WX */
+
 #ifdef _WINGUI
 #include "wininclude.h"
 #endif /* _WINGUI */
@@ -623,6 +627,8 @@ void OpenCreatedView (PtrDocument pDoc, int view,
       /* wait for frame initialisation (needed by opengl) 
        * this function waits for complete widgets initialisation */
       wxSafeYield();
+      /* fix accessibility problem : force the created frame to get the focus */
+      FrameTable[frame].WdFrame->SetFocus();
 #endif /* _WX */
     }
 }

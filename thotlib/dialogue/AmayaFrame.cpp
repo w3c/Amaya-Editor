@@ -830,6 +830,8 @@ void AmayaFrame::RaiseFrame()
 
 void AmayaFrame::SetStatusBarText( const wxString & text )
 {
+  wxLogDebug( _T("AmayaFrame::SetStatusBarText - len=%d"), text.Length() );
+
   // the new text is assigned
   m_StatusBarText = text;
 

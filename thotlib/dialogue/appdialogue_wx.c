@@ -416,8 +416,8 @@ ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position 
   
   /* wait for frame initialisation (needed by opengl) 
    * this function waits for complete widgets initialisation */
-  wxTheApp->Yield( TRUE );
-  
+  wxSafeYield();
+	
   return TRUE;
 #else
   return FALSE;

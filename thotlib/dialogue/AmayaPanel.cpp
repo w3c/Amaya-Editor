@@ -107,7 +107,7 @@ void AmayaPanel::ShowWhenUnsplit( bool show )
     {
       Hide();
       m_pPanel_xhtml->Hide();
-    }
+   }
   else
     {
       Show();
