@@ -81,11 +81,10 @@ PtrElement          pEl;
    return NULL;
 }
 
-
-/* ---------------------------------------------------------------------- */
-/* |    ProtectElement positionne l'indicateur ElIsCopy dans tout le sous-arbre | */
-/* |            de pE.                                                  | */
-/* ---------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------- 
+   ProtectElement sets the ElIsCopy flag in the elements of the subtree 
+   of pE
+   ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
 void                ProtectElement (PtrElement pEl)
@@ -110,11 +109,11 @@ PtrElement          pEl;
 }
 
 
-/* ---------------------------------------------------------------------- */
-/* |    GetOtherPairedElement                                                     | */
-/* |  retournee  un pointeur sur la marque qui fait la paire avec la    | */
-/* |  la marque pointee par pEl.                                        | */
-/* ---------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------
+   GetOtherPairedElement
+   returns a pointer on the mark which is pair to the one pointed to by
+   pEl
+   ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
 PtrElement          GetOtherPairedElement (PtrElement pEl)
@@ -134,40 +133,42 @@ PtrElement          pEl;
    pOther = NULL;
    if (pEl != NULL)
       if (pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsPairedElement)
-	 /* il s'agit bien d'un element de paire */
+	/* check if it's a pair element */
 	 if (pEl->ElOtherPairedEl != NULL)
-	    /* cet element a deja un pointeur vers l'autre element de la paire */
+	    /* the element already has a pointer to the other element of the
+	       pair */
 	    pOther = pEl->ElOtherPairedEl;
 	 else
 	   {
-	      /* rechercher la marque de meme type et de meme numero */
+	      /* searchs the mark having the same type and number */
 	      pSS = pEl->ElSructSchema;
 	      begin = pEl->ElSructSchema->SsRule[pEl->ElTypeNumber - 1].SrFirstOfPair;
 	      if (begin)
-		 /* marque de debut, on cherche la marque de fin */
+		 /* pEl has a begin mark, so we search the end mark */
 		 typeNum = pEl->ElTypeNumber + 1;
 	      else
-		 /* marque de fin, on cherche la marque de debut */
+		 /* pEl has an end mark, so we search the begin mark */
 		 typeNum = pEl->ElTypeNumber - 1;
 	      found = False;
 	      pOther = pEl;
-	      /* boucle de recherche */
+	      /* search loop */
 	      while ((pOther != NULL) && (!found))
 		{
 		   if (begin)
-		      /* on cherche en avant */
+		     /* forward search */
 		      pOther = FwdSearchTypedElem (pOther, typeNum, pSS);
 		   else
-		      /* on cherche en arriere */
+		     /* backward search */
 		      pOther = BackSearchTypedElem (pOther, typeNum, pSS);
 		   if (pOther != NULL)
-		      /* on a trouve' un element du type cherche' */
-		      /* c'est le bon s'il a le meme identificateur */
+		     /* we found an element having the same type as that of
+			 the of the element we are searching */
+		     /* it's a hit, if it has the same identifier */
 		      found = (pOther->ElPairIdent == pEl->ElPairIdent ||
-				(pEl->ElPairIdent == 0 && pOther->ElOtherPairedEl == NULL));
+			       (pEl->ElPairIdent == 0 && pOther->ElOtherPairedEl == NULL));
 		}
 	      if (found)
-		 /* on a trouve'. On etablite le chainage entre les 2 elements */
+		 /* found it! Now link the two elements */
 		{
 		   pEl->ElOtherPairedEl = pOther;
 		   pOther->ElOtherPairedEl = pEl;
