@@ -539,38 +539,33 @@ void ANNOT_FreeDocumentResource (Document doc)
 
 /*-----------------------------------------------------------------------
   RemoteLoad_callback
-  -----------------------------------------------------------------------
   -----------------------------------------------------------------------*/
-void RemoteLoad_callback (int doc, int status, 
-			  char *urlName,
-			  char *outputfile, 
-			  AHTHeaders *http_headers,
-			  void * context)
+void RemoteLoad_callback (int doc, int status, char *urlName, char *outputfile, 
+			  AHTHeaders *http_headers, void * context)
 {
    REMOTELOAD_context *ctx;
-   Document source_doc;
-   char *source_doc_url;
-   char *source_body_url;
+   Document            source_doc;
+   char               *source_doc_url, *ptr, *s;
+   char               *source_body_url, *buffer;
+   int                 l;
 
    /* restore REMOTELOAD contextext's */  
    ctx = (REMOTELOAD_context *) context;
-
    if (!ctx)
      return;
    
    ResetStop (doc);
-
    source_doc = ctx->source_doc;
    source_doc_url = ctx->source_doc_url;
    source_body_url = ctx->source_body_url;
 
    /* only load the annotation if the download was succesful and if
       the source document hasn't disappeared in the meantime */
-   if (status == HT_OK
-       && DocumentURLs[source_doc] 
-       && ( Annot_isSameURL (DocumentURLs[source_doc], source_body_url)
-	   || (AnnotMetaData[source_doc].annot_url 
-	       &&  Annot_isSameURL (AnnotMetaData[source_doc].annot_url, source_doc_url))))
+   if (status == HT_OK &&
+       DocumentURLs[source_doc] &&
+       (Annot_isSameURL (DocumentURLs[source_doc], source_body_url)
+	|| (AnnotMetaData[source_doc].annot_url &&
+	    Annot_isSameURL (AnnotMetaData[source_doc].annot_url, source_doc_url))))
      {
        LINK_LoadAnnotationIndex (doc, ctx->remoteAnnotIndex, TRUE);
        /* clear the status line if there was no error*/
@@ -578,13 +573,15 @@ void RemoteLoad_callback (int doc, int status,
      }
    else
      {
-       char *ptr;
        ptr = HTTP_headers (http_headers, AM_HTTP_REASON);
        if (ptr)
 	 {
-	   char buffer[MAX_LENGTH];
-	   snprintf (buffer, sizeof (buffer), "%s: %s", TtaGetMessage (AMAYA, AM_ANNOT_INDEX_FAILURE), ptr);
+	   s = TtaGetMessage (AMAYA, AM_ANNOT_INDEX_FAILURE);
+	   l = strlen (s) + strlen (ptr) + 4;
+	   buffer = (char *)TtaGetMemory (l);
+	   sprintf (buffer, "%s: %s", s, ptr);
 	   TtaSetStatus (doc, 1, buffer, NULL);
+	   TtaFreeMemory (buffer);
 	 }
        else
 	 TtaSetStatus (doc, 1,  TtaGetMessage (AMAYA, AM_ANNOT_INDEX_FAILURE), NULL);
@@ -603,18 +600,18 @@ void RemoteLoad_callback (int doc, int status,
   -----------------------------------------------------------------------*/
 static void ANNOT_Load2 (Document doc, View view, AnnotLoadMode mode)
 {
-  char *annotIndex;
-  char *annotURL;
-  char *tmp_url;
-  char *doc_url;
-  char *tmp_doc_url;
-  char *body_url;
-  char *tmp_body_url;
+  char               *annotIndex;
+  char               *annotURL;
+  char               *tmp_url;
+  char               *doc_url;
+  char               *tmp_doc_url;
+  char               *body_url;
+  char               *tmp_body_url;
+  char               *server;
   REMOTELOAD_context *ctx;
-  int res;
-  List *ptr;
-  char *server;
-  ThotBool is_active = FALSE;
+  int                 res;
+  List               *ptr;
+  ThotBool            is_active = FALSE;
 
 
   if (mode == AM_LOAD_NONE)
@@ -819,12 +816,12 @@ void ANNOT_Reload (Document doc, View view)
   -----------------------------------------------------------------------*/
 void ANNOT_Create (Document doc, View view, AnnotMode mode)
 {
-  Document    doc_annot;
-  AnnotMeta  *annot;
+  Document           doc_annot;
+  AnnotMeta         *annot;
   XPointerContextPtr ctx;
-  char       *xptr;
-  ThotBool    useDocRoot = mode & ANNOT_useDocRoot;
-  ThotBool    isReplyTo = mode & ANNOT_isReplyTo;
+  char              *xptr;
+  ThotBool           useDocRoot = mode & ANNOT_useDocRoot;
+  ThotBool           isReplyTo = mode & ANNOT_isReplyTo;
 
   /* we can only annotate some types of documents and saved documents */
   if (!ANNOT_CanAnnotate (doc))
@@ -943,17 +940,17 @@ void ANNOT_Post_callback (int doc, int status,
   /* delete the temporary file */
   /* the context gives the link's name and we'll use it to look up the
      document ... */
-
    REMOTELOAD_context *ctx;
-   Document  source_doc;
+   Document            source_doc;
    /* For saving threads */
-   ThotBool isReplyTo;
+   ThotBool            isReplyTo;
 #ifdef ANNOT_ON_ANNOT
-   ThotBool is_root;
+   ThotBool            is_root;
 #endif
-   ThotBool do_update;
-   char *previous_body_url;
-   char *previous_annot_url;
+   ThotBool            do_update;
+   char               *previous_body_url, *ptr, *s;
+   char               *previous_annot_url, *buffer;
+   int                 l;
 
    /* restore REMOTELOAD contextext's */  
    ctx = (REMOTELOAD_context *) context;
@@ -1146,9 +1143,9 @@ void ANNOT_Post_callback (int doc, int status,
 		   if (AnnotList_localCount (AnnotMetaData[doc].annotations) > 0)
 		     do_update = TRUE;
 		   /* erase the reference to the local annotation reference in the local thread */
-		   else if (is_root
-			    && AnnotMetaData[doc].thread != AnnotMetaData[source_doc].thread
-			    && AnnotList_localCount (AnnotMetaData[doc].thread->annotations) > 0)
+		   else if (is_root &&
+			    AnnotMetaData[doc].thread != AnnotMetaData[source_doc].thread &&
+			    AnnotList_localCount (AnnotMetaData[doc].thread->annotations) > 0)
 		     do_update = TRUE;
 
 		   if (do_update)
@@ -1195,13 +1192,15 @@ void ANNOT_Post_callback (int doc, int status,
      }
    else /* there was error */
      {
-       char *ptr;
        ptr = HTTP_headers (http_headers, AM_HTTP_REASON);
        if (ptr)
 	 {
-	   char buffer[MAX_LENGTH];
-	   snprintf (buffer, sizeof (buffer), "%s: %s", TtaGetMessage (AMAYA, AM_ANNOT_POST_FAILURE), ptr);
+	   s = TtaGetMessage (AMAYA, AM_ANNOT_POST_FAILURE);
+	   l = strlen (s) + strlen (ptr) + 4;
+	   buffer = (char *)TtaGetMemory (l);
+	   sprintf (buffer, "%s: %s", s, ptr);
 	   TtaSetStatus (doc, 1, buffer, NULL);
+	   TtaFreeMemory (buffer);
 	 }
        else
 	 TtaSetStatus (doc, 1,  TtaGetMessage (AMAYA, AM_ANNOT_POST_FAILURE), NULL);
@@ -1669,32 +1668,28 @@ ThotBool Annot_Types (NotifyElement *event)
   Todo: rename the LINK_SaveLink to LINK_SaveIndex, as that's what 
   it's really doing.
   -----------------------------------------------------------------------*/
-void ANNOT_Delete_callback (int doc, int status, 
-			    char *urlName,
-			    char *outputfile, 
-			    AHTHeaders *http_headers,
-			    void * context)
+void ANNOT_Delete_callback (int doc, int status, char *urlName, char *outputfile, 
+			    AHTHeaders *http_headers, void * context)
 {
   DELETE_context *ctx;
-  Document source_doc;
-  Document annot_doc;
-  char  *annot_url;
-  char  *output_file;
-  Element  annotEl;
-  AnnotMeta *annot;
-  ThotBool annot_is_remote;
-  ThotBool delete_annot = TRUE;
+  Document        source_doc;
+  Document        annot_doc;
+  char           *annot_url;
+  char           *output_file, *ptr, *s, *buffer;
+   int            l;
+  Element         annotEl;
+  AnnotMeta      *annot;
+  ThotBool        annot_is_remote;
+  ThotBool        delete_annot = TRUE;
   /* for deleting threads */
-  ThotBool isReplyTo;
+  ThotBool        isReplyTo;
 
   /* restore REMOTELOAD contextext's */  
   ctx = (DELETE_context *) context;
-
   if (!ctx)
     return;
  
   ResetStop (doc);
- 
   source_doc = ctx->source_doc;
   annot_doc = ctx->annot_doc;
   annot_url = ctx->annot_url;
@@ -1766,13 +1761,15 @@ void ANNOT_Delete_callback (int doc, int status,
     }
   else 
     {
-      char *ptr;
       ptr = HTTP_headers (http_headers, AM_HTTP_REASON);
       if (ptr)
 	{
-	   char buffer[MAX_LENGTH];
-	   snprintf (buffer, sizeof (buffer), "%s: %s", TtaGetMessage (AMAYA, AM_ANNOT_DELETE_FAILURE), ptr);
+	   s = TtaGetMessage (AMAYA, AM_ANNOT_DELETE_FAILURE);
+	   l = strlen (s) + strlen (ptr) + 4;
+	   buffer = (char *)TtaGetMemory (l);
+	   sprintf (buffer, "%s: %s", s, ptr);
 	   TtaSetStatus (doc, 1, buffer, NULL);
+	   TtaFreeMemory (buffer);
 	}
       else
 	TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_ANNOT_DELETE_FAILURE), NULL);
