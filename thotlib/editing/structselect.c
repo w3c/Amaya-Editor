@@ -2044,6 +2044,48 @@ void             RemoveFromSelection (PtrElement pEl, PtrDocument pDoc)
 }
 
 /*----------------------------------------------------------------------
+  SelectableAncestor
+  If element pEl has exception NoSelect or Hidden, return the first ancestor
+  that can be selected.
+  However, if the element is hidden, but has specified a callback for event
+  Select, it is accepted.
+  ----------------------------------------------------------------------*/
+static void    SelectableAncestor (PtrElement *pEl, int *position)
+{
+  ThotBool    graph, stop;
+
+  graph = ((*pEl)->ElLeafType == LtPolyLine ||
+	      (*pEl)->ElLeafType == LtPath ||
+	      ((*pEl)->ElLeafType == LtGraphics && (*pEl)->ElGraph == 'g'));
+  if (TypeHasException (ExcNoSelect, (*pEl)->ElTypeNumber,
+			(*pEl)->ElStructSchema) ||
+      (HiddenType (*pEl) && !ElementHasAction(*pEl, TteElemSelect, TRUE)) ||
+      (TypeHasException (ExcSelectParent, (*pEl)->ElTypeNumber,
+			 (*pEl)->ElStructSchema) &&
+       (*position == 0 || !graph)))
+    {
+      /* select element entirely */
+      *position = 0;
+      stop = FALSE;
+      while (!stop)
+	if ((*pEl)->ElParent == NULL)
+	  /* that's a root. Select it */
+	  stop = TRUE;
+	else
+	  {
+	    *pEl = (*pEl)->ElParent;
+	    if (!TypeHasException (ExcNoSelect, (*pEl)->ElTypeNumber,
+				   (*pEl)->ElStructSchema)  &&
+		(!HiddenType (*pEl) ||
+		 ElementHasAction (*pEl, TteElemSelect, TRUE)) &&
+		!TypeHasException (ExcSelectParent, (*pEl)->ElTypeNumber,
+			 (*pEl)->ElStructSchema))
+	      stop = TRUE;
+	  }
+    }
+}
+
+/*----------------------------------------------------------------------
   SelectElementWithEvent
   Same function as SelectElement, but send  events TteElemSelect.Pre and
    TteElemSelect.Post to the application
@@ -2052,27 +2094,30 @@ void SelectElementWithEvent (PtrDocument pDoc, PtrElement pEl, ThotBool begin, T
 {
    NotifyElement       notifyEl;
    Document            doc;
+   int                 pos;
 
    if (pDoc != NULL && pEl != NULL)
      {
-        doc = IdentDocument (pDoc);
-	notifyEl.event = TteElemSelect;
-	notifyEl.document = doc;
-	notifyEl.element = (Element) pEl;
-	notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-	notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
-	notifyEl.position = 0;
-	if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-	  {
-	     SelectElement (pDoc, pEl, begin, check);
-	     notifyEl.event = TteElemSelect;
-	     notifyEl.document = doc;
-	     notifyEl.element = (Element) pEl;
-	     notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-	     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
-	     notifyEl.position = 0;
-	     CallEventType ((NotifyEvent *) & notifyEl, FALSE);
-	  }
+       pos = 0;
+       SelectableAncestor (&pEl, &pos);
+       doc = IdentDocument (pDoc);
+       notifyEl.event = TteElemSelect;
+       notifyEl.document = doc;
+       notifyEl.element = (Element) pEl;
+       notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
+       notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
+       notifyEl.position = 0;
+       if (!CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+	 {
+	   SelectElement (pDoc, pEl, begin, check);
+	   notifyEl.event = TteElemSelect;
+	   notifyEl.document = doc;
+	   notifyEl.element = (Element) pEl;
+	   notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
+	   notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
+	   notifyEl.position = 0;
+	   CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+	 }
      }
 }
 
@@ -2089,6 +2134,7 @@ void    SelectPositionWithEvent (PtrDocument pDoc, PtrElement pEl, int first)
 
    if (pDoc != NULL && pEl != NULL)
      {
+        SelectableAncestor (&pEl, &first);
         doc = IdentDocument (pDoc);
 	notifyEl.event = TteElemSelect;
 	notifyEl.document = doc;
@@ -2120,9 +2166,12 @@ void SelectStringWithEvent (PtrDocument pDoc, PtrElement pEl, int firstChar, int
 {
    NotifyElement       notifyEl;
    Document            doc;
+   int                 pos;
 
    if (pDoc != NULL && pEl != NULL)
      {
+        pos = 0;
+        SelectableAncestor (&pEl, &pos);
         doc = IdentDocument (pDoc);
 	notifyEl.event = TteElemSelect;
 	notifyEl.document = doc;
@@ -2143,7 +2192,6 @@ void SelectStringWithEvent (PtrDocument pDoc, PtrElement pEl, int firstChar, int
 	  }
      }
 }
-
 
 /*----------------------------------------------------------------------
    ChangeSelection
@@ -2451,31 +2499,6 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 	     /* the element to be selected is a constant */
 	     /* Select it entirely */
 	     rank = 0;
-	   /* if the element to be selected has exception NoSelect or */
-	   /* Hidden, select the first ancestor that can be selected */
-	   /* However, if the element is hidden, but has specified a */
-	   /* callback for event Select, it is selected */
-	   if (TypeHasException (ExcNoSelect, pEl->ElTypeNumber, pEl->ElStructSchema) ||
-	       (HiddenType (pEl) && !ElementHasAction(pEl, TteElemSelect, TRUE)) ||
-	       (TypeHasException (ExcSelectParent, pEl->ElTypeNumber, pEl->ElStructSchema) &&
-		(rank == 0 || !graphSel)))
-	     {
-	       /* select element entirely */
-	       rank = 0;
-	       stop = FALSE;
-	       while (!stop)
-		 if (pEl->ElParent == NULL)
-		   /* that's a root. Select it */
-		   stop = TRUE;
-		 else
-		   {
-		     pEl = pEl->ElParent;
-		     if (!TypeHasException (ExcNoSelect, pEl->ElTypeNumber, pEl->ElStructSchema)  &&
-			 (!HiddenType (pEl) ||
-			  ElementHasAction (pEl, TteElemSelect, TRUE)))
-		       stop = TRUE;
-		   }
-	     }
 	   if (rank > 0 && pAb->AbPresentationBox && pAb->AbCanBeModified)
 	     /* user has clicked in the presentation box displaying an */
 	     /* attribute value */

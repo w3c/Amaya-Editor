@@ -865,7 +865,7 @@ EXCEPT
 	HEAD:		NoCut;
 	TITLE:		NoCut;
 	Document_URL:	Hidden, NoSpellCheck;
-	C_Empty:	Hidden;
+	C_Empty:	Hidden, NoSelect;
 	C_BR:		SelectParent;
 	Head_misc:	Hidden;
 	Frames:		Hidden;
