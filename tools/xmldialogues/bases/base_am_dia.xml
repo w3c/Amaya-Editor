@@ -1277,7 +1277,7 @@
 </label>
 <label define="BHeadingCell">
 	<message xml:lang="en">Heading cell (th)</message>
-	<message xml:lang="fr">Cellule de tête (th)</message>
+	<message xml:lang="fr">Cellule titre (th)</message>
 	<message xml:lang="de">Kopfzelle (th)</message>
 	<message xml:lang="it">Cella intestazione (th)</message>
 	<message xml:lang="tr">Başlık hücresi (th)</message>

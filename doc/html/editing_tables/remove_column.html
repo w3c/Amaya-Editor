@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Removing a Column</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title>Removing/Copying/Pasting a Column</title>
   <style type="text/css">
   </style>
-  <meta name="GENERATOR" content="amaya 6.4, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 8.2, see http://www.w3.org/Amaya/" />
   <link href="../style.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -17,27 +18,64 @@
     <tr>
       <td><img alt="W3C" src="../../images/w3c_home" /> <img alt="Amaya"
         src="../../images/amaya.gif" /></td>
-      <td><p align="right"><a href="add_tbody.html" accesskey="p"><img alt="previous"
-        src="../../images/left.gif" /></a> <a href="../Tables.html"
-        accesskey="t"><img alt="top" src="../../images/up.gif" /></a></p>
+      <td><p align="right"><a href="add_tbody.html" accesskey="p"><img
+        alt="previous" src="../../images/left.gif" /></a> <a
+        href="../Tables.html" accesskey="t"><img alt="top"
+        src="../../images/up.gif" /></a></p>
       </td>
     </tr>
   </tbody>
 </table>
 
 <div id="page_body">
-<h1>Removing a Column</h1>
-
-<p>When you delete a cell in a column that becomes empty, Amaya deletes the
-column automatically. You can also delete a column without first removing its
-content.</p>
+<h1>Removing/Copying/Pasting a Column</h1>
 
 <p class="ProcedureCaption">To delete a column from a table:</p>
 <ol>
-  <li>Move the cursor into the column that you want to remove. </li>
-  <li>Choose <strong>Table &gt; Delete table column</strong> from the
-    <strong>Types</strong> menu.</li>
+  <li>Move the cursor into the column that you want to remove and choose the
+    <strong>Delete table column</strong> entry in the <strong>Table</strong>
+    sub-menu.</li>
+  <li>You can also start the selection in a cell and extend to another cell
+    in the same column (by example starts in Cell 1.2 and ends in Cell 3.2).
+    Amaya changes to the column selection mode. Hitting the <code>F2</code>
+    key on Windows (or the <code>Esc</code> key on Linux) extends the
+    selection into the column between and including the two whole cells (Cell
+    1.2, Cell 2.2, Cell 3.2). The <code>Delete</code> key will remove the
+    contents of all selected cells. Hitting the <code>F2</code> or
+    <code>Esc</code> key another times extends the selection to the whole
+    column. The <code>Delete</code> key will remove the selected column.</li>
 </ol>
+
+<table border="1" summary="table">
+  <tbody>
+    <tr>
+      <td>Cell 1.1</td>
+      <td>Cell 1.2</td>
+      <td>Cell 1.3</td>
+    </tr>
+    <tr>
+      <td>Cell 2.1</td>
+      <td>Cell 2.2</td>
+      <td>Cell 2.3</td>
+    </tr>
+    <tr>
+      <td>Cell 3.1</td>
+      <td>Cell 3.2</td>
+      <td>Cell 3.3</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>When a whole column is selected, it's possible to copy (or to cut) it and
+to paste it before or after another column.</p>
+<ol>
+  <li>To paste a column before an existing column, click at the beginning of
+    a cell in the existing column and paste the copied or cut column.</li>
+  <li>To paste a column an existing column, move the cursor to the end of a
+    cell in the existing column and paste the copied or cut column.</li>
+</ol>
+
+<p></p>
 </div>
 </body>
 </html>
