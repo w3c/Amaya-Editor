@@ -1652,20 +1652,17 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 		  unsigned char type, ThotBool state)
 {
   int                 frame, i, index;
-
 #ifdef _MOTIF
   ThotWidget          w, row;
   int                 n;
   XmString            title_string;
   Arg                 args[MAX_ARGS];
 #endif /* _MOTIF */
-
 #ifdef _GTK
   ThotWidget          w, row;
   ThotWidget          toolbar;
   GtkTooltips        *tooltipstmp;
 #endif /* _GTK */
-
 #ifdef _WINGUI
   ThotButton          w;
 #endif /* _WINGUI */
@@ -1833,13 +1830,13 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 		    WinErrorBox (NULL, "TtaAddButton");
 		  else
 		    {
-		      w->fsState      = TBSTATE_ENABLED;
-		      w->fsStyle      = type;
+		      w->fsState = TBSTATE_ENABLED;
+		      w->fsStyle = type;
 		      FrameTable[frame].ButtonId[i] = TBBUTTONS_BASE + i;
-		      w->idCommand    = FrameTable[frame].ButtonId[i]; 
+		      w->idCommand = FrameTable[frame].ButtonId[i]; 
 		      w->bReserved[0] = 0;
 		      w->bReserved[1] = 0;
-		      w->dwData       = 0;
+		      w->dwData = 0;
 		      if (procedure)
 			{
 			  w->iBitmap      = picture;
@@ -1853,8 +1850,8 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
 			}
 		      else
 			{
-			  w->iBitmap   = 3;
-			  w->iString   = 0;
+			  w->iBitmap = 3;
+			  w->iString = 0;
 			  SendMessage(WinToolBar[frame], TB_INSERTBUTTON,
 				      (WPARAM) FrameTable[frame].ButtonId[i],
 				      (LPARAM)(LPTBBUTTON)w);
@@ -1876,42 +1873,6 @@ int TtaAddButton (Document document, View view, ThotIcon picture,
   return (index);
 }
 
-#ifdef IV
-/*----------------------------------------------------------------------
-   TtaGetButtonCallback
-
-   Get the callback of a button in a document view.
-   Returns the callback if it exists, NULL if it doesn't exists
-   Parameters:
-   document: the concerned document.
-   view: the concerned view.
-   index: the index.
-  ----------------------------------------------------------------------*/
-void *TtaGetButtonCallback (Document document, View view, int index)
-{
-   int                 frame;
-
-   UserErrorCode = 0;
-   /* verifie le parametre document */
-   if (document == 0 && view == 0)
-      return (NULL);
-   else
-     {
-	frame = GetWindowNumber (document, view);
-	if (frame == 0 || frame > MAX_FRAME)
-	   return (NULL);
-	else if (FrameTable[frame].WdFrame != 0)
-	  {
-	     if (index < MAX_BUTTON && index > 0 &&
-		 FrameTable[frame].Button[index] != 0)
-		return (FrameTable[frame].Call_Button[index]);
-	     else
-	        return (NULL);
-	  }
-     }
-   return(NULL);
-}
-#endif /* IV */
 
 /*----------------------------------------------------------------------
    TtaSwitchButton
@@ -3241,19 +3202,16 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
    int                 visiVal;
    int                 frame;
    ThotBool            found;
-
 #define MIN_HEIGHT 100
 #define MIN_WIDTH 200
    
 #ifdef _WINGUI
-   hwndClient = 0; 
-   ToolBar    = 0;
-   logoFrame  = 0;
-   StatusBar  = 0;
-
+   hwndClient = 0;
+   ToolBar = 0;
+   logoFrame = 0;
+   StatusBar = 0;
    strcpy (wTitle, name);
 #endif /* _WINGUI */
-
 
    menu_bar = NULL;
    frame = 0;
@@ -3321,10 +3279,10 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   else 
 	     {
 	       /* store everything. */
-	       FrMainRef[frame]            = Main_Wd;
-	       FrRef[frame]                = hwndClient;
-	       WinToolBar[frame]           = ToolBar;
-	       FrameTable[frame].WdStatus  = StatusBar;
+	       FrMainRef[frame] = Main_Wd;
+	       FrRef[frame] = hwndClient;
+	       WinToolBar[frame] = ToolBar;
+	       FrameTable[frame].WdStatus = StatusBar;
 	       /* and show it up. */
 	       if (withMenu)
 		 {
@@ -4160,13 +4118,11 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   FrameTable[frame].WdScrollH = hscrl;
 	   FrameTable[frame].WdScrollV = vscrl;
 	   if (w == NULL)
-		   w = (ThotMenu)CreateWindow ("STATIC", "", 
-			       WS_CHILD | SS_LEFT,
-			       0, 0, 0, 0, Main_Wd, (HMENU) frame, 
-			       hInstance, NULL); 
-	   FrameTable[frame].WdFrame = (ThotMenu) w;
+	     FrameTable[frame].WdFrame = (ThotMenu) hwndClient;
+	   else
+	     FrameTable[frame].WdFrame = (ThotMenu) w;
 #endif /* _WINGUI */
-     
+
 	   FrameTable[frame].FrScrollOrg = 0;
 
 	   /* get registry default values for visibility */
@@ -4191,7 +4147,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
        *volume = GetCharsCapacity (width * height * 5);
        FrameTable[frame].FrDoc = doc;
        FrameTable[frame].FrView = view;
-
 #ifdef _WINGUI
        SetMenu (Main_Wd, menu_bar);
        ShowWindow (Main_Wd, SW_SHOWNORMAL);
@@ -4201,17 +4156,15 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
        
 #ifdef _GL
        FrameTable[frame].Scroll_enabled = TRUE;
-#endif /* _GL */
-       
+#endif /* _GL */ 
      }
    return (frame);
 #else /* #if defined(_MOTIF) || defined(_GTK) || defined(_WINGUI) */
-
    /* this is for none gui compilation */
    return 0;
-
 #endif /* #if defined(_MOTIF) || defined(_GTK) || defined(_WINGUI) */
 }
+
 /*----------------------------------------------------------------------
  TtaDisableScrollbars  : Disable scrollbars for this view                 
   ----------------------------------------------------------------------*/

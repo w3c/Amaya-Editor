@@ -2013,7 +2013,7 @@ static void Wnd_ResizeContent (HWND hwnd, int cx, int cy, int frame)
   FRWidth[frame] = cx;
   FRHeight[frame] = cy;
   /* Adjust toolbar size. */
-  if (IsWindowVisible (WinToolBar[frame]))
+  if (WinToolBar[frame] && IsWindowVisible (WinToolBar[frame]))
     {
       dwStyle = GetWindowLong (WinToolBar[frame], GWL_STYLE);
       if (dwStyle & CCS_NORESIZE)
@@ -2051,7 +2051,7 @@ static void Wnd_ResizeContent (HWND hwnd, int cx, int cy, int frame)
     cyStatus = 0;
 
 
-  if (Win_Scroll_visible (FrameTable[frame].WdScrollV)) 
+  if (FrameTable[frame].WdScrollV && Win_Scroll_visible (FrameTable[frame].WdScrollV)) 
     {
       /* Adjust Vertical scroll bar */
       MoveWindow (FrameTable[frame].WdScrollV, cx - 15,
@@ -2063,7 +2063,7 @@ static void Wnd_ResizeContent (HWND hwnd, int cx, int cy, int frame)
   else
     cxVSB = 0;
 
-  if (Win_Scroll_visible (FrameTable[frame].WdScrollH)) 
+  if (FrameTable[frame].WdScrollH && Win_Scroll_visible (FrameTable[frame].WdScrollH)) 
     {
       /* Adjust Hoizontal scroll bar */
       MoveWindow (FrameTable[frame].WdScrollH, 0,
@@ -2105,8 +2105,6 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
 
   switch (mMsg)
     {
-
-
     case WM_CREATE:
       /* Create toolbar  */
       ThotTBBitmap.hInst = hInstance;
@@ -2114,6 +2112,8 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
 	
       dwToolBarStyles = WS_CHILD | WS_VISIBLE | CCS_TOP | TBSTYLE_TOOLTIPS;
       dwToolBarStyles = dwToolBarStyles | TBSTYLE_FLAT;
+	  if (ToolBar == 0)
+	  {
       ToolBar = CreateWindow (TOOLBARCLASSNAME, NULL, dwToolBarStyles,
 			      0, 0, 0, 0, hwnd, (HMENU) 1, hInstance, 0);
 
@@ -2125,13 +2125,12 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
       hwndToolTip = ToolBar_GetToolTips (ToolBar);
       if (dwToolBarStyles & TBSTYLE_TOOLTIPS)
 	InitToolTip (ToolBar);	
-    
+	  }
       /* Create status bar  */
       dwStatusBarStyles = WS_CHILD | WS_VISIBLE | CCS_BOTTOM | SBARS_SIZEGRIP;
       StatusBar = CreateStatusWindow (dwStatusBarStyles, "", hwnd, 2);
       ShowWindow (StatusBar, SW_SHOWNORMAL);
-      UpdateWindow (StatusBar); 
-      hwndClient = 0;
+      UpdateWindow (StatusBar);
       hwndClient = CreateWindowEx (WS_EX_ACCEPTFILES, "ClientWndProc", NULL,
 				   WS_CHILD | WS_BORDER,
 				   0, 0, 0, 0, hwnd, (HMENU) 2, hInstance, NULL);
@@ -2298,8 +2297,6 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
       cx = LOWORD (lParam);
       cy = HIWORD (lParam);
       Wnd_ResizeContent (hwnd, cx, cy, frame);
-      /*SetFocus (FrRef [frame]);
-      ActiveFrame = frame;*/
       return 0;
 
 #ifdef _GL
