@@ -50,6 +50,7 @@
 #include "appdialogue_f.h"
 #include "applicationapi_f.h"
 #include "checkaccess_f.h"
+#include "callback_f.h"
 #include "config_f.h"
 #include "dialogapi_f.h"
 #include "documentapi_f.h"
@@ -408,35 +409,39 @@ Proc                procedure;
 /*----------------------------------------------------------------------
    TtaQuit
 
-   Quits the Thot tool kit. No other function of the tool kit can then
+   Quit the Thot tool kit. No other function of the tool kit can then
    be called by the application.
 
   ----------------------------------------------------------------------*/
 void                TtaQuit ()
 {
   PtrDocument       pDoc;
+  NotifyDialog      notifyDoc;
   int               d;
 
-#ifndef NODISPLAY
-  FreeDocColors ();
-  FreeAllMessages ();
-  Prof_FreeTable ();
-#endif /* NODISPLAY */
-#ifndef NODISPLAY
-  FreeTranslations ();
-  FreeMenus ();
-#endif /* NODISPLAY */
+  /* close all opened document */
   for (d = 0; d < MAX_DOCUMENTS - 1; d++)
     if (LoadedDocument[d])
       {
 	/* free the document tree */
 	UnloadTree (d + 1);
+	notifyDoc.event = TteDocClose;
+	notifyDoc.document = d + 1;
+	notifyDoc.view = 0;
+	CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
 	pDoc = LoadedDocument[d];
 	/* free document schemas */
 	FreeDocumentSchemas (pDoc);
 	FreeDocument (pDoc);
 	LoadedDocument[d] = NULL;
       }
+#ifndef NODISPLAY
+  FreeDocColors ();
+  FreeAllMessages ();
+  Prof_FreeTable ();
+  FreeTranslations ();
+  FreeMenus ();
+#endif /* NODISPLAY */
   FreeAll ();
   TtaFreeAppRegistry ();
   if (AppClosingFunction)
