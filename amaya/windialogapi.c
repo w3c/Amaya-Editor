@@ -26,6 +26,7 @@
 
 #include "wininclude.h"
 
+
 #ifdef  APPFILENAMEFILTER
 #       undef  APPFILENAMEFILTER
 #endif  /* APPFILENAMEFILTER */
@@ -70,25 +71,27 @@ int                WIN_NormalLineSpacing;
 
 extern HINSTANCE    hInstance;
 extern HDC          TtPrinterDC;
-extern STRING        AttrHREFvalue;
-extern CHAR_T         WIN_buffMenu [MAX_TXT_LEN];
-extern CHAR_T         ChkrCorrection[MAX_PROPOSAL_CHKR+1][MAX_WORD_LEN];
+extern STRING       AttrHREFvalue;
+extern CHAR_T       WIN_buffMenu [MAX_TXT_LEN];
+extern CHAR_T       ChkrCorrection[MAX_PROPOSAL_CHKR+1][MAX_WORD_LEN];
 extern BOOL         TtIsPrinterTrueColor;
 extern BOOL         bUserAbort;
 extern HWND         hWndParent;
 extern int          WIN_MenuAlphabet;
 
-static CHAR_T         urlToOpen [256];
-static CHAR_T         altText [256];
-static CHAR_T         message [300];
-static CHAR_T         message2 [300];
-static CHAR_T         wndTitle [100];
-static CHAR_T         currentLabel [100];
-static CHAR_T         currentRejectedchars [100];
-static CHAR_T         currentPathName [100];
-static CHAR_T         winCurLang [100];
-static CHAR_T         currentFileToPrint [MAX_PATH];
-static CHAR_T         attDlgTitle [100];
+extern int          ClickX, ClickY;
+
+static CHAR_T       urlToOpen [256];
+static CHAR_T       altText [256];
+static CHAR_T       message [300];
+static CHAR_T       message2 [300];
+static CHAR_T       wndTitle [100];
+static CHAR_T       currentLabel [100];
+static CHAR_T       currentRejectedchars [100];
+static CHAR_T       currentPathName [100];
+static CHAR_T       winCurLang [100];
+static CHAR_T       currentFileToPrint [MAX_PATH];
+static CHAR_T       attDlgTitle [100];
 static STRING       lpPrintTemplateName = (STRING) 0;
 static int          currentDoc ;
 static int          currentView ;
@@ -2246,6 +2249,7 @@ LPARAM lParam;
     switch (msg) {
 	       case WM_INITDIALOG:
 			    currentDlg = hwnDlg;
+                /* SetWindowPos (currentDlg, HWND_TOP, ClickX, ClickY, 294, 97, SWP_DRAWFRAME); */
                 transURLWnd = GetDlgItem (hwnDlg, IDC_COPYIMG);
                 copyImgWnd = GetDlgItem (hwnDlg, IDC_TRANSFORMURL);
 			    SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, currentPathName);
