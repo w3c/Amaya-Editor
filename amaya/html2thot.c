@@ -2787,15 +2787,18 @@ static void           ProcessStartGI (char* GIname)
 		    }
 		}
 	      if (pHTMLGIMapping[entry].XMLcontents != 'E')
-		{
-		  ElementStack[StackLevel] = el;
-		  if (sameLevel)
-		    ThotLevel[StackLevel] = ThotLevel[StackLevel - 1];
-		  else
-		    ThotLevel[StackLevel] = ThotLevel[StackLevel - 1] + 1;
-		  LanguageStack[StackLevel] = HTMLcontext.language;
-		  GINumberStack[StackLevel++] = entry;
-		}
+		if (StackLevel >= MaxStack - 1)
+	          HTMLParseError (HTMLcontext.doc, "Too many nested elements");
+		else
+		  {
+		    ElementStack[StackLevel] = el;
+		    if (sameLevel)
+		      ThotLevel[StackLevel] = ThotLevel[StackLevel - 1];
+		    else
+		      ThotLevel[StackLevel] = ThotLevel[StackLevel - 1] + 1;
+		    LanguageStack[StackLevel] = HTMLcontext.language;
+		    GINumberStack[StackLevel++] = entry;
+		  }
 	    }
 	}
     }
@@ -2848,9 +2851,7 @@ static void     EndOfStartGI (char c)
          HTMLParseError (HTMLcontext.doc, "Element after tag </html>. Ignored");
          return;
          }
-      if (!strcmp (theGI, "math") ||
-	  !strcmp (theGI, "svg") ||
-	  !strcmp (theGI, "xmlgraphics"))
+      if (!strcmp (theGI, "math") || !strcmp (theGI, "svg"))
 	/* a <math> or <svg> tag has been read */
 	{
 	  /* get back to the beginning of the tag in the input buffer */
@@ -6244,7 +6245,7 @@ static void     InitializeHTMLParser (Element lastelem, ThotBool isclosed, Docum
 	   elem = TtaGetParent (lastelem);
 	else
 	   elem = lastelem;
-	while (elem != NULL && elem != rootElement)
+	while (elem != NULL && elem != rootElement && StackLevel < MaxStack-2)
 	  {
 	     strcpy (tag, GetXMLElementName (TtaGetElementType (elem), doc));
 	     if (strcmp (tag, "???"))
