@@ -771,9 +771,7 @@ void SaveDocumentAs (Document doc, View view)
 	    }
 	}
       else
-	{
-	  TtaExtractName (tempname, SavePath, SaveName);
-	}
+	TtaExtractName (tempname, SavePath, SaveName);
       TtaSetDialoguePosition ();
     }
   else
@@ -869,9 +867,9 @@ void SetNamespacesAndDTD (Document doc)
    char                *ptr, *s;
    char                *charsetname = NULL;
    char		        buffer[300];
-   ThotBool		useMathML, useSVG, useHTML, useXML, usePI;
-   int                  length, profile;
    char                *attrText;
+   int                  length, profile;
+   ThotBool		useMathML, useSVG, useHTML, useXML, usePI, xhtml_mimetype;
 
    useMathML = FALSE;
    useHTML = FALSE;
@@ -1049,18 +1047,43 @@ void SetNamespacesAndDTD (Document doc)
 		   TtaAttachAttribute (meta, attr, doc);
 		 }
 	       TtaSetAttributeText (attr, "Content-Type", meta, doc);
+
 	       attrType.AttrTypeNum = HTML_ATTR_meta_content;
 	       attr = TtaGetAttribute (meta, attrType);
+	       if (!DocumentMeta[doc] || !DocumentMeta[doc]->xmlformat)
+		 /* must be text/html */
+		 xhtml_mimetype = FALSE; 
+	       else if (DocumentMeta[doc]->content_type == NULL)
+		 {
+		   if (attr)
+		     {
+		       length = TtaGetTextAttributeLength (attr);
+		       attrText = (char *)TtaGetMemory (length + 1);
+		       TtaGiveTextAttributeValue (attr, attrText, &length);
+		       if (!strncmp (attrText, "text/html", 9))
+			 xhtml_mimetype = FALSE;
+		       else
+			 xhtml_mimetype = TRUE;
+		       TtaFreeMemory (attrText);
+		     }
+		   else
+		     /* what default MIME type for the html document */
+		     TtaGetEnvBoolean ("ENABLE_XHTML_MIMETYPE", &xhtml_mimetype);
+		 }
 	       if (!attr)
 		 {
 		   attr = TtaNewAttribute (attrType);
 		   TtaAttachAttribute (meta, attr, doc);
 		 }
-	       if (charsetname[0] == EOS)
-		 TtaSetAttributeText (attr, "text/html", meta, doc);
+	       if (DocumentMeta[doc] && DocumentMeta[doc]->content_type)
+		 strcpy (buffer, DocumentMeta[doc]->content_type);
+	       else if (xhtml_mimetype)
+		 strcpy (buffer, AM_XHTML_MIME_TYPE);
 	       else
+		 strcpy (buffer, "text/html");
+	       if (charsetname[0] != EOS)
 		 {
-		   strcpy (buffer, "text/html; charset=");
+		   strcat (buffer, "; charset=");
 		   strcat (buffer, charsetname);
 		   TtaSetAttributeText (attr, buffer, meta, doc);
 		 }

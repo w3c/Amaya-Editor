@@ -545,7 +545,7 @@ void DocumentInfo (Document document, View view)
 		BaseDialog + DocInfoForm, content);
 
    /* Mime Type */
-   if (DocumentMeta[document] && DocumentMeta[document]->content_type != NULL)
+   if (DocumentMeta[document] && DocumentMeta[document]->content_type)
      content = DocumentMeta[document]->content_type;
    else
      content = TtaGetMessage (AMAYA, AM_UNKNOWN);
@@ -561,7 +561,7 @@ void DocumentInfo (Document document, View view)
 		BaseDialog + DocInfoForm, content);
 
    /* Content Length */
-   if (DocumentMeta[document] && DocumentMeta[document]->content_length != NULL)
+   if (DocumentMeta[document] && DocumentMeta[document]->content_length)
      content = DocumentMeta[document]->content_length;
    else
      content = TtaGetMessage (AMAYA, AM_UNKNOWN);
@@ -3247,6 +3247,7 @@ void ReparseAs (Document doc, View view, ThotBool asHTML,
       (asHTML && !DocumentMeta[doc]->xmlformat))
     /* the document is not concerned by this option */
     return;
+  docModified = TtaIsDocumentModified (doc);
   if (!CanReplaceCurrentDocument (doc, view))
     /* abort the command */
     return;
@@ -3279,7 +3280,6 @@ void ReparseAs (Document doc, View view, ThotBool asHTML,
   RemoveDocCSSs (doc);  
   /* Free access keys table */
   TtaRemoveDocAccessKeys (doc);
-  docModified = TtaIsDocumentModified (doc);
   if (asHTML)
     DocumentMeta[doc]->xmlformat = FALSE;
   if (charset != UNDEFINED_CHARSET &&
@@ -3307,19 +3307,22 @@ void ReparseAs (Document doc, View view, ThotBool asHTML,
 		   DocumentTypes[doc] == docText);
       StartParser (doc, localFile, documentname, s, localFile, plaintext, FALSE);
     }
-  /* then request to save as XHTML */
-  if (asHTML)
-    DocumentMeta[doc]->xmlformat = TRUE;
 
   /* fetch and display all images referred by the document */
   DocNetworkStatus[doc] = AMAYA_NET_ACTIVE;
   FetchAndDisplayImages (doc, AMAYA_LOAD_IMAGE, NULL);
   DocNetworkStatus[doc] = AMAYA_NET_INACTIVE;
-  /* Update the source of the document */
-  TtaSetDocumentModified (doc);
-  Synchronize (doc, view);
-  if (!docModified)
-    TtaSetDocumentUnmodified (doc);
+  if (asHTML)
+    /*  save as XHTML */
+    /*DocumentMeta[doc]->xmlformat = TRUE*/;
+  else
+    {
+      /* Update the source of the document */
+      TtaSetDocumentModified (doc);
+      Synchronize (doc, view);
+      if (!docModified)
+	TtaSetDocumentUnmodified (doc);
+    }
   /* check parsing errors */
   CheckParsingErrors (doc);
   TtaFreeMemory (localFile);
@@ -3425,7 +3428,6 @@ static Document LoadDocument (Document doc, char *pathname,
   CheckDocHeader (s, &xmlDec, &withDoctype, &isXML, &isknown,
 		  &docProfile, &charset, charsetname, &thotType);
 
-  /* if (charset == UNDEFINED_CHARSET && isXML && thotType == docHTML) */
   /* Check charset information in a meta */
   if (charset == UNDEFINED_CHARSET)
     CheckCharsetInMeta (s, &metacharset, charsetname);
@@ -3531,12 +3533,8 @@ static Document LoadDocument (Document doc, char *pathname,
 	       docType == docSource || docType == docLog )
 	strcpy (local_content_type , "text/plain");
       else if (docType == docHTML || docType == docLibrary)
-	{
-	  if (isXML && AM_UseXHTMLMimeType () )
-	    strcpy (local_content_type , AM_XHTML_MIME_TYPE);
-	  else
-	    strcpy (local_content_type , "text/html");
-	}
+	/* not defined yet */
+	local_content_type[0] = EOS;
     }
    else
      /* The server returned a content type */
@@ -3970,12 +3968,11 @@ static Document LoadDocument (Document doc, char *pathname,
       /* content-type */
       if (http_content_type)
 	DocumentMeta[newdoc]->content_type = TtaStrdup (http_content_type);
+      else if (local_content_type[0] != EOS)
+	/* assign a content type to the local files */
+	DocumentMeta[newdoc]->content_type = TtaStrdup (local_content_type);
       else
-	if (local_content_type[0] != EOS)
-	  /* assign a content type to the local files */
-	  DocumentMeta[newdoc]->content_type = TtaStrdup (local_content_type);
-	else
-	  DocumentMeta[newdoc]->content_type = NULL;
+	DocumentMeta[newdoc]->content_type = NULL;
       /* content-length */
       s = HTTP_headers (http_headers, AM_HTTP_CONTENT_LENGTH);
       if (s)
@@ -5921,7 +5918,7 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	{
 	  if (SavingDocument != 0)
 	    {
-	      if (SavePath[0] && IsW3Path (SavePath))
+	      if (SavePath[0])
 		{
 		  /* clear the status message */
 

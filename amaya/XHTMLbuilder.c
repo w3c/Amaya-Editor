@@ -31,6 +31,7 @@
 #include "HTMLimage_f.h"
 #include "HTMLtable_f.h"
 #include "HTMLimage_f.h"
+#include "init_f.h"
 #include "UIcss_f.h"
 #include "styleparser_f.h"
 #include "XHTMLbuilder_f.h"
@@ -61,10 +62,10 @@ extern XmlEntity *pXhtmlEntityTable;
 #define MaxMsgLength 200
 
 /*----------------------------------------------------------------------
-  ParseCharset:
+  ParseCharsetAndContentType:
   Parses the element HTTP-EQUIV and looks for the charset value.
   ----------------------------------------------------------------------*/
-void             ParseCharset (Element el, Document doc) 
+void ParseCharsetAndContentType (Element el, Document doc) 
 
 {
    AttributeType attrType;
@@ -77,8 +78,8 @@ void             ParseCharset (Element el, Document doc)
    int           pos, index = 0;
 
    charset = TtaGetDocumentCharset (doc);
-   if (charset != UNDEFINED_CHARSET)
-     /* the charset was already defined by the http header */
+   if (charset != UNDEFINED_CHARSET &&
+       DocumentMeta[doc] && DocumentMeta[doc]->content_type)
      return;
 
    docSSchema = TtaGetDocumentSSchema (doc);
@@ -110,18 +111,33 @@ void             ParseCharset (Element el, Document doc)
 			   *ptrText = tolower (*ptrText);
 			   ptrText++;
 			 }
-		       
-		       str = strstr (text2, "charset=");
-		       if (str)
+
+		       if (!DocumentMeta[doc])
+			 DocumentMeta[doc] = DocumentMetaDataAlloc ();
+		       if (DocumentMeta[doc]->content_type == NULL)
 			 {
-			   pos = str - text2 + 8;
-			   while (text2[pos] != SPACE &&
-				  text2[pos] != TAB && text2[pos] != EOS)
-			     charsetname[index++] = text2[pos++];
-			   charsetname[index] = EOS;
-			   charset = TtaGetCharset (charsetname);
-			   if (charset != UNDEFINED_CHARSET)
-			     TtaSetDocumentCharset (doc, charset, FALSE);
+			   
+			   if (!strncmp (text2, "text/html", 9))
+			     DocumentMeta[doc]->content_type = TtaStrdup ("text/html");
+			   else
+			     DocumentMeta[doc]->content_type = TtaStrdup (AM_XHTML_MIME_TYPE);
+			 }
+
+		       if (charset == UNDEFINED_CHARSET)
+			 {
+			 /* the charset is not already defined by the http header */
+			   str = strstr (text2, "charset=");
+			   if (str)
+			     {
+			       pos = str - text2 + 8;
+			       while (text2[pos] != SPACE &&
+				      text2[pos] != TAB && text2[pos] != EOS)
+				 charsetname[index++] = text2[pos++];
+			       charsetname[index] = EOS;
+			       charset = TtaGetCharset (charsetname);
+			       if (charset != UNDEFINED_CHARSET)
+				 TtaSetDocumentCharset (doc, charset, FALSE);
+			     }
 			 }
 		       TtaFreeMemory (text2);
 		     }       
@@ -163,11 +179,10 @@ ThotBool      XhtmlCannotContainText (ElementType elType)
   Check its attributes and its contents.
   ----------------------------------------------------------------------*/
 void XhtmlElementComplete (ParserData *context, Element el, int *error)
-
 {
    Document       doc;   
    ElementType    elType, newElType, childType;
-   Element        constElem, child, desc, leaf, prev, next, last,
+   Element        child, desc, leaf, prev, next, last,
 	          elFrames, lastFrame, lastChild, parent, picture, content;
    Attribute      attr;
    AttributeType  attrType;
@@ -524,7 +539,7 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
        break;
        
      case HTML_EL_META:
-       ParseCharset (el, doc);
+       ParseCharsetAndContentType (el, doc);
        break;
 
      case HTML_EL_STYLE_:	/* it's a STYLE element */
