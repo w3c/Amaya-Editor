@@ -1,4 +1,3 @@
-#ifdef _SVG
 /*
  *
  *  (c) COPYRIGHT MIT and INRIA, 1996-2001
@@ -66,6 +65,7 @@ static  char  oldXlinkHrefValue[oldHrefMaxLen];
 #include "init_f.h"
 #include "XLinkedit_f.h"
 
+#ifdef _SVG
 /*----------------------------------------------------------------------
  SetEmptyShapeAttrSubTree
  A SVG drawing is about to be saved. Set the IntEmptyShape attribute
