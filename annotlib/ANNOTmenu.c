@@ -20,6 +20,13 @@
 #include "annotlib.h"
 #include "ANNOTmenu.h"
 
+/* the selector type used to show/hide annotations */
+typedef enum _SelType {
+  BY_AUTHOR = 0,
+  BY_TYPE,
+  BY_SERVER
+} SelType;
+  
 /* common local variables */
 CHAR_T  s[MAX_LENGTH]; /* general purpose buffer */
 
@@ -245,6 +252,80 @@ View view;
   TtaSetDisplayMode (document, DisplayImmediately);
 }
 
+/**************************************************
+ ** 
+ ** AnnotShowHide Filter menu
+ **
+ *************************************************/
+
+/*---------------------------------------------------------------
+  BuildAnnotShowHideSelector builds the list allowing to select a profile
+------------------------------------------------------------------*/
+#ifdef __STDC__
+static void BuildAnnotShowHideSelector (Document doc, SelType selector)
+#else
+static void BuildAnnotShowHideSelector (doc)
+Document doc;
+#endif /* __STDC__ */
+{
+  int                   nb_entries;
+  int                   i;
+  CHAR_T                *sel_entry;
+  List                  *item;
+  AnnotMeta             *annot;
+
+   /* count and copy the entries that we're interested in */
+  item = AnnotMetaDataList[doc];
+  nb_entries = 0;
+  ustrcpy (s, TEXT(""));
+  i = 0;
+  while (item)
+     {
+       annot = (AnnotMeta *) item->object;
+       /* @@ the idea is to use the different selection types here */
+       /* @@ we need to add memory dynamically, to avoid the memory overrun */
+       /* we need to check that one entry didn't exist already */
+       switch (selector)
+	 {
+	 case BY_AUTHOR:
+	   sel_entry = annot->author;
+	   break;
+	 case BY_TYPE:
+	   sel_entry = annot->type;
+	   break;
+	 case BY_SERVER:
+	   sel_entry = NULL;
+	   /*
+	   sel_entry = NormalizeURL (get server!);
+	   */
+	   break;
+	 default:
+	   sel_entry = NULL;
+	   break;
+	 }
+       if (sel_entry == NULL)
+	 {
+	   item = item->next;
+	   continue;
+	 }
+       ustrcpy (&s[i], sel_entry);
+       i += ustrlen (&s[i]) + 1;
+       nb_entries++;
+       item = item->next;
+     }
+
+   /* Fill in the form  */
+   TtaNewSelector (AnnotShowHideBase + mShowHideSelector, 
+		   AnnotShowHideBase + AnnotShowHideMenu,
+		   TEXT(""),
+		   nb_entries,
+		   s,
+		   (nb_entries < 5) ? nb_entries : 5,
+		   TEXT(""),
+		   FALSE, 
+		   FALSE);
+}
+
 /*----------------------------------------------------------------------
    callback of the AnnotShowHide menu
   ----------------------------------------------------------------------*/
@@ -286,7 +367,7 @@ CHAR_T             *data;
 	    }
 	  break;
 
-	case mAnnotShowHideSelector:
+	case mShowHideSelector:
 	  /* copy what was selected */
 #if 0 
 	  if (data)
@@ -296,59 +377,18 @@ CHAR_T             *data;
 #endif
 	  break;
 	  
+	case mSelectFilter:
+	  /* change the content of the selector */
+	  /* @@ here I need to have a pointer in memory to the
+	     annotation document... means I'll only be able to have
+	     one such annotation dialogue at the time */
+	  BuildAnnotShowHideSelector (1, val);
+	  break;
+
 	default:
 	  break;
 	}
     }
-}
-
-/*---------------------------------------------------------------
-  BuildAnnotShowHideSelector builds the list allowing to select a profile
-------------------------------------------------------------------*/
-#ifdef __STDC__
-static void BuildAnnotShowHideSelector (Document doc)
-#else
-static void BuildAnnotShowHideSelector (doc)
-Document doc;
-#endif /* __STDC__ */
-{
-  int                   nb_entries;
-  int                   i;
-  CHAR_T                *entry;
-  List                  *item;
-  AnnotMeta             *annot;
-
-   /* count and copy the entries that we're interested in */
-  item = AnnotMetaDataList[doc];
-  nb_entries = 0;
-  ustrcpy (s, TEXT(""));
-  i = 0;
-  while (item)
-     {
-       annot = (AnnotMeta *) item->object;
-       /* @@ the idea is to use the different selection types here */
-       /* @@ we need to add memory dynamically, to avoid the memory overrun */
-       /* we need to check that one entry didn't exist already */
-       if (annot->author)
-	 entry = annot->author;
-       else
-	 continue;
-       ustrcpy (&s[i], entry);
-       i += ustrlen (&s[i]) + 1;
-       nb_entries++;
-       item = item->next;
-     }
-
-   /* Fill in the form  */
-   TtaNewSelector (AnnotShowHideBase + mAnnotShowHideSelector, 
-		   AnnotShowHideBase + AnnotShowHideMenu,
-		   "",
-		   nb_entries,
-		   s,
-		   (nb_entries < 5) ? nb_entries : 5,
-		   NULL,
-		   FALSE, 
-		   FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -383,12 +423,33 @@ View                view;
 	       TtaGetViewFrame (document, view),
 	       TEXT("Show/Hide annotations"), 2, s, TRUE, 1, 'L', 
 	       D_DONE);
-  BuildAnnotShowHideSelector (document);
+
+  
+  /* create the radio buttons for choosing a selector */
+  i = 0;
+  strcpy (&s[i], TEXT("BBy author"));
+  i += ustrlen (&s[i]) + 1;
+  strcpy (&s[i], TEXT("BBy type"));
+  i += ustrlen (&s[i]) + 1;
+  strcpy (&s[i], TEXT("BBy server"));
+
+  TtaNewSubmenu (AnnotShowHideBase + mSelectFilter, 
+		 AnnotShowHideBase + AnnotShowHideMenu,
+		 0,
+		 TEXT("Filter options"),
+		 3,
+		 s,
+		 NULL,
+		 TRUE);
+
+  /* @@ we should save the last selector type */
+  BuildAnnotShowHideSelector (document, BY_AUTHOR);
 
   /* display the menu */
   TtaSetDialoguePosition ();
   TtaShowDialogue (AnnotShowHideBase + AnnotShowHideMenu, TRUE);
 }
+
 
 
 

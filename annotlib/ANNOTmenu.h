@@ -27,9 +27,12 @@
 #define MAX_QUERYCONFMENU_DLG  10
 
 #define AnnotShowHideMenu      1
-#define mAnnotShowHideSelector 2
-#define MAX_ANNOTSHOWHIDE_DLG  3
+#define mSelectFilter          2
+#define mShowHideSelector      3
+#define MAX_ANNOTSHOWHIDE_DLG  4
 
 #endif /*_ANNOTquery.h */
+
+
 
 
