@@ -150,9 +150,9 @@ BOXES
 		END;
 	END;
 
-   OVAL_S:
+   ELLIPSE_S:
 	BEGIN
-	Content: Text 'oval';
+	Content: Text 'ellipse';
 	Visibility: 0;
 	IN Graph_Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -502,6 +502,213 @@ BOXES
 	END;
    VALUE_y: BEGIN
 	Content: (y);
+	Visibility: 0;
+	IN Graph_Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+   ATTR_cx: BEGIN
+	Content: Text '  cx=';
+	Visibility: 0;
+	IN Graph_Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+   VALUE_cx: BEGIN
+	Content: (cx);
+	Visibility: 0;
+	IN Graph_Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+   ATTR_cy: BEGIN
+	Content: Text '  cy=';
+	Visibility: 0;
+	IN Graph_Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+   VALUE_cy: BEGIN
+	Content: (cy);
+	Visibility: 0;
+	IN Graph_Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+   ATTR_r: BEGIN
+	Content: Text '  r=';
+	Visibility: 0;
+	IN Graph_Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+   VALUE_r: BEGIN
+	Content: (r);
+	Visibility: 0;
+	IN Graph_Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+   ATTR_rx: BEGIN
+	Content: Text '  rx=';
+	Visibility: 0;
+	IN Graph_Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+   VALUE_rx: BEGIN
+	Content: (rx);
+	Visibility: 0;
+	IN Graph_Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+   ATTR_ry: BEGIN
+	Content: Text '  ry=';
+	Visibility: 0;
+	IN Graph_Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+   VALUE_ry: BEGIN
+	Content: (ry);
+	Visibility: 0;
+	IN Graph_Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+   ATTR_x1: BEGIN
+	Content: Text '  x1=';
+	Visibility: 0;
+	IN Graph_Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+   VALUE_x1: BEGIN
+	Content: (x1);
+	Visibility: 0;
+	IN Graph_Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+   ATTR_y1: BEGIN
+	Content: Text '  y1=';
+	Visibility: 0;
+	IN Graph_Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+   VALUE_y1: BEGIN
+	Content: (y1);
+	Visibility: 0;
+	IN Graph_Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+   ATTR_x2: BEGIN
+	Content: Text '  x2=';
+	Visibility: 0;
+	IN Graph_Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+   VALUE_x2: BEGIN
+	Content: (x2);
+	Visibility: 0;
+	IN Graph_Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+   ATTR_y2: BEGIN
+	Content: Text '  y2=';
+	Visibility: 0;
+	IN Graph_Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+   VALUE_y2: BEGIN
+	Content: (y2);
 	Visibility: 0;
 	IN Graph_Structure_view BEGIN
 		HorizPos: Left = Previous . Right;
@@ -953,9 +1160,9 @@ RULES
 		END;
 	END;
 
-   Oval:
+   ellipse:
 	BEGIN
-	CreateBefore (OVAL_S);
+	CreateBefore (ELLIPSE_S);
 	CreateWith (VerticalLine);
 	Width: 2.5 cm UserSpecified;
 	Height: 1.5 cm UserSpecified;
@@ -1303,6 +1510,88 @@ ATTRIBUTES
 	CreateBefore (VALUE_stroke_width);
 	END;
 
+  cx:
+	BEGIN
+	CreateBefore (ATTR_cx);
+	CreateBefore (VALUE_cx);
+   	HorizPos: VMiddle = Enclosing . Left;
+	IN Graph_Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	IN Graph_Alternate_view
+		HorizPos: Left = Enclosing . Left;
+	END;
+
+  cy:
+	BEGIN
+	CreateBefore (ATTR_cy);
+	CreateBefore (VALUE_cy);
+   	        VertPos: HMiddle = Enclosing . Top;
+   	IN Graph_Structure_view
+		VertPos: Top = Previous . Bottom;
+	IN Graph_Alternate_view
+		VertPos: Top = Previous . Bottom;
+	END;
+
+  r:
+	BEGIN
+	CreateBefore (ATTR_r);
+	CreateBefore (VALUE_r);
+	END;
+
+  rx:
+	BEGIN
+	CreateBefore (ATTR_rx);
+	CreateBefore (VALUE_rx);
+	END;
+
+  ry:
+	BEGIN
+	CreateBefore (ATTR_ry);
+	CreateBefore (VALUE_ry);
+	END;
+
+  x1:
+	BEGIN
+	CreateBefore (ATTR_x1);
+	CreateBefore (VALUE_x1);
+   	HorizPos: Left = Enclosing . Left;
+	IN Graph_Structure_view
+		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
+	END;
+
+  y1:
+	BEGIN
+	CreateBefore (ATTR_y1);
+	CreateBefore (VALUE_y1);
+   	VertPos:  Top = Enclosing . Top;
+   	IN Graph_Structure_view
+		VertPos: Top = Previous . Bottom;
+	IN Graph_Alternate_view
+		VertPos: Top = Previous . Bottom;
+	END;
+
+  x2:
+	BEGIN
+	CreateBefore (ATTR_x2);
+	CreateBefore (VALUE_x2);
+   	Width: Right = Enclosing . Left;
+	IN Graph_Structure_view
+		Width: Enclosing . Width - STRUCT_INDENT;
+	IN Graph_Alternate_view
+		Width: Enclosing . Width;
+	END;
+
+  y2:
+	BEGIN
+	CreateBefore (ATTR_y2);
+	CreateBefore (VALUE_y2);
+   	Height:  Top = Enclosing . Top;
+   	IN Graph_Structure_view
+		Height: Enclosed . Height;
+	IN Graph_Alternate_view
+		Height: Enclosed . Height;
+	END;
+
   IntPosX:
 	BEGIN
 	HorizPos: Left = Enclosing . Left + IntPosX pt;
@@ -1318,22 +1607,6 @@ ATTRIBUTES
 		VertPos: Top = Previous . Bottom;
 	IN Graph_Alternate_view
 		VertPos: Top = Previous . Bottom;
-	END;
-  IntWidth:
-	BEGIN
-	Width: IntWidth pt;
-	IN Graph_Structure_view
-		Width: Enclosing . Width;
-	IN Graph_Alternate_view
-		Width: Enclosing . Width;
-	END;
-  IntHeight:
-	BEGIN
-	Height: IntHeight pt;
-	IN Graph_Structure_view
-		Height: Enclosed . Height;
-	IN Graph_Alternate_view
-		Height: Enclosed . Height;
 	END;
 
   dx:

@@ -29,16 +29,17 @@ STRUCT
 
    GraphicsElement = CASE OF
 	
-	    desc = TEXT;                             { NEW }
+	    desc = TEXT;
 	
-	    title = TEXT;                            { NEW }
+	    title = TEXT;
 	
-	    metadata = TEXT;                         { NEW }
+	    metadata = TEXT;
 	
             Line_
-                (ATTR points = text;
-                                IntPosX = integer; IntPosY = integer;
-                                IntWidth = integer; IntHeight = integer;
+                (ATTR x1 = text;
+	              y1 = text;
+                      x2 = text;
+	              y2 = text;
                       linestyle_ = solid_, dashed_, dotted_;
                       arrowhead = none_, start, end_, both;
                       depth_ = integer)
@@ -49,7 +50,7 @@ STRUCT
 	
             Rectangle
                 (ATTR position = text;               { OBSOLETE }
-                                IntPosX; IntPosY;    { OBSOLETE }
+                                IntPosX = integer; IntPosY = integer;    { OBSOLETE }
                       x = text;                      { NEW }
                       y = text;                      { NEW }
                       width_;
@@ -80,9 +81,9 @@ STRUCT
 		  END;
 	
             Circle
-                (ATTR position;                      { OBSOLETE }
-                                IntPosX; IntPosY;    { OBSOLETE }
-                      width_;
+                (ATTR cx = text;
+		      cy = text;
+                      r = text;
                       linestyle_;
                                 IntEmptyShape;
                       depth_)
@@ -91,11 +92,11 @@ STRUCT
 	          GRAPHICS;
 		  END;
 	
-            Oval
-                (ATTR position;                      { OBSOLETE }
-                                IntPosX; IntPosY;    { OBSOLETE }
-                      width_;
-                      height_;
+            ellipse
+                (ATTR cx;
+		      cy;
+		      rx = text;
+		      ry = text;
                       linestyle_;
                                 IntEmptyShape;
                       depth_)
@@ -109,7 +110,7 @@ STRUCT
                                 IntPosX; IntPosY;
                       width_;
                       height_;
-                      points;
+                      points = text;
                       arrowhead;
                       linestyle_;
                       depth_)
@@ -223,7 +224,7 @@ EXCEPT
    Rectangle:           MoveResize, HighlightChildren, NoShowBox;
    RoundRect:           MoveResize, HighlightChildren, NoShowBox;
    Circle:              MoveResize, HighlightChildren, NoShowBox;
-   Oval:                MoveResize, HighlightChildren, NoShowBox;
+   ellipse:                MoveResize, HighlightChildren, NoShowBox;
    Polyline:            MoveResize, HighlightChildren, NoShowBox;
    Polygon:             MoveResize, HighlightChildren, NoShowBox;
    Spline:              MoveResize, HighlightChildren, NoShowBox;

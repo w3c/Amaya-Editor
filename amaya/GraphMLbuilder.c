@@ -230,7 +230,7 @@ int		arrowHead;
 	  switch (arrowHead)
 		{
 		case GraphML_ATTR_arrowhead_VAL_none_:
-			shape = 'w';
+			shape = 'g';
 			break;
 		case GraphML_ATTR_arrowhead_VAL_start:
 			shape = 'x';
@@ -242,7 +242,7 @@ int		arrowHead;
 			shape = 'z';
 			break;
 		default:
-			shape = 'w';
+			shape = 'g';
 			break;
 		}
 	  leaf = CreateGraphicalLeaf (shape, el, doc, arrowHead != 0);
@@ -259,7 +259,7 @@ int		arrowHead;
 	  leaf = CreateGraphicalLeaf ('a', el, doc, FALSE);
 	  *closed = TRUE;
 	  break;
-       case GraphML_EL_Oval:
+       case GraphML_EL_ellipse:
 	  leaf = CreateGraphicalLeaf ('c', el, doc, FALSE);
 	  *closed = TRUE;
 	  break;
@@ -545,24 +545,6 @@ void UpdateInternalAttrForPoly (el, leaf, doc, minX, minY, maxX, maxY, setIntPos
          }
       TtaSetAttributeValue (attr, y+minY, el, doc);
       }
-
-   attrType.AttrTypeNum = GraphML_ATTR_IntWidth;
-   attr = TtaGetAttribute (el, attrType);
-   if (attr == NULL)
-      {
-      attr = TtaNewAttribute (attrType);
-      TtaAttachAttribute (el, attr, doc);
-      }
-   TtaSetAttributeValue (attr, width, el, doc);
-
-   attrType.AttrTypeNum = GraphML_ATTR_IntHeight;
-   attr = TtaGetAttribute (el, attrType);
-   if (attr == NULL)
-      {
-      attr = TtaNewAttribute (attrType);
-      TtaAttachAttribute (el, attr, doc);
-      }
-   TtaSetAttributeValue (attr, height, el, doc);
 }
 
 
@@ -695,7 +677,7 @@ Document	doc;
 /*----------------------------------------------------------------------
    ParseCoordAttribute
    Create or update a specific presentation rule for element el that reflects
-   the value of the x or y attribute attr.
+   the value of the x, y, cx, cy, x1, x2, y1, y2, dx, or dy attribute attr.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void      ParseCoordAttribute (Attribute attr, Element el, Document doc)
@@ -723,6 +705,18 @@ Document	doc;
           ruleType = PRHorizPos;
       else if (attrType.AttrTypeNum == GraphML_ATTR_y)
           ruleType = PRVertPos;
+      else if (attrType.AttrTypeNum == GraphML_ATTR_cx)
+          ruleType = PRHorizPos;
+      else if (attrType.AttrTypeNum == GraphML_ATTR_cy)
+          ruleType = PRVertPos;
+      else if (attrType.AttrTypeNum == GraphML_ATTR_x1)
+          ruleType = PRHorizPos;
+      else if (attrType.AttrTypeNum == GraphML_ATTR_y1)
+          ruleType = PRVertPos;
+      else if (attrType.AttrTypeNum == GraphML_ATTR_x2)
+          ruleType = PRWidth;
+      else if (attrType.AttrTypeNum == GraphML_ATTR_y2)
+          ruleType = PRHeight;
       else if (attrType.AttrTypeNum == GraphML_ATTR_dx)
           ruleType = PRHorizPos;
       else if (attrType.AttrTypeNum == GraphML_ATTR_dy)
@@ -747,7 +741,7 @@ Document	doc;
 /*----------------------------------------------------------------------
    ParseWidthHeightAttribute
    Create or update a specific presentation rule for element el that reflects
-   the value of attribute attr, which is width_ or height_
+   the value of attribute attr, which is width_, height_, r, rx, or ry.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void      ParseWidthHeightAttribute (Attribute attr, Element el, Document doc)
@@ -775,6 +769,12 @@ Document	doc;
          ruleType = PRWidth;
       else if (attrType.AttrTypeNum == GraphML_ATTR_height_)
          ruleType = PRHeight;
+      else if (attrType.AttrTypeNum == GraphML_ATTR_r)
+         ruleType = PRWidth;
+      else if (attrType.AttrTypeNum == GraphML_ATTR_rx)
+         ruleType = PRWidth;
+      else if (attrType.AttrTypeNum == GraphML_ATTR_ry)
+         ruleType = PRHeight;
       else
 	 return;
       /* get the value of the width_ or height_ attribute */
@@ -788,14 +788,22 @@ Document	doc;
       if (pval.typed_data.unit != STYLE_UNIT_INVALID)
 	 {
          if (pval.typed_data.value == 0)
-	    /* disable rendering of this svg graphics */
+	    /* a value of 0 disables rendering of this element */
 	    ruleType = PRVisibility;
 	 else
 	    {
+	    /* if there was a value of 0 previously, enable rendering */
 	    ctxt->destroy = TRUE;
 	    TtaSetStylePresentation (PRVisibility, el, NULL, ctxt, pval);
             ctxt->destroy = FALSE;
 	    }
+	 if (attrType.AttrTypeNum == GraphML_ATTR_r ||
+	     attrType.AttrTypeNum == GraphML_ATTR_rx ||
+	     attrType.AttrTypeNum == GraphML_ATTR_ry)
+	   /* that's a radius, multiply the value by 2 to set the width or
+	      height of the box */
+	   pval.typed_data.value *= 2;
+         /* set the width or height of the box */
 	 TtaSetStylePresentation (ruleType, el, NULL, ctxt, pval);
 	 }
       TtaFreeMemory (ctxt);
@@ -904,6 +912,12 @@ Document	doc;
 	break;
      case GraphML_ATTR_x:
      case GraphML_ATTR_y:
+     case GraphML_ATTR_cx:
+     case GraphML_ATTR_cy:
+     case GraphML_ATTR_x1:
+     case GraphML_ATTR_y1:
+     case GraphML_ATTR_x2:
+     case GraphML_ATTR_y2:
      case GraphML_ATTR_dx:
      case GraphML_ATTR_dy:
 	ParseCoordAttribute (attr, el, doc);
@@ -913,6 +927,9 @@ Document	doc;
 	break;
      case GraphML_ATTR_width_:
      case GraphML_ATTR_height_:
+     case GraphML_ATTR_r:
+     case GraphML_ATTR_rx:
+     case GraphML_ATTR_ry:
 	ParseWidthHeightAttribute (attr, el, doc);
 	break;
      case GraphML_ATTR_fill:

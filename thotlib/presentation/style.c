@@ -1561,53 +1561,77 @@ ThotBool            generic;
       break;
     case PtHeight:
       rule->PrPresMode = PresImmediate;
-      rule->PrDimRule.DrUnit = int_unit;
-      rule->PrDimRule.DrAttr = FALSE;
       if (generic)
 	{
 	  /* generate a complete rule Height=Enclosed.Height */
 	  rule->PrDimRule.DrPosition = FALSE;
 	  rule->PrDimRule.DrAbsolute = FALSE;
 	  rule->PrDimRule.DrSameDimens = TRUE;
+	  rule->PrDimRule.DrUnit = int_unit;
+	  rule->PrDimRule.DrAttr = FALSE;
+	  rule->PrDimRule.DrMin = FALSE;
+	  rule->PrDimRule.DrUserSpecified = FALSE;
 	  rule->PrDimRule.DrRelation = RlEnclosed;
 	  rule->PrDimRule.DrNotRelat = FALSE;
 	  rule->PrDimRule.DrRefKind = RkElType;
-	  rule->PrDimRule.DrUserSpecified = FALSE;
 	  rule->PrDimRule.DrRefIdent = 0;	  
 	}
-      if (absolute)
-	{
-	  rule->PrDimRule.DrAbsolute = TRUE;
-	  rule->PrDimRule.DrValue = value;
-	}
+      if (rule->PrDimRule.DrPosition)
+          {
+	  rule->PrDimRule.DrPosRule.PoDistUnit = int_unit;
+	  rule->PrDimRule.DrPosRule.PoDistAttr = FALSE;
+	  rule->PrDimRule.DrPosRule.PoDistance = value;
+	  }
       else
-	rule->PrDimRule.DrValue = 0;
+	{
+	  rule->PrDimRule.DrUnit = int_unit;
+	  rule->PrDimRule.DrAttr = FALSE;
+	  if (absolute)
+	    {
+	      rule->PrDimRule.DrAbsolute = TRUE;
+	      rule->PrDimRule.DrValue = value;
+	    }
+	  else
+	    rule->PrDimRule.DrValue = 0;
+	}
       break;
     case PtWidth:
       rule->PrPresMode = PresImmediate;
-      rule->PrDimRule.DrUnit = int_unit;
-      rule->PrDimRule.DrAttr = FALSE;
       if (generic)
 	{
 	  /* generate a complete rule Width=Enclosing.Width+value */
 	  rule->PrDimRule.DrPosition = FALSE;
 	  rule->PrDimRule.DrAbsolute = FALSE;
 	  rule->PrDimRule.DrSameDimens = TRUE;
+	  rule->PrDimRule.DrUnit = int_unit;
+	  rule->PrDimRule.DrAttr = FALSE;
+	  rule->PrDimRule.DrMin = FALSE;
+	  rule->PrDimRule.DrUserSpecified = FALSE;
 	  rule->PrDimRule.DrRelation = RlEnclosing;
 	  rule->PrDimRule.DrNotRelat = FALSE;
 	  rule->PrDimRule.DrRefKind = RkElType;
-	  rule->PrDimRule.DrUserSpecified = FALSE;
 	  rule->PrDimRule.DrRefIdent = 0;	  
 	}
-      if (absolute)
-	{
-	rule->PrDimRule.DrAbsolute = TRUE;
-	rule->PrDimRule.DrValue = value;
-	}
-      else if (int_unit == UnPercent)
-	rule->PrDimRule.DrValue = 100 - value;
+      if (rule->PrDimRule.DrPosition)
+          {
+	  rule->PrDimRule.DrPosRule.PoDistUnit = int_unit;
+	  rule->PrDimRule.DrPosRule.PoDistAttr = FALSE;
+	  rule->PrDimRule.DrPosRule.PoDistance = value;
+	  }
       else
-	rule->PrDimRule.DrValue = -value;
+	{
+	  rule->PrDimRule.DrUnit = int_unit;
+	  rule->PrDimRule.DrAttr = FALSE;
+	  if (absolute)
+	    {
+	      rule->PrDimRule.DrAbsolute = TRUE;
+	      rule->PrDimRule.DrValue = value;
+	    }
+	  else if (int_unit == UnPercent)
+	    rule->PrDimRule.DrValue = 100 - value;
+	  else
+	    rule->PrDimRule.DrValue = -value;
+	}
       break;
     case PtPictInfo:
       break;

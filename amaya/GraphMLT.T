@@ -153,10 +153,10 @@ RULES
 		END;
 	END;
 
-   Oval:
+   ellipse:
 	BEGIN
 	create SOT;
-	create 'oval';
+	create 'ellipse';
 	indent +6;
 	create attributes;
 	if IntEmptyShape
@@ -168,7 +168,7 @@ RULES
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'oval>\12' after;
+		create 'ellipse>\12' after;
 		END;
 	END;
 
@@ -467,6 +467,78 @@ ATTRIBUTES
 	create SAN;
 	create 'stroke-width="';
 	create stroke_width;
+	create DoubleQuote;
+	END;
+
+   cx:
+	BEGIN
+	create SAN;
+	create 'cx="';
+	create cx;
+	create DoubleQuote;
+	END;
+
+   cy:
+	BEGIN
+	create SAN;
+	create 'cy="';
+	create cy;
+	create DoubleQuote;
+	END;
+
+   r:
+	BEGIN
+	create SAN;
+	create 'r="';
+	create r;
+	create DoubleQuote;
+	END;
+
+   rx:
+	BEGIN
+	create SAN;
+	create 'rx="';
+	create rx;
+	create DoubleQuote;
+	END;
+
+   ry:
+	BEGIN
+	create SAN;
+	create 'ry="';
+	create ry;
+	create DoubleQuote;
+	END;
+
+   x1:
+	BEGIN
+	create SAN;
+	create 'x1="';
+	create x1;
+	create DoubleQuote;
+	END;
+
+   y1:
+	BEGIN
+	create SAN;
+	create 'y1="';
+	create y1;
+	create DoubleQuote;
+	END;
+
+   x2:
+	BEGIN
+	create SAN;
+	create 'x2="';
+	create x2;
+	create DoubleQuote;
+	END;
+
+   y2:
+	BEGIN
+	create SAN;
+	create 'y2="';
+	create y2;
 	create DoubleQuote;
 	END;
 

@@ -63,6 +63,18 @@ ATTRIBUTES
 	AttrModify.Post -> AttrCoordChanged;
    y:
 	AttrModify.Post -> AttrCoordChanged;
+   cx:
+	AttrModify.Post -> AttrCoordChanged;
+   cy:
+	AttrModify.Post -> AttrCoordChanged;
+   x1:
+	AttrModify.Post -> AttrCoordChanged;
+   y1:
+	AttrModify.Post -> AttrCoordChanged;
+   x2:
+	AttrModify.Post -> AttrCoordChanged;
+   y2:
+	AttrModify.Post -> AttrCoordChanged;
    dx:
 	AttrModify.Post -> AttrCoordChanged;
    dy:
@@ -72,13 +84,15 @@ ATTRIBUTES
    IntPosY:
         AttrModify.Post -> AttrIntPosChanged;
    width_:
-	AttrModify.Post -> AttrWidthChanged;
+	AttrModify.Post -> AttrWidthHeightChanged;
    height_:
-	AttrModify.Post -> AttrHeightChanged;
-   IntWidth:
-        AttrModify.Post -> AttrIntSizeChanged;
-   IntHeight:
-        AttrModify.Post -> AttrIntSizeChanged;
+	AttrModify.Post -> AttrWidthHeightChanged;
+   r:
+	AttrModify.Post -> AttrWidthHeightChanged;
+   rx:
+	AttrModify.Post -> AttrWidthHeightChanged;
+   ry:
+	AttrModify.Post -> AttrWidthHeightChanged;
    transform:
 	BEGIN
 	AttrModify.Post -> AttrTransformChanged;

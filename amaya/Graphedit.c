@@ -102,7 +102,7 @@ Document doc;
 	    elType.ElTypeNum == GraphML_EL_Rectangle ||
 	    elType.ElTypeNum == GraphML_EL_RoundRect ||
 	    elType.ElTypeNum == GraphML_EL_Circle ||
-	    elType.ElTypeNum == GraphML_EL_Oval ||
+	    elType.ElTypeNum == GraphML_EL_ellipse ||
 	    elType.ElTypeNum == GraphML_EL_Polyline ||
 	    elType.ElTypeNum == GraphML_EL_Polygon ||
 	    elType.ElTypeNum == GraphML_EL_Spline ||
@@ -212,7 +212,7 @@ ThotBool ExtendSelectGraphMLElement(event)
 	 elType.ElTypeNum != GraphML_EL_Rectangle &&
 	 elType.ElTypeNum != GraphML_EL_RoundRect &&
 	 elType.ElTypeNum != GraphML_EL_Circle &&
-	 elType.ElTypeNum != GraphML_EL_Oval &&
+	 elType.ElTypeNum != GraphML_EL_ellipse &&
 	 elType.ElTypeNum != GraphML_EL_Polyline &&
 	 elType.ElTypeNum != GraphML_EL_Polygon &&
 	 elType.ElTypeNum != GraphML_EL_Spline &&
@@ -233,7 +233,7 @@ ThotBool ExtendSelectGraphMLElement(event)
 	 elType.ElTypeNum != GraphML_EL_Rectangle &&
 	 elType.ElTypeNum != GraphML_EL_RoundRect &&
 	 elType.ElTypeNum != GraphML_EL_Circle &&
-	 elType.ElTypeNum != GraphML_EL_Oval &&
+	 elType.ElTypeNum != GraphML_EL_ellipse &&
 	 elType.ElTypeNum != GraphML_EL_Polyline &&
 	 elType.ElTypeNum != GraphML_EL_Polygon &&
 	 elType.ElTypeNum != GraphML_EL_Spline &&
@@ -514,25 +514,12 @@ void AttrIntPosChanged (event)
 }
 
 /*----------------------------------------------------------------------
- AttrWidthChanged
+ AttrWidthHeightChanged
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void AttrWidthChanged (NotifyAttribute *event)
+void AttrWidthHeightChanged (NotifyAttribute *event)
 #else /* __STDC__*/
-void AttrWidthChanged (event)
-     NotifyAttribute *event;
-#endif /* __STDC__*/
-{
-   ParseWidthHeightAttribute (event->attribute, event->element, event->document);
-}
-
-/*----------------------------------------------------------------------
- AttrHeightChanged
- -----------------------------------------------------------------------*/
-#ifdef __STDC__
-void AttrHeightChanged (NotifyAttribute *event)
-#else /* __STDC__*/
-void AttrHeightChanged (event)
+void AttrWidthHeightChanged (event)
      NotifyAttribute *event;
 #endif /* __STDC__*/
 {
@@ -566,6 +553,7 @@ static void UpdateWidthHeightAttribute (attr, el, doc)
    else
      {
        TtaGiveAttributeType (attr, &attrType, &attrKind);
+       /*********
        if (attrType.AttrTypeNum == GraphML_ATTR_IntWidth)
 	 attrType.AttrTypeNum = GraphML_ATTR_width_;
        else if (attrType.AttrTypeNum == GraphML_ATTR_IntHeight)
@@ -579,6 +567,7 @@ static void UpdateWidthHeightAttribute (attr, el, doc)
        val = TtaGetAttributeValue (attr);
        usprintf (buffer, TEXT("%d"), val);
        TtaSetAttributeText (extAttr, buffer, el, doc);
+       *****/
      }
 }
 
@@ -742,7 +731,7 @@ ThotBool   GraphicsPRuleChange (event)
       if (elType.ElTypeNum == GraphML_EL_Rectangle ||
           elType.ElTypeNum == GraphML_EL_RoundRect ||
           elType.ElTypeNum == GraphML_EL_Circle ||
-          elType.ElTypeNum == GraphML_EL_Oval ||
+          elType.ElTypeNum == GraphML_EL_ellipse ||
           elType.ElTypeNum == GraphML_EL_Polyline ||
           elType.ElTypeNum == GraphML_EL_Polygon ||
           elType.ElTypeNum == GraphML_EL_Spline ||
@@ -794,7 +783,7 @@ ThotBool   GraphicsPRuleChange (event)
     {
       if (elType.ElTypeNum == GraphML_EL_Rectangle ||
           elType.ElTypeNum == GraphML_EL_RoundRect ||
-          elType.ElTypeNum == GraphML_EL_Oval ||
+          elType.ElTypeNum == GraphML_EL_ellipse ||
           elType.ElTypeNum == GraphML_EL_Polyline ||
           elType.ElTypeNum == GraphML_EL_Polygon ||
           elType.ElTypeNum == GraphML_EL_Spline ||
@@ -804,6 +793,7 @@ ThotBool   GraphicsPRuleChange (event)
 	  unit = TtaGetPRuleUnit (presRule);
 	  TtaGiveBoxSize (el, doc, 1, unit, &i, &height);
 	  height += TtaGetPRuleValue (presRule);
+	  /*******
           attrType.AttrTypeNum = GraphML_ATTR_IntHeight;
           attr = TtaGetAttribute (el, attrType);
           if (attr == NULL)
@@ -813,6 +803,7 @@ ThotBool   GraphicsPRuleChange (event)
             }
           TtaSetAttributeValue (attr, height, el, doc);
           UpdateWidthHeightAttribute (attr, el, doc);
+	  ******/
           ret = TRUE; /* don't let Thot perform normal operation */
         }
     }
@@ -821,7 +812,7 @@ ThotBool   GraphicsPRuleChange (event)
       if (elType.ElTypeNum == GraphML_EL_Rectangle ||
           elType.ElTypeNum == GraphML_EL_RoundRect ||
           elType.ElTypeNum == GraphML_EL_Circle ||
-          elType.ElTypeNum == GraphML_EL_Oval ||
+          elType.ElTypeNum == GraphML_EL_ellipse ||
           elType.ElTypeNum == GraphML_EL_Polyline ||
           elType.ElTypeNum == GraphML_EL_Polygon ||
           elType.ElTypeNum == GraphML_EL_Spline ||
@@ -832,6 +823,7 @@ ThotBool   GraphicsPRuleChange (event)
 	  unit = TtaGetPRuleUnit (presRule);
 	  TtaGiveBoxSize (el, doc, 1, unit, &width, &i);
 	  width += TtaGetPRuleValue (presRule);
+	  /******
           attrType.AttrTypeNum = GraphML_ATTR_IntWidth;
           attr = TtaGetAttribute (el, attrType);
           if (attr == NULL)
@@ -841,6 +833,7 @@ ThotBool   GraphicsPRuleChange (event)
             }
           TtaSetAttributeValue (attr, width, el, doc);
           UpdateWidthHeightAttribute (attr, el, doc);
+	  ******/
           ret = TRUE; /* don't let Thot perform normal operation */
         }
     }
@@ -850,7 +843,7 @@ ThotBool   GraphicsPRuleChange (event)
 
 /*----------------------------------------------------------------------
    ControlPointChanged
-   A control point has been changed in a Line_, a Polyline, a Polygon,
+   A control point has been changed in a Polyline, a Polygon,
    a Spline or a ClosedSpline.  Update the points attribute.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1026,7 +1019,7 @@ int                 construct;
     {
     case 0:	/* line */
 	newType.ElTypeNum = GraphML_EL_Line_;
-	shape = 'w';
+	shape = '\\';
 	break;
     case 1:	/* rectangle */
 	newType.ElTypeNum = GraphML_EL_Rectangle;
@@ -1040,8 +1033,8 @@ int                 construct;
 	newType.ElTypeNum = GraphML_EL_Circle;
 	shape = 'a';
 	break;
-    case 4:	/* oval */
-	newType.ElTypeNum = GraphML_EL_Oval;
+    case 4:	/* ellipse */
+	newType.ElTypeNum = GraphML_EL_ellipse;
 	shape = 'c';
 	break;
     case 5:	/* polyline */
@@ -1080,11 +1073,11 @@ int                 construct;
        if (dispMode == DisplayImmediately)
          TtaSetDisplayMode (doc, DeferredDisplay);
 
-       /* for rectangles, circle, oval, and text, ask for an elastic box */
+       /* for rectangles, circle, ellipse, and text, ask for an elastic box */
        if (newType.ElTypeNum == GraphML_EL_Rectangle ||
 	   newType.ElTypeNum == GraphML_EL_RoundRect ||
 	   newType.ElTypeNum == GraphML_EL_Circle ||
-	   newType.ElTypeNum == GraphML_EL_Oval ||
+	   newType.ElTypeNum == GraphML_EL_ellipse ||
 	   newType.ElTypeNum == GraphML_EL_text_ ||
 	   newType.ElTypeNum == GraphML_EL_foreignObject)
 	 TtaAskFirstCreation ();
