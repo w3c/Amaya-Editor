@@ -248,22 +248,22 @@ static void RedrawPolyLine (int frame, int x, int y, PtrTextBuffer buffer,
       if (i + 1 == point)
 	{
 	  /* selected point */
-	  *x2 = points[i].x;
-	  *y2 = points[i].y;
+	  *x2 = (int)points[i].x;
+	  *y2 = (int)points[i].y;
 	}
       else
 	{
 	  if (i + 1 == point - 1)
 	    {
 	      /* predecessor */
-	      *x1 = points[i].x;
-	      *y1 = points[i].y;
+	      *x1 = (int)points[i].x;
+	      *y1 = (int)points[i].y;
 	    }
 	  else if (i == point)
 	    {
 	      /* succesor */
-	      *x3 = points[i].x;
-	      *y3 = points[i].y;
+	      *x3 = (int)points[i].x;
+	      *y3 = (int)points[i].y;
 	    }
 	}
       j++;
@@ -277,19 +277,17 @@ static void RedrawPolyLine (int frame, int x, int y, PtrTextBuffer buffer,
       points[nb - 1].y = points[0].y;
      if (point == 1)
        {
-	 *x1 = points[nb - 2].x;
-	 *y1 = points[nb - 2].y;
+	 *x1 = (int)points[nb - 2].x;
+	 *y1 = (int)points[nb - 2].y;
        }
      if (point == nb - 1)
        {
-	 *x3 = points[0].x;
-	 *y3 = points[0].y;
+	 *x3 = (int)points[0].x;
+	 *y3 = (int)points[0].y;
        }
 
 #ifdef _GL
-
      /* GL_DrawPolygon (points, nb); */
-
 #else /*_GL*/
 
 #ifdef _WINDOWS

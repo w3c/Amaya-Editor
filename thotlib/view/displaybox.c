@@ -1785,12 +1785,6 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	} 
 #ifdef _GL
       StopTextureScale ();
-      /****if (Printing)
-	{
-	if (prevfont == NULL)
-	  prevfont = nextfont;
-	DrawString (buffer, 0, frame, x, y1, prevfont, -1, 0, 0, 1, 0);
-	}****/
 #endif /* _GL */
 
       /* Should the end of the line be filled with dots */
