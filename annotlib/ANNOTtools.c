@@ -921,16 +921,21 @@ static void  ThreadItem_delete (Container *item)
   ------------------------------------------------------------*/
 static void ConvertContainerToList (List **result, Container *container)
 {
+  Container *container_tmp;
   Container *tmp2;
-
-  while (container)
+  
+  container_tmp = container;
+  while (container_tmp)
     {
-      if (container->annot)
-	List_addEnd (result, (void *) container->annot);
-      if (container->child)
-	ConvertContainerToList (result, container->child);
-      tmp2 = container;
-      container = container->next;
+      if (container_tmp->annot)
+	List_addEnd (result, (void *) container_tmp->annot);
+      if (container_tmp->child)
+	{
+	  ConvertContainerToList (result, container_tmp->child);
+	  container_tmp->child = NULL;
+        }
+      tmp2 = container_tmp;
+      container_tmp = container_tmp->next;
       tmp2->next = NULL;
       ThreadItem_delete (tmp2);
     }
