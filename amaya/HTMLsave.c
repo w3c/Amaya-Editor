@@ -220,7 +220,7 @@ char               *pathname;
 
    /* Dialogue form for saving in local */
    TtaNewForm (BaseDialog + FormSauver, TtaGetViewFrame (document, view), 0, 0,
-	       TtaGetMessage (AMAYA, AM_SAVE_LOCAL), TRUE, 3, 'L', D_DONE);
+	       TtaGetMessage (AMAYA, AM_SAVE_AS), TRUE, 3, 'L', D_CANCEL);
    /* TtaGetMessage(LIB, DOCUMENT_NAME) */
    sprintf (buffer, "%s%c%s", TtaGetMessage (AMAYA, AM_BCOPY_IMAGES), EOS,
 	    TtaGetMessage (AMAYA, AM_BTRANSFORM_URL));
@@ -365,7 +365,7 @@ boolean             confirm;
 		    {
 		       FilesLoading[document] = 2;
 		       ResetStop (document);
-		       sprintf (msg, "%s %s\n%s", TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
+		       sprintf (msg, "%s %s \n%s", TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
 				pImage->originalName, TtaGetMessage (AMAYA, AM_SAVE_DISK));
 		       InitConfirm (document, view, msg);
 		       /* JK: to erase the last status message */
@@ -427,6 +427,7 @@ View                view;
        (SaveDocumentThroughNet (document, view, FALSE) == 0))
      {
 
+       TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_SAVED), DocumentURLs[document]);
 	SavingDocument = (Document) None;
 	return;
      }
@@ -442,6 +443,7 @@ View                view;
 
    TtaExportDocument (document, tempname, "HTMLT");
    TtaSetDocumentUnmodified (document);
+   TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_SAVED), DocumentURLs[document]);
    SavingDocument = (Document) None;
 }
 
@@ -597,7 +599,6 @@ void                DoSaveAs ()
 {
    char                tempfile[MAX_LENGTH];
    char                tempname[MAX_LENGTH];
-   char                imgname[MAX_LENGTH];
    char                imgbase[MAX_LENGTH];
    boolean             src_is_local;
    boolean             dst_is_local;
@@ -669,13 +670,14 @@ void                DoSaveAs ()
 	       }
 	  }
      }
+
    if (src_is_local && dst_is_local)
      {
-  /*----------------------------------------------------------------------
-   *           Local to Local                 
-   *						
-   *   Just dump HTML to another directory    
-   ----------------------------------------------------------------------*/
+       /*
+	*           Local to Local                 
+	*						
+	*   Just dump HTML to another directory    
+	*/
 
 	/*
 	 * Moving a document locally : don't change anything on URL or images.
@@ -708,17 +710,17 @@ void                DoSaveAs ()
 	TtaFreeMemory (DocumentURLs[SavingDocument]);
 	DocumentURLs[SavingDocument] = (char *) TtaStrdup (tempfile);
 	TtaSetTextZone (SavingDocument, 1, 1, DocumentURLs[SavingDocument]);
-
+	TtaSetStatus (SavingDocument, 1, TtaGetMessage (AMAYA, AM_SAVED), tempfile);
 	SavingDocument = (Document) None;
      }
    else if ((!src_is_local) && dst_is_local)
      {
-  /*----------------------------------------------------------------------
-   *           Remote to Local                
-   *						
-   *   + copy images				
-   *   + move URLs to absolutes ones.		
-   ----------------------------------------------------------------------*/
+       /*
+	*           Remote to Local                
+	*						
+	*   + copy images				
+	*   + move URLs to absolutes ones.		
+	*/
 
 	/*
 	 * verify that we don't overwite anything and ask for confirmation
@@ -763,15 +765,16 @@ void                DoSaveAs ()
 	DocumentURLs[SavingDocument] = (char *) TtaStrdup (tempfile);
 	TtaSetTextZone (SavingDocument, 1, 1, DocumentURLs[SavingDocument]);
 
+	TtaSetStatus (SavingDocument, 1, TtaGetMessage (AMAYA, AM_SAVED), tempfile);
 	SavingDocument = (Document) None;
      }
    else if (src_is_local && (!dst_is_local))
      {
-  /*----------------------------------------------------------------------
-   *           Local to Remote                
-   *						
-   *   + copy images				
-   ----------------------------------------------------------------------*/
+       /*
+	*           Local to Remote                
+	*						
+	*   + copy images				
+	*/
 
 	/*
 	 * change all Picture SRC to the remote URL.
@@ -802,17 +805,18 @@ void                DoSaveAs ()
 	else
 	  {
 	     TtaDestroyDialogue (BaseDialog + FormSauver);
+	     TtaSetStatus (SavingDocument, 1, TtaGetMessage (AMAYA, AM_SAVED), tempfile);
 	     SavingDocument = (Document) None;
 	  }
      }
-   else
-     {				/* ! src_is_local && ! dst_is_local */
-  /*----------------------------------------------------------------------
-   *           Remote to Remote               
-   *						
-   *   + copy images				
-   *   + move URLs to absolutes ones.		
-   ----------------------------------------------------------------------*/
+   else	/* ! src_is_local && ! dst_is_local */
+     {
+       /*
+	*           Remote to Remote               
+	*						
+	*   + copy images				
+	*   + move URLs to absolutes ones.		
+	*/
 
 	/*
 	 * Transform all URLs to absolute ones.
@@ -849,6 +853,7 @@ void                DoSaveAs ()
 	else
 	  {
 	     TtaDestroyDialogue (BaseDialog + FormSauver);
+	     TtaSetStatus (SavingDocument, 1, TtaGetMessage (AMAYA, AM_SAVED), tempfile);
 	     SavingDocument = (Document) None;
 	  }
      }
@@ -879,14 +884,13 @@ char               *pathname;
    SavingObject = document;
    strncpy (tempSavedObject, object, sizeof (tempSavedObject));
 
-   /* Dialogue form for saving in local */
+   /* Dialogue form for saving as */
    TtaNewForm (BaseDialog + FormSauver, TtaGetViewFrame (document, view), 0, 0,
-	       TtaGetMessage (AMAYA, AM_SAVE_LOCAL), TRUE, 2, 'L', D_DONE);
+	       TtaGetMessage (AMAYA, AM_SAVE_AS), TRUE, 2, 'L', D_CANCEL);
    TtaListDirectory (DirectoryName, BaseDialog + FormSauver,
 		     TtaGetMessage (LIB, TMSG_DOC_DIR),		/* std thot msg */
 		     BaseDialog + SauvDir, "",
 		     TtaGetMessage (AMAYA, AM_FILES), BaseDialog + SauvDoc);
-   /* TtaGetMessage(LIB, DOCUMENT_NAME) */
    TtaNewTextForm (BaseDialog + SauvNom, BaseDialog + FormSauver,
 		   TtaGetMessage (AMAYA, AM_OBJECT_LOCATION), 50, 1, TRUE);
    TtaSetTextForm (BaseDialog + SauvNom, pathname);

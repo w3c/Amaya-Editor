@@ -1,27 +1,20 @@
 0 Files
 1 Open location
 2 Clear
-3 Save local
+3 Document %s saved
 4 Attribute
 5 URL
-6 Get an answer
 7 Text
 8 Name
 9 Password
 10 Use as class
 11 Apply class
 12 Select a class
-13 %s created
 14 Fetching %s
-15 Loading %s
 16 Cannot load %s
 17 Finished!
-18 Document saved in %s
 19 Select the target
 20 Invalid target
-21 No document %s
-22 Access denied to %s
-23 Loading of %s interrupted
 24 Address
 25 Title
 26 Document modified. All changes will be lost. Do you want to continue ?
@@ -85,18 +78,8 @@
 84 Delete a Style Sheet
 85 <HTML><HEAD>ERROR</HEAD><BODY><TITLE>ERROR: The requested URL could not be retrieved</TITLE><H2>The requested URL could not be retrieved</H2><HR><P>While trying to retrieve the URL:<A HREF=\"%s\">%s</A></P><P>The following error was encountered:</P><UL><LI><STRONG>Connection Failed</STRONG></UL><P>The system returned:</P><PRE><I>(%d) %s</I></PRE><P>This means that:</P><PRE>The remote site or server may be down or non-existant.</PRE><PRE>Please try again soon.</PRE><P></P><HR>\n</BODY></HTML>
 86 Please enter username:
-87 Password:
-88 Please give name of file to save in:
-89 Plase enter account:
-90 It might not be allowed to use this method, continue?"
-91 Location has moved, continue?
-92 A new set of rules is to be added to your setup - continue?
 93 %d outstanding requests
-94 Connection closed
 95 Garbage collecting persistent cache - please wait...
-96 HTTP 403 Error: The server forbids this operation on this ressource
-97 HTTP 404 Error: The server cannot find the requested URL
-98 HTTP 500 Error: The server has encountered an inernal error
 99 Interrupt transfer
 100 Previous document
 101 Next document

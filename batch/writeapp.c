@@ -342,7 +342,8 @@ PtrEventsSet        pAppli;
 	fprintf (AppFile, "Pixmap image;  /* logo pixmap */\n");
 	fprintf (AppFile, "Pixmap icon;   /* icon pixmap */\n\n");
      }
-   fprintf (AppFile, "\n/* ---------------------------------------------------------------------- */\n");
+   fprintf (AppFile, "\n/*----------------------------------------------------------------------\n -----------------------------------------------------------------------*/ 
+\n");
    fprintf (AppFile, "void %sApplicationInitialise ()\n", fname);
    fprintf (AppFile, "{\n PtrEventsSet appliActions;\n\n");
    fprintf (AppFile, "  /* Create the new application context*/\n");
@@ -399,7 +400,8 @@ char               *fname;
    fprintf (AppFile, "#ifdef __STDC__\n");
    while (action != NULL)
      {
-	fprintf (actionFile, "\n/* ---------------------------------------------------------------------- */\n");
+	fprintf (actionFile, "\n/*----------------------------------------------------------------------\n -----------------------------------------------------------------------*/ 
+\n");
 	fprintf (actionFile, "#ifdef __STDC__\n");
 	strcpy (s, "#else /* __STDC__*/\n");
 	fprintf (AppFile, "extern ");
@@ -515,7 +517,7 @@ char               *fname;
 	     fprintf (actionFile, "#endif /* __STDC__*/\n{\n");
 	     fprintf (actionFile, "  /* code to be written */\n");
 	     if (action->ActPre)
-		fprintf (actionFile, "  return False; /* let Thot perform normal operation */\n");
+		fprintf (actionFile, "  return FALSE; /* let Thot perform normal operation */\n");
 	     fprintf (actionFile, "}\n\n");
 	  }
 	action = action->ActNext;
@@ -625,7 +627,7 @@ char               *fname;
      {
 	/* c'est bien EDITOR.A qu'on compile, on ajoute le main avec les
 	   initialisation qu'il faut */
-	structSelectResource = False;	/* no structselectResource */
+	structSelectResource = FALSE;	/* no structselectResource */
 	fprintf (AppFile, "\nvoid TteLoadApplications ()\n");
 	fprintf (AppFile, "{\n");
 	fprintf (AppFile, "  %sActionListInit ();\n", fname);
@@ -637,7 +639,7 @@ char               *fname;
 	     while (SchUsed != NULL)
 	       {
 		  if (!strcmp (SchUsed->AppNameValue, "StructSelect"))
-		     structSelectResource = True;
+		     structSelectResource = TRUE;
 		  fprintf (AppFile, "  %sLoadResources ();\n",
 			   SchUsed->AppNameValue);
 		  SchUsed = SchUsed->AppNextName;
@@ -710,7 +712,7 @@ char               *fname;
 	fprintf (AppFile, "\n  TteInitMenus (appName, %d);\n", nbActions);
 
 
-	editingResource = False;	/* no editing Resource loaded by default */
+	editingResource = FALSE;	/* no editing Resource loaded by default */
 	menuAction = ActionsUsed;
 	while (menuAction != NULL)
 	  {
@@ -719,7 +721,8 @@ char               *fname;
 	     if (!menuAction->AppStandardName)
 		/* ecrit les fonctions non standard des menus dans XXXaction.c */
 	       {
-		  fprintf (actionFile, "\n/* -------------------------------------------------------------- */\n");
+		  fprintf (actionFile, "\n/*----------------------------------------------------------------------\n -----------------------------------------------------------------------*/ 
+\n");
 		  fprintf (actionFile, "#ifdef __STDC__\n");
 		  fprintf (actionFile, "void %s (Document document, View view)\n",
 			   menuAction->AppNameValue);
@@ -743,7 +746,7 @@ char               *fname;
 		      || !strcmp (menuAction->AppNameValue, "TtcDeletePreviousChar")
 		   || !strcmp (menuAction->AppNameValue, "TtcCopySelection")
 		      || !strcmp (menuAction->AppNameValue, "TtcInclude"))
-		     editingResource = True;
+		     editingResource = TRUE;
 	       }
 	     menuAction = menuAction->AppNextName;
 	  }

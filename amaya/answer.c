@@ -111,7 +111,6 @@ void               *input, HTAlertPar * reply;
 
 	    case HT_PROG_DONE:
 	       /* it's not interesting to display this message */
-	       /*  TtaSetStatus(me->docid, 1, TtaGetMessage(AMAYA, AM_CONNECTION_CLOSED), me->urlName); */
 	       break;
 	    case HT_PROG_WAIT:
 	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_WAITING_FOR_SOCKET), NULL);

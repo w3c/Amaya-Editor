@@ -348,9 +348,9 @@ char               *url;
    strcat (URL, DIR_STR);
    strcat (URL, CSSDocumentName);
 
-   /* Dialogue form for saving in local */
+   /* Dialogue form for saving as */
    TtaNewForm (BaseCSSDialog + CSSFormSauver, TtaGetViewFrame (doc, view), 0, 0,
-	       TtaGetMessage (AMAYA, AM_SAVE_LOCAL), TRUE, 2, 'L', D_DONE);
+	       TtaGetMessage (AMAYA, AM_SAVE_AS), TRUE, 2, 'L', D_DONE);
    TtaListDirectory (CSSDirectoryName, BaseCSSDialog + CSSFormSauver,
 		     TtaGetMessage (LIB, TMSG_DOC_DIR),
 		     BaseCSSDialog + CSSSauvDir, "css",

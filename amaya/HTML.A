@@ -25,9 +25,21 @@ ELEMENTS
 
    GRAPHICS_UNIT:
       	BEGIN
-      	ElemGraphModify.Post -> graphicsModified;
+      	ElemGraphModify.Post -> GraphicsModified;
       	END;
-      
+
+   Text_Input:
+	BEGIN
+	ElemTextModify.Pre -> SaveDocumentStatus;
+	ElemTextModify.Post -> RestoreDocumentStatus;
+	END;
+
+   Text_Area:
+	BEGIN
+	ElemTextModify.Pre -> SaveDocumentStatus;
+	ElemTextModify.Post -> RestoreDocumentStatus;
+	END;
+
    TITLE:
 	ElemTextModify.Post -> TitleModified;
 
@@ -84,27 +96,27 @@ ATTRIBUTES
 	END;
    coords:
      	BEGIN
-      	AttrModify.Post -> coordsModified;
+      	AttrModify.Post -> CoordsModified;
       	END;
       
     x_coord:
      	BEGIN
-      	AttrModify.Post -> graphicsModified;
+      	AttrModify.Post -> GraphicsModified;
      	END;
      
     y_coord:
      	BEGIN
-      	AttrModify.Post -> graphicsModified;
+      	AttrModify.Post -> GraphicsModified;
      	END;
      
     width\240:
    	BEGIN
-    	AttrModify.Post -> graphicsModified;
+    	AttrModify.Post -> GraphicsModified;
     	END;
     
     height\240:
    	BEGIN
-   	AttrModify.Post -> graphicsModified;
+   	AttrModify.Post -> GraphicsModified;
    	END;
 
    Cell_width:

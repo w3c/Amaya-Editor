@@ -391,13 +391,13 @@ View                view;
 
 
 /*----------------------------------------------------------------------
-   coordsModified  updates x_ccord, y_coord, width, height or      
+   CoordsModified  updates x_ccord, y_coord, width, height or      
    polyline according to the new coords value.             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                coordsModified (NotifyAttribute * event)
+void                CoordsModified (NotifyAttribute * event)
 #else  /* __STDC__ */
-void                coordsModified (event)
+void                CoordsModified (event)
 NotifyAttribute    *event;
 
 #endif /* __STDC__ */
@@ -407,13 +407,13 @@ NotifyAttribute    *event;
 
 
 /*----------------------------------------------------------------------
-   graphicsModified        updates coords attribute value          
+   GraphicsModified        updates coords attribute value          
    according to the new coord value.                       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                graphicsModified (NotifyAttribute * event)
+void                GraphicsModified (NotifyAttribute * event)
 #else  /* __STDC__ */
-void                graphicsModified (event)
+void                GraphicsModified (event)
 NotifyAttribute    *event;
 
 #endif /* __STDC__ */

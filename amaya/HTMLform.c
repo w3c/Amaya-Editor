@@ -27,7 +27,37 @@
 static char        *buffer;    /* temporary buffer used to build the query
 				  string */
 static int          lgbuffer;  /* size of the temporary buffer */
-
+static int          documentStatus;
+ 
+ 
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/ 
+#ifdef __STDC__
+boolean SaveDocumentStatus (NotifyOnTarget *event)
+#else /* __STDC__*/
+boolean SaveDocumentStatus(event)
+     NotifyOnTarget *event;
+#endif /* __STDC__*/
+{
+  /* save the document status */
+  documentStatus = TtaIsDocumentModified (event->document);
+  return FALSE; /* let Thot perform normal operation */
+}
+ 
+ 
+/*----------------------------------------------------------------------
+ -----------------------------------------------------------------------*/ 
+#ifdef __STDC__
+void RestoreDocumentStatus (NotifyOnTarget *event)
+#else /* __STDC__*/
+void RestoreDocumentStatus(event)
+     NotifyOnTarget *event;
+#endif /* __STDC__*/
+{
+  /* restore the document status */
+  if (!documentStatus)
+    TtaSetDocumentUnmodified (event->document);
+}
 
 /*----------------------------------------------------------------------
   EscapeChar
