@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Bienvenue sur Amaya</title>
+  <meta name="GENERATOR" content="amaya V3.2.1" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <style type="text/css">
+    body {font-family: helvetica, arial, sans-serif; color: #501070;
+          background-color: #f7edff}
+    h1 {font-size: 200%; font-weight: bold; font-style:italic; color:#ffa0d8;
+        margin-bottom: 0"}
+    h2 {marging-top: 0; margin-bottom: .4em; font-style:italic; color:#ffa0d8}
+    h3 {border: solid 1px #ffa0d8; padding: 4px; margin-bottom: .2em}
+    div p {text-align: justify}
+    div {margin-top: 0}
+    .intro {text-align: right; margin-top: -217px; margin-bottom: 120px}
+    .button {border: solid 1px #501070; padding: 4px}
+    .buttonbar {text-align: center; margin-top: 1.5em}
+    .pink {color: #ffa0d8}
+    a:link {color:#ffa0d8; font-weight: bold}
+    a:active {color: #c04898; font-weight: bold}
+    a:visited {color: #9820c8; font-weight: bold}
+  </style>
+</head>
+
+<body xml:lang="fr" lang="fr">
+<img src="purple.gif" alt="A purple background" width="100%" height="217" />
+
+<p class="intro"><strong>Amaya</strong> est un client Web qui sert à la fois
+de navigateur et d'outil d'édition.<br />
+Il a été conçu par le <a href="http://www.w3.org/">W3C</a> ayant pour but
+essentiel la démonstration<br />
+des nouvelles technologies dans l'environnement WYSIWYG.<br />
+La version courante supporte les recommendations<br />
+HTML, XHTML, MathML,<br />
+CSS, et HTTP.</p>
+
+<h1>Bienvenue sur Amaya!</h1>
+
+<h2>Version 3.2.1</h2>
+
+<div>
+<h3>Caractéristiques principales</h3>
+
+<p>Avec Amaya, vous pouvez manipuler des pages Web contenant des boîtes de
+dialogues, des tables et les caractéristiques les plus avancées à partir
+d'HTML. Vous pouvez créer et éditer des expressions mathématiques complexes
+dans les pages Web. Vous pouvez styler vos documents en utilisant les cascades
+de feuilles de style. Vous pouvez publier des documents HTML et XHTML sur un
+serveur local ou lointain à travers HTTP.</p>
+
+<p>La Navigation et l'édition sont intimement intégrées. Vous pouvez naviguer
+et éditer des pages Web en même temps. Pour faire une édition de façon très
+aisée, un simple clic dans Amaya changera seulement le point d'insertion et
+permettra de rentrer le texte; pour suivre un lien, vous devez double cliquer.
+Ce comportement peut être modifié ainsi que de nombreuses caractéristiques en
+utilisant le menu Spécial/Préférences.</p>
+
+<p>Amaya peut éditer et publier des feuilles de style CSS. De plus, vous
+pouvez facilement ajouter et retirer des feuilles de style aux documents. Vous
+pouvez les activer et les désactiver de manière sélective et voir
+immédiatement l'interprétation des différences.</p>
+
+<p>Une Vue source montre le balisage courant produit par Amaya. En utilisant
+cette vue en parallèle avec la vue principale, vous pouvez travailler sur la
+page présentée et sur le code source. Amaya fournit une caractéristique
+Défaire/Refaire à multi-niveaux et multi-documents.</p>
+</div>
+
+<div>
+<h3>Manuel en ligne</h3>
+
+<p>Un manuel d'utilisation est disponible en ligne. Vous pouvez y accéder avec
+le menu Aide, qui affiche chaque section séparément. Vous pouvez également
+l'imprimer: il suffit de suivre le lien <a
+href="../doc/amaya/Manual.html">Manuel en ligne</a>. Vous obtiendrez la page
+de garde. Construisez ensuite le livre entier à l'aide de l'entrée "construire
+un livre" du menu Spécial et imprimez le résultat</p>
+</div>
+
+<div>
+<h3>Droit de copie</h3>
+
+<p>Il est permis d'utiliser, de copier, de modifier et de distribuer ce
+logiciel et sa documentation dans n'importe quel but et sans rétribution ou
+droits d'auteur, pourvu que tout le texte de <a
+href="http://www.w3.org/Consortium/Legal/copyright-software.html">déclaration
+du droit de copie du MIT et de l'INRIA</a> apparaisse sur TOUTES les copies du
+logiciel et de sa documentation ou portions de celle-ci, incluant les
+modifications que vous effectuez.</p>
+</div>
+
+<p class="buttonbar"><span class="button"><a
+href="http://www.w3.org/">serveurW3C</a></span> <span class="button"><a
+href="http://www.w3.org/Amaya/">Amaya</a></span> <span class="button"><a
+href="../doc/amaya/Manual.html">Manuel en ligne</a></span></p>
+</body>
+</html>
