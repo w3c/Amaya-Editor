@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Fri Sep  1 16:19:03 CEST 2000" version="13">
+<base last_update="Wed Sep 27 08:29:40 CEST 2000" version="14">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
 	<language encoding="latin1">de</language>
 	<language encoding="latin1">it</language>
 	<language encoding="latin1">tr</language>
+	<language encoding="latin1">es</language>
 </control>
 <messages>
 <label define="AM_FILES">
@@ -14,6 +15,7 @@
 	<message xml:lang="de">Dateien</message>
 	<message xml:lang="it">File</message>
 	<message xml:lang="tr">Dosyalar</message>
+	<message xml:lang="es">Ficheros</message>
 </label>
 <label define="AM_OPEN_URL">
 	<message xml:lang="en">Open</message>
@@ -21,6 +23,7 @@
 	<message xml:lang="de">Datei</message>
 	<message xml:lang="it">Apri</message>
 	<message xml:lang="tr">Git</message>
+	<message xml:lang="es">Abrir</message>
 </label>
 <label define="AM_CLEAR">
 	<message xml:lang="en">Clear</message>
@@ -28,6 +31,7 @@
 	<message xml:lang="de">Löschen</message>
 	<message xml:lang="it">Cancella</message>
 	<message xml:lang="tr">Temizle</message>
+	<message xml:lang="es">Limpiar</message>
 </label>
 <label define="AM_SAVED">
 	<message xml:lang="en">Document saved: %s</message>
@@ -35,6 +39,7 @@
 	<message xml:lang="de">Dokument gespeichert: %s</message>
 	<message xml:lang="it">Documento salvato: %s</message>
 	<message xml:lang="tr">%s belgesi kaydedildi</message>
+	<message xml:lang="es">Documento guardado: %s</message>
 </label>
 <label define="AM_ATTRIBUTE">
 	<message xml:lang="en">Attribute</message>
@@ -42,6 +47,7 @@
 	<message xml:lang="de">Attribute</message>
 	<message xml:lang="it">Attributo</message>
 	<message xml:lang="tr">Özellik</message>
+	<message xml:lang="es">Atributo</message>
 </label>
 <label define="AM_HREF_VALUE">
 	<message xml:lang="en">URL</message>
@@ -49,6 +55,7 @@
 	<message xml:lang="de">URL</message>
 	<message xml:lang="it">URL</message>
 	<message xml:lang="tr">URL</message>
+	<message xml:lang="es">URL</message>
 </label>
 <label define="AM_TEXT">
 	<message xml:lang="en">Text</message>
@@ -56,6 +63,7 @@
 	<message xml:lang="de">Text</message>
 	<message xml:lang="it">Testo</message>
 	<message xml:lang="tr">Metin</message>
+	<message xml:lang="es">Texto</message>
 </label>
 <label define="AM_NAME">
 	<message xml:lang="en">Name</message>
@@ -63,6 +71,7 @@
 	<message xml:lang="de">Name</message>
 	<message xml:lang="it">Nome</message>
 	<message xml:lang="tr">Ýsim</message>
+	<message xml:lang="es">Nombre</message>
 </label>
 <label define="AM_PASSWORD">
 	<message xml:lang="en">Password</message>
@@ -70,6 +79,7 @@
 	<message xml:lang="de">Paßwort</message>
 	<message xml:lang="it">Password</message>
 	<message xml:lang="tr">Parola</message>
+	<message xml:lang="es">Password</message>
 </label>
 <label define="AM_DEF_CLASS">
 	<message xml:lang="en">Use as class</message>
@@ -77,6 +87,7 @@
 	<message xml:lang="de">Als Klasse verwenden</message>
 	<message xml:lang="it">Usa come classe</message>
 	<message xml:lang="tr">Sýnýf olarak kullan</message>
+	<message xml:lang="es">Usar como clase</message>
 </label>
 <label define="AM_APPLY_CLASS">
 	<message xml:lang="en">Apply class</message>
@@ -84,6 +95,7 @@
 	<message xml:lang="de">Klasse anwenden</message>
 	<message xml:lang="it">Applica la classe</message>
 	<message xml:lang="tr">Sýnýf uygula</message>
+	<message xml:lang="es">Aplicar clase</message>
 </label>
 <label define="AM_SEL_CLASS">
 	<message xml:lang="en">Select a class or a pseudo-class</message>
@@ -91,6 +103,7 @@
 	<message xml:lang="de">Wähle Klasse</message>
 	<message xml:lang="it">Seleziona una classe o una pseudoclasse</message>
 	<message xml:lang="tr">Sýnýf seçimi</message>
+	<message xml:lang="es">Seleccionar una clase o pseudo-clase</message>
 </label>
 <label define="AM_FETCHING">
 	<message xml:lang="en">Fetching %s</message>
@@ -98,6 +111,7 @@
 	<message xml:lang="de">Lade: %s</message>
 	<message xml:lang="it">Sto caricando %s</message>
 	<message xml:lang="tr">%s alýnýyor</message>
+	<message xml:lang="es">Recogiendo %s</message>
 </label>
 <label define="AM_CANNOT_LOAD">
 	<message xml:lang="en">Cannot load %s</message>
@@ -105,6 +119,7 @@
 	<message xml:lang="de">Die Datei konnte nicht gefunden werden: %s</message>
 	<message xml:lang="it">Impossibile caricare %s</message>
 	<message xml:lang="tr">%s yüklenemiyor</message>
+	<message xml:lang="es">No puedo cargar %s</message>
 </label>
 <label define="AM_DOCUMENT_LOADED">
 	<message xml:lang="en">Finished!</message>
@@ -112,6 +127,7 @@
 	<message xml:lang="de">Laden beendet!</message>
 	<message xml:lang="it">Finito!</message>
 	<message xml:lang="tr">Bitti!</message>
+	<message xml:lang="es">¡Terminado!</message>
 </label>
 <label define="AM_SEL_TARGET">
 	<message xml:lang="en">Select the target</message>
@@ -119,6 +135,7 @@
 	<message xml:lang="de">Wähle Ziel</message>
 	<message xml:lang="it">Seleziona l'obiettivo</message>
 	<message xml:lang="tr">Hedefi seçin</message>
+	<message xml:lang="es">Seleccionar el destino</message>
 </label>
 <label define="AM_INVALID_TARGET">
 	<message xml:lang="en">Invalid target</message>
@@ -126,6 +143,7 @@
 	<message xml:lang="de">Ungültiges Ziel</message>
 	<message xml:lang="it">Obiettivo non valido</message>
 	<message xml:lang="tr">Geçersiz hedef</message>
+	<message xml:lang="es">Destino inválido</message>
 </label>
 <label define="AM_LOCATION">
 	<message xml:lang="en">Insert the URI or browse</message>
@@ -133,6 +151,7 @@
 	<message xml:lang="de">Adresse</message>
 	<message xml:lang="it">Indirizzo</message>
 	<message xml:lang="tr">Adres</message>
+	<message xml:lang="es">Insertar URI o hojear</message>
 </label>
 <label define="AM_TITLE">
 	<message xml:lang="en">Title</message>
@@ -140,6 +159,7 @@
 	<message xml:lang="de">Titel</message>
 	<message xml:lang="it">Titolo</message>
 	<message xml:lang="tr">Baþlýk</message>
+	<message xml:lang="es">Título</message>
 </label>
 <label define="AM_DOC_MODIFIED">
 	<message xml:lang="en">Document modified. All changes will be lost. Do you want to continue ?</message>
@@ -147,6 +167,7 @@
 	<message xml:lang="de">Alle nderungen gehen verloren - Möchten Sie fortfahren ?</message>
 	<message xml:lang="it">Il documento è stato modificato. Tutte le modifiche andranno perdute. Vuoi continuare ugualmente?</message>
 	<message xml:lang="tr">Tüm deðiþiklikleri kaybedeceksiniz, devam etmek istiyor musunuz?</message>
+	<message xml:lang="es">Documento modificado. ¿Se perderán todos los cambios. ¿Quiere seguir?</message>
 </label>
 <label define="AM_RED_FETCHING">
 	<message xml:lang="en">Redirection fetching of %s</message>
@@ -154,6 +175,7 @@
 	<message xml:lang="de">Lade Weiterleitung: %s</message>
 	<message xml:lang="it">Redirezione durante il caricamento di %s</message>
 	<message xml:lang="tr">Redirection fetching of %s</message>
+	<message xml:lang="es">Redirección recuperación de %s</message>
 </label>
 <label define="AM_REDIRECTIONS_LIMIT">
 	<message xml:lang="en">Too many redirections detected</message>
@@ -161,6 +183,7 @@
 	<message xml:lang="de">Zu viele Weiterleitungen</message>
 	<message xml:lang="it">Ho rilevato troppe redirezioni</message>
 	<message xml:lang="tr">Too many redirections detected</message>
+	<message xml:lang="es">Demasiadas redirecciones detectadas</message>
 </label>
 <label define="AM_CANNOT_CREATE_FILE">
 	<message xml:lang="en">Cannot create local file %s</message>
@@ -168,6 +191,7 @@
 	<message xml:lang="de">Kann lokale Datei nicht anlegen: %s</message>
 	<message xml:lang="it">Non posso creare il file locale %s</message>
 	<message xml:lang="tr">Yerel dosya %s yaratýlamýyor</message>
+	<message xml:lang="es">No puedo crear fichero local %s</message>
 </label>
 <label define="AM_WAITING_FOR_SOCKET">
 	<message xml:lang="en">Waiting for a free socket</message>
@@ -175,6 +199,7 @@
 	<message xml:lang="de">Warte auf freien Netz-Socket</message>
 	<message xml:lang="it">Sono in attesa di un socket libero</message>
 	<message xml:lang="tr">Boþ bir soket bekleniyor</message>
+	<message xml:lang="es">Esperando un socket libre</message>
 </label>
 <label define="AM_PROG_READ">
 	<message xml:lang="en">Reading %s</message>
@@ -182,6 +207,7 @@
 	<message xml:lang="de">Lade: %s</message>
 	<message xml:lang="it">Sto leggendo %s</message>
 	<message xml:lang="tr">%s okunuyor</message>
+	<message xml:lang="es">Leyendo %s</message>
 </label>
 <label define="AM_PROG_WRITE">
 	<message xml:lang="en">Writing %s</message>
@@ -189,6 +215,7 @@
 	<message xml:lang="de">Schreibe: %s</message>
 	<message xml:lang="it">Sto scrivendo %s</message>
 	<message xml:lang="tr">%s yazýlýyor</message>
+	<message xml:lang="es">Escribiendo %s</message>
 </label>
 <label define="AM_WAITING_FOR_CONNECTION">
 	<message xml:lang="en">Waiting for connection</message>
@@ -196,6 +223,7 @@
 	<message xml:lang="de">Warte auf Verbindung</message>
 	<message xml:lang="it">In attesa della connessione</message>
 	<message xml:lang="tr">Baðlantý bekleniyor</message>
+	<message xml:lang="es">Esperando conexión</message>
 </label>
 <label define="AM_CONTACTING_HOST">
 	<message xml:lang="en">Contacting %s</message>
@@ -203,6 +231,7 @@
 	<message xml:lang="de">Kontakt zu: %s</message>
 	<message xml:lang="it">Sto contattando %s</message>
 	<message xml:lang="tr">%s: baðlanýlýyor</message>
+	<message xml:lang="es">Contactando %s</message>
 </label>
 <label define="AM_LOOKING_HOST">
 	<message xml:lang="en">Looking up %s</message>
@@ -210,6 +239,7 @@
 	<message xml:lang="de">Suche: %s</message>
 	<message xml:lang="it">Sto cercando %s</message>
 	<message xml:lang="tr">%s: aranýyor</message>
+	<message xml:lang="es">Mejorando %s</message>
 </label>
 <label define="AM_UNKNOWN_STATUS">
 	<message xml:lang="en">Unknown Status</message>
@@ -217,6 +247,7 @@
 	<message xml:lang="de">Unbekannter Status</message>
 	<message xml:lang="it">Stato sconosciuto</message>
 	<message xml:lang="tr">Belirsiz durum</message>
+	<message xml:lang="es">Estado desconocido Status</message>
 </label>
 <label define="AM_GET_AUTHENTICATION">
 	<message xml:lang="en">Authentication Dialogue</message>
@@ -224,6 +255,7 @@
 	<message xml:lang="de">Anmeldung</message>
 	<message xml:lang="it">Dialogo di autenticazione</message>
 	<message xml:lang="tr">Güvenlik istemi</message>
+	<message xml:lang="es">Diálogo de Autenticación</message>
 </label>
 <label define="AM_AUTHENTICATION_FAILURE">
 	<message xml:lang="en">Authorization failure for %s</message>
@@ -231,6 +263,7 @@
 	<message xml:lang="de">Anmeldungsfehler für %s</message>
 	<message xml:lang="it">Autorizzazione fallita per %s</message>
 	<message xml:lang="tr">%s için yetkilendirme baþarýsýz</message>
+	<message xml:lang="es">Fallo de autorización para %s</message>
 </label>
 <label define="AM_LOADED_NO_DATA">
 	<message xml:lang="en">%s loaded but no data is available</message>
@@ -238,6 +271,7 @@
 	<message xml:lang="de">%s geladen, aber leer</message>
 	<message xml:lang="it">%s caricato, ma non è disponibile alcun dato</message>
 	<message xml:lang="tr">%s yüklendi, ancak veri içermiyor</message>
+	<message xml:lang="es">%s cargado pero no hay datos disponibles</message>
 </label>
 <label define="AM_LOAD_ABORT">
 	<message xml:lang="en">Transfer interrupted!</message>
@@ -245,6 +279,7 @@
 	<message xml:lang="de">Übertragung unterbrochen!</message>
 	<message xml:lang="it">Trasferimento interrotto!</message>
 	<message xml:lang="tr">Aktarým kesildi!</message>
+	<message xml:lang="es">Transferencia interrumpida</message>
 </label>
 <label define="AM_NOT_AVAILABLE_RETRY">
 	<message xml:lang="en">%s is not available at the moment. Please retry at some other time</message>
@@ -252,6 +287,7 @@
 	<message xml:lang="de">%s ist im Moment nicht verfügbar. Bitte später nochmal versuchen!</message>
 	<message xml:lang="it">%s è indisponibile al momento. Riprova piú tardi</message>
 	<message xml:lang="tr">%s: þu anda eriþilemiyor, baþka bir zaman deneyin</message>
+	<message xml:lang="es">%s no está disponible en este momento. Por favor inténtelo en otro momento</message>
 </label>
 <label define="AM_ELEMENT_LOADED">
 	<message xml:lang="en">%s loaded</message>
@@ -259,6 +295,7 @@
 	<message xml:lang="de">%s geladen</message>
 	<message xml:lang="it">%s caricato</message>
 	<message xml:lang="tr">%s yüklendi</message>
+	<message xml:lang="es">%s cargado</message>
 </label>
 <label define="AM_REMOTE_SAVING">
 	<message xml:lang="en">Saving %s</message>
@@ -266,6 +303,7 @@
 	<message xml:lang="de">Speichere: %s</message>
 	<message xml:lang="it">Salvataggio di %s</message>
 	<message xml:lang="tr">%s kaydediliyor</message>
+	<message xml:lang="es">Guardando %s</message>
 </label>
 <label define="AM_CANNOT_SAVE">
 	<message xml:lang="en">Cannot save in: %s</message>
@@ -273,6 +311,7 @@
 	<message xml:lang="de">Kann nicht speichern unter: %s</message>
 	<message xml:lang="it">Non posso salvare su %s</message>
 	<message xml:lang="tr">%s kaydedilemedi</message>
+	<message xml:lang="es">No puedo guardar en: %s</message>
 </label>
 <label define="AM_SYSTEM_ERROR">
 	<message xml:lang="en">English system errors messages</message>
@@ -280,6 +319,7 @@
 	<message xml:lang="de">German system errors messages</message>
 	<message xml:lang="it">italian system errors messages</message>
 	<message xml:lang="tr">Türkçe sistem hata mesajlarý</message>
+	<message xml:lang="es">Error en el sistema de mensajes (English)</message>
 </label>
 <label define="AM_INVALID_ANCHOR1">
 	<message xml:lang="en">An anchor cannot contain these elements</message>
@@ -287,6 +327,7 @@
 	<message xml:lang="de">Ein Verknüpfungsziel kann dieses Element nicht enthalten</message>
 	<message xml:lang="it">Un ancora non può contenere questi elementi</message>
 	<message xml:lang="tr">&lt;A> tanýmlamasý bu unsurlarý içeremez</message>
+	<message xml:lang="es">Un ancla no puede ontener estos elementos</message>
 </label>
 <label define="AM_INVALID_ANCHOR2">
 	<message xml:lang="en">Cannot create an anchor within an anchor</message>
@@ -294,6 +335,7 @@
 	<message xml:lang="de">Innerhalb eines Verknüpfungszieles kann kein Verknüpfungsziel erstellt werden</message>
 	<message xml:lang="it">Non posso creare un'ancora all'interno di un'ancora</message>
 	<message xml:lang="tr">&lt;A> tanýmlamasý içinde bir baþka &lt;A> tanýmý yer alamaz.</message>
+	<message xml:lang="es">No puedo crear un ancla en un ancla</message>
 </label>
 <label define="AM_GET_UNSUPPORTED_PROTOCOL">
 	<message xml:lang="en">Sorry, no GET support yet for URLs of this type: %s</message>
@@ -301,6 +343,7 @@
 	<message xml:lang="de">GET-Unterstützung noch nicht implementiert für URL-Type: %s</message>
 	<message xml:lang="it">Il GET di URL di tipo %s non è ancora supportato</message>
 	<message xml:lang="tr">%s tipi URL\'ler için GET desteði henüz yok, üzgünüm</message>
+	<message xml:lang="es">Lo siento, no hay soporte GET aun para URL de este tipo: %s</message>
 </label>
 <label define="AM_PUT_UNSUPPORTED_PROTOCOL">
 	<message xml:lang="en">Sorry, no PUT support yet for URLs of this type: %s</message>
@@ -308,6 +351,7 @@
 	<message xml:lang="de">PUT-Unterstützung noch nicht implementiert für URL-Type: %s</message>
 	<message xml:lang="it">Il PUT di URL di tipo %s non è ancora supportato</message>
 	<message xml:lang="tr">%s tipi URL\'ler için PUT desteði henüz yok, üzgünüm</message>
+	<message xml:lang="es">Lo siento, no hay soporte PUT aun para URL de este tipo: %s</message>
 </label>
 <label define="AM_UNSUPPORTED_FEATURE">
 	<message xml:lang="en">This version of Amaya does not support this feature</message>
@@ -315,6 +359,7 @@
 	<message xml:lang="de">Diese Funktion wird von Amaya nicht unterstützt</message>
 	<message xml:lang="it">La presente versione di Amaya non supporta questa funzionalità</message>
 	<message xml:lang="tr">Amaya\'nýn bu sürümü, bu özelliði desteklemiyor</message>
+	<message xml:lang="es">Esta fersión de Amaya no soporta esta característica</message>
 </label>
 <label define="AM_WROTE_OBJECT">
 	<message xml:lang="en">Finished writing %s</message>
@@ -322,6 +367,7 @@
 	<message xml:lang="de">Schreiben beendet %s</message>
 	<message xml:lang="it">Scrittura di %s terminata</message>
 	<message xml:lang="tr">%s\'in yazýmý tamamlandý</message>
+	<message xml:lang="es">Finalizado escritura %s</message>
 </label>
 <label define="AM_BAD_URL">
 	<message xml:lang="en">Could not normalize %s</message>
@@ -329,6 +375,7 @@
 	<message xml:lang="de">Normalisierung nicht erfolgreich für: %s</message>
 	<message xml:lang="it">Impossibile normalizzare %s</message>
 	<message xml:lang="tr">%s normale dönüþtürülemedi</message>
+	<message xml:lang="es">No pude normallizar %s</message>
 </label>
 <label define="AM_CACHE_ERROR">
 	<message xml:lang="en">Could not create temporary file directory %s</message>
@@ -336,6 +383,7 @@
 	<message xml:lang="de">Temporäres Dateiverzeichnis konnte nicht angelegt werden: %s</message>
 	<message xml:lang="it">Impossibile creare la directory dei file temporanei %s</message>
 	<message xml:lang="tr">%s geçici dosya dizini yaratýlamadý</message>
+	<message xml:lang="es">No pude crear directorio de ficheros temporales %s</message>
 </label>
 <label define="AM_NO_TRANS">
 	<message xml:lang="en">No transformation applicable to the selection</message>
@@ -343,6 +391,7 @@
 	<message xml:lang="de">Für die Markierung ist keine Umwandlung anwendbar</message>
 	<message xml:lang="it">Alla selezione non è applicabile alcuna trasformazione</message>
 	<message xml:lang="tr">Seçili bölge için hiç bir dönüþüm kullanýlamaz</message>
+	<message xml:lang="es">No hay transformación aplicable a la selección</message>
 </label>
 <label define="AM_TRANS_FAILED">
 	<message xml:lang="en">Transformation failed</message>
@@ -350,6 +399,7 @@
 	<message xml:lang="de">Umwandlung fehlerhaft</message>
 	<message xml:lang="it">Trasformazione fallita</message>
 	<message xml:lang="tr">Dönüþüm baþarýsýz</message>
+	<message xml:lang="es">Falló la transformación</message>
 </label>
 <label define="AM_TRANS_PARSE_ERROR">
 	<message xml:lang="en">syntax error in file HTML.trans line %s</message>
@@ -357,6 +407,7 @@
 	<message xml:lang="de">Syntaxfehler in der HTML-Datei, Zeile %s</message>
 	<message xml:lang="it">errore di sintassi nel file HTML.trans alla linea %s</message>
 	<message xml:lang="tr">HTML.trans dosyasý, %s satýrýnda yazým hatasý</message>
+	<message xml:lang="es">error de sintaxis en fichero.trans línea %s</message>
 </label>
 <label define="AM_BUTTON_MATH">
 	<message xml:lang="en">Maths</message>
@@ -364,6 +415,7 @@
 	<message xml:lang="de">Formel</message>
 	<message xml:lang="it">Formule matematiche</message>
 	<message xml:lang="tr">Matematik</message>
+	<message xml:lang="es">Matemáticas</message>
 </label>
 <label define="AM_BUTTON_GRAPHICS">
 	<message xml:lang="en">Graphics</message>
@@ -371,6 +423,7 @@
 	<message xml:lang="de">Grafiken</message>
 	<message xml:lang="it">Grafica</message>
 	<message xml:lang="tr">Grafik</message>
+	<message xml:lang="es">Gráficos</message>
 </label>
 <label define="AM_SAVE_AS">
 	<message xml:lang="en">Save as</message>
@@ -378,48 +431,56 @@
 	<message xml:lang="de">Speichern unter</message>
 	<message xml:lang="it">Salva con nome</message>
 	<message xml:lang="tr">Ýsimle kaydet</message>
+	<message xml:lang="es">Guardar como</message>
 </label>
 <label define="AM_AUTHENTICATION_REALM">
 	<message xml:lang="en">Please authenticate for realm \'%s\' at server \'%s\'</message>
 	<message xml:lang="fr">Authentification requise pour le domaine \'%s\' du serveur \'%s\'</message>
 	<message xml:lang="de">Bitte für die Domain \'%s\' auf dem Server \'%s\' einloggen:</message>
 	<message xml:lang="it">Autenticazione per il dominio \'%s\' sul server \'%s\'</message>
+	<message xml:lang="es">Por favor valide para \'%s\' en el servidor \'%s\'</message>
 </label>
 <label define="AM_BUTTON_BrowseEdit">
 	<message xml:lang="en">Editor/Browser</message>
 	<message xml:lang="fr">diteur/Navigateur</message>
 	<message xml:lang="de">Editor/Browser</message>
 	<message xml:lang="it">Editor/Browser</message>
+	<message xml:lang="es">Editor/Navegador</message>
 </label>
 <label define="AM_REQUEST_TIMEOUT">
 	<message xml:lang="en">Request timeout - server did not respond</message>
 	<message xml:lang="fr">Délai expiré - le serveur n'a pas répondu</message>
 	<message xml:lang="de">Timeout - server antwortet nicht</message>
 	<message xml:lang="it">Richiesta scaduta - il server non ha risposto</message>
+	<message xml:lang="es">Petición caducada - el servidor no responde</message>
 </label>
 <label define="AM_OVERWRITE_CHECK">
 	<message xml:lang="en">%s already exists. Overwrite it?</message>
 	<message xml:lang="fr">%s existe déjà. Forcer l'écriture ?</message>
 	<message xml:lang="de">%s besteht bereits. Überschreiben?</message>
 	<message xml:lang="it">%s esiste già. Vuoi sovrascriverlo?</message>
+	<message xml:lang="es">%s ya existe. ¿Sobreescribirlo?</message>
 </label>
 <label define="AM_ETAG_CHANGED">
 	<message xml:lang="en">%s has changed. Overwrite it?</message>
 	<message xml:lang="fr">%s a changé. Forcer l'écriture ?</message>
 	<message xml:lang="de">%s wurde geändert. Überschreiben?</message>
 	<message xml:lang="it">%s è cambiato. Vuoi sovrascriverlo?</message>
+	<message xml:lang="es">%s ha cambiado. ¿Sobreescribirlo?</message>
 </label>
 <label define="AM_BACKGROUND_IMAGE">
 	<message xml:lang="en">Background image</message>
 	<message xml:lang="fr">Image de fond</message>
 	<message xml:lang="de">Hintergrundbild</message>
 	<message xml:lang="it">Immagine di sfondo</message>
+	<message xml:lang="es">Imagen de fondo</message>
 </label>
 <label define="AM_BG_IMAGE_NOT_ALLOWED">
 	<message xml:lang="en">Background image not allowed here</message>
 	<message xml:lang="fr">Image de fond interdite ici</message>
 	<message xml:lang="de">Hintergrundbild hier nicht zulässig</message>
 	<message xml:lang="it">L'immagine di background non è consentita qui</message>
+	<message xml:lang="es">Imagen de fondo no se permite aquí</message>
 </label>
 <label define="AM_CSS">
 	<message xml:lang="en">CSS</message>
@@ -427,6 +488,7 @@
 	<message xml:lang="de">CSS</message>
 	<message xml:lang="it">CSS</message>
 	<message xml:lang="tr">CSS</message>
+	<message xml:lang="es">CSS</message>
 </label>
 <label define="AM_WARNING_SAVE_OVERWRITE">
 	<message xml:lang="en">Saving will overwrite the following URLs:</message>
@@ -434,6 +496,7 @@
 	<message xml:lang="de">Speichern überschreibt die folgenden URL:</message>
 	<message xml:lang="it">Il salvataggio sovrascriverà i seguenti URL:</message>
 	<message xml:lang="tr">Kaydetmek þu URL\'lerin üzerine yazacaktýr:</message>
+	<message xml:lang="es">Guardar sobreescibirá las siguientes URL:</message>
 </label>
 <label define="AM_URL_SAVE_FAILED">
 	<message xml:lang="en">Failed to save to URL</message>
@@ -441,6 +504,7 @@
 	<message xml:lang="de">Speichern der URL fehlerhaft</message>
 	<message xml:lang="it">Il salvataggio sull'URL è fallito</message>
 	<message xml:lang="tr">URL kaydedilemedi</message>
+	<message xml:lang="es">Fallo al guardar en URL</message>
 </label>
 <label define="AM_SAVE_DISK">
 	<message xml:lang="en">Save to disk ?</message>
@@ -448,6 +512,7 @@
 	<message xml:lang="de">Speichern auf Festplatte?</message>
 	<message xml:lang="it">Salvo su disco ?</message>
 	<message xml:lang="tr">Diske kayýt?</message>
+	<message xml:lang="es">¿Guardar en disco?</message>
 </label>
 <label define="AM_BCOPY_IMAGES">
 	<message xml:lang="en">Copy Images</message>
@@ -455,6 +520,7 @@
 	<message xml:lang="de">Grafiken speichern</message>
 	<message xml:lang="it">Copia immagini</message>
 	<message xml:lang="tr">Görüntüleri kopyala</message>
+	<message xml:lang="es">Copiar Imágenes</message>
 </label>
 <label define="AM_BTRANSFORM_URL">
 	<message xml:lang="en">Transform URLs</message>
@@ -462,6 +528,7 @@
 	<message xml:lang="de">Absolute Verknüpfungszieladressen</message>
 	<message xml:lang="it">Trasforma URL</message>
 	<message xml:lang="tr">URL\'leri dönüþtür</message>
+	<message xml:lang="es">Transformar URL</message>
 </label>
 <label define="AM_DOC_LOCATION">
 	<message xml:lang="en">Document location</message>
@@ -469,6 +536,7 @@
 	<message xml:lang="de">Dokumentenadresse</message>
 	<message xml:lang="it">Collocazione del documento</message>
 	<message xml:lang="tr">Belgenin adresi</message>
+	<message xml:lang="es">Ubicación de documento</message>
 </label>
 <label define="AM_IMAGES_LOCATION">
 	<message xml:lang="en">Images directory</message>
@@ -476,6 +544,7 @@
 	<message xml:lang="de">Grafik(unter)verzeichnis</message>
 	<message xml:lang="it">Directory delle immagini</message>
 	<message xml:lang="tr">Görüntü dizini</message>
+	<message xml:lang="es">Directorio de Imágenes</message>
 </label>
 <label define="AM_OBJECT_LOCATION">
 	<message xml:lang="en">Object location</message>
@@ -483,6 +552,7 @@
 	<message xml:lang="de">Objektadresse</message>
 	<message xml:lang="it">Collocazione dell'oggetto</message>
 	<message xml:lang="tr">Nesne konumu</message>
+	<message xml:lang="es">Ubicación de objecto</message>
 </label>
 <label define="AM_CSS_FILE">
 	<message xml:lang="en">CSS files</message>
@@ -490,6 +560,7 @@
 	<message xml:lang="de">Stylesheetdatei wählen</message>
 	<message xml:lang="it">CSS file</message>
 	<message xml:lang="tr">CSS dosyasý 1</message>
+	<message xml:lang="es">ficheros CSS</message>
 </label>
 <label define="AM_ABOUT1">
 	<message xml:lang="en">W3C's editor/browser for the Web</message>
@@ -497,12 +568,14 @@
 	<message xml:lang="de">der W3C Web-Browser und -Editor</message>
 	<message xml:lang="it">il editor/browser del W3C</message>
 	<message xml:lang="tr">WWW için tarayýcý ve belge düzenleyici</message>
+	<message xml:lang="es">Editor/Hojeador de W3C para la Web</message>
 </label>
 <label define="AM_ABOUT2">
 	<message xml:lang="en">(mail issues to www-amaya@w3.org)</message>
 	<message xml:lang="fr">(envoyez vos questions à www-amaya@w3.org)</message>
 	<message xml:lang="de">(Probleme senden an www-amaya@w3.org)</message>
 	<message xml:lang="it">(scrivere a www-amaya@w3.org per informazioni)</message>
+	<message xml:lang="es">(salida de correo para www-amaya@w3.org)</message>
 </label>
 <label define="AM_TOO_LONG_URL">
 	<message xml:lang="en">Can't handle URLs having more than %s chars</message>
@@ -510,6 +583,7 @@
 	<message xml:lang="de">URL länger als %s Zeichen werden zur Zeit nicht unterstützt</message>
 	<message xml:lang="it">Impossibile gestire URL composti da piú di %s caratteri</message>
 	<message xml:lang="tr">%s karakterden uzun URL\'ler þimdilik iþlenemiyor</message>
+	<message xml:lang="es">No puedo gestionar URL con más de %s caracteres</message>
 </label>
 <label define="AM_INVALID_TYPE">
 	<message xml:lang="en">Only default type is allowed</message>
@@ -517,6 +591,7 @@
 	<message xml:lang="de">Nur Standardtyp erlaubt</message>
 	<message xml:lang="it">consentito il solo tipo di default</message>
 	<message xml:lang="tr">Sadece öntanýmlý tip kullanýlabilir</message>
+	<message xml:lang="es">Sólo se permite el tipo por omisión</message>
 </label>
 <label define="AM_UPDATED_LINK">
 	<message xml:lang="en">Links update: %s%% has been done</message>
@@ -524,6 +599,7 @@
 	<message xml:lang="de">Aktualisierung der Verknüpfung : %s%% erfolgreich</message>
 	<message xml:lang="it">Aggiornamento dei collegamenti: %s%% è stato fatto</message>
 	<message xml:lang="tr">Baðlantý güncellemesi: %s%% tamamlandý</message>
+	<message xml:lang="es">Actualización de enlace: %s%% se ha realizado</message>
 </label>
 <label define="AM_NOTHING_TO_SAVE">
 	<message xml:lang="en">Nothing new to be saved</message>
@@ -531,6 +607,7 @@
 	<message xml:lang="de">Nichts zu speichern</message>
 	<message xml:lang="it">Niente di nuovo da salvare</message>
 	<message xml:lang="tr">Kaydedilecek bir þey yok</message>
+	<message xml:lang="es">Nada nuevo que guardar</message>
 </label>
 <label define="AM_REPEAT_Y">
 	<message xml:lang="en">repeat-y</message>
@@ -538,6 +615,7 @@
 	<message xml:lang="de">Wiederholung y</message>
 	<message xml:lang="it">repeat-y</message>
 	<message xml:lang="tr">y\'de tekrar</message>
+	<message xml:lang="es">repetir-y</message>
 </label>
 <label define="AM_SYS_ERROR_TMPL">
 	<message xml:lang="en">&lt;HTML>&lt;HEAD>&lt;TITLE>ERROR: Cannot access a URL&lt;/TITLE>&lt;/HEAD>&lt;BODY>&lt;H1>The requested URL could not be retrieved&lt;/H1>&lt;HR>&lt;P>While trying to retrieve the URL:&lt;A HREF=\"%s\">%s&lt;/A>&lt;/P>&lt;P>The following error was encountered:&lt;/P>&lt;UL>&lt;LI>&lt;STRONG>Connection Failed&lt;/STRONG>&lt;/UL>&lt;P>The system returned:&lt;/P>&lt;PRE>&lt;I>(%d) %s&lt;/I>&lt;/PRE>&lt;P>This means that:&lt;/P>&lt;PRE>The remote site or server may be down or non-existent.&lt;/PRE>&lt;PRE>Please try again soon.&lt;/PRE>&lt;P>&lt;/P>&lt;HR>\n&lt;/BODY>&lt;/HTML></message>
@@ -545,6 +623,7 @@
 	<message xml:lang="de">&lt;HTML>&lt;HEAD>&lt;TITLE>ERROR: Kann nicht zugreifen auf URL&lt;/TITLE>&lt;/HEAD>&lt;BODY>&lt;H1>Die angeforderte URL konnte nicht geladen werden &lt;/H1>&lt;HR>&lt;P>Beim Laden der URL:&lt;A HREF=\"%s\">%s&lt;/A>&lt;/P>&lt;P> ist folgender Fehler aufgetreten:&lt;/P>&lt;UL>&lt;LI>&lt;STRONG>Verbindung nicht möglich&lt;/STRONG>&lt;/UL>&lt;P>Das System meldete:&lt;/P>&lt;PRE>&lt;I>(%d) %s&lt;/I>&lt;/PRE>&lt;P>Dies bedeutet, daß:&lt;/P>&lt;PRE>Die Gegenseite oder der Server sind nicht erreichbar oder existieren nicht.&lt;/PRE>&lt;PRE>Bitte später noch einmal versuchen.&lt;/PRE>&lt;P>&lt;/P>&lt;HR>\n&lt;/BODY>&lt;/HTML></message>
 	<message xml:lang="it">&lt;HTML>&lt;HEAD>&lt;TITLE>ERRORE: Impossibile accedere ad un URL&lt;/TITLE>&lt;/HEAD>&lt;BODY>&lt;H1>L'URL richiesto non può essere recuperato&lt;/H1>&lt;HR>&lt;P>Tentando di recuperare l'URL:&lt;A HREF=\"%s\">%s&lt;/A>&lt;/P>&lt;P>si è verificato il seguente errore:&lt;/P>&lt;UL>&lt;LI>&lt;STRONG>Connessione fallita&lt;/STRONG>&lt;/UL>&lt;P>Il sistema ha restituito:&lt;/P>&lt;PRE>&lt;I>(%d) %s&lt;/I>&lt;/PRE>&lt;P>Ciò significa che:&lt;/P>&lt;PRE>Il sito o il server remoti possono essere inattivi o inesistenti.&lt;/PRE>&lt;PRE>Prova ancora piú tardi.&lt;/PRE>&lt;P>&lt;/P>&lt;HR>\n&lt;/BODY>&lt;/HTML></message>
 	<message xml:lang="tr">&lt;HTML>&lt;HEAD>&lt;TITLE>HATA: URL eriþilemiyor&lt;/TITLE>&lt;/HEAD>&lt;BODY>&lt;H1>Belirtilen URL alýnamadý&lt;/H1>&lt;HR>&lt;P>Belirtilen URL alýnýrken:&lt;A HREF=\"%s\">%s&lt;/A>&lt;/P>&lt;P>Aþaðýdaki hata ile karþýlaþýldý:&lt;/P>&lt;UL>&lt;LI>&lt;STRONG>Baðlantý baþarýsýz&lt;/STRONG>&lt;/UL>&lt;P>Sistem hata olarak:&lt;/P>&lt;PRE>&lt;I>(%d) %s&lt;/I>&lt;/PRE>mesajýný verdi&lt;P>Bunun anlamý:&lt;/P>&lt;PRE>Karþý sunucunun çalýþmýyor olmasý veya istenen belgenin sunucuda yer almamasý.&lt;/PRE>&lt;PRE>Lütfen bir süre sonra tekrar deneyin.&lt;/PRE>&lt;P>&lt;/P>&lt;HR>\n&lt;/BODY>&lt;/HTML></message>
+	<message xml:lang="es">&lt;HTML>&lt;HEAD>&lt;TITLE>ERROR: No puedo acceder a la URL&lt;/TITLE>&lt;/HEAD>&lt;BODY>&lt;H1>El documento solicitado no se pudo obtener&lt;/H1>&lt;HR>&lt;P>While trying to retrieve the URL:&lt;A HREF=\"%s\">%s&lt;/A>&lt;/P>&lt;P>Se encontró el sguiente error:&lt;/P>&lt;UL>&lt;LI>&lt;STRONG>Fallo de conexion&lt;/STRONG>&lt;/UL>&lt;P>El sistema respondió:&lt;/P>&lt;PRE>&lt;I>(%d) %s&lt;/I>&lt;/PRE>&lt;P>Esto significa que:&lt;/P>&lt;PRE>El sitio remoto puede no estar operativo o no existir.&lt;/PRE>&lt;PRE>Por favor, intentelo de nuevo.&lt;/PRE>&lt;P>&lt;/P>&lt;HR>\n&lt;/BODY>&lt;/HTML></message>
 </label>
 <label define="AM_GET_USER_NAME">
 	<message xml:lang="en">Please enter username:</message>
@@ -552,6 +631,7 @@
 	<message xml:lang="de">Bitte Usernamen eingeben:</message>
 	<message xml:lang="it">Digita lo username:</message>
 	<message xml:lang="tr">Kullanýcý ismini girin:</message>
+	<message xml:lang="es">Por favor, introduzca un nombre de usuario:</message>
 </label>
 <label define="AM_WAITING_REQUESTS">
 	<message xml:lang="en">%d outstanding requests</message>
@@ -559,12 +639,14 @@
 	<message xml:lang="de">%d offene Anfrage(n)</message>
 	<message xml:lang="it">%d richieste inevase</message>
 	<message xml:lang="tr">%d istek sýrada</message>
+	<message xml:lang="es">%d outstanding requests</message>
 </label>
 <label define="AM_NO_CCS_FILE">
 	<message xml:lang="en">No CSS file available</message>
 	<message xml:lang="fr">Pas de fichier CSS possible</message>
 	<message xml:lang="de">Keine CSS-Datei vorhanden</message>
 	<message xml:lang="it">Non è disponibile nessun file CSS</message>
+	<message xml:lang="es">No hay fichero CSS disponible</message>
 </label>
 <label define="AM_BUTTON_INTERRUPT">
 	<message xml:lang="en">Interrupt transfer</message>
@@ -572,6 +654,7 @@
 	<message xml:lang="de">Übertragung unterbrechen</message>
 	<message xml:lang="it">Interrompi trasferimento</message>
 	<message xml:lang="tr">Aktarýmý kes</message>
+	<message xml:lang="es">Transferencia interrumpida</message>
 </label>
 <label define="AM_BUTTON_PREVIOUS">
 	<message xml:lang="en">Previous document</message>
@@ -579,6 +662,7 @@
 	<message xml:lang="de">Vorheriges Dokument</message>
 	<message xml:lang="it">Documento precedente</message>
 	<message xml:lang="tr">Önceki belge</message>
+	<message xml:lang="es">Documento previo</message>
 </label>
 <label define="AM_BUTTON_NEXT">
 	<message xml:lang="en">Next document</message>
@@ -586,6 +670,7 @@
 	<message xml:lang="de">Nachfolgendes Dokument</message>
 	<message xml:lang="it">Documento successivo</message>
 	<message xml:lang="tr">Sonraki belge</message>
+	<message xml:lang="es">Siguiente documento</message>
 </label>
 <label define="AM_BUTTON_RELOAD">
 	<message xml:lang="en">Reload</message>
@@ -593,6 +678,7 @@
 	<message xml:lang="de">Neu laden</message>
 	<message xml:lang="it">Ricarica</message>
 	<message xml:lang="tr">Yeniden yükle</message>
+	<message xml:lang="es">Recargar</message>
 </label>
 <label define="AM_BUTTON_SAVE">
 	<message xml:lang="en">Save</message>
@@ -600,6 +686,7 @@
 	<message xml:lang="de">Speichern</message>
 	<message xml:lang="it">Salva</message>
 	<message xml:lang="tr">Kaydet</message>
+	<message xml:lang="es">Guardar</message>
 </label>
 <label define="AM_BUTTON_PRINT">
 	<message xml:lang="en">Print</message>
@@ -607,6 +694,7 @@
 	<message xml:lang="de">Drucken</message>
 	<message xml:lang="it">Stampa</message>
 	<message xml:lang="tr">Yazdýr</message>
+	<message xml:lang="es">Imprimir</message>
 </label>
 <label define="AM_BUTTON_SEARCH">
 	<message xml:lang="en">Search</message>
@@ -614,6 +702,7 @@
 	<message xml:lang="de">Suchen</message>
 	<message xml:lang="it">Cerca</message>
 	<message xml:lang="tr">Ara</message>
+	<message xml:lang="es">Buscar</message>
 </label>
 <label define="AM_BUTTON_ITALICS">
 	<message xml:lang="en">Emphasis</message>
@@ -621,6 +710,7 @@
 	<message xml:lang="de">Betont</message>
 	<message xml:lang="it">Enfasi</message>
 	<message xml:lang="tr">Vurgu</message>
+	<message xml:lang="es">Enfasis</message>
 </label>
 <label define="AM_BUTTON_BOLD">
 	<message xml:lang="en">Strong</message>
@@ -628,6 +718,7 @@
 	<message xml:lang="de">Fett</message>
 	<message xml:lang="it">Forte</message>
 	<message xml:lang="tr">Kuvvetli</message>
+	<message xml:lang="es">Strong</message>
 </label>
 <label define="AM_BUTTON_CODE">
 	<message xml:lang="en">Fixed font</message>
@@ -635,6 +726,7 @@
 	<message xml:lang="de">Feste Schriftbreite</message>
 	<message xml:lang="it">Fixed font</message>
 	<message xml:lang="tr">Sabit geniþlikli yazýtipi</message>
+	<message xml:lang="es">Fuente fija</message>
 </label>
 <label define="AM_NO_REPEAT">
 	<message xml:lang="en">no-repeat</message>
@@ -642,6 +734,7 @@
 	<message xml:lang="de">keine Wiederholung</message>
 	<message xml:lang="it">no-repeat</message>
 	<message xml:lang="tr">tekrar yok</message>
+	<message xml:lang="es">no repetir</message>
 </label>
 <label define="AM_BUTTON_IMG">
 	<message xml:lang="en">Insert image</message>
@@ -649,6 +742,7 @@
 	<message xml:lang="de">Grafik einfügen</message>
 	<message xml:lang="it">Inserisci immagine</message>
 	<message xml:lang="tr">Görüntü ekle</message>
+	<message xml:lang="es">Insertar imagen</message>
 </label>
 <label define="AM_BUTTON_H1">
 	<message xml:lang="en">Heading level 1</message>
@@ -656,6 +750,7 @@
 	<message xml:lang="de">Überschrift Ebene 1</message>
 	<message xml:lang="it">Intestazione di livello 1</message>
 	<message xml:lang="tr">Baþlýk 1</message>
+	<message xml:lang="es">Cabecera Nivel 1</message>
 </label>
 <label define="AM_BUTTON_H2">
 	<message xml:lang="en">Heading level 2</message>
@@ -663,6 +758,7 @@
 	<message xml:lang="de">Überschrift Ebene 2</message>
 	<message xml:lang="it">Intestazione di livello 2</message>
 	<message xml:lang="tr">Baþlýk 2</message>
+	<message xml:lang="es">Cabecera Nivel 2</message>
 </label>
 <label define="AM_BUTTON_H3">
 	<message xml:lang="en">Heading level 3</message>
@@ -670,6 +766,7 @@
 	<message xml:lang="de">Überschrift Ebene 3</message>
 	<message xml:lang="it">Intestazione di livello 3</message>
 	<message xml:lang="tr">Baþlýk 3</message>
+	<message xml:lang="es">Cabecera Nivel 3</message>
 </label>
 <label define="AM_BUTTON_UL">
 	<message xml:lang="en">Bulleted list</message>
@@ -677,6 +774,7 @@
 	<message xml:lang="de">Liste mit Punkten</message>
 	<message xml:lang="it">Lista puntata</message>
 	<message xml:lang="tr">Noktalý liste</message>
+	<message xml:lang="es">Lista con boliches</message>
 </label>
 <label define="AM_BUTTON_OL">
 	<message xml:lang="en">Numbered list</message>
@@ -684,6 +782,7 @@
 	<message xml:lang="de">Numerierte Liste</message>
 	<message xml:lang="it">Lista numerata</message>
 	<message xml:lang="tr">Numaralý liste</message>
+	<message xml:lang="es">Lista numerada</message>
 </label>
 <label define="AM_BUTTON_DL">
 	<message xml:lang="en">Definition list</message>
@@ -691,6 +790,7 @@
 	<message xml:lang="de">Definitionsliste</message>
 	<message xml:lang="it">Lista di definizioni</message>
 	<message xml:lang="tr">Taným listesi</message>
+	<message xml:lang="es">Lista de definicion list</message>
 </label>
 <label define="AM_BUTTON_LINK">
 	<message xml:lang="en">Link</message>
@@ -698,6 +798,7 @@
 	<message xml:lang="de">Verknüpfung</message>
 	<message xml:lang="it">Collegamento</message>
 	<message xml:lang="tr">Baðlantý</message>
+	<message xml:lang="es">Enlace</message>
 </label>
 <label define="AM_BUTTON_TABLE">
 	<message xml:lang="en">Table</message>
@@ -705,6 +806,7 @@
 	<message xml:lang="de">Tabelle</message>
 	<message xml:lang="it">Tabella</message>
 	<message xml:lang="tr">Tablo</message>
+	<message xml:lang="es">Tabla</message>
 </label>
 <label define="AM_NO_NAME">
 	<message xml:lang="en">Document doesn't have a name. Saving to:</message>
@@ -712,6 +814,7 @@
 	<message xml:lang="de">Das Dokument ist unbenannt. Speichere unter:</message>
 	<message xml:lang="it">Il documento non ha un nome. Salva in:</message>
 	<message xml:lang="tr">Belgenin bir ismi yok. Þu isimle kaydediyorum:</message>
+	<message xml:lang="es">El documento no tiene nombre. Guardar en:</message>
 </label>
 <label define="AM_BUTTON_PLUGIN">
 	<message xml:lang="en">Plugins</message>
@@ -719,6 +822,7 @@
 	<message xml:lang="de">Plugins</message>
 	<message xml:lang="it">Plugins</message>
 	<message xml:lang="tr">Plugin\'ler</message>
+	<message xml:lang="es">Plugins</message>
 </label>
 <label define="AM_UNKNOWN_SAVE_ERROR">
 	<message xml:lang="en">Unknown error while saving URL %s</message>
@@ -726,6 +830,7 @@
 	<message xml:lang="de">Unbekannter Fehler beim Speichern URL %s</message>
 	<message xml:lang="it">Errore sconosciuto durante il salvataggio dell'URL %s</message>
 	<message xml:lang="tr">%s URL\'ini kaydederken, belirsiz hata</message>
+	<message xml:lang="es">Error desconocido al guardar URL %s</message>
 </label>
 <label define="AM_CANT_CONNECT_TO_HOST">
 	<message xml:lang="en">Cannot make a connection to the server</message>
@@ -733,6 +838,7 @@
 	<message xml:lang="de">Keine Verbindung zum Server</message>
 	<message xml:lang="it">Impossibile connettersi al server</message>
 	<message xml:lang="tr">Sunucuya baðlantý yapýlamýyor</message>
+	<message xml:lang="es">No puedo crear una conexion al servidor</message>
 </label>
 <label define="AM_FORBIDDEN_ACCESS">
 	<message xml:lang="en">Access to %s is forbidden by the server</message>
@@ -740,6 +846,7 @@
 	<message xml:lang="de">Zugriff auf %s verboten</message>
 	<message xml:lang="it">L'accesso a %s è proibito dal server</message>
 	<message xml:lang="tr">%s eriþimi kural gereði engellenmiþ</message>
+	<message xml:lang="es">El aceso a %s está prohibido por el servidor</message>
 </label>
 <label define="AM_REQUEST_SUCCEEDED">
 	<message xml:lang="en">Operation succeeded for %s</message>
@@ -747,6 +854,7 @@
 	<message xml:lang="de">Operation erfolgreich für: %s</message>
 	<message xml:lang="it">L'operazione ha avuto successo per %s</message>
 	<message xml:lang="tr">%s için iþlem baþarýlý</message>
+	<message xml:lang="es">Operacion correcta para %s</message>
 </label>
 <label define="AM_CREATED_NEW_REMOTE_RESSOURCE">
 	<message xml:lang="en">%s has been created</message>
@@ -754,6 +862,7 @@
 	<message xml:lang="de">%s wurde erzeugt</message>
 	<message xml:lang="it">%s è stato creato</message>
 	<message xml:lang="tr">%s yaratýldý</message>
+	<message xml:lang="es">%s se ha creado</message>
 </label>
 <label define="AM_UPDATED_REMOTE_RESSOURCE">
 	<message xml:lang="en">%s has been updated</message>
@@ -761,6 +870,7 @@
 	<message xml:lang="de">%s wurde aktualisiert</message>
 	<message xml:lang="it">%s è stato aggiornato</message>
 	<message xml:lang="tr">%s güncellendi</message>
+	<message xml:lang="es">%s se ha actualizado</message>
 </label>
 <label define="AM_UNKNOWN_XXX_STATUS">
 	<message xml:lang="en">Operation completed with a %s status code</message>
@@ -768,6 +878,7 @@
 	<message xml:lang="de">Operation wurde beendet mit Code %s .</message>
 	<message xml:lang="it">Operazione completata con codice %s</message>
 	<message xml:lang="tr">Ýþlem %s durum kodu ile tamamlandý</message>
+	<message xml:lang="es">Operacion completada con un código de estado %s</message>
 </label>
 <label define="AM_SERVER_DID_NOT_UNDERSTAND_REQ_SYNTAX">
 	<message xml:lang="en">Server did not understand the request syntax</message>
@@ -775,6 +886,7 @@
 	<message xml:lang="de">Der Server konnte die Anfragesyntax nicht verstehen</message>
 	<message xml:lang="it">Il server non ha compreso la sintassi della richiesta</message>
 	<message xml:lang="tr">Sunucu istem yazýmýný anlamadý</message>
+	<message xml:lang="es">El servidor no entendio la sintaxis de la petición</message>
 </label>
 <label define="AM_NO_DATA">
 	<message xml:lang="en">Server has no new information to send back</message>
@@ -782,6 +894,7 @@
 	<message xml:lang="de">Der Server hat keine neue Informationen zurückzusenden</message>
 	<message xml:lang="it">Il server non ha nuove informazioni da inviare</message>
 	<message xml:lang="tr">Sunucunun gönderecek yeni bilgisi</message>
+	<message xml:lang="es">El servidor no tiene información nueva para devolver</message>
 </label>
 <label define="AM_METHOD_NOT_ALLOWED">
 	<message xml:lang="en">This method is not allowed</message>
@@ -789,6 +902,7 @@
 	<message xml:lang="de">Diese Methode ist nicht erlaubt</message>
 	<message xml:lang="it">Questo metodo non è consentito</message>
 	<message xml:lang="tr">Bu yöntem %s için kullanýlamaz</message>
+	<message xml:lang="es">Ese método no está permitido</message>
 </label>
 <label define="AM_PLEASE_AUTHENTICATE">
 	<message xml:lang="en">Please authenticate to access %s</message>
@@ -796,6 +910,7 @@
 	<message xml:lang="de">Bitte einloggen für den Zugriff auf: %s</message>
 	<message xml:lang="it">Identificazione richiesta per accedere a %s</message>
 	<message xml:lang="tr">%s eriþimi için lütfen kendinizi tanýtýn</message>
+	<message xml:lang="es">Por favor identifíquese para acceder a %s</message>
 </label>
 <label define="AM_VERIFYING">
 	<message xml:lang="en">Verifying ...</message>
@@ -803,6 +918,7 @@
 	<message xml:lang="de">Überprüfe ...</message>
 	<message xml:lang="it">Verifica in corso ...</message>
 	<message xml:lang="tr">Doðrulanýyor...</message>
+	<message xml:lang="es">Verificando ...</message>
 </label>
 <label define="AM_SAVING_FAILED">
 	<message xml:lang="en">Saving to %s failed, Save to disk ?</message>
@@ -810,6 +926,7 @@
 	<message xml:lang="de">Speichern unter %s fehlerhaft, Speichern auf Festplatte?</message>
 	<message xml:lang="it">Il salvataggio su %s è fallito, salvo su disco ?</message>
 	<message xml:lang="tr">%s\'e kaydedilemedi, Diske kaydedeyim mi?</message>
+	<message xml:lang="es">El guardado en %s ha fallado, ¿guardar en disco?</message>
 </label>
 <label define="AM_SAVE_COMPARE_FAILED">
 	<message xml:lang="en">Saving to %s seems corrupted, ignore ?</message>
@@ -817,6 +934,7 @@
 	<message xml:lang="de">Speichern unter %s scheint fehlerhaft zu sein, Ignorieren?</message>
 	<message xml:lang="it">Il salvataggio su %s sembra non funzionare, ignora ?</message>
 	<message xml:lang="tr">%s bozuk görünüyor, devam edeyim mi?</message>
+	<message xml:lang="es">Guardar en %s parece corrompido, ¿ignorar?</message>
 </label>
 <label define="AM_SAVE_REDIRECTED">
 	<message xml:lang="en">URL %s redirected to %s, ignore ?</message>
@@ -824,6 +942,7 @@
 	<message xml:lang="de">URL %s weitergeleitet nach %s, Ignorieren?</message>
 	<message xml:lang="it">L'URL %s è rediretto su %s, ignora ?</message>
 	<message xml:lang="tr">URL %s %s e yönlendirilmiþ, devam edeyim mi?</message>
+	<message xml:lang="es">URL %s redirigida a %s, ¿ignorar?</message>
 </label>
 <label define="AM_SAVE_RELOAD_FAILED">
 	<message xml:lang="en">Reload of %s failed, ignore ?</message>
@@ -831,6 +950,7 @@
 	<message xml:lang="de">Neuladen von %s fehlerhaft, Ignorieren?</message>
 	<message xml:lang="it">Ricaricamento di %s fallito, ignora ?</message>
 	<message xml:lang="tr">%s yeniden yüklenemedi, devam edeyim mi?</message>
+	<message xml:lang="es">La recarga de %s ha fallado, ¿ignorar?</message>
 </label>
 <label define="AM_SERVER_INTERNAL_ERROR_500_CAUSE">
 	<message xml:lang="en">Server reports a 501 error: %s</message>
@@ -838,6 +958,7 @@
 	<message xml:lang="de">Der Server meldet einen 501-Fehler: %s</message>
 	<message xml:lang="it">Il server riporta un errore 501: %s</message>
 	<message xml:lang="tr">Sunucu 501 hatasý veriyor: %s</message>
+	<message xml:lang="es">El servidor responde con un error 501: %s</message>
 </label>
 <label define="AM_SERVER_INTERNAL_ERROR_500_NO_CAUSE">
 	<message xml:lang="en">Server reports a 501 error</message>
@@ -845,6 +966,7 @@
 	<message xml:lang="de">Der Server meldet einen 501-Fehler</message>
 	<message xml:lang="it">Il server riporta un errore 501</message>
 	<message xml:lang="tr">Sunucu 501 hatasý veriyor</message>
+	<message xml:lang="es">El servidor responde con un error 501</message>
 </label>
 <label define="AM_SERVER_NOT_IMPLEMENTED_501_ERROR">
 	<message xml:lang="en">Server does not support this request method</message>
@@ -852,6 +974,7 @@
 	<message xml:lang="de">Der Server unterstützt diese Anforderungsmethode nicht</message>
 	<message xml:lang="it">Il server non supporta questo metodo di richiesta</message>
 	<message xml:lang="tr">Sunucu bu istem yöntemini kabul etmiyor</message>
+	<message xml:lang="es">El servidor no soporta este método de petición</message>
 </label>
 <label define="AM_PARSE">
 	<message xml:lang="en">Filter</message>
@@ -859,6 +982,7 @@
 	<message xml:lang="de">Filter</message>
 	<message xml:lang="it">Filtro</message>
 	<message xml:lang="tr">Süzgeç</message>
+	<message xml:lang="es">Filtro</message>
 </label>
 <label define="AM_ACTIVE_TRANSFERS">
 	<message xml:lang="en">active transfers</message>
@@ -866,6 +990,7 @@
 	<message xml:lang="de">Aktive Übertragungen</message>
 	<message xml:lang="it">trasferimenti attivi</message>
 	<message xml:lang="tr">etkin aktarýmlar</message>
+	<message xml:lang="es">activar transferencias</message>
 </label>
 <label define="AM_WAITING_TRANSFERS">
 	<message xml:lang="en">queued transfers</message>
@@ -873,6 +998,7 @@
 	<message xml:lang="de">Wartende Übertragungen</message>
 	<message xml:lang="it">trasferimenti in coda</message>
 	<message xml:lang="tr">kuyruktaki aktarýmlar</message>
+	<message xml:lang="es">transferencias encoladas</message>
 </label>
 <label define="AM_PRINT_TOC">
 	<message xml:lang="en">Table of contents</message>
@@ -880,12 +1006,14 @@
 	<message xml:lang="de">mit Inhaltsverzeichnis</message>
 	<message xml:lang="it">Sommario</message>
 	<message xml:lang="tr">Ýçindekiler</message>
+	<message xml:lang="es">Tabla de contenidos</message>
 </label>
 <label define="AM_NUMBERED_LINKS">
 	<message xml:lang="en">Table of links</message>
 	<message xml:lang="fr">Table des liens</message>
 	<message xml:lang="de">mit Verknüpfungen</message>
 	<message xml:lang="it">Sommario dei collegamenti</message>
+	<message xml:lang="es">Tabla de enlaces</message>
 </label>
 <label define="AM_REPEAT_MODE">
 	<message xml:lang="en">Repeat Mode</message>
@@ -893,6 +1021,7 @@
 	<message xml:lang="de">Wiederholungsmodus</message>
 	<message xml:lang="it">Repeat Mode</message>
 	<message xml:lang="tr">Tekrar Kipi</message>
+	<message xml:lang="es">Modo repetición</message>
 </label>
 <label define="AM_REPEAT">
 	<message xml:lang="en">repeat</message>
@@ -900,6 +1029,7 @@
 	<message xml:lang="de">Wiederholung</message>
 	<message xml:lang="it">repeat</message>
 	<message xml:lang="tr">tekrar</message>
+	<message xml:lang="es">repetir</message>
 </label>
 <label define="AM_REPEAT_X">
 	<message xml:lang="en">repeat-x</message>
@@ -907,348 +1037,406 @@
 	<message xml:lang="de">Wiederholung x</message>
 	<message xml:lang="it">repeat-x</message>
 	<message xml:lang="tr">x\'te tekrar</message>
+	<message xml:lang="es">repetir-x</message>
 </label>
 <label define="AM_RELOAD_FILES">
 	<message xml:lang="en">Your previous Amaya session failed. Do you want to reload backup documents?</message>
 	<message xml:lang="fr">Votre précédente session Amaya a planté. Voulez-vous recharger les documents modifiés ?</message>
 	<message xml:lang="de">Ihr letzter Amaya-Prozeß wurde abgebrochen. Möchten Sie Sicherungskopien laden?</message>
 	<message xml:lang="it">La precedente sessione con Amaya è fallita. Vuoi ricaricare i documenti di backup?</message>
+	<message xml:lang="es">Su sesión previa de amaya falló. ¿Quiere recargar la copia de seguridad de los documentos?</message>
 </label>
 <label define="AM_AUTHENTICATION_CONFIRM">
 	<message xml:lang="en">Authentication failed. Retry?</message>
 	<message xml:lang="fr">chec de l'authentification. Voulez-vous réessayer ?</message>
 	<message xml:lang="de">Login gescheitert. Wiederholen?</message>
 	<message xml:lang="it">Autenticazione fallita. Vuoi riprovare?</message>
+	<message xml:lang="es">Fallo de autenticacion. ¿Reintentar?</message>
 </label>
 <label define="AM_REDIRECTION_CONFIRM">
 	<message xml:lang="en">Operation will be redirected. Continue?</message>
 	<message xml:lang="fr">L'opération sera redirigée. Voulez-vous continuer ?</message>
 	<message xml:lang="de">Umleitung folgen?</message>
 	<message xml:lang="it">L'operazione sarà rediretta. Vuoi continuare?</message>
+	<message xml:lang="es">La operación será redirigida. ¿Continuar?</message>
 </label>
 <label define="AM_ROWS">
 	<message xml:lang="en">Number of Rows</message>
 	<message xml:lang="fr">Nombre de lignes</message>
 	<message xml:lang="de">Zeilen:</message>
 	<message xml:lang="it">Numero di righe</message>
+	<message xml:lang="es">Numero de filas</message>
 </label>
 <label define="AM_COLS">
 	<message xml:lang="en">Number of Columns</message>
 	<message xml:lang="fr">Nombre de colonnes</message>
 	<message xml:lang="de">Spalten:</message>
 	<message xml:lang="it">Numero di colonne</message>
+	<message xml:lang="es">Numero de columnas</message>
 </label>
 <label define="AM_BORDER">
 	<message xml:lang="en">Border</message>
 	<message xml:lang="fr">paisseur des traits</message>
 	<message xml:lang="de">Rahmen:</message>
 	<message xml:lang="it">Bordo</message>
+	<message xml:lang="es">Borde</message>
 </label>
 <label define="AM_ALT">
 	<message xml:lang="en">Alternate text</message>
 	<message xml:lang="fr">Texte de remplacement</message>
 	<message xml:lang="de">Alternativer Text</message>
 	<message xml:lang="it">Testo alternativo</message>
+	<message xml:lang="es">Texto alternativo</message>
 </label>
 <label define="AM_ALT_MISSING">
 	<message xml:lang="en">The Alternate text is mandatory</message>
 	<message xml:lang="fr">Le texte remplacement est obligatoire</message>
 	<message xml:lang="de">Alternativer Text ist erforderlich!</message>
 	<message xml:lang="it">Il testo alternativo è obbligatorio</message>
+	<message xml:lang="es">El texto alternativo es obligatorio</message>
 </label>
 <label define="AM_PRINT_URL">
 	<message xml:lang="en">Print URL</message>
 	<message xml:lang="fr">Imprimer l'URL</message>
 	<message xml:lang="de">mit URLpply</message>
 	<message xml:lang="it">Stampa URL</message>
+	<message xml:lang="es">Imprimir URL</message>
 </label>
 <label define="AM_APPLY_BUTTON">
 	<message xml:lang="en">Apply</message>
 	<message xml:lang="fr">Appliquer</message>
 	<message xml:lang="de">Übernehmen</message>
 	<message xml:lang="it">Applica</message>
+	<message xml:lang="es">Aplicar</message>
 </label>
 <label define="AM_DEFAULT_BUTTON">
 	<message xml:lang="en">Defaults</message>
 	<message xml:lang="fr">Défauts</message>
 	<message xml:lang="de">Zurücksetzen</message>
 	<message xml:lang="it">Predefinite</message>
+	<message xml:lang="es">Por omisión</message>
 </label>
 <label define="AM_FLUSH_CACHE_BUTTON">
 	<message xml:lang="en">Flush cache</message>
 	<message xml:lang="fr">Vider le cache</message>
 	<message xml:lang="de">Cache leeren</message>
 	<message xml:lang="it">Svuota la cache</message>
+	<message xml:lang="es">Vaciar cache</message>
 </label>
 <label define="AM_CACHE_MENU">
 	<message xml:lang="en">Cache Preferences</message>
 	<message xml:lang="fr">Configuration du cache</message>
 	<message xml:lang="de">Cache Einstellungen</message>
 	<message xml:lang="it">Preferenze sulla cache</message>
+	<message xml:lang="es">Preferencias de Cache</message>
 </label>
 <label define="AM_ENABLE_CACHE">
 	<message xml:lang="en">Enable cache</message>
 	<message xml:lang="fr">Activer le cache</message>
 	<message xml:lang="de">Cache aktivieren</message>
 	<message xml:lang="it">Abilita la cache</message>
+	<message xml:lang="es">Activar cache</message>
 </label>
 <label define="AM_CACHE_PROT_DOCS">
 	<message xml:lang="en">Cache protected documents</message>
 	<message xml:lang="fr">Stocker dans le cache les documents protégés</message>
 	<message xml:lang="de">Cache geschützte Dokumente</message>
 	<message xml:lang="it">Proteggi i documenti nella cache</message>
+	<message xml:lang="es">documentos protegidos del cache</message>
 </label>
 <label define="AM_DISCONNECTED_MODE">
 	<message xml:lang="en">Disconnected mode</message>
 	<message xml:lang="fr">Mode déconnecté</message>
 	<message xml:lang="de">Offline-Modus</message>
 	<message xml:lang="it">Modo non in linea</message>
+	<message xml:lang="es">Modo desconectado</message>
 </label>
 <label define="AM_IGNORE_EXPIRES">
 	<message xml:lang="en">Ignore Expires: header</message>
 	<message xml:lang="fr">Ignorer l'en-tête Expires:</message>
 	<message xml:lang="de">Ignoriere Expires(Gültig bis): header</message>
 	<message xml:lang="it">Ignora le scadenze: header</message>
+	<message xml:lang="es">Ignorar Expires: cabecera</message>
 </label>
 <label define="AM_CACHE_DIR">
 	<message xml:lang="en">Cache directory</message>
 	<message xml:lang="fr">Répertoire du cache</message>
 	<message xml:lang="de">Cache Verzeichnis</message>
 	<message xml:lang="it">Directory della cache</message>
+	<message xml:lang="es">directorio cache</message>
 </label>
 <label define="AM_CACHE_SIZE">
 	<message xml:lang="en">Cache size (Mb)</message>
 	<message xml:lang="fr">Taille du cache (Mo)</message>
 	<message xml:lang="de">Cachegröße (Mb)</message>
 	<message xml:lang="it">Dimensione della cache (Mb)</message>
+	<message xml:lang="es">Tamaño de cache(Mb)</message>
 </label>
 <label define="AM_CACHE_ENTRY_SIZE">
 	<message xml:lang="en">Cache entry size limit (Mb)</message>
 	<message xml:lang="fr">Taille maximale des entrées du cache (Mo)</message>
 	<message xml:lang="de">Max. Größe von Cacheeinträgen (Mb)</message>
 	<message xml:lang="it">Dimensione dell'indice della cache (Mb)</message>
+	<message xml:lang="es">Límite de tamaño de entrada ea cache (Mb)</message>
 </label>
 <label define="AM_PROXY_MENU">
 	<message xml:lang="en">Proxy Preferences</message>
 	<message xml:lang="fr">Configuration du proxy</message>
 	<message xml:lang="de">Proxy Einstellungen</message>
 	<message xml:lang="it">Preferenze sull'uso dei proxy</message>
+	<message xml:lang="es">Preferencias de proxy</message>
 </label>
 <label define="AM_HTTP_PROXY">
 	<message xml:lang="en">HTTP proxy (e.g., www.w3.org:1234)</message>
 	<message xml:lang="fr">Proxy HTTP</message>
 	<message xml:lang="de">HTTP proxy (e.g., www.w3.org:1234)</message>
 	<message xml:lang="it">HTTP proxy (es., http://groucho.marx.edu)</message>
+	<message xml:lang="es">HTTP proxy (v.g., www.w3.org:1234)</message>
 </label>
 <label define="AM_PROXY_DOMAIN">
 	<message xml:lang="en">Proxy domain list (e.g., lists.w3.org)</message>
 	<message xml:lang="fr">Ne pas utiliser un proxy avec ces domaines</message>
 	<message xml:lang="de">Proxy domain list (e.g., lists.w3.org)</message>
 	<message xml:lang="it">Non usare il proxy su questi domini (es., www.w3.org)</message>
+	<message xml:lang="es">Lista de dominios proxy domain list (e.g., lists.w3.org)</message>
 </label>
 <label define="AM_GENERAL_MENU">
 	<message xml:lang="en">General Preferences</message>
 	<message xml:lang="fr">Configuration générale</message>
 	<message xml:lang="de">Allgemeine Einstellungen</message>
 	<message xml:lang="it">Preferenze generali</message>
+	<message xml:lang="es">Preferencias generales</message>
 </label>
 <label define="AM_HOME_PAGE">
 	<message xml:lang="en">Home Page</message>
 	<message xml:lang="fr">Page de démarrage</message>
 	<message xml:lang="de">Startseite</message>
 	<message xml:lang="it">Home Page</message>
+	<message xml:lang="es">Página principal</message>
 </label>
 <label define="AM_TOOLTIP_DELAY">
 	<message xml:lang="en">ToolTip delay (ms)</message>
 	<message xml:lang="fr">Délai des infobulles (ms)</message>
 	<message xml:lang="de">Quickinfo Verzögerung (ms)</message>
 	<message xml:lang="it">Ritardo del ToolTip (ms)</message>
+	<message xml:lang="es">Retardo ToolTip (ms)</message>
 </label>
 <label define="AM_DOUBLECLICK_DELAY">
 	<message xml:lang="en">Double click delay (ms)</message>
 	<message xml:lang="fr">Délai de double-clic (ms)</message>
 	<message xml:lang="de">Doppelklickintervall (ms)</message>
 	<message xml:lang="it">Ritardo del doppio click (ms)</message>
+	<message xml:lang="es">Retardo Duble clic (ms)</message>
 </label>
 <label define="AM_MENU_FONT_SIZE">
 	<message xml:lang="en">Menu font size</message>
 	<message xml:lang="fr">Taille de la police dialogue</message>
 	<message xml:lang="de">Größe Menüschriftart</message>
 	<message xml:lang="it">Dimensione dei caratteri dei menu</message>
+	<message xml:lang="es">Tamaño fuente de menu</message>
 </label>
 <label define="AM_ZOOM">
 	<message xml:lang="en">Font zoom</message>
 	<message xml:lang="fr">Zoom caractères</message>
 	<message xml:lang="de">Schriftzoom</message>
 	<message xml:lang="it">Ingrandimento della fonte</message>
+	<message xml:lang="es">Zoom de fuente</message>
 </label>
 <label define="AM_DIALOGUE_LANGUAGE">
 	<message xml:lang="en">Dialogue language</message>
 	<message xml:lang="fr">Langue des dialogues</message>
 	<message xml:lang="de">Dialogsprache</message>
 	<message xml:lang="it">Lingua delle finestre di dialogo</message>
+	<message xml:lang="es">Idioma de dialogo</message>
 </label>
 <label define="AM_ENABLE_MULTIKEY">
 	<message xml:lang="en">Enable multi-key (`+a=à)</message>
 	<message xml:lang="fr">Activer multi-key (`+a=à)</message>
 	<message xml:lang="de">Mehrfachtasten aktivieren (`+a=à)</message>
 	<message xml:lang="it">Abilita le sequenze multitasto</message>
+	<message xml:lang="es">Activar multi-key (`+a=à)</message>
 </label>
 <label define="AM_SHOW_BG_IMAGES">
 	<message xml:lang="en">Show background images</message>
 	<message xml:lang="fr">Montrer les images de fond</message>
 	<message xml:lang="de">Hintergrundbilder anzeigen</message>
 	<message xml:lang="it">Mostra le immagini di sfondo</message>
+	<message xml:lang="es">Mostrar imágenes de fondo</message>
 </label>
 <label define="AM_ENABLE_DOUBLECLICK">
 	<message xml:lang="en">Double click activates link</message>
 	<message xml:lang="fr">Cliquer deux fois pour suivre un lien</message>
 	<message xml:lang="de">Doppelklick aktiviert Link</message>
 	<message xml:lang="it">Il doppio click attiva il collegamento</message>
+	<message xml:lang="es">Doble click activa enlaces</message>
 </label>
 <label define="AM_PUBLISH_MENU">
 	<message xml:lang="en">Publishing Preferences</message>
 	<message xml:lang="fr">Configuration de la publication</message>
 	<message xml:lang="de">Einstellungen veröffentlichen</message>
 	<message xml:lang="it">Preferenze per la pubblicazione</message>
+	<message xml:lang="es">Preferencias de publicación</message>
 </label>
 <label define="AM_USE_ETAGS">
 	<message xml:lang="en">Use ETAGS and preconditions</message>
 	<message xml:lang="fr">Utiliser les ETAGS et les pré-conditions</message>
 	<message xml:lang="de">ETAGS und preconditions verwenden</message>
 	<message xml:lang="it">Usa gli ETAGS e le precondizioni</message>
+	<message xml:lang="es">Usar ETAGS y precondiciones</message>
 </label>
 <label define="AM_VERIFY_PUT">
 	<message xml:lang="en">Verify each PUT with a GET</message>
 	<message xml:lang="fr">Vérifier chaque PUT avec un GET</message>
 	<message xml:lang="de">PUT durch GET verifizieren</message>
 	<message xml:lang="it">Verifica ogni PUT con un GET</message>
+	<message xml:lang="es">Verificar cada PUT con un GET</message>
 </label>
 <label define="AM_DEFAULT_NAME">
 	<message xml:lang="en">Default name for URLs finishing in '/'</message>
 	<message xml:lang="fr">Nom par défaut pour les URLs finissant par un '/'</message>
 	<message xml:lang="de">Dateiname, falls URL mit '/' endet</message>
 	<message xml:lang="it">Nome di default per gli URL che terminano con '/'</message>
+	<message xml:lang="es">El nombre por omisión de URL termina en '/'</message>
 </label>
 <label define="AM_GEOMETRY_MENU">
 	<message xml:lang="en">Geometry Preferences</message>
 	<message xml:lang="fr">Configuration de la géométrie</message>
 	<message xml:lang="de">Einstellungen Fenstergeometrie</message>
 	<message xml:lang="it">Preferenze della geometria</message>
+	<message xml:lang="es">Preferencias de geometría</message>
 </label>
 <label define="AM_SAVE_GEOMETRY">
 	<message xml:lang="en">Save current geometry</message>
 	<message xml:lang="fr">Sauver la géométrie courante</message>
 	<message xml:lang="de">Aktuelle Geometrie speichern</message>
 	<message xml:lang="it">Salva la geometria corrente</message>
+	<message xml:lang="es">Guardar geometria actual</message>
 </label>
 <label define="AM_RESTORE_GEOMETRY">
 	<message xml:lang="en">Restore default geometry</message>
 	<message xml:lang="fr">Restaurer la géométrie défaut</message>
 	<message xml:lang="de">Standardgeometrie einstellen</message>
 	<message xml:lang="it">Ripristina la geometria di default</message>
+	<message xml:lang="es">Restaurar la geometría por omisión</message>
 </label>
 <label define="AM_GEOMETRY_CHANGE">
 	<message xml:lang="en">The change will be effective when you open a new window.</message>
 	<message xml:lang="fr">Ces changements seront effectifs lors de l'ouverture d'une fenêtre</message>
 	<message xml:lang="de">Die Änderungen werden beim öffnen eines neuen Fensters wirksam.</message>
 	<message xml:lang="it">La modifica sarà effettiva quando aprirai una nuova finestra.</message>
+	<message xml:lang="es">Los cambios serán efectivos cuando abra unanueva ventana.</message>
 </label>
 <label define="AM_COLOR_MENU">
 	<message xml:lang="en">Color Preferences</message>
 	<message xml:lang="fr">Configuration des couleurs</message>
 	<message xml:lang="de">Farbeinstellungen</message>
 	<message xml:lang="it">Preferenze dei colori</message>
+	<message xml:lang="es">Preferencias de color</message>
 </label>
 <label define="AM_DOC_FG_COLOR">
 	<message xml:lang="en">Document foreground color</message>
 	<message xml:lang="fr">Couleur d'avant-plan des documents</message>
 	<message xml:lang="de">Schriftfarbe (Dokument)</message>
 	<message xml:lang="it">Colore in primo piano nei documenti</message>
+	<message xml:lang="es">Color del documento</message>
 </label>
 <label define="AM_DOC_BG_COLOR">
 	<message xml:lang="en">Document background color</message>
 	<message xml:lang="fr">Couleur d'arrière-plan des documents</message>
 	<message xml:lang="de">Hintergrundfarbe (Dokument)</message>
 	<message xml:lang="it">Colore dello sfondo nei documenti</message>
+	<message xml:lang="es">Color del fondo del documento</message>
 </label>
 <label define="AM_MENU_FG_COLOR">
 	<message xml:lang="en">Menu foreground color</message>
 	<message xml:lang="fr">Couleur d'avant-plan des menus</message>
 	<message xml:lang="de">Schriftfarbe (Menüs)</message>
 	<message xml:lang="it">Colore in primo piano nei menu</message>
+	<message xml:lang="es">Menu color de documeto</message>
 </label>
 <label define="AM_MENU_BG_COLOR">
 	<message xml:lang="en">Menu background color</message>
 	<message xml:lang="fr">Couleur d'arrière-plan des menus</message>
 	<message xml:lang="de">Hintergrundfarbe (Menüs)</message>
 	<message xml:lang="it">Colore dello sfondo nei menu</message>
+	<message xml:lang="es">Menu color de fondo</message>
 </label>
 <label define="AM_CANT_CREATE_CACHE">
 	<message xml:lang="en">Couldn't start the cache. You may have specified an invalid cache directory or another Amaya is using the cache.</message>
 	<message xml:lang="fr">Impossible d'initialiser le cache. Vous avez peut-être specifié un répertoire invalide ou vous exécutez un autre Amaya en méme-temps.</message>
 	<message xml:lang="de">Kann den Cache nicht starten. Möglicherweise ist das Cacheverzeichnis ungültig, oder ein anderer Prozeß verwendet den Cache.</message>
 	<message xml:lang="it">Impossibile attivare la cache. Puoi avere specificato una directory di cache non valida, oppure un'altra istanza di Amaya sta usando la cache.</message>
+	<message xml:lang="es">No pude iniciar el caché. Puede haber especificado un directorio de caché inválido u otro Amaya está usando el cache.</message>
 </label>
 <label define="AM_BUTTON_HOME">
 	<message xml:lang="en">Home</message>
 	<message xml:lang="fr">Page personelle</message>
 	<message xml:lang="de">Anfang</message>
 	<message xml:lang="it">Home</message>
+	<message xml:lang="es">Home</message>
 </label>
 <label define="AM_LANG_NEGOTIATION">
 	<message xml:lang="en">List of preferred languages like "en, fr":</message>
 	<message xml:lang="fr">Liste des langues préférées comme "fr, en" :</message>
 	<message xml:lang="de">Liste der bevorzugten Sprachen wie "en, fr":</message>
 	<message xml:lang="it">Lista delle lingue preferite, come "it, en, fr":</message>
+	<message xml:lang="es">Lista de idiomas preferidos como "es, en, fr":</message>
 </label>
 <label define="AM_PROFILES_FILE">
 	<message xml:lang="en">Location of profiles definition file</message>
 	<message xml:lang="fr">Emplacement du fichier de définition de profils</message>
 	<message xml:lang="de">Verzeichnis der Profildefinitionen</message>
 	<message xml:lang="it">File di definizione dei profili</message>
+	<message xml:lang="es">Ubicación de fichero de definición de perfiles</message>
 </label>
 <label define="AM_PROFILE_SELECT">
 	<message xml:lang="en">Profile Selection</message>
 	<message xml:lang="fr">Sélection du profil</message>
 	<message xml:lang="de">Profilauswahl</message>
 	<message xml:lang="it">Selezione dei profili</message>
+	<message xml:lang="es">Seleccion de perfil</message>
 </label>
 <label define="AM_PROFILE_CHANGE">
 	<message xml:lang="en">These changes won't be effective until Amaya is restarted</message>
 	<message xml:lang="fr">Ces changements seront effectifs lors du prochain démarrage.</message>
 	<message xml:lang="de">Diese Änderungen werden erst bei einem Neustart von Amaya wirksam</message>
 	<message xml:lang="it">Queste modifiche saranno effettive alla prossima esecuzione</message>
+	<message xml:lang="es">Estos cambios no serán efectivos hasta que se reinicie Amaya</message>
 </label>
 <label define="AM_PROFILE_MENU">
 	<message xml:lang="en">Profiles Preferences</message>
 	<message xml:lang="fr">Configuration du profil</message>
 	<message xml:lang="de">Profileinstellungen</message>
 	<message xml:lang="it">Preferenze dei profili</message>
+	<message xml:lang="es">Preferencias de perfiles</message>
 </label>
 <label define="AM_TEMPLATES_SERVER">
 	<message xml:lang="en">Enter the URL of the templates server</message>
 	<message xml:lang="fr">Entrez l'URL du serveur de modèles</message>
 	<message xml:lang="de">URL des Vorlagen-Servers angeben</message>
 	<message xml:lang="it">Digita l'URL del server dei modelli</message>
+	<message xml:lang="es">Introduzca la URL del servidor de plantillas</message>
 </label>
 <label define="AM_TEMPLATES_MENU">
 	<message xml:lang="en">Templates Preferences</message>
 	<message xml:lang="fr">Configuration des modèles de pages</message>
 	<message xml:lang="de">Vorlagen-Einstellungen</message>
 	<message xml:lang="it">Preferenze sui modelli</message>
+	<message xml:lang="es">Preferencias de plantillas</message>
 </label>
 <label define="AM_SAFE_PUT_REDIRECT">
 	<message xml:lang="en">Allow automatic PUT redirections on these domains</message>
 	<message xml:lang="fr">Autoriser la redirection automatique du PUT dans ces domaines</message>
 	<message xml:lang="de">Automatische PUT-Umleitung bei diesen Domänen erlauben</message>
 	<message xml:lang="it">Consenti la redirezione automatica dei PUT su questi domini</message>
+	<message xml:lang="es">Permitir redirecciones PUT automáticas en estos dominios</message>
 </label>
 <label define="AM_WITH_CSS">
 	<message xml:lang="en">Ignore style sheets</message>
 	<message xml:lang="fr">Sans feuilles de style</message>
 	<message xml:lang="de">Stilvorlagen ignorieren</message>
 	<message xml:lang="it">Ignora gli stili CSS</message>
+	<message xml:lang="es">Ignorar hojas de estilo</message>
 </label>
 <label define="AM_TRANS">
 	<message xml:lang="en">Transform type</message>
@@ -1256,126 +1444,147 @@
 	<message xml:lang="de">Umformatieren</message>
 	<message xml:lang="it">Trasforma tipo</message>
 	<message xml:lang="tr">Dönüþüm türü</message>
+	<message xml:lang="es">Tipo de transformación</message>
 </label>
 <label define="AM_PROXY_DOMAIN_INFO">
 	<message xml:lang="en">(separate each entry with a space)</message>
 	<message xml:lang="fr">(séparer chaque entrée avec un espace)</message>
 	<message xml:lang="de">(Einträge durch Leerzeichen trennen)</message>
 	<message xml:lang="it">(separa ogni campo con uno spazio)</message>
+	<message xml:lang="es">(separar cada entrada con un espacio)</message>
 </label>
 <label define="AM_DONT_PROXY_DOMAIN">
 	<message xml:lang="en">No proxy on these domains</message>
 	<message xml:lang="fr">Ne pas utiliser le proxy dans ces domaines</message>
 	<message xml:lang="de">Keinen Proxy für folgende Domänen verwenden</message>
 	<message xml:lang="it">Escludi l'utilizzo del proxy su questi domini</message>
+	<message xml:lang="es">No hay proxy es estos dominios</message>
 </label>
 <label define="AM_ONLY_PROXY_DOMAIN">
 	<message xml:lang="en">Only proxy these domains</message>
 	<message xml:lang="fr">Utiliser le proxy uniquement dans ces domaines</message>
 	<message xml:lang="de">Proxy nur für folgende Domänen verwenden</message>
 	<message xml:lang="it">Utilizza il proxy solo su questi domini</message>
+	<message xml:lang="es">Sólo proxy en estos dominios</message>
 </label>
 <label define="AM_MATH_ENTITY_NAME">
 	<message xml:lang="en">Character name</message>
 	<message xml:lang="fr">Nom du caractère</message>
 	<message xml:lang="de">Zeichenname</message>
 	<message xml:lang="it">Nome del carattere</message>
+	<message xml:lang="es">Nombre de carácter</message>
 </label>
 <label define="AM_USER_DIR">
 	<message xml:lang="en">Amaya user directory</message>
 	<message xml:lang="fr">Repertoire utilisateur</message>
 	<message xml:lang="de">Amaya Benutzerverzeichnis</message>
 	<message xml:lang="it">Directory dell'utente</message>
+	<message xml:lang="es">Directorio de usuario de Amaya</message>
 </label>
 <label define="AM_TMP_DIR">
 	<message xml:lang="en">Temporary directory</message>
 	<message xml:lang="fr">Repertoire témporaire</message>
 	<message xml:lang="de">Lokaler filter...</message>
 	<message xml:lang="it">Directory temporanea</message>
+	<message xml:lang="es">Directorio temporal</message>
 </label>
 <label define="AM_COLOR_PALETTE">
 	<message xml:lang="en">Use palette</message>
 	<message xml:lang="fr">Par palette</message>
 	<message xml:lang="de">Palette benutzen</message>
 	<message xml:lang="it">Usa la palette</message>
+	<message xml:lang="es">Usar paleta</message>
 </label>
 <label define="AM_LANNEG_MENU">
 	<message xml:lang="en">Language Negotiation</message>
 	<message xml:lang="fr">Négotiation de langues</message>
 	<message xml:lang="de">Sprachauswahl</message>
 	<message xml:lang="it">Negoziazione della lingua</message>
+	<message xml:lang="es">Negociación de idioma</message>
 </label>
 <label define="AM_XML_ERROR">
 	<message xml:lang="en">This document is not valid - fix your document or change your profile</message>
 	<message xml:lang="fr">Ce document est invalide - corrigez votre document ou changez de profil</message>
 	<message xml:lang="de">Fehler beim XML parsen - bitte Dokument überprüfen</message>
 	<message xml:lang="it">Errore XML - si consiglia di verificare il documento</message>
+	<message xml:lang="es">El análisis XML ha fallado - por favor compruebe su documento</message>
 </label>
 <label define="AM_ANNOT_CONF_MENU">
 	<message xml:lang="en">Configuration for annotations</message>
 	<message xml:lang="fr">Configurer les annotations</message>
 	<message xml:lang="de">Konfiguration für Anmerkungen</message>
 	<message xml:lang="it">Configurazione delle annotazioni</message>
+	<message xml:lang="es">Configuracion para anotaciones</message>
 </label>
 <label define="AM_ANNOT_USER">
 	<message xml:lang="en">Annotation user</message>
 	<message xml:lang="fr">Nom de l'utilisateur</message>
 	<message xml:lang="de">Anmerkungsbenutzer</message>
 	<message xml:lang="it">Nome utente</message>
+	<message xml:lang="es">Anotacion de usuario</message>
 </label>
 <label define="AM_ANNOT_POST_SERVER">
 	<message xml:lang="en">Annotation post server</message>
 	<message xml:lang="fr">Serveur de publication</message>
 	<message xml:lang="de">Anmerkungs-Veröffentlichungs-Server</message>
 	<message xml:lang="it">Server per la pubblicazione</message>
+	<message xml:lang="es">Anotacion post server</message>
 </label>
 <label define="AM_ANNOT_SERVERS">
 	<message xml:lang="en">Annotation servers</message>
 	<message xml:lang="fr">Serveur d'annotations</message>
 	<message xml:lang="de">Anmerkungsserver</message>
 	<message xml:lang="it">Server per le annotazioni</message>
+	<message xml:lang="es">Annotation servers</message>
 </label>
 <label define="AM_ANNOT_AUTOLOAD">
 	<message xml:lang="en">Autoload annotations</message>
 	<message xml:lang="fr">Charger automatiquement les annoations</message>
 	<message xml:lang="de">Anmerkungen automatisch laden</message>
 	<message xml:lang="it">Caricamento automatico delle annotazioni</message>
+	<message xml:lang="es">Autocargar anotaciones</message>
 </label>
 <label define="AM_DOC_SEL_COLOR">
 	<message xml:lang="en">Selection color</message>
 	<message xml:lang="fr">Couleur de sélection</message>
 	<message xml:lang="de">Farbe Auswahl</message>
 	<message xml:lang="it">Colore della selezione</message>
+	<message xml:lang="es">Seleccion de color</message>
 </label>
 <label define="AM_DOC_INS_COLOR">
 	<message xml:lang="en">Caret color</message>
 	<message xml:lang="fr">Couleur du curseur d'insertion</message>
 	<message xml:lang="de">Farbe Cursor</message>
 	<message xml:lang="it">Colore del cursore</message>
+	<message xml:lang="es">Caret color</message>
 </label>
 <label define="AM_ORIENTATION">
 	<message xml:lang="en">Orientation</message>
 	<message xml:lang="fr">Orientation</message>
 	<message xml:lang="de">Ausrichtung</message>
 	<message xml:lang="it">Orientamento</message>
+	<message xml:lang="es">Orientacion</message>
 </label>
 <label define="AM_PORTRAIT">
 	<message xml:lang="en">Portrait</message>
 	<message xml:lang="fr">Portrait</message>
 	<message xml:lang="de">Hochformat</message>
 	<message xml:lang="it">Ritratto</message>
+	<message xml:lang="es">Vertical</message>
 </label>
 <label define="AM_LANDSCAPE">
 	<message xml:lang="en">Landscape</message>
 	<message xml:lang="fr">Paysage</message>
 	<message xml:lang="de">Querformat</message>
 	<message xml:lang="it">Paesaggio</message>
+	<message xml:lang="es">Apaisado</message>
 </label>
 <label define="AM_ENABLE_FTP">
 	<message xml:lang="en">Enable FTP (experimental)</message>
 	<message xml:lang="fr">Support FTP (experimental)</message>
 	<message xml:lang="it">Abilita FTP (sperimentale)</message>
 	<message xml:lang="de">FTP zulassen (noch in der Erprobung)</message>
+	<message xml:lang="es">Activar FTP (experimental)</message>
 </label>
 <label define="AM_XML_PROFILE">
 	<message xml:lang="en">In the current Amaya profile:</message>

@@ -1,6 +1,7 @@
+# encoding= latin1
 0 X11 Fehler: %s\n
 1 Ansicht nicht gefunden.
-2 Fehler beim Einlesen des Wörterbuchs: %s\n 
+2 Fehler beim Einlesen des Wörterbuchs: %s\n
 3 Fehlende Datei: %s\n
 4 Kann nicht schreiben unter: %s
 5 Kann das Schema nicht finden: %s
@@ -49,7 +50,7 @@
 48 Ansichtsfenster zum drucken
 49 Drucke die %s - Ansicht
 50 Dies ist eine Kopie
-51 Fehler beim Laden von "%s" 
+51 Fehler beim Laden von "%s"
 52 Umgebungsvariable %s nicht definiert
 53 Ein Element kann sich nicht auf sich selbst beziehen
 54 Attribut erforderlich, nicht gelöscht
@@ -179,6 +180,7 @@
 178 PostScript-Datei
 179 Drucker
 180 Suche nach
+181 **UPPERCASE = lowercase
 182 Groß-/Kleinschreibung ignorieren
 183 Ersetzen durch
 184 Ersetzen
@@ -280,6 +282,4 @@
 280 Überstrichen
 281 Dokumentenformat
 282 Ereignisse (Events)
-283 Lösche Attribut 
-285 Linke Maustaste: Auswahl der Farbe für markierten Text
-286 Mittlere oder rechte Maustaste: Auswahl der Cursorfarbe
+283 Lösche Attribut

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base version="5" last_update="Tue Jun 27 11:11:43 CEST 2000">
+<base version="6" last_update="Wed Sep 27 08:44:52 CEST 2000">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">de</language>
 	<language encoding="latin1">fr</language>
 	<language encoding="latin1">it</language>
 	<language encoding="latin1">tr</language>
+	<language encoding="latin1">es</language>
 </control>
 <messages>
 <label define="Number_Propositions">
@@ -14,6 +15,7 @@
 	<message xml:lang="fr">Nombre de propositions</message>
 	<message xml:lang="it">Numero di proposte alternative</message>
 	<message xml:lang="tr">Önerilerin sayýsý</message>
+	<message xml:lang="es">Number of proposals</message>
 </label>
 <label define="What">
 	<message xml:lang="en">Checking</message>
@@ -21,6 +23,7 @@
 	<message xml:lang="fr">Où corriger</message>
 	<message xml:lang="it">Controlla</message>
 	<message xml:lang="tr">Kontrol ediliyor</message>
+	<message xml:lang="es">Checking</message>
 </label>
 <label define="Pass_Without">
 	<message xml:lang="en">Search/Skip</message>
@@ -28,6 +31,7 @@
 	<message xml:lang="fr">Chercher/Suivant</message>
 	<message xml:lang="it">Cerca</message>
 	<message xml:lang="tr">Atla ve sonraki</message>
+	<message xml:lang="es">Buscar/Saltar</message>
 </label>
 <label define="Replace_With">
 	<message xml:lang="en">Replace (+ dic)</message>
@@ -35,6 +39,7 @@
 	<message xml:lang="fr">Remplacer (+ dic)</message>
 	<message xml:lang="it">Sostituisci (+ diz)</message>
 	<message xml:lang="tr">Deðiþtir (+ sözlük)</message>
+	<message xml:lang="es">Reemplazar (+ dic)</message>
 </label>
 <label define="Replace_Without">
 	<message xml:lang="en">Replace and next</message>
@@ -42,6 +47,7 @@
 	<message xml:lang="fr">Remplacer</message>
 	<message xml:lang="it">Sostituisci e continua</message>
 	<message xml:lang="tr">Deðiþtir ve sonraki</message>
+	<message xml:lang="es">Reemplazar y siguiente</message>
 </label>
 <label define="Keep_Unknown">
 	<message xml:lang="en">Other language</message>
@@ -49,6 +55,7 @@
 	<message xml:lang="fr">Autre langue</message>
 	<message xml:lang="it">Altra lingua</message>
 	<message xml:lang="tr">Baþka dil</message>
+	<message xml:lang="es">Otro idioma</message>
 </label>
 <label define="Pass_With">
 	<message xml:lang="en">Skip (+ dic)</message>
@@ -56,6 +63,7 @@
 	<message xml:lang="fr">Suivant (+ dic)</message>
 	<message xml:lang="it">Salta (+ diz)</message>
 	<message xml:lang="tr">Atla (+ sozluk)</message>
+	<message xml:lang="es">Saltar (+ dic)</message>
 </label>
 <label define="Specials">
 	<message xml:lang="en">words containing:</message>
@@ -63,6 +71,7 @@
 	<message xml:lang="fr">incluant les caractères :</message>
 	<message xml:lang="it">parole contenenti:</message>
 	<message xml:lang="tr">words containing:</message>
+	<message xml:lang="es">palabras que contengan:</message>
 </label>
 <label define="Correct">
 	<message xml:lang="en">Spell checking ...</message>
@@ -70,6 +79,7 @@
 	<message xml:lang="fr">Corriger...</message>
 	<message xml:lang="it">Controllo ortografico...</message>
 	<message xml:lang="tr">Yazým hatalarý aranýyor...</message>
+	<message xml:lang="es">Verificando ortografía ...</message>
 </label>
 <label define="Romans">
 	<message xml:lang="en">Roman numerals</message>
@@ -77,6 +87,7 @@
 	<message xml:lang="fr">en chiffres romains</message>
 	<message xml:lang="it">numerali romani</message>
 	<message xml:lang="tr">Roma rakamlarý</message>
+	<message xml:lang="es">Números romanos</message>
 </label>
 <label define="Ignore">
 	<message xml:lang="en">Ignore</message>
@@ -84,6 +95,7 @@
 	<message xml:lang="fr">Ignorer les mots</message>
 	<message xml:lang="it">Ignora</message>
 	<message xml:lang="tr">Aldýrma</message>
+	<message xml:lang="es">Ignorar</message>
 </label>
 <label define="Capitals">
 	<message xml:lang="en">words that are all caps</message>
@@ -91,6 +103,7 @@
 	<message xml:lang="fr">en lettres capitales</message>
 	<message xml:lang="it">parole tutte maiuscole</message>
 	<message xml:lang="tr">Hepsi büyük harf olan sözcükler</message>
+	<message xml:lang="es">palabras mayúsculas</message>
 </label>
 <label define="Arabics">
 	<message xml:lang="en">words with digits</message>
@@ -98,6 +111,7 @@
 	<message xml:lang="fr">incluant des chiffres</message>
 	<message xml:lang="it">parole contenenti cifre</message>
 	<message xml:lang="tr">Rakam içeren sözcükler</message>
+	<message xml:lang="es">palabras con dígitos</message>
 </label>
 <label define="NO_PARAM">
 	<message xml:lang="en">Parameter file error</message>
@@ -105,6 +119,7 @@
 	<message xml:lang="fr">Erreur dans le fichier des paramètres</message>
 	<message xml:lang="it">Errore nel file dei parametri</message>
 	<message xml:lang="tr">Parametre dosya hatasý</message>
+	<message xml:lang="es">Error fichero de parametro</message>
 </label>
 <label define="NO_KEYBOARD">
 	<message xml:lang="en">No keyboard file</message>
@@ -112,6 +127,7 @@
 	<message xml:lang="fr">Absence de fichier clavier</message>
 	<message xml:lang="it">Il file della tastiera non esiste</message>
 	<message xml:lang="tr">Tuþtakýmý dosyasý yok</message>
+	<message xml:lang="es">No hay fichero de teclado</message>
 </label>
 <label define="NO_SAVE">
 	<message xml:lang="en">Cannot save the document dictionary</message>
@@ -119,6 +135,7 @@
 	<message xml:lang="fr">Impossible d\'enregistrer le dictionnaire du document</message>
 	<message xml:lang="it">Impossibile salvare il dizionario del documento</message>
 	<message xml:lang="tr">Belge sözlüðü kaydedilemiyor</message>
+	<message xml:lang="es">No puedo guardar el diccionario del documento</message>
 </label>
 <label define="REFUSE_WORD">
 	<message xml:lang="en">Incorrect word "%s" refused in this dictionary</message>
@@ -126,6 +143,7 @@
 	<message xml:lang="fr">Mot "%s" incorrect refusé dans ce dictionnaire</message>
 	<message xml:lang="it">Parola scorretta "%s" rifiutata in questo dizionario</message>
 	<message xml:lang="tr">Yanlýþ sözcük "%s" bu sözlükte kabul edilmiyor</message>
+	<message xml:lang="es">Palabra incorrecta "%s" recahzada en este dictionario</message>
 </label>
 <label define="ADD_WORD">
 	<message xml:lang="en">Word "%s" added in the document dictionary</message>
@@ -133,6 +151,7 @@
 	<message xml:lang="fr">Mot "%s" ajouté dans le dictionnaire du document</message>
 	<message xml:lang="it">Parola "%s" aggiunta nel dizionario del documento</message>
 	<message xml:lang="tr">"%s" sözcüðü belge sözlüðüne eklendi</message>
+	<message xml:lang="es">La palabra "%s" añadida al diccionario del documento</message>
 </label>
 <label define="END_CHECK">
 	<message xml:lang="en">End of spell checking</message>
@@ -140,6 +159,7 @@
 	<message xml:lang="fr">Correction terminée</message>
 	<message xml:lang="it">Fine controllo ortografico</message>
 	<message xml:lang="tr">Yazým hatalarý arama sonu</message>
+	<message xml:lang="es">Final de la corrección ortográfica</message>
 </label>
 <label define="STOP_CHECK">
 	<message xml:lang="en">Spell checking aborted</message>
@@ -147,6 +167,7 @@
 	<message xml:lang="fr">Correction interrompue</message>
 	<message xml:lang="it">Controllo ortografico interrotto</message>
 	<message xml:lang="tr">Yazým hatasý aramasý iptal edildi</message>
+	<message xml:lang="es">Corrección ortográfica abortada</message>
 </label>
 <label define="NO_SELECT">
 	<message xml:lang="en">Please select a document</message>
@@ -154,6 +175,7 @@
 	<message xml:lang="fr">Rien à corriger : sélectionnez un document</message>
 	<message xml:lang="it">Seleziona un documento</message>
 	<message xml:lang="tr">Lütfen bir belge seçin</message>
+	<message xml:lang="es">Por favor, seleccione un documento</message>
 </label>
 <label define="OK_SAVE">
 	<message xml:lang="en">Document dictionary saved: %s</message>
@@ -161,6 +183,7 @@
 	<message xml:lang="fr">Sauvegarde du dictionnaire "%s"</message>
 	<message xml:lang="it">Dizionario del documento salvato: %s</message>
 	<message xml:lang="tr">Belge sözlüðü kaydedildi: %s</message>
+	<message xml:lang="es">Diccionario del documento guardado: %s</message>
 </label>
 <label define="MSG_MAX_CHECK">
 </label>

@@ -1,3 +1,4 @@
+# encoding= latin1
 0 Nombre de propositions
 1 Où corriger
 2 Chercher/Suivant
@@ -5,9 +6,9 @@
 4 Remplacer
 5 Autre langue
 6 Suivant (+ dic)
-7 incluant les caractères : 
+7 incluant les caractères :
 8 Corriger...
-9 en chiffres romains 
+9 en chiffres romains
 10 Ignorer les mots
 11 en lettres capitales
 12 incluant des chiffres

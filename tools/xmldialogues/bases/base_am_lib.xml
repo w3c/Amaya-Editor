@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base version="5" last_update="Tue Jun 27 17:17:31 CEST 2000">
+<base version="6" last_update="Wed Sep 27 08:44:52 CEST 2000">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
 	<language encoding="latin1">de</language>
 	<language encoding="latin1">it</language>
 	<language encoding="latin1">tr</language>
+	<language encoding="latin1">es</language>
 </control>
 <messages>
 <label define="TMSG_LIB_X11_ERR">
@@ -14,6 +15,7 @@
 	<message xml:lang="de">X11 Fehler: %s\n</message>
 	<message xml:lang="it">Errore X11: %s\n</message>
 	<message xml:lang="tr">X11 Hatasý : %s\n</message>
+	<message xml:lang="es">Error de X11 : %s\n</message>
 </label>
 <label define="TMSG_MISSING_VIEW">
 	<message xml:lang="en">View not found.</message>
@@ -21,6 +23,7 @@
 	<message xml:lang="de">Ansicht nicht gefunden.</message>
 	<message xml:lang="it">Vista non trovata.</message>
 	<message xml:lang="tr">Görünüm bulunamadý.</message>
+	<message xml:lang="es">Vista no encontrada.</message>
 </label>
 <label define="TMSG_ERR_LOADING_DICO">
 	<message xml:lang="en">Error while loading the dictionary: %s\n</message>
@@ -28,6 +31,7 @@
 	<message xml:lang="de">Fehler beim Einlesen des Wörterbuchs: %s\n</message>
 	<message xml:lang="it">Errore durante il caricamento del dizionario: %s\n</message>
 	<message xml:lang="tr">Sözlük yüklerken hata: %s\n</message>
+	<message xml:lang="es">Error cargando el diccionario: %s\n</message>
 </label>
 <label define="TMSG_LIB_MISSING_FILE">
 	<message xml:lang="en">Missing file: %s\n</message>
@@ -35,6 +39,7 @@
 	<message xml:lang="de">Fehlende Datei: %s\n</message>
 	<message xml:lang="it">File mancante: %s\n</message>
 	<message xml:lang="tr">eksik dosya: %s\n</message>
+	<message xml:lang="es">Fichero perdido: %s\n</message>
 </label>
 <label define="TMSG_WRITING_IMP">
 	<message xml:lang="en">Cannot write: %s</message>
@@ -42,6 +47,7 @@
 	<message xml:lang="de">Kann nicht schreiben unter: %s</message>
 	<message xml:lang="it">Impossibile scrivere: %s</message>
 	<message xml:lang="tr">Yazýlamýyor: %s</message>
+	<message xml:lang="es">No puedo escribir: %s</message>
 </label>
 <label define="TMSG_SCHEMA_NOT_FIND">
 	<message xml:lang="en">Cannot find schema: %s</message>
@@ -49,6 +55,7 @@
 	<message xml:lang="de">Kann das Schema nicht finden: %s</message>
 	<message xml:lang="it">Schema non trovato: %s</message>
 	<message xml:lang="tr">Þema bulunamýyor: %s</message>
+	<message xml:lang="es">No puedo encontrar esquema: %s</message>
 </label>
 <label define="TMSG_LIB_CONFIRM">
 	<message xml:lang="en">Confirm</message>
@@ -56,6 +63,7 @@
 	<message xml:lang="de">OK</message>
 	<message xml:lang="it">Conferma</message>
 	<message xml:lang="tr">Onayla</message>
+	<message xml:lang="es">Confirme</message>
 </label>
 <label define="TMSG_MISSING_ALPHABET">
 	<message xml:lang="en">No alphabet file</message>
@@ -63,6 +71,7 @@
 	<message xml:lang="de">Keine Alphabetdatei</message>
 	<message xml:lang="it">Il file dell'alfabeto è inesistente</message>
 	<message xml:lang="tr">Alfabe dosyasý yok</message>
+	<message xml:lang="es">No hay fichero de alfabeto</message>
 </label>
 <label define="TMSG_OPEN_DOC_IMP">
 	<message xml:lang="en">Cannot open document %s</message>
@@ -70,6 +79,7 @@
 	<message xml:lang="de">Kann das Dokument nicht laden: %s</message>
 	<message xml:lang="it">Impossibile aprire il documento %s</message>
 	<message xml:lang="tr">%s belgesi açýlamýyor</message>
+	<message xml:lang="es">No puedo abrir documento %s</message>
 </label>
 <label define="TMSG_ERR_PIV">
 	<message xml:lang="en">Pivot format error: %s</message>
@@ -77,6 +87,7 @@
 	<message xml:lang="de">Pivot Formatfehler: %s</message>
 	<message xml:lang="it">Errore nel formato pivot: %s</message>
 	<message xml:lang="tr">Pivot biçim hatasý: %s</message>
+	<message xml:lang="es">Pivot format error: %s</message>
 </label>
 <label define="TMSG_OLD_VIEW_NOT_REPLACED">
 	<message xml:lang="en">New view cannot replace the old one</message>
@@ -84,6 +95,7 @@
 	<message xml:lang="de">Neues Ansichtsfenster kann das bisherige nicht ersetzen</message>
 	<message xml:lang="it">La nuova vista non può rimpiazzare la vecchia</message>
 	<message xml:lang="tr">Yeni görünüm eskisinin yerini alamaz</message>
+	<message xml:lang="es">La nueva vista no pede sustituir la previa</message>
 </label>
 <label define="TMSG_OLD_SCH_TO_RECOMP">
 	<message xml:lang="en">Incompatible schemas. Recompile %s</message>
@@ -91,6 +103,7 @@
 	<message xml:lang="de">Inkompatible Schemen. Compiliere %s neu</message>
 	<message xml:lang="it">Schemi incompatibili. Ricompila %s</message>
 	<message xml:lang="tr">Uyumsuz þemalar. %s yeniden derlenmeli</message>
+	<message xml:lang="es">Esquemas incompatibles. Recompile %s</message>
 </label>
 <label define="TMSG_BAD_FRAME_NB">
 	<message xml:lang="en">Incorrect window number</message>
@@ -98,6 +111,7 @@
 	<message xml:lang="de">Fehlerhafte Fensternummer</message>
 	<message xml:lang="it">Numero di finestra non corretto</message>
 	<message xml:lang="tr">Yanlýþ pencere numarasý</message>
+	<message xml:lang="es">Número de ventana incorrecto</message>
 </label>
 <label define="TMSG_MISSING_FONT">
 	<message xml:lang="en">Fatal Error: Thot fonts not found</message>
@@ -105,6 +119,7 @@
 	<message xml:lang="de">Gravierender Fehler: Thot-Schriften nicht gefunden</message>
 	<message xml:lang="it">Errore fatale: fonti di Thot non trovate</message>
 	<message xml:lang="tr">Ölümcül hata: Thot yazýtipleri bulunamadý</message>
+	<message xml:lang="es">Error Fatal: Las fuentes Thot no encontradas</message>
 </label>
 <label define="TMSG_COLUMNS_PAGINATE_AGAIN">
 	<message xml:lang="en">Document with columns. Paginate again.</message>
@@ -112,6 +127,7 @@
 	<message xml:lang="de">Dokument enthält Spalten. Bitte neu umbrechen</message>
 	<message xml:lang="it">Documento con colonne. Riimpagina.</message>
 	<message xml:lang="tr">Sütun içeren belge. Yeniden sayfala.</message>
+	<message xml:lang="es">Documento con columnas. Pagine de nuevo.</message>
 </label>
 <label define="TMSG_NO_MEMORY">
 	<message xml:lang="en">Memory exhausted</message>
@@ -119,6 +135,7 @@
 	<message xml:lang="de">Arbeitsspeicher erschöpft</message>
 	<message xml:lang="it">Memoria esaurita</message>
 	<message xml:lang="tr">Bellek tükendi</message>
+	<message xml:lang="es">Memory agotada</message>
 </label>
 <label define="TMSG_UNABLE_TO_CONNECT_TO_X">
 	<message xml:lang="en">Fatal Error: Unable to connect to X</message>
@@ -126,6 +143,7 @@
 	<message xml:lang="de">Gravierender Fehler: kein Zugriff zum X-Server</message>
 	<message xml:lang="it">Errore fatale: impossibile connettersi a X</message>
 	<message xml:lang="tr">Ölümcül Hata: X sistemine baðlanýlamýyor</message>
+	<message xml:lang="es">Error Fatal Error: No puedo conectar a X</message>
 </label>
 <label define="TMSG_VIEW_MODIFIED_BEFORE_CREATION">
 	<message xml:lang="en">View is modified before creation</message>
@@ -133,6 +151,7 @@
 	<message xml:lang="de">Ansichtsfenster muß vor möglicher Änderung erzeugt werden</message>
 	<message xml:lang="it">Vista modificata prima della creazione</message>
 	<message xml:lang="tr">Görünüm dosya yaratmadan önce deðiþtirildi</message>
+	<message xml:lang="es">La vista está modificada entes de la creación</message>
 </label>
 <label define="TMSG_SEL_BEFORE">
 	<message xml:lang="en">Select before</message>
@@ -140,6 +159,7 @@
 	<message xml:lang="de">Bitte zuerst auswählen</message>
 	<message xml:lang="it">Seleziona prima</message>
 	<message xml:lang="tr">Önce seçim</message>
+	<message xml:lang="es">Selecione antes</message>
 </label>
 <label define="TMSG_NO_PLACE_FOR_FONT">
 	<message xml:lang="en">No more place for the font %s</message>
@@ -147,6 +167,7 @@
 	<message xml:lang="de">Kein Platz mehr für die Schrift: %s</message>
 	<message xml:lang="it">Non c\'è posto per la fonte %s</message>
 	<message xml:lang="tr">%s yazýtipi için yer kalmadý</message>
+	<message xml:lang="es">No queda sitio para la fuente %s</message>
 </label>
 <label define="TMSG_INCORRECT_DOC_STRUCTURE">
 	<message xml:lang="en">Structure of document %s invalid</message>
@@ -154,6 +175,7 @@
 	<message xml:lang="de">Struktur des Dokuments %s ist fehlerhaft</message>
 	<message xml:lang="it">La struttura del documento %s non è valida</message>
 	<message xml:lang="tr">%s belgesinin yapýsý geçersiz</message>
+	<message xml:lang="es">La estructura del documento %s es invalida</message>
 </label>
 <label define="TMSG_LOCKED_DOC">
 	<message xml:lang="en">Document %s cannot be edited nor saved</message>
@@ -161,6 +183,7 @@
 	<message xml:lang="de">Das Dokument %s kann weder geändert noch gespeichert werden</message>
 	<message xml:lang="it">Il documento %s non può essere editato nè salvato</message>
 	<message xml:lang="tr">%s belgesi deðiþtirilemiyor veya kaydedilemiyor.</message>
+	<message xml:lang="es">El documento %s no se puede editar ni guardar</message>
 </label>
 <label define="TMSG_LIB_RULES_TABLE_FULL">
 	<message xml:lang="en">Rules table full.</message>
@@ -168,6 +191,7 @@
 	<message xml:lang="de">Regeltabelle voll.</message>
 	<message xml:lang="it">Tabella delle regole piena.</message>
 	<message xml:lang="tr">Kural tablosu dolu.</message>
+	<message xml:lang="es">Tabla de reglas completa.</message>
 </label>
 <label define="TMSG_STR_SCH_CHANGED">
 	<message xml:lang="en">Structure schema %s has been changed</message>
@@ -175,6 +199,7 @@
 	<message xml:lang="de">Strukturschema %s wurde verändert</message>
 	<message xml:lang="it">Lo schema di struttura %s è stato modificato</message>
 	<message xml:lang="tr">Yapý þemasý %s deðiþti.</message>
+	<message xml:lang="es">El esquema de estructura ha cambiado</message>
 </label>
 <label define="TMSG_INCORRECT_STR_FILE">
 	<message xml:lang="en">Incorrect file: %s.STR</message>
@@ -182,6 +207,7 @@
 	<message xml:lang="de">Fehlerhafte Datei: %s.STR</message>
 	<message xml:lang="it">File non corretto: %s.STR</message>
 	<message xml:lang="tr">Yanlýþ dosya: %s.STR</message>
+	<message xml:lang="es">Fichero incorrecto: %s.STR</message>
 </label>
 <label define="TMSG_INCORRECT_PRS_FILE">
 	<message xml:lang="en">Incorrect file: %s.PRS</message>
@@ -189,6 +215,7 @@
 	<message xml:lang="de">Fehlerhafte Datei: %s.PRS</message>
 	<message xml:lang="it">File non corretto: %s.PRS</message>
 	<message xml:lang="tr">Yanlýþ dosya: %s.PRS</message>
+	<message xml:lang="es">Fichero incorrecto: %s.PRS</message>
 </label>
 <label define="TMSG_MISSING_DIR">
 	<message xml:lang="en">Directory not found: %s</message>
@@ -196,6 +223,7 @@
 	<message xml:lang="de">Verzeichnis nicht gefunden: %s</message>
 	<message xml:lang="it">Directory non trovata: %s</message>
 	<message xml:lang="tr">%s dizini bulunamadý</message>
+	<message xml:lang="es">Directorio no encontrado: %s</message>
 </label>
 <label define="TMSG_PRINT_IMP">
 	<message xml:lang="en">Cannot print</message>
@@ -203,6 +231,7 @@
 	<message xml:lang="de">Kann nicht drucken</message>
 	<message xml:lang="it">Impossibile stampare</message>
 	<message xml:lang="tr">Yazdýrýlamýyor</message>
+	<message xml:lang="es">No puedo imprimir</message>
 </label>
 <label define="TMSG_CHANGE_PRES_IMP">
 	<message xml:lang="en">Cannot change presentation</message>
@@ -210,6 +239,7 @@
 	<message xml:lang="de">Kann diese Ansicht nicht ändern</message>
 	<message xml:lang="it">Impossibile cambiare presentazione</message>
 	<message xml:lang="tr">Sunum deðiþtirilemiyor</message>
+	<message xml:lang="es">No puedo cambiar presentación</message>
 </label>
 <label define="TMSG_SAVE_IN_PS_IMP">
 	<message xml:lang="en">Cannot save in PostScript</message>
@@ -217,6 +247,7 @@
 	<message xml:lang="de">Kann nicht als PostScript speichern</message>
 	<message xml:lang="it">Impossibile salvare in PostScript</message>
 	<message xml:lang="tr">PostScript yazdýrýlamýyor</message>
+	<message xml:lang="es">No puedo guardar en PostScript</message>
 </label>
 <label define="TMSG_IMPORT_FILE_IMP">
 	<message xml:lang="en">Cannot import file</message>
@@ -224,6 +255,7 @@
 	<message xml:lang="de">Kann die Datei nicht importieren</message>
 	<message xml:lang="it">Impossibile importare il file</message>
 	<message xml:lang="tr">dosya yüklenemiyor</message>
+	<message xml:lang="es">No puedo importar fichero</message>
 </label>
 <label define="TMSG_EMPTY_VIEW">
 	<message xml:lang="en">View is empty</message>
@@ -231,6 +263,7 @@
 	<message xml:lang="de">Ansichtsfenster ist leer</message>
 	<message xml:lang="it">La vista è vuota</message>
 	<message xml:lang="tr">Görünüm boþ</message>
+	<message xml:lang="es">La vista está vacía</message>
 </label>
 <label define="TMSG_RO_EL_FORBIDDEN">
 	<message xml:lang="en">Not allowed, read only element</message>
@@ -238,6 +271,7 @@
 	<message xml:lang="de">Unmöglich, lese nur ein Element</message>
 	<message xml:lang="it">Non consentito, elemento a sola lettura</message>
 	<message xml:lang="tr">Geçersiz, salt oku birim.</message>
+	<message xml:lang="es">No permitido, elemento de sólo lectura</message>
 </label>
 <label define="TMSG_DON_T_COPY_PAIRED_EL">
 	<message xml:lang="en">Cannot copy paired components</message>
@@ -245,6 +279,7 @@
 	<message xml:lang="de">Kann keine gepaarten Komponenten kopieren</message>
 	<message xml:lang="it">Impossibile copiare componenti accoppiati</message>
 	<message xml:lang="tr">Çiftli bileþenler kopyalanamaz</message>
+	<message xml:lang="es">No puedo copiar componentes emparejados</message>
 </label>
 <label define="TMSG_NEW_DICO">
 	<message xml:lang="en">Creating the dictionary for document: %s</message>
@@ -252,6 +287,7 @@
 	<message xml:lang="de">Erzeuge Wörterbuch für das Dokument: %s</message>
 	<message xml:lang="it">Creo il dizionario per il documento %s</message>
 	<message xml:lang="tr">%s belgesi için sözlük yaratýlýyor</message>
+	<message xml:lang="es">Creando el diccionario para documento: %s</message>
 </label>
 <label define="TMSG_PICT_TYPE">
 	<message xml:lang="en">Image Type</message>
@@ -259,6 +295,7 @@
 	<message xml:lang="de">Grafikformat</message>
 	<message xml:lang="it">Tipo di immagine</message>
 	<message xml:lang="tr">Görüntü türü</message>
+	<message xml:lang="es">Tipo de imagen</message>
 </label>
 <label define="TMSG_PICT_PRES">
 	<message xml:lang="en">Image Presentation</message>
@@ -266,6 +303,7 @@
 	<message xml:lang="de">Grafikpräsentation</message>
 	<message xml:lang="it">Presentazione dell\'immagine</message>
 	<message xml:lang="tr">Görüntü sunumu</message>
+	<message xml:lang="es">Presentacion de imagen</message>
 </label>
 <label define="TMSG_PICT_FILE">
 	<message xml:lang="en">Image File</message>
@@ -273,6 +311,7 @@
 	<message xml:lang="de">Grafikdatei</message>
 	<message xml:lang="it">File dell'immagine</message>
 	<message xml:lang="tr">Görüntü dosyasý</message>
+	<message xml:lang="es">Fichero de imagen</message>
 </label>
 <label define="TMSG_DOC_PRINTED">
 	<message xml:lang="en">Document %s printed</message>
@@ -280,6 +319,7 @@
 	<message xml:lang="de">Dokument %s wurde gedruckt</message>
 	<message xml:lang="it">Il documento %s è stato stampato</message>
 	<message xml:lang="tr">%s belgesi yazdýrýldý</message>
+	<message xml:lang="es">Documento %s imprimido</message>
 </label>
 <label define="TMSG_FIRST_PAGE">
 	<message xml:lang="en">From page ...</message>
@@ -287,6 +327,7 @@
 	<message xml:lang="de">von Seite ...</message>
 	<message xml:lang="it">Da pagina ...</message>
 	<message xml:lang="tr">Sayfa ...</message>
+	<message xml:lang="es">De la página ...</message>
 </label>
 <label define="TMSG_LAST_PAGE">
 	<message xml:lang="en">... to page</message>
@@ -294,6 +335,7 @@
 	<message xml:lang="de">... bis Seite</message>
 	<message xml:lang="it">... a pagina</message>
 	<message xml:lang="tr">... ya kadar</message>
+	<message xml:lang="es">... a la página</message>
 </label>
 <label define="TMSG_NB_COPIES">
 	<message xml:lang="en">Number of copies</message>
@@ -301,6 +343,7 @@
 	<message xml:lang="de">Zahl der Kopien</message>
 	<message xml:lang="it">Numero di copie</message>
 	<message xml:lang="tr">Kopya sayýsý</message>
+	<message xml:lang="es">Número de copias</message>
 </label>
 <label define="TMSG_REDUCTION">
 	<message xml:lang="en">Disposition</message>
@@ -308,6 +351,7 @@
 	<message xml:lang="de">Größe (%)</message>
 	<message xml:lang="it">Scala (%)</message>
 	<message xml:lang="tr">Ölçek (%)</message>
+	<message xml:lang="es">Disposicion</message>
 </label>
 <label define="TMSG_1_PAGE_SHEET">
 	<message xml:lang="en">1 page/sheet</message>
@@ -315,6 +359,7 @@
 	<message xml:lang="de">1 Seite/Blatt</message>
 	<message xml:lang="it">1 pagina per foglio</message>
 	<message xml:lang="tr">1 sayfa/kaðýt</message>
+	<message xml:lang="es">1 pagina/hoja</message>
 </label>
 <label define="TMSG_2_PAGE_SHEET">
 	<message xml:lang="en">2 pages/sheet</message>
@@ -322,6 +367,7 @@
 	<message xml:lang="de">2 Seiten/Blatt</message>
 	<message xml:lang="it">2 pagine per foglio</message>
 	<message xml:lang="tr">2 sayfa/kaðýt</message>
+	<message xml:lang="es">2 pagina/hoja</message>
 </label>
 <label define="TMSG_4_PAGE_SHEET">
 	<message xml:lang="en">4 pages/sheet</message>
@@ -329,6 +375,7 @@
 	<message xml:lang="de">4 Seiten/Blatt</message>
 	<message xml:lang="it">4 pagine per foglio</message>
 	<message xml:lang="tr">4 sayfa/kaðýt</message>
+	<message xml:lang="es">4 pagina/hoja</message>
 </label>
 <label define="TMSG_NB_PAGE_SHEET">
 	<message xml:lang="en">Pages per sheet</message>
@@ -336,6 +383,7 @@
 	<message xml:lang="de">Seiten pro Blatt</message>
 	<message xml:lang="it">Pagine per foglio</message>
 	<message xml:lang="tr">Kaðýt baþýna sayfa</message>
+	<message xml:lang="es">Paginas por hoja</message>
 </label>
 <label define="TMSG_PAGINATE">
 	<message xml:lang="en">Pagination</message>
@@ -343,6 +391,7 @@
 	<message xml:lang="de">Seitenzahlen</message>
 	<message xml:lang="it">Impaginazione</message>
 	<message xml:lang="tr">Sayfalandýrma</message>
+	<message xml:lang="es">Paginacion</message>
 </label>
 <label define="TMSG_VIEWS_TO_PRINT">
 	<message xml:lang="en">Views to print</message>
@@ -350,6 +399,7 @@
 	<message xml:lang="de">Ansichtsfenster zum drucken</message>
 	<message xml:lang="it">Viste da stampare</message>
 	<message xml:lang="tr">Yazdýrýlacak görünümler</message>
+	<message xml:lang="es">Vistas para imprimir</message>
 </label>
 <label define="TMSG_CHANGE_PSCH">
 	<message xml:lang="en">Printing with %s presentation</message>
@@ -357,6 +407,7 @@
 	<message xml:lang="de">Drucke die %s - Ansicht</message>
 	<message xml:lang="it">Stampa con presentazione %s</message>
 	<message xml:lang="tr">%s sunumu ile yazdýrýlýyor</message>
+	<message xml:lang="es">Imprimir con presentación %s</message>
 </label>
 <label define="TMSG_A_COPY">
 	<message xml:lang="en">This is a copy</message>
@@ -364,6 +415,7 @@
 	<message xml:lang="de">Dies ist eine Kopie</message>
 	<message xml:lang="it">Questa è una copia</message>
 	<message xml:lang="tr">Bu bir kopya</message>
+	<message xml:lang="es">Esto es una copia</message>
 </label>
 <label define="TMSG_LIB_NO_LOAD">
 	<message xml:lang="en">Loading of "%s" failed</message>
@@ -371,6 +423,7 @@
 	<message xml:lang="de">Fehler beim Laden von "%s"</message>
 	<message xml:lang="it">Caricamento di "%s" fallito</message>
 	<message xml:lang="tr">"%s" yüklenemedi</message>
+	<message xml:lang="es">La carga de "%s" ha fallado</message>
 </label>
 <label define="TMSG_MISSING_DICOPAR">
 	<message xml:lang="en">Environment variable %s undefined</message>
@@ -378,6 +431,7 @@
 	<message xml:lang="de">Umgebungsvariable %s nicht definiert</message>
 	<message xml:lang="it">La variabile d\'ambiente %s è indefinita</message>
 	<message xml:lang="tr">%s ortam deðiþkeni tanýmsýz</message>
+	<message xml:lang="es">La variable de entorno %s no está definida</message>
 </label>
 <label define="TMSG_SELF_REF_IMP">
 	<message xml:lang="en">An element cannot refer to itself</message>
@@ -385,6 +439,7 @@
 	<message xml:lang="de">Ein Element kann sich nicht auf sich selbst beziehen</message>
 	<message xml:lang="it">Un elemento non può riferirsi a sè stesso</message>
 	<message xml:lang="tr">Bir birim kendisini belirtemez</message>
+	<message xml:lang="es">Un elemento no puede referirse a él mismo</message>
 </label>
 <label define="TMSG_LIB_ATTR_REQUIRED_NOT_DELETED">
 	<message xml:lang="en">Attribute required, not deleted</message>
@@ -392,6 +447,7 @@
 	<message xml:lang="de">Attribut erforderlich, nicht gelöscht</message>
 	<message xml:lang="it">Attributo richiesto, non cancellato</message>
 	<message xml:lang="tr">Özellik gerekli, silinmedi</message>
+	<message xml:lang="es">Atributo requerido, no borrado</message>
 </label>
 <label define="TMSG_NATURE_FORBIDDEN">
 	<message xml:lang="en">Nature forbidden here</message>
@@ -399,6 +455,7 @@
 	<message xml:lang="de">Wert hier nicht zulässig</message>
 	<message xml:lang="it">Natura non consentita qui</message>
 	<message xml:lang="tr">Nature forbidden here</message>
+	<message xml:lang="es">Nature prohibido aquí</message>
 </label>
 <label define="TMSG_LIB_MANDATORY_COMPONENT">
 	<message xml:lang="en">%s : mandatory component</message>
@@ -406,6 +463,7 @@
 	<message xml:lang="de">%s : erforderliche Komponente</message>
 	<message xml:lang="it">%s : componente obbligatorio</message>
 	<message xml:lang="tr">%s: zorunlu parça</message>
+	<message xml:lang="es">%s : componente obligatorio</message>
 </label>
 <label define="TMSG_SEL_ONE_COMPONENT">
 	<message xml:lang="en">Select only one component</message>
@@ -413,6 +471,7 @@
 	<message xml:lang="de">Bitte nur eine einzige Komponente auswählen</message>
 	<message xml:lang="it">Seleziona solo un componente</message>
 	<message xml:lang="tr">Yalnýzca bir parça seçin</message>
+	<message xml:lang="es">Seleccione sólo un componente</message>
 </label>
 <label define="TMSG_PASTING_EL_IMP">
 	<message xml:lang="en">The element %s cannot be pasted here</message>
@@ -420,6 +479,7 @@
 	<message xml:lang="de">Das Element %s kann kann an dieser Stelle nicht eingefügt werden</message>
 	<message xml:lang="it">L\'elemento %s non può essere incollato qui</message>
 	<message xml:lang="tr">%s birimi buraya yapýþtýrýlamaz</message>
+	<message xml:lang="es">El elemento %s no se puede pegar aquí</message>
 </label>
 <label define="TMSG_MODIFYING_BOX_IMP">
 	<message xml:lang="en">You cannot modify a box here</message>
@@ -427,6 +487,7 @@
 	<message xml:lang="de">Rahmen kann hier nicht geändert werden</message>
 	<message xml:lang="it">Non puoi modificare una scatola qui</message>
 	<message xml:lang="tr">Burada kutu deðiþtiremezsiniz.</message>
+	<message xml:lang="es">No puede modificar un cuadro aquí</message>
 </label>
 <label define="TMSG_LIB_STRING">
 	<message xml:lang="en">%s</message>
@@ -434,6 +495,7 @@
 	<message xml:lang="de">%s</message>
 	<message xml:lang="it">%s</message>
 	<message xml:lang="tr">%s</message>
+	<message xml:lang="es">%s</message>
 </label>
 <label define="TMSG_NO_VIEW_SEL_FOR_PRINTING">
 	<message xml:lang="en">No view to print</message>
@@ -441,6 +503,7 @@
 	<message xml:lang="de">Es wurde kein Ansichtsfenster zum Drucken ausgewählt</message>
 	<message xml:lang="it">Nessuna vista da stampare</message>
 	<message xml:lang="tr">Yazdýrma için görünüm seçilmedi</message>
+	<message xml:lang="es">No hay vista para imprimir</message>
 </label>
 <label define="TMSG_ENTER_PRS_SCH">
 	<message xml:lang="en">Enter the presentation for %s</message>
@@ -448,6 +511,7 @@
 	<message xml:lang="de">Bitte die Ansicht wählen zu %s</message>
 	<message xml:lang="it">Digita la presentazione per %s</message>
 	<message xml:lang="tr">%s için sunum girin</message>
+	<message xml:lang="es">Introduzca la presentacion para %s</message>
 </label>
 <label define="TMSG_READING_DOC">
 	<message xml:lang="en">Reading the document...</message>
@@ -455,6 +519,7 @@
 	<message xml:lang="de">lade Dokument...</message>
 	<message xml:lang="it">Lettura del documento...</message>
 	<message xml:lang="tr">Belge okunuyor...</message>
+	<message xml:lang="es">Leyendo el documento...</message>
 </label>
 <label define="TMSG_SEL_EL">
 	<message xml:lang="en">Select an element</message>
@@ -462,6 +527,7 @@
 	<message xml:lang="de">Bitte ein Element auswählen</message>
 	<message xml:lang="it">Seleziona un elemento</message>
 	<message xml:lang="tr">Birim seçin</message>
+	<message xml:lang="es">Seleccione un elemento</message>
 </label>
 <label define="TMSG_NO_KBD">
 	<message xml:lang="en">File thot.keyboard not found</message>
@@ -469,6 +535,7 @@
 	<message xml:lang="de">Datei thot.keyboard nicht gefunden</message>
 	<message xml:lang="it">File thot.keyboard non trovato</message>
 	<message xml:lang="tr">thot.keyboard dosyasý bulunamadý</message>
+	<message xml:lang="es">Fichero thot.teclado no encontrado</message>
 </label>
 <label define="TMSG_X_BUF_UNMODIFIED">
 	<message xml:lang="en">X clipboard unchanged</message>
@@ -476,6 +543,7 @@
 	<message xml:lang="de">X-Window Zwischenablage unverändert</message>
 	<message xml:lang="it">X clipboard non modificata</message>
 	<message xml:lang="tr">X clipboard deðiþmedi</message>
+	<message xml:lang="es">Portapapeles X inalterado</message>
 </label>
 <label define="TMSG_COPYING_DIFFERENT_COMPONENTS_IMP">
 	<message xml:lang="en">Cannot copy different components. Group.</message>
@@ -483,6 +551,7 @@
 	<message xml:lang="de">Kann verschiedenartige Komponenten nicht kopieren. Bitte gruppieren.</message>
 	<message xml:lang="it">Impossibile copiare componenti differenti. Raggruppa.</message>
 	<message xml:lang="tr">Deðiþik parçalar kopyalanamaz, gruplayýn</message>
+	<message xml:lang="es">No puedo copiar diferentes componentes. Grupo.</message>
 </label>
 <label define="TMSG_RO_DOC_FORBIDDEN">
 	<message xml:lang="en">Not allowed, read only document</message>
@@ -490,6 +559,7 @@
 	<message xml:lang="de">Nicht erlaubt, lade nur Dokumente</message>
 	<message xml:lang="it">Non consentito, documento a sola lettura</message>
 	<message xml:lang="tr">salt-oku belge, yapýlamaz</message>
+	<message xml:lang="es">No permitido, documento de sólo lectura</message>
 </label>
 <label define="TMSG_SELF_DOC_INCLUSION_IMP">
 	<message xml:lang="en">A document cannot include itself</message>
@@ -497,6 +567,7 @@
 	<message xml:lang="de">Ein Dokument kann nicht in sich selbst eingebunden werden</message>
 	<message xml:lang="it">Un documento non può includere sè stesso</message>
 	<message xml:lang="tr">Bir belgeye kendisini ekleyemezsiniz</message>
+	<message xml:lang="es">Un documento no puede incluirse a sí mismo</message>
 </label>
 <label define="TMSG_MODIFYING_BOX">
 	<message xml:lang="en">Changing the box %s</message>
@@ -504,6 +575,7 @@
 	<message xml:lang="de">Ändere den Rahmen %s</message>
 	<message xml:lang="it">Modifica della scatola %s</message>
 	<message xml:lang="tr">%s için kutu deðiþtiriliyor</message>
+	<message xml:lang="es">Cambiando el cuadro %s</message>
 </label>
 <label define="TMSG_MOVING_BOX">
 	<message xml:lang="en">Moving the box %s</message>
@@ -511,6 +583,7 @@
 	<message xml:lang="de">Verschiebe den Rahmen %s</message>
 	<message xml:lang="it">Spostamento della scatola %s</message>
 	<message xml:lang="tr">%s kutusu yer deðiþtiriyor</message>
+	<message xml:lang="es">Moviendo el cuadro %s</message>
 </label>
 <label define="TMSG_LIB_DOC_WRITTEN">
 	<message xml:lang="en">Document written: %s</message>
@@ -518,6 +591,7 @@
 	<message xml:lang="de">Dokument gespeichert: %s</message>
 	<message xml:lang="it">Documento scritto: %s</message>
 	<message xml:lang="tr">%s belgesi kaydedildi</message>
+	<message xml:lang="es">Documento escrito: %s</message>
 </label>
 <label define="TMSG_WRITING">
 	<message xml:lang="en">Writing ...</message>
@@ -525,6 +599,7 @@
 	<message xml:lang="de">Speichere ...</message>
 	<message xml:lang="it">Scrittura in corso ...</message>
 	<message xml:lang="tr">Kaydediliyor...</message>
+	<message xml:lang="es">Escribiendo ...</message>
 </label>
 <label define="TMSG_EMPTY_REF">
 	<message xml:lang="en">Empty reference.</message>
@@ -532,6 +607,7 @@
 	<message xml:lang="de">Leere Verknüpfung.</message>
 	<message xml:lang="it">Riferimento vuoto.</message>
 	<message xml:lang="tr">Boþ baþvuru.</message>
+	<message xml:lang="es">Referencia vacía.</message>
 </label>
 <label define="TMSG_COPYING_PAGE_BRK_IMP">
 	<message xml:lang="en">Don\'t copy page breaks!</message>
@@ -539,6 +615,7 @@
 	<message xml:lang="de">Kopiere keine Seitenumbrüche!</message>
 	<message xml:lang="it">Non copiare i salti pagina!</message>
 	<message xml:lang="tr">Sayfa kesmelerini kopyalamayýn</message>
+	<message xml:lang="es">¡No copie fines de página!</message>
 </label>
 <label define="TMSG_SEL_EL_MANDATORY">
 	<message xml:lang="en">You have selected a %s element. You had to select a %s element.</message>
@@ -546,6 +623,7 @@
 	<message xml:lang="de">Es ist ein %s - Element ausgewählt. Bitte ein %s - Element wählen!</message>
 	<message xml:lang="it">Hai selezionato un elemento %s. Dovevi selezionare un elemento %s.</message>
 	<message xml:lang="tr">%s birimi seçtiniz, oysa %s birimi seçmeniz gerekirdi</message>
+	<message xml:lang="es">Ha seleccionado un elemento %s . Tiene que seleccionar un elemento %s .</message>
 </label>
 <label define="TMSG_MODIFYING_DIR_LIST">
 	<message xml:lang="en">Changing directory list</message>
@@ -553,6 +631,7 @@
 	<message xml:lang="de">Ändere Verzeichnisliste</message>
 	<message xml:lang="it">Modifica della lista delle directory</message>
 	<message xml:lang="tr">Dizin dökümünü deðiþtiriyorum</message>
+	<message xml:lang="es">Cambiando lista de directorios</message>
 </label>
 <label define="TMSG_PRINTING">
 	<message xml:lang="en">Printing</message>
@@ -560,6 +639,7 @@
 	<message xml:lang="de">Drucke</message>
 	<message xml:lang="it">Stampa</message>
 	<message xml:lang="tr">Yazdýrýlýyor</message>
+	<message xml:lang="es">Imprimiendo</message>
 </label>
 <label define="TMSG_EXPORTING">
 	<message xml:lang="en">Exporting document %s ...</message>
@@ -567,6 +647,7 @@
 	<message xml:lang="de">Exportiere Dokument %s ...</message>
 	<message xml:lang="it">Esportazione del documento %s in corso...</message>
 	<message xml:lang="tr">%s belgesi kaydediliyor...</message>
+	<message xml:lang="es">Exportando documento %s ...</message>
 </label>
 <label define="TMSG_DICO">
 	<message xml:lang="en">Loading dictionary %s</message>
@@ -574,6 +655,7 @@
 	<message xml:lang="de">Lade Wörterbuch %s</message>
 	<message xml:lang="it">Caricamento del dizionario %s</message>
 	<message xml:lang="tr">%s sözlüðü yükleniyor</message>
+	<message xml:lang="es">Cargando dictionario %s</message>
 </label>
 <label define="TMSG_SAVE_IN_PS">
 	<message xml:lang="en">Writing PostScript file ...</message>
@@ -581,6 +663,7 @@
 	<message xml:lang="de">Schreibe PostScript - Datei ...</message>
 	<message xml:lang="it">Scrittura del file PostScript in corso...</message>
 	<message xml:lang="tr">PostScript dosyasý yazdýrýlýyor...</message>
+	<message xml:lang="es">Escribiendo fichero PostScript...</message>
 </label>
 <label define="TMSG_IMPORTING_FILE">
 	<message xml:lang="en">Importing file ...</message>
@@ -588,6 +671,7 @@
 	<message xml:lang="de">Importiere Datei ...</message>
 	<message xml:lang="it">Importazione del file in corso...</message>
 	<message xml:lang="tr">Dosya ekleniyor...</message>
+	<message xml:lang="es">Importando fichero ...</message>
 </label>
 <label define="TMSG_CHOOSE_DOC_FORM_FOR_LOADING">
 	<message xml:lang="en">Which form of the document do you want to load?</message>
@@ -595,6 +679,7 @@
 	<message xml:lang="de">In welcher Form soll das Dokument geladen werden?</message>
 	<message xml:lang="it">Quale forma del documento vuoi caricare?</message>
 	<message xml:lang="tr">Belgenin hangi biçimini yðklemek istersiniz?</message>
+	<message xml:lang="es">¿Qué formulario del documento quiere cargar?</message>
 </label>
 <label define="TMSG_TWO_POINTS_IN_POLYLINE_NEEDED">
 	<message xml:lang="en">At least two points in a polyline</message>
@@ -602,6 +687,7 @@
 	<message xml:lang="de">Ein Polygon erfordert mindestens zwei Punkte</message>
 	<message xml:lang="it">Una polyline deve contenere almeno due punti</message>
 	<message xml:lang="tr">polyline için en az iki nokta</message>
+	<message xml:lang="es">Al menos dos puntos en una línea</message>
 </label>
 <label define="TMSG_VAL_FOR_ATTR_REQUESTED">
 	<message xml:lang="en">Enter a value for attribute %s</message>
@@ -609,6 +695,7 @@
 	<message xml:lang="de">Bitte einen Wert eingeben für %s</message>
 	<message xml:lang="it">Digita un valore per l'attributo %s</message>
 	<message xml:lang="tr">%s için bir özellik girin</message>
+	<message xml:lang="es">Introduzca un valor para el atributo %s</message>
 </label>
 <label define="TMSG_OLD_PIV_FORMAT_SAVE_DOC_WITH_THOT">
 	<message xml:lang="en">Old pivot format. Save the document.</message>
@@ -616,6 +703,7 @@
 	<message xml:lang="de">Altes Pivot - Format. Bitte das Dokument speichern.</message>
 	<message xml:lang="it">Vecchio formato pivot. Salvare il documento con Thot.</message>
 	<message xml:lang="tr">Eski pivot biçimi. Belgeyi kaydedin.</message>
+	<message xml:lang="es">Old pivot format. Guardar el documento.</message>
 </label>
 <label define="TMSG_CREATING_BOX">
 	<message xml:lang="en">Creating the box %s</message>
@@ -623,6 +711,7 @@
 	<message xml:lang="de">Erzeuge den Rahmen %s</message>
 	<message xml:lang="it">Crea la scatola %s</message>
 	<message xml:lang="tr">%s kutusu yaratýlýyor</message>
+	<message xml:lang="es">Creando el cuadro %s</message>
 </label>
 <label define="TMSG_NOT_ENOUGH_MEMORY">
 	<message xml:lang="en">Not enough memory</message>
@@ -630,6 +719,7 @@
 	<message xml:lang="de">Nicht genügend Arbeitsspeicher</message>
 	<message xml:lang="it">Memoria insufficiente</message>
 	<message xml:lang="tr">Bellek yetersiz</message>
+	<message xml:lang="es">No hay suficiente memoria</message>
 </label>
 <label define="TMSG_SEL_EL_TYPE">
 	<message xml:lang="en">Select an element %s</message>
@@ -637,6 +727,7 @@
 	<message xml:lang="de">Bitte ein Element auswählen %s</message>
 	<message xml:lang="it">Seleziona un elemento %s</message>
 	<message xml:lang="tr">%s bir birim seçin</message>
+	<message xml:lang="es">Seleccione un elemento %s</message>
 </label>
 <label define="TMSG_HOLOPHRAST_IMP">
 	<message xml:lang="en">This element cannot be holophrasted</message>
@@ -644,6 +735,7 @@
 	<message xml:lang="de">Dieses Element kann nicht in Gliederungsansicht dargestellt werden</message>
 	<message xml:lang="it">Questo elemento non può essere incorporato</message>
 	<message xml:lang="tr">Bu birim "holophrast" edilemez</message>
+	<message xml:lang="es">Este elemento no puede ser holophrasted</message>
 </label>
 <label define="TMSG_SEL_REFERRED_EL">
 	<message xml:lang="en">Designate the element to be referred</message>
@@ -651,6 +743,7 @@
 	<message xml:lang="de">Bitte das Bezugselement bestimmen</message>
 	<message xml:lang="it">Designa l\'elemento da riferire</message>
 	<message xml:lang="tr">Designate the element to be referred</message>
+	<message xml:lang="es">Desige el elemento para ser referenciado</message>
 </label>
 <label define="TMSG_TOO_MANY_DOCS">
 	<message xml:lang="en">Too many documents.</message>
@@ -658,6 +751,7 @@
 	<message xml:lang="de">Zu viele Dokumente geöffnet</message>
 	<message xml:lang="it">Troppi documenti.</message>
 	<message xml:lang="tr">Çok fazla belge</message>
+	<message xml:lang="es">Demasiados documentos.</message>
 </label>
 <label define="TMSG_EMPTY_DOC_NOT_WRITTEN">
 	<message xml:lang="en">Empty document, not written.</message>
@@ -665,6 +759,7 @@
 	<message xml:lang="de">Leeres Dokument, nicht gespeichert.</message>
 	<message xml:lang="it">Documento vuoto, non scritto.</message>
 	<message xml:lang="tr">Boþ belge, yazýlmadý</message>
+	<message xml:lang="es">Documento vacío, no escrito.</message>
 </label>
 <label define="TMSG_INSERTING_IMP">
 	<message xml:lang="en">Impossible to insert here</message>
@@ -672,6 +767,7 @@
 	<message xml:lang="de">Einfügen hier nicht möglich</message>
 	<message xml:lang="it">Impossibile inserire qui</message>
 	<message xml:lang="tr">Buraya eklemek mümkün deðil.</message>
+	<message xml:lang="es">Imposible insertar aquí</message>
 </label>
 <label define="TMSG_NOTHING_TO_DEL">
 	<message xml:lang="en">Nothing to delete</message>
@@ -679,6 +775,7 @@
 	<message xml:lang="de">Nichts zu löschen</message>
 	<message xml:lang="it">Non c\'è nulla da cancellare</message>
 	<message xml:lang="tr">Silecek bir þey yok.</message>
+	<message xml:lang="es">Nada que borrar</message>
 </label>
 <label define="TMSG_MANDATORY_ATTR">
 	<message xml:lang="en">Mandatory attribute.</message>
@@ -686,6 +783,7 @@
 	<message xml:lang="de">Notwendiges Attribut.</message>
 	<message xml:lang="it">Attributo obbligatorio.</message>
 	<message xml:lang="tr">Gerekli özellik.</message>
+	<message xml:lang="es">Atributo obligatorio.</message>
 </label>
 <label define="TMSG_ALL_VIEWS_ALREADY_CREATED">
 	<message xml:lang="en">All views already created.</message>
@@ -693,6 +791,7 @@
 	<message xml:lang="de">Alle Ansichten sind bereits erzeugt.</message>
 	<message xml:lang="it">Tutte le viste sono già state create.</message>
 	<message xml:lang="tr">Tüm görünümler yaratýldý.</message>
+	<message xml:lang="es">Todas las vistas creadas ya.</message>
 </label>
 <label define="TMSG_EMPTY_DOC">
 	<message xml:lang="en">Empty document.</message>
@@ -700,6 +799,7 @@
 	<message xml:lang="de">Leeres Dokument.</message>
 	<message xml:lang="it">Documento vuoto.</message>
 	<message xml:lang="tr">Boþ belge.</message>
+	<message xml:lang="es">Documento vacío.</message>
 </label>
 <label define="TMSG_CHANGING_DOC_IMP">
 	<message xml:lang="en">Don\'t change document !</message>
@@ -707,6 +807,7 @@
 	<message xml:lang="de">Dokument nicht ändern!</message>
 	<message xml:lang="it">Non cambiare il documento!</message>
 	<message xml:lang="tr">Belgeyi deðiþtirmeyin!</message>
+	<message xml:lang="es">No cambie el documento</message>
 </label>
 <label define="TMSG_LIB_TOO_MANY_VIEWS">
 	<message xml:lang="en">Too many views.</message>
@@ -714,6 +815,7 @@
 	<message xml:lang="de">Zu viele Ansichten.</message>
 	<message xml:lang="it">Troppe viste.</message>
 	<message xml:lang="tr">Çok fazla görünüm.</message>
+	<message xml:lang="es">Demasiadas vistas.</message>
 </label>
 <label define="TMSG_NOTHING_TO_PASTE">
 	<message xml:lang="en">Nothing to be pasted.</message>
@@ -721,6 +823,7 @@
 	<message xml:lang="de">Nichts zum Einfügen vorhanden.</message>
 	<message xml:lang="it">Non c\'è nulla da incollare.</message>
 	<message xml:lang="tr">Yapýþtýracak bir þey yok.</message>
+	<message xml:lang="es">Nada que pegar.</message>
 </label>
 <label define="TMSG_OPENING_NEW_FRAME_IMP">
 	<message xml:lang="en">Cannot open a new window. Close a window.</message>
@@ -728,6 +831,7 @@
 	<message xml:lang="de">Kann kein neues Fenster öffnen. Bitte zunächst ein Fenster schließen.</message>
 	<message xml:lang="it">Impossibile aprire una nuova finestra. Chiudi una finestra.</message>
 	<message xml:lang="tr">Yeni pencere açýlamýyor. Pencere kapatýn</message>
+	<message xml:lang="es">No puedo abrir una ventana nueva. Cierre una ventana.</message>
 </label>
 <label define="TMSG_DEBUG_ERROR">
 	<message xml:lang="en">*** Thot: Irrecoverable error ***</message>
@@ -735,6 +839,7 @@
 	<message xml:lang="de">*** Thot: Nicht behebbarer Fehler ***</message>
 	<message xml:lang="it">*** Thot: Errore non recuperabile ***</message>
 	<message xml:lang="tr">*** Thot: Dönüþü olmayan HATA ***</message>
+	<message xml:lang="es">*** Thot: Error Irrecuperable ***</message>
 </label>
 <label define="TMSG_DEBUG_SAV_FILES">
 	<message xml:lang="en">modified documents, if any, will be saved</message>
@@ -742,6 +847,7 @@
 	<message xml:lang="de">Geänderte Dokumente werden evtl. in \n</message>
 	<message xml:lang="it">i documenti modificati, se ve ne sono, saranno salvati</message>
 	<message xml:lang="tr">deðiþtirilen belgeler varsa kaydedilecek</message>
+	<message xml:lang="es">documentos modificados, si hay, serán guardados</message>
 </label>
 <label define="TMSG_REALSIZE">
 	<message xml:lang="en">As it is</message>
@@ -749,6 +855,7 @@
 	<message xml:lang="de">wie momentan</message>
 	<message xml:lang="it">Cosí com'è</message>
 	<message xml:lang="tr">Olduðu gibi</message>
+	<message xml:lang="es">Como es</message>
 </label>
 <label define="TMSG_RESCALE">
 	<message xml:lang="en">Scaled</message>
@@ -756,6 +863,7 @@
 	<message xml:lang="de">Skaliert</message>
 	<message xml:lang="it">In scala</message>
 	<message xml:lang="tr">Oranlý</message>
+	<message xml:lang="es">En escala</message>
 </label>
 <label define="TMSG_FILLFRAME">
 	<message xml:lang="en">Repeated</message>
@@ -763,6 +871,7 @@
 	<message xml:lang="de">Mehrfach</message>
 	<message xml:lang="it">Ripetuta</message>
 	<message xml:lang="tr">Tekrarlý</message>
+	<message xml:lang="es">Repetido</message>
 </label>
 <label define="TMSG_XREPEAT">
 	<message xml:lang="en">X Repeated</message>
@@ -770,6 +879,7 @@
 	<message xml:lang="de">X - Faktor</message>
 	<message xml:lang="it">Ripetuta in X</message>
 	<message xml:lang="tr">X Tekrarlý</message>
+	<message xml:lang="es">X Repetido</message>
 </label>
 <label define="TMSG_YREPEAT">
 	<message xml:lang="en">Y Repeated</message>
@@ -777,6 +887,7 @@
 	<message xml:lang="de">Y - Faktor</message>
 	<message xml:lang="it">Ripetuta in Y</message>
 	<message xml:lang="tr">Y Tekrarlý</message>
+	<message xml:lang="es">Y Repetido</message>
 </label>
 <label define="TMSG_PREMAT_EOF">
 	<message xml:lang="en">Premature EOF</message>
@@ -784,6 +895,7 @@
 	<message xml:lang="de">Datei abgeschnitten</message>
 	<message xml:lang="it">Fine del file prematura</message>
 	<message xml:lang="tr">Beklenmeyen EOF</message>
+	<message xml:lang="es">Prematuro EOF</message>
 </label>
 <label define="TMSG_NO_BOUNDING_BOX_IN_PS">
 	<message xml:lang="en">No bounding box in ps file %s</message>
@@ -791,6 +903,7 @@
 	<message xml:lang="de">bounding box in .ps - Datei %s fehlt</message>
 	<message xml:lang="it">Manca la bounding box nel file PostScript %s</message>
 	<message xml:lang="tr">PS dosyasý %s içinde kenar kutusu yok</message>
+	<message xml:lang="es">No hay cuadro acotado en fichero ps %s</message>
 </label>
 <label define="TMSG_HYPHEN_FILE_NOT_OPEN">
 	<message xml:lang="en">Cannot open hyphen patterns file: %s</message>
@@ -798,6 +911,7 @@
 	<message xml:lang="de">Kann die Worttrennungsregeldatei nicht öffnen: %s</message>
 	<message xml:lang="it">Impossibile aprire il file delle divisioni sillabiche: %s</message>
 	<message xml:lang="tr">Bölme özellikleri dosyasý %s açýlamýyor</message>
+	<message xml:lang="es">No puedo abrir fichero de modelo hyphen: %s</message>
 </label>
 <label define="TMSG_HYPHEN_FILE_OPEN">
 	<message xml:lang="en">Reading hyphen patterns file: %s</message>
@@ -805,6 +919,7 @@
 	<message xml:lang="de">Lese Worttrennungsregeldatei: %s</message>
 	<message xml:lang="it">Lettura del file delle divisioni sillabiche in corso: %s</message>
 	<message xml:lang="tr">Bölme özellikleri dosyasý %s okunuyor</message>
+	<message xml:lang="es">Leyendo fichero de modelo hyphen: %s</message>
 </label>
 <label define="TMSG_HYPHEN_WORD_TOO_LONG">
 	<message xml:lang="en">Word too long for hyphenation: %s. Are you sure it's correct?</message>
@@ -812,6 +927,7 @@
 	<message xml:lang="de">Wort zu lang zum Trennen: %s. OK?</message>
 	<message xml:lang="it">Parola troppo lunga per la divisione: %s. Sei sicuro che sia corretta?</message>
 	<message xml:lang="tr">%s kelimesi bölünemeyecek kadar uzun, doðru olduðundan emin misiniz?</message>
+	<message xml:lang="es">Palabra demasiado larga para hyphenacion: %s. ¿Está seguro de que es correcta?</message>
 </label>
 <label define="TMSG_COLOR_INCORRECT">
 	<message xml:lang="en">Pixmap : Color error</message>
@@ -819,6 +935,7 @@
 	<message xml:lang="de">Pixmap : Fehler in Farben</message>
 	<message xml:lang="it">Pixmap : Errore di allocazione dei colori</message>
 	<message xml:lang="tr">Pixmap : Renk hatasý</message>
+	<message xml:lang="es">Pixmap : Color error</message>
 </label>
 <label define="TMSG_XPM_OPEN_ERR">
 	<message xml:lang="en">Pixmap : Open failed</message>
@@ -826,6 +943,7 @@
 	<message xml:lang="de">Pixmap : Fehler beim Laden</message>
 	<message xml:lang="it">Pixmap : Apertura del file fallita</message>
 	<message xml:lang="tr">Pixmap : Okuma hatasý</message>
+	<message xml:lang="es">Pixmap : Fallo de apertura</message>
 </label>
 <label define="TMSG_XPM_FILE_INCORRECT">
 	<message xml:lang="en">Pixmap : File invalid</message>
@@ -833,6 +951,7 @@
 	<message xml:lang="de">Pixmap : Ungültige Datei</message>
 	<message xml:lang="it">Pixmap : File non valido</message>
 	<message xml:lang="tr">Pixmap : Dosya geçersiz</message>
+	<message xml:lang="es">Pixmap : Ficharo invalido</message>
 </label>
 <label define="TMSG_XPM_NO_MEM">
 	<message xml:lang="en">Pixmap : No memory</message>
@@ -840,6 +959,7 @@
 	<message xml:lang="de">Pixmap : nicht genügend Arbeitsspeicher</message>
 	<message xml:lang="it">Pixmap : Memoria insufficiente</message>
 	<message xml:lang="tr">Pixmap : Bellek yok</message>
+	<message xml:lang="es">Pixmap : No hay memoria</message>
 </label>
 <label define="TMSG_XPM_COLOR_ERR">
 	<message xml:lang="en">Pixmap : Color failed</message>
@@ -847,6 +967,7 @@
 	<message xml:lang="de">Pixmap : Farbe nicht darstellbar</message>
 	<message xml:lang="it">Pixmap : Errore di allocazione dei colori</message>
 	<message xml:lang="tr">Pixmap : Renk baþarýsýz</message>
+	<message xml:lang="es">Pixmap : Fallo de color</message>
 </label>
 <label define="TMSG_INCLUDE_FILE_IMP">
 	<message xml:lang="en">Cannot include file %s</message>
@@ -854,6 +975,7 @@
 	<message xml:lang="de">Kann Datei nicht einfügen: %s</message>
 	<message xml:lang="it">Impossibile includere il file %s</message>
 	<message xml:lang="tr">%s dosyasý eklenemiyor</message>
+	<message xml:lang="es">No puedo incluir el fichero %s</message>
 </label>
 <label define="TMSG_CREATE_FILE_IMP">
 	<message xml:lang="en">Cannot create file %s</message>
@@ -861,6 +983,7 @@
 	<message xml:lang="de">Kann Datei nicht erzeugen: %s</message>
 	<message xml:lang="it">Impossibile creare il file %s</message>
 	<message xml:lang="tr">%s dosyasý yaratýlamýyor</message>
+	<message xml:lang="es">No puedo crear el fichero %s</message>
 </label>
 <label define="TMSG_EL_NOT_TRANSLATED">
 	<message xml:lang="en">No translation schema for %s</message>
@@ -868,6 +991,7 @@
 	<message xml:lang="de">Kein Übersetzungsschema bekannt für %s</message>
 	<message xml:lang="it">Manca lo schema di traduzione per %s</message>
 	<message xml:lang="tr">%s için dönüþüm þemasý yok</message>
+	<message xml:lang="es">No hay esquema de traducción parar %s</message>
 </label>
 <label define="TMSG_TRA_FILE_INCORRECT">
 	<message xml:lang="en">Incorrect .TRA file: %s</message>
@@ -875,6 +999,7 @@
 	<message xml:lang="de">Fehlerhafte .TRA - Datei: %s</message>
 	<message xml:lang="it">File .TRA incorretto: %s</message>
 	<message xml:lang="tr">Geçersiz.TRA dosyasý: %s</message>
+	<message xml:lang="es">Incorrecto. Fichero TRA: %s</message>
 </label>
 <label define="TMSG_TOO_MANY_OUTPUT_FILES">
 	<message xml:lang="en">Too many output files</message>
@@ -882,6 +1007,7 @@
 	<message xml:lang="de">Zu viele Ausgabedateien</message>
 	<message xml:lang="it">Troppi file di output</message>
 	<message xml:lang="tr">Çok fazla çýktý dosyasý</message>
+	<message xml:lang="es">Demasiados ficheros de salida</message>
 </label>
 <label define="TMSG_CREATE_FRAME_FOR_VIEW">
 	<message xml:lang="en">No window size for view %s</message>
@@ -889,6 +1015,7 @@
 	<message xml:lang="de">Keine Fenstergröße bekannt für die %s - Ansicht</message>
 	<message xml:lang="it">Manca la dimensione della finestra per la vista %s</message>
 	<message xml:lang="tr">%s görünümü için pencere boyutu yok</message>
+	<message xml:lang="es">No hay tamaño de ventana para vista %s</message>
 </label>
 <label define="TMSG_INVALID_SIBLING">
 	<message xml:lang="en">%s is not a valid sibling for %s (%s)</message>
@@ -896,6 +1023,7 @@
 	<message xml:lang="de">%s entspricht nicht %s (%s)</message>
 	<message xml:lang="it">%s non è un fratello valido per %s (%s)</message>
 	<message xml:lang="tr">%s is not a valid sibling for %s (%s)</message>
+	<message xml:lang="es">%s no es un hermano válido para %s (%s)</message>
 </label>
 <label define="TMSG_INVALID_CHILD">
 	<message xml:lang="en">%s is not a valid child for %s (%s)</message>
@@ -903,6 +1031,7 @@
 	<message xml:lang="de">%s ist kein gültiges Kind von %s (%s)</message>
 	<message xml:lang="it">%s non è un figlio valido per %s (%s)</message>
 	<message xml:lang="tr">%s is not a valid child for %s (%s)</message>
+	<message xml:lang="es">%s no es un hijo valido para %s (%s)</message>
 </label>
 <label define="TMSG_ATTR_REQUIRED_FOR_EL">
 	<message xml:lang="en">Attribute required %s for element %s</message>
@@ -910,6 +1039,7 @@
 	<message xml:lang="de">Bitte das Attribut %s für das Element %s bestimmen!</message>
 	<message xml:lang="it">L'attributo richiede %s per l\'elemento %s</message>
 	<message xml:lang="tr">%s özelliði %s birimi için gereklidir</message>
+	<message xml:lang="es">Atributo %s necesario para el elemento %s</message>
 </label>
 <label define="TMSG_PAGE">
 	<message xml:lang="en">%s, page %d</message>
@@ -917,6 +1047,7 @@
 	<message xml:lang="de">%s, Seite %d</message>
 	<message xml:lang="it">%s, pagina %d</message>
 	<message xml:lang="tr">%s, sayfa %d</message>
+	<message xml:lang="es">%s, pagina %d</message>
 </label>
 <label define="TMSG_LIB_UNKNOWN_TYPE">
 	<message xml:lang="en">%s : unknown type.</message>
@@ -924,6 +1055,7 @@
 	<message xml:lang="de">%s : unbekannter Typ.</message>
 	<message xml:lang="it">%s : tipo sconosciuto.</message>
 	<message xml:lang="tr">%s : bilinmeyen tip</message>
+	<message xml:lang="es">%s : tipo desconocido type.</message>
 </label>
 <label define="TMSG_LANGUAGE">
 	<message xml:lang="en">Language</message>
@@ -931,6 +1063,7 @@
 	<message xml:lang="de">Sprache</message>
 	<message xml:lang="it">Lingua</message>
 	<message xml:lang="tr">Dil</message>
+	<message xml:lang="es">Idioma</message>
 </label>
 <label define="TMSG_ATTR">
 	<message xml:lang="en">Attributes</message>
@@ -938,6 +1071,7 @@
 	<message xml:lang="de">Attribut</message>
 	<message xml:lang="it">Attributi</message>
 	<message xml:lang="tr">Özellik</message>
+	<message xml:lang="es">Atributos</message>
 </label>
 <label define="TMSG_SEARCH_REF">
 	<message xml:lang="en">Search reference</message>
@@ -945,6 +1079,7 @@
 	<message xml:lang="de">Suche Bezugsziel</message>
 	<message xml:lang="it">Cerca riferimento</message>
 	<message xml:lang="tr">Kaynak ara</message>
+	<message xml:lang="es">Buscar referencia</message>
 </label>
 <label define="TMSG_STD_PRES">
 	<message xml:lang="en">Standard presentation</message>
@@ -952,6 +1087,7 @@
 	<message xml:lang="de">Standarddarstellung</message>
 	<message xml:lang="it">Presentazione standard</message>
 	<message xml:lang="tr">Standart sunum</message>
+	<message xml:lang="es">Presentación estandar</message>
 </label>
 <label define="TMSG_APPLY">
 	<message xml:lang="en">Apply</message>
@@ -959,6 +1095,7 @@
 	<message xml:lang="de">Anwenden</message>
 	<message xml:lang="it">Applica</message>
 	<message xml:lang="tr">Uygula</message>
+	<message xml:lang="es">Aplicar</message>
 </label>
 <label define="TMSG_CHAR">
 	<message xml:lang="en">Characters</message>
@@ -966,6 +1103,7 @@
 	<message xml:lang="de">Zeichen</message>
 	<message xml:lang="it">Caratteri</message>
 	<message xml:lang="tr">Karakterler</message>
+	<message xml:lang="es">Caracteres</message>
 </label>
 <label define="TMSG_LINE">
 	<message xml:lang="en">Underline</message>
@@ -973,6 +1111,7 @@
 	<message xml:lang="de">Unterstreichen</message>
 	<message xml:lang="it">Sottolineatura</message>
 	<message xml:lang="tr">Altçizgi</message>
+	<message xml:lang="es">Subrayado</message>
 </label>
 <label define="TMSG_GRAPHICS_PRES">
 	<message xml:lang="en">Graphics</message>
@@ -980,6 +1119,7 @@
 	<message xml:lang="de">Grafik</message>
 	<message xml:lang="it">Grafica</message>
 	<message xml:lang="tr">Grafikler</message>
+	<message xml:lang="es">Grapicos</message>
 </label>
 <label define="TMSG_FORMAT">
 	<message xml:lang="en">Format</message>
@@ -987,6 +1127,7 @@
 	<message xml:lang="de">Format</message>
 	<message xml:lang="it">Formattazione</message>
 	<message xml:lang="tr">Biçim</message>
+	<message xml:lang="es">Formato</message>
 </label>
 <label define="TMSG_UNCHANGED">
 	<message xml:lang="en">Default</message>
@@ -994,6 +1135,7 @@
 	<message xml:lang="de">Standard</message>
 	<message xml:lang="it">Predefinito</message>
 	<message xml:lang="tr">Öntanýmlý</message>
+	<message xml:lang="es">Por omisión</message>
 </label>
 <label define="TMSG_ALIGN">
 	<message xml:lang="en">Align</message>
@@ -1001,6 +1143,7 @@
 	<message xml:lang="de">Ausrichten</message>
 	<message xml:lang="it">Allineamento</message>
 	<message xml:lang="tr">Hizala</message>
+	<message xml:lang="es">Alineación</message>
 </label>
 <label define="TMSG_INDENT">
 	<message xml:lang="en">Indent</message>
@@ -1008,6 +1151,7 @@
 	<message xml:lang="de">Einrücken</message>
 	<message xml:lang="it">Indentazione</message>
 	<message xml:lang="tr">Ýçeriden</message>
+	<message xml:lang="es">Sangrar</message>
 </label>
 <label define="TMSG_LIB_PRINT">
 	<message xml:lang="en">Print</message>
@@ -1015,6 +1159,7 @@
 	<message xml:lang="de">Drucken</message>
 	<message xml:lang="it">Stampa</message>
 	<message xml:lang="tr">Yazdýr</message>
+	<message xml:lang="es">Imprimir</message>
 </label>
 <label define="TMSG_MANUAL_FEED">
 	<message xml:lang="en">Manual feed</message>
@@ -1022,6 +1167,7 @@
 	<message xml:lang="de">manueller Papiereinzug</message>
 	<message xml:lang="it">Alimentazione manuale</message>
 	<message xml:lang="tr">Elle besleme</message>
+	<message xml:lang="es">Alimentación manual</message>
 </label>
 <label define="TMSG_OPTIONS">
 	<message xml:lang="en">Options</message>
@@ -1029,6 +1175,7 @@
 	<message xml:lang="de">Optionen</message>
 	<message xml:lang="it">Opzioni</message>
 	<message xml:lang="tr">Seçenekler</message>
+	<message xml:lang="es">Opciones</message>
 </label>
 <label define="TMSG_A4">
 	<message xml:lang="en">A4</message>
@@ -1036,6 +1183,7 @@
 	<message xml:lang="de">A4</message>
 	<message xml:lang="it">A4</message>
 	<message xml:lang="tr">A4</message>
+	<message xml:lang="es">A4</message>
 </label>
 <label define="TMSG_US">
 	<message xml:lang="en">US</message>
@@ -1043,6 +1191,7 @@
 	<message xml:lang="de">US</message>
 	<message xml:lang="it">US</message>
 	<message xml:lang="tr">US</message>
+	<message xml:lang="es">US</message>
 </label>
 <label define="TMSG_PAPER_SIZE">
 	<message xml:lang="en">Paper format</message>
@@ -1050,6 +1199,7 @@
 	<message xml:lang="de">Papierformat</message>
 	<message xml:lang="it">Formato della carta</message>
 	<message xml:lang="tr">Sayfa biçimi</message>
+	<message xml:lang="es">Formato de papel</message>
 </label>
 <label define="TMSG_DONE">
 	<message xml:lang="en">Done</message>
@@ -1057,6 +1207,7 @@
 	<message xml:lang="de">Abbrechen</message>
 	<message xml:lang="it">Fatto</message>
 	<message xml:lang="tr">Tamam</message>
+	<message xml:lang="es">Hecho</message>
 </label>
 <label define="TMSG_DOC_DIR">
 	<message xml:lang="en">Directories</message>
@@ -1064,6 +1215,7 @@
 	<message xml:lang="de">Verzeichnisse</message>
 	<message xml:lang="it">Directory</message>
 	<message xml:lang="tr">Dizinleri</message>
+	<message xml:lang="es">Directorios</message>
 </label>
 <label define="TMSG_DOCUMENT_NAME">
 	<message xml:lang="en">Document name</message>
@@ -1071,6 +1223,7 @@
 	<message xml:lang="de">Dokumentenname</message>
 	<message xml:lang="it">Nome del documento</message>
 	<message xml:lang="tr">Belge ismi</message>
+	<message xml:lang="es">Nombre de documento</message>
 </label>
 <label define="TMSG_FILE_EXIST">
 	<message xml:lang="en">The document %s already exists. Do you want to overwrite it?</message>
@@ -1078,6 +1231,7 @@
 	<message xml:lang="de">Das Dokument %s existiert bereits. Überschreiben ?</message>
 	<message xml:lang="it">Il documento %s esiste già. Vuoi sovrascriverlo?</message>
 	<message xml:lang="tr">%s belgesi zaten var, üzerine yazmak ister misiniz?</message>
+	<message xml:lang="es">El documento %s ya existe. ¿Quiere sobreescribirlo?</message>
 </label>
 <label define="TMSG_BUTTON_1">
 	<message xml:lang="en">Left button sets the text color</message>
@@ -1085,6 +1239,7 @@
 	<message xml:lang="de">Maustaste 1 setzt die Textfarbe</message>
 	<message xml:lang="it">Il pulsante sinistro cambia il colore del testo</message>
 	<message xml:lang="tr">1. tuþ yazý rengini ayarlar</message>
+	<message xml:lang="es">El botón izquierdo fija el color del texto</message>
 </label>
 <label define="TMSG_BUTTON_2">
 	<message xml:lang="en">Middle or Right button sets the background color</message>
@@ -1092,6 +1247,7 @@
 	<message xml:lang="de">Maustaste 2 setzt die Hintergrundfarbe</message>
 	<message xml:lang="it">Il pulsante centrale e quello destro cambiano il colore dello sfondo</message>
 	<message xml:lang="tr">2. tuþ arkaplan rengini ayarlar</message>
+	<message xml:lang="es">El botón derecho o central fija el color del fondo</message>
 </label>
 <label define="TMSG_FONT_FAMILY">
 	<message xml:lang="en">Font family</message>
@@ -1099,6 +1255,7 @@
 	<message xml:lang="de">Schriftart</message>
 	<message xml:lang="it">Famiglia</message>
 	<message xml:lang="tr">Yazýtipi ailesi</message>
+	<message xml:lang="es">Familia de fuentes</message>
 </label>
 <label define="TMSG_ROMAN">
 	<message xml:lang="en">Normal</message>
@@ -1106,6 +1263,7 @@
 	<message xml:lang="de">Normal</message>
 	<message xml:lang="it">Normale</message>
 	<message xml:lang="tr">Normal</message>
+	<message xml:lang="es">Normal</message>
 </label>
 <label define="TMSG_BOLD">
 	<message xml:lang="en">Bold</message>
@@ -1113,6 +1271,7 @@
 	<message xml:lang="de">Fett</message>
 	<message xml:lang="it">Grassetto</message>
 	<message xml:lang="tr">Kalýn</message>
+	<message xml:lang="es">Negrita</message>
 </label>
 <label define="TMSG_ITALIC">
 	<message xml:lang="en">Italic</message>
@@ -1120,6 +1279,7 @@
 	<message xml:lang="de">Kursiv</message>
 	<message xml:lang="it">Italico</message>
 	<message xml:lang="tr">Ýtalik</message>
+	<message xml:lang="es">Cursiva</message>
 </label>
 <label define="TMSG_OBLIQUE">
 	<message xml:lang="en">Oblique</message>
@@ -1127,6 +1287,7 @@
 	<message xml:lang="de">Geneigt</message>
 	<message xml:lang="it">Obliquo</message>
 	<message xml:lang="tr">Oblik</message>
+	<message xml:lang="es">Oblicua</message>
 </label>
 <label define="TMSG_NOT_BOLD">
 	<message xml:lang="en">Normal</message>
@@ -1134,6 +1295,7 @@
 	<message xml:lang="de">Normal</message>
 	<message xml:lang="it">Normale</message>
 	<message xml:lang="tr">Normal</message>
+	<message xml:lang="es">Normal</message>
 </label>
 <label define="TMSG_BOLDNESS">
 	<message xml:lang="en">Boldness</message>
@@ -1141,6 +1303,7 @@
 	<message xml:lang="de">Fett</message>
 	<message xml:lang="it">Grassetto</message>
 	<message xml:lang="tr">Kalýn</message>
+	<message xml:lang="es">Negrita</message>
 </label>
 <label define="TMSG_NORMAL">
 	<message xml:lang="en">Normal</message>
@@ -1148,6 +1311,7 @@
 	<message xml:lang="de">Normal</message>
 	<message xml:lang="it">Normale</message>
 	<message xml:lang="tr">Normal</message>
+	<message xml:lang="es">Normal</message>
 </label>
 <label define="TMSG_UNDERLINE">
 	<message xml:lang="en">Underline</message>
@@ -1155,6 +1319,7 @@
 	<message xml:lang="de">Unterstrichen</message>
 	<message xml:lang="it">Sottolineato</message>
 	<message xml:lang="tr">Altçizgi</message>
+	<message xml:lang="es">Subrayado</message>
 </label>
 <label define="TMSG_CROSS_OUT">
 	<message xml:lang="en">Cross out</message>
@@ -1162,6 +1327,7 @@
 	<message xml:lang="de">Durchgestrichen</message>
 	<message xml:lang="it">Sbarrato</message>
 	<message xml:lang="tr">Cross out</message>
+	<message xml:lang="es">Cross out</message>
 </label>
 <label define="TMSG_BODY_SIZE_PTS">
 	<message xml:lang="en">Body size (pt)</message>
@@ -1169,6 +1335,7 @@
 	<message xml:lang="de">Schriftgröße (pt)</message>
 	<message xml:lang="it">Dimensione (pt)</message>
 	<message xml:lang="tr">Body boyu (pt)</message>
+	<message xml:lang="es">Tamaño del cuerpo (pt)</message>
 </label>
 <label define="TMSG_INDENT_PTS">
 	<message xml:lang="en">Indent (pt)</message>
@@ -1176,6 +1343,7 @@
 	<message xml:lang="de">Einrückung (pt)</message>
 	<message xml:lang="it">Indentazione (pt)</message>
 	<message xml:lang="tr">Ýçeriden (pt)</message>
+	<message xml:lang="es">Sangrar (pt)</message>
 </label>
 <label define="TMSG_LINE_SPACING_PTS">
 	<message xml:lang="en">Line spacing (pt)</message>
@@ -1183,6 +1351,7 @@
 	<message xml:lang="de">Zeilenabstand (pt)</message>
 	<message xml:lang="it">Interlinea (pt)</message>
 	<message xml:lang="tr">Satýr aralýðý (pt)</message>
+	<message xml:lang="es">Espacio de líneas (pt)</message>
 </label>
 <label define="TMSG_LINE_SPACING">
 	<message xml:lang="en">Line spacing</message>
@@ -1190,6 +1359,7 @@
 	<message xml:lang="de">Zeilenabstand</message>
 	<message xml:lang="it">Interlinea</message>
 	<message xml:lang="tr">Satýr aralýðý</message>
+	<message xml:lang="es">Espaciado de líneas</message>
 </label>
 <label define="TMSG_JUSTIFY">
 	<message xml:lang="en">Justification</message>
@@ -1197,6 +1367,7 @@
 	<message xml:lang="de">Ausrichtung</message>
 	<message xml:lang="it">Giustificazione</message>
 	<message xml:lang="tr">Justification</message>
+	<message xml:lang="es">Justificacion</message>
 </label>
 <label define="TMSG_LIB_YES">
 	<message xml:lang="en">Yes</message>
@@ -1204,6 +1375,7 @@
 	<message xml:lang="de">Ja</message>
 	<message xml:lang="it">Sí</message>
 	<message xml:lang="tr">Evet</message>
+	<message xml:lang="es">Sí</message>
 </label>
 <label define="TMSG_LIB_NO">
 	<message xml:lang="en">No</message>
@@ -1211,6 +1383,7 @@
 	<message xml:lang="de">Nein</message>
 	<message xml:lang="it">No</message>
 	<message xml:lang="tr">Hayýr</message>
+	<message xml:lang="es">No</message>
 </label>
 <label define="TMSG_SAVE_DOC">
 	<message xml:lang="en">Save document</message>
@@ -1218,6 +1391,7 @@
 	<message xml:lang="de">Dokument speichern</message>
 	<message xml:lang="it">Salva il documento</message>
 	<message xml:lang="tr">Belge kaydet</message>
+	<message xml:lang="es">Guardar documento</message>
 </label>
 <label define="TMSG_CLOSE_DON_T_SAVE">
 	<message xml:lang="en">Close, don't save</message>
@@ -1225,6 +1399,7 @@
 	<message xml:lang="de">Nicht Speichern</message>
 	<message xml:lang="it">Chiudi, non salvare</message>
 	<message xml:lang="tr">Kapat, kaydetme</message>
+	<message xml:lang="es">Cerrar, no guardar</message>
 </label>
 <label define="TMSG_STYLE">
 	<message xml:lang="en">Character style</message>
@@ -1232,6 +1407,7 @@
 	<message xml:lang="de">Auszeichnung</message>
 	<message xml:lang="it">Stile dei caratteri</message>
 	<message xml:lang="tr">Karakter tarzý</message>
+	<message xml:lang="es">Estilo de caracter</message>
 </label>
 <label define="TMSG_COLORS">
 	<message xml:lang="en">Colors</message>
@@ -1239,6 +1415,7 @@
 	<message xml:lang="de">Farben</message>
 	<message xml:lang="it">Colori</message>
 	<message xml:lang="tr">Renkler</message>
+	<message xml:lang="es">Colores</message>
 </label>
 <label define="TMSG_DEL">
 	<message xml:lang="en">Delete</message>
@@ -1246,6 +1423,7 @@
 	<message xml:lang="de">Löschen</message>
 	<message xml:lang="it">Cancella</message>
 	<message xml:lang="tr">Sil</message>
+	<message xml:lang="es">Borrar</message>
 </label>
 <label define="TMSG_OUTPUT">
 	<message xml:lang="en">Output</message>
@@ -1253,6 +1431,7 @@
 	<message xml:lang="de">Ausgabe</message>
 	<message xml:lang="it">Destinazione</message>
 	<message xml:lang="tr">Çýktý</message>
+	<message xml:lang="es">Output</message>
 </label>
 <label define="TMSG_PS_FILE">
 	<message xml:lang="en">PostScript file</message>
@@ -1260,6 +1439,7 @@
 	<message xml:lang="de">PostScript-Datei</message>
 	<message xml:lang="it">File PostScript</message>
 	<message xml:lang="tr">PostScript dosya</message>
+	<message xml:lang="es">Fichero PostScript</message>
 </label>
 <label define="TMSG_PRINTER">
 	<message xml:lang="en">Printer</message>
@@ -1267,6 +1447,7 @@
 	<message xml:lang="de">Drucker</message>
 	<message xml:lang="it">Stampante</message>
 	<message xml:lang="tr">Yazýcý</message>
+	<message xml:lang="es">Impresora</message>
 </label>
 <label define="TMSG_SEARCH_FOR">
 	<message xml:lang="en">Search for</message>
@@ -1274,9 +1455,11 @@
 	<message xml:lang="de">Suche nach</message>
 	<message xml:lang="it">Cerca</message>
 	<message xml:lang="tr">Arama</message>
+	<message xml:lang="es">Buscar</message>
 </label>
 <label define="TMSG_UPPERCASE_EQ_LOWERCASE">
 	<message xml:lang="en">UPPERCASE = lowercase</message>
+	<message xml:lang="es">MAYÚSCULAS = minusculas</message>
 </label>
 <label define="TMSG_REPLACE_BY">
 	<message xml:lang="en">Replace by</message>
@@ -1284,6 +1467,7 @@
 	<message xml:lang="de">Groß-/Kleinschreibung ignorieren</message>
 	<message xml:lang="it">MAIUSCOLE = minuscole</message>
 	<message xml:lang="tr">BÜYÜK HARF = küçük harf</message>
+	<message xml:lang="es">Sustituir por</message>
 </label>
 <label define="TMSG_REPLACE">
 	<message xml:lang="en">Replace</message>
@@ -1291,6 +1475,7 @@
 	<message xml:lang="de">Ersetzen durch</message>
 	<message xml:lang="it">Rimpiazza con</message>
 	<message xml:lang="tr">ile deðiþtir</message>
+	<message xml:lang="es">Sustituir</message>
 </label>
 <label define="TMSG_NO_REPLACE">
 	<message xml:lang="en">No replace</message>
@@ -1298,6 +1483,7 @@
 	<message xml:lang="de">Ersetzen</message>
 	<message xml:lang="it">Rimpiazza</message>
 	<message xml:lang="tr">Deðiþtir</message>
+	<message xml:lang="es">No sustituir</message>
 </label>
 <label define="TMSG_REPLACE_ON_REQU">
 	<message xml:lang="en">Replace on request</message>
@@ -1305,6 +1491,7 @@
 	<message xml:lang="de">Nicht ersetzen</message>
 	<message xml:lang="it">Non rimpiazzare</message>
 	<message xml:lang="tr">Deðiþtirme</message>
+	<message xml:lang="es">Sustituir a solicitud</message>
 </label>
 <label define="TMSG_AUTO_REPLACE">
 	<message xml:lang="en">Automatic replace</message>
@@ -1312,6 +1499,7 @@
 	<message xml:lang="de">Einzeln ersetzen</message>
 	<message xml:lang="it">Rimpiazza su richiesta</message>
 	<message xml:lang="tr">Ýstek üzerine deðiþtir</message>
+	<message xml:lang="es">Sustitución automatica</message>
 </label>
 <label define="TMSG_SEARCH_WHERE">
 	<message xml:lang="en">Search where</message>
@@ -1319,6 +1507,7 @@
 	<message xml:lang="de">Alle ersetzen</message>
 	<message xml:lang="it">Rimpiazzamento automatico</message>
 	<message xml:lang="tr">Otomatik olarak deðiþtir</message>
+	<message xml:lang="es">Buscar donde</message>
 </label>
 <label define="TMSG_BEFORE_SEL">
 	<message xml:lang="en">Before selection</message>
@@ -1326,6 +1515,7 @@
 	<message xml:lang="de">Suche im Dokument</message>
 	<message xml:lang="it">Dove cercare</message>
 	<message xml:lang="tr">Arama nerede</message>
+	<message xml:lang="es">Antes selección</message>
 </label>
 <label define="TMSG_WITHIN_SEL">
 	<message xml:lang="en">Within selection</message>
@@ -1333,6 +1523,7 @@
 	<message xml:lang="de">Oberhalb der Markierung</message>
 	<message xml:lang="it">Prima della selezione</message>
 	<message xml:lang="tr">Seçimden önce</message>
+	<message xml:lang="es">En seleccion</message>
 </label>
 <label define="TMSG_AFTER_SEL">
 	<message xml:lang="en">After selection</message>
@@ -1340,6 +1531,7 @@
 	<message xml:lang="de">Innerhalb der Markierung</message>
 	<message xml:lang="it">Nella selezione</message>
 	<message xml:lang="tr">Seçim içi</message>
+	<message xml:lang="es">Tras seleccion</message>
 </label>
 <label define="TMSG_IN_WHOLE_DOC">
 	<message xml:lang="en">In the whole document</message>
@@ -1347,6 +1539,7 @@
 	<message xml:lang="de">Unterhalb der Markierung</message>
 	<message xml:lang="it">Dopo la selezione</message>
 	<message xml:lang="tr">Seçimden sonra</message>
+	<message xml:lang="es">En todo el documento</message>
 </label>
 <label define="TMSG_DO_NOT_REPLACE">
 	<message xml:lang="en">Do not replace</message>
@@ -1354,6 +1547,7 @@
 	<message xml:lang="de">Im gesamten Dokument</message>
 	<message xml:lang="it">L\'intero documento</message>
 	<message xml:lang="tr">Tüm belgede</message>
+	<message xml:lang="es">No sustituir</message>
 </label>
 <label define="TMSG_STD_COLORS">
 	<message xml:lang="en">Default colors</message>
@@ -1361,6 +1555,7 @@
 	<message xml:lang="de">Nicht ersetzen</message>
 	<message xml:lang="it">Non rimpiazzare</message>
 	<message xml:lang="tr">Deðiþtirme</message>
+	<message xml:lang="es">Colores por omisión</message>
 </label>
 <label define="TMSG_BEFORE_CLOSING">
 	<message xml:lang="en">before closing it</message>
@@ -1368,6 +1563,7 @@
 	<message xml:lang="de">Standardfarbe</message>
 	<message xml:lang="it">Colori di default</message>
 	<message xml:lang="tr">Öntanýmlý renkler</message>
+	<message xml:lang="es">antes de cerrarlo</message>
 </label>
 <label define="TMSG_CLOSE_DOC">
 	<message xml:lang="en">Close a document</message>
@@ -1375,6 +1571,7 @@
 	<message xml:lang="de">vorher?</message>
 	<message xml:lang="it">prima di chiuderlo</message>
 	<message xml:lang="tr">kapamadan önce</message>
+	<message xml:lang="es">Cierre un documento</message>
 </label>
 <label define="TMSG_NO_NAME">
 	<message xml:lang="en">No_name</message>
@@ -1382,6 +1579,7 @@
 	<message xml:lang="de">Schließe ein Dokument</message>
 	<message xml:lang="it">Chiudi un documento</message>
 	<message xml:lang="tr">Belgeyi kapa</message>
+	<message xml:lang="es">Anónimo</message>
 </label>
 <label define="TMSG_CREATE_DOC">
 	<message xml:lang="en">Create a document</message>
@@ -1389,6 +1587,7 @@
 	<message xml:lang="de">unbenannt</message>
 	<message xml:lang="it">Senza_nome</message>
 	<message xml:lang="tr">Ýsimsiz</message>
+	<message xml:lang="es">Crear un documento</message>
 </label>
 <label define="TMSG_DOC_TYPE">
 	<message xml:lang="en">Document type</message>
@@ -1396,6 +1595,7 @@
 	<message xml:lang="de">Neues Dokument</message>
 	<message xml:lang="it">Crea un documento</message>
 	<message xml:lang="tr">Belge yarat</message>
+	<message xml:lang="es">Tipo de documento</message>
 </label>
 <label define="TMSG_RENAME">
 	<message xml:lang="en">Rename</message>
@@ -1403,6 +1603,7 @@
 	<message xml:lang="de">Dokumententyp</message>
 	<message xml:lang="it">Tipo di documento</message>
 	<message xml:lang="tr">Belge tarzý</message>
+	<message xml:lang="es">Renombrar</message>
 </label>
 <label define="TMSG_MATH_SYMBOLS">
 	<message xml:lang="en">Math symbols</message>
@@ -1410,6 +1611,7 @@
 	<message xml:lang="de">Umbenennen</message>
 	<message xml:lang="it">Rinomina</message>
 	<message xml:lang="tr">Ýsmini deðiþtir</message>
+	<message xml:lang="es">Símbolos matemáticos</message>
 </label>
 <label define="TMSG_GRAPHICS">
 	<message xml:lang="en">Graphics</message>
@@ -1417,6 +1619,7 @@
 	<message xml:lang="de">Formelsatz</message>
 	<message xml:lang="it">Simboli matematici</message>
 	<message xml:lang="tr">Matematik sembolleri</message>
+	<message xml:lang="es">Graficos</message>
 </label>
 <label define="TMSG_LATIN_ALPHABET">
 	<message xml:lang="en">Latin alphabet</message>
@@ -1424,6 +1627,7 @@
 	<message xml:lang="de">Grafik</message>
 	<message xml:lang="it">Grafica</message>
 	<message xml:lang="tr">Grafik</message>
+	<message xml:lang="es">Alfabeto latino</message>
 </label>
 <label define="TMSG_GREEK_ALPHABET">
 	<message xml:lang="en">Greek alphabet</message>
@@ -1431,6 +1635,7 @@
 	<message xml:lang="de">Lateinisches Alphabet</message>
 	<message xml:lang="it">Alfabeto latino</message>
 	<message xml:lang="tr">Latin alfabesi</message>
+	<message xml:lang="es">Alfabet griego</message>
 </label>
 <label define="TMSG_PRES">
 	<message xml:lang="en">Presentation</message>
@@ -1438,6 +1643,7 @@
 	<message xml:lang="de">Griechiches Alphabet</message>
 	<message xml:lang="it">Alfabeto greco</message>
 	<message xml:lang="tr">Yunan alfabesi</message>
+	<message xml:lang="es">Presentacion</message>
 </label>
 <label define="TMSG_FILES">
 	<message xml:lang="en">Files</message>
@@ -1445,6 +1651,7 @@
 	<message xml:lang="de">Ansicht</message>
 	<message xml:lang="it">Presentazione</message>
 	<message xml:lang="tr">Sunum</message>
+	<message xml:lang="es">Ficheros</message>
 </label>
 <label define="TMSG_OPEN_DOC">
 	<message xml:lang="en">Open a document</message>
@@ -1452,6 +1659,7 @@
 	<message xml:lang="de">Dateien</message>
 	<message xml:lang="it">File</message>
 	<message xml:lang="tr">Dosyalar</message>
+	<message xml:lang="es">Abrir un documento</message>
 </label>
 <label define="TMSG_IMPORT_DOC_TYPE">
 	<message xml:lang="en">Document type</message>
@@ -1459,6 +1667,7 @@
 	<message xml:lang="de">Lade Dokument</message>
 	<message xml:lang="it">Aprire un documento</message>
 	<message xml:lang="tr">Belge aç</message>
+	<message xml:lang="es">Tipo de documento</message>
 </label>
 <label define="TMSG_VIEWS">
 	<message xml:lang="en">Views</message>
@@ -1466,6 +1675,7 @@
 	<message xml:lang="de">Dokumententyp</message>
 	<message xml:lang="it">Tipo di documento</message>
 	<message xml:lang="tr">Belge türü</message>
+	<message xml:lang="es">Vistas</message>
 </label>
 <label define="TMSG_CHANGE_FILTER">
 	<message xml:lang="en">Change filter</message>
@@ -1473,6 +1683,7 @@
 	<message xml:lang="de">Ansichten</message>
 	<message xml:lang="it">Viste</message>
 	<message xml:lang="tr">Görünümler</message>
+	<message xml:lang="es">Cambiar filtro</message>
 </label>
 <label define="TMSG_VALUE_NOT_CHANGED">
 	<message xml:lang="en">Value not changed</message>
@@ -1480,6 +1691,7 @@
 	<message xml:lang="de">Ändere Filter</message>
 	<message xml:lang="it">Cambia filtro</message>
 	<message xml:lang="tr">Süzgeç deðiþtir</message>
+	<message xml:lang="es">Valor no modificado</message>
 </label>
 <label define="TMSG_INCREASE">
 	<message xml:lang="en">Increase</message>
@@ -1487,6 +1699,7 @@
 	<message xml:lang="de">Wert nicht geändert</message>
 	<message xml:lang="it">Valore non modificato</message>
 	<message xml:lang="tr">Deðer deðiþtirilmedi</message>
+	<message xml:lang="es">Incrementar</message>
 </label>
 <label define="TMSG_DECREASE">
 	<message xml:lang="en">Decrease</message>
@@ -1494,6 +1707,7 @@
 	<message xml:lang="de">Erhöhe</message>
 	<message xml:lang="it">Incrementa</message>
 	<message xml:lang="tr">Arttýr</message>
+	<message xml:lang="es">Decrementar</message>
 </label>
 <label define="TMSG_VISIB">
 	<message xml:lang="en">Visibility</message>
@@ -1501,6 +1715,7 @@
 	<message xml:lang="de">Verringere</message>
 	<message xml:lang="it">Decrementa</message>
 	<message xml:lang="tr">Azalt</message>
+	<message xml:lang="es">Visibilidad</message>
 </label>
 <label define="TMSG_CHANGE_ZOOM">
 	<message xml:lang="en">Character size difference</message>
@@ -1508,6 +1723,7 @@
 	<message xml:lang="de">Sichtbarkeit</message>
 	<message xml:lang="it">Visibilità</message>
 	<message xml:lang="tr">Görüþ mesafesi</message>
+	<message xml:lang="es">Diferencia de tamaño de caracter</message>
 </label>
 <label define="TMSG_LIB_ZOOM">
 	<message xml:lang="en">Zoom</message>
@@ -1515,6 +1731,7 @@
 	<message xml:lang="de">Schiftgrößenunterschied</message>
 	<message xml:lang="it">Scarto sulla dimensione dei caratteri</message>
 	<message xml:lang="tr">Karakter boyu farký</message>
+	<message xml:lang="es">Zoom</message>
 </label>
 <label define="TMSG_SAVE_AS">
 	<message xml:lang="en">Save as</message>
@@ -1522,6 +1739,7 @@
 	<message xml:lang="de">Vergrößern</message>
 	<message xml:lang="it">Zoom</message>
 	<message xml:lang="tr">Yaklaþ</message>
+	<message xml:lang="es">Guardar como</message>
 </label>
 <label define="TMSG_SAVE">
 	<message xml:lang="en">Save</message>
@@ -1529,6 +1747,7 @@
 	<message xml:lang="de">Speichern unter</message>
 	<message xml:lang="it">Salva con nome</message>
 	<message xml:lang="tr">Ýsimle kaydet</message>
+	<message xml:lang="es">Guardar</message>
 </label>
 <label define="TMSG_THOT_APP">
 	<message xml:lang="en">Thot</message>
@@ -1536,6 +1755,7 @@
 	<message xml:lang="de">Speichern</message>
 	<message xml:lang="it">Salva</message>
 	<message xml:lang="tr">Kaydet</message>
+	<message xml:lang="es">Thot</message>
 </label>
 <label define="TMSG_DOC_FORMAT">
 	<message xml:lang="en">Format</message>
@@ -1543,6 +1763,7 @@
 	<message xml:lang="de">Thot</message>
 	<message xml:lang="it">Thot</message>
 	<message xml:lang="tr">Thot</message>
+	<message xml:lang="es">Formato</message>
 </label>
 <label define="TMSG_COPY">
 	<message xml:lang="en">Copy</message>
@@ -1550,6 +1771,7 @@
 	<message xml:lang="de">Format</message>
 	<message xml:lang="it">Formattazione</message>
 	<message xml:lang="tr">Biçim</message>
+	<message xml:lang="es">Copiar</message>
 </label>
 <label define="TMSG_TEXT">
 	<message xml:lang="en">Text</message>
@@ -1557,6 +1779,7 @@
 	<message xml:lang="de">Kopiere</message>
 	<message xml:lang="it">Copia</message>
 	<message xml:lang="tr">Kopyala</message>
+	<message xml:lang="es">Texto</message>
 </label>
 <label define="TMSG_GRAPHIC">
 	<message xml:lang="en">Graphic</message>
@@ -1564,6 +1787,7 @@
 	<message xml:lang="de">Text</message>
 	<message xml:lang="it">Testo</message>
 	<message xml:lang="tr">Metin</message>
+	<message xml:lang="es">Grafico</message>
 </label>
 <label define="TMSG_SYMBOL">
 	<message xml:lang="en">Symbol</message>
@@ -1571,6 +1795,7 @@
 	<message xml:lang="de">Zeichnung</message>
 	<message xml:lang="it">Grafica</message>
 	<message xml:lang="tr">Grafik</message>
+	<message xml:lang="es">Símbolo</message>
 </label>
 <label define="TMSG_PICTURE">
 	<message xml:lang="en">Image</message>
@@ -1578,6 +1803,7 @@
 	<message xml:lang="de">Symbol</message>
 	<message xml:lang="it">Simbolo</message>
 	<message xml:lang="tr">Simge</message>
+	<message xml:lang="es">Imagen</message>
 </label>
 <label define="TMSG_EL_TYPE">
 	<message xml:lang="en">Element type</message>
@@ -1585,6 +1811,7 @@
 	<message xml:lang="de">Grafik</message>
 	<message xml:lang="it">Immagine</message>
 	<message xml:lang="tr">Görüntü</message>
+	<message xml:lang="es">Tipo de elemento</message>
 </label>
 <label define="TMSG_AFTER">
 	<message xml:lang="en">after</message>
@@ -1592,6 +1819,7 @@
 	<message xml:lang="de">Art des Elements</message>
 	<message xml:lang="it">Tipo di elemento</message>
 	<message xml:lang="tr">Birim tipi</message>
+	<message xml:lang="es">después</message>
 </label>
 <label define="TMSG_BEFORE">
 	<message xml:lang="en">before</message>
@@ -1599,6 +1827,7 @@
 	<message xml:lang="de">nach</message>
 	<message xml:lang="it">dopo</message>
 	<message xml:lang="tr">önce</message>
+	<message xml:lang="es">antes</message>
 </label>
 <label define="TMSG_AROUND">
 	<message xml:lang="en">around</message>
@@ -1606,6 +1835,7 @@
 	<message xml:lang="de">vor</message>
 	<message xml:lang="it">prima</message>
 	<message xml:lang="tr">sonra</message>
+	<message xml:lang="es">alrededor</message>
 </label>
 <label define="TMSG_INCLUDE">
 	<message xml:lang="en">Include</message>
@@ -1613,6 +1843,7 @@
 	<message xml:lang="de">um</message>
 	<message xml:lang="it">intorno</message>
 	<message xml:lang="tr">civarýnda</message>
+	<message xml:lang="es">Incluir</message>
 </label>
 <label define="TMSG_PASTE">
 	<message xml:lang="en">Paste</message>
@@ -1620,6 +1851,7 @@
 	<message xml:lang="de">Einfügen</message>
 	<message xml:lang="it">Includi</message>
 	<message xml:lang="tr">Ekle</message>
+	<message xml:lang="es">Pegar</message>
 </label>
 <label define="TMSG_TO_CREATE">
 	<message xml:lang="en">to create</message>
@@ -1627,6 +1859,7 @@
 	<message xml:lang="de">Einfügen</message>
 	<message xml:lang="it">Incolla</message>
 	<message xml:lang="tr">Yapýþtýr</message>
+	<message xml:lang="es">crear</message>
 </label>
 <label define="TMSG_INSERT">
 	<message xml:lang="en">Insert</message>
@@ -1634,6 +1867,7 @@
 	<message xml:lang="de">erzeugen</message>
 	<message xml:lang="it">da creare</message>
 	<message xml:lang="tr">to create</message>
+	<message xml:lang="es">Insertar</message>
 </label>
 <label define="TMSG_PAGE_BRK">
 	<message xml:lang="en">Page break</message>
@@ -1641,6 +1875,7 @@
 	<message xml:lang="de">Einfügen</message>
 	<message xml:lang="it">Inserisci</message>
 	<message xml:lang="tr">Ekle</message>
+	<message xml:lang="es">Fin de página</message>
 </label>
 <label define="TMSG_READ_ONLY">
 	<message xml:lang="en">(Read only)</message>
@@ -1648,6 +1883,7 @@
 	<message xml:lang="de">Seitenumbruch</message>
 	<message xml:lang="it">Salto pagina</message>
 	<message xml:lang="tr">Sayfa kesmesi</message>
+	<message xml:lang="es">(Sólo lectura)</message>
 </label>
 <label define="TMSG_SURROUND">
 	<message xml:lang="en">Surround</message>
@@ -1655,6 +1891,7 @@
 	<message xml:lang="de">(schreibgeschützt)</message>
 	<message xml:lang="it">(Sola lettura)</message>
 	<message xml:lang="tr">(Salt-Oku)</message>
+	<message xml:lang="es">Surround</message>
 </label>
 <label define="TMSG_CHANGE_TYPE">
 	<message xml:lang="en">Change type</message>
@@ -1662,6 +1899,7 @@
 	<message xml:lang="de">Umgebung</message>
 	<message xml:lang="it">Ingloba</message>
 	<message xml:lang="tr">Çevrele</message>
+	<message xml:lang="es">Cambiar tipo</message>
 </label>
 <label define="TMSG_LANG_OF_EL">
 	<message xml:lang="en">Language of element</message>
@@ -1669,6 +1907,7 @@
 	<message xml:lang="de">Typ ändern</message>
 	<message xml:lang="it">Cambia tipo</message>
 	<message xml:lang="tr">Tip deðiþtir</message>
+	<message xml:lang="es">Idioma de elemento</message>
 </label>
 <label define="TMSG_INHERITED_LANG">
 	<message xml:lang="en">Inherited language:</message>
@@ -1676,6 +1915,7 @@
 	<message xml:lang="de">Sprache des Elements</message>
 	<message xml:lang="it">Lingua dell'elemento</message>
 	<message xml:lang="tr">Birimin dili</message>
+	<message xml:lang="es">Idioma heredado:</message>
 </label>
 <label define="TMSG_DO_NOT_CHANGE_DOC">
 	<message xml:lang="en">Do not change document!</message>
@@ -1683,6 +1923,7 @@
 	<message xml:lang="de">Sprachvoreinstellung:</message>
 	<message xml:lang="it">Lingua ereditata:</message>
 	<message xml:lang="tr">Alýnan dil</message>
+	<message xml:lang="es">¡No cambie el documento!</message>
 </label>
 <label define="TMSG_NOT_FOUND">
 	<message xml:lang="en">Not found</message>
@@ -1690,6 +1931,7 @@
 	<message xml:lang="de">Bitte das Dokument nicht ändern!</message>
 	<message xml:lang="it">Non modificate il documento!</message>
 	<message xml:lang="tr">Belgeyi deðiþtirmeyin!</message>
+	<message xml:lang="es">No encontrado</message>
 </label>
 <label define="TMSG_SEARCH_IN">
 	<message xml:lang="en">Search in</message>
@@ -1697,6 +1939,7 @@
 	<message xml:lang="de">Nicht gefunden</message>
 	<message xml:lang="it">Non trovato</message>
 	<message xml:lang="tr">Bulunamadý</message>
+	<message xml:lang="es">Buscar en</message>
 </label>
 <label define="TMSG_SEARCH_EMPTY_EL">
 	<message xml:lang="en">Search empty elements</message>
@@ -1704,6 +1947,7 @@
 	<message xml:lang="de">Suche in</message>
 	<message xml:lang="it">Cerca in</message>
 	<message xml:lang="tr">Ara</message>
+	<message xml:lang="es">Buscar elementos vacíos</message>
 </label>
 <label define="TMSG_SEARCH_EMPTY_REF">
 	<message xml:lang="en">Search empty references</message>
@@ -1711,6 +1955,7 @@
 	<message xml:lang="de">Suche nach leeren Elementen</message>
 	<message xml:lang="it">Cerca gli elementi vuoti</message>
 	<message xml:lang="tr">Boþ birimleri ara</message>
+	<message xml:lang="es">Buscar referencias vacías</message>
 </label>
 <label define="TMSG_SEARCH_REF_TO_EL">
 	<message xml:lang="en">Search references to this element</message>
@@ -1718,6 +1963,7 @@
 	<message xml:lang="de">Suche nach leeren Verknüpfungen</message>
 	<message xml:lang="it">Cerca i riferimenti vuoti</message>
 	<message xml:lang="tr">Boþ kaynaklarý ara</message>
+	<message xml:lang="es">Buscar referencias para este elemento</message>
 </label>
 <label define="TMSG_LINK">
 	<message xml:lang="en">Link</message>
@@ -1725,6 +1971,7 @@
 	<message xml:lang="de">Suche nach Verknüpfungen zu diesem Dokument</message>
 	<message xml:lang="it">Cerca i riferimenti a questo elemento</message>
 	<message xml:lang="tr">Bu birime kaynaklarý ara</message>
+	<message xml:lang="es">Enlace</message>
 </label>
 <label define="TMSG_REF_IN_DOC">
 	<message xml:lang="en">Reference in document</message>
@@ -1732,6 +1979,7 @@
 	<message xml:lang="de">Verknüpfung</message>
 	<message xml:lang="it">Collegamento</message>
 	<message xml:lang="tr">Baðlantý</message>
+	<message xml:lang="es">Referencia en documento</message>
 </label>
 <label define="TMSG_SEARCH">
 	<message xml:lang="en">Search</message>
@@ -1739,6 +1987,7 @@
 	<message xml:lang="de">Verknüpfungsziel im Dokument</message>
 	<message xml:lang="it">Riferimento nel documento</message>
 	<message xml:lang="tr">Belge içi kaynak</message>
+	<message xml:lang="es">Buscar</message>
 </label>
 <label define="TMSG_EL_RO">
 	<message xml:lang="en">Read only element</message>
@@ -1746,6 +1995,7 @@
 	<message xml:lang="de">Suche</message>
 	<message xml:lang="it">Cerca</message>
 	<message xml:lang="tr">Ara</message>
+	<message xml:lang="es">Elemento de sólo lectura</message>
 </label>
 <label define="TMSG_NOTHING_TO_REPLACE">
 	<message xml:lang="en">Nothing to replace</message>
@@ -1753,6 +2003,7 @@
 	<message xml:lang="de">Schreibgeschütztes Dokument</message>
 	<message xml:lang="it">Elemento a sola lettura</message>
 	<message xml:lang="tr">Salt-oku birim</message>
+	<message xml:lang="es">Nada que sustituir</message>
 </label>
 <label define="TMSG_OPEN">
 	<message xml:lang="en">Open</message>
@@ -1760,6 +2011,7 @@
 	<message xml:lang="de">Nichts zu ersetzen</message>
 	<message xml:lang="it">Nulla da rimpiazzare</message>
 	<message xml:lang="tr">Deðiþtirilecek bir þey yok</message>
+	<message xml:lang="es">Abrir</message>
 </label>
 <label define="TMSG_STD_CHAR">
 	<message xml:lang="en">Standard characters</message>
@@ -1767,6 +2019,7 @@
 	<message xml:lang="de">Öffne</message>
 	<message xml:lang="it">Apri</message>
 	<message xml:lang="tr">Aç</message>
+	<message xml:lang="es">Caracteres estandar</message>
 </label>
 <label define="TMSG_STD_GRAPHICS">
 	<message xml:lang="en">Standard graphics</message>
@@ -1774,6 +2027,7 @@
 	<message xml:lang="de">Standard Zeichensatz</message>
 	<message xml:lang="it">Caratteri standard</message>
 	<message xml:lang="tr">Standart karakterler</message>
+	<message xml:lang="es">Graficos estandar</message>
 </label>
 <label define="TMSG_STD_FORMAT">
 	<message xml:lang="en">Standard format</message>
@@ -1781,6 +2035,7 @@
 	<message xml:lang="de">Standard Grafik</message>
 	<message xml:lang="it">Grafica standard</message>
 	<message xml:lang="tr">Standart grafikler</message>
+	<message xml:lang="es">Formato etandar</message>
 </label>
 <label define="TMSG_STD_GEOMETRY">
 	<message xml:lang="en">Standard geometry</message>
@@ -1788,6 +2043,7 @@
 	<message xml:lang="de">Standard Format</message>
 	<message xml:lang="it">Formato standard</message>
 	<message xml:lang="tr">Standart biçim</message>
+	<message xml:lang="es">Geometria estandar</message>
 </label>
 <label define="TMSG_TYPOGRAPHIC_POINTS">
 	<message xml:lang="en">pt</message>
@@ -1795,6 +2051,7 @@
 	<message xml:lang="de">Standard Geometrie</message>
 	<message xml:lang="it">Geometria standard</message>
 	<message xml:lang="tr">Standart geometri</message>
+	<message xml:lang="es">pt</message>
 </label>
 <label define="TMSG_LINE_STYLE">
 	<message xml:lang="en">Line style</message>
@@ -1802,6 +2059,7 @@
 	<message xml:lang="de">pt</message>
 	<message xml:lang="it">pt</message>
 	<message xml:lang="tr">pt</message>
+	<message xml:lang="es">Estilo de línea</message>
 </label>
 <label define="TMSG_LINE_WEIGHT">
 	<message xml:lang="en">Line weight</message>
@@ -1809,6 +2067,7 @@
 	<message xml:lang="de">Linienart</message>
 	<message xml:lang="it">Stile delle linee</message>
 	<message xml:lang="tr">Çizgi tarzý</message>
+	<message xml:lang="es">Ancho de línea</message>
 </label>
 <label define="TMSG_FILL_PATTERN">
 	<message xml:lang="en">Fill pattern</message>
@@ -1816,6 +2075,7 @@
 	<message xml:lang="de">Linienstärke</message>
 	<message xml:lang="it">Spessore delle linee</message>
 	<message xml:lang="tr">Çizgi aðýrlýðý</message>
+	<message xml:lang="es">Rellenar modelo</message>
 </label>
 <label define="TMSG_SPLIT">
 	<message xml:lang="en">Split</message>
@@ -1823,6 +2083,7 @@
 	<message xml:lang="de">Füllmuster</message>
 	<message xml:lang="it">Motivo di riempimento</message>
 	<message xml:lang="tr">Doldurma þekli</message>
+	<message xml:lang="es">Dividir</message>
 </label>
 <label define="TMSG_OBJECT_TYPE">
 	<message xml:lang="en">Object type</message>
@@ -1830,6 +2091,7 @@
 	<message xml:lang="de">Teilen</message>
 	<message xml:lang="it">Dividi</message>
 	<message xml:lang="tr">Ayýr</message>
+	<message xml:lang="es">Tipo de objeto</message>
 </label>
 <label define="TMSG_GOTO_PAGE">
 	<message xml:lang="en">Goto page number:</message>
@@ -1837,6 +2099,7 @@
 	<message xml:lang="de">Objekttyp</message>
 	<message xml:lang="it">Tipo di oggetto</message>
 	<message xml:lang="tr">Nesne türü</message>
+	<message xml:lang="es">Ir a página número:</message>
 </label>
 <label define="TMSG_ANY">
 	<message xml:lang="en">Any</message>
@@ -1844,6 +2107,7 @@
 	<message xml:lang="de">Gehe zu Seite Nr.:</message>
 	<message xml:lang="it">Vai a pagina numero:</message>
 	<message xml:lang="tr">Numaralý sayfaya git</message>
+	<message xml:lang="es">Cualquiera</message>
 </label>
 <label define="TMSG_ATTR_TO_SEARCH">
 	<message xml:lang="en">Attribute to search</message>
@@ -1851,6 +2115,7 @@
 	<message xml:lang="de">egal</message>
 	<message xml:lang="it">Any</message>
 	<message xml:lang="tr">Herhangi</message>
+	<message xml:lang="es">Atributo para buscar</message>
 </label>
 <label define="TMSG_TYPE_TO_SEARCH">
 	<message xml:lang="en">Type to search</message>
@@ -1858,6 +2123,7 @@
 	<message xml:lang="de">Attribut suchen</message>
 	<message xml:lang="it">Attributo da cercare</message>
 	<message xml:lang="tr">Aranacak olan özellik</message>
+	<message xml:lang="es">Tipo para buscar</message>
 </label>
 <label define="TMSG_NATURES">
 	<message xml:lang="en">Natures</message>
@@ -1865,6 +2131,7 @@
 	<message xml:lang="de">Suche nach Typ</message>
 	<message xml:lang="it">Tipo da cercare</message>
 	<message xml:lang="tr">Aranacak olan tip</message>
+	<message xml:lang="es">Natures</message>
 </label>
 <label define="TMSG_VALUE_OF_ATTR">
 	<message xml:lang="en">Attribute value:</message>
@@ -1872,6 +2139,7 @@
 	<message xml:lang="de">Dokumententyp</message>
 	<message xml:lang="it">Nature</message>
 	<message xml:lang="tr">Natures</message>
+	<message xml:lang="es">Valores de atributo:</message>
 </label>
 <label define="TMSG_UNKNOWN_ATTR">
 	<message xml:lang="en">Unknown attribute</message>
@@ -1879,6 +2147,7 @@
 	<message xml:lang="de">Wert des Attributs:</message>
 	<message xml:lang="it">Valore dell\'attributo:</message>
 	<message xml:lang="tr">Özellik deðeri</message>
+	<message xml:lang="es">Atributo desconocido</message>
 </label>
 <label define="TMSG_CREATE_EL_REF">
 	<message xml:lang="en">Create referenced element</message>
@@ -1886,6 +2155,7 @@
 	<message xml:lang="de">Unbekanntes Attribut</message>
 	<message xml:lang="it">Attributo sconosciuto</message>
 	<message xml:lang="tr">Bilinmeyen özellik</message>
+	<message xml:lang="es">Crear elemento referenciado</message>
 </label>
 <label define="TMSG_SHOW_EL_REF">
 	<message xml:lang="en">Show referenced element</message>
@@ -1893,6 +2163,7 @@
 	<message xml:lang="de">Erzeuge Verknüpfungsziel</message>
 	<message xml:lang="it">Crea l\'elemento riferito</message>
 	<message xml:lang="tr">Kaynaklý birim yarat</message>
+	<message xml:lang="es">Mostrar elemento referenciado</message>
 </label>
 <label define="TMSG_MODE_INSERT">
 	<message xml:lang="en">Insertion mode</message>
@@ -1900,6 +2171,7 @@
 	<message xml:lang="de">Zeige Verknüpfungsziel</message>
 	<message xml:lang="it">Mostra l\'elemento riferito</message>
 	<message xml:lang="tr">Kaynaklý birim göster</message>
+	<message xml:lang="es">Modo insercion</message>
 </label>
 <label define="TMSG_CANCEL">
 	<message xml:lang="en">Cancel</message>
@@ -1907,6 +2179,7 @@
 	<message xml:lang="de">Einfügemodus</message>
 	<message xml:lang="it">Modo di inserzione</message>
 	<message xml:lang="tr">Ekleme kipi</message>
+	<message xml:lang="es">Cancelar</message>
 </label>
 <label define="TMSG_ERROR_PS_TRANSLATION">
 	<message xml:lang="en">Error in PostScript translation</message>
@@ -1914,6 +2187,7 @@
 	<message xml:lang="de">Abbrechen</message>
 	<message xml:lang="it">Annulla</message>
 	<message xml:lang="tr">Vazgeç</message>
+	<message xml:lang="es">Error in traducción PostScript</message>
 </label>
 <label define="TMSG_UNKNOWN_PRINTER">
 	<message xml:lang="en">Command refused by the spooler "%s"</message>
@@ -1921,6 +2195,7 @@
 	<message xml:lang="de">Fehler in der PostScript-Erkennung</message>
 	<message xml:lang="it">Errore nella traduzione in PostScript</message>
 	<message xml:lang="tr">PostScript dönüþümünde hata</message>
+	<message xml:lang="es">Orden rechazada por el spooler "%s"</message>
 </label>
 <label define="TMSG_CANNOT_CREATE_PS">
 	<message xml:lang="en">Cannot create "%s"</message>
@@ -1928,6 +2203,7 @@
 	<message xml:lang="de">Auftrag vom Druckspooler "%s" zurückgeweisen</message>
 	<message xml:lang="it">Comando rifiutato dallo spooler "%s"</message>
 	<message xml:lang="tr">Komut "%s" tarafýndan reddedildi.</message>
+	<message xml:lang="es">No puedo crear "%s"</message>
 </label>
 <label define="TMSG_GLOBAL_LAYOUT">
 	<message xml:lang="en">Global Layout</message>
@@ -1935,6 +2211,7 @@
 	<message xml:lang="de">Kann "%s" nicht erzeugen</message>
 	<message xml:lang="it">Impossibile creare "%s"</message>
 	<message xml:lang="tr">"%s" yaratýlamadý</message>
+	<message xml:lang="es">Disposición global</message>
 </label>
 <label define="TMSG_UNABLE_LINK_NEW_ELEM">
 	<message xml:lang="en">Unable to link the new element</message>
@@ -1942,6 +2219,7 @@
 	<message xml:lang="de">Seitenformat</message>
 	<message xml:lang="it">Presentazione generale</message>
 	<message xml:lang="tr">Genel biçim</message>
+	<message xml:lang="es">No puedo enlazar el nuevo elemento</message>
 </label>
 <label define="TMSG_CHAR_ENCODING">
 	<message xml:lang="en">Character encoding</message>
@@ -1949,6 +2227,7 @@
 	<message xml:lang="de">Kann des erzeugte Element nicht verweisen</message>
 	<message xml:lang="it">Impossibile collegare il nuovo elemento</message>
 	<message xml:lang="tr">Yeni birime baðlantý yapýlamadý</message>
+	<message xml:lang="es">Codificacion de caracter</message>
 </label>
 <label define="TMSG_NO_LANGUAGE">
 	<message xml:lang="en">No language</message>
@@ -1956,6 +2235,7 @@
 	<message xml:lang="de">Zeichensatz</message>
 	<message xml:lang="it">Codifica dei caratteri</message>
 	<message xml:lang="tr">Karakter kodlamasý</message>
+	<message xml:lang="es">Sin idioma</message>
 </label>
 <label define="TMSG_OVERLINE">
 	<message xml:lang="en">Overline</message>
@@ -1963,6 +2243,7 @@
 	<message xml:lang="de">Keine Sprache</message>
 	<message xml:lang="it">Nessuna lingua</message>
 	<message xml:lang="tr">Dil yok</message>
+	<message xml:lang="es">Overline</message>
 </label>
 <label define="TMSG_DOCUMENT_FORMAT">
 	<message xml:lang="en">Document format</message>
@@ -1970,18 +2251,21 @@
 	<message xml:lang="de">Überstrichen</message>
 	<message xml:lang="it">Soprassegnato</message>
 	<message xml:lang="tr">Üstçizgi</message>
+	<message xml:lang="es">Formato de documento</message>
 </label>
 <label define="TMSG_EVENTS">
 	<message xml:lang="en">Events</message>
 	<message xml:lang="fr">Format de document</message>
 	<message xml:lang="de">Dokumentenformat</message>
 	<message xml:lang="it">Formato del documento</message>
+	<message xml:lang="es">Eventos</message>
 </label>
 <label define="TMSG_DEL_ATTR">
 	<message xml:lang="en">Remove attribute</message>
 	<message xml:lang="fr">Événements</message>
 	<message xml:lang="de">Ereignisse (Events)</message>
 	<message xml:lang="it">Eventi</message>
+	<message xml:lang="es">Eliminar atributos</message>
 </label>
 <label define="TMSG_PROFILE">
 	<message xml:lang="fr">Retire l'attribut</message>

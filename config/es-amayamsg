@@ -207,3 +207,5 @@
 205 Vertical
 206 Apaisado
 207 Activar FTP (experimental)
+208 **In the current Amaya profile:
+209 **Tags/attributes are ignored - see the log file

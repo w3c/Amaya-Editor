@@ -1,3 +1,4 @@
+# encoding= latin1
 0 Önerilerin sayýsý
 1 Kontrol ediliyor
 2 Atla ve sonraki
@@ -10,7 +11,7 @@
 9 Roma rakamlarý
 10 Aldýrma
 11 Hepsi büyük harf olan sözcükler
-12 Rakam içeren sözcükler 
+12 Rakam içeren sözcükler
 13 Parametre dosya hatasý
 14 Tuþtakýmý dosyasý yok
 15 Belge sözlüðü kaydedilemiyor

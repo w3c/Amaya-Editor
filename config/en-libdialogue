@@ -1,6 +1,7 @@
+# encoding= latin1
 0 X11 Error : %s\n
 1 View not found.
-2 Error while loading the dictionary: %s\n 
+2 Error while loading the dictionary: %s\n
 3 Missing file: %s\n
 4 Cannot write: %s
 5 Cannot find schema: %s
@@ -102,7 +103,7 @@
 101 Nothing to be pasted.
 102 Cannot open a new window. Close a window.
 103 *** Thot: Irrecoverable error ***
-104 modified documents, if any, will be saved 
+104 modified documents, if any, will be saved
 105 As it is
 106 Scaled
 107 Repeated
@@ -113,7 +114,7 @@
 112 Cannot open hyphen patterns file: %s
 113 Reading hyphen patterns file: %s
 114 Word too long for hyphenation: %s. Are you sure it's correct?
-115 Pixmap : Color error 
+115 Pixmap : Color error
 116 Pixmap : Open failed
 117 Pixmap : File invalid
 118 Pixmap : No memory
@@ -179,107 +180,106 @@
 178 PostScript file
 179 Printer
 180 Search for
-182 UPPERCASE = lowercase
-183 Replace by
-184 Replace
-185 No replace
-186 Replace on request
-187 Automatic replace
-188 Search where
-189 Before selection
-190 Within selection
-191 After selection
-192 In the whole document
-193 Do not replace
-194 Default colors
-195 before closing it
-196 Close a document
-197 No_name
-198 Create a document
-199 Document type
-200 Rename
-201 Math symbols
-202 Graphics
-203 Latin alphabet
-204 Greek alphabet
-205 Presentation
-206 Files
-207 Open a document
-208 Document type
-209 Views
-210 Change filter
-211 Value not changed
-212 Increase
-213 Decrease
-214 Visibility
-215 Character size difference
-216 Zoom
-217 Save as
-218 Save
-219 Thot
-220 Format
-221 Copy
-222 Text
-223 Graphic
-224 Symbol
-225 Image
-226 Element type
-227 after
-228 before
-229 around
-230 Include
-231 Paste
-232 to create
-233 Insert
-234 Page break
-235 (Read only)
-236 Surround
-237 Change type
-238 Language of element
-239 Inherited language: 
-240 Do not change document!
-241 Not found
-242 Search in 
-243 Search empty elements
-244 Search empty references
-245 Search references to this element
-246 Link
-247 Reference in document
-248 Search
-249 Read only element
-250 Nothing to replace
-251 Open
-252 Standard characters
-253 Standard graphics
-254 Standard format
-255 Standard geometry
-256 pt
-257 Line style
-258 Line weight
-259 Fill pattern
-260 Split
-261 Object type
-262 Goto page number: 
-263 Any
-264 Attribute to search
-265 Type to search
-266 Natures
-267 Attribute value:
-268 Unknown attribute
-269 Create referenced element
-270 Show referenced element
-271 Insertion mode
-272 Cancel
-273 Error in PostScript translation
-274 Command refused by the spooler "%s"
-275 Cannot create "%s"
-276 Global Layout
-277 Unable to link the new element
-278 Character encoding
-279 No language
-280 Overline
-281 Document format
-282 Events
-283 Remove attribute
-285 Left button sets the selection color
-286 Middle or Right button sets the caret color
+181 UPPERCASE = lowercase
+182 Replace by
+183 Replace
+184 No replace
+185 Replace on request
+186 Automatic replace
+187 Search where
+188 Before selection
+189 Within selection
+190 After selection
+191 In the whole document
+192 Do not replace
+193 Default colors
+194 before closing it
+195 Close a document
+196 No_name
+197 Create a document
+198 Document type
+199 Rename
+200 Math symbols
+201 Graphics
+202 Latin alphabet
+203 Greek alphabet
+204 Presentation
+205 Files
+206 Open a document
+207 Document type
+208 Views
+209 Change filter
+210 Value not changed
+211 Increase
+212 Decrease
+213 Visibility
+214 Character size difference
+215 Zoom
+216 Save as
+217 Save
+218 Thot
+219 Format
+220 Copy
+221 Text
+222 Graphic
+223 Symbol
+224 Image
+225 Element type
+226 after
+227 before
+228 around
+229 Include
+230 Paste
+231 to create
+232 Insert
+233 Page break
+234 (Read only)
+235 Surround
+236 Change type
+237 Language of element
+238 Inherited language:
+239 Do not change document!
+240 Not found
+241 Search in
+242 Search empty elements
+243 Search empty references
+244 Search references to this element
+245 Link
+246 Reference in document
+247 Search
+248 Read only element
+249 Nothing to replace
+250 Open
+251 Standard characters
+252 Standard graphics
+253 Standard format
+254 Standard geometry
+255 pt
+256 Line style
+257 Line weight
+258 Fill pattern
+259 Split
+260 Object type
+261 Goto page number:
+262 Any
+263 Attribute to search
+264 Type to search
+265 Natures
+266 Attribute value:
+267 Unknown attribute
+268 Create referenced element
+269 Show referenced element
+270 Insertion mode
+271 Cancel
+272 Error in PostScript translation
+273 Command refused by the spooler "%s"
+274 Cannot create "%s"
+275 Global Layout
+276 Unable to link the new element
+277 Character encoding
+278 No language
+279 Overline
+280 Document format
+281 Events
+282 Remove attribute
+282 **Remove attribute

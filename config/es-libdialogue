@@ -1,3 +1,4 @@
+# encoding= latin1
 0 Error de X11 : %s\n
 1 Vista no encontrada.
 2 Error cargando el diccionario: %s\n
@@ -109,14 +110,14 @@
 108 X Repetido
 109 Y Repetido
 110 Prematuro EOF
-111 No hay cuadro acotado en fichero ps  %s
+111 No hay cuadro acotado en fichero ps %s
 112 No puedo abrir fichero de modelo hyphen: %s
 113 Leyendo fichero de modelo hyphen: %s
 114 Palabra demasiado larga para hyphenacion: %s. ¿Está seguro de que es correcta?
-115 Pixmap : Color error 
+115 Pixmap : Color error
 116 Pixmap : Fallo de apertura
 117 Pixmap : Ficharo invalido
-118 Pixmap : No  hay memoria
+118 Pixmap : No hay memoria
 119 Pixmap : Fallo de color
 120 No puedo incluir el fichero %s
 121 No puedo crear el fichero %s
@@ -179,107 +180,106 @@
 178 Fichero PostScript
 179 Impresora
 180 Buscar
-182 MAYÚSCULAS = minusculas
-183 Sustituir por
-184 Sustituir
-185 No sustituir
-186 Sustituir a solicitud
-187 Sustitución automatica
-188 Buscar donde
-189 Antes selección
-190 En seleccion
-191 Tras seleccion
-192 En todo el documento
-193 No sustituir
-194 Colores por omisión
-195 antes de cerrarlo
-196 Cierre un documento
-197 Anónimo
-198 Crear un documento
-199 Tipo de documento
-200 Renombrar
-201 Símbolos matemáticos
-202 Graficos
-203 Alfabeto latino
-204 Alfabet griego
-205 Presentacion
-206 Ficheros
-207 Abrir un documento
-208 Tipo de documento
-209 Vistas
-210 Cambiar filtro
-211 Valor no modificado
-212 Incrementar
-213 Decrementar
-214 Visibilidad
-215 Diferencia de tamaño de caracter
-216 Zoom
-217 Guardar como
-218 Guardar
-219 Thot
-220 Formato
-221 Copiar
-222 Texto
-223 Grafico
-224 Símbolo
-225 Imagen
-226 Tipo de elemento
-227 después
-228 antes
-229 alrededor
-230 Incluir
-231 Pegar
-232 crear
-233 Insertar
-234 Fin de página
-235 (Sólo lectura)
-236 Surround
-237 Cambiar tipo
-238 Idioma de elemento
-239 Idioma heredado:
-240 ¡No cambie el documento!
-241 No encontrado
-242 Buscar en
-243 Buscar elementos vacíos
-244 Buscar referencias vacías
-245 Buscar referencias para este elemento
-246 Enlace
-247 Referencia en documento
-248 Buscar
-249 Elemento de sólo lectura
-250 Nada que sustituir
-251 Abrir
-252 Caracteres estandar
-253 Graficos estandar
-254 Formato etandar
-255 Geometria estandar
-256 pt
-257 Estilo de línea
-258 Ancho de línea
-259 Rellenar modelo
-260 Dividir
-261 Tipo de objeto
-262 Ir a página número:
-263 Cualquiera
-264 Atributo para buscar
-265 Tipo para buscar
-266 Natures
-267 Valores de atributo:
-268 Atributo desconocido
-269 Crear elemento referenciado
-270 Mostrar elemento referenciado
-271 Modo insercion
-272 Cancelar
-273 Error in traducción PostScript
-274 Orden rechazada por el spooler "%s"
-275 No puedo crear "%s"
-276 Disposición global
-277 No puedo enlazar el nuevo elemento
-278 Codificacion de caracter
-279 Sin idioma
-280 Overline
-281 Formato de documento
-282 Eventos
-283 Eliminar atributos
-285 El botón izquierdo fija el color de la selección
-286 El botón central o derecho fija el color intercalado
+181 MAYÚSCULAS = minusculas
+182 Sustituir por
+183 Sustituir
+184 No sustituir
+185 Sustituir a solicitud
+186 Sustitución automatica
+187 Buscar donde
+188 Antes selección
+189 En seleccion
+190 Tras seleccion
+191 En todo el documento
+192 No sustituir
+193 Colores por omisión
+194 antes de cerrarlo
+195 Cierre un documento
+196 Anónimo
+197 Crear un documento
+198 Tipo de documento
+199 Renombrar
+200 Símbolos matemáticos
+201 Graficos
+202 Alfabeto latino
+203 Alfabet griego
+204 Presentacion
+205 Ficheros
+206 Abrir un documento
+207 Tipo de documento
+208 Vistas
+209 Cambiar filtro
+210 Valor no modificado
+211 Incrementar
+212 Decrementar
+213 Visibilidad
+214 Diferencia de tamaño de caracter
+215 Zoom
+216 Guardar como
+217 Guardar
+218 Thot
+219 Formato
+220 Copiar
+221 Texto
+222 Grafico
+223 Símbolo
+224 Imagen
+225 Tipo de elemento
+226 después
+227 antes
+228 alrededor
+229 Incluir
+230 Pegar
+231 crear
+232 Insertar
+233 Fin de página
+234 (Sólo lectura)
+235 Surround
+236 Cambiar tipo
+237 Idioma de elemento
+238 Idioma heredado:
+239 ¡No cambie el documento!
+240 No encontrado
+241 Buscar en
+242 Buscar elementos vacíos
+243 Buscar referencias vacías
+244 Buscar referencias para este elemento
+245 Enlace
+246 Referencia en documento
+247 Buscar
+248 Elemento de sólo lectura
+249 Nada que sustituir
+250 Abrir
+251 Caracteres estandar
+252 Graficos estandar
+253 Formato etandar
+254 Geometria estandar
+255 pt
+256 Estilo de línea
+257 Ancho de línea
+258 Rellenar modelo
+259 Dividir
+260 Tipo de objeto
+261 Ir a página número:
+262 Cualquiera
+263 Atributo para buscar
+264 Tipo para buscar
+265 Natures
+266 Valores de atributo:
+267 Atributo desconocido
+268 Crear elemento referenciado
+269 Mostrar elemento referenciado
+270 Modo insercion
+271 Cancelar
+272 Error in traducción PostScript
+273 Orden rechazada por el spooler "%s"
+274 No puedo crear "%s"
+275 Disposición global
+276 No puedo enlazar el nuevo elemento
+277 Codificacion de caracter
+278 Sin idioma
+279 Overline
+280 Formato de documento
+281 Eventos
+282 Eliminar atributos
+282 **Remove attribute

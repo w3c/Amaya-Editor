@@ -1,6 +1,7 @@
+# encoding= latin1
 0 Errore X11: %s\n
 1 Vista non trovata.
-2 Errore durante il caricamento del dizionario: %s\n 
+2 Errore durante il caricamento del dizionario: %s\n
 3 File mancante: %s\n
 4 Impossibile scrivere: %s
 5 Schema non trovato: %s
@@ -14,7 +15,7 @@
 13 Errore fatale: fonti di Thot non trovate
 14 Documento con colonne. Riimpagina.
 15 Memoria esaurita
-16 Errore fatale: impossibile connettersi a  X
+16 Errore fatale: impossibile connettersi a X
 17 Vista modificata prima della creazione
 18 Seleziona prima
 19 Non c\'è posto per la fonte %s
@@ -179,6 +180,7 @@
 178 File PostScript
 179 Stampante
 180 Cerca
+181 **UPPERCASE = lowercase
 182 MAIUSCOLE = minuscole
 183 Rimpiazza con
 184 Rimpiazza
@@ -236,7 +238,7 @@
 236 Ingloba
 237 Cambia tipo
 238 Lingua dell'elemento
-239 Lingua ereditata: 
+239 Lingua ereditata:
 240 Non modificate il documento!
 241 Non trovato
 242 Cerca in
@@ -259,7 +261,7 @@
 259 Motivo di riempimento
 260 Dividi
 261 Tipo di oggetto
-262 Vai a pagina numero: 
+262 Vai a pagina numero:
 263 Any
 264 Attributo da cercare
 265 Tipo da cercare
@@ -281,5 +283,3 @@
 281 Formato del documento
 282 Eventi
 283 Rimuovi l\'attributo
-285 Il tasto di sinistra setta il colore della selezione
-286 Il tasto centrale o di destra setta il colore del cursore

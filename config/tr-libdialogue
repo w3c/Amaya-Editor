@@ -1,6 +1,7 @@
+# encoding= latin1
 0 X11 Hatasý : %s\n
 1 Görünüm bulunamadý.
-2 Sözlük yüklerken hata: %s\n 
+2 Sözlük yüklerken hata: %s\n
 3 eksik dosya: %s\n
 4 Yazýlamýyor: %s
 5 Þema bulunamýyor: %s
@@ -113,7 +114,7 @@
 112 Bölme özellikleri dosyasý %s açýlamýyor
 113 Bölme özellikleri dosyasý %s okunuyor
 114 %s kelimesi bölünemeyecek kadar uzun, doðru olduðundan emin misiniz?
-115 Pixmap : Renk hatasý 
+115 Pixmap : Renk hatasý
 116 Pixmap : Okuma hatasý
 117 Pixmap : Dosya geçersiz
 118 Pixmap : Bellek yok
@@ -179,6 +180,7 @@
 178 PostScript dosya
 179 Yazýcý
 180 Arama
+181 **UPPERCASE = lowercase
 182 BÜYÜK HARF = küçük harf
 183 ile deðiþtir
 184 Deðiþtir
@@ -239,7 +241,7 @@
 239 Alýnan dil
 240 Belgeyi deðiþtirmeyin!
 241 Bulunamadý
-242 Ara  
+242 Ara
 243 Boþ birimleri ara
 244 Boþ kaynaklarý ara
 245 Bu birime kaynaklarý ara
@@ -259,14 +261,14 @@
 259 Doldurma þekli
 260 Ayýr
 261 Nesne türü
-262 Numaralý sayfaya git 
+262 Numaralý sayfaya git
 263 Herhangi
 264 Aranacak olan özellik
 265 Aranacak olan tip
 266 Natures
 267 Özellik deðeri
 268 Bilinmeyen özellik
-269 Kaynaklý birim yarat 
+269 Kaynaklý birim yarat
 270 Kaynaklý birim göster
 271 Ekleme kipi
 272 Vazgeç
@@ -278,8 +280,6 @@
 278 Karakter kodlamasý
 279 Dil yok
 280 Üstçizgi
-281 **Document format
-282 **Events
-283 **Remove attribute
-285 **Left button sets the selection color
-286 **Middle or Right button sets the caret color
+281 **Events
+282 **Remove attribute
+282 **Remove attribute

@@ -86,20 +86,19 @@ sub init_label {
 			
 			
 
-#	the first line in witch we are interested can be (but not necessary)read	now
+#	the first line in which we are interested can be (but not necessary)read	now
 			if ( $continue == 0) {
 				close (LABEL) || warn "problem during LABEL'file $in_labelfile is closed: $!\n";
 				
-				my $choice = "no";
 				do {
 					print "\n\tPlease write this line at the begining of the good labels:\n",
 							"$comment_for_begining_of_h_file\n",
 							"\tInto $in_labelfile \n",
-							"\tAre you ok? (Yes/No):\t";
-					$choice = <STDIN>;
-					chomp $choice;				
+							"\tDone? (Yes/No):\t";
+					$_ = <STDIN>;
+					chomp;				
 				}
-				while (!defined ($choice) || $choice !~ /^y/i );
+				while (!defined ($_) || !/^y/i );
 				init_label ($in_labelfile, $comment_for_begining_of_h_file) ; 
 				##warning : recursivity, can do some errors
 			}
