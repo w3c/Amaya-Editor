@@ -2418,409 +2418,407 @@ int                 typeNum;
 PtrSSchema          pSS;
 PtrDocument         pDoc;
 boolean             Before;
-
 #endif /* __STDC__ */
 
 {
-   PtrElement          firstSel, lastSel, pNew, pF, pSibling, pEl, pElem,
-		       pElSplit, pSplitEl;
-   ElementType	       elType;
-   PtrDocument         pSelDoc;
-   ElementType	       selType;
-   NotifyElement       notifyEl;
-   NotifyOnElementType notifyElType;
-   int                 firstChar, lastChar, NSiblings, ancestorRule, rule;
-   boolean             InsertionPoint, ok, createAfter, splitElem, elConst,
-                       empty, selHead, selTail, done;
+  PtrElement          firstSel, lastSel, pNew, pF, pSibling, pEl;
+  PtrElement          pElem, pElSplit, pSplitEl;
+  ElementType	      elType, selType;
+  PtrDocument         pSelDoc;
+  NotifyElement       notifyEl;
+  NotifyOnElementType notifyElType;
+  int                 firstChar, lastChar, NSiblings, ancestorRule, rule;
+  boolean             InsertionPoint, ok, createAfter, splitElem, elConst;
+  boolean             empty, selHead, selTail, done;
 
-   NSiblings = 0;
-   if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,
-			     &lastChar))
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
-   else if (pSelDoc != pDoc)
-      /* the document asking for the creation of a new element is NOT the */
-      /* document containing the current selection */
-      return;
-   else if (pSelDoc->DocReadOnly)
-      TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
-   else
-      /* il y a bien une selection et le document est modifiable */
-     {
-	elConst = FALSE;
-	empty = FALSE;
-	InsertionPoint = (firstSel == lastSel && firstSel->ElTerminal &&
-			  firstSel->ElLeafType == LtText &&
-			  firstChar == lastChar && firstChar > 0);
-	/* Peut-on considerer la selection courante comme un simple point */
-	/* d'insertion ? */
-	if (!InsertionPoint)
-	   if (firstSel == lastSel)
-	      /* un seul element selectionne' */
-	      if (GetElementConstruct (firstSel) == CsConstant)
-		 /* c'est une constante, on va creer le nouvel element devant */
+  NSiblings = 0;
+  if (!GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar))
+    TtaDisplaySimpleMessage (INFO, LIB, TMSG_SEL_EL);
+  else if (pSelDoc != pDoc)
+    /* the document asking for the creation of a new element is NOT the */
+    /* document containing the current selection */
+    return;
+  else if (pSelDoc->DocReadOnly)
+    TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
+  else
+    /* il y a bien une selection et le document est modifiable */
+    {
+      elConst = FALSE;
+      empty = FALSE;
+      InsertionPoint = (firstSel == lastSel 
+			&& firstChar == lastChar
+			&& firstSel->ElTerminal
+			&& ((firstSel->ElLeafType == LtText && firstChar > 0)
+			    || firstSel->ElLeafType == LtPicture));
+      /* Peut-on considerer la selection courante comme un simple point */
+      /* d'insertion ? */
+      if (!InsertionPoint)
+	if (firstSel == lastSel)
+	  /* un seul element selectionne' */
+	  if (GetElementConstruct (firstSel) == CsConstant)
+	    /* c'est une constante, on va creer le nouvel element devant */
+	    {
+	      InsertionPoint = TRUE;
+	      elConst = TRUE;
+	    }
+      if (!InsertionPoint)
+	if (firstSel == lastSel)
+	  if (EmptyElement (firstSel))
+	    /* c'est un element vide unique */
+	    {
+	      InsertionPoint = TRUE;
+	      empty = TRUE;
+	    }
+
+      if (!InsertionPoint)
+	/* il n'y a pas un simple point d'insertion, mais du texte et/ou */
+	/* un ou des elements selectionne's */
+	{
+	  /* Coupe les elements du debut et de la fin de la selection s'ils */
+	  /* sont partiellement selectionnes */
+	  TtaClearViewSelections ();
+	  CutSelection (pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar);
+	  AbstractImageUpdated (pSelDoc);
+	  RedisplayDocViews (pSelDoc);
+	  if (lastSel->ElTerminal && lastSel->ElLeafType == LtText &&
+	      lastChar >= lastSel->ElTextLength)
+	    lastChar = 0;
+	  if (Before)
+	    InsertionPoint = TRUE;
+	  else if (firstChar <= 1 && lastChar == 0)
+	    /* le premier et le dernier element selectionnes sont
+	       entierement selectionne's */
+	    /* on essaie de changer le type des elements selectionne's */
+	    {
+	      /* on essaie d'abord de transformer l'ensemble des elements
+		 selectionne's en un element du type demande' */
+	      ok = ChangeTypeOfElements (firstSel, lastSel, pSelDoc, typeNum, pSS);
+	      if (!ok)
+		/* ca n'a pas marche'. essaie les transformations de */
+		/* type par patterns */
 		{
-		   InsertionPoint = TRUE;
-		   elConst = TRUE;
+		  GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,&lastChar);
+		  pEl=firstSel;
+		  selType.ElTypeNum= firstSel->ElTypeNumber;
+		  selType.ElSSchema = (SSchema)(firstSel->ElStructSchema);
+		  while(selType.ElTypeNum !=0 && pEl!=NULL)
+		    {
+		      pEl= NextInSelection(pEl,lastSel);
+		      if (pEl!= NULL &&
+			  (pEl->ElTypeNumber!=selType.ElTypeNum
+			   || pEl->ElStructSchema->SsCode != ((PtrSSchema)(selType.ElSSchema))->SsCode))
+			selType.ElTypeNum=0;
+		    }
+		  notifyElType.event = TteElemTransform;
+		  notifyElType.document = (Document) IdentDocument (pSelDoc);
+		  notifyElType.elementType.ElTypeNum = selType.ElTypeNum;
+		  notifyElType.elementType.ElSSchema = selType.ElSSchema;
+		  notifyElType.element = (Element) (firstSel);
+		  notifyElType.targetElementType.ElTypeNum = typeNum;
+		  notifyElType.targetElementType.ElSSchema = (SSchema) pSS;
+		  
+		  ok = !CallEventType((NotifyEvent *) & notifyElType,TRUE);
 		}
-	if (!InsertionPoint)
-	   if (firstSel == lastSel)
-	      if (EmptyElement (firstSel))
-		 /* c'est un element vide unique */
+	      /* si ca n'a pas marche' et si plusieurs elements sont
+		 selectionne's, on essaie de transformer chaque element
+		 selectionne' en un element du type demande' */
+	      if (!ok)
+		if (firstSel != lastSel)
+		  {
+		    if (firstSel->ElParent != lastSel->ElParent)
+		      /* essaie de ramener la selection a une suite de
+			 freres */
+		      {
+			firstChar = 0;
+			lastChar = 0;
+			if (ThotLocalActions[T_selectsiblings] != NULL)
+			  ThotLocalActions[T_selectsiblings] (&firstSel, &lastSel,
+							      &firstChar, &lastChar);
+		      }
+		    pEl = firstSel;
+		    do
+		      {
+			/* essaie de transformer un element */
+			ok = ChangeTypeOfElements (pEl, pEl, pSelDoc, typeNum, pSS);
+			if (ok)
+			  /* cherche l'element suivant de la selection */
+			  pEl = NextInSelection (pEl, lastSel);
+		      }
+		    while (pEl != NULL && ok);
+		  }
+	    }
+	  else
+	    /* on ne fait rien */
+	    return;
+	}
+      if (InsertionPoint)
+	/* il y a un simple point d'insertion */
+	{
+	  /* verifie si l'element a creer porte l'exception NoCreate */
+	  if (TypeHasException (ExcNoCreate, typeNum, pSS))
+	    /* abandon */
+	    return;
+	  
+	  if (elConst || empty)
+	    {
+	      selHead = TRUE;
+	      selTail = FALSE;
+	    }
+	  else
+	    {
+	      /* la selection commence-t-elle en tete d'un element ? */
+	      selHead = (firstSel == lastSel &&
+			 firstSel->ElPrevious == NULL &&
+			 lastSel->ElTerminal &&
+			 (lastSel->ElLeafType == LtText || lastSel->ElLeafType == LtPicture) &&
+			 firstChar <= 1);
+	      /* la selection est-t-elle a la fin de la derniere feuille
+		 de texte d'un element */
+	      selTail = (firstSel == lastSel &&
+			 lastSel->ElNext == NULL &&
+			 lastSel->ElTerminal &&
+			 (lastSel->ElLeafType == LtText || lastSel->ElLeafType == LtPicture) &&
+			 firstChar > lastSel->ElTextLength);
+	    }
+	  
+	  /* verifie si la selection est en fin ou debut de paragraphe */
+	  if (selHead)
+	    {
+	      pEl = firstSel;
+	      firstChar = 0;
+	      createAfter = FALSE;
+	    }
+	  else if (selTail)
+	    {
+	      pEl = lastSel;
+	      firstChar = 0;
+	      createAfter = TRUE;
+	    }
+	  else
+	    {
+	      pEl = firstSel;
+	      createAfter = FALSE;
+	      if (lastSel->ElTerminal &&
+		  (lastSel->ElLeafType == LtText || lastSel->ElLeafType == LtPicture) &&
+		  firstChar > 1)
+		createAfter = TRUE;
+	    }
+	  /* on verifie si on peut couper un element ascendant en deux et
+	     creer le nouvel element entre les deux parties obtenues */
+	  ok = CanInsertBySplitting (&pEl, firstChar, &splitElem,
+				     &pSplitEl, &pElSplit, createAfter,
+				     typeNum, pSS, pSelDoc);
+	  if (ok)
+	    if (empty)
+	      if (!EmptyElement (pEl))
+		empty = FALSE;
+
+	  ancestorRule = 0;
+	  if (!ok)
+	    /* si l'element a creer apparait dans le schema de structure
+	       comme un element de liste ou d'agregat, on essaie de creer
+	       une telle liste ou un tel agregat */
+	    {
+	      rule = typeNum;
+	      while (rule > 0 && !ok)
 		{
-		   InsertionPoint = TRUE;
-		   empty = TRUE;
+		  /* on cherche d'abord une regle CsList */
+		  ancestorRule = ListRuleOfElem (rule, pSS);
+		  if (ancestorRule == 0)
+		    /* Pas trouve' de regle Liste On cherche une regle 
+		       Aggregate */
+		    ancestorRule = AggregateRuleOfElem (rule, pSS);
+		  if (ancestorRule == 0)
+		    rule = 0;
+		  else
+		    {
+		      ok = CanInsertBySplitting (&pEl, firstChar,
+						 &splitElem, &pSplitEl, &pElSplit, createAfter,
+						 ancestorRule, pSS, pSelDoc);
+		      if (!ok && ancestorRule > 0)
+			rule = ancestorRule;
+		    }
 		}
-	if (!InsertionPoint)
-	   /* il n'y a pas un simple point d'insertion, mais du texte et/ou */
-	   /* un ou des elements selectionne's */
-	  {
-	     /* Coupe les elements du debut et de la fin de la selection s'ils */
-	     /* sont partiellement selectionnes */
-	     TtaClearViewSelections ();
-	     CutSelection (pSelDoc, &firstSel, &lastSel, &firstChar, &lastChar);
-	     AbstractImageUpdated (pSelDoc);
-	     RedisplayDocViews (pSelDoc);
-	     if (lastSel->ElTerminal && lastSel->ElLeafType == LtText &&
-		 lastChar >= lastSel->ElTextLength)
-		lastChar = 0;
-	     if (Before)
-		InsertionPoint = TRUE;
-	     else if (firstChar <= 1 && lastChar == 0)
-		/* le premier et le dernier element selectionnes sont
-		   entierement selectionne's */
-		/* on essaie de changer le type des elements selectionne's */
-	       {
-		  /* on essaie d'abord de transformer l'ensemble des elements
-		     selectionne's en un element du type demande' */
-		  ok = ChangeTypeOfElements (firstSel, lastSel, pSelDoc, typeNum,
-					  pSS);
-		  if (!ok)
-		     /* ca n'a pas marche'. essaie les transformations de */
-		     /* type par patterns */
-		     {
-                        GetCurrentSelection (&pSelDoc, &firstSel, &lastSel, &firstChar,&lastChar);
-                        pEl=firstSel;
-                        selType.ElTypeNum= firstSel->ElTypeNumber;
-                        selType.ElSSchema = (SSchema)(firstSel->ElStructSchema);
-                        while(selType.ElTypeNum !=0 && pEl!=NULL)
-                          {
-                             pEl= NextInSelection(pEl,lastSel);
-			     if (pEl!= NULL && (pEl->ElTypeNumber!=selType.ElTypeNum
-                                               || pEl->ElStructSchema->SsCode != ((PtrSSchema)(selType.ElSSchema))->SsCode))
-                                selType.ElTypeNum=0;
-                          }
-         		notifyElType.event = TteElemTransform;
-		  	notifyElType.document = (Document) IdentDocument (pSelDoc);
-		  	notifyElType.elementType.ElTypeNum = selType.ElTypeNum;
-		  	notifyElType.elementType.ElSSchema = selType.ElSSchema;
-		  	notifyElType.element = (Element) (firstSel);
-		  	notifyElType.targetElementType.ElTypeNum = typeNum;
-		  	notifyElType.targetElementType.ElSSchema = (SSchema) pSS;
-			
-			ok = !CallEventType((NotifyEvent *) & notifyElType,TRUE);
-		     }
-		  /* si ca n'a pas marche' et si plusieurs elements sont
-		     selectionne's, on essaie de transformer chaque element
-		     selectionne' en un element du type demande' */
-		  if (!ok)
-		     if (firstSel != lastSel)
-		       {
-			  if (firstSel->ElParent != lastSel->ElParent)
-			     /* essaie de ramener la selection a une suite de
-			        freres */
-			    {
-			       firstChar = 0;
-			       lastChar = 0;
-			       if (ThotLocalActions[T_selectsiblings] != NULL)
-				  ThotLocalActions[T_selectsiblings] (&firstSel, &lastSel,
-						     &firstChar, &lastChar);
-			    }
-			  pEl = firstSel;
-			  do
-			    {
-			       /* essaie de transformer un element */
-			       ok = ChangeTypeOfElements (pEl, pEl, pSelDoc,
-						       typeNum, pSS);
-			       if (ok)
-				  /* cherche l'element suivant de la selection */
-				  pEl = NextInSelection (pEl, lastSel);
-			    }
-			  while (pEl != NULL && ok);
-		       }
-	       }
-	     else
-		/* on ne fait rien */
-		return;
-	  }
-	if (InsertionPoint)
-	   /* il y a un simple point d'insertion */
-	  {
-	     /* verifie si l'element a creer porte l'exception NoCreate */
-	     if (TypeHasException (ExcNoCreate, typeNum, pSS))
-		/* abandon */
-		return;
+	    }
+	  
+	  if (ok && pEl != NULL)
+	    {
+	      /* demande a l'application si on peut creer ce type d'element */
+	      notifyEl.event = TteElemNew;
+	      notifyEl.document = (Document) IdentDocument (pSelDoc);
+	      notifyEl.element = (Element) (pEl->ElParent);
+	      notifyEl.elementType.ElTypeNum = typeNum;
+	      notifyEl.elementType.ElSSchema = (SSchema) pSS;
+	      pF = pEl;
+	      NSiblings = 0;
+	      while (pF->ElPrevious != NULL)
+		{
+		  NSiblings++;
+		  pF = pF->ElPrevious;
+		}
+	      if (createAfter)
+		NSiblings++;
+	      notifyEl.position = NSiblings;
+	      if (CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
+		/* l'application refuse */
+		pEl = NULL;
+	    }
 
-	     if (elConst || empty)
-	       {
-		  selHead = TRUE;
-		  selTail = FALSE;
-	       }
-	     else
-	       {
-		  /* la selection commence-t-elle en tete d'un element ? */
-		  selHead = (firstSel == lastSel &&
-			       firstSel->ElPrevious == NULL &&
-			       lastSel->ElTerminal &&
-			       lastSel->ElLeafType == LtText &&
-			       firstChar <= 1);
-		  /* la selection est-t-elle a la fin de la derniere feuille
-		     de texte d'un element */
-		  selTail = (firstSel == lastSel &&
-				lastSel->ElNext == NULL &&
-				lastSel->ElTerminal &&
-				lastSel->ElLeafType == LtText &&
-				firstChar > lastSel->ElTextLength);
-	       }
-
-	     /* verifie si la selection est en fin ou debut de paragraphe */
-	     if (selHead)
-	       {
-		  pEl = firstSel;
-		  firstChar = 0;
-		  createAfter = FALSE;
-	       }
-	     else if (selTail)
-	       {
-		  pEl = lastSel;
-		  firstChar = 0;
-		  createAfter = TRUE;
-	       }
-	     else
-	       {
-		  pEl = firstSel;
-		  createAfter = FALSE;
-		  if (lastSel->ElTerminal && lastSel->ElLeafType == LtText &&
-		      firstChar > 1)
-		     createAfter = TRUE;
-	       }
-	     /* on verifie si on peut couper un element ascendant en deux et
-		creer le nouvel element entre les deux parties obtenues */
-	     ok = CanInsertBySplitting (&pEl, firstChar, &splitElem,
-					&pSplitEl, &pElSplit, createAfter,
-					typeNum, pSS, pSelDoc);
-	     if (ok)
-		if (empty)
-		   if (!EmptyElement (pEl))
-		      empty = FALSE;
-	     ancestorRule = 0;
-	     if (!ok)
-		/* si l'element a creer apparait dans le schema de structure
-		   comme un element de liste ou d'agregat, on essaie de creer
-		   une telle liste ou un tel agregat */
-	       {
-		  rule = typeNum;
-		  while (rule > 0 && !ok)
+	  pNew = NULL;
+	  if (ok && pEl != NULL)
+	    {
+	      /* After element */
+	      ok = !CannotInsertNearElement (pEl, FALSE);
+	      if (ok)
+		{
+		  done = FALSE;
+		  if (splitElem)
+		    /* coupe l'element en deux */
 		    {
-		       /* on cherche d'abord une regle CsList */
-		       ancestorRule = ListRuleOfElem (rule, pSS);
-		       if (ancestorRule == 0)
-			  /* Pas trouve' de regle Liste On cherche une regle 
-			     Aggregate */
-			  ancestorRule = AggregateRuleOfElem (rule, pSS);
-		       if (ancestorRule == 0)
-			  rule = 0;
-		       else
-			 {
-			    ok = CanInsertBySplitting (&pEl, firstChar,
-				 &splitElem, &pSplitEl, &pElSplit, createAfter,
-				 ancestorRule, pSS, pSelDoc);
-			    if (!ok && ancestorRule > 0)
-			       rule = ancestorRule;
-			 }
-		    }
-	       }
-
-	     if (ok && pEl != NULL)
-	       {
-		  /* demande a l'application si on peut creer ce type d'element */
-		  notifyEl.event = TteElemNew;
-		  notifyEl.document = (Document) IdentDocument (pSelDoc);
-		  notifyEl.element = (Element) (pEl->ElParent);
-		  notifyEl.elementType.ElTypeNum = typeNum;
-		  notifyEl.elementType.ElSSchema = (SSchema) pSS;
-		  pF = pEl;
-		  NSiblings = 0;
-		  while (pF->ElPrevious != NULL)
-		    {
-		       NSiblings++;
-		       pF = pF->ElPrevious;
-		    }
-		  if (createAfter)
-		     NSiblings++;
-		  notifyEl.position = NSiblings;
-		  if (CallEventType ((NotifyEvent *) (&notifyEl), TRUE))
-		     /* l'application refuse */
-		     pEl = NULL;
-	       }
-	     pNew = NULL;
-	     if (ok && pEl != NULL)
-	       {
-                  ok = !CannotInsertNearElement (pEl,
-                                                 FALSE); /* After element */
-		  if (ok)
-		     {
-		     done = FALSE;
-		     if (splitElem)
-			/* coupe l'element en deux */
-		       {
-			  ok = BreakElement (pSplitEl, pElSplit, firstChar,
-					     FALSE);
-			  if (ok)
-			     {
-			     createAfter = TRUE;
-			     if (ancestorRule > 0)
+		      ok = BreakElement (pSplitEl, pElSplit, firstChar, FALSE);
+		      if (ok)
+			{
+			  createAfter = TRUE;
+			  if (ancestorRule > 0)
+			    {
+			      pElem = pSplitEl;
+			      do
 				{
-				pElem = pSplitEl;
-				do
-				   {
-				   ok = AllowedSibling (pElem, pDoc, typeNum,
-					       pSS, !createAfter, TRUE, FALSE);
-				   if (ok)
-				      {
+				  ok = AllowedSibling (pElem, pDoc, typeNum,
+						       pSS, !createAfter, TRUE, FALSE);
+				  if (ok)
+				    {
 				      pEl = pElem;
 				      done = TRUE;
-				      }
-				   else
-				      if (pElem->ElTerminal)
-					 pElem = NULL;
-				      else
-					{
-				        pElem = pElem->ElFirstChild;
-					while (pElem != NULL &&
-					       pElem->ElNext != NULL)
-					    pElem = pElem->ElNext;
-					}
-				   }
-				while (!ok && pElem != NULL);
+				    }
+				  else if (pElem->ElTerminal)
+				    pElem = NULL;
+				  else
+				    {
+				      pElem = pElem->ElFirstChild;
+				      while (pElem != NULL && pElem->ElNext != NULL)
+					pElem = pElem->ElNext;
+				    }
 				}
-			     }
-		       }
-		     if (!done)
-		       if (ancestorRule > 0)
-		          {
-		          pNew = NewSubtree (ancestorRule, pSS, pSelDoc,
-                                   pEl->ElAssocNum, FALSE, TRUE, TRUE, TRUE);
-			  elType.ElTypeNum = typeNum;
-			  elType.ElSSchema = (SSchema) pSS;
-			  TtaCreateDescent (IdentDocument (pSelDoc),
-					    (Element) pNew, elType);
-			  ok = True;
-		          }
-		     }
-		  if (ok)
-		    {
-		       /* annule la selection */
-		       TtaClearViewSelections ();
-		       if (!splitElem)
-		         if (firstSel->ElTerminal &&
-			     firstSel->ElLeafType == LtText &&
-			     firstChar > 1 &&
-			     firstChar <= firstSel->ElTextLength && !splitElem)
-			   {
-			     DestroyAbsBoxes (firstSel, pSelDoc, TRUE);
-			     AbstractImageUpdated (pSelDoc);
-			     SplitTextElement (firstSel, firstChar, pSelDoc, TRUE);
-			     CreateAllAbsBoxesOfEl (firstSel, pSelDoc);
-			     if (firstSel->ElNext != NULL)
-			        CreateAllAbsBoxesOfEl (firstSel->ElNext, pSelDoc);
-			   }
-		       if (pNew == NULL)
-		          pNew = NewSubtree (typeNum, pSS, pSelDoc,
-				     pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
-
-		       /* Insertion du nouvel element */
-		       if (createAfter)
-			 {
-			    pSibling = pEl->ElNext;
-			    FwdSkipPageBreak (&pSibling);
-			    InsertElementAfter (pEl, pNew);
-			    if (pSibling == NULL)
-			       /* l'element pEl n'est plus le dernier fils de
-			          son pere */
-			       ChangeFirstLast (pEl, pSelDoc, FALSE, TRUE);
-			 }
-		       else
-			 {
-			    pSibling = pEl->ElPrevious;
-			    InsertElementBefore (pEl, pNew);
-			    if (empty)
-			       /* on detruit l'element vide devant lequel on
-			          vient de creer un nouvel element */
-			      {
-				 /* envoie l'evenement ElemDelete.Pre a
-				    l'application */
-				 if (!SendEventSubTree (TteElemDelete, pSelDoc,
-							pEl, TTE_STANDARD_DELETE_LAST_ITEM))
-				   {
-				      /* detruit les paves de l'element vide a 
-				         detruire */
-				      DestroyAbsBoxes (pEl, pSelDoc, TRUE);
-				      AbstractImageUpdated (pSelDoc);
-				      /* prepare l'evenement ElemDelete.Post */
-				      notifyEl.event = TteElemDelete;
-				      notifyEl.document = (Document) IdentDocument (pSelDoc);
-				      notifyEl.element = (Element) (pEl->ElParent);
-				      notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-				      notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
-				      notifyEl.position = NSiblings + 1;
-				      pSibling = NextElement (pEl);
-				      /* retire l'element de l'arbre abstrait */
-				      RemoveElement (pEl);
-				      UpdateNumbers (pSibling, pEl, pSelDoc, TRUE);
-				      RedisplayCopies (pEl, pSelDoc, TRUE);
-				      DeleteElement (&pEl);
-				      /* envoie l'evenement ElemDelete.Post a l'application */
-				      CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
-				   }
-			      }
-			    else if (pSibling == NULL)
-			       /* l'element pEl n'est plus le premier fils de
-			          son pere */
-			       ChangeFirstLast (pEl, pSelDoc, TRUE, TRUE);
-			 }
-		       /* traite les exclusions des elements crees */
-		       RemoveExcludedElem (&pNew);
-		       /* traite les attributs requis des elements crees */
-		       AttachMandatoryAttributes (pNew, pSelDoc);
-		       if (pSelDoc->DocSSchema != NULL)
-			  /* le document n'a pas ete ferme' entre temps */
-			 {
-			    /* traitement des exceptions */
-			    CreationExceptions (pNew, pSelDoc);
-			    /* cree les paves du nouvel element et */
-			    /* met a jour ses voisins */
-			    CreateAllAbsBoxesOfEl (pNew, pSelDoc);
-			    /* Mise a jour des images abstraites */
-			    AbstractImageUpdated (pSelDoc);
-			    /* indique au Mediateur les modifications */
-			    RedisplayDocViews (pSelDoc);
-			    /* si on est dans un element copie' par inclusion,
-			       on met a jour les copies de cet element. */
-			    RedisplayCopies (pNew, pSelDoc, TRUE);
-			    UpdateNumbers (NextElement (pNew), pNew, pSelDoc, TRUE);
-			    /* Indiquer que le document est modifie' */
-			    pSelDoc->DocModified = TRUE;
-			    pSelDoc->DocNTypedChars += 30;
-			    /* envoie un evenement ElemNew.Post a l'application */
-			    NotifySubTree (TteElemNew, pSelDoc, pNew, 0);
-			    /* Replace la selection */
-			    SelectElementWithEvent (pSelDoc, FirstLeaf (pNew),
-						    TRUE, TRUE);
-			 }
+			      while (!ok && pElem != NULL);
+			    }
+			}
 		    }
-	       }
-	  }
-     }
+		  if (!done)
+		    if (ancestorRule > 0)
+		      {
+			pNew = NewSubtree (ancestorRule, pSS, pSelDoc,
+					   pEl->ElAssocNum, FALSE, TRUE, TRUE, TRUE);
+			elType.ElTypeNum = typeNum;
+			elType.ElSSchema = (SSchema) pSS;
+			TtaCreateDescent (IdentDocument (pSelDoc),
+					  (Element) pNew, elType);
+			ok = True;
+		      }
+		}
+	      if (ok)
+		{
+		  /* annule la selection */
+		  TtaClearViewSelections ();
+		  if (!splitElem)
+		    if (firstSel->ElTerminal &&
+			firstSel->ElLeafType == LtText &&
+			firstChar > 1 &&
+			firstChar <= firstSel->ElTextLength && !splitElem)
+		      {
+			DestroyAbsBoxes (firstSel, pSelDoc, TRUE);
+			AbstractImageUpdated (pSelDoc);
+			SplitTextElement (firstSel, firstChar, pSelDoc, TRUE);
+			CreateAllAbsBoxesOfEl (firstSel, pSelDoc);
+			if (firstSel->ElNext != NULL)
+			  CreateAllAbsBoxesOfEl (firstSel->ElNext, pSelDoc);
+		      }
+		  if (pNew == NULL)
+		    pNew = NewSubtree (typeNum, pSS, pSelDoc,
+				       pEl->ElAssocNum, TRUE, TRUE, TRUE, TRUE);
+		  
+		  /* Insertion du nouvel element */
+		  if (createAfter)
+		    {
+		      pSibling = pEl->ElNext;
+		      FwdSkipPageBreak (&pSibling);
+		      InsertElementAfter (pEl, pNew);
+		      if (pSibling == NULL)
+			/* l'element pEl n'est plus le dernier fils de
+			   son pere */
+			ChangeFirstLast (pEl, pSelDoc, FALSE, TRUE);
+		    }
+		  else
+		    {
+		      pSibling = pEl->ElPrevious;
+		      InsertElementBefore (pEl, pNew);
+		      if (empty)
+			/* on detruit l'element vide devant lequel on
+			   vient de creer un nouvel element */
+			{
+			  /* envoie l'evenement ElemDelete.Pre a
+			     l'application */
+			  if (!SendEventSubTree (TteElemDelete, pSelDoc,
+						 pEl, TTE_STANDARD_DELETE_LAST_ITEM))
+			    {
+			      /* detruit les paves de l'element vide a 
+				 detruire */
+			      DestroyAbsBoxes (pEl, pSelDoc, TRUE);
+			      AbstractImageUpdated (pSelDoc);
+			      /* prepare l'evenement ElemDelete.Post */
+			      notifyEl.event = TteElemDelete;
+			      notifyEl.document = (Document) IdentDocument (pSelDoc);
+			      notifyEl.element = (Element) (pEl->ElParent);
+			      notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
+			      notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
+			      notifyEl.position = NSiblings + 1;
+			      pSibling = NextElement (pEl);
+			      /* retire l'element de l'arbre abstrait */
+			      RemoveElement (pEl);
+			      UpdateNumbers (pSibling, pEl, pSelDoc, TRUE);
+			      RedisplayCopies (pEl, pSelDoc, TRUE);
+			      DeleteElement (&pEl);
+			      /* envoie l'evenement ElemDelete.Post a l'application */
+			      CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
+			    }
+			}
+		      else if (pSibling == NULL)
+			/* l'element pEl n'est plus le premier fils de
+			   son pere */
+			ChangeFirstLast (pEl, pSelDoc, TRUE, TRUE);
+		    }
+		  /* traite les exclusions des elements crees */
+		  RemoveExcludedElem (&pNew);
+		  /* traite les attributs requis des elements crees */
+		  AttachMandatoryAttributes (pNew, pSelDoc);
+		  if (pSelDoc->DocSSchema != NULL)
+		    /* le document n'a pas ete ferme' entre temps */
+		    {
+		      /* traitement des exceptions */
+		      CreationExceptions (pNew, pSelDoc);
+		      /* cree les paves du nouvel element et */
+		      /* met a jour ses voisins */
+		      CreateAllAbsBoxesOfEl (pNew, pSelDoc);
+		      /* Mise a jour des images abstraites */
+		      AbstractImageUpdated (pSelDoc);
+		      /* indique au Mediateur les modifications */
+		      RedisplayDocViews (pSelDoc);
+		      /* si on est dans un element copie' par inclusion,
+			 on met a jour les copies de cet element. */
+		      RedisplayCopies (pNew, pSelDoc, TRUE);
+		      UpdateNumbers (NextElement (pNew), pNew, pSelDoc, TRUE);
+		      /* Indiquer que le document est modifie' */
+		      pSelDoc->DocModified = TRUE;
+		      pSelDoc->DocNTypedChars += 30;
+		      /* envoie un evenement ElemNew.Post a l'application */
+		      NotifySubTree (TteElemNew, pSelDoc, pNew, 0);
+		      /* Replace la selection */
+		      SelectElementWithEvent (pSelDoc, FirstLeaf (pNew), TRUE, TRUE);
+		    }
+		}
+	    }
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
