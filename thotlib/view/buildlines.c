@@ -2071,7 +2071,7 @@ int                *height;
 	if (pChildAb == NULL)
 	  still = FALSE;
 	/* Est-ce que le pave est mort ? */
-	else if (pChildAb->AbDead || pChildAb->AbNotInLine)
+	else if (pChildAb->AbDead || pChildAb->AbNew || pChildAb->AbNotInLine)
 	  pChildAb = pChildAb->AbNext;
 	else if (pChildAb->AbBox->BxType == BoGhost)
 	  /* descend la hierarchie */

@@ -3030,7 +3030,7 @@ ThotBool            drag;
 	        /* attribute value */
 	       {
 		  CancelSelection ();
-		  if (TtaGetDisplayMode (FrameTable[frame].FrDoc) == DisplayImmediately)
+		  /*if (TtaGetDisplayMode (FrameTable[frame].FrDoc) == DisplayImmediately)*/
 		    SelectStringInAttr (pDoc, pAb, rank, rank, FALSE);
 		  InitSelectedCharInAttr = rank;
 	       }
