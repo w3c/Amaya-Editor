@@ -19,6 +19,7 @@
 #include "amaya.h"
 #include "css.h"
 #include "undo.h"
+#include "registry.h"
 #include "fetchHTMLname.h"
 #include "uaccess.h"
 

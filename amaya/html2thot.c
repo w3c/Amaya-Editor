@@ -4551,7 +4551,7 @@ int                 code;
 STRING              prefix;
 #endif
 {
-   int		 len, c = 0;
+   int		 len;
    Language	 lang, l;
    ElementType	 elType;
    Element	 elText;
