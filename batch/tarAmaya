@@ -180,6 +180,14 @@ echo "Platform -------> WX"
    ${AMAYADIR}/fonts/*.ttf \
    ${AMAYADIR}/fonts/*.TTF \
    ${AMAYADIR}/resources/xrc/*.xrc \
-   ${AMAYADIR}/resources/icons/*.gif \
+   ${AMAYADIR}/resources/icons/16x16/*.png \
+   ${AMAYADIR}/resources/icons/22x22/*.png \
+   ${AMAYADIR}/resources/icons/misc/*.png \
+   ${AMAYADIR}/resources/icons/16x16/*.ico \
+   ${AMAYADIR}/resources/icons/22x22/*.ico \
+   ${AMAYADIR}/resources/icons/misc/*.ico \
+   ${AMAYADIR}/resources/icons/16x16/*.gif \
+   ${AMAYADIR}/resources/icons/22x22/*.gif \
+   ${AMAYADIR}/resources/icons/misc/*.gif \
    ${AMAYADIR}/WX/bin/amaya \
    ${AMAYADIR}/WX/bin/print
