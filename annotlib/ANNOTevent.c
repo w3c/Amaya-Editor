@@ -15,7 +15,7 @@
  *                  for the byzance collaborative work application
  */
 
-#include "annot.h"
+#include "annotlib.h"
 
 /* some state variables */
 static char *annotUser; /* user id for saving the annotation */

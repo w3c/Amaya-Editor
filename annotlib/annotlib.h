@@ -14,7 +14,9 @@
  *                   for the byzance collaborative work application
  */
 
+/* app generated files */
 #include "HTML.h"
+#include "Annot.h"
 
 /* Amaya modules */
 

@@ -1,0 +1,11 @@
+APPLICATION Annot;
+
+DEFAULT
+   BEGIN
+	ElemActivate.Pre -> DoubleClick;
+	ElemClick.Pre -> SimpleClick;
+	DocClose.Post -> DocumentClosed;
+	DocSave.Pre -> DocumentToSave;
+   END;
+
+END

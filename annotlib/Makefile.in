@@ -33,6 +33,9 @@ clean :
 	$(RM) *.o
 	$(RM) $(ANNOTLIB)/AnnotP.PRS
 	$(RM) $(ANNOTLIB)/Annot.STR
+	$(RM) $(ANNOTLIB)/Annot.SCH
+	$(RM) $(ANNOTLIB)/AnnotAPP.c
+	$(RM) $(ANNOTLIB)/Annot.h
 
 install :
 
@@ -53,33 +56,59 @@ include .depends
 #########################################################################
 
 #
+# Translation schema compilation
+#
+compANNOTT: $(ANNOTLIB)/AnnotT.TRA
+
+$(ANNOTLIB)/AnnotT.TRA : ../../annotlib/AnnotT.T ../bin/tra
+	TRA=`pwd`/../bin/tra; \
+	cd $(ANNOTLIB); THOTDIR=`pwd`/.. ;export THOTDIR; \
+	$$TRA $(ALL_AMAYA_OPTIONS) AnnotT
+
+#
 # Structure schema compilation
 #
-compANNOT: $(ANNOTLIB)/Annot.STR
-$(ANNOTLIB)/Annot.STR : ../../annotlib/Annot.S ../bin/str ../bin/prs ../bin/tra
-	STR=`pwd`/../bin/str;PRS=`pwd`/../bin/prs;TRA=`pwd`/../bin/tra;\
+compANNOTA: $(ANNOTLIB)/Annot.SCH
+
+$(ANNOTLIB)/AnnotAPP.c \
+$(ANNOTLIB)/Annot.SCH : $(ANNOTLIB)/Annot.A ../bin/app
+	APP=`pwd`/../bin/app;\
 	cd $(ANNOTLIB); THOTDIR=`pwd`/.. ;export THOTDIR; \
-	$$STR $(ALL_AMAYA_OPTIONS) Annot ; \
-	$$PRS $(ALL_AMAYA_OPTIONS) AnnotP
+	$$APP $(ALL_AMAYA_OPTIONS) Annot.A
+
+AnnotAPP.o : $(ANNOTLIB)/AnnotAPP.c
+
+#
+# Structure schema compilation
+#
+
+compANNOTS: $(ANNOTLIB)/Annot.STR
+
+$(ANNOTLIB)/Annot.STR : ../../annotlib/Annot.S ../bin/str
+	STR=`pwd`/../bin/str; \
+	cd $(ANNOTLIB); THOTDIR=`pwd`/.. ;export THOTDIR; \
+	$$STR $(ALL_AMAYA_OPTIONS) Annot
 
 #
 # Presentation schemas compilation
 #
 compANNOTP: $(ANNOTLIB)/AnnotP.PRS
+
 $(ANNOTLIB)/AnnotP.PRS : ../../annotlib/AnnotP.P ../bin/prs
 	PRS=`pwd`/../bin/prs;\
 	cd $(ANNOTLIB); THOTDIR=`pwd`/.. ;export THOTDIR; \
 	$$PRS $(ALL_AMAYA_OPTIONS) AnnotP
 
-amaya_annot_schema: compANNOT compANNOTP
+AMAYA_ANNOT_SCHEMA= compANNOTA compANNOTP compANNOTS compANNOTT
 
-AMAYA_ANNOT_OBJ = \
+AMAYA_ANNOT_OBJ= \
+	AnnotAPP.o \
 	ANNOTevent.o \
 	ANNOTfiles.o \
 	ANNOTlink.o \
 	ANNOTtools.o
 
-libAnnot : amaya_annot_schema libAnnot.a
+libAnnot : $(AMAYA_ANNOT_SCHEMA) libAnnot.a
 
 libAnnot.a : $(AMAYA_ANNOT_OBJ)
 	$(AR) libAnnot.a $(AMAYA_ANNOT_OBJ)
@@ -112,3 +141,16 @@ proto : ../bin/cextract
 	      $(MV) /tmp/cextract.$$base.$$$$ $$dir/f/"$$base"_f.h ; \
 	  fi ; \
 	 done)
+
+
+
+
+
+
+
+
+
+
+
+
+

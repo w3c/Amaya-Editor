@@ -15,7 +15,7 @@
  *                  for the byzance collaborative work application
  */
 
-#include "annot.h"
+#include "annotlib.h"
 
 #ifdef _WINDOWS
 #define TMPDIR "TMP"

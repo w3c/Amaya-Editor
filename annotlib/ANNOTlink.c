@@ -15,7 +15,7 @@
  *                  for the byzance collaborative work application
  */
 
-#include "annot.h"
+#include "annotlib.h"
 
 /*-----------------------------------------------------------------------
    LINK_GetAnnotationIndexFile 
