@@ -1354,9 +1354,9 @@ create new elements for the list.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-The following two instructions define the body of a document as asequence of
-at least two chapters and the contents of a section as asequence of
-paragraphs.  A single paragraph can be the entire contentsof a section.</P>
+The following two instructions define the body of a document as a sequence of
+at least two chapters and the contents of a section as a sequence of
+paragraphs.  A single paragraph can be the entire contents of a section.</P>
 <PRE>
 Body             = LIST [2..*] OF (Chapter);
 Section_contents = LIST OF (Paragraph);
@@ -1396,10 +1396,10 @@ aggregate.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-In a bilingual document, each paragraph has an English version andFrench
-version.  In certain cases, the translator wants to add amarginal note, but
-this note is present in very few paragraphs.  Thus,it must not be created
-systematically for every paragraph.  Abilingual paragraph of this type is
+In a bilingual document, each paragraph has an English version and a French
+version.  In certain cases, the translator wants to add a marginal note, but
+this note is present in very few paragraphs.  Thus, it must not be created
+systematically for every paragraph.  A bilingual paragraph of this type is
 declared:</P>
 <PRE>
 Bilingual_paragraph = BEGIN
@@ -1443,11 +1443,11 @@ href="#units"><EM>unit</EM></A> are discussed elsewhere.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-It is common in documents to treat a variety of objects as if theywere
-ordinary paragraphs.  Thus, a ``Paragraph'' might actually becomposed of a
-block of text (an ordinary paragraph), or a mathematicalformula whose
-structure is defined by another structure schema namedMath, or a table, also
-defined by another structure schema.  Here is adefinition of such a
+It is common in documents to treat a variety of objects as if they were
+ordinary paragraphs.  Thus, a ``Paragraph'' might actually be composed of a
+block of text (an ordinary paragraph), or a mathematical formula whose
+structure is defined by another structure schema named Math, or a table, also
+defined by another structure schema.  Here is a definition of such a
 paragraph:</P>
 <PRE>
 Paragraph = CASE OF
@@ -1504,9 +1504,9 @@ element.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-If the types Note and Section are defined in theArticle structure schema, it
-is possible to define, in the samestructure schema, a reference to a note and
-a reference to a sectionin this manner:</P>
+If the types Note and Section are defined in the Article structure schema, it
+is possible to define, in the same structure schema, a reference to a note and
+a reference to a section in this manner:</P>
 <PRE>
 Ref_note    = REFERENCE (Note);
 Ref_section = REFERENCE (Section);
@@ -1583,10 +1583,10 @@ specifies a structure defined by another structure schema.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-If the types Math and Table don't appear in the left partof a structure rule
-in the schema, the following two rules indicatethat a formula has the
-structure of an object defined by the structureschema Math and that a table
-element has the structure of anobject defined by the Table schema.</P>
+If the types Math and Table don't appear in the left part of a structure rule
+in the schema, the following two rules indicate that a formula has the
+structure of an object defined by the structure schema Math and that a table
+element has the structure of an object defined by the Table schema.</P>
 <PRE>
 Formula = Math;
 Table_elem = Table;
@@ -1652,8 +1652,8 @@ UNITS
    Ref_note = REFERENCE (Note);
 </PRE>
 <P>
-then it is possible to use references to notes in a cell of a table,even when
-<TT>Table</TT>is an external structure schema.  The<TT>Table<TT> schema must
+then it is possible to use references to notes in a cell of a table, even when
+<TT>Table</TT> is an external structure schema.  The <TT>Table<TT> schema must
 declare a cell to be a sequence of units, which can then be base element types
 (text, for example) or references to notes in the document. <PRE>
 Cell = LIST OF (UNITS);
@@ -1707,17 +1707,17 @@ skeleton form not load the contents of a particular element type, the keyword
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-Suppose that, in documents of the article class, the element
-typesArticle_title, Figure, Section, Paragraph, and Biblio should appearin the
-skeleton form in order to make it easier to create externalreferences to them
-from other documents.  When loading an article inits skeleton form, all of
-these element types will be loaded exceptfor paragraphs, but only the article
-title will be loaded in itsentirety.  For figures, the legend will be loaded,
-while for sections,the title will be loaded, and for bibliographic entries,
-only thetitle that they contain will be loaded.  Note that
-bibliographicelements are defined in another structure schema, RefBib.  To
-producethis result, the following declarations should be placed in the
-Articlestructure schema:</P>
+Suppose that, in documents of the article class, the element types
+Article_title, Figure, Section, Paragraph, and Biblio should appear in the
+skeleton form in order to make it easier to create external references to them
+from other documents.  When loading an article in its skeleton form, all of
+these element types will be loaded except for paragraphs, but only the article
+title will be loaded in its entirety.  For figures, the legend will be loaded,
+while for sections, the title will be loaded, and for bibliographic entries,
+only the title that they contain will be loaded.  Note that
+bibliographic elements are defined in another structure schema, RefBib.  To
+produce this result, the following declarations should be placed in the
+Article structure schema:</P>
 <PRE>
 EXPORT
    Article_title,
@@ -1903,10 +1903,10 @@ elements between the current selection and the clicked element.
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-Consider a structure schema for object-style graphics which definesthe
+Consider a structure schema for object-style graphics which defines the
 Graphic_object element type with the associated Height and Weight
-numericattributes.  Suppose that we want documents of this class to have
-thefollowing qualities:</P>
+numeric attributes.  Suppose that we want documents of this class to have
+the following qualities:</P>
 <UL>
 <LI>Whenever the width or height of an object is changed using the mouse, the
 new values are stored in the object's Width and Height attributes.
@@ -2643,10 +2643,10 @@ will be opened and no other views can be opened.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-When editing a report, it might be useful have views of the table ofcontents
-and of the mathematical formulas, in addition to theprincipal view which shows
-the document in its entirety.  To achievethis, a presentation schema for the
-Report class would have thefollowing <TT>VIEWS</TT>section:</P>
+When editing a report, it might be useful have views of the table of contents
+and of the mathematical formulas, in addition to the principal view which shows
+the document in its entirety.  To achieve this, a presentation schema for the
+Report class would have the following <TT>VIEWS</TT> section:</P>
 <PRE>
 VIEWS
      Full_text, Table_of_contents, Formulas;
@@ -2691,13 +2691,13 @@ instruction).</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-Consider a Report presentation using the view declarations from thepreceding
-example.  Suppose we want to print the full text and tableof contents views,
-but not the Formulas view, which is only usefulwhen editing.  In addition,
-suppose that we also want to print thebibliographic citations, which are
-associated elements (of type<TT>Citation</TT>).  A sensible printing order
-would be to print the full textthen the bibliography and finally the table of
-contents.  To obtainthis result when printing, the presentation schema would
+Consider a Report presentation using the view declarations from the preceding
+example.  Suppose we want to print the full text and table of contents views,
+but not the Formulas view, which is only useful when editing.  In addition,
+suppose that we also want to print the bibliographic citations, which are
+associated elements (of type <TT>Citation</TT>).  A sensible printing order
+would be to print the full text then the bibliography and finally the table of
+contents.  To obtain this result when printing, the presentation schema would
 say:</P>
 <PRE>
 PRINT
@@ -2848,7 +2848,7 @@ The formal definition of counter declarations is:</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-If the body of a chapter is defined as a sequence of sections in thestructure
+If the body of a chapter is defined as a sequence of sections in the structure
 schema:</P>
 <PRE>
 Chapter_body = LIST OF (Section = 
@@ -2907,7 +2907,7 @@ thechapter in arabic numerals.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-To count tables and figures together in a document of the chaptertype, a
+To count tables and figures together in a document of the chapter type, a
 counter could be defined using:</P>
 <PRE>
 CommonCtr : SET 0 ON Chapter ADD 1 ON Table
@@ -2973,7 +2973,7 @@ codes</A> for the symbols and graphical elements.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-The constants ``Summary:'' and fraction bar, which were describedearlier, are
+The constants ``Summary:'' and fraction bar, which were described earlier, are
 declared:</P>
 <PRE>
 CONST
@@ -3073,10 +3073,10 @@ concerned by the function.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-To make today's date appear at the top of the first page of a report,a <A
-href="#creation"><TT>CREATE</TT> rule</A>associated with theReport_Title
-element type generates a presentation box whose content(specified by the
-<TT>Content</TT>rule of that presentation box) isthe variable:</P>
+To make today's date appear at the top of the first page of a report, a <A
+href="#creation"><TT>CREATE</TT> rule</A> associated with the Report_Title
+element type generates a presentation box whose content (specified by the
+<TT>Content</TT> rule of that presentation box) is the variable:</P>
 <PRE>
 VAR
      Todays_date : TEXT 'Version of ' DATE;
@@ -3381,7 +3381,7 @@ keyword <TT>Referred</TT>.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-In all structure schemas, there is a global Language attributedefined as
+In all structure schemas, there is a global Language attribute defined as
 follows:</P>
 <PRE>
 ATTR
@@ -3407,7 +3407,7 @@ href="#style"><TT>Style</TT> rule</A>.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-A numeric attribute representing the importance of the part of thedocument to
+A numeric attribute representing the importance of the part of the document to
 which it is attached can be defined:</P>
 <PRE>
 ATTR
@@ -3447,7 +3447,7 @@ attribute has value 10, the font size will be 4.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-Suppose the structure defines a list element which can have anattribute
+Suppose the structure defines a list element which can have an attribute
 defining the type of list (numbered or not):</P>
 <PRE>
 STRUCT
@@ -3470,9 +3470,9 @@ ATTRIBUTES
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-Suppose that two attributes are defined in the structure schema.  Thefirst is
-a numeric global attribute called ``version''.  The other isa local attribute
-defined on the root of the document called``Document_version'':</P>
+Suppose that two attributes are defined in the structure schema.  The first is
+a numeric global attribute called ``version''.  The other is a local attribute
+defined on the root of the document called ``Document_version'':</P>
 <PRE>
 STRUCTURE Document
 ATTR
@@ -3539,7 +3539,7 @@ a semicolon.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-Consider a Book document class which includes instances of the Chapterdocument
+Consider a Book document class which includes instances of the Chapter document
 class.  These classes might have the following schemas:</P>
 <PRE>
 STRUCTURE Book
@@ -3656,8 +3656,8 @@ block concerning the same view.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-The following rules for a report's title make the title visible in theprimary
-view and invisible in the table of contents and in the formulaviews (see the
+The following rules for a report's title make the title visible in the primary
+view and invisible in the table of contents and in the formula views (see the
 <A href="#visib"><TT>Visibility</TT> rule</A>).</P>
 <PRE>
 Title : BEGIN
@@ -4022,7 +4022,7 @@ an enclosed box.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-If, in the structure schema for mathematical formulas, the fractionelement is
+If, in the structure schema for mathematical formulas, the fraction element is
 defined by</P>
 <PRE>
 Fraction = BEGIN
@@ -4031,7 +4031,7 @@ Fraction = BEGIN
            END;
 </PRE>
 <P>
-then the horizontal reference axis of the fraction can be positionedon top of
+then the horizontal reference axis of the fraction can be positioned on top of
 the denominator by the rule:</P>
 <PRE>
 Fraction :
@@ -4121,7 +4121,7 @@ However, the choice of units is limited to em, ex, pt and px.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-The following rules specify that a box has a height of 10.5centimeters and a
+The following rules specify that a box has a height of 10.5 centimeters and a
 width of 5.3 ems:</P>
 <PRE>
 Height : 10.5 cm;
@@ -4252,7 +4252,7 @@ rule, the horizontal position rule, or both.</P>
 <STRONG>Example:</STRONG></P>
 <P>
 If a <A name="expos1">report</A>is defined by by the following
-structureschema:</P>
+structure schema:</P>
 <PRE>
 Report = BEGIN
           Title  = Text;
@@ -4271,8 +4271,8 @@ Report : BEGIN
           END;
 </PRE>
 <P>
-These rules place the <A name="reportexample">report</A>in the upperleft
-corner of the enclosing box, which is the window in which thedocument is being
+These rules place the <A name="reportexample">report</A> in the upper left
+corner of the enclosing box, which is the window in which the document is being
 edited.</P>
 <PRE>
 Title :   BEGIN
@@ -4282,9 +4282,9 @@ Title :   BEGIN
           END;
 </PRE>
 <P>
-The top of the title is one line (a line has the height of thecharacters of
-the title) from the top of the report, which is also thetop of the editing
-window.  The title is centered horizontally in thewindow (see <A
+The top of the title is one line (a line has the height of the characters of
+the title) from the top of the report, which is also the top of the editing
+window.  The title is centered horizontally in the window (see <A
 href="#posdim">figure</A>).</P>
 <PRE>
 Summary :  BEGIN
@@ -4294,20 +4294,20 @@ Summary :  BEGIN
           END;
 </PRE>
 <P>
-The top of the summary is place a line and a half below the bottom ofthe title
+The top of the summary is place a line and a half below the bottom of the title
 and is shifted two centimeters from the side of the window.</P>
 </BLOCKQUOTE>
 <BLOCKQUOTE class="example">
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-Suppose there is a <A name="expos2">Design</A>logical structure which contains
+Suppose there is a <A name="expos2">Design</A> logical structure which contains
 graphical elements:</P>
 <PRE>
 Design = LIST OF (ElemGraph = GRAPHICS);
 </PRE>
 <P>
-The following rules allow the user to freely choose the position ofeach
+The following rules allow the user to freely choose the position of each
 element when it is created:</P>
 <PRE>
 ElemGraph =
@@ -4318,8 +4318,8 @@ ElemGraph =
    END;
 </PRE>
 <P>
-Thus, when a graphical element is created, its default placement is atthe left
-of the window and 1 cm from the top, but the user can move itimmediately,
+Thus, when a graphical element is created, its default placement is at the left
+of the window and 1 cm from the top, but the user can move it immediately,
 simply by moving the mouse.</P>
 </BLOCKQUOTE>
 </DIV>
@@ -4358,8 +4358,8 @@ require it, a larger extent is possible.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-Continuing with the <A href="#expos2">previous example</A>, it is possibleto
-allow the user to choose the size of each graphical element as itis
+Continuing with the <A href="#expos2">previous example</A>, it is possible to
+allow the user to choose the size of each graphical element as it is
 created:</P>
 <PRE>
 ElemGraph : BEGIN
@@ -4450,9 +4450,9 @@ logical elements.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-Completing the <A href="#expos1">above example</A>, it is possible tospecify
-that the report takes its width from the editing window andits height from the
-size of its contents (this can obviously begreater than that of the
+Completing the <A href="#expos1">above example</A>, it is possible to specify
+that the report takes its width from the editing window and its height from the
+size of its contents (this can obviously be greater than that of the
 window):</P>
 <PRE>
 Report :  BEGIN
@@ -4462,8 +4462,8 @@ Report :  BEGIN
           END;
 </PRE>
 <P>
-Then, the following rules make the title occupy 60% of the width ofthe report
-(which is that of the window) and is broken into centeredlines of this width
+Then, the following rules make the title occupy 60% of the width of the report
+(which is that of the window) and is broken into centered lines of this width
 (see the <A href="#linerule"><TT>Line</TT> rule</A>).</P>
 <PRE>
 Title :   BEGIN
@@ -4546,11 +4546,11 @@ in the position and extent rule are opposite sides of the box.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-Suppose we want to draw an elastic arrow or line between the middle ofthe
-bottom side of box A and the upper left corner of box B.  To dothis, we would
-define a graphics box whose upper left corner coincideswith the middle of the
-bottom side of A (a position rule) and whoselower right corner coincides with
-with the upper left corner of B(dimension rules):</P>
+Suppose we want to draw an elastic arrow or line between the middle of the
+bottom side of box A and the upper left corner of box B.  To do this, we would
+define a graphics box whose upper left corner coincides with the middle of the
+bottom side of A (a position rule) and whose lower right corner coincides with
+with the upper left corner of B (dimension rules):</P>
 <PRE>
 LinkedBox :
    BEGIN
@@ -4565,13 +4565,13 @@ LinkedBox :
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-The element SectionTitle creates a presentation box called SectionNumwhich
-contains the number of the section.  Suppose we want to alignthe SectionNum
-and SectionTitle horizontally, have the SectionNum takeits width from its
-contents (the section number), have theSectionTitle box begin 0.5 cm to the
-right of the SectionNum box andend at the right edge of its enclosing box.
-This would make theSectionTitle box elastic, since its width is defined by the
-positionof its left and right sides.  The following rules produce this
+The element SectionTitle creates a presentation box called SectionNum which
+contains the number of the section.  Suppose we want to align the SectionNum
+and SectionTitle horizontally, have the SectionNum take its width from its
+contents (the section number), have the SectionTitle box begin 0.5 cm to the
+right of the SectionNum box and end at the right edge of its enclosing box.
+This would make the SectionTitle box elastic, since its width is defined by the
+position of its left and right sides.  The following rules produce this
 effect:</P>
 <PRE>
 SectionNum :
@@ -4825,11 +4825,11 @@ alignment style is no longer perceptible.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-An important use of inheritance is to vary the characteristics oflines for an
-element type (for example, Paragraph) according to theenclosing environment
-(for example, Summary or Section), and thusobtain different line breaking
-styles for the same elements when theyappear in different environments.  The
-following rules specify thatparagraphs inherit their alignment, justification,
+An important use of inheritance is to vary the characteristics of lines for an
+element type (for example, Paragraph) according to the enclosing environment
+(for example, Summary or Section), and thus obtain different line breaking
+styles for the same elements when they appear in different environments.  The
+following rules specify that paragraphs inherit their alignment, justification,
 and line spacing:</P>
 <PRE>
 Paragraph :
@@ -4912,13 +4912,13 @@ schema.</P>
 <STRONG>Example:</STRONG></P>
 <P>
 Suppose the structure schema defines a logical attribute
-called<TT>New</TT>which is used to identify the passages in a document which
-wererecently modified.  It would be nice to have the presentation schemamake a
+called <TT>New</TT> which is used to identify the passages in a document which
+were recently modified.  It would be nice to have the presentation schema make a
 bar appear in the left margin next to each passage having
-the<TT>New</TT>attribute.  A new passage can be an entire element, such asa
-paragraph or section, or it can be some words in the middle of aparagraph.  To
-produce the desired effect, the <TT>New</TT>attribute isgiven a creation rule
-which generates a <TT>VerticalBar</TT>presentationbox.</P>
+the <TT>New</TT> attribute.  A new passage can be an entire element, such as a
+paragraph or section, or it can be some words in the middle of a paragraph.  To
+produce the desired effect, the <TT>New</TT> attribute is given a creation rule
+which generates a <TT>VerticalBar</TT> presentation box.</P>
 <P>
 When the <TT>New</TT> attribute is attached to a character string which is
 inside a line broken element (inside a paragraph, for example), the bar is one
@@ -5007,7 +5007,7 @@ relative.  The value may not be inherited.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-The following rules  prevent widows and orphans in a paragraph:</P>
+The following rules prevent widows and orphans in a paragraph:</P>
 <PRE>
 Paragraph :
    BEGIN
@@ -5016,8 +5016,8 @@ Paragraph :
    END;
 </PRE>
 <P>
-This rule prevents a section title from becoming separated from thefirst
-paragraph of the section by prohibiting page breaks at thebeginning of the
+This rule prevents a section title from becoming separated from the first
+paragraph of the section by prohibiting page breaks at the beginning of the
 section rule:</P>
 <PRE>
 Section :
@@ -5096,15 +5096,15 @@ used.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-Suppose that only <TT>Formula</TT>elements should be displayed in
-the<TT>MathView</TT>view.  Then, the default rules should include:</P>
+Suppose that only <TT>Formula</TT> elements should be displayed in
+the <TT>MathView</TT> view.  Then, the default rules should include:</P>
 <PRE>
 DEFAULT
      IN MathView Visibility:0;
 </PRE>
 <P>
-which makes all elements invisible in the <TT>MathView</TT>view.However, the
-<TT>Formula</TT>element also has a <TT>Visibility</TT>rule:</P>
+which makes all elements invisible in the <TT>MathView</TT> view.  However, the
+<TT>Formula</TT> element also has a <TT>Visibility</TT> rule:</P>
 <PRE>
 Formula :
      IN MathView Visibility:5;
@@ -5182,8 +5182,8 @@ The rule</P>
 Size : Enclosing - 2 pt Min 7;
 </PRE>
 <P>
-states that the character size is 2 points less than that of theenclosing box,
-but that it may not be less than 7 points, whatever theenclosing box's
+states that the character size is 2 points less than that of the enclosing box,
+but that it may not be less than 7 points, whatever the enclosing box's
 value.</P>
 <P>
 The following rules make the text of a report be displayed with medium-sized
@@ -5225,7 +5225,7 @@ kinship specification.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-To specify that the summary uses the font family of the rest of thedocument,
+To specify that the summary uses the font family of the rest of the document,
 but in the italic style, the following rules are used:</P>
 <PRE>
 Summary :
@@ -5292,8 +5292,8 @@ attribute.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-For a purely textual document, in which overlapping never poses aproblem, a
-single default <TT>Depth</TT>rule in the presentation schemais sufficient:</P>
+For a purely textual document, in which overlapping never poses a problem, a
+single default <TT>Depth</TT>rule in the presentation schema is sufficient:</P>
 <PRE>
 DEFAULT
     Depth : 0;
@@ -5314,7 +5314,7 @@ BOXES
       END;
 </PRE>
 <P>
-and is created by the <TT>Example</TT>element, which has the rules:</P>
+and is created by the <TT>Example</TT> element, which has the rules:</P>
 <PRE>
 RULES
    Example :
@@ -5354,8 +5354,8 @@ kinship specification.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-To specify that, in Figures, the graphical parts should bedrawn in solid
-lines, the Figure element is given a rule using the<TT>Solid</TT>name:</P>
+To specify that, in Figures, the graphical parts should be drawn in solid
+lines, the Figure element is given a rule using the <TT>Solid</TT> name:</P>
 <PRE>
 Figure :
    LineStyle : Solid;
@@ -5390,7 +5390,7 @@ elements.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-To specify that, in Figures, the graphical parts should be drawn withlines 0.3
+To specify that, in Figures, the graphical parts should be drawn with lines 0.3
 pt thick, the Figure element is given this rule:</P>
 <PRE>
 Figure :
@@ -5440,8 +5440,8 @@ elements.  In all other case, text characters are not colored.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-To specify that, in Figures, the closed graphical elements should befilled
-with a pattern resembling a brick wall, the Figure element isgiven this
+To specify that, in Figures, the closed graphical elements should be filled
+with a pattern resembling a brick wall, the Figure element is given this
 rule:</P>
 <PRE>
 Figure :
@@ -5482,7 +5482,7 @@ href="#pattern">fill pattern</A> does not prevent the use of color.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-To specify that, in Figures, everything must be drawn in blue on abackground
+To specify that, in Figures, everything must be drawn in blue on a background
 of yellow, the Figure element isgiven these rules:</P>
 <PRE>
 Figure :
@@ -5555,8 +5555,8 @@ as <TT>[*]</TT>, which is equivalent to the rule:</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-The content of the presentation box created to make the chapternumber and
-section number appear before each section title can bedefined by:</P>
+The content of the presentation box created to make the chapter number and
+section number appear before each section title can be defined by:</P>
 <PRE>
 BOXES
      SectionNumBox :
@@ -5566,8 +5566,8 @@ BOXES
           END;
 </PRE>
 <P>
-if the <TT>NumSection</TT>variable has been defined in the variabledefinition
-section of the presentation schema.  Otherwise the<TT>Content</TT>would be
+if the <TT>NumSection</TT>variable has been defined in the variable definition
+section of the presentation schema.  Otherwise the <TT>Content</TT> would be
 written:</P>
 <PRE>
 BOXES
@@ -5665,13 +5665,13 @@ basis.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-Let us define an object type, called Table, which is composed of asequence of
-columns, all having the same fixed width, where thecolumns are separated by
-vertical lines.  There is a line to the leftof the first column and one to the
-right of the last.  Each column hasa variable number of cells, placed one on
-top of the other andseparated by horizontal lines.  There are no horizontal
-lines abovethe first cell or below the last cell.  The text contained in
-eachcell is  broken into lines and these lines are centered horizontallyin the
+Let us define an object type, called Table, which is composed of a sequence of
+columns, all having the same fixed width, where the columns are separated by
+vertical lines.  There is a line to the left of the first column and one to the
+right of the last.  Each column has a variable number of cells, placed one on
+top of the other and separated by horizontal lines.  There are no horizontal
+lines above the first cell or below the last cell.  The text contained in
+each cell is  broken into lines and these lines are centered horizontally in the
 cell. The logical structure of this object is defined by:</P>
 <PRE>
 Table   = LIST OF (Column);
@@ -5883,7 +5883,7 @@ RefChapter = REFERENCE (Chapter);
 </PRE>
 <P>
 then the following presentation rules (among many other rules in
-thepresentation schema) can be specified:</P>
+the presentation schema) can be specified:</P>
 <PRE>
 COUNTERS
    ChapterCtr : RANK OF Chapter;
@@ -6108,8 +6108,8 @@ translator.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-To limit the lines produced by the translator to a length of 80characters, the
-following rule is written at the beginning of thetranslation schema.</P>
+To limit the lines produced by the translator to a length of 80 characters, the
+following rule is written at the beginning of the translation schema.</P>
 <PRE>
 LineLength 80;
 </PRE>
@@ -6150,7 +6150,7 @@ terminated by a semicolon.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-The following buffer declarations create an picture name buffer named
+The following buffer declarations create a picture name buffer named
 <TT>pictureName</TT> and a read buffer named <A
 name="destname"><TT>DestName</TT></A>:</P>
 <PRE>
@@ -6266,8 +6266,8 @@ Chapter_Body = LIST OF
          );
 </PRE>
 <P>
-(sections are defined recursively), a counter can be defined givingthe <A
-name="sectnum">number of a section</A>within its level in thehierarchy:</P>
+(sections are defined recursively), a counter can be defined giving the <A
+name="sectnum">number of a section</A>within its level in the hierarchy:</P>
 <PRE>
 COUNTERS
    SectionNumber : Rank of Section;
@@ -6313,7 +6313,7 @@ declaration is terminated by a semicolon.</P>
 <P>
 <STRONG><A name="levelexample">Example:</A></STRONG></P>
 <P>
-The following rule assigns the name <TT>TxtLevel</TT>to the characterstring
+The following rule assigns the name <TT>TxtLevel</TT>to the character string
 ``Level'':</P>
 <PRE>
 CONST
@@ -6415,8 +6415,8 @@ function is the empty string.
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-To create, at the beginning of each section of the translateddocument, text
-composed of the string ``Section'' followed by thesection number, the
+To create, at the beginning of each section of the translated document, text
+composed of the string ``Section'' followed by the section number, the
 following <A name="varsectexample">variable definition</A>might be used:</P>
 <PRE>
 VAR
@@ -6832,10 +6832,10 @@ the keywords <TT>BEGIN</TT> and <TT>END</TT>.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-Suppose that after each element of type Section_Title it is useful toproduce
-the text <TT>\label{SectX}</TT>where <TT>X</TT>represents thesection number,
-but only if the section is designated by one or morereferences in the
-document.  The following conditional rule producesthis effect:</P>
+Suppose that after each element of type Section_Title it is useful to produce
+the text <TT>\label{SectX}</TT> where <TT>X</TT> represents the section number,
+but only if the section is designated by one or more references in the
+document.  The following conditional rule produces this effect:</P>
 <PRE>
 RULES
   Section_Title :
@@ -6845,18 +6845,18 @@ RULES
 </PRE>
 <P>
 (the declaration of the <A href="#prestrans"><TT>UniqueSectNum</TT>
-counter</A>is given above).  The string <TT>\12</TT>represents aline
+counter</A> is given above).  The string <TT>\12</TT> represents a line
 break.</P>
 </BLOCKQUOTE>
 <BLOCKQUOTE class="example">
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-Suppose that for elements of the Elmnt type it would be useful toproduce a
-character indicating the value of the numeric attributeLevel associated with
-the element: an  ``A'' for all values of Levelless than 3, a ``B'' for values
-between 3 and 10 and a ``C'' forvalues greater than 10.  This can be achieved
-by writing the followingrules for the Elmnt type:</P>
+Suppose that for elements of the Elmnt type it would be useful to produce a
+character indicating the value of the numeric attribute Level associated with
+the element: an  ``A'' for all values of Level less than 3, a ``B'' for values
+between 3 and 10 and a ``C'' for values greater than 10.  This can be achieved
+by writing the following rules for the Elmnt type:</P>
 <PRE>
 RULES
   Elmnt :
@@ -7055,9 +7055,9 @@ command), messages produced by the <TT>Write</TT> rule are not displayed.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-To make the translator display the number of each section beingtranslated on
-the user's terminal, the following rule is specified forthe
-<TT>Section</TT>element type:</P>
+To make the translator display the number of each section being translated on
+the user's terminal, the following rule is specified for the
+<TT>Section</TT> element type:</P>
 <PRE>
 Section : BEGIN
           Write VarSection;
@@ -7065,8 +7065,8 @@ Section : BEGIN
           END;
 </PRE>
 <P>
-(see <A href="#varsectexample">above</A>for the definition of
-the<TT>VarSection</TT>variable).</P>
+(see <A href="#varsectexample">above</A> for the definition of
+the <TT>VarSection</TT> variable).</P>
 <P>
 To display text on the terminal before issuing a read operation with the
 <TT>Read</TT> rule, the following rule is used:</P>
@@ -7100,8 +7100,8 @@ applied.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-The following set of rules tells the user that the translator iswaiting for
-the entry of some text, reads this text into a buffer andcopies the text into
+The following set of rules tells the user that the translator is waiting for
+the entry of some text, reads this text into a buffer and copies the text into
 the translated document.</P>
 <PRE>
 BEGIN
@@ -7153,11 +7153,11 @@ a complete file path.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-Suppose that it is desirable to print documents of the Article classwith a
-formatter which requires a number of declarations anddefinitions at the
-beginning of the file.  The <TT>Include</TT>rule canbe used to achieve this.
-All the declarations and definitions areplaced in a file called
-<TT>DeclarArt</TT>and then the <TT>Article</TT>element type is given the
+Suppose that it is desirable to print documents of the Article class with a
+formatter which requires a number of declarations and definitions at the
+beginning of the file.  The <TT>Include</TT>rule can be used to achieve this.
+All the declarations and definitions a replaced in a file called
+<TT>DeclarArt</TT> and then the <TT>Article</TT> element type is given the
 following rule:</P>
 <PRE>
 Article : BEGIN
@@ -7241,9 +7241,9 @@ when the translation is explicitly required by a <TT>Get Referred Type</TT> or
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-The structure schema defined figures as associated element which arecomposed
-of some content and a caption.  Moreover, it is possible to makereferences to
-figures, using elements of the <TT>RefFigure</TT>type:</P>
+The structure schema defined figures as associated element which are composed
+of some content and a caption.  Moreover, it is possible to make references to
+figures, using elements of the <TT>RefFigure</TT> type:</P>
 <PRE>
      ...
      RefFigure = REFERENCE(Figure);
@@ -7255,11 +7255,11 @@ ASSOC
      ...
 </PRE>
 <P>
-Suppose it would be useful to make a figure appear in the translateddocument
-at the place in the text where the first reference to thefigure is made.  If
-some figures are not referenced, then they wouldappear at the end of the
-document.  Also, each figure's caption shouldappear before the content.  The
-following rules in the translationschema will produce this result:</P>
+Suppose it would be useful to make a figure appear in the translated document
+at the place in the text where the first reference to the figure is made.  If
+some figures are not referenced, then they would appear at the end of the
+document.  Also, each figure's caption should appear before the content.  The
+following rules in the translation schema will produce this result:</P>
 <PRE>
 Article :   BEGIN
             ...
@@ -7328,7 +7328,7 @@ command), prompts are not displayed.</P>
 <STRONG>Example:</STRONG></P>
 <P>
 The <TT>Article</TT>structure schema uses the
-<TT>Formula</TT>externalstructure, defined by another structure schema, for
+<TT>Formula </TT>external structure, defined by another structure schema, for
 mathematical formulas:</P>
 <PRE>
 STRUCTURE Article;
@@ -7342,9 +7342,9 @@ STRUCT
 END
 </PRE>
 <P>
-Suppose that it would be useful to use the <TT>FormulaT</TT>translationschema
-for the formulas of an article.  This can be expressed in twodifferent ways in
-the <TT>Article</TT>class translation schema, usingthe rules:</P>
+Suppose that it would be useful to use the <TT>FormulaT</TT> translation schema
+for the formulas of an article.  This can be expressed in two different ways in
+the <TT>Article</TT>class translation schema, using the rules:</P>
 <PRE>
 RULES
     Article :
@@ -7442,16 +7442,16 @@ rules, is terminated by a semicolon.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-To generate the translation of each section in a different file,the following
-rule can be associated with type <TT>Section</TT>.That rule uses the <A
-href="#varoutputfile"><TT>VarOutpuFile</TT> variable</A>defined above.</P>
+To generate the translation of each section in a different file, the following
+rule can be associated with type <TT>Section</TT>.  That rule uses the <A
+href="#varoutputfile"><TT>VarOutpuFile</TT> variable</A> defined above.</P>
 <PRE>
      Section:
          ChangeMainFile VarOutpuFile Before;
 </PRE>
 <P>
-If <TT>output.txt</TT>is the name of the output file specified whenstarting
-the translation program, translated sections are writtenin files
+If <TT>output.txt</TT> is the name of the output file specified when starting
+the translation program, translated sections are written in files
 <TT>output1.txt</TT>, <TT>output2.txt</TT>, etc.</P>
 </BLOCKQUOTE>
 </DIV>
@@ -7569,9 +7569,9 @@ href="#notrans"><TT>NoTranslation</TT></A>.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-The structure defined the ``Language'' attribute which can take thevalues
-``French'' and ``English''.  To have the French parts of theoriginal document
-removed and prevent the translation of the leavesof the English parts, the
+The structure defined the ``Language'' attribute which can take the values
+``French'' and ``English''.  To have the French parts of the original document
+removed and prevent the translation of the leaves of the English parts, the
 following rules would be used:</P>
 <PRE>
 ATTRIBUTES
@@ -7698,10 +7698,10 @@ have no effect on the translation of the document.</P>
 <P>
 <STRONG>Example:</STRONG></P>
 <P>
-Suppose that it is desirable to use the same font sizes as in thespecific
-presentation, but the font size must be between 10 and 18typographer's points.
-If font size is set in the translated documentby the string
-<TT>pointsize=n</TT>where <TT>n</TT>is the font size intypographer's points
+Suppose that it is desirable to use the same font sizes as in the specific
+presentation, but the font size must be between 10 and 18 typographer's points.
+If font size is set in the translated document by the string
+<TT>pointsize=n</TT> where <TT>n</TT> is the font size in typographer's points
 then the following rules will suffice:</P>
 <PRE>
 PRESENTATION
@@ -7777,10 +7777,10 @@ codes</A>.</P>
 <STRONG>Example:</STRONG></P>
 <P>
 In a translation schema producing documents destined for use with
-theL<SUP>A</SUP>T<SUB><BIG>E</BIG></SUB>X formatter, the Latin
+the L<SUP>A</SUP>T<SUB><BIG>E</BIG></SUB>X formatter, the Latin
 characters``&eacute;'' (octal code 351 in Thot) and ``&egrave;'' (octal code
-350in Thot)  must be converted to their representation
-inL<SUP>A</SUP>T<SUB><BIG>E</BIG></SUB>X:</P>
+350 in Thot)  must be converted to their representation
+in L<SUP>A</SUP>T<SUB><BIG>E</BIG></SUB>X:</P>
 <PRE>
 TEXTTRANSLATE        Latin
      BEGIN

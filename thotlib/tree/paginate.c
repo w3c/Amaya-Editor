@@ -408,7 +408,7 @@ PtrElement         *pLib;
 {
    PtrElement          pPrevious;
    NotifyElement       notifyEl;
-   int                 nbBrothers;
+   int                 NSiblings;
 
    *pLib = NULL;
    /* envoie l'evenement ElemDelete.Pre */
@@ -431,7 +431,7 @@ PtrElement         *pLib;
 	notifyEl.element = (Element) (pPage->ElParent);
 	notifyEl.elementType.ElTypeNum = pPage->ElTypeNumber;
 	notifyEl.elementType.ElSSchema = (SSchema) (pPage->ElStructSchema);
-	nbBrothers = 0;
+	NSiblings = 0;
 	DeleteElement (&pPage);
 	*pLib = NULL;
 	if (pPrevious != NULL)
@@ -442,11 +442,11 @@ PtrElement         *pLib;
 		*pLib = NULL;
 	     while (pPrevious != NULL)
 	       {
-		  nbBrothers++;
+		  NSiblings++;
 		  pPrevious = pPrevious->ElPrevious;
 	       }
 	  }
-	notifyEl.position = nbBrothers;
+	notifyEl.position = NSiblings;
 	CallEventType ((NotifyEvent *) & notifyEl, FALSE);
      }
 }
@@ -719,17 +719,17 @@ int                 nbView;
 }
 
 /*----------------------------------------------------------------------
-   	Secable	retourne 'Vrai' si le pave pointe' par			
+   	Divisible retourne 'Vrai' si le pave pointe' par
    		pAb est secable et 'Faux' sinon.			
    		Au retour, si la boite est secable, pR1 pointe sur la	
    		regle NoBreak1 a appliquer a l'element			
-   		(pR1 est NULL s'il n'y a pas de regle NoBreak1 a		
+   		(pR1 est NULL s'il n'y a pas de regle NoBreak1 a
    		appliquer)						
    		pAt1 pointe sur le bloc de l'attribut auquel correspond	
    		la regle pR1, si c'est une regle d'attribut (pAt1=NULL	
    		sinon),							
    		pR2 pointe sur la regle NoBreak2 a appliquer a l'element
-   		(pR2 est NULL s'il n'y a pas de regle NoBreak2 a		
+   		(pR2 est NULL s'il n'y a pas de regle NoBreak2 a
    		appliquer),						
    		pAt2 pointe sur le bloc de l'attribut auquel correspond	
    		la regle pR2, si c'est une regle d'attribut		
@@ -883,7 +883,7 @@ PtrElement          rootEl;
    PtrAbstractBox      pPa1;
    AbPosition         *pPavP1;
    PtrElement          pEl1;
-   int                 nbBrothers;
+   int                 NSiblings;
    PtrElement          pF;
    NotifyElement       notifyEl;
    PtrPRule            pRule;
@@ -1050,16 +1050,16 @@ PtrElement          rootEl;
    notifyEl.element = (Element) (pEl->ElParent);
    notifyEl.elementType.ElTypeNum = PageBreak + 1;
    notifyEl.elementType.ElSSchema = (SSchema) (rootEl->ElStructSchema);
-   nbBrothers = 0;
+   NSiblings = 0;
    pF = pEl1;
    while (pF->ElPrevious != NULL)
      {
-	nbBrothers++;
+	NSiblings++;
 	pF = pF->ElPrevious;
      }
    if (!ElemIsBefore)
-      nbBrothers++;
-   notifyEl.position = nbBrothers;
+      NSiblings++;
+   notifyEl.position = NSiblings;
    CallEventType ((NotifyEvent *) & notifyEl, TRUE);
    /* cree l'element Marque de Page */
    pElPage = NewSubtree (PageBreak + 1, rootEl->ElStructSchema,
@@ -2409,7 +2409,7 @@ boolean             withAPP;
    boolean             pageAtEnd;
    boolean             stop, stop1, ok;
    NotifyElement       notifyEl;
-   int                 nbBrothers;
+   int                 NSiblings;
 
    /* cherche d'abord s'il n'y en pas deja une */
    pageAtEnd = FALSE;		/* on n'en pas encore vu */
@@ -2458,10 +2458,10 @@ boolean             withAPP;
       /* cree une marque de page */
      {
 	/* cherche le dernier fils de la racine */
-	nbBrothers = 1;
+	NSiblings = 1;
 	while (pEl->ElNext != NULL)
 	  {
-	     nbBrothers++;
+	     NSiblings++;
 	     pEl = pEl->ElNext;
 	  }
 	if (withAPP)
@@ -2472,7 +2472,7 @@ boolean             withAPP;
 	     notifyEl.element = (Element) (pEl->ElParent);
 	     notifyEl.elementType.ElTypeNum = PageBreak + 1;
 	     notifyEl.elementType.ElSSchema = (SSchema) (pRootEl->ElStructSchema);
-	     notifyEl.position = nbBrothers;
+	     notifyEl.position = NSiblings;
 	     ok = !CallEventType ((NotifyEvent *) & notifyEl, TRUE);
 	  }
 	else

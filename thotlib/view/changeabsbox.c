@@ -2039,24 +2039,25 @@ int                *boxType;
 }
 
 
-/*              BoiteElAssoc N'EST PLUS UTILISEE            */
+/*  CreateHeaderFooterForAssocEl N'EST PLUS UTILISEE avec les colonnes       */
 
 #ifndef __COLPAGE__
 
 /*----------------------------------------------------------------------
-   BoiteElAssoc verifie si l'element associe' pointe' par pEl doit 
-   etre affiche' dans une boite de haut ou de bas de page, 
-   pour la vue viewNb.                                      
-   Si oui, cree la boite de haut ou bas de page si elle    
-   n'existe pas et en cas de creation retourne l'adresse   
-   de son pave dans pAbbReDisp.                              
+   CreateHeaderFooterForAssocEl
+   verifie si l'element associe' pointe' par pEl doit
+   etre affiche' dans une boite de haut ou de bas de page,
+   pour la vue viewNb.
+   Si oui, cree la boite de haut ou bas de page si elle
+   n'existe pas et en cas de creation retourne l'adresse
+   de son pave dans pAbbReDisp.
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static void         BoiteElAssoc (PtrElement pEl, int viewNb, PtrDocument pDoc, PtrAbstractBox * pAbbReDisp)
+static void         CreateHeaderFooterForAssocEl (PtrElement pEl, int viewNb, PtrDocument pDoc, PtrAbstractBox * pAbbReDisp)
 
 #else  /* __STDC__ */
-static void         BoiteElAssoc (pEl, viewNb, pDoc, pAbbReDisp)
+static void         CreateHeaderFooterForAssocEl (pEl, viewNb, pDoc, pAbbReDisp)
 PtrElement          pEl;
 int                 viewNb;
 PtrDocument         pDoc;
@@ -2790,7 +2791,7 @@ int                 viewNb;
 {
    int                 view, firstView, lastView;
    PtrAbstractBox      pAb, pAbbReDisp, pAbbR, pAbbFirst, pAbbLast, pAbbSibling;
-   boolean             existingView, stop, assoc;
+   boolean             existingView, stop, assocView;
    boolean             complete;
    PtrAbstractBox      pAbbox1;
 
@@ -2812,8 +2813,8 @@ int                 viewNb;
 	/* nouveaux paves */
 	for (view = firstView; view <= lastView; view++)
 	  {
-	     assoc = AssocView (pEl);
-	     if (!assoc)
+	     assocView = AssocView (pEl);
+	     if (!assocView)
 		/* l'element ne s'affiche pas dans une vue */
 		/* d'elements associes */
 		existingView = pDoc->DocView[view - 1].DvPSchemaView > 0;
@@ -2826,15 +2827,15 @@ int                 viewNb;
 		  /* il n'y a encore rien a reafficher */
 		  pAbbFirst = NULL;
 		  pAbbLast = NULL;
-		  if (!assoc)
+		  if (!assocView)
 		     /* traitement particulier des elements associes */
 		    {
-		       BoiteElAssoc (pEl, view, pDoc, &pAbbReDisp);
+		       CreateHeaderFooterForAssocEl (pEl, view, pDoc, &pAbbReDisp);
 		       pAbbFirst = pAbbReDisp;
 		       pAbbLast = pAbbReDisp;
 		    }
 		  /* cree et chaine les paves correspondant a l'element, si ca n'a */
-		  /* pas deja ete fait par BoiteElAssoc */
+		  /* pas deja ete fait par CreateHeaderFooterForAssocEl */
 		  if (pAbbReDisp == NULL)
 		     pAb = AbsBoxesCreate (pEl, pDoc, view, TRUE, TRUE, &complete);
 		  else
@@ -2894,7 +2895,7 @@ int                 viewNb;
 				&& !pAbbox1->AbInLine
 				&& pAbbox1->AbTruncatedTail)
 			       /* le pave precedent est incomplet a la fin */
-			       if (assoc || pDoc->DocView[view - 1].DvSync)
+			       if (assocView || pDoc->DocView[view - 1].DvSync)
 				  /* La vue est synchronisee, on supprime tous les paves */
 				  /* precedents */
 				 {
@@ -2934,7 +2935,7 @@ int                 viewNb;
 				   && !pAbbox1->AbInLine
 				   && pAbbox1->AbTruncatedHead)
 				  /* le pave suivant est incomplet au debut */
-				  if (assoc || pDoc->DocView[view - 1].DvSync)
+				  if (assocView || pDoc->DocView[view - 1].DvSync)
 				     /* La vue est synchronisee, on supprime 
 				        tous les paves suivants */
 				    {
