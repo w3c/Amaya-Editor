@@ -61,28 +61,27 @@ static int          newColor[] =
 
 #define MAX_EXT_DOC 10
 
-#include "tree_f.h"
-#include "structcreation_f.h"
-
-#include "callback_f.h"
-#include "viewcommands_f.h"
-#include "exceptions_f.h"
-#include "font_f.h"
-#include "units_f.h"
-#include "memory_f.h"
-#include "message_f.h"
-#include "changeabsbox_f.h"
-
-#include "readpivot_f.h"
-#include "references_f.h"
-#include "externalref_f.h"
-#include "schemas_f.h"
-#include "fileaccess_f.h"
-#include "structschema_f.h"
-#include "content_f.h"
+#include "abspictures_f.h"
 #include "applicationapi_f.h"
+#include "callback_f.h"
+#include "changeabsbox_f.h"
+#include "content_f.h"
+#include "externalref_f.h"
+#include "exceptions_f.h"
+#include "fileaccess_f.h"
+#include "font_f.h"
 #include "labelalloc_f.h"
 #include "language_f.h"
+#include "memory_f.h"
+#include "message_f.h"
+#include "readpivot_f.h"
+#include "references_f.h"
+#include "schemas_f.h"
+#include "structcreation_f.h"
+#include "structschema_f.h"
+#include "tree_f.h"
+#include "units_f.h"
+#include "viewcommands_f.h"
 
 /*----------------------------------------------------------------------
    	PivotError							
@@ -127,16 +126,12 @@ BinFile             file;
    Retourne un pointeur sur son contexte, ou NULL s'il	
    n'est pas charge'.                                      
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 PtrDocument         GetPtrDocument (DocumentIdentifier docIdent)
-
 #else  /* __STDC__ */
 PtrDocument         GetPtrDocument (docIdent)
 DocumentIdentifier  docIdent;
-
 #endif /* __STDC__ */
-
 {
    int                 doc;
    PtrDocument         pDoc;
@@ -154,13 +149,10 @@ DocumentIdentifier  docIdent;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         FreeUnusedReferredElemDesc (PtrDocument pDoc)
-
 #else  /* __STDC__ */
 static void         FreeUnusedReferredElemDesc (pDoc)
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
-
 {
    PtrReferredDescr    pRefD, pPrevRefD;
 
@@ -198,10 +190,8 @@ PtrDocument         pDoc;
    squelette si skeleton est TRUE. Ne pas charger de       
    schema de structure et utiliser pSS si pSS <> NULL.     
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 boolean             OpenDocument (Name docName, PtrDocument pDoc, boolean loadIncludedDoc, boolean skeleton, PtrSSchema pSS, boolean withAppEvent)
-
 #else  /* __STDC__ */
 boolean             OpenDocument (docName, pDoc, loadIncludedDoc, skeleton, pSS, withAppEvent)
 Name                docName;
@@ -210,9 +200,7 @@ boolean             loadIncludedDoc;
 boolean             skeleton;
 PtrSSchema          pSS;
 boolean             withAppEvent;
-
 #endif /* __STDC__ */
-
 {
    boolean             ret;
    int                 i;
@@ -304,16 +292,12 @@ boolean             withAppEvent;
    structure et de presentation utilises par le document   
    ne sont pas liberes...                                  
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                DeleteAllTrees (PtrDocument pDoc)
-
 #else  /* __STDC__ */
 void                DeleteAllTrees (pDoc)
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
-
 {
    int                 i;
    PtrOutReference     pOutRef, pNextOutRef;
@@ -392,17 +376,14 @@ PtrDocument         pDoc;
    presentation trouve ou 0.                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *NormalizeFileName (char *fileName, int *oldTypeImage, PictureScaling * oldPres, boolean * found)
-
+static char        *NormalizeFileName (char *fileName, int *oldTypeImage, PictureScaling *oldPres, boolean *found)
 #else  /* __STDC__ */
 static char        *NormalizeFileName (fileName, oldTypeImage, oldPres, found)
 char               *fileName;
 int                *oldTypeImage;
 PictureScaling     *oldPres;
 boolean            *found;
-
 #endif /* __STDC__ */
-
 {
    char               *name;
 
@@ -423,43 +404,6 @@ boolean            *found;
    return name;
 }
 
-
-/*----------------------------------------------------------------------
-   CreatePRule cree une regle de presentation pour l'image		
-   contenue dans pEl.                                      
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         CreatePRule (PtrElement pEl, int pictureType, PictureScaling scaling, int view)
-
-#else  /* __STDC__ */
-static void         CreatePRule (pEl, pictureType, scaling, view)
-PtrElement          pEl;
-int                 pictureType;
-PictureScaling      scaling;
-int                 view;
-
-#endif /* __STDC__ */
-
-{
-   PtrPRule            pPRule;
-
-   GetPresentRule (&pPRule);
-   /* initialise d'abord la nouvelle regle */
-   pPRule->PrPresMode = PresImmediate;
-   pPRule->PrSpecifAttr = 0;
-   pPRule->PrSpecifAttrSSchema = NULL;
-   pPRule->PrViewNum = view;
-   pPRule->PrType = PtPictInfo;
-   pPRule->PrPictInfo.PicXArea = 0;
-   pPRule->PrPictInfo.PicYArea = 0;
-   pPRule->PrPictInfo.PicWArea = 0;
-   pPRule->PrPictInfo.PicHArea = 0;
-   pPRule->PrPictInfo.PicPresent = scaling;
-   pPRule->PrPictInfo.PicType = pictureType;
-   /* chaine la nouvelle regle */
-   pPRule->PrNextPRule = pEl->ElFirstPRule;
-   pEl->ElFirstPRule = pPRule;
-}
 
 /*----------------------------------------------------------------------
    ReadDimensionType lit un type de dimension dans le fichier et	
@@ -838,104 +782,46 @@ boolean             oldformat;
 }
 
 /*----------------------------------------------------------------------
-   ReadPictureType lit le type de l'image d'un PictInfo.		
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static int          ReadPictureType (BinFile file)
-
-#else  /* __STDC__ */
-static int          ReadPictureType (file)
-BinFile             file;
-
-#endif /* __STDC__ */
-
-{
-   int                 n;
-
-   TtaReadShort (file, &n);
-   /* Pour assurer la compatibilite avec Linux et autre machine */
-   if (n == 255)
-      return -1;
-   else
-      return n;
-}
-
-/*----------------------------------------------------------------------
-   ReadPictureArea lit la zone affichable d'un PictInfo.		
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void         ReadPictureArea (BinFile file, int *PicXArea, int *PicYArea, int *PicWArea, int *PicHArea)
-
-#else  /* __STDC__ */
-static void         ReadPictureArea (file, PicXArea, PicYArea, PicWArea, PicHArea)
-BinFile             file;
-int                *PicXArea;
-int                *PicYArea;
-int                *PicWArea;
-int                *PicHArea;
-
-#endif /* __STDC__ */
-
-{
-   int                 n;
-
-   TtaReadShort (file, &n);
-   *PicXArea = PointToPixel (n);
-   TtaReadShort (file, &n);
-   *PicYArea = PointToPixel (n);
-   TtaReadShort (file, &n);
-   *PicWArea = PointToPixel (n);
-   TtaReadShort (file, &n);
-   *PicHArea = PointToPixel (n);
-}
-
-/*----------------------------------------------------------------------
    ReadPicturePresentation lit la presentation d'un PictInfo	
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
-static PictureScaling ReadPicturePresentation (BinFile file)
-
+static PictureScaling ReadPicturePresentation (BinFile pivFile)
 #else  /* __STDC__ */
-static PictureScaling ReadPicturePresentation (file)
-BinFile             file;
-
+static PictureScaling ReadPicturePresentation (pivFile)
+BinFile             pivFile;
 #endif /* __STDC__ */
-
 {
    char                c;
    PictureScaling      scaling;
 
-   if (!TtaReadByte (file, &c))
+   if (!TtaReadByte (pivFile, &c))
      {
 	c = '\0';
-	PivotError (file);
+	PivotError (pivFile);
      }
    switch (c)
-	 {
-	    case C_PIV_REALSIZE:
-	       scaling = RealSize;
-	       break;
-	    case C_PIV_RESCALE:
-	       scaling = ReScale;
-	       break;
-	    case C_PIV_FILLFRAME:
-	       scaling = FillFrame;
-	       break;
-	    case C_PIV_XREPEAT:
-	       scaling = XRepeat;
-	       break;
-	    case C_PIV_YREPEAT:
-	       scaling = YRepeat;
-	       break;
-	    default:
-	       PivotError (file);
-	       DisplayPivotMessage ("PICT");
-	       scaling = RealSize;
-	       break;
-	 }
+     {
+     case C_PIV_REALSIZE:
+       scaling = RealSize;
+       break;
+     case C_PIV_RESCALE:
+       scaling = ReScale;
+       break;
+     case C_PIV_FILLFRAME:
+       scaling = FillFrame;
+       break;
+     case C_PIV_XREPEAT:
+       scaling = XRepeat;
+       break;
+     case C_PIV_YREPEAT:
+       scaling = YRepeat;
+       break;
+     default:
+       PivotError (pivFile);
+       DisplayPivotMessage ("PICT");
+       scaling = RealSize;
+       break;
+     }
 
    return scaling;
 }
@@ -945,18 +831,13 @@ BinFile             file;
    LabelStringToInt convertit le label strn en un entier           
    retourne 0 si label mal construit.                      
   ----------------------------------------------------------------------*/
-
-
 #ifdef __STDC__
 void                LabelStringToInt (LabelString string, int *number)
-
 #else  /* __STDC__ */
 void                LabelStringToInt (string, number)
 LabelString         string;
 int                *number;
-
 #endif /* __STDC__ */
-
 {
    int                 i;
    int                 val;
@@ -996,10 +877,8 @@ int                *number;
    reference externe, le nom (docIdent) du document contenant	
    l'element reference'. 					
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         ReadReference (ReferenceType * refType, LabelString label, boolean * refExt, DocumentIdentifier * docIdent, BinFile file)
-
 #else  /* __STDC__ */
 static void         ReadReference (refType, label, refExt, docIdent, file)
 ReferenceType      *refType;
@@ -1007,9 +886,7 @@ LabelString         label;
 boolean            *refExt;
 DocumentIdentifier *docIdent;
 BinFile             file;
-
 #endif /* __STDC__ */
-
 {
    int                 j;
    char                c;
@@ -1128,18 +1005,14 @@ BinFile             file;
    La fonction rend un pointeur sur le descripteur trouve' 
    ou cree'.                                               
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static PtrReferredDescr GetElRefer (LabelString label, DocumentIdentifier docIdent, PtrDocument pDoc)
-
 #else  /* __STDC__ */
 static PtrReferredDescr GetElRefer (label, docIdent, pDoc)
 LabelString         label;
 DocumentIdentifier  docIdent;
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
-
 {
    PtrReferredDescr    pRefD;
    int                 i;
@@ -1333,10 +1206,8 @@ char               *tag;
    de l'element courant et qu'on ne cherche plus a` creer  
    de contenu.                                             
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         ExportedContent (boolean * createAll, int *elType, PtrSSchema * pSS, PtrSSchema * pContSS, int *contentType)
-
 #else  /* __STDC__ */
 static void         ExportedContent (createAll, elType, pSS, pContSS, contentType)
 boolean            *createAll;
@@ -1344,9 +1215,7 @@ int                *elType;
 PtrSSchema         *pSS;
 PtrSSchema         *pContSS;
 int                *contentType;
-
 #endif /* __STDC__ */
-
 {
    int                 i;
    boolean             ok;
@@ -1422,18 +1291,14 @@ int                *contentType;
    schema de structure pSS et, si certains attributs requis        
    manquent, affiche un message d'erreur.                          
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         CheckMandatAttrSRule (PtrElement pEl, SRule * pSRule, PtrSSchema pSS)
-
 #else  /* __STDC__ */
 static void         CheckMandatAttrSRule (pEl, pSRule, pSS)
 PtrElement          pEl;
 SRule              *pSRule;
 PtrSSchema          pSS;
-
 #endif /* __STDC__ */
-
 {
    PtrAttribute        pAttr;
    int                 i, att;
@@ -1472,7 +1337,6 @@ static void         CheckMandatoryAttr (PtrElement pEl, PtrDocument pDoc)
 static void         CheckMandatoryAttr (pEl, pDoc)
 PtrElement          pEl;
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
 {
 
@@ -1522,7 +1386,6 @@ PtrDocument         pDoc;
    dans pReadAttr.                                                 
    ATTENTION: ReadAttributePiv utilise la table des natures du document    
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                ReadAttributePiv (BinFile pivFile, PtrElement pEl, PtrDocument pDoc, boolean create, PtrAttribute * pReadAttr, PtrAttribute * pAttr)
 
@@ -1743,10 +1606,8 @@ PtrAttribute       *pAttr;
    dans pReadAttr.                                                 
    ATTENTION: ReadAttribute utilise la table des natures du document  
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         ReadAttribute (BinFile pivFile, PtrElement pEl, PtrDocument pDoc, boolean create, PtrAttribute * pReadAttr)
-
 #else  /* __STDC__ */
 static void         ReadAttribute (pivFile, pEl, pDoc, create, pReadAttr)
 BinFile             pivFile;
@@ -1754,7 +1615,6 @@ PtrElement          pEl;
 PtrDocument         pDoc;
 boolean             create;
 PtrAttribute       *pReadAttr;
-
 #endif /* __STDC__ */
 
 {
@@ -1810,309 +1670,309 @@ boolean             link;
 
 #endif /* __STDC__ */
 {
-   PRuleType           TypeRP;
-   BAlignment          align;
-   PictureScaling      pres;
-   PtrPRule            pR1, pPRule, pPRule1;
-   PosRule            *pPosRule;
-   PtrPSchema          pSPR;
-   PtrSSchema          pSSR;
-   PtrAttribute        pAttr;
-   DimensionRule      *pDimRule;
-   TypeUnit            unit;
-   int                 pictureType, val, PicXArea, PicYArea, PicWArea,
-                       PicHArea, view, box;
-   char                ch;
-   boolean             absolute, sign, just;
-
-   pres = (PictureScaling) 0;
-   pictureType = 0;
-   just = FALSE;
-   sign = FALSE;
-   absolute = FALSE;
-   align = (BAlignment) 0;
-   TypeRP = (PRuleType) 0;
-   *pRuleRead = NULL;
-   unit = UnRelative;
-   /* lit le numero de vue */
-   TtaReadShort (pivFile, &view);
-   /* lit le numero de la boite de present. concernee par la regle */
-   TtaReadShort (pivFile, &box);
-   /* lit le type de la regle */
-   if (!TtaReadByte (pivFile, &ch))
+  PRuleType           TypeRP;
+  BAlignment          align;
+  PictureScaling      pres;
+  PtrPRule            pR1, pPRule, pPRule1;
+  PosRule            *pPosRule;
+  PtrPSchema          pSPR;
+  PtrSSchema          pSSR;
+  PtrAttribute        pAttr;
+  DimensionRule      *pDimRule;
+  TypeUnit            unit;
+  int                 pictureType, val, PicXArea, PicYArea, PicWArea;
+  int                 PicHArea, view, box;
+  char                ch;
+  boolean             absolute, sign, just;
+  
+  pres = (PictureScaling) 0;
+  pictureType = 0;
+  just = FALSE;
+  sign = FALSE;
+  absolute = FALSE;
+  align = (BAlignment) 0;
+  TypeRP = (PRuleType) 0;
+  *pRuleRead = NULL;
+  unit = UnRelative;
+  /* lit le numero de vue */
+  TtaReadShort (pivFile, &view);
+  /* lit le numero de la boite de present. concernee par la regle */
+  TtaReadShort (pivFile, &box);
+  /* lit le type de la regle */
+  if (!TtaReadByte (pivFile, &ch))
+    PivotError (pivFile);
+  switch (ch)
+    {
+    case C_PR_ADJUST:
+      TypeRP = PtAdjust;
+      break;
+    case C_PR_HEIGHT:
+      TypeRP = PtHeight;
+      break;
+    case C_PR_WIDTH:
+      TypeRP = PtWidth;
+      break;
+    case C_PR_VPOS:
+      TypeRP = PtVertPos;
+      break;
+    case C_PR_HPOS:
+      TypeRP = PtHorizPos;
+      break;
+    case C_PR_SIZE:
+      TypeRP = PtSize;
+      break;
+    case C_PR_STYLE:
+      TypeRP = PtStyle;
+      break;
+    case C_PR_FONT:
+      TypeRP = PtFont;
+      break;
+    case C_PR_UNDERLINE:
+      TypeRP = PtUnderline;
+      break;
+    case C_PR_UNDER_THICK:
+      TypeRP = PtThickness;
+      break;
+    case C_PR_BREAK1:
+      TypeRP = PtBreak1;
+      break;
+    case C_PR_BREAK2:
+      TypeRP = PtBreak2;
+      break;
+    case C_PR_PICTURE:
+      TypeRP = PtPictInfo;
+      break;
+    case C_PR_INDENT:
+      TypeRP = PtIndent;
+      break;
+    case C_PR_LINESPACING:
+      TypeRP = PtLineSpacing;
+      break;
+    case C_PR_JUSTIFY:
+      TypeRP = PtJustify;
+      break;
+    case C_PR_HYPHENATE:
+      TypeRP = PtHyphenate;
+      break;
+    case C_PR_LINESTYLE:
+      TypeRP = PtLineStyle;
+      break;
+    case C_PR_LINEWEIGHT:
+      TypeRP = PtLineWeight;
+      break;
+    case C_PR_FILLPATTERN:
+      TypeRP = PtFillPattern;
+      break;
+    case C_PR_BACKGROUND:
+      TypeRP = PtBackground;
+      break;
+    case C_PR_FOREGROUND:
+      TypeRP = PtForeground;
+      break;
+    default:
       PivotError (pivFile);
-   switch (ch)
-	 {
-	    case C_PR_ADJUST:
-	       TypeRP = PtAdjust;
-	       break;
-	    case C_PR_HEIGHT:
-	       TypeRP = PtHeight;
-	       break;
-	    case C_PR_WIDTH:
-	       TypeRP = PtWidth;
-	       break;
-	    case C_PR_VPOS:
-	       TypeRP = PtVertPos;
-	       break;
-	    case C_PR_HPOS:
-	       TypeRP = PtHorizPos;
-	       break;
-	    case C_PR_SIZE:
-	       TypeRP = PtSize;
-	       break;
-	    case C_PR_STYLE:
-	       TypeRP = PtStyle;
-	       break;
-	    case C_PR_FONT:
-	       TypeRP = PtFont;
-	       break;
-	    case C_PR_UNDERLINE:
-	       TypeRP = PtUnderline;
-	       break;
-	    case C_PR_UNDER_THICK:
-	       TypeRP = PtThickness;
-	       break;
-	    case C_PR_BREAK1:
-	       TypeRP = PtBreak1;
-	       break;
-	    case C_PR_BREAK2:
-	       TypeRP = PtBreak2;
-	       break;
-	    case C_PR_PICTURE:
-	       TypeRP = PtPictInfo;
-	       break;
-	    case C_PR_INDENT:
-	       TypeRP = PtIndent;
-	       break;
-	    case C_PR_LINESPACING:
-	       TypeRP = PtLineSpacing;
-	       break;
-	    case C_PR_JUSTIFY:
-	       TypeRP = PtJustify;
-	       break;
-	    case C_PR_HYPHENATE:
-	       TypeRP = PtHyphenate;
-	       break;
-	    case C_PR_LINESTYLE:
-	       TypeRP = PtLineStyle;
-	       break;
-	    case C_PR_LINEWEIGHT:
-	       TypeRP = PtLineWeight;
-	       break;
-	    case C_PR_FILLPATTERN:
-	       TypeRP = PtFillPattern;
-	       break;
-	    case C_PR_BACKGROUND:
-	       TypeRP = PtBackground;
-	       break;
-	    case C_PR_FOREGROUND:
-	       TypeRP = PtForeground;
-	       break;
-	    default:
-	       PivotError (pivFile);
-	       DisplayPivotMessage ("p");
-	       break;
-	 }
+      DisplayPivotMessage ("p");
+      break;
+    }
 
-   if (!error)
-      /* lit les parametres de la regle selon son type */
-      switch (TypeRP)
-	    {
-	       case PtAdjust:
-		  align = ReadAlign (pivFile);
-		  break;
-	       case PtHeight:
-	       case PtWidth:
-		  absolute = ReadDimensionType (pivFile);
-		  TtaReadShort (pivFile, &val);
-		  unit = ReadUnit (pivFile);
-		  sign = ReadSign (pivFile);
-		  break;
-	       case PtVertPos:
-	       case PtHorizPos:
-		  TtaReadShort (pivFile, &val);
-		  unit = ReadUnit (pivFile);
-		  sign = ReadSign (pivFile);
-		  break;
-	       case PtBreak1:
-	       case PtBreak2:
-	       case PtIndent:
-	       case PtSize:
-	       case PtLineSpacing:
-	       case PtLineWeight:
-		  TtaReadShort (pivFile, &val);
-		  unit = ReadUnit (pivFile);
-		  if (TypeRP == PtIndent)
-		     sign = ReadSign (pivFile);
-		  break;
-	       case PtFillPattern:
-	       case PtBackground:
-	       case PtForeground:
-		  TtaReadShort (pivFile, &val);
-		  break;
-	       case PtFont:
-	       case PtStyle:
-	       case PtUnderline:
-	       case PtThickness:
-	       case PtLineStyle:
-		  if (!TtaReadByte (pivFile, &ch))
-		     PivotError (pivFile);
-		  break;
-	       case PtJustify:
-	       case PtHyphenate:
-		  just = ReadBoolean (pivFile);
-		  break;
-	       case PtPictInfo:
-		  ReadPictureArea (pivFile, &PicXArea, &PicYArea, &PicWArea, &PicHArea);
-		  pres = ReadPicturePresentation (pivFile);
-		  pictureType = ReadPictureType (pivFile);
-		  break;
-	       default:
-		  break;
-	    }
+  if (!error)
+    /* lit les parametres de la regle selon son type */
+    switch (TypeRP)
+      {
+      case PtAdjust:
+	align = ReadAlign (pivFile);
+	break;
+      case PtHeight:
+      case PtWidth:
+	absolute = ReadDimensionType (pivFile);
+	TtaReadShort (pivFile, &val);
+	unit = ReadUnit (pivFile);
+	sign = ReadSign (pivFile);
+	break;
+      case PtVertPos:
+      case PtHorizPos:
+	TtaReadShort (pivFile, &val);
+	unit = ReadUnit (pivFile);
+	sign = ReadSign (pivFile);
+	break;
+      case PtBreak1:
+      case PtBreak2:
+      case PtIndent:
+      case PtSize:
+      case PtLineSpacing:
+      case PtLineWeight:
+	TtaReadShort (pivFile, &val);
+	unit = ReadUnit (pivFile);
+	if (TypeRP == PtIndent)
+	  sign = ReadSign (pivFile);
+	break;
+      case PtFillPattern:
+      case PtBackground:
+      case PtForeground:
+	TtaReadShort (pivFile, &val);
+	break;
+      case PtFont:
+      case PtStyle:
+      case PtUnderline:
+      case PtThickness:
+      case PtLineStyle:
+	if (!TtaReadByte (pivFile, &ch))
+	  PivotError (pivFile);
+	break;
+      case PtJustify:
+      case PtHyphenate:
+	just = ReadBoolean (pivFile);
+	break;
+      case PtPictInfo:
+	TtaReadShort (pivFile, &PicXArea);
+	TtaReadShort (pivFile, &PicYArea);
+	TtaReadShort (pivFile, &PicWArea);
+	TtaReadShort (pivFile, &PicHArea);
+	pres = ReadPicturePresentation (pivFile);
+	TtaReadShort (pivFile, &pictureType);
+	/* Pour assurer la compatibilite avec Linux et autre machine */
+	if (pictureType == 255)
+	  pictureType = -1;
+	SetImageRule (pEl, PicXArea, PicYArea, PicWArea, PicHArea, pictureType, pres);
+	create = FALSE;
+	break;
+      default:
+	break;
+      }
 
-   if (create)
-     {
-	GetPresentRule (&pPRule);
-	*pRuleRead = pPRule;
-	/* initialise d'abord la nouvelle regle */
-	pPRule->PrPresMode = PresImmediate;
-	pPRule->PrSpecifAttr = 0;
-	pPRule->PrSpecifAttrSSchema = NULL;
-	pAttr = NULL;
-	pPRule->PrViewNum = view;
-	pPRule->PrType = TypeRP;
-	/* charge les parametres de la regle selon son type */
-	if (!error)
-	   switch (pPRule->PrType)
-		 {
-		    case PtAdjust:
-		       pPRule->PrAdjust = align;
-		       break;
-		    case PtHeight:
-		    case PtWidth:
-		       pDimRule = &pPRule->PrDimRule;
-		       pDimRule->DrPosition = FALSE;
-		       pDimRule->DrAbsolute = absolute;
-		       if (!pDimRule->DrAbsolute)
-			  /* c'est une dimension relative, on prend */
-			  /* la regle qui devrait s'appliquer a     */
-			  /* l'element, puis on la modifie selon    */
-			  /* ce qui est lu dans le fichier          */
-			 {
-			    pR1 = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, pPRule->PrViewNum,
-				       pPRule->PrType, FALSE, TRUE, &pAttr);
-			    if (pR1 != NULL)
-
-			      {
-				 *pPRule = *pR1;
-				 pPRule->PrViewNum = view;
-				 pPRule->PrNextPRule = NULL;
-				 pPRule->PrCond = NULL;
-			      }
-			 }
-		       pDimRule->DrAttr = FALSE;
-		       pDimRule->DrValue = val;
-		       pDimRule->DrUnit = unit;
-		       if (!sign)
-			  pDimRule->DrValue = -pDimRule->DrValue;
-		       pDimRule->DrMin = FALSE;
-		       break;
-		    case PtVertPos:
-		    case PtHorizPos:
-		       pPosRule = &pPRule->PrPosRule;
-		       /* c'est une position relative, on prend */
-		       /* la regle qui devrait s'appliquer a    */
-		       /* l'element, puis on la modifie selon   */
-		       /* ce qui est lu dans le fichier         */
-		       pR1 = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, pPRule->PrViewNum,
-				       pPRule->PrType, FALSE, TRUE, &pAttr);
-		       if (pR1 != NULL)
-			  *pPRule = *pR1;
-		       pPRule->PrViewNum = view;
-		       pPRule->PrNextPRule = NULL;
-		       pPRule->PrCond = NULL;
-		       pPosRule->PoDistAttr = FALSE;
-		       pPosRule->PoDistance = val;
-		       pPosRule->PoDistUnit = unit;
-		       if (!sign)
-			  pPosRule->PoDistance = -pPosRule->PoDistance;
-		       break;
-		    case PtBreak1:
-		    case PtBreak2:
-		    case PtIndent:
-		    case PtSize:
-		    case PtLineSpacing:
-		    case PtLineWeight:
-		       pPRule->PrMinAttr = FALSE;
-		       pPRule->PrMinValue = val;
-		       pPRule->PrMinUnit = unit;
-		       if (pPRule->PrType == PtIndent)
-			  if (!sign)
-			     pPRule->PrMinValue = -pPRule->PrMinValue;
-		       break;
-		    case PtFillPattern:
-		       pPRule->PrAttrValue = FALSE;
-		       pPRule->PrIntValue = val;
-		       break;
-		    case PtBackground:
-		    case PtForeground:
-		       pPRule->PrAttrValue = FALSE;
-		       /* convertit les couleurs des anciennes versions */
-		       if (pDoc->DocPivotVersion < 4)
-			  val = newColor[val];
-		       pPRule->PrIntValue = val;
-		       break;
-		    case PtFont:
-		    case PtStyle:
-		    case PtUnderline:
-		    case PtThickness:
-		    case PtLineStyle:
-		       pPRule->PrChrValue = ch;
-		       break;
-		    case PtJustify:
-		    case PtHyphenate:
-		       pPRule->PrJustify = just;
-		       break;
-		    case PtPictInfo:
-		       pPRule->PrPictInfo.PicXArea = PicXArea;
-		       pPRule->PrPictInfo.PicYArea = PicYArea;
-		       pPRule->PrPictInfo.PicWArea = PicWArea;
-		       pPRule->PrPictInfo.PicHArea = PicHArea;
-		       pPRule->PrPictInfo.PicPresent = pres;
-		       pPRule->PrPictInfo.PicType = pictureType;
-		       break;
-		    default:
-		       break;
-		 }
-	/* si la regle copiee est associee a un attribut, garde le lien */
-	/* avec cet attribut */
-	if (pAttr != NULL)
+  if (create)
+    {
+      GetPresentRule (&pPRule);
+      *pRuleRead = pPRule;
+      /* initialise d'abord la nouvelle regle */
+      pPRule->PrPresMode = PresImmediate;
+      pPRule->PrSpecifAttr = 0;
+      pPRule->PrSpecifAttrSSchema = NULL;
+      pAttr = NULL;
+      pPRule->PrViewNum = view;
+      pPRule->PrType = TypeRP;
+      /* charge les parametres de la regle selon son type */
+      if (!error)
+	switch (pPRule->PrType)
 	  {
-	     pPRule->PrSpecifAttr = pAttr->AeAttrNum;
-	     pPRule->PrSpecifAttrSSchema = pAttr->AeAttrSSchema;
+	  case PtAdjust:
+	    pPRule->PrAdjust = align;
+	    break;
+	  case PtHeight:
+	  case PtWidth:
+	    pDimRule = &pPRule->PrDimRule;
+	    pDimRule->DrPosition = FALSE;
+	    pDimRule->DrAbsolute = absolute;
+	    if (!pDimRule->DrAbsolute)
+	      /* c'est une dimension relative, on prend */
+	      /* la regle qui devrait s'appliquer a     */
+	      /* l'element, puis on la modifie selon    */
+	      /* ce qui est lu dans le fichier          */
+	      {
+		pR1 = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, pPRule->PrViewNum,
+					   pPRule->PrType, FALSE, TRUE, &pAttr);
+		if (pR1 != NULL)
+		  
+		  {
+		    *pPRule = *pR1;
+		    pPRule->PrViewNum = view;
+		    pPRule->PrNextPRule = NULL;
+		    pPRule->PrCond = NULL;
+		  }
+	      }
+	    pDimRule->DrAttr = FALSE;
+	    pDimRule->DrValue = val;
+	    pDimRule->DrUnit = unit;
+	    if (!sign)
+	      pDimRule->DrValue = -pDimRule->DrValue;
+	    pDimRule->DrMin = FALSE;
+	    break;
+	  case PtVertPos:
+	  case PtHorizPos:
+	    pPosRule = &pPRule->PrPosRule;
+	    /* c'est une position relative, on prend */
+	    /* la regle qui devrait s'appliquer a    */
+	    /* l'element, puis on la modifie selon   */
+	    /* ce qui est lu dans le fichier         */
+	    pR1 = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, pPRule->PrViewNum,
+				       pPRule->PrType, FALSE, TRUE, &pAttr);
+	    if (pR1 != NULL)
+	      *pPRule = *pR1;
+	    pPRule->PrViewNum = view;
+	    pPRule->PrNextPRule = NULL;
+	    pPRule->PrCond = NULL;
+	    pPosRule->PoDistAttr = FALSE;
+	    pPosRule->PoDistance = val;
+	    pPosRule->PoDistUnit = unit;
+	    if (!sign)
+	      pPosRule->PoDistance = -pPosRule->PoDistance;
+	    break;
+	  case PtBreak1:
+	  case PtBreak2:
+	  case PtIndent:
+	  case PtSize:
+	  case PtLineSpacing:
+	  case PtLineWeight:
+	    pPRule->PrMinAttr = FALSE;
+	    pPRule->PrMinValue = val;
+	    pPRule->PrMinUnit = unit;
+	    if (pPRule->PrType == PtIndent)
+	      if (!sign)
+		pPRule->PrMinValue = -pPRule->PrMinValue;
+	    break;
+	  case PtFillPattern:
+	    pPRule->PrAttrValue = FALSE;
+	    pPRule->PrIntValue = val;
+	    break;
+	  case PtBackground:
+	  case PtForeground:
+	    pPRule->PrAttrValue = FALSE;
+	    /* convertit les couleurs des anciennes versions */
+	    if (pDoc->DocPivotVersion < 4)
+	      val = newColor[val];
+	    pPRule->PrIntValue = val;
+	    break;
+	  case PtFont:
+	  case PtStyle:
+	  case PtUnderline:
+	  case PtThickness:
+	  case PtLineStyle:
+	    pPRule->PrChrValue = ch;
+	    break;
+	  case PtJustify:
+	  case PtHyphenate:
+	    pPRule->PrJustify = just;
+	    break;
+	  default:
+	    break;
 	  }
-
-	if (link)
-	   /* chaine la nouvelle regle de presentation en queue de la */
-	   /* chaine des regles de presentation de l'element */
-	   if (pEl->ElFirstPRule == NULL)
-	      /* pas encore de regle de presentation pour l'element */
-	      pEl->ElFirstPRule = pPRule;
-	   else
-	     {
-		/* 1ere regle de presentation de l'element */
-		pPRule1 = pEl->ElFirstPRule;
-		/* cherche la derniere regle de l'element */
-		while (pPRule1->PrNextPRule != NULL)
-		   pPRule1 = pPRule1->PrNextPRule;
-		/* chaine la nouvelle regle */
-		pPRule1->PrNextPRule = pPRule;
-	     }
-	/* c'est la derniere regle */
-	pPRule->PrNextPRule = NULL;
-     }
+      /* si la regle copiee est associee a un attribut, garde le lien */
+      /* avec cet attribut */
+      if (pAttr != NULL)
+	{
+	  pPRule->PrSpecifAttr = pAttr->AeAttrNum;
+	  pPRule->PrSpecifAttrSSchema = pAttr->AeAttrSSchema;
+	}
+      
+      if (link)
+	/* chaine la nouvelle regle de presentation en queue de la */
+	/* chaine des regles de presentation de l'element */
+	if (pEl->ElFirstPRule == NULL)
+	  /* pas encore de regle de presentation pour l'element */
+	  pEl->ElFirstPRule = pPRule;
+	else
+	  {
+	    /* 1ere regle de presentation de l'element */
+	    pPRule1 = pEl->ElFirstPRule;
+	    /* cherche la derniere regle de l'element */
+	    while (pPRule1->PrNextPRule != NULL)
+	      pPRule1 = pPRule1->PrNextPRule;
+	    /* chaine la nouvelle regle */
+	    pPRule1->PrNextPRule = pPRule;
+	  }
+      /* c'est la derniere regle */
+      pPRule->PrNextPRule = NULL;
+    }
 }
 
 
@@ -2196,10 +2056,8 @@ PtrDocument         pDoc;
    - createDesc: si cree<desc est faux, on ne cree pas     
    l'element lu ni sa descendance. Prioritaire sur createAll
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 PtrElement          ReadTreePiv (BinFile pivFile, PtrSSchema pSSchema, PtrDocument pDoc, char *tag, int assocNum, boolean createParam, boolean createAll, int *contentType, PtrSSchema * pContSS, int *typeRead, PtrSSchema * pSSRead, boolean createPage, PtrElement pParent, boolean createDesc)
-
 #else  /* __STDC__ */
 PtrElement          ReadTreePiv (pivFile, pSSchema, pDoc, tag, assocNum, createParam, createAll, contentType, pContSS, typeRead, pSSRead, createPage, pParent, createDesc)
 BinFile             pivFile;
@@ -2216,748 +2074,751 @@ PtrSSchema         *pSSRead;
 boolean             createPage;
 PtrElement          pParent;
 boolean             createDesc;
-
 #endif /* __STDC__ */
 
 {
-   PtrAttribute        pAttr;
-   PtrTextBuffer       pBuf, pBufComment;
-   PtrElement          pPrevEl, p, pEl, pEl2, pElInt, pElRead, pfutParent;
-   PtrPRule            pPRule;
-   PtrSSchema          pSS;
-   PtrReferredDescr    pRefD;
-   SRule              *pSRule;
-   LabelString         label;
-   DocumentIdentifier  docIdent;
-   BasicType           leafType;
-   PageType            pageType;
-   ReferenceType       refType;
-   PictureScaling      pres;
-   int                 i, j, n, view, pictureType, elType, rule;
-   char                ch, c, alphabet;
-   boolean             create, inclusion, modif, parameter, findtype, refExt,
-                       found, withReferences;
-   NotifyElement       notifyEl;
-
-   pSRule = NULL;
-   pEl = NULL;
-   withReferences = FALSE;
-   create = FALSE;
-   if (*tag != (char) C_PIV_TYPE && *tag != (char) C_PIV_NATURE)
-     {
-	i = 1;
-	while (!error && i < 200)
-	  {
-	     if (!TtaReadByte (pivFile, &c))
-		PivotError (pivFile);
-	     else
-	       {
-		  if (c < ' ')
-		    {
-		       printf ("^");
-		       c = (char) (((int) c) + ((int) '@'));
-		       i++;
-		    }
-		  printf ("%c", c);
+  PtrAttribute        pAttr;
+  PtrTextBuffer       pBuf, pBufComment;
+  PtrElement          pPrevEl, p, pEl, pEl2, pElInt, pElRead, pfutParent;
+  PtrPRule            pPRule;
+  PtrSSchema          pSS;
+  PtrReferredDescr    pRefD;
+  SRule              *pSRule;
+  LabelString         label;
+  DocumentIdentifier  docIdent;
+  BasicType           leafType;
+  PageType            pageType;
+  ReferenceType       refType;
+  PictureScaling      pres;
+  NotifyElement       notifyEl;
+  PictInfo           *image;
+  int                 i, j, n, view, pictureType, elType, rule;
+  char                ch, c, alphabet;
+  boolean             create, inclusion, modif, parameter;
+  boolean             findtype, refExt, found, withReferences;
+  
+  pSRule = NULL;
+  pEl = NULL;
+  withReferences = FALSE;
+  create = FALSE;
+  if (*tag != (char) C_PIV_TYPE && *tag != (char) C_PIV_NATURE)
+    {
+      i = 1;
+      while (!error && i < 200)
+	{
+	  if (!TtaReadByte (pivFile, &c))
+	    PivotError (pivFile);
+	  else
+	    {
+	      if (c < ' ')
+		{
+		  printf ("^");
+		  c = (char) (((int) c) + ((int) '@'));
 		  i++;
-	       }
-	  }
-	printf ("\n");
-	DisplayPivotMessage ("I");	/* erreur */
-	PivotError (pivFile);
-     }
-   else
-     {
-	/* lit le type de l'element dans le fichier */
-	elType = ReadType (pDoc, &pSSchema, pivFile, tag);
-	if (!error)
-	  {
-	     *typeRead = elType;	/* numero de type de l'element en cours */
-	     *pSSRead = pSSchema;	/* schema de structure de l'element en cours */
-	     if (!createAll)
-		/* on ne cree que les elements de type exporte'. L'element en cours */
-		/* de lecture est-il du type qui constitue le contenu de l'element */
-		/* exporte' englobant ? */
-		ExportedContent (&createAll, &elType, &pSSchema, pContSS, contentType);
-	     pSRule = &pSSchema->SsRule[elType - 1];
-	     if (createAll)
-		create = TRUE;
-	     else
-		/* on ne cree que les elements de type exporte' */
-	       {
-		  create = FALSE;
-		  if (pSRule->SrExportedElem)	/* l'element est d'un type exporte' */
-		     if (pSRule->SrExportContent != 0)
-			/* on veut creer au moins une partie de son contenu */
-		       {
-			  create = TRUE;	/* on le cree */
-			  *contentType = pSRule->SrExportContent;
-			  /* il faudra creer son contenu */
-			  /* cherche le schema de structure ou est */
-			  /* defini son contenu */
-			  if (pSRule->SrNatExpContent[0] == '\0')
-			     /* meme schema de structure */
-			     *pContSS = pSSchema;
-			  else
-			     /* cherche dans la table des natures du document */
-			    {
-			       i = 0;
-			       do
-				  i++;
-			       while (pDoc->DocNatureName[i - 1] != pSRule->SrNatExpContent &&
-				      i != pDoc->DocNNatures);
-			       if (pDoc->DocNatureName[i - 1] == pSRule->SrNatExpContent)
-				  /* trouve' */
-				  *pContSS = pDoc->DocNatureSSchema[i - 1];
-			       else
-				  /* la nature du contenu n'est pas chargee */
-				 {
-				    *pContSS = NULL;
-				    *contentType = 0;
-				    /* il faut peut-etre aussi creer */
-				    /* tout le contenu de l'element */
-				 }
-			    }
-			  ExportedContent (&createAll, &elType, &pSSchema, pContSS, contentType);
-		       }
-		  if (elType == PageBreak + 1)
-		     if (createPage)
-		       {
-			  create = TRUE;	/* on le cree */
-			  *contentType = elType;
-			  *pContSS = pSSchema;
-
-			  /* il faudra creer son contenu */
-			  /* cherche le schema de structure ou est */
-			  /* defini son contenu */
-			  ExportedContent (&createAll, &elType, &pSSchema, pContSS, contentType);
-		       }
-	       }
-	     if (createDesc)
-	       {
-		  notifyEl.event = TteElemRead;
-		  notifyEl.document = (Document) IdentDocument (pDoc);
-		  notifyEl.element = (Element) pParent;
-		  notifyEl.elementType.ElTypeNum = *typeRead;
-		  notifyEl.elementType.ElSSchema = (SSchema) (*pSSRead);
-		  notifyEl.position = 0;
-		  if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
-		     /* l'application ne veut pas lire le sous-arbre */
-		    {
-		       create = FALSE;
-		       createDesc = FALSE;
-		    }
-	       }
-	     /* on cree toujours la racine du document */
-	     if (!create)
-		if (pSSchema == pDoc->DocSSchema)
-		   if (elType == pSSchema->SsRootElem)
-		      /* c'est la racine, on cree */
-		      create = TRUE;
-	     if (!create)
-		pEl = NULL;
-	     else
-		/* cree un element du type lu */
-	       {
-		  if (pSSchema->SsRule[elType - 1].SrParamElem && createParam)
-		     /* simule un element ordinaire, si c'est un parametre a creer */
-		    {
-		       pSSchema->SsRule[elType - 1].SrParamElem = FALSE;
-		       parameter = TRUE;
-		    }
-		  else
-		     parameter = FALSE;
-		  /* il ne faut pas que le label max. du document augmente */
-		  pEl = NewSubtree (elType, pSSchema, pDoc, assocNum, FALSE, TRUE, FALSE, FALSE);
-		  if (pEl != NULL)
-		     pEl->ElLabel[0] = '\0';
-		  if (parameter)
-		     pSSchema->SsRule[elType - 1].SrParamElem = TRUE;
-	       }
-
-	     if (!TtaReadByte (pivFile, tag))
-		PivotError (pivFile);
-	  }
-	inclusion = FALSE;	/* est-ce une reference a un element inclus? */
-	if (!error && *tag == (char) C_PIV_INCLUDED)
-	   /* oui, lit la reference */
-	  {
-	     inclusion = TRUE;
-	     ReadReference (&refType, label, &refExt, &docIdent, pivFile);
-	     if (create)
-	       {
-		  GetReference (&pEl->ElSource);
-		  pEl->ElSource->RdElement = pEl;
-		  CreateReference (pEl->ElSource, refType, label, refExt, docIdent, pDoc);
-		  pEl->ElIsCopy = TRUE;
-
-	       }
-	     if (!TtaReadByte (pivFile, tag))
-		PivotError (pivFile);
-	  }
-
-	/* lit le tag "Element-reference'" si elle est presente */
-	if (!error)
-	   if (*tag == (char) C_PIV_REFERRED)
-	     {
-		withReferences = TRUE;
-		if (!TtaReadByte (pivFile, tag))
-		   PivotError (pivFile);
-	     }
-	   else
-	      withReferences = FALSE;
-	/* traite le label s'il est present */
-	label[0] = '\0';
-	if (!error)
-	   if (*tag == (char) C_PIV_SHORT_LABEL || *tag == (char) C_PIV_LONG_LABEL ||
-	       *tag == (char) C_PIV_LABEL)
-	     {
-		ReadLabel (*tag, label, pivFile);
-		/* lit le tag qui suit le label */
-		if (!TtaReadByte (pivFile, tag))
-		   PivotError (pivFile);
-	     }
-	if (!error && label[0] != '\0' && create)
-	   /* l'element porte un label */
-	  {
-	     strncpy (pEl->ElLabel, label, MAX_LABEL_LEN);
-	     if (!withReferences)
-		/* on verifie si cet element (ou plutot son label) est dans la */
-		/* chaine des elements reference's de l'exterieur */
-	       {
-		  pRefD = pDoc->DocLabels;
-		  while (pRefD != NULL && !withReferences)
-		     if (strcmp (pRefD->ReReferredLabel, label) == 0)
-			withReferences = TRUE;
-		     else
-			pRefD = pRefD->ReNext;
-	       }
-	     if (!error)
-		if (pDoc->DocPivotVersion < 3 || withReferences)
-		   /* on associe a l'element un descripteur d'element reference' */
-
+		}
+	      printf ("%c", c);
+	      i++;
+	    }
+	}
+      printf ("\n");
+      DisplayPivotMessage ("I");	/* erreur */
+      PivotError (pivFile);
+    }
+  else
+    {
+      /* lit le type de l'element dans le fichier */
+      elType = ReadType (pDoc, &pSSchema, pivFile, tag);
+      if (!error)
+	{
+	  *typeRead = elType;	/* numero de type de l'element en cours */
+	  *pSSRead = pSSchema;	/* schema de structure de l'element en cours */
+	  if (!createAll)
+	    /* on ne cree que les elements de type exporte'. L'element en cours */
+	    /* de lecture est-il du type qui constitue le contenu de l'element */
+	    /* exporte' englobant ? */
+	    ExportedContent (&createAll, &elType, &pSSchema, pContSS, contentType);
+	  pSRule = &pSSchema->SsRule[elType - 1];
+	  if (createAll)
+	    create = TRUE;
+	  else
+	    /* on ne cree que les elements de type exporte' */
+	    {
+	      create = FALSE;
+	      if (pSRule->SrExportedElem)	/* l'element est d'un type exporte' */
+		if (pSRule->SrExportContent != 0)
+		  /* on veut creer au moins une partie de son contenu */
 		  {
-		     ClearDocIdent (&docIdent);
-		     pEl->ElReferredDescr = GetElRefer (label, docIdent, pDoc);
-		     if (pEl->ElReferredDescr->ReReferredElem != NULL)
-			/* on a deja lu dans ce document un element */
-			/* portant ce label, erreur */
-		       {
-			  pEl->ElReferredDescr = NULL;
-			  DisplayPivotMessage ("L");
-		       }
-		     else
-			pEl->ElReferredDescr->ReReferredElem = pEl;
+		    create = TRUE;	/* on le cree */
+		    *contentType = pSRule->SrExportContent;
+		    /* il faudra creer son contenu */
+		    /* cherche le schema de structure ou est */
+		    /* defini son contenu */
+		    if (pSRule->SrNatExpContent[0] == '\0')
+		      /* meme schema de structure */
+		      *pContSS = pSSchema;
+		    else
+		      /* cherche dans la table des natures du document */
+		      {
+			i = 0;
+			do
+			  i++;
+			while (pDoc->DocNatureName[i - 1] != pSRule->SrNatExpContent &&
+			       i != pDoc->DocNNatures);
+			if (pDoc->DocNatureName[i - 1] == pSRule->SrNatExpContent)
+			  /* trouve' */
+			  *pContSS = pDoc->DocNatureSSchema[i - 1];
+			else
+			  /* la nature du contenu n'est pas chargee */
+			  {
+			    *pContSS = NULL;
+			    *contentType = 0;
+			    /* il faut peut-etre aussi creer */
+			    /* tout le contenu de l'element */
+			  }
+		      }
+		    ExportedContent (&createAll, &elType, &pSSchema, pContSS, contentType);
 		  }
+	      if (elType == PageBreak + 1)
+		if (createPage)
+		  {
+		    create = TRUE;	/* on le cree */
+		    *contentType = elType;
+		    *pContSS = pSSchema;
+		    
+		    /* il faudra creer son contenu */
+		    /* cherche le schema de structure ou est */
+		    /* defini son contenu */
+		    ExportedContent (&createAll, &elType, &pSSchema, pContSS, contentType);
+		  }
+	    }
+	  if (createDesc)
+	    {
+	      notifyEl.event = TteElemRead;
+	      notifyEl.document = (Document) IdentDocument (pDoc);
+	      notifyEl.element = (Element) pParent;
+	      notifyEl.elementType.ElTypeNum = *typeRead;
+	      notifyEl.elementType.ElSSchema = (SSchema) (*pSSRead);
+	      notifyEl.position = 0;
+	      if (CallEventType ((NotifyEvent *) & notifyEl, TRUE))
+		/* l'application ne veut pas lire le sous-arbre */
+		{
+		  create = FALSE;
+		  createDesc = FALSE;
+		}
+	    }
+	  /* on cree toujours la racine du document */
+	  if (!create)
+	    if (pSSchema == pDoc->DocSSchema)
+	      if (elType == pSSchema->SsRootElem)
+		/* c'est la racine, on cree */
+		create = TRUE;
+	  if (!create)
+	    pEl = NULL;
+	  else
+	    /* cree un element du type lu */
+	    {
+	      if (pSSchema->SsRule[elType - 1].SrParamElem && createParam)
+		/* simule un element ordinaire, si c'est un parametre a creer */
+		{
+		  pSSchema->SsRule[elType - 1].SrParamElem = FALSE;
+		  parameter = TRUE;
+		}
+	      else
+		parameter = FALSE;
+	      /* il ne faut pas que le label max. du document augmente */
+	      pEl = NewSubtree (elType, pSSchema, pDoc, assocNum, FALSE, TRUE, FALSE, FALSE);
+	      if (pEl != NULL)
+		pEl->ElLabel[0] = '\0';
+	      if (parameter)
+		pSSchema->SsRule[elType - 1].SrParamElem = TRUE;
+	    }
+	  
+	  if (!TtaReadByte (pivFile, tag))
+	    PivotError (pivFile);
+	}
+      inclusion = FALSE;	/* est-ce une reference a un element inclus? */
+      if (!error && *tag == (char) C_PIV_INCLUDED)
+	/* oui, lit la reference */
+	{
+	  inclusion = TRUE;
+	  ReadReference (&refType, label, &refExt, &docIdent, pivFile);
+	  if (create)
+	    {
+	      GetReference (&pEl->ElSource);
+	      pEl->ElSource->RdElement = pEl;
+	      CreateReference (pEl->ElSource, refType, label, refExt, docIdent, pDoc);
+	      pEl->ElIsCopy = TRUE;
+	    }
+	  if (!TtaReadByte (pivFile, tag))
+	    PivotError (pivFile);
+	}
+      
+      /* lit le tag "Element-reference'" si elle est presente */
+      if (!error)
+	if (*tag == (char) C_PIV_REFERRED)
+	  {
+	    withReferences = TRUE;
+	    if (!TtaReadByte (pivFile, tag))
+	      PivotError (pivFile);
 	  }
+	else
+	  withReferences = FALSE;
 
-	/* lit le tag d'holophraste si elle est presente */
-	if (!error && create)
-	   pEl->ElHolophrast = FALSE;
-	if (*tag == (char) C_PIV_HOLOPHRAST && !error)
+      /* traite le label s'il est present */
+      label[0] = '\0';
+      if (!error)
+	if (*tag == (char) C_PIV_SHORT_LABEL || *tag == (char) C_PIV_LONG_LABEL ||
+	    *tag == (char) C_PIV_LABEL)
 	  {
-	     if (create)
-		pEl->ElHolophrast = TRUE;
-	     /* lit l'octet qui suit */
-	     if (!TtaReadByte (pivFile, tag))
-		PivotError (pivFile);
+	    ReadLabel (*tag, label, pivFile);
+	    /* lit le tag qui suit le label */
+	    if (!TtaReadByte (pivFile, tag))
+	      PivotError (pivFile);
 	  }
-	/* lit les attributs de l'element s'il y en a */
-	while (*tag == (char) C_PIV_ATTR && !error)
-	  {
-	     ReadAttribute (pivFile, pEl, pDoc, create, &pAttr);
-	     if (!error)
-		if (!TtaReadByte (pivFile, tag))
-		   PivotError (pivFile);
-	  }
-	/* tous les attributs de l'element sont lus, on verifie qu'il ne */
-	/* manque pas d'attributs locaux obligatoires pour l'element */
-	if (!error && create)
-	   CheckMandatoryAttr (pEl, pDoc);
+      if (!error && label[0] != '\0' && create)
+	/* l'element porte un label */
+	{
+	  strncpy (pEl->ElLabel, label, MAX_LABEL_LEN);
+	  if (!withReferences)
+	    /* on verifie si cet element (ou plutot son label) est dans la */
+	    /* chaine des elements reference's de l'exterieur */
+	    {
+	      pRefD = pDoc->DocLabels;
+	      while (pRefD != NULL && !withReferences)
+		if (strcmp (pRefD->ReReferredLabel, label) == 0)
+		  withReferences = TRUE;
+		else
+		  pRefD = pRefD->ReNext;
+	    }
+	  if (!error)
+	    if (pDoc->DocPivotVersion < 3 || withReferences)
+	      /* on associe a l'element un descripteur d'element reference' */
+	      {
+		ClearDocIdent (&docIdent);
+		pEl->ElReferredDescr = GetElRefer (label, docIdent, pDoc);
+		if (pEl->ElReferredDescr->ReReferredElem != NULL)
+		  /* on a deja lu dans ce document un element */
+		  /* portant ce label, erreur */
+		  {
+		    pEl->ElReferredDescr = NULL;
+		    DisplayPivotMessage ("L");
+		  }
+		else
+		  pEl->ElReferredDescr->ReReferredElem = pEl;
+	      }
+	}
 
-	/* lit les regles de presentation de l'element */
-	/* etablit d'abord le chainage de l'element avec son pere pour que la */
-	/* procedure GlobalSearchRulepEl appelee par ReadPRulePiv puisse trouver les */
-	/* regles de presentation heritees des attributs des ascendants */
-	if (pEl != NULL)
-	   pEl->ElParent = pParent;
-	while (*tag == (char) C_PIV_PRESENT && !error)
+      /* lit le tag d'holophraste si elle est presente */
+      if (!error && create)
+	pEl->ElHolophrast = FALSE;
+      if (*tag == (char) C_PIV_HOLOPHRAST && !error)
+	{
+	  if (create)
+	    pEl->ElHolophrast = TRUE;
+	  /* lit l'octet qui suit */
+	  if (!TtaReadByte (pivFile, tag))
+	    PivotError (pivFile);
+	}
+      /* lit les attributs de l'element s'il y en a */
+      while (*tag == (char) C_PIV_ATTR && !error)
+	{
+	  ReadAttribute (pivFile, pEl, pDoc, create, &pAttr);
+	  if (!error)
+	    if (!TtaReadByte (pivFile, tag))
+	      PivotError (pivFile);
+	}
+      /* tous les attributs de l'element sont lus, on verifie qu'il ne */
+      /* manque pas d'attributs locaux obligatoires pour l'element */
+      if (!error && create)
+	CheckMandatoryAttr (pEl, pDoc);
+      
+      /* lit les regles de presentation de l'element */
+      /* etablit d'abord le chainage de l'element avec son pere pour que la */
+      /* procedure GlobalSearchRulepEl appelee par ReadPRulePiv puisse trouver les */
+      /* regles de presentation heritees des attributs des ascendants */
+      if (pEl != NULL)
+	pEl->ElParent = pParent;
+      while (*tag == (char) C_PIV_PRESENT && !error)
+	{
+	  ReadPRulePiv (pDoc, pivFile, pEl, create, &pPRule, TRUE);
+	  if (!error)
+	    /* lit l'octet qui suit la regle */
+	    if (!TtaReadByte (pivFile, tag))
+	      PivotError (pivFile);
+	}
+      /* lit le commentaire qui accompagne eventuellement l'element */
+      if (!error)
+	if (*tag == (char) C_PIV_COMMENT || *tag == (char) C_PIV_OLD_COMMENT)
 	  {
-	     ReadPRulePiv (pDoc, pivFile, pEl, create, &pPRule, TRUE);
-	     if (!error)
-		/* lit l'octet qui suit la regle */
-		if (!TtaReadByte (pivFile, tag))
-		   PivotError (pivFile);
+	    pBufComment = ReadComment (pivFile, create, (boolean) (*tag == (char) C_PIV_OLD_COMMENT));	/*  */
+	    if (create)
+	      pEl->ElComment = pBufComment;
+	    /* lit l'octet suivant le commentaire */
+	    if (!TtaReadByte (pivFile, tag))
+	      PivotError (pivFile);
 	  }
-	/* lit le commentaire qui accompagne eventuellement l'element */
-	if (!error)
-	   if (*tag == (char) C_PIV_COMMENT || *tag == (char) C_PIV_OLD_COMMENT)
-	     {
-		pBufComment = ReadComment (pivFile, create, (boolean) (*tag == (char) C_PIV_OLD_COMMENT));	/*  */
-		if (create)
-		   pEl->ElComment = pBufComment;
-		/* lit l'octet suivant le commentaire */
-		if (!TtaReadByte (pivFile, tag))
-		   PivotError (pivFile);
-	     }
-	if (!error)
-	   /* si l'element est une copie par inclusion, il n'a pas de contenu */
-	   if (!inclusion)
-	      /* lit le contenu de l'element create */
-	      /* traitement specifique selon le constructeur de l'element */
-	      switch (pSSchema->SsRule[elType - 1].SrConstruct)
+      if (!error)
+	/* si l'element est une copie par inclusion, il n'a pas de contenu */
+	if (!inclusion)
+	  /* lit le contenu de l'element create */
+	  /* traitement specifique selon le constructeur de l'element */
+	  switch (pSSchema->SsRule[elType - 1].SrConstruct)
+	    {
+	    case CsReference:
+	      if (*tag != (char) C_PIV_REFERENCE)
+		{
+		  PivotError (pivFile);
+		  DisplayPivotMessage ("R");	/* erreur */
+		}
+	      else
+		/* traitement des references : on lit la reference */
+		{
+		  ReadReference (&refType, label, &refExt, &docIdent, pivFile);
+		  if (create)
+		    CreateReference (pEl->ElReference, refType, label, refExt, docIdent, pDoc);
+		  if (!TtaReadByte (pivFile, tag))
+		    PivotError (pivFile);
+		}
+	      break;
+	    case CsPairedElement:
+	      if (*tag != (char) C_PIV_BEGIN)
+		{
+		  PivotError (pivFile);
+		  DisplayPivotMessage ("M");	/* erreur, pas de tag debut */
+		}
+	      else
+		/* traitement des paires : on lit l'identificateur */
+		{
+		  TtaReadInteger (pivFile, &i);
+		  if (create)
+		    pEl->ElPairIdent = i;
+		  if (i > pDoc->DocMaxPairIdent)
+		    pDoc->DocMaxPairIdent = i;
+		  if (!TtaReadByte (pivFile, tag))
+		    PivotError (pivFile);
+		  if (*tag != (char) C_PIV_END)
+		    /* erreur, pas de tag de fin */
 		    {
-		       case CsReference:
-			  if (*tag != (char) C_PIV_REFERENCE)
-			    {
-			       PivotError (pivFile);
-			       DisplayPivotMessage ("R");	/* erreur */
-			    }
-			  else
-			     /* traitement des references : on lit la reference */
-			    {
-			       ReadReference (&refType, label, &refExt, &docIdent, pivFile);
-			       if (create)
-				  CreateReference (pEl->ElReference, refType, label, refExt, docIdent, pDoc);
-			       if (!TtaReadByte (pivFile, tag))
-				  PivotError (pivFile);
-			    }
-			  break;
-		       case CsPairedElement:
-			  if (*tag != (char) C_PIV_BEGIN)
-			    {
-			       PivotError (pivFile);
-			       DisplayPivotMessage ("M");	/* erreur, pas de tag debut */
-			    }
-			  else
-			     /* traitement des paires : on lit l'identificateur */
-			    {
-			       TtaReadInteger (pivFile, &i);
-			       if (create)
-				  pEl->ElPairIdent = i;
-			       if (i > pDoc->DocMaxPairIdent)
-				  pDoc->DocMaxPairIdent = i;
-			       if (!TtaReadByte (pivFile, tag))
-				  PivotError (pivFile);
-			       if (*tag != (char) C_PIV_END)
-				  /* erreur, pas de tag de fin */
-				 {
-				    PivotError (pivFile);
-				    DisplayPivotMessage ("m");
-				 }
-			       else if (!TtaReadByte (pivFile, tag))
-				  PivotError (pivFile);
-			    }
-			  break;
-		       case CsBasicElement:
-			  leafType = pSSchema->SsRule[elType - 1].SrBasicType;
-			  if (leafType == CharString)
-			     if (pDoc->DocPivotVersion >= 4)
-			       {
-				  if (*tag != (char) C_PIV_LANG)
-				     /* pas de tag de langue, c'est la premiere langue de la */
-				     /* table des langues du document */
-				     i = 0;
-				  else
-				    {
-				       /* lit le numero de langue (pour la table des langues du document */
-				       if (!TtaReadByte (pivFile, tag))
-					  PivotError (pivFile);
-				       else
-					  i = (int) (*tag);
-				       /* lit l'octet suivant */
-				       if (!TtaReadByte (pivFile, tag))
-					  PivotError (pivFile);
-				    }
-				  if (create && !error)
-				    {
-				       /* i est le rang de la langue dans la table des */
-				       /* langues du document */
-				       if (i < 0 || i >= pDoc->DocNLanguages)
-					 {
-					    DisplayPivotMessage ("Invalid language");
-					    pEl->ElLanguage = TtaGetDefaultLanguage ();
-					 }
-				       else
-					  pEl->ElLanguage = pDoc->DocLanguages[i];
-				    }
-			       }
-			     else
-				/* version pivot < 4 */
-			       {
-				  /* alpabet par defaut = Latin */
-				  alphabet = 'L';
-				  /* dans le cas d'une inclusion sans expansion, il */
-				  /* n'y a pas d'alphabet. */
-				  /* dans les versions pivot anciennes, il peut y avoir une */
-				  /* tag d'alphabet. On la saute */
-				  if (*tag != (char) C_PIV_BEGIN &&
-				      *tag != (char) C_PIV_END &&
-				      *tag != (char) C_PIV_TYPE &&
-				      *tag != (char) C_PIV_NATURE)
-				     /* on a lu l'alphabet */
-				    {
-				       alphabet = *tag;
-				       /* lit l'octet suivant */
-				       if (!TtaReadByte (pivFile, tag))
-					  PivotError (pivFile);
-				    }
-				  if (create)
-				    {
-				       pEl->ElLanguage = TtaGetLanguageIdFromAlphabet (alphabet);
-				       /* verifie que la langue est dans la table des langues */
-				       /* du document */
-				       found = FALSE;
-				       for (i = 0; i < pDoc->DocNLanguages && !found; i++)
-					  if (pDoc->DocLanguages[i] == pEl->ElLanguage)
-					     found = TRUE;
-				       if (!found && pDoc->DocNLanguages < MAX_LANGUAGES_DOC)
-					  /* elle n'y est pas, on la met */
-					 {
-					    pDoc->DocLanguages[pDoc->DocNLanguages] = pEl->ElLanguage;
-					    pDoc->DocNLanguages++;
-					 }
-				    }
-			       }
-
-			  if (*tag == (char) C_PIV_BEGIN && !error)
-			    {
-			       if (leafType != PageBreak)
-				  if (!TtaReadByte (pivFile, tag))
-				     PivotError (pivFile);
-			       if (*tag != (char) C_PIV_END)	/* il y a un contenu */
-				 {
-				    switch (leafType)
-					  {
-					     case CharString:
-						if (!create)
-						   /* saute le texte de l'element */
-						  {
-						     ch = *tag;
-						     while (ch != '\0' && !error)
-							if (!TtaReadByte (pivFile, &ch))
-							   PivotError (pivFile);
-						  }
-						else
-						   /* lit le texte et remplit les buffers de texte    */
-						  {
-						     pBuf = pEl->ElText;
-						     n = 0;
-						     pEl->ElTextLength = 0;
-						     ch = *tag;
-						     do
-							if (ch != '\0')
-							  {
-							     if (n == MAX_CHAR - 1)
-							       {
-								  pEl->ElTextLength += n;
-								  pBuf->BuLength = n;
-								  pBuf->BuContent[n] = '\0';
-								  pBuf = NewTextBuffer (pBuf);
-								  n = 0;
-							       }
-							     n++;
-							     /* mise a la norme iso des anciens pivots */
-							     if (pDoc->DocPivotVersion < 3)
-								if (((int) ch) >= 1 && ch < ' ')
-								   switch (ch)
-									 {
-									    case '\021':
-									       ch = '\040';
-									       break;	/*space */
-									    case '\030':
-									       ch = '\230';
-									       break;	/*oe */
-									    case '\036':
-									       ch = '\377';
-									       break;	/*ydiaresis */
-									    case '\037':
-									       ch = '\351';
-									       break;	/*eacute */
-									    default:
-									       ch = (char) (((int) ch) + 223);
-									 }
-							     /* changement des oe et OE */
-							     if (pDoc->DocPivotVersion < 4)
-								if (ch == '\230')
-								   ch = '\367';
-								else if (ch == '\367')
-								   ch = '\230';
-								else if (ch == '\231')
-								   ch = '\327';
-								else if (ch == '\327')
-								   ch = '\231';
-							     /* range le caractere et lit le suivant */
-							     pBuf->BuContent[n - 1] = ch;
-							     if (!TtaReadByte (pivFile, &ch))
-								PivotError (pivFile);
-							  }
-						     while (ch != '\0') ;
-						     pEl->ElTextLength += n;
-						     pBuf->BuLength = n;
-						     pBuf->BuContent[n] = '\0';
-						     pEl->ElVolume = pEl->ElTextLength;
-						  }
-						if (!TtaReadByte (pivFile, tag))
-						   PivotError (pivFile);
-						break;
-					     case Picture:
-						if (!create)
-						   /* saute le texte de l'element */
-						  {
-						     ch = *tag;
-						     while (ch != '\0')
-							if (!TtaReadByte (pivFile, &ch))
-							   PivotError (pivFile);
-						  }
-						else
-						   /* lit le texte et remplit les buffers de texte    */
-						  {
-						     pBuf = pEl->ElPictureName;
-						     n = 0;
-						     pEl->ElNameLength = 0;
-						     pEl->ElPictInfo = NULL;
-						     ch = *tag;
-						     do
-							if (ch != '\0')
-							  {
-							     /* TODO : nom d'image > MAX_CHAR */
-							     if (n == MAX_CHAR - 1)
-							       {
-								  PivotError (pivFile);
-								  DisplayPivotMessage ("x");
-							       }
-							     n++;
-							     /* range le caractere et lit le suivant */
-							     pBuf->BuContent[n - 1] = ch;
-							     if (!TtaReadByte (pivFile, &ch))
-								PivotError (pivFile);
-							  }
-						     while (ch != '\0') ;
-						     /* on suppose que le nom tient en entier dans un buffer */
-						     /* on normalise le nom */
-						     strcpy (pBuf->BuContent, NormalizeFileName (pBuf->BuContent, &pictureType,
-							 &pres, &findtype));
-						     if (findtype)
-						       {
-							  /* on a trouve une image v1, on cree une regle */
-							  /* de presentation PictInfo pour l'element */
-							  CreatePRule (pEl, pictureType, pres, view);
-						       }
-						     pEl->ElNameLength += n;
-						     pBuf->BuLength = n;
-						     pBuf->BuContent[n] = '\0';
-						     pEl->ElVolume = pEl->ElNameLength;
-						  }
-						if (!TtaReadByte (pivFile, tag))
-						   PivotError (pivFile);
-						break;
-					     case Symbol:
-					     case GraphicElem:
-						/* on a lu le code representant la forme */
-						ch = *tag;
-						/* lit l'octet qui suit */
-						if (!TtaReadByte (pivFile, tag))
-						   PivotError (pivFile);
-						else if (*tag != (char) C_PIV_POLYLINE)
-						   /* c'est un element graphique simple */
-						  {
-						     if (create)
-						       {
-							  pEl->ElGraph = ch;
-							  /* remplace les anciens rectangles trame's par */
-							  /* de simple rectangles */
-							  if (pEl->ElGraph >= '0' && pEl->ElGraph <= '9')
-							     pEl->ElGraph = 'R';
-							  else if (pEl->ElGraph >= '\260' && pEl->ElGraph <= '\270')
-							     pEl->ElGraph = 'R';
-							  if (ch == '\0')
-							     pEl->ElVolume = 0;
-							  else
-							     pEl->ElVolume = 1;
-						       }
-						  }
-						else
-						   /* c'est une Polyline */
-						  {
-						     /* lit le nombre de points de la ligne */
-						     if (!TtaReadShort (pivFile, &n))
-							PivotError (pivFile);
-						     /* lit tous les points */
-						     else if (!create)
-							for (i = 0; i < n; i++)
-							   TtaReadInteger (pivFile, &j);
-						     else
-						       {
-							  /* transforme l'element graphique simple en Polyline */
-							  pEl->ElLeafType = LtPolyLine;
-							  GetTextBuffer (&pEl->ElPolyLineBuffer);
-							  pEl->ElVolume = n;
-							  pEl->ElPolyLineType = ch;
-							  pEl->ElNPoints = n;
-							  pBuf = pEl->ElPolyLineBuffer;
-							  j = 0;
-							  for (i = 0; i < n; i++)
-							    {
-							       if (j >= MAX_POINT_POLY)
-								  /* buffer courant plein */
-								 {
-								    pBuf = NewTextBuffer (pBuf);
-								    j = 0;
-								 }
-							       TtaReadInteger (pivFile, &pBuf->BuPoints[j].XCoord);
-							       TtaReadInteger (pivFile, &pBuf->BuPoints[j].YCoord);
-							       pBuf->BuLength++;
-							       j++;
-							    }
-						       }
-						     /* lit l'octet qui suit (tag de fin d'element) */
-						     if (!TtaReadByte (pivFile, tag))
-							PivotError (pivFile);
-						  }
-						break;
-					     case PageBreak:
-						/* lit le numero de page et */
-						/* le type de page */
-						TtaReadShort (pivFile, &n);
-						TtaReadShort (pivFile, &view);
-						pageType = ReadPageType (pivFile);
-						modif = ReadBoolean (pivFile);
-						if (create)
-						  {
-						     pEl->ElPageNumber = n;
-						     pEl->ElViewPSchema = view;
-						     pEl->ElPageType = pageType;
-						     pEl->ElPageModified = modif;
-						  }
-						if (!TtaReadByte (pivFile, tag))
-						   PivotError (pivFile);
-						break;
-					     default:
-						break;
-					  }
-
-				 }
-			       if (*tag != (char) C_PIV_END)
-				 {
-				    PivotError (pivFile);
-				    DisplayPivotMessage ("F");
-				 }
-
-			       if (!TtaReadByte (pivFile, tag))
-				  PivotError (pivFile);
-			    }
-			  break;
-		       default:
-			  /* traite le contenu s'il y en a un */
-			  if (*tag == (char) C_PIV_BEGIN)
-			    {
-			       if (pEl != NULL)
-				  if (pEl->ElTerminal)
-				    {
-				       PivotError (pivFile);
-				       DisplayPivotMessage ("f");
-				    }
-			       /* erreur: feuille avec contenu */
-			       if (!error)
-				 {
-				    if (!TtaReadByte (pivFile, tag))
-				       PivotError (pivFile);
-				    pPrevEl = NULL;
-				    while (*tag != (char) C_PIV_END && !error)
-				       /* ce n'est pas un element vide, */
-				       /* on lit son contenu */
-				      {
-					 if (pPrevEl != NULL)
-					    pfutParent = pPrevEl->ElParent;
-					 else if (pEl != NULL)
-					    pfutParent = pEl;
-					 else
-					    pfutParent = pParent;
-					 p = ReadTreePiv (pivFile, pSSchema, pDoc, tag, assocNum,
-							  createParam, createAll, contentType, pContSS, &rule,
-							  &pSS, createPage, pfutParent, createDesc);
-					 pElRead = p;
-					 if (!error)
-					    if (p != NULL)
-					      {
-						 if (pPrevEl != NULL)
-						   {
-						      if (pEl != NULL)
-							 pEl->ElParent = NULL;
-						      InsertElementAfter (pPrevEl, p);
-						      if (pEl != NULL)
-							 pEl->ElParent = pParent;
-						   }
-						 else if (pEl != NULL)
-						   {
-						      if (!createAll)
-							 if (p->ElTypeNumber != PageBreak + 1)
-							    if (p->ElStructSchema != pEl->ElStructSchema)
-							       /* l'element a inserer dans l'arbre appartient       */
-							       /* a un schema different de celui de son pere        */
-							       if (p->ElTypeNumber != p->ElStructSchema->SsRootElem)
-								  /* ce n'est pas la racine d'une nature, on ajoute  */
-								  /* un element intermediaire */
-								 {
-								    pEl2 = p;
-								    /* il ne faut pas que le label */
-								    /* max. du document augmente */
-								    pElInt = NewSubtree (pEl2->ElStructSchema->SsRootElem,
-											 pEl2->ElStructSchema,
-											 pDoc, assocNum, FALSE, TRUE, FALSE, FALSE);
-
-								    pElInt->ElLabel[0] = '\0';
-								    InsertFirstChild (pElInt, p);
-								    p = pElInt;
-								 }
-						      pEl->ElParent = NULL;
-						      InsertFirstChild (pEl, p);
-						      pEl->ElParent = pParent;
-						   }
-						 else
-						    pEl = p;
-
-						 pPrevEl = p;
-						 SendEventAttrRead (pElRead, pDoc);
-						 /* Si l'element qu'on vient de lire n'a pas ete      */
-						 /* cree' (lecture squelette) mais que certains de    */
-						 /* ses descendants l'ont ete,ReadTreePiv a retourne' */
-						 /* un pointeur sur le premier descendant cree'. On   */
-						 /* cherche le dernier frere, qui devient l'element   */
-						 /* precedent du prochain element lu. */
-
-						 while (pPrevEl->ElNext != NULL)
-						    pPrevEl = pPrevEl->ElNext;
-					      }
-				      }
-				    if (!error)
-				       if (!TtaReadByte (pivFile, tag))
-					  PivotError (pivFile);
-				 }
-			    }
-			  break;
+		      PivotError (pivFile);
+		      DisplayPivotMessage ("m");
 		    }
+		  else if (!TtaReadByte (pivFile, tag))
+		    PivotError (pivFile);
+		}
+	      break;
+	    case CsBasicElement:
+	      leafType = pSSchema->SsRule[elType - 1].SrBasicType;
+	      if (leafType == CharString)
+		if (pDoc->DocPivotVersion >= 4)
+		  {
+		    if (*tag != (char) C_PIV_LANG)
+		      /* pas de tag de langue, c'est la premiere langue de la */
+		      /* table des langues du document */
+		      i = 0;
+		    else
+		      {
+			/* lit le numero de langue (pour la table des langues du document */
+			if (!TtaReadByte (pivFile, tag))
+			  PivotError (pivFile);
+			else
+			  i = (int) (*tag);
+			/* lit l'octet suivant */
+			if (!TtaReadByte (pivFile, tag))
+			  PivotError (pivFile);
+		      }
+		    if (create && !error)
+		      {
+			/* i est le rang de la langue dans la table des */
+			/* langues du document */
+			if (i < 0 || i >= pDoc->DocNLanguages)
+			  {
+			    DisplayPivotMessage ("Invalid language");
+			    pEl->ElLanguage = TtaGetDefaultLanguage ();
+			  }
+			else
+			  pEl->ElLanguage = pDoc->DocLanguages[i];
+		      }
+		  }
+		else
+		  /* version pivot < 4 */
+		  {
+		    /* alpabet par defaut = Latin */
+		    alphabet = 'L';
+		    /* dans le cas d'une inclusion sans expansion, il */
+		    /* n'y a pas d'alphabet. */
+		    /* dans les versions pivot anciennes, il peut y avoir une */
+		    /* tag d'alphabet. On la saute */
+		    if (*tag != (char) C_PIV_BEGIN &&
+			*tag != (char) C_PIV_END &&
+			*tag != (char) C_PIV_TYPE &&
+			*tag != (char) C_PIV_NATURE)
+		      /* on a lu l'alphabet */
+		      {
+			alphabet = *tag;
+			/* lit l'octet suivant */
+			if (!TtaReadByte (pivFile, tag))
+			  PivotError (pivFile);
+		      }
+		    if (create)
+		      {
+			pEl->ElLanguage = TtaGetLanguageIdFromAlphabet (alphabet);
+			/* verifie que la langue est dans la table des langues */
+			/* du document */
+			found = FALSE;
+			for (i = 0; i < pDoc->DocNLanguages && !found; i++)
+			  if (pDoc->DocLanguages[i] == pEl->ElLanguage)
+			    found = TRUE;
+			if (!found && pDoc->DocNLanguages < MAX_LANGUAGES_DOC)
+			  /* elle n'y est pas, on la met */
+			  {
+			    pDoc->DocLanguages[pDoc->DocNLanguages] = pEl->ElLanguage;
+			    pDoc->DocNLanguages++;
+			  }
+		      }
+		  }
+	      
+	      if (*tag == (char) C_PIV_BEGIN && !error)
+		{
+		  if (leafType != PageBreak)
+		    if (!TtaReadByte (pivFile, tag))
+		      PivotError (pivFile);
+		  if (*tag != (char) C_PIV_END)	/* il y a un contenu */
+		    {
+		      switch (leafType)
+			{
+			case CharString:
+			  if (!create)
+			    /* saute le texte de l'element */
+			    {
+			      ch = *tag;
+			      while (ch != '\0' && !error)
+				if (!TtaReadByte (pivFile, &ch))
+				  PivotError (pivFile);
+			    }
+			  else
+			    /* lit le texte et remplit les buffers de texte    */
+			    {
+			      pBuf = pEl->ElText;
+			      n = 0;
+			      pEl->ElTextLength = 0;
+			      ch = *tag;
+			      do
+				if (ch != '\0')
+				  {
+				    if (n == MAX_CHAR - 1)
+				      {
+					pEl->ElTextLength += n;
+					pBuf->BuLength = n;
+					pBuf->BuContent[n] = '\0';
+					pBuf = NewTextBuffer (pBuf);
+					n = 0;
+				      }
+				    n++;
+				    /* mise a la norme iso des anciens pivots */
+				    if (pDoc->DocPivotVersion < 3)
+				      if (((int) ch) >= 1 && ch < ' ')
+					switch (ch)
+					  {
+					  case '\021':
+					    ch = '\040';
+					    break;	/*space */
+					  case '\030':
+					    ch = '\230';
+					    break;	/*oe */
+					  case '\036':
+					    ch = '\377';
+					    break;	/*ydiaresis */
+					  case '\037':
+					    ch = '\351';
+					    break;	/*eacute */
+					  default:
+					    ch = (char) (((int) ch) + 223);
+					  }
+				    /* changement des oe et OE */
+				    if (pDoc->DocPivotVersion < 4)
+				      if (ch == '\230')
+					ch = '\367';
+				      else if (ch == '\367')
+					ch = '\230';
+				      else if (ch == '\231')
+					ch = '\327';
+				      else if (ch == '\327')
+					ch = '\231';
+				    /* range le caractere et lit le suivant */
+				    pBuf->BuContent[n - 1] = ch;
+				    if (!TtaReadByte (pivFile, &ch))
+				      PivotError (pivFile);
+				  }
+			      while (ch != '\0') ;
+			      pEl->ElTextLength += n;
+			      pBuf->BuLength = n;
+			      pBuf->BuContent[n] = '\0';
+			      pEl->ElVolume = pEl->ElTextLength;
+			    }
+			  if (!TtaReadByte (pivFile, tag))
+			    PivotError (pivFile);
+			  break;
+			case Picture:
+			  if (!create)
+			    /* saute le texte de l'element */
+			    {
+			      ch = *tag;
+			      while (ch != '\0')
+				if (!TtaReadByte (pivFile, &ch))
+				  PivotError (pivFile);
+			    }
+			  else
+			    /* lit le texte et remplit les buffers de texte    */
+			    {
+			      pBuf = pEl->ElPictureName;
+			      n = 0;
+			      pEl->ElNameLength = 0;
+			      ch = *tag;
+			      do
+				if (ch != '\0')
+				  {
+				    /* TODO : nom d'image > MAX_CHAR */
+				    if (n == MAX_CHAR - 1)
+				      {
+					PivotError (pivFile);
+					DisplayPivotMessage ("x");
+				      }
+				    n++;
+				    /* range le caractere et lit le suivant */
+				    pBuf->BuContent[n - 1] = ch;
+				    if (!TtaReadByte (pivFile, &ch))
+				      PivotError (pivFile);
+				  }
+			      while (ch != '\0');
 
-     }
-   if (!error)
-     {
-	if (createDesc && pEl != NULL)
-	  {
-	     notifyEl.event = TteElemRead;
-	     notifyEl.document = (Document) IdentDocument (pDoc);
-	     notifyEl.element = (Element) pEl;
-	     notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
-	     notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
-	     notifyEl.position = 0;
-	     CallEventType ((NotifyEvent *) & notifyEl, FALSE);
-	  }
-	if (pEl != NULL)
-	   pEl->ElParent = NULL;
-	return pEl;
-     }
-
-   return NULL;
+			      /* on suppose que le nom tient en entier dans un buffer */
+			      /* on normalise le nom */
+			      strcpy (pBuf->BuContent, NormalizeFileName (pBuf->BuContent, &pictureType,
+									  &pres, &findtype));
+			      if (findtype)
+				{
+				  /* on a trouve une image v1, on cree une regle */
+				  /* de presentation PictInfo pour l'element */
+				  SetImageRule (pEl, 0, 0, 0, 0, pictureType, pres);
+				}
+			      /* complete the Picture information block */
+			      image = (PictInfo *)pEl->ElPictInfo;
+			      if (image != NULL)
+				image->PicFileName = pBuf->BuContent;
+			      pEl->ElNameLength += n;
+			      pBuf->BuLength = n;
+			      pBuf->BuContent[n] = '\0';
+			      pEl->ElVolume = pEl->ElNameLength;
+			    }
+			  if (!TtaReadByte (pivFile, tag))
+			    PivotError (pivFile);
+			  break;
+			case Symbol:
+			case GraphicElem:
+			  /* on a lu le code representant la forme */
+			  ch = *tag;
+			  /* lit l'octet qui suit */
+			  if (!TtaReadByte (pivFile, tag))
+			    PivotError (pivFile);
+			  else if (*tag != (char) C_PIV_POLYLINE)
+			    /* c'est un element graphique simple */
+			    {
+			      if (create)
+				{
+				  pEl->ElGraph = ch;
+				  /* remplace les anciens rectangles trame's par */
+				  /* de simple rectangles */
+				  if (pEl->ElGraph >= '0' && pEl->ElGraph <= '9')
+				    pEl->ElGraph = 'R';
+				  else if (pEl->ElGraph >= '\260' && pEl->ElGraph <= '\270')
+				    pEl->ElGraph = 'R';
+				  if (ch == '\0')
+				    pEl->ElVolume = 0;
+				  else
+				    pEl->ElVolume = 1;
+				}
+			    }
+			  else
+			    /* c'est une Polyline */
+			    {
+			      /* lit le nombre de points de la ligne */
+			      if (!TtaReadShort (pivFile, &n))
+				PivotError (pivFile);
+			      /* lit tous les points */
+			      else if (!create)
+				for (i = 0; i < n; i++)
+				  TtaReadInteger (pivFile, &j);
+			      else
+				{
+				  /* transforme l'element graphique simple en Polyline */
+				  pEl->ElLeafType = LtPolyLine;
+				  GetTextBuffer (&pEl->ElPolyLineBuffer);
+				  pEl->ElVolume = n;
+				  pEl->ElPolyLineType = ch;
+				  pEl->ElNPoints = n;
+				  pBuf = pEl->ElPolyLineBuffer;
+				  j = 0;
+				  for (i = 0; i < n; i++)
+				    {
+				      if (j >= MAX_POINT_POLY)
+					/* buffer courant plein */
+					{
+					  pBuf = NewTextBuffer (pBuf);
+					  j = 0;
+					}
+				      TtaReadInteger (pivFile, &pBuf->BuPoints[j].XCoord);
+				      TtaReadInteger (pivFile, &pBuf->BuPoints[j].YCoord);
+				      pBuf->BuLength++;
+				      j++;
+				    }
+				}
+			      /* lit l'octet qui suit (tag de fin d'element) */
+			      if (!TtaReadByte (pivFile, tag))
+				PivotError (pivFile);
+			    }
+			  break;
+			case PageBreak:
+			  /* lit le numero de page et */
+			  /* le type de page */
+			  TtaReadShort (pivFile, &n);
+			  TtaReadShort (pivFile, &view);
+			  pageType = ReadPageType (pivFile);
+			  modif = ReadBoolean (pivFile);
+			  if (create)
+			    {
+			      pEl->ElPageNumber = n;
+			      pEl->ElViewPSchema = view;
+			      pEl->ElPageType = pageType;
+			      pEl->ElPageModified = modif;
+			    }
+			  if (!TtaReadByte (pivFile, tag))
+			    PivotError (pivFile);
+			  break;
+			default:
+			  break;
+			}
+		      
+		    }
+		  if (*tag != (char) C_PIV_END)
+		    {
+		      PivotError (pivFile);
+		      DisplayPivotMessage ("F");
+		    }
+		  
+		  if (!TtaReadByte (pivFile, tag))
+		    PivotError (pivFile);
+		}
+	      break;
+	    default:
+	      /* traite le contenu s'il y en a un */
+	      if (*tag == (char) C_PIV_BEGIN)
+		{
+		  if (pEl != NULL)
+		    if (pEl->ElTerminal)
+		      {
+			PivotError (pivFile);
+			DisplayPivotMessage ("f");
+		      }
+		  /* erreur: feuille avec contenu */
+		  if (!error)
+		    {
+		      if (!TtaReadByte (pivFile, tag))
+			PivotError (pivFile);
+		      pPrevEl = NULL;
+		      while (*tag != (char) C_PIV_END && !error)
+			/* ce n'est pas un element vide, */
+			/* on lit son contenu */
+			{
+			  if (pPrevEl != NULL)
+			    pfutParent = pPrevEl->ElParent;
+			  else if (pEl != NULL)
+			    pfutParent = pEl;
+			  else
+			    pfutParent = pParent;
+			  p = ReadTreePiv (pivFile, pSSchema, pDoc, tag, assocNum,
+					   createParam, createAll, contentType, pContSS, &rule,
+					   &pSS, createPage, pfutParent, createDesc);
+			  pElRead = p;
+			  if (!error)
+			    if (p != NULL)
+			      {
+				if (pPrevEl != NULL)
+				  {
+				    if (pEl != NULL)
+				      pEl->ElParent = NULL;
+				    InsertElementAfter (pPrevEl, p);
+				    if (pEl != NULL)
+				      pEl->ElParent = pParent;
+				  }
+				else if (pEl != NULL)
+				  {
+				    if (!createAll)
+				      if (p->ElTypeNumber != PageBreak + 1)
+					if (p->ElStructSchema != pEl->ElStructSchema)
+					  /* l'element a inserer dans l'arbre appartient       */
+					  /* a un schema different de celui de son pere        */
+					  if (p->ElTypeNumber != p->ElStructSchema->SsRootElem)
+					    /* ce n'est pas la racine d'une nature, on ajoute  */
+					    /* un element intermediaire */
+					    {
+					      pEl2 = p;
+					      /* il ne faut pas que le label */
+					      /* max. du document augmente */
+					      pElInt = NewSubtree (pEl2->ElStructSchema->SsRootElem,
+								   pEl2->ElStructSchema,
+								   pDoc, assocNum, FALSE, TRUE, FALSE, FALSE);
+					      
+					      pElInt->ElLabel[0] = '\0';
+					      InsertFirstChild (pElInt, p);
+					      p = pElInt;
+					    }
+				    pEl->ElParent = NULL;
+				    InsertFirstChild (pEl, p);
+				    pEl->ElParent = pParent;
+				  }
+				else
+				  pEl = p;
+				
+				pPrevEl = p;
+				SendEventAttrRead (pElRead, pDoc);
+				/* Si l'element qu'on vient de lire n'a pas ete      */
+				/* cree' (lecture squelette) mais que certains de    */
+				/* ses descendants l'ont ete,ReadTreePiv a retourne' */
+				/* un pointeur sur le premier descendant cree'. On   */
+				/* cherche le dernier frere, qui devient l'element   */
+				/* precedent du prochain element lu. */
+				
+				while (pPrevEl->ElNext != NULL)
+				  pPrevEl = pPrevEl->ElNext;
+			      }
+			}
+		      if (!error)
+			if (!TtaReadByte (pivFile, tag))
+			  PivotError (pivFile);
+		    }
+		}
+	      break;
+	    }
+    }
+      
+  if (!error)
+    {
+      if (createDesc && pEl != NULL)
+	{
+	  notifyEl.event = TteElemRead;
+	  notifyEl.document = (Document) IdentDocument (pDoc);
+	  notifyEl.element = (Element) pEl;
+	  notifyEl.elementType.ElTypeNum = pEl->ElTypeNumber;
+	  notifyEl.elementType.ElSSchema = (SSchema) (pEl->ElStructSchema);
+	  notifyEl.position = 0;
+	  CallEventType ((NotifyEvent *) & notifyEl, FALSE);
+	}
+      if (pEl != NULL)
+	pEl->ElParent = NULL;
+      return pEl;
+    }
+  
+  return NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -3178,10 +3039,8 @@ int                 rank;
    	presentation qui se trouvent dans le fichier file et charge ces	
    	schemas								
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                ReadSchemaNamesPiv (BinFile file, PtrDocument pDoc, char *tag, PtrSSchema pLoadedSS)
-
 #else  /* __STDC__ */
 void                ReadSchemaNamesPiv (file, pDoc, tag, pLoadedSS)
 BinFile             file;
@@ -3334,16 +3193,13 @@ PtrSSchema          pLoadedSS;
    	ReadLanguageTablePiv
 	lit la table des langues qui se trouve en tete du fichier pivot.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                ReadLanguageTablePiv (BinFile file, PtrDocument pDoc, char *tag)
-
 #else  /* __STDC__ */
 void                ReadLanguageTablePiv (file, pDoc, tag)
 BinFile             file;
 PtrDocument         pDoc;
 char               *tag;
-
 #endif /* __STDC__ */
 
 {
@@ -3383,15 +3239,12 @@ char               *tag;
    ReadVersionNumberPiv lit la version dans le fichier pivot et         
    met sa valeur dans le contexte pDoc. Retourne 0 si OK.          
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 int                 ReadVersionNumberPiv (BinFile file, PtrDocument pDoc)
-
 #else  /* __STDC__ */
 int                 ReadVersionNumberPiv (file, pDoc)
 BinFile             file;
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
 
 {
@@ -3483,10 +3336,8 @@ char               *tag;
    sont decharge's au retour. Si skeleton est vrai, le     
    document est charge sous forme squelette.               
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 void                LoadDocumentPiv (BinFile file, PtrDocument pDoc, boolean loadExternalDoc, boolean skeleton, PtrSSchema pLoadedSS, boolean withEvent)
-
 #else  /* __STDC__ */
 void                LoadDocumentPiv (file, pDoc, loadExternalDoc, skeleton, pLoadedSS, withEvent)
 BinFile             file;
@@ -3495,7 +3346,6 @@ boolean             loadExternalDoc;
 boolean             skeleton;
 PtrSSchema          pLoadedSS;
 boolean             withEvent;
-
 #endif /* __STDC__ */
 
 {

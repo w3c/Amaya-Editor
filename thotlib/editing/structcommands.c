@@ -1167,7 +1167,8 @@ boolean             save;
 			  SplitBeforeSelection (&firstSel, &firstChar,
 					      &lastSel, &lastChar, pSelDoc);
 		       }
-		     if (lastChar > 0 && lastChar <= lastSel->ElTextLength)
+		     if (lastSel->ElTerminal && lastSel->ElLeafType == LtText
+			 && lastChar > 0 && lastChar <= lastSel->ElTextLength)
 			/* la selection se termine a l'interieur d'un element
 			   coupe en deux le dernier element selectionne' */
 		       {

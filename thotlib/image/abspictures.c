@@ -31,78 +31,7 @@
 #include "memory_f.h"
 
 /*----------------------------------------------------------------------
-   Retourne un pointeur sur la regle de pres specifique de l'elt   
-  ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static PtrPRule     FindPictInfo (PtrElement pEl)
-
-#else  /* __STDC__ */
-static PtrPRule     FindPictInfo (pEl)
-PtrElement          pEl;
-
-#endif /* __STDC__ */
-
-{
-   PtrPRule            pRegle = NULL;
-   PtrPRule            pR = NULL;
-   boolean             new = FALSE;
-
-   if (pEl->ElFirstPRule == NULL)
-     {
-	/* cet element n'a aucune regle de presentation specifique, on en */
-	/* cree une et on la chaine a l'element */
-	GetPresentRule (&pRegle);
-	new = (pRegle != NULL);
-	pEl->ElFirstPRule = pRegle;
-     }
-   else
-      /* cherche parmi les regles de presentation specifiques de
-         l'element si ce type de regle existe pour la vue
-         a laquelle appartient le pave. */
-     {
-	pR = pEl->ElFirstPRule;	/* premiere regle specifique de
-				 * l'element */
-	while (pRegle == NULL)
-	  {
-	     if (pR->PrType == PtPictInfo)
-		/* la regle existe deja */
-		pRegle = pR;
-	     else if (pR->PrNextPRule != NULL)
-		/* passe a la regle specifique suivante de l'element */
-		pR = pR->PrNextPRule;
-	     else
-	       {
-		  /* On a examine' toutes les regles specifiques de */
-		  /* l'element, ajoute une nouvelle regle en fin de chaine */
-		  GetPresentRule (&pRegle);
-		  new = (pRegle != NULL);
-		  pR->PrNextPRule = pRegle;
-	       }
-	  }
-     }
-   if (new)
-     {
-	pRegle->PrType = PtPictInfo;
-	pRegle->PrNextPRule = NULL;
-	pRegle->PrViewNum = 0;
-	pRegle->PrSpecifAttr = 0;
-	pRegle->PrSpecifAttrSSchema = NULL;
-	pRegle->PrPresMode = PresImmediate;
-	pRegle->PrPictInfo.PicXArea = 0;
-	pRegle->PrPictInfo.PicYArea = 0;
-	pRegle->PrPictInfo.PicWArea = 0;
-	pRegle->PrPictInfo.PicHArea = 0;
-	pRegle->PrPictInfo.PicPresent = ReScale;
-	pRegle->PrPictInfo.PicType = GIF_FORMAT;
-     }
-   return pRegle;
-
-}
-
-
-/*----------------------------------------------------------------------
-   
+  SetImageRule updates or creates the picture descriptor of an element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                SetImageRule (PtrElement pEl, int x, int y, int w, int h, int typeimage, PictureScaling presimage)
@@ -118,18 +47,28 @@ int                 typeimage;
 #endif /* __STDC__ */
 
 {
-   PtrPRule            pRegle;
+  PictInfo           *image;
 
-   pRegle = FindPictInfo (pEl);
-   if (pRegle != NULL)
-     {
-	pRegle->PrPictInfo.PicXArea = x;
-	pRegle->PrPictInfo.PicYArea = y;
-	pRegle->PrPictInfo.PicWArea = w;
-	pRegle->PrPictInfo.PicHArea = h;
-	pRegle->PrPictInfo.PicPresent = presimage;
-	pRegle->PrPictInfo.PicType = typeimage;
-     }
+  if (pEl != NULL)
+    {
+      image = (PictInfo *) pEl->ElPictInfo;
+      if (image == NULL)
+	{
+	  image = (PictInfo *) TtaGetMemory (sizeof (PictInfo));
+	  pEl->ElPictInfo = (int *) image;
+	}
+      image->PicFileName = NULL;
+      image->PicPixmap = 0;
+      image->PicMask = 0;
+      image->PicType = typeimage;
+      image->PicPresent = presimage;
+      image->PicXArea = x;
+      image->PicYArea = y;
+      image->PicWArea = w;
+      image->PicHArea = h;
+      image->mapped = FALSE;
+      image->created = FALSE;
+    }
 }
 
 

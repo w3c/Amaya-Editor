@@ -17,8 +17,6 @@ extern void PutLabel ( BinFile pivFile,
 extern void PutAttribut ( BinFile pivFile,
                           PtrAttribute pAttr,
                           PtrDocument pDoc );
-extern void PutReglePres ( BinFile pivFile,
-                           PtrPRule pPRule );
 extern void Externalise ( BinFile pivFile,
                           PtrElement * pEl,
                           PtrDocument pDoc,
@@ -59,8 +57,6 @@ extern void PutLabel (/* BinFile pivFile,
 extern void PutAttribut (/* BinFile pivFile,
                             PtrAttribute pAttr,
                             PtrDocument pDoc */);
-extern void PutReglePres (/* BinFile pivFile,
-                             PtrPRule pPRule */);
 extern void Externalise (/* BinFile pivFile,
                             PtrElement * pEl,
                             PtrDocument pDoc,

@@ -293,8 +293,6 @@ NotifyElement      *event;
 			     TtaShowElement (targetDocument, view, elFound, 10);
 		    }
 	       }
-	     else if (targetDocument > 0)
-		TtaRaiseView (targetDocument, 1);
 
 	     if (targetDocument > 0)
 	       {
@@ -312,6 +310,7 @@ NotifyElement      *event;
 			 }
 		       TtaSetAttributeText (attr, "visited", anchor, event->document);
 		    }
+		  TtaRaiseView (targetDocument, 1);
 	       }
 	     TtaFreeMemory (url);
 	     return TRUE;

@@ -488,13 +488,6 @@ typedef struct _PresRule
 	{
 	  BAlignment _PrAdjust_;
 	} s6;
-	/* synchronize this structure with PictInfo */
-	struct	/* PRuleType = PtPictInfo */
-	{
-	  int		PicXArea, PicYArea, PicWArea, PicHArea;
-	  PictureScaling	PicPresent;
-	  int		PicType;
-	} s7;
       } u;
     } s2;
   } u;
@@ -523,7 +516,6 @@ typedef struct _PresRule
 #define PrDimRule u.s2.u.s4._PrDimRule_
 #define PrJustify u.s2.u.s5._PrJustify_
 #define PrAdjust u.s2.u.s6._PrAdjust_
-#define PrPictInfo u.s2.u.s7
 
 /* operation on a counter */
 typedef enum

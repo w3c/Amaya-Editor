@@ -1119,7 +1119,6 @@ PtrAbstractBox      pAb;
    PtrDocument         pDoc;
    PtrElement          pEl, pAncest;
    PtrAttribute        pAttr, pNewAttr;
-   PictInfo           *picture;
 
    /* cherche le document auquel appartient le pave */
    pEl = pAb->AbElement;
@@ -1170,10 +1169,6 @@ PtrAbstractBox      pAb;
 		    pEl->ElVolume = 100;
 		    dVol = pAb->AbVolume - pEl->ElVolume;
 		    pEl->ElText->BuLength = strlen (pEl->ElText->BuContent);
-		    picture = (PictInfo *) pAb->AbPictInfo;
-		    SetImageRule (pEl, picture->PicXArea, picture->PicYArea,
-				  picture->PicWArea, picture->PicHArea,
-				  picture->PicType, picture->PicPresent);
 		    break;
 		 case LtText:
 		    dVol = pAb->AbVolume - pEl->ElTextLength;
