@@ -6,7 +6,10 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern Document get_timeline_doc ( Document doc );
+extern void Get_timeline_of_doc ( Document basedoc,
+                                  Document* timelinedoc,
+                                  View* timelineview );
+extern void Free_timeline_of_doc ( Document doc );
 extern void InitSVGAnim ( void );
 extern void SwitchIconAnim ( Document doc,
                              View view,
@@ -29,7 +32,10 @@ extern void TimelineWindowClose ( NotifyDialog * event );
 
 #else /* __STDC__ */
 
-extern Document get_timeline_doc (/* Document doc */);
+extern void Get_timeline_of_doc (/* Document basedoc,
+                                    Document* timelinedoc,
+                                    View* timelineview */);
+extern void Free_timeline_of_doc (/* Document doc */);
 extern void InitSVGAnim (/* void */);
 extern void SwitchIconAnim (/* Document doc,
                                View view,
