@@ -27,56 +27,61 @@
 ################# AMAYA EDITOR
 <editor>
 +amayabase
-+areas
++annot
++base-module
++bdi-text-module
 +browsing
++clientside-module
 +config
 +css-style
 +edit
 +forms
 +link-module
-+base-module
++edit-module
++iframe-module
 +meta-module
-+head
-+html-style
++presentation-module
 +makebook
 +makeid
 +maths
 +object-module
 +print
++script-module
 +source-view
 +spell
++svg
 +tables
 +templates
 +views
-+svg
-+annot
 
 ################# XHTML-STRICT
 <XHTML-1.1>
 +amayabase
-+areas
++annot
++base-module
++bdi-text-module
 +browsing
++clientside-module
 +config
 +css-style
 +edit
 +forms
 +link-module
-+base-module
++edit-module
 +meta-module
-+head
++presentation-module
 +makebook
 +makeid
 +maths
 +object-module
 +print
++script-module
 +source-view
 +spell
-+strict-style
++svg
 +tables
 +templates
 +views
-+svg
-+annot
 
 ################# AMAYA XHTML-BASIC
 <XHTML-basic>
@@ -158,11 +163,11 @@ TtcSearchText
 
 ########### EDITING
 [edit]
++hypertext-module
++image-module
++list-module
 +struct-module
 +text-module
-+list-module
-+image-module
-+hypertext-module
 HelpAttributes
 HelpChanging
 HelpPublishing
@@ -201,8 +206,9 @@ PrintAs
 SetupAndPrint
 
 ########### HTML
-[head]
+[script-module]
 &CreateScript
+&CreateNOSCRIPT
 
 ########### XHTML modules
 [struct-module]
@@ -251,12 +257,29 @@ ShowTargets
 &CreateList
 &CreateNumberedList
 
+[presentation-module]
+&SetOnOffBold
+&SetOnOffBig
+&CreateHorizontalRule
+&SetOnOffItalic
+&SetOnOffSmall
+&SetOnOffSub
+&SetOnOffSup
+&SetOnOffTeletype
+
 [image-module]
 &CreateImage
 
 [object-module]
 &CreateObject
 &CreateParameter
+
+[edit-module]
+&SetOnOffINS
+&SetOnOffDEL
+
+[bdi-text-module]
+&SetOnOffBDO
 
 [meta-module]
 &CreateMeta
@@ -267,7 +290,7 @@ ShowTargets
 [base-module]
 &CreateBase
 
-[areas]
+[clientside-module]
 CreateAreaCircle
 CreateAreaPoly
 CreateAreaRect
@@ -337,37 +360,22 @@ HelpTables
 &CreateMMULTISCRIPTS
 &CreateMTABLE
 &DeleteMColumn
-&CreateNOSCRIPT
 HelpMath
 
 ################# SVG
 [svg]
 ShowGraphicsPalette
-
-########### STYLE
-[strict-style]
-&CreateHorizontalRule
-&SetOnOffItalic
-&SetOnOffBold
-&SetOnOffTeletype
-&SetOnOffBig
-&SetOnOffSmall
-&SetOnOffSub
-&SetOnOffSup
-&SetOnOffBDO
 HelpSVG
 
-[html-style]
-+strict-style
-&SetOnOffINS
-&SetOnOffDEL
+########### STYLE
+[iframe-module]
 &CreateIFrame
-&SetOnOffBDO
 
 [css-browsing]
 OpenCSS
 DisableCSS
 EnableCSS
+HelpStyleSheets
 
 [basic-css-style]
 +css-browsing
@@ -376,11 +384,8 @@ EnableCSS
 &TtcChangeCharacters
 &TtcChangeColors
 &TtcChangeFormat
-&NewCss
 &LinkCSS
-OpenCSS
 &RemoveCSS
-HelpStyleSheets
 
 [css-style]
 +basic-css-style
