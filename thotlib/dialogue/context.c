@@ -186,11 +186,11 @@ static void InitColors (char* name)
  ----------------------------------------------------------------------*/
 static void InitGraphicContexts (void)
 {
+#ifdef _GTK
   int                 white;
   int                 black;
   ThotPixmap          pix;
 
-#ifdef _GTK
   gdk_rgb_init ();
 
   white = ColorNumber ("White");

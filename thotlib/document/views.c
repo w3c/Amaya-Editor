@@ -588,6 +588,14 @@ void OpenCreatedView (PtrDocument pDoc, int view,
       DisplayFrame (frame);
       ShowSelection (pDoc->DocViewRootAb[view - 1], TRUE);
 
+#ifdef _WX
+      /* wait for frame initialisation (needed by opengl) */
+      TtaHandlePendingEvents();
+      /* wait for frame initialisation (needed by opengl) 
+       * this function waits for complete widgets initialisation */
+      wxSafeYield();
+#endif /* _WX */
+	  
       /* Update Paste entry in menu */
 #ifdef _WINGUI
 	  if (pDoc->DocReadOnly)
@@ -620,13 +628,6 @@ void OpenCreatedView (PtrDocument pDoc, int view,
       if (ThotLocalActions[T_chattr] != NULL)
 	(*(Proc1)ThotLocalActions[T_chattr]) ((void*)pDoc);
 
-#ifdef _WX
-      /* wait for frame initialisation (needed by opengl) */
-      TtaHandlePendingEvents();
-      /* wait for frame initialisation (needed by opengl) 
-       * this function waits for complete widgets initialisation */
-      wxTheApp->Yield( TRUE );
-#endif /* _WX */
     }
 }
 

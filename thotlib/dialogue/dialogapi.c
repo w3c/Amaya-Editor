@@ -2130,7 +2130,9 @@ void TtaNewScrollPopup (int ref, ThotWidget parent, char *title, int number,
 static ThotWidget AddInFormulary (struct Cat_Context *catalogue, int *index,
 				  int *entry, struct E_List **adbloc)
 {
+#ifndef _WX
    ThotWidget          row;
+#endif /* _WX */
    ThotWidget          w;
 
    /* Il faut sauter la 1ere entree allouee a un Row-Column */
@@ -3314,7 +3316,9 @@ void TtaSetToggleMenu (int ref, int val, ThotBool on)
   ThotWidget          w;
   register int        i;
   register int        ent;
+#if defined(_GTK)
   ThotBool            visible;
+#endif /* _GTK */
   ThotBool            done;
   struct E_List      *adbloc;
   struct Cat_Context *catalogue;

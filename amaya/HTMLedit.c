@@ -577,7 +577,9 @@ void ChangeTitle (Document doc, View view)
    ElementType         elType;
    Element             el, child;
    Language            lang;
+#ifndef _WX   
    unsigned char       *title;
+#endif /* _WX */
    int                 length;
 
    if (!TtaGetDocumentAccessMode (doc))

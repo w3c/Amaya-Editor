@@ -58,7 +58,7 @@ void AmayaNotebook::OnClose(wxCloseEvent& event)
   /* if this boolean is set to false, the window must not be closed */
   bool close_window = true; 
 
-  int page_id = 0;
+  unsigned int page_id = 0;
   while ( page_id < GetPageCount() )
   {
     AmayaPage * p_page = (AmayaPage *)GetPage(page_id);
@@ -104,7 +104,7 @@ void AmayaNotebook::OnClose(wxCloseEvent& event)
 void AmayaNotebook::UpdatePageId()
 {
   /* update page_id for each page */
-  int page_id = 0;
+  unsigned int page_id = 0;
   while ( page_id < GetPageCount() )
     {
       AmayaPage * p_page = (AmayaPage *)GetPage(page_id);
@@ -164,7 +164,7 @@ void AmayaNotebook::OnPageChanged(wxNotebookEvent& event)
   // Update every page
   // important work is done when SetSelected is called :
   // + window title is updated in order to match current selected page
-  int page_id = 0;
+  unsigned int page_id = 0;
   while ( page_id < GetPageCount() )
   {
     AmayaPage * p_page = (AmayaPage *)GetPage(page_id);
@@ -191,7 +191,7 @@ void AmayaNotebook::OnPageChanged(wxNotebookEvent& event)
  */
 int AmayaNotebook::GetPageId( const AmayaPage * p_page )
 {
-  int page_id = 0;
+  unsigned int page_id = 0;
   bool found = false;
   while ( !found && page_id < GetPageCount() )
   {

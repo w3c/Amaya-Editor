@@ -486,11 +486,11 @@ void SetRelativeURLs (Document doc, char *newpath)
   ----------------------------------------------------------------------*/
 static void InitSaveForm (Document document, View view, char *pathname)
 {
-#ifndef _WINGUI
+#ifdef _GTK
    char             buffer[3000];
    char             s[MAX_LENGTH];
    int              i;
-#endif /* WINDOWS */
+#endif /* _GTK */
 
   if (TextFormat)
      {

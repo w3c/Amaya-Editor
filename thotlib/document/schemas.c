@@ -846,7 +846,6 @@ void ReleaseStructureSchema (PtrSSchema pSS, PtrDocument pDoc)
   AStructure          *pStr;
   PtrDocSchemasDescr  pPfS, pPrevPfS;
   int                 i;
-  ThotBool            result;
 
   /* look for this schema in the table */
   for (i = 0; i < MAX_SSCHEMAS && LoadedSSchema[i].pStructSchema != pSS; i++);
@@ -1436,9 +1435,8 @@ ThotBool FreeNature (PtrSSchema pSS, PtrSSchema pNatureSS, PtrDocument pDoc)
   ----------------------------------------------------------------------*/
 void FreeDocumentSchemas (PtrDocument pDoc)
 {
-  PtrSSchema          pSS, pDocSS;
+  PtrSSchema          pSS;
   PtrDocSchemasDescr  pPfS;
-   int                i;
 
    while (pDoc->DocFirstSchDescr)
      {

@@ -3171,9 +3171,9 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
   ----------------------------------------------------------------------*/
 void BrowseConfMenu (Document document, View view)
 {
-#ifndef _WINGUI
+#ifdef _GTK
   int              i;
-#endif /* _WINGUI */
+#endif /* _GTK */
 
   /* reset the modified flag */
   SafePutStatus = 0;
