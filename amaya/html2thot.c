@@ -5884,7 +5884,7 @@ CHARSET    *charset;
 {
   gzFile        stream;
   char          file_name[MAX_LENGTH];
-  char         *ptr, *end, *meta, *content, *body, *http;
+  char         *ptr, *end, *end2,*meta, *content, *body, *http;
   char          charsetname[MAX_LENGTH];
   int           res, i, j, k;
   ThotBool      endOfSniffedFile;
@@ -5931,7 +5931,19 @@ CHARSET    *charset;
 			  end = NULL;
 			  ptr = strstr (ptr, "=");
 			  if (ptr)
-			    end = strstr (&ptr[1], "\"");
+			    {
+			      end2 = strstr (&ptr[1], ">");
+			      if (end2)
+				{
+				  end = strstr (&ptr[1], "\"");
+				  if (!end || (end && end > end2))
+				    {
+				      end = strstr (&ptr[1], "\'");
+				      if (end && end > end2)
+					end = NULL;
+				    }
+				}
+			    }
 			  if (end && end != ptr)
 			    {
 			      /* get the document charset */
