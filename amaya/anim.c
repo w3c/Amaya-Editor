@@ -48,6 +48,9 @@ static int      AnimButton;
 #include "wininclude.h"
 #define iconAnim 27
 #define iconAnimNo 27
+#else
+#define min(A,B) ((A<B)?A:B)
+#define max(A,B) ((B>A)?B:A)
 #endif /* _WINDOWS */
 
 

@@ -10,14 +10,17 @@ AMAYA_SVG_OBJ= \
 	anim.o \
 	SVGAPP.o \
 	SVGbuilder.o \
-	SVGedit.o
+	SVGedit.o \
+	TimelineAPP.o
 
 AMAYA_SVG_SRC= \
 	anim.c \
         SVG.h \
 	SVGAPP.c \
 	SVGbuilder.c \
-	SVGedit.c 
+	SVGedit.c \
+	Timeline.h \
+	TimelineAPP.c 
 
 
 AMAYA_SVG_INCLUDES= 
