@@ -20,7 +20,8 @@ extern void TtaAddPSchema ( PSchema schema,
                             PSchema oldSchema,
                             ThotBool before,
                             Document document,
-                            SSchema nature );
+                            SSchema nature,
+                            char *name );
 extern PSchema TtaGetFirstPSchema ( Document document,
                                     SSchema nature );
 extern void TtaNextPSchema ( PSchema * schema,
@@ -43,7 +44,8 @@ extern void TtaAddPSchema (/* PSchema schema,
                               PSchema oldSchema,
                               ThotBool before,
                               Document document,
-                              SSchema nature */);
+                              SSchema nature,
+                              char *name */);
 extern PSchema TtaGetFirstPSchema (/* Document document,
                                       SSchema nature */);
 extern void TtaNextPSchema (/* PSchema * schema,

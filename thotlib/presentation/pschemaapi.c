@@ -78,7 +78,7 @@ static PtrHandlePSchema HandleOfPSchema (PSchema schema, Document doc,
    Return value:
    the new presentation schema.
   ----------------------------------------------------------------------*/
-PSchema             TtaNewPSchema (SSchema nature, ThotBool userStyleSheet)
+PSchema TtaNewPSchema (SSchema nature, ThotBool userStyleSheet)
 {
    PtrPSchema          pSchPres;
    PtrSSchema          pSS;
@@ -239,9 +239,10 @@ void TtaRemovePSchema (PSchema schema, Document document, SSchema nature)
    before: if TRUE, the new presentation schema is inserted just before
    oldSchema, else it is inserted just after. Meaningless if oldSchema is NULL.
    document: the document to which the presentation schema is added.
+   name: the name of the presentation schema.
   ----------------------------------------------------------------------*/
 void TtaAddPSchema (PSchema schema, PSchema oldSchema, ThotBool before,
-		    Document document, SSchema nature)
+		    Document document, SSchema nature, char *name)
 {
   PtrSSchema	      pSchS;
 
@@ -263,6 +264,8 @@ void TtaAddPSchema (PSchema schema, PSchema oldSchema, ThotBool before,
 	  ((PtrPSchema) schema)->PsStructCode++;
 	  /* name of associated structure schema */
 	  strncpy (((PtrPSchema) schema)->PsStructName, pSchS->SsName,
+		   MAX_NAME_LENGTH);
+	  strncpy (((PtrPSchema) schema)->PsPresentName, name,
 		   MAX_NAME_LENGTH);
 	}
     }

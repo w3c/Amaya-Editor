@@ -3525,13 +3525,14 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 		 fprintf (fileDescriptor, "{-----------------------  ");
 		 switch (pSc1->PsOrigin)
 		   {
-		   case Agent: fprintf (fileDescriptor, "User Agent");
+		   case Agent: fprintf (fileDescriptor, "User Agent ");
 		     break;
-		   case User: fprintf (fileDescriptor, "User");
+		   case User: fprintf (fileDescriptor, "User ");
 		     break;
-		   case Author: fprintf (fileDescriptor, "Author");
+		   case Author: fprintf (fileDescriptor, "Author ");
 		     break;
 		   }
+		 fprintf (fileDescriptor, "(%s) ", pSc1->PsPresentName);
 		 fprintf (fileDescriptor, " -----------------------}\n\n");
 		 fprintf (fileDescriptor, "PRESENTATION ");
 		 wrtext (pSchemaStr->SsName, fileDescriptor);

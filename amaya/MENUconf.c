@@ -183,7 +183,7 @@ static ThotBool DoubleClick;
 static ThotBool EnableFTP;
 static char     ScreenType[MAX_LENGTH];
 static char    *ScreensTxt[]={
- "handheld", "projection", "screen", "tty", "tv"
+  "handheld", "print", "projection", "screen", "tty", "tv"
 };
 
 /* Publish menu options */
@@ -2744,21 +2744,16 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  /* action buttons */
 	case ID_APPLY:
 	  SetBrowseConf ();	  
-	  libwww_updateNetworkConf (SafePutStatus);
-	  /* reset the status flag */
-	  SafePutStatus = 0;
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DONE:
-    case IDCANCEL:
+	case IDCANCEL:
 	  /* reset the status flag */
-	  SafePutStatus = 0;
 	  BrowseHwnd = NULL;
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DEFAULTS:
 	  /* always signal this as modified */
-	  SafePutStatus |= AMAYA_SAFEPUT_RESTART;
 	  GetDefaultBrowseConf ();
 	  WIN_RefreshBrowseMenu (hwnDlg);
 	  break;

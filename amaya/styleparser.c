@@ -5580,7 +5580,8 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 		{
 		  /* future import rules must be ignored */
 		  ignoreImport = TRUE;
-		  ParseStyleDeclaration (NULL, CSSbuffer, docRef, refcss, link, FALSE);
+		  ParseStyleDeclaration (NULL, CSSbuffer, docRef, refcss,
+					 pInfo->PiLink, FALSE);
 		  LineNumber += newlines;
 		  newlines = 0;
 		  NewLineSkipped = 0;

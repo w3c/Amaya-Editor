@@ -1051,7 +1051,7 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
 		{
 		  /* chain this new element as waiting for this image */
 		  ctxEl = desc->elImage;
-		  if (ctxEl != NULL && ctxEl->currentElement != el)
+		  if (ctxEl && ctxEl->currentElement != el)
 		    {
 		      /* concerned elements are different */
 		      while (ctxEl->nextElement != NULL)
@@ -1063,6 +1063,8 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
 		      ctxEl->currentElement = el;
 		      ctxEl->nextElement = NULL;
 		    }
+		  else if (callback)
+		    TtaFreeMemory (extra);
 		}
 	    }
 	}

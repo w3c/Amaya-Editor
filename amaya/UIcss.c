@@ -221,15 +221,19 @@ void EmbedStyleSheets (Document docsrc, Document docdest)
 	  pInfo = css->infos[docsrc];
 	  /* at the end of the encosing document list */
 	  prevInfo = css->infos[docdest];
-	  while (prevInfo->PiNext)
+	  while (prevInfo && prevInfo->PiNext)
 	    prevInfo = prevInfo->PiNext;
 	  while (pInfo)
 	    {
-	      prevInfo->PiNext = pInfo;
+	      if (prevInfo)
+		prevInfo->PiNext = pInfo;
+	      else
+		css->infos[docdest] = pInfo;
 	      pInfo->PiEnabled = TRUE;
 	      pInfo->PiCategory = CSS_EMBED;
 	      css->infos[docsrc] = pInfo->PiNext;
 	      pInfo->PiNext = NULL;
+	      prevInfo = pInfo;
 	      pInfo = css->infos[docsrc];
 	    }
 	}

@@ -1125,12 +1125,12 @@ extern Element TtaSearchElementAmong5Types (ElementType type1,
    the element found, or NULL if no element has been found.
    ---------------------------------------------------------------------- */
 extern Element TtaBackSearchElementAmong5Types (ElementType type1, 
-					    ElementType type2,
-					    ElementType type3,
-					    ElementType type4,
-					    ElementType type5, 
-					    SearchDomain scope,
-					    Element element);
+						ElementType type2,
+						ElementType type3,
+						ElementType type4,
+						ElementType type5, 
+						SearchDomain scope,
+						Element element);
 
 /* ----------------------------------------------------------------------
    TtaSearchNoPageBreak

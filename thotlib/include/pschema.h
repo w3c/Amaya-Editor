@@ -78,9 +78,10 @@ extern void TtaRemovePSchema (PSchema schema, Document document, SSchema nature)
    oldSchema, else it is inserted just after. Meaningless if
    oldSchema is NULL.
    document: the document to which the presentation schema is added.
+   name: the name of the presentation schema.
   ----------------------------------------------------------------------*/
 extern void TtaAddPSchema (PSchema schema, PSchema oldSchema, ThotBool before,
-			   Document document, SSchema nature);
+			   Document document, SSchema nature, char *name);
 
 /*----------------------------------------------------------------------
    TtaGetFirstPSchema

@@ -5081,14 +5081,16 @@ void ParseExternalDocument (char     *fileName,
   ShowParsingErrors = savParsingError;
 
   /* Delete the external document */
-  if (externalDoc != 0)
+  if (externalDoc != 0 && externalDoc != doc)
     {
       FreeDocumentResource (externalDoc);
       TtaCloseDocument (externalDoc);
+      TtaFreeMemory (DocumentURLs[externalDoc]);
+      DocumentURLs[externalDoc] = NULL;
     }
 
   /* Restore the display mode */
-  if (dispMode == DisplayImmediately)
+  if (dispMode == DisplayImmediately && DocumentURLs[doc])
     TtaSetDisplayMode (doc, dispMode);
 
   if (docURL)
@@ -5096,13 +5098,9 @@ void ParseExternalDocument (char     *fileName,
       TtaFreeMemory (docURL);
       docURL = NULL;
     }
-  if (tempName != NULL)
-    TtaFreeMemory (tempName);
-  if (extUseUri != NULL)
-    TtaFreeMemory (extUseUri);
-  if (extUseId != NULL)
-    TtaFreeMemory (extUseId);
-
+  TtaFreeMemory (tempName);
+  TtaFreeMemory (extUseUri);
+  TtaFreeMemory (extUseId);
   if (extEl)
     {
       /* Fetch and display the recursive images */

@@ -1204,6 +1204,8 @@ static PtrPRule PresRuleInsert (PtrPSchema tsch, GenericContext ctxt,
       if (pRule != NULL)
 	{
 	  pRule->PrType = pres;
+	  if (pres == PRFunction)
+	    pRule->PrPresFunction = extra;
 	  pRule->PrCond = NULL;
 	  pRule->PrViewNum = 1;
 	  pRule->PrSpecifAttr = 0;
@@ -3054,48 +3056,51 @@ void TtaCleanStylePresentation (PSchema tsch, Document doc, SSchema sSch)
     {
       attrs = ((PtrPSchema) tsch)->PsAttrPRule->AttrPres[attrType];
       nbrules = ((PtrPSchema) tsch)->PsNAttrPRule->Num[attrType];
-      for (i = 0; i < nbrules; i++)
+      if (attrs)
 	{
-	  switch (pSS->SsAttribute->TtAttr[attrType]->AttrType)
+	  for (i = 0; i < nbrules; i++)
 	    {
-	    case AtNumAttr:
-	      for (j = 0; j < attrs->ApNCases; j++)
+	      switch (pSS->SsAttribute->TtAttr[attrType]->AttrType)
 		{
-		  pRule = attrs->ApCase[j].CaFirstPRule;
-		  while (pRule != NULL)
+		case AtNumAttr:
+		  for (j = 0; j < attrs->ApNCases; j++)
 		    {
-		      ApplyAGenericStyleRule (doc, pSS, 0, attrType+1, 0,
-					      pRule, TRUE);
-		      pRule = pRule->PrNextPRule;
+		      pRule = attrs->ApCase[j].CaFirstPRule;
+		      while (pRule != NULL)
+			{
+			  ApplyAGenericStyleRule (doc, pSS, 0, attrType+1, 0,
+						  pRule, TRUE);
+			  pRule = pRule->PrNextPRule;
+			}
 		    }
-		}
-	      break;
-	    case AtTextAttr:
-	      pRule = attrs->ApTextFirstPRule;
-	      break;
-	    case AtReferenceAttr:
-	      pRule = attrs->ApRefFirstPRule;
-	      break;
-	    case AtEnumAttr:
-	      for (j = 0; j < pSS->SsAttribute->TtAttr[attrType]->AttrNEnumValues; j++)
-		{
-		  pRule = attrs->ApEnumFirstPRule[j];
-		  while (pRule != NULL)
+		  break;
+		case AtTextAttr:
+		  pRule = attrs->ApTextFirstPRule;
+		  break;
+		case AtReferenceAttr:
+		  pRule = attrs->ApRefFirstPRule;
+		  break;
+		case AtEnumAttr:
+		  for (j = 0; j < pSS->SsAttribute->TtAttr[attrType]->AttrNEnumValues; j++)
 		    {
-		      ApplyAGenericStyleRule (doc, pSS, 0, attrType, 0,
-					      pRule, TRUE);
-		      pRule = pRule->PrNextPRule;
+		      pRule = attrs->ApEnumFirstPRule[j];
+		      while (pRule != NULL)
+			{
+			  ApplyAGenericStyleRule (doc, pSS, 0, attrType, 0,
+						  pRule, TRUE);
+			  pRule = pRule->PrNextPRule;
+			}
 		    }
+		  break;
 		}
-	      break;
-	    }
 
-	  while (pRule != NULL)
-	    {
-	      ApplyAGenericStyleRule (doc, pSS, 0, attrType, 0, pRule, TRUE);
-	      pRule = pRule->PrNextPRule;
+	      while (pRule)
+		{
+		  ApplyAGenericStyleRule (doc, pSS, 0, attrType, 0, pRule, TRUE);
+		  pRule = pRule->PrNextPRule;
+		}
+	      attrs = attrs->ApNextAttrPres;
 	    }
-	  attrs = attrs->ApNextAttrPres;
 	}
     }
   /* restore the display mode */

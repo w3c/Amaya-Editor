@@ -2078,9 +2078,10 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 		  absoluteMove = TRUE;
 	    }
 	  /* Moving included boxes or reevalution of the block of lines? */
-	  if (absoluteMove ||
-	      pCurrentAb->AbWidth.DimAbRef ||
-	      pCurrentAb->AbWidth.DimValue >= 0)
+	  if (pCurrentAb->AbLeafType == LtCompound &&
+	      (absoluteMove ||
+	       pCurrentAb->AbWidth.DimAbRef ||
+	       pCurrentAb->AbWidth.DimValue >= 0))
 
 	    /* the box is already built */
 	    /* or it's within a stretchable box */
@@ -2607,9 +2608,10 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 		    }
 		}
 	    }
-	  else if (absoluteMove ||
-		   pCurrentAb->AbHeight.DimAbRef ||
-		   pCurrentAb->AbHeight.DimValue >= 0)
+	  else if (pCurrentAb->AbLeafType == LtCompound &&
+		   (absoluteMove ||
+		    pCurrentAb->AbHeight.DimAbRef ||
+		    pCurrentAb->AbHeight.DimValue >= 0))
 	    {
 	      /* the box is already built */
 	      /* or it's within a stretchable box */
