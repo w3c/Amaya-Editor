@@ -765,7 +765,7 @@ printf ("cref=%d: Min =%d, Max=%d, colWidth=%d, colPercent=%d\n", cRef, pBox->Bx
   sumPercent = sumPercent * width / 100;
   min = min + sum + sumPercent;
   max = max + sum + sumPercent;
-
+  var = var + sumPercent;
   /* check if the contraint is valid */
   if (constraint && min > width)
     {
@@ -985,11 +985,19 @@ PtrAbstractBox  table;
 int             frame;
 #endif
 {
-  PtrAbstractBox     *colBox;
+  PtrAttribute        pAttr;
+  PtrSSchema          pSS;
+  PtrAbstractBox     *colBox, rowSpanCell[MAX_COLROW];
+  PtrAbstractBox      pAb, row;
   PtrTabRelations     pTabRel;
+  PtrDocument         pDoc;
+  int                 rowSpans[MAX_COLROW];
   int                *colWidth, *colPercent;
   int                 cRef, i;
-  int                 cNumber;
+  int                 cNumber, rspanNumber;
+  int                 attrHeight, attrVSpan;
+  boolean             skip;
+  boolean             modified;
 
   /* how many columns */
   pTabRel = table->AbBox->BxColumns;
@@ -1006,6 +1014,7 @@ int             frame;
   colBox = TtaGetMemory (sizeof (PtrAbstractBox) * cNumber);
   colWidth = TtaGetMemory (sizeof (int) * cNumber);
   colPercent = TtaGetMemory (sizeof (int) * cNumber);
+
   pTabRel = table->AbBox->BxColumns;
   cRef = 0;
   while (pTabRel != NULL)
@@ -1025,6 +1034,80 @@ int             frame;
   TtaFreeMemory (colBox);
   TtaFreeMemory (colWidth);
   TtaFreeMemory (colPercent);
+
+  /* check vertically spanned cells */
+  pSS = table->AbElement->ElStructSchema;
+  rspanNumber = 0; /* no row-spanned cell */
+  attrVSpan = GetAttrWithException (ExcRowSpan, pSS);
+  attrHeight = GetAttrWithException (ExcNewHeight, pSS);
+  if (attrVSpan != 0)
+    {
+      /* Enter a critical section */
+      ComputeColInWork = TRUE;
+      pDoc = LoadedDocument[FrameTable[frame].FrDoc - 1];
+      modified = pDoc->DocModified;
+      /* process all rows */
+      pTabRel = table->AbBox->BxRows;
+      while (pTabRel != NULL)
+	{
+	  for (i = 0; i < MAX_RELAT_DIM && pTabRel->TaRTable[i] != NULL; i++)
+	    {
+	      /* process all cells in the row */
+	      row = pTabRel->TaRTable[i];
+	      /* remove existing Height attribute */
+	      GetAttribute (&pAttr);
+	      pAttr->AeAttrSSchema = pSS;
+	      pAttr->AeAttrNum = attrHeight;
+	      pAttr->AeAttrType = AtNumAttr;
+	      pAttr->AeAttrValue = MAX_INT_ATTR_VAL + 1;
+	      AttachAttrWithValue (row->AbElement, pDoc, pAttr);
+	      DeleteAttribute (NULL, pAttr);
+	      cRef = 0;
+	      pAb = row;
+	      skip = FALSE;
+	      while (pAb != NULL && cRef < cNumber)
+		{
+		  if (skip)
+		    {
+		      pAb = NextSiblingAbsBox (pAb, row);
+		      skip = FALSE;
+		    }
+		  else
+		    pAb = SearchNextAbsBox (pAb, row);
+
+		  if (pAb != NULL && !pAb->AbDead && pAb->AbBox != NULL &&
+		      TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pSS) &&
+		      !pAb->AbPresentationBox)
+		    {
+		      pAttr = pAb->AbElement->ElFirstAttr;
+		      while (pAttr != NULL)
+			{
+			  if (pAttr->AeAttrNum == attrVSpan &&
+			      pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
+			    {
+			      /* rowspan on this cell */
+			      if (pAttr->AeAttrValue > 1 && rspanNumber < MAX_COLROW)
+				{
+				  /* register current cell and span value */
+				  rowSpans[rspanNumber] = pAttr->AeAttrValue;
+				  rowSpanCell[rspanNumber++] = pAb;
+				}
+			      pAttr = NULL;
+			    }
+			  else
+			    pAttr = pAttr->AeNext;
+			}
+		    }
+		}
+	    }
+	  pTabRel = pTabRel->TaRNext;
+	}
+      /* Now check row heights */
+      CheckRowHeights (table, rspanNumber, rowSpanCell, rowSpans, frame);
+      pDoc->DocModified = modified;
+      /* Exit a critical section */
+      ComputeColInWork = FALSE;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1069,6 +1152,7 @@ int             frame;
 
   pDoc = LoadedDocument[FrameTable[frame].FrDoc - 1];
   modified = pDoc->DocModified;
+
   pSS = table->AbElement->ElStructSchema;
   /* how many columns */
   pTabRel = table->AbBox->BxColumns;
@@ -1144,7 +1228,7 @@ int             frame;
 	  pAttr->AeAttrNum = attrHeight;
 	  pAttr->AeAttrType = AtNumAttr;
 	  pAttr->AeAttrValue = MAX_INT_ATTR_VAL + 1;
-	  AttachAttrWithValue (row->AbElement, LoadedDocument[FrameTable[frame].FrDoc - 1], pAttr);
+	  AttachAttrWithValue (row->AbElement, pDoc, pAttr);
 	  DeleteAttribute (NULL, pAttr);
 
 	  cRef = 0;
@@ -1277,8 +1361,14 @@ int             frame;
 				  pAb->AbBox != NULL && !pAb->AbPresentationBox)
 				{
 				  /* diff between cell's and box's position */
-				  delta = cell->AbBox->BxXOrg - pAb->AbBox->BxXOrg;
-				  if (delta < 0)
+				  if (pAb->AbBox->BxHorizEdge == Left ||
+				      pAb->AbBox->BxHorizEdge == VertRef)
+				    {
+				      delta = cell->AbBox->BxXOrg - pAb->AbBox->BxXOrg;
+				      if (delta < 0)
+					delta = 0;
+				    }
+				  else
 				    delta = 0;
 				  if (pAb->AbBox->BxType == BoBlock ||
 				      pAb->AbBox->BxType == BoTable)
@@ -1588,8 +1678,7 @@ Document        document;
 }
 
 /*----------------------------------------------------------------------
-   CheckColumnWidth
-
+   UpdateColumnWidth
    checks the column width and changes columns or table width if needed.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__

@@ -8877,7 +8877,7 @@ ATTRIBUTES
 
  Align (Table) = left_:
 	BEGIN
-	CreateBefore(ALIGN_LEFT);
+	CreateFirst(ALIGN_LEFT);
 	HorizPos: Left = Enclosing . Left;
 	In Structure_view
 	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -8886,7 +8886,7 @@ ATTRIBUTES
 	END;
  Align (Table) = center_:
 	BEGIN
-	CreateBefore(ALIGN_CENTER);
+	CreateFirst(ALIGN_CENTER);
 	HorizPos: VMiddle = Enclosing . VMiddle;
 	In Structure_view
 	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -8895,7 +8895,7 @@ ATTRIBUTES
 	END;
  Align (Table) = right_:
 	BEGIN
-	CreateBefore(ALIGN_RIGHT);
+	CreateFirst(ALIGN_RIGHT);
 	HorizPos: Right = Enclosing . Right;
 	In Structure_view
 	   HorizPos: Left = Enclosing . Left + STRUCT_INDENT;

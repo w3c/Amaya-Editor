@@ -1182,6 +1182,7 @@ char                c;
 {
    ViewSelection      *pViewSel;
    PtrAbstractBox      pAb;
+   DisplayMode         dispMode;
    int                 frame;
 
    if (document != 0)
@@ -1193,6 +1194,12 @@ char                c;
 	    pViewSel->VsBox->BxAbstractBox->AbReadOnly)
 	  /* nothing to do */
 	  return;
+
+	/* avoid to redisplay step by step */
+	dispMode = TtaGetDisplayMode (document);
+	if (dispMode == DisplayImmediately)
+	  TtaSetDisplayMode (document, DeferredDisplay);
+
 	if (!StructSelectionMode && !ViewFrameTable[frame - 1].FrSelectOnePosition)
 	  {
 	    /* Delete the current selection */
@@ -1220,6 +1227,9 @@ char                c;
 	      }
 	  }
 	InsertChar (frame, c, -1);
+	/* restore the display mode */
+	if (dispMode == DisplayImmediately)
+	  TtaSetDisplayMode (document, dispMode);
      }
 }
 

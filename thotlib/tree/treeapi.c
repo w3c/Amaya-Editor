@@ -3748,7 +3748,7 @@ Element             element;
    if (parent != NULL)
      {
        /* check if parent is a parent of pEl */
-       while (pEl != NULL && pEl != parent)
+       while (pEl != NULL && pEl != (PtrElement) parent)
 	 pEl = pEl->ElParent;
      }
    if (pEl == NULL)

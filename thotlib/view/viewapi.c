@@ -2789,17 +2789,23 @@ DisplayMode         newDisplayMode;
 	    /* le document passe du mode affichage differe' ou sans calcul  */
 	    /* d'image au mode  d'affichage immediat */
 	    {
+              if (oldDisplayMode == DeferredDisplay &&
+		  ThotLocalActions[T_colupdates])
+		/* update tables if necessary */
+		(*ThotLocalActions[T_colupdates]) (document);
+
 	      /* on met a jour le mode d'affichage */
 	      documentDisplayMode[document - 1] = newDisplayMode;
 
               if (oldDisplayMode == NoComputedDisplay)
-                /* il faut recalculer l'image */
-		RebuildImage (LoadedDocument[document - 1]);
+		{
+		  /* il faut recalculer l'image */
+		  RebuildImage (LoadedDocument[document - 1]);
+		  /* update tables if necessary */
+		  if (ThotLocalActions[T_colupdates])
+		    (*ThotLocalActions[T_colupdates]) (document);
+		}
 
-	      /* update tables if necessary */
-	      if (ThotLocalActions[T_colupdates])
-		(*ThotLocalActions[T_colupdates]) (document);
-		
               /* reaffiche ce qui a deja ete prepare' */
               RedisplayDocViews (LoadedDocument[document - 1]);
 
