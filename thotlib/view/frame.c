@@ -2250,16 +2250,18 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 			  /* it lacks some abstract image at the bottom of the frame */
 			  /* Volume to add */
 			  bottom = (y + h / 4) * l;
+			  
 			  if (tVol > 0 && tVol < pFrame->FrAbstractBox->AbVolume)
 			    {
 			      /* free abstract boxes on top of the frame */
+			      int org = 0;
 			      if (topBox)
-				y = topBox->BxYOrg;
+			      	org = topBox->BxYOrg;
 			      DecreaseVolume (TRUE, tVol, frame);
 			      DefClip (frame, 0, 0, 0, 0);
 			      /* check location of frame in concrete image */
 			      if (topBox)
-				pFrame->FrYOrg = pFrame->FrYOrg - y + topBox->BxYOrg;
+				pFrame->FrYOrg = pFrame->FrYOrg - org + topBox->BxYOrg;
 			    }
 			  if (pFrame->FrAbstractBox == NULL)
 			    {
