@@ -6,13 +6,18 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-#ifdef _TH_
-extern wchar_t TtaGetCharFromWC ( wchar_t wc,
-                                  CHARSET encoding );
-#else /* _TH_ */
 extern unsigned char TtaGetCharFromWC ( wchar_t wc,
                                         CHARSET encoding );
-#endif /* _TH */
+extern wchar_t TtaConvertJisToWC ( unsigned char b1,
+                                   unsigned char b2,
+                                   CHARSET charset );
+extern wchar_t TtaConvertSjisToWC ( unsigned char b1,
+                                    unsigned char b2 );
+extern int TtaJisEscMatch ( unsigned char *buf,
+                            unsigned char *match,
+                            int *more );
+extern wchar_t TtaGetWCFromJisChar ( unsigned char c,
+                                     CHARSET encoding );
 extern wchar_t TtaGetWCFromChar ( unsigned char c,
                                   CHARSET encoding );
 extern int TtaWCToMBstring ( wchar_t src,
@@ -40,13 +45,18 @@ extern CHAR_T *TtaConvertIsoToCHAR ( unsigned char *src,
 
 #else /* __STDC__ */
 
-#ifdef _TH_
-extern wchar_t TtaGetCharFromWC (/* wchar_t wc,
-                                    CHARSET encoding */);
-#else /* _TH_ */
 extern unsigned char TtaGetCharFromWC (/* wchar_t wc,
                                           CHARSET encoding */);
-#endif /* _TH_ */
+extern wchar_t TtaConvertJisToWC (/* unsigned char b1,
+                                     unsigned char b2,
+                                     CHARSET charset */);
+extern wchar_t TtaConvertSjisToWC (/* unsigned char b1,
+                                      unsigned char b2 */);
+extern int TtaJisEscMatch (/* unsigned char *buf,
+                              unsigned char *match,
+                              int *more */);
+extern wchar_t TtaGetWCFromJisChar (/* unsigned char c,
+                                       CHARSET encoding */);
 extern wchar_t TtaGetWCFromChar (/* unsigned char c,
                                     CHARSET encoding */);
 extern int TtaWCToMBstring (/* wchar_t src,

@@ -61,19 +61,15 @@
 #include "inites_f.h"
 #ifdef _GTK
 #include "gtk-functions.h"
-
 #ifdef _GL
 /* Some GL in it */
 #include <gtkgl/gtkglarea.h>
 #include "glwindowdisplay.h"
 #endif/*  _GL */
-
-/*static    Time   t1;*/
 #else /* _GTK */
 #include "input_f.h"
 #include "appli_f.h"
 #endif /* _GTK */
-
 #ifndef _WINDOWS
 #include "LiteClue_f.h"
 #include "xwindowdisplay_f.h"
@@ -93,11 +89,11 @@ typedef void        (*Thot_ActionProc) ();
 typedef struct _CallbackCTX *PtrCallbackCTX;
 
 typedef struct _CallbackCTX
-  {
-     Thot_ActionProc     callbackProc;
-     int                 callbackSet;
-     PtrCallbackCTX      callbackNext;
-  }
+{
+  Thot_ActionProc     callbackProc;
+  int                 callbackSet;
+  PtrCallbackCTX      callbackNext;
+}
 CallbackCTX;
 
 static PtrCallbackCTX FirstCallbackAPI;
@@ -121,6 +117,20 @@ static SchemaMenu_Ctl *SchemasMenuList;
 #define WM_ENTER (WM_USER)
 extern TBADDBITMAP ThotTBBitmap;
 WNDPROC lpfnTextZoneWndProc = (WNDPROC) 0;
+
+typedef struct struct_winerror
+{
+   WORD   errNo;
+   char  *errstr;
+};
+
+struct struct_winerror Win_errtab[] = {
+#include "winerrdata.c"
+};
+
+#define NB_WIN_ERROR (sizeof(Win_errtab) / sizeof(struct struct_winerror))
+
+static DWORD        WinLastError;
 static HWND    hwndTB;
 static int     FormattedViewXPos = 0;
 static int     FormattedViewYPos = 0;
@@ -130,6 +140,30 @@ HWND           StatusBar;
 HWND           logoFrame;
 HMENU          hmenu;
 int            menu_item;
+
+/*----------------------------------------------------------------------
+  WinErrorBox pops-up a message box when an MS-Window error occured.
+  ----------------------------------------------------------------------*/
+void WinErrorBox (HWND hWnd, char *source)
+{
+#ifndef _AMAYA_RELEASE_
+  int                msg;
+  char               str[200];
+
+  WinLastError = GetLastError ();
+  if (WinLastError == 0)
+    return;
+  for (msg = 0; msg < NB_WIN_ERROR; msg++)
+    if (Win_errtab[msg].errNo == WinLastError)
+      break;
+  if (msg >= NB_WIN_ERROR)
+    sprintf (str, "Error %d : not registered\n", WinLastError);
+  else
+    sprintf (str, "(source: %s Error %d : %s\n)", source, WinLastError,
+	     Win_errtab[msg].errstr);
+  MessageBox (hWnd, str, "Amaya", MB_OK);
+#endif /* _AMAYA_RELEASE_ */
+}
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -202,18 +236,12 @@ void TteInitMenus (char *name, int number)
   char                namef2[100];
   char                text[100];
   char                script;
-#ifndef _WINDOWS
-  Display            *Dp;
-#else /* _WINDOWS */
 
-  FrMainRef [0] = 0;
-#endif /* _WINDOWS */
   /* Initialisation du  contexte serveur */
   FrRef[0] = 0;
   InitDocContexts ();
-
   /* Init the profile table */
-  Prof_InitTable(NULL);
+  Prof_InitTable (NULL);
   /* Initialise le dialogue */
   servername = NULL;
   if (appArgc > 2)
@@ -229,11 +257,8 @@ void TteInitMenus (char *name, int number)
 	    i = appArgc;
 	  }
     }
-#ifdef _WINDOWS
-  WIN_TtaInitDialogue (servername);
-#else  /* _WINDOWS */
-  TtaInitDialogue (servername, &app_cont, &Dp);
-#ifndef _GTK
+  TtaInitDialogue (servername, &app_cont);
+#if !defined(_WINDOWS) && !defined(_GTK)
   if (!RootShell)
     {
       /* Connection au serveur X impossible */
@@ -241,21 +266,16 @@ void TteInitMenus (char *name, int number)
       printf ("*** Fatal Error: X connexion refused\n");
       exit (1);
     }
-  TtDisplay = Dp;
-#endif /* _GTK */
-#endif /* _WINDOWS */
+#endif /* _WINDOWS && _GTK */
 
    /* Definition de la procedure de retour des dialogues */
    TtaDefineDialogueCallback (ThotCallback);
-
    Dict_Init ();
    ThotInitDisplay (name, 0, 0);
-
 #ifndef _WINDOWS
    /* initialize the LiteClue Widget */
    InitClue(RootShell);
 #endif /* _WINDOWS */
-
    script = TtaGetScript (TtaGetDefaultLanguage ());
    FontIdentifier (script, 2, 0, MenuSize, UnPoint, text, namef1);
    FontIdentifier (script, 2, 1, MenuSize, UnPoint, text, namef2);
@@ -1293,20 +1313,6 @@ void TteOpenMainWindow (char *name, Pixmap logo, Pixmap icon)
 		/* sinon on reduit le nombre de menus */
 		ptrmenu = NULL;
 	  }
-#if 0
-        /**** creation de la fenetre principale ****/
-	if (n == 0)
-	  {
-	     WithMessages = FALSE;
-	     TtaInitDialogueWindow (name, NULL, None, None, 0, NULL);
-	  }
-	else
-	  {
-	     WithMessages = TRUE;
-	     TtaInitDialogueWindow (name, NULL, logo, icon, n, string);
-	  }
-#endif
-
 	/* icone des fenetres de documents */
 #ifndef _WINDOWS
 #ifndef _GTK
@@ -4511,12 +4517,3 @@ void ThotCallback (int ref, int typedata, char *data)
 	}
     }
 }
-/* End Of Module Thot */
-
-
-
-
-
-
-
-

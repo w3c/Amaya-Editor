@@ -16,20 +16,6 @@ extern void DrawChar ( char car,
                        int y,
                        PtrFont font,
                        int fg );
-#ifdef _TH_
-extern int DrawString ( wchar_t *buff,
-                        int lg,
-                        int frame,
-                        int x,
-                        int y,
-                        PtrFont font,
-                        int boxWidth,
-                        int bl,
-                        int hyphen,
-                        int startABlock,
-                        int fg,
-                        int shadow );
-#else /* _TH_ */
 extern int DrawString ( unsigned char *buff,
                         int lg,
                         int frame,
@@ -42,7 +28,6 @@ extern int DrawString ( unsigned char *buff,
                         int startABlock,
                         int fg,
                         int shadow );
-#endif /* _TH_ */
 extern void DisplayUnderline ( int frame,
                                int x,
                                int y,
@@ -365,20 +350,6 @@ extern void DrawChar (/* char car,
                          int y,
                          PtrFont font,
                          int fg */);
-#ifdef _TH_
-extern int DrawString (/* wchar_t *buff,
-                          int lg,
-                          int frame,
-                          int x,
-                          int y,
-                          PtrFont font,
-                          int boxWidth,
-                          int bl,
-                          int hyphen,
-                          int startABlock,
-                          int fg,
-                          int shadow */);
-#else /* _TH_ */
 extern int DrawString (/* unsigned char *buff,
                           int lg,
                           int frame,
@@ -391,7 +362,6 @@ extern int DrawString (/* unsigned char *buff,
                           int startABlock,
                           int fg,
                           int shadow */);
-#endif /* _TH_ */
 extern void DisplayUnderline (/* int frame,
                                  int x,
                                  int y,

@@ -15,18 +15,11 @@ extern void ThotXmColorProc ( ThotColorStruct *bg,
                               ThotColorStruct *top,
                               ThotColorStruct *bottom );
 extern void TtaInitDialogue ( char *server,
-                              ThotAppContext *app_context,
-                              Display **Dp );
+                              ThotAppContext *app_context );
 extern void TtaInitDialogueTranslations ( ThotTranslations translations );
 extern void TtaChangeDialogueFonts ( char *menufont,
                                      char *formfont );
 extern int TtaGetReferencesBase ( int number );
-extern void TtaInitDialogueWindow ( char* name,
-                                    char *geometry,
-                                    Pixmap logo,
-                                    Pixmap icon,
-                                    int number,
-                                    char *textmenu );
 extern void DisplayConfirmMessage ( char *text );
 extern void DisplayMessage ( char *text,
                              int msgType );
@@ -173,12 +166,12 @@ extern void TtaNewNumberForm ( int ref,
                                ThotBool react );
 extern void TtaSetNumberForm ( int ref,
                                int val );
+extern void TtaAbortShowDialogue ( void );
 extern void TtaSetDialoguePosition ( void );
 extern void TtaShowDialogue ( int ref,
                               ThotBool remanent );
 extern void TtaWaitShowDialogue ( void );
 extern ThotBool TtaTestWaitShowDialogue ( void );
-extern void TtaAbortShowDialogue ( void );
 extern void TtaFreeAllCatalogs ( void );
 
 #else /* __STDC__ */
@@ -192,18 +185,11 @@ extern void ThotXmColorProc (/* ThotColorStruct *bg,
                                 ThotColorStruct *top,
                                 ThotColorStruct *bottom */);
 extern void TtaInitDialogue (/* char *server,
-                                ThotAppContext *app_context,
-                                Display **Dp */);
+                                ThotAppContext *app_context */);
 extern void TtaInitDialogueTranslations (/* ThotTranslations translations */);
 extern void TtaChangeDialogueFonts (/* char *menufont,
                                        char *formfont */);
 extern int TtaGetReferencesBase (/* int number */);
-extern void TtaInitDialogueWindow (/* char* name,
-                                      char *geometry,
-                                      Pixmap logo,
-                                      Pixmap icon,
-                                      int number,
-                                      char *textmenu */);
 extern void DisplayConfirmMessage (/* char *text */);
 extern void DisplayMessage (/* char *text,
                                int msgType */);
@@ -350,12 +336,12 @@ extern void TtaNewNumberForm (/* int ref,
                                  ThotBool react */);
 extern void TtaSetNumberForm (/* int ref,
                                  int val */);
+extern void TtaAbortShowDialogue (/* void */);
 extern void TtaSetDialoguePosition (/* void */);
 extern void TtaShowDialogue (/* int ref,
                                 ThotBool remanent */);
 extern void TtaWaitShowDialogue (/* void */);
 extern ThotBool TtaTestWaitShowDialogue (/* void */);
-extern void TtaAbortShowDialogue (/* void */);
 extern void TtaFreeAllCatalogs (/* void */);
 
 #endif /* __STDC__ */

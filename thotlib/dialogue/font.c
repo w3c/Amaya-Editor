@@ -76,7 +76,6 @@ static SpecFont   FirstFontSel = NULL;
 #include "windowdisplay_f.h"
 
 #ifdef _GL
-
 #ifdef _GTK
 #include <gtkgl/gtkglarea.h>
 #endif /*_GTK*/
@@ -87,11 +86,9 @@ static SpecFont   FirstFontSel = NULL;
 #include "glwindowdisplay.h"
 
 
-
 /*----------------------------------------------------------------------
  GL_FontIInit 
- Use Freetype2 and 
- the FTGL lib :
+ Use Freetype2 and the FTGL lib :
  http://homepages.paradise.net.nz/henryj/code/index.html
   ----------------------------------------------------------------------*/
 void *GL_LoadFont (char alphabet, int family, 
@@ -532,18 +529,11 @@ else
 #ifdef _GTK
       gdk_string_extents (font, &c, &lbearing, &rbearing, &width, &ascent, &descent);
 #else /* _GTK */
-#ifdef _TH_
       xc = CharacterStructure(c, xf);
       if (xc == NULL)
 	ascent = xf->max_bounds.ascent;
       else
 	ascent = xc->ascent;
-#else /* _TH_ */
-      /* a patch due to errors in standard symbol fonts */
-      if (xf->per_char == NULL)
-	return (xf->max_bounds.ascent);
-      ascent = xf->per_char[c - xf->min_char_or_byte2].ascent;
-#endif /* _TH_ */
 #endif /* _GTK */
     }
   if (c == 244)
@@ -1092,10 +1082,8 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
   while (ptfont == NULL && i < MAX_FONT && TtFonts[i] != NULL)
     {
       if (strcmp (&TtFontName[deb], text) == 0)
-	{
-	  /* Font cache lookup succeeded */
-	  ptfont = TtFonts[i];
-	}
+	/* Font cache lookup succeeded */
+	ptfont = TtFonts[i];
       else
 	{
 	  i++;
@@ -1108,15 +1096,14 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
     {
       /* Check for table font overflow */
       if (i >= MAX_FONT)
-	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_NO_MEMORY),
-			   textX);
+	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_NO_MEMORY), textX);
       else
 	{
 	  strcpy (&TtFontName[deb], text);
 	  strcpy (&TtPsFontName[i * 8], PsName);	   
 #ifdef _GL
 #ifdef _PCLDEBUG
-  g_print ("\n XLFD selection : %s", textX);
+	  g_print ("\n XLFD selection : %s", textX);
 #endif /*_PCLDEBUG*/
 	  ptfont = GL_LoadFont (script, family, highlight, size, textX);/*alphabet=>script*/
 #else /*_GL*/
@@ -1131,15 +1118,15 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	  ActiveFont = WIN_LoadFont (script, family, highlight, size);
 	  if (TtPrinterDC != NULL)
 	  {
-		  display = TtPrinterDC;
-	      hOldFont = SelectObject (TtPrinterDC, ActiveFont);
+	    display = TtPrinterDC;
+	    hOldFont = SelectObject (TtPrinterDC, ActiveFont);
 	      /*SelectObject (TtPrinterDC, hOldFont);*/
 	    }
 	  else
 	    {
-		  display = GetDC(FrRef[frame]);
+	      display = GetDC(FrRef[frame]);
 	      hOldFont = SelectObject (display, ActiveFont);
-		  /*if (frame)
+	      /*if (frame)
 	        SelectObject (TtDisplay, hOldFont);*/
 	    }
 	  if (GetTextMetrics (display, &textMetric))
@@ -1773,7 +1760,6 @@ void TtaSetFontZoom (int zoom)
   ----------------------------------------------------------------------*/
 void InitDialogueFonts (char *name)
 {
-#ifndef _GTK
 #ifndef _WINDOWS
   int              ndir, ncurrent;
   char             FONT_PATH[128];
@@ -1781,7 +1767,6 @@ void InitDialogueFonts (char *name)
 #endif /* _WINDOWS */
   char           **dirlist = NULL;
   char           **currentlist = NULL;
-#endif /* _GTK */
   char            *value;
   char             script;
   int              f3;
@@ -1839,7 +1824,6 @@ void InitDialogueFonts (char *name)
   f3 = MenuSize + 2;
   
 #ifndef _WINDOWS
-#ifndef _GTK
   fontpath = TtaGetEnvString ("THOTFONT");
   if (fontpath)
     {
@@ -1877,11 +1861,8 @@ void InitDialogueFonts (char *name)
 	}
       TtaFreeMemory ( currentlist);
     }
-#ifndef _GTK
   for (i = 0; i < MAX_FONT; i++)
     TtPatchedFont[i] = 0;
-#endif /* _GTK */
-#endif /* !_GTK */
 #endif /* _WINDOWS */
 
   /* Initialize the Thot Lib standards fonts */
@@ -1967,22 +1948,21 @@ void ThotFreeFont (int frame)
 		  TtaFreeMemory (TtFonts[i]);
 		}
 #else  /* _WINDOWS */
-#ifdef _GTK
-	      if (j == MAX_FONT)
-#ifndef _GL 
-	        gdk_font_unref (TtFonts[i]);
-#else /*_GL */
-	        gl_font_delete (TtFonts[i]);
-#endif /*_GL*/
-#else /* _GTK */
 	      if (j == MAX_FONT)
 		{
+#ifdef _GTK
+#ifndef _GL 
+		  gdk_font_unref (TtFonts[i]);
+#else /*_GL */
+		  gl_font_delete (TtFonts[i]);
+#endif /*_GL*/
+#else /* _GTK */
+		  XFreeFont (TtDisplay, (XFontStruct *) TtFonts[i]);
+#endif /* _GTK */
 		  /* remove the indicator */
 		  if (TtPatchedFont[i])
 		    TtPatchedFont[i] = 0;
-		  XFreeFont (TtDisplay, (XFontStruct *) TtFonts[i]);
 		}
-#endif /* _GTK */
 #endif /* _WINDOWS */
 #ifdef _I18N_
 	      /* remove this font in fontsets */

@@ -26,6 +26,10 @@ extern void PngPrint ( char *fn,
                        FILE *fd,
                        int bgColor );
 extern ThotBool IsPngFormat ( char *fn );
+extern ThotBool SavePng ( const char *filename,
+                          unsigned char *m_pData,
+                          unsigned int m_width,
+                          unsigned int m_height );
 
 #else /* __STDC__ */
 
@@ -49,6 +53,10 @@ extern void PngPrint (/* char *fn,
                          FILE *fd,
                          int bgColor */);
 extern ThotBool IsPngFormat (/* char *fn */);
+extern ThotBool SavePng (/* const char *filename,
+                            unsigned char *m_pData,
+                            unsigned int m_width,
+                            unsigned int m_height */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

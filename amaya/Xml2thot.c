@@ -2582,30 +2582,25 @@ static void EndOfXhtmlAttributeName (char *attrName, Element el,
 
    UnknownAttr = FALSE;
    attrType.AttrTypeNum = 0;
-
    mapAttr = MapHTMLAttribute (attrName, &attrType, currentElementName,
 			       &highEnoughLevel, doc);
-
    if (attrType.AttrTypeNum <= 0)
      {
        /* this attribute is not in the HTML mapping table */
        if (strcasecmp (attrName, "xml:lang") == 0)
 	 /* attribute xml:lang is not considered as invalid, but it is ignored */
 	 lastMappedAttr = NULL;
+       else if (highEnoughLevel)
+	 {
+	   sprintf (msgBuffer, "Invalid XHTML attribute \"%s\"", attrName);
+	   XmlParseError (errorParsing, msgBuffer, 0);
+	 }
        else
 	 {
-	   if (highEnoughLevel)
-	     {
-	       sprintf (msgBuffer, "Invalid XHTML attribute \"%s\"", attrName);
-	       XmlParseError (errorParsing, msgBuffer, 0);
-	     }
-	   else
-	     {
-	       sprintf (msgBuffer,
-			 "Invalid XHTML attribute \"%s\" for the document profile",
-			 attrName);
-	       XmlParseError (errorParsingProfile, msgBuffer, 0);
-	     }
+	   sprintf (msgBuffer,
+		    "Invalid XHTML attribute \"%s\" for the document profile",
+		    attrName);
+	   XmlParseError (errorParsingProfile, msgBuffer, 0);
 	 }
      }
    

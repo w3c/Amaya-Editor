@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001.
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -14,7 +14,6 @@
 THOT_EXPORT Proc	       ThotLocalActions[MAX_LOCAL_ACTIONS];
 
 #ifndef NODISPLAY
-
 #ifdef _WINDOWS
 #include <windows.h>
 #ifndef __GNUC__
@@ -28,7 +27,6 @@ THOT_EXPORT BOOL               buttonCommand;
 #else /* _WINDOWS */
 THOT_EXPORT ThotWidget	       RootShell;
 #endif /* !_WINDOWS */
-
 THOT_EXPORT ThotAppContext     app_cont;
 THOT_EXPORT Proc	       CurrentCallbackAPI;
 
@@ -37,10 +35,8 @@ THOT_EXPORT Proc	       CurrentCallbackAPI;
 /* For each action, the following items are stored: name, address,	  */
 /* keyboard equivalent, windows supposed to call the action.		  */
 /* Calling an action: (*actionptr->Call_Action)(document, view);	  */
-
 THOT_EXPORT Action_Ctl	      *MenuActionList;
 THOT_EXPORT int		       MaxMenuAction;
-
 /* return events for Application and Document windows			  */
 THOT_EXPORT int                ClickIsDone;
 THOT_EXPORT char              *servername ;

@@ -14,7 +14,6 @@ extern HFONT      WinLoadFont (HDC w, PtrFont f);
 extern int        WIN_InitSystemColors ();
 extern void       WIN_GetDeviceContext (int frame);
 extern void       WIN_ReleaseDeviceContext ();
-extern ThotBool   WIN_TtaInitDialogue (char *s);
 extern void       WIN_TtaSetPulldownOff (int, ThotMenu, ThotWindow);
 extern void       WIN_TtaSetPulldownOn (int, ThotMenu, ThotWindow);
 extern void       WIN_TtaSetToggleMenu (int, int, ThotBool, ThotWindow);
