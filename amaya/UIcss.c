@@ -791,6 +791,8 @@ void ShowAppliedStyle (Document doc, View view)
 	{
 	  DocumentSource[newdoc] = doc;
 	  TtaSetStatus (newdoc, 1, "   ", NULL);
+	  /* set the STYLE.LST document in read-only mode */
+	  TtaSetDocumentAccessMode (newdoc, 0);
 	}
     }
 }
@@ -851,6 +853,8 @@ void SynchronizeAppliedStyle (NotifyElement *event)
 	  }
 	fclose (list);
 	StartParser (i, fileName, "STYLE.LST", dirName, "STYLE.LST", TRUE);
+        /* set the STYLE.LST document in read-only mode */
+        TtaSetDocumentAccessMode (i, 0);
 	return;
     }
 }
