@@ -2306,6 +2306,11 @@
 	<message xml:lang="fr">Surpasser le verrou?</message>
 	<message xml:lang="pt">Sobrepor trava?</message>
 </label>
+<label define="AM_COPY_LOCK">
+	<message xml:lang="en">Copy the lock information? </message>
+	<message xml:lang="fr">Copier les informations du verrou?? </message>
+	<message xml:lang="pt">Copiar informação da trava? </message>
+</label>
 <label define="AM_UNLOCK_BEFORE">
 	<message xml:lang="en">Try to unlock the document before...</message>
 	<message xml:lang="fr">Essayez déverrouillé le document...</message>
@@ -2330,6 +2335,11 @@
 	<message xml:lang="en">Document %s is unlocked!</message>
 	<message xml:lang="fr">Document %s est déverrouillé!</message>
 	<message xml:lang="pt">Documento %s está destravado!</message>
+</label>
+<label define="AM_UNLOCK_DOCUMENT">
+	<message xml:lang="en">Unlock the document? </message>
+	<message xml:lang="fr">Déverrouillé le document? </message>
+	<message xml:lang="pt">Destravar o documento? </message>
 </label>
 <label define="AM_DAV_PROPERTIES">
 	<message xml:lang="en">Document properties</message>

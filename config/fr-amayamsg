@@ -273,19 +273,21 @@
 271 Document %s est verrouillé!
 272 Document %s a été verrouillé par %s (temps d'expiration %s)
 273 Surpasser le verrou?
-274 Essayez déverrouillé le document...
-275 Déverrouillage a réussit!
-276 Dérrouillage a échué!
-277 En attente d'une libération du verrou...
-278 Document %s est déverrouillé!
-279 Propriétes du document
-280 Propriétes du document ne sont pas disponibles
-281 Propriétes du document ne sont pas disponibles pour l'instant. Essayez de nouveau plus tard...
-282 En attente des propriétes du document...
-283 Désolé, WebDAV ne support pas URLs comme %s
-284 Sauvegarde du verrou dans la base local a échué
-285 Impossible éffacer verrou de la base local
-286 Désolé, cette opération est interdit pour %s
-287 Opération a échué! Cause: Faute de dépendence
-288 Opération a échué! Cause: %s
-289 Ressayez? 
+274 Copier les informations du verrou?? 
+275 Essayez déverrouillé le document...
+276 Déverrouillage a réussit!
+277 Dérrouillage a échué!
+278 En attente d'une libération du verrou...
+279 Document %s est déverrouillé!
+280 Déverrouillé le document? 
+281 Propriétes du document
+282 Propriétes du document ne sont pas disponibles
+283 Propriétes du document ne sont pas disponibles pour l'instant. Essayez de nouveau plus tard...
+284 En attente des propriétes du document...
+285 Désolé, WebDAV ne support pas URLs comme %s
+286 Sauvegarde du verrou dans la base local a échué
+287 Impossible éffacer verrou de la base local
+288 Désolé, cette opération est interdit pour %s
+289 Opération a échué! Cause: Faute de dépendence
+290 Opération a échué! Cause: %s
+291 Ressayez? 

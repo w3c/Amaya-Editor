@@ -273,19 +273,21 @@
 271 Documento %s está travado!
 272 Documento %s foi travado por %s (tempo restante %s)
 273 Sobrepor trava?
-274 Tente destravar o documento...
-275 Documento foi destravado com sucesso!
-276 Documento não pode ser destravado com sucesso!
-277 Destravando %s...
-278 Documento %s está destravado!
-279 Propriedades do documento
-280 Propriedades do documento não estão disponíveis
-281 Propriedades do documento estão temporariamente indisponíveis. Tente de novo mais tarde...
-282 Buscando as propriedades do documento...
-283 Lamento, WebDAV não supporta URLs como %s
-284 Impossível salvar informação de trava localmente
-285 Impossível remover informação de trava local
-286 Lamento, esta operação não é permitida para %s
-287 Operação falhou! Causa: Falha de dependência
-288 Operaçã falhou! Causa: %s
-289 Tentar de novo? 
+274 Copiar informação da trava? 
+275 Tente destravar o documento...
+276 Documento foi destravado com sucesso!
+277 Documento não pode ser destravado com sucesso!
+278 Destravando %s...
+279 Documento %s está destravado!
+280 Destravar o documento? 
+281 Propriedades do documento
+282 Propriedades do documento não estão disponíveis
+283 Propriedades do documento estão temporariamente indisponíveis. Tente de novo mais tarde...
+284 Buscando as propriedades do documento...
+285 Lamento, WebDAV não supporta URLs como %s
+286 Impossível salvar informação de trava localmente
+287 Impossível remover informação de trava local
+288 Lamento, esta operação não é permitida para %s
+289 Operação falhou! Causa: Falha de dependência
+290 Operaçã falhou! Causa: %s
+291 Tentar de novo? 
