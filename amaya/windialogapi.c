@@ -3567,8 +3567,8 @@ LRESULT CALLBACK PasteLibraryModelDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM w
       default:
 	return FALSE;
       }
-    return TRUE;
 #endif /* _SVGLIB */
+    return TRUE;
 }
 
 /*-----------------------------------------------------------------------

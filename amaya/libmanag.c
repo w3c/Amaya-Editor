@@ -232,8 +232,7 @@ void CopySvgInformationTree (Document doc, View view)
 		TtaGetMessage (AMAYA, AM_SVGLIB_NO_SVG_SELECTION));
     }
 #else /* _WINDOWS */
-  CreateOpenImgDlgWindow (TtaGetViewFrame (document, view), LastURLImage, -1,
-			  -1, 1);
+  CreatePasteLibraryModelDlgWindow (TtaGetViewFrame (document, view));
 #endif /* _WINDOWS */
 #endif /* _SVGLIB */
 }
@@ -775,7 +774,7 @@ int SVGLibraryListItemNumber (char *buffer)
   ----------------------------------------------------------------------*/
 char *IsSVGCatalogueExist (char *data)
 {
-  char              *catalogueUri;
+  char              *catalogueUri = NULL;
 #ifdef _SVGLIB
   ListUriTitle      *curList = HeaderListUriTitle;
 
@@ -1702,7 +1701,7 @@ char *GetURIId (char *href)
   ----------------------------------------------------------------------*/
 Element SearchSVGElement (Document doc, char *identificateur)
 {
-  Element        elFound;
+  Element        elFound = NULL;
 #ifdef _SVGLIB
   Element        root;
   ElementType    elTypeSearch;
@@ -1754,7 +1753,7 @@ Element SearchSVGElement (Document doc, char *identificateur)
   ----------------------------------------------------------------------*/
 Element PasteLibraryGraphicElement (Element sourceEl, Document sourceDoc, int Method)
 {
-  Element        copiedElement;
+  Element        copiedElement = NULL;
 #ifdef _SVGLIB
   Document       destDoc;
   SSchema        docSchema, SvgSchema;
