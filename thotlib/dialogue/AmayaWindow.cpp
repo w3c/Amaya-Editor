@@ -633,7 +633,7 @@ bool AmayaWindow::CheckSpecialKey( wxKeyEvent& event )
        thot_keysym == WXK_INSERT ||
        thot_keysym == WXK_DELETE ||
        thot_keysym == WXK_HOME   ||
-       thot_keysym == WXK_PRIOR  ||
+       /*       thot_keysym == WXK_PRIOR  ||*/
        thot_keysym == WXK_NEXT   ||
        thot_keysym == WXK_END    ||
        thot_keysym == WXK_LEFT   ||
@@ -650,11 +650,21 @@ bool AmayaWindow::CheckSpecialKey( wxKeyEvent& event )
   wxGLCanvas *     p_gl_canvas         = wxDynamicCast(p_win_focus, wxGLCanvas);
   wxTextCtrl *     p_text_ctrl         = wxDynamicCast(p_win_focus, wxTextCtrl);
   wxComboBox *     p_combo_box         = wxDynamicCast(p_win_focus, wxComboBox);
+  wxSpinCtrl *     p_spinctrl          = wxDynamicCast(p_win_focus, wxSpinCtrl);
 
-  if ((p_combo_box || p_text_ctrl)&& proceed_key && thot_keysym != WXK_F2)
+  /* allow other widgets to handel special keys only when the key is not F2 */
+  if ((p_combo_box || p_text_ctrl || p_spinctrl) && proceed_key && thot_keysym != WXK_F2)
     {
       event.Skip();
       return true;
+    }
+
+  /* the TAB key should be used to navigate into current document links only when the focus is ont he canvas 
+   * otherwise the TAB key must be used to navigate into widgets (with focus )*/
+  if (!p_gl_canvas && (thot_keysym == WXK_TAB))
+    {
+      event.Skip();
+      return true;      
     }
 
 #ifdef _WINDOWS
