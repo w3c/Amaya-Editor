@@ -139,7 +139,8 @@ static void DisplayWords (void)
     }
   OldNC = NC;
 
-#else /* _WINGUI */
+#endif /* _WINGUI */
+#ifdef _GTK
    int                 i, indx, length;
    char               *entry;
    char                BufMenu[MAX_TXT_LEN];
@@ -170,10 +171,9 @@ static void DisplayWords (void)
       TtaSetSelector (SpellingBase + ChkrSelectProp, -1, ChkrCorrection[1]);
    else
       TtaSetSelector (SpellingBase + ChkrSelectProp, -1, "");
-
    /* le formulaire est maintenant pret a etre affiche' */
    OldNC = NC;
-#endif /* _WINGUI */
+#endif /* _GTK */
 }
 
 
@@ -371,7 +371,8 @@ static LRESULT CALLBACK SpellCheckDlgProc (ThotWindow hwnDlg, UINT msg,
     }
   return TRUE;
 }
-#else /* _WINGUI */
+#endif /* _WINGUI */
+#ifdef _GTK
 
 /*----------------------------------------------------------------------
   UnsetEntryMenu
@@ -390,7 +391,7 @@ void UnsetEntryMenu (int ref, int ent)
 	TtaRedrawMenuEntry (ref, ent, fontname, (ThotColor)-1, 0);
      }
 }
-#endif /* _WINGUI */
+#endif /* _GTK */
 
 /*----------------------------------------------------------------------
   TtcSpellCheck  active le formulaire de correction                
@@ -595,10 +596,11 @@ static void SetProposals (Language language)
 	     TtaGetLanguageName (ChkrLanguage));
 #ifdef _WINGUI
    SetWindowText (hwndLanguage, Lab);
-#else  /* !_WINGUI */
+#endif /* _WINGUI */
+#ifdef _GTK
    TtaNewLabel (SpellingBase + ChkrLabelLanguage,
 		SpellingBase + ChkrFormCorrect, Lab);
-#endif /* _WINGUI */
+#endif /* _GTK */
 }
 
 
@@ -633,9 +635,18 @@ static ThotBool StartSpellChecker ()
 #ifdef _WINGUI
        MessageBox (NULL, TtaGetMessage (LIB, TMSG_END_CHECK), \
 		   "Spell checking", MB_OK | MB_ICONINFORMATION);
-#else  /* _WINGUI */
-       TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_END_CHECK), NULL);
 #endif /* _WINGUI */
+#ifdef _GTK
+       TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_END_CHECK), NULL);
+#endif /* _GTK */
+#ifdef _WX
+       wxMessageDialog 
+	 spell_checker_messagedialog( (wxWindow*) NULL,
+				      TtaConvMessageToWX (TtaGetMessage (LIB, TMSG_END_CHECK)), 
+				      TtaConvMessageToWX (TtaGetMessage (LIB, TMSG_Correct)),
+				      (long) wxOK | wxICON_EXCLAMATION | wxSTAY_ON_TOP);
+       spell_checker_messagedialog.ShowModal(); 
+#endif /* _WX */
        FirstStep = TRUE;
        ok = FALSE;
      }
@@ -766,9 +777,9 @@ void CallbackChecker (int ref, int dataType, char *data)
 	if (!IgnoreSpecial)
 	  {
 	    IgnoreSpecial = TRUE;
-#ifndef _WINGUI 
+#ifdef _GTK
 	    TtaSetToggleMenu (SpellingBase + ChkrMenuIgnore, 3, IgnoreSpecial);
-#endif /* _WINGUI */
+#endif /* _GTK */
 	  }
 	break;
       case ChkrCaptureNC:
@@ -801,12 +812,12 @@ void CallbackChecker (int ref, int dataType, char *data)
 	  {
 	    InitSearchDomain ((int) data, ChkrRange);
 	    /* On prepare la recheche suivante */
-#ifndef _WINGUI
+#ifdef _GTK
 	    if (ChkrRange->SStartToEnd)
 	      TtaSetMenuForm (SpellingBase + ChkrMenuOR, 2);
 	    else
 	      TtaSetMenuForm (SpellingBase + ChkrMenuOR, 0);
-#endif /* !_WINGUI */
+#endif /* GTK */
 	  }
 	else if (ChkrRange != NULL)
 	  /* Est-ce que le document vient de recevoir la selection */
@@ -814,7 +825,7 @@ void CallbackChecker (int ref, int dataType, char *data)
 	    {
 	      /* Est-ce encore vrai */
 	      GetCurrentSelection (&pDocSel, &pEl1, &pElN, &c1, &cN);
-#ifndef _WINGUI
+#ifdef _GTK
 	      if (pDocSel == ChkrRange->SDocument)
 		{
 		  /* Il faut reactiver les entree */
@@ -822,7 +833,7 @@ void CallbackChecker (int ref, int dataType, char *data)
 		  TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 1, NULL, (ThotColor)-1, 1);
 		  TtaRedrawMenuEntry (SpellingBase + ChkrMenuOR, 2, NULL, (ThotColor)-1, 1);
 		} 
-#endif /* !_WINGUI */
+#endif /* GTK */
 	    }
 	break;
       case ChkrSelectProp:
@@ -856,4 +867,28 @@ void SpellCheckLoadResources ()
 	ChkrFileDict = NULL;
 	ChkrRange = NULL;
      }
+}
+
+/*----------------------------------------------------------------------
+  TtaGetProposal
+
+  Returns a proposal from the list of proposals (needed by wx)
+  ----------------------------------------------------------------------*/
+void TtaGetProposal (char **proposal, int i)
+{
+  *proposal = ChkrCorrection[i];
+  return;
+}
+
+/*----------------------------------------------------------------------
+  TtaGetChkrLanguageName
+
+  Returns the name of the checker language (needed by wx)
+  Return value:
+  the name of the language.
+  ----------------------------------------------------------------------*/
+void TtaGetChkrLanguageName (char **lang)
+{
+  *lang = TtaGetLanguageName (ChkrLanguage);
+  return;
 }

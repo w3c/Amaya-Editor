@@ -134,6 +134,22 @@ extern char TtaGetScript (Language languageId);
 extern char *TtaGetLanguageName (Language languageId);
 
 /*----------------------------------------------------------------------
+   TtaGetProposal
+
+   Returns the list of proposals (needed by wx)
+  ----------------------------------------------------------------------*/
+extern void TtaGetProposal (char **proposal, int i);
+
+/*----------------------------------------------------------------------
+   TtaGetChkrLanguageName
+
+  Returns the name of the checker language (needed by wx)
+   Return value:
+   the name of the language.
+  ----------------------------------------------------------------------*/
+extern void TtaGetChkrLanguageName (char **lang);
+
+/*----------------------------------------------------------------------
    TtaGetLanguageCode
 
    Not available for TYPO languages.

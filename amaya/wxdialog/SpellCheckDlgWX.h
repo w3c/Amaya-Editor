@@ -8,6 +8,7 @@
 //-----------------------------------------------------------------------------
 
 #include "AmayaDialog.h"
+#include "wx/spinctrl.h"
 
 //-----------------------------------------------------------------------------
 // Class definition: SpellCheckDlgWX
@@ -37,13 +38,20 @@ private:
   void OnIgnoreRomansChkBox ( wxCommandEvent& event );
   void OnIgnoreSpecialsChkBox ( wxCommandEvent& event );
   void OnAreaRadioBox ( wxCommandEvent& event );
+  void OnSpecialChar ( wxCommandEvent& event );
+  void OnChangeNbProposals ( wxSpinEvent& event );
+  void OnChangeProposals ( wxCommandEvent& event );
+  void Set_Proposals ();
+
  // Any class wishing to process wxWindows events must use this macro
   DECLARE_EVENT_TABLE()
     
 private:
-  wxString   m_Printer;
   int        m_base;
   int        m_ref;
+  int        m_nb_proposals;
+  int        m_max_proposals;
+  wxString   m_special_char;
 };
 
 #endif  //__SPELLCHECKDLGWX_H__

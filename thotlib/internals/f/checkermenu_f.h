@@ -15,6 +15,9 @@ extern void CallbackChecker ( int ref,
                               int dataType,
                               char *data );
 extern void SpellCheckLoadResources ( void );
+extern void TtaGetProposal ( char **proposal,
+                             int i );
+extern void TtaGetChkrLanguageName ( char **lang );
 
 #else /* __STDC__ */
 
@@ -27,6 +30,9 @@ extern void CallbackChecker ( int ref,
                                 int dataType,
                                 char *data );
 extern void SpellCheckLoadResources ( void );
+extern void TtaGetProposal ( char **proposal,
+                               int i );
+extern void TtaGetChkrLanguageName ( char **lang );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
