@@ -199,6 +199,9 @@ TransCondition      cond;
 	    case TcondExternalRef:
 	       TtaWriteByte (outfile, C_TR_EXTERNALREF);
 	       break;
+	    case TcondElementType:
+	       TtaWriteByte (outfile, C_TR_ELEMENTTYPE);
+	       break;
 	 }
 }
 
@@ -758,6 +761,9 @@ PtrSSchema          pSS;
 			   }
 			 else
 			    TtaWriteByte (outfile, pCond->TcPresValue);
+			 break;
+		      case TcondElementType:
+			 WriteShort (pCond->TcAttr);
 			 break;
 		      default:
 			 break;

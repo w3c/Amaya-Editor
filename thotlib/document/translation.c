@@ -905,7 +905,7 @@ PtrElement          pEl;
 /*----------------------------------------------------------------------
    ConditionIsTrue   evalue la condition du bloc de regles pointe' par
    pBlock pour l'element pointe' par pEl et l'attribut pointe' par 
-   pAttr s'il est different de NULL. Retourne vrai si la condition 
+   pAttr s'il est different de NULL. Retourne vrai si la condition est
    satisfaite, faux sinon.                                         
   ----------------------------------------------------------------------*/
 
@@ -1310,6 +1310,15 @@ PtrDocument         pDoc;
 				      if (!ret)
 					 pPRule = pPRule->PrNextPRule;
 				   }
+				 break;
+			      case TcondElementType:
+				 /* cherche si l'attribut porte sur un element
+				    du type voulu */
+				 ret = FALSE;
+				 if (pAttr != NULL)
+				   if (pElem->ElTypeNumber == Cond->TcAttr &&
+				       pElem->ElStructSchema == pAttr->AeAttrSSchema)
+				      ret = TRUE;
 				 break;
 			      case TcondPresentation:
 				 /* la condition est satisfaite si l'element */

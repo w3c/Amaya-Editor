@@ -108,6 +108,7 @@ CondOnAscend =   'First' / 'Last' /
                                                       [ '(' TypeIdent ')' ] /
 		 'Attributes' /
 		  AttrIdent [ AttrRelat ] /
+		  TypeIdent /
                  'Presentation' / PresRule / 'Comment' .
 
 ParentLevel =	 [ GreaterLess ] RelLevel .

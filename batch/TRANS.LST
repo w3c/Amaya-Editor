@@ -114,6 +114,7 @@ number
 	                                                      [ '(' TypeIdent ')' ] /
 			 'Attributes' /
 			  AttrIdent [ AttrRelat ] /
+			  TypeIdent /
 	                 'Presentation' / PresRule / 'Comment' .
 	
    61	ParentLevel =	 [ GreaterLess ] RelLevel .
@@ -378,7 +379,7 @@ right part.
 
     1  TransSchema        
     2  TypeIdent             1  20  20  20  20  34  45  59  59  58  58  58  58
-                              48  48  48  48  48  66  66  72
+                              58  48  48  48  48  48  66  66  72
     3  MaxLineLength         1
     4  LineEndString         1
     5  LineEndInsertString   1

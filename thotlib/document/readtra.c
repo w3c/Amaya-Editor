@@ -138,6 +138,9 @@ BinFile             file;
 	       case C_TR_EXTERNALREF:
 		  cond = TcondExternalRef;
 		  break;
+	       case C_TR_ELEMENTTYPE:
+		  cond = TcondElementType;
+		  break;
 	       default:
 		  TSchemaError (2);
 		  cond = TcondFirst;
@@ -792,6 +795,9 @@ PtrTRuleBlock      *pNextBlock;
 				   }
 				 else
 				    TtaReadByte (file, &pCond->TcPresValue);
+			      break;
+			   case TcondElementType:
+			      TtaReadShort (file, &pCond->TcAttr);
 			      break;
 			   default:
 			      break;

@@ -53,7 +53,8 @@ typedef enum
 	TcondUserPage,
 	TcondReminderPage,
 	TcondEmpty,
-	TcondExternalRef
+	TcondExternalRef,
+	TcondElementType
 } TransCondition;
 
 /* a translation rule type */
@@ -135,10 +136,11 @@ typedef struct _TranslCondition
 	    RelatNAscend	_TcAscendRel_;
 	    int		_TcAscendLevel_;   /* RelLevel */
 	    } s1;
-	  struct	/* TcCondition = TcondAttr || TcCondition = TcondPRule */
+	  struct	/* TcCondition = TcondAttr || TcCondition = TcondPRule
+			   TcCondition = TcondElementType */
 	    {
-	    int		_TcAttr_;   /* number of the attribute or type
-						   of the presentation rule */ 
+	    int		_TcAttr_;   /* attribute num, type num or type
+				       of the presentation rule */ 
 	    union
 	      {
 	      struct	/* AttribType = AtNumAttr */

@@ -708,11 +708,13 @@ RULES
 ATTRIBUTES
 
 #ifdef COUGAR
- Langue: BEGIN
-	Create ' lang="';
-	Create Langue;
-	Create DoubleQuote;
-	END;
+ Langue:
+	if not HTML
+	   BEGIN
+	   Create ' lang="';
+	   Create Langue;
+	   Create DoubleQuote;
+	   END;
 #endif
 
  http_equiv: BEGIN

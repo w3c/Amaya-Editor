@@ -65,4 +65,5 @@
 #define MISSING_COLOR			        57
 #define ONLY_FOR_ELEMS 			        58
 #define CPP_NOT_FOUND			        59
+#define ONLY_FOR_ATTRS 			        60
 #define TRA_MSG_MAX				60

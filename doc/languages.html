@@ -6799,6 +6799,14 @@ or zero.  It can be preceded by <TT>&lt;</TT> or <TT>></TT> to indicate a
 maximum or minimum number of ancestors.  If these symbols are missing, the
 condition is satisfied only if it exists exactly <I>n</I> ancestors.  When
 this number is missing, it is equivalent to > 0.</P>
+<P>
+If the condition applies to translation rules associated with an attribute,
+i.e. if it is in the <TT>ATTRIBUTES</TT> section of the presentation schema,
+the condition can be simply an element name. Translation rules are then
+executed only if the attribute is attached to an element of that type.
+The keyword <TT>NOT</TT> before the element name indicates that the
+translation rules must be executed only if the element is not of the type
+indicated.</P>
 </DIV>
 
 <DIV class="subsubsection">
@@ -7015,6 +7023,7 @@ the keywords <TT>BEGIN</TT> and <TT>END</TT>.</P>
                  'ComputedPage' / 'StartPage' / 
                  'UserPage' / 'ReminderPage' /
                  'Empty' /
+                  ElemID /
                  'FirstAttr' / 'LastAttr' .
    CondAscend   = [ Ascend ] CondOnAscend .
    Ascend       = '*' / 'Parent' / 'Ancestor' LevelOrType .
@@ -8595,6 +8604,7 @@ CondElem      = 'FirstRef' / 'LastRef' /
                 'ComputedPage' / 'StartPage' / 
                 'UserPage' / 'ReminderPage' /
                 'Empty' /
+		ElemID /
                 'FirstAttr' / 'LastAttr' .
 CondAscend    = [ Ascend ] CondOnAscend .
 Ascend        = '*' / 'Parent' / 'Ancestor' LevelOrType .

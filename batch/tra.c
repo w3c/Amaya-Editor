@@ -253,13 +253,14 @@ static void         InitAttrTransl ()
 }
 
 /*----------------------------------------------------------------------
+   EndOfCondition
    traite le type d'element indique' dans une condition Within ou  
    FirstWithin Le nom du type se trouve dans la variable TypeWithin 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfContdition (PtrSSchema pSS)
+static void         EndOfCondition (PtrSSchema pSS)
 #else  /* __STDC__ */
-static void         EndOfContdition (pSS)
+static void         EndOfCondition (pSS)
 PtrSSchema          pSS;
 #endif /* __STDC__ */
 {
@@ -307,7 +308,7 @@ PtrSSchema          pSS;
 	if (strcmp (AncestorName, pSS->SsRule[i].SrName) != 0)
 	   /* type inconnu */
 	   CompilerMessage (BeginAncestorName, TRA, FATAL, BAD_TYPE, inputLine,
-			  LineNum);
+			    LineNum);
 	else
 	   /* le type existe, il a le numero i */
 	   CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAscendType = i + 1;
@@ -682,7 +683,7 @@ static void         NewTransRule ()
 {
    PtrTRule            pTRule;
 
-   EndOfContdition (pSSchema);
+   EndOfCondition (pSSchema);
    InCondition = False;
    GetTRule (&pTRule);
    if (pTRule == NULL)
@@ -979,7 +980,8 @@ indLine             wi;
 }
 
 /*----------------------------------------------------------------------
-   ElementTypeNum si le mot de longueyr wl qui commence a l'indice 
+   ElementTypeNum
+   si le mot de longueur wl qui commence a l'indice 
    wi du buffer de lecture est un nom de type d'element, retourne  
    le numero de type correspondant, sinon retourne 0.              
   ----------------------------------------------------------------------*/
@@ -1013,6 +1015,76 @@ indLine             wl;
    return i;
 }
 
+/*----------------------------------------------------------------------
+   AttributeNum
+   si le mot de longueur wl qui commence a l'indice wi du buffer de
+   lecture est un nom d'attribut, retourne le numero de cet attribut,
+   sinon retourne 0.              
+  ----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+static int          AttributeNum (indLine wi, indLine wl)
+
+#else  /* __STDC__ */
+static int          AttributeNum (wi, wl)
+indLine             wi;
+indLine             wl;
+
+#endif /* __STDC__ */
+
+{
+   Name                n;
+   int                 i;
+
+   /* copie dans n l'identificateur */
+   CopyWord (n, wi, wl);
+   /* verifie si l'attribut existe bien dans le schema de structure */
+   i = 1;
+   while (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName) != 0
+          && i < pSSchema->SsNAttributes)
+      i++;
+   if (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName) != 0)
+      /* attribut inconnu */
+      i = 0;
+   return i;
+}
+
+/*----------------------------------------------------------------------
+   ElementTypeInCond
+   si le mot de longueur wl qui commence a l'indice wi du buffer de
+   lecture est un type d'element, traite ce type comme apparaissant
+   dans une condition "if type"
+  ----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+static boolean      ElementTypeInCond (indLine wi, indLine wl)
+
+#else  /* __STDC__ */
+static boolean      ElementTypeInCond (wi, wl)
+indLine             wi;
+indLine             wl;
+
+#endif /* __STDC__ */
+
+{
+   int                 i;
+
+   i = ElementTypeNum (wi, wl);
+   if (i > 0)
+      /* c'est bien un type d'element */
+      /* une condition "if type" ne peut s'appliquer qu'a une regle de */
+      /* traduction d'attribnut */
+      if (!InAttrRules)
+	 CompilerMessage (wi, TRA, FATAL, ONLY_FOR_ATTRS, inputLine, LineNum);
+      else
+         {
+         CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition =
+							      TcondElementType;
+	 /* le type existe,il a le numero i*/
+	 CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAttr = i;
+         }
+   return (i > 0);
+}
 
 /*----------------------------------------------------------------------
    traite le mot commencant a la position wi dans la ligne courante
@@ -1492,7 +1564,7 @@ SyntRuleNum         pr;
 		    case KWD_Begin:	/* Begin */
 		       if (r == RULE_SeqOfRules1)
 			 {
-			    EndOfContdition (pSSchema);
+			    EndOfCondition (pSSchema);
 			    if (!InAttrRules)
 			       InCondBlock = True;
 			 }
@@ -1507,6 +1579,7 @@ SyntRuleNum         pr;
 		       CurBlock->TbCondition[0].TcAscendType = 0;
 		       CurBlock->TbCondition[0].TcAscendNature[0] = '\0';
 		       CurBlock->TbCondition[0].TcAscendRelLevel = 0;
+		       CurBlock->TbCondition[0].TcCondition = TcondElementType;
 		       Immediately = False;
 		       Asterisk = False;
 		       break;
@@ -1517,7 +1590,7 @@ SyntRuleNum         pr;
 			  CompilerMessage (wi, TRA, FATAL, TOO_MANY_CONDITIONS, inputLine, LineNum);
 		       else
 			 {
-			    EndOfContdition (pSSchema);
+			    EndOfCondition (pSSchema);
 			    i = CurBlock->TbNConditions;
 			    CurBlock->TbNConditions++;
 			    CurBlock->TbCondition[i].TcNegativeCond = False;
@@ -1525,6 +1598,7 @@ SyntRuleNum         pr;
 			    CurBlock->TbCondition[i].TcAscendType = 0;
 			    CurBlock->TbCondition[i].TcAscendNature[0] = '\0';
 			    CurBlock->TbCondition[i].TcAscendRelLevel = 0;
+			    CurBlock->TbCondition[i].TcCondition = TcondElementType;
 			    Immediately = False;
 			    Asterisk = False;
 			 }
@@ -2125,17 +2199,20 @@ SyntRuleNum         pr;
 					  }
 				     }
 				   else if (pr == RULE_CondOnAscend)
-				      /* dans une condition Within ou FirstWithin */
 				     {
+				     if (CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition == TcondFirstWithin ||
+				         CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition == TcondWithin)
+				        /* dans une condition Within ou FirstWithin */
+
+
 					if (!ExternalSchema)
-					   /* nom du type d'element dans la condition Within ou */
-					   /* FirstWithin */
+					   /* nom du type d'element */
 					  {
 					     CopyWord (TypeWithin, wi, wl);
 					     BeginTypeWithin = wi;
 					  }
 					else
-					   /* nom d'un schema de structure externe dans la condition */
+					   /* nom d'un schema de structure externe dans une condition */
 					   /* Within ou FirstWithin */
 					  {
 					     ExternalSchema = False;
@@ -2149,9 +2226,12 @@ SyntRuleNum         pr;
 						/* le schema de structure a ete charge' */
 					       {
 						  strncpy (CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcElemNature, n, MAX_NAME_LENGTH);
-						  EndOfContdition (pExtSSchema);
+						  EndOfCondition (pExtSSchema);
 					       }
 					  }
+				     else
+				       /* dans une condition "if TYPE" */
+				       ElementTypeInCond (wi, wl);
 				     }
 				   else if (pr == RULE_LevelOrType)
 				      /* un type d'element dans une condition portant sur */
@@ -2313,17 +2393,10 @@ SyntRuleNum         pr;
 					 /* s'il vient de la regle Token ou Function, voyons si */
 					 /* ce n'est pas un identificateur d'attribut */
 					{
-					   /* copie dans n l'identificateur */
-					   CopyWord (n, wi, wl);
-					   /* verifie si l'attribut existe bien dans le schema */
-					   /* de structure */
-					   i = 1;
-					   while (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName) != 0
-					     && i < pSSchema->SsNAttributes)
-					      i++;
-					   if (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName) != 0)
-					      /* attribut inconnu */
-					      CompilerMessage (wi, TRA, FATAL, BAD_ATTR, inputLine, LineNum);
+					   i = AttributeNum (wi, wl);
+					   if (i == 0)
+					      CompilerMessage (wi, TRA, FATAL,
+						 BAD_ATTR, inputLine, LineNum);
 					   else
 					      /* l'attribut existe, il a le numero i */
 					     {
@@ -2509,23 +2582,16 @@ SyntRuleNum         pr;
 				   break;
 
 				case RULE_AttrIdent:	/* AttrIdent */
-				   /* copie dans n l'identificateur de l'attribut */
-				   CopyWord (n, wi, wl);
-				   /* verifie si l'attribut existe bien dans le schema de */
-				   /* structure */
-				   i = 1;
-				   while (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName) != 0
-					  && i < pSSchema->SsNAttributes)
-				      i++;
-				   if (strcmp (n, pSSchema->SsAttribute[i - 1].AttrName) != 0)
-				      /* attribut inconnu */
-				      CompilerMessage (wi, TRA, FATAL, BAD_ATTR, inputLine, LineNum);
-				   else
-				      /* l'attribut existe, il a le numero i */
+				   i = AttributeNum (wi, wl);
 				   if (pr == RULE_TransAttr)
-				      /* c'est un nom d'attribut auquel on va associer des */
-				      /* regles de traduction */
-				     {
+				     if (i == 0)
+				       CompilerMessage (wi, TRA, FATAL,
+						BAD_ATTR, inputLine, LineNum);
+				     else
+				       /* l'attribut existe, il a le numero i*/
+				       /* c'est un nom d'attribut auquel on va associer des */
+				       /* regles de traduction */
+				       {
 					CurAttr = i;
 					CurValAttr = 0;		/* pas encore rencontre' de valeur */
 					CurBlock = NULL;
@@ -2561,41 +2627,51 @@ SyntRuleNum         pr;
 						    break;
 					      }
 
-				     }
-				   else if (pr == RULE_CondOnAscend)
-				      /* un nom d'attribut dans une condition */
-				     {
-					ProcessAncestorName (pSSchema);
-					if (!Asterisk)
+				       }
+				     else if (pr == RULE_CondOnAscend)
+				       /* un nom d'attribut dans une condition */
+				       if (i == 0)
+					 /* ce n'est pas un attribut connu */
+					 /* c'est peut etre un type d'element*/
+					 {
+				         if (ElementTypeInCond (wi, wl))
+					    /* ce nom est maintenant un type */
+					    Identifier[nb - 1].SrcIdentCode =
+						     RULE_TypeIdent;
+					 }
+				       else
+					 /* c'est un attribut du schema */
+				         {
+					 ProcessAncestorName (pSSchema);
+					 if (!Asterisk)
 					   CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAscendRelLevel = -1;
-					CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondAttr;
-					CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAttr = i;
-					switch (pSSchema->SsAttribute[i - 1].AttrType)
+					 CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcCondition = TcondAttr;
+					 CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAttr = i;
+					 switch (pSSchema->SsAttribute[i - 1].AttrType)
 					      {
-						 case AtNumAttr:
-						    CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcLowerBound = -MAX_INT_ATTR_VAL - 1;
-						    /* -infini */
-						    CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcUpperBound = MAX_INT_ATTR_VAL + 1;
-						    /* +infini */
-						    break;
-						 case AtTextAttr:
-						    CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcTextValue[0] = '\0';
-						    break;
-						 case AtReferenceAttr:
-
-						    break;	/* rien */
-						 case AtEnumAttr:
-						    CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAttrValue = 0;
-						    break;
-						 default:
-						    break;
+						case AtNumAttr:
+						   CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcLowerBound = -MAX_INT_ATTR_VAL - 1;
+						   /* -infini */
+						   CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcUpperBound = MAX_INT_ATTR_VAL + 1;
+						   /* +infini */
+						   break;
+						case AtTextAttr:
+						   CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcTextValue[0] = '\0';
+						   break;
+						case AtReferenceAttr:
+						   break;	/* rien */
+						case AtEnumAttr:
+						   CurBlock->TbCondition[CurBlock->TbNConditions - 1].TcAttrValue = 0;
+						   break;
+						default:
+						   break;
 					      }
 
-				     }
-				   else if (pr == RULE_Token ||
-					    pr == RULE_CountFunction ||
-					    pr == RULE_Function)
-				      AttrInCreateOrWrite (i, pr, wi);
+				       }
+				     else if (pr == RULE_Token ||
+					      pr == RULE_CountFunction ||
+					      pr == RULE_Function)
+				        AttrInCreateOrWrite (i, pr, wi);
 				   break;
 
 				case RULE_AttrValIdent:	/* AttrValIdent */
