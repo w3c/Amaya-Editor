@@ -263,9 +263,8 @@ static void AddAnnotationIndexFile (char *source_url, char *index_file)
 void LINK_AddAnnotIcon (Document source_doc, Element anchor, AnnotMeta *annot)
 {
   Element       el;
-  char          s[MAX_LENGTH];
+  char          iconName[MAX_LENGTH];
   char          previous[MAX_LENGTH];
-  char         *iconName;
   RDFStatementP iconS = (RDFStatementP) NULL;
   int           len;
   Language      lang;
@@ -281,13 +280,31 @@ void LINK_AddAnnotIcon (Document source_doc, Element anchor, AnnotMeta *annot)
     iconS = ANNOT_FindRDFStatement (annot->type->statements, PROP_usesIcon);
   
   if (iconS)
-    iconName = iconS->object->name;
-  else
     {
-      sprintf (s, "%s%camaya%cannot.gif",
-	       TtaGetEnvString ("THOTDIR"), DIR_SEP, DIR_SEP);
-      iconName = s;
+      strcpy (iconName, iconS->object->name);
+      WWWToLocal (iconName);
+      /* expand $THOTDIR and $APP_HOME */
+      if (strncmp (iconName, "$THOTDIR", 8) == 0)
+	{
+	  char temp[MAX_LENGTH];
+	  char* thotdir = TtaGetEnvString ("THOTDIR");
+	  strcpy (temp, iconName);
+	  strcpy (iconName, thotdir);
+	  strcat (iconName, temp+8);
+	}
+      else
+	if (strncmp (iconName, "$APP_HOME", 9) == 0)
+	  {
+	    char temp[MAX_LENGTH];
+	    char* app_home = TtaGetEnvString ("APP_HOME");
+	    strcpy (temp, iconName);
+	    strcpy (iconName, app_home);
+	    strcat (iconName, temp+9);
+	  }
     }
+  else
+      sprintf (iconName, "%s%camaya%cannot.gif",
+	       TtaGetEnvString ("THOTDIR"), DIR_SEP, DIR_SEP);
 
   /* only substitute the icon name if it has changed */
   len = TtaGetTextLength (el);
