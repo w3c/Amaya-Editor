@@ -323,6 +323,7 @@ redland_config: @MAKEREDLAND@ force
 			--without-bdb \
 	 		--enable-parsers=raptor \
 			--with-xml-parser=expat \
+			--with-www=none \
 		        --cache-file=$$localdir/config.cache; \
 		$(ECHO) "redland is configured" ; \
 	  fi)
