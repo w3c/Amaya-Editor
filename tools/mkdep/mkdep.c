@@ -463,6 +463,7 @@ int main(int argc, char **argv)
 		len = strlen(name);
 		memcpy(depname, name, (size_t) len+1);
 		command = __depname;
+		/* .c files or .S files */
 		if (len > 2 && name[len-2] == '.') {
 			switch (name[len-1]) {
 				case 'c':
@@ -471,10 +472,22 @@ int main(int argc, char **argv)
 					command = "";
 			}
 		}
+		/* .cpp files support */
+		if (len > 4 &&
+		    name[len-4] == '.' &&
+		    name[len-3] == 'c' &&
+		    name[len-2] == 'p' &&
+		    name[len-1] == 'p')	
+		{
+		  depname[len-3] = 'o';
+		  depname[len-2] = '\0';
+		  command = "";
+		}
+		
 		nb_include = 0;
 
-                /*
-		 * print the base dependancy between the .o and .c file.
+        /*
+		 * print the base dependancy between the .o and [.c|.S|.cpp] file.
 		 */
 		if ((vpath != NULL) && (!strncmp(depname, vpath, strlen(vpath)))) {
 		    char *relpath = &depname[strlen(vpath)];
