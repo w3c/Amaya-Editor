@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Créer des éléments</title>
-  <meta name="GENERATOR" content="amaya V3.2.1" />
+  <meta name="GENERATOR" content="amaya V4.0" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -25,11 +23,11 @@
   </tbody>
 </table>
 
-<div>
+<div id="Information">
 <h1>Types information dans HTML</h1>
 
 <p>HTML 4.0 (Strict) fournit des éléments pour désigner certains types
-"information". Bien qu'il existe une présentation  par défaut de  chaque type
+"information". Bien qu'il existe une présentation par défaut de chaque type
 d'élément, il est possible d'utiliser les <a
 href="../StyleSheets.html">Feuilles de style</a> pour changer la présentation
 de n'importe quel élément. Les types information qui peuvent être représentés
@@ -38,7 +36,7 @@ par les éléments HTML sont :</p>
   <dt><a href="headings.html.fr">En-têtes</a></dt>
     <dd>Il y a six niveaux d'en-tête dans HTML, qui doivent être utilisés pour
       marquer les en-têtes de page ou de sujet selon leur importance.</dd>
-    <dd>HTML fournit deux types de listes simples :
+    <dd>HTML fournit deux types de listes simples : 
       <ol>
         <li>Listes numérotées ( comme celle-ci)</li>
         <li>Listes non ordonnées.</li>
@@ -51,7 +49,7 @@ par les éléments HTML sont :</p>
       l'auteur d'une page HTML.</dd>
   <dt>Définitions</dt>
     <dd>Celles-ci peuvent être marquées comme une <a
-      href="inline.html.fr#Definition" rel="glossary">définition en ligne </a>
+      href="inline.html.fr#Definition" rel="glossary">définition en ligne</a>
       (c'est-à-dire définie dans un paragraphe normal) ou dans une <a
       href="lists.html.fr">liste de termes et de définitions</a>. Cette liste
       de types information est elle-même une liste de définitions. Il est
@@ -76,7 +74,7 @@ par les éléments HTML sont :</p>
       devrait être supprimé. <ins>(Cela est utile pour l'édition collabo
       )</ins></dd>
   <dt><a href="inline.html.fr#Emphasis">Mises en évidence</a></dt>
-  <dt>HTML fournit deux niveaux de mise en évidence :<em> mise en évidence
+  <dt>HTML fournit deux niveaux de mise en évidence :<em>mise en évidence
   ordinaire</em> et <strong>mise en évidence forte.</strong></dt>
   <dt></dt>
 </dl>
