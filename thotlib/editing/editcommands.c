@@ -44,25 +44,7 @@ static struct _TextBuffer XClipboard;
 #ifdef _GTK
 static ThotBool     ClipboardToPaste = FALSE;
 #endif /* _GTK */
-
-/* text element where the last insertion is done */
-/*
- * SG: already declared in boxes_tv.h
- *
-static PtrElement   LastInsertElText;
-static PtrElement   LastInsertElement;
-static int          LastInsertThotWindow;
-*/
-
-/* attribute for which a presentation abstract box has been modified */
-/*
- * SG: already declared in boxes_tv.h
- *
-static PtrAttribute LastInsertAttr;
-static PtrElement   LastInsertAttrElem;
-*/
-static ThotBool     FromKeyboard;
-
+static ThotBool     NewInsert;
 
 #include "abspictures_f.h"
 #include "actions_f.h"
@@ -964,7 +946,8 @@ static void NewTextLanguage (PtrAbstractBox pAb, int charIndex, Language lang)
    Return TRUE if there is a notification to the application and the
    current selection could be modified.
   ----------------------------------------------------------------------*/
-static ThotBool GiveAbsBoxForLanguage (int frame, PtrAbstractBox *pAb, int keyboard)
+static ThotBool GiveAbsBoxForLanguage (int frame, PtrAbstractBox *pAb,
+				       int keyboard)
 {
   PtrAbstractBox      pSelAb;
   PtrBox              pBox;
@@ -1196,7 +1179,8 @@ void CloseParagraphInsertion (PtrAbstractBox pAb, int frame)
 		  else
 		    {
 		      /* Reevalue le bloc de lignes */
-		      RecomputeLines (LastInsertParagraph, NULL, NULL, LastInsertThotWindow);
+		      RecomputeLines (LastInsertParagraph, NULL, NULL,
+				      LastInsertThotWindow);
 		      /* Et l'affiche */
 		      RedrawFrameBottom (LastInsertThotWindow, 0, NULL);
 		      LastInsertParagraph = NULL;
@@ -1985,7 +1969,7 @@ static void ContentEditing (int editType)
   textPasted = FALSE;
   graphEdit = FALSE;
 
-  if (editType == TEXT_PASTE && ClipboardThot.BuLength == 0 && !FromKeyboard)
+  if (editType == TEXT_PASTE && ClipboardThot.BuLength == 0 && !NewInsert)
     {
       /* paste a structured element */
       if (ThotLocalActions[T_cmdpaste])
@@ -2063,7 +2047,7 @@ static void ContentEditing (int editType)
 	    }
 	}
       /*-- La commande coller concerne le mediateur --*/
-      if (editType == TEXT_PASTE && !FromKeyboard)
+      if (editType == TEXT_PASTE && !NewInsert)
 	/* Il faut peut-etre deplacer la selection courante */
 	SetInsert (&pAb, &frame, ClipboardType, FALSE);
 
@@ -2085,7 +2069,7 @@ static void ContentEditing (int editType)
 	    return;
 	}
 
-      if (editType == TEXT_INSERT && !FromKeyboard)
+      if (editType == TEXT_INSERT && !NewInsert)
 	{
 	  if (pBox && pViewSel->VsIndBox != 0)
 	    {
@@ -2268,7 +2252,7 @@ static void ContentEditing (int editType)
       if (pAb == NULL)
 	{
 	  /* Le traitement concerne l'application */
-	  if ((editType == TEXT_DEL || editType == TEXT_SUP) && !FromKeyboard)
+	  if ((editType == TEXT_DEL || editType == TEXT_SUP) && !NewInsert)
 	    {
 	      /* close the current text insertion */
 	      CloseTextInsertion ();
@@ -2279,13 +2263,13 @@ static void ContentEditing (int editType)
 	      SaveInClipboard (&charsDelta, &spacesDelta, &x, 0, NULL, pAb,
 			       frame, &ClipboardThot);
 	      /* vide le clipboard du Mediateur */
-	      if (editType == TEXT_CUT && !FromKeyboard)
+	      if (editType == TEXT_CUT && !NewInsert)
 		{
 		  /* close the current text insertion */
 		  CloseTextInsertion ();
 		  CutCommand (TRUE);
 		}
-	      else if (editType == TEXT_COPY && !FromKeyboard)
+	      else if (editType == TEXT_COPY && !NewInsert)
 		CopyCommand ();
 	    }
 	}
@@ -2426,10 +2410,10 @@ static void ContentEditing (int editType)
 		
 	      /* Traitement */
 	      if (editType == TEXT_INSERT && pAb->AbLeafType == LtPicture &&
-		  !FromKeyboard)
+		  !NewInsert)
 		LoadPictFile (pLine, defaultHeight, defaultWidth, pBox, pAb,
 			      frame);
-	      else if (editType == TEXT_CUT && !FromKeyboard)
+	      else if (editType == TEXT_CUT && !NewInsert)
 		{
 		  SaveInClipboard (&charsDelta, &spacesDelta, &x, i, pBuffer,
 				   pAb, frame, &ClipboardThot);
@@ -2451,7 +2435,7 @@ static void ContentEditing (int editType)
 				     defaultWidth, pLine, pBox, pAb, frame, TRUE);
 		}
 	      else if ((editType == TEXT_DEL || editType == TEXT_SUP) &&
-		       !FromKeyboard)
+		       !NewInsert)
 		if (pAb->AbVolume == 0 ||
 		    pViewSel->VsIndBox + pViewSel->VsBox->BxFirstChar > pAb->AbVolume)
 		  {
@@ -2478,7 +2462,7 @@ static void ContentEditing (int editType)
 		else
 		  DeleteSelection (defaultHeight, defaultWidth, pLine, pBox,
 				   pAb, frame, FALSE/*editType != TEXT_SUP*/);
-	      else if (editType == TEXT_PASTE && !FromKeyboard)
+	      else if (editType == TEXT_PASTE && !NewInsert)
 		{
 		  /* Verifie que l'script du clipboard correspond a celui
 		     du pave */
@@ -2516,7 +2500,7 @@ static void ContentEditing (int editType)
 		      textPasted = TRUE;
 		    }
 		}
-	      else if (editType == TEXT_COPY && !FromKeyboard)
+	      else if (editType == TEXT_COPY && !NewInsert)
 		{
 		  SaveInClipboard (&charsDelta, &spacesDelta, &x, i, pBuffer,
 				   pAb, frame, &ClipboardThot);
@@ -2525,21 +2509,21 @@ static void ContentEditing (int editType)
 		  /* the selection is not changed */
 		  pAb = NULL;
 		}
-	      else if (editType == TEXT_X_PASTE && !FromKeyboard)
+	      else if (editType == TEXT_X_PASTE && !NewInsert)
 		{
 		  PasteClipboard (defaultHeight, defaultWidth, pLine, pBox,
 				  pAb, frame, &XClipboard);
 		  textPasted = TRUE;
 		}
-	      else if (pAb->AbLeafType == LtPicture && FromKeyboard)
+	      else if (pAb->AbLeafType == LtPicture && NewInsert)
 		LoadPictFile (pLine, defaultHeight, defaultWidth, pBox, pAb,
 			      frame);
-	      else if (pAb->AbLeafType == LtSymbol && FromKeyboard)
+	      else if (pAb->AbLeafType == LtSymbol && NewInsert)
 		LoadSymbol ((char) editType, pLine, defaultHeight,
 			    defaultWidth, pBox, pAb, frame);
 	      else if ((pAb->AbLeafType == LtGraphics ||
 			pAb->AbLeafType == LtPolyLine) &&
-		       FromKeyboard)
+		       NewInsert)
 		{
 		  LoadShape ((char) editType, pLine, defaultHeight,
 			     defaultWidth, pBox, pAb, frame);
@@ -2581,7 +2565,7 @@ static void ContentEditing (int editType)
 		  if (pSelBox->BxHorizFlex || pSelBox->BxVertFlex)
 		    {
 		      MirrorShape (pAb, pSelBox->BxHorizInverted,
-				   pSelBox->BxVertInverted,FromKeyboard);
+				   pSelBox->BxVertInverted,NewInsert);
 		      /* on arrete */
 		      pLastAb = NULL;
 		    }
@@ -3378,25 +3362,25 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 	      if (keyboard == -1 || keyboard == 0)
 		/* saisie au clavier ou par la palette Math symbols */
 		{
-		  FromKeyboard = TRUE;
+		  NewInsert = TRUE;
 		  ContentEditing ((int) c);
-		  FromKeyboard = FALSE;
+		  NewInsert = FALSE;
 		}
 	      break;
 	    case LtGraphics:
 	    case LtPolyLine:
 	      if (keyboard == 1)
 		{
-		  FromKeyboard = TRUE;
+		  NewInsert = TRUE;
 		  ContentEditing ((int) c);
-		  FromKeyboard = FALSE;
+		  NewInsert = FALSE;
 		}
 	      break;
 	    case LtPicture:
 	      {
-		FromKeyboard = TRUE;
+		NewInsert = TRUE;
 		ContentEditing ((int) c);
-		FromKeyboard = FALSE;
+		NewInsert = FALSE;
 	      }
 	    break;
 	    default:
@@ -4298,6 +4282,6 @@ void                EditingLoadResources ()
 	LastInsertElText = NULL;
 	LastInsertAttr = NULL;
 	LastInsertAttrElem = NULL;
-	FromKeyboard = FALSE;
+	NewInsert = FALSE;
      }
 }

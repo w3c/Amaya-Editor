@@ -3263,14 +3263,13 @@ void ReparseAs (Document doc, View view, ThotBool asHTML,
   char            documentname[MAX_LENGTH];
   char            s[MAX_LENGTH], charsetname[MAX_LENGTH];
   int             i, parsingLevel;
-  ThotBool        plaintext, docModified;
+  ThotBool        plaintext;
   ThotBool        xmlDec, withDoctype, isXML, isKnown;
 
   if (DocumentURLs[doc] == NULL ||
       (asHTML && !DocumentMeta[doc]->xmlformat))
     /* the document is not concerned by this option */
     return;
-  docModified = TtaIsDocumentModified (doc);
   if (!CanReplaceCurrentDocument (doc, view))
     /* abort the command */
     return;
@@ -3335,16 +3334,14 @@ void ReparseAs (Document doc, View view, ThotBool asHTML,
   DocNetworkStatus[doc] = AMAYA_NET_ACTIVE;
   FetchAndDisplayImages (doc, AMAYA_LOAD_IMAGE, NULL);
   DocNetworkStatus[doc] = AMAYA_NET_INACTIVE;
-  if (asHTML)
-    /*  save as XHTML */
-    /*DocumentMeta[doc]->xmlformat = TRUE*/;
-  else
+  if (!asHTML &&
+      !XMLNotWellFormed && !XMLCharacterNotSupported &&
+      !XMLErrorsFoundInProfile && !XMLErrorsFound)
     {
-      /* Update the source of the document */
+      /* No error found -> Update the source of the document */
       TtaSetDocumentModified (doc);
       Synchronize (doc, view);
-      if (!docModified)
-	TtaSetDocumentUnmodified (doc);
+      TtaSetDocumentUnmodified (doc);
     }
   /* check parsing errors */
   CheckParsingErrors (doc);
