@@ -150,7 +150,7 @@ typedef enum
 /* a presentation box */
 typedef struct _PresentationBox
 {
-  CUSName	PbName;		/* box name */	
+  Name      PbName;		/* box name */	
   PtrPRule	PbFirstPRule;	/* first presentation rule defining the box */
   ThotBool	PbAcceptPageBreak;	/* indicates whether the box may be
 					   broken at the bottom of a page */
@@ -355,9 +355,9 @@ typedef struct _Condition
       int       _CoTypeAncestor_;	/* type of the ancestor */	
       ThotBool  _CoImmediate_;	/* Immediately */
       ArithRel  _CoAncestorRel_;
-      CUSName   _CoAncestorName_;	/* Ancestor type name, if defined
+      Name      _CoAncestorName_;	/* Ancestor type name, if defined
 					   in another schema */
-      CUSName   _CoSSchemaName_;	/* name of the schema where the
+      Name      _CoSSchemaName_;	/* name of the schema where the
 					   ancestor is defined if
 					   CoTypeAncestor = 0 */
     } s1;
@@ -460,7 +460,7 @@ typedef struct _PresRule
 	                       PtBorderTopStyle, PtBorderRightStyle,
                                PtBorderBottomStyle, PtBorderLeftStyle */
 	{
-	  CHAR_T     _PrChrValue_;
+	  char     _PrChrValue_;
 	}  s1;
 	struct	/* PRuleType = PtBreak1, PtBreak2,
 	        PtIndent, PtSize, PtLineSpacing, PtLineWeight,
@@ -587,10 +587,9 @@ typedef struct _Counter
 /* a presentation constant */
 typedef struct _PresConstant
 {
-  BasicType     PdType;				/* type of the constant */
-  CHAR_T           PdAlphabet;			/* alphabet of the constant */
-  CHAR_T           PdString[MAX_PRES_CONST_LEN];	/* constant presentation string,
-				   		terminated by a NUL character */
+  BasicType PdType;                       /* type of the constant                                        */
+  char      PdAlphabet;                   /* alphabet of the constant                                    */
+  char      PdString[MAX_PRES_CONST_LEN]; /* constant presentation string, terminated by a NUL character */
 } PresConstant;
 
 /* a presentation variable is the concatenation of the results of various

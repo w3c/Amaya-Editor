@@ -3579,12 +3579,12 @@ void                CreateInsertPageMenu ()
    Au retour, ret= vrai si le travail a ete fait, faux sinon.	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CreatePasteIncludeCmd (ThotBool create, ThotBool paste, CHAR_T button, ThotBool * ret)
+void                CreatePasteIncludeCmd (ThotBool create, ThotBool paste, char button, ThotBool * ret)
 #else  /* __STDC__ */
 void                CreatePasteIncludeCmd (create, paste, button, ret)
 ThotBool            create;
 ThotBool            paste;
-CHAR_T                button;
+char                button;
 ThotBool           *ret;
 
 #endif /* __STDC__ */

@@ -3468,8 +3468,7 @@ View                view;
 	       {
 		  ustrncpy (title, TtaGetMessage (LIB, TMSG_SURROUND), MAX_NAME_LENGTH);
 		  /* cree le pop-up menu Surround */
-		  TtaNewPopup (NumMenuSurround, 0, title, NItems,
-			       menuBuffer, NULL, TEXT('L'));
+		  TtaNewPopup (NumMenuSurround, 0, title, NItems, menuBuffer, NULL, 'L');
 		  /* affiche le pop-up menu */
 #         ifndef _WINDOWS
 		  TtaShowDialogue (NumMenuSurround, FALSE);
@@ -3609,8 +3608,7 @@ View                view;
 		   ustrncpy (title, TtaGetMessage (LIB, TMSG_CHANGE_TYPE),
 			    MAX_NAME_LENGTH);
 		   /* cree le pop-up menu Change Type */
-		   TtaNewPopup (NumMenuChangeType, 0, title, NItems,
-				menuBuffer, NULL, TEXT('L'));
+		   TtaNewPopup (NumMenuChangeType, 0, title, NItems, menuBuffer, NULL, 'L');
 		   /* affiche le pop-up menu */
 #          ifndef _WINDOWS
 		   TtaShowDialogue (NumMenuChangeType, FALSE);

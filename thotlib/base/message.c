@@ -46,7 +46,7 @@ TabMsg;
  /* Identification des messages Thot */
 static PtrTabMsg    FirstTableMsg = NULL;
 static CHAR_T       EmptyMsg [1];
-static CHAR_T       result[MAX_TXT_LEN];
+static char         result[MAX_TXT_LEN];
 
 #include "dialogapi_f.h"
 #include "memory_f.h"
@@ -70,7 +70,7 @@ char*               pBuffer;
 
 #endif /* __STDC__ */
 {
-   CHAR_T              nombre[4];
+   char                nombre[4];
    int                 uniteid, dixid, centid;
    int                 i = 0, j = 0, k;
 
@@ -93,7 +93,7 @@ char*               pBuffer;
 	     {
 		/* On est dans le cas d'un \n */
 		i += 2;
-		result[j++] = TEXT('\n');
+		result[j++] = '\n';
 	     }
 	   else
 	     {
@@ -106,32 +106,32 @@ char*               pBuffer;
 		       && (pBuffer[i] != EOS)
 		       && (k <= 2))
 		   nombre[k++] = pBuffer[i++];
-		nombre[k] = WC_EOS;
+		nombre[k] = EOS;
 
-		switch (ustrlen (nombre))
+		switch (strlen (nombre))
 		      {
 			 case 0:
 			    result[j++] = pBuffer[i++];
 			    break;
 			 case 1:
-			    uniteid = nombre[0] - TEXT('0');
-			    result[j++] = (CHAR_T) uniteid;
+			    uniteid = nombre[0] - '0';
+			    result[j++] = uniteid;
 			    break;
 			 case 2:
-			    uniteid = nombre[1] - TEXT('0');
-			    dixid = nombre[0] - TEXT('0');
-			    result[j++] = (CHAR_T) (uniteid + 8 * dixid);
+			    uniteid = nombre[1] - '0';
+			    dixid = nombre[0] - '0';
+			    result[j++] = uniteid + 8 * dixid;
 			    break;
 			 case 3:
-			    uniteid = nombre[2] - TEXT('0');
-			    dixid = nombre[1] - TEXT('0');
-			    centid = nombre[0] - TEXT('0');
-			    result[j++] = (CHAR_T) (uniteid + 8 * dixid + 64 * centid);
+			    uniteid = nombre[2] - '0';
+			    dixid = nombre[1] - '0';
+			    centid = nombre[0] - '0';
+			    result[j++] = uniteid + 8 * dixid + 64 * centid;
 			    break;
 		      }
 	     }
      }
-   result[j] = WC_EOS;
+   result[j] = EOS;
    return (result);
 }
 
@@ -152,8 +152,9 @@ int                 msgNumber;
 
 #endif /* __STDC__ */
 {
-   CharUnit*           s;
-   FILE               *file;
+   CHAR_T*             s;
+   char*               langVar;
+   FILE*               file;
    int                 origineid;
    int                 num;
    PtrTabMsg           currenttable;
@@ -165,8 +166,8 @@ int                 msgNumber;
    char                pBuff[MAX_TXT_LEN];
 
    /* contruction du nom $THOTDIR/bin/$LANG-msgName */
-   s = TtaGetVarLANG ();
-   StringCopy (fileName, s);
+   langVar = TtaGetVarLANG ();
+   iso2cus_strcpy (fileName, langVar);
    fileName[2] = CUSTEXT('-');
    StringCopy (&fileName[3], msgName);
    SearchFile (fileName, 2, pBuffer);
@@ -217,8 +218,8 @@ int                 msgNumber;
 #        else /* !_I18N_ */
          string = pBuff;
 #        endif /* !_I18N_ */
-	     s = TtaAllocString (ustrlen (string) + 1);
-	     ustrcpy (s, AsciiTranslate (string));
+	     s = TtaAllocString (strlen (pBuff) + 1);
+	     iso2wc_strcpy (s, AsciiTranslate (pBuff));
 	     currenttable->TabMessages[num] = s;
 	  }
 	fclose (file);

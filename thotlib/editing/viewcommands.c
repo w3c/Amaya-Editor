@@ -1180,8 +1180,7 @@ View                view;
                        {
                           /* il n'y a qu'une nature, c'est un pop-up menu */
                           MenuAActiver = NumMenuPresNature + NumSousMenu;
-                          TtaNewPopup (MenuAActiver, 0, NomUtilisateur, nbPres,
-                                       BufMenuB, NULL, TEXT('L'));
+                          TtaNewPopup (MenuAActiver, 0, NomUtilisateur, nbPres, BufMenuB, NULL, 'L');
                        }
                      else
                         /* il y a plusieurs natures, c'est un sous-menu du menu */

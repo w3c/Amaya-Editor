@@ -34,41 +34,6 @@ const STRING str2;
 }
 
 /*-------------------------------------------------------------
-  ustrcasecmp: compare CharUnit* string to a char* string.
-  -------------------------------------------------------------*/
-#ifdef __STDC__
-int cus2iso_strcasecmp (const CharUnit* str1, const char* str2)
-#else  /* __STDC__ */
-int cus2iso_strcasecmp (str1, str2)
-const CharUnit* str1;
-const char*     str2;
-#endif /* __STDC__ */
-{
-    int       diff;
-    CharUnit* cus_str2 = (CharUnit*) malloc ((strlen (str2) + 1) * sizeof (CharUnit));
-
-    iso2wc_strcpy (cus_str2, str2);
-    diff = StringCaseCompare (str1, cus_str2);
-
-    free (cus_str2);
-    return diff;
-}
-
-/*-------------------------------------------------------------
-  ustrcasecmp: compare CharUnit* string to a char* string.
-  -------------------------------------------------------------*/
-#ifdef __STDC__
-int iso2cus_strcasecmp (const char* str1, const CharUnit* str2)
-#else  /* __STDC__ */
-int iso2cus_strcasecmp (str1, str2)
-const CharUnit* str1;
-const char*     str2;
-#endif /* __STDC__ */
-{
-    return cus2iso_strcasecmp (str2, str1);
-}
-
-/*-------------------------------------------------------------
   ustrcat: appends src to the content of dest. This function 
   suposes that momery has been already allocated in the same 
   way that strcat does.
@@ -190,11 +155,11 @@ const char* src;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-char* wc2iso_strcpy (char* dest, const CHAR_T* src)
+char* wc2iso_strcpy (char* dest, const STRING src)
 #else  /* __STDC__ */
 char* wc2iso_strcpy (dest, src)
 char*         dest;
-const CHAR_T* src;
+const STRING  src;
 #endif /* __STDC__ */
 {
     int i, len = ustrlen (src);
@@ -452,42 +417,6 @@ int ustrcasecmp (const STRING str1, const STRING str2)
 int ustrcasecmp (str1, str2)
 const STRING str1;
 const STRING str2;
-#endif /* __STDC__ */
-{
-#   ifdef _WINDOWS
-    return (unsigned int) _stricmp ((char*)str1, (char*)str2);
-#   else  /* !_WINDOWS */
-    return (unsigned int) strcasecmp ((char*)str1, (char*)str2);
-#   endif /* !_WINDOWS */
-}
-
-/*-------------------------------------------------------------
-  cus2iso_strcasecmp: compare CharUnit* string to a char* string.
-  -------------------------------------------------------------*/
-#ifdef __STDC__
-int cus2iso_strcasecmp (const CharUnit* str1, const char* str2)
-#else  /* __STDC__ */
-int cus2iso_strcasecmp (str1, str2)
-const CharUnit* str1;
-const char*     str2;
-#endif /* __STDC__ */
-{
-#   ifdef _WINDOWS
-    return (unsigned int) _stricmp ((char*)str1, (char*)str2);
-#   else  /* !_WINDOWS */
-    return (unsigned int) strcasecmp ((char*)str1, (char*)str2);
-#   endif /* !_WINDOWS */
-}
-
-/*-------------------------------------------------------------
-  iso2cus_strcasecmp: compare char* string to a CharUnit* string.
-  -------------------------------------------------------------*/
-#ifdef __STDC__
-int iso2cus_strcasecmp (const char* str1, const CharUnit* str2)
-#else  /* __STDC__ */
-int iso2cus_strcasecmp (str1, str2)
-const CharUnit* str1;
-const char*     str2;
 #endif /* __STDC__ */
 {
 #   ifdef _WINDOWS
@@ -1101,6 +1030,170 @@ const CharUnit* strCharSet;
      return (CharUnit*) strstr ((char*)str, (char*)strCharSet);
 #    endif /* (_WINDOWS) && defined(_I18N_) */
 }
+
+/*-------------------------------------------------------------
+  cus2iso_strcasecmp: compare CharUnit* string to a char* string.
+  -------------------------------------------------------------*/
+#ifdef __STDC__
+int cus2iso_strcasecmp (const CharUnit* str1, const char* str2)
+#else  /* __STDC__ */
+int cus2iso_strcasecmp (str1, str2)
+const CharUnit* str1;
+const char*     str2;
+#endif /* __STDC__ */
+{
+    int       diff;
+    CharUnit* cus_str2 = (CharUnit*) malloc ((strlen (str2) + 1) * sizeof (CharUnit));
+
+    iso2cus_strcpy (cus_str2, str2);
+    diff = StringCaseCompare (str1, cus_str2);
+
+    free (cus_str2);
+    return diff;
+}
+
+/*-------------------------------------------------------------
+  iso2cus_strcasecmp: compare char* string to a CharUnit* string.
+  -------------------------------------------------------------*/
+#ifdef __STDC__
+int iso2cus_strcasecmp (const char* str1, const CharUnit* str2)
+#else  /* __STDC__ */
+int iso2cus_strcasecmp (str1, str2)
+const CharUnit* str1;
+const char*     str2;
+#endif /* __STDC__ */
+{
+    return cus2iso_strcasecmp (str2, str1);
+}
+
+/*-------------------------------------------------------------
+  ucsiso_strcmp: compare a CharUnit* string to a char* string.
+  The first arg (str1) must be CharUnit*
+  The second arg mest be char*
+  -------------------------------------------------------------*/
+ 
+#ifdef __STDC__
+int ucsiso_strcmp (const CharUnit* str1, const char* str2)
+#else  /* __STDC__ */
+int ucsiso_strcmp (str1, str2)
+const CharUnit* str1;
+const char*     str2;
+#endif /* __STDC__ */
+{
+    int       diff;
+    CharUnit* cus_str2 = (CharUnit*) malloc ((strlen (str2) + 1) * sizeof (CharUnit));
+
+    iso2cus_strcpy (cus_str2, str2);
+    diff = StringCompare (str1, cus_str2);
+
+    free (cus_str2);
+    return diff;
+}
+
+/*-------------------------------------------------------------
+  isocus_strcmp: compares a char* string to a CharUnit* string.
+  The first arg (str1) must be char*
+  The second arg mest be CharUnit*
+  -------------------------------------------------------------*/
+ 
+#ifdef __STDC__
+int isocus_strcmp (const char* str1, const CharUnit* str2)
+#else  /* __STDC__ */
+int isocus_strcmp (str1, str2)
+const char*     str1;
+const CharUnit* str2;
+#endif /* __STDC__ */
+{
+    return ucsiso_strcmp (str2, str1);
+}
+
+/*-------------------------------------------------------------
+  iso2cus_strcpy: copies src (8-bit) into dest (CharUnit*). This 
+  function suposes that momery has been already allocated in the 
+  same way that strcpy does.
+  -------------------------------------------------------------*/
+ 
+#ifdef __STDC__
+CharUnit* iso2cus_strcpy (CharUnit* dest, const char* src)
+#else  /* __STDC__ */
+CharUnit* iso2cus_strcpy (dest, src)
+CharUnit* dest;
+const char* src;
+#endif /* __STDC__ */
+{
+    int i, len = strlen (src);
+    for (i = 0; i < len; i++)
+        dest[i] = (CharUnit)src[i];
+    dest[i] = (CharUnit)0;
+    return dest;
+}
+
+/*-------------------------------------------------------------
+  wc2iso_strcpy: copies src (CharUnit*) into dest (8-bit). This 
+  function suposes that momery has been already allocated in the 
+  same way that strcpy does.
+  -------------------------------------------------------------*/
+ 
+#ifdef __STDC__
+char* cus2iso_strcpy (char* dest, const CharUnit* src)
+#else  /* __STDC__ */
+char* cus2iso_strcpy (dest, src)
+char*           dest;
+const CharUnit* src;
+#endif /* __STDC__ */
+{
+    int i, len = StringLength (src);
+    for (i = 0; i < len; i++)
+        dest[i] = (char)src[i];
+    dest[i] = (char)0;
+    return dest;
+}
+
+/*-------------------------------------------------------------
+  cus2iso_strncpy: copy n characters of a CharUnit* string to 
+  a char* string.
+  -------------------------------------------------------------*/
+ 
+#ifdef __STDC__
+char* cus2iso_strncpy (char* dest, const CharUnit* src, unsigned int count)
+#else  /* __STDC__ */
+char* cus2iso_strncpy (dest, src, count)
+char*           dest;
+const CharUnit* src;
+unsigned int  count;
+#endif /* __STDC__ */
+{
+    int i;
+    for (i = 0; i < count; i++)
+        dest[i] = (char) src[i];
+    dest[i] = (char)0;
+    return dest;
+}
+
+/*-------------------------------------------------------------
+  iso2cus_strncpy: copy n characters of a char* string to 
+  a CharUnit* string.
+  -------------------------------------------------------------*/
+ 
+#ifdef __STDC__
+CharUnit* iso2cus_strncpy (CharUnit* dest, const char* src, unsigned int count)
+#else  /* __STDC__ */
+CharUnit* iso2cus_strncpy (dest, src, count)
+CharUnit*   dest;
+const char* src;
+unsigned int  count;
+#endif /* __STDC__ */
+{
+    int i;
+    for (i = 0; i < count; i++)
+        dest[i] = (CharUnit) src[i];
+    dest[i] = (CharUnit)0;
+    return dest;
+}
+
+
+
+
 
 
 

@@ -768,7 +768,7 @@ int                *selEntry;
 	dest += l + 1;
 	src += l + 1;
      }
-   TtaNewPopup (NumMenuReferenceChoice, 0, TtaGetMessage (LIB, TMSG_LINK), nbEntries, bufMenuB, NULL, TEXT('L'));
+   TtaNewPopup (NumMenuReferenceChoice, 0, TtaGetMessage (LIB, TMSG_LINK), nbEntries, bufMenuB, NULL, 'L');
 #  ifndef _WINDOWS
    TtaSetDialoguePosition ();
    TtaShowDialogue (NumMenuReferenceChoice, FALSE);

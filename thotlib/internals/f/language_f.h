@@ -7,20 +7,20 @@
 #ifdef __STDC__
 
 extern char* TtaGetLanguageNameFromCode ( char* code );
-extern char* TtaGetLanguageCodeFromName ( CharUnit* name );
+extern char* TtaGetLanguageCodeFromName ( char* name );
 extern void InitLanguage ( void );
-extern Language TtaNewLanguage ( STRING languageName,
+extern Language TtaNewLanguage ( char* languageName,
                                  char languageAlphabet,
                                  STRING principalDictionary,
                                  STRING secondDictionary );
 extern void TtaRemoveLanguage ( Language language );
-extern Language TtaGetLanguageIdFromName ( CharUnit* languageName );
-extern CharUnit* TtaGetVarLANG ( void );
+extern Language TtaGetLanguageIdFromName ( char* languageName );
+extern char* TtaGetVarLANG ( void );
 extern Language TtaGetDefaultLanguage ( void );
 extern Language TtaGetLanguageIdFromAlphabet ( CHAR_T languageAlphabet );
 extern char TtaGetAlphabet ( Language languageId );
-extern STRING TtaGetLanguageName ( Language languageId );
-extern STRING TtaGetLanguageCode ( Language languageId );
+extern char* TtaGetLanguageName ( Language languageId );
+extern char* TtaGetLanguageCode ( Language languageId );
 extern int TtaGetNumberOfLanguages ( void );
 extern int TtaGetFirstUserLanguage ( void );
 extern ThotBool GetPatternList ( Language langageId );
@@ -39,12 +39,12 @@ extern Language TtaNewLanguage (/* STRING languageName,
                                    STRING secondDictionary */);
 extern void TtaRemoveLanguage (/* Language language */);
 extern Language TtaGetLanguageIdFromName (/* CharUnit* languageName */);
-extern CharUnit* TtaGetVarLANG (/* void */);
+extern char* TtaGetVarLANG (/* void */);
 extern Language TtaGetDefaultLanguage (/* void */);
 extern Language TtaGetLanguageIdFromAlphabet (/* CHAR_T languageAlphabet */);
 extern char TtaGetAlphabet (/* Language languageId */);
-extern STRING TtaGetLanguageName (/* Language languageId */);
-extern STRING TtaGetLanguageCode (/* Language languageId */);
+extern char* TtaGetLanguageName (/* Language languageId */);
+extern char* TtaGetLanguageCode (/* Language languageId */);
 extern int TtaGetNumberOfLanguages (/* void */);
 extern int TtaGetFirstUserLanguage (/* void */);
 extern ThotBool GetPatternList (/* Language langageId */);

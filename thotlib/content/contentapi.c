@@ -68,12 +68,12 @@
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaSetTextContent (Element element, STRING content, Language language, Document document)
+void                TtaSetTextContent (Element element, char* content, Language language, Document document)
 
 #else  /* __STDC__ */
 void                TtaSetTextContent (element, content, language, document)
 Element             element;
-STRING              content;
+char*               content;
 Language            language;
 Document            document;
 
@@ -147,7 +147,7 @@ Document            document;
 	     if (content != NULL)
 	       {
 	       ptr = content;
-	       length = ustrlen (content);
+	       length = strlen (content);
 	       delta = length - ((PtrElement) element)->ElTextLength;
 	       ((PtrElement) element)->ElTextLength = length;
 	       ((PtrElement) element)->ElVolume = length;

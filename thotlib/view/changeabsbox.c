@@ -2805,8 +2805,7 @@ PtrDocument         pDocRef;
 				{
 				   pAbbox1 = pAb;
 				   if (pRe1->PrNPresBoxes == 0)
-				      found = (strcmp (pRe1->PrPresBoxName,
-						       pAbbox1->AbPSchema->PsPresentBox[pAbbox1->AbTypeNum - 1].PbName) == 0);
+				      found = (strcmp (pRe1->PrPresBoxName, pAbbox1->AbPSchema->PsPresentBox[pAbbox1->AbTypeNum - 1].PbName) == 0);
 				   else
 				      found = pRe1->PrPresBox[0] == pAbbox1->AbTypeNum;
 				}
@@ -3560,7 +3559,7 @@ PtrSSchema          pSchS;
 	     pTtAttr = &(pElIncluded->ElStructSchema->SsAttribute[att - 1]);
 	     if (pTtAttr->AttrType == AtNumAttr)
 		/* c'est un attribut numerique */
-		if (ustrncmp (pTtAttr->AttrOrigName, NmAttr, sizeof (Name)) == 0)
+		if (strncmp (pTtAttr->AttrOrigName, NmAttr, sizeof (Name)) == 0)
 		   /* il a le nom cherche' */
 		   found = TRUE;
 	  }

@@ -93,7 +93,7 @@ PtrSSchema          pSS;
      {
 	if (LoadedPSchema[i].pPresSchema != NULL)
 	   /* compare les noms schemaName et PresSchemaName */
-	   if (ustrcmp (schemaName, LoadedPSchema[i].PresSchemaName) == 0)
+	   if (strcmp (schemaName, LoadedPSchema[i].PresSchemaName) == 0)
 	      found = TRUE;
 	if (!found)
 	   i++;
@@ -110,7 +110,7 @@ PtrSSchema          pSS;
      {
 	Name pschemaName;
 
-	ustrncpy(pschemaName, schemaName, MAX_NAME_LENGTH);
+	strncpy (pschemaName, schemaName, MAX_NAME_LENGTH);
 	pPSchema = ReadPresentationSchema (pschemaName, pSS);
 	if (pPSchema != NULL)
 	   /* met le nouveau schema dans la table des schemas charges */
@@ -119,20 +119,18 @@ PtrSSchema          pSS;
 	     i = 0;
 	     do
 		i++;
-	     while (LoadedPSchema[i].pPresSchema != NULL &&
-		    i < MAX_PSCHEMAS - 1);
+	     while (LoadedPSchema[i].pPresSchema != NULL && i < MAX_PSCHEMAS - 1);
 	     if (LoadedPSchema[i].pPresSchema == NULL)
 		/* on a trouve une entree libre, on l'utilise */
 	       {
 		  LoadedPSchema[i].UsageCount = 1;
 		  LoadedPSchema[i].pPresSchema = pPSchema;
-		  ustrncpy (LoadedPSchema[i].PresSchemaName, schemaName,
-			   MAX_NAME_LENGTH);
+		  strncpy (LoadedPSchema[i].PresSchemaName, schemaName, MAX_NAME_LENGTH);
 	       }
 	  }
      }
    if (pPSchema != NULL)
-      ustrncpy (pSS->SsDefaultPSchema, schemaName, MAX_NAME_LENGTH);
+      strncpy (pSS->SsDefaultPSchema, schemaName, MAX_NAME_LENGTH);
    /* rend la valeur de retour */
    return pPSchema;
 }

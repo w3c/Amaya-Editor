@@ -54,7 +54,7 @@ extern void FindCompleteName ( CharUnit* fileName,
                                PathBuffer completeName,
                                int *length );
 extern void GetDocIdent ( DocumentIdentifier *Ident,
-                          Name docName );
+                          CharUnit* docName );
 extern void GetDocName ( DocumentIdentifier Ident,
                          Name docName );
 extern int FileWriteAccess ( STRING fileName );

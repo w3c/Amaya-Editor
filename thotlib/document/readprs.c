@@ -51,7 +51,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
+   char c;
 
    if (!TtaReadByte (file, &c))
      {
@@ -225,7 +225,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
+   char c;
 
    if (!TtaReadByte (file, &c))
      {
@@ -262,7 +262,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
+   char c;
 
    if (!TtaReadByte (file, &c))
      {
@@ -307,7 +307,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
+   char c;
 
    if (!TtaReadByte (file, &c))
      {
@@ -352,8 +352,8 @@ ThotBool           *repeat;
 
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
-   FunctionType        functType;
+   char         c;
+   FunctionType functType;
 
    *repeat = FALSE;
    if (!TtaReadByte (file, &c))
@@ -455,7 +455,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
+   char                c;
    BAlignment          align;
 
    if (!TtaReadByte (file, &c))
@@ -499,7 +499,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
+   char                c;
    PresCondition       condtype;
 
    if (!TtaReadByte (file, &c))
@@ -601,7 +601,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
+   char                c;
    ArithRel            rel;
 
    if (!TtaReadByte (file, &c))
@@ -635,7 +635,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
+   char                c;
    BoxEdge             edge;
 
    if (!TtaReadByte (file, &c))
@@ -694,7 +694,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
+   char                c;
    Level               level;
 
    if (!TtaReadByte (file, &c))
@@ -754,7 +754,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
+   char                c;
    CounterOp           optype;
 
    if (!TtaReadByte (file, &c))
@@ -797,7 +797,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
+   char                c;
    BasicType           basictyp;
 
    if (!TtaReadByte (file, &c))
@@ -846,7 +846,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
+   char                c;
    VariableType        vartyp;
 
    if (!TtaReadByte (file, &c))
@@ -907,7 +907,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
+   char                c;
    CounterStyle        countstyle;
 
    if (!TtaReadByte (file, &c))
@@ -953,7 +953,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
+   char                c;
    CounterValue        value;
 
    if (!TtaReadByte (file, &c))
@@ -993,7 +993,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
+   char                c;
    ContentType         conttype;
 
    if (!TtaReadByte (file, &c))
@@ -1038,7 +1038,7 @@ PtrPRule           *pNextPRule;
 
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
+   char                c;
 
    if (!TtaReadByte (file, &c))
       return NULL;
@@ -1060,7 +1060,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
+   char c;
 
    if (!TtaReadByte (file, &c))
       c = SPACE;
@@ -1120,7 +1120,7 @@ BinFile             file;
 
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
+   char c;
 
    if (!TtaReadByte (file, &c))
       c = SPACE;
@@ -1381,45 +1381,47 @@ PtrSSchema          pSS;
 {
    PtrPRule            pNextPRule;
    PtrPSchema          pPSch;
-   Counter            *pCntr;
-   CntrItem           *pCntrItem;
-   PresConstant       *pConst;
-   PresVariable       *pVar;
-   PresVarItem        *pVarItem;
-   PresentationBox    *pBox;
-   AttributePres      *pAttrP, *pAttrOld;
-   NumAttrCase        *pCase;
+   Counter*            pCntr;
+   CntrItem*           pCntrItem;
+   PresConstant*       pConst;
+   PresVariable*       pVar;
+   PresVarItem*        pVarItem;
+   PresentationBox*    pBox;
+   AttributePres*      pAttrP, *pAttrOld;
+   NumAttrCase*        pCase;
    PathBuffer          dirBuffer;
    BinFile             file;
-   CHAR_T                buf[MAX_TXT_LEN];
+   CharUnit            buf[MAX_TXT_LEN];
    int                 InitialNElems, i, j, l;
    ThotBool            ret;
+   CharUnit            file_name[MAX_LENGTH];
 
    error = FALSE;
    pPSch = NULL;
    /* compose le nom du fichier a ouvrir */
-   ustrncpy (dirBuffer, SchemaPath, MAX_PATH);
-   MakeCompleteName (fileName, CUSTEXT("PRS"), dirBuffer, buf, &i);
+   iso2cus_strcpy (file_name, fileName);
+   StringNCopy (dirBuffer, SchemaPath, MAX_PATH);
+   MakeCompleteName (file_name, CUSTEXT("PRS"), dirBuffer, buf, &i);
 
    /* teste si le fichier existe */
    file = TtaReadOpen (buf);
    if (file == 0)
      {
 	/* message 'Fichier inaccessible' */
-	ustrncpy (buf, fileName, MAX_NAME_LENGTH);
-	ustrcat (buf, CUSTEXT(".PRS"));
+	StringNCopy (buf, file_name, MAX_NAME_LENGTH);
+	StringConcat (buf, CUSTEXT(".PRS"));
 	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), buf);
      }
    else
      {
 	/* supprime le suffixe .PRS a la fin du nom de fichier */
-	buf[i - 4] = EOS;
+	buf[i - 4] = CUS_EOS;
 	GetSchPres (&pPSch);
 	/* acquiert un bloc pour la prochaine regle lue */
 	GetPresentRule (&pNextPRule);
 	pNextPRule->PrCond = NULL;
 	/* met son nom dans le schema de presentation */
-	ustrncpy (pPSch->PsPresentName, fileName, MAX_NAME_LENGTH - 1);
+	strncpy (pPSch->PsPresentName, fileName, MAX_NAME_LENGTH - 1);
 	/* lit la partie fixe du schema de presentation */
 	/* lit le nom du schema de structure correspondant */
 	TtaReadName (file, pPSch->PsStructName);

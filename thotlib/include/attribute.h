@@ -173,7 +173,7 @@ extern void         TtaGiveAttributeType (Attribute attribute, /*OUT*/ Attribute
    attrKind: kind of the attribute: 0 = Enumerate, 1 = Integer, 2 = Text,
    3 = CsReference
    ---------------------------------------------------------------------- */
-extern void         TtaGiveAttributeTypeFromName (STRING name, Element element, /*OUT*/ AttributeType * attributeType, /*OUT*/ int *attrKind);
+extern void         TtaGiveAttributeTypeFromName (char* name, Element element, /*OUT*/ AttributeType * attributeType, /*OUT*/ int *attrKind);
 
 /* ----------------------------------------------------------------------
    TtaGiveAttributeTypeFromOriginalName
@@ -189,7 +189,7 @@ extern void         TtaGiveAttributeTypeFromName (STRING name, Element element, 
    attrKind: kind of the attribute: 0 = Enumerate, 1 = Integer, 2 = Text,
    3 = CsReference
    ---------------------------------------------------------------------- */
-extern void        TtaGiveAttributeTypeFromOriginalName (STRING name, Element element, /*OUT*/ AttributeType * attributeType, /*OUT*/ int *attrKind);
+extern void        TtaGiveAttributeTypeFromOriginalName (char* name, Element element, /*OUT*/ AttributeType * attributeType, /*OUT*/ int *attrKind);
 
 /* ----------------------------------------------------------------------
    TtaGetAttributeName
@@ -203,7 +203,7 @@ extern void        TtaGiveAttributeTypeFromOriginalName (STRING name, Element el
    name of that type.
 
    ---------------------------------------------------------------------- */
-extern STRING      TtaGetAttributeName (AttributeType attributeType);
+extern char*      TtaGetAttributeName (AttributeType attributeType);
 
 /* ----------------------------------------------------------------------
    TtaGetAttributeOriginalName
@@ -217,7 +217,7 @@ extern STRING      TtaGetAttributeName (AttributeType attributeType);
    name of that type.
 
    ---------------------------------------------------------------------- */
-extern STRING     TtaGetAttributeOriginalName (AttributeType attributeType);
+extern char*     TtaGetAttributeOriginalName (AttributeType attributeType);
 
 /* ----------------------------------------------------------------------
    TtaSameAttributeTypes
@@ -262,7 +262,7 @@ extern int          TtaGetAttributeValue (Attribute attribute);
    name of that value or empty string if error.
  
    ---------------------------------------------------------------------- */
-extern STRING       TtaGetAttributeValueName (AttributeType attributeType, int value);
+extern char*       TtaGetAttributeValueName (AttributeType attributeType, int value);
 
 
 /* ----------------------------------------------------------------------
@@ -278,7 +278,7 @@ extern STRING       TtaGetAttributeValueName (AttributeType attributeType, int v
    the corresponding int value, or 0 if error.
  
    ---------------------------------------------------------------------- */
-extern int         TtaGetAttributeValueFromName (STRING name, AttributeType attributeType);
+extern int         TtaGetAttributeValueFromName (char* name, AttributeType attributeType);
 
 /* ----------------------------------------------------------------------
    TtaGetAttributeValueFromOriginalName
@@ -294,7 +294,7 @@ extern int         TtaGetAttributeValueFromName (STRING name, AttributeType attr
    the corresponding int value, or 0 if error.
 
    ---------------------------------------------------------------------- */
-extern int                TtaGetAttributeValueFromOriginalName (STRING name, AttributeType attributeType);
+extern int                TtaGetAttributeValueFromOriginalName (char* name, AttributeType attributeType);
 
 
 /* ----------------------------------------------------------------------
@@ -362,10 +362,10 @@ extern void         TtaNextAttribute ( /* Element element, Attribute *attribute 
 extern Attribute    TtaGetAttribute ( /* Element element, AttributeType attributeType */ );
 extern void         TtaGiveAttributeType ( /* Attribute attribute, AttributeType *attributeType, int *attrKind */ );
 extern void         TtaGiveAttributeTypeFromName ( /* char *name, Element element, AttributeType *attributeType, int *attrKind */ );
-extern STRING       TtaGetAttributeName ( /* AttributeType attributeType */ );
+extern char*        TtaGetAttributeName ( /* AttributeType attributeType */ );
 extern int          TtaSameAttributeTypes ( /* AttributeType type1, AttributeType type2 */ );
 extern int          TtaGetAttributeValue ( /* Attribute attribute */ );
-extern STRING       TtaGetAttributeValueName ( /* AttributeType attributeType, int value */ );
+extern char*        TtaGetAttributeValueName ( /* AttributeType attributeType, int value */ );
 extern int          TtaGetAttributeValueFromName ( /* char *name, AttributeType attributeType */ );
 extern int          TtaGetAttributeValueFromOriginalName (/* char *name, AttributeType attributeType */ );
 

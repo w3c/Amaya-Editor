@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern int TtaFileExist ( CONST CharUnit* filename );
-extern int TtaFileUnlink ( CONST STRING filename );
+extern int TtaFileUnlink ( CONST CharUnit* filename );
 extern int ThotDirBrowse_first ( ThotDirBrowse * me,
                                  CharUnit* dir,
                                  CharUnit* name,
@@ -36,7 +36,7 @@ extern ThotBool TtaCompareFiles ( CONST STRING file1,
 #else /* __STDC__ */
 
 extern int TtaFileExist (/* CONST CharUnit* filename */);
-extern int TtaFileUnlink (/* CONST STRING filename */);
+extern int TtaFileUnlink (/* CONST CharUnit* filename */);
 extern int ThotDirBrowse_first (/* ThotDirBrowse * me,
                                    CharUnit* dir,
                                    CharUnit* name,

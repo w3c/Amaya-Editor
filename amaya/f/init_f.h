@@ -10,8 +10,8 @@ extern Document IsDocumentLoaded ( STRING documentURL,
                                    STRING form_data );
 extern ThotBool CanReplaceCurrentDocument ( Document document,
                                             View view );
-extern void ExtractParameters ( STRING aName,
-                                STRING parameters );
+extern void ExtractParameters ( CharUnit* aName,
+                                CharUnit* parameters );
 extern void SetArrowButton ( Document document,
                              ThotBool back,
                              ThotBool on );
@@ -46,7 +46,7 @@ extern void OpenDoc ( Document document,
 extern void GoToHome ( Document doc,
                        View view );
 extern Document InitDocView ( Document doc,
-                              STRING docname,
+                              CharUnit* docname,
                               DocumentType docType,
                               ThotBool logFile );
 extern void Reload_callback ( int doc,
@@ -80,7 +80,7 @@ extern void GetHTMLDocument_callback ( int newdoc,
                                        STRING outputfile,
                                        STRING content_type,
                                        void * context );
-extern Document GetHTMLDocument ( const STRING documentPath,
+extern Document GetHTMLDocument ( const CharUnit* documentPath,
                                   STRING form_data,
                                   Document doc,
                                   Document baseDoc,
@@ -90,7 +90,7 @@ extern Document GetHTMLDocument ( const STRING documentPath,
                                   void *ctx_cbf );
 extern void CallbackDialogue ( int ref,
                                int typedata,
-                               STRING data );
+                               CharUnit* data );
 extern ThotBool CheckMakeDirectory ( CharUnit* name,
                                      ThotBool recursive );
 extern void FreeAmayaStructures ( void );
@@ -191,7 +191,7 @@ extern void OpenDoc (/* Document document,
 extern void GoToHome (/* Document doc,
                          View view */);
 extern Document InitDocView (/* Document doc,
-                                STRING docname,
+                                CharUnit* docname,
                                 DocumentType docType,
                                 ThotBool logFile */);
 extern void Reload_callback (/* int doc,
@@ -235,7 +235,7 @@ extern Document GetHTMLDocument (/* const STRING documentPath,
                                     void *ctx_cbf */);
 extern void CallbackDialogue (/* int ref,
                                  int typedata,
-                                 STRING data */);
+                                 CharUnit* data */);
 extern ThotBool CheckMakeDirectory (/* CharUnit* name,
                                        ThotBool recursive */);
 extern void FreeAmayaStructures (/* void */);

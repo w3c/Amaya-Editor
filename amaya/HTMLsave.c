@@ -506,16 +506,16 @@ void                DoSaveObjectAs (void)
 void                DoSaveObjectAs ()
 #endif
 {
-   CHAR_T                tempfile[MAX_LENGTH];
-   CHAR_T                msg[MAX_LENGTH];
-   ThotBool            dst_is_local;
-   int                 res;
+   CharUnit         tempfile[MAX_LENGTH];
+   CHAR_T           msg[MAX_LENGTH];
+   ThotBool         dst_is_local;
+   int              res;
 
    dst_is_local = !IsW3Path (SavePath);
 
-   ustrcpy (tempfile, SavePath);
-   ustrcat (tempfile, DIR_STR);
-   ustrcat (tempfile, ObjectName);
+   StringCopy (tempfile, SavePath);
+   StringConcat (tempfile, CUS_DIR_STR);
+   StringConcat (tempfile, ObjectName);
 
 
    if (!dst_is_local)
@@ -580,7 +580,7 @@ View                view;
 
 #endif
 {
-   CHAR_T             tempname[MAX_LENGTH];
+   CharUnit         tempname[MAX_LENGTH];
    int              i;
 
    if ((SavingDocument != 0 && SavingDocument != doc) ||
@@ -634,10 +634,10 @@ View                view;
 	       !IsHTMLName (SaveName) &&
 	       !IsXMLName (SaveName))
 	     {
-	       ustrcat (SaveName, CUSTEXT(".html"));
-	       ustrcpy (tempname, SavePath);
-	       ustrcat (tempname, URL_STR);
-	       ustrcat (tempname, SaveName);
+	       StringConcat (SaveName, CUSTEXT(".html"));
+	       StringCopy (tempname, SavePath);
+	       StringConcat (tempname, CUS_URL_STR);
+	       StringConcat (tempname, SaveName);
  	     }
 	 }
        else
@@ -650,9 +650,9 @@ View                view;
      }
    else
      {
-       ustrcpy (tempname, SavePath);
-       ustrcat (tempname, DIR_STR);
-       ustrcat (tempname, SaveName);
+       StringCopy (tempname, SavePath);
+       StringConcat (tempname, CUS_DIR_STR);
+       StringConcat (tempname, SaveName);
      }
 
    /* display the dialog box */
@@ -1843,13 +1843,13 @@ STRING                 newURL;
    Element             el, root, content;
    LoadedImageDesc    *pImage;
    Language            lang;
-   CHAR_T                tempfile[MAX_LENGTH];
-   CHAR_T                localpath[MAX_LENGTH];
-   CHAR_T                oldpath[MAX_LENGTH];
-   CHAR_T                oldname[MAX_LENGTH];
-   CHAR_T                tempname[MAX_LENGTH];
-   CHAR_T                imgname[MAX_LENGTH];
-   CHAR_T                url[MAX_LENGTH];
+   CharUnit            tempfile[MAX_LENGTH];
+   CHAR_T              localpath[MAX_LENGTH];
+   CHAR_T              oldpath[MAX_LENGTH];
+   CHAR_T              oldname[MAX_LENGTH];
+   CHAR_T              tempname[MAX_LENGTH];
+   CharUnit            imgname[MAX_LENGTH];
+   CHAR_T              url[MAX_LENGTH];
    STRING              buf, ptr;
    STRING              sStyle, stringStyle;
    STRING              oldStyle;
@@ -1980,9 +1980,9 @@ STRING                 newURL;
 				 }
 			       else
 				 {
-				   ustrcpy (tempfile, SavePath);
-				   ustrcat (tempfile, DIR_STR);
-				   ustrcat (tempfile, imgname);
+				   StringCopy (tempfile, SavePath);
+				   StringConcat (tempfile, CUS_DIR_STR);
+				   StringConcat (tempfile, imgname);
 				 }
 			       
 			       TtaFileCopy (oldname, tempfile);
@@ -2139,9 +2139,9 @@ STRING                 newURL;
 				   ustrcpy (tempfile, tempname);
 			       else
 				 {
-				   ustrcpy (tempfile, SavePath);
-				   ustrcat (tempfile, DIR_STR);
-				   ustrcat (tempfile, imgname);
+				   StringCopy (tempfile, SavePath);
+				   StringConcat (tempfile, CUS_DIR_STR);
+				   StringConcat (tempfile, imgname);
 				 }
 			       TtaFileCopy (buf, tempfile);
 			     }

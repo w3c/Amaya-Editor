@@ -84,6 +84,12 @@ extern CharUnit* StringToken ( CharUnit* str,
 extern CharUnit* StringSubstring ( const CharUnit* str,
                                    const CharUnit* strCharSet );
 
+extern CharUnit* iso2cus_strcpy (CharUnit*, const char*);
+extern int isocus_strcmp (const char*, const CharUnit*);
+extern char* cus2iso_strcpy (char*, const CharUnit*);
+extern char* cus2iso_strncpy (char*, const CharUnit*, unsigned int);
+extern CharUnit* iso2cus_strncpy (CharUnit*, const char*, unsigned int);
+
 #else /* __STDC__ */
 
 extern int ustrcasecmp (/* const STRING str1,
@@ -164,5 +170,10 @@ extern CharUnit* StringToken (/* CharUnit* str,
 extern CharUnit* StringSubstring (/* const CharUnit* str,
                                      const CharUnit* strCharSet */);
 
+extern CharUnit* iso2cus_strcpy (/* CharUnit*, const char* */);
+extern int isocus_strcmp (/* const char*, const CharUnit* */);
+extern char* cus2iso_strcpy (/* char*, const CharUnit* */);
+extern char* cus2iso_strncpy (/* char*, const CharUnit*, unsigned int */);
+extern CharUnit* iso2cus_strncpy (/* CharUnit*, const char*, unsigned int*/);
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -179,13 +179,14 @@ unsigned short*     blue;
      {
 #endif /* _WINDOWS */
        /* Lookup the color name in the application color name database */
-       for (i = 0; i < NColors; i++)
-	 if (!StringCaseCompare (ColorName (i), colname))
-	   {
-	     *red   = RGB_Table[i].red;
-	     *green = RGB_Table[i].green;
-	     *blue  = RGB_Table[i].blue;
-	   }
+       ThotBool found = FALSE;
+       for (i = 0; i < NColors && !found; i++)
+           if (!StringCaseCompare (ColorName (i), colname)) {
+              found = TRUE;
+              *red   = RGB_Table[i].red;
+              *green = RGB_Table[i].green;
+              *blue  = RGB_Table[i].blue;
+           }
 #ifndef _WINDOWS
      }
 #endif /* _WINDOWS */

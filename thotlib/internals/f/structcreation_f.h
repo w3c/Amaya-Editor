@@ -73,7 +73,7 @@ extern PtrElement CreateOrPasteInText ( ThotBool create,
 extern void CreateInsertPageMenu ( void );
 extern void CreatePasteIncludeCmd ( ThotBool create,
                                     ThotBool paste,
-                                    CHAR_T button,
+                                    char button,
                                     ThotBool * ret );
 extern void CreatePasteIncludeMenuCallback ( ThotBool create,
                                              ThotBool paste,

@@ -86,7 +86,7 @@ extern void         TtaSetPulldownOn (int ref, ThotWidget parent);
    Le parame`tre button indique le bouton de la souris qui active le  
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
-extern void         TtaNewPopup (int ref, ThotWidget parent, STRING title, int number, STRING text, STRING equiv, CHAR_T button);
+extern void         TtaNewPopup (int ref, ThotWidget parent, STRING title, int number, STRING text, STRING equiv, char button);
 
 /*----------------------------------------------------------------------
    TtaNewSubmenu cre'e un sous-menu :                                 

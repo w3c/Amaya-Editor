@@ -303,13 +303,13 @@ DocViewNumber       view;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static CHAR_T  BorderStyleCharValue (int borderStyle)
+static char  BorderStyleCharValue (int borderStyle)
 #else  /* __STDC__ */
-static CHAR_T  BorderStyleCharValue (borderStyle)
+static char  BorderStyleCharValue (borderStyle)
 int borderStyle;
 #endif /* __STDC__ */
 {
-   CHAR_T ret;
+   char ret;
 
    switch (borderStyle)
      {
@@ -413,10 +413,10 @@ CHAR_T borderStyle;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static CHAR_T         CharRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view, ThotBool * ok)
+static char         CharRule (PtrPRule pPRule, PtrElement pEl, DocViewNumber view, ThotBool * ok)
 
 #else  /* __STDC__ */
-static CHAR_T         CharRule (pPRule, pEl, view, ok)
+static char         CharRule (pPRule, pEl, view, ok)
 PtrPRule            pPRule;
 PtrElement          pEl;
 DocViewNumber       view;
@@ -426,7 +426,7 @@ ThotBool           *ok;
 
 {
    PtrAbstractBox      pAbb;
-   CHAR_T              val;
+   char                val;
 
    val = SPACE;
    *ok = TRUE;
@@ -3469,8 +3469,7 @@ PtrAttribute        pAttr;
 	    break;
 
 	  case PtFont:
-	    pAb->AbFont = CharRule (pPRule, pAb->AbElement, pAb->AbDocView,
-				    &appl);
+	    pAb->AbFont = CharRule (pPRule, pAb->AbElement, pAb->AbDocView, &appl);
 	    if (!appl && pAb->AbElement->ElParent == NULL)
 	      {
 		pAb->AbFont = 'T';

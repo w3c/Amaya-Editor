@@ -63,7 +63,7 @@ static TransCondition ReadTransCondition (file)
 BinFile             file;
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
+   char                c;
    TransCondition      cond;
 
    cond = TcondFirst;
@@ -160,7 +160,7 @@ static TRuleType    ReadTRuleType (file)
 BinFile             file;
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
+   char                c;
    TRuleType           ruleType;
 
    ruleType = TRemove;
@@ -234,7 +234,7 @@ static RelatNAscend ReadRelatNAscend (file)
 BinFile             file;
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
+   char                c;
    RelatNAscend        relat;
 
    relat = RelEquals;		/* valeur par defaut */
@@ -268,7 +268,7 @@ static TOrder       ReadTOrder (file)
 BinFile             file;
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
+   char                c;
    TOrder              order;
 
    order = TAfter;
@@ -304,7 +304,7 @@ static CreatedObject ReadCreatedObject (file)
 BinFile             file;
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
+   char                c;
    CreatedObject       obj;
 
    obj = ToConst;
@@ -400,7 +400,7 @@ BinFile             file;
 #endif /* __STDC__ */
 
 {
-   CHAR_T                c;
+   char                c;
    TRelatPosition      position;
 
    position = RpSibling;
@@ -444,7 +444,7 @@ BinFile             file;
 #endif /* __STDC__ */
 
 {
-   CHAR_T                c;
+   char                c;
    TIndentType		 typ;
 
    typ = ItAbsolute;
@@ -484,7 +484,7 @@ BinFile             file;
 #endif /* __STDC__ */
 
 {
-   CHAR_T                c;
+   char                c;
    TCounterOp          op;
 
    op = TCntrNoOp;
@@ -525,7 +525,7 @@ static TranslVarType ReadTranslVarType (file)
 BinFile             file;
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
+   char                c;
    TranslVarType       varType;
 
    varType = VtText;
@@ -582,7 +582,7 @@ static CounterStyle ReadCounterStyle (file)
 BinFile             file;
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
+   char                c;
    CounterStyle        style;
 
 
@@ -628,7 +628,7 @@ BinFile             file;
 PtrTRule           *pNextTRule;
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
+   char                c;
    PtrTRule            pTRule;
 
    if (!TtaReadByte (file, &c))
@@ -740,7 +740,7 @@ BinFile             file;
 PtrTRuleBlock      *pNextBlock;
 #endif /* __STDC__ */
 {
-   CHAR_T                c;
+   char c;
 
    TtaReadByte (file, &c);
    if (c == EOS)

@@ -1197,7 +1197,7 @@ char*               name;
    else
      {
 	FontFamily = TtaGetMemory (StringLength (value) + 1);
-	wc2iso_strcpy (FontFamily, value);
+	cus2iso_strcpy (FontFamily, value);
 	if (!strcmp (FontFamily, "-b&h-lucida"))
 	   UseLucidaFamily = TRUE;
 	else

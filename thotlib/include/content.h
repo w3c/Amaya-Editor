@@ -44,7 +44,7 @@ PicType;
    document: the document containing that element.
 
   ----------------------------------------------------------------------*/
-extern void         TtaSetTextContent (Element element, STRING content, Language language, Document document);
+extern void         TtaSetTextContent (Element element, char* content, Language language, Document document);
 
 /*----------------------------------------------------------------------
    TtaAppendTextContent

@@ -6,8 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern Document TtaNewDocument ( STRING structureSchema,
-                                 STRING documentName );
+extern Document TtaNewDocument ( char* structureSchema,
+                                 CharUnit* documentName );
 extern void LoadDocument ( PtrDocument * pDoc,
                            STRING fileName );
 extern void LoadXmlDocument ( PtrDocument * pDoc,
@@ -29,8 +29,8 @@ extern void BackupOnFatalErrorLoadResources ( void );
 
 #else /* __STDC__ */
 
-extern Document TtaNewDocument (/* STRING structureSchema,
-                                   STRING documentName */);
+extern Document TtaNewDocument (/* char* structureSchema,
+                                   CharUnit* documentName */);
 extern void LoadDocument (/* PtrDocument * pDoc,
                              STRING fileName */);
 extern void LoadXmlDocument (/* PtrDocument * pDoc,

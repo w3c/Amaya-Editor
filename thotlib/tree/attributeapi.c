@@ -219,7 +219,6 @@ PtrSSchema          pSS;
 	   }
 }
 
-
 /*----------------------------------------------------------------------
    Verifie que tous les elements du sous-arbre de racine pEl       
    possedent les attributs requis et, si certains attributs requis 
@@ -761,11 +760,11 @@ int                *attrKind;
    ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                TtaGiveAttributeTypeFromName (STRING name, Element element, AttributeType * attributeType, int *attrKind)
+void                TtaGiveAttributeTypeFromName (char* name, Element element, AttributeType * attributeType, int *attrKind)
 
 #else  /* __STDC__ */
 void                TtaGiveAttributeTypeFromName (name, element, attributeType, attrKind)
-STRING              name;
+char*               name;
 Element             element;
 AttributeType      *attributeType;
 int                *attrKind;
@@ -779,7 +778,7 @@ int                *attrKind;
    (*attributeType).AttrSSchema = NULL;
    (*attributeType).AttrTypeNum = 0;
    *attrKind = 0;
-   if (name[0] == EOS || ustrlen (name) >= MAX_NAME_LENGTH || element == NULL)
+   if (name[0] == EOS || strlen (name) >= MAX_NAME_LENGTH || element == NULL)
       TtaError (ERR_invalid_parameter);
    else
      {
@@ -829,11 +828,11 @@ int                *attrKind;
    ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                TtaGiveAttributeTypeFromOriginalName (STRING name, Element element, AttributeType * attributeType, int *attrKind)
+void                TtaGiveAttributeTypeFromOriginalName (char* name, Element element, AttributeType * attributeType, int *attrKind)
 
 #else  /* __STDC__ */
 void                TtaGiveAttributeTypeFromOriginalName (name, element, attributeType, attrKind)
-STRING              name;
+char*               name;
 Element             element;
 AttributeType      *attributeType;
 int                *attrKind;
@@ -847,7 +846,7 @@ int                *attrKind;
    (*attributeType).AttrSSchema = NULL;
    (*attributeType).AttrTypeNum = 0;
    *attrKind = 0;
-   if (name[0] == EOS || ustrlen (name) >= MAX_NAME_LENGTH || element == NULL)
+   if (name[0] == EOS || strlen (name) >= MAX_NAME_LENGTH || element == NULL)
       TtaError (ERR_invalid_parameter);
    else
      {
@@ -895,11 +894,11 @@ int                *attrKind;
    ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-STRING              TtaGetAttributeName (AttributeType attributeType)
+char*              TtaGetAttributeName (AttributeType attributeType)
 
 #else  /* __STDC__ */
-STRING              TtaGetAttributeName (attributeType)
-AttributeType       attributeType;
+char*              TtaGetAttributeName (attributeType)
+AttributeType      attributeType;
 
 #endif /* __STDC__ */
 
@@ -918,7 +917,7 @@ AttributeType       attributeType;
      }
    else
      {
-	ustrncpy (bufferName, ((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1].AttrName, MAX_NAME_LENGTH);
+	strncpy (bufferName, ((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1].AttrName, MAX_NAME_LENGTH);
      }
    return bufferName;
 }
@@ -937,10 +936,10 @@ AttributeType       attributeType;
    ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-STRING              TtaGetAttributeOriginalName (AttributeType attributeType)
+char*               TtaGetAttributeOriginalName (AttributeType attributeType)
 
 #else  /* __STDC__ */
-STRING              TtaGetAttributeOriginalName (attributeType)
+char*               TtaGetAttributeOriginalName (attributeType)
 AttributeType       attributeType;
 
 #endif /* __STDC__ */
@@ -960,7 +959,7 @@ AttributeType       attributeType;
      }
    else
      {
-	ustrncpy (bufferName, ((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1].AttrOrigName, MAX_NAME_LENGTH);
+	strncpy (bufferName, ((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1].AttrOrigName, MAX_NAME_LENGTH);
      }
    return bufferName;
 }
@@ -1060,10 +1059,10 @@ Attribute           attribute;
 
 
 #ifdef __STDC__
-STRING              TtaGetAttributeValueOriginalName (AttributeType attributeType, int value)
+char*               TtaGetAttributeValueOriginalName (AttributeType attributeType, int value)
 
 #else  /* __STDC__ */
-STRING              TtaGetAttributeValueOriginalName (attributeType, value)
+char*               TtaGetAttributeValueOriginalName (attributeType, value)
 AttributeType       attributeType;
 int		    value;
 
@@ -1092,7 +1091,7 @@ int		    value;
      }
    else
      {
-	ustrncpy (bufferName, ((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1].AttrEnumOrigValue[value - 1], MAX_NAME_LENGTH);
+	strncpy (bufferName, ((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1].AttrEnumOrigValue[value - 1], MAX_NAME_LENGTH);
      }
    return bufferName;
 }
@@ -1113,10 +1112,10 @@ int		    value;
    ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-STRING              TtaGetAttributeValueName (AttributeType attributeType, int value)
+char*               TtaGetAttributeValueName (AttributeType attributeType, int value)
 
 #else  /* __STDC__ */
-STRING              TtaGetAttributeValueName (attributeType, value)
+char*               TtaGetAttributeValueName (attributeType, value)
 AttributeType       attributeType;
 int		    value;
 
@@ -1145,7 +1144,7 @@ int		    value;
      }
    else
      {
-	ustrncpy (bufferName, ((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1].AttrEnumValue[value - 1], MAX_NAME_LENGTH);
+	strncpy (bufferName, ((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1].AttrEnumValue[value - 1], MAX_NAME_LENGTH);
      }
    return bufferName;
 }
@@ -1167,11 +1166,11 @@ int		    value;
    ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-int                TtaGetAttributeValueFromOriginalName (STRING name, AttributeType attributeType)
+int                TtaGetAttributeValueFromOriginalName (char* name, AttributeType attributeType)
 
 #else  /* __STDC__ */
 int                TtaGetAttributeValueFromOriginalName (name, attributeType)
-STRING              name;
+char*              name;
 AttributeType      attributeType;
 
 #endif /* __STDC__ */
@@ -1182,7 +1181,7 @@ AttributeType      attributeType;
 
    UserErrorCode = 0;
    value = 0;
-   if (name[0] == EOS || ustrlen (name) >= MAX_NAME_LENGTH)
+   if (name[0] == EOS || strlen (name) >= MAX_NAME_LENGTH)
      {
         TtaError (ERR_invalid_parameter);
      }
@@ -1203,7 +1202,7 @@ AttributeType      attributeType;
      {
         attr = & ((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1];
         for (i = 0; value == 0 && i < attr->AttrNEnumValues; i++)
-	    if (ustrncmp(attr->AttrEnumOrigValue[i], name, MAX_NAME_LENGTH) == 0)
+	    if (strncmp(attr->AttrEnumOrigValue[i], name, MAX_NAME_LENGTH) == 0)
 		value = i+1;
      }
    return value;
@@ -1224,11 +1223,11 @@ AttributeType      attributeType;
    ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-int                TtaGetAttributeValueFromName (STRING name, AttributeType attributeType)
+int                TtaGetAttributeValueFromName (char* name, AttributeType attributeType)
 
 #else  /* __STDC__ */
 int                TtaGetAttributeValueFromName (name, attributeType)
-STRING              name;
+char*              name;
 AttributeType      attributeType;
 
 #endif /* __STDC__ */
@@ -1239,7 +1238,7 @@ AttributeType      attributeType;
 
    UserErrorCode = 0;
    value = 0;
-   if (name[0] == EOS || ustrlen (name) >= MAX_NAME_LENGTH)
+   if (name[0] == EOS || strlen (name) >= MAX_NAME_LENGTH)
      {
         TtaError (ERR_invalid_parameter);
      }
@@ -1260,7 +1259,7 @@ AttributeType      attributeType;
      {
         attr = & ((PtrSSchema) (attributeType.AttrSSchema))->SsAttribute[attributeType.AttrTypeNum - 1];
         for (i = 0; value == 0 && i < attr->AttrNEnumValues; i++)
-	    if (ustrncmp(attr->AttrEnumValue[i], name, MAX_NAME_LENGTH) == 0)
+	    if (strncmp(attr->AttrEnumValue[i], name, MAX_NAME_LENGTH) == 0)
 		value = i+1;
      }
    return value;

@@ -2106,7 +2106,7 @@ ElementType         elementType;
 	    elementType.ElTypeNum < 1)
 	TtaError (ERR_invalid_element_type);
    else
-	ustrncpy (nameBuffer, ((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrOrigName, MAX_NAME_LENGTH);
+	strncpy (nameBuffer, ((PtrSSchema) (elementType.ElSSchema))->SsRule[elementType.ElTypeNum - 1].SrOrigName, MAX_NAME_LENGTH);
    return nameBuffer;
 }
 

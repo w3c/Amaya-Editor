@@ -251,7 +251,7 @@ int                 o_len;
 
       /* We are ready to fetch the base value from the Registry */
 #     if defined(_WINDOWS) && defined(_I18N_)
-      wc2iso_strcpy (baseA, base);
+      cus2iso_strcpy (baseA, base);
       value = TtaGetEnvString (baseA);
 #     else  /* !(defined(_WINDOWS) && defined(_I18N_)) */
       value = TtaGetEnvString (base);
@@ -664,7 +664,7 @@ char* name;
 #     if defined(_WINDOWS) && defined(_I18N_)
       {
          CharUnit* tmp = TtaAllocCUString (strlen (name) + 1);
-         iso2wc_strcpy (tmp, name);
+         iso2cus_strcpy (tmp, name);
          value = _wgetenv (tmp);
          TtaFreeMemory (tmp);
          return value;
@@ -747,7 +747,7 @@ char* name;
 
 #  if defined(_WINDOWS) && defined(_I18N_)
    tmp = TtaAllocCUString (strlen (name) + 1);
-   iso2wc_strcpy (tmp, name);
+   iso2cus_strcpy (tmp, name);
    value = _wgetenv (tmp);
    TtaFreeMemory (tmp);
 #  else /* !(defined(_WINDOWS) && defined(_I18N_)) */
@@ -963,7 +963,7 @@ char* name;
 #    if defined(_WINDOWS) && defined(_I18N_)
      {
         CharUnit* tmp = TtaAllocCUString (strlen (name) + 1);
-        iso2wc_strcpy (tmp, name);
+        iso2cus_strcpy (tmp, name);
         value = _wgetenv (tmp);
         TtaFreeMemory (tmp);
         return value;
@@ -1041,7 +1041,7 @@ char* name;
     * next time it will be saved.
     */
 # if defined(_WINDOWS) && defined(_I18N_)
-  iso2wc_strcpy (tmp, name);
+  iso2cus_strcpy (tmp, name);
   value = cus_getenv (tmp);
 # else /* !(defined(_WINDOWS) && defined(_I18N_)) */
   value = getenv (name);
@@ -1292,7 +1292,7 @@ RegistryLevel level;
 	*str = EOS;
 #   if defined(_WINDOWS) && defined(_I18N_)
     cus_value = TtaAllocCUString (strlen (value) + 1);
-    iso2wc_strcpy (cus_value, value);
+    iso2cus_strcpy (cus_value, value);
 	AddRegisterEntry (appli, name, cus_value, level, TRUE);
 #   else /* !(defined(_WINDOWS) && defined(_I18N_)) */
 	AddRegisterEntry (appli, name, value, level, TRUE);

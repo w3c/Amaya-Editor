@@ -36,8 +36,8 @@
 
 #define NAME_LENGTH     32
 
-#define HTAppName     TEXT ("amaya")
-#define HTAppVersion  TEXT ("V2.5")
+#define HTAppName     "amaya"
+#define HTAppVersion  "V2.5"
 #define HTAppDate     TEXT (" ")
 
 #define URL_STR       "/"
@@ -203,11 +203,11 @@ THOT_EXPORT CHAR_T       Answer_name[NAME_LENGTH];
 THOT_EXPORT CHAR_T       Answer_password[NAME_LENGTH];
 THOT_EXPORT CHAR_T       Display_password[NAME_LENGTH];
 THOT_EXPORT CHAR_T       ScanFilter[NAME_LENGTH]; /* to scan directories    */
-THOT_EXPORT STRING       LastURLName;	/* last URL requested               */
-THOT_EXPORT STRING       DirectoryName;	/* local path of the document       */
-THOT_EXPORT STRING       DocumentName;	/* document name                    */
-THOT_EXPORT STRING       SavePath;	/* saving path                      */
-THOT_EXPORT STRING       SaveName;	/* saving name of the document      */
+THOT_EXPORT CharUnit*    LastURLName;	/* last URL requested               */
+THOT_EXPORT CharUnit*    DirectoryName;	/* local path of the document       */
+THOT_EXPORT CharUnit*    DocumentName;	/* document name                    */
+THOT_EXPORT CharUnit*    SavePath;	/* saving path                      */
+THOT_EXPORT CharUnit*    SaveName;	/* saving name of the document      */
 THOT_EXPORT STRING       ObjectName;	/* document name                    */
 THOT_EXPORT STRING       SaveImgsURL;	/* where to save remote Images      */
 THOT_EXPORT STRING       TargetName;
@@ -293,7 +293,7 @@ typedef struct _DocumentMetaDataElement
 
 #define DocumentTableLength 10
 /* URL of each loaded document */
-THOT_EXPORT STRING     DocumentURLs[DocumentTableLength];
+THOT_EXPORT CharUnit* DocumentURLs[DocumentTableLength];
 /* Any formdata associated with a URL */
 THOT_EXPORT DocumentMetaDataElement *DocumentMeta[DocumentTableLength];
 /* Type of document */

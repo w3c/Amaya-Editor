@@ -701,8 +701,7 @@ PtrDict            *pDictionary;
 	  }
      }
 
-   d = LoadTreatedDict (pDictionary, EOS, document, dictName,
-		 document->DocDirectory, FALSE, TRUE);
+   d = LoadTreatedDict (pDictionary, EOS, document, dictName, document->DocDirectory, FALSE, TRUE);
    if (d == -1)
       return (FALSE);
 

@@ -143,19 +143,19 @@ PathBuffer s;
 int        nbStr;
 #endif /* __STDC__ */
 {
-  int occ;
-  STRING pBuf;
+  int      occ;
+  char*    pBuf;
   ThotBool found = FALSE;
 
   occ=0;
   pBuf = buffer;
   while (!found && occ < nbStr)
     {
-      if(!ustrcmp(pBuf,s))
+      if(!strcmp (pBuf, s))
 	found = TRUE;
       else
 	{
-	  pBuf = pBuf + ustrlen(pBuf) + 1;
+	  pBuf = pBuf + strlen(pBuf) + 1;
 	  occ++;
 	}
     }

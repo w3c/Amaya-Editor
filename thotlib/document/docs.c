@@ -176,13 +176,13 @@ PtrDocument         pDoc;
    been created.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Document            TtaNewDocument (STRING structureSchema, STRING documentName)
+Document            TtaNewDocument (char* structureSchema, CharUnit* documentName)
 #else  /* __STDC__ */
 Document            TtaNewDocument (structureSchema, documentName)
-STRING              structureSchema;
-STRING              documentName;
+char*               structureSchema;
+CharUnit*           documentName;
 #endif /* __STDC__ */
-{
+{ 
   PtrDocument         pDoc;
   Document            document;
   int                 i;
@@ -190,7 +190,7 @@ STRING              documentName;
   UserErrorCode = 0;
   document = 0;
   pDoc = NULL;
-  if (documentName[0] == EOS)
+  if (documentName[0] == CUS_EOS)
     /* No name provided by the user */
     TtaError (ERR_document_name);
   else
@@ -204,7 +204,7 @@ STRING              documentName;
 	{
 	  Name sschemaName;
 	  
-	  ustrncpy(sschemaName, structureSchema, MAX_NAME_LENGTH);
+	  strncpy(sschemaName, structureSchema, MAX_NAME_LENGTH);
 	  /* charge le schema de structure */
 	  GetSchStruct (&pDoc->DocSSchema);
 	  pDoc->DocSSchema->SsExtension = FALSE;
@@ -248,20 +248,20 @@ STRING              documentName;
 		  /* An attribut Language is stored in the root */
 		  CheckLanguageAttr (pDoc, pDoc->DocRootElement);
 		  /* The document is named */
-		  ustrncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
-		  pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
+		  StringNCopy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
+		  pDoc->DocDName[MAX_NAME_LENGTH - 1] = CUS_EOS;
 		  /* one get an identifier to the document */
-		  GetDocIdent (&pDoc->DocIdent, documentName);
+		  GetDocIdent (&pDoc->DocIdent, documentName); 
 		  /* keep the actual schema path in the document context */
-		  ustrncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
+		  StringNCopy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
 		  /* initializes the directory of the document */
-		  ustrncpy (pDoc->DocDirectory, DocumentPath, MAX_PATH);
+		  StringNCopy (pDoc->DocDirectory, DocumentPath, MAX_PATH);
 		  /* if path, keep only the first directory */
 		  i = 1;
-		  while (pDoc->DocDirectory[i - 1] != EOS &&
-			 pDoc->DocDirectory[i - 1] != PATH_SEP && i < MAX_PATH)
-		    i++;
-		  pDoc->DocDirectory[i - 1] = EOS;
+		  while (pDoc->DocDirectory[i - 1] != CUS_EOS &&
+                 pDoc->DocDirectory[i - 1] != CUS_PATH_SEP && i < MAX_PATH)
+                i++;
+          pDoc->DocDirectory[i - 1] = CUS_EOS;
 		  /* Read-Write document */
 		  pDoc->DocReadOnly = FALSE;
 		  document = IdentDocument (pDoc);

@@ -7327,8 +7327,8 @@ ThotBool	    plainText;
 	      {
 		/* change the document type */
 		TtaFreeView (doc, 1);
-		doc = TtaNewDocument (TEXT("TextFile"), documentName);
-		TtaSetPSchema (doc, TEXT("TextFileP"));
+		doc = TtaNewDocument ("TextFile", documentName);
+		TtaSetPSchema (doc, "TextFileP");
 		DocumentSSchema = TtaGetDocumentSSchema (doc);
 		isHTML = FALSE;
 	      }
@@ -7343,11 +7343,11 @@ ThotBool	    plainText;
 	      {
 		/* change the document type */
 		TtaFreeView (doc, 1);
-		doc = TtaNewDocument (TEXT("HTML"), documentName);
+		doc = TtaNewDocument ("HTML", documentName);
 		if (TtaGetScreenDepth () > 1)
-		  TtaSetPSchema (doc, TEXT("HTMLP"));
+		  TtaSetPSchema (doc, "HTMLP");
 		else
-		  TtaSetPSchema (doc, TEXT("HTMLPBW"));
+		  TtaSetPSchema (doc, "HTMLPBW");
 		DocumentSSchema = TtaGetDocumentSSchema (doc);
 		isHTML = TRUE;
 	      }

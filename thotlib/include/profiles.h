@@ -11,12 +11,12 @@
 
 #define MAX_PRO_LENGTH              200       /* Maximum length of a string */
 #define DEF_FILE                   "amaya.profiles"
-#define PROFILE_START              CUSTEXT('<')
-#define MODULE_START               CUSTEXT('[')
-#define PROFILE_END                CUSTEXT('>')
-#define MODULE_END                 CUSTEXT(']')
-#define MODULE_REF                 CUSTEXT('+')
-#define EDITING_REF                CUSTEXT('&')
+#define PROFILE_START              '<'
+#define MODULE_START               '['
+#define PROFILE_END                '>'
+#define MODULE_END                 ']'
+#define MODULE_REF                 '+'
+#define EDITING_REF                '&'
 
 #ifdef __STDC__
 /*----------------------------------------------------------------------

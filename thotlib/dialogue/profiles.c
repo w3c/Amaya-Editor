@@ -338,7 +338,7 @@ char*         element;
       i = 1;
       while (element[i] != PROFILE_END)
 	i++;
-      element[i] = CUS_EOS;
+      element[i] = EOS;
       /* The new profile in progress */
       CurrentModule = AddProfile (&element[1]);
       CurrentEntries = 0;
@@ -547,7 +547,7 @@ void Prof_InitTable ()
 	  /* what is the current active profile */  
 	  ptr = TtaGetEnvString ("Profile");
 	  if (ptr && *ptr)
-	    wc2iso_strcpy (UserProfile, ptr);	
+	    cus2iso_strcpy (UserProfile, ptr);	
 	  else
 	    UserProfile[0] = CUS_EOS;
 

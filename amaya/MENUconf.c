@@ -66,97 +66,97 @@ static int SafePutStatus;
 #ifdef _WINDOWS
 static HWND CacheHwnd = NULL;
 #endif /* _WINDOWS */
-static int CacheBase;
+static int      CacheBase;
 static ThotBool EnableCache;
 static ThotBool CacheProtectedDocs;
 static ThotBool CacheDisconnectMode;
 static ThotBool CacheExpireIgnore;
-static CHAR_T CacheDirectory [MAX_LENGTH];
-static int CacheSize;
-static int MaxCacheFile;
+static CharUnit CacheDirectory [MAX_LENGTH];
+static int      CacheSize;
+static int      MaxCacheFile;
 
 /* Proxy menu options */
 #ifdef _WINDOWS
-static HWND ProxyHwnd = NULL;
+static HWND     ProxyHwnd = NULL;
 #endif /* _WINDOWS */
-static int ProxyBase;
-static CHAR_T HttpProxy [MAX_LENGTH];
-static CHAR_T ProxyDomain [MAX_LENGTH];
+static int      ProxyBase;
+static CHAR_T   HttpProxy [MAX_LENGTH];
+static CHAR_T   ProxyDomain [MAX_LENGTH];
 static ThotBool ProxyDomainIsOnlyProxy;
 
 /* General menu options */
 #ifdef _WINDOWS
-static CHAR_T AppHome [MAX_LENGTH];
-static CHAR_T AppTmpDir [MAX_LENGTH];
-static HWND GeneralHwnd = NULL;
+static CHAR_T   AppHome [MAX_LENGTH];
+static CHAR_T   AppTmpDir [MAX_LENGTH];
+static HWND     GeneralHwnd = NULL;
 #endif /* _WINDOWS */
-static int GeneralBase;
-static int DoubleClickDelay;
-static int Zoom;
+static int      GeneralBase;
+static int      DoubleClickDelay;
+static int      Zoom;
 static ThotBool Multikey;
-static CHAR_T DefaultName [MAX_LENGTH];
+static CHAR_T   DefaultName [MAX_LENGTH];
 static ThotBool BgImages;
 static ThotBool DoubleClick;
-static CHAR_T DialogueLang [MAX_LENGTH];
-static int FontMenuSize;
-static CHAR_T HomePage [MAX_LENGTH];
+static CHAR_T   DialogueLang [MAX_LENGTH];
+static int      FontMenuSize;
+static CharUnit HomePage [MAX_LENGTH];
 
 /* Publish menu options */
 #ifdef _WINDOWS
-static HWND PublishHwnd =  NULL;
+static HWND     PublishHwnd =  NULL;
 #endif /* _WINDOWS */
-static int PublishBase;
+static int      PublishBase;
 static ThotBool LostUpdateCheck;
 static ThotBool VerifyPublish;
-static CHAR_T SafePutRedirect [MAX_LENGTH];
+static CHAR_T   SafePutRedirect [MAX_LENGTH];
 
 /* Color menu options */
 #ifdef _WINDOWS
-static HWND ColorHwnd = NULL;
+static HWND     ColorHwnd = NULL;
 #endif /* _WINDOWS */
-static int ColorBase;
-static CHAR_T FgColor [MAX_LENGTH];
-static CHAR_T BgColor [MAX_LENGTH];
+static int      ColorBase;
+static CHAR_T   FgColor [MAX_LENGTH];
+static CHAR_T   BgColor [MAX_LENGTH];
 #ifndef _WINDOWS
-static CHAR_T MenuFgColor [MAX_LENGTH];
-static CHAR_T MenuBgColor [MAX_LENGTH];
+static CHAR_T   MenuFgColor [MAX_LENGTH];
+static CHAR_T   MenuBgColor [MAX_LENGTH];
 #endif /* !_WINDOWS */
 
 /* Geometry menu options */
-static int GeometryBase;
+static int      GeometryBase;
 static Document GeometryDoc = 0;
 #ifdef _WINDOWS
-HWND   GeometryHwnd = NULL;
+HWND            GeometryHwnd = NULL;
 #endif /* _WINDOWS */
 /* common local variables */
-CHAR_T s[MAX_LENGTH]; /* general purpose buffer */
+CharUnit        s[MAX_LENGTH]; /* general purpose buffer */
 
 /* Language negotiation menu options */
 #ifdef _WINDOWS
-static HWND LanNegHwnd = NULL;
+static HWND     LanNegHwnd = NULL;
 #endif /* _WINDOWS */
-static int LanNegBase;
-static CHAR_T LanNeg [MAX_LENGTH];
+static int      LanNegBase;
+static CHAR_T   LanNeg [MAX_LENGTH];
 
 /* Profile menu options */
 #ifdef _WINDOWS
-static HWND ProfileHwnd = NULL;
-static HWND wndProfilesList;
-static HWND wndProfile;
+static HWND     ProfileHwnd = NULL;
+static HWND     wndProfilesList;
+static HWND     wndProfile;
 #endif /* _WINDOWS */
-static int ProfileBase;
-static CHAR_T Profile [MAX_LENGTH];
-static CHAR_T Profiles_File [MAX_LENGTH];
+static int      ProfileBase;
+static CHAR_T   Profile [MAX_LENGTH];
+static CHAR_T   Profiles_File [MAX_LENGTH];
 #define MAX_PRO 50
-static STRING MenuText[MAX_PRO];
+static char*    MenuText[MAX_PRO];
 
 /* Templates menu option */
 #ifdef _WINDOWS
-static HWND TemplatesHwnd = NULL;
+static HWND     TemplatesHwnd = NULL;
 #endif /* _WINDOWS */
-static int TemplatesBase;
-static CHAR_T TemplatesUrl [MAX_LENGTH];
-static int CurrentProfile = -1;
+static int      TemplatesBase;
+static CHAR_T   TemplatesUrl [MAX_LENGTH];
+static int      CurrentProfile = -1;
 
 #ifndef AMAYA_JAVA
 #include "query_f.h"
@@ -172,23 +172,23 @@ static int CurrentProfile = -1;
    exist, it sets the value to an empty ("") string
    ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void  GetEnvString (const STRING name, STRING value)
+static void  GetEnvString (char* name, CharUnit* value)
 #else
 static void  GetEnvString (name, value)
-const STRING name;
-STRING       value;
+char*        name;
+CharUnit*    value;
 #endif /* __STDC__ */
 {
-  CHAR_T     *ptr;
+  CharUnit*  ptr;
 
   ptr = TtaGetEnvString (name);
   if (ptr)
     {
-      ustrncpy (value, ptr, MAX_LENGTH);
-      value[MAX_LENGTH-1] = EOS;
+      StringNCopy (value, ptr, MAX_LENGTH);
+      value[MAX_LENGTH-1] = CUS_EOS;
     }
   else
-    value[0] = EOS;
+    value[0] = CUS_EOS;
 }
 
 /*----------------------------------------------------------------------
@@ -212,53 +212,53 @@ void InitAmayaDefEnv ()
       StringConcat (HomePage, AMAYA_PAGE);
     }
   else
-    HomePage[0]  = EOS;
+    HomePage[0]  = CUS_EOS;
   TtaSetDefEnvString ("HOME_PAGE", HomePage, FALSE);
-  HomePage[0] = EOS;
-  TtaSetDefEnvString ("ENABLE_MULTIKEY", TEXT("no"), FALSE);
-  TtaSetDefEnvString ("ENABLE_BG_IMAGES", TEXT("yes"), FALSE);
-  TtaSetDefEnvString ("VERIFY_PUBLISH", TEXT("no"), FALSE);
-  TtaSetDefEnvString ("ENABLE_LOST_UPDATE_CHECK", TEXT("yes"), FALSE);
-  TtaSetDefEnvString ("DEFAULTNAME", TEXT("Overview.html"), FALSE);
-  TtaSetDefEnvString ("FontMenuSize", TEXT("12"), FALSE);
-  TtaSetDefEnvString ("ENABLE_DOUBLECLICK", TEXT("yes"), FALSE);
+  HomePage[0] = CUS_EOS;
+  TtaSetDefEnvString ("ENABLE_MULTIKEY", CUSTEXT("no"), FALSE);
+  TtaSetDefEnvString ("ENABLE_BG_IMAGES", CUSTEXT("yes"), FALSE);
+  TtaSetDefEnvString ("VERIFY_PUBLISH", CUSTEXT("no"), FALSE);
+  TtaSetDefEnvString ("ENABLE_LOST_UPDATE_CHECK", CUSTEXT("yes"), FALSE);
+  TtaSetDefEnvString ("DEFAULTNAME", CUSTEXT("Overview.html"), FALSE);
+  TtaSetDefEnvString ("FontMenuSize", CUSTEXT("12"), FALSE);
+  TtaSetDefEnvString ("ENABLE_DOUBLECLICK", CUSTEXT("yes"), FALSE);
   /* @@@ */
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
   /* @@@ */
   
 #ifndef _WINDOWS
-  TtaSetDefEnvString ("THOTPRINT", "lpr", FALSE);
+  TtaSetDefEnvString ("THOTPRINT", CUSTEXT("lpr"), FALSE);
   /* A4 size */
-  TtaSetDefEnvString ("PAPERSIZE", "0", FALSE);
+  TtaSetDefEnvString ("PAPERSIZE", CUSTEXT("0"), FALSE);
 #endif
   /* network configuration */
-  TtaSetDefEnvString ("SAFE_PUT_REDIRECT", "", FALSE);
-  TtaSetDefEnvString ("ENABLE_LOST_UPDATE_CHECK", TEXT("yes"), FALSE);
-  TtaSetDefEnvString ("ENABLE_PIPELINING", TEXT("yes"), FALSE);
-  TtaSetDefEnvString ("NET_EVENT_TIMEOUT", TEXT("60000"), FALSE);
-  TtaSetDefEnvString ("PERSIST_CX_TIMEOUT", TEXT("60"), FALSE);
-  TtaSetDefEnvString ("DNS_TIMEOUT", TEXT("1800"), FALSE);
-  TtaSetDefEnvString ("MAX_SOCKET", TEXT("32"), FALSE);
-  TtaSetDefEnvString ("ENABLE_MDA", TEXT("yes"), FALSE);
-  TtaSetDefEnvString ("HTTP_PROXY", _EMPTYSTR_, FALSE);
-  TtaSetDefEnvString ("PROXYDOMAIN", _EMPTYSTR_, FALSE);
-  TtaSetDefEnvString ("PROXYDOMAIN_IS_ONLYPROXY", TEXT("no"), FALSE);
-  TtaSetDefEnvString ("MAX_CACHE_ENTRY_SIZE", TEXT("3"), FALSE);
-  TtaSetDefEnvString ("CACHE_SIZE", TEXT("10"), FALSE);
+  TtaSetDefEnvString ("SAFE_PUT_REDIRECT", CUSTEXT(""), FALSE);
+  TtaSetDefEnvString ("ENABLE_LOST_UPDATE_CHECK", CUSTEXT("yes"), FALSE);
+  TtaSetDefEnvString ("ENABLE_PIPELINING", CUSTEXT("yes"), FALSE);
+  TtaSetDefEnvString ("NET_EVENT_TIMEOUT", CUSTEXT("60000"), FALSE);
+  TtaSetDefEnvString ("PERSIST_CX_TIMEOUT", CUSTEXT("60"), FALSE);
+  TtaSetDefEnvString ("DNS_TIMEOUT", CUSTEXT("1800"), FALSE);
+  TtaSetDefEnvString ("MAX_SOCKET", CUSTEXT("32"), FALSE);
+  TtaSetDefEnvString ("ENABLE_MDA", CUSTEXT("yes"), FALSE);
+  TtaSetDefEnvString ("HTTP_PROXY", CUSTEXT(""), FALSE);
+  TtaSetDefEnvString ("PROXYDOMAIN", CUSTEXT(""), FALSE);
+  TtaSetDefEnvString ("PROXYDOMAIN_IS_ONLYPROXY", CUSTEXT("no"), FALSE);
+  TtaSetDefEnvString ("MAX_CACHE_ENTRY_SIZE", CUSTEXT("3"), FALSE);
+  TtaSetDefEnvString ("CACHE_SIZE", CUSTEXT("10"), FALSE);
   if (TempFileDirectory)
   {
-    usprintf (s, TEXT("%s%clibwww-cache"), TempFileDirectory, DIR_SEP);
+    cus_sprintf (s, CUSTEXT("%s%clibwww-cache"), TempFileDirectory, CUS_DIR_SEP);
     TtaSetDefEnvString ("CACHE_DIR", s, FALSE);
-	TtaSetDefEnvString ("ENABLE_CACHE", TEXT("yes"), FALSE);
+	TtaSetDefEnvString ("ENABLE_CACHE", CUSTEXT("yes"), FALSE);
   }
   else
   {
-    TtaSetDefEnvString ("CACHE_DIR", _EMPTYSTR_, FALSE);
-	TtaSetDefEnvString ("ENABLE_CACHE", TEXT("yes"), FALSE);
+    TtaSetDefEnvString ("CACHE_DIR", CUSTEXT(""), FALSE);
+	TtaSetDefEnvString ("ENABLE_CACHE", CUSTEXT("yes"), FALSE);
   }
-  TtaSetDefEnvString ("CACHE_PROTECTED_DOCS", TEXT("yes"), FALSE);
-  TtaSetDefEnvString ("CACHE_DISCONNECTED_MODE", TEXT("no"), FALSE);
-  TtaSetDefEnvString ("CACHE_EXPIRE_IGNORE", TEXT("no"), FALSE);
+  TtaSetDefEnvString ("CACHE_PROTECTED_DOCS", CUSTEXT("yes"), FALSE);
+  TtaSetDefEnvString ("CACHE_DISCONNECTED_MODE", CUSTEXT("no"), FALSE);
+  TtaSetDefEnvString ("CACHE_EXPIRE_IGNORE", CUSTEXT("no"), FALSE);
   /* appearance */
 
 }
@@ -269,11 +269,11 @@ void InitAmayaDefEnv ()
    variable.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void GetDefEnvToggle (const STRING name, ThotBool *value, int ref, int entry)
+static void GetDefEnvToggle (char* name, ThotBool *value, int ref, int entry)
 #else
 static void GetDefEnvToggle (name, value, ref, entry)
-const STRING name;
-ThotBool *value;
+char*       name;
+ThotBool*   value;
 int ref;
 int entry;
 #endif /* __STDC__ */
@@ -295,22 +295,22 @@ int entry;
    doesn't exist, it sets the value to an empty ("") string
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void GetDefEnvString (const STRING name, STRING value)
+static void GetDefEnvString (char* name, CharUnit* value)
 #else
 static void GetDefEnvString (name, value)
-const STRING name;
-STRING value;
+char*       name;
+CharUnit*   value;
 #endif /* __STDC__ */
 {
-  CHAR_T *ptr;
+  CharUnit* ptr;
 
   ptr = TtaGetDefEnvString (name);
   if (ptr) {
-    ustrncpy (value, ptr, MAX_LENGTH);
-    value[MAX_LENGTH-1] = EOS;
+    StringNCopy (value, ptr, MAX_LENGTH);
+    value[MAX_LENGTH-1] = CUS_EOS;
   }
   else
-    value[0] = EOS;
+    value[0] = CUS_EOS;
 }
 
 /*----------------------------------------------------------------------
@@ -2629,10 +2629,10 @@ STRING              pathname;
   registry entry under the form "x y w h"
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void RestoreDefEnvGeom (STRING env_var)
+static void RestoreDefEnvGeom (char* env_var)
 #else
 static void RestoreDefEnvGeom (env_var
-STRING env_var;
+char* env_var;
 #endif /* _STDC_ */
 {
   int x, y, w, h;
@@ -2656,10 +2656,10 @@ STRING env_var;
   using the format "x y w h"
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void SetEnvGeom (STRING view_name)
+static void SetEnvGeom (char* view_name)
 #else
 static void SetEnvGeom (view_name)
-STRING view_name
+char* view_name
 #endif /* _STDC_ */
 {
   int view;
@@ -2692,13 +2692,13 @@ static void RestoreDefaultGeometryConf (void)
 static void RestoreDefaultGeometryConf ()
 #endif /* __STDC__ */
 {
-  RestoreDefEnvGeom (TEXT("Formatted_view"));
-  RestoreDefEnvGeom (TEXT("Structure_view"));
-  RestoreDefEnvGeom (TEXT("Math_Structure_view"));
-  RestoreDefEnvGeom (TEXT("Graph_Structure_view"));
-  RestoreDefEnvGeom (TEXT("Alternate_view"));
-  RestoreDefEnvGeom (TEXT("Links_view"));
-  RestoreDefEnvGeom (TEXT("Table_of_contents"));
+  RestoreDefEnvGeom ("Formatted_view");
+  RestoreDefEnvGeom ("Structure_view");
+  RestoreDefEnvGeom ("Math_Structure_view");
+  RestoreDefEnvGeom ("Graph_Structure_view");
+  RestoreDefEnvGeom ("Alternate_view");
+  RestoreDefEnvGeom ("Links_view");
+  RestoreDefEnvGeom ("Table_of_contents");
 
   /* save the options */
   TtaSaveAppRegistry ();
@@ -2716,15 +2716,15 @@ static void SetEnvCurrentGeometry ()
   /* only do the processing if the document exists */
   if (DocumentURLs[GeometryDoc])
     {
-      SetEnvGeom (TEXT("Formatted_view"));
-      SetEnvGeom (TEXT("Structure_view"));
-      SetEnvGeom (TEXT("Math_Structure_view"));
+      SetEnvGeom ("Formatted_view");
+      SetEnvGeom ("Structure_view");
+      SetEnvGeom ("Math_Structure_view");
 #ifdef GRAPHML
       SetEnvGeom ("Graph_Structure_view");
 #endif /* GRAPHML */
-      SetEnvGeom (TEXT("Alternate_view"));
-      SetEnvGeom (TEXT("Links_view"));
-      SetEnvGeom (TEXT("Table_of_contents"));
+      SetEnvGeom ("Alternate_view");
+      SetEnvGeom ("Links_view");
+      SetEnvGeom ("Table_of_contents");
     } /* if GeometryDoc exists */
 }
 
@@ -3235,7 +3235,7 @@ static void SetProfileConf ()
 ------------------------------------------------------------------*/
 static void BuildProfileList (void)
 {
-  STRING                ptr;
+  CharUnit*             ptr;
   int                   nbprofiles = 0;
   int                   i = 0;
 
@@ -3247,8 +3247,8 @@ static void BuildProfileList (void)
   while (i < nbprofiles && MenuText[i] != '\0')
     {
       /* keep in mind the current selected entry */
-      if (ptr && !ustrcmp (ptr, MenuText[i]))
-	CurrentProfile = i;
+      if (ptr && !ucsiso_strcmp (ptr, MenuText[i]))
+         CurrentProfile = i;
       SendMessage (wndProfilesList, LB_INSERTSTRING, i, (LPARAM) MenuText[i]);
       i++;
     }

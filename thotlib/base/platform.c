@@ -85,15 +85,15 @@ CONST CharUnit*     filename;
    TtaFileUnlink : remove a file.                                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 TtaFileUnlink (CONST STRING filename)
+int                 TtaFileUnlink (CONST CharUnit* filename)
 #else  /* __STDC__ */
 int                 TtaFileUnlink (filename)
-CONST STRING        filename;
+CONST CharUnit*     filename;
 
 #endif /* __STDC__ */
 {
   if (filename)
-    return (uunlink (filename));
+    return (cus_unlink (filename));
 else
   return 0;
 }

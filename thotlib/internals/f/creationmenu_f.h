@@ -21,7 +21,7 @@ extern void BuildPasteMenu ( int RefMenu,
                              STRING bufMenu,
                              Name title,
                              int nbEntries,
-                             CHAR_T button );
+                             char button );
 
 #else /* __STDC__ */
 

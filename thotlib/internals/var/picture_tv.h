@@ -14,7 +14,7 @@ THOT_EXPORT int             InlineHandlers;
 THOT_EXPORT Visual         *theVisual;
 #else  /* _WINDOWS */
 THOT_EXPORT void           *theVisual;
-THOT_EXPORT char            LostPicturePath [512];
+THOT_EXPORT CharUnit        LostPicturePath [512];
 #endif /* _WINDOWS */
 THOT_EXPORT PictureHandler  PictureHandlerTable[MAX_PICT_FORMATS];
 THOT_EXPORT int             PictureIdType[MAX_PICT_FORMATS];

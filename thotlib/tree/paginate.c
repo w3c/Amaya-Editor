@@ -392,7 +392,7 @@ ThotBool           *firstPage;
 
 #endif /* __STDC__ */
 {
-   STRING name;
+   char* name;
 
    /* affiche un message avec le numero de page */
    /* affiche d'abord le nom de la vue */

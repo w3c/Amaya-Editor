@@ -21,10 +21,10 @@
 #include "language.h"
 
 /* document internal identifier: unique identifier for the storage system */
-typedef char	DocumentIdentifier[MAX_DOC_IDENT_LEN];
+typedef CharUnit DocumentIdentifier[MAX_DOC_IDENT_LEN];
 
 /* document external identifier: document name for the user */
-typedef CHAR_T	ADocumentName[MAX_NAME_LENGTH];
+typedef CharUnit ADocumentName[MAX_NAME_LENGTH];
 
 /* element access mode */
 typedef enum {

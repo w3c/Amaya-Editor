@@ -60,8 +60,8 @@ static CharUnit*    doc_items[MAX_ITEM_CONF];
 static CharUnit*    doc_items_menu[MAX_ITEM_CONF];
 static CharUnit*    nat_items[MAX_ITEM_CONF];
 static CharUnit*    nat_items_menu[MAX_ITEM_CONF];
-static char*        ext_items[MAX_ITEM_CONF];
-static char*        ext_items_menu[MAX_ITEM_CONF];
+static CharUnit*    ext_items[MAX_ITEM_CONF];
+static CharUnit*    ext_items_menu[MAX_ITEM_CONF];
 static char*        pres_items[MAX_ITEM_CONF];
 static char*        pres_items_menu[MAX_ITEM_CONF];
 static char*        export_items[MAX_ITEM_CONF];
@@ -182,16 +182,16 @@ unsigned char*      line;
    /* saute les espaces de debut de ligne */
    while (line[ind] <= SPACE && line[ind] != EOS)
       ind++;
-   if (line[ind] == TEXT('#'))
+   if (line[ind] == '#')
       /* la ligne commence par un commentaire */
       return FALSE;
    /* saute le premier mot */
-   while (line[ind] > SPACE && line[ind] != TEXT('#') && line[ind] != TEXT(':') && line[ind] != EOS)
+   while (line[ind] > SPACE && line[ind] != '#' && line[ind] != ':' && line[ind] != EOS)
       ind++;
    /* saute les espaces qui suivent le 1er mot */
    while (line[ind] <= SPACE && line[ind] != EOS)
       ind++;
-   if (line[ind] == TEXT('#') || line[ind] == EOS)
+   if (line[ind] == '#' || line[ind] == EOS)
       /* il ne reste rien dans la ligne ou seulement un commentaire */
       return TRUE;
    else
@@ -216,17 +216,17 @@ unsigned char*      text;
 
    indline = 0;
    text[0] = EOS;
-   while (line[indline] != TEXT(':') && line[indline] != EOS)
+   while (line[indline] != ':' && line[indline] != EOS)
       indline++;
-   if (line[indline] == TEXT(':'))
+   if (line[indline] == ':')
      {
 	indline++;
 	while (line[indline] <= SPACE && line[indline] != EOS)
 	   indline++;
-	if (line[indline] == TEXT('#') || line[indline] == EOS)
+	if (line[indline] == '#' || line[indline] == EOS)
 	   return;
 	indtext = 0;
-	while (line[indline] != TEXT('#') && line[indline] != EOS)
+	while (line[indline] != '#' && line[indline] != EOS)
 	   text[indtext++] = line[indline++];
 	/* elimine les blancs de fin de ligne */
 	indtext--;
@@ -415,13 +415,13 @@ ThotBool*           import;
 	   else
 	     {
 		getFirstWord (line, word);
-		if (strcmp (word, *doctypeOrig) == 0)
+		if (isocus_strcmp (word, *doctypeOrig) == 0)
 		   stop = TRUE;
 	     }
 	while (!stop);
 
 #   if defined(_WINDOWS) && defined(_I18N_)
-    iso2wc_strcpy (Word_, word);
+    iso2cus_strcpy (Word_, word);
     if (StringCompare (Word_, *doctypeOrig) == 0)
 #   else  /* !(defined(_WINDOWS) && defined(_I18N_)) */
 	if (strcmp (word, *doctypeOrig) == 0)
@@ -433,8 +433,8 @@ ThotBool*           import;
 		fprintf (stderr, "invalid line in file %s\n   %s\n", fname, line);
 	     else
 	       {
-		  *doctypeTrans = TtaGetMemory (strlen (text) + 1);
-		  iso2wc_strcpy (*doctypeTrans, AsciiTranslate (text));
+		  *doctypeTrans = TtaAllocCUString (strlen (text) + 1);
+		  iso2cus_strcpy (*doctypeTrans, AsciiTranslate (text));
 	       }
 	  }
      }
@@ -473,20 +473,21 @@ CharUnit*           aSchemaPath;
 #define NAME_LENGTH     100
 #define MAX_NAME         80
 #define SELECTOR_NB_ITEMS 5
+   char*               varLang;
    PathBuffer          fname;
-   CharUnit*           suffix;
+   CharUnit            suffix[MAX_LENGTH];
    CharUnit*           nameOrig;
    CharUnit*           nameTrans;
    ThotBool            stop;
 
-   suffix = TtaGetVarLANG ();
-
+   varLang = TtaGetVarLANG ();
+   iso2cus_strcpy (suffix, varLang);
 #  ifdef _WINDOWS
-   if (!StringNCaseCompare (suffix, CUSTEXT("fr"), 2))
+   if (!_strnicmp (varLang, "fr", 2))
       app_lang = FR_LANG;
-   else if (!StringNCaseCompare (suffix, CUSTEXT("en"), 2))
+   else if (!_strnicmp (varLang, "en", 2))
       app_lang = EN_LANG;
-   else if (!StringNCaseCompare (suffix, CUSTEXT("de"), 2))
+   else if (!_strnicmp (varLang, "de", 2))
       app_lang = DE_LANG;
 #  endif /* _WINDOWS */
 
@@ -609,11 +610,11 @@ CharUnit*           aSchemaPath;
    les schemas de nature.                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 ConfigMakeDocTypeMenu (char* BufMenu, int *lgmenu, ThotBool doc)
+int                 ConfigMakeDocTypeMenu (CharUnit* BufMenu, int *lgmenu, ThotBool doc)
 
 #else  /* __STDC__ */
 int                 ConfigMakeDocTypeMenu (BufMenu, lgmenu, doc)
-STRING              BufMenu;
+CharUnit*           BufMenu;
 int                *lgmenu;
 ThotBool            doc;
 
@@ -634,14 +635,14 @@ ThotBool            doc;
 	   if (doc_items_menu[i] != NULL)
 	      /* cette entree de la table a une traduction, on la prend */
 	     {
-		len = strlen (doc_items_menu[i]);
-		strcpy (BufMenu + (*lgmenu), doc_items_menu[i]);
+		len = StringLength (doc_items_menu[i]);
+		StringCopy (BufMenu + (*lgmenu), doc_items_menu[i]);
 	     }
 	   else
 	      /* pas de traduction, on prend le nom d'origine du schema */
 	     {
-		len = strlen (doc_items[i]);
-		strcpy (BufMenu + (*lgmenu), doc_items[i]);
+		len = StringLength (doc_items[i]);
+		StringCopy (BufMenu + (*lgmenu), doc_items[i]);
 	     }
 	   (*lgmenu) += len + 1;
 	   nbitem++;
@@ -654,14 +655,14 @@ ThotBool            doc;
 	   if (nat_items_menu[i] != NULL)
 	      /* cette entree de la table a une traduction, on la prend */
 	     {
-		len = strlen (nat_items_menu[i]);
-		strcpy (BufMenu + (*lgmenu), nat_items_menu[i]);
+		len = StringLength (nat_items_menu[i]);
+		StringCopy (BufMenu + (*lgmenu), nat_items_menu[i]);
 	     }
 	   else
 	      /* pas de traduction, on prend le nom d'origine du schema */
 	     {
-		len = strlen (nat_items[i]);
-		strcpy (BufMenu + (*lgmenu), nat_items[i]);
+		len = StringLength (nat_items[i]);
+		StringCopy (BufMenu + (*lgmenu), nat_items[i]);
 	     }
 	   (*lgmenu) += len + 1;
 	   nbitem++;
@@ -679,12 +680,12 @@ ThotBool            doc;
    nature (2) ou d'extension (3).                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaConfigSSchemaExternalName (char* nameUser, char* nameSchema, int Typ)
+void                TtaConfigSSchemaExternalName (CharUnit* nameUser, CharUnit* nameSchema, int Typ)
 
 #else  /* __STDC__ */
 void                TtaConfigSSchemaExternalName (nameUser, nameSchema, Typ)
-char*               nameUser;
-char*               nameSchema;
+CharUnit*           nameUser;
+CharUnit*           nameSchema;
 int                 Typ;
 
 #endif /* __STDC__ */
@@ -701,10 +702,10 @@ int                 Typ;
 	    case CONFIG_DOCUMENT_STRUCT:
 	       while (i < MAX_ITEM_CONF && !found && doc_items[i] != NULL)
 		 {
-		    if (strcmp (nameSchema, doc_items[i]) == 0)
+		    if (StringCompare (nameSchema, doc_items[i]) == 0)
 		      {
 			 if (doc_items_menu[i] != NULL)
-			    strcpy (nameUser, doc_items_menu[i]);
+			    StringCopy (nameUser, doc_items_menu[i]);
 			 found = TRUE;
 		      }
 		    else
@@ -715,10 +716,10 @@ int                 Typ;
 	    case CONFIG_NATURE_STRUCT:
 	       while (i < MAX_ITEM_CONF && !found && nat_items[i] != NULL)
 		 {
-		    if (strcmp (nameSchema, nat_items[i]) == 0)
+		    if (StringCompare (nameSchema, nat_items[i]) == 0)
 		      {
 			 if (nat_items_menu[i] != NULL)
-			    strcpy (nameUser, nat_items_menu[i]);
+			    StringCopy (nameUser, nat_items_menu[i]);
 			 found = TRUE;
 		      }
 		    else
@@ -729,10 +730,10 @@ int                 Typ;
 	    case CONFIG_EXTENSION_STRUCT:
 	       while (i < MAX_ITEM_CONF && !found && ext_items[i] != NULL)
 		 {
-		    if (strcmp (nameSchema, ext_items[i]) == 0)
+		    if (StringCompare (nameSchema, ext_items[i]) == 0)
 		      {
 			 if (ext_items_menu[i] != NULL)
-			    strcpy (nameUser, ext_items_menu[i]);
+			    StringCopy (nameUser, ext_items_menu[i]);
 			 found = TRUE;
 		      }
 		    else
@@ -751,12 +752,12 @@ int                 Typ;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                ConfigSSchemaInternalName (char* nameUser, char* nameSchema, ThotBool Doc)
+void                ConfigSSchemaInternalName (CharUnit* nameUser, CharUnit* nameSchema, ThotBool Doc)
 
 #else  /* __STDC__ */
 void                ConfigSSchemaInternalName (nameUser, nameSchema, Doc)
-char*               nameUser;
-char*               nameSchema;
+CharUnit*           nameUser;
+CharUnit*           nameSchema;
 ThotBool            Doc;
 
 #endif /* __STDC__ */
@@ -771,10 +772,10 @@ ThotBool            Doc;
    if (Doc)
       while (i < MAX_ITEM_CONF && !found && doc_items_menu[i] != NULL)
 	{
-	   if (strcmp (nameUser, doc_items_menu[i]) == 0)
+	   if (StringCompare (nameUser, doc_items_menu[i]) == 0)
 	     {
 		if (doc_items[i] != NULL)
-		   strcpy (nameSchema, doc_items[i]);
+		   StringCopy (nameSchema, doc_items[i]);
 		found = TRUE;
 	     }
 	   else
@@ -783,10 +784,10 @@ ThotBool            Doc;
    else
       while (i < MAX_ITEM_CONF && !found && nat_items_menu[i] != NULL)
 	{
-	   if (strcmp (nameUser, nat_items_menu[i]) == 0)
+	   if (StringCompare (nameUser, nat_items_menu[i]) == 0)
 	     {
 		if (nat_items[i] != NULL)
-		   strcpy (nameSchema, nat_items[i]);
+		   StringCopy (nameSchema, nat_items[i]);
 		found = TRUE;
 	     }
 	   else
@@ -809,30 +810,31 @@ ThotBool            lang;
 #endif /* __STDC__ */
 
 {
-
+ 
    CharUnit            suffix[MAX_EXT];
-   CharUnit*           ptr;
+   char*               ptr;
    int                 i;
    PathBuffer          DirBuffer, filename;
    FILE               *file;
+   CharUnit*           app_home;
 
    if (lang)
      {
-	ptr = TtaGetVarLANG ();
-	ustrcpy (suffix, ptr);
+        ptr = TtaGetVarLANG ();
+        iso2cus_strcpy (suffix, ptr);
      }
    else
       StringCopy (suffix, CUSTEXT("conf"));
 
    /* Search in HOME directory */
-   ptr = TtaGetEnvString ("APP_HOME");
-   ustrcpy (DirBuffer, ptr);
+   app_home = TtaGetEnvString ("APP_HOME");
+   StringCopy (DirBuffer, app_home);
    MakeCompleteName (name, suffix, DirBuffer, filename, &i);
    if (!TtaFileExist (filename))
      {
        /* compose le nom du fichier a ouvrir avec le nom du directory */
        /* des schemas et le suffixe */
-       ustrncpy (DirBuffer, SchemaPath, MAX_PATH);
+       StringNCopy (DirBuffer, SchemaPath, MAX_PATH);
        MakeCompleteName (name, suffix, DirBuffer, filename, &i);
      }
    /* ouvre le fichier */
@@ -950,11 +952,11 @@ char*               schpres;
    directories de schemas.                                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 ConfigMakeImportMenu (char* BufMenu)
+int                 ConfigMakeImportMenu (CharUnit* BufMenu)
 
 #else  /* __STDC__ */
 int                 ConfigMakeImportMenu (BufMenu)
-char*               BufMenu;
+CharUnit*           BufMenu;
 
 #endif /* __STDC__ */
 
@@ -974,14 +976,14 @@ char*               BufMenu;
 	     if (doc_items_menu[i] != NULL)
 		/* cette entree de la table a une traduction, on la prend */
 	       {
-		  len = strlen (doc_items_menu[i]);
-		  strcpy (&BufMenu[lgmenu], doc_items_menu[i]);
+		  len = StringLength (doc_items_menu[i]);
+		  StringCopy (&BufMenu[lgmenu], doc_items_menu[i]);
 	       }
 	     else
 		/* pas de traduction, on prend le nom d'origine du schema */
 	       {
-		  len = strlen (doc_items[i]);
-		  strcpy (&BufMenu[lgmenu], doc_items[i]);
+		  len = StringLength (doc_items[i]);
+		  StringCopy (&BufMenu[lgmenu], doc_items[i]);
 	       }
 	     lgmenu += len + 1;
 	     nbitem++;
@@ -1117,13 +1119,13 @@ char*               trans;
    ThotBool            found;
    int                 i, j;
    TtAttribute        *pAttr;
-   CharUnit            terme[MAX_NAME_LENGTH];
+   char                terme[MAX_NAME_LENGTH];
 
    found = FALSE;
    strncpy (terme, AsciiTranslate (word), MAX_NAME_LENGTH - 1);
    /* cherche le mot a traduire d'abord parmi les noms d'elements */
    for (i = 0; i < pSS->SsNRules; i++)
-      if (StringCompare (terme, pSS->SsRule[i].SrName) == 0)
+      if (strcmp (terme, pSS->SsRule[i].SrName) == 0)
 	{
 	   strncpy (pSS->SsRule[i].SrName, AsciiTranslate (trans), MAX_NAME_LENGTH - 1);
 	   found = TRUE;
@@ -1171,16 +1173,18 @@ PtrSSchema          pSS;
 #endif /* __STDC__ */
 
 {
-   FILE*   file;
+   FILE*    file;
    ThotBool stop, error;
    char*    line;
    char*    text;
    char*    word;
+   CharUnit pSS_SsName[MAX_LENGTH];
 
    if (pSS == NULL)
       return;
    /* ouvre le fichier de configuration langue associe' au schema */
-   file = openConfigFile (pSS->SsName, TRUE);
+   iso2cus_strcpy (pSS_SsName, pSS->SsName);
+   file = openConfigFile (pSS_SsName, TRUE);
    if (file == NULL) 
       /* pas de fichier langue associe' a ce schema de structure */
       return;
@@ -1356,12 +1360,15 @@ char*               sectName;
 
 #endif /* __STDC__ */
 {
-   FILE               *file;
+   FILE*    file;
+   CharUnit pSS_SsName[MAX_LENGTH];
 
    /* ouvre le fichier .conf */
    file = NULL;
-   if (pSS != NULL)
-      file = openConfigFile (pSS->SsName, FALSE);
+   if (pSS != NULL) {
+      iso2cus_strcpy (pSS_SsName, pSS->SsName);
+      file = openConfigFile (&pSS_SsName[0], FALSE);
+   } 
    if (file != NULL)
       /* on a ouvert le fichier */
       /* cherche la ligne "style xxxx" qui correspond au schema P concerne' */
@@ -2014,22 +2021,25 @@ char*               schemaName;
 #endif /* __STDC__ */
 
 {
-   FILE               *file;
-   char                line[MAX_TXT_LEN];
-   char                word[MAX_TXT_LEN];
-   char                seqLine[MAX_TXT_LEN];
-   char                lastStyle[MAX_TXT_LEN];
-   char	               bestStyle[MAX_TXT_LEN];
-   int		           lastPrefixLen, bestPrefixLen;
-   int		           score, i;
-   ThotBool            stop;
+   FILE*    file;
+   char     line[MAX_TXT_LEN];
+   char     word[MAX_TXT_LEN];
+   char     seqLine[MAX_TXT_LEN];
+   char     lastStyle[MAX_TXT_LEN];
+   char     bestStyle[MAX_TXT_LEN];
+   int      lastPrefixLen, bestPrefixLen;
+   int      score, i;
+   ThotBool stop;
+   CharUnit pSS_SsName[MAX_LENGTH];
 
    schemaName[0] = EOS;
    score = 0;
    /* ouvre le fichier .conf correspondant au type du document */
    file = NULL;
-   if (pSS != NULL)
-      file = openConfigFile (pSS->SsName, FALSE);
+   if (pSS != NULL) {
+      iso2cus_strcpy (pSS_SsName, pSS->SsName);
+      file = openConfigFile (pSS_SsName, FALSE);
+   }
    if (file != NULL)
       /* on a ouvert le fichier, on va le lire ligne par ligne */
      {

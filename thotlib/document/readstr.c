@@ -50,7 +50,7 @@ AttribType         *attrType;
 #endif /* __STDC__ */
 
 {
-   CHAR_T                c;
+   char c;
 
    TtaReadByte (file, &c);
    switch (c)
@@ -92,7 +92,7 @@ RConstruct         *constr;
 #endif /* __STDC__ */
 
 {
-   CHAR_T                c;
+   char c;
 
    TtaReadByte (file, &c);
    switch (c)
@@ -154,7 +154,7 @@ BasicType          *typ;
 #endif /* __STDC__ */
 
 {
-   CHAR_T                c;
+   char c;
 
    TtaReadByte (file, &c);
    switch (c)
@@ -207,7 +207,7 @@ TtAttribute        *pAttr;
    int                 j;
 
    TtaReadName (file, pAttr->AttrName);
-   ustrcpy (pAttr->AttrOrigName, pAttr->AttrName);
+   strcpy (pAttr->AttrOrigName, pAttr->AttrName);
    TtaReadBool (file, &pAttr->AttrGlobal);
    TtaReadShort (file, &pAttr->AttrFirstExcept);
    TtaReadShort (file, &pAttr->AttrLastExcept);
@@ -228,7 +228,7 @@ TtAttribute        *pAttr;
 		    for (j = 0; j < pAttr->AttrNEnumValues; j++)
 		      {
 			TtaReadName (file, pAttr->AttrEnumValue[j]);
-			ustrcpy (pAttr->AttrEnumOrigValue[j], pAttr->AttrEnumValue[j]);
+			strcpy (pAttr->AttrEnumOrigValue[j], pAttr->AttrEnumValue[j]);
 		      }
 		    break;
 	      }
@@ -258,7 +258,7 @@ SRule              *pSRule;
    int                 j;
 
    TtaReadName (file, pSRule->SrName);
-   ustrcpy (pSRule->SrOrigName, pSRule->SrName);
+   strcpy (pSRule->SrOrigName, pSRule->SrName);
    TtaReadShort (file, &pSRule->SrNDefAttrs);
    for (j = 0; j < pSRule->SrNDefAttrs; j++)
       TtaReadShort (file, &pSRule->SrDefAttr[j]);
@@ -304,7 +304,7 @@ SRule              *pSRule;
    switch (pSRule->SrConstruct)
 	 {
 	    case CsNatureSchema:
-	       ustrcpy (pSRule->SrOrigNat, pSRule->SrName);
+	       strcpy (pSRule->SrOrigNat, pSRule->SrName);
 	       pSRule->SrSSchemaNat = NULL;
 	       break;
 	    case CsBasicElement:
@@ -364,7 +364,7 @@ PtrSSchema          pSS;
 #endif /* __STDC__ */
 
 {
-   CHAR_T              c;
+   char c;
    int                 i;
 
    i = 0;
@@ -406,10 +406,11 @@ PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 
-{
+{ 
    BinFile             file;
    PathBuffer          buf;
    PathBuffer          dirBuffer;
+   CharUnit            file_name[MAX_LENGTH];
    int                 i;
 
    /* compose le nom du fichier a ouvrir */
@@ -417,17 +418,18 @@ PtrSSchema          pSS;
    pwdPath = TtaGetEnvString ("PWD");
    ustrncpy (dirBuffer, pwdPath, MAX_PATH);
 #  endif  /* !_WINDOWS_COMPILERS */
-   ustrncpy (dirBuffer, SchemaPath, MAX_PATH);
+   StringNCopy (dirBuffer, SchemaPath, MAX_PATH);
 /* #  endif * _WINDOWS_COMPILERS */
-   MakeCompleteName (fileName, CUSTEXT("STR"), dirBuffer, buf, &i);
+   iso2cus_strcpy (file_name, fileName);
+   MakeCompleteName (file_name, CUSTEXT("STR"), dirBuffer, buf, &i);
 
    /* ouvre le fichier */
    file = TtaReadOpen (buf);
    if (file == 0)
       /* echec */
      {
-	ustrncpy (buf, fileName, MAX_PATH);
-	ustrcat (buf, CUSTEXT(".STR"));
+	StringNCopy (buf, file_name, MAX_PATH);
+	StringConcat (buf, CUSTEXT(".STR"));
 	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), buf);
 	return FALSE;
      }

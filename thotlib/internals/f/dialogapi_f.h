@@ -13,7 +13,7 @@ extern void ThotXmColorProc ( ThotColorStruct *bg,
                               ThotColorStruct *sel,
                               ThotColorStruct *top,
                               ThotColorStruct *bottom );
-extern void TtaInitDialogue ( STRING server,
+extern void TtaInitDialogue ( CharUnit* server,
                               ThotAppContext * app_context,
                               Display ** Dp );
 extern void TtaInitDialogueTranslations ( ThotTranslations translations );
@@ -46,7 +46,7 @@ extern void TtaNewPopup ( int ref,
                           int number,
                           STRING text,
                           STRING equiv,
-                          CHAR_T button );
+                          char button );
 extern void TtaNewIconMenu ( int ref,
                              int ref_parent,
                              int entry,
@@ -161,7 +161,7 @@ extern void ThotXmColorProc (/* ThotColorStruct *bg,
                                 ThotColorStruct *sel,
                                 ThotColorStruct *top,
                                 ThotColorStruct *bottom */);
-extern void TtaInitDialogue (/* STRING server,
+extern void TtaInitDialogue (/* CharUnit* server,
                                 ThotAppContext * app_context,
                                 Display ** Dp */);
 extern void TtaInitDialogueTranslations (/* ThotTranslations translations */);

@@ -33,7 +33,7 @@ static ThotBool     AnswerCreateAskForNew;	/* answer AnswerCreateAskForNew to th
 #include "structcreation_f.h"
  
 #ifdef __STDC__
-extern int          ConfigMakeDocTypeMenu (STRING, int*, ThotBool);
+extern int          ConfigMakeDocTypeMenu (CharUnit*, int*, ThotBool);
 
 #else  /* __STDC__ */
 extern int          ConfigMakeDocTypeMenu ();
@@ -210,14 +210,14 @@ STRING              bufMenu;
   BuildPasteMenu
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                BuildPasteMenu (int RefMenu, STRING bufMenu, Name title, int nbEntries, CHAR_T button)
+void                BuildPasteMenu (int RefMenu, STRING bufMenu, Name title, int nbEntries, char button)
 #else  /* __STDC__ */
 void                BuildPasteMenu (RefMenu, bufMenu, title, nbEntries, button)
 int                 RefMenu;
 STRING              bufMenu;
 Name                title;
 int                 nbEntries;
-CHAR_T                button;
+char                button;
 
 #endif /* __STDC__ */
 {

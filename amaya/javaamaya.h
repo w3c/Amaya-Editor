@@ -13,8 +13,8 @@
 #ifdef __STDC__
 extern Document IsDocumentLoaded ( char *documentURL,
 				   char *form_data);
-extern void ExtractParameters ( char *aName,
-                                char *parameters );
+extern void ExtractParameters ( CharUnit* aName,
+                                CharUnit* parameters );
 extern void ExtractSuffix ( STRING aName,
                             STRING aSuffix );
 extern void ResetStop ( Document document );
@@ -50,8 +50,8 @@ extern void ShowToC ( Document document,
                       View view );
 extern void ShowMapAreas ( Document document,
                            View view );
-extern ThotBool NormalizeFile ( STRING src,
-                               STRING target );
+extern ThotBool NormalizeFile ( CharUnit* src,
+                               CharUnit* target );
 extern void SectionNumbering ( Document document,
                                View view );
 extern void MakeBook ( Document document,
@@ -65,8 +65,8 @@ extern void AmayaClose ( Document document,
 
 extern Document IsDocumentLoaded (/* char *documentURL,
                                      char *form_data  */);
-extern void ExtractParameters (/* char *aName,
-                                  char *parameters */);
+extern void ExtractParameters (/* CharUnit* aName,
+                                  CharUnit* parameters */);
 extern void ExtractSuffix (/* char *aName,
                               char *aSuffix */);
 extern void ResetStop (/* Document document */);

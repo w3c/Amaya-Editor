@@ -72,7 +72,7 @@ static Element	LastDeletedElement = NULL;
 #endif /* _WINDOWS */
 
 /* Function name table */
-typedef CHAR_T     functName[10];
+typedef char       functName[10];
 static  functName  functionName[] =
 {
    "Imaginary",

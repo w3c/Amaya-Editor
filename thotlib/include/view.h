@@ -356,7 +356,7 @@ extern ThotBool     TtaIsViewOpened (Document document, View view);
    the view. 0 if no view of that name is currently open for the document.
 
   ----------------------------------------------------------------------*/
-extern View         TtaGetViewFromName (Document document, STRING viewName);
+extern View         TtaGetViewFromName (Document document, char* viewName);
 
 /*----------------------------------------------------------------------
    Map and raise the corresponding window.                          
@@ -496,7 +496,7 @@ extern int          TtaIsPSchemaValid ( /* STRING structureName, STRING presenta
 extern void         TtaGiveViewsToOpen ( /* Document document, STRING buffer, int *nbViews */ );
 extern STRING       TtaGetViewName ( /* Document document, View view */ );
 extern ThotBool     TtaIsViewOpened ( /*Document document, View view */ );
-extern View         TtaGetViewFromName ( /* Document document, STRING viewName */ );
+extern View         TtaGetViewFromName ( /* Document document, char* viewName */ );
 extern void         TtaRaiseView ( /*Document document, View view */ );
 extern void         TtaGiveActiveView ( /* Document *document, View *view */ );
 extern void         TtaClipPolyline ( /* Element element, Document doc, View view */ );

@@ -68,6 +68,11 @@ extern CharUnit*    StringNCopy        (CharUnit*, const CharUnit*, unsigned int
 extern CharUnit*    StrRChr            (const CharUnit*, CharUnit);
 extern CharUnit*    StringToken        (CharUnit*, const CharUnit*);
 extern CharUnit*    StringSubstring    (const CharUnit*, const CharUnit*);
+extern CharUnit*    iso2cus_strcpy     (CharUnit*, const char*);
+extern int          isocus_strcmp      (const char*, const CharUnit*);
+extern char*        cus2iso_strcpy     (char*, const CharUnit*);
+extern char*        cus2iso_strncpy    (char*, const CharUnit*, unsigned int);
+extern CharUnit*    iso2cus_strncpy    (CharUnit*, const char*, unsigned int);
 #else  /* __STDC__ */
 extern int          ustrcasecmp        ();
 extern int          cus2iso_strcasecmp ();
@@ -101,6 +106,11 @@ extern CharUnit*    StringNCopy        ();
 extern CharUnit*    StrRChr            ();
 extern CharUnit*    StringToken        ();
 extern CharUnit*    StringSubstring    ();
+extern CharUnit*    iso2cus_strcpy     ();
+extern int          isocus_strcmp      ();
+extern char*        cus2iso_strcpy     ();
+extern char*        cus2iso_strncpy    ();
+extern CharUnit*    iso2cus_strncpy    ();
 #endif /* __STDC__ */
 
 #endif /* _USTRING_H */

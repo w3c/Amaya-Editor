@@ -1565,20 +1565,20 @@ ThotColorStruct *bottom;
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
 #ifdef __STDC__
-BOOL             WIN_TtaInitDialogue (STRING server)
+BOOL             WIN_TtaInitDialogue (CharUnit* server)
 #else  /* !__STDC__ */
 BOOL             WIN_TtaInitDialogue (server)
-STRING server; 
+CharUnit*        server; 
 #endif /* __STDC__ */
 #else  /* _WINDOWS */
 #ifdef __STDC__
-void             TtaInitDialogue (STRING server, ThotAppContext * app_context, Display ** Dp)
+void             TtaInitDialogue (CharUnit* server, ThotAppContext * app_context, Display ** Dp)
 
 #else  /* __STDC__ */
 void             TtaInitDialogue (server, app_context, Dp)
-STRING              server;
-ThotAppContext     *app_context;
-Display           **Dp;
+CharUnit*        server;
+ThotAppContext*  app_context;
+Display**        Dp;
 
 #endif /* __STDC__ */
 #endif /* _WINDOWS */
@@ -3168,7 +3168,7 @@ ThotWidget          parent;
    menu : 'L' pour left, 'M' pour middle et 'R' pour right.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaNewPopup (int ref, ThotWidget parent, STRING title, int number, STRING text, STRING equiv, CHAR_T button)
+void                TtaNewPopup (int ref, ThotWidget parent, STRING title, int number, STRING text, STRING equiv, char button)
 #else  /* __STDC__ */
 void                TtaNewPopup (ref, parent, title, number, text, equiv, button)
 int                 ref;
@@ -3177,7 +3177,7 @@ STRING              title;
 int                 number;
 STRING              text;
 STRING              equiv;
-CHAR_T                button;
+char                button;
 
 #endif /* __STDC__ */
 {

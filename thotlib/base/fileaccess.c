@@ -599,14 +599,14 @@ int*                length;
 
    found = FALSE;
    i = 1;
-   first_directory[0] = EOS;
-   while (directory_list[i - 1] != EOS && (!found))
+   first_directory[0] = CUS_EOS;
+   while (directory_list[i - 1] != CUS_EOS && (!found))
      {
 	j = 1;
-	while (directory_list[i - 1] != PATH_SEP
-	       && directory_list[i - 1] != EOS
-	       && j < MAX_PATH
-	       && i < MAX_PATH)
+	while (directory_list[i - 1] != CUS_PATH_SEP && 
+           directory_list[i - 1] != CUS_EOS      && 
+           j < MAX_PATH                          && 
+           i < MAX_PATH)
 	  {
 	     /* on decoupe la liste en directory individuels */
 	     single_directory[j - 1] = directory_list[i - 1];
@@ -614,27 +614,27 @@ int*                length;
 	     j++;
 	  }
 	/* on ajoute une fin de chaine */
-	single_directory[j - 1] = EOS;
+	single_directory[j - 1] = CUS_EOS;
 	/* on sauve ce nom de directory si c'est le 1er */
-	if (first_directory[0] == EOS)
-	   ustrncpy (first_directory, single_directory, MAX_PATH);
+	if (first_directory[0] == CUS_EOS)
+	   StringNCopy (first_directory, single_directory, MAX_PATH);
 	/* on construit le nom */
 	FindCompleteName (fname, fext, single_directory, completeName, length);
 	if (TtaFileExist (completeName))
 	  {
 	     found = TRUE;
-	     ustrncpy (directory_list, single_directory, MAX_PATH);
+	     StringNCopy (directory_list, single_directory, MAX_PATH);
 	  }
 	else
 	   /* on essaie avec un autre directory en sautant le PATH_SEP */
-	if (directory_list[i - 1] == PATH_SEP)
+	if (directory_list[i - 1] == CUS_PATH_SEP)
 	   i++;
      }
    if (!found)
      {
-	completeName[0] = EOS;
-	if (first_directory[0] != EOS)
-	   ustrncpy (directory_list, first_directory, MAX_PATH);
+	completeName[0] = CUS_EOS;
+	if (first_directory[0] != CUS_EOS)
+	   StringNCopy (directory_list, first_directory, MAX_PATH);
      }
 }
 
@@ -821,17 +821,17 @@ int                *length;
    GetDocIdent                                                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GetDocIdent (DocumentIdentifier *Ident, Name docName)
+void                GetDocIdent (DocumentIdentifier* Ident, CharUnit* docName)
 #else  /* __STDC__ */
 void                GetDocIdent (Ident, docName)
-DocumentIdentifier *Ident;
-Name                docName;
+DocumentIdentifier* Ident;
+CharUnit*           docName;
 
 #endif /* __STDC__ */
 
 {
-   ustrncpy (*Ident, docName, MAX_DOC_IDENT_LEN);
-   *Ident[MAX_DOC_IDENT_LEN - 1] = EOS;
+   StringNCopy (*Ident, docName, MAX_DOC_IDENT_LEN);
+   *Ident[MAX_DOC_IDENT_LEN - 1] = CUS_EOS;
 }
 
 /*----------------------------------------------------------------------

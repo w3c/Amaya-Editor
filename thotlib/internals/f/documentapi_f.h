@@ -31,7 +31,7 @@ extern SSchema TtaNewSchemaExtension ( Document document,
                                        STRING extensionName,
                                        STRING presentationName );
 extern void TtaSetPSchema ( Document document,
-                            STRING presentationName );
+                            char* presentationName );
 extern void TtaSetDocumentDirectory ( Document document,
                                       STRING directory );
 extern void TtaSetDocumentAccessMode ( Document document,

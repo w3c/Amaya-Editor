@@ -2779,7 +2779,7 @@ ThotBool            withAttr;
 ThotBool            withLabel;
 #endif /* __STDC__ */
 
-{
+{  
    PtrElement          pEl, t1, t2;
    int                 i;
    ThotBool            gener, create, error;
@@ -4221,7 +4221,7 @@ PtrElement          pEl;
    PtrAttribute        pAttr, pA;
    int                 len;
    Language            lang;
-
+ 
    if (pEl != NULL)
       if (GetTypedAttrForElem (pEl, 1, NULL) == NULL)
 	 /* this element has no language attribute */

@@ -108,7 +108,7 @@ static ThotBool      DoCreateAttribute = TRUE;     /* flag for NotifyAttribute*/
 static ThotBool      XmlFirstError = TRUE;         /* flag for NotifyAttribute*/
 static int          IgnoreElemLevel;              /* stack level from where */
                                                   /* elements are ignored (events) */
-static CHAR_T      currentGI[64];               /* the GI of the last elem read */
+static char         currentGI[64];               /* the GI of the last elem read */
 static int          nbAssocRoot = 0;              /* number of assoc trees read */
 /* parser stack */
 #define MAX_STACK_HEIGHT 200		  /* maximum stack height */

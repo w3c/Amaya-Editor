@@ -25,19 +25,11 @@
 #define AMAYA_WWW_CACHE
 #define AMAYA_LOST_UPDATE
 
-#if defined(_I18N_) || defined(__JIS__)
-#   ifdef _WINDOWS
-#         define CACHE_DIR_NAME L"\\libwww-cache\\"
-#   else
-#         define CACHE_DIR_NAME L"/libwww-cache/"
-#   endif /* _WINDOWS */
-#else /*  */
-#     ifdef _WINDOWS
-#           define CACHE_DIR_NAME "\\libwww-cache\\"
-#     else
-#           define CACHE_DIR_NAME "/libwww-cache/"
-#     endif /* _WINDOWS */
-#endif /*  */
+#ifdef _WINDOWS
+#      define CACHE_DIR_NAME CUSTEXT("\\libwww-cache\\")
+#else
+#      define CACHE_DIR_NAME CUSTEXT("/libwww-cache/")
+#endif
 
 /* libwww default parameters */
 #define DEFAULT_CACHE_SIZE 10
@@ -57,6 +49,7 @@
 #include <fcntl.h>
 #include "HTEvtLst.h"
 #include "HTAABrow.h"
+#include "ustring.h"
 
 #if defined(__svr4__) || defined (_AIX)
 #define CATCH_SIG
@@ -124,7 +117,7 @@ static int          fd_cachelock; /* open handle to the .lock cache file */
 /* prototypes */
 
 #ifdef __STDC__
-static void RecCleanCache (STRING dirname);
+static void RecCleanCache (CharUnit* dirname);
 #ifdef _WINDOWS
 int WIN_Activate_Request (HTRequest* , HTAlertOpcode, int, const char*, void*, HTAlertPar*);
 #endif /* _WINDOWS */
@@ -155,10 +148,10 @@ static ThotBool SafePut_query (/* char *url */);
   filename and fd_cachelock will take its value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int set_cachelock (STRING filename)
+static int set_cachelock (CharUnit* filename)
 #else        
 static int set_cachelock (filename)
-STRING filename;
+CharUniut* filename;
 #endif /* __STDC__ */
 {
   int status;
@@ -224,10 +217,10 @@ int *fd;
   returns the pid of the process who has the lock
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int test_cachelock (STRING filename)
+static int test_cachelock (CharUnit* filename)
 #else
 static int test_cachelock (filename)
-STRING filename;
+CharUnit*  filename;
 #endif /* __STDC__ */
 {
 #ifdef _WINDOWS
@@ -770,7 +763,7 @@ int                 status;
 	    || (me->method == METHOD_PUT)) 
 	  {
 	    TtaFreeMemory (me->urlName);
-	    me->urlName = WideChar2ISO (TtaStrdup (ISO2WideChar (new_anchor->parent->address)));
+	    me->urlName = TtaStrdup (new_anchor->parent->address);
 	  }
 	else
 	  /* it's a SYNC mode, so we should keep the urlName */
@@ -1176,9 +1169,9 @@ int                 status;
 	   /* libwww gives www/unknown when it gets an error. As this is 
 	      an HTML test, we force the type to text/html */
 	   if (!strcmp (content_type, "www/unknown"))
-	     me->content_type = WideChar2ISO (TtaStrdup (TEXT("text/html")));
+	     me->content_type = TtaStrdup ("text/html");
 	   else
-	     me->content_type = WideChar2ISO (TtaStrdup (ISO2WideChar (content_type)));
+	     me->content_type = TtaStrdup (content_type);
 	   
 	   /* Content-Type can be specified by an httpd  server's admin.
 	      To be on the safe side, we normalize its case */
@@ -1318,24 +1311,19 @@ static void           AHTAcceptTypesInit (c)
 HTList             *c;
 #endif /* __STDC__ */
 {
-  if (c == (HTList *) NULL) 
+   if (c == (HTList *) NULL) 
       return;
 
-      /* define here all the mime types that Amaya can accept */
+   /* define here all the mime types that Amaya can accept */
 
-      HTConversion_add (c, "image/png",  "www/present", 
-			HTThroughLine, 1.0, 0.0, 0.0);
-      HTConversion_add (c, "image/jpeg", "www/present", 
-			HTThroughLine, 1.0, 0.0, 0.0);
-      HTConversion_add (c, "image/gif",  "www/present", 
-			HTThroughLine, 1.0, 0.0, 0.0);
-      HTConversion_add (c, "image/xbm",  "www/present", 
-			HTThroughLine, 1.0, 0.0, 0.0);
-      HTConversion_add (c, "image/xpm",  "www/present", 
-			HTThroughLine, 1.0, 0.0, 0.0);
+   HTConversion_add (c, "image/png",  "www/present", HTThroughLine, 1.0, 0.0, 0.0);
+   HTConversion_add (c, "image/jpeg", "www/present", HTThroughLine, 1.0, 0.0, 0.0);
+   HTConversion_add (c, "image/gif",  "www/present", HTThroughLine, 1.0, 0.0, 0.0);
+   HTConversion_add (c, "image/xbm",  "www/present", HTThroughLine, 1.0, 0.0, 0.0);
+   HTConversion_add (c, "image/xpm",  "www/present", HTThroughLine, 1.0, 0.0, 0.0);
 
    /* Define here the equivalences between MIME types and file extensions for
-    the types that Amaya can display */
+      the types that Amaya can display */
 
    /* Initialize suffix bindings for local files */
    HTBind_init();
@@ -1359,9 +1347,9 @@ static void         AHTAcceptLanguagesInit (c)
 HTList             *c;
 #endif /* __STDC__ */
 {
-  STRING            ptr;
-  STRING            lang_list;
-  CHAR_T            s[3];
+  CharUnit*         ptr;
+  CharUnit*         lang_list;
+  char              s[3];
   int               count, lg;
   double            quality;
   ThotBool          still;
@@ -1371,77 +1359,68 @@ HTList             *c;
   
   lang_list = TtaGetEnvString ("ACCEPT_LANGUAGES");
   s[2] = EOS;
-  if (lang_list && *lang_list != EOS)
+  if (lang_list && *lang_list != CUS_EOS)
     {
       /* add the default language first  */
       HTLanguage_add (c, "*", -1.0);
       /* how many languages do we have? */
       ptr = lang_list;
       count = 0;
-      while (*ptr != EOS)
-	{
-	  while (*ptr != EOS &&
-		 (*ptr < 'A' || (*ptr > 'Z' && *ptr < 'a') || *ptr > 'z'))
-	    /* skip the whole separator */
-	    ptr++;
-	  lg = 0;
-	  while ((*ptr >= 'A' && *ptr <= 'Z') || (*ptr >= 'a' && *ptr <= 'z') || *ptr == '-')
-	    {
-	      /* it's a new language */
-	      ptr++;
-	      lg++;
-	    }
-	  if (lg >= 2)
-	    count++;
-	  if (*ptr != EOS)
-	    ptr++;
-	}
+      while (*ptr != CUS_EOS) {
+            while (*ptr != CUS_EOS && (*ptr < CUSTEXT('A') || (*ptr > CUSTEXT('Z') && *ptr < CUSTEXT('a')) || *ptr > CUSTEXT('z')))
+                  /* skip the whole separator */
+                  ptr++;
+            lg = 0;
+            while ((*ptr >= CUSTEXT('A') && *ptr <= CUSTEXT('Z')) || (*ptr >= CUSTEXT('a') && *ptr <= CUSTEXT('z')) || *ptr == CUSTEXT('-')) {
+                  /* it's a new language */
+                  ptr++;
+                  lg++;
+			}
+            if (lg >= 2)
+               count++;
+            if (*ptr != CUS_EOS)
+               ptr++;
+	  }
 
       if (count > 0)
-	quality = 1.1 - (double) count/10.0;
+         quality = 1.1 - (double) count/10.0;
       else
-	quality = 1.0;
+          quality = 1.0;
 
-      /*
-	Read the languages from the registry, then inject them one, by one.
-	The first one is the one with the highest priority.
-	The libwww ask for the lowest priority first.
+     /* Read the languages from the registry, then inject them one, by one.
+        The first one is the one with the highest priority.
+        The libwww ask for the lowest priority first.
       */
       ptr--;
       still = TRUE;
-      while (count) 
-	{
-	  while (still &&
-		 (*ptr < 'A' || (*ptr > 'Z' && *ptr < 'a') || *ptr > 'z'))
-	    /* skip the whole separator */
-	    if (ptr > lang_list)
-	      ptr--;
-	    else
-	      still = FALSE;
-	  lg = 0;
-	  while (still &&
-		 ((*ptr >= 'A' && *ptr <= 'Z') || (*ptr >= 'a' && *ptr <= 'z') || *ptr == '-'))
-	    {
-	      /* it's a new language */
-	      if (ptr > lang_list)
-		ptr--;
-	      else
-		still = FALSE;
-	      lg++;
-	    }
-	  if (lg >= 2)
-	    {
-	      if (still)
-		ustrncpy (s, &ptr[1], 2);
-	      else
-		ustrncpy (s, lang_list, 2);
-	      count--;
-	      HTLanguage_add (c, WideChar2ISO(s), quality);
-	      quality += 0.1;
-	    }
-	  ptr--;
-	}
-    }
+      while (count) {
+            while (still && (*ptr < CUSTEXT('A') || (*ptr > CUSTEXT('Z') && *ptr < CUSTEXT('a')) || *ptr > CUSTEXT('z')))
+                  /* skip the whole separator */
+                  if (ptr > lang_list)
+                     ptr--;
+                  else
+                      still = FALSE;
+            lg = 0;
+            while (still && ((*ptr >= CUSTEXT('A') && *ptr <= CUSTEXT('Z')) || (*ptr >= CUSTEXT('a') && *ptr <= CUSTEXT('z')) || *ptr == CUSTEXT('-'))) {
+                  /* it's a new language */
+                  if (ptr > lang_list)
+                     ptr--;
+                  else
+                      still = FALSE;
+                  lg++;
+			}
+            if (lg >= 2) {
+               if (still)
+                  cus2iso_strncpy  (s, &ptr[1], 2);
+               else
+                   cus2iso_strncpy (s, lang_list, 2);
+               count--;
+               HTLanguage_add (c, WideChar2ISO(s), quality);
+               quality += 0.1;
+			}
+            ptr--;
+	  }
+  }
 }
 
 /*----------------------------------------------------------------------
@@ -1465,52 +1444,40 @@ HTList             *c;
     ** that is not directly outputting someting to the user on the screen
     */
 
-   HTConversion_add (c, "message/rfc822", "*/*", HTMIMEConvert, 
-		     1.0, 0.0, 0.0);
-   HTConversion_add (c, "message/x-rfc822-foot", "*/*", HTMIMEFooter,
-		     1.0, 0.0, 0.0);
-   HTConversion_add (c, "message/x-rfc822-head", "*/*", HTMIMEHeader,
-		     1.0, 0.0, 0.0);
-   HTConversion_add(c,"message/x-rfc822-cont",	"*/*", HTMIMEContinue,	
-		    1.0, 0.0, 0.0);
-   HTConversion_add(c,"message/x-rfc822-partial","*/*",	HTMIMEPartial,
-		    1.0, 0.0, 0.0);
-   HTConversion_add (c, "multipart/*", "*/*", HTBoundary,
-		     1.0, 0.0, 0.0);
-   HTConversion_add (c, "text/plain", "text/html", HTPlainToHTML,
-		     1.0, 0.0, 0.0);
+   HTConversion_add (c, "message/rfc822", "*/*", HTMIMEConvert, 1.0, 0.0, 0.0);
+   HTConversion_add (c, "message/x-rfc822-foot", "*/*", HTMIMEFooter, 1.0, 0.0, 0.0);
+   HTConversion_add (c, "message/x-rfc822-head", "*/*", HTMIMEHeader, 1.0, 0.0, 0.0);
+   HTConversion_add(c,"message/x-rfc822-cont",	"*/*", HTMIMEContinue, 1.0, 0.0, 0.0);
+   HTConversion_add(c,"message/x-rfc822-partial","*/*",	HTMIMEPartial, 1.0, 0.0, 0.0);
+   HTConversion_add (c, "multipart/*", "*/*", HTBoundary, 1.0, 0.0, 0.0);
+   HTConversion_add (c, "text/plain", "text/html", HTPlainToHTML, 1.0, 0.0, 0.0);
 
    /*
    ** The following conversions are converting ASCII output from various
    ** protocols to HTML objects.
    */
-   HTConversion_add (c, "text/x-http", "*/*", HTTPStatus_new,
-		     1.0, 0.0, 0.0);
+   HTConversion_add (c, "text/x-http", "*/*", HTTPStatus_new, 1.0, 0.0, 0.0);
 
    /*
    ** We also register a special content type guess stream that can figure out
    ** the content type by reading the first bytes of the stream
    */
-   HTConversion_add (c, "www/unknown", "*/*", HTGuess_new,
-		     1.0, 0.0, 0.0);
+   HTConversion_add (c, "www/unknown", "*/*", HTGuess_new, 1.0, 0.0, 0.0);
 
 #ifdef AMAYA_WWW_CACHE
    /*
    ** Register a persistent cache stream which can save an object to local
    ** file
    */
-   HTConversion_add (c, "www/cache", "*/*", HTCacheWriter,
-		     1.0, 0.0, 0.0);
-   HTConversion_add(c,"www/cache-append", "*/*", HTCacheAppend,
-		    1.0, 0.0, 0.0);
+   HTConversion_add (c, "www/cache", "*/*", HTCacheWriter, 1.0, 0.0, 0.0);
+   HTConversion_add(c,"www/cache-append", "*/*", HTCacheAppend, 1.0, 0.0, 0.0);
 #endif AMAYA_WWW_CACHE
 
    /*
    ** This dumps all other formats to local disk without any further
    ** action taken
    */
-   HTConversion_add (c, "*/*", "www/present", HTSaveLocally,
-		     0.3, 0.0, 0.0);  
+   HTConversion_add (c, "*/*", "www/present", HTSaveLocally, 0.3, 0.0, 0.0);  
 }
 
 
@@ -1520,7 +1487,7 @@ HTList             *c;
   ----------------------------------------------------------------------*/
 static void         AHTProtocolInit (void)
 {
-  char *strptr;
+  CharUnit* strptr;
 
   /* 
      NB. Preemptive == YES means Blocking requests
@@ -1543,8 +1510,8 @@ static void         AHTProtocolInit (void)
 #endif
 
    /* initialize pipelining */
-  strptr = (char *) TtaGetEnvString ("ENABLE_PIPELINING");
-  if (strptr && *strptr && strcasecmp (strptr,"yes" ))
+  strptr = TtaGetEnvString ("ENABLE_PIPELINING");
+  if (strptr && *strptr && StringCaseCompare (strptr, CUSTEXT("yes")))
     HTTP_setConnectionMode (HTTP_11_NO_PIPELINING);
 }
 
@@ -1572,29 +1539,19 @@ static void         AHTNetInit (void)
 **      Not done automaticly - may be done by application!
 */
 
-  HTNet_addAfter (HTAuthFilter, "http://*", NULL, HT_NO_ACCESS,
-		  HT_FILTER_MIDDLE);
-  HTNet_addAfter(HTAuthFilter, "http://*", NULL, HT_REAUTH,
-		 HT_FILTER_MIDDLE);
-  HTNet_addAfter (redirection_handler, "http://*", NULL, HT_PERM_REDIRECT,
-		  HT_FILTER_MIDDLE);
-  HTNet_addAfter (redirection_handler, "http://*", NULL, HT_FOUND, 
-		  HT_FILTER_MIDDLE);
-  HTNet_addAfter (redirection_handler, "http://*", NULL, HT_SEE_OTHER,
-		  HT_FILTER_MIDDLE);
-  HTNet_addAfter (redirection_handler, "http://*", NULL, HT_TEMP_REDIRECT,
-		  HT_FILTER_MIDDLE);
-  HTNet_addAfter(HTAuthInfoFilter, 	"http://*", NULL, HT_ALL, 
-		 HT_FILTER_MIDDLE);
-  HTNet_addAfter (HTUseProxyFilter, "http://*", NULL, HT_USE_PROXY,
-		  HT_FILTER_MIDDLE);
+  HTNet_addAfter (HTAuthFilter, "http://*", NULL, HT_NO_ACCESS, HT_FILTER_MIDDLE);
+  HTNet_addAfter (HTAuthFilter, "http://*", NULL, HT_REAUTH, HT_FILTER_MIDDLE);
+  HTNet_addAfter (redirection_handler, "http://*", NULL, HT_PERM_REDIRECT, HT_FILTER_MIDDLE);
+  HTNet_addAfter (redirection_handler, "http://*", NULL, HT_FOUND, HT_FILTER_MIDDLE);
+  HTNet_addAfter (redirection_handler, "http://*", NULL, HT_SEE_OTHER, HT_FILTER_MIDDLE);
+  HTNet_addAfter (redirection_handler, "http://*", NULL, HT_TEMP_REDIRECT, HT_FILTER_MIDDLE);
+  HTNet_addAfter (HTAuthInfoFilter, 	"http://*", NULL, HT_ALL, HT_FILTER_MIDDLE);
+  HTNet_addAfter (HTUseProxyFilter, "http://*", NULL, HT_USE_PROXY, HT_FILTER_MIDDLE);
 #ifdef AMAYA_LOST_UPDATE
-  HTNet_addAfter (precondition_handler, NULL, NULL, HT_PRECONDITION_FAILED,
-		  HT_FILTER_MIDDLE);
+  HTNet_addAfter (precondition_handler, NULL, NULL, HT_PRECONDITION_FAILED, HT_FILTER_MIDDLE);
 #endif /* AMAYA_LOST_UPDATE */
 #ifndef _WINDOWS
-  HTNet_addAfter (AHTLoadTerminate_handler, NULL, NULL, HT_ALL, 
-		   HT_FILTER_LAST);	
+  HTNet_addAfter (AHTLoadTerminate_handler, NULL, NULL, HT_ALL, HT_FILTER_LAST);	
 #endif /* !_WINDOWS */
    /**** for later ?? ****/
    /*  HTNet_addAfter(HTInfoFilter, 	NULL,		NULL, HT_ALL,		HT_FILTER_LATE); */
@@ -1712,31 +1669,30 @@ View view;
   Clears an existing cache directory
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void RecCleanCache (STRING dirname)
+static void RecCleanCache (CharUnit* dirname)
 #else
 static void RecCleanCache (dirname)
-STRING dirname;
+CharUnit*   dirname;
 #endif /* __STDC__ */
 
 #ifdef _WINDOWS
 {
-  HANDLE hFindFile;
-  ThotBool status;
+  HANDLE          hFindFile;
+  ThotBool        status;
   WIN32_FIND_DATA ffd;
-  
-  CHAR_T t_dir [MAX_LENGTH];
-  STRING ptr;
+  CharUnit        t_dir [MAX_LENGTH];
+  CharUnit*       ptr;
 
   /* create a t_dir name to start searching for files */
-  if ((ustrlen (dirname) + 10) > MAX_LENGTH)
+  if ((StringLength (dirname) + 10) > MAX_LENGTH)
     /* ERROR: directory name is too big */
     return;
 
-  ustrcpy (t_dir, dirname);
+  StringCopy (t_dir, dirname);
   /* save the end of the dirname. We'll use it to make
      a complete pathname when erasing files */
-  ptr = &t_dir[ustrlen (t_dir)];
-  ustrcat (t_dir, TEXT("*"));
+  ptr = &t_dir[StringLength (t_dir)];
+  StringConcat (t_dir, CUSTEXT("*"));
 
   hFindFile = FindFirstFile (t_dir, &ffd);
     
@@ -1750,10 +1706,10 @@ STRING dirname;
       if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 	{
 	  /* it's a directory, erase it recursively */
-	  if (ustrcmp (ffd.cFileName, TEXT("..")) && ustrcmp (ffd.cFileName, TEXT(".")))
+	  if (StringCompare (ffd.cFileName, CUSTEXT("..")) && StringCompare (ffd.cFileName, TEXT(".")))
 	    {
-	      ustrcpy (ptr, ffd.cFileName);
-	      ustrcat (ptr, DIR_STR);
+	      StringCopy (ptr, ffd.cFileName);
+	      StringConcat (ptr, CUS_DIR_STR);
 	      RecCleanCache (t_dir);
 	      urmdir (t_dir);
 	    }
@@ -1761,7 +1717,7 @@ STRING dirname;
 	else
 	  {
 	    /* it's a file, erase it */
-	    ustrcpy (ptr, ffd.cFileName);
+	    StringCopy (ptr, ffd.cFileName);
 	    TtaFileUnlink (t_dir);
 	  }
       status = FindNextFile (hFindFile, &ffd);
@@ -1840,28 +1796,29 @@ static void Cacheinit ()
    HTCacheMode_setEnabled (NO);
 
 #else /* AMAYA_WWW_CACHE */
-  STRING strptr;
-  STRING cache_dir = NULL;
-  STRING real_dir = NULL;
-  STRING cache_lockfile;
-  int cache_size;
-  int cache_entry_size;
-  ThotBool cache_enabled;
-  ThotBool cache_locked;
-  ThotBool tmp_bool;
+  CharUnit* strptr;
+  CharUnit* real_dir = NULL;
+  CharUnit* cache_lockfile;
+  char      www_realDir[MAX_LENGTH];
+  char*     cache_dir = NULL;
+  int       cache_size;
+  int       cache_entry_size;
+  ThotBool  cache_enabled;
+  ThotBool  cache_locked;
+  ThotBool  tmp_bool;
 
 int i;
 
   /* activate cache? */
   strptr = TtaGetEnvString ("ENABLE_CACHE");
-  if (strptr && *strptr && ustrcasecmp (strptr, TEXT("yes")))
+  if (strptr && *strptr && StringCaseCompare (strptr, CUSTEXT("yes")))
     cache_enabled = NO;
   else
     cache_enabled = YES;
 
   /* cache protected documents? */
   strptr = TtaGetEnvString ("CACHE_PROTECTED_DOCS");
-  if (strptr && *strptr && !ustrcasecmp (strptr, TEXT("yes")))
+  if (strptr && *strptr && !StringCaseCompare (strptr, CUSTEXT("yes")))
     HTCacheMode_setProtected (YES);
   else
     HTCacheMode_setProtected (NO);
@@ -1870,56 +1827,55 @@ int i;
   strptr = TtaGetEnvString ("CACHE_DIR");
   if (strptr && *strptr) 
     {
-      real_dir = TtaAllocString (ustrlen (strptr) + ustrlen (CACHE_DIR_NAME) + 20);
-      ustrcpy (real_dir, strptr);
-	  if (*(real_dir + ustrlen (real_dir) - 1) != DIR_SEP)
-	    ustrcat (real_dir, DIR_STR);
+      real_dir = TtaAllocCUString (StringLength (strptr) + StringLength (CACHE_DIR_NAME) + 20);
+      StringCopy (real_dir, strptr);
+	  if (*(real_dir + StringLength (real_dir) - 1) != CUS_DIR_SEP)
+	    StringConcat (real_dir, CUS_DIR_STR);
     }
   else
     {
-      real_dir = TtaAllocString (ustrlen (TempFileDirectory)
-                               + ustrlen (CACHE_DIR_NAME) + 20);
-      usprintf (real_dir, TEXT("%s%s"), TempFileDirectory, CACHE_DIR_NAME);
+      real_dir = TtaAllocCUString (StringLength (TempFileDirectory) + StringLength (CACHE_DIR_NAME) + 20);
+      cus_sprintf (real_dir, CUSTEXT("%s%s"), TempFileDirectory, CACHE_DIR_NAME);
     }
 
   /* compatiblity with previous versions of Amaya: does real_dir
      include CACHE_DIR_NAME? If not, add it */
-  strptr = ustrstr (real_dir, CACHE_DIR_NAME);
+  strptr = StringSubstring (real_dir, CACHE_DIR_NAME);
   if (!strptr)
-  {
-    ustrcat (real_dir, CACHE_DIR_NAME);
-  }
+    StringConcat (real_dir, CACHE_DIR_NAME);
   else
     {
-      i = ustrlen (CACHE_DIR_NAME);
-	  if (strptr[i] != EOS)
-          ustrcat (real_dir, CACHE_DIR_NAME);
+      i = StringLength (CACHE_DIR_NAME);
+	  if (strptr[i] != CUS_EOS)
+          StringConcat (real_dir, CACHE_DIR_NAME);
     }
 
   /* convert the local cache dir into a file URL, as expected by
      libwww */
-  cache_dir = HTLocalToWWW (WideChar2ISO (real_dir), "file:");
+ 
+  cus2iso_strcpy (www_realDir, real_dir);
+
+  cache_dir = HTLocalToWWW (www_realDir, "file:");
 
   /* get the cache size (or use a default one) */
   strptr = TtaGetEnvString ("CACHE_SIZE");
   if (strptr && *strptr) 
-    cache_size = uctoi (strptr);
+    cache_size = custoi (strptr);
   else
     cache_size = DEFAULT_CACHE_SIZE;
 
   /* get the max cached file size (or use a default one) */
-  if (!TtaGetEnvInt (TEXT("MAX_CACHE_ENTRY_SIZE"), &cache_entry_size))
+  if (!TtaGetEnvInt ("MAX_CACHE_ENTRY_SIZE", &cache_entry_size))
     cache_entry_size = DEFAULT_MAX_CACHE_ENTRY_SIZE;
 
   if (cache_enabled) 
     {
       /* how to remove the lock? force remove it? */
-      cache_lockfile = TtaAllocString (ustrlen (real_dir) + 20);
-      ustrcpy (cache_lockfile, real_dir);
-      ustrcat (cache_lockfile, TEXT(".lock"));
+      cache_lockfile = TtaAllocCUString (StringLength (real_dir) + 20);
+      StringCopy (cache_lockfile, real_dir);
+      StringConcat (cache_lockfile, CUSTEXT(".lock"));
       cache_locked = FALSE;
-      if (TtaFileExist (cache_lockfile)
-	  && !(cache_locked = test_cachelock (cache_lockfile)))
+      if (TtaFileExist (cache_lockfile) && !(cache_locked = test_cachelock (cache_lockfile)))
 	{
 #ifdef DEBUG_LIBWWW
 	  fprintf (stderr, "found a stale cache, removing it\n");
@@ -1927,10 +1883,10 @@ int i;
 	  /* remove the lock and clean the cache (the clean cache 
 	     will remove all, making the following call unnecessary */
 	  /* little trick to win some memory */
-	  strptr = ustrrchr (cache_lockfile, TEXT('.'));
-	  *strptr = EOS;
+	  strptr = StrRChr (cache_lockfile, CUSTEXT('.'));
+	  *strptr = CUS_EOS;
 	  RecCleanCache (cache_lockfile);
-	  *strptr = '.';
+	  *strptr = CUSTEXT('.');
 	}
 
       if (!cache_locked) 
@@ -1938,12 +1894,11 @@ int i;
 	  /* initialize the cache if there's no other amaya
 	     instance running */
 	  HTCacheMode_setMaxCacheEntrySize (cache_entry_size);
-	  if (TtaGetEnvBoolean (TEXT("CACHE_EXPIRE_IGNORE"), &tmp_bool) 
-	      && tmp_bool)
+	  if (TtaGetEnvBoolean ("CACHE_EXPIRE_IGNORE", &tmp_bool) && tmp_bool)
 	    HTCacheMode_setExpires (HT_EXPIRES_IGNORE);
 	  else
 	    HTCacheMode_setExpires (HT_EXPIRES_AUTO);
-	  TtaGetEnvBoolean (TEXT("CACHE_DISCONNECTED_MODE"), &tmp_bool);
+	  TtaGetEnvBoolean ("CACHE_DISCONNECTED_MODE", &tmp_bool);
 	  if (tmp_bool)
 	    HTCacheMode_setDisconnected (HT_DISCONNECT_NORMAL);
 	  else
@@ -2007,49 +1962,59 @@ static void ProxyInit (void)
 static void ProxyInit ()
 #endif /* __STDC__ */
 {
-  STRING strptr;
-  STRING str = NULL;
-  STRING name;
-  ThotBool proxy_is_onlyproxy;
-
-  char*  strptrA;
+  CharUnit* strptr;
+  CharUnit* str = NULL;
+  char*     name;
+  ThotBool  proxy_is_onlyproxy;
+  char*     tmp = (char*) 0;
+  char*     strptrA;
 
   /* get the proxy settings from the thot.ini file */
   strptr = TtaGetEnvString ("HTTP_PROXY");
-  if (strptr && *strptr)
-    {
-      /* does the proxy env string has an "http://" prefix? */
-      if ( !ustrncasecmp( strptr, "http://", 7))
-	HTProxy_add ("http", WideChar2ISO (strptr));
-      else
-	{
-	  strptrA = (char *) TtaGetMemory (ustrlen (strptr) + 9);
-	  strcpy (strptrA, "http://");
-	  strcat (strptrA, WideChar2ISO (strptr));
-	  HTProxy_add ("http", strptrA);
-	  TtaFreeMemory (strptrA);
-	}
-    }
+  if (strptr) {
+     tmp = (char*) TtaGetMemory (StringLength (strptr) + 1);
+     cus2iso_strcpy (tmp, strptr);
+  }
+
+  if (strptr && *strptr) {
+     /* does the proxy env string has an "http://" prefix? */
+     if (!StringNCaseCompare (strptr, CUSTEXT("http://"), 7)) 
+        HTProxy_add ("http", tmp);
+     else {
+          strptrA = (char*) TtaGetMemory (ustrlen (strptr) + 9);
+          strcpy (strptrA, "http://");
+          strcat (strptrA, tmp);
+          HTProxy_add ("http", strptrA);
+          TtaFreeMemory (strptrA);
+	 }
+     TtaFreeMemory (tmp);
+     tmp = (char*) 0;
+  }
 
   /* get the no_proxy settings from the thot.ini file */
   strptr = TtaGetEnvString ("PROXYDOMAIN");
-  if (strptr && *strptr) 
-    {
-      str = TtaStrdup (strptr);          /* Get copy we can mutilate */
-      strptr = str;
-      strptrA = WideChar2ISO (strptr);
-      while ((name = ISO2WideChar(HTNextField (&strptrA))) != NULL) {
-	STRING portstr = ustrchr (name, TEXT(':'));
-	unsigned port=0;
-	if (portstr) { 
-	  *portstr++ = EOS;
-	  if (*portstr) port = (unsigned) uctoi (portstr);
-	}
-	/* Register it for all access methods */
-	HTNoProxy_add (WideChar2ISO (name), NULL, port);
-      }
-      TtaFreeMemory (str);
-    }
+  if (strptr) {
+     tmp = (char*) TtaGetMemory (StringLength (strptr) + 1);
+     cus2iso_strcpy (tmp, strptr);
+  }
+
+  if (strptr && *strptr) {
+     str = StringDuplicate (strptr);          /* Get copy we can mutilate */
+     strptr = str;
+     while ((name = HTNextField (&tmp)) != NULL) {
+           char* portstr = strchr (name, ':');
+           unsigned port=0;
+           if (portstr) { 
+              *portstr++ = EOS;
+              if (*portstr) port = (unsigned) atoi (portstr);
+		   }
+           /* Register it for all access methods */
+           HTNoProxy_add (name, NULL, port);
+	 }
+     TtaFreeMemory (str);
+     TtaFreeMemory (tmp);
+     tmp = (char*)0;
+  }
 
   /* how should we interpret the proxy domain list? */
   TtaGetEnvBoolean ("PROXYDOMAIN_IS_ONLYPROXY", &proxy_is_onlyproxy);
@@ -2070,18 +2035,18 @@ static void SafePut_init (void)
 static void SafePut_init ()
 #endif /* __STDC__ */
 {
-  STRING strptr;
-  STRING str = NULL;
-  char  *strptrA, *ptr;
-  char *domain;
+  CharUnit* strptr;
+  CharUnit* str = NULL;
+  char*     ptr, strptrA[MAX_LENGTH];
+  char*     domain;
 
   /* get the proxy settings from the thot.ini file */
   strptr = TtaGetEnvString ("SAFE_PUT_REDIRECT");
   if (strptr && *strptr)
     {
       /* Get copy we can mutilate */
-      str = TtaStrdup (strptr);          
-      strptrA = WideChar2ISO (str);
+      str = StringDuplicate (strptr);
+      cus2iso_strcpy (strptrA, strptr);
       /* convert to lowercase */
       ptr = strptrA;
       while (*ptr) 
@@ -2150,18 +2115,18 @@ static ThotBool SafePut_query (char *url)
   creates the Amaya client profile for libwww.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         AHTProfile_newAmaya (STRING AppName, STRING AppVersion)
+static void         AHTProfile_newAmaya (char* AppName, char* AppVersion)
 #else  /* __STDC__ */
 static void         AHTProfile_newAmaya (AppName, AppVersion)
-STRING AppName;
-STRING AppVersion;
+char* AppName;
+char* AppVersion;
 #endif /* __STDC__ */
 {
-   STRING strptr;
+   CharUnit* strptr;
 
    /* If the Library is not already initialized then do it */
    if (!HTLib_isInitialized ())
-      HTLibInit (WideChar2ISO (AppName), WideChar2ISO (AppVersion));
+      HTLibInit (AppName, AppVersion);
 
    if (!converters)
       converters = HTList_new ();
@@ -2198,13 +2163,11 @@ STRING AppVersion;
    AHTNetInit ();
 
    /* Set up the default set of Authentication schemes */
-   HTAA_newModule ("basic", HTBasic_generate, HTBasic_parse, NULL,
-		    HTBasic_delete);
+   HTAA_newModule ("basic", HTBasic_generate, HTBasic_parse, NULL, HTBasic_delete);
    /* activate MDA by defaul */
    strptr = TtaGetEnvString ("ENABLE_MDA");
-   if (!strptr || (strptr && *strptr && ustrcasecmp (strptr, TEXT("no"))))
-     HTAA_newModule ("digest", HTDigest_generate, HTDigest_parse, 
-		     HTDigest_updateInfo, HTDigest_delete);
+   if (!strptr || (strptr && *strptr && StringCaseCompare (strptr, CUSTEXT("no"))))
+     HTAA_newModule ("digest", HTDigest_generate, HTDigest_parse, HTDigest_updateInfo, HTDigest_delete);
 
    /* Get any proxy settings */
    ProxyInit ();
@@ -2323,7 +2286,7 @@ void                QueryInit ()
 void                QueryInit ()
 #endif
 {
-  STRING strptr;
+  CharUnit* strptr;
   int tmp_i;
   long tmp_l;
 
@@ -2370,7 +2333,7 @@ void                QueryInit ()
    /* Maximum number of simultaneous open sockets */
    strptr = TtaGetEnvString ("MAX_SOCKET");
    if (strptr && *strptr) 
-     tmp_i = uctoi (strptr);
+     tmp_i = custoi (strptr);
    else
      tmp_i = DEFAULT_MAX_SOCKET;
    HTNet_setMaxSocket (tmp_i);
@@ -2379,7 +2342,7 @@ void                QueryInit ()
    /* dns timeout */
    strptr = TtaGetEnvString ("DNS_TIMEOUT");
    if (strptr && *strptr) 
-     tmp_i = uctoi (strptr);
+     tmp_i = custoi (strptr);
    else
      tmp_i = DEFAULT_DNS_TIMEOUT;
    HTDNS_setTimeout (tmp_i);
@@ -2387,7 +2350,7 @@ void                QueryInit ()
    /* persistent connections timeout */
    strptr = TtaGetEnvString ("PERSIST_CX_TIMEOUT");
    if (strptr && *strptr) 
-     tmp_l = uctol (strptr);
+     tmp_l = uctol (strptr); 
    else
      tmp_l = DEFAULT_PERSIST_TIMEOUT;
    HTHost_setPersistTimeout (tmp_l);
@@ -2395,7 +2358,7 @@ void                QueryInit ()
    /* default timeout in ms */
    strptr = TtaGetEnvString ("NET_EVENT_TIMEOUT");
    if (strptr && *strptr) 
-     tmp_i = uctoi (strptr);
+     tmp_i = custoi (strptr);
    else
      tmp_i = DEFAULT_NET_EVENT_TIMEOUT;
    HTHost_setEventTimeout (tmp_i);
@@ -2909,7 +2872,7 @@ STRING        content_type;
    me->anchor = (HTParentAnchor *) HTAnchor_findAddress (WideChar2ISO (ref));
    TtaFreeMemory (ref);
    
-   TtaGetEnvBoolean (TEXT("CACHE_DISCONNECTED_MODE"), &bool_tmp);
+   TtaGetEnvBoolean ("CACHE_DISCONNECTED_MODE", &bool_tmp);
    if (!bool_tmp && (mode & AMAYA_NOCACHE))
       HTRequest_setReloadMode (me->request, HT_CACHE_FLUSH);
 

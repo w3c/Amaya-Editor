@@ -63,26 +63,26 @@ ThotBool		    origName;
 #endif /* __STDC__ */
 
 {
-   PtrElement          pEl;
-   CharUnit*           text;
+   PtrElement       pEl;
+   char*            text;
 
    text = TtaGetMemory (MAX_TXT_LEN);
 
    if (pAb == NULL)
-      StringCopy (text, CUSTEXT(" "));
+      strcpy (text, " ");
    else
      {
 	pEl = pAb->AbElement;
 	/* copie le nom du type d'element structure auquel appartient la boite */
 	if (origName)
-	   StringCopy (text, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrOrigName);
+	   strcpy (text, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrOrigName);
 	else
-	   StringCopy (text, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
+	   strcpy (text, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
 	if (pAb->AbPresentationBox)
 	  /* Ajoute le nom du type de boite de presentation */
 	  {
-	     StringConcat (text, CUSTEXT("."));
-	     StringConcat (text, pAb->AbPSchema->PsPresentBox[pAb->AbTypeNum - 1].PbName);
+	     strcat (text, ".");
+	     strcat (text, pAb->AbPSchema->PsPresentBox[pAb->AbTypeNum - 1].PbName);
 	  }
      }
    return (text);

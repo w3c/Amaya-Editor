@@ -80,11 +80,11 @@ BinFile             pivFile;
 {
    int                 version;
 
-   TtaWriteByte (pivFile, (CHAR_T) C_PIV_VERSION);
-   TtaWriteByte (pivFile, (CHAR_T) C_PIV_VERSION);
+   TtaWriteByte (pivFile, (char) C_PIV_VERSION);
+   TtaWriteByte (pivFile, (char) C_PIV_VERSION);
    /* Version courante de PIVOT: 5 */
    version = 5;
-   TtaWriteByte (pivFile, (CHAR_T) version);
+   TtaWriteByte (pivFile, (char) version);
 }
 
 /*----------------------------------------------------------------------
@@ -99,8 +99,8 @@ int                 n;
 
 #endif /* __STDC__ */
 {
-   TtaWriteByte (pivFile, (CHAR_T) (n / 256));
-   TtaWriteByte (pivFile, (CHAR_T) (n % 256));
+   TtaWriteByte (pivFile, (char) (n / 256));
+   TtaWriteByte (pivFile, (char) (n % 256));
 }
 
 /*----------------------------------------------------------------------

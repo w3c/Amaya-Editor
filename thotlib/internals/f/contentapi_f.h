@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern void TtaSetTextContent ( Element element,
-                                STRING content,
+                                char* content,
                                 Language language,
                                 Document document );
 extern void InsertText ( PtrElement pEl,
@@ -74,7 +74,7 @@ extern int TtaGetPageView ( Element pageElement );
 #else /* __STDC__ */
 
 extern void TtaSetTextContent (/* Element element,
-                                  STRING content,
+                                  char* content,
                                   Language language,
                                   Document document */);
 extern void InsertText (/* PtrElement pEl,

@@ -52,7 +52,7 @@ static CHAR_T       WIN_title[MAX_NAME_LENGTH + 2];
 
 extern WNDPROC      lpfnTextZoneWndProc ;
 
-CHAR_T              WIN_buffMenu[MAX_TXT_LEN];
+char                WIN_buffMenu[MAX_TXT_LEN];
 
 #ifdef __STDC__
 extern LRESULT CALLBACK textZoneProc (HWND, UINT, WPARAM, LPARAM);
@@ -68,7 +68,7 @@ static PtrSSchema   AttrStruct[MAX_MENU * 2];
 static int          AttrNumber[MAX_MENU * 2];
 static ThotBool     AttrOblig[MAX_MENU * 2];
 static ThotBool     AttrEvent[MAX_MENU* 2];
-static CHAR_T       TextAttrValue[LgMaxAttrText];
+static char         TextAttrValue[LgMaxAttrText];
 static PtrSSchema   SchCurrentAttr = NULL;
 static int          EventMenu[MAX_FRAME];
 static int          NumCurrentAttr = 0;
@@ -170,11 +170,11 @@ PtrAttribute        currAttr;
    CHAR_T              bufMenu[MAX_TXT_LEN];
    int                 i;
 #endif /* _WINDOWS */
-   CHAR_T              string[MAX_TXT_LEN];
-   STRING              ptr;
+   char                string[MAX_TXT_LEN];
+   char*               ptr;
    Language            language;
    Name                languageValue;
-   CHAR_T                Lab[200];
+   CHAR_T              Lab[200];
    PtrAttribute        pHeritAttr;
    PtrElement          pElAttr;
    int                 defItem, nbItem, nbLanguages, firstLanguage, length;
@@ -204,18 +204,18 @@ PtrAttribute        currAttr;
    firstLanguage = TtaGetFirstUserLanguage ();
    for (language = firstLanguage; language < nbLanguages; language++)
      {
-       ustrcpy (string, TtaGetLanguageName (language));
-       length = ustrlen (string);
+       strcpy (string, TtaGetLanguageName (language));
+       length = strlen (string);
        if (length > 0)
 	 {
 	   if (defItem < 0 && languageValue[0] != EOS)
-	     if (ustrcasecmp(TtaGetLanguageCode(language), languageValue) == 0)
+	     if (strcasecmp (TtaGetLanguageCode (language), languageValue) == 0)
 	       {
 		 defItem = nbItem;
-		 ustrcpy (languageValue, string);
+		 strcpy (languageValue, string);
 	       }
 	   nbItem++;
-	   ustrcpy (ptr, string);
+	   strcpy (ptr, string);
 	   ptr += length + 1;
 	 }
      }
@@ -225,8 +225,6 @@ PtrAttribute        currAttr;
 #     ifndef _WINDOWS
       TtaNewTextForm (NumSelectLanguage, NumFormLanguage, TtaGetMessage (LIB, TMSG_LANGUAGE), 30, 1, FALSE);
       TtaSetTextForm (NumFormLanguage, languageValue);
-#     else  /* _WINDOWS */
-      /* Do something for Windows */
 #     endif /* !_WINDOWS */
    } else {
 #         ifndef _WINDOWS 
@@ -872,7 +870,7 @@ int                 view;
                /* boucle sur les valeurs possibles de l'attribut */
                while (val < pAttr1->AttrNEnumValues) {
 #                    ifdef _WINDOWS 
-                     i = ustrlen (pAttr1->AttrEnumValue[val]) + 1;	/* for 'B' and EOS */
+                     i = strlen (pAttr1->AttrEnumValue[val]) + 1;	/* for 'B' and EOS */
 #                    else  /* !_WINDOWS */
                      i = ustrlen (pAttr1->AttrEnumValue[val]) + 2;	/* for 'B' and EOS */
 #                    endif /* _WINDOWS */
@@ -881,7 +879,7 @@ int                 view;
                         bufMenu[lgmenu] = 'B';
                         ustrcpy (&bufMenu[lgmenu + 1], pAttr1->AttrEnumValue[val]);
 #                       else  /* _WINDOWS */
-                        ustrcpy (&WIN_buffMenu[lgmenu], pAttr1->AttrEnumValue[val]);
+                        strcpy (&WIN_buffMenu[lgmenu], pAttr1->AttrEnumValue[val]);
 #                       endif /* _WINDOWS */
                         val++;
 					 } 
@@ -1518,7 +1516,7 @@ STRING              valtext;
       break;
     case NumMenuAttrText:
       /* valeur d'un attribut textuel */
-      ustrncpy (TextAttrValue, valtext, LgMaxAttrText);
+      strncpy (TextAttrValue, valtext, LgMaxAttrText);
       act = 0;
       break;
     case NumMenuAttrEnum:

@@ -76,7 +76,7 @@
 #include "xbmhandler_f.h"
 #include "xpmhandler_f.h"
 
-static STRING   PictureMenu;
+static char*    PictureMenu;
 static Pixmap   PictureLogo;
 static ThotGC   tiledGC;
 
@@ -1315,8 +1315,8 @@ char*              buffer;
    while (i < HandlersCounter)
      {
 	item = PictureHandlerTable[i].GUI_Name;
-	ustrcpy (buffer + index, item);
-	index += ustrlen (item) + 1;
+	strcpy (buffer + index, item);
+	index += strlen (item) + 1;
 	i++;
      }
    buffer = PictureMenu;
@@ -2095,24 +2095,24 @@ PictureScaling      picPresent;
    It returns the number of handlers in count.             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GetPictureHandlersList (int *count, STRING buffer)
+void                GetPictureHandlersList (int *count, char* buffer)
 #else  /* __STDC__ */
 void                GetPictureHandlersList (count, buffer)
 int                *count;
-STRING              buffer;
+char*               buffer;
 
 #endif /* __STDC__ */
 {
    int                 i = 0;
    int                 index = 0;
-   STRING              item;
+   char*               item;
 
    *count = HandlersCounter;
    while (i < HandlersCounter)
      {
 	item = PictureHandlerTable[i].GUI_Name;
-	ustrcpy (buffer + index, item);
-	index += ustrlen (item) + 1;
+	strcpy (buffer + index, item);
+	index += strlen (item) + 1;
 	i++;
      }
    buffer = PictureMenu;

@@ -8,20 +8,20 @@
 
 extern void ConfigInit ( void );
 extern void TtaConfigReadConfigFiles ( CharUnit* aSchemaPath );
-extern int ConfigMakeDocTypeMenu ( char* BufMenu,
+extern int ConfigMakeDocTypeMenu ( CharUnit* BufMenu,
                                    int *lgmenu,
                                    ThotBool doc );
-extern void TtaConfigSSchemaExternalName ( char* nameUser,
-                                           char* nameSchema,
+extern void TtaConfigSSchemaExternalName ( CharUnit* nameUser,
+                                           CharUnit* nameSchema,
                                            int Typ );
-extern void ConfigSSchemaInternalName ( char* nameUser,
-                                        char* nameSchema,
+extern void ConfigSSchemaInternalName ( CharUnit* nameUser,
+                                        CharUnit* nameSchema,
                                         ThotBool Doc );
 extern int ConfigMakeMenuPres ( CharUnit* schema,
                                 char* BufMenu );
 extern void ConfigGetPSchemaName ( int choix,
                                    char* schpres );
-extern int ConfigMakeImportMenu ( char* BufMenu );
+extern int ConfigMakeImportMenu ( CharUnit* BufMenu );
 extern int ConfigMakeMenuExport ( CharUnit* schema,
                                   char* BufMenu );
 extern void ConfigGetExportSchemaName ( int choix,
@@ -81,20 +81,20 @@ extern ThotBool ConfigDefaultTypoSchema ( PtrSSchema pSS,
 
 extern void ConfigInit (/* void */);
 extern void TtaConfigReadConfigFiles (/* CharUnit* aSchemaPath */);
-extern int ConfigMakeDocTypeMenu (/* char* BufMenu,
+extern int ConfigMakeDocTypeMenu (/* CharUnit* BufMenu,
                                      int *lgmenu,
                                      ThotBool doc */);
-extern void TtaConfigSSchemaExternalName (/* char* nameUser,
-                                             char* nameSchema,
+extern void TtaConfigSSchemaExternalName (/* CharUnit* nameUser,
+                                             CharUnit* nameSchema,
                                              int Typ */);
-extern void ConfigSSchemaInternalName (/* char* nameUser,
-                                          char* nameSchema,
+extern void ConfigSSchemaInternalName (/* CharUnit* nameUser,
+                                          CharUnit* nameSchema,
                                           ThotBool Doc */);
 extern int ConfigMakeMenuPres (/* CharUnit* schema,
                                   char* BufMenu */);
 extern void ConfigGetPSchemaName (/* int choix,
                                      char* schpres */);
-extern int ConfigMakeImportMenu (/* char* BufMenu */);
+extern int ConfigMakeImportMenu (/* CharUnit* BufMenu */);
 extern int ConfigMakeMenuExport (/* CharUnit* schema,
                                     char* BufMenu */);
 extern void ConfigGetExportSchemaName (/* int choix,

@@ -55,8 +55,8 @@ struct PatternList
 
 struct Langue_Ctl
 {
-  CharUnit           LangName[MAX_NAME_LENGTH];      /* Nom de la langue                           */
-  CharUnit           LangCode[MAX_NAME_LENGTH];      /* Code de la langue (RFC1766)                */
+  char               LangName[MAX_NAME_LENGTH];      /* Nom de la langue                           */
+  char               LangCode[MAX_NAME_LENGTH];      /* Code de la langue (RFC1766)                */
   char               LangAlphabet;                   /* Alphabet associe a la langue               */
   CHAR_T             LangPrincipal[MAX_NAME_LENGTH]; /* Name du dictionnaire principal             */
   CHAR_T             LangSecondary[MAX_NAME_LENGTH]; /* Name du dictionnaire secondaire            */

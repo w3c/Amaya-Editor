@@ -52,15 +52,15 @@ PtrSSchema          pSS;
 
 #endif /* __STDC__ */
 {
-   CharUnit            schemaName[MAX_NAME_LENGTH];
-   PtrEventsSet        schemaActions;
+   char             schemaName[MAX_NAME_LENGTH];
+   PtrEventsSet     schemaActions;
 
-   StringCopy (schemaName, pSS->SsName);
+   strcpy (schemaName, pSS->SsName);
    pSS->SsActionList = NULL;
    if (pSS->SsName[0] != EOS)
      {
 	schemaActions = SchemasEvents;
-	while (schemaActions != NULL && StringCompare (schemaActions->EvSName, schemaName) != 0)
+	while (schemaActions != NULL && strcmp (schemaActions->EvSName, schemaName) != 0)
 	   schemaActions = schemaActions->EvSNext;
 	if (schemaActions != NULL)
 	   pSS->SsActionList = schemaActions;
@@ -144,13 +144,13 @@ Proc                doIt;
    We don't support adding a new action currently !!!
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                TteAddUserAction (STRING actionName, UserProc procedure,
+int                TteAddUserAction (char* actionName, UserProc procedure,
                                       void *arg)
 
 #else  /* __STDC__ */
 int                TteAddUserAction (actionName, procedure, arg)
-STRING              actionName;
-UserProc            procedure;
+char*              actionName;
+UserProc           procedure;
 void               *arg;
 
 #endif /* __STDC__ */
@@ -165,7 +165,7 @@ void               *arg;
     */
    if (actionName == NULL)
       return(-1);
-   lg = ustrlen (actionName);
+   lg = strlen (actionName);
    if (lg == 0) return(-1);
 
    pAction = ActionList;
@@ -173,12 +173,12 @@ void               *arg;
      {
 	/* following actions are treated */
 	newAction = pAction->ActNext;
-	while (newAction != NULL && ustrcmp (actionName, pAction->ActName) != 0)
+	while (newAction != NULL && strcmp (actionName, pAction->ActName) != 0)
 	  {
 	     pAction = pAction->ActNext;
 	     newAction = newAction->ActNext;
 	  }
-	if (ustrcmp (actionName, pAction->ActName) == 0)
+	if (strcmp (actionName, pAction->ActName) == 0)
 	   newAction = pAction;
      }
    else

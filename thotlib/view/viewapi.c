@@ -950,11 +950,11 @@ View                view;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-View                TtaGetViewFromName (Document document, STRING viewName)
+View                TtaGetViewFromName (Document document, char* viewName)
 #else  /* __STDC__ */
 View                TtaGetViewFromName (document, viewName)
 Document            document;
-STRING              viewName;
+char*               viewName;
 #endif /* __STDC__ */
 {
    View                view;
