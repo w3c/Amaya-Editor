@@ -1562,6 +1562,7 @@ ThotBool            completeCreator;
   int                 lqueue, pqueue;
   ThotBool            ok, stop, finish, volok;
   ThotBool            complete;
+  FunctionType        funct;
 
   pAbbCreated = NULL;
   pAb = NULL;
@@ -1584,17 +1585,32 @@ ThotBool            completeCreator;
     if (pEl->ElAbstractBox[viewIndex] == NULL)
       ok = FALSE;
   /* on ne cree pas de pave fils pour un element holophraste' ou une feuille */
+  funct = pRCre->PrPresFunction;
   if (ok)
     if (pEl->ElHolophrast || pEl->ElTerminal)
-      if (pRCre->PrPresFunction == FnCreateFirst || pRCre->PrPresFunction == FnCreateLast)
+      if (funct == FnCreateFirst || funct == FnCreateLast)
 	ok = FALSE;
   /* on ne cree pas de pave de presentation qui soit un frere ou le pere du */
   /* pave racine de la vue. */
   if (ok)
-    if (pEl->ElAbstractBox[viewIndex]->AbEnclosing == NULL
-	&& (pRCre->PrPresFunction == FnCreateBefore || pRCre->PrPresFunction == FnCreateAfter ||
-	    pRCre->PrPresFunction == FnCreateWith || pRCre->PrPresFunction == FnCreateEnclosing))
-      ok = FALSE;
+    if (pEl->ElAbstractBox[viewIndex]->AbEnclosing == NULL)
+       switch (funct)
+	 {
+	 case FnCreateBefore:
+	   funct = FnCreateFirst;
+	   break;
+	 case FnCreateAfter:
+	   funct = FnCreateLast;
+	   break;
+	 case FnCreateWith:
+           ok = FALSE;
+	   break;
+	 case FnCreateEnclosing:
+           ok = FALSE;
+	   break;
+	 default:
+	   break;
+	 }
   /* si c'est une boite de haut de page et qu'il s'agit de la derniere */
   /* marque de page du document, on ne cree pas la boite */
   if (ok)
@@ -1791,7 +1807,7 @@ ThotBool            completeCreator;
 	   pAbb1 = pEl->ElAbstractBox[viewIndex];
 	   /* pAbb1: 1er pave de l'element createur */
 	   /* chaine le pave cree */
-	   switch (pRCre->PrPresFunction)
+	   switch (funct)
 	     {
 	     case FnCreateFirst:
 	       pAb->AbSelected = FALSE;
@@ -2288,8 +2304,8 @@ ThotBool            completeCreator;
 		     pEl->ElAbstractBox[viewIndex] = pAbbCreated;
 		     pAbbCreated->AbPresentationBox = FALSE;
 		     /* cree le pave de presentation */
-		     pAbb1 = CrAbsBoxesPres (pEl, pDoc, pR, pSS, NULL, viewNb, pSchP,
-					     TRUE, TRUE);
+		     pAbb1 = CrAbsBoxesPres (pEl, pDoc, pR, pSS, NULL, viewNb,
+					     pSchP, TRUE, TRUE);
 		     /* restaure le pointeur de pave de l'element */
 		     pEl->ElAbstractBox[viewIndex] = pAbbNext;
 		   }
@@ -2607,11 +2623,11 @@ PtrPRule            pRule;
 	   /* si la regle de creation possede l'indication de repetition */
 	   /* on appelle la procedure de creation systematiquement */
 	   if ((head
-		&& (pRule->PrPresFunction == FnCreateBefore
-		    || pRule->PrPresFunction == FnCreateFirst))
+		&& (pRule->PrPresFunction == FnCreateBefore ||
+		    pRule->PrPresFunction == FnCreateFirst))
 	       || (!head
-		   && (pRule->PrPresFunction == FnCreateAfter
-		       || pRule->PrPresFunction == FnCreateLast)))
+		   && (pRule->PrPresFunction == FnCreateAfter ||
+		       pRule->PrPresFunction == FnCreateLast)))
 	     {
 		pAbb = CrAbsBoxesPres (pAb->AbElement, pDoc, pRule,
 			      pSS, pAttr, pAb->AbDocView, pSP, FALSE, TRUE);
@@ -3193,8 +3209,9 @@ PtrAbstractBox      pNewAbbox;
 		/* le pave de presentation a ete cree */
 		if (pRuleCr->PrPresFunction == FnCreateBefore ||
 		    pRuleCr->PrPresFunction == FnCreateEnclosing)
-		   /* il a ete cree devant */
-		   if (*pAbbReturn == pNewAbbox)
+		  if (pEl->ElParent != NULL)
+		    /* il a ete cree devant */
+		    if (*pAbbReturn == pNewAbbox)
 		      /* on s'appretait a retourner */
 		      /* un pointeur sur le pave createur */
 		      /* on retourne un pointeur sur la pave cree, qui est */
@@ -4945,12 +4962,14 @@ ThotBool           *complete;
 			   switch (pRule->PrPresFunction)
 			     {
 			     case FnCreateBefore:
-			       if (!forward && pAbbPres != NULL)
+			       if (!forward && pAbbPres != NULL &&
+				   pEl->ElParent)
 				 pAbbReturn = pAbbPres;
 			       break;
 			     case FnCreateAfter:
 			     case FnCreateWith:
-			       if (forward && pAbbPres != NULL)
+			       if (forward && pAbbPres != NULL &&
+				   pEl->ElParent)
 				 pAbbReturn = pAbbPres;
 			       break;
 			     case FnCreateEnclosing:
