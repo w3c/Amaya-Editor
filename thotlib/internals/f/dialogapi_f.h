@@ -12,20 +12,6 @@ extern void TtaInitDialogueWindows ( char *server,
                                      char *txtOK,
                                      char *txtRAZ,
                                      char *txtDone );
-extern void TtaInitDialogueTranslations (XtTranslations translations) ;
-#ifdef WWW_XWINDOWS
-extern void TtaInitDialogue (char *server, 
-                             char *txtOK, 
-                             char *txtRAZ, 
-                             char *txtDone, 
-                             XtAppContext *app_context, 
-                             Display **Dp) ;
-#else  /* WWW_XWINDOWS */
-extern void TtaInitDialogueWindows (char *server, 
-                                    char *txtOK, 
-                                    char *txtRAZ, 
-                                    char *txtDone) ;
-#endif /* WWW_XWINDOWS */
 extern void TtaChangeDialogueFonts ( char *menufont,
                                      char *formfont );
 extern int TtaGetReferencesBase ( int number );
@@ -172,20 +158,6 @@ extern void TtaAbortShowDialogue ( void );
 
 extern void DebugBreak (/* void */);
 extern void MyWarningHandler (/* void */);
-extern void TtaInitDialogueTranslations (/*XtTranslations translations*/) ;
-#ifdef WWW_XWINDOWS
-extern void TtaInitDialogue (/*char *server, 
-                             char *txtOK, 
-                             char *txtRAZ, 
-                             char *txtDone, 
-                             XtAppContext *app_context, 
-                             Display **Dp*/) ;
-#else  /* WWW_XWINDOWS */
-extern void TtaInitDialogueWindows (/*char *server, 
-                                    char *txtOK, 
-                                    char *txtRAZ, 
-                                    char *txtDone*/) ;
-#endif /* WWW_XWINDOWS */
 extern void TtaInitDialogueWindows (/* char *server,
                                        char *txtOK,
                                        char *txtRAZ,

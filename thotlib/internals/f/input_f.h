@@ -11,8 +11,6 @@ extern void ThotInput ( int frame,
                         unsigned int nb,
                         int PicMask,
                         int key );
-extern XtTranslations InitTranslations (char *appliname) ;
-extern void XCharTranslation (XEvent * event) ;
 
 #else /* __STDC__ */
 
@@ -21,8 +19,6 @@ extern void ThotInput (/* int frame,
                           unsigned int nb,
                           int PicMask,
                           int key */);
-extern XtTranslations InitTranslations (/*char *appliname*/) ;
-extern void XCharTranslation (/*XEvent * event*/) ;
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
