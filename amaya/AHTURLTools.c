@@ -33,7 +33,9 @@ typedef struct _HTURI
 
 #ifdef _WINDOWS
 #define TMPDIR "TMP"
+#ifndef PATH_MAX
 #define PATH_MAX MAX_PATH
+#endif
 #define stat _stat
 #define uint64_t unsigned __int64
 #define getpid _getpid
