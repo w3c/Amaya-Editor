@@ -292,7 +292,7 @@ int WIN_Activate_Request (HTRequest * request, HTAlertOpcode op,
        if (!(me->output)
 	   && (me->output != stdout) 
 	   && me->outputfile
-	   &&  (me->output = TtaWriteOpen (me->outputfile) == NULL))
+	   &&  ((me->output = TtaWriteOpen (me->outputfile)) == NULL))
        {
 	 /* the request is associated with a file */
 	 me->outputfile[0] = EOS;	/* file could not be opened */

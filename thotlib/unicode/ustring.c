@@ -382,9 +382,49 @@ CHARSET TtaGetCharset (char *charsetname)
 CHARSET TtaGetLocaleCharset ()
 {
 #ifdef _WINDOWS
-  /* TODO : if this function is used on window, write the code to detect
-     the local charset ... */
-  LocaleSystemCharset = WINDOWS_1252;
+  UINT cp;
+   if (LocaleSystemCharset == UNSUPPORTED_CHARSET)
+    {
+    cp = GetOEMCP ();
+    switch (cp)
+	{
+    case 437: /* Latin 1 */
+    case 850:
+    case 860:
+    case 863:
+    case 861:
+	  LocaleSystemCharset = WINDOWS_1252;
+	  break;
+    case 708:
+    case 709:
+    case 710:
+    case 720: /* Arabic */
+    case 864:
+      LocaleSystemCharset = WINDOWS_1256;
+	  break;
+    case 737: /* Greek */
+    case 869:
+	  LocaleSystemCharset = WINDOWS_1253;
+	  break;
+    case 775: /* Baltic */
+    case 852:
+    case 865:
+	  LocaleSystemCharset = WINDOWS_1257;
+	  break;
+    case 855: /* Cyrillic */
+    case 866:
+	  LocaleSystemCharset = WINDOWS_1251;
+	  break;
+    case 857: /* Turkish */
+	  LocaleSystemCharset = WINDOWS_1254;
+	  break;
+    case 862: /* Hebrew */
+	  LocaleSystemCharset = WINDOWS_1255;
+	  break;
+    default:
+      LocaleSystemCharset = WINDOWS_1252;
+	}
+   }
 #else /* _WINDOWS */
   if (LocaleSystemCharset == UNSUPPORTED_CHARSET)
     {
