@@ -1155,7 +1155,6 @@ DBG(fprintf(stderr, "   Moving document locally : to %s\n", tempfile);)
 	     if (!UserAnswer)
 	       {
 		  /* the user has to change the name of the saving file */
-		  TtaSetDialoguePosition ();
 		  SaveDocumentAs(SavingDocument, 1);
 		  return;
 	       }
@@ -1198,7 +1197,6 @@ DBG(fprintf(stderr, "   Saving document locally from net to %s\n", tempfile);)
 	     if (!UserAnswer)
 	       {
 		  /* the user has to change the name of the saving file */
-		  TtaSetDialoguePosition ();
 		  SaveDocumentAs(SavingDocument, 1);
 		  return;
 	       }
@@ -1252,11 +1250,8 @@ DBG(fprintf(stderr, "   Uploading document to net %s\n", tempfile);)
 	res = SaveDocumentThroughNet (SavingDocument, 1, TRUE, with_images);
 
 	if (res)
-	  {
-	    /* restore all urls */
-	    TtaSetDialoguePosition ();
-	    SaveDocumentAs(SavingDocument, 1);
-	  }
+	  /* restore all urls */
+	  SaveDocumentAs(SavingDocument, 1);
 	else
 	  {
 	     TtaSetStatus (SavingDocument, 1, TtaGetMessage (AMAYA, AM_SAVED), tempfile);
@@ -1295,10 +1290,7 @@ DBG(fprintf(stderr, "   Copying remote document to remote URL %s\n", tempfile);)
 	res = SaveDocumentThroughNet (SavingDocument, 1, TRUE, with_images);
 
 	if (res)
-	  {
-	     TtaSetDialoguePosition ();
-	     SaveDocumentAs(SavingDocument, 1);
-	  }
+	  SaveDocumentAs(SavingDocument, 1);
 	else
 	  {
 	     TtaSetStatus (SavingDocument, 1, TtaGetMessage (AMAYA, AM_SAVED), tempfile);
@@ -1344,7 +1336,7 @@ char               *pathname;
    TtaSetTextForm (BaseDialog + NameSave, pathname);
    TtaExtractName (pathname, tempdir, ObjectName);
    TtaSetDialoguePosition ();
-   TtaShowDialogue (BaseDialog + SaveForm, TRUE);
+   TtaShowDialogue (BaseDialog + SaveForm, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -1375,7 +1367,7 @@ void                DoSaveObjectAs ()
 	if (res)
 	  {
 	     TtaSetDialoguePosition ();
-	     TtaShowDialogue (BaseDialog + SaveForm, TRUE);
+	     TtaShowDialogue (BaseDialog + SaveForm, FALSE);
 	     return;
 	  }
 	SavingObject = 0;
@@ -1391,7 +1383,7 @@ void                DoSaveObjectAs ()
 	  {
 	     /* the user has to change the name of the saving file */
 	     TtaSetDialoguePosition ();
-	     TtaShowDialogue (BaseDialog + SaveForm, TRUE);
+	     TtaShowDialogue (BaseDialog + SaveForm, FALSE);
 	     return;
 	  }
      }

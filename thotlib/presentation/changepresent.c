@@ -1895,13 +1895,20 @@ int                 viewToApply;
 	   pPRule = pRS;
 	}
 
-   if (!found && RuleSetIn (PtBackground, rules) && pEl->ElParent)
+   if (!found && pEl->ElParent)
      {
-       RuleSetClr (rulesS);
-       RuleSetPut (rulesS, PtFillPattern);
-       RuleSetPut (rulesS, PtBackground);
-       RuleSetPut (rulesS, PtFunction);
-       RemoveSpecifPres (pEl->ElParent, pDoc, rulesS, viewToApply);
+       if (RuleSetIn (PtBackground, rules))
+	 {
+	   RuleSetClr (rulesS);
+	   RuleSetPut (rulesS, PtBackground);
+	   RemoveSpecifPres (pEl->ElParent, pDoc, rulesS, viewToApply);
+	 }
+       else if (RuleSetIn (PtForeground, rules))
+	 {
+	   RuleSetClr (rulesS);
+	   RuleSetPut (rulesS, PtForeground);
+	   RemoveSpecifPres (pEl->ElParent, pDoc, rulesS, viewToApply);
+	 }
      }
 }
 

@@ -373,7 +373,6 @@ EXCEPT
 #ifndef COUGAR
 	Langue:         Invisible;
 #endif
-	Style\240:	Invisible;
 	InternalLink:	Invisible;
 	WidthElement:	NewWidth;
 	IntWidthPercent:Invisible;

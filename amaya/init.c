@@ -1469,12 +1469,20 @@ char               *target;
 	/* remove the prefix file: */
 	if (src[5] == EOS)
 	   strcpy (target, DIR_STR);
+	else if (src[0] == '~')
+	  {
+	    /* replace ~ */
+	    s = (char *) TtaGetEnvString ("HOME");
+	    strcpy (target, s);
+	    strcat (target, &src[5]);
+	  }
 	else
 	   strcpy (target, &src[5]);
 	change = TRUE;
      }
    else
       strcpy (target, src);
+
    return (change);
 }
 
@@ -1816,6 +1824,11 @@ char               *data;
        /* *********SaveConfirm********* */
        UserAnswer = (val == 1);
        TtaDestroyDialogue (BaseDialog + ConfirmSave);
+       if (!UserAnswer)
+	 {
+	   SavingDocument = 0;
+	   SavingObject = 0;
+	 }
        break;
        
      case AttrHREFForm:
