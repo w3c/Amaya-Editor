@@ -533,7 +533,7 @@ static void CallbackCSS (int ref, int typedata, char *data)
 		    {
 		      j = strlen (localname);
 		      /* the document style order */
-		      scanf (&ptr[j], "%d", &sty);
+		      sscanf (&ptr[j], "%d", &sty);
 		      ptr[j] = EOS;
 		    }
 		  found = TRUE;
@@ -573,7 +573,7 @@ static void CallbackCSS (int ref, int typedata, char *data)
 		  if (pInfo)
 		    {
 		      pInfo->PiEnabled = TRUE;
-		      EnableStyleElement (CSSdocument);
+		      EnableStyleElement (CSSdocument, CSSlink[sty]);
 		    }
 		}
 	      else

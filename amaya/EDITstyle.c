@@ -259,7 +259,7 @@ ThotBool ChangeStyle (NotifyElement * event)
   DeleteStyle
   the STYLE element will be deleted in the document HEAD.
   ----------------------------------------------------------------------*/
-ThotBool DeleteStyle (NotifyElement * event)
+ThotBool DeleteStyle (NotifyElement *event)
 {
   RemoveStyleSheet (NULL, event->document, TRUE, TRUE, event->element);
   return FALSE;  /* let Thot perform normal operation */
@@ -270,30 +270,36 @@ ThotBool DeleteStyle (NotifyElement * event)
   EnableStyleElement
   the STYLE element must be reparsed.
   ----------------------------------------------------------------------*/
-void EnableStyleElement (Document doc)
+void EnableStyleElement (Document doc, Element el)
 {
-  Element               el;
   ElementType		elType;
   char                 *name;
   char                 *buffer;
+  ThotBool            loadcss;
 
-  el = TtaGetMainRoot (doc);
-  elType = TtaGetElementType (el);
-  name = TtaGetSSchemaName (elType.ElSSchema);
+  /* check if we have to load CSS */
+  TtaGetEnvBoolean ("LOAD_CSS", &loadcss);
+  if (!loadcss)
+    return;
+
+  if (el)
+    {
+      elType = TtaGetElementType (el);
+      name = TtaGetSSchemaName (elType.ElSSchema);
+      /* if it's a SVG document, remove the style defined in the SVG DTD */
+      if ((!strcmp (name, "HTML") && elType.ElTypeNum == HTML_EL_STYLE_)
 #ifdef _SVG
-   /* if it's a SVG document, remove the style defined in the SVG DTD */
-   if (!strcmp (name, "SVG"))
-     elType.ElTypeNum = SVG_EL_style__;
-   else
+	  || (!strcmp (name, "SVG") && elType.ElTypeNum == SVG_EL_style__)
 #endif
-     elType.ElTypeNum = HTML_EL_STYLE_;
-   el = TtaSearchTypedElement (elType, SearchForward, el);
-   if (el)
-     {
-       /* get the style element in the document head */
-       buffer = GetStyleContents (el);
-       ApplyCSSRules (el, buffer, doc, FALSE);
-     }
+	  )
+	{
+	  /* get the style element in the document head */
+	  buffer = GetStyleContents (el);
+	  ReadCSSRules (doc, NULL, buffer, NULL, TtaGetElementLineNumber (el),
+			FALSE, el);
+	  TtaFreeMemory (buffer);
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
