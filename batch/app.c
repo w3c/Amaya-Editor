@@ -1188,12 +1188,12 @@ static void WriteChar (FILE *Hfile, unsigned char ch)
 /*----------------------------------------------------------------------
    WriteName                                                       
   ----------------------------------------------------------------------*/
-static void WriteName (FILE * Hfile, Name n)
+static void WriteName (FILE *Hfile, char *n)
 {
    int                 i;
 
    i = 0;
-   while (n[i] != '\0')
+   while (n[i] != EOS)
      {
 	WriteChar (Hfile, n[i]);
 	i++;
@@ -1205,7 +1205,7 @@ static void WriteName (FILE * Hfile, Name n)
   ----------------------------------------------------------------------*/
 static void WriteRuleName (FILE * Hfile, int r)
 {
-   if (pSSchema->SsRule->SrElem[r]->SrName[0] == '\0')
+   if (pSSchema->SsRule->SrElem[r]->SrName[0] == EOS)
       fprintf (Hfile, "ID%d", r+1);
    else
       WriteName (Hfile, pSSchema->SsRule->SrElem[r]->SrName);

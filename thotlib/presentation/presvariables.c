@@ -53,7 +53,7 @@ static int MakeAliasTypeCount (Counter *pCounter, CounterOp op,
   pSchStr->SsRule->SrElem[rule -1] = NewAlias;
 
   /* initialise l'alias temporaire */
-  strcpy (NewAlias->SrName, "Counter_alias");
+  NewAlias->SrName = TtaStrdup ("Counter_alias");
   NewAlias->SrNDefAttrs = 0;
   NewAlias->SrNLocalAttrs = 0;
   NewAlias->SrLocalAttr = NULL;
