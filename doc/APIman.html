@@ -4940,14 +4940,13 @@ checking). A typographic language is identified by an identifier of type
 <P>Declares a new language, its alphabet and optionally the names of the
 principal and secondary dictionaries. All languages used in a Thot document
 must be explicitly declared, except for predefined languages. Thot registers
-all declared languages and allocates a different identifier to each of them. 
-<P>This function does not load dictionaries but loads their name. If
+all declared languages and allocates a different identifier to each of them.
+his function does not load dictionaries but loads their name. If
 <EM>principalDictionary</EM> and/or <EM>secondDictionary</EM> are not NULL
 values, dictionaries are loaded when necessary from files
 $DICOPAR/principalDictionary and or $DICOPAR/secondDictionary. If an
 application redeclares an existing language, this new declaration has no
 effect.</P>
-</P>
 
 <HR>
 
@@ -6563,6 +6562,11 @@ when its text file is not reachable because it cannot work without.</P>
 applicationMSG.h file is used to address correct message in source code and
 the en-applicationTXT gives the English version of messages text:</P>
 
+<TABLE BORDER=0>
+  <TR>
+
+<TD>
+
 <P>#define APP_start              0</P>
 
 <P>#define APP_abort             1</P>
@@ -6573,7 +6577,9 @@ the en-applicationTXT gives the English version of messages text:</P>
 
 <P>#define APP_MSG_MAX 4</P>
 
-<P> </P>
+<P>applicationMSG.h</P>
+
+<TD>
 
 <P>0   Application</P>
 
@@ -6582,11 +6588,16 @@ the en-applicationTXT gives the English version of messages text:</P>
 <P>2   Unreachable file %s</P>
 
 <P>3   End of application</P>
-<TT>
-<P>applicationMSG.h</P>
-</TT><TT>
+
+<P> </P>
+
 <P>en-applicationTXT</P>
-</TT>
+
+  </TR>
+</TABLE>
+
+<P> </P>
+
 <P>The application has to load the rigth message table:</P>
 
 <PRE>
