@@ -540,7 +540,10 @@ void       XhtmlElementComplete (Element el, Document doc, int *error)
 		   newElType.ElSSchema = docSSchema;
 		   newElType.ElTypeNum = HTML_EL_Frames;
 		   elFrames = TtaNewElement (doc, newElType);
-		   XmlSetElemLineNumber (elFrames);
+		   if (DocumentMeta[doc]->xmlformat)
+		     XmlSetElemLineNumber (elFrames);
+		   else
+		     SetHtmlElemLineNumber (elFrames);
 		   TtaInsertSibling (elFrames, child, TRUE, doc);
 		 }
 	       /* move the element as the last child of the Frames element */
@@ -559,7 +562,10 @@ void       XhtmlElementComplete (Element el, Document doc, int *error)
        /* Create a child of type Text_Input */
        elType.ElTypeNum = HTML_EL_Text_Input;
        child = TtaNewTree (doc, elType, "");
-       XmlSetElemLineNumber (child);
+       if (DocumentMeta[doc]->xmlformat)
+	 XmlSetElemLineNumber (child);
+       else
+	 SetHtmlElemLineNumber (child);
        TtaInsertFirstChild (&child, el, doc);
        /* now, process it like a Text_Input element */
 
@@ -632,16 +638,33 @@ void       XhtmlElementComplete (Element el, Document doc, int *error)
 		 }
 	     }
 	 }
-       if (IsParsingCSS ())
+       if (DocumentMeta[doc]->xmlformat)
 	 {
-	   text = GetStyleContents (el);
-	   if (text)
+	   if (IsXmlParsingCSS ())
 	     {
-	       ReadCSSRules (doc, NULL, text,
-			     TtaGetElementLineNumber (el), FALSE);
-	       TtaFreeMemory (text);
+	       text = GetStyleContents (el);
+	       if (text)
+		 {
+		   ReadCSSRules (doc, NULL, text,
+				 TtaGetElementLineNumber (el), FALSE);
+		   TtaFreeMemory (text);
+		 }
+	       SetXmlParsingCSS (FALSE);
 	     }
-	   SetParsingCSS (FALSE);
+	 }
+       else
+	 {
+	   if (IsHtmlParsingCSS ())
+	     {
+	       text = GetStyleContents (el);
+	       if (text)
+		 {
+		   ReadCSSRules (doc, NULL, text,
+				 TtaGetElementLineNumber (el), FALSE);
+		   TtaFreeMemory (text);
+		 }
+	       SetHtmlParsingCSS (FALSE);
+	     }
 	 }
        /* and continue as if it were a Preformatted or a Script */
        break;
@@ -720,8 +743,16 @@ void       XhtmlElementComplete (Element el, Document doc, int *error)
 	 }
        
        /* detect whether we're parsing a whole table or just a cell */
-       if (IsWithinTable ())
-	   NewCell (el, doc, FALSE);
+       if (DocumentMeta[doc]->xmlformat)
+	 {
+	   if (IsWithinXmlTable ())
+	     NewCell (el, doc, FALSE);
+	 }
+       else
+	 {
+	   if (IsWithinHtmlTable ())
+	     NewCell (el, doc, FALSE);
+	 }
        break;
        
      case HTML_EL_Table:

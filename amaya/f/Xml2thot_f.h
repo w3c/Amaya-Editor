@@ -10,11 +10,11 @@ extern void XmlSetElemLineNumber ( Element el );
 extern void XmlParseError ( ErrorType type,
                             unsigned char *msg,
                             int line );
-extern ThotBool IsParsingCSS ( void );
-extern void SetParsingCSS ( ThotBool value );
+extern ThotBool IsXmlParsingCSS ( void );
+extern void SetXmlParsingCSS ( ThotBool value );
 extern void SetParsingTextArea ( ThotBool value );
 extern void SetLanguagInXmlStack ( Language lang );
-extern int IsWithinTable ( void );
+extern int IsWithinXmlTable ( void );
 extern void SubWithinTable ( void );
 extern void InsertXmlElement ( Element *el );
 extern Element XmlLastLeafInElement ( Element el );
@@ -58,11 +58,11 @@ extern void XmlSetElemLineNumber (/* Element el */);
 extern void XmlParseError (/* ErrorType type,
                               unsigned char *msg,
                               int line */);
-extern ThotBool IsParsingCSS (/* void */);
-extern void SetParsingCSS (/* ThotBool value */);
+extern ThotBool IsXmlParsingCSS (/* void */);
+extern void SetXmlParsingCSS (/* ThotBool value */);
 extern void SetParsingTextArea (/* ThotBool value */);
 extern void SetLanguagInXmlStack (/* Language lang */);
-extern int IsWithinTable (/* void */);
+extern int IsWithinXmlTable (/* void */);
 extern void SubWithinTable (/* void */);
 extern void InsertXmlElement (/* Element *el */);
 extern Element XmlLastLeafInElement (/* Element el */);

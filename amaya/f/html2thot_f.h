@@ -11,6 +11,10 @@ extern char *SkipInt ( char *ptr );
 extern void ParseAreaCoords ( Element element,
                               Document document );
 extern void SetLanguagInHTMLStack ( Language lang );
+extern ThotBool IsHtmlParsingCSS ( void );
+extern void SetHtmlParsingCSS ( ThotBool value );
+extern void SetHtmlElemLineNumber ( Element el );
+extern int IsWithinHtmlTable ( void );
 extern void InitMapping ( void );
 extern void HTMLParseError ( Document doc,
                              char* msg );
@@ -70,6 +74,10 @@ extern char *SkipInt (/* char *ptr */);
 extern void ParseAreaCoords (/* Element element,
                                 Document document */);
 extern void SetLanguagInHTMLStack (/* Language lang */);
+extern ThotBool IsHtmlParsingCSS (/* void */);
+extern void SetHtmlParsingCSS (/* ThotBool value */);
+extern void SetHtmlElemLineNumber (/* Element el */);
+extern int IsWithinHtmlTable (/* void */);
 extern void InitMapping (/* void */);
 extern void HTMLParseError (/* Document doc,
                                char* msg */);

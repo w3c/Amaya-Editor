@@ -106,12 +106,13 @@ void MapGenericXmlAttribute (char *attrName, AttributeType *attrType,
 
 /*----------------------------------------------------------------------
   XmlElementComplete
-  Complete XML elements. Check its attributes and its contents.
+  Complete XML elements.
+  Check its attributes and its contents.
   ----------------------------------------------------------------------*/
 void XmlElementComplete (Element el, Document doc, int *error)
 
 {
-  Element lastChild;
+  Element   lastChild;
 
   if (el && doc)
     {

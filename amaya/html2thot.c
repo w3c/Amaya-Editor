@@ -678,6 +678,46 @@ void  SetLanguagInHTMLStack (Language lang)
 }
 
 /*----------------------------------------------------------------------
+  IsHtmlParsingCSS 
+  Returns the value of ParsingCSS boolean.
+  ----------------------------------------------------------------------*/
+ThotBool  IsHtmlParsingCSS ()
+
+{
+   return HTMLcontext.parsingCSS;
+}
+
+/*----------------------------------------------------------------------
+  SetHtmlParsingCSS 
+  Sets the value of ParsingCSS boolean.
+  ----------------------------------------------------------------------*/
+void  SetHtmlParsingCSS (ThotBool value)
+
+{
+   HTMLcontext.parsingCSS = value;
+}
+
+/*----------------------------------------------------------------------
+   SetHtmlElemLineNumber
+   Assigns the current line number
+  ----------------------------------------------------------------------*/
+void SetHtmlElemLineNumber (Element el)
+
+{
+  TtaSetElementLineNumber (el, NumberOfLinesRead);
+}
+
+/*----------------------------------------------------------------------
+  IsWithinHtmlTable 
+  Returns the value of WithinTable integer.
+  ----------------------------------------------------------------------*/
+int  IsWithinHtmlTable ()
+
+{
+   return HTMLcontext.withinTable;
+}
+
+/*----------------------------------------------------------------------
    copyCEstring    create a copy of the string of elements pointed
    by first and return a pointer on the first
    element of the copy.
@@ -1606,365 +1646,6 @@ void CheckCSSLink (Element el, Document doc, SSchema schema)
     }
 }
 
-
-/*----------------------------------------------------------------------
-   ElementComplete
-   Element el is complete. Check its attributes and its contents.
-  ----------------------------------------------------------------------*/
-static void            ElementComplete (Element el)
-{
-   ElementType         elType, newElType, childType;
-   Element             constElem, child, desc, leaf, prev, next, last,
-		       elFrames, lastFrame, lastChild;
-   Attribute           attr;
-   AttributeType       attrType;
-   Language            lang;
-   char                lastChar[2];
-   char               *text, *name1;
-   int                 length;
-
-   elType = TtaGetElementType (el);
-   /* is this a block-level element in a character-level element? */
-   if (!IsCharacterLevelElement (el) &&
-       elType.ElTypeNum != HTML_EL_Comment_ &&
-       elType.ElTypeNum != HTML_EL_XMLPI)
-      BlockInCharLevelElem (el);
-
-   newElType.ElSSchema = elType.ElSSchema;
-   switch (elType.ElTypeNum)
-    {
-    case HTML_EL_Object:	/*  it's an object */
-       /* create Object_Content */
-       child = TtaGetFirstChild (el);
-       if (child != NULL)
-	 elType = TtaGetElementType (child);
-	 
-       /* is it the PICTURE element ? */
-       if (child == NULL || elType.ElTypeNum != HTML_EL_PICTURE_UNIT)
-	 {
-	   desc = child;
-	   /* create the PICTURE element */
-	   elType.ElTypeNum = HTML_EL_PICTURE_UNIT;
-	   child = TtaNewTree (HTMLcontext.doc, elType, "");
-	   if (desc == NULL)
-	     TtaInsertFirstChild (&child, el, HTMLcontext.doc);
-	   else
-	     TtaInsertSibling (child, desc, TRUE, HTMLcontext.doc);
-	 }
-       /* copy attribute data into SRC attribute of Object_Image */
-       attrType.AttrSSchema = DocumentSSchema;
-       attrType.AttrTypeNum = HTML_ATTR_data;
-       attr = TtaGetAttribute (el, attrType);
-       if (attr != NULL)
-	 {
-	    length = TtaGetTextAttributeLength (attr);
-	    if (length > 0)
-	      {
-		name1 = TtaGetMemory (length + 1);
-		TtaGiveTextAttributeValue (attr, name1, &length);
-		attrType.AttrTypeNum = HTML_ATTR_SRC;
-		attr = TtaGetAttribute (child, attrType);
-		if (attr == NULL)
-		  {
-		    attr = TtaNewAttribute (attrType);
-		    TtaAttachAttribute (child, attr, HTMLcontext.doc);
-		  }
-		TtaSetAttributeText (attr, name1, child, HTMLcontext.doc);
-		TtaFreeMemory (name1);
-	      }
-	 }
-       /* is the Object_Content element already created ? */
-       desc = child;
-       TtaNextSibling(&desc);
-       if (desc != NULL)
-	 elType = TtaGetElementType (desc);
-	 
-       /* is it the Object_Content element ? */
-       if (desc == NULL || elType.ElTypeNum != HTML_EL_Object_Content)
-	 {
-	   /* create Object_Content */
-	   elType.ElTypeNum = HTML_EL_Object_Content;
-	   desc = TtaNewTree (HTMLcontext.doc, elType, "");
-	   TtaInsertSibling (desc, child, FALSE, HTMLcontext.doc);
-	   /* move previous existing children into Object_Content */
-	   child = TtaGetLastChild(el);
-	   while (child != desc)
-	     {
-	       TtaRemoveTree (child, HTMLcontext.doc);
-	       TtaInsertFirstChild (&child, desc, HTMLcontext.doc);
-	       child = TtaGetLastChild(el);
-	     }
-	 }
-	break;
-
-    case HTML_EL_Unnumbered_List:
-    case HTML_EL_Numbered_List:
-    case HTML_EL_Menu:
-    case HTML_EL_Directory:
-	/* It's a List element. It should only have List_Item children.
-	   If it has List element chidren, move these List elements
-	   within their previous List_Item sibling.  This is to fix
-           a bug in document generated by Mozilla. */
-	prev = NULL;
-	next = NULL;
-	child = TtaGetFirstChild (el);
-	while (child != NULL)
-	   {
-	   next = child;
-	   TtaNextSibling (&next);
-	   elType = TtaGetElementType (child);
-	   if (elType.ElTypeNum == HTML_EL_Unnumbered_List ||
-	       elType.ElTypeNum == HTML_EL_Numbered_List ||
-	       elType.ElTypeNum == HTML_EL_Menu ||
-	       elType.ElTypeNum == HTML_EL_Directory)
-	     /* this list element is a child of another list element */
-	     if (prev)
-		{
-		elType = TtaGetElementType (prev);
-		if (elType.ElTypeNum == HTML_EL_List_Item)
-		   {
-		   /* get the last child of the previous List_Item */
-		   desc = TtaGetFirstChild (prev);
-		   last = NULL;
-		   while (desc)
-		      {
-		      last = desc;
-		      TtaNextSibling (&desc);
-		      }
-		   /* move the list element after the last child of the
-		      previous List_Item */
-		   TtaRemoveTree (child, HTMLcontext.doc);
-		   if (last)
-		      TtaInsertSibling (child, last, FALSE, HTMLcontext.doc);
-		   else
-		      TtaInsertFirstChild (&child, prev, HTMLcontext.doc);
-		   child = prev;
-		   }
-	        }
-	   prev = child;
-	   child = next;
-	   }
-	break;
-
-    case HTML_EL_FRAMESET:
-	/* The FRAMESET element is now complete.  Gather all its FRAMESET
-	   and FRAME children and wrap them up in a Frames element */
-	elFrames = NULL; lastFrame = NULL;
-	lastChild = NULL;
-	child = TtaGetFirstChild (el);
-	while (child != NULL)
-	   {
-	   next = child;
-	   TtaNextSibling (&next);
-	   elType = TtaGetElementType (child);
-	   if (elType.ElTypeNum == HTML_EL_FRAMESET ||
-	       elType.ElTypeNum == HTML_EL_FRAME ||
-	       elType.ElTypeNum == HTML_EL_Comment_)
-	       {
-	       /* create the Frames element if it does not exist */
-	       if (elFrames == NULL)
-		 {
-		    newElType.ElSSchema = DocumentSSchema;
-		    newElType.ElTypeNum = HTML_EL_Frames;
-		    elFrames = TtaNewElement (HTMLcontext.doc, newElType);
-		    TtaSetElementLineNumber (elFrames, NumberOfLinesRead);
-		    TtaInsertSibling (elFrames, child, TRUE, HTMLcontext.doc);
-		 }
-	       /* move the element as the last child of the Frames element */
-	       TtaRemoveTree (child, HTMLcontext.doc);
-	       if (lastFrame == NULL)
-		  TtaInsertFirstChild (&child, elFrames, HTMLcontext.doc);
-	       else
-		  TtaInsertSibling (child, lastFrame, FALSE, HTMLcontext.doc);
-	       lastFrame = child;
-	       }
-	   child = next;
-           }
-	break;
-
-    case HTML_EL_Input:	/* it's an INPUT without any TYPE attribute */
-	/* Create a child of type Text_Input */
-	elType.ElTypeNum = HTML_EL_Text_Input;
-	child = TtaNewTree (HTMLcontext.doc, elType, "");
-	TtaSetElementLineNumber (child, NumberOfLinesRead);
-	TtaInsertFirstChild (&child, el, HTMLcontext.doc);
-	/* now, process it like a Text_Input element */
-    case HTML_EL_Text_Input:
-    case HTML_EL_Password_Input:
-    case HTML_EL_File_Input:
-      /* get element Inserted_Text */
-      child = TtaGetFirstChild (el);
-      if (child != NULL)
-	{
-	  attrType.AttrSSchema = DocumentSSchema;
-	  attrType.AttrTypeNum = HTML_ATTR_Value_;
-	  attr = TtaGetAttribute (el, attrType);
-	  if (attr != NULL)
-	    {
-	      /* copy the value of attribute "value" into the first text
-		 leaf of element */
-	      length = TtaGetTextAttributeLength (attr);
-	      if (length > 0)
-		{
-		  /* get the text leaf */
-		  leaf = TtaGetFirstChild (child);
-		  if (leaf != NULL)
-		    {
-		      childType = TtaGetElementType (leaf);
-		      if (childType.ElTypeNum == HTML_EL_TEXT_UNIT)
-			{
-			  /* copy attribute value into the text leaf */
-			  text = TtaGetMemory (length + 1);
-			  TtaGiveTextAttributeValue (attr, text, &length);
-			  TtaSetTextContent (leaf, text, HTMLcontext.language,
-					     HTMLcontext.doc);
-			  TtaFreeMemory (text);
-			}
-		    }
-		}
-	    }
-	}
-      break;
-
-    case HTML_EL_META:
-      ParseCharset (el, HTMLcontext.doc);
-      HTMLcontext.encoding = TtaGetDocumentCharset (HTMLcontext.doc);
-      break;
-
-    case HTML_EL_STYLE_:	/* it's a STYLE element */
-    case HTML_EL_Preformatted:	/* it's a PRE */
-    case HTML_EL_SCRIPT_:	/* it's a SCRIPT element */
-       /* if the last line of the Preformatted is empty, remove it */
-       leaf = LastLeafInElement (el);
-       if (leaf != NULL)
-	  {
-	    elType = TtaGetElementType (leaf);
-	    if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
-	      /* the last leaf is a TEXT element */
-	      {
-		length = TtaGetTextLength (leaf);
-		if (length > 0)
-		  {
-		     TtaGiveSubString (leaf, lastChar, length, 1);
-		     if (lastChar[0] == EOL)
-			/* last character is new line, delete it */
-			{
-		        if (length == 1)
-		          /* empty TEXT element */
-		          TtaDeleteTree (leaf, HTMLcontext.doc);
-		        else
-		          /* remove the last character */
-		          TtaDeleteTextContent (leaf, length, 1,
-					        HTMLcontext.doc);
-			}
-		  }
-	      }
-	  }
-       if (HTMLcontext.parsingCSS)
-	 {
-	   text = GetStyleContents (el);
-	   if (text)
-	     {
-	       ReadCSSRules (HTMLcontext.doc, NULL, text,
-			     TtaGetElementLineNumber (el), FALSE);
-	       TtaFreeMemory (text);
-	     }
-	   HTMLcontext.parsingCSS = FALSE;
-	 }
-	/* and continue as if it were a Preformatted or a Script */
-       break;
-
-    case HTML_EL_Text_Area:	/* it's a Text_Area */
-      HTMLcontext.parsingTextArea = FALSE;
-       child = TtaGetFirstChild (el);
-       if (child == NULL)
-	  /* it's an empty Text_Area */
-	  /* insert a Inserted_Text element in the element */
-	 {
-	   newElType.ElTypeNum = HTML_EL_Inserted_Text;
-	   child = TtaNewTree (HTMLcontext.doc, newElType, "");
-	   TtaInsertFirstChild (&child, el, HTMLcontext.doc);
-	 }
-       else
-	 {
-	   /* save the text into Default_Value attribute */
-	   attrType.AttrSSchema = DocumentSSchema;
-	   attrType.AttrTypeNum = HTML_ATTR_Default_Value;
-	   if (TtaGetAttribute (el, attrType) == NULL)
-	     /* attribute Default_Value is missing */
-	     {
-	       attr = TtaNewAttribute (attrType);
-	       TtaAttachAttribute (el, attr, HTMLcontext.doc);
-	       desc = TtaGetFirstChild (child);
-	       length = TtaGetTextLength (desc) + 1;
-	       text = TtaGetMemory (length);
-	       TtaGiveTextContent (desc, text, &length, &lang);
-	       TtaSetAttributeText (attr, text, el, HTMLcontext.doc);
-	       TtaFreeMemory (text);
-	     }
-	 }
-       /* insert a Frame element */
-       newElType.ElTypeNum = HTML_EL_Frame;
-       constElem = TtaNewTree (HTMLcontext.doc, newElType, "");
-       TtaInsertSibling (constElem, child, FALSE, HTMLcontext.doc);
-       break;
-
-    case HTML_EL_Radio_Input:
-    case HTML_EL_Checkbox_Input:
-       /* put an attribute Checked if it is missing */
-       attrType.AttrSSchema = DocumentSSchema;
-       attrType.AttrTypeNum = HTML_ATTR_Checked;
-       if (TtaGetAttribute (el, attrType) == NULL)
-	  /* attribute Checked is missing */
-	 {
-	    attr = TtaNewAttribute (attrType);
-	    TtaAttachAttribute (el, attr, HTMLcontext.doc);
-	    TtaSetAttributeValue (attr, HTML_ATTR_Checked_VAL_No_, el,
-				  HTMLcontext.doc);
-	 }
-       break;
-
-    case HTML_EL_Option_Menu:
-       /* Check that at least one option has a SELECTED attribute */
-       OnlyOneOptionSelected (el, HTMLcontext.doc, TRUE);
-       break;
-
-    case HTML_EL_LINK:
-       CheckCSSLink (el, HTMLcontext.doc, DocumentSSchema);
-       break;
-
-    case HTML_EL_Data_cell:
-    case HTML_EL_Heading_cell:
-      /* insert a pseudo paragraph into empty cells */
-       child = TtaGetFirstChild (el);
-       if (child == NULL)
-	 {
-	   elType.ElTypeNum = HTML_EL_Pseudo_paragraph;
-	   child = TtaNewTree (HTMLcontext.doc, elType, "");
-	   if (child != NULL)
-	     TtaInsertFirstChild (&child, el, HTMLcontext.doc);
-	 }
-
-       /* detect whether we're parsing a whole table or just a cell */
-       if (HTMLcontext.withinTable == 0)
-	 NewCell (el, HTMLcontext.doc, FALSE);
-       break;
-
-    case HTML_EL_Table:
-       CheckTable (el, HTMLcontext.doc);
-       HTMLcontext.withinTable--;
-       break;
-
-    case HTML_EL_TITLE:
-       /* show the TITLE in the main window */
-       UpdateTitle (el, HTMLcontext.doc);
-       break;
-
-    default:
-       break;
-    }
-}
-
 /*----------------------------------------------------------------------
    RemoveEndingSpaces
    If element el is a block-level element, remove all spaces contained
@@ -2039,6 +1720,7 @@ static ThotBool     CloseElement (int entry, int start, ThotBool onStartTag)
    ElementType       elType, parentType;
    Element           el, parent;
    ThotBool          ret, stop, spacesDeleted;
+   int               error;
 
    ret = FALSE;
    /* the closed HTML element corresponds to a Thot element. */
@@ -2197,7 +1879,7 @@ static ThotBool     CloseElement (int entry, int start, ThotBool onStartTag)
 	   spacesDeleted = FALSE;
 	   while (el != NULL)
 	     {
-	       ElementComplete (el);
+	       XhtmlElementComplete (el, HTMLcontext.doc, &error);
 	       if (!spacesDeleted)
 	          /* If the element closed is a block-element, remove */
 	          /* spaces contained at the end of that element */
@@ -2415,7 +2097,7 @@ static void           EndOfStartTag (char c)
   AttributeType       attrType;
   Attribute           attr;
   char               *text;
-  int                 length;
+  int                 length, error;
 
   UnknownTag = FALSE;
   if ((HTMLcontext.lastElement != NULL) && (lastElemEntry != -1))
@@ -2432,7 +2114,7 @@ static void           EndOfStartTag (char c)
 	/* this is an empty element. Do not expect an end tag */
 	{
 	  CloseElement (lastElemEntry, -1, TRUE);
-	  ElementComplete (HTMLcontext.lastElement);
+	  XhtmlElementComplete (HTMLcontext.lastElement, HTMLcontext.doc, &error);
 	}
       
       /* if it's a LI element, creates its IntItemStyle attribute
@@ -6766,6 +6448,7 @@ void StartParser (Document doc, char *fileName,
   char            tempname[MAX_LENGTH];
   char            temppath[MAX_LENGTH];
   ThotBool        isHTML;
+  int             error;
 
   HTMLcontext.doc = doc;
   FirstElemToBeChecked = NULL;
@@ -6931,7 +6614,7 @@ void StartParser (Document doc, char *fileName,
 	  el = HTMLcontext.lastElement;
 	  while (el != NULL)
 	    {
-	      ElementComplete (el);
+	      XhtmlElementComplete (el, HTMLcontext.doc, &error);
 	      el = TtaGetParent (el);
 	    }
 	  /* check the Thot abstract tree */

@@ -498,10 +498,13 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
     case errorNotWellFormed:
       if (line == 0)
 	{
-	  fprintf (ErrFile, "  line %d, char %d: %s\n",
-		   XML_GetCurrentLineNumber (Parser) + htmlLineRead -  extraLineRead,
-		   XML_GetCurrentColumnNumber (Parser),
-		   msg);
+	  if (Parser != NULL)
+	    {
+	      fprintf (ErrFile, "  line %d, char %d: %s\n",
+		       XML_GetCurrentLineNumber (Parser) + htmlLineRead -  extraLineRead,
+		       XML_GetCurrentColumnNumber (Parser),
+		       msg);
+	    }
 	}
       else
 	fprintf (ErrFile, "  line %d: %s\n", line, msg); 
@@ -510,10 +513,13 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
     case errorCharacterNotSupported:
       if (line == 0)
 	{
-	  fprintf (ErrFile, "  line %d, char %d: %s\n",
-		   XML_GetCurrentLineNumber (Parser) + htmlLineRead -  extraLineRead,
-		   XML_GetCurrentColumnNumber (Parser),
-		   msg);
+	  if (Parser != NULL)
+	    {
+	      fprintf (ErrFile, "  line %d, char %d: %s\n",
+		       XML_GetCurrentLineNumber (Parser) + htmlLineRead -  extraLineRead,
+		       XML_GetCurrentColumnNumber (Parser),
+		       msg);
+	    }
 	}
       else
 	fprintf (ErrFile, "  line %d: %s\n", line, msg); 
@@ -523,10 +529,13 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
     case warningMessage:
       if (line == 0)
 	{
-	  fprintf (ErrFile, "  line %d, char %d: %s\n",
-		   XML_GetCurrentLineNumber (Parser) + htmlLineRead -  extraLineRead,
-		   XML_GetCurrentColumnNumber (Parser),
-		   msg);
+	  if (Parser != NULL)
+	    {
+	      fprintf (ErrFile, "  line %d, char %d: %s\n",
+		       XML_GetCurrentLineNumber (Parser) + htmlLineRead -  extraLineRead,
+		       XML_GetCurrentColumnNumber (Parser),
+		       msg);
+	    }
 	}
       else
 	fprintf (ErrFile, "  line %d: %s\n", line, msg);
@@ -536,10 +545,13 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
     case errorParsingProfile:
       if (line == 0)
 	{
-	  fprintf (ErrFile, "  line %d, char %d: %s\n",
-		   XML_GetCurrentLineNumber (Parser) + htmlLineRead -  extraLineRead,
-		   XML_GetCurrentColumnNumber (Parser),
-		   msg);
+	  if (Parser != NULL)
+	    {
+	      fprintf (ErrFile, "  line %d, char %d: %s\n",
+		       XML_GetCurrentLineNumber (Parser) + htmlLineRead -  extraLineRead,
+		       XML_GetCurrentColumnNumber (Parser),
+		       msg);
+	    }
 	}
       else
 	fprintf (ErrFile, "  line %d: %s\n", line, msg); 
@@ -552,20 +564,20 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
 }
 
 /*----------------------------------------------------------------------
-  IsParsingCSS 
+  IsXmlParsingCSS 
   Returns the value of ParsingCSS boolean.
   ----------------------------------------------------------------------*/
-ThotBool  IsParsingCSS ()
+ThotBool  IsXmlParsingCSS ()
 
 {
    return XMLcontext.parsingCSS;
 }
 
 /*----------------------------------------------------------------------
-  SetParsingCSS 
+  SetXmlParsingCSS 
   Sets the value of ParsingCSS boolean.
   ----------------------------------------------------------------------*/
-void  SetParsingCSS (ThotBool value)
+void  SetXmlParsingCSS (ThotBool value)
 
 {
    XMLcontext.parsingCSS = value;
@@ -592,10 +604,10 @@ void  SetLanguagInXmlStack (Language lang)
 }
 
 /*----------------------------------------------------------------------
-  IsWithinTable 
+  IsWithinXmlTable 
   Returns the value of WithinTable integer.
   ----------------------------------------------------------------------*/
-int  IsWithinTable ()
+int  IsWithinXmlTable ()
 
 {
    return XMLcontext.withinTable;
@@ -1360,8 +1372,7 @@ static ThotBool     XmlCloseElement (char *mappedName)
 	       /* Remove the trailing spaces of that element */
 	       RemoveTrailingSpaces (el);
 
-	       (*(currentParserCtxt->ElementComplete)) (el, XMLcontext.doc,
-							&error);
+	       (*(currentParserCtxt->ElementComplete)) (el, XMLcontext.doc, &error);
 
 	       if (el == XMLcontext.lastElement)
 		 el = NULL;
@@ -3328,7 +3339,7 @@ static void      CreateXmlComment (char *commentValue)
 	      ptr = &commentValue[i];
 	    }
 	}
-      (*(currentParserCtxt->ElementComplete)) (commentEl, XMLcontext.doc, &error);
+      (*(currentParserCtxt->ElementComplete)) (commentEl,  XMLcontext.doc, &error);
       XMLcontext.lastElementClosed = TRUE;
     }
 }
@@ -4926,13 +4937,9 @@ static void   XmlParse (FILE     *infile, CHARSET charset,
    The parameter pathURL gives the original (local or  distant) path
    or URL of the xml document.
   ------------------------------------------------------------------------------*/
-void StartXmlParser (Document doc,
-		     char *fileName,
-		     char *documentName,
-		     char *documentDirectory,
-		     char *pathURL,
-		     ThotBool xmlDec,
-		     ThotBool xmlDoctype)
+void StartXmlParser (Document doc, char *fileName,
+		     char *documentName, char *documentDirectory,
+		     char *pathURL, ThotBool xmlDec, ThotBool xmlDoctype)
 {
   Element         el, oldel;
   char            tempname[MAX_LENGTH];
@@ -5055,8 +5062,7 @@ void StartXmlParser (Document doc,
 	  el = XMLcontext.lastElement;
 	  while (el != NULL)
 	    {
-		(*(currentParserCtxt->ElementComplete))
-		  (el, XMLcontext.doc, &error);
+		(*(currentParserCtxt->ElementComplete)) (el, XMLcontext.doc, &error);
 		el = TtaGetParent (el);
 	    }
 	}
