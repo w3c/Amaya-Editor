@@ -908,7 +908,7 @@ EXCEPT
 	AREA:		MoveResize, ClickableSurface, HighlightChildren;
 	Password_Input: Shadow;
 	Preformatted:	ReturnCreateNL, NoReplicate;
-	STYLE_:		ReturnCreateNL, NoReplicate;
+	STYLE_:		ReturnCreateNL, NoSpellCheck, NoReplicate;
 	SCRIPT_:	ReturnCreateNL, NoReplicate;
 	Text_Area:	ReturnCreateNL, NoReplicate;
 	HTMLfragment:	NoMove, NoResize, Hidden, NoBreakByReturn;

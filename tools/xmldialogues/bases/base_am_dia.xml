@@ -2738,11 +2738,11 @@
 	<message xml:lang="ru">Показать оглавление</message>
 </label>
 <label define="BShowTimeLine">
-	<message xml:lang="en">Timeline</message>
-	<message xml:lang="fr">Ligne de temps</message>
+	<message xml:lang="en">Show timeline</message>
+	<message xml:lang="fr">Montrer la ligne de temps</message>
 	<message xml:lang="de">Zeitliche Reihenfolge</message>
 	<message xml:lang="fi">Aikajana</message>
-	<message xml:lang="it">Timeline</message>
+	<message xml:lang="it">Mostra la timeline</message>
 	<message xml:lang="es">Planificación</message>
 	<message xml:lang="tr">Zaman sırası</message>
 	<message xml:lang="ru">Шкала времени</message>
