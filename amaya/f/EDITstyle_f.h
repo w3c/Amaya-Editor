@@ -13,6 +13,8 @@ extern STRING UpdateCSSBackgroundImage ( STRING oldpath,
 extern ThotBool UpdateStyleDelete ( NotifyAttribute * event );
 extern ThotBool ChangeStyle ( NotifyElement * event );
 extern ThotBool DeleteStyle ( NotifyElement * event );
+extern void EnableStyleElement ( Document doc );
+extern void DeleteStyleElement ( Document doc );
 extern void StyleChanged ( NotifyAttribute * event );
 extern void UpdateStylePost ( NotifyAttribute * event );
 extern void GetHTMLStyleString ( Element el,
@@ -36,6 +38,8 @@ extern STRING UpdateCSSBackgroundImage (/* STRING oldpath,
 extern ThotBool UpdateStyleDelete (/* NotifyAttribute * event */);
 extern ThotBool ChangeStyle (/* NotifyElement * event */);
 extern ThotBool DeleteStyle (/* NotifyElement * event */);
+extern void EnableStyleElement (/* Document doc */);
+extern void DeleteStyleElement (/* Document doc */);
 extern void StyleChanged (/* NotifyAttribute * event */);
 extern void UpdateStylePost (/* NotifyAttribute * event */);
 extern void GetHTMLStyleString (/* Element el,
