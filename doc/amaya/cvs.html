@@ -1,0 +1,277 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+                      "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Amaya and CVS</title>
+</head>
+
+<body lang="en">
+
+<div id="head">
+<p><a href="../../"><img border="0" alt="W3C"
+src="../../Icons/WWW/w3c_home"></a> <a href="../"><img border="0"
+src="../Icons/amaya.gif" alt="Amaya"></a> <a href="Manual.html"><img
+border="0" src="../Icons/doc48x.gif" alt="Using"></a></p>
+</div>
+
+<h1>Getting Amaya from the CVS Repository</h1>
+
+<div class="intro">
+<a href="http://www.cyclic.com/cvs/info.html">CVS</a> allows
+<strong>YOU</strong> to follow the development of <a
+href="http://www.w3.org/Amaya/">Amaya</a> closely and to contribute with
+patches and new features.
+<ul>
+  <li><a href="#Requiremen">Requirements</a></li>
+  <li><a href="#Releases">How does Amaya releases and CVS work
+  together?</a></li>
+  <li><a href="#Anonymous">How to check out Amaya and libwww from CVS</a></li>
+  <li><a href="#update">How to get the latest edits from CVS</a></li>
+  <li><a href="#Boot">How to get libwww bootstrapped after checking out</a>
+    <ul>
+      <li><a href="#Easy">Generate Include files</a></li>
+      <li><a href="#More">Generate Makefiles</a></li>
+    </ul>
+  </li>
+  <li><a href="Compiling">Configure and compile Amaya</a></li>
+</ul>
+
+<p>The following requires that you are familiar with CVS - if not then look at
+<a href="http://www.cyclic.com/cvs/info.html">Cyclic's pages on CVS</a> or the
+<a href="http://www.loria.fr/~molli/cvs-index.html">excellent information</a>
+provided by <a href="http://www.loria.fr/~molli/">Pascal.Molli</a>.</p>
+</div>
+
+<p></p>
+<hr>
+
+
+<h2><a name="Requiremen">Requirements</a></h2>
+<dl>
+  <dt>Disk space</dt>
+    <dd>Just checking out requires 8 M for libwww and 38M for Amaya. Building
+      will easily double the size, so it's better to have 100M available.</dd>
+  <dt><a href="http://www.cyclic.com/cyclic-pages/howget.html">CVS</a>
+  (version 1.10 or later)</dt>
+    <dd>The concurrent version system</dd>
+  <dt><a
+  href="http://www.perl.com/pace/pub/perldocs/latest.html">Perl</a></dt>
+    <dd>No need to introduce this fun, lego-like, and poetic scripting
+      language</dd>
+</dl>
+
+<p>On Unix you <strong>MUST</strong> have the following GNU tools installed in
+order to continue. Check that you have the following programs with the correct
+version number:</p>
+<dl>
+  <dt><a href="http://www.gnu.org/order/ftp.html"><strong>gcc</strong></a> and
+  <a href="http://www.gnu.org/order/ftp.html"><strong>GNU
+  make</strong></a></dt>
+    <dd>Automake relies on features provided by gcc and GNU make that don't
+      come with other compilers and makes. When compiling directly from CVS
+      you MUST use these gcc and gmake.</dd>
+  <dt><strong><a href="http://sourceware.cygnus.com/automake/">GNU
+  automake</a> (version 1.4 or later)</strong></dt>
+    <dd>Automake is a tool for automatically generating
+      <code>Makefile.in</code>'s which are used by autoconf</dd>
+  <dt><strong><a href="http://sourceware.cygnus.com/autoconf/">GNU
+  autoconf</a> (version 2.13 or later)</strong></dt>
+    <dd>A tool for automatically generating <code>Makefile</code>'s which are
+      used by make</dd>
+  <dt><strong><a href="http://www.gnu.org/software/libtool/libtool.html">GNU
+  libtool</a> (version 1.2d or later)</strong></dt>
+    <dd>A tool for automatically handling generation of shared libraries. If
+      you upgrade libtool to a new version then you <strong>MUST</strong>
+      rerun the configure script as some files used by libtool have to be
+      regenerated.</dd>
+  <dt>Other stuff</dt>
+    <dd>X11, Motif or <a href="http://www.lesstif.org/">Lesstif</a>
+      development headers and libraries.</dd>
+</dl>
+
+<h2><a name="Releases1">Amaya Releases</a></h2>
+
+<p>CVS allows you to use the very latest version of Amaya - as soon as a fix
+or a new feature is commited to the CVS repository then you can update your
+working version and you will have it right away.</p>
+
+<p>The purpose of "releases" is to say that now we believe that the code is
+stable with a well defined set of features. Until now, we have been giving out
+distribution files every time we announced a release. This will not change,
+but you can <a href="http://dev.w3.org/cgi-bin/cvsweb/">use the CVS
+repository</a> in exactly the same way - often with much less overhead than
+dealing with a distribution package.</p>
+
+<p>Starting from release 2.1, every release is marked in the CVS repository
+using tags, so that it is possible to retrieve a complete release using the
+CVS <code>-r </code>option (note that <code>-r</code> is "sticky"). Check out
+the online <a href="http://dev.w3.org/cgi-bin/cvsweb/">CVS log walker</a> for
+the current set of release tags.</p>
+
+<h2><a name="Anonymous">Anonymous CVS Checkout</a></h2>
+
+<p>To be able to compile Amaya, you will need to check out not only Amaya, but
+also <a href="http://www.w3.org/Library/">libwww</a>, from the W3C<a
+href="http://dev.w3.org/"> CVS server</a>.</p>
+
+<p>Anonymous checkout is read-only access which allows you to get the latest
+edits and to provide patches to be integrated into the code base. The
+instructions should work for both <a
+href="http://www.cyclic.com/cvs/unix.html">Unix</a> and <a
+href="http://www.cyclic.com/cvs/windows.html">Windows</a>. A couple of
+notes:</p>
+<ul>
+  <li><a
+    href="http://lists.w3.org/Archives/Public/www-lib/1999AprJun/0169.html">Win95/98
+    doesn't have the notion of a home directory so you may have to set it
+    yourself</a> or define it in <code>Admin/Preferences/WinCVS</code> in <a
+    href="http://www.wincvs.org/">WinCVS</a></li>
+  <li>Make sure you are running at least CVS 1.10 or later.</li>
+</ul>
+
+<p>Start by login as follows:</p>
+<pre>% <strong>cvs -d :pserver:anonymous@dev.w3.org:/sources/public login</strong></pre>
+
+<p>after which you type "<strong>anonymous</strong>" as password.</p>
+
+<h3><a name="latest">Checkout the Latest Version</a></h3>
+
+<p>To get the <em>latest</em> version from the CVS repository, run this
+command:</p>
+<pre>% <strong>cvs -d :pserver:anonymous@dev.w3.org:/sources/public -z3 checkout Amaya</strong></pre>
+
+<p>libwww is an evolving piece of code. We use the <code>Amaya</code> tag to
+identify the current version being used by the Amaya team. To download this
+version,  run this command:</p>
+<pre>% <strong>cvs -d :pserver:anonymous@dev.w3.org:/sources/public -z3 checkout -rAmaya libwww</strong></pre>
+
+<p>If you want to try the bleeding edge libwww, just remove the Amaya tag as
+follows:</p>
+<pre>% <strong>cvs -d :pserver:anonymous@dev.w3.org:/sources/public -z3 checkout libwww</strong></pre>
+
+<p>After which you will get all the code coming at you. Now you are ready to
+<a href="#Boot">getting boot strapped</a>.</p>
+
+<h3><a name="revision">Checkout a Specific Revision</a></h3>
+
+<p>If you want to get a <a href="#Releases">specific release</a> using CVS
+tags then you can do this by using the the CVS "<tt>-r</tt>" option, for
+example</p>
+<pre>% <strong>cvs -d :pserver:anonymous@dev.w3.org:/sources/public -z3 -r Release-2-1 checkout Amaya</strong></pre>
+
+<p>Check the <a href="http://dev.w3.org/cgi-bin/cvsweb/">CVS log walker</a>
+for the current set of release tags. If you at some point want to revert to
+the latest untagged version then you should use the following command:</p>
+<pre>% <strong>cd Amaya</strong>
+% <strong>cvs -z3 update -A</strong></pre>
+
+<h2><a name="update">How to Get the Latest Updates</a></h2>
+
+<p>The big advantage of using CVS is that you easily can keep your version of
+the code base up to date with the latest edits and changes committed to
+CVS.</p>
+
+<p>Once you have <a href="#latest">checked out the amaya and libwww CVS
+trees</a> (<a href="#revision">not a specific revision</a>), you can get any
+updates committed to the tree by using the <a
+href="http://www.loria.fr/~molli/cvs/doc/cvs_16.html#SEC148">cvs update
+command</a> like this</p>
+<pre>% <strong>cd libwww</strong>
+% <strong>cvs -z3 update -d</strong>
+% <strong>cd ../Amaya
+% <strong>cvs -z3 update -d</strong>
+% cd ..</strong></pre>
+
+<p>It is important that you use the "<tt>-d</tt>" flag so that you get new
+directories as well as updated files. Now you <strong>MUST</strong> <a
+href="#Easy">repeat the compilation bootstrapping</a> procedure.</p>
+
+<h2><a name="Boot">Getting libwww Bootstrapped</a></h2>
+
+<p>When compiling directly from the CVS repository there are a few steps you
+have to go through which are already done if compiling from a distribution
+package. Follow these three steps:</p>
+<ol>
+  <li><a href="#Easy">Generate include files</a></li>
+  <li><a href="#More">Unix only: generate make files</a></li>
+  <li><a href="#Configure">Configure and compile libwww</a></li>
+</ol>
+
+<h3><a name="Easy">1. Generate Include Files (Windows &amp; Unix)</a></h3>
+
+<p>On <em>both</em> Windows and Unix you can generate the <tt>*.h</tt> files
+and the <tt>*.def</tt> files by running a <a
+href="http://www.perl.org/">Perl</a> script provided by <a
+href="http://www.w3.org/People/Eric/">Eric Prud'hommeaux</a>. Never mind that
+it gives a few warnings when it runs - they are all OK. It requires that you
+have a recent version of <a href="http://www.perl.org/">Perl</a> on your
+machine. Run the script like this (note the explicit use of the perl
+interpreter):</p>
+<pre>% <strong>cd libwww</strong>
+% <strong>perl config/winConfigure.pl</strong></pre>
+
+<p>Windows people are now done and can jump directly to the instructions for
+<a href="SourceDist.html#Installation">how to compile Amaya</a>. On Unix, you
+need two additional steps.</p>
+
+<h3><a name="More">2. Generate Makefile (Unix only)</a></h3>
+
+<p>Now <a name="Using11">generate</a> the make files as follows - don't worry
+about the <a
+href="http://subzero.campus.luth.se/FreeDocs/autoconf-2.12/autoconf_44.html#IDX36">warnings
+produced by autoconf</a>:</p>
+<pre>% <strong>aclocal; autoheader; automake; autoconf</strong></pre>
+
+<p>Now you <strong>MUST</strong> run the configure script as described in the
+next section on <a href="#Compiling">installation instructions</a>. If for
+some reason <em>you have trouble</em> running the configure script then try
+and run this command instead</p>
+<pre>% <strong>make distclean; aclocal; autoheader; automake; </strong><strong>autoconf</strong></pre>
+
+<h3 id="Configure">3. Configure and compile libwww</h3>
+
+<p>It'l be done automatically when you'll <a
+href="SourceDist#Installation">compile Amaya</a>.</p>
+
+<h2><a name="Compiling">Configuring and Compiling Amaya</a></h2>
+
+<p>Remember to <a
+href="mailto:www-amaya-request@w3.org?subject=subscribe">subscribe to the
+&lt;www-amaya@w3.org></a> mailing list (<a
+href="http://lists.w3.org/Archives/Public/www-amaya/">archives</a>) for
+information of new features as well as discussions of problems and ideas.</p>
+
+<p>Congratulations - you are now ready to <a
+href="SourceDist.html#Installing">configure and compile Amaya</a>!</p>
+
+<p></p>
+<hr>
+
+<address>
+  <a href="mailto:jose.kahan@w3.org">Jos&eacute; Kahan</a><br>
+  $Date$ 
+</address>
+
+<p class="policyfooter"><small><a
+href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Copyright">Copyright</a>
+&nbsp;&copy;&nbsp; 1999  <a href="http://www.w3.org/">W3C</a> (<a
+href="http://www.lcs.mit.edu/">MIT</a>, <a
+href="http://www.inria.fr/">INRIA</a>, <a
+href="http://www.keio.ac.jp/">Keio</a> ), All Rights Reserved. W3C <a
+href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Legal
+Disclaimer">liability,</a> <a
+href="http://www.w3.org/Consortium/Legal/ipr-notice.html#W3C
+Trademarks">trademark</a>, <a
+href="http://www.w3.org/Consortium/Legal/copyright-documents.html">document
+use </a>and <a
+href="http://www.w3.org/Consortium/Legal/copyright-software.html">software
+licensing </a>rules apply. Your interactions with this site are in accordance
+with our <a
+href="http://www.w3.org/Consortium/Legal/privacy-statement.html#Public">public</a>
+and <a
+href="http://www.w3.org/Consortium/Legal/privacy-statement.html#Members">Member</a>
+privacy statements.</small></p>
+
+<p></p>
+</body>
+</html>
