@@ -697,7 +697,11 @@ int                 key;
 
              /* Recherche l'entree de 1er niveau */
              while (!found && ptr != NULL)
+#                  ifdef _WINDOWS
                    if (ptr->K_EntryCode == key && !(specialKey == FALSE && key == 27)) {
+#                  else  /* !_WINDOWS */
+                   if (ptr->K_EntryCode == key)) {
+#                  endif /* _WINDOWS */
                       /* On entre dans un automate */
                       found = TRUE;
                       Automata_current = ptr->K_Next;
