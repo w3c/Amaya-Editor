@@ -1364,7 +1364,7 @@ char               *target;
    char               *s;
    boolean             change;
 
-   change = TRUE;
+   change = FALSE;
    if (strncmp (src, "file:", 5) == 0)
      {
 	/* remove the prefix file: */
@@ -1379,6 +1379,7 @@ char               *target;
 	  }
 	else
 	   strcpy (target, &src[5]);
+	change = TRUE;
      }
 #  ifndef _WINDOWS
    else if (src[0] == '~')
@@ -1389,6 +1390,7 @@ char               *target;
 	if (src[1] != DIR_SEP)
 	  strcat (target, DIR_STR);
 	strcat (target, &src[1]);
+	change = TRUE;
      }
 #   endif /* _WINDOWS */
    else
@@ -1396,6 +1398,8 @@ char               *target;
 
    /* remove /../ and /./ */
    SimplifyUrl (&target);
+   if (!change)
+     change = strcmp (src, target);
    return (change);
 }
 
