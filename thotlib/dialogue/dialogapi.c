@@ -6018,9 +6018,10 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	    PopShell = XtCreatePopupShell ("", applicationShellWidgetClass, RootShell, args, 0);
 #else /* _GTK */
 	    PopShell = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-	    PopShell->style->font=DefaultFont;
+	    /*PopShell->style->font=DefaultFont;*/
 	    gtk_widget_realize (PopShell);
 	    gtk_window_set_title (GTK_WINDOW (PopShell), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+	    gtk_window_set_position (GTK_WINDOW (PopShell), GTK_WIN_POS_MOUSE);
 	    gtk_widget_set_uposition(GTK_WIDGET(PopShell), ShowX, ShowY);
 	    gtk_container_set_border_width (GTK_CONTAINER(PopShell), 10);
 	    ConnectSignalGTK (GTK_OBJECT(PopShell),
@@ -6086,10 +6087,11 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	else
 	{
 	  form = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-	  form->style->font=DefaultFont;
+	  /*form->style->font=DefaultFont;*/
 	  /*gtk_widget_realize (GTK_WIDGET(form));	*/
 	  gtk_widget_realize (GTK_WIDGET(form));	
 	  gtk_window_set_title (GTK_WINDOW (form), title);
+	  gtk_window_set_position (GTK_WINDOW (form), GTK_WIN_POS_MOUSE);
 	  ConnectSignalGTK (GTK_OBJECT(form),
 			    "delete_event",
 			    GTK_SIGNAL_FUNC(gtk_true),
@@ -6230,7 +6232,7 @@ static void NewSheet (int ref, ThotWidget parent, char *title, int number,
 	/* Create the hbox for buttons */
 	tmpw = gtk_hbox_new (FALSE, 5);
 	gtk_widget_show_all (tmpw);
-	tmpw->style->font=formFONT;
+	/*tmpw->style->font=formFONT;*/
 	gtk_widget_set_name (tmpw, "Dialogue");
 	gtk_box_pack_start (GTK_BOX(row), tmpw, FALSE, FALSE, 0);
 	row=tmpw;
