@@ -201,7 +201,7 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
    NotifyOnValue       notifyVal;
    NotifyElement       notifyEl;
    int                 NSiblings, i, asc, nR;
-   ThotBool            stop, ok, possible, isCell;
+   ThotBool            stop, ok, possible;
 
    pPasted = NULL;
    pAncest = NULL;
@@ -209,26 +209,45 @@ static PtrElement PasteAnElement (PtrElement pEl, PtrPasteElem pSavedEl,
    if (addedCell)
      pOrig = addedCell;
    else
+     pOrig = pSavedEl->PeElement;
+
+   /* don't paste a cell if the enclosing row is not pasted */
+   if (!TypeHasException (ExcIsCell, pEl->ElTypeNumber,
+			  pEl->ElStructSchema) &&
+       TypeHasException (ExcIsCell, pOrig->ElTypeNumber,
+			 pOrig->ElStructSchema))
      {
-       pOrig = pSavedEl->PeElement;
-       isCell = TypeHasException (ExcIsCell, pOrig->ElTypeNumber,
-				  pOrig->ElStructSchema);
-       /* don't paste a cell if the enclosing row is not pasted */
-       if (cellChild == NULL && isCell)
+       if (pOrig && pOrig->ElFirstChild)
 	 {
-	   if (pOrig && pOrig->ElFirstChild)
-	     {
-	       /* paste children of the cell instead of the cell itself */
-	       pOrig = pOrig->ElFirstChild;
-	       if (pOrig->ElStructSchema &&
-		   !strcmp (pOrig->ElStructSchema->SsName, "MathML"))
-		 /* go down one mor step */
-		 pOrig = pOrig->ElFirstChild;
-	       *cellChild = pOrig;
-	       isCell = FALSE;
-	     }
+	   /* paste children of the cell instead of the cell itself */
+	   pOrig = pOrig->ElFirstChild;
+	   if (pOrig->ElStructSchema &&
+	       !strcmp (pOrig->ElStructSchema->SsName, "MathML"))
+	     /* go down one mor step */
+	     pOrig = pOrig->ElFirstChild;
+	   *cellChild = pOrig;
 	 }
      }
+   else if (!TypeHasException (ExcIsRow, pEl->ElTypeNumber,
+			       pEl->ElStructSchema) &&
+	    TypeHasException (ExcIsRow, pOrig->ElTypeNumber,
+			      pOrig->ElStructSchema))
+     {
+       /* paste children of the cell instead of the cell itself */
+       pChild = pOrig->ElFirstChild;
+       while (pChild && pChild->ElNext)
+	 pChild = pChild->ElNext;
+       while (pChild && pEl)
+	 {
+	   /* don't check enclosed cells */
+	   pElem = PasteAnElement (pEl, NULL, within, FALSE,
+				   cancelled, pDoc, cellChild, pChild);
+	   pEl = pElem;
+	   pChild = pChild->ElPrevious;
+	 }
+       return pElem;
+     }
+
    ok = FALSE;
    if (within)
      {
@@ -629,10 +648,11 @@ void PasteCommand ()
   int                 firstChar, lastChar, view, i, nRowsTempCol, info = 0;
   int                 colspan, rowspan, back, nbextended;
   ThotBool            ok, before, within, lock, cancelled, first, beginning;
-  ThotBool            savebefore;
+  ThotBool            savebefore, withinTable;
 
   before = FALSE;
   nbextended = 0;
+  withinTable = FALSE;
   pColHead = pRow = pNextRow = pTable = NULL;
   if (FirstSavedElement == NULL)
     return;
@@ -681,7 +701,10 @@ void PasteCommand ()
 		  pCell = pCell->ElParent;
 		}
 	      if (pCell)
-		before = beginning;
+		{
+		  before = beginning;
+		  withinTable = TRUE;
+		}
 	    }
 
 	  if (WholeColumnSaved && pCell)
@@ -804,7 +827,7 @@ void PasteCommand ()
 	  nRowsTempCol = 0;
 	  do
 	    {
-	      if (WholeColumnSaved)
+	      if (WholeColumnSaved && withinTable)
 		{
 		  /* look for the cell in that row and that column or
 		     in a previous column */

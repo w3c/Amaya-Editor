@@ -761,7 +761,7 @@ static void CheckTableWidths (PtrAbstractBox table, int frame, ThotBool freely)
 	sumPercent = minOfPercent;
     }
 #ifdef TAB_DEBUG
-printf ("\nCheckTableWidths (%s) %d cols\n", table->AbElement->ElLabel, cNumber);
+  printf ("\nCheckTableWidths (%s) %d cols\n", table->AbElement->ElLabel, cNumber);
 #endif
 
   /* now update real widths */
@@ -769,7 +769,7 @@ printf ("\nCheckTableWidths (%s) %d cols\n", table->AbElement->ElLabel, cNumber)
   if (max + sum + sumPercent <= width && !constraint)
     {
 #ifdef TAB_DEBUG
-printf ("Maximum Widths ...\n");
+  printf ("Maximum Widths ...\n");
 #endif
       /* assign the maximum width, or the percent, or the width */
       width = max + sum + sumPercent;
@@ -1020,7 +1020,7 @@ printf ("Specific Widths ...\n");
   CheckMBP (table, table->AbBox, frame, TRUE);
   table->AbBox->BxCycles = 0;
 #ifdef TAB_DEBUG
-printf("End CheckTableWidths (%s) = %d [%d]\n", table->AbElement->ElLabel,
+  printf("End CheckTableWidths (%s) = %d [%d]\n", table->AbElement->ElLabel,
        table->AbBox->BxWidth, table->AbBox->BxW);
 #endif
   TtaFreeMemory (colBox);
@@ -1036,6 +1036,8 @@ printf("End CheckTableWidths (%s) = %d [%d]\n", table->AbElement->ElLabel,
 static void ChangeTableWidth (PtrAbstractBox table, int frame)
 {
   /* table formatting in the main view only */
+  if (table == NULL || FrameTable[frame].FrDoc == 0)
+    return;
   if (FrameTable[frame].FrView != 1)
     return;
 
@@ -1675,7 +1677,6 @@ static ThotBool SetCellWidths (PtrAbstractBox cell, PtrAbstractBox table, int fr
 
 /*----------------------------------------------------------------------
   UpdateCellHeight
-
   The cell height changes, we need to propagate the change.
   ----------------------------------------------------------------------*/
 static void UpdateCellHeight (PtrAbstractBox cell, int frame)
@@ -1684,6 +1685,8 @@ static void UpdateCellHeight (PtrAbstractBox cell, int frame)
   PtrAbstractBox      row;
 
   /* table formatting in the main view only */
+  if (cell == NULL || FrameTable[frame].FrDoc == 0)
+    return;
   if (FrameTable[frame].FrView != 1)
     return;
 
@@ -1707,6 +1710,52 @@ static void UpdateCellHeight (PtrAbstractBox cell, int frame)
 }
 
 
+
+/*----------------------------------------------------------------------
+  UpdateCellRowSpan
+  The column width changes, we need to propagate the change.
+  ----------------------------------------------------------------------*/
+static void UpdateCellRowSpan (PtrAbstractBox cell, PtrAbstractBox table)
+{
+  PtrTabSpan          pTabSpan;
+  PtrAttribute        pAttr;
+  PtrSSchema          pSS;
+  int                 i, attrVSpan;
+
+  if (table && table->AbBox)
+    {
+      /* check if the cell is into the list of vertical spanned cells */
+      pTabSpan = table->AbBox->BxSpans;
+      pSS = table->AbElement->ElStructSchema;
+      while (pTabSpan)
+	{
+	  for (i = 0; i < MAX_RELAT_DIM; i++)
+	    {
+	      if (cell == pTabSpan->TaSpanCell[i])
+		{
+		  pAttr = cell->AbElement->ElFirstAttr;
+		  attrVSpan = GetAttrWithException (ExcRowSpan, pSS);
+		  while (pAttr)
+		    {
+		      if (pAttr->AeAttrNum == attrVSpan &&
+			  pAttr->AeAttrSSchema == pSS)
+			{
+			  if (pAttr->AeAttrValue != pTabSpan->TaSpanNumber[i])
+			    /* update the registered row span value */
+			    pTabSpan->TaSpanNumber[i] = pAttr->AeAttrValue;
+			  pAttr = NULL;
+			}
+		      else
+			pAttr = pAttr->AeNext;
+		    }
+		  return;
+		}
+	    }
+	  pTabSpan = pTabSpan->TaSpanNext;
+	}
+    }
+}
+
 /*----------------------------------------------------------------------
   UpdateColumnWidth
   The column width changes, we need to propagate the change.
@@ -1717,6 +1766,8 @@ static void UpdateColumnWidth (PtrAbstractBox cell, PtrAbstractBox col, int fram
   PtrAbstractBox      row;
 
   /* table formatting in the main view only */
+  if (FrameTable[frame].FrDoc == 0)
+    return;
   if (FrameTable[frame].FrView != 1)
     return;
 
@@ -1731,6 +1782,8 @@ static void UpdateColumnWidth (PtrAbstractBox cell, PtrAbstractBox col, int fram
       row = SearchEnclosingType (cell, BoRow, BoRow);
       if (row  && row->AbBox)
 	table = (PtrAbstractBox) row->AbBox->BxTable;
+      /* if the cell is row spanned update its rowspan value */
+      UpdateCellRowSpan (cell, table);
     }
   if (table && !table->AbNew && !table->AbDead &&
       table->AbBox && table->AbBox->BxCycles == 0)
@@ -1771,6 +1824,8 @@ static void UpdateTable (PtrAbstractBox table, PtrAbstractBox col,
   PtrAbstractBox      pAb;
 
   /* table formatting in the main view only */
+  if (FrameTable[frame].FrDoc == 0)
+    return;
   if (FrameTable[frame].FrView != 1)
     return;
 

@@ -2153,7 +2153,6 @@ void CellVertExtend (Document doc, View view)
 	    newSpan = span + nextSpan;
 	  /* merge the following cell(s) with the current cell */
 	  ChangeRowspan (cell, span, newSpan, doc);
-	  SetRowExt (cell, newSpan, doc, inMath);
 	  /* set and register the new value of attribute rowspan */
 	  if (newAttr)
 	    {
@@ -2165,6 +2164,7 @@ void CellVertExtend (Document doc, View view)
 	      TtaRegisterAttributeReplace (attr, cell, doc);
 	      TtaSetAttributeValue (attr, newSpan, cell, doc);
 	    }
+	  SetRowExt (cell, newSpan, doc, inMath);
 	  TtaCloseUndoSequence (doc);
 	  TtaSetDocumentModified (doc);
 	}

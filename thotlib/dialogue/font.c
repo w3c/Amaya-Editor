@@ -1000,10 +1000,6 @@ int PixelValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
 #ifdef _WIN_PRINT
       if (TtPrinterDC && ScreenDPI)
 	dist = (dist * PrinterDPI + ScreenDPI / 2) / ScreenDPI;
-#else /* _WIN_PRINT */
-      if (Printing)
-	/* Postscript unit is the point instead of the pixel */
-	dist = PixelToPoint (dist);
 #endif /* _WIN_PRINT */
       break;
     case UnPercent:
@@ -1056,7 +1052,7 @@ int LogicalValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
        else
 	 dist = val;
 #ifndef _WIN_PRINT
-       if (!Printing)
+       /*if (!Printing)*/
 	 /* Postscript unit is the point instead of the pixel */
 #endif /* _WIN_PRINT */
 	 dist = PixelToPoint (dist);
@@ -1076,10 +1072,6 @@ int LogicalValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
 #ifdef _WIN_PRINT
        if (TtPrinterDC && PrinterDPI)
 	 dist = (dist * ScreenDPI + PrinterDPI / 2) / PrinterDPI;
-#else /* _WIN_PRINT */
-      if (Printing)
-	 /* Postscript unit is the point instead of the pixel */
-	 dist = PixelToPoint (dist);
 #endif /* _WIN_PRINT */
         break;
      case UnPercent:
@@ -2314,10 +2306,8 @@ SpecFont ThotLoadFont (char script, int family, int highlight, int size,
 	size = (size * 72 + ScreenDPI / 2) / ScreenDPI;
 #else /* _WIN_PRINT */
         /* adjust the font size to the printer definition */
-        size = (size * 72 + DOT_PER_INCH / 2) / DOT_PER_INCH;
+       size = (size * 72 + DOT_PER_INCH / 2) / DOT_PER_INCH;
 #endif /* _WIN_PRINT */
-    /*else
-	size = LogicalValue (size, UnPoint, NULL, 0)*/;
       unit = UnPoint;
     }
   else if (unit == UnXHeight || unit == UnPercent)

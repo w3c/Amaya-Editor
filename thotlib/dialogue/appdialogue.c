@@ -3181,7 +3181,7 @@ static ThotWidget GetGLArea ()
   Create a frame at position X,Y and dimensions width,height (if >0).
   - name gives the title of the window.
   - schema gives the schema name of the current document.
-  - view is the view number.
+  - view is the schema view number.
   - doc gives the document index.
   - withMenu is TRUE when menus are displayed
   - withButton is TRUE when buttons are displayed
