@@ -2468,26 +2468,35 @@ void selection_received (GtkWidget *widget, GtkSelectionData *sel_data,
   return;
 } 
 
+/*When user begin a new selection*/
+void gtk_claim_selection()
+{
+  if (FrameTable[ActiveFrame].WdFrame)
+    {
+      /* but now we own the selection, so goodbye to the other app */
+      gtk_selection_owner_set (GTK_WIDGET(FrameTable[ActiveFrame].WdFrame),
+			       GDK_SELECTION_PRIMARY,
+			       GDK_CURRENT_TIME);
+    }
+}
+
 /*-----------------------------------------------------------------------
   get_targets
   Signal handler invoked when user focus on drawing area 
--------------------------------------------------------------------------*/
+  -------------------------------------------------------------------------*/
 void get_targets ( GtkWidget *widget,  gpointer data )
 {
   static GdkAtom targets_atom = GDK_NONE;
-	  
+  
   if (targets_atom == GDK_NONE)
     targets_atom = gdk_atom_intern ("STRING", FALSE);
-  if (FrameTable[ActiveFrame].WdFrame){
+  if (FrameTable[ActiveFrame].WdFrame)
+    {
       gtk_selection_convert (GTK_WIDGET(FrameTable[ActiveFrame].WdFrame), 
-	  GDK_SELECTION_PRIMARY, 
-	  targets_atom,  
-	  GDK_CURRENT_TIME);
-      /* but now we own the selection, so goodbye to the other app */
-      gtk_selection_owner_set (GTK_WIDGET(FrameTable[ActiveFrame].WdFrame),
-	  GDK_SELECTION_PRIMARY,
-	  GDK_CURRENT_TIME);
-  }
+			     GDK_SELECTION_PRIMARY, 
+			     targets_atom,  
+			     GDK_CURRENT_TIME);
+    }
 }
 
 /*-----------------------------------------------------------------------
@@ -2498,11 +2507,12 @@ gint selection_clear ( GtkWidget         *widget,
     GdkEventSelection *event,
     gpointer data )
 {
-    if (Xbuffer != NULL)
-       free(Xbuffer);
-   Xbuffer = NULL;
-   ClipboardLength = 0;
-   TtaClearViewSelections ();
+  if (Xbuffer != NULL)
+    free(Xbuffer);
+  Xbuffer = NULL;
+  ClipboardLength = 0;
+  TtaClearViewSelections ();
+  
   return TRUE;
 }
  
