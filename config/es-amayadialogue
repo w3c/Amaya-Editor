@@ -28,7 +28,7 @@
 26 Guardar
 27 Guardar como...
 28 Sinchronizar
-29 **Latin Reading
+29 Recargar como ISO-latin-1
 30 Información de documento
 31 Configurar e imprimir...
 32 Imprimir
@@ -201,8 +201,8 @@
 199 Plantillas...
 200 Anotar selección
 201 Anotar documento
-202 **Reassign annotation (selection)
-203 **Reassign annotation (XPointer)
+202 **Move to selection
+203 **Move to stored XPointer
 204 Post anotacion
 205 Borrar anotación
 206 Cargar anotaciones

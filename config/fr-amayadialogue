@@ -28,7 +28,7 @@
 26 Sauver
 27 Sauver comme...
 28 Synchroniser
-29 **Latin Reading
+29 Reouvrir en ISO-latin-1
 30 Informations sur le document
 31 Paramétrer et imprimer...
 32 Imprimer
@@ -201,8 +201,8 @@
 199 Modèles de page
 200 Annoter la séléction
 201 Annoter le document
-202 **Reassign annotation (selection)
-203 **Reassign annotation (XPointer)
+202 Déplacer sur la séléction
+203 Déplacer sur le XPointer enregistré
 204 Enregister une annotation
 205 Détruire l'annotation
 206 Charger les annotations

@@ -28,7 +28,7 @@
 26 Salva
 27 Salva con nome...
 28 Sincronizza
-29 **Latin Reading
+29 Riapri in ISO-latin-1
 30 Informazioni sul documento
 31 Imposta e stampa...
 32 Stampa
@@ -201,8 +201,8 @@
 199 Modelli...
 200 Annota la selezione
 201 Annota il documento
-202 **Reassign annotation (selection)
-203 **Reassign annotation (XPointer)
+202 **Move to selection
+203 **Move to stored XPointer
 204 Registra annotazione
 205 Elimina l'annotazione
 206 Carica annotazioni

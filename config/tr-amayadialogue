@@ -28,7 +28,7 @@
 26 Kaydet
 27 Ýsimle kaydet...
 28 **Synchronize
-29 **Latin Reading
+29 **Reopen ISO-latin-1
 30 **Document Information
 31 **Setup and Print...
 32 Yapýlandýr ve yazdýr
@@ -201,8 +201,8 @@
 199 **Templates...
 200 **Annotate selection
 201 **Annotate document
-202 **Reassign annotation (selection)
-203 **Reassign annotation (XPointer)
+202 **Move to selection
+203 **Move to stored XPointer
 204 **Post annotation
 205 **Delete annotation
 206 **Load annotations

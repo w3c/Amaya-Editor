@@ -28,7 +28,7 @@
 26 Speichern
 27 Speichern unter...
 28 Synchronisieren
-29 **Latin Reading
+29 ISO-latin-1 new laden
 30 Dateiinformationen
 31 Einstellungen und Druck...
 32 Drucken
@@ -138,7 +138,7 @@
 136 Markierung als Verknüfung definieren...
 137 Markierung als Verknüpfungsziel definieren
 138 Verknüpfungsziel löschen
-139 **Store selection as XPointer
+139 Auswahl als XPointer speichern
 140 Symbolleiste
 141 Dokumentadresse
 142 Aktive Grafikbereiche markieren
@@ -201,8 +201,8 @@
 199 Seitenvorlagen...
 200 Auswahl kommentieren
 201 Dokument kommentieren
-202 **Reassign annotation (selection)
-203 **Reassign annotation (XPointer)
+202 Anmerkung in die auswahl verschieben
+203 Anmerkung in gespeicherten XPointer verschieben
 204 Anmerkung veröffentlichen
 205 Kommentierung entfernen
 206 Anmerkungen laden
