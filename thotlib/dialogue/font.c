@@ -384,7 +384,8 @@ static HFONT WIN_LoadFont (char script, int family, int highlight, int size)
 #ifdef _WIN_PRINT
    nHeight = -MulDiv(size, DOT_PER_INCH, 80);
 #else /* _WIN_PRINT */
-   nHeight = -size;
+   /*nHeight = -size;*/
+   nHeight = -MulDiv(size, DOT_PER_INCH, 80);
 #endif /* _WIN_PRINT */
   hFont = GetWinFontConfig (script, family, highlight, nHeight);
  

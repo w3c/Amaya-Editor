@@ -450,7 +450,7 @@ void ThotInitDisplay (char* name, int dx, int dy)
      DeleteObject (WIN_LastBitmap);
    WIN_LastBitmap = 0;
    InitCurs ();
-   DOT_PER_INCH = 80 /*GetDeviceCaps (TtDisplay, LOGPIXELSY)*/;
+   DOT_PER_INCH = GetDeviceCaps (TtDisplay, LOGPIXELSY);
    InitDialogueFonts (name);
 
    /* Initialization of Picture Drivers */
