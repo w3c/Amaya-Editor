@@ -64,7 +64,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W3 /GR /GX /ZI /Od /I "..\..\annotlib" /I "..\..\annotlib\f" /I "..\..\libraptor" /I "..\amaya" /I "..\..\amaya" /I "..\..\amaya\f" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\var" /I "..\..\thotlib\include" /I "..\thotlib\internals\f" /I "..\..\..\libwww\Library\src" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I "..\annotlib" /I "..\annotlib\f" /D "_DEBUG" /D "_WINDOWS" /D "_STIX" /D "__STDC__" /D "ANNOTATIONS" /D "RAPTOR_RDF_PARSER" /D "_GL" /D "WIN32" /D "_WINGUI" /FD /GZ /c
+# ADD CPP /nologo /MTd /W3 /GR /GX /ZI /Od /I "..\..\annotlib" /I "..\..\annotlib\f" /I "..\..\..\redland\raptor" /I "..\..\..\redland\librdf" /I "..\amaya" /I "..\..\amaya" /I "..\..\amaya\f" /I "..\..\thotlib\internals\h" /I "..\..\thotlib\internals\var" /I "..\..\thotlib\include" /I "..\thotlib\internals\f" /I "..\..\..\libwww\Library\src" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I "..\annotlib" /I "..\annotlib\f" /D "_DEBUG" /D "_WINDOWS" /D "_STIX" /D "__STDC__" /D "ANNOTATIONS" /D "RAPTOR_RDF_PARSER" /D "AM_REDLAND" /D "_GL" /D "WIN32" /D "_WINGUI" /D "LIBRDF_INTERNAL" /D "RAPTOR_INTERNAL" /FD /GZ /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x40c /d "_DEBUG"
 # ADD RSC /l 0x40c /d "_DEBUG"
@@ -112,6 +112,30 @@ SOURCE=..\..\annotlib\ANNOTschemas.c
 # Begin Source File
 
 SOURCE=..\..\annotlib\ANNOTtools.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\annotlib\BMevent.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\annotlib\BMfile.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\annotlib\BMmenu.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\annotlib\BMtools.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\annotlib\BMview.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\TopicsAPP.c
 # End Source File
 # End Target
 # End Project

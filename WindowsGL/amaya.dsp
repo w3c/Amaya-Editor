@@ -69,7 +69,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MTd /W3 /GR /GX /ZI /Od /I "..\..\freetype-2.1.0\include" /I "..\..\..\libwww\modules\expat\lib" /I ".\..\libwww\modules\expat\lib" /I "..\freetype-2.1.0\objs" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\..\libwww\modules\expat\lib" /I "..\libpng\zlib" /I "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /I "..\davlib\h" /I "..\davlib\f" /I "..\davlib\tree\h" /D "_DEBUG" /D "EXPAT_PARSER" /D "_WINDOWS" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D "_STIX" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /D "XML_GENERIC" /D "DAV" /D "_GL" /D "WIN32" /D "_WINGUI" /FR /YX /FD /GZ /c
+# ADD CPP /nologo /MTd /W3 /GR /GX /ZI /Od /I "..\..\freetype-2.1.0\include" /I "..\..\..\libwww\modules\expat\lib" /I ".\..\libwww\modules\expat\lib" /I "..\freetype-2.1.0\objs" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\..\libwww\modules\expat\lib" /I "..\libpng\zlib" /I "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /I "..\davlib\h" /I "..\davlib\f" /I "..\davlib\tree\h" /D "_DEBUG" /D "EXPAT_PARSER" /D "_WINDOWS" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D "_STIX" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /D "XML_GENERIC" /D "DAV" /D "_GL" /D "WIN32" /D "_WINGUI" /D "BOOKMARKS" /FR /YX /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /o /win32 "NUL"
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /o /win32 "NUL"
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
@@ -319,6 +319,10 @@ SOURCE=.\libThotEditor.lib
 # Begin Source File
 
 SOURCE=.\libwww.lib
+# End Source File
+# Begin Source File
+
+SOURCE=.\librdf\Debug\librdf.lib
 # End Source File
 # Begin Source File
 
