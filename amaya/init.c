@@ -98,9 +98,7 @@
 #include <direct.h>
 #endif 
 */
-extern HWND     FrMainRef [12];
 extern int      currentFrame;
-extern char     wTitle [MAX_LENGTH];
 int             Window_Curs;
 char            DocToOpen[MAX_LENGTH];
 #endif /* _WINDOWS */
@@ -3761,10 +3759,6 @@ Document GetHTMLDocument (const char *documentPath, char *form_data,
      NormalizeURL (tempdocument, baseDoc, pathname, documentname, NULL);
    else
      NormalizeURL (tempdocument, 0, pathname, documentname, NULL);
-
-#ifdef _WINDOWS
-   sprintf (wTitle, "%s", documentname);
-#endif /* _WINDOWS */
 
    /* check the document suffix */
    if (IsMathMLName (documentname))
