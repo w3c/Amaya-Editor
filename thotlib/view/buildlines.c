@@ -2180,8 +2180,13 @@ void                ComputeLines (PtrBox pBox, int frame, int *height)
 	      else
 		{
 		  x = pLine->LiXOrg;
-		  if (!extensibleBox)
+		  if (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum &&
+		      pLine->LiRealLength > pBox->BxW)
+		    pBox->BxContentWidth = TRUE;
+		  if (!pBox->BxContentWidth)
 		    {
+		      if (extensibleBox)
+			pLine->LiXMax = pBox->BxW;
 		      if (pAb->AbAdjust == AlignCenter)
 			x += (pLine->LiXMax - pLine->LiRealLength) / 2;
 		      else if (pAb->AbAdjust == AlignRight)

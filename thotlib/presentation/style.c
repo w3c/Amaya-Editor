@@ -1135,7 +1135,8 @@ static void PresRuleRemove (PtrPSchema tsch, GenericContext ctxt,
  ----------------------------------------------------------------------*/
 static void PresentationValueToPRule (PresentationValue val, int type,
 				      PtrPRule rule, int funcType,
-				      ThotBool absolute, ThotBool generic)
+				      ThotBool absolute, ThotBool generic,
+				      ThotBool minValue)
 {
   TypeUnit            int_unit;
   int                 value;
@@ -1472,7 +1473,7 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	  rule->PrDimRule.DrSameDimens = TRUE;
 	  rule->PrDimRule.DrUnit = int_unit;
 	  rule->PrDimRule.DrAttr = FALSE;
-	  rule->PrDimRule.DrMin = TRUE;
+	  rule->PrDimRule.DrMin = minValue;
 	  rule->PrDimRule.DrUserSpecified = FALSE;
 	  rule->PrDimRule.DrRelation = RlEnclosed;
 	  rule->PrDimRule.DrNotRelat = FALSE;
@@ -1508,7 +1509,7 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	  rule->PrDimRule.DrSameDimens = TRUE;
 	  rule->PrDimRule.DrUnit = int_unit;
 	  rule->PrDimRule.DrAttr = FALSE;
-	  rule->PrDimRule.DrMin = TRUE;
+	  rule->PrDimRule.DrMin = minValue;
 	  rule->PrDimRule.DrUserSpecified = FALSE;
 	  rule->PrDimRule.DrRelation = RlEnclosing;
 	  rule->PrDimRule.DrNotRelat = FALSE;
@@ -2153,15 +2154,32 @@ int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
   GenericContext    ctxt = (GenericContext) c;
   PtrPRule          pRule;
   PRuleType         intRule;
+  ElementType       elType;
   unsigned int      func = 0;
   int               cst = 0;
   int               i;
   int               attrType;
   int               doc = c->doc;
-  ThotBool          absolute, generic;
+  ThotBool          absolute, generic, minValue;
 
   TypeToPresentation (type, &intRule, &func, &absolute);
   generic = (el == NULL);
+  if (type == PRHeight)
+    {
+      /* check if the height is a minimum value or not */
+      if (!generic)
+	{
+	  elType = TtaGetElementType (el);
+	  i = elType.ElTypeNum;
+	}
+      else
+	i = ctxt->type;
+      /* apply a min value for all compound element */
+      minValue = (i == 0 || i >= PageBreak);
+    }
+  else
+    minValue = FALSE;
+
   if (c->destroy)
     {
       if (generic)
@@ -2189,7 +2207,8 @@ int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
 	      v.typed_data.value = cst;
 	      v.typed_data.real = FALSE;
 	    }
-	  PresentationValueToPRule (v, intRule, pRule, func, absolute, generic);
+	  PresentationValueToPRule (v, intRule, pRule, func, absolute, generic,
+				    minValue);
 	  if (generic)
 	    {
 	      pRule->PrViewNum = 1;

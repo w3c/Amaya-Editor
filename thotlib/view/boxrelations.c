@@ -1510,7 +1510,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 	  /* check if the relative box is not already dead */
 	  if (pDimAb->DimAbRef && IsDead (pDimAb->DimAbRef))
 	    {
-	      fprintf (stderr, "Dimension refers a dead box");
+	      /* the dimension refers a dead box */
 	      pDimAb->DimAbRef = NULL;
 	      pDimAb->DimValue = -1;
 	    }
@@ -1536,7 +1536,7 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 	      else
 		pDimAb->DimUnit = UnPixel;
 	    }
-	  
+
 	  if (pParentAb == NULL)
 	    /* It's the root box */
 	    if (horizRef)

@@ -732,11 +732,8 @@ void GiveEnclosureSize (PtrAbstractBox pAb, int frame, int *width,
 	  ComputeLines (pCurrentBox, frame, height);
 	  if (pCurrentBox->BxContentWidth ||
 	      (hMin && pCurrentBox->BxMaxWidth > pCurrentBox->BxW))
-	    {
-	      /* it's an extensible line */
-	      pCurrentBox->BxContentWidth = TRUE;
-	      pCurrentBox->BxW = pCurrentBox->BxMaxWidth;
-	    }
+	    /* it's an extensible line */
+	    pCurrentBox->BxW = pCurrentBox->BxMaxWidth;
 	}
       *width = pCurrentBox->BxW;
     }
@@ -1442,8 +1439,8 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 	      pCurrentBox->BxMinWidth = 0;
 	    }
 	  
-	  /* Si le pave est mis en ligne et secable -> la boite est eclatee */
 	  if (inLines && pAb->AbAcceptLineBreak)
+	    /* the abstract box is in line but accepts line breaks it becomes a ghost */
 	    {
 	      if (pAb->AbFirstEnclosed != NULL)
 		{
@@ -1451,6 +1448,7 @@ static PtrBox CreateBox (PtrAbstractBox pAb, int frame, ThotBool inLines,
 		  pCurrentBox->BxType = BoGhost;
 		}
 	    }
+
 	  /* Is there a background image ? */
 	  if (pAb->AbPictBackground != NULL)
 	    {
