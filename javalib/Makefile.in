@@ -16,10 +16,12 @@ INCLUDES= -DHAVE_CONFIG_H -I@srcdir@ -I.. -I. -I@srcdir@/f \
 	  @THOTINCLUDES@ @X_CFLAGS@
 
 JAVASTUB= ../bin/javastub
-JAVAC	= javac
-KAFFEH	= ../bin/kaffeh
+JAVAC	= cd $(THOTDIR)/classes ; CLASSPATH=".:`pwd`:`pwd`/classes.zip:`pwd`/biss.zip:`pwd`/jigsaw.zip";\
+          export CLASSPATH; javac
+KAFFEH	= CLASSPATH=".:$(THOTDIR)/classes:$(THOTDIR)/classes/classes.zip:$(THOTDIR)/classes/biss.zip:$(THOTDIR)/classes/jigsaw.zip";\
+          export CLASSPATH; ../bin/kaffeh
 
-COMPILERS= $(JAVASTUB) $(KAFFEH) ../bin/kaffe
+COMPILERS= $(JAVASTUB) ../bin/kaffeh ../bin/kaffe
 
 prefix = @prefix@
 exec_prefix = @exec_prefix@
@@ -35,7 +37,7 @@ all : libThotJava.a libAmayaJava.a
 
 clean :
 	$(RM) libThotJava.a libAmayaJava.a
-	$(RM) *.o
+	$(RM) *.o *.c *.h javastub.log
 
 install : all
 	@(if test ! -d $(libdir) ; then $(MKDIR) $(libdir) ; fi)
@@ -51,7 +53,10 @@ include .depends
 ../tools/mkdep/mkdep : 
 	@(cd ../tools/mkdep ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
 
-.depends depend : ../tools/mkdep/mkdep
+.depends : ../tools/mkdep/mkdep
+	../tools/mkdep/mkdep -relative -vpath $(VPATH) $(INCLUDES) $(VPATH)/*.c  > .depends
+
+depend : ../tools/mkdep/mkdep
 	../tools/mkdep/mkdep -relative -vpath $(VPATH) $(INCLUDES) *.c $(VPATH)/*.c  > .depends
 
 ../bin/kaffe ../bin/kaffeh :
@@ -113,20 +118,8 @@ libAmayaJava.a : $(AMAYA_JAVA_OBJ)
 #									#
 #########################################################################
 
-APICLASSES=Application Document Tree Content Attribute Reference \
-        Language Presentation View Selection Interface Registry \
-	Dialog LibMsg AppAction
-        
-CLASSES=Element SSchema Document ElementType Attribute \
-        AttributeType PRule Extra Language IntPtr Action
-	
-HEADER=StringBuffer
-
-AMAYAAPI_CLASSES=JavaAmaya AmayaMsg
-AMAYAAPI_CLASSES_UP=Html
-AMAYA_CLASSES=HTTPRequest
-
 stubs : thotlib_stubs amaya_stubs java_stubs
+	@make depend
 
 thotlib_stubs : \
     thotlib_APIApplication.h \
@@ -159,7 +152,7 @@ thotlib_stubs : \
 thotlib_Action.h : $(THOTDIR)/classes/thotlib/Action.java $(COMPILERS)
 	@echo
 	@echo "Compiling Java class Action"
-	cd $(THOTDIR)/classes ; $(JAVAC) thotlib/Action.java
+	$(JAVAC) thotlib/Action.java
 	@echo
 	@echo "Producing header for class Action"
 	$(KAFFEH) thotlib.Action
@@ -167,7 +160,7 @@ thotlib_Action.h : $(THOTDIR)/classes/thotlib/Action.java $(COMPILERS)
 thotlib_IntPtr.h : $(THOTDIR)/classes/thotlib/IntPtr.java $(COMPILERS)
 	@echo
 	@echo "Compiling Java class IntPtr"
-	cd $(THOTDIR)/classes ; $(JAVAC) thotlib/IntPtr.java
+	$(JAVAC) thotlib/IntPtr.java
 	@echo
 	@echo "Producing header for class IntPtr"
 	$(KAFFEH) thotlib.IntPtr
@@ -175,7 +168,7 @@ thotlib_IntPtr.h : $(THOTDIR)/classes/thotlib/IntPtr.java $(COMPILERS)
 thotlib_Language.h : $(THOTDIR)/classes/thotlib/Language.java $(COMPILERS)
 	@echo
 	@echo "Compiling Java class Language"
-	cd $(THOTDIR)/classes ; $(JAVAC) thotlib/Language.java
+	$(JAVAC) thotlib/Language.java
 	@echo
 	@echo "Producing header for class Language"
 	$(KAFFEH) thotlib.Language
@@ -183,7 +176,7 @@ thotlib_Language.h : $(THOTDIR)/classes/thotlib/Language.java $(COMPILERS)
 thotlib_Extra.h : $(THOTDIR)/classes/thotlib/Extra.java $(COMPILERS)
 	@echo
 	@echo "Compiling Java class Extra"
-	cd $(THOTDIR)/classes ; $(JAVAC) thotlib/Extra.java
+	$(JAVAC) thotlib/Extra.java
 	@echo
 	@echo "Producing header for class Extra"
 	$(KAFFEH) thotlib.Extra
@@ -191,7 +184,7 @@ thotlib_Extra.h : $(THOTDIR)/classes/thotlib/Extra.java $(COMPILERS)
 thotlib_PRule.h : $(THOTDIR)/classes/thotlib/PRule.java $(COMPILERS)
 	@echo
 	@echo "Compiling Java class PRule"
-	cd $(THOTDIR)/classes ; $(JAVAC) thotlib/PRule.java
+	$(JAVAC) thotlib/PRule.java
 	@echo
 	@echo "Producing header for class PRule"
 	$(KAFFEH) thotlib.PRule
@@ -199,7 +192,7 @@ thotlib_PRule.h : $(THOTDIR)/classes/thotlib/PRule.java $(COMPILERS)
 thotlib_AttributeType.h : $(THOTDIR)/classes/thotlib/AttributeType.java $(COMPILERS)
 	@echo
 	@echo "Compiling Java class AttributeType"
-	cd $(THOTDIR)/classes ; $(JAVAC) thotlib/AttributeType.java
+	$(JAVAC) thotlib/AttributeType.java
 	@echo
 	@echo "Producing header for class AttributeType"
 	$(KAFFEH) thotlib.AttributeType
@@ -207,7 +200,7 @@ thotlib_AttributeType.h : $(THOTDIR)/classes/thotlib/AttributeType.java $(COMPIL
 thotlib_Attribute.h : $(THOTDIR)/classes/thotlib/Attribute.java $(COMPILERS)
 	@echo
 	@echo "Compiling Java class Attribute"
-	cd $(THOTDIR)/classes ; $(JAVAC) thotlib/Attribute.java
+	$(JAVAC) thotlib/Attribute.java
 	@echo
 	@echo "Producing header for class Attribute"
 	$(KAFFEH) thotlib.Attribute
@@ -215,7 +208,7 @@ thotlib_Attribute.h : $(THOTDIR)/classes/thotlib/Attribute.java $(COMPILERS)
 thotlib_ElementType.h : $(THOTDIR)/classes/thotlib/ElementType.java $(COMPILERS)
 	@echo
 	@echo "Compiling Java class ElementType"
-	cd $(THOTDIR)/classes ; $(JAVAC) thotlib/ElementType.java
+	$(JAVAC) thotlib/ElementType.java
 	@echo
 	@echo "Producing header for class ElementType"
 	$(KAFFEH) thotlib.ElementType
@@ -223,7 +216,7 @@ thotlib_ElementType.h : $(THOTDIR)/classes/thotlib/ElementType.java $(COMPILERS)
 thotlib_Document.h : $(THOTDIR)/classes/thotlib/Document.java $(COMPILERS)
 	@echo
 	@echo "Compiling Java class Document"
-	cd $(THOTDIR)/classes ; $(JAVAC) thotlib/Document.java
+	$(JAVAC) thotlib/Document.java
 	@echo
 	@echo "Producing header for class Document"
 	$(KAFFEH) thotlib.Document
@@ -231,7 +224,7 @@ thotlib_Document.h : $(THOTDIR)/classes/thotlib/Document.java $(COMPILERS)
 thotlib_SSchema.h : $(THOTDIR)/classes/thotlib/SSchema.java $(COMPILERS)
 	@echo
 	@echo "Compiling Java class SSchema"
-	cd $(THOTDIR)/classes ; $(JAVAC) thotlib/SSchema.java
+	$(JAVAC) thotlib/SSchema.java
 	@echo
 	@echo "Producing header for class SSchema"
 	$(KAFFEH) thotlib.SSchema
@@ -239,7 +232,7 @@ thotlib_SSchema.h : $(THOTDIR)/classes/thotlib/SSchema.java $(COMPILERS)
 thotlib_Element.h : $(THOTDIR)/classes/thotlib/Element.java $(COMPILERS)
 	@echo
 	@echo "Compiling Java class Element"
-	cd $(THOTDIR)/classes ; $(JAVAC) thotlib/Element.java
+	$(JAVAC) thotlib/Element.java
 	@echo
 	@echo "Producing header for class Element"
 	$(KAFFEH) thotlib.Element
@@ -255,7 +248,7 @@ thotlib_APIAppAction_stubs.c : $(THOTDIR)/thotlib/include/appaction.h \
 		    $(THOTDIR)/thotlib/include/appaction.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APIAppAction"
-	cd $(THOTDIR)/classes ; $(JAVAC) thotlib/APIAppAction.java
+	$(JAVAC) thotlib/APIAppAction.java
 	@echo
 	@echo "Producing header for class APIAppAction"
 	$(KAFFEH) thotlib.APIAppAction
@@ -271,7 +264,7 @@ thotlib_APILibMsg_stubs.c : $(THOTDIR)/thotlib/include/libmsg.h \
 		    $(THOTDIR)/thotlib/include/libmsg.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APILibMsg"
-	cd $(THOTDIR)/classes ; $(JAVAC) thotlib/APILibMsg.java
+	$(JAVAC) thotlib/APILibMsg.java
 	@echo
 	@echo "Producing header for class APILibMsg"
 	$(KAFFEH) thotlib.APILibMsg
@@ -287,7 +280,7 @@ thotlib_APIDialog_stubs.c : $(THOTDIR)/thotlib/include/dialog.h \
 		    $(THOTDIR)/thotlib/include/dialog.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APIDialog"
-	cd $(THOTDIR)/classes ; $(JAVAC) thotlib/APIDialog.java
+	$(JAVAC) thotlib/APIDialog.java
 	@echo
 	@echo "Producing header for class APIDialog"
 	$(KAFFEH) thotlib.APIDialog
@@ -303,7 +296,7 @@ thotlib_APIRegistry_stubs.c : $(THOTDIR)/thotlib/include/registry.h \
 		    $(THOTDIR)/thotlib/include/registry.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APIRegistry"
-	cd $(THOTDIR)/classes ; $(JAVAC) thotlib/APIRegistry.java
+	$(JAVAC) thotlib/APIRegistry.java
 	@echo
 	@echo "Producing header for class APIRegistry"
 	$(KAFFEH) thotlib.APIRegistry
@@ -319,7 +312,7 @@ thotlib_APIInterface_stubs.c : $(THOTDIR)/thotlib/include/interface.h \
 		    $(THOTDIR)/thotlib/include/interface.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APIInterface"
-	cd $(THOTDIR)/classes ; $(JAVAC) thotlib/APIInterface.java
+	$(JAVAC) thotlib/APIInterface.java
 	@echo
 	@echo "Producing header for class APIInterface"
 	$(KAFFEH) thotlib.APIInterface
@@ -335,7 +328,7 @@ thotlib_APISelection_stubs.c : $(THOTDIR)/thotlib/include/selection.h \
 		    $(THOTDIR)/thotlib/include/selection.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APISelection"
-	cd $(THOTDIR)/classes ; $(JAVAC) thotlib/APISelection.java
+	$(JAVAC) thotlib/APISelection.java
 	@echo
 	@echo "Producing header for class APISelection"
 	$(KAFFEH) thotlib.APISelection
@@ -351,7 +344,7 @@ thotlib_APIView_stubs.c : $(THOTDIR)/thotlib/include/view.h \
 		    $(THOTDIR)/thotlib/include/view.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APIView"
-	cd $(THOTDIR)/classes ; $(JAVAC) thotlib/APIView.java
+	$(JAVAC) thotlib/APIView.java
 	@echo
 	@echo "Producing header for class APIView"
 	$(KAFFEH) thotlib.APIView
@@ -367,7 +360,7 @@ thotlib_APIPresentation_stubs.c : $(THOTDIR)/thotlib/include/presentation.h \
 		    $(THOTDIR)/thotlib/include/presentation.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APIPresentation"
-	cd $(THOTDIR)/classes ; $(JAVAC) thotlib/APIPresentation.java
+	$(JAVAC) thotlib/APIPresentation.java
 	@echo
 	@echo "Producing header for class APIPresentation"
 	$(KAFFEH) thotlib.APIPresentation
@@ -383,7 +376,7 @@ thotlib_APIReference_stubs.c : $(THOTDIR)/thotlib/include/reference.h \
 		    $(THOTDIR)/thotlib/include/reference.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APIReference"
-	cd $(THOTDIR)/classes ; $(JAVAC) thotlib/APIReference.java
+	$(JAVAC) thotlib/APIReference.java
 	@echo
 	@echo "Producing header for class APIReference"
 	$(KAFFEH) thotlib.APIReference
@@ -399,7 +392,7 @@ thotlib_APIAttribute_stubs.c : $(THOTDIR)/thotlib/include/attribute.h \
 		    $(THOTDIR)/thotlib/include/attribute.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APIAttribute"
-	cd $(THOTDIR)/classes ; $(JAVAC) thotlib/APIAttribute.java
+	$(JAVAC) thotlib/APIAttribute.java
 	@echo
 	@echo "Producing header for class APIAttribute"
 	$(KAFFEH) thotlib.APIAttribute
@@ -415,7 +408,7 @@ thotlib_APIContent_stubs.c : $(THOTDIR)/thotlib/include/content.h \
 		    $(THOTDIR)/thotlib/include/content.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APIContent"
-	cd $(THOTDIR)/classes ; $(JAVAC) thotlib/APIContent.java
+	$(JAVAC) thotlib/APIContent.java
 	@echo
 	@echo "Producing header for class APIContent"
 	$(KAFFEH) thotlib.APIContent
@@ -431,7 +424,7 @@ thotlib_APILanguage_stubs.c : $(THOTDIR)/thotlib/include/language.h \
 		    $(THOTDIR)/thotlib/include/language.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APILanguage"
-	cd $(THOTDIR)/classes ; $(JAVAC) thotlib/APILanguage.java
+	$(JAVAC) thotlib/APILanguage.java
 	@echo
 	@echo "Producing header for class APILanguage"
 	$(KAFFEH) thotlib.APILanguage
@@ -447,7 +440,7 @@ thotlib_APITree_stubs.c : $(THOTDIR)/thotlib/include/tree.h \
 		    $(THOTDIR)/thotlib/include/tree.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APITree"
-	cd $(THOTDIR)/classes ; $(JAVAC) thotlib/APITree.java
+	$(JAVAC) thotlib/APITree.java
 	@echo
 	@echo "Producing header for class APITree"
 	$(KAFFEH) thotlib.APITree
@@ -463,7 +456,7 @@ thotlib_APIDocument_stubs.c : $(THOTDIR)/thotlib/include/document.h \
 		    $(THOTDIR)/thotlib/include/document.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APIDocument"
-	cd $(THOTDIR)/classes ; $(JAVAC) thotlib/APIDocument.java
+	$(JAVAC) thotlib/APIDocument.java
 	@echo
 	@echo "Producing header for class APIDocument"
 	$(KAFFEH) thotlib.APIDocument
@@ -479,7 +472,7 @@ thotlib_APIApplication_stubs.c : $(THOTDIR)/thotlib/include/application.h \
 		    $(THOTDIR)/thotlib/include/application.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APIApplication"
-	cd $(THOTDIR)/classes ; $(JAVAC) thotlib/APIApplication.java
+	$(JAVAC) thotlib/APIApplication.java
 	@echo
 	@echo "Producing header for class APIApplication"
 	$(KAFFEH) thotlib.APIApplication
@@ -493,7 +486,7 @@ amaya_stubs : \
 amaya_HTTPRequest.h : $(THOTDIR)/classes/amaya/HTTPRequest.java $(COMPILERS)
 	@echo
 	@echo "Compiling Java class HTTPRequest"
-	cd $(THOTDIR)/classes ; $(JAVAC) amaya/HTTPRequest.java
+	$(JAVAC) amaya/HTTPRequest.java
 	@echo
 	@echo "Producing header for class HTTPRequest"
 	$(KAFFEH) amaya.HTTPRequest
@@ -514,7 +507,7 @@ amaya_APIHtml_stubs.c : ../amaya/HTML.h \
 		    ../amaya/HTML.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APIHtml"
-	cd $(THOTDIR)/classes ; $(JAVAC) amaya/APIHtml.java
+	$(JAVAC) amaya/APIHtml.java
 	@echo
 	@echo "Producing header for class APIHtml"
 	$(KAFFEH) amaya.APIHtml
@@ -530,7 +523,7 @@ amaya_APIJavaAmaya_stubs.c : $(THOTDIR)/amaya/javaamaya.h \
 		    $(THOTDIR)/amaya/javaamaya.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APIJavaAmaya"
-	cd $(THOTDIR)/classes ; $(JAVAC) amaya/APIJavaAmaya.java
+	$(JAVAC) amaya/APIJavaAmaya.java
 	@echo
 	@echo "Producing header for class APIJavaAmaya"
 	$(KAFFEH) amaya.APIJavaAmaya
@@ -546,7 +539,7 @@ amaya_APIAmayaMsg_stubs.c : $(THOTDIR)/amaya/amayamsg.h \
 		    $(THOTDIR)/amaya/amayamsg.h 2>> javastub.log
 	@echo
 	@echo "Compiling new Java class APIAmayaMsg"
-	cd $(THOTDIR)/classes ; $(JAVAC) amaya/APIAmayaMsg.java
+	$(JAVAC) amaya/APIAmayaMsg.java
 	@echo
 	@echo "Producing header for class APIAmayaMsg"
 	$(KAFFEH) amaya.APIAmayaMsg

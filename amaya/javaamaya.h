@@ -130,6 +130,8 @@ extern char *GetUserString ( void );
 extern char *GetPasswdString ( void );
 extern char *GetAnswerString ( void );
 extern char *GetTempDirectory ( void );
+extern int GetHTMLtypeNo(char *tag);
+extern char *GetHTMLTag(int type);
 
 #else /* __STDC__ */
 
@@ -141,6 +143,8 @@ extern char *GetUserString (/* void */);
 extern char *GetPasswdString (/* void */);
 extern char *GetAnswerString (/* void */);
 extern char *GetTempDirectory (/* void */);
+extern int GetHTMLtypeNo(/* char *tag */);
+extern char *GetHTMLTag(/* int type */);
 
 #endif /* __STDC__ */
 #endif /* __AMAYA_API_H__ */

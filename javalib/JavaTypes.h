@@ -8,8 +8,6 @@
 #ifndef _Included_Java_Type_H_
 #define _Included_Java_Type_H_
 
-#include "native.h"
-
 typedef (*Java2CCallback) (void *arg);
 
 extern void addNativeMethod(char*, void*);
@@ -20,6 +18,8 @@ extern void addNativeMethod(char*, void*);
 #include "attribute.h"
 #include "presentation.h"
 #include "language.h"
+
+#include "native.h"
 
 /*
  * Includes auto-generated interface Java classes.

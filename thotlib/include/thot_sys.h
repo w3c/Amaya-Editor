@@ -60,14 +60,6 @@
 #endif /* !(defined (WILLOWS) || defined(_WINDOWS)) */
 #endif /* !(defined(_WINDOWS) || defined(_CONSOLE)) */
 
-#ifdef linux
-/*
- * just to imitate the Sun allocator, until everything has been
- * cleaned with INSURE.
- */
-#define malloc(s) calloc(1,s)
-#endif
-
 #ifndef MAX_PATH
 #define MAX_PATH HT_MAX_PATH	/* nombre de caracteres par liste de path */
 #endif

@@ -1,5 +1,7 @@
 /*
  * javaamaya.c : defines part of the Java related Amaya API.
+ *
+ * Daniel Veillard, 1997
  */
 
 #ifdef AMAYA_JAVA
@@ -7,6 +9,8 @@
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "javaamaya.h"
+
+#include "html2thot_f.h"
 
 /*----------------------------------------------------------------------
    GetUserAgentName returns the User Agent ID string
@@ -127,6 +131,73 @@ char *GetTempDirectory ()
 #endif
 {
     return(&TempFileDirectory[0]);
+}
+
+/*----------------------------------------------------------------------
+   GetHTMLtypeNo returns the thot internal type number for an HTML tag
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int GetHTMLtypeNo(char *tag)
+#else
+int GetHTMLtypeNo(tag)
+char *tag;
+
+#endif
+{
+    int res;
+    GIType(tag, &res);
+    return(res);
+}
+
+/*----------------------------------------------------------------------
+   GetHTMLTag return thot internal type number for an HTML tag
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+char *GetHTMLTag(int type)
+#else
+char *GetHTMLTag(type)
+int type;
+
+#endif
+{
+    return(GITagNameByType(type));
+}
+
+/*----------------------------------------------------------------------
+   GetHTMLAttrNo returns the thot internal HTML attribute number
+                 An attribute name may be used on different element
+		 with different semantic, hence one can give an element
+		 name to better specify the attribute. If null, the first
+		 ID corresponding of an attribute spelled tag will be
+		 returned
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int GetHTMLAttrNo(char *tag, char *elem)
+#else
+int GetHTMLAttrNo(tag, elem)
+char *tag;
+char *elem;
+
+#endif
+{
+    int res = 0;
+    /* AttrType(tag, &res); */
+    return(res);
+}
+
+/*----------------------------------------------------------------------
+   GetHTMLAttr return thot internal type number for an HTML attribute name
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+char *GetHTMLAttr(int type)
+#else
+char *GetHTMLAttr(type)
+int type;
+
+#endif
+{
+    /* return(AttrTagNameByType(type, elem)); */
+    return(NULL);
 }
 
 #endif /* AMAYA_JAVA */

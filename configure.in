@@ -303,7 +303,7 @@ dnl  ***************************************************************
 
 THOT_VER="2.1a"
 AMAYA_VER="1.0a"
-KAFFE_VER="0.8.4"
+KAFFE_VER="0.9.1"
 LIBWWW_VER="5.0a"
 
 dnl
@@ -728,6 +728,7 @@ if test "$build_amaya" = "yes" ; then
 		    echo Amaya configured with Java support
 		fi
             fi
+	    echo Using kaffe-$KAFFE_VER Java virtual machine
 	else
 	    echo Amaya configured with libWWW
 	fi

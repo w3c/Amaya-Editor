@@ -1002,7 +1002,6 @@ void dump_stubs(FILE *out) {
     fprintf(out," * signatures of Java2C and C2Java conversion handlers\n");
     fprintf(out," * As well as the Class LOCK/UNLOCK macros\n");
     fprintf(out," */\n\n");
-    fprintf(out,"#include <native.h>\n");
     fprintf(out,"#include \"JavaTypes.h\"\n");
     fprintf(out,"#include \"%s.h\"\n", classname);
     fprintf(out,"#include \"%s\"\n\n", stubHOutputFile);

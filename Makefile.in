@@ -15,9 +15,8 @@ LIBJPEG	= libjpeg
 LIBPNG	= libpng
 LIBZ	= libz
 
-LINKS	= schemas schemasOPERA config
 SUBDIRS	= tools tablelib thotlib batch drawlib indexlib thot amaya javalib 
-EXTRA_SUBDIRS= misc
+EXTRA_SUBDIRS= misc classes javalib
 
 prefix = @prefix@
 exec_prefix = @exec_prefix@
@@ -224,10 +223,10 @@ kaffe_config :
 	  fi)
 
 kaffe_make :
-	@(cd $(KAFFE) ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)")
+	@(cd $(KAFFE) ; $(MAKE))
 
 kaffe_install:
-	@(cd $(KAFFE) ; $(MAKE) CC="$(CC)" CFLAGS="$(CFLAGS)" install)
+	@(cd $(KAFFE) ; $(MAKE) install)
 	@(if [ ! -d $(THOTDIR)/classes ] ; \
 	  then \
 	      $(MKDIR) $(THOTDIR)/classes ; \

@@ -4,7 +4,6 @@
  * be built automatically by javastub program.
  */
 
-#include <native.h>
 #include "app.h"
 #include "appaction.h"
 #include "memory.h"

@@ -3,8 +3,10 @@
 # Generated from Options.in
 #
 # Increase the Version number each time one entry is added
-# Version : 1.2
+# Version : 1.3
 #
+
+SHELL	= /bin/sh
 
 CC	= @CC@
 CFLAGS	= @CFLAGS@
