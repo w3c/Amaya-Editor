@@ -38,8 +38,8 @@ STRUCT
       { ptoken }
       MTEXT
 	  (ATTR fontsize = TEXT;
-		fontweight = normal, bold_;
-		fontstyle = normal, italic;
+		fontweight = normal_, bold_;
+		fontstyle = normal_, italic;
 		IntFontstyle = IntNormal, IntItalic;	{ for internal use }
 		fontfamily = TEXT;
 		color = TEXT;

@@ -154,12 +154,12 @@
 153 Left button sets the text color
 154 Middle or Right button sets the background color
 155 Font family
-156 Roman
+156 Normal
 157 Bold
 158 Italic
 159 Oblique
-160 Bold italic
-161 Bold oblique
+160 Normal
+161 Boldness
 162 Normal
 163 Underline
 164 Cross out

@@ -4024,6 +4024,7 @@ PtrDocument         pDoc;
        || typeRule == PtDepth
        || typeRule == PtSize
        || typeRule == PtStyle
+       || typeRule == PtWeight
        || typeRule == PtFont
        || typeRule == PtUnderline
        || typeRule == PtThickness

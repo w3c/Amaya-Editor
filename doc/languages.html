@@ -14,7 +14,7 @@
 
 <h4>Translated from French by Ethan Munson</h4>
 
-<h4>Version of June, 1999</h4>
+<h4>Version of July 3, 1999</h4>
 <p>
 &copy; 1996 INRIA</p>
 <hr>
@@ -3730,6 +3730,7 @@ rules are considered to be the default rules:</p>
    HorizOverflow: No;
    Size:          Enclosing =;
    Style:         Enclosing =;
+   Weight:        Enclosing =;
    Font:          Enclosing =;
    Underline:     Enclosing =;
    Thickness:     Enclosing =;
@@ -4574,6 +4575,7 @@ rules are terminated by a semicolon.</p>
                 'Size'  ':'         SizeInherit /
                 'Font' ':'          NameInherit /
                 'Style' ':'         StyleInherit /
+                'Weight' ':'        WeightInherit /
                 'Underline' ':'     UnderLineInherit /
                 'Thickness' ':'     ThicknessInherit /
                 'Depth' ':'         NumberInherit /
@@ -5753,17 +5755,27 @@ between the sizes of the different elements.</p>
 <p>
 The <tt>Font</tt> rule determines the font family to be used to display the
 characters contained in the box, while the <tt>Style</tt> rule determines
-their style.  Thot recognizes three character fonts (Times, Helvetica, and
-Courier) and six styles: Roman, Italics, Bold, BoldItalics, Oblique, and
-BoldOblique.</p>
+their style and the <tt>Weight</tt> rule determines their weight.  Thot
+recognizes three character fonts (Times, Helvetica, and Courier), three
+styles: Roman, Italics, and Oblique, and two weights: Normal and Bold.</p>
 <p>
-The font family and style can specified by a named constant or can be
-inherited.  For the name of the font family only the first character is
-used.</p>
+The font family, style and weight can be specified by a named constant or
+can be inherited.  For the name of the font family only the first character
+is used.</p>
 <p>
-Only identical inheritance is allowed: the box takes the same font or style as
-the box from which it inherits.  This is indicated by an equals sign after the
-kinship specification.</p>
+Only identical inheritance is allowed: the box takes the same font, style or
+weight as the box from which it inherits.  This is indicated by an equals
+sign after the kinship specification.</p>
+<pre>               'Font' ':'          NameInherit /
+               'Style' ':'         StyleInherit /
+               'Weight' ':'        WeightInherit /
+
+NameInherit   = Kinship '=' / FontName .
+FontName      = NAME .
+StyleInherit  = Kinship '=' /
+                'Roman' / 'Italics' / 'Oblique' .
+WeightInherit = Kinship '=' /
+                'Normal' / 'Bold' .</pre>
 <blockquote class="example">
 <p>
 <strong>Example:</strong></p>
@@ -8816,6 +8828,7 @@ PresParam       = 'VertRef' ':' HorizPosition /
                   'Size'  ':' SizeInherit /
                   'Font' ':' NameInherit /
                   'Style' ':' StyleInherit /
+                  'Weight' ':' WeightInherit /
                   'Underline' ':' UnderLineInherit /
                   'Thickness' ':' ThicknessInherit /
                   'Depth' ':' NumberInherit /
@@ -8931,8 +8944,9 @@ PercentSize     = NUMBER .
 NameInherit     = Kinship '=' / FontName .
 FontName        = NAME .
 StyleInherit    = Kinship '=' /
-                  'Roman' / 'Bold' / 'Italics' / 
-                  'BoldItalics' / 'Oblique' / 'BoldOblique' .
+                  'Roman' / 'Italics' / 'Oblique' .
+WeightInherit   = Kinship '=' /
+                  'Normal' / 'Bold' .
 UnderLineInherit= Kinship '=' /
                   'NoUnderline' / 'Underlined' / 
                   'Overlined' / 'CrossedOut' .

@@ -66,7 +66,7 @@ static char*       Patterns_PS[] =
    "2222223e222222e3",		/*brick */
    "4244241c244442c1",		/*tile */
    "6688888884444222",		/*sea */
-   "11b87c3a11a3c78b"		/*bottomket */
+   "11b87c3a11a3c78b"		/*basket */
 };
 
 

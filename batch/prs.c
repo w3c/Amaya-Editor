@@ -381,6 +381,9 @@ indLine             wi;
 	    case PtStyle:
 	       CurRule->PrChrValue = 'R';	/* Romain par defaut */
 	       break;
+	    case PtWeight:
+	       CurRule->PrChrValue = 'N';	/* Normal par defaut */
+	       break;
 	    case PtUnderline:
 	       CurRule->PrChrValue = 'N';	/* Pas de souligne par defaut */
 	       break;
@@ -1671,6 +1674,14 @@ indLine             wi;
 	CurRule->PrType = PtStyle;
 	InheritRule (InheritParent);
      }
+   if (GetTypedRule (PtWeight, pPSchema->PsFirstDefaultPRule) == NULL)
+      /* pas de regle Weight par defaut, on en cree une : */
+      /* Weight: Enclosing =; */
+     {
+	CreateDefaultRule ();
+	CurRule->PrType = PtWeight;
+	InheritRule (InheritParent);
+     }
    if (GetTypedRule (PtFont, pPSchema->PsFirstDefaultPRule) == NULL)
       /* pas de regle Font par defaut, on en cree une : */
       /* Font: Enclosing =; */
@@ -2677,27 +2688,38 @@ indLine             wi;
 	       /* Style roman */
 	       CurRule->PrChrValue = 'R';
 	       break;
-	    case KWD_Bold:
-	       /* Style Bold */
-	       CurRule->PrChrValue = 'B';
-	       break;
 	    case KWD_Italics:
 	       /* Style Italics */
 	       CurRule->PrChrValue = 'I';
-	       break;
-	    case KWD_BoldItalics:
-	       /* Style BoldItalics */
-	       CurRule->PrChrValue = 'G';
-	       break;
-	    case KWD_BoldOblique:
-	       /* Style BoldOblique */
-	       CurRule->PrChrValue = 'Q';
 	       break;
 	    case KWD_Oblique:
 	       /* Style Oblique */
 	       CurRule->PrChrValue = 'O';
 	       break;
-
+            case KWD_Bold:
+	       /* Weight Bold */
+	       CurRule->PrChrValue = 'B';
+	       if (CurRule->PrType == PtStyle)
+                  /* OBSOLETE rule "Style: Bold"
+		     turn it into "Weight: Bold" */
+                  CurRule->PrType = PtWeight;
+               break;
+            case KWD_BoldItalics:
+               /* Style BoldItalics -- OBSOLETE -- */
+               CurRule->PrChrValue = 'I';	/* Style: Italics; */
+	       CreatePRule (PtWeight, wi);
+	       CurRule->PrChrValue = 'B';	/* Weight; Bold */
+               break;
+            case KWD_BoldOblique:
+               /* Style BoldOblique -- OBSOLETE -- */
+               CurRule->PrChrValue = 'O';	/* Style: Oblique; */
+	       CreatePRule (PtWeight, wi);
+	       CurRule->PrChrValue = 'B';	/* Weight; Bold */
+               break;
+	    case KWD_Normal:
+	       /* Weight Normal */
+	       CurRule->PrChrValue = 'N';
+	       break;
 	    case KWD_Underline:
 	       /* Souligne */
 	       CreatePRule (PtUnderline, wi);
@@ -2732,6 +2754,10 @@ indLine             wi;
 	    case KWD_Style:
 	       /* Style */
 	       CreatePRule (PtStyle, wi);
+	       break;
+	    case KWD_Weight:
+	       /* Weight */
+	       CreatePRule (PtWeight, wi);
 	       break;
 	    case KWD_Indent:
 	       /* Indent */

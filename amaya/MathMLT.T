@@ -526,7 +526,7 @@ ATTRIBUTES
 	create '"';	
 	end;
 
-   fontweight = normal:
+   fontweight = normal_:
 	begin
 	create SAN;
 	create 'fontweight="normal"';
@@ -537,7 +537,7 @@ ATTRIBUTES
 	create 'fontweight="bold"';
 	end;
 
-   fontstyle = normal:
+   fontstyle = normal_:
 	begin
 	create SAN;
 	create 'fontstyle="normal"';

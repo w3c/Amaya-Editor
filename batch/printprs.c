@@ -458,27 +458,30 @@ PtrPRule            pR;
 		     putchar (pRe1->PrChrValue);
 		     break;
 	       }
-
       else if (pRe1->PrType == PtStyle)
 	 switch (pRe1->PrChrValue)
 	       {
-		  case 'B':
-		     printf ("Bold");
-		     break;
 		  case 'I':
 		     printf ("Italics");
 		     break;
 		  case 'R':
 		     printf ("Roman");
 		     break;
-		  case 'G':
-		     printf ("BoldItalics");
-		     break;
-		  case 'Q':
-		     printf ("BoldOblique");
-		     break;
 		  case 'O':
 		     printf ("Oblique");
+		     break;
+		  default:
+		     putchar (pRe1->PrChrValue);
+		     break;
+	       }
+      else if (pRe1->PrType == PtWeight)
+	 switch (pRe1->PrChrValue)
+	       {
+		  case 'B':
+		     printf ("Bold");
+		     break;
+		  case 'N':
+		     printf ("Normal");
 		     break;
 		  default:
 		     putchar (pRe1->PrChrValue);
@@ -1227,6 +1230,10 @@ PtrPRule            RP;
 		    break;
 		 case PtStyle:
 		    printf ("Style: ");
+		    wrfontstyle (RP);
+		    break;
+		 case PtWeight:
+		    printf ("Weight: ");
 		    wrfontstyle (RP);
 		    break;
 		 case PtUnderline:

@@ -139,24 +139,24 @@ TypeUnit unit;
    switch (family) {
           case TEXT('T'):
           case TEXT('t'):
-               usprintf (&WIN_lpszFace[0], _TimesNewRomanFONT_);
+               usprintf (&WIN_lpszFace[0], TEXT("Times New Roman"));
                /* usprintf (&WIN_lpszFace[0], L"Alis Akhbar MT"); */
                /* usprintf (&WIN_lpszFace[0], L"Farsi 1.1"); */
                break;
 
           case TEXT('H'):
           case TEXT('h'):
-               usprintf (&WIN_lpszFace[0], _ArialFONT_);
+               usprintf (&WIN_lpszFace[0], TEXT("Arial"));
                break;
 
           case TEXT('C'):
           case TEXT('c'):
-               usprintf (&WIN_lpszFace[0], _CourierNewFONT_);
+               usprintf (&WIN_lpszFace[0], TEXT("Courier New"));
                break;
 
           case TEXT('S'):
           case TEXT('s'):
-               usprintf (&WIN_lpszFace[0], _SymbolFONT_);
+               usprintf (&WIN_lpszFace[0], TEXT("Symbol"));
                break;
 
           default:
@@ -660,10 +660,10 @@ CHAR_T                r_nameX[100];
 	switch ((CHAR_T) TOLOWER (family))
 	      {
 		 case TEXT('t'):
-		    ustrcat (r_nameX, _BrightCST_);
+		    ustrcat (r_nameX, TEXT("bright"));
 		    break;
 		 case TEXT('c'):
-		    ustrcat (r_nameX, _TypewriterCST_);
+		    ustrcat (r_nameX, TEXT("typewriter"));
 		    break;
 		 default:
 		    break;
@@ -671,91 +671,80 @@ CHAR_T                r_nameX[100];
      }
    else
      {
+        ustrcat (r_nameX, TEXT("-"));
 	switch ((CHAR_T) TOLOWER (family))
 	      {
 		 case TEXT('t'):
-		    ustrcat (r_nameX, TEXT("-"));
-		    ustrcat (r_nameX, _TimesFONT_);
+		    ustrcat (r_nameX, TEXT("times"));
 		    break;
 		 case TEXT('h'):
-		    ustrcat (r_nameX, TEXT("-"));
-		    ustrcat (r_nameX, _HelveticaFONT_);
+		    ustrcat (r_nameX, TEXT("helvetica"));
 		    break;
 		 case TEXT('c'):
-		    ustrcat (r_nameX, TEXT("-"));
-		    ustrcat (r_nameX, _CourierFONT_);
+		    ustrcat (r_nameX, TEXT("courier"));
 		    break;
 		 case TEXT('s'):
-		    ustrcat (r_nameX, TEXT("-"));
-		    ustrcat (r_nameX, _SymbolFONT_);
+		    ustrcat (r_nameX, TEXT("Symbol"));
 		    break;
 		 default:
-		    ustrcat (r_nameX, TEXT("-"));
 		    ustrcat (r_nameX, TEXT("*"));
 	      }
      }
 
+   ustrcat (r_nameX, TEXT("-"));
    switch ((CHAR_T) TOLOWER (StylesTable[highlight]))
 	 {
 	    case TEXT('r'):
+	       ustrcat (r_nameX, TEXT("medium"));
 	       ustrcat (r_nameX, TEXT("-"));
-	       ustrcat (r_nameX, _MediumSTYLE_);
-	       ustrcat (r_nameX, TEXT("-"));
-	       ustrcat (r_nameX, _r_);
+	       ustrcat (r_nameX, TEXT("r"));
 	       break;
 	    case TEXT('i'):
 	    case TEXT('o'):
-	       if ((CHAR_T) TOLOWER (family) == TEXT('h') || (CHAR_T) TOLOWER (family) == TEXT('c'))
-		   {
-			   ustrcat (r_nameX, TEXT("-"));
-		       ustrcat (r_nameX, _MediumSTYLE_);
-		       ustrcat (r_nameX, TEXT("-"));
-		       ustrcat (r_nameX, _o_);
-		   }
+	       ustrcat (r_nameX, TEXT("medium"));
+	       ustrcat (r_nameX, TEXT("-"));
+	       if ((CHAR_T) TOLOWER (family) == TEXT('h') ||
+		   (CHAR_T) TOLOWER (family) == TEXT('c'))
+		   ustrcat (r_nameX, TEXT("o"));
 	       else
-		   {
-			   ustrcat (r_nameX, TEXT("-"));
-		       ustrcat (r_nameX, _MediumSTYLE_);
-		       ustrcat (r_nameX, TEXT("-"));
-		       ustrcat (r_nameX, _i_);
-		   }
+		   ustrcat (r_nameX, TEXT("i"));
 	       break;
 	    case TEXT('b'):
+	       if (UseLucidaFamily && (CHAR_T) TOLOWER (family) == TEXT('t'))
+		  ustrcat (r_nameX, TEXT("demibold"));
+	       else
+		  ustrcat (r_nameX, TEXT("bold"));
+	       ustrcat (r_nameX, TEXT("-"));
+	       ustrcat (r_nameX, TEXT("r"));
+	       break;
 	    case TEXT('g'):
 	    case TEXT('q'):
 	       if (UseLucidaFamily && (CHAR_T) TOLOWER (family) == TEXT('t'))
-		   {
-			   ustrcat (r_nameX, TEXT("-"));
-		       ustrcat (r_nameX, _DemiboldSTYLE_);
-		       ustrcat (r_nameX, TEXT("-"));
-		       ustrcat (r_nameX, _r_);
-		   }
+		   ustrcat (r_nameX, TEXT("demibold"));
 	       else
-		   {
-			   ustrcat (r_nameX, TEXT("-"));
-		       ustrcat (r_nameX, _BoldSTYLE_);
-		       ustrcat (r_nameX, TEXT("-"));
-		       ustrcat (r_nameX, _r_);
-		   }
+		   ustrcat (r_nameX, TEXT("bold"));
+	       ustrcat (r_nameX, TEXT("-"));
+	       if ((CHAR_T) TOLOWER (family) == TEXT('h') ||
+		   (CHAR_T) TOLOWER (family) == TEXT('c'))
+		   ustrcat (r_nameX, TEXT("o"));
+	       else
+		   ustrcat (r_nameX, TEXT("i"));
 	       break;
 	 }
 
+   ustrcat (r_nameX, TEXT("-"));
    if ((CHAR_T) TOLOWER (family) == TEXT('h'))
-   {
-	   ustrcat (r_nameX, TEXT("-"));	/* narrow helvetica does not exist */
-       ustrcat (r_nameX, _NormalSTYLE_);	/* narrow helvetica does not exist */
-   }
-  else
-  {  
-	  ustrcat (r_nameX, TEXT("-"));
+      ustrcat (r_nameX, TEXT("normal"));  /* narrow helvetica does not exist */
+   else
       ustrcat (r_nameX, TEXT("*"));
-  }
    if ((CHAR_T) TOLOWER (family) == TEXT('s'))
      {
 	if (UseBitStreamFamily)
-	   usprintf (r_nameX, TEXT("%s-*-*-%d-83-83-p-*-*-fontspecific"), r_nameX, size * 10);
+	   usprintf (r_nameX, TEXT("%s-*-*-%d-83-83-p-*-*-fontspecific"),
+		     r_nameX, size * 10);
 	else
-	   usprintf (r_nameX,TEXT( "%s-*-%d-*-75-75-p-*-*-fontspecific"), r_nameX, size);
+	   usprintf (r_nameX,TEXT( "%s-*-%d-*-75-75-p-*-*-fontspecific"),
+		     r_nameX, size);
      }
    else
      {
@@ -763,50 +752,40 @@ CHAR_T                r_nameX[100];
 	   usprintf (r_nameX, TEXT("%s-*-*-%d-83-83"), r_nameX, size * 10);
 	else
 	   usprintf (r_nameX, TEXT("%s-*-%d-*-75-75"), r_nameX, size);
+	ustrcat (r_nameX, TEXT("-"));
 	if ((CHAR_T) TOLOWER (family) == TEXT('c'))
-	{
-		ustrcat (r_nameX, TEXT("-"));
-	    ustrcat (r_nameX, _m_);
-	    ustrcat (r_nameX, TEXT("-"));
-	    ustrcat (r_nameX, TEXT("*"));
-	}
+	    ustrcat (r_nameX, TEXT("m"));
 	else
-	{
-		ustrcat (r_nameX, TEXT("-"));
-	    ustrcat (r_nameX, _p_);
-	    ustrcat (r_nameX, TEXT("-"));
-	    ustrcat (r_nameX, TEXT("*"));
-	}
+	    ustrcat (r_nameX, TEXT("p"));
+	ustrcat (r_nameX, TEXT("-"));
+	ustrcat (r_nameX, TEXT("*"));
+	ustrcat (r_nameX, TEXT("-"));
 	if ((CHAR_T) TOLOWER (alphabet) == TEXT('l'))
 	{
-		ustrcat (r_nameX, TEXT("-"));
-	    ustrcat (r_nameX, _Iso8859CST_);
+	    ustrcat (r_nameX, TEXT("iso8859"));
 	    ustrcat (r_nameX, TEXT("-"));
-	    ustrcat (r_nameX, _ONE_);
+	    ustrcat (r_nameX, TEXT("1"));
 	}
 	else if ((CHAR_T) TOLOWER (alphabet) == TEXT('e'))
 	{
-		ustrcat (r_nameX, TEXT("-"));
-	    ustrcat (r_nameX, _Iso8859CST_);
+	    ustrcat (r_nameX, TEXT("iso8859"));
 	    ustrcat (r_nameX, TEXT("-"));
-	    ustrcat (r_nameX, _TWO_);
+	    ustrcat (r_nameX, TEXT("2"));
 	}	
 	else if ((CHAR_T) TOLOWER (alphabet) == TEXT('g'))
 	{
-		ustrcat (r_nameX, TEXT("-"));		/*adobe */
 	    ustrcat (r_nameX, TEXT("*"));		/*adobe */
 	    ustrcat (r_nameX, TEXT("-"));		/*adobe */
-	    ustrcat (r_nameX, _FontspecificFONT_);		/*adobe */
+	    ustrcat (r_nameX, TEXT("fontspecific"));	/*adobe */
 	}
 	else
-	  {
+	{
+	    ustrcat (r_nameX, TEXT("iso8859"));
 	    ustrcat (r_nameX, TEXT("-"));
-	    ustrcat (r_nameX, _Iso8859CST_);
-	    ustrcat (r_nameX, TEXT("-"));
-	    ustrcat (r_nameX, _ONE_);
+	    ustrcat (r_nameX, TEXT("1"));
 		/* replace '1' by current alphabet */
-	   r_nameX[ustrlen (r_nameX) -1] = alphabet;
-	  }
+	    r_nameX[ustrlen (r_nameX) -1] = alphabet;
+	}
      }
 
    usprintf (r_name, TEXT("%c%c%c%d"), TOLOWER (alphabet), TOLOWER (family),
@@ -1129,12 +1108,12 @@ STRING              name;
      {
 	FontFamily = TtaAllocString (ustrlen (value) + 1);
 	ustrcpy (FontFamily, value);
-	if (!ustrcmp (FontFamily, _FontFamilyLucida))
+	if (!ustrcmp (FontFamily, TEXT("-b&h-lucida")))
 	   UseLucidaFamily = TRUE;
 	else
 	  {
 	     UseLucidaFamily = FALSE;
-	     if (!ustrcmp (FontFamily, _FontFamilyBitstream))
+	     if (!ustrcmp (FontFamily, TEXT("gipsi-bitstream")))
 	       {
 		  UseBitStreamFamily = TRUE;
 		  /* Changes size 30, 40 and 60 to resp. 36, 48 et 72 */

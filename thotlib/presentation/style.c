@@ -1254,24 +1254,33 @@ ThotBool            generic;
       rule->PrPresMode = PresImmediate;
       switch (value)
 	{
-	case StyleBold:
-	  rule->PrChrValue = 'B';
-	  break;
 	case StyleRoman:
 	  rule->PrChrValue = 'R';
 	  break;
 	case StyleItalics:
 	  rule->PrChrValue = 'I';
 	  break;
-	case StyleBoldItalics:
-	  rule->PrChrValue = 'G';
-	  break;
 	case StyleOblique:
 	  rule->PrChrValue = 'O';
 	  break;
-	case StyleBoldOblique:
-	  rule->PrChrValue = 'Q';
+	default:
+	  rule->PrChrValue = 'R';
+	  break;	   
+	}
+      break;
+    case PtWeight:
+      rule->PrPresMode = PresImmediate;
+      switch (value)
+	{
+	case WeightNormal:
+	  rule->PrChrValue = 'N';
 	  break;
+	case WeightBold:
+	  rule->PrChrValue = 'B';
+	  break;
+	default:
+	  rule->PrChrValue = 'N';
+	  break;	   
 	}
       break;
     case PtUnderline:
@@ -1564,23 +1573,31 @@ PtrPRule                   rule;
     case PtStyle:
       switch (rule->PrChrValue)
 	{
-	case 'B':
-	  value = STYLE_FONT_BOLD;
-	  break;
 	case 'R':
 	  value = STYLE_FONT_ROMAN;
 	  break;
 	case 'I':
 	  value = STYLE_FONT_ITALICS;
 	  break;
-	case 'G':
-	  value = STYLE_FONT_BOLDITALICS;
-	  break;
 	case 'O':
 	  value = STYLE_FONT_OBLIQUE;
 	  break;
-	case 'Q':
-	  value = STYLE_FONT_BOLDOBLIQUE;
+	default:
+	  value = STYLE_FONT_ROMAN;
+	  break;
+	}
+      break;
+    case PtWeight:
+      switch (rule->PrChrValue)
+	{
+	case 'B':
+	  value = STYLE_WEIGHT_BOLD;
+	  break;
+	case 'N':
+	  value = STYLE_WEIGHT_NORMAL;
+	  break;
+	default:
+	  value = STYLE_WEIGHT_NORMAL;
 	  break;
 	}
       break;
@@ -2003,6 +2020,9 @@ int                 extra;
       break;
     case PtStyle:
       setting->type = PRStyle;
+      break;
+    case PtWeight:
+      setting->type = PRWeight;
       break;
     case PtSize:
       setting->type = PRSize;

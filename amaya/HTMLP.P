@@ -18,7 +18,7 @@ PRINT
 #define STRUCT_INDENT 1.5
 #define TAG_FONTSIZE 10 pt
 #define DOC_FONTSIZE 12 pt
-#define TAG_Style Bold
+#define TAG_Weight Bold
 #define TAG_Visibility 7
 
 #ifdef BLACK_WHITE
@@ -38,14 +38,17 @@ PRINT
 #endif
 
 #define TAG_Font Helvetica
-#define ATTR_Style Bold
+#define ATTR_Style Roman
+#define ATTR_Weight Bold
 #define ATTR_Style_Links_view Italics
 #define ATTR_Visibility 6
 #define INPUT_Font Courier
 #define COMMENT_Visibility 5
 #define COMMENT_Font Helvetica
 #define COMMENT_Style Italics
-#define INVALID_Style Bold
+#define COMMENT_Weight Normal
+#define INVALID_Style Roman
+#define INVALID_Weight Bold
 #define INVALID_Visibility 5
 #define INVALID_Font Helvetica
 #define TableSimpleHSpace 4 px
@@ -99,6 +102,7 @@ DEFAULT
 	Visibility: Enclosing =;
 	Font: Enclosing =;
 	Style: Enclosing =;
+	Weight: Enclosing =;
 	Underline: Enclosing =;
 	Thickness: Enclosing =;
 	Size: Enclosing =;
@@ -119,6 +123,7 @@ BOXES
 	VertPos: HRef = Creator . HRef;
 	Font: Creator =;
 	Style: Creator =;
+	Weight: Creator =;
 	Size: Creator =;
 	IN Structure_view
 		Visibility: 0;
@@ -138,6 +143,7 @@ BOXES
 	VertPos: HRef = Creator . HRef;
 	Font: Creator =;
 	Style: Creator =;
+	Weight: Creator =;
 	Size: Creator =;
 	IN Structure_view
 		Visibility: 0;
@@ -171,6 +177,7 @@ BOXES
 	VertPos: HRef = Creator . HRef;
 	Font: Creator =;
 	Style: Creator =;
+	Weight: Creator =;
 	Size: Creator =;
 	IN Structure_view
 		Visibility: 0;
@@ -189,6 +196,7 @@ BOXES
 	Visibility: Creator =;
 	Font: Creator =;
 	Style: Creator =;
+	Weight: Creator =;
 	Size: Creator =;
 #ifdef PAGE
 	Foreground: Creator =;
@@ -211,6 +219,7 @@ BOXES
 	Visibility: Creator =;
 	Font: Creator =;
 	Style: Creator =;
+	Weight: Creator =;
 	Size: Creator =;
 #ifdef PAGE
 	Foreground: Creator =;
@@ -234,6 +243,7 @@ BOXES
 	Visibility: Creator =;
 	Font: Creator =;
 	Style: Creator =;
+	Weight: Creator =;
 	Size: Creator =;
 #ifdef PAGE
 	Foreground: Creator =;
@@ -258,6 +268,7 @@ BOXES
 	Visibility: Creator =;
 	Font: Creator =;
 	Style: Creator =;
+	Weight: Creator =;
 	Size: Creator =;
 #ifdef PAGE
 	Foreground: Creator =;
@@ -283,6 +294,7 @@ BOXES
 	Visibility: Creator =;
 	Font: Creator =;
 	Style: Creator =;
+	Weight: Creator =;
 	Size: Creator =;
 #ifdef PAGE
 	Foreground: Creator =;
@@ -305,7 +317,7 @@ BOXES
 		VertPos: Top = Enclosing . Top + 0.5;
 		Size: TAG_FONTSIZE;
 		Font: TAG_Font;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -327,7 +339,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -336,7 +348,7 @@ BOXES
 	Content: Text 'SCRIPT';
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -346,7 +358,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -356,7 +368,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -368,7 +380,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -379,7 +391,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -410,7 +422,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -421,7 +433,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -450,7 +462,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -460,7 +472,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -470,7 +482,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -480,7 +492,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -490,7 +502,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -502,7 +514,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -514,7 +526,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -526,7 +538,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -538,7 +550,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -564,7 +576,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -576,7 +588,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -588,7 +600,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -600,7 +612,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -612,7 +624,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -624,7 +636,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -636,7 +648,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -648,7 +660,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -660,7 +672,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -672,7 +684,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -684,7 +696,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -696,7 +708,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -708,7 +720,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -720,7 +732,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -732,7 +744,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -744,7 +756,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -756,7 +768,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -768,7 +780,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -780,7 +792,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -792,7 +804,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -804,7 +816,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -816,7 +828,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -828,7 +840,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -840,7 +852,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -852,7 +864,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -864,7 +876,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -876,7 +888,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -888,7 +900,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -900,7 +912,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -912,7 +924,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -924,7 +936,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -936,7 +948,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -948,7 +960,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -960,7 +972,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -972,7 +984,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -984,7 +996,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -996,7 +1008,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -1008,7 +1020,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -1020,7 +1032,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -1032,7 +1044,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -1044,7 +1056,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -1056,7 +1068,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -1068,7 +1080,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -1080,7 +1092,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -1092,7 +1104,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -1104,7 +1116,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -1116,7 +1128,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -1151,7 +1163,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -1197,7 +1209,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -1208,7 +1220,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -1220,7 +1232,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -1232,7 +1244,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -1244,7 +1256,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -1256,7 +1268,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -1268,7 +1280,7 @@ BOXES
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -1280,7 +1292,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -1292,7 +1304,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -1304,7 +1316,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -1316,7 +1328,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -1328,7 +1340,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -1340,7 +1352,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -1352,7 +1364,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -1364,7 +1376,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -1376,7 +1388,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -1388,7 +1400,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -1400,7 +1412,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -1412,7 +1424,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -1424,7 +1436,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -1436,7 +1448,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -1448,7 +1460,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -1460,7 +1472,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -1471,7 +1483,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -1482,7 +1494,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -1494,7 +1506,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -1506,7 +1518,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -1518,7 +1530,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -1530,7 +1542,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -1542,7 +1554,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -1554,7 +1566,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -1566,7 +1578,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -1593,7 +1605,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -1603,7 +1615,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -1613,7 +1625,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -1624,7 +1636,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -1635,7 +1647,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -1646,7 +1658,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -1656,7 +1668,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -1666,7 +1678,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -1676,7 +1688,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -1686,7 +1698,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -1696,7 +1708,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -1706,7 +1718,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -1716,7 +1728,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -1726,7 +1738,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -1736,7 +1748,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -1746,7 +1758,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -1756,7 +1768,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -1766,7 +1778,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -1776,7 +1788,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -1785,7 +1797,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -1795,7 +1807,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -1805,7 +1817,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -1815,7 +1827,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -1845,7 +1857,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -1855,7 +1867,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -1865,7 +1877,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -1875,7 +1887,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -1885,7 +1897,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -1895,7 +1907,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -1905,7 +1917,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -1917,7 +1929,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -1929,7 +1941,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -1941,7 +1953,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2197,7 +2209,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -2246,7 +2258,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2258,7 +2270,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -2270,7 +2282,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2282,7 +2294,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	IN Alternate_view BEGIN
@@ -2302,7 +2314,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2314,7 +2326,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -2326,7 +2338,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2338,7 +2350,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -2350,7 +2362,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2362,7 +2374,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2374,7 +2386,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2386,7 +2398,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2398,7 +2410,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2410,7 +2422,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2422,7 +2434,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2434,7 +2446,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2446,7 +2458,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2458,7 +2470,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2470,7 +2482,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2482,7 +2494,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2494,7 +2506,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2506,7 +2518,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -2518,7 +2530,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2530,7 +2542,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -2542,7 +2554,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2554,7 +2566,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2566,7 +2578,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2578,7 +2590,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2590,7 +2602,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2602,7 +2614,7 @@ BOXES
 		HorizPos: Left = Enclosing . Left;
 		VertPos: Top = Previous . Bottom;
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -2614,7 +2626,7 @@ BOXES
 		HorizPos: Left = Enclosing . Left;
 		VertPos: Top = Previous . Bottom;
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -2626,7 +2638,7 @@ BOXES
 		HorizPos: Left = Enclosing . Left;
 		VertPos: Top = Previous . Bottom;
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -2638,7 +2650,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2650,7 +2662,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2662,7 +2674,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2674,7 +2686,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2686,7 +2698,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2698,7 +2710,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2710,7 +2722,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2722,7 +2734,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2734,7 +2746,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2746,7 +2758,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2758,7 +2770,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2770,7 +2782,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2782,7 +2794,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -2794,7 +2806,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2806,7 +2818,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -2818,7 +2830,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2830,7 +2842,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -2842,7 +2854,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -2854,7 +2866,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2866,7 +2878,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -2878,7 +2890,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -2890,7 +2902,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -2902,7 +2914,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2914,7 +2926,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -2926,7 +2938,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -2938,7 +2950,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2950,7 +2962,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -2962,7 +2974,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2974,7 +2986,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -2986,7 +2998,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -2998,7 +3010,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -3060,7 +3072,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -3070,7 +3082,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -3080,7 +3092,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -3090,7 +3102,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -3100,7 +3112,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -3110,7 +3122,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -3120,7 +3132,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -3130,7 +3142,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -3140,7 +3152,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -3150,7 +3162,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -3160,7 +3172,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -3170,7 +3182,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -3180,7 +3192,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -3190,7 +3202,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -3200,7 +3212,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -3210,7 +3222,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -3220,7 +3232,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -3230,7 +3242,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -3240,7 +3252,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -3250,7 +3262,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -3260,7 +3272,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -3270,7 +3282,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -3296,7 +3308,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -3306,7 +3318,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -3316,7 +3328,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -3326,7 +3338,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -3336,7 +3348,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -3379,7 +3391,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -3389,7 +3401,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -3399,7 +3411,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -3409,7 +3421,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -3421,7 +3433,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -3433,7 +3445,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -3445,7 +3457,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -3456,7 +3468,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -3487,7 +3499,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -3499,7 +3511,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -3531,7 +3543,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -3543,7 +3555,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -3555,7 +3567,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -3567,7 +3579,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -3579,7 +3591,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -3591,7 +3603,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -3603,7 +3615,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -3615,7 +3627,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -3647,7 +3659,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -3659,7 +3671,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -3671,7 +3683,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -3683,7 +3695,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -3741,7 +3753,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -3753,7 +3765,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -3765,7 +3777,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -3777,7 +3789,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -3789,7 +3801,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -3800,7 +3812,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -3812,7 +3824,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -3824,7 +3836,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -3836,7 +3848,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -3848,7 +3860,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -3860,7 +3872,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -3872,7 +3884,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -3884,7 +3896,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -3896,7 +3908,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -3906,7 +3918,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -4008,7 +4020,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -4122,7 +4134,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4134,7 +4146,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -4146,7 +4158,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4158,7 +4170,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -4170,7 +4182,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4182,7 +4194,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -4194,7 +4206,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4206,7 +4218,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -4218,7 +4230,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4230,7 +4242,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4242,7 +4254,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -4254,7 +4266,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4266,7 +4278,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -4278,7 +4290,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4290,7 +4302,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -4302,7 +4314,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -4314,7 +4326,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -4326,7 +4338,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -4338,7 +4350,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4350,7 +4362,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4362,7 +4374,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4374,7 +4386,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -4386,7 +4398,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4397,7 +4409,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -4409,7 +4421,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4420,7 +4432,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -4432,7 +4444,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -4444,7 +4456,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4456,7 +4468,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -4468,7 +4480,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4480,7 +4492,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -4492,7 +4504,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -4504,7 +4516,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4515,7 +4527,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -4527,7 +4539,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4539,7 +4551,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4551,7 +4563,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4563,7 +4575,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4575,7 +4587,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4587,7 +4599,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4599,7 +4611,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4611,7 +4623,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4623,7 +4635,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4635,7 +4647,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4647,7 +4659,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -4659,7 +4671,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4671,7 +4683,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -4683,7 +4695,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4695,7 +4707,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -4707,7 +4719,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -4719,7 +4731,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4731,7 +4743,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -4743,7 +4755,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4755,7 +4767,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -4767,7 +4779,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4779,7 +4791,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -4791,7 +4803,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4803,7 +4815,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -4815,7 +4827,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4827,7 +4839,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -4839,7 +4851,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -4851,7 +4863,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -5029,7 +5041,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -5042,7 +5054,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5054,7 +5066,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -5066,7 +5078,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5078,7 +5090,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5090,7 +5102,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5102,7 +5114,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5114,7 +5126,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5126,7 +5138,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5138,7 +5150,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5150,7 +5162,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5162,7 +5174,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5174,7 +5186,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5186,7 +5198,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5198,7 +5210,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5210,7 +5222,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5222,7 +5234,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5234,7 +5246,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5246,7 +5258,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -5258,7 +5270,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5270,7 +5282,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -5282,7 +5294,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5294,7 +5306,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -5306,7 +5318,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5318,7 +5330,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -5330,7 +5342,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -5340,7 +5352,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -5350,7 +5362,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -5360,7 +5372,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -5372,7 +5384,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5384,7 +5396,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -5396,7 +5408,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5408,7 +5420,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -5420,7 +5432,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5432,7 +5444,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -5444,7 +5456,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5456,7 +5468,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -5468,7 +5480,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5480,7 +5492,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -5492,7 +5504,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5504,7 +5516,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -5516,7 +5528,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5528,7 +5540,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -5540,7 +5552,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5550,7 +5562,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -5560,7 +5572,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -5570,7 +5582,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -5580,7 +5592,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -5590,7 +5602,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -5600,7 +5612,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -5610,7 +5622,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -5632,7 +5644,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -5644,7 +5656,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5656,7 +5668,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5668,7 +5680,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5680,7 +5692,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5692,7 +5704,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
@@ -5704,7 +5716,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5714,7 +5726,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -5724,7 +5736,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -5734,7 +5746,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -5747,7 +5759,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5759,7 +5771,7 @@ BOXES
 		HorizPos: Left = Previous . Right;
 		VertPos: HRef = Previous . HRef;
 		Size: TAG_FONTSIZE;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
 	END;
@@ -5782,6 +5794,7 @@ BOXES
 	Size : 11 pt;
 	Font: times;
 	Style: Italics;	
+	Weight: Normal;
 	END;
 
   URLhead:
@@ -5798,6 +5811,7 @@ BOXES
 	Size : 8 pt;
 	Font: times;
 	Style: Roman;	
+	Weight: Normal;
 	END;
 
   Spacehead:
@@ -5814,6 +5828,7 @@ BOXES
 	Size : 8 pt;
 	Font: times;
 	Style: Roman;
+	Weight: Normal;
 	END;
 
   PageNum:
@@ -5829,6 +5844,7 @@ BOXES
 	Size : 11 pt;
 	Font: times;
 	Style: Roman;
+	Weight: Normal;
 	END;
 
   LinksPageNum:
@@ -5844,6 +5860,7 @@ BOXES
 	Size : 11 pt;
 	Font: times;
 	Style: Roman;
+	Weight: Normal;
 	END;
 
   ToCPageNum:
@@ -5859,6 +5876,7 @@ BOXES
 	Size : 11 pt;
 	Font: times;
 	Style: Roman;
+	Weight: Normal;
 	END;
 
   BottomSpace:
@@ -5991,6 +6009,7 @@ RULES
 	Indent: 0;
 	Font: Times;
 	Style: Roman;
+	Weight: Normal;
 	LineWeight: 0;
 	Width: Enclosing . Width;
 #ifdef PAGE
@@ -6127,7 +6146,7 @@ RULES
 		VertPos: Top = Previous INDEX_S . Top;
 		Size: TAG_FONTSIZE;
 		Font: TAG_Font;
-		Style: TAG_Style;
+		Weight: TAG_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
@@ -6144,7 +6163,7 @@ RULES
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Foreground: ATTR_Color;
-		Style: ATTR_Style;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;
 		Size: TAG_FONTSIZE;
 		END;
@@ -6229,7 +6248,7 @@ RULES
 	Height: 1.5 min;
 	VertPos: Top = Previous NOT MAP . Bottom + VSpaceBeforeH1;
 	Size: Enclosing + 6;
-	Style: Bold;
+	Weight: Bold;
 	Hyphenate: No;
 	CreateBefore(H1_S);
 	CreateWith(VerticalLine);
@@ -6239,12 +6258,12 @@ RULES
 		VertPos: Top = Previous . Bottom;
 		Height: Enclosed . Height;
 		Size: Enclosing =;
-		Style: Enclosing =;
+		Weight: Enclosing =;
 		NoLine;
 		END;
 	IN Alternate_view BEGIN
 		Size: Enclosing =;
-		Style: Enclosing =;
+		Weight: Enclosing =;
 		Adjust: VMiddle;
 		END;
 	IN Table_of_contents BEGIN
@@ -6274,7 +6293,7 @@ RULES
 #endif
 	Width: Enclosing . Width;
 	Size: Enclosing + 4;
-	Style: Bold;
+	Weight: Bold;
 	CreateBefore(H2_S);
 	CreateWith(VerticalLine);
 	VertPos: Top = Previous NOT MAP . Bottom + VSpaceBeforeH2;
@@ -6283,12 +6302,12 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		Size: Enclosing =;
-		Style: Enclosing =;
+		Weight: Enclosing =;
 		NoLine;
 		END;
 	IN Alternate_view BEGIN
 		Size: Enclosing =;
-		Style: Enclosing =;
+		Weight: Enclosing =;
 		END;
 	IN Table_of_contents BEGIN
 #ifdef PAGE
@@ -6299,7 +6318,7 @@ RULES
 #endif
 		HorizPos: Left = Enclosing . Left + 1;
 		Size: Enclosing =;
-		Style: Enclosing =;
+		Weight: Enclosing =;
 		Visibility: 9;
 		VertPos: Top = Previous . Bottom + VSpaceInToC;
 		END;
@@ -6318,7 +6337,7 @@ RULES
 	VertPos: Top = Previous NOT MAP . Bottom + VSpaceBeforeH3;
 	Width: Enclosing . Width;
 	Size: Enclosing + 2;
-	Style: Bold;
+	Weight: Bold;
 	CreateBefore(H3_S);
 	CreateWith(VerticalLine);
 	IN Structure_view BEGIN
@@ -6326,12 +6345,12 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		Size: Enclosing =;
-		Style: Enclosing =;
+		Weight: Enclosing =;
 		NoLine;
 		END;
 	IN Alternate_view BEGIN
 		Size: Enclosing =;
-		Style: Enclosing =;
+		Weight: Enclosing =;
 		END;
 	IN Table_of_contents BEGIN
 #ifdef PAGE
@@ -6342,7 +6361,7 @@ RULES
 #endif
 		HorizPos: Left = Enclosing . Left + 2;
 		Size: Enclosing =;
-		Style: Enclosing =;
+		Weight: Enclosing =;
 		Visibility: 8;
 		VertPos: Top = Previous . Bottom + VSpaceInToC;
 		END;
@@ -6361,7 +6380,7 @@ RULES
 	VertPos: Top = Previous NOT MAP . Bottom + VSpaceBeforeH4;
 	Width: Enclosing . Width;
 	Size: Enclosing =;
-	Style: Bold;
+	Weight: Bold;
 	CreateBefore(H4_S);
 	CreateWith(VerticalLine);
 	IN Structure_view BEGIN
@@ -6369,11 +6388,11 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		Size: Enclosing =;
-		Style: Enclosing =;
+		Weight: Enclosing =;
 		NoLine;
 		END;
 	IN Alternate_view BEGIN
-		Style: Enclosing =;
+		Weight: Enclosing =;
 		Size: Enclosing =;
 		END;
 	IN Table_of_contents BEGIN
@@ -6385,7 +6404,7 @@ RULES
 #endif
 		HorizPos: Left = Enclosing . Left + 3;
 		Size: Enclosing =;
-		Style: Enclosing =;
+		Weight: Enclosing =;
 		Visibility: 7;
 		VertPos: Top = Previous . Bottom + VSpaceInToC;
 		END;
@@ -6496,12 +6515,7 @@ RULES
 	CreateBefore(I_S);
 	CreateWith(VerticalLine);
 	LineBreak: Yes;
-	if within Bold_text
-	   Style: BoldItalics;
-	if within Strong
-	   Style: BoldItalics;
-	if not within Bold_text and not within Strong
-	   Style: Italics;
+	Style: Italics;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
@@ -6516,16 +6530,11 @@ RULES
 	CreateBefore(B_S);
 	CreateWith(VerticalLine);
 	LineBreak: Yes;
-	if within Italic_text
-	   Style: BoldItalics;
-	if within Emphasis
-	   Style: BoldItalics;
-	if not within Italic_text and not within Emphasis
-	   Style: Bold;
+	Weight: Bold;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
-		Style: Enclosing =;
+		Weight: Enclosing =;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
@@ -6661,12 +6670,7 @@ RULES
 	CreateBefore(EM_S);
 	CreateWith(VerticalLine);
 	LineBreak: Yes;
-	if within Bold_text
-	   Style: BoldItalics;
-	if within Strong
-	   Style: BoldItalics;
-	if not within Bold_text and not within Strong
-	   Style: Italics;
+	Style: Italics;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
@@ -6682,16 +6686,11 @@ RULES
 	CreateBefore(STRONG_S);
 	CreateWith(VerticalLine);
 	LineBreak: Yes;
-	if within Emphasis
-	   Style: BoldItalics;
-	if within Italic_text
-	   Style: BoldItalics;
-	if not within Emphasis and not within Italic_text
-	   Style: Bold;
+	Weight: Bold;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
-		Style: Enclosing =;
+		Weight: Enclosing =;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
@@ -6703,7 +6702,7 @@ RULES
 	CreateWith(VerticalLine);
 	LineBreak: Yes;
 	Size: Enclosing + 1;
-	Style: Bold;
+	Weight: Bold;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
@@ -6711,7 +6710,7 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		Size: Enclosing =;
-		Style: Enclosing =;
+		Weight: Enclosing =;
 		END;
 	END;
  Code:
@@ -7135,7 +7134,6 @@ RULES
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Style: Enclosing =;
 		NoLine;
 		END;
 	END;
@@ -7879,7 +7877,6 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		Adjust: Left;
-		Style: Enclosing =;
 		NoLine;
 		END;
 	END;
@@ -7903,7 +7900,6 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		Adjust: Left;
-		Style: Enclosing =;
 		END;
 	END;
 
@@ -7916,7 +7912,6 @@ RULES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		Adjust: Left;
-		Style: Enclosing =;
 		END;
 	END;
 
@@ -8073,14 +8068,14 @@ RULES
 	VertPos : Top = Enclosing . Top + TableSimpleVSpace;
 	HorizPos: Left = Previous Table_cell . Right + TableDoubleHSpace;
 	Width: 20 px;
-	Style: Bold;
+	Weight: Bold;
 	Adjust: VMiddle;
 	CreateBefore(TH_S);
 	if NOT RowExt
 	   CreateAfter (CellFooter);
 	CreateWith(VerticalLine);
 	IN Structure_view BEGIN
-		Style : Enclosing =;
+		Weight : Enclosing =;
 		Adjust : Enclosing =;
 		VertPos: Top = Previous . Bottom;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -8177,7 +8172,7 @@ RULES
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
 		Visibility: INVALID_Visibility;
-		Style: INVALID_Style;
+		Style: INVALID_Style; Weight: INVALID_Weight;
 #ifdef BLACK_WHITE
 		Underline: CrossedOut;
 #else
@@ -8193,7 +8188,7 @@ RULES
 	IN Structure_view BEGIN
 		Visibility: COMMENT_Visibility;
 		Font: COMMENT_Font;
-		Style: COMMENT_Style;
+		Style: COMMENT_Style; Weight: COMMENT_Weight;
 		Width: Enclosing . Width;
 		END;
 	END;

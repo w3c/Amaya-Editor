@@ -44,10 +44,10 @@ GenericContextBlock, *GenericContext;
 
 typedef struct struct_SpecificContext
   {
-     Document                doc;	/* document number */
-     SSchema                 schema;	/* associated structure */
-     int                     type;      /* type of element */
-     ThotBool                destroy;   /* destructive mode ? */
+     Document              doc;	     /* document number */
+     SSchema               schema;   /* associated structure */
+     int                   type;     /* type of element */
+     ThotBool              destroy;  /* destructive mode ? */
 
      /*
       * The end of the block is to be filled with other kind
@@ -59,7 +59,7 @@ PresentationContextBlock, *PresentationContext;
 
 /* Units */
 #define STYLE_UNIT_INVALID	0	/* invalid unit : for parsing   */
-#define STYLE_UNIT_REL	1	/* relative : e.g. to font size */
+#define STYLE_UNIT_REL		1	/* relative : e.g. to font size */
 #define STYLE_UNIT_PT		2	/* typo points : 1/72 inches    */
 #define STYLE_UNIT_PC		3	/* typo points : 1/6 inches     */
 #define STYLE_UNIT_IN		4	/* inches                       */
@@ -102,20 +102,20 @@ typedef struct _PresentationSetting
  */
 
 #define STYLE_FONT_ROMAN		StyleRoman
-#define STYLE_FONT_BOLD		StyleBold
 #define STYLE_FONT_ITALICS		StyleItalics
 #define STYLE_FONT_OBLIQUE		StyleOblique
-#define STYLE_FONT_BOLDITALICS	StyleBoldItalics
-#define STYLE_FONT_BOLDOBLIQUE	StyleBoldOblique
+
+#define STYLE_WEIGHT_BOLD		WeightBold
+#define STYLE_WEIGHT_NORMAL		WeightNormal
 
 #define STYLE_FONT_TIMES		FontTimes
 #define STYLE_FONT_HELVETICA		FontHelvetica
 #define STYLE_FONT_COURIER		FontCourier
 
 #define STYLE_NOUNDERLINE		1
-#define STYLE_UNDERLINE		2
-#define STYLE_OVERLINE		3
-#define STYLE_CROSSOUT		4
+#define STYLE_UNDERLINE			2
+#define STYLE_OVERLINE			3
+#define STYLE_CROSSOUT			4
 
 #define STYLE_THINUNDERLINE		1
 #define STYLE_THICKUNDERLINE		2
@@ -125,23 +125,23 @@ typedef struct _PresentationSetting
 #define STYLE_ADJUSTCENTERED		3
 #define STYLE_ADJUSTLEFTWITHDOTS	4
 
-#define STYLE_JUSTIFIED		1
+#define STYLE_JUSTIFIED			1
 #define STYLE_NOTJUSTIFIED		2
 
-#define STYLE_LINESOLID		1
+#define STYLE_LINESOLID			1
 #define STYLE_LINEDASHED		2
 #define STYLE_LINEDOTTED		3
 
-#define STYLE_HYPHENATE		1
+#define STYLE_HYPHENATE			1
 #define STYLE_NOHYPHENATE		2
 
 #define STYLE_HIDE			0
 #define STYLE_DISPLAY			5
 
 #define STYLE_INLINE			1
-#define STYLE_NOTINLINE		2
+#define STYLE_NOTINLINE			2
 
-#define STYLE_REALSIZE		1
+#define STYLE_REALSIZE			1
 #define STYLE_SCALE			2
 #define STYLE_REPEAT			3
 #define STYLE_VREPEAT			4

@@ -53,6 +53,7 @@
 #define C_PR_PICTURE 'P'
 #define C_PR_INDENT 'R'
 #define C_PR_STYLE 'S'
+#define C_PR_WEIGHT 'w'
 #define C_PR_SIZE 'T'
 #define C_PR_HPOS 'X'
 #define C_PR_VPOS 'Y'

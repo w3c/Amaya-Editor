@@ -131,6 +131,7 @@ static int          repeatImage;
 static int          imageSel;
 static int          fontNum;
 static int          fontStyle;
+static int          fontWeight;
 static int          fontUnderline;
 static int          fontSize;
 static int          baseDoc;
@@ -905,18 +906,20 @@ STRING curLang;
  CreateCharacterDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateCharacterDlgWindow (HWND parent, int font_num, int font_style, int font_underline, int font_size)
+void CreateCharacterDlgWindow (HWND parent, int font_num, int font_style, int font_weight, int font_underline, int font_size)
 #else  /* !__STDC__ */
-void CreateCharacterDlgWindow (parentint font_num, font_style, font_underline, font_size)
+void CreateCharacterDlgWindow (parentint font_num, font_style, font_weight, font_underline, font_size)
 HWND  parent;
 int   font_num; 
-int   font_style; 
+int   font_style;
+int   font_weight; 
 int   font_underline; 
 int   font_size;
 #endif /* __STDC__ */
 {  
     fontNum       = font_num;
     fontStyle     = font_style;
+    fontWeight    = font_weight;
     fontUnderline = font_underline;
     fontSize      = font_size;
 
@@ -2905,7 +2908,7 @@ LPARAM lParam;
                                 break;
                        default: CheckRadioButton (hwnDlg, IDC_TIMES, IDC_DEFAULTFAMILY, IDC_DEFAULTFAMILY);
                 }
-
+/*******/  separer ce menu en deux, en utilisant la varable fontWeight /******/
                 switch (fontStyle) {
                        case 0:  CheckRadioButton (hwnDlg, IDC_ROMAN, IDC_DEFAULTSTYLE, IDC_ROMAN);
                                 break;

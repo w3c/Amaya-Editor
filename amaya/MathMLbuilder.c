@@ -660,7 +660,8 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
    {MathML_ATTR_fence, L"true", MathML_ATTR_fence_VAL_true},
    {MathML_ATTR_fence, L"false", MathML_ATTR_fence_VAL_false},
    {MathML_ATTR_fontstyle, L"italic", MathML_ATTR_fontstyle_VAL_italic},
-   {MathML_ATTR_fontstyle, L"normal", MathML_ATTR_fontstyle_VAL_normal},
+   {MathML_ATTR_fontstyle, L"normal", MathML_ATTR_fontstyle_VAL_normal_},
+******  some missing attributes here: fontweight, form, frame, etc...
    {MathML_ATTR_link, L"document", MathML_ATTR_link_VAL_document},
    {MathML_ATTR_link, L"extended", MathML_ATTR_link_VAL_extended},
    {MathML_ATTR_link, L"group", MathML_ATTR_link_VAL_group},
@@ -685,10 +686,10 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
    {MathML_ATTR_fence, "false", MathML_ATTR_fence_VAL_false},
 
    {MathML_ATTR_fontstyle, "italic", MathML_ATTR_fontstyle_VAL_italic},
-   {MathML_ATTR_fontstyle, "normal", MathML_ATTR_fontstyle_VAL_normal},
+   {MathML_ATTR_fontstyle, "normal", MathML_ATTR_fontstyle_VAL_normal_},
 
    {MathML_ATTR_fontweight, "bold", MathML_ATTR_fontweight_VAL_bold_},
-   {MathML_ATTR_fontweight, "normal", MathML_ATTR_fontweight_VAL_normal},
+   {MathML_ATTR_fontweight, "normal_", MathML_ATTR_fontweight_VAL_normal_},
 
    {MathML_ATTR_form, "prefix", MathML_ATTR_form_VAL_prefix},
    {MathML_ATTR_form, "infix", MathML_ATTR_form_VAL_infix},

@@ -118,6 +118,7 @@
 /* C_PR_HPOS	= 'X'; */
 /* C_PR_SIZE	= 'T'; */
 /* C_PR_STYLE	= 'S'; */
+/* C_PR_WEIGHT  = 'w'; */
 /* C_PR_FONT	= 'F'; */
 /* C_PR_BREAK1	= '1'; */
 /* C_PR_BREAK2	= '2'; */
@@ -294,6 +295,7 @@
 /* C_PR_HPOS	= 'X'; */
 /* C_PR_SIZE	= 'T'; */
 /* C_PR_STYLE	= 'S'; */
+/* C_PR_WEIGHT  = 'w'; */
 /* C_PR_FONT	= 'F'; */
 /* C_PR_BREAK1	= '1'; */
 /* C_PR_BREAK2	= '2'; */

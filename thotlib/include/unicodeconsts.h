@@ -16,9 +16,9 @@
 #   define _B_                L"B"
 #   define _C_                L"C"
 #   define _D_                L"D"
-#			 define _E_				   L"E"
+#   define _E_		      L"E"
 #   define _F_                L"F"
-#			 define _G_                L"G"
+#   define _G_                L"G"
 #   define _H_                L"H"
 #   define _I_                L"I"
 #   define _J_                L"J"
@@ -78,7 +78,6 @@
 #   define _AlphabetCST_          L"alphabet"
 #   define _AmayaMainCST_         L"AmayaMain"
 #   define _BackgroundColorCST_   L"BackgroundColor"
-#   define _BrightCST_            L"bright"
 #   define _BUTTONCST_            L"BUTTON"
 #   define _ClientWndProcCST_     L"ClientWndProc"
 #   define _CorrdialogueCST_      L"corrdialogue"
@@ -98,7 +97,6 @@
 #   define _IDI_APPICONCST_       L"IDI_APPICON"
 #   define _ImportCST_            L"import"
 #   define _InactiveItemColorCST_ L"InactiveItemColor"
-#   define _Iso8859CST_           L"iso8859"
 #   define _KeyboardCST_          L"keyboard"
 #   define _LEXCST_               L"LEX"
 #   define _LibdialogueCST_       L"libdialogue"
@@ -125,7 +123,6 @@
 #   define _TtcPasteCST_          L"TtcPaste"
 #   define _TtcRedoCST_           L"TtcRedo"
 #   define _TtcUndoCST_           L"TtcUndo"
-#   define _TypewriterCST_        L"typewriter"
 #   define _TypographyCST_        L"typography"
 #   define _VISIBILITYCST_        L"VISIBILITY"
 #   define _WNDIALOGBOXCST_       L"WNDIALOGBOX"
@@ -316,25 +313,6 @@
 #   define _SpaceKEY_                      L"space"
 #   define _UpKEY_                         L"up"
 
-
-#   define _ArialFONT_                     L"Arial"
-#   define _CourierFONT_                   L"courier"
-#   define _CourierNewFONT_                L"Courier New"
-#   define _FontspecificFONT_              L"fontspecific"
-#   define _HelveticaFONT_                 L"helvetica"
-#   define _MediumSTYLE_                   L"medium"
-#   define _SymbolFONT_                    L"Symbol"
-#   define _TimesFONT_                     L"times"
-#   define _TimesNewRomanFONT_             L"Times New Roman"
-
-#   define _FontFamilyLucida               L"-b&h-lucida"
-#   define _FontFamilyBitstream            L"gipsi-bitstream"
-
-#   define _BoldSTYLE_                     L"bold"
-#   define _DemiboldSTYLE_                 L"demibold"
-#   define _MediumSTYLE_                   L"medium"
-#   define _NormalSTYLE_                   L"normal"
-
 #   define _KBKeyRC_                       L"<Key>"
 
 #   define _AmericanID_                    L"American"
@@ -465,7 +443,6 @@
 #      define _AlphabetCST_          "alphabet"
 #      define _AmayaMainCST_         "AmayaMain"
 #      define _BackgroundColorCST_   "BackgroundColor"
-#      define _BrightCST_            "bright"
 #      define _BUTTONCST_            "BUTTON"
 #      define _ClientWndProcCST_     "ClientWndProc"
 #      define _CorrdialogueCST_      "corrdialogue"
@@ -485,7 +462,6 @@
 #      define _IDI_APPICONCST_       "IDI_APPICON"
 #      define _ImportCST_            "import"
 #      define _InactiveItemColorCST_ "InactiveItemColor"
-#      define _Iso8859CST_           "iso8859"
 #      define _KeyboardCST_          "keyboard"
 #      define _LEXCST_               "LEX"
 #      define _LibdialogueCST_       "libdialogue"
@@ -512,7 +488,6 @@
 #      define _TtcPasteCST_          "TtcPaste"
 #      define _TtcRedoCST_           "TtcRedo"
 #      define _TtcUndoCST_           "TtcUndo"
-#      define _TypewriterCST_        "typewriter"
 #      define _TypographyCST_        "typography"
 #      define _VISIBILITYCST_        "VISIBILITY"
 #      define _WNDIALOGBOXCST_       "WNDIALOGBOX"
@@ -701,23 +676,6 @@
 #      define _SpaceKEY_                      "space"
 #      define _UpKEY_                         "up"
 
-#      define _ArialFONT_                     "Arial"
-#      define _CourierFONT_                   "courier"
-#      define _CourierNewFONT_                "Courier New"
-#      define _FontspecificFONT_              "fontspecific"
-#      define _HelveticaFONT_                 "helvetica"
-#      define _SymbolFONT_                    "Symbol"
-#      define _TimesFONT_                     "times"
-#      define _TimesNewRomanFONT_             "Times New Roman"
-
-#      define _FontFamilyLucida               "-b&h-lucida"
-#      define _FontFamilyBitstream            "gipsi-bitstream"
-
-#      define _BoldSTYLE_                     "bold"
-#      define _DemiboldSTYLE_                 "demibold"
-#      define _MediumSTYLE_                   "medium"
-#      define _NormalSTYLE_                   "normal"
-
 #      define _KBKeyRC_                       "<Key>"
 
 #      define _AmericanID_                    "American"
@@ -769,7 +727,7 @@
 #      define _A3PaperFormat_                  "A3"
 
 #      ifdef _WINDOWS
-#            define  WIN_DEF_TMPDIR           "c:\\temp"
+#      define  WIN_DEF_TMPDIR           "c:\\temp"
 #      else  /* !_WINDOWS */
 #      endif /* ! _WINDOWS */
 
@@ -777,4 +735,3 @@
 #endif /* !_I18N_ */
 
 #endif /* _UCS2_CONST */
- 

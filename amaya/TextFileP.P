@@ -15,27 +15,28 @@ PRINT
    Formatted_view;
 
 COUNTERS
-   CptPage : Rank of Page(Formatted_view);
+   CptPage: Rank of Page(Formatted_view);
 #endif
 
 DEFAULT
 
    BEGIN
-   HorizRef : Enclosed . HRef;
-   VertRef : * . Left;
-   Width : Enclosed . Width;
-   Height : Enclosed . Height;
-   VertPos : Top = Previous . Bottom;
-   HorizPos : Left = Enclosing . Left;
-   Justify : Enclosing =;
-   LineSpacing : Enclosing =;
+   HorizRef: Enclosed . HRef;
+   VertRef: * . Left;
+   Width: Enclosed . Width;
+   Height: Enclosed . Height;
+   VertPos: Top = Previous . Bottom;
+   HorizPos: Left = Enclosing . Left;
+   Justify: Enclosing =;
+   LineSpacing: Enclosing =;
    Visibility: Enclosing =;
-   Font : Enclosing =;
-   Style : Enclosing =;
-   Size : Enclosing =;
-   Adjust : Left;
-   Indent : Enclosing =;
-   Depth : 0;
+   Font: Enclosing =;
+   Style: Enclosing =;
+   Weight: Enclosing =;
+   Size: Enclosing =;
+   Adjust: Left;
+   Indent: Enclosing =;
+   Depth: 0;
    UnderLine: Enclosing =;
    Thickness: Enclosing =;
    LineStyle: Enclosing =;
@@ -50,9 +51,9 @@ BOXES
 #ifdef PAGE
   URLhead:
 	BEGIN
-	Background : White;
-	Foreground : Black;
-	Fillpattern : nopattern;
+	Background: White;
+	Foreground: Black;
+	Fillpattern: nopattern;
 	Underline: NoUnderline;
 	Copy (Document_URL);
 	Justify: No;
@@ -60,47 +61,50 @@ BOXES
 	VertPos: Top = Previous PAGE_BREAK . Bottom + 0.7 cm;
 	Width: Enclosed . Width;
 	Height:   1.2 cm;
-	Size : 8 pt;
+	Size: 8 pt;
 	Font: times;
 	Style: Roman;	
+	Weight: Normal;
 	END;
 
   Spacehead:
 	BEGIN
-	Background : White;
-	Foreground : Black;
-	Fillpattern : nopattern;
+	Background: White;
+	Foreground: Black;
+	Fillpattern: nopattern;
 	Underline: NoUnderline;
 	Content: Text ' ';
 	Justify: No;
 	HorizPos: Left = Previous PAGE_BREAK . Left;
 	VertPos: Top = Previous PAGE_BREAK . Bottom + 0.7 cm;
 	Height:   1.2 cm;
-	Size : 8 pt;
+	Size: 8 pt;
 	Font: times;
 	Style: Roman;
+	Weight: Normal;
 	END;
 
   PageNum:
 	BEGIN
-	Background : White;
-	Foreground : Black;
-	Fillpattern : nopattern;
+	Background: White;
+	Foreground: Black;
+	Fillpattern: nopattern;
 	Underline: NoUnderline;
 	Content: (Value (CptPage, Arabic));
 	VertPos: Top = Next PAGE_BREAK . Top - 0.5 cm;
 	HorizPos: VMiddle = Next PAGE_BREAK . VMiddle;
 	Height:   1.6 cm;
 	Width: Enclosed .Width;
-	Size : 11 pt;
+	Size: 11 pt;
 	Font: times;
 	Style: Roman;
+	Weight: Normal;
 	END;
 
   BottomSpace:
 	BEGIN
-	Background : White;
-	Foreground : Black;
+	Background: White;
+	Foreground: Black;
 	FillPattern: backgroundcolor;
 	Height: 1.4 cm;
 	Width: 1 pt;
@@ -112,8 +116,8 @@ BOXES
 
   ThePage:
 	BEGIN
-	Background : White;
-	Foreground : Black;
+	Background: White;
+	Foreground: Black;
 	FillPattern: backgroundcolor;
 	ShowBox;
 #ifdef US_PAPER
@@ -138,17 +142,18 @@ BOXES
 
   RightSpace:
 	BEGIN
-	Fillpattern : nopattern;
+	Fillpattern: nopattern;
 	Underline: NoUnderline;
 	Content: Text '   ';
 	Justify: No;
 	HorizPos: Left = BODY . Right;
 	VertPos: Top = Enclosing . Top;
-	Width : Enclosed . Width;
-	Height:   1;
-	Size : 12 pt;
+	Width: Enclosed . Width;
+	Height: 1;
+	Size: 12 pt;
 	Font: times;
 	Style: Roman;
+	Weight: Normal;
 	END;
 
 #endif
@@ -162,6 +167,7 @@ RULES
  TextFile: BEGIN
 	Font: Courier;
 	Style: Roman;
+	Weight: Normal;
 	Adjust: Left;
 #ifdef PAGE
 	Size: 10 pt;
@@ -200,6 +206,6 @@ RULES
 	END;
 
  TEXT_UNIT :
-	 Width : Enclosed . Width;
+	 Width: Enclosed . Width;
 
 END

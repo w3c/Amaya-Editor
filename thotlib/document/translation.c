@@ -877,6 +877,7 @@ PtrPRule            pPRule;
 	 {
 	    case PtFont:
 	    case PtStyle:
+	    case PtWeight:
 	    case PtUnderline:
 	    case PtThickness:
 	    case PtLineStyle:
@@ -2572,6 +2573,7 @@ ThotBool           *removeEl;
 				       {
 					  case PtFont:
 					  case PtStyle:
+					  case PtWeight:
 					  case PtUnderline:
 					  case PtThickness:
 					  case PtLineStyle:

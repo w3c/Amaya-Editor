@@ -347,7 +347,8 @@ typedef struct _AbstractBox
   int	          AbNum;	/* Abstract box number for debug */
   int	          AbVisibility; /* Abstract box visibility degree */
   CHAR_T          AbFont;	/* Characteristics of the font used */
-  int		  AbHighlight;	/* Highlighting of the abstract box */
+  int		  AbFontStyle;	/* Font style: roman, italic, oblique */
+  int		  AbFontWeight;	/* Font weight: normal, bold */
   int		  AbSize;	/* Character logical/real size */
   TypeUnit        AbSizeUnit;   /* Unit for the size */
   CHAR_T	  AbLineStyle;  /* Line style */

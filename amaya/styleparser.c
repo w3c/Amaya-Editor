@@ -1179,8 +1179,7 @@ ThotBool            isHTML;
 /*----------------------------------------------------------------------
    ParseCSSFontWeight : parse a CSS font weight string   
    we expect the input string describing the attribute to be     
-   extra-light, light, demi-light, medium, demi-bold, bold, extra-bold
-   or a number encoding for the previous values                       
+   normal, bold, bolder, lighter, 100, 200, 300, ... 900, inherit.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static STRING       ParseCSSFontWeight (Element element, PSchema tsch,
@@ -1195,7 +1194,7 @@ CSSInfoPtr          css;
 ThotBool            isHTML;
 #endif
 {
-   PresentationValue   weight, previous_style;
+   PresentationValue   weight;
 
    weight.typed_data.value = 0;
    weight.typed_data.unit = STYLE_UNIT_REL;
@@ -1260,38 +1259,16 @@ ThotBool            isHTML;
      return (cssRule);
 
    /*
-    * Here we have to reduce since font weight is not well supported
+    * Here we have to reduce since only two font weight values are supported
     * by the Thot presentation API.
     */
-    if (!TtaGetStylePresentation (PRStyle, element, tsch, context, &previous_style))
-       {
-       if (previous_style.typed_data.value == STYLE_FONT_ITALICS ||
-	   previous_style.typed_data.value == STYLE_FONT_BOLDITALICS)
-	  if (weight.typed_data.value > 0)
-	     weight.typed_data.value = STYLE_FONT_BOLDITALICS;
-	  else
-	     weight.typed_data.value = STYLE_FONT_ITALICS;
-       else if (previous_style.typed_data.value == STYLE_FONT_OBLIQUE ||
-	        previous_style.typed_data.value == STYLE_FONT_BOLDOBLIQUE)
-	  if (weight.typed_data.value > 0)
-	    weight.typed_data.value = STYLE_FONT_BOLDOBLIQUE;
-	  else
-	    weight.typed_data.value = STYLE_FONT_OBLIQUE;
-       else if (previous_style.typed_data.value == STYLE_FONT_ROMAN ||
-	        previous_style.typed_data.value == STYLE_FONT_BOLD)
-	  if (weight.typed_data.value > 0)
-	    weight.typed_data.value = STYLE_FONT_BOLD;
-	  else
-	    weight.typed_data.value = STYLE_FONT_ROMAN;
-       }
-   else
-       if (weight.typed_data.value > 0)
-         weight.typed_data.value = STYLE_FONT_BOLD;
-       else
-         weight.typed_data.value = STYLE_FONT_ROMAN;
+    if (weight.typed_data.value > 0)
+       weight.typed_data.value = STYLE_WEIGHT_BOLD;
+    else
+       weight.typed_data.value = STYLE_WEIGHT_NORMAL;
 
    /* install the new presentation */
-    TtaSetStylePresentation (PRStyle, element, tsch, context, weight);
+   TtaSetStylePresentation (PRStyle, element, tsch, context, weight);
    return (cssRule);
 }
 
@@ -1394,25 +1371,7 @@ ThotBool            isHTML;
     * install the new presentation.
     */
    if (style.typed_data.value != 0)
-     {
-	PresentationValue   previous_style;
-
-	if (!TtaGetStylePresentation (PRStyle, element, tsch, context, &previous_style))
-	  {
-	     if (previous_style.typed_data.value == STYLE_FONT_BOLD)
-	       {
-		  if (style.typed_data.value == STYLE_FONT_ITALICS)
-		     style.typed_data.value = STYLE_FONT_BOLDITALICS;
-		  if (style.typed_data.value == STYLE_FONT_OBLIQUE)
-		     style.typed_data.value = STYLE_FONT_BOLDOBLIQUE;
-	       }
-	     TtaSetStylePresentation (PRStyle, element, tsch, context, style);
-	  }
-	else
-	  {
-	    TtaSetStylePresentation (PRStyle, element, tsch, context, style);
-	  }
-     }
+        TtaSetStylePresentation (PRStyle, element, tsch, context, style);
    if (size.typed_data.value != 0)
      {
 	PresentationValue   previous_size;
@@ -3026,23 +2985,25 @@ int                  len
     case PRStyle:
       switch (settings->value.typed_data.value)
 	{
-	case STYLE_FONT_BOLD:
-	  ustrcpy (buffer, TEXT("font-weight: bold"));
-	  break;
 	case STYLE_FONT_ROMAN:
 	  ustrcpy (buffer, TEXT("font-style: normal"));
 	  break;
 	case STYLE_FONT_ITALICS:
 	  ustrcpy (buffer, TEXT("font-style: italic"));
 	  break;
-	case STYLE_FONT_BOLDITALICS:
-	  ustrcpy (buffer, TEXT("font-weight: bold; font-style: italic"));
-	  break;
 	case STYLE_FONT_OBLIQUE:
 	  ustrcpy (buffer, TEXT("font-style: oblique"));
 	  break;
-	case STYLE_FONT_BOLDOBLIQUE:
-	  ustrcpy (buffer, TEXT("font-weight: bold; font-style: oblique"));
+	}
+      break;
+    case PRWeight:
+      switch (settings->value.typed_data.value)
+	{
+	case STYLE_WEIGHT_BOLD:
+	  ustrcpy (buffer, TEXT("font-weight: bold"));
+	  break;
+	case STYLE_WEIGHT_NORMAL:
+	  ustrcpy (buffer, TEXT("font-weight: normal"));
 	  break;
 	}
       break;

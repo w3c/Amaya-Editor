@@ -63,14 +63,16 @@ typedef int        *PRule;
 #define PRVertOverflow 39
 #define PRLine 40
 #define PRNone 41
+#define PRWeight 42
 
 /* values for rule PRStyle */
 #define StyleRoman 1
-#define StyleBold 2
-#define StyleItalics 3
-#define StyleOblique 4
-#define StyleBoldItalics 5
-#define StyleBoldOblique 6
+#define StyleItalics 2
+#define StyleOblique 3
+
+/* values for rule PRWeight */
+#define WeightNormal 1
+#define WeightBold 2
 
 /* values for rule PRFont */
 #define FontTimes 1
@@ -119,9 +121,10 @@ typedef int        *PRule;
 
    Parameter:
    presentationType: type of the presentation rule to be created. Available
-   values are PRSize, PRStyle, PRFont, PRUnderline, PRThickness, PRIndent,
-   PRLineSpacing, PRDepth, PRAdjust, PRJustify, PRLineStyle, PRLineWeight,
-   PRFillPattern, PRBackground, PRForeground, PRHyphenate.
+   values are PRSize, PRStyle, PRWeight, PRFont, PRUnderline, PRThickness,
+   PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRJustify, PRLineStyle,
+   PRLineWeight, PRFillPattern, PRBackground, PRForeground, PRHyphenate,
+   PRWidth, PRHeight, PRVertPos, PRHorizPos.
    view: the view (this view must be open).
    document: the document.
 
@@ -139,9 +142,10 @@ extern PRule        TtaNewPRule (int presentationType, View view, Document docum
 
    Parameter:
    presentationType: type of the presentation rule to be created. Available
-   values are PRSize, PRStyle, PRFont, PRUnderline, PRThickness, PRIndent,
-   PRLineSpacing, PRDepth, PRAdjust, PRJustify, PRLineStyle, PRLineWeight,
-   PRFillPattern, PRBackground, PRForeground, PRHyphenate.
+   values are PRSize, PRStyle, PRWeight, PRFont, PRUnderline, PRThickness,
+   PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRJustify, PRLineStyle,
+   PRLineWeight, PRFillPattern, PRBackground, PRForeground, PRHyphenate,
+   PRShowBox, PRNotInLine.
    viewName: the name of the view (this view does not need to be open).
    document: the document.
 
@@ -159,9 +163,10 @@ extern PRule        TtaNewPRuleForView (int presentationType, int view, Document
 
    Parameter:
    presentationType: type of the presentation rule to be created. Available
-   values are PRSize, PRStyle, PRFont, PRUnderline, PRThickness, PRIndent,
-   PRLineSpacing, PRDepth, PRAdjust, PRJustify, PRLineStyle, PRLineWeight,
-   PRFillPattern, PRBackground, PRForeground, PRHyphenate.
+   values are PRSize, PRStyle, PRWeight, PRFont, PRUnderline, PRThickness,
+   PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRJustify, PRLineStyle,
+   PRLineWeight, PRFillPattern, PRBackground, PRForeground, PRHyphenate,
+   PRShowBox, PRNotInLine.
    viewName: the name of the view (this view does not need to be open).
    document: the document.
 
@@ -227,8 +232,8 @@ extern void         TtaRemovePRule (Element element, PRule pRule, Document docum
 
    Valid values according to rule type:
    PRSize: an integer between 6 and 72 (body size in points).
-   PRStyle: StyleRoman, StyleBold, StyleItalics, StyleOblique, StyleBoldItalics,
-            StyleBoldOblique.
+   PRStyle: StyleRoman, StyleItalics, StyleOblique.
+   PRWeight: WeightNormal, WeightBold.
    PRFont: FontTimes, FontHelvetica, FontCourier.
    PRUnderline: NoUnderline, Underline, Overline, CrossOut.
    PRThickness: ThinUnderline, ThickUnderline.
@@ -367,19 +372,22 @@ extern void         TtaGiveThotRGB (int num, /*OUT*/ unsigned short *red, /*OUT*
 extern void         TtaNextPRule (Element element, /*INOUT*/ PRule * pRule);
 
 /*----------------------------------------------------------------------
-   TtaGetPRuleType
+   TtaGetPRule
 
-   Returns the type of a presentation rule.
-
+   Returns a presentation rule of a given type associated with a given element.
+ 
    Parameters:
-   pRule: the presentation rule of interest.
-
+   element: the element of interest.
+   presentationType: type of the desired presentation rule. Available
+   values are PRSize, PtStyle, PtWeight, PRFont, PRUnderline, PRThickness,
+   PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRJustify, PRLineStyle,
+   PRLineWeight, PRFillPattern, PRBackground, PRForeground, PRHyphenate,
+   PRShowBox, PRNotInLine.
+ 
    Return value:
-   type of that presentation rule. Available values are RSize, PtStyle,
-   RFont, RUnderline, RThickness, PRIndent, RLineSpacing, RDepth, RAdjust,
-   RJustify, RLineStyle, RLineWeight, RFillPattern, RBackground,
-   RForeground, RHyphenate.
-
+   the presentation rule found, or NULL if the element
+   does not have this type of presentation rule.
+ 
   ----------------------------------------------------------------------*/
 extern PRule        TtaGetPRule (Element element, int presentationType);
 
@@ -395,7 +403,7 @@ extern PRule        TtaGetPRule (Element element, int presentationType);
    type of that presentation rule. Available values are RSize, PtStyle,
    RFont, RUnderline, RThickness, PRIndent, RLineSpacing, RDepth, RAdjust,
    RJustify, RLineStyle, RLineWeight, RFillPattern, RBackground,
-   RForeground, RHyphenate.
+   RForeground, RHyphenate, PRShowBox, PRNotInLine.
 
   ----------------------------------------------------------------------*/
 extern int          TtaGetPRuleType (PRule pRule);
@@ -410,8 +418,8 @@ extern int          TtaGetPRuleType (PRule pRule);
 
    Return values according to rule type:
    PRSize: an integer between 6 and 72 (body size in points).
-   PRStyle: StyleRoman, StyleBold, StyleItalics, StyleOblique,StyleBoldItalics,
-            StyleBoldOblique.
+   PRStyle: StyleRoman, StyleItalics, StyleOblique.
+   PRWeight: WeightNormal, WeightBold.
    PRFont: FontTimes, FontHelvetica, FontCourier.
    RPUnderline: NoUnderline, Underline, Overline, CrossOut.
    PRThickness: ThinUnderline, ThickUnderline.

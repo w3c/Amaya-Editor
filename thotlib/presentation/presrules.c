@@ -341,18 +341,18 @@ ThotBool           *ok;
 				     val = pAbba1->AbFont;
 				     break;
 				  case PtStyle:
-				     if (pAbba1->AbHighlight == 1)
-					val = 'B';
-				     else if (pAbba1->AbHighlight == 2)
+				     if (pAbba1->AbFontStyle == 1) /* I: Italic */
 					val = 'I';
-				     else if (pAbba1->AbHighlight == 3)		/* O : oblique */
+				     else if (pAbba1->AbFontStyle == 2)	/* O: oblique */
 					val = 'O';
-				     else if (pAbba1->AbHighlight == 4)		/* G : gras italique */
-					val = 'G';
-				     else if (pAbba1->AbHighlight == 5)		/* Q : gras oblique */
-					val = 'Q';
-				     else
+				     else	/* default: R: Roman */
 					val = 'R';
+				     break;
+				  case PtWeight:
+				     if (pAbba1->AbFontWeight == 1)	/* B: Bold */
+					val = 'B';
+				     else	/* default: N: Normal */
+					val = 'N';
 				     break;
 				  case PtUnderline:
 				     if (pAbba1->AbUnderline == 1)
@@ -3142,29 +3142,39 @@ PtrAttribute        pAttr;
 	    if (!appl && pAbb1->AbElement->ElParent == NULL)
 	      /* Pas de regle pour la racine, on met la valeur par defaut */
 	      {
-		pAbb1->AbHighlight = 0;
+		pAbb1->AbFontStyle = 0;
 		appl = TRUE;
 	      }
 	    else
 	      switch (c)
 		{
-		case 'I':
-		  pAbb1->AbHighlight = 2;
+		case 'I':	/* Italic */
+		  pAbb1->AbFontStyle = 1;
 		  break;
-		case 'B':
-		  pAbb1->AbHighlight = 1;
+		case 'O':	/* Oblique */
+		  pAbb1->AbFontStyle = 2;
 		  break;
-		case 'O':/*iso */
-		  pAbb1->AbHighlight = 3;
+		default:	/* Roman */
+		  pAbb1->AbFontStyle = 0;
 		  break;
-		case 'G':
-		  pAbb1->AbHighlight = 4;
+		}
+	    break;
+	  case PtWeight:
+	    c = CharRule (pPRule, pAbb1->AbElement, pAbb1->AbDocView, &appl);
+	    if (!appl && pAbb1->AbElement->ElParent == NULL)
+	      /* Pas de regle pour la racine, on met la valeur par defaut */
+	      {
+		pAbb1->AbFontWeight = 0;
+		appl = TRUE;
+	      }
+	    else
+	      switch (c)
+		{
+		case 'B':	/* Bold */
+		  pAbb1->AbFontWeight = 1;
 		  break;
-		case 'Q':
-		  pAbb1->AbHighlight = 5;
-		  break;
-		default:
-		  pAbb1->AbHighlight = 0;
+		default:	/* Normal */
+		  pAbb1->AbFontWeight = 0;
 		  break;
 		}
 	    break;

@@ -482,27 +482,30 @@ PtrPRule            pR;
 		     putchar (pRe1->PrChrValue);
 		     break;
 	       }
-
       else if (pRe1->PrType == PtStyle)
 	 switch (pRe1->PrChrValue)
 	       {
-		  case 'B':
-		     fprintf (output, "Bold");
-		     break;
 		  case 'I':
 		     fprintf (output, "Italics");
 		     break;
 		  case 'R':
 		     fprintf (output, "Roman");
 		     break;
-		  case 'G':
-		     fprintf (output, "BoldItalics");
-		     break;
-		  case 'Q':
-		     fprintf (output, "BoldOblique");
-		     break;
 		  case 'O':
 		     fprintf (output, "Oblique");
+		     break;
+		  default:
+		     putchar (pRe1->PrChrValue);
+		     break;
+	       }
+      else if (pRe1->PrType == PtWeight)
+	 switch (pRe1->PrChrValue)
+	       {
+		  case 'B':
+		     fprintf (output, "Bold");
+		     break;
+		  case 'N':
+		     fprintf (output, "Normal");
 		     break;
 		  default:
 		     putchar (pRe1->PrChrValue);
@@ -1250,6 +1253,10 @@ PtrPRule            RP;
 		    break;
 		 case PtStyle:
 		    fprintf (output, "Style: ");
+		    wrfontstyle (RP);
+		    break;
+		 case PtWeight:
+		    fprintf (output, "Weight: ");
 		    wrfontstyle (RP);
 		    break;
 		 case PtUnderline:

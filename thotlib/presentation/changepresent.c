@@ -442,6 +442,9 @@ PRuleType           pRule;
 	    case PtStyle:
 	       return PRStyle;
 	       break;
+	    case PtWeight:
+	       return PRWeight;
+	       break;
 	    case PtFont:
 	       return PRFont;
 	       break;
@@ -2087,22 +2090,24 @@ ThotBool            Background;
   les caracteres demandes par l'utilisateur.		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply, ThotBool modifFamily, CHAR_T family, ThotBool modifStyle, int charStyle, ThotBool modifsize, int size, ThotBool modifUnderline, int underline, ThotBool modifWeight, int weightUnderline)
+void                ModifyChar (PtrElement pEl, PtrDocument pDoc, int viewToApply, ThotBool modifFamily, CHAR_T family, ThotBool modifStyle, int charStyle, ThotBool modifWeight, int charWeight, ThotBool modifsize, int size, ThotBool modifUnderline, int underline, ThotBool modifUlWeight, int weightUnderline)
 
 #else  /* __STDC__ */
-void                ModifyChar (pEl, pDoc, viewToApply, modifFamily, family, modifStyle, charStyle, modifsize, size, modifUnderline, underline, modifWeight, weightUnderline)
+void                ModifyChar (pEl, pDoc, viewToApply, modifFamily, family, modifStyle, charStyle, modifWeight, charWeight, modifsize, size, modifUnderline, underline, modifUlWeight, weightUnderline)
 PtrElement          pEl;
 PtrDocument         pDoc;
 int                 viewToApply;
 ThotBool            modifFamily;
-CHAR_T                family;
+CHAR_T              family;
 ThotBool            modifStyle;
 int                 charStyle;
+ThotBool	    modifWeight;
+int		    charWeight;
 ThotBool            modifsize;
 int                 size;
 ThotBool            modifUnderline;
 int                 underline;
-ThotBool            modifWeight;
+ThotBool            modifUlWeight;
 int                 weightUnderline;
 
 #endif /* __STDC__ */
@@ -2140,10 +2145,10 @@ int                 weightUnderline;
 	  /* reset the previous value */
 	  pPRule->PrChrValue = value;
      }
-   /* charStyle de caracteres */
+   /* Style de caracteres */
    if (modifStyle)
      {
-	/* cherche la regle de presentation specifique 'charStyle' de l'element */
+	/* cherche la regle de presentation specifique 'Style' de l'element */
 	/* ou en cree une nouvelle */
 	pPRule = SearchPresRule (pEl, PtStyle, 0, &isNew, pDoc, viewToApply);
 	/* met les choix de l'utilisateur dans cette regle */
@@ -2154,22 +2159,13 @@ int                 weightUnderline;
 	switch (charStyle)
 	  {
 	  case 0:
-	    pPRule->PrChrValue = TEXT('R');
+	    pPRule->PrChrValue = 'R';	/* roman */
 	    break;
 	  case 1:
-	    pPRule->PrChrValue = 'B';
+	    pPRule->PrChrValue = 'I';	/* italic */
 	    break;
 	  case 2:
-	    pPRule->PrChrValue = 'I';
-	    break;
-	  case 3:
 	    pPRule->PrChrValue = 'O';	/* oblique */
-	    break;
-	  case 4:
-	    pPRule->PrChrValue = 'G';	/* gras italique */
-	    break;
-	  case 5:
-	    pPRule->PrChrValue = 'Q';	/* gras Oblique */
 	    break;
 	  default:
 	    pPRule->PrChrValue = 'R';
@@ -2186,7 +2182,41 @@ int                 weightUnderline;
 	  /* reset the previous value */
 	  pPRule->PrChrValue = value;
      }
-   /* Corps des caracteres */
+   /* Graisse des caracteres */
+   if (modifWeight)
+     {
+	/* cherche la regle de presentation specifique 'Weight' de l'element */
+	/* ou en cree une nouvelle */
+	pPRule = SearchPresRule (pEl, PtWeight, 0, &isNew, pDoc, viewToApply);
+	/* met les choix de l'utilisateur dans cette regle */
+	pPRule->PrType = PtWeight;
+	pPRule->PrViewNum = viewSch;
+	pPRule->PrPresMode = PresImmediate;
+	value = pPRule->PrChrValue;
+	switch (charWeight)
+	  {
+	  case 0:
+	    pPRule->PrChrValue = 'N';	/* normal */
+	    break;
+	  case 1:
+	    pPRule->PrChrValue = 'B';	/* bold */
+	    break;
+	  default:
+	    pPRule->PrChrValue = 'N';
+	    break;
+	  }
+	if (!PRuleMessagePre (pEl, pPRule, pDoc, isNew))
+	  {
+	     SetDocumentModified (pDoc, TRUE, 0);
+	     /* si le pave existe, applique la nouvelle regle au pave */
+	     ApplyNewRule (pDoc, pPRule, pEl);
+	     PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	  }
+	else if (!isNew)
+	  /* reset the previous value */
+	  pPRule->PrChrValue = value;
+     }
+   /* Taille des caracteres */
    if (modifsize)
      {
 	/* cherche la regle de presentation specifique 'Corps' de l'element */
@@ -2253,7 +2283,7 @@ int                 weightUnderline;
 	  pPRule->PrChrValue = value;
      }
    /* Epaisseur du souligne */
-   if (modifWeight)
+   if (modifUlWeight)
      {
 	/* cherche la regle de presentation specifique weightUnderline de l'element */
 	/* ou en cree une nouvelle */

@@ -2,6 +2,23 @@ This file lists the bugs that have been fixed and the extensions that
 have been introduced in Amaya and Thot since version 1.4 of Amaya.
  
 =============================================================
+2.1a
+=============================================================
+ 
+Extensions 2.1a:
+---------------
+
+* For a better mapping with CSS, language P has been extended.  Style and
+  Weight are now two separate properties.  This allows Amaya to handle
+  the corresponding CSS properties (font-style, font-weight) independently
+  and to display text both italic and bold.
+
+Fixed bugs 2.1a:
+---------------
+
+*
+
+=============================================================
 2.1
 =============================================================
  

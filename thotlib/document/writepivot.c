@@ -661,6 +661,7 @@ PtrPRule      pPRule;
   if ((pPRule->PrType == PtHeight || pPRule->PrType == PtWidth
        || pPRule->PrType == PtVertPos || pPRule->PrType == PtHorizPos
        || pPRule->PrType == PtSize || pPRule->PrType == PtStyle
+       || pPRule->PrType == PtWeight
        || pPRule->PrType == PtUnderline || pPRule->PrType == PtThickness
        || pPRule->PrType == PtFont || pPRule->PrType == PtBreak1
        || pPRule->PrType == PtBreak2 || pPRule->PrType == PtPictInfo
@@ -716,6 +717,10 @@ PtrPRule      pPRule;
 	  break;
 	case PtStyle:
 	  TtaWriteByte (pivFile, C_PR_STYLE);
+	  TtaWriteByte (pivFile, pPRule->PrChrValue);
+	  break;
+	case PtWeight:
+	  TtaWriteByte (pivFile, C_PR_WEIGHT);
 	  TtaWriteByte (pivFile, pPRule->PrChrValue);
 	  break;
 	case PtUnderline:

@@ -1760,6 +1760,9 @@ ThotBool            link;
     case C_PR_STYLE:
       TypeRP = PtStyle;
       break;
+    case C_PR_WEIGHT:
+      TypeRP = PtWeight;
+      break;
     case C_PR_FONT:
       TypeRP = PtFont;
       break;
@@ -1858,6 +1861,7 @@ ThotBool            link;
 	break;
       case PtFont:
       case PtStyle:
+      case PtWeight:
       case PtUnderline:
       case PtThickness:
       case PtLineStyle:
@@ -1982,6 +1986,7 @@ ThotBool            link;
 	    break;
 	  case PtFont:
 	  case PtStyle:
+	  case PtWeight:
 	  case PtUnderline:
 	  case PtThickness:
 	  case PtLineStyle:

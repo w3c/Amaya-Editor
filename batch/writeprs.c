@@ -207,6 +207,9 @@ PRuleType           ruleType;
 	    case PtStyle:
 	       TtaWriteByte (outfile, C_PR_STYLE);
 	       break;
+	    case PtWeight:
+	       TtaWriteByte (outfile, C_PR_WEIGHT);
+	       break;
 	    case PtFont:
 	       TtaWriteByte (outfile, C_PR_FONT);
 	       break;
@@ -1064,6 +1067,7 @@ PtrPRule            pPRule;
 				break;
 			     case PtFont:
 			     case PtStyle:
+			     case PtWeight:
 			     case PtUnderline:
 			     case PtThickness:
 			     case PtLineStyle:

@@ -90,6 +90,9 @@ BinFile             file;
 	    case C_PR_STYLE:
 	       return PtStyle;
 	       break;
+	    case C_PR_WEIGHT:
+	       return PtWeight;
+	       break;
 	    case C_PR_UNDERLINE:
 	       return PtUnderline;
 	       break;
@@ -1206,6 +1209,7 @@ PtrPRule           *pNextPRule;
 					break;
 				     case PtFont:
 				     case PtStyle:
+				     case PtWeight:
 				     case PtUnderline:
 				     case PtThickness:
 				     case PtLineStyle:

@@ -1180,6 +1180,43 @@ int                 frame;
     }
 }
 
+/*----------------------------------------------------------------------
+   FontStyleAndWeight
+   returns the Highlight value for abstract box pAb, according to its
+   FontStyle and FontWeight.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static int          FontStyleAndWeight (PtrAbstractBox pAb)
+#else  /* __STDC__ */
+static int          FontStyleAndWeight (pAb)
+PtrAbstractBox      pAb;
+
+#endif /* __STDC__ */
+{
+   int	i;
+
+   i = 0;
+   if (pAb)
+      if (pAb->AbFontWeight == 1)	/* Weight: Bold */
+	 {
+	 if (pAb->AbFontStyle == 1)		/* Style: Italic */
+	    i = 4;
+	 else if (pAb->AbFontStyle == 2)	/* Style: Oblique */
+	    i = 5;
+	 else					/* Style: Roman (default) */
+	    i = 1;
+	 }
+      else				/* Weight: Normal */
+	 {
+	 if (pAb->AbFontStyle == 1)		/* Style: Italic */
+	    i = 2;
+	 else if (pAb->AbFontStyle == 2)	/* Style: Oblique */
+	    i = 3;
+	 else					/* Style: Roman (default) */
+	    i = 0;	 
+	 }
+   return i;
+}
 
 /*----------------------------------------------------------------------
    CreateBox cree la boite qui est associee au pave donne en       
@@ -1248,7 +1285,8 @@ int                *carIndex;
    else if (pAb->AbLeafType == LtCompound)
      alphabet = 'L';
    /* teste l'unite */
-   font = ThotLoadFont (alphabet, pAb->AbFont, pAb->AbHighlight, height, unit, frame);
+   font = ThotLoadFont (alphabet, pAb->AbFont, FontStyleAndWeight(pAb),
+			height, unit, frame);
 
    /* Creation */
    pCurrentBox = pAb->AbBox;
@@ -2458,11 +2496,12 @@ int                 frame;
 	     height += pFrame->FrMagnification;
 
 	     if (pAb->AbLeafType == LtText)
-		pBox->BxFont = ThotLoadFont (TtaGetAlphabet (pAb->AbLanguage), pAb->AbFont,
-				     pAb->AbHighlight, height, unit, frame);
+		pBox->BxFont = ThotLoadFont (TtaGetAlphabet (pAb->AbLanguage),
+					  pAb->AbFont, FontStyleAndWeight(pAb),
+					  height, unit, frame);
 	     else if (pAb->AbLeafType == LtSymbol)
 		pBox->BxFont = ThotLoadFont ('G', pAb->AbFont,
-				     pAb->AbHighlight, height, unit, frame);
+				FontStyleAndWeight (pAb), height, unit, frame);
 	     else
 		pBox->BxFont = ThotLoadFont ('L', 'T', 0, height, unit, frame);
 

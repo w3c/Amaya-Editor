@@ -181,8 +181,8 @@
 #define TMSG_BOLD		          	     157
 #define TMSG_ITALIC			             158
 #define TMSG_OBLIQUE			             159
-#define TMSG_BOLD_ITALIC		             160
-#define TMSG_BOLD_OBLIQUE	       	             161
+#define TMSG_NOT_BOLD				     160
+#define TMSG_BOLDNESS				     161
 #define TMSG_NORMAL			             162
 #define TMSG_UNDERLINE			             163
 #define TMSG_CROSS_OUT			             164

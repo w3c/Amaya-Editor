@@ -151,17 +151,18 @@
 #define NumLabelReferenceNotFound	142
 #define NumMenuReferenceChoice	143
 
-#define NumFormPresChar	150
+#define NumFormPresChar		150
 #define NumMenuCharFamily	151
-#define NumMenuStyleChar	152
-#define NumMenuCharFontSize	153
-#define NumMenuUnderlineType	154
-#define NumMenuUnderlineWeight	155
+#define NumMenuCharFontStyle	152
+#define NumMenuCharFontWeight	153
+#define NumMenuCharFontSize	154
+#define NumMenuUnderlineType	155
+#define NumMenuUnderlineWeight	156
 
 #define NumFormPresFormat	157
 #define NumMenuAlignment	158
 #define	NumMenuJustification	159
-#define NumZoneRecess	160
+#define NumZoneRecess		160
 #define NumMenuRecessSense	161
 #define NumZoneLineSpacing	162
 #define NumMenuLineSpacing	163

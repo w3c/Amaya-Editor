@@ -4042,7 +4042,8 @@ STRING              data;
 	       case NumFormPresGraphics:
 	       case NumFormColors:
 	       case NumMenuCharFamily:
-	       case NumMenuStyleChar:
+	       case NumMenuCharFontStyle:
+	       case NumMenuCharFontWeight:
 	       case NumMenuCharFontSize:
 	       case NumMenuUnderlineType:
 	       case NumMenuUnderlineWeight:

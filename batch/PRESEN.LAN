@@ -112,6 +112,7 @@ Rule2 =		  'Break' ':' Boolean /
 		  'Underline' ':' UnderLineInherit /
 		  'Thickness' ':' ThicknessInherit /
 		  'Style' ':' StyleInherit /
+		  'Weight' ':' WeightInherit /
 		  'Indent' ':' DistInherit /
 		  'Adjust' ':' AdjustInherit /
 		  'NoBreak1' ':' AbsDist /
@@ -237,8 +238,10 @@ PercentSize =	  NUMBER .
 
 NameInherit =	  Link '=' / FontStyleName .
 FontStyleName =	  NAME .
-StyleInherit =	  Link '=' / 'Roman' / 'Bold' / 'Italics' / 'BoldItalics' /
-		  'Oblique' / 'BoldOblique' .
+StyleInherit =	  Link '=' / 'Roman' / 'Italics' / 'Oblique' /
+		  { the next three values are obsolete }
+		  'Bold' / 'BoldItalics' / 'BoldOblique' .
+WeightInherit =	  Link '=' / 'Normal' / 'Bold' .
 UnderLineInherit = Link '=' / 'NoUnderline' / 'Underlined' / 'Overlined' /
 		  'CrossedOut' .
 ThicknessInherit = Link '=' / 'Thick' / 'Thin' .

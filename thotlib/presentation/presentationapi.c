@@ -46,9 +46,10 @@ extern int          UserErrorCode;
 
    Parameter:
    presentationType: type of the presentation rule to be created. Available
-   values are PRSize, PRStyle, PRFont, PRUnderline, PRThickness, PRIndent,
-   PRLineSpacing, PRDepth, PRAdjust, PRJustify, PRLineStyle, PRLineWeight,
-   PRFillPattern, PRBackground, PRForeground, PRHyphenate.
+   values are PRSize, PRStyle, PRWeight, PRFont, PRUnderline, PRThickness,
+   PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRJustify, PRLineStyle,
+   PRLineWeight, PRFillPattern, PRBackground, PRForeground, PRHyphenate,
+   PRWidth, PRHeight, PRVertPos, PRHorizPos.
    view: the view (this view must be open).
    document: the document.
 
@@ -117,10 +118,10 @@ Document            document;
 
    Parameter:
    presentationType: type of the presentation rule to be created. Available
-   values are PRSize, PRStyle, PRFont, PRUnderline, PRThickness, PRIndent,
-   PRLineSpacing, PRDepth, PRAdjust, PRJustify, PRLineStyle, PRLineWeight,
-   PRFillPattern, PRBackground, PRForeground, PRHyphenate, PRShowBox,
-   PRNotInLine.
+   values are PRSize, PRStyle, PRWeight, PRFont, PRUnderline, PRThickness,
+   PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRJustify, PRLineStyle,
+   PRLineWeight, PRFillPattern, PRBackground, PRForeground, PRHyphenate,
+   PRShowBox, PRNotInLine.
    viewName: the name of the view (this view does not need to be open).
    document: the document.
 
@@ -181,10 +182,10 @@ Document            document;
 
    Parameter:
    presentationType: type of the presentation rule to be created. Available
-   values are PRSize, PRStyle, PRFont, PRUnderline, PRThickness, PRIndent,
-   PRLineSpacing, PRDepth, PRAdjust, PRJustify, PRLineStyle, PRLineWeight,
-   PRFillPattern, PRBackground, PRForeground, PRHyphenate, PRShowBox,
-   PRNotInLine.
+   values are PRSize, PRStyle, PRWeight, PRFont, PRUnderline, PRThickness,
+   PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRJustify, PRLineStyle,
+   PRLineWeight, PRFillPattern, PRBackground, PRForeground, PRHyphenate,
+   PRShowBox, PRNotInLine.
    viewName: the name of the view (this view does not need to be open).
    document: the document.
 
@@ -444,8 +445,8 @@ Document            document;
 
    Valid values according to rule type:
    PRSize: an integer between 6 and 72 (body size in points).
-   PRStyle: StyleRoman, StyleBold, StyleItalics, StyleOblique, StyleBoldItalics,
-            StyleBoldOblique.
+   PRStyle: StyleRoman, StyleItalics, StyleOblique.
+   PRWeight: WeightNormal, WeightBold.
    PRFont: FontTimes, FontHelvetica, FontCourier.
    PRUnderline: NoUnderline, Underline, Overline, CrossOut.
    PRThickness: ThinUnderline, ThickUnderline.
@@ -506,20 +507,29 @@ Document            document;
 	     case StyleRoman:
 	       ((PtrPRule) pRule)->PrChrValue = 'R';
 	       break;
-	     case StyleBold:
-	       ((PtrPRule) pRule)->PrChrValue = 'B';
-	       break;
 	     case StyleItalics:
 	       ((PtrPRule) pRule)->PrChrValue = 'I';
 	       break;
 	     case StyleOblique:
 	       ((PtrPRule) pRule)->PrChrValue = 'O';
 	       break;
-	     case StyleBoldItalics:
-	       ((PtrPRule) pRule)->PrChrValue = 'G';
+	     default:
+#ifndef NODISPLAY
+	       done = FALSE;
+#endif
+	       TtaError (ERR_invalid_parameter);
 	       break;
-	     case StyleBoldOblique:
-	       ((PtrPRule) pRule)->PrChrValue = 'Q';
+	     }
+	   break;
+	 case PtWeight:
+	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
+	   switch (value)
+	     {
+	     case WeightNormal:
+	       ((PtrPRule) pRule)->PrChrValue = 'N';
+	       break;
+	     case WeightBold:
+	       ((PtrPRule) pRule)->PrChrValue = 'B';
 	       break;
 	     default:
 #ifndef NODISPLAY
@@ -1173,10 +1183,10 @@ PRule              *pRule;
    Parameters:
    element: the element of interest.
    presentationType: type of the desired presentation rule. Available
-   values are PRSize, PtStyle, PRFont, PRUnderline, PRThickness, PRIndent,
-   PRLineSpacing, PRDepth, PRAdjust, PRJustify, PRLineStyle, PRLineWeight,
-   PRFillPattern, PRBackground, PRForeground, PRHyphenate, PRShowBox,
-   PRNotInLine.
+   values are PRSize, PtStyle, PtWeight, PRFont, PRUnderline, PRThickness,
+   PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRJustify, PRLineStyle,
+   PRLineWeight, PRFillPattern, PRBackground, PRForeground, PRHyphenate,
+   PRShowBox, PRNotInLine.
 
    Return value:
    the presentation rule found, or NULL if the element
@@ -1234,7 +1244,7 @@ int                 presentationType;
    pRule: the presentation rule of interest.
 
    Return value:
-   type of that presentation rule. Available values are RSize, PtStyle,
+   type of that presentation rule. Available values are RSize, RStyle, RWeight,
    RFont, RUnderline, RThickness, PtIndent, RLineSpacing, RDepth, RAdjust,
    RJustify, RLineStyle, RLineWeight, RFillPattern, RBackground,
    RForeground, RHyphenate, PRShowBox, PRNotInLine.
@@ -1274,8 +1284,8 @@ PRule               pRule;
 
    Return values according to rule type:
    PRSize: an integer between 6 and 72 (body size in points).
-   PRStyle: StyleRoman, StyleBold, StyleItalics, StyleOblique,StyleBoldItalics,
-            StyleBoldOblique.
+   PRStyle: StyleRoman, StyleItalics, StyleOblique.
+   PRWeight: WeightNormal, WeightBold.
    PRFont: FontTimes, FontHelvetica, FontCourier.
    RPUnderline: NoUnderline, Underline, Overline, CrossOut.
    PRThickness: ThinUnderline, ThickUnderline.
@@ -1319,20 +1329,25 @@ PRule               pRule;
 	  case 'R':
 	    value = StyleRoman;
 	    break;
-	  case 'B':
-	    value = StyleBold;
-	    break;
 	  case 'I':
 	    value = StyleItalics;
 	    break;
 	  case 'O':
 	    value = StyleOblique;
 	    break;
-	  case 'G':
-	    value = StyleBoldItalics;
+	  default:
+	    TtaError (ERR_invalid_parameter);
 	    break;
-	  case 'Q':
-	    value = StyleBoldOblique;
+	  }
+	break;
+      case PtWeight:
+	switch (((PtrPRule) pRule)->PrChrValue)
+	  {
+	  case 'N':
+	    value = WeightNormal;
+	    break;
+	  case 'B':
+	    value = WeightBold;
 	    break;
 	  default:
 	    TtaError (ERR_invalid_parameter);
@@ -1613,6 +1628,7 @@ PRule               pRule2;
 				      break;
 				   case PtFont:
 				   case PtStyle:
+				   case PtWeight:
 				   case PtUnderline:
 				   case PtThickness:
 				   case PtLineStyle:

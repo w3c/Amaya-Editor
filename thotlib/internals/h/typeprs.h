@@ -207,10 +207,10 @@ typedef enum
 {
   /* the order determines the order of the rules in the presentation schema */
   PtVisibility, PtFunction, PtVertRef, PtHorizRef, PtHeight, PtWidth, 
-  PtVertPos, PtHorizPos, PtSize, PtStyle, PtFont, PtUnderline, PtThickness,
-  PtIndent, PtLineSpacing, PtDepth, PtAdjust, PtJustify, PtLineStyle,
-  PtLineWeight, PtFillPattern, PtBackground, PtForeground, PtHyphenate,
-  PtVertOverflow, PtHorizOverflow,
+  PtVertPos, PtHorizPos, PtSize, PtStyle, PtWeight, PtFont, PtUnderline,
+  PtThickness, PtIndent, PtLineSpacing, PtDepth, PtAdjust, PtJustify,
+  PtLineStyle, PtLineWeight, PtFillPattern, PtBackground, PtForeground,
+  PtHyphenate, PtVertOverflow, PtHorizOverflow,
   /* the three following types must be the last ones */
   PtBreak1, PtBreak2, PtPictInfo
 } PRuleType;
@@ -442,8 +442,8 @@ typedef struct _PresRule
 					   or numerical value number */ 
 	  int  _PrIntValue_;
 	}  s0;
-	struct	/* PRuleType = PtFont, PtStyle, PtUnderline, PtThickness,*/
-	        /* PtLineStyle */
+	struct	/* PRuleType = PtFont, PtStyle, PtWeight, PtUnderline, */
+	        /*	       PtThickness, PtLineStyle */
 	{
 	  CHAR_T     _PrChrValue_;
 	}  s1;

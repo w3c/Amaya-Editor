@@ -69,11 +69,12 @@ static ThotBool            ChngStandardColor;	/* standard presentation colors  *
 static ThotBool            ChngStandardGeom;	/* standard geometry */
 /* user presentation choices and their values */
 static ThotBool     ChngFontFamily; /* user asks to modify the font family */
-static ThotBool     ChngStyle;	/* user asks to modify the style */
+static ThotBool     ChngFontStyle;  /* user asks to modify the font style */
+static ThotBool     ChngFontWeight; /* user asks to modify the font weight */
 static ThotBool     ChngUnderline;  /* user asks to modify the underline */
-static ThotBool     ChngWeight;	/* user asks to modify the underline weight */
-static ThotBool     ChngBodySize;   /* user asks to modify the body size */
-static ThotBool     ChngCadr;	/* user asks to modify the alignment mode */
+static ThotBool     ChngUlWeight;/* user asks to modify the underline weight */
+static ThotBool     ChngFontSize;   /* user asks to modify the body size */
+static ThotBool     ChngAlign;	/* user asks to modify the alignment mode */
 static ThotBool     ChngJustif;	/* user asks to change the justification */
 static ThotBool     ChngHyphen;	/* user asks to change the hyphenation */
 static ThotBool     ChngIndent;	/* user asks to change the indentation */
@@ -83,30 +84,32 @@ static ThotBool     ChngLineWeight; /* user asks to change the line weight */
 static ThotBool     ChngTrame;	/* user asks to change the pattern */
 #define Apply_All		0
 #define Apply_FontFamily	1
-#define Apply_Style		2
-#define Apply_Underline		3
-#define Apply_Weigh		4
-#define Apply_BodySize		5
-#define Apply_AllChars		6
+#define Apply_FontStyle		2
+#define Apply_FontWeight	3
+#define Apply_Underline		4
+#define Apply_UlWeight		5
+#define Apply_FontSize		6
+#define Apply_AllChars		7
 
-#define Apply_Cadr		7
-#define Apply_Justif		8
-#define Apply_Hyphen		9
-#define Apply_Indent		10
-#define Apply_LineSp		11
-#define Apply_AllFormat		12
+#define Apply_Align		8
+#define Apply_Justif		9
+#define Apply_Hyphen		10
+#define Apply_Indent		11
+#define Apply_LineSp		12
+#define Apply_AllFormat		13
 
-#define Apply_LineStyle		13
-#define Apply_LineWeight	14
-#define Apply_Trame		15
-#define Apply_AllGraphics	16
+#define Apply_LineStyle		14
+#define Apply_LineWeight	15
+#define Apply_Trame		16
+#define Apply_AllGraphics	17
 
 static ThotBool     StdFontFamily; /* user asks to reset the font family */
-static ThotBool     StdStyle;	/* user asks to reset the style */
+static ThotBool     StdFontStyle;  /* user asks to reset the font style */
+static ThotBool     StdFontWeight; /* user asks to reset the font weight */
 static ThotBool     StdUnderline;  /* user asks to reset the underline */
-static ThotBool     StdWeight;	/* user asks to reset the underline weight */
-static ThotBool     StdBodySize;   /* user asks to reset the body size */
-static ThotBool     StdCadr;	/* user asks to reset the alignment mode */
+static ThotBool     StdUlWeight;/* user asks to reset the underline weight */
+static ThotBool     StdFontSize;   /* user asks to reset the body size */
+static ThotBool     StdAlign;	/* user asks to reset the alignment mode */
 static ThotBool     StdJustif;	/* user asks to reset the justification */
 static ThotBool     StdHyphen;	/* user asks to reset the hyphenation */
 static ThotBool     StdIndent;	/* user asks to reset the indentation */
@@ -114,17 +117,19 @@ static ThotBool     StdLineSp;	/* user asks to reset the line spacing */
 static ThotBool     StdLineStyle;  /* user asks to reset the line style */
 static ThotBool     StdLineWeight; /* user asks to reset the line weight */
 static ThotBool     StdTrame;	/* user asks to reset the pattern */
-static CHAR_T         FontFamily;	/* font family requested by the user */
-static int          Style;	/* character style requested by the user */
+
+static CHAR_T       FontFamily;	/* font family requested by the user */
+static int          FontStyle;	/* font style requested by the user */
+static int          FontWeight;	/* font weight requested by the user */
 static int          UnderlineStyle; /* underline style requested by the user */
 static int          UnderlineWeight;/* underline weight requested by user */
-static int          BodySize;	/* body size (in points) requested by user */
-static int          Cadr;	/* line alignment mode */
+static int          FontSize;	/* body size (in points) requested by user */
+static int          Align;	/* line alignment mode */
 static ThotBool     Justif;	/* with or without justification */
 static ThotBool     Hyphenate;	/* with or without hyphenation */
 static int          IndentValue;/* value in points for the 1st line indent */
 static int          IndentSign;	/* the indentation sign */
-static CHAR_T         LineStyle;	/* requested line style */
+static CHAR_T       LineStyle;	/* requested line style */
 static int          LineWeight;	/* requested line weight in points */
 static int          PaintWithPattern;	/* number of the requested trame */
 
@@ -193,7 +198,7 @@ int                 applyDomain;
   PtrAbstractBox      pAb;
   TypeUnit            LocLineWeightUnit;
   int                 firstChar, lastChar;
-  int                 currentBodySize;
+  int                 currentFontSize;
   int                 i;
   int                 sign;
   ThotBool            selectionOK;
@@ -201,14 +206,15 @@ int                 applyDomain;
   ThotBool            chngFormat;
   ThotBool            chngGraphics;
   ThotBool            locChngFontFamily;
-  ThotBool            locChngStyle;
-  ThotBool            locChngBodySize;
+  ThotBool            locChngFontStyle;
+  ThotBool            locChngFontWeight;
+  ThotBool            locChngFontSize;
   ThotBool            locChngUnderline;
-  ThotBool            locChngWeight;
+  ThotBool            locChngUlWeight;
   ThotBool            locChngLineStyle;
   ThotBool            locChngLineWeight;
   ThotBool            locChngTrame;
-  ThotBool            locChngCadr;
+  ThotBool            locChngAlign;
   ThotBool            locChngJustif;
   ThotBool            locChngHyphen;
   ThotBool            locChngIndent;
@@ -238,20 +244,20 @@ int                 applyDomain;
 
 	addPresRule = FALSE;
 	/* Set chngChars indicator */
-	locChngBodySize = ((StdBodySize || ChngBodySize)
-			   && (applyDomain == Apply_BodySize
+	locChngFontSize = ((StdFontSize || ChngFontSize)
+			   && (applyDomain == Apply_FontSize
 			        || applyDomain == Apply_AllChars
 			       || applyDomain == Apply_All));
-	addPresRule = addPresRule || (ChngBodySize
-			   && (applyDomain == Apply_BodySize
+	addPresRule = addPresRule || (ChngFontSize
+			   && (applyDomain == Apply_FontSize
 			        || applyDomain == Apply_AllChars
 			       || applyDomain == Apply_All));
-	locChngWeight = ((StdWeight || ChngWeight)
-			 && (applyDomain == Apply_Weigh
+	locChngUlWeight = ((StdUlWeight || ChngUlWeight)
+			 && (applyDomain == Apply_UlWeight
 			     || applyDomain == Apply_AllChars
 			     || applyDomain == Apply_All));
-	addPresRule = addPresRule || (ChngWeight
-			 && (applyDomain == Apply_Weigh
+	addPresRule = addPresRule || (ChngUlWeight
+			 && (applyDomain == Apply_UlWeight
 			     || applyDomain == Apply_AllChars
 			     || applyDomain == Apply_All));
 	locChngUnderline = ((StdUnderline || ChngUnderline)
@@ -262,14 +268,24 @@ int                 applyDomain;
 			    && (applyDomain == Apply_Underline
 			        || applyDomain == Apply_AllChars
 				|| applyDomain == Apply_All));
-	locChngStyle = ((StdStyle || ChngStyle)
-			&& (applyDomain == Apply_Style
+	locChngFontStyle = ((StdFontStyle || ChngFontStyle)
+			&& (applyDomain == Apply_FontStyle
 			    || applyDomain == Apply_AllChars
 			    || applyDomain == Apply_All));
-	addPresRule = addPresRule || (ChngStyle
-			&& (applyDomain == Apply_Style
+	addPresRule = addPresRule || (ChngFontStyle
+			&& (applyDomain == Apply_FontStyle
 			    || applyDomain == Apply_AllChars
 			    || applyDomain == Apply_All));
+
+	locChngFontWeight = ((StdFontWeight || ChngFontWeight)
+			&& (applyDomain == Apply_FontWeight
+			    || applyDomain == Apply_AllChars
+			    || applyDomain == Apply_All));
+	addPresRule = addPresRule || (ChngFontWeight
+			&& (applyDomain == Apply_FontWeight
+			    || applyDomain == Apply_AllChars
+			    || applyDomain == Apply_All));
+
 	locChngFontFamily = ((StdFontFamily || ChngFontFamily)
 			     && (applyDomain == Apply_FontFamily
 				 || applyDomain == Apply_AllChars
@@ -278,11 +294,12 @@ int                 applyDomain;
 			     && (applyDomain == Apply_FontFamily
 				 || applyDomain == Apply_AllChars
 				 || applyDomain == Apply_All));
-	chngChars = (locChngBodySize || locChngWeight || locChngUnderline || locChngStyle || locChngFontFamily);
+	chngChars = (locChngFontSize || locChngUlWeight || locChngUnderline ||
+		   locChngFontStyle || locChngFontWeight || locChngFontFamily);
 
 	/* Set chngFormat indicator */
-	locChngCadr = ((StdCadr || ChngCadr)
-		       && (applyDomain == Apply_Cadr
+	locChngAlign = ((StdAlign || ChngAlign)
+		       && (applyDomain == Apply_Align
 			   || applyDomain == Apply_AllFormat
 			   || applyDomain == Apply_All));
 	locChngJustif = ((StdJustif || ChngJustif)
@@ -301,7 +318,7 @@ int                 applyDomain;
 			 && (applyDomain == Apply_LineSp
 			     || applyDomain == Apply_AllFormat
 			     || applyDomain == Apply_All));
-	chngFormat = (locChngCadr || locChngJustif || locChngHyphen || locChngIndent || locChngLineSp);
+	chngFormat = (locChngAlign || locChngJustif || locChngHyphen || locChngIndent || locChngLineSp);
 
 	/* Set chngGraphics indicator */
 	locChngLineStyle = ((StdLineStyle || ChngLineStyle)
@@ -365,7 +382,7 @@ int                 applyDomain;
 	  pAb = AbsBoxOfEl (pFirstSel, SelectedView);
 	if (pAb != NULL)
 	  {
-	     currentBodySize = PixelToPoint(PixelValue (pAb->AbSize,
+	     currentFontSize = PixelToPoint(PixelValue (pAb->AbSize,
 							pAb->AbSizeUnit, pAb, ViewFrameTable[ActiveFrame - 1].FrMagnification));
 	    
 	    /* famille de polices de caracteres */
@@ -380,15 +397,26 @@ int                 applyDomain;
 		  locChngFontFamily = (FontFamily != pAb->AbFont);
 	      }
 	    /* style des caracteres */
-	    if (locChngStyle)
+	    if (locChngFontStyle)
 	      {
-		if (StdStyle)
+		if (StdFontStyle)
 		  {
 		    RuleSetPut (TheRules, PtStyle);
-		    locChngStyle = FALSE;
+		    locChngFontStyle = FALSE;
 		  }
 		else
-		  locChngStyle = (Style != pAb->AbHighlight);
+		  locChngFontStyle = (FontStyle != pAb->AbFontStyle);
+	      }
+	    /* graisse des caracteres */
+	    if (locChngFontWeight)
+	      {
+		if (StdFontWeight)
+		  {
+		    RuleSetPut (TheRules, PtWeight);
+		    locChngFontWeight = FALSE;
+		  }
+		else
+		  locChngFontWeight = (FontWeight != pAb->AbFontWeight);
 	      }
 
 	    /* style du souligne */
@@ -404,36 +432,36 @@ int                 applyDomain;
 	      }
 
 	    /* epaisseur du souligne */
-	    if (locChngWeight)
+	    if (locChngUlWeight)
 	      {
-		if (StdWeight)
+		if (StdUlWeight)
 		  {
 		    RuleSetPut (TheRules, PtThickness);
-		    StdWeight = FALSE;
+		    StdUlWeight = FALSE;
 		  }
 		else
-		  locChngWeight = (UnderlineWeight != pAb->AbThickness);
+		  locChngUlWeight = (UnderlineWeight != pAb->AbThickness);
 	      }
 
 	    /* corps en points typo */
-	    if (locChngBodySize)
+	    if (locChngFontSize)
 	      {
-		if (StdBodySize)
+		if (StdFontSize)
 		  {
 		    RuleSetPut (TheRules, PtSize);
-		    locChngBodySize = FALSE;
+		    locChngFontSize = FALSE;
 		  }
 		else
-		  locChngBodySize = (BodySize != currentBodySize);
+		  locChngFontSize = (FontSize != currentFontSize);
 	      }
 
 	    /* alignement des lignes */
-	    if (locChngCadr)
+	    if (locChngAlign)
 	      {
-		if (StdCadr)
+		if (StdAlign)
 		  {
 		    RuleSetPut (TheRules, PtAdjust);
-		    locChngCadr = FALSE;
+		    locChngAlign = FALSE;
 		  }
 		else
 		  {
@@ -455,7 +483,7 @@ int                 applyDomain;
 			i = 1;
 			break;
 		      }
-		    locChngCadr = (i != Cadr);
+		    locChngAlign = (i != Align);
 		  }
 	      }
 
@@ -558,8 +586,8 @@ int                 applyDomain;
 		      i = pAb->AbLineWeight;
 		    else
 		      {
-			i = (currentBodySize * pAb->AbLineWeight) / 10;
-			if ((currentBodySize * i) % 10 >= 5)
+			i = (currentFontSize * pAb->AbLineWeight) / 10;
+			if ((currentFontSize * i) % 10 >= 5)
 			  i++;
 		      }
 		    if (LineWeight != i)
@@ -630,23 +658,31 @@ int                 applyDomain;
 
 		/* Character properties */
 		if (chngChars)
-		  ModifyChar (pEl, pSelDoc, SelectedView, locChngFontFamily,
-			      FontFamily, locChngStyle, Style, locChngBodySize, BodySize,
-			      locChngUnderline, UnderlineStyle, locChngWeight, UnderlineWeight);
+		  ModifyChar (pEl, pSelDoc, SelectedView,
+			      locChngFontFamily, FontFamily,
+			      locChngFontStyle, FontStyle,
+			      locChngFontWeight, FontWeight,
+			      locChngFontSize, FontSize,
+			      locChngUnderline, UnderlineStyle,
+			      locChngUlWeight, UnderlineWeight);
 
 		/* Graphic properties */
 		if (chngGraphics)
-		  ModifyGraphics (pEl, pSelDoc, SelectedView, locChngLineStyle,
-				  LineStyle, locChngLineWeight, LineWeight, LocLineWeightUnit,
+		  ModifyGraphics (pEl, pSelDoc, SelectedView,
+				  locChngLineStyle, LineStyle,
+				  locChngLineWeight, LineWeight, LocLineWeightUnit,
 				  locChngTrame, PaintWithPattern, FALSE, 0,
 				  FALSE, 0);
 
 		/* Format properties */
 		if (chngFormat)
 		  if (pBlock != NULL)
-		     ModifyLining (pBlock, pSelDoc, SelectedView, locChngCadr, Cadr,
-				locChngJustif, Justif, locChngIndent, IndentValue * IndentSign,
-				locChngLineSp, OldLineSp, locChngHyphen, Hyphenate);
+		     ModifyLining (pBlock, pSelDoc, SelectedView,
+				   locChngAlign, Align,
+				   locChngJustif, Justif,
+				   locChngIndent, IndentValue * IndentSign,
+				   locChngLineSp, OldLineSp,
+				   locChngHyphen, Hyphenate);
 		/* Standard geometry */
 		if (ChngStandardGeom)
 		  {
@@ -809,14 +845,15 @@ int                 val;
 	case 0:
 	  /* caracteres standard */
 	  StdFontFamily = TRUE;
-	  StdStyle = TRUE;
+	  StdFontStyle = TRUE;
+	  StdFontWeight = TRUE;
 	  StdUnderline = TRUE;
-	  StdWeight = TRUE;
-	  StdBodySize = TRUE;
+	  StdUlWeight = TRUE;
+	  StdFontSize = TRUE;
 	  break;
 	case 1:
 	  /* format standard */
-	  StdCadr = TRUE;
+	  StdAlign = TRUE;
 	  StdJustif = TRUE;
 	  StdHyphen = TRUE;
 	  StdIndent = TRUE;
@@ -844,11 +881,12 @@ int                 val;
 	  /* retour "Appliquer" du formulaire Presentation standard */
 	  ApplyPresentMod (Apply_All);
 	  StdFontFamily = FALSE;
-	  StdStyle = FALSE;
+	  StdFontStyle = FALSE;
+	  StdFontWeight = FALSE;
 	  StdUnderline = FALSE;
-	  StdWeight = FALSE;
-	  StdBodySize = FALSE;
-	  StdCadr = FALSE;
+	  StdUlWeight = FALSE;
+	  StdFontSize = FALSE;
+	  StdAlign = FALSE;
 	  StdJustif = FALSE;
 	  StdHyphen = FALSE;
 	  StdIndent = FALSE;
@@ -915,19 +953,35 @@ STRING              txt;
 	}
       ApplyPresentMod (Apply_FontFamily);
       break;
-    case NumMenuStyleChar:	/* style des caracteres */
-      if (val == 6)	/* entree 6: Standard */
+
+    case NumMenuCharFontStyle:	/* style des caracteres */
+      if (val == 3)	/* entree 3: Standard */
 	{
-	  ChngStyle = FALSE;
-	  StdStyle = TRUE;
+	  ChngFontStyle = FALSE;
+	  StdFontStyle = TRUE;
 	}
       else
 	{
-	  ChngStyle = TRUE;
-	  StdStyle = FALSE;
-	  Style = val;
+	  ChngFontStyle = TRUE;
+	  StdFontStyle = FALSE;
+	  FontStyle = val;
 	}
-      ApplyPresentMod (Apply_Style);
+      ApplyPresentMod (Apply_FontStyle);
+      break;
+
+    case NumMenuCharFontWeight:	/* graisse des caracteres */
+      if (val == 2)	/* entree 2: Standard */
+	{
+	  ChngFontWeight = FALSE;
+	  StdFontWeight = TRUE;
+	}
+      else
+	{
+	  ChngFontWeight = TRUE;
+	  StdFontWeight = FALSE;
+	  FontWeight = val;
+	}
+      ApplyPresentMod (Apply_FontWeight);
       break;
     case NumMenuUnderlineType:		/* style du souligne */
       /* l'entree 2 est supprimee dans cette version */
@@ -970,35 +1024,35 @@ STRING              txt;
 	  StdLineWeight = FALSE;
 	  UnderlineWeight = val;
 	}
-      ApplyPresentMod (Apply_Weigh);
+      ApplyPresentMod (Apply_UlWeight);
       break;
     case NumMenuCharFontSize:	/* menu des corps en points typo */
       if (val >= 0 && val < NumberOfFonts ())
 	{
-	  ChngBodySize = TRUE;
-	  StdBodySize = FALSE;
-	  BodySize = FontPointSize (val);
+	  ChngFontSize = TRUE;
+	  StdFontSize = FALSE;
+	  FontSize = FontPointSize (val);
 	}
       else
 	{
-	  ChngBodySize = FALSE;
-	  StdBodySize = TRUE;
+	  ChngFontSize = FALSE;
+	  StdFontSize = TRUE;
 	}
-      ApplyPresentMod (Apply_BodySize);
+      ApplyPresentMod (Apply_FontSize);
       break;
     case NumMenuAlignment:	/* alignement des lignes */
       if (val == 3)	/* entree 3: Standard */
 	{
-	  ChngCadr = FALSE;
-	  StdCadr = TRUE;
+	  ChngAlign = FALSE;
+	  StdAlign = TRUE;
 	}
       else
 	{
-	  ChngCadr = TRUE;
-	  StdCadr = FALSE;
-	  Cadr = val + 1;
+	  ChngAlign = TRUE;
+	  StdAlign = FALSE;
+	  Align = val + 1;
 	}
-      ApplyPresentMod (Apply_Cadr);
+      ApplyPresentMod (Apply_Align);
       break;
     case NumMenuJustification:		/* justification */
       if (val == 2)	/* entree 2: Standard */
@@ -1295,19 +1349,13 @@ View                view;
 	     i = 0;
 	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_ROMAN));
 	     i += ustrlen (&string[i]) + 1;
-	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_BOLD));
-	     i += ustrlen (&string[i]) + 1;
 	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_ITALIC));
 	     i += ustrlen (&string[i]) + 1;
 	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_OBLIQUE));
 	     i += ustrlen (&string[i]) + 1;
-	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_BOLD_ITALIC));
-	     i += ustrlen (&string[i]) + 1;
-	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_BOLD_OBLIQUE));
-	     i += ustrlen (&string[i]) + 1;
 	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
-	     TtaNewSubmenu (NumMenuStyleChar, NumFormPresChar, 0,
-		   TtaGetMessage (LIB, TMSG_STYLE), 7, string, NULL, TRUE);
+	     TtaNewSubmenu (NumMenuCharFontStyle, NumFormPresChar, 0,
+		   TtaGetMessage (LIB, TMSG_STYLE), 4, string, NULL, TRUE);
 
 	     /* sous-menu type de Souligne */
 	     i = 0;
@@ -1322,7 +1370,17 @@ View                view;
 	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
 	     TtaNewSubmenu (NumMenuUnderlineType, NumFormPresChar, 0,
 		    TtaGetMessage (LIB, TMSG_LINE), 5, string, NULL, TRUE);
-	     TtaNewLabel (NumMenuUnderlineWeight, NumFormPresChar, " ");
+
+	     /* sous-menu graisse des caracteres */
+	     i = 0;
+	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_NOT_BOLD));
+	     i += ustrlen (&string[i]) + 1;
+	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_BOLD));
+	     i += ustrlen (&string[i]) + 1;
+	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
+	     TtaNewSubmenu (NumMenuCharFontWeight, NumFormPresChar, 0,
+		   TtaGetMessage (LIB, TMSG_BOLDNESS), 3, string, NULL, TRUE);
+
 	     /* sous-menus des corps disponibles, en points typographiques */
 	     nbItems = 0;
 	     i = 0;
@@ -1372,11 +1430,18 @@ View                view;
 	     TtaSetMenuForm (NumMenuCharFamily, i - 1);
 #        endif /* !_WINDOWS */
 	     /* initialise le catalogue 'Style des caracteres' */
-	     ChngStyle = TRUE;
-	     StdStyle = FALSE;
-	     Style = pAb->AbHighlight;
+	     ChngFontStyle = TRUE;
+	     StdFontStyle = FALSE;
+	     FontStyle = pAb->AbFontStyle;
 #        ifndef _WINDOWS 
-	     TtaSetMenuForm (NumMenuStyleChar, Style);
+	     TtaSetMenuForm (NumMenuCharFontStyle, FontStyle);
+#        endif /* !_WINDOWS */
+	     /* initialise le catalogue 'Graisse des caracteres' */
+	     ChngFontWeight = TRUE;
+	     StdFontWeight = FALSE;
+	     FontWeight = pAb->AbFontWeight;
+#        ifndef _WINDOWS 
+	     TtaSetMenuForm (NumMenuCharFontWeight, FontWeight);
 #        endif /* !_WINDOWS */
 
 	     /* initialise le catalogue 'Epaisseur du souligne' */
@@ -1392,18 +1457,18 @@ View                view;
 	     /*TtaSetMenuForm (NumMenuUnderlineWeight, UnderlineWeight);*/
 
 	     /* initialise le sous-menu 'Corps des caracteres' */
-	     ChngBodySize = TRUE;
-	     StdBodySize = FALSE;
-	     BodySize = pAb->AbSize;
+	     ChngFontSize = TRUE;
+	     StdFontSize = FALSE;
+	     FontSize = pAb->AbSize;
 	     if (pAb->AbSizeUnit == UnPoint)
 		/* convertit la taille */
-		i = FontRelSize (BodySize);
+		i = FontRelSize (FontSize);
 	     else
 		i = pAb->AbSize;
 #        ifndef _WINDOWS 
 	     TtaSetMenuForm (NumMenuCharFontSize, i);
 #       else  /* _WINDOWS */
-		CreateCharacterDlgWindow (TtaGetViewFrame (document, view), fontNum, Style, UnderlineStyle, BodySize);
+		CreateCharacterDlgWindow (TtaGetViewFrame (document, view), fontNum, FontStyle, FontWeight, UnderlineStyle, FontSize);
 #       endif /* _WINDOWS */
 	  }
 	DocModPresent = pDoc;
@@ -1433,7 +1498,7 @@ View                view;
    PtrElement          pFirstSel, pLastSel;
    PtrAbstractBox      pAb;
    CHAR_T                string[MAX_TXT_LEN];
-   int                 currentBodySize;
+   int                 currentFontSize;
    int                 i, nbItems;
    int                 firstChar, lastChar;
    ThotBool            selectionOK;
@@ -1519,10 +1584,10 @@ View                view;
 		i = LineWeight;
 	     else
 	       {
-	          currentBodySize = PixelToPoint(PixelValue (pAb->AbSize,pAb->AbSizeUnit,
+	          currentFontSize = PixelToPoint(PixelValue (pAb->AbSize,pAb->AbSizeUnit,
 							     pAb, ViewFrameTable[ActiveFrame - 1].FrMagnification));
-		  i = (currentBodySize * LineWeight) / 10;
-		  if ((currentBodySize * i) % 10 >= 5)
+		  i = (currentFontSize * LineWeight) / 10;
+		  if ((currentFontSize * i) % 10 >= 5)
 		     i++;
 	       }
 	     TtaSetNumberForm (NumZoneStrokeWeight, i);
@@ -1761,16 +1826,18 @@ static void         ResetMenus ()
 	TteConnectAction (T_present, (Proc) CallbackPresMenu);
 	ChngFontFamily = FALSE;
 	StdFontFamily = FALSE;
-	ChngStyle = FALSE;
-	StdStyle = FALSE;
+	ChngFontStyle = FALSE;
+	StdFontStyle = FALSE;
+	ChngFontWeight = FALSE;
+	StdFontWeight = FALSE;
 	ChngUnderline = FALSE;
 	StdUnderline = FALSE;
-	ChngWeight = FALSE;
-	StdWeight = FALSE;
-	ChngBodySize = FALSE;
-	StdBodySize = FALSE;
-	ChngCadr = FALSE;
-	StdCadr = FALSE;
+	ChngUlWeight = FALSE;
+	StdUlWeight = FALSE;
+	ChngFontSize = FALSE;
+	StdFontSize = FALSE;
+	ChngAlign = FALSE;
+	StdAlign = FALSE;
 	ChngJustif = FALSE;
 	StdJustif = FALSE;
 	ChngHyphen = FALSE;

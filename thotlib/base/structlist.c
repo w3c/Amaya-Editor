@@ -153,6 +153,9 @@ FILE               *fileDescriptor;
 	    case PtStyle:
 	       fprintf (fileDescriptor, "Style");
 	       break;
+	    case PtWeight:
+	       fprintf (fileDescriptor, "Weight");
+	       break;
 	    case PtFont:
 	       fprintf (fileDescriptor, "Font");
 	       break;
@@ -1058,7 +1061,7 @@ FILE               *fileDescriptor;
 	   fprintf (fileDescriptor, " ");
 	fprintf (fileDescriptor, "View:%d", pPa1->AbDocView);
 	fprintf (fileDescriptor, " Visib:%d", pPa1->AbVisibility);
-	fprintf (fileDescriptor, " Actif:");
+	fprintf (fileDescriptor, " Active:");
 	wrThotBool (pPa1->AbSensitive, fileDescriptor);
 	fprintf (fileDescriptor, " R/O:");
 	wrThotBool (pPa1->AbReadOnly, fileDescriptor);
@@ -1082,19 +1085,20 @@ FILE               *fileDescriptor;
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (fileDescriptor, " ");
 	fprintf (fileDescriptor, "Font:%c", pPa1->AbFont);
-	fprintf (fileDescriptor, " HighL:%d", pPa1->AbHighlight);
+	fprintf (fileDescriptor, " Style:%d", pPa1->AbFontStyle);
+	fprintf (fileDescriptor, " Weight:%d", pPa1->AbFontWeight);
 	fprintf (fileDescriptor, " Size:%d", pPa1->AbSize);
 	wrTypeUnit (pPa1->AbSizeUnit, fileDescriptor);
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (fileDescriptor, " ");
 	if (!pPa1->AbHorizEnclosing)
-	   fprintf (fileDescriptor, " HorizEncl:N");
+	   fprintf (fileDescriptor, "HorizEncl:N ");
 	if (!pPa1->AbVertEnclosing)
-	   fprintf (fileDescriptor, " VertEncl:N");
+	   fprintf (fileDescriptor, "VertEncl:N ");
 	if (pPa1->AbNotInLine)
-	   fprintf (fileDescriptor, " NotInLine");
-	fprintf (fileDescriptor, " PageBreak:");
+	   fprintf (fileDescriptor, "NotInLine ");
+	fprintf (fileDescriptor, "PageBreak:");
 	wrThotBool (pPa1->AbAcceptPageBreak, fileDescriptor);
 	fprintf (fileDescriptor, " LineBreak:");
 	wrThotBool (pPa1->AbAcceptLineBreak, fileDescriptor);
@@ -1102,7 +1106,7 @@ FILE               *fileDescriptor;
 	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (fileDescriptor, " ");
-	fprintf (fileDescriptor, " Indent:%d", pPa1->AbIndent);
+	fprintf (fileDescriptor, "Indent:%d", pPa1->AbIndent);
 	wrTypeUnit (pPa1->AbIndentUnit, fileDescriptor);
 	fprintf (fileDescriptor, " align:");
 	switch (pPa1->AbAdjust)
@@ -1147,7 +1151,6 @@ FILE               *fileDescriptor;
 		    break;
 		 case LtText:
 		    fprintf (fileDescriptor, "TEXT ");
-
 		    break;
 		 case LtPolyLine:
 		    fprintf (fileDescriptor, "POLYLINE ");
@@ -1169,7 +1172,7 @@ FILE               *fileDescriptor;
 		    break;
 	      }
 
-	fprintf (fileDescriptor, "\n\n");
+	fprintf (fileDescriptor, "\n");
 	for (j = 1; j <= Indent + 6; j++)
 	   fprintf (fileDescriptor, " ");
 	switch (pPa1->AbLeafType)
@@ -1195,8 +1198,8 @@ FILE               *fileDescriptor;
 			  fprintf (fileDescriptor, "YRepeat");
 			else
 			  fprintf (fileDescriptor, "RealSize");
+		        fprintf (fileDescriptor, "\n");
 		      }
-		    fprintf (fileDescriptor, "\n\n");
 		    for (j = 1; j <= Indent + 6; j++)
 		      fprintf (fileDescriptor, " ");
 		    fprintf (fileDescriptor, "ShowBox:");
