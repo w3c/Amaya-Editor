@@ -1,19 +1,17 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <title>Welcome to Amaya</title>
-  <meta name="generator"
-  content="amaya 9.0-pre, see http://www.w3.org/Amaya/" />
+  <title>Willkommen bei Amaya</title>
+  <meta name="generator" content="amaya 8.7, see http://www.w3.org/Amaya/" />
   <link href="amaya.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="de" lang="de">
 
 <div id="logo">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.0" height="150px"
      width="230px">
-  <title>Amaya logo</title>
+  <title>Amaya Logo</title>
   <ellipse cx="0px" cy="0px" rx="66px" ry="45px"
         style="fill: #EDF3FF; stroke: #EDF3FF" transform="translate(138,96)">
     <animateTransform attributeName="transform" attributeType="XML"
@@ -75,50 +73,55 @@
 </svg>
 </div>
 
-<h1>Welcome to Amaya 9.0</h1>
+<h1>Willkommen bei Amaya 9.0</h1>
 
-<p>Amaya is a Web client that acts both as a browser and as an authoring
-tool. It has been designed by <a onclick="" href="http://www.w3.org/">W3C</a>
-and <a onclick="" href="http://www.inria.fr/">INRIA</a> with the primary
-purpose of demonstrating new Web technologies and helping users to generate
-valid Web pages.<br />
-With Amaya, you can manipulate rich Web pages containing forms, tables, and
-the most advanced features from <acronym
-title="Hypertext Markup Language">XHTML</acronym>. You can create and edit
-complex <a href="../doc/html/Math.html">mathematical expressions</a> within
-Web pages. You can style your documents using Cascading Style Sheets.</p>
+<p>Amaya ist ein Web-Client, der sowohl als Browser als auch als
+Autorenwerkzeug dient. Amaya wurde vom <a onclick=""
+href="http://www.w3.org/">W3C</a> und <a onclick=""
+href="http://www.inria.fr/">INRIA</a> entworfen in der Absicht, neue
+Web-Technologien zu demonstrieren und Anwender bei der Erstellung korrekter
+Webseiten zu unterstützen.<br />
+Mit Amaya können Sie umfangreiche Webseiten mit Formularen, Tabellen, sowie
+den fortgeschrittensten Eigenschaften von <acronym
+title="Hypertext Markup Language">XHTML bearbeiten</acronym>. Sie können
+komplexe <a href="../doc/html/Math.html">mathematische Ausdrücke</a> in
+Webseiten schreiben und editieren. Sie können Dokumente mit Cascading Style
+Sheets gestalten.</p>
 
 <div class="body">
-<p>Did you know?</p>
+<p>Haben Sie schon gewusst?</p>
 <dl>
-  <dt>Amaya is a structured editor</dt>
-    <dd>With the F2 key you can select the enclosing structure, so editing
-      functions (copy, paste, attributes, etc.) will apply to these
-      structured elements.</dd>
-  <dt>Document can be edited throught sychronized views</dt>
-    <dd>The View menu allows you to open Structure view, Source view, etc. A
-      click on the bottom red line opens or closes a second view.</dd>
-  <dt>Document can be published directly on a server</dt>
-    <dd>With the http PUT method you can write on a server provided you're
-      allowed.</dd>
-  <dt>Links can be created by a simple click</dt>
-    <dd>To create a link you can directly click a target (use Show targets to
-      display available targets).</dd>
-  <dt>Amaya provides avanced commands</dt>
-    <dd>Like Section numbering, Generation of table of contents, Insertion of
-      time stamp , Strructure transformation.</dd>
+  <dt>Amaya ist ein Struktureditor</dt>
+    <dd>Mit der F2-Taste können Sie eine Teilstruktur auswählen.
+      Editierfunktionen (kopieren, einfügen, Attribute bearbeiten, etc.)
+      operieren dann auf den Elementen dieser Struktur.</dd>
+  <dt>Dokumente können in verschiedenen synchronen Ansichten bearbeitet
+  werden</dt>
+    <dd>Über das Menü <i>Ansicht</i> können Sie eine Strukturansicht,
+      Quelltextansicht, etc. öffnen. Ein Klick auf die untere rote Linie
+      öffnet oder schließt eine zweite Ansicht.</dd>
+  <dt>Dokumente können direkt auf einem Server veröffentlicht werden</dt>
+    <dd>Mit der http PUT Methode können Sie auf einen Server schreiben,
+      vorausgesetzt Sie besitzen die notwendigen Rechte.</dd>
+  <dt>Verknüpfungen können mit einem enfachen Klick erzeugt werden</dt>
+    <dd>Klicken Sie einfach direkt auf das Verknüpfungsziel, um eine
+      Verknüpfung zu erzeugen (wählen Sie <i>Verknüpfungsziele anzeigen</i>,
+      um mögliche Verknüpfungsziele zu sehen).</dd>
+  <dt>Amaya bietet einfache Kommandos für komplexe Funktionen</dt>
+    <dd>wie Abschnittsnummerierung, Erstellen von Inhaltsverzeichnissen,
+      Einfügen von Zeitstempeln, Strukturtransformationen.</dd>
 </dl>
 </div>
 
-<p class="bottom">Permission to use, copy, modify, and distribute this
-software and its documentation for any purpose and without fee or royalty is
-hereby granted, provided that the full text of the <a
+<p class="bottom">Sie dürfen diese Software und die dazugehörende
+Dokumentation für beliebige Zwecke und ohne jedwede Gebühr verwenden,
+kopieren, verändern, und verbreiten. Voraussetzung hierfür ist, dass der
+vollständige Text des <a
 href="http://www.w3.org/Consortium/Legal/copyright-software.html"><acronym
 title="Massachusetts Institute of Technology">MIT</acronym> and INRIA
-Copyright Statement</a> appears with <strong>all</strong> copies of the
-software and documentation or portions thereof, including modifications that
-you make.</p>
-
-<p></p>
+Copyright-Vermerks</a> in <strong>allen</strong> Kopien der Software und der
+Dokumentation, sowie allen Teilen davon, inklusive Änderungen, die Sie
+vorgenommen haben, enthalten ist.</p>
 </body>
 </html>
+

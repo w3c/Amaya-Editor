@@ -244,8 +244,8 @@
 242 Anker erzeugen
 243 Verweis/Anker löschen
 244 Id hinzufügen/entfernen...
-245 **Show &tools
-246 **&Fullscreen
+245 &Hilfsmittel anzeigen
+246 &Vollbildanzeige
 247 Symbolleiste anzeigen
 248 Adresszeile anzeigen
 249 Aktive Bildbereiche
@@ -258,7 +258,7 @@
 256 Textbrowser
 257 Inhaltsverzeichnis
 258 Zeitliche Reihenfolge
-259 **&Split view
+259 &Ansicht teilen
 260 Schrift...
 261 Farbe...
 262 Ausrichtung...

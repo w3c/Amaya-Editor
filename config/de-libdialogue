@@ -141,10 +141,10 @@
 139 Weiter ...
 140 Holen
 141 Farbe
-142 **Background color
-143 **Foreground color
-144 **Switch colors
-145 **Select a generic XML structure
+142 Hintergrundfarbe
+143 Vordergrundfarbe
+144 Farben wechseln
+145 Wählen Sie eine generische XML-Struktur
 146 Überprüfe
 147 Suchen
 148 Ersetzen (PW)
@@ -166,23 +166,23 @@
 164 Rechtschreibprüfung abgebrochen
 165 Bitte ein Dokument auswählen
 166 Dokumentwörterbuch unter %s gespeichert
-167 **Not available in this version
-168 **Enable/Disable palette
-169 **Tools
-170 **Mandatory attribute, it can't be removed
-171 **Refresh
-172 **Left
-173 **Right
-174 **Center
-175 **Justify
+167 In dieser Version nicht verfügbar
+168 Palette aktivieren/deaktivieren
+169 Hilfsmittel
+170 Obligatorisches Attribut, kann nicht entfernt werden
+171 Erneuern
+172 Links
+173 Rechts
+174 Zentrieren
+175 Ausrichten
 176 Klasse übernehnem
 177 Klasse oder Pseudoklasse wählen
 178 Auswählen
-179 **Use F2 key to select the parent element
+179 Verwenden Sie die F2 Taste, um das Elternelement auszuwählen
 180 Formel
-181 **Misc
-182 **Binary relations
-183 **Binary relations of negation
-184 **Operators
-185 **Greek alphabet (capital)
-186 **Arrows
+181 Verschiedene
+182 Binäre Relationen
+183 Binäre negierte Relationen
+184 Operatoren
+185 Griechisches Alphabet (Großbuchstaben)
+186 Pfeile

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Fri Dec  3 11:03:17 CET 2004" version="86">
+<base last_update="Thu Dec 16 11:05:00 CET 2004" version="87">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -2588,11 +2588,13 @@
 	<message xml:lang="en">Show &amp;tools</message>
 	<message xml:lang="fr">&amp;Montrer outils</message>
 	<message xml:lang="es">&amp;Mostrar ventana de diálogo</message>
+	<message xml:lang="de">&amp;Hilfsmittel anzeigen</message>
 </label>
 <label define="TFullScreen">
 	<message xml:lang="en">&amp;Fullscreen</message>
 	<message xml:lang="fr">&amp;Plein écran</message>
 	<message xml:lang="es">&amp;Pantalla completa</message>
+	<message xml:lang="de">&amp;Vollbildanzeige</message>
 </label>
 <label define="TShowButtonbar">
 	<message xml:lang="en">Show &amp;button bar</message>
@@ -2728,6 +2730,7 @@
 <label define="TSplitUnsplitPage">
 	<message xml:lang="en">&amp;Split view</message>
 	<message xml:lang="fr">P&amp;artager la vue</message>
+	<message xml:lang="de">&amp;Ansicht teilen</message>
 	<message xml:lang="es">&amp;Dividir vista</message>
 </label>
 <label define="BCharacterStyle">
