@@ -1147,7 +1147,7 @@ CONST STRING        name;
 #endif /* __STDC__ */
 {
    int                 frame;
-   CHAR_T              s[500];
+   CHAR_T              s[MAX_TXT_LEN];
 #ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
    XmString            title_string;
@@ -1174,7 +1174,7 @@ CONST STRING        name;
 		  usprintf (s, text, name);
 	       }
 	     else
-		ustrncpy (&s[0], text, 1024);
+		ustrncpy (s, text, MAX_TXT_LEN);
 
 	     SendMessage (FrameTable[frame].WdStatus, SB_SETTEXT, (WPARAM) 0, (LPARAM) & s[0]);
 	     SendMessage (FrameTable[frame].WdStatus, WM_PAINT, (WPARAM) 0, (LPARAM) 0);
