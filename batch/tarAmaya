@@ -1,86 +1,113 @@
 #!/bin/sh
 #
-# This script builds all the binary tar files for Amaya
+# This script builds all the binary tar files for amaya
 #
 #       amaya-$MACH-$AMAYAVERSION.tgz
 # 
-AMAYAVERSION=v.r
-THOTDIR=$PWD/../..
-DEST=$HOME
+# Usage: tarSourcesAmaya amayaversion [dest_path]
+#
+
+ARGS=2
+E_MAUVAISARGS=65
+
+if [ $# -le 0 ] # Vérifie le bon nombre d'arguments de la ligne de commande
+then
+  echo "Usage: `basename $0` amayaversion [dest_path]"
+  exit $E_MAUVAISARGS
+else
+  # amayaversion is the first parameter
+  AMAYAVERSION=$1
+  # destination directory is the second parameter
+  if [ -z $2 ]
+  then
+    DEST=$HOME
+  else
+    DEST=$2
+  fi
+fi
+
 PLATFORMS="LINUX-ELF GTK GL"
+
+# search directories to tar (Amaya)
+AMAYADIR=$PWD/..
+TARDIR=$PWD/../..
+cd $AMAYADIR
+AMAYADIR=$PWD
+cd $TARDIR
+TARDIR=$PWD/
+AMAYADIR=${AMAYADIR#$TARDIR}
 
 TAR="tar cvzfh "
 COMPRESS="gzip -9"
 
-cd $THOTDIR
-echo "Generating binary tar files from " $THOTDIR
+echo "Generating binary tar files from " $AMAYADIR
 
 for MACH in $PLATFORMS
 do
 echo "Platform ------->" $MACH
  $TAR $DEST/amaya-$MACH-$AMAYAVERSION.tgz \
-   Amaya/README.amaya \
-   Amaya/README.gl \
-   Amaya/amaya/COPYRIGHT* \
-   Amaya/amaya/AmayaPage.html* \
-   Amaya/amaya/Amaya.svg \
-   Amaya/amaya/*.PRS \
-   Amaya/amaya/*.STR \
-   Amaya/amaya/*.TRA \
-   Amaya/amaya/*.conf \
-   Amaya/amaya/*.en \
-   Amaya/amaya/*.gif \
-   Amaya/amaya/*.png \
-   Amaya/amaya/*.trans \
-   Amaya/annotlib/*.STR \
-   Amaya/annotlib/*P.PRS \
-   Amaya/annotlib/*T.TRA \
-   Amaya/annotlib/*.en \
-   Amaya/annotlib/closed.png \
-   Amaya/annotlib/open.png \
-   Amaya/annotlib/selected.gif \
-   Amaya/batch/MachineType \
-   Amaya/config/XKeysymDB \
-   Amaya/config/en-amayadialogue \
-   Amaya/config/en-amayamsg \
-   Amaya/config/en-libdialogue \
-   Amaya/config/en-corrdialogue \
-   Amaya/config/de-* \
-   Amaya/config/es-* \
-   Amaya/config/fi-* \
-   Amaya/config/fr-* \
-   Amaya/config/it-* \
-   Amaya/config/pt-* \
-   Amaya/config/tr-* \
-   Amaya/config/*.rdf \
-   Amaya/config/*thot.rc \
-   Amaya/config/amaya.emacs \
-   Amaya/config/amaya.kb \
-   Amaya/config/amaya.keyboard \
-   Amaya/config/amaya.profiles \
-   Amaya/config/annot.schemas \
-   Amaya/config/fonts.* \
-   Amaya/config/lib_files.dat \
-   Amaya/config/libconfig/*.css \
-   Amaya/config/libconfig/*.png \
-   Amaya/config/libconfig/*.lhtml \
-   Amaya/config/libconfig/*.svg \
-   Amaya/dicopar/E*.dic \
-   Amaya/dicopar/*.ptn \
-   Amaya/dicopar/alphabet \
-   Amaya/dicopar/clavier \
-   Amaya/doc/html/*.html \
-   Amaya/doc/html/*/*.html \
-   Amaya/doc/html/*.css \
-   Amaya/doc/images/*.gif \
-   Amaya/doc/images/*.png \
-   Amaya/doc/images/*.jpg \
-   Amaya/doc/images/w3c_home \
-   Amaya/$MACH/bin/amaya \
-   Amaya/$MACH/bin/print \
-   Amaya/fonts/Families.list \
-   Amaya/fonts/fonts.dir \
-   Amaya/fonts/icones*
+   ${AMAYADIR}/README.amaya \
+   ${AMAYADIR}/README.gl \
+   ${AMAYADIR}/amaya/COPYRIGHT* \
+   ${AMAYADIR}/amaya/AmayaPage.html* \
+   ${AMAYADIR}/amaya/Amaya.svg \
+   ${AMAYADIR}/amaya/*.PRS \
+   ${AMAYADIR}/amaya/*.STR \
+   ${AMAYADIR}/amaya/*.TRA \
+   ${AMAYADIR}/amaya/*.conf \
+   ${AMAYADIR}/amaya/*.en \
+   ${AMAYADIR}/amaya/*.gif \
+   ${AMAYADIR}/amaya/*.png \
+   ${AMAYADIR}/amaya/*.trans \
+   ${AMAYADIR}/annotlib/*.STR \
+   ${AMAYADIR}/annotlib/*P.PRS \
+   ${AMAYADIR}/annotlib/*T.TRA \
+   ${AMAYADIR}/annotlib/*.en \
+   ${AMAYADIR}/annotlib/closed.png \
+   ${AMAYADIR}/annotlib/open.png \
+   ${AMAYADIR}/annotlib/selected.gif \
+   ${AMAYADIR}/batch/MachineType \
+   ${AMAYADIR}/config/XKeysymDB \
+   ${AMAYADIR}/config/en-amayadialogue \
+   ${AMAYADIR}/config/en-amayamsg \
+   ${AMAYADIR}/config/en-libdialogue \
+   ${AMAYADIR}/config/en-corrdialogue \
+   ${AMAYADIR}/config/de-* \
+   ${AMAYADIR}/config/es-* \
+   ${AMAYADIR}/config/fi-* \
+   ${AMAYADIR}/config/fr-* \
+   ${AMAYADIR}/config/it-* \
+   ${AMAYADIR}/config/pt-* \
+   ${AMAYADIR}/config/tr-* \
+   ${AMAYADIR}/config/*.rdf \
+   ${AMAYADIR}/config/*thot.rc \
+   ${AMAYADIR}/config/amaya.emacs \
+   ${AMAYADIR}/config/amaya.kb \
+   ${AMAYADIR}/config/amaya.keyboard \
+   ${AMAYADIR}/config/amaya.profiles \
+   ${AMAYADIR}/config/annot.schemas \
+   ${AMAYADIR}/config/fonts.* \
+   ${AMAYADIR}/config/lib_files.dat \
+   ${AMAYADIR}/config/libconfig/*.css \
+   ${AMAYADIR}/config/libconfig/*.png \
+   ${AMAYADIR}/config/libconfig/*.lhtml \
+   ${AMAYADIR}/config/libconfig/*.svg \
+   ${AMAYADIR}/dicopar/E*.dic \
+   ${AMAYADIR}/dicopar/*.ptn \
+   ${AMAYADIR}/dicopar/alphabet \
+   ${AMAYADIR}/dicopar/clavier \
+   ${AMAYADIR}/doc/html/*.html \
+   ${AMAYADIR}/doc/html/*/*.html \
+   ${AMAYADIR}/doc/html/*.css \
+   ${AMAYADIR}/doc/images/*.gif \
+   ${AMAYADIR}/doc/images/*.png \
+   ${AMAYADIR}/doc/images/*.jpg \
+   ${AMAYADIR}/doc/images/w3c_home \
+   ${AMAYADIR}/$MACH/bin/amaya \
+   ${AMAYADIR}/$MACH/bin/print \
+   ${AMAYADIR}/fonts/Families.list \
+   ${AMAYADIR}/fonts/fonts.dir \
+   ${AMAYADIR}/fonts/icones*
 done
 
 

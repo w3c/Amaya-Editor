@@ -1,33 +1,61 @@
 #!/bin/sh
 #
-# This script builds all the binary tar files for Amaya
+# This script builds all the binary tar files for ${AMAYADIR}
 #
 #       amayadoc-$AMAYAVERSION.tgz
-# 
-AMAYAVERSION=v.r
-THOTDIR=$PWD/../..
-DEST=$HOME
+#
+# Usage: tarSourcesAmaya amayaversion [dest_path]
+#
+
+ARGS=2
+E_MAUVAISARGS=65
+
+if [ $# -le 0 ] # Vérifie le bon nombre d'arguments de la ligne de commande
+then
+  echo "Usage: `basename $0` amayaversion [dest_path]"
+  exit $E_MAUVAISARGS
+else
+  # amayaversion is the first parameter
+  AMAYAVERSION=$1
+  # destination directory is the second parameter
+  if [ -z $2 ]
+  then
+    DEST=$HOME
+  else
+    DEST=$2
+  fi
+fi
+
+# search directories to tar (Amaya and libwww)
+AMAYADIR=$PWD/..
+TARDIR=$PWD/../..
+cd $AMAYADIR
+AMAYADIR=$PWD
+cd $TARDIR
+TARDIR=$PWD/
+AMAYADIR=${AMAYADIR#$TARDIR}
+LIBWWWDIR=libwww
+
 TAR="tar cvzfh "
 COMPRESS="gzip -9"
 
-cd $THOTDIR
 echo "Generating doc tar files "
 
  $TAR $DEST/amayadoc-$AMAYAVERSION.tgz \
-   Amaya/README.amaya \
-   Amaya/README.gl \
-   Amaya/amaya/COPYRIGHT* \
-   Amaya/amaya/AmayaPage.html.* \
-   Amaya/dicopar/F*.dic \
-   Amaya/dicopar/*.ptn \
-   Amaya/dicopar/alphabet \
-   Amaya/dicopar/clavier \
-   Amaya/doc/html/*.html* \
-   Amaya/doc/html/*/*.html* \
-   Amaya/doc/html/*.css \
-   Amaya/doc/images/*-de.* \
-   Amaya/doc/images/*-es.* \
-   Amaya/doc/images/*-fr.*
+   ${AMAYADIR}/README.amaya \
+   ${AMAYADIR}/README.gl \
+   ${AMAYADIR}/amaya/COPYRIGHT* \
+   ${AMAYADIR}/amaya/AmayaPage.html.* \
+   ${AMAYADIR}/dicopar/F*.dic \
+   ${AMAYADIR}/dicopar/*.ptn \
+   ${AMAYADIR}/dicopar/alphabet \
+   ${AMAYADIR}/dicopar/clavier \
+   ${AMAYADIR}/doc/html/*.html* \
+   ${AMAYADIR}/doc/html/*/*.html* \
+   ${AMAYADIR}/doc/html/*.css \
+   ${AMAYADIR}/doc/images/*-de.* \
+   ${AMAYADIR}/doc/images/*-es.* \
+   ${AMAYADIR}/doc/images/*-fr.*
 
 
 
