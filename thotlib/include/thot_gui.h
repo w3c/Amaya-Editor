@@ -161,7 +161,7 @@ typedef ThotWidget     ThotMenu;
 typedef Drawable       ThotBitmap;
 typedef GC             ThotGC;
 typedef unsigned long  ThotColor;
-typedef XColor         ThotColorStruct;
+typedef GdkColor       ThotColorStruct;
 typedef int           *ptrfont;
 typedef Cursor         ThotCursor;
 typedef XPoint         ThotPoint;

@@ -1576,9 +1576,9 @@ ThotBool     logFile;
 			 TBSTYLE_BUTTON, TRUE);
 	   iEditor = TtaAddButton (doc, 1, iconEditor, SetBrowserEditor, "SetBrowserEditor",
 			 TtaGetMessage (AMAYA, AM_BUTTON_BrowseEdit),
-			 TBSTYLE_BUTTON, TRUE); 
+			 TBSTYLE_BUTTON, TRUE);
 	   /* SEPARATOR */
-	   TtaAddButton (doc, 1, None, NULL, NULL, "", TBSTYLE_SEP, FALSE);
+	   TtaAddButton (doc, 1, None, NULL, NULL, NULL, TBSTYLE_SEP, FALSE);
 	   iSave = TtaAddButton (doc, 1, iconSaveNo, SaveDocument, "SaveDocument",
 			 TtaGetMessage (AMAYA, AM_BUTTON_SAVE),
 			 TBSTYLE_BUTTON, FALSE);
@@ -1589,7 +1589,7 @@ ThotBool     logFile;
 			 TtaGetMessage (AMAYA, AM_BUTTON_SEARCH),
 			 TBSTYLE_BUTTON, TRUE);
 	   /* SEPARATOR */
-	   TtaAddButton (doc, 1, None, NULL, NULL, "", TBSTYLE_SEP, FALSE);
+	   TtaAddButton (doc, 1, None, NULL, NULL, NULL, TBSTYLE_SEP, FALSE);
 	   iI =  TtaAddButton (doc, 1, iconI, SetCharEmphasis, "SetCharEmphasis",
 				    TtaGetMessage (AMAYA, AM_BUTTON_ITALICS),
 				    TBSTYLE_CHECK, TRUE);
@@ -1600,7 +1600,7 @@ ThotBool     logFile;
 				    TtaGetMessage (AMAYA, AM_BUTTON_CODE),
 				    TBSTYLE_CHECK, TRUE);
 	   /* SEPARATOR */
-	   TtaAddButton (doc, 1, None, NULL, NULL, "", TBSTYLE_SEP, FALSE);
+	   TtaAddButton (doc, 1, None, NULL, NULL, NULL, TBSTYLE_SEP, FALSE);
 	   iImage = TtaAddButton (doc, 1, iconImage, CreateImage, "CreateImage", 
 			 TtaGetMessage (AMAYA, AM_BUTTON_IMG),
 			 TBSTYLE_BUTTON, TRUE);

@@ -11,6 +11,9 @@
  * Authors: I. Vatton (INRIA)
  *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  */
+#ifdef _GTK
+#include <gtk/gtk.h>
+#endif /* _GTK */
 
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -23,15 +26,6 @@
 #define THOT_EXPORT extern
 #include "frame_tv.h"
 #include "platform_tv.h"
-
-#ifdef _I18N_
-#      ifdef _WINDOWS 
-#            define NoneTxt L"None"
-#      else  /* !_WINDOWS */
-#      endif /* !_WINDOWS */
-#else  /* !_I18N_ */
-#      define NoneTxt "None"
-#endif /* !_I18N_ */
 
 #include "memory_f.h"
 
@@ -60,12 +54,12 @@ char               *bits;
 #endif /* __STDC__ */
 
 {
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    if (bits != NULL)
       return (XCreateBitmapFromData (TtDisplay, TtRootWindow, bits, width, height));
    else
       return (0);
-#  else  /* _WINDOWS */
+#else  /* _WINDOWS */
    return CreateBitmap (width, height, 16, 4, bits);
 #endif /* _WINDOWS */
 }
@@ -80,8 +74,24 @@ Pixmap              TtaCreatePixmapLogo (d)
 char              **d;
 #endif /* __STDC__ */
 {
-#  ifndef _WINDOWS
+#ifdef _WINDOWS
+   return (Pixmap) NULL;
+#else  /* _WINDOWS */
    Pixmap              pixmap;
+#ifdef _GTK
+   ThotWidget          icon;
+   GdkBitmap          *mask;
+
+   if (d != NULL)
+     {
+       pixmap = gdk_pixmap_create_from_xpm (Main_Wd->window, &mask ,
+					    &style->bg[GTK_STATE_NORMAL] ,(gchar *) picture); 
+       icon = gtk_pixmap_new (pixmap, mask);
+       gdk_pixmap_unref (pixmap);
+       gdk_bitmap_unref (mask);	
+     }	    
+   return (icon);
+#else /* _GTK */
    Pixmap              PicMask;
    XpmAttributes       att;
    XpmColorSymbol      cs;
@@ -102,14 +112,10 @@ char              **d;
 	/* None  for the background color */
 	att.numsymbols = 1;
 	att.colorsymbols = &cs;
-	cs.name = NoneTxt;
+	cs.name = "None";
 	cs.value = NULL;
 	cs.pixel = (Pixel) BgMenu_Color;
-#       ifdef WWW_MSWINDOWS
-	/* whatever the windows version is - @@@ */
-#       else
 	XpmCreatePixmapFromData (TtDisplay, TtRootWindow, d, &pixmap, &PicMask, &att);
-#       endif
 	if (att.pixels != NULL)
 	  XpmFree (att.pixels);
 
@@ -117,7 +123,6 @@ char              **d;
 	   XFreePixmap (TtDisplay, PicMask);
      }
    return (pixmap);
-#  else  /* _WINDOWS */
-   return (Pixmap) NULL;
-#  endif /* _WINDOWS */
+#endif /* _GTK */
+#endif /* _WINDOWS */
 }

@@ -138,8 +138,6 @@ typedef struct {
 #define XPMPIPE  2
 #define XPMBUFFER 3
 
-#define EOL '\n'
-#define TAB '\t'
 #define SPC ' '
 
 typedef struct {

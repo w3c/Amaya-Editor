@@ -23,6 +23,10 @@
  * Last modification: Jan 09 1997
  */
 
+#ifdef _GTK 
+#include <gtk/gtk.h>
+#endif /* _GTK */
+
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "constmedia.h"
@@ -1194,7 +1198,34 @@ ThotBool            printing;
 
 #endif /* __STDC__ */
 {
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
+#ifdef _GTK
+   /* initialize Graphic context to display pictures */
+   TtGraphicGC = gdk_gc_new (DefaultDrawable);
+   gdk_rgb_gc_set_foreground (TtGraphicGC, Black_Color);
+   gdk_rgb_gc_set_background (TtGraphicGC, White_Color);
+   gdk_gc_set_exposures (TtGraphicGC,0);
+
+   /* initialize Graphic context to create pixmap */
+   /* GCimage = gdk_gc_new (DefaultDrawable);
+   gdk_rgb_gc_set_foreground (GCimage, Black_Color);
+   gdk_rgb_gc_set_background (GCimage, White_Color);
+   gdk_gc_set_exposures (GCimage,0);*/
+
+   /* initialize Graphic context to display tiled pictures */
+   /* tiledGC = gdk_gc_new (DefaultDrawable);
+   gdk_rgb_gc_set_foreground (tiledGC, Black_Color);
+   gdk_rgb_gc_set_background (tiledGC, White_Color);
+   gdk_gc_set_exposures (tiledGC,0);*/
+
+   /* special Graphic context to display bitmaps */
+   /* GCpicture = gdk_gc_new (DefaultDrawable);
+   gdk_rgb_gc_set_foreground (GCpicture, Black_Color);
+   gdk_rgb_gc_set_background (GCpicture, White_Color);
+   gdk_gc_set_exposures (GCpicture,0);*/
+   /* create a special logo for lost pictures */
+   /* TODO */
+#else /* _GTK */
    /* initialize Graphic context to display pictures */
    TtGraphicGC = XCreateGC (TtDisplay, TtRootWindow, 0, NULL);
    XSetForeground (TtDisplay, TtGraphicGC, Black_Color);
@@ -1227,7 +1258,8 @@ ThotBool            printing;
 						  White_Color,
 						  TtWDepth);
    theVisual = DefaultVisual (TtDisplay, TtScreen);
-#  endif /* !_WINDOWS */
+#endif /* _GTK */
+#endif /* !_WINDOWS */
 
    Printing = printing;
    /* by default no plugins loaded */
@@ -1377,24 +1409,23 @@ int                 wlogo;
 int                 hlogo;
 #endif /* __STDC__ */
 {
+#ifndef _GTK
    int                 x, y, w, h, xFrame, yFrame, wFrame, hFrame;
    int                 XOrg, YOrg, picXOrg, picYOrg;
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    int                 fileNameWidth;
    int                 fnposx, fnposy;
    CHAR_T              filename[255];
    Drawable            drawable;
-#  else  /* _WINDOWS */
+#else  /* _WINDOWS */
    ThotWindow          drawable;
-#  endif /* !_WINDOWS */
+   HDC                 hDc, hMemDc;
+   POINT               lPt [2];
+   HBITMAP             hOldBitmap;
+#endif /* !_WINDOWS */
    Pixmap              pixmap;
    float               scaleX, scaleY;
 
-#  ifdef _WINDOWS
-   HDC     hDc, hMemDc ;
-   POINT   lPt [2];
-   HBITMAP hOldBitmap;
-#  endif /* _WINDOWS */
    /* Create the temporary picture */
    scaleX = 0.0;
    scaleY = 0.0;
@@ -1430,7 +1461,7 @@ int                 hlogo;
        break;
      }
    
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    pixmap = XCreatePixmap (TtDisplay, TtRootWindow, w, h, TtWDepth);
    XFillRectangle (TtDisplay, pixmap, TtBlackGC, x, y, w, h);
    
@@ -1440,7 +1471,7 @@ int                 hlogo;
    XDrawLine (TtDisplay, pixmap, TtDialogueGC, x + w - 1, y, x, y + h - 2);
    XDrawLine (TtDisplay, pixmap, TtWhiteGC, x, y + 1, x + w - 1, y + h - 1);
    XDrawLine (TtDisplay, pixmap, TtWhiteGC, x + w - 1, y + 1, x, y + h - 1);
-#  else  /* _WINDOWS */
+#else  /* _WINDOWS */
    pixmap = CreateBitmap (w, h, TtWDepth, 1, NULL);
    hDc    = GetDC (drawable);
    hMemDc = CreateCompatibleDC (hDc);
@@ -1472,7 +1503,7 @@ int                 hlogo;
    SelectObject (hMemDc, hOldBitmap);
    DeleteDC (hDc);
    DeleteDC (hMemDc);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
    /* copying the logo */
    /* 2 pixels used by the enclosing rectangle */
@@ -1502,9 +1533,9 @@ int                 hlogo;
        picYOrg = 0;
      }
    /* Drawing In the Picture Box */
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
    XCopyArea (TtDisplay, imageDesc->PicPixmap, pixmap, TtDialogueGC, picXOrg, picYOrg, wFrame, hFrame, xFrame, yFrame);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
    GetXYOrg (frame, &XOrg, &YOrg);
    xFrame = box->BxXOrg + FrameTable[frame].FrLeftMargin - XOrg;
    yFrame = box->BxYOrg + FrameTable[frame].FrTopMargin - YOrg;
@@ -1520,12 +1551,11 @@ int                 hlogo;
 
    LayoutPicture (pixmap, drawable, picXOrg, picYOrg, w, h, x, y, frame, imageDesc);
 
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    if (pixmap && !DeleteObject (pixmap))
       WinErrorBox (WIN_Main_Wd);
    pixmap = (HBITMAP) 0;
-#  endif /* _WINDOWS */ 
-#  ifndef _WINDOWS
+#else /* _WINDOWS */ 
    XFreePixmap (TtDisplay, pixmap);
    pixmap = None;
    XSetLineAttributes (TtDisplay, TtLineGC, 1, LineSolid, CapButt, JoinMiter);
@@ -1541,7 +1571,8 @@ int                 hlogo;
        XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) FontDialogue)->fid);
        XDrawString (TtDisplay, drawable, TtLineGC, fnposx, fnposy, filename, ustrlen (filename));
      }
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
+#endif /* _GTK */
 }
 
 #ifdef _WINDOWS
@@ -1928,6 +1959,7 @@ PtrBox              box;
 PictInfo           *imageDesc;
 #endif /* __STDC__ */
 {
+#ifndef _GTK
    int                 typeImage;
    PathBuffer          fileName;
    PictureScaling      pres;
@@ -1939,9 +1971,9 @@ PictInfo           *imageDesc;
    Drawable            myDrawable = None;
    Picture_Report      status;
    unsigned long       Bgcolor;
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    BOOL                DeviceToRelease = FALSE;
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
    if (box->BxAbstractBox->AbVisibility < ViewFrameTable[frame - 1].FrVisibility)
      /* the picture is not visible */
@@ -1956,16 +1988,16 @@ PictInfo           *imageDesc;
    w = 0;
    h = 0;
 
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    if (TtDisplay == 0) {
       WIN_GetDeviceContext (frame);
       DeviceToRelease = TRUE;
    }
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
    if (status != Supported_Format)
      {
-#      ifdef _WINDOWS
+#ifdef _WINDOWS
        if (TtPrinterDC == NULL) {
           imageDesc->PicType = 3;
           pres = RealSize;
@@ -1973,9 +2005,9 @@ PictInfo           *imageDesc;
           myDrawable = (*(PictureHandlerTable [GIF_FORMAT].Produce_Picture)) 
 			             (LostPicturePath, imageDesc, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask, &width, &height);
 	   }
-#      else  /* !_WINDOWS */
+#else  /* !_WINDOWS */
        myDrawable = PictureLogo;
-#      endif /* _WINDOWS */
+#endif /* _WINDOWS */
        imageDesc->PicType = -1;
        wFrame = w = 40;
        hFrame = h = 40;
@@ -2001,7 +2033,7 @@ PictInfo           *imageDesc;
 
        if (!Printing)
 	 {
-#          ifndef _WINDOWS
+#ifndef _WINDOWS
 	   if (box != NULL)
 	     /* set the colors of the  graphic context GC */
 	     if (TtWDepth == 1)
@@ -2024,7 +2056,7 @@ PictInfo           *imageDesc;
 		 XSetForeground (TtDisplay, GCpicture, ColorPixel (box->BxAbstractBox->AbForeground));
 		 XSetBackground (TtDisplay, TtGraphicGC, ColorPixel (box->BxAbstractBox->AbBackground));
 	       }
-#          endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	 }
 
        Bgcolor = ColorPixel (box->BxAbstractBox->AbBackground);
@@ -2096,7 +2128,7 @@ PictInfo           *imageDesc;
 
    if (imageDesc->PicPresent != ReScale || Printing)
      {
-#      ifdef _WINDOWS 
+#ifdef _WINDOWS 
        if (TtPrinterDC) {
           imageDesc->PicXArea = (xFrame * PrinterDPI + PrinterDPI / 2) / ScreenDPI;
           imageDesc->PicYArea = (yFrame * PrinterDPI + PrinterDPI / 2) / ScreenDPI;
@@ -2108,12 +2140,12 @@ PictInfo           *imageDesc;
             imageDesc->PicWArea = wFrame;
             imageDesc->PicHArea = hFrame;
 	   }
-#      else /* !_WINDOWS */
+#else /* !_WINDOWS */
        imageDesc->PicXArea = xFrame;
        imageDesc->PicYArea = yFrame;
        imageDesc->PicWArea = wFrame;
        imageDesc->PicHArea = hFrame;
-#      endif /* _WINDOWS */
+#endif /* _WINDOWS */
      }
    else
      {
@@ -2130,14 +2162,14 @@ PictInfo           *imageDesc;
        picMask = None;
      }
    if (!Printing || imageDesc->PicPixmap != EpsfPictureLogo)
-#     ifndef _WINDOWS
+#ifndef _WINDOWS
       UpdatePictInfo (imageDesc, myDrawable, picMask);
-#     else  /* _WINDOWS */
+#else  /* _WINDOWS */
       UpdatePictInfo (imageDesc, myDrawable);
       if (DeviceToRelease)
          WIN_ReleaseDeviceContext ();
-#     endif /* _WINDOWS */
-
+#endif /* _WINDOWS */
+#endif /* _GTK */
 }
 
 

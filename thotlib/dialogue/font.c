@@ -13,6 +13,10 @@
  *          D. Veillard (W3C/INRIA): Windows NT/95 routines
  *
  */
+#ifdef _GTK
+#include <gtk/gtk.h>
+#include <gdk/gdk.h>
+#endif /* _GTK */
 
 #include "thot_sys.h"
 #include "libmsg.h"
@@ -66,44 +70,6 @@ static int   WIN_fdwItalic;
 static int   WIN_fdwUnderline;
 static int   WIN_fdwStrikeOut;
 
-#endif /* _WINDOWS */
-
-
-#ifdef _WINDOWS
-#if 0
-/*----------------------------------------------------------------------
- *    FontCreated
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int FontCreated (CHAR_T alphabet, CHAR_T family, int highlight, int size, TypeUnit unit)
-#else  /* __STDC__ */
-static int FontCreated (alphabet, family, highlight, size, unit)
-CHAR_T     alphabet;
-CHAR_T     family;
-int      highlight;
-int      size;
-TypeUnit unit;
-#endif /* __STDC__ */
-{
-    int i = 0;
-	BOOL found = FALSE;
-
-	while (i < nbFontsCreated && !found) {
-          if (FCTable [i].alphabet       == alphabet         &&
-             toupper(FCTable [i].family) == toupper (family) &&
-             FCTable [i].highlight       == highlight        &&
-             FCTable [i].size            == size             &&
-             FCTable [i].unit            == unit)
-			 found = TRUE ;
-		  else 
-			  i++;
-    }
-
-	if (found)
-       return i;
-    return -1;
-}
-#endif /* 0 */
 /*----------------------------------------------------------------------
  *    WIN_LoadFont :  load a Windows TRUEType with a defined set of
  *                    characteristics.
@@ -245,8 +211,8 @@ UCHAR_T       c;
 ptrfont             font;
 #endif /* __STDC__ */
 {
-#  if defined(_I18N_) || defined(__JIS__)
-#     ifdef _WINDOWS
+#if defined(_I18N_) || defined(__JIS__)
+#ifdef _WINDOWS
       SIZE wsize;
       HFONT currentFont; 
       WIN_GetDeviceContext (-1);
@@ -255,30 +221,36 @@ ptrfont             font;
       SelectObject (TtDisplay, currentFont);
       WIN_ReleaseDeviceContext ();
       return wsize.cx;
-#     else  /* !_WINDOWS */
-#     endif /* _WINDOWS */
-#  else /* defined(_I18N_) || defined(__JIS__) */
+#else  /* !_WINDOWS */
+#endif /* _WINDOWS */
+#else /* defined(_I18N_) || defined(__JIS__) */
+
    int                 l;
 
    if (font == NULL)
       return (0);
-   else {
+   else
+     {
         /* characters NEW_LINE and BREAK_LINE are equivalent */
         if (c == NEW_LINE)
            c = BREAK_LINE;
-#       ifdef _WINDOWS
+#ifdef _WINDOWS
         l = font->FiWidths[c];
-#       else  /* _WINDOWS */
+#else  /* _WINDOWS */
+#ifdef _GTK
+	l = gdk_char_width (font, c);
+#else /* _GTK */
         if (((XFontStruct*) font)->per_char == NULL)
-           l = ((XFontStruct*) font)->max_bounds.width;
+	  l = ((XFontStruct*) font)->max_bounds.width;
         else if (c < ((XFontStruct*) font)->min_char_or_byte2)
-             l = 0;
+	  l = 0;
         else 
-             l = ((XFontStruct *) font)->per_char[c - ((XFontStruct *) font)->min_char_or_byte2].width;
-#       endif /* !_WINDOWS */
-   } 
+	  l = ((XFontStruct *) font)->per_char[c - ((XFontStruct *) font)->min_char_or_byte2].width;
+#endif /* _GTK */
+#endif /* !_WINDOWS */
+     }
    return (l);
-#  endif /* defined(_I18N_) || defined(__JIS__) */
+#endif /* defined(_I18N_) || defined(__JIS__) */
 }
 
 /*----------------------------------------------------------------------
@@ -298,11 +270,16 @@ ptrfont             font;
   else
     return (font->FiHeights[c]);
 #else  /* _WINDOWS */
-   else if (((XFontStruct *) font)->per_char == NULL)
-        return FontHeight (font);
-   else
-       return ((XFontStruct *) font)->per_char[c - ((XFontStruct *) font)->min_char_or_byte2].ascent
-               + ((XFontStruct *) font)->per_char[c - ((XFontStruct *) font)->min_char_or_byte2].descent;
+#ifdef _GTK
+  else
+    l = gdk_char_height (font, c);
+#else /* _GTK */
+  else if (((XFontStruct *) font)->per_char == NULL)
+    return FontHeight (font);
+  else
+    return ((XFontStruct *) font)->per_char[c - ((XFontStruct *) font)->min_char_or_byte2].ascent
+      + ((XFontStruct *) font)->per_char[c - ((XFontStruct *) font)->min_char_or_byte2].descent;
+#endif /* _GTK */
 #endif /* !_WINDOWS */
 }
 
@@ -323,12 +300,16 @@ ptrfont             font;
   else
     return font->FiAscent;
 #else  /* _WINDOWS */
-   else if (((XFontStruct *) font)->per_char == NULL)
-        return ((XFontStruct *) font)->max_bounds.ascent;
-   else
-       return ((XFontStruct *) font)->per_char[c - ((XFontStruct *) font)->min_char_or_byte2].ascent;
+#ifdef _GTK
+  else
+    gdk_string_extents (font, &c, &lbearing, &rbearing, &width, &ascent, &descent);
+#else /* _GTK */
+  else if (((XFontStruct *) font)->per_char == NULL)
+    return ((XFontStruct *) font)->max_bounds.ascent;
+  else
+    return ((XFontStruct *) font)->per_char[c - ((XFontStruct *) font)->min_char_or_byte2].ascent;
+#endif /* _GTK */
 #endif /* !_WINDOWS */
-
 }
 
 /*----------------------------------------------------------------------
@@ -347,8 +328,13 @@ ptrfont             font;
   else
     return (font->FiAscent);
 #else  /* _WINDOWS */
-   else
-     return ((XFontStruct *) font)->ascent;
+#ifdef _GTK
+  else
+    return (font->ascent);
+#else /* _GTK */
+  else
+    return (((XFontStruct *) font)->ascent);
+#endif /* _GTK */
 #endif /* !_WINDOWS */
 }
 
@@ -368,8 +354,13 @@ ptrfont             font;
    else
      return (font->FiHeight);
 #else  /* _WINDOWS */
+#ifdef _GTK
+  else
+    return (gdk_string_height (font, c) + 3); /* need some extra space */
+#else /* _GTK */
    else
      return ((XFontStruct *) font)->max_bounds.ascent + ((XFontStruct *) font)->max_bounds.descent;
+#endif /* _GTK */
 #endif /* !_WINDOWS */
 }
 
@@ -391,8 +382,6 @@ int                 zoom;
    int              dist, i;
 
    dist = 0;
-#  ifdef _WINDOWS 
-#  endif /* _WINDOWS */
    switch (unit)
      {
      case UnRelative:
@@ -414,16 +403,17 @@ int                 zoom;
 	 dist += (dist * zoom / 10);
        break;
      case UnPixel:
-#      ifdef _WINDOWS
-       if (TtPrinterDC) {
-          if (PrinterDPI == 0)
+#ifdef _WINDOWS
+       if (TtPrinterDC)
+	 {
+	   if (PrinterDPI == 0)
              PrinterDPI = GetDeviceCaps (GetDC (NULL), LOGPIXELSY);
-          if (ScreenDPI == 0)
+	   if (ScreenDPI == 0)
              ScreenDPI = GetDeviceCaps (TtPrinterDC, LOGPIXELSY);
-          dist = (val * PrinterDPI + ScreenDPI / 2) / ScreenDPI;
-	   }
+	   dist = (val * PrinterDPI + ScreenDPI / 2) / ScreenDPI;
+	 }
        else
-#      endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	 dist = val;
        /* take zoom into account */
        if (zoom != 0)
@@ -434,8 +424,6 @@ int                 zoom;
        dist = i / 100;
        break;
      }
-#  ifdef _WINDOWS
-#  endif /* _WINDOWS */
    return (dist);
 }
 
@@ -481,11 +469,11 @@ int                 zoom;
        /* take zoom into account */
        if (zoom != 0)
 	 val -= (val * zoom / 10);
-#      ifdef _WINDOWS 
+#ifdef _WINDOWS 
        if (TtPrinterDC)
 	 dist = (val * ScreenDPI + ScreenDPI / 2) / PrinterDPI;
        else 
-#      endif /* _WINDOWS */
+#endif /* _WINDOWS */
 	 dist = val;
        break;
      case UnPercent:
@@ -568,7 +556,13 @@ CHAR_T                name[100];
 int                 toPatch;
 #endif /* __STDC__ */
 {
-   CHAR_T                tmp[200];
+#ifdef _GTK
+  GdkFont *result;
+
+  result = gdk_font_load ((gchar *)name);
+  return (result);
+#else /* _GTK */
+   CHAR_T              tmp[200];
    XFontStruct        *result;
    int                 mincar;
    int                 spacewd;
@@ -607,6 +601,7 @@ int                 toPatch;
 	      result->per_char[HALF_EM - mincar].width = (spacewd + 1) / 2;
 	}
    return ((ptrfont) result);
+#endif /* _GTK */
 }
 #  endif /* !_WINDOWS */
 

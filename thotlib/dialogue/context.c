@@ -47,6 +47,7 @@ static ThotColorStruct  cwhite;
 #include "wininclude.h"
 
 static int   palSize;
+static int   initialized = 0;
 int          nbPalEntries;
 PALETTEENTRY palEntries[256];
 int          nbSysColors;
@@ -62,7 +63,6 @@ ThotGC              WinCreateGC (void)
 #endif				/* __STDC__ */
 {
    ThotGC gc = (ThotGC) TtaGetMemory (sizeof (WIN_GC_BLK));
-
    return (gc);
 }
 
@@ -77,11 +77,9 @@ void WinInitColors ()
 #endif /* __STDC__ */
 {
    int        i;
-   static int initialized = 0;
 
    if (initialized)
       return;
-
    palSize = GetDeviceCaps (TtDisplay, SIZEPALETTE);
    if (palSize == 0)
      TtIsTrueColor = TRUE;
@@ -89,7 +87,6 @@ void WinInitColors ()
      TtIsTrueColor = FALSE;
 
    /* Create a color palette for the Thot set of colors. */
-
    /* fill-in the Pix_Color table */
    for (i = 0; i < MAX_COLOR; i++) 
        Pix_Color[i] = RGB (RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue);
@@ -99,7 +96,6 @@ void WinInitColors ()
        BackgroundColor[i] = 0;
 
    initialized = 1;
-
 }
 #endif /* _WINDOWS */
 
@@ -164,7 +160,11 @@ unsigned short     *blue;
    ThotColorStruct     color;
 
    /* Lookup the color name in the X color name database */
+#ifdef _GTK
+    if (gdk_color_parse (colname, &color))
+#else /* _GTK */
    if (XParseColor (TtDisplay, TtCmap, colname, &color))
+#endif /* _GTK */
      {
 	/* normalize RGB color values to 8 bits values */
 	color.red >>= 8;
@@ -300,11 +300,56 @@ char*               name;
 {
    ThotBool            found;
 #ifndef _WINDOWS
+#ifdef _GTK
+   GdkVisual          *vptr;
+   GdkVisualType       vinfo;
+#else /* _GTK */
    XVisualInfo        *vptr;
    XVisualInfo         vinfo;
+#endif /* _GTK */
    ThotColorStruct     col;
    int                 i;
 
+#ifdef _GTK
+   vptr = gdk_visual_get_best ();
+   vinfo = gdk_visual_get_best_type ();
+   if (vptr)
+     {
+       TtIsTrueColor = (vinfo == GDK_VISUAL_TRUE_COLOR || vinfo == GDK_VISUAL_DIRECT_COLOR );
+      // XFree (vptr);
+     }
+   else
+     TtIsTrueColor = FALSE;
+   /* Depending on the display Black and White order may be inverted */
+  // if (XWhitePixel (TtDisplay, TtScreen) == 0)
+  test =  gdk_color_white (TtCmap, &cwhite);
+  test = gdk_color_black (TtCmap, &cblack);
+   if (cwhite.pixel == 0)
+     {
+       /* je ne sais pas ce qu'il faut faire */
+       /*if (!XAllocNamedColor (TtDisplay, TtCmap, "White", &cwhite, &col))
+	   TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
+	if (!XAllocNamedColor (TtDisplay, TtCmap, "Black", &cblack, &col))
+	   TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
+     }
+   else
+     {
+	if (!XAllocNamedColor (TtDisplay, TtCmap, "Black", &cblack, &col))
+	   TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
+	if (!XAllocNamedColor (TtDisplay, TtCmap, "White", &cwhite, &col))
+	   TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY)*/;
+     }
+   /* Initialize colors for the application */
+   /*   Black_Color  = cblack.pixel;
+	FgMenu_Color = Select_Color = cblack.pixel;
+	White_Color  = cwhite.pixel;
+	Scroll_Color = BgMenu_Color = cwhite.pixel; */
+   /* a modifier */
+    Black_Color = 0x000000;
+    FgMenu_Color = Select_Color =0x000000;
+    White_Color = 0xffffff;
+    Scroll_Color =  0xffffff;
+#else /* _GTK */
    vinfo.visualid = XVisualIDFromVisual (XDefaultVisual (TtDisplay, TtScreen));
    vptr = XGetVisualInfo (TtDisplay, VisualIDMask, &vinfo, &i);
    if (vptr)
@@ -314,6 +359,7 @@ char*               name;
      }
    else
      TtIsTrueColor = FALSE;
+
    /* Depending on the display Black and White order may be inverted */
    if (XWhitePixel (TtDisplay, TtScreen) == 0)
      {
@@ -334,16 +380,31 @@ char*               name;
    FgMenu_Color = Select_Color = cblack.pixel;
    White_Color  = cwhite.pixel;
    Scroll_Color = BgMenu_Color = cwhite.pixel;
+#endif /* _GTK */
 #endif /* _WINDOWS */
 
    if (TtWDepth > 1)
      {
+#ifndef _WINDOWS
+#ifdef _GTK
 	/* background color */
-#       ifndef _WINDOWS
+	found = FindColor (0, name, "BackgroundColor", "Grey", &White_Color);
+	/* color for the selection */
+	found = FindColor (0, name, "DocSelectColor", "SteelBlue", &Select_Color);
+#else /* _GTK */
+	/* background color */
 	found = FindColor (0, name, "BackgroundColor", "gainsboro", &White_Color);
-#       else  /* _WINDOWS */
+	/* color for borders and buttons */
+	found = FindColor (0, name, "DocSelectColor", "SteelBlue", &Select_Color);
+#endif /* _GTK */
+#else  /* _WINDOWS */
+	/* background color */
 	found = FindColor (0, name, "BackgroundColor", "LightGrey1", &White_Color);
-#       endif /* _WINDOWS */
+	/* color for borders and buttons */
+	found = FindColor (0, name, "DocSelectColor", "Blue", &Select_Color);
+#endif /* _WINDOWS */
+	/* color for the selection */
+	found = FindColor (0, name, "InactiveItemColor", "LightGrey1", &InactiveB_Color);
 	/* drawing color */
 	found = FindColor (0, name, "ForegroundColor", "Black", &Black_Color);
 	/* color for the menu background */
@@ -352,18 +413,6 @@ char*               name;
 	found = FindColor (0, name, "MenuFgColor", "Black", &FgMenu_Color);
 	/* scrolls color */
 	Scroll_Color = BgMenu_Color;
-	/* color for the selection */
-#       ifndef _WINDOWS
-	found = FindColor (0, name, "DocSelectColor", "SteelBlue", &Select_Color);
-#       else  /* _WINDOWS */
-	found = FindColor (0, name, "DocSelectColor", "Blue", &Select_Color);
-#       endif /* _WINDOWS */
-	/* color for borders and buttons */
-#       ifndef _WINDOWS
-	found = FindColor (0, name, "InactiveItemColor", "LightGrey", &InactiveB_Color);
-#       else  /* _WINDOWS */
-	found = FindColor (0, name, "InactiveItemColor", "LightGrey1", &InactiveB_Color);
-#       endif /* _WINDOWS */
      }
    else
       /* at least allocate the selection color */
@@ -371,22 +420,20 @@ char*               name;
 
    /* The reference color */
    found = FindColor (0, name, "ActiveBoxColor", "Red", &(Box_Color));
-#  ifndef _WINDOWS
+
+   /* color for read-only sections */
+   found = FindColor (0, name, "ReadOnlyColor", "Black", &(RO_Color));
+
+#ifndef _WINDOWS
    if (!found)
       Box_Color = cwhite.pixel;
    else if (TtWDepth == 1)
       Box_Color = cblack.pixel;
-#  endif /* !_WINDOWS */
-
-   /* color for read-only sections */
-   found = FindColor (0, name, "ReadOnlyColor", "Black", &(RO_Color));
-#  ifndef _WINDOWS 
    if (!found)
       RO_Color = cwhite.pixel;
    else if (TtWDepth == 1)
       RO_Color = cblack.pixel;
 #  else  /* _WINDOWS */
-   /* TtDisplay = GetDC (WIN_Main_Wd) ; */
    WinInitColors ();
 #  endif /* _WINDOWS */
 }
@@ -401,92 +448,108 @@ static void InitGraphicContexts (void)
 static void InitGraphicContexts ()
 #endif /* __STDC__ */
 {
-#  ifndef _WINDOWS
-   unsigned long       valuemask;
-   unsigned long       white;
-   unsigned long       black;
-   XGCValues           GCmodel;
-   Pixmap              pix;
-#  endif /* _WINDOWS */
+#ifndef _WINDOWS
+#ifndef _GTK
+  unsigned long       valuemask;
+  XGCValues           GCmodel;
+#endif /* _GTK */
+  int                 white;
+  int                 black;
+  Pixmap              pix;
+#endif /* _WINDOWS */
 
-   /* Create a Graphic Context to write white on black. */
-#  ifndef _WINDOWS
+#ifndef _WINDOWS
+#ifdef _GTK
+   gdk_rgb_init ();
+   white = ColorNumber ("White");
+   black = ColorNumber ("Black");
+   pix = CreatePattern (0, 0, 0, black, white, 6);
+
+  /* Create a Graphic Context to write white on black. */
+  TtWhiteGC = gdk_gc_new (DefaultDrawable);
+  gdk_rgb_gc_set_background (TtWhiteGC, Black_Color);
+  gdk_rgb_gc_set_foreground (TtWhiteGC, White_Color);
+  gdk_gc_set_function (TtWhiteGC, GDK_COPY); 
+
+ 
+  /* Create a Graphic Context to write black on white. */
+  TtBlackGC = gdk_gc_new (DefaultDrawable);
+  gdk_rgb_gc_set_foreground (TtBlackGC, Black_Color);
+  gdk_rgb_gc_set_background (TtBlackGC, White_Color);
+  gdk_gc_set_function (TtBlackGC, GDK_COPY);
+  
+  /*
+   * Create a Graphic Context to write black on white,
+   * but with a specific 10101010 pattern.
+   */
+  TtLineGC = gdk_gc_new (DefaultDrawable);
+  gdk_rgb_gc_set_foreground (TtLineGC, Black_Color);
+  gdk_rgb_gc_set_background (TtLineGC, White_Color);
+  gdk_gc_set_function (TtLineGC, GDK_COPY);
+  gdk_gc_set_tile (TtLineGC, pix);
+
+  /* Another Graphic Context to write black on white, for dialogs. */
+  TtDialogueGC = gdk_gc_new (DefaultDrawable);
+  gdk_rgb_gc_set_foreground (TtDialogueGC, Black_Color);
+  gdk_rgb_gc_set_background (TtDialogueGC, White_Color);
+  gdk_gc_set_function (TtDialogueGC, GDK_COPY);
+
+  /*
+    * A Graphic Context to show selected objects. On X-Windows,
+    * the colormap indexes are XORed to show the object without
+    * destroying the colors : XOR.XOR = I ...
+    */
+  TtInvertGC = gdk_gc_new (DefaultDrawable);
+  if (TtWDepth > 1)
+    gdk_rgb_gc_set_foreground (TtInvertGC, Black_Color);
+  else
+    gdk_rgb_gc_set_foreground (TtInvertGC, Select_Color);
+  gdk_rgb_gc_set_background (TtInvertGC, White_Color);
+  gdk_gc_set_function (TtInvertGC, GDK_INVERT);
+
+  /*
+   * A Graphic Context for trame objects.
+   */
+  TtGreyGC = gdk_gc_new (DefaultDrawable);
+  gdk_rgb_gc_set_foreground (TtGreyGC, Black_Color);
+  gdk_rgb_gc_set_background (TtGreyGC, White_Color);
+  gdk_gc_set_function (TtGreyGC, GDK_COPY);
+  gdk_gc_set_fill (TtGreyGC, GDK_TILED);
+
+  gdk_pixmap_unref (pix);
+#else /* _GTK */
    valuemask = GCForeground | GCBackground | GCFunction;
    white = ColorNumber ("White");
    black = ColorNumber ("Black");
+   pix = CreatePattern (0, 0, 0, black, white, 6);
 
    GCmodel.function = GXcopy;
-   pix = CreatePattern (0, 0, 0, black, white, 6);	/* !!!! */
    GCmodel.foreground = White_Color;
    GCmodel.background = Black_Color;
    TtWhiteGC = XCreateGC (TtDisplay, TtRootWindow, valuemask, &GCmodel);
-#  endif /* _WINDOWS */
-#  ifdef _WINDOWS
-   /*
-   TtWhiteGC.capabilities = THOT_GC_PEN | THOT_GC_FOREGROUND | THOT_GC_BACKGROUND;
-   TtWhiteGC.pen = GetStockObject (WHITE_PEN);
-   TtWhiteGC.background = Black_Color;
-   TtWhiteGC.foreground = White_Color;
-   */
-#  endif /* _WINDOWS */
 
    /* Create a Graphic Context to write black on white. */
-#  ifndef _WINDOWS
    GCmodel.foreground = Black_Color;
    GCmodel.background = White_Color;
    TtBlackGC = XCreateGC (TtDisplay, TtRootWindow, valuemask, &GCmodel);
-#  endif /* _WINDOWS */
-#  ifdef _WINDOWS
-   /*
-   TtBlackGC.capabilities = THOT_GC_PEN | THOT_GC_FOREGROUND | THOT_GC_BACKGROUND;
-   TtBlackGC.pen = GetStockObject (BLACK_PEN);
-   TtBlackGC.background = White_Color;
-   TtBlackGC.foreground = Black_Color;
-   */
-#  endif /* _WINDOWS */
 
    /*
     * Create a Graphic Context to write black on white,
     * but with a specific 10101010 pattern.
     */
-#  ifndef _WINDOWS
    GCmodel.foreground = Black_Color;
    GCmodel.background = White_Color;
    TtLineGC = XCreateGC (TtDisplay, TtRootWindow, valuemask, &GCmodel);
    XSetTile (TtDisplay, TtLineGC, pix);
-#  endif /* _WINDOWS */
-#  ifdef _WINDOWS
-   TtLineGC.capabilities = THOT_GC_FOREGROUND | THOT_GC_PEN;
-   /* THOT_GC_BACKGROUND | THOT_GC_BRUSH | */ 
-   /******************************************
-   TtLineGC.pen = GetStockObject (BLACK_PEN);
-   *******************************************/
-   /* TtLineGC.background = White_Color; */
-   /* TtLineGC.foreground = Black_Color; */
-   TtLineGC.foreground = 1;
-   /* !!!! WIN_LastBitmap created by pix = CreatePattern(...); */
-   /* TtLineGC.brush = CreatePatternBrush(WIN_LastBitmap); */
-#  endif /* _WINDOWS */
 
    /* Another Graphic Context to write black on white, for dialogs. */
-#  ifndef _WINDOWS
    TtDialogueGC = XCreateGC (TtDisplay, TtRootWindow, valuemask, &GCmodel);
-#  endif /* _WINDOWS */
-#  ifdef _WINDOWS
-   /*
-   TtDialogueGC.capabilities = THOT_GC_FOREGROUND | THOT_GC_BACKGROUND | THOT_GC_PEN;
-   TtDialogueGC.pen = GetStockObject (BLACK_PEN);
-   TtDialogueGC.background = White_Color;
-   TtDialogueGC.foreground = Black_Color;
-   */
-#  endif /* _WINDOWS */
 
    /*
     * A Graphic Context to show selected objects. On X-Windows,
     * the colormap indexes are XORed to show the object without
     * destroying the colors : XOR.XOR = I ...
     */
-#  ifndef _WINDOWS
    GCmodel.function = GXinvert;
    GCmodel.plane_mask = Select_Color;
    if (TtWDepth > 1)
@@ -495,45 +558,25 @@ static void InitGraphicContexts ()
       GCmodel.foreground = Select_Color;
    GCmodel.background = White_Color;
    TtInvertGC = XCreateGC (TtDisplay, TtRootWindow, valuemask | GCPlaneMask, &GCmodel);
-#  endif /* _WINDOWS */
-#  ifdef _WINDOWS
-   /*
-   TtDialogueGC.capabilities = THOT_GC_FOREGROUND | THOT_GC_BACKGROUND |
-      THOT_GC_FUNCTION;
-   TtDialogueGC.mode = R2_XORPEN;
-   if (TtWDepth > 1)
-      TtDialogueGC.foreground = Black_Color;
-   else
-      TtDialogueGC.foreground = Select_Color;
-   TtDialogueGC.background = White_Color;
-   */
-#  endif /* _WINDOWS */
 
    /*
     * A Graphic Context for trame objects.
     */
-#  ifndef _WINDOWS
    GCmodel.function = GXcopy;
    GCmodel.foreground = Black_Color;
    TtGreyGC = XCreateGC (TtDisplay, TtRootWindow, valuemask, &GCmodel);
    XSetFillStyle (TtDisplay, TtGreyGC, FillTiled);
    XFreePixmap (TtDisplay, pix);
-#  endif /* _WINDOWS */
-#  ifdef _WINDOWS
-   /*
-   TtGreyGC.capabilities = THOT_GC_FOREGROUND | THOT_GC_BACKGROUND |
-   THOT_GC_PEN |
-      THOT_GC_FUNCTION;
-   TtBlackGC.background = White_Color;
-   TtBlackGC.foreground = Black_Color;
-   TtBlackGC.mode = R2_XORPEN;
-   */
-   /* !!!! WIN_LastBitmap created by pix = CreatePattern(...); */
-   /* TtBlackGC.brush = CreatePatternBrush(WIN_LastBitmap); */
+#endif /* _GTK */
+
+#else /* _WINDOWS */
+   TtLineGC.capabilities = THOT_GC_FOREGROUND | THOT_GC_PEN;
+   TtLineGC.foreground = 1;
+
    if (WIN_LastBitmap && !DeleteObject (WIN_LastBitmap))
       WinErrorBox (WIN_Main_Wd);
    WIN_LastBitmap = 0;
-#  endif
+#endif /* _WINDOWS */
 }
 
 
@@ -550,37 +593,59 @@ int                 dy;
 
 #endif /* __STDC__ */
 {
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    WIN_GetDeviceContext (-1);
    TtWDepth = GetDeviceCaps (TtDisplay, PLANES);
    if (TtWDepth == 1)
-      TtWDepth = GetDeviceCaps (TtDisplay, BITSPIXEL);
-#  endif /* _WINDOWS */
+     TtWDepth = GetDeviceCaps (TtDisplay, BITSPIXEL);
 
-#  ifndef _WINDOWS
+   InitDocColors (name);
+   InitColors (name);
+   InitGraphicContexts ();
+   InitCurs ();
+   WIN_InitDialogueFonts (TtDisplay, name);
+
+   /* Initialization of Picture Drivers */
+   InitPictureHandlers (FALSE);
+   WIN_ReleaseDeviceContext ();
+#else /* _WINDOWS */
+#ifdef _GTK
+
+  int x, y, width, height, depth;
+
+  /* Declaration of a DefaultDrawable useful for the creation of Pixmap and the
+     initialization of GraphicContexts */
+  DefaultWindow = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_widget_realize (DefaultWindow);
+  DefaultDrawingarea = gtk_drawing_area_new();
+  gtk_widget_set_parent (DefaultDrawingarea,DefaultWindow); 
+  gtk_widget_realize (DefaultDrawingarea);
+  DefaultDrawable = DefaultDrawingarea->window;
+  gdk_window_get_geometry (DefaultDrawable,&x, &y, &width, &height, &depth);
+  TtWDepth = depth; 
+  TtCmap =  gdk_colormap_get_system ();
+
+   InitDocColors (name);
+   InitColors (name);
+   InitGraphicContexts ();
+   InitDialogueFonts (name);
+#else /* _GTK */
    XSetErrorHandler (XWindowError);
    XSetIOErrorHandler (XWindowFatalError);
    TtScreen = DefaultScreen (TtDisplay);
    TtWDepth = DefaultDepth (TtDisplay, TtScreen);
    TtRootWindow = RootWindow (TtDisplay, TtScreen);
    TtCmap = XDefaultColormap (TtDisplay, TtScreen);
-#  endif
 
    InitDocColors (name);
    InitColors (name);
    InitGraphicContexts ();
    InitCurs ();
-
-#  ifdef _WINDOWS 
-   WIN_InitDialogueFonts (TtDisplay, name);
-#  else /* !_WINDOWS */
    InitDialogueFonts (name);
-#  endif /* _WINDOWS */
 
    /* Initialization of Picture Drivers */
    InitPictureHandlers (FALSE);
-#  ifdef _WINDOWS
-   WIN_ReleaseDeviceContext ();
+#endif /* _GTK */
 #  endif /* _WINDOWS */
 }
 
@@ -589,21 +654,22 @@ int                 dy;
  ----------------------------------------------------------------------*/
 void InitDocContexts ()
 {
-   int                 i;
+  int                 i;
 
-   /* Initialize the memory allocator */
-   InitKernelMemory ();
-   /* Initialisation de la table des frames */
-   for (i = 0; i <= MAX_FRAME; i++) {
-       FrRef[i] = 0;
-#      ifdef _WINDOWS
-       FrMainRef[i] = 0;
-#      endif /* _WINDOWS */
-   }
-   PackBoxRoot = NULL;		/* Don't do englobing placement for current boxes */
-   DifferedPackBlocks = NULL;	/* Don't differ englobing placement for current boxes */
-   BoxCreating = FALSE;		/* no interractive creation yet */
-   InitializeOtherThings ();
+  /* Initialize the memory allocator */
+  InitKernelMemory ();
+  /* Initialisation de la table des frames */
+  for (i = 0; i <= MAX_FRAME; i++)
+    {
+      FrRef[i] = 0;
+#ifdef _WINDOWS
+      FrMainRef[i] = 0;
+#endif /* _WINDOWS */
+    }
+  PackBoxRoot = NULL;		/* Don't do englobing placement for current boxes */
+  DifferedPackBlocks = NULL;	/* Don't differ englobing placement for current boxes */
+  BoxCreating = FALSE;		/* no interractive creation yet */
+  InitializeOtherThings ();
 }
 
 #ifndef _WINDOWS
@@ -615,9 +681,9 @@ void                SelectionEvents (void *ev)
 #else  /* __STDC__ */
 void                SelectionEvents (ev)
 void               *ev;
-
 #endif /* __STDC__ */
 {
+#ifndef _GTK
    XSelectionRequestEvent *request;
    XSelectionEvent     notify;
    ThotWindow          w, wind;
@@ -772,6 +838,7 @@ void               *ev;
 		 }
 	       break;
 	 }
+#endif /* _GTK */
 }
 #endif /* _WINDOWS */
 

@@ -36,8 +36,8 @@
 #endif /* _WINDOW S*/
 
 static ThotColorStruct def_colrs[256];
-static int          allocation_index[256];
-static int          have_colors = 0;
+static int             allocation_index[256];
+static int             have_colors = 0;
 
 
 #ifdef _WINDOWS
@@ -107,7 +107,11 @@ ThotColorStruct  *colr;
 	  {
 	     for (i = 0; i < NumCells; i++)
 		def_colrs[i].pixel = i;
+#ifdef _GTK
+	     match =  gdk_colormap_alloc_colors (colormap, &def_colrs[0], NumCells, FALSE, TRUE, NULL); 
+#else /* _GTK */
 	     XQueryColors (dsp, colormap, def_colrs, NumCells);
+#endif /* _GTK */
 	     have_colors = 1;
 	  }
 #ifdef MORE_ACCURATE
@@ -185,12 +189,14 @@ int                 i;
    Pix_Color[i] = RGB (RGB_Table[i].red, RGB_Table[i].green, RGB_Table[i].blue);
 #  else  /* _WINDOWS */
    ThotColorStruct     col;
+
    if (Color_Table[i] != NULL)
      {
 	/* load the color */
 	col.red   = RGB_Table[i].red * 256;
 	col.green = RGB_Table[i].green * 256;
 	col.blue  = RGB_Table[i].blue * 256;
+
 	/* Find closest color */
 	FindOutColor (TtDisplay, TtCmap, &col);
 	Pix_Color[i] = col.pixel;
@@ -250,34 +256,39 @@ void         FreeDocColors ()
 #ifndef _WIN_PRINT
   int        i;
 
-  /* free standard colors */
 #ifdef _WINDOWS
-   /* for (i = 0; i < NColors; i++)
-     DeleteObject (Pix_Color[i]); */
-#else /* _WINDOWS */
-   XFreeColors (TtDisplay, TtCmap, Pix_Color, NColors, (unsigned long) 0);
-#endif /* _WINDOWS */
 
-   /* free extended colors */
-   for (i = 0; i < NbExtColors; i++)
-     if (ExtColor[i] != (ThotColor) 0)
-#ifdef _WINDOWS
-       /* DeleteObject (ExtColor[i]); */
+  /* free extended colors */
+  if (!TtIsTrueColor && TtCmap && !DeleteObject (TtCmap))
+    WinErrorBox (WIN_Main_Wd);
+  TtCmap = 0;
 #else /* _WINDOWS */
-       XFreeColors (TtDisplay, TtCmap, &ExtColor[i], 1, (unsigned long) 0);
-#endif /* _WINDOWS */
-#ifdef _WINDOWS
-   if (!TtIsTrueColor && TtCmap && !DeleteObject (TtCmap))
-     WinErrorBox (WIN_Main_Wd);
-   TtCmap = 0;
+#ifdef _GTK
+  /* free standard colors */
+  gdk_colors_free (TtCmap, &Pix_Color[0], NColors, (gulong)0 );
+
+  /* free extended colors */
+  for (i = 0; i < NbExtColors; i++)
+    if (ExtColor[i])
+      gdk_colors_free (TtCmap, &ExtColor[i], 1, (gulong)0);
+#else /* _GTK */
+  /* free standard colors */
+  XFreeColors (TtDisplay, TtCmap, Pix_Color, NColors, (unsigned long) 0);
+
+  /* free extended colors */
+  for (i = 0; i < NbExtColors; i++)
+    if (ExtColor[i])
+      XFreeColors (TtDisplay, TtCmap, &ExtColor[i], 1, (unsigned long) 0);
+#endif /* _GTK */
 #endif /* _WINDOWS */
 #endif /* _WIN_PRINT */
-   TtaFreeMemory (ExtRGB_Table);
-   TtaFreeMemory (ExtColor);
-   TtaFreeMemory (ExtCount_Table);
-   ExtRGB_Table = NULL;
-   ExtColor = NULL;
-   ExtCount_Table = NULL;
+
+  TtaFreeMemory (ExtRGB_Table);
+  TtaFreeMemory (ExtColor);
+  TtaFreeMemory (ExtCount_Table);
+  ExtRGB_Table = NULL;
+  ExtColor = NULL;
+  ExtCount_Table = NULL;
 }
 
 /*----------------------------------------------------------------------
@@ -298,6 +309,9 @@ STRING              name;
    char*               value;
    ThotBool            reducecolor;
    ThotBool            colormap_full;
+#ifdef _GTK
+   ThotColorStruct     gdkwhite, gdkblack;
+#endif /* _GTK */
 
    /* clean up everything with white */
    for (i = 2; i < NColors; i++)
@@ -318,8 +332,15 @@ STRING              name;
    Pix_Color[0] = RGB (255, 255, 255);
    Pix_Color[1] = RGB (0, 0, 0);
 #  else  /* _WINDOWS */
+#ifdef _GTK
+   gdk_color_white (TtCmap, &gdkwhite);  
+   gdk_color_black (TtCmap, &gdkblack);
+   Pix_Color[0] = gdkwhite.pixel;
+   Pix_Color[1] = gdkblack.pixel;
+#else /* _GTK */
    Pix_Color[0] = WhitePixel (TtDisplay, DefaultScreen (TtDisplay));
    Pix_Color[1] = BlackPixel (TtDisplay, DefaultScreen (TtDisplay));
+#endif /* _GTK */
 #  endif /* _WINDOWS */
 
    /* setup greyscale colors */
@@ -422,12 +443,27 @@ ThotColor ColorPixel (num)
 int                 num;
 #endif /* __STDC__ */
 {
+#ifdef _GTK 
+  unsigned short   red, green, blue;
+  ThotColor        color;
+
+  /* Return the value of a color in 3 octets */
+  TtaGiveThotRGB(num, &red, &green, &blue);
+  color = 0; 
+  color |= (red & 0xFF);
+  color <<= 8;
+  color |= (green & 0xFF);
+  color <<= 8;
+  color |= (blue & 0xFF);
+  return (color);
+#else /* _GTK */
    if (num < NColors && num >= 0)
-     return (Pix_Color[num]);
+    return (Pix_Color[num]);
   else if (num < NColors + NbExtColors && num >= 0)
     return (ExtColor[num - NColors]);
-   else
-     return ((ThotColor) 0);
+  else
+    return ((ThotColor) 0);
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -446,7 +482,11 @@ int              num;
       if (ExtCount_Table[num] == 1)
 	{
 #ifndef _WINDOWS
+#ifdef _GTK
+	  gdk_colors_free (TtCmap, &ExtColor[num], 1, (gulong)0);
+#else /* _GTK */
 	  XFreeColors (TtDisplay, TtCmap, &ExtColor[num], 1, (unsigned long) 0);
+#endif /* _GTK */
 #endif /* _WINDOWS */
 	  ExtColor[num] = (ThotColor) 0;
 	}
@@ -718,21 +758,19 @@ int                 motif;
    unsigned long       FgPixel;
    unsigned long       BgPixel;
    Pixmap              pixmap;
-
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    BITMAP              bitmap = {0, 0, 0, 1, 1, 0};
    HBITMAP             hBitmap;
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
-#ifdef bug649
-   if (TtWDepth == 1)
-     {
-	/* Black and White display */
-	FgPixel = ColorPixel (ColorNumber ("Black"));
-	BgPixel = ColorPixel (ColorNumber ("White"));
-     }
-   else
-#endif
+#ifdef _GTK
+   ThotColorStruct     gdkFgPixel;
+   ThotColorStruct     gdkBgPixel;
+
+   gdkFgPixel.pixel = gdk_rgb_xpixel_from_rgb (FgPixel);
+   gdkBgPixel.pixel = gdk_rgb_xpixel_from_rgb (BgPixel);
+#endif /* _GTK */
+
 #ifndef _WIN_PRINT
    if (active)
      {
@@ -978,6 +1016,130 @@ int                 motif;
    /* WIN_LastBitmap = hBitmap; */
    pixmap = hBitmap;
 #else /* _WINDOWS */
+#ifdef _GTK
+   switch (motif)
+	 {
+	    case 1:
+	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray8_bits, gray8_width,
+				  gray8_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+	       break;
+	    case 2:
+	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray0_bits, gray0_width,
+				  gray0_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+	       break;
+	    case 3:
+	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray1_bits, gray1_width,
+				  gray1_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+	       break;
+	    case 4:
+	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray2_bits, gray2_width,
+				  gray2_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+	       break;
+	    case 5:
+	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray3_bits, gray3_width,
+				  gray3_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+	       break;
+	    case 6:
+	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray4_bits, gray4_width,
+				  gray4_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+	       break;
+	    case 7:
+	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray5_bits, gray5_width,
+				  gray5_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+	       break;
+	    case 8:
+	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray6_bits, gray6_width,
+				  gray6_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+	       break;
+	    case 9:
+	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) gray7_bits, gray7_width,
+				  gray7_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+	       break;
+	    case 10:
+	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) horiz1_bits, horiz1_width,
+				 horiz1_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+	       break;
+	    case 11:
+	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) horiz2_bits, horiz2_width,
+				 horiz2_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+	       break;
+	    case 12:
+	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) horiz3_bits, horiz3_width,
+				 horiz3_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+	       break;
+	    case 13:
+	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) vert1_bits, vert1_width,
+				  vert1_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+	       break;
+	    case 14:
+	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) vert2_bits, vert2_width,
+				  vert2_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+	       break;
+	    case 15:
+	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) vert3_bits, vert3_width,
+				  vert3_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+	       break;
+	    case 16:
+	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) left1_bits, left1_width,
+				  left1_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+	       break;
+	    case 17:
+	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) left2_bits, left2_width,
+				  left2_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+	       break;
+	    case 18:
+	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) left3_bits, left3_width,
+				  left3_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+	       break;
+	    case 19:
+	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) right1_bits, right1_width,
+				 right1_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+	       break;
+	    case 20:
+	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) right2_bits, right2_width,
+				 right2_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+	       break;
+	    case 21:
+	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) right3_bits, right3_width,
+				 right3_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+	       break;
+	    case 22:
+	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) square1_bits, square1_width,
+				square1_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+	       break;
+	    case 23:
+	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) square2_bits, square2_width,
+				square2_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+	       break;
+	    case 24:
+	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) square3_bits, square3_width,
+				square3_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+	       break;
+	    case 25:
+	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) lozenge_bits, lozenge_width,
+				lozenge_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+	       break;
+	    case 26:
+	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) brick_bits, brick_width,
+				  brick_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+	       break;
+	    case 27:
+	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) tile_bits, tile_width,
+				   tile_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+	       break;
+	    case 28:
+	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) sea_bits, sea_width,
+				    sea_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+	       break;
+	    case 29:
+	       pixmap = gdk_pixmap_create_from_data (DefaultDrawable, (char *) basket_bits, basket_width,
+				 basket_height, TtWDepth, &gdkFgPixel, &gdkBgPixel);
+	       break;
+	    default:
+	       pixmap = None;
+	       break;
+	 }
+#else /* _GTK */
    switch (motif)
 	 {
 	    case 1:
@@ -1101,6 +1263,7 @@ int                 motif;
 	       break;
 	 }
    XFlush (TtDisplay);
+#endif /* _GTK */
 #endif /* _WINDOWS */
-   return ((unsigned long) pixmap);
+   return (pixmap);
 }

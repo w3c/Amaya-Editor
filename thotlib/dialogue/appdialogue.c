@@ -99,7 +99,7 @@ CallbackCTX;
 static PtrCallbackCTX firstCallbackAPI;
 static int          FreeMenuAction;
 static Pixmap       wind_pixmap;
-static  void *      LastProcedure;   
+static  void *      LastProcedure = NULL;   
 
 /* LISTES DES MENUS : chaque menu pointe sur une liste d'items.  */
 /* Chaque item contient le numero d'entree dans le fichier de    */
@@ -1466,7 +1466,8 @@ ThotBool   state;
 	    i++;
 	  if (i < MAX_BUTTON)
 	    {
-	      /* verifie que deux séparateurs ne se suivent pas et que la fonction appartient au profile choisi */
+	      /* Avoid to have two consecutive separators
+		 and test if the function is available in the current profile */
 	      if ((procedure == NULL && LastProcedure != NULL)  || (procedure != NULL &&  Prof_ShowButton(functionName)))
 		{
 		  LastProcedure = procedure;
@@ -1477,7 +1478,7 @@ ThotBool   state;
 		    gtk_toolbar_append_space (GTK_TOOLBAR (FrameTable[frame].Button[0]));
 		  else
 		    {
-		      /* insere l'icone du bouton */
+		      /* insert the icon */
 		      w = gtk_pixmap_new (picture, NULL);
 		      row = gtk_toolbar_append_item (GTK_TOOLBAR (FrameTable[frame].Button[0]), NULL, NULL ,"private", 
 						       w, GTK_SIGNAL_FUNC (APP_ButtonCallback), (gpointer)frame);
@@ -1537,7 +1538,7 @@ ThotBool   state;
 		  FrameTable[frame].EnabledButton[i] = state;
 		  index = i;
 #ifndef _GTK
-		  if (info != NULL)
+		  if (info != NULL && procedure != NULL)
 		    XcgLiteClueAddWidget(liteClue, w,  info, ustrlen(info), 0);
 #endif /* _GTK */
 #else  /* _WINDOWS */
@@ -1574,7 +1575,7 @@ ThotBool   state;
 			}
 		    }
 		  
-		  if (info != NULL)
+		  if (info != NULL && procedure != NULL)
 		    FrameTable[frame].TbStrings[i] = info;
 #endif /* _WINDOWS */
 		}
@@ -2426,15 +2427,16 @@ int                 doc;
 #else  /* _WINDOWS */
    ThotWidget          menu_bar;
    ThotWidget          w; /* menu button */
-#ifdef _GTK
+   ThotWidget          table1;
+   ThotWidget          drawing_area;
+   ThotWidget          drawing_frame;  
+   ThotWidget          hbox1, hbox2;
    ThotWidget          vbox1;
+#ifdef _GTK
    ThotWidget          vbox2;
    ThotWidget          vbox3;
-   ThotWidget          hbox1;
-   ThotWidget          hbox2;
    ThotWidget          menu_item;
    ThotWidget          logo_pixmap;
-   ThotWidget          table1;
    ThotWidget          table2;
    ThotWidget          table3;
    ThotWidget          table4;
@@ -2444,15 +2446,10 @@ int                 doc;
    ThotWidget          label1;
    ThotWidget          label2;
    ThotWidget          statusbar;
-   ThotWidget          drawing_area;
    ThotWidget          toolbar;
-   ThotWidget          drawing_frame;  
    GdkPixmap          *amaya_pixmap;
    GdkBitmap          *amaya_mask;
 #else /* _GTK */
-   ThotWidget          row1, row2, rowv;
-   ThotWidget          TheFrame;
-   ThotWidget          Wframe;
    ThotWidget          shell;
    Arg                 args[MAX_ARGS], argument[5];
    XmString            title_string;
@@ -2461,7 +2458,7 @@ int                 doc;
 #endif /* _GTK */
    Dimension           dx, dy;
 #endif /* _WINDOWS */
-   ThotWidget          Main_Wd = (ThotWidget) 0;
+   ThotWidget          Main_Wd = 0;
    ThotWidget          hscrl;
    ThotWidget          vscrl;
    SchemaMenu_Ctl     *SCHmenu;
@@ -2526,7 +2523,7 @@ int                 doc;
 	   haut = mmtopixel (haut, 0) + FrameTable[frame].FrTopMargin;
 	   
 #ifdef _WINDOWS
-	   /*** Build thedocument window ***/
+	   /*** Build the document window ***/
 	   if (X < 0)
 	     X = 92;
 	   else
@@ -2568,7 +2565,7 @@ int                 doc;
 	   }
 #else /* _WINDOWS */
 #ifdef _GTK
-	   /*** Build thedocument window ***/
+	   /*** Build the document window ***/
 	   Main_Wd = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	   gtk_window_set_title (GTK_WINDOW (Main_Wd), "Amaya");
 	   gtk_window_set_policy (GTK_WINDOW (Main_Wd), TRUE, TRUE, FALSE);
@@ -2589,7 +2586,7 @@ int                 doc;
 	     /* Creation de la fenetre icone associee */
 	     /*XtSetArg (args[n], XmNiconPixmap, wind_pixmap)*/;
 #else /* _GTK */
-	   /*** Build thedocument window ***/
+	   /*** Building the document window ***/
 	   if (large < MIN_LARG)
 	     dx = (Dimension) MIN_LARG;
 	   else
@@ -2618,7 +2615,7 @@ int                 doc;
 	   n++;
 	   if (wind_pixmap != 0)
 	     {
-	       /* Creation de la fenetre icone associee */
+	       /* Creation of the associated icon window */
 	       XtSetArg (args[n], XmNiconPixmap, wind_pixmap);
 	       n++;
 	     }
@@ -2699,10 +2696,9 @@ int                 doc;
 		   {
 		     if (menu_bar == 0)
 		       {
-			 /*** The toolbar ***/
+			 /*** The menu bar ***/
 #ifndef _WINDOWS
 #ifdef _GTK
-			 /*** La barre des menus ***/
 			 menu_bar = gtk_menu_bar_new ();
 			 gtk_widget_show (menu_bar);
 			 gtk_box_pack_start (GTK_BOX (vbox2), menu_bar, FALSE, TRUE, 0);
@@ -2715,7 +2711,6 @@ int                 doc;
 #endif /* !_WINDOWS */
 		       }
 		   
-		     /* construit le bouton de menu */
 #ifdef _WINDOWS
 		     w = CreateMenu ();
 #else  /* _WINDOWS */
@@ -2771,8 +2766,138 @@ int                 doc;
 
 #ifndef _WINDOWS
 #ifdef _GTK
+	   /* Building the top window */
+	   vbox3 = gtk_vbox_new (FALSE, 0);
+	   gtk_widget_show (vbox3);
+	   gtk_box_pack_start (GTK_BOX (vbox1), vbox3, FALSE, TRUE, 0);
+
+
+	   /* creation of the toolbar */
+	   toolbar = gtk_toolbar_new (GTK_ORIENTATION_HORIZONTAL, GTK_TOOLBAR_ICONS);
+	   gtk_widget_set_usize (GTK_WIDGET (toolbar),-1, 20);
+	   gtk_widget_show (toolbar);
+	   gtk_box_pack_start (GTK_BOX(vbox3), toolbar, FALSE, TRUE, 0);
+	 
+	   for (i=1; i<MAX_BUTTON ; i++)
+	     FrameTable[frame].Button[i] = NULL;
+	   FrameTable[frame].Button[0] = toolbar;
+
+	   /* The table which includes the logo, labels and text zones */
+	   hbox1 = gtk_hbox_new (FALSE, 0);
+	   gtk_widget_show (hbox1);
+	   gtk_box_pack_start (GTK_BOX (vbox1), hbox1, FALSE, TRUE, 0);
+  
+	   /* logo */
+	   amaya_pixmap = gdk_pixmap_create_from_xpm_d (DefaultWindow->window, &amaya_mask,
+						      &DefaultWindow->style->bg[GTK_STATE_NORMAL],
+						      amaya);
+	   logo_pixmap = gtk_pixmap_new (amaya_pixmap, amaya_mask);
+	   gdk_pixmap_unref (amaya_pixmap);
+	   gdk_bitmap_unref (amaya_mask);
+	   gtk_widget_show (logo_pixmap);
+	   gtk_box_pack_start (GTK_BOX (hbox1), logo_pixmap, FALSE, FALSE, 0);
+	   gtk_misc_set_alignment (GTK_MISC (logo_pixmap), 0.15, 0.5);
+	   
+	   /* Creation des  tables contenant les labels et zones de saisie d'URL */
+	   table1 = gtk_table_new (2, 2, FALSE);
+	   gtk_widget_show (table1);
+	   gtk_box_pack_start (GTK_BOX (hbox1), table1, TRUE, TRUE, 0);
+	   
+	   table2 = gtk_table_new (1, 1, FALSE);
+	   gtk_widget_show (table2);
+	   gtk_table_attach (GTK_TABLE (table1), table2, 0, 1, 0, 1,
+			     (GtkAttachOptions) GTK_FILL, (GtkAttachOptions) GTK_FILL, 0,0);
+
+	   label1 = gtk_label_new ("Adress");
+	   gtk_widget_show (label1);
+	   gtk_table_attach (GTK_TABLE (table2), label1, 0, 1, 0, 1,
+			     (GtkAttachOptions) GTK_EXPAND | GTK_FILL,
+			     (GtkAttachOptions)  GTK_EXPAND | GTK_FILL, 0,0);
+	   gtk_label_set_justify (GTK_LABEL (label1), GTK_JUSTIFY_LEFT);
+	   gtk_misc_set_padding (GTK_MISC (label1), 10, 5);
+
+	   table3 = gtk_table_new (1, 1, FALSE);
+	   gtk_widget_show (table3);
+	   gtk_table_attach (GTK_TABLE (table1), table3, 0, 1, 1, 2,
+			     (GtkAttachOptions) GTK_FILL, (GtkAttachOptions) GTK_FILL, 0,0);
+	   label2 = gtk_label_new ("Title ");
+	   gtk_widget_show (label2);
+	   gtk_table_attach (GTK_TABLE (table3), label2, 0, 1, 0, 1,
+			     (GtkAttachOptions) GTK_EXPAND | GTK_FILL,
+			     (GtkAttachOptions)  GTK_EXPAND | GTK_FILL, 0,0);
+	   gtk_label_set_justify (GTK_LABEL (label2), GTK_JUSTIFY_LEFT);
+	   gtk_misc_set_padding (GTK_MISC (label2), 10, 5);
+
+	   table4 = gtk_table_new (1, 1, FALSE);
+	   gtk_widget_show (table4);
+	   gtk_table_attach (GTK_TABLE (table1), table4, 1, 2, 0, 1,
+			     (GtkAttachOptions)GTK_EXPAND |GTK_FILL, 
+			     (GtkAttachOptions)GTK_EXPAND | GTK_FILL, 0,0);
+ 
+
+	   entry1 = gtk_entry_new ();
+	   gtk_widget_show (entry1);
+	   gtk_table_attach (GTK_TABLE (table4), entry1, 0, 1, 0, 1,
+		    (GtkAttachOptions) GTK_EXPAND | GTK_FILL,
+		    (GtkAttachOptions)  GTK_EXPAND | GTK_FILL, 0,0);
+
+	   table5 = gtk_table_new (1, 1, FALSE);
+	   gtk_widget_show (table5);
+	   gtk_table_attach (GTK_TABLE (table1), table5, 1, 2, 1, 2,
+			     (GtkAttachOptions)GTK_EXPAND |GTK_FILL, 
+			     (GtkAttachOptions)GTK_EXPAND | GTK_FILL, 0,0);
+
+	   entry2 = gtk_entry_new ();
+	   gtk_widget_show (entry2);
+	   gtk_table_attach (GTK_TABLE (table5), entry2, 0, 1, 0, 1,
+			     (GtkAttachOptions) GTK_EXPAND | GTK_FILL,
+			     (GtkAttachOptions)  GTK_EXPAND | GTK_FILL, 0,0);
+ 
+	   hbox2 = gtk_hbox_new (FALSE, 0);
+	   gtk_widget_show (hbox2);
+	   gtk_box_pack_start (GTK_BOX (vbox1), hbox2, TRUE, TRUE, 0);
+
+	   /*Creation d'une frame pour placer la drawing area */
+	   drawing_frame = gtk_frame_new (NULL);
+	   gtk_frame_set_shadow_type (GTK_FRAME (drawing_frame),GTK_SHADOW_IN);
+	   gtk_widget_show (drawing_frame);
+	   gtk_box_pack_start (GTK_BOX (hbox2), drawing_frame, TRUE, TRUE, 0);
+
+	   /* Creation de la drawing area */
+	   drawing_area = gtk_drawing_area_new ();
+	   gtk_drawing_area_size(GTK_DRAWING_AREA(drawing_area), dx, dy);
+	   gtk_container_add (GTK_CONTAINER (drawing_frame), drawing_area);
+	   gtk_widget_show(drawing_area);
+	   gtk_signal_connect (GTK_OBJECT (drawing_area), "expose_event",
+                           (GtkSignalFunc) ExposeEvent, (gpointer) frame);
+	   gtk_signal_connect (GTK_OBJECT(drawing_area),"configure_event",
+                           (GtkSignalFunc)FrameResized, (gpointer) frame);
+	   gtk_widget_set_events (drawing_area, GDK_EXPOSURE_MASK);
+
+	   /*** Creation of scrollbars ***/
+	   vscrl = gtk_vscrollbar_new (GTK_ADJUSTMENT (gtk_adjustment_new (0, 0, 0, 0, 0, 0)));
+	   gtk_widget_show (vscrl);
+	   gtk_box_pack_start (GTK_BOX (hbox2), vscrl, FALSE, TRUE, 0);
+	   /* gtk_signal_connect (GTK_OBJECT (vscrl), "value_changed",
+			       GTK_SIGNAL_FUNC (FrameVScrolled), &frame);*/
+	   hscrl = gtk_hscrollbar_new (GTK_ADJUSTMENT (gtk_adjustment_new (0, 0, 0, 0, 0, 0)));
+	   gtk_widget_show (hscrl);
+	   gtk_box_pack_start (GTK_BOX (vbox1), hscrl, FALSE, TRUE, 0);
+	   /* gtk_signal_connect (GTK_OBJECT (hscrl), "value_changed",
+			       GTK_SIGNAL_FUNC (FrameHScrolled), NULL);*/
+	   /* status bar */
+	   statusbar = gtk_statusbar_new ();
+	   gtk_widget_show (statusbar);
+	   gtk_box_pack_start (GTK_BOX (vbox1), statusbar, FALSE, TRUE, 0);
+
+	   gtk_widget_show (Main_Wd);
+	   
+	   FrameTable[frame].WdScrollH = hscrl;
+	   FrameTable[frame].WdScrollV = vscrl;
+	   FrameTable[frame].WdFrame =  drawing_area;
+	   FrRef[frame] = drawing_area->window;
 #else /* _GTK */
-	   /*** La barre de scroll horizontale ***/
+	   /*** Creation of scrollbars ***/
 	   n = 0;
 	   XtSetArg (args[n], XmNbackground, Scroll_Color);
 	   n++;
@@ -2790,8 +2915,6 @@ int                 doc;
 	   XtAddCallback (hscrl, XmNpageIncrementCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
 	   XtAddCallback (hscrl, XmNtoTopCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
 	   XtAddCallback (hscrl, XmNtoBottomCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
-
-	   /*** La barre de scroll verticale ***/
 	   n = 0;
 	   XtSetArg (args[n], XmNbackground, Scroll_Color);
 	   n++;
@@ -2810,7 +2933,7 @@ int                 doc;
 	   XtAddCallback (vscrl, XmNtoTopCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
 	   XtAddCallback (vscrl, XmNtoBottomCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
 
-	   /* Row vertical pour mettre le logo au dessous des boutons */
+	   /* Vertical row */
 	   n = 0;
 	   XtSetArg (args[n], XmNmarginWidth, 0);
 	   n++;
@@ -2824,12 +2947,10 @@ int                 doc;
 	   n++;
 	   XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM);
 	   n++;
-	   rowv = XmCreateRowColumn (Main_Wd, "", args, n);
-
-	   XtManageChild (rowv);
+	   table1 = XmCreateRowColumn (Main_Wd, "", args, n);
+	   XtManageChild (table1);
 	   
-	   Wframe = rowv;
-	   /* Row horizontal des boutons */
+	   /* Horizontal box for the button bar */
 	   n = 0;
 	   XtSetArg (args[n], XmNmarginWidth, 0);
 	   n++;
@@ -2843,13 +2964,13 @@ int                 doc;
 	   n++;
 	   XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM);
 	   n++;
-	   row1 = XmCreateRowColumn (rowv, "", args, n);
+	   hbox1 = XmCreateRowColumn (table1, "", args, n);
 	   
 	   for (i = 1; i < MAX_BUTTON; i++)
 	     FrameTable[frame].Button[i] = 0;
-	   FrameTable[frame].Button[0] = row1;
+	   FrameTable[frame].Button[0] = hbox1;
 
-	   /* Row horizontal pour mettre le logo a gauche des commandes */
+	   /* Horizontal row for logo and text zones */
 	   n = 0;
 	   XtSetArg (args[n], XmNmarginWidth, 5);
 	   n++;
@@ -2861,11 +2982,10 @@ int                 doc;
 	   n++;
 	   XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM);
 	   n++;
-	   row1 = XmCreateForm (rowv, "", args, n);
+	   hbox1 = XmCreateForm (table1, "", args, n);
+	   XtManageChild (hbox1);
 
-	   XtManageChild (row1);
-
-	   /* logo de l'application */
+	   /* logo */
 	   if (image != 0)
 	     {
 	       n = 0;
@@ -2879,12 +2999,11 @@ int                 doc;
 	       n++;
 	       XtSetArg (args[n], XmNtopAttachment, XmATTACH_FORM);
 	       n++;
-	       w = XmCreateLabel (row1, "Logo", args, n);
-
+	       w = XmCreateLabel (hbox1, "Logo", args, n);
 	       XtManageChild (w);
 	     }
 
-	   /*** Creation des zones texte  ***/
+	   /*** Creation of text zones  ***/
 	   n = 0;
 	   XtSetArg (args[n], XmNmarginWidth, 0);
 	   n++;
@@ -2914,12 +3033,12 @@ int                 doc;
 	       n++;
 	     }
 
-	   rowv = XmCreateForm (row1, "", args, n);
+	   vbox1 = XmCreateForm (hbox1, "", args, n);
 	   for (i = 1; i < MAX_TEXTZONE; i++)
 	     FrameTable[frame].Text_Zone[i] = 0;
-	   FrameTable[frame].Text_Zone[0] = rowv;
+	   FrameTable[frame].Text_Zone[0] = vbox1;
 
-	   /*** Creation de la zone d'affichage du contenu du document ***/
+	   /*** The document frame ***/
 	   n = 0;
 	   XtSetArg (args[n], XmNmarginWidth, 0);
 	   n++;
@@ -2932,8 +3051,8 @@ int                 doc;
 	   XtSetArg (args[n], XmNtraversalOn, TRUE);
 	   n++;
 
-	   TheFrame = w = XmCreateFrame (Main_Wd, "Frame", args, n);
-	   XtManageChild (w);
+	   drawing_frame = XmCreateFrame (Main_Wd, "Frame", args, n);
+	   XtManageChild (drawing_frame);
 
 	   n = 0;
 	   XtSetArg (args[n], XmNbackground, White_Color);
@@ -2948,10 +3067,10 @@ int                 doc;
 	   n++;
 	   XtSetArg (args[n], XmNkeyboardFocusPolicy, XmPOINTER);
 	   n++;
-	   w = XmCreateDrawingArea (w, "", args, n);
-	   XtManageChild (w);
+	   drawing_area = XmCreateDrawingArea (drawing_frame, "", args, n);
+	   XtManageChild (drawing_area);
 
-	   /* Row horizontal pour les messages */
+	   /* Horizontal row for buttom messages */
 	   n = 0;
 	   XtSetArg (args[n], XmNmarginWidth, 0);
 	   n++;
@@ -2963,8 +3082,8 @@ int                 doc;
 	   n++;
 	   XtSetArg (args[n], XmNkeyboardFocusPolicy, XmPOINTER);
 	   n++;
-	   row2 = XmCreateRowColumn (Main_Wd, "", args, n);
-	   XtManageChild (row2);
+	   hbox2 = XmCreateRowColumn (Main_Wd, "", args, n);
+	   XtManageChild (hbox2);
 	   n = 0;
 	   XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	   n++;
@@ -2980,11 +3099,11 @@ int                 doc;
 	   i = CharacterWidth (TEXT('M'), LargeFontDialogue) * 50;
 	   XtSetArg (args[n], XmNwidth, (Dimension) i);
 	   n++;
-	   FrameTable[frame].WdStatus = XmCreateLabel (row2, "Thot_MSG", args, n);
+	   FrameTable[frame].WdStatus = XmCreateLabel (hbox2, "Thot_MSG", args, n);
 	   XtManageChild (FrameTable[frame].WdStatus);
 	   XmStringFree (title_string);
 	   n = 0;
-	   XtSetArg (args[n], XmNmessageWindow, row2);
+	   XtSetArg (args[n], XmNmessageWindow, hbox2);
 	   n++;
 	   XtSetValues (Main_Wd, args, n);
 
@@ -2996,34 +3115,34 @@ int                 doc;
 	   XtSetValues (shell, args, n);
 	   XtPopup (shell, XtGrabNonexclusive);
 	   
-	   XmMainWindowSetAreas (Main_Wd, menu_bar, Wframe, hscrl, vscrl, TheFrame);
-	   XtAddCallback (w, XmNinputCallback, (XtCallbackProc) DrawingInput, (XtPointer) frame);
-	   XtAddCallback (w, XmNresizeCallback, (XtCallbackProc) FrameResized, (XtPointer) frame);
-	   FrRef[frame] = XtWindowOfObject (w);
+	   XmMainWindowSetAreas (Main_Wd, menu_bar, table1, hscrl, vscrl, drawing_frame);
+	   XtAddCallback (drawing_area, XmNinputCallback, (XtCallbackProc) DrawingInput, (XtPointer) frame);
+	   XtAddCallback (drawing_area, XmNresizeCallback, (XtCallbackProc) FrameResized, (XtPointer) frame);
+	   FrameTable[frame].WdScrollH = hscrl;
+	   FrameTable[frame].WdScrollV = vscrl;
+	   FrameTable[frame].WdFrame = drawing_area;
+	   FrRef[frame] = XtWindowOfObject (drawing_area);
 #endif /* _GTK */
 	   FrameTable[frame].FrWidth  = (int) dx;
 	   FrameTable[frame].FrHeight = (int) dy;
 #else  /* _WINDOWS */
-	   /*** La barre de scroll horizontale ***/
+	   /*** scrollbars ***/
 	   hscrl = CreateWindow (_ScrollbarCST_, NULL, WS_CHILD | WS_VISIBLE | SBS_HORZ,
 				 0, 0, 0, 0, Main_Wd, (HMENU) frame, hInstance, NULL);
-	   
 	   SetScrollRange (hscrl, SB_CTL, 0, 100, FALSE);
 	   SetScrollPos (hscrl, SB_CTL, 0, FALSE);
 
-	   /*** La barre de scroll verticale ***/
 	   vscrl = CreateWindow (_ScrollbarCST_, NULL, WS_CHILD | WS_VISIBLE | SBS_VERT,
 				 0, 0, 0, 0, Main_Wd, (HMENU) (frame + 1), hInstance, NULL);
-	   
 	   SetScrollRange (vscrl, SB_CTL, 0, 100, FALSE);
 	   SetScrollPos (vscrl, SB_CTL, 0, FALSE);
+
 	   FrameTable[frame].FrWidth  = (int) large;
 	   FrameTable[frame].FrHeight = (int) haut;
-#endif /* _WINDOWS */
-	   
 	   FrameTable[frame].WdScrollH = hscrl;
 	   FrameTable[frame].WdScrollV = vscrl;
 	   FrameTable[frame].WdFrame = (ThotMenu) w;
+#endif /* _WINDOWS */
 
 	   /* get registry default values for zoom and visibility */
 	   zoomStr = TtaGetEnvString ("ZOOM");
@@ -3052,10 +3171,11 @@ int                 doc;
        else
 	 ChangeFrameTitle (frame, name);
 
-       /* volume en caracteres */
+       /* Window volume in characters */
        *volume = GetCharsCapacity (FrameTable[frame].FrWidth * FrameTable[frame].FrHeight);
        FrameTable[frame].FrDoc = doc;
        FrameTable[frame].FrView = view;
+
 #ifdef _WINDOWS
        SetMenu (Main_Wd, menu_bar);
        ShowWindow (Main_Wd, SW_SHOWNORMAL);
@@ -3079,15 +3199,16 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
+#ifndef _GTK
    ThotWidget          w;
    int                 action;
    int                 ref, i;
    int                 item;
    Menu_Ctl           *ptrmenu;
    Item_Ctl           *ptr;
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
    int                 txtZoneIndex;
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
    if (ThotLocalActions[T_stopinsert] != NULL)
      (*ThotLocalActions[T_stopinsert]) ();
@@ -3171,6 +3292,7 @@ int                 frame;
 	ClearConcreteImage (frame);
 	ThotFreeFont (frame);	/* On libere les polices de caracteres utilisees */
      }
+#endif /* _GTK */		
 }
 
 
@@ -3349,6 +3471,7 @@ PtrDocument  pDoc;
 ThotBool     on;
 #endif /* __STDC__ */
 {
+#ifndef _GTK
 #ifndef _WINDOWS 
   CHAR_T                fontname[100];
   CHAR_T                text[20];
@@ -3415,6 +3538,7 @@ ThotBool     on;
 #endif /* _WINDOWS */
 	}
     }
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -3429,6 +3553,7 @@ PtrDocument  pDoc;
 ThotBool     on;
 #endif /* __STDC__ */
 {
+#ifndef _GTK
 #ifndef _WINDOWS 
   CHAR_T                fontname[100];
   CHAR_T                text[20];
@@ -3495,6 +3620,7 @@ ThotBool     on;
 #endif /* _WINDOWS */
 	}
     }
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -3509,6 +3635,7 @@ PtrDocument  pDoc;
 ThotBool     on;
 #endif /* __STDC__ */
 {
+#ifndef _GTK 
 #ifndef _WINDOWS 
   CHAR_T                fontname[100];
   CHAR_T                text[20];
@@ -3553,6 +3680,7 @@ ThotBool     on;
 	}
       frame++;
     }
+#endif /* _GTK */
 }
 
 /*----------------------------------------------------------------------
@@ -3569,6 +3697,7 @@ int                 menuID;
 
 #endif /* __STDC__ */
 {
+#ifndef _GTK
    ThotMenu            w;
    int                 menu;
    int                 frame;
@@ -3640,6 +3769,7 @@ int                 menuID;
 	     }
 	 }
      }
+#endif /* _GTK */
 }
 
 
@@ -3657,6 +3787,7 @@ int                 menuID;
 
 #endif /* __STDC__ */
 {
+#ifndef _GTK
    ThotMenu            w;
    int                 menu;
    int                 frame;
@@ -3718,6 +3849,7 @@ int                 menuID;
 	     }
 	 }
      }
+#endif /* _GTK */
 }
 
 

@@ -17,6 +17,7 @@
 #ifndef _DIALOG_H_
 #define _DIALOG_H_
 
+
 #ifndef _WINDOWS
 #include <X11/Intrinsic.h>
 #endif
@@ -33,6 +34,18 @@ enum DButtons
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
+#ifdef _GTK 
+#include <gtk/gtk.h> 
+/*-------------------------------------------------------------------------------
+  ExposeEvent reaffichee la page lorsqu'un :
+  evenement de type "expose_event" est emis.
+  Le parametre widget donne la reference de la drawing_area dans laquelle
+  la page doit etre redessinee.
+  Le parametre event donne des informations sur l'evenement.
+  Le parametre data contient le numero de la frame.
+--------------------------------------------------------------------------------*/
+extern gint ExposeEvent (ThotWidget widget, GdkEventExpose *event, gpointer data);
+#endif /* _GTK */
 
 
 /*----------------------------------------------------------------------
