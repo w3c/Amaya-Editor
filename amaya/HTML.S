@@ -855,5 +855,15 @@ EXCEPT
 	rowspan_:	RowSpan;
 	Object_Content: Hidden, NoCreate, NoCut;
 	Ghost_restruct:	Invisible;
+	onclick:	EventAttr;
+	ondblclick:	EventAttr;
+	onmousedown:	EventAttr;
+	onmouseup:	EventAttr;
+	onmouseover:	EventAttr;
+	onmousemove:	EventAttr;
+	onmouseout:	EventAttr;
+	onkeypress:	EventAttr;
+	onkeydown:	EventAttr;
+	onkeyup:	EventAttr;
 
 END

@@ -302,6 +302,7 @@
 #define TMSG_NO_LANGUAGE			     279
 #define TMSG_OVERLINE				     280
 #define TMSG_DOCUMENT_FORMAT			     281
-#define TMSG_LIB_MSG_MAX			     282
+#define TMSG_EVENTS				     282
+#define TMSG_LIB_MSG_MAX			     283
 
 #endif

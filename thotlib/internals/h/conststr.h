@@ -85,6 +85,7 @@
 #define ExcColSpan 321
 #define ExcRowSpan 322
 #define ExcShadow 323
+#define ExcEventAttr 324
 /* SpellCheck exception */
 #define ExcNoSpellCheck 400
 

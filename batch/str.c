@@ -1705,6 +1705,9 @@ SyntRuleNum         pr;
 	       case KWD_NoVResize:
 		  ExceptionNum (ExcNoVResize, True, False, False, wi);
 		  break;
+	       case KWD_EventAttr:
+		  ExceptionNum (ExcEventAttr, False, True, False, wi);
+		  break;
 	       case KWD_NewWidth:
 		  ExceptionNum (ExcNewWidth, False, True, True, wi);
 		  break;

@@ -13,8 +13,8 @@ THOT_EXPORT PtrElement	CreatedElement[500];	/* pointers to the created elements 
 
 /* data for the CHOICE menu */
 THOT_EXPORT boolean		NatureChoice;
-THOT_EXPORT int		ChoiceMenuTypeNum[LgMaxChoiceMenu];
-THOT_EXPORT PtrSSchema	ChoiceMenuSSchema[LgMaxChoiceMenu];
+THOT_EXPORT int		ChoiceMenuTypeNum[MAX_MENU];
+THOT_EXPORT PtrSSchema	ChoiceMenuSSchema[MAX_MENU];
 
 THOT_EXPORT int		ChosenTypeNum;    /* type chosen by the user in the CHOICE
 					  menu */

@@ -2365,11 +2365,13 @@ int                 frame;
    int                 xd, xf;
    int                 yd, yf;
    int                 i;
+   boolean             status;
 
    pLastBox = NULL;
    pSaveBox = pBox;
    pLine->LiRealLength += x;
    /* prepare le reaffichage de la ligne */
+   status = ReadyToDisplay;
    ReadyToDisplay = FALSE;
    /* Bornes de reaffichage a priori */
    pFrame = &ViewFrameTable[frame - 1];
@@ -2459,7 +2461,7 @@ int                 frame;
 	  XMove (pBox, NULL, x, frame);
      }
    DefClip (frame, xd, yd, xf, yf);
-   ReadyToDisplay = TRUE;
+   ReadyToDisplay = status;
 }
 
 
@@ -2483,10 +2485,12 @@ int                 spaceDelta;
    int                 spaceValue, remainder;
    PtrBox              pFirstBox, pBox;
    ViewSelection      *pViewSel;
+   boolean             status;
 
    remainder = pLine->LiNPixels - xDelta;
    spaceValue = 0;
    nSpaces = pLine->LiNSpaces;
+   status = ReadyToDisplay;
    ReadyToDisplay = FALSE;
 
    /* Faut-il changer la largeur des blancs ? */
@@ -2582,7 +2586,7 @@ int                 spaceDelta;
 	pBox = GetNextBox (pFirstBox->BxAbstractBox);
      }
    while (pFirstBox != pLine->LiLastBox && pFirstBox != pLine->LiLastPiece);
-   ReadyToDisplay = TRUE;
+   ReadyToDisplay = status;
 }
 
 

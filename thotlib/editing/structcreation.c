@@ -47,6 +47,29 @@
 #define THOT_EXPORT
 #include "creation_tv.h"
 
+typedef enum
+{
+   InsertWithin, InsertBefore, InsertAfter, ReferredElem, Separator
+}
+MenuItemAction;
+
+/* information about items of INSERT / PASTE / INCLUDE menus */
+/* action to be performed for each item */
+static MenuItemAction Action[MAX_MENU];
+
+/* action as seen by the user */
+static MenuItemAction UserAction[MAX_MENU];
+
+/* element concerned by the action to be performed */
+static PtrElement   ElemAction[MAX_MENU];
+
+/* type of element to be created for each menu item */
+static int          ElemTypeAction[MAX_MENU];
+
+/* structure schema of elements to be created */
+static PtrSSchema   SSchemaAction[MAX_MENU];
+static boolean      createPasteMenuOK;
+
 #include "absboxes_f.h"
 #include "abspictures_f.h"
 #include "appli_f.h"
@@ -1672,29 +1695,6 @@ PtrElement         *pSelEl;
 }
 #endif /* WIN_PRINT */
 
-typedef enum
-{
-   InsertWithin, InsertBefore, InsertAfter, ReferredElem, Separator
-}
-MenuItemAction;
-
-/* information about items of INSERT / PASTE / INCLUDE menus */
-/* action to be performed for each item */
-static MenuItemAction Action[LgMaxInsertMenu];
-
-/* action as seen by the user */
-static MenuItemAction UserAction[LgMaxInsertMenu];
-
-/* element concerned by the action to be performed */
-static PtrElement   ElemAction[LgMaxInsertMenu];
-
-/* type of element to be created for each menu item */
-static int          ElemTypeAction[LgMaxInsertMenu];
-
-/* structure schema of elements to be created */
-static PtrSSchema   SSchemaAction[LgMaxInsertMenu];
-static boolean      createPasteMenuOK;
-
 
 /*----------------------------------------------------------------------
    AddChoiceMenuItem ajoute le nom item comme nouvelle entree dans le	
@@ -1945,7 +1945,7 @@ PtrDocument         pDoc;
 				 /* cherche les unites definies dans le schema */
 				 for (i = 1; i <= pAncSS->SsNRules; i++)
 				    if (pAncSS->SsRule[i - 1].SrUnitElem)
-				       if (nItems < MAX_ENTRIES)
+				       if (nItems < MAX_MENU)
 					  if (!ExcludedType (pEl, i, pAncSS))
 					     /* met l'unite dans le menu */
 					    {
@@ -1977,7 +1977,7 @@ PtrDocument         pDoc;
 		  typeNum = 0;
 		  while (typeNum < pSRule->SrNChoices)
 		    {
-		       if (nItems < MAX_ENTRIES)
+		       if (nItems < MAX_MENU)
 			  if (!TypeHasException (ExcNoCreate, pSRule->SrChoice[typeNum], pSS))
 			     /* pas d'exception interdisant a l'utilisateur */
 			     /* de creer ce type d'element */
@@ -3218,7 +3218,7 @@ char               *menuBuf;
 
    /* si on ne peut pas mettre au moins 10 caracteres, on ne met pas */
    /* l'entree dans le menu */
-   if (*menuInd > MAX_TXT_LEN - 10 || *nItems >= LgMaxInsertMenu)
+   if (*menuInd > MAX_TXT_LEN - 10 || *nItems >= MAX_MENU)
       ret = FALSE;
    else
      {

@@ -490,8 +490,5 @@ typedef SearchContext *PtrSearchContext;
 
 /* List of the pointers used */
 typedef char    FontName[30];
-typedef char    ButtonLabel[10];
-typedef int     CatIndex[MAX_ENTRY];
-typedef char    CatalogText[MAX_TXT_LEN];
 
 #endif

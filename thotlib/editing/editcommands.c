@@ -3415,16 +3415,16 @@ int                 nbytes;
 
 #endif /* __STDC__ */
 {
-   int                 i, j;
-   int                 b, previousChars;
-   int                 frame, lg;
-   boolean             wasCRbefore;
    PtrTextBuffer       clipboard;
    PtrAbstractBox      pAb;
    PtrBox              pSelBox;
    PtrTextBuffer       pBuffer;
    PtrDocument         pDoc;
    PtrElement          pEl;
+   int                 i, j, ind;
+   int                 b, previousChars;
+   int                 frame, lg;
+   boolean             wasCRbefore;
 
    /* Juste pour recuperer le document selectionne */
    if (!GetCurrentSelection (&pDoc, &pEl, &pEl, &b, &b))
@@ -3445,7 +3445,8 @@ int                 nbytes;
 
    /* Calcule la position du debut de la selection courante */
    /* l'index dans le buffer, le decalage x ne sont pas utilises */
-   GiveInsertPoint (pAb, frame, &pSelBox, &pBuffer, &b, &b, &previousChars);
+   GiveInsertPoint (pAb, frame, &pSelBox, &pBuffer, &ind, &b, &previousChars);
+   /* initialise l'insertion */
    previousChars += pSelBox->BxIndChar + 1;
 
    wasCRbefore = FALSE;
@@ -3484,7 +3485,7 @@ int                 nbytes;
 		  /* Calcule la position du debut de la selection courante */
 		  SetInsert (&pAb, &frame, LtText, FALSE);
 		  /* l'index dans le buffer, le decalage x ne sont pas utilises */
-		  GiveInsertPoint (pAb, frame, &pSelBox, &pBuffer, &b, &b, &previousChars);
+		  GiveInsertPoint (pAb, frame, &pSelBox, &pBuffer, &ind, &b, &previousChars);
 		  previousChars += pSelBox->BxIndChar + 1;
 
 		  /* Vide le clipboard X */

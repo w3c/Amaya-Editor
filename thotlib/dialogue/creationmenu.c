@@ -18,7 +18,6 @@
 #include "dialog.h"
 #include "constmedia.h"
 #include"constmenu.h"
-#define MAX_ENTRIES 20
 #include "typemedia.h"
 
 #undef THOT_EXPORT

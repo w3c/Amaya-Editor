@@ -192,16 +192,8 @@
 /* Number of references reserved by Thot       				*/
 /* MAX_ITEM >= MAX_FRAME for X-Windows applications			*/
 /* MAX_ITEM >= MAX_FRAME+MAX_MENU for Windows applications   		*/
-#define MAX_MENU		30
+#define MAX_MENU		30 /* max number of entries and menus   */
 #define MAX_ITEM		40
 #define MAX_ThotMenu	((MAX_MENU + 1) * MAX_MENU * MAX_ITEM) + MAX_LocalMenu
-
-#define MAX_ENTRIES 20
-#define LgMaxMenu 20
-#define LgMaxChoiceMenu		20
-#define LgMaxInsertMenu		20
-#define LgMaxSurroundMenu	25
-#define LgMaxChangeTypeMenu	25
-#define LgMaxAttributeMenu	25
 
 #endif

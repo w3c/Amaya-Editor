@@ -102,6 +102,12 @@ static int          ChangeTypeMethod[MAX_ITEMS_CHANGE_TYPE];
 #include "structschema_f.h"
 #include "content_f.h"
 
+
+/* element types proposed in menu Surround */
+static int          typeNumSurround[MAX_MENU];	/* type */
+static PtrSSchema   pSSSurround[MAX_MENU];	/* schema */
+static int          NElSurround;	/* number of entries in the table */
+
 /*----------------------------------------------------------------------
    IsolatedPairedElem   verifie si l'element pEl est un element de 
    paire dont l'homologue ne serait pas dans la partie             
@@ -3025,11 +3031,6 @@ void                ImportAsciiFile ()
 }
 
 
-/* types des elements propose's dans le menu Surround */
-static int          typeNumSurround[LgMaxSurroundMenu];		/* numero de type */
-static PtrSSchema   pSSSurround[LgMaxSurroundMenu];	/* schema */
-static int          NElSurround;	/* nombre d'entrees dans la table */
-
 /*----------------------------------------------------------------------
    AddEntrySurround ajoute, dans la table des elements a mettre    
    dans le menu Surround, le type d'element (typeNum, pSS),  
@@ -3058,7 +3059,7 @@ int                 typeNum;
 	 i++;
    if (!found)
       /* ce type n'est pas deja dans la table */
-      if (NElSurround < LgMaxSurroundMenu - 1)
+      if (NElSurround < MAX_MENU - 1)
 	 /* la table n'est pas pleine */
 	{
 	   /* on met le type dans la table */
@@ -3093,8 +3094,8 @@ PtrDocument         pDoc;
 {
    Name                menuTitle;
    char                choiceMenuBuf[MAX_TXT_LEN];
-   int                 choiceTypeNum[LgMaxChoiceMenu];
-   PtrSSchema          choicePSSchema[LgMaxChoiceMenu];
+   int                 choiceTypeNum[MAX_MENU];
+   PtrSSchema          choicePSSchema[MAX_MENU];
    int                 i, NChoiceItems;
    SRule              *pSRule;
 
@@ -3188,8 +3189,8 @@ int                *NItems;
    PtrDocument         pDoc;
    PtrSSchema          pSS, pExtSS;
    SRule              *pSRule;
-   PtrSSchema          choicePSSchema[LgMaxChoiceMenu];
-   int                 choiceTypeNum[LgMaxChoiceMenu];
+   PtrSSchema          choicePSSchema[MAX_MENU];
+   int                 choiceTypeNum[MAX_MENU];
    int                 typeNum, i, NChoiceItems, firstChar, lastChar, menuInd,
                        len;
    Name                menuTitle, typeName;

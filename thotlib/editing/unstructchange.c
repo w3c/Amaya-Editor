@@ -1455,15 +1455,16 @@ boolean             before;
 
 #endif /* __STDC__ */
 {
-   PtrElement          pSibling, pNext, pPrev, pE, pElem, pParent, pS,
-                       pSel, pSuccessor, pLeaf;
+   PtrElement          pSibling, pNext, pPrev, pE, pElem, pParent, pS;
+   PtrElement          pSel, pSuccessor, pLeaf;
    PtrElement         *list;
    PtrDocument         pDoc;
    NotifyElement       notifyEl;
    NotifyOnValue       notifyVal;
+   Document            doc;
    int                 nSiblings;
-   int                 nbEl, i, j;
-   boolean             stop, ok;
+   int                 nbEl, j;
+   boolean             stop, ok, isRow;
 
    if (pEl == NULL)
       return;
@@ -1477,257 +1478,259 @@ boolean             before;
    pParent = pEl;
    do
      {
-	if (before)
-	   pSibling = PreviousNotPage (pParent);
-	else
-	   pSibling = NextSiblingNotPage (pParent);
-	if (pSibling == NULL)
-	  {
-	     pElem = pParent;
-	     pParent = pElem->ElParent;
-	  }
+       if (before)
+	 pSibling = PreviousNotPage (pParent);
+       else
+	 pSibling = NextSiblingNotPage (pParent);
+       if (pSibling == NULL)
+	 {
+	   pElem = pParent;
+	   pParent = pElem->ElParent;
+	 }
      }
    while (pParent != NULL && pSibling == NULL);
    if (pParent == NULL || pSibling == NULL)
-      return;
+     return;
    if (pSibling != NULL && pParent != pEl && pElem != NULL)
-      if (pSibling->ElTerminal)
-	 pSibling = NULL;
-      else
-	{
-	   pSibling = pSibling->ElFirstChild;
-	   if (pSibling != NULL)
-	     {
-		if (before)
-		   while (pSibling->ElNext != NULL)
-		      pSibling = pSibling->ElNext;
-		else
-		  {
-		     pE = pElem;
-		     pElem = pSibling;
-		     pSibling = pE;
-		  }
-		if (!AllowedSibling (pSibling, pDoc, pElem->ElTypeNumber, pElem->ElStructSchema,
-				     FALSE, FALSE, FALSE))
-		   pSibling = NULL;
-	     }
-	}
-   if (pSibling == NULL || pParent == pEl)
-     {
-	stop = FALSE;
-	pElem = pEl;
-	do
-	  {
+     if (pSibling->ElTerminal)
+       pSibling = NULL;
+     else
+       {
+	 pSibling = pSibling->ElFirstChild;
+	 if (pSibling != NULL)
+	   {
 	     if (before)
-		pSibling = PreviousNotPage (pElem);
-	     else
-		pSibling = NextSiblingNotPage (pElem);
-	     if (pSibling != NULL)
-		stop = TRUE;
+	       while (pSibling->ElNext != NULL)
+		 pSibling = pSibling->ElNext;
 	     else
 	       {
-		  pParent = pElem->ElParent;
-		  if (pParent == NULL)
-		    {
-		       stop = TRUE;
-		       pElem = NULL;
-		    }
-		  else if (TypeHasException (ExcParagraphBreak, pParent->ElTypeNumber,
-					     pParent->ElStructSchema))
-		     stop = TRUE;
-		  else
-		     pElem = pParent;
+		 pE = pElem;
+		 pElem = pSibling;
+		 pSibling = pE;
 	       }
-	  }
-	while (!stop);
-
-	if (pElem == NULL)
-	   return;
-	if (pSibling == NULL)
+	     if (!AllowedSibling (pSibling, pDoc, pElem->ElTypeNumber,
+				  pElem->ElStructSchema, FALSE, FALSE, FALSE))
+	       pSibling = NULL;
+	   }
+       }
+   if (pSibling == NULL || pParent == pEl)
+     {
+       stop = FALSE;
+       pElem = pEl;
+       do
+	 {
 	   if (before)
+	     pSibling = PreviousNotPage (pElem);
+	   else
+	     pSibling = NextSiblingNotPage (pElem);
+	   if (pSibling != NULL)
+	     stop = TRUE;
+	   else
 	     {
-		pLeaf = PreviousLeaf (pElem);
-	        pSibling = AscentChildOfParagraph (pLeaf);
+	       pParent = pElem->ElParent;
+	       if (pParent == NULL)
+		 {
+		   stop = TRUE;
+		   pElem = NULL;
+		 }
+	       else if (TypeHasException (ExcParagraphBreak, pParent->ElTypeNumber,
+					  pParent->ElStructSchema))
+		 stop = TRUE;
+	       else
+		 pElem = pParent;
+	     }
+	 }
+       while (!stop);
+
+       if (pElem == NULL)
+	 return;
+       if (pSibling == NULL)
+	 if (before)
+	   {
+	     pLeaf = PreviousLeaf (pElem);
+	     pSibling = AscentChildOfParagraph (pLeaf);
+	   }
+	 else
+	   {
+	     pSibling = pElem;
+	     pLeaf = NextLeaf (pSibling);
+	     pElem = AscentChildOfParagraph (pLeaf);
+	     if (ElemIsAnAncestor(pElem, pSibling))
+	       pElem = pLeaf;
+	   }
+       else
+	 {
+	   if (!pSibling->ElTerminal)
+	     if (before)
+	       pSibling = PreviousLeaf (pElem);
+	     else
+	       pSibling = NextLeaf (pElem);
+	   if (!pSibling->ElTerminal)
+	     {
+	       if (pSibling->ElFirstChild == NULL)
+		 {
+		   /* pSibling is empty. Delete it */
+		   SelectElement (pDoc, pSibling, TRUE, TRUE);
+		   CutCommand (FALSE);
+		 }
 	     }
 	   else
 	     {
-		pSibling = pElem;
-		pLeaf = NextLeaf (pSibling);
-		pElem = AscentChildOfParagraph (pLeaf);
-		if (ElemIsAnAncestor(pElem, pSibling))
-		   pElem = pLeaf;
-	     }
-	else
-	  {
-	     if (!pSibling->ElTerminal)
-		if (before)
-		   pSibling = PreviousLeaf (pElem);
-		else
-		   pSibling = NextLeaf (pElem);
-	     if (!pSibling->ElTerminal)
-	       {
-		  if (pSibling->ElFirstChild == NULL)
-		    {
-		       /* pSibling is empty. Delete it */
-		       SelectElement (pDoc, pSibling, TRUE, TRUE);
-		       CutCommand (FALSE);
-		    }
-	       }
-	     else
-	       {
-		  if (pSibling->ElLeafType == LtPairedElem)
-		     /* skip the paired element */
-		     DeleteNextChar (frame, pSibling, before);
-		  else if (pSibling->ElTypeNumber == CharString + 1)
-		     if (before)
-		       {
-			  /* set selection after the last character of the string */
-			  SelectPositionWithEvent (pDoc, pSibling,
-						   pSibling->ElTextLength + 1);
-			  /* simulate a backspace */
-			  InsertChar (frame, '\177', -1);
-		       }
+	       if (pSibling->ElLeafType == LtPairedElem)
+		 /* skip the paired element */
+		 DeleteNextChar (frame, pSibling, before);
+	       else if (pSibling->ElTypeNumber == CharString + 1)
+		 if (before)
+		   {
+		     /* set selection after the last character of the string */
+		     SelectPositionWithEvent (pDoc, pSibling,
+					      pSibling->ElTextLength + 1);
+		     /* simulate a backspace */
+		     InsertChar (frame, '\177', -1);
+		   }
+		 else
+		   {
+		     /* set selection before the first character of the string */
+		     if (pSibling->ElVolume == 0)
+		       SelectElement (pDoc, pSibling, FALSE, FALSE);
 		     else
-		       {
-			 /* set selection before the first character of the string */
-			 if (pSibling->ElVolume == 0)
-			   SelectElement (pDoc, pSibling, FALSE, FALSE);
-			 else
-			   SelectString (pDoc, pSibling, 1, 0);
-			  /* simulate a delete */
-			  TtcDeleteSelection (0, 0);
-		       }
-		  else /* if (pSibling->ElLeafType == LtPicture) */
-		    {
-			  /* set selection before the first character of the string */
-			  SelectElement (pDoc, pSibling, FALSE, FALSE);
-			  /* simulate a delete */
-			  TtcDeleteSelection (0, 0);
-		    }
-	       }
-	     /* done */
-	     pElem = NULL;
-	     pSibling = NULL;
-	  }
+		       SelectString (pDoc, pSibling, 1, 0);
+		     /* simulate a delete */
+		     TtcDeleteSelection (0, 0);
+		   }
+	       else /* if (pSibling->ElLeafType == LtPicture) */
+		 {
+		   /* set selection before the first character of the string */
+		   SelectElement (pDoc, pSibling, FALSE, FALSE);
+		   /* simulate a delete */
+		   TtcDeleteSelection (0, 0);
+		 }
+	     }
+	   /* done */
+	   pElem = NULL;
+	   pSibling = NULL;
+	 }
      }
 
-   if (pElem != NULL && pSibling != NULL)
-      if (AllowedSibling (pSibling, pDoc, pElem->ElTypeNumber, pElem->ElStructSchema, FALSE, FALSE, FALSE))
-	{
-	  /* annule d'abord la selection */
-	   TtaClearViewSelections ();
-	   pE = pElem;
-	   nbEl = 0;
-	   while (pE != NULL)
+   if (pElem != NULL && pSibling != NULL &&
+       AllowedSibling (pSibling, pDoc, pElem->ElTypeNumber, pElem->ElStructSchema, FALSE, FALSE, FALSE))
+     {
+       /* annule d'abord la selection */
+       TtaClearViewSelections ();
+       pE = pElem;
+       nbEl = 0;
+       while (pE != NULL)
+	 {
+	   nbEl++;
+	   pE = pE->ElNext;
+	 }
+       list = (PtrElement *) TtaGetMemory (nbEl * sizeof (PtrElement));
+       pE = pElem;
+       nbEl = 0;
+       while (pE != NULL)
+	 {
+	   /* enregistre les elements preexistants */
+	   list[nbEl++] = pE;
+	   pE = pE->ElNext;
+	 }
+       pParent = pElem->ElParent;
+       isRow = TypeHasException (ExcIsRow, pParent->ElTypeNumber, pParent->ElStructSchema);
+       j = 0;
+       doc = IdentDocument (pDoc);
+       while (pElem != NULL)
+	 {
+	   j++;
+	   if (j < nbEl)
+	     pNext = list[j];
+	   else
+	     pNext = NULL;
+	   /* envoie l'evenement ElemDelete.Pre a l'application pour */
+	   /* les elements preexistants */
+	   if (isRow || !SendEventSubTree (TteElemDelete, pDoc, pElem, TTE_STANDARD_DELETE_LAST_ITEM))
 	     {
-	       nbEl++;
-	       pE = pE->ElNext;
+	       /* detruit les paves de l'element qui va etre deplace' */
+	       DestroyAbsBoxes (pElem, pDoc, TRUE);
+	       AbstractImageUpdated (pDoc);
+	       if (!isRow)
+		 {
+		   /* prepare the event ElemDelete.Post */
+		   notifyEl.event = TteElemDelete;
+		   notifyEl.document = doc;
+		   notifyEl.element = (Element) (pElem->ElParent);
+		   notifyEl.elementType.ElTypeNum = pElem->ElTypeNumber;
+		   notifyEl.elementType.ElSSchema = (SSchema) (pElem->ElStructSchema);
+		   nSiblings = 0;
+		   pS = pElem;
+		   while (pS->ElPrevious != NULL)
+		     {
+		       nSiblings++;
+		       pS = pS->ElPrevious;
+		     }
+		   notifyEl.position = nSiblings;
+		 }
+	       pSuccessor = NextElement (pElem);
+	       /* retire l'element de l'arbre abstrait */
+	       RemoveElement (pElem);
+	       UpdateNumbers (pSuccessor, pElem, pDoc, TRUE);
+	       RedisplayCopies (pElem, pDoc, TRUE);
+	       if (!isRow)
+		 {
+		   /* send the event ElemDelete.Post to the application */
+		   CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
+		   /* send the event ElemPaste.Pre to the application */
+		   notifyVal.event = TteElemPaste;
+		   notifyVal.document = doc;
+		   notifyVal.element = (Element) (pSibling->ElParent);
+		   notifyVal.target = (Element) pElem;
+		   nSiblings = 1;
+		   pS = pSibling;
+		   while (pS->ElPrevious != NULL)
+		     {
+		       nSiblings++;
+		       pS = pS->ElPrevious;
+		     }
+		   notifyVal.value = nSiblings;
+		   ok = CallEventType ((NotifyEvent *) (&notifyVal), TRUE);
+		 }
+	       else
+		 ok = FALSE;
+	       if (ok)
+		 /* the application refuses the paste, free this element */
+		 DeleteElement (&pElem, pDoc);
+	       else
+		 {
+		   /* l'application accepte */
+		   /* insere l'element a sa nouvelle position */
+		   InsertElementAfter (pSibling, pElem);
+		   if (!isRow)
+		     NotifySubTree (TteElemPaste, pDoc, pElem, 0);
+		 }
 	     }
-	   list = (PtrElement *) TtaGetMemory (nbEl * sizeof (PtrElement));
-	   pE = pElem;
-	   nbEl = 0;
-	   while (pE != NULL)
-	     {
-	       /* enregistre les elements preexistants */
-	       list[nbEl++] = pE;
-	       pE = pE->ElNext;
-	     }
+	   if (pElem != NULL)
+	     pSibling = pElem;
+	   if (pSel == NULL)
+	     pSel = pElem;
+	   /* passe a l'element suivant */
+	   if (pNext == NULL)
+	     pElem = NULL;
+	   else if (AllowedSibling (pSibling, pDoc, pNext->ElTypeNumber,
+				    pNext->ElStructSchema, FALSE, FALSE, FALSE))
+	     pElem = pNext;
+	   else
+	     pElem = NULL;
+	 }
+       TtaFreeMemory (list);
 
-	   pParent = pElem->ElParent;
-	   i = 0;
-	   while (pElem != NULL)
+       /* detruit les elements qui ont ete vide's */
+       pPrev = NULL;
+       while (pParent != NULL && pParent->ElFirstChild == NULL)
+	 {
+	   pE = pParent;
+	   pParent = pE->ElParent;
+	   /* envoie l'evenement ElemDelete.Pre et demande a */
+	   /* l'application si elle est d'accord pour detruire l'elem. */
+	   if (!SendEventSubTree (TteElemDelete, pDoc, pE, TTE_STANDARD_DELETE_LAST_ITEM))
 	     {
-		pNext = pElem->ElNext;
-		/* envoie l'evenement ElemDelete.Pre a l'application pour */
-		/* les elements preexistants */
-		if (!SendEventSubTree (TteElemDelete, pDoc, pElem, TTE_STANDARD_DELETE_LAST_ITEM))
-		  {
-		     /* detruit les paves de l'element qui va etre deplace' */
-		     DestroyAbsBoxes (pElem, pDoc, TRUE);
-		     AbstractImageUpdated (pDoc);
-		     /* prepare l'evenement ElemDelete.Post */
-		     j = i;
-		     while (j < nbEl && list[j] != pElem)
-		       j++;
-		     if (j < nbEl)
-		       {
-			 notifyEl.event = TteElemDelete;
-			 notifyEl.document = (Document) IdentDocument (pDoc);
-			 notifyEl.element = (Element) (pElem->ElParent);
-			 notifyEl.elementType.ElTypeNum = pElem->ElTypeNumber;
-			 notifyEl.elementType.ElSSchema = (SSchema) (pElem->ElStructSchema);
-			 nSiblings = 0;
-			 pS = pElem;
-			 while (pS->ElPrevious != NULL)
-			   {
-			     nSiblings++;
-			     pS = pS->ElPrevious;
-			   }
-			 notifyEl.position = nSiblings;
-		       }
-		     pSuccessor = NextElement (pEl);
-		     /* retire l'element de l'arbre abstrait */
-		     RemoveElement (pElem);
-		     UpdateNumbers (pSuccessor, pElem, pDoc, TRUE);
-		     RedisplayCopies (pElem, pDoc, TRUE);
-		     if (j < nbEl)
-		       {
-			 /* envoie l'evenement ElemDelete.Post a l'application */
-			 CallEventType ((NotifyEvent *) (&notifyEl), FALSE);
-			 /* envoie un evenement ElemPaste.Pre a l'application */
-			 notifyVal.event = TteElemPaste;
-			 notifyVal.document = (Document) IdentDocument (pDoc);
-			 notifyVal.element = (Element) (pSibling->ElParent);
-			 notifyVal.target = (Element) pElem;
-			 nSiblings = 1;
-			 pS = pSibling;
-			 while (pS->ElPrevious != NULL)
-			   {
-			     nSiblings++;
-			     pS = pS->ElPrevious;
-			   }
-			 notifyVal.value = nSiblings;
-			 ok = CallEventType ((NotifyEvent *) (&notifyVal), TRUE);
-		       }
-		     else
-		       ok = FALSE;
-		     if (ok)
-		       /* l'application refuse, on libere l'element */
-		       DeleteElement (&pElem, pDoc);
-		     else
-		       {
-			 /* l'application accepte */
-			 /* insere l'element a sa nouvelle position */
-			 InsertElementAfter (pSibling, pElem);
-			 if (j < nbEl)
-			   NotifySubTree (TteElemPaste, pDoc, pElem, 0);
-		       }
-		     if (j < nbEl)
-		       i = j;
-		  }
-		pSibling = pElem;
-		if (pSel == NULL)
-		   pSel = pElem;
-		/* passe a l'element suivant */
-		if (pNext == NUL)
-		   pElem = NULL;
-		else if (AllowedSibling (pSibling, pDoc, pNext->ElTypeNumber,
-				pNext->ElStructSchema, FALSE, FALSE, FALSE))
-		   pElem = pNext;
-		else
-		   pElem = NULL;
-	     }
-	   TtaFreeMemory (list);
-	   /* detruit les elements qui ont ete vide's */
-	   pPrev = NULL;
-	   while (pParent != NULL && pParent->ElFirstChild == NULL)
-	     {
-		pE = pParent;
-		pParent = pE->ElParent;
-		/* envoie l'evenement ElemDelete.Pre et demande a */
-		/* l'application si elle est d'accord pour detruire l'elem. */
-		if (!SendEventSubTree (TteElemDelete, pDoc, pE, TTE_STANDARD_DELETE_LAST_ITEM))
-		  {
 		     /* cherche l'element qui precede l'element a detruire */
 		     pPrev = PreviousNotPage (pE);
 		     DestroyAbsBoxes (pE, pDoc, TRUE);
@@ -1735,7 +1738,7 @@ boolean             before;
 		     pNext = NextElement (pE);
 		     /* prepare l'evenement ElemDelete.Post */
 		     notifyEl.event = TteElemDelete;
-		     notifyEl.document = (Document) IdentDocument (pDoc);
+		     notifyEl.document = doc;
 		     notifyEl.element = (Element) pParent;
 		     notifyEl.elementType.ElTypeNum = pE->ElTypeNumber;
 		     notifyEl.elementType.ElSSchema = (SSchema) (pE->ElStructSchema);

@@ -847,7 +847,7 @@ NotifyElement      *event;
 {
   Document            originDocument, doc;
   Element             el, anchor, next, child, previous, nextchild, parent;
-  ElementType         elType, parentType;
+  ElementType         elType;
   AttributeType       attrType;
   Attribute           attr;
   SSchema             HTMLschema;
