@@ -93,7 +93,7 @@ char  *LINK_GetAnnotationIndexFile (char *source_url)
 	    DIR_SEP,  
 	    annot_main_index);
   local_source_url = TtaStrdup (source_url);
-  WWWToLocal (local_source_url);
+  WWWToLocal (local_source_url); /* @@ JK: remove this */
 
   if (TtaFileExist (annot_main_index_file))
     {

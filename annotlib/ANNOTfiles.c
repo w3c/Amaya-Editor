@@ -101,55 +101,79 @@ Document ANNOT_NewDocument (Document doc, AnnotMode mode)
 }
 
 /*-----------------------------------------------------------------------
+  GetMetaDataInAnnotList
+  If it exists, it returns the annotation object from the annot_list that
+  corresponds to the document_url. Otherwise, it returns NULL.
+  -----------------------------------------------------------------------*/
+static AnnotMeta *GetMetaDataInAnnotList (char *doc_url, List *annot_list)
+{
+  List *ptr;
+  AnnotMeta *annot = NULL;
+  char *annot_url;
+  char *tmp_doc_url = NULL;
+  char *body_url;
+
+  if (!IsW3Path (doc_url) && !IsFilePath (doc_url))
+    tmp_doc_url = LocalToWWW (doc_url);
+  else
+    tmp_doc_url = doc_url;
+
+  /* get a pointer to the annot list */
+  ptr = annot_list;
+  while (ptr)
+    {
+      annot = (AnnotMeta *) ptr->object;
+
+      if (annot->annot_url)
+	annot_url = annot->annot_url;
+      else
+	annot_url = NULL;
+
+      /* RRS: newly created local annotations have only a body URI */
+      if (annot->body_url)
+	body_url = annot->body_url;
+      else
+	body_url = NULL;
+
+      /* @@ maybe we could add calls to NormalizeFile here */
+      if ((annot_url && !strcasecmp (tmp_doc_url, annot_url))
+	  || (body_url && !strcasecmp (tmp_doc_url, body_url)))
+	break;
+      ptr = ptr->next;
+    }
+  
+  if (tmp_doc_url != doc_url)
+      TtaFreeMemory (tmp_doc_url);
+
+  if (ptr)
+    return annot;
+  else
+    return NULL;
+}
+
+/*-----------------------------------------------------------------------
   GetMetaData
   returns the annotation object that corresponds to the annotation
   doc_annot of document doc.
   -----------------------------------------------------------------------*/
 AnnotMeta *GetMetaData (Document doc, Document doc_annot)
 {
-  List *ptr;
   AnnotMeta *annot = NULL;
 
-  /* get a pointer to the annot list */
-  ptr = AnnotMetaData[doc].annotations;
-  while (ptr)
-    {
-      annot = (AnnotMeta *) ptr->object;
-      /* @@ maybe we could add calls to NormalizeFile here */
-      if ((annot->annot_url 
-	   && (!strcasecmp (DocumentURLs[doc_annot], annot->annot_url)
-	       || !strcasecmp (DocumentURLs[doc_annot], annot->annot_url + 7)))
-	  /* RRS: newly created local annotations have only a body URI */
-	  || (annot->body_url
-	      &&  (!strcasecmp (DocumentURLs[doc_annot], annot->body_url) 
-		   || !strcasecmp (DocumentURLs[doc_annot], annot->body_url + 7))))
-	break;
-      ptr = ptr->next;
-    }
-  
-  if (ptr)
+  /* search the annotation list */
+  annot = GetMetaDataInAnnotList (DocumentURLs[doc_annot], 
+				 AnnotMetaData[doc].annotations);
+
+  if (annot)
     return annot;
 
 #ifdef ANNOT_ON_ANNOT
   if (AnnotMetaData[doc].thread)
-    ptr = AnnotMetaData[doc].thread->annotations;
-  else
-    ptr = NULL;
-  while (ptr)
-    {
-      annot = (AnnotMeta *) ptr->object;
-      /* @@ maybe we could add calls to NormalizeFile here */
-      if ((annot->annot_url 
-	   && (!strcasecmp (DocumentURLs[doc_annot], annot->annot_url)
-	       || !strcasecmp (DocumentURLs[doc_annot], annot->annot_url + 7)))
-	  /* RRS: newly created local annotations have only a body URI */
-	  || (annot->body_url
-	      &&  (!strcasecmp (DocumentURLs[doc_annot], annot->body_url) 
-		   || !strcasecmp (DocumentURLs[doc_annot], annot->body_url + 7))))
-	break;
-      ptr = ptr->next;
-    }
-  if (ptr)
+    /* search the thread list associated to the annotation document */
+    annot = GetMetaDataInAnnotList (DocumentURLs[doc_annot], 
+				    AnnotMetaData[doc].thread->annotations);
+
+  if (annot)
     return annot;
 #endif /* ANNOT_ON_ANNOT */
 
@@ -331,10 +355,10 @@ void  ANNOT_InitDocumentMeta (Document doc, Document docAnnot, AnnotMeta *annot,
       annot->name = doc_anchor;
     }
 #endif
-  doc_anchor = TtaGetMemory (strlen (DocumentURLs[doc])
+  doc_anchor = TtaGetMemory (strlen (annot->source_url)
 			     + strlen (annot->name) 
 			     + 20);
-  sprintf (doc_anchor, "%s#%s", DocumentURLs[doc], annot->name);
+  sprintf (doc_anchor, "%s#%s", annot->source_url, annot->name);
   TtaSetAttributeText (attr, doc_anchor, el, docAnnot);
   TtaFreeMemory (doc_anchor);
   /* use the source_doc_title parameter as the value of the source
@@ -770,11 +794,7 @@ void ANNOT_UpdateThread (Document doc, AnnotMeta *annot)
     return;
 
   /* find the document where the thread is being shown */
-  if (AnnotMetaData[doc].thread)
-    thread_doc = AnnotThread_searchRoot (AnnotMetaData[doc].thread->rootOfThread);
-  else
-    thread_doc = 0;
-
+  thread_doc = AnnotThread_searchRoot (AnnotMetaData[doc].thread->rootOfThread);
   if (thread_doc == 0)
     return;
 

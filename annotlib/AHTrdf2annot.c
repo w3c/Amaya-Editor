@@ -168,19 +168,25 @@ static AnnotMeta* FindAnnot( List** listP, char* annot_url, ThotBool create )
 {
   AnnotMeta *annot = find_last_annot;
   int url_length;
+  char *ptr_annot_url;
+
+  if (!IsW3Path (annot_url))
+    ptr_annot_url = FixFileURL (annot_url);
+  else
+    ptr_annot_url = annot_url;
 
   /*  uri = HTLocalToWWW (file_name, "file:"); */
 
-  if (!find_last_annotURL || strcmp(find_last_annotURL, annot_url)) {
+  if (!find_last_annotURL || strcmp(find_last_annotURL, ptr_annot_url)) {
     /* search for annotation in list */
-    annot = AnnotList_searchAnnot (*listP, annot_url, AM_ANNOT_URL);
+    annot = AnnotList_searchAnnot (*listP, ptr_annot_url, AM_ANNOT_URL);
     if (!annot && create)
       {
 	annot = AnnotMeta_new ();
-	annot->annot_url = TtaStrdup (annot_url);
+	annot->annot_url = TtaStrdup (ptr_annot_url);
 	List_add (listP, (void*) annot);
       }
-    url_length = strlen(annot_url) + 1;
+    url_length = strlen(ptr_annot_url) + 1;
     if (find_last_length < url_length)
       {
 	if (find_last_annotURL)
@@ -189,9 +195,12 @@ static AnnotMeta* FindAnnot( List** listP, char* annot_url, ThotBool create )
 	find_last_length = 2*url_length;
 	find_last_annotURL = TtaGetMemory (find_last_length);
       }
-    strcpy(find_last_annotURL, annot_url);
+    strcpy(find_last_annotURL, ptr_annot_url);
     find_last_annot = annot;
   }
+
+  if (ptr_annot_url != annot_url)
+    TtaFreeMemory (ptr_annot_url);
 
   return annot;
 }
@@ -252,7 +261,16 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
       annot = FindAnnot (listP, subject, TRUE);
 
       if (contains(predicate, ANNOT_NS, ANNOT_ANNOTATES))
-          annot->source_url = TtaStrdup ((char *) object);
+	{
+	  if (!IsW3Path ((char *) object))
+	    {
+	      /* we normalize the URL to take into account
+		 the early / and \ problem */
+	      annot->source_url = FixFileURL ((char *) object);
+	    }
+	  else
+	    annot->source_url = TtaStrdup ((char *) object);
+	}
       else if (contains (predicate, DC_NS, DC_CREATOR))
 	{
 	  /* @@ RRS: hack, hack; we should _not_ be inferring URIs.
@@ -297,7 +315,16 @@ static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
       else if (contains (predicate, HTTP_NS, HTTP_CONTENT_LENGTH))
           annot->content_length = TtaStrdup ((char *) object);
       else if (contains (predicate, ANNOT_NS, ANNOT_BODY))
-          annot->body_url = TtaStrdup ((char *) object);
+	{
+	  if (!IsW3Path ((char *) object))
+	    {
+	      /* we normalize the URL to take into account
+		 the early / and \ problem */
+	      annot->body_url = FixFileURL ((char *) object);
+	    }
+	  else
+	    annot->body_url = TtaStrdup ((char *) object);
+	}
       else if (contains (predicate, HTTP_NS, HTTP_BODY))
           annot->body = TtaStrdup ((char *) object);
 #ifdef ANNOT_ON_ANNOT

@@ -220,16 +220,14 @@ List *CopyAnnotServers (char *server_list)
    Prepares a query URL using the algae text template. Any %u will be
    substituted with the url given in the parameter.
   -----------------------------------------------------------------------*/
-static void CopyAlgaeTemplateURL (char **dest, char *proto, char *url)
+static void CopyAlgaeTemplateURL (char **dest, char *url)
 {
   char *in;
   char *out;
   char *tmp;
-  int proto_len;
   int url_len;
   int i;
 
-  proto_len = (proto) ? strlen (proto) : 0;
   url_len = (url) ? strlen (url) : 0;
 
   /* allocate enough memory in the string */
@@ -246,7 +244,7 @@ static void CopyAlgaeTemplateURL (char **dest, char *proto, char *url)
       else
 	break;
     }
-  *dest = TtaGetMemory (i * (strlen (proto) + strlen (url))
+  *dest = TtaGetMemory (i * strlen (url)
 			+ strlen (annotAlgaeText)
 			+ 30);
   in = annotAlgaeText;
@@ -256,9 +254,9 @@ static void CopyAlgaeTemplateURL (char **dest, char *proto, char *url)
       if (*in == '%' && *(in + 1) == 'u')
 	{
 	  /* copy the proto and the URL */
-	  sprintf (out, "%s%s", proto, url);
+	  sprintf (out, "%s", url);
 	  /* and update the pointers */
-	  out = out + proto_len + url_len;
+	  out = out + url_len;
 	  in = in + 2;
 	}
       else
@@ -520,7 +518,7 @@ static void ANNOT_Load2 (Document doc, View view, AnnotLoadMode mode)
 {
   char *annotIndex;
   char *annotURL;
-  char *proto;
+  char *tmp_url;
   REMOTELOAD_context *ctx;
   int res;
   List *ptr;
@@ -586,24 +584,25 @@ static void ANNOT_Load2 (Document doc, View view, AnnotLoadMode mode)
 	  /* "compute" the url we're looking up in the annotation server */
 	  if (!IsW3Path (DocumentURLs[doc]) &&
 	      !IsFilePath (DocumentURLs[doc]))
-	    proto = "file://";
+	    tmp_url = LocalToWWW (DocumentURLs[doc]);
 	  else
-	    proto = "";
+	    tmp_url = DocumentURLs[doc];
 	  if (!annotCustomQuery || !annotAlgaeText || 
 	      annotAlgaeText[0] == EOS)
 	    {
-	      annotURL = TtaGetMemory (strlen (DocumentURLs[doc])
-				       + strlen (proto)
+	      annotURL = TtaGetMemory (strlen (tmp_url)
 				       + sizeof ("w3c_annotates=")
 				       + 50);
-	      sprintf (annotURL, "w3c_annotates=%s%s", proto, 
-		       DocumentURLs[doc]);
+	      sprintf (annotURL, "w3c_annotates=%s", tmp_url);
 	    }
 	  else
 	    /* substitute the %u for DocumentURLs[doc] and go for it! */
 	    /* @@ we have a potential mem bug here as I'm not computing
 	       the exact size */
-	    CopyAlgaeTemplateURL (&annotURL, proto, DocumentURLs[doc]);
+	    CopyAlgaeTemplateURL (&annotURL, tmp_url);
+
+	  if (tmp_url != DocumentURLs[doc])
+	    TtaFreeMemory (tmp_url);
 
 	  if (IsFilePath (annotURL))
 	    {

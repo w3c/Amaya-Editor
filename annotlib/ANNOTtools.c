@@ -1607,6 +1607,11 @@ void ANNOT_SetType (Document doc, RDFResourceP type)
 char * ANNOT_MakeFileURL (const char *path)
 {
   char *url;
+
+  url = LocalToWWW ((char *) path);
+
+  return (url);
+#if 0
   /* @@ add the file:// (why it wasn't there before? */
   url = TtaGetMemory (strlen (path)
 		      + sizeof ("file://")
@@ -1614,6 +1619,7 @@ char * ANNOT_MakeFileURL (const char *path)
   if (url)
     sprintf (url, "file://%s", path);
   return url;
+#endif
 }
 
  /*-----------------------------------------------------------------------
@@ -1682,12 +1688,51 @@ Element ANNOT_GetHTMLRoot (Document doc)
 void WWWToLocal (char *url)
 {
   char *tmp;
-  
+  char *tmp_url;
+  char target[10];
+
+  ThotBool free_tmp_url;
+
   if (!url || !IsFilePath (url))
     return;
 
-  tmp = HTWWWToLocal (url, "file:", NULL);
-  strcpy (url, tmp);
+  ExtractTarget (url, target);
+
+  /* Because of a previous problem, some of the local annotations were
+     stored with wrong URLs. That is, of type file: and with backslashes.
+     If this is the case, we try to convert them to slashes before invoking
+     the libwww function. Otherwise, the convertion will fail.
+  */
+
+  if (strchr (url, '\\'))
+    {
+      tmp_url = TtaStrdup (url);
+      free_tmp_url = TRUE;
+      tmp = tmp_url;
+      while (*tmp)
+	{
+	  if (*tmp == '\\')
+	    *tmp = '/';
+	  tmp++;
+	}
+    }
+  else
+    {
+      tmp_url = url;
+      free_tmp_url = FALSE;
+    }
+
+  tmp = HTWWWToLocal (tmp_url, "file://", NULL);
+  if (free_tmp_url)
+    TtaFreeMemory (tmp_url);
+
+   /* @@ JK: A patch for Windows */
+  if (tmp[0] == DIR_SEP && tmp[1] == DIR_SEP && tmp[3] ==':')
+    strcpy (url, tmp + 2);
+	  else
+    strcpy (url, tmp);
+  if (target[0])
+	  strcat (url, target);
   HT_FREE (tmp);
 }
 
@@ -1696,7 +1741,7 @@ void WWWToLocal (char *url)
   Converts a local URL into a file: one. Caller has to free the
   returned string.
   -----------------------------------------------------------------------*/
-char *LocalToWWW (char *url)
+char * LocalToWWW (char *url)
 {
   char *tmp;
   
@@ -1704,6 +1749,29 @@ char *LocalToWWW (char *url)
   if (!url || (url[0] != DIR_SEP && url[1] != ':'))
     return NULL;
 
-  tmp = HTLocalToWWW (url, "file:");
+  tmp = HTLocalToWWW (url, "file://");
   return (tmp);
 }
+
+/*-----------------------------------------------------------------------
+  FixFileURL
+  This function makes sure that all the local URLs have the same format.
+  -----------------------------------------------------------------------*/
+
+char *FixFileURL (char *url)
+{
+  char *tmp, *fixed_url;
+
+  tmp = TtaStrdup ((char *) url);
+  WWWToLocal (tmp);
+  fixed_url = LocalToWWW (tmp);
+  TtaFreeMemory (tmp);
+
+  return (fixed_url);
+}
+
+
+
+
+
+
