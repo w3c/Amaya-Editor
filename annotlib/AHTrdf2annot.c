@@ -87,16 +87,21 @@ static void ParseIdFragment (AnnotMeta *annot, char *buff)
     }
 }
 
-/*
- * Determine if a given string (input) contains the first substring 
- * (s1) followed by the second substring (s2).
- *
- * RETURN: TRUE if input = s1+s2 (+ is string concatenation); FALSE otherwise
- *
- *@param input source string
- *@param s1 first substring 
- *@param s2 second substring
- */
+/* ------------------------------------------------------------
+   contains
+
+   Determine if a given string (input) contains the first substring 
+   (s1) followed by the second substring (s2).
+  
+   Parameters:
+     input - source string
+     s1 - first substring 
+     s2 - second substring
+  
+   Returns: 
+     TRUE if input = s1+s2 (+ is string concatenation); FALSE otherwise
+  
+ ------------------------------------------------------------*/
 static ThotBool contains(char *input, const char *s1, const char * s2)
 {
   if (!strncmp(input, s1, strlen(s2)))
@@ -107,24 +112,28 @@ static ThotBool contains(char *input, const char *s1, const char * s2)
   return FALSE;
 }
 
-/*
- * This callback is invoked when a new RDF triple has been parsed.
- *
- * As the triples arrive, their predicate is checked and its
- * object is cached if it is a predicate that we care about.
- *@param rdfp the RDF parser
- *@param t an RDF triple
- *@param context user data - NOT used
- */
-static void triple_handler (HTRDF * rdfp, HTTriple * t, void * context)
+/* ------------------------------------------------------------
+   triple_handler
+
+   This callback is invoked when a new RDF triple has been parsed.
+  
+   As the triples arrive, their predicate is checked and its
+   object is cached if it is a predicate that we care about.
+  
+   Parameters:
+     rdfp - the RDF parser
+     triple - an RDF triple
+     context - user data; NOT used
+ ------------------------------------------------------------*/
+static void triple_handler (HTRDF * rdfp, HTTriple * triple, void * context)
 {
-  if (rdfp && t) 
+  if (rdfp && triple) 
     {
-      char * predicate = HTTriple_predicate(t);
+      char * predicate = HTTriple_predicate(triple);
 #ifdef _DEBUG
-      char * subject = HTTriple_subject(t);
+      char * subject = HTTriple_subject(triple);
 #endif
-      char * object = HTTriple_object(t);
+      char * object = HTTriple_object(triple);
 
 #ifdef _DEBUG
       fprintf (stdout, "PRD = %s\n", predicate);
@@ -175,15 +184,20 @@ static void triple_handler (HTRDF * rdfp, HTTriple * t, void * context)
 
 /********************** Public API entry point ********************/
 
-/* 
- * Parses a file of RDF.
- *
- * RETURN: a pointer to an annotation's list or NULL if an error
- * occurs during the parsing.
- */
+/* ------------------------------------------------------------
+   RDF_parseFile
+
+   Parses a file of RDF.
+  
+   Parameters:
+     file_name - the name of the file to parse
+     type - the annotation type (see AnnotFileType)
+
+   Returs: a pointer to an annotation's list or NULL if an error
+     occurs during the parsing.
+ ------------------------------------------------------------*/
 List *RDF_parseFile (char *file_name, AnnotFileType type)
 {
-  char *s;
   char *uri = file_name;
 
   annot_list = NULL;
@@ -205,9 +219,8 @@ List *RDF_parseFile (char *file_name, AnnotFileType type)
 
   annot->annot_url = strdup(uri);
 
-  if ((s = HTRDFParseFile(file_name, triple_handler) != NULL)) 
+  if (HTRDF_parseFile(file_name, triple_handler) != YES)
     {
-      fprintf(stderr, "%s\n", s);
       AnnotList_free (annot_list);
       annot_list = NULL;
       return NULL;
@@ -222,7 +235,11 @@ List *RDF_parseFile (char *file_name, AnnotFileType type)
 }
 
 #ifdef _DEBUG
-/* main function for unit testing */
+/* ------------------------------------------------------------
+   main 
+
+   function for unit testing 
+ ------------------------------------------------------------*/
 int main (int argc, char *argv[])
 {
   List *l;
