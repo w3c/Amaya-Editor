@@ -1698,7 +1698,10 @@ static void ValidateGeneralConf ()
 	  exit (1);
 	} 
       else
-	change++;
+	{
+	  TtaSetEnvString ("APP_TMPDIR", AppTmpDir, TRUE);
+	  change++;
+	}
     }
   if (change)
     SetDlgItemText (GeneralHwnd, IDC_TMPDIR, AppTmpDir);

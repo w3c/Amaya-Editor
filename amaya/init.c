@@ -4348,20 +4348,41 @@ NotifyEvent        *event;
 
    s = TtaGetEnvString ("APP_TMPDIR");
    if (!CheckMakeDirectory (s, TRUE))
-     /* @@ add an error message */
-     exit (1);
-   
+     /* try to use the default value */
+     {
+       s = TtaGetDefEnvString ("APP_TMPDIR");
+       if (CheckMakeDirectory (s, TRUE))
+	 /* make it the current user one */
+	 TtaSetEnvString ("APP_TMPDIR", s, TRUE);
+       else
+	 /* didn't work, so we exit */
+	 {
+	   usprintf (TempFileDirectory, 
+		     "InitAmaya: Couldnt' create directory %s", s);
+#ifdef _WINDOWS
+	   MessageBox (NULL, TempFileDirectory, "Error", MB_OK);
+#else
+	   fprintf (stderr, TempFileDirectory);
+#endif /* _WINDOWS */
+	   exit (1);
+	 }
+     }
+
    /* add the temporary directory in document path */
    ustrcpy (TempFileDirectory, s);
    TtaAppendDocumentPath (TempFileDirectory);
-   
+ 
 #ifdef _WINDOWS
    s = TtaGetEnvString ("APP_HOME");
    if (!CheckMakeDirectory (s, TRUE))
-     /* @@ add an error message */
-     exit (1);
+     /* didn't work, so we exit */
+     {
+       usprintf (TempFileDirectory, 
+		 "InitAmaya: Couldnt' create directory %s", s);
+       MessageBox (NULL, TempFileDirectory, "Error", MB_OK);
+       exit (1);
+     }
 #endif /* _WINDOWS */
-
    /*
     * Build the User preferences file name:
     * $HOME/.amaya/amaya.css on Unix platforms
