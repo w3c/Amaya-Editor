@@ -1472,11 +1472,8 @@ void            GoToHome (Document doc, View view)
    logFile is TRUE if the new view is created to display a log file
    sourceOfDoc is not zero when we're opening the source view of a document.
   ----------------------------------------------------------------------*/
-Document     InitDocView (Document doc,
-			  char *docname,
-			  DocumentType docType,
-			  Document sourceOfDoc,
-			  ThotBool readOnly)
+Document InitDocView (Document doc, char *docname, DocumentType docType,
+		      Document sourceOfDoc, ThotBool readOnly)
 {
   View          mainView, structView, altView, linksView, tocView;
   Document      old_doc;
@@ -3596,18 +3593,18 @@ static void	UpdateSaveAsButtons ()
    SetFileSuffix
    Set the suffix of the file name used for saving a document
   ----------------------------------------------------------------------*/
-static void	SetFileSuffix ()
+static void SetFileSuffix ()
 {
-  char  	       suffix[6];
-  char *         filename;
-  int		       i, len;
+  char  	suffix[6];
+  char         *filename;
+  int		i, len;
 
   if (SavingDocument != 0 && SaveName[0] != EOS)
     {
      if (SaveAsHTML)
         strcpy (suffix, "html");
      else if (SaveAsXML)
-        strcpy (suffix, "xml");
+        strcpy (suffix, "html");
      else if (SaveAsText)
         strcpy (suffix, "txt");
      else

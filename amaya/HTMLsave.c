@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2000
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -95,15 +95,8 @@ static CHAR_T *HTMLDocTypes_2[] =
 /*-----------------------------------------------------------------------
  SaveAsDlgProc
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
-LRESULT CALLBACK GetSaveDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-#else  /* !__STDC__ */
-LRESULT CALLBACK GetSaveDlgProc (hwnDlg, msg, wParam, lParam)
-HWND   hwndParent; 
-UINT   msg; 
-WPARAM wParam; 
-LPARAM lParam;
-#endif /* __STDC__ */
+LRESULT CALLBACK GetSaveDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
+				 LPARAM lParam)
 {
   static CHAR_T txt [500];
   
@@ -157,13 +150,7 @@ LPARAM lParam;
 /*-----------------------------------------------------------------------
  CreateGetSaveDlgWindow
  ------------------------------------------------------------------------*/
-#ifdef __STDC__
 void CreateGetSaveDlgWindow (HWND parent, STRING path_name)
-#else  /* !__STDC__ */
-void CreateGetSaveDlgWindow (parent, path_name)
-HWND  parent;
-STRING path_name;
-#endif /* __STDC__ */
 {  
   usprintf (currentPathName, path_name);
   DialogBox (hInstance, MAKEINTRESOURCE (GETSAVEDIALOG), parent,
@@ -174,13 +161,7 @@ STRING path_name;
 /*----------------------------------------------------------------------
   CheckGenerator                                                 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            CheckGenerator (NotifyElement * event)
-#else  /* __STDC__ */
-ThotBool            CheckGenerator (event)
-NotifyElement      *event;
-
-#endif /* __STDC__ */
 {
   AttributeType      attrType;
   Attribute          attr;
@@ -229,13 +210,7 @@ NotifyElement      *event;
 /*----------------------------------------------------------------------
   GenerateQuoteBefore                                                  
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            GenerateQuoteBefore (NotifyAttribute * event)
-#else  /* __STDC__ */
-ThotBool            GenerateQuoteBefore (event)
-NotifyAttribute    *event;
-
-#endif /* __STDC__ */
 {
   STRING            ptr;
   int               length;
@@ -270,13 +245,7 @@ NotifyAttribute    *event;
 /*----------------------------------------------------------------------
   GenerateQuoteAfter                                                 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                GenerateQuoteAfter (NotifyAttribute * event)
-#else  /* __STDC__ */
-void                GenerateQuoteAfter (event)
-NotifyAttribute    *event;
-
-#endif /* __STDC__ */
 {
   /* remove quotes before and after the text */
   QuotedText[ustrlen (QuotedText) - 1] = EOS;
@@ -292,13 +261,7 @@ NotifyAttribute    *event;
   the value of the NAME attribute is a valid XML ID and if not,
   generate an ID attribute with a valid value.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool            CheckValidID (NotifyAttribute * event)
-#else  /* __STDC__ */
-ThotBool            CheckValidID (event)
-NotifyAttribute    *event;
-
-#endif /* __STDC__ */
 {
   AttributeType     attrType;
   Attribute         attr;
@@ -351,13 +314,7 @@ NotifyAttribute    *event;
 /*----------------------------------------------------------------------
    SetRelativeURLs: try to make relative URLs within an HTML document.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SetRelativeURLs (Document document, STRING newpath)
-#else
-void                SetRelativeURLs (document, newpath)
-Document            document;
-STRING              newpath;
-#endif
 {
   Element             el, root, content;
   ElementType         elType;
@@ -461,15 +418,7 @@ STRING              newpath;
   InitSaveForm
   Build and display the Save As dialog box and prepare for input.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         InitSaveForm (Document document, View view, STRING pathname)
-#else
-static void         InitSaveForm (document, view, pathname)
-Document            document;
-View                view;
-STRING              pathname;
-
-#endif
 {
 #ifndef _WINDOWS
    CHAR_T             buffer[3000];
@@ -564,16 +513,8 @@ STRING              pathname;
 /*----------------------------------------------------------------------
   InitSaveObjectForm
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                InitSaveObjectForm (Document document, View view, STRING object, STRING pathname)
-#else
-void                InitSaveObjectForm (document, view, object, pathname)
-Document            document;
-View                view;
-STRING              object;
-STRING              pathname;
-
-#endif
+void InitSaveObjectForm (Document document, View view, STRING object,
+			 STRING pathname)
 {
 #ifndef _WINDOWS
    CHAR_T                tempdir[MAX_LENGTH];
@@ -606,11 +547,7 @@ STRING              pathname;
 /*----------------------------------------------------------------------
   DeleteTempObjectFile
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                DeleteTempObjectFile (void)
-#else
-void                DeleteTempObjectFile ()
-#endif
 {
    TtaFileUnlink (tempSavedObject);
 }
@@ -619,11 +556,7 @@ void                DeleteTempObjectFile ()
 /*----------------------------------------------------------------------
   DoSaveObjectAs
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                DoSaveObjectAs (void)
-#else
-void                DoSaveObjectAs ()
-#endif
 {
    CHAR_T           tempfile[MAX_LENGTH];
    CHAR_T           msg[MAX_LENGTH];
@@ -682,14 +615,7 @@ void                DoSaveObjectAs ()
    SaveDocumentAs                                              
    Entry point called when the user selects the SaveAs function
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SaveDocumentAs (Document doc, View view)
-#else
-void                SaveDocumentAs (doc, view)
-Document            doc;
-View                view;
-
-#endif
 {
    CHAR_T           tempname[MAX_LENGTH];
    int              i;
@@ -741,8 +667,7 @@ View                view;
 	   if (!TextFormat &&
 	       DocumentTypes[SavingDocument] != docMath &&
 	       DocumentTypes[SavingDocument] != docSVG &&
-	       !IsHTMLName (SaveName) &&
-	       !IsXMLName (SaveName))
+	       !IsHTMLName (SaveName) && !IsXMLName (SaveName))
 	     {
 	       ustrcat (SaveName, TEXT(".html"));
 	       ustrcpy (tempname, SavePath);
@@ -778,13 +703,7 @@ View                view;
    set the HtmlDTD attribute to Frameset if the document uses Frames;
    create a META element to specify Content-Type and Charset.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void         SetNamespacesAndDTD (Document doc)
-#else
-void         SetNamespacesAndDTD (doc)
-Document     doc;
-
-#endif
 {
    Element		root, el, head, meta, lastmeta, lastel;
    ElementType		elType;
@@ -1044,16 +963,8 @@ Document     doc;
 /*----------------------------------------------------------------------
    RestartParser
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void       RestartParser (Document doc, CHAR_T *localFile,
-				 CHAR_T *tempdir, CHAR_T *documentname)
-#else
-static void       RestartParser (doc, localFile, tempdir, documentname)
-Document          doc;
-CHAR_T           *localFile;
-CHAR_T           *tempdir;
-CHAR_T           *documentname;
-#endif
+static void RestartParser (Document doc, CHAR_T *localFile, CHAR_T *tempdir,
+			   CHAR_T *documentname)
 {
   CHARSET             charset;
   CHAR_T              htmlErrFile [80];
@@ -1119,13 +1030,7 @@ CHAR_T           *documentname;
    If doc is a HTML document and the source view is open, redisplay the
    source.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void       RedisplaySourceFile (Document doc)
-#else
-static void       RedisplaySourceFile (doc)
-Document          doc;
-
-#endif
 {
   CHAR_T             *localFile;
   CHAR_T	      documentname[MAX_LENGTH];
@@ -1158,14 +1063,8 @@ Document          doc;
    SaveDocumentLocally save the document in a local file.
    Return TRUE if the document has been saved
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool   SaveDocumentLocally (Document doc, STRING directoryName, STRING documentName)
-#else
-static ThotBool   SaveDocumentLocally (doc, directoryName, documentName)
-Document          doc;
-STRING            directoryName;
-STRING            documentName;
-#endif
+static ThotBool SaveDocumentLocally (Document doc, STRING directoryName,
+				     STRING documentName)
 {
   STRING              ptr;
   CHAR_T              tempname[MAX_LENGTH];
@@ -1234,15 +1133,8 @@ STRING            documentName;
   It ask the user whether an extra name suffix should be added or
   abort.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool    AddNoName (Document document, View view, CHAR_T* url, ThotBool *ok)
-#else
-static ThotBool    AddNoName (document, view, url, ok)
-Document           document;
-View               view;
-CHAR_T*            url;
-ThotBool          *ok;
-#endif
+static ThotBool AddNoName (Document document, View view, CHAR_T *url,
+			   ThotBool *ok)
 {
    CHAR_T            msg[MAX_LENGTH];
    CHAR_T            documentname[MAX_LENGTH];
@@ -1286,16 +1178,9 @@ ThotBool          *ok;
   check for errors using a following GET.
   Return 0 if the file has been saved
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int   SafeSaveFileThroughNet (Document doc, STRING localfile, STRING remotefile, PicType filetype, ThotBool use_preconditions)
-#else
-static int   SafeSaveFileThroughNet (doc, localfile, remotefile, filetype, use_preconditions)
-Document     doc;
-STRING       localfile;
-STRING       remotefile;
-PicType      filetype;
-ThotBool     use_preconditions;
-#endif
+static int SafeSaveFileThroughNet (Document doc, STRING localfile,
+				   STRING remotefile, PicType filetype,
+				   ThotBool use_preconditions)
 {
   CHAR_T              msg[MAX_LENGTH];
   CHAR_T              tempfile[MAX_LENGTH]; /* File name used to refetch */
@@ -1373,19 +1258,9 @@ ThotBool     use_preconditions;
   Save a simple file to a remote network location.
   confirm = TRUE form SAVE_AS and FALSE from SAVE
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool     SaveObjectThroughNet (Document document, View view,
-					  STRING url, ThotBool confirm,
-					  ThotBool use_preconditions)
-#else
-static ThotBool     SaveObjectThroughNet (document, view, url, confirm,
-					  use_preconditions)
-Document            document;
-View                view;
-STRING              url;
-ThotBool            confirm;
-ThotBool            use_preconditions;
-#endif
+static ThotBool SaveObjectThroughNet (Document document, View view,
+				      STRING url, ThotBool confirm,
+				      ThotBool use_preconditions)
 {
   STRING           tempname;
   STRING           msg;
@@ -1452,20 +1327,9 @@ ThotBool            use_preconditions;
   Save a document and the included images to a remote network location.
   confirm = TRUE form SAVE_AS and FALSE from SAVE
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static ThotBool  SaveDocumentThroughNet (Document doc, View view, STRING url,
-					 ThotBool confirm, ThotBool with_images,
-					 ThotBool use_preconditions)
-#else
-static ThotBool  SaveDocumentThroughNet (doc, view, url, confirm,
-                                         with_images, use_preconditions)
-Document         doc;
-View             view;
-STRING           url;
-ThotBool         confirm;
-ThotBool         with_images;
-ThotBool         use_preconditions;
-#endif
+static ThotBool SaveDocumentThroughNet (Document doc, View view, STRING url,
+					ThotBool confirm, ThotBool with_images,
+					ThotBool use_preconditions)
 {
   LoadedImageDesc *pImage;
   STRING           tempname;
@@ -1646,13 +1510,7 @@ ThotBool         use_preconditions;
    If sourceDoc is a source document, return the corresponding
    structured document.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 Document       GetDocFromSource (Document sourceDoc)
-#else
-Document       GetDocFromSource (sourceDoc)
-Document       sourceDoc;
-
-#endif
 {
   Document	htmlDoc;
   int		i;
@@ -1675,13 +1533,7 @@ Document       sourceDoc;
    save the current view (source/structure) in a temporary file and update
    the other view (structure/source).      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                Synchronize (Document document, View view)
-#else  /* __STDC__ */
-void                Synchronize (document, view)
-Document            document;
-View                view;
-#endif /* __STDC__ */
 {
    NotifyElement       event;
    CHAR_T*             tempdocument = NULL;
@@ -1787,14 +1639,7 @@ View                view;
   Entry point called when the user selects the Save menu entry or
   presses the Save button.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                SaveDocument (Document doc, View view)
-#else
-void                SaveDocument (doc, view)
-Document            doc;
-View                view;
-
-#endif
 {
   NotifyElement       event;
   CHAR_T              tempname[MAX_LENGTH];
@@ -2087,13 +1932,7 @@ void                   BackUpDocs ()
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            DocumentToSave (NotifyDialog * event)
-#else  /* __STDC__ */
-ThotBool            DocumentToSave (event)
-NotifyDialog       *event;
-
-#endif /* __STDC__ */
+ThotBool DocumentToSave (NotifyDialog * event)
 {
    SaveDocument (event->document, 1);
    return TRUE;	/* prevent Thot from performing normal save operation */
@@ -2109,16 +1948,8 @@ NotifyDialog       *event;
   The parameter imgbase gives the relative path of the new image directory.
   The parameter newURL gives the new document URL (or local file).
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void            UpdateImages (Document doc, ThotBool src_is_local, ThotBool dst_is_local, CHAR_T* imgbase, CHAR_T* newURL)
-#else
-static void            UpdateImages (doc, src_is_local, dst_is_local, imgbase, newURL)
-Document               doc;
-ThotBool               src_is_local;
-ThotBool               dst_is_local;
-CHAR_T*                imgbase;
-CHAR_T*                newURL;
-#endif
+static void UpdateImages (Document doc, ThotBool src_is_local,
+			  ThotBool dst_is_local, CHAR_T *imgbase, CHAR_T *newURL)
 {
    AttributeType       attrType;
    ElementType         elType;
@@ -2477,11 +2308,7 @@ CHAR_T*                newURL;
   parameters, whether initial and final location are local or remote
   and recomputes URLs accordingly.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                DoSaveAs (void)
-#else
-void                DoSaveAs ()
-#endif
 {
   Document            doc;
   AttributeType       attrType;
