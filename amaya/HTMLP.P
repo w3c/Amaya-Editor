@@ -1988,7 +1988,7 @@ BOXES
 	Foreground : Black;
 	LineWeight: 2 px;
 	Depth: 4;
-	Visibility: 5;
+	Visibility: Enclosing =;
 	IN Structure_view
 		Visibility: 0;
 	IN Alternate_view
@@ -2007,7 +2007,7 @@ BOXES
 	Foreground : White;
 	LineWeight: 1 px;
 	Depth: 5;
-	Visibility: 5;
+	Visibility: Enclosing =;
 	InLine: No;
 	IN Structure_view
 		Visibility: 0;
@@ -2102,6 +2102,7 @@ BOXES
 	HorizPos: VMiddle = Previous BrowseButton_Mark . VMiddle;
 	VertPos: HMiddle = Previous BrowseButton_Mark . HMiddle;
 	Width: Enclosed . Width;
+	Visibility: Creator =;
 	IN Structure_view
 		Visibility: 0;
 	IN Links_view
@@ -3035,6 +3036,8 @@ BOXES
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view
+		Visibility: 0;
+	IN Alternate_view
 		Visibility: 0;
 	END;
 
@@ -7419,7 +7422,7 @@ RULES
  Frame: BEGIN
 	CreateBefore(Text_Mark);
 	CreateBefore(Text_Frame);
-	Visibility: 1;
+	Width: 1 px;  Height: 1 px;
 	Depth: 4;
 	IN Structure_view
 		Visibility: 0;
@@ -7430,7 +7433,7 @@ RULES
 	CreateBefore(ATTR_Checkbox);
 	CreateBefore(Text_Space);
 	LineBreak: No;
-	Visibility: 1;
+	Width: 1 px;  Height: 1 px;
 	In Structure_view BEGIN
 		Visibility: Enclosing =;
 		Height: DOC_FONTSIZE;
@@ -7442,7 +7445,7 @@ RULES
 	CreateBefore(ATTR_Radio);
 	CreateBefore(Text_Space);
 	LineBreak: No;
-	Visibility: 1;
+	Width: 1 px;  Height: 1 px;
 	In Structure_view BEGIN
 		Visibility: Enclosing =;
 		Height: DOC_FONTSIZE;
@@ -9154,6 +9157,12 @@ ATTRIBUTES
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
 		END;
+	IN Links_view
+		Visibility: Enclosing =;
+	IN Alternate_view
+		Visibility: Enclosing =;
+	IN Table_of_contents
+		Visibility: Enclosing =;
 	END;
 
  Checked(Checkbox_Input) = Yes_:
