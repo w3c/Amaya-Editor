@@ -313,71 +313,85 @@ static  HTAtom *AHTGuessAtom_for (char *urlName, PicType contentType)
   ----------------------------------------------------------------------*/
 void HTTP_headers_set (HTRequest * request, HTResponse * response, void *context, int status)
 {
-  AHTReqContext      *me = (AHTReqContext *) HTRequest_context (request);
-  HTAtom *tmp_atom;
+  AHTReqContext  *me;
+  HTAtom         *tmp_atom;
 #if 0
   HTAtom *unk_atom;
 #endif
-  char *tmp_char;
-  char   tmp_wchar[MAX_LENGTH];
-  HTParentAnchor *anchor = NULL;
-  ThotBool  use_anchor = FALSE;
+  char           *tmp_char;
+  char            tmp_wchar[MAX_LENGTH];
+  HTParentAnchor *anchor;
+  ThotBool        use_anchor = FALSE;
+
+  me =  (AHTReqContext *) HTRequest_context (request);
+  anchor = HTRequest_anchor (request);
 
   /* @@@ JK: we need a function here to specify which headers we
      want to copy */
 
-  /* we have already forced a content type (what about a charset? */
-  if (me->http_headers.content_type)
-    return;
-
-  /* copy the content_type */
-  tmp_atom =  HTResponse_format (response);
-#if 0
-  /* @@JK :a complete hack, until I find out how to fix the cache 
-     return type */
-  unk_atom = HTAtom_for ("www/unknown");
-  if (!tmp_atom || tmp_atom == unk_atom)
+  /* copy the content_type if we didn't force it before */
+  if (me->http_headers.content_type == NULL)
     {
-      use_anchor = TRUE;
-      anchor = HTRequest_anchor (request);
+      /* trying to use the info in the anchor, rather than in the response.
+	 Seems it's more recent */
       tmp_atom = HTAnchor_format (anchor);
-    }
-  else
-    use_anchor = FALSE;
-#endif
 
-  if (tmp_atom)
-    tmp_char = HTAtom_name (tmp_atom);
-  else
-    tmp_char = "www/unknown";
-  
-  if (tmp_char && tmp_char[0] != EOS)
-    {
-      /* libwww gives www/unknown when it gets an error. As this is 
-	 an HTML test, we force the type to text/html */
-      if (!strcmp (tmp_char, "www/unknown"))
+#if 0
+      tmp_atom =  HTResponse_format (response);
+      /* @@JK :a complete hack, until I find out how to fix the cache 
+	 return type */
+      unk_atom = HTAtom_for ("www/unknown");
+      if (!tmp_atom || tmp_atom == unk_atom)
 	{
-	  /* if it's not a file downloaded from FTP, initialize the
-	     content type to text/html by default */
-	  me->http_headers.content_type = NULL;
+	  use_anchor = TRUE;
+	  anchor = HTRequest_anchor (request);
+	  tmp_atom = HTAnchor_format (anchor);
 	}
-      else 
-	{
-	  iso2wc_strcpy (tmp_wchar, tmp_char);
-	  me->http_headers.content_type = TtaWCSdup (tmp_wchar);
-	}
+      else
+	use_anchor = FALSE;
+#endif
       
+      if (tmp_atom)
+	tmp_char = HTAtom_name (tmp_atom);
+      else
+	tmp_char = "www/unknown";
+      
+      if (tmp_char && tmp_char[0] != EOS)
+	{
+	  /* libwww gives www/unknown when it gets an error. As this is 
+	     an HTML test, we force the type to text/html */
+	  if (!strcmp (tmp_char, "www/unknown"))
+	    {
+	      /* if it's not a file downloaded from FTP, initialize the
+		 content type to text/html by default */
+	      me->http_headers.content_type = NULL;
+	    }
+	  else 
+	    {
+	      iso2wc_strcpy (tmp_wchar, tmp_char);
+	      me->http_headers.content_type = TtaWCSdup (tmp_wchar);
+	    }
+	  
 #ifdef DEBUG_LIBWWW
-      fprintf (stderr, "content type is: %s\n", me->http_headers.content_type);
+	  fprintf (stderr, "Set content type to: %s\n", 
+		   me->http_headers.content_type);
 #endif /* DEBUG_LIBWWW */
+	}
     }
-  
+
   /* copy the charset */
+
+  /* @@ JK I think there was a problem when using info directly from
+     the anchor... but what it was? The response object doesn't have
+     it anyway */
+  tmp_atom = HTAnchor_charset (anchor);
+#if 0
   if (use_anchor)
     tmp_atom = HTAnchor_charset (anchor);
   else
     tmp_atom = HTResponse_charset (response);
-
+#endif
+  
   if (tmp_atom)
     {
       iso2wc_strcpy (tmp_wchar, HTAtom_name (tmp_atom));
