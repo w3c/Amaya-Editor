@@ -35,3 +35,5 @@
      1     1   PRule         PRule      "struct Horg_w3c_thotlib_PRule*" yes
      1     1   Language      Language   "struct Horg_w3c_thotlib_Language*" yes
      1     1   Element       Element    "struct Horg_w3c_thotlib_Element*" yes
+# I18N String for now it's only a char* but will need a converter later...
+     0	   0   STRING        String	"struct Hjava_lang_String*" yes
