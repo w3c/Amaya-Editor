@@ -491,7 +491,8 @@ static int          EntityTableEntry = 0; /* entry of the entity table that
 static int          CharRank = 0;	  /* rank of the last matching
 					     character in that entry */
 #ifdef _I18N_
-static unsigned char SecondByte[3] = {EOS, EOS, EOS}; /* second char of an UTF-8 string */
+/* second char of an UTF-8 string */
+static unsigned char SecondByte[6] = {EOS, EOS, EOS, EOS, EOS, EOS};
 #endif /* _I18N_ */
 
 static void         ProcessStartGI (char* GIname);
