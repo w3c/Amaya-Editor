@@ -1210,6 +1210,7 @@ void ANNOT_Post (Document doc, View view)
   AnnotMeta *annot;
   Document source_doc;
   ThotBool isReplyTo;
+  ThotBool new_annotation;
 
   /* @@ JK: while the post item isn't desactivated on the main window,
      forbid annotations from elsewhere */
@@ -1230,6 +1231,7 @@ void ANNOT_Post (Document doc, View view)
   ctx = TtaGetMemory (sizeof (REMOTELOAD_context));
   /* make some space to store the remote file name */
   ctx->remoteAnnotIndex = TtaGetMemory (MAX_LENGTH);
+  ctx->remoteAnnotIndex[0]  = EOS;
   /* store the temporary filename */
   ctx->rdf_file = rdf_file;
   /* copy the name of the localfile if it's a local document */
@@ -1247,6 +1249,9 @@ void ANNOT_Post (Document doc, View view)
   /* compute the URL */
   if (IsW3Path (DocumentURLs[doc]))
     {
+      /* we're saving a modification to an existing annotation */
+      new_annotation = FALSE;
+      
       /* find the annotation metadata that corresponds to this annotation */
       annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].annotations,
 				     DocumentURLs[doc], AM_BODY_URL);
@@ -1260,7 +1265,35 @@ void ANNOT_Post (Document doc, View view)
       if (!annot)
 	/* @@ JK: give some error message, free the ctx */
 	return;
+    }
+  else
+    {
+      /* we're posting a new annotation */
+      new_annotation = TRUE;
+    }
 
+  /* launch the request */
+  ANNOT_UpdateTransfer (doc);
+  if (new_annotation)
+    {
+      url = annotPostServer;
+      free_url = FALSE;
+
+      res = GetObjectWWW (doc,
+			  url,
+			  rdf_file,
+			  ctx->remoteAnnotIndex,
+			  AMAYA_FILE_POST | AMAYA_ASYNC | AMAYA_FLUSH_REQUEST,
+			  NULL,
+			  NULL, 
+			  (void *)  ANNOT_Post_callback,
+			  (void *) ctx,
+			  NO,
+			  NULL);
+    } 
+  else
+    {
+#ifdef ANNOT_USE_POST
       /* we're saving a modification to an existing annotation */
       url = TtaGetMemory (strlen (annotPostServer)
 			  + sizeof ("?replace_source=")
@@ -1273,27 +1306,29 @@ void ANNOT_Post (Document doc, View view)
 		annot->annot_url,
 		ANNOTATION_CLASSNAME);
       free_url = TRUE;
-    }
-  else
-    {
-      /* we're saving a new annotation */
-      url = annotPostServer;
+
+      res = GetObjectWWW (doc,
+			  url,
+			  rdf_file,
+			  ctx->remoteAnnotIndex,
+			  AMAYA_FILE_POST | AMAYA_ASYNC | AMAYA_FLUSH_REQUEST,
+			  NULL,
+			  NULL, 
+			  (void *)  ANNOT_Post_callback,
+			  (void *) ctx,
+			  NO,
+			  NULL);
+#else /* USE PUT */
+      /* we're saving a modification to an existing annotation */
+      url = annot->annot_url;
       free_url = FALSE;
+
+      res = PutObjectWWW (doc, rdf_file, url, "application/xml", ctx->remoteAnnotIndex,
+			  AMAYA_SIMPLE_PUT | AMAYA_SYNC | AMAYA_NOCACHE |  AMAYA_FLUSH_REQUEST,
+			  (void *)  ANNOT_Post_callback, (void *) ctx);
+#endif /* AMAYA_USE_POST */
     }
 
-  /* launch the request */
-  ANNOT_UpdateTransfer (doc);
-  res = GetObjectWWW (doc,
-		      url,
-		      rdf_file,
-		      ctx->remoteAnnotIndex,
-		      AMAYA_FILE_POST | AMAYA_ASYNC | AMAYA_FLUSH_REQUEST,
-		      NULL,
-		      NULL, 
-		      (void *)  ANNOT_Post_callback,
-		      (void *) ctx,
-		      NO,
-		      NULL);
   if (free_url)
     TtaFreeMemory (url);
   /* @@ JK: here we should delete the context or call the callback in case of

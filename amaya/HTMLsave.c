@@ -620,7 +620,7 @@ void DoSaveObjectAs (void)
      {
 	/* @@ We need to check the use of AMAYA_PREWRITE_VERIFY in this function*/
        /* @@ JK: add mime type  */
-       res = PutObjectWWW (SavingObject, tempSavedObject, tempfile, NULL,
+       res = PutObjectWWW (SavingObject, tempSavedObject, tempfile, NULL, NULL,
 			   AMAYA_SYNC | AMAYA_NOCACHE |  AMAYA_FLUSH_REQUEST 
 			   | AMAYA_USE_PRECONDITIONS, NULL, NULL);
        if (res)
@@ -1364,7 +1364,8 @@ static int SafeSaveFileThroughNet (Document doc, char *localfile,
   mode = AMAYA_SYNC | AMAYA_NOCACHE | AMAYA_FLUSH_REQUEST;
   mode = mode | ((use_preconditions) ? AMAYA_USE_PRECONDITIONS : 0);
 
-  res = PutObjectWWW (doc, localfile, tempfile, content_type, mode, NULL, NULL);
+  res = PutObjectWWW (doc, localfile, tempfile, content_type, NULL,
+		      mode, NULL, NULL);
   if (res != 0)
     /* The HTTP PUT method failed ! */
     return (res);

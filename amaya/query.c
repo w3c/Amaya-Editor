@@ -759,7 +759,9 @@ int                 AHTOpen_file (HTRequest * request)
       return HT_OK;
     }
 
-  if (me->method == METHOD_PUT)
+  /* me->outputfile is only set when we want to store whatever result the server
+     sends back */
+  if (me->method == METHOD_PUT && !me->outputfile)
     {
       me->reqStatus = HT_WAITING;
       return HT_OK;
@@ -799,6 +801,7 @@ int                 AHTOpen_file (HTRequest * request)
   HTRequest_setOutputStream (me->request,
 			     AHTFWriter_new (me->request, me->output, YES));
   me->reqStatus = HT_WAITING;
+
   return HT_OK;
 }
 
@@ -2771,6 +2774,19 @@ void AHTRequest_setCustomAcceptHeader (HTRequest *request, char *value)
 }
 
 /*----------------------------------------------------------------------
+  GetOutputFileName
+  Generates a temporary filename (based on a counter) for storing
+  the information that a server sends back.
+  ----------------------------------------------------------------------*/
+static void GetOutputFileName (char *outputfile, int tempsubdir)
+{
+  sprintf (outputfile, "%s%c%d%c%04dAM", TempFileDirectory, DIR_SEP, tempsubdir, DIR_SEP,
+	   object_counter);
+  /* update the object_counter (used for the tempfilename) */
+  object_counter++;
+}
+
+/*----------------------------------------------------------------------
   InvokeGetObjectWWW_callback
   A simple function to invoke a callback function whenever there's an error
   in GetObjectWWW
@@ -2785,7 +2801,6 @@ void InvokeGetObjectWWW_callback (int docid, char *urlName,
   (*terminate_cbf) (docid, status, urlName, outputfile,
 		    NULL, context_tcbf);  
 }
-
 
 
 /*----------------------------------------------------------------------
@@ -2899,13 +2914,12 @@ int GetObjectWWW (int docid, char *urlName, char *formdata,
        return HT_ERROR;
      }
 
-   /* we store CSS in subdir named 0; all the other files go to a subidr
+   /* we store CSS in subdir named 0; all the other files go to a subdir
       named after their own docid */
    tempsubdir = (mode & AMAYA_LOAD_CSS) ? 0 : docid;
    /* create a tempfilename */
-   sprintf (outputfile, "%s%c%d%c%04dAM", TempFileDirectory, DIR_SEP, tempsubdir, DIR_SEP, object_counter);
-   /* update the object_counter (used for the tempfilename) */
-   object_counter++;
+   GetOutputFileName (outputfile, tempsubdir);
+
    /* normalize the URL */
    esc_url = EscapeURL (urlName);
    if (esc_url) 
@@ -3232,7 +3246,7 @@ int GetObjectWWW (int docid, char *urlName, char *formdata,
    HT_OK
   ----------------------------------------------------------------------*/
 int PutObjectWWW (int docid, char *fileName, char *urlName, 
-		  char *contentType, int mode,
+		  char *contentType, char *outputfile, int mode,
 		  TTcbf *terminate_cbf, void *context_tcbf)
 {
    AHTReqContext      *me;
@@ -3253,12 +3267,22 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
    char                file_name[MAX_LENGTH];
 #endif /* _WINDOWS */
 
-   /* should we protect the PUT against lost updates? */
-   tmp = TtaGetEnvString ("ENABLE_LOST_UPDATE_CHECK");
-   if (tmp && *tmp && strcasecmp (tmp, "yes"))
-     lost_update_check = FALSE;
+   if (mode & AMAYA_SIMPLE_PUT)
+     {
+       lost_update_check = FALSE;
+       UsePreconditions = FALSE;
+       if (!outputfile)
+	 return HT_ERROR;
+     }
+   else
+     {
+       /* should we protect the PUT against lost updates? */
+       tmp = TtaGetEnvString ("ENABLE_LOST_UPDATE_CHECK");
+       if (tmp && *tmp && strcasecmp (tmp, "yes"))
+	 lost_update_check = FALSE;
 
-   UsePreconditions = mode & AMAYA_USE_PRECONDITIONS;
+       UsePreconditions = mode & AMAYA_USE_PRECONDITIONS;
+     }
 
    AmayaLastHTTPErrorMsg [0] = EOS;
    AmayaLastHTTPErrorMsgR [0] = EOS;
@@ -3353,9 +3377,18 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
    me->block_size =  file_size;
    /* select the parameters that distinguish a PUT from a GET/POST */
    me->method = METHOD_PUT;
-   me->output = stdout;
-   /* we are not expecting to receive any input from the server */
-   me->outputfile = (char  *) NULL; 
+   if (mode & AMAYA_SIMPLE_PUT)
+     {
+       me->output = NULL;
+       GetOutputFileName (outputfile, docid);
+       me->outputfile = outputfile;
+     }
+   else
+     {
+       me->output = stdout;
+       /* we are not expecting to receive any input from the server */
+       me->outputfile = (char  *) NULL; 
+     }
 
 #ifdef _WINDOWS
    /* libwww's HTParse function doesn't take into account the drive name;
@@ -3432,11 +3465,7 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
    /*
    ** define other request characteristics
    */
-#ifdef _WINDOWS
    HTRequest_setPreemptive (me->request, NO);
-#else
-   HTRequest_setPreemptive (me->request, NO);
-#endif /* _WINDOWS */
 
    /*
    ** Make sure that the first request is flushed immediately and not
@@ -3479,10 +3508,13 @@ int PutObjectWWW (int docid, char *fileName, char *urlName,
    /* don't use the cache while saving a document */
    HTRequest_setReloadMode (me->request, HT_CACHE_FLUSH);
 
+#if 0
    /* Throw away any reponse body */
    /*
    HTRequest_setOutputStream (me->request, HTBlackHole());        
    */
+   HTRequest_setOutputStream (me->request, NULL);
+#endif
 
    /* prepare the URLname that will be displayed in the status bar */
    ChopURL (me->status_urlName, me->urlName);

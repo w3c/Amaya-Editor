@@ -296,6 +296,9 @@ typedef enum _ClickEvent {
 /* delete an annotation */
 #define AMAYA_DELETE    16384
 #define AMAYA_MBOOK_IMAGE 32768
+/* post an annotation using PUT */
+#define AMAYA_SIMPLE_PUT 65536
+
 /*
  * Flags to indicate the action to take when the network options
  * are modified
