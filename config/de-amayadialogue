@@ -165,26 +165,27 @@
 164 **Publishing...
 165 **Cache...
 166 **Proxy...
-167 **Colors...
-168 **Geometry...
-169 **Save the options
-170 Info
-171 ** About Amaya at W3C
-172 Verknüpfungen folgen/Dokumente öffnen
-173 Auswählen
-174 Suchen
-175 Ansichten
-176 Einfügen von Elementen
-177 Verknüpfungen bearbeiten
-178 Umformatieren
-179 Tabellen
-180 Formeln
-181 Aktive Grafikbereiche
-182 Formate/Stylesheets
-183 Attribute
-184 Rechtschreibung
-185 Speichern/Publizieren
-186 Drucken
-187 Abschnittsnummern
-188 Buch zusammenfügen
-189 Konfiguration
+167 **Printer...
+168 **Colors...
+169 **Geometry...
+170 **Save the options
+171 Info
+172 ** About Amaya at W3C
+173 Verknüpfungen folgen/Dokumente öffnen
+174 Auswählen
+175 Suchen
+176 Ansichten
+177 Einfügen von Elementen
+178 Verknüpfungen bearbeiten
+179 Umformatieren
+180 Tabellen
+181 Formeln
+182 Aktive Grafikbereiche
+183 Formate/Stylesheets
+184 Attribute
+185 Rechtschreibung
+186 Speichern/Publizieren
+187 Drucken
+188 Abschnittsnummern
+189 Buch zusammenfügen
+190 Konfiguration
