@@ -4085,7 +4085,7 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode, ThotBool recordLineN
 		  pAttr = pNode->ElFirstAttr;
 		  while (pAttr != NULL)
 		    {
-		      if (!AttrHasException (ExcInvisible, pAttr->AeAttrNum, pNode->ElStructSchema))
+		      if (!AttrHasException (ExcInvisible, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
 			/* Don't export invisible attributes */
 			{
 			  ExportXmlBuffer (pDoc, " ");
