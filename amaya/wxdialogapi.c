@@ -78,6 +78,8 @@ ThotBool CreateInitConfirmDlgWX ( int ref,
       p_dlg->Destroy();
       return FALSE;
     }
+#else /* _WX */
+  return FALSE;
 #endif /* _WX */
 }
 
@@ -179,6 +181,8 @@ ThotBool CreateOpenDocDlgWX ( int ref,
       p_dlg->Destroy();
       return FALSE;
     }
+#else /* _WX */
+  return FALSE;
 #endif /* _WX */
 }
 
@@ -246,6 +250,8 @@ ThotBool CreateSearchDlgWX ( int ref, ThotWindow parent,  char* caption)
       p_dlg->Destroy();
       return FALSE;
     }
+#else /* _WX */
+  return FALSE;
 #endif /* _WX */
 }
 
@@ -277,6 +283,8 @@ ThotBool CreatePrintDlgWX ( int ref, ThotWindow parent,  char* ps_file)
       p_dlg->Destroy();
       return FALSE;
     }
+#else /* _WX */
+  return FALSE;
 #endif /* _WX */
 }
 
@@ -310,5 +318,7 @@ ThotBool CreateSaveAsDlgWX ( int ref, ThotWindow parent,
       p_dlg->Destroy();
       return FALSE;
     }
+#else /* _WX */
+  return FALSE;
 #endif /* _WX */
 }

@@ -239,7 +239,7 @@
 237 FTP zulassen
 238 XML-Dokument nicht wohlgeformt - als HTML laden oder Parserfehler anzeigen?
 239 XML-Dokument nicht wohlgeformt - Parsefehler anzeigen?
-240 Verwenden Sie 'Datei/Zeichensatz erzwingen'
+240 Verwenden Sie 'Datei/Zeichenkodierung erzwingen'
 241 Ungültige Zeichen
 242 Dokumenttyp:
 243 Einige Tags/Attribute wurden ignoriert - siehe Ansicht/Parserfehler anzeigen
@@ -276,9 +276,9 @@
 274 Anmerkung gelöscht
 275 Laden des Anmerkungsindex gescheitert
 276 Fehler
-277 Zeichensatz wählen
+277 Zeichenkodierung wählen
 278 MIME-Typ wählen
-279 Zeichensatz ändern
+279 Zeichenkodierung ändern
 280 MIME-Typ ändern
 281 Ändern
 282 Dieser Dokumenttyp unterstützt keine Zeichensätze
