@@ -8,7 +8,7 @@
 #
 #       amaya-libs-$MACH-$AMAYAVERSION.tgz
 #
-AMAYAVERSION=4.01
+AMAYAVERSION=4.1
 THOTDIR=$PWD/../..
 DEST=/tahiti/thottape
 
@@ -299,7 +299,6 @@ Amaya/Windows/*.dsw \
 Amaya/Windows/amaya/*.mkf \
 Amaya/Windows/annotlib/*.mak \
 Amaya/Windows/annotlib/*.dsp \
-Amaya/Windows/annotlib/*.dsw \
 Amaya/Windows/Compilers/*.mak \
 Amaya/Windows/Compilers/*.dsp \
 Amaya/Windows/Compilers/*.dsw \
