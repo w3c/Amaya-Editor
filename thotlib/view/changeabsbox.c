@@ -4064,10 +4064,8 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 			    /* pave n'appartient pas a l'element */
 			    pAb = NULL;
 			  else if (pAb->AbTypeNum == pR->PrPresBox[0] &&
-				   pAb->AbPSchema == pSchP
-				   /****  && (pR->PrDuplicate ||
-					  (pAb->AbCreatorAttr == pAttr)) ****/
-				   )
+				   pAb->AbPSchema == pSchP &&
+				   pAb->AbCreatorAttr == pAttr)
 			    /* c'est un pave de presentation de l'element */
 			    /* ce pave a la type cherche', et il est cre'e' */
 			    /* par l'attribut. On a trouve' */
