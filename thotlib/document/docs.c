@@ -580,63 +580,6 @@ PtrElement          pEl;
      }
 }
 
-/*----------------------------------------------------------------------
-   simpleSave sauve un document sous forme pivot dans un fichier   
-   dont le nom est donne par name, et ne fait rien d'autre.
-   Rend false si l'ecriture n'a pu se faire.               
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static boolean      simpleSave (PtrDocument pDoc, char *name, boolean withAPP)
-#else  /* __STDC__ */
-static boolean      simpleSave (pDoc, name, withAPP)
-PtrDocument         pDoc;
-char               *name;
-boolean             withAPP;
-
-#endif /* __STDC__ */
-{
-   BinFile             fichpivot;
-   NotifyDialog        notifyDoc;
-   boolean             ok;
-
-   if (!pDoc->DocReadOnly)
-     {
-	fichpivot = BIOwriteOpen (name);
-	if (fichpivot == 0)
-	   return FALSE;
-	else
-	  {
-	     if (withAPP)
-	       {
-		  /* envoie l'evenement DocSave.Pre a l'application */
-		  notifyDoc.event = TteDocSave;
-		  notifyDoc.document = (Document) IdentDocument (pDoc);
-		  notifyDoc.view = 0;
-		  ok = !CallEventType ((NotifyEvent *) & notifyDoc, TRUE);
-	       }
-	     else
-		ok = TRUE;
-	     if (ok)
-		/* l'application laisse Thot effectuer la sauvegarde */
-	       {
-		  /* ecrit le document dans ce fichier sous la forme pivot */
-		  SauveDoc (fichpivot, pDoc);
-		  BIOwriteClose (fichpivot);
-		  if (withAPP)
-		    {
-		       /* envoie l'evenement DocSave.Post a l'application */
-		       notifyDoc.event = TteDocSave;
-		       notifyDoc.document = (Document) IdentDocument (pDoc);
-		       notifyDoc.view = 0;
-		       CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
-		    }
-	       }
-	     return TRUE;
-	  }
-     }
-   return FALSE;
-}
-
 
 /*----------------------------------------------------------------------
    UpdateIncludedElement met a` jour et reaffiche l'element pEl inclus dans  
@@ -813,6 +756,66 @@ PtrDocument         pDoc;
 }
 
 
+/********** TODO revoir tout ce qui suit ***********/
+
+/*----------------------------------------------------------------------
+   simpleSave sauve un document sous forme pivot dans un fichier   
+   dont le nom est donne par name, et ne fait rien d'autre.
+   Rend false si l'ecriture n'a pu se faire.               
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static boolean      simpleSave (PtrDocument pDoc, char *name, boolean withEvent)
+#else  /* __STDC__ */
+static boolean      simpleSave (pDoc, name, withEvent)
+PtrDocument         pDoc;
+char               *name;
+boolean             withEvent;
+
+#endif /* __STDC__ */
+{
+   BinFile             pivotFile;
+   NotifyDialog        notifyDoc;
+   boolean             ok;
+
+   if (!pDoc->DocReadOnly)
+     {
+	pivotFile = BIOwriteOpen (name);
+	if (pivotFile == 0)
+	   return FALSE;
+	else
+	  {
+	     if (withEvent)
+	       {
+		  /* envoie l'evenement DocSave.Pre a l'application */
+		  notifyDoc.event = TteDocSave;
+		  notifyDoc.document = (Document) IdentDocument (pDoc);
+		  notifyDoc.view = 0;
+		  ok = !CallEventType ((NotifyEvent *) & notifyDoc, TRUE);
+	       }
+	     else
+		ok = TRUE;
+	     if (ok)
+		/* l'application laisse Thot effectuer la sauvegarde */
+	       {
+		  /* ecrit le document dans ce fichier sous la forme pivot */
+		  SauveDoc (pivotFile, pDoc);
+		  BIOwriteClose (pivotFile);
+		  if (withEvent)
+		    {
+		       /* envoie l'evenement DocSave.Post a l'application */
+		       notifyDoc.event = TteDocSave;
+		       notifyDoc.document = (Document) IdentDocument (pDoc);
+		       notifyDoc.view = 0;
+		       CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
+		    }
+	       }
+	     return TRUE;
+	  }
+     }
+   return FALSE;
+}
+
+
 /*----------------------------------------------------------------------
    saveWithExtension sauve un document sous forme pivot en         
    concatenant l'extension au nom stocke' dans le document.
@@ -828,49 +831,44 @@ char               *extension;
 
 #endif /* __STDC__ */
 {
+   char                buf[MAX_TXT_LEN];
    int                 i;
-   char                buffer[MAX_TXT_LEN];
 
    if (pDoc == NULL)
       return FALSE;
-   FindCompleteName (pDoc->DocDName, extension, pDoc->DocDirectory, buffer, &i);
-   if (simpleSave (pDoc, buffer, FALSE))
+   FindCompleteName (pDoc->DocDName, extension, pDoc->DocDirectory, buf, &i);
+   if (simpleSave (pDoc, buf, FALSE))
      {
 	UpdateAllInclusions (pDoc);
 	return TRUE;
      }
    else
      {
-	TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, WRITING_IMP), buffer);
+	TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, WRITING_IMP), buf);
 	return FALSE;
      }
 }
 
 /*----------------------------------------------------------------------
-   StoreDocument       effectue la sauvegarde du document pDoc         
+   StoreDocument       sauve le document pDoc dans un fichier
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-boolean             StoreDocument (PtrDocument pDoc, Name NomDuDocument, PathBuffer NomDirectory, boolean SauveDocAvecCopie, boolean SauveDocAvecMove)
+boolean             StoreDocument (PtrDocument pDoc, Name docName, PathBuffer dirName, boolean copy, boolean move)
 #else  /* __STDC__ */
-boolean             StoreDocument (pDoc, NomDuDocument, NomDirectory, SauveDocAvecCopie, SauveDocAvecMove)
+boolean             StoreDocument (pDoc, docName, dirName, copy, move)
 PtrDocument         pDoc;
-Name                 NomDuDocument;
-PathBuffer          NomDirectory;
-boolean             SauveDocAvecCopie;
-boolean             SauveDocAvecMove;
+Name                docName;
+PathBuffer          dirName;
+boolean             copy;
+boolean             move;
 
 #endif /* __STDC__ */
 {
-   boolean             status, ok;
-   PathBuffer          NomAuto;	/* sauvegardes auto */
-   PathBuffer          NomFichier;	/* le .PIV final */
-   PathBuffer          NomTemporaire;	/* le .Tmp */
-   PathBuffer          NomBackup;	/* .OLD: ancien .PIV */
-   PathBuffer          DirectoryOrig;
-   char                buffer[MAX_TXT_LEN];
-   boolean             SauverDansMemeFichier;
-   int                 i;
+   PathBuffer          bakName, pivName, tempName, backName, oldDir;
    NotifyDialog        notifyDoc;
+   char                buf[MAX_TXT_LEN];
+   int                 i;
+   boolean             sameFile, status, ok;
 
    notifyDoc.event = TteDocSave;
    notifyDoc.document = (Document) IdentDocument (pDoc);
@@ -881,31 +879,31 @@ boolean             SauveDocAvecMove;
    else
      {
 	status = TRUE;
-	SauverDansMemeFichier = TRUE;
-	if (strcmp (NomDuDocument, pDoc->DocDName) != 0)
-	   SauverDansMemeFichier = FALSE;
-	if (strcmp (NomDirectory, pDoc->DocDirectory) != 0)
-	   SauverDansMemeFichier = FALSE;
+	sameFile = TRUE;
+	if (strcmp (docName, pDoc->DocDName) != 0)
+	   sameFile = FALSE;
+	if (strcmp (dirName, pDoc->DocDirectory) != 0)
+	   sameFile = FALSE;
 
 	/* construit le nom complet de l'ancien fichier de sauvegarde */
-	FindCompleteName (pDoc->DocDName, "BAK", pDoc->DocDirectory, NomAuto, &i);
-	strncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
+	FindCompleteName (pDoc->DocDName, "BAK", pDoc->DocDirectory, bakName, &i);
+	strncpy (oldDir, pDoc->DocDirectory, MAX_PATH);
 	/*     SECURITE:                                         */
 	/*     on ecrit sur un fichier nomme' X.Tmp et non pas   */
 	/*     directement X.PIV ...                             */
 	/*     On fait ensuite des renommages                    */
-	FindCompleteName (NomDuDocument, "PIV", NomDirectory, buffer, &i);
+	FindCompleteName (docName, "PIV", dirName, buf, &i);
 	/* on teste d'abord le droit d'ecriture sur le .PIV */
-	ok = FileWriteAccess (buffer) == 0;
+	ok = FileWriteAccess (buf) == 0;
 	if (ok)
 	  {
-	     FindCompleteName (NomDuDocument, "Tmp", NomDirectory, NomTemporaire, &i);
+	     FindCompleteName (docName, "Tmp", dirName, tempName, &i);
 	     /* on teste le droit d'ecriture sur le .Tmp */
-	     ok = FileWriteAccess (NomTemporaire) == 0;
+	     ok = FileWriteAccess (tempName) == 0;
 	     if (ok)
 	       {
 		  TtaDisplaySimpleMessage (INFO, LIB, WRITING);
-		  ok = simpleSave (pDoc, NomTemporaire, FALSE);
+		  ok = simpleSave (pDoc, tempName, FALSE);
 	       }
 	     if (ok)
 		UpdateAllInclusions (pDoc);
@@ -913,9 +911,9 @@ boolean             SauveDocAvecMove;
 	if (!ok)
 	  {
 	     /* on indique un nom connu de l'utilisateur... */
-	     FindCompleteName (NomDuDocument, "PIV", NomDirectory, buffer, &i);
+	     FindCompleteName (docName, "PIV", dirName, buf, &i);
 	     TtaDisplayMessage (CONFIRM, TtaGetMessage(LIB, WRITING_IMP),
-					    buffer);
+					    buf);
 	     status = FALSE;
 	  }
 	else
@@ -924,22 +922,22 @@ boolean             SauveDocAvecMove;
 	     /* Le nom et le directory du document peuvent avoir change'. */
 	     /* le fichier .OLD reste dans l'ancien directory, avec */
 	     /* l'ancien nom */
-	     FindCompleteName (pDoc->DocDName, "PIV", DirectoryOrig, NomFichier, &i);
-	     if (!SauveDocAvecCopie)
+	     FindCompleteName (pDoc->DocDName, "PIV", oldDir, pivName, &i);
+	     if (!copy)
 	       {
-		  FindCompleteName (pDoc->DocDName, "OLD", DirectoryOrig, NomBackup, &i);
-		  i = rename (NomFichier, NomBackup);
+		  FindCompleteName (pDoc->DocDName, "OLD", oldDir, backName, &i);
+		  i = rename (pivName, backName);
 	       }
 	     /* 2- faire mv du .Tmp sur le .PIV */
-	     FindCompleteName (NomDuDocument, "PIV", NomDirectory, NomFichier, &i);
-	     i = rename (NomTemporaire, NomFichier);
+	     FindCompleteName (docName, "PIV", dirName, pivName, &i);
+	     i = rename (tempName, pivName);
 	     if (i >= 0)
 		/* >> tout s'est bien passe' << */
 		/* detruit l'ancienne sauvegarde */
 	       {
-		  RemoveFile (NomAuto);
+		  RemoveFile (bakName);
 		  TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_DOC_WRITTEN),
-						 NomFichier);
+						 pivName);
 		  /* c'est trop tot pour perdre l'ancien nom du fichier et son */
 		  /* directory d'origine. */
 		  pDoc->DocModified = FALSE;
@@ -955,58 +953,58 @@ boolean             SauveDocAvecMove;
 		  /* document */
 		  UpdateRef (pDoc);
 		  /* detruit le fichier .REF du document sauve' */
-		  FindCompleteName (pDoc->DocDName, "REF", DirectoryOrig, buffer, &i);
-		  RemoveFile (buffer);
-		  if (!SauverDansMemeFichier)
+		  FindCompleteName (pDoc->DocDName, "REF", oldDir, buf, &i);
+		  RemoveFile (buf);
+		  if (!sameFile)
 		    {
-		       if (strcmp (NomDirectory, DirectoryOrig) != 0 &&
-			   strcmp (NomDuDocument, pDoc->DocDName) == 0)
+		       if (strcmp (dirName, oldDir) != 0 &&
+			   strcmp (docName, pDoc->DocDName) == 0)
 			  /* changement de directory sans changement de nom */
-			  if (SauveDocAvecMove)
+			  if (move)
 			    {
 			       /* deplacer le fichier .EXT dans le nouveau directory */
-			       FindCompleteName (pDoc->DocDName, "EXT", DirectoryOrig, buffer, &i);
-			       FindCompleteName (pDoc->DocDName, "EXT", NomDirectory, NomFichier, &i);
-			       rename (buffer, NomFichier);
+			       FindCompleteName (pDoc->DocDName, "EXT", oldDir, buf, &i);
+			       FindCompleteName (pDoc->DocDName, "EXT", dirName, pivName, &i);
+			       rename (buf, pivName);
 			       /* detruire l'ancien fichier PIV */
-			       FindCompleteName (pDoc->DocDName, "PIV", DirectoryOrig, buffer, &i);
-			       RemoveFile (buffer);
+			       FindCompleteName (pDoc->DocDName, "PIV", oldDir, buf, &i);
+			       RemoveFile (buf);
 			    }
 
-		       if (strcmp (NomDuDocument, pDoc->DocDName) != 0)
+		       if (strcmp (docName, pDoc->DocDName) != 0)
 			 {
 			    /* il y a effectivement changement de nom */
-			    if (SauveDocAvecCopie)
+			    if (copy)
 			       /* l'utilisateur veut creer une copie du document. */
 			       /* on fait apparaitre le document copie dans les */
 			       /* fichiers .EXT des documents reference's */
-			       ChangeNomExt (pDoc, NomDuDocument, TRUE);
-			    if (SauveDocAvecMove)
+			       ChangeNomExt (pDoc, docName, TRUE);
+			    if (move)
 			      {
 				 /* il s'agit d'un changement de nom du document */
 				 /* change le nom du document dans les fichiers */
 				 /* .EXT de tous les documents reference's */
-				 ChangeNomExt (pDoc, NomDuDocument, FALSE);
+				 ChangeNomExt (pDoc, docName, FALSE);
 				 /* indique le changement de nom a tous les */
 				 /* documents qui referencent ce document */
-				 ChangeNomRef (pDoc, NomDuDocument);
+				 ChangeNomRef (pDoc, docName);
 				 /* renomme le fichier .EXT du document qui change */
 				 /* de nom */
-				 FindCompleteName (pDoc->DocDName, "EXT", DirectoryOrig, buffer,
+				 FindCompleteName (pDoc->DocDName, "EXT", oldDir, buf,
 					     &i);
-				 FindCompleteName (NomDuDocument, "EXT", NomDirectory,
-					     NomFichier, &i);
-				 rename (buffer, NomFichier);
+				 FindCompleteName (docName, "EXT", dirName,
+					     pivName, &i);
+				 rename (buf, pivName);
 				 /* detruit l'ancien fichier .PIV */
-				 FindCompleteName (pDoc->DocDName, "PIV", DirectoryOrig, buffer,
+				 FindCompleteName (pDoc->DocDName, "PIV", oldDir, buf,
 					     &i);
-				 RemoveFile (buffer);
+				 RemoveFile (buf);
 			      }
 			 }
-		       strncpy (pDoc->DocDName, NomDuDocument, MAX_NAME_LENGTH);
-		       strncpy (pDoc->DocIdent, NomDuDocument, MAX_DOC_IDENT_LEN);
-		       strncpy (pDoc->DocDirectory, NomDirectory, MAX_PATH);
-		       ChangeDocumentName (pDoc, NomDuDocument);
+		       strncpy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
+		       strncpy (pDoc->DocIdent, docName, MAX_DOC_IDENT_LEN);
+		       strncpy (pDoc->DocDirectory, dirName, MAX_PATH);
+		       ChangeDocumentName (pDoc, docName);
 		    }
 	       }
 	     notifyDoc.event = TteDocSave;
@@ -1035,10 +1033,10 @@ boolean             ask;
 #endif /* __STDC__ */
 
 {
+   Name                docName;
+   char                directory[MAX_PATH];
    boolean             ok;
    boolean             status;
-   Name                 docName;
-   char                directory[MAX_PATH];
 
    status = FALSE;
    if (pDoc->DocReadOnly)
@@ -1069,20 +1067,20 @@ boolean             ask;
    WriteDocument sauve sous forme pivot le document pointe' par    
    pDoc. Retourne Vrai si le document a pu etre sauve,     
    Faux si echec.                                          
-   - Mode = 0 : demander le nom de fichier a` l'utilisateur
-   - Mode = 1 : fichier de sauvegarde automatique (.BAK)   
-   - Mode = 2 : fichier scratch (pas de message)           
-   - Mode = 3 : fichier de sauvegarde urgente (.SAV)       
-   - Mode = 4 : sauve sans demander de nom.                
+   - mode = 0 : demander le nom de fichier a` l'utilisateur
+   - mode = 1 : fichier de sauvegarde automatique (.BAK)   
+   - mode = 2 : fichier scratch (pas de message)           
+   - mode = 3 : fichier de sauvegarde urgente (.SAV)       
+   - mode = 4 : sauve sans demander de nom.                
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             WriteDocument (PtrDocument pDoc, int Mode)
+boolean             WriteDocument (PtrDocument pDoc, int mode)
 
 #else  /* __STDC__ */
-boolean             WriteDocument (pDoc, Mode)
+boolean             WriteDocument (pDoc, mode)
 PtrDocument         pDoc;
-int                 Mode;
+int                 mode;
 
 #endif /* __STDC__ */
 
@@ -1091,8 +1089,8 @@ int                 Mode;
 
    ok = FALSE;
    if (pDoc != NULL)
-      if (Mode >= 0 && Mode <= 4)
-	 switch (Mode)
+      if (mode >= 0 && mode <= 4)
+	 switch (mode)
 	       {
 		  case 0:
 		     ok = interactiveSave (pDoc, TRUE);

@@ -1,22 +1,24 @@
+/* -- Copyright (c) 1996 INRIA --  All rights reserved -- */
+
 /*
- * Structures de donnees pour le traducteur.
+ * Data structures for the Thot translator.
  *
- * Declarations de types pour la traduction des documents
+ * Type declarations for document translation
  *
  */
 
-/* 
+/*
    DEFINITIONS:
 
-   Un numero de compteur est le rang d'un compteur dans la table
+   A counter number is the rank of a counter in the table
 	TranslSchema.TsCounter.
-   Un numero de constantes est le rang d'une constante dans la table
+   A constant number is the rank of a constant in the table
 	TranslSchema.STConst.
-   Un numero de variable est le rang d'une variable dans la table
-	TranslSchema.TsVariable. 
- */
+   A variable number is the rank of a variable in the table
+	TranslSchema.TsVariable.
+*/
 
-/* un type de condition d'application de regle de traduction */
+/* a translation rule application condition type */
 typedef enum
 {
 	TcondFirst,
@@ -43,7 +45,7 @@ typedef enum
 	TcondExternalRef
 } TransCondition;
 
-/* un type de regle de traduction */
+/* a translation rule type */
 typedef enum
 {
 	TCreate,
@@ -61,95 +63,95 @@ typedef enum
 	TNoLineBreak
 } TRuleType;
 
-/* la position ou il faut creer les chaines produites par le traducteur */
+/* the position where the translator-produced strings are created */
 typedef enum
 {
 	TAfter, 
 	TBefore
 } TOrder;
 
-/* Les regles de traduction relatives a un objet sont groupees en blocs
-   Les regles d'un meme bloc s'appliquent selon la meme condition.
-   Une chaine de blocs de regles s'applique a un meme objet. Ainsi les
-   blocs de regles de traduction d'un type defini dans le schema de
-   structure sont chaines, de meme que les blocs de regles de traduction
-   d'une valeur d'attribut. 
- */
+/* The translation rules relative to an object are grouped by blocks.
+   Rules from a same block apply depending on the same condition.
+   A string of rule blocks applies to one object. This way the translation
+   rule blocks of a type defined in the structure schema are linked,
+   as well as the translation rule blocks for an attribute value.
+*/
 
-/* un pointeur sur une regle de traduction */
+/* a pointer on a translation rule */
 typedef struct _TranslRule *PtrTRule;
 
-/* un pointeur sur un bloc de regles de traduction */
+/* a pointer on a translation rule block */
 typedef struct _TRuleBlock *PtrTRuleBlock;
 
-/* pour interpreter le champ TcAscendLevel */
+/* to interpret the field TcAscendLevel */
 typedef enum
 {
 	RelGreater, RelLess, RelEquals
 }       RelatNAscend;
 
-/* une condition d'application d'un bloc de regles de traduction */
+/* a translation rule block application condition */
 typedef struct _TranslCondition
 {
-	TransCondition    TcCondition;   	/* type de la condition d'application
-					   des regles du bloc */
-	boolean         TcNegativeCond;	/* la condition est negative */
-	boolean		TcTarget;	/* la condition porte sur l'element
-					   reference' */
-	int		TcAscendType; /* type de l'element ascendant
-					   concerne' par la condition */
-	Name		TcAscendNature; /* nom du schema ou est
-					 defini ce nom de type d'element */
-	int		TcAscendRelLevel; /* niveau relatif de l'element
-					 ascendant concerne' par la condition.
-					 0  = element lui-meme
-					 -1 = l'element lui-meme ou n'importe
-					      quel ascendant */
+	TransCondition    TcCondition;   	/* type of the application condition
+							   of the block's rules */
+	boolean         TcNegativeCond;	/* the condition is negative */
+	boolean		TcTarget;	/* the condition is on the referenced
+						   element */
+	int		TcAscendType; 	/* type of the ascendent element
+						   affected by the condition */
+	Name		TcAscendNature; 	/* name of the schema where this
+						   element type name is defined */
+	int		TcAscendRelLevel; /* relative level of the ascendent
+						   element affected by the condition.
+						   0  = the element itself
+						   -1 = the element itself or any
+							  ascendent */
 	union
 	  {
 	  struct	/* TcCondition = TcondAlphabet */
 	    {
-	    char        _TcAlphabet_;  /* l'alphabet sur lequel porte la
-					   condition */
+	    char        _TcAlphabet_; /* the alphabet on which the condition
+						   applies */ 
 	    } s0;
 	  struct	/* TcCondition = TcondWithin, TcondFirstWithin */
 	    {
-	    int		_TcElemType_; /* type de l'ascendant */
-	    Name		_TcElemNature_;/* nom de la nature ou est defini
-					 TcElemType, 0 si meme schema */
+	    int		_TcElemType_; 	/* type of the ascendent */
+	    Name		_TcElemNature_;	/* name of the nature where
+							   TcElemType is defined, 0 if
+							   same schema */
 	    boolean	_TcImmediatelyWithin_; /* Immediately within */
 	    RelatNAscend	_TcAscendRel_;
 	    int		_TcAscendLevel_;   /* RelLevel */
 	    } s1;
 	  struct	/* TcCondition = TcondAttr || TcCondition = TcondPRule */
 	    {
-	    int		_TcAttr_;    /*  numero de l'attribut ou type de
-					 la regle de presentation */
+	    int		_TcAttr_;   /* number of the attribute or type
+						   of the presentation rule */ 
 	    union
 	      {
 	      struct	/* AttribType = AtNumAttr */
 	        {
-	        int	_TcLowerBound_;	/*valeur minimum de l'attribut pour que
-					les regles du bloc soient appliquees */
-	        int	_TcUpperBound_;	/*valeur maximum de l'attribut pour que
-					les regles du bloc soient appliquees */
+	        int	_TcLowerBound_;	/* minimum value of the attribute such that
+						   the block's rules be applied */
+	        int	_TcUpperBound_;	/* maximum value of the attribute such that
+						   the block's rules be applied */
 	        } s0;
 	      struct	/* AttribType = AtTextAttr */
 	        {
-	        Name	_TcTextValue_;	/* la valeur qui declanche
-					l'application des regles du bloc */
+	        Name	_TcTextValue_;	/* the value triggering the application
+							   of the block's rules */
 	        } s1;
 	      struct	/* AttribType = AtEnumAttr */
 	        {
-	        int	 _TcAttrValue_;	/* Valeur de l'attribut pour laquelle
-				        on applique les regles du bloc,
-				        0 si on applique pour toute valeur */
+	        int	 _TcAttrValue_;	/* value of the attribute for which the
+						   block's rules are applied, 0 if applied
+						   for any value */
 	        } s2;
-	      struct	/* dans le cas TcondPRule seulement */
+	      struct	/* in the case TcondPRule only */
 	        {
-	        char	_TcPresValue_;    /* Valeur de la presentation pour
-				       laquelle on applique les regles du bloc,
-				        0 si on applique pour toute valeur */
+	        char	_TcPresValue_;    /* value of the presentation for which
+							   the block's rules are applied, 0 if
+							   applied for any value */
 	        } s3;
 	      } u;
 	    } s2;
@@ -170,17 +172,18 @@ typedef struct _TranslCondition
 #define TcAttrValue u.s2.u.s2._TcAttrValue_
 #define TcPresValue u.s2.u.s3._TcPresValue_
 
-/* un bloc de regles de traduction */
+/* a translation rules block */
 typedef struct _TRuleBlock
 {
-	PtrTRuleBlock   TbNextBlock; /* pointeur sur le bloc de regles suivant */
-	PtrTRule    TbFirstTRule;  /* pointeur sur la 1ere regle du bloc */
-	int		TbNConditions; /* nombre de conditions dans TbCondition */ 
-	TranslCondition	TbCondition[MAX_TRANSL_COND]; /* les conditions qui doivent
-			    etre realisees pour appliquer les regles du bloc */
+	PtrTRuleBlock   TbNextBlock; 	/* pointer on the next rules block */
+	PtrTRule    TbFirstTRule;  	/* pointer on the first rule of the block */
+	int		TbNConditions; 	/* number of conditions in TbCondition */
+	TranslCondition	TbCondition[MAX_TRANSL_COND]; /* the conditions that have
+						   to be satisfied to apply the rules of the
+						   block */
 } TRuleBlock;
 
-/* type de chose a creer dans le fichier de sortie ou a ecrire au terminal */
+/* type of object to create in the output */
 typedef enum
 {
   	ToConst,
@@ -205,8 +208,8 @@ typedef enum
 	ToExtension
 } CreatedObject;
 
-/* position relative, dans l'arbre abstrait, de l'element a prendre par une */
-/* regle Get ou Copy. */
+/* relative position in the abstract tree of the element to take by a Get or
+   Copy rule */
 typedef enum
 {
   	RpSibling,
@@ -215,62 +218,60 @@ typedef enum
 	RpAssoc
 } TRelatPosition;
 
-/* une regle de traduction */
+/* a translation rule */
 typedef struct _TranslRule
 {
-  PtrTRule    TrNextTRule;	/* regle suivante du meme bloc */
-  TOrder      TrOrder;	/* position relative */
-  TRuleType	TrType;		/* type de la regle */
+  PtrTRule    TrNextTRule;	/* next rule in the same block */
+  TOrder      TrOrder;		/* relative position */
+  TRuleType	TrType;		/* type of the rule */
   union
     {
       struct	/* TrType = TCreate, TWrite */
 	{
-	  CreatedObject 	_TrObject_;	/*type de chose a creer dans le fichier
-					   de sortie ou a ecrire au terminal */
-	  int	 	_TrObjectNum_;	/* numero de la chose a creer ou a
-					   ecrire */
-	  Name		_TrObjectNature_;	/* Schema ou l'element est defini, */
-					/* 0 si meme schema de structure */
-	  boolean	_TrReferredObj_;	/* la variable a creer doit etre
-					   calculee pour l'element reference',
-					   et non pour l'element lui-meme */
-	  int		_TrFileNameVar_;	/* variable definissant le nom du
-					   fichier de sortie */
+	  CreatedObject 	_TrObject_;	/* type of the object to create for the output */
+	  int	 	_TrObjectNum_;	/* number of the object to create or write */
+	  Name		_TrObjectNature_;	/* schema where the element is defined,
+						   0 if same structure schema */
+	  boolean	_TrReferredObj_;	/* the variable to be created must be
+						   computed for the referenced element,
+						   not the element itself */
+	  int		_TrFileNameVar_;	/* variable defining the name of the
+						   output file */
 	} s0;
       struct	/* TrType = TGet, TCopy */
 	{
-	  int		_TrElemType_;	/* type de l'element a prendre */
-	  Name	 	_TrElemNature_;	/* Schema ou l'element est defini, 
-					   0 si meme schema de structure */
-	  TRelatPosition 	_TrRelPosition_;	/* position relative dans l'arbre
-					   abstrait de l'element a prendre */
+	  int		_TrElemType_;	/* type of the element to take */
+	  Name	 	_TrElemNature_;	/* schema where the element is defined,
+						   0 if same structure schema */
+	  TRelatPosition 	_TrRelPosition_;	/* relative position in the abstract
+						   tree of the element to take */
 	} s1;
       struct	/* TrType = TUse */
 	{
-	  Name	 _TrNature_;		/* nom de la nature */
-	  Name	 _TrTranslSchemaName_;	/* nom du schema de trad. a appliquer*/
+	  Name	 _TrNature_;		/* name of the nature */
+	  Name	 _TrTranslSchemaName_;	/* name of the translation schema
+							   to apply */
 	} s2;
       struct	/* TrType = TRead */
 	{
-	  int	_TrBuffer_; 		/* numero du buffer de lecture */
+	  int	_TrBuffer_; 			/* number of the read buffer */
 	} s4;
       struct	/* TrType = TInclude */
 	{
-	  CreatedObject  _TrBufOrConst_;		/* le nom du fichier a inclure est 
-					   dans un buffer ou une constante */
-	  int	  _TrInclFile_; 		/* numero de la constante ou du
-					   buffer qui contient le nom du
-					   fichier a inclure */
+	  CreatedObject  _TrBufOrConst_;	/* the name of the file to include is
+							   in a buffer or a constant */	
+	  int	  _TrInclFile_; 			/* number of the constant or the
+							   buffer containing the name of
+							   the file to include */
 	} s5;
       struct	/* TrType = TChangeMainFile */
 	{
-	  int	_TrNewFileVar_;	 /* variable definissant le nouveau
-					    nom de fichier */
+	  int	_TrNewFileVar_;			/* variable defining the new filename */ 
 	} s6;
      struct	/* TrType = TSetCounter, TAddCounter */
 	{
-	  int	_TrCounterNum_;	 /*numero du compteur a mettre a jour*/
-	  int	_TrCounterParam_;	 /* valeur de la mise a jour */
+	  int	_TrCounterNum_;	/* number of the counter to update */ 
+	  int	_TrCounterParam_;	/* update value */ 
 	} s7;
     } u;
 } TranslRule;
@@ -292,7 +293,7 @@ typedef struct _TranslRule
 #define TrCounterNum u.s7._TrCounterNum_
 #define TrCounterParam u.s7._TrCounterParam_
 
-/* type d'une operation sur un compteur */
+/* counter operation type */
 typedef enum
 {
 	TCntrRank,
@@ -301,25 +302,24 @@ typedef enum
 	TCntrNoOp
 } TCounterOp;
 
-/* un compteur */
+/* a counter */
 typedef struct _TCounter
 {
-	TCounterOp     TnOperation;	/* type de l'operation du compteur */
-	int 		TnElemType1;	/* premier type d'element sur lequel
-					   s'applique l'operation du compteur*/
-	int		TnAcestorLevel;	/* Si "CntrRank of", niveau du parent que
-					   l'on souhaite compter */
-	int 		TnElemType2;	/* deuxieme type d'element sur lequel
-					   s'applique l'operation du compteur*/
-	int             TnParam1;	/* premier parametre de l'operation */
-	int             TnParam2;	/* deuxieme parametre de l'operation*/
-	int  TnAttrInit;	/* TtAttribute de la racine qui donne sa
-					   valeur initiale au compteur, 
-					   0 si la valeur initiale ne depend
-					   depend pas d'un attribut */
+	TCounterOp     TnOperation;	/* type of the counter operation */
+	int 		TnElemType1;	/* first element type on which the
+						   counter operation is applied */
+	int		TnAcestorLevel;	/* if "CntrRank of", level of the ancestor
+						   that is to be counted */
+	int 		TnElemType2;	/* second element type on which the
+						   counter operation is applied */
+	int             TnParam1;	/* first operation parameter */
+	int             TnParam2;	/* second operation parameter */
+	int  TnAttrInit;			/* TtAttribute is the root giving the counter
+						   its initial value, 0 if the initial value
+						   doesn't depend on any attribute */
 } TCounter;
 
-/* types des elements de variables de traduction */
+/* types of the elements of the translation variables */
 typedef enum
 {
 	VtText,
@@ -333,77 +333,72 @@ typedef enum
 	VtFileDir	
 } TranslVarType;
 
-/* un element d'une variable de traduction */
+/* a translation variable element */
 typedef struct _TranslVarItem
 {
-	TranslVarType     TvType;		/* type de l'element de variable */
-	int             TvItem;	/* numero de la constante, du compteur,
-					   de l'attribut ou du buffer qui
-					   constitue l'element de variable */
-	int             TvLength;	/* longueur du nombre a generer, dans
-					   le cas d'un compteur seulement */
-	CounterStyle	TvCounterStyle;	/* style du nombre a generer, dans
-					   le cas d'un compteur seulement */
+	TranslVarType     TvType;	/* type of the variable element */	
+	int             TvItem;		/* number of the constant, the counter,
+						   the attribute or the buffer making up
+						   the variable element */
+	int             TvLength;	/* length of the number to generate, in
+						   the case of a counter only */
+	CounterStyle	TvCounterStyle;	/* style of the number to generate,
+						    in the case of a counter only */
 } TranslVarItem;
 
-/* une variable de traduction est la concatenation des resultats de
-   plusieurs elements */
+/* a translation variable is the concatenation of the result of
+   several elements */
 typedef struct _TranslVariable
 {
-	int 		TrvNItems;	/* nombre effectif d'elements*/
-	TranslVarItem     TrvItem[MAX_TRANSL_VAR_ITEM];   /* liste des elements */
+	int 		TrvNItems;	/* effective number of elements */
+	TranslVarItem     TrvItem[MAX_TRANSL_VAR_ITEM]; /* list of the elements */  
 } TranslVariable;
 
-/* un buffer de lecture */
+/* a read buffer */
 typedef char    TranslBuffer[MAX_TRANSL_BUFFER_LEN];
 
-/* un cas d'application de regles de traduction pour un attribut a valeur
-   numerique */
+/* an application case of the translation rules for a numerical value
+   attribute */
 typedef struct _TranslNumAttrCase
 {
-	int             TaLowerBound;	/* valeur minimum de l'attribut pour
-					   que les regles de traduction soient
-					   appliquees */
-	int             TaUpperBound;	/* valeur maximum de l'attribut pour
-					   que les regles de traduction soient
-					   appliquees */
-	PtrTRuleBlock   TaTRuleBlock;	/* bloc de regles de regles a appliquer
-					   quand la valeur de l'attribut est
-					   dans l'intervalle */
+	int             TaLowerBound;	/* minimum value of the attribute such that
+						   the translation rules be applied */
+	int             TaUpperBound;	/* maximum value of the attribute such that
+						   the translation rules be applied */
+	PtrTRuleBlock   TaTRuleBlock;	/* rules block to apply when the value of the
+						   attribute is in the interval */
 } TranslNumAttrCase;
 
-/* traduction d'un attribut logique */
+/* translation of a logical attribute */
 typedef struct _AttributeTransl
 {
-  int	AtrElemType;	/* Type d'element auquel s'appliquent les
-				 regles de traduction, 0 si les regles
-				 s'appliquent quel que soit le type d'element*/
+  int	AtrElemType;	/* element type to which the translation rules apply,
+				   0 if the rules apply whatever the element type is */
   union
     {
       struct	/* AttribType = AtNumAttr */
 	{
-	  /* nombre de cas d'application de regles de traduction*/ 
+	  /* number of translation rules application cases */
 	  int _AtrNCases_;
-	  /* les cas d'application de regles de traduction */
+	  /* the translation rules application cases */
 	  TranslNumAttrCase     _AtrCase_[MAX_TRANSL_ATTR_CASE];
 	} s0;
       struct	/* AttribType = AtReferenceAttr */
 	{
-	  PtrTRuleBlock   _AtrRefTRuleBlock_; /* bloc de regles a appliquer
-						pour l'attribut */
+	  PtrTRuleBlock   _AtrRefTRuleBlock_; 	/* rules block to apply for the
+								   attribute */
 	} s1;
       struct	/* AttribType = AtTextAttr */
 	{
-	  Name             _AtrTextValue_;	/*la valeur qui declanche l'application
-					   des regles de traduction */
-	  PtrTRuleBlock   _AtrTxtTRuleBlock_;	/* bloc de regles a appliquer pour
-					   cette valeur */
+	  Name             _AtrTextValue_;	/* the value triggering the application
+							   of the translation rules */
+	  PtrTRuleBlock   _AtrTxtTRuleBlock_;	/* rules block to apply for this
+								   value */
 	} s2;
       struct	/* AttribType = AtEnumAttr */
 	{
-	  /* Pour chaque valeur de l'attribut, dans l'ordre de
-	     la table AttrEnumValue, adresse du premier bloc de regles
-	     de traduction associe a cette valeur. */
+	  /* address of the first translation rules block associatied with each
+	     value of the attribute, in the same order than in the table AttrEnumValue */
 	  PtrTRuleBlock   _AtrEnuTRuleBlock_[MAX_ATTR_VAL + 1];
 	} s3;
     } u;
@@ -416,29 +411,26 @@ typedef struct _AttributeTransl
 #define AtrTxtTRuleBlock u.s2._AtrTxtTRuleBlock_
 #define AtrEnuTRuleBlock u.s3._AtrEnuTRuleBlock_
 
-/* traduction d'une presentation specifique */
+/* translation of a specific presentation */
 typedef struct _PRuleTransl
 {
-  boolean	RtExist;	/* Il y a des regles de traduction pour cette
-				   presentation */
+  boolean	RtExist;	/* there are translation rules for this presentation */
   union
     {
-      struct	/* presentation a valeur numerique */
+      struct	/* numerical value presentation */
 	{
-	  int		_RtNCase_; 	/* nombre de cas d'application de
-					   regles de traduction */ 
-	  TranslNumAttrCase	_RtCase_[MAX_TRANSL_PRES_CASE]; /* les cas d'application de
-					   regles de traduction */
+	  int		_RtNCase_; 	/* number of translation rules application cases */
+	  TranslNumAttrCase	_RtCase_[MAX_TRANSL_PRES_CASE];
+					/* the translation rules application cases */
 	} s0;
-      struct	/* autres presentation */
+      struct	/* other presentations */
 	{
-	  char		_RtPRuleValue_[MAX_TRANSL_PRES_VAL + 1]; /* les valeurs possibles de
-						     la presentation */
-	  PtrTRuleBlock	_RtPRuleValueBlock_[MAX_TRANSL_PRES_VAL + 1]; /* Pour chaque valeur
-					de la presentation, dans l'ordre de la
-					table RtPRuleValue, adresse du premier bloc
-					de regles de traduction associe a
-					cette valeur. */
+	  char		_RtPRuleValue_[MAX_TRANSL_PRES_VAL + 1]; 
+					/* possible values of the presentation */
+	  PtrTRuleBlock	_RtPRuleValueBlock_[MAX_TRANSL_PRES_VAL + 1]; 
+					/* address of the first translation rules block
+					   associated with each value of the presentation,
+					   in the order of the table RtPRuleValue */
 	} s1;
     } u;
 } PRuleTransl;
@@ -448,90 +440,82 @@ typedef struct _PRuleTransl
 #define RtPRuleValue u.s1._RtPRuleValue_
 #define RtPRuleValueBlock u.s1._RtPRuleValueBlock_
 
-/* chaines pour une regle de traduction de caracteres */
-typedef char    SourceString[MAX_SRCE_LEN + 1];	/* chaine source */
-typedef char    TargetString[MAX_TARGET_LEN + 1];	/* chaine cible */
+/* strings for a characters translation rule */
+typedef char    SourceString[MAX_SRCE_LEN + 1];	/* source string */
+typedef char    TargetString[MAX_TARGET_LEN + 1];	/* target string */
 
-/* une entree de la table de traduction */
+/* an entry of the translation table */
 typedef struct _StringTransl
 {
-	SourceString        StSource;	/* chaine source */
-	TargetString        StTarget;	/* chaine cible */
+	SourceString        StSource;	/* source string */
+	TargetString        StTarget;	/* traget string */
 } StringTransl;
 
-/* indices des regles de traduction de texte pour un alphabet */
+/* indices of the text translation rules for an alphabet */
 typedef struct _AlphabetTransl
 {
 	char	AlAlphabet;
-	int 	AlBegin; /* indice de la 1ere regle de traduction de
-				   caracteres dans la table TsCharTransl */
-	int	AlEnd;	/* indice de la derniere regle de traduction
-				   de caracteres dans la meme table */
+	int 	AlBegin; 	/* index of the first characters translation
+				   rule in the table TsCharTransl */
+	int	AlEnd;	/* index of the last characters translation
+				   rule in the same table */
 } AlphabetTransl;
 
-/* pointeur sur un schema de traduction */
+/* pointer on a translation schema */
 typedef struct _TranslSchema *PtrTSchema;
 
-/* schema de traduction associe a une classe de document ou d'objet */
+/* translation schema associated with a document or object class */
 typedef struct _TranslSchema
 {
-	PtrTSchema    TsNext;	/* pour le chainage des blocs libres*/
-	Name             TsStructName;	/* nom du schema de structure */
-	int             TsStructCode;	/* code identifiant la version de ce
-					   schema de structure */
-	int             TsLineLength;/* longueur max des lignes traduites*/
-	Name		TsEOL; /* caractere delimitant la fin de
-					    la ligne */
-	Name             TsTranslEOL; /* chaine de caracteres a inserer
-					    a la fin des lignes traduites */
-	int 		TsNConstants;	/* nombre de constantes */
-	int 		TsNCounters;	/* nombre de compteurs */
-	int 		TsNVariables;	/* nombre de variables de traduction */
-	int 		TsNBuffers;	/* nombre de buffers */
-	int             TsConstBegin[MAX_TRANSL_CONST]; /* indice du premier caract.
-					   de chaque constante dans le buffer
-					   TsConstant */
-	TCounter      TsCounter[MAX_TRANSL_COUNTER];/* les compteurs */
-	TranslVariable         TsVariable[MAX_TRANSL_VARIABLE];	  /* les variables */
-	int 		TsPictureBuffer;		  /*  numero du buffer image */
-	TranslBuffer          TsBuffer[MAX_TRANSL_BUFFER];  /* les buffers */
-	PtrTRuleBlock   TsElemTRule[MAX_RULES_SSCHEMA]; /* pointeurs sur le debut de
-					   la chaine des regles de traduction
-					   associees a chaque type d'element,
-					   dans le meme ordre que dans la table
-					   StructSchema.SsRule */
-	boolean		TsInheritAttr[MAX_RULES_SSCHEMA]; /* pour chaque type
-					   d'element, dans le meme ordre que
-					   dans la table StructSchema.SsRule,
-					   indique si l'elem. herite d'un
-					   attribut d'un elem. ascendant */
-	AttributeTransl   TsAttrTRule[MAX_ATTR_SSCHEMA]; /* regles de traduction
-					   des attributs logiques, dans l'ordre
-					   de la table StructSchema.SsAttribute*/
-	PRuleTransl	TsPresTRule[MAX_TRANSL_PRULE];	/* regles de traduction de la
-					   presentation specifique, dans
-					   l'ordre des types de regles de
-					   presentation */
-	int 		TsNTranslAlphabets;/* nombre d'elements dans le tableau
+	PtrTSchema    TsNext;	/* to link free blocks */
+	Name             TsStructName;	/* name of the structure schema */
+	int             TsStructCode;		/* code identifying the version of
+							   this structure schema */
+	int             TsLineLength;		/* max length of translated lines */
+	Name		TsEOL; 	/* end of line character */
+	Name             TsTranslEOL; /* character string to insert at the end
+						   of translated lines */
+	int 		TsNConstants;	/* number of constants */
+	int 		TsNCounters;	/* number of counters */
+	int 		TsNVariables;	/* number of translation variables */
+	int 		TsNBuffers;		/* number of buffers */
+	int             TsConstBegin[MAX_TRANSL_CONST]; 
+						/* index of the first character of each
+						   constant in the buffer TsConstant */
+	TCounter      TsCounter[MAX_TRANSL_COUNTER];	/* the counters */
+	TranslVariable         TsVariable[MAX_TRANSL_VARIABLE];	  
+						/* the variables */
+	int 		TsPictureBuffer;	/* number of the image buffer */	  
+	TranslBuffer          TsBuffer[MAX_TRANSL_BUFFER];  	/* the buffers */
+	PtrTRuleBlock   TsElemTRule[MAX_RULES_SSCHEMA];	/* pointers on the beginning
+					   of the string of translation rules associated
+					   with each element type, in the same order than in
+					   the table StructSchema.SsRule */ 
+	boolean		TsInheritAttr[MAX_RULES_SSCHEMA];	/* indicates for
+					   each element type, in the same order than in
+					   the table StructSchema.SsRule, if the element
+					   inherits from an ascendent element attribute */ 
+	AttributeTransl   TsAttrTRule[MAX_ATTR_SSCHEMA];	/* translation rules
+					   of the logical attributes, in the same order
+					   than in the table StructSchema.SsAttribute */ 
+	PRuleTransl	TsPresTRule[MAX_TRANSL_PRULE];	/* translation rules of the
+					   specific presentation, in the order of the
+					   presentation rules types */	
+	int 		TsNTranslAlphabets;	/* number of element in the array
 					   TsTranslAlphabet */
-	AlphabetTransl         TsTranslAlphabet[MAX_TRANSL_ALPHABET]; /* traduction des chaines
-					   de caracteres pour les differents
-					   alphabets */
-	int 		TsSymbolFirst;/* indice de la 1ere regle de traduc.de
-					   symboles dans la table TsCharTransl */
-	int 		TsSymbolLast;  /* indice de la derniere regle de
-					   traduction de symboles dans la meme
-					   table */
-	int 		TsGraphicsFirst; /* indice de la 1ere regle de traduc de
-					   graphiques dans la table TsCharTransl*/
-	int 		TsGraphicsLast;   /* indice de la derniere regle de
-					   traduction de graphiques dans la
-					   meme table */
-	int 		TsNCharTransls;	/* nombre total de regles de traduction
-					   de caracteres */
-	StringTransl         TsCharTransl[MAX_TRANSL_CHAR]; /* la table de traduction des
-					   caracteres */
-	char            TsConstant[MAX_TRANSL_CONST_LEN]; /* chaine de toutes les
-					   constantes de traduction, separees
-					   les unes des autres par un NULL */
+	AlphabetTransl         TsTranslAlphabet[MAX_TRANSL_ALPHABET];	/* translation
+					   of character strings for the different alphabets */
+	int 		TsSymbolFirst;	/* index of the first symbols translation rule
+						   in the table TsCharTransl */
+	int 		TsSymbolLast;	/* index of the last symbols translation rule
+						   in the same table */  
+	int 		TsGraphicsFirst; 	/* index of the first graphics translation rule
+						   in the table TsCharTransl */
+	int 		TsGraphicsLast;   /* index of the last graphics translation rule
+						   in the same table */
+	int 		TsNCharTransls;	/* total number of characters translation rules */
+	StringTransl         TsCharTransl[MAX_TRANSL_CHAR];	/* the characters translation
+						   				   table */
+	char            TsConstant[MAX_TRANSL_CONST_LEN];	/* string of all the
+					   translation constants, separated by NULL */
 } TranslSchema;
