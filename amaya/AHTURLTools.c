@@ -1862,7 +1862,7 @@ CHAR_T*              target;
        if (src[start_index] == WC_EOS)
        /* if there's nothing afterwards, add a DIR_STR */
 	 ustrcpy (target, WC_DIR_STR);
-#ifdef 0
+#if 0
        /* JK: removed the conversion of homedir in a file: url */
 #ifndef _WINDOWS
        else if (src[start_index] == TEXT('~'))
