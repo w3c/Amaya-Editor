@@ -3317,6 +3317,7 @@ void GetFallbackCharacter (int code, unsigned char *fallback, Language *lang)
   unsigned char *ptr;
 #endif /* _I18N_ */
   int	         i;
+  Language       language = *lang;
 
   fallback[0] = EOS;
   fallback[1] = EOS;
@@ -3328,7 +3329,7 @@ void GetFallbackCharacter (int code, unsigned char *fallback, Language *lang)
     /* character is not in the fallback table */
     {
       /* display a question mark instead */
-      *lang = TtaGetLanguageIdFromScript('L');
+      *lang = Latin_Script;
       fallback[0]= '?';
     }
 #ifdef _I18N_
@@ -3345,26 +3346,20 @@ void GetFallbackCharacter (int code, unsigned char *fallback, Language *lang)
     {
       if (UnicodeFallbackTable[i].EightbitCode < 255)
 	{
-	  /* Symbol character */
-	  if (TtaGetScript (*lang) != 'G')
-	    /* the language must be changed */
-	    *lang = TtaGetLanguageIdFromScript('G');
+	  /* Generation of a Greek fallback symbol */
+	  *lang = Greek_Script;
 	  fallback[0] = UnicodeFallbackTable[i].EightbitCode;
 	}
       else if (UnicodeFallbackTable[i].EightbitCode < 2000)
 	{
-	  /* ISO latin-1 fallback */
-	  if (TtaGetScript (*lang) != 'L')
-	    /* the language must be changed */
-	    *lang = TtaGetLanguageIdFromScript('L');
+	  /* Generation of a Latin fallback symbol */
+	  *lang = Latin_Script;
 	  fallback[0]= UnicodeFallbackTable[i].EightbitCode - 1000;
 	}
       else
 	{
-	  /* Symbol fallback */
-	  if (TtaGetScript (*lang) != 'G')
-	    /* the language must be changed */
-	    *lang = TtaGetLanguageIdFromScript('G');
+	  /* Generation of a Greek fallback symbol */
+	  *lang = Greek_Script;
 	  fallback[0] = UnicodeFallbackTable[i].EightbitCode - 2000;
 	}
       /* some special cases: add a second character */
@@ -3392,6 +3387,8 @@ void GetFallbackCharacter (int code, unsigned char *fallback, Language *lang)
 	  ptr = fallback;
 	  i = TtaWCToMBstring ((wchar_t) code, &ptr);
 	  fallback[i] = EOS;
+	  /* keep the inherited language */
+	  *lang = language;
 	}
 #endif /* _I18N_ */
       else
