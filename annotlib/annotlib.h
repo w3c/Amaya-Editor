@@ -66,7 +66,6 @@ typedef struct _RDFResource
   RDFClass, *RDFClassP,
   RDFProperty, *RDFPropertyP;
 
-#ifdef ANNOT_ON_ANNOT
 /* linked list of all annotation threads related to a document */
 typedef struct _AnnotThreadList {
   /* the list of all the replies related to a document */
@@ -75,7 +74,6 @@ typedef struct _AnnotThreadList {
   char *rootOfThread;     /* url of the root of thread */
   int  references;       /* how many times is this thread referenced? */
 } AnnotThreadList;
-#endif /* ANNOT_ON_ANNOT */
 
 /* the info we're interested in in an annotation */
 typedef struct _AnnotMeta {
