@@ -155,6 +155,8 @@ extern void HelpSearching ( Document document,
                             View view );
 extern void HelpViews ( Document document,
                         View view );
+extern void HelpDocument ( Document document,
+                           View view );
 extern void HelpCreating ( Document document,
                            View view );
 extern void HelpLinks ( Document document,
@@ -166,6 +168,10 @@ extern void HelpTables ( Document document,
 extern void HelpMath ( Document document,
                        View view );
 extern void HelpSVG ( Document document,
+                      View view );
+extern void HelpEditChar ( Document document,
+                           View view );
+extern void HelpXml ( Document document,
                       View view );
 extern void HelpImageMaps ( Document document,
                             View view );
@@ -348,6 +354,8 @@ extern void HelpSearching (/* Document document,
                               View view */);
 extern void HelpViews (/* Document document,
                           View view */);
+extern void HelpDocument (/* Document document,
+                             View view */);
 extern void HelpCreating (/* Document document,
                              View view */);
 extern void HelpLinks (/* Document document,
@@ -359,6 +367,10 @@ extern void HelpTables (/* Document document,
 extern void HelpMath (/* Document document,
                          View view */);
 extern void HelpSVG (/* Document document,
+                        View view */);
+extern void HelpEditChar (/* Document document,
+                             View view */);
+extern void HelpXml (/* Document document,
                         View view */);
 extern void HelpImageMaps (/* Document document,
                               View view */);
