@@ -3750,12 +3750,6 @@ RULES
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		END;
-	IN Links_view
-		Visibility: 0;
-	IN Table_of_contents
-		Visibility: 0;
-	IN Alternate_view
-		Visibility: 0;
 	END;
 
 { ---- Style CSS ---- }

@@ -1151,19 +1151,18 @@ int                *carIndex;
 	     /* On note pour l'affichage que cette boite est nouvelle */
 	     pCurrentBox->BxNew = TRUE;
 
-	     /* Est-ce un document vide ? */
-	     if (pMainBox == NULL)
+	     /* Est-ce la boite racine ? */
+	     if (pMainBox == pCurrentBox)
 	       {
 		  pCurrentBox->BxPrevious = NULL;
 		  pCurrentBox->BxNext = NULL;
-		  pMainBox = pCurrentBox;
-		  /* On modifie le chainage a partir de la boite racine */
-		  /* BxNext(RlRoot) -> Debut du chainage                */
-		  /* BxPrevious(RlRoot) -> Fin du chainage              */
 	       }
 	     else
 	       {
 		  /* On ajoute la boite a la fin du chainage */
+		  /* On modifie le chainage a partir de la boite racine */
+		  /* BxNext(RlRoot) -> Debut du chainage                */
+		  /* BxPrevious(RlRoot) -> Fin du chainage              */
 		  pBox = pMainBox->BxPrevious;
 		  pCurrentBox->BxPrevious = pBox;
 		  if (pBox != NULL)
