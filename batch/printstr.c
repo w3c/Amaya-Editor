@@ -43,12 +43,12 @@ TtAttribute        *pAt1;
 #include "readstr_f.h"
 
 #ifdef __STDC__
-extern CharUnit*    TtaGetEnvString (char*);
+extern CHAR_T*      TtaGetEnvString (char*);
 extern void         TtaInitializeAppRegistry (char*);
 extern void         TtaSaveAppRegistry (void);
 
 #else
-extern CharUnit*    TtaGetEnvString ();
+extern CHAR_T*      TtaGetEnvString ();
 extern void         TtaInitializeAppRegistry ();
 extern void         TtaSaveAppRegistry ();
 
@@ -989,7 +989,7 @@ char              **argv;
    ThotBool             premattrlocal;
 
    TtaInitializeAppRegistry (argv[0]);
-   STR = TtaGetMessageTable ("strdialogue", STR_MSG_MAX);
+   STR = TtaGetMessageTable (TEXT("strdialogue"), STR_MSG_MAX);
    exec = argv[0];
 
    for (argc--, argv++; argc > 0; argc--, argv++)

@@ -2167,7 +2167,7 @@ indLine             wi;
 	CurRule->PrElement = False;
 	CurRule->PrExternal = False;
 	CurRule->PrNPresBoxes = 0;
-	CurRule->PrPresBoxName[0] = '\0';
+	CurRule->PrPresBoxName[0] = WC_EOS;
 	/* verifie que cette regle n'est pas deja presente pour cette */
 	/* vue  uniquement pour layoutFonct = FnLine ou FnPage ou FnColumn */
 	if (layoutFonct == FnLine || layoutFonct == FnPage
@@ -2346,7 +2346,7 @@ indLine             wi;
 	CurRule->PrElement = False;
 	CurRule->PrExternal = False;
 	CurRule->PrNPresBoxes = 0;
-	CurRule->PrPresBoxName[0] = '\0';
+	CurRule->PrPresBoxName[0] = WC_EOS;
      }
 }
 
@@ -2376,7 +2376,7 @@ indLine             wi;
    CurRule->PrElement = False;
    CurRule->PrExternal = False;
    CurRule->PrNPresBoxes = 0;
-   CurRule->PrPresBoxName[0] = '\0';
+   CurRule->PrPresBoxName[0] = WC_EOS;
    /* S'il n'y a pas de condition courante, verifie qu'il n'y a pas */
    /* deja une regle Copy ou Content sans condition pour cette vue */
    if (Conditions != NULL)
@@ -6746,7 +6746,7 @@ char              **argv;
    if (!error) {
       /* prepare the cpp command */
 #     ifdef _WINDOWS
-      cmd [pIndex] = (STRING) malloc (4 * sizeof (CHAR_T));
+      cmd [pIndex] = TtaAllocString (4);
       ustrcpy (cmd [pIndex++], TEXT("cpp"));
 #     else  /* !_WINDOWS */
       ustrcpy (cmd, CPP " ");
@@ -6755,7 +6755,7 @@ char              **argv;
       while (param < argc && argv[param][0] == '-') {
             /* keep cpp params */
 #           ifdef _WINDOWS
-            cmd [pIndex] = (STRING) malloc (ustrlen (argv[param]) + 1);
+            cmd [pIndex] = TtaAllocString (ustrlen (argv[param]) + 1);
             ustrcpy (cmd [pIndex++], argv[param]);
 #           else  /* !_WINDOWS */
             ustrcat (cmd, argv[param]);
@@ -6811,24 +6811,24 @@ char              **argv;
 #          endif /* _WINDOWS */
            if (pwd != NULL) {
 #             ifdef _WINDOWS
-              cmd [pIndex] = (STRING) malloc (3 + ustrlen (pwd));
+              cmd [pIndex] = TtaAllocString (3 + ustrlen (pwd));
               usprintf (cmd [pIndex++], TEXT("-I%s"), pwd);
-              cmd [pIndex] = (STRING) malloc (3);
+              cmd [pIndex] = TtaAllocString (3);
               ustrcpy (cmd [pIndex++], TEXT("-C"));
-              cmd [pIndex] = (STRING) malloc (ustrlen (srceFileName) + 1);
+              cmd [pIndex] = TtaAllocString (ustrlen (srceFileName) + 1);
               ustrcpy (cmd [pIndex++], srceFileName);
-              cmd [pIndex] = (STRING) malloc (ustrlen (fname) + 1);
+              cmd [pIndex] = TtaAllocString (ustrlen (fname) + 1);
               ustrcpy (cmd [pIndex++], fname);
 #             else  /* !_WINDOWS */
               sprintf (&cmd[i], "-I%s -C %s > %s", pwd, srceFileName, fname);
 #             endif /* _WINDOWS */
            } else {
 #                 ifdef _WINDOWS
-                  cmd [pIndex] = (STRING) malloc (3);
+                  cmd [pIndex] = TtaAllocString (3);
                   ustrcpy (cmd [pIndex++], TEXT("-C"));
-                  cmd [pIndex] = (STRING) malloc (ustrlen (srceFileName) + 1);
+                  cmd [pIndex] = TtaAllocString (ustrlen (srceFileName) + 1);
                   ustrcpy (cmd [pIndex++], srceFileName);
-                  cmd [pIndex] = (STRING) malloc (ustrlen (fname) + 1);
+                  cmd [pIndex] = TtaAllocString (ustrlen (fname) + 1);
                   ustrcpy (cmd [pIndex++], fname);
 #                 else  /* !_WINDOWS */
                   sprintf (&cmd[i], "-C %s > %s", srceFileName, fname);

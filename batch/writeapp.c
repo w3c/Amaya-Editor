@@ -176,7 +176,7 @@ STRING              menuName;
 	       fprintf (AppFile, "DocTypeWindow");
 	       break;
 	 }
-   fprintf (AppFile, ", \"%s\", %s, %s, %d);\n", schemaName, menuName,
+   fprintf (AppFile, ", TEXT(\"%s\"), %s, %s, %d);\n", schemaName, menuName,
 	    item->AppItemName, itemsNumber);
 
    /* traite la liste des items du sous-menu */
@@ -196,7 +196,7 @@ STRING              menuName;
 		    fprintf (AppFile, "DocTypeWindow");
 		    break;
 	      }
-	fprintf (AppFile, ", \"%s\", %s, %s", schemaName, menuName, item->AppItemName);
+	fprintf (AppFile, ", TEXT(\"%s\"), %s, %s", schemaName, menuName, item->AppItemName);
 	if (subitem->AppItemName == NULL)
 	   fprintf (AppFile, ", 0");
 	else
@@ -246,7 +246,7 @@ char               *schemaName;
 		    fprintf (AppFile, "DocTypeWindow");
 		    break;
 	      }
-	fprintf (AppFile, ", \"%s\");\n", schemaName);
+	fprintf (AppFile, ", TEXT(\"%s\"));\n", schemaName);
      }
    else
      {
@@ -276,7 +276,7 @@ char               *schemaName;
 			 fprintf (AppFile, "DocTypeWindow");
 			 break;
 		   }
-	     fprintf (AppFile, ", \"%s\", %d, %s, %d", schemaName,
+	     fprintf (AppFile, ", TEXT(\"%s\"), %d, %s, %d", schemaName,
 		      menu->AppMenuView, menu->AppMenuName, itemsNumber);
 	     /* Declare les menus dynamiques */
 	     if (!ustrcmp (menu->AppMenuName, TEXT("Attributes_")))
@@ -318,7 +318,7 @@ char               *schemaName;
 				   fprintf (AppFile, "DocTypeWindow");
 				   break;
 			     }
-		       fprintf (AppFile, ", \"%s\", %s, -1", schemaName, menu->AppMenuName);
+		       fprintf (AppFile, ", TEXT(\"%s\"), %s, -1", schemaName, menu->AppMenuName);
 		       if (item->AppItemName == NULL)
 			  fprintf (AppFile, ", 0");
 		       else
@@ -355,7 +355,7 @@ PtrEventsSet        pAppli;
      {
 	fprintf (AppFile, "#include \"logo.xpm\"\n#include \"logo.xbm\"\n#include \"message.h\"\n");
 	fprintf (AppFile, "#ifdef _WINDOWS\n#include \"wininclude.h\"\n#endif\n\n");
-	fprintf (AppFile, "int    appArgc;\nCharUnit** appArgv;\n");
+	fprintf (AppFile, "int    appArgc;\nCHAR_T** appArgv;\n");
 	fprintf (AppFile, "Pixmap image;  /* logo pixmap */\n");
 	fprintf (AppFile, "Pixmap image;  /* logo pixmap */\n");
 	fprintf (AppFile, "Pixmap icon;   /* icon pixmap */\n\n");
@@ -364,7 +364,7 @@ PtrEventsSet        pAppli;
    fprintf (AppFile, "void %sApplicationInitialise ()\n", fname);
    fprintf (AppFile, "{\n PtrEventsSet appliActions;\n\n");
    fprintf (AppFile, "  /* Create the new application context*/\n");
-   fprintf (AppFile, "  appliActions = TteNewEventsSet (%d, \"%s\");\n",
+   fprintf (AppFile, "  appliActions = TteNewEventsSet (%d, TEXT(\"%s\"));\n",
 	    pAppli->EvSStructId, pAppli->EvSName);
 
    WriteEventsList (pAppli);
@@ -721,11 +721,11 @@ char               *fname;
 	fprintf (AppFile, "/*################### Main program #########################*/\n");
     fprintf (AppFile, "#ifdef _WINDOWS\n");
 	fprintf (AppFile, "#ifdef __STDC__\n");
-	fprintf (AppFile, "int main (int argc, CharUnit **argv)\n");
+	fprintf (AppFile, "int main (int argc, CHAR_T** argv)\n");
 	fprintf (AppFile, "#else /* __STDC__ */\n");
 	fprintf (AppFile, "int main (argc, argv)\n");
-	fprintf (AppFile, "int argc;\n");
-	fprintf (AppFile, "CharUnit **argv;\n");
+	fprintf (AppFile, "int      argc;\n");
+	fprintf (AppFile, "CHAR_T** argv;\n");
 	fprintf (AppFile, "#endif /* __STDC__ */\n");
     fprintf (AppFile, "#else  /* !_WINDOWS */\n");
 	fprintf (AppFile, "#ifdef __STDC__\n");
@@ -739,8 +739,8 @@ char               *fname;
 	fprintf (AppFile, "{\n");
 
 	fprintf (AppFile, "  int lg; /* identify dialogue messages */\n");
-	fprintf (AppFile, "  CharUnit appName[MAX_PATH]; /* name of the application */\n");
-	fprintf (AppFile, "  CharUnit workName[MAX_PATH]; /* path of the application */\n");
+	fprintf (AppFile, "  CHAR_T appName[MAX_PATH]; /* name of the application */\n");
+	fprintf (AppFile, "  CHAR_T workName[MAX_PATH]; /* path of the application */\n");
 
 	fprintf (AppFile, "  /* initialize the Registry */\n");
 	fprintf (AppFile, "  TtaInitializeAppRegistry (argv[0]);\n");
@@ -749,9 +749,9 @@ char               *fname;
 	fprintf (AppFile, "  /* extract the name of the application */\n");
 	fprintf (AppFile, "  TtaExtractName (argv[0], workName, appName);\n");
 	fprintf (AppFile, "  /* application name is limited to 19 characters */\n");
-	fprintf (AppFile, "  lg = StringLength (appName);\n");
+	fprintf (AppFile, "  lg = ustrlen (appName);\n");
 	fprintf (AppFile, "  if (lg > 19)\n");
-	fprintf (AppFile, "    appName[19] = CUS_EOS;\n");
+	fprintf (AppFile, "    appName[19] = WC_EOS;\n");
 	fprintf (AppFile, "  TtaInitialize (appName);\n");
 	fprintf (AppFile, "\n  TteInitMenus (appName, %d);\n", nbActions);
 
@@ -814,8 +814,8 @@ char               *fname;
 	  }
 
 	fprintf (AppFile, "  /* load appName+\"dialogue\" message file */\n");
-	fprintf (AppFile, "  StringCopy (workName, appName);\n");
-	fprintf (AppFile, "  StringConcat(workName, CUSTEXT(\"dialogue\"));\n");
+	fprintf (AppFile, "  ustrcpy (workName, appName);\n");
+	fprintf (AppFile, "  ustrcat(workName, TEXT(\"dialogue\"));\n");
 	fprintf (AppFile, "  TtaGetMessageTable (workName, MAX_EDITOR_LABEL);\n");
 	/* if necessary load editing Resources */
 	if (editingResource)
@@ -908,7 +908,7 @@ PtrEventsSet        pAppli;
    FILE               *infoFILE;
 
    i = 0;
-   fileSuffix = TtaStrdup (ISO2WideChar (fname));
+   fileSuffix = TtaStrdup (fname);
 
    /* met le suffixe APP.c a la fin du nom de fichier */
    while (fname[i] != ' ' && fname[i] != '\0')

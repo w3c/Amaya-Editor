@@ -817,8 +817,8 @@ char              **argv;
 #  endif /* _WINDOWS */
 
    TtaInitializeAppRegistry (argv[0]);
-   GRM = TtaGetMessageTable ("grmdialogue", GRM_MSG_MAX);
-   COMPIL = TtaGetMessageTable ("compildialogue", COMP_MSG_MAX);
+   GRM = TtaGetMessageTable (TEXT("grmdialogue"), GRM_MSG_MAX);
+   COMPIL = TtaGetMessageTable (TEXT("compildialogue"), COMP_MSG_MAX);
 
    if (argc != 2)
       TtaDisplaySimpleMessage (FATAL, GRM, UNKNOWN_FILE);

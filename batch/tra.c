@@ -424,10 +424,10 @@ int                 wi;
    traite le mot-cle' representant une valeur d'une presentation.  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PresentValue (CHAR_T value, int wi)
+static void         PresentValue (char value, int wi)
 #else  /* __STDC__ */
 static void         PresentValue (value, wi)
-CHAR_T                value;
+char                value;
 int                 wi;
 #endif /* __STDC__ */
 {
@@ -3257,7 +3257,7 @@ char              **argv;
      {
         /* prepare the cpp command */
 #     ifdef _WINDOWS
-      cmd [pIndex] = (STRING) malloc (4 * sizeof (CHAR_T));
+      cmd [pIndex] = TtaAllocString (4);
       ustrcpy (cmd [pIndex++], TEXT("cpp"));
 #     else  /* !_WINDOWS */
       ustrcpy (cmd, CPP " ");
@@ -3267,7 +3267,7 @@ char              **argv;
 	  {
 	    /* keep cpp params */
 #       ifdef _WINDOWS
-        cmd [pIndex] = (STRING) malloc (ustrlen (argv[param]) + 1);
+        cmd [pIndex] = TtaAllocString (ustrlen (argv[param]) + 1);
         ustrcpy (cmd [pIndex++], argv[param]);
 #       else  /* !_WINDOWS */
 	    ustrcat (cmd, argv[param]);
@@ -3330,24 +3330,24 @@ char              **argv;
 #       endif /* _WINDOWS */
 		if (pwd != NULL) {
 #          ifdef _WINDOWS
-           cmd [pIndex] = (STRING) malloc (3 + ustrlen (pwd));
+           cmd [pIndex] = TtaAllocString (3 + ustrlen (pwd));
            usprintf (cmd [pIndex++], TEXT("-I%s"), pwd);
-           cmd [pIndex] = (STRING) malloc (3);
+           cmd [pIndex] = TtaAllocString (3);
            ustrcpy (cmd [pIndex++], TEXT("-C"));
-           cmd [pIndex] = (STRING) malloc (ustrlen (srceFileName) + 1);
+           cmd [pIndex] = TtaAllocString (ustrlen (srceFileName) + 1);
            ustrcpy (cmd [pIndex++], srceFileName);
-           cmd [pIndex] = (STRING) malloc (ustrlen (fname) + 1);
+           cmd [pIndex] = TtaAllocString (ustrlen (fname) + 1);
            ustrcpy (cmd [pIndex++], fname);
 #          else  /* !_WINDOWS */
            sprintf (&cmd[i], "-I%s -C %s > %s", pwd, srceFileName, fname);
 #          endif /* _WINDOWS */
 		} else {
 #              ifdef _WINDOWS
-               cmd [pIndex] = (STRING) malloc (3);
+               cmd [pIndex] = TtaAllocString (3);
                ustrcpy (cmd [pIndex++], TEXT("-C"));
-               cmd [pIndex] = (STRING) malloc (ustrlen (srceFileName) + 1);
+               cmd [pIndex] = TtaAllocString (ustrlen (srceFileName) + 1);
                ustrcpy (cmd [pIndex++], srceFileName);
-               cmd [pIndex] = (STRING) malloc (2);
+               cmd [pIndex] = TtaAllocString (2);
                ustrcpy (cmd [pIndex++], fname);
 #              else  /* !_WINDOWS */
                sprintf (&cmd[i], "-C %s > %s", srceFileName, fname);
