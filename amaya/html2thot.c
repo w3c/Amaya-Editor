@@ -2685,8 +2685,9 @@ static void           ProcessStartGI (char* GIname)
 
   if (entry >= 0)
     {
-      if (ParsingLevel[HTMLcontext.doc] != L_Other &&
-	  !(pHTMLGIMapping[entry].Level & ParsingLevel[HTMLcontext.doc])) 
+      if (TtaGetDocumentProfile(HTMLcontext.doc) != L_Other &&
+	  !(pHTMLGIMapping[entry].Level &
+	    TtaGetDocumentProfile(HTMLcontext.doc))) 
 	{
 	  /* Invalid element for the current profile */
 	  /* don't process that element */
@@ -2942,8 +2943,9 @@ static void        EndOfEndTag (char c)
 	InsertInvalidEl (msgBuffer, FALSE);
         }
       else if (entry >= 0 &&
-	       ParsingLevel[HTMLcontext.doc] != L_Other &&
-	       !(pHTMLGIMapping[entry].Level & ParsingLevel[HTMLcontext.doc])) 
+	       TtaGetDocumentProfile(HTMLcontext.doc) != L_Other &&
+	       !(pHTMLGIMapping[entry].Level &
+		 TtaGetDocumentProfile(HTMLcontext.doc))) 
 	{
 	  /* Invalid element for the current profile */
 	  if (strlen (inputBuffer) > MaxMsgLength - 20)

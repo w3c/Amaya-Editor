@@ -178,7 +178,8 @@ void MapXMLElementType (int XMLtype,
      ptr = XHTMLElemMappingTable;
    else if (XMLtype == MATH_TYPE)
      {
-       if (ParsingLevel[doc] == L_Basic && DocumentTypes[doc] == docHTML)
+       if (TtaGetDocumentProfile(doc) == L_Basic &&
+	   DocumentTypes[doc] == docHTML)
 	 {
 	   /* Maths are not allowed in this document */
 	   ptr = NULL;
@@ -189,7 +190,8 @@ void MapXMLElementType (int XMLtype,
      }
    else if (XMLtype == SVG_TYPE)
      {
-       if (ParsingLevel[doc] == L_Basic && DocumentTypes[doc] == docHTML)
+       if (TtaGetDocumentProfile(doc) == L_Basic &&
+	   DocumentTypes[doc] == docHTML)
 	 {
 	   /* Graphics are not allowed in this document */
 	   ptr = NULL;
@@ -213,10 +215,10 @@ void MapXMLElementType (int XMLtype,
 	 if (strcmp (ptr[i].XMLname, XMLname))
 	   /* it's not the tag */
 	   i++;
-	 else if (ParsingLevel[doc] != L_Other &&
-		  !(ptr[i].Level & ParsingLevel[doc]))
+	 else if (TtaGetDocumentProfile(doc) != L_Other &&
+		  !(ptr[i].Level & TtaGetDocumentProfile(doc)))
 	   {
-	     /* this tag is not valid for the current parsing level */
+	     /* this tag is not valid in the document profile */
 	     *highEnoughLevel = FALSE;
 	     i++;
 	   }
@@ -263,8 +265,8 @@ char*           GetXMLElementName (ElementType elType, Document doc)
 	    if (ptr[i].ThotType == elType.ElTypeNum)
 	      {
 		if (doc == 0 || 
-		    ParsingLevel[doc] == L_Other ||
-		    (ptr[i].Level & ParsingLevel[doc]))
+		    TtaGetDocumentProfile(doc) == L_Other ||
+		    (ptr[i].Level & TtaGetDocumentProfile(doc)))
 		  return ptr[i].XMLname;
 		else
 		  invalid = TRUE;
@@ -369,8 +371,8 @@ int       MapXMLAttribute (int XMLtype, char *attrName,
 	  (ptr[i].XMLelement[0] != EOS &&
 	   strcmp (ptr[i].XMLelement, elementName)))
 	i++;
-      else if (ParsingLevel[doc] != L_Other &&
-	       !(ptr[i].Level & ParsingLevel[doc]))
+      else if (TtaGetDocumentProfile(doc) != L_Other &&
+	       !(ptr[i].Level & TtaGetDocumentProfile(doc)))
 	{
 	  *highEnoughLevel = FALSE;
 	  i++;
@@ -427,8 +429,8 @@ char*           GetXMLAttributeName (AttributeType attrType,
 		 !strcmp (ptr[i].XMLelement, tag)))
 	      {
 		if (doc != 0 &&
-		    ParsingLevel[doc] != L_Other &&
-		    !(ptr[i].Level & ParsingLevel[doc]))
+		    TtaGetDocumentProfile(doc) != L_Other &&
+		    !(ptr[i].Level & TtaGetDocumentProfile(doc)))
 		  invalid = TRUE;
 		else
 		  return ptr[i].XMLattribute;

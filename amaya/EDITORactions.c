@@ -121,7 +121,7 @@ void InitializeNewDoc (char *url, int docType, Document doc)
   DocumentMeta[doc]->method = CE_ABSOLUTE;
   DocumentSource[doc] = 0;
   /* default parsing level */
-  ParsingLevel[doc] = L_Transitional;
+  TtaSetDocumentProfile(doc, L_Transitional);
 
   ResetStop (doc);
   language = TtaGetDefaultLanguage ();
@@ -142,11 +142,11 @@ void InitializeNewDoc (char *url, int docType, Document doc)
       /* check the current profile */
       profile = TtaGetEnvString ("Profile");
       if (!strncmp (profile, "XHTML Basic", 11))
-	ParsingLevel[doc] = L_Basic;
+	TtaSetDocumentProfile(doc, L_Basic);
       else if (!strncmp (profile, "XHTML 1.0 Strict", 16))
-	ParsingLevel[doc] = L_Strict;
+	TtaSetDocumentProfile(doc, L_Strict);
       else if (!strncmp (profile, "XHTML 1.1", 9))
-	ParsingLevel[doc] = L_Xhtml11;
+	TtaSetDocumentProfile(doc, L_Xhtml11);
       
       LoadUserStyleSheet (doc);
       /* attach an attribute PrintURL to the root element */
@@ -1114,7 +1114,7 @@ void                CreateTable (Document document, View view)
        if (el != NULL)
 	 {
 	   attrType.AttrSSchema = elType.ElSSchema;
-	   if (ParsingLevel[document] == L_Basic)
+	   if (TtaGetDocumentProfile(document) == L_Basic)
 	     {
 	       /* remove the Border attribute */
 	       attrType.AttrTypeNum = HTML_ATTR_Border;

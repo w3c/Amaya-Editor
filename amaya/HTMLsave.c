@@ -508,9 +508,9 @@ static void InitSaveForm (Document document, View view, char *pathname)
      }
   else if (IsXMLName (pathname) || DocumentMeta[document]->xmlformat ||
 	   (!DocumentMeta[document]->xmlformat && 
-	    (ParsingLevel[document] == L_Basic ||
-	     ParsingLevel[document] == L_Xhtml11 ||
-	     ParsingLevel[document] == L_Strict)))
+	    (TtaGetDocumentProfile(document) == L_Basic ||
+	     TtaGetDocumentProfile(document) == L_Xhtml11 ||
+	     TtaGetDocumentProfile(document) == L_Strict)))
     {
       SaveAsHTML = FALSE;
       SaveAsXML = TRUE;
@@ -931,19 +931,19 @@ void SetNamespacesAndDTD (Document doc)
 		strcat (buffer, "\n    ");
 		strcat (buffer, HTMLDocTypes_2[4]);
 	      }
-	    else if (ParsingLevel[doc] == L_Basic)
+	    else if (TtaGetDocumentProfile(doc) == L_Basic)
 	      {
 		strcat (buffer, HTMLDocTypes_1[0]);
 		strcat (buffer, "\n    ");
 		strcat (buffer, HTMLDocTypes_2[0]);
 	      }
-	    else if (ParsingLevel[doc] == L_Strict)
+	    else if (TtaGetDocumentProfile(doc) == L_Strict)
 	      {
 		strcat (buffer, HTMLDocTypes_1[1]);
 		strcat (buffer, "\n    ");
 		strcat (buffer, HTMLDocTypes_2[1]);
 	      }
-	    else if (ParsingLevel[doc] == L_Xhtml11)
+	    else if (TtaGetDocumentProfile(doc) == L_Xhtml11)
 	      {
 		strcat (buffer, HTMLDocTypes_1[2]);
 		strcat (buffer, "\n    ");
@@ -964,7 +964,7 @@ void SetNamespacesAndDTD (Document doc)
 		strcat (buffer, "\n    ");
 		strcat (buffer, HTMLDocTypes_2[7]);
 	      }
-	    else if (ParsingLevel[doc] == L_Strict)
+	    else if (TtaGetDocumentProfile(doc) == L_Strict)
 	      {
 		strcat (buffer, HTMLDocTypes_1[5]);
 		strcat (buffer, "\n    ");
@@ -1285,7 +1285,7 @@ static ThotBool SaveDocumentLocally (Document doc, char *directoryName,
 	{
 	  if (SaveAsXML)
 	    {
-	      if (ParsingLevel[doc] == L_Xhtml11)
+	      if (TtaGetDocumentProfile(doc) == L_Xhtml11)
 		ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
 							  "HTMLT11");
 	      else
@@ -1592,7 +1592,7 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
   if (DocumentTypes[doc] == docHTML)
     if (SaveAsXML)
       {
-	if (ParsingLevel[doc] == L_Xhtml11)
+	if (TtaGetDocumentProfile(doc) == L_Xhtml11)
 	  TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLT11");
 	else
 	  TtaExportDocumentWithNewLineNumbers (doc, tempname, "HTMLTX");
@@ -1850,7 +1850,7 @@ void Synchronize (Document document, View view)
        SetNamespacesAndDTD (document);
        if (DocumentTypes[document] == docHTML)
 	 {
-	   if (ParsingLevel[document] == L_Xhtml11)
+	   if (TtaGetDocumentProfile(document) == L_Xhtml11)
 	     TtaExportDocumentWithNewLineNumbers (document, tempdocument,
 						  "HTMLT11");
 	   else if (DocumentMeta[document]->xmlformat)
@@ -1995,9 +1995,9 @@ void SaveDocument (Document doc, View view)
   /* We automatically save a HTML document as a XML one 
      when we have a xhtml profile */
     if (!SaveAsXML &&
-	(ParsingLevel[doc] == L_Basic ||
-	 ParsingLevel[doc] == L_Strict ||
-	 ParsingLevel[doc] == L_Xhtml11))
+	(TtaGetDocumentProfile(doc) == L_Basic ||
+	 TtaGetDocumentProfile(doc) == L_Strict ||
+	 TtaGetDocumentProfile(doc) == L_Xhtml11))
       SaveAsXML = TRUE;
 
   if (IsW3Path (tempname))
@@ -2091,7 +2091,7 @@ void SaveDocument (Document doc, View view)
 	  if (DocumentTypes[doc] == docHTML)
 	    if (SaveAsXML)
 	      {
-		if (ParsingLevel[doc] == L_Xhtml11)
+		if (TtaGetDocumentProfile(doc) == L_Xhtml11)
 		  ok = TtaExportDocumentWithNewLineNumbers (doc, tempname,
 							    "HTMLT11");
 		else

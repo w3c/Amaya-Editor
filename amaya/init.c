@@ -287,9 +287,6 @@ typedef enum
 
 TypeBrowserFile WidgetParent;
 
-/* original document parsing level */
-int CurrentParsingLevel;
-
 
 /*----------------------------------------------------------------------
    DocumentMetaDataAlloc
@@ -1144,12 +1141,28 @@ void CleanUpParsingErrors ()
   ----------------------------------------------------------------------*/
 void CheckParsingErrors (Document doc)
 {
-  char      *profile, *ptr, *reload;
-
+#ifdef PROFILE
+  char      *ptr, *reload, profile;
   /* current Amaya profile */
   profile = TtaGetEnvString ("Profile");
   if (!profile)
     profile = "";
+#else /* PROFILE */
+  char      *ptr, *reload;
+  char       profile [20];
+
+  if (TtaGetDocumentProfile(doc) == L_Basic)
+    strcpy (profile, "XHTML Basic");
+  else if (TtaGetDocumentProfile(doc) == L_Strict)
+    strcpy (profile, "XHTML 1.0 Strict");
+  else if (TtaGetDocumentProfile(doc) == L_Xhtml11)
+    strcpy (profile, "XHTML 1.1");
+  else if (TtaGetDocumentProfile(doc) == L_Transitional)
+    strcpy (profile, "XHTML Transitional");
+  else
+    strcpy (profile, "");
+#endif /* PROFILE */
+
   if (ErrFile)
     {
       /* Active the menu entry */
@@ -1197,7 +1210,7 @@ void CheckParsingErrors (Document doc)
       else if (XMLErrorsFoundInProfile)
 	{
 	  /* Some elements or attributes are not supported */
-	  /* for the current profile */
+	  /* in the current document profile */
 	  InitConfirm3L (doc, 1, TtaGetMessage (AMAYA, AM_XML_PROFILE),
 			 profile, TtaGetMessage (AMAYA, AM_XML_WARNING), FALSE);
 	  CleanUpParsingErrors ();
@@ -1210,23 +1223,7 @@ void CheckParsingErrors (Document doc)
       CleanUpParsingErrors ();
     }
   else
-    {
       TtaSetItemOff (doc, 1, Views, BShowLogFile);
-      if ((CurrentParsingLevel != L_Other) && TtaCanEdit ())
-	/* Check the current profile increases the current parsing level */
-	if ((CurrentParsingLevel == L_Basic &&
-	     (ParsingLevel[doc] == L_Strict ||
-	      ParsingLevel[doc] == L_Xhtml11 ||
-	      ParsingLevel[doc] == L_Transitional)) ||
-	    (CurrentParsingLevel == L_Strict &&
-	     (ParsingLevel[doc] == L_Xhtml11 ||
-	      ParsingLevel[doc] == L_Transitional)) ||
-	    (CurrentParsingLevel == L_Xhtml11 &&
-	     ParsingLevel[doc] == L_Transitional))
-	  InitConfirm3L (doc, 1, TtaGetMessage (AMAYA, AM_XML_PROFILE),
-			 profile, TtaGetMessage (AMAYA, AM_XML_MISMATCH_PROFILE),
-			 FALSE);
-    }
 }
 
 
@@ -1267,13 +1264,8 @@ void StopTransfer (Document document, View view)
 		    NULL);
     }
 }
-/*----------------------------------------------------------------------
-  CompleteUrl
-   The Address text field in a document window or the open dialog
-   can accept URL in a short definition : w3.org
-   so that we prepend it http://
-  ----------------------------------------------------------------------*/
-static int  CompleteUrl (char **url)
+
+static int  CompleteUrl(char **url)
 {
     char *s;
 
@@ -2567,7 +2559,6 @@ static Document LoadDocument (Document doc, char *pathname,
   else
     content_type = NULL;
 
-  CurrentParsingLevel = L_Other;
   /* check if there is an XML declaration with a charset declaration */
   if (tempfile[0] != EOS)
     CheckDocHeader (tempfile, &xmlDec, &withDoctype, &isXML,
@@ -3017,24 +3008,27 @@ static Document LoadDocument (Document doc, char *pathname,
       if (DocumentMeta[newdoc]->method == CE_INIT)
 	DocumentMeta[newdoc]->method = CE_ABSOLUTE;
 
-      /* save the current document parsing level */
-      CurrentParsingLevel = parsingLevel;
+      /* store the document profile */
+#ifndef PROFILE
+      TtaSetDocumentProfile (newdoc, parsingLevel);      
+#else /* PROFILE */
       /* check the current profile */
       profile = TtaGetEnvString ("Profile");
       if (parsingLevel == L_Other)
-	ParsingLevel[newdoc] = parsingLevel;
+	TtaGetDocumentProfile(newdoc) = parsingLevel;
       else
 	{
 	  if (strncmp (profile, "XHTML Basic", 11) == 0)
-	    ParsingLevel[newdoc] = L_Basic;
+	    TtaGetDocumentProfile[newdoc] = L_Basic;
 	  else if (strncmp (profile, "XHTML 1.0 Strict", 16) == 0)
-	    ParsingLevel[newdoc] = L_Strict;
+	    TtaGetDocumentProfile[newdoc] = L_Strict;
 	  else if (strncmp (profile, "XHTML 1.1", 9) == 0)
-	    ParsingLevel[newdoc] = L_Xhtml11;
+	    TtaGetDocumentProfile[newdoc] = L_Xhtml11;
 	  else
-	    ParsingLevel[newdoc] = L_Transitional;
+	    TtaGetDocumentProfile[newdoc] = L_Transitional;
 	}
-      
+#endif /* PROFILE */
+     
 	if (docType == docSVG ||
 #ifdef XML_GENERIC
 	    docType == docXml ||
@@ -3414,7 +3408,7 @@ void ShowSource (Document document, View view)
 	 SetNamespacesAndDTD (document);
 	 if (DocumentTypes[document] == docHTML)
 	   {
-	     if (ParsingLevel[document] == L_Xhtml11)
+	     if (TtaGetDocumentProfile(document) == L_Xhtml11)
 	       TtaExportDocumentWithNewLineNumbers (document, tempdocument,
 						    "HTMLT11");
 	     else if (DocumentMeta[document]->xmlformat)
