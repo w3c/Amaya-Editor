@@ -102,6 +102,12 @@ typedef struct _PresentationSetting
 #define STYLE_FONT_HELVETICA		FontHelvetica
 #define STYLE_FONT_COURIER		FontCourier
 
+#ifdef _WINDOWS
+#      ifdef _I18N_ 
+#            define STYLE_FONT_OTHER 1000
+#      endif /* _I18N_ */
+#endif /* _WINDOWS */
+
 #define STYLE_FONT_ROMAN		StyleRoman
 #define STYLE_FONT_ITALICS		StyleItalics
 #define STYLE_FONT_OBLIQUE		StyleOblique

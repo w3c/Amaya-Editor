@@ -289,7 +289,6 @@ ptrfont             font;
   int                 i;
 #endif /* !defined(_WINDOWS) && !defined(_GTK) */
   int                 l;
-
   if (font == NULL)
     return (0);
   else

@@ -1181,6 +1181,13 @@ ThotBool            generic;
 	case STYLE_FONT_COURIER:
 	  rule->PrChrValue = 'C';
 	  break;
+#   ifdef _WINDOWS
+#   ifdef _I18N_
+	case STYLE_FONT_OTHER:
+	  rule->PrChrValue = -1;
+	  break;
+#   endif /* _I18N_ */
+#   endif /* _WINDOWS */
 	}
       break;
     case PtStyle:
@@ -1556,6 +1563,13 @@ PtrPRule                   rule;
 	case 'C':
 	  value = STYLE_FONT_COURIER;
 	  break;
+#   ifdef _WINDOWS
+#   ifdef _I18N_
+	case -1:
+	  value = STYLE_FONT_OTHER;
+	  break;
+#   endif /* _I18N_ */
+#   endif /* _WINDOWS */
 	}
       break;
 

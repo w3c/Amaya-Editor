@@ -40,9 +40,6 @@
 #include "wininclude.h"
 
 #define GLOBALS_HERE
-#ifdef _I18N_
-#include "unicode.h"
-#endif
 #endif /* _WINDOWS */
 
 #define THOT_EXPORT extern
@@ -710,31 +707,10 @@ int       nShow;
 { 
    int        argc;
    CHAR_T**   argv;
-#  ifdef _I18N_
-   PLANGSTATE pLState   ; // Language state struct, typedef in UPDTLANG.H
-   PAPP_STATE pAppState ; // Application state struct, typedef in UMHANDLERS.H
-   GLOBALDEV  GlobalDev ; // Overall state struct
-#  endif /* _I18N_ */
 
    currentFrame = -1;
    hInstance  = hInst;
    nAmayaShow = nShow;
-
-#  ifdef _I18N_
-   pLState   = (PLANGSTATE) HeapAlloc (GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof (LANGSTATE)); 
-   pAppState = (PAPP_STATE) HeapAlloc (GetProcessHeap(), HEAP_ZERO_MEMORY, sizeof (APP_STATE)) ;
-
-    GlobalDev.pLState   = pLState   ;
-    GlobalDev.pAppState = pAppState ;
-   if (!InitUnicodeInterface (hInst)) {
-       /* Initialize Unicode/ANSI functions ** Initialize UI and language dependent state */
-
-       /* Failed too early in initialization to use the resources, must fall back on
-          a hard coded English message */
-      MessageBoxW(NULL, TEXT("Cannot initialize application. Press OK to exit..."), NULL, MB_OK | MB_ICONEXCLAMATION) ;     
-      return FALSE ;
-   }
-#  endif 
 
    argc = makeArgcArgv (hInst, &argv, lpCommand);
    main (argc, argv);
@@ -1627,12 +1603,6 @@ Display**        Dp;
 #  ifdef _WINDOWS
    iconID = TEXT("IDI_APPICON");
 
-#   ifdef _I18N_
-   RegisterThisClass (RootShell, hInstance, WndProc, iconID, TEXT("Amaya"), 0, 0, 0, (HBRUSH) GetStockObject (LTGRAY_BRUSH), TEXT("AmayaMain"));
-   RegisterThisClass (RootShell, hInstance, ClientWndProc, iconID, TEXT("ClientWndProc"), CS_DBLCLKS, 0, 0, (HBRUSH) (COLOR_WINDOW + 1), NULL);
-   RegisterThisClass (RootShell, hInstance, ThotDlgProc, iconID, TEXT("WNDIALOGBOX"), 0, 0, 0, (HBRUSH) GetStockObject (LTGRAY_BRUSH), NULL);
-
-#  else  /* !_I18N_ */
    RootShell.style         = 0;
    RootShell.lpfnWndProc   = WndProc;
    RootShell.cbClsExtra    = 0;
@@ -1680,7 +1650,6 @@ Display**        Dp;
    
    if (!RegisterClassEx (&RootShell))
       return (FALSE);
-#  endif /* !_I18N_ */
 #  endif /* _WINDOWS */
 
 #  ifndef _WINDOWS

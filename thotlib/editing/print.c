@@ -275,38 +275,13 @@ LPSTR  msg;
 #endif /* __STDC__ */
 {
     DOCINFO         DocInfo;
-    STRING suffix;
 
     bError     = FALSE;     /* no errors yet */
     gbAbort    = FALSE;     /* user hasn't aborted */
 
-#  ifdef _WINDOWS
-   suffix = TtaGetVarLANG ();
 
-   if (!ustrncasecmp (suffix, TEXT("fr"), 2))
-      app_lang = FR_LANG;
-   else if (!ustrncasecmp (suffix, TEXT("en"), 2))
-      app_lang = EN_LANG;
-   else if (!ustrncasecmp (suffix, TEXT("de"), 2))
-      app_lang = DE_LANG;
-#  endif /* _WINDOWS */
-
-	switch (app_lang) {
-           case FR_LANG:
-               if (!(ghwndAbort = CreateDialog (hInst, TEXT("FR_Printinprogress"), ghwndMain, (DLGPROC) AbortDlgProc)))
-                  WinErrorBox (ghwndMain, TEXT("InitPrinting: FR_LANG"));
-               break;
-
-		   case EN_LANG:
-                if (!(ghwndAbort = CreateDialog (hInst, TEXT("EN_Printinprogress"), ghwndMain, (DLGPROC) AbortDlgProc)))
-                   WinErrorBox (ghwndMain, TEXT("InitPrinting: EN_LANG"));
-                break;
-
-		   case DE_LANG:
-                if (!(ghwndAbort = CreateDialog (hInst, TEXT("DE_Printinprogress"), ghwndMain, (DLGPROC) AbortDlgProc)))
-                   WinErrorBox (ghwndMain, TEXT("InitPrinting: DE_LANG"));
-				break;
-	} 
+   if (!(ghwndAbort = CreateDialog (hInst, TEXT("Printinprogress"), ghwndMain, (DLGPROC) AbortDlgProc)))
+      WinErrorBox (ghwndMain, TEXT("InitPrinting: DE_LANG"));
 
     EnableWindow (ghwndMain, FALSE);
     SetAbortProc (TtPrinterDC, AbortProc);
