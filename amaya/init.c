@@ -36,6 +36,8 @@
 #include "css.xpm"
 #include "Image.xpm"
 #include "DL.xpm"
+#include "Link.xpm"
+#include "Table.xpm"
 
 
 #ifdef _WINDOWS
@@ -69,6 +71,8 @@ static Pixmap       iconCSS;
 static Pixmap       iconBullet;
 static Pixmap       iconNum;
 static Pixmap       iconDL;
+static Pixmap       iconLink;
+static Pixmap       iconTable;
 
 
 #include "css_f.h"
@@ -82,6 +86,7 @@ static Pixmap       iconDL;
 #include "EDITimage_f.h"
 #include "EDITstyle_f.h"
 #include "HTMLactions_f.h"
+#include "HTMLedit_f.h"
 #include "HTMLsave_f.h"
 #include "HTMLstyle_f.h"
 #include "UIcss_f.h"
@@ -635,6 +640,8 @@ char               *pathname;
 	     TtaAddButton (doc, 1, iconBullet, CreateList, TtaGetMessage (AMAYA, AM_BUTTON_UL));
 	     TtaAddButton (doc, 1, iconNum, CreateNumberedList, TtaGetMessage (AMAYA, AM_BUTTON_OL));
 	     TtaAddButton (doc, 1, iconDL, CreateDefinitionList, TtaGetMessage (AMAYA, AM_BUTTON_DL));
+	     TtaAddButton (doc, 1, iconLink, CreateLink, TtaGetMessage (AMAYA, AM_BUTTON_LINK));
+	     TtaAddButton (doc, 1, iconTable, CreateTable, TtaGetMessage (AMAYA, AM_BUTTON_TABLE));
 
 	     TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_LOCATION), TRUE, TextURL);
 	     TtaAddTextZone (doc, 1, TtaGetMessage (AMAYA, AM_TITLE), TRUE, TextTitle);
@@ -1541,6 +1548,8 @@ NotifyEvent        *event;
    iconNum = TtaCreatePixmapLogo (Num_xpm);
    iconImage = TtaCreatePixmapLogo (Image_xpm);
    iconDL = TtaCreatePixmapLogo (DL_xpm);
+   iconLink = TtaCreatePixmapLogo (Link_xpm);
+   iconTable = TtaCreatePixmapLogo (Table_xpm);
 
    TargetName = NULL;
    /* initialize temporary directory for loaded files */

@@ -285,10 +285,10 @@ boolean             confirm;
    TtaExtractName (DocumentURLs[document], url, documentname);
    if (documentname[0] == EOS)
      {
-	strcpy (msg, "Document doesn't have a complete name. Saving to : \n");
+	strcpy (msg, TtaGetMessage(AMAYA, AM_NO_NAME));
 	strcat (msg, url);
 	strcat (msg, DIR_STR);
-	strcpy (msg, "noname.html");
+	strcat (msg, "noname.html");
 	InitConfirm (document, view, msg);
 	if (UserAnswer == 0)
 	   return (-1);
@@ -301,7 +301,7 @@ boolean             confirm;
    if (confirm)
      {
 	TtaNewForm (BaseDialog + ConfirmSave, TtaGetViewFrame (document, view),
-	 0, 0, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 1, 'L', D_DONE);
+	 0, 0, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 1, 'L', D_CANCEL);
 	/*strcpy(msg,"Saving will overwrite the following URLs :"); */
 	TtaNewLabel (BaseDialog + ConfirmSaveLbl, BaseDialog + ConfirmSave, TtaGetMessage (AMAYA, AM_WARNING_SAVE_OVERWRITE));
 
