@@ -84,7 +84,6 @@ do
    cp -p Thot/$MACH/bin/prs $DIR/$MACH/bin/
    cp -p Thot/$MACH/bin/str $DIR/$MACH/bin/
    cp -p Thot/$MACH/bin/tra $DIR/$MACH/bin/
-   cp -p Thot/batch/concatps* $DIR/$MACH/bin/
 done
 
 DIR=/mnt/thot/$THOTVERSION
@@ -94,6 +93,7 @@ mkdir $DIR
 
  mkdir $DIR/batch
    cp -p Thot/batch/*.GRM $DIR/batch/
+   cp -p Thot/batch/concatps* $DIR/batch/
  mkdir $DIR/config
    cp -p Thot/config/XKeysymDB $DIR/config/
    cp -p Thot/config/thot.ini $DIR/config/
