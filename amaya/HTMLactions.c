@@ -1,4 +1,4 @@
- /*
+/*
  *
  *  (c) COPYRIGHT MIT and INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
@@ -189,119 +189,121 @@ int                 newtype;
    /* is this element already within an element of the requested type? */
    if (TtaGetTypedAncestor (elem, elType) == NULL)
      {
-	/* it is not within an element of type newtype */
-	prev = elem;
-	TtaPreviousSibling (&prev);
-	if (prev != NULL)
-	  {
-	     siblingType = TtaGetElementType (prev);
-	     if (siblingType.ElTypeNum == newtype)
-	       {
-		  child = TtaGetLastChild (prev);
-		  if (child != NULL)
-		    {
+       /* it is not within an element of type newtype */
+       prev = elem;
+       TtaPreviousSibling (&prev);
+       if (prev != NULL)
+	 {
+	   siblingType = TtaGetElementType (prev);
+	   if (siblingType.ElTypeNum == newtype)
+	     {
+	       child = TtaGetLastChild (prev);
+	       if (child != NULL)
+		 {
+		   if (TtaCanInsertSibling (TtaGetElementType (elem),
+					    child, FALSE, document))
+		     {
+		       TtaRegisterElementDelete (elem, document);
+		       TtaRemoveTree (elem, document);
+		       TtaInsertSibling (elem, child, FALSE, document);
+		       TtaRegisterElementCreate (elem, document);
+		       TtaSetDocumentModified (document);
+		     }
+		 }
+	       else
+		 {
+		   if (TtaCanInsertFirstChild (TtaGetElementType (elem),
+					       prev, document))
+		     {
+		       TtaRegisterElementDelete (elem, document);
+		       TtaRemoveTree (elem, document);
+		       TtaInsertFirstChild (&elem, prev, document);
+		       TtaRegisterElementCreate (elem, document);
+		       TtaSetDocumentModified (document);
+		     }
+		 }
+	     }
+	   else
+	     {
+	       if (TtaCanInsertSibling (elType, prev, FALSE, document))
+		 {
+		   added = TtaNewElement (document, elType);
+		   TtaRegisterElementDelete (elem, document);
+		   TtaRemoveTree (elem, document);
+		   TtaInsertSibling (added, prev, FALSE, document);
+		   TtaRegisterElementCreate (added, document);
+		   TtaInsertFirstChild (&elem, added, document);
+		   TtaRegisterElementCreate (elem, document);
+		   TtaSetDocumentModified (document);
+		 }
+	     }
+	 }
+       else
+	 {
+	   next = elem;
+	   TtaNextSibling (&next);
+	   if (next != NULL)
+	     {
+	       siblingType = TtaGetElementType (next);
+	       if (siblingType.ElTypeNum == newtype)
+		 {
+		   child = TtaGetFirstChild (next);
+		   if (child != NULL)
+		     {
 		       if (TtaCanInsertSibling (TtaGetElementType (elem),
-						child, FALSE, document))
+						child, TRUE, document))
 			 {
-			    TtaRegisterElementDelete (elem, document);
-			    TtaRemoveTree (elem, document);
-			    TtaInsertSibling (elem, child, FALSE, document);
-			    TtaRegisterElementCreate (elem, document);
-			    TtaSetDocumentModified (document);
+			   TtaRegisterElementDelete (elem, document);
+			   TtaRemoveTree (elem, document);
+			   TtaInsertSibling (elem, child, TRUE, document);
+			   TtaRegisterElementCreate (elem, document);
+			   TtaSetDocumentModified (document);
 			 }
-		    }
-		  else
-		    {
+		     }
+		   else
+		     {
 		       if (TtaCanInsertFirstChild (TtaGetElementType (elem),
-						   prev, document))
+						   next, document))
 			 {
-			    TtaRegisterElementDelete (elem, document);
-			    TtaRemoveTree (elem, document);
-			    TtaInsertFirstChild (&elem, prev, document);
-			    TtaRegisterElementCreate (elem, document);
-			    TtaSetDocumentModified (document);
+			   TtaRegisterElementDelete (elem, document);
+			   TtaRemoveTree (elem, document);
+			   TtaInsertFirstChild (&elem, next, document);
+			   TtaRegisterElementCreate (elem, document);
+			   TtaSetDocumentModified (document);
 			 }
-		    }
-	       }
-	     else
-	       {
-		  if (TtaCanInsertSibling (elType, prev, FALSE, document))
-		    {
-		       added = TtaNewElement (document, elType);
+		     }
+		 }
+	       else
+		 {
+		   if (TtaCanInsertSibling (elType, next, TRUE, document))
+		     {
 		       TtaRegisterElementDelete (elem, document);
 		       TtaRemoveTree (elem, document);
-		       TtaInsertSibling (added, prev, FALSE, document);
+		       added = TtaNewElement (document, elType);
+		       TtaInsertSibling (added, next, TRUE, document);
 		       TtaRegisterElementCreate (added, document);
 		       TtaInsertFirstChild (&elem, added, document);
 		       TtaRegisterElementCreate (elem, document);
 		       TtaSetDocumentModified (document);
-		    }
-	       }
-	  }
-	else
-	  {
-	     next = elem;
-	     TtaNextSibling (&next);
-	     if (next != NULL)
-	       {
-		  siblingType = TtaGetElementType (next);
-		  if (siblingType.ElTypeNum == newtype)
-		    {
-		       child = TtaGetFirstChild (next);
-		       if (child != NULL)
-			 {
-			    if (TtaCanInsertSibling (TtaGetElementType (elem), child, TRUE, document))
-			      {
-				 TtaRegisterElementDelete (elem, document);
-				 TtaRemoveTree (elem, document);
-				 TtaInsertSibling (elem, child, TRUE, document);
-				 TtaRegisterElementCreate (elem, document);
-				 TtaSetDocumentModified (document);
-			      }
-			 }
-		       else
-			 {
-			    if (TtaCanInsertFirstChild (TtaGetElementType (elem), next, document))
-			      {
-				 TtaRegisterElementDelete (elem, document);
-				 TtaRemoveTree (elem, document);
-				 TtaInsertFirstChild (&elem, next, document);
-				 TtaRegisterElementCreate (elem, document);
-				 TtaSetDocumentModified (document);
-			      }
-			 }
-		    }
-		  else
-		    {
-		       if (TtaCanInsertSibling (elType, next, TRUE, document))
-			 {
-			    TtaRegisterElementDelete (elem, document);
-			    TtaRemoveTree (elem, document);
-			    added = TtaNewElement (document, elType);
-			    TtaInsertSibling (added, next, TRUE, document);
-			    TtaRegisterElementCreate (added, document);
-			    TtaInsertFirstChild (&elem, added, document);
-			    TtaRegisterElementCreate (elem, document);
-			    TtaSetDocumentModified (document);
-			 }
-		    }
-	       }
-	     else
-	       {
-		  parent = TtaGetParent (elem);
-		  if (TtaCanInsertFirstChild (elType, parent, document))
-		    {
-		       TtaRegisterElementDelete (elem, document);
-		       TtaRemoveTree (elem, document);
-		       added = TtaNewElement (document, elType);
-		       TtaInsertFirstChild (&added, parent, document);
-		       TtaRegisterElementCreate (added, document);
-		       TtaInsertFirstChild (&elem, added, document);
-		       TtaRegisterElementCreate (elem, document);
-		       TtaSetDocumentModified (document);
-		    }
-	       }
-	  }
+		     }
+		 }
+	     }
+	   else
+	     {
+	       parent = TtaGetParent (elem);
+	       if (TtaCanInsertFirstChild (elType, parent, document))
+		 {
+		   TtaRegisterElementDelete (elem, document);
+		   TtaRemoveTree (elem, document);
+		   added = TtaNewElement (document, elType);
+		   TtaInsertFirstChild (&added, parent, document);
+		   TtaRegisterElementCreate (added, document);
+		   TtaInsertFirstChild (&elem, added, document);
+		   TtaRegisterElementCreate (elem, document);
+		   TtaSetDocumentModified (document);
+		 }
+	     }
+	 }
      }
 }
 
@@ -554,7 +556,7 @@ void *context;
      
       /* only turn off the link if it points that exists or that we can
 	 follow */
-      if (PseudoAttr != NULL && status != -1)
+      if (PseudoAttr && status != -1)
 	{
 	  if (url[0] == '#')
 	    {
@@ -568,7 +570,7 @@ void *context;
 
   if (url[0] == '#' && targetDocument != 0)
     {
-      if (elFound != NULL)
+      if (elFound)
 	{
 	  elType = TtaGetElementType (elFound);
 	  if (elType.ElSSchema == docSchema && elType.ElTypeNum == HTML_EL_LINK)
@@ -636,139 +638,148 @@ Document         doc;
 #endif /* ANNOTATIONS */
    HTMLSSchema = TtaGetSSchema (TEXT("HTML"), doc);
 
-   if (anchor != NULL)
+   if (anchor)
      {
-        elType = TtaGetElementType (anchor);
-	attrType.AttrSSchema = HTMLSSchema;
-	isHTML = TtaSameSSchemas (elType.ElSSchema, HTMLSSchema);
-	/* search the HREF or CITE attribute */
-        if (isHTML &&
-		(elType.ElTypeNum == HTML_EL_Quotation ||
-		 elType.ElTypeNum == HTML_EL_Block_Quote ||
-		 elType.ElTypeNum == HTML_EL_INS ||
-		 elType.ElTypeNum == HTML_EL_DEL))
-	   attrType.AttrTypeNum = HTML_ATTR_cite;
-	else if (isHTML && elType.ElTypeNum == HTML_EL_FRAME)
-	   attrType.AttrTypeNum = HTML_ATTR_FrameSrc;
-	else
-	   if (isHTML)
-	     attrType.AttrTypeNum = HTML_ATTR_HREF_;
-	   else
-	     {
-	        attrType.AttrSSchema = TtaGetSSchema (TEXT("XLink"), doc);
-		attrType.AttrTypeNum = XLink_ATTR_href_;
+       elType = TtaGetElementType (anchor);
+       attrType.AttrSSchema = HTMLSSchema;
+       isHTML = TtaSameSSchemas (elType.ElSSchema, HTMLSSchema);
+       /* search the HREF or CITE attribute */
+       if (isHTML &&
+	   (elType.ElTypeNum == HTML_EL_Quotation ||
+	    elType.ElTypeNum == HTML_EL_Block_Quote ||
+	    elType.ElTypeNum == HTML_EL_INS ||
+	    elType.ElTypeNum == HTML_EL_DEL))
+	 attrType.AttrTypeNum = HTML_ATTR_cite;
+       else if (isHTML && elType.ElTypeNum == HTML_EL_FRAME)
+	 attrType.AttrTypeNum = HTML_ATTR_FrameSrc;
+       else
+	 if (isHTML)
+	   attrType.AttrTypeNum = HTML_ATTR_HREF_;
+	 else
+	   {
+	     if (elType.ElTypeNum == GraphML_EL_a &&
+		 !ustrcmp (TtaGetSSchemaName (elType.ElSSchema),
+			   TEXT("GraphML")))
+	       /* it's an SVG anchor element, look for an xlink:href attr. */
+	       {
+		 attrType.AttrSSchema = elType.ElSSchema;
+		 attrType.AttrTypeNum = GraphML_ATTR_xlink_href;
+	       }
+	     else
+	       {
+		 attrType.AttrSSchema = TtaGetSSchema (TEXT("XLink"), doc);
+		 attrType.AttrTypeNum = XLink_ATTR_href_;
 #ifdef ANNOTATIONS
-		/* is it an annotation link? */
-		if (elType.ElSSchema == attrType.AttrSSchema
-		    && elType.ElTypeNum == XLink_EL_XLink)
-		  isAnnotLink = TRUE;
+		 /* is it an annotation link? */
+		 if (elType.ElSSchema == attrType.AttrSSchema
+		     && elType.ElTypeNum == XLink_EL_XLink)
+		   isAnnotLink = TRUE;
 #endif /* ANNOTATIONS */
-	     }
-
-	HrefAttr = TtaGetAttribute (anchor, attrType);
+	       }
+	   }
+       HrefAttr = TtaGetAttribute (anchor, attrType);
      }
 
    if (HrefAttr != NULL)
      {
-	targetDocument = 0;
-	PseudoAttr = NULL;
-	/* get a buffer for the target URL */
-	length = TtaGetTextAttributeLength (HrefAttr);
-	length++;
-	url = TtaAllocString (length);
-	if (url != NULL)
-	  {
-	     elType = TtaGetElementType (anchor);
-	     if (elType.ElTypeNum == HTML_EL_Anchor &&
-		 elType.ElSSchema == HTMLSSchema)
-	       {
-		 /* it's an HTML anchor */
-		 /* attach an attribute PseudoClass = active */
-		 attrType.AttrSSchema = HTMLSSchema;
-		 attrType.AttrTypeNum = HTML_ATTR_PseudoClass;
-		 PseudoAttr = TtaGetAttribute (anchor, attrType);
-		 if (PseudoAttr == NULL)
-		   {
-		     PseudoAttr = TtaNewAttribute (attrType);
-		     TtaAttachAttribute (anchor, PseudoAttr, doc);
-		   }
-		 TtaSetAttributeText (PseudoAttr, TEXT("active"), anchor, doc);
-	       }
-	     /* get the URL itself */
-	     TtaGiveTextAttributeValue (HrefAttr, url, &length);
-
-	     /* suppress white spaces at the end */
-	     length--;
-	     while (url[length] == ' ')
-		url[length--] = EOS;
-	     /* save the complete URL of the source document */
-	     length = ustrlen (DocumentURLs[doc])+1;
-	     sourceDocUrl = TtaAllocString (length);
-	     ustrcpy (sourceDocUrl, DocumentURLs[doc]);
-	     /* save the context */
-	     ctx = TtaGetMemory (sizeof (FollowTheLink_context));
-	     ctx->anchor = anchor;
-	     ctx->doc = doc;
-	     ctx->url = url;
-	     ctx->elSource = elSource;
-	     ctx->sourceDocUrl = sourceDocUrl;
-	     TtaSetSelectionMode (TRUE);
-	     if (url[0] == '#')
-	       {
-		 /* the target element is part of the same document */
-		 targetDocument = doc;
-		 /* manually invoke the callback */
-		 FollowTheLink_callback (targetDocument, 0, NULL, NULL, NULL, 
- 					 (void *) ctx);
-		 /*
+       targetDocument = 0;
+       PseudoAttr = NULL;
+       /* get a buffer for the target URL */
+       length = TtaGetTextAttributeLength (HrefAttr);
+       length++;
+       url = TtaAllocString (length);
+       if (url != NULL)
+	 {
+	   elType = TtaGetElementType (anchor);
+	   if (elType.ElTypeNum == HTML_EL_Anchor &&
+	       elType.ElSSchema == HTMLSSchema)
+	     {
+	       /* it's an HTML anchor */
+	       /* attach an attribute PseudoClass = active */
+	       attrType.AttrSSchema = HTMLSSchema;
+	       attrType.AttrTypeNum = HTML_ATTR_PseudoClass;
+	       PseudoAttr = TtaGetAttribute (anchor, attrType);
+	       if (PseudoAttr == NULL)
+		 {
+		   PseudoAttr = TtaNewAttribute (attrType);
+		   TtaAttachAttribute (anchor, PseudoAttr, doc);
+		 }
+	       TtaSetAttributeText (PseudoAttr, TEXT("active"), anchor, doc);
+	     }
+	   /* get the URL itself */
+	   TtaGiveTextAttributeValue (HrefAttr, url, &length);
+	   /* suppress white spaces at the end */
+	   length--;
+	   while (url[length] == ' ')
+	     url[length--] = EOS;
+	   /* save the complete URL of the source document */
+	   length = ustrlen (DocumentURLs[doc])+1;
+	   sourceDocUrl = TtaAllocString (length);
+	   ustrcpy (sourceDocUrl, DocumentURLs[doc]);
+	   /* save the context */
+	   ctx = TtaGetMemory (sizeof (FollowTheLink_context));
+	   ctx->anchor = anchor;
+	   ctx->doc = doc;
+	   ctx->url = url;
+	   ctx->elSource = elSource;
+	   ctx->sourceDocUrl = sourceDocUrl;
+	   TtaSetSelectionMode (TRUE);
+	   if (url[0] == '#')
+	     {
+	       /* the target element is part of the same document */
+	       targetDocument = doc;
+	       /* manually invoke the callback */
+	       FollowTheLink_callback (targetDocument, 0, NULL, NULL, NULL, 
+				       (void *) ctx);
+	       /*
 		 if (PseudoAttr != NULL)
-		   TtaSetAttributeText (PseudoAttr, "visited", anchor, doc);
-		   */
-
-	       }
-	     else
-		/* the target element seems to be in another document */
-	       {
-		 ustrncpy (documentURL, url, MAX_LENGTH - 1);
-		 documentURL[MAX_LENGTH - 1] = EOS;
-		 url[0] = EOS;
-		 /* is the source element an image map? */
-		 attrType.AttrSSchema = HTMLSSchema;
-		 attrType.AttrTypeNum = HTML_ATTR_ISMAP;
-		 attr = TtaGetAttribute (elSource, attrType);
-		 if (attr != NULL)
-		   /* it's an image map */
-		   {
-		     info = GetActiveImageInfo (doc, elSource);
-		     if (info != NULL)
-		       {
-			 /* @@ what do we do with the precedent parameters? */
-			ustrcat (documentURL, info);
-			TtaFreeMemory (info);
-		       }
-		   }
-		 /* interrupt current transfer */
-		 StopTransfer (doc, 1);	   
-		 /* get the referred document */
+		 TtaSetAttributeText (PseudoAttr, "visited", anchor, doc);
+	       */
+	       
+	     }
+	   else
+	     /* the target element seems to be in another document */
+	     {
+	       ustrncpy (documentURL, url, MAX_LENGTH - 1);
+	       documentURL[MAX_LENGTH - 1] = EOS;
+	       url[0] = EOS;
+	       /* is the source element an image map? */
+	       attrType.AttrSSchema = HTMLSSchema;
+	       attrType.AttrTypeNum = HTML_ATTR_ISMAP;
+	       attr = TtaGetAttribute (elSource, attrType);
+	       if (attr != NULL)
+		 /* it's an image map */
+		 {
+		   info = GetActiveImageInfo (doc, elSource);
+		   if (info != NULL)
+		     {
+		       /* @@ what do we do with the precedent parameters? */
+		       ustrcat (documentURL, info);
+		       TtaFreeMemory (info);
+		     }
+		 }
+	       /* interrupt current transfer */
+	       StopTransfer (doc, 1);	   
+	       /* get the referred document */
 #ifdef ANNOTATIONS
-		 targetDocument = GetHTMLDocument (documentURL, NULL,
-						   (isAnnotLink) ? 0 : doc,
-						   doc,
-						   (isAnnotLink) ? CE_ANNOT : CE_RELATIVE, 
-						   (isAnnotLink) ? FALSE : TRUE, 
-						   (void *) FollowTheLink_callback,
-						   (void *) ctx);
+	       targetDocument = GetHTMLDocument (documentURL, NULL,
+						 (isAnnotLink) ? 0 : doc,
+						 doc,
+						 (isAnnotLink) ? CE_ANNOT : CE_RELATIVE, 
+						 (isAnnotLink) ? FALSE : TRUE, 
+						 (void *) FollowTheLink_callback,
+						 (void *) ctx);
 #else
-		 targetDocument = GetHTMLDocument (documentURL, NULL,
-						   doc, 
-						   doc, 
-						   CE_RELATIVE, TRUE, 
-						   (void *) FollowTheLink_callback,
-						   (void *) ctx);
+	       targetDocument = GetHTMLDocument (documentURL, NULL,
+						 doc, 
+						 doc, 
+						 CE_RELATIVE, TRUE, 
+						 (void *) FollowTheLink_callback,
+						 (void *) ctx);
 #endif /* ANNOTATIONS */
-	       }
-	     return (TRUE);
-	  }
+	     }
+	   return (TRUE);
+	 }
      }
    return (FALSE);
 }
@@ -812,7 +823,6 @@ Document	document;
       }
 }
 
-
 /*----------------------------------------------------------------------
   ActivateElement    The user has activated an element.         
   ----------------------------------------------------------------------*/
@@ -828,7 +838,7 @@ Document            document;
    Attribute           attr;
    Element             anchor, elFound, ancestor;
    ElementType         elType, elType1;
-   SSchema             HTMLschema, XLinkSchema;
+   SSchema             HTMLschema, SvgSchema, XLinkSchema;
    ThotBool	       ok, isHTML, isXLink;
 
    elType = TtaGetElementType (element);
@@ -966,7 +976,7 @@ Document            document;
    if (!isXLink)
      {
        anchor = SearchAnchor (document, element, TRUE, FALSE);
-       if (anchor == NULL)
+       if (!anchor)
 	 {
 	   if (isHTML && (elType.ElTypeNum == HTML_EL_LINK ||
 			  elType.ElTypeNum == HTML_EL_FRAME))
@@ -976,6 +986,17 @@ Document            document;
 	       elType1.ElTypeNum = HTML_EL_LINK;
 	       elType1.ElSSchema = HTMLschema;
 	       anchor = TtaGetTypedAncestor (element, elType1);
+	     }
+	   if (!anchor)
+	     {
+	       /* look for an enclosing SVG anchor */
+	       SvgSchema =  TtaGetSSchema (TEXT("GraphML"), document);
+	       if (SvgSchema)
+		 {
+		   elType1.ElTypeNum = GraphML_EL_a;
+	           elType1.ElSSchema = SvgSchema;
+	           anchor = TtaGetTypedAncestor (element, elType1);	   
+		 }
 	     }
 	 }
      }
@@ -2096,7 +2117,8 @@ NotifyElement* event;
 	       }
 	    else
 	       {
-	       attrType.AttrSSchema = TtaGetSSchema (TEXT("TextFile"), otherDoc);
+	       attrType.AttrSSchema = TtaGetSSchema (TEXT("TextFile"),
+						     otherDoc);
 	       attrType.AttrTypeNum = TextFile_ATTR_Highlight;
 	       val = TextFile_ATTR_Highlight_VAL_Yes_;
 	       }
@@ -2339,7 +2361,8 @@ int                 elemtype;
 	     done = FALSE;
 	     elFont = TtaGetTypedAncestor (selectedEl, elType);
 	     if (remove)
-		/* the element has to be removed from an element of type elType */
+		/* the element has to be removed from an element of type
+		   elType */
 		/* If it is not within such an element, nothing to do */
 		done = (elFont == NULL);
 	     else
@@ -2383,71 +2406,71 @@ int                 elemtype;
      {
        switch (elemtype)
 	 {
-	    case HTML_EL_Emphasis:
-	       SelectionInEM = !remove;
-	       break;
-	    case HTML_EL_Strong:
-	       SelectionInSTRONG = !remove;
-	       break;
-	    case HTML_EL_Def:
-	       SelectionInDFN = !remove;
-	       break;
-	    case HTML_EL_Code:
-	       SelectionInCODE = !remove;
-	       break;
-	    case HTML_EL_Variable:
-	       SelectionInVAR = !remove;
-	       break;
-	    case HTML_EL_Sample:
-	       SelectionInSAMP = !remove;
-	       break;
-	    case HTML_EL_Keyboard:
-	       SelectionInKBD = !remove;
-	       break;
-	    case HTML_EL_Cite:
-	       SelectionInCITE = !remove;
-	       break;
-	    case HTML_EL_ABBR:
-	       SelectionInABBR = !remove;
-	       break;
-	    case HTML_EL_ACRONYM:
-	       SelectionInACRONYM = !remove;
-	       break;
-	    case HTML_EL_INS:
-	       SelectionInINS = !remove;
-	       break;
-	    case HTML_EL_DEL:
-	       SelectionInDEL = !remove;
-	       break;
-	    case HTML_EL_Italic_text:
-	       SelectionInI = !remove;
-	       break;
-	    case HTML_EL_Bold_text:
-	       SelectionInB = !remove;
-	       break;
-	    case HTML_EL_Teletype_text:
-	       SelectionInTT = !remove;
-	       break;
-	    case HTML_EL_Big_text:
-	       SelectionInBIG = !remove;
-	       break;
-	    case HTML_EL_Small_text:
-	       SelectionInSMALL = !remove;
-	       break;
-	    case HTML_EL_Subscript:
-	       SelectionInSub = !remove;
-	       break;
-	    case HTML_EL_Superscript:
-	       SelectionInSup = !remove;
-	       break;
-	    case HTML_EL_Quotation:
-	       SelectionInQuote = !remove;
-	       break;
-	    case HTML_EL_BDO:
-	       SelectionInBDO = !remove;
-	       break;
-	    default:
-	       break;
+	 case HTML_EL_Emphasis:
+	   SelectionInEM = !remove;
+	   break;
+	 case HTML_EL_Strong:
+	   SelectionInSTRONG = !remove;
+	   break;
+	 case HTML_EL_Def:
+	   SelectionInDFN = !remove;
+	   break;
+	 case HTML_EL_Code:
+	   SelectionInCODE = !remove;
+	   break;
+	 case HTML_EL_Variable:
+	   SelectionInVAR = !remove;
+	   break;
+	 case HTML_EL_Sample:
+	   SelectionInSAMP = !remove;
+	   break;
+	 case HTML_EL_Keyboard:
+	   SelectionInKBD = !remove;
+	   break;
+	 case HTML_EL_Cite:
+	   SelectionInCITE = !remove;
+	   break;
+	 case HTML_EL_ABBR:
+	   SelectionInABBR = !remove;
+	   break;
+	 case HTML_EL_ACRONYM:
+	   SelectionInACRONYM = !remove;
+	   break;
+	 case HTML_EL_INS:
+	   SelectionInINS = !remove;
+	   break;
+	 case HTML_EL_DEL:
+	   SelectionInDEL = !remove;
+	   break;
+	 case HTML_EL_Italic_text:
+	   SelectionInI = !remove;
+	   break;
+	 case HTML_EL_Bold_text:
+	   SelectionInB = !remove;
+	   break;
+	 case HTML_EL_Teletype_text:
+	   SelectionInTT = !remove;
+	   break;
+	 case HTML_EL_Big_text:
+	   SelectionInBIG = !remove;
+	   break;
+	 case HTML_EL_Small_text:
+	   SelectionInSMALL = !remove;
+	   break;
+	 case HTML_EL_Subscript:
+	   SelectionInSub = !remove;
+	   break;
+	 case HTML_EL_Superscript:
+	   SelectionInSup = !remove;
+	   break;
+	 case HTML_EL_Quotation:
+	   SelectionInQuote = !remove;
+	   break;
+	 case HTML_EL_BDO:
+	   SelectionInBDO = !remove;
+	   break;
+	 default:
+	   break;
 	 }
      }
 }

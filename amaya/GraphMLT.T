@@ -71,41 +71,22 @@ RULES
 	create 'defs>\12' after;
 	END;
 
-   Spline:
+   path:
 	BEGIN
 	create SOT;
-	create 'spline';
-	indent +8;
+	create 'path';
+	indent +6;
 	create attributes;
 	if IntEmptyShape
 		create CloseEmptyTagNL;
-	indent -8;
+	indent -6;
 	if not IntEmptyShape
 		BEGIN
 		create CloseTagNL;
 		indent +2;
 		indent -2 after;
 		create SCT after;
-		create 'spline>\12' after;
-		END;
-	END;
-
-   ClosedSpline:
-	BEGIN
-	create SOT;
-	create 'closedspline';
-	indent +14;
-	create attributes;
-	if IntEmptyShape
-		create CloseEmptyTagNL;
-	indent -14;
-	if not IntEmptyShape
-		BEGIN
-		create CloseTagNL;
-		indent +2;
-		indent -2 after;
-		create SCT after;
-		create 'closedspline>\12' after;
+		create 'path>\12' after;
 		END;
 	END;
 
@@ -326,7 +307,7 @@ RULES
 	create SOT;
 	create 'a';
 	create attributes;
-	create '>';
+	create CloseTagNL;
 	indent +2;
 	indent -2 after;
 	create SCT after;
@@ -586,6 +567,22 @@ ATTRIBUTES
 	BEGIN
 	create SAN;
 	create 'arrowhead="both"';
+	END;
+
+   d:
+	BEGIN
+	create SAN;
+	create 'd="';
+	create d;
+	create DoubleQuote;
+	END;
+
+   pathLength:
+	BEGIN
+	create SAN;
+	create 'pathLength="';
+	create pathLength;
+	create DoubleQuote;
 	END;
 
    cx:

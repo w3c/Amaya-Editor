@@ -319,33 +319,6 @@ int		arrowHead;
    elType = TtaGetElementType (el);
    switch (elType.ElTypeNum)
      {
-     case GraphML_EL_Spline:
-       switch (arrowHead)
-	 {
-	 case GraphML_ATTR_arrowhead_VAL_none_:
-	   shape = 'B';
-	   break;
-	 case GraphML_ATTR_arrowhead_VAL_start:
-	   shape = 'F';
-	   break;
-	 case GraphML_ATTR_arrowhead_VAL_end_:
-	   shape = 'A';
-	   break;
-	 case GraphML_ATTR_arrowhead_VAL_both:
-	   shape = 'D';
-	   break;
-	 default:
-	   shape = 'B';
-	   break;
-	 }
-       leaf = CreateGraphicalLeaf (shape, el, doc, arrowHead != 0);
-       break;
-
-     case GraphML_EL_ClosedSpline:
-       leaf = CreateGraphicalLeaf ('s', el, doc, FALSE);
-       *closed = TRUE;
-       break;
-
      case GraphML_EL_rect:
        leaf = CreateGraphicalLeaf ('C', el, doc, FALSE);
        *closed = TRUE;
@@ -731,8 +704,7 @@ int             *error
 
 /*----------------------------------------------------------------------
  UpdatePositionOfPoly
- Set position, width and height for an element polyline, Spline,
- polygon or ClosedSpline.
+ Set position, width and height for an element polyline or polygon.
  Change coords of control points accordingly.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1152,6 +1124,358 @@ ThotBool        delete
 }
 
 /*----------------------------------------------------------------------
+   GetNumber
+   Parse a coordinate value in a path expression and skip to next token
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static STRING      GetNumber (STRING ptr, int* coord)
+#else
+static STRING      GetNumber (ptr, coord)
+STRING ptr;
+int* coord;
+#endif
+{
+  int      val;
+  ThotBool negative;
+
+  val = 0;
+  negative = FALSE;
+  /* read the sign */
+  if (*ptr == TEXT('+'))
+    ptr++;
+  else if (*ptr == TEXT('-'))
+    {
+      ptr++;
+      negative = TRUE;
+    }
+  /* read the integer part */
+  while (*ptr != WC_EOS && *ptr >= TEXT('0') && *ptr <= TEXT('9'))
+    {
+      val *= 10;
+      val += *ptr - TEXT('0');
+      ptr++;
+    }
+  if (*ptr == TEXT('.'))
+    /* skip the decimal part */
+    {
+      ptr++;
+      while (*ptr != WC_EOS &&  *ptr >= TEXT('0') && *ptr <= TEXT('9'))
+	ptr++;
+    }
+  if (negative)
+    *coord = - val;
+  else
+    *coord = val;
+  /* skip the following spaces */
+  while (*ptr != WC_EOS &&
+         (*ptr == TEXT(',') || *ptr == WC_SPACE || *ptr == WC_BSPACE ||
+	  *ptr == WC_EOL    || *ptr == WC_TAB   || *ptr == WC_CR))
+    ptr++;
+  return (ptr);
+}
+
+/*----------------------------------------------------------------------
+   ParsePathDataAttribute
+   Parse the value of a path data attribute
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void      ParsePathDataAttribute (Attribute attr, Element el, Document doc)
+#else
+void      ParsePathDataAttribute (attr, el, doc)
+Attribute	attr;
+Element		el;
+Document	doc;
+#endif
+{
+   int          length, x, y, x1, y1, x2, y2, xcur, ycur, xinit, yinit,
+                x2prev, y2prev, x1prev, y1prev, rx, ry, xAxisRotation,
+                largeArcFlag, sweepFlag;
+   ThotBool     relative;
+   STRING       text, ptr;
+   CHAR_T       command, prevCommand;
+
+   length = TtaGetTextAttributeLength (attr) + 2;
+   text = TtaAllocString (length);
+   if (text)
+      {
+      /* get the content of the path data attribute */
+      TtaGiveTextAttributeValue (attr, text, &length);
+      /* parse the attribute content */
+      ptr = text;
+      ptr = TtaSkipWCBlanks (ptr);
+      command = *ptr;
+      ptr++;
+      prevCommand = WC_EOS;
+      while (command != EOS)
+         {
+         relative = TRUE;
+         switch (command)
+	   {
+	   case 'M':
+	     relative = FALSE;
+	   case 'm':
+	     /* moveto */
+             ptr = TtaSkipWCBlanks (ptr);
+	     ptr = GetNumber (ptr, &xcur);
+             ptr = GetNumber (ptr, &ycur);
+	     xinit = xcur;
+             yinit = ycur;
+	     prevCommand = command;
+	     if (*ptr != TEXT('+') && *ptr != TEXT('-') &&
+		 (*ptr < '0' || *ptr > '9'))
+	       /* no more coordinates. New command */
+	       {
+	       command = *ptr;
+	       ptr++;
+	       }
+	     else
+	       /* more coordinates, do as if it was a lineto command */
+	       {
+	       if (command == 'M')
+		 command = 'L';
+	       else
+                 command = 'l';
+	       }
+	     break;
+
+	   case 'Z':
+	     relative = FALSE;
+	   case 'z':
+	     /* close path */
+             ptr = TtaSkipWCBlanks (ptr);	     
+	     command = *ptr;
+	     ptr++;
+	     /* draw a line from (xcur, ycur) to (xinit, yinit) */
+	     /******/
+	     prevCommand = command;
+	     break;
+
+	   case 'L':
+	     relative = FALSE;
+	   case 'l':
+	     /* lineto */
+             ptr = TtaSkipWCBlanks (ptr);
+             ptr = GetNumber (ptr, &x);
+             ptr = GetNumber (ptr, &y);
+	     /* draw a line from (xcur, ycur) to (x, y) */
+	     /******/
+	     xcur = x;
+	     ycur = y;
+	     prevCommand = command;
+	     if (*ptr != TEXT('+') && *ptr != TEXT('-') &&
+		 (*ptr < '0' || *ptr > '9'))
+	       /* no more coordinates. New command */
+	       {
+	       command = *ptr;
+	       ptr++;
+	       }
+	     break;
+
+	   case 'H':
+	     relative = FALSE;
+	   case 'h':
+	     /* horizontal lineto */
+             ptr = TtaSkipWCBlanks (ptr);
+             ptr = GetNumber (ptr, &x);
+	     /* draw a horizontal line from (xcur, ycur) to (x, ycur) */
+	     /******/
+	     xcur = x;
+	     prevCommand = command;
+	     if (*ptr != TEXT('+') && *ptr != TEXT('-') &&
+		 (*ptr < '0' || *ptr > '9'))
+	       /* no more coordinates. New command */
+	       {
+	       command = *ptr;
+	       ptr++;
+	       }
+	     break;
+
+	   case 'V':
+	     relative = FALSE;
+	   case 'v':
+	     /* vertical lineto */
+             ptr = TtaSkipWCBlanks (ptr);
+             ptr = GetNumber (ptr, &y);
+	     /* draw a vertical line from (xcur, ycur) to (xcur, y) */
+	     /******/
+	     ycur = y;
+	     prevCommand = command;
+	     if (*ptr != TEXT('+') && *ptr != TEXT('-') &&
+		 (*ptr < '0' || *ptr > '9'))
+	       /* no more coordinates. New command */
+	       {
+	       command = *ptr;
+	       ptr++;
+	       }
+	     break;
+
+	   case 'C':
+	     relative = FALSE;
+	   case 'c':
+	     /* curveto */
+             ptr = TtaSkipWCBlanks (ptr);
+             ptr = GetNumber (ptr, &x1);
+             ptr = GetNumber (ptr, &y1);
+             ptr = GetNumber (ptr, &x2);
+             ptr = GetNumber (ptr, &y2);
+	     ptr = GetNumber (ptr, &x);
+             ptr = GetNumber (ptr, &y);
+	     /* draw a cubic Bezier curve from (xcur, ycur) to (x, y) using
+                (x1, y1) as the control point at the beginning of the curve
+		and (x2,y2) as the control point at the end of the curve */
+	     /******/
+             xcur = x;
+             ycur = y;
+             x2prev = x2;
+             y2prev = y2;
+	     prevCommand = command;
+	     if (*ptr != TEXT('+') && *ptr != TEXT('-') &&
+		 (*ptr < '0' || *ptr > '9'))
+	       /* no more coordinates. New command */
+	       {
+	       command = *ptr;
+	       ptr++;
+	       }
+	     break;
+
+	   case 'S':
+	     relative = FALSE;
+	   case 's':
+	     /* smooth curveto */
+             ptr = TtaSkipWCBlanks (ptr);
+             ptr = GetNumber (ptr, &x2);
+             ptr = GetNumber (ptr, &y2);
+	     ptr = GetNumber (ptr, &x);
+             ptr = GetNumber (ptr, &y);
+	     /* compute the first control point */
+	     if (prevCommand == TEXT('C') || prevCommand == TEXT('c') || 
+		 prevCommand == TEXT('S') || prevCommand == TEXT('s'))
+	       {
+		 x1 = xcur + (xcur - x2prev);
+		 y1 = ycur + (ycur - y2prev);
+	       }
+	     else
+	       {
+		 x1 = xcur;
+		 y1 = ycur;
+	       }
+	     /* draw a cubic Bezier curve from (xcur, ycur) to (x, y) using
+                (x1, y1) as the control point at the beginning of the curve
+		and (x2,y2) as the control point at the end of the curve */
+	     /******/
+             xcur = x;
+             ycur = y;
+             x2prev = x2;
+             y2prev = y2;
+	     prevCommand = command;
+	     if (*ptr != TEXT('+') && *ptr != TEXT('-') &&
+		 (*ptr < '0' || *ptr > '9'))
+	       /* no more coordinates. New command */
+	       {
+	       command = *ptr;
+	       ptr++;
+	       }
+	     break;
+
+	   case 'Q':
+	     relative = FALSE;
+	   case 'q':
+	     /* quadric Bezier curveto */
+             ptr = TtaSkipWCBlanks (ptr);
+             ptr = GetNumber (ptr, &x1);
+             ptr = GetNumber (ptr, &y1);
+	     ptr = GetNumber (ptr, &x);
+             ptr = GetNumber (ptr, &y);
+	     /* draw a quadric Bezier curve from (xcur, ycur) to (x, y) using
+                (x1, y1) as the control point */
+	     /******/
+             xcur = x;
+             ycur = y;
+             x1prev = x1;
+             y1prev = y1;
+	     prevCommand = command;
+	     if (*ptr != TEXT('+') && *ptr != TEXT('-') &&
+		 (*ptr < '0' || *ptr > '9'))
+	       /* no more coordinates. New command */
+	       {
+	       command = *ptr;
+	       ptr++;
+	       }
+	     break;
+
+	   case 'T':
+	     relative = FALSE;
+	   case 't':
+	     /* smooth quadric Bezier curveto */
+             ptr = TtaSkipWCBlanks (ptr);
+	     ptr = GetNumber (ptr, &x);
+             ptr = GetNumber (ptr, &y);
+	     /* compute the control point */
+	     if (prevCommand == TEXT('Q') || prevCommand == TEXT('q') || 
+		 prevCommand == TEXT('T') || prevCommand == TEXT('t'))
+	       {
+		 x1 = xcur + (xcur - x1prev);
+		 y1 = ycur + (ycur - y1prev);
+	       }
+	     else
+	       {
+		 x1 = xcur;
+		 y1 = ycur;
+	       }
+	     /* draw a quadric Bezier curve from (xcur, ycur) to (x, y) using
+                (x1, y1) as the control point */
+	     /******/
+             xcur = x;
+             ycur = y;
+             x1prev = x1;
+             y1prev = y1;
+	     prevCommand = command;
+	     if (*ptr != TEXT('+') && *ptr != TEXT('-') &&
+		 (*ptr < '0' || *ptr > '9'))
+	       /* no more coordinates. New command */
+	       {
+	       command = *ptr;
+	       ptr++;
+	       }
+	     break;
+
+	   case 'A':
+	     relative = FALSE;
+	   case 'a':
+	     /* elliptical arc */
+             ptr = TtaSkipWCBlanks (ptr);
+             ptr = GetNumber (ptr, &rx);
+             ptr = GetNumber (ptr, &ry);
+             ptr = GetNumber (ptr, &xAxisRotation);
+             ptr = GetNumber (ptr, &largeArcFlag);
+             ptr = GetNumber (ptr, &sweepFlag);
+	     ptr = GetNumber (ptr, &x);
+             ptr = GetNumber (ptr, &y);
+	     /* draw an elliptical arc from (xcur, ycur) to (x, y) */
+	     /*******/
+             xcur = x;
+             ycur = y;
+	     prevCommand = command;
+	     if (*ptr != TEXT('+') && *ptr != TEXT('-') &&
+		 (*ptr < '0' || *ptr > '9'))
+	       /* no more coordinates. New command */
+	       {
+	       command = *ptr;
+	       ptr++;
+	       }
+	     break;
+
+	   default:
+	     /* error */
+	     command = EOS;
+	     break;
+	   }
+         }
+      TtaFreeMemory (text);
+      }
+}
+
+/*----------------------------------------------------------------------
    GraphMLAttributeComplete
    The XML parser has read attribute attr for element el in document doc.
   ----------------------------------------------------------------------*/
@@ -1217,6 +1541,9 @@ Document	doc;
 	   leaf = CreateGraphicLeaf (el, doc, &closed, 0);	   
 	ParseWidthHeightAttribute (attr, el, doc, FALSE);
 	break;
+     case GraphML_ATTR_d:
+	ParsePathDataAttribute (attr, el, doc);
+        break;
      default:
 	break;
      }

@@ -101,8 +101,7 @@ Document    doc;
      if (elType.ElSSchema == GraphMLSchema)
         /* this child is in the GraphML namespace */
 	{
-        if (elType.ElTypeNum == GraphML_EL_Spline ||
-	    elType.ElTypeNum == GraphML_EL_ClosedSpline ||
+        if (elType.ElTypeNum == GraphML_EL_path ||
 	    elType.ElTypeNum == GraphML_EL_rect ||
 	    elType.ElTypeNum == GraphML_EL_circle ||
 	    elType.ElTypeNum == GraphML_EL_ellipse ||
@@ -253,8 +252,7 @@ NotifyElement *event;
    elType = TtaGetElementType (firstSel);
    if (elType.ElSSchema != graphSSchema ||
         (elType.ElTypeNum != GraphML_EL_g &&
-	 elType.ElTypeNum != GraphML_EL_Spline &&
-	 elType.ElTypeNum != GraphML_EL_ClosedSpline &&
+	 elType.ElTypeNum != GraphML_EL_path &&
 	 elType.ElTypeNum != GraphML_EL_rect &&
 	 elType.ElTypeNum != GraphML_EL_circle &&
 	 elType.ElTypeNum != GraphML_EL_ellipse &&
@@ -275,8 +273,7 @@ NotifyElement *event;
    elType = TtaGetElementType (selEl);
    if (elType.ElSSchema != graphSSchema ||
         (elType.ElTypeNum != GraphML_EL_g &&
-	 elType.ElTypeNum != GraphML_EL_Spline &&
-	 elType.ElTypeNum != GraphML_EL_ClosedSpline &&
+	 elType.ElTypeNum != GraphML_EL_path &&
 	 elType.ElTypeNum != GraphML_EL_rect &&
 	 elType.ElTypeNum != GraphML_EL_circle &&
 	 elType.ElTypeNum != GraphML_EL_ellipse &&
@@ -755,8 +752,6 @@ ThotBool    horiz;
 	   elType.ElTypeNum == GraphML_EL_image ||
 	   elType.ElTypeNum == GraphML_EL_foreignObject ||
 	   elType.ElTypeNum == GraphML_EL_GraphML ||
-	   elType.ElTypeNum == GraphML_EL_Spline ||
-	   elType.ElTypeNum == GraphML_EL_ClosedSpline ||
 	   elType.ElTypeNum == GraphML_EL_polyline ||
 	   elType.ElTypeNum == GraphML_EL_polygon)
     {
@@ -860,8 +855,7 @@ NotifyAttribute *event;
 }
 
 /*----------------------------------------------------------------------
-  CheckGraphMLRoot checks that the svg root element includes that
-  new element.
+  CheckGraphMLRoot checks that the svg root element includes element el.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
 void             CheckGraphMLRoot (Document doc, Element el)
@@ -909,9 +903,7 @@ Element          el;
 	  while (child)
 	    {
 	      elType = TtaGetElementType (child);
-	      if (elType.ElTypeNum == GraphML_EL_Spline ||
-		  elType.ElTypeNum == GraphML_EL_ClosedSpline ||
-		  elType.ElTypeNum == GraphML_EL_polyline ||
+	      if (elType.ElTypeNum == GraphML_EL_polyline ||
 		  elType.ElTypeNum == GraphML_EL_polygon)
 		TranslatePointsAttribute (el, doc, val, unit, TRUE);
 	      else
@@ -981,9 +973,7 @@ Element          el;
 	  while (child)
 	    {
 	      elType = TtaGetElementType (child);
-	      if (elType.ElTypeNum == GraphML_EL_Spline ||
-		  elType.ElTypeNum == GraphML_EL_ClosedSpline ||
-		  elType.ElTypeNum == GraphML_EL_polyline ||
+	      if (elType.ElTypeNum == GraphML_EL_polyline ||
 		  elType.ElTypeNum == GraphML_EL_polygon)
 		TranslatePointsAttribute (el, doc, val, unit, FALSE);
 	      else
@@ -1044,14 +1034,12 @@ Element          el;
 	    dw = 0;
 	  if (dh < 0)
 	    dh = 0;
-	  /* manage included polylines */
+	  /* handle included polylines */
 	  child = TtaGetFirstChild (graphRoot);
 	  while (child)
 	    {
 	      elType = TtaGetElementType (child);
-	      if (elType.ElTypeNum == GraphML_EL_Spline ||
-		  elType.ElTypeNum == GraphML_EL_ClosedSpline ||
-		  elType.ElTypeNum == GraphML_EL_polyline ||
+	      if (elType.ElTypeNum == GraphML_EL_polyline ||
 		  elType.ElTypeNum == GraphML_EL_polygon)
 		UpdatePositionOfPoly (child, doc, 0, 0, wR + dw, hR + dh);
 	      /* next element */
@@ -1179,9 +1167,7 @@ NotifyPresentation *event;
 	{
 	  /* the new value is the old one plus the difference */
 	  y = TtaGetPRuleValue (presRule);
-	  if (elType.ElTypeNum == GraphML_EL_Spline ||
-	      elType.ElTypeNum == GraphML_EL_ClosedSpline ||
-	      elType.ElTypeNum == GraphML_EL_polyline ||
+	  if (elType.ElTypeNum == GraphML_EL_polyline ||
 	      elType.ElTypeNum == GraphML_EL_polygon)
 	    TranslatePointsAttribute (el, doc, y, unit, FALSE);
 	  else
@@ -1191,18 +1177,14 @@ NotifyPresentation *event;
 	{
 	  /* the new value is the old one plus the difference */
 	  x = TtaGetPRuleValue (presRule);
-	  if (elType.ElTypeNum == GraphML_EL_Spline ||
-	      elType.ElTypeNum == GraphML_EL_ClosedSpline ||
-	      elType.ElTypeNum == GraphML_EL_polyline ||
+	  if (elType.ElTypeNum == GraphML_EL_polyline ||
 	      elType.ElTypeNum == GraphML_EL_polygon)
 	    TranslatePointsAttribute (el, doc, x, unit, TRUE);
 	  else
 	    UpdatePositionAttribute (el, doc, x, width, TRUE);
 	}
       else if (presType == PRHeight &&
-	       (elType.ElTypeNum == GraphML_EL_Spline ||
-		elType.ElTypeNum == GraphML_EL_ClosedSpline ||
-		elType.ElTypeNum == GraphML_EL_rect ||
+	       (elType.ElTypeNum == GraphML_EL_rect ||
 		elType.ElTypeNum == GraphML_EL_ellipse ||
 		elType.ElTypeNum == GraphML_EL_polyline ||
 		elType.ElTypeNum == GraphML_EL_polygon ||
@@ -1215,9 +1197,7 @@ NotifyPresentation *event;
 	  UpdateWidthHeightAttribute (el, doc, height, FALSE);
 	}
       else if (presType == PRWidth &&
-	       (elType.ElTypeNum == GraphML_EL_Spline ||
-		elType.ElTypeNum == GraphML_EL_ClosedSpline ||
-		elType.ElTypeNum == GraphML_EL_rect ||
+	       (elType.ElTypeNum == GraphML_EL_rect ||
 		elType.ElTypeNum == GraphML_EL_circle ||
 		elType.ElTypeNum == GraphML_EL_ellipse ||
 		elType.ElTypeNum == GraphML_EL_polyline ||
@@ -1236,8 +1216,8 @@ NotifyPresentation *event;
 
 /*----------------------------------------------------------------------
    ControlPointChanged
-   A control point has been changed in a polyline, a polygon,
-   a Spline or a ClosedSpline.  Update the points attribute.
+   A control point has been changed in a polyline or a polygon.
+   Update the points attribute.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
 void ControlPointChanged (NotifyOnValue *event)
@@ -1262,9 +1242,7 @@ void ControlPointChanged(event)
   if (elType.ElSSchema != GetGraphMLSSchema (doc))
     return;
   if (elType.ElTypeNum == GraphML_EL_polyline ||
-      elType.ElTypeNum == GraphML_EL_polygon ||
-      elType.ElTypeNum == GraphML_EL_Spline ||
-      elType.ElTypeNum == GraphML_EL_ClosedSpline)
+      elType.ElTypeNum == GraphML_EL_polygon)
      {
 	child = TtaGetFirstChild (el);
 	length = TtaGetPolylineLength (child);
@@ -1540,11 +1518,11 @@ int          construct;
       shape = 'p';
       break;
     case 7:	/* spline */
-      /* newType.ElTypeNum = GraphML_EL_Spline;
+      /* newType.ElTypeNum = GraphML_EL_path;        ********
 	 shape = 'B'; */
       break;
     case 8:	/* closed spline */
-      /* newType.ElTypeNum = GraphML_EL_ClosedSpline;
+      /* newType.ElTypeNum = GraphML_EL_path;        ********
 	 shape = 's'; */
       break;
     case 9:	/* foreignObject with some HTML code */

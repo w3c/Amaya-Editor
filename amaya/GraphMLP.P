@@ -94,21 +94,9 @@ BOXES
 		END;
 	END;
 
-   SPLINE_S:
+   PATH_S:
 	BEGIN
-	Content: Text 'spline';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		Size: TAG_FONTSIZE;
-		Font: TAG_Font;
-		Style: TAG_Style; Weight: TAG_Weight;
-		Visibility: TAG_Visibility;  Foreground: TAG_Color;
-		END;
-	END;
-
-   CLOSEDSPLINE_S:
-	BEGIN
-	Content: Text 'closedspline';
+	Content: Text 'path';
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
@@ -695,29 +683,6 @@ BOXES
 		END;
 	END;
 
-   ATTR_points: BEGIN
-	Content: Text '  points=';
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
-		END;
-	END;
-   VALUE_points: BEGIN
-	Content: (points);
-	Visibility: 0;
-	IN Structure_view BEGIN
-		HorizPos: Left = Previous . Right;
-		VertPos: HRef = Previous . HRef;
-		Size: TAG_FONTSIZE;
-		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
-		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
-		END;
-	END;
-
    ATTR_arrowhead_none: BEGIN
 	Content: Text '  arrowhead=none';
 	Visibility: 0;
@@ -760,6 +725,52 @@ BOXES
 		Size: TAG_FONTSIZE;
 		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+
+   ATTR_d: BEGIN
+	Content: Text '  d=';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+   VALUE_d: BEGIN
+	Content: (d);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+   ATTR_pathLength: BEGIN
+	Content: Text '  pathLength=';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+   VALUE_pathLength: BEGIN
+	Content: (pathLength);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
 	END;
 
@@ -960,6 +971,29 @@ BOXES
 	END;
    VALUE_y2: BEGIN
 	Content: (y2);
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
+		END;
+	END;
+
+   ATTR_points: BEGIN
+	Content: Text '  points=';
+	Visibility: 0;
+	IN Structure_view BEGIN
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
+		Size: TAG_FONTSIZE;
+		Font: ATTR_Font; Style: ATTR_Style; Weight: ATTR_Weight;
+		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
+		END;
+	END;
+   VALUE_points: BEGIN
+	Content: (points);
 	Visibility: 0;
 	IN Structure_view BEGIN
 		HorizPos: Left = Previous . Right;
@@ -1238,9 +1272,13 @@ RULES
 	CreateBefore(SVG_S);
         CreateWith(VerticalLine);
 	HorizRef: *.Bottom;
-        Width: 10 cm;
-        Height: 5 cm;
+        if within GraphML BEGIN
+           Width: Enclosing . Width;
+           Height: Enclosing . Height;
+	   END;
         if NOT within GraphML BEGIN
+           Width: 10 cm;
+           Height: 5 cm;
            VertPos: Top = Previous . Bottom;
 	   Foreground: transparent;
 	   Background: Black;
@@ -1310,47 +1348,15 @@ RULES
 		END;
 	END;
 
-   Spline:
+   path:
 	BEGIN
-	CreateBefore (SPLINE_S);
-	Width: Enclosing . Width;
-	Height: Enclosing . Height;
-	MarginTop: 5 px;
-	MarginLeft: 5 px;
-	MarginBottom: 5 px;
-	MarginRight: 5 px;
-	IN Structure_view BEGIN
-	        if within use_
-	            Visibility: 0;
-		MarginTop: 0;
-		MarginLeft: 0;
-		MarginBottom: 0;
-		MarginRight: 0;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		Height: Enclosed . Height;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		END;
-	IN Alternate_view
-		Visibility: 0;
-	END;
-
-   ClosedSpline:
-	BEGIN
-	CreateBefore (CLOSEDSPLINE_S);
+	CreateBefore (PATH_S);
 	CreateWith (VerticalLine);
-	Width: Enclosing . Width;
-	Height: Enclosing . Height;
-	MarginTop: 5 px;
-	MarginLeft: 5 px;
-	MarginBottom: 5 px;
-	MarginRight: 5 px;
+	HorizPos: Left = Enclosing . Left + 1 pt UserSpecified;
+	VertPos:  Top = Enclosing . Top + 1 pt UserSpecified;
 	IN Structure_view BEGIN
 	        if within use_
 	            Visibility: 0;
-		MarginTop: 0;
-		MarginLeft: 0;
-		MarginBottom: 0;
-		MarginRight: 0;
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		Height: Enclosed . Height;
@@ -1529,6 +1535,8 @@ RULES
 	Width: Enclosing . Width;
 	Height: Enclosing . Height;
 	IN Structure_view BEGIN
+	        if within use_
+	            Visibility: 0;
 		Size: DOC_FONTSIZE;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		Height: Enclosed . Height;
@@ -1916,12 +1924,6 @@ ATTRIBUTES
   externalResourcesRequired = true:
 	CreateBefore (ATTR_extResourcesReq_true);
 
-  points:
-	BEGIN
-	CreateBefore (ATTR_points);
-	CreateBefore (VALUE_points);
-	END;
-
   arrowhead = none_:
 	CreateBefore (ATTR_arrowhead_none);
   arrowhead = start:
@@ -1930,6 +1932,18 @@ ATTRIBUTES
 	CreateBefore (ATTR_arrowhead_end_);
   arrowhead = both:
 	CreateBefore (ATTR_arrowhead_both);
+
+  d:
+	BEGIN
+	CreateBefore (ATTR_d);
+	CreateBefore (VALUE_d);
+	END;
+
+  pathLength:
+	BEGIN
+	CreateBefore (ATTR_pathLength);
+	CreateBefore (VALUE_pathLength);
+	END;
 
   cx:
 	BEGIN
@@ -1991,6 +2005,12 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore (ATTR_y2);
 	CreateBefore (VALUE_y2);
+	END;
+
+  points:
+	BEGIN
+	CreateBefore (ATTR_points);
+	CreateBefore (VALUE_points);
 	END;
 
   dx:

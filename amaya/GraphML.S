@@ -38,7 +38,7 @@ STRUCT
 	      stroke = text;
 	      stroke_width = text;
 	      transform = text;
-              linestyle_ = solid_, dashed_, dotted_)
+              linestyle_ = solid_, dashed_, dotted_)   {*** not svg ***}
         = LIST OF (GraphicsElement);
 
    defs
@@ -51,24 +51,18 @@ STRUCT
 	      { graphicsElementEvents })
         = LIST OF (GraphicsElement);
 
-   { path }
-	
-   Spline
-        (ATTR width_;
-              height_;
-	      transform;
-              points = text;
-              arrowhead = none_, start, end_, both;
-              linestyle_)
-        = GRAPHICS;
-	
-   ClosedSpline
-        (ATTR width_;
-              height_;
-	      transform;
-              points;
-              linestyle_)
-        = GRAPHICS;
+   path
+	(ATTR externalResourcesRequired; 
+	      fill;
+              stroke;
+	      stroke_width;
+              transform;
+	      d = text;
+	      pathLength = text)
+        = AGGREGATE
+	      desc; title; metadata;
+	      GRAPHICS;
+	      END;
 
    rect
         (ATTR transform;
@@ -81,7 +75,7 @@ STRUCT
 	      fill;
               stroke;
 	      stroke_width;
-              linestyle_)
+              linestyle_)  {*** not svg ***}
         = AGGREGATE
 	      desc; title; metadata;
 	      GRAPHICS;
@@ -95,7 +89,7 @@ STRUCT
 	      fill;
               stroke;
 	      stroke_width;
-              linestyle_)
+              linestyle_)  {*** not svg ***}
         = AGGREGATE
 	      desc; title; metadata;
 	      GRAPHICS;
@@ -110,7 +104,7 @@ STRUCT
 	      fill;
               stroke;
 	      stroke_width;
-              linestyle_)
+              linestyle_)  {*** not svg ***}
         = AGGREGATE
 	      desc; title; metadata;
 	      GRAPHICS;
@@ -125,8 +119,8 @@ STRUCT
 	      fill;
               stroke;
 	      stroke_width;
-              linestyle_;
-              arrowhead)
+              linestyle_;  {*** not svg ***}
+              arrowhead = none_, start, end_, both)  {*** not svg ***}
         = AGGREGATE
 	      desc; title; metadata;
 	      GRAPHICS;
@@ -136,12 +130,12 @@ STRUCT
         (ATTR width_;
               height_;
 	      transform;
-              points;
+              points = text;
 	      fill;
               stroke;
 	      stroke_width;
-              arrowhead;
-              linestyle_)
+              arrowhead;   {*** not svg ***}
+              linestyle_)  {*** not svg ***}
         = AGGREGATE
 	      desc; title; metadata;
 	      GRAPHICS;
@@ -155,12 +149,12 @@ STRUCT
 	      fill;
               stroke;
 	      stroke_width;
-              linestyle_)
+              linestyle_)  {*** not svg ***}
         = AGGREGATE
 	      desc; title; metadata;
 	      GRAPHICS;
 	      END;
-	
+
    text_
         (ATTR transform;
 	      x;
@@ -238,7 +232,8 @@ STRUCT
    { pattern }
 
    a
-        (ATTR { requiredFeatures; requiredExtensions; systemLanguage }
+        (ATTR xlink_href;
+	      { requiredFeatures; requiredExtensions; systemLanguage }
 	      externalResourcesRequired;
 	      fill;
               stroke;
@@ -298,8 +293,7 @@ STRUCT
    GraphicsElement
 	= CASE OF
 	      desc; title; metadata; defs;
-	      Spline; ClosedSpline;
-	      text_; rect; circle; ellipse; line_; polyline; polygon;
+	      path; text_; rect; circle; ellipse; line_; polyline; polygon;
 	      use_; image; GraphML; g; a;
 	      script; style__; symbol_;
 	      foreignObject; XLink;
@@ -331,10 +325,9 @@ STRUCT
 EXCEPT
 
    GraphML:             IsDraw, MoveResize, NoShowBox, NoMove;
-   g:                   NoMove, NoResize, NoShowBox, NoCreate;
+   g:                   NoMove, NoResize, HighlightChildren, NoShowBox,
+                        NoCreate;
    defs:                NoMove, NoResize, NoShowBox, NoCreate;
-   Spline:              MoveResize, HighlightChildren, NoShowBox, NoCreate;
-   ClosedSpline:        MoveResize, HighlightChildren, NoShowBox, NoCreate;
    rect:                MoveResize, HighlightChildren, NoShowBox, NoCreate;
    circle:              MoveResize, HighlightChildren, NoShowBox, NoCreate;
    ellipse:             MoveResize, HighlightChildren, NoShowBox, NoCreate;
@@ -344,13 +337,16 @@ EXCEPT
    text_:               MoveResize, NoResize, NoShowBox, ReturnCreateWithin,
 	                NoCreate;
    tspan:	        NoShowBox; 
-   use_:	        NoMove, NoResize, NoShowBox, NoCreate;
+   use_:	        NoMove, NoResize, HighlightChildren, NoShowBox,
+	                NoCreate;
    image:	        MoveResize, HighlightChildren, NoShowBox;
-   symbol_:	        NoMove, NoResize, NoShowBox, NoCreate;
-   a:	                NoMove, NoResize, NoShowBox, NoCreate;
+   symbol_:	        NoMove, NoResize,  HighlightChildren,NoShowBox,
+                        NoCreate;
+   a:	                NoMove, NoResize, HighlightChildren, NoShowBox,
+                        NoCreate;
    script:	        NoMove, NoResize, NoShowBox, NoCreate;
    style__:             NoMove, NoResize, NoShowBox, NoCreate;
-   foreignObject:       MoveResize, NoCreate;
+   foreignObject:       MoveResize, HighlightChildren, NoCreate;
    PICTURE:             NoMove, NoResize;
    TEXT:                NoMove, NoResize;
 

@@ -25,10 +25,6 @@ ELEMENTS
 	ElemTextModify.Post ->  TextChangedInGroup;
 	END;
 ***}
-   Spline:
-	ElemGraphModify.Post -> ControlPointChanged;
-   ClosedSpline:
-	ElemGraphModify.Post -> ControlPointChanged;
    rect:
 	ElemGraphModify.Post -> GraphicsChanged;
    circle:
@@ -122,11 +118,6 @@ ATTRIBUTES
 	AttrCreate.Post -> AttrTransformChanged;
 	AttrDelete.Pre ->  AttrTransformDelete;
 	END;
-   points:
-	BEGIN
-	AttrDelete.Pre ->  DeleteAttrPoints;
-	AttrModify.Post -> AttrPointsModified;
-	END;
    arrowhead:
 	BEGIN
 	AttrModify.Post -> AttrArrowHeadModified;
@@ -166,6 +157,11 @@ ATTRIBUTES
 	AttrModify.Post -> AttrCoordChanged;
    y2:
 	AttrModify.Post -> AttrCoordChanged;
+   points:
+	BEGIN
+	AttrDelete.Pre ->  DeleteAttrPoints;
+	AttrModify.Post -> AttrPointsModified;
+	END;
    dx:
 	AttrModify.Post -> AttrCoordChanged;
    dy:
