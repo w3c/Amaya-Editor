@@ -508,6 +508,7 @@ EXCEPT
    IntVertStretch:  	Invisible;
    IntRowAlign:	        Invisible;
    IntColAlign:	        Invisible;
+   IntSelected:		Invisible;
    rowspan\240:	        RowSpan;
    columnspan:          ColSpan;
    MRef_column:		ColRef, Invisible;
