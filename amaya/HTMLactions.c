@@ -1202,14 +1202,15 @@ int                 eltype;
 {
    Element             selectedEl, elem, firstSelectedElem, lastSelectedElem,
                        child, next, elFont;
+   ElementType         elType, selType;
+   DisplayMode         dispMode;
    int                 firstChar, nextFirstChar, lastChar, nextLastChar,
                        length, firstSelectedChar, lastSelectedChar;
-   ElementType         elType, selType;
-   boolean             remove, done;
-   DisplayMode         dispMode;
+   boolean             remove, done, toset;
 
    lastSelectedElem = NULL;
    lastSelectedChar = 0;
+   toset = TRUE;
    dispMode = TtaGetDisplayMode (document);
    if (dispMode == DisplayImmediately)
      TtaSetDisplayMode (document, DeferredDisplay);
@@ -1246,9 +1247,12 @@ int                 eltype;
 	lastSelectedChar = lastChar;
 	selType = TtaGetElementType (selectedEl);
 	if (!TtaIsLeaf (selType))
-	   /* this selected element is not a leaf. Process all text leaves of */
-	   /* that element */
-	   SetFontOrPhraseOnElement ((Document) document, selectedEl, eltype, remove);
+	  {
+	    /* this selected element is not a leaf. Process all text leaves of */
+	    /* that element */
+	    SetFontOrPhraseOnElement ((Document) document, selectedEl, eltype, remove);
+	    toset = FALSE;
+	  }
 	else if (selType.ElTypeNum == HTML_EL_TEXT_UNIT)
 	   /* this selected element is a text leaf */
 	  {
@@ -1319,8 +1323,9 @@ int                 eltype;
      }
 
    UpdateContextSensitiveMenus (document);
-
-   switch (eltype)
+   if (toset)
+     {
+       switch (eltype)
 	 {
 	    case HTML_EL_Emphasis:
 	       SelectionInEM = !remove;
@@ -1376,6 +1381,7 @@ int                 eltype;
 	    default:
 	       break;
 	 }
+     }
 }
 
 /*----------------------------------------------------------------------
