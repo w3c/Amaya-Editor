@@ -261,7 +261,7 @@ ThotBool ChangeStyle (NotifyElement * event)
   ----------------------------------------------------------------------*/
 ThotBool DeleteStyle (NotifyElement *event)
 {
-  RemoveStyleSheet (NULL, event->document, TRUE, TRUE, event->element);
+  RemoveStyle (NULL, event->document, TRUE, TRUE, event->element, CSS_DOCUMENT_STYLE);
   return FALSE;  /* let Thot perform normal operation */
 }
 
@@ -272,9 +272,12 @@ ThotBool DeleteStyle (NotifyElement *event)
   ----------------------------------------------------------------------*/
 void EnableStyleElement (Document doc, Element el)
 {
-  ElementType		elType;
-  char                 *name;
-  char                 *buffer;
+  ElementType	      elType;
+  CSSInfoPtr          css = NULL;
+  PInfoPtr            pInfo;
+  DisplayMode         dispMode;
+  char               *name;
+  char               *buffer;
   ThotBool            loadcss;
 
   /* check if we have to load CSS */
@@ -286,17 +289,26 @@ void EnableStyleElement (Document doc, Element el)
     {
       elType = TtaGetElementType (el);
       name = TtaGetSSchemaName (elType.ElSSchema);
-      /* if it's a SVG document, remove the style defined in the SVG DTD */
       if ((!strcmp (name, "HTML") && elType.ElTypeNum == HTML_EL_STYLE_)
 #ifdef _SVG
+	  /* if it's a SVG document, remove the style defined in the SVG DTD */
 	  || (!strcmp (name, "SVG") && elType.ElTypeNum == SVG_EL_style__)
 #endif
 	  )
 	{
 	  /* get the style element in the document head */
 	  buffer = GetStyleContents (el);
+	  css = SearchCSS (doc, NULL, el, &pInfo);
+	  if (pInfo)
+	    pInfo->PiEnabled = TRUE;
+	  dispMode = TtaGetDisplayMode (doc);
+	  if (dispMode != NoComputedDisplay)
+	    TtaSetDisplayMode (doc, NoComputedDisplay);
 	  ReadCSSRules (doc, NULL, buffer, NULL, TtaGetElementLineNumber (el),
 			FALSE, el);
+	  /* Restore the display mode */
+	  if (dispMode != NoComputedDisplay)
+	    TtaSetDisplayMode (doc, dispMode);
 	  TtaFreeMemory (buffer);
 	}
     }
@@ -306,32 +318,30 @@ void EnableStyleElement (Document doc, Element el)
   DeleteStyleElement
   the STYLE element will be deleted in the document HEAD.
   ----------------------------------------------------------------------*/
-void DeleteStyleElement (Document doc)
+void DeleteStyleElement (Document doc, Element el)
 {
-  Element               el;
   ElementType		elType;
   char                 *name;
 
-  /* get the style element in the document head */
-  el = TtaGetMainRoot (doc);
-  elType = TtaGetElementType (el);
-  name = TtaGetSSchemaName (elType.ElSSchema);
+  if (el)
+    {
+      /* get the style element in the document head */
+      elType = TtaGetElementType (el);
+      name = TtaGetSSchemaName (elType.ElSSchema);
+      if ((!strcmp (name, "HTML") && elType.ElTypeNum == HTML_EL_STYLE_)
 #ifdef _SVG
-   /* if it's a SVG document, remove the style defined in the SVG DTD */
-   if (!strcmp (name, "SVG"))
-     elType.ElTypeNum = SVG_EL_style__;
-   else
+	  /* if it's a SVG document, remove the style defined in the SVG DTD */
+	  || (!strcmp (name, "SVG") && elType.ElTypeNum == SVG_EL_style__)
 #endif
-     elType.ElTypeNum = HTML_EL_STYLE_;
-   el = TtaSearchTypedElement (elType, SearchForward, el);
-   if (el)
-     {
-       RemoveStyleSheet (NULL, doc, TRUE, TRUE, el);
-       TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
-       TtaRegisterElementDelete (el, doc);
-       TtaDeleteTree (el, doc);
-       TtaCloseUndoSequence (doc);
-     }
+	  )
+	{
+	  RemoveStyle (NULL, doc, TRUE, TRUE, el, CSS_DOCUMENT_STYLE);
+	  TtaOpenUndoSequence (doc, NULL, NULL, 0, 0);
+	  TtaRegisterElementDelete (el, doc);
+	  TtaDeleteTree (el, doc);
+	  TtaCloseUndoSequence (doc);
+	}
+    }
 }
 
 
@@ -339,7 +349,7 @@ void DeleteStyleElement (Document doc)
    StyleChanged
    A STYLE element has been changed in the HEAD
   ----------------------------------------------------------------------*/
-void StyleChanged (NotifyAttribute * event)
+void StyleChanged (NotifyAttribute *event)
 {
   char               *buffer, *ptr1, *ptr2;
   char               *pEnd, *nEnd;
@@ -473,8 +483,7 @@ void StyleChanged (NotifyAttribute * event)
       TtaFreeMemory (OldBuffer);
       OldBuffer = NULL;
     }
-  if (buffer)
-    TtaFreeMemory (buffer);
+  TtaFreeMemory (buffer);
 }
 
 

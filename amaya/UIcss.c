@@ -237,6 +237,99 @@ void EmbedStyleSheets (Document docsrc, Document docdest)
     }
 }
 
+/*----------------------------------------------------------------------
+   AddStyle adds a style.
+   It could be an external CSS file, the User Stylesheet or a
+   document Style element.
+   category specifies the CSS category.
+  ----------------------------------------------------------------------*/
+void AddStyle (char *url, Document doc, Element link, CSSCategory category)
+{
+  CSSInfoPtr      css, match;
+  PInfoPtr        pInfo;
+  DisplayMode     dispMode;
+  int             media;
+
+  if (category == CSS_USER_STYLE)
+    {
+      /* Change the Display Mode to take into account the new presentation */
+      dispMode = TtaGetDisplayMode (doc);
+      if (dispMode != NoComputedDisplay)
+	TtaSetDisplayMode (doc, NoComputedDisplay);
+      LoadUserStyleSheet (doc);
+      /* Restore the display mode */
+      if (dispMode != NoComputedDisplay)
+	TtaSetDisplayMode (doc, dispMode);
+    }
+  else
+    {
+      pInfo = NULL;
+      css = CSSList;
+      match = NULL;
+      while (css)
+	{
+	  if ((url &&
+	       ((css->url && !strcmp (url, css->url)) ||
+		(css->localName && !strcmp (url, css->localName)))) ||
+	      (url == NULL && doc && css->doc == doc))
+	    {
+	      if (doc == 0)
+		{
+		  /* no specific document is requested */
+		  match = css;
+		  css = NULL;
+		}
+	      else
+		{
+		  /* look for an entry with the right link */
+		  pInfo = css->infos[doc];
+		  while (!match && pInfo)
+		    {
+		      if (pInfo->PiLink == link &&
+			  pInfo->PiCategory == category)
+			{
+			  match = css;
+			  css = NULL;
+			}
+		      else if (pInfo->PiCategory == category &&
+			       category != CSS_DOCUMENT_STYLE &&
+			       category != CSS_USER_STYLE)
+			{
+			  match = css;
+			  css = NULL;
+			}
+		      else
+			pInfo = pInfo->PiNext;
+		    }
+		}
+	    }
+	  if (css)
+	    css = css->NextCSS;
+	}
+
+      css = match;
+      if (css)
+	{
+	  /* Change the Display Mode to take into account the new presentation */
+	  dispMode = TtaGetDisplayMode (doc);
+	  if (dispMode != NoComputedDisplay)
+	    TtaSetDisplayMode (doc, NoComputedDisplay);
+	  if (pInfo)
+	    {
+	      link = pInfo->PiLink;
+	      media = pInfo->PiMedia;
+	      pInfo->PiEnabled = TRUE;
+	    }
+	  else
+	    media = CSS_ALL;
+	  LoadStyleSheet (url, doc, link, NULL, media, FALSE);
+	  /* Restore the display mode */
+	  if (dispMode != NoComputedDisplay)
+	    TtaSetDisplayMode (doc, dispMode);
+	}
+    }
+}
+
 
 /*----------------------------------------------------------------------
   UpdateStyleSheet removes then reloads a style sheet url to all related
@@ -360,8 +453,7 @@ char *CssToPrint (Document doc, char *printdir)
 			/* that external or user style sheet concerns the document */
 			length += strlen (css->localName) + 3;
 		    }
-		  else
-		    pInfo = pInfo->PiNext;
+		  pInfo = pInfo->PiNext;
 		}
 	    }
 	  css = css->NextCSS;
@@ -553,51 +645,21 @@ static void CallbackCSS (int ref, int typedata, char *data)
 	    case 2:
 	      /* disable the CSS file, but not remove */
 	      if (category == CSS_DOCUMENT_STYLE)
-		{
-		  css = SearchCSS (CSSdocument, NULL, CSSlink[sty], &pInfo);
-		  if (pInfo)
-		     UnlinkCSS (css, CSSdocument, CSSlink[sty], TRUE, FALSE);
-		}
+		RemoveStyle (NULL, CSSdocument, TRUE, FALSE, CSSlink[sty], category);
 	      else
-		{
-		  css = SearchCSS (CSSdocument, ptr, NULL, &pInfo);
-		  RemoveStyleSheet (ptr, CSSdocument, TRUE, FALSE, NULL);
-		}
+		RemoveStyle (ptr, CSSdocument, TRUE, FALSE, NULL, category);
       	      break;
 	    case 3:
 	      /* enable the CSS file */
 	      if (category == CSS_DOCUMENT_STYLE)
-		{
-		  /* style element */
-		  css = SearchCSS (CSSdocument, NULL, CSSlink[sty], &pInfo);
-		  if (pInfo)
-		    {
-		      pInfo->PiEnabled = TRUE;
-		      EnableStyleElement (CSSdocument, CSSlink[sty]);
-		    }
-		}
+		EnableStyleElement (CSSdocument, CSSlink[sty]);
 	      else
-		{
-		  /* external style sheet */
-		  css = SearchCSS (CSSdocument, ptr, NULL, &pInfo);
-		  if (pInfo)
-		    {
-		      pInfo->PiEnabled = TRUE;
-		      /* apply CSS rules */
-		      if (UserCSS && !strcmp (ptr, UserCSS))
-			LoadUserStyleSheet (CSSdocument);
-		      else
-			LoadStyleSheet (ptr, CSSdocument,
-					pInfo->PiLink, NULL,
-					pInfo->PiMedia,
-					pInfo->PiCategory == CSS_USER_STYLE);
-		    }
-		}
+		AddStyle (ptr, CSSdocument, NULL, category);
       	      break;
 	    case 4:
 	      /* remove the link to this file */
 	      if (category == CSS_DOCUMENT_STYLE)
-		DeleteStyleElement (CSSdocument);
+		DeleteStyleElement (CSSdocument, CSSlink[sty]);
 	      else if (category == CSS_EXTERNAL_STYLE)
 		{
 		  css = CSSList;
@@ -672,6 +734,8 @@ static void InitCSSDialog (Document doc, char *s)
 {
   CSSInfoPtr          css;
   PInfoPtr            pInfo;
+  ElementType	      elType;
+  char               *name;
   char                buf[400];
   char               *ptr, *localname;
   int                 i, select;
@@ -756,48 +820,65 @@ static void InitCSSDialog (Document doc, char *s)
 		     use the dialogue encoding for buf and UTF-8 for CSS path  */
 		  if (pInfo->PiCategory == CSS_DOCUMENT_STYLE)
 		    {
-		      ptr = TtaGetMemory (strlen (localname) + 11);
-		      sprintf (ptr, "%s%d", localname, sty);
-		      CSSlink[sty++] = pInfo->PiLink;
+		      /* skip HTML style attributes */
+		      elType = TtaGetElementType (pInfo->PiLink);
+		      name = TtaGetSSchemaName (elType.ElSSchema);
+		      if (!strcmp (name, "HTML") && elType.ElTypeNum == HTML_EL_STYLE_)
+			{
+			  ptr = TtaGetMemory (strlen (localname) + 11);
+			  sprintf (ptr, "%s%d", localname, sty);
+			  CSSlink[sty++] = pInfo->PiLink;
+			}
+		      else
+			{
+			  /* skip this entry */
+			  ptr = NULL;
+			  nb--;
+			  if (nb == 0)
+			    {
+			      TtaFreeMemory (CSSlink);
+			      CSSlink = NULL;
+			    }
+			}
 		    }
+		  else if (css->url == NULL)
+		    ptr = TtaConvertMbsToByte (css->localName,
+					       TtaGetDefaultCharset ());
 		  else
+		    ptr = TtaConvertMbsToByte (css->url,
+					       TtaGetDefaultCharset ());
+		  if (ptr)
 		    {
-		      if (css->url == NULL)
-			ptr = TtaConvertMbsToByte (css->localName,
-						   TtaGetDefaultCharset ());
-		      else
-			ptr = TtaConvertMbsToByte (css->url,
-						   TtaGetDefaultCharset ());
-		    }
-		  len = strlen (ptr) + 1; /* + EOS */
-		  if (size < len + String_length)
-		    break;
-		  /* display the category */
-		  strcpy (&buf[index], DisplayCategory[pInfo->PiCategory]);
-		  index += String_length;
-		  strcpy (&buf[index], ptr);
-		  index += len;
-		  size -= len;
-		  if (select == -1 &&
-		      (CSScase < 4 || pInfo->PiCategory == CSS_EXTERNAL_STYLE))
-		    {
-		      if (pInfo->PiCategory == CSS_DOCUMENT_STYLE)
+		      len = strlen (ptr) + 1; /* + EOS */
+		      if (size < len + String_length)
+			break;
+		      /* display the category */
+		      strcpy (&buf[index], DisplayCategory[pInfo->PiCategory]);
+		      index += String_length;
+		      strcpy (&buf[index], ptr);
+		      index += len;
+		      size -= len;
+		      if (select == -1 &&
+			  (CSScase < 4 || pInfo->PiCategory == CSS_EXTERNAL_STYLE))
 			{
-			  strcpy (CSSpath, DisplayCategory[CSS_DOCUMENT_STYLE]);
-			  strcat (CSSpath, ptr);
-			}
-		      else
-			{
-			  strcpy (CSSpath, DisplayCategory[pInfo->PiCategory]);
-			  if (css->url)
-			    strcat (CSSpath, css->url);
+			  if (pInfo->PiCategory == CSS_DOCUMENT_STYLE)
+			    {
+			      strcpy (CSSpath, DisplayCategory[CSS_DOCUMENT_STYLE]);
+			      strcat (CSSpath, ptr);
+			    }
 			  else
-			    strcat (CSSpath, css->localName);
+			    {
+			      strcpy (CSSpath, DisplayCategory[pInfo->PiCategory]);
+			      if (css->url)
+				strcat (CSSpath, css->url);
+			      else
+				strcat (CSSpath, css->localName);
+			    }
+			  select = i;
 			}
-		      select = i;
+		      TtaFreeMemory (ptr);
+		      i++;
 		    }
-		  TtaFreeMemory (ptr);
-		  i++;
 		}
 	      pInfo = pInfo->PiNext;
 	    }

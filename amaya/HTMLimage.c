@@ -917,7 +917,7 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
   attr = NULL;
   FetchImage_ctx = NULL;
 
-  if (el && (doc == 0 || DocumentURLs[doc]))
+  if (el || extra)
     {
       if (URL == NULL)
 	{
@@ -967,6 +967,7 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
 	  else
 	    update = TRUE;
 	}      
+
       if (update)
 	{
 #else /*_BASE64*/
@@ -1065,12 +1066,11 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
 		}
 	    }
 	}
-
+      else if (callback)
+	TtaFreeMemory (extra);
       if (attr && imageName)
 	TtaFreeMemory (imageName);
     }
-  else if (callback)
-    TtaFreeMemory (extra);
   TtaHandlePendingEvents ();
 }
 

@@ -36,11 +36,12 @@ extern ThotBool UnlinkCSS ( CSSInfoPtr css,
                             ThotBool disabled,
                             ThotBool removed );
 extern void RemoveDocCSSs ( Document doc );
-extern void RemoveStyleSheet ( char *url,
-                               Document doc,
-                               ThotBool disabled,
-                               ThotBool removed,
-                               Element link );
+extern void RemoveStyle ( char *url,
+                          Document doc,
+                          ThotBool disabled,
+                          ThotBool removed,
+                          Element link,
+                          CSSCategory category );
 extern char *GetStyleContents ( Element el );
 extern void LoadStyleSheet ( char *url,
                              Document doc,
@@ -81,11 +82,12 @@ extern ThotBool UnlinkCSS (/* CSSInfoPtr css,
                               ThotBool disabled,
                               ThotBool removed */);
 extern void RemoveDocCSSs (/* Document doc */);
-extern void RemoveStyleSheet (/* char *url,
-                                 Document doc,
-                                 ThotBool disabled,
-                                 ThotBool removed,
-                                 Element link */);
+extern void RemoveStyle (/* char *url,
+                            Document doc,
+                            ThotBool disabled,
+                            ThotBool removed,
+                            Element link,
+                            CSSCategory category */);
 extern char *GetStyleContents (/* Element el */);
 extern void LoadStyleSheet (/* char *url,
                                Document doc,

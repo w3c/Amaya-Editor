@@ -409,7 +409,7 @@ void XmlStyleSheetModified (NotifyOnTarget *event)
 			  (strcmp (OldCssName, cssname) != 0))
 			{
 			  NormalizeURL (OldCssName, event->document, pathname, documentname, NULL);
-			  RemoveStyleSheet (pathname, event->document, TRUE, TRUE, NULL);
+			  RemoveStyle (pathname, event->document, TRUE, TRUE, NULL, CSS_EXTERNAL_STYLE);
 			  oldStructureChecking = TtaGetStructureChecking (event->document);
 			  TtaSetStructureChecking (0, event->document);
 			  XmlStyleSheetPi (buffer, event->element);

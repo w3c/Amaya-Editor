@@ -213,7 +213,7 @@ void RemoveLink (Element el, Document doc)
 	      length = MAX_LENGTH;
 	      TtaGiveTextAttributeValue (attr, buffer, &length);
 	      NormalizeURL (buffer, doc, pathname, documentname, NULL);
-	      RemoveStyleSheet (pathname, doc, TRUE, TRUE, NULL);
+	      RemoveStyle (pathname, doc, TRUE, TRUE, NULL, CSS_EXTERNAL_STYLE);
 	    }
 	}
     }
@@ -249,7 +249,7 @@ void RemoveLink (Element el, Document doc)
 		  strcpy (cssname, ptr);
 		}		
 	      NormalizeURL (cssname, doc, pathname, documentname, NULL);
-	      RemoveStyleSheet (pathname, doc, TRUE, TRUE, NULL);
+	      RemoveStyle (pathname, doc, TRUE, TRUE, NULL, CSS_EXTERNAL_STYLE);
 	    }
 	}
     }
@@ -1743,7 +1743,7 @@ void         CreateRemoveIDAttribute (char *elName, Document doc, ThotBool creat
    an ordinary Paragraph.
    Rule: only the first child of any element can be a Pseudo_paragraph.
   ----------------------------------------------------------------------*/
-static void         CheckPseudoParagraph (Element el, Document doc)
+static void CheckPseudoParagraph (Element el, Document doc)
 {
   Element		prev, next, parent;
   Attribute             attr;
@@ -2129,14 +2129,12 @@ static void CheckDescendants (Element el, Document doc)
 void ElementPasted (NotifyElement * event)
 {
   Document            originDocument, doc;
-  Language            lang;
   Element             el, anchor, child, previous, nextchild, parent, ancestor,
                       sibling;
   ElementType         elType, parentType;
   AttributeType       attrType;
   Attribute           attr;
   SSchema             HTMLschema;
-  CSSInfoPtr          css;
   char               *value;
   int                 length, oldStructureChecking;
   ThotBool            ok;
@@ -2164,21 +2162,10 @@ void ElementPasted (NotifyElement * event)
       /* check if it's a CSS link */
       CheckCSSLink (el, doc, HTMLschema);
     }
-  else if (elType.ElSSchema == HTMLschema &&
-	   elType.ElTypeNum == HTML_EL_STYLE_)
-    {
-      /* The pasted element is a STYLE element in the HEAD */
-      /* Get its content */
-      child = TtaGetFirstChild (el);
-      length = TtaGetTextLength (child);
-      value = TtaGetMemory (length + 1);
-      TtaGiveTextContent (child, value, &length, &lang);
-      /* parse the content */
-      css = AddCSS (doc, doc, CSS_DOCUMENT_STYLE, CSS_ALL, NULL, NULL, el);
-      ReadCSSRules (doc, css, value, NULL, TtaGetElementLineNumber (child),
-		    FALSE, el);
-      TtaFreeMemory (value);
-    }
+  else if (elType.ElSSchema == HTMLschema && elType.ElTypeNum == HTML_EL_STYLE_)
+    /* The pasted element is a STYLE element in the HEAD */
+    /* Get its content */
+    EnableStyleElement (doc, el);
   else if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
     {  
       parent = TtaGetParent (event->element);

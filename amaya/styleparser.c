@@ -5291,12 +5291,16 @@ void ApplyCSSRules (Element el, char *cssRule, Document doc, ThotBool destroy)
 
   css = SearchCSS (doc, NULL, el, &pInfo);
   if (css == NULL)
-    /* create the document css context */
-    css = AddCSS (doc, doc, CSS_DOCUMENT_STYLE, CSS_ALL, NULL, NULL, el);
+    {
+      /* create the document css context */
+      css = AddCSS (doc, doc, CSS_DOCUMENT_STYLE, CSS_ALL, NULL, NULL, el);
+      pInfo = css->infos[doc];
+    }
   else if (pInfo == NULL)
     /* create the entry into the css context */
     pInfo = AddInfoCSS (doc, css, CSS_DOCUMENT_STYLE, CSS_ALL, el);
-  ParseStyleDeclaration (el, cssRule, doc, css, el, destroy); 
+  if (pInfo->PiEnabled)
+    ParseStyleDeclaration (el, cssRule, doc, css, el, destroy); 
 }
 
 /*----------------------------------------------------------------------

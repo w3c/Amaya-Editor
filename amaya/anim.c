@@ -2226,9 +2226,9 @@ static Element Search_first_anim_in_tree(Document basedoc, Element element) {
       searchedType5.ElSSchema = svg_schema;
       searchedType5.ElTypeNum = SVG_EL_set_;
 	
-      res = SearchElementAmong5Types (searchedType1, searchedType2,
-				      searchedType3, searchedType4,
-				      searchedType5, SearchInTree, element);	
+      res = TtaSearchElementAmong5Types (searchedType1, searchedType2,
+					 searchedType3, searchedType4,
+					 searchedType5, SearchInTree, element);	
     }
   return res;
 }
@@ -2261,9 +2261,9 @@ static Element Search_next_anim_in_tree(Document basedoc, Element element) {
       searchedType5.ElSSchema = svg_schema;
       searchedType5.ElTypeNum = SVG_EL_set_;
 
-      res = SearchElementAmong5Types (searchedType1, searchedType2,
-				      searchedType3, searchedType4,
-				      searchedType5, SearchForward, element);	
+      res = TtaSearchElementAmong5Types (searchedType1, searchedType2,
+					 searchedType3, searchedType4,
+					 searchedType5, SearchForward, element);	
     }
 
   return res;
@@ -2278,7 +2278,8 @@ static Element Search_next_anim_in_tree(Document basedoc, Element element) {
   returned values are expressed in ms. 
   ----------------------------------------------------------------------*/
 #ifdef _SVGANIM
-static void Compute_global_anim_period_of_doc (Document basedoc, double* tmin, double* tmax)
+static void Compute_global_anim_period_of_doc (Document basedoc,
+					       double* tmin, double* tmax)
 {
   int k=1;
   double start, duration;
@@ -2319,7 +2320,8 @@ static void Compute_global_anim_period_of_doc (Document basedoc, double* tmin, d
   generate the title group of an animated element on Timeline UI  
   ----------------------------------------------------------------------*/
 #ifdef _SVGANIM
-static void Create_title_group(Document basedoc, Document timelinedoc, int ty, Element parent, int collapsed) {
+static void Create_title_group(Document basedoc, Document timelinedoc,
+			       int ty, Element parent, int collapsed) {
   Element temp_el;
   int vertical_pos = 0;
   char buffer[512];

@@ -200,7 +200,7 @@ void AttrMediaChanged (NotifyAttribute *event)
 		{
 		  if (elType.ElTypeNum != HTML_EL_STYLE_)
 		    el = NULL;
-		  RemoveStyleSheet (completeURL, doc, FALSE, FALSE, el);
+		  RemoveStyle (completeURL, doc, FALSE, FALSE, el, pInfo->PiCategory);
 		}
 	      /* only update the CSS media info */
 	      pInfo->PiMedia = media;
@@ -225,7 +225,8 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css,
   PInfoPtr            pInfo, oldInfo;
   PISchemaPtr         pIS;
   PSchema             pSchema, nSchema, prevS;
-  Element             prevLink, nextLink, parent, prevStyle, nextStyle;
+  Element             prevLink, nextLink, parent;
+  Element             prevStyle, nextStyle;
   ElementType	      elType, styleType;
   AttributeType       attrType;
   Attribute           attr;
@@ -321,6 +322,7 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css,
 	      nextStyle = TtaSearchTypedElementInTree (styleType, SearchForward,
 						       parent, prevLink);
 	      attrType.AttrTypeNum = HTML_ATTR_REL;
+	      elType.ElTypeNum = HTML_EL_LINK;
 	    }
 	  else
 	    {
@@ -709,12 +711,10 @@ ThotBool UnlinkCSS (CSSInfoPtr css, Document doc, Element link,
 						 pIS->PiSSchema);
 		      TtaUnlinkPSchema (pIS->PiPSchema, doc,
 					pIS->PiSSchema);
-		      pIS = pIS->PiSNext;
-		      pInfo->PiSchemas = pIS;
-		      TtaFreeMemory (pIS);
 		    }
-		  else
-		    pIS = pIS->PiSNext;
+		  pInfo->PiSchemas = pIS->PiSNext;
+		  TtaFreeMemory (pIS);
+		  pIS = pInfo->PiSchemas;
 		}
 	    }
 	  /* the CSS is no longer applied */
@@ -792,26 +792,73 @@ void RemoveDocCSSs (Document doc)
 }
 
 /*----------------------------------------------------------------------
-   RemoveStyleSheet removes a style sheet.
-   It could be an external CSS file linked with the document (url not NULL)
-   or the document Style element.
+   RemoveStyle removes a style.
+   It could be an external CSS file, the User Stylesheet or a
+   document Style element.
    disabled is TRUE when the CSS style sheet is disabled.
    removed is TRUE when the CSS style sheet is removed.
+   category specifies the CSS category.
   ----------------------------------------------------------------------*/
-void RemoveStyleSheet (char *url, Document doc, ThotBool disabled,
-		       ThotBool removed, Element link)
+void RemoveStyle (char *url, Document doc, ThotBool disabled,
+		  ThotBool removed, Element link, CSSCategory category)
 {
-  CSSInfoPtr      css;
+  CSSInfoPtr      css, match;
   PInfoPtr        pInfo;
   DisplayMode     dispMode;
 
-  css = SearchCSS (doc, url, link, &pInfo);/********/
+  pInfo = NULL;
+  css = CSSList;
+  match = NULL;
+  while (css)
+    {
+      if ((url &&
+	  ((css->url && !strcmp (url, css->url)) ||
+	   (css->localName && !strcmp (url, css->localName)))) ||
+	  (url == NULL && doc && css->doc == doc))
+	{
+	  if (doc == 0)
+	    {
+	      /* no specific document is requested */
+	      match = css;
+	      css = NULL;
+	    }
+	  else
+	    {
+	      /* look for an entry with the right link */
+	      pInfo = css->infos[doc];
+	      while (!match && pInfo)
+		{
+		  if (pInfo->PiLink == link &&
+		      pInfo->PiCategory == category)
+		    {
+		      match = css;
+		      css = NULL;
+		    }
+		  else if (pInfo->PiCategory == category &&
+			   category != CSS_DOCUMENT_STYLE &&
+			   category != CSS_USER_STYLE)
+		    {
+		      match = css;
+		      css = NULL;
+		    }
+		  else
+		    pInfo = pInfo->PiNext;
+		}
+	    }
+	}
+      if (css)
+	css = css->NextCSS;
+    }
+
+  css = match;
   if (css)
     {
       /* Change the Display Mode to take into account the new presentation */
       dispMode = TtaGetDisplayMode (doc);
       if (dispMode != NoComputedDisplay)
 	TtaSetDisplayMode (doc, NoComputedDisplay);
+      if (pInfo)
+	link = pInfo->PiLink;
       UnlinkCSS (css, doc, link, disabled, removed);
       /* Restore the display mode */
       if (dispMode != NoComputedDisplay)
