@@ -564,12 +564,12 @@ Document	doc;
    Check the Thot structure of the GraphML element el.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void      GraphMLElementComplete (Element el, Document doc)
+void      GraphMLElementComplete (Element el, Document doc, int *error)
 #else
 void      GraphMLElementComplete (el, doc)
 Element		el;
 Document	doc;
-
+int             *error
 #endif
 {
    ElementType		elType, parentType, newType;
@@ -578,6 +578,7 @@ Document	doc;
    SSchema	        GraphMLSSchema;
    ThotBool		closedShape;
 
+   *error = 0;
    elType = TtaGetElementType (el);
    GraphMLSSchema = GetGraphMLSSchema (doc);
    if (elType.ElSSchema != GraphMLSSchema)

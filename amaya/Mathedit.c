@@ -948,10 +948,10 @@ int                 construct;
 	    {
 	      NumberRows = 2;
 	      NumberCols = 2;
-#  ifdef _WINDOWS
+#ifdef _WINDOWS
               CreateMatrixDlgWindow (BaseDialog, TableForm, TableCols,
 				     TableRows, NumberCols, NumberRows);
-#  else  /* !_WINDOWS */
+#else  /* !_WINDOWS */
 	      TtaNewForm (BaseDialog + TableForm, TtaGetViewFrame (doc, 1),
 			  TtaGetMessage (1, BMatrix), TRUE, 1, 'L', D_CANCEL);
 	      TtaNewNumberForm (BaseDialog + TableCols, BaseDialog + TableForm,
@@ -970,7 +970,7 @@ int                 construct;
 		  TtaCloseUndoSequence (doc);
 		  return;
 		}
-#  endif /* !_WINDOWS */
+#endif /* !_WINDOWS */
 	    }
 	  else
 	    {
@@ -1226,7 +1226,7 @@ View                view;
      /* the document is in ReadOnly mode */
      return;
 
-# ifndef _WINDOWS
+#ifndef _WINDOWS
   if (!InitMaths)
     {
       InitMaths = TRUE;
@@ -1241,9 +1241,11 @@ View                view;
       TtaSetDialoguePosition ();
     }
   TtaShowDialogue (MathsDialogue + FormMaths, TRUE); 
-# else /* _WINDOWS */
-  CreateMathDlgWindow (TtaGetViewFrame (doc, view), MathsDialogue, TtaGetThotWindow (GetWindowNumber (doc, view)), TtaGetMessage (AMAYA, AM_BUTTON_MATH));
-# endif /* _WINDOWS */
+#else /* _WINDOWS */
+  CreateMathDlgWindow (TtaGetViewFrame (doc, view), MathsDialogue,
+		       TtaGetThotWindow (GetWindowNumber (doc, view)),
+		       TtaGetMessage (AMAYA, AM_BUTTON_MATH));
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -1907,7 +1909,7 @@ void CreateMO (document, view)
   ----------------------------------------------------------------------*/
 void                InitMathML ()
 {
-#  ifndef _WINDOWS 
+#ifndef _WINDOWS 
    iconMath = TtaCreatePixmapLogo (Math_xpm);
    iconMathNo = TtaCreatePixmapLogo (MathNo_xpm);
    mIcons[0] = TtaCreatePixmapLogo (Bmath_xpm);
@@ -1924,7 +1926,7 @@ void                InitMathML ()
    mIcons[11] = TtaCreatePixmapLogo (mscript_xpm);
    mIcons[12] = TtaCreatePixmapLogo (matrix_xpm);
    mIcons[13] = TtaCreatePixmapLogo (greek_xpm);
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
   MathsDialogue = TtaSetCallback (CallbackMaths, MAX_MATHS);
   KeyboardsLoadResources ();
 }
@@ -2817,10 +2819,12 @@ void CreateMCHAR (document, view)
       return;
    
    MathMLEntityName[0] = EOS;
-#  ifdef _WINDOWS
-   CreateMCHARDlgWindow (TtaGetViewFrame (document, view), BaseDialog, MathEntityForm, MathEntityText,
-                              MathMLEntityName, TtaGetMessage (1, BMCharacter), TtaGetMessage (AMAYA, AM_MATH_ENTITY_NAME));
-#  else
+#ifdef _WINDOWS
+   CreateMCHARDlgWindow (TtaGetViewFrame (document, view), BaseDialog,
+			 MathEntityForm, MathEntityText, MathMLEntityName,
+			 TtaGetMessage (1, BMCharacter),
+			 TtaGetMessage (AMAYA, AM_MATH_ENTITY_NAME));
+#else
    TtaNewForm (BaseDialog + MathEntityForm, TtaGetViewFrame (document, view), 
 	       TtaGetMessage (1, BMCharacter), TRUE, 1, 'L', D_CANCEL);
    TtaNewTextForm (BaseDialog + MathEntityText, BaseDialog + MathEntityForm,
@@ -2830,7 +2834,7 @@ void CreateMCHAR (document, view)
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + MathEntityForm, FALSE);
    TtaWaitShowDialogue ();
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
    if (MathMLEntityName[0] != EOS)
      {
       if (!TtaIsSelectionEmpty ())

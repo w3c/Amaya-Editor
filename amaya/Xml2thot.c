@@ -1,18 +1,18 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
 /*
  *
- * html2thot parses a HTML file and builds the corresponding abstract tree
+ * Xml2thot parses a HTML file and builds the corresponding abstract tree
  * for a Thot document of type HTML.
  *
  * Author: V. Quint
  *         L. Carcone 
- *         R. Guetari (W3C/INRIA): Unicode version 
+ *         R. Guetari: Unicode version 
  */
 
 #define THOT_EXPORT extern
@@ -300,12 +300,12 @@ static void         ProcessStartGI (CHAR_T* GIname);
 static void         InsertElement (Element * el);
 static void         PutMathMLEntity (USTRING entityValue, Language lang,
 				     STRING entityName, Document doc);
-static void         XhtmlElementComplete (Element el, Document doc);
+static void         XhtmlElementComplete (Element el, Document doc, int *error);
 #else
 static void         ProcessStartGI ();
 static void         InsertElement ();
 static void         PutMathMLEntity (entityValue, lang, entityName, doc);
-static void         XhtmlElementComplete (el, doc);
+static void         XhtmlElementComplete (el, doc, error);
 #endif
 
 static FILE*    ErrFile = (FILE*) 0;
@@ -972,12 +972,12 @@ Element             el;
    Element el is complete. Check its attributes and its contents.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         XhtmlElementComplete (Element el,
-					  Document doc)
+static void         XhtmlElementComplete (Element el, Document doc, int *error)
 #else
-static void         XhtmlElementComplete (el, doc)
+static void         XhtmlElementComplete (el, doc, error)
 Element           el;
 Document          doc;
+int               *error;
 #endif
 {
    ElementType         elType, newElType, childType;
@@ -991,6 +991,7 @@ Document          doc;
    STRING              name1;
    int                 length;
 
+   *error = 0;
    elType = TtaGetElementType (el);
    /* is this a block-level element in a character-level element? */
    if (!IsCharacterLevelElement (el) && elType.ElTypeNum != HTML_EL_Comment_)
@@ -1410,7 +1411,7 @@ USTRING           mappedName;
 ThotBool         onStartTag;
 #endif
 {
-   int                 i;
+   int                 i, error;
    Element             el, parent;
    ThotBool            ret, stop, spacesDeleted;
 
@@ -1493,7 +1494,8 @@ ThotBool         onStartTag;
 	   spacesDeleted = FALSE;
 	   while (el != NULL)
 	     {
-	       (*(currentParserCtxt->ElementComplete)) (el, currentDocument);
+	       (*(currentParserCtxt->ElementComplete)) (el, currentDocument,
+							&error);
 	       if (!spacesDeleted)
 	          /* If the element closed is a block-element, remove */
 	          /* spaces contained at the end of that element */
@@ -1836,7 +1838,7 @@ CHAR_T     *GIname;
    CHAR_T       msgBuffer[MaxMsgLength];
    STRING       mappedName;
    ElementType  elType;
-   int          i;
+   int          i, error;
    ThotBool     ok;
 
 
@@ -1885,7 +1887,9 @@ CHAR_T     *GIname;
 	     /* this is an empty element */
 	     {
 	       CloseElement (mappedName, TRUE);
-	       (*(currentParserCtxt->ElementComplete)) (lastElement, currentDocument);
+	       (*(currentParserCtxt->ElementComplete)) (lastElement,
+							currentDocument,
+							&error);
 	     }
 	   else
 	     if (!CloseElement (mappedName, FALSE))
@@ -3983,7 +3987,7 @@ ThotBool    plainText;
   CHAR_T*         s;
   CHAR_T          tempname[MAX_LENGTH];
   CHAR_T          temppath[MAX_LENGTH];
-  int             length;
+  int             length, error;
   ThotBool        isHTML;
   char            www_file_name[MAX_LENGTH];
 
@@ -4117,7 +4121,8 @@ ThotBool    plainText;
 	el = lastElement;
 	while (el != NULL)
 	  {
-	    (*(currentParserCtxt->ElementComplete)) (el, currentDocument);
+	    (*(currentParserCtxt->ElementComplete)) (el, currentDocument,
+						     &error);
 	    el = TtaGetParent (el);
 	  }
 

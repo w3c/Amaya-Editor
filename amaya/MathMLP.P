@@ -2453,7 +2453,7 @@ RULES
 
    Index:
    	BEGIN
-	HorizRef: * . Top;
+	HorizRef: Enclosed . HRef;
    	HorizPos: Left = Enclosing . Left;
    	VertPos: Top = Enclosing . Top;
 	Width: ROOT_OFFSET min;

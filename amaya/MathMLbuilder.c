@@ -875,12 +875,13 @@ static void	NextNotSepOrComment (el, prev)
 /*----------------------------------------------------------------------
   CheckMathSubExpressions
   Children of element el should be of type type1, type2, and type3.
-  Create an element of that type.
+  If they are not, wrap them in elements of these types.
+  If element el have too many or not enough children, return FALSE.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void	CheckMathSubExpressions (Element el, int type1, int type2, int type3, Document doc)
+static ThotBool CheckMathSubExpressions (Element el, int type1, int type2, int type3, Document doc)
 #else
-static void	CheckMathSubExpressions (el, type1, type2, type3, doc)
+static ThotBool CheckMathSubExpressions (el, type1, type2, type3, doc)
    Element	el;
    int		type1;
    int		type2;
@@ -890,13 +891,25 @@ static void	CheckMathSubExpressions (el, type1, type2, type3, doc)
 {
   Element	child, new, prev;
   ElementType	elType, childType;
+  ThotBool      result;
 
+  result = TRUE;
   elType.ElSSchema = GetMathMLSSchema (doc);
   child = TtaGetFirstChild (el);
   prev = NULL;
   NextNotSepOrComment (&child, &prev);
-  if (child != NULL && type1 != 0)
+  if (type1 == 0)
     {
+    if (child)
+      /* no child expected and there is one, error */
+      result = FALSE;
+    }
+  else
+    if (!child)
+      /* a first child is expected and it's missing */
+      result = FALSE;
+    else
+      {
       elType.ElTypeNum = type1;
       childType = TtaGetElementType (child);
       if (TtaSameTypes (childType, elType) == 0)
@@ -911,12 +924,21 @@ static void	CheckMathSubExpressions (el, type1, type2, type3, doc)
 	  CreatePlaceholders (child, doc);
 	  child = new;
 	}
-      if (type2 != 0)
+      prev = child;
+      TtaNextSibling (&child);
+      NextNotSepOrComment (&child, &prev);
+      if (type2 == 0)
+        {
+        if (child)
+          /* this second child is not expected, error */
+          result = FALSE;
+        }
+      else
 	{
-	  prev = child;
-	  TtaNextSibling (&child);
-	  NextNotSepOrComment (&child, &prev);
-	  if (child != NULL)
+	  if (!child)
+	    /* a second child is expected and it's missing */
+	    result = FALSE;
+	  else
 	    {
 	      elType.ElTypeNum = type2;
 	      childType = TtaGetElementType (child);
@@ -929,12 +951,21 @@ static void	CheckMathSubExpressions (el, type1, type2, type3, doc)
 		  CreatePlaceholders (child, doc);
 		  child = new;
 		}
-	      if (type3 != 0)
+	      prev = child;
+	      TtaNextSibling (&child);
+	      NextNotSepOrComment (&child, &prev);
+	      if (type3 == 0)
 		{
-		  prev = child;
-		  TtaNextSibling (&child);
-		  NextNotSepOrComment (&child, &prev);
-		  if (child != NULL)
+		if (child)
+		  /* this third child is not expected, error */
+		  result = FALSE;
+		}
+	      else
+		{
+		  if (!child)
+		    /* a third child is expected and it's missing */
+		    result = FALSE;
+		  else
 		    {
 		      elType.ElTypeNum = type3;
 		      childType = TtaGetElementType (child);
@@ -945,12 +976,20 @@ static void	CheckMathSubExpressions (el, type1, type2, type3, doc)
 			  TtaInsertSibling (new, prev, FALSE, doc);
 			  TtaInsertFirstChild (&child, new, doc);
 			  CreatePlaceholders (child, doc);
+			  child = new;
 			}
 		    }
+		  prev = child;
+		  TtaNextSibling (&child);
+		  NextNotSepOrComment (&child, &prev);
+		  if (child)
+		    /* this fourth child is unexpected */
+		    result = FALSE;
 		}
 	    }
         }
-    }
+      }
+  return result;
 }
 
 
@@ -1839,9 +1878,9 @@ void ChangeTypeOfElement (elem, doc, newTypeNum)
    transform the MO into a MF and the character into a Thot symbol.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void      CheckFence (Element el, Document doc)
+static void      CheckFence (Element el, Document doc)
 #else
-void      CheckFence (el, doc)
+static void      CheckFence (el, doc)
 Element                 el;
 Document		doc;
 
@@ -2153,11 +2192,12 @@ Document	doc;
    Check the Thot structure of the MathML element el.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void      MathMLElementComplete (Element el, Document doc)
+void      MathMLElementComplete (Element el, Document doc, int *error)
 #else
-void      MathMLElementComplete (el, doc)
+void      MathMLElementComplete (el, doc, error)
 Element		el;
 Document	doc;
+int             *error;
 
 #endif
 {
@@ -2165,8 +2205,11 @@ Document	doc;
    Element		child, parent, new, prev, next;
    AttributeType	attrType;
    Attribute		attr;
-   SSchema       MathMLSSchema;
+   SSchema              MathMLSSchema;
+   ThotBool             ok;
 
+   ok = TRUE;
+   *error = 0;
    elType = TtaGetElementType (el);
    MathMLSSchema = GetMathMLSSchema (doc);
 
@@ -2224,8 +2267,8 @@ Document	doc;
        case MathML_EL_MFRAC:
        case MathML_EL_BevelledMFRAC:
 	  /* end of a fraction. Create a Numerator and a Denominator */
-	  CheckMathSubExpressions (el, MathML_EL_Numerator,
-				   MathML_EL_Denominator, 0, doc);
+	  ok = CheckMathSubExpressions (el, MathML_EL_Numerator,
+					MathML_EL_Denominator, 0, doc);
 	  break;
        case MathML_EL_MSQRT:
 	  /* end of a Square Root */
@@ -2236,8 +2279,8 @@ Document	doc;
 	  break;
        case MathML_EL_MROOT:
 	  /* end of a Root. Create a RootBase and an Index */
-	  CheckMathSubExpressions (el, MathML_EL_RootBase, MathML_EL_Index,
-				   0, doc);
+	  ok = CheckMathSubExpressions (el, MathML_EL_RootBase,
+					MathML_EL_Index, 0, doc);
 	  break;
        case MathML_EL_MENCLOSE:
 	  /* Create placeholders within the element */
@@ -2255,41 +2298,43 @@ Document	doc;
 	  break;
        case MathML_EL_MSUB:
 	  /* end of a MSUB. Create Base and Subscript */
-	  CheckMathSubExpressions (el, MathML_EL_Base, MathML_EL_Subscript,
-				   0, doc);
+	  ok = CheckMathSubExpressions (el, MathML_EL_Base,
+					MathML_EL_Subscript, 0, doc);
 	  SetIntVertStretchAttr (el, doc, MathML_EL_Base, NULL);
 	  break;
        case MathML_EL_MSUP:
 	  /* end of a MSUP. Create Base and Superscript */
-	  CheckMathSubExpressions (el, MathML_EL_Base, MathML_EL_Superscript,
-				   0, doc);
+	  ok = CheckMathSubExpressions (el, MathML_EL_Base,
+					MathML_EL_Superscript, 0, doc);
 	  SetIntVertStretchAttr (el, doc, MathML_EL_Base, NULL);
 	  break;
        case MathML_EL_MSUBSUP:
 	  /* end of a MSUBSUP. Create Base, Subscript, and Superscript */
-	  CheckMathSubExpressions (el, MathML_EL_Base, MathML_EL_Subscript,
-				   MathML_EL_Superscript, doc);
+	  ok = CheckMathSubExpressions (el, MathML_EL_Base,
+					MathML_EL_Subscript,
+					MathML_EL_Superscript, doc);
 	  SetIntVertStretchAttr (el, doc, MathML_EL_Base, NULL);
 	  break;
        case MathML_EL_MUNDER:
 	  /* end of a MUNDER. Create UnderOverBase, and Underscript */
-	  CheckMathSubExpressions (el, MathML_EL_UnderOverBase,
-				   MathML_EL_Underscript, 0, doc);
+	  ok = CheckMathSubExpressions (el, MathML_EL_UnderOverBase,
+					MathML_EL_Underscript, 0, doc);
 	  SetIntHorizStretchAttr (el, doc);
 	  SetIntVertStretchAttr (el, doc, MathML_EL_UnderOverBase, NULL);
 	  break;
        case MathML_EL_MOVER:
 	  /* end of a MOVER. Create UnderOverBase, and Overscript */
-	  CheckMathSubExpressions (el, MathML_EL_UnderOverBase,
-				   MathML_EL_Overscript, 0, doc);
+	  ok = CheckMathSubExpressions (el, MathML_EL_UnderOverBase,
+					MathML_EL_Overscript, 0, doc);
 	  SetIntHorizStretchAttr (el, doc);
 	  SetIntVertStretchAttr (el, doc, MathML_EL_UnderOverBase, NULL);
 	  break;
        case MathML_EL_MUNDEROVER:
 	  /* end of a MUNDEROVER. Create UnderOverBase, Underscript, and
 	     Overscript */
-	  CheckMathSubExpressions (el, MathML_EL_UnderOverBase,
-			  MathML_EL_Underscript, MathML_EL_Overscript, doc);
+	  ok = CheckMathSubExpressions (el, MathML_EL_UnderOverBase,
+					MathML_EL_Underscript,
+					MathML_EL_Overscript, doc);
 	  SetIntHorizStretchAttr (el, doc);
 	  SetIntVertStretchAttr (el, doc, MathML_EL_UnderOverBase, NULL);
 	  break;
@@ -2346,6 +2391,9 @@ Document	doc;
 	  CreatePlaceholders (el, doc);
 	  }
      }
+   if (!ok)
+     /* send an error message */
+     *error = 1;
 }
 
 /*----------------------------------------------------------------------

@@ -232,10 +232,11 @@ Document doc;
 {
    PtrParserCtxt	ctxt;
    ElementType		elType;
+   int                  error;
 
    elType = TtaGetElementType (el);
    if (currentParserCtxt != NULL)
-      (*(currentParserCtxt->ElementComplete)) (el, doc);
+      (*(currentParserCtxt->ElementComplete)) (el, doc, &error);
    else
       {
       /* initialize all parser contexts if not done yet */
@@ -247,7 +248,15 @@ Document doc;
 	    ustrcmp (ctxt->SSchemaName, TtaGetSSchemaName (elType.ElSSchema)))
 	 ctxt = ctxt->NextParserCtxt;
       if (ctxt != NULL)
-	 (*(ctxt->ElementComplete)) (el, doc);
+	 (*(ctxt->ElementComplete)) (el, doc, &error);
+      }
+   if (error)
+      {
+      if (error == 1)
+	 {
+         ParseHTMLError (doc, TEXT("Invalid number of children"));
+	 XMLabort = TRUE;
+	 }
       }
 }
 
