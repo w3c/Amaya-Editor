@@ -15,12 +15,12 @@ extern void EDITORLoadResources ( void );
 
 #else /* __STDC__ */
 
-extern void EDITORApplicationInitialise (/* void */);
-extern void EDITORActionListInit (/* void */);
-extern void TteLoadApplications (/* void */);
-extern int main (/* int argc,
-                    char **argv */);
-extern void EDITORLoadResources (/* void */);
+extern void EDITORApplicationInitialise ( void );
+extern void EDITORActionListInit ( void );
+extern void TteLoadApplications ( void );
+extern int main ( int argc,
+                    char **argv );
+extern void EDITORLoadResources ( void );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -2228,16 +2228,13 @@ void UpdateDoctypeMenu (Document doc)
 
   TtaSetItemOn  (doc, 1, File, Doctype1);
   TtaSetItemOn  (doc, 1, File, BRemoveDoctype);
+  TtaSetItemOff (doc, 1, File, BAddDoctype);
   TtaSetItemOff (doc, 1, File, BDoctypeXhtml11);
   TtaSetItemOff (doc, 1, File, BDoctypeXhtmlTransitional);
   TtaSetItemOff (doc, 1, File, BDoctypeXhtmlStrict);
   TtaSetItemOff (doc, 1, File, BDoctypeXhtmlBasic);
   TtaSetItemOff (doc, 1, File, BDoctypeHtmlTransitional);
   TtaSetItemOff (doc, 1, File, BDoctypeHtmlStrict);
-  TtaSetItemOff (doc, 1, File, BDoctypeXhtmlPlusMath);
-  TtaSetItemOff (doc, 1, File, BDoctypeXhtmlPlusMathPlusSVG);
-  TtaSetItemOff (doc, 1, File, BDoctypeMathML);
-  TtaSetItemOff (doc, 1, File, BDoctypeSVG);
 
 
   if (docType == docText || docType == docCSS ||
@@ -2249,7 +2246,7 @@ void UpdateDoctypeMenu (Document doc)
       return;
     }
 
-  /* look for the MathML nature used in the document */
+  /* look for a MathML or SVG nature within the document */
   nature = NULL;
   useMathML = FALSE;
   useSVG = FALSE;
@@ -2272,40 +2269,35 @@ void UpdateDoctypeMenu (Document doc)
     case L_Other:
       if (docType == docHTML)
 	{
-	  if (useMathML || useSVG)
+	  TtaSetItemOff (doc, 1, File, BRemoveDoctype);
+	  /* TtaSetItemOn (doc, 1, File, BAddDoctype); */
+	  if (!useMathML && !useSVG)
 	    {
-	      TtaSetItemOn (doc, 1, File, BDoctypeXhtmlPlusMath);
-	      TtaSetItemOn (doc, 1, File, BDoctypeXhtmlPlusMathPlusSVG);
-	    }
-	  else if (DocumentMeta[doc]->xmlformat)
-	    {
-	      TtaSetItemOn (doc, 1, File, BDoctypeXhtml11);
-	      TtaSetItemOn (doc, 1, File, BDoctypeXhtmlTransitional);
-	      TtaSetItemOn (doc, 1, File, BDoctypeXhtmlStrict);
-	      TtaSetItemOn (doc, 1, File, BDoctypeXhtmlBasic);
-	    }
-	  else
-	    {
-	      TtaSetItemOn (doc, 1, File, BDoctypeXhtmlTransitional);
-	      TtaSetItemOn (doc, 1, File, BDoctypeXhtmlStrict);
-	      TtaSetItemOn (doc, 1, File, BDoctypeXhtml11);
-	      TtaSetItemOn (doc, 1, File, BDoctypeXhtmlBasic);
-	      TtaSetItemOn (doc, 1, File, BDoctypeHtmlTransitional);
-	      TtaSetItemOn (doc, 1, File, BDoctypeHtmlStrict);
+	      if (DocumentMeta[doc]->xmlformat)
+		{
+		  TtaSetItemOn (doc, 1, File, BDoctypeXhtml11);
+		  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlTransitional);
+		  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlStrict);
+		  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlBasic);
+		}
+	      else
+		{
+		  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlTransitional);
+		  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlStrict);
+		  TtaSetItemOn (doc, 1, File, BDoctypeXhtml11);
+		  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlBasic);
+		  TtaSetItemOn (doc, 1, File, BDoctypeHtmlTransitional);
+		  TtaSetItemOn (doc, 1, File, BDoctypeHtmlStrict);
+		}
 	    }
 	}
       else if (docType == docMath)
-	TtaSetItemOn (doc, 1, File, BDoctypeMathML);
+	TtaSetItemOn (doc, 1, File, BAddDoctype);
       else if (docType == docSVG)
-	TtaSetItemOn (doc, 1, File, BDoctypeSVG);
+	TtaSetItemOn (doc, 1, File, BAddDoctype);
       break;
     case L_Xhtml11:
-      if (useMathML || useSVG)
-	{
-	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlPlusMath);
-	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlPlusMathPlusSVG);
-	}
-      else
+      if (!useMathML && !useSVG)
 	{
 	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlTransitional);
 	  TtaSetItemOn (doc, 1, File, BDoctypeXhtmlStrict);
@@ -2350,10 +2342,9 @@ void UpdateDoctypeMenu (Document doc)
 	}
       break;
     case L_MathML:
-      TtaSetItemOn (doc, 1, File, BDoctypeMathML);
-      break;
     case L_SVG:
-      TtaSetItemOn (doc, 1, File, BDoctypeSVG);
+      break;
+      /* TtaSetItemOn (doc, 1, File, BAddDoctype); */
       break;
     }
 }

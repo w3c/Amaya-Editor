@@ -55,6 +55,7 @@ MENUS
 	view:1 File Separator;
 	view:1 File button:BSynchro -> Synchronize;
 	view:1 File.Doctype1 button:BRemoveDoctype -> RemoveDoctype;
+	view:1 File.Doctype1 button:BAddDoctype -> AddDoctype;
 	view:1 File.Doctype1 Separator;
 	view:1 File.Doctype1 button:BDoctypeXhtml11 -> CreateDoctypeXhtml11;
 	view:1 File.Doctype1 button:BDoctypeXhtmlTransitional -> CreateDoctypeXhtmlTransitional;
@@ -62,11 +63,6 @@ MENUS
 	view:1 File.Doctype1 button:BDoctypeXhtmlBasic -> CreateDoctypeXhtmlBasic;
 	view:1 File.Doctype1 button:BDoctypeHtmlTransitional -> CreateDoctypeHtmlTransitional;
 	view:1 File.Doctype1 button:BDoctypeHtmlStrict -> CreateDoctypeHtmlStrict;
-	view:1 File.Doctype1 Separator;
-	view:1 File.Doctype1 button:BDoctypeXhtmlPlusMathPlusSVG -> CreateDoctypeXhtml11;
-	view:1 File.Doctype1 button:BDoctypeXhtmlPlusMath -> CreateDoctypeXhtml11;
-	view:1 File.Doctype1 button:BDoctypeMathML -> CreateDoctypeMathML;
-	view:1 File.Doctype1 button:BDoctypeSVG -> CreateDoctypeSVG;
 	view:1 File button:BDocInfo -> DocumentInfo;
 	view:1 File Separator;
 	view:1 File button:BSetUpandPrint -> SetupAndPrint;

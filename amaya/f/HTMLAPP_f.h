@@ -12,9 +12,9 @@ extern void HTMLLoadResources ( void );
 
 #else /* __STDC__ */
 
-extern void HTMLApplicationInitialise (/* void */);
-extern void HTMLActionListInit (/* void */);
-extern void HTMLLoadResources (/* void */);
+extern void HTMLApplicationInitialise ( void );
+extern void HTMLActionListInit ( void );
+extern void HTMLLoadResources ( void );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -547,40 +547,25 @@ void InitializeNewDoc (char *url, int docType, Document doc, int profile)
 }
 
 /*--------------------------------------------------------------------------
-  RemoveDoctype
-  Remove the doctype declaration
+  IsDoctypePossible
+  Verify whether the document is valid or not according to the new doctype
   --------------------------------------------------------------------------*/
-void RemoveDoctype (Document document, View view)
+static ThotBool IsDoctypePossible (Document doc, View view, int profile)
 {
+  ElementType    elType;
+  Element        docEl, doctype;
+  char          *tempdocument = NULL;
+  char           documentname[MAX_LENGTH];
+  char           tempdir[MAX_LENGTH];
+  ThotBool       error = FALSE;
 
-  ElementType     elType;
-  Element         docEl, doctype;
-  char           *s;
 
-  docEl = TtaGetMainRoot (document);
-  elType = TtaGetElementType (docEl);
+  
 
-  /* Search the doctype declaration according to the main schema */
-  s = TtaGetSSchemaName (elType.ElSSchema);
-  if (strcmp (s, "HTML") == 0)
-    elType.ElTypeNum = HTML_EL_DOCTYPE;
-  else if (strcmp (s, "SVG") == 0)
-    elType.ElTypeNum = SVG_EL_DOCTYPE;
-  else if (strcmp (s, "MathML") == 0)
-    elType.ElTypeNum = MathML_EL_DOCTYPE;
-  else
-    elType.ElTypeNum = XML_EL_doctype;
-  doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
+  return error;
 
-  /* remove the existing doctype */
-  if (doctype != NULL)
-    {
-      TtaDeleteTree (doctype, document);
-      TtaSetDocumentProfile (document, L_Other);
-      UpdateDoctypeMenu (document);
-      TtaSetDocumentModified (document);
-    }
 }
+
 
 /*--------------------------------------------------------------------------
   CreateOrChangeDoctype
@@ -594,6 +579,7 @@ static void CreateOrChangeDoctype (Document doc, View view, int profile)
   char            documentname[MAX_LENGTH];
   char            tempdir[MAX_LENGTH];
 
+
   /* Ask confirmation */
   if (TtaIsDocumentModified (doc))
     {
@@ -605,6 +591,7 @@ static void CreateOrChangeDoctype (Document doc, View view, int profile)
 	return;
     } 
   
+  /* Remove the doctype if it exists */
   docEl = TtaGetMainRoot (doc);
   elType = TtaGetElementType (docEl);
   /* Search the doctype declaration according to the main schema */
@@ -616,8 +603,6 @@ static void CreateOrChangeDoctype (Document doc, View view, int profile)
   else if (profile == L_SVG) 
     elType.ElTypeNum = SVG_EL_DOCTYPE;
   doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
-
-  /* Remove the previous doctype */
   if (doctype != NULL)
     TtaDeleteTree (doctype, doc);
 
@@ -661,6 +646,95 @@ static void CreateOrChangeDoctype (Document doc, View view, int profile)
   UpdateDoctypeMenu (doc);
 
   TtaFreeMemory (tempdocument);
+}
+
+/*--------------------------------------------------------------------------
+  RemoveDoctype
+  Remove the doctype declaration
+  --------------------------------------------------------------------------*/
+void RemoveDoctype (Document document, View view)
+{
+
+  ElementType     elType;
+  Element         docEl, doctype;
+  char           *s;
+
+  docEl = TtaGetMainRoot (document);
+  elType = TtaGetElementType (docEl);
+
+  /* Search the doctype declaration according to the main schema */
+  s = TtaGetSSchemaName (elType.ElSSchema);
+  if (strcmp (s, "HTML") == 0)
+    elType.ElTypeNum = HTML_EL_DOCTYPE;
+  else if (strcmp (s, "SVG") == 0)
+    elType.ElTypeNum = SVG_EL_DOCTYPE;
+  else if (strcmp (s, "MathML") == 0)
+    elType.ElTypeNum = MathML_EL_DOCTYPE;
+  else
+    elType.ElTypeNum = XML_EL_doctype;
+  doctype = TtaSearchTypedElement (elType, SearchInTree, docEl);
+
+  /* remove the existing doctype */
+  if (doctype != NULL)
+    {
+      TtaDeleteTree (doctype, document);
+      TtaSetDocumentProfile (document, L_Other);
+      UpdateDoctypeMenu (document);
+      TtaSetDocumentModified (document);
+    }
+}
+
+/*--------------------------------------------------------------------------
+  AddDoctype
+  Add the doctype declaration
+  --------------------------------------------------------------------------*/
+void AddDoctype (Document document, View view)
+{
+
+  DocumentType    docType;
+  SSchema         nature;
+  char           *ptr;
+  ThotBool	  useMathML, useSVG;
+  int             profile;
+ 
+  /* look for a MathML or SVG nature within the document */
+  nature = NULL;
+  useMathML = FALSE;
+  useSVG = FALSE;
+  do
+    {
+      TtaNextNature (document, &nature);
+      if (nature)
+	{
+	  ptr = TtaGetSSchemaName (nature);
+	  if (!strcmp (ptr, "MathML"))
+	    useMathML = TRUE;
+	  if (!strcmp (ptr, "SVG"))
+	    useSVG = TRUE;
+	}
+    }
+  while (nature);
+
+  docType = DocumentTypes[document];
+  if (docType == docHTML)
+    {
+      if (useMathML || useSVG)
+	profile = L_Xhtml11;
+      else
+	{
+	  if (DocumentMeta[document]->xmlformat)
+	    XmlDoctype = TRUE;
+	  else
+	    XmlDoctype = FALSE;
+	  profile = L_Transitional;
+	}
+    }
+  else if (docType == docMath)
+    profile = L_MathML;
+  else if (docType == docSVG)
+    profile = L_SVG;
+
+  CreateOrChangeDoctype (document, view, profile);
 }
 
 /*--------------------------------------------------------------------------

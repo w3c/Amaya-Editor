@@ -30,6 +30,8 @@ extern void InitializeNewDoc ( char *url,
                                int profile );
 extern void RemoveDoctype ( Document document,
                             View view );
+extern void AddDoctype ( Document document,
+                         View view );
 extern void CreateDoctypeXhtml11 ( Document document,
                                    View view );
 extern void CreateDoctypeXhtmlTransitional ( Document document,
@@ -284,6 +286,8 @@ extern void InitializeNewDoc ( char *url,
                                  int profile );
 extern void RemoveDoctype ( Document document,
                               View view );
+extern void AddDoctype ( Document document,
+                           View view );
 extern void CreateDoctypeXhtml11 ( Document document,
                                      View view );
 extern void CreateDoctypeXhtmlTransitional ( Document document,

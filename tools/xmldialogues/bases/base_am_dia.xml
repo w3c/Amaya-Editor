@@ -360,17 +360,17 @@
 	<message xml:lang="tr">Eşlemek</message>
 </label>
 <label define="Doctype1">
-	<message xml:lang="en">Modify &amp;doctype</message>
-	<message xml:lang="fr">Modifier le &amp;doctype</message>
-	<message xml:lang="it">Modifica doctype</message>
+	<message xml:lang="en">&amp;Document Type</message>
+	<message xml:lang="fr">&amp;Doctype</message>
+	<message xml:lang="it">Document Type</message>
 	<message xml:lang="de">DTD ändern</message>
 	<message xml:lang="es">Ca&amp;mbiar doctype</message>
-	<message xml:lang="pt">Modificar doctype</message>
+	<message xml:lang="pt">Document Type</message>
 	<message xml:lang="fi">Muuta tyyppi</message>
 	<message xml:lang="tr">doctype\'bı düzenle</message>
 </label>
 <label define="BRemoveDoctype">
-	<message xml:lang="en">&amp;Remove doctype</message>
+	<message xml:lang="en">&amp;Remove the doctype</message>
 	<message xml:lang="fr">S&amp;upprimer le doctype</message>
 	<message xml:lang="it">Elimina doctype</message>
 	<message xml:lang="de">DTD entfernen</message>
@@ -379,9 +379,13 @@
 	<message xml:lang="fi">Poista tyyppi</message>
 	<message xml:lang="tr">doctype\'bı sil</message>
 </label>
+<label define="BAddDoctype">
+	<message xml:lang="en">&amp;Add a doctype</message>
+	<message xml:lang="fr">&amp;Ajouter un doctype</message>
+</label>
 <label define="BDoctypeXhtml11">
-	<message xml:lang="en">Set doctype to &amp;XHTML 1.1</message>
-	<message xml:lang="fr">Changer/Créer doctype &amp;XHTML 1.1</message>
+	<message xml:lang="en">Change doctype to &amp;XHTML 1.1</message>
+	<message xml:lang="fr">Changer le doctype pour &amp;XHTML 1.1</message>
 	<message xml:lang="it">Cambia/Crea doctype XHTML 1.1</message>
 	<message xml:lang="de">XHTML 1.1</message>
 	<message xml:lang="es">Cambiar doctype a &amp;XHTML 1.1</message>
@@ -390,16 +394,16 @@
 	<message xml:lang="tr">XHTML 1.1 doctype\'bı değiştir/yarat</message>
 </label>
 <label define="BBDoctypeXhtmlTransitional">
-	<message xml:lang="en">Set doctype to XHTML 1.0 &amp;Transitional</message>
-	<message xml:lang="fr">Changer/Créer doctype XHTML 1.0 &amp;Transitional</message>
+	<message xml:lang="en">Change doctype to XHTML 1.0 &amp;Transitional</message>
+	<message xml:lang="fr">Changer le doctype pour XHTML 1.0 &amp;Transitional</message>
 	<message xml:lang="it">Cambia/Crea doctype XHTML 1.0 Transitional</message>
 	<message xml:lang="de">Dokumenttyp XHTML 1.0 Transitional zuweisen</message>
 	<message xml:lang="es">Cambiar/Crear doctype XHTML 1.0 Transicional</message>
 	<message xml:lang="pt">Modificar/Criar doctype XHTML 1.0</message>
 </label>
 <label define="BDoctypeXhtmlStrict">
-	<message xml:lang="en">Set doctype to XHTML 1.0 &amp;Strict</message>
-	<message xml:lang="fr">Changer/Créer doctype XHTML 1.0 &amp;Strict</message>
+	<message xml:lang="en">Change doctype to XHTML 1.0 &amp;Strict</message>
+	<message xml:lang="fr">Changer le doctype pour XHTML 1.0 &amp;Strict</message>
 	<message xml:lang="it">Cambia/Crea doctype XHTML 1.0 Strict</message>
 	<message xml:lang="de">XHTML 1.0 Strict</message>
 	<message xml:lang="es">Cambiar doctype a XHTML 1.0 &amp;Strict</message>
@@ -408,8 +412,8 @@
 	<message xml:lang="tr">XHTML 1.0 Strict doctype\'bı değiştir/yarat</message>
 </label>
 <label define="BDoctypeXhtmlBasic">
-	<message xml:lang="en">Set doctype to XHTML 1.0 &amp;Basic</message>
-	<message xml:lang="fr">Changer/Créer doctype XHTML 1.0 &amp;Basic</message>
+	<message xml:lang="en">Change doctype to XHTML 1.0 &amp;Basic</message>
+	<message xml:lang="fr">Changer le doctype pour XHTML 1.0 &amp;Basic</message>
 	<message xml:lang="it">Cambia/Crea doctype XHTML 1.0 Basic</message>
 	<message xml:lang="de">XHTML 1.0 Basic</message>
 	<message xml:lang="es">Cambiar doctype a XHTML 1.0 &amp;Basic</message>
@@ -418,62 +422,22 @@
 	<message xml:lang="tr">XHTML 1.0 Basic doctype\'bı değiştir/yarat</message>
 </label>
 <label define="BBDoctypeHtmlTransitional">
-	<message xml:lang="en">Set doctype to &amp;HTML 4.01 Transitional</message>
-	<message xml:lang="fr">Changer/Créer doctype &amp;HTML 4.01 Transitional</message>
+	<message xml:lang="en">Change doctype to &amp;HTML 4.01 Transitional</message>
+	<message xml:lang="fr">Changer le doctype pour &amp;HTML 4.01 Transitional</message>
 	<message xml:lang="it">Cambia/Crea doctype HTML 4.01 Transitional</message>
 	<message xml:lang="de">Dokumenttyp HTML 4.01 Transitional zuweisen</message>
 	<message xml:lang="es">Cambiar/Crear doctype HTML 4.01 Transicional</message>
 	<message xml:lang="pt">Modificar/Criar doctype HTML 4.01 Transitional</message>
 </label>
 <label define="BDoctypeHtmlStrict">
-	<message xml:lang="en">Set doctype to HTML 4.01 Str&amp;ict</message>
-	<message xml:lang="fr">Changer/Créer doctype HTML 4.01 Str&amp;ict</message>
+	<message xml:lang="en">Change doctype to HTML 4.01 Str&amp;ict</message>
+	<message xml:lang="fr">Changer le doctype pour HTML 4.01 Str&amp;ict</message>
 	<message xml:lang="it">Cambia/Crea doctype HTML 4.01 Strict</message>
 	<message xml:lang="de">HTML Strict</message>
 	<message xml:lang="es">Cambiar doctype a HTML 4.01 Str&amp;ict</message>
 	<message xml:lang="pt">Alterar doctype para HTML 4.01 Strict</message>
 	<message xml:lang="fi">Aseta tyypiksi HTML 4.01 Strict</message>
 	<message xml:lang="tr">HTML 4.01 Strict doctype\'bı değiştir/yarat</message>
-</label>
-<label define="BDoctypeXhtmlPlusMathPlusSVG">
-	<message xml:lang="en">Set doctype to XHTML 1.1 + MathML 2.0 + S&amp;VG 1.1</message>
-	<message xml:lang="fr">Changer/Créer doctype XHTML 1.1 + MathML 2.0 + S&amp;VG 1.1</message>
-	<message xml:lang="it">Cambia/Crea doctype XHTML 1.1 + MathML 2.0 + S&amp;VG 1.1</message>
-	<message xml:lang="de">XHTML 1.1 + MathML+ S&amp;VG 1.1</message>
-	<message xml:lang="es">Combiar doctype a XHTML 1.1 + MathML 2.0 + S&amp;VG 1.1</message>
-	<message xml:lang="pt">Alterar doctype para XHTML 1.1 + MathML 2.0 + S&amp;VG 1.1</message>
-	<message xml:lang="fi">Aseta tyypiksi XHTML 1.1 + MathML 2.0 + S&amp;VG 1.1</message>
-	<message xml:lang="tr">XHTML 1.1 + MathML 2.0 + S&amp;VG 1.1 doctype\'bı değiştir/yarat</message>
-</label>
-<label define="BDoctypeXhtmlPlusMath">
-	<message xml:lang="en">Set doctype to XHTML 1.1 + &amp;MathML 2.0</message>
-	<message xml:lang="fr">Changer/Créer doctype XHTML 1.1 + &amp;MathML 2.0</message>
-	<message xml:lang="it">Cambia/Crea doctype XHTML 1.1 + MathML 2.0</message>
-	<message xml:lang="de">XHTML 1.1 + MathML</message>
-	<message xml:lang="es">Combiar doctype a XHTML 1.1 + M&amp;athML 2.0</message>
-	<message xml:lang="pt">Alterar doctype para XHTML 1.1 + MathML 2.0</message>
-	<message xml:lang="fi">Aseta tyypiksi XHTML 1.1 + MathML 2.0</message>
-	<message xml:lang="tr">XHTML 1.1 + MathML 2.0 doctype\'bı değiştir/yarat</message>
-</label>
-<label define="BDoctypeMathML">
-	<message xml:lang="en">Set doctype to M&amp;athML 2.0</message>
-	<message xml:lang="fr">Changer/Créer doctype M&amp;athML 2.0</message>
-	<message xml:lang="it">Cambia/Crea doctype MathML 2.0</message>
-	<message xml:lang="de">MathML</message>
-	<message xml:lang="es">Cambiar doctype a &amp;MathML 2.0</message>
-	<message xml:lang="pt">Alterar doctype para XHTML 1.1 + MathML 2.0</message>
-	<message xml:lang="fi">Aseta tyypiksi MathML 2.0</message>
-	<message xml:lang="tr">MathML 2.0 doctype\'bı değiştir/yarat</message>
-</label>
-<label define="BDoctypeSVG">
-	<message xml:lang="en">Set doctype to SV&amp;G 1.1</message>
-	<message xml:lang="fr">Changer/Créer doctype SV&amp;G 1.1</message>
-	<message xml:lang="it">Cambia/Crea doctype SVG 1.1</message>
-	<message xml:lang="de">SVG</message>
-	<message xml:lang="es">Cambiar doctype a SV&amp;G 1.1</message>
-	<message xml:lang="pt">Alterar doctype para SVG</message>
-	<message xml:lang="fi">Aseta tyypiksi SVG 1.1</message>
-	<message xml:lang="tr">SVG 1.1 doctype'bı değiştir/yarat</message>
 </label>
 <label define="BDocInfo">
 	<message xml:lang="en">Document &amp;Information</message>
