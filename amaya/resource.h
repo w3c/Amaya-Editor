@@ -262,6 +262,7 @@
 #define ADDNEWMODELINTOLIBRARYDIALOG    558
 #define CREATELIBRARYDIALOG             559
 #define IDD_DIALOG5                     560
+#define CREATEHREF                      561
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002
@@ -293,6 +294,8 @@
 #define ID_APPLY                        1058
 #define IDC_GETALT                      1058
 #define IDC_CLEAR                       1058
+#define IDC_CLEAR2                      1059
+#define IDC_CLICK                       1059
 #define IDC_TIMES                       1060
 #define IDC_HELVETICA                   1061
 #define IDC_COURIER                     1062

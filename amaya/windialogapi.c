@@ -420,6 +420,7 @@ LRESULT CALLBACK HRefDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
 		  TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
       SetWindowText (GetDlgItem (hwnDlg, IDC_BROWSE), TtaGetMessage (AMAYA, AM_BROWSE));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_CLICK), TtaGetMessage (AMAYA, AM_CLICK));
       SetWindowText (GetDlgItem (hwnDlg, IDC_CLEAR), TtaGetMessage (AMAYA, AM_CLEAR));
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
       
@@ -482,8 +483,13 @@ LRESULT CALLBACK HRefDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	    }
 	  break;
 	  
-	case IDC_CLEAR:
+	case IDC_CLICK:
+	  EndDialog (hwnDlg, IDCANCEL);
 	  ThotCallback (BaseDialog + AttrHREFForm, INTEGER_DATA, (char*) 3);
+	  break;
+	  
+	case IDC_CLEAR:
+	  ThotCallback (BaseDialog + AttrHREFForm, INTEGER_DATA, (char*) 4);
 	  TmpDocName[0] = 0;
 	  SetDlgItemText (hwnDlg, IDC_GETURL, "");
 	  break;
@@ -3578,7 +3584,7 @@ void CreateHRefDlgWindow (ThotWindow parent, char *HRefValue,
   else 
     szFilter = APPALLFILESFILTER;
 
-  DialogBox (hInstance, MAKEINTRESOURCE (OPENDOCDIALOG), parent,
+  DialogBox (hInstance, MAKEINTRESOURCE (CREATEHREF), parent,
 	     (DLGPROC) HRefDlgProc);
 }
 
