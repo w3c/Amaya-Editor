@@ -414,7 +414,7 @@ BoxType          colrow;
     }
 }
 
-
+#ifdef IV
 /*----------------------------------------------------------------------
   SetAttrWidthPxl changes the AttrWidthPxl value.
   ----------------------------------------------------------------------*/
@@ -489,7 +489,7 @@ int             width;
 	  pAttr = pAttr->AeNext;
     }
 }
-
+#endif /* IV */
 
 /*----------------------------------------------------------------------
   GiveAttrWidth returns TRUE if the element width is given
@@ -713,7 +713,7 @@ ThotBool         force;
 {
   PtrAbstractBox      pCell;
   PtrAbstractBox     *colBox;
-  PtrBox              pBox, prevBox, box;
+  PtrBox              pBox, box;
   PtrTabRelations     pTabRel;
   int                *colWidth, *colPercent;
   int                 cNumber, cRef;
@@ -723,7 +723,7 @@ ThotBool         force;
   int                 percent, sumPercent;
   int                 minOfPercent, maxOfPercent;
   int                 minOfWidth, maxOfWidth;
-  int                 mbp, var, minsize;
+  int                 mbp, var;
   ThotBool            constraint, useMax;
   ThotBool            addIt, addExtra;
 
