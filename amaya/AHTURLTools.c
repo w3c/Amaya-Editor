@@ -1870,13 +1870,13 @@ CHAR_T*              target;
 	  ustrcat (target, WC_DIR_STR);
 #endif
 	i = ustrlen (target);
-	CleanCopyFileURL (&target[i], &src[1]);
+	ustrcpy (&target[i], &src[1]);
 	change = TRUE;
      }
 #endif /* _WINDOWS */
 
    else
-     CleanCopyFileURL (target, src);
+     ustrcpy (target, src);
 
    /* remove /../ and /./ */
    SimplifyUrl (&target);
