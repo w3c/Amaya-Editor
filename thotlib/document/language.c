@@ -219,19 +219,16 @@ void                InitLanguage ()
 
    Return value:
    identifier of the new language or 0 if the language cannot be added.
-
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
 Language            TtaNewLanguage (char *languageName, char languageAlphabet, char *principalDictionary, char *secondDictionary)
-
 #else  /* __STDC__ */
 Language            TtaNewLanguage (languageName, languageAlphabet, principalDictionary, secondDictionary)
 char               *languageName;
 char                languageAlphabet;
 char               *principalDictionary;
 char               *secondDictionary;
-
 #endif /* __STDC__ */
 
 {
@@ -277,7 +274,7 @@ char               *secondDictionary;
 	FreeEntry++;
      }
    return i;
-}				/*TtaNewLanguage */
+}
 
 
 /*----------------------------------------------------------------------
@@ -292,16 +289,12 @@ char               *secondDictionary;
 
    Return value:
    identifier of that language or 0 if the language is unknown.
-
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 Language            TtaGetLanguageIdFromName (char *languageName)
-
 #else  /* __STDC__ */
 Language            TtaGetLanguageIdFromName (languageName)
 char               *languageName;
-
 #endif /* __STDC__ */
 
 {
@@ -351,7 +344,7 @@ char               *languageName;
      }
    /* returned value */
    return (Language) i;
-}				/*TtaGetLanguageIdFromName */
+}
 
 /*----------------------------------------------------------------------
    TtaGetVarLANG
@@ -360,7 +353,6 @@ char               *languageName;
 
    Return value:
    a string of 2 chars.
-
   ----------------------------------------------------------------------*/
 char               *TtaGetVarLANG ()
 {
@@ -386,7 +378,6 @@ char               *TtaGetVarLANG ()
 
    Return value:
    identifier of the default language.
-
   ----------------------------------------------------------------------*/
 Language            TtaGetDefaultLanguage ()
 {
@@ -425,16 +416,12 @@ Language            TtaGetDefaultLanguage ()
 
    Return value:
    identifier of that language or 0 if the language is unknown.
-
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 Language            TtaGetLanguageIdFromAlphabet (char languageAlphabet)
-
 #else  /* __STDC__ */
 Language            TtaGetLanguageIdFromAlphabet (languageAlphabet)
 char                languageAlphabet;
-
 #endif /* __STDC__ */
 
 {
@@ -466,7 +453,7 @@ char                languageAlphabet;
 	  }
      }
    return (Language) i;
-}				/*TtaGetLanguageIdFromAlphabet */
+}
 
 
 /*----------------------------------------------------------------------
@@ -481,7 +468,6 @@ char                languageAlphabet;
 
    Return value:
    a character that identifies the alphabet ('L' = latin, 'G' = greek).
-
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -519,7 +505,6 @@ Language            languageId;
 
    Return value:
    the name of the language.
-
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
@@ -555,25 +540,22 @@ Language            languageId;
 
    Return value:
    the current number of languages.
-
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 int                 TtaGetNumberOfLanguages ()
-
 #else  /* __STDC__ */
 int                 TtaGetNumberOfLanguages ()
 #endif				/* __STDC__ */
-
 {
    return FreeEntry;
 }
 
 
-/* 
- * GetPatternList: Read the pattern file of the language and creates the appropriate structure.
- * return 0 if problem else returns 1 
- */
+/*----------------------------------------------------------------------
+  GetPatternList: Read the pattern file of the language and creates the
+  appropriate structure.
+  Return 0 if problem else returns 1 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             GetPatternList (Language langageId)
 #else  /* __STDC__ */
@@ -633,13 +615,13 @@ Language            langageId;
    LangTable[lang].LangTabPattern.Charge = 1;
    fclose (in);
    return (TRUE);
-}				/* GetPatternList */
+}
 
 
-/* 
- * FoundPatternInList regarde: verifies if a string belongs to the pattern list.
- * if true, it returns 1 else 0 
- */
+/*----------------------------------------------------------------------
+  FoundPatternInList verifies if a string belongs to the pattern list.
+  if true, it returns 1 else 0 
+  ----------------------------------------------------------------------*/
 #ifdef __STDC
 char               *FoundPatternInList (Language langageId, unsigned char substring[MAX_LET_PATTERN])
 #else  /* __STDC__ */
@@ -657,7 +639,7 @@ unsigned char       substring[MAX_LET_PATTERN];
    language = (int) langageId;
    lgstring = strlen (substring);
    ptrTabPattern = &LangTable[language].LangTabPattern;
-   i = ptrTabPattern->ind_pattern[lgstring];
+   i = ptrTabPattern->ind_pattern[lgstring-1];
    if (i == 0)
       return (0);
 
@@ -672,10 +654,10 @@ unsigned char       substring[MAX_LET_PATTERN];
 }
 
 
-  /* 
+/*----------------------------------------------------------------------
    * FoundHyphenPoints: apply Liang algo. on a word and returns the 
    * hypen points.
-   */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                FoundHyphenPoints (Language langageId, char wordToCut[MAX_CHAR])
 #else  /* __STDC__ */
@@ -735,10 +717,11 @@ char                wordToCut[MAX_CHAR];
 }
 
 
-/* TtaGetPatternHyphenList 
+/*----------------------------------------------------------------------
+ TtaGetPatternHyphenList 
    returns a pointer on the list of values representing the hyphen points
    or NULL 
- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                *TtaGetPatternHyphenList (char word[MAX_CHAR], Language languageId)
 #else  /* __STDC__ */
@@ -773,10 +756,10 @@ Language            languageId;
 
 }
 
-/* 
+/*----------------------------------------------------------------------
  * TtaExistPatternList verifies if a list of patterns is defined
  * for a given language
- */
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             TtaExistPatternList (Language languageId)
 #else  /* __STDC__ */

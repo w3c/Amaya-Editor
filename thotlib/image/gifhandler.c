@@ -35,10 +35,10 @@
 #include "picture_tv.h"
 #include "frame_tv.h"
 
-#include "picture_f.h"
-#include "gifhandler_f.h"
 #include "font_f.h"
-
+#include "inites_f.h"
+#include "gifhandler_f.h"
+#include "picture_f.h"
 
 #define	MAXCOLORMAPSIZE		256
 #define scale 65536 / MAXCOLORMAPSIZE;
@@ -82,13 +82,12 @@ unsigned char       nibMask[8] =
 {1, 2, 4, 8, 16, 32, 64, 128};
 int                 ZeroDataBlock = FALSE;
 
-#ifdef __STDC__
-extern void         FindOutColor (Display *, Colormap, ThotColorStruct *);
-
-#else  /* __STDC__ */
-extern void         FindOutColor ();
-
-#endif /* __STDC__ */
+static int          code_size, set_code_size;
+static int          max_code, max_code_size;
+static int          firstcode, oldcode;
+static int          clear_code, end_code;
+static int          table[2][(1 << MAX_LWZ_BITS)];
+static int          stack[(1 << (MAX_LWZ_BITS)) * 2], *sp = stack;;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -552,12 +551,6 @@ int                 input_code_size;
 {
    static int          fresh = FALSE;
    int                 code, incode;
-   static int          code_size, set_code_size;
-   static int          max_code, max_code_size;
-   static int          firstcode, oldcode;
-   static int          clear_code, end_code;
-   static int          table[2][(1 << MAX_LWZ_BITS)];
-   static int          stack[(1 << (MAX_LWZ_BITS)) * 2], *sp = stack;
    register int        i;
 
    if (flag)
@@ -895,10 +888,11 @@ int                 bg;
    return (PicMask);
 
 }
-/*
- * Make an image of appropriate depth for display from image data.
- */
 
+
+/*----------------------------------------------------------------------
+  Make an image of appropriate depth for display from image data.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 XImage             *MakeImage (Display * dsp, unsigned char *data, int width, int height, int depth,
 			       ThotColorStruct * colrs)
@@ -1076,6 +1070,8 @@ ThotColorStruct    *colrs;
 
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 Pixmap              DataToPixmap (char *image_data, int width, int height, int num_colors,
 				  ThotColorStruct colrs[256])
@@ -1117,6 +1113,7 @@ ThotColorStruct     colrs[256];
 	tmpcolr.red = colrs[i].red;
 	tmpcolr.green = colrs[i].green;
 	tmpcolr.blue = colrs[i].blue;
+	tmpcolr.pixel = 0;
 	tmpcolr.flags = DoRed | DoGreen | DoBlue;
 	if ((THOT_vInfo.class == THOT_TrueColor) ||
 	    (THOT_vInfo.class == THOT_DirectColor))
@@ -1338,7 +1335,6 @@ ThotBitmap         *mask1;
 	*mask1 = MakeMask (TtDisplay, buffer, w, h, i);
 #endif /* _WINDOWS */
      }
-
    pixmap = DataToPixmap (buffer, w, h, ncolors, colrs);
 
    free (buffer);
@@ -1356,7 +1352,6 @@ ThotBitmap         *mask1;
 	*yif = 0;
 
 	return (ThotBitmap) pixmap;
-
      }
 }
 

@@ -5,12 +5,15 @@
  *
  */
  
-/*----------------------------------------------------------------------
-  AHTBridge.c : This module implements the callback setup and
-  handlers between the Xt, libwww, and Amaya procedures. It's responsible
-  for assigning, modifying, and supressing Xt events to the active
-  requests.
- -----------------------------------------------------------------------*/
+/*
+ * AHTBridge.c : This module implements the callback setup and
+ * handlers between the Xt, libwww, and Amaya procedures. It's responsible
+ * for assigning, modifying, and supressing Xt events to the active
+ * requests.
+ *
+ * Author: J Kahan
+ *
+ */
 
 #define EXPORT extern
 #include "amaya.h"

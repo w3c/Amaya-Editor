@@ -5,13 +5,16 @@
  *
  */
  
-/*----------------------------------------------------------------------
-  AHTFWrite.c:  it's a rewrite of HTFWrite.c in order  to have a
-  callback to a user defined function each time a new data block
-  is received over the network.  
-  (Adapted from libwww's HTFWrite.c module). See libwww for a more
-  complete documentation.
-  ---------------------------------------------------------------------*/
+/*
+ * AHTFWrite.c:  it's a rewrite of HTFWrite.c in order  to have a
+ * callback to a user defined function each time a new data block
+ * is received over the network.  
+ * (Adapted from libwww's HTFWrite.c module). See libwww for a more
+ * complete documentation.
+ *
+ * Author: J. Kahan
+ *
+ */
 
 #define EXPORT extern
 #include "amaya.h"

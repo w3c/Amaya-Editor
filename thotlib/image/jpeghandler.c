@@ -63,15 +63,6 @@ static void
 struct jpeg_decompress_struct cinfo;
 struct my_error_mgr jerr;
 
-#ifdef __STDC__
-extern Pixmap       DataToPixmap (char *, int, int, int, ThotColorStruct[]);
-extern int          PixelEnPt (int, int);
-
-#else  /* __STDC__ */
-extern Pixmap       DataToPixmap ();
-extern int          PixelEnPt ();
-
-#endif /* __STDC__ */
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/

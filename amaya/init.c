@@ -5,6 +5,12 @@
  *
  */
 
+/*
+ * Initialization functions and button functions of Amaya application.
+ *
+ * Author: I. Vatton
+ */
+
 /* Included headerfiles */
 #define EXPORT
 #include "amaya.h"

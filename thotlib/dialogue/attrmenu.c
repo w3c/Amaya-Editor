@@ -730,7 +730,7 @@ char               *valtext;
 				       {
 					  /* la valeur saisie devient la valeur courante */
 					  if (pAttrNew->AeAttrText == NULL)
-					     GetTextBuffer (&pAttrNew->AeAttrText);
+					     GetTextBuffer (&(pAttrNew->AeAttrText));
 					  else
 					     ClearText (pAttrNew->AeAttrText);
 					  CopyStringToText (TextAttrValue,

@@ -5,6 +5,13 @@
  *
  */
 
+/*
+ * Menu bar functions of Amaya application.
+ *
+ * Author: I. Vatton
+ *
+ */
+
 /* Included headerfiles */
 #define EXPORT extern
 #include "amaya.h"

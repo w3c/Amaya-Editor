@@ -5,13 +5,17 @@
  *
  */
 
-/*----------------------------------------------------------------------
-  HTMLform.c: This module contains all the functions used to handle
-  forms. These are of three types: functions for handling user actions
-  on the elements of the form (e.g., clicking on a radio button), 
-  functions for resetting a form to its default value, and, finally,
-  functions for parsing and for submitting a form.
- -----------------------------------------------------------------------*/ 
+/*
+ * HTMLform.c: This module contains all the functions used to handle
+ * forms. These are of three types: functions for handling user actions
+ * on the elements of the form (e.g., clicking on a radio button), 
+ * functions for resetting a form to its default value, and, finally,
+ * functions for parsing and for submitting a form.
+ *
+ * Authors: J. Kahan, I. Vatton
+ *
+ */
+
 
 /* Included headerfiles */
 #define EXPORT extern

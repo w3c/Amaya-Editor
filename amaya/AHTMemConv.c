@@ -5,11 +5,14 @@
  *
  */
  
-/*----------------------------------------------------------------------
-  AHTMemConv.c: writes a stream to a memory structure 
-  (Adapted from libwww's HTFWrite.c module). See libwww for a more
-  complete documentation.
-  ---------------------------------------------------------------------*/
+/*
+ * AHTMemConv.c: writes a stream to a memory structure 
+ * (Adapted from libwww's HTFWrite.c module). See libwww for a more
+ * complete documentation.
+ *
+ * Author: J. Kahan
+ *
+ */
 
 #define EXPORT extern
 #include "amaya.h"

@@ -5,6 +5,13 @@
  *
  */
 
+/*
+ * Amaya saving functions.
+ *
+ * Authors: D. Veillard, I. Vatton
+ *
+ */
+
 /* Included headerfiles */
 #define EXPORT extern
 #include "amaya.h"

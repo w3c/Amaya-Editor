@@ -5,10 +5,13 @@
  *
  */
 
-/*----------------------------------------------------------------------
-  answer.c:  contains all the functions for requesting user input for
-  libwww and for displaying request status.
-  ---------------------------------------------------------------------*/
+/*
+ * answer.c:  contains all the functions for requesting user input for
+ * libwww and for displaying request status.
+ *
+ * Author: J. Kahan
+ *
+ */
 
 /* Included headerfiles */
 #define EXPORT extern

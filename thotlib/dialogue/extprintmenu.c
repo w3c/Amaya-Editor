@@ -238,12 +238,13 @@ View                view;
 
 #endif /* __STDC__ */
 {
+   PtrDocument         pDoc;
    int                 i;
    char                BufMenu[MAX_TXT_LEN];
 
    docPrint = document;
-   pDocPrint = LoadedDocument[document - 1];
-   ConnectPrint ();
+   pDoc = LoadedDocument[document - 1];
+   InitPrintParameters (pDoc);
    NewFirstPage = FirstPage;
    NewLastPage = LastPage;
    NewNbCopies = NbCopies;
@@ -288,7 +289,7 @@ View                view;
    TtaSetNumberForm(NumZoneLastPage, LastPage);
 
    /* zone de saisie des vues a imprimer */
-   ComposePrintMenu(pDocPrint,BufMenu,&NbPrintViews);
+   ComposePrintMenu(pDoc,BufMenu,&NbPrintViews);
    TtaNewToggleMenu(NumMenuViewsToPrint,
 		    NumFormPrint,
 		    TtaGetMessage(LIB, TMSG_VIEWS_TO_PRINT),

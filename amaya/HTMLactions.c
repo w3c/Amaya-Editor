@@ -5,6 +5,14 @@
  *
  */
 
+/*
+ * Amaya browser functions called form Thot and declared in HTML.A.
+ * These functions concern links and other HTML general features.
+ *
+ * Authors: V. Quint, I. Vatton
+ *
+ */
+
 /* Included headerfiles */
 #define EXPORT extern
 #include "amaya.h"

@@ -62,6 +62,7 @@
 
 int                 PRINT;	/* Identification des messages */
 int                 NumberOfPages;
+int                 UserErrorCode;
 
 static PtrDocument  TheDoc;	/* le document en cours de traitement */
 static PtrDocument  MainDocument;	/* le document principal a imprimer */
@@ -71,15 +72,14 @@ static PathBuffer   DocumentDir;	/* le directory d'origine du document */
 #define MAX_PRINTED_VIEWS MAX_VIEW_DOC+MAX_ASSOC_DOC
 static int          NPrintViews;
 static Name         PrintViewName[MAX_PRINTED_VIEWS];
-
 static int          TopMargin;
 static int          LeftMargin;
 static PtrAbstractBox RootAbsBox;	/* pave racine de la vue traitee */
 static DocViewNumber CurrentView;	/* numero de la vue traitee */
 static int          CurAssocNum;	/* No d'element associe de la vue traitee */
 static int          CurrentFrame;	/* No frame contenant la vue traitee */
-
-ThotColorStruct     ThotWindowColor;
+static char        *printer;
+static ThotWindow   thotWindow;
 
 #include "buildboxes_f.h"
 #include "boxpositions_f.h"
@@ -2508,6 +2508,50 @@ int                 messageID;
 }
 
 /*----------------------------------------------------------------------
+   DisplayConfirmMessage
+   displays the given message (text).
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                DisplayConfirmMessage (char *text)
+#else  /* __STDC__ */
+void                DisplayConfirmMessage (text)
+char               *text;
+
+#endif /* __STDC__ */
+{
+   ClientSend (thotWindow, printer, text);
+}
+
+/*----------------------------------------------------------------------
+   DisplayMessage
+   displays the given message (text).
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                DisplayMessage (char *text, int msgType)
+#else  /* __STDC__ */
+void                DisplayMessage (text, msgType)
+char               *text;
+int                 msgType;
+
+#endif /* __STDC__ */
+{
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaError (int errorCode)
+
+#else  /* __STDC__ */
+void                TtaError (errorCode)
+int                 errorCode;
+
+#endif /* __STDC__ */
+{
+   UserErrorCode = errorCode;
+}
+
+/*----------------------------------------------------------------------
    LoadReferedDocuments    charge tous les documents reference's   
    par le document pointe' par pDoc.			
   ----------------------------------------------------------------------*/
@@ -2571,11 +2615,8 @@ char              **argv;
 {
    char               *name;
    char               *realName;
-   char               *printer;
    char               *tempDir;
    int                 NCopies;
-   long                thotWindow;
-   /*int                 number;*/
    char               *destination;
    char                cmd[800];
    char                temp[MAX_PATH];
@@ -2591,7 +2632,6 @@ char              **argv;
    Repaginate = atoi (argv[argCounter++]);
    firstPage = atoi (argv[argCounter++]);
    lastPage = atoi (argv[argCounter++]);
-   /*number = atoi (argv[argCounter++]);*/
    realName = (char *) TtaGetMemory (strlen (argv[argCounter]) + 1);
    strcpy (realName, argv[argCounter++]);
    printer = (char *) TtaGetMemory (strlen (argv[argCounter]) + 1);
@@ -2608,7 +2648,7 @@ char              **argv;
    NoEmpyBox = atoi (argv[argCounter++]);
    manualFeed = atoi (argv[argCounter++]);
    BlackAndWhite = atoi (argv[argCounter++]);
-   thotWindow = (long) atoi (argv[argCounter++]);
+   thotWindow = (ThotWindow) atoi (argv[argCounter++]);
    destination = (char *) TtaGetMemory (strlen (argv[argCounter]) + 1);
    strcpy (destination, argv[argCounter++]);
    for (viewsCounter = argCounter; viewsCounter < argc; viewsCounter++)
@@ -2684,19 +2724,19 @@ char              **argv;
 	sprintf (cmd, "/bin/mv %s/%s.ps %s\n", tempDir, name, printer);
 	result = system (cmd);
 	if (result == -1)
-	   ClientSend ((ThotWindow) thotWindow, printer, TMSG_CANNOT_CREATE_PS);
+	   ClientSend (thotWindow, printer, TMSG_CANNOT_CREATE_PS);
      }
    else
      {
 	sprintf (cmd, "%s -#%d -T%s %s/%s.ps\n", printer, NCopies, realName, tempDir, name);
 	result = system (cmd);
 	if (result == -1)
-	   ClientSend ((ThotWindow) thotWindow, printer, TMSG_UNKNOWN_PRINTER);
+	   ClientSend (thotWindow, printer, TMSG_UNKNOWN_PRINTER);
      }
 
    sprintf (cmd, "/bin/rm -rf %s\n", tempDir);
    system (cmd);
 
-   ClientSend ((ThotWindow) thotWindow, realName, TMSG_DOC_PRINTED);
+   ClientSend (thotWindow, realName, TMSG_DOC_PRINTED);
    exit (0);
 }

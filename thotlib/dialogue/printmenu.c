@@ -93,6 +93,8 @@ char               *name;
    pivName = (char *) TtaGetMemory (strlen (name) + 5);
    sprintf (pivName, "%s.PIV", name);
    sprintf (cmd, "/bin/mv '%s'/'%s' '%s'/'%s'\n", dir, bakName, tempDir, pivName);
+   TtaFreeMemory (bakName);
+   TtaFreeMemory (pivName);
    system (cmd);
 }
 
@@ -127,13 +129,11 @@ int                 manualFeed;
 int                 blackAndWhite;
 int                 repaginate;
 char               *viewsToPrint;
-
 #endif /* __STDC__ */
 
 {
-   ThotPid             pid = ThotPid_get ();
-
 #ifndef _WINDOWS
+   ThotPid             pid = ThotPid_get ();
    char                cmd[800];
    int                 res;
    char               *thotDir;
@@ -155,6 +155,7 @@ char               *viewsToPrint;
 	       BinariesDirectory, name, tempDir, repaginate, firstPage, lastPage, realName, "lp", PageSize, nCopies, hShift,
 	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], viewsToPrint);
 
+   TtaFreeMemory (tempDir);
    res = system (cmd);
    if (res == -1)
       TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_ERROR_PS_TRANSLATION);
@@ -193,7 +194,6 @@ int                 manualFeed;
 int                 blackAndWhite;
 int                 repaginate;
 char               *viewsToPrint;
-
 #endif /* __STDC__ */
 
 {
@@ -214,14 +214,15 @@ char               *viewsToPrint;
    PrintInit (userOrientation, tempDir, dir, name);
 
    if (psName[0] != '\0')
-      sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s %s %d %d %d %s %d %d %d %d %d %ld PSFILE %s &\n",
+      sprintf (cmd, "%s/print %s %s %d %d %d %s %s %s %d %d %d %s %d %d %d %d %d %ld PSFILE %s &\n",
 	       BinariesDirectory, name, tempDir, repaginate, firstPage, lastPage, realName, psName, PageSize, nCopies, hShift,
 	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], viewsToPrint);
    else
-      sprintf (cmd, "%s/print %s %s %d %d %d 0 %s %s %s %d %d %d %s %d %d %d %d %d %ld PSFILE %s &\n",
+      sprintf (cmd, "%s/print %s %s %d %d %d %s %s %s %d %d %d %s %d %d %d %d %d %ld PSFILE %s &\n",
 	       BinariesDirectory, name, tempDir, repaginate, firstPage, lastPage, realName, "out.ps", PageSize, nCopies, hShift,
 	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], viewsToPrint);
 
+   TtaFreeMemory (tempDir);
    res = system (cmd);
    if (res == -1)
       TtaDisplaySimpleMessage (CONFIRM, LIB, TMSG_ERROR_PS_TRANSLATION);
@@ -229,44 +230,56 @@ char               *viewsToPrint;
 
 
 /*----------------------------------------------------------------------
-   ConnectPrint
+   InitPrintParameters
    initializes the printing parameters.
   ----------------------------------------------------------------------*/
-void ConnectPrint ()
+#ifdef __STDC__
+void        InitPrintParameters (PtrDocument pDoc)
+#else  /* __STDC__ */
+void        InitPrintParameters (pDoc)
+PtrDocument pDoc;
+#endif /* __STDC__ */
 {
    char               *ptr;
 
    if (ThotLocalActions[T_rprint] == NULL)
      {
-	/* Connecte les actions liees au traitement du print */
-	TteConnectAction (T_rprint, (Proc) CallbackPrintmenu);
-	/* read DEFAULTPRINTER shell variable */
-	ptr = TtaGetEnvString ("THOTPRINT");
-	if (ptr == NULL)
-	   strcpy (pPrinter, "");
-	else
-	   strcpy (pPrinter, ptr);
-        /*if (!PSdir)
-           sprintf (PSdir, "/tmp/out%d.ps", numOfJobs) ;*/
-        sprintf (PSdir, "%s/%s.ps", pDocPrint->DocDirectory, pDocPrint->DocDName) ;
-	/*PSdir[0] = '\0';*/
-	PaperPrint = TRUE;
-	ManualFeed = FALSE;
-	FirstPage = 0;
-	LastPage = 999;
-	NbCopies = 1;
-	Reduction = 100;
-	PagesPerSheet = 1;
-	strcpy (PageSize, "A4");
-	pProcExportPrintDoc = NULL;
+       /* Connecte les actions liees au traitement du print */
+       TteConnectAction (T_rprint, (Proc) CallbackPrintmenu);
+       /* read DEFAULTPRINTER shell variable */
+       ptr = TtaGetEnvString ("THOTPRINT");
+       if (ptr == NULL)
+	 strcpy (pPrinter, "");
+       else
+	 strcpy (pPrinter, ptr);
+       PSdir[0] = '\0';
+       pDocPrint = NULL;
+       strcpy (PageSize, "A4");
+     }
+
+   if (pDoc != pDocPrint)
+     {
+       /* we are changing the current printed document */
+       pDocPrint = pDoc;
+       PaperPrint = TRUE;
+       ManualFeed = FALSE;
+       FirstPage = 0;
+       LastPage = 999;
+       NbCopies = 1;
+       Reduction = 100;
+       PagesPerSheet = 1;
+       pProcExportPrintDoc = NULL;
+       if (pDocPrint->DocDirectory[0] == DIR_SEP)
+	 sprintf (PSdir, "%s/%s.ps", pDocPrint->DocDirectory, pDocPrint->DocDName);
+       else
+	 sprintf (PSdir, "/tmp/%s.ps", pDocPrint->DocDName);
      }
 }
 
 /*----------------------------------------------------------------------
    TtcPrint standard handler for the Print action.  
    Calls TtaPrint to print the current view.
-   ----------------------------------------------------------------------*/
-   
+   ----------------------------------------------------------------------*/  
 #ifdef __STDC__
 void                TtcPrint (Document document, View view)
 #else  /* __STDC__ */
@@ -296,6 +309,7 @@ char               *viewNames;
 
 #endif /* __STDC__ */
 {
+   PtrDocument         pDoc;
    PathBuffer          dirName,tmpDirName;
    Name                docName,tmpDocName;
    boolean	       docReadOnly;
@@ -304,13 +318,13 @@ char               *viewNames;
    Name                savePres, newPres;
    int                 orientation;
 
-   pDocPrint = LoadedDocument[document - 1];
-   ConnectPrint ();
+   pDoc = LoadedDocument[document - 1];
+   InitPrintParameters (pDoc);
    /* prepares the execution of the print command */
-   strcpy (savePres, pDocPrint->DocSSchema->SsDefaultPSchema);
-   ConfigGetPSchemaForPageSize (pDocPrint->DocSSchema, PageSize, newPres);
+   strcpy (savePres, pDoc->DocSSchema->SsDefaultPSchema);
+   ConfigGetPSchemaForPageSize (pDoc->DocSSchema, PageSize, newPres);
    if (newPres[0] != '\0')
-      strcpy (pDocPrint->DocSSchema->SsDefaultPSchema, newPres);
+      strcpy (pDoc->DocSSchema->SsDefaultPSchema, newPres);
    strcpy(tmpDirName,"/tmp");
    strcpy(tmpDocName,"ThotXXXXXX");
 #ifdef WWW_MSWINDOWS
@@ -324,30 +338,30 @@ char               *viewNames;
    else
      /* standard export */
      {
-       strncpy (dirName, pDocPrint->DocDirectory, MAX_PATH);
-       strncpy (docName, pDocPrint->DocDName, MAX_NAME_LENGTH);
-       docReadOnly = pDocPrint->DocReadOnly;
+       strncpy (dirName, pDoc->DocDirectory, MAX_PATH);
+       strncpy (docName, pDoc->DocDName, MAX_NAME_LENGTH);
+       docReadOnly = pDoc->DocReadOnly;
 
-       strcpy (pDocPrint->DocDirectory, tmpDirName);
-       strcpy (pDocPrint->DocDName, tmpDocName);
-       pDocPrint->DocReadOnly = FALSE;
+       strcpy (pDoc->DocDirectory, tmpDirName);
+       strcpy (pDoc->DocDName, tmpDocName);
+       pDoc->DocReadOnly = FALSE;
 
-       ok = WriteDocument (pDocPrint, 2);
+       ok = WriteDocument (pDoc, 2);
 
-       pDocPrint->DocReadOnly = docReadOnly;
-       strncpy (pDocPrint->DocDirectory, dirName, MAX_PATH);
-       strncpy (pDocPrint->DocDName, docName, MAX_NAME_LENGTH);
+       pDoc->DocReadOnly = docReadOnly;
+       strncpy (pDoc->DocDirectory, dirName, MAX_PATH);
+       strncpy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
      }
 
    /* searches the paper orientation for the presentation scheme */
-   ConfigGetPresentationOption(pDocPrint->DocSSchema,"orientation",Orientation);
+   ConfigGetPresentationOption(pDoc->DocSSchema,"orientation",Orientation);
    if (!strcmp (Orientation,"Landscape"))
      orientation = 1;
    else
      orientation = 0;
 
    /* restores the presentation scheme */
-   strcpy (pDocPrint->DocSSchema->SsDefaultPSchema, savePres);
+   strcpy (pDoc->DocSSchema->SsDefaultPSchema, savePres);
 
    /* make an automatic backup */
    if (ok)
@@ -355,9 +369,9 @@ char               *viewNames;
 	if (PaperPrint)
 	   Print (tmpDocName,
 		  tmpDirName,
-		  pDocPrint->DocSchemasPath,
+		  pDoc->DocSchemasPath,
 		  DocumentPath,
-		  pDocPrint->DocSSchema->SsDefaultPSchema,
+		  pDoc->DocSSchema->SsDefaultPSchema,
 		  docName, dirName, pPrinter,
 		  FirstPage, LastPage, NbCopies, 
 		  0, 0, orientation,
@@ -368,9 +382,9 @@ char               *viewNames;
 	else if (PSdir[0] != '\0')
 	   PostScriptSave (tmpDocName,
 			   tmpDirName,
-			   pDocPrint->DocSchemasPath,
+			   pDoc->DocSchemasPath,
 			   DocumentPath,
-			   pDocPrint->DocSSchema->SsDefaultPSchema,
+			   pDoc->DocSSchema->SsDefaultPSchema,
 			   docName, dirName, PSdir,
 			   FirstPage, LastPage, NbCopies,
 			   0, 0, orientation,
@@ -380,7 +394,7 @@ char               *viewNames;
 			   viewNames);
      }
    /* restores the presentation scheme */
-   strcpy (pDocPrint->DocSSchema->SsDefaultPSchema, savePres);
+   strcpy (pDoc->DocSSchema->SsDefaultPSchema, savePres);
    numOfJobs++;
 }
 
@@ -498,13 +512,14 @@ View                view;
 
 #endif /* __STDC__ */
 {
+   PtrDocument         pDoc;
    int                 i;
    char                bufMenu[MAX_TXT_LEN];
 
-   pDocPrint = LoadedDocument[document - 1];
+   pDoc = LoadedDocument[document - 1];
 
    /* Print form */
-   ConnectPrint ();
+   InitPrintParameters (pDoc);
    TtaNewSheet (NumFormPrint, TtaGetViewFrame (document, view), 0, 0,
 		TtaGetMessage (LIB, TMSG_LIB_PRINT),
 	   1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), FALSE, 2, 'L', D_CANCEL);

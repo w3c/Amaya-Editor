@@ -5,12 +5,13 @@
  *
  */
 
-/*----------------------------------------------------------------------
-
-   html2thot parses an HTML file and builds the abstract tree of a Thot
-   document of type HTML.
-
-  ----------------------------------------------------------------------*/
+/*
+ *
+ * html2thot parses an HTML file and builds the abstract tree of a Thot
+ * document of type HTML.
+ *
+ * Author: V. Quint
+ */
 
 /* Compiling this module with -DSTANDALONE generates the main program of  */
 /* a converter which reads a HTML file and creates a Thot .PIV file.      */
@@ -1292,7 +1293,8 @@ static boolean      InsertSibling ()
       return FALSE;
    else if (lastElementClosed ||
 	    TtaIsLeaf (TtaGetElementType (lastElement)) ||
-	    GIMappingTable[GINumberStack[StackLevel - 1]].htmlContents == 'E')
+	    (GINumberStack[StackLevel - 1] >= 0 &&
+	     GIMappingTable[GINumberStack[StackLevel - 1]].htmlContents == 'E'))
       return TRUE;
    else
       return FALSE;
@@ -2650,61 +2652,63 @@ int                 entry;
 {
    boolean             ok;
 
-   if (StackLevel == 0)
-     return FALSE;
-
-   ok = TRUE;
-   /* only TH and TD elements are allowed as children of a TR element */
-   if (!strcmp (GIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "TR"))
-      if (strcmp (GIMappingTable[entry].htmlGI, "TH") &&
-	  strcmp (GIMappingTable[entry].htmlGI, "TD"))
-	 ok = FALSE;
-   if (ok)
-      /* only CAPTION, THEAD, TFOOT, TBODY, COLGROUP, COL and TR are */
-      /* allowed as children of a TABLE element */
-      if (!strcmp (GIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "TABLE"))
-	 if (strcmp (GIMappingTable[entry].htmlGI, "CAPTION") &&
-	     strcmp (GIMappingTable[entry].htmlGI, "THEAD") &&
-	     strcmp (GIMappingTable[entry].htmlGI, "TFOOT") &&
-	     strcmp (GIMappingTable[entry].htmlGI, "TBODY") &&
-	     strcmp (GIMappingTable[entry].htmlGI, "COLGROUP") &&
-	     strcmp (GIMappingTable[entry].htmlGI, "COL") &&
-	     strcmp (GIMappingTable[entry].htmlGI, "TR"))
-	    if (!strcmp (GIMappingTable[entry].htmlGI, "TD") ||
-		!strcmp (GIMappingTable[entry].htmlGI, "TH"))
+   if (StackLevel == 0 || GINumberStack[StackLevel - 1] < 0)
+     return TRUE;
+   else
+     {
+       ok = TRUE;
+       /* only TH and TD elements are allowed as children of a TR element */
+       if (!strcmp (GIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "TR"))
+	 if (strcmp (GIMappingTable[entry].htmlGI, "TH") &&
+	     strcmp (GIMappingTable[entry].htmlGI, "TD"))
+	   ok = FALSE;
+       if (ok)
+	 /* only CAPTION, THEAD, TFOOT, TBODY, COLGROUP, COL and TR are */
+	 /* allowed as children of a TABLE element */
+	 if (!strcmp (GIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "TABLE"))
+	   if (strcmp (GIMappingTable[entry].htmlGI, "CAPTION") &&
+	       strcmp (GIMappingTable[entry].htmlGI, "THEAD") &&
+	       strcmp (GIMappingTable[entry].htmlGI, "TFOOT") &&
+	       strcmp (GIMappingTable[entry].htmlGI, "TBODY") &&
+	       strcmp (GIMappingTable[entry].htmlGI, "COLGROUP") &&
+	       strcmp (GIMappingTable[entry].htmlGI, "COL") &&
+	       strcmp (GIMappingTable[entry].htmlGI, "TR"))
+	     if (!strcmp (GIMappingTable[entry].htmlGI, "TD") ||
+		 !strcmp (GIMappingTable[entry].htmlGI, "TH"))
 	       /* Table cell within a TABLE, without a TR. Assume TR */
 	       ProcessStartGI ("TR");
-	    else
+	     else
 	       ok = FALSE;
-   if (ok)
-      /* only TR is allowed as a child of a THEAD, TFOOT or TBODY element */
-      if (!strcmp (GIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "THEAD") ||
-	  !strcmp (GIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "TFOOT") ||
-	  !strcmp (GIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "TBODY"))
-	 if (strcmp (GIMappingTable[entry].htmlGI, "TR"))
-	    if (!strcmp (GIMappingTable[entry].htmlGI, "TD") ||
-		!strcmp (GIMappingTable[entry].htmlGI, "TH"))
+       if (ok)
+	 /* only TR is allowed as a child of a THEAD, TFOOT or TBODY element */
+	 if (!strcmp (GIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "THEAD") ||
+	     !strcmp (GIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "TFOOT") ||
+	     !strcmp (GIMappingTable[GINumberStack[StackLevel - 1]].htmlGI, "TBODY"))
+	   if (strcmp (GIMappingTable[entry].htmlGI, "TR"))
+	     if (!strcmp (GIMappingTable[entry].htmlGI, "TD") ||
+		 !strcmp (GIMappingTable[entry].htmlGI, "TH"))
 	       /* Table cell within a THEAD, TFOOT or TBODY without a TR. */
 	       /* Assume TR */
 	       ProcessStartGI ("TR");
-	    else
+	     else
 	       ok = FALSE;
-   if (ok)
-      /* refuse BODY within BODY */
-      if (strcmp (GIMappingTable[entry].htmlGI, "BODY") == 0)
-	 if (Within (HTML_EL_BODY))
-	    ok = FALSE;
-   if (ok)
-      /* refuse HEAD within HEAD */
-      if (strcmp (GIMappingTable[entry].htmlGI, "HEAD") == 0)
-	 if (Within (HTML_EL_HEAD))
-	    ok = FALSE;
-   if (ok)
-      /* refuse STYLE within STYLE */
-      if (strcmp (GIMappingTable[entry].htmlGI, "STYLE") == 0)
-	 if (Within (HTML_EL_Styles))
-	    ok = FALSE;
-   return ok;
+       if (ok)
+	 /* refuse BODY within BODY */
+	 if (strcmp (GIMappingTable[entry].htmlGI, "BODY") == 0)
+	   if (Within (HTML_EL_BODY))
+	     ok = FALSE;
+       if (ok)
+	 /* refuse HEAD within HEAD */
+	 if (strcmp (GIMappingTable[entry].htmlGI, "HEAD") == 0)
+	   if (Within (HTML_EL_HEAD))
+	     ok = FALSE;
+       if (ok)
+	 /* refuse STYLE within STYLE */
+	 if (strcmp (GIMappingTable[entry].htmlGI, "STYLE") == 0)
+	   if (Within (HTML_EL_Styles))
+	     ok = FALSE;
+       return ok;
+     }
 }
 
 /*----------------------------------------------------------------------

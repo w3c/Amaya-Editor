@@ -5,6 +5,12 @@
  *
  */
 
+/*
+ *
+ * Author: S Bonhomme
+ *
+ */
+
 /* Included headerfiles */
 #define EXPORT extern
 #include "amaya.h"
@@ -12,9 +18,10 @@
 #include "html2thot_f.h"
 #include "transparse_f.h"
  
-/*  pattern matching static variables */
-
-/* pattern matching stack associates a node of source structure tree to a list of pat */
+/*
+ * pattern matching stack associates a node of source structure tree to a 
+ * list of pat.
+ */
 static struct _mStack
   {
      strNode            *Node;
@@ -1389,8 +1396,12 @@ strNode            *TN;
    TtaFreeMemory ((char *) NS->Attributes);
    NS->Attributes = NULL;
    TtaFreeMemory (attrValue);
+   TtaFreeMemory (tag);
 }
 
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void PutEndTag (strGenStack * ND)
 #else

@@ -5,15 +5,13 @@
  *
  */
 
-/*----------------------------------------------------------------------
-   	Transformation language parser, see file HTML.trans for a 
-	description of the language				
-   									
-   	Author:	Stephane Bonhomme					
-   	VarDate:	April 1996						
-   									
-   									
-  ----------------------------------------------------------------------*/
+/*
+ * Transformation language parser, see file HTML.trans for a 
+ * description of the language				
+ *
+ * Author: S. Bonhomme			
+ *
+ */
 
 /* Compiling this module with -DPPSTANDALONE generates the main program of  */
 /* a converter which reads a .trans file and creates the trans tables     */
@@ -2029,11 +2027,11 @@ static void         ppInitAutomaton ()
    prevTrans = NULL;
    do
      {
-	trans = (PtrTransition) TtaGetMemory (sizeof (Transition));
-	trans->nextTransition = NULL;
 	theState = ppsourceAutomaton[entry].initState;
 	if (theState < 1000)
 	  {
+	     trans = (PtrTransition) TtaGetMemory (sizeof (Transition));
+	     trans->nextTransition = NULL;
 	     trans->trigger = ppsourceAutomaton[entry].trigger;
 	     trans->action = ppsourceAutomaton[entry].transitionAction;
 	     trans->newState = ppsourceAutomaton[entry].newState;

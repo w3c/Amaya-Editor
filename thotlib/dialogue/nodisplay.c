@@ -17,8 +17,6 @@
 
 /* procedures importees */
 #include "schemas_f.h"
-
-
 #include "memory_f.h"
 #include "readpivot_f.h"
 
@@ -69,16 +67,6 @@ int                *desc;
 {
 }
 
-#ifdef __STDC__
-int                 Corr_Charger (Language langue)
-#else  /* __STDC__ */
-int                 Corr_Charger (langue)
-Language            langue;
-
-#endif /* __STDC__ */
-{
-   return -1;
-}
 
 #ifdef __STDC__
 void                AddInSelection (PtrElement pEl, boolean dernier)
@@ -131,47 +119,6 @@ PtrAttribute       *pAttr;
 #endif /* __STDC__ */
 {
    return NULL;
-}
-
-#ifdef __STDC__
-boolean             FormeComplete ()
-#else  /* __STDC__ */
-boolean             FormeComplete ()
-#endif				/* __STDC__ */
-{
-   return TRUE;
-}
-
-#ifdef __STDC__
-void                CacheRemoveImage (PtrElement element)
-#else  /* __STDC__ */
-void                CacheRemoveImage (element)
-PtrElement          element;
-
-#endif /* __STDC__ */
-{
-}
-
-#ifdef __STDC__
-int                 PixelEnPt (int x)
-#else  /* __STDC__ */
-int                 PixelEnPt (x)
-int                 x;
-
-#endif /* __STDC__ */
-{
-   return x;
-}
-
-#ifdef __STDC__
-int                 PtEnPixel (int x)
-#else  /* __STDC__ */
-int                 PtEnPixel (x)
-int                 x;
-
-#endif /* __STDC__ */
-{
-   return x;
 }
 
 #ifdef __STDC__

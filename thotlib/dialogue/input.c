@@ -373,7 +373,8 @@ int                 command;
 	if (oldptr->K_Next == NULL)
 	  {
 	     /* creation d'une 1ere entree de 2eme niveau */
-	     ptr = (KEY *) TtaGetMemory (sizeof (KEY));
+	     if (ptr == NULL)
+	       ptr = (KEY *) TtaGetMemory (sizeof (KEY));
 	     ptr->K_EntryCode = key2;
 	     ptr->K_Modifier = mod2;
 	     ptr->K_Other = NULL;
@@ -407,7 +408,8 @@ int                 command;
 	if (!exists)
 	  {
 	     /* Creation d'une entree d'automate de 2eme niveau */
-	     ptr = (KEY *) TtaGetMemory (sizeof (KEY));
+	     if (ptr == NULL)
+	       ptr = (KEY *) TtaGetMemory (sizeof (KEY));
 	     ptr->K_EntryCode = key2;
 	     ptr->K_Modifier = mod2;
 	     ptr->K_Other = NULL;

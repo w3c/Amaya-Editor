@@ -3341,9 +3341,10 @@ PtrAttribute        pAttr;
 	  }
 	/* specific processing for deleting the attributes of a Draw */
 	DrawSupprAttr (pAttr, pEl);
-	/* frees the attribute block */
-	FreeAttribute (pAttr);
      }
+   /* frees the attribute block */
+   if (pAttr != NULL)
+     FreeAttribute (pAttr);
 }
 
 

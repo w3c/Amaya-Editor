@@ -5,11 +5,14 @@
  *
  */
 
-/*----------------------------------------------------------------------
-  query.c : contains all the functions for requesting iand publishing
-  URLs via libwww. It handles any eventual HTTP error code
-  (redirection, authentication needed, not found, etc.)
-  ---------------------------------------------------------------------*/
+/*
+ * query.c : contains all the functions for requesting iand publishing
+ * URLs via libwww. It handles any eventual HTTP error code
+ * (redirection, authentication needed, not found, etc.)
+ *
+ * Author: J. Kahan
+ *
+ */
 
 /* Amaya includes  */
 #define EXPORT extern

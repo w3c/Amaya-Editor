@@ -5,6 +5,11 @@
  *
  */
 
+/*
+ *
+ * Author: V. Quint
+ */
+
 /* Amaya includes  */
 #define EXPORT extern
 #include "amaya.h"

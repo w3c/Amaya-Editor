@@ -5,6 +5,14 @@
  *
  */
 
+/*
+ * Amaya editing functions called form Thot and declared in HTML.A.
+ * These functions concern presentation of HTML elements.
+ *
+ * Authors: D. Veillard, I. Vatton
+ *
+ */
+
 /* Included headerfiles */
 #define EXPORT extern
 #include "amaya.h"

@@ -5,6 +5,13 @@
  *
  */
 
+/*
+ *
+ * Author: D. Veillard
+ *
+ */
+
+
 #define EXPORT extern
 #include "amaya.h"
 #include "css.h"

@@ -7,7 +7,10 @@
 
 /*
  * p2css.c : file used to analyse a PSchema and translate it to CSS or
- *           modify it on the fly. Complementary to api/genericdriver.c .
+ *           modify it on the fly. Complementary to api/genericdriver.c.
+ *
+ * Author: D. Veillard
+ *
  */
 
 #define EXPORT extern

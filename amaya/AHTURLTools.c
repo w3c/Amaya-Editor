@@ -5,10 +5,13 @@
  *
  */
 
-/*----------------------------------------------------------------------
-  AHTURLTools.c: contains all the functions for testing, manipulating,
-  and normalizing URLs.
-  ---------------------------------------------------------------------*/
+/*
+ * AHTURLTools.c: contains all the functions for testing, manipulating,
+ * and normalizing URLs.
+ *
+ * Authors: J. Kahan, I. Vatton
+ *
+ */
  
 /* Amaya includes  */
 #define EXPORT extern

@@ -5,6 +5,12 @@
  *
  */
 
+/*
+ *
+ * Author: D. Veillard
+ *
+ */
+
 /* Included headerfiles */
 #define EXPORT extern
 #include "amaya.h"

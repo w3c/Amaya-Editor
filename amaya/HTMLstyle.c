@@ -5,6 +5,11 @@
  *
  */
 
+/*
+ * Author: D. Veillard
+ *
+ */
+
 /* Included headerfiles */
 #define EXPORT extern
 #include "amaya.h"
@@ -926,10 +931,10 @@ int                *len;
    /*
     * create the context of the Specific presentation driver.
     */
-   context = (PresentationContext) & block;
    block.drv = &SpecificStrategy;
    block.doc = doc;
    block.schema = TtaGetDocumentSSchema (doc);
+   context = (PresentationContext) & block;
 
    nb_rules = 0;
 

@@ -20,29 +20,6 @@ int                 EndOfPage = 0;
 
 /* Les fonctions vides pour l'edition de lien */
 
-#ifdef __STDC__
-void                Ind_Creation (PtrElement pEl, PtrDocument pDoc)
-#else  /* __STDC__ */
-void                Ind_Creation (pEl, pDoc)
-PtrElement          pEl;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-{
-}
-
-#ifdef __STDC__
-void                Ind_VerifMarque (PtrElement * pEl, PtrDocument pDoc)
-#else  /* __STDC__ */
-void                Ind_VerifMarque (pEl, pDoc)
-PtrElement          pEl;
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
-{
-}
-
 
 #ifdef __STDC__
 Pixmap              TtaCreatePixmapLogo (char **data)
@@ -123,17 +100,6 @@ PtrElement          pEl;
 #endif /* __STDC__ */
 {
    return FALSE;
-}
-
-#ifdef __STDC__
-void                BuildSchPresNameMenu (PtrSSchema pSchStr, Name name)
-#else  /* __STDC__ */
-void                BuildSchPresNameMenu (pSchStr, name)
-PtrSSchema          pSchStr;
-Name                name;
-
-#endif /* __STDC__ */
-{
 }
 
 boolean             LinkReference ()

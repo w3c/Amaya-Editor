@@ -5,16 +5,18 @@
  *
  */
 
+/*
+ * CSS.c : Handle all the dialogs and interface functions needed 
+ * to manipulate CSS.
+ *
+ * Author: D. Veillard
+ *
+ */
+
 /* Amaya includes  */
 #define EXPORT extern
 #include "amaya.h"
 #include "css.h"
-
-
-/*----------------------------------------------------------------------
-   CSS.c : Handle all the dialogs and interface functions needed 
-   to manipulate CSS.                                    
-  ----------------------------------------------------------------------*/
 
 /*
  * HOTLIST :
