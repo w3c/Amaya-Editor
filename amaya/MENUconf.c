@@ -639,6 +639,54 @@ CHAR_T* name;
 }
 
 #ifdef _WINDOWS
+
+/*----------------------------------------------------------------------
+  FilterSpaces
+  If removeAll is true, all spaces in string are removed, otherwise, all
+  duplicate spaces are converted into a single space.
+  If any spaces were found, it returns 1. 0 otherwise.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static int FilterSpaces (CHAR_T* string, ThotBool removeAll)
+#else
+static int FilterSpaces (string, removeAll)
+CHAR_T* string;
+ThotBool removeall;
+#endif
+{
+  CHAR_T *target, *source;
+  int result = 0;
+
+  if (string)
+  {
+   source = target = string;
+   while (*source)
+   {
+	if (*source == ' ')
+	{
+		result = 1;
+		/* skip to the first non space char */
+       while (*source == ' ')
+			source++;
+	   /* filter the space */
+ 	   if (!removeAll)
+	   {
+	      *target = ' ';
+		  target++;
+	   }
+	   if (*source == EOS)
+		   break;
+	}
+	  /* copy the char and pass on to the next one */
+	  *target = *source;
+	  source++;
+	  target++;
+	}
+   *target = *source;
+   }
+  return result;
+}
+
 /*----------------------------------------------------------------------
   ConvertSpaceNLI
   Converts spaces in source into \n if the toNL is TRUE. Otherwise, does
@@ -646,19 +694,22 @@ CHAR_T* name;
   Returns 1 if it did any substitutions, 0 otherwise.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int ConvertSpaceNL(CHAR_T* source, ThotBool toNL)
+static int ConvertSpaceNL (CHAR_T* source, ThotBool toNL)
 #else
-static int ConvertSpaceNL (name)
-CHAR_T* name;
+static int ConvertSpaceNL (source, toNL)
+CHAR_T* source;
+ThotBool toNL;
 #endif
 {
   int result;
   CHAR_T target[MAX_LENGTH];
   CHAR_T *s, *t;
 
-  result = 0;
   if (source) 
     {
+	  /* remove all spaces before starting */
+	  if (!toNL)
+         result = FilterSpaces (source, TRUE);
 	  s = source;
 	  t = target;
       while (*s)
@@ -684,7 +735,12 @@ CHAR_T* name;
 	  }
 	  *t = *s;
 	  if (result)
+	  {
+		  if (!toNL)
+		    /* remove duplicate spaces, coming from empty lines */
+		    FilterSpaces (target, FALSE);
 		  ustrcpy (source, target);
+	  }
   }
   return result;
 }
