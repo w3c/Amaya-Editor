@@ -128,6 +128,12 @@
 #define C_TR_REFERRED_EL L'd'
 #define C_TR_ASSOC L'A'
 
+/* type of an output indentation rule */
+#define C_TR_ABSOLUTE L'A'
+#define C_TR_RELATIVE L'R'
+#define C_TR_SUSPEND L'S'
+#define C_TR_RESUME L'r'
+
 /* type of a counter operation */
 #define C_TR_RANK L'R'
 #define C_TR_RLEVEL L'L'
@@ -226,6 +232,12 @@
 #define C_TR_DESCEND 'D'
 #define C_TR_REFERRED_EL 'd'
 #define C_TR_ASSOC 'A'
+
+/* type of an output indentation rule */
+#define C_TR_ABSOLUTE 'A'
+#define C_TR_RELATIVE 'R'
+#define C_TR_SUSPEND 'S'
+#define C_TR_RESUME 'r'
 
 /* type of a counter operation */
 #define C_TR_RANK 'R'

@@ -14,7 +14,7 @@
 
 <h4>Translated from French by Ethan Munson</h4>
 
-<h4>Version of July 6, 1999</h4>
+<h4>Version of August 23, 1999</h4>
 <p>
 &copy; 1996 INRIA</p>
 <hr>
@@ -5694,7 +5694,7 @@ is the typographer's point.  Centimeters and inches may not be used.</p>
 <p>
 If the size is inherited, the rule must specify the relative from which to
 inherit and any percentage or difference from that relative's value.
-A percentage is indicated by a </tt>*</tt> followed by the value of the
+A percentage is indicated by a <tt>*</tt> followed by the value of the
 percentage and a <tt>%</tt>.
 A difference can be expressed in either typographer's points or in abstract
 units and the maximum or minimum size can be specified, but without
@@ -7554,8 +7554,7 @@ based on very similar models.</p>
                   'RemoveFile' VarID [ Position ] ';' /
                   'Set' CounterID InitValue [ Position ] ';' /
                   'Add' CounterID Increment [ Position ] ';' /
-                  'Indent' [ 'IN' VarID ] [ IndentSign ]
-                           IndentValue [ Position ] ';' .</pre>
+                  'Indent' [ 'IN' VarID ] Indent [ Position ] ';' .</pre>
 </div>
 
 <div class="subsection">
@@ -8160,16 +8159,16 @@ the output files.</p>
 <p>
 Each time the translator creates a new line in an output file, it generates a
 variable number of space characters at the beginning of the new line.  By
-default, the number of these characters (the indentation) is 0.  It can be
-changed with the <tt>Indent</tt> rule.</p>
+default, the number of these characters (the indentation value) is 0.  It can
+be changed with the <tt>Indent</tt> rule.</p>
 <p>
-The rule begins with the <tt>Indent</tt> keyword, followed by the indentation
-sign (optional) and value and a keyword <tt>Before</tt> or <tt>After</tt>
-indicating that the indentation should be changed <a href="#sectc5222">before
-or after</a> the element's content is generated.  If the position is not
-indicated, the indentation is changed before the element's content is
-generated.  This rule, like all translation rules, is terminated by a
-semicolon.</p>
+In its simple form, the rule begins with the <tt>Indent</tt> keyword,
+followed by the indentation sign (optional) and value and a keyword
+<tt>Before</tt> or <tt>After</tt> indicating that the indentation should
+be changed <a href="#sectc5222">before or after</a> the element's content
+is generated.  If the position is not indicated, the indentation is changed
+before the element's content is generated.  This rule, like all translation
+rules, is terminated by a semicolon.</p>
 <p>
 The indentation value is indicated by an integer, which is the number of space
 characters to be generated at the beginning of each new line. A sign
@@ -8177,15 +8176,24 @@ characters to be generated at the beginning of each new line. A sign
 value is relative: the current value of indentation is incremented (if sign is
 <tt>+</tt>) or decremented (if sign is <tt>-</tt>) by the specified value.</p>
 <p>
+Keyword <tt>Suspend</tt> or <tt>Resume</tt> can appear instead of the
+(possibly signed) identation value.  <tt>Suspend</tt> means that the new
+indentation value to be used is zero until another <tt>Indent</tt> rule
+is executed and changes the indentation value. <tt>Resume</tt> means that
+the indentation value that was used before the last <tt>Indent Suspend</tt>
+was executed becomes the new value.  Only one <tt>Suspend</tt> can be used
+before a <tt>Resume</tt>; <tt>Supend</tt>-<tt>Resume</tt> pairs can not be
+nested.
+<p>
 Like the <a href="#sectc5210"><tt>Create</tt> rule</a>, the <tt>Indent</tt>
 keyword can be followed by the <tt>IN</tt> keyword and by the name of a <a
 href="#sectc526">variable</a>.  This means that the rule must not change
 indentation in the main output file, but in the file whose name is specified
 by the variable (by default, indentation is changed in the main output
 file).</p>
-<pre>               'Indent' [ 'IN' VarID ] [ IndentSign ]
-                        IndentValue [ Position ] ';' .
+<pre>               'Indent' [ 'IN' VarID ] Indent [ Position ] ';' .
 
+Indent        = 'Suspend' / 'Resume' / [ IndentSign ] IndentValue .
 IndentSign    = '+' / '-' .
 IndentValue   = NUMBER .</pre>
 </div>
@@ -9105,9 +9113,9 @@ SimpleRule    = 'Create' [ 'IN' VarID ] Object
                 'RemoveFile' VarID [ Position ] ';' /
                 'Set' CounterID InitValue [ Position ] ';' /
                 'Add' CounterID Increment [ Position ] ';' /
-                'Indent' [ 'IN' VarID ] [ IndentSign ]
-                         IndentValue [ Position ] ';' .
+                'Indent' [ 'IN' VarID ] Indent [ Position ] ';' .
 
+Indent        = 'Suspend' / 'Resume' / [ IndentSign ] IndentValue .
 IndentSign    = '+' / '-' .
 IndentValue   = NUMBER .
 

@@ -234,6 +234,15 @@ typedef enum
 	RpAssoc
 } TRelatPosition;
 
+/* type of an Indent rule */
+typedef enum
+{
+	ItAbsolute,
+        ItRelative,
+	ItSuspend,
+	ItResume
+} TIndentType;
+
 /* a translation rule */
 typedef struct _TranslRule
 {
@@ -294,7 +303,7 @@ typedef struct _TranslRule
 	  int	_TrIndentFileNameVar_;  /* variable defining the name of the
 					   output file */
 	  int   _TrIndentVal_;	/* indent value */
-	  ThotBool _TrRelativeIndent_;	/* Indent value is relative to parent*/
+	  TIndentType _TrIndentType_;	/* Indent value is relative to parent*/
 	} s8;
     } u;
 } TranslRule;
@@ -317,7 +326,7 @@ typedef struct _TranslRule
 #define TrCounterParam u.s7._TrCounterParam_
 #define TrIndentFileNameVar u.s8._TrIndentFileNameVar_
 #define TrIndentVal u.s8._TrIndentVal_
-#define TrRelativeIndent u.s8._TrRelativeIndent_
+#define TrIndentType u.s8._TrIndentType_
 
 /* counter operation type */
 typedef enum

@@ -431,6 +431,49 @@ BinFile             file;
 
 
 /*----------------------------------------------------------------------
+   ReadIndentType	lit un type de regle d'indentation
+  ----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+static TIndentType ReadIndentType (BinFile file)
+
+#else  /* __STDC__ */
+static TIndentType ReadIndentType (file)
+BinFile             file;
+
+#endif /* __STDC__ */
+
+{
+   CHAR_T                c;
+   TIndentType		 typ;
+
+   typ = ItAbsolute;
+   if (!TtaReadByte (file, &c))
+      TSchemaError (23);
+   else
+      switch (c)
+	    {
+	       case C_TR_ABSOLUTE:
+		  typ = ItAbsolute;
+		  break;
+	       case C_TR_RELATIVE:
+		  typ = ItRelative;
+		  break;
+	       case C_TR_SUSPEND:
+		  typ = ItSuspend;
+		  break;
+	       case C_TR_RESUME:
+		  typ = ItResume;
+		  break;
+	       default:
+		  TSchemaError (24);
+		  break;
+	    }
+   return typ;
+}
+
+
+/*----------------------------------------------------------------------
    ReadTCounterOp lit le type< d'une operation sur un compteur.    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -672,7 +715,7 @@ PtrTRule           *pNextTRule;
 		       case TIndent:
 			  TtaReadShort (file, &pTRule->TrIndentFileNameVar);
 			  TtaReadSignedShort (file, &pTRule->TrIndentVal);
-			  TtaReadBool (file, &pTRule->TrRelativeIndent);
+			  pTRule->TrIndentType = ReadIndentType (file);
 			  break;
 		       default:
 			  break;
@@ -1080,12 +1123,12 @@ PtrSSchema          pSS;
 	GetTRule (&pNextTRule);
 	if (pNextTRule == NULL)
 	  {
-	     TSchemaError (19);
+	     TSchemaError (21);
 	     return NULL;
 	  }
 	if ((pNextBlock = (PtrTRuleBlock) TtaGetMemory (sizeof (TRuleBlock))) == NULL)
 	  {
-	     TSchemaError (21);
+	     TSchemaError (22);
 	     return NULL;
 	  }
 	else

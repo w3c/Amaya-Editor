@@ -134,10 +134,10 @@ RuleA =          'Create' [ 'IN' VariableIdent ] Token [ Position ] ';' /
 RuleB =		 'ChangeMainFile' VariableIdent [ Position ] ';' /
 		 'Set' CounterIdent InitValue [ Position ] ';' /
 		 'Add' CounterIdent IncrValue [ Position ] ';' /
-                 'Indent' [ 'IN' VariableIdent ] [ IndentSign ] IndentVal
-                          [ Position ] ';' /
+                 'Indent' [ 'IN' VariableIdent ] Indent [ Position ] ';' /
 		 'RemoveFile' VariableIdent [ Position ] ';' .
 
+Indent =         'Suspend' / 'Resume' / [ IndentSign ] IndentVal .
 IndentSign =     '+' / '-' .
 IndentVal =	 NUMBER .
 

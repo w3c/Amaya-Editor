@@ -50,12 +50,13 @@
 /* information about an output file */
 typedef struct _AnOutputFile
   {
-     CHAR_T                OfFileName[MAX_PATH];	/* file name */
+     CHAR_T              OfFileName[MAX_PATH];	/* file name */
      FILE               *OfFileDesc;	/* file descriptor */
      int                 OfBufferLen;	/* current length of output buffer */
      int		 OfIndent;	/* current value of indentation */
+     int		 OfPreviousIndent;/* previous value of indentation */
      ThotBool		 OfStartOfLine;	/* start a new line */
-     CHAR_T                OfBuffer[MAX_BUFFER_LEN];	/* output buffer */
+     CHAR_T              OfBuffer[MAX_BUFFER_LEN];	/* output buffer */
      ThotBool		 OfCannotOpen;	/* open failure */
   }
 AnOutputFile;
@@ -150,6 +151,7 @@ ThotBool		    open;
 	ustrcpy (OutputFile[NOutputFiles].OfFileName, fName);
 	OutputFile[NOutputFiles].OfBufferLen = 0;
 	OutputFile[NOutputFiles].OfIndent = 0;
+	OutputFile[NOutputFiles].OfPreviousIndent = 0;
 	OutputFile[NOutputFiles].OfStartOfLine = TRUE;
 	NOutputFiles++;
 	return (NOutputFiles - 1);
@@ -2928,6 +2930,7 @@ ThotBool           *removeEl;
 			 /* on bascule sur le nouveau fichier */
 			 OutputFile[1].OfBufferLen = 0;
 			 OutputFile[1].OfIndent = 0;
+			 OutputFile[1].OfPreviousIndent = 0;
 			 OutputFile[1].OfStartOfLine = TRUE;
 			 OutputFile[1].OfFileDesc = newFile;
 			 OutputFile[1].OfCannotOpen = FALSE;
@@ -2971,10 +2974,24 @@ ThotBool           *removeEl;
 		 }
 	       if (fileNum >= 0)
 		  {
-	          if (pTRule->TrRelativeIndent)
-		     OutputFile[fileNum].OfIndent += pTRule->TrIndentVal;
-	          else
-		     OutputFile[fileNum].OfIndent = pTRule->TrIndentVal;
+		  switch (pTRule->TrIndentType)
+		     {
+		     case ItRelative:
+		         OutputFile[fileNum].OfIndent += pTRule->TrIndentVal;
+			 break;
+	             case ItAbsolute:
+		         OutputFile[fileNum].OfIndent = pTRule->TrIndentVal;
+			 break;
+		     case ItSuspend:
+		         OutputFile[fileNum].OfPreviousIndent =
+						OutputFile[fileNum].OfIndent;
+			 OutputFile[fileNum].OfIndent = 0;
+			 break;
+		     case ItResume:
+			 OutputFile[fileNum].OfIndent = 
+					OutputFile[fileNum].OfPreviousIndent;
+			 break;
+		     }
 		  if (OutputFile[fileNum].OfIndent < 0)
 		     OutputFile[fileNum].OfIndent = 0;
 		  }
@@ -3434,6 +3451,7 @@ PtrDocument         pDoc;
    OutputFile[0].OfFileDesc = NULL;
    OutputFile[0].OfBufferLen = 0;
    OutputFile[0].OfIndent = 0;
+   OutputFile[0].OfPreviousIndent = 0;
    OutputFile[0].OfStartOfLine = TRUE;
    OutputFile[0].OfCannotOpen = FALSE;
 
@@ -3442,6 +3460,7 @@ PtrDocument         pDoc;
    OutputFile[1].OfFileDesc = mainFile;
    OutputFile[1].OfBufferLen = 0;
    OutputFile[1].OfIndent = 0;
+   OutputFile[1].OfPreviousIndent = 0;
    OutputFile[1].OfStartOfLine = TRUE;
    OutputFile[1].OfCannotOpen = FALSE;
    NOutputFiles = 2;

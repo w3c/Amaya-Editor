@@ -1976,8 +1976,9 @@ SyntRuleNum         pr;
 			  {
 			  NewTransRule ();
 			  CurTRule->TrType = TIndent;
-			  CurTRule->TrRelativeIndent = FALSE;
 			  CurTRule->TrIndentFileNameVar = 0;
+			  CurTRule->TrIndentVal = 0;
+			  CurTRule->TrIndentType = ItAbsolute;
 			  IndentSign = 0;
 			  }
 		       break;
@@ -1985,6 +1986,14 @@ SyntRuleNum         pr;
 		    case KWD_RemoveFile:	/* RemoveFile */
 		       NewTransRule ();
 		       CurTRule->TrType = TRemoveFile;
+		       break;
+
+		    case KWD_Suspend:		/* Suspend */
+		       CurTRule->TrIndentType = ItSuspend;
+		       break;
+
+		    case KWD_Resume:		/* Resume */
+		       CurTRule->TrIndentType = ItResume;
 		       break;
 
 		    case KWD_LineSpacing:
@@ -2794,7 +2803,7 @@ SyntRuleNum         pr;
 				   if (IndentSign != 0)
 				      /* indent value is relative */
 				      {
-				      CurTRule->TrRelativeIndent = TRUE;
+				      CurTRule->TrIndentType = ItRelative;
 				      k  = k * IndentSign;
 				      }
 				   CurTRule->TrIndentVal = k;

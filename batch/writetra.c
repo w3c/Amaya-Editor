@@ -451,6 +451,39 @@ TRelatPosition      pos;
 
 
 /*----------------------------------------------------------------------
+   WriteIndentType   ecrit un type de regle d'indentation		
+  ----------------------------------------------------------------------*/
+
+#ifdef __STDC__
+static void         WriteIndentType (TIndentType typ)
+
+#else  /* __STDC__ */
+static void         WriteIndentType (typ)
+TIndentType         typ;
+
+#endif /* __STDC__ */
+
+{
+
+   switch (typ)
+	 {
+	    case ItAbsolute:
+	       TtaWriteByte (outfile, C_TR_ABSOLUTE);
+	       break;
+	    case ItRelative:
+	       TtaWriteByte (outfile, C_TR_RELATIVE);
+	       break;
+	    case ItSuspend:
+	       TtaWriteByte (outfile, C_TR_SUSPEND);
+	       break;
+	    case ItResume:
+	       TtaWriteByte (outfile, C_TR_RESUME);
+	       break;
+	 }
+}
+
+
+/*----------------------------------------------------------------------
    WriteTCounterOp   ecrit le type d'une operation sur un compteur	
   ----------------------------------------------------------------------*/
 
@@ -652,7 +685,7 @@ PtrTRule            pTRule;
 		 case TIndent:
 		    WriteShort (currentRule->TrIndentFileNameVar);
 		    WriteSignedShort (currentRule->TrIndentVal);
-		    WriteBoolean (currentRule->TrRelativeIndent);
+		    WriteIndentType (currentRule->TrIndentType);
 		 default:
 		    break;
 	      }

@@ -125,8 +125,8 @@ RULES
 	Create '>';
 	NoLineBreak;
 	NoTranslation;
-	Indent -2;
-	Indent +2 After;
+	Indent Suspend;
+	Indent Resume After;
 	Create '</style>\12' After;
 	END;
 
@@ -142,8 +142,8 @@ RULES
 	Create '>\12';
 	NoLineBreak;
 	NoTranslation;
-	Indent -2;
-	Indent +2 After;
+	Indent Suspend;
+	Indent Resume After;
 	Create '</script>\12' After;
 	END;
 
@@ -601,6 +601,8 @@ RULES
 	Create '<pre';
 	Create Attributes;
 	Create '>';
+	Indent Suspend;
+        Indent Resume After;
 	Create '</pre>\12' After;
 	END;
 

@@ -140,12 +140,12 @@ number
    67	RuleB =		 'ChangeMainFile' VariableIdent [ Position ] ';' /
 			 'Set' CounterIdent InitValue [ Position ] ';' /
 			 'Add' CounterIdent IncrValue [ Position ] ';' /
-	                 'Indent' [ 'IN' VariableIdent ] [ IndentSign ] IndentVal
-	                          [ Position ] ';' /
+	                 'Indent' [ 'IN' VariableIdent ] Indent [ Position ] ';' /
 			 'RemoveFile' VariableIdent [ Position ] ';' .
 	
-   72	IndentSign =     '+' / '-' .
-   73	IndentVal =	 NUMBER .
+   72	Indent =         'Suspend' / 'Resume' / [ IndentSign ] IndentVal .
+   73	IndentSign =     '+' / '-' .
+   74	IndentVal =	 NUMBER .
 	
    68	Token =		 ConstIdent / VariableIdent /
 			 'Refered' VarOrType [ '(' TypeIdent ')' ] /
@@ -157,7 +157,7 @@ number
 			 'FileDir' / 'FileName' / 'Extension' /
 			 'DocumentName' / 'DocumentDir' /
 	                 'Attributes' / 'Presentation' / 'RefId' / 'PairId' .
-   74	VarOrType =	 'DocumentName' / 'DocumentDir' / 'RefId' /
+   75	VarOrType =	 'DocumentName' / 'DocumentDir' / 'RefId' /
 			 VariableIdent / TypeIdent .
    69	Position =       'After' / 'Before' .
    70	RelPosition =    'Included' / 'Refered' / 'Referred' .
@@ -168,13 +168,13 @@ number
    56	Alphabet =       NAME .
    14	SeqOfTransl =    'Begin' < Translation > 'End' ';' /
 	                 Translation .
-   76	Translation =    Source [ '-' '>' Target ] ';' .
-   77	Source =         STRING .
-   78	Target =         STRING .
-   75	FileName =       STRING .
+   77	Translation =    Source [ '-' '>' Target ] ';' .
+   78	Source =         STRING .
+   79	Target =         STRING .
+   76	FileName =       STRING .
 	
    12	SeqOfPres =      TransPres < TransPres > .
-   79	TransPres =      PresRule ':' SeqOfRules .
+   80	TransPres =      PresRule ':' SeqOfRules .
    62	PresRule =       'Size' [ PresRelat ] /
 	                 'Indent' [ PresRelat ] /
 	                 'LineSpacing' [ PresRelat ] /
@@ -191,31 +191,31 @@ number
 			 'FillPattern' [ '=' Pattern ] /
 			 'Background' [ '=' Color ] /
 			 'Foreground' [ '=' Color ] .
-   80	PresRelat =      '=' PresValue /
+   81	PresRelat =      '=' PresValue /
 	                 '>' [ '-' ] MinimumPres /
 	                 '<' [ '-' ] MaximumPres /
 	                 'IN' '[' [ '-' ] MinIntervalPres '.' '.'
 	                          [ '-' ] MaxIntervalPres ']' .
-   81	AdjustVal =      'Left' / 'Right' / 'VMiddle' / 'LeftWithDots' .
-   82	BooleanVal =     'Yes' / 'No' .
-   83	StyleVal =       'Roman' / 'Italics' / 'Oblique' .
-   84	WeightVal =      'Normal' / 'Bold' .
-   85	FontVal =        'Times' / 'Helvetica' / 'Courier' .
-   86	UnderLineVal =   'NoUnderline' / 'Underlined' / 'Overlined' / 'CrossedOut' /
+   82	AdjustVal =      'Left' / 'Right' / 'VMiddle' / 'LeftWithDots' .
+   83	BooleanVal =     'Yes' / 'No' .
+   84	StyleVal =       'Roman' / 'Italics' / 'Oblique' .
+   85	WeightVal =      'Normal' / 'Bold' .
+   86	FontVal =        'Times' / 'Helvetica' / 'Courier' .
+   87	UnderLineVal =   'NoUnderline' / 'Underlined' / 'Overlined' / 'CrossedOut' /
 			 { the following values are obsolete }
 	                 'No' / 'UnderLine' / 'OverLine' / 'StrikeOut' .
-   87	UnderLStyleVal = 'Thick' / 'Thin' .
+   88	UnderLStyleVal = 'Thick' / 'Thin' .
 	
-   88	LineStyleVal =   'Solid' / 'Dashed' / 'Dotted' .
-   89	Pattern =        NAME .
-   90	Color =          NAME .
+   89	LineStyleVal =   'Solid' / 'Dashed' / 'Dotted' .
+   90	Pattern =        NAME .
+   91	Color =          NAME .
 	
-   92	MinimumPres =    NUMBER .
-   93	MaximumPres =    NUMBER .
-   94	MinIntervalPres= NUMBER .
-   95	MaxIntervalPres= NUMBER .
-   91	PresValue =      [ '-' ] PresVal .
-   96	PresVal =        NUMBER .
+   93	MinimumPres =    NUMBER .
+   94	MaximumPres =    NUMBER .
+   95	MinIntervalPres= NUMBER .
+   96	MaxIntervalPres= NUMBER .
+   92	PresValue =      [ '-' ] PresVal .
+   97	PresVal =        NUMBER .
 	
 	END
 	
@@ -226,20 +226,20 @@ number
 code  character  numbers of rules using the key-word
 
 1001      ;       1   1   1   1  15  18  26  28  36  51  66  66  66  66  66  66
-                 66  66  66  66  67  67  67  67  67  14  76
-1002      =      15  35  54  62  62  62  62  62  62  62  62  62  62  62  62  80
-1003      :      18  28  30  34  45  79
-1004      -      21  35  35  35  35  37  72  76  80  80  80  80  91
+                 66  66  66  66  67  67  67  67  67  14  77
+1002      =      15  35  54  62  62  62  62  62  62  62  62  62  62  62  62  81
+1003      :      18  28  30  34  45  80
+1004      -      21  35  35  35  35  37  73  77  81  81  81  81  92
 1005      (      26  30  34  59  58  58  66  66  68  68  68
 1006      )      26  30  34  59  58  58  66  66  68  68  68
 1007      ,      30
-1008      >      35  63  76  80
-1009      <      35  63  80
-1010      [      35  80
-1011      .      35  35  80  80
-1012      ]      35  80
+1008      >      35  63  77  81
+1009      <      35  63  81
+1010      [      35  81
+1011      .      35  35  81  81
+1012      ]      35  81
 1013      *      57
-1014      +      72
+1014      +      73
 
 
 
@@ -274,14 +274,14 @@ code  key-word      numbers of rules using the key-word
 1125  FileDir         30  68
 1126  FileName        30  68
 1127  Extension       30  68
-1128  DocumentName    30  68  74
-1129  DocumentDir     30  68  74
+1128  DocumentName    30  68  75
+1129  DocumentDir     30  68  75
 1130  ARABIC          32
 1131  UROMAN          32
 1132  LROMAN          32
 1133  UPPERCASE       32
 1134  LOWERCASE       32
-1135  IN              35  66  67  80
+1135  IN              35  66  67  81
 1136  First           46  58
 1137  Second          46
 1138  Begin           36  51  14
@@ -324,53 +324,55 @@ code  key-word      numbers of rules using the key-word
 1175  ChangeMainFile  67
 1176  Indent          67  62
 1177  RemoveFile      67
-1178  Translated      68
-1179  Content         68
-1180  RefId           68  74
-1181  PairId          68
-1182  After           69
-1183  Before          69
-1184  Included        70
-1185  Size            62
-1186  LineSpacing     62
-1187  Adjust          62
-1188  Justify         62
-1189  Hyphenate       62
-1190  Style           62
-1191  Weight          62
-1192  Font            62
-1193  UnderLine       62  86
-1194  Thickness       62
-1195  LineStyle       62
-1196  LineWeight      62
-1197  FillPattern     62
-1198  Background      62
-1199  Foreground      62
-1200  Left            81
-1201  Right           81
-1202  VMiddle         81
-1203  LeftWithDots    81
-1204  Yes             82
-1205  No              82  86
-1206  Roman           83
-1207  Italics         83
-1208  Oblique         83
-1209  Normal          84
-1210  Bold            84
-1211  Times           85
-1212  Helvetica       85
-1213  Courier         85
-1214  NoUnderline     86
-1215  Underlined      86
-1216  Overlined       86
-1217  CrossedOut      86
-1218  OverLine        86
-1219  StrikeOut       86
-1220  Thick           87
-1221  Thin            87
-1222  Solid           88
-1223  Dashed          88
-1224  Dotted          88
+1178  Suspend         72
+1179  Resume          72
+1180  Translated      68
+1181  Content         68
+1182  RefId           68  75
+1183  PairId          68
+1184  After           69
+1185  Before          69
+1186  Included        70
+1187  Size            62
+1188  LineSpacing     62
+1189  Adjust          62
+1190  Justify         62
+1191  Hyphenate       62
+1192  Style           62
+1193  Weight          62
+1194  Font            62
+1195  UnderLine       62  87
+1196  Thickness       62
+1197  LineStyle       62
+1198  LineWeight      62
+1199  FillPattern     62
+1200  Background      62
+1201  Foreground      62
+1202  Left            82
+1203  Right           82
+1204  VMiddle         82
+1205  LeftWithDots    82
+1206  Yes             83
+1207  No              83  87
+1208  Roman           84
+1209  Italics         84
+1210  Oblique         84
+1211  Normal          85
+1212  Bold            85
+1213  Times           86
+1214  Helvetica       86
+1215  Courier         86
+1216  NoUnderline     87
+1217  Underlined      87
+1218  Overlined       87
+1219  CrossedOut      87
+1220  OverLine        87
+1221  StrikeOut       87
+1222  Thick           88
+1223  Thin            88
+1224  Solid           89
+1225  Dashed          89
+1226  Dotted          89
 
 
 
@@ -385,7 +387,7 @@ right part.
 
     1  TransSchema        
     2  TypeIdent             1  20  20  20  20  34  45  59  59  58  58  58  58
-                              58  66  66  66  66  66  68  68  74
+                              58  66  66  66  66  66  68  68  75
     3  MaxLineLength         1
     4  LineEndString         1
     5  LineEndInsertString   1
@@ -412,14 +414,14 @@ right part.
    26  BufferDcl             6   6
    27  BufferIdent          26  30  66  68  71
    28  VariableDcl           9   9
-   29  VariableIdent        28  66  67  67  67  68  74
+   29  VariableIdent        28  66  67  67  67  68  75
    30  Function             28  28  68  68
    31  Length               30
    32  CounterStyle         30
    33  CharString           30  68
    34  TransAttr            11  11
    35  AttrRelat            34  58
-   36  SeqOfRules           34  45  79
+   36  SeqOfRules           34  45  80
    37  AttrValue            35
    38  MinVal               35
    39  MaxVal               35
@@ -445,7 +447,7 @@ right part.
    59  LevelOrType          57
    60  CondRelLevel         59
    61  ParentLevel          58  58
-   62  PresRule             58  79
+   62  PresRule             58  80
    63  GreaterLess          61
    64  RelLevel             61
    65  TrSchema             66
@@ -455,41 +457,42 @@ right part.
    69  Position             66  66  66  66  66  66  67  67  67  67  67
    70  RelPosition          66  66
    71  File                 66
-   72  IndentSign           67
-   73  IndentVal            67
-   74  VarOrType            68  68
-   75  FileName             71
-   76  Translation          14  14
-   77  Source               76
-   78  Target               76
-   79  TransPres            12  12
-   80  PresRelat            62  62  62  62
-   81  AdjustVal            62
-   82  BooleanVal           62  62
-   83  StyleVal             62
-   84  WeightVal            62
-   85  FontVal              62
-   86  UnderLineVal         62
-   87  UnderLStyleVal       62
-   88  LineStyleVal         62
-   89  Pattern              62
-   90  Color                62  62
-   91  PresValue            80
-   92  MinimumPres          80
-   93  MaximumPres          80
-   94  MinIntervalPres      80
-   95  MaxIntervalPres      80
-   96  PresVal              91
+   72  Indent               67
+   73  IndentSign           72
+   74  IndentVal            72
+   75  VarOrType            68  68
+   76  FileName             71
+   77  Translation          14  14
+   78  Source               77
+   79  Target               77
+   80  TransPres            12  12
+   81  PresRelat            62  62  62  62
+   82  AdjustVal            62
+   83  BooleanVal           62  62
+   84  StyleVal             62
+   85  WeightVal            62
+   86  FontVal              62
+   87  UnderLineVal         62
+   88  UnderLStyleVal       62
+   89  LineStyleVal         62
+   90  Pattern              62
+   91  Color                62  62
+   92  PresValue            81
+   93  MinimumPres          81
+   94  MaximumPres          81
+   95  MinIntervalPres      81
+   96  MaxIntervalPres      81
+   97  PresVal              92
 
 
 
 *** REFERENCES TO BASIC TYPES ***
 
 Numbers of the rules using NAME
-  16  19   2  27  29  22  44  65  56  89  90
+  16  19   2  27  29  22  44  65  56  90  91
 
 Numbers of the rules using NUMBER
-   3  25  23  24  31  38  39  40  41  42  60  64  73  92  93  94  95  96
+   3  25  23  24  31  38  39  40  41  42  60  64  74  93  94  95  96  97
 
 Numbers of the rules using STRING
-   4   5  17  33  43  77  78  75
+   4   5  17  33  43  78  79  76
