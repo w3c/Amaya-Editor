@@ -1,0 +1,45 @@
+Package: 	amaya
+Version:	8.4
+Revision:	23
+Maintainer:	Stephane GULLY <stephane.gully@inrialpes.fr>
+Depends:	glib-shlibs, imlib-shlibs (>= 1.9.14-2), gtk+-shlibs, gettext, libjpeg-shlibs, libpng3-shlibs
+BuildDepends:   glib, gtk+, imlib (>= 1.9.14-2), libjpeg, libpng3, gettext-bin, gettext-dev
+Conflicts:	amaya-gtk
+Replaces:	amaya-gtk
+Source:		mirror:custom:amaya-src-%v.tgz
+CustomMirror: <<
+	Primary:  http://www.w3.org/Amaya/Distribution
+	ftp-US:   ftp://ftp.w3.org/pub/amaya
+<<
+SourceDirectory: Amaya
+SetLDFLAGS: -search_paths_first
+CompileScript: <<
+	mkdir Darwin
+	cd 'Darwin' && ../configure --with-gtk --with-dav --prefix=%p/share --bindir=%p/bin && make
+<<
+InstallScript: <<
+	cd 'Darwin' && make install prefix=%i/share bindir=%i/bin
+	cd %i/bin && ln -sf ../share/Amaya/applis/bin/amaya amaya
+<<
+DocFiles:	README README.amaya amaya/COPYRIGHT
+Description:	W3C's Editor/Browser
+DescDetail: <<
+	Amaya is a complete web browsing and authoring 
+	environment and comes equipped with a "WYSIWYG style" 
+	of interface, similar to that of the most popular commercial 
+	browsers. With such an interface, users can easily generate
+	HTML and XHTML pages, as well as CSS style sheets, MathML
+	expressions, and SVG drawings (full support of SVG is not yet
+	available, though).
+	Amaya includes a collaborative annotation application based
+	on Resource Description Framework (RDF), XLink, and
+	XPointer.
+<<
+DescPackaging: <<
+	Slight hack to make Amaya install in /sw/share/Amaya with
+	link from /sw/bin/amaya to amaya executable. (Default would
+	have /sw/Amaya, which isn't pretty).
+<<
+License:	OSI-Approved
+Homepage:	http://www.w3.org/Amaya/
+Source-MD5:	cb624c3d29f636c13f5d3704aaf9f6b9
