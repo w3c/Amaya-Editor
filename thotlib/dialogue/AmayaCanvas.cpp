@@ -557,9 +557,6 @@ void AmayaCanvas::OnIdle( wxIdleEvent& event )
  */
 void AmayaCanvas::Init()
 {
-  if (!GetContext())
-    return;
-
   // do not initialize twice
   if (m_Init)
     return;
