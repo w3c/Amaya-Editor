@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Browsing with Amaya</title>
-  <meta name="GENERATOR" content="amaya V4.4" />
+  <meta name="GENERATOR" content="amaya V5.0 alpha" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -17,9 +17,8 @@
         alt="Amaya" src="../Icons/amaya.gif" /></p>
       </td>
       <td><p><a href="Manual.html" accesskey="t"><img alt=""
-       src="../Icons/up.gif" /></a> <a href="Selecting.html"
-        accesskey="n"><img alt="next" src="../Icons/right.gif"
-        /></a></p>
+        src="../Icons/up.gif" /></a> <a href="Selecting.html"
+        accesskey="n"><img alt="next" src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -59,13 +58,14 @@ activated. That command allows you to reopen the document with a charset set
 to ISO-latin-1. The reopen document is now considered as modified (a charset
 has been added) and can be saved.</p>
 
-<p>Amaya interprets character entities.: When it's not able to interpret it,
-it displays a '?' (or it displays the entity value when the entity is within
-an attribute value or when the entityi s unknown). In all cases entities are
-restored when the document is saved, except if the document encoding is
-ISO-latin-1 and the entity corresponds to an ISO-latin-1 character. If the
-document encoding is ASCII, Amaya translates ISO-latin-1 characters into
-entities.</p>
+<p><a name="entities">Amaya interprets character entities</a>. When the
+corresponding character is not available, it displays a '?' (or it displays
+the entity value when the entity is within an attribute value or when the
+entity is unknown).  When the document is saved these character entities are
+restored, except if the document encoding is ISO-latin-1 and the entity
+corresponds to an ISO-latin-1 character. In that case, the ISO Latin-1 code
+of the character is used. If the document encoding is ASCII, Amaya translates
+ISO-latin-1 characters not available in ASCII into entities.</p>
 
 <h3><a name="Activating">Activating a link</a></h3>
 
@@ -166,8 +166,8 @@ href="Links.html#L245">create links</a> faster.</p>
       this area to actually load the document. This command could be also
       used to create a new local document.</dd>
   <dt>Following links</dt>
-    <dd><a href="#L311">Activating a link</a> to get the corresponding
-      document.</dd>
+    <dd><a href="#L311">Activating a link</a>
+       to get the corresponding document.</dd>
 </dl>
 
 <h3><a name="Moving">Moving backward and forward</a></h3>
@@ -181,9 +181,8 @@ list:</p>
       <strong>Alt-f</strong> in Unix, and Alt-left-arrow and Alt-right-arrow
       in Windows</dd>
   <dt>Button bar</dt>
-    <dd>Two buttons: <img alt="Back " src="../Icons/Back.gif" /> 
-     and <img alt="Forward "
-      src="../Icons/Forward.gif" /> allow you to go back to
+    <dd>Two buttons: <img alt="Back " src="../Icons/Back.gif" /> and <img
+      alt="Forward " src="../Icons/Forward.gif" /> allow you to go back to
       the previous page or forward to the next one.</dd>
 </dl>
 

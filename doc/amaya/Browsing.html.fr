@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Naviguer avec Amaya</title>
-  <meta name="GENERATOR" content="amaya V4.4" />
+  <meta name="GENERATOR" content="amaya V5.0 alpha" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -18,8 +18,7 @@
       </td>
       <td><p><a href="Manual.html.fr" accesskey="t"><img alt=""
         src="../Icons/up.gif" /></a> <a href="Selecting.html.fr"
-        accesskey="n"><img alt="next" src="../Icons/right.gif"
-        /></a></p>
+        accesskey="n"><img alt="next" src="../Icons/right.gif" /></a></p>
       </td>
     </tr>
   </tbody>
@@ -61,6 +60,16 @@ ISO-latin-1</strong>" est activée. Cette commande vous permet de re-ouvrir le
 document avec le "charset" correspondant à l'ISO-latin-1. Le document est
 maintenant considéré comme modifié (un charset a été ajouté) and peut être
 sauvé.</p>
+
+<p><a name="entite">Amaya interprète les entités caractères</a>. Quand il ne
+dispose pas du caractère correspondant, il affiche un '?' (ou il affiche le
+nom de l'entité lorsqu'elle figure dans un attribut ou quand elle est
+inconnue). Lorsque le document est sauvé, ces entités caractères sont
+restaurées, sauf si le document est codé en ISO Latin-1 et que l'entité
+correspond à un caractère ISO Latin-1. Dans ce cas c'est simplement le code
+ISO Latin 1 du caractère qui est sauvé. Si l'encodage du document est
+l'ASCII, Amaya convertit en entités les caractères ISO Latin-1 qui n'existent
+pas en ASCII.</p>
 
 <h3><a name="Activating">Activer un lien</a></h3>
 
@@ -174,8 +183,8 @@ vite.</p>
       chargement du document effectif. Cette commande peut aussi être
       utilisée pour créer un nouveau document local.</dd>
   <dt>Liens suivants</dt>
-    <dd><a href="#L311">Activer un lien</a> pour obtenir le document
-      correspondant.</dd>
+    <dd><a href="#L311">Activer un lien</a>
+       pour obtenir le document correspondant.</dd>
 </dl>
 
 <h3><a name="Moving">Aller en arrière et en avant</a></h3>
@@ -190,9 +199,8 @@ chargées :</p>
       <strong>Control-b</strong> et <strong>Shift-Control-F</strong> sur
       Windows.</dd>
   <dt>Barre des boutons</dt>
-    <dd>Deux boutons : <img alt="Back " src="../Icons/Back.gif"/> 
-	et <img alt="Forward "
-      src="../Icons/Forward.gif" /> vous permettent de
+    <dd>Deux boutons : <img alt="Back " src="../Icons/Back.gif" /> et <img
+      alt="Forward " src="../Icons/Forward.gif" /> vous permettent de
       retourner à la page précédente ou d'aller à la page suivante.</dd>
 </dl>
 
