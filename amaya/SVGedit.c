@@ -1864,7 +1864,7 @@ static void         CreateGroup ()
 /*----------------------------------------------------------------------
    CallbackGraph: manage Graph dialogue events.
   ----------------------------------------------------------------------*/
-static void         CallbackGraph (int ref, int typedata, char *data)
+static void CallbackGraph (int ref, int typedata, char *data)
 {
   Document           doc;
   int                val = (int) data;
@@ -1873,7 +1873,7 @@ static void         CallbackGraph (int ref, int typedata, char *data)
   if (ref == MenuGraph1)
     {
       ref = MenuGraph;
-      val += 5;
+      val += 6;
     }
   switch (ref)
     {
@@ -1914,7 +1914,7 @@ gboolean CloseSvgPalette (GtkWidget *widget,
 /*----------------------------------------------------------------------
    ShowGraphicsPalette displays the Graphics palette
   ----------------------------------------------------------------------*/
-static void         ShowGraphicsPalette (Document doc, View view)
+static void ShowGraphicsPalette (Document doc, View view)
 {
 #ifdef _GTK
   GtkWidget *w;
@@ -1935,7 +1935,7 @@ static void         ShowGraphicsPalette (Document doc, View view)
       TtaNewIconMenu (GraphDialogue + MenuGraph, GraphDialogue + FormGraph, 0,
 		      NULL, 6, mIcons, FALSE);
       TtaNewIconMenu (GraphDialogue + MenuGraph1, GraphDialogue + FormGraph, 0,
-		      NULL, 6, &mIcons[5], FALSE);
+		      NULL, 6, &mIcons[6], FALSE);
       /* do not select the entry because it's not necessary */
       /*TtaSetMenuForm (GraphDialogue + MenuGraph, 0);*/
       TtaSetDialoguePosition ();

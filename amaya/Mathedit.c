@@ -1325,7 +1325,7 @@ static void CallbackMaths (int ref, int typedata, char *data)
   if (ref == MenuMaths1)
     {
       ref = MenuMaths;
-      val += 6;
+      val += 7;
     }
   switch (ref)
     {
@@ -1394,7 +1394,7 @@ static void CreateMathMenu (Document doc, View view)
       TtaNewIconMenu (MathsDialogue + MenuMaths, MathsDialogue + FormMaths, 0,
 		   NULL, 7, mIcons, FALSE);
       TtaNewIconMenu (MathsDialogue + MenuMaths1, MathsDialogue + FormMaths, 0,
-		   NULL, 7, &mIcons[6], FALSE);
+		   NULL, 7, &mIcons[7], FALSE);
       /* do not need to initialise the selection into the palette */
       /*TtaSetMenuForm (MathsDialogue + MenuMaths, 0);*/
       TtaSetDialoguePosition ();
