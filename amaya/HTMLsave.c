@@ -1639,12 +1639,11 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
 		    url);
 	  if (confirm)
 	    {
-	      InitConfirm3L (doc, view, msg, AmayaLastHTTPErrorMsg,
-			     AmayaLastHTTPErrorMsgR, FALSE);
-	      if (UserAnswer)
-		res = -1;
-	      else
-		res = -1;
+	      if (AmayaLastHTTPErrorMsg[0] != EOS ||
+		  AmayaLastHTTPErrorMsgR[0] != EOS)
+		InitConfirm3L (doc, view, msg, AmayaLastHTTPErrorMsg,
+			       AmayaLastHTTPErrorMsgR, FALSE);
+	      res = - 1;
 	    }
 	  else
 	    {
