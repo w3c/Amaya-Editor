@@ -170,7 +170,8 @@ cliquant à la souris sur le bandeau rouge en bas de votre document.</p>
 
 <p><strong>Astuce 2</strong> : Les commandes <strong>Montrer ...</strong> du
 menu <strong>Vues</strong> peuvent être également utilisées pour redonner le
-focus clavier à une vue.</p>
+focus clavier à une vue. (Ceci est très utile quand le focus est bloqué dans
+les outils)</p>
 
 <h3>Fermer une vue</h3>
 
