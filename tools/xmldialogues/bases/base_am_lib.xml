@@ -2272,6 +2272,21 @@
 	<message xml:lang="de">LÃ¶sche Attribut</message>
 	<message xml:lang="it">Rimuovi l\'attributo</message>
 </label>
+<label define="TMSG_CPBUTTON_1">
+        <message xml:lang="en">Left button sets the selection color</message>
+	<message xml:lang="fr"></message>
+        <message xml:lang="de">Linke Maustaste: Auswahl der Farbe für markierten Text</message>
+	<message xml:lang="it">Il tasto di sinistra setta il colore della selezione</message>
+	<message xml:lang="es">El botón izquierdo fija el color de la selección</message>
+</label>
+<label define="TMSG_CPBUTTON_2">
+        <message xml:lang="en">Middle or Right button sets the caret color</message>
+	<message xml:lang="fr"></message>
+	<message xml:lang="de">Mittlere oder rechte Maustaste: Auswahl der Cursorfarbe</message>
+	<message xml:lang="it">Il tasto centrale o di destra setta il colore del cursore</message>
+	<message xml:lang="es">El botón central o derecho fija el color intercalado</message>
+</label>
+
 <label define="TMSG_LIB_MSG_MAX">
 </label>
 </messages>
