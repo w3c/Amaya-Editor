@@ -81,10 +81,12 @@ d'utiliser le clavier pour activer les liens, ainsi que les formulaires de
 contrôles. La commande au clavier est <strong>Alt-Enter</strong> par défaut,
 mais la commande <em>DoAction</em> peut être associée à un autre <a
 href="ShortCuts.html.fr">raccourci clavier</a>. La commande
-<em>NextLinkOrFormElement</em>, associée par défaut à la touche
-<strong>Tab</strong>, vous permet de trouver le prochain (ou le premier s'il
-n'y a pas de sélection) lien ou élément de formulaire HTML dans le
-document.</p>
+<em>NextLinkOrFormElement</em>, associée par défaut au raccourci clavier
+<strong>Tab</strong>, vous permet de trouver le prochain (ou le premier) lien
+ou élément de formulaire HTML dans le document. La commande
+<em>PreviousLinkOrFormElement</em>, associée par défaut au raccourci clavier
+<strong>Shift-Tab</strong>, vous permet de trouver le lien ou élément de
+formulaire HTML qui précède (ou le dernier) dans le document.</p>
 
 <p>Le document récupéré par cette opération <em>remplace</em> le document
 courant dans la même fenêtre et conserve le mode (éditeur ou navigateur). Si

@@ -37,7 +37,7 @@
 /*----------------------------------------------------------------------
   GetLineWeight computes the line weight of an abstract box.
   ----------------------------------------------------------------------*/
-static int          GetLineWeight (PtrAbstractBox pAb)
+static int GetLineWeight (PtrAbstractBox pAb)
 {
   if (pAb == NULL)
     return (0);
@@ -49,7 +49,8 @@ static int          GetLineWeight (PtrAbstractBox pAb)
 /*----------------------------------------------------------------------
   DisplayImage displays a empty box in the frame.
   ----------------------------------------------------------------------*/
-static void  DisplayImage (PtrBox pBox, int frame, int xmin, int xmax, int ymin, int ymax, ThotBool selected)
+static void  DisplayImage (PtrBox pBox, int frame, int xmin, int xmax,
+			   int ymin, int ymax, ThotBool selected)
 {
   ViewFrame          *pFrame;
   int                 xd, yd, x, y;
@@ -568,7 +569,7 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected)
   to change anything, otherwise, all points are moved using
   Box-Width/Lim-X ratio horizontally and Box-Height/Lim-Y ratio vertically.
   ----------------------------------------------------------------------*/
-static void         PolyTransform (PtrBox pBox, int frame)
+static void PolyTransform (PtrBox pBox, int frame)
 {
   float               xRatio, yRatio, pointIndex;
   PtrTextBuffer       adbuff;

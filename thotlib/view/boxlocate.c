@@ -268,7 +268,7 @@ static int GetDistance (int value, int delta)
   We apply a ratio to vertical distances to give a preference to the
   horizontal proximity.
   ----------------------------------------------------------------------*/
-int    GetBoxDistance (int xRef, int yRef, int x, int y, int width, int height)
+int GetBoxDistance (int xRef, int yRef, int x, int y, int width, int height)
 {
    int                 value;
 
@@ -285,8 +285,8 @@ int    GetBoxDistance (int xRef, int yRef, int x, int y, int width, int height)
 /*----------------------------------------------------------------------
   PolyNewPoint : add a new point to the current polyline.
   ----------------------------------------------------------------------*/
-ThotBool    PolyNewPoint (int x, int y, ThotPoint **points, int *npoints,
-			  int *maxpoints)
+ThotBool PolyNewPoint (int x, int y, ThotPoint **points, int *npoints,
+		       int *maxpoints)
 {
    ThotPoint          *tmp;
    int                 size;
@@ -405,10 +405,10 @@ void        PolySplit (float a1, float b1, float a2, float b2,
 /*----------------------------------------------------------------------
   QuadraticSplit : split a quadratic Bezier and pushes the result on the stack.
   ----------------------------------------------------------------------*/
-void        QuadraticSplit (float a1, float b1, float a2, float b2,
-			    float a3, float b3,
-			    ThotPoint **points, int *npoints,
-			    int *maxpoints)
+void QuadraticSplit (float a1, float b1, float a2, float b2,
+		     float a3, float b3,
+		     ThotPoint **points, int *npoints,
+		     int *maxpoints)
 {
    register float      tx, ty;
    float               x1, y1, x2, y2, x3, y3, i, j;
@@ -446,7 +446,7 @@ void        QuadraticSplit (float a1, float b1, float a2, float b2,
   Checking is performed after a rotation that provides an horizontal
   rectangle.
   ----------------------------------------------------------------------*/
-static ThotBool     IsOnSegment (int x, int y, int x1, int y1, int x2, int y2)
+static ThotBool IsOnSegment (int x, int y, int x1, int y1, int x2, int y2)
 {
    int                 dX, dY, nX, nY;
    double              ra, cs, ss;
@@ -473,7 +473,8 @@ static ThotBool     IsOnSegment (int x, int y, int x1, int y1, int x2, int y2)
 /*----------------------------------------------------------------------
   CrossLine returns the next cross value
   ----------------------------------------------------------------------*/
-static int     CrossLine (int x, int y, int prevX, int prevY, int nextX, int nextY, int cross)
+static int CrossLine (int x, int y, int prevX, int prevY, int nextX,
+		      int nextY, int cross)
 {
   int          i;
   ThotBool     ok;
@@ -606,7 +607,7 @@ static ThotBool  IsWithinPolyline (PtrAbstractBox pAb, int x, int y, int frame)
   IsWithinPath returns TRUE if the point x, y is within the path represented
   by the polyline defined by points.
   ----------------------------------------------------------------------*/
-static ThotBool     IsWithinPath (int x, int y, ThotPoint *points, int npoints)
+static ThotBool IsWithinPath (int x, int y, ThotPoint *points, int npoints)
 {
    int                 cross;
    int                 i;

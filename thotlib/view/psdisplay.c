@@ -166,8 +166,7 @@ void DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int fg)
    if (y < 0)
       return;
    y += FrameTable[frame].FrTopMargin;
-   x = PixelToPoint (x);
-   y = PixelToPoint (y + FontBase (font));
+   y = y + FontBase (font);
    if (fg >= 0)
      {
        /* Do we need to change the current color ? */
@@ -175,7 +174,7 @@ void DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int fg)
        w = CharacterWidth (car, font);
        /* Do we need to change the current font ? */
        CurrentFont (fout, font);
-       fprintf (fout, "(%c) %d %d %d s\n", car, PixelToPoint (w), x, -y);
+       fprintf (fout, "(%c) %d %d %d s\n", car, w, x, -y);
      }
 }
 
@@ -292,8 +291,8 @@ int DrawString (STRING buff, int i, int lg, int frame, int x, int y,
     {
       /* Beginning of a new box */
       SameBox = 1;
-      X = PixelToPoint (x);
-      Y = PixelToPoint (y + FontBase (font));
+      X = x;
+      Y = y + FontBase (font);
       NbWhiteSp = 0;
       if (fg >= 0)
 	{
@@ -357,7 +356,7 @@ int DrawString (STRING buff, int i, int lg, int frame, int x, int y,
   /* is this the end of the box */
   if (boxWidth != 0)
     {
-      boxWidth = PixelToPoint (boxWidth);
+      boxWidth = boxWidth;
       /* Is justification needed ? */
       if (fg >= 0)
 	{
@@ -410,7 +409,7 @@ void DisplayUnderline (int frame, int x, int y, ptrfont font, int type,
       bottom = y + fheight - thickness;
       middle = y + fheight / 2;
       l_start = X;		/* get current X value (cf DrawString) */
-      l_end = X + PixelToPoint (lg);	/* compute the end coordinate */
+      l_end = X + lg;	/* compute the end coordinate */
       
       /*
        * for an underline independant of the font add
@@ -426,20 +425,20 @@ void DisplayUnderline (int frame, int x, int y, ptrfont font, int type,
 	  
 	case 1:	/* underlined */
 	  fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
-		   l_end, -(PixelToPoint (bottom)), l_start,
-		   -(PixelToPoint (bottom)), 5, thickness, 2);
+		   l_end, -(bottom), l_start,
+		   -(bottom), 5, thickness, 2);
 	  break;
 	  
 	case 2:	/* overlined */
 	  fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
-		   l_end, -(PixelToPoint (y)), l_start, -(PixelToPoint (y)),
+		   l_end, -(y), l_start, -(y),
 		   5, thickness, 2);
 	  break;
 	  
 	case 3:	/* cross-over */
 	  fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
-		   l_end, -(PixelToPoint (middle)), l_start,
-		   -(PixelToPoint (middle)), 5, thickness, 2);
+		   l_end, -(middle), l_start,
+		   -(middle), 5, thickness, 2);
 	  break;
 	}
     }
@@ -471,16 +470,16 @@ void DrawRadical (int frame, int thick, int x, int y, int l, int h,
 
    if (h <= (3 * fh))
      fprintf (fout, "%d %d %d %d %d %d %d %d r\n",
-	      PixelToPoint (x + l), -(PixelToPoint (y)), 
-	      PixelToPoint (x + (fh / 2)), -(PixelToPoint (y)),
-	      PixelToPoint (x + (fh / 4)), -(PixelToPoint (y + h)),
-	      PixelToPoint (x), -(PixelToPoint (y + (2 * (h / 3)))));
+	      x + l, -(y), 
+	      x + (fh / 2), -(y),
+	      x + (fh / 4), -(y + h),
+	      x, -(y + (2 * (h / 3))));
    else
      fprintf (fout, "%d %d %d %d %d %d %d %d r\n",
-	      PixelToPoint (x + l), -(PixelToPoint (y)),
-	      PixelToPoint (x + (fh / 2)), -(PixelToPoint (y)),
-	      PixelToPoint (x + (fh / 2)), -(PixelToPoint (y + h)),
-	      PixelToPoint (x), -(PixelToPoint (y + (2 * (h / 3)))));
+	      x + l, -(y),
+	      x + (fh / 2), -(y),
+	      x + (fh / 2), -(y + h),
+	      x, -(y + (2 * (h / 3))));
 }
 
 
@@ -513,10 +512,10 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
    ey = FontHeight (font);
    h -= ey;
    y += FontBase (font);
-   x = PixelToPoint (x + (l / 2));
-   yf = PixelToPoint (y + h);
-   ym = PixelToPoint (y + (h / 2));
-   y = PixelToPoint (y) + 1;
+   x = x + (l / 2);
+   yf = y + h;
+   ym = y + (h / 2);
+   y = y + 1;
    if (h < ey / 4)
      {
        /* Made of only one glyph */
@@ -524,9 +523,9 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
 	 {
 	   /* double integral */
 	   fprintf (fout, "%d %d (\\362) c\n", -ym,
-		    x - PixelToPoint (CharacterWidth ('\362', font) / 4));
+		    x - CharacterWidth ('\362', font) / 4);
 	   fprintf (fout, "%d %d (\\362) c\n", -ym,
-		    x + PixelToPoint (CharacterWidth ('\362', font) / 4));
+		    x + CharacterWidth ('\362', font) / 4);
 	 }
        else
 	 {
@@ -542,10 +541,10 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
 	 {
 	   /* double integral */
 	   fprintf (fout, "%d %d %d %s (\\363) (\\364) (\\365) s3\n",
-		    x - PixelToPoint (CharacterWidth ('\364', font) / 4),
+		    x - CharacterWidth ('\364', font) / 4,
 		    -yf, -y, Scale);
 	   fprintf (fout, "%d %d %d %s (\\363) (\\364) (\\365) s3\n",
-		    x + PixelToPoint (CharacterWidth ('\364', font) / 4),
+		    x + CharacterWidth ('\364', font) / 4,
 		    -yf, -y, Scale);
 	 }
        else
@@ -577,8 +576,8 @@ void DrawSigma (int frame, int x, int y, int l, int h, ptrfont font, int fg)
    /* Change the current font */
    PoscriptFont = NULL;
    fprintf (fout, "(Symbol) %.0f sf\n", FontHeight (font) * 0.9);
-   x = PixelToPoint (x + (l / 2));
-   y = PixelToPoint (y + h - FontHeight (font) + FontBase (font));
+   x = x + (l / 2);
+   y = y + h - FontHeight (font + FontBase (font));
    fprintf (fout, "%d %d (\\345) c\n", -y, x);
 }
 
@@ -601,8 +600,8 @@ void DrawPi (int frame, int x, int y, int l, int h, ptrfont font, int fg)
    /* Change the current font */
    PoscriptFont = NULL;
    fprintf (fout, "(Symbol) %.0f sf\n", FontHeight (font) * 0.9);
-   x = PixelToPoint (x + (l / 2));
-   y = PixelToPoint (y + h - FontHeight (font) + FontBase (font));
+   x = x + (l / 2);
+   y = y + h - FontHeight (font + FontBase (font));
    fprintf (fout, "%d %d (\\325) c\n", -y, x);
 }
 
@@ -625,8 +624,8 @@ void DrawUnion (int frame, int x, int y, int l, int h, ptrfont font, int fg)
    /* Change the current font */
    PoscriptFont = NULL;
    fprintf (fout, "(Symbol) %.0f sf\n", FontHeight (font) * 0.9);
-   x = PixelToPoint (x + (l / 2));
-   y = PixelToPoint (y + h - FontHeight (font) + FontBase (font));
+   x = x + (l / 2);
+   y = y + h - FontHeight (font + FontBase (font));
    fprintf (fout, "%d %d (\\310) c\n", -y, x);
 }
 
@@ -649,8 +648,8 @@ void DrawIntersection (int frame, int x, int y, int l, int h, ptrfont font,
    /* Change the current font */
    PoscriptFont = NULL;
    fprintf (fout, "(Symbol) %.0f sf\n", FontHeight (font) * 0.9);
-   x = PixelToPoint (x + (l / 2));
-   y = PixelToPoint (y + h - FontHeight (font) + FontBase (font));
+   x = x + (l / 2);
+   y = y + h - FontHeight (font + FontBase (font));
    fprintf (fout, "%d %d (\\307) c\n", -y, x);
 }
 
@@ -682,13 +681,11 @@ void DrawArrow (int frame, int thick, int style, int x, int y, int l,
 
    l--;
    h--;
-   xm = PixelToPoint (x + l / 2);
-   xf = PixelToPoint (x + l);
-   ym = PixelToPoint (y + h / 2);
-   yf = PixelToPoint (y + h);
+   xm = x + l / 2;
+   xf = x + l;
+   ym = y + h / 2;
+   yf = y + h;
    lg = HL + thick;		/* lenght of the arrow head */
-   x = PixelToPoint (x);
-   y = PixelToPoint (y);
 
    if (direction == 0)
      {
@@ -777,9 +774,9 @@ void DrawBracket (int frame, int thick, int x, int y, int l, int h,
    ey = FontHeight (font);
    h -= ey;
    y += FontBase (font);
-   x = PixelToPoint (x + (l / 2));
-   yf = PixelToPoint (y + h);
-   y = PixelToPoint (y) + 1;
+   x = x + (l / 2);
+   yf = y + h;
+   y = y + 1;
 
    if (h < ey / 4)
      {
@@ -831,9 +828,9 @@ void DrawPointyBracket (int frame, int thick, int x, int y, int l, int h,
 
    if (h < ey / 4)
      {
-       x = PixelToPoint (x + (l / 2));
-       yf = PixelToPoint (y + h);
-       y = PixelToPoint (y) + 1;
+       x = x + (l / 2);
+       yf = y + h;
+       y = y + 1;
 	/* Made of only one glyph */
 	if (direction == 0)
 	   fprintf (fout, "%d %d (\341) c\n", -yf, x);
@@ -846,15 +843,15 @@ void DrawPointyBracket (int frame, int thick, int x, int y, int l, int h,
 	if (direction == 0)
 	  /* Trace un crochet ouvrant */
 	  fprintf (fout, "%d %d %d %d %d %d %d %d %d Seg\n",
-		   PixelToPoint (x + l), -(PixelToPoint (y)),
-		   PixelToPoint (x), -(PixelToPoint (y + (h / 2))),
-		   PixelToPoint (x + l), -(PixelToPoint (y + h)),
+		   x + l, -(y),
+		   x, -(y + (h / 2)),
+		   x + l, -(y + h),
 		   5, 1, 3);
 	else
 	  fprintf (fout, "%d %d %d %d %d %d %d %d %d Seg\n",
-		   PixelToPoint (x), -(PixelToPoint (y)),
-		   PixelToPoint (x + l), -(PixelToPoint (y + (h / 2))),
-		   PixelToPoint (x), -(PixelToPoint (y + h)),
+		   x, -(y),
+		   x + l, -(y + (h / 2)),
+		   x, -(y + h),
 		   5, 1, 3);
      }
 }
@@ -888,9 +885,9 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
    ey = FontHeight (font);
    h -= ey;
    y += FontBase (font);
-   yf = PixelToPoint (y + h);
-   y = PixelToPoint (y) + 1;
-   x = PixelToPoint (x + (l / 2));
+   yf = y + h;
+   y = y + 1;
+   x = x + (l / 2);
 
    if (h < ey / 3)
      {
@@ -939,9 +936,9 @@ void DrawBrace (int frame, int thick, int x, int y, int l, int h,
    ey = FontHeight (font);
    h -= ey;
    y += FontBase (font);
-   x = PixelToPoint (x + (l / 2));
-   yf = PixelToPoint (y + h);
-   y = PixelToPoint (y) + 1;
+   x = x + (l / 2);
+   yf = y + h;
+   y = y + 1;
 
    if (h < ey - 1)
      {
@@ -982,10 +979,8 @@ void DrawRectangle (int frame, int thick, int style, int x, int y,
    y += FrameTable[frame].FrTopMargin;
    fout = (FILE *) FrRef[frame];
 
-   xf = PixelToPoint (x + width);
-   yf = PixelToPoint (y + height);
-   x = PixelToPoint (x);
-   y = PixelToPoint (y);
+   xf = x + width;
+   yf = y + height;
 
    /* Do we need to change the current color ? */
    if (fg < 0)
@@ -1011,73 +1006,72 @@ void DrawRectangle (int frame, int thick, int style, int x, int y,
    - a backward arrow has to be drawn (2)
    - both backward and forward arrows have to be drawn (3)
   ----------------------------------------------------------------------*/
-void   DrawSegments (int frame, int thick, int style, int x, int y, PtrTextBuffer buffer, int nb, int fg, int arrow, int bg, int pattern)
+void  DrawSegments (int frame, int thick, int style, int x, int y,
+		    PtrTextBuffer buffer, int nb, int fg, int arrow, int bg,
+		    int pattern)
 {
-   int                 i, j;
-   float               xp, yp;
-   int                 prevx, prevy;
-   int                 lg;
-   PtrTextBuffer       adbuff;
-   FILE               *fout;
+  PtrTextBuffer       adbuff;
+  FILE               *fout;
+  float               xp, yp;
+  int                 i, j;
+  int                 prevx, prevy;
+  int                 lg;
 
-   if (y < 0)   
-      return;
-   fout = (FILE *) FrRef[frame];
-   if (fg < 0)
-     thick = 0;
-   /* fill the included polygon */
-   DrawPolygon (frame, 0, style, x, y, buffer, nb, fg, bg, pattern);
-   y += FrameTable[frame].FrTopMargin;
-   xp = yp = 0;
-   prevx = prevy = 0;
-   lg = HL + thick;
-
-   /* Do we need to change the current color ? */
-   CurrentColor (fout, fg);
-   adbuff = buffer;
-   /* backward arrow  */
-   if (arrow == 2 || arrow == 3)
-      fprintf (fout, "%d %d %d %d %d %d %d %d arr\n",
-	       style,
-	       PixelToPoint (buffer->BuPoints[2].XCoord + x),
-	       -(PixelToPoint (buffer->BuPoints[2].YCoord + y)),
-	       PixelToPoint (buffer->BuPoints[1].XCoord + x),
-	       -(PixelToPoint (buffer->BuPoints[1].YCoord + y)),
-	       thick, lg, lg);
-
-   j = 1;
-   for (i = 1; i < nb; i++)
-     {
-	if (j >= adbuff->BuLength)
-	  {
-	     if (adbuff->BuNext != NULL)
-	       {
-		  /* Next buffer */
-		  adbuff = adbuff->BuNext;
-		  j = 0;
-	       }
-	  }
-	if (i == nb - 1)
-	  {
-	     /* keep last coordinates for drawing the arrows */
-	     prevx = FloatToInt (xp);
-	     prevy = FloatToInt (yp);
-	  }
-	/* Coordinate for next point */
-	xp = (float) PixelToPoint (adbuff->BuPoints[j].XCoord + x);
-	yp = (float) PixelToPoint (adbuff->BuPoints[j].YCoord + y);
-	fprintf (fout, "%f %f\n", xp, -yp);
-	j++;
-     }
-   /* Extra characteristics for drawing */
-   fprintf (fout, " %d %d %d Seg\n", style, thick, nb - 1);
-
-   /* forward arrow  */
-   j--;
-   if (arrow == 1 || arrow == 3)
-      fprintf (fout, "%d %d %d %d %d %d %d %d arr\n",
-	       style, prevx, -prevy,
-	       FloatToInt (xp), -(FloatToInt (yp)), thick, lg, lg);
+  if (y < 0)   
+    return;
+  fout = (FILE *) FrRef[frame];
+  if (fg < 0)
+    thick = 0;
+  /* fill the included polygon */
+  DrawPolygon (frame, 0, style, x, y, buffer, nb, fg, bg, pattern);
+  y += FrameTable[frame].FrTopMargin;
+  xp = yp = 0;
+  prevx = prevy = 0;
+  lg = HL + thick;
+  
+  /* Do we need to change the current color ? */
+  CurrentColor (fout, fg);
+  adbuff = buffer;
+  /* backward arrow  */
+  if (arrow == 2 || arrow == 3)
+    fprintf (fout, "%d %d %d %d %d %d %d %d arr\n",
+	     style,
+	     PixelValue (adbuff->BuPoints[2].XCoord, UnPixel, NULL, 0) + x,
+	     -(PixelValue (adbuff->BuPoints[2].YCoord, UnPixel, NULL, 0) + y),
+	     PixelValue (adbuff->BuPoints[1].XCoord, UnPixel, NULL, 0) + x,
+	     -(PixelValue (adbuff->BuPoints[1].YCoord, UnPixel, NULL, 0) + y),
+	     thick, lg, lg);
+  
+  j = 1;
+  for (i = 1; i < nb; i++)
+    {
+      if (j >= adbuff->BuLength && adbuff->BuNext != NULL)
+	{
+	  /* Next buffer */
+	  adbuff = adbuff->BuNext;
+	  j = 0;
+	}
+      if (i == nb - 1)
+	{
+	  /* keep last coordinates for drawing the arrows */
+	  prevx = FloatToInt (xp);
+	  prevy = FloatToInt (yp);
+	}
+      /* Coordinate for next point */
+      xp = (float) (PixelValue (adbuff->BuPoints[j].XCoord, UnPixel, NULL, 0) + x);
+      yp = (float) (PixelValue (adbuff->BuPoints[j].YCoord, UnPixel, NULL, 0) + y);
+      fprintf (fout, "%f %f\n", xp, -yp);
+      j++;
+    }
+  /* Extra characteristics for drawing */
+  fprintf (fout, " %d %d %d Seg\n", style, thick, nb - 1);
+  
+  /* forward arrow  */
+  j--;
+  if (arrow == 1 || arrow == 3)
+    fprintf (fout, "%d %d %d %d %d %d %d %d arr\n",
+	     style, prevx, -prevy,
+	     FloatToInt (xp), -(FloatToInt (yp)), thick, lg, lg);
 }
 
 
@@ -1092,41 +1086,38 @@ void   DrawSegments (int frame, int thick, int style, int x, int y, PtrTextBuffe
 void DrawPolygon (int frame, int thick, int style, int x, int y,
 		  PtrTextBuffer buffer, int nb, int fg, int bg, int pattern)
 {
-   int                 i, j;
-   float               xp, yp;
-   PtrTextBuffer       adbuff;
-   FILE               *fout;
+  float               xp, yp;
+  PtrTextBuffer       adbuff;
+  FILE               *fout;
+  int                 i, j;
 
-   fout = (FILE *) FrRef[frame];
+  fout = (FILE *) FrRef[frame];
   if (y < 0)
     return;
-   y += FrameTable[frame].FrTopMargin;
-   if (fg < 0)
-     thick = 0;
-   /* Do we need to change the current color ? */
-   CurrentColor (fout, fg);
-   FillWithPattern (fout, fg, bg, pattern);
-   adbuff = buffer;
-   j = 1;
-   for (i = 1; i < nb; i++)
-     {
-	if (j >= adbuff->BuLength)
-	  {
-	     if (adbuff->BuNext != NULL)
-	       {
-		  /* Next buffer */
-		  adbuff = adbuff->BuNext;
-		  j = 0;
-	       }
-	  }
-	/* Coordinate for next point */
-	xp = (float) PixelToPoint (adbuff->BuPoints[j].XCoord + x);
-	yp = (float) PixelToPoint (adbuff->BuPoints[j].YCoord + y);
-	fprintf (fout, "%f %f\n", xp, -yp);
-	j++;
-     }
-   /* Extra characteristics for drawing */
-   fprintf (fout, "%d %d %d  Poly\n", style, thick, nb - 1);
+  y += FrameTable[frame].FrTopMargin;
+  if (fg < 0)
+    thick = 0;
+  /* Do we need to change the current color ? */
+  CurrentColor (fout, fg);
+  FillWithPattern (fout, fg, bg, pattern);
+  adbuff = buffer;
+  j = 1;
+  for (i = 1; i < nb; i++)
+    {
+      if (j >= adbuff->BuLength && adbuff->BuNext != NULL)
+	{
+	  /* Next buffer */
+	  adbuff = adbuff->BuNext;
+	  j = 0;
+	}
+      /* Coordinate for next point */
+      xp = (float) (PixelValue (adbuff->BuPoints[j].XCoord, UnPixel, NULL, 0) + x);
+      yp = (float) (PixelValue (adbuff->BuPoints[j].YCoord, UnPixel, NULL, 0) + y);
+      fprintf (fout, "%f %f\n", xp, -yp);
+      j++;
+    }
+  /* Extra characteristics for drawing */
+  fprintf (fout, "%d %d %d  Poly\n", style, thick, nb - 1);
 }
 
 
@@ -1168,18 +1159,18 @@ void DrawCurve (int frame, int thick, int style, int x, int y,
    j = 1;
    i = 2;
    adbuff = buffer;
-   lastx = adbuff->BuPoints[j].XCoord;
-   lasty = adbuff->BuPoints[j].YCoord;
+   lastx = PixelValue (adbuff->BuPoints[j].XCoord, UnPixel, NULL, 0);
+   lasty = PixelValue (adbuff->BuPoints[j].YCoord, UnPixel, NULL, 0);
    j++;
-   newx = adbuff->BuPoints[j].XCoord;
-   newy = adbuff->BuPoints[j].YCoord;
+   newx = PixelValue (adbuff->BuPoints[j].XCoord, UnPixel, NULL, 0);
+   newy = PixelValue (adbuff->BuPoints[j].YCoord, UnPixel, NULL, 0);
    /* control points for first arc */
    x1 = (float) (lastx + x);
    y1 = (float) (lasty + y);
-   x2 = (float) (PixelToPoint ((int) controls[i].lx * 3 + lastx / 4 + x));
-   y2 = (float) (PixelToPoint ((int) controls[i].ly * 3 + lasty / 4 + y));
-   x3 = (float) (PixelToPoint ((int) controls[i].lx * 3 + newx / 4 + x));
-   y3 = (float) (PixelToPoint ((int) controls[i].ly * 3 + newy / 4 + y));
+   x2 = (float) ((int) controls[i].lx * 3 + lastx / 4 + x);
+   y2 = (float) ((int) controls[i].ly * 3 + lasty / 4 + y);
+   x3 = (float) ((int) controls[i].lx * 3 + newx / 4 + x);
+   y3 = (float) ((int) controls[i].ly * 3 + newy / 4 + y);
 
    /* backward arrow  */
    if (arrow == 2 || arrow == 3)
@@ -1204,23 +1195,23 @@ void DrawCurve (int frame, int thick, int style, int x, int y,
 	  }
 	lastx = newx;
 	lasty = newy;
-	newx = adbuff->BuPoints[j].XCoord;
-	newy = adbuff->BuPoints[j].YCoord;
+	newx = PixelValue (adbuff->BuPoints[j].XCoord, UnPixel, NULL, 0);
+	newy = PixelValue (adbuff->BuPoints[j].YCoord, UnPixel, NULL, 0);
 	x1 = (float) lastx + x;
 	y1 = (float) lasty + y;
 	if (i < nb - 2)
 	  {
-	     x2 = (float) PixelToPoint ((int) controls[i].rx + x);
-	     y2 = (float) PixelToPoint ((int) controls[i].ry + y);
-	     x3 = (float) PixelToPoint ((int) controls[i + 1].lx + x);
-	     y3 = (float) PixelToPoint ((int) controls[i + 1].ly + y);
+	     x2 = controls[i].rx + x;
+	     y2 = controls[i].ry + y;
+	     x3 = controls[i + 1].lx + x;
+	     y3 = controls[i + 1].ly + y;
 	  }
 	else if (i == nb - 2)
 	  {
-	     x2 = (float) PixelToPoint (((int) controls[i].rx * 3 + lastx) / 4 + x);
-	     y2 = (float) PixelToPoint (((int) controls[i].ry * 3 + lasty) / 4 + y);
-	     x3 = (float) PixelToPoint (((int) controls[i].rx * 3 + newx) / 4 + x);
-	     y3 = (float) PixelToPoint (((int) controls[i].ry * 3 + newy) / 4 + y);
+	     x2 = (controls[i].rx * 3. + lastx) / (4. + x);
+	     y2 = (controls[i].ry * 3. + lasty) / (4. + y);
+	     x3 = (controls[i].rx * 3. + newx) / (4. + x);
+	     y3 = (controls[i].ry * 3.+ newy) / (4. + y);
 	  }
      }
    fprintf (fout, "%f %f %d %d %d Curv\n", x1, -y1, style, thick, nb - 1);
@@ -1262,15 +1253,15 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
    j = 1;
    i = 1;
    adbuff = buffer;
-   x0 = x1 = (float) adbuff->BuPoints[j].XCoord + x;
-   y0 = y1 = (float) adbuff->BuPoints[j].YCoord + y;
-   x2 = (float) PixelToPoint ((int) controls[i].rx + x);
-   y2 = (float) PixelToPoint ((int) controls[i].ry + y);
+   x0 = x1 = (float) PixelValue (adbuff->BuPoints[j].XCoord + x, UnPixel, NULL, 0);
+   y0 = y1 = (float) PixelValue (adbuff->BuPoints[j].YCoord + y, UnPixel, NULL, 0);
+   x2 = controls[i].rx + x;
+   y2 = controls[i].ry + y;
 
    for (i = 2; i < nb; i++)
      {
-	x3 = (float) PixelToPoint ((int) controls[i].lx + x);
-	y3 = (float) PixelToPoint ((int) controls[i].ly + y);
+	x3 = controls[i].lx + x;
+	y3 = controls[i].ly + y;
 	fprintf (fout, "%f %f %f %f %f %f\n", x3, -y3, x2, -y2, x1, -y1);
 	j++;
 	if (j >= adbuff->BuLength)
@@ -1282,15 +1273,15 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
 		  j = 0;
 	       }
 	  }
-	x1 = (float) adbuff->BuPoints[j].XCoord + x;
-	y1 = (float) adbuff->BuPoints[j].YCoord + y;
-	x2 = (float) PixelToPoint ((int) controls[i].rx + x);
-	y2 = (float) PixelToPoint ((int) controls[i].ry + y);
+	x1 = (float) PixelValue (adbuff->BuPoints[j].XCoord + x, UnPixel, NULL, 0);
+	y1 = (float) PixelValue (adbuff->BuPoints[j].YCoord + y, UnPixel, NULL, 0);
+	x2 = controls[i].rx + x;
+	y2 = controls[i].ry + y;
      }
 
    /* Close the stroke */
-   x3 = (float) PixelToPoint ((int) (controls[1].lx)) + x;
-   y3 = (float) PixelToPoint ((int) (controls[1].ly)) + y;
+   x3 = controls[1].lx + x;
+   y3 = controls[1].ly + y;
    fprintf (fout, "%f %f %f %f %f %f\n", x3, -y3, x2, -y2, x1, -y1);
    fprintf (fout, "%f %f %d %d %d Splin\n", x0, -y0, style, thick, nb);
 }
@@ -1319,37 +1310,37 @@ void DrawPath (int frame, int thick, int style, int x, int y,
 	    /* this path segment starts a new subpath */
 	    {
 	      /* generate a moveto */
-	      x1 = (float) PixelToPoint (x + pPa->XStart);
-	      y1 = (float) PixelToPoint (y + pPa->YStart);
+	      x1 = (float) x + PixelValue (pPa->XStart, UnPixel, NULL, 0);
+	      y1 = (float) y + PixelValue (pPa->YStart, UnPixel, NULL, 0);
 	      fprintf (fout, "%f %f moveto ", x1, -y1);
 	    }
 
 	  switch (pPa->PaShape)
 	    {
 	    case PtLine:
-	      x2 = (float) PixelToPoint (x + pPa->XEnd);
-	      y2 = (float) PixelToPoint (y + pPa->YEnd);
+	      x2 = (float) x + PixelValue (pPa->XEnd, UnPixel, NULL, 0);
+	      y2 = (float) y + PixelValue (pPa->YEnd, UnPixel, NULL, 0);
 	      fprintf (fout, "%f %f lineto ", x2, -y2);
 	      break;
 
 	    case PtCubicBezier:
-	      cx1 = (float) PixelToPoint (x + pPa->XCtrlStart);
-	      cy1 = (float) PixelToPoint (y + pPa->YCtrlStart);
-	      cx2 = (float) PixelToPoint (x + pPa->XCtrlEnd);
-	      cy2 = (float) PixelToPoint (y + pPa->YCtrlEnd);
-	      x2 = (float) PixelToPoint (x + pPa->XEnd);
-	      y2 = (float) PixelToPoint (y + pPa->YEnd);
+	      cx1 = (float) x + PixelValue (pPa->XCtrlStart, UnPixel, NULL, 0);
+	      cy1 = (float) y + PixelValue (pPa->YCtrlStart, UnPixel, NULL, 0);
+	      cx2 = (float) x + PixelValue (pPa->XCtrlEnd, UnPixel, NULL, 0);
+	      cy2 = (float) y + PixelValue (pPa->YCtrlEnd, UnPixel, NULL, 0);
+	      x2 = (float) x + PixelValue (pPa->XEnd, UnPixel, NULL, 0);
+	      y2 = (float) y + PixelValue (pPa->YEnd, UnPixel, NULL, 0);
 	      fprintf (fout, "%f %f %f %f %f %f curveto ",
 		       cx1, -cy1, cx2, -cy2, x2, -y2);
 	      break;
 
 	    case PtQuadraticBezier:
-	      x1 = (float) PixelToPoint (x + pPa->XStart);
-	      y1 = (float) PixelToPoint (y + pPa->YStart);
-	      cx1 = (float) PixelToPoint (x + pPa->XCtrlStart);
-	      cy1 = (float) PixelToPoint (y + pPa->YCtrlStart);
-	      x2 = (float) PixelToPoint (x + pPa->XEnd);
-	      y2 = (float) PixelToPoint (y + pPa->YEnd);
+	      x1 = (float) x + PixelValue (pPa->XStart, UnPixel, NULL, 0);
+	      y1 = (float) y + PixelValue (pPa->YStart, UnPixel, NULL, 0);
+	      cx1 = (float) x + PixelValue (pPa->XCtrlStart, UnPixel, NULL, 0);
+	      cy1 = (float) y + PixelValue (pPa->YCtrlStart, UnPixel, NULL, 0);
+	      x2 = (float) x + PixelValue (pPa->XEnd, UnPixel, NULL, 0);
+	      y2 = (float) y + PixelValue (pPa->YEnd, UnPixel, NULL, 0);
 	      fprintf (fout, "%f %f %f %f %f %f curveto ",
 		       x1+((2*(cx1-x1))/3), -y1-((2*(cy1-y1))/3),
                        x2+((2*(cx1-x2))/3), -y2-((2*(cy1-y2))/3), x2, -y2);
@@ -1401,12 +1392,12 @@ void DrawDiamond (int frame, int thick, int style, int x, int y,
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
-   xm = PixelToPoint (x + width / 2);
-   ym = PixelToPoint (y + height / 2);
-   xf = PixelToPoint (x + width);
-   yf = PixelToPoint (y + height);
-   x = PixelToPoint (x);
-   y = PixelToPoint (y);
+   xm = x + width / 2;
+   ym = y + height / 2;
+   xf = x + width;
+   yf = y + height;
+   x = x;
+   y = y;
 
    FillWithPattern (fout, fg, bg, pattern);
    fprintf (fout, "%d %d %d %d %d %d %d %d %d %d %d Poly\n",
@@ -1448,13 +1439,13 @@ void DrawOval (int frame, int thick, int style, int x, int y, int width,
    if (ry > arc)
      ry = arc;
  
-   xf = PixelToPoint (x + width - 1);
-   yf = PixelToPoint (y + height - 1);
-   x = PixelToPoint (x);
-   y = PixelToPoint (y);
+   xf = x + width - 1;
+   yf = y + height - 1;
+   x = x;
+   y = y;
    FillWithPattern (fout, fg, bg, pattern);
    fprintf (fout, "%d %d %d %d %d %d %d %d oval\n", style, thick,
-	    x, -y, xf, -yf, PixelToPoint (rx), PixelToPoint (ry));
+	    x, -y, xf, -yf, rx, ry);
 }
 
 
@@ -1482,10 +1473,10 @@ void DrawEllips (int frame, int thick, int style, int x, int y, int width,
       CurrentColor (fout, fg);
    width = width / 2;
    height = height / 2;
-   xm = PixelToPoint (x + width);
-   ym = PixelToPoint (y + height);
-   width = PixelToPoint (width);
-   height = PixelToPoint (height);
+   xm = x + width;
+   ym = y + height;
+   width = width;
+   height = height;
 
    FillWithPattern (fout, fg, bg, pattern);
    if (width == height)
@@ -1519,10 +1510,10 @@ void DrawCorner (int frame, int thick, int style, int x, int y, int l,
 
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
-   xf = PixelToPoint (x + l);
-   yf = PixelToPoint (y + h);
-   x = PixelToPoint (x);
-   y = PixelToPoint (y);
+   xf = x + l;
+   yf = y + h;
+   x = x;
+   y = y;
 
    switch (corner)
 	 {
@@ -1569,10 +1560,10 @@ void DrawRectangleFrame (int frame, int thick, int style, int x, int y,
       CurrentColor (fout, fg);
 
    arc = 3 * 72 / 25.4;
-   xf = PixelToPoint (x + width - 1);
-   yf = PixelToPoint (y + height - 1);
-   x = PixelToPoint (x);
-   y = PixelToPoint (y);
+   xf = x + width - 1;
+   yf = y + height - 1;
+   x = x;
+   y = y;
 
    FillWithPattern (fout, fg, bg, pattern);
    fprintf (fout, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d ov\n",
@@ -1610,10 +1601,10 @@ void DrawEllipsFrame (int frame, int thick, int style, int x, int y,
 
    width = width / 2;
    height = height / 2;
-   xm = PixelToPoint (x + width);
-   ym = PixelToPoint (y + height);
-   width = PixelToPoint (width);
-   height = PixelToPoint (height);
+   xm = x + width;
+   ym = y + height;
+   width = width;
+   height = height;
 
    FillWithPattern (fout, fg, bg, pattern);
    if (width == height)
@@ -1665,10 +1656,10 @@ void DrawHorizontalLine (int frame, int thick, int style, int x, int y,
      Y = y + h - thick / 2;
    else
      Y = y + thick / 2;
-   xf = PixelToPoint (x + l);
-   x = PixelToPoint (x);
-   Y = PixelToPoint (Y);
-   thick = PixelToPoint (thick);
+   xf = x + l;
+   x = x;
+   Y = Y;
+   thick = thick;
    fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
 	    xf, -Y, x, -Y, style, thick, 2);
 }
@@ -1693,31 +1684,31 @@ void DrawHorizontalBrace (int frame, int thick, int style, int x, int y,
   fout = (FILE *) FrRef[frame];
   /* Do we need to change the current color ? */
   CurrentColor (fout, fg);
-  Y = PixelToPoint (y + (h - thick) / 2);
-  xf = PixelToPoint (x + l);
-  xm = PixelToPoint (x + (l / 2));
-  x = PixelToPoint (x);
+  Y = y + (h - thick / 2);
+  xf = x + l;
+  xm = x + (l / 2);
+  x = x;
   if (align == 0)
     /* Over brace */
     {
       fprintf (fout, "%d %d %d %d %d %d %d %d %d %d %d Seg\n",
-	       x, -(PixelToPoint (y + h)),
+	       x, -(y + h),
 	       x, -Y,
 	       xf, -Y,
-	       xf, -(PixelToPoint (y + h)), style, thick, 4);
+	       xf, -(y + h), style, thick, 4);
       fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
-	       xm, -(PixelToPoint (y)), xm, -Y, style, thick, 2);
+	       xm, -(y), xm, -Y, style, thick, 2);
     }
   else
     /* Underbrace */
     {
       fprintf (fout, "%d %d %d %d %d %d %d %d %d %d %d Seg\n",
-	       x, -(PixelToPoint (y)),
+	       x, -(y),
 	       x, -Y,
 	       xf, -Y,
-	       xf, -(PixelToPoint (y)), style, thick, 4);
+	       xf, -(y), style, thick, 4);
       fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
-	       xm, -(PixelToPoint (y + h)), xm, -Y, style, thick, 2);
+	       xm, -(y + h), xm, -Y, style, thick, 2);
     }
 }
 
@@ -1748,10 +1739,10 @@ void DrawVerticalLine (int frame, int thick, int style, int x, int y,
       X = x + l - thick / 2;
    else
       X = x + thick / 2;
-   yf = PixelToPoint (y + h);
-   y = PixelToPoint (y);
-   X = PixelToPoint (X);
-   thick = PixelToPoint (thick);
+   yf = y + h;
+   y = y;
+   X = X;
+   thick = thick;
       fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
 	       X, -yf, X, -y, style, thick, 2);
 }
@@ -1783,10 +1774,10 @@ void DrawDoubleVerticalLine (int frame, int thick, int style, int x, int y,
       X = x + l - thick / 2;
    else
       X = x + thick / 2;
-   yf = PixelToPoint (y + h);
-   y = PixelToPoint (y);
-   X = PixelToPoint (X);
-   thick = PixelToPoint (thick);
+   yf = y + h;
+   y = y;
+   X = X;
+   thick = thick;
       fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
 	       X, -yf, X, -y, style, thick, 2);
 }
@@ -1809,9 +1800,9 @@ void DrawPoints (int frame, int x, int y, int boxWidth, int fg)
   if (boxWidth > 0)
     {
       fout = (FILE *) FrRef[frame];
-      xcour = PixelToPoint (x);
-      ycour = PixelToPoint (y);
-      fprintf (fout, "%d %d %d Pes\n", xcour, -ycour, PixelToPoint (boxWidth));
+      xcour = x;
+      ycour = y;
+      fprintf (fout, "%d %d %d Pes\n", xcour, -ycour, boxWidth);
     }
 }
 
@@ -1839,10 +1830,10 @@ void DrawSlash (int frame, int thick, int style, int x, int y, int l,
 
    l--;
    h--;
-   xf = PixelToPoint (x + l);
-   yf = PixelToPoint (y + h);
-   x = PixelToPoint (x);
-   y = PixelToPoint (y);
+   xf = x + l;
+   yf = y + h;
+   x = x;
+   y = y;
 
    if (direction == 0)
       fprintf (fout, "%d %d %d %d %d %d %d Seg\n",
@@ -1879,8 +1870,8 @@ void psBoundingBox (int frame, int width, int height)
    /* of the output image, here is the correct values :               */
 
    fprintf (fout, "%%%%BoundingBox: %d %d %d %d\n",
-	    50, 791 - PixelToPoint (height),
-	    50 + PixelToPoint (width), 791);
+	    50, 791 - height,
+	    50 + width, 791);
 }
 
 
@@ -1906,10 +1897,10 @@ void PaintWithPattern (int frame, int x, int y, int width, int height,
 
    if (pattern >= 0)
      {
-	xf = PixelToPoint (x + width - 1);
-	yf = PixelToPoint (y + height - 1);
-	x = PixelToPoint (x);
-	y = PixelToPoint (y);
+	xf = x + width - 1;
+	yf = y + height - 1;
+	x = x;
+	y = y;
 	fprintf (fout, "%d %d %d %d %d %d %d %d %d trm\n",
 		 pattern, x, -yf, xf, -yf, xf, -y, x, -y);
      }

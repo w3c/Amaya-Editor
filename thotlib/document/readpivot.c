@@ -2268,7 +2268,7 @@ static  LabelString         label;
 		{
 		  if (leafType == CharString || leafType == Picture)
 		    {
-		      if (!TtaReadWideChar (pivFile,& ctext, UTF_8))
+		      if (!TtaReadWideChar (pivFile, &ctext, UTF_8))
 			PivotError (pivFile, "PivotError: Text 1");
 		      if (ctext != (CHAR_T) C_PIV_END)
 			{

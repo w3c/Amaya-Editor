@@ -9,7 +9,6 @@
  * Module dedicated to font handling.
  *
  * Author: I. Vatton (INRIA)
- *         R. Guetari (W3C/INRIA)
  *
  */
 
@@ -25,25 +24,42 @@
 
 
 /*----------------------------------------------------------------------
- *      PointToPixel convert from points to pixels.
+  PointToPixel convert from points to pixels.
   ----------------------------------------------------------------------*/
-int                 PointToPixel (int value)
+int PointToPixel (int value)
 {
-   if (DOT_PER_INCHE == 0)
-     return (value);
-   else
-     return (int)(((float)(value * DOT_PER_INCHE)) / 72.);
+  int         val;
+
+  if (DOT_PER_INCHE == 0)
+    return (value);
+  else
+    {
+      val = (value * DOT_PER_INCHE + 36) / 72;
+      if (val == 0 && value > 0)
+	return (1);
+      else
+	return (val);
+    }
 }
 
 
 /*----------------------------------------------------------------------
- *      PixelToPoint convert from pixels to points.
+  PixelToPoint convert from pixels to points.
   ----------------------------------------------------------------------*/
-int                 PixelToPoint (int value)
+int PixelToPoint (int value)
 {
-   if (DOT_PER_INCHE == 0)
-      return (value);
-   else
-      return (int)(((float)(value * 72)) / (float)DOT_PER_INCHE);
+  int         val;
+
+  if (DOT_PER_INCHE == 0)
+    return (value);
+  else
+    {
+      val = (value * 72 + DOT_PER_INCHE / 2) / DOT_PER_INCHE;
+      if (val == 0 && value > 0)
+	return (1);
+      else
+	return (val);
+    }
 }
+
 

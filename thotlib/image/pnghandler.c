@@ -578,8 +578,8 @@ static unsigned char *ReadPngToData (char *datafile, int *w, int *h,
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
-		    int *wif, int *hif, unsigned long BackGroundPixel,
-		    int *width, int *height, int zoom)
+		    int *wif, int *hif, int bgColor, int *width,
+		    int *height, int zoom)
 {
   Pixmap           pixmap = (Pixmap) 0;
   ThotColorStruct *colrs;
@@ -672,105 +672,19 @@ Drawable PngCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 void PngPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
-	       int hif, int PicXArea, int PicYArea, int PicWArea,
-	       int PicHArea, FILE *fd, unsigned long BackGroundPixel)
+	       int hif, FILE *fd, int bgColor)
 {
-#ifdef _WINDOWS
-  return;
-#else  /* _WINDOWS */
+#ifndef _WINDOWS
   ThotColorStruct *colrs;
   unsigned char   *data;
-  unsigned short  *sdata;
-  int              delta;
-  int              xtmp, ytmp;
-  int              x, y, w, h;
-  int	           col, ind;
-  int              ncolors, cpp, bg = -1;
-  
-  data = ReadPngToData(fn, &w, &h, &ncolors, &cpp, &colrs, &bg);
-  if (!data)
-    /* feed the editor with the appropriate message */
-       return;
-  if (bg != -1 && bg < ncolors)
-    {
-      colrs[bg].red   = 65535;
-      colrs[bg].green = 65535;
-      colrs[bg].blue  = 65535;
-    }
-  
-  sdata = (unsigned short  *) data;
-  PicWArea = w;
-  PicHArea = h;
-  xtmp = 0;
-  ytmp = 0;
-  switch (pres)
-    {
-    case RealSize:
-    case FillFrame:
-    case XRepeat:
-    case YRepeat:      
-      delta = (wif - PicWArea)/2;
-      if (delta > 0)
-	{
-	  xif += delta;
-	  wif = PicWArea;
-	}
-      else
-	{
-	  xtmp = -delta;
-	  PicWArea = wif;
-	}     
-      delta = (hif - PicHArea)/2;
-      if (delta > 0)
-	{
-	  yif += delta ;
-	  hif = PicHArea;
-	}
-      else
-	{
+  int              picW, picH;
+  int              ncolors, cpp, transparent;
 
-	  ytmp = - delta;
-	  PicHArea = hif;
-	}   
-      fprintf(fd, "gsave %d -%d translate\n", PixelToPoint (xif),
-	      PixelToPoint (yif + hif));
-      fprintf (fd, "%d %d %d %d DumpImage2\n", PicWArea,
-	       PicHArea, PixelToPoint (wif), PixelToPoint (hif));
-      break;
-    case ReScale:
-      fprintf (fd, "gsave %d -%d translate\n", PixelToPoint (xif),
-	       PixelToPoint (yif + hif));
-      fprintf (fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea,
-	       PixelToPoint (wif), PixelToPoint (hif));
-      wif = PicWArea;
-      hif = PicHArea;
-      break;
-    default:
-      break;
-    }
-
-  fprintf(fd, "\n");
-  for (y = 0 ; y < hif; y++)
-    {
-      ind = ((ytmp + y) * w) + xtmp;
-      for (x = 0 ; x < wif; x++)
-	{
-	  if (ncolors > 256)
-	    /* use two bytes per pixel */
-	    col = sdata[ind++];
-	  else
-	    /* use one byte per pixel */
-	    col = data[ind++];
-	  fprintf (fd, "%02x%02x%02x",
-		   colrs[col].red >> 8,
-		   colrs[col].green >> 8,
-		   colrs[col].blue >> 8);
-	}
-      fprintf(fd, "\n");
-    }
-  fprintf(fd, "\n");
-  fprintf(fd, "grestore\n");
-  fprintf(fd, "\n");   
+  transparent = -1;
+  data = ReadPngToData (fn, &picW, &picH, &ncolors, &cpp, &colrs, &transparent);
+  if (data)
+    DataToPrint (data, pres, xif, yif, wif, hif, picW, picH, fd, ncolors,
+		 transparent, bgColor, colrs);
   TtaFreeMemory (data);
   /* free the table of colors */
   TtaFreeMemory (colrs);

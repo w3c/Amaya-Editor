@@ -1151,7 +1151,7 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame, int x,
   int                 picXArea, picYArea, picWArea, picHArea;
   int                 xTranslate, yTranslate, picXOrg, picYOrg;
   int                 xFrame, yFrame;
-  ThotColor           BackGroundPixel;
+  int                 bgColor;
 #ifdef _WIN_PRINT
   LPBITMAPINFO        pbmi;
   LPBYTE              lpBits;
@@ -1200,7 +1200,7 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame, int x,
   picYArea = imageDesc->PicYArea;
   picWArea = imageDesc->PicWArea;
   picHArea = imageDesc->PicHArea;
-  BackGroundPixel = box->BxAbstractBox->AbBackground;
+  bgColor = box->BxAbstractBox->AbBackground;
   
   SetPictureClipping (&picWArea, &picHArea, w, h, imageDesc);
   if (!Printing)
@@ -1330,9 +1330,8 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame, int x,
 #else /* _WINDOWS */
   (*(PictureHandlerTable[typeImage].Produce_Postscript)) (fileName,pres,
 							  x, y, w, h,
-							  picXArea, picYArea,
-							  picWArea, picHArea,
-							  (FILE *) drawable, BackGroundPixel);
+							  (FILE *) drawable,
+							  bgColor);
 #endif /* _WINDOWS*/
 }
 

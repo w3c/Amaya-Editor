@@ -29,8 +29,8 @@
    fn. updates the wif, hif, xif , yif                     
   ----------------------------------------------------------------------*/
 Drawable XbmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
-		    int *wif, int *hif, unsigned long BackGroundPixel,
-		    int *width, int *height, int zoom)
+		    int *wif, int *hif, unsigned long bgPixel, int *width,
+		    int *height, int zoom)
 {
 #ifndef _WINDOWS
   Pixmap              pixmap;
@@ -67,108 +67,105 @@ Drawable XbmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
    XbmPrint produces postscript frome an xbm file                  
   ----------------------------------------------------------------------*/
 void XbmPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
-	       int hif, int PicXArea, int PicYArea, int PicWArea,
-	       int PicHArea, FILE *fd, unsigned int BackGroundPixel)
+	       int hif, FILE *fd, unsigned int bgPixel)
 {
-#ifdef _WINDOWS
-   return;
-#else  /* _WINDOWS */
-   XImage             *pict;
-   Pixmap              pix;
-   int                 delta;
-   int                 xtmp, ytmp;
-   float               Scx, Scy;
-   register int        i, j, nbb;
-   register char      *pt, *pt1;
-   int                 wim, him;
+#ifndef _WINDOWS
+  XImage             *pict;
+  Pixmap              pix;
+  int                 delta;
+  int                 xtmp, ytmp;
+  int                 picW, picH;
+  float               Scx, Scy;
+  register int        i, j, nbb;
+  register char      *pt, *pt1;
+  int                 wim, him;
 
-   i = XReadBitmapFile (TtDisplay, TtRootWindow, fn, &PicWArea, &PicHArea,
-			&pix, &xtmp, &ytmp);
-   if (i != BitmapSuccess)
-      return;
-   xtmp = 0;
-   ytmp = 0;
-
-   switch (pres)
-	 {
-	    case RealSize:
-	    case FillFrame:
-	    case XRepeat:
-	    case YRepeat:
-	       delta = (wif - PicWArea) / 2;
-	       if (delta > 0)
-		 {
-		    xif += delta;
-		    wif = PicWArea;
-		 }
-	       else
-		 {
-		    xtmp = -delta;
-		    PicWArea = wif;
-		 }
-	       delta = (hif - PicHArea) / 2;
-	       if (delta > 0)
-		 {
-		    yif += delta;
-		    hif = PicHArea;
-		 }
-	       else
-		 {
-		    ytmp = -delta;
-		    PicHArea = hif;
-		 }
-	       break;
-	    case ReScale:
-	       if ((float) PicHArea / (float) PicWArea <= (float) hif / (float) wif)
-		 {
-		    Scx = (float) wif / (float) PicWArea;
-		    yif += (hif - (PicHArea * Scx)) / 2;
-		    hif = PicHArea * Scx;
-		 }
-	       else
-		 {
-		    Scy = (float) hif / (float) PicHArea;
-		    xif += (wif - (PicWArea * Scy)) / 2;
-		    wif = PicWArea * Scy;
-		 }
-	       break;
-	    default:
-	       break;
-	 }
-
-   if (pix != None)
-     {
-	pict = XGetImage (TtDisplay, pix, xtmp, ytmp,
-			  (unsigned int) PicWArea, (unsigned int) PicHArea,
-			  AllPlanes, XYPixmap);
-
-	wim = pict->width;
-	him = pict->height;
-	fprintf (fd, "gsave %d -%d translate\n", PixelToPoint (xif), PixelToPoint (yif + hif));
-	fprintf (fd, "%d %d %d %d DumpImage\n", pict->width, pict->height, PixelToPoint (wif), PixelToPoint (hif));
-
-	nbb = (wim + 7) / 8;
-	if (ImageByteOrder (TtDisplay) == LSBFirst)
-	   LittleXBigEndian ((unsigned char *) pict->data, (long) (pict->bytes_per_line * him));
-	for (j = 0, pt1 = pict->data; j < him; j++, pt1 += pict->bytes_per_line)
-	  {
-	     for (i = 0, pt = pt1; i < nbb; i++)
-		fprintf (fd, "%02x", ((*pt++) & 0xff) ^ 0xff);
-	     fprintf (fd, "\n");
-	  }
-	fprintf (fd, "grestore\n");
-
-	/* frees the allocated space for the bitmap in memory */
-	XDestroyImage (pict);
-	XFreePixmap (TtDisplay, pix);
-     }
+  i = XReadBitmapFile (TtDisplay, TtRootWindow, fn, &picW, &picH, &pix,
+		       &xtmp, &ytmp);
+  if (i != BitmapSuccess)
+    return;
+  xtmp = 0;
+  ytmp = 0;
+  switch (pres)
+    {
+    case RealSize:
+    case FillFrame:
+    case XRepeat:
+    case YRepeat:
+      delta = (wif - picW) / 2;
+      if (delta > 0)
+	{
+	  xif += delta;
+	  wif = picW;
+	}
+      else
+	{
+	  xtmp = -delta;
+	  picW = wif;
+	}
+      delta = (hif - picH) / 2;
+      if (delta > 0)
+	{
+	  yif += delta;
+	  hif = picH;
+	}
+      else
+	{
+	  ytmp = -delta;
+	  picH = hif;
+	}
+      break;
+    case ReScale:
+      if ((float) picH / (float) picW <= (float) hif / (float) wif)
+	{
+	  Scx = (float) wif / (float) picW;
+	  yif += (hif - (picH * Scx)) / 2;
+	  hif = picH * Scx;
+	}
+      else
+	{
+	  Scy = (float) hif / (float) picH;
+	  xif += (wif - (picW * Scy)) / 2;
+	  wif = picW * Scy;
+	}
+      break;
+    default:
+      break;
+    }
+  
+  if (pix != None)
+    {
+      pict = XGetImage (TtDisplay, pix, xtmp, ytmp, (unsigned int) picW,
+			(unsigned int) picH, AllPlanes, XYPixmap);
+      
+      wim = pict->width;
+      him = pict->height;
+      fprintf (fd, "gsave %d -%d translate\n", xif, yif + hif);
+      fprintf (fd, "%d %d %d %d DumpImage\n", pict->width, pict->height, wif, hif);
+      
+      nbb = (wim + 7) / 8;
+      if (ImageByteOrder (TtDisplay) == LSBFirst)
+	LittleXBigEndian ((unsigned char *) pict->data,
+			  (long) (pict->bytes_per_line * him));
+      for (j = 0, pt1 = pict->data; j < him; j++, pt1 += pict->bytes_per_line)
+	{
+	  for (i = 0, pt = pt1; i < nbb; i++)
+	    fprintf (fd, "%02x", ((*pt++) & 0xff) ^ 0xff);
+	  fprintf (fd, "\n");
+	}
+      fprintf (fd, "grestore\n");
+      
+      /* frees the allocated space for the bitmap in memory */
+      XDestroyImage (pict);
+      XFreePixmap (TtDisplay, pix);
+    }
 #endif /* !_WINDOWS */
 }
 
 /*----------------------------------------------------------------------
    IsXbmFormat check if the file header is of an xbm format        
   ----------------------------------------------------------------------*/
-ThotBool             IsXbmFormat (char *fn)
+ThotBool IsXbmFormat (char *fn)
 {
 #ifdef _WINDOWS
    return (FALSE);

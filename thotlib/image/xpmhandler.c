@@ -30,6 +30,7 @@
 #include "picture_f.h"
 #include "inites_f.h"
 #include "font_f.h"
+#include "gifhandler_f.h"
 #include "units_f.h"
 
 
@@ -38,8 +39,8 @@
    fn. updates the wif, hif, xif , yif                     
   ----------------------------------------------------------------------*/
 Drawable XpmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
-		    int *wif, int *hif, unsigned long BackGroundPixel,
-		    int *width, int *height, int zoom)
+		    int *wif, int *hif, int bgColor, int *width,
+		    int *height, int zoom)
 {
 #ifdef _WINDOWS
   *width = 0;
@@ -63,7 +64,7 @@ Drawable XpmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
   att.green_closeness = 40000;
   att.blue_closeness = 40000;
   att.numsymbols = 1;
-  att.mask_pixel = BackGroundPixel;
+  att.mask_pixel = ColorPixel (bgColor);
 
   status = XpmReadFileToPixmap (TtDisplay, TtRootWindow, fn, &pixmap,
 				(Pixmap *) &(imageDesc->PicMask), &att);
@@ -93,26 +94,18 @@ Drawable XpmCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
    XpmPrint converts an xpm file to PostScript.                    
   ----------------------------------------------------------------------*/
 void XpmPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
-	       int hif, int PicXArea, int PicYArea, int PicWArea,
-	       int PicHArea, FILE *fd, unsigned long BackGroundPixel)
+	       int hif, FILE *fd, int bgColor)
 {
 #ifndef _WINDOWS 
-   int                 delta;
-   int                 xtmp, ytmp;
-   float               Scx, Scy;
    register int        i;
-   unsigned int       *pt;
-   unsigned char       pt1;
-   int                 x, y;
-   int                 wim ;
    XpmAttributes       att;
    XpmInfo             info;
-   ThotColorStruct     exactcolor;
+   ThotColorStruct     color;
    int                 status;
+   int                 picW, picH;
    unsigned long       valuemask = 0;
    ThotColorStruct     colorTab[256];
    XpmImage            image;
-   unsigned int        NbCharPerLine;
    unsigned short      red, green, blue;
 
    /* pixmap loading parameters passed to the library */
@@ -128,117 +121,30 @@ void XpmPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
    if (status < XpmSuccess)
      return;
 
-   PicWArea = image.width;
-   PicHArea = image.height;
-   xtmp = 0;
-   ytmp = 0;
-
-   switch (pres)
-     {
-     case RealSize:
-     case FillFrame:
-     case XRepeat:
-     case YRepeat:
-       delta = (wif - PicWArea) / 2;
-       if (delta > 0)
-	 {
-	   xif += delta;
-	   wif = PicWArea;
-	 }
-       else
-	 {
-	   xtmp = -delta;
-	   PicWArea = wif;
-	 }
-       delta = (hif - PicHArea) / 2;
-       if (delta > 0)
-	 {
-	   yif += delta;
-	   hif = PicHArea;
-	 }
-       else
-	 {
-	   
-	   ytmp = -delta;
-	   PicHArea = hif;
-	 }
-       break;
-     case ReScale:
-       if ((float) PicHArea / (float) PicWArea <= (float) hif / (float) wif)
-	 {
-	   Scx = (float) wif / (float) PicWArea;
-	   yif += (int) ((hif - (PicHArea * Scx)) / 2);
-	   hif = (int) (PicHArea * Scx);
-	 }
-       else
-	 {
-	   Scy = (float) hif / (float) PicHArea;
-	   xif += (int) ((wif - (PicWArea * Scy)) / 2);
-	   wif = (int) (PicWArea * Scy);
-	 }
-       break;
-     default:
-       break;
-     }
-
+   picW = image.width;
+   picH = image.height;
    /* reads the colorspace palette to produce the ps */
-   for (i = 0; i < (int) (image.ncolors); i++)
+   for (i = 0; i < image.ncolors; i++)
      {
 	if (strncmp (image.colorTable[i].c_color, "None", 4) == 0)
-
 	  {
-	     TtaGiveThotRGB ((int) BackGroundPixel, &red, &green, &blue);
-	     colorTab[i].red = (unsigned char) red;
-	     colorTab[i].green = (unsigned char) green;
-	     colorTab[i].blue = (unsigned char) blue;
+	     TtaGiveThotRGB (bgColor, &red, &green, &blue);
+	     colorTab[i].red = red;
+	     colorTab[i].green = green;
+	     colorTab[i].blue = blue;
 	     colorTab[i].pixel = i;
-	     /*NoneColor = i; */
-	     /*MaskSet = 1; */
-
 	  }
 	else
 	  {
-	     XParseColor (TtDisplay, TtCmap, image.colorTable[i].c_color, &exactcolor);
+	     XParseColor (TtDisplay, TtCmap, image.colorTable[i].c_color, &color);
 	     colorTab[i].pixel = i;
-	     colorTab[i].red = exactcolor.red;
-	     colorTab[i].green = exactcolor.green;
-	     colorTab[i].blue = exactcolor.blue;
-
+	     colorTab[i].red = color.red;
+	     colorTab[i].green = color.green;
+	     colorTab[i].blue = color.blue;
 	  }
      }
-
-   wim = image.width;
-   /* generation of the poscript , header Dumpimage2 + dimensions  */
-   /* + picture location. Each pixel = RRGGBB in  hexa    */
-   fprintf (fd, "gsave %d -%d translate\n", PixelToPoint (xif),
-	    PixelToPoint (yif + hif));
-   fprintf (fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea,
-	    PixelToPoint (wif), PixelToPoint (hif));
-   fprintf (fd, "\n");
-
-   NbCharPerLine = wim;
-
-   for (y = 0; y < hif; y++)
-     {
-	pt = (image.data + ((ytmp + y) * NbCharPerLine) + xtmp);
-	for (x = 0; x < wif; x++)
-	  {
-
-	     /* RGB components generation */
-	     pt1 = (unsigned char) (*pt);
-	     fprintf (fd, "%02x%02x%02x",
-		      (colorTab[pt1].red) & 0xff,
-		      (colorTab[pt1].green) & 0xff,
-		      (colorTab[pt1].blue) & 0xff);
-
-	     pt++;
-	  }
-	fprintf (fd, "\n");
-     }
-
-   fprintf (fd, "\n");
-   fprintf (fd, "grestore\n");
-   fprintf (fd, "\n");
+   DataToPrint (image.data, pres, xif, yif, wif, hif, picW, picH, fd,
+		image.ncolors, -1, bgColor, image.colorTable);
    XpmFreeXpmInfo (&info);
    XpmFreeXpmImage (&image);
    att.valuemask = valuemask;

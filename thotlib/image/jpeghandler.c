@@ -197,20 +197,20 @@ void JpegPrintErrorMsg (int ErrorNumber)
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 Drawable JpegCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
-		     int *wif, int *hif, unsigned long BackGroundPixel,
-		     int *width, int *height, int zoom)
+		     int *wif, int *hif, int bgColor, int *width,
+		     int *height, int zoom)
 {
   int                 w, h;
-  Pixmap              pixmap = (Pixmap)NULL;
+  Pixmap              pixmap = (Pixmap) NULL;
   ThotColorStruct     colrs[256];
-  unsigned char      *buffer = NULL, *buffer2 = NULL;
+  unsigned char      *data = NULL, *data2 = NULL;
 
   /* effective load of the Picture from Jpeg Library */
-  buffer = ReadJpegToData (fn, &w, &h, colrs);
+  data = ReadJpegToData (fn, &w, &h, colrs);
   /* return image dimensions */
   *width = w;
   *height = h;
-  if (buffer == NULL)
+  if (data == NULL)
     {
 #ifdef _WINDOWS 
       WinErrorBox (NULL, "JpegCreate(1)");
@@ -236,20 +236,20 @@ Drawable JpegCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
   if ((*xif != 0 && *yif != 0) && (w != *xif || h != *yif))
     {   
       /* xif and yif contain width and height of the box */
-      buffer2 = ZoomPicture (buffer, w , h, *xif, *yif, 1);
-      TtaFreeMemory (buffer);
-      buffer = buffer2;
-      buffer2 = NULL;
+      data2 = ZoomPicture (data, w , h, *xif, *yif, 1);
+      TtaFreeMemory (data);
+      data = data2;
+      data2 = NULL;
       w = *xif;
       h = *yif;
     }
 #endif /* _WIN_PRINT */
 
-  if (buffer == NULL)
+  if (data == NULL)
     return ((Drawable) NULL);
 
-  pixmap = DataToPixmap (buffer, w, h, 100, colrs, 1);
-  TtaFreeMemory (buffer);  
+  pixmap = DataToPixmap (data, w, h, 100, colrs, 1);
+  TtaFreeMemory (data);  
   if (pixmap == None)
     {
 #ifdef _WINDOWS
@@ -269,95 +269,22 @@ Drawable JpegCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 
 
 /*----------------------------------------------------------------------
-   JpegPrint produces postscript from a jpeg picture file          
+   JpegPrint produces postscript from a jpeg picture file
   ----------------------------------------------------------------------*/
 void JpegPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
-		int hif, int PicXArea, int PicYArea, int PicWArea,
-		int PicHArea, FILE *fd, unsigned long BackGroundPixel)
+		int hif, FILE *fd, int bgColor)
 {
-  int                 delta;
-  int                 xtmp, ytmp;
-  unsigned char      *pt;
-  int                 x, y, w, h;
-  int                 wim;
-  unsigned int        NbCharPerLine;
+#ifndef _WINDOWS
   ThotColorStruct     colrs[256];
-  unsigned char      *buffer;
+  unsigned char      *data;
+  int                 picW, picH;
 
-  buffer = ReadJpegToData (fn, &w, &h, colrs);
-  if (!buffer)
-    /* feed the editor with the appropriate message */
-    return;
-
-  PicWArea = w;
-  PicHArea = h;
-  xtmp = 0;
-  ytmp = 0;
-  switch (pres)
-    {
-    case RealSize:
-    case FillFrame:
-    case XRepeat:
-    case YRepeat:
-      delta = (wif - PicWArea) / 2;
-      if (delta > 0)
-	{
-	  xif += delta;
-	  wif = PicWArea;
-	}
-      else
-	{
-	  xtmp = -delta;
-	  PicWArea = wif;
-	}
-      delta = (hif - PicHArea) / 2;
-      if (delta > 0)
-	{
-	  yif += delta;
-	  hif = PicHArea;
-	}
-      else
-	{
-	  ytmp = -delta;
-	  PicHArea = hif;
-	}
-      fprintf (fd, "gsave %d -%d translate\n", PixelToPoint (xif),
-	       PixelToPoint (yif + hif));
-      fprintf (fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea,
-	       PixelToPoint (wif), PixelToPoint (hif));
-      break;
-    case ReScale:
-      fprintf (fd, "gsave %d -%d translate\n", PixelToPoint (xif),
-	       PixelToPoint (yif + hif));
-      fprintf (fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea,
-	       PixelToPoint (wif), PixelToPoint (hif));
-      wif = PicWArea;
-      hif = PicHArea;
-      break;
-    default:
-      break;
-    }
-
-  wim = w;
-  fprintf (fd, "\n");
-  NbCharPerLine = wim;
-  for (y = 0; y < hif; y++)
-    {
-      pt = (unsigned char *) (buffer + ((ytmp + y) * NbCharPerLine) + xtmp);
-      for (x = 0; x < wif; x++)
-	{
-	  fprintf (fd, "%02x%02x%02x",
-		   (colrs[*pt].red) >> 8,
-		   (colrs[*pt].green) >> 8,
-		   (colrs[*pt].blue) >> 8);
-	  pt++;
-	}
-      fprintf (fd, "\n");
-    }
-  fprintf (fd, "\n");
-  fprintf (fd, "grestore\n");
-  fprintf (fd, "\n");
-  free (buffer);
+  data = ReadJpegToData (fn, &picW, &picH, colrs);
+  if (!data)
+    DataToPrint (data, pres, xif, yif, wif, hif, picW, picH, fd, 100, -1,
+		 bgColor, colrs);
+  TtaFreeMemory (data);
+#endif /* _WINDOWS */
 }
 
 
@@ -366,7 +293,6 @@ void JpegPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
   ----------------------------------------------------------------------*/
 ThotBool IsJpegFormat (char *fn)
 { 
-   /*JSAMPROW buffer[1]; *//* row pointer array for read_scanlines */
    FILE               *fd;
 
    if ((fd = fopen (fn, "rb")) == NULL)

@@ -28,10 +28,10 @@
 #define THOT_EXPORT extern
 #include "frame_tv.h"
 #include "units_tv.h"
+#include "edit_tv.h"
 #undef THOT_EXPORT
 #define THOT_EXPORT
 #include "font_tv.h"
-
 /* that table for the charSThotLoacter glyphs */
 static int          FirstRemovableFont = 1;
 static char         StylesTable[MAX_HIGHLIGHT] = "rbiogq";
@@ -320,7 +320,7 @@ int CharacterWidth (unsigned char c, ptrfont font)
 /*----------------------------------------------------------------------
  *      CharacterHeight returns the height of a char in a given font.
   ----------------------------------------------------------------------*/
-int                 CharacterHeight (unsigned char c, ptrfont font)
+int CharacterHeight (unsigned char c, ptrfont font)
 {
 #ifdef _GTK
   int l;
@@ -349,7 +349,7 @@ int                 CharacterHeight (unsigned char c, ptrfont font)
 /*----------------------------------------------------------------------
        CharacterAscent returns the ascent of a char in a given font.
   ----------------------------------------------------------------------*/
-int                 CharacterAscent (unsigned char c, ptrfont font)
+int CharacterAscent (unsigned char c, ptrfont font)
 {
 #ifdef _GTK
   int               lbearing, rbearing, width, ascent, descent;
@@ -443,9 +443,9 @@ int                 FontHeight (ptrfont font)
 }
 
 /*----------------------------------------------------------------------
- *  PixelValue computes the pixel size for a given logical unit.
- *		pAb is the current abstract box except for UnPercent unit
- *		where it holds the comparison value.
+  PixelValue computes the pixel size for a given logical unit.
+  pAb is the current abstract box except for UnPercent unit
+  where it holds the comparison value.
   ----------------------------------------------------------------------*/
 int PixelValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
 {
@@ -467,20 +467,31 @@ int PixelValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
 	 dist = (val * CharacterAscent ('x', pAb->AbBox->BxFont)) / 10;
        break;
      case UnPoint:
-       dist = PointToPixel (val);
        /* take zoom into account */
        if (zoom != 0)
-	 dist += (dist * zoom / 10);
+	 val += (val * zoom / 10);
+#ifndef _WIN_PRINT
+       if (Printing)
+	 /* the basic unit is the point instead of the pixel */
+	 dist = val;
+       else
+#endif /* _WIN_PRINT */
+	 dist = PointToPixel (val);
        break;
      case UnPixel:
-	 dist = val;
        /* take zoom into account */
        if (zoom != 0)
-	 dist += (dist * zoom / 10);
+	 val += (val * zoom / 10);
 #ifdef _WIN_PRINT
        if (TtPrinterDC && ScreenDPI)
-	 dist = (dist * PrinterDPI + ScreenDPI / 2) / ScreenDPI;
+	 dist = (val * PrinterDPI + ScreenDPI / 2) / ScreenDPI;
+#else /* _WIN_PRINT */
+       if (Printing)
+	 /* the basic unit is the point instead of the pixel */
+	 dist = PixelToPoint (val);
 #endif /* _WIN_PRINT */
+       else
+	 dist = val;
        break;
      case UnPercent:
        i = val * (int) pAb;
@@ -494,9 +505,9 @@ int PixelValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
 }
 
 /*----------------------------------------------------------------------
- *  LogicalValue computes the logical value for a given pixel size.
- *		pAb is the current abstract box except for UnPercent unit
- *		where it holds the comparison value.
+  LogicalValue computes the logical value for a given pixel size.
+  pAb is the current abstract box except for UnPercent unit
+  where it holds the comparison value.
   ----------------------------------------------------------------------*/
 int LogicalValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
 {
@@ -521,17 +532,28 @@ int LogicalValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
        /* take zoom into account */
        if (zoom != 0)
 	 val -= (val * zoom / 10);
-       dist = PixelToPoint (val);
+#ifndef _WIN_PRINT
+       if (Printing)
+	 /* the basic unit is the point instead of the pixel */
+	 dist = val;
+       else
+#endif /* _WIN_PRINT */
+	 dist = PixelToPoint (val);
        break;
      case UnPixel:
-	   dist = val;
        /* take zoom into account */
        if (zoom != 0)
-	     dist -= (dist * zoom / 10);
+	 val -= (val * zoom / 10);
 #ifdef _WIN_PRINT
        if (TtPrinterDC && PrinterDPI)
-	     dist = (dist * ScreenDPI + ScreenDPI / 2) / PrinterDPI;
+	 dist = (val * ScreenDPI + PrinterDPI / 2) / PrinterDPI;
+#else /* _WIN_PRINT */
+      if (Printing)
+	 /* the basic unit is the point instead of the pixel */
+	 dist = PixelToPoint (val);
 #endif /* _WIN_PRINT */
+       else
+	 dist = val;
         break;
      case UnPercent:
        if (pAb == NULL)
@@ -553,7 +575,7 @@ int LogicalValue (int val, TypeUnit unit, PtrAbstractBox pAb, int zoom)
 /*----------------------------------------------------------------------
  *      FontBase returns the shifting of the base line for a given font.
   ----------------------------------------------------------------------*/
-int                 FontBase (ptrfont font)
+int FontBase (ptrfont font)
 {
    if (font == NULL)
       return (0);
@@ -564,7 +586,7 @@ int                 FontBase (ptrfont font)
 /*----------------------------------------------------------------------
  *   FontRelSize converts between a size in points and the logical size.
   ----------------------------------------------------------------------*/
-int                 FontRelSize (int size)
+int FontRelSize (int size)
 {
    int                 j;
 
@@ -578,7 +600,7 @@ int                 FontRelSize (int size)
 /*----------------------------------------------------------------------
  *   FontPointSize convert a logical size to the point value.
   ----------------------------------------------------------------------*/
-int                 FontPointSize (int size)
+int FontPointSize (int size)
 {
 
    if (size > MaxNumberOfSizes)
@@ -593,7 +615,7 @@ int                 FontPointSize (int size)
 /*----------------------------------------------------------------------
   LoadFont load a given font designed by its name.
   ----------------------------------------------------------------------*/
-ptrfont      LoadFont (char *name)
+ptrfont LoadFont (char *name)
 {
 #ifdef _GTK
   GdkFont *result;
@@ -778,14 +800,14 @@ void FontIdentifier (char alphabet, char family, int highlight, int size,
 ptrfont ReadFont (char alphabet, char family, int highlight, int size,
 		  TypeUnit unit)
 {
-   char             name[10], nameX[100];
+  char             name[10], nameX[100];
 
-   FontIdentifier (alphabet, family, highlight, size, unit, name, nameX);
-#  ifndef _WINDOWS
-   return LoadFont (nameX);
-#  else  /* _WINDOWS */
-   return NULL;
-#  endif /* _WINDOWS */
+  FontIdentifier (alphabet, family, highlight, size, unit, name, nameX);
+#ifndef _WINDOWS
+  return LoadFont (nameX);
+#else  /* _WINDOWS */
+  return NULL;
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -1012,10 +1034,10 @@ ptrfont ThotLoadFont (char alphabet, char family, int highlight, int size,
   if (unit == UnPixel)
     {
 #ifdef _WIN_PRINT
-	  if (TtPrinterDC && ScreenDPI)
-	     size = (size * PrinterDPI + ScreenDPI / 2) / ScreenDPI;
+      if (TtPrinterDC && ScreenDPI)
+	size = (size * PrinterDPI + ScreenDPI / 2) / ScreenDPI;
 #endif /* _WIN_PRINT */
-      size = PixelToPoint (size);
+      size = LogicalValue (size, UnPoint, NULL, 0);
       unit = UnPoint;
     }
   else if (unit == UnXHeight || unit == UnPercent)
@@ -1033,6 +1055,11 @@ ptrfont ThotLoadFont (char alphabet, char family, int highlight, int size,
        else
 	 size = size + FontZoom;
      }
+#ifndef _WIN_PRINT
+   if (Printing && unit == UnPoint)
+     /* adjust the font size to the printer definition */
+     size = (size * 72 + DOT_PER_INCHE / 2) / DOT_PER_INCHE;
+#endif /* _WIN_PRINT */
 
    /* the minimum size is 6 points */
    if (size < 6 && unit == UnPoint)
@@ -1105,11 +1132,6 @@ void InitDialogueFonts (char* name)
 	    UseBitStreamFamily = FALSE;
 	}
     }
-#ifdef _WINDOWS
-  DOT_PER_INCHE = GetDeviceCaps(hDC, LOGPIXELSY);
-#else  /* !_WINDOWS */
-  DOT_PER_INCHE = 72;
-#endif /* _WINDOWS */
 
   /* Is there any predefined size for menu fonts ? */
   value = TtaGetEnvString ("FontMenuSize");

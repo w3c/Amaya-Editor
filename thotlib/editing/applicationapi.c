@@ -243,12 +243,10 @@ void InitErrorHandler ()
 
    Initializes the Thot editing tool kit for an application. This function must be
    called before any other function of the tool kit.
-
    Parameter:
    applicationName: the argv[0] of the application that requires services
    from the tool kit.  This name is used for accessing the ressources
    defined in file .Xdefaults.
-
   ----------------------------------------------------------------------*/
 void TtaInitialize (char *applicationName)
 {
@@ -258,9 +256,7 @@ void TtaInitialize (char *applicationName)
    strcpy (DefaultDocumentName, "");
    InitEditorMemory ();	      /* Initializes the memory managment of the editor */
    InitNatures ();	      /* Initializes the table of Natures */
-
    FullStructureChecking = FALSE;
-
    /* Initializes the table of documents */
    for (i = 0; i < MAX_DOCUMENTS; i++)
       LoadedDocument[i] = NULL;

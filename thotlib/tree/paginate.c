@@ -24,10 +24,11 @@
 #include "message.h"
 #include "appdialogue.h"
 #include "fileaccess.h"
+
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "appdialogue_tv.h"
-
+#include "boxes_tv.h"
 #undef THOT_EXPORT
 #define THOT_EXPORT
 #include "page_tv.h"
@@ -502,7 +503,7 @@ static PtrElement InsertMark (PtrAbstractBox pAb, int frame, int nbView,
    NotifyElement       notifyEl;
    int                 NSiblings;
 #endif
-   int                 cpt, h;
+   int                 cpt, h, val;
    ThotBool            stop, inTop;
    ThotBool            ElemIsChild, ElemIsBefore, cut;
 
@@ -762,7 +763,10 @@ static PtrElement InsertMark (PtrAbstractBox pAb, int frame, int nbView,
 	  {
 	    pPos = &pP1->AbVertPos;
 	    pPos->PosAbRef = pAb;
-	    pPos->PosDistance = PixelToPoint (RealPageHeight - pAb->AbBox->BxYOrg - pAb->AbBox->BxHeight);
+	    val = RealPageHeight - pAb->AbBox->BxYOrg - pAb->AbBox->BxHeight;
+	    pPos->PosDistance = PixelValue (val, UnPixel, NULL,
+					    ViewFrameTable[frame - 1].FrMagnification);
+	    /*pPos->PosDistance = PixelToPoint (val);*/
 	    pPos->PosEdge = Top;
 	    pPos->PosRefEdge = Bottom;
 	    pPos->PosUnit = UnPoint;
@@ -773,7 +777,10 @@ static PtrElement InsertMark (PtrAbstractBox pAb, int frame, int nbView,
 	  {
 	    pPos = &pP1->AbVertPos;
 	    pPos->PosAbRef = pAb;
-	    pPos->PosDistance = PixelToPoint (RealPageHeight - pAb->AbBox->BxYOrg);
+	    val = RealPageHeight - pAb->AbBox->BxYOrg;
+	    pPos->PosDistance = PixelValue (val, UnPixel, NULL,
+					    ViewFrameTable[frame - 1].FrMagnification);
+	    /*pPos->PosDistance = PixelToPoint (val);*/
 	    pPos->PosEdge = Top;
 	    pPos->PosRefEdge = Top;
 	    pPos->PosUnit = UnPoint;

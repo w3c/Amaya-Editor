@@ -2240,6 +2240,7 @@ int main (int argc, char **argv)
   hCurrentInstance = hInst;
   TtDisplay = GetDC (NULL);
   ScreenDPI = GetDeviceCaps (TtDisplay, LOGPIXELSY);
+  DOT_PER_INCHE = ScreenDPI;
   ReleaseDC (NULL, TtDisplay);
   TtDisplay = NULL;
   if (buttonCmd == FALSE && TtPrinterDC == NULL)
@@ -2249,6 +2250,8 @@ int main (int argc, char **argv)
   PrinterDPI = GetDeviceCaps (TtPrinterDC, LOGPIXELSY);
   WIN_Main_Wd = hWnd;
   buttonCommand = buttonCmd;
+#else /* _WINDOWS */
+  DOT_PER_INCHE = 90;
 #endif /* _WINDOWS */
 
   thotWindow       = 0;

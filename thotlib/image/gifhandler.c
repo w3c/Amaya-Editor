@@ -1334,8 +1334,8 @@ unsigned char *ReadGifToData (char *datafile, int *w, int *h, int *ncolors,
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 Drawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
-		    int *wif, int *hif, unsigned long BackGroundPixel,
-		    int *width, int *height, int zoom)
+		    int *wif, int *hif, int bgColor, int *width,
+		    int *height, int zoom)
 {
   Pixmap              pixmap = (Pixmap) 0;
   ThotColorStruct     colrs[256];
@@ -1427,108 +1427,119 @@ Drawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
 
 
 /*----------------------------------------------------------------------
-   GifPrint  : reads a gif file and produces PostScirpt      
+   Print generates the PostScirpt of an image
+  ----------------------------------------------------------------------*/
+void DataToPrint (unsigned char *data, PictureScaling pres, int xif, int yif,
+		  int wif, int hif, int picW, int picH, FILE *fd, int ncolors,
+		  int transparent, int bgColor, ThotColorStruct *colrs)
+{
+  unsigned short  *sdata;
+  int              delta;
+  int              xtmp, ytmp;
+  int	           col, ind;
+  int              x, y;
+  unsigned short   red, green, blue;
+
+  if (transparent != -1 && transparent < ncolors)
+    {
+      TtaGiveThotRGB (bgColor, &red, &green, &blue);
+      colrs[transparent].red   = red << 8;
+      colrs[transparent].green = green << 8;
+      colrs[transparent].blue  = blue << 8;
+    }
+  
+  xtmp = 0;
+  ytmp = 0;
+  sdata = (unsigned short  *) data;
+  switch (pres)
+    {
+    case RealSize:
+    case FillFrame:
+    case XRepeat:
+    case YRepeat:      
+      delta = (wif - picW)/2;
+      if (delta > 0)
+	{
+	  xif += delta;
+	  wif = picW;
+	}
+      else
+	{
+	  xtmp = -delta;
+	  picW = wif;
+	}     
+      delta = (hif - picH)/2;
+      if (delta > 0)
+	{
+	  yif += delta ;
+	  hif = picH;
+	}
+      else
+	{
+
+	  ytmp = - delta;
+	  picH = hif;
+	} 
+
+      fprintf(fd, "gsave %d -%d translate\n", xif,
+	      yif + hif);
+      fprintf (fd, "%d %d %d %d DumpImage2\n", picW, picH,
+	       wif, hif);
+      break;
+    case ReScale:
+      fprintf (fd, "gsave %d -%d translate\n", xif,
+	       yif + hif);
+      fprintf (fd, "%d %d %d %d DumpImage2\n", picW, picH,
+	       wif, hif);
+      wif = picW;
+      hif = picH;
+      break;
+    default:
+      break;
+    }
+
+  fprintf(fd, "\n");
+  for (y = 0 ; y < hif; y++)
+    {
+      ind = ((ytmp + y) * picW) + xtmp;
+      for (x = 0 ; x < wif; x++)
+	{
+	  if (ncolors > 256)
+	    /* use two bytes per pixel */
+	    col = sdata[ind++];
+	  else
+	    /* use one byte per pixel */
+	    col = data[ind++];
+	  fprintf (fd, "%02x%02x%02x",
+		   colrs[col].red >> 8,
+		   colrs[col].green >> 8,
+		   colrs[col].blue >> 8);
+	}
+      fprintf(fd, "\n");
+    }
+  fprintf(fd, "\n");
+  fprintf(fd, "grestore\n");
+  fprintf(fd, "\n");   
+}
+
+/*----------------------------------------------------------------------
+   GifPrint reads a gif file and produces PostScirpt      
   ----------------------------------------------------------------------*/
 void GifPrint (char *fn, PictureScaling pres, int xif, int yif, int wif,
-	       int hif, int PicXArea, int PicYArea, int PicWArea,
-	       int PicHArea, FILE *fd, unsigned long BackGroundPixel)
+	       int hif, FILE *fd, int bgColor)
 {
-#ifdef _WINDOWS
-  return;
-#else  /* _WINDOWS */
-   ThotColorStruct     colrs[256];
-   unsigned char      *buffer;
-   unsigned char      *pt;
-   unsigned int        bperline;
-   int                 x, y, w, h;
-   int                 wim;
-   int                 ncolors, cpp;
-   int                 delta;
-   int                 xtmp, ytmp;
+#ifndef _WINDOWS
+  ThotColorStruct     colrs[256];
+  unsigned char      *data;
+  int                 picW, picH;
+  int                 ncolors, cpp;
 
-   GifTransparent = -1;
-   buffer = ReadGifToData (fn, &w, &h, &ncolors, &cpp, colrs);
-   if (GifTransparent >= 0)
-     {
-       /* invalid the transparent color */
-       colrs[GifTransparent].red   = 65535;
-       colrs[GifTransparent].green = 65535;
-       colrs[GifTransparent].blue  = 65535;
-     }
-
-   if (!buffer)
-      return;
-   PicWArea = w;
-   PicHArea = h;
-   xtmp = 0;
-   ytmp = 0;
-   switch (pres)
-     {
-     case FillFrame:
-     case XRepeat:
-     case YRepeat:
-     case RealSize:
-       delta = (wif - PicWArea) / 2;
-       if (delta > 0)
-	 {
-	   xif += delta;
-	   wif = PicWArea;
-	 }
-       else
-	 {
-	   xtmp = -delta;
-	   PicWArea = wif;
-	 }
-       delta = (hif - PicHArea) / 2;
-       if (delta > 0)
-	 {
-	   yif += delta;
-	   hif = PicHArea;
-	 }
-       else
-	 {
-	   
-	   ytmp = -delta;
-	   PicHArea = hif;
-	 }
-       fprintf (fd, "gsave %d -%d translate\n", PixelToPoint (xif),
-		   PixelToPoint (yif + hif));
-       fprintf (fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea,
-		   PixelToPoint (wif), PixelToPoint (hif));
-       break;
-     case ReScale:
-       fprintf (fd, "gsave %d -%d translate\n", PixelToPoint (xif),
-		   PixelToPoint (yif + hif));
-       fprintf (fd, "%d %d %d %d DumpImage2\n", PicWArea, PicHArea,
-		   PixelToPoint (wif), PixelToPoint (hif));
-       wif = PicWArea;
-       hif = PicHArea;
-       break;
-     default:
-       break;
-     }
-
-   wim = w;
-   fprintf (fd, "\n");
-   bperline = wim;
-   for (y = 0; y < hif; y++)
-     {
-	pt = (unsigned char *) (buffer + ((ytmp + y) * bperline) + xtmp);
-	for (x = 0; x < wif; x++)
-	  {
-	    fprintf (fd, "%02x%02x%02x",
-		     (colrs[*pt].red) >> 8,
-		     (colrs[*pt].green) >> 8,
-		     (colrs[*pt].blue) >> 8);
-	    pt++;
-	  }
-	fprintf (fd, "\n");
-     }
-
-   fprintf (fd, "\n");
-   fprintf (fd, "grestore\n");
-   fprintf (fd, "\n");
-   TtaFreeMemory (buffer);
+  GifTransparent = -1;
+  data = ReadGifToData (fn, &picW, &picH, &ncolors, &cpp, colrs);
+  if (data)
+    DataToPrint (data, pres, xif, yif, wif, hif, picW, picH, fd, ncolors,
+		 GifTransparent, bgColor, colrs);
+  TtaFreeMemory (data);
 #endif /* _WINDOWS */
 }
 

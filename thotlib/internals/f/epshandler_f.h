@@ -12,7 +12,7 @@ extern Drawable EpsCreate ( char *fn,
                             int *yif,
                             int *wif,
                             int *hif,
-                            unsigned long BackGroundPixel,
+                            int bgColor,
                             int *width,
                             int *height,
                             int zoom );
@@ -22,12 +22,8 @@ extern void EpsPrint ( char *fn,
                        int yif,
                        int wif,
                        int hif,
-                       int PicXArea,
-                       int PicYArea,
-                       int PicWArea,
-                       int PicHArea,
                        FILE *fd,
-                       unsigned long BackGroundPixel );
+                       int bgColor );
 extern ThotBool IsEpsFormat ( char *fn );
 
 #else /* __STDC__ */
@@ -38,7 +34,7 @@ extern Drawable EpsCreate (/* char *fn,
                               int *yif,
                               int *wif,
                               int *hif,
-                              unsigned long BackGroundPixel,
+                              int bgColor,
                               int *width,
                               int *height,
                               int zoom */);
@@ -48,12 +44,8 @@ extern void EpsPrint (/* char *fn,
                          int yif,
                          int wif,
                          int hif,
-                         int PicXArea,
-                         int PicYArea,
-                         int PicWArea,
-                         int PicHArea,
                          FILE *fd,
-                         unsigned long BackGroundPixel */);
+                         int bgColor */);
 extern ThotBool IsEpsFormat (/* char *fn */);
 
 #endif /* __STDC__ */

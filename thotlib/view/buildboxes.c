@@ -300,11 +300,9 @@ C_points *ComputeControlPoints (PtrTextBuffer buffer, int nb, int zoom)
 		    }
 	       }
 	     x3 = (float) PixelValue (pBuffer->BuPoints[j].XCoord,
-				      UnPixel, NULL,
-				      zoom);
+				      UnPixel, NULL, zoom);
 	     y3 = (float) PixelValue (pBuffer->BuPoints[j].YCoord,
-				      UnPixel, NULL,
-				      zoom);
+				      UnPixel, NULL, zoom);
 	  }
 	dx = x3 - x2;
 	dy = y2 - y3;
@@ -575,13 +573,9 @@ static void GivePolylineSize (PtrAbstractBox pAb, int zoom, int *width,
   if (max > 0 || pBuffer != NULL)
     {
       /* La largeur est donnee par le point limite */
-      *width = pBuffer->BuPoints[0].XCoord;
+      *width =  PixelValue (pBuffer->BuPoints[0].XCoord, UnPixel, NULL, zoom);
       /* La hauteur est donnee par le point limite */
-      *height = pBuffer->BuPoints[0].YCoord;
-      
-      /* Convertit en pixels */
-      *width = PixelValue (*width, UnPixel, NULL, zoom);
-      *height = PixelValue (*height, UnPixel, NULL, zoom);
+      *height =  PixelValue (pBuffer->BuPoints[0].YCoord, UnPixel, NULL, zoom);
     }
 }
 

@@ -12,7 +12,7 @@ extern Drawable XbmCreate ( char *fn,
                             int *yif,
                             int *wif,
                             int *hif,
-                            unsigned long BackGroundPixel,
+                            unsigned long bgPixel,
                             int *width,
                             int *height,
                             int zoom );
@@ -22,12 +22,8 @@ extern void XbmPrint ( char *fn,
                        int yif,
                        int wif,
                        int hif,
-                       int PicXArea,
-                       int PicYArea,
-                       int PicWArea,
-                       int PicHArea,
                        FILE *fd,
-                       unsigned int BackGroundPixel );
+                       unsigned int bgPixel );
 extern ThotBool IsXbmFormat ( char *fn );
 
 #else /* __STDC__ */
@@ -38,7 +34,7 @@ extern Drawable XbmCreate (/* char *fn,
                               int *yif,
                               int *wif,
                               int *hif,
-                              unsigned long BackGroundPixel,
+                              unsigned long bgPixel,
                               int *width,
                               int *height,
                               int zoom */);
@@ -48,12 +44,8 @@ extern void XbmPrint (/* char *fn,
                          int yif,
                          int wif,
                          int hif,
-                         int PicXArea,
-                         int PicYArea,
-                         int PicWArea,
-                         int PicHArea,
                          FILE *fd,
-                         unsigned int BackGroundPixel */);
+                         unsigned int bgPixel */);
 extern ThotBool IsXbmFormat (/* char *fn */);
 
 #endif /* __STDC__ */
