@@ -36,8 +36,8 @@
 
 #define NAME_LENGTH     32
 
-#define HTAppName     "amaya"
-#define HTAppVersion  "V2.5"
+#define HTAppName     TEXT("amaya")
+#define HTAppVersion  TEXT("V2.5")
 #define HTAppDate     TEXT (" ")
 
 #define URL_STR       "/"
@@ -199,19 +199,19 @@ typedef enum _ClickEvent {
 #define AMAYA_PARSE_ALL         31  /* All the parts */
 
 THOT_EXPORT int          appArgc;
-THOT_EXPORT CharUnit**   appArgv;
-THOT_EXPORT CharUnit     TempFileDirectory[MAX_LENGTH];
+THOT_EXPORT CHAR_T**     appArgv;
+THOT_EXPORT CHAR_T       TempFileDirectory[MAX_LENGTH];
 THOT_EXPORT CHAR_T       Answer_text[MAX_LENGTH];
 THOT_EXPORT CHAR_T       Answer_name[NAME_LENGTH];
 THOT_EXPORT CHAR_T       Answer_password[NAME_LENGTH];
 THOT_EXPORT CHAR_T       Display_password[NAME_LENGTH];
 THOT_EXPORT CHAR_T       ScanFilter[NAME_LENGTH]; /* to scan directories    */
 THOT_EXPORT CHAR_T       MathMLEntityName[MAX_LENGTH]; /* entity name typed by the user for a MathML expression */
-THOT_EXPORT CharUnit*    LastURLName;	/* last URL requested               */
-THOT_EXPORT CharUnit*    DirectoryName;	/* local path of the document       */
-THOT_EXPORT CharUnit*    DocumentName;	/* document name                    */
-THOT_EXPORT CharUnit*    SavePath;	/* saving path                      */
-THOT_EXPORT CharUnit*    SaveName;	/* saving name of the document      */
+THOT_EXPORT CHAR_T*      LastURLName;	/* last URL requested               */
+THOT_EXPORT CHAR_T*      DirectoryName;	/* local path of the document       */
+THOT_EXPORT CHAR_T*      DocumentName;	/* document name                    */
+THOT_EXPORT CHAR_T*      SavePath;	/* saving path                      */
+THOT_EXPORT CHAR_T*      SaveName;	/* saving name of the document      */
 THOT_EXPORT STRING       ObjectName;	/* document name                    */
 THOT_EXPORT STRING       SaveImgsURL;	/* where to save remote Images      */
 THOT_EXPORT STRING       TargetName;
@@ -289,7 +289,7 @@ typedef enum
 /* a record for data associated with a request */
 typedef struct _DocumentMetaDataElement
 {
-  CharUnit*  form_data;        /* form data associated with a URL               */
+  CHAR_T*    form_data;        /* form data associated with a URL               */
   ClickEvent method;           /* method used to send this data                 */
   ThotBool   put_default_name; /* URL name was concatenated with DEFAULT_NAME   */
   ThotBool   xmlformat;        /* the document should be exported in xml format */
@@ -297,7 +297,7 @@ typedef struct _DocumentMetaDataElement
 
 #define DocumentTableLength 10
 /* URL of each loaded document */
-THOT_EXPORT CharUnit* DocumentURLs[DocumentTableLength];
+THOT_EXPORT CHAR_T* DocumentURLs[DocumentTableLength];
 /* Any formdata associated with a URL */
 THOT_EXPORT DocumentMetaDataElement *DocumentMeta[DocumentTableLength];
 /* Type of document */
@@ -342,7 +342,7 @@ THOT_EXPORT int iTable;
 
 
 #ifdef __STDC__
-typedef void (*LoadedImageCallback)(Document doc, Element el, char *file, void *extra);
+typedef void (*LoadedImageCallback)(Document doc, Element el, CHAR_T* file, void *extra);
 #else
 typedef void (*LoadedImageCallback)();
 #endif
@@ -382,20 +382,16 @@ THOT_EXPORT LoadedImageDesc *ImageLocal;
 
 /* The default Amaya HOME pages (page shown at boot time */
 
-#if defined(_I18N_) || defined(__JIS__)
-#   ifdef _WINDOWS
-#         define AMAYA_PAGE  L"\\amaya\\AmayaPage.html"
-#   else  /* _WINDOWS */
-#         define AMAYA_PAGE  L"/amaya/AmayaPage.html"
-#   endif /* _WINDOWS */
-#   define   AMAYA_PAGE_DOC       L"http://www.w3.org/Amaya/User/"
-#else /*  !_I18N_ */
-#     ifdef _WINDOWS
-#           define AMAYA_PAGE  "\\amaya\\AmayaPage.html"
-#     else  /* _WINDOWS */
-#           define AMAYA_PAGE "/amaya/AmayaPage.html"
-#     endif /* _WINDOWS */
-#     define   AMAYA_PAGE_DOC       "http://www.w3.org/Amaya/User/"
-#endif /* !_I18N_ */
+#ifdef _WINDOWS
+#      define AMAYA_PAGE  TEXT("\\amaya\\AmayaPage.html")
+#else  /* !_WINDOWS */
+#      define AMAYA_PAGE  TEXT("/amaya/AmayaPage.html")
+#endif /* !_WINDOWS */
+
+#define   AMAYA_PAGE_DOC  TEXT("http://www.w3.org/Amaya/User/")
+
+#ifndef MAX_TXT_LEN
+#define MAX_TXT_LEN 1024	/* Max. length of strings */
+#endif  /* MAX_TXT_LEN */
 
 #endif /* AMAYA_H */

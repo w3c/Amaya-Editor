@@ -6,36 +6,36 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern int MapGI ( char* gi,
+extern int MapGI ( CHAR_T* gi,
                    SSchema *schema,
                    Document doc );
-extern void GIType ( char* gi,
+extern void GIType ( CHAR_T* gi,
                      ElementType *elType,
                      Document doc );
-extern AttributeMapping *MapAttr ( char* Attr,
+extern AttributeMapping *MapAttr ( CHAR_T* Attr,
                                    SSchema *schema,
                                    int elemEntry,
                                    Document doc );
-extern void MapHTMLAttribute ( char* Attr,
+extern void MapHTMLAttribute ( CHAR_T* Attr,
                                AttributeType *attrType,
-                               char* elementName,
+                               CHAR_T* elementName,
                                Document doc );
 
 #else /* __STDC__ */
 
-extern int MapGI (/* char* gi,
+extern int MapGI (/* CHAR_T* gi,
                      SSchema *schema,
                      Document doc */);
-extern void GIType (/* char* gi,
+extern void GIType (/* CHAR_T* gi,
                        ElementType *elType,
                        Document doc */);
-extern AttributeMapping *MapAttr (/* char* Attr,
+extern AttributeMapping *MapAttr (/* CHAR_T* Attr,
                                      SSchema *schema,
                                      int elemEntry,
                                      Document doc */);
-extern void MapHTMLAttribute (/* char* Attr,
+extern void MapHTMLAttribute (/* CHAR_T* Attr,
                                  AttributeType *attrType,
-                                 char* elementName,
+                                 CHAR_T* elementName,
                                  Document doc */);
 
 #endif /* __STDC__ */

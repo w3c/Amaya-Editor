@@ -11,13 +11,13 @@ extern SSchema GetGraphMLSSchema ( Document doc );
 extern SSchema GetXMLSSchema ( int XMLtype,
                                Document doc );
 extern void MapXMLElementType ( int XMLtype,
-                                char* XMLname,
+                                CHAR_T* XMLname,
                                 ElementType *elType,
-                                char** mappedName,
-                                char* content,
+                                CHAR_T** mappedName,
+                                CHAR_T* content,
                                 Document doc );
 extern void GetXMLElementName ( ElementType elType,
-                                char** buffer );
+                                CHAR_T** buffer );
 
 #else /* __STDC__ */
 
@@ -26,13 +26,13 @@ extern SSchema GetGraphMLSSchema (/* Document doc */);
 extern SSchema GetXMLSSchema (/* int XMLtype,
                                  Document doc */);
 extern void MapXMLElementType (/* int XMLtype,
-                                  char* XMLname,
+                                  CHAR_T* XMLname,
                                   ElementType *elType,
-                                  char** mappedName,
-                                  char* content,
+                                  CHAR_T** mappedName,
+                                  CHAR_T* content,
                                   Document doc */);
 extern void GetXMLElementName (/* ElementType elType,
-                                  char** buffer */);
+                                  CHAR_T** buffer */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

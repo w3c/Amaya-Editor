@@ -750,7 +750,7 @@ STRING              presentationName;
    result = 0;
    /* Arrange the name of the file to be opened with the schema directory name */
    ustrncpy (DirBuffer, SchemaPath, MAX_PATH);
-   MakeCompleteName (presentationName, CUSTEXT("PRS"), DirBuffer, text, &i);
+   MakeCompleteName (presentationName, TEXT("PRS"), DirBuffer, text, &i);
    /* Checks if the file exists */
    file = TtaReadOpen (text);
    if (file == 0)

@@ -630,143 +630,143 @@ static oneLine      StartTagEndingElem[] =
 
 static AttrValueMapping HTMLAttrValueMappingTable[] =
 {
-   {HTML_ATTR_dir, "ltr", HTML_ATTR_dir_VAL_ltr},
-   {HTML_ATTR_dir, "rtl", HTML_ATTR_dir_VAL_rtl},
+   {HTML_ATTR_dir, TEXT("ltr"), HTML_ATTR_dir_VAL_ltr},
+   {HTML_ATTR_dir, TEXT("rtl"), HTML_ATTR_dir_VAL_rtl},
 
-   {HTML_ATTR_TextAlign, "left", HTML_ATTR_TextAlign_VAL_left_},
-   {HTML_ATTR_TextAlign, "center", HTML_ATTR_TextAlign_VAL_center_},
-   {HTML_ATTR_TextAlign, "right", HTML_ATTR_TextAlign_VAL_right_},
-   {HTML_ATTR_TextAlign, "justify", HTML_ATTR_TextAlign_VAL_justify_},
+   {HTML_ATTR_TextAlign, TEXT("left"), HTML_ATTR_TextAlign_VAL_left_},
+   {HTML_ATTR_TextAlign, TEXT("center"), HTML_ATTR_TextAlign_VAL_center_},
+   {HTML_ATTR_TextAlign, TEXT("right"), HTML_ATTR_TextAlign_VAL_right_},
+   {HTML_ATTR_TextAlign, TEXT("justify"), HTML_ATTR_TextAlign_VAL_justify_},
 
-   {HTML_ATTR_Align, "left", HTML_ATTR_Align_VAL_left_},
-   {HTML_ATTR_Align, "center", HTML_ATTR_Align_VAL_center_},
-   {HTML_ATTR_Align, "right", HTML_ATTR_Align_VAL_right_},
+   {HTML_ATTR_Align, TEXT("left"), HTML_ATTR_Align_VAL_left_},
+   {HTML_ATTR_Align, TEXT("center"), HTML_ATTR_Align_VAL_center_},
+   {HTML_ATTR_Align, TEXT("right"), HTML_ATTR_Align_VAL_right_},
 
-   {HTML_ATTR_LAlign, "top", HTML_ATTR_LAlign_VAL_Top_},
-   {HTML_ATTR_LAlign, "bottom", HTML_ATTR_LAlign_VAL_Bottom_},
-   {HTML_ATTR_LAlign, "left", HTML_ATTR_LAlign_VAL_Left_},
-   {HTML_ATTR_LAlign, "right", HTML_ATTR_LAlign_VAL_Right_},
+   {HTML_ATTR_LAlign, TEXT("top"), HTML_ATTR_LAlign_VAL_Top_},
+   {HTML_ATTR_LAlign, TEXT("bottom"), HTML_ATTR_LAlign_VAL_Bottom_},
+   {HTML_ATTR_LAlign, TEXT("left"), HTML_ATTR_LAlign_VAL_Left_},
+   {HTML_ATTR_LAlign, TEXT("right"), HTML_ATTR_LAlign_VAL_Right_},
 
-   {HTML_ATTR_Clear, "left", HTML_ATTR_Clear_VAL_Left_},
-   {HTML_ATTR_Clear, "right", HTML_ATTR_Clear_VAL_Right_},
-   {HTML_ATTR_Clear, "all", HTML_ATTR_Clear_VAL_All_},
-   {HTML_ATTR_Clear, "none", HTML_ATTR_Clear_VAL_None_},
+   {HTML_ATTR_Clear, TEXT("left"), HTML_ATTR_Clear_VAL_Left_},
+   {HTML_ATTR_Clear, TEXT("right"), HTML_ATTR_Clear_VAL_Right_},
+   {HTML_ATTR_Clear, TEXT("all"), HTML_ATTR_Clear_VAL_All_},
+   {HTML_ATTR_Clear, TEXT("none"), HTML_ATTR_Clear_VAL_None_},
 
-   {HTML_ATTR_NumberStyle, "1", HTML_ATTR_NumberStyle_VAL_Arabic_},
-   {HTML_ATTR_NumberStyle, "a", HTML_ATTR_NumberStyle_VAL_LowerAlpha},
-   {HTML_ATTR_NumberStyle, "A", HTML_ATTR_NumberStyle_VAL_UpperAlpha},
-   {HTML_ATTR_NumberStyle, "i", HTML_ATTR_NumberStyle_VAL_LowerRoman},
-   {HTML_ATTR_NumberStyle, "I", HTML_ATTR_NumberStyle_VAL_UpperRoman},
+   {HTML_ATTR_NumberStyle, TEXT("1"), HTML_ATTR_NumberStyle_VAL_Arabic_},
+   {HTML_ATTR_NumberStyle, TEXT("a"), HTML_ATTR_NumberStyle_VAL_LowerAlpha},
+   {HTML_ATTR_NumberStyle, TEXT("A"), HTML_ATTR_NumberStyle_VAL_UpperAlpha},
+   {HTML_ATTR_NumberStyle, TEXT("i"), HTML_ATTR_NumberStyle_VAL_LowerRoman},
+   {HTML_ATTR_NumberStyle, TEXT("I"), HTML_ATTR_NumberStyle_VAL_UpperRoman},
 
-   {HTML_ATTR_BulletStyle, "disc", HTML_ATTR_BulletStyle_VAL_disc},
-   {HTML_ATTR_BulletStyle, "square", HTML_ATTR_BulletStyle_VAL_square},
-   {HTML_ATTR_BulletStyle, "circle", HTML_ATTR_BulletStyle_VAL_circle},
+   {HTML_ATTR_BulletStyle, TEXT("disc"), HTML_ATTR_BulletStyle_VAL_disc},
+   {HTML_ATTR_BulletStyle, TEXT("square"), HTML_ATTR_BulletStyle_VAL_square},
+   {HTML_ATTR_BulletStyle, TEXT("circle"), HTML_ATTR_BulletStyle_VAL_circle},
 
-   {HTML_ATTR_ItemStyle, "1", HTML_ATTR_ItemStyle_VAL_Arabic_},
-   {HTML_ATTR_ItemStyle, "a", HTML_ATTR_ItemStyle_VAL_LowerAlpha},
-   {HTML_ATTR_ItemStyle, "A", HTML_ATTR_ItemStyle_VAL_UpperAlpha},
-   {HTML_ATTR_ItemStyle, "i", HTML_ATTR_ItemStyle_VAL_LowerRoman},
-   {HTML_ATTR_ItemStyle, "I", HTML_ATTR_ItemStyle_VAL_UpperRoman},
-   {HTML_ATTR_ItemStyle, "disc", HTML_ATTR_ItemStyle_VAL_disc},
-   {HTML_ATTR_ItemStyle, "square", HTML_ATTR_ItemStyle_VAL_square},
-   {HTML_ATTR_ItemStyle, "circle", HTML_ATTR_ItemStyle_VAL_circle},
+   {HTML_ATTR_ItemStyle, TEXT("1"), HTML_ATTR_ItemStyle_VAL_Arabic_},
+   {HTML_ATTR_ItemStyle, TEXT("a"), HTML_ATTR_ItemStyle_VAL_LowerAlpha},
+   {HTML_ATTR_ItemStyle, TEXT("A"), HTML_ATTR_ItemStyle_VAL_UpperAlpha},
+   {HTML_ATTR_ItemStyle, TEXT("i"), HTML_ATTR_ItemStyle_VAL_LowerRoman},
+   {HTML_ATTR_ItemStyle, TEXT("I"), HTML_ATTR_ItemStyle_VAL_UpperRoman},
+   {HTML_ATTR_ItemStyle, TEXT("disc"), HTML_ATTR_ItemStyle_VAL_disc},
+   {HTML_ATTR_ItemStyle, TEXT("square"), HTML_ATTR_ItemStyle_VAL_square},
+   {HTML_ATTR_ItemStyle, TEXT("circle"), HTML_ATTR_ItemStyle_VAL_circle},
 
-   {HTML_ATTR_Button_type, "button", HTML_ATTR_Button_type_VAL_button},
-   {HTML_ATTR_Button_type, "submit", HTML_ATTR_Button_type_VAL_submit},
-   {HTML_ATTR_Button_type, "reset", HTML_ATTR_Button_type_VAL_reset},
+   {HTML_ATTR_Button_type, TEXT("button"), HTML_ATTR_Button_type_VAL_button},
+   {HTML_ATTR_Button_type, TEXT("submit"), HTML_ATTR_Button_type_VAL_submit},
+   {HTML_ATTR_Button_type, TEXT("reset"), HTML_ATTR_Button_type_VAL_reset},
 
-   {HTML_ATTR_mode, "display", HTML_ATTR_mode_VAL_display},
-   {HTML_ATTR_mode, "inline", HTML_ATTR_mode_VAL_inline_math},
+   {HTML_ATTR_mode, TEXT("display"), HTML_ATTR_mode_VAL_display},
+   {HTML_ATTR_mode, TEXT("inline"), HTML_ATTR_mode_VAL_inline_math},
 
-   {HTML_ATTR_frame, "void", HTML_ATTR_frame_VAL_void},
-   {HTML_ATTR_frame, "above", HTML_ATTR_frame_VAL_above},
-   {HTML_ATTR_frame, "below", HTML_ATTR_frame_VAL_below},
-   {HTML_ATTR_frame, "hsides", HTML_ATTR_frame_VAL_hsides},
-   {HTML_ATTR_frame, "lhs", HTML_ATTR_frame_VAL_lhs},
-   {HTML_ATTR_frame, "rhs", HTML_ATTR_frame_VAL_rhs},
-   {HTML_ATTR_frame, "vsides", HTML_ATTR_frame_VAL_vsides},
-   {HTML_ATTR_frame, "box", HTML_ATTR_frame_VAL_box},
-   {HTML_ATTR_frame, "border", HTML_ATTR_frame_VAL_border},
+   {HTML_ATTR_frame, TEXT("void"), HTML_ATTR_frame_VAL_void},
+   {HTML_ATTR_frame, TEXT("above"), HTML_ATTR_frame_VAL_above},
+   {HTML_ATTR_frame, TEXT("below"), HTML_ATTR_frame_VAL_below},
+   {HTML_ATTR_frame, TEXT("hsides"), HTML_ATTR_frame_VAL_hsides},
+   {HTML_ATTR_frame, TEXT("lhs"), HTML_ATTR_frame_VAL_lhs},
+   {HTML_ATTR_frame, TEXT("rhs"), HTML_ATTR_frame_VAL_rhs},
+   {HTML_ATTR_frame, TEXT("vsides"), HTML_ATTR_frame_VAL_vsides},
+   {HTML_ATTR_frame, TEXT("box"), HTML_ATTR_frame_VAL_box},
+   {HTML_ATTR_frame, TEXT("border"), HTML_ATTR_frame_VAL_border},
 
-   {HTML_ATTR_frameborder, "0", HTML_ATTR_frameborder_VAL_Border0},
-   {HTML_ATTR_frameborder, "1", HTML_ATTR_frameborder_VAL_Border1},
+   {HTML_ATTR_frameborder, TEXT("0"), HTML_ATTR_frameborder_VAL_Border0},
+   {HTML_ATTR_frameborder, TEXT("1"), HTML_ATTR_frameborder_VAL_Border1},
 
-   {HTML_ATTR_scrolling, "yes", HTML_ATTR_scrolling_VAL_Yes_},
-   {HTML_ATTR_scrolling, "no", HTML_ATTR_scrolling_VAL_No_},
-   {HTML_ATTR_scrolling, "auto", HTML_ATTR_scrolling_VAL_auto_},
+   {HTML_ATTR_scrolling, TEXT("yes"), HTML_ATTR_scrolling_VAL_Yes_},
+   {HTML_ATTR_scrolling, TEXT("no"), HTML_ATTR_scrolling_VAL_No_},
+   {HTML_ATTR_scrolling, TEXT("auto"), HTML_ATTR_scrolling_VAL_auto_},
 
-   {HTML_ATTR_rules_, "none", HTML_ATTR_rules__VAL_none_},
-   {HTML_ATTR_rules_, "groups", HTML_ATTR_rules__VAL_groups},
-   {HTML_ATTR_rules_, "rows", HTML_ATTR_rules__VAL_rows},
-   {HTML_ATTR_rules_, "cols", HTML_ATTR_rules__VAL_cols},
-   {HTML_ATTR_rules_, "all", HTML_ATTR_rules__VAL_all},
+   {HTML_ATTR_rules_, TEXT("none"), HTML_ATTR_rules__VAL_none_},
+   {HTML_ATTR_rules_, TEXT("groups"), HTML_ATTR_rules__VAL_groups},
+   {HTML_ATTR_rules_, TEXT("rows"), HTML_ATTR_rules__VAL_rows},
+   {HTML_ATTR_rules_, TEXT("cols"), HTML_ATTR_rules__VAL_cols},
+   {HTML_ATTR_rules_, TEXT("all"), HTML_ATTR_rules__VAL_all},
 
-   {HTML_ATTR_Cell_align, "left", HTML_ATTR_Cell_align_VAL_Cell_left},
-   {HTML_ATTR_Cell_align, "center", HTML_ATTR_Cell_align_VAL_Cell_center},
-   {HTML_ATTR_Cell_align, "right", HTML_ATTR_Cell_align_VAL_Cell_right},
-   {HTML_ATTR_Cell_align, "justify", HTML_ATTR_Cell_align_VAL_Cell_justify},
-   {HTML_ATTR_Cell_align, "char", HTML_ATTR_Cell_align_VAL_Cell_char},
+   {HTML_ATTR_Cell_align, TEXT("left"), HTML_ATTR_Cell_align_VAL_Cell_left},
+   {HTML_ATTR_Cell_align, TEXT("center"), HTML_ATTR_Cell_align_VAL_Cell_center},
+   {HTML_ATTR_Cell_align, TEXT("right"), HTML_ATTR_Cell_align_VAL_Cell_right},
+   {HTML_ATTR_Cell_align, TEXT("justify"), HTML_ATTR_Cell_align_VAL_Cell_justify},
+   {HTML_ATTR_Cell_align, TEXT("char"), HTML_ATTR_Cell_align_VAL_Cell_char},
 
-   {HTML_ATTR_Alignment, "top", HTML_ATTR_Alignment_VAL_Top_},
-   {HTML_ATTR_Alignment, "middle", HTML_ATTR_Alignment_VAL_Middle_},
-   {HTML_ATTR_Alignment, "bottom", HTML_ATTR_Alignment_VAL_Bottom_},
-   {HTML_ATTR_Alignment, "left", HTML_ATTR_Alignment_VAL_Left_},
-   {HTML_ATTR_Alignment, "right", HTML_ATTR_Alignment_VAL_Right_},
+   {HTML_ATTR_Alignment, TEXT("top"), HTML_ATTR_Alignment_VAL_Top_},
+   {HTML_ATTR_Alignment, TEXT("middle"), HTML_ATTR_Alignment_VAL_Middle_},
+   {HTML_ATTR_Alignment, TEXT("bottom"), HTML_ATTR_Alignment_VAL_Bottom_},
+   {HTML_ATTR_Alignment, TEXT("left"), HTML_ATTR_Alignment_VAL_Left_},
+   {HTML_ATTR_Alignment, TEXT("right"), HTML_ATTR_Alignment_VAL_Right_},
 
-   {HTML_ATTR_METHOD, "get", HTML_ATTR_METHOD_VAL_Get_},
-   {HTML_ATTR_METHOD, "post", HTML_ATTR_METHOD_VAL_Post_},
+   {HTML_ATTR_METHOD, TEXT("get"), HTML_ATTR_METHOD_VAL_Get_},
+   {HTML_ATTR_METHOD, TEXT("post"), HTML_ATTR_METHOD_VAL_Post_},
 
-   {HTML_ATTR_Position, "top", HTML_ATTR_Position_VAL_Position_top},
-   {HTML_ATTR_Position, "bottom", HTML_ATTR_Position_VAL_Position_bottom},
-   {HTML_ATTR_Position, "left", HTML_ATTR_Position_VAL_Position_left},
-   {HTML_ATTR_Position, "right", HTML_ATTR_Position_VAL_Position_right},
+   {HTML_ATTR_Position, TEXT("top"), HTML_ATTR_Position_VAL_Position_top},
+   {HTML_ATTR_Position, TEXT("bottom"), HTML_ATTR_Position_VAL_Position_bottom},
+   {HTML_ATTR_Position, TEXT("left"), HTML_ATTR_Position_VAL_Position_left},
+   {HTML_ATTR_Position, TEXT("right"), HTML_ATTR_Position_VAL_Position_right},
 
-   {HTML_ATTR_Row_valign, "top", HTML_ATTR_Row_valign_VAL_Row_top},
-   {HTML_ATTR_Row_valign, "middle", HTML_ATTR_Row_valign_VAL_Row_middle},
-   {HTML_ATTR_Row_valign, "bottom", HTML_ATTR_Row_valign_VAL_Row_bottom},
-   {HTML_ATTR_Row_valign, "baseline", HTML_ATTR_Row_valign_VAL_Row_baseline},
+   {HTML_ATTR_Row_valign, TEXT("top"), HTML_ATTR_Row_valign_VAL_Row_top},
+   {HTML_ATTR_Row_valign, TEXT("middle"), HTML_ATTR_Row_valign_VAL_Row_middle},
+   {HTML_ATTR_Row_valign, TEXT("bottom"), HTML_ATTR_Row_valign_VAL_Row_bottom},
+   {HTML_ATTR_Row_valign, TEXT("baseline"), HTML_ATTR_Row_valign_VAL_Row_baseline},
 
-   {HTML_ATTR_Cell_valign, "top", HTML_ATTR_Cell_valign_VAL_Cell_top},
-   {HTML_ATTR_Cell_valign, "middle", HTML_ATTR_Cell_valign_VAL_Cell_middle},
-   {HTML_ATTR_Cell_valign, "bottom", HTML_ATTR_Cell_valign_VAL_Cell_bottom},
-   {HTML_ATTR_Cell_valign, "baseline", HTML_ATTR_Cell_valign_VAL_Cell_baseline},
+   {HTML_ATTR_Cell_valign, TEXT("top"), HTML_ATTR_Cell_valign_VAL_Cell_top},
+   {HTML_ATTR_Cell_valign, TEXT("middle"), HTML_ATTR_Cell_valign_VAL_Cell_middle},
+   {HTML_ATTR_Cell_valign, TEXT("bottom"), HTML_ATTR_Cell_valign_VAL_Cell_bottom},
+   {HTML_ATTR_Cell_valign, TEXT("baseline"), HTML_ATTR_Cell_valign_VAL_Cell_baseline},
 
-   {HTML_ATTR_shape, "rect", HTML_ATTR_shape_VAL_rectangle},
-   {HTML_ATTR_shape, "circle", HTML_ATTR_shape_VAL_circle},
-   {HTML_ATTR_shape, "poly", HTML_ATTR_shape_VAL_polygon},
+   {HTML_ATTR_shape, TEXT("rect"), HTML_ATTR_shape_VAL_rectangle},
+   {HTML_ATTR_shape, TEXT("circle"), HTML_ATTR_shape_VAL_circle},
+   {HTML_ATTR_shape, TEXT("poly"), HTML_ATTR_shape_VAL_polygon},
 
-   {HTML_ATTR_valuetype, "data", HTML_ATTR_valuetype_VAL_data_},
-   {HTML_ATTR_valuetype, "ref", HTML_ATTR_valuetype_VAL_ref},
-   {HTML_ATTR_valuetype, "object", HTML_ATTR_valuetype_VAL_object_},
+   {HTML_ATTR_valuetype, TEXT("data"), HTML_ATTR_valuetype_VAL_data_},
+   {HTML_ATTR_valuetype, TEXT("ref"), HTML_ATTR_valuetype_VAL_ref},
+   {HTML_ATTR_valuetype, TEXT("object"), HTML_ATTR_valuetype_VAL_object_},
 
 /* HTML attribute TYPE generates a Thot element */
-   {DummyAttribute, "button", HTML_EL_Button_Input},
-   {DummyAttribute, "checkbox", HTML_EL_Checkbox_Input},
-   {DummyAttribute, "file", HTML_EL_File_Input},
-   {DummyAttribute, "hidden", HTML_EL_Hidden_Input},
-   {DummyAttribute, "image", HTML_EL_PICTURE_UNIT},
-   {DummyAttribute, "password", HTML_EL_Password_Input},
-   {DummyAttribute, "radio", HTML_EL_Radio_Input},
-   {DummyAttribute, "reset", HTML_EL_Reset_Input},
-   {DummyAttribute, "submit", HTML_EL_Submit_Input},
-   {DummyAttribute, "text", HTML_EL_Text_Input},
+   {DummyAttribute, TEXT("button"), HTML_EL_Button_Input},
+   {DummyAttribute, TEXT("checkbox"), HTML_EL_Checkbox_Input},
+   {DummyAttribute, TEXT("file"), HTML_EL_File_Input},
+   {DummyAttribute, TEXT("hidden"), HTML_EL_Hidden_Input},
+   {DummyAttribute, TEXT("image"), HTML_EL_PICTURE_UNIT},
+   {DummyAttribute, TEXT("password"), HTML_EL_Password_Input},
+   {DummyAttribute, TEXT("radio"), HTML_EL_Radio_Input},
+   {DummyAttribute, TEXT("reset"), HTML_EL_Reset_Input},
+   {DummyAttribute, TEXT("submit"), HTML_EL_Submit_Input},
+   {DummyAttribute, TEXT("text"), HTML_EL_Text_Input},
 
 /* The following declarations allow the parser to accept boolean attributes */
 /* written "checked=CHECKED"), for instance */
-   {HTML_ATTR_ISMAP, "ismap", HTML_ATTR_ISMAP_VAL_Yes_},
-   {HTML_ATTR_nohref, "nohref", HTML_ATTR_nohref_VAL_Yes_},
-   {HTML_ATTR_COMPACT, "compact", HTML_ATTR_COMPACT_VAL_Yes_},
-   {HTML_ATTR_Multiple, "multiple", HTML_ATTR_Multiple_VAL_Yes_},
-   {HTML_ATTR_Selected, "selected", HTML_ATTR_Selected_VAL_Yes_},
-   {HTML_ATTR_Checked, "checked", HTML_ATTR_Checked_VAL_Yes_},
-   {HTML_ATTR_No_wrap, "nowrap", HTML_ATTR_No_wrap_VAL_no_wrap},
-   {HTML_ATTR_NoShade, "noshade", HTML_ATTR_NoShade_VAL_NoShade_},
-   {HTML_ATTR_declare, "declare", HTML_ATTR_declare_VAL_Yes_},
-   {HTML_ATTR_defer, "defer", HTML_ATTR_defer_VAL_Yes_},
-   {HTML_ATTR_disabled, "disabled", HTML_ATTR_disabled_VAL_Yes_},
-   {HTML_ATTR_readonly, "readonly", HTML_ATTR_readonly_VAL_Yes_},
-   {HTML_ATTR_no_resize, "noresize", HTML_ATTR_no_resize_VAL_Yes_},
-   {0, "", 0}			/* Last entry. Mandatory */
+   {HTML_ATTR_ISMAP, TEXT("ismap"), HTML_ATTR_ISMAP_VAL_Yes_},
+   {HTML_ATTR_nohref, TEXT("nohref"), HTML_ATTR_nohref_VAL_Yes_},
+   {HTML_ATTR_COMPACT, TEXT("compact"), HTML_ATTR_COMPACT_VAL_Yes_},
+   {HTML_ATTR_Multiple, TEXT("multiple"), HTML_ATTR_Multiple_VAL_Yes_},
+   {HTML_ATTR_Selected, TEXT("selected"), HTML_ATTR_Selected_VAL_Yes_},
+   {HTML_ATTR_Checked, TEXT("checked"), HTML_ATTR_Checked_VAL_Yes_},
+   {HTML_ATTR_No_wrap, TEXT("nowrap"), HTML_ATTR_No_wrap_VAL_no_wrap},
+   {HTML_ATTR_NoShade, TEXT("noshade"), HTML_ATTR_NoShade_VAL_NoShade_},
+   {HTML_ATTR_declare, TEXT("declare"), HTML_ATTR_declare_VAL_Yes_},
+   {HTML_ATTR_defer, TEXT("defer"), HTML_ATTR_defer_VAL_Yes_},
+   {HTML_ATTR_disabled, TEXT("disabled"), HTML_ATTR_disabled_VAL_Yes_},
+   {HTML_ATTR_readonly, TEXT("readonly"), HTML_ATTR_readonly_VAL_Yes_},
+   {HTML_ATTR_no_resize, TEXT("noresize"), HTML_ATTR_no_resize_VAL_Yes_},
+   {0, TEXT(""), 0}			/* Last entry. Mandatory */
 };
 
 typedef int         State;	/* a state of the automaton */
@@ -812,7 +812,7 @@ static CharUnit*    docURL = NULL;	  /* path or URL of the document */
 /* input buffer */
 #define MaxBufferLength 1000
 #define AllmostFullBuffer 700
-static UCHAR_T       inputBuffer[MaxBufferLength];
+static  UCHAR_T      inputBuffer[MaxBufferLength];
 static int           LgBuffer = 0;	  /* actual length of text in input
 					     buffer */
 static int	    BufferLineNumber = 0; /* line number in the source file of
@@ -843,7 +843,7 @@ static ThotBool     UnknownTag = FALSE;	  /* the last start tag encountered is
 static ThotBool     MergeText = FALSE;	  /* character data should be catenated
 					     with the last Text element */
 static ThotBool     HTMLrootClosed = FALSE;
-static char*        HTMLrootClosingTag = NULL;
+static CHAR_T*      HTMLrootClosingTag = NULL;
 
 static PtrElemToBeChecked FirstElemToBeChecked = NULL;
 static PtrElemToBeChecked LastElemToBeChecked = NULL;
@@ -855,7 +855,7 @@ static ThotBool     NormalTransition;
 
 /* information about an entity being read */
 #define MaxEntityLength 50
-static char         EntityName[MaxEntityLength];/* name of entity being read */
+static CHAR_T       EntityName[MaxEntityLength];/* name of entity being read */
 static int          LgEntityName = 0;	  /* length of entity name read so
 					     far */
 static int          EntityTableEntry = 0; /* entry of the entity table that
@@ -866,7 +866,7 @@ static int          CharRank = 0;	  /* rank of the last matching
 #define MaxMsgLength 200	/* maximum size of error messages */
 
 #ifdef __STDC__
-static void         ProcessStartGI (char* GIname);
+static void         ProcessStartGI (CHAR_T* GIname);
 #else
 static void         ProcessStartGI ();
 #endif
@@ -1066,27 +1066,27 @@ Document            document;
    GITagNameByType search in the mapping tables the name for a given type
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char*              GITagNameByType (ElementType elType)
+CHAR_T*            GITagNameByType (ElementType elType)
 #else
-char*              GITagNameByType (elType)
+CHAR_T*            GITagNameByType (elType)
 ElementType elType;
 
 #endif
 {
   int		i;
-  char*     buffer;
+  CHAR_T*   buffer;
 
   if (elType.ElTypeNum > 0)
     {
       i = 0;
-      if (strcmp ("HTML", TtaGetSSchemaName (elType.ElSSchema)) == 0)
+      if (ustrcmp (TEXT("HTML"), TtaGetSSchemaName (elType.ElSSchema)) == 0)
 	do
 	  {
-	    if (pHTMLGIMapping[i].ThotType == elType.ElTypeNum && strcmp (pHTMLGIMapping[i].htmlGI, "listing"))	/* use PRE */
+	    if (pHTMLGIMapping[i].ThotType == elType.ElTypeNum && ustrcmp (pHTMLGIMapping[i].htmlGI, TEXT("listing")))	/* use PRE */
 	      return  pHTMLGIMapping[i].htmlGI;
 	    i++;
 	  }
-	while (pHTMLGIMapping[i].htmlGI[0] != EOS);
+	while (pHTMLGIMapping[i].htmlGI[0] != WC_EOS);
 #ifndef STANDALONE
       else
 	{
@@ -1095,16 +1095,16 @@ ElementType elType;
 	}
 #endif
     }
-  return "???";
+  return TEXT("???");
 }
 
 /*----------------------------------------------------------------------
    GITagName search in GIMappingTable the name for a given element
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char*              GITagName (Element elem)
+CHAR_T*            GITagName (Element elem)
 #else
-char*              GITagName (elem)
+CHAR_T*            GITagName (elem)
 Element            elem;
 
 #endif
@@ -1121,11 +1121,11 @@ Element            elem;
    corresponding to the rank of that entry.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 MapThotAttr (char* Attr, char* tag)
+int                 MapThotAttr (CHAR_T* Attr, CHAR_T* tag)
 #else
 int                 MapThotAttr (Attr, tag)
-char*               Attr;
-char*               tag;
+CHAR_T*             Attr;
+CHAR_T*             tag;
 
 #endif
 {
@@ -1136,9 +1136,9 @@ char*               tag;
    thotAttr = -1;
    lastElemEntry = -1;
    schema = DocumentSSchema;
-   if (tag[0] != EOS)
+   if (tag[0] != WC_EOS)
    lastElemEntry = MapGI (tag, &schema, theDocument);
-   if (lastElemEntry >= 0 || tag[0] == EOS)
+   if (lastElemEntry >= 0 || tag[0] == WC_EOS)
      {
 	tableEntry = MapAttr (Attr, &schema, lastElemEntry, theDocument);
 	if (tableEntry != NULL)
@@ -1362,41 +1362,44 @@ SSchema		    ThotSSchema;
    ParseHTMLError  print the error message msg on stderr.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ParseHTMLError (Document doc, unsigned char* msg)
+void                ParseHTMLError (Document doc, CHAR_T* msg)
 #else
 void                ParseHTMLError (doc, msg)
 Document            doc;
-unsigned char*      msg;
+CHAR_T*             msg;
 
 #endif
 {
-   HTMLErrorsFound = TRUE;
-   if (!ErrFile)
-      {
-      usprintf (ErrFileName, TEXT("%s%c%d%cHTML.ERR"), TempFileDirectory,
-		DIR_SEP, doc, DIR_SEP);
-      if ((ErrFile = ufopen (ErrFileName, CUSTEXT("w"))) == NULL)
-         return;
-      }
+#  ifdef _I18N_
+   char  mbcsMsg [MAX_TXT_LEN * 2];
+#  else  /* !_I18N_ */
+   char* mbcsMsg = msg;
+#  endif /* _I18N_ */
 
-   if (doc == theDocument)
+#  ifdef _I18N_
+   wcstombs (mbcsMsg, msg, MAX_TXT_LEN * 2);
+#  endif /* _I18N_ */
+
+   HTMLErrorsFound = TRUE;
+   if (!ErrFile) {
+      usprintf (ErrFileName, TEXT("%s%c%d%cHTML.ERR"), TempFileDirectory, DIR_SEP, doc, DIR_SEP);
+      if ((ErrFile = ufopen (ErrFileName, TEXT("w"))) == NULL)
+         return;
+   }
+
+   if (doc == theDocument) {
       /* the error message is related to the document being parsed */
-      {
-      if (docURL != NULL)
-	 {
-	 fprintf (ErrFile, "*** Errors in %s\n", docURL);
-#ifndef STANDALONE
-	 TtaFreeMemory (docURL);
-#endif /* STANDALONE */
-	 docURL = NULL;
-	 }
+      if (docURL != NULL) {
+         fprintf (ErrFile, "*** Errors in %s\n", docURL);
+#        ifndef STANDALONE
+         TtaFreeMemory (docURL);
+#        endif /* STANDALONE */
+         docURL = NULL;
+	  }
       /* print the line number and character number before the message */
-      fprintf (ErrFile, "   line %d, char %d: %s\n", NumberOfLinesRead,
-	       NumberOfCharRead, msg);
-      }
-   else
-      /* print only the error message */
-      fprintf (ErrFile, "%s\n", msg);
+      fprintf (ErrFile, "   line %d, char %d: %s\n", NumberOfLinesRead, NumberOfCharRead, mbcsMsg);
+   } else /* print only the error message */
+          fprintf (ErrFile, "%s\n", mbcsMsg);
 }
 
 /*----------------------------------------------------------------------
@@ -1547,7 +1550,7 @@ ElementType         elType;
    int                 i;
    ThotBool            ret;
 
-   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
       /* not an HTML element */
       ret = TRUE;
    else
@@ -1694,7 +1697,7 @@ UCHAR_T             c;
 	  if (currentState == 0)
 	    TextToDocument ();
 	  else
-	    ParseHTMLError (theDocument, "Panic: buffer overflow");
+	    ParseHTMLError (theDocument, TEXT("Panic: buffer overflow"));
 	  LgBuffer = 0;
 	}
 
@@ -1904,19 +1907,19 @@ Element            *el;
    element el.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         CreateAttr (Element el, AttributeType attrType, char* text, ThotBool invalid)
+static void         CreateAttr (Element el, AttributeType attrType, CHAR_T* text, ThotBool invalid)
 #else
 static void         CreateAttr (el, attrType, text, invalid)
 Element             el;
 AttributeType       attrType;
-char*               text;
+CHAR_T*             text;
 ThotBool            invalid;
 
 #endif
 {
    int                 attrKind;
    int                 length;
-   char*               buffer;
+   CHAR_T*             buffer;
    Attribute           attr, oldAttr;
 
    if (attrType.AttrTypeNum != 0)
@@ -1944,12 +1947,12 @@ ThotBool            invalid;
 	   /* Copy the name of the invalid attribute as the content */
 	   /* of the Invalid_attribute attribute. */
 	  {
-	     length = strlen (text) + 2;
+	     length = ustrlen (text) + 2;
 	     length += TtaGetTextAttributeLength (attr);
-	     buffer = TtaGetMemory (length + 1);
+	     buffer = TtaAllocString (length + 1);
 	     TtaGiveTextAttributeValue (attr, buffer, &length);
-	     strcat (buffer, " ");
-	     strcat (buffer, text);
+	     ustrcat (buffer, TEXT(" "));
+	     ustrcat (buffer, text);
 	     TtaSetAttributeText (attr, buffer, el, theDocument);
 	     TtaFreeMemory (buffer);
 	  }
@@ -2753,14 +2756,14 @@ ThotBool            onStartTag;
 	      looks for that element in the stack, but not at
 	      a higher level as a table element */
 	   if (!onStartTag &&
-	       (!strcmp (pHTMLGIMapping[entry].htmlGI, "form") ||
-            !strcmp (pHTMLGIMapping[entry].htmlGI, "font") ||
-            !strcmp (pHTMLGIMapping[entry].htmlGI, "center")))
+	       (!ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("form")) ||
+            !ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("font")) ||
+            !ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("center"))))
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!strcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, "tbody") ||
-               !strcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, "tr")    ||
-               !strcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, "th")    ||
-               !strcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, "td"))
+	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("tbody")) ||
+               !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("tr"))    ||
+               !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("th"))    ||
+               !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("td")))
 		 {
 		   /* ignore this end tag */
 		   ret = FALSE;
@@ -2781,33 +2784,33 @@ ThotBool            onStartTag;
 	      equivalent), looks for that element in the
 	      stack, but not at a higher level as the list (or
 	      equivalent) element */
-	   if (!strcmp (pHTMLGIMapping[start].htmlGI, "li"))
+	   if (!ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("li")))
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!strcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, "ol")  ||
-               !strcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, "ul")  ||
-               !strcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, "dir") ||
-               !strcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, "menu"))
+	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("ol"))  ||
+               !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("ul"))  ||
+               !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("dir")) ||
+               !ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("menu")))
 		 stop = TRUE;
 	       else
 		 i--;
-	   else if (!strcmp (pHTMLGIMapping[start].htmlGI, "option"))
+	   else if (!ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("option")))
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!strcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, "select"))
+	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("select")))
 		 stop = TRUE;
 	       else
 		 i--;
-	   else if (!strcmp (pHTMLGIMapping[start].htmlGI, "dd") ||
-                !strcmp (pHTMLGIMapping[start].htmlGI, "dt"))
+	   else if (!ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("dd")) ||
+                !ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("dt")))
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!strcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, "dl"))
+	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("dl")))
 		 stop = TRUE;
 	       else
 		 i--;
-	   else if (!strcmp (pHTMLGIMapping[start].htmlGI, "tr") ||
-                !strcmp (pHTMLGIMapping[start].htmlGI, "td") ||
-                !strcmp (pHTMLGIMapping[start].htmlGI, "th"))
+	   else if (!ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("tr")) ||
+                !ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("td")) ||
+                !ustrcmp (pHTMLGIMapping[start].htmlGI, TEXT("th")))
 	     while (i > 0 && entry != GINumberStack[i] && !stop)
-	       if (!strcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, "table"))
+	       if (!ustrcmp (pHTMLGIMapping[GINumberStack[i]].htmlGI, TEXT("table")))
 		 stop = TRUE;
 	       else
 		 i--;
@@ -2906,11 +2909,11 @@ ThotBool            onStartTag;
    Thot value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 MapAttrValue (int ThotAtt, char* AttrVal)
+int                 MapAttrValue (int ThotAtt, CHAR_T* AttrVal)
 #else
 int                 MapAttrValue (ThotAtt, AttrVal)
 int                 ThotAtt;
-char*               AttrVal;
+CHAR_T*             AttrVal;
 
 #endif
 {
@@ -2923,7 +2926,7 @@ char*               AttrVal;
       i++;
    if (HTMLAttrValueMappingTable[i].ThotAttr == ThotAtt)
       do
-	 if (AttrVal[1] == EOS && (ThotAtt == HTML_ATTR_NumberStyle ||
+	 if (AttrVal[1] == WC_EOS && (ThotAtt == HTML_ATTR_NumberStyle ||
 				   ThotAtt == HTML_ATTR_ItemStyle))
 	    /* attributes NumberStyle (which is always 1 character long) */
 	    /* and ItemStyle (only when its length is 1) are */
@@ -2935,7 +2938,7 @@ char*               AttrVal;
 	 else
 	    /* for other attributes, uppercase and lowercase are */
 	    /* equivalent */
-	    if (!strcasecmp (HTMLAttrValueMappingTable[i].XMLattrValue, AttrVal))
+	    if (!ustrcasecmp (HTMLAttrValueMappingTable[i].XMLattrValue, AttrVal))
 	       value = HTMLAttrValueMappingTable[i].ThotAttrValue;
 	    else
 	       i++;
@@ -2949,10 +2952,10 @@ char*               AttrVal;
    element INPUT accordingly.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         TypeAttrValue (char* val)
+static void         TypeAttrValue (CHAR_T* val)
 #else
 static void         TypeAttrValue (val)
-char*               val;
+CHAR_T*             val;
 
 #endif
 {
@@ -2960,19 +2963,19 @@ char*               val;
   Element             newChild;
   AttributeType       attrType;
   Attribute           attr;
-  unsigned char       msgBuffer[MaxMsgLength];
+  CHAR_T              msgBuffer[MaxMsgLength];
   int                 value;
 
   value = MapAttrValue (DummyAttribute, val);
   if (value < 0)
     {
-      if (strlen (val) > MaxMsgLength - 40)
-         val[MaxMsgLength - 40] = EOS;
-      sprintf (msgBuffer, "Unknown attribute value \"type = %s\"", val);
+      if (ustrlen (val) > MaxMsgLength - 40)
+         val[MaxMsgLength - 40] = WC_EOS;
+      usprintf (msgBuffer, TEXT("Unknown attribute value \"type = %s\""), val);
       ParseHTMLError (theDocument, msgBuffer);
       attrType.AttrSSchema = DocumentSSchema;
       attrType.AttrTypeNum = pHTMLAttributeMapping[0].ThotAttribute;
-      sprintf (msgBuffer, "type=%s", val);
+      usprintf (msgBuffer, TEXT("type=%s"), val);
       CreateAttr (lastElement, attrType, msgBuffer, TRUE);
     }
   else
@@ -2980,9 +2983,9 @@ char*               val;
       elType = TtaGetElementType (lastElement);
       if (elType.ElTypeNum != HTML_EL_Input)
 	{
-        if (strlen (val) > MaxMsgLength - 40)
-	   val[MaxMsgLength - 40] = EOS;
-	sprintf (msgBuffer, "Duplicate attribute \"type = %s\"", val);
+        if (ustrlen (val) > MaxMsgLength - 40)
+	   val[MaxMsgLength - 40] = WC_EOS;
+	usprintf (msgBuffer, TEXT("Duplicate attribute \"type = %s\""), val);
 	}
       else
 	{
@@ -3178,10 +3181,10 @@ CHAR_T                c;
   if ((lastElement != NULL) && (lastElemEntry != -1))
     {
       math = FALSE;
-      if (!strcmp (pHTMLGIMapping[lastElemEntry].htmlGI, "math"))
+      if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("math")))
 	/* a <math> tag has been read */
 	math = TRUE;
-      else if (!strcmp (pHTMLGIMapping[lastElemEntry].htmlGI, "mathdisp"))
+      else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("mathdisp")))
 	/* a <mathdisp> tag has been read.  add an attribute "mode=display"
 	   (for compatibility with old MathML version WD-math-970704 */
 	{
@@ -3210,7 +3213,7 @@ CHAR_T                c;
 	     been read */
 	  (void) CloseElement (lastElemEntry, -1, FALSE);
 	}
-      else if (!strcmp (pHTMLGIMapping[lastElemEntry].htmlGI, "xmlgraphics"))
+      else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("xmlgraphics")))
 	/* a <XMLGRAPHICS> tag has been read */
         {
 	  /* Parse the GraphML structure */
@@ -3222,12 +3225,12 @@ CHAR_T                c;
 	     been read */
 	  (void) CloseElement (lastElemEntry, -1, FALSE);	   
 	}
-      else if (!strcmp (pHTMLGIMapping[lastElemEntry].htmlGI, "pre")   ||
-               !strcmp (pHTMLGIMapping[lastElemEntry].htmlGI, "style") ||
-               !strcmp (pHTMLGIMapping[lastElemEntry].htmlGI, "script"))
+      else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("pre"))   ||
+               !ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("style")) ||
+               !ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("script")))
 	/* a <PRE>, <STYLE> or <SCRIPT> tag has been read */
 	AfterTagPRE = TRUE;
-      else if (!strcmp (pHTMLGIMapping[lastElemEntry].htmlGI, "table"))
+      else if (!ustrcmp (pHTMLGIMapping[lastElemEntry].htmlGI, TEXT("table")))
 	/* <TABLE> has been read */
 	WithinTable++;
       else if (pHTMLGIMapping[lastElemEntry].htmlContents == 'E')
@@ -3298,29 +3301,29 @@ int                 entry;
      {
        ok = TRUE;
        /* only TH and TD elements are allowed as children of a TR element */
-       if (!strcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, "tr"))
-	 if (strcmp (pHTMLGIMapping[entry].htmlGI, "th") &&
-	     strcmp (pHTMLGIMapping[entry].htmlGI, "td"))
+       if (!ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("tr")))
+	 if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("th")) &&
+	     ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("td")))
 	   ok = FALSE;
        if (ok)
 	 /* only CAPTION, THEAD, TFOOT, TBODY, COLGROUP, COL and TR are */
 	 /* allowed as children of a TABLE element */
-	 if (!strcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, "table"))
-	   if (strcmp (pHTMLGIMapping[entry].htmlGI, "caption")  &&
-	       strcmp (pHTMLGIMapping[entry].htmlGI, "thead")    &&
-	       strcmp (pHTMLGIMapping[entry].htmlGI, "tfoot")    &&
-	       strcmp (pHTMLGIMapping[entry].htmlGI, "tbody")    &&
-	       strcmp (pHTMLGIMapping[entry].htmlGI, "colgroup") &&
-	       strcmp (pHTMLGIMapping[entry].htmlGI, "col")      &&
-	       strcmp (pHTMLGIMapping[entry].htmlGI, "tr"))
-	     if (!strcmp (pHTMLGIMapping[entry].htmlGI, "td") ||
-             !strcmp (pHTMLGIMapping[entry].htmlGI, "th"))
+	 if (!ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("table")))
+	   if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("caption"))  &&
+	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("thead"))    &&
+	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("tfoot"))    &&
+	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("tbody"))    &&
+	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("colgroup")) &&
+	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("col"))      &&
+	       ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("tr")))
+	     if (!ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("td")) ||
+             !ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("th")))
 	       /* Table cell within a table, without a tr. Assume tr */
 	       {
 		/* save the last last GI read from the input file */
 		saveLastElemEntry = lastElemEntry;
 		/* simulate a <TR> tag */
-	        ProcessStartGI ("tr");
+	        ProcessStartGI (TEXT("tr"));
 		/* restore the last tag that has actually been read */
 		lastElemEntry = saveLastElemEntry;
 	       }
@@ -3329,28 +3332,28 @@ int                 entry;
        if (ok)
 	 /* CAPTION, THEAD, TFOOT, TBODY, COLGROUP are allowed only as
 	    children of a TABLE element */
-	 if (strcmp (pHTMLGIMapping[entry].htmlGI, "caption")  == 0 ||
-	     strcmp (pHTMLGIMapping[entry].htmlGI, "thead")    == 0 ||
-	     strcmp (pHTMLGIMapping[entry].htmlGI, "tfoot")    == 0 ||
-	     strcmp (pHTMLGIMapping[entry].htmlGI, "tbody")    == 0 ||
-	     strcmp (pHTMLGIMapping[entry].htmlGI, "colgroup") == 0)
-	   if (strcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, "table") != 0)
+	 if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("caption"))  == 0 ||
+	     ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("thead"))    == 0 ||
+	     ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("tfoot"))    == 0 ||
+	     ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("tbody"))    == 0 ||
+	     ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("colgroup")) == 0)
+	   if (ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("table")) != 0)
 	      ok = FALSE;
        if (ok)
 	 /* only TR is allowed as a child of a THEAD, TFOOT or TBODY element */
-	 if (!strcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, "thead") ||
-	     !strcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, "tfoot") ||
-	     !strcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, "tbody"))
-	   if (strcmp (pHTMLGIMapping[entry].htmlGI, "tr"))
-	     if (!strcmp (pHTMLGIMapping[entry].htmlGI, "td") ||
-             !strcmp (pHTMLGIMapping[entry].htmlGI, "th"))
+	 if (!ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("thead")) ||
+	     !ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("tfoot")) ||
+	     !ustrcmp (pHTMLGIMapping[GINumberStack[StackLevel - 1]].htmlGI, TEXT("tbody")))
+	   if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("tr")))
+	     if (!ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("td")) ||
+             !ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("th")))
 	       /* Table cell within a thead, tfoot or tbody without a tr. */
 	       /* Assume tr */
 	       {
 		/* save the last last GI read from the input file */
 		saveLastElemEntry = lastElemEntry;
 		/* simulate a <tr> tag */
-	        ProcessStartGI ("tr");
+	        ProcessStartGI (TEXT("tr"));
 		/* restore the last tag that has actually been read */
 		lastElemEntry = saveLastElemEntry;
 	       }
@@ -3358,17 +3361,17 @@ int                 entry;
 	       ok = FALSE;
        if (ok)
 	 /* refuse BODY within BODY */
-	 if (strcmp (pHTMLGIMapping[entry].htmlGI, "body") == 0)
+	 if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("body")) == 0)
 	   if (Within (HTML_EL_BODY, DocumentSSchema))
 	     ok = FALSE;
        if (ok)
 	 /* refuse HEAD within HEAD */
-	 if (strcmp (pHTMLGIMapping[entry].htmlGI, "head") == 0)
+	 if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("head")) == 0)
 	   if (Within (HTML_EL_HEAD, DocumentSSchema))
 	     ok = FALSE;
        if (ok)
 	 /* refuse STYLE within STYLE */
-	 if (strcmp (pHTMLGIMapping[entry].htmlGI, "style") == 0)
+	 if (ustrcmp (pHTMLGIMapping[entry].htmlGI, TEXT("style")) == 0)
 	   if (Within (HTML_EL_STYLE_, DocumentSSchema))
 	     ok = FALSE;
        return ok;
@@ -3390,10 +3393,10 @@ int                 entry;
 
    /* if current element is DD, Hn closes that DD only when there is */
    /* no enclosing DL */
-   if (pHTMLGIMapping[entry].htmlGI[0] == 'H' &&
-       pHTMLGIMapping[entry].htmlGI[1] >= '1' &&
-       pHTMLGIMapping[entry].htmlGI[1] <= '6' &&
-       pHTMLGIMapping[entry].htmlGI[2] == EOS)
+   if (pHTMLGIMapping[entry].htmlGI[0] == TEXT('H') &&
+       pHTMLGIMapping[entry].htmlGI[1] >= TEXT('1') &&
+       pHTMLGIMapping[entry].htmlGI[1] <= TEXT('6') &&
+       pHTMLGIMapping[entry].htmlGI[2] == WC_EOS)
       /* the new element is a Hn */
       if (StackLevel > 1)
 	 if (ElementStack[StackLevel - 1] != NULL)
@@ -3417,10 +3420,10 @@ int                 entry;
    tag position is incorrect (TRUE).
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         InsertInvalidEl (char* content, ThotBool position)
+static void         InsertInvalidEl (CHAR_T* content, ThotBool position)
 #else
 static void         InsertInvalidEl (content, position)
-char*               content;
+CHAR_T*             content;
 ThotBool		    position;
 
 #endif
@@ -3463,24 +3466,24 @@ ThotBool		    position;
    or character), according to the mapping table.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ProcessStartGI (char* GIname)
+static void         ProcessStartGI (CHAR_T* GIname)
 #else
 static void         ProcessStartGI (GIname)
-char*               GIname;
+CHAR_T*             GIname;
 
 #endif
 {
   ElementType         elType;
   Element             el;
   int                 entry, i;
-  unsigned char       msgBuffer[MaxMsgLength];
+  CHAR_T              msgBuffer[MaxMsgLength];
   PtrClosedElement    pClose;
   ThotBool            sameLevel;
   SSchema	      schema;
 
   /* ignore tag <P> within PRE */
   if (Within (HTML_EL_Preformatted, DocumentSSchema))
-    if (strcasecmp (GIname, "p") == 0)
+    if (ustrcasecmp (GIname, TEXT("p")) == 0)
       return;
 
   /* search the HTML element name in the mapping table */
@@ -3492,10 +3495,10 @@ char*               GIname;
     {
       /* check if it's the math or svg tag with a namespace prefix */
       /* So, look for a colon in the element name */
-      for (i = 0; GIname[i] != ':' && GIname[i] != EOS; i++);
-      if (GIname[i] == ':' &&
-	      (strcasecmp (&GIname[i+1], "math") == 0 ||
-	       strcasecmp (&GIname[i+1], "xmlgraphics") == 0))
+      for (i = 0; GIname[i] != TEXT(':') && GIname[i] != WC_EOS; i++);
+      if (GIname[i] == TEXT(':') &&
+	      (ustrcasecmp (&GIname[i+1], TEXT("math")) == 0 ||
+	       ustrcasecmp (&GIname[i+1], TEXT("xmlgraphics")) == 0))
 	/* it's a math or svg tag with a namespace prefix. OK */
 	{
          entry = MapGI (&GIname[i+1], &schema, theDocument);
@@ -3504,13 +3507,13 @@ char*               GIname;
       else
 	/* unknown tag */
 	{
-	  if (strlen (GIname) > MaxMsgLength - 20)
-	    GIname[MaxMsgLength - 20] = EOS;
-	  sprintf (msgBuffer, "Unknown tag <%s>", GIname);
+	  if (ustrlen (GIname) > MaxMsgLength - 20)
+	    GIname[MaxMsgLength - 20] = WC_EOS;
+	  usprintf (msgBuffer, TEXT("Unknown tag <%s>"), GIname);
 	  ParseHTMLError (theDocument, msgBuffer);
 	  UnknownTag = TRUE;
 	  /* create an Invalid_element */
-	  sprintf (msgBuffer, "<%s", GIname);
+	  usprintf (msgBuffer, TEXT("<%s"), GIname);
 	  InsertInvalidEl (msgBuffer, FALSE);
 	}
     }
@@ -3528,11 +3531,11 @@ char*               GIname;
       if (!ContextOK (entry))
 	/* element not allowed in the current structural context */
 	{
-	  sprintf (msgBuffer, "Tag <%s> is not allowed here", GIname);
+	  usprintf (msgBuffer, TEXT("Tag <%s> is not allowed here"), GIname);
 	  ParseHTMLError (theDocument, msgBuffer);
 	  UnknownTag = TRUE;
 	  /* create an Invalid_element */
-	  sprintf (msgBuffer, "<%s", GIname);
+	  usprintf (msgBuffer, TEXT("<%s"), GIname);
 	  InsertInvalidEl (msgBuffer, TRUE);
 	}
       else
@@ -3628,7 +3631,7 @@ CHAR_T                c;
       if (lastElementClosed && (lastElement == rootElement))
          /* an element after the tag </html>, ignore it */
          {
-         ParseHTMLError (theDocument, "Element after tag </html>. Ignored");
+         ParseHTMLError (theDocument, TEXT("Element after tag </html>. Ignored"));
          return;
          }
       ProcessStartGI (theGI);
@@ -3664,10 +3667,10 @@ CHAR_T                c;
 #endif
 {
    SSchema	       schema;
-   unsigned char   msgBuffer[MaxMsgLength];
-   int                 entry;
-   int                 i;
-   ThotBool            ok;
+   CHAR_T          msgBuffer[MaxMsgLength];
+   int             entry;
+   int             i;
+   ThotBool        ok;
 
    CloseBuffer ();
 
@@ -3703,7 +3706,7 @@ CHAR_T                c;
 	   i++;
 	else
 	   i = 0;
-        if (strcasecmp (&inputBuffer[i], HTMLrootClosingTag) == 0)
+        if (ustrcasecmp (&inputBuffer[i], HTMLrootClosingTag) == 0)
 	   {
 	   HTMLrootClosed = TRUE;
 	   ok = TRUE;
@@ -3719,17 +3722,17 @@ CHAR_T                c;
         {
         if (ustrlen (inputBuffer) > MaxMsgLength - 20)
 	   inputBuffer[MaxMsgLength - 20] = WC_EOS;
-	sprintf (msgBuffer, "Unknown tag </%s>", inputBuffer);
+	usprintf (msgBuffer, TEXT("Unknown tag </%s>"), inputBuffer);
 	ParseHTMLError (theDocument, msgBuffer);
 	/* create an Invalid_element */
-	sprintf (msgBuffer, "</%s", inputBuffer);
+	usprintf (msgBuffer, TEXT("</%s"), inputBuffer);
 	InsertInvalidEl (msgBuffer, FALSE);
         }
       else if (!CloseElement (entry, -1, FALSE))
         /* the end tag does not close any current element */
         {
 	/* print an error message... */
-	sprintf (msgBuffer, "Unexpected end tag </%s>", inputBuffer);
+	usprintf (msgBuffer, TEXT("Unexpected end tag </%s>"), inputBuffer);
 	ParseHTMLError (theDocument, msgBuffer);
 	/* ... and try to recover */
 	if ((inputBuffer[0] == TEXT('H') || inputBuffer[0] == TEXT('h')) &&
@@ -3738,8 +3741,8 @@ CHAR_T                c;
 	   /* the end tag is </Hn>. Consider all Hn as equivalent. */
 	   /* </H3> is considered as an end tag for <H2>, for instance */
 	  {
-	     strcpy (msgBuffer, inputBuffer);
-	     msgBuffer[1] = '1';
+	     ustrcpy (msgBuffer, inputBuffer);
+	     msgBuffer[1] = TEXT('1');
 	     i = 1;
 	     do
 	       {
@@ -3761,10 +3764,10 @@ CHAR_T                c;
 	  {
 	    ok = TRUE;
 	    schema = DocumentSSchema;
-	    if (!CloseElement (MapGI ("ol", &schema, theDocument), -1, FALSE) &&
-            !CloseElement (MapGI ("ul", &schema, theDocument), -1, FALSE) &&
-            !CloseElement (MapGI ("menu", &schema, theDocument), -1, FALSE) &&
-            !CloseElement (MapGI ("dir", &schema, theDocument), -1, FALSE))
+	    if (!CloseElement (MapGI (TEXT("ol"), &schema, theDocument), -1, FALSE) &&
+            !CloseElement (MapGI (TEXT("ul"), &schema, theDocument), -1, FALSE) &&
+            !CloseElement (MapGI (TEXT("menu"), &schema, theDocument), -1, FALSE) &&
+            !CloseElement (MapGI (TEXT("dir"), &schema, theDocument), -1, FALSE))
 	      ok = FALSE;
 	  }
 	if (!ok)
@@ -3772,7 +3775,7 @@ CHAR_T                c;
 	  {
             if (ustrlen (inputBuffer) > MaxMsgLength - 10)
 	       inputBuffer[MaxMsgLength - 10] = WC_EOS;
-	    sprintf (msgBuffer, "</%s", inputBuffer);
+	    usprintf (msgBuffer, TEXT("</%s"), inputBuffer);
 	    InsertInvalidEl (msgBuffer, TRUE);
 	  }
         }
@@ -3840,7 +3843,7 @@ CHAR_T                c;
    Attribute           attr;
    SSchema             schema;
    CHAR_T              translation;
-   unsigned char       msgBuffer[MaxMsgLength];
+   CHAR_T              msgBuffer[MaxMsgLength];
 
    CloseBuffer ();
    /* if a single '/' or '?' has been read instead of an attribute name, ignore
@@ -3878,7 +3881,7 @@ CHAR_T                c;
 	   {
            if (ustrlen (inputBuffer) > MaxMsgLength - 30)
 	      inputBuffer[MaxMsgLength - 30] = WC_EOS;
-	   sprintf (msgBuffer, "Unknown attribute \"%s\"", inputBuffer);
+	   usprintf (msgBuffer, TEXT("Unknown attribute \"%s\""), inputBuffer);
 	   ParseHTMLError (theDocument, msgBuffer);
 	   /* attach an Invalid_attribute to the current element */
 	   tableEntry = &pHTMLAttributeMapping[0];
@@ -4023,7 +4026,7 @@ int                 oldWidth;
   AttributeType      attrTypePxl, attrTypePercent;
   Attribute          attrOld, attrNew;
   int                length, val;
-  unsigned char      msgBuffer[MaxMsgLength];
+  CHAR_T             msgBuffer[MaxMsgLength];
 #ifndef STANDALONE
   ElementType	     elType;
   int                w, h;
@@ -4098,7 +4101,7 @@ int                 oldWidth;
     TtaRemoveAttribute (el, attrNew, doc);
     if (ustrlen (buffer) > MaxMsgLength - 30)
         buffer[MaxMsgLength - 30] = EOS;
-    sprintf (msgBuffer, "Invalid attribute value \"%s\"", buffer);
+    usprintf (msgBuffer, TEXT("Invalid attribute value \"%s\""), buffer);
     ParseHTMLError (doc, msgBuffer);
     }
 #ifndef STANDALONE
@@ -4124,7 +4127,7 @@ Document            doc;
    AttributeType       attrType;
    int                 val, ind, factor, delta;
    Attribute           attr;
-   unsigned char       msgBuffer[MaxMsgLength];
+   CHAR_T              msgBuffer[MaxMsgLength];
 
    /* is the first character a '+' or a '-' ? */
    ind = 0;
@@ -4167,7 +4170,7 @@ Document            doc;
          TtaRemoveAttribute (el, attr, doc);
       if (ustrlen (buffer) > MaxMsgLength - 30)
          buffer[MaxMsgLength - 30] = EOS;
-      sprintf (msgBuffer, "Invalid attribute value \"%s\"", buffer);
+      usprintf (msgBuffer, TEXT("Invalid attribute value \"%s\""), buffer);
       ParseHTMLError (doc, msgBuffer);
       }
 }
@@ -4178,10 +4181,10 @@ Document            doc;
    Put that value in the current Thot attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         EndOfAttrValue (char c)
+static void         EndOfAttrValue (CHAR_T c)
 #else
 static void         EndOfAttrValue (c)
-char                c;
+CHAR_T              c;
 
 #endif
 {
@@ -4191,21 +4194,21 @@ char                c;
    Element             child;
    Language            lang;
    CHAR_T              translation;
-   CHAR_T              shape;
+   char                shape;
    STRING              buffer;
    STRING              attrName;
    int                 val;
    int                 length;
    int                 attrKind;
    ThotBool            done;
-   unsigned char       msgBuffer[MaxMsgLength];
+   CHAR_T              msgBuffer[MaxMsgLength];
 
    ReadingAnAttrValue = FALSE;
    if (UnknownAttr)
       /* this is the end of value of an invalid attribute. Keep the */
       /* quote character that ends the value for copying it into the */
       /* Invalid_attribute. */
-      if (c == '\'' || c == '\"')
+      if (c == TEXT('\'') || c == TEXT('\"'))
 	 PutInBuffer (c);
    CloseBuffer ();
    /* inputBuffer contains the attribute value */
@@ -4220,7 +4223,7 @@ char                c;
       /* an attribute after the tag </html>, ignore it */
       done = TRUE;
    /* treatments of some particular HTML attributes */
-   else if (!strcmp (lastAttrEntry->XMLattribute, "style"))
+   else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("style")))
      {
 #ifndef STANDALONE
 	TtaSetAttributeText (lastAttribute, inputBuffer, lastAttrElement,
@@ -4230,11 +4233,11 @@ char                c;
 	done = TRUE;
      }
 #ifndef STANDALONE
-   else if (!strcmp (lastAttrEntry->XMLattribute, "link"))
+   else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("link")))
       HTMLSetAlinkColor (theDocument, inputBuffer);
-   else if (!strcmp (lastAttrEntry->XMLattribute, "alink"))
+   else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("alink")))
       HTMLSetAactiveColor (theDocument, inputBuffer);
-   else if (!strcmp (lastAttrEntry->XMLattribute, "vlink"))
+   else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("vlink")))
       HTMLSetAvisitedColor (theDocument, inputBuffer);
 #endif
 
@@ -4264,7 +4267,7 @@ char                c;
 			attrName = TtaGetAttributeName (attrType);
                         if (ustrlen (inputBuffer) > MaxMsgLength - 30)
                            inputBuffer[MaxMsgLength - 30] = WC_EOS;
-			sprintf (msgBuffer, "Unknown attribute value \"%s = %s\"", attrName, inputBuffer);
+			usprintf (msgBuffer, TEXT("Unknown attribute value \"%s = %s\""), attrName, inputBuffer);
 			ParseHTMLError (theDocument, msgBuffer);
 			/* remove the attribute and replace it by an */
 			/* Invalid_attribute */
@@ -4272,7 +4275,7 @@ char                c;
 					    theDocument);
 			attrType.AttrSSchema = DocumentSSchema;
 			attrType.AttrTypeNum = pHTMLAttributeMapping[0].ThotAttribute;
-			sprintf (msgBuffer, "%s=%s", attrName, inputBuffer);
+			usprintf (msgBuffer, TEXT("%s=%s"), attrName, inputBuffer);
 			CreateAttr (lastAttrElement, attrType, msgBuffer, TRUE);
 		        }
 		     else
@@ -4296,7 +4299,7 @@ char                c;
 			   {
 			   TtaRemoveAttribute (lastAttrElement, lastAttribute,
 					       theDocument);
-			   sprintf (msgBuffer, "Invalid attribute value \"%s\"", inputBuffer);
+			   usprintf (msgBuffer, TEXT("Invalid attribute value \"%s\""), inputBuffer);
 			   ParseHTMLError (theDocument, msgBuffer);
 			   }
 		     break;
@@ -4311,7 +4314,7 @@ char                c;
 			   lang = TtaGetLanguageIdFromName (inputBuffer);
 			   if (lang == 0)
 			      {
-			      sprintf (msgBuffer, "Unknown language: %s", inputBuffer);
+			      usprintf (msgBuffer, TEXT("Unknown language: %s"), inputBuffer);
 			      ParseHTMLError (theDocument, msgBuffer);
 			      }
 			   else
@@ -4366,13 +4369,13 @@ char                c;
         /* IntWidthPxl */
         CreateAttrWidthPercentPxl (inputBuffer, lastAttrElement, theDocument, -1);
 
-     else if (!strcmp (lastAttrEntry->XMLattribute, "size"))
+     else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("size")))
        {
        TtaGiveAttributeType (lastAttribute, &attrType, &attrKind);
        if (attrType.AttrTypeNum == HTML_ATTR_Font_size)
 	  CreateAttrIntSize (inputBuffer, lastAttrElement, theDocument);
        }
-     else if (!strcmp (lastAttrEntry->XMLattribute, "shape"))
+     else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("shape")))
        {
        child = TtaGetFirstChild (lastAttrElement);
        if (child != NULL)
@@ -4395,7 +4398,7 @@ char                c;
      	  TtaSetGraphicsShape (child, shape, theDocument);
           }
        }
-     else if (!strcmp (lastAttrEntry->XMLattribute, "value"))
+     else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("value")))
        {
        elType = TtaGetElementType (lastAttrElement);
        if (elType.ElTypeNum == HTML_EL_Text_Input ||
@@ -4417,17 +4420,17 @@ char                c;
      /*      bgcolor        ->                   background         */
      /*      text           ->                   color              */
      /*      color          ->                   color              */
-     else if (!strcmp (lastAttrEntry->XMLattribute, "background"))
+     else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("background")))
         {
         if (ustrlen (inputBuffer) > MaxMsgLength - 30)
             inputBuffer[MaxMsgLength - 30] = WC_EOS;
-        sprintf (msgBuffer, "background: url(%s)", inputBuffer);
+        usprintf (msgBuffer, TEXT("background: url(%s)"), inputBuffer);
         ParseHTMLSpecificStyle (lastElement, msgBuffer, theDocument, FALSE);
         }
-     else if (!strcmp (lastAttrEntry->XMLattribute, "bgcolor"))
+     else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("bgcolor")))
         HTMLSetBackgroundColor (theDocument, lastElement, inputBuffer);
-     else if (!strcmp (lastAttrEntry->XMLattribute, "text") ||
-              !strcmp (lastAttrEntry->XMLattribute, "color"))
+     else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("text")) ||
+              !ustrcmp (lastAttrEntry->XMLattribute, TEXT("color")))
         HTMLSetForegroundColor (theDocument, lastElement, inputBuffer);
 #endif /* !STANDALONE */
      }
@@ -4569,7 +4572,7 @@ STRING              prefix;
 	 TtaAttachAttribute (elText, attr, theDocument);
 	 len = ustrlen (EntityName);
 	 if (len > MAX_ENTITY_LENGTH -5)
-	     EntityName[MAX_ENTITY_LENGTH -5] = EOS;
+	     EntityName[MAX_ENTITY_LENGTH -5] = WC_EOS;
 	 buffer[0] = '&';
          ustrcpy (&buffer[1], prefix);
 	 ustrcat (buffer, EntityName);
@@ -4627,9 +4630,9 @@ CHAR_T                c;
 #endif
 {
    int                 i;
-   unsigned char       msgBuffer[MaxMsgLength];
+   CHAR_T              msgBuffer[MaxMsgLength];
 
-   EntityName[LgEntityName] = EOS;
+   EntityName[LgEntityName] = WC_EOS;
    if (CharEntityTable[EntityTableEntry].charName[CharRank] == EOS)
       /* the entity read matches the current entry of entity table */
       if (CharEntityTable[EntityTableEntry].charCode > 255)
@@ -4647,7 +4650,7 @@ CHAR_T                c;
 	  PutInBuffer (EntityName[i]);
        PutInBuffer (';');
        /* print an error message */
-       sprintf (msgBuffer, "Invalid entity \"&%s;\"", EntityName);
+       usprintf (msgBuffer, TEXT("Invalid entity \"&%s;\""), EntityName);
        ParseHTMLError (theDocument, msgBuffer);
      }
    LgEntityName = 0;
@@ -4666,7 +4669,7 @@ unsigned char       c;
 #endif
 {
    int                 i;
-   unsigned char       msgBuffer[MaxMsgLength];
+   CHAR_T              msgBuffer[MaxMsgLength];
    ThotBool	           OK, done, stop;
 
    done = FALSE;
@@ -4680,7 +4683,7 @@ unsigned char       c;
      stop = FALSE;
      do
 	{
-	if (strncmp (EntityName, CharEntityTable[i].charName, LgEntityName) != 0)
+	if (ustrncmp (EntityName, CharEntityTable[i].charName, LgEntityName) != 0)
 	   stop = TRUE;
 	else
 	   if (CharEntityTable[i].charName[CharRank] < c)
@@ -4697,14 +4700,14 @@ unsigned char       c;
         {
 	/* If we are not reading an attribute value, assume that semicolon is
 	   missing and put the corresponding char in the document content */
-	EntityName[LgEntityName] = EOS;
+	EntityName[LgEntityName] = WC_EOS;
 	if (CharEntityTable[EntityTableEntry].charCode > 255)
 	   PutNonISOlatin1Char (CharEntityTable[EntityTableEntry].charCode, TEXT (""));
 	else
 	   PutInBuffer ((char)(CharEntityTable[EntityTableEntry].charCode));
 	if (c != SPACE)
 	   /* print an error message */
-	   ParseHTMLError (theDocument, "Missing semicolon");
+	   ParseHTMLError (theDocument, TEXT("Missing semicolon"));
 	/* next state is the return state from the entity subautomaton, not
 	   the state computed by the automaton. In addition the character read
 	   has not been processed yet */
@@ -4724,7 +4727,7 @@ unsigned char       c;
 	  OK = FALSE;
 	else
 	  if (LgEntityName > 0 &&
-	      strncmp (EntityName, CharEntityTable[EntityTableEntry].charName, LgEntityName) != 0)
+	      ustrncmp (EntityName, CharEntityTable[EntityTableEntry].charName, LgEntityName) != 0)
 	     OK = FALSE;
 	  else
 	     {
@@ -4751,8 +4754,8 @@ unsigned char       c;
 		{
 	        /* print an error message */
 	        EntityName[LgEntityName++] = c;
-	        EntityName[LgEntityName++] = EOS;
-	        sprintf (msgBuffer, "Invalid entity \"&%s\"", EntityName);
+	        EntityName[LgEntityName++] = WC_EOS;
+	        usprintf (msgBuffer, TEXT("Invalid entity \"&%s\""), EntityName);
 	        ParseHTMLError (theDocument, msgBuffer);
 		}
 	     /* next state is the return state from the entity subautomaton,
@@ -4781,8 +4784,8 @@ CHAR_T                c;
 {
    int                 code;
 
-   EntityName[LgEntityName] = EOS;
-   sscanf (EntityName, "%d", &code);
+   EntityName[LgEntityName] = WC_EOS;
+   usscanf (EntityName, TEXT("%d"), &code);
    if (code > 255)
       PutNonISOlatin1Char (code, TEXT ("#"));
    else
@@ -4823,7 +4826,7 @@ char                c;
 	       PutInBuffer (EntityName[i]);
 	    LgEntityName = 0;
 	    /* error message */
-	    ParseHTMLError (theDocument, "Invalid decimal entity");
+	    ParseHTMLError (theDocument, TEXT("Invalid decimal entity"));
 	    }
 	 /* next state is state 0, not the state computed by the automaton */
 	 /* and the character read has not been processed yet */
@@ -4847,8 +4850,8 @@ CHAR_T                c;
 {
    int                 code;
 
-   EntityName[LgEntityName] = EOS;
-   sscanf (EntityName, "%x", &code);
+   EntityName[LgEntityName] = WC_EOS;
+   usscanf (EntityName, TEXT("%x"), &code);
    if (code > 255)
       PutNonISOlatin1Char (code, TEXT ("#x"));
    else
@@ -4893,7 +4896,7 @@ char                c;
 	       PutInBuffer (EntityName[i]);
 	    LgEntityName = 0;
 	    /* error message */
-	    ParseHTMLError (theDocument, "Invalid hexadecimal entity");
+	    ParseHTMLError (theDocument, TEXT("Invalid hexadecimal entity"));
 	    }
 	 /* next state is state 0, not the state computed by the automaton */
 	 /* and the character read has not been processed yet */
@@ -5435,7 +5438,7 @@ void                FreeHTMLParser ()
       }
 
    /* free descriptors of elements closed by a start tag */
-   for (entry = 0; pHTMLGIMapping[entry].htmlGI[0] != EOS; entry++)
+   for (entry = 0; pHTMLGIMapping[entry].htmlGI[0] != WC_EOS; entry++)
       {
       pClose = pHTMLGIMapping[entry].firstClosedElem;
       while (pClose != NULL)
@@ -5452,54 +5455,88 @@ void                FreeHTMLParser ()
    whatever it is.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char     GetNextChar (FILE *infile, char* buffer, int *index, ThotBool *endOfFile)
+static CHAR_T   GetNextChar (FILE *infile, char* buffer, int *index, ThotBool *endOfFile)
 #else
-static char     GetNextChar (infile, buffer, index, endOfFile)
+static CHAR_T   GetNextChar (infile, buffer, index, endOfFile)
 FILE*           infile;
 char*           buffer;
 int*            index;
 ThotBool*       endOfFile;
 #endif
 {
-  char          charRead;
-  int           res;
+    CHAR_T        charRead;
+    int           res;
 
-  charRead = EOS;
-  *endOfFile = FALSE;
-  if (buffer != NULL)
-    {
-      charRead = buffer[(*index)++];
-      *endOfFile = (charRead == EOS);
-    }
-  else if (infile == NULL)
-    *endOfFile = TRUE;
-  else
-    {
-      if (*index == 0)
-	{
-	  res = gzread (infile, FileBuffer, INPUT_FILE_BUFFER_SIZE);
-	  if (res <= 0)
-            /* error or end of file */
-            {
-	      *endOfFile = TRUE;
-	      charRead = EOS;
-	      LastCharInFileBuffer = 0;
+#   ifdef _I18N_
+    char          mbcstr[MAX_BYTES];
+    int           nbBytes;
+#   endif /* _I18N_ */
+
+    charRead = WC_EOS;
+    *endOfFile = FALSE;
+
+#   ifdef _I18N_
+    if (buffer != NULL) {
+       mbcstr[0] = buffer[(*index)++];
+       nbBytes   = 1;
+       if (mbcstr[0] >= 0x80) {
+          mbcstr[1] = buffer[(*index)++];
+          nbBytes = 2;
+       }
+       mbtowc (&charRead, mbcstr, nbBytes);
+       *endOfFile = (charRead == WC_EOS);
+    } else if (infile == NULL)
+           *endOfFile = TRUE;
+    else {
+         if (*index == 0) {
+            res = gzread (infile, FileBuffer, INPUT_FILE_BUFFER_SIZE);
+            if (res <= 0) {
+               /* error or end of file */
+               *endOfFile = TRUE;
+               charRead = WC_EOS;
+               LastCharInFileBuffer = 0;
+            } else {
+                   LastCharInFileBuffer = res - 1;
             }
-	  else
-            {
-	      /* FileBuffer[res] = EOS; $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ */
-	      LastCharInFileBuffer = res - 1;
+         }
+         if (*endOfFile == FALSE) {
+            mbcstr[0] = FileBuffer[(*index)++];
+            nbBytes   = 1;
+            if (mbcstr[0] >= 0x80) {
+               mbcstr[1] = FileBuffer[(*index)++];
+               nbBytes = 2;
             }
-	}
-      if (*endOfFile == FALSE)
-	{
-	  charRead = FileBuffer[(*index)++];
-	  /* charRead = WC_Buffer[(*index)++]; */
-	  if (*index > LastCharInFileBuffer)
-	    *index = 0;
-	}
+            mbtowc (&charRead, mbcstr, nbBytes);
+            if (*index > LastCharInFileBuffer)
+               *index = 0;
+         }
     }
-  return charRead;
+#   else  /* !_I18N_ */
+    if (buffer != NULL) {
+       charRead = buffer[(*index)++];
+       *endOfFile = (charRead == EOS);
+    } else if (infile == NULL)
+           *endOfFile = TRUE;
+    else {
+         if (*index == 0) {
+            res = gzread (infile, FileBuffer, INPUT_FILE_BUFFER_SIZE);
+            if (res <= 0) {
+               /* error or end of file */
+               *endOfFile = TRUE;
+               charRead = EOS;
+               LastCharInFileBuffer = 0;
+            } else {
+                   LastCharInFileBuffer = res - 1;
+            }
+         }
+         if (*endOfFile == FALSE) {
+            charRead = FileBuffer[(*index)++];
+            if (*index > LastCharInFileBuffer)
+               *index = 0;
+         }
+    }
+#   endif /* !_I18N_ */
+    return charRead;
 }
 
 /*----------------------------------------------------------------------
@@ -5522,29 +5559,29 @@ Element		el;
    input file or buffer.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char          GetNextInputChar (FILE *infile, int *index, ThotBool *endOfFile)
+CHAR_T        GetNextInputChar (FILE *infile, int *index, ThotBool *endOfFile)
 #else
-char          GetNextInputChar (infile, index, endOfFile)
+CHAR_T        GetNextInputChar (infile, index, endOfFile)
 FILE*         infile;
 int*          index;
 ThotBool*     endOfFile;
 #endif
 {
-  char charRead;
+  CHAR_T charRead;
 
-  charRead = EOS;
+  charRead = WC_EOS;
   *endOfFile = FALSE;
-  if (PreviousBufChar != EOS)
+  if (PreviousBufChar != WC_EOS)
     {
       charRead = PreviousBufChar;
-      PreviousBufChar = EOS;
+      PreviousBufChar = WC_EOS;
     }
   else
     {
       charRead = GetNextChar (infile, InputText, index, endOfFile);
       NumberOfCharRead++;
       /* skip null characters*/
-      while (charRead == EOS && !*endOfFile)
+      while (charRead == WC_EOS && !*endOfFile)
 	{
 	charRead = GetNextChar (infile, InputText, index, endOfFile);
 	NumberOfCharRead++;
@@ -5552,20 +5589,20 @@ ThotBool*     endOfFile;
     }
   if (*endOfFile == FALSE)
     {
-      if ((int) charRead == __CR__)
+      if ((int) charRead == WC_CR)
 	/* CR has been read */
 	{
 	  /* Read next character */
 	  charRead = GetNextChar (infile, InputText, index, endOfFile);
-	  if ((int) charRead != EOL)
+	  if ((int) charRead != WC_EOL)
 	    /* next character is not LF. Store next character and return LF */
 	    {
 	      PreviousBufChar = charRead;
-	      charRead = EOL;
+	      charRead = WC_EOL;
 	    }
 	}
       /* update the counters of characters and lines read */
-      if ((int) charRead == EOL || (int) charRead == __CR__)
+      if ((int) charRead == WC_EOL || (int) charRead == WC_CR)
 	/* new line in HTML file */
 	{
 	  NumberOfLinesRead++;
@@ -5584,11 +5621,11 @@ ThotBool*     endOfFile;
    One parameter should be NULL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void        HTMLparse (FILE * infile, STRING HTMLbuf)
+static void        HTMLparse (FILE * infile, char* HTMLbuf)
 #else
 static void        HTMLparse (infile, HTMLbuf)
 FILE               *infile;
-STRING              HTMLbuf;
+char*              HTMLbuf;
 
 #endif
 {
@@ -5632,7 +5669,7 @@ STRING              HTMLbuf;
 		      if (currentState == 6 || currentState == 9)
 			/* within an attribute value between quotes */
 			if (lastAttrEntry != NULL &&
-			    !strcmp (lastAttrEntry->XMLattribute, "src"))
+			    !ustrcmp (lastAttrEntry->XMLattribute, TEXT("src")))
 			   /* value of an SRC attribute */
 			   /* consider new line as an empty char*/
 			   charRead = EOS;
@@ -5954,7 +5991,7 @@ STRING              fileName;
   ThotBool            endOfFile, isXHTML;
 
   isXHTML = FALSE;
-  stream = gzopen (WideChar2ISO (fileName), "r");
+  stream = gzopen (fileName, "r");
   if (stream != 0)
     {
       InputText = NULL;
@@ -5979,12 +6016,12 @@ STRING              fileName;
 		  i += 5;
 		  /* stop the research */
 		  endOfFile = TRUE;
-		  if (FileBuffer[i] == SPACE ||
-			 FileBuffer[i] == BSPACE ||
-			 FileBuffer[i] == EOL ||
-			 FileBuffer[i] == TAB ||
-			 FileBuffer[i] == __CR__ ||
-			 FileBuffer[i] == '>')
+		  if (FileBuffer[i] == WC_SPACE  ||
+              FileBuffer[i] == WC_BSPACE ||
+              FileBuffer[i] == WC_EOL    ||
+              FileBuffer[i] == WC_TAB    ||
+              FileBuffer[i] == WC_CR     ||
+              FileBuffer[i] == TEXT('>'))
 		     isXHTML = TRUE;
 		}
 	    }
@@ -6441,10 +6478,10 @@ Document            doc;
    the missing elements.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CheckAbstractTree (STRING pathURL)
+void                CheckAbstractTree (CHAR_T* pathURL)
 #else
 void                CheckAbstractTree (pathURL)
-STRING              pathURL;
+CHAR_T*             pathURL;
 
 #endif
 {
@@ -7014,10 +7051,10 @@ ThotBool            isclosed;
 Document            doc;
 #endif  /* __STDC__ */
 {
-   char                tag[20];
-   Element             elem;
-   int                 i;
-   SSchema	       schema;
+   CHAR_T           tag[20];
+   Element          elem;
+   int              i;
+   SSchema          schema;
 
    StackLevel = 1;
    currentLanguage = TtaGetDefaultLanguage ();
@@ -7033,8 +7070,8 @@ Document            doc;
 	   elem = lastelem;
 	while (elem != NULL && elem != rootElement)
 	  {
-	     strcpy (tag, GITagNameByType (TtaGetElementType (elem)));
-	     if (strcmp (tag, "???"))
+	     ustrcpy (tag, GITagNameByType (TtaGetElementType (elem)));
+	     if (ustrcmp (tag, TEXT("???")))
 	       {
 		  for (i = StackLevel; i > 0; i--)
 		    {
@@ -7126,13 +7163,13 @@ STRING	        closingTag;
    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void       ParseSubTree (STRING HTMLbuf, Element lastelem, ThotBool isclosed, Document doc)
+void       ParseSubTree (CHAR_T* HTMLbuf, Element lastelem, ThotBool isclosed, Document doc)
 #else
 void       ParseSubTree (HTMLbuf, lastelem, isclosed, doc)
-STRING	   HTMLbuf;
-Element		lastelem;
-ThotBool		isclosed;
-Document	doc;
+CHAR_T*    HTMLbuf;
+Element	   lastelem;
+ThotBool   isclosed;
+Document   doc;
 
 #endif
 {
@@ -7227,7 +7264,7 @@ char              **argv;
 	  TtaSetDocumentPath (documentDirectory);
 	  docURL = htmlFileName;
 	  /* create a Thot document of type HTML */
-	  doc = TtaNewDocument ("HTML", pivotFileName);
+	  doc = TtaNewDocument (TEXT("HTML"), pivotFileName);
 	  theDocument = doc;
 	  if (doc == 0)
 	    {
@@ -7246,23 +7283,23 @@ char              **argv;
    distant) path or URL of the html document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                StartParser (Document doc, CharUnit* htmlFileName, CharUnit* documentName, CharUnit* documentDirectory, CharUnit* pathURL, ThotBool plainText)
+void                StartParser (Document doc, CHAR_T* htmlFileName, CHAR_T* documentName, CHAR_T* documentDirectory, CHAR_T* pathURL, ThotBool plainText)
 #else
 void                StartParser (doc, htmlFileName, documentName, documentDirectory, pathURL, plainText)
 Document            doc;
-CharUnit*           htmlFileName;
-CharUnit*           documentName;
-CharUnit*           documentDirectory;
-CharUnit*           pathURL;
+CHAR_T*             htmlFileName;
+CHAR_T*             documentName;
+CHAR_T*             documentDirectory;
+CHAR_T*             pathURL;
 ThotBool            plainText;
 #endif
 {
   Element             el, oldel;
   AttributeType       attrType;
   Attribute           attr;
-  CharUnit*           s;
-  CharUnit            tempname[MAX_LENGTH];
-  CharUnit            temppath[MAX_LENGTH];
+  CHAR_T*             s;
+  CHAR_T              tempname[MAX_LENGTH];
+  CHAR_T              temppath[MAX_LENGTH];
   int                 length;
   ThotBool            isHTML;
   char                www_file_name[MAX_LENGTH];
@@ -7291,16 +7328,16 @@ ThotBool            plainText;
     {
       FileBuffer[0] = EOS;
       WithinTable = 0;
-      if (documentName[0] == CUS_EOS && !TtaCheckDirectory (documentDirectory))
+      if (documentName[0] == WC_EOS && !TtaCheckDirectory (documentDirectory))
 	{
-	  StringCopy (documentName, documentDirectory);
-	  documentDirectory[0] = CUS_EOS;
+	  ustrcpy (documentName, documentDirectory);
+	  documentDirectory[0] = WC_EOS;
 	  s = TtaGetEnvString ("PWD");
 	  /* set path on current directory */
 	  if (s != NULL)
-	    StringCopy (documentDirectory, s);
+	    ustrcpy (documentDirectory, s);
 	  else
-	    documentDirectory[0] = CUS_EOS;
+	    documentDirectory[0] = WC_EOS;
 	}
       TtaAppendDocumentPath (documentDirectory);
       /* create a Thot document of type HTML */
@@ -7308,17 +7345,17 @@ ThotBool            plainText;
       /* the Thot document has been successfully created */
       {
 #ifndef STANDALONE
-	length = StringLength (pathURL);
-	if (StringCompare (pathURL, htmlFileName) == 0)
+	length = ustrlen (pathURL);
+	if (ustrcmp (pathURL, htmlFileName) == 0)
 	  {
-	    docURL = TtaAllocCUString (length + 1);
-	    StringCopy (docURL, pathURL);
+	    docURL = TtaAllocString (length + 1);
+	    ustrcpy (docURL, pathURL);
 	  }
 	else
 	  {
-	    length += StringLength (htmlFileName) + 20;
-	    docURL = TtaAllocCUString (length+1);
-	    cus_sprintf (docURL, CUSTEXT("%s temp file: %s"), pathURL, htmlFileName);
+	    length += ustrlen (htmlFileName) + 20;
+	    docURL = TtaAllocString (length+1);
+	    usprintf (docURL, TEXT("%s temp file: %s"), pathURL, htmlFileName);
 	  }
 #endif /* STANDALONE */
 	/* do not check the Thot abstract tree against the structure */
@@ -7341,14 +7378,14 @@ ThotBool            plainText;
 	  }
 	else
 #endif /* ANNOTATIONS */
-	  isHTML = (strcmp (TtaGetSSchemaName (DocumentSSchema), "HTML") == 0);
+	  isHTML = (ustrcmp (TtaGetSSchemaName (DocumentSSchema), TEXT("HTML")) == 0);
 	if (plainText)
 	  {
 	    if (isHTML)
 	      {
 		/* change the document type */
 		TtaFreeView (doc, 1);
-		doc = TtaNewDocument ("TextFile", documentName);
+		doc = TtaNewDocument (TEXT("TextFile"), documentName);
 		TtaSetPSchema (doc, TEXT("TextFileP"));
 		DocumentSSchema = TtaGetDocumentSSchema (doc);
 		isHTML = FALSE;
@@ -7364,7 +7401,7 @@ ThotBool            plainText;
 	      {
 		/* change the document type */
 		TtaFreeView (doc, 1);
-		doc = TtaNewDocument ("HTML", documentName);
+		doc = TtaNewDocument (TEXT("HTML"), documentName);
 		if (TtaGetScreenDepth () > 1)
 		  TtaSetPSchema (doc, TEXT("HTMLP"));
 		else

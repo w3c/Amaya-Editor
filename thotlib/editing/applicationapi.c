@@ -307,17 +307,17 @@ void                InitErrorHandler ()
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaInitialize (CharUnit* applicationName)
+void                TtaInitialize (CHAR_T* applicationName)
 #else  /* __STDC__ */
 void                TtaInitialize (applicationName)
-CharUnit*           applicationName;
+CHAR_T*             applicationName;
 
 #endif /* __STDC__ */
 {
    int                 i;
 
    UserErrorCode = 0;
-   StringCopy (DefaultDocumentName, CUSTEXT(""));
+   ustrcpy (DefaultDocumentName, TEXT(""));
    InitEditorMemory ();		/* Initializes the memory managment of the editor */
    InitNatures ();		/* Initializes the table of Natures */
 
@@ -360,7 +360,7 @@ CharUnit*           applicationName;
    Patterns = Name_patterns;
 #endif /* NODISPLAY */
    /* load the message table of the Thot Library */
-   i = TtaGetMessageTable (CUSTEXT("libdialogue"), TMSG_LIB_MSG_MAX);
+   i = TtaGetMessageTable (TEXT("libdialogue"), TMSG_LIB_MSG_MAX);
    switch (i)
 	 {
 	    case 0:

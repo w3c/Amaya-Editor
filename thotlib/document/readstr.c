@@ -397,7 +397,7 @@ PtrSSchema          pSS;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-ThotBool            ReadStructureSchema (CUSName fileName, PtrSSchema pSS)
+ThotBool            ReadStructureSchema (Name fileName, PtrSSchema pSS)
 
 #else  /* __STDC__ */
 ThotBool            ReadStructureSchema (fileName, pSS)
@@ -417,17 +417,17 @@ PtrSSchema          pSS;
    pwdPath = TtaGetEnvString ("PWD");
    ustrncpy (dirBuffer, pwdPath, MAX_PATH);
 #  endif  /* !_WINDOWS_COMPILERS */
-   StringNCopy (dirBuffer, SchemaPath, MAX_PATH);
+   ustrncpy (dirBuffer, SchemaPath, MAX_PATH);
 /* #  endif * _WINDOWS_COMPILERS */
-   MakeCompleteName (fileName, CUSTEXT("STR"), dirBuffer, buf, &i);
+   MakeCompleteName (fileName, TEXT("STR"), dirBuffer, buf, &i);
 
    /* ouvre le fichier */
    file = TtaReadOpen (buf);
    if (file == 0)
       /* echec */
      {
-	StringNCopy (buf, fileName, MAX_PATH);
-	StringConcat (buf, CUSTEXT(".STR"));
+	ustrncpy (buf, fileName, MAX_PATH);
+	ustrcat (buf, TEXT(".STR"));
 	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), buf);
 	return FALSE;
      }

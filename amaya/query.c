@@ -26,9 +26,9 @@
 #define AMAYA_LOST_UPDATE
 
 #ifdef _WINDOWS
-#      define CACHE_DIR_NAME CUSTEXT("\\libwww-cache\\")
+#      define CACHE_DIR_NAME TEXT("\\libwww-cache\\")
 #else
-#      define CACHE_DIR_NAME CUSTEXT("/libwww-cache/")
+#      define CACHE_DIR_NAME TEXT("/libwww-cache/")
 #endif
 
 /* libwww default parameters */
@@ -117,7 +117,7 @@ static int          fd_cachelock; /* open handle to the .lock cache file */
 /* prototypes */
 
 #ifdef __STDC__
-static void RecCleanCache (CharUnit* dirname);
+static void RecCleanCache (CHAR_T* dirname);
 #ifdef _WINDOWS
 int WIN_Activate_Request (HTRequest* , HTAlertOpcode, int, const char*, void*, HTAlertPar*);
 #endif /* _WINDOWS */
@@ -148,7 +148,7 @@ static ThotBool SafePut_query (/* char *url */);
   filename and fd_cachelock will take its value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int set_cachelock (CharUnit* filename)
+static int set_cachelock (CHAR_T* filename)
 #else        
 static int set_cachelock (filename)
 CharUniut* filename;
@@ -217,10 +217,10 @@ int *fd;
   returns the pid of the process who has the lock
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int test_cachelock (CharUnit* filename)
+static int test_cachelock (CHAR_T* filename)
 #else
 static int test_cachelock (filename)
-CharUnit*  filename;
+CHAR_T*  filename;
 #endif /* __STDC__ */
 {
 #ifdef _WINDOWS
@@ -332,8 +332,8 @@ PicType contentType;
      ** Amaya could not detect the type, so 
      ** we try to use the filename's suffix to do so.
      */
-     filename = AmayaParseUrl (urlName, _EMPTYSTR_, AMAYA_PARSE_PATH | AMAYA_PARSE_PUNCTUATION);
-     HTBind_getFormat (WideChar2ISO (filename), &atom, &enc, &cte, &lang, &quality);
+     filename = AmayaParseUrl (urlName, TEXT(""), AMAYA_PARSE_PATH | AMAYA_PARSE_PUNCTUATION);
+     HTBind_getFormat (filename, &atom, &enc, &cte, &lang, &quality);
      TtaFreeMemory (filename);
      if (atom ==  WWW_UNKNOWN)
 	 /*
@@ -480,7 +480,7 @@ AHTReqContext      *me;
 	 {
 	   if (me->outputfile && me->outputfile[0] != EOS)
 	     {
-	       TtaFileUnlink (ISO2WideChar (me->outputfile));
+	       TtaFileUnlink (me->outputfile);
 	       me->outputfile[0] = EOS;
 	     }
 	 }
@@ -639,9 +639,7 @@ HTRequest           *request;
 #ifdef DEBUG_LIBWWW
       fprintf(stderr, "AHTOpen_file: couldn't open output stream for url %s\n", me->urlName);
 #endif
-      TtaSetStatus (me->docid, 1, 
-		    TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE),
-		    ISO2WideChar (me->outputfile));
+      TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE), me->outputfile);
       me->reqStatus = HT_ERR;
       return (HT_ERROR);
     }
@@ -733,13 +731,13 @@ int                 status;
        */
 
        /* only do a redirect using a network protocol understood by Amaya */
-   	if (IsValidProtocol (ISO2WideChar (new_anchor->parent->address)))
+   	if (IsValidProtocol (new_anchor->parent->address))
 	  {
 	    /* if it's a valid URL, we try to normalize it */
 	    /* We use the pre-redirection anchor as a base name */
 	    /* @@ how to obtain this address here? */
-	    dst = ISO2WideChar (new_anchor->parent->address);
-	    escape_src = EscapeURL (ISO2WideChar (me->urlName));
+	    dst = new_anchor->parent->address;
+	    escape_src = EscapeURL (me->urlName);
 	    if (escape_src)
 	      {
 		ref = AmayaParseUrl (dst, escape_src, AMAYA_PARSE_ALL);
@@ -795,8 +793,7 @@ int                 status;
 	  }
 
 	/* tell the user what we're doing */
-	TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_RED_FETCHING),
-		      ISO2WideChar (me->status_urlName));
+	TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_RED_FETCHING), me->status_urlName);
 
 	/*
 	** launch the request
@@ -1177,7 +1174,7 @@ int                 status;
 	   
 	   /* Content-Type can be specified by an httpd  server's admin.
 	      To be on the safe side, we normalize its case */
-	   ConvertToLowerCase (ISO2WideChar (me->content_type));
+	   ConvertToLowerCase (me->content_type);
 	   
 #ifdef DEBUG_LIBWWW
 	   fprintf (stderr, "content type is: %s\n", me->content_type);
@@ -1187,9 +1184,7 @@ int                 status;
 
    /* to avoid a hangup while downloading css files */
    if (AmayaAlive_flag && (me->mode & AMAYA_LOAD_CSS))
-     TtaSetStatus (me->docid, 1, 
-		   TtaGetMessage (AMAYA, AM_ELEMENT_LOADED),
-		   ISO2WideChar (me->status_urlName));
+     TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_ELEMENT_LOADED), me->status_urlName);
    
   /* don't remove or Xt will hang up during the PUT */
    if (AmayaIsAlive ()  && ((me->method == METHOD_POST) ||
@@ -1241,7 +1236,7 @@ int                 status;
 	   if (docid_status != NULL && docid_status->counter > 1)
 	     TtaSetStatus (me->docid, 1, 
 			   TtaGetMessage (AMAYA, AM_ELEMENT_LOADED),
-			   ISO2WideChar (me->status_urlName));
+			   me->status_urlName);
 	       break;
 	       
      case HT_NO_DATA:
@@ -1250,7 +1245,7 @@ int                 status;
 		  me->status_urlName);
        TtaSetStatus (me->docid, 1, 
 		     TtaGetMessage (AMAYA, AM_LOADED_NO_DATA),
-		     ISO2WideChar (me->status_urlName));
+		     me->status_urlName);
        break;
        
      case HT_INTERRUPTED:
@@ -1268,7 +1263,7 @@ int                 status;
 		  HTResponse_retryTime (response));
        TtaSetStatus (me->docid, 1, 
 		     TtaGetMessage (AMAYA, AM_NOT_AVAILABLE_RETRY),
-		     ISO2WideChar (me->status_urlName));
+		     me->status_urlName);
        break;
 
      case HT_ERROR:
@@ -1283,7 +1278,7 @@ int                 status;
 		  me->status_urlName ? me->status_urlName :"<UNKNOWN>");
        TtaSetStatus (me->docid, 1,
 		     TtaGetMessage (AMAYA, AM_CANNOT_LOAD),
-		     me->status_urlName ? ISO2WideChar (me->status_urlName) : TEXT("<UNKNOWN>"));
+		     me->status_urlName ? me->status_urlName : TEXT("<UNKNOWN>"));
        break;
      default:
        if (PROT_TRACE)
@@ -1349,8 +1344,8 @@ static void         AHTAcceptLanguagesInit (c)
 HTList             *c;
 #endif /* __STDC__ */
 {
-  CharUnit*         ptr;
-  CharUnit*         lang_list;
+  CHAR_T*         ptr;
+  CHAR_T*         lang_list;
   char              s[3];
   int               count, lg;
   double            quality;
@@ -1368,19 +1363,19 @@ HTList             *c;
       /* how many languages do we have? */
       ptr = lang_list;
       count = 0;
-      while (*ptr != CUS_EOS) {
-            while (*ptr != CUS_EOS && (*ptr < CUSTEXT('A') || (*ptr > CUSTEXT('Z') && *ptr < CUSTEXT('a')) || *ptr > CUSTEXT('z')))
+      while (*ptr != WC_EOS) {
+            while (*ptr != WC_EOS && (*ptr < TEXT('A') || (*ptr > TEXT('Z') && *ptr < TEXT('a')) || *ptr > TEXT('z')))
                   /* skip the whole separator */
                   ptr++;
             lg = 0;
-            while ((*ptr >= CUSTEXT('A') && *ptr <= CUSTEXT('Z')) || (*ptr >= CUSTEXT('a') && *ptr <= CUSTEXT('z')) || *ptr == CUSTEXT('-')) {
+            while ((*ptr >= TEXT('A') && *ptr <= TEXT('Z')) || (*ptr >= TEXT('a') && *ptr <= TEXT('z')) || *ptr == TEXT('-')) {
                   /* it's a new language */
                   ptr++;
                   lg++;
 			}
             if (lg >= 2)
                count++;
-            if (*ptr != CUS_EOS)
+            if (*ptr != WC_EOS)
                ptr++;
 	  }
 
@@ -1396,14 +1391,14 @@ HTList             *c;
       ptr--;
       still = TRUE;
       while (count) {
-            while (still && (*ptr < CUSTEXT('A') || (*ptr > CUSTEXT('Z') && *ptr < CUSTEXT('a')) || *ptr > CUSTEXT('z')))
+            while (still && (*ptr < TEXT('A') || (*ptr > TEXT('Z') && *ptr < TEXT('a')) || *ptr > TEXT('z')))
                   /* skip the whole separator */
                   if (ptr > lang_list)
                      ptr--;
                   else
                       still = FALSE;
             lg = 0;
-            while (still && ((*ptr >= CUSTEXT('A') && *ptr <= CUSTEXT('Z')) || (*ptr >= CUSTEXT('a') && *ptr <= CUSTEXT('z')) || *ptr == CUSTEXT('-'))) {
+            while (still && ((*ptr >= TEXT('A') && *ptr <= TEXT('Z')) || (*ptr >= TEXT('a') && *ptr <= TEXT('z')) || *ptr == TEXT('-'))) {
                   /* it's a new language */
                   if (ptr > lang_list)
                      ptr--;
@@ -1489,7 +1484,7 @@ HTList             *c;
   ----------------------------------------------------------------------*/
 static void         AHTProtocolInit (void)
 {
-  CharUnit* strptr;
+  CHAR_T* strptr;
 
   /* 
      NB. Preemptive == YES means Blocking requests
@@ -1612,14 +1607,14 @@ View view;
   /* don't do anything if we don't have a valid cache dir */
   if (!tmp || *tmp == EOS)
 	  return;
-  cache_dir = TtaStrdup (ISO2WideChar (tmp));
+  cache_dir = TtaStrdup (tmp);
   HT_FREE (tmp);
   cache_size = HTCacheMode_maxSize ();
   cache_expire = HTCacheMode_expires ();
   cache_disconnect = HTCacheMode_disconnected ();
 
   /* get something we can work on :) */
-  tmp = ISO2WideChar (HTWWWToLocal (WideChar2ISO (cache_dir), "file:", NULL));
+  tmp = HTWWWToLocal (cache_dir, "file:", NULL);
   real_dir = TtaAllocString (ustrlen (tmp) + 20);
   ustrcpy (real_dir, tmp);
   HT_FREE (tmp);
@@ -1645,7 +1640,7 @@ View view;
 
   HTCacheMode_setExpires (cache_expire);
   HTCacheMode_setDisconnected (cache_disconnect);
-  HTCacheInit (WideChar2ISO (cache_dir), cache_size);
+  HTCacheInit (cache_dir, cache_size);
   /* set a new concurrent cache lock */
   ustrcat (real_dir, TEXT(".lock"));
   if (set_cachelock (real_dir) == -1)
@@ -1672,10 +1667,10 @@ View view;
   Clears an existing cache directory
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void RecCleanCache (CharUnit* dirname)
+static void RecCleanCache (CHAR_T* dirname)
 #else
 static void RecCleanCache (dirname)
-CharUnit*   dirname;
+CHAR_T*   dirname;
 #endif /* __STDC__ */
 
 #ifdef _WINDOWS
@@ -1683,8 +1678,8 @@ CharUnit*   dirname;
   HANDLE          hFindFile;
   ThotBool        status;
   WIN32_FIND_DATA ffd;
-  CharUnit        t_dir [MAX_LENGTH];
-  CharUnit*       ptr;
+  CHAR_T        t_dir [MAX_LENGTH];
+  CHAR_T*       ptr;
 
   /* create a t_dir name to start searching for files */
   if ((StringLength (dirname) + 10) > MAX_LENGTH)
@@ -1709,10 +1704,10 @@ CharUnit*   dirname;
       if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 	{
 	  /* it's a directory, erase it recursively */
-	  if (StringCompare (ffd.cFileName, CUSTEXT("..")) && StringCompare (ffd.cFileName, TEXT(".")))
+	  if (ustrcmp (ffd.cFileName, TEXT("..")) && ustrcmp (ffd.cFileName, TEXT(".")))
 	    {
-	      StringCopy (ptr, ffd.cFileName);
-	      StringConcat (ptr, CUS_DIR_STR);
+	      ustrcpy (ptr, ffd.cFileName);
+	      ustrcat (ptr, WC_DIR_STR);
 	      RecCleanCache (t_dir);
 	      urmdir (t_dir);
 	    }
@@ -1720,7 +1715,7 @@ CharUnit*   dirname;
 	else
 	  {
 	    /* it's a file, erase it */
-	    StringCopy (ptr, ffd.cFileName);
+	    ustrcpy (ptr, ffd.cFileName);
 	    TtaFileUnlink (t_dir);
 	  }
       status = FindNextFile (hFindFile, &ffd);
@@ -1799,9 +1794,9 @@ static void Cacheinit ()
    HTCacheMode_setEnabled (NO);
 
 #else /* AMAYA_WWW_CACHE */
-  CharUnit* strptr;
-  CharUnit* real_dir = NULL;
-  CharUnit* cache_lockfile;
+  CHAR_T* strptr;
+  CHAR_T* real_dir = NULL;
+  CHAR_T* cache_lockfile;
   char      www_realDir[MAX_LENGTH];
   char*     cache_dir = NULL;
   int       cache_size;
@@ -1838,7 +1833,7 @@ int i;
   else
     {
       real_dir = TtaAllocCUString (StringLength (TempFileDirectory) + StringLength (CACHE_DIR_NAME) + 20);
-      cus_sprintf (real_dir, CUSTEXT("%s%s"), TempFileDirectory, CACHE_DIR_NAME);
+      usprintf (real_dir, TEXT("%s%s"), TempFileDirectory, CACHE_DIR_NAME);
     }
 
   /* compatiblity with previous versions of Amaya: does real_dir
@@ -1863,7 +1858,7 @@ int i;
   /* get the cache size (or use a default one) */
   strptr = TtaGetEnvString ("CACHE_SIZE");
   if (strptr && *strptr) 
-    cache_size = custoi (strptr);
+    cache_size = wctoi (strptr);
   else
     cache_size = DEFAULT_CACHE_SIZE;
 
@@ -1965,7 +1960,7 @@ static void ProxyInit (void)
 static void ProxyInit ()
 #endif /* __STDC__ */
 {
-  CharUnit* strptr;
+  CHAR_T*   strptr;
   char*     name;
   ThotBool  proxy_is_onlyproxy;
   char*     tmp = NULL;
@@ -2036,8 +2031,8 @@ static void SafePut_init (void)
 static void SafePut_init ()
 #endif /* __STDC__ */
 {
-  CharUnit* strptr;
-  CharUnit* str = NULL;
+  CHAR_T* strptr;
+  CHAR_T* str = NULL;
   char*     ptr, *strptrA, *ptr2;
   char*     domain;
 
@@ -2127,7 +2122,7 @@ char* AppName;
 char* AppVersion;
 #endif /* __STDC__ */
 {
-   CharUnit* strptr;
+   CHAR_T* strptr;
 
    /* If the Library is not already initialized then do it */
    if (!HTLib_isInitialized ())
@@ -2291,7 +2286,7 @@ void                QueryInit ()
 void                QueryInit ()
 #endif
 {
-  CharUnit* strptr;
+  CHAR_T* strptr;
   int tmp_i;
   long tmp_l;
 
@@ -2338,7 +2333,7 @@ void                QueryInit ()
    /* Maximum number of simultaneous open sockets */
    strptr = TtaGetEnvString ("MAX_SOCKET");
    if (strptr && *strptr) 
-     tmp_i = custoi (strptr);
+     tmp_i = wctoi (strptr);
    else
      tmp_i = DEFAULT_MAX_SOCKET;
    HTNet_setMaxSocket (tmp_i);
@@ -2347,7 +2342,7 @@ void                QueryInit ()
    /* dns timeout */
    strptr = TtaGetEnvString ("DNS_TIMEOUT");
    if (strptr && *strptr) 
-     tmp_i = custoi (strptr);
+     tmp_i = wctoi (strptr);
    else
      tmp_i = DEFAULT_DNS_TIMEOUT;
    HTDNS_setTimeout (tmp_i);
@@ -2363,7 +2358,7 @@ void                QueryInit ()
    /* default timeout in ms */
    strptr = TtaGetEnvString ("NET_EVENT_TIMEOUT");
    if (strptr && *strptr) 
-     tmp_i = custoi (strptr);
+     tmp_i = wctoi (strptr);
    else
      tmp_i = DEFAULT_NET_EVENT_TIMEOUT;
    HTHost_setEventTimeout (tmp_i);
@@ -2544,7 +2539,7 @@ STRING string;
      change
      */
 
-  tmp_string_ptr = tmp_string = WideChar2ISO (TtaStrdup (string));
+  tmp_string_ptr = tmp_string = TtaStrdup (string);
   formdata = HTAssocList_new();
   
   while (*tmp_string)
@@ -2786,7 +2781,7 @@ STRING        content_type;
    esc_url = EscapeURL (urlName);
    if (esc_url) 
      {
-       ref = AmayaParseUrl (esc_url, _EMPTYSTR_, AMAYA_PARSE_ALL);
+       ref = AmayaParseUrl (esc_url, TEXT(""), AMAYA_PARSE_ALL);
        TtaFreeMemory (esc_url);
      }
    else
@@ -2866,13 +2861,13 @@ STRING        content_type;
 	 me->outputfile = TtaGetMemory (l + 2);
        else
 	 me->outputfile = TtaGetMemory (MAX_LENGTH + 2);
-       strcpy (me->outputfile, WideChar2ISO (outputfile));
+       strcpy (me->outputfile, outputfile);
        l = ustrlen (urlName);
        if (l > MAX_LENGTH)
 	 me->urlName = TtaGetMemory (l + 2);
        else
 	 me->urlName = TtaGetMemory (MAX_LENGTH + 2);
-       strcpy (me->urlName, WideChar2ISO (urlName));
+       strcpy (me->urlName, urlName);
 #ifdef _WINDOWS
      /* force windows ASYNC requests to always be non preemptive */
      HTRequest_setPreemptive (me->request, NO);
@@ -2881,8 +2876,8 @@ STRING        content_type;
    else 
 #ifdef _WINDOWS
      {
-       me->outputfile = WideChar2ISO (outputfile);
-       me->urlName = WideChar2ISO (urlName);
+       me->outputfile = outputfile;
+       me->urlName = urlName;
        /* force windows SYNC requests to always be non preemptive */
        HTRequest_setPreemptive (me->request, YES);
      }
@@ -2912,9 +2907,9 @@ STRING        content_type;
    ChopURL (me->status_urlName, me->urlName);
    TtaSetStatus (me->docid, 1, 
 		 TtaGetMessage (AMAYA, AM_FETCHING),
-		 ISO2WideChar (me->status_urlName));
+		 me->status_urlName);
 
-   me->anchor = (HTParentAnchor *) HTAnchor_findAddress (WideChar2ISO (ref));
+   me->anchor = (HTParentAnchor *) HTAnchor_findAddress (ref);
    TtaFreeMemory (ref);
    
    TtaGetEnvBoolean ("CACHE_DISCONNECTED_MODE", &bool_tmp);
@@ -2953,11 +2948,11 @@ STRING        content_type;
        /* @@@ a very ugly patch :)))
 	I'm copying here some of the functionality I use in the PUT
        I need to put the common parts in another module */
-       QGetFileSize (WideChar2ISO (formdata), &filesize);
+       QGetFileSize (formdata, &filesize);
        filesize = filesize + strlen ("w3c_annotate=");
        me->block_size = filesize;
 
-       fileURL = HTParse (WideChar2ISO (formdata), "file:/", PARSE_ALL);
+       fileURL = HTParse (formdata, "file:/", PARSE_ALL);
        me->source = HTAnchor_findAddress (fileURL);
        HT_FREE (fileURL);
 
@@ -2977,7 +2972,7 @@ STRING        content_type;
 
 	 me->document = TtaGetMemory (me->block_size 
 				      + strlen ("w3c_annotate=") + 1);
-	 fp = fopen (WideChar2ISO (formdata), "r");
+	 fp = fopen (formdata, "r");
 	 i = 0;
 	 strcpy (me->document, "w3c_annotate=");
 	 c = getc (fp);
@@ -3154,7 +3149,7 @@ void               *context_tcbf;
    */
    if (DocumentMeta[docid]->put_default_name)
      {
-       CharUnit *ptr1, *ptr2;
+       CHAR_T *ptr1, *ptr2;
        ptr1 = TtaGetEnvString ("DEFAULTNAME");
        if (ptr1 && *ptr1) 
 	 {
@@ -3175,7 +3170,7 @@ void               *context_tcbf;
    me->terminate_cbf = terminate_cbf;
    me->context_tcbf = context_tcbf;
    esc_url = EscapeURL (urlName);
-   me->urlName = TtaStrdup (WideChar2ISO (esc_url));
+   me->urlName = TtaStrdup (esc_url);
    TtaFreeMemory (esc_url);
    me->block_size =  file_size;
    /* select the parameters that distinguish a PUT from a GET/POST */
@@ -3189,7 +3184,7 @@ void               *context_tcbf;
       so we sidestep it */
    fileURL = NULL;
    StrAllocCopy (fileURL, "file:");
-   StrAllocCat (fileURL, WideChar2ISO (fileName));
+   StrAllocCat (fileURL, fileName);
 #else
    fileURL = HTParse (fileName, "file:/", PARSE_ALL);
 #endif /* _WINDOWS */
@@ -3206,20 +3201,20 @@ void               *context_tcbf;
    /* we try to use any content-type previosuly associated
       with the parent. If it doesn't exist, we try to guess it
       from the URL */
-   tmp = ISO2WideChar (HTAtom_name (HTAnchor_format (dest_anc_parent)));
+   tmp = HTAtom_name (HTAnchor_format (dest_anc_parent));
    if (!tmp || !ustrcmp (tmp, TEXT("www/unknown")))
      {
-       HTAnchor_setFormat (dest_anc_parent, AHTGuessAtom_for (ISO2WideChar (me->urlName), contentType));
-       tmp = ISO2WideChar (HTAtom_name (HTAnchor_format (dest_anc_parent)));
+       HTAnchor_setFormat (dest_anc_parent, AHTGuessAtom_for (me->urlName, contentType));
+       tmp = HTAtom_name (HTAnchor_format (dest_anc_parent));
      }
    /* .. and we give the same type to the source anchor */
    /* we go thru setOutputFormat, rather than change the parent's
       anchor, as that's the place that libwww expects it to be */
    HTAnchor_setFormat (HTAnchor_parent (me->source),
-		       HTAtom_for (WideChar2ISO (tmp)));
+		       HTAtom_for (tmp));
 
    HTRequest_setOutputFormat (me->request,
-			      HTAtom_for (WideChar2ISO (tmp)));
+			      HTAtom_for (tmp));
 
 #if 0 /* JK: code ready, but we're not going to use it yet */
    /*
@@ -3228,17 +3223,17 @@ void               *context_tcbf;
    /* we try to use any charset previosuly associated
       with the parent. If it doesn't exist, we try to guess it
       from the metadata */
-   tmp = ISO2WideChar (HTAtom_name (HTAnchor_charset (dest_anc_parent)));
+   tmp = HTAtom_name (HTAnchor_charset (dest_anc_parent));
    if (!tmp)
      {
        HTAnchor_setCharset (dest_anc_parent, HTAtom_for ("iso-8859-3"));
-       tmp = ISO2WideChar (HTAtom_name (HTAnchor_charset (dest_anc_parent)));
+       tmp = HTAtom_name (HTAnchor_charset (dest_anc_parent));
      }
    /* .. and we give the same charset to the source anchor */
    /* we go thru setCharSet, rather than change the parent's
       anchor, as that's the place that libwww expects it to be */
    HTAnchor_setCharset (HTAnchor_parent (me->source),
-			HTAtom_for (WideChar2ISO (tmp)));
+			HTAtom_for (tmp));
 #endif /* CHARSET */
 
    /*
@@ -3298,7 +3293,7 @@ void               *context_tcbf;
 
    /* prepare the URLname that will be displayed in the status bar */
    ChopURL (me->status_urlName, me->urlName);
-   TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REMOTE_SAVING), ISO2WideChar (me->status_urlName));
+   TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REMOTE_SAVING), me->status_urlName);
 
    /* make the request */
    if (lost_update_check && (!UsePreconditions || !etag))
@@ -3378,8 +3373,8 @@ int                 docid;
 	  processing easier */
        UserAborted_flag = TRUE;
        /* abort all outstanding libwww UI dialogues */
-       CallbackDialogue (BaseDialog + FormAnswer,  STRING_DATA, (CharUnit*) 0);
-       CallbackDialogue (BaseDialog + ConfirmForm, INTEGER_DATA, (CharUnit*) 0);
+       CallbackDialogue (BaseDialog + FormAnswer,  STRING_DATA, (CHAR_T*) 0);
+       CallbackDialogue (BaseDialog + ConfirmForm, INTEGER_DATA, (CHAR_T*) 0);
        /* expire all outstanding timers */
        HTTimer_expireAll ();
        /* HTNet_killAll (); */
@@ -3414,9 +3409,9 @@ int                 docid;
 		   else
 		     {
 		       if (me->terminate_cbf)
-			 (*me->terminate_cbf) (me->docid, -1, ISO2WideChar (me->urlName),
-					       ISO2WideChar (me->outputfile),
-					       ISO2WideChar (me->content_type), 
+			 (*me->terminate_cbf) (me->docid, -1, me->urlName,
+					       me->outputfile,
+					       me->content_type, 
 					       me->context_tcbf);
 
 		       if (async_flag) 

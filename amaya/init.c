@@ -90,7 +90,7 @@
 */
 extern HWND     FrMainRef [12];
 extern int      currentFrame;
-extern CharUnit wTitle [MAX_LENGTH];
+extern CHAR_T   wTitle [MAX_LENGTH];
 int             Window_Curs;
 
 CHAR_T docToOpen [MAX_LENGTH];
@@ -199,7 +199,7 @@ static ThotIcon       iconJava;
 
 extern int       currentFrame;
 extern int       menu_item;
-extern CharUnit  LostPicturePath [512];
+extern CHAR_T    LostPicturePath [512];
 
 static ThotBool  itemChecked = FALSE;
 
@@ -263,11 +263,11 @@ typedef struct _GETHTMLDocument_context {
   ThotBool   ok;
   ThotBool   history;
   ThotBool   local_link;
-  CharUnit*  target;
-  CharUnit*  documentname;
+  CHAR_T*    target;
+  CHAR_T*    documentname;
   STRING     form_data;
   ClickEvent method;
-  CharUnit*  tempdocument;
+  CHAR_T*    tempdocument;
   TTcbf*     cbf;
   void*      ctx_cbf;
 } GETHTMLDocument_context;
@@ -290,15 +290,15 @@ typedef struct _RELOAD_context {
    corresponding document is already loaded or 0.          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Document            IsDocumentLoaded (CharUnit* documentURL, STRING form_data)
+Document            IsDocumentLoaded (CHAR_T* documentURL, STRING form_data)
 #else
 Document            IsDocumentLoaded (documentURL, form_data)
-CharUnit*           documentURL;
+CHAR_T*             documentURL;
 STRING              form_data;
 
 #endif
 {
-  CharUnit          otherURL[MAX_LENGTH];
+  CHAR_T            otherURL[MAX_LENGTH];
   int               i;
   ThotBool          found;
 
@@ -307,11 +307,11 @@ STRING              form_data;
 
   if (IsW3Path (documentURL))
     {
-      StringCopy (otherURL, documentURL);
-      StringConcat (otherURL, CUS_URL_STR);
+      ustrcpy (otherURL, documentURL);
+      ustrcat (otherURL, WC_URL_STR);
     }
   else
-    otherURL[0] = CUS_EOS;
+    otherURL[0] = WC_EOS;
 
   i = 1;
   found = FALSE;
@@ -321,7 +321,7 @@ STRING              form_data;
       if (DocumentURLs[i])
 	{
 	  /* compare the url */
-	  found = (!StringCompare (documentURL, DocumentURLs[i]) || !StringCompare (otherURL, DocumentURLs[i]));
+	  found = (!ustrcmp (documentURL, DocumentURLs[i]) || !ustrcmp (otherURL, DocumentURLs[i]));
 	  /* compare the form_data */
 	  if (found && (!((!form_data && !DocumentMeta[i]->form_data) ||
 		 (form_data && DocumentMeta[i]->form_data &&
@@ -336,7 +336,7 @@ STRING              form_data;
     /* document is found */
     return ((Document) i);
   else
-    /* document is not found */
+    /* document is not found */ 
     return ((Document) None);
 }
 
@@ -376,30 +376,30 @@ View		view;
    ExtractParameters extract parameters from document nane.        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ExtractParameters (CharUnit* aName, CharUnit* parameters)
+void                ExtractParameters (CHAR_T* aName, CHAR_T* parameters)
 #else
 void                ExtractParameters (aName, parameters)
-CharUnit*           aName;
-CharUnit*           parameters;
+CHAR_T*             aName;
+CHAR_T*             parameters;
 #endif
 {
    int              lg, i;
-   CharUnit*        ptr;
-   CharUnit*        oldptr;
+   CHAR_T*          ptr;
+   CHAR_T*          oldptr;
 
    if (!parameters || !aName)
      /* bad parameters */
      return;
 
-   parameters[0] = CUS_EOS;
-   lg = StringLength (aName);
+   parameters[0] = WC_EOS;
+   lg = ustrlen (aName);
    if (lg)
      {
 	/* the name is not empty */
 	oldptr = ptr = &aName[0];
 	do
 	  {
-	     ptr = StrRChr (oldptr, CUSTEXT('?'));
+	     ptr = ustrrchr (oldptr, TEXT('?'));
 	     if (ptr)
 		oldptr = &ptr[1];
 	  }
@@ -408,9 +408,9 @@ CharUnit*           parameters;
 	i = (int) (oldptr) - (int) (aName);	/* name length */
 	if (i > 1)
 	  {
-	     aName[i - 1] = CUS_EOS;
+	     aName[i - 1] = WC_EOS;
 	     if (i != lg)
-		StringCopy (parameters, oldptr);
+		ustrcpy (parameters, oldptr);
 	  }
      }
 }
@@ -600,7 +600,7 @@ Document        doc;
   TtaSetDocumentAccessMode (doc, 0);
   el = TtaGetMainRoot (doc);
   elType = TtaGetElementType (el);
-  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
     {
       elType.ElTypeNum = HTML_EL_Form;
       elForm = TtaSearchTypedElement (elType, SearchForward, el);
@@ -1027,7 +1027,7 @@ STRING              text;
 	      return;
 	    }
 	}
-
+ 
       if (!CanReplaceCurrentDocument (document, view))
 	{
 	  /* restore the previous value @@ */
@@ -1049,7 +1049,7 @@ STRING              text;
 	TtaFreeMemory (s);
       InNewWindow = FALSE;
       CurrentDocument = document;
-      CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (CharUnit*) 1);
+      CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (CHAR_T*) 1);
     }
 }
 
@@ -1355,7 +1355,7 @@ View        view;
 ThotBool    isHTML;
 #endif
 {
-  CharUnit  tempfile[MAX_LENGTH];
+  CHAR_T  tempfile[MAX_LENGTH];
   int       i;
 
   /* create a new document */
@@ -1428,23 +1428,23 @@ Document        doc;
 View            view;
 #endif
 {
-  CharUnit* s;
+  CHAR_T* s;
 
   s = TtaGetEnvString ("HOME_PAGE");
    if (!s)
      {
        s = TtaGetEnvString ("THOTDIR");
        if (s != NULL)
-	 StringCopy (LastURLName, s);
+	 ustrcpy (LastURLName, s);
        else
-	 LastURLName[0] = CUS_EOS;
-       StringConcat (LastURLName, AMAYA_PAGE);
+	 LastURLName[0] = WC_EOS;
+       ustrcat (LastURLName, AMAYA_PAGE);
      }
    else
-     StringCopy (LastURLName, s);
+     ustrcpy (LastURLName, s);
    InNewWindow = FALSE;
    CurrentDocument = doc;
-   CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (CharUnit*) 1);
+   CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (CHAR_T*) 1);
 }
 
 
@@ -1453,11 +1453,11 @@ View            view;
    logFile is TRUE if the new view is created to display a log file
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Document     InitDocView (Document doc, CharUnit* docname, DocumentType docType, ThotBool logFile)
+Document     InitDocView (Document doc, CHAR_T* docname, DocumentType docType, ThotBool logFile)
 #else
 Document     InitDocView (doc, docname, logFile)
 Document     doc;
-CharUnit*    docname;
+CHAR_T*      docname;
 DocumentType docType;
 ThotBool     logFile;
 #endif
@@ -1543,13 +1543,13 @@ ThotBool     logFile;
    if (docType == docText || docType == docTextRO ||
        docType == docCSS || docType == docCSSRO ||
        docType == docSource || docType == docSourceRO)
-     doc = TtaNewDocument ("TextFile", docname);
+     doc = TtaNewDocument (TEXT("TextFile"), docname);
 #ifdef ANNOTATIONS
    else if (docType == docAnnot || docType == docAnnotRO)
-     doc = TtaNewDocument ("Annot", docname);
+     doc = TtaNewDocument (TEXT("Annot"), docname);
 #endif /* ANNOTATIONS */
    else
-     doc = TtaNewDocument ("HTML", docname);
+     doc = TtaNewDocument (TEXT("HTML"), docname);
    if (doc >= DocumentTableLength)
      {
        TtaCloseDocument (doc);
@@ -2102,25 +2102,25 @@ STRING documentname;
   contains the current copy of the remote file.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Document     LoadHTMLDocument (Document doc, CharUnit* pathname, CharUnit* form_data, int method, CharUnit* tempfile, CharUnit* documentname, STRING content_type, ThotBool history)
+static Document     LoadHTMLDocument (Document doc, CHAR_T* pathname, CHAR_T* form_data, int method, CHAR_T* tempfile, CHAR_T* documentname, CHAR_T* content_type, ThotBool history)
 #else
 static Document     LoadHTMLDocument (doc, pathname, form_data, method, tempfile, documentname, content_type, history)
 Document            doc;
-CharUnit*           pathname;
-CharUnit*           form_data;
+CHAR_T*             pathname;
+CHAR_T*             form_data;
 int                 method;
-CharUnit*           tempfile;
-CharUnit*           documentname;
-STRING              content_type;
+CHAR_T*             tempfile;
+CHAR_T*             documentname;
+CHAR_T*             content_type;
 ThotBool            history;
 #endif
 {
   CSSInfoPtr          css;
   Document            newdoc = 0;
   DocumentType        docType;
-  CharUnit*           tempdocument;
-  CharUnit*           tempdir;
-  CharUnit*           s;
+  CHAR_T*           tempdocument;
+  CHAR_T*           tempdir;
+  CHAR_T*           s;
   int                 i, j;
   ThotBool            otherFile;
   ThotBool            plainText;
@@ -2193,7 +2193,7 @@ ThotBool            history;
 	     content_type[j] = EOS;
 	   if (!ustrcasecmp (content_type, TEXT("text")))
 	     {
-	       if (!ustrncasecmp (&content_type[i+1], CUSTEXT("html"), 4))
+	       if (!ustrncasecmp (&content_type[i+1], TEXT("html"), 4))
 		 {
 		   /* it's an HTML document */
 		   docType = docHTML;
@@ -2282,15 +2282,15 @@ ThotBool            history;
       tempdocument = TtaAllocCUString (MAX_LENGTH);
       TtaExtractName (pathname, tempfile, tempdocument);
       /* reinitialize directories and document lists */
-      StringCopy (pathname, DirectoryName);
-      StringConcat (pathname, CUS_DIR_STR);
-      StringConcat (pathname, tempdocument);
-      StringCopy (SavePath, DirectoryName);
-      StringCopy (SaveName, tempdocument);
+      ustrcpy (pathname, DirectoryName);
+      ustrcat (pathname, CUS_DIR_STR);
+      ustrcat (pathname, tempdocument);
+      ustrcpy (SavePath, DirectoryName);
+      ustrcpy (SaveName, tempdocument);
       ResetStop (doc);
       InitSaveObjectForm (doc, 1, SavingFile, pathname);
     }
-  else if (pathname[0] != CUS_EOS)
+  else if (pathname[0] != WC_EOS)
     {
       if (method != CE_MAKEBOOK)
 	{
@@ -2589,7 +2589,7 @@ View                view;
    STRING              pathname;
    STRING              documentname;
    int                 toparse;
-   CharUnit*           form_data;
+   CHAR_T*             form_data;
    ClickEvent          method;
    int                 mode;
    int		       position;
@@ -2816,7 +2816,7 @@ View                view;
 #endif
 {
    STRING        tempdocument;
-   CharUnit*     s;
+   CHAR_T*       s;
    CHAR_T	     documentname[MAX_LENGTH];
    CHAR_T	     tempdir[MAX_LENGTH];
    Document	     sourceDoc;
@@ -3183,12 +3183,12 @@ NotifyDialog       *event;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void GetHTMLDocument_callback (int newdoc, int status, CharUnit* urlName, STRING outputfile, STRING content_type, void * context)
+void GetHTMLDocument_callback (int newdoc, int status, CHAR_T* urlName, STRING outputfile, STRING content_type, void * context)
 #else  /* __STDC__ */
 void GetHTMLDocument_callback (newdoc, status, urlName, outputfile, content_type, context)
 int       newdoc;
 int       status;
-CharUnit* urlName;
+CHAR_T*   urlName;
 STRING    outputfile;
 STRING    content_type;
 void*     context;
@@ -3201,12 +3201,12 @@ void*     context;
    Document            res;
    STRING              tempfile;
    STRING              target;
-   CharUnit*           pathname;
-   CharUnit*           documentname;
-   CharUnit*           form_data;
+   CHAR_T*             pathname;
+   CHAR_T*             documentname;
+   CHAR_T*             form_data;
    ClickEvent          method;
    STRING              tempdocument;
-   CharUnit*           s;
+   CHAR_T*             s;
    int                 i;
    ThotBool	       history;
    ThotBool            ok;
@@ -3353,7 +3353,7 @@ void*     context;
     - history: record the URL in the browsing history
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Document            GetHTMLDocument (const CharUnit* documentPath, STRING form_data, Document doc, Document baseDoc, ClickEvent CE_event, ThotBool history, TTcbf *cbf, void *ctx_cbf)
+Document            GetHTMLDocument (const CHAR_T* documentPath, STRING form_data, Document doc, Document baseDoc, ClickEvent CE_event, ThotBool history, TTcbf *cbf, void *ctx_cbf)
 #else
 Document            GetHTMLDocument (documentPath, const STRING form_data, doc, baseDoc, CE_event, history, void *cbf, void *ctx_cbf)
 STRING              documentPath;
@@ -3368,12 +3368,12 @@ void               *ctx_cbf;
 {
    Document            newdoc;
    CSSInfoPtr          css;
-   STRING              tempfile;
-   CharUnit*           tempdocument;
-   CharUnit*           parameters;
-   CharUnit*           target;
-   CharUnit*           pathname;
-   CharUnit*           documentname;
+   CHAR_T*             tempfile;
+   CHAR_T*             tempdocument;
+   CHAR_T*             parameters;
+   CHAR_T*             target;
+   CHAR_T*             pathname;
+   CHAR_T*             documentname;
    int                 toparse;
    int                 slash;
    int                 mode;
@@ -3381,7 +3381,7 @@ void               *ctx_cbf;
    GETHTMLDocument_context *ctx = NULL;
 
    /* Extract parameters if necessary */
-   if (StringLength (documentPath) > MAX_LENGTH - 1) 
+   if (ustrlen (documentPath) > MAX_LENGTH - 1) 
      {
        TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_TOO_LONG_URL), TEXT("512"));
        return (0);
@@ -3391,15 +3391,15 @@ void               *ctx_cbf;
      TtaSetStatus (baseDoc, 1, TEXT(" "), NULL);
  
    ok = TRUE;
-   tempdocument = TtaAllocCUString (MAX_LENGTH);
-   target       = TtaAllocCUString (MAX_LENGTH);
-   documentname = TtaAllocCUString (MAX_LENGTH);
-   parameters   = TtaAllocCUString (MAX_LENGTH);
+   tempdocument = TtaAllocString (MAX_LENGTH);
+   target       = TtaAllocString (MAX_LENGTH);
+   documentname = TtaAllocString (MAX_LENGTH);
+   parameters   = TtaAllocString (MAX_LENGTH);
    tempfile     = TtaAllocString (MAX_LENGTH);
-   tempfile[0]  = EOS;
-   pathname     = TtaAllocCUString (MAX_LENGTH);
+   tempfile[0]  = WC_EOS;
+   pathname     = TtaAllocString (MAX_LENGTH);
 
-   StringCopy (tempdocument, documentPath);
+   ustrcpy (tempdocument, documentPath);
    ExtractParameters (tempdocument, parameters);
    /* Extract the target if necessary */
    ExtractTarget (tempdocument, target);
@@ -3414,11 +3414,11 @@ void               *ctx_cbf;
       is a local file */
 
 #  ifdef _WINDOWS
-   cus_sprintf (wTitle, CUSTEXT("%s"), documentname);
+   usprintf (wTitle, TEXT("%s"), documentname);
 #  endif /* _WINDOWS */
    ConvertFileURL (pathname);
 
-   if (parameters[0] == CUS_EOS)
+   if (parameters[0] == WC_EOS)
      {
        newdoc = IsDocumentLoaded (pathname, form_data);
        if (newdoc != 0)
@@ -3432,8 +3432,8 @@ void               *ctx_cbf;
      {
        /* we need to ask the server */
        newdoc = 0;
-       StringConcat (pathname, CUSTEXT("?"));
-       StringConcat (pathname, parameters);
+       ustrcat (pathname, TEXT("?"));
+       ustrcat (pathname, parameters);
      }
 
    if (ok && newdoc != 0 && history)
@@ -3567,8 +3567,8 @@ void               *ctx_cbf;
 			 && !ustrcmp (documentname, TEXT("noname.html")))
 		       {
 			 slash = StringLength (pathname);
-			 if (slash && pathname[slash - 1] != CUSTEXT('/'))
-			   StringConcat (pathname, CUSTEXT("/"));
+			 if (slash && pathname[slash - 1] != TEXT('/'))
+			   ustrcat (pathname, TEXT("/"));
 		       }
 		     css = SearchCSS (0, pathname);
 		     if (css == NULL)
@@ -3721,17 +3721,17 @@ static void	SetFileSuffix ()
    Callback procedure for dialogue events.                            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                CallbackDialogue (int ref, int typedata, CharUnit* data)
+void                CallbackDialogue (int ref, int typedata, CHAR_T* data)
 #else
 void                CallbackDialogue (ref, typedata, data)
 int                 ref;
 int                 typedata;
-CharUnit*           data;
+CHAR_T*             data;
 #endif
 {
-  CharUnit*         tempfile;
+  CHAR_T*           tempfile;
   STRING            tempname;
-  CharUnit          sep;
+  CHAR_T            sep;
   int               val, i;
   ThotBool          change;
 
@@ -4034,15 +4034,15 @@ CharUnit*           data;
 	   /* Move the information into LastURLName or DirectoryName */
 	   if (IsW3Path (SavePath))
 	     {
-	       StringCopy (LastURLName, SavePath);
-	       StringConcat (LastURLName, CUSTEXT("/"));
-	       StringConcat (LastURLName, SaveName);
-	       DirectoryName[0] = EOS;
+	       ustrcpy (LastURLName, SavePath);
+	       ustrcat (LastURLName, TEXT("/"));
+	       ustrcat (LastURLName, SaveName);
+	       DirectoryName[0] = WC_EOS;
 	     }
 	   else
 	     {
-	       LastURLName[0] = CUS_EOS;
-	       StringCopy (DirectoryName, SavePath);
+	       LastURLName[0] = WC_EOS;
+	       ustrcpy (DirectoryName, SavePath);
 	       ustrcat (DocumentName, SaveName);
 	     }
 	 }
@@ -4051,9 +4051,9 @@ CharUnit*           data;
 	 {
 	   if (SavingDocument != 0)
 	     {
-	       SavePath[0] = CUS_EOS;
-	       SaveImgsURL[0] = EOS;
-	       SaveName[0] = EOS;
+	       SavePath[0] = WC_EOS;
+	       SaveImgsURL[0] = WC_EOS;
+	       SaveName[0] = WC_EOS;
 #          ifndef _WINDOWS
 	       TtaSetTextForm (BaseDialog + NameSave, SaveImgsURL);
 	       TtaSetTextForm (BaseDialog + ImgDirSave, SaveImgsURL);
@@ -4091,8 +4091,8 @@ CharUnit*           data;
        
        if (*tempfile && tempfile[StringLength (tempfile) - 1] == sep)
 	 {
-	   StringCopy (SavePath, tempfile);
-	   SaveName[0] = EOS;
+	   ustrcpy (SavePath, tempfile);
+	   SaveName[0] = WC_EOS;
 	 }
        else
 	 {
@@ -4129,8 +4129,8 @@ CharUnit*           data;
 	       ustrcat (SavePath, DIR_STR);
 	       ustrcat (SavePath, data);
 	     }
-	   StringCopy (tempfile, SavePath);
-	   StringConcat (tempfile, CUS_DIR_STR);
+	   ustrcpy (tempfile, SavePath);
+	   ustrcat (tempfile, WC_DIR_STR);
 	   if (SavingDocument != 0)
 	     StringConcat (tempfile, DocumentName);
 	   else
@@ -4153,9 +4153,9 @@ CharUnit*           data;
        ustrcpy (SaveName, data);
        /* construct the document full name */
        tempfile = TtaAllocCUString (MAX_LENGTH);
-       StringCopy (tempfile, SavePath);
-       StringConcat (tempfile, CUS_DIR_STR);
-       StringConcat (tempfile, SaveName);
+       ustrcpy (tempfile, SavePath);
+       ustrcat (tempfile, WC_DIR_STR);
+       ustrcat (tempfile, SaveName);
 #      ifndef _WINDOWS
        TtaSetTextForm (BaseDialog + NameSave, tempfile);
 #      endif /* !_WINDOWS */
@@ -4313,7 +4313,7 @@ static ThotBool       RestoreAmayaDocs ()
 {
   FILE              * f;
   int                 docType;
-  CharUnit            tempname[MAX_LENGTH], tempdoc[MAX_LENGTH];
+  CHAR_T              tempname[MAX_LENGTH], tempdoc[MAX_LENGTH];
   char                tempdocA[MAX_LENGTH];
   char                docname[MAX_LENGTH];  
   ThotBool            aDoc;
@@ -4363,12 +4363,12 @@ static ThotBool       RestoreAmayaDocs ()
   all the intermediary directories.
   Returns TRUE if the operation succeeds, FALSE otherwise.
   ----------------------------------------------------------------------*/
-ThotBool CheckMakeDirectory (CharUnit* name, ThotBool recursive)
+ThotBool CheckMakeDirectory (CHAR_T* name, ThotBool recursive)
 {
   ThotBool  i;
-  CharUnit* tmp_name;
-  CharUnit* ptr;
-  CharUnit  tmp_char;
+  CHAR_T* tmp_name;
+  CHAR_T* ptr;
+  CHAR_T  tmp_char;
 
   /* protection against bad calls */
   if (!name || *name == CUS_EOS)
@@ -4465,9 +4465,8 @@ void                InitAmaya (event)
 NotifyEvent        *event;
 #endif
 {
-   CharUnit*           s;
-   CharUnit*           tempname;
-   CharUnit            CUS_HTAppName[MAX_LENGTH];
+   CHAR_T*             s;
+   CHAR_T*             tempname;
    int                 i;
    ThotBool            restoredDoc;
 
@@ -4634,9 +4633,8 @@ NotifyEvent        *event;
     * $HOME/.amaya/amaya.css on Unix platforms
     * $HOME\amaya\amaya.css on Windows platforms
     */
-   tempname = TtaAllocCUString (MAX_LENGTH);
-   iso2cus_strcpy (CUS_HTAppName, HTAppName);
-   cus_sprintf (tempname, CUSTEXT("%s%c%s.css"), s, CUS_DIR_SEP, CUS_HTAppName);
+   tempname = TtaAllocString (MAX_LENGTH);
+   usprintf (tempname, TEXT("%s%c%s.css"), s, WC_DIR_SEP, HTAppName);
    if (TtaFileExist (tempname))
      UserCSS = StringDuplicate (tempname);
    else
@@ -4655,7 +4653,7 @@ NotifyEvent        *event;
        /* initialize history */
        InitDocHistory (i);
        /* Create a temporary sub-directory for storing the HTML and image files */
-       cus_sprintf (tempname, CUSTEXT("%s%c%d"), TempFileDirectory, CUS_DIR_SEP, i);
+       usprintf (tempname, TEXT("%s%c%d"), TempFileDirectory, WC_DIR_SEP, i);
        TtaMakeDirectory (tempname);
        /* adding the CSS directory */
        if (i == 0)
@@ -4672,7 +4670,7 @@ NotifyEvent        *event;
    DocumentName = TtaAllocString (MAX_LENGTH);
    memset (DocumentName, EOS, MAX_LENGTH);
    SavePath = TtaAllocString (MAX_LENGTH);
-   SavePath[0] = EOS;
+   SavePath[0] = WC_EOS;
    SaveName = TtaAllocString (MAX_LENGTH);
    SaveName[0] = EOS;
    ObjectName = TtaAllocString (MAX_LENGTH);
@@ -4700,7 +4698,7 @@ NotifyEvent        *event;
    TtaSetBackup (BackUpDocs);
    TtaSetApplicationQuit (FreeAmayaStructures);
    TtaSetDocStatusUpdate ((Proc) DocStatusUpdate);
-   AMAYA = TtaGetMessageTable (CUSTEXT("amayamsg"), AMAYA_MSG_MAX);
+   AMAYA = TtaGetMessageTable (TEXT("amayamsg"), AMAYA_MSG_MAX);
    /* allocate callbacks for amaya */
    BaseDialog = TtaSetCallback (CallbackDialogue, MAX_REF);
    /* init the Picture context */
@@ -4751,14 +4749,14 @@ NotifyEvent        *event;
 	 StringCopy (LastURLName, s);
        else
 	 LastURLName[0] = CUS_EOS;
-       StringConcat (LastURLName, AMAYA_PAGE);
-       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (CharUnit*) 1);
+       ustrcat (LastURLName, AMAYA_PAGE);
+       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (CHAR_T*) 1);
      }
    else if (IsW3Path (s))
      {
        /* it is a remote document */
        StringCopy (LastURLName, s);
-       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (CharUnit*) 1);
+       CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (CHAR_T*) 1);
      }
    else
      {
@@ -4781,7 +4779,7 @@ NotifyEvent        *event;
 	     ustrcpy (DocumentName, LastURLName);
 	   /* start with the local document */
 	   LastURLName[0] = CUS_EOS;
-	   CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (CharUnit*) 1);
+	   CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (CHAR_T*) 1);
 	 }
     else
         /* Create a new document */

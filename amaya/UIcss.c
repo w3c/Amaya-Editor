@@ -26,7 +26,7 @@
 
 static int         BaseCSS;
 static int         CSScase;
-static STRING      CSSpath;
+static CHAR_T*     CSSpath;
 static Document    CSSdocument;
 
 #include "AHTURLTools_f.h"
@@ -128,7 +128,7 @@ Document            doc;
   CSSInfoPtr          css;
   struct stat         buf;
   FILE               *res;
-  STRING              buffer, ptr;
+  CHAR_T              *buffer, *ptr;
   int                 len;
 
   /* look for the User preferences */
@@ -167,7 +167,7 @@ Document            doc;
   if (css->enabled[doc] && ptr[0] != EOS  && TtaFileExist (ptr))
     {
       /* read User preferences */
-      res = fopen (ptr, "r");
+      res = ufopen (ptr, TEXT("r"));
       if (res != NULL)
 	{
 #ifdef _WINDOWS
@@ -387,8 +387,8 @@ STRING              printdir;
 		      i = ustrlen (printdir);
 		      ustrcpy (tempfile, printdir);
 		      tempfile[i++] = DIR_SEP;
-		      ustrcpy (&tempfile[i], "css");
-		      file = ufopen (tempfile, CUSTEXT("w"));
+		      ustrcpy (&tempfile[i], TEXT("css"));
+		      file = ufopen (tempfile, TEXT("w"));
 		      if (file)
 			{
 			  /* add that file name to the list */
@@ -460,7 +460,7 @@ STRING              data;
 	      css = SearchCSS (0, CSSpath);
 	      css ->enabled[CSSdocument] = TRUE;
 	      /* apply CSS rules */
-	      if (!strcmp (CSSpath, UserCSS))
+	      if (!ustrcmp (CSSpath, UserCSS))
 		LoadUserStyleSheet (CSSdocument);
 	      else
 		LoadStyleSheet (CSSpath, CSSdocument, NULL, NULL, css->media[CSSdocument]);

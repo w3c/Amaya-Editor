@@ -852,10 +852,10 @@ int                *volume;
       /* On construit le nom du fichier PostScript */
       ustrcpy (tmp, DocumentPath);
       /* On cherche le directory ou existe le .PIV */
-      MakeCompleteName (pDoc->DocDName, CUSTEXT("PIV"), tmp, fileName, &len);
+      MakeCompleteName (pDoc->DocDName, TEXT("PIV"), tmp, fileName, &len);
       /* On construit le nom complet avec ce directory */
-      FindCompleteName (pDoc->DocDName, CUSTEXT("ps"), tmp, fileName, &len);	/* ps au lieu de PIV */
-      if ((PSfile = ufopen (fileName, CUSTEXT("w"))) == NULL)
+      FindCompleteName (pDoc->DocDName, TEXT("ps"), tmp, fileName, &len);	/* ps au lieu de PIV */
+      if ((PSfile = ufopen (fileName, TEXT("w"))) == NULL)
 	TtaDisplayMessage (FATAL, TtaGetMessage (LIB, TMSG_CANNOT_CREATE_PS), fileName);
       else
 	{
@@ -2518,7 +2518,7 @@ PtrDocument         pDoc;
 		  if (pDocRef != NULL)
 		    {
 		       CopyDocIdent (&pDocRef->DocIdent, pRefD->ReExtDocument);
-		       OpenDocument (_EMPTYSTR_, pDocRef, TRUE, FALSE, NULL, FALSE, FALSE);
+		       OpenDocument (TEXT(""), pDocRef, TRUE, FALSE, NULL, FALSE, FALSE);
 		    }
 	       }
 	  }
@@ -2889,7 +2889,7 @@ char              **argv;
        /* the document is loaded */
        /* load CSS files and apply CSS rules */
        for (i = 0; i < cssCounter; i++)
-	 LoadStyleSheet (CSSName[i], 1, NULL, NULL, 0/*CSS_ALL*/);
+	 LoadStyleSheet (CSSName[i], 1, NULL, NULL, 0/*CSS_ALL*/);  
        
        /* load all referred document before printing */
        LoadReferedDocuments (TheDoc);

@@ -120,7 +120,7 @@ struct Cat_List
 
 #ifdef _GTK
 extern int          appArgc;
-extern CharUnit**   appArgv;
+extern CHAR_T**     appArgv;
 #endif /*_GTK */
 
 /* Declarations des options de dialogue */
@@ -231,7 +231,7 @@ UINT subMenuID [MAX_FRAME];
 ThotWindow WIN_curWin = (ThotWindow)(-1);
 
 #ifdef __STDC__
-extern int main (int, CharUnit**);
+extern int main (int, CHAR_T**);
 #else  /* !__STDC__ */
 extern int main ();
 #endif /* __STDC__ */
@@ -621,7 +621,7 @@ int        ref;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int makeArgcArgv (HINSTANCE hInst, CharUnit*** pArgv, char* cmdLine)
+int makeArgcArgv (HINSTANCE hInst, CHAR_T*** pArgv, char* cmdLine)
 #else  /* __STDC__ */
 int makeArgcArgv (hInst, pArgv, cmdLine)
 HINSTANCE   hInst; 
@@ -702,7 +702,7 @@ int       nShow;
 #endif /* __STDC__ */
 { 
    int        argc;
-   CharUnit** argv;
+   CHAR_T**   argv;
 
    currentFrame = -1;
    hInstance  = hInst;
@@ -1565,10 +1565,10 @@ ThotColorStruct *bottom;
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
 #ifdef __STDC__
-BOOL             WIN_TtaInitDialogue (CharUnit* server)
+BOOL             WIN_TtaInitDialogue (CHAR_T* server)
 #else  /* !__STDC__ */
 BOOL             WIN_TtaInitDialogue (server)
-CharUnit*        server; 
+CHAR_T*          server; 
 #endif /* __STDC__ */
 #else  /* _WINDOWS */
 #ifdef __STDC__
@@ -1770,7 +1770,7 @@ int                 number;
    principale d'une application.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaInitDialogueWindow (CharUnit* name, STRING geometry, Pixmap logo, Pixmap icon, int number, STRING textmenu)
+void                TtaInitDialogueWindow (CHAR_T* name, STRING geometry, Pixmap logo, Pixmap icon, int number, STRING textmenu)
 #else  /* __STDC__ */
 void                TtaInitDialogueWindow (name, geometry, logo, icon, number, textmenu)
 STRING              name;
@@ -1796,7 +1796,7 @@ STRING              textmenu;
 #endif /* !_WINDOWS */
 
    int                 n;
-   CharUnit*           value;
+   CHAR_T*             value;
 
 #  ifndef _WINDOWS
    Pixmap              lthot;

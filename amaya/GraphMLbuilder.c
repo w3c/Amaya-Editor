@@ -25,58 +25,58 @@ static AttributeMapping GraphMLAttributeMappingTable[] =
 {
    /* The first entry MUST be unknown_attr */
    /* The rest of this table MUST be in alphabetical order */
-   {"unknown_attr", "", 'A', GraphML_ATTR_Invalid_attribute},
+   {TEXT("unknown_attr"), TEXT(""), 'A', GraphML_ATTR_Invalid_attribute},
 
-   {"align", "", 'A', GraphML_ATTR_align},
-   {"arrowhead", "", 'A', GraphML_ATTR_arrowhead},
-   {"class", "", 'A', GraphML_ATTR_class},
-   {"depth", "", 'A', GraphML_ATTR_depth_},
-   {"direction", "", 'A', GraphML_ATTR_direction},
-   {"height", "", 'A', GraphML_ATTR_height_},
-   {"hspace", "", 'A', GraphML_ATTR_hspace},
-   {"id", "", 'A', GraphML_ATTR_id},
-   {"linewidth", "", 'A', GraphML_ATTR_linewidth},
-   {"linestyle", "", 'A', GraphML_ATTR_linestyle_},
-   {"link", "", 'A', GraphML_ATTR_link},
-   {"position", "", 'A', GraphML_ATTR_position},
-   {"points", "", 'A', GraphML_ATTR_points},
-   {"style", "", 'A', GraphML_ATTR_style_},
-   {"valign", "", 'A', GraphML_ATTR_valign},
-   {"vspace", "", 'A', GraphML_ATTR_vspace},
-   {"width", "", 'A', GraphML_ATTR_width_},
-   {"zzghost", "", 'A', GraphML_ATTR_Ghost_restruct},
+   {TEXT("align"), TEXT(""), 'A', GraphML_ATTR_align},
+   {TEXT("arrowhead"), TEXT(""), 'A', GraphML_ATTR_arrowhead},
+   {TEXT("class"), TEXT(""), 'A', GraphML_ATTR_class},
+   {TEXT("depth"), TEXT(""), 'A', GraphML_ATTR_depth_},
+   {TEXT("direction"), TEXT(""), 'A', GraphML_ATTR_direction},
+   {TEXT("height"), TEXT(""), 'A', GraphML_ATTR_height_},
+   {TEXT("hspace"), TEXT(""), 'A', GraphML_ATTR_hspace},
+   {TEXT("id"), TEXT(""), 'A', GraphML_ATTR_id},
+   {TEXT("linewidth"), TEXT(""), 'A', GraphML_ATTR_linewidth},
+   {TEXT("linestyle"), TEXT(""), 'A', GraphML_ATTR_linestyle_},
+   {TEXT("link"), TEXT(""), 'A', GraphML_ATTR_link},
+   {TEXT("position"), TEXT(""), 'A', GraphML_ATTR_position},
+   {TEXT("points"), TEXT(""), 'A', GraphML_ATTR_points},
+   {TEXT("style"), TEXT(""), 'A', GraphML_ATTR_style_},
+   {TEXT("valign"), TEXT(""), 'A', GraphML_ATTR_valign},
+   {TEXT("vspace"), TEXT(""), 'A', GraphML_ATTR_vspace},
+   {TEXT("width"), TEXT(""), 'A', GraphML_ATTR_width_},
+   {TEXT("zzghost"), TEXT(""), 'A', GraphML_ATTR_Ghost_restruct},
 
-   {"", "", EOS, 0}		/* Last entry. Mandatory */
+   {TEXT(""), TEXT(""), EOS, 0}		/* Last entry. Mandatory */
 };
 
 /* mapping table of attribute values */
 
 static AttrValueMapping GraphMLAttrValueMappingTable[] =
 { 
-   {GraphML_ATTR_align, "center", GraphML_ATTR_align_VAL_center_},
-   {GraphML_ATTR_align, "left", GraphML_ATTR_align_VAL_left_},
-   {GraphML_ATTR_align, "right", GraphML_ATTR_align_VAL_right_},
-   {GraphML_ATTR_arrowhead, "both", GraphML_ATTR_arrowhead_VAL_both},
-   {GraphML_ATTR_arrowhead, "end", GraphML_ATTR_arrowhead_VAL_end_},
-   {GraphML_ATTR_arrowhead, "none", GraphML_ATTR_arrowhead_VAL_none_},
-   {GraphML_ATTR_arrowhead, "start", GraphML_ATTR_arrowhead_VAL_start},
-   {GraphML_ATTR_direction, "down", GraphML_ATTR_direction_VAL_down},
-   {GraphML_ATTR_direction, "left", GraphML_ATTR_direction_VAL_left_},
-   {GraphML_ATTR_direction, "right", GraphML_ATTR_direction_VAL_right_},
-   {GraphML_ATTR_direction, "up", GraphML_ATTR_direction_VAL_up},
-   {GraphML_ATTR_linestyle_, "dashed", GraphML_ATTR_linestyle__VAL_dashed_},
-   {GraphML_ATTR_linestyle_, "dotted", GraphML_ATTR_linestyle__VAL_dotted_},
-   {GraphML_ATTR_linestyle_, "solid", GraphML_ATTR_linestyle__VAL_solid_},
-   {GraphML_ATTR_link, "document", GraphML_ATTR_link_VAL_document},
-   {GraphML_ATTR_link, "extended", GraphML_ATTR_link_VAL_extended},
-   {GraphML_ATTR_link, "group", GraphML_ATTR_link_VAL_group},
-   {GraphML_ATTR_link, "locator", GraphML_ATTR_link_VAL_locator},
-   {GraphML_ATTR_link, "simple", GraphML_ATTR_link_VAL_simple},
-   {GraphML_ATTR_valign, "bottom", GraphML_ATTR_valign_VAL_bottom_},
-   {GraphML_ATTR_valign, "middle", GraphML_ATTR_valign_VAL_middle},
-   {GraphML_ATTR_valign, "top", GraphML_ATTR_valign_VAL_top_},
+   {GraphML_ATTR_align, TEXT("center"), GraphML_ATTR_align_VAL_center_},
+   {GraphML_ATTR_align, TEXT("left"), GraphML_ATTR_align_VAL_left_},
+   {GraphML_ATTR_align, TEXT("right"), GraphML_ATTR_align_VAL_right_},
+   {GraphML_ATTR_arrowhead, TEXT("both"), GraphML_ATTR_arrowhead_VAL_both},
+   {GraphML_ATTR_arrowhead, TEXT("end"), GraphML_ATTR_arrowhead_VAL_end_},
+   {GraphML_ATTR_arrowhead, TEXT("none"), GraphML_ATTR_arrowhead_VAL_none_},
+   {GraphML_ATTR_arrowhead, TEXT("start"), GraphML_ATTR_arrowhead_VAL_start},
+   {GraphML_ATTR_direction, TEXT("down"), GraphML_ATTR_direction_VAL_down},
+   {GraphML_ATTR_direction, TEXT("left"), GraphML_ATTR_direction_VAL_left_},
+   {GraphML_ATTR_direction, TEXT("right"), GraphML_ATTR_direction_VAL_right_},
+   {GraphML_ATTR_direction, TEXT("up"), GraphML_ATTR_direction_VAL_up},
+   {GraphML_ATTR_linestyle_, TEXT("dashed"), GraphML_ATTR_linestyle__VAL_dashed_},
+   {GraphML_ATTR_linestyle_, TEXT("dotted"), GraphML_ATTR_linestyle__VAL_dotted_},
+   {GraphML_ATTR_linestyle_, TEXT("solid"), GraphML_ATTR_linestyle__VAL_solid_},
+   {GraphML_ATTR_link, TEXT("document"), GraphML_ATTR_link_VAL_document},
+   {GraphML_ATTR_link, TEXT("extended"), GraphML_ATTR_link_VAL_extended},
+   {GraphML_ATTR_link, TEXT("group"), GraphML_ATTR_link_VAL_group},
+   {GraphML_ATTR_link, TEXT("locator"), GraphML_ATTR_link_VAL_locator},
+   {GraphML_ATTR_link, TEXT("simple"), GraphML_ATTR_link_VAL_simple},
+   {GraphML_ATTR_valign, TEXT("bottom"), GraphML_ATTR_valign_VAL_bottom_},
+   {GraphML_ATTR_valign, TEXT("middle"), GraphML_ATTR_valign_VAL_middle},
+   {GraphML_ATTR_valign, TEXT("top"), GraphML_ATTR_valign_VAL_top_},
 
-   {0, "", 0}			/* Last entry. Mandatory */
+   {0, TEXT(""), 0}			/* Last entry. Mandatory */
 };
 
 #define MaxMsgLength 200
@@ -101,12 +101,12 @@ STRING elementName;
  
 #endif
 {
-   if (ustrcmp (elementName, "math") == 0)
-      ustrcpy (DTDname, "MathML");
-   else if (ustrcmp (elementName, "label") == 0 || ustrcmp (elementName, "text") == 0)
-      ustrcpy (DTDname, "HTML");
+   if (ustrcmp (elementName, TEXT("math")) == 0)
+      ustrcpy (DTDname, TEXT("MathML"));
+   else if (ustrcmp (elementName, TEXT("label")) == 0 || ustrcmp (elementName, TEXT("text")) == 0)
+      ustrcpy (DTDname, TEXT("HTML"));
    else
-      ustrcpy (DTDname, "");
+      ustrcpy (DTDname, TEXT(""));
 }
 
 /*----------------------------------------------------------------------
@@ -115,12 +115,12 @@ STRING elementName;
    attribute of name Attr and returns the corresponding Thot attribute type.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void           MapGraphMLAttribute (char* Attr, AttributeType *attrType, char* elementName, Document doc)
+void           MapGraphMLAttribute (CHAR_T* Attr, AttributeType *attrType, CHAR_T* elementName, Document doc)
 #else
 void           MapGraphMLAttribute (Attr, attrType, elementName, doc)
-char*          Attr;
+CHAR_T*        Attr;
 AttributeType* attrType;
-char*		   elementName;
+CHAR_T*        elementName;
 Document       doc;
 #endif
 {
@@ -130,7 +130,7 @@ Document       doc;
    attrType->AttrSSchema = NULL;
    i = 0;
    do
-      if (strcasecmp (GraphMLAttributeMappingTable[i].XMLattribute, Attr))
+      if (ustrcasecmp (GraphMLAttributeMappingTable[i].XMLattribute, Attr))
 	 i++;
       else
 	 if (GraphMLAttributeMappingTable[i].XMLelement[0] == EOS)
@@ -138,7 +138,7 @@ Document       doc;
 	       attrType->AttrTypeNum = GraphMLAttributeMappingTable[i].ThotAttribute;
 	       attrType->AttrSSchema = GetGraphMLSSchema (doc);
 	       }
-	 else if (!strcasecmp (GraphMLAttributeMappingTable[i].XMLelement, elementName))
+	 else if (!ustrcasecmp (GraphMLAttributeMappingTable[i].XMLelement, elementName))
 	       {
 	       attrType->AttrTypeNum = GraphMLAttributeMappingTable[i].ThotAttribute;
 	       attrType->AttrSSchema = GetGraphMLSSchema (doc);
@@ -154,10 +154,10 @@ Document       doc;
    ThotAtt and its value AttrVal. Returns the corresponding Thot value.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                MapGraphMLAttributeValue (char* AttrVal, AttributeType attrType, int *value)
+void                MapGraphMLAttributeValue (CHAR_T* AttrVal, AttributeType attrType, int *value)
 #else
 void                MapGraphMLAttributeValue (AttrVal, attrType, value)
-char*              AttrVal;
+CHAR_T*             AttrVal;
 AttributeType       attrType;
 int		   *value;
 #endif
@@ -171,7 +171,7 @@ int		   *value;
        i++;
    if (GraphMLAttrValueMappingTable[i].ThotAttr == attrType.AttrTypeNum)
        do
-	   if (!strcasecmp (GraphMLAttrValueMappingTable[i].XMLattrValue, AttrVal))
+	   if (!ustrcasecmp (GraphMLAttrValueMappingTable[i].XMLattrValue, AttrVal))
 	       *value = GraphMLAttrValueMappingTable[i].ThotAttrValue;
 	   else
 	       i++;
@@ -222,13 +222,13 @@ Document doc;
    Return that GRAPHICS_UNIT element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Element      CreateGraphicalLeaf (CHAR_T shape, Element el, Document doc, ThotBool changeShape)
+static Element      CreateGraphicalLeaf (char shape, Element el, Document doc, ThotBool changeShape)
 #else
 static Element      CreateGraphicalLeaf (shape, el, doc, changeShape)
-CHAR_T		shape;
-Element		el;
-Document	doc;
-ThotBool		changeShape;
+char                shape;
+Element             el;
+Document            doc;
+ThotBool            changeShape;
 
 #endif
 {
@@ -283,9 +283,9 @@ int		arrowHead;
 
 #endif
 {
-   ElementType		elType;
-   Element		leaf;
-   CHAR_T			shape;
+   ElementType elType;
+   Element     leaf;
+   char        shape;
 
    leaf = NULL;
    *closed = FALSE;
@@ -533,7 +533,7 @@ Document	doc;
           TtaGiveTextAttributeValue (spaceAttr, text, &length); 
           /* parse the text value and extract the internal value */
           ptr = text;
-          sscanf (ptr, "%d", &val);
+          usscanf (ptr, TEXT("%d"), &val);
           ptr = SkipInt (ptr);
           ptr = SkipSep (ptr);
           TtaFreeMemory (text);
@@ -778,7 +778,7 @@ Document	doc;
       while (*ptr != EOS)
          {
          x = y = 0;
-         sscanf (ptr, "%d", &x);
+         usscanf (ptr, TEXT("%d"), &x);
          if (x > maxX)
             maxX = x;
          if (x < minX)
@@ -786,7 +786,7 @@ Document	doc;
          ptr = SkipInt (ptr);
          ptr = SkipSep (ptr);
          if (ptr)
-            sscanf (ptr, "%d", &y);
+            usscanf (ptr, TEXT("%d"), &y);
          if (y > maxY)
             maxY = y;
          if (y < minY)
@@ -829,11 +829,11 @@ Document	doc;
       TtaGiveTextAttributeValue (attr, text, &length);
       x = y = 0;
       ptr = text;
-      sscanf (ptr, "%d", &x);
+      usscanf (ptr, TEXT("%d"), &x);
       ptr = SkipInt (ptr);
       ptr = SkipSep (ptr);
       if (ptr)
-         sscanf (ptr, "%d", &y);
+         usscanf (ptr, TEXT("%d"), &y);
 
       /* Search the IntPosX attribute */
       TtaGiveAttributeType (attr, &attrType, &attrKind);
@@ -906,7 +906,7 @@ Document	doc;
       /* parse the text value and extract the internal value */
       l = 0;
       ptr = text;
-      sscanf (ptr, "%d", &l);
+      usscanf (ptr, TEXT("%d"), &l);
       ptr = SkipInt (ptr);
       ptr = SkipSep (ptr);
       /* set the internal value */

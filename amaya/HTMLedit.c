@@ -233,10 +233,10 @@ ThotBool		    withUndo;
      }
   else
 #ifdef GRAPHML
-  if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
+  if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")) == 0)
      {
      MapGraphMLAttribute ("link", &attrType, "", doc);
-     MapGraphMLAttributeValue ("simple", attrType, &val);
+     MapGraphMLAttributeValue (TEXT("simple"), attrType, &val);
      }
 #endif
   if (attrType.AttrTypeNum > 0)
@@ -636,7 +636,7 @@ Boolean		    withUndo;
        }
      else
 #ifdef GRAPHML
-     if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
+     if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")) == 0)
        {
 	 attrType.AttrSSchema = elType.ElSSchema;
 	 attrType.AttrTypeNum = GraphML_ATTR_id;
@@ -1046,7 +1046,7 @@ Document     doc;
        }
      else
 #ifdef GRAPHML
-     if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
+     if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")) == 0)
        {
        attrType.AttrSSchema = elType.ElSSchema;
        attrType.AttrTypeNum = GraphML_ATTR_id;
@@ -2195,7 +2195,7 @@ void                SetOnOffStrong (document, view)
 Document            document;
 View                view;
 
-#endif /* __STDC__ */
+#endif /* __STDC__ */ 
 {
   Element             selectedEl;
   ElementType         elType;

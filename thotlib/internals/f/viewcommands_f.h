@@ -14,9 +14,9 @@ extern int CreateWindowWithTitle ( PtrDocument pDoc,
                                    int Y,
                                    int width,
                                    int height );
-extern void ImportDocument ( CUSName SSchemaName,
+extern void ImportDocument ( Name SSchemaName,
                              PathBuffer directory,
-                             CharUnit* fileName );
+                             CHAR_T* fileName );
 extern void TtaChangeNaturePresentSchema ( Document document,
                                            SSchema natureSSchema,
                                            STRING newPresentation );
@@ -33,9 +33,9 @@ extern int CreateWindowWithTitle (/* PtrDocument pDoc,
                                      int Y,
                                      int width,
                                      int height */);
-extern void ImportDocument (/* CUSName SSchemaName,
+extern void ImportDocument (/* Name SSchemaName,
                                PathBuffer directory,
-                               CharUnit* fileName */);
+                               CHAR_T* fileName */);
 extern void TtaChangeNaturePresentSchema (/* Document document,
                                              SSchema natureSSchema,
                                              STRING newPresentation */);

@@ -62,13 +62,12 @@ HTAlertPar         *reply;
 #endif
 {
    AHTReqContext      *me = HTRequest_context (request);
-   char                tempbuf[MAX_LENGTH];
+   CHAR_T              tempbuf[MAX_LENGTH];
    char                buf[11];
    long                cl, bytes_rw;
    int                 pro;
    int                *raw_rw;
    HTParentAnchor     *anchor;
-   STRING              Uinput = ISO2WideChar ((char*)input);
 
    if (request && HTRequest_internal (request))
       return NO;
@@ -85,10 +84,10 @@ HTAlertPar         *reply;
 		*/
 	      break;
 	    case HT_PROG_DNS:
-	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_LOOKING_HOST), Uinput);
+	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_LOOKING_HOST), input);
 	       break;
 	    case HT_PROG_CONNECT:
-	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CONTACTING_HOST), Uinput);
+	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CONTACTING_HOST), input);
 	       break;
 	    case HT_PROG_ACCEPT:
 	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_WAITING_FOR_CONNECTION), NULL);
@@ -108,7 +107,7 @@ HTAlertPar         *reply;
 		       if (pro > 100)		/* libwww reports > 100! */
 			 pro = 100;
 		       HTNumToStr ((unsigned long) cl, buf, 10);
-		       sprintf (tempbuf, "%s (%d%% of %s)\n", me->status_urlName, (int) pro, buf);
+		       usprintf (tempbuf, TEXT("%s (%d%% of %s)\n"), me->status_urlName, (int) pro, buf);
 		     }
 		   else 
 		     {
@@ -117,21 +116,21 @@ HTAlertPar         *reply;
 		       if (bytes_rw > 0)
 			 {
 			   HTNumToStr(bytes_rw, buf, 10);
-			   sprintf (tempbuf, "%s bytes", buf);
+			   usprintf (tempbuf, TEXT("%s bytes"), buf);
 			 } 
 		       else if (raw_rw && *raw_rw>0) 
 			 {
 			   HTNumToStr(*raw_rw, buf, 10);
-			   sprintf (tempbuf, "%s bytes", buf);
+			   usprintf (tempbuf, TEXT("%s bytes"), buf);
 			 } 
 		       else 
 			 buf[0] = EOS;
 		     }
 		   /* update the message on the status bar */
 		   if (buf[0]) 
-		     TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_READ), ISO2WideChar (tempbuf));
+		     TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_READ), tempbuf);
 		   else
-		     TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_READ), ISO2WideChar (me->status_urlName));
+		     TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_READ), me->status_urlName);
 		 }
 	       break;
 
@@ -145,22 +144,22 @@ HTAlertPar         *reply;
 		      bytes_rw = HTRequest_bodyWritten (request);
 			pro = (int) ((bytes_rw * 100l) / cl);
 			HTNumToStr ((unsigned long) cl, buf, 10);
-			sprintf (tempbuf, "%s: Writing (%d%% of %s)\n", me->urlName, pro, buf);
-			TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_WRITE), ISO2WideChar (tempbuf));
+			usprintf (tempbuf, TEXT("%s: Writing (%d%% of %s)\n"), me->urlName, pro, buf);
+			TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_WRITE), tempbuf);
 		    }
-		  else 
+		  else  
 		    {
 		      bytes_rw = HTRequest_bytesWritten(request);
 		      raw_rw = input ? (int *) input : NULL;
 		      if (bytes_rw > 0)
 			{
 			  HTNumToStr(bytes_rw, buf, 10);
-			  sprintf (tempbuf, "%s bytes ", buf);
+			  usprintf (tempbuf, TEXT("%s bytes "), buf);
 			} 
 		      else if (raw_rw && *raw_rw >0) 
 			{
 			  HTNumToStr(*raw_rw, buf, 10);
-			  sprintf (tempbuf, "%s bytes ", buf);
+			  usprintf (tempbuf, TEXT("%s bytes "), buf);
 			} 
 		      else 
 			buf[0] = EOS;
@@ -171,7 +170,7 @@ HTAlertPar         *reply;
 		    TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_READ), tempbuf);
 		  else
 		  ***/
-		    TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_WRITE), ISO2WideChar (me->status_urlName));
+		    TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_WRITE), me->status_urlName);
 		}
 	       break;
 		 
@@ -227,17 +226,13 @@ HTAlertPar         *reply;
       InitConfirm (0, 0, TtaGetMessage (AMAYA, AM_REDIRECTION_CONFIRM));
       break;
     case HT_MSG_FILE_REPLACE:
-      tmp_buf = TtaAllocString (strlen (me->urlName)
-		  		     + ustrlen (TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK))
-				     + 10); /*a bit more than enough memory */
+      tmp_buf = TtaAllocString (ustrlen (me->urlName) + ustrlen (TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK)) + 10); /*a bit more than enough memory */
       usprintf (tmp_buf, TtaGetMessage (AMAYA, AM_OVERWRITE_CHECK), me->urlName);
       InitConfirm (0, 0, tmp_buf);
       TtaFreeMemory (tmp_buf);
       break;
     case HT_MSG_RULES:
-      tmp_buf = TtaAllocString (strlen (me->urlName)
-					+ ustrlen (TtaGetMessage (AMAYA, AM_ETAG_CHANGED))
-					+ 10); /*a bit more than enough memory */
+      tmp_buf = TtaAllocString (ustrlen (me->urlName) + ustrlen (TtaGetMessage (AMAYA, AM_ETAG_CHANGED)) + 10); /*a bit more than enough memory */
       usprintf (tmp_buf, TtaGetMessage (AMAYA, AM_ETAG_CHANGED), me->urlName);
       InitConfirm (0, 0, tmp_buf);
       TtaFreeMemory (tmp_buf);
@@ -346,7 +341,7 @@ HTAlertPar         *reply;
 #endif /* __STDC */
 {
    AHTReqContext      *me = HTRequest_context (request);
-   const STRING       realm = ISO2WideChar (HTRequest_realm (request));
+   const STRING       realm = HTRequest_realm (request);
    STRING             server;
    AHTReqStatus       old_reqStatus;
 
@@ -358,7 +353,7 @@ HTAlertPar         *reply;
        Answer_password[0] = EOS;
 
        /* prepare the authentication realm message */
-       server = AmayaParseUrl (ISO2WideChar (me->urlName), _EMPTYSTR_, AMAYA_PARSE_HOST);
+       server = AmayaParseUrl (me->urlName, TEXT(""), AMAYA_PARSE_HOST);
        /* protection against having a stop kill this thread */
        old_reqStatus = me->reqStatus;
        me->reqStatus = HT_BUSY;
@@ -373,11 +368,11 @@ HTAlertPar         *reply;
        /* handle the user's answers back to the library */
        if (Answer_name[0] != EOS)
 	 {
-	   HTAlert_setReplyMessage (reply, WideChar2ISO (Answer_name));
+	   HTAlert_setReplyMessage (reply, Answer_name);
 	   if (Answer_password[0] != EOS)
 	     {
 	       /* give password back to the request */
-	       HTAlert_setReplySecret (reply, WideChar2ISO (Answer_password));
+	       HTAlert_setReplySecret (reply, Answer_password);
 	       return YES;
 	     }
 	 }
@@ -462,17 +457,17 @@ HTAlertPar         *reply;
 	 {
 	 case HTERR_UNAUTHORIZED:
 	   TtaSetStatus (me->docid, 1,
-			 TtaGetMessage (AMAYA, AM_AUTHENTICATION_FAILURE), ISO2WideChar (me->urlName));
+			 TtaGetMessage (AMAYA, AM_AUTHENTICATION_FAILURE), me->urlName);
 	   break;
 	 case HTERR_FORBIDDEN:
 	   TtaSetStatus (me->docid, 1,
-			 TtaGetMessage (AMAYA, AM_FORBIDDEN_ACCESS), ISO2WideChar (me->urlName));
+			 TtaGetMessage (AMAYA, AM_FORBIDDEN_ACCESS), me->urlName);
 	   break;
 	 case HTERR_SYSTEM:
-	   if (!ustrcmp (TEXT("connect"),  ISO2WideChar (HTError_location (pres))))
+	   if (!strcmp ("connect",  HTError_location (pres)))
 	     TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANT_CONNECT_TO_HOST), (STRING) NULL);
 	   else
-	     TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UNKNOWN_SAVE_ERROR), ISO2WideChar (me->urlName));
+	     TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UNKNOWN_SAVE_ERROR), me->urlName);
 	   break;
 	 case HTERR_NO_REMOTE_HOST:
 	   TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANT_CONNECT_TO_HOST), (STRING) NULL);
@@ -503,7 +498,7 @@ HTRequest          *request;
    HTList             *cur = request->error_stack;
    AHTReqContext      *me = (AHTReqContext *) HTRequest_context (request);
    int                 index;
-   char                buffer[1024];
+   CHAR_T              buffer[1024];
 
 
    if (WWWTRACE)	   
@@ -528,15 +523,12 @@ HTRequest          *request;
 		{
 		  if (me->method != METHOD_PUT) 
 		    {
-		      sprintf (buffer, 
-			       WideChar2ISO (TtaGetMessage (AMAYA, AM_SYS_ERROR_TMPL)), 
-			       me->urlName, me->urlName, 
-			       (int) pres->element, pres->par);
+		      usprintf (buffer, TtaGetMessage (AMAYA, AM_SYS_ERROR_TMPL), me->urlName, me->urlName, (int) pres->element, pres->par);
 		      StrAllocCat (me->error_stream, buffer);
 		    }
 		  else
 		    {
-		      sprintf (buffer, "Error: Server is unavailable or doesn't exist");
+		      usprintf (buffer, TEXT("Error: Server is unavailable or doesn't exist"));
 		      StrAllocCat (me->error_stream, buffer);
 		    }
 		}
@@ -545,14 +537,12 @@ HTRequest          *request;
 	    case HTERR_TIME_OUT:
 	      if (me->method != METHOD_PUT)
 		{
-		  sprintf (buffer, WideChar2ISO (TtaGetMessage (AMAYA, AM_SYS_ERROR_TMPL)),
-			   me->urlName, me->urlName,
-			   (int) pres->element, "connection timeout");
+		  usprintf (buffer, TtaGetMessage (AMAYA, AM_SYS_ERROR_TMPL), me->urlName, me->urlName, (int) pres->element, "connection timeout");
 		  StrAllocCat (me->error_stream, buffer);
 		}
 	      else
 		{
-		  sprintf (buffer, "Error: Server is unavailable or doesn't exist");
+		  usprintf (buffer, TEXT("Error: Server is unavailable or doesn't exist"));
 		  StrAllocCat (me->error_stream, buffer);
 		}
 	      break;	   
@@ -624,20 +614,20 @@ int status;
   HTErrorElement      errorElement;
   HTList              *cur;
   CHAR_T              msg_status[10];
-  STRING              server_status = (STRING) NULL;
+  CHAR_T*             server_status = (CHAR_T*) NULL;
 
   if (status == 200)
     TtaSetStatus (me->docid, 1,  
 		  TtaGetMessage (AMAYA, AM_REQUEST_SUCCEEDED),
-		  ISO2WideChar (me->status_urlName));
+		  me->status_urlName);
   else if (status == 201)
     TtaSetStatus (me->docid, 1, 
 		  TtaGetMessage (AMAYA, AM_CREATED_NEW_REMOTE_RESSOURCE),
-		  ISO2WideChar (me->status_urlName));
+		  me->status_urlName);
   else if (status == 204 && me->method == METHOD_PUT)
     TtaSetStatus (me->docid, 1,
 		  TtaGetMessage (AMAYA, AM_UPDATED_REMOTE_RESSOURCE),
-		  ISO2WideChar (me->status_urlName));
+		  me->status_urlName);
   else if (status == 204 && me->method == METHOD_PUT)
     TtaSetStatus (me->docid, 1, 
 		  TtaGetMessage (AMAYA, AM_NO_DATA), 
@@ -657,7 +647,7 @@ int status;
       TtaSetStatus (me->docid, 1,
 		    TtaGetMessage (AMAYA, 
 				   AM_AUTHENTICATION_FAILURE), 
-		    ISO2WideChar (me->status_urlName));
+		    me->status_urlName);
       usprintf (AmayaLastHTTPErrorMsg, 
 	       TtaGetMessage (AMAYA, AM_AUTHENTICATION_FAILURE),
 	       me->status_urlName);
@@ -666,7 +656,7 @@ int status;
     {
       TtaSetStatus (me->docid, 1,
 		    TtaGetMessage (AMAYA, AM_FORBIDDEN_ACCESS),
-		    ISO2WideChar (me->status_urlName));
+		    me->status_urlName);
       usprintf (AmayaLastHTTPErrorMsg, 
 	       TtaGetMessage (AMAYA, AM_FORBIDDEN_ACCESS), 
 	       me->urlName);
@@ -708,9 +698,8 @@ int status;
               if (next_error && next_error->par)
                 error = next_error;
             }
-          if (error->par && error->length < MAX_LENGTH/2
-              && ((char *) error->par)[0] != EOS)
-            server_status = ISO2WideChar ((char *) error->par);
+          if (error->par && error->length < MAX_LENGTH/2 && ((char *) error->par)[0] != EOS)
+            server_status = (char *) error->par;
         }
 
       if (error == (HTError *) NULL)
@@ -732,15 +721,13 @@ int status;
 	{
 	  TtaSetStatus (me->docid, 1,
 			TEXT("Transfer interrupted by user"), (STRING) NULL);
-	  usprintf (AmayaLastHTTPErrorMsg, "%s",
-		    TEXT("Transfer interrupted by user"));
+	  usprintf (AmayaLastHTTPErrorMsg, TEXT("%s"), TEXT("Transfer interrupted by user"));
 	}
       else if (errorElement == HTERR_PRECON_FAILED) 
 	{
 	  TtaSetStatus (me->docid, 1,
 			TEXT("Document has changed (412)"), (STRING) NULL);
-	  usprintf (AmayaLastHTTPErrorMsg, "%s",
-		    TEXT("Document has changed (412)"));
+	  usprintf (AmayaLastHTTPErrorMsg, TEXT("%s"), TEXT("Document has changed (412)"));
 	  status = -412;
 	}
       else if (errorElement == HTERR_TIME_OUT || errorElement == HTERR_TIMEOUT)
@@ -766,10 +753,10 @@ int status;
 	    {
 	      TtaSetStatus (me->docid, 1, 
 			    TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_CAUSE), 
-			    ISO2WideChar (error->par));
+			    error->par);
 	      usprintf (AmayaLastHTTPErrorMsg, 
 			TtaGetMessage (AMAYA, AM_SERVER_INTERNAL_ERROR_500_CAUSE), 
-			ISO2WideChar (error->par));
+			error->par);
 	    }
 	  else
 	    {

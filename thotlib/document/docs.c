@@ -172,11 +172,11 @@ PtrDocument         pDoc;
    been created.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-Document            TtaNewDocument (char* structureSchema, CharUnit* documentName)
+Document            TtaNewDocument (CHAR_T* structureSchema, CHAR_T* documentName)
 #else  /* __STDC__ */
 Document            TtaNewDocument (structureSchema, documentName)
-char*               structureSchema;
-CharUnit*           documentName;
+CHAR_T*             structureSchema;
+CHAR_T*             documentName;
 #endif /* __STDC__ */
 { 
   PtrDocument         pDoc;
@@ -197,14 +197,11 @@ CharUnit*           documentName;
 	/* No free context document */
 	TtaError (ERR_too_many_documents);
       else
-	{
-	  CUSName sschemaName;
-	  
-	  iso2cus_strncpy(sschemaName, structureSchema, MAX_NAME_LENGTH);
+	{	  
 	  /* charge le schema de structure */
 	  GetSchStruct (&pDoc->DocSSchema);
 	  pDoc->DocSSchema->SsExtension = FALSE;
-	  if (!ReadStructureSchema (sschemaName, pDoc->DocSSchema) ||
+	  if (!ReadStructureSchema (structureSchema, pDoc->DocSSchema) ||
 	      pDoc->DocSSchema->SsExtension)
 	    /* failure while reading the structure schema or while loading
 	       a schema extension */
@@ -244,14 +241,14 @@ CharUnit*           documentName;
 		  /* An attribut Language is stored in the root */
 		  CheckLanguageAttr (pDoc, pDoc->DocRootElement);
 		  /* The document is named */
-		  StringNCopy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
+		  ustrncpy (pDoc->DocDName, documentName, MAX_NAME_LENGTH);
 		  pDoc->DocDName[MAX_NAME_LENGTH - 1] = CUS_EOS;
 		  /* one get an identifier to the document */
 		  GetDocIdent (&pDoc->DocIdent, documentName); 
 		  /* keep the actual schema path in the document context */
-		  StringNCopy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
+		  ustrncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
 		  /* initializes the directory of the document */
-		  StringNCopy (pDoc->DocDirectory, DocumentPath, MAX_PATH);
+		  ustrncpy (pDoc->DocDirectory, DocumentPath, MAX_PATH);
 		  /* if path, keep only the first directory */
 		  i = 1;
 		  while (pDoc->DocDirectory[i - 1] != CUS_EOS &&
@@ -308,11 +305,11 @@ STRING              fileName;
 	   if (fileName[0] != URL_DIR_SEP)
 	     {
 	       if (fileName != DefaultDocumentName)
-		 StringNCopy (DefaultDocumentName, fileName, MAX_NAME_LENGTH);
+		 ustrncpy (DefaultDocumentName, fileName, MAX_NAME_LENGTH);
 	       /* nom de document relatif */
-	       StringNCopy ((*pDoc)->DocDName, DefaultDocumentName, MAX_NAME_LENGTH);
+	       ustrncpy ((*pDoc)->DocDName, DefaultDocumentName, MAX_NAME_LENGTH);
 	       (*pDoc)->DocDName[MAX_NAME_LENGTH - 1] = EOS;
-	       StringNCopy ((*pDoc)->DocIdent, DefaultDocumentName, MAX_DOC_IDENT_LEN);
+	       ustrncpy ((*pDoc)->DocIdent, DefaultDocumentName, MAX_DOC_IDENT_LEN);
 	       (*pDoc)->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
 	       if ((*pDoc)->DocDirectory[0] == EOS)
 		 ustrncpy ((*pDoc)->DocDirectory, DocumentPath, MAX_PATH);
@@ -338,9 +335,9 @@ STRING              fileName;
 		   j++;
 		 }
 	       DefaultDocumentName[i] = CUS_EOS;
-	       StringNCopy ((*pDoc)->DocDName, DefaultDocumentName, MAX_NAME_LENGTH);
+	       ustrncpy ((*pDoc)->DocDName, DefaultDocumentName, MAX_NAME_LENGTH);
 	       (*pDoc)->DocDName[MAX_NAME_LENGTH - 1] = EOS;
-	       StringNCopy ((*pDoc)->DocIdent, DefaultDocumentName, MAX_DOC_IDENT_LEN);
+	       ustrncpy ((*pDoc)->DocIdent, DefaultDocumentName, MAX_DOC_IDENT_LEN);
 	       (*pDoc)->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
 	       /* sauve le path des documents avant de l'ecraser */
 	       ustrncpy (directoryBuffer, DocumentPath, MAX_PATH);
@@ -387,21 +384,21 @@ STRING              fileName;
    Au retour pDoc est NIL si le document n'a pas ete cree. 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                NewDocument (PtrDocument * pDoc, CharUnit* SSchemaName, CharUnit* docName, PathBuffer directory)
+void                NewDocument (PtrDocument * pDoc, CHAR_T* SSchemaName, CHAR_T* docName, PathBuffer directory)
 #else  /* __STDC__ */
 void                NewDocument (pDoc, SSchemaName, docName, directory)
 PtrDocument        *pDoc;
-CharUnit*           SSchemaName;
-CharUnit*           docName;
+CHAR_T*             SSchemaName;
+CHAR_T*             docName;
 PathBuffer          directory;
 
 #endif /* __STDC__ */
 {
    PtrElement          pEl;
    NotifyDialog        notifyDoc;
-   CharUnit            PSchemaName[MAX_NAME_LENGTH]; 
-   CharUnit            docNameBuffer[MAX_NAME_LENGTH]; 
-   CharUnit            docType[MAX_NAME_LENGTH];
+   CHAR_T              PSchemaName[MAX_NAME_LENGTH]; 
+   CHAR_T              docNameBuffer[MAX_NAME_LENGTH]; 
+   CHAR_T              docType[MAX_NAME_LENGTH];
    PathBuffer          directoryBuffer;
    PathBuffer          fileNameBuffer;
 
@@ -426,34 +423,34 @@ PathBuffer          directory;
 	   /* on suppose que le mon de schema est dans la langue de */
 	   /* l'utilisateur: on le traduit en nom interne */
 	   ConfigSSchemaInternalName (SSchemaName, docType, TRUE);
-	   if (docType[0] == CUS_EOS)
+	   if (docType[0] == WC_EOS)
 	      /* ce nom n'est pas dans le fichier langue, on le prend */
 	      /* tel quel */
-	      StringNCopy (docType, SSchemaName, MAX_NAME_LENGTH);
+	      ustrncpy (docType, SSchemaName, MAX_NAME_LENGTH);
 	   /* compose le nom du fichier a ouvrir avec le nom du directory */
 	   /* des schemas... */
 	   ustrncpy (directoryBuffer, SchemaPath, MAX_PATH);
-	   MakeCompleteName (docType, CUSTEXT("STR"), directoryBuffer, fileNameBuffer, &i);
+	   MakeCompleteName (docType, TEXT("STR"), directoryBuffer, fileNameBuffer, &i);
 	   /* teste si le fichier '.STR' existe */
 
 	   if (TtaFileExist (fileNameBuffer) == 0)
 	     {
-		StringNCopy (fileNameBuffer, docType, MAX_NAME_LENGTH);
-		ustrcat (fileNameBuffer, CUSTEXT(".STR"));
+		ustrncpy (fileNameBuffer, docType, MAX_NAME_LENGTH);
+		ustrcat (fileNameBuffer, TEXT(".STR"));
 		TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_SCHEMA_NOT_FIND), fileNameBuffer);
 	     }
 	   else
 	     {
 		/* charge le schema de structure et le schema de presentation */
-		PSchemaName[0] = EOS;
+		PSchemaName[0] =WC_EOS;
 		/* pas de preference pour un schema de */
 		/* presentation particulier */
 		LoadSchemas (docType, PSchemaName, &((*pDoc)->DocSSchema), NULL, FALSE);
 		if (docName[0] != CUS_EOS)
-		   StringNCopy (docNameBuffer, docName, MAX_NAME_LENGTH);
+		   ustrncpy (docNameBuffer, docName, MAX_NAME_LENGTH);
 		else
 		  {
-		     StringNCopy (docNameBuffer, SSchemaName, MAX_NAME_LENGTH);
+		     ustrncpy (docNameBuffer, SSchemaName, MAX_NAME_LENGTH);
 		     ustrcat (docNameBuffer, TEXT("X"));
 		  }
 		if ((*pDoc)->DocSSchema != NULL)
@@ -503,10 +500,10 @@ PathBuffer          directory;
 			i++;
 		     directoryBuffer[i] = EOS;
 		  }
-		FindCompleteName (docNameBuffer, CUSTEXT("PIV"), directoryBuffer, fileNameBuffer, &i);
-		StringNCopy ((*pDoc)->DocDName, docNameBuffer, MAX_NAME_LENGTH);
+		FindCompleteName (docNameBuffer, TEXT("PIV"), directoryBuffer, fileNameBuffer, &i);
+		ustrncpy ((*pDoc)->DocDName, docNameBuffer, MAX_NAME_LENGTH);
 		(*pDoc)->DocDName[MAX_NAME_LENGTH - 1] = EOS;
-		StringNCopy ((*pDoc)->DocIdent, docNameBuffer, MAX_DOC_IDENT_LEN);
+		ustrncpy ((*pDoc)->DocIdent, docNameBuffer, MAX_DOC_IDENT_LEN);
 		(*pDoc)->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
 		/* le document appartient au directory courant */
 		ustrncpy ((*pDoc)->DocDirectory, directoryBuffer, MAX_PATH);

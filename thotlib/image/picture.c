@@ -637,7 +637,7 @@ STRING              fileName;
 #endif /* __STDC__ */
 {
    if (PictureHandlerTable[typeImage].Match_Format != NULL)
-      return (*(PictureHandlerTable[typeImage].Match_Format)) (WideChar2ISO(fileName));
+      return (*(PictureHandlerTable[typeImage].Match_Format)) (fileName);
    return FALSE;
 }
 

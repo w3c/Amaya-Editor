@@ -37,10 +37,10 @@
 static Document     BgDocument;
 static int          BaseImage;
 static int          RepeatValue;
-static CharUnit     DirectoryImage[MAX_LENGTH];
-static CharUnit     LastURLImage[MAX_LENGTH];
+static CHAR_T       DirectoryImage[MAX_LENGTH];
+static CHAR_T       LastURLImage[MAX_LENGTH];
 static CHAR_T       ImageName[MAX_LENGTH];
-static CharUnit     ImgFilter[NAME_LENGTH];
+static CHAR_T       ImgFilter[NAME_LENGTH];
 static CHAR_T       ImgAlt[NAME_LENGTH];
 
 #include "AHTURLTools_f.h"
@@ -131,7 +131,7 @@ STRING              data;
          case FormImage:
          case FormBackground:
 	   if (val == 2) { /* Clear button */
-	     LastURLImage[0] = CUS_EOS;
+	     LastURLImage[0] = WC_EOS;
 #ifndef _WINDOWS
 	     TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
 #endif /* !_WINDOWS */
@@ -142,7 +142,7 @@ STRING              data;
 			       ImgFilter, TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
 	   }
 	   else if (val == 0) { /* Cancel button */ 
-	     LastURLImage[0] = CUS_EOS;
+	     LastURLImage[0] = WC_EOS;
 	     TtaDestroyDialogue (ref);
 	     BgDocument = 0;
 	     /* Confirm button */
@@ -290,14 +290,14 @@ STRING              data;
                  break;
               if (IsW3Path (data)) {
                  /* save the URL name */
-                 StringCopy (LastURLImage, data);
-                 ImageName[0] = EOS;
+                 ustrcpy (LastURLImage, data);
+                 ImageName[0] = WC_EOS;
 			  } else {
                      change = NormalizeFile (data, LastURLImage);
                      if (TtaCheckDirectory (LastURLImage)) {
-                        StringCopy (DirectoryImage, LastURLImage);
-                        ImageName[0] = EOS;
-                        LastURLImage[0] = CUS_EOS;
+                        ustrcpy (DirectoryImage, LastURLImage);
+                        ImageName[0] = WC_EOS;
+                        LastURLImage[0] = WC_EOS;
 					 } else
                             TtaExtractName (LastURLImage, DirectoryImage, ImageName);
 			  }
@@ -309,11 +309,11 @@ STRING              data;
          case ImageDir:
               if (!ustrcmp (data, TEXT(".."))) {
                  /* suppress last directory */
-                 StringCopy (tempname, DirectoryImage);
+                 ustrcpy (tempname, DirectoryImage);
                  TtaExtractName (tempname, DirectoryImage, tempfile);
 			  } else {
-                     StringConcat (DirectoryImage, CUS_DIR_STR);
-                     StringConcat (DirectoryImage, data);
+                     ustrcat (DirectoryImage, WC_DIR_STR);
+                     ustrcat (DirectoryImage, data);
 			  }
 #             ifndef _WINDOWS
               TtaSetTextForm (BaseImage + ImageURL, DirectoryImage);
@@ -322,7 +322,7 @@ STRING              data;
                                 BaseImage + ImageDir, ImgFilter, TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
               TtaListDirectory (DirectoryImage, BaseImage + FormBackground, TtaGetMessage (LIB, TMSG_DOC_DIR), 
                                 BaseImage + ImageDir, ImgFilter, TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
-              ImageName[0] = EOS;
+              ImageName[0] = WC_EOS;
               break;
          case ImageSel:
               if (DirectoryImage[0] == CUS_EOS) {
@@ -330,11 +330,11 @@ STRING              data;
                  ugetcwd (DirectoryImage, MAX_LENGTH);
 			  } 
               /* construct the image full name */
-              StringCopy (LastURLImage, DirectoryImage);
-              val = StringLength (LastURLImage) - 1;
-              if (LastURLImage[val] != CUS_DIR_SEP)
-                 StringConcat (LastURLImage, CUS_DIR_STR);
-              StringConcat (LastURLImage, data);
+              ustrcpy (LastURLImage, DirectoryImage);
+              val = ustrlen (LastURLImage) - 1;
+              if (LastURLImage[val] != WC_DIR_SEP)
+                 ustrcat (LastURLImage, WC_DIR_STR);
+              ustrcat (LastURLImage, data);
 #             ifndef _WINDOWS
               TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
 #             endif /* !_WINDOWS */
@@ -354,8 +354,8 @@ void                InitImage ()
 {
    BaseImage = TtaSetCallback (CallbackImage, IMAGE_MAX_REF);
    RepeatValue = 0;
-   LastURLImage[0] = CUS_EOS;
-   StringCopy(ImgFilter, CUSTEXT(".gif"));
+   LastURLImage[0] = WC_EOS;
+   ustrcpy (ImgFilter, TEXT(".gif"));
    /* set path on current directory */
    ugetcwd (DirectoryImage, MAX_LENGTH);
 }
@@ -406,12 +406,12 @@ View                view;
   'p': polygon
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         CreateAreaMap (Document doc, View view, STRING shape)
+static void         CreateAreaMap (Document doc, View view, char* shape)
 #else  /* __STDC__ */
 static void         CreateAreaMap (document, view, shape)
 Document            document;
 View                view;
-STRING              shape;
+char*               shape;
 
 #endif /* __STDC__ */
 {
@@ -636,7 +636,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   CreateAreaMap (doc, view, TEXT("R"));
+   CreateAreaMap (doc, view, "R");
 }
 
 /*----------------------------------------------------------------------
@@ -650,7 +650,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   CreateAreaMap (doc, view, TEXT("a"));
+   CreateAreaMap (doc, view, "a");
 }
 
 /*----------------------------------------------------------------------
@@ -664,7 +664,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   CreateAreaMap (doc, view, TEXT("p"));
+   CreateAreaMap (doc, view, "p");
 }
 
 /*----------------------------------------------------------------------
@@ -705,12 +705,12 @@ View                view;
 		     TtaGetMessage (AMAYA, AM_IMAGES_LOCATION),
 		     BaseImage + ImageDir, ImgFilter,
 		     TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
-   if (LastURLImage[0] != CUS_EOS)
+   if (LastURLImage[0] != WC_EOS)
       TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
    else
      {
-	StringCopy (LastURLImage, DirectoryImage);
-	ustrcat (LastURLImage, CUS_DIR_STR);
+	ustrcpy (LastURLImage, DirectoryImage);
+	ustrcat (LastURLImage, WC_DIR_STR);
 	ustrcat (LastURLImage, ImageName);
 	TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
      }
@@ -785,7 +785,7 @@ void ChangeBackgroundImage (document, view)
 		     TtaGetMessage (LIB, TMSG_DOC_DIR),
 		     BaseImage + ImageDir, ImgFilter,
 		     TtaGetMessage (AMAYA, AM_FILES), BaseImage + ImageSel);
-   if (LastURLImage[0] != CUS_EOS)
+   if (LastURLImage[0] != WC_EOS)
       TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
    else
      {
@@ -816,12 +816,12 @@ void ChangeBackgroundImage (document, view)
    TtaShowDialogue (BaseImage + FormBackground, TRUE);
    TtaFreeMemory (s);
 #  else /* _WINDOWS */
-   if (LastURLImage[0] != CUS_EOS)
-      StringCopy (s, LastURLImage);
+   if (LastURLImage[0] != WC_EOS)
+      ustrcpy (s, LastURLImage);
    else {
-      StringCopy (s, DirectoryImage);
-      StringConcat (s, CUS_DIR_STR);
-      StringConcat (s, ImageName);
+      ustrcpy (s, DirectoryImage);
+      ustrcat (s, WC_DIR_STR);
+      ustrcat (s, ImageName);
    }
    BgDocument = document;
    CreateBackgroundImageDlgWindow (TtaGetViewFrame (document, view), BaseImage, FormBackground, ImageURL, ImageLabel, ImageDir, ImageSel, RepeatImage, s);
@@ -1087,19 +1087,19 @@ View                view;
    url is the complete URL of the distant location.              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            AddLocalImage (STRING fullname, STRING name, STRING url, Document doc, LoadedImageDesc ** desc)
+ThotBool            AddLocalImage (CHAR_T* fullname, CHAR_T* name, CHAR_T* url, Document doc, LoadedImageDesc ** desc)
 #else  /* __STDC__ */
 ThotBool            AddLocalImage (fullname, name, url, doc, desc)
-STRING              fullname;
-STRING              name;
-STRING              url;
+CHAR_T*             fullname;
+CHAR_T*             name;
+CHAR_T*             url;
 Document            doc;
 LoadedImageDesc   **desc;
 
 #endif /* __STDC__ */
 {
   LoadedImageDesc    *pImage, *previous;
-  STRING              localname;
+  CHAR_T*             localname;
 
   *desc = NULL;
   if (!TtaFileExist (fullname))
@@ -1140,9 +1140,9 @@ LoadedImageDesc   **desc;
 	{
 	  /* It is a new loaded image */
 	  pImage = (LoadedImageDesc *) TtaGetMemory (sizeof (LoadedImageDesc));
-	  pImage->originalName = TtaGetMemory (ustrlen (url) + 1);
+	  pImage->originalName = TtaAllocString (ustrlen (url) + 1);
 	  ustrcpy (pImage->originalName, url);
-	  pImage->localName = TtaGetMemory (ustrlen (localname) + 1);
+	  pImage->localName = TtaAllocString (ustrlen (localname) + 1);
 	  ustrcpy (pImage->localName, localname);
 	  pImage->prevImage = previous;
 	  if (previous != NULL)

@@ -6,13 +6,13 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern Document TtaNewDocument ( char* structureSchema,
-                                 CharUnit* documentName );
+extern Document TtaNewDocument ( CHAR_T* structureSchema,
+                                 CHAR_T* documentName );
 extern void LoadDocument ( PtrDocument * pDoc,
                            STRING fileName );
 extern void NewDocument ( PtrDocument * pDoc,
-                          CharUnit* SSchemaName,
-                          CharUnit* docName,
+                          CHAR_T* SSchemaName,
+                          CHAR_T* docName,
                           PathBuffer directory );
 extern void PaginateDocument ( PtrDocument pDoc );
 extern void UpdateIncludedElement ( PtrElement pEl,
@@ -27,13 +27,13 @@ extern void BackupOnFatalErrorLoadResources ( void );
 
 #else /* __STDC__ */
 
-extern Document TtaNewDocument (/* char* structureSchema,
-                                   CharUnit* documentName */);
+extern Document TtaNewDocument (/* CHAR_T* structureSchema,
+                                   CHAR_T* documentName */);
 extern void LoadDocument (/* PtrDocument * pDoc,
                              STRING fileName */);
 extern void NewDocument (/* PtrDocument * pDoc,
-                            CharUnit* SSchemaName,
-                            CharUnit* docName,
+                            CHAR_T* SSchemaName,
+                            CHAR_T* docName,
                             PathBuffer directory */);
 extern void PaginateDocument (/* PtrDocument pDoc */);
 extern void UpdateIncludedElement (/* PtrElement pEl,

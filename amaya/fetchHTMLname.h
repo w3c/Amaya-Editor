@@ -12,8 +12,8 @@
 #define MaxGIlength 14
 #define DummyAttribute 500
 
-typedef unsigned char GI[MaxGIlength];
-
+/* typedef unsigned char GI[MaxGIlength]; */
+typedef CHAR_T GI[MaxGIlength];
 
 typedef struct _ClosedElement *PtrClosedElement;
 typedef struct _ClosedElement

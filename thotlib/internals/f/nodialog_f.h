@@ -17,12 +17,12 @@ extern int GetObjectWWW ( int docid,
                           void* context_tcbf,
                           ThotBool error_html,
                           STRING content_type );
-extern ThotBool IsW3Path ( const STRING path );
-extern void NormalizeURL ( STRING orgName,
+extern ThotBool IsW3Path ( const CHAR_T* path );
+extern void NormalizeURL ( CHAR_T* orgName,
                            Document doc,
-                           STRING newName,
-                           STRING docName,
-                           STRING otherPath );
+                           CHAR_T* newName,
+                           CHAR_T* docName,
+                           CHAR_T* otherPath );
 extern ThotBool LoadRemoteStyleSheet ( STRING url,
                                        Document doc,
                                        Element el,
@@ -126,12 +126,12 @@ extern int GetObjectWWW (/* int docid,
                             void* context_tcbf,
                             ThotBool error_html,
                             STRING content_type */);
-extern ThotBool IsW3Path (/* const STRING path */);
-extern void NormalizeURL (/* STRING orgName,
+extern ThotBool IsW3Path (/* const CHAR_T* path */);
+extern void NormalizeURL (/* CHAR_T* orgName,
                              Document doc,
-                             STRING newName,
-                             STRING docName,
-                             STRING otherPath */);
+                             CHAR_T* newName,
+                             CHAR_T* docName,
+                             CHAR_T* otherPath */);
 extern ThotBool LoadRemoteStyleSheet (/* STRING url,
                                          Document doc,
                                          Element el,

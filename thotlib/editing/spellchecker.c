@@ -719,10 +719,10 @@ PtrDict             docDict;
    CHAR_T                tempbuffer[THOT_MAX_CHAR];
    CHAR_T                word[MAX_WORD_LEN];
 
-   FindCompleteName (docDict->DictName, _EMPTYSTR_, docDict->DictDirectory, tempbuffer, &i);
+   FindCompleteName (docDict->DictName, TEXT(""), docDict->DictDirectory, tempbuffer, &i);
    if (docDict->DictNbWords >= 0)
      {
-	f = ufopen (tempbuffer, CUSTEXT("w"));
+	f = ufopen (tempbuffer, TEXT("w"));
 	if (f != NULL)
 	  {
 	    /* enregistrer d'abord nb words and nb chars effectifs */
@@ -767,7 +767,7 @@ PtrDict            *pDict;
 {
    CHAR_T              word1[MAX_WORD_LEN];
    int                 ret;
-   CUSName             DiNom;
+   Name             DiNom;
    ThotBool            OKinsere = TRUE;
    PtrDict             docDict;
 
@@ -802,7 +802,7 @@ PtrDict            *pDict;
 		    /* dictionnaire plein */
 		    SaveDictFile (docDict);
 		    /* rechargement du dictionnaire avec plus de memoire */
-		    StringCopy (DiNom, docDict->DictName); 
+		    ustrcpy (DiNom, docDict->DictName); 
 		    if (ReloadDictionary (pDict) == TRUE)
 		      {
 			 docDict = *pDict;
@@ -1027,10 +1027,10 @@ int                 ParametrizeChecker ()
 {
    int                 ret;
    FILE               *fparam;
-   CharUnit            paramnom[MAX_LENGTH];
+   CHAR_T              paramnom[MAX_LENGTH];
    FILE               *ftsub;
-   CharUnit            clavnom[MAX_LENGTH];
-   CharUnit*           corrpath;
+   CHAR_T              clavnom[MAX_LENGTH];
+   CHAR_T*             corrpath;
 
    ret = 1;
    /* initialisations des parametres du correcteur */
@@ -1047,10 +1047,10 @@ int                 ParametrizeChecker ()
 	else
 	  {
 	     /* Lecture du fichier parametres */
-	     StringCopy (paramnom, corrpath);
-         StringConcat (paramnom, CUS_DIR_STR);
-	     StringConcat (paramnom, CUSTEXT("param"));
-	     if ((fparam = cus_fopen (paramnom, CUSTEXT("r"))) != NULL)
+	     ustrcpy (paramnom, corrpath);
+         ustrcat (paramnom, WC_DIR_STR);
+	     ustrcat (paramnom, TEXT("param"));
+	     if ((fparam = ufopen (paramnom, TEXT("r"))) != NULL)
 	       /* Existence du fichier */
 		init_param (fparam);
 	     else
@@ -1060,10 +1060,10 @@ int                 ParametrizeChecker ()
 	       }
 
 	     /* Lecture du  fichier clavier */
-	     StringCopy (clavnom, corrpath);
-         StringConcat (clavnom, CUS_DIR_STR);
-	     StringConcat (clavnom, CUSTEXT("clavier"));
-	     if ((ftsub = cus_fopen (clavnom, CUSTEXT("r"))) != NULL)
+	     ustrcpy (clavnom, corrpath);
+         ustrcat (clavnom, WC_DIR_STR);
+	     ustrcat (clavnom, TEXT("clavier"));
+	     if ((ftsub = ufopen (clavnom, TEXT("r"))) != NULL)
 	       /* Existence du fichier */
 	       {
 		  init_Tsub (ftsub);

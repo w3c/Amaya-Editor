@@ -8,31 +8,31 @@
 
 extern char* SkipBlanksAndComments ( char* ptr );
 extern CHAR_T* SkipWCBlanksAndComments (CHAR_T* ptr);
-extern char* SkipProperty ( char* ptr );
+extern CHAR_T* SkipProperty ( CHAR_T* ptr );
 extern void ParseCSSBackgroundImageCallback ( Document doc,
                                               Element element,
                                               STRING file,
                                               void *extra );
-extern char* GetCSSBackgroundURL ( char* styleString );
+extern CHAR_T* GetCSSBackgroundURL ( CHAR_T* styleString );
 extern void PToCss ( PresentationSetting settings,
-                     char* buffer,
+                     CHAR_T* buffer,
                      int len );
 extern void ParseHTMLSpecificStyle ( Element el,
-                                     char* cssRule,
+                                     CHAR_T* cssRule,
                                      Document doc,
                                      ThotBool destroy );
-extern int IsImplicitClassName ( char* class,
+extern int IsImplicitClassName ( CHAR_T* class,
                                  Document doc );
 extern void HTMLSetBackgroundColor ( Document doc,
                                      Element el,
-                                     char* color );
+                                     CHAR_T* color );
 extern void HTMLSetBackgroundImage ( Document doc,
                                      Element el,
                                      int repeat,
-                                     char* image );
+                                     CHAR_T* image );
 extern void HTMLSetForegroundColor ( Document doc,
                                      Element el,
-                                     char* color );
+                                     CHAR_T* color );
 extern void HTMLResetBackgroundColor ( Document doc,
                                        Element el );
 extern void HTMLResetBackgroundImage ( Document doc,
@@ -40,52 +40,52 @@ extern void HTMLResetBackgroundImage ( Document doc,
 extern void HTMLResetForegroundColor ( Document doc,
                                        Element el );
 extern void HTMLSetAlinkColor ( Document doc,
-                                char* color );
+                                CHAR_T* color );
 extern void HTMLSetAactiveColor ( Document doc,
-                                  char* color );
+                                  CHAR_T* color );
 extern void HTMLSetAvisitedColor ( Document doc,
-                                   char* color );
+                                   CHAR_T* color );
 extern void HTMLResetAlinkColor ( Document doc );
 extern void HTMLResetAactiveColor ( Document doc );
 extern void HTMLResetAvisitedColor ( Document doc );
 extern void ApplyCSSRules ( Element el,
-                            char* cssRule,
+                            CHAR_T* cssRule,
                             Document doc,
                             ThotBool destroy );
-extern char ReadCSSRules ( Document docRef,
+extern CHAR_T ReadCSSRules ( Document docRef,
                            CSSInfoPtr css,
-                           char* buffer,
+                           CHAR_T* buffer,
                            ThotBool withUndo );
 
 #else /* __STDC__ */
 
 extern char* SkipBlanksAndComments (/* char* ptr */);
 extern CHAR_T* SkipWCBlanksAndComments (/* CHAR_T* ptr */);
-extern char* SkipProperty (/* char* ptr */);
+extern CHAR_T* SkipProperty (/* CHAR_T* ptr */);
 extern void ParseCSSBackgroundImageCallback (/* Document doc,
                                                 Element element,
                                                 STRING file,
                                                 void *extra */);
-extern char* GetCSSBackgroundURL (/* char* styleString */);
+extern CHAR_T* GetCSSBackgroundURL (/* CHAR_T* styleString */);
 extern void PToCss (/* PresentationSetting settings,
-                       char* buffer,
+                       CHAR_T* buffer,
                        int len */);
 extern void ParseHTMLSpecificStyle (/* Element el,
-                                       char* cssRule,
+                                       CHAR_T* cssRule,
                                        Document doc,
                                        ThotBool destroy */);
-extern int IsImplicitClassName (/* char* class,
+extern int IsImplicitClassName (/* CHAR_T* class,
                                    Document doc */);
 extern void HTMLSetBackgroundColor (/* Document doc,
                                        Element el,
-                                       char* color */);
+                                       CHAR_T* color */);
 extern void HTMLSetBackgroundImage (/* Document doc,
                                        Element el,
                                        int repeat,
-                                       char* image */);
+                                       CHAR_T* image */);
 extern void HTMLSetForegroundColor (/* Document doc,
                                        Element el,
-                                       char* color */);
+                                       CHAR_T* color */);
 extern void HTMLResetBackgroundColor (/* Document doc,
                                          Element el */);
 extern void HTMLResetBackgroundImage (/* Document doc,
@@ -93,21 +93,21 @@ extern void HTMLResetBackgroundImage (/* Document doc,
 extern void HTMLResetForegroundColor (/* Document doc,
                                          Element el */);
 extern void HTMLSetAlinkColor (/* Document doc,
-                                  char* color */);
+                                  CHAR_T* color */);
 extern void HTMLSetAactiveColor (/* Document doc,
-                                    char* color */);
+                                    CHAR_T* color */);
 extern void HTMLSetAvisitedColor (/* Document doc,
-                                     char* color */);
+                                     CHAR_T* color */);
 extern void HTMLResetAlinkColor (/* Document doc */);
 extern void HTMLResetAactiveColor (/* Document doc */);
 extern void HTMLResetAvisitedColor (/* Document doc */);
 extern void ApplyCSSRules (/* Element el,
-                              char* cssRule,
+                              CHAR_T* cssRule,
                               Document doc,
                               ThotBool destroy */);
-extern char ReadCSSRules (/* Document docRef,
+extern CHAR_T ReadCSSRules (/* Document docRef,
                              CSSInfoPtr css,
-                             char* buffer,
+                             CHAR_T* buffer,
                              ThotBool withUndo */);
 
 #endif /* __STDC__ */

@@ -33,7 +33,7 @@ static ThotBool     AnswerCreateAskForNew;	/* answer AnswerCreateAskForNew to th
 #include "structcreation_f.h"
  
 #ifdef __STDC__
-extern int          ConfigMakeDocTypeMenu (CharUnit*, int*, ThotBool);
+extern int          ConfigMakeDocTypeMenu (CHAR_T*, int*, ThotBool);
 
 #else  /* __STDC__ */
 extern int          ConfigMakeDocTypeMenu ();

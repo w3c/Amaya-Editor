@@ -101,16 +101,16 @@ STRING              word;
    suffix.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            TtaIsSuffixFileIn (CharUnit* aDirectory, CharUnit* suffix)
+ThotBool            TtaIsSuffixFileIn (CHAR_T* aDirectory, CHAR_T* suffix)
 #else  /* __STDC__ */
 ThotBool            TtaIsSuffixFileIn (aDirectory, suffix)
-CharUnit*           aDirectory;
+CHAR_T*             aDirectory;
 CharUnit*           suffix;
 
 #endif /* __STDC__ */
 {
    ThotBool            ret;
-   CharUnit            command[MAX_LENGTH];
+   CHAR_T              command[MAX_LENGTH];
    ThotDirBrowse       thotDir;
 
    ret = FALSE;
@@ -118,10 +118,10 @@ CharUnit*           suffix;
    if (TtaCheckDirectory (aDirectory))
      {
 	thotDir.buf = command;
-	thotDir.bufLen = sizeof (command);
+	thotDir.bufLen = sizeof (command) / sizeof (CHAR_T);
 	thotDir.PicMask = (ThotDirBrowse_mask)
                           (ThotDirBrowse_FILES | ThotDirBrowse_DIRECTORIES);
-	ret = ThotDirBrowse_first (&thotDir, aDirectory, CUSTEXT("*"), suffix);
+	ret = ThotDirBrowse_first (&thotDir, aDirectory, TEXT("*"), suffix);
 	ThotDirBrowse_close (&thotDir);
      }
    return (ret);
@@ -211,7 +211,7 @@ int                 fileRef;
 	     thotDir.buf = word;
 	     thotDir.bufLen = sizeof (word);
 	     thotDir.PicMask = ThotDirBrowse_DIRECTORIES;
-	     if (ThotDirBrowse_first (&thotDir, aDirectory, "*", "") == 1)
+	     if (ThotDirBrowse_first (&thotDir, aDirectory, TEXT("*"), TEXT("")) == 1)
 	       {
 		  do
 		    {
@@ -256,7 +256,7 @@ int                 fileRef;
 	     ls_currentfile = 0;
 	     stop = FALSE;
 	     /* Commande ls sur le directory */
-	     if (ThotDirBrowse_first (&thotDir, aDirectory, "*", suffix) == 1)
+	     if (ThotDirBrowse_first (&thotDir, aDirectory, TEXT("*"), suffix) == 1)
 		do
 		  {
 		     /* c'est un fichier regulier -> compare le suffixe */

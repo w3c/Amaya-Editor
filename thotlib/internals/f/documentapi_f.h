@@ -21,8 +21,8 @@ extern void UnloadDocument ( PtrDocument * pDoc );
 extern void TtaCloseDocument ( Document document );
 extern void TtaSetDocumentPath ( STRING path );
 extern ThotBool TtaCheckPath ( char* path );
-extern ThotBool TtaIsInDocumentPath ( CharUnit* directory );
-extern void TtaAppendDocumentPath ( CharUnit* directory );
+extern ThotBool TtaIsInDocumentPath ( CHAR_T* directory );
+extern void TtaAppendDocumentPath ( CHAR_T* directory );
 extern void TtaSetSchemaPath ( STRING path );
 extern SSchema TtaNewNature ( SSchema schema,
                               CHAR_T* natureName,
@@ -33,7 +33,7 @@ extern SSchema TtaNewSchemaExtension ( Document document,
 extern void TtaSetPSchema ( Document document,
                             CHAR_T* presentationName );
 extern void TtaSetDocumentDirectory ( Document document,
-                                      CharUnit* directory );
+                                      CHAR_T* directory );
 extern void TtaSetDocumentAccessMode ( Document document,
                                        int accessMode );
 extern void TtaSetDocumentBackUpInterval ( Document document,
@@ -45,7 +45,7 @@ extern void SetDocumentModified ( PtrDocument pDoc,
                                   int length );
 extern void TtaSetDocumentModified ( Document document );
 extern void TtaSetDocumentUnmodified ( Document document );
-extern CharUnit* TtaGetDocumentName ( Document document );
+extern CHAR_T* TtaGetDocumentName ( Document document );
 extern Document TtaGetDocumentFromName ( STRING documentName );
 extern void TtaGetDocumentDirectory ( Document document,
                                       STRING buffer,
@@ -92,8 +92,8 @@ extern void UnloadDocument (/* PtrDocument * pDoc */);
 extern void TtaCloseDocument (/* Document document */);
 extern void TtaSetDocumentPath (/* STRING path */);
 extern ThotBool TtaCheckPath (/* char* path */);
-extern ThotBool TtaIsInDocumentPath (/* CharUnit* directory */);
-extern void TtaAppendDocumentPath (/* CharUnit* directory */);
+extern ThotBool TtaIsInDocumentPath (/* CHAR_T* directory */);
+extern void TtaAppendDocumentPath (/* CHAR_T* directory */);
 extern void TtaSetSchemaPath (/* STRING path */);
 extern SSchema TtaNewNature (/* SSchema schema,
                                 CHAR_T* natureName,
@@ -104,7 +104,7 @@ extern SSchema TtaNewSchemaExtension (/* Document document,
 extern void TtaSetPSchema (/* Document document,
                               CHAR_T* presentationName */);
 extern void TtaSetDocumentDirectory (/* Document document,
-                                        CharUnit* directory */);
+                                        CHAR_T* directory */);
 extern void TtaSetDocumentAccessMode (/* Document document,
                                          int accessMode */);
 extern void TtaSetDocumentBackUpInterval (/* Document document,
@@ -116,7 +116,7 @@ extern void SetDocumentModified (/* PtrDocument pDoc,
                                     int length */);
 extern void TtaSetDocumentModified (/* Document document */);
 extern void TtaSetDocumentUnmodified (/* Document document */);
-extern CharUnit* TtaGetDocumentName (/* Document document */);
+extern CHAR_T* TtaGetDocumentName (/* Document document */);
 extern Document TtaGetDocumentFromName (/* STRING documentName */);
 extern void TtaGetDocumentDirectory (/* Document document,
                                         STRING buffer,

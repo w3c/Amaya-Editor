@@ -61,7 +61,7 @@ static int          topGenerStack;
 static UCHAR_T      TransferMode;
 #define ByAttribute 0
 #define InBuffer 1
-static STRING       bufHTML;		/* HTML text buffer */
+static CHAR_T*      bufHTML;		/* HTML text buffer */
 static int          szHTML;		/* size of generated HTML code */
 static int          lastRulePlace;	/* pointer to the stack*/
 static strTransSet *CourTransSet;       /* the transformation set used */
@@ -851,7 +851,7 @@ Document doc;
 
   len = BUFFER_LEN - szHTML;
   ustrcpy (tmpfilename, TtaGetEnvString ("TMPDIR"));
-  ustrcat (tmpfilename, DIR_STR);
+  ustrcat (tmpfilename, WC_DIR_STR);
   ustrcat (tmpfilename, TEXT("amayatrans.tmp"));
   TtaExportTree (subTree, doc, tmpfilename, TEXT("HTMLT"));     
   StatBuffer = (struct stat *) TtaGetMemory (sizeof (struct stat));
@@ -991,7 +991,7 @@ Document            doc;
 	TtaNextSibling (&myLastSelect);
 	RemoveHTMLTree (prevMatch->MatchNode->Elem, doc);
      }
-   if (ustrcmp (bufHTML, _EMPTYSTR_))
+   if (ustrcmp (bufHTML, TEXT("")))
      {
 #ifdef AMAYA_DEBUG
        printf("%s\n\n",bufHTML);
@@ -1880,7 +1880,7 @@ Document            doc;
 	lastRulePlace = 1;
 	szHTML = 0;
 	bufHTML = TtaAllocString (BUFFER_LEN);
-	ustrcpy (bufHTML, _EMPTYSTR_);
+	ustrcpy (bufHTML, TEXT(""));
 	
 	TransferMode = InBuffer;
 	/* applying the transformation */

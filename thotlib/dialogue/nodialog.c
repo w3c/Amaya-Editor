@@ -51,10 +51,10 @@ STRING        content_type;
   returns TRUE if path is in fact a URL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool             IsW3Path (const STRING path)
+ThotBool             IsW3Path (const CHAR_T* path)
 #else  /* __STDC__ */
 ThotBool             IsW3Path (path)
-const STRING        path;
+const CHAR_T*        path;
 #endif /* __STDC__ */
 {
   return FALSE;
@@ -66,7 +66,7 @@ const STRING        path;
    or file name path (newName) and the name of the document (docName).        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                NormalizeURL (STRING orgName, Document doc, STRING newName, STRING docName, STRING otherPath)
+void                NormalizeURL (CHAR_T* orgName, Document doc, CHAR_T* newName, CHAR_T* docName, CHAR_T* otherPath)
 #else  /* __STDC__ */
 void                NormalizeURL (orgName, doc, newName, docName, otherPath)
 STRING              orgName;

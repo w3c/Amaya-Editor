@@ -67,8 +67,8 @@
 
 
 static PathBuffer   PrintDirName;
-static CUSName      PrintDocName;
-static char         Orientation[MAX_NAME_LENGTH];
+static Name         PrintDocName;
+static CHAR_T       Orientation[MAX_NAME_LENGTH];
 static Func         pFuncExportPrintDoc = NULL;
 static int          defPaperPrint;
 static int          defManualFeed;
@@ -112,7 +112,7 @@ STRING              cssToPrint;
 Document            document;
 #endif /* __STDC__ */
 { 
-   CharUnit*               ptr;
+   CHAR_T*                 ptr;
 #  ifdef _WINDOWS
    static LPPRINTER_INFO_5 pInfo5;
    CHAR_T*                 printArgv [100];
@@ -626,7 +626,7 @@ Document document;
 #endif /* __STDC__ */
 {
    PtrDocument pDoc;
-   CharUnit*   ptr;
+   CHAR_T*     ptr;
    int         lg;
 
    if (document == 0)
@@ -641,10 +641,10 @@ Document document;
        /* read DEFAULTPRINTER variable */
        ptr = TtaGetEnvString ("THOTPRINT");
        if (ptr == NULL)
-          StringCopy (pPrinter, CUSTEXT(""));
+          ustrcpy (pPrinter, TEXT(""));
        else
-           StringCopy (pPrinter, ptr);
-       PSdir[0] = EOS;
+           ustrcpy (pPrinter, ptr);
+       PSdir[0] = WC_EOS;
        PrintingDoc = 0;
        defPaperPrint = TRUE;
        defManualFeed = FALSE;
@@ -682,7 +682,7 @@ Document document;
 	     {
 	       ptr = NULL;
 	       ptr = TtaGetEnvString ("APP_TMPDIR");
-	       if (ptr == NULL || *ptr == EOS || !TtaCheckDirectory (ptr))
+	       if (ptr == NULL || *ptr == WC_EOS || !TtaCheckDirectory (ptr))
 		 {
 		   ptr = NULL;
 		   ptr = TtaGetEnvString ("TMPDIR");
@@ -743,7 +743,7 @@ STRING          *printDirName;
 #endif /* __STDC__ */
 {
    ThotPid             pid = ThotPid_get ();
-   CharUnit*           dirString;
+   CHAR_T*             dirString;
    int                 lg;
 
    *printDocName = PrintDocName;
@@ -757,7 +757,7 @@ STRING          *printDirName;
      { 
        if (!TtaCheckDirectory (dirString))
 	 TtaMakeDirectory (dirString);
-       StringCopy (PrintDirName, dirString);
+       ustrcpy (PrintDirName, dirString);
        lg = ustrlen(PrintDirName);
        if (PrintDirName[lg - 1] == DIR_SEP)
          PrintDirName[--lg] = EOS;
@@ -768,9 +768,9 @@ STRING          *printDirName;
        lg = ustrlen (PrintDirName);
      }
 
-   cus_sprintf (PrintDocName, CUSTEXT("Thot%ld"), (long) pid + numOfJobs);
-   StringCopy (&PrintDirName[lg], CUS_DIR_STR);
-   StringConcat (&PrintDirName[lg], PrintDocName);
+   usprintf (PrintDocName, TEXT("Thot%ld"), (long) pid + numOfJobs);
+   ustrcpy (&PrintDirName[lg], WC_DIR_STR);
+   ustrcat (&PrintDirName[lg], PrintDocName);
    if (!TtaCheckDirectory (PrintDirName))
       TtaMakeDirectory (PrintDirName);
 }
@@ -790,7 +790,7 @@ STRING              cssNames;
 {
    PtrDocument         pDoc;
    PathBuffer          dirName;
-   CUSName             docName;
+   Name                docName;
    Name                savePres, newPres;
    STRING              tmpDirName, tmpDocName;
    int                 orientation;
@@ -817,8 +817,8 @@ STRING              cssNames;
    TtaGetPrintNames (&tmpDocName, &tmpDirName);
    numOfJobs++;
 
-   StringNCopy (dirName, pDoc->DocDirectory, MAX_PATH);
-   StringNCopy (docName, pDoc->DocDName, MAX_NAME_LENGTH);
+   ustrncpy (dirName, pDoc->DocDirectory, MAX_PATH);
+   ustrncpy (docName, pDoc->DocDName, MAX_NAME_LENGTH);
    if (pFuncExportPrintDoc !=NULL)
      /* a export procedure is defined */
        ok = (*pFuncExportPrintDoc)(document, PrintDocName, PrintDirName);
@@ -827,20 +827,20 @@ STRING              cssNames;
      {
        docReadOnly = pDoc->DocReadOnly;
 
-       StringCopy (pDoc->DocDirectory, PrintDirName);
-       StringCopy (pDoc->DocDName, PrintDocName);
+       ustrcpy (pDoc->DocDirectory, PrintDirName);
+       ustrcpy (pDoc->DocDName, PrintDocName);
        pDoc->DocReadOnly = FALSE;
 
        ok = WriteDocument (pDoc, 5);
 
        pDoc->DocReadOnly = docReadOnly;
-       StringNCopy (pDoc->DocDirectory, dirName, MAX_PATH);
-       StringNCopy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
+       ustrncpy (pDoc->DocDirectory, dirName, MAX_PATH);
+       ustrncpy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
      }
 
    /* searches the paper orientation for the presentation scheme */
-   ConfigGetPresentationOption(pDoc->DocSSchema, "orientation", Orientation);
-   if (!strcmp (Orientation, "Landscape"))
+   ConfigGetPresentationOption(pDoc->DocSSchema, TEXT("orientation"), Orientation);
+   if (!ustrcmp (Orientation, TEXT("Landscape")))
      orientation = 1;
    else
      orientation = 0;

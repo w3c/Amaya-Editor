@@ -35,49 +35,54 @@
    Si filename est un repertoire, on retourne 0.           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 TtaFileExist (CONST CharUnit* filename)
+int                 TtaFileExist (CONST CHAR_T* filename)
 #else  /* __STDC__ */
 int                 TtaFileExist (filename)
-CONST CharUnit*     filename;
+CONST CHAR_T*       filename;
 
 #endif /* __STDC__ */
 {
-   int                 status = 0;
+   int         status = 0;
 
-#if defined(_WINDOWS) && !defined(__GNUC__)
-   DWORD               attribs;
+#  if defined(_WINDOWS) && !defined(__GNUC__)
+
+   DWORD       attribs;
 
    attribs = GetFileAttributes ((LPCTSTR)filename);
+
    if (attribs == 0xFFFFFFFF)
       status = 0;
    else if (attribs & FILE_ATTRIBUTE_DIRECTORY)
-      status = 0;
+        status = 0;
    else
-      status = 1;
-#else /* _WINDOWS && !__GNUC__ */
-   int                 filedes;
-   struct stat         statinfo;
+       status = 1;
 
-#ifdef _WINDOWS
-   filedes = open (filename, _O_RDONLY | O_BINARY);
-#else /* _WINDOWS */
-   filedes = open (filename, O_RDONLY);
-#endif /* _WINDOWS */
+#  else /* _WINDOWS && !__GNUC__ */
+
+   int         filedes;
+   struct stat statinfo;
+   char        mbs_filename[2 * MAX_TXT_LEN];
+
+   wcstombs (mbs_filename, filename, 2 * MAX_TXT_LEN);
+
+#  ifdef _WINDOWS
+   filedes = open (mbs_filename, _O_RDONLY | O_BINARY);
+#  else /* _WINDOWS */
+   filedes = open (mbs_filename, O_RDONLY);
+#  endif /* _WINDOWS */
    if (filedes < 0)
       status = 0;
-   else
-     {
-       /* on ne veut pas de directory */
-       if (fstat (filedes, &statinfo) != -1)
-	 {
-	   if (statinfo.st_mode & S_IFDIR)
-	     status = 0;
-	   else
-	     status = 1;
-	 }
-       close (filedes);
-     }
-#endif /* _WINDOWS && !__GNUC__ */
+   else {
+        /* on ne veut pas de directory */
+        if (fstat (filedes, &statinfo) != -1) {
+           if (statinfo.st_mode & S_IFDIR)
+              status = 0;
+           else
+              status = 1;
+        }
+        close (filedes);
+   }
+#  endif /* _WINDOWS && !__GNUC__ */
    return status;
 }
 
@@ -85,7 +90,7 @@ CONST CharUnit*     filename;
    TtaFileUnlink : remove a file.                                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 TtaFileUnlink (CONST CharUnit* filename)
+int                 TtaFileUnlink (CONST CHAR_T* filename)
 #else  /* __STDC__ */
 int                 TtaFileUnlink (filename)
 CONST CharUnit*     filename;
@@ -93,7 +98,7 @@ CONST CharUnit*     filename;
 #endif /* __STDC__ */
 {
   if (filename)
-    return (cus_unlink (filename));
+    return (uunlink (filename));
 else
   return 0;
 }
@@ -113,9 +118,9 @@ ThotDirBrowse      *me;
 #  if defined(_WINDOWS) && !defined(__GNUC__)
    DWORD               attr;
 
-   if (StringLength (me->data.cFileName) + me->dirLen > (size_t)me->bufLen)
+   if (ustrlen (me->data.cFileName) + me->dirLen > (size_t)me->bufLen)
       return -2;
-   StringCopy (me->buf + me->dirLen, me->data.cFileName);
+   ustrcpy (me->buf + me->dirLen, me->data.cFileName);
    if ((attr = GetFileAttributes (me->buf)) == 0xFFFFFFFF)
       return -1;
    if (attr & FILE_ATTRIBUTE_DIRECTORY && !(me->PicMask & ThotDirBrowse_DIRECTORIES))
@@ -175,24 +180,28 @@ ThotDirBrowse      *me;
    platform dependent ThotDirBrowse structure                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 ThotDirBrowse_first (ThotDirBrowse * me, CharUnit* dir, CharUnit* name, CharUnit* ext)
+int                 ThotDirBrowse_first (ThotDirBrowse * me, CHAR_T* dir, CHAR_T* name, CHAR_T* ext)
 #else  /* __STDC__ */
 int                 ThotDirBrowse_first (me, dir, name, ext)
 ThotDirBrowse      *me;
-CharUnit*           dir;
-CharUnit*           name;
-CharUnit*           ext;
+CHAR_T*             dir;
+CHAR_T*             name;
+CHAR_T*             ext;
 
 #endif /* __STDC__ */
 {
-   CharUnit         space[MAX_PATH];
+#  ifdef _WINDOWS
+   CHAR_T           space[MAX_PATH];
+#  else  /* !_WINDOWS */
+   char             space[MAX_PATH];
+#  endif /* !_WINDOWS */
    int              ret;
 
-   me->dirLen = StringLength (dir);
-   StringCopy (me->buf, dir);
-   StringCopy (me->buf + (me->dirLen++), CUS_DIR_STR);
+   me->dirLen = ustrlen (dir);
+   ustrcpy (me->buf, dir);
+   ustrcpy (me->buf + (me->dirLen++), WC_DIR_STR);
 #  if defined(_WINDOWS) && !defined(__GNUC__)
-   cus_sprintf (space, CUSTEXT("%s\\%s%s"), dir ? dir : CUSTEXT(""), name ? name : CUSTEXT(""), ext ? ext : CUSTEXT(""));
+   usprintf (space, TEXT("%s\\%s%s"), dir ? dir : TEXT(""), name ? name : TEXT(""), ext ? ext : TEXT(""));
    me->handle = INVALID_HANDLE_VALUE;
    if ((me->handle = FindFirstFile (space, &me->data)) == INVALID_HANDLE_VALUE)
       return -1;
@@ -563,11 +572,11 @@ ThotFileInfo       *pInfo;
    TtaFileCopy copies a source file into a target file.              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaFileCopy (CONST CharUnit* sourceFileName, CONST CharUnit* targetFileName)
+void                TtaFileCopy (CONST CHAR_T* sourceFileName, CONST CHAR_T* targetFileName)
 #else
 void                TtaFileCopy (sourceFileName, targetFileName)
-CONST CharUnit*     sourceFileName;
-CONST CharUnit*     targetFileName;
+CONST CHAR_T*       sourceFileName;
+CONST CHAR_T*       targetFileName;
 
 #endif
 {
@@ -576,26 +585,26 @@ CONST CharUnit*     targetFileName;
    int                 size;
    char                buffer[8192];
 
-   if (StringCompare (sourceFileName, targetFileName) != 0)
+   if (ustrcmp (sourceFileName, targetFileName) != 0)
      {
 #ifdef _WINDOWS
-	if ((targetf = cus_fopen (targetFileName, CUSTEXT("wb"))) == NULL)
+	if ((targetf = ufopen (targetFileName, TEXT("wb"))) == NULL)
 #else
-	if ((targetf = cus_fopen (targetFileName, CUSTEXT("w"))) == NULL)
+	if ((targetf = ufopen (targetFileName, TEXT("w"))) == NULL)
 #endif
 	   /* cannot write into the target file */
 	   return;
 	else
 	  {
 #ifdef _WINDOWS
-	     if ((sourcef = cus_fopen (sourceFileName, CUSTEXT("rb"))) == NULL)
+	     if ((sourcef = ufopen (sourceFileName, TEXT("rb"))) == NULL)
 #else
-	     if ((sourcef = cus_fopen (sourceFileName, CUSTEXT("r"))) == NULL)
+	     if ((sourcef = ufopen (sourceFileName, TEXT("r"))) == NULL)
 #endif
 	       {
 		  /* cannot read the source file */
 		  fclose (targetf);
-		  cus_unlink (targetFileName);
+		  uunlink (targetFileName);
 		  return;
 	       }
 	     else

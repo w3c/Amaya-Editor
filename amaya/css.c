@@ -635,7 +635,8 @@ CSSmedia    media;
   FILE               *res;
   CHAR_T              tempfile[MAX_LENGTH];
   CHAR_T              tempURL[MAX_LENGTH];
-  STRING              buffer = NULL;
+  CHAR_T*             buffer = NULL;
+  char*               tmpBuff;
   int                 len;
   ThotBool            import, printing;
 
@@ -718,24 +719,30 @@ CSSmedia    media;
 		return;
 	      }
 
-	  buffer = TtaAllocString (buf.st_size + 1000);
-	  if (buffer == NULL)
+      tmpBuff = TtaGetMemory (buf.st_size + 1000);
+	  if (tmpBuff == NULL)
 	    {
 	      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
 	      fclose (res);
 	      return;
 	    }
-	  len = fread (buffer, buf.st_size, 1, res);
+	  len = fread (tmpBuff, buf.st_size, 1, res);
 	  if (len != 1)
 	    {
 	      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
 	      fclose (res);
-	      TtaFreeMemory (buffer);
+	      TtaFreeMemory (tmpBuff);
 	      return;
 	    }
-	  buffer[buf.st_size] = 0;
+	  tmpBuff[buf.st_size] = 0;
 	  fclose (res);
 
+#     ifdef _I18N_
+	  buffer = TtaAllocString (buf.st_size + 1000);
+      mbstowcs (buffer, tmpBuff, buf.st_size + 1000);
+#     else  /* !_I18N_ */
+      buffer = tmpBuff;
+#     endif /* !_I18N_ */
 	  ReadCSSRules (doc, oldcss, buffer, FALSE);
 	  TtaFreeMemory (buffer);
 	}

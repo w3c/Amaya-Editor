@@ -130,7 +130,7 @@ STRING              documentName;
       else
 	{
 	  /* Arrange the file name */
-	  FindCompleteName (documentName, CUSTEXT("PIV"), pDoc->DocDirectory, path, &i);
+	  FindCompleteName (documentName, TEXT("PIV"), pDoc->DocDirectory, path, &i);
 	  pivotFile = TtaWriteOpen (path);
 	  if (pivotFile == 0)
 	    TtaError (ERR_cannot_open_pivot_file);
@@ -289,24 +289,24 @@ ThotBool            move;
      {
 	status = TRUE;
 	sameFile = TRUE;
-	if (StringCompare (docName, pDoc->DocDName) != 0)
+	if (ustrcmp (docName, pDoc->DocDName) != 0)
 	   sameFile = FALSE;
-	if (StringCompare (dirName, pDoc->DocDirectory) != 0)
+	if (ustrcmp (dirName, pDoc->DocDirectory) != 0)
 	   sameFile = FALSE;
 
 	/* construit le nom complet de l'ancien fichier de sauvegarde */
-	FindCompleteName (pDoc->DocDName, CUSTEXT("BAK"), pDoc->DocDirectory, bakName, &i);
-	StringNCopy (oldDir, pDoc->DocDirectory, MAX_PATH);
+	FindCompleteName (pDoc->DocDName, TEXT("BAK"), pDoc->DocDirectory, bakName, &i);
+	ustrncpy (oldDir, pDoc->DocDirectory, MAX_PATH);
 	/*     SECURITE:                                         */
 	/*     on ecrit sur un fichier nomme' X.Tmp et non pas   */
 	/*     directement X.PIV ...                             */
 	/*     On fait ensuite des renommages                    */
-	FindCompleteName (docName, CUSTEXT("PIV"), dirName, buf, &i);
+	FindCompleteName (docName, TEXT("PIV"), dirName, buf, &i);
 	/* on teste d'abord le droit d'ecriture sur le .PIV */
 	ok = FileWriteAccess (buf) == 0;
 	if (ok)
 	  {
-	     FindCompleteName (docName, CUSTEXT("Tmp"), dirName, tempName, &i);
+	     FindCompleteName (docName, TEXT("Tmp"), dirName, tempName, &i);
 	     /* on teste le droit d'ecriture sur le .Tmp */
 	     ok = FileWriteAccess (tempName) == 0;
 	     if (ok)
@@ -320,7 +320,7 @@ ThotBool            move;
 	if (!ok)
 	  {
 	     /* on indique un nom connu de l'utilisateur... */
-	     FindCompleteName (docName, CUSTEXT("PIV"), dirName, buf, &i);
+	     FindCompleteName (docName, TEXT("PIV"), dirName, buf, &i);
 	     TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_WRITING_IMP), buf);
 	     status = FALSE;
 	  }
@@ -330,14 +330,14 @@ ThotBool            move;
 	     /* Le nom et le directory du document peuvent avoir change'. */
 	     /* le fichier .OLD reste dans l'ancien directory, avec */
 	     /* l'ancien nom */
-	     FindCompleteName (pDoc->DocDName, CUSTEXT("PIV"), oldDir, pivName, &i);
+	     FindCompleteName (pDoc->DocDName, TEXT("PIV"), oldDir, pivName, &i);
 	     if (!copy)
 	       {
-		  FindCompleteName (pDoc->DocDName, CUSTEXT("OLD"), oldDir, backName, &i);
+		  FindCompleteName (pDoc->DocDName, TEXT("OLD"), oldDir, backName, &i);
 		  i = urename (pivName, backName);
 	       }
 	     /* 2- faire mv du .Tmp sur le .PIV */
-	     FindCompleteName (docName, CUSTEXT("PIV"), dirName, pivName, &i);
+	     FindCompleteName (docName, TEXT("PIV"), dirName, pivName, &i);
 	     i = urename (tempName, pivName);
 	     if (i >= 0)
 		/* >> tout s'est bien passe' << */
@@ -360,24 +360,24 @@ ThotBool            move;
 		  /* document */
 		  UpdateRef (pDoc);
 		  /* detruit le fichier .REF du document sauve' */
-		  FindCompleteName (pDoc->DocDName, CUSTEXT("REF"), oldDir, buf, &i);
+		  FindCompleteName (pDoc->DocDName, TEXT("REF"), oldDir, buf, &i);
 		  TtaFileUnlink (buf);
 		  if (!sameFile)
 		    {
-		       if (StringCompare (dirName, oldDir) != 0 && StringCompare (docName, pDoc->DocDName) == 0)
+		       if (ustrcmp (dirName, oldDir) != 0 && ustrcmp (docName, pDoc->DocDName) == 0)
 			  /* changement de directory sans changement de nom */
 			  if (move)
 			    {
 			       /* deplacer le fichier .EXT dans le nouveau directory */
-			       FindCompleteName (pDoc->DocDName, CUSTEXT("EXT"), oldDir, buf, &i);
-			       FindCompleteName (pDoc->DocDName, CUSTEXT("EXT"), dirName, pivName, &i);
+			       FindCompleteName (pDoc->DocDName, TEXT("EXT"), oldDir, buf, &i);
+			       FindCompleteName (pDoc->DocDName, TEXT("EXT"), dirName, pivName, &i);
 			       urename (buf, pivName);
 			       /* detruire l'ancien fichier PIV */
-			       FindCompleteName (pDoc->DocDName, CUSTEXT("PIV"), oldDir, buf, &i);
+			       FindCompleteName (pDoc->DocDName, TEXT("PIV"), oldDir, buf, &i);
 			       TtaFileUnlink (buf);
 			    }
 
-		       if (StringCompare (docName, pDoc->DocDName) != 0)
+		       if (ustrcmp (docName, pDoc->DocDName) != 0)
 			 {
 			    /* il y a effectivement changement de nom */
 			    if (copy)
@@ -396,17 +396,17 @@ ThotBool            move;
 				 ChangeNomRef (pDoc, docName);
 				 /* renomme le fichier .EXT du document qui change */
 				 /* de nom */
-				 FindCompleteName (pDoc->DocDName, CUSTEXT("EXT"), oldDir, buf, &i);
-				 FindCompleteName (docName, CUSTEXT("EXT"), dirName, pivName, &i);
+				 FindCompleteName (pDoc->DocDName, TEXT("EXT"), oldDir, buf, &i);
+				 FindCompleteName (docName, TEXT("EXT"), dirName, pivName, &i);
 				 urename (buf, pivName);
 				 /* detruit l'ancien fichier .PIV */
-				 FindCompleteName (pDoc->DocDName, CUSTEXT("PIV"), oldDir, buf, &i);
+				 FindCompleteName (pDoc->DocDName, TEXT("PIV"), oldDir, buf, &i);
 				 TtaFileUnlink (buf);
 			      }
 			 }
-		       StringNCopy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
-		       StringNCopy (pDoc->DocIdent, docName, MAX_DOC_IDENT_LEN);
-		       StringNCopy (pDoc->DocDirectory, dirName, MAX_PATH);
+		       ustrncpy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
+		       ustrncpy (pDoc->DocIdent, docName, MAX_DOC_IDENT_LEN);
+		       ustrncpy (pDoc->DocDirectory, dirName, MAX_PATH);
 		       ChangeDocumentName (pDoc, docName);
 		    }
 	       }
@@ -507,22 +507,22 @@ int                 mode;
 	     ok = interactiveSave (pDoc);
 	   break;
 	 case 1:
-	   ok = saveWithExtension (pDoc, CUSTEXT("BAK"));
+	   ok = saveWithExtension (pDoc, TEXT("BAK"));
 	   if (ok)
 	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_DOC_WRITTEN), pDoc->DocDName);
 	   break;
 	 case 2:
-	   ok = saveWithExtension (pDoc, CUSTEXT("BAK"));
+	   ok = saveWithExtension (pDoc, TEXT("BAK"));
 	   break;
 	 case 3:
-	   ok = saveWithExtension (pDoc, CUSTEXT("SAV"));
+	   ok = saveWithExtension (pDoc, TEXT("SAV"));
 	   break;
 	 case 4:
 	   SetWriteDirectory (pDoc, pDoc->DocDName, pDoc->DocDirectory, FALSE, FALSE);
 	   ok = interactiveSave (pDoc);
 	   break;
 	 case 5:
-	   ok = saveWithExtension (pDoc, CUSTEXT("PIV"));
+	   ok = saveWithExtension (pDoc, TEXT("PIV"));
 	   break;
 	 }
    return ok;

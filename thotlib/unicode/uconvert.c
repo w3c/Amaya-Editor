@@ -27,63 +27,6 @@ extern void*  TtaGetMemory ();
 #endif /* !__STDC__ */
 
 
-/**********************************************************************
- * ISO2WideChar: Converts an ISO String into a Wide Characters coded  *
- * String. An ISO String is a string which declaration is in the form *
- * of char* blahblah. A Wide Character string which declaration is    *
- * STRING blahblah may coded in 8, 16 or 32 bits.                     *
- **********************************************************************/
-#ifdef __STDC__
-STRING ISO2WideChar (const char* str)
-#else  /* !__STDC__ */
-STRING ISO2WideChar (str)
-const char* str;
-#endif /* !__STDC__ */
-{
-#   if defined(_I18N_) || defined(__JIS__)
-    if (str) {
-       int len = strlen (str);
-       STRING puStr, uStr = TtaAllocString (len + 1);
-	   puStr = uStr;
-       while (*puStr++ = ((CHAR_T) *str++));
-       *puStr = (CHAR_T)0;
-	   return uStr;
-	}
-    return (STRING) 0;   
-#   else /* defined(_I18N_) || defined(__JIS__) */
-    return (STRING)str;
-#   endif /* defined(_I18N_) || defined(__JIS__) */
-}
-
-
-/**********************************************************************
- * WideChar2ISO: Converts a Wide Characters coded String into an ISO  *
- * String.                                                            *
- **********************************************************************/
-#ifdef __STDC__
-char* WideChar2ISO (STRING str)
-#else  /* !__STDC__ */
-char* WideChar2ISO (str)
-const STRING str;
-#endif /* !__STDC__ */
-{     
-#   if defined(_I18N_) || defined(__JIS__)
-    if (str) {
-       int ndx, len = ustrlen (str);
-       char* isoStr = (char*) TtaGetMemory ((len + 1) * sizeof (char));
-       for (ndx = 0; ndx < len; ndx++) {
-           char* pStr = (char*) &str[ndx];
-           isoStr [ndx] = *pStr;
-	   }
-       isoStr [ndx] = (char)0;
-	   return isoStr;
-	}
-    return (char*) 0;   
-#   else /* defined(_I18N_) || defined(__JIS__) */
-    return (char*)str;
-#   endif /* defined(_I18N_) || defined(__JIS__) */
-}
-
 #ifdef _I18N_
 #ifdef __STDC__
 int uctoi (const STRING string )
@@ -286,23 +229,40 @@ CharUnit c;
 #endif /* __STDC__ */
 {
 #   if defined(_WINDOWS) && defined(_I18N_)
-    return (CHAR_T) towlower((wint_t ) c);
+    return (CharUnit) towlower((wint_t ) c);
 #   else  /* !(defined(_WINDOWS) && defined(_I18N_)) */
     return ((char) tolower ((int)c));
 #   endif /* !(defined(_WINDOWS) && defined(_I18N_)) */
 }
 
 #ifdef __STDC__
-int custoi (const CharUnit* string)
+int wctoi (const CHAR_T* string)
 #else  /* !__STDC__ */
-int custoi (string)
-const CharUnit* string;
+int wctoi (string)
+const CHAR_T* string;
 #endif /* !__STDC__ */
 {
-#   if defined(_WINDOWS) && defined(_I18N_)
-    return _wtoi (string);
-#   else  /* !_WINDOWS */
+#ifdef _I18N_
+#  ifdef _WINDOWS
+      /* 
+      Windows provides a routine that allows to convert
+      from a wide character string to an integer value 
+      */
+      return _wtoi (string);
+#  else  /* !_WINDOWS */
+      /* 
+      For the moment Unix platforms do not provide allowing
+      to convert from a wide character string to an interger.
+      We have to convert string into multibyte character
+      string and use atoi.
+      */
+      char  str[MAX_TXT_LEN];
+
+      wcstombs (str, string, MAX_TXT_LEN);
+      return atoi (str);
+#  endif /* !_WINDOWS */
+#else  /* !_I18N_ */
     return atoi (string);
-#   endif /* !_WINDOWS */
+#endif /* !_I18N_ */
 }
 

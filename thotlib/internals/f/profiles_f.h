@@ -11,7 +11,7 @@ extern void Prof_InitTable ( void );
 extern void Prof_FreeTable ( void );
 extern void TtaRebuildProTable ( char *prof_file );
 extern ThotBool TtaCanEdit ( void );
-extern void TtaGetProfileFileName ( CharUnit* name,
+extern void TtaGetProfileFileName ( CHAR_T* name,
                                     int length );
 extern void TtaGetDefProfileFileName ( CharUnit* name,
                                        int length );
@@ -31,7 +31,7 @@ extern void Prof_InitTable (/* void */);
 extern void Prof_FreeTable (/* void */);
 extern void TtaRebuildProTable (/* char *prof_file */);
 extern ThotBool TtaCanEdit (/* void */);
-extern void TtaGetProfileFileName (/* CharUnit* name,
+extern void TtaGetProfileFileName (/* CHAR_T* name,
                                       int length */);
 extern void TtaGetDefProfileFileName (/* CharUnit* name,
                                          int length */);

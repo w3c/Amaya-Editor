@@ -127,7 +127,7 @@ ThotBool		    open;
      }
    else
      {
-	OutputFile[NOutputFiles].OfFileDesc = ufopen (fName, CUSTEXT("w"));
+	OutputFile[NOutputFiles].OfFileDesc = ufopen (fName, TEXT("w"));
 	if (OutputFile[NOutputFiles].OfFileDesc == NULL)
 	  {
 	     if (!OutputFile[NOutputFiles].OfCannotOpen)
@@ -2731,7 +2731,7 @@ ThotBool            recordLineNb;
 					   /* le document reference' n'est pas charge' */
 					  {
 					     ustrncpy (directoryName, DocumentPath, MAX_PATH);
-					     MakeCompleteName (docIdent, CUSTEXT("PIV"), directoryName, fullName, &i);
+					     MakeCompleteName (docIdent, TEXT("PIV"), directoryName, fullName, &i);
 					     if (fullName[0] != EOS)
 						/* on a trouve' le fichier */
 						nameBuffer = directoryName;
@@ -2920,7 +2920,7 @@ ThotBool            recordLineNb;
 	       PutVariable (pEl, pAttr, pTSch, pSSch, pTRule->TrNewFileVar, FALSE, currentFileName, 0, pDoc, *lineBreak);
 	       if (currentFileName[0] != EOS)
 		 {
-		    newFile = ufopen (currentFileName, CUSTEXT("w"));
+		    newFile = ufopen (currentFileName, TEXT("w"));
 		    if (newFile == NULL)
 		       TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_CREATE_FILE_IMP), currentFileName);
 		    else
@@ -3140,7 +3140,7 @@ ThotBool            recordLineNb;
 	           /* compose le nom du fichier a ouvrir avec le nom du
 		      directory des schemas... */
 		    ustrncpy (directoryName, SchemaPath, MAX_PATH);
-		    MakeCompleteName (fname, _EMPTYSTR_, directoryName, fullName, &i);
+		    MakeCompleteName (fname, TEXT(""), directoryName, fullName, &i);
 		 }
 	       /* si le fichier a inclure est deja ouvert en ecriture, on
 		  le flush.  */
@@ -3533,7 +3533,7 @@ ThotBool            recordLineNb;
    ThotBool            ok = TRUE;
 
    /* cree le fichier de sortie principal */
-   outputFile = ufopen (fName, CUSTEXT("w"));
+   outputFile = ufopen (fName, TEXT("w"));
    if (outputFile == NULL)
      ok = FALSE;
    else
@@ -3628,7 +3628,7 @@ STRING              TSchemaName;
 
  
   /* cree le fichier de sortie principal */
-  outputFile = ufopen (fName, CUSTEXT("w"));
+  outputFile = ufopen (fName, TEXT("w"));
   
   if (outputFile == NULL)
     TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_CREATE_FILE_IMP), fName);

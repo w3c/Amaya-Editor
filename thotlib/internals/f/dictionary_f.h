@@ -10,8 +10,8 @@ extern void TreateDictionary ( PtrDict dict );
 extern int LoadTreatedDict ( PtrDict * pDictionary,
                              Language lang,
                              PtrDocument document,
-                             CharUnit* dictName,
-                             CharUnit* dictDirectory,
+                             CHAR_T* dictName,
+                             CHAR_T* dictDirectory,
                              ThotBool readonly,
                              ThotBool toCreate );
 extern ThotBool ReloadDictionary ( PtrDict * pDictionary );

@@ -322,58 +322,58 @@ STRING              aSuffix;
   returns TRUE if path points to an HTML resource.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool             IsHTMLName (const CharUnit* path)
+ThotBool             IsHTMLName (const CHAR_T* path)
 #else  /* __STDC__ */
 ThotBool             IsHTMLName (path)
-const CharUnit*      path;
+const CHAR_T*        path;
 #endif /* __STDC__ */
 {
-   CharUnit          temppath[MAX_LENGTH];
-   CharUnit          suffix[MAX_LENGTH];
-   CharUnit          nsuffix[MAX_LENGTH];
-   int               i;
+   CHAR_T            temppath[MAX_LENGTH];
+   CHAR_T            suffix[MAX_LENGTH];
+   CHAR_T            nsuffix[MAX_LENGTH];
+   int               i; 
 
    if (!path)
       return (FALSE);
 
-   StringCopy (temppath, path);
+   ustrcpy (temppath, path);
    ExtractSuffix (temppath, suffix);
 
    /* Normalize the suffix */
    i = 0;
-   while (suffix[i] != CUS_EOS && i < MAX_LENGTH -1)
+   while (suffix[i] != WC_EOS && i < MAX_LENGTH -1)
      {
-       nsuffix[i] = ToLower (suffix[i]);
+       nsuffix[i] = utolower (suffix[i]);
        i++;
      }
-   nsuffix[i] = EOS;
-   if (!StringCompare (nsuffix, CUSTEXT("html")) ||
-       !StringCompare (nsuffix, CUSTEXT("htm")) ||
-       !StringCompare (nsuffix, CUSTEXT("shtml")) ||
-       !StringCompare (nsuffix, CUSTEXT("jsp")) ||
-       !StringCompare (nsuffix, CUSTEXT("xht")) ||
-       !StringCompare (nsuffix, CUSTEXT("xhtm")) ||
-       !StringCompare (nsuffix, CUSTEXT("xhtml")))
+   nsuffix[i] = WC_EOS;
+   if (!ustrcmp (nsuffix, TEXT("html")) ||
+       !ustrcmp (nsuffix, TEXT("htm")) ||
+       !ustrcmp (nsuffix, TEXT("shtml")) ||
+       !ustrcmp (nsuffix, TEXT("jsp")) ||
+       !ustrcmp (nsuffix, TEXT("xht")) ||
+       !ustrcmp (nsuffix, TEXT("xhtm")) ||
+       !ustrcmp (nsuffix, TEXT("xhtml")))
      return (TRUE);
-   else if (!StringCompare (nsuffix, CUSTEXT("gz")))
+   else if (!ustrcmp (nsuffix, TEXT("gz")))
      {
        /* take into account compressed files */
        ExtractSuffix (temppath, suffix);       
        /* Normalize the suffix */
        i = 0;
-       while (suffix[i] != CUS_EOS && i < MAX_LENGTH -1)
+       while (suffix[i] != WC_EOS && i < MAX_LENGTH -1)
 	 {
-	   nsuffix[i] = ToLower (suffix[i]);
+	   nsuffix[i] = utolower (suffix[i]);
 	   i++;
 	 }
-       nsuffix[i] = CUS_EOS;
-       if (!StringCompare (nsuffix, CUSTEXT("html")) ||
-           !StringCompare (nsuffix, CUSTEXT("htm")) ||
-           !StringCompare (nsuffix, CUSTEXT("shtml")) ||
-           !StringCompare (nsuffix, CUSTEXT("jsp")) ||
-           !StringCompare (nsuffix, CUSTEXT("xht")) ||
-           !StringCompare (nsuffix, CUSTEXT("xhtm")) ||
-           !StringCompare (nsuffix, CUSTEXT("xhtml")))
+       nsuffix[i] = WC_EOS;
+       if (!ustrcmp (nsuffix, TEXT("html")) ||
+           !ustrcmp (nsuffix, TEXT("htm")) ||
+           !ustrcmp (nsuffix, TEXT("shtml")) ||
+           !ustrcmp (nsuffix, TEXT("jsp")) ||
+           !ustrcmp (nsuffix, TEXT("xht")) ||
+           !ustrcmp (nsuffix, TEXT("xhtm")) ||
+           !ustrcmp (nsuffix, TEXT("xhtml")))
  
 	 return (TRUE);
        else
@@ -632,20 +632,20 @@ const char         *url;
   returns TRUE if path is in fact a URL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool             IsW3Path (const CharUnit* path)
+ThotBool             IsW3Path (const CHAR_T* path)
 #else  /* __STDC__ */
 ThotBool             IsW3Path (path)
-const CharUnit*      path;
+const CHAR_T*        path;
 #endif /* __STDC__ */
 {
-  if (StringNCompare (path, CUSTEXT("http:"), 5)   && 
-      StringNCompare (path, CUSTEXT("ftp:"), 4)    &&
-      StringNCompare (path, CUSTEXT("telnet:"), 7) && 
-      StringNCompare (path, CUSTEXT("wais:"), 5)   &&
-      StringNCompare (path, CUSTEXT("news:"), 5)   && 
-      StringNCompare (path, CUSTEXT("gopher:"), 7) &&
-      StringNCompare (path, CUSTEXT("mailto:"), 7) && 
-      StringNCompare (path, CUSTEXT("archie:"), 7))
+  if (ustrncmp (path, TEXT("http:"), 5)   && 
+      ustrncmp (path, TEXT("ftp:"), 4)    &&
+      ustrncmp (path, TEXT("telnet:"), 7) && 
+      ustrncmp (path, TEXT("wais:"), 5)   &&
+      ustrncmp (path, TEXT("news:"), 5)   && 
+      ustrncmp (path, TEXT("gopher:"), 7) &&
+      ustrncmp (path, TEXT("mailto:"), 7) && 
+      ustrncmp (path, TEXT("archie:"), 7))
     return FALSE;
   return TRUE;
 }
@@ -682,9 +682,9 @@ const STRING       url;
       - or the document path (without document name).
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-CharUnit*           GetBaseURL (Document doc)
+CHAR_T*             GetBaseURL (Document doc)
 #else  /* __STDC__ */
-CharUnit*           GetBaseURL (doc)
+CHAR_T*             GetBaseURL (doc)
 Document            doc;
 #endif /* __STDC__ */
 {
@@ -692,7 +692,7 @@ Document            doc;
   ElementType         elType;
   AttributeType       attrType;
   Attribute           attr;
-  STRING              ptr, basename;
+  CHAR_T              *ptr, *basename;
   int                 length;
 
   /* @@@ irene */
@@ -700,7 +700,7 @@ Document            doc;
 	  return NULL;
   basename = TtaAllocString (MAX_LENGTH);
   ustrncpy (basename, DocumentURLs[doc], MAX_LENGTH-1);
-  basename[MAX_LENGTH-1] = EOS;
+  basename[MAX_LENGTH-1] = WC_EOS;
   length = MAX_LENGTH -1;
   /* get the root element    */
   el = TtaGetMainRoot (doc);
@@ -725,19 +725,19 @@ Document            doc;
 	  TtaGiveTextAttributeValue (attr, basename, &length);
 	  /* base and orgName have to be separated by a DIR_SEP */
 	  length--;
-	  if (basename[0] != EOS && basename[length] != URL_SEP && basename[length] != DIR_SEP) 
+	  if (basename[0] != WC_EOS && basename[length] != WC_URL_SEP && basename[length] != WC_DIR_SEP) 
 	    /* verify if the base has the form "protocol://server:port" */
 	    {
-	      ptr = AmayaParseUrl (basename, _EMPTYSTR_, AMAYA_PARSE_ACCESS |
+	      ptr = AmayaParseUrl (basename, TEXT(""), AMAYA_PARSE_ACCESS |
 				                 AMAYA_PARSE_HOST |
 				                 AMAYA_PARSE_PUNCTUATION);
 	      if (ptr && !ustrcmp (ptr, basename))
 		{
 		  /* it has this form, we complete it by adding a URL_STR  */
-		  if (ustrchr (basename, DIR_SEP))
-		    ustrcat (basename, DIR_STR);
+		  if (ustrchr (basename, WC_DIR_SEP))
+		    ustrcat (basename, WC_DIR_STR);
 		  else
-		    ustrcat (basename, URL_STR);
+		    ustrcat (basename, WC_URL_STR);
 		  length++;
 		}
 	      if (ptr)
@@ -753,22 +753,22 @@ Document            doc;
    */
   length = ustrlen (basename) - 1;
   /* search for the last DIR_SEP char */
-  while (length >= 0  && basename[length] != URL_SEP && basename[length] != DIR_SEP)
+  while (length >= 0  && basename[length] != WC_URL_SEP && basename[length] != WC_DIR_SEP)
     length--;
   if (length >= 0)
     /* found the last DIR_SEP char, end the string there */
-    basename[length + 1] = EOS;		   
+    basename[length + 1] = WC_EOS;		   
   else
     /* search for the first PATH_STR char */
     {
       for (length = 0; basename[length] != TEXT(':') && 
-	     basename[length] != EOS; length ++);
+	     basename[length] != WC_EOS; length ++);
       if (basename[length] == TEXT(':'))
 	/* found, so end the string there */
-	basename[length + 1] = EOS;
+	basename[length + 1] = WC_EOS;
       else
 	/* not found, discard the base */
-	basename[0] = EOS;
+	basename[0] = WC_EOS;
     }
   return (basename);
 }
@@ -779,53 +779,53 @@ Document            doc;
    Allocate and return the local document path associated to the url
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-CharUnit*  GetLocalPath (Document doc, CharUnit* url)
+CHAR_T*    GetLocalPath (Document doc, CHAR_T* url)
 #else  /* __STDC__ */
-CharUnit*  GetLocalPath (doc, url)
+CHAR_T*    GetLocalPath (doc, url)
 Document   doc;
-CharUnit*  url;
+CHAR_T*    url;
 #endif /* __STDC__ */
 {
-  CharUnit* ptr;
-  CharUnit* n;
-  CharUnit* documentname;
-  CharUnit  url_sep;
+  CHAR_T*   ptr;
+  CHAR_T*   n;
+  CHAR_T*   documentname;
+  CHAR_T    url_sep;
   int       len;
   ThotBool  noFile;
 
   if (url != NULL)
     {
       /* check whether the file name exists */
-      len = StringLength (url) - 1;
+      len = ustrlen (url) - 1;
       if (IsW3Path (url))
-         url_sep = CUSTEXT('/');
+         url_sep = TEXT('/');
       else 
-          url_sep = CUS_DIR_SEP;
+          url_sep = WC_DIR_SEP;
       noFile = (url[len] == url_sep);
       if (noFile)
-         url[len] = CUS_EOS;
-      ptr = TtaAllocCUString (MAX_LENGTH);
-      documentname = TtaAllocCUString (MAX_LENGTH);
+         url[len] = WC_EOS;
+      ptr = TtaAllocString (MAX_LENGTH);
+      documentname = TtaAllocString (MAX_LENGTH);
       TtaExtractName (url, ptr, documentname);
-      cus_sprintf (ptr, CUSTEXT("%s%s%d%s"), TempFileDirectory, CUS_DIR_STR, doc, CUS_DIR_STR);
+      usprintf (ptr, TEXT("%s%s%d%s"), TempFileDirectory, WC_DIR_STR, doc, WC_DIR_STR);
       if (!TtaCheckDirectory (ptr))
 	/* directory did not exist */
 	TtaMakeDirectory (ptr);
 
       /* don't include the query string within document name */
-      n = StrRChr (documentname, CUSTEXT('?'));
+      n = ustrrchr (documentname, TEXT('?'));
       if (n != NULL)
-         *n = CUS_EOS;
+         *n = WC_EOS;
       /* don't include ':' within document name */
-      n = StrChr (documentname, CUSTEXT(':'));
+      n = ustrchr (documentname, TEXT(':'));
       if (n != NULL)
-         *n = CUS_EOS;
+         *n = WC_EOS;
       /* if after all this operations document name
 	 is empty, let's use noname.html instead */
-      if (documentname[0] == CUS_EOS)
-         StringConcat (ptr, CUSTEXT("noname.html"));
+      if (documentname[0] == WC_EOS)
+         ustrcat (ptr, TEXT("noname.html"));
       else
-          StringConcat (ptr, documentname);
+          ustrcat (ptr, documentname);
       TtaFreeMemory (documentname);
       /* restore the url */
       if (noFile)
@@ -840,30 +840,30 @@ CharUnit*  url;
    ExtractTarget extract the target name from document nane.        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void         ExtractTarget (CharUnit* aName, CharUnit* target)
+void         ExtractTarget (CHAR_T* aName, CHAR_T* target)
 #else
 void         ExtractTarget (aName, target)
-CharUnit*    aName;
-CharUnit*    target;
+CHAR_T*      aName;
+CHAR_T*      target;
 #endif
 {
    int       lg, i;
-   CharUnit* ptr;
-   CharUnit* oldptr;
+   CHAR_T*   ptr;
+   CHAR_T*   oldptr;
 
    if (!target || !aName)
      /* bad target */
      return;
 
-   target[0] = CUS_EOS;
-   lg = StringLength (aName);
+   target[0] = WC_EOS;
+   lg = ustrlen (aName);
    if (lg)
      {
 	/* the name is not empty */
 	oldptr = ptr = &aName[0];
 	do
 	  {
-	     ptr = StrRChr (oldptr, CUSTEXT('#'));
+	     ptr = ustrrchr (oldptr, TEXT('#'));
 	     if (ptr)
 		oldptr = &ptr[1];
 	  }
@@ -872,9 +872,9 @@ CharUnit*    target;
 	i = (int) (oldptr) - (int) (aName);	/* name length */
 	if (i > 1)
 	  {
-	     aName[i - 1] = CUS_EOS;
+	     aName[i - 1] = WC_EOS;
 	     if (i != lg)
-		StringCopy (target, oldptr);
+		ustrcpy (target, oldptr);
 	  }
      }
 }
@@ -885,14 +885,14 @@ CharUnit*    target;
    can use it as a local filename
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void ConvertFileURL (CharUnit* url)
+void ConvertFileURL (CHAR_T* url)
 #else
 void ConvertFileURL (url)
-CharUnit* url
+CHAR_T* url
 #endif /* __STDC__ */
 {
-  if (!StringNCaseCompare (url, CUSTEXT("file:"), 5))
-     StringCopy (url, url + 5);
+  if (!ustrncasecmp (url, TEXT("file:"), 5))
+     ustrcpy (url, url + 5);
 }
 
 /*----------------------------------------------------------------------
@@ -907,22 +907,22 @@ CharUnit* url
    the name "noname.html".
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                NormalizeURL (CharUnit* orgName, Document doc, CharUnit* newName, CharUnit* docName, CharUnit* otherPath)
+void                NormalizeURL (CHAR_T* orgName, Document doc, CHAR_T* newName, CHAR_T* docName, CHAR_T* otherPath)
 #else  /* __STDC__ */
 void                NormalizeURL (orgName, doc, newName, docName, otherPath)
-CharUnit*           orgName;
+CHAR_T*             orgName;
 Document            doc;
-CharUnit*           newName;
-CharUnit*           docName;
-CharUnit*           otherPath;
+CHAR_T*             newName;
+CHAR_T*             docName;
+CHAR_T*             otherPath;
 #endif /* __STDC__ */
 {
-   CharUnit*        basename;
-   CharUnit         tempOrgName[MAX_LENGTH];
-   CharUnit*        ptr;
-   CharUnit         used_sep;
-   int              length;
-   ThotBool         check;
+   CHAR_T*        basename;
+   CHAR_T         tempOrgName[MAX_LENGTH];
+   CHAR_T*        ptr;
+   CHAR_T         used_sep;
+   int            length;
+   ThotBool       check;
 
 #  ifdef _WINDOWS
    int ndx;
@@ -934,7 +934,7 @@ CharUnit*           otherPath;
    if (doc != 0)
      basename = GetBaseURL (doc);
    else if (otherPath != NULL)
-     basename = StringDuplicate (otherPath);
+     basename = TtaWCSdup (otherPath);
    else
      basename = NULL;
 
@@ -945,51 +945,51 @@ CharUnit*           otherPath;
     */
    ptr = orgName;
    /* skip leading white space and new line characters */
-   while ((*ptr == CUS_SPACE || *ptr == CUS_EOL) && *ptr++ != CUS_EOS);
-   StringNCopy (tempOrgName, ptr, MAX_LENGTH -1);
-   tempOrgName[MAX_LENGTH -1] = CUS_EOS;
+   while ((*ptr == WC_SPACE || *ptr == WC_EOL) && *ptr++ != WC_EOS);
+   ustrncpy (tempOrgName, ptr, MAX_LENGTH -1);
+   tempOrgName[MAX_LENGTH -1] = WC_EOS;
    /*
     * Make orgName a complete URL
     * If the URL does not include a protocol, then try to calculate
     * one using the doc's base element (if it exists),
     */
-   if (tempOrgName[0] == CUS_EOS)
+   if (tempOrgName[0] == WC_EOS)
      {
-       newName[0] = CUS_EOS;
+       newName[0] = WC_EOS;
        TtaFreeMemory (basename);
        return;
      }
 
    /* clean trailing white space */
-   length = StringLength (tempOrgName) - 1;
-   while (tempOrgName[length] == CUS_SPACE && tempOrgName[length] == CUS_EOL)
+   length = ustrlen (tempOrgName) - 1;
+   while (tempOrgName[length] == WC_SPACE && tempOrgName[length] == WC_EOL)
      {
-       tempOrgName[length] = CUS_EOS;
+       tempOrgName[length] = WC_EOS;
        length--;
      }
 
    /* remove extra dot (which dot???) */
    /* ugly, but faster than a strcmp */
-   if (tempOrgName[length] == CUSTEXT('.')
-       && (length == 0 || tempOrgName[length-1] != CUSTEXT('.')))
-	 tempOrgName[length] = CUS_EOS;
+   if (tempOrgName[length] == TEXT('.')
+       && (length == 0 || tempOrgName[length-1] != TEXT('.')))
+	 tempOrgName[length] = WC_EOS;
 
    if (IsW3Path (tempOrgName))
      {
        /* the name is complete, go to the Sixth Step */
-       StringCopy (newName, tempOrgName);
+       ustrcpy (newName, tempOrgName);
        SimplifyUrl (&newName);
        /* verify if the URL has the form "protocol://server:port" */
-       ptr = AmayaParseUrl (newName, _EMPTYSTR_, AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST | AMAYA_PARSE_PUNCTUATION);
-       if (ptr && !StringCompare (ptr, newName)) /* it has this form, we complete it by adding a DIR_STR  */
-         StringConcat (newName, CUS_URL_STR);
+       ptr = AmayaParseUrl (newName, TEXT(""), AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST | AMAYA_PARSE_PUNCTUATION);
+       if (ptr && !ustrcmp (ptr, newName)) /* it has this form, we complete it by adding a DIR_STR  */
+         ustrcat (newName, WC_URL_STR);
 
        if (ptr)
          TtaFreeMemory (ptr);
      }
    else if ( basename == NULL)
      /* the name is complete, go to the Sixth Step */
-     StringCopy (newName, tempOrgName);
+     ustrcpy (newName, tempOrgName);
    else
      {
        /* Calculate the absolute URL, using the base or document URL */
@@ -1006,11 +1006,11 @@ CharUnit*           otherPath;
        if (ptr)
 	 {
 	   SimplifyUrl (&ptr);
-	   StringCopy (newName, ptr);
+	   ustrcpy (newName, ptr);
 	   TtaFreeMemory (ptr);
 	 }
        else
-	 newName[0] = CUS_EOS;
+	 newName[0] = WC_EOS;
      }
 
    TtaFreeMemory (basename);
@@ -1019,10 +1019,10 @@ CharUnit*           otherPath;
     * .amaya directory. If the new URL finishes on DIR_SEP, then use
     * noname.html as a default ressource name
    */
-   if (newName[0] != CUS_EOS)
+   if (newName[0] != WC_EOS)
      {
-       length = StringLength (newName) - 1;
-       if (newName[length] == CUS_URL_SEP || newName[length] == CUS_DIR_SEP)
+       length = ustrlen (newName) - 1;
+       if (newName[length] == WC_URL_SEP || newName[length] == WC_DIR_SEP)
 	 {
 	   used_sep = newName[length];
 	   check = TRUE;
@@ -1031,39 +1031,39 @@ CharUnit*           otherPath;
                length--;
                while (length >= 0 && newName[length] != used_sep)
 		 length--;
-               if (!StringNCompare (&newName[length+1], CUSTEXT(".."), 2))
+               if (!ustrncmp (&newName[length+1], TEXT(".."), 2))
 		 {
-		   newName[length+1] = CUS_EOS;
+		   newName[length+1] = WC_EOS;
 		   /* remove also previous directory */
 		   length--;
 		   while (length >= 0 && newName[length] != used_sep)
 		     length--;
-		   if (StringNCompare (&newName[length+1], CUSTEXT("//"), 2))
+		   if (ustrncmp (&newName[length+1], TEXT("//"), 2))
 		     /* don't remove server name */
-                     newName[length+1] = CUS_EOS;
+                     newName[length+1] = WC_EOS;
 		 }
-	       else if (!StringNCompare (&newName[length+1], CUSTEXT("."), 1))
-		 newName[length+1] = CUS_EOS;
+	       else if (!ustrncmp (&newName[length+1], TEXT("."), 1))
+		 newName[length+1] = WC_EOS;
                else
 		 check = FALSE;
 	     }
-	   StringCopy (docName, CUSTEXT("noname.html"));	       
+	   ustrcpy (docName, TEXT("noname.html"));	       
 	   /* docname was not comprised inside the URL, so let's */
 	   /* assign the default ressource name */
-	   StringCopy (docName, CUSTEXT("noname.html"));
+	   ustrcpy (docName, TEXT("noname.html"));
 	 }
        else
 	 { /* docname is comprised inside the URL */
-           while (length >= 0 && newName[length] != CUS_URL_SEP && newName[length] != CUS_DIR_SEP)
+           while (length >= 0 && newName[length] != WC_URL_SEP && newName[length] != WC_DIR_SEP)
 	     length--;
 	   if (length < 0)
-             StringCopy (docName, newName);
+             ustrcpy (docName, newName);
 	   else
-	     StringCopy (docName, &newName[length+1]);
+	     ustrcpy (docName, &newName[length+1]);
 	 }
      }
    else
-     docName[0] = CUS_EOS;
+     docName[0] = WC_EOS;
 } 
 
 /*----------------------------------------------------------------------
@@ -1080,7 +1080,7 @@ const STRING       url2;
    STRING           basename_ptr1, basename_ptr2;
    ThotBool          result;
 
-   basename_ptr1 = AmayaParseUrl (url1, _EMPTYSTR_, AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST | AMAYA_PARSE_PUNCTUATION);
+   basename_ptr1 = AmayaParseUrl (url1, TEXT(""), AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST | AMAYA_PARSE_PUNCTUATION);
    basename_ptr2 = AmayaParseUrl (url2, _EMPTYSTR_, AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST | AMAYA_PARSE_PUNCTUATION);
 
    if (ustrcmp (basename_ptr1, basename_ptr2))
@@ -1112,7 +1112,7 @@ const STRING    path;
    if (!path || path[0] == EOS || path[ustrlen(path)] == DIR_SEP)
      return (FALSE);
 
-   root = AmayaParseUrl(path, _EMPTYSTR_, AMAYA_PARSE_PATH | AMAYA_PARSE_PUNCTUATION);
+   root = AmayaParseUrl(path, TEXT(""), AMAYA_PARSE_PATH | AMAYA_PARSE_PUNCTUATION);
 
    if (root) 
      {
@@ -1303,34 +1303,34 @@ HTURI       *parts;
   	returns		A pointer to a malloc'd string which MUST BE FREED
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-STRING        AmayaParseUrl (const STRING aName, STRING relatedName, int wanted)
+CHAR_T*        AmayaParseUrl (const CHAR_T* aName, CHAR_T* relatedName, int wanted)
 #else  /* __STDC__ */
-STRING        AmayaParseUrl (aName, relatedName, wanted)
-const STRING  aName;
-STRING        relatedName;
+CHAR_T*        AmayaParseUrl (aName, relatedName, wanted)
+const CHAR_T*  aName;
+CHAR_T*        relatedName;
 int            wanted;
 
 #endif /* __STDC__ */
 {
-  STRING     return_value;
+  CHAR_T*    return_value;
   CHAR_T     result[MAX_LENGTH];
   CHAR_T     name[MAX_LENGTH];
   CHAR_T     rel[MAX_LENGTH];
-  STRING     p, access;
+  CHAR_T     *p, *access;
   HTURI      given, related;
   int        len;
   CHAR_T     used_sep;
-  STRING     used_str;
+  CHAR_T*    used_str;
 
-  if (ustrchr (aName, DIR_SEP) || ustrchr (relatedName, DIR_SEP))
+  if (ustrchr (aName, WC_DIR_SEP) || ustrchr (relatedName, WC_DIR_SEP))
     {
-      used_str = DIR_STR;
-      used_sep = DIR_SEP;
+      used_str = WC_DIR_STR;
+      used_sep = WC_DIR_SEP;
     }
   else
     {
-      used_str = URL_STR;
-      used_sep = URL_SEP;
+      used_str = WC_URL_STR;
+      used_sep = WC_URL_SEP;
     }
 
   /* Make working copies of input strings to cut up: */
@@ -1340,7 +1340,7 @@ int            wanted;
   if (relatedName != NULL)  
     ustrcpy (rel, relatedName);
   else
-    relatedName[0] = EOS;
+    relatedName[0] = WC_EOS;
   
   scan (name, &given);
   scan (rel,  &related); 
@@ -1428,7 +1428,7 @@ int            wanted;
 	    ustrcat (result, given.fragment); 
 	  }
 	else if (!(given.absolute) && !(given.fragment))
-	  ustrcat (result, _EMPTYSTR_);
+	  ustrcat (result, TEXT(""));
 	else
 	  {
 	    if (wanted & AMAYA_PARSE_PUNCTUATION)
@@ -1455,43 +1455,43 @@ int            wanted;
   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static CharUnit* HTCanon (CharUnit** filename, CharUnit* host)
+static CHAR_T* HTCanon (CHAR_T** filename, CHAR_T* host)
 #else  /* __STDC__ */
 static STRING HTCanon (filename, host)
-CharUnit** filename;
-CharUnit*  host;
+CHAR_T** filename;
+CHAR_T*  host;
 #endif /* __STDC__ */
 {
-    CharUnit* newname = NULL;
-    CharUnit  used_sep;
-    CharUnit* path;
-    CharUnit* strptr;
-    CharUnit* port;
-    CharUnit* access = host-3;
+    CHAR_T* newname = NULL;
+    CHAR_T  used_sep;
+    CHAR_T* path;
+    CHAR_T* strptr;
+    CHAR_T* port;
+    CHAR_T* access = host-3;
 
   
-     if (*filename && StrChr (*filename, CUS_URL_SEP))
+     if (*filename && ustrchr (*filename, WC_URL_SEP))
        {
-	 used_sep = CUS_URL_SEP;
+	 used_sep = WC_URL_SEP;
        }
      else
        {
-	 used_sep = CUS_DIR_SEP;
+	 used_sep = WC_DIR_SEP;
        }
   
     while (access > *filename && *(access - 1) != used_sep)       /* Find access method */
 	access--;
-    if ((path = StrChr (host, used_sep)) == NULL)			/* Find path */
-       path = host + StringLength (host);
-    if ((strptr = StrChr (host, CUSTEXT('@'))) != NULL && strptr < path)	   /* UserId */
+    if ((path = ustrchr (host, used_sep)) == NULL)			/* Find path */
+       path = host + ustrlen (host);
+    if ((strptr = ustrchr (host, TEXT('@'))) != NULL && strptr < path)	   /* UserId */
        host = strptr;
-    if ((port = StrChr (host, CUSTEXT(':'))) != NULL && port > path)      /* Port number */
+    if ((port = ustrchr (host, TEXT(':'))) != NULL && port > path)      /* Port number */
        port = NULL;
 
     strptr = host;				    /* Convert to lower-case */
     while (strptr < path)
       {
-         *strptr = ToLower (*strptr);
+         *strptr = utolower (*strptr);
          strptr++;
       }
     
@@ -1499,11 +1499,11 @@ CharUnit*  host;
        numerical host name. The domain name is already made lower-case
        and without a trailing dot. */
     {
-      CharUnit* dot = port ? port : path;
-      if (dot > *filename && *--dot == CUSTEXT('.'))
+      CHAR_T* dot = port ? port : path;
+      if (dot > *filename && *--dot == TEXT('.'))
 	{
-	  CharUnit* orig = dot;
-      CharUnit* dest = dot + 1;
+	  CHAR_T* orig = dot;
+      CHAR_T* dest = dot + 1;
 	  while ((*orig++ = *dest++));
             if (port) port--;
 	  path--;
@@ -1516,40 +1516,40 @@ CharUnit*  host;
 	  {
 	    if (!newname)
 	      {
-		CharUnit* orig = port; 
-        CharUnit* dest = port + 1;
+		CHAR_T* orig = port; 
+        CHAR_T* dest = port + 1;
 		while ((*orig++ = *dest++));
 	      }
 	  }
-	else if ((!StringNCompare (access, CUSTEXT("http"), 4)   &&
-             (*(port + 1) == CUSTEXT('8')                    && 
-             *(port+2) == CUSTEXT('0')                       && 
+	else if ((!ustrncmp (access, TEXT("http"), 4)   &&
+             (*(port + 1) == TEXT('8')                    && 
+             *(port+2) == TEXT('0')                       && 
              (*(port+3) == used_sep || !*(port + 3))))       ||
-             (!StringNCompare (access, CUSTEXT("gopher"), 6) &&
-             (*(port+1) == CUSTEXT('7')                      && 
-             *(port+2) == CUSTEXT('0')                       && 
+             (!ustrncmp (access, TEXT("gopher"), 6) &&
+             (*(port+1) == TEXT('7')                      && 
+             *(port+2) == TEXT('0')                       && 
              (*(port+3) == used_sep || !*(port+3))))         ||
-             (!StringNCompare (access, CUSTEXT("ftp"), 3)    &&
-             (*(port+1) == CUSTEXT('2')                      && 
-             *(port + 2) == CUSTEXT('1')                     && 
+             (!ustrncmp (access, TEXT("ftp"), 3)    &&
+             (*(port+1) == TEXT('2')                      && 
+             *(port + 2) == TEXT('1')                     && 
              (*(port+3) == used_sep || !*(port+3))))) {
 	  if (!newname)
 	    {
-	      CharUnit* orig = port; 
-          CharUnit* dest = port + 3;
+	      CHAR_T* orig = port; 
+          CHAR_T* dest = port + 3;
 	      while((*orig++ = *dest++));
 	      /* Update path position, Henry Minsky */
 	      path -= 3;
 	    }
 	}
 	else if (newname)
-	  StringNConcat (newname, port, (int) (path - port));
+	  ustrncat (newname, port, (int) (path - port));
       }
 
     if (newname)
       {
-	CharUnit* newpath = newname + StringLength (newname);
-	StringConcat (newname, path);
+	CHAR_T* newpath = newname + ustrlen (newname);
+	ustrcat (newname, path);
 	path = newpath;
 	/* Free old copy */
 	TtaFreeMemory(*filename);
@@ -1585,17 +1585,17 @@ CharUnit*  host;
   Returns: A string which might be the old one or a new one.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void         SimplifyUrl (CharUnit** url)
+void         SimplifyUrl (CHAR_T** url)
 #else  /* __STDC__ */
 void         SimplifyUrl (url)
-CharUnit**   url;
+CHAR_T**     url;
 #endif /* __STDC__ */
 {
-  CharUnit* path;
-  CharUnit* access;
-  CharUnit* newptr; 
-  STRING    p;
-  STRING    orig, dest, end;
+  CHAR_T*   path;
+  CHAR_T*   access;
+  CHAR_T*   newptr; 
+  CHAR_T*   p;
+  CHAR_T   *orig, *dest, *end;
 
   CharUnit used_sep;
   ThotBool ddot_simplify; /* used to desactivate the double dot simplifcation:
@@ -1605,53 +1605,53 @@ CharUnit**   url;
   if (!url || !*url)
     return;
 
-  if (StrChr (*url, CUS_URL_SEP))
+  if (ustrchr (*url, WC_URL_SEP))
     {
-      used_sep = CUS_URL_SEP;
+      used_sep = WC_URL_SEP;
     }
   else
     {
-      used_sep = CUS_DIR_SEP;
+      used_sep = WC_DIR_SEP;
     }
 
   /* should we simplify double dot? */
   path = *url;
-  if (*path == CUSTEXT('.') && *(path + 1) == CUSTEXT('.'))
+  if (*path == TEXT('.') && *(path + 1) == TEXT('.'))
     ddot_simplify = FALSE;
   else
     ddot_simplify = TRUE;
 
   /* Find any scheme name */
-  if ((path = StringSubstring(*url, CUSTEXT("://"))) != NULL)
+  if ((path = ustrstr (*url, TEXT("://"))) != NULL)
     {
       /* Find host name */
       access = *url;
-      while (access < path && (*access = ToLower (*access)))
+      while (access < path && (*access = utolower (*access)))
             access++;
       path += 3;
-      while ((newptr = StringSubstring (path, CUSTEXT ("://"))) != NULL)
+      while ((newptr = ustrstr (path, TEXT ("://"))) != NULL)
             /* For proxies */
             path = newptr+3;
      /* We have a host name */
-      path = HTCanon(url, path);
+      path = HTCanon (url, path);
     }
-  else if ((path = ustrstr(*url, TEXT(":/"))) != NULL)
+  else if ((path = ustrstr (*url, TEXT(":/"))) != NULL)
     path += 2;
   else
     path = *url;
 
-  if (*path == used_sep && *(path+1)==used_sep)
+  if (*path == used_sep && *(path+1) == used_sep)
     /* Some URLs start //<foo> */
     path += 1;
-  else if (!ustrncmp(path, TEXT("news:"), 5))
+  else if (!ustrncmp (path, TEXT("news:"), 5))
     {
-      newptr = ustrchr(path+5, TEXT('@'));
+      newptr = ustrchr (path+5, TEXT('@'));
       if (!newptr)
 	newptr = path + 5;
       while (*newptr)
 	{
 	  /* Make group or host lower case */
-	  *newptr = tolower (*newptr);
+	  *newptr = utolower (*newptr);
 	  newptr++;
 	}
       /* Doesn't need to do any more */
@@ -1677,7 +1677,7 @@ CharUnit**   url;
 	      if (p > *url && *(p+1) == TEXT('.') && (*(p+2) == used_sep || !*(p+2)))
 		{
 		  orig = p + 1;
-		  dest = (*(p+2)!=used_sep) ? p+2 : p+3;
+		  dest = (*(p+2) != used_sep) ? p+2 : p+3;
 		  while ((*orig++ = *dest++)); /* Remove a used_sep and a dot*/
 		  end = orig - 1;
 		}
@@ -1731,53 +1731,53 @@ CharUnit**   url;
    Return TRUE if target and src differ.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool             NormalizeFile (CharUnit* src, CharUnit* target)
+ThotBool             NormalizeFile (CHAR_T* src, CHAR_T* target)
 #else
 ThotBool             NormalizeFile (src, target)
-CharUnit*            src;
-CharUnit*            target;
+CHAR_T*              src;
+CHAR_T*              target;
 
 #endif
 {
-   CharUnit*         s;
+   CHAR_T*           s;
    ThotBool          change;
 
    change = FALSE;
-   if (StringNCompare (src, CUSTEXT("file:"), 5) == 0)
+   if (ustrncmp (src, TEXT("file:"), 5) == 0)
      {
 	/* remove the prefix file: */
-	if (src[5] == CUS_EOS)
-	   StringCopy (target, CUS_DIR_STR);
-	else if (src[0] == CUSTEXT('~'))
+	if (src[5] == WC_EOS)
+	   ustrcpy (target, WC_DIR_STR);
+	else if (src[0] == TEXT('~'))
 	  {
 	    /* replace ~ */
 	    s = TtaGetEnvString ("HOME");
-	    StringCopy (target, s);
-	    StringConcat (target, &src[5]);
+	    ustrcpy (target, s);
+	    ustrcat (target, &src[5]);
 	  }
 	else
-	   StringCopy (target, &src[5]);
+	   ustrcpy (target, &src[5]);
 	change = TRUE;
      }
 #  ifndef _WINDOWS
-   else if (src[0] == CUSTEXT('~'))
+   else if (src[0] == TEXT('~'))
      {
 	/* replace ~ */
 	s = TtaGetEnvString ("HOME");
-	StringCopy (target, s);
-	if (src[1] != CUS_DIR_SEP)
-	  strcat (target, CUS_DIR_STR);
-	StringConcat (target, &src[1]);
+	ustrcpy (target, s);
+	if (src[1] != WC_DIR_SEP)
+	  ustrcat (target, WC_DIR_STR);
+	ustrcat (target, &src[1]);
 	change = TRUE;
      }
 #   endif /* _WINDOWS */
    else
-      StringCopy (target, src);
+      ustrcpy (target, src);
 
    /* remove /../ and /./ */
    SimplifyUrl (&target);
    if (!change)
-     change = StringCompare (src, target);
+     change = ustrcmp (src, target);
    return (change);
 }
 

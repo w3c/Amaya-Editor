@@ -57,7 +57,7 @@ LoadedImageDesc   **desc;
    if (pathname == NULL || name == NULL)
       return (FALSE);
    else if (IsHTTPPath (pathname))
-     localname = GetLocalPath (doc, pathname);
+     localname = GetLocalPath (doc, pathname); 
    else
       /* it is a local image */
       return (FALSE);		/* nothing to do */
@@ -600,12 +600,12 @@ void *context;
 	    if (ptr) 
 	      {
 		ptr++;
-		ustrcpy (ptr, CUSTEXT("html"));
+		ustrcpy (ptr, TEXT("html"));
 	      }
 	    else
-	      ustrcat (tempfile, CUSTEXT(".html"));
+	      ustrcat (tempfile, TEXT(".html"));
 	    TtaFreeMemory (desc->localName);
-	    desc->localName = TtaStrdup (tempfile);
+	    desc->localName = TtaWCSdup (tempfile);
 
 	  }
 	else
@@ -742,8 +742,7 @@ Element             element;
    may indicate extra transfer parameters, for example bypassing the cache.		
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                FetchImage (Document doc, Element el, STRING URL, int flags,
-                                LoadedImageCallback callback, void *extra)
+void                FetchImage (Document doc, Element el, STRING URL, int flags, LoadedImageCallback callback, void *extra)
 #else  /* __STDC__ */
 void                FetchImage (doc, el, URL, flags, callback, extra)
 Document            doc;
@@ -818,7 +817,7 @@ void               *extra;
 	      /* store the context before downloading the images */
 	      FetchImage_ctx = TtaGetMemory (sizeof (FetchImage_context));
 	      FetchImage_ctx->desc = desc;
-	      FetchImage_ctx->base_url =  TtaStrdup (DocumentURLs[doc]);
+	      FetchImage_ctx->base_url =  TtaWCSdup (DocumentURLs[doc]);
 
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
 	      FilesLoading[doc]++;
@@ -938,7 +937,7 @@ int                 flags;
      return FALSE;
 
    /* register the current URL */
-   currentURL = TtaStrdup (DocumentURLs[doc]);
+   currentURL = TtaWCSdup (DocumentURLs[doc]);
    /* get the root element */
    el = TtaGetMainRoot (doc);
    /* prepare the type of element to be searched */

@@ -1157,18 +1157,18 @@ int zoom;
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
 #ifdef __STDC__
-void                WIN_InitDialogueFonts (HDC hDC, CharUnit* name)
+void                WIN_InitDialogueFonts (HDC hDC, CHAR_T* name)
 #else  /* __STDC__ */
 void                WIN_InitDialogueFonts (hDC, name)
 HDC                 hDC;
-CharUnit*           name;
+CHAR_T*             name;
 #endif /* __STDC__ */
 #else  /* !_WINDOWS */
 #ifdef __STDC__
-void                InitDialogueFonts (char* name)
+void                InitDialogueFonts (CHAR_T* name)
 #else  /* __STDC__ */
 void                InitDialogueFonts (name)
-char*               name;
+CHAR_T*             name;
 #endif /* __STDC__ */
 #endif /* _WINDOWS */
 {
@@ -1179,7 +1179,7 @@ char*               name;
 #  endif /* _WINDOWS */
    STRING*          dirlist = NULL;
    STRING*          currentlist = NULL;
-   CharUnit*        value;
+   CHAR_T*          value;
    char             alphabet;
    int              f3;
    int              i;
@@ -1199,8 +1199,8 @@ char*               name;
      }
    else
      {
-	FontFamily = TtaGetMemory (StringLength (value) + 1);
-	cus2iso_strcpy (FontFamily, value);
+	FontFamily = TtaGetMemory (ustrlen (value) + 1);
+	wc2iso_strcpy (FontFamily, value);
 	if (!strcmp (FontFamily, "-b&h-lucida"))
 	   UseLucidaFamily = TRUE;
 	else
@@ -1229,7 +1229,7 @@ char*               name;
    /* Is there any predefined size for menu fonts ? */
    value = TtaGetEnvString ("FontMenuSize");
    if (value != NULL)
-      cus_sscanf (value, CUSTEXT("%d"), &MenuSize);
+      usscanf (value, TEXT("%d"), &MenuSize);
    f3 = MenuSize + 2;
 
 #  ifndef _WINDOWS

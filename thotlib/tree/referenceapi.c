@@ -777,7 +777,7 @@ Element             element2;
 		else
 		   /* external references */
 		if (strcmp (pRef1->ReReferredLabel, pRef2->ReReferredLabel) == 0)
-		   if (StringCompare (pRef1->ReExtDocument, pRef2->ReExtDocument) == 0)
+		   if (ustrcmp (pRef1->ReExtDocument, pRef2->ReExtDocument) == 0)
 		      result = 1;
 	     }
      }
@@ -946,7 +946,7 @@ Attribute           attribute2;
 		else
 		   /* External references */
 		if (strcmp (pRef1->ReReferredLabel, pRef2->ReReferredLabel) == 0)
-		   if (StringCompare (pRef1->ReExtDocument, pRef2->ReExtDocument) == 0)
+		   if (ustrcmp (pRef1->ReExtDocument, pRef2->ReExtDocument) == 0)
 		      result = 1;
 	     }
      }

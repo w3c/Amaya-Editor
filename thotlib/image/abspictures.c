@@ -55,7 +55,7 @@ int                 imagetype;
 {
   PtrTextBuffer       pBuffer;
   PictInfo*           image = NULL;
-  PCHAR_T             ptr = NULL;
+  CHAR_T*             ptr = NULL;
   int                 picPresent, len;
 
   if (imagetype == XBM_FORMAT || imagetype == XPM_FORMAT)
@@ -147,7 +147,7 @@ int                 imagetype;
     {
       /* Initialize image descriptor */
       /* use the buffer allocated by the picture content */
-      (PCHAR_T)image->PicFileName = ptr;
+      image->PicFileName = ptr;
       image->PicPixmap = 0;
 #     ifndef _WINDOWS 
       image->PicMask = 0;

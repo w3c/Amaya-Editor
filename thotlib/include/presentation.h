@@ -404,7 +404,7 @@ extern void        TtaGiveWindowSize (Document document, View view, TypeUnit uni
 /*----------------------------------------------------------------------
  *   TtaGiveRGB returns the RGB of the color.
  ----------------------------------------------------------------------*/
-extern void         TtaGiveRGB ( CharUnit* colname, /*OUT*/ unsigned short *red, /*OUT*/ unsigned short *green, /*OUT*/ unsigned short *blue );
+extern void         TtaGiveRGB ( CHAR_T* colname, /*OUT*/ unsigned short *red, /*OUT*/ unsigned short *green, /*OUT*/ unsigned short *blue );
 
 /*----------------------------------------------------------------------
    TtaGiveThotRGB returns the Red Green and Blue values corresponding
@@ -564,7 +564,7 @@ extern void         TtaGiveBoxSize ( /* Element element, Document document, View
 extern void         TtaGiveBoxPosition ( /* Element element, Document document, View view, TypeUnit unit, int *xCoord, int *yCoord */ );
 extern void         TtaGiveBoxAbsPosition ( /* Element element, Document document, View view, TypeUnit unit, int *xCoord, int *yCoord */ );
 extern void         TtaGiveWindowSize ( /* Document document, View view, TypeUnit unit, int *width, int *height */ );
-extern void         TtaGiveRGB ( /* CharUnit* colname, unsigned short *red, unsigned short *green, unsigned short *blue*/ );
+extern void         TtaGiveRGB ( /* CHAR_T* colname, unsigned short *red, unsigned short *green, unsigned short *blue*/ );
 extern void         TtaGiveThotRGB (/*int num, unsigned short *red, unsigned short *green, unsigned short *blue*/);
 extern void         TtaNextPRule ( /* Element element, PRule *pRule */ );
 extern PRule        TtaGetPRule ( /* Element element, int presentationType */ );

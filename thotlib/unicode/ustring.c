@@ -40,15 +40,15 @@ const STRING str2;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-STRING ustrcat (STRING dest, const STRING src)
+CHAR_T* ustrcat (CHAR_T* dest, const CHAR_T* src)
 #else  /* __STDC__ */
-STRING ustrcat (dest, src)
-STRING       dest;
-const STRING src;
+CHAR_T* ustrcat (dest, src)
+CHAR_T*       dest;
+const CHAR_T* src;
 #endif /* __STDC__ */
 {
 #   ifdef _WINDOWS
-    return (STRING) wcscat ((wchar_t*)dest, (wchar_t*)src);
+    return (CHAR_T*) wcscat ((wchar_t*)dest, (wchar_t*)src);
 #   else  /* !_WINDOWS */
 #   endif /* !_WINDOWS */
 }
@@ -58,15 +58,15 @@ const STRING src;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-STRING ustrchr (const STRING src, CHAR_T c)
+CHAR_T* ustrchr (const CHAR_T* src, CHAR_T c)
 #else  /* __STDC__ */
-STRING ustrchr (src, c)
-const STRING src;
+CHAR_T* ustrchr (src, c)
+const CHAR_T*  src;
 CHAR_T         c;
 #endif /* __STDC__ */
 {
 #   ifdef _WINDOWS
-    return ((STRING) wcschr ((wchar_t*)src, (wint_t)c));
+    return ((CHAR_T*) wcschr ((wchar_t*)src, (wint_t)c));
 #   else  /* !_WINDOWS */
 #   endif /* !_WINDOWS */
 }
@@ -76,11 +76,11 @@ CHAR_T         c;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-int ustrcmp (const STRING str1, const STRING str2)
+int ustrcmp (const CHAR_T* str1, const CHAR_T* str2)
 #else  /* __STDC__ */
 int ustrcmp (str1, str2)
-const STRING str1;
-const STRING str2;
+const CHAR_T* str1;
+const CHAR_T* str2;
 #endif /* __STDC__ */
 {
 #   ifdef _WINDOWS
@@ -114,15 +114,15 @@ const STRING str2;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-STRING ustrcpy (STRING dest, const STRING src)
+CHAR_T* ustrcpy (CHAR_T* dest, const CHAR_T* src)
 #else  /* __STDC__ */
-STRING ustrcpy (dest, src)
-STRING       dest;
-const STRING src;
+CHAR_T* ustrcpy (dest, src)
+CHAR_T*       dest;
+const CHAR_T* src;
 #endif /* __STDC__ */
 {
 #   ifdef _WINDOWS
-    return (STRING) wcscpy ((wchar_t*)dest, (wchar_t*)src);
+    return (CHAR_T*) wcscpy ((wchar_t*)dest, (wchar_t*)src);
 #   else  /* !_WINDOWS */
 #   endif /* !_WINDOWS */
 }
@@ -270,16 +270,16 @@ unsigned int  count;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-STRING ustrncmp (const STRING str1, const STRING str2, unsigned int count)
+CHAR_T* ustrncmp (const CHAR_T* str1, const CHAR_T* str2, unsigned int count)
 #else  /* __STDC__ */
-STRING ustrncmp (str1, str2, count)
-const STRING str1;
-const STRING str2;
+CHAR_T* ustrncmp (str1, str2, count)
+const CHAR_T* str1;
+const CHAR_T* str2;
 unsigned int  count;
 #endif /* __STDC__ */
 {
 #   ifdef _WINDOWS 
-    return (STRING) wcsncmp ((wchar_t*)str1, (wchar_t*)str2, (size_t)count);
+    return (CHAR_T*) wcsncmp ((wchar_t*)str1, (wchar_t*)str2, (size_t)count);
 #   else  /* !_WINDOWS */
 #   endif /* !_WINDOWS */
 }
@@ -412,14 +412,14 @@ const STRING str2;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-STRING ustrcat (STRING dest, const STRING src)
+CHAR_T* ustrcat (CHAR_T* dest, const CHAR_T* src)
 #else  /* __STDC__ */
-STRING ustrcat (dest, src)
-STRING       dest;
-const STRING src;
+CHAR_T* ustrcat (dest, src)
+CHAR_T*       dest;
+const CHAR_T* src;
 #endif /* __STDC__ */
 {
-    return (STRING) strcat ((char*)dest, (char*)src);
+    return (CHAR_T*) strcat ((char*)dest, (char*)src);
 }
 
 /*-------------------------------------------------------------
@@ -427,14 +427,14 @@ const STRING src;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-STRING ustrchr (const STRING src, CHAR_T c)
+CHAR_T* ustrchr (const CHAR_T* src, CHAR_T c)
 #else  /* __STDC__ */
-STRING ustrchr (src, c)
-const STRING src;
+CHAR_T* ustrchr (src, c)
+const CHAR_T*  src;
 CHAR_T         c;
 #endif /* __STDC__ */
 {
-    return ((STRING) strchr ((char*)src, (int)c));
+    return ((CHAR_T*) strchr ((char*)src, (int)c));
 }
 
 /*-------------------------------------------------------------
@@ -442,11 +442,11 @@ CHAR_T         c;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-int ustrcmp (const STRING str1, const STRING str2)
+int ustrcmp (const CHAR_T* str1, const CHAR_T* str2)
 #else  /* __STDC__ */
 int ustrcmp (str1, str2)
-const STRING str1;
-const STRING str2;
+const CHAR_T* str1;
+const CHAR_T* str2;
 #endif /* __STDC__ */
 {
     return strcmp ((char*)str1, (char*)str2);
@@ -474,14 +474,14 @@ const STRING str2;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-STRING ustrcpy (STRING dest, const STRING src)
+CHAR_T* ustrcpy (CHAR_T* dest, const CHAR_T* src)
 #else  /* __STDC__ */
-STRING ustrcpy (dest, src)
-STRING       dest;
-const STRING src;
+CHAR_T* ustrcpy (dest, src)
+CHAR_T*       dest;
+const CHAR_T* src;
 #endif /* __STDC__ */
 {
-    return (STRING) strcpy ((char*)dest, (char*)src);
+    return (CHAR_T*) strcpy ((char*)dest, (char*)src);
 }
 
 /*-------------------------------------------------------------
@@ -611,15 +611,15 @@ unsigned int  count;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-STRING ustrncmp (const STRING str1, const STRING str2, unsigned int count)
+CHAR_T* ustrncmp (const CHAR_T* str1, const CHAR_T* str2, unsigned int count)
 #else  /* __STDC__ */
-STRING ustrncmp (str1, str2, count)
-const STRING str1;
-const STRING str2;
+CHAR_T* ustrncmp (str1, str2, count)
+const CHAR_T* str1;
+const CHAR_T* str2;
 unsigned int  count;
 #endif /* __STDC__ */
 {
-    return (STRING) strncmp ((char*)str1, (char*)str2, (size_t)count);
+    return (CHAR_T*) strncmp ((char*)str1, (char*)str2, (size_t)count);
 }
 
 /*-------------------------------------------------------------

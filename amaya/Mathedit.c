@@ -566,7 +566,7 @@ int                 construct;
       if (construct == 1)
 	/* Math button */
 	{
-	if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+	if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
 	   /* selection is in an HTML element */
 	   {
            newType.ElTypeNum = HTML_EL_Math;
@@ -574,7 +574,7 @@ int                 construct;
            TtaCreateElement (newType, doc);
 	   }
 #ifdef GRAPHML
-	if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
+	if (strcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")) == 0)
 	   /* selection is in a GraphML element */
 	   {
            newType.ElTypeNum = GraphML_EL_Math;
@@ -598,7 +598,7 @@ int                 construct;
       mrowCreated = FALSE;
 
       /* Check whether the selected element is a MathML element */
-      if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
+      if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) == 0)
 	{
 	  /* current selection is within a MathML element */
 	  mathSchema = elType.ElSSchema;
@@ -629,7 +629,7 @@ int                 construct;
 	  /* get the MathML schema for this document or associate it to the
 	     document if it is not associated yet */
 	  mathSchema = TtaNewNature (docSchema, TEXT("MathML"), TEXT("MathMLP"));
-	  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0 &&
+	  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0 &&
 	      elType.ElTypeNum != HTML_EL_Math)
 	    /* the current selection is in an HTML element, but it's not
 	       a Math element */
@@ -699,7 +699,7 @@ int                 construct;
 		}
 	    }
 
-	  if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0 &&
+	  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0 &&
 	      elType.ElTypeNum == HTML_EL_Math)
 	    /* the current selection is in an HTML element, and it's a
 	       Math element */
@@ -752,7 +752,7 @@ int                 construct;
 		 {
 #ifdef GRAPHML
 		 elType = TtaGetElementType (sibling);
-		 if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
+		 if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")) == 0)
 		    /* selection is within a GraphML element */
 		    {
 		    elType.ElTypeNum = GraphML_EL_Math;
@@ -1562,7 +1562,7 @@ void CreateCharStringElement (typeNum, doc)
 
    /* if not within a MathML element, nothing to do */
    elType = TtaGetElementType (firstSel);
-   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
+   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) != 0)
       return;
 
    TtaSetDisplayMode (doc, DeferredDisplay);
@@ -2657,7 +2657,7 @@ void CreateMathEntity (document, view)
 
    /* if not within a MathML element, nothing to do */
    elType = TtaGetElementType (firstSel);
-   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
+   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) != 0)
       return;
    
    MathMLEntityName[0] = EOS;
@@ -2682,7 +2682,7 @@ void CreateMathEntity (document, view)
       TtaGiveFirstSelectedElement (document, &firstSel, &firstChar, &i);
       /* if not within a MathML element, nothing to do */
       elType = TtaGetElementType (firstSel);
-      if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") != 0)
+      if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) != 0)
          return;
       TtaGiveLastSelectedElement (document, &lastSel, &i, &lastChar);
       TtaOpenUndoSequence (document, firstSel, lastSel, firstChar, lastChar);
@@ -2907,7 +2907,7 @@ void SetMathCharFont (doc, attribute)
 	}
      }
 
-  attrType.AttrSSchema = TtaGetSSchema ("MathML", doc);
+  attrType.AttrSSchema = TtaGetSSchema (TEXT("MathML"), doc);
   attrType.AttrTypeNum = attribute;
   attr = TtaGetAttribute (firstSel, attrType);
   if (attr)

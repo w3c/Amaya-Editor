@@ -473,12 +473,12 @@ PtrSSchema          pSS;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                LoadSchemas (CharUnit* SSchName, CharUnit* PSchName, PtrSSchema * pSS, PtrSSchema pLoadedSS, ThotBool extension)
+void                LoadSchemas (CHAR_T* SSchName, CHAR_T* PSchName, PtrSSchema * pSS, PtrSSchema pLoadedSS, ThotBool extension)
 
 #else  /* __STDC__ */
 void                LoadSchemas (SSchName, PSchName, pSS, pLoadedSS, extension)
-CharUnit*           SSchName;
-CharUnit*           PSchName;
+CHAR_T*             SSchName;
+CHAR_T*             PSchName;
 PtrSSchema         *pSS;
 PtrSSchema          pLoadedSS;
 ThotBool            extension;
@@ -487,15 +487,13 @@ ThotBool            extension;
 
 {
    Name          schName;
-   CUSName       cusSchName;
 
-   StringNCopy (cusSchName, SSchName, MAX_NAME_LENGTH);
    ustrncpy (schName, SSchName, MAX_NAME_LENGTH);
    /* cree le schema de structure et charge le fichier dedans */
    if (pLoadedSS == NULL) {
       GetSchStruct (pSS);
-      if (!ReadStructureSchema (cusSchName, *pSS)) {
-         TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_SCHEMA_NOT_FIND), cusSchName);
+      if (!ReadStructureSchema (SSchName, *pSS)) {
+         TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_SCHEMA_NOT_FIND), SSchName);
          FreeSchStruc (*pSS);
          *pSS = NULL;	     
 	  } else if ((*pSS)->SsExtension != extension) {

@@ -17,8 +17,8 @@ extern void LoadNatureSchema ( PtrSSchema pSS,
 extern int CreateNature ( CHAR_T* SSchName,
                           CHAR_T* PSchName,
                           PtrSSchema pSS );
-extern void LoadSchemas ( CharUnit* SSchName,
-                          CharUnit* PSchName,
+extern void LoadSchemas ( CHAR_T* SSchName,
+                          CHAR_T* PSchName,
                           PtrSSchema * pSS,
                           PtrSSchema pLoadedSS,
                           ThotBool extension );
@@ -43,8 +43,8 @@ extern void LoadNatureSchema (/* PtrSSchema pSS,
 extern int CreateNature (/* CHAR_T* SSchName,
                             CHAR_T* PSchName,
                             PtrSSchema pSS */);
-extern void LoadSchemas (/* CharUnit* SSchName,
-                            CharUnit* PSchName,
+extern void LoadSchemas (/* CHAR_T* SSchName,
+                            CHAR_T* PSchName,
                             PtrSSchema * pSS,
                             PtrSSchema pLoadedSS,
                             ThotBool extension */);

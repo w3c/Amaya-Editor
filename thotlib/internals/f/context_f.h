@@ -6,12 +6,12 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void TtaGiveRGB ( CharUnit* colname,
+extern void TtaGiveRGB ( CHAR_T* colname,
                          unsigned short *red,
                          unsigned short *green,
                          unsigned short *blue );
 extern void TtaUpdateEditorColors ( void );
-extern void ThotInitDisplay ( CharUnit* name,
+extern void ThotInitDisplay ( CHAR_T* name,
                               int dx,
                               int dy );
 extern void InitDocContexts ( void );
@@ -19,12 +19,12 @@ extern void SelectionEvents ( void *ev );
 
 #else /* __STDC__ */
 
-extern void TtaGiveRGB (/* CharUnit* colname,
+extern void TtaGiveRGB (/* CHAR_T* colname,
                            unsigned short *red,
                            unsigned short *green,
                            unsigned short *blue */);
 extern void TtaUpdateEditorColors (/* void */);
-extern void ThotInitDisplay (/* CharUnit* name,
+extern void ThotInitDisplay (/* CHAR_T* name,
                                 int dx,
                                 int dy */);
 extern void InitDocContexts (/* void */);

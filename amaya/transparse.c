@@ -32,7 +32,7 @@
 #endif
 
 
-extern CharUnit*   SchemaPath;
+extern CHAR_T*   SchemaPath;
 
 
 /* pattern and rules internal representation */
@@ -2512,8 +2512,8 @@ strTransSet        **resTrSet;
 	    fileName[(next - cour)] = '\0';
           }
         len = ustrlen(fileName);
-        if (fileName[len]!= DIR_SEP)
-          ustrcat (fileName,DIR_STR);
+        if (fileName[len]!= WC_DIR_SEP)
+          ustrcat (fileName, WC_DIR_STR);
         ustrcat (fileName,name);
         ustrcat (fileName, TEXT(".trans"));
 	found = (TtaFileExist(fileName) == 1);

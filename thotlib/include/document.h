@@ -54,7 +54,7 @@ typedef int        *SSchema;
    the document that has been created or 0 if the document has not
    been created.
   ----------------------------------------------------------------------*/
-extern Document     TtaNewDocument (char* structureSchema, CharUnit* documentName);
+extern Document     TtaNewDocument (CHAR_T* structureSchema, CHAR_T* documentName);
 
 /*----------------------------------------------------------------------
    TtaOpenDocument
@@ -199,7 +199,7 @@ extern ThotBool     TtaCheckPath (char* path );
    directory: the new directory name.
 
   ----------------------------------------------------------------------*/
-extern ThotBool     TtaIsInDocumentPath (CharUnit* aDirectory);
+extern ThotBool     TtaIsInDocumentPath (CHAR_T* aDirectory);
 
 /*----------------------------------------------------------------------
    TtaAppendDocumentPath
@@ -211,7 +211,7 @@ extern ThotBool     TtaIsInDocumentPath (CharUnit* aDirectory);
    directory: the new directory name.
 
   ----------------------------------------------------------------------*/
-extern void         TtaAppendDocumentPath (CharUnit* aDirectory);
+extern void         TtaAppendDocumentPath (CHAR_T* aDirectory);
 
 /*----------------------------------------------------------------------
    TtaSetSchemaPath
@@ -325,7 +325,7 @@ extern void         TtaSetPSchema (Document document, CHAR_T* presentationName);
    directory: new document directory.
 
   ----------------------------------------------------------------------*/
-extern void         TtaSetDocumentDirectory (Document document, CharUnit* directory);
+extern void         TtaSetDocumentDirectory (Document document, CHAR_T* directory);
 
 /*----------------------------------------------------------------------
    TtaRemoveSchemaExtension
@@ -423,7 +423,7 @@ extern void         TtaSetDocumentUnmodified (Document document);
    name of that document.
 
   ----------------------------------------------------------------------*/
-extern CharUnit*       TtaGetDocumentName (Document document);
+extern CHAR_T*       TtaGetDocumentName (Document document);
 
 /*----------------------------------------------------------------------
    TtaGetDocumentFromName
@@ -699,7 +699,7 @@ extern Document     TtaGetDocumentOfSavedElements ();
    structure (documents, natures et extensions) qui ont    
    des fichiers de langue dans les directories de schemas. 
   ----------------------------------------------------------------------*/
-extern void TtaConfigReadConfigFiles ( CharUnit* aSchemaPath );
+extern void TtaConfigReadConfigFiles ( CHAR_T* aSchemaPath );
 
 /*----------------------------------------------------------------------
    TtaConfigSSchemaExternalName retourne dans nameUser le nom     
@@ -708,11 +708,11 @@ extern void TtaConfigReadConfigFiles ( CharUnit* aSchemaPath );
    Typ indique s'il s'agit d'un schema de document (1), de         
    nature (2) ou d'extension (3).                                  
   ----------------------------------------------------------------------*/
-extern void TtaConfigSSchemaExternalName (/*OUT*/ CharUnit* nameUser, CharUnit* nameSchema, int Typ );
+extern void TtaConfigSSchemaExternalName (/*OUT*/ CHAR_T* nameUser, CHAR_T* nameSchema, int Typ );
 
 #else  /* __STDC__ */
 
-extern Document     TtaNewDocument ( /* char* structureSchema, CharUnit* documentName */ );
+extern Document     TtaNewDocument ( /* CHAR_T* structureSchema, CHAR_T* documentName */ );
 extern Document     TtaOpenDocument ( /* char *documentName, int accessMode */ );
 extern void         TtaSaveDocument ( /* Document document, char *documentName */ );
 extern ThotBool     TtaExportDocument ( /* Document document, char *fileName, char* TSchemaName */ );
@@ -721,22 +721,22 @@ extern void         TtaCloseDocument ( /* Document document */ );
 extern void         TtaRemoveDocument ( /* Document document */ );
 extern void         TtaSetDocumentPath ( /* char *path */ );
 extern ThotBool     TtaCheckPath (/* char *path */);
-extern ThotBool     TtaIsInDocumentPath ( /*char *aDirectory */ );
-extern void         TtaAppendDocumentPath ( /*CharUnit* aDirectory */ );
+extern ThotBool     TtaIsInDocumentPath ( /*CHAR_T* aDirectory */ );
+extern void         TtaAppendDocumentPath ( /*CHAR_T* aDirectory */ );
 extern void         TtaSetSchemaPath ( /* char *path */ );
 extern SSchema      TtaNewNature ( /* SSchema schema, CHAR_T* natureName, CHAR_T* presentationName */ );
 extern SSchema      TtaNewSchemaExtension ( /* Document document, CHAR_T* extensionName, CHAR_T* presentationName */ );
 extern SSchema      TtaGetSchemaExtension ( /*Document document, char *NomExtension */ );
 extern void         TtaRemoveSchemaExtension ( /* Document document, SSchema extension, int *removedElements, int *removedAttributes */ );
 extern void         TtaSetPSchema ( /* Document document, CHAR_T* presentationName */ );
-extern void         TtaSetDocumentDirectory ( /* Document document, CharUnit* directory */ );
+extern void         TtaSetDocumentDirectory ( /* Document document, CHAR_T* directory */ );
 extern void         TtaSetDocumentName ( /* Document document, char *documentName */ );
 extern void         TtaSetDocumentAccessMode ( /* Document document, int accessMode */ );
 extern void         TtaSetDocumentBackUpInterval ( /* Document document, int interval */ );
 extern void         TtaSetNotificationMode ( /* Document document, int notificationMode */ );
 extern void         TtaSetDocumentModified ( /* Document document */ );
 extern void         TtaSetDocumentUnmodified ( /* Document document */ );
-extern CharUnit*    TtaGetDocumentName ( /* Document document */ );
+extern CHAR_T*      TtaGetDocumentName ( /* Document document */ );
 extern Document     TtaGetDocumentFromName ( /* char *documentName */ );
 extern void         TtaGetDocumentDirectory ( /* Document document, char *buffer, int bufferLength */ );
 extern SSchema      TtaGetDocumentSSchema ( /* Document document */ );
@@ -755,9 +755,9 @@ extern void         TtaGetDocumentPath ( /* char *buffer, int bufferLength */ );
 extern void         TtaGetSchemaPath ( /* char *buffer, int bufferLength */ );
 extern Document     TtaGetDocumentOfSavedElements ();
 
-extern void TtaConfigReadConfigFiles (/* char *aSchemaPath */);
-extern void TtaConfigSSchemaExternalName (/* CharUnit *nameUser,
-                                             CharUnit *nameSchema,
+extern void TtaConfigReadConfigFiles (/* CHAR_T* aSchemaPath */);
+extern void TtaConfigSSchemaExternalName (/* CHAR_T *nameUser,
+                                             CHAR_T *nameSchema,
                                              int Typ */);
 
 #endif /* __STDC__ */

@@ -305,16 +305,16 @@ void         FreeDocColors ()
    are allocated.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                InitDocColors (CharUnit* name)
+void                InitDocColors (CHAR_T* name)
 #else  /* __STDC__ */
 void                InitDocColors (name)
-CharUnit*           name;
+CHAR_T*             name;
 
 #endif /* __STDC__ */
 {
 #ifndef _WIN_PRINT
    int                 i, j, k;
-   CharUnit*           value;
+   CHAR_T*             value;
    ThotBool            reducecolor;
    ThotBool            colormap_full;
 #ifdef _GTK
@@ -330,7 +330,7 @@ CharUnit*           name;
    value = TtaGetEnvString ("ReduceColor");
    if (value == NULL)
       reducecolor = FALSE;
-   else if (!StringCaseCompare (value, CUSTEXT("yes")))
+   else if (!ustrcasecmp (value, TEXT("yes")))
       reducecolor = TRUE;
    else
       reducecolor = FALSE;

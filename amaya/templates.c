@@ -29,7 +29,7 @@
 #     define META_TEMPLATE_NAME "AMAYA_TEMPLATE"
 #endif /* defined(_I18N_) || defined(__JIS__) */
 /* URL of the script providing templates (for reload) */
-static STRING script_URL;
+static CHAR_T* script_URL;
 
 #include "init_f.h"
 
@@ -118,9 +118,9 @@ Document doc;
       if (ok)
         {
           if (script_URL == NULL)
-            script_URL = TtaStrdup (DocumentURLs[doc]);
+            script_URL = TtaWCSdup (DocumentURLs[doc]);
 	  TtaFreeMemory (DocumentURLs[doc]);
-	  DocumentURLs[doc] = TtaStrdup (buffer);
+	  DocumentURLs[doc] = TtaWCSdup (buffer);
           DocumentMeta[doc]->method = CE_TEMPLATE;
 	  TtaSetTextZone (doc, 1, 1, DocumentURLs[doc]);
 	  TtaSetDocumentUnmodified (doc);
@@ -146,7 +146,7 @@ Document doc;
 	}
       else
 	{
-	  TtaSetDocumentDirectory (doc, "");
+	  TtaSetDocumentDirectory (doc, TEXT(""));
 	  TtaSetDocumentName (doc, buffer);
 	}
       SetWindowTitle (doc, doc, 0);
@@ -159,14 +159,14 @@ Document doc;
   to reload a template
   ----------------------------------------------------------------------*/
 #ifdef __STDC__    
-void ReloadTemplateParams (STRING *docURL, ClickEvent *method)
+void ReloadTemplateParams (CHAR_T* docURL, ClickEvent *method)
 #else /* __STDC__ */
 void ReloadTemplateParams (docURL, method)
-STRING *docURL;
+CHAR_T* docURL;
 ClickEvent *method;
 #endif /* __STDC__ */
 {
    *method = CE_FORM_GET;
    TtaFreeMemory (*docURL);
-   *docURL = TtaStrdup (script_URL);
+   *docURL = TtaWCSdup (script_URL);
 }

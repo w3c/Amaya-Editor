@@ -178,7 +178,7 @@ NotifyElement      *event;
 	      else
 		{
 		  /* update the version */
-		  ustrcpy (buff, HTAppName);
+		  ustrcpy (buff, HTAppName); 
 		  ustrcat (buff, TEXT(" "));
 		  ustrcat (buff, HTAppVersion);
 		  TtaSetAttributeText (attr, buff, event->element, event->document);
@@ -506,16 +506,16 @@ void                DoSaveObjectAs (void)
 void                DoSaveObjectAs ()
 #endif
 {
-   CharUnit         tempfile[MAX_LENGTH];
+   CHAR_T           tempfile[MAX_LENGTH];
    CHAR_T           msg[MAX_LENGTH];
    ThotBool         dst_is_local;
    int              res;
 
    dst_is_local = !IsW3Path (SavePath);
 
-   StringCopy (tempfile, SavePath);
-   StringConcat (tempfile, CUS_DIR_STR);
-   StringConcat (tempfile, ObjectName);
+   ustrcpy (tempfile, SavePath);
+   ustrcat (tempfile, WC_DIR_STR);
+   ustrcat (tempfile, ObjectName);
 
 
    if (!dst_is_local)
@@ -580,7 +580,7 @@ View                view;
 
 #endif
 {
-   CharUnit         tempname[MAX_LENGTH];
+   CHAR_T           tempname[MAX_LENGTH];
    int              i;
 
    if ((SavingDocument != 0 && SavingDocument != doc) ||
@@ -607,13 +607,13 @@ View                view;
 	 {
 	   tempname[i-2] = EOS;
 	   TtaFreeMemory (DocumentURLs[doc]);
-	   DocumentURLs[doc] = TtaStrdup (tempname);
+	   DocumentURLs[doc] = TtaWCSdup (tempname);
 	 }
        else if (i > 1 && !ustrcmp (&tempname[i-1], TEXT(".Z")))
 	 {
 	   tempname[i-1] = EOS;
 	   TtaFreeMemory (DocumentURLs[doc]);
-	   DocumentURLs[doc] = TtaStrdup (tempname);
+	   DocumentURLs[doc] = TtaWCSdup (tempname);
 	 }
 
        /* if it is a Web document use the current SavePath */
@@ -634,10 +634,10 @@ View                view;
 	       !IsHTMLName (SaveName) &&
 	       !IsXMLName (SaveName))
 	     {
-	       StringConcat (SaveName, CUSTEXT(".html"));
-	       StringCopy (tempname, SavePath);
-	       StringConcat (tempname, CUS_URL_STR);
-	       StringConcat (tempname, SaveName);
+	       ustrcat (SaveName, TEXT(".html"));
+	       ustrcpy (tempname, SavePath);
+	       ustrcat (tempname, WC_URL_STR);
+	       ustrcat (tempname, SaveName);
  	     }
 	 }
        else
@@ -650,9 +650,9 @@ View                view;
      }
    else
      {
-       StringCopy (tempname, SavePath);
-       StringConcat (tempname, CUS_DIR_STR);
-       StringConcat (tempname, SaveName);
+       ustrcpy (tempname, SavePath);
+       ustrcat (tempname, WC_DIR_STR);
+       ustrcat (tempname, SaveName);
      }
 
    /* display the dialog box */
@@ -843,7 +843,7 @@ Document     doc;
 	 attr = TtaNewAttribute (attrType);
 	 TtaAttachAttribute (meta, attr, doc);
 	 }
-      TtaSetAttributeText (attr, "Content-Type", meta, doc);
+      TtaSetAttributeText (attr, TEXT("Content-Type"), meta, doc);
       attrType.AttrTypeNum = HTML_ATTR_meta_content;
       attr = TtaGetAttribute (meta, attrType);
       if (!attr)
@@ -852,13 +852,13 @@ Document     doc;
 	 TtaAttachAttribute (meta, attr, doc);
 	 }
       if (ISOlatin == 'L')
-         TtaSetAttributeText (attr, "text/html; charset=ISO-8859-1", meta,doc);
+         TtaSetAttributeText (attr, TEXT("text/html; charset=ISO-8859-1"), meta,doc);
       else if (ISOlatin == '2')
-         TtaSetAttributeText (attr, "text/html; charset=ISO-8859-2", meta,doc);
+         TtaSetAttributeText (attr, TEXT("text/html; charset=ISO-8859-2"), meta,doc);
       else if (ISOlatin == '9')
-         TtaSetAttributeText (attr, "text/html; charset=ISO-8859-9", meta,doc);
+         TtaSetAttributeText (attr, TEXT("text/html; charset=ISO-8859-9"), meta,doc);
       else
-         TtaSetAttributeText (attr, "text/html", meta, doc);
+         TtaSetAttributeText (attr, TEXT("text/html"), meta, doc);
       } 
 }
 
@@ -875,7 +875,7 @@ Document          doc;
 
 #endif
 {
-  STRING        localFile;
+  CHAR_T*   localFile;
   CHAR_T	documentname[MAX_LENGTH];
   CHAR_T	tempdir[MAX_LENGTH];
   NotifyElement event;
@@ -926,7 +926,7 @@ STRING            documentName;
 #endif
 
   ustrcpy (tempname, directoryName);
-  ustrcat (tempname, DIR_STR);
+  ustrcat (tempname, WC_DIR_STR);
   ustrcat (tempname, documentName);
   /* suspend the redisplay due to the temporary update of attributes
      STYLE and META-CONTENT */
@@ -979,12 +979,12 @@ STRING            documentName;
   abort.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ThotBool    AddNoName (Document document, View view, STRING url, ThotBool *ok)
+static ThotBool    AddNoName (Document document, View view, CHAR_T* url, ThotBool *ok)
 #else
 static ThotBool    AddNoName (document, view, url, ok)
 Document           document;
 View               view;
-STRING             url;
+CHAR_T*            url;
 ThotBool          *ok;
 #endif
 {
@@ -1004,11 +1004,11 @@ ThotBool          *ok;
       ustrcat (msg, url);
       if (IsW3Path (url))
 	{
-	  if (url[len -1] != URL_SEP)
-	    ustrcat (msg, URL_STR);
+	  if (url[len -1] != WC_URL_SEP)
+	    ustrcat (msg, WC_URL_STR);
 	}
-      else if (url[len -1] != DIR_SEP)
-	ustrcat (msg, DIR_STR);
+      else if (url[len -1] != WC_DIR_SEP)
+	ustrcat (msg, WC_DIR_STR);
       /* get default name */
       DefaultName = TtaGetEnvString ("DEFAULTNAME");
       if (DefaultName == NULL || *DefaultName == EOS)
@@ -1460,7 +1460,7 @@ View                view;
 #endif /* __STDC__ */
 {
    NotifyElement       event;
-   STRING              tempdocument = NULL;
+   CHAR_T*             tempdocument = NULL;
    CHAR_T              documentname[MAX_LENGTH];
    CHAR_T              tempdir[MAX_LENGTH];
    Document            htmlDoc;
@@ -1528,7 +1528,7 @@ View                view;
   CHAR_T              localFile[MAX_LENGTH];
   CHAR_T              documentname[MAX_LENGTH];
   CHAR_T              tempdir[MAX_LENGTH];
-  STRING              ptr;
+  CHAR_T*             ptr;
   int                 i, res;
   Document	      htmlDoc;
   ThotBool            ok, newLineNumbers;
@@ -1583,13 +1583,13 @@ View                view;
     {
       tempname[i-2] = EOS;
       TtaFreeMemory (DocumentURLs[doc]);
-      DocumentURLs[doc] = TtaStrdup (tempname);
+      DocumentURLs[doc] = TtaWCSdup (tempname);
     }
   else if (i > 1 && !ustrcmp (&tempname[i-1], TEXT(".Z")))
     {
       tempname[i-1] = EOS;
       TtaFreeMemory (DocumentURLs[doc]);
-      DocumentURLs[doc] = TtaStrdup (tempname);
+      DocumentURLs[doc] = TtaWCSdup (tempname);
     }
 
 #ifdef AMAYA_DEBUG
@@ -1606,11 +1606,11 @@ View                view;
 	  ok = TRUE;
 	  /* need to update the document url */
 	  res = ustrlen(tempname) - 1;
-	  if (tempname[res] != URL_SEP)
-	    ustrcat (tempname, URL_STR);
+	  if (tempname[res] != WC_URL_SEP)
+	    ustrcat (tempname, WC_URL_STR);
 	  ustrcat (tempname, DefaultName);
 	  TtaFreeMemory (DocumentURLs[doc]);
-	  DocumentURLs[doc] = TtaStrdup (tempname);
+	  DocumentURLs[doc] = TtaWCSdup (tempname);
 	  DocumentMeta[doc]->put_default_name = TRUE; 
 	  if (DocumentTypes[doc] == docHTML ||
 	      DocumentTypes[doc] == docHTMLRO)	
@@ -1621,7 +1621,7 @@ View                view;
 		/* it has a source document */
 		{
 		TtaFreeMemory (DocumentURLs[DocumentSource[doc]]);
-		DocumentURLs[DocumentSource[doc]] = TtaStrdup (tempname);
+		DocumentURLs[DocumentSource[doc]] = TtaWCSdup (tempname);
 		}
 	      }
 	  else if (DocumentTypes[doc] == docSource ||
@@ -1632,7 +1632,7 @@ View                view;
 	      if (htmlDoc)
 		 {
 		 TtaFreeMemory (DocumentURLs[htmlDoc]);
-		 DocumentURLs[htmlDoc] = TtaStrdup (tempname);
+		 DocumentURLs[htmlDoc] = TtaWCSdup (tempname);
 		 }
 	      }
 	}
@@ -1752,9 +1752,9 @@ void                   BackUpDocs ()
 {
   Document             doc;
   FILE                *f;
-  CHAR_T                 pathname[MAX_LENGTH];
-  CHAR_T                 docname[MAX_LENGTH];
-  STRING               ptr;
+  CHAR_T               pathname[MAX_LENGTH];
+  CHAR_T               docname[MAX_LENGTH];
+  CHAR_T*              ptr;
   int                  l;
 
   /* check all modified documents */
@@ -1766,7 +1766,7 @@ void                   BackUpDocs ()
 	  {
 	    /* open the crash file */
 	    usprintf (pathname, TEXT("%s%cCrash.amaya"), TempFileDirectory, DIR_SEP);
-	    f = ufopen (pathname, CUSTEXT("w"));
+	    f = ufopen (pathname, TEXT("w"));
 	    if (f == NULL)
 	      return;
 	  }
@@ -1828,14 +1828,14 @@ NotifyDialog       *event;
   The parameter newURL gives the new document URL (or local file).
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void            UpdateImages (Document doc, ThotBool src_is_local, ThotBool dst_is_local, STRING imgbase, STRING newURL)
+static void            UpdateImages (Document doc, ThotBool src_is_local, ThotBool dst_is_local, CHAR_T* imgbase, CHAR_T* newURL)
 #else
 static void            UpdateImages (doc, src_is_local, dst_is_local, imgbase, newURL)
 Document               doc;
 ThotBool               src_is_local;
 ThotBool               dst_is_local;
-STRING                 imgbase;
-STRING                 newURL;
+CHAR_T*                imgbase;
+CHAR_T*                newURL;
 #endif
 {
    AttributeType       attrType;
@@ -1844,16 +1844,16 @@ STRING                 newURL;
    Element             el, root, content;
    LoadedImageDesc    *pImage;
    Language            lang;
-   CharUnit            tempfile[MAX_LENGTH];
+   CHAR_T              tempfile[MAX_LENGTH];
    CHAR_T              localpath[MAX_LENGTH];
    CHAR_T              oldpath[MAX_LENGTH];
    CHAR_T              oldname[MAX_LENGTH];
    CHAR_T              tempname[MAX_LENGTH];
-   CharUnit            imgname[MAX_LENGTH];
+   CHAR_T              imgname[MAX_LENGTH];
    CHAR_T              url[MAX_LENGTH];
-   STRING              buf, ptr;
-   STRING              sStyle, stringStyle;
-   STRING              oldStyle;
+   CHAR_T              *buf, *ptr;
+   CHAR_T              *sStyle, *stringStyle;
+   CHAR_T*             oldStyle;
    int                 buflen, max, index;
 
    if (imgbase[0] != EOS)
@@ -1862,13 +1862,13 @@ STRING                 newURL;
        buflen = ustrlen (imgbase) - 1;
        if (dst_is_local && !IsW3Path (imgbase))
 	 {
-	   if (imgbase[buflen] != DIR_SEP)
-	     ustrcat (imgbase, DIR_STR);
+	   if (imgbase[buflen] != WC_DIR_SEP)
+	     ustrcat (imgbase, WC_DIR_STR);
 	 }
        else
 	 {
-	   if (imgbase[buflen] != URL_SEP)
-	     ustrcat (imgbase, URL_STR);
+	   if (imgbase[buflen] != WC_URL_SEP)
+	     ustrcat (imgbase, WC_URL_STR);
 	 }
      }
 
@@ -1976,14 +1976,14 @@ STRING                 newURL;
 			       if (imgbase[0] != EOS)
 				 {
 				   ustrcpy (tempfile, imgbase);
-				   ustrcat (tempfile, DIR_STR);
+				   ustrcat (tempfile, WC_DIR_STR);
 				   ustrcat (tempfile, imgname);
 				 }
 			       else
 				 {
-				   StringCopy (tempfile, SavePath);
-				   StringConcat (tempfile, CUS_DIR_STR);
-				   StringConcat (tempfile, imgname);
+				   ustrcpy (tempfile, SavePath);
+				   ustrcat (tempfile, WC_DIR_STR);
+				   ustrcat (tempfile, imgname);
 				 }
 			       
 			       TtaFileCopy (oldname, tempfile);
@@ -2007,7 +2007,7 @@ STRING                 newURL;
 				       /* image was already loaded */
 				       if (pImage->originalName != NULL)
 					 TtaFreeMemory (pImage->originalName);
-				       pImage->originalName = TtaStrdup (tempname);
+				       pImage->originalName = TtaWCSdup (tempname);
 				       if (TtaFileExist(pImage->localName))
 					 pImage->status = IMAGE_MODIFIED;
 				       else
@@ -2140,9 +2140,9 @@ STRING                 newURL;
 				   ustrcpy (tempfile, tempname);
 			       else
 				 {
-				   StringCopy (tempfile, SavePath);
-				   StringConcat (tempfile, CUS_DIR_STR);
-				   StringConcat (tempfile, imgname);
+				   ustrcpy (tempfile, SavePath);
+				   ustrcat (tempfile, WC_DIR_STR);
+				   ustrcat (tempfile, imgname);
 				 }
 			       TtaFileCopy (buf, tempfile);
 			     }
@@ -2165,7 +2165,7 @@ STRING                 newURL;
 				       /* image was already loaded */
 				       if (pImage->originalName != NULL)
 					 TtaFreeMemory (pImage->originalName);
-				       pImage->originalName = TtaStrdup (tempname);
+				       pImage->originalName = TtaWCSdup (tempname);
 				       if (TtaFileExist(pImage->localName))
 					 pImage->status = IMAGE_MODIFIED;
 				       else
@@ -2236,19 +2236,19 @@ void                DoSaveAs ()
     {
      if (dst_is_local)
        {
-	 ustrcat (documentFile, DIR_STR);
-	 url_sep = DIR_SEP;
+	 ustrcat (documentFile, WC_DIR_STR);
+	 url_sep = WC_DIR_SEP;
        }
      else
        {
-	 ustrcat (documentFile, URL_STR);
-	 url_sep = URL_SEP;
+	 ustrcat (documentFile, WC_URL_STR);
+	 url_sep = WC_URL_SEP;
        }
     }
   else if (dst_is_local)
-    url_sep = DIR_SEP;
+    url_sep = WC_DIR_SEP;
   else
-    url_sep = URL_SEP;
+    url_sep = WC_URL_SEP;
 
   new_put_def_name = FALSE;
   if (SaveName[0] == EOS)
@@ -2259,7 +2259,7 @@ void                DoSaveAs ()
 	  ok = TRUE;
 	  res = ustrlen(SavePath) - 1;
 	  if (SavePath[res] == url_sep)
-	    SavePath[res] = EOS;
+	    SavePath[res] = WC_EOS;
 	  /* need to update the document url */
 	  ustrcpy (SaveName, DefaultName);
 	  ustrcat (documentFile, SaveName);
@@ -2344,7 +2344,7 @@ void                DoSaveAs ()
 	      if (imgbase[0] != DIR_SEP)
 		  {
 		    ustrcpy (tempname, SavePath);
-		    ustrcat (tempname, DIR_STR);
+		    ustrcat (tempname, WC_DIR_STR);
 		    ustrcat (tempname, imgbase);
 		  }
 	      else
@@ -2457,12 +2457,12 @@ void                DoSaveAs ()
 	  if (TextFormat || !SaveAsText)
 	    {
 	      TtaFreeMemory (DocumentURLs[doc]);
-	      DocumentURLs[doc] = TtaStrdup (documentFile);
+	      DocumentURLs[doc] = TtaWCSdup (documentFile);
 	      TtaSetTextZone (doc, 1, 1, DocumentURLs[doc]);
 	      if (DocumentSource[doc])
 		{
 	          TtaFreeMemory (DocumentURLs[DocumentSource[doc]]);
-	          DocumentURLs[DocumentSource[doc]] = TtaStrdup (documentFile);
+	          DocumentURLs[DocumentSource[doc]] = TtaWCSdup (documentFile);
 		}
 	      if (DocumentMeta[doc]->method == CE_TEMPLATE)
 		{

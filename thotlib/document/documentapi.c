@@ -127,7 +127,7 @@ int                 accessMode;
 	     pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
 	     /* suppresses the .PIV suffix if found */
 	     if (lg > 4)
-		if (StringCompare (&(pDoc->DocDName[lg - 4]), CUSTEXT(".PIV")) == 0)
+		if (ustrcmp (&(pDoc->DocDName[lg - 4]), TEXT(".PIV")) == 0)
 		   pDoc->DocDName[lg - 4] = EOS;
 	     GetDocIdent (&pDoc->DocIdent, pDoc->DocDName);
 	     ustrncpy (pDoc->DocDirectory, DocumentPath, MAX_PATH);
@@ -453,26 +453,26 @@ char*               path;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            TtaIsInDocumentPath (CharUnit* directory)
+ThotBool            TtaIsInDocumentPath (CHAR_T* directory)
 
 #else  /* __STDC__ */
 ThotBool            TtaIsInDocumentPath (directory)
-CharUnit*           directory;
+CHAR_T*             directory;
 
 #endif /* __STDC__ */
 
 {
    int                 i;
-   CharUnit*           ptr;
+   CHAR_T*             ptr;
 
    /* Verify if this directory is already in the list  */
-   ptr = StringSubstring (DocumentPath, directory);
-   i = StringLength (directory);
-   while (ptr != NULL && ptr[i] != CUS_PATH_SEP && ptr[i] != CUS_EOS)
+   ptr = ustrstr (DocumentPath, directory);
+   i = ustrlen (directory);
+   while (ptr != NULL && ptr[i] != WC_PATH_SEP && ptr[i] != WC_EOS)
      {
-        ptr = StringSubstring (ptr, CUS_PATH_STR);
+        ptr = ustrstr (ptr, WC_PATH_STR);
         if (ptr != NULL)
-           ptr = StringSubstring (ptr, directory);
+           ptr = ustrstr (ptr, directory);
      }
    return (ptr != NULL);
 }
@@ -490,11 +490,11 @@ CharUnit*           directory;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-void                TtaAppendDocumentPath (CharUnit* directory)
+void                TtaAppendDocumentPath (CHAR_T* directory)
 
 #else  /* __STDC__ */
 void                TtaAppendDocumentPath (directory)
-CharUnit*           directory;
+CHAR_T*             directory;
 
 #endif /* __STDC__ */
 
@@ -503,7 +503,7 @@ CharUnit*           directory;
    int                 lg;
 
    UserErrorCode = 0;
-   lg = StringLength (directory);
+   lg = ustrlen (directory);
 
    if (lg >= MAX_PATH)
       TtaError (ERR_string_too_long);
@@ -512,14 +512,14 @@ CharUnit*           directory;
    else if (!TtaIsInDocumentPath (directory))
      {
 	/* add the directory in the path */
-	i = StringLength (DocumentPath);
+	i = ustrlen (DocumentPath);
 	if (i + lg + 2 >= MAX_PATH)
 	   TtaError (ERR_string_too_long);
 	else
 	  {
 	     if (i > 0)
-            StringConcat (DocumentPath, CUS_PATH_STR);
-         StringConcat (DocumentPath, directory);
+            ustrcat (DocumentPath, WC_PATH_STR);
+         ustrcat (DocumentPath, directory);
 	  }
      }
 }
@@ -756,11 +756,11 @@ CHAR_T*             presentationName;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaSetDocumentDirectory (Document document, CharUnit* directory)
+void                TtaSetDocumentDirectory (Document document, CHAR_T* directory)
 #else  /* __STDC__ */
 void                TtaSetDocumentDirectory (document, directory)
 Document            document;
-CharUnit*           directory;
+CHAR_T*             directory;
 #endif /* __STDC__ */
 
 {
@@ -773,9 +773,9 @@ CharUnit*           directory;
    else
       /* parameter document is correct */
      {
-	if (StringLength (directory) >= MAX_PATH)
+	if (ustrlen (directory) >= MAX_PATH)
 	   TtaError (ERR_buffer_too_small);
-	StringCopy (LoadedDocument[document - 1]->DocDirectory, directory);
+	ustrcpy (LoadedDocument[document - 1]->DocDirectory, directory);
      }
 }
 
@@ -1030,17 +1030,17 @@ Document            document;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-CharUnit*           TtaGetDocumentName (Document document)
+CHAR_T*             TtaGetDocumentName (Document document)
 
 #else  /* __STDC__ */
-CharUnit*           TtaGetDocumentName (document)
+CHAR_T*             TtaGetDocumentName (document)
 Document            document;
 
 #endif /* __STDC__ */
 
 {
    UserErrorCode = 0;
-   nameBuffer[0] = EOS;
+   nameBuffer[0] = WC_EOS;
    /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
@@ -1053,7 +1053,7 @@ Document            document;
    else
       /* parameter document is correct */
      {
-	StringCopy (nameBuffer, LoadedDocument[document - 1]->DocDName);
+	ustrcpy (nameBuffer, LoadedDocument[document - 1]->DocDName);
      }
    return nameBuffer;
 }
@@ -1130,7 +1130,7 @@ int                 bufferLength;
 
 {
    UserErrorCode = 0;
-   nameBuffer[0] = EOS;
+   nameBuffer[0] = WC_EOS;
    /* verifies the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
      {
@@ -1419,7 +1419,7 @@ char*               presentationName;
    presentationName[0] = EOS;
    /* Arrange the name of the file to be opened with the documents directory name */
    ustrncpy (DirBuffer, DocumentPath, MAX_PATH);
-   MakeCompleteName (documentName, CUSTEXT("PIV"), DirBuffer, text, &i);
+   MakeCompleteName (documentName, TEXT("PIV"), DirBuffer, text, &i);
    /* Verify if the file exists */
    file = TtaReadOpen (text);
    if (file == 0)

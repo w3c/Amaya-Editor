@@ -182,7 +182,7 @@ static void            InitParserContexts ()
    /* initialize GraphML parser */
    ctxt->NextParserCtxt = NULL;	/* last context */
    ctxt->SSchemaName = TtaAllocString (MAX_SS_NAME_LENGTH);
-   ustrcpy (ctxt->SSchemaName, "GraphML");
+   ustrcpy (ctxt->SSchemaName, TEXT("GraphML"));
    ctxt->XMLSSchema = NULL;
    ctxt->XMLtype = GRAPH_TYPE;
    ctxt->MapAttribute = (Proc) MapGraphMLAttribute;
@@ -1608,7 +1608,7 @@ void                FreeXMLParser ()
    closingTag: name of the tag that should terminate the tree to be parsed.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void	  XMLparse (FILE *infile, int *index, STRING DTDname, Document doc, Element el, ThotBool isclosed, Language lang, char* closingTag)
+void	  XMLparse (FILE *infile, int *index, STRING DTDname, Document doc, Element el, ThotBool isclosed, Language lang, CHAR_T* closingTag)
 #else
 void	  XMLparse (infile, index, DTDname, doc, el, isclosed, lang, closingTag)
 FILE     *infile;
@@ -1618,7 +1618,7 @@ Document  doc;
 Element   el;
 ThotBool  isclosed;
 Language  lang;
-char*     closingTag;
+CHAR_T*   closingTag;
 #endif
 {
   UCHAR_T             charRead;

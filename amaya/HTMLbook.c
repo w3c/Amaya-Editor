@@ -52,7 +52,7 @@ ThotBool	 WithToC;
 ThotBool         IgnoreCSS;
 
 static struct _SubDoc  *SubDocs;
-static CharUnit         PSdir[MAX_PATH];
+static CHAR_T           PSdir[MAX_PATH];
 static CHAR_T           PPrinter[MAX_PATH];
 static Document		DocPrint;
 static int              PaperPrint;
@@ -92,7 +92,7 @@ STRING              url;
   entry = TtaGetMemory (sizeof (struct _SubDoc));
   entry->SDnext = NULL;
   entry->SDel = el;
-  entry->SDname = TtaStrdup (url);
+  entry->SDname = TtaWCSdup (url);
 
   if (SubDocs == NULL)
     SubDocs = entry;
@@ -374,9 +374,9 @@ static void         CheckPrintingDocument (document)
 Document            document;
 #endif
 {
-   CharUnit         docName[MAX_LENGTH];
-   CharUnit*        ptr; 
-   CharUnit         suffix[MAX_LENGTH];
+   CHAR_T         docName[MAX_LENGTH];
+   CHAR_T*        ptr; 
+   CHAR_T         suffix[MAX_LENGTH];
    int              lg;
 
    if (DocPrint != document)
@@ -387,16 +387,16 @@ Document            document;
        /* define the new default PS file */
        ptr = TtaGetEnvString ("APP_TMPDIR");
        if (ptr != NULL && TtaCheckDirectory (ptr))
-	     StringCopy (PSdir, ptr);
+	     ustrcpy (PSdir, ptr);
        else
-	     StringCopy (PSdir, TtaGetDefEnvString ("APP_TMPDIR"));
-	   lg = StringLength (PSdir);
-	   if (PSdir[lg - 1] == CUS_DIR_SEP)
-	     PSdir[--lg] = CUS_EOS;
+	     ustrcpy (PSdir, TtaGetDefEnvString ("APP_TMPDIR"));
+	   lg = ustrlen (PSdir);
+	   if (PSdir[lg - 1] == WC_DIR_SEP)
+	     PSdir[--lg] = WC_EOS;
 
-       StringCopy (docName, TtaGetDocumentName (document));
+       ustrcpy (docName, TtaGetDocumentName (document));
        ExtractSuffix (docName, suffix);
-       cus_sprintf (&PSdir[lg], CUSTEXT("%c%s.ps"), CUS_DIR_SEP, docName);
+       usprintf (&PSdir[lg], TEXT("%c%s.ps"), WC_DIR_SEP, docName);
        TtaSetPsFile (PSdir);
        /* define the new default PrintSchema */
        NumberLinks = FALSE;
@@ -645,7 +645,7 @@ void                InitPrint (void)
 void                InitPrint ()
 #endif /* __STDC__ */
 {
-  CharUnit* ptr;
+  CHAR_T* ptr;
 
    BasePrint = TtaSetCallback (CallbackPrint, PRINT_MAX_REF);
    DocPrint = 0;
@@ -654,9 +654,9 @@ void                InitPrint ()
    /* read default printer variable */
    ptr = TtaGetEnvString ("THOTPRINT");
    if (ptr == NULL)
-     StringCopy (PPrinter, CUSTEXT(""));
+     ustrcpy (PPrinter, TEXT(""));
    else
-     StringCopy (PPrinter, ptr);
+     ustrcpy (PPrinter, ptr);
    TtaGetEnvInt ("PAPERSIZE", &PageSize);
    PaperPrint = PP_PRINTER;
    PrintURL = TRUE;
@@ -1129,7 +1129,7 @@ IncludeCtxt *prev;
 	    /* this link designates an external document */
 	    {
 	      /* create a new document and loads the target document */
-	      IncludedDocument = TtaNewDocument ("HTML", CUSTEXT("tmp"));
+	      IncludedDocument = TtaNewDocument (TEXT("HTML"), TEXT("tmp"));
 	      if (IncludedDocument != 0)
 		{
 		  TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_FETCHING), url);

@@ -79,7 +79,7 @@
    from the tool kit.  This name is used for accessing the ressources
    defined in file .Xdefaults.
   ----------------------------------------------------------------------*/
-extern void TtaInitialize (STRING applicationName);
+extern void TtaInitialize (CHAR_T* applicationName);
 
 /*----------------------------------------------------------------------
    TtaQuit
@@ -130,7 +130,7 @@ extern STRING TtaGetStrError (int errorCode);
    which sizes are sufficient to contain the path and      
    the file name.                                          
   ----------------------------------------------------------------------*/
-extern void TtaExtractName (CharUnit* text, /*OUT*/ CharUnit* aDirectory, /*OUT*/ CharUnit* aName);
+extern void TtaExtractName (CHAR_T* text, /*OUT*/ CHAR_T* aDirectory, /*OUT*/ CHAR_T* aName);
 
 /*----------------------------------------------------------------------
    TtaIsPrinting returns TRUE is the application is printing.    
@@ -146,13 +146,13 @@ extern char*     TtaStrdup (char* str);
 extern CHAR_T*   TtaWCSdup (CHAR_T*);
 extern CharUnit* TtaCUSdup (CharUnit*);
 #else  /* __STDC__ */
-extern void      TtaInitialize ( /* STRING applicationName */ );
+extern void      TtaInitialize ( /* CHAR_T* applicationName */ );
 extern void      TtaQuit ( /* void */ );
 extern void      TtaSetErrorMessages ( /* int on */ );
 extern STRING    TtaGetVersion ( /* void */ );
 extern int       TtaGetErrorCode ( /* void */ );
 extern STRING    TtaGetStrError ( /* int errorCode */ );
-extern void      TtaExtractName ( /* CharUnit* text, CharUnit* aDirectory, CharUnit* aName */ );
+extern void      TtaExtractName ( /* CHAR_T* text, CHAR_T* aDirectory, CHAR_T* aName */ );
 extern ThotBool  TtaIsPrinting ();
 extern void*     TtaGetMemory ( /* int size */ );
 extern void      TtaFreeMemory ( /* STRING buffer */ );

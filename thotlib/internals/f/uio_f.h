@@ -6,13 +6,13 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern STRING ufgets ( STRING string,
+extern CHAR_T* ufgets ( CHAR_T* string,
                        int n,
                        FILE *stream );
 
 #else /* __STDC__ */
 
-extern STRING ufgets (/* STRING string,
+extern CHAR_T* ufgets (/* CHAR_T* string,
                          int n,
                          FILE *stream */);
 

@@ -65,8 +65,8 @@ typedef long ThotFileOffset;
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern int TtaFileExist ( CONST CharUnit* filename );
-extern int TtaFileUnlink ( CONST CharUnit* filename );
+extern int TtaFileExist ( CONST CHAR_T* filename );
+extern int TtaFileUnlink ( CONST CHAR_T* filename );
 extern int TtaFileClose ( ThotFileHandle handle );
 extern int TtaFileClose ( ThotFileHandle handle );
 extern int TtaFileRead ( ThotFileHandle handle,
@@ -80,8 +80,8 @@ extern ThotFileOffset TtaFileSeek ( ThotFileHandle handle,
                                     ThotFileOrigin origin );
 extern int TtaFileStat ( ThotFileHandle handle,
                          ThotFileInfo * pInfo );
-extern void TtaFileCopy ( CONST CharUnit* sourceFileName,
-                          CONST CharUnit* targetFileName );
+extern void TtaFileCopy ( CONST CHAR_T* sourceFileName,
+                          CONST CHAR_T* targetFileName );
 
 extern ThotBool TtaReadByte ( BinFile file,
                              char* bval );
@@ -98,7 +98,7 @@ extern ThotBool TtaReadInteger ( BinFile file,
 extern ThotBool TtaReadName ( BinFile file,
                              char* name );
 extern ThotBool TtaReadWCName (BinFile file, CHAR_T* name);
-extern BinFile TtaReadOpen (CONST CharUnit* filename);
+extern BinFile TtaReadOpen (CONST CHAR_T* filename);
 extern void TtaReadClose ( BinFile file );
 extern void TtaWriteClose ( BinFile file );
 extern ThotBool TtaWriteByte ( BinFile file,
@@ -110,13 +110,13 @@ extern ThotBool TtaWriteInteger ( BinFile file,
                                  int lval );
 extern ThotBool TtaCompareFiles ( CONST STRING file1,
                                  CONST STRING file2 );
-extern ThotBool TtaMakeDirectory ( CharUnit* directory );
-extern ThotBool TtaCheckDirectory ( CharUnit* directory );
+extern ThotBool TtaMakeDirectory ( CHAR_T* directory );
+extern ThotBool TtaCheckDirectory ( CHAR_T* directory );
 
 #else /* __STDC__ */
 
-extern int TtaFileExist (/* CONST CharUnit* filename */);
-extern int TtaFileUnlink (/* CONST CharUnit *filename */);
+extern int TtaFileExist (/* CONST CHAR_T* filename */);
+extern int TtaFileUnlink (/* CONST CHAR_T *filename */);
 extern ThotFileHandle TtaFileOpen (/* CONST char *name,
                                       ThotFileMode mode */);
 extern int TtaFileClose (/* ThotFileHandle handle */);
@@ -131,8 +131,8 @@ extern ThotFileOffset TtaFileSeek (/* ThotFileHandle handle,
                                       ThotFileOrigin origin */);
 extern int TtaFileStat (/* ThotFileHandle handle,
                            ThotFileInfo * pInfo */);
-extern void TtaFileCopy (/* CONST CharUnit* sourceFileName,
-                            CONST CharUnit* targetFileName */);
+extern void TtaFileCopy (/* CONST CHAR_T* sourceFileName,
+                            CONST CHAR_T* targetFileName */);
 
 extern ThotBool TtaReadByte (/* BinFile file,
                                char *bval */);
@@ -148,7 +148,7 @@ extern ThotBool TtaReadInteger (/* BinFile file,
 extern ThotBool TtaReadName (/* BinFile file,
                                char *name */);
 extern ThotBool TtaReadWCName (/* BinFile file, CHAR_T* name */);
-extern BinFile TtaReadOpen (/* CONST CharUnit* filename */);
+extern BinFile TtaReadOpen (/* CONST CHAR_T* filename */);
 extern void TtaReadClose (/* BinFile file */);
 extern void TtaWriteClose (/* BinFile file */);
 extern ThotBool TtaWriteByte (/* BinFile file,
@@ -160,8 +160,8 @@ extern ThotBool TtaWriteInteger (/* BinFile file,
                                    int lval */);
 extern ThotBool TtaCompareFiles (/* CONST char *file1,
                                    CONST char *file2 */);
-extern ThotBool TtaMakeDirectory (/* CharUnit* directory */);
-extern ThotBool TtaCheckDirectory (/* CharUnit* directory */);
+extern ThotBool TtaMakeDirectory (/* CHAR_T* directory */);
+extern ThotBool TtaCheckDirectory (/* CHAR_T* directory */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

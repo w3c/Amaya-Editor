@@ -71,7 +71,7 @@ static ThotBool EnableCache;
 static ThotBool CacheProtectedDocs;
 static ThotBool CacheDisconnectMode;
 static ThotBool CacheExpireIgnore;
-static CharUnit CacheDirectory [MAX_LENGTH];
+static CHAR_T   CacheDirectory [MAX_LENGTH];
 static int      CacheSize;
 static int      MaxCacheFile;
 
@@ -99,7 +99,7 @@ static ThotBool BgImages;
 static ThotBool DoubleClick;
 static CHAR_T   DialogueLang [MAX_LENGTH];
 static int      FontMenuSize;
-static CharUnit HomePage [MAX_LENGTH];
+static CHAR_T   HomePage [MAX_LENGTH];
 
 /* Publish menu options */
 #ifdef _WINDOWS
@@ -129,7 +129,7 @@ static Document GeometryDoc = 0;
 HWND            GeometryHwnd = NULL;
 #endif /* _WINDOWS */
 /* common local variables */
-CharUnit        s[MAX_LENGTH]; /* general purpose buffer */
+CHAR_T          s[MAX_LENGTH]; /* general purpose buffer */
 
 /* Language negotiation menu options */
 #ifdef _WINDOWS
@@ -172,23 +172,23 @@ static int      CurrentProfile = -1;
    exist, it sets the value to an empty ("") string
    ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void  GetEnvString (char* name, CharUnit* value)
+static void  GetEnvString (char* name, CHAR_T* value)
 #else
 static void  GetEnvString (name, value)
 char*        name;
-CharUnit*    value;
+CHAR_T*      value;
 #endif /* __STDC__ */
 {
-  CharUnit*  ptr;
+  CHAR_T*  ptr;
 
   ptr = TtaGetEnvString (name);
   if (ptr)
     {
-      StringNCopy (value, ptr, MAX_LENGTH);
-      value[MAX_LENGTH-1] = CUS_EOS;
+      ustrncpy (value, ptr, MAX_LENGTH);
+      value[MAX_LENGTH-1] = WC_EOS;
     }
   else
-    value[0] = CUS_EOS;
+    value[0] = WC_EOS;
 }
 
 /*----------------------------------------------------------------------
@@ -202,63 +202,63 @@ void InitAmayaDefEnv (void)
 void InitAmayaDefEnv ()
 #endif /* __STDC__ */
 {
-  CharUnit* ptr;
+  CHAR_T* ptr;
 
   /* browsing editing options */
   ptr = TtaGetEnvString ("THOTDIR");
   if (ptr != NULL)
     {
-      StringCopy (HomePage, ptr);
-      StringConcat (HomePage, AMAYA_PAGE);
+      ustrcpy (HomePage, ptr);
+      ustrcat (HomePage, AMAYA_PAGE);
     }
   else
-    HomePage[0]  = CUS_EOS;
+    HomePage[0]  = WC_EOS;
   TtaSetDefEnvString ("HOME_PAGE", HomePage, FALSE);
   HomePage[0] = CUS_EOS;
-  TtaSetDefEnvString ("ENABLE_MULTIKEY", CUSTEXT("no"), FALSE);
-  TtaSetDefEnvString ("ENABLE_BG_IMAGES", CUSTEXT("yes"), FALSE);
-  TtaSetDefEnvString ("VERIFY_PUBLISH", CUSTEXT("no"), FALSE);
-  TtaSetDefEnvString ("ENABLE_LOST_UPDATE_CHECK", CUSTEXT("yes"), FALSE);
-  TtaSetDefEnvString ("DEFAULTNAME", CUSTEXT("Overview.html"), FALSE);
-  TtaSetDefEnvString ("FontMenuSize", CUSTEXT("12"), FALSE);
-  TtaSetDefEnvString ("ENABLE_DOUBLECLICK", CUSTEXT("yes"), FALSE);
+  TtaSetDefEnvString ("ENABLE_MULTIKEY", TEXT("no"), FALSE);
+  TtaSetDefEnvString ("ENABLE_BG_IMAGES", TEXT("yes"), FALSE);
+  TtaSetDefEnvString ("VERIFY_PUBLISH", TEXT("no"), FALSE);
+  TtaSetDefEnvString ("ENABLE_LOST_UPDATE_CHECK", TEXT("yes"), FALSE);
+  TtaSetDefEnvString ("DEFAULTNAME", TEXT("Overview.html"), FALSE);
+  TtaSetDefEnvString ("FontMenuSize", TEXT("12"), FALSE);
+  TtaSetDefEnvString ("ENABLE_DOUBLECLICK", TEXT("yes"), FALSE);
   /* @@@ */
   TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
   /* @@@ */
   
 #ifndef _WINDOWS
-  TtaSetDefEnvString ("THOTPRINT", CUSTEXT("lpr"), FALSE);
+  TtaSetDefEnvString ("THOTPRINT", TEXT("lpr"), FALSE);
   /* A4 size */
-  TtaSetDefEnvString ("PAPERSIZE", CUSTEXT("0"), FALSE);
+  TtaSetDefEnvString ("PAPERSIZE", TEXT("0"), FALSE);
 #endif
   /* network configuration */
-  TtaSetDefEnvString ("SAFE_PUT_REDIRECT", CUSTEXT(""), FALSE);
-  TtaSetDefEnvString ("ENABLE_LOST_UPDATE_CHECK", CUSTEXT("yes"), FALSE);
-  TtaSetDefEnvString ("ENABLE_PIPELINING", CUSTEXT("yes"), FALSE);
-  TtaSetDefEnvString ("NET_EVENT_TIMEOUT", CUSTEXT("60000"), FALSE);
-  TtaSetDefEnvString ("PERSIST_CX_TIMEOUT", CUSTEXT("60"), FALSE);
-  TtaSetDefEnvString ("DNS_TIMEOUT", CUSTEXT("1800"), FALSE);
-  TtaSetDefEnvString ("MAX_SOCKET", CUSTEXT("32"), FALSE);
-  TtaSetDefEnvString ("ENABLE_MDA", CUSTEXT("yes"), FALSE);
-  TtaSetDefEnvString ("HTTP_PROXY", CUSTEXT(""), FALSE);
-  TtaSetDefEnvString ("PROXYDOMAIN", CUSTEXT(""), FALSE);
-  TtaSetDefEnvString ("PROXYDOMAIN_IS_ONLYPROXY", CUSTEXT("no"), FALSE);
-  TtaSetDefEnvString ("MAX_CACHE_ENTRY_SIZE", CUSTEXT("3"), FALSE);
-  TtaSetDefEnvString ("CACHE_SIZE", CUSTEXT("10"), FALSE);
+  TtaSetDefEnvString ("SAFE_PUT_REDIRECT", TEXT(""), FALSE);
+  TtaSetDefEnvString ("ENABLE_LOST_UPDATE_CHECK", TEXT("yes"), FALSE);
+  TtaSetDefEnvString ("ENABLE_PIPELINING", TEXT("yes"), FALSE);
+  TtaSetDefEnvString ("NET_EVENT_TIMEOUT", TEXT("60000"), FALSE);
+  TtaSetDefEnvString ("PERSIST_CX_TIMEOUT", TEXT("60"), FALSE);
+  TtaSetDefEnvString ("DNS_TIMEOUT", TEXT("1800"), FALSE);
+  TtaSetDefEnvString ("MAX_SOCKET", TEXT("32"), FALSE);
+  TtaSetDefEnvString ("ENABLE_MDA", TEXT("yes"), FALSE);
+  TtaSetDefEnvString ("HTTP_PROXY", TEXT(""), FALSE);
+  TtaSetDefEnvString ("PROXYDOMAIN", TEXT(""), FALSE);
+  TtaSetDefEnvString ("PROXYDOMAIN_IS_ONLYPROXY", TEXT("no"), FALSE);
+  TtaSetDefEnvString ("MAX_CACHE_ENTRY_SIZE", TEXT("3"), FALSE);
+  TtaSetDefEnvString ("CACHE_SIZE", TEXT("10"), FALSE);
   if (TempFileDirectory)
   {
-    cus_sprintf (s, CUSTEXT("%s%clibwww-cache"), TempFileDirectory, CUS_DIR_SEP);
+    usprintf (s, TEXT("%s%clibwww-cache"), TempFileDirectory, WC_DIR_SEP);
     TtaSetDefEnvString ("CACHE_DIR", s, FALSE);
-	TtaSetDefEnvString ("ENABLE_CACHE", CUSTEXT("yes"), FALSE);
+	TtaSetDefEnvString ("ENABLE_CACHE", TEXT("yes"), FALSE);
   }
   else
   {
-    TtaSetDefEnvString ("CACHE_DIR", CUSTEXT(""), FALSE);
-	TtaSetDefEnvString ("ENABLE_CACHE", CUSTEXT("yes"), FALSE);
+    TtaSetDefEnvString ("CACHE_DIR", TEXT(""), FALSE);
+	TtaSetDefEnvString ("ENABLE_CACHE", TEXT("yes"), FALSE);
   }
-  TtaSetDefEnvString ("CACHE_PROTECTED_DOCS", CUSTEXT("yes"), FALSE);
-  TtaSetDefEnvString ("CACHE_DISCONNECTED_MODE", CUSTEXT("no"), FALSE);
-  TtaSetDefEnvString ("CACHE_EXPIRE_IGNORE", CUSTEXT("no"), FALSE);
+  TtaSetDefEnvString ("CACHE_PROTECTED_DOCS", TEXT("yes"), FALSE);
+  TtaSetDefEnvString ("CACHE_DISCONNECTED_MODE", TEXT("no"), FALSE);
+  TtaSetDefEnvString ("CACHE_EXPIRE_IGNORE", TEXT("no"), FALSE);
   /* appearance */
 
 }
@@ -295,22 +295,22 @@ int entry;
    doesn't exist, it sets the value to an empty ("") string
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void GetDefEnvString (char* name, CharUnit* value)
+static void GetDefEnvString (char* name, CHAR_T* value)
 #else
 static void GetDefEnvString (name, value)
 char*       name;
-CharUnit*   value;
+CHAR_T*     value;
 #endif /* __STDC__ */
 {
-  CharUnit* ptr;
+  CHAR_T* ptr;
 
   ptr = TtaGetDefEnvString (name);
   if (ptr) {
-    StringNCopy (value, ptr, MAX_LENGTH);
-    value[MAX_LENGTH-1] = CUS_EOS;
+    ustrncpy (value, ptr, MAX_LENGTH);
+    value[MAX_LENGTH-1] = WC_EOS;
   }
   else
-    value[0] = CUS_EOS;
+    value[0] = WC_EOS;
 }
 
 /*----------------------------------------------------------------------
@@ -371,12 +371,12 @@ const STRING end_path;
   doesn't do anything.  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void AmCopyFile (const STRING source_dir, const STRING dest_dir, const STRING filename)
+static void AmCopyFile (const CHAR_T* source_dir, const CHAR_T* dest_dir, const CHAR_T* filename)
 #else
 static void AmCopyFile (source_dir, dest_dir, filename)
-const STRING source_dir;
-const STRING dest_dir;
-const STRING filename;
+const CHAR_T* source_dir;
+const CHAR_T* dest_dir;
+const CHAR_T* filename;
 #endif /* __STDC__ */
 {
  CHAR_T source_file [MAX_LENGTH];
@@ -396,10 +396,10 @@ const STRING filename;
   operation was done.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int CleanDirSep (STRING name)
+int CleanDirSep (CHAR_T* name)
 #else
 int CleanDirSep (name)
-STRING name
+CHAR_T* name
 #endif /* __STDC__ */
 {
  int result = 0;
@@ -408,9 +408,9 @@ STRING name
   /* remove all double DIR_SEP */
   s = 0;
   d = 0;
-  while (name[d] != EOS)
+  while (name[d] != WC_EOS)
   {
-    if (name[d] == DIR_SEP && name[d + 1] == DIR_SEP)
+    if (name[d] == WC_DIR_SEP && name[d + 1] == WC_DIR_SEP)
 	{
 	  result = 1;
 	  d++;
@@ -420,7 +420,7 @@ STRING name
 	s++;
 	d++;
   }
-  name[s] = EOS;
+  name[s] = WC_EOS;
 
   return (result);
 }
@@ -432,37 +432,37 @@ STRING name
   Returns 1 if it made any change, 0 otherwise (not boolean).
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int CleanFirstLastSpace (STRING name)
+int CleanFirstLastSpace (CHAR_T* name)
 #else
 int CleanFirstLastSpace (name)
-STRING name
+CHAR_T* name
 #endif /* __STDC__ */
 {
  int result = 0;
  int l, d;
 
- if (!name ||  *name == EOS)
+ if (!name ||  *name == WC_EOS)
    return (0);
 
  /* start by removing the ending spaces */
  l = ustrlen (name) - 1;
- while (l > 0 && name[l] == ' ')
+ while (l > 0 && name[l] == TEXT(' '))
    l--;
- if (name[l+1] == ' ')
+ if (name[l+1] == TEXT(' '))
    {
      result = 1;
-     name[l+1] = EOS;
+     name[l+1] = WC_EOS;
    }
 
  /* now remove the leading spaces */
  l = 0;
- while (name[l] == ' ' && name[l] != EOS)
+ while (name[l] == TEXT(' ') && name[l] != WC_EOS)
    l++;
  if (l > 0)
    {
      result = 1;
      d = 0;
-     while (name[l] != EOS)
+     while (name[l] != WC_EOS)
        {
 	 name[d] = name[l];
 	 d++;
@@ -480,10 +480,10 @@ STRING name
   does this operation.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int RemoveLastDirSep (STRING name)
+static int RemoveLastDirSep (CHAR_T* name)
 #else
 static int RemoveLastDirSep (name)
-STRING name;
+CHAR_T* name;
 #endif
 {
   int result;
@@ -493,9 +493,9 @@ STRING name;
   if (name) 
     { 
         last_char = ustrlen (name) - 1;
-        if (name[last_char] == DIR_SEP)
+        if (name[last_char] == WC_DIR_SEP)
           {
-                name[last_char] = EOS;
+                name[last_char] = WC_EOS;
                 result = 1;
           }
     }
@@ -3235,7 +3235,7 @@ static void SetProfileConf ()
 ------------------------------------------------------------------*/
 static void BuildProfileList (void)
 {
-  CharUnit*             ptr;
+  CHAR_T*               ptr;
   int                   nbprofiles = 0;
   int                   i = 0;
 

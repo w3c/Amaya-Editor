@@ -101,11 +101,11 @@ typedef struct _AHTReqContext
     SOCKET             except_sock;            /* except socket associated with the request */
     /*** End of experimental stuff ****/
     
-    char*              outputfile;	/* file to receive incoming data         */
+    CHAR_T*            outputfile;	/* file to receive incoming data         */
     FILE               *output;	        /* file pointer to outputfile            */
-    int                 mode;	        /* Mode of request: SYNC/ASYNC/IASYNC/FORM POST/FORM GET   */
-    char*              urlName;	/* url to retrieve/or that was retrieved */
-    char               status_urlName [MAX_LENGTH]; /* url name to be displayed on the status bar */
+    int                mode;	        /* Mode of request: SYNC/ASYNC/IASYNC/FORM POST/FORM GET   */
+    CHAR_T*            urlName;	/* url to retrieve/or that was retrieved */
+    CHAR_T             status_urlName [MAX_LENGTH]; /* url name to be displayed on the status bar */
     TIcbf              *incremental_cbf;	/* For IASYNC mode, @ of callback function */
     /* It'll be called each time a new data package */
     /* is received                                  */

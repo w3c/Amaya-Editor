@@ -10,13 +10,13 @@ extern STRING SkipSep ( STRING ptr );
 extern STRING SkipInt ( STRING ptr );
 extern void ParseAreaCoords ( Element element,
                               Document document );
-extern char* GITagNameByType ( ElementType elType );
-extern char* GITagName ( Element elem );
-extern int MapThotAttr ( char* Attr,
-                         char* tag );
+extern CHAR_T* GITagNameByType ( ElementType elType );
+extern CHAR_T* GITagName ( Element elem );
+extern int MapThotAttr ( CHAR_T* Attr,
+                         CHAR_T* tag );
 extern void InitMapping ( void );
 extern void ParseHTMLError ( Document doc,
-                             unsigned char* msg );
+                             CHAR_T* msg );
 extern ThotBool IsCharacterLevelElement ( Element el );
 extern void OnlyOneOptionSelected ( Element el,
                                     Document doc,
@@ -25,7 +25,7 @@ extern void CheckCSSLink ( Element el,
                            Document doc,
                            SSchema schema );
 extern int MapAttrValue ( int ThotAtt,
-                          char* AttrVal );
+                          CHAR_T* AttrVal );
 extern void SetAttrIntItemStyle ( Element el,
                                   Document doc );
 extern void CreateAttrWidthPercentPxl ( STRING buffer,
@@ -43,18 +43,18 @@ extern char GetNextInputChar ( FILE *infile,
                                ThotBool *endOfFile );
 extern ThotBool IsXHTMLDocType ( STRING fileName );
 extern ThotBool ContentIsXML ( CharUnit* fileName );
-extern void CheckAbstractTree ( STRING pathURL );
+extern void CheckAbstractTree ( CHAR_T* pathURL );
 extern void ParseIncludedHTML ( Element elem,
                                 STRING closingTag );
-extern void ParseSubTree ( STRING HTMLbuf,
+extern void ParseSubTree ( CHAR_T* HTMLbuf,
                            Element lastelem,
                            ThotBool isclosed,
                            Document doc );
 extern void StartParser ( Document doc,
-                          CharUnit* htmlFileName,
-                          CharUnit* documentName,
-                          CharUnit* documentDirectory,
-                          CharUnit* pathURL,
+                          CHAR_T* htmlFileName,
+                          CHAR_T* documentName,
+                          CHAR_T* documentDirectory,
+                          CHAR_T* pathURL,
                           ThotBool plainText );
 
 #else /* __STDC__ */
@@ -63,13 +63,13 @@ extern STRING SkipSep (/* STRING ptr */);
 extern STRING SkipInt (/* STRING ptr */);
 extern void ParseAreaCoords (/* Element element,
                                 Document document */);
-extern char* GITagNameByType (/* ElementType elType */);
-extern char* GITagName (/* Element elem */);
-extern int MapThotAttr (/* char* Attr,
-                           char* tag */);
+extern CHAR_T* GITagNameByType (/* ElementType elType */);
+extern CHAR_T* GITagName (/* Element elem */);
+extern int MapThotAttr (/* CHAR_T* Attr,
+                           CHAR_T* tag */);
 extern void InitMapping (/* void */);
 extern void ParseHTMLError (/* Document doc,
-                               unsigned char* msg */);
+                               CHAR_T msg */);
 extern ThotBool IsCharacterLevelElement (/* Element el */);
 extern void OnlyOneOptionSelected (/* Element el,
                                       Document doc,
@@ -78,7 +78,7 @@ extern void CheckCSSLink (/* Element el,
                              Document doc,
                              SSchema schema */);
 extern int MapAttrValue (/* int ThotAtt,
-                            char* AttrVal */);
+                            CHAR_T* AttrVal */);
 extern void SetAttrIntItemStyle (/* Element el,
                                     Document doc */);
 extern void CreateAttrWidthPercentPxl (/* STRING buffer,
@@ -96,18 +96,18 @@ extern char GetNextInputChar (/* FILE *infile,
                                  ThotBool *endOfFile */);
 extern ThotBool IsXHTMLDocType (/* STRING fileName */);
 extern ThotBool ContentIsXML (/* CharUnit* fileName */);
-extern void CheckAbstractTree (/* STRING pathURL */);
+extern void CheckAbstractTree (/* CHAR_T* pathURL */);
 extern void ParseIncludedHTML (/* Element elem,
                                   STRING closingTag */);
-extern void ParseSubTree (/* STRING HTMLbuf,
+extern void ParseSubTree (/* CHAR_T* HTMLbuf,
                              Element lastelem,
                              ThotBool isclosed,
                              Document doc */);
 extern void StartParser (/* Document doc,
-                            CharUnit* htmlFileName,
-                            CharUnit* documentName,
-                            CharUnit* documentDirectory,
-                            CharUnit* pathURL,
+                            CHAR_T* htmlFileName,
+                            CHAR_T* documentName,
+                            CHAR_T* documentDirectory,
+                            CHAR_T* pathURL,
                             ThotBool plainText */);
 
 #endif /* __STDC__ */

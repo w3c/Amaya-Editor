@@ -146,10 +146,10 @@ Display            *dpy;
  *   TtaGiveRGB returns the RGB of the color.
  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaGiveRGB (CharUnit* colname, unsigned short *red, unsigned short *green, unsigned short *blue)
+void                TtaGiveRGB (CHAR_T* colname, unsigned short *red, unsigned short *green, unsigned short *blue)
 #else  /* __STDC__ */
 void                TtaGiveRGB (colname, red, green, blue)
-CharUnit*           colname;
+CHAR_T*             colname;
 unsigned short*     red;
 unsigned short*     green;
 unsigned short*     blue;
@@ -181,7 +181,7 @@ unsigned short*     blue;
        /* Lookup the color name in the application color name database */
        ThotBool found = FALSE;
        for (i = 0; i < NColors && !found; i++)
-           if (!StringCaseCompare (ColorName (i), colname)) {
+           if (!ustrcasecmp (ColorName (i), colname)) {
               found = TRUE;
               *red   = RGB_Table[i].red;
               *green = RGB_Table[i].green;
@@ -198,19 +198,19 @@ unsigned short*     blue;
  * The result is the closest color found the Thot color table.
  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ThotBool     FindColor (int disp, CharUnit* name, char* colorplace, CharUnit* defaultcolor, ThotColor *colorpixel)
+static ThotBool     FindColor (int disp, CHAR_T* name, char* colorplace, CHAR_T* defaultcolor, ThotColor *colorpixel)
 #else  /* __STDC__ */
 static ThotBool     FindColor (disp, name, colorplace, defaultcolor, colorpixel)
 int         disp;
-CharUnit*   name;
+CHAR_T*     name;
 char*       colorplace;
-CharUnit*   defaultcolor;
+CHAR_T*     defaultcolor;
 ThotColor*  colorpixel;
 
 #endif /* __STDC__ */
 {
    int                 col;
-   CharUnit*           value;
+   CHAR_T*             value;
    unsigned short      red;
    unsigned short      green;
    unsigned short      blue;
@@ -218,7 +218,7 @@ ThotColor*  colorpixel;
    value = TtaGetEnvString (colorplace);
    /* do you need to take the default color? */
    if (value == NULL && defaultcolor != NULL)
-       value = StringDuplicate (defaultcolor);
+       value = TtaWCSdup (defaultcolor);
 
    if (value != NULL)
      {
@@ -265,23 +265,23 @@ void TtaUpdateEditorColors (void)
 void TtaUpdateEditorColors ()
 #endif /* __STDC__ */
 {
-  CharUnit* app_name;
+  CHAR_T*   app_name;
   ThotBool  found;
 
   app_name =  TtaGetEnvString ("appname");
 
   /* background color */
 #       ifndef _WINDOWS
-  found = FindColor (0, app_name, "BackgroundColor", CUSTEXT("gainsboro"), &White_Color);
+  found = FindColor (0, app_name, "BackgroundColor", TEXT("gainsboro"), &White_Color);
 #       else  /* _WINDOWS */
-  found = FindColor (0, app_name, "BackgroundColor", CUSTEXT("LightGrey1"), &White_Color);
+  found = FindColor (0, app_name, "BackgroundColor", TEXT("LightGrey1"), &White_Color);
 #       endif /* _WINDOWS */
   /* drawing color */
-  found = FindColor (0, app_name, "ForegroundColor", CUSTEXT("Black"), &Black_Color);
+  found = FindColor (0, app_name, "ForegroundColor", TEXT("Black"), &Black_Color);
   /* color for the menu background */
-  found = FindColor (0, app_name, "MenuBgColor", CUSTEXT("Grey"), &BgMenu_Color);
+  found = FindColor (0, app_name, "MenuBgColor", TEXT("Grey"), &BgMenu_Color);
   /* color for the menu foregroundground */
-  found = FindColor (0, app_name, "MenuFgColor", CUSTEXT("Black"), &FgMenu_Color);
+  found = FindColor (0, app_name, "MenuFgColor", TEXT("Black"), &FgMenu_Color);
   /* scrolls color */
   Scroll_Color = BgMenu_Color;
 #ifdef _WINDOWS
@@ -293,10 +293,10 @@ void TtaUpdateEditorColors ()
  *      InitColors initializes the Thot predefined X-Window colors.
  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         InitColors (CharUnit* name)
+static void         InitColors (CHAR_T* name)
 #else  /* __STDC__ */
 static void         InitColors (name)
-CharUnit*           name;
+CHAR_T*             name;
 
 #endif /* __STDC__ */
 {
@@ -402,30 +402,30 @@ CharUnit*           name;
 #endif /* _GTK */
 #else  /* _WINDOWS */
 	/* background color */
-	found = FindColor (0, name, "BackgroundColor", CUSTEXT("LightGrey1"), &White_Color);
+	found = FindColor (0, name, "BackgroundColor", TEXT("LightGrey1"), &White_Color);
 	/* color for borders and buttons */
-	found = FindColor (0, name, "DocSelectColor", CUSTEXT("Blue"), &Select_Color);
+	found = FindColor (0, name, "DocSelectColor", TEXT("Blue"), &Select_Color);
 #endif /* _WINDOWS */
 	/* color for the selection */
-	found = FindColor (0, name, "InactiveItemColor", CUSTEXT("LightGrey1"), &InactiveB_Color);
+	found = FindColor (0, name, "InactiveItemColor", TEXT("LightGrey1"), &InactiveB_Color);
 	/* drawing color */
-	found = FindColor (0, name, "ForegroundColor", CUSTEXT("Black"), &Black_Color);
+	found = FindColor (0, name, "ForegroundColor", TEXT("Black"), &Black_Color);
 	/* color for the menu background */
-	found = FindColor (0, name, "MenuBgColor", CUSTEXT("Grey"), &BgMenu_Color);
+	found = FindColor (0, name, "MenuBgColor", TEXT("Grey"), &BgMenu_Color);
 	/* color for the menu foregroundground */
-	found = FindColor (0, name, "MenuFgColor", CUSTEXT("Black"), &FgMenu_Color);
+	found = FindColor (0, name, "MenuFgColor", TEXT("Black"), &FgMenu_Color);
 	/* scrolls color */
 	Scroll_Color = BgMenu_Color;
      }
    else
       /* at least allocate the selection color */
-      found = FindColor (0, name, "DocSelectColor", CUSTEXT("White"), &Select_Color);
+      found = FindColor (0, name, "DocSelectColor", TEXT("White"), &Select_Color);
 
    /* The reference color */
-   found = FindColor (0, name, "ActiveBoxColor", CUSTEXT("Red"), &(Box_Color));
+   found = FindColor (0, name, "ActiveBoxColor", TEXT("Red"), &(Box_Color));
 
    /* color for read-only sections */
-   found = FindColor (0, name, "ReadOnlyColor", CUSTEXT("Black"), &(RO_Color));
+   found = FindColor (0, name, "ReadOnlyColor", TEXT("Black"), &(RO_Color));
 
 #ifndef _WINDOWS
    if (!found)
@@ -587,10 +587,10 @@ static void InitGraphicContexts ()
  *      ThotInitDisplay initialize all the output settings.
  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ThotInitDisplay (CharUnit* name, int dx, int dy)
+void                ThotInitDisplay (CHAR_T* name, int dx, int dy)
 #else  /* __STDC__ */
 void                ThotInitDisplay (name, dx, dy)
-CharUnit*           name;
+CHAR_T*             name;
 int                 dx;
 int                 dy;
 

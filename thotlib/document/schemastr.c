@@ -204,12 +204,12 @@ PtrSSchema         pSS;
    schema de structure complet.                                       
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                LoadSchemas (CharUnit* SSchName, CharUnit* PSchName, PtrSSchema * pSS, PtrSSchema pLoadedSS, ThotBool Extension)
+void                LoadSchemas (CHAR_T* SSchName, CHAR_T* PSchName, PtrSSchema * pSS, PtrSSchema pLoadedSS, ThotBool Extension)
 
 #else  /* __STDC__ */
 void                LoadSchemas (SSchName, PSchName, pSS, pLoadedSS, Extension)
-CharUnit*           SSchName;
-CharUnit*           PSchName;
+CHAR_T*             SSchName;
+CHAR_T*             PSchName;
 PtrSSchema         *pSS;
 PtrSSchema          pLoadedSS;
 ThotBool            Extension;

@@ -532,8 +532,8 @@ char*       name;
 void Prof_InitTable ()
 {
   FILE*     profFile;
-  CharUnit* ptr;
-  CharUnit  buffer[MAX_LENGTH];
+  CHAR_T*   ptr;
+  CHAR_T    buffer[MAX_LENGTH];
 
   /* TODO: use a ISO functions for TtaGetEnvString and TtaStrdup */
   /* Retreive thot.rc variables and open the profile file */
@@ -543,11 +543,11 @@ void Prof_InitTable ()
     {
       if (SearchFile (ptr, 2, buffer))
 	{
-	  profFile = cus_fopen (buffer,CUSTEXT("r"));
+	  profFile = ufopen (buffer, TEXT("r"));
 	  /* what is the current active profile */  
 	  ptr = TtaGetEnvString ("Profile");
 	  if (ptr && *ptr)
-	    cus2iso_strcpy (UserProfile, ptr);	
+	    wc2iso_strcpy (UserProfile, ptr);	
 	  else
 	    UserProfile[0] = CUS_EOS;
 
@@ -638,22 +638,22 @@ ThotBool    TtaCanEdit ()
    name is a provided buffer of length characters to receive the name.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void     TtaGetProfileFileName (CharUnit* name, int length)
+void     TtaGetProfileFileName (CHAR_T* name, int length)
 #else  /* !__STDC__ */
 void     TtaGetProfileFileName (name, length)
-CharUnit* name;
+CHAR_T*  name;
 #endif /* !__STDC__ */
 {
-  CharUnit* ptr;
-  CharUnit  buffer[MAX_LENGTH];
+  CHAR_T*   ptr;
+  CHAR_T    buffer[MAX_LENGTH];
 
   name[0] = EOS;
   ptr = TtaGetEnvString ("Profiles_File");
   if (ptr && *ptr)
     {
       SearchFile (ptr, 2, buffer);
-      if (StringLength (buffer) < (size_t)length)
-	StringCopy (name, buffer);
+      if (ustrlen (buffer) < (size_t)length)
+	ustrcpy (name, buffer);
     }
 }
 
@@ -662,22 +662,22 @@ CharUnit* name;
    name is a provided buffer of length characters to receive the name.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void     TtaGetDefProfileFileName (CharUnit* name, int length)
+void     TtaGetDefProfileFileName (CHAR_T* name, int length)
 #else  /* !__STDC__ */
 void     TtaGetDefProfileFileName (name, length)
-CharUnit* name;
+CHAR_T*  name;
 #endif /* !__STDC__ */
 {
-  CharUnit* ptr;
-  CharUnit  buffer[200];
+  CHAR_T* ptr;
+  CHAR_T  buffer[200];
 
-  name[0] = CUS_EOS;
+  name[0] = WC_EOS;
   ptr = TtaGetDefEnvString ("Profiles_File");
   if (ptr && *ptr)
     {
       SearchFile (ptr, 2, buffer);
-      if (StringLength (buffer) < (size_t)length)
-	StringCopy (name, buffer);
+      if (ustrlen (buffer) < (size_t)length)
+	ustrcpy (name, buffer);
     }
 }
 

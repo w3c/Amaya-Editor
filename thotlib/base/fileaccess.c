@@ -30,6 +30,10 @@
 #include "registry_f.h"
 #include "ustring_f.h"
 
+#ifdef _WINDOWS
+#include "winsys.h"
+#endif /* _WINDOWS */
+
 /* ---------------------------------------------- */
 /* |  Constants for read and write operations   | */
 /* ---------------------------------------------- */
@@ -41,8 +45,6 @@
 #define DECAL_1         (1 * 8)
 
 #define SIGNED_SHORT_MASK	0xffff0000L
-
-#define MAX_BYTES 3 /* We suppose that a multibyte character is encoded on maximum 2 bytes */
 
 /*----------------------------------------------------------------------
    TtaReadByte reads a character (or byte) value.                  
@@ -327,14 +329,41 @@ CHAR_T*             name;
    TtaReadOpen opens a file for reading.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-BinFile             TtaReadOpen (CONST CharUnit* filename)
+BinFile             TtaReadOpen (CONST CHAR_T* filename)
 #else  /* __STDC__ */
 BinFile             TtaReadOpen (filename)
-CONST CharUnit*     filename;
+CONST CHAR_T*       filename;
 
 #endif /* __STDC__ */
 {
-   if (filename && filename [0] != CUS_EOS)
+#  ifdef _WINDOWS 
+   char*   mode = "rb";
+#  else  /* !_WINDOWS */
+   char    mode = "r";
+#  endif /* !_WINDOWS */
+
+#  ifdef _I18N_
+   char    mbs_filename [2 * MAX_TXT_LEN];
+#  endif /* _I18N_ */
+
+   if (filename && filename [0] != WC_EOS) {
+#     ifdef _I18N_
+#     ifdef _WINDOWS
+      if (IS_NT)
+         return _wfopen (filename, TEXT("rb"));
+      else /* !IS_NT */
+#     endif /* _WINDOWS */
+      { 
+           wcstombs (mbs_filename, filename, 2 * MAX_TXT_LEN);
+           return fopen (mbs_filename, mode);
+      }
+#     else  /* !_I18N_ */
+      return fopen (filename, mode);
+#     endif /* !_I18N_ */
+   } else
+         return (BinFile) NULL;
+#if 0 /* ********  OLD CODE  ******** */
+   if (filename && filename [0] != WC_EOS)
 #     ifdef _WINDOWS
       return cus_fopen (filename, CUSTEXT("rb"));
 #     else
@@ -342,6 +371,7 @@ CONST CharUnit*     filename;
 #     endif
    else
 	   return (BinFile) NULL;
+#endif /* ********  OLD CODE ********* */
 }
 
 
@@ -638,60 +668,60 @@ DocumentIdentifier  Ident;
    the file name.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaExtractName (CharUnit* text, CharUnit* aDirectory, CharUnit* aName)
+void                TtaExtractName (CHAR_T* text, CHAR_T* aDirectory, CHAR_T* aName)
 
 #else  /* __STDC__ */
 void                TtaExtractName (text, aDirectory, aName)
-CharUnit*           text;
-CharUnit*           aDirectory;
-CharUnit*           aName;
+CHAR_T*             text;
+CHAR_T*             aDirectory;
+CHAR_T*             aName;
 
 #endif /* __STDC__ */
 {
    int                 lg, i, j;
-   CharUnit*           ptr;
-   CharUnit*           oldptr;
-   CharUnit            URL_DIR_SEP;
+   CHAR_T*             ptr;
+   CHAR_T*             oldptr;
+   CHAR_T              URL_DIR_SEP;
 
    if (text == NULL || aDirectory == NULL || aName == NULL)
       return;			/* No input text or error in input parameters */
 
-   if (text && StrChr (text, CUSTEXT('/')))
-     URL_DIR_SEP = CUSTEXT('/');
+   if (text && ustrchr (text, TEXT('/')))
+     URL_DIR_SEP = TEXT('/');
    else 
-     URL_DIR_SEP = CUS_DIR_SEP;
+     URL_DIR_SEP = WC_DIR_SEP;
    
-   aDirectory[0] = CUS_EOS;
-   aName[0] = CUS_EOS;
-   lg = StringLength (text);
+   aDirectory[0] = WC_EOS;
+   aName[0] = WC_EOS;
+   lg = ustrlen (text);
    if (lg)
      {
        /* the text is not empty */
        ptr = oldptr = &text[0];
        do
 	 {
-	   ptr = StrRChr (oldptr, URL_DIR_SEP);
+	   ptr = ustrrchr (oldptr, URL_DIR_SEP);
 	   if (ptr != NULL)
 	     oldptr = &ptr[1];
 	 }
        while (ptr != NULL);
        
-       i = ((int) (oldptr) - (int) (text)) / sizeof (CharUnit);	/* the length of the directory part */
+       i = ((int) (oldptr) - (int) (text)) / sizeof (CHAR_T);	/* the length of the directory part */
        if (i > 1)
 	 {
-	   StringNCopy (aDirectory, text, i);
+	   ustrncpy (aDirectory, text, i);
 	   j = i - 1;
 	   /* Suppresses the / characters at the end of the path */
 	   while (aDirectory[j] == URL_DIR_SEP)
-	     aDirectory[j--] = CUS_EOS;
+	     aDirectory[j--] = WC_EOS;
 	 }
        if (i != lg)
-          StringCopy (aName, oldptr);
+          ustrcpy (aName, oldptr);
      }
 #    ifdef _WINDOWS
-     lg = StringLength (aName);
-     if (!StringCaseCompare (&aName[lg - 4], CUSTEXT(".exe")))
-        aName[lg - 4] = CUS_EOS;
+     lg = ustrlen (aName);
+     if (!ustrcasecmp (&aName[lg - 4], TEXT(".exe")))
+        aName[lg - 4] = WC_EOS;
 #    endif /* _WINDOWS */
 }
 
@@ -711,13 +741,13 @@ CharUnit*           aName;
    (MakeCompleteName est utilise pour la lecture)          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                MakeCompleteName (CharUnit* fname, CharUnit* fext, CharUnit* directory_list, CharUnit* completeName, int *length)
+void                MakeCompleteName (CHAR_T* fname, CHAR_T* fext, CHAR_T* directory_list, CHAR_T* completeName, int *length)
 #else  /* __STDC__ */
 void                MakeCompleteName (fname, fext, directory_list, completeName, length)
-CharUnit*           fname;
-CharUnit*           fext;
-CharUnit*           directory_list;
-CharUnit*           completeName;
+CHAR_T*             fname;
+CHAR_T*             fext;
+CHAR_T*             directory_list;
+CHAR_T*             completeName;
 int*                length;
 
 #endif /* __STDC__ */
@@ -729,13 +759,13 @@ int*                length;
 
    found = FALSE;
    i = 1;
-   first_directory[0] = CUS_EOS;
-   while (directory_list[i - 1] != CUS_EOS && (!found))
+   first_directory[0] = WC_EOS;
+   while (directory_list[i - 1] != WC_EOS && (!found))
      {
 	j = 1;
-	while (directory_list[i - 1] != CUS_PATH_SEP && 
-           directory_list[i - 1] != CUS_EOS      && 
-           j < MAX_PATH                          && 
+	while (directory_list[i - 1] != WC_PATH_SEP && 
+           directory_list[i - 1] != WC_EOS      && 
+           j < MAX_PATH                         && 
            i < MAX_PATH)
 	  {
 	     /* on decoupe la liste en directory individuels */
@@ -744,27 +774,27 @@ int*                length;
 	     j++;
 	  }
 	/* on ajoute une fin de chaine */
-	single_directory[j - 1] = CUS_EOS;
+	single_directory[j - 1] = WC_EOS;
 	/* on sauve ce nom de directory si c'est le 1er */
-	if (first_directory[0] == CUS_EOS)
-	   StringNCopy (first_directory, single_directory, MAX_PATH);
+	if (first_directory[0] == WC_EOS)
+	   ustrncpy (first_directory, single_directory, MAX_PATH);
 	/* on construit le nom */
 	FindCompleteName (fname, fext, single_directory, completeName, length);
 	if (TtaFileExist (completeName))
 	  {
 	     found = TRUE;
-	     StringNCopy (directory_list, single_directory, MAX_PATH);
+	     ustrncpy (directory_list, single_directory, MAX_PATH);
 	  }
 	else
 	   /* on essaie avec un autre directory en sautant le PATH_SEP */
-	if (directory_list[i - 1] == CUS_PATH_SEP)
+	if (directory_list[i - 1] == WC_PATH_SEP)
 	   i++;
      }
    if (!found)
      {
-	completeName[0] = CUS_EOS;
-	if (first_directory[0] != CUS_EOS)
-	   StringNCopy (directory_list, first_directory, MAX_PATH);
+	completeName[0] = WC_EOS;
+	if (first_directory[0] != WC_EOS)
+	   ustrncpy (directory_list, first_directory, MAX_PATH);
      }
 }
 
@@ -798,12 +828,12 @@ STRING              fileName;
    else
      {
        ustrcpy (directory, DocumentPath);
-       MakeCompleteName (name, _EMPTYSTR_, directory, fileName, &length);
+       MakeCompleteName (name, TEXT(""), directory, fileName, &length);
        if (!TtaFileExist (fileName))
 	 {
 	   /* Recherche le fichier dans les repertoires de schemas */
 	   ustrcpy (directory, SchemaPath);
-	   MakeCompleteName (name, _EMPTYSTR_, directory, fileName, &length);
+	   MakeCompleteName (name, TEXT(""), directory, fileName, &length);
 	 }
      }
 }
@@ -813,11 +843,11 @@ STRING              fileName;
    est identique, retourne Vrai.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ThotBool     IsExtended (CharUnit* fileName, CharUnit* extension)
+static ThotBool     IsExtended (CHAR_T* fileName, CHAR_T* extension)
 #else  /* __STDC__ */
 static ThotBool     IsExtended (fileName, extension)
-CharUnit*           fileName;
-CharUnit*           extension;
+CHAR_T*             fileName;
+CHAR_T*             extension;
 
 #endif /* __STDC__ */
 {
@@ -829,9 +859,9 @@ CharUnit*           extension;
    extLength = 0;
 
    /* on mesure extension */
-   extLength = StringLength (extension);
+   extLength = ustrlen (extension);
    /* on mesure fileName */
-   nameLength = StringLength (fileName);
+   nameLength = ustrlen (fileName);
    if (nameLength >= THOT_MAX_CHAR)
       ok = FALSE;
    else if (extLength > 0 && nameLength > extLength)
@@ -861,11 +891,11 @@ CharUnit*           extension;
    simplement fileName dans completeName.                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                FindCompleteName (CharUnit* fileName, CharUnit* extension, PathBuffer directory, PathBuffer completeName, int *length)
+void                FindCompleteName (CHAR_T* fileName, CHAR_T* extension, PathBuffer directory, PathBuffer completeName, int *length)
 #else  /* __STDC__ */
 void                FindCompleteName (fileName, extension, directory, completeName, length)
-CharUnit*           fileName;
-CharUnit*           extension;
+CHAR_T*             fileName;
+CHAR_T*             extension;
 PathBuffer          directory;
 PathBuffer          completeName;
 int                *length;
@@ -873,14 +903,14 @@ int                *length;
 #endif /* __STDC__ */
 {
    int              i, j, k, h = 0;
-   CharUnit*        home_dir = NULL;
+   CHAR_T*          home_dir = NULL;
 
    /* on recopie le repertoire */
-   i = StringLength (directory);
-   j = StringLength (fileName);
+   i = ustrlen (directory);
+   j = ustrlen (fileName);
 
    /* check for tilde indicating the HOME directory */
-   if (directory[0] == CUSTEXT('~'))
+   if (directory[0] == TEXT('~'))
      {
 #   ifdef _WINDOWS
     home_dir = NULL;
@@ -892,7 +922,7 @@ int                *length;
 	  {
 	    /* tilde will not be copied */
 	    i--;
-	    h = StringLength (home_dir);
+	    h = ustrlen (home_dir);
 	  }
      }
    if (i > 1)
@@ -901,46 +931,46 @@ int                *length;
 
    /* si on cherche a ouvrir un fichier pivot et que le nom de fichier se
       termine par ".piv", on remplace ce suffixe par ".PIV" */
-   if (StringCompare (extension, CUSTEXT("PIV")) == 0)
+   if (ustrcmp (extension, TEXT("PIV")) == 0)
      {
 	if (j > 4)
-	   if (fileName[j - 4] == CUSTEXT('.'))
-	      if (fileName[j - 3] == CUSTEXT('p'))
-		 if (fileName[j - 2] == CUSTEXT('i'))
-		    if (fileName[j - 1] == CUSTEXT('v'))
+	   if (fileName[j - 4] == TEXT('.'))
+	      if (fileName[j - 3] == TEXT('p'))
+		 if (fileName[j - 2] == TEXT('i'))
+		    if (fileName[j - 1] == TEXT('v'))
 		      {
-			 fileName[j - 3] = CUSTEXT('P');
-			 fileName[j - 2] = CUSTEXT('I');
-			 fileName[j - 1] = CUSTEXT('V');
+			 fileName[j - 3] = TEXT('P');
+			 fileName[j - 2] = TEXT('I');
+			 fileName[j - 1] = TEXT('V');
 		      }
      }
-   if (!IsExtended (fileName, extension) && extension[0] != CUS_EOS)
-      k = StringLength (extension) + 1;	/* dont forget the '.' */
+   if (!IsExtended (fileName, extension) && extension[0] != WC_EOS)
+      k = ustrlen (extension) + 1;	/* dont forget the '.' */
    else
       k = 0;
    if (i + j + k + h >= MAX_PATH)
       return;
 
-   completeName[0] = CUS_EOS;
+   completeName[0] = WC_EOS;
    if (home_dir)
      {
-       StringConcat (completeName, home_dir);
-       StringConcat (completeName, &directory[1]);
+       ustrcat (completeName, home_dir);
+       ustrcat (completeName, &directory[1]);
      }
    else
-     StringConcat (completeName, directory);
+     ustrcat (completeName, directory);
 
    /* on ajoute un DIR_STR */
    if (i >= 1)
-     StringConcat (completeName, CUS_DIR_STR);
+     ustrcat (completeName, WC_DIR_STR);
 
    /* on recopie le nom */
-   StringConcat (completeName, fileName);
+   ustrcat (completeName, fileName);
    if (k != 0)
      {
 	/* on ajoute l'extension */
-	StringConcat (completeName, CUSTEXT("."));
-	StringConcat (completeName, extension);
+	ustrcat (completeName, TEXT("."));
+	ustrcat (completeName, extension);
      }
    /* on termine la chaine */
    *length = i + j + k + h;
@@ -951,32 +981,32 @@ int                *length;
    GetDocIdent                                                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GetDocIdent (DocumentIdentifier* Ident, CharUnit* docName)
+void                GetDocIdent (DocumentIdentifier* Ident, CHAR_T* docName)
 #else  /* __STDC__ */
 void                GetDocIdent (Ident, docName)
 DocumentIdentifier* Ident;
-CharUnit*           docName;
+CHAR_T*             docName;
 
 #endif /* __STDC__ */
 
 {
-   StringNCopy (*Ident, docName, MAX_DOC_IDENT_LEN);
-   *Ident[MAX_DOC_IDENT_LEN - 1] = CUS_EOS;
+   ustrncpy (*Ident, docName, MAX_DOC_IDENT_LEN);
+   *Ident[MAX_DOC_IDENT_LEN - 1] = WC_EOS;
 }
 
 /*----------------------------------------------------------------------
    GetDocName                                                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GetDocName (DocumentIdentifier Ident, CUSName docName)
+void                GetDocName (DocumentIdentifier Ident, CHAR_T* docName)
 #else  /* __STDC__ */
 void                GetDocName (Ident, docName)
 DocumentIdentifier  Ident;
-CUSName             docName;
+CHAR_T*             docName;
 
 #endif /* __STDC__ */
 {
-   StringNCopy (docName, Ident, MAX_NAME_LENGTH);
+   ustrncpy (docName, Ident, MAX_NAME_LENGTH);
    docName[MAX_NAME_LENGTH - 1] = CUS_EOS;
 }
 
@@ -1220,11 +1250,11 @@ int                *len;
    FALSE otherwise.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            TtaMakeDirectory (CharUnit* directory)
+ThotBool            TtaMakeDirectory (CHAR_T* directory)
 
 #else  /* __STDC__ */
 ThotBool            TtaMakeDirectory (directory)
-CharUnit*           directory;
+CHAR_T*             directory;
 
 #endif /* __STDC__ */
 
@@ -1257,11 +1287,11 @@ CharUnit*           directory;
 	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            TtaCheckDirectory (CharUnit* directory)
+ThotBool            TtaCheckDirectory (CHAR_T* directory)
 
 #else  /* __STDC__ */
 ThotBool            TtaCheckDirectory (directory)
-CharUnit*           directory;
+CHAR_T*             directory;
 
 #endif /* __STDC__ */
 
@@ -1275,10 +1305,28 @@ CharUnit*           directory;
    attribs = GetFileAttributes (directory);
    if (attribs == 0xFFFFFFFF)
       return FALSE;
-   else if (!(attribs & FILE_ATTRIBUTE_DIRECTORY))
+   if (!(attribs & FILE_ATTRIBUTE_DIRECTORY))
       return FALSE;
    return TRUE;
 #else  /* _WINDOWS */
+
+#  ifdef _I18N_
+   char        mbs_directory[2 * MAX_TXT_LEN];
+   struct stat fileStat;
+
+   wcstombs (mbs_directory, directory, 2 * MAX_TXT_LEN);
+
+   /* does the directory exist ? */
+   if (strlen (mbs_directory) < 1)
+      return (FALSE);
+   if (stat (mbs_directory, &fileStat) != 0)
+        return (FALSE);
+   if (S_ISDIR (fileStat.st_mode))
+        return (TRUE);
+   return (FALSE);
+
+#  else  /* !_I18N_ */
+
    struct stat         fileStat;
 
    /* does the directory exist ? */
@@ -1290,6 +1338,8 @@ CharUnit*           directory;
       return (TRUE);
    else
       return (FALSE);
+
+#  endif /* !_I18N_ */
 #endif /* !_WINDOWS */
 }
 

@@ -34,7 +34,7 @@ extern struct Langue_Ctl LangTable[MAX_LANGUAGES];
 extern struct Langue_Ctl TypoLangTable[MAX_LANGUAGES];
 extern int          FreeEntry;
 
-static CharUnit*    dictPath;	/* environment variable DICOPAR */
+static CHAR_T*      dictPath;	/* environment variable DICOPAR */
 static PtrDict      dictTable[MaxDictionaries];
 
 unsigned            ReverseCode[NbLtr];
@@ -57,14 +57,14 @@ static void           LoadAlphabet ()
   int        i;
   
   if (dictPath != NULL)
-    StringCopy (alphaName, dictPath);
+    ustrcpy (alphaName, dictPath);
   else
-    StringCopy (alphaName, CUSTEXT(""));
+    ustrcpy (alphaName, TEXT(""));
 
-  StringConcat (alphaName, CUS_DIR_STR);
-  StringConcat (alphaName, CUSTEXT("alphabet"));
+  ustrcat (alphaName, WC_DIR_STR);
+  ustrcat (alphaName, TEXT("alphabet"));
   
-  if ((falpha = cus_fopen (alphaName, CUSTEXT("r"))) != NULL)
+  if ((falpha = ufopen (alphaName, TEXT("r"))) != NULL)
     {
       for (i = 0; i < 256; i++)
           Code[i] = (unsigned char) 100;
@@ -218,7 +218,7 @@ PtrDocument         document;
    a pointer (pDictionary) referencing its descriptor or NULL    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SearchDictName (PtrDict * pDictionary, CharUnit* dictName, CharUnit* dictDirectory)
+static void         SearchDictName (PtrDict * pDictionary, CHAR_T* dictName, CHAR_T* dictDirectory)
 #else  /* __STDC__ */
 static void         SearchDictName (pDictionary, dictName, dictDirectory)
 PtrDict            *pDictionary;
@@ -233,8 +233,8 @@ STRING              dictDirectory;
    d = 0;
    while (d < MaxDictionaries && (dictTable[d] != NULL) && (!found))
      {
-	found = (StringCompare (dictTable[d]->DictName, dictName) == 0
-	       && StringCompare (dictTable[d]->DictDirectory, dictDirectory) == 0);
+	found = (ustrcmp (dictTable[d]->DictName, dictName) == 0
+	       && ustrcmp (dictTable[d]->DictDirectory, dictDirectory) == 0);
 	d++;
      }
    if (found)
@@ -251,26 +251,26 @@ STRING              dictDirectory;
    returns  1 if the file .DCT exists (treated)                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          TestDictionary (CharUnit* dictName, CharUnit* dictDirectory)
+static int          TestDictionary (CHAR_T* dictName, CHAR_T* dictDirectory)
 #else  /* __STDC__ */
 static int          TestDictionary (dictName, dictDirectory)
-CharUnit*           dictName;
-CharUnit*           dictDirectory;
+CHAR_T*             dictName;
+CHAR_T*             dictDirectory;
 
 #endif /* __STDC__ */
 {
   int                 ret, i;
-  CharUnit            tempbuffer[THOT_MAX_CHAR];
+  CHAR_T              tempbuffer[THOT_MAX_CHAR];
 
-  FindCompleteName (dictName, CUSTEXT("dic"), dictDirectory, tempbuffer, &i);
+  FindCompleteName (dictName, TEXT("dic"), dictDirectory, tempbuffer, &i);
   if (TtaFileExist (tempbuffer) == 0)	/* Unknown file */
     {
       /* Looks for not pre-treated dictionary */
-      FindCompleteName (dictName, CUSTEXT("DCT"), dictDirectory, tempbuffer, &i);
+      FindCompleteName (dictName, TEXT("DCT"), dictDirectory, tempbuffer, &i);
       if (TtaFileExist (tempbuffer) == 0)
 	{
 	  /* File .DCT unknown: looks for a dictionary LEX not pre-treated */
-	  FindCompleteName (dictName, CUSTEXT("LEX"), dictDirectory, tempbuffer, &i);
+	  FindCompleteName (dictName, TEXT("LEX"), dictDirectory, tempbuffer, &i);
 	  if (TtaFileExist (tempbuffer) == 0)
 	    /* unknown file */
 	    ret = -1;
@@ -417,20 +417,20 @@ PtrDict             dict;
    retourne dans pDictionary le pointeur sur son descripteur ou NULL        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PrepareDictionary (PtrDict * pDictionary, CharUnit* dictName, PtrDocument document, STRING dictDirectory, Language lang, ThotBool readonly, ThotBool treated, ThotBool toTreat)
+static void         PrepareDictionary (PtrDict * pDictionary, CHAR_T* dictName, PtrDocument document, CHAR_T* dictDirectory, Language lang, ThotBool readonly, ThotBool treated, ThotBool toTreat)
 #else  /* __STDC__ */
 static void         PrepareDictionary (pDictionary, dictName, document, dictDirectory, lang, readonly, treated, toTreat)
 PtrDict            *pDictionary;
-CharUnit*           dictName;
+CHAR_T*             dictName;
 PtrDocument         document;
-STRING              dictDirectory;
+CHAR_T*             dictDirectory;
 Language            lang;
 ThotBool            readonly;
 ThotBool            treated;
 ThotBool            toTreat;
 #endif /* __STDC__ */
 {
-  CharUnit            tempbuffer[THOT_MAX_CHAR];
+  CHAR_T              tempbuffer[THOT_MAX_CHAR];
   ThotBool            new = FALSE;
   ThotBool            ret;
   FILE*               dictFile;
@@ -446,21 +446,21 @@ ThotBool            toTreat;
       if (toTreat)
 	FindCompleteName (dictName, TEXT("DCT"), dictDirectory, tempbuffer, &i);
       else
-	FindCompleteName (dictName, CUSTEXT("LEX"), dictDirectory, tempbuffer, &i);
+	FindCompleteName (dictName, TEXT("LEX"), dictDirectory, tempbuffer, &i);
     }
   if (readonly == FALSE)
     {
       /* Alterable dictionary */
       if (TtaFileExist (tempbuffer) != 0)
 	{
-	  dictFile = ufopen (tempbuffer, CUSTEXT("rw"));
+	  dictFile = ufopen (tempbuffer, TEXT("rw"));
 	  /* updating the dictionary */
 	  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_DICO), dictName);
 	}
       else
 	{
 	  new = TRUE;
-	  dictFile = ufopen (tempbuffer, CUSTEXT("w+"));
+	  dictFile = ufopen (tempbuffer, TEXT("w+"));
 	  /* new dictionary */
 	  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_NEW_DICO), dictName);
 	}
@@ -494,7 +494,7 @@ ThotBool            toTreat;
   pdict->DictDoc = document;
   pdict->DictLanguage = lang;
   ustrcpy (pdict->DictDirectory, dictDirectory);
-  StringCopy (pdict->DictName, dictName);
+  ustrcpy (pdict->DictName, dictName);
   pdict->DictReadOnly = readonly;
   
   /* calculation of the memory size needed by the dictionary */
@@ -592,14 +592,14 @@ ThotBool            toTreat;
   toCreate = TRUE
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 LoadTreatedDict (PtrDict * pDictionary, Language lang, PtrDocument document, CharUnit* dictName, CharUnit* dictDirectory, ThotBool readonly, ThotBool toCreate)
+int                 LoadTreatedDict (PtrDict * pDictionary, Language lang, PtrDocument document, CHAR_T* dictName, CHAR_T* dictDirectory, ThotBool readonly, ThotBool toCreate)
 #else  /* __STDC__ */
 int                 LoadTreatedDict (pDictionary, lang, document, dictName, dictDirectory, readonly, toCreate)
 PtrDict            *pDictionary;
 Language            lang;
 PtrDocument         document;
-CharUnit*           dictName;
-CharUnit*           dictDirectory;
+CHAR_T*             dictName;
+CHAR_T*             dictDirectory;
 ThotBool            readonly;
 ThotBool            toCreate;
 #endif /* __STDC__ */
@@ -678,7 +678,7 @@ PtrDict            *pDictionary;
    PtrDict             pdict;
    PtrDocument         document;
    int                 d;
-   CharUnit            dictName[MAX_NAME_LENGTH];
+   CHAR_T              dictName[MAX_NAME_LENGTH];
 
    document = NULL;
    if (*pDictionary == NULL)
@@ -694,7 +694,7 @@ PtrDict            *pDictionary;
 	if (dictTable[d] == pdict)
 	  {
 	     /* Getting information about the dictionary */
-	     StringCopy (dictName, pdict->DictName);
+	     ustrcpy (dictName, pdict->DictName);
 	     document = pdict->DictDoc;
 	     /* Release the string and the list of words ... */
 	     FreeStringInDict (pdict);
@@ -704,7 +704,7 @@ PtrDict            *pDictionary;
 	  }
      }
 
-   d = LoadTreatedDict (pDictionary, EOS, document, dictName, document->DocDirectory, FALSE, TRUE);
+   d = LoadTreatedDict (pDictionary, 0, document, dictName, document->DocDirectory, FALSE, TRUE);
    if (d == -1)
       return (FALSE);
 

@@ -239,10 +239,10 @@ PtrDocument         pDoc;
    schema de structure et utiliser pSS si pSS <> NULL.     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            OpenDocument (CharUnit* docName, PtrDocument pDoc, ThotBool loadIncludedDoc, ThotBool skeleton, PtrSSchema pSS, ThotBool withAppEvent, ThotBool removeExclusions)
+ThotBool            OpenDocument (CHAR_T* docName, PtrDocument pDoc, ThotBool loadIncludedDoc, ThotBool skeleton, PtrSSchema pSS, ThotBool withAppEvent, ThotBool removeExclusions)
 #else  /* __STDC__ */
 ThotBool            OpenDocument (docName, pDoc, loadIncludedDoc, skeleton, pSS, withAppEvent, removeExclusions)
-CharUnit*           docName;
+CHAR_T*             docName;
 PtrDocument         pDoc;
 ThotBool            loadIncludedDoc;
 ThotBool            skeleton;
@@ -273,11 +273,11 @@ ThotBool		    removeExclusions
 	else
 	   /* le document n'a pas d'identificateur, on l'accede par son nom */
 	  {
-	     StringNCopy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
+	     ustrncpy (pDoc->DocDName, docName, MAX_NAME_LENGTH);
 	     pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
 	     /* on n'a pas d'autre outil de stockage des documents que le SGF UNIX */
 	     /* On confond identificateur et nom de document */
-	     StringNCopy (pDoc->DocIdent, docName, MAX_DOC_IDENT_LEN);
+	     ustrncpy (pDoc->DocIdent, docName, MAX_DOC_IDENT_LEN);
 	     pDoc->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
 	  }
 	if (pDoc->DocDName[0] > SPACE)
@@ -289,7 +289,7 @@ ThotBool		    removeExclusions
 		ustrncpy (directoryName, DocumentPath, MAX_PATH);
 	     else
 		ustrncpy (directoryName, pDoc->DocDirectory, MAX_PATH);
-	     MakeCompleteName (pDoc->DocDName, CUSTEXT("PIV"), directoryName, text, &i);
+	     MakeCompleteName (pDoc->DocDName, TEXT("PIV"), directoryName, text, &i);
 	     /* ouvre le fichier 'PIV' */
 	     pivotFile = TtaReadOpen (text);
 	     if (pivotFile != 0)
@@ -308,7 +308,7 @@ ThotBool		    removeExclusions
 		       ret = TRUE;
 		       /* lit le fichier des references externes s'il existe */
 		       /* dans le meme directory que le fichier .PIV */
-		       FindCompleteName (pDoc->DocDName, CUSTEXT("EXT"), directoryName, text, &i);
+		       FindCompleteName (pDoc->DocDName, TEXT("EXT"), directoryName, text, &i);
 		       pivotFile = TtaReadOpen (text);
 		       if (pivotFile != 0)
 			 {
@@ -317,7 +317,7 @@ ThotBool		    removeExclusions
 			 }
 		       /* lit le fichier de mise a jour des references sortantes */
 		       /* s'il existe dans le meme directory que le fichier .PIV */
-		       FindCompleteName (pDoc->DocDName, CUSTEXT("REF"), directoryName, text, &i);
+		       FindCompleteName (pDoc->DocDName, TEXT("REF"), directoryName, text, &i);
 		       pivotFile = TtaReadOpen (text);
 		       if (pivotFile != 0)
 			 {
@@ -1541,9 +1541,7 @@ PtrAttribute       *pAttr;
 			      pPremBuff->BuContent[2] != TEXT('-'))
 			    /* it's not a valid language code. Convert it */
 			    {
-                CharUnit langName [MAX_LENGTH];
-                wc2cus_strcpy (langName, pPremBuff->BuContent);
-			    iso2wc_strcpy (pPremBuff->BuContent, TtaGetLanguageCodeFromName (langName));
+			    iso2wc_strcpy (pPremBuff->BuContent, TtaGetLanguageCodeFromName (pPremBuff->BuContent));
 			    pBT->BuLength = ustrlen (pPremBuff->BuContent);
 			    }
 		    }
@@ -3502,7 +3500,7 @@ ThotBool		    removeExclusions
 	/* reference's par d'autres documents (on en aura besoin */
 	/* pendant la lecture du fichier .PIV). On cherche ce */
 	/* fichier dans le meme directory que le fichier .PIV */
-	FindCompleteName (pDoc->DocDName, CUSTEXT("EXT"), pDoc->DocDirectory, buffer, &i);
+	FindCompleteName (pDoc->DocDName, TEXT("EXT"), pDoc->DocDirectory, buffer, &i);
 	EXTfile = TtaReadOpen (buffer);
 	if (EXTfile != 0)
 	  {

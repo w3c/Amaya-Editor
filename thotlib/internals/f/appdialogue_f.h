@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void TteInitMenus ( CharUnit* name,
+extern void TteInitMenus ( CHAR_T* name,
                            int number );
 extern void FreeMenus ( void );
 extern void TteAddMenuAction ( char* actionName,
@@ -35,7 +35,7 @@ extern void TteAddMenuItem ( WindowType windowtype,
                              int itemID,
                              char* actionName,
                              char itemType );
-extern void TteOpenMainWindow ( CharUnit* name,
+extern void TteOpenMainWindow ( CHAR_T* name,
                                 Pixmap logo,
                                 Pixmap icon );
 extern void APP_ButtonCallback ( ThotButton w,
@@ -123,7 +123,7 @@ extern void ThotCallback ( int ref,
 
 #else /* __STDC__ */
 
-extern void TteInitMenus (/* CharUnit* name,
+extern void TteInitMenus (/* CHAR_T* name,
                              int number */);
 extern void FreeMenus (/* void */);
 extern void TteAddMenuAction (/* char* actionName,
@@ -152,7 +152,7 @@ extern void TteAddMenuItem (/* WindowType windowtype,
                                int itemID,
                                char* actionName,
                                char itemType */);
-extern void TteOpenMainWindow (/* CharUnit* name,
+extern void TteOpenMainWindow (/* CHAR_T* name,
                                   Pixmap logo,
                                   Pixmap icon */);
 extern void APP_ButtonCallback (/* ThotButton w,

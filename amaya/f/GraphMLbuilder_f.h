@@ -12,7 +12,7 @@ extern void MapGraphMLAttribute ( char* Attr,
                                   AttributeType *attrType,
                                   char* elementName,
                                   Document doc );
-extern void MapGraphMLAttributeValue ( char* AttrVal,
+extern void MapGraphMLAttributeValue ( CHAR_T* AttrVal,
                                        AttributeType attrType,
                                        int *value );
 extern void MapGraphMLEntity ( STRING entityName,
@@ -61,7 +61,7 @@ extern void MapGraphMLAttribute (/* char* Attr,
                                     AttributeType *attrType,
                                     char* elementName,
                                     Document doc */);
-extern void MapGraphMLAttributeValue (/* char* AttrVal,
+extern void MapGraphMLAttributeValue (/* CHAR_T* AttrVal,
                                          AttributeType attrType,
                                          int *value */);
 extern void MapGraphMLEntity (/* STRING entityName,

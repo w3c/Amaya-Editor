@@ -30,9 +30,9 @@ extern void UpdateSRCattribute ( NotifyElement * event );
 extern void SRCattrModified ( NotifyAttribute * event );
 extern void CreateImage ( Document document,
                           View view );
-extern ThotBool AddLocalImage ( STRING fullname,
-                                STRING name,
-                                STRING url,
+extern ThotBool AddLocalImage ( CHAR_T* fullname,
+                                CHAR_T* name,
+                                CHAR_T* url,
                                 Document doc,
                                 LoadedImageDesc ** desc );
 extern void RemoveDocumentImages ( Document doc );
@@ -63,9 +63,9 @@ extern void UpdateSRCattribute (/* NotifyElement * event */);
 extern void SRCattrModified (/* NotifyAttribute * event */);
 extern void CreateImage (/* Document document,
                             View view */);
-extern ThotBool AddLocalImage (/* STRING fullname,
-                                  STRING name,
-                                  STRING url,
+extern ThotBool AddLocalImage (/* CHAR_T* fullname,
+                                  CHAR_T* name,
+                                  CHAR_T* url,
                                   Document doc,
                                   LoadedImageDesc ** desc */);
 extern void RemoveDocumentImages (/* Document doc */);

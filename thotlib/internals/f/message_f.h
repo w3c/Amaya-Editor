@@ -6,9 +6,9 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern CHAR_T* AsciiTranslate ( char* pBuffer );
+extern CHAR_T* AsciiTranslate ( CHAR_T* pBuffer );
 extern char* ISOAsciiTranslate ( char* pBuffer );
-extern int TtaGetMessageTable ( CONST CharUnit* msgName,
+extern int TtaGetMessageTable ( CONST CHAR_T* msgName,
                                 int msgNumber );
 extern void FreeAllMessages ( void );
 extern STRING TtaGetMessage ( int origin,
@@ -23,9 +23,9 @@ extern void DisplayPivotMessage ( STRING code );
 
 #else /* __STDC__ */
 
-extern CHAR_T* AsciiTranslate (/* char* pBuffer */);
+extern CHAR_T* AsciiTranslate (/* CHAR_T* pBuffer */);
 extern char* ISOAsciiTranslate (/* char* pBuffer */);
-extern int TtaGetMessageTable (/* CONST CharUnit* msgName,
+extern int TtaGetMessageTable (/* CONST CHAR_T* msgName,
                                   int msgNumber */);
 extern void FreeAllMessages (/* void */);
 extern STRING TtaGetMessage (/* int origin,

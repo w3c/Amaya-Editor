@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern void FreeDocColors ( void );
-extern void InitDocColors ( CharUnit* name );
+extern void InitDocColors ( CHAR_T* name );
 extern int NumberOfColors ( void );
 extern CHAR_T* ColorName ( int num );
 extern ThotColor ColorPixel ( int num );
@@ -33,7 +33,7 @@ extern Pixmap CreatePattern ( int disp,
 #else /* __STDC__ */
 
 extern void FreeDocColors (/* void */);
-extern void InitDocColors (/* CharUnit* name */);
+extern void InitDocColors (/* CHAR_T* name */);
 extern int NumberOfColors (/* void */);
 extern CHAR_T* ColorName (/* int num */);
 extern ThotColor ColorPixel (/* int num */);

@@ -345,11 +345,11 @@ static void UpdatePointsAttribute (el, doc, minX, minY, maxX, maxY)
 	  if (y < *minY)
 	    *minY = y;
 	  if (point > 1)
-	    ustrcat (buffer, " ");
-	  sprintf (buffer1, "%d", x + posX);
+	    ustrcat (buffer, TEXT(" "));
+	  usprintf (buffer1, TEXT("%d"), x + posX);
 	  ustrcat (buffer, buffer1);
-	  ustrcat (buffer, ",");
-	  sprintf (buffer1, "%d", y + posY);
+	  ustrcat (buffer, TEXT(","));
+	  usprintf (buffer1, TEXT("%d"), y + posY);
 	  ustrcat (buffer, buffer1);
 	}
       attrType.AttrTypeNum = GraphML_ATTR_points;
@@ -396,15 +396,15 @@ static void UpdatePositionAttribute (attr, el, doc)
 	 posX = 0;
        else
 	 posX = TtaGetAttributeValue (attr);
-       sprintf (buffer, "%d", posX);
+       usprintf (buffer, TEXT("%d"), posX);
        attrType.AttrTypeNum = GraphML_ATTR_IntPosY;
        attr = TtaGetAttribute (el, attrType);
        if (attr == NULL)
 	 posY = 0;
        else
 	 posY = TtaGetAttributeValue (attr);
-       sprintf (buffer1, "%d", posY);
-       ustrcat (buffer, ", ");
+       usprintf (buffer1, TEXT("%d"), posY);
+       ustrcat (buffer, TEXT(", "));
        ustrcat (buffer, buffer1);
        attrType.AttrTypeNum = GraphML_ATTR_position;
        attr = TtaGetAttribute (el, attrType);
@@ -503,7 +503,7 @@ static void UpdateWidthHeightAttribute (attr, el, doc)
 	   TtaAttachAttribute (el, extAttr, doc);
 	 }
        val = TtaGetAttributeValue (attr);
-       sprintf (buffer, "%d", val);
+       usprintf (buffer, TEXT("%d"), val);
        TtaSetAttributeText (extAttr, buffer, el, doc);
      }
 }
@@ -829,16 +829,16 @@ int                 construct;
 {
    Document	        doc;
    Element	        last, first, graphRoot, newEl, sibling, selEl;
-   Element              child, parent, elem;
-   ElementType	        elType, wrapperType, newType, childType;
+   Element          child, parent, elem;
+   ElementType      elType, wrapperType, newType, childType;
    AttributeType	attrType;
-   Attribute	        attr;
+   Attribute        attr;
    SSchema	        docSchema, GraphMLSSchema;
-   DisplayMode	        dispMode;
-   CHAR_T		        shape;
+   DisplayMode      dispMode;
+   char		        shape;
    int		        c1, c2, i, j, w, h, minX, minY, maxX, maxY;
    ThotBool	        found, automaticPlacement;
-   int	                oldStructureChecking;
+   int	            oldStructureChecking;
 
    doc = TtaGetSelectedDocument ();
    if (doc == 0)
@@ -861,7 +861,7 @@ int                 construct;
       /* the current selection is not in a GraphML element, create one */
       {
       wrapperType = TtaGetElementType (first);
-      if (ustrcmp (TtaGetSSchemaName (wrapperType.ElSSchema), "HTML"))
+      if (ustrcmp (TtaGetSSchemaName (wrapperType.ElSSchema), TEXT("HTML")))
 	 /* selection is not in an HTML element. */
          return;
       wrapperType.ElTypeNum = HTML_EL_XMLGraphics;
@@ -1042,7 +1042,7 @@ int                 construct;
 	   /* the document is supposed to be HTML */
 	   childType.ElSSchema = docSchema;
 	   childType.ElTypeNum = HTML_EL_HTMLfragment;
-	   child = TtaNewTree (doc, childType, "");
+	   child = TtaNewTree (doc, childType, TEXT(""));
 	   /* do not check the Thot abstract tree against the structure */
 	   /* schema when inserting this element */
 	   oldStructureChecking = TtaGetStructureChecking (doc);

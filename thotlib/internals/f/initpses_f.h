@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void InitDocColors ( char *name );
+extern void InitDocColors ( CHAR_T* name );
 extern void FreeDocColors ( void );
 extern unsigned long ColorPixel ( int num );
 extern void TtaFreeThotColor ( int num );
@@ -26,7 +26,7 @@ extern unsigned long CreatePattern ( int disp,
 
 #else /* __STDC__ */
 
-extern void InitDocColors (/* char *name */);
+extern void InitDocColors (/* CHAR_T* name */);
 extern void FreeDocColors (/* void */);
 extern unsigned long ColorPixel (/* int num */);
 extern void TtaFreeThotColor (/* int num */);

@@ -1119,17 +1119,17 @@ char*               suffix;
    intializes the keybord encoding.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotTranslations      InitTranslations (CharUnit* appliname)
+ThotTranslations      InitTranslations (CHAR_T* appliname)
 #else  /* __STDC__ */
 ThotTranslations      InitTranslations (appliname)
-CharUnit*             appliname;
+CHAR_T*               appliname;
 
 #endif /* __STDC__ */
 {
-   CharUnit*           appHome;	   /* fichier de translation */
-   CharUnit            fullName[200];  /* ligne en construction pour motif */
-   CharUnit            home[200]; 
-   CharUnit            name[80]; 
+   CHAR_T*             appHome;	   /* fichier de translation */
+   CHAR_T              fullName[200];  /* ligne en construction pour motif */
+   CHAR_T              home[200]; 
+   CHAR_T              name[80]; 
    char*               text;	   
    char*               adr;
    char                transText [MAX_LENGTH];
@@ -1144,20 +1144,20 @@ CharUnit*             appliname;
    ThotTranslations    table = 0;
 
    appHome = TtaGetEnvString ("APP_HOME");
-   StringCopy (name, appliname);
+   ustrcat (name, appliname);
 #  ifdef _WINDOWS
-   StringConcat (name, CUSTEXT(".kb"));
+   ustrcat (name, TEXT(".kb"));
 #  else  /* _WINDOWS */
-   StringConcat (name, CUSTEXT(".keyboard"));
+   ustrcat (name, TEXT(".keyboard"));
 #  endif /* _WINDOWS */
 
-   StringCopy (home, appHome);
-   StringConcat (home, CUS_DIR_STR);
-   StringConcat (home, name);
+   ustrcpy (home, appHome);
+   ustrcat (home, WC_DIR_STR);
+   ustrcat (home, name);
    if (!SearchFile (home, 0, fullName))
      SearchFile (name, 2, fullName);
 
-   file = cus_fopen (fullName, CUSTEXT("r"));
+   file = ufopen (fullName, TEXT("r"));
    if (!file)
      {
 	/*Fichier inaccessible */

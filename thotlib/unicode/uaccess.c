@@ -11,30 +11,80 @@
 
 #include "uaccess.h"
 
-#ifdef _I18N_
-#else  /* !_I18N_ */
-
+/*----------------------------------------------------------------*\
+ * TtaIsDigit                                                     *
+\*----------------------------------------------------------------*/
 #ifdef __STDC__
-CHAR_T ugetcharnum (const STRING str, const int index)
-#else  /* __STDC__ */
-CHAR_T ugetcharnum (str, index)
-const STRING str;
-const int    index;
-#endif /* __STDC__ */
-{
-   return ((CHAR_T) ((char*)str)[index]);
-}
-
-#ifdef __STDC__
-void usetcharnumval (STRING str, const int index, const CHAR_T c)
+int TtaIsDigit (CHAR_T val)
 #else  /* !__STDC__ */
-void usetcharnumval (str, index, c)
-STRING    str; 
-const int index; 
-const CHAR_T c;
-#endif /* __STDC__ */
+int TtaIsDigit (val)
+CHAR_T   val;
+#endif /* !__STDC__ */
 {
-   ((char*) str) [index] = (char) c;
+#ifdef _I18N_ 
+#  ifdef _WINDOWS
+   return iswdigit (val);
+   /* The compatibility of iswdigit routine is supposed to be 
+    * ANSI, WIN NT and WIN 95.
+    * Use it when a I18N version of libc for Unix/Linux is available 
+    */
+#  else  /* !_WINDOWS */
+   return isdigit ((int) val);
+#  endif /* !_WINDOWS */
+#else  /* !_I18N_ */
+   return isdigit ((int)val);
+#endif /* !_I18N_ */
 }
 
-#endif /* _I18N_ */
+/*----------------------------------------------------------------*\
+ * TtaIsAlpha                                                     *
+\*----------------------------------------------------------------*/
+#ifdef __STDC__
+int TtaIsAlpha (CHAR_T val)
+#else  /* !__STDC__ */
+int TtaIsAlpha (val)
+CHAR_T   val;
+#endif /* !__STDC__ */
+{
+#ifdef _I18N_ 
+#  ifdef _WINDOWS
+   return iswalpha (val);
+   /* The compatibility of iswalpha routine is supposed to be 
+    * ANSI, WIN NT and WIN 95.
+    * Use it when a I18N version of libc for Unix/Linux is available 
+    */
+#  else  /* !_WINDOWS */
+   return isalpha ((int) val);
+#  endif /* !_WINDOWS */
+#else  /* !_I18N_ */
+   return isalpha ((int)val);
+#endif /* !_I18N_ */
+}
+
+/*----------------------------------------------------------------*\
+ * TtaIsAlnum                                                     *
+\*----------------------------------------------------------------*/
+#ifdef __STDC__
+int TtaIsAlnum (CHAR_T val)
+#else  /* !__STDC__ */
+int TtaIsAlnum (val)
+CHAR_T   val;
+#endif /* !__STDC__ */
+{
+#ifdef _I18N_ 
+#  ifdef _WINDOWS
+   return iswalnum (val);
+   /* The compatibility of iswalnum routine is supposed to be 
+    * ANSI, WIN NT and WIN 95.
+    * Use it when a I18N version of libc for Unix/Linux is available 
+    */
+#  else  /* !_WINDOWS */
+   return isalnum ((int) val);
+#  endif /* !_WINDOWS */
+#else  /* !_I18N_ */
+   return isalnum ((int)val);
+#endif /* !_I18N_ */
+}
+
+
+

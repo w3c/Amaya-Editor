@@ -79,7 +79,7 @@ ThotBool          removeSpan;
    /* if it's a GraphML element, remove the style attribute defined in the
       GraphML DTD, otherwise, remove the style attribute defined in the
       HTML DTD */
-   if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
+   if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
       {
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = GraphML_ATTR_style_;
@@ -126,9 +126,9 @@ STRING              styleString;
 #endif
 {
   STRING              b, e, ptr, oldptr, sString;
-  CHAR_T                old_url[MAX_LENGTH];
-  CHAR_T                tempname[MAX_LENGTH];
-  CHAR_T                imgname[MAX_LENGTH];
+  CHAR_T              old_url[MAX_LENGTH];
+  CHAR_T              tempname[MAX_LENGTH];
+  CHAR_T              imgname[MAX_LENGTH];
   STRING              new_url;
   int                 len;
 
@@ -139,34 +139,34 @@ STRING              styleString;
     {
       /* we need to compare this url with the new doc path */
       b += 3;
-      b = SkipBlanksAndComments (b);
-      if (*b == '(')
+      b = SkipWCBlanksAndComments (b);
+      if (*b == TEXT('('))
 	{
 	  b++;
-	  b = SkipBlanksAndComments (b);
+	  b = SkipWCBlanksAndComments (b);
 	  /*** Caution: Strings can either be written with double quotes or
 	       with single quotes. Only double quotes are handled here.
 	       Escaped quotes are not handled. See function SkipQuotedString */
-	  if (*b == '"')
+	  if (*b == TEXT('"'))
 	    {
 	      /* search the url end */
 	      b++;
 	      e = b;
-	      while (*e != EOS && *e != '"')
+	      while (*e != WC_EOS && *e != TEXT('"'))
 		e++;
 	    }
 	  else
 	    {
 	      /* search the url end */
 	      e = b;
-	      while (*e != EOS && *e != ')')
+	      while (*e != WC_EOS && *e != TEXT(')'))
 		e++;
 	    }
-	  if (*e != EOS)
+	  if (*e != WC_EOS)
 	    {
 	      len = (int)(e - b);
 	      ustrncpy (old_url, b, len);
-	      old_url[len] = EOS;
+	      old_url[len] = WC_EOS;
 	      /* get the old full image name */
 	      NormalizeURL (old_url, 0, tempname, imgname, oldpath);
 	      /* build the new full image name */
@@ -294,15 +294,15 @@ NotifyAttribute    *event;
   else
     {
       /* mange only differences */
-      while (OldBuffer[i] == *ptr1 && *ptr1 != EOS)
+      while (OldBuffer[i] == *ptr1 && *ptr1 != WC_EOS)
 	{
-	  if (i > 0 && OldBuffer[i-1] == '{')
+	  if (i > 0 && OldBuffer[i-1] == TEXT('{'))
 	    braces++;
 	  if (i > 0 &&
-	      (OldBuffer[i-1] == '}' ||
-	       ((OldBuffer[i-1] == ';' || OldBuffer[i-1] == '>') && braces == 0)))
+	      (OldBuffer[i-1] == TEXT('}') ||
+           ((OldBuffer[i-1] == TEXT(';') || OldBuffer[i-1] == TEXT('>')) && braces == 0)))
 	    {
-	      if (OldBuffer[i-1] == '}')
+	      if (OldBuffer[i-1] == TEXT('}'))
 		braces--;
 	      previousEnd = i;
 	      pEnd = ptr1;
@@ -312,7 +312,7 @@ NotifyAttribute    *event;
 	}
       
       /* now ptr1 and OldBuffer[i] point different strings */
-      if (*ptr1 != EOS)
+      if (*ptr1 != WC_EOS)
 	{
 	  ptr2 = ptr1 + ustrlen (ptr1);
 	  j = i + ustrlen (&OldBuffer[i]);
@@ -321,14 +321,14 @@ NotifyAttribute    *event;
 	  braces = 0;
 	  while (OldBuffer[j] == *ptr2 && ptr2 != ptr1)
 	    {
-	      if (j > i && OldBuffer[j-1] == '{')
+	      if (j > i && OldBuffer[j-1] == TEXT('{'))
 		braces++;
 	      if (j > i &&
-		  (OldBuffer[j-1] == '}' ||
-		   ((OldBuffer[j-1] == '@' || OldBuffer[j-1] == '<') &&
+		  (OldBuffer[j-1] == TEXT('}') ||
+           ((OldBuffer[j-1] == TEXT('@') || OldBuffer[j-1] == TEXT('<')) &&
 		    braces == 0)))
 		{
-		  if (OldBuffer[j-1] == '}')
+		  if (OldBuffer[j-1] == TEXT('}'))
 		    braces--;
 		  nextEnd = j;
 		  nEnd = ptr2;
@@ -339,21 +339,21 @@ NotifyAttribute    *event;
 	  if (ptr1 != ptr2)
 	    {
 	      /* take complete CSS rules */
-	      OldBuffer[nextEnd] = EOS;
-	      *nEnd = EOS;
+	      OldBuffer[nextEnd] = WC_EOS;
+	      *nEnd = WC_EOS;
 	  
 	      /* remove previous rules */
 	      ptr1 = &OldBuffer[previousEnd];
 	      ptr2 = ptr1;
 	      do
 		{
-		  while (*ptr2 != '}' && *ptr2 != EOS)
+		  while (*ptr2 != TEXT('}') && *ptr2 != WC_EOS)
 		    ptr2++;
-		  if (*ptr2 != EOS)
+		  if (*ptr2 != WC_EOS)
 		    ptr2++;
 		  /* cut here */
 		  c = *ptr2;
-		  *ptr2 = EOS;
+		  *ptr2 = WC_EOS;
 		  ApplyCSSRules (event->element, ptr1, event->document, TRUE);
 		  /**** update image contexts
 			url1 = GetCSSBackgroundURL (ptr1);
@@ -367,25 +367,25 @@ NotifyAttribute    *event;
 		  *ptr2 = c;
 		  ptr1 = ptr2;
 		}
-	      while (*ptr2 != EOS);
+	      while (*ptr2 != WC_EOS);
 	      
 	      /* add new rules */
 	      ptr1 = pEnd;
 	      ptr2 = ptr1;
 	      do
 		{
-		  while (*ptr2 != '}' && *ptr2 != EOS)
+		  while (*ptr2 != TEXT('}') && *ptr2 != WC_EOS)
 		    ptr2++;
-		  if (*ptr2 != EOS)
+		  if (*ptr2 != WC_EOS)
 		    ptr2++;
 		  /* cut here */
 		  c = *ptr2;
-		  *ptr2 = EOS;
+		  *ptr2 = WC_EOS;
 		  ApplyCSSRules (event->element, ptr1, event->document, FALSE);
 		  *ptr2 = c;
 		  ptr1 = ptr2;
 		}
-	      while (*ptr2 != EOS);
+	      while (*ptr2 != WC_EOS);
 	    }
 	}
       
@@ -441,7 +441,7 @@ NotifyAttribute    *event;
         /* if it's a GraphML element, delete the style attribute defined in the
            GraphML DTD, otherwise, delete the style attribute defined in the
            HTML DTD */
-	if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
+	if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
 	   {
 	   atType.AttrSSchema = elType.ElSSchema;
 	   atType.AttrTypeNum = GraphML_ATTR_style_;
@@ -666,7 +666,7 @@ Document            doc;
 	     }
 	  else
 #ifdef GRAPHML
-	  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
+	  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
 	     {
 	     attrType.AttrSSchema = elType.ElSSchema;
 	     attrType.AttrTypeNum = GraphML_ATTR_class;
@@ -721,8 +721,8 @@ void                *param;
 {
   LoadedImageDesc    *imgInfo;
   STRING              css_rules = param;
-  CHAR_T                string[150];
-  STRING              ptr;
+  CHAR_T              string[150];
+  CHAR_T*             ptr;
 
   string[0] = EOS;
   if (settings->type == PRBackgroundPicture)
@@ -859,7 +859,7 @@ Document            doc;
   TtaOpenUndoSequence (doc, ClassReference, ClassReference, 0, 0);
 
   /* create the class attribute */
-  if (stylestring[0] == '.')
+  if (stylestring[0] == TEXT('.'))
     {
       a_class = &CurrentClass[0];
       if (*a_class == '.')
@@ -871,7 +871,7 @@ Document            doc;
 	 }
       else
 #ifdef GRAPHML
-      if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
+      if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
 	 {
 	   attrType.AttrSSchema = elType.ElSSchema;
 	   attrType.AttrTypeNum = GraphML_ATTR_class;
@@ -1251,7 +1251,7 @@ View                view;
 	}
       else
 #ifdef GRAPHML
-	if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
+	if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
 	  {
 	    attrType.AttrSSchema = elType.ElSSchema;
 	    attrType.AttrTypeNum = GraphML_ATTR_class;
@@ -1340,7 +1340,7 @@ View                view;
   else
 #ifdef GRAPHML
   elType = TtaGetElementType (firstSelectedEl);
-  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
+  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
      {
      attrType.AttrSSchema = elType.ElSSchema;
      attrType.AttrTypeNum = GraphML_ATTR_class;

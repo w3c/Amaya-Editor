@@ -243,8 +243,7 @@ int status;
   if (me->reqStatus == HT_END)
     {
       if (AmayaIsAlive ()  && me->terminate_cbf)
-	(*me->terminate_cbf) (me->docid, 0, ISO2WideChar(me->urlName), ISO2WideChar(me->outputfile),
-			      ISO2WideChar(me->content_type), me->context_tcbf);
+	(*me->terminate_cbf) (me->docid, 0, me->urlName, me->outputfile, me->content_type, me->context_tcbf);
 
     }
   else if (me->reqStatus == HT_ABORT)
@@ -252,24 +251,22 @@ int status;
        button. We erase the incoming file, if it exists */
     {
       if (AmayaIsAlive () && me->terminate_cbf)
-	(*me->terminate_cbf) (me->docid, -1, ISO2WideChar(me->urlName), ISO2WideChar(me->outputfile),
-			      ISO2WideChar(me->content_type), me->context_tcbf);
+	(*me->terminate_cbf) (me->docid, -1, me->urlName, me->outputfile, me->content_type, me->context_tcbf);
       if (me->outputfile && me->outputfile[0] != EOS)
 	{
-	  TtaFileUnlink (ISO2WideChar (me->outputfile));
-	  me->outputfile[0] = EOS;
-	}
+	  TtaFileUnlink (me->outputfile);
+	  me->outputfile[0] = EOS; 
+	} 
     }
   else if (me->reqStatus == HT_ERR)
     {
       /* there was an error */
       if (AmayaIsAlive && me->terminate_cbf)
-	(*me->terminate_cbf) (me->docid, -1, ISO2WideChar(me->urlName), ISO2WideChar(me->outputfile),
-			      ISO2WideChar(me->content_type), me->context_tcbf);
+	(*me->terminate_cbf) (me->docid, -1, me->urlName, me->outputfile, me->content_type, me->context_tcbf);
       
       if (me->outputfile && me->outputfile[0] != EOS)
 	{
-	  TtaFileUnlink (ISO2WideChar (me->outputfile));
+	  TtaFileUnlink (me->outputfile);
 	  me->outputfile[0] = EOS;
 	}
     }
@@ -320,12 +317,10 @@ HTAlertPar         *reply;
        if (!(me->output)
 	   && (me->output != stdout) 
 	   && me->outputfile
-	   &&  (me->output = ufopen (ISO2WideChar (me->outputfile), CUSTEXT("wb"))) == NULL) {
+	   &&  (me->output = ufopen (me->outputfile, TEXT("wb"))) == NULL) {
 	 /* the request is associated with a file */
 	 me->outputfile[0] = EOS;	/* file could not be opened */
-	 TtaSetStatus (me->docid, 1, 
-		       TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE),
-		       ISO2WideChar(me->outputfile));
+	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE), me->outputfile);
 	 me->reqStatus = HT_ERR;
 
 	 if (me->error_html)

@@ -108,17 +108,17 @@ int                 height;
 
 #endif /* __STDC__ */
 {
-   int      createdFrame;
-   CharUnit buf[MAX_TXT_LEN];
+   int    createdFrame;
+   CHAR_T buf[MAX_TXT_LEN];
 
    /* met dans le buffer le nom du document... */
-   StringNCopy (buf, pDoc->DocDName, MAX_NAME_LENGTH);
-   StringConcat (buf, CUSTEXT("  "));
+   ustrncpy (buf, pDoc->DocDName, MAX_NAME_LENGTH);
+   ustrcat (buf, TEXT("  "));
    /* ...suivi eventuellement de la mention 'Read only' */
    if (pDoc->DocReadOnly)
      {
-	StringConcat (buf, CUSTEXT(" "));
-	StringConcat (buf, TtaGetMessage (LIB, TMSG_READ_ONLY));
+	ustrcat (buf, TEXT(" "));
+	ustrcat (buf, TtaGetMessage (LIB, TMSG_READ_ONLY));
      }
    /* creation d'une frame pour la vue */
    createdFrame = MakeFrame (pDoc->DocSSchema->SsName, view, buf, X, Y, width, height, vol, IdentDocument (pDoc));
@@ -403,12 +403,12 @@ PtrDocument         pDoc;
    fileName: nom du fichier a importer.                        	
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ImportDocument (CUSName SSchemaName, PathBuffer directory, CharUnit* fileName)
+void                ImportDocument (Name SSchemaName, PathBuffer directory, CHAR_T* fileName)
 #else  /* __STDC__ */
 void                ImportDocument (SSchemaName, directory, fileName)
-CUSName             SSchemaName;
+Name                SSchemaName;
 PathBuffer          directory;
-CharUnit*           fileName;
+CHAR_T*             fileName;
 #endif /* __STDC__ */
 {
    FILE               *file;
@@ -426,10 +426,10 @@ CharUnit*           fileName;
 	   /* pas de directory precise'. On prend le path des documents */
 	   ustrncpy (directory, DocumentPath, MAX_PATH);
 	/* construit le nom complet du fichier a importer */
-	MakeCompleteName (fileName, CUSTEXT(""), directory, fullName, &i);
+	MakeCompleteName (fileName, TEXT(""), directory, fullName, &i);
 	TtaDisplaySimpleMessage (INFO, LIB, TMSG_IMPORTING_FILE);
 	/* ouvre le fichier a importer */
-	file = cus_fopen (fullName, CUSTEXT("r"));
+	file = ufopen (fullName, TEXT("r"));
 	if (file != NULL)
 	   /* le fichier a importer est ouvert */
 	  {
@@ -464,9 +464,9 @@ CharUnit*           fileName;
 		       /* complete le descripteur du document */
 		       pDoc->DocRootElement->ElAccess = AccessReadWrite;
 		       CheckLanguageAttr (pDoc, pDoc->DocRootElement);
-		       StringNCopy (pDoc->DocDName, fileName, MAX_NAME_LENGTH);
+		       ustrncpy (pDoc->DocDName, fileName, MAX_NAME_LENGTH);
 		       pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
-		       StringNCopy (pDoc->DocIdent, fileName, MAX_DOC_IDENT_LEN);
+		       ustrncpy (pDoc->DocIdent, fileName, MAX_DOC_IDENT_LEN);
 		       pDoc->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
 		       ustrncpy (pDoc->DocDirectory, directory, MAX_PATH);
 		       /* conserve le path actuel des schemas dans le contexte du doc. */

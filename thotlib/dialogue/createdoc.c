@@ -212,7 +212,7 @@ char*               data;
 	       strcat (docName, NameDocToCreate);
            /* docName has to be encoded in Wide Character */
            /* We have to use Multbyte to Wide Character String conversion */
-	       TtaSetTextForm (NumZoneDocNameToCreate, ISO2WideChar (docName));
+	       TtaSetTextForm (NumZoneDocNameToCreate, docName);
 	       break;
 	    case NumSelDocClassToCreate:
 	       /* selecteur classe du document a creer */

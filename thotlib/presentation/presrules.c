@@ -3305,8 +3305,7 @@ PtrAttribute        pAttr;
 			  /* relative file name */
 			  {
 			    ustrncpy (directoryName, SchemaPath, MAX_PATH - 1);
-			    MakeCompleteName (pConst->PdString, _EMPTYSTR_,
-					      directoryName, fname, &i);
+			    MakeCompleteName (pConst->PdString, TEXT(""), directoryName, fname, &i);
 			  }
 			NewPictInfo (pAb, fname, UNKNOWN_FORMAT);
 			appl = TRUE;

@@ -456,8 +456,8 @@ FILE               *fileDescriptor;
 
 #endif /* __STDC__ */
 {
-   PtrReferredDescr    pDe1;
-   CUSName             N;
+   PtrReferredDescr pDe1;
+   Name             N;
 
    switch (pRef->RdTypeRef)
 	 {
@@ -485,7 +485,7 @@ FILE               *fileDescriptor;
 	  {
 	     fprintf (fileDescriptor, "%s(", pDe1->ReReferredLabel);
 	     GetDocName (pDe1->ReExtDocument, N);
-	     cus_fprintf (fileDescriptor, "%s)", N);
+	     fprintf (fileDescriptor, "%s)", N);
 	  }
 	else if (pDe1->ReReferredElem == NULL)
 	   fprintf (fileDescriptor, "ReReferredElem=NULL, ReReferredLabel=%s", pDe1->ReReferredLabel);

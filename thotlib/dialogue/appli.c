@@ -1675,7 +1675,7 @@ LPARAM lParam;
             }
 
             case WM_DROPFILES: {
-                 CharUnit DroppedFileName [MAX_PATH + 1];
+                 CHAR_T DroppedFileName [MAX_PATH + 1];
                  UINT i, nNumFiles = DragQueryFile ((HDROP)wParam, 0xFFFFFFFF, NULL, 0);
                  int document, view;
                  FrameToView (frame, &document, &view);

@@ -6,12 +6,12 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern Document IsDocumentLoaded ( CharUnit* documentURL,
-                                   STRING form_data );
+extern Document IsDocumentLoaded ( CHAR_T* documentURL,
+                                   CHAR_T* form_data );
 extern ThotBool CanReplaceCurrentDocument ( Document document,
                                             View view );
-extern void ExtractParameters ( CharUnit* aName,
-                                CharUnit* parameters );
+extern void ExtractParameters ( CHAR_T* aName,
+                                CHAR_T* parameters );
 extern void SetArrowButton ( Document document,
                              ThotBool back,
                              ThotBool on );
@@ -46,7 +46,7 @@ extern void OpenDoc ( Document document,
 extern void GoToHome ( Document doc,
                        View view );
 extern Document InitDocView ( Document doc,
-                              CharUnit* docname,
+                              CHAR_T* docname,
                               DocumentType docType,
                               ThotBool logFile );
 extern void Reload_callback ( int doc,
@@ -80,7 +80,7 @@ extern void GetHTMLDocument_callback ( int newdoc,
                                        STRING outputfile,
                                        STRING content_type,
                                        void * context );
-extern Document GetHTMLDocument ( const CharUnit* documentPath,
+extern Document GetHTMLDocument ( const CHAR_T* documentPath,
                                   STRING form_data,
                                   Document doc,
                                   Document baseDoc,
@@ -151,12 +151,12 @@ extern void AmayaClose ( Document document,
 
 #else /* __STDC__ */
 
-extern Document IsDocumentLoaded (/* CharUnit* documentURL,
-                                     STRING form_data */);
+extern Document IsDocumentLoaded (/* CHAR_T* documentURL,
+                                     CHAR_T* form_data */);
 extern ThotBool CanReplaceCurrentDocument (/* Document document,
                                               View view */);
-extern void ExtractParameters (/* CharUnit* aName,
-                                  CharUnit* parameters */);
+extern void ExtractParameters (/* CHAR_T* aName,
+                                  CHAR_T* parameters */);
 extern void SetArrowButton (/* Document document,
                                ThotBool back,
                                ThotBool on */);
@@ -191,7 +191,7 @@ extern void OpenDoc (/* Document document,
 extern void GoToHome (/* Document doc,
                          View view */);
 extern Document InitDocView (/* Document doc,
-                                CharUnit* docname,
+                                CHAR_T* docname,
                                 DocumentType docType,
                                 ThotBool logFile */);
 extern void Reload_callback (/* int doc,
@@ -225,7 +225,7 @@ extern void GetHTMLDocument_callback (/* int newdoc,
                                          STRING outputfile,
                                          STRING content_type,
                                          void * context */);
-extern Document GetHTMLDocument (/* const CharUnit* documentPath,
+extern Document GetHTMLDocument (/* const CHAR_T* documentPath,
                                     STRING form_data,
                                     Document doc,
                                     Document baseDoc,

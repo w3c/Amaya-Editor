@@ -6,23 +6,19 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern STRING ISO2WideChar ( const char* str );
-extern char* WideChar2ISO ( STRING str );
 extern int uctoi ( const STRING string );
 extern long uctol ( const STRING string );
 extern CHAR_T utolower ( CHAR_T c );
 extern CharUnit ToLower ( CharUnit c );
-extern int custoi ( const CharUnit* string );
+extern int wctoi ( const CHAR_T* string );
 
 #else /* __STDC__ */
 
-extern STRING ISO2WideChar (/* const char* str */);
-extern char* WideChar2ISO (/* STRING str */);
 extern int uctoi (/* const STRING string */);
 extern long uctol (/* const STRING string */);
 extern CHAR_T utolower (/* CHAR_T c */);
 extern CharUnit ToLower (/* CharUnit c */);
-extern int custoi (/* const CharUnit* string */);
+extern int wctoi (/* const CHAR_T* string */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -22,41 +22,41 @@
 static ElemMapping    MathMLElemMappingTable[] =
 {
    /* This table MUST be in alphabetical order */
-   {"XMLcomment", SPACE, MathML_EL_XMLcomment},
-   {"XMLcomment_line", SPACE, MathML_EL_XMLcomment_line},
-   {"maligngroup", 'E', MathML_EL_MALIGNGROUP},
-   {"malignmark", 'E', MathML_EL_MALIGNMARK},
-   {"merror", SPACE, MathML_EL_MERROR},
-   {"mf", SPACE, MathML_EL_MF},  /* for compatibility with an old version of
+   {TEXT("XMLcomment"), SPACE, MathML_EL_XMLcomment},
+   {TEXT("XMLcomment_line"), SPACE, MathML_EL_XMLcomment_line},
+   {TEXT("maligngroup"), 'E', MathML_EL_MALIGNGROUP},
+   {TEXT("malignmark"), 'E', MathML_EL_MALIGNMARK},
+   {TEXT("merror"), SPACE, MathML_EL_MERROR},
+   {TEXT("mf"), SPACE, MathML_EL_MF},  /* for compatibility with an old version of
 				    MathML: WD-math-970704 */
-   {"mfenced", SPACE, MathML_EL_MFENCED},
-   {"mfrac", SPACE, MathML_EL_MFRAC},
-   {"mi", SPACE, MathML_EL_MI},
-   {"mmultiscripts", SPACE, MathML_EL_MMULTISCRIPTS},
-   {"mn", SPACE, MathML_EL_MN},
-   {"mo", SPACE, MathML_EL_MO},
-   {"mover", SPACE, MathML_EL_MOVER},
-   {"mpadded", SPACE, MathML_EL_MPADDED},
-   {"mphantom", SPACE, MathML_EL_MPHANTOM},
-   {"mprescripts", SPACE, MathML_EL_PrescriptPairs},
-   {"mroot", SPACE, MathML_EL_MROOT},
-   {"mrow", SPACE, MathML_EL_MROW},
-   {"ms", SPACE, MathML_EL_MS},
-   {"mspace", 'E', MathML_EL_MSPACE},
-   {"msqrt", SPACE, MathML_EL_MSQRT},
-   {"mstyle", SPACE, MathML_EL_MSTYLE},
-   {"msub", SPACE, MathML_EL_MSUB},
-   {"msubsup", SPACE, MathML_EL_MSUBSUP},
-   {"msup", SPACE, MathML_EL_MSUP},
-   {"mtable", SPACE, MathML_EL_MTABLE},
-   {"mtd", SPACE, MathML_EL_MTD},
-   {"mtext", SPACE, MathML_EL_MTEXT},
-   {"mtr", SPACE, MathML_EL_MTR},
-   {"munder", SPACE, MathML_EL_MUNDER},
-   {"munderover", SPACE, MathML_EL_MUNDEROVER},
-   {"none", SPACE, MathML_EL_Construct},
-   {"sep", 'E', MathML_EL_SEP},
-   {"", SPACE, 0}	/* Last entry. Mandatory */
+   {TEXT("mfenced"), SPACE, MathML_EL_MFENCED},
+   {TEXT("mfrac"), SPACE, MathML_EL_MFRAC},
+   {TEXT("mi"), SPACE, MathML_EL_MI},
+   {TEXT("mmultiscripts"), SPACE, MathML_EL_MMULTISCRIPTS},
+   {TEXT("mn"), SPACE, MathML_EL_MN},
+   {TEXT("mo"), SPACE, MathML_EL_MO},
+   {TEXT("mover"), SPACE, MathML_EL_MOVER},
+   {TEXT("mpadded"), SPACE, MathML_EL_MPADDED},
+   {TEXT("mphantom"), SPACE, MathML_EL_MPHANTOM},
+   {TEXT("mprescripts"), SPACE, MathML_EL_PrescriptPairs},
+   {TEXT("mroot"), SPACE, MathML_EL_MROOT},
+   {TEXT("mrow"), SPACE, MathML_EL_MROW},
+   {TEXT("ms"), SPACE, MathML_EL_MS},
+   {TEXT("mspace"), 'E', MathML_EL_MSPACE},
+   {TEXT("msqrt"), SPACE, MathML_EL_MSQRT},
+   {TEXT("mstyle"), SPACE, MathML_EL_MSTYLE},
+   {TEXT("msub"), SPACE, MathML_EL_MSUB},
+   {TEXT("msubsup"), SPACE, MathML_EL_MSUBSUP},
+   {TEXT("msup"), SPACE, MathML_EL_MSUP},
+   {TEXT("mtable"), SPACE, MathML_EL_MTABLE},
+   {TEXT("mtd"), SPACE, MathML_EL_MTD},
+   {TEXT("mtext"), SPACE, MathML_EL_MTEXT},
+   {TEXT("mtr"), SPACE, MathML_EL_MTR},
+   {TEXT("munder"), SPACE, MathML_EL_MUNDER},
+   {TEXT("munderover"), SPACE, MathML_EL_MUNDEROVER},
+   {TEXT("none"), SPACE, MathML_EL_Construct},
+   {TEXT("sep"), 'E', MathML_EL_SEP},
+   {TEXT(""), SPACE, 0}	/* Last entry. Mandatory */
 };
 
 #ifdef GRAPHML
@@ -65,22 +65,22 @@ static ElemMapping    MathMLElemMappingTable[] =
 static ElemMapping    GraphMLElemMappingTable[] =
 {
    /* This table MUST be in alphabetical order */
-   {"XMLcomment", SPACE, GraphML_EL_XMLcomment},
-   {"XMLcomment_line", SPACE, GraphML_EL_XMLcomment_line},
-   {"circle", SPACE, GraphML_EL_Circle},
-   {"closedspline", SPACE, GraphML_EL_ClosedSpline},
-   {"group", SPACE, GraphML_EL_Group},
-   {"label", 'X', GraphML_EL_Label},	/* see function GraphMLGetDTDName */
-   {"line", 'E', GraphML_EL_Line_},
-   {"math", 'X', GraphML_EL_Math},	/* see function GraphMLGetDTDName */
-   {"oval", SPACE, GraphML_EL_Oval},
-   {"polygon", SPACE, GraphML_EL_Polygon},
-   {"polyline", 'E', GraphML_EL_Polyline},
-   {"rect", SPACE, GraphML_EL_Rectangle},
-   {"roundrect", SPACE, GraphML_EL_RoundRect},
-   {"spline", 'E', GraphML_EL_Spline},
-   {"text", 'X', GraphML_EL_Text_},      /* see function GraphMLGetDTDName */
-   {"", SPACE, 0}	/* Last entry. Mandatory */
+   {TEXT("XMLcomment"), SPACE, GraphML_EL_XMLcomment},
+   {TEXT("XMLcomment_line"), SPACE, GraphML_EL_XMLcomment_line},
+   {TEXT("circle"), SPACE, GraphML_EL_Circle},
+   {TEXT("closedspline"), SPACE, GraphML_EL_ClosedSpline},
+   {TEXT("group"), SPACE, GraphML_EL_Group},
+   {TEXT("label"), 'X', GraphML_EL_Label},	/* see function GraphMLGetDTDName */
+   {TEXT("line"), 'E', GraphML_EL_Line_},
+   {TEXT("math"), 'X', GraphML_EL_Math},	/* see function GraphMLGetDTDName */
+   {TEXT("oval"), SPACE, GraphML_EL_Oval},
+   {TEXT("polygon"), SPACE, GraphML_EL_Polygon},
+   {TEXT("polyline"), 'E', GraphML_EL_Polyline},
+   {TEXT("rect"), SPACE, GraphML_EL_Rectangle},
+   {TEXT("roundrect"), SPACE, GraphML_EL_RoundRect},
+   {TEXT("spline"), 'E', GraphML_EL_Spline},
+   {TEXT("text"), 'X', GraphML_EL_Text_},      /* see function GraphMLGetDTDName */
+   {TEXT(""), SPACE, 0}	/* Last entry. Mandatory */
 };
 #else /* GRAPHML */
 /* there is no mapping table of GraphML elements */
@@ -157,14 +157,14 @@ int                XMLtype;
     - content 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void               MapXMLElementType (int XMLtype, char* XMLname, ElementType *elType, char** mappedName, char* content, Document doc)
+void               MapXMLElementType (int XMLtype, CHAR_T* XMLname, ElementType *elType, CHAR_T** mappedName, CHAR_T* content, Document doc)
 #else
 void               MapXMLElementType (XMLtype, XMLname, elType, mappedName, content, doc)
 int                XMLtype;
-char*              XMLname;
+CHAR_T*            XMLname;
 ElementType*       elType;
-char**             mappedName;
-char* 	           content;
+CHAR_T**           mappedName;
+CHAR_T* 	       content;
 Document           doc;
 #endif
 {
@@ -189,7 +189,7 @@ Document           doc;
 	 i++;
        /* look at all entries starting with the right character */
        do
-	 if (strcmp (ptr[i].XMLname, XMLname))
+	 if (ustrcmp (ptr[i].XMLname, XMLname))
 	   i++;
 	 else
 	   {
@@ -209,11 +209,11 @@ Document           doc;
    search in the mapping tables the XML name for a given Thot type
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void              GetXMLElementName (ElementType elType, char** buffer)
+void              GetXMLElementName (ElementType elType, CHAR_T** buffer)
 #else
 void              GetXMLElementName (elType, buffer)
 ElementType       elType;
-char**            buffer;
+CHAR_T**          buffer;
 #endif
 {
    int                 i;

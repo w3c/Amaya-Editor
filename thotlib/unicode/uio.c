@@ -14,43 +14,45 @@
 
 #define _MIN_ ((a), (b)) (a) < (b) ? (a) : (b)
 
-#if defined(_I18N_) ||defined(__JIS__)
-
 #ifdef __STDC__
-STRING ufgets (STRING string, int n, FILE *stream)
+CHAR_T* ufgets (CHAR_T* string, int n, FILE *stream)
 #else  /* !__STDC__ */
-STRING ufgets (string, n, stream)
-STRING string; 
+CHAR_T* ufgets (string, n, stream)
+CHAR_T* string; 
 int    n; 
 FILE*  stream;
 #endif /* __STDC__ */
 {
-    char str [1024];
-	int  len;
-    if (fgets (str, n, stream)) {
-#      ifdef _WINDOWS
-       len = MultiByteToWideChar (CP_ACP, 0, str, -1, string, n);
-	   string [min (n, len)] = L'\0';
-#      else  /* !_WINDOWS */
-       len = mbstowcs (string, str, n);
-#      endif /* _WINDOWS */
-	   return string;
+#   ifdef _I18N_
+    unsigned char byte;
+    CHAR_T        wChar;
+    char          mbcstr[MAX_BYTES];
+    int           nbWChar = 0;
+    int           nbBytes;
+    ThotBool      done = FALSE;
+
+    while (nbWChar < n && !done) {
+          nbBytes = 1; 
+          if ((byte = fgetc (stream)) == 0 || byte == EOF) {
+             string [nbWChar] = WC_EOS;
+             done = TRUE;
+          }
+          mbcstr[0] = byte;
+          if (byte >= 0x80) {
+             if ((byte = fgetc (stream)) == 0 || byte == EOF) {
+                string [nbWChar] = WC_EOS;
+                done = TRUE;
+             }
+             mbcstr [1] = byte;
+             nbBytes = 2;
+          }
+          mbtowc (&wChar, mbcstr, nbBytes);
+          string[nbWChar++] = wChar;
 	}
-	return (STRING) 0;
+    if (nbWChar == 0)
+       return (CHAR_T*) 0;
+    return string;
+#   else  /* !_I18N_ */
+    return (CHAR_T*) fgets ((char*) string, n, stream);
+#   endif /* !_I18N_ */
 }
-
-#else  /* !_I18N_ */
-
-#ifdef __STDC__
-STRING ufgets (STRING string, int n, FILE *stream)
-#else  /* !__STDC__ */
-STRING ufgets (string, n, stream)
-STRING string; 
-int    n; 
-FILE*  stream;
-#endif /* __STDC__ */
-{
-    return (STRING) fgets ((char*) string, n, stream);
-}
-
-#endif /* !_I18N_ */

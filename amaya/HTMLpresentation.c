@@ -349,7 +349,7 @@ Element             elem;
    else
 #ifdef GRAPHML
    elType = TtaGetElementType (elem);
-   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
+   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")) == 0)
       {
 	attrType.AttrSSchema = elType.ElSSchema;
 	attrType.AttrTypeNum = GraphML_ATTR_style_;

@@ -21,10 +21,10 @@
 #include "language.h"
 
 /* document internal identifier: unique identifier for the storage system */
-typedef CharUnit DocumentIdentifier[MAX_DOC_IDENT_LEN];
+typedef CHAR_T DocumentIdentifier[MAX_DOC_IDENT_LEN];
 
 /* document external identifier: document name for the user */
-typedef CharUnit ADocumentName[MAX_NAME_LENGTH];
+typedef CHAR_T ADocumentName[MAX_NAME_LENGTH];
 
 /* element access mode */
 typedef enum {
@@ -206,7 +206,7 @@ typedef struct _PolyLinePoint
 #define MAX_POINT_POLY	THOT_MAX_CHAR / sizeof(PolyLinePoint)
 
 #ifndef AMAYA_H__	
-typedef CharUnit PathBuffer[MAX_PATH];
+typedef CHAR_T PathBuffer[MAX_PATH];
 #endif 
 
 /* Description of a text buffer */

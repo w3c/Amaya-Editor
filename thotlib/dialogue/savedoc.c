@@ -109,9 +109,9 @@ void                BuildSaveDocMenu ()
    NotifyDialog        notifyDoc;
 
    /* Name du fichier a sauver */
-   StringCopy (outputFileName, SaveDirectoryName);
-   StringConcat (outputFileName, CUS_DIR_STR);
-   StringConcat (outputFileName, SaveFileName);
+   ustrcpy (outputFileName, SaveDirectoryName);
+   ustrcat (outputFileName, WC_DIR_STR);
+   ustrcat (outputFileName, SaveFileName);
    if (TraductionSchemaName[0] == CUS_EOS)
       /* sauver en format Thot */
      {
@@ -128,18 +128,18 @@ void                BuildSaveDocMenu ()
 	     }
 	   else
 	     {
-	       StringConcat (outputFileName, CUSTEXT(".PIV")); 
+	       ustrcat (outputFileName, TEXT(".PIV")); 
 	       (void) StoreDocument (DocumentToSave,
 				     SaveFileName, SaveDirectoryName,
 				     SaveDocWithCopy, SaveDocWithMove);
 	     }
 	 }
      }
-   else if (!StringCompare (TraductionSchemaName, CUSTEXT("_ThotOther_")))
+   else if (!ustrcmp (TraductionSchemaName, TEXT("_ThotOther_")))
      {
        if (DocumentToSave->DocPivotVersion == -1)
          {
-	   StringConcat (outputFileName, CUSTEXT(".PIV")); 
+	   ustrcat (outputFileName, TEXT(".PIV")); 
 	   (void) StoreDocument (DocumentToSave,
 				 SaveFileName, SaveDirectoryName,
 				 SaveDocWithCopy, SaveDocWithMove);
@@ -156,7 +156,7 @@ void                BuildSaveDocMenu ()
 	   /* l'application accepte que Thot exporte le document */
 	  {
 	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_EXPORTING), DocumentToSave->DocDName);
-	     FindCompleteName (SaveFileName, CUSTEXT(""), SaveDirectoryName, outputFileName, &i);
+	     FindCompleteName (SaveFileName, TEXT(""), SaveDirectoryName, outputFileName, &i);
 	     ExportDocument (DocumentToSave, outputFileName, TraductionSchemaName, FALSE);
 	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_DOC_WRITTEN), outputFileName);
 	     /* envoie le message DocExport.Post a l'application */
@@ -455,9 +455,9 @@ PtrDocument         pDoc;
 	      ustrcat (BufMenu, WC_DIR_STR);
 	      ustrcat (BufMenu, SaveFileName);
 	      if (pDoc->DocPivotVersion == -1)
-             ustrcat (BufMenu, CUSTEXT(".xml"));
+             ustrcat (BufMenu, TEXT(".xml"));
 	      else
-               ustrcat (BufMenu, CUSTEXT(".PIV"));
+               ustrcat (BufMenu, TEXT(".PIV"));
 	      /* nom de document propose' */
 #         ifndef _WINDOWS
 	      TtaNewTextForm (NumZoneDocNameTooSave, NumFormSaveAs, TtaGetMessage (LIB, TMSG_DOCUMENT_NAME), 50, 1, TRUE);

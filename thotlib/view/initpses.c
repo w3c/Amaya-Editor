@@ -301,10 +301,10 @@ extern unsigned char  basket_bits[32];
    InitDocColors initialize the Thot internal color table. (fake)
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                InitDocColors (char *name)
+void                InitDocColors (CHAR_T* name)
 #else  /* __STDC__ */
 void                InitDocColors (name)
-char               *name;
+CHAR_T*             name;
 
 #endif /* __STDC__ */
 {

@@ -7,15 +7,15 @@
 #ifdef __STDC__
 
 extern CHAR_T* TtaGetLanguageNameFromCode ( char* code );
-extern char* TtaGetLanguageCodeFromName ( CharUnit* name );
+extern char* TtaGetLanguageCodeFromName ( CHAR_T* name );
 extern void InitLanguage ( void );
-extern Language TtaNewLanguage ( char* languageName,
+extern Language TtaNewLanguage ( CHAR_T* languageName,
                                  char languageAlphabet,
                                  STRING principalDictionary,
                                  STRING secondDictionary );
 extern void TtaRemoveLanguage ( Language language );
 extern Language TtaGetLanguageIdFromName ( CHAR_T* languageName );
-extern CharUnit* TtaGetVarLANG ( void );
+extern CHAR_T* TtaGetVarLANG ( void );
 extern Language TtaGetDefaultLanguage ( void );
 extern Language TtaGetLanguageIdFromAlphabet ( CHAR_T languageAlphabet );
 extern char TtaGetAlphabet ( Language languageId );
@@ -31,15 +31,15 @@ extern ThotBool TtaExistPatternList ( Language languageId );
 #else /* __STDC__ */
 
 extern CHAR_T* TtaGetLanguageNameFromCode (/* char* code */);
-extern char* TtaGetLanguageCodeFromName (/* CharUnit* name */);
+extern char* TtaGetLanguageCodeFromName (/* CHAR_T* name */);
 extern void InitLanguage (/* void */);
-extern Language TtaNewLanguage (/* char* languageName,
+extern Language TtaNewLanguage (/* CHAR_T* languageName,
                                    char languageAlphabet,
                                    STRING principalDictionary,
                                    STRING secondDictionary */);
 extern void TtaRemoveLanguage (/* Language language */);
 extern Language TtaGetLanguageIdFromName (/* CHAR_T* languageName */);
-extern CharUnit* TtaGetVarLANG (/* void */);
+extern CHAR_T* TtaGetVarLANG (/* void */);
 extern Language TtaGetDefaultLanguage (/* void */);
 extern Language TtaGetLanguageIdFromAlphabet (/* CHAR_T languageAlphabet */);
 extern char TtaGetAlphabet (/* Language languageId */);

@@ -88,7 +88,7 @@ extern void TteLoadApplications ( void );
 extern ThotBool     WithMessages;	/* partage avec le module dialog.c */
 extern Pixmap       image;
 extern int          appArgc;
-extern CharUnit**   appArgv;
+extern CHAR_T**     appArgv;
 extern int          iString;
 typedef void        (*Thot_ActionProc) ();
 typedef struct _CallbackCTX *PtrCallbackCTX;
@@ -223,10 +223,10 @@ HWND GetCurrentWindow () {
    TteInitMenuActions alloue la table des actions.                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TteInitMenus (CharUnit* name, int number)
+void                TteInitMenus (CHAR_T* name, int number)
 #else  /* __STDC__ */
 void                TteInitMenus (name, number)
-CharUnit*           name;
+CHAR_T*             name;
 int                 number;
 
 #endif /* __STDC__ */
@@ -257,7 +257,7 @@ int                 number;
      {
 	i = 1;
 	while (i < appArgc - 1)
-	   if (StringCompare (appArgv[i], CUSTEXT("-display")) != 0)
+	   if (ustrcmp (appArgv[i], TEXT("-display")) != 0)
 	      i++;
 	   else
 	     {
@@ -1318,10 +1318,10 @@ int                 doc;
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TteOpenMainWindow (CharUnit* name, Pixmap logo, Pixmap icon)
+void                TteOpenMainWindow (CHAR_T* name, Pixmap logo, Pixmap icon)
 #else  /* __STDC__ */
 void                TteOpenMainWindow (name, logo, icon)
-CharUnit*           name;
+CHAR_T*             name;
 Pixmap              logo;
 Pixmap              icon;
 
@@ -2762,8 +2762,8 @@ int                 doc;
    ThotWidget          vscrl;
    SchemaMenu_Ctl     *SCHmenu;
    Menu_Ctl           *ptrmenu;
-   CharUnit*           visiStr;
-   CharUnit*           zoomStr;
+   CHAR_T*             visiStr;
+   CHAR_T*             zoomStr;
    int                 i;
    int                 ref;
    int                 visiVal, zoomVal;
@@ -3466,7 +3466,7 @@ int                 doc;
 	     zoomVal = 0;
 	   else
 	     {
-	       zoomVal = custoi (zoomStr);
+	       zoomVal = wctoi (zoomStr);
 	       if (zoomVal > 10 || zoomVal < -10)
 		 zoomVal = 0;
 	     }
@@ -3475,7 +3475,7 @@ int                 doc;
 	     visiVal = 5;
 	   else
 	     {
-	       visiVal = custoi (visiStr);
+	       visiVal = wctoi (visiStr);
 	       if (visiVal < 0 || visiVal > 10)
 		 visiVal = 5;
 	     }

@@ -11,10 +11,10 @@
  */
 
 #ifdef __STDC__
-extern Document IsDocumentLoaded ( char *documentURL,
-				   char *form_data);
-extern void ExtractParameters ( CharUnit* aName,
-                                CharUnit* parameters );
+extern Document IsDocumentLoaded ( CHAR_T* documentURL,
+				   CHAR_T* form_data);
+extern void ExtractParameters ( CHAR_T* aName,
+                                CHAR_T* parameters );
 extern void ExtractSuffix ( STRING aName,
                             STRING aSuffix );
 extern void ResetStop ( Document document );
@@ -50,8 +50,8 @@ extern void ShowToC ( Document document,
                       View view );
 extern void ShowMapAreas ( Document document,
                            View view );
-extern ThotBool NormalizeFile ( CharUnit* src,
-                               CharUnit* target );
+extern ThotBool NormalizeFile ( CHAR_T* src,
+                               CHAR_T* target );
 extern void SectionNumbering ( Document document,
                                View view );
 extern void MakeBook ( Document document,
@@ -63,10 +63,10 @@ extern void AmayaClose ( Document document,
 
 #else /* __STDC__ */
 
-extern Document IsDocumentLoaded (/* char *documentURL,
-                                     char *form_data  */);
-extern void ExtractParameters (/* CharUnit* aName,
-                                  CharUnit* parameters */);
+extern Document IsDocumentLoaded (/* CHAR_T* documentURL,
+                                     CHAR_T* form_data  */);
+extern void ExtractParameters (/* CHAR_T* aName,
+                                  CHAR_T* parameters */);
 extern void ExtractSuffix (/* char *aName,
                               char *aSuffix */);
 extern void ResetStop (/* Document document */);
@@ -102,8 +102,8 @@ extern void ShowToC (/* Document document,
                         View view */);
 extern void ShowMapAreas (/* Document document,
                              View view */);
-extern ThotBool NormalizeFile (/* char *src,
-                                 char *target */);
+extern ThotBool NormalizeFile (/* CHAR_T* src,
+                                 CHAR_T* target */);
 extern void CallbackDialogue (/* int ref,
                                  int typedata,
                                  char *data */);

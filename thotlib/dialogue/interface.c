@@ -679,11 +679,11 @@ int                 keycode;
  */
 void                TtaInstallMultiKey ()
 {
-  CharUnit* ptr;
+  CHAR_T* ptr;
 
 # ifdef _WINDOWS 
   ptr = TtaGetEnvString ("ENABLE_MULTIKEY");
-  if (ptr != NULL && !StringCaseCompare (ptr, CUSTEXT("yes")))
+  if (ptr != NULL && !ustrcasecmp (ptr, TEXT("yes")))
     Enable_Multikey = TRUE;
   else
     Enable_Multikey = FALSE;

@@ -46,7 +46,7 @@
 #define _MENU_IMAGE_TYPE    6
 #define MAX_IMAGE_MENU      7
 extern PathBuffer   DocumentPath;
-extern CharUnit*    SchemaPath;
+extern CHAR_T*      SchemaPath;
 extern STRING       FileExtension[];
 
 #undef THOT_EXPORT
@@ -55,7 +55,7 @@ extern STRING       FileExtension[];
 static int          IndexTypeImage, IndexPresImage, BaseDlgImage;
 static ThotBool     RedisplayPicture;
 static CHAR_T       ImageName[100];
-static CharUnit     DirectoryImage[MAX_PATH];
+static CHAR_T       DirectoryImage[MAX_PATH];
 
 #include "browser_f.h"
 #include "fileaccess_f.h"
@@ -197,17 +197,17 @@ STRING              txt;
        if (TtaCheckDirectory (txt) && txt[ustrlen (txt) - 1] != URL_DIR_SEP)
 	 {
 	   ustrcpy (DirectoryImage, txt);
-	   ImageName[0] = EOS;
+	   ImageName[0] = WC_EOS;
 	 }
        else
 	 {
 	   /* conserve le nom du document a ouvrir */
 	   TtaExtractName (txt, DirectoryImage, ImageName);
-	   if (ImageName[0] == EOS && !TtaCheckDirectory (DirectoryImage))
+	   if (ImageName[0] == WC_EOS && !TtaCheckDirectory (DirectoryImage))
 	     {
 	       /* Le texte correspond au nom de l'image sans directory */
 	       ustrncpy (ImageName, DirectoryImage, 100);
-	       DirectoryImage[0] = EOS;
+	       DirectoryImage[0] = WC_EOS;
 	     }
 	 }
        
@@ -221,8 +221,8 @@ STRING              txt;
 		 i = ustrlen (DocumentPath);
 		 if (i + ustrlen (DirectoryImage) + 2 < MAX_PATH)
 		   {
-		     StringConcat (DocumentPath, CUS_PATH_STR);
-		     StringConcat (DocumentPath, DirectoryImage);
+		     ustrcat (DocumentPath, WC_PATH_STR);
+		     ustrcat (DocumentPath, DirectoryImage);
 		     InitPathImage ();
 		     TtaListDirectory (DirectoryImage, BaseDlgImage + _IMAGE_FORM, NULL, -1,
 				       FileExtension[IndexTypeImage], TtaGetMessage (LIB, TMSG_FILES), BaseDlgImage + _IMAGE_SEL);
@@ -236,7 +236,7 @@ STRING              txt;
 	   /* compose le path complet du fichier pivot */
 	   ustrncpy (DirectoryImage, DocumentPath, MAX_PATH);
 	   /* recheche indirectement le directory */
-	   MakeCompleteName (txt, _EMPTYSTR_, DirectoryImage, completeName, &i);
+	   MakeCompleteName (txt, TEXT(""), DirectoryImage, completeName, &i);
 	   /* separe directory et nom */
 	   TtaExtractName (completeName, DirectoryImage, ImageName);
 	 }

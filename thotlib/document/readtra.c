@@ -1076,10 +1076,10 @@ PRuleTransl        *pPruleTr;
    - pSS: schema de structure correspondant, deja rempli.  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-PtrTSchema          ReadTranslationSchema (CUSName fileName, PtrSSchema pSS)
+PtrTSchema          ReadTranslationSchema (Name fileName, PtrSSchema pSS)
 #else  /* __STDC__ */
 PtrTSchema          ReadTranslationSchema (fileName, pSS)
-CUSName             fileName;
+Name                fileName;
 PtrSSchema          pSS;
 #endif /* __STDC__ */
 {
@@ -1095,21 +1095,21 @@ PtrSSchema          pSS;
    StringTransl       *pStringTr;
    PRuleTransl        *pPRuleTr;
    PathBuffer          dirBuffer;
-   CHAR_T                buf[MAX_TXT_LEN];
+   CHAR_T              buf[MAX_TXT_LEN];
    int                 InitialNElems, i, j;
 
    error = FALSE;
    pTSch = NULL;
    /* compose le nom du fichier a ouvrir */
    ustrncpy (dirBuffer, SchemaPath, MAX_PATH);
-   MakeCompleteName (fileName, CUSTEXT("TRA"), dirBuffer, buf, &i);
+   MakeCompleteName (fileName, TEXT("TRA"), dirBuffer, buf, &i);
 
    /* ouvre le fichier */
    file = TtaReadOpen (buf);
    if (file == 0)
      {
 	ustrncpy (buf, fileName, MAX_PATH);
-	ustrcat (buf, CUSTEXT(".TRA"));
+	ustrcat (buf, TEXT(".TRA"));
 	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), buf);
      }
    else

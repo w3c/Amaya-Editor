@@ -93,8 +93,8 @@ ThotBool            isHTML;
   CHAR_T               tempfile[MAX_LENGTH];
   int                  doc;
 
-  pathname = TtaGetMemory (MAX_LENGTH);
-  documentname = TtaGetMemory (MAX_LENGTH);
+  pathname = TtaAllocString (MAX_LENGTH);
+  documentname = TtaAllocString (MAX_LENGTH);
   NormalizeURL (url, 0, pathname, documentname, NULL);
   if (isHTML)
     doc = InitDocView (0, documentname, docHTML, FALSE);
@@ -104,7 +104,7 @@ ThotBool            isHTML;
   TtaFreeMemory (pathname);
 
   /* save the document name into the document table */
-  s = TtaStrdup (url);
+  s = TtaWCSdup (url);
   TtaSetTextZone (doc, 1, 1, url);
   DocumentURLs[doc] = s;
   DocumentMeta[doc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));

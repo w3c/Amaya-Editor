@@ -536,7 +536,7 @@ CharUnit*            str;
 
    if (str == NULL)
       return (NULL);
-   res = TtaGetMemory ((ustrlen (str) + 1) * sizeof (CharUnit));
+   res = TtaGetMemory ((StringLength (str) + 1) * sizeof (CharUnit));
    if (res == NULL)
       return (res);
    StringCopy (res, str);

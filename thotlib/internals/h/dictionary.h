@@ -55,13 +55,13 @@ struct PatternList
 
 struct Langue_Ctl
 {
-  char               LangName[MAX_NAME_LENGTH];      /* Nom de la langue                           */
+  CHAR_T             LangName[MAX_NAME_LENGTH];      /* Nom de la langue                           */
   char               LangCode[MAX_NAME_LENGTH];      /* Code de la langue (RFC1766)                */
   char               LangAlphabet;                   /* Alphabet associe a la langue               */
   CHAR_T             LangPrincipal[MAX_NAME_LENGTH]; /* Name du dictionnaire principal             */
   CHAR_T             LangSecondary[MAX_NAME_LENGTH]; /* Name du dictionnaire secondaire            */
   Dictionary         LangDict[MAX_DICTS];            /* Pointeurs vers les dictionnaires           */
-  CharUnit           LangPattern[MAX_NAME_LENGTH];   /* Name de la liste de patterns d'hyphenation */
+  CHAR_T             LangPattern[MAX_NAME_LENGTH];   /* Name de la liste de patterns d'hyphenation */
   struct PatternList LangTabPattern;                 /* Pointeur sur la liste de patterns          */
 };
 

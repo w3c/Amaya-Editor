@@ -51,7 +51,7 @@
 
 #endif /* !_I18N_ ****************************/
 
-extern STRING ufgets (STRING , int , FILE*);
+extern CHAR_T* ufgets (CHAR_T* , int , FILE*);
 
 #if defined(_WINDOWS) && defined(_I18N_)
 

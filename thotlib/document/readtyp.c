@@ -479,7 +479,7 @@ PtrSSchema          SS;
    /* compose le nom du fichier a ouvrir avec le nom du directory */
    /* des schemas... */
    strncpy (DirBuffer, SchemaPath, MAX_PATH);
-   MakeCompleteName (fname, "TYP", DirBuffer, texte, &i);
+   MakeCompleteName (fname, TEXT("TYP"), DirBuffer, texte, &i);
 
    /* ouvre le fichier */
    fich = TtaReadOpen (texte);

@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern PtrDocument GetPtrDocument ( DocumentIdentifier docIdent );
-extern ThotBool OpenDocument ( CharUnit* docName,
+extern ThotBool OpenDocument ( CHAR_T* docName,
                                PtrDocument pDoc,
                                ThotBool loadIncludedDoc,
                                ThotBool skeleton,
@@ -77,7 +77,7 @@ extern void LoadDocumentPiv ( BinFile file,
 #else /* __STDC__ */
 
 extern PtrDocument GetPtrDocument (/* DocumentIdentifier docIdent */);
-extern ThotBool OpenDocument (/* CharUnit* docName,
+extern ThotBool OpenDocument (/* CHAR_T* docName,
                                  PtrDocument pDoc,
                                  ThotBool loadIncludedDoc,
                                  ThotBool skeleton,

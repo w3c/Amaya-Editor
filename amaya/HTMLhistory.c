@@ -23,13 +23,13 @@
 /* a record in an history */
 typedef struct _HistElement
 {
-	STRING	HistUrl;	/* document URL */
-        STRING  form_data;       /* data associated with forms */
-        int     method;         /* method used to request this URL */
-	int	HistPosition;	/* volume preceding the first element to be
-				made visible in the main window */
-	int	HistDistance;	/* distance from the  top of the window to the
-				top of this element (% of the window height) */
+     STRING HistUrl;        /* document URL */
+     STRING form_data;      /* data associated with forms */
+     int    method;         /* method used to request this URL */
+     int    HistPosition;	/* volume preceding the first element to be
+                               made visible in the main window */
+     int    HistDistance;	/* distance from the  top of the window to the
+                               top of this element (% of the window height) */
 } HistElement;
 
 /* the history of a window */
@@ -398,8 +398,7 @@ View                view;
      {
      if (hist)
        /* record the current position in the history */
-       AddDocHistory (doc, DocumentURLs[doc], DocumentMeta[doc]->form_data,
-		      DocumentMeta[doc]->method);
+       AddDocHistory (doc, DocumentURLs[doc], DocumentMeta[doc]->form_data, DocumentMeta[doc]->method);
      
      DocHistoryIndex[doc] = prev;
      }
@@ -626,8 +625,8 @@ ClickEvent          method;
    if (DocHistory[doc][DocHistoryIndex[doc]].form_data)
      TtaFreeMemory (DocHistory[doc][DocHistoryIndex[doc]].form_data);
    
-   DocHistory[doc][DocHistoryIndex[doc]].HistUrl = TtaStrdup (url);
-   DocHistory[doc][DocHistoryIndex[doc]].form_data = TtaStrdup (form_data);
+   DocHistory[doc][DocHistoryIndex[doc]].HistUrl = TtaWCSdup (url);
+   DocHistory[doc][DocHistoryIndex[doc]].form_data = TtaWCSdup (form_data);
    DocHistory[doc][DocHistoryIndex[doc]].method = method;
 
    position = RelativePosition (doc, &distance);
@@ -635,7 +634,7 @@ ClickEvent          method;
    DocHistory[doc][DocHistoryIndex[doc]].HistPosition = position;
 
    DocHistoryIndex[doc]++;
-   DocHistoryIndex[doc] %= DOC_HISTORY_SIZE;
+   DocHistoryIndex[doc] %= DOC_HISTORY_SIZE; 
 
    /* delete the next entry in the history */
    if (DocHistory[doc][DocHistoryIndex[doc]].HistUrl)

@@ -203,7 +203,8 @@ typedef unsigned char   ThotBool;
 #endif  /* TEXT */
 
 #if defined(_WINDOWS) && defined(_I18N_)
-#   define CUSTEXT(str) L##str
+/* #   define CUSTEXT(str) L##str */
+#   define CUSTEXT(str) str
 #else
 #     define CUSTEXT(str) str
 #endif
@@ -229,5 +230,19 @@ typedef unsigned char   ThotBool;
 #define CUS_TAB    CUSTEXT('\t')
 #define CUS_SPACE  CUSTEXT(' ')
 #define CUS_BSPACE CUSTEXT('\b')
+
+#define MAX_BYTES 3 
+/* We suppose that a multibyte character is encoded on maximum 2 bytes 
+   If this value is modified, we have to adapt the code of the following 
+   proceduress:
+
+   ** TtaReadWideChar
+   ** TtaWriteWideChar
+
+   ** TtaCheckDirectory
+   ** ThotDirBrowse_first
+                        
+   ** getFirstWord
+*/
 
 #endif /* THOT_SYS_H */

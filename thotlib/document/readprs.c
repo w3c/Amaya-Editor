@@ -1391,29 +1391,29 @@ PtrSSchema          pSS;
    NumAttrCase*        pCase;
    PathBuffer          dirBuffer;
    BinFile             file;
-   CharUnit            buf[MAX_TXT_LEN];
+   CHAR_T              buf[MAX_TXT_LEN];
    int                 InitialNElems, i, j, l;
    ThotBool            ret;
 
    error = FALSE;
    pPSch = NULL;
    /* compose le nom du fichier a ouvrir */
-   StringNCopy (dirBuffer, SchemaPath, MAX_PATH);
-   MakeCompleteName (fileName, CUSTEXT("PRS"), dirBuffer, buf, &i);
+   ustrncpy (dirBuffer, SchemaPath, MAX_PATH);
+   MakeCompleteName (fileName, TEXT("PRS"), dirBuffer, buf, &i);
 
    /* teste si le fichier existe */
    file = TtaReadOpen (buf);
    if (file == 0)
      {
 	/* message 'Fichier inaccessible' */
-	StringNCopy (buf, fileName, MAX_NAME_LENGTH);
-	StringConcat (buf, CUSTEXT(".PRS"));
+	ustrncpy (buf, fileName, MAX_NAME_LENGTH);
+	ustrcat (buf, TEXT(".PRS"));
 	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), buf);
      }
    else
      {
 	/* supprime le suffixe .PRS a la fin du nom de fichier */
-	buf[i - 4] = CUS_EOS;
+	buf[i - 4] = WC_EOS;
 	GetSchPres (&pPSch);
 	/* acquiert un bloc pour la prochaine regle lue */
 	GetPresentRule (&pNextPRule);
@@ -1461,8 +1461,7 @@ PtrSSchema          pSS;
 	     pNextPRule = NULL;
 	     pPSch = NULL;
 	     /* Schemas incompatibles */
-	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_OLD_SCH_TO_RECOMP),
-				buf);
+	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_OLD_SCH_TO_RECOMP), buf);
 	  }
 	else
 	  {
