@@ -68,7 +68,6 @@ static ThotBool             CheckProfile = FALSE;
 static char                 UserProfile[MAX_PRO_LENGTH];
 static PtrProCtl            UserProfContext = NULL;
 static char                 ProfileBuff[MAX_PRO_LENGTH];
-static char                 ProfileBuffA[MAX_PRO_LENGTH];
 /* This boolean goes FALSE if the profile only contains browsing functions */
 static ThotBool             EnableEdit = TRUE;
 
