@@ -132,14 +132,13 @@ disponibles sont :</p>
         </mrow>
         <mi>n</mi>
       </msubsup>
-    </math> or <math xmlns="http://www.w3.org/1998/Math/MathML">
+    </math> ou <math xmlns="http://www.w3.org/1998/Math/MathML">
       <mrow>
         <msubsup>
-          <mo largeop="true">&Integral;</mo>
+          <mo>&Integral;</mo>
           <mn>0</mn>
           <mo>&infin;</mo>
         </msubsup>
-        <mi></mi>
       </mrow>
     </math></li>
   <li>Indice (<code>msub)</code>: <math

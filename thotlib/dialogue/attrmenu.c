@@ -50,7 +50,7 @@
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 
-/* flags to show the existence of the TtAttribute forms*/
+/* flags to show the existence of the TtAttribute forms */
 static ThotBool     AttrFormExists = FALSE;
 static ThotBool     MandatoryAttrFormExists = FALSE;
 
@@ -73,6 +73,12 @@ static ThotBool     AttrEvent[MAX_MENU * 2];
 static int          AttrEventNumber[MAX_MENU];
 static int          ActiveEventAttr[MAX_MENU];
 static int          EventMenu[MAX_FRAME];
+
+/* the context of the attribute menu that was built previously */
+static PtrDocument PrevDoc = NULL;
+static PtrSSchema PrevStructSchema = NULL;
+static int PrevElTypeNumber = 0;
+static ThotBool PrevElAttr = FALSE;
 
 /* required attributs context */
 static PtrAttribute PtrReqAttr;
@@ -918,12 +924,6 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
   /* demande quelle est la selection courante */
   selectionOK = GetCurrentSelection (&SelDoc, &firstSel, &lastSel, &firstChar,
 				     &lastChar);
-  if (selectionOK && firstSel == lastSel && firstSel->ElParent == NULL)
-    /* the Document element is selected. It can't accept any attribute */
-    selectionOK = FALSE;
-  if (selectionOK && ElementIsReadOnly (firstSel))
-    /* the selected element is read-only. Don't change its attributes */
-    selectionOK = FALSE;
   if (selectionOK && SelDoc == pDoc && firstSel)
     /* il y a une selection et elle est dans le document traite' */
     {
@@ -1126,7 +1126,6 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
   return (nbOfEntries - *nbEvent);
 }
 
-
 /*----------------------------------------------------------------------
    UpdateAttrMenu                                                       
    Updates the Attributes menu of all open frames belonging to document
@@ -1134,6 +1133,9 @@ static int BuildAttrMenu (char *bufMenu, PtrDocument pDoc, int *nbEvent,
   ----------------------------------------------------------------------*/
 void UpdateAttrMenu (PtrDocument pDoc)
 {
+  ThotBool            selectionOK;
+  PtrElement          firstSel, lastSel;
+  int                 firstChar, lastChar;
   char                bufMenuAttr[MAX_TXT_LEN];
   char                bufEventAttr[MAX_TXT_LEN];
 #ifndef _WX
@@ -1149,7 +1151,8 @@ void UpdateAttrMenu (PtrDocument pDoc)
 #endif /* _WINGUI */
 
 #ifdef _WX
-  /* do nothing if the attribute dialog is not updatable (auto refresh checkbox activate) */
+  /* do nothing if the attribute dialog is not updatable (auto refresh
+     checkbox activate) */
   if (!AmayaSubPanelManager::GetInstance()->IsActive(WXAMAYA_PANEL_ATTRIBUTE))
     {
       AmayaSubPanelManager::GetInstance()->ShouldBeUpdated(WXAMAYA_PANEL_ATTRIBUTE);
@@ -1159,7 +1162,39 @@ void UpdateAttrMenu (PtrDocument pDoc)
 
   /* Compose le menu des attributs */
   if (pDoc == SelectedDocument && !pDoc->DocReadOnly)
-    nbItemAttr = BuildAttrMenu (bufMenuAttr, pDoc, &nbEvent, bufEventAttr);
+    {
+      selectionOK = GetCurrentSelection (&pDoc, &firstSel, &lastSel,
+					 &firstChar, &lastChar);
+      if (selectionOK && firstSel == lastSel && firstSel->ElParent == NULL)
+	/* the Document element is selected. It can't accept any attribute */
+	selectionOK = FALSE;
+      if (selectionOK && ElementIsReadOnly (firstSel))
+	/* the selected element is read-only. Don't change its attributes */
+	selectionOK = FALSE;
+      if (!selectionOK)
+	{
+	  nbItemAttr = 0;
+	  nbEvent = 0;
+	}
+      else
+	{
+	  if (pDoc != PrevDoc ||
+	      firstSel->ElStructSchema != PrevStructSchema ||
+	      firstSel->ElTypeNumber != PrevElTypeNumber ||
+	      firstSel->ElFirstAttr != NULL ||
+	      PrevElAttr)
+	    {
+	      nbItemAttr = BuildAttrMenu (bufMenuAttr, pDoc, &nbEvent,
+					  bufEventAttr);
+	      PrevDoc = pDoc;
+	      PrevStructSchema = firstSel->ElStructSchema;
+	      PrevElTypeNumber = firstSel->ElTypeNumber;
+	      PrevElAttr = (firstSel->ElFirstAttr != NULL);
+	    }
+	  else
+	    return;
+	}
+    }
   else
     {
       nbItemAttr = 0;

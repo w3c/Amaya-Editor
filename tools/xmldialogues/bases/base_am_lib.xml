@@ -1506,7 +1506,7 @@
 </label>
 <label define="TMSG_DEL_ATTR">
 	<message xml:lang="en">Remove attribute</message>
-	<message xml:lang="fr">Retire l'attribut</message>
+	<message xml:lang="fr">Retirer l'attribut</message>
 	<message xml:lang="de">Löschen</message>
 	<message xml:lang="it">Rimuovi l\'attributo</message>
 	<message xml:lang="es">Eliminar atributo</message>
