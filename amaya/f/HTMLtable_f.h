@@ -6,6 +6,10 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern ThotBool RemoveColumn ( Element colhead,
+                               Document doc,
+                               ThotBool ifEmpty,
+                               ThotBool inMath );
 extern void CheckAllRows ( Element table,
                            Document doc,
                            ThotBool placeholder,
@@ -20,10 +24,6 @@ extern void CellPasted ( NotifyElement * event );
 extern ThotBool DeleteRow ( NotifyElement * event );
 extern void RowDeleted ( NotifyElement * event );
 extern ThotBool DeleteCell ( NotifyElement * event );
-extern ThotBool RemoveColumn ( Element colhead,
-                               Document doc,
-                               ThotBool ifEmpty,
-                               ThotBool inMath );
 extern void CellDeleted ( NotifyElement * event );
 extern void TableCreated ( NotifyElement * event );
 extern void TablebodyDeleted ( NotifyElement * event );
@@ -32,14 +32,18 @@ extern void RowPasted ( NotifyElement * event );
 extern void ColspanCreated ( NotifyAttribute * event );
 extern ThotBool RegisterColspan ( NotifyAttribute * event );
 extern void ColspanModified ( NotifyAttribute * event );
-extern ThotBool ColspanDelete ( NotifyAttribute * event );
+extern void ColspanDeleted ( NotifyAttribute * event );
 extern void RowspanCreated ( NotifyAttribute * event );
 extern ThotBool RegisterRowspan ( NotifyAttribute * event );
 extern void RowspanModified ( NotifyAttribute * event );
-extern ThotBool RowspanDelete ( NotifyAttribute * event );
+extern void RowspanDeleted ( NotifyAttribute * event );
 
 #else /* __STDC__ */
 
+extern ThotBool RemoveColumn (/* Element colhead,
+                                 Document doc,
+                                 ThotBool ifEmpty,
+                                 ThotBool inMath */);
 extern void CheckAllRows (/* Element table,
                              Document doc,
                              ThotBool placeholder,
@@ -54,10 +58,6 @@ extern void CellPasted (/* NotifyElement * event */);
 extern ThotBool DeleteRow (/* NotifyElement * event */);
 extern void RowDeleted (/* NotifyElement * event */);
 extern ThotBool DeleteCell (/* NotifyElement * event */);
-extern ThotBool RemoveColumn (/* Element colhead,
-                                 Document doc,
-                                 ThotBool ifEmpty,
-                                 ThotBool inMath */);
 extern void CellDeleted (/* NotifyElement * event */);
 extern void TableCreated (/* NotifyElement * event */);
 extern void TablebodyDeleted (/* NotifyElement * event */);
@@ -66,11 +66,11 @@ extern void RowPasted (/* NotifyElement * event */);
 extern void ColspanCreated (/* NotifyAttribute * event */);
 extern ThotBool RegisterColspan (/* NotifyAttribute * event */);
 extern void ColspanModified (/* NotifyAttribute * event */);
-extern ThotBool ColspanDelete (/* NotifyAttribute * event */);
+extern void ColspanDeleted (/* NotifyAttribute * event */);
 extern void RowspanCreated (/* NotifyAttribute * event */);
 extern ThotBool RegisterRowspan (/* NotifyAttribute * event */);
 extern void RowspanModified (/* NotifyAttribute * event */);
-extern ThotBool RowspanDelete (/* NotifyAttribute * event */);
+extern void RowspanDeleted (/* NotifyAttribute * event */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

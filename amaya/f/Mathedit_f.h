@@ -109,7 +109,8 @@ extern void AttrColAlignDeleted ( NotifyAttribute *event );
 extern void AttrColAlignMtdCreated ( NotifyAttribute *event );
 extern void AttrColAlignMtdDeleted ( NotifyAttribute *event );
 extern void HandleColAndRowAlignAttributes ( Element row,
-                                              Document doc );
+                                             Document doc );
+
 #else /* __STDC__ */
 
 extern void AddMathButton (/* Document doc,
@@ -215,7 +216,7 @@ extern void AttrColAlignDeleted (/* NotifyAttribute *event */);
 extern void AttrColAlignMtdCreated (/* NotifyAttribute *event */);
 extern void AttrColAlignMtdDeleted (/* NotifyAttribute *event */);
 extern void HandleColAndRowAlignAttributes (/* Element row,
-                                                Document doc */ );
+                                               Document doc */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
