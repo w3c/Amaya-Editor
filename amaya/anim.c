@@ -4331,10 +4331,6 @@ static void Define_motion_anim (NotifyElement *event)
 }
 #endif /* _SVGANIM */
 
-
-
-
-
 /*----------------------------------------------------------------------
   Show_timeline_help 
   ----------------------------------------------------------------------*/
@@ -4358,6 +4354,10 @@ static void Show_timeline_help (NotifyElement *event)
       dt[basedoc].helpdoc = GetAmayaDoc (buffer, NULL, 0,0, CE_ABSOLUTE,
 					 FALSE, FALSE, FALSE,
 					 TtaGetDefaultCharset ());
+      /* no button bar */
+      TtcSwitchButtonBar (dt[basedoc].helpdoc, 1);
+      /* no command open */
+      TtcSwitchCommands (dt[basedoc].helpdoc, 1);
       /* set the document in Read Only mode */
       TtaSetDocumentAccessMode (dt[basedoc].helpdoc, 0);
     }
@@ -4372,8 +4372,6 @@ static void Show_timeline_help (NotifyElement *event)
     }
 }
 #endif /* _SVGANIM */
-
-
 
 /*----------------------------------------------------------------------
   Selection_changed_in_basedoc 
