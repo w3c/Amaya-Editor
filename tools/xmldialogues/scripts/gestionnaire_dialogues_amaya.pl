@@ -71,11 +71,11 @@ use Import_am_msg qw( 	&import_a_language
 								$in_textsufix
 								$encodage );
 use Export_am_msg qw ( 	&export );
-use Forcer 			qw ( 	&forcer );
 use Dial_tool_box qw ( 	&add_label
-								&remove_label );
+								&delete_label );
+use Forcer 			qw ( 	&forcer );
 
-
+		
 
 menu () ;
 
@@ -195,8 +195,14 @@ sub menu1 {
 										);
 	}
 	elsif ($choice == 4) {
+		Dial_tool_box::add_label ( $OUT_PUT_directory,
+											$base_name{ $index{ $last_choice}} 
+											);						
 	}
 	elsif ($choice == 5) {
+		Dial_tool_box::delete_label ( $OUT_PUT_directory,
+												$base_name{ $index{ $last_choice}} 
+												);
 	}
 	elsif ($choice == 6) { # n'arrive que si last_choice = 1
 		#en principe ne reprend que EDITOR.h
