@@ -338,27 +338,8 @@ const CHAR_T*        path;
 
    ustrcpy (temppath, path);
    ExtractSuffix (temppath, suffix);
-
-   /* Normalize the suffix */
-   i = 0;
-   while (suffix[i] != WC_EOS && i < MAX_LENGTH -1)
+   while (suffix[0] != WC_EOS)
      {
-       nsuffix[i] = utolower (suffix[i]);
-       i++;
-     }
-   nsuffix[i] = WC_EOS;
-   if (!ustrcmp (nsuffix, TEXT("html")) ||
-       !ustrcmp (nsuffix, TEXT("htm")) ||
-       !ustrcmp (nsuffix, TEXT("shtml")) ||
-       !ustrcmp (nsuffix, TEXT("jsp")) ||
-       !ustrcmp (nsuffix, TEXT("xht")) ||
-       !ustrcmp (nsuffix, TEXT("xhtm")) ||
-       !ustrcmp (nsuffix, TEXT("xhtml")))
-     return (TRUE);
-   else if (!ustrcmp (nsuffix, TEXT("gz")))
-     {
-       /* take into account compressed files */
-       ExtractSuffix (temppath, suffix);       
        /* Normalize the suffix */
        i = 0;
        while (suffix[i] != WC_EOS && i < MAX_LENGTH -1)
@@ -368,19 +349,42 @@ const CHAR_T*        path;
 	 }
        nsuffix[i] = WC_EOS;
        if (!ustrcmp (nsuffix, TEXT("html")) ||
-           !ustrcmp (nsuffix, TEXT("htm")) ||
-           !ustrcmp (nsuffix, TEXT("shtml")) ||
-           !ustrcmp (nsuffix, TEXT("jsp")) ||
-           !ustrcmp (nsuffix, TEXT("xht")) ||
-           !ustrcmp (nsuffix, TEXT("xhtm")) ||
-           !ustrcmp (nsuffix, TEXT("xhtml")))
- 
+	   !ustrcmp (nsuffix, TEXT("htm")) ||
+	   !ustrcmp (nsuffix, TEXT("shtml")) ||
+	   !ustrcmp (nsuffix, TEXT("jsp")) ||
+	   !ustrcmp (nsuffix, TEXT("xht")) ||
+	   !ustrcmp (nsuffix, TEXT("xhtm")) ||
+	   !ustrcmp (nsuffix, TEXT("xhtml")))
 	 return (TRUE);
+       else if (!ustrcmp (nsuffix, TEXT("gz")))
+	 {
+	   /* take into account compressed files */
+	   ExtractSuffix (temppath, suffix);       
+	   /* Normalize the suffix */
+	   i = 0;
+	   while (suffix[i] != WC_EOS && i < MAX_LENGTH -1)
+	     {
+	       nsuffix[i] = utolower (suffix[i]);
+	       i++;
+	     }
+	   nsuffix[i] = WC_EOS;
+	   if (!ustrcmp (nsuffix, TEXT("html")) ||
+	       !ustrcmp (nsuffix, TEXT("htm")) ||
+	       !ustrcmp (nsuffix, TEXT("shtml")) ||
+	       !ustrcmp (nsuffix, TEXT("jsp")) ||
+	       !ustrcmp (nsuffix, TEXT("xht")) ||
+	       !ustrcmp (nsuffix, TEXT("xhtm")) ||
+	       !ustrcmp (nsuffix, TEXT("xhtml")))
+	     return (TRUE);
+	   else
+	     return (FALSE);
+	 }
        else
-	 return (FALSE);
+	 /* check if there is another suffix */
+	 ExtractSuffix (temppath, suffix);
      }
-   else
-     return (FALSE);
+   
+   return (FALSE);
 }
 
 /*----------------------------------------------------------------------
