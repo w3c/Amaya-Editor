@@ -196,10 +196,15 @@ AnnotMeta *annot;
   else
     first  = TtaSearchElementByLabel(annot->labf, TtaGetMainRoot (source_doc));
 
-  if (!first)
-    /* @@ JK: signal an error, orphan annotation */
-    return;
-  
+  if (first)
+    /* we found it */
+    annot->is_orphan = FALSE;
+  else
+    {
+      /* it's an orphan annotation */
+      first = TtaGetMainRoot (source_doc);
+      annot->is_orphan = TRUE;
+    }
   
   /* create the anotation element */
   XLinkSchema = GetXLinkSSchema (source_doc);
@@ -316,11 +321,11 @@ AnnotMeta *annot;
   attrType.AttrSSchema = XLinkSchema;
 
   /* add the annotation icon */
-  if (ustrcasecmp (annot->author, "tim"))
+  if (!annot->is_orphan)
     attrType.AttrTypeNum = XLink_ATTR_AnnotIcon1;
   else
-    /* @@ aha, it's Tim */
-    attrType.AttrTypeNum = XLink_ATTR_AnnotIcon2;
+    attrType.AttrTypeNum = XLink_ATTR_AnnotOrphIcon;
+
   attr = TtaNewAttribute (attrType);
   TtaAttachAttribute (anchor, attr, source_doc);  
 
@@ -708,15 +713,19 @@ Element LINK_SelectSourceDoc (doc, annot_url, return_el)
 
     if (annot)
       {
-	xptr_ctx = XPointer_parse (doc, annot->xptr);
-	if (!xptr_ctx->error)
+	if (!annot->is_orphan)
 	  {
-	    XPointer_select (xptr_ctx);
-	    selected = TRUE;
+	    xptr_ctx = XPointer_parse (doc, annot->xptr);
+	    if (!xptr_ctx->error)
+	      {
+		XPointer_select (xptr_ctx);
+		selected = TRUE;
+	      }
+	    else
+	      fprintf (stderr, 
+		       "LINK_SelectSource: impossible to set XPointer\n");
+	    XPointer_free (xptr_ctx);
 	  }
-	else
-	  fprintf (stderr, "LINK_SelectSource: impossible to set XPointer\n");
-	XPointer_free (xptr_ctx);
       }
     else
       fprintf (stderr, "LINK_SelectSourceDoc: couldn't find annotation metadata\n");

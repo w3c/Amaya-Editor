@@ -36,7 +36,8 @@ static ThotBool annotAutoLoad; /* should annotations be downloaded
 static ThotBool annotCustomQuery; /* use an algae custom query if TRUE */
 static CHAR_T *annotAlgaeText;    /* the custom algae query text */
 
-static Element last_selected_annotation; /* last selected annotation */
+/* last selected annotation */
+static Element last_selected_annotation[DocumentTableLength];
 
 static ThotBool schema_init = FALSE;
 
@@ -452,7 +453,8 @@ Document doc;
 {
   int i;
 
-  /* stop the on-going requests */
+  /* reset the last_selected_annotation for this document */
+  last_selected_annotation[doc] = NULL;
 
   /* close all the open annotation windows, asking the user if he 
    wants to save them */
@@ -463,10 +465,11 @@ Document doc;
       if (DocumentURLs[i] && DocumentTypes[i] == docAnnot
 	  && DocumentMeta[i]->source_doc == doc)
 	{
+	  /* stop any active transfer related to this document */
+	  StopTransfer (i, 1);	
 	  /* insist, until the user saves the annotation.
 	     It'd be nice to keep the annotation open, even if the
-	     doc disappears
-	  */
+	     doc disappears */
 	  /* while (DocumentURLs[i]) */
 	    CloseDocument (i, 1);
 	}
@@ -1048,7 +1051,7 @@ Element el;
   CHAR_T          *annot_url;
 
   /* reset the last selected annotation ptr */
-  last_selected_annotation = NULL;
+  last_selected_annotation[doc] = NULL;
 
   /* is it an annotation link? */
   elType = TtaGetElementType (el);
@@ -1070,7 +1073,7 @@ Element el;
   /* select the annotated text */
   LINK_SelectSourceDoc (doc, annot_url, FALSE);
   /* memorize the last selected annotation */
-  last_selected_annotation =  el;
+  last_selected_annotation[doc] =  el;
 
   TtaFreeMemory (annot_url);
 }
@@ -1110,8 +1113,8 @@ void *context;
     {
       /* select the annotated text and memorize the last selected 
 	 annotation */ 
-        last_selected_annotation =  
-	  LINK_SelectSourceDoc (doc, DocumentURLs[ctx->doc_annot], TRUE);
+      last_selected_annotation[doc] =  
+	LINK_SelectSourceDoc (doc, DocumentURLs[ctx->doc_annot], TRUE);
     }
 
   TtaFreeMemory (ctx->url);
@@ -1226,6 +1229,8 @@ NotifyElement *event;
 
 /*-----------------------------------------------------------------------
   ANNOT_Delete_callback
+  Todo: rename the LINK_SaveLink to LINK_SaveIndex, as that's what 
+  it's really doing.
   -----------------------------------------------------------------------*/
 #ifdef __STDC__
 void ANNOT_Delete_callback (int doc, int status, 
@@ -1361,9 +1366,9 @@ void ANNOT_Delete (document, view)
       /* delete from an annotation document */
 
       /* clear the status */
-      last_selected_annotation =  NULL;
       annot_doc = doc;
       source_doc = DocumentMeta[doc]->source_doc;
+      last_selected_annotation[source_doc] =  NULL;
   
       /* make the body */
       if (IsW3Path (DocumentURLs[doc]))
@@ -1408,10 +1413,11 @@ void ANNOT_Delete (document, view)
       source_doc = doc;
 
       /* verify if the user has selected an annotation link */
-      if (!last_selected_annotation)
+      if (!last_selected_annotation[source_doc])
 	return;
 
-      annotEl = last_selected_annotation;
+      annotEl = last_selected_annotation[source_doc];
+      last_selected_annotation[source_doc] = NULL;
 
       /* is it an annotation link? */
       elType = TtaGetElementType (annotEl);
@@ -1529,6 +1535,4 @@ void ANNOT_Delete (document, view)
       /* invoke the callback */
       ANNOT_Delete_callback (doc, HT_OK, NULL, NULL, NULL, (void *) ctx);
     }
-  /* @@ JK: Todo rename the function to LINK_SaveIndex, as that's what it's
-     doing */
 }
