@@ -1663,7 +1663,7 @@ int                 percentH;
 		BoxGeometry (frame, *x, *y, *width, *height, *x + xref, *y + yref);
 	      /* is there any dependence between height and width */
 	      *width = *width + dl;
-	      *height = d*height + h;
+	      *height = *height + dh;
 	      if (percentW != 0)
 		{
 		  *width = *height * percentW / 100;
