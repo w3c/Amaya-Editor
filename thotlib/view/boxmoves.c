@@ -2662,12 +2662,12 @@ int                 frame;
 		     if (pAb->AbInLine)
 		       /* Inclusion dans un bloc de ligne */
 		       EncloseInLine (pBox, frame, pAb);
-		     else if ((pCell = GetParentCell (pBox)) &&
+		     /*else if ((pCell = GetParentCell (pBox)) &&
 			      pAb->AbBox->BxPacking <= 1)
 		       {
-			 /* */
 			 HeightPack (pAb, pSourceBox, frame);
 		       }
+		     */
 		     /* Si l'englobement n'est pas prevu en fin de traitement */
 		     else if (pAb->AbBox != PackBoxRoot &&
 			      !IsParentBox (pAb->AbBox, PackBoxRoot) /*&&
