@@ -101,10 +101,6 @@ GLint GLEndPage (void);
 GLint GLBeginViewport (GLint viewport[4]);
 GLint GLEndViewport (void);
 
-GLint GLText (const char *str, const char *fontname, GLshort fontsize);
-GLint GLDrawPixels (GLsizei width, GLsizei height,
-				   GLint xorig, GLint yorig,
-				   GLenum format, GLenum type, const void *pixels);
 GLint GLEnable (GLint mode);
 GLint GLDisable (GLint mode);
 GLint GLPointSize (GLfloat value);
@@ -114,7 +110,8 @@ GLint GLLineWidth (GLfloat value);
 GLint GLParseFeedbackBuffer (GLfloat *current);
 
 /*Text*/
-GLint GLText (const char *str, const char *fontname, GLshort fontsize);
+GLint GLText (const char *str, const char *fontname, GLshort fontsize, 
+	      GLfloat x, GLfloat y);
 
 /*Pictures*/
 GLint GLDrawPixels (GLsizei width, GLsizei height,
