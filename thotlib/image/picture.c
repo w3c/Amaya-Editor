@@ -374,20 +374,6 @@ static void GL_MakeTextureSize(PictInfo *Image,
 #endif /* POWER2TEXSUBIMAGE */
 
 
-/* static void MakeOpaque (unsigned char *pxl,  */
-/* 			unsigned int width, unsigned int height) */
-/* { */
-/*   int nbpixel; */
-
-/*   nbpixel = width * height * 4; */
-/*   pxl += 3; */
-/*   while (nbpixel) */
-/*     { */
-/*       *pxl = 0; */
-/*       nbpixel -= 4; */
-/*       pxl += 4; */
-/*     }   */
-/* } */
 
 /*----------------------------------------------------------------------
  GL_TextureBind : Put Texture in video card's Memory at
@@ -2451,15 +2437,6 @@ void *Group_shot (int x, int y, int width, int height, int frame, ThotBool is_rg
 		    GL_RGBA, 
 		    GL_UNSIGNED_BYTE, 
 		    imageDesc->PicPixmap);
-
-      /* if (!is_rgba) */
-      /* 	MakeOpaque (imageDesc->PicPixmap, width, height); */
-
-
-      /* SavePng ("/home/cheyroul/test.png",  */
-/*        	   imageDesc->PicPixmap,  */
-/*      	   (unsigned int) width,  */
-/*       	   (unsigned int) height); */
 
       GL_TextureBind (imageDesc);
       return imageDesc;

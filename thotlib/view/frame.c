@@ -797,7 +797,8 @@ void ComputeABoundingBox (PtrAbstractBox pAbSeeked, int frame)
 
 #ifdef _GL
 /*----------------------------------------------------------------------
-  SyncBoundingboxes : sync Bounding box of a group
+  SyncBoundingboxes : sync Bounding box of a group according to openGL 
+  Compued values
   ----------------------------------------------------------------------*/
 static void SyncBoundingboxesReal (PtrAbstractBox pInitAb, 
 				   int XFrame, int YFrame, int frame)

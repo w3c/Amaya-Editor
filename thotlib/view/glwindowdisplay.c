@@ -273,6 +273,7 @@ void ResetMainWindowBackgroundColor (int frame)
 #endif /*_GTK*/
   GL_Background[frame] = color;
   TtaGiveThotRGB (color, &red, &green, &blue);
+  /* the 0.0 for alpha is needed for group opacity */
   glClearColor ((float)red/255, (float)green/255, (float)blue/255, 0.0);
 }
 /*----------------------------------------------------------------------
@@ -287,6 +288,7 @@ void SetMainWindowBackgroundColor (int frame, int color)
 #endif /*_GTK*/
   GL_Background[frame] = color;
   TtaGiveThotRGB (color, &red, &green, &blue);
+  /* the 0.0 for alpha is needed for group opacity */
   glClearColor ((float)red/255, (float)green/255, (float)blue/255, 0.0);
 }
 
@@ -1923,7 +1925,11 @@ void TtaPause (int frame)
 
   if (frame && frame <= MAX_FRAME)
     if (FrameTable[frame].Anim_play)
-      TtaChangePlay (frame);
+      {
+	TtaChangePlay (frame);
+	FrameTable[frame].BeginTime = 0;
+	FrameTable[frame].LastTime = 0;
+      }
 }
 /*----------------------------------------------------------------------
  SetCurrentTime : Position current time

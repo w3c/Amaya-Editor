@@ -241,7 +241,13 @@ static void LocateLeafBox (int frame, View view, int x, int y, int xDelta,
      /* stay in the same box */
      pBox = endBox;
    else
+     {
+#ifdef _GL
+       x -= pFrame->FrXOrg;
+       y -= pFrame->FrYOrg;
+#endif /* _GL */
      pBox = GetLeafBox (endBox, frame, &x, &y, xDelta, yDelta);
+     }
    if (pBox)
      {
 	pAb = pBox->BxAbstractBox;
@@ -574,7 +580,7 @@ static void MovingCommands (int code, Document doc, View view,
 #ifndef _GL
 	  ClickX = pBoxBegin->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
 #else /* _GL */
-	  ClickX = pBoxBegin->BxClipX + pViewSel->VsXPos;
+	  ClickX = pBoxBegin->BxClipX + pViewSel->VsBox->BxClipX;
 #endif /* _GL */
 	  break;
 	  
@@ -652,7 +658,7 @@ static void MovingCommands (int code, Document doc, View view,
 #ifndef _GL
 		      if (pBoxEnd->BxXOrg + pViewSelEnd->VsXPos > pFrame->FrXOrg + w)
 #else /* _GL */
-			if (pBoxEnd->BxClipX + pViewSelEnd->VsXPos > w)
+			if (pBoxEnd->BxClipX + pViewSelEnd->VsBox->BxClipX > w)
 #endif /* _GL */
 			{
 			  if (FrameTable[frame].FrScrollOrg + FrameTable[frame].FrScrollWidth > pFrame->FrXOrg + w)
@@ -663,7 +669,7 @@ static void MovingCommands (int code, Document doc, View view,
 			HorizontalScroll (frame, pBoxEnd->BxXOrg + pViewSelEnd->VsXPos - 4 - pFrame->FrXOrg, 0);
 #else /* _GL */
 			else if (pBoxEnd->BxClipX + pViewSelEnd->VsXPos - 4 < 0)
-			  HorizontalScroll (frame, pBoxEnd->BxClipX + pViewSelEnd->VsXPos - 4, 0);
+			  HorizontalScroll (frame, pBoxEnd->BxClipX + pViewSelEnd->VsBox->BxClipX - 4, 0);
 
 #endif /* _GL */
 		    }
@@ -710,7 +716,7 @@ static void MovingCommands (int code, Document doc, View view,
 #ifndef _GL
 	  ClickX = pBoxBegin->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
 #else /* _GL */
-	  ClickX = pBoxBegin->BxClipX + pViewSel->VsXPos;
+	  ClickX = pBoxBegin->BxClipX + pViewSel->VsBox->BxClipX;
 #endif /* _GL */
 	  break;
 
@@ -722,7 +728,7 @@ static void MovingCommands (int code, Document doc, View view,
 #ifndef _GL
 	    ClickX = pViewSel->VsBox->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
 #else /* _GL */
-	  ClickX = pViewSel->VsBox->BxClipX + pViewSel->VsXPos;
+	  ClickX = pViewSel->VsBox->BxClipX + pViewSel->VsBox->BxClipX;
 #endif /* _GL */
 	  break;
 	   
@@ -734,7 +740,7 @@ static void MovingCommands (int code, Document doc, View view,
 #ifndef _GL
 	    ClickX = pViewSel->VsBox->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
 #else /* _GL */
-	  ClickX = pViewSel->VsBox->BxClipX + pViewSel->VsXPos;
+	  ClickX = pViewSel->VsBox->BxClipX + pViewSel->VsBox->BxClipX;
 #endif /* _GL */
 	  break;
 	   
@@ -757,9 +763,9 @@ static void MovingCommands (int code, Document doc, View view,
 		x = pViewSelEnd->VsXPos + pBox->BxXOrg;
 	      y = pBox->BxYOrg + pBox->BxHeight;
 #else /* _GL */
-	        x = pViewSel->VsXPos + pBoxBegin->BxClipX + pFrame->FrXOrg;
+	        x = pViewSel->VsBox->BxClipX + pBoxBegin->BxClipX + pFrame->FrXOrg;
 	      else
-		x = pViewSelEnd->VsXPos + pBox->BxClipX + pFrame->FrXOrg;
+		x = pViewSelEnd->VsBox->BxClipX + pBox->BxClipX + pFrame->FrXOrg;
 	      y = pBox->BxClipY + pBox->BxClipH + pFrame->FrYOrg;
 #endif /* _GL */
 	      yDelta = 10;
@@ -819,18 +825,18 @@ static void MovingCommands (int code, Document doc, View view,
 	    {
 	      done = FALSE;
 #ifndef _GL
-	      y = pBoxBegin->BxYOrg;
+	      y = pBoxBegin->BxYOrg + pFrame->FrYOrg;
 	      if (SelPosition || RightExtended)
 		x = pViewSel->VsXPos + pBoxBegin->BxXOrg;
 	      else
 		x = pViewSelEnd->VsXPos + pBoxEnd->BxXOrg;
 
 #else /* _GL */
-	      y = pBoxBegin->BxClipY;
+	      y = pBoxBegin->BxClipY + pFrame->FrYOrg;
 	      if (SelPosition || RightExtended)
-		x = pViewSel->VsXPos + pBoxBegin->BxClipX + pFrame->FrYOrg;
+		x = pViewSel->VsBox->BxClipX + pBoxBegin->BxClipX + pFrame->FrYOrg;
 	      else
-		x = pViewSelEnd->VsXPos + pBoxEnd->BxClipX + pFrame->FrYOrg;
+		x = pViewSelEnd->VsBox->BxClipX + pBoxEnd->BxClipX + pFrame->FrYOrg;
 #endif /* _GL */
 	      yDelta = -10;
 	      if (extendSel && RightExtended)
@@ -848,7 +854,11 @@ static void MovingCommands (int code, Document doc, View view,
 		  else
 		    {
 		      /* just decrease the curent extension */
+#ifndef _GL
 		      y = pBoxEnd->BxYOrg;
+#else /* _GL */
+		      y = pBoxEnd->BxClipY + pFrame->FrYOrg;
+#endif /* _GL */
 		      pBox = pBoxEnd;
 		    }
 		}
