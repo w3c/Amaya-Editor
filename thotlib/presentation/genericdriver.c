@@ -2071,6 +2071,7 @@ PresentationValue   v;
       return (-1);
    v.typed_data.unit = DRIVERP_UNIT_REL;
    v.typed_data.value = cst;
+   v.typed_data.real = FALSE;
    etoi_convert (rule, v, ctxt, FnBackgroundPicture, FALSE);
    return (0);
 }

@@ -3253,7 +3253,7 @@ static HTMLStyleAttribute HTMLStyleAttributes[] =
 /*----------------------------------------------------------------------
    ParseCSSRule : parse a CSS Style string                        
    we expect the input string describing the style to be of the  
-   form : ATTRIBUTE : DESCRIPTION [ , ATTIBUTE : DESCRIPTION ] * 
+   form : PRORPERTY : DESCRIPTION [ ; PROPERTY : DESCRIPTION ] * 
    but tolerate incorrect or incomplete input                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -3276,11 +3276,12 @@ boolean             isHTML;
     {
       cssRule = TtaSkipBlanks (cssRule);
       found = FALSE;
-      /* look for the type of attribute */
+      /* look for the type of property */
       for (i = 0; i < NB_CSSSTYLEATTRIBUTE && !found; i++)
 	{
 	  lg = ustrlen (HTMLStyleAttributes[i].name);
-	  if (!ustrncmp (cssRule, HTMLStyleAttributes[i].name, lg))
+	  if ((isHTML && !ustrncasecmp (cssRule, HTMLStyleAttributes[i].name, lg)) ||
+	     (!isHTML && !ustrncmp (cssRule, HTMLStyleAttributes[i].name, lg)))
 	    {
 	      cssRule += lg;
 	      found = TRUE;
