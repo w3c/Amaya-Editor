@@ -828,6 +828,14 @@ Document	doc;
       {
       /* get the value of the position attribute */
       TtaGiveTextAttributeValue (attr, text, &length);
+      x = y = 0;
+      ptr = text;
+      sscanf (ptr, "%d", &x);
+      ptr = SkipInt (ptr);
+      ptr = SkipSep (ptr);
+      if (ptr)
+         sscanf (ptr, "%d", &y);
+
       /* Search the IntPosX attribute */
       TtaGiveAttributeType (attr, &attrType, &attrKind);
       attrType.AttrTypeNum = GraphML_ATTR_IntPosX;
@@ -838,6 +846,8 @@ Document	doc;
         attrX = TtaNewAttribute (attrType);
         TtaAttachAttribute (el, attrX, doc);
         }
+      TtaSetAttributeValue (attrX, x, el, doc);
+
       /* Search the IntPosY attribute */
       attrType.AttrTypeNum = GraphML_ATTR_IntPosY;
       attrY = TtaGetAttribute (el, attrType);
@@ -847,14 +857,6 @@ Document	doc;
         attrY = TtaNewAttribute (attrType);
         TtaAttachAttribute (el, attrY, doc);
         }
-      x = y = 0;
-      ptr = text;
-      sscanf (ptr, "%d", &x);
-      ptr = SkipInt (ptr);
-      ptr = SkipSep (ptr);
-      if (ptr)
-         sscanf (ptr, "%d", &y);
-      TtaSetAttributeValue (attrX, x, el, doc);
       TtaSetAttributeValue (attrY, y, el, doc);
       TtaFreeMemory (text);
       }

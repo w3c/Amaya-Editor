@@ -64,7 +64,7 @@ static ThotBool PaletteDisplayed = FALSE;
 /*----------------------------------------------------------------------
  SetEmptyShapeAttrSubTree
  A GraphML drawing is about to be saved. Set the EmptyShape attribute
- on all closed geometric shape that do not contain any Label element.
+ on all closed geometric shapes that do not contain any Label element.
  This attribute is used by the translation schema (GraphMLT.T) to
  generate a closing tag.
  -----------------------------------------------------------------------*/
@@ -112,7 +112,9 @@ Document doc;
 		 {
 		 attr = TtaNewAttribute (attrType);
 		 TtaAttachAttribute (child, attr, doc);
-		 TtaSetAttributeValue (attr, GraphML_ATTR_IntEmptyShape_VAL_yes_, child, doc);
+		 TtaSetAttributeValue (attr,
+				       GraphML_ATTR_IntEmptyShape_VAL_yes_,
+				       child, doc);
 		 }
 	      }
 	   else
@@ -839,15 +841,15 @@ int                 construct;
    int	                oldStructureChecking;
 
    doc = TtaGetSelectedDocument ();
-   newEl = NULL;
-   child = NULL;
-
    if (doc == 0)
       /* there is no selection. Nothing to do */
       return;
    TtaGiveLastSelectedElement (doc, &last, &c2, &j);
    TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
    selEl = first;
+   newEl = NULL;
+   child = NULL;
+
    /* Are we in a drawing? */
    docSchema = TtaGetDocumentSSchema (doc);
    GraphMLSSchema = GetGraphMLSSchema (doc);
@@ -867,7 +869,7 @@ int                 construct;
       TtaGiveFirstSelectedElement (doc, &graphRoot, &c1, &i);
       }
 
-   /* looks for the element (sibling) in front of which the new element will be
+   /* look for the element (sibling) in front of which the new element will be
       created */
    sibling = first;
    found = FALSE;
@@ -901,6 +903,8 @@ int                 construct;
       if (TtaGetAttribute (parent, attrType))
 	 automaticPlacement = TRUE;
       }
+
+   TtaOpenUndoSequence (doc, first, last, c1, c2);
 
    newType.ElSSchema = GraphMLSSchema;
    newType.ElTypeNum = 0;
@@ -1019,7 +1023,7 @@ int                 construct;
          TtaInsertFirstChild (&newEl, parent, doc);
        else
 	 TtaInsertSibling (newEl, sibling, TRUE, doc);
-       
+
        /* create a child for the new element */
        if (shape != EOS)
          /* create a graphic leaf according to the element's type */
@@ -1054,9 +1058,10 @@ int                 construct;
 	     }
 	   while (elem != NULL);
 	 }
+       TtaRegisterElementCreate (newEl, doc);
 
        /* if the parent element is a Group, create the internal attribute
-	  coreesponding to attribute direction of the parent element */
+	  corresponding to attribute direction of the parent element */
        elType = TtaGetElementType (parent);
        if (elType.ElTypeNum == GraphML_EL_Group)
          ParseDirAndSpaceAttributes (parent, newEl, doc);
@@ -1069,7 +1074,8 @@ int                 construct;
      /* select the right element */
      TtaSelectElement (doc, selEl);
    
-   if (shape == 'S' || shape == 'w' || shape == 'p' || shape == 'B' || shape == 's')
+   if (shape == 'S' || shape == 'w' || shape == 'p' || shape == 'B' ||
+       shape == 's')
      /* multipoints element. Let the user enter the points */
      {
        if (automaticPlacement)
@@ -1097,12 +1103,14 @@ int                 construct;
        if (dispMode == DisplayImmediately)
          TtaSetDisplayMode (doc, DeferredDisplay);
        UpdatePointsAttribute (newEl, doc, &minX, &minY, &maxX, &maxY);
-       UpdateInternalAttrForPoly (newEl, child, doc, minX, minY, maxX, maxY, !automaticPlacement);
+       UpdateInternalAttrForPoly (newEl, child, doc, minX, minY, maxX, maxY,
+				  !automaticPlacement);
        /* ask Thot to display changes made in the document */
        TtaSetDisplayMode (doc, dispMode);
        /* switch on the current selection */
        /*TtaSwitchSelection (doc, 1, TRUE);*/
      }
+   TtaCloseUndoSequence (doc);
    TtaSetDocumentModified (doc);
 }
 
