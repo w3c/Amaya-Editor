@@ -127,7 +127,7 @@ void BM_Quit (void)
 }
 
 /*-----------------------------------------------------------------------
-  BM_Create
+  BM_CreateBM
   Opens a dialog for bookmarking the URL viewed in doc.
   -----------------------------------------------------------------------*/
 void BM_CreateBM (Document doc, View view)
