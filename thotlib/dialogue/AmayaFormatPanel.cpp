@@ -129,7 +129,7 @@ void AmayaFormatPanel::RefreshToolTips()
  * Description:  refresh the button widgets of the frame's panel
  *--------------------------------------------------------------------------------------
  */
-void AmayaFormatPanel::SendDataToPanel( AmayaPanelParams& p )
+void AmayaFormatPanel::SendDataToPanel( AmayaParams& p )
 {
   int modif_type       = (int)p.param1;
   int align_num        = (int)p.param2;
@@ -230,7 +230,7 @@ void AmayaFormatPanel::RefreshFormatPanel()
   Document doc;
   View view;
   TtaGetActiveView( &doc, &view );
-  TtcChangeFormat( doc, view );
+  TtaExecuteMenuAction ("TtcChangeFormat", doc, view);
 
   XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_FORMAT",wxBitmapButton)->SetBackgroundColour(m_OffColour);
   XRCCTRL(*m_pPanelContentDetach,"wxID_DEFAULT_INDENT",wxBitmapButton)->SetBackgroundColour(m_OffColour);

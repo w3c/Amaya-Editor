@@ -162,7 +162,7 @@ void AmayaXHTMLPanel::OnButton( wxCommandEvent& event )
  * Description:  refresh the button widgets of the frame's panel
  *--------------------------------------------------------------------------------------
  */
-void AmayaXHTMLPanel::SendDataToPanel( AmayaPanelParams& p )
+void AmayaXHTMLPanel::SendDataToPanel( AmayaParams& p )
 {
   bool * p_checked_array = (bool *)p.param1;
 

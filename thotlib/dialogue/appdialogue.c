@@ -25,7 +25,8 @@
 #include "wininclude.h"
 #endif /* _WINGUI */
 #ifdef _WX
-#include "appdialogue_wx_f.h"
+  #include "AmayaParams.h"
+  #include "appdialogue_wx_f.h"
 #endif /* _WX */
 #ifdef _GTK
 #include "logowindow.h"

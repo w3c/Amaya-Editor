@@ -27,6 +27,7 @@
 #include "views_f.h"
 #include "structselect_f.h"
 #include "appdialogue_f.h"
+#include "AmayaParams.h"
 #include "appdialogue_wx_f.h"
 #include "input_f.h"
 

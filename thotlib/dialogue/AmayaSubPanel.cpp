@@ -420,7 +420,7 @@ wxPanel * AmayaSubPanel::GetPanelContentDetach()
  * Description:  refresh the button widgets of the frame's panel, should be override in inherited class
  *--------------------------------------------------------------------------------------
  */
-void AmayaSubPanel::SendDataToPanel( AmayaPanelParams& p )
+void AmayaSubPanel::SendDataToPanel( AmayaParams& p )
 {
   wxLogDebug( _T("AmayaSubPanel::SendDataToPanel") );
 }

@@ -91,6 +91,8 @@ extern void TtaToggleOnOffSplitView ( int frame_id );
 extern void TtaDoPostFrameCreation ( int frame_id );
 extern void TtaToggleOnOffFullScreen ( int frame_id );
 extern void TtaRegisterOpenURLCallback ( void (*callback) (void *) );
+extern void TtaSendDataToPanel ( int panel_type,
+                                 AmayaParams& params );
 
 #else /* __STDC__ */
 
@@ -179,6 +181,8 @@ extern void TtaToggleOnOffSplitView ( int frame_id );
 extern void TtaDoPostFrameCreation ( int frame_id );
 extern void TtaToggleOnOffFullScreen ( int frame_id );
 extern void TtaRegisterOpenURLCallback ( void (*callback) (void *) );
+extern void TtaSendDataToPanel ( int panel_type,
+                                   AmayaParams& params );
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

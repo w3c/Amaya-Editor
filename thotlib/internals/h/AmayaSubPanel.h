@@ -6,10 +6,10 @@
 #include "wx/wx.h"
 #include "wx/panel.h"
 #include "paneltypes_wx.h"
+#include "AmayaParams.h"
 
 class AmayaFloatingPanel;
 class AmayaNormalWindow;
-class AmayaPanelParams;
 
 /*
  *  Description:  - AmayaSubPanel contains a sub-panel (xhtml, ...)
@@ -60,7 +60,7 @@ class AmayaSubPanel : public wxPanel
   void Raise();
 
  protected:
-  virtual void SendDataToPanel( AmayaPanelParams& params );
+  virtual void SendDataToPanel( AmayaParams& params );
   virtual void DoUpdate();
 
   void UnExpand();

@@ -55,6 +55,9 @@ extern void TtaToggleOnOffFullScreen( int frame_id );
 extern int GetWindowNumber (Document doc, View view);
 extern void TtaRegisterOpenURLCallback( void (*callback) (void *) );
 
+#include "AmayaParams.h"
+extern void TtaSendDataToPanel( int panel_type, AmayaParams& params );
+
 #endif /* #define __APPDIALOGUE_WX_H__ */
 
 #endif /* _WX */

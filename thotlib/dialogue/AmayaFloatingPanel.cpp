@@ -11,6 +11,7 @@
 #include "AmayaColorsPanel.h"
 #include "AmayaCharStylePanel.h"
 #include "AmayaFormatPanel.h"
+#include "AmayaApplyClassPanel.h"
 
 /*
  *--------------------------------------------------------------------------------------
@@ -53,6 +54,10 @@ AmayaFloatingPanel::AmayaFloatingPanel( wxWindow * p_parent
     case WXAMAYA_PANEL_FORMAT:
       wxLogDebug( _T("AmayaFloatingPanel::AmayaFloatingPanel - WXAMAYA_PANEL_FORMAT"));
       m_pPanel = new AmayaFormatPanel( this );
+      break;
+    case WXAMAYA_PANEL_APPLYCLASS:
+      wxLogDebug( _T("AmayaFloatingPanel::AmayaFloatingPanel - WXAMAYA_PANEL_APPLYCLASS"));
+      m_pPanel = new AmayaApplyClassPanel( this );
       break;
     }
 

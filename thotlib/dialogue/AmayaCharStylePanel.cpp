@@ -155,7 +155,7 @@ void AmayaCharStylePanel::RefreshToolTips()
  * Description:  refresh the button widgets of the frame's panel
  *--------------------------------------------------------------------------------------
  */
-void AmayaCharStylePanel::SendDataToPanel( AmayaPanelParams& p )
+void AmayaCharStylePanel::SendDataToPanel( AmayaParams& p )
 {
   int font_family    = (int)p.param1;
   int font_style     = (int)p.param2;
@@ -247,7 +247,7 @@ void AmayaCharStylePanel::RefreshCharStylePanel()
   Document doc;
   View view;
   TtaGetActiveView( &doc, &view );
-  TtcChangeCharacters( doc, view );
+  TtaExecuteMenuAction ("TtcChangeCharacters", doc, view);
 }
 
 /*----------------------------------------------------------------------

@@ -2168,7 +2168,7 @@ void TtcChangeCharacters (Document document, View view)
 				       UnderlineStyle, FontSize);
 #endif /* _WINGUI */
 #ifdef _WX
-	     AmayaPanelParams p;
+	     AmayaParams p;
 	     p.param1 = (void*)(FontFamily-1);
 	     p.param2 = (void*)FontStyle;
 	     p.param3 = (void*)FontWeight;
@@ -2542,7 +2542,7 @@ void TtcChangeFormat (Document document, View view)
          TtaShowDialogue (NumFormPresFormat, TRUE);
 #endif /* _GTK */     
 #ifdef _WX
-	 AmayaPanelParams p;
+	 AmayaParams p;
 	 p.param1 = (void*)AmayaFormatPanel::wxFORMAT_MODIF_ALL;
 	 p.param2 = (void*)alignNum;
 	 p.param3 = (void*)IndentValue;

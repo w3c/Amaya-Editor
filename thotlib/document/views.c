@@ -76,6 +76,7 @@
 #include "viewapi_f.h"
 #include "writepivot_f.h"
 
+#include "AmayaParams.h"
 #include "appdialogue_wx_f.h"
 
 #ifdef _WX

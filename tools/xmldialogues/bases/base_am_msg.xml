@@ -248,28 +248,6 @@
 	<message xml:lang="fi">Käytä luokkana</message>
 	<message xml:lang="ru">Использовать как класс</message>
 </label>
-<label define="AM_APPLY_CLASS">
-	<message xml:lang="en">Apply class</message>
-	<message xml:lang="fr">Appliquer classe</message>
-	<message xml:lang="de">Klasse übernehnem</message>
-	<message xml:lang="it">Applica la classe</message>
-	<message xml:lang="tr">Sınıf uygula</message>
-	<message xml:lang="es">Aplicar clase</message>
-	<message xml:lang="pt">Applicar classe</message>
-	<message xml:lang="fi">Käytä luokkaa</message>
-	<message xml:lang="ru">Применить класс</message>
-</label>
-<label define="AM_SEL_CLASS">
-	<message xml:lang="en">Select a class or a pseudo-class</message>
-	<message xml:lang="fr">Sélectionner une classe ou une pseudo-classe</message>
-	<message xml:lang="de">Klasse oder Pseudoklasse wählen</message>
-	<message xml:lang="it">Seleziona una classe o una pseudoclasse</message>
-	<message xml:lang="tr">Sınıf seçimi</message>
-	<message xml:lang="es">Seleccionar una clase o seudo-clase</message>
-	<message xml:lang="pt">Selecionar uma classe ou pseudo-classe</message>
-	<message xml:lang="fi">Valitse luokka tai valeluokka</message>
-	<message xml:lang="ru">Выбрать класс или псевдо-класс</message>
-</label>
 <label define="AM_FETCHING">
 	<message xml:lang="en">Fetching %s</message>
 	<message xml:lang="fr">Recherche de %s</message>

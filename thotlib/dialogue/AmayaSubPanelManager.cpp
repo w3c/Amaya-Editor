@@ -368,7 +368,7 @@ void AmayaSubPanelManager::DoUnfloat( AmayaSubPanel * p_panel )
  * Description:  distribute new values to the given panel and all its brothers
  *--------------------------------------------------------------------------------------
  */
-void AmayaSubPanelManager::SendDataToPanel( int panel_type, AmayaPanelParams& params )
+void AmayaSubPanelManager::SendDataToPanel( int panel_type, AmayaParams& params )
 {
   // send data to each registred panel which have same type
   for ( SubPanelList::Node *node = m_RegistredPanel.GetFirst(); node ; node = node->GetNext() )
@@ -462,6 +462,9 @@ void AmayaSubPanelManager::SaveSubPanelState( AmayaSubPanel * p_panel )
       break;
     case WXAMAYA_PANEL_FORMAT:
       TtaSetEnvBoolean("OPEN_PANEL_FORMAT", value, TRUE);
+      break;
+    case WXAMAYA_PANEL_APPLYCLASS:
+      TtaSetEnvBoolean("OPEN_PANEL_APPLYCLASS", value, TRUE);
       break;
     }
 }

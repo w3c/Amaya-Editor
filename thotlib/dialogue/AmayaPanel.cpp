@@ -36,6 +36,7 @@
 #include "AmayaColorsPanel.h"
 #include "AmayaCharStylePanel.h"
 #include "AmayaFormatPanel.h"
+#include "AmayaApplyClassPanel.h"
 #include "AmayaNormalWindow.h"
 
 IMPLEMENT_DYNAMIC_CLASS(AmayaPanel, wxPanel)
@@ -57,8 +58,6 @@ AmayaPanel::AmayaPanel( wxWindow *      p_parent_window
 			)
   :  wxPanel( wxDynamicCast( p_parent_window, wxWindow ),
 	      id, pos, size, style )
-     ,m_pPanel_xhtml(NULL)
-     ,m_pPanel_attribute(NULL)
      ,m_pParentNWindow(p_parent_nwindow)
 {
   wxLogDebug( _T("AmayaPanel::AmayaPanel") );
@@ -72,16 +71,12 @@ AmayaPanel::AmayaPanel( wxWindow *      p_parent_window
   m_pScrolledWindow->SetScrollRate( 5, 5 );
 
   // load static sub-panels  
-  m_pPanel_xhtml     = new AmayaXHTMLPanel(     m_pScrolledWindow, p_parent_nwindow );
-  m_pPanel_attribute = new AmayaAttributePanel( m_pScrolledWindow, p_parent_nwindow );
-  m_pPanel_colors    = new AmayaColorsPanel(    m_pScrolledWindow, p_parent_nwindow );
-  m_pPanel_charstyle = new AmayaCharStylePanel( m_pScrolledWindow, p_parent_nwindow );
-  m_pPanel_format    = new AmayaFormatPanel(    m_pScrolledWindow, p_parent_nwindow );
-  m_aPanelList[WXAMAYA_PANEL_XHTML]     = m_pPanel_xhtml;
-  m_aPanelList[WXAMAYA_PANEL_ATTRIBUTE] = m_pPanel_attribute;
-  m_aPanelList[WXAMAYA_PANEL_COLORS]    = m_pPanel_colors;
-  m_aPanelList[WXAMAYA_PANEL_CHARSTYLE] = m_pPanel_charstyle;
-  m_aPanelList[WXAMAYA_PANEL_FORMAT]    = m_pPanel_format;
+  m_aPanelList[WXAMAYA_PANEL_XHTML]      = new AmayaXHTMLPanel(     m_pScrolledWindow, p_parent_nwindow );
+  m_aPanelList[WXAMAYA_PANEL_ATTRIBUTE]  = new AmayaAttributePanel( m_pScrolledWindow, p_parent_nwindow );
+  m_aPanelList[WXAMAYA_PANEL_COLORS]     = new AmayaColorsPanel(    m_pScrolledWindow, p_parent_nwindow );
+  m_aPanelList[WXAMAYA_PANEL_CHARSTYLE]  = new AmayaCharStylePanel( m_pScrolledWindow, p_parent_nwindow );
+  m_aPanelList[WXAMAYA_PANEL_FORMAT]     = new AmayaFormatPanel(    m_pScrolledWindow, p_parent_nwindow );
+  m_aPanelList[WXAMAYA_PANEL_APPLYCLASS] = new AmayaApplyClassPanel( m_pScrolledWindow, p_parent_nwindow );
 
   // attach subpanels & title to the panel
   wxBoxSizer * p_TopSizer = new wxBoxSizer ( wxVERTICAL );
@@ -91,11 +86,12 @@ AmayaPanel::AmayaPanel( wxWindow *      p_parent_window
 
   wxBoxSizer * p_PanelSizer = new wxBoxSizer ( wxVERTICAL );
   m_pScrolledWindow->SetSizer(p_PanelSizer);
-  p_PanelSizer->Add( m_pPanel_xhtml,      0, wxBOTTOM | wxEXPAND, 5 );
-  p_PanelSizer->Add( m_pPanel_attribute,  0, wxBOTTOM | wxEXPAND, 5 );
-  p_PanelSizer->Add( m_pPanel_colors,     0, wxBOTTOM | wxEXPAND, 5 );
-  p_PanelSizer->Add( m_pPanel_charstyle,  0, wxBOTTOM | wxEXPAND, 5 );
-  p_PanelSizer->Add( m_pPanel_format,     0, wxBOTTOM | wxEXPAND, 5 );
+  p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_XHTML],      0, wxBOTTOM | wxEXPAND, 5 );
+  p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_ATTRIBUTE],  0, wxBOTTOM | wxEXPAND, 5 );
+  p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_COLORS],     0, wxBOTTOM | wxEXPAND, 5 );
+  p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_CHARSTYLE],  0, wxBOTTOM | wxEXPAND, 5 );
+  p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_FORMAT],     0, wxBOTTOM | wxEXPAND, 5 );
+  p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_APPLYCLASS], 0, wxBOTTOM | wxEXPAND, 5 );
   
   // setup labels
   XRCCTRL(*this, "wxID_LABEL_TOOLS", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_TOOLS)));
@@ -131,12 +127,10 @@ void AmayaPanel::ShowWhenUnsplit( bool show )
   if (!show)
     {
       Hide();
-      m_pPanel_xhtml->Hide();
    }
   else
     {
       Show();
-      m_pPanel_xhtml->Show();
     }
 }
 
@@ -166,7 +160,7 @@ void AmayaPanel::OnClose( wxCommandEvent& event )
  */
 AmayaXHTMLPanel * AmayaPanel::GetXHTMLPanel() const
 {
-  return m_pPanel_xhtml;
+  return (AmayaXHTMLPanel *)m_aPanelList[WXAMAYA_PANEL_XHTML];
 }
 
 /*
@@ -178,7 +172,7 @@ AmayaXHTMLPanel * AmayaPanel::GetXHTMLPanel() const
  */
 AmayaAttributePanel * AmayaPanel::GetAttributePanel() const
 {
-  return m_pPanel_attribute;
+  return (AmayaAttributePanel *)m_aPanelList[WXAMAYA_PANEL_ATTRIBUTE];
 }
 
 /*
@@ -190,7 +184,7 @@ AmayaAttributePanel * AmayaPanel::GetAttributePanel() const
  */
 void AmayaPanel::RefreshToolTips()
 {
-  m_pPanel_xhtml->RefreshToolTips();
+  m_aPanelList[WXAMAYA_PANEL_XHTML]->RefreshToolTips();
 }
 
 /*

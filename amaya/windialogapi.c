@@ -2319,7 +2319,7 @@ LRESULT CALLBACK ApplyClassDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	}
       else
 	{
-	  SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_APPLY_CLASS));
+	  SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_APPLY_CLASS));
 	  SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
 			 TtaGetMessage (LIB, TMSG_APPLY));
 	}

@@ -159,6 +159,7 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
       TtaSetEnvBoolean("OPEN_PANEL_COLORS", TRUE, FALSE);
       TtaSetEnvBoolean("OPEN_PANEL_CHARSTYLE", TRUE, FALSE);
       TtaSetEnvBoolean("OPEN_PANEL_FORMAT", TRUE, FALSE);
+      TtaSetEnvBoolean("OPEN_PANEL_APPLYCLASS", TRUE, FALSE);
       
       /* open or close panels */
       ThotBool value;
@@ -192,9 +193,14 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
 	p_panel->OpenSubPanel( WXAMAYA_PANEL_FORMAT );
       else
 	p_panel->CloseSubPanel( WXAMAYA_PANEL_FORMAT );
+      TtaGetEnvBoolean ("OPEN_PANEL_APPLYCLASS", &value);
+      if (value)
+	p_panel->OpenSubPanel( WXAMAYA_PANEL_APPLYCLASS );
+      else
+	p_panel->CloseSubPanel( WXAMAYA_PANEL_APPLYCLASS );
     }
 
-  // show the window if not already shown
+  // show the window if not already show
   TtaShowWindow( window_id, TRUE );
 
   return window_id;
@@ -1226,7 +1232,7 @@ void TtaRefreshPanelButton( Document doc, View view, int panel_type )
 	    return;
 
 	  /* refresh the subpanel with button stats */
-	  AmayaPanelParams p;
+	  AmayaParams p;
 	  p.param1 = (void*)p_checked_array;
 	  AmayaSubPanelManager::GetInstance()->SendDataToPanel( p_subpanel->GetPanelType(), p );
 	}
@@ -1628,5 +1634,18 @@ void TtaRegisterOpenURLCallback( void (*callback) (void *) )
 #ifdef _WX
   /* register openurl callback in order to call it when twice amaya instance are running */
   ((AmayaApp *)wxTheApp)->RegisterOpenURLCallback( callback );
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  TtaSendDataToPanel
+  interface to send data to panel manager
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void TtaSendDataToPanel( int panel_type, AmayaParams& params )
+{
+#ifdef _WX
+  AmayaSubPanelManager::GetInstance()->SendDataToPanel( panel_type, params );
 #endif /* _WX */
 }

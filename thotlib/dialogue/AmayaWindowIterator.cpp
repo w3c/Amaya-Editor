@@ -30,6 +30,7 @@
 #include "boxparams_f.h"
 #include "dialogapi_f.h"
 #include "callback_f.h"
+#include "AmayaParams.h"
 #include "appdialogue_wx_f.h"
 #include "input_f.h"
 

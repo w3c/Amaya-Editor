@@ -205,7 +205,7 @@ static void InitFormLanguage (Document doc, View view,
 
 #ifdef _WX
    ptr = GetListOfLanguages (bufMenu, MAX_TXT_LEN, languageCode, &nbItem, &defItem);
-   AmayaPanelParams p;
+   AmayaParams p;
    p.param1 = (void*)AmayaAttributePanel::wxATTR_ACTION_SETUPLANG;
    p.param2 = (void*)FALSE;
    p.param3 = (void*)ptr;
@@ -602,7 +602,7 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
 #endif /* _WINGUI */
 #ifdef _WX
 	 
-	 AmayaPanelParams p;
+	 AmayaParams p;
 	 p.param1 = (void*)AmayaAttributePanel::wxATTR_ACTION_SETUPNUM;
 	 p.param2 = (void*)required;
 	 p.param3 = (void*)i;
@@ -631,7 +631,7 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
 	 else
 	   TextAttrValue[0] = EOS;
 #ifdef _WX
-	 AmayaPanelParams p;
+	 AmayaParams p;
 	 p.param1 = (void*)AmayaAttributePanel::wxATTR_ACTION_SETUPTEXT;
 	 p.param2 = (void*)required;
 	 p.param3 = (void*)TextAttrValue;
@@ -699,7 +699,7 @@ static void MenuValues (TtAttribute * pAttr, ThotBool required,
 	 if (PtrReqAttr)
 	   PtrReqAttr->AeAttrValue = i + 1;
 #ifdef _WX
-	 AmayaPanelParams p;
+	 AmayaParams p;
 	 p.param1 = (void*)AmayaAttributePanel::wxATTR_ACTION_SETUPENUM;
 	 p.param2 = (void*)required;
 	 p.param3 = (void*)bufMenu;
@@ -1118,7 +1118,7 @@ void UpdateAttrMenu (PtrDocument pDoc)
 
 #ifdef _WX
   /* update the attribute dialog */
-  AmayaPanelParams p;
+  AmayaParams p;
   p.param1 = (void*)AmayaAttributePanel::wxATTR_ACTION_LISTUPDATE;
   p.param2 = (void*)bufMenuAttr;
   p.param3 = (void*)nbItemAttr;

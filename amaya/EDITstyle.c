@@ -41,6 +41,8 @@
 
 #ifdef _WX
   #include "wxdialogapi_f.h"
+  #include "appdialogue_wx.h"
+  #include "paneltypes_wx.h"
 #endif /* _WX */
 
 
@@ -1602,7 +1604,7 @@ void CreateClass (Document doc, View view)
       /* update the class name selector. */
       elHtmlName =  GetXMLElementName (elType, doc);
       if (elHtmlName[0] == '?')
-	InitConfirm (doc, 1, TtaGetMessage (AMAYA, AM_SEL_CLASS));
+	InitConfirm (doc, 1, TtaGetMessage (LIB, TMSG_SEL_CLASS));
       else
 	{
 #ifdef _GTK
@@ -1612,7 +1614,7 @@ void CreateClass (Document doc, View view)
 	  NbClass = BuildClassList (doc, ListBuffer, MAX_CSS_LENGTH, elHtmlName);
 #ifdef _GTK
 	  TtaNewSelector (BaseDialog + ClassSelect, BaseDialog + ClassForm,
-			  TtaGetMessage (AMAYA, AM_SEL_CLASS),
+			  TtaGetMessage (LIB, TMSG_SEL_CLASS),
 			  NbClass, ListBuffer, 5, NULL, TRUE, FALSE);
 #endif /* _GTK */
   
@@ -1647,7 +1649,7 @@ void CreateClass (Document doc, View view)
 	  CreateListEditDlgWX( BaseDialog+ClassForm,
 			       TtaGetViewFrame(doc, 1),
 			       TtaGetMessage(AMAYA, AM_DEF_CLASS),
-			       TtaGetMessage(AMAYA, AM_SEL_CLASS),
+			       TtaGetMessage(LIB, TMSG_SEL_CLASS),
 			       NbClass,
 			       ListBuffer,
 			       CurrentClass );
@@ -1675,6 +1677,9 @@ void ApplyClass (Document doc, View view)
   AttributeType       attrType;
   Element             firstSelectedEl;
   ElementType	      elType;
+#ifdef _WX
+  char                a_class_with_dot[51];
+#endif /* _WX */
   char                a_class[50];
   int                 len;
   int                 firstSelectedChar, lastSelectedChar;
@@ -1697,18 +1702,18 @@ void ApplyClass (Document doc, View view)
   CurrentClass[0] = EOS;
   ApplyClassDoc = doc;
   /* updating the class name selector. */
-#ifndef _WINGUI
+#ifdef _GTK
    strcpy (bufMenu, TtaGetMessage (LIB, TMSG_APPLY));
    TtaNewSheet (BaseDialog + AClassForm, TtaGetViewFrame (doc, 1), 
-		TtaGetMessage (AMAYA, AM_APPLY_CLASS), 1,
+		TtaGetMessage (LIB, TMSG_APPLY_CLASS), 1,
 		bufMenu, FALSE, 2, 'L', D_DONE);
-#endif /* !_WINGUI */
+#endif /* _GTK */
   NbClass = BuildClassList (doc, ListBuffer, MAX_CSS_LENGTH, "default");
-#ifndef _WINGUI
+#ifdef _GTK
   TtaNewSelector (BaseDialog + AClassSelect, BaseDialog + AClassForm,
-		  TtaGetMessage (AMAYA, AM_SEL_CLASS),
+		  TtaGetMessage (LIB, TMSG_SEL_CLASS),
 		  NbClass, ListBuffer, 5, NULL, FALSE, TRUE);
-#endif /* !_WINGUI */
+#endif /* _GTK */
 
   /* preselect the entry corresponding to the class of the first selected
      element. */
@@ -1723,7 +1728,7 @@ void ApplyClass (Document doc, View view)
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = SVG_ATTR_class;
     }
-#endif
+#endif /* _SVG */
   else
     {
       attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
@@ -1734,25 +1739,43 @@ void ApplyClass (Document doc, View view)
     {
       len = 50;
       TtaGiveTextAttributeValue (attr, a_class, &len);
-#ifndef _WINGUI
+#ifdef _GTK
       TtaSetSelector (BaseDialog + AClassSelect, -1, a_class);
-#endif /* !_WINGUI */
+#endif /* _GTK */
+#ifdef _WX
+      a_class_with_dot[0] = EOS;
+      strcat(a_class_with_dot, ".");
+      strcat(a_class_with_dot, a_class);      
+      strcpy (CurrentClass, a_class_with_dot);
+#else /* _WX */
       strcpy (CurrentClass, a_class);
+#endif /* _WX */
     }
   else
     {
-#ifndef _WINGUI
+#ifdef _GTK
       TtaSetSelector (BaseDialog + AClassSelect, 0, NULL);
-#endif /* !_WINGUI */
+#endif /* _GTK */
       strcpy (CurrentClass, "default");
     }
 
-   /* pop-up the dialogue box. */
-#ifndef _WINGUI
+  /* pop-up the dialogue box. */
+#ifdef _GTK
   TtaShowDialogue (BaseDialog + AClassForm, TRUE);
-#else  /* _WINGUI */
+#endif /* _GTK */
+
+#ifdef _WINGUI
   CreateApplyClassDlgWindow (TtaGetViewFrame (doc, 1), NbClass, ListBuffer);
 #endif /* _WINGUI */
+
+#ifdef _WX  
+  AmayaParams p;
+  p.param1 = (void*)NbClass;
+  p.param2 = (void*)ListBuffer;
+  p.param3 = (void*)CurrentClass;
+  p.param4 = (void*)(BaseDialog+AClassForm); /* the dialog reference used to call the right callback in thotlib */
+  TtaSendDataToPanel( WXAMAYA_PANEL_APPLYCLASS, p );
+#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------

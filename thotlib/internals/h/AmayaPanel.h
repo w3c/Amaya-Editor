@@ -92,11 +92,14 @@ class AmayaPanel : public wxPanel
   int          m_ParentWindowId; // amaya parent window id
   AmayaNormalWindow * m_pParentNWindow  ;
 
+  /*
   AmayaXHTMLPanel *      m_pPanel_xhtml;
   AmayaAttributePanel *  m_pPanel_attribute;
   AmayaColorsPanel *     m_pPanel_colors;
   AmayaCharStylePanel *  m_pPanel_charstyle;
   AmayaFormatPanel *     m_pPanel_format;
+*/
+
   AmayaSubPanel *        m_aPanelList[WXAMAYA_PANEL_TYPE_NB];
 
   wxPanel *          m_pTitlePanel;

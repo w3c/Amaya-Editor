@@ -28,7 +28,7 @@ public:
   void RefreshToolTips();
 
  protected:
-  virtual void SendDataToPanel( AmayaPanelParams& params );
+  virtual void SendDataToPanel( AmayaParams& params );
   virtual void DoUpdate();
 
   int ChooseCustomColor( const wxColour & start_colour );

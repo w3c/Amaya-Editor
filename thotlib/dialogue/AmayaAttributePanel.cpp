@@ -126,7 +126,7 @@ bool AmayaAttributePanel::IsFreezed()
   params:
   returns:
   ----------------------------------------------------------------------*/
-void AmayaAttributePanel::SendDataToPanel( AmayaPanelParams& p )
+void AmayaAttributePanel::SendDataToPanel( AmayaParams& p )
 {
   wxLogDebug(_T("AmayaAttributePanel::SendDataToPanel") );
 

@@ -175,7 +175,7 @@ void AmayaColorsPanel::OnSwitchColors( wxCommandEvent& event )
  * Description:  refresh the button widgets of the frame's panel
  *--------------------------------------------------------------------------------------
  */
-void AmayaColorsPanel::SendDataToPanel( AmayaPanelParams& p )
+void AmayaColorsPanel::SendDataToPanel( AmayaParams& p )
 {
   // update button background colors
   m_ThotBGColor = (int)p.param1;

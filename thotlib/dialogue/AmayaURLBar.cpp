@@ -19,6 +19,7 @@
 #include "message.h"
 #include "libmsg.h"
 
+#include "AmayaParams.h"
 #include "appdialogue_wx_f.h"
 
 #include "AmayaURLBar.h"

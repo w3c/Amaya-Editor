@@ -46,7 +46,7 @@ public:
   void OnDelAttr( wxCommandEvent& event );
 
  protected:
-  virtual void SendDataToPanel( AmayaPanelParams& params );
+  virtual void SendDataToPanel( AmayaParams& params );
   virtual void DoUpdate();
 
   void RemoveCurrentAttribut();

@@ -28,7 +28,7 @@ public:
   void RefreshToolTips();
 
  protected:
-  virtual void SendDataToPanel( AmayaPanelParams& params );
+  virtual void SendDataToPanel( AmayaParams& params );
   virtual void DoUpdate();
   void RefreshCharStylePanel();
 

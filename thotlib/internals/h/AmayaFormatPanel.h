@@ -40,7 +40,7 @@ class AmayaFormatPanel : public AmayaSubPanel
   void RefreshToolTips();
 
  protected:
-  virtual void SendDataToPanel( AmayaPanelParams& params );
+  virtual void SendDataToPanel( AmayaParams& params );
   virtual void DoUpdate();
   void RefreshFormatPanel();
   void LineSpaceChanged();

@@ -68,6 +68,8 @@
 #include "unstructlocate_f.h"
 #include "views_f.h"
 #include "viewapi_f.h"
+
+#include "AmayaParams.h"
 #include "appdialogue_wx_f.h"
 
 static char           nameBuffer[MAX_NAME_LENGTH];
