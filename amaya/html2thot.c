@@ -1897,7 +1897,9 @@ static void	CreatePlaceholders (el, doc)
 #endif
 {
    Element	sibling, prev, constr, child;
+   Attribute	attr;
    ElementType	elType;
+   AttributeType	attrType;
    boolean	create;
 
    elType.ElSSchema = MathMLSSchema;
@@ -1937,6 +1939,11 @@ static void	CreatePlaceholders (el, doc)
             elType.ElTypeNum = MathML_EL_Construct;
 	    constr = TtaNewElement (doc, elType);
 	    TtaInsertSibling (constr, sibling, TRUE, doc);
+	    attrType.AttrSSchema = elType.ElSSchema;
+	    attrType.AttrTypeNum = MathML_ATTR_placeholder;
+	    attr = TtaNewAttribute (attrType);
+	    TtaAttachAttribute (constr, attr, doc);
+	    TtaSetAttributeValue (attr, MathML_ATTR_placeholder_VAL_yes_, constr, doc);
 	    }
 	 create = TRUE;
 	 }
@@ -1969,6 +1976,11 @@ static void	CreatePlaceholders (el, doc)
            elType.ElTypeNum = MathML_EL_Construct;
 	   constr = TtaNewElement (doc, elType);
 	   TtaInsertSibling (constr, prev, FALSE, doc);
+	   attrType.AttrSSchema = elType.ElSSchema;
+	   attrType.AttrTypeNum = MathML_ATTR_placeholder;
+	   attr = TtaNewAttribute (attrType);
+	   TtaAttachAttribute (constr, attr, doc);
+	   TtaSetAttributeValue (attr, MathML_ATTR_placeholder_VAL_yes_, constr, doc);
 	   } 
       }
 }
@@ -3025,6 +3037,50 @@ static void	CheckMathSubExpressions (el, type1, type2, type3)
       }
 }
 
+
+/*----------------------------------------------------------------------
+   SetPlaceholderAttr
+
+   Put a placeholder attribute on all Construct elements in the
+   subtree of root el.
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void SetPlaceholderAttr (Element el, Document doc)
+#else /* __STDC__*/
+static void SetPlaceholderAttr (el, doc)
+  Element	el;
+  Document	doc;
+#endif /* __STDC__*/
+{
+  Element	child;
+  ElementType	elType;
+  Attribute	attr;
+  AttributeType	attrType;
+
+  if (el == NULL)
+     return;
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum == MathML_EL_Construct &&
+      elType.ElSSchema == MathMLSSchema)
+     {
+     attrType.AttrSSchema = elType.ElSSchema;
+     attrType.AttrTypeNum = MathML_ATTR_placeholder;
+     attr = TtaNewAttribute (attrType);
+     TtaAttachAttribute (el, attr, doc);
+     TtaSetAttributeValue (attr, MathML_ATTR_placeholder_VAL_yes_, el, doc);
+     }
+  else
+     {
+     child = TtaGetFirstChild (el);
+     while (child != NULL)
+        {
+        SetPlaceholderAttr (child, doc);
+        TtaNextSibling (&child);
+        }
+     }
+}
+
+
 /*----------------------------------------------------------------------
    BuildMultiscript
 
@@ -3087,9 +3143,11 @@ static void BuildMultiscript (elMMULTISCRIPT)
 	  /* create a first and a last PostscriptPair as placeholders */
 	  pair = TtaNewTree (theDocument, elTypePair, "");
 	  TtaInsertFirstChild (&pair, group, theDocument);
+	  SetPlaceholderAttr (pair, theDocument);
 	  prevPair = pair;
 	  pair = TtaNewTree (theDocument, elTypePair, "");
 	  TtaInsertSibling (pair, prevPair, FALSE, theDocument);
+	  SetPlaceholderAttr (pair, theDocument);
 	  prevScript = NULL;
 	  }
         if (prevScript == NULL)
@@ -3122,6 +3180,7 @@ static void BuildMultiscript (elMMULTISCRIPT)
 	/* insert the current element as a child of the new MSuperscript or
 	   MSubscript element */
 	TtaInsertFirstChild (&elem, script, theDocument);
+	SetPlaceholderAttr (elem, theDocument);
 	}
 
       CreatePlaceholders (elem, theDocument);
@@ -3142,6 +3201,7 @@ static void BuildMultiscript (elMMULTISCRIPT)
 	      elTypeGroup.ElTypeNum = MathML_EL_PostscriptPairs;
 	      group = TtaNewTree (theDocument, elTypeGroup, "");
 	      TtaInsertSibling (group, elem, TRUE, theDocument);
+	      SetPlaceholderAttr (group, theDocument);
 	      }
 	   /* the following elements will be interpreted as sub- superscripts
 	      in PrescriptPair elements, wich will be children of this
@@ -3152,9 +3212,11 @@ static void BuildMultiscript (elMMULTISCRIPT)
 	   /* create a first and a last PostscriptPair as placeholders */
 	   pair = TtaNewTree (theDocument, elTypePair, "");
 	   TtaInsertFirstChild (&pair, group, theDocument);
+	   SetPlaceholderAttr (pair, theDocument);
 	   prevPair = pair;
 	   pair = TtaNewTree (theDocument, elTypePair, "");
 	   TtaInsertSibling (pair, prevPair, FALSE, theDocument);
+	   SetPlaceholderAttr (pair, theDocument);
 	   prevScript = NULL;
 	   TtaNextSibling (&elem);
 	   }
@@ -3170,6 +3232,7 @@ static void BuildMultiscript (elMMULTISCRIPT)
       if (group == NULL)
 	 group = base;
       TtaInsertSibling (elem, group, TRUE, theDocument);
+      SetPlaceholderAttr (elem, theDocument);
       }
 }
 

@@ -113,8 +113,10 @@ Document doc;
 
 #endif
 {
-ElementType	elType;
 Element		sibling;
+Attribute	attr;
+ElementType	elType;
+AttributeType	attrType;
 boolean		createConstruct;
 
      elType = TtaGetElementType (el);
@@ -145,6 +147,11 @@ boolean		createConstruct;
 	   elType.ElTypeNum = MathML_EL_Construct;
 	   sibling = TtaNewElement (doc, elType);
 	   TtaInsertSibling (sibling, el, before, doc);
+           attrType.AttrSSchema = elType.ElSSchema;
+           attrType.AttrTypeNum = MathML_ATTR_placeholder;
+           attr = TtaNewAttribute (attrType);
+           TtaAttachAttribute (sibling, attr, doc);
+           TtaSetAttributeValue (attr, MathML_ATTR_placeholder_VAL_yes_, sibling, doc);
 	   }
 	}
 }
@@ -209,6 +216,32 @@ Document doc;
 	 }
 }
 
+
+/*----------------------------------------------------------------------
+   RemoveAttr
+   Remove attribute of type attrTypeNum from element el, if it exists
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void RemoveAttr (Element el, Document doc, int attrTypeNum)
+#else /* __STDC__*/
+static void RemoveAttr (el, doc, attrTypeNum)
+     Element el;
+     Document doc;
+     int attrTypeNum;
+#endif /* __STDC__*/
+{
+  ElementType	elType;
+  AttributeType attrType;
+  Attribute	attr;
+
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = attrTypeNum;
+  attr = TtaGetAttribute (el, attrType);
+  if (attr != NULL)
+      TtaRemoveAttribute (el, attr, doc);
+}
+
 /*----------------------------------------------------------------------
    CallbackMaths: manage Maths dialogue events.
   ----------------------------------------------------------------------*/
@@ -223,11 +256,12 @@ char               *data;
 #endif
 {
   Document           doc;
-  Element            sibling, last, el, row, fence, child;
-  ElementType        newType, elType;
+  Element            sibling, last, el, row, fence, symbol, child, leaf;
+  ElementType        newType, elType, symbType;
   SSchema            docSchema, mathSchema;
   int                val, c1, c2, i, j, len;
-  boolean	     before, ParBlock, surround, insertSibling;
+  boolean	     before, ParBlock, surround, insertSibling,
+		     selectFirstChild;
 
   val = (int) data;
   ParBlock = FALSE;
@@ -432,6 +466,7 @@ char               *data;
 
       elType = TtaGetElementType (sibling);
       newType.ElSSchema = mathSchema;
+      selectFirstChild = TRUE;
       switch (val)
 	{
 	case 0:	/* create a Math element */
@@ -444,6 +479,7 @@ char               *data;
 	  break;
 	case 2:
 	  newType.ElTypeNum = MathML_EL_MROOT;
+	  selectFirstChild = FALSE;	/* select the Index component */
 	  break;
 	case 3:
 	  newType.ElTypeNum = MathML_EL_MSQRT;
@@ -472,6 +508,7 @@ char               *data;
 	case 11:
 	  newType.ElTypeNum = MathML_EL_MROW;
 	  ParBlock = TRUE;
+	  selectFirstChild = FALSE;	/* select the second component */
 	  break;
 	case 12:
 	  newType.ElTypeNum = MathML_EL_MMULTISCRIPTS;
@@ -506,18 +543,22 @@ char               *data;
 		}
 	      else
 		{
-		  /* check whether the element is a construction */
+		  /* check whether the element is a Construct */
 		  elType = TtaGetElementType (sibling);
 		  if (elType.ElTypeNum == MathML_EL_Construct)
+		    {
 		    TtaInsertFirstChild (&el, sibling, doc);
+		    RemoveAttr (el, doc, MathML_ATTR_placeholder);
+		    }
 		  else
 		    TtaInsertSibling (el, sibling, before, doc);
 		}
 	    }
 	  else if (elType.ElTypeNum == MathML_EL_Construct)
 	    {
-	      /* replace the construction choice */
+	      /* replace the Construct element */
 	      TtaInsertFirstChild (&el, sibling, doc);
+	      RemoveAttr (el, doc, MathML_ATTR_placeholder);
 	    }
 	  else
 	    {
@@ -538,10 +579,19 @@ char               *data;
 	      if (child != NULL)
 		{
 		  newType.ElTypeNum = MathML_EL_MF;
-		  fence = TtaNewTree (doc, newType, "");
+		  fence = TtaNewElement (doc, newType);
 		  TtaInsertSibling (fence, child, TRUE, doc);
-		  fence = TtaNewTree (doc, newType, "");
+		  symbType.ElSSchema = mathSchema;
+		  symbType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
+		  symbol = TtaNewElement (doc, symbType);
+		  TtaSetGraphicsShape (symbol, '(', doc);
+		  TtaInsertFirstChild (&symbol, fence, doc);
+
+		  fence = TtaNewElement (doc, newType);
 		  TtaInsertSibling (fence, child, FALSE, doc);
+		  symbol = TtaNewElement (doc, symbType);
+		  TtaSetGraphicsShape (symbol, ')', doc);
+		  TtaInsertFirstChild (&symbol, fence, doc);
 		}
 	    }
 	  
@@ -554,13 +604,18 @@ char               *data;
 	  /* check the Thot abstract tree against the structure schema. */
 	  TtaSetStructureChecking (1, doc);
 	  
-	  /* selected the first child of the new element */
-	  while (el != NULL)
+	  /* selected the leaf in the first (or second) child of the new
+	     element */
+	  child = TtaGetFirstChild (el);
+	  if (!selectFirstChild)
+	     /* get the seconf child */
+	     TtaNextSibling (&child);
+	  while (child != NULL)
 	    {
-	      sibling = el;
-	      el = TtaGetFirstChild (sibling);
+	      leaf = child;
+	      child = TtaGetFirstChild (child);
 	    }
-	  TtaSelectElement (doc, sibling);
+	  TtaSelectElement (doc, leaf);
 	}
       else if (surround)
 	{
@@ -719,32 +774,6 @@ static int GetCharType (c, alphabet)
         ret = MathML_EL_MO;
      }
   return ret;
-}
-
-
-/*----------------------------------------------------------------------
-   RemoveAttr
-   Remove attribute of type attrTypeNum from element el, if it exists
- -----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void RemoveAttr (Element el, Document doc, int attrTypeNum)
-#else /* __STDC__*/
-static void RemoveAttr (el, doc, attrTypeNum)
-     Element el;
-     Document doc;
-     int attrTypeNum;
-#endif /* __STDC__*/
-{
-  ElementType	elType;
-  AttributeType attrType;
-  Attribute	attr;
-
-  elType = TtaGetElementType (el);
-  attrType.AttrSSchema = elType.ElSSchema;
-  attrType.AttrTypeNum = attrTypeNum;
-  attr = TtaGetAttribute (el, attrType);
-  if (attr != NULL)
-      TtaRemoveAttribute (el, attr, doc);
 }
 
 /*----------------------------------------------------------------------

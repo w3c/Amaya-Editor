@@ -700,7 +700,10 @@ PtrDocument         pDoc;
 		       c = pEl->ElGraph;
 		    if (ft == 0)
 		       /* pas de traduction */
-		       PutChar (c, fileNum, NULL, pDoc, lineBreak);
+		       {
+		       if (c != '\0')
+		          PutChar (c, fileNum, NULL, pDoc, lineBreak);
+		       }
 		    else
 		       /* on traduit l'element */
 		       /* cherche le symbole dans les chaines sources de la */
@@ -721,7 +724,8 @@ PtrDocument         pDoc;
 			   }
 			 else
 			    /* ce symbole ne se traduit pas */
-			    PutChar (c, fileNum, NULL, pDoc, lineBreak);
+		            if (c != '\0')
+			       PutChar (c, fileNum, NULL, pDoc, lineBreak);
 		      }
 		    if (pEl->ElLeafType == LtPolyLine)
 		       if (pEl->ElNPoints > 0)

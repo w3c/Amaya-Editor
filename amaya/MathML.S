@@ -16,8 +16,8 @@ STRUCT
 
    MROW = LIST OF (Construct);
 
-   Construct = CASE OF
-		  MTEXT = TEXT (ATTR entity = yes_, no_);
+   Construct (ATTR placeholder = yes_) = CASE OF
+		  MTEXT = TEXT (ATTR entity = yes_);
 		  MROW;
 		  MROOT = BEGIN
 			RootBase = Construct;
@@ -31,10 +31,7 @@ STRUCT
 			Denominator = Construct;
 			END;
 		  MSUBSUP = BEGIN
-			Base = CASE OF
-				    SYMBOL;
-				    Construct;
-				    END;
+			Base = Construct;
 		  	Subscript = Construct;
 		  	Superscript = Construct;
 			END;
@@ -47,10 +44,7 @@ STRUCT
 		  	Superscript;
 			END;
 		  MUNDER = BEGIN
-			UnderOverBase = CASE OF
-				    SYMBOL;
-				    Construct;
-				    END;
+			UnderOverBase = Construct;
 			Underscript = Construct;
 			END;
 		  MOVER = BEGIN
@@ -63,10 +57,7 @@ STRUCT
 			Overscript;
 			END;
 		  MMULTISCRIPTS = BEGIN
-			MultiscriptBase =  CASE OF
-				    SYMBOL;
-				    Construct;
-				    END;
+			MultiscriptBase =  Construct;
 			PostscriptPairs = LIST OF (PostscriptPair =
 						BEGIN
 						MSubscript = Construct;
@@ -83,7 +74,7 @@ STRUCT
 		  MO (ATTR addspace = nospace, spacebefore, spaceafter, both) =
 			TEXT;
 		  MS = TEXT;
-		  MF = SYMBOL;
+		  MF = TEXT;
 		  SEP = CONSTANT C_Empty;
 		  MSPACE = CONSTANT C_Empty;
 		  MSTYLE = LIST OF (Construct);

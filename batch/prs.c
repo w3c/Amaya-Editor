@@ -1864,6 +1864,7 @@ indLine             wi;
       CompilerMessage (wi, PRS, FATAL, BAD_RULE_FOR_A_TERMINAL_ELEM, inputLine, LineNum);
    else if (layoutFonct != FnLine &&
 	    layoutFonct != FnNoLine &&
+	    layoutFonct != FnShowBox &&
 	    pSSchema->SsRule[CurType - 1].SrConstruct == CsChoice)
       CompilerMessage (wi, PRS, FATAL, CANT_USE_RULE_FOR_A_CHOICE, inputLine, LineNum);
    else
@@ -1881,7 +1882,8 @@ indLine             wi;
 	CurRule->PrPresBoxName[0] = '\0';
 	/* verifie que cette regle n'est pas deja presente pour cette */
 	/* vue  uniquement pour layoutFonct = FnLine ou FnPage ou FnColumn */
-	if (layoutFonct == FnLine || layoutFonct == FnPage || layoutFonct == FnColumn
+	if (layoutFonct == FnLine || layoutFonct == FnPage
+	    || layoutFonct == FnColumn
 	    || layoutFonct == FnSubColumn
 	    || layoutFonct == FnNoLine)
 	  {

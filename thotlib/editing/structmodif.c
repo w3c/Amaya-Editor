@@ -1080,10 +1080,8 @@ boolean             block;
                        pPrev, pNext, pChild, pEl2, pEl, pCompleteElem,
                        pSibling, pClose;
    PtrDocument         pDoc;
-   PtrAbstractBox      pAb;
    NotifyElement       notifyEl;
-   int                 firstChar, lastChar, NSiblings, nextChar, view,
-                       dvol;
+   int                 firstChar, lastChar, NSiblings, nextChar, view;
    boolean             ret, ok;
 
    ret = FALSE;

@@ -451,6 +451,12 @@ RULES
 	if empty and immediately within MSuperscript
 		CreateFirst (NONE_S);
 	VertPos: HRef = Previous not MF . HRef;
+	Fillpattern: gray2;
+	LineWeight: 0;	{ do not draw the outline }
+	ShowBox;
+	if not immediately within MSubscript and
+	   not immediately within MSuperscript
+		Width: 0.5;
 	IN Math_Structure_view BEGIN
 		Width: Enclosing . Width;
 		Height: Enclosed . Height;
@@ -1028,4 +1034,9 @@ ATTRIBUTES
 		Visibility: Enclosing =;
 	END;
 
+  placeholder:
+	BEGIN
+	Fillpattern: nopattern;
+	Width: Enclosed . Width;
+	END;
 END
