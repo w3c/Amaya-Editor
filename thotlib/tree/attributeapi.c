@@ -716,8 +716,12 @@ int                *attrKind;
 
    UserErrorCode = 0;
    if (attribute == NULL)
-
-      TtaError (ERR_invalid_parameter);
+     {
+       *attrKind = 0;
+       (*attributeType).AttrSSchema = NULL;
+       (*attributeType).AttrTypeNum = 0;
+       TtaError (ERR_invalid_parameter);
+     }
    else
      {
 	(*attributeType).AttrSSchema = (SSchema)

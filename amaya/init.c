@@ -2197,10 +2197,10 @@ ThotBool            history;
 		 {
 		   /* it's an XML document */
 		   isXML = TRUE;
-		   if (parsingLevel == L_Other)
-		     docType = docText;
-		   else if (thotType == docSVG || thotType == docMath)
+		   if (thotType == docSVG || thotType == docMath)
 		     docType = thotType;
+		   else if (parsingLevel == L_Other)
+		     docType = docText;
 		   else
 		     docType = docHTML;
 		   unknown = FALSE;
