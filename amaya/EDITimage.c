@@ -31,6 +31,7 @@ static char       ImgAlt[MAX_LENGTH];
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"
 #include "EDITimage_f.h"
+#include "EDITstyle_f.h"
 #include "HTMLimage_f.h"
 #include "HTMLpresentation_f.h"
 #include "init_f.h"
