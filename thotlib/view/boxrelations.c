@@ -1516,9 +1516,6 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 	    }
 	  else
 	    {
-if (TypeHasException (ExcIsTable,
-		      pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema))
-  printf("Table\n");
 	      pDimAb = &pAb->AbHeight;
 	      pBox->BxContentHeight = FALSE;
 	    }
