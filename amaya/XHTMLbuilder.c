@@ -1311,21 +1311,35 @@ void EndOfHTMLAttributeValue (char *attrValue,
 		      if (isXML)
 			XmlParseError (errorParsing, msgBuffer, 0);
 		      else
+			/* we are parsing an HTML file, not an XHTML file */
 			{
+			  /* generate an error message in the log */
 			  HTMLParseError (context->doc, msgBuffer);
-		      /* remove the attribute and replace it by an */
-		      /* Invalid_attribute (not for XHTML) */
-			  TtaRemoveAttribute (lastAttrElement,
+			  /* special case for value POLYGON of attribute 
+			     shape (AREA element) */
+			  if (attrType.AttrTypeNum == HTML_ATTR_shape &&
+			      strcasecmp (attrValue, "POLYGON") == 0)
+			    {
+			      val = HTML_ATTR_shape_VAL_polygon;
+			      /* interpret it as if it were "poly" */
+			      TtaSetAttributeValue (currentAttribute, val,
+					  lastAttrElement, context->doc);
+			    }
+			  else
+			    /* remove the attribute and replace it by an */
+			    /* Invalid_attribute (not for XHTML) */
+			    {
+			      TtaRemoveAttribute (lastAttrElement,
 					      currentAttribute, context->doc);
-			  attrType.AttrSSchema = 
-			    TtaGetDocumentSSchema (context->doc);
-			  attrType.AttrTypeNum =
-			    pHTMLAttributeMapping[0].ThotAttribute;
-			  sprintf (msgBuffer, "%s=%s", attrName, attrValue);
-			  CreateHTMLAttribute (lastAttrElement, attrType,
-					       msgBuffer, TRUE, context->doc,
-					       &currentAttribute,
-					       &lastAttrElement);
+			      attrType.AttrSSchema = 
+				         TtaGetDocumentSSchema (context->doc);
+			      attrType.AttrTypeNum =
+			               pHTMLAttributeMapping[0].ThotAttribute;
+			      sprintf (msgBuffer, "%s=%s", attrName,attrValue);
+			      CreateHTMLAttribute (lastAttrElement, attrType,
+					 msgBuffer, TRUE, context->doc,
+					 &currentAttribute, &lastAttrElement);
+			    }
 			}
 		    }
 		  else
