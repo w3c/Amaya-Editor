@@ -1236,8 +1236,13 @@ static void      RemoveTrailingSpaces (Element el)
 	       else if (strcmp (currentParserCtxt->SSchemaName, "MathML") == 0)
 		 attrType.AttrTypeNum = MathML_ATTR_EntityName;
 	       else
-		 attrType.AttrTypeNum = 0;
-	       attr = TtaGetAttribute (lastLeaf, attrType);
+		 {
+		   attrType.AttrTypeNum = 0;
+		   attr = NULL;
+		 }
+	       if (attrType.AttrTypeNum != 0)
+		 attr = TtaGetAttribute (lastLeaf, attrType);
+
 	       /* Don't suppress trailing spaces for an entity element */
 	       if (attr == NULL)
 		 {
