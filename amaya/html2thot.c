@@ -2223,7 +2223,12 @@ static void EndOfStartTag (char c)
 	  /* we have to read the content as a simple text unit */
 	  HTMLcontext.parsingTextArea = TRUE;
 	}
-      
+    }
+
+  if (c == '<')
+    {
+      HTMLParseError (HTMLcontext.doc, "Syntax error");
+      StartOfTag (c);
     }
 }
 
@@ -2658,13 +2663,18 @@ static void        EndOfStartGIandTag (char c)
 {
    EndOfStartGI (c);
    EndOfStartTag (c);
+  if (c == '<')
+    {
+      HTMLParseError (HTMLcontext.doc, "Syntax error");
+      StartOfTag (c);
+    }
 }
 
 /*----------------------------------------------------------------------
    EndOfEndTag     An end tag has been read in the HTML file.
    Terminate all corresponding Thot elements.
   ----------------------------------------------------------------------*/
-static void        EndOfEndTag (char c)
+static void EndOfEndTag (char c)
 {
    SSchema	   schema;
    char            msgBuffer[MaxMsgLength];
@@ -2673,151 +2683,157 @@ static void        EndOfEndTag (char c)
    ThotBool        ok, removed;
 
    CloseBuffer ();
-
-   if (HTMLcontext.parsingTextArea)
-      if (strcasecmp (inputBuffer, "textarea") != 0)
-         /* We are parsing the contents of a textarea element. The end
-	    tag is not the one closing the current textarea, consider it
-	    as plain text */
+   if (HTMLcontext.parsingTextArea &&
+       strcasecmp (inputBuffer, "textarea") != 0)
+     /* We are parsing the contents of a textarea element. The end
+	tag is not the one closing the current textarea, consider it
+	as plain text */
+     {
+       /* next state is state 0, not the state computed by the automaton */
+       NormalTransition = FALSE;
+       currentState = 0;
+       /* put "</" and the tag name in the input buffer */
+       for (i = LgBuffer; i > 0; i--)
+	 inputBuffer[i + 1] = inputBuffer[i - 1];
+       LgBuffer += 2;
+       inputBuffer[0] = '<';
+       inputBuffer[1] = '/';
+       inputBuffer[LgBuffer] = EOS;
+       /* copy the input buffer into the document */
+       TextToDocument ();
+     }
+   else
+     {
+       /* is it the end of the current HTML fragment ? */
+       ok = FALSE;
+       if (HTMLrootClosingTag != EOS)
 	 {
-         /* next state is state 0, not the state computed by the automaton */
-         NormalTransition = FALSE;
-	 currentState = 0;
-	 /* put "</" and the tag name in the input buffer */
-         for (i = LgBuffer; i > 0; i--)
-	   inputBuffer[i + 1] = inputBuffer[i - 1];
-         LgBuffer += 2;
-         inputBuffer[0] = '<';
-         inputBuffer[1] = '/';
-         inputBuffer[LgBuffer] = EOS;
-	 /* copy the input buffer into the document */
-         TextToDocument ();
-         return;
-         }
+	   /* look for a colon in the element name (namespaces) and ignore the
+	      prefix if there is one */
+	   for (i = 0; i < LgBuffer && inputBuffer[i] != ':'; i++);
+	   if (inputBuffer[i] == ':')
+	     i++;
+	   else
+	     i = 0;
+	   if (strcasecmp (&inputBuffer[i], HTMLrootClosingTag) == 0)
+	     {
+	       HTMLrootClosed = TRUE;
+	       ok = TRUE;
+	     }
+	 }
 
-   /* is it the end of the current HTML fragment ? */
-   ok = FALSE;
-   if (HTMLrootClosingTag != EOS)
-      {
-	/* look for a colon in the element name (namespaces) and ignore the
-	   prefix if there is one */
-	for (i = 0; i < LgBuffer && inputBuffer[i] != ':'; i++);
-	if (inputBuffer[i] == ':')
-	   i++;
-	else
-	   i = 0;
-        if (strcasecmp (&inputBuffer[i], HTMLrootClosingTag) == 0)
-	   {
-	   HTMLrootClosed = TRUE;
-	   ok = TRUE;
-	   }
-      }
+       if (!ok)
+	 {
+	   /* search the HTML tag in the mapping table */
+	   schema = DocumentSSchema;
+	   entry = MapGI (inputBuffer, &schema, HTMLcontext.doc);
+	   if (entry < 0)
+	     {
+	       if (strlen (inputBuffer) > MaxMsgLength - 20)
+		 inputBuffer[MaxMsgLength - 20] = EOS;
+	       if (DocumentMeta[HTMLcontext.doc] &&
+		   DocumentMeta[HTMLcontext.doc]->xmlformat)
+		 {
+		   sprintf (msgBuffer, "Invalid tag <%s> (removed if saving)", inputBuffer);
+		   HTMLParseError (HTMLcontext.doc, msgBuffer);
+		   removed = TRUE;
+		 }
+	       else
+		 {
+		   sprintf (msgBuffer, "Warning - unknown tag </%s>", inputBuffer);
+		   HTMLParseError (HTMLcontext.doc, msgBuffer);
+		   removed = FALSE;
+		 }
+	       /* create an Invalid_element */
+	       sprintf (msgBuffer, "</%s", inputBuffer);
+	       InsertInvalidEl (msgBuffer, removed);
+	     }
+	   else if (entry >= 0 &&
+		    TtaGetDocumentProfile(HTMLcontext.doc) != L_Other &&
+		    !(pHTMLGIMapping[entry].Level &
+		      TtaGetDocumentProfile (HTMLcontext.doc))) 
+	     {
+	       /* Invalid element for the document profile */
+	       if (strlen (inputBuffer) > MaxMsgLength - 20)
+		 inputBuffer[MaxMsgLength - 20] = EOS;
+	       sprintf (msgBuffer,
+			"Invalid end element <%s> for the document profile",
+			inputBuffer);
+	       HTMLParseError (HTMLcontext.doc, msgBuffer);
+	       XMLErrorsFoundInProfile = TRUE;
+	     }
+	   else if (!CloseElement (entry, -1, FALSE))
+	     /* the end tag does not close any current element */
+	     {
+	       if (DocumentMeta[HTMLcontext.doc] &&
+		   DocumentMeta[HTMLcontext.doc]->xmlformat)
+		 {
+		   sprintf (msgBuffer, "Invalid end tag <%s>", inputBuffer);
+		   HTMLParseError (HTMLcontext.doc, msgBuffer);
+		 }
+	       else
+		 {
+		   /* try to recover */
+		   if ((inputBuffer[0] == 'H' || inputBuffer[0] == 'h') &&
+		       inputBuffer[1] >= '1' && inputBuffer[1] <= '6' &&
+		       inputBuffer[2] == EOS)
+		     /* the end tag is </Hn>. Consider all Hn as equivalent. */
+		     /* </H3> is considered as an end tag for <H2>, for instance */
+		     {
+		       strcpy (msgBuffer, inputBuffer);
+		       msgBuffer[1] = '1';
+		       i = 1;
+		       do
+			 {
+			   schema = DocumentSSchema;
+			   entry = MapGI (msgBuffer, &schema, HTMLcontext.doc);
+			   ok = CloseElement (entry, -1, FALSE);
+			   msgBuffer[1]++;
+			   i++;
+			 }
+		       while (i <= 6 && !ok);
+		     }
+		   if (!ok &&
+		       (!strcasecmp (inputBuffer, "ol")   ||
+			!strcasecmp (inputBuffer, "ul")   ||
+			!strcasecmp (inputBuffer, "menu") ||
+			!strcasecmp (inputBuffer, "dir")))
+		     /* the end tag is supposed to close a list */
+		     /* try to close another type of list */
+		     {
+		       ok = TRUE;
+		       schema = DocumentSSchema;
+		       if (!CloseElement (MapGI ("ol", &schema, HTMLcontext.doc), -1, FALSE) &&
+			   !CloseElement (MapGI ("ul", &schema, HTMLcontext.doc), -1, FALSE) &&
+			   !CloseElement (MapGI ("menu", &schema, HTMLcontext.doc), -1, FALSE) &&
+			   !CloseElement (MapGI ("dir", &schema, HTMLcontext.doc), -1, FALSE))
+			 ok = FALSE;
+		     }
+		   if (!ok)
+		     /* unrecoverable error. Create an Invalid_element */
+		     {
+		       if (strlen (inputBuffer) > MaxMsgLength - 10)
+			 inputBuffer[MaxMsgLength - 10] = EOS;
+		       InsertInvalidEl (msgBuffer, TRUE);
+		       /* print an error message... */
+		       sprintf (msgBuffer, "Invalid end tag </%s> (removed if saving)",
+				inputBuffer);
+		     }
+		   else
+		     /* print an error message... */
+		     sprintf (msgBuffer, "Warning - unexpected end tag </%s>", inputBuffer);
+		   HTMLParseError (HTMLcontext.doc, msgBuffer);
+		 }
+	     }
+	 }
+       InitBuffer ();
+     }
 
-   if (!ok)
-      {
-      /* search the HTML tag in the mapping table */
-      schema = DocumentSSchema;
-      entry = MapGI (inputBuffer, &schema, HTMLcontext.doc);
-      if (entry < 0)
-        {
-	  if (strlen (inputBuffer) > MaxMsgLength - 20)
-	    inputBuffer[MaxMsgLength - 20] = EOS;
-	  if (DocumentMeta[HTMLcontext.doc] &&
-	      DocumentMeta[HTMLcontext.doc]->xmlformat)
-	    {
-	      sprintf (msgBuffer, "Invalid tag <%s> (removed if saving)", inputBuffer);
-	      HTMLParseError (HTMLcontext.doc, msgBuffer);
-	      removed = TRUE;
-	    }
-	  else
-	    {
-	      sprintf (msgBuffer, "Warning - unknown tag </%s>", inputBuffer);
-	      HTMLParseError (HTMLcontext.doc, msgBuffer);
-	      removed = FALSE;
-	    }
-	  /* create an Invalid_element */
-	  sprintf (msgBuffer, "</%s", inputBuffer);
-	  InsertInvalidEl (msgBuffer, removed);
-        }
-      else if (entry >= 0 &&
-	       TtaGetDocumentProfile(HTMLcontext.doc) != L_Other &&
-	       !(pHTMLGIMapping[entry].Level &
-		 TtaGetDocumentProfile (HTMLcontext.doc))) 
-	{
-	  /* Invalid element for the document profile */
-	  if (strlen (inputBuffer) > MaxMsgLength - 20)
-	    inputBuffer[MaxMsgLength - 20] = EOS;
-	  sprintf (msgBuffer,
-		   "Invalid end element <%s> for the document profile",
-		   inputBuffer);
-	  HTMLParseError (HTMLcontext.doc, msgBuffer);
-	  XMLErrorsFoundInProfile = TRUE;
-	}
-      else if (!CloseElement (entry, -1, FALSE))
-        /* the end tag does not close any current element */
-        {
-	  if (DocumentMeta[HTMLcontext.doc] &&
-	      DocumentMeta[HTMLcontext.doc]->xmlformat)
-	    {
-	      sprintf (msgBuffer, "Invalid end tag <%s>", inputBuffer);
-	      HTMLParseError (HTMLcontext.doc, msgBuffer);
-	    }
-	  else
-	    {
-	      /* try to recover */
-	      if ((inputBuffer[0] == 'H' || inputBuffer[0] == 'h') &&
-		  inputBuffer[1] >= '1' && inputBuffer[1] <= '6' &&
-		  inputBuffer[2] == EOS)
-		/* the end tag is </Hn>. Consider all Hn as equivalent. */
-		/* </H3> is considered as an end tag for <H2>, for instance */
-		{
-		  strcpy (msgBuffer, inputBuffer);
-		  msgBuffer[1] = '1';
-		  i = 1;
-		  do
-		    {
-		      schema = DocumentSSchema;
-		      entry = MapGI (msgBuffer, &schema, HTMLcontext.doc);
-		      ok = CloseElement (entry, -1, FALSE);
-		      msgBuffer[1]++;
-		      i++;
-		    }
-		  while (i <= 6 && !ok);
-		}
-	      if (!ok &&
-		  (!strcasecmp (inputBuffer, "ol")   ||
-		   !strcasecmp (inputBuffer, "ul")   ||
-		   !strcasecmp (inputBuffer, "menu") ||
-		   !strcasecmp (inputBuffer, "dir")))
-		/* the end tag is supposed to close a list */
-		/* try to close another type of list */
-		{
-		  ok = TRUE;
-		  schema = DocumentSSchema;
-		  if (!CloseElement (MapGI ("ol", &schema, HTMLcontext.doc), -1, FALSE) &&
-		      !CloseElement (MapGI ("ul", &schema, HTMLcontext.doc), -1, FALSE) &&
-		      !CloseElement (MapGI ("menu", &schema, HTMLcontext.doc), -1, FALSE) &&
-		      !CloseElement (MapGI ("dir", &schema, HTMLcontext.doc), -1, FALSE))
-		    ok = FALSE;
-		}
-	      if (!ok)
-		/* unrecoverable error. Create an Invalid_element */
-		{
-		  if (strlen (inputBuffer) > MaxMsgLength - 10)
-		    inputBuffer[MaxMsgLength - 10] = EOS;
-		  InsertInvalidEl (msgBuffer, TRUE);
-		  /* print an error message... */
-		  sprintf (msgBuffer, "Invalid end tag </%s> (removed if saving)",
-			   inputBuffer);
-		}
-	      else
-		/* print an error message... */
-		sprintf (msgBuffer, "Warning - unexpected end tag </%s>", inputBuffer);
-	      HTMLParseError (HTMLcontext.doc, msgBuffer);
-	    }
-        }
-      }
-   InitBuffer ();
+  if (c == '<')
+    {
+      HTMLParseError (HTMLcontext.doc, "Syntax error");
+      StartOfTag (c);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -2901,7 +2917,7 @@ static void EndOfAttrName (char c)
 	     {
 	       if (strlen (inputBuffer) > MaxMsgLength - 30)
 		 inputBuffer[MaxMsgLength - 30] = EOS;
-	       sprintf (msgBuffer, "Invalid attribute \"%s\"", inputBuffer);
+	       sprintf (msgBuffer, "Invalid attribute \"%s\"(removed if saving)", inputBuffer);
 	       HTMLParseError (HTMLcontext.doc, msgBuffer);
 	       /* attach an Invalid_attribute to the current element */
 	       tableEntry = &pHTMLAttributeMapping[0];
@@ -3000,8 +3016,13 @@ static void EndOfAttrName (char c)
   ----------------------------------------------------------------------*/
 static void         EndOfAttrNameAndTag (char c)
 {
-   EndOfAttrName (c);
-   EndOfStartTag (c);
+  EndOfAttrName (c);
+  EndOfStartTag (c);
+  if (c == '<')
+    {
+      HTMLParseError (HTMLcontext.doc, "Syntax error");
+      StartOfTag (c);
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -4009,11 +4030,13 @@ static sourceTransition sourceAutomaton[] =
    {1, '*', (Proc) PutInBuffer, 2},
 /* state 2: reading a start tag */
    {2, '>', (Proc) EndOfStartGIandTag, 0},
+   {2, '<', (Proc) EndOfStartGIandTag, 1},     /* Error: tag not closed */
    {2, '&', (Proc) StartOfEntity, -30},		/* call subautomaton 30 */
    {2, 'S', (Proc) EndOfStartGI, 16},	/*   S = Space */
    {2, '*', (Proc) PutInBuffer, 2},
 /* state 3: reading an end tag */
    {3, '>', (Proc) EndOfEndTag, 0},
+   {3, '<', (Proc) EndOfEndTag, 1},             /* Error: tag not closed */
    {3, '&', (Proc) StartOfEntity, -30},		/* call subautomaton 30 */
    {3, 'S', (Proc) Do_nothing, 3},
    {3, '*', (Proc) PutInBuffer, 3},
@@ -4022,6 +4045,7 @@ static sourceTransition sourceAutomaton[] =
    {4, 'S', (Proc) EndOfAttrName, 17},
    {4, '&', (Proc) StartOfEntity, -30},		/* call subautomaton 30 */
    {4, '>', (Proc) EndOfAttrNameAndTag, 0},
+   {4, '<', (Proc) EndOfAttrNameAndTag, 1},     /* Error: tag not closed */
    {4, '*', (Proc) PutInBuffer, 4},
 /* state 5: expecting an attribute value */
    {5, '\"', (Proc) StartOfQuotedAttrValue, 6},
@@ -4040,6 +4064,7 @@ static sourceTransition sourceAutomaton[] =
    {7, '*', (Proc) PutInBuffer, 7},
 /* state 8: end of attribute value */
    {8, '>', (Proc) EndOfStartTag, 0},
+   {8, '<', (Proc) EndOfStartTag, 1},     /* Error: tag not closed */
    {8, 'S', (Proc) Do_nothing, 16},
    {8, '*', (Proc) PutInBuffer, 4},
 /* state 9: reading an attribute value between simple quotes */
@@ -4072,6 +4097,7 @@ static sourceTransition sourceAutomaton[] =
 /* state 16: expecting an attribute name or an end of start tag */
    {16, 'S', (Proc) Do_nothing, 16},
    {16, '>', (Proc) EndOfStartTag, 0},
+   {16, '<', (Proc) EndOfStartTag, 1},     /* Error: tag not closed */
    {16, '*', (Proc) PutInBuffer, 4},
 /* state 17: expecting '=' after an attribute name */
    {17, 'S', (Proc) Do_nothing, 17},
@@ -4126,7 +4152,7 @@ static sourceTransition sourceAutomaton[] =
    InitAutomaton   read the "source" form of the automaton and
    build the "executable" form.
   ----------------------------------------------------------------------*/
-void                InitAutomaton (void)
+void InitAutomaton (void)
 {
    int                 entry;
    State               theState;
