@@ -291,6 +291,8 @@ MENUS
 	view:1 Links button:BDeleteAnchor -> DeleteAnchor;
 	view:1 Links button:BMakeID -> MakeIDMenu;
 
+	view:1 Views toggle:TShowPanel -> ShowPanel;
+	view:1 Views toggle:TFullScreen -> FullScreen;
 	view:1 Views toggle:TShowButtonbar -> ShowButtons;
 	view:1 Views toggle:TShowTextZone -> ShowAddress;
 	view:1 Views toggle:TShowMapAreas -> ShowMapAreas;
@@ -304,6 +306,7 @@ MENUS
 	view:1 Views button:BShowAlternate -> ShowAlternate;
 	view:1 Views button:BShowToC -> ShowToC;
 	view:1 Views button:BShowTimeLine -> ShowTimeLineWindow;
+	view:1 Views toggle:TSplitUnsplitPage -> SplitUnsplitPage;
 
         view:1 Style button:BCharacterStyle -> TtcChangeCharacters;
         view:1 Style button:BColors -> TtcChangeColors;

@@ -251,78 +251,81 @@
 249 Create &target
 250 &Delete anchor
 251 &Add/Remove IDs...
-252 Show &button bar
-253 Show a&ddress
-254 Show &map areas
-255 Show &targets
-256 Zoom in
-257 Zoom out
-258 Show &structure
-259 Show so&urce
-260 Show lin&ks
-261 Show &alternate
-262 Show table &of contents
-263 Timeline
-264 C&haracter style...
-265 C&olors...
-266 &Format...
-267 &Background image...
-268 Create &rule...
-269 Apply &class...
-270 Show applied style...
-271 Lin&k...
-272 Ope&n...
-273 &Disable...
-274 &Enable...
-275 Remo&ve...
-276 Annotate selection
-277 Annotate document
-278 Move to selection
-279 Store selection as &XPointer
-280 Move to stored XPointer
-281 Reply to annotation
-282 Post to server
-283 Delete
-284 Load
-285 Customize query...
-286 Local filter...
-287 View Bookmarks
-288 New Bookmark
-289 New Topic
-290 New Separator
-291 Move Item
-292 Lock resource...
-293 Unlock resource...
-294 View resource properties...
-295 Copy lock information...
-296 Locked?
-297 About Amaya
-298 About Amaya at W3C
-299 Index
-300 Browsing
-301 Views
-302 Selecting
-303 Document
-304 Creating elements
-305 Attributes
-306 Characters
-307 Restructuring
-308 Links
-309 Tables
-310 Image maps
-311 Math
-312 Graphics
-313 XML support
-314 Style sheets
-315 Searching
-316 Spell Checking
-317 Publishing
-318 WebDAV
-319 Printing
-320 Numbering
-321 Making books
-322 Annotations
-323 &Bookmarks
-324 Configuring Amaya
-325 ShortCuts
-326 Accessibility in Amaya
+252 Show &panel
+253 &Fullscreen
+254 Show &button bar
+255 Show a&ddress
+256 Show &map areas
+257 Show &targets
+258 Zoom in
+259 Zoom out
+260 Show &structure
+261 Show so&urce
+262 Show lin&ks
+263 Show &alternate
+264 Show table &of contents
+265 Timeline
+266 &Split view
+267 C&haracter style...
+268 C&olors...
+269 &Format...
+270 &Background image...
+271 Create &rule...
+272 Apply &class...
+273 Show applied style...
+274 Lin&k...
+275 Ope&n...
+276 &Disable...
+277 &Enable...
+278 Remo&ve...
+279 Annotate selection
+280 Annotate document
+281 Move to selection
+282 Store selection as &XPointer
+283 Move to stored XPointer
+284 Reply to annotation
+285 Post to server
+286 Delete
+287 Load
+288 Customize query...
+289 Local filter...
+290 View Bookmarks
+291 New Bookmark
+292 New Topic
+293 New Separator
+294 Move Item
+295 Lock resource...
+296 Unlock resource...
+297 View resource properties...
+298 Copy lock information...
+299 Locked?
+300 About Amaya
+301 About Amaya at W3C
+302 Index
+303 Browsing
+304 Views
+305 Selecting
+306 Document
+307 Creating elements
+308 Attributes
+309 Characters
+310 Restructuring
+311 Links
+312 Tables
+313 Image maps
+314 Math
+315 Graphics
+316 XML support
+317 Style sheets
+318 Searching
+319 Spell Checking
+320 Publishing
+321 WebDAV
+322 Printing
+323 Numbering
+324 Making books
+325 Annotations
+326 &Bookmarks
+327 Configuring Amaya
+328 ShortCuts
+329 Accessibility in Amaya

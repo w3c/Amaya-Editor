@@ -251,78 +251,81 @@
 249 Create destino
 250 Apagar âncora
 251 Adicionar/Remover IDs...
-252 Exibir barra de ferramentas
-253 Exibir endereço
-254 Exibir áreas de mapa
-255 Exibir destinos
-256 Ampliar (Zoom in)
-257 Reduzir (Zoom out)
-258 Exibir estrutura
-259 Exibir fonte
-260 Exibir enlaces (links)
-261 Exibir alternativa
-262 Exibir índice de conteúdos
-263 **Timeline
-264 Estilo de carácter...
-265 Cores...
-266 Formato...
-267 Imagem de fundo...
-268 Criar regra...
-269 Aplicar classe...
-270 **Show applied style...
-271 Ligar...
-272 Abrir...
-273 Desabilitar...
-274 Habilitar...
-275 Remover...
-276 Anotar seleção
-277 Anotar documento
-278 Mover até a seleção
-279 Salvar seleção como XPointer
-280 Mover para o XPointer memorizado
-281 Responder à anotação
-282 Registrar
-283 Apagar
-284 Carregar
-285 Personalizar consulta...
-286 Filtro local...
-287 **View Bookmarks
-288 **New Bookmark
-289 **New Topic
-290 **New Separator
-291 **Move Item
-292 Travar o recurso
-293 Destravar o recurso
-294 Exibir as propriedades do recurso
-295 Copiar a informação da trava...
-296 Travado?
-297 Sobre Amaya
-298 Sobre Amaya no W3C
-299 Índice
-300 Navegar
-301 Vistas
-302 Selecionar
-303 Documento
-304 Criar elementos
-305 Atributos
-306 Caracteres
-307 Reestruturar
-308 Enlaces (links)
-309 Tabelas
-310 Mapas de Imagem
-311 Matemática
-312 Gráficos
-313 Suporte à XML
-314 Folhas de estilo
-315 Achar...
-316 Verificar ortografia
-317 Publicar
-318 WebDAV
-319 Imprimir
-320 Numberar
-321 Criar livros
-322 Anotações
-323 **&Bookmarks
-324 Configurar Amaya
-325 Atalhos
-326 Accessibilidade em Amaya
+252 **Show &panel
+253 **&Fullscreen
+254 Exibir barra de ferramentas
+255 Exibir endereço
+256 Exibir áreas de mapa
+257 Exibir destinos
+258 Ampliar (Zoom in)
+259 Reduzir (Zoom out)
+260 Exibir estrutura
+261 Exibir fonte
+262 Exibir enlaces (links)
+263 Exibir alternativa
+264 Exibir índice de conteúdos
+265 **Timeline
+266 **&Split view
+267 Estilo de carácter...
+268 Cores...
+269 Formato...
+270 Imagem de fundo...
+271 Criar regra...
+272 Aplicar classe...
+273 **Show applied style...
+274 Ligar...
+275 Abrir...
+276 Desabilitar...
+277 Habilitar...
+278 Remover...
+279 Anotar seleção
+280 Anotar documento
+281 Mover até a seleção
+282 Salvar seleção como XPointer
+283 Mover para o XPointer memorizado
+284 Responder à anotação
+285 Registrar
+286 Apagar
+287 Carregar
+288 Personalizar consulta...
+289 Filtro local...
+290 **View Bookmarks
+291 **New Bookmark
+292 **New Topic
+293 **New Separator
+294 **Move Item
+295 Travar o recurso
+296 Destravar o recurso
+297 Exibir as propriedades do recurso
+298 Copiar a informação da trava...
+299 Travado?
+300 Sobre Amaya
+301 Sobre Amaya no W3C
+302 Índice
+303 Navegar
+304 Vistas
+305 Selecionar
+306 Documento
+307 Criar elementos
+308 Atributos
+309 Caracteres
+310 Reestruturar
+311 Enlaces (links)
+312 Tabelas
+313 Mapas de Imagem
+314 Matemática
+315 Gráficos
+316 Suporte à XML
+317 Folhas de estilo
+318 Achar...
+319 Verificar ortografia
+320 Publicar
+321 WebDAV
+322 Imprimir
+323 Numberar
+324 Criar livros
+325 Anotações
+326 **&Bookmarks
+327 Configurar Amaya
+328 Atalhos
+329 Accessibilidade em Amaya

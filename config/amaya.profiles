@@ -53,6 +53,9 @@ ZoomOut
 #+templates
 +browsing_WX
 +edit_WX
+ShowPanel
+FullScreen
+SplitUnsplitPage
 ZoomIn
 ZoomOut
 &EmptyTransformMenu

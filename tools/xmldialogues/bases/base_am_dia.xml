@@ -2654,6 +2654,14 @@
 	<message xml:lang="tr">IDs ekle/sil</message>
 	<message xml:lang="ru">Добавить/Удалить IDs...</message>
 </label>
+<label define="TShowPanel">
+	<message xml:lang="en">Show &amp;panel</message>
+	<message xml:lang="fr">&amp;Montrer panel</message>
+</label>
+<label define="TFullScreen">
+	<message xml:lang="en">&amp;Fullscreen</message>
+	<message xml:lang="fr">&amp;Plein écran</message>
+</label>
 <label define="TShowButtonbar">
 	<message xml:lang="en">Show &amp;button bar</message>
 	<message xml:lang="fr">Montrer &amp;boutons</message>
@@ -2784,6 +2792,10 @@
 	<message xml:lang="es">Planificación</message>
 	<message xml:lang="tr">Zaman sırası</message>
 	<message xml:lang="ru">Шкала времени</message>
+</label>
+<label define="TSplitUnsplitPage">
+	<message xml:lang="en">&amp;Split view</message>
+	<message xml:lang="fr">P&amp;artager la vue</message>
 </label>
 <label define="BCharacterStyle">
 	<message xml:lang="en">C&amp;haracter style...</message>

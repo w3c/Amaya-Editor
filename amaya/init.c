@@ -7365,6 +7365,30 @@ void ChangeAttrOnRoot (Document doc, int attrNum)
 }
 
 /*----------------------------------------------------------------------
+  ShowPanel
+  show/hide the side panel
+  ----------------------------------------------------------------------*/
+void ShowPanel (Document doc, View view)
+{
+}
+
+/*----------------------------------------------------------------------
+  FullScreen
+  enable/disable fullscreen
+  ----------------------------------------------------------------------*/
+void FullScreen (Document doc, View view)
+{
+}
+
+/*----------------------------------------------------------------------
+  SplitUnsplitPage
+  split or unsplit the frame
+  ----------------------------------------------------------------------*/
+void SplitUnsplitPage (Document doc, View view)
+{
+}
+
+/*----------------------------------------------------------------------
   ShowMapAreas
   Execute the "Show Map Areas" command
   ----------------------------------------------------------------------*/

@@ -251,78 +251,81 @@
 249 Crea obiettivo
 250 Cancella ancora
 251 Aggiungi/Togli ID...
-252 Mostra barra dei pulsanti
-253 Mostra indirizzo
-254 Mostra le zone attive
-255 Mostra obiettivi
-256 Ingrandisci
-257 Rimpicciolisci
-258 Mostra struttura
-259 Mostra sorgente
-260 Mostra collegamenti
-261 Mostra la vista alternativa
-262 Mostra sommario
-263 Timeline
-264 Stile dei caratteri...
-265 Colori...
-266 Formattazione...
-267 Immagine di sfondo...
-268 Crea una regola...
-269 Applica una classe...
-270 Mostra lo stile applicato...
-271 Collegamento...
-272 Apri...
-273 Disabilita...
-274 Abilita...
-275 Rimuovi...
-276 Annota la selezione
-277 Annota il documento
-278 Muovi sulla selezione
-279 Salva la selezione come XPointer
-280 Muovi sull'Xpointer memorizzato
-281 Rispondi all'annotazione
-282 Registra
-283 Elimina
-284 Carica
-285 Personalizza la richiesta
-286 Filtro locale...
-287 Visualizza favorites
-288 Nuovo bookmark
-289 Nuova rubrica
-290 Nuovo separatore
-291 Sposta elemento
-292 Lock resource...
-293 Unlock resource...
-294 Informazioni per il lock...
-295 Copia delle informazioni per il lock...
-296 Lock?
-297 Informazioni su Amaya
-298 Informazioni su Amaya al W3C
-299 Indice
-300 Navigazione
-301 Viste
-302 Selezione
-303 Documento
-304 Creazione elementi
-305 Attributi
-306 Caratteri
-307 Ristrutturazione
-308 Collegamenti
-309 Tabelle
-310 Zone attive
-311 Matematica
-312 Graphics
-313 Supporto XML
-314 Fogli di stile
-315 Ricerca
-316 Controllo ortografico
-317 Pubblicazione
-318 WebDAV
-319 Stampa
-320 Numerazione
-321 Creare un libro
-322 Annotazioni
-323 F&avorites
-324 Configurazione di Amaya
-325 Scelte rapide
-326 Accessibilità in Amaya
+252 **Show &panel
+253 **&Fullscreen
+254 Mostra barra dei pulsanti
+255 Mostra indirizzo
+256 Mostra le zone attive
+257 Mostra obiettivi
+258 Ingrandisci
+259 Rimpicciolisci
+260 Mostra struttura
+261 Mostra sorgente
+262 Mostra collegamenti
+263 Mostra la vista alternativa
+264 Mostra sommario
+265 Timeline
+266 **&Split view
+267 Stile dei caratteri...
+268 Colori...
+269 Formattazione...
+270 Immagine di sfondo...
+271 Crea una regola...
+272 Applica una classe...
+273 Mostra lo stile applicato...
+274 Collegamento...
+275 Apri...
+276 Disabilita...
+277 Abilita...
+278 Rimuovi...
+279 Annota la selezione
+280 Annota il documento
+281 Muovi sulla selezione
+282 Salva la selezione come XPointer
+283 Muovi sull'Xpointer memorizzato
+284 Rispondi all'annotazione
+285 Registra
+286 Elimina
+287 Carica
+288 Personalizza la richiesta
+289 Filtro locale...
+290 Visualizza favorites
+291 Nuovo bookmark
+292 Nuova rubrica
+293 Nuovo separatore
+294 Sposta elemento
+295 Lock resource...
+296 Unlock resource...
+297 Informazioni per il lock...
+298 Copia delle informazioni per il lock...
+299 Lock?
+300 Informazioni su Amaya
+301 Informazioni su Amaya al W3C
+302 Indice
+303 Navigazione
+304 Viste
+305 Selezione
+306 Documento
+307 Creazione elementi
+308 Attributi
+309 Caratteri
+310 Ristrutturazione
+311 Collegamenti
+312 Tabelle
+313 Zone attive
+314 Matematica
+315 Graphics
+316 Supporto XML
+317 Fogli di stile
+318 Ricerca
+319 Controllo ortografico
+320 Pubblicazione
+321 WebDAV
+322 Stampa
+323 Numerazione
+324 Creare un libro
+325 Annotazioni
+326 F&avorites
+327 Configurazione di Amaya
+328 Scelte rapide
+329 Accessibilità in Amaya
