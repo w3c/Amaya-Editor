@@ -88,9 +88,9 @@ uninstall :
 	  cd .. ; fi ;done )
 
 update :
-	@(cd $(THOTDIR) ; cvs update)
+	@(cd $(THOTDIR) ; cvs update -dP)
 	@(if [ -d $(THOTDIR)/../$(LIBWWW) ] ; then \
-	  cd $(THOTDIR)/../$(LIBWWW) ; cvs update ; fi)
+	  cd $(THOTDIR)/../$(LIBWWW) ; cvs update -dP; fi)
 
 commit :
 	@(cd $(THOTDIR) ; cvs commit)
