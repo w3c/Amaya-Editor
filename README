@@ -1,13 +1,10 @@
 
                  Thot library and Amaya
 
-Thot is a generic system for the development of document centered
+Thot is a generic system for the development of document-centered
 applications based on the concept of structured active documents. It can be
 used for building interactive system as well as automatic processors.
-Currently the programs using the Thot Library and available in source
-form are Thot Editor (http://www.inrialpes.fr/opera/Thot) and Amaya (see
-http://www.w3.org/Amaya for more information).
-
+Currently the open-source program using the Thot Library is Amaya
+(http://www.w3.org/Amaya).
 For more information about Amaya. see the README.amaya file
 and the documentation located in doc/amaya.
-
