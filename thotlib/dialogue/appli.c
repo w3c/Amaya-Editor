@@ -814,12 +814,14 @@ void WIN_ChangeVScroll (int frame, int reason, int value)
 	   else 
 	     delta = -(nbPages * FrameTable[frame].FrHeight + (int) ((remaining * FrameTable[frame].FrHeight) / height));
 	   VerticalScroll (frame, delta, 1);
-	 } else {
+	 } 
+       else 
+	 {
 	   delta = (int) (((float)value / (float)FrameTable[frame].FrHeight) * 100);
 	   JumpIntoView (frame, delta);
 	 }
        break;
-   }
+     }
 }
 
 /*----------------------------------------------------------------------
@@ -1093,6 +1095,38 @@ void FrameVScrolled (int *w, int frame, int *param)
     }
 }
 #else /* _GTK */
+
+void FrameVScrolledGTK (GtkAdjustment *w, int frame)
+{ 
+  int        delta, Xpos, Ypos, width, height, viewed, left;
+  static int PreviousPosition = 0;
+
+  /* ne pas traiter si le document est en mode NoComputedDisplay */
+  if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == NoComputedDisplay)
+    return;
+  ComputeDisplayedChars (frame, &Xpos, &Ypos, &width, &height);
+  delta = (int) w->value - PreviousPosition;
+  viewed = abs (delta) / height;
+  left = abs (delta) - (height * viewed);
+  if (viewed <= 3)
+    {
+      if (delta > 0)
+	delta = viewed * FrameTable[frame].FrHeight 
+	  + (int) ((left * FrameTable[frame].FrHeight) / height);
+      else 
+	delta = -(viewed * FrameTable[frame].FrHeight 
+		  + (int) ((left * FrameTable[frame].FrHeight) / height));
+      VerticalScroll (frame, delta, 1);
+    } 
+  else 
+    {
+      delta = (int) ((w->value / (float)FrameTable[frame].FrHeight) * 100);
+      JumpIntoView (frame, delta);
+    }
+  PreviousPosition = (int) w->value;
+}
+
+#ifdef TESTEDSCROLLSOLUTIONDONTWORKATALL
 void FrameVScrolledGTK (GtkAdjustment *w, int frame)
 {
   int                 delta;
@@ -1142,21 +1176,21 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
       /* On regarde si le deplacement bute en bas du document */
       if (delta + h >= FrameTable[frame].FrHeight - 4)
 	delta = FrameTable[frame].FrHeight;
-      else if (delta >= 4)
+      else if (delta)
 	/* Ou plutot vers le milieu */
-	  delta -= h / 2;
-      /* else */
-      /* 	delta = 0; */
-      if (delta <= 0)
-	return;
+	  delta += h / 2;
+      else 
+      	delta = 0;
+
       delta = (delta * 100) / FrameTable[frame].FrHeight;
       /***** printf ("  JumpIntoView %d\n", delta); ****/
       JumpIntoView (frame, delta);
+      JumpInProgress = FALSE;
       /* recompute the scroll bars */
       UpdateScrollbars (frame);
-      JumpInProgress = FALSE;
     }
 }
+#endif /*O*/
 #endif /*_GTK*/
 #endif /* _WINDOWS */
 
@@ -3332,7 +3366,9 @@ void UpdateScrollbars (int frame)
        XtSetValues (vscroll, args, n);
      }
 #else /*_GTK*/
-
+   /*if (JumpInProgress)
+     return;
+   */
    if (width == l && Xpos == 0)
      gtk_widget_hide (GTK_WIDGET (hscroll));
    else

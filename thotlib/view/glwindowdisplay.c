@@ -731,6 +731,14 @@ void GL_DrawLines (ThotPoint *point, int npoints)
   ----------------------------------------------------------------------*/
 void GL_DrawPolygon (ThotPoint *points, int npoints)
 {
+  if (0 && Software_Mode)
+    {
+      glEnable (GL_POLYGON_SMOOTH); 
+      glHint (GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+      tesse (points, npoints, FALSE);
+      glDisable (GL_POLYGON_SMOOTH); 
+    }
+  else
     tesse (points, npoints, FALSE);
 }
 
@@ -1534,7 +1542,7 @@ void SetGlPipelineState ()
       glEnable (GL_LINE_SMOOTH); 
       glEnable (GL_POINT_SMOOTH); 
       glHint (GL_POINT_SMOOTH_HINT, GL_NICEST);
-      glHint (GL_LINE_SMOOTH_HINT, GL_NICEST);      
+      glHint (GL_LINE_SMOOTH_HINT, GL_NICEST); 
       /* For transparency and beautiful antialiasing*/
       glEnable (GL_BLEND); 
       glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
@@ -1613,24 +1621,29 @@ void GL_BackBufferRegionSwapping (int x, int y,
 void GL_window_copy_area (int frame, int xf, int yf, int xd, int yd,
 			  int width, int height)
 {
-  /* if (!Software_Mode) */
     DefRegion (frame, 
 	       xd, yd+FrameTable[frame].FrTopMargin, 
 	       width+xd, yd+height+FrameTable[frame].FrTopMargin);
- /*  else */
-/*     { */
-/*       if (GL_MakeCurrent (frame)) */
-/*       	return; */
+
+#ifdef SCROLL_TEST
+  if (!Software_Mode)
+    DefRegion (frame, 
+	       xd, yd+FrameTable[frame].FrTopMargin, 
+	       width+xd, yd+height+FrameTable[frame].FrTopMargin);
+  else
+    {
+      if (GL_MakeCurrent (frame))
+      	return;
       /* Copy from backbuffer to backbuffer */
-    
-     /*  glRasterPos2i (xf, yf + height); */
-/*       glCopyPixels (xd,    */
-/*  		    FrameTable[frame].FrHeight + FrameTable[frame].FrTopMargin    */
-/* 		    - (yd + height),  */
-/*  		    width, height, GL_COLOR);  */
+      glFinish ();
+      glRasterPos2i (xf, yf + height);
+      glCopyPixels (xd,   
+ 		    FrameTable[frame].FrHeight   
+		    - (yd + height + FrameTable[frame].FrTopMargin), 
+ 		    width, height, GL_COLOR); 
       /*copy from back to front */
-     /*  GL_Swap (frame); */
-/*       glFinish (); */
+      GL_Swap (frame);
+      glFinish ();
       
       /* glRasterPos2i (xf, yf + height); */
 /*       glCopyPixels (xd,   */
@@ -1644,7 +1657,8 @@ void GL_window_copy_area (int frame, int xf, int yf, int xd, int yd,
 /* 		    width, height,  */
 /* 		    GL_COLOR); */
 /*       glDrawBuffer (GL_BACK); */
-   /*  } */
+    }
+#endif /*SCROLLTEST*/
 }
 
 
@@ -1680,14 +1694,13 @@ void glMatroxBUG (int frame, int x, int y, int width, int height)
       RedrawFrameBottom (frame, 0, NULL);
     }
 }
-/*****************************************************/
-/* TESTING */
-
 
 #ifdef _PCLDEBUG
 
-/* Testing purpose function 
-   Drawing grid (for canvas geometry tests)*/
+/*****************************************************/
+/* TESTING NOT REALLY USED (FOR DEBUGGING)*/
+
+/* Drawing grid (for canvas geometry precision tests)*/
 void DrawGrid(int width, int height)
 {  
   GLfloat grid2x2[2][2][3];
@@ -1756,10 +1769,10 @@ int make_carre()
 }
 
 /*-------------------------------
- saveBuffer :
+ SaveBuffer :
  Take a picture (tga) of the backbuffer.
- mainly for debug purpose, but could be used for a
- C remplacment of Batik 
+ mainly for debug purpose, 
+ (but Amaya could be used as a svg renderer)
 --------------------------------*/
 int saveBuffer (int width, int height)
 {
