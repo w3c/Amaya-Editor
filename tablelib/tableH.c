@@ -827,7 +827,7 @@ printf ("cref=%d: Min =%d, Max=%d, colWidth=%d, colPercent=%d\n", cRef, pBox->Bx
   if (max <= width && !constraint)
     {
       /* assign the maximum width to each column */
-      ResizeWidth (pBox, pBox, NULL, max - pBox->BxW, 0, frame);
+      ResizeWidth (pBox, pBox, NULL, max - pBox->BxW, 0, 0, 0, frame);
       for (cRef = 0; cRef < cNumber; cRef++)
 	{
 	  pBox = colBox[cRef]->AbBox;
@@ -840,7 +840,7 @@ printf ("cref=%d: Min =%d, Max=%d, colWidth=%d, colPercent=%d\n", cRef, pBox->Bx
 	    delta = pBox->BxMaxWidth;
 	  /* update the new inside width */
 	  delta = delta - pBox->BxLMargin - pBox->BxRMargin - pBox->BxLPadding - pBox->BxRPadding - pBox->BxLBorder - pBox->BxRBorder - pBox->BxW;
-	  ResizeWidth (pBox, pBox, NULL, delta, 0, frame);
+	  ResizeWidth (pBox, pBox, NULL, delta, 0, 0, 0, frame);
 #ifdef TAB_DEBUG
 printf ("Width[%d]=%d\n", cRef, pBox->BxWidth);
 #endif
@@ -849,7 +849,7 @@ printf ("Width[%d]=%d\n", cRef, pBox->BxWidth);
   else if (min >= width || (!constraint && i == 0))
     {
       /* assign the minimum width to each column */
-      ResizeWidth (pBox, pBox, NULL, min - pBox->BxW, 0, frame);
+      ResizeWidth (pBox, pBox, NULL, min - pBox->BxW, 0, 0, 0, frame);
       for (cRef = 0; cRef < cNumber; cRef++)
 	{
 	  pBox = colBox[cRef]->AbBox;
@@ -864,7 +864,7 @@ printf ("Width[%d]=%d\n", cRef, pBox->BxWidth);
 	    delta = pBox->BxMinWidth;
 	  /* update the new inside width */
 	  delta = delta - pBox->BxLMargin - pBox->BxRMargin - pBox->BxLPadding - pBox->BxRPadding - pBox->BxLBorder - pBox->BxRBorder - pBox->BxW;
-	  ResizeWidth (pBox, pBox, NULL, delta, 0, frame);
+	  ResizeWidth (pBox, pBox, NULL, delta, 0, 0, 0, frame);
 #ifdef TAB_DEBUG
 printf ("Width[%d]=%d\n", cRef, pBox->BxWidth);
 #endif
@@ -873,7 +873,7 @@ printf ("Width[%d]=%d\n", cRef, pBox->BxWidth);
   else
     {
       /* assign a specific width to each column */
-      ResizeWidth (pBox, pBox, NULL, width - pBox->BxW, 0, frame);
+      ResizeWidth (pBox, pBox, NULL, width - pBox->BxW, 0, 0, 0, frame);
       useMax = FALSE;
       if (max < width)
 	{
@@ -966,7 +966,7 @@ printf ("Width[%d]=%d\n", cRef, pBox->BxWidth);
 	    }
 	  /* update the new inside width */
 	  i = i - pBox->BxLMargin - pBox->BxRMargin - pBox->BxLPadding - pBox->BxRPadding - pBox->BxLBorder - pBox->BxRBorder - pBox->BxW;
-	  ResizeWidth (pBox, pBox, NULL, i, 0, frame);
+	  ResizeWidth (pBox, pBox, NULL, i, 0, 0, 0, frame);
 #ifdef TAB_DEBUG
 printf ("Width[%d]=%d\n", cRef, pBox->BxWidth);
 #endif
@@ -1850,7 +1850,7 @@ int              frame;
 	      pAb = SearchEnclosingType (col, BoTable);
 	      /* during table building each column needs a minimum width */
 	      if (col->AbBox->BxWidth < 20)
-		ResizeWidth (col->AbBox, col->AbBox, NULL, 20 - col->AbBox->BxWidth, 0, frame);
+		ResizeWidth (col->AbBox, col->AbBox, NULL, 20 - col->AbBox->BxWidth, 0, 0, 0, frame);
 	    }
 	}
       else if (row != NULL && row->AbBox != NULL)
