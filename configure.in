@@ -362,6 +362,9 @@ if test "$with_mesa" = "yes" ; then
 
 
   echo "---> Install Mesa library into Amaya/Mesa/"
+  # remove old lib
+  rm -rf $OLDDIR/../Mesa/lib/*
+  # create directories
   mkdir -p $OLDDIR/../Mesa
   mkdir -p $OLDDIR/../Mesa/include
   mkdir -p $OLDDIR/../Mesa/lib
@@ -483,7 +486,7 @@ if test "$with_wx" = "yes" ; then
   # copy libraries (only .a because we dont want to share)
   cp -pd $WXBUILD_DIR/lib/*.a $OLDDIR/../$WXAMAYA_DIR/lib/
   # copy autoconfig script (needed to setup 'Option' file)
-  cp -pd $WXBUILD_DIR/*-config $OLDDIR/../$WXAMAYA_DIR/
+  cp -pd $WXBUILD_DIR/*-config* $OLDDIR/../$WXAMAYA_DIR/
   cd $OLDDIR
   echo "---> Install wxWidgets library into Amaya. - DONE"
   # --------- install wxWidgets library - DONE --------------- #
@@ -491,15 +494,20 @@ if test "$with_wx" = "yes" ; then
 
   # --------- configuring wxWidgets paths --------------- #
   WXCONFIG=../$WXAMAYA_DIR/wx-config
+  # TODO: pour la version suivante de wxWidgets
+  #WXCONFIG=../$WXAMAYA_DIR/lib/wx/config/gtk2ud-2.5
   # look for relative wxWidgets path : necessary to install into different paths amaya
   WXCONFIG_ARGS="--prefix=../../$WXAMAYA_DIR --exec-prefix=../../$WXAMAYA_DIR"
+  WXCONFIG_TOOLKIT=""
+  # TODO: pour la version suivante de wxWidgets
+  #WXCONFIG_TOOLKIT="--toolkit=gtk2 --unicode --debug"
   # check that wx-config exists
   if test ! -f $WXCONFIG ; then
     AC_MSG_ERROR(Cannot find wx-config. Please download wxWidgets (http://www.wxwidgets.org/))
   fi
 
   # setup include paths  
-  WX_INCLUDES="`$WXCONFIG $WXCONFIG_ARGS --cxxflags`"
+  WX_INCLUDES="`$WXCONFIG $WXCONFIG_ARGS $WXCONFIG_TOOLKIT --cxxflags`"
   WX_INCLUDES="-I../../$WXAMAYA_DIR/contrib/include/ ${WX_INCLUDES}"
   AC_SUBST(WX_INCLUDES)
 
@@ -515,7 +523,9 @@ if test "$with_wx" = "yes" ; then
       WX_LIBRARIES_EXTRA_PARAM="-framework OpenGL -framework AGL"
     fi
   fi
-  WX_LIBRARIES="-Wl,-rpath,../../$WXAMAYA_DIR/lib `$WXCONFIG $WXCONFIG_ARGS --libs=${WXCONFIG_LIBS_PARAM}` ${WX_LIBRARIES_EXTRA_PARAM}"
+  # TODO: pour la version suivante de wxWidgets
+  #WX_LIBRARIES="-Wl,-rpath,../../$WXAMAYA_DIR/lib `$WXCONFIG $WXCONFIG_ARGS $WXCONFIG_TOOLKIT --libs ${WXCONFIG_LIBS_PARAM}` ${WX_LIBRARIES_EXTRA_PARAM}"
+  WX_LIBRARIES="-Wl,-rpath,../../$WXAMAYA_DIR/lib `$WXCONFIG $WXCONFIG_ARGS $WXCONFIG_TOOLKIT --libs=${WXCONFIG_LIBS_PARAM}` ${WX_LIBRARIES_EXTRA_PARAM}"
   AC_SUBST(WX_LIBRARIES)
 
   WX_OPTIONS="-D_WX"
