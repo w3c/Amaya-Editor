@@ -76,6 +76,22 @@ void DefClip (int frame, int xd, int yd, int xf, int yf)
    if ((xd == xf && xd == 0 && (yd != yf || yd != 0)) ||
        (yd == yf && yd == 0 && (xd != xf || xd != 0)))
      return;
+   else
+     {
+       /* exchange limits for rigth-to-left string */
+       if (xf < xd)
+	 {
+	   xe = xd;
+	   xd = xf;
+	   xf = xe;
+	 }
+       if (yf < yd)
+	 {
+	   ye = yd;
+	   yd = yf;
+	   yf = ye;
+	 }
+     }
    if (frame > 0 && frame <= MAX_FRAME)
      {
 	pFrame = &ViewFrameTable[frame - 1];

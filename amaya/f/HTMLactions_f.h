@@ -40,7 +40,7 @@ extern void FreeDocumentResource ( Document doc );
 extern void DocumentClosed ( NotifyDialog * event );
 extern void UpdateContextSensitiveMenus ( Document doc );
 extern void ResetHighlightedElement ( void );
-extern void SynchronizeSourceView ( NotifyElement * event );
+extern void SynchronizeSourceView ( NotifyElement *event );
 extern void SelectionChanged ( NotifyElement *event );
 extern void XmlSelectionChanged ( NotifyElement *event );
 extern void SetCharFontOrPhrase ( int document,
@@ -82,7 +82,7 @@ extern void FreeDocumentResource (/* Document doc */);
 extern void DocumentClosed (/* NotifyDialog * event */);
 extern void UpdateContextSensitiveMenus (/* Document doc */);
 extern void ResetHighlightedElement (/* void */);
-extern void SynchronizeSourceView (/* NotifyElement * event */);
+extern void SynchronizeSourceView (/* NotifyElement *event */);
 extern void SelectionChanged (/* NotifyElement *event */);
 extern void XmlSelectionChanged (/* NotifyElement *event */);
 extern void SetCharFontOrPhrase (/* int document,

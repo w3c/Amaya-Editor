@@ -61,8 +61,6 @@ static PtrElement   SelectedElement[MAX_SEL_ELEM]; /* the selected elements if
 static int          LatestReturned;	/* rank in table SelectedElement of the
 					   last element returned by function
 					   NextInSelection */
-static int          FrameWithNoUpdate;	/* the window where the selection does
-					   not need to be highlighted */
 static int          OldSelectedView;	/* old active view */
 static PtrDocument  OldDocSelectedView;	/* the document to which the old active
 					   view belongs */
@@ -107,7 +105,6 @@ void InitSelection ()
    SynchronizeViews = TRUE;	/* all views of a document are synchronized */
    FixedElement = NULL;
    FixedChar = 0;
-   FrameWithNoUpdate = 0;
    OldSelectedView = 0;
    OldDocSelectedView = NULL;
    SelectionUpdatesMenus = TRUE;
@@ -570,7 +567,7 @@ void HighlightSelection (ThotBool showBegin, ThotBool clearOldSel)
 	    frame = 0;
 	  /* if the view is open, process all abstract boxes of the
 	     selected element in this view */
-	  if (frame > 0 && frame != FrameWithNoUpdate)
+	  if (frame > 0)
 	    {
 	      /* switch selection off in this view */
 	      if (clearOldSel)
@@ -1108,7 +1105,7 @@ static ThotBool SelectAbsBoxes (PtrElement pEl, ThotBool createView)
 		  frame = SelectedDocument->DocViewFrame[view];
 		else
 		  frame = 0;
-		if (frame != 0 && frame != FrameWithNoUpdate)
+		if (frame != 0)
 		  {
 		    if (run == 1)
 		      ClearViewSelection (frame);
@@ -1657,22 +1654,20 @@ void SelectElement (PtrDocument pDoc, PtrElement pEl, ThotBool begin, ThotBool c
 }
 
 /*----------------------------------------------------------------------
-   ExtendSelection
-   Extend current selection to element pEl.
-   If rank = 0, element pEl is entirely selected.
-   If rank > 0, extend selection to the character having that rank in the
-   text element pEl.
-   If fixed is TRUE, the new selection is between the current fixed point and
-   element pEl; parameter begin is meaningless.
-   If fixed is FALSE,
-      if begin is TRUE, the beginning of the curent selection is moved to
-              element pEl
-      if begin is FALSE, the end of the current selection is extended to
-              element pEl.
-   If drag is TRUE, only the minimum processing is done.
+  ExtendSelection
+  Extend current selection to element pEl.
+  If rank = 0, element pEl is entirely selected.
+  If rank > 0, extend selection to the character having that rank in the
+  text element pEl.
+  If fixed is TRUE keeps the current fixed point and element.
+  If begin is TRUE, the beginning of the current selection is moved to
+  element pEl
+  If begin is FALSE, the end of the current selection is extended to
+  element pEl.
+  If drag is TRUE, only the minimum processing is done.
   ----------------------------------------------------------------------*/
-void  ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
-		       ThotBool drag)
+void ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
+		      ThotBool drag)
 {
   PtrElement          oldFirstEl, oldLastEl, pElP;
   int                 oldFirstChar, oldLastChar;
@@ -1711,7 +1706,7 @@ void  ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
 	  if (pEl->ElHolophrast)
 	    /* element pEl is holophrasted, select it entirely */
 	    rank = 0;
-	  if (!fixed && begin)
+	  if (!fixed)
 	    /* change fixed point by moving it first to the end */
 	    {
 	      FixedElement = LastSelectedElement;
@@ -1763,21 +1758,28 @@ void  ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
 		  FixedElement = LastLeaf (PreviousLeaf (FixedElement));
 		  if (FixedElement && FixedElement->ElTerminal &&
 		     FixedElement->ElLeafType == LtText)
-		    FixedChar =  FixedElement->ElVolume;
+		    FixedChar =  FixedElement->ElVolume + 1;
 		}
 	      LastSelectedElement = FixedElement;
 	      if (FixedChar == 0)
 		LastSelectedChar = FixedChar;
 	      else
-		LastSelectedChar = FixedChar - 1;
+		LastSelectedChar = FixedChar;
 	    }
 	  else
 	    /* pEl is after the fixed point */
 	    {
-	      LastSelectedElement = pEl;
-	      LastSelectedChar = rank;
 	      FirstSelectedElement = FixedElement;
 	      FirstSelectedChar = FixedChar;
+	      while (rank == 1)
+		{
+		  /* move the end selection to the end of the previous element */
+		  pEl = LastLeaf (PreviousLeaf (pEl));
+		  if (pEl && pEl->ElTerminal && pEl->ElLeafType == LtText)
+		    rank =  pEl->ElVolume + 1;
+		}
+	      LastSelectedElement = pEl;
+	      LastSelectedChar = rank;
 	    }
 
 	  /* adjust selection */
@@ -1894,7 +1896,7 @@ void  ExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin,
 	      if (ThotLocalActions[T_chattr] != NULL)
 		(*ThotLocalActions[T_chattr]) (SelectedDocument);
 	    }
-	  if (!fixed && begin)
+	  if (!fixed)
 	    /* change the fixed point: move it to the begining */
 	    {
 	      FixedElement = FirstSelectedElement;
@@ -2031,7 +2033,7 @@ void           AddInSelection (PtrElement pEl, ThotBool last)
    Remove element pEl from the current selection, but only if the
    current selection is discrete.
   ----------------------------------------------------------------------*/
-void             RemoveFromSelection (PtrElement pEl, PtrDocument pDoc)
+void RemoveFromSelection (PtrElement pEl, PtrDocument pDoc)
 {
    int                 i, j;
 
@@ -2099,7 +2101,8 @@ static void    SelectableAncestor (PtrElement *pEl, int *position)
   Same function as SelectElement, but send  events TteElemSelect.Pre and
    TteElemSelect.Post to the application
   ----------------------------------------------------------------------*/
-void SelectElementWithEvent (PtrDocument pDoc, PtrElement pEl, ThotBool begin, ThotBool check)
+void SelectElementWithEvent (PtrDocument pDoc, PtrElement pEl,
+			     ThotBool begin, ThotBool check)
 {
    NotifyElement       notifyEl;
    Document            doc;
@@ -2210,26 +2213,25 @@ void SelectStringWithEvent (PtrDocument pDoc, PtrElement pEl, int firstChar, int
    pAb: the abstract box where the user has clicked.
    rank: rank of the character on which the user has clicked, or 0 if the
          whole abstract box has been designated.
-   update: the display module asks for the selection to be updated.
-         if update is FALSE, the user wants to extend the current selection
-         and parameter extension means:
-               TRUE: the beginning of the current selection is extended,
-               FALSE: the end of the current selection is extended.
+   extension: TRUE if the user wants to extend the current selection.
+   begin: TRUE when the beginning of the current selection is extended,
+          FALSE when the end of the current selection is extended.
    doubleClick: if TRUE, the user has double-clicked without moving the mouse.
    drag: the user extends the selection by dragging.
    Return TRUE when the application asks Thot to do nothing.
   ----------------------------------------------------------------------*/
 ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
-			  ThotBool extension, ThotBool update,
+			  ThotBool extension, ThotBool begin,
 			  ThotBool doubleClick, ThotBool drag)
 {
   PtrDocument         pDoc;
+  PtrSSchema          pSS;
   PtrElement          pEl, pParent;
   PtrAttribute        pAttr;
   NotifyElement       notifyEl;
   Document            doc;
   int                 view;
-  ThotBool            error, fixed, begin, stop, doubleClickRef;
+  ThotBool            error, stop, doubleClickRef;
   ThotBool            graphSel, result;
 
   pEl = NULL;
@@ -2238,10 +2240,10 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
   doc = IdentDocument (pDoc);
   /* by default Thot applies its editing changes */
   result = FALSE;
-  if (doubleClick && pAb != NULL)
+  if (doubleClick && pAb)
     {
       pEl = pAb->AbElement;
-      if (pEl != NULL)
+      if (pEl)
 	{
 	  /* send event TteElemActivate.Pre to the application */
 	  notifyEl.event = TteElemActivate;
@@ -2301,10 +2303,11 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
   
   /* if it's a double-click, check that the element is a reference or an */
   /* inclusion */
-  if (doubleClick && pAb != NULL && pAb->AbElement != NULL)
+  if (doubleClick && pAb && pAb->AbElement)
     {
       pEl = pAb->AbElement;
-      if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct != CsReference)
+      pSS = pEl->ElStructSchema;
+      if (pSS->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct != CsReference)
 	{
 	  /* search for an inclusion among the ancestors */
 	  pParent = pEl;
@@ -2314,7 +2317,7 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 	    /* it's an inclusion */
 	    pEl = pParent;
 	}
-      if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsReference ||
+      if (pSS->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsReference ||
 	  pEl->ElSource != NULL)
 	/* this element is a reference or an inclusion */
 	{
@@ -2367,10 +2370,7 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
     /* select all the contents */
     rank = 0;
   
-  if (!update)
-    FrameWithNoUpdate = frame;
-
-  if (extension || !update)
+  if (extension)
     {
       /* extension of current selection */
       if (DocSelectedAttr != NULL)
@@ -2383,7 +2383,7 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 	      if (rank == 0)
 		{
 		  FirstSelectedCharInAttr = 1;
-		  LastSelectedCharInAttr = pAb->AbVolume;
+		  LastSelectedCharInAttr = pAb->AbVolume + 1;
 		}
 	      else if (rank <= InitSelectedCharInAttr)
 		{
@@ -2411,19 +2411,18 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 		error = TRUE;
 	      else
 		{
-		  fixed = update;
-		  begin = extension;
 		  pEl = pAb->AbElement;
-		  if (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsConstant)
+		  pSS = pEl->ElStructSchema;
+		  if (pSS->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsConstant)
 		    /* the element to be selected is a constant */
 		    /* select it entirely */
 		    rank = 0;
 		  /* If the element to be selected is hidden or cannot be */
 		  /* selected, get the first ancestor that can be selected*/
-		  if (TypeHasException (ExcNoSelect, pEl->ElTypeNumber, pEl->ElStructSchema) ||
+		  if (TypeHasException (ExcNoSelect, pEl->ElTypeNumber, pSS) ||
 		      (HiddenType (pEl) &&
 		       !ElementHasAction(pEl, TteElemExtendSelect, TRUE)) ||
-		      TypeHasException (ExcSelectParent, pEl->ElTypeNumber, pEl->ElStructSchema))
+		      TypeHasException (ExcSelectParent, pEl->ElTypeNumber, pSS))
 		    {
 		      stop = FALSE;
 		      /* select the entire element */
@@ -2453,7 +2452,7 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 		    /* application accepts selection */
 		    {
 		      /* do select */
-		      ExtendSelection (pEl, rank, fixed, begin, drag);
+		      ExtendSelection (pEl, rank, extension, begin, drag);
 		      /* send event TteElemExtendSelect.Pre to the */
 		      /* application */
 		      notifyEl.event = TteElemExtendSelect;
@@ -2531,7 +2530,6 @@ ThotBool ChangeSelection (int frame, PtrAbstractBox pAb, int rank,
 
   if (!doubleClick)
     {
-      FrameWithNoUpdate = 0;
       if (!error)
 	/* If all the contents of a text leaf is selected, then the leaf */
 	/* itself is considered as selected */
@@ -2762,23 +2760,22 @@ void BuildSelectionMessage ()
    else
       just return FALSE
   ----------------------------------------------------------------------*/
-ThotBool            SelectPairInterval ()
+ThotBool SelectPairInterval ()
 {
-   ThotBool            ret;
+  ThotBool            ret;
 
-   ret = FALSE;
-   if (!SelContinue)
-      if (NSelectedElements == 2)
-	 /* only two elements are selected */
-	 if (SelectedElement[0] == GetOtherPairedElement (SelectedElement[1]))
-	    /* they are paired elements */
-	   {
-	      SelContinue = TRUE;
-	      LastSelectedElement = FirstSelectedElement;
-	      ExtendSelection (SelectedElement[1], 0, FALSE, TRUE, FALSE);
-	      ret = TRUE;
-	   }
-   return ret;
+  ret = FALSE;
+  if (!SelContinue && NSelectedElements == 2)
+    /* only two elements are selected */
+    if (SelectedElement[0] == GetOtherPairedElement (SelectedElement[1]))
+      /* they are paired elements */
+      {
+	SelContinue = TRUE;
+	LastSelectedElement = FirstSelectedElement;
+	ExtendSelection (SelectedElement[1], 0, TRUE, TRUE, FALSE);
+	ret = TRUE;
+      }
+  return ret;
 }
 
 
@@ -2790,7 +2787,7 @@ ThotBool            SelectPairInterval ()
    - next element if val = 3
    - child of first selected element if val = 4
   ----------------------------------------------------------------------*/
-void                SelectAround (int val)
+void SelectAround (int val)
 {
   PtrElement          pEl, pParent, pFirst, pLast;
   int                 lg;
@@ -2863,6 +2860,7 @@ void                SelectAround (int val)
 			  }
 		      SelectElementWithEvent (SelectedDocument, pFirst, TRUE, FALSE);
 		      if (pFirst != pLast)
+			/* changee the selection */
 			ExtendSelection (pLast, 0, FALSE, TRUE, FALSE);
 		    }
 		}

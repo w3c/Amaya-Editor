@@ -18,8 +18,12 @@ extern void TtcNextLine ( Document document,
                           View view );
 extern void TtcStartOfLine ( Document document,
                              View view );
+extern void TtcSelStartOfLine ( Document document,
+                                View view );
 extern void TtcEndOfLine ( Document document,
                            View view );
+extern void TtcSelEndOfLine ( Document document,
+                              View view );
 extern void TtcPreviousSelChar ( Document document,
                                  View view );
 extern void TtcNextSelChar ( Document document,
@@ -63,8 +67,12 @@ extern void TtcNextLine (/* Document document,
                             View view */);
 extern void TtcStartOfLine (/* Document document,
                                View view */);
+extern void TtcSelStartOfLine (/* Document document,
+                                  View view */);
 extern void TtcEndOfLine (/* Document document,
                              View view */);
+extern void TtcSelEndOfLine (/* Document document,
+                                View view */);
 extern void TtcPreviousSelChar (/* Document document,
                                    View view */);
 extern void TtcNextSelChar (/* Document document,

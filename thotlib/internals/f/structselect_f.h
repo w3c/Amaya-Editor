@@ -70,7 +70,7 @@ extern ThotBool ChangeSelection ( int frame,
                                   PtrAbstractBox pAb,
                                   int rank,
                                   ThotBool extension,
-                                  ThotBool update,
+                                  ThotBool begin,
                                   ThotBool doubleClick,
                                   ThotBool drag );
 extern void PrepareSelectionMenu ( void );
@@ -152,7 +152,7 @@ extern ThotBool ChangeSelection (/* int frame,
                                     PtrAbstractBox pAb,
                                     int rank,
                                     ThotBool extension,
-                                    ThotBool update,
+                                    ThotBool begin,
                                     ThotBool doubleClick,
                                     ThotBool drag */);
 extern void PrepareSelectionMenu (/* void */);

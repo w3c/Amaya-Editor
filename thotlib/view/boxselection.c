@@ -497,7 +497,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 		    {
 		      /* select the whole text */
 		      firstChar = 1;
-		      lastChar = pAb->AbVolume;
+		      lastChar = pAb->AbVolume + 1;
 		    }
 		}
 	      else if (firstChar == 0)

@@ -2455,7 +2455,7 @@ static void         ContentEditing (int editType)
 	      if (pAb->AbLeafType != LtPolyLine && j != i)
 		ChangeSelection (frame,
 				 pViewSelEnd->VsBox->BxAbstractBox, j,
-				 TRUE, TRUE, FALSE, FALSE);
+				 TRUE, FALSE, FALSE, FALSE);
 	    }
 	}
     }

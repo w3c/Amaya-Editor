@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -170,53 +170,54 @@ void  TtaSelectString (Document document, Element textElement,
   ----------------------------------------------------------------------*/
 void TtaExtendSelection (Document document, Element element, int lastCharacter)
 {
-   PtrDocument         pDoc;
-   PtrElement          firstSelection, lastSelection;
-   DisplayMode         dispMode;
-   int                 firstChar, lastChar;
-   ThotBool            ok;
-   ThotBool            abort;
+  PtrDocument         pDoc;
+  PtrElement          firstSelection, lastSelection;
+  DisplayMode         dispMode;
+  int                 firstChar, lastChar;
+  ThotBool            ok;
+  ThotBool            abort;
 
-   UserErrorCode = 0;
-   if (element == NULL)
-      TtaError (ERR_invalid_parameter);
-   else if (((PtrElement) element)->ElParent == NULL)
-      TtaError (ERR_invalid_parameter);
-   /* Checks the parameter document */
-   else if (document < 1 || document > MAX_DOCUMENTS)
-      TtaError (ERR_invalid_document_parameter);
-   else if (LoadedDocument[document - 1] == NULL)
-      TtaError (ERR_invalid_document_parameter);
-   else
-      /* Parameter document is correct */
-     {
-	/* verifies if there is a selection */
-	ok = GetCurrentSelection (&pDoc, &firstSelection, &lastSelection, &firstChar, &lastChar);
-	dispMode = TtaGetDisplayMode (document);
-	if (dispMode == DisplayImmediately || dispMode == DeferredDisplay)
-	   /* The command can be executed */
-	  {
-	     if (ok)
-		/* verifies that the selection is into the document */
-		ok = (pDoc == LoadedDocument[document - 1]);
-	  }
-	/* verifies if a selection is applied */
-	else if (IsSelectionRegistered (document, &abort))
-	   /* There is an application, the extension is accepted if there is 
-	      a request which is not for aborting */
-	   ok = !abort;
-
-	if (!ok)
-	   /* Error: no selection */
-	   TtaError (ERR_no_selection_in_document);
-	else
-	  {
-	    if (dispMode == DisplayImmediately || dispMode == DeferredDisplay)
-	      ExtendSelection ((PtrElement) element, lastCharacter, FALSE, FALSE, FALSE);
-	    else
-	      NewSelectionExtension (document, element, lastCharacter);
-	  }
-     }
+  UserErrorCode = 0;
+  if (element == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (((PtrElement) element)->ElParent == NULL)
+    TtaError (ERR_invalid_parameter);
+  /* Checks the parameter document */
+  else if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    /* Parameter document is correct */
+    {
+      /* verifies if there is a selection */
+      ok = GetCurrentSelection (&pDoc, &firstSelection, &lastSelection,
+				&firstChar, &lastChar);
+      dispMode = TtaGetDisplayMode (document);
+      if (dispMode == DisplayImmediately || dispMode == DeferredDisplay)
+	/* The command can be executed */
+	{
+	  if (ok)
+	    /* verifies that the selection is into the document */
+	    ok = (pDoc == LoadedDocument[document - 1]);
+	}
+      /* verifies if a selection is applied */
+      else if (IsSelectionRegistered (document, &abort))
+	/* There is an application, the extension is accepted if there is 
+	   a request which is not for aborting */
+	ok = !abort;
+      
+      if (!ok)
+	/* Error: no selection */
+	TtaError (ERR_no_selection_in_document);
+      else
+	{
+	  if (dispMode == DisplayImmediately || dispMode == DeferredDisplay)
+	    ExtendSelection ((PtrElement) element, lastCharacter, TRUE, FALSE, FALSE);
+	  else
+	    NewSelectionExtension (document, element, lastCharacter);
+	}
+    }
 }
 
 /*----------------------------------------------------------------------

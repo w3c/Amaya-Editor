@@ -134,6 +134,7 @@ static int          stack_deep;
 void LocateSelectionInView (int frame, int x, int y, int button)
 {
   PtrBox              pBox;
+  PtrElement          pEl = NULL, firstEl;
   PtrTextBuffer       pBuffer;
   PtrAbstractBox      pAb;
   NotifyElement       notifyEl;
@@ -145,7 +146,8 @@ void LocateSelectionInView (int frame, int x, int y, int button)
   int                 index, pos;
   int                 xOrg, yOrg;
   int                 doc, view;
-  ThotBool            extend, ok;
+  int                 firstC;
+  ThotBool            extend, ok, left = FALSE;
 
   if (frame >= 1)
     {
@@ -188,30 +190,30 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		    - pBox->BxLPadding;
 		  LocateClickedChar (pBox, extend, &pBuffer, &pos, &index,
 				     &charsNumber, &spacesNumber);
+		  charsNumber = pBox->BxFirstChar + charsNumber;
 		  if (extend)
 		    {
-		      if (pViewSel->VsIndBox == 0 &&
-			  pViewSel->VsBox &&
-			  pViewSel->VsBox->BxAbstractBox == pAb &&
-			  pViewSel->VsBox->BxFirstChar  == FixedChar &&
-			  pViewSel->VsBox->BxFirstChar > pBox->BxFirstChar)
+		      pEl = pAb->AbElement;
+		      if (DocSelectedAttr)
 			{
-			  /* the initial point becomes the end of the selection */
-			  pos = FixedChar - 1;
-			  ChangeSelection (frame, pAb,
-					   pBox->BxFirstChar + charsNumber,
-					   FALSE, TRUE, FALSE, FALSE);
-			  FixedChar = pos;
-			  charsNumber = pos;
+			  /* work within an attribute */
+			  firstC = FirstSelectedCharInAttr;
+			  firstEl = NULL;
 			}
-		      else if (charsNumber == 0)
-			/* the final point becomes the end of the selection */
-			charsNumber = pBox->BxFirstChar - 1;
 		      else
-			charsNumber = pBox->BxFirstChar + charsNumber;
+			{
+			  firstC = FirstSelectedChar;
+			  firstEl = FirstSelectedElement;
+			}
+		      if (pEl == firstEl && charsNumber < firstC)
+			left = TRUE;
+		      else if (ElemIsBefore (pEl, firstEl))
+			left = TRUE;
+		      else if (charsNumber == pBox->BxFirstChar && pEl == firstEl)
+			/* extension until the beginning of this box
+			   select the end of the previous box */
+			charsNumber--;
 		    }
-		  else
-		    charsNumber = pBox->BxFirstChar + charsNumber;
 		}
 	    }
 	  else
@@ -226,18 +228,17 @@ void LocateSelectionInView (int frame, int x, int y, int button)
 		{
 		case 0:
 		  /* Extension of selection */
-		  ChangeSelection (frame, pAb, charsNumber, TRUE, TRUE, FALSE, FALSE);
+		  ChangeSelection (frame, pAb, charsNumber, TRUE, left, FALSE, FALSE);
 		  break;
 		case 1:
 		  /* Extension of selection */
-		  ChangeSelection (frame, pAb, charsNumber, TRUE, TRUE, FALSE, TRUE);
+		  ChangeSelection (frame, pAb, charsNumber, TRUE, left, FALSE, TRUE);
 		  break;
 		case 2:
 		  ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE, FALSE, FALSE);
 		  break;
 		case 3:
-		  if (!ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE,
-					TRUE, FALSE) &&
+		  if (!ChangeSelection (frame, pAb, charsNumber, FALSE, TRUE, TRUE, FALSE) &&
 		      pAb->AbLeafType == LtText &&
 		      (!pAb->AbPresentationBox || pAb->AbCanBeModified))
 		    SelectCurrentWord (frame, pBox, charsNumber, index, pBuffer,

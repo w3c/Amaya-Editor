@@ -135,7 +135,7 @@ static void MoveInLine (int frame, ThotBool toend, ThotBool extendSel)
 	   nChars = pBox->BxFirstChar;
      }
    /* update the selection */
-   ChangeSelection (frame, pAb, nChars, extendSel, TRUE, FALSE, FALSE);
+   ChangeSelection (frame, pAb, nChars, extendSel, !toend, FALSE, FALSE);
 }
 
 
@@ -221,25 +221,25 @@ static void LocateLeafBox (int frame, View view, int x, int y, int xDelta,
      }
 
    pBox = GetLeafBox (pLastBox, frame, &x, &y, xDelta, yDelta);
-   nChars = 0;
-   if (pBox != NULL)
+    if (pBox)
      {
 	pAb = pBox->BxAbstractBox;
-	if (pAb != NULL)
+	if (pAb)
 	  {
 	     if (IsTextLeaf (pAb))
 	       {
 		  x -= pBox->BxXOrg;
 		  LocateClickedChar (pBox, extendSel, &pBuffer, &x, &index,
 				     &nChars, &nbbl);
+		  nChars = pBox->BxFirstChar + nChars;
 		  if (extendSel && LeftExtended && nChars <= pBox->BxNChars)
-		    nChars = pBox->BxFirstChar + nChars - 1;
-		  else
-		    nChars = pBox->BxFirstChar + nChars;
+		    nChars--;
 	       }
+	     else
+	       nChars = 0;
 	     /* Change the selection */
 	     if (extendSel)
-	       ChangeSelection (frame, pAb, nChars, TRUE, TRUE, FALSE, FALSE);
+	       ChangeSelection (frame, pAb, nChars, TRUE, LeftExtended, FALSE, FALSE);
 	     else
 	       ChangeSelection (frame, pAb, nChars, FALSE, TRUE, FALSE, FALSE);
 	  }
@@ -467,14 +467,14 @@ static void MovingCommands (int code, Document doc, View view,
 				   firstEl == lastEl)
 			    {
 			      /* select one character */
-			      ChangeSelection (frame, pBox->BxAbstractBox, x - 1,
-					       TRUE, TRUE, FALSE, FALSE);
 			      LeftExtended = TRUE;
+			      ChangeSelection (frame, pBox->BxAbstractBox, x - 1,
+					       TRUE, LeftExtended, FALSE, FALSE);
 			    }
 			  else
 			    /* extend the selection */
 			    ChangeSelection (frame, pBox->BxAbstractBox, x - 1,
-					     TRUE, TRUE, FALSE, FALSE);
+					     TRUE, LeftExtended, FALSE, FALSE);
 			}
 		      else
 			/* the x is equal to first */
@@ -567,23 +567,23 @@ static void MovingCommands (int code, Document doc, View view,
 			      firstEl == lastEl)
 			    {
 			      /* a single insert point */
+			      LeftExtended = FALSE;
 			      ChangeSelection (frame, pBox->BxAbstractBox, FixedChar,
 					       FALSE, TRUE, FALSE, FALSE);
-			      LeftExtended = FALSE;
 			    }
 			  else if (SelPosition &&
 				   firstC == lastC &&
 				   firstEl == lastEl)
 			    {
 			      /* select one character */
-			      ChangeSelection (frame, pBox->BxAbstractBox, x + 1,
-					       TRUE, TRUE, FALSE, FALSE);
 			      RightExtended = TRUE;
+			      ChangeSelection (frame, pBox->BxAbstractBox, x + 1,
+					       TRUE, LeftExtended, FALSE, FALSE);
 			    }
 			  else
 			    /* extend the end of the current selection */
 			    ChangeSelection (frame, pBox->BxAbstractBox, x + 1,
-					     TRUE, TRUE, FALSE, FALSE);
+					     TRUE, LeftExtended, FALSE, FALSE);
 			}
 		      else
 			ChangeSelection (frame, pBox->BxAbstractBox, x + 1,
@@ -774,7 +774,7 @@ static void MovingCommands (int code, Document doc, View view,
 		i = last;
 	      if (pEl->ElAbstractBox[view - 1])
 		ChangeSelection (frame, pEl->ElAbstractBox[view - 1], i,
-				 TRUE, TRUE, FALSE, FALSE);
+				 TRUE, LeftExtended, FALSE, FALSE);
 	    }
 	  else
 	    {
@@ -819,7 +819,7 @@ static void MovingCommands (int code, Document doc, View view,
 		 i = last;
 	       if (pEl->ElAbstractBox[view - 1])
 		 ChangeSelection (frame, pEl->ElAbstractBox[view - 1], i,
-				  TRUE, TRUE, FALSE, FALSE);
+				  TRUE, LeftExtended, FALSE, FALSE);
 	     }
 	   else
 	     {
