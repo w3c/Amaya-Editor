@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2002
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2003
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -2565,25 +2565,7 @@ static char *ParseCSSBackgroundColor (Element element, PSchema tsch,
 					char *cssRule,
 					CSSInfoPtr css, ThotBool isHTML)
 {
-  GenericContext        ctxt = (GenericContext) context;
   PresentationValue     best;
-  unsigned int          savedtype = 0;
-  ThotBool              moved;
-
-  /* Horrible hack requested by CSS: move the rule to the root element */
-  moved = (isHTML &&
-	   (element != NULL || ctxt->attrType[0] == 0) &&
-	   (ctxt->type == HTML_EL_HTML || ctxt->type == HTML_EL_BODY));
-  if (moved)
-    {
-      if (element)
-	element = TtaGetMainRoot (context->doc);
-      else
-	{
-	  savedtype = context->type;
-	  context->type = HTML_EL_Document;
-	}
-    }
 
   best.typed_data.unit = STYLE_UNIT_INVALID;
   best.typed_data.real = FALSE;
@@ -2617,13 +2599,8 @@ static char *ParseCSSBackgroundColor (Element element, PSchema tsch,
 	  TtaSetStylePresentation (PRShowBox, element, tsch, context, best);
 	}
     }
-
-  /* restore the refered element */
-  if (moved && !element)
-    context->type = savedtype;
   return (cssRule);
 }
-
 
 /*----------------------------------------------------------------------
   ParseSVGStroke: parse a SVG stroke property
@@ -2845,27 +2822,13 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
   char                      *base;
   char                       tempname[MAX_LENGTH];
   char                       imgname[MAX_LENGTH];
-  unsigned int               savedtype = 0;
-  ThotBool                   moved;
 
-  /* default element for FetchImage */
-  el = TtaGetMainRoot (context->doc);
-  /* Horrible hack requested by CSS: move the rule to the root element */
-  moved = (isHTML && (element != NULL || ctxt->attrType[0] == 0) &&
-	   (ctxt->type == HTML_EL_HTML || ctxt->type == HTML_EL_BODY));
-  if (moved)
-    {
-      if (element)
-	element = el;
-      else
-	{
-	  savedtype = context->type;
-	  context->type = HTML_EL_Document;
-	}
-    }
-  else if (element)
+  if (element)
     el = element;
-
+  else
+    /* default element for FetchImage */
+    el = TtaGetMainRoot (context->doc);
+    
   url = NULL;
   cssRule = SkipBlanksAndComments (cssRule);
   if (!strncasecmp (cssRule, "none", 4))
@@ -2966,10 +2929,6 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
 	    TtaFreeMemory (url);
 	}
     }
-
-  /* restore the refered element */
-  if (moved && !element)
-    context->type = savedtype;
   return (cssRule);
 }
 
@@ -2980,24 +2939,7 @@ static char *ParseCSSBackgroundRepeat (Element element, PSchema tsch,
 				       PresentationContext context,
 				       char *cssRule, CSSInfoPtr css, ThotBool isHTML)
 {
-  GenericContext      ctxt = (GenericContext) context;
   PresentationValue   repeat;
-  unsigned int        savedtype = 0;
-  ThotBool            moved;
-
-  /* Horrible hack requested by CSS: move the rule to the root element */
-  moved = (isHTML && (element != NULL || ctxt->attrType[0] == 0) &&
-	   (ctxt->type == HTML_EL_HTML || ctxt->type == HTML_EL_BODY));
-  if (moved)
-    {
-      if (element)
-	element = TtaGetMainRoot (context->doc);
-      else
-	{
-	  savedtype = context->type;
-	  context->type = HTML_EL_Document;
-	}
-    }
 
   repeat.typed_data.value = STYLE_REALSIZE;
   repeat.typed_data.unit = STYLE_UNIT_REL;
@@ -3023,11 +2965,7 @@ static char *ParseCSSBackgroundRepeat (Element element, PSchema tsch,
       TtaSetStylePresentation (PRPictureMode, element, tsch, context, repeat);
     }
   cssRule = SkipWord (cssRule);
-
-  /* restore the refered element */
-  if (moved && !element)
-    context->type = savedtype;
-   return (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -3039,34 +2977,12 @@ static char *ParseCSSBackgroundAttachment (Element element, PSchema tsch,
 					   char *cssRule, CSSInfoPtr css,
 					   ThotBool isHTML)
 {
-  GenericContext        ctxt = (GenericContext) context;
-  unsigned int          savedtype = 0;
-  ThotBool              moved;
-
-  /* Horrible hack requested by CSS: move the rule to the root element */
-  moved = (isHTML && (element != NULL || ctxt->attrType[0] == 0) &&
-	   (ctxt->type == HTML_EL_HTML || ctxt->type == HTML_EL_BODY));
-  if (moved)
-    {
-      if (element)
-	element = TtaGetMainRoot (context->doc);
-      else
-	{
-	  savedtype = context->type;
-	  context->type = HTML_EL_Document;
-	}
-    }
-
-   cssRule = SkipBlanksAndComments (cssRule);
-   if (!strncasecmp (cssRule, "scroll", 6))
-     cssRule = SkipWord (cssRule);
-   else if (!strncasecmp (cssRule, "fixed", 5))
-     cssRule = SkipWord (cssRule);
-
-  /* restore the refered element */
-  if (moved && !element)
-    context->type = savedtype;
-   return (cssRule);
+  cssRule = SkipBlanksAndComments (cssRule);
+  if (!strncasecmp (cssRule, "scroll", 6))
+    cssRule = SkipWord (cssRule);
+  else if (!strncasecmp (cssRule, "fixed", 5))
+    cssRule = SkipWord (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -3078,59 +2994,38 @@ static char *ParseCSSBackgroundPosition (Element element, PSchema tsch,
 					 char *cssRule, CSSInfoPtr css,
 					 ThotBool isHTML)
 {
-  GenericContext        ctxt = (GenericContext) context;
   PresentationValue     repeat;
-  unsigned int          savedtype = 0;
-  ThotBool              moved;
   ThotBool              ok;
 
-  /* Horrible hack requested by CSS: move the rule to the root element */
-  moved = (isHTML && (element != NULL || ctxt->attrType[0] == 0) &&
-	   (ctxt->type == HTML_EL_HTML || ctxt->type == HTML_EL_BODY));
-  if (moved)
+  cssRule = SkipBlanksAndComments (cssRule);
+  ok = TRUE;
+  if (!strncasecmp (cssRule, "left", 4))
+    cssRule = SkipWord (cssRule);
+  else if (!strncasecmp (cssRule, "right", 5))
+    cssRule = SkipWord (cssRule);
+  else if (!strncasecmp (cssRule, "center", 6))
+    cssRule = SkipWord (cssRule);
+  else if (!strncasecmp (cssRule, "top", 3))
+    cssRule = SkipWord (cssRule);
+  else if (!strncasecmp (cssRule, "bottom", 6))
+    cssRule = SkipWord (cssRule);
+  else if (isdigit (*cssRule) || *cssRule == '.')
+    cssRule = SkipWord (cssRule);
+  else
+    ok = FALSE;
+
+  if (ok && DoApply)
     {
-      if (element)
-	element = TtaGetMainRoot (context->doc);
-      else
-	{
-	  savedtype = context->type;
-	  context->type = HTML_EL_Document;
-	}
+      /* force realsize for the background image */
+      repeat.typed_data.value = STYLE_REALSIZE;
+      repeat.typed_data.unit = STYLE_UNIT_REL;
+      repeat.typed_data.real = FALSE;
+      /* check if it's an important rule */
+      if (tsch)
+	cssRule = CheckImportantRule (cssRule, context);
+      TtaSetStylePresentation (PRPictureMode, element, tsch, context, repeat);
     }
-
-   cssRule = SkipBlanksAndComments (cssRule);
-   ok = TRUE;
-   if (!strncasecmp (cssRule, "left", 4))
-     cssRule = SkipWord (cssRule);
-   else if (!strncasecmp (cssRule, "right", 5))
-     cssRule = SkipWord (cssRule);
-   else if (!strncasecmp (cssRule, "center", 6))
-     cssRule = SkipWord (cssRule);
-   else if (!strncasecmp (cssRule, "top", 3))
-     cssRule = SkipWord (cssRule);
-   else if (!strncasecmp (cssRule, "bottom", 6))
-     cssRule = SkipWord (cssRule);
-   else if (isdigit (*cssRule) || *cssRule == '.')
-     cssRule = SkipWord (cssRule);
-   else
-     ok = FALSE;
-
-   if (ok && DoApply)
-     {
-       /* force realsize for the background image */
-       repeat.typed_data.value = STYLE_REALSIZE;
-       repeat.typed_data.unit = STYLE_UNIT_REL;
-       repeat.typed_data.real = FALSE;
-       /* check if it's an important rule */
-       if (tsch)
-	 cssRule = CheckImportantRule (cssRule, context);
-       TtaSetStylePresentation (PRPictureMode, element, tsch, context, repeat);
-     }
-
-  /* restore the refered element */
-  if (moved && !element)
-    context->type = savedtype;
-   return (cssRule);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
