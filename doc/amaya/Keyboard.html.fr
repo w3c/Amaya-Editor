@@ -419,7 +419,7 @@ pourra être appliquée dès qu'on lancera le serveur X.</p>
     <tr>
       <td class="name">hyphen</td>
       <td>173</td>
-      <td>- (minus)</td>
+      <td>- (moins)</td>
       <td>-</td>
       <td>&173;</td>
     </tr>
@@ -461,7 +461,7 @@ pourra être appliquée dès qu'on lancera le serveur X.</p>
     <tr>
       <td class="name">laquo</td>
       <td>171</td>
-      <td>&lt; (inferieur)</td>
+      <td>&lt; (inférieur)</td>
       <td>&lt;</td>
       <td>«</td>
     </tr>

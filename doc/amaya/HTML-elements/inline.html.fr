@@ -3,12 +3,12 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Inline elements</title>
+  <title>Balisage en ligne</title>
   <meta name="GENERATOR" content="amaya V3.2.1" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="fr" lang="fr">
 
 <table border="0" width="100%" summary="toc">
   <tbody>
@@ -29,134 +29,138 @@
 </table>
 
 <div id="Inline3">
-<h1>Inline markup</h1>
+<h1>Balisage en ligne</h1>
 
-<p>Text within a paragraph, heading, or other block element can be marked up
-in a variety of ways, for example to emphasise it, or to highlight text that
-should be entered by a user into a computer. Most of these inline elements are
-described in this page, although links, which are inline elements, are
-described separately.</p>
+<p>Un texte à l'intérieur d'un paragraphe, une entête, ou un autre élément
+bloc peut être balisé de différentes façons, par exemple pour mettre l'accent
+dessus, ou pour souligner ce qui devrait être entré par l'utilisateur sur un
+ordinateur. La plupart de ces éléments en ligne sont décrits dans cette page,
+bien que les liens, qui sont eux aussi des éléments en ligne, soient décrits
+séparément.</p>
 
 <div>
-<h2><a name="Inline21"></a><a name="Definition">Definitions</a></h2>
+<h2><a name="Inline21"></a><a name="Definition">Définitions</a></h2>
 
-<p>The <a
-href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-DFN"><code>DFN</code></a>element
-is used to mark an <dfn>inline definition</dfn> (a word which is given as a
-defining instance)</p>
+<p>L'élément <a
+href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-DFN"><code>DFN</code></a>
+est utilisé pour marquer une <dfn>définition en ligne</dfn>  (un mot qui est
+donné comme un exemple de définition)</p>
 
-<p><a href="../StyleSheets.html">Style sheets</a> can be used to change the
-presentation of inline definitions.</p>
+<p><a href="../StyleSheets.html">Les feuilles de style</a> peuvent être
+utiliser pour changer la présentation des définitions en ligne.</p>
 </div>
 
 <div>
-<h2><a name="Inline1">Inline Quotations</a></h2>
+<h2><a name="Inline1">Les citations en ligne</a></h2>
 
-<p>Quotations which are inline can be marked using the information type
-"quotation" - the HTML element <a
+<p>Les citations qui sont en ligne peuvent être marquées en utilisant
+l'élément d'information "quotation" - l'élément HTML <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-Q"><code>Q</code></a>.
-This element is selected from the character elements submenu of the Style
-menu, or in linux with the keyboard shortcut Alt-t, Alt-q. It is possible to
-give a URI source for the quotation, using the <code>cite</code>
-attribute.</p>
+Cet élément est sélectionné depuis le sous-menu Éléments caractères du menu
+Style, ou sur linux avec le raccourci clavier Alt-t, Alt-q. Il est possible de
+donner  l'URI de la source pour la citation, utilisant l'attribut
+<code>cite</code>.</p>
 
-<p><a href="../StyleSheets.html">Style sheets</a> can be used to change the
-presentation of inline quotations. The HTML specification states tht inline
-quotation should be rendered with the appropriate punctuation marks for the
-language being represented.</p>
+<p><a href="../StyleSheets.html">Les feuilles de style</a> peuvent être
+utilisées pour changer la présentation des citations en ligne. Les
+spécifications HTML précisent que les citations en ligne devraient être
+rendues avec des guillemets appropriés à la langue courante.</p>
 </div>
 
 <div>
-<h2><a name="Sample">Sample input, output and computer code</a></h2>
+<h2>Les éléments exemple, entrée, sortie et code</h2>
 
-<p>Elements are provided to mark computer code, such as
-<code>statement:do-something</code>, with separate markup for
-<var>variables</var>, as well as <kbd>user input</kbd> and <samp>program
-output</samp> - the elements <a
+<p>Les éléments sont fournis pour marquer les codes, comme
+<code>statement:do-something</code>, avec le balisage différent pour
+<var>variables</var>, ainsi que <kbd>user input</kbd> et <samp>program
+output</samp> - les éléments <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-CODE"><code>CODE</code></a>,
 <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-VAR"><code>VAR</code></a>,
 <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-KBD"><code>KBD</code></a>
-and <a
+et <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-SAMP"><code>SAMP</code></a>.
-These elements are found in the information types submenu of the Style menu,
-and there are keyboard shortcuts in Unix for all of them - Alt-t followed by
-Alt-c for code, Alt-v for variables, Alt-k for user input and Alt-s for sample
-output.</p>
+Ces éléments sont trouvés à l'aide du sous-menu types information du menu
+Style, et il existe des raccourcis clavier pour eux tous - Alt-t suivi de
+Alt-c pour code, Alt-v pour variables, Alt-k pour user input et Alt-s pour
+sample output.</p>
 
-<p><a href="../StyleSheets.html">Style sheets</a> can be used to change the
-presentation of these elements.</p>
+<p><a href="../StyleSheets.html">Les feuilles de style</a> peuvent être
+utilisées pour changer la présentation de ces éléments.</p>
 </div>
 
 <div>
-<h2><a name="Inline">Acronyms and abbreviations</a></h2>
+<h2><a name="Inline">Acronymes and abréviations</a></h2>
 
-<p>Acronyms and abbreviations should be marked as such, using the <a
+<p>Acronymes et abréviations devraient être marqués comme tel, utilisant les
+éléments <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ABBR"><code>ABBR</code></a>
-and <a
+et <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ACRONYM"><code>ACRONYM</code></a>
-elements available in the information types submenu of the Style menu. For
-unix there is also the shortcut Alt-t, Alt-a for acronym. This allows
-recognition for different types of systems. The <code>title</code> attribute
-can also be used to specify the expansion of the acronym. Select the text to
-be marked, for example <acronym
-title="World Wide Web Consortium">W3C</acronym>, select the Style menu, the
-information types submenu, and the option acronym. Then select the entire
-element (<kbd>Escape key</kbd> on Unix, <kbd>F2 key</kbd> on windows), open
-the Attributes menu, select title, enter <kbd>World Wide Web Consortium</kbd>,
-and apply it.</p>
+disponibles dans le sous-menu  types information du menu Style. Pour unix, il
+y a également le raccourci Alt-t, Alt-a pour les acronymes. Ceci permet la
+reconnaissance des différents types de systèmes. L'attribut <code>title</code>
+peut également être utilisé pour spécifier l'expansion de l'acronyme.
+Sélectionnez le texte à marquer, par exemple <acronym
+title="World Wide Web Consortium">W3C</acronym>, sélectionnez le menu Style,
+le sous-menu types information, et l'option acronyme. Puis sélectionnez
+l'élément entier (<kbd>touche Escape</kbd> sur Unix, <kbd>touche F2 </kbd> sur
+windows), ouvrez le menu Attributs, sélectionnez title, entrez <kbd>World Wide
+Web Consortium</kbd>, et appliquez le.</p>
 
-<p><a href="../StyleSheets.html">Style sheets</a> can be used to change the
-presentation of acronyms or abbreviations.</p>
+<p><a href="../StyleSheets.html">Les feuilles de style</a> peuvent être
+utilisées pour changer la présentation des acronymes ou des abréviations.</p>
 </div>
 
 <div>
-<h2><a name="Inline2">Insertions and deletions</a></h2>
+<h2><a name="Inline2">Insertions and suppressions</a></h2>
 
-<p>The <a href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-del"
-name="DEL"><code>DEL</code></a> and <a
+<p>Les éléments <a
+href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-del"
+name="DEL"><code>DEL</code></a> et <a
 href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-ins"><code>INS</code></a>
-elements are available in the information types submenu of the Style menu to
-mark text <del>which ought</del> to be deleted or which has <ins>already</ins>
-been inserted.</p>
+sont disponibles dans le sous-menu types information du menu Style pour
+marquer le texte qui devra être effacé ou qui a <ins>déjà</ins> été
+inséré.</p>
 
-<p><a href="../StyleSheets.html">Style sheets</a> can be used to change the
-presentation of insertions and deletions.</p>
+<p><a href="../StyleSheets.html">Les feuilles de style</a> peuvent être
+utilisées pour changer la présentation des insertions et des suppressions.</p>
 </div>
 
 <div>
-<h2><a name="Emphasis">Emphasis elements</a></h2>
+<h2><a name="Emphasis">Les éléments accentués</a></h2>
 
-<p>HTML has elements to define two levels of emphasis:</p>
+<p>HTML a des éléments pour définir deux niveaux d'accentuation:</p>
 <ol>
-  <li><em>Ordinary emphasis</em>, using the <a
-    href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-EM">EM</a>
-    element and</li>
-  <li><strong>Strong emphasis</strong>, using the <code><a
-    href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-STRONG">STRONG</a></code>
-    element.</li>
+  <li><em>L'accentuation ordinaire</em>, utilisez l'élément <a
+    href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-EM">EM</a></li>
+  <li><strong>L'accentuation renforcée</strong>, utilisez l'élément <code><a
+    href="http://www.w3.org/TR/REC-html40/struct/text.html#edef-STRONG">STRONG</a></code>.</li>
 </ol>
 
-<p>Both types of emphasis can be applied from the toolbar using the <img
-src="../../Icons/Em.gif" alt="Emphasis" /> and <img
-src="../../Icons/Strong.gif" alt="Strong" /> buttons, or from the Information
-type submenu of the Style menu. There are also standard keyboard shortcuts -
-<kbd>Shift-control-I</kbd> for emphasis (because the default rendering is
-often italicised text) and <kbd>Shift-control-B</kbd> for strong emphasis
-(becuase the default rendering is often bold text). If there is a current
-selection, the emphaisis is applied to that, otherwise the appropriate element
-is created, as a child of the current element.</p>
+<p>Deux types d'accentuation peuvent être appliqués depuis la barre d'outils
+en utilisant les boutons <img src="../../Icons/Em.gif" alt="Emphasis" /> et
+<img src="../../Icons/Strong.gif" alt="Strong" /> , ou depuis le formulaire du
+sous-menu types information du menu Style. Il y a également des raccourcis
+clavier - <kbd>Shift-control-I</kbd> pour accentuer (parce que
+l'interprétation par défaut est souvent le texte en italique) et
+<kbd>Shift-control-B</kbd> pour l'accentuation renforcée (parce que
+l'interprétation par défaut est souvent le texte en gras). Si il y a une
+sélection courante, l'accentuation lui est appliquée, autrement l'élément
+approprié est créé, en tant que fils de l'élément courant.</p>
 
-<p>The emphasis elements are toggled in Amaya - to remove an emphasis select
-the element and reapply the appropriate emphasis. For example place the cursor
-somewhere in a <code>STRONG</code> element, use the <kbd>F2</kbd> (windows) or
-<kbd>Escape</kbd> (Unix) key to select the element, and then use the keyboard
-shortcut, menu item, or the <img src="../../Icons/Strong.gif" alt="Strong" />
-button - the <code>STRONG</code> element will be removed.</p>
+<p>Les éléments d'accentuation sont sous forme de choix dans Amaya - pour
+désactiver une accentuation, sélectionnez l'élément et réappliquez
+l'accentuation appropriée. Par exemple, placez le curseur quelque part sur un
+élément <code>STRONG</code>, utilisez la touche <kbd>F2</kbd> (windows) ou la
+touche <kbd>Escape</kbd> (Unix) pour sélectionner l'élément, et ensuite
+utilisez le raccourci clavier, menu item, ou le bouton <img
+src="../../Icons/Strong.gif" alt="Strong" />  - l'élément <code>STRONG</code>
+sera désactivé.</p>
 
-<p><a href="../StyleSheets.html">Style sheets</a> can be used to change the
-presentation of both types of emphasis.</p>
+<p><a href="../StyleSheets.html">Les feuilles de style</a> peuvent être
+utilisées pour changer la présentation des deux types d'accentuation.</p>
 </div>
 </div>
 

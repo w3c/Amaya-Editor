@@ -10,7 +10,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
-<body xml:lang="en" lang="en">
+<body xml:lang="fr" lang="fr">
 
 <table border="0" width="100%" summary="toc">
   <tbody>
@@ -37,10 +37,10 @@ raccourcis, taille et position de la fenêtre, feuille de style de
 l'utilisateur, etc. Vous pouvez changer la majorité des paramètres de
 configuration par le biais des menus de préférences spécifiques. Ce document
 expose sommairement le répertoire de configuration et les <a
-href="#Conventions">conventions</a> du fichier, donne un apperçu des
-différents <a href="#preferences">menus de preference</a>, et donne une
-information spécifique sur comment configurer les <a
-href="#shortcuts">raccourcis clavier</a>.</p>
+href="#Conventions">conventions</a> du fichier, donne un aperçu des différents
+<a href="#preferences">menus de préférence</a>, et donne une information
+spécifique sur comment configurer les <a href="#shortcuts">raccourcis
+clavier</a>.</p>
 
 <h3><a name="Conventions">Conventions</a></h3>
 
@@ -53,7 +53,7 @@ Amaya a été installé.</p>
 <h4><a name="AmayaHome">Le répertoire d'AmayaHome</a></h4>
 
 <p>Amaya stocke les préférences de l'utilisateur ainsi que les autres fichiers
-de configuration de l'utilisateur que nous appelerons le répertoire
+de configuration de l'utilisateur que nous appellerons le répertoire
 <strong>AmayaHome</strong>. La table suivante montre où ce répertoire est
 stocké dans les différentes architectures:</p>
 
@@ -93,7 +93,7 @@ installe les nouvelles versions d'Amaya et peut contenir les fichiers
 suivants:</p>
 <ul>
   <li><strong>thot.rc</strong> : les préférences de l'utilisateur, changées
-    grâve au menu préférences.</li>
+    grâce au menu préférences.</li>
   <li><a name="keyboard"><strong>amaya.keyboard</strong></a> (Unix) ou
     <strong>amaya.kb</strong> (Windows) : ce fichier définie <a
     href="#shortcuts">les raccourcis clavier d'Amaya</a>.</li>
@@ -105,7 +105,7 @@ suivants:</p>
     dictionnaire Anglais et le dictionnaire Français (ces deux dictionnaires
     peuvent être téléchargés depuis les <a
     href="http://www.w3.org/Amaya/User/BinDist.html">serveurs W3C</a>). Quand
-    l'utilisateur veut enregistrer un noveau mot, le vérificateur
+    l'utilisateur veut enregistrer un niveau mot, le vérificateur
     d'orthographe crée ou met à jour le "dictionnaire personnel de
     l'utilisateur".</li>
 </ul>
@@ -117,7 +117,7 @@ redémarrer Amaya pour les prendre en compte.</p>
 
 <h4><a name="AmayaTemp">Le répertoire AmayaTemp</a></h4>
 
-<p>Amaya stocke tous les fichiers temporaires qu'il crée durant l'éxécution
+<p>Amaya stocke tous les fichiers temporaires qu'il crée durant l'exécution
 dans un répertoire que nous appelons le répertoire e
 <strong>AmayaTemp</strong>. La table suivante montre où ce répertoire est
 stocké dans les différents architectures:</p>
@@ -150,7 +150,7 @@ par le biais des menus <strong>Préférences Générales</strong> et
 
 <p>Amaya essaye toujours d'effacer tous les fichiers temporaires qu'il crée.
 Cependant, si Amaya plante, les fichiers temporaires ne seront pas effacés.
-Ceci n'aura pas d'impact sur les éxécutions d'Amaya ultérieurement.</p>
+Ceci n'aura pas d'impact sur les exécutions d'Amaya ultérieurement.</p>
 
 <h3><a name="preferences">Menus des Préférences</a></h3>
 
@@ -159,7 +159,7 @@ y a neuf différents menus de préférences disponibles: <a
 href="#General">Générales</a>, <a href="#Publishing">Publication</a>, <a
 href="#Cache">Cache</a>, <a href="#Specifying1">Proxy</a>, <a
 href="#color">Couleurs</a>, <a href="#HTML">Géométrie</a>,<a href="#lang">
-Négociation des langues</a>, <a href="#Profiles">Profiles</a>, et <a
+Négociation des langues</a>, <a href="#Profiles">Profils</a>, et <a
 href="#Templates">Modèles de page</a>. Dans chacun de ces menus, il y a trois
 boutons d'action en commun:</p>
 
@@ -236,15 +236,15 @@ alt="General Preferences Menu" /></p>
 <h3><span style="font-size: 12pt">Le double clic active les liens</span></h3>
 <dl>
     <dd>Depuis la première version d'Amaya, les utilisateurs ont besoin de
-      double cliquer sur un lien pour l'activer. Celà permet de différencier
+      double cliquer sur un lien pour l'activer. Cela permet de différencier
       l'édition d'un lien de son activation. Vous pouvez passer outre ce
       comportement en désactivant cette option.
       <p></p>
     </dd>
-  <dt><strong>Activer le FTP (experimental)</strong></dt>
+  <dt><strong>Activer le FTP (expérimental)</strong></dt>
     <dd>Amaya permet de suivre les URLs FTP. Ce soutien est expérimental et il
       n'est pas encore débugué. Par exemple,   les URLs FTP nécessitent une
-      authentification de l'utilisateur, l'authentication de l'information
+      authentification de l'utilisateur, l'authentification de l'information
       n'étant pas toujours mémorisée. Aussi, le fait de taper sur le bouton
       Stop pendant un téléchargement FTP peut faire planter Amaya. Malgré ces
       problèmes, nous avons rajouter cette option dans Amaya afin que les
@@ -264,7 +264,7 @@ alt="General Preferences Menu" /></p>
       visualisé à l'intérieur d'une fenêtre zoomée sera visualisée plus gros
       ou plus petit que sa taille réelle selon le zoom courant.<br />
       Cette option vous permet de changer le zoom par défaut pour toutes les
-      fenêtres. Çe changement affecte uniquement les tailles des polices de
+      fenêtres. Ce changement affecte uniquement les tailles des polices de
       caractères mais pas les images et c'est reflété immédiatement sur tous
       les documents ouverts.<br />
       <br />
@@ -288,7 +288,7 @@ alt="General Preferences Menu" /></p>
       messages de dialogue qui sont visualisés quand on analyse un document ou
       quand on le sauve sous un schéma spécifique, se trouvent dans le fichier
       <strong>Amaya/amaya/HTML.<em>code</em></strong>, où le suffixe
-      <em>code</em> est une abbréviation d'une langue (par exemple
+      <em>code</em> est une abréviation d'une langue (par exemple
       <code>en</code> ou <code>fr</code>). Ce fichier possède 4 sections:</p>
       <ul>
         <li><strong>extension:</strong> non utilisé par Amaya</li>
@@ -301,7 +301,7 @@ alt="General Preferences Menu" /></p>
       <p>Il est possible d'adapter Amaya aux nouvelles langues ISO-Latin-1 en
       écrivant les fichiers de dialogue correspondant.. Ces fichiers de
       dialogue doivent se trouver dans le même répertoire (c'est à dire
-      <strong>Amaya/config</strong>) et doivent utililser le code correct ISO
+      <strong>Amaya/config</strong>) et doivent utiliser le code correct ISO
       639 comme préfixe (it- pour Italien, de- pour Allemand, etc.). Le
       fichier code spécifique HTML doit aussi être créé.</p>
       <p></p>
@@ -364,9 +364,9 @@ cache est activé et est stocké dans le répertoire
   <dt><strong>Ignorer les expiration: entête</strong></dt>
     <dd>N'expire pas les entrées de cache.</dd>
   <dt><strong>Répertoire du cache</strong></dt>
-    <dd>Donne le répertoire parent pour le répertoire libwww-cache directory.
-      Le fait de changer ce répertoire n'effacera pas le contenu du précédant.
-      Vous aurez à le supprimer vous même.<br />
+    <dd>Donne le répertoire parent pour le répertoire libwww-cache. Le fait de
+      changer ce répertoire n'effacera pas le contenu du précédant. Vous aurez
+      à le supprimer vous même.<br />
       <strong>Note:</strong> On ne peut pas utiliser des répertoires NFS
       (Network File System) pour le répertoire du cache en raison de leurs
       mécanismes de verrouillage. Utiliser un répertoire 'local' pour le
@@ -389,7 +389,7 @@ ou ne devrait pas être utilisé par le biais de ce menu.</p>
     <dd>Donnes le proxy qui devrait être utilisé pour les requêtes HTTP. Vous
       devez spécifier le nom du serveur en entier. Si le serveur est en train
       de fonctionner sur un port autre que 80, alors, comme un URL, vous devez
-      ajouter un charactère ":" au nom du proxy, suivi par le numéro du port.
+      ajouter un caractère ":" au nom du proxy, suivi par le numéro du port.
       Par exemple::
       <pre>   groucho.marx.edu
             </pre>
@@ -404,11 +404,11 @@ ou ne devrait pas être utilisé par le biais de ce menu.</p>
 <dl>
   <dt><strong>Liste du domaine proxy</strong></dt>
     <dd>Donne une liste des domaines séparés par des espaces où vous voulez
-      utililser votre proxy. Par exemple:
+      utiliser votre proxy. Par exemple:
       <pre>harpo.marx.edu zeppo.marx.edu chico.marx.edu
               ^--------------^----&gt; entrées séparées par des espaces
             </pre>
-      <p>Utillisez les intérupteurs pour spécifier si le proxy doit ou ne doit
+      <p>Utilisez les interrupteurs pour spécifier si le proxy doit ou ne doit
       pas être utilisé avec cette liste de domaines.</p>
     </dd>
 </dl>
@@ -425,13 +425,13 @@ couleurs: utilisez Amaya pour visualiser la sélection courante.</p>
   <li><strong>Couleur du point d'insertion</strong> donne la couleur du
     premier plan qui montre la sélection quand elle est limitée à un point
     d'insertion;</li>
-  <li><strong>Selection de la couleur</strong> donne la couleur de l'arrière
+  <li><strong>Sélection de la couleur</strong> donne la couleur de l'arrière
     plan qui montre la sélection courante quand elle est étendue.</li>
 </ul>
 
 <p>La version Unix fournit également des entrées pour changer le menu des
 couleurs. Pour changer le menu des couleurs sur Windows, vous avez besoin
-d'uitliser le contrôle de configuration standard de Windows, se trouvant dans
+d'utiliser le contrôle de configuration standard de Windows, se trouvant dans
 le répertoire <code>Control Panel</code>.</p>
 
 <p>Toutes ces couleurs peuvent être sélectionnées par leur nom, leur code hex,
@@ -449,8 +449,8 @@ utilisées à la place.</p>
 <p>Sur Windows, vous pouvez également sélectionner des couleurs par le biais
 de la palette de couleur.</p>
 
-<p><strong>Note:</strong> le changement des couleurs sera effectif  when vous
-ouvrirez une nouvelle fenêtre de document ou quand vous télechargez un
+<p><strong>Note:</strong> le changement des couleurs sera effectif  quand vous
+ouvrirez une nouvelle fenêtre de document ou quand vous téléchargez un
 document.</p>
 
 <p>Le moyen de fixer ou de changer les couleurs des liens, des liens visités
@@ -488,7 +488,7 @@ demander de façon transparente n'importe laquelle de ces versions.</p>
 <p style="text-align: center"><img src="../Icons/ProfilesMenu.gif"
 alt="Profiles  menu" /></p>
 
-<p>Dans Amaya, un <strong>profil</strong> défini l'apperçu et le ressentiment
+<p>Dans Amaya, un <strong>profil</strong> défini l'aperçu et le ressentiment
 de l'interface Amaya de l'utilisateur. Vous pouvez utilliser des profils pour
 cacher ou visualiser des boutons ou des menus d'Amaya. Ce menu vous permet de
 choisir un fichier de définition de profil donné et d'en sélectionner un parmi
@@ -497,7 +497,7 @@ de profils: <em>editor</em>, <em>mini-editor</em>, <em>browser</em>,
 <em>mini-browser</em>, chacun ayant différentes capacités. N'importe quel
 changement de profil sera effectif au prochain lancement d'Amaya.</p>
 
-<h4><a name="Templates">Modéles de pages</a></h4>
+<h4><a name="Templates">Modèles de pages</a></h4>
 
 <p style="text-align: center"><img src="../Icons/TemplatesMenu.gif"
 alt="Templates " /></p>
@@ -509,7 +509,7 @@ soit localisé sur votre station soit stocké dans un serveur particulier. Vous
 aurez besoin de quitter Amaya pour valider cette option. Quand vous lancerez
 Amaya de nouveau, il y aura une nouvelle entrée de fichier
 <code>Fichier/Nouveau/depuis modèle de page</code>. En suivant cette entrée,
-vous ouvrirrez un nouveau document montrant les résultats de navigation de
+vous ouvrirez un nouveau document montrant les résultats de navigation de
 l'URL du modèle de page. L'idée est que cette page agit comme un index des
 modèles de page disponibles sur votre station ou sur le serveur des modèles de
 page. Un exemple de modèle de page est disponible à cette adresse <a
@@ -521,12 +521,12 @@ page avec Amaya</a>.</p>
 <h3><a name="shortcuts">Les raccourcis clavier</a></h3>
 
 <p>Il est utile de pouvoir invoquer les commandes des menus directement depuis
-le clavier. La boîte à outils de Thot fournit une facililté qui laisse
+le clavier. La boîte à outils de Thot fournit une facilité qui laisse
 l'utilisateur accomplir ceci par le biais d'un fichier d'application des
 raccourcis clavier. Ce fichier défini une liste d'associations entre une
 séquence au clavier et la commande correspondante invoquée.</p>
 
-<p>La synthaxe utilisée pour définir une association est:</p>
+<p>La syntaxe utilisée pour définir une association est:</p>
 <pre> Directive = KeySeq ':' IdentCommand ;
  KeysSeq = KeySet [ ',' KeySet ] ;
  KeySet = [ Modifier ] [ 'Shift' ] Key ;
@@ -540,10 +540,10 @@ séquence au clavier et la commande correspondante invoquée.</p>
  Char = KeyValue / OctalValue ;  OctalValue = '\' NUMBER ; </pre>
 
 <p>Par exemple, regardez les fichiers standards <code>amaya.keyboard</code>
-(for Unix platforms) et <code>amaya.kb</code> (pour stations Windows), qui
+(pour stations Unix) et <code>amaya.kb</code> (pour stations Windows), qui
 sont localisés par défaut dans le répertoire <code>Amaya/config</code>.</p>
 
-<p>La liste des commandes diponibles est:</p>
+<p>La liste des commandes disponibles est: </p>
 <ul>
   <li>Commandes de déplacement:
     <ul>
@@ -573,7 +573,7 @@ sont localisés par défaut dans le répertoire <code>Amaya/config</code>.</p>
     SaveDocument, SaveDocumentAs, Synchronize, SetupAndPrint, PrintAs
     CloseDocument, AmayaClose</p>
   </li>
-  <li>Dans le menu Édition: 
+  <li>Dans le menu Édition:
     <p class="menuItems">TtcUndo, TtcRedo, TtcCutSelection, TtcCopySelection,
     TtcPaste, TtcDeleteSelection, SetBrowserEditor, TtcSearchText, SpellCheck,
     TransformType.</p>
