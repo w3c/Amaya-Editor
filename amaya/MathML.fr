@@ -1,0 +1,19 @@
+extension
+
+presentation
+
+ MathMLP:  Pr\351sentation standard
+
+export
+
+ MathMLT: XML
+
+translation
+
+TEXT_UNIT: \0
+GRAPHICS_UNIT: Graphique
+SYMBOL_UNIT: \0
+PICTURE_UNIT: IMG
+REFERENCE_UNIT: Reference
+PAGE_BREAK: Saut_de_page
+
