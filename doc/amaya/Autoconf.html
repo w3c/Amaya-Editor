@@ -14,7 +14,7 @@ border="0" src="../Icons/doc48x.gif" alt="Doc"></a></p>
 <h1>Compiling Amaya Sources with Autoconf</h1>
 <p>
 This document explains how to compile the <strong>Amaya</strong> environment
-(<strong>Amaya</strong> binary and <strong>Thot</strong> schemas compilers)
+(<strong>Amaya</strong> binary and <strong>Amaya</strong> schemas compilers)
 from the distributed <a href="Sources.html">source tree</a>.</p>
 <p>
 Here is the content of this document:</p>
@@ -65,13 +65,13 @@ Here is a simple recipe explaining how to build using autoconf:</p>
 Install your source code tree:
 <pre>gunzip -c /tmp/amaya-src-xxx.tar.gz | tar xvf -</pre>
 <p>
-this will create a Thot subtree of approximately 13
+this will create a Amaya subtree of approximately 13
 MBytes.<strong></strong></p>
 </li>
 <li>
 <span style="color : #FF0000">Create a subtree (obj)</span>  for object and
 launch configure to create the Makefile(s):
-<pre>cd Thot
+<pre>cd Amaya
 mkdir obj 
 cd obj 
 ../configure</pre>
@@ -161,19 +161,19 @@ from their xxx.c counterpart.
 </li>
 <li>
 make <strong>clean</strong> : removes all object files, but keep the binaries
-in <code>Thot/</code><strong>obj </strong><code>/bin</code> .
+in <code>Amaya/</code><strong>obj </strong><code>/bin</code> .
 </li>
 <li>
-make <strong>libwww</strong> : rebuild the libwww.a library from Thot/libww
+make <strong>libwww</strong> : rebuild the libwww.a library from Amaya/libww
 tree.
 </li>
 <li>
 make <strong>libjpeg</strong> : rebuild the libjpeg.a library from
-Thot/libjpeg tree.
+Amaya/libjpeg tree.
 </li>
 <li>
 make <strong>libpng</strong> : rebuild the libpng.a and libz.a libraries from
-Thot/libpng tree.
+Amaya/libpng tree.
 </li>
 <li>
 make without argument rebuild everything.
@@ -196,7 +196,7 @@ Errors may append at different stages in the compilation process. Here is a
 small checklist:</p>
 <ul>
 <li>
-from the start: typing make in the <code>Thot/</code><strong>obj </strong>
+from the start: typing make in the <code>Amaya/</code><strong>obj </strong>
 directory doesn't work. This means that the step 1 or 2 of the <a
 href="#L666">previous section</a> failed.
 <ol>
@@ -205,7 +205,7 @@ do you use GNU make? The Makefile organization heavily relies on including
 sub-Makefiles and some old versions of Make don't support it.
 </li>
 <li>
-do you have write access on the <code>Thot/</code><strong>obj </strong>
+do you have write access on the <code>Amaya/</code><strong>obj </strong>
 directory ?
 </li>
 <li>
@@ -222,7 +222,7 @@ check that you have some room left for the object.
 </li>
 <li>
 verify the include path for the X-Windows and Motif include files in
-<code>Thot/</code><strong>obj </strong><code>/Options.</code>
+<code>Amaya/</code><strong>obj </strong><code>/Options.</code>
 </li>
 <li>
 verify that the target directory for the object exist and is writable. The
@@ -263,7 +263,7 @@ PATH with 755 Unix rights:
         exec `gcc --print-prog-name=cpp` $@</pre>
 </li>
 <li>
-check that you have write right access on Thot/amaya directory.
+check that you have write right access on Amaya/amaya directory.
 </li>
 <li>
 One can force the compiler to rebuild the amaya and HTML schemas by typing:
@@ -313,7 +313,7 @@ libraries should be quite straightforward.</p>
 <li>
 verify the library path (<strong>-L</strong> flags in
 <strong>LINK_OPTIONS</strong>) for the X-Windows and Motif libraries files in
-<code>Thot/</code><strong>obj </strong><code>/Makefile</code>.
+<code>Amaya/</code><strong>obj </strong><code>/Makefile</code>.
 </li>
 <li>
 Check whether <strong>-lSM</strong> and <strong>-lICE</strong>  X11R6
@@ -322,7 +322,7 @@ X11R5 environment.
 </li>
 <li>
 If amaya linking complains about <strong>XLookupString</strong>, check in
-<code>Thot/amaya/EDITOR.A</code> that the section USES does not refer to
+<code>Amaya/amaya/EDITOR.A</code> that the section USES does not refer to
 <strong>Lookup</strong>. If needed, remove it, and restart
 <p>
 <code>make amaya</code></p>
@@ -359,11 +359,11 @@ corresponding libraries in the system.</p>
 </li>
 <li>
 Check that the amaya compiled <strong>schemas</strong> are present, namely
-<code>Thot/amaya/HTML.STR</code>, <code>Thot/amaya/HTMLP.PRS</code>...
+<code>Amaya/amaya/HTML.STR</code>, <code>Amaya/amaya/HTMLP.PRS</code>...
 </li>
 <li>
 Verify that the main <a href="Registry.html">registry</a> file
-<code>Thot/config/thot.ini</code> is present.
+<code>Amaya/config/thot.ini</code> is present.
 </li>
 </ol>
 <p>

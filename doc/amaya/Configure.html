@@ -33,7 +33,7 @@ updating the following configuration files:</p>
 <ul>
 <li>
 The <a name="registry">registry file</a> <strong>$HOME/.thotrc</strong> (Unix)
-or <strong>Thot/config/thot.rc</strong> (Windows)
+or <strong>Amaya/config/thot.rc</strong> (Windows)
 <p>
 This file  is used to define global parameters for Thot applications (Amaya is
 a Thot application). In this file, there's a section called
@@ -50,8 +50,8 @@ printer command</a>.</p>
 <li>
 The <a name="keyboard">keyboard file</a> <strong>$HOME/amaya.keyboard</strong>
 (this file is specific to a Unix user) or
-<strong>Thot/config/amaya.keyboard</strong> (this file is the default for Unix
-users) or <strong>Thot/config/amaya.kb</strong> (this file is the default for
+<strong>Amaya/config/amaya.keyboard</strong> (this file is the default for Unix
+users) or <strong>Amaya/config/amaya.kb</strong> (this file is the default for
 Windows users).
 <p>
 This file defines <a href="#L236">Amaya keyboard shortcuts</a>.</p>
@@ -59,13 +59,13 @@ This file defines <a href="#L236">Amaya keyboard shortcuts</a>.</p>
 <li>
 The <a name="HTML1">HTML configuration file</a>
 <strong>$HOME/HTML.conf</strong> (this file is specific to a Unix user) or
-<strong>Thot/amaya/HTML.conf</strong> (this file is the default for Unix or
+<strong>Amaya/amaya/HTML.conf</strong> (this file is the default for Unix or
 Windows users). This file defines the <a href="#HTML">position</a> and the <a
 href="#HTML">size</a> of Amaya document windows.
 </li>
 <li>
 File <strong>$HOME/.amaya.css</strong> (Unix) or
-<strong>Thot/amaya/amaya.css</strong> (Windows) contains the user's style
+<strong>Amaya/amaya/amaya.css</strong> (Windows) contains the user's style
 sheet.
 </li>
 </ul>
@@ -267,12 +267,12 @@ href="#registry">registry file</a>. The default language is English (value
 <code>en_US</code>). At the moment, only two languages are available: English
 (<code>en</code>) and French (<code>fr</code>). When launched, Amaya loads
 dialogue files according to the current dialogue language: en- files or fr-
-files. These dialogue files are located in the directory Thot/config.</p>
+files. These dialogue files are located in the directory Amaya/config.</p>
 <p>
 In Thot, a document is specified according to a schema. In Amaya, the dialogue
 message that are displayed when parsing a document or when saving it under a
 specific schema are given in the
-<strong>Thot/amaya/HTML.<em>code</em></strong> file, where the <em>code</em>
+<strong>Amaya/amaya/HTML.<em>code</em></strong> file, where the <em>code</em>
 suffix is a language abbreviation (e.g.,  <code>en</code> or <code>fr</code>).
 This  file has 4 sections:</p>
 <ul>
@@ -294,7 +294,7 @@ attribute in the Thot HTML structure.
 <p>
 It's possible to adapt Amaya to new ISO-Latin-1 languages by writing
 corresponding dialogue files. These dialogue files have to be located in the
-same directory <strong>Thot/config,</strong> and must use the right ISO 639
+same directory <strong>Amaya/config,</strong> and must use the right ISO 639
 code as a prefix (it- for Italian, de- for German, etc.). The specific
 HTML.code file also has to be created.</p>
 
@@ -543,7 +543,7 @@ y Y
 <p>
 By default, this input method is disabled. To active it the user has to edit
 his/her <a href="#Configuring">registry file</a> <code>$HOME/.thotrc</code>
-(Unix) or <code>Thot/config/thot.rc</code> (Windows) to set the parameter
+(Unix) or <code>Amaya/config/thot.rc</code> (Windows) to set the parameter
 value "<code>ENABLE_MULTIKEY=yes</code>".</p>
 
 <h3><a name="Double-click">Double-click delay</a></h3>

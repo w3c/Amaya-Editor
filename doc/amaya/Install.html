@@ -16,7 +16,7 @@ alt="Doc"></a></p>
 <h1>How to install the Unix Amaya Binary Release</h1>
 <p>
 <img src="../Icons/warning.gif"> In the following, we assume that the path
-stored in the archive begins with the <code><strong>Thot</strong></code>
+stored in the archive begins with the <code><strong>Amaya</strong></code>
 directory (this change was introduced for the source distribution). Older
 binary distributions use <code><strong>Amaya</strong></code> as the top
 directory name instead.</p>
@@ -63,17 +63,17 @@ transfer, please get a new one. Read carefully the <code>COPYRIGHT</code>,
 
 <h3>Set up the environment and start Amaya</h3>
 <p>
-The file <code>Thot/SYSTEM/bin/amaya</code> is the <strong>Amaya</strong>
-binary, the best thing is to add the path to the Thot/SYSTEM/bin directory to
+The file <code>Amaya/SYSTEM/bin/amaya</code> is the <strong>Amaya</strong>
+binary, the best thing is to add the path to the Amaya/SYSTEM/bin directory to
 your PATH environment variable. For example on a <strong>Linux-ELF</strong>
 system:</p>
 <p>
-<code>setenv PATH $PATH:/usr/local/Thot/LINUX-ELF/bin</code></p>
+<code>setenv PATH $PATH:/usr/local/Amaya/LINUX-ELF/bin</code></p>
 <p>
 for a csh or tcsh shell. When using sh, bash or another variant of the Bourne
 shell</p>
 <p>
-<code>PATH=$PATH:/usr/local/Thot/LINUX-ELF/bin ; export PATH</code></p>
+<code>PATH=$PATH:/usr/local/Amaya/LINUX-ELF/bin ; export PATH</code></p>
 <p>
 Maybe this command should be added to the .login startup script. Once done one
 can lauch <strong>Amaya</strong> simply by typing "amaya" to the shell prompt.
@@ -99,10 +99,10 @@ machine or an old Linux a.out installation).
 <li>
 If the binary version is ok, check the availability of the dynamic libraries
 needed by the executable file amayamain (located under
-<code>Thot/bin/SYSTEM/amaya</code>). for example on a
+<code>Amaya/bin/SYSTEM/amaya</code>). for example on a
 <strong>Linux-ELF</strong> system type
 <p>
-<code>ldd Thot/LINUX-ELF/bin/amaya</code></p>
+<code>ldd Amaya/LINUX-ELF/bin/amaya</code></p>
 <p>
 and check that there is no missing libraries.</p>
 </li>
