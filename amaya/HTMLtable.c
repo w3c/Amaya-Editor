@@ -1661,11 +1661,12 @@ void RowPasted (NotifyElement * event)
   Document            doc;
   ThotBool            inMath;
 
+  if (event->info == 1)
+    return;
   row = event->element;
   doc = event->document;
   if (!ElementOKforProfile (row, doc))
     return;
-
   elType = TtaGetElementType (row);
   inMath = TtaSameSSchemas (elType.ElSSchema,
 			    TtaGetSSchema ("MathML", doc));
