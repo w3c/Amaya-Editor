@@ -13,7 +13,11 @@
  ** $Author$
  ** $Revision$
  ** $Log$
- ** Revision 1.1  2002-05-31 10:48:46  kirschpi
+ ** Revision 1.2  2002-06-03 14:37:44  kirschpi
+ ** The name of some public functions have been changed to avoid conflic with
+ ** other libraries.
+ **
+ ** Revision 1.1  2002/05/31 10:48:46  kirschpi
  ** Added a new module for WebDAV purposes _ davlib.
  ** Some changes have been done to add this module in the following files:
  ** amaya/query.c, amaya/init.c, amaya/answer.c, amaya/libwww.h, amaya/amayamsg.h,
@@ -39,7 +43,7 @@
 
 #include <ctype.h>
 
-#include "expat.h"
+#include "xmlparse.h"
 #include "awtree.h"
 
 #define NUM_OF_NODES 3			/* estimative - number of children nodes per node */

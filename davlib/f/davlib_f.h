@@ -7,6 +7,7 @@
 #ifdef __STDC__
 
 extern void InitDAV ( void );
+extern void DAVFreeLock ( Document docid );
 extern void DAVLockDocument ( Document document,
                               View view );
 extern void DAVUnlockDocument ( Document document,
@@ -21,6 +22,7 @@ extern void DAVLockIndicator ( Document document,
 #else /* __STDC__ */
 
 extern void InitDAV (/* void */);
+extern void DAVFreeLock (/* Document docid */);
 extern void DAVLockDocument (/* Document document,
                                 View view */);
 extern void DAVUnlockDocument (/* Document document,

@@ -14,7 +14,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.2  2002-05-31 17:59:19  kirschpi
+ ** Revision 1.3  2002-06-03 14:37:42  kirschpi
+ ** The name of some public functions have been changed to avoid conflic with
+ ** other libraries.
+ **
+ ** Revision 1.2  2002/05/31 17:59:19  kirschpi
  ** Functions to give to user some informations about active locks
  ** (a basic awareness support) when the user load or exit a document.
  **
@@ -81,7 +85,7 @@ void InitDAV (void) {
     if (ptr && (*ptr))   
         sprintf (DAVUserURL,ptr);
     else {  
-        char *email = DefaultEmail();
+        char *email = DAVDefaultEmail();
         sprintf (DAVUserURL,"%s%s",(email)?"mailto:":"http://", (email)?email:fqdn);
 
         /* save user URL in thot env */
@@ -232,7 +236,7 @@ void DAVFreeLock (Document docid) {
         /* if there is a lock info in the local base,
          * user has a lock for this resource.
          */
-        lockinfo = FindLockToken (absURI, relURI);
+        lockinfo = DAVFindLockToken (absURI, relURI);
         if (lockinfo && *lockinfo) {
             char label1[LINE_MAX], label2[LINE_MAX];
 

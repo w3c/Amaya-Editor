@@ -7,50 +7,54 @@
 #ifdef __STDC__
 
 extern char * DAVFQDN ( void );
-extern char * DefaultEmail ( void );
-extern time_t TimeoutValue ( char *timeout );
-extern char * CopyFile ( char * filename,
-                         int size );
-extern LockLine * GetLockFromTree ( AwTree * tree,
-                                    char *owner );
+extern char * DAVDefaultEmail ( void );
+extern time_t DAVTimeoutValue ( char *timeout );
+extern char * DAVCopyFile ( char * filename,
+                            int size );
+extern char * DAVFindLockToken ( char *hostname,
+                                 char *relative );
+extern LockLine * DAVGetLockFromTree ( AwTree * tree,
+                                       char *owner );
 extern void DAVAddIfHeader ( AHTReqContext *context,
                              char *url );
 extern void DAVRemoveIfHeader ( AHTReqContext *context );
 extern AHTDAVContext * AHTDAVContext_new ( const char *DocURL );
 extern void AHTDAVContext_delete ( AHTDAVContext * me );
-extern AHTReqContext * CreateDefaultContext ( int doc,
-                                              char *url,
-                                              AHTDAVContext *dav,
-                                              HTNetAfter * after,
-                                              TTcbf * terminate,
-                                              TIcbf * incremental,
-                                              BOOL preemptive,
-                                              int mode );
-extern AHTReqContext * CopyContext ( AHTReqContext *context );
+extern AHTReqContext * DAVCreateDefaultContext ( int doc,
+                                                 char *url,
+                                                 AHTDAVContext *dav,
+                                                 HTNetAfter * after,
+                                                 TTcbf * terminate,
+                                                 TIcbf * incremental,
+                                                 BOOL preemptive,
+                                                 int mode );
+extern AHTReqContext * DAVCopyContext ( AHTReqContext *context );
 
 #else /* __STDC__ */
 
 extern char * DAVFQDN (/* void */);
-extern char * DefaultEmail (/* void */);
-extern time_t TimeoutValue (/* char *timeout */);
-extern char * CopyFile (/* char * filename,
-                           int size */);
-extern LockLine * GetLockFromTree (/* AwTree * tree,
-                                      char *owner */);
+extern char * DAVDefaultEmail (/* void */);
+extern time_t DAVTimeoutValue (/* char *timeout */);
+extern char * DAVCopyFile (/* char * filename,
+                              int size */);
+extern char * DAVFindLockToken (/* char *hostname,
+                                   char *relative */);
+extern LockLine * DAVGetLockFromTree (/* AwTree * tree,
+                                         char *owner */);
 extern void DAVAddIfHeader (/* AHTReqContext *context,
                                char *url */);
 extern void DAVRemoveIfHeader (/* AHTReqContext *context */);
 extern AHTDAVContext * AHTDAVContext_new (/* const char *DocURL */);
 extern void AHTDAVContext_delete (/* AHTDAVContext * me */);
-extern AHTReqContext * CreateDefaultContext (/* int doc,
-                                                char *url,
-                                                AHTDAVContext *dav,
-                                                HTNetAfter * after,
-                                                TTcbf * terminate,
-                                                TIcbf * incremental,
-                                                BOOL preemptive,
-                                                int mode */);
-extern AHTReqContext * CopyContext (/* AHTReqContext *context */);
+extern AHTReqContext * DAVCreateDefaultContext (/* int doc,
+                                                   char *url,
+                                                   AHTDAVContext *dav,
+                                                   HTNetAfter * after,
+                                                   TTcbf * terminate,
+                                                   TIcbf * incremental,
+                                                   BOOL preemptive,
+                                                   int mode */);
+extern AHTReqContext * DAVCopyContext (/* AHTReqContext *context */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

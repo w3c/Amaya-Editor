@@ -12,7 +12,11 @@
  ** $Author$
  ** $Revision$
  ** $Log$
- ** Revision 1.2  2002-05-31 17:59:19  kirschpi
+ ** Revision 1.3  2002-06-03 14:37:42  kirschpi
+ ** The name of some public functions have been changed to avoid conflic with
+ ** other libraries.
+ **
+ ** Revision 1.2  2002/05/31 17:59:19  kirschpi
  ** Functions to give to user some informations about active locks
  ** (a basic awareness support) when the user load or exit a document.
  **
@@ -44,7 +48,7 @@ extern int verifyString (char *data) {
     int i = 0;
     int sum = 0;
 
-    for (i=0; i<strlen (data); i++) {
+    for (i=0; (unsigned)i<strlen (data); i++) {
         if ( isalnum(data[i]) && !isspace(data[i]) )
             sum++;
     }

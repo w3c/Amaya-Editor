@@ -15,7 +15,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.2  2002-05-31 17:59:19  kirschpi
+ ** Revision 1.3  2002-06-03 14:37:42  kirschpi
+ ** The name of some public functions have been changed to avoid conflic with
+ ** other libraries.
+ **
+ ** Revision 1.2  2002/05/31 17:59:19  kirschpi
  ** Functions to give to user some informations about active locks
  ** (a basic awareness support) when the user load or exit a document.
  **
@@ -61,7 +65,7 @@ char * DAVFQDN (void) {
 /*----------------------------------------------------------------------
    Returns the default user email
   ----------------------------------------------------------------------*/
-char * DefaultEmail (void) {
+char * DAVDefaultEmail (void) {
     HTRequest *request = HTRequest_new();    
     HTUserProfile *user = HTRequest_userProfile (request);
     char *email = (user)?HTUserProfile_email(user):NULL;
@@ -73,7 +77,7 @@ char * DefaultEmail (void) {
 /*----------------------------------------------------------------------
    Calculates a time_t value for the timeout string
   ----------------------------------------------------------------------*/
-time_t TimeoutValue (char *timeout) {
+time_t DAVTimeoutValue (char *timeout) {
     time_t now,tout;
         
     time(&now);                
@@ -90,7 +94,7 @@ time_t TimeoutValue (char *timeout) {
 /*----------------------------------------------------------------------
    Copy the file 'filename' to a string 
   ----------------------------------------------------------------------*/
-char * CopyFile (char * filename, int size) {
+char * DAVCopyFile (char * filename, int size) {
     char *document = NULL;
 
     if (filename) {
@@ -122,7 +126,7 @@ char * CopyFile (char * filename, int size) {
    Returns:
         char * with the lock-token, or NULL if fails
  ----------------------------------------------------------------------*/
-char * FindLockToken (char *hostname, char *relative) {
+char * DAVFindLockToken (char *hostname, char *relative) {
     char   *lock    = NULL;
     HTList *matches = NULL;
     LockLine *line  = NULL;
@@ -148,7 +152,7 @@ char * FindLockToken (char *hostname, char *relative) {
          * can only unlock a resource after get it, consequently, after 
          * the DAVFindLock, which upadtes the base*/
         itime = strtotime (line->initialTime);    
-        tout = TimeoutValue (line->timeout);
+        tout = DAVTimeoutValue (line->timeout);
 
         
         /* try to get the most recent token */ 
@@ -168,7 +172,7 @@ char * FindLockToken (char *hostname, char *relative) {
     }
     
 #ifdef DEBUG_DAV
-    fprintf (stderr,"FindLockToken.... Returning %s\n",(lock)?lock:"NULL");
+    fprintf (stderr,"DAVFindLockToken.... Returning %s\n",(lock)?lock:"NULL");
 #endif
     HTList_delete (matches);
     return lock;
@@ -177,14 +181,14 @@ char * FindLockToken (char *hostname, char *relative) {
 
 
 /*----------------------------------------------------------------------
-   GetLockFromTree: Get the lock information from the AwTree object.
+   DAVGetLockFromTree: Get the lock information from the AwTree object.
    Parameters:
         AwTree * tree: where we should look for lock information  
         char * owner: for return purposes 
    Returns:
         LockLine *: lock information or NULL
   ----------------------------------------------------------------------*/
-LockLine * GetLockFromTree (AwTree * tree, char *owner) {
+LockLine * DAVGetLockFromTree (AwTree * tree, char *owner) {
     LockLine * lock;
     AwNode * Nactivelock;
     AwNode * node;
@@ -311,7 +315,7 @@ LockLine * GetLockFromTree (AwTree * tree, char *owner) {
             if (Itimeout) HT_FREE (Itimeout);
                             
 #ifdef DEBUG_DAV            
-            fprintf (stderr,"GetLockFromTree..... LockLine: %s Owner %s\n", \
+            fprintf (stderr,"DAVGetLockFromTree..... LockLine: %s Owner %s\n", \
                             (lock)?"OK":"NO",owner);
 #endif
         }
@@ -480,7 +484,7 @@ void AHTDAVContext_delete (AHTDAVContext * me)
         int mode : request mode
         
   ----------------------------------------------------------------------*/
-AHTReqContext * CreateDefaultContext (int doc, char *url, AHTDAVContext *dav,\
+AHTReqContext * DAVCreateDefaultContext (int doc, char *url, AHTDAVContext *dav,\
                                       HTNetAfter * after, TTcbf * terminate, \
                                       TIcbf * incremental, BOOL preemptive, int mode)  
 {
@@ -533,14 +537,14 @@ AHTReqContext * CreateDefaultContext (int doc, char *url, AHTDAVContext *dav,\
 /*----------------------------------------------------------------------
    Copy an AHTDAVContext object to a new object for retry purposes
   ----------------------------------------------------------------------*/
-AHTReqContext * CopyContext (AHTReqContext *context) {
+AHTReqContext * DAVCopyContext (AHTReqContext *context) {
     AHTReqContext *me = NULL;
 
     if (context) {
 #ifdef DEBUG_DAV
         fprintf (stderr,"Copycontext.... copying the request context\n");
 #endif              
-        me = CreateDefaultContext (context->docid, context->urlName,NULL, NULL, \
+        me = DAVCreateDefaultContext (context->docid, context->urlName,NULL, NULL, \
                                    context->terminate_cbf, context->incremental_cbf,\
                                    HTRequest_preemptive (context->request),\
                                    context->mode);

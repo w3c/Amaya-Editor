@@ -10,9 +10,9 @@ extern int FilterFailedDependency_handler ( HTRequest * request,
                                             HTResponse * response,
                                             void * param,
                                             int status );
-extern void setCopyRequest ( AHTReqContext *new_request,
-                             AHTReqContext *context,
-                             AHTDAVContext *davctx );
+extern void DAVSetCopyRequest ( AHTReqContext *new_request,
+                                AHTReqContext *context,
+                                AHTDAVContext *davctx );
 extern int FilterLocked_handler ( HTRequest * request,
                                   HTResponse * response,
                                   void * param,
@@ -51,8 +51,6 @@ extern int FilterFindAndShowLock_handler ( HTRequest * request,
                                            HTResponse * response,
                                            void * param,
                                            int status );
-extern char * FindLockToken ( char *hostname,
-                              char *relative );
 extern AHTDAVContext * GetUnlockInfo ( int document );
 extern BOOL DoUnlockRequest ( int doc,
                               AHTDAVContext *info );
@@ -93,9 +91,9 @@ extern int FilterFailedDependency_handler (/* HTRequest * request,
                                               HTResponse * response,
                                               void * param,
                                               int status */);
-extern void setCopyRequest (/* AHTReqContext *new_request,
-                               AHTReqContext *context,
-                               AHTDAVContext *davctx */);
+extern void DAVSetCopyRequest (/* AHTReqContext *new_request,
+                                  AHTReqContext *context,
+                                  AHTDAVContext *davctx */);
 extern int FilterLocked_handler (/* HTRequest * request,
                                     HTResponse * response,
                                     void * param,
@@ -134,8 +132,6 @@ extern int FilterFindAndShowLock_handler (/* HTRequest * request,
                                              HTResponse * response,
                                              void * param,
                                              int status */);
-extern char * FindLockToken (/* char *hostname,
-                                char *relative */);
 extern AHTDAVContext * GetUnlockInfo (/* int document */);
 extern BOOL DoUnlockRequest (/* int doc,
                                 AHTDAVContext *info */);

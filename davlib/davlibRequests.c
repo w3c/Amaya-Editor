@@ -15,7 +15,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.2  2002-05-31 17:59:19  kirschpi
+ ** Revision 1.3  2002-06-03 14:37:43  kirschpi
+ ** The name of some public functions have been changed to avoid conflic with
+ ** other libraries.
+ **
+ ** Revision 1.2  2002/05/31 17:59:19  kirschpi
  ** Functions to give to user some informations about active locks
  ** (a basic awareness support) when the user load or exit a document.
  **
@@ -68,17 +72,17 @@ int FilterFailedDependency_handler (HTRequest * request, HTResponse * response,
 
 
 /* ----------------------------------------------------------------------
-   setCopyRequest: set a copy of a request context, according the 
+   DAVSetCopyRequest: set a copy of a request context, according the 
                    method needs. Used by FilterLoked_handler and 
                    FilterMultiStatus_handler.
    ---------------------------------------------------------------------- */
-void setCopyRequest (AHTReqContext *new_request, AHTReqContext *context, \
+void DAVSetCopyRequest (AHTReqContext *new_request, AHTReqContext *context, \
                      AHTDAVContext *davctx) {
                                    
     if (new_request && context && davctx) 
     {
 #ifdef DEBUG_DAV
-        fprintf (stderr,"setCopyRequest.... copying the request\n");
+        fprintf (stderr,"DAVSetCopyRequest.... copying the request\n");
 #endif  
         /* copy the document content for PUT and file POST */   
         if (new_request->method == METHOD_PUT || \
@@ -93,7 +97,7 @@ void setCopyRequest (AHTReqContext *new_request, AHTReqContext *context, \
                 filename = strchr (filename,':');
                 if (filename) {
                     filename++;
-                    new_request->document = CopyFile (filename,context->block_size);
+                    new_request->document = DAVCopyFile (filename,context->block_size);
                 }
             }
                         
@@ -180,8 +184,8 @@ int FilterLocked_handler (HTRequest * request, HTResponse * response,
             
             if (context->method != METHOD_LOCK) {
                 /* copy info to retry later */
-                AHTReqContext *new_request = CopyContext (context);
-                setCopyRequest (new_request, context, new_davctx);
+                AHTReqContext *new_request = DAVCopyContext (context);
+                DAVSetCopyRequest (new_request, context, new_davctx);
                 new_davctx->new_request = new_request;          
             }
 
@@ -262,8 +266,8 @@ int FilterMultiStatus_handler (HTRequest * request, HTResponse * response,
                     return HT_OK;
             
             /* copy info to retry later */
-            new_request = CopyContext (context);
-            setCopyRequest (new_request, context, new_davctx);
+            new_request = DAVCopyContext (context);
+            DAVSetCopyRequest (new_request, context, new_davctx);
             new_davctx->new_request = new_request;
             
             /* continue only if we could copy the request*/ 
@@ -447,7 +451,7 @@ int FilterFindAndPut_handler (HTRequest * request, HTResponse * response,
 
         /*find lock informations*/
         if (davctx->tree)
-            lockinfo = GetLockFromTree (davctx->tree,owner);
+            lockinfo = DAVGetLockFromTree (davctx->tree,owner);
 
         /*document is locked, ask to*/
         if (lockinfo) {
@@ -627,7 +631,7 @@ BOOL createLockBody (char *owner, char *scope, char *body, int len) {
                      "    <D:owner><D:href>%s</D:href></D:owner>%s"
                      "</D:lockinfo>", nl,nl,scope,nl,nl,owner,nl);
          
-         if ( body!=NULL && len > strlen (tmp)) {
+         if ( body!=NULL && (unsigned) len > strlen (tmp)) {
              int i; 
              /* clen the memory */
              for (i=0;i<len;i++) body[i]='\0';
@@ -718,7 +722,7 @@ BOOL DoLockRequest (int doc, AHTDAVContext *info) {
          * the end of the application (request will be kept in memory), 
          * and AMAYA_NOCACHE is  mandatory for DAV requests 
          * */
-        context = CreateDefaultContext (doc, url, info, \
+        context = DAVCreateDefaultContext (doc, url, info, \
                         FilterLock_handler, \
                         (TTcbf *) DAVTerminate_callback, NULL, NO, \
                         (AMAYA_ASYNC | AMAYA_FLUSH_REQUEST | AMAYA_NOCACHE));
@@ -884,7 +888,7 @@ int FilterFindAndShowLock_handler (HTRequest * request, HTResponse * response,
       
         /*find lock informations*/
         if (davctx->tree)
-            lockinfo = GetLockFromTree (davctx->tree,owner);
+            lockinfo = DAVGetLockFromTree (davctx->tree,owner);
 
         /* show lock informations to the user */
         if (lockinfo) {
@@ -965,7 +969,7 @@ AHTDAVContext * GetUnlockInfo (int document) {
   
     /* get the lock-token. if there isn't a lock-token, we can't do the
      * request here, returning NULL */
-    lock = FindLockToken (info->absoluteURI,info->relativeURI);
+    lock = DAVFindLockToken (info->absoluteURI,info->relativeURI);
     if (!lock) {
         AHTDAVContext_delete (info);
         return NULL;
@@ -1010,7 +1014,7 @@ BOOL DoUnlockRequest (int doc, AHTDAVContext *info) {
          * be kept in memory), and AMAYA_NOCACHE is mandatory for 
          * DAV requests 
          * */
-        context = CreateDefaultContext (doc, url, info, \
+        context = DAVCreateDefaultContext (doc, url, info, \
                   FilterUnlock_handler, \
                   (TTcbf *)DAVTerminate_callback, NULL, NO, \
                   AMAYA_ASYNC | AMAYA_FLUSH_REQUEST | AMAYA_NOCACHE);
@@ -1213,7 +1217,7 @@ int FilterFindAndUnlock_handler (HTRequest * request, HTResponse * response,
 
         /*find lock informations*/
         if (davctx->tree)
-            lockinfo = GetLockFromTree (davctx->tree,owner);
+            lockinfo = DAVGetLockFromTree (davctx->tree,owner);
 
         /*document is locked, ask to*/
         if (lockinfo && !davctx->retry) {
@@ -1296,7 +1300,7 @@ BOOL createPropfindBody (BOOL lockdiscovery, char *body, int len) {
                      (lockdiscovery)?"<D:prop><D:lockdiscovery/></D:prop>":\
                      "<D:allprop/>",nl);
          
-     if ( body!=NULL && len > strlen (tmp)) {
+     if ( body!=NULL && (unsigned) len > strlen (tmp)) {
          int i;
          /* clean the memory */
          for (i=0;i<len;i++) body[i]='\0';
@@ -1427,7 +1431,7 @@ int FilterFindLock_handler (HTRequest * request, HTResponse * response,
                             "resource is locked\n",lockdiscovery);
 #endif        
             /* try to discover who is the lock's owner */
-            lockinfo = GetLockFromTree (davctx->tree, owner);
+            lockinfo = DAVGetLockFromTree (davctx->tree, owner);
             if (lockinfo && owner && *owner) {
                 /* if the user wants to receive awareness information,
                  * notify him/her about locked resources
@@ -1522,7 +1526,7 @@ BOOL DoPropfindRequest (int doc, AHTDAVContext *info, HTNetAfter * filter_handle
          * preemptive : no
          * mode : AMAYA_ASYNC | AMAYA_FLUSH_REQUEST | AMAYA_NOCACHE
          * */
-        context = CreateDefaultContext (doc,url, info, \
+        context = DAVCreateDefaultContext (doc,url, info, \
                       filter_handler,(TTcbf *)DAVTerminate_callback, NULL, NO,\
                       AMAYA_ASYNC | AMAYA_FLUSH_REQUEST | AMAYA_NOCACHE);
         
@@ -1661,7 +1665,7 @@ int FilterCopyLockInfo_handler (HTRequest *request, HTResponse *response,\
 
         /*find lockdiscovery element*/
         if (davctx->tree)
-            lockinfo = GetLockFromTree (davctx->tree,owner);
+            lockinfo = DAVGetLockFromTree (davctx->tree,owner);
 
         
         /* there is a lockdiscovery element in XML response, 
