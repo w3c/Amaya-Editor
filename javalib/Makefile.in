@@ -474,9 +474,6 @@ amaya_stubs = \
 
 amaya_HTTPRequest.h : $(THOTDIR)/classes/amaya/HTTPRequest.java $(COMPILERS)
 	@echo
-	@echo "Compiling Java class HTTPRequest"
-	$(JAVAC) amaya/HTTPRequest.java
-	@echo
 	@echo "Producing header for class HTTPRequest"
 	$(KAFFEH) amaya.HTTPRequest
 
