@@ -8144,8 +8144,6 @@ void TtaShowDialogue (int ref, ThotBool remanent)
 #ifndef _GTK
   int                 n;
   Arg                 args[MAX_ARGS];
-#else /* _GTK */
-
 #endif /* !_GTK */
 #endif /* _WINDOWS */
   ThotWidget          w;
@@ -8250,15 +8248,10 @@ void TtaShowDialogue (int ref, ThotBool remanent)
 	  XtSetArg (args[0], XmNdefaultButton, catalogue->Cat_Entries->E_ThotWidget[1]);
 	  XtSetValues (w, args, 1);
 #else /* _GTK */
-	  /*
-	   * A VERIFIER
-	   *
-	   *il faut mettre le focus au bon bouton
-	   *
-	   */
-	  gtk_widget_grab_default (GTK_WIDGET(catalogue->Cat_Entries->E_ThotWidget[1]));
-  
-	  /*	  gtk_widget_grab_default(GTK_WIDGET(catalogue->Cat_Entries->E_ThotWidget[1]));*/
+	  if (catalogue->Cat_Entries->E_ThotWidget[1])
+	    gtk_widget_grab_default (GTK_WIDGET(catalogue->Cat_Entries->E_ThotWidget[1]));
+	  else if (catalogue->Cat_Entries->E_ThotWidget[0])
+	    gtk_widget_grab_default (GTK_WIDGET(catalogue->Cat_Entries->E_ThotWidget[0]));
 #endif /* !_GTK */
 	}
       INITform (w, catalogue, NULL);
