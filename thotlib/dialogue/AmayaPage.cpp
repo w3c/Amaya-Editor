@@ -1038,7 +1038,7 @@ BEGIN_EVENT_TABLE(AmayaPage, wxPanel)
 
   EVT_BUTTON( -1,                       AmayaPage::OnSplitButton)
 
-  EVT_SET_FOCUS(                        AmayaPage::OnSetFocus )
+  //  EVT_SET_FOCUS(                        AmayaPage::OnSetFocus )
   //  EVT_CONTEXT_MENU(                     AmayaPage::OnContextMenu )
 
 END_EVENT_TABLE()

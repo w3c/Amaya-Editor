@@ -275,12 +275,12 @@ BEGIN_EVENT_TABLE(AmayaNotebook, wxNotebook)
   EVT_NOTEBOOK_PAGE_CHANGED(  -1, AmayaNotebook::OnPageChanged )
   EVT_NOTEBOOK_PAGE_CHANGING( -1, AmayaNotebook::OnPageChanging )
 
-  EVT_SET_FOCUS(        AmayaNotebook::OnSetFocus )
+  //  EVT_SET_FOCUS(        AmayaNotebook::OnSetFocus )
   EVT_IDLE(             AmayaNotebook::OnIdle) // Process a wxEVT_IDLE event
 
   EVT_CONTEXT_MENU(              AmayaNotebook::OnContextMenu )
 
-  EVT_CHAR( AmayaNotebook::OnChar )
+  //  EVT_CHAR( AmayaNotebook::OnChar )
 END_EVENT_TABLE()
   
 #endif /* #ifdef _WX */
