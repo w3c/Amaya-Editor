@@ -136,12 +136,10 @@ Amaya/amaya/stopR.xpm \
 Amaya/amaya/toggle-s.xpm \
 Amaya/amaya/toggle.xpm \
 Amaya/batch/APP.LAN \
-Amaya/batch/META.LAN \
 Amaya/batch/PRESEN.LAN \
 Amaya/batch/STRUCT.LAN \
 Amaya/batch/TRANS.LAN \
 Amaya/batch/APP.GRM \
-Amaya/batch/META.GRM \
 Amaya/batch/PRESEN.GRM \
 Amaya/batch/STRUCT.GRM \
 Amaya/batch/TRANS.GRM \
@@ -353,7 +351,6 @@ Amaya/libjpeg/rdrle.c \
 Amaya/libjpeg/rdswitch.c \
 Amaya/libjpeg/rdtarga.c \
 Amaya/libjpeg/structure.doc \
-Amaya/libjpeg/tags \
 Amaya/libjpeg/testimg.gif \
 Amaya/libjpeg/testimg.jpg \
 Amaya/libjpeg/testimg.ppm \
@@ -406,7 +403,6 @@ Amaya/libpng/pngwrite.c \
 Amaya/libpng/pngwtran.c \
 Amaya/libpng/pngwutil.c \
 Amaya/libpng/readme.txt \
-Amaya/libpng/tags \
 Amaya/libpng/zlib/ChangeLog \
 Amaya/libpng/zlib/Make_vms.com \
 Amaya/libpng/zlib/Makefile \
@@ -436,7 +432,6 @@ Amaya/libpng/zlib/infutil.c \
 Amaya/libpng/zlib/infutil.h \
 Amaya/libpng/zlib/minigzip.c \
 Amaya/libpng/zlib/minigzip.c.old \
-Amaya/libpng/zlib/tags \
 Amaya/libpng/zlib/trees.c \
 Amaya/libpng/zlib/uncompr.c \
 Amaya/libpng/zlib/zconf.h \
