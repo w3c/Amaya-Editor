@@ -549,7 +549,6 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
 		      pChildBox->BxXOrg += x;
 		    
 		    pChildBox->BxXToCompute = FALSE;	/* La boite est placee */
-		    
 		    /* detecte les debordements de la boite englobante */
 		    if (pChildAb->AbHorizEnclosing
 			&& !eclate
@@ -852,8 +851,7 @@ void SetPageHeight (PtrAbstractBox pAb, int *ht, int *pos, int *nChars)
 
 
 /*----------------------------------------------------------------------
-   SetBoxToTranslate marque le sous-arbre des paves en cours de    
-   placement.                                              
+  SetBoxToTranslate marks boxes which are not already placed.
   ----------------------------------------------------------------------*/
 void SetBoxToTranslate (PtrAbstractBox pAb, ThotBool horizRef, ThotBool vertRef)
 {
@@ -868,7 +866,7 @@ void SetBoxToTranslate (PtrAbstractBox pAb, ThotBool horizRef, ThotBool vertRef)
    /* sont toujours placees en absolue           */
    if (pBox->BxHorizFlex || pBox->BxXOutOfStruct)
       horizRef = FALSE;
-   if (pBox->BxYToCompute && (pBox->BxVertFlex || pBox->BxYOutOfStruct))
+   if (pBox->BxVertFlex || pBox->BxYOutOfStruct)
       vertRef = FALSE;
 
    if (pBox->BxType != BoSplit && pBox->BxType != BoMulScript)

@@ -1041,8 +1041,10 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 	      /* Traite le niveau inferieur */
 	      toHorizPack = FALSE;
 	      /* if the box position is not complete
-		 transmit the box position instead of the shift */
-	      if (!pBox->BxYOutOfStruct && pBox->BxXToCompute)
+		 transmit the box position instead of the shift except for
+		 out of structure relations */
+	      if (/*!pBox->BxXOutOfStruct && !pBox->BxHorizFlex &&*/
+		  pBox->BxXToCompute)
 		delta = pBox->BxXOrg;
 	      while (pChildAb != NULL)
 		{
@@ -1055,7 +1057,6 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 			  if (pBox->BxXToCompute &&
 			      Propagate == ToSiblings &&
 			      !pChildAb->AbBox->BxHorizFlex)
-			    /* Adding the current position */
 			    pChildAb->AbBox->BxXToCompute = TRUE;
 			  XMoveAllEnclosed (pChildAb->AbBox, delta, frame);
 			}
@@ -1192,8 +1193,10 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 	      pChildAb = pBox->BxAbstractBox->AbFirstEnclosed;
 	      toVertPack = FALSE;
 	      /* if the box position is not complete
-		 transmit the box position instead of the shift */
-	      if (/*!pBox->BxYOutOfStruct &&*/ pBox->BxYToCompute)
+		 transmit the box position instead of the shift except for
+		 out of structure relations */
+	      if (/*!pBox->BxYOutOfStruct && !pBox->BxVertFlex &&*/
+		  pBox->BxYToCompute)
 		  delta = pBox->BxYOrg;
 	      while (pChildAb != NULL)
 		{
@@ -1203,12 +1206,10 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 			toVertPack = TRUE;
 		      else
 			{
-			  /*****
 			  if (pBox->BxYToCompute &&
 			      Propagate == ToSiblings &&
 			      !pChildAb->AbBox->BxVertFlex)
-			    ** Adding the current position **
-			    pChildAb->AbBox->BxYToCompute = TRUE; *****/
+			    pChildAb->AbBox->BxYToCompute = TRUE;
 			  YMoveAllEnclosed (pChildAb->AbBox, delta, frame);
 			}
 		    }
