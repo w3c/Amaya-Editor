@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Mon Nov  3 14:40:24 CET 2003" version="62">
+<base last_update="Wed Nov 12 14:43:13 CET 2003" version="63">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -117,7 +117,7 @@
 	<message xml:lang="de">&amp;Ansicht</message>
 	<message xml:lang="it">&amp;Viste</message>
 	<message xml:lang="tr">&amp;Görünümler</message>
-	<message xml:lang="es">&amp;Vistas</message>
+	<message xml:lang="es">&amp;Ver</message>
 	<message xml:lang="pt">&amp;Vistas</message>
 	<message xml:lang="fi">&amp;Näytä</message>
 </label>
@@ -305,7 +305,7 @@
 	<message xml:lang="de">Aktualisieren</message>
 	<message xml:lang="it">Ricarica documento</message>
 	<message xml:lang="tr">Belgeyi yeniden yükle</message>
-	<message xml:lang="es">&amp;Recargar documento</message>
+	<message xml:lang="es">Actualiza&amp;r</message>
 	<message xml:lang="pt">Recarregar documento</message>
 	<message xml:lang="fi">Päivitä dokumentti</message>
 </label>
@@ -364,7 +364,7 @@
 	<message xml:lang="fr">Modifier le &amp;doctype</message>
 	<message xml:lang="it">Modifica doctype</message>
 	<message xml:lang="de">DTD ändern</message>
-	<message xml:lang="es">&amp;Modificar doctype</message>
+	<message xml:lang="es">Ca&amp;mbiar doctype</message>
 	<message xml:lang="pt">Modificar doctype</message>
 	<message xml:lang="fi">Muuta tyyppi</message>
 	<message xml:lang="tr">doctype\'bı düzenle</message>
@@ -470,7 +470,7 @@
 	<message xml:lang="fr">Infor&amp;mations sur le document</message>
 	<message xml:lang="de">Kurzinfo</message>
 	<message xml:lang="it">Informazioni sul documento</message>
-	<message xml:lang="es">In&amp;formación de documento</message>
+	<message xml:lang="es">&amp;Propiedades</message>
 	<message xml:lang="pt">Informação sobre o documento</message>
 	<message xml:lang="fi">Tietoja dokumentista</message>
 	<message xml:lang="tr">Doküman bilgisi</message>
@@ -690,7 +690,7 @@
 	<message xml:lang="fr">Changer le titre...</message>
 	<message xml:lang="de">Titel ändern</message>
 	<message xml:lang="it">Cambia Titolo...</message>
-	<message xml:lang="es">Cambiar Título...</message>
+	<message xml:lang="es">Título (title) ...</message>
 	<message xml:lang="pt">Mudar título...</message>
 	<message xml:lang="fi">Muuta otsake...</message>
 	<message xml:lang="tr">Başlığı değiştir</message>
@@ -1071,7 +1071,7 @@
 	<message xml:lang="de">Geordnete Liste (ol)</message>
 	<message xml:lang="it">Lista numerata (ol)</message>
 	<message xml:lang="tr">Numaralı liste (ol)</message>
-	<message xml:lang="es">List numerada (ol)</message>
+	<message xml:lang="es">Lista numerada (ol)</message>
 	<message xml:lang="pt">Lista numerada (ol)</message>
 	<message xml:lang="fi">Numeroitu luettelo (ol)</message>
 </label>
@@ -1531,7 +1531,7 @@
 	<message xml:lang="de">Formel</message>
 	<message xml:lang="it">Math</message>
 	<message xml:lang="tr">Matematik</message>
-	<message xml:lang="es">&amp;Matemáticas</message>
+	<message xml:lang="es">&amp;MathML</message>
 	<message xml:lang="pt">Matemática</message>
 	<message xml:lang="fi">Matematiikka</message>
 </label>
@@ -1779,7 +1779,7 @@
 	<message xml:lang="en">Show SVG Library</message>
 	<message xml:lang="fr">Montrer la librairie SVG</message>
 	<message xml:lang="it">Mostri librería SVG</message>
-	<message xml:lang="es">&amp;Mostrar Biblioteca SVG</message>
+	<message xml:lang="es">&amp;Ver Biblioteca SVG</message>
 	<message xml:lang="de">SVG-Bibliothek anzeigen...</message>
 	<message xml:lang="tr">SVG kütüphanesini göster</message>
 </label>
@@ -1855,7 +1855,7 @@
 	<message xml:lang="de">Symbolleiste anzeigen</message>
 	<message xml:lang="it">Mostra barra dei pulsanti</message>
 	<message xml:lang="tr">Tusları göster</message>
-	<message xml:lang="es">Mostar &amp;barra de botones</message>
+	<message xml:lang="es">&amp;Barra de botones</message>
 	<message xml:lang="pt">Exibir barra de ferramentas</message>
 	<message xml:lang="fi">Näytä painikerivi</message>
 </label>
@@ -1865,7 +1865,7 @@
 	<message xml:lang="de">Adresszeile anzeigen</message>
 	<message xml:lang="it">Mostra indirizzo</message>
 	<message xml:lang="tr">Adres göster</message>
-	<message xml:lang="es">Mostrar d&amp;irección</message>
+	<message xml:lang="es">D&amp;irección</message>
 	<message xml:lang="pt">Exibir endereço</message>
 	<message xml:lang="fi">Näytä osoite</message>
 </label>
@@ -1875,7 +1875,7 @@
 	<message xml:lang="de">Aktive Bildbereiche</message>
 	<message xml:lang="it">Mostra le zone attive</message>
 	<message xml:lang="tr">Yakınlaştır</message>
-	<message xml:lang="es">Mostrar áreas de ma&amp;pas</message>
+	<message xml:lang="es">Áreas de &amp;mapas</message>
 	<message xml:lang="pt">Exibir áreas de mapa</message>
 	<message xml:lang="fi">Näytä kartta alueet</message>
 </label>
@@ -1884,7 +1884,7 @@
 	<message xml:lang="fr">Montrer les &amp;cibles</message>
 	<message xml:lang="de">Anker anzeigen</message>
 	<message xml:lang="it">Mostra obiettivi</message>
-	<message xml:lang="es">Mostrar &amp;destinos</message>
+	<message xml:lang="es">&amp;Destinos</message>
 	<message xml:lang="pt">Exibir destinos</message>
 	<message xml:lang="fi">Näytä kohteet</message>
 	<message xml:lang="tr">Hedefi göster</message>
@@ -1895,7 +1895,7 @@
 	<message xml:lang="de">Schrift vergrößern</message>
 	<message xml:lang="it">Ingrandisci</message>
 	<message xml:lang="tr">Uzaklaştır</message>
-	<message xml:lang="es">Zoom &amp;más</message>
+	<message xml:lang="es">&amp;Aumentar tamaño de texto</message>
 	<message xml:lang="pt">Ampliar (Zoom in)</message>
 	<message xml:lang="fi">Lähennä</message>
 </label>
@@ -1905,7 +1905,7 @@
 	<message xml:lang="de">Schrift verkleinern</message>
 	<message xml:lang="it">Rimpicciolisci</message>
 	<message xml:lang="tr">Harita alanlarını göster</message>
-	<message xml:lang="es">Zoom me&amp;nos</message>
+	<message xml:lang="es">&amp;Reducir tamaño de texto</message>
 	<message xml:lang="pt">Reduzir (Zoom out)</message>
 	<message xml:lang="fi">Loitonna</message>
 </label>
@@ -1914,7 +1914,7 @@
 	<message xml:lang="fr">Montrer les &amp;erreurs</message>
 	<message xml:lang="de">Parserfehler anzeigen</message>
 	<message xml:lang="it">Mostra le errore</message>
-	<message xml:lang="es">Mostrar errores &amp;sintácticos</message>
+	<message xml:lang="es">Errores &amp;sintácticos</message>
 	<message xml:lang="pt">Exibir erros de gramática (parsing)</message>
 	<message xml:lang="fi">Näytä käännösvirheet</message>
 	<message xml:lang="tr">Pars hatalarını göster</message>
@@ -1925,7 +1925,7 @@
 	<message xml:lang="de">Struktur</message>
 	<message xml:lang="it">Mostra struttura</message>
 	<message xml:lang="tr">Yapıyı göster</message>
-	<message xml:lang="es">Mostrar es&amp;tructura</message>
+	<message xml:lang="es">Es&amp;tructura</message>
 	<message xml:lang="pt">Exibir estrutura</message>
 	<message xml:lang="fi">Näytä rakenne</message>
 </label>
@@ -1935,7 +1935,7 @@
 	<message xml:lang="de">Textbrowser</message>
 	<message xml:lang="it">Mostra la vista alternativa</message>
 	<message xml:lang="tr">Alternatif gösterim</message>
-	<message xml:lang="es">Mostrar &amp;alternativo</message>
+	<message xml:lang="es">A&amp;lternativo</message>
 	<message xml:lang="pt">Exibir alternativa</message>
 	<message xml:lang="fi">Show alternate</message>
 </label>
@@ -1945,7 +1945,7 @@
 	<message xml:lang="de">Verweise</message>
 	<message xml:lang="it">Mostra collegamenti</message>
 	<message xml:lang="tr">Bağlantıları göster</message>
-	<message xml:lang="es">Mostrar &amp;enlaces</message>
+	<message xml:lang="es">&amp;Enlaces</message>
 	<message xml:lang="pt">Exibir enlaces (links)</message>
 	<message xml:lang="fi">Näytä linkit</message>
 </label>
@@ -1955,7 +1955,7 @@
 	<message xml:lang="de">Inhaltsverzeichnis</message>
 	<message xml:lang="it">Mostra sommario</message>
 	<message xml:lang="tr">Içindekileri göster</message>
-	<message xml:lang="es">Mostrar tabla de &amp;contenidos</message>
+	<message xml:lang="es">Tabla de &amp;contenidos</message>
 	<message xml:lang="pt">Exibir índice de conteúdos</message>
 	<message xml:lang="fi">Näytä sisällysluettelo</message>
 </label>
@@ -1964,7 +1964,7 @@
 	<message xml:lang="fr">Montrer le s&amp;ource</message>
 	<message xml:lang="it">Mostra sorgente</message>
 	<message xml:lang="de">Quelltext</message>
-	<message xml:lang="es">Mostrar &amp;fuente</message>
+	<message xml:lang="es">Código &amp;fuente</message>
 	<message xml:lang="pt">Exibir fonte</message>
 	<message xml:lang="fi">Näytä lähdekoodi</message>
 	<message xml:lang="tr">kaynak göster</message>
@@ -1975,7 +1975,7 @@
 	<message xml:lang="de">Schrift...</message>
 	<message xml:lang="it">Stile dei caratteri...</message>
 	<message xml:lang="tr">Karakter tarzı...</message>
-	<message xml:lang="es">E&amp;stilo de carácter...</message>
+	<message xml:lang="es">&amp;Carácter...</message>
 	<message xml:lang="pt">Estilo de carácter...</message>
 	<message xml:lang="fi">Fontin tyyli...</message>
 </label>
@@ -1985,7 +1985,7 @@
 	<message xml:lang="de">Farbe...</message>
 	<message xml:lang="it">Colori...</message>
 	<message xml:lang="tr">Renkler...</message>
-	<message xml:lang="es">&amp;Colores...</message>
+	<message xml:lang="es">C&amp;olores...</message>
 	<message xml:lang="pt">Cores...</message>
 	<message xml:lang="fi">Värit...</message>
 </label>
@@ -1995,7 +1995,7 @@
 	<message xml:lang="de">Ausrichtung...</message>
 	<message xml:lang="it">Formattazione...</message>
 	<message xml:lang="tr">Biçim...</message>
-	<message xml:lang="es">&amp;Formato...</message>
+	<message xml:lang="es">&amp;Párrafo...</message>
 	<message xml:lang="pt">Formato...</message>
 	<message xml:lang="fi">Muoto...</message>
 </label>
@@ -2033,14 +2033,14 @@
 	<message xml:lang="en">Show applied style...</message>
 	<message xml:lang="fr">Montrer le style appliqué...</message>
 	<message xml:lang="it">Mostra lo stile applicato...</message>
-	<message xml:lang="es">Mostrar estilo aplicado...</message>
+	<message xml:lang="es">&amp;Mostrar estilo aplicado...</message>
 </label>
 <label define="BLinkCSS">
 	<message xml:lang="en">Lin&amp;k...</message>
 	<message xml:lang="fr">&amp;Ajouter...</message>
 	<message xml:lang="it">Collegamento...</message>
 	<message xml:lang="de">Verknüpfen...</message>
-	<message xml:lang="es">&amp;Enlazar...</message>
+	<message xml:lang="es">&amp;Enlazar hoja de estilo...</message>
 	<message xml:lang="pt">Ligar...</message>
 	<message xml:lang="fi">Linkki...</message>
 	<message xml:lang="tr">Bağlantı</message>
@@ -2050,7 +2050,7 @@
 	<message xml:lang="fr">O&amp;uvrir...</message>
 	<message xml:lang="it">Apri...</message>
 	<message xml:lang="de">Öffnen...</message>
-	<message xml:lang="es">&amp;Abrir...</message>
+	<message xml:lang="es">&amp;Abrir hoja de estilo...</message>
 	<message xml:lang="pt">Abrir...</message>
 	<message xml:lang="fi">Avaa...</message>
 	<message xml:lang="tr">Aç</message>
@@ -2060,7 +2060,7 @@
 	<message xml:lang="fr">&amp;Désactiver...</message>
 	<message xml:lang="it">Disabilita...</message>
 	<message xml:lang="de">Deaktivieren...</message>
-	<message xml:lang="es">&amp;Desactivar...</message>
+	<message xml:lang="es">&amp;Desactivar hoja de estilo...</message>
 	<message xml:lang="pt">Desabilitar...</message>
 	<message xml:lang="fi">Poista käytöstä...</message>
 	<message xml:lang="tr">Olumsuzla</message>
@@ -2070,7 +2070,7 @@
 	<message xml:lang="fr">R&amp;éactiver...</message>
 	<message xml:lang="it">Abilita...</message>
 	<message xml:lang="de">Aktivieren...</message>
-	<message xml:lang="es">Acti&amp;var...</message>
+	<message xml:lang="es">Acti&amp;var hoja de estilo...</message>
 	<message xml:lang="pt">Habilitar...</message>
 	<message xml:lang="fi">Ota käyttöön...</message>
 	<message xml:lang="tr">Olumla</message>
@@ -2080,7 +2080,7 @@
 	<message xml:lang="fr">Re&amp;tirer...</message>
 	<message xml:lang="it">Rimuovi...</message>
 	<message xml:lang="de">Entfernen...</message>
-	<message xml:lang="es">&amp;Borrar enlace...</message>
+	<message xml:lang="es">&amp;Borrar enlace a hoja de estilo...</message>
 	<message xml:lang="pt">Remover...</message>
 	<message xml:lang="fi">Poista...</message>
 	<message xml:lang="tr">Sil</message>
@@ -2433,7 +2433,7 @@
 	<message xml:lang="de">Über Amaya</message>
 	<message xml:lang="it">Informazioni su Amaya al W3C</message>
 	<message xml:lang="tr">W3C deki Amaya hakkında</message>
-	<message xml:lang="es">Acerca de Amaya en W3C</message>
+	<message xml:lang="es">Página web de Amaya en el W3C</message>
 	<message xml:lang="pt">Sobre Amaya no W3C</message>
 	<message xml:lang="fi">Lisätietoa Amayasta W3C:ssä</message>
 </label>
@@ -2563,7 +2563,7 @@
 	<message xml:lang="de">Formeln</message>
 	<message xml:lang="it">Matematica</message>
 	<message xml:lang="tr">Matematik</message>
-	<message xml:lang="es">Matemáticas</message>
+	<message xml:lang="es">MathML</message>
 	<message xml:lang="pt">Matemática</message>
 	<message xml:lang="fi">Matematiikka</message>
 </label>
@@ -2613,7 +2613,7 @@
 	<message xml:lang="de">Rechtschreibprüfung</message>
 	<message xml:lang="it">Controllo ortografico</message>
 	<message xml:lang="tr">Yazı hataları düzeltmek</message>
-	<message xml:lang="es">Comprobar ortografía</message>
+	<message xml:lang="es">Verificar ortografía</message>
 	<message xml:lang="pt">Verificar ortografia</message>
 	<message xml:lang="fi">Oikeinkirjoituksen tarkastus</message>
 </label>

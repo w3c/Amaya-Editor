@@ -9,7 +9,7 @@
 7 X&HTML
 8 &XML
 9 En&laces
-10 &Vistas
+10 &Ver
 11 E&stilo
 12 Es&pecial
 13 At&ributos
@@ -28,13 +28,13 @@
 26 Desde &plantilla
 27 &Abrir documento...
 28 A&brir en ventana nueva...
-29 &Recargar documento
+29 Actualiza&r
 30 A&trás
 31 A&delante
 32 &Guardar
 33 G&uardar como...
 34 Sincroni&zar
-35 &Modificar doctype
+35 Ca&mbiar doctype
 36 &Borrar doctype
 37 Cambiar doctype a &XHTML 1.1
 38 Cambiar/Crear doctype XHTML 1.0 Transicional
@@ -45,7 +45,7 @@
 43 Combiar doctype a XHTML 1.1 + M&athML 2.0
 44 Cambiar doctype a &MathML 2.0
 45 Cambiar doctype a SV&G 1.0
-46 In&formación de documento
+46 &Propiedades
 47 &Configurar e imprimir...
 48 &Imprimir
 49 Cerrar &ventana
@@ -67,7 +67,7 @@
 65 script
 66 Estilo (style)
 67 Comentario
-68 Cambiar Título...
+68 Título (title) ...
 69 Dirección (address)
 70 Área (area)
 71 Círculo
@@ -105,7 +105,7 @@
 103 Imagen (img)...
 104 Lista
 105 Lista no numerada (ul)
-106 List numerada (ol)
+106 Lista numerada (ol)
 107 Lista de Definición (dl)
 108 Término (dt)
 109 Definición (dd)
@@ -151,7 +151,7 @@
 149 Superíndice (sup)
 150 Remarcado (Quotation q)
 151 BiDi override (bdo)
-152 &Matemáticas
+152 &MathML
 153 Nueva fórmula (math)
 154 Texto simple (mtext)
 155 Identificador (mi)
@@ -176,7 +176,7 @@
 174 Matriz (mtable)
 175 Borrar columna de matriz
 176 &SVG
-177 &Mostrar Biblioteca SVG
+177 &Ver Biblioteca SVG
 178 &Añadir la selección a la Biblioteca SVG
 179 Elementos XML...
 180 Enlazar el destino &previo
@@ -184,30 +184,30 @@
 182 Crear &destino
 183 &Borrar ancla
 184 Guardar selección como &XPointer
-185 Mostar &barra de botones
-186 Mostrar d&irección
-187 Mostrar áreas de ma&pas
-188 Mostrar &destinos
-189 Zoom &más
-190 Zoom me&nos
-191 Mostrar errores &sintácticos
-192 Mostrar es&tructura
-193 Mostrar &alternativo
-194 Mostrar &enlaces
-195 Mostrar tabla de &contenidos
-196 Mostrar &fuente
-197 E&stilo de carácter...
-198 &Colores...
-199 &Formato...
+185 &Barra de botones
+186 D&irección
+187 Áreas de &mapas
+188 &Destinos
+189 &Aumentar tamaño de texto
+190 &Reducir tamaño de texto
+191 Errores &sintácticos
+192 Es&tructura
+193 A&lternativo
+194 &Enlaces
+195 Tabla de &contenidos
+196 Código &fuente
+197 &Carácter...
+198 C&olores...
+199 &Párrafo...
 200 &Imagen de fondo...
 201 Crear &regla...
 202 A&plicar clase...
-203 Mostrar estilo aplicado...
-204 &Enlazar...
-205 &Abrir...
-206 &Desactivar...
-207 Acti&var...
-208 &Borrar enlace...
+203 &Mostrar estilo aplicado...
+204 &Enlazar hoja de estilo...
+205 &Abrir hoja de estilo...
+206 &Desactivar hoja de estilo...
+207 Acti&var hoja de estilo...
+208 &Borrar enlace a hoja de estilo...
 209 &Numeración de sección
 210 &Hacer libro
 211 &Crear/Borrar atributos id...
@@ -244,7 +244,7 @@
 242 ¿Bloqueado?
 243 Preferencias...
 244 Acerca de Amaya
-245 Acerca de Amaya en W3C
+245 Página web de Amaya en el W3C
 246 Índice
 247 Navegar
 248 Vistas
@@ -257,12 +257,12 @@
 255 Enlaces
 256 Tablas
 257 Mapas de imagen
-258 Matemáticas
+258 MathML
 259 Gráficos
 260 Soporte XML
 261 Hojas de estilo
 262 Buscar
-263 Comprobar ortografía
+263 Verificar ortografía
 264 Publicar
 265 WebDAV
 266 Imprimir

@@ -1,16 +1,16 @@
 # encoding= latin1
 0 Archivos
-1 Abrir:
-2 Documento XHTML 1.1 nuevo...
-3 Documento XHTML 1.0 Transitional nuevo...
-4 Documento XHTML 1.0 Strict nuevo...
-5 Documento XHTML 1.0 Basic nuevo...
-6 Documento MathML nuevo...
-7 Documento SVG nuevo...
-8 Nueva hoja de estilo CSS...
+1 Dirección:
+2 Nuevo documento XHTML 1.1
+3 Nuevo documento XHTML 1.0 Transitional
+4 Nuevo documento XHTML 1.0 Strict
+5 Nuevo documento XHTML 1.0 Basic
+6 Nuevo documento MathML
+7 Nuevo documento SVG
+8 Nueva hoja de estilo CSS
 9 Desde plantilla
-10 Abrir documento...
-11 Abrir en ventana nueva...
+10 Abrir documento
+11 Abrir en ventana nueva
 12 Limpiar
 13 Clic
 14 Documento guardado: %s
@@ -27,9 +27,9 @@
 25 ¡Terminado!
 26 Seleccionar el destino
 27 Destino inválido
-28 Insertar URI o buscar:
-29 Título
-30 Cambiar Título...
+28 Escriba el URI o pulse el botón Buscar:
+29 Título:
+30 Título (title)
 31 Documento modificado. ¡Se perderán todos los cambios! ¿Quiere seguir?
 32 Redirección recuperación de %s
 33 Demasiadas redirecciones detectadas
@@ -63,13 +63,13 @@
 61 No hay transformación aplicable a la selección
 62 Falló la transformación
 63 error de sintaxis en archivo HTML.trans línea %s
-64 Matemáticas
-65 Gráficos
+64 MathML
+65 SVG
 66 Guardar como
 67 Necesita autentificar el dominio \'%s\' en el servidor \'%s\'
 68 Dominio: %s
 69 Servidor: %s
-70 Editor/Navegador
+70 Edición
 71 Petición caducada - el servidor no responde
 72 %s ya existe. ¿Sobrescribirlo?
 73 %s ha cambiado. ¿Sobrescribirlo?
@@ -84,13 +84,13 @@
 82 Ubicación de documento:
 83 Directorio de imágenes:
 84 Ubicación de objeto
-85 Archivos CSS
-86 Abrir CSS
-87 Desactivar CSS
-88 Activar CSS
-89 Borrar enlace a CSS
-90 Editor/Navegador de W3C para la Web
-91 (enviar cuestión a www-amaya@w3.org)
+85 Hojas de estilo enlazadas:
+86 Abrir hoja de estilo
+87 Desactivar hoja de estilo
+88 Activar hoja de estilo
+89 Borrar enlace a hoja de estilo
+90 Editor/Navegador del W3C para la Web
+91 (enviar sugerencias a www-amaya@w3.org)
 92 No puedo gestionar URL con más de %s caracteres
 93 Sólo se permite el tipo por omisión
 94 Actualización de enlace: %s%% realizada
@@ -98,25 +98,25 @@
 96 Repetir-y (repeat-y)
 97 Por favor, introduzca un nombre de usuario:
 98 %d solicitud pendiente
-99 No hay archivo CSS disponible
-100 Interrumpir transferencia
-101 Documento anterior
-102 Documento siguiente
-103 Recargar
+99 No hay ninguna hoja de estilo enlazada
+100 Detener
+101 Atrás
+102 Adelante
+103 Actualizar
 104 Guardar
 105 Imprimir
 106 Buscar
 107 Énfasis (em)
 108 Enérgico (strong)
-109 Fuente fija
+109 Código (code)
 110 No repetir (no-repeat)
-111 Insertar imagen
-112 Cabecera Nivel 1
-113 Cabecera Nivel 2
-114 Cabecera Nivel 3
-115 Lista no numerada
-116 Lista numerada
-117 Lista de definición
+111 Imagen
+112 Cabecera nivel 1 (h1)
+113 Cabecera nivel 2 (h2)
+114 Cabecera nivel 3 (h3)
+115 Lista no numerada (ul)
+116 Lista numerada (ol)
+117 Lista de definición (dl)
 118 Enlace
 119 Tabla
 120 El documento no tiene nombre. Guardar en:
@@ -151,10 +151,10 @@
 149 Su sesión anterior de Amaya falló. ¿Quiere recargar la copia de seguridad de los documentos?
 150 Fallo de autentificación. ¿Reintentar?
 151 La operación será redirigida. ¿Continuar?
-152 Número de filas
-153 Número de columnas
-154 Borde
-155 Texto alternativo
+152 Número de filas:
+153 Número de columnas:
+154 Grosor del borde:
+155 Texto alternativo:
 156 El texto alternativo es obligatorio
 157 Imprimir URL
 158 Aplicar
@@ -193,16 +193,16 @@
 191 Usar ETAGS y precondiciones
 192 Verificar cada PUT con un GET
 193 El nombre por omisión de URL termina en '/':
-194 Preferencias de geometría
-195 Guardar geometría actual
+194 Preferencias de geometría de la ventana
+195 Guardar la geometría actual
 196 Restaurar la geometría por omisión
 197 Los cambios serán efectivos cuando abra una nueva ventana.
-198 Preferencias de color
-199 Color del documento:
-200 Color del fondo del documento:
+198 Preferencias de colores
+199 Color del texto del documento:
+200 Color de fondo del documento:
 201 Color del menú
-202 Color del fondo del menú
-203 No pude iniciar el caché. Puede haber especificado un directorio de caché inválido u otro Amaya está usando el caché.
+202 Color de fondo del menú
+203 No pude iniciar la caché. Puede haber especificado un directorio de caché inválido u otro Amaya está usando el caché.
 204 Inicio
 205 Lista de idiomas preferidos (p.e. "es, en, fr"):
 206 Ubicación del archivo de definición de perfiles:
@@ -217,19 +217,19 @@
 215 (separar los dominios con un espacio)
 216 No usar proxy es estos dominios
 217 Usar proxy sólo en estos dominios
-218 Nombre de carácter
+218 Nombre de carácter:
 219 Directorio de usuario de Amaya:
 220 Directorio temporal:
 221 Usar paleta
-222 Negociación de idioma
+222 Preferencias de negociación de idioma
 223 Configuración de anotaciones
-224 Anotación de usuario:
+224 Usuario anotaciones/marcadores:
 225 Servidor de publicación:
 226 Servidores de anotaciones:
 227 Autocargar anotaciones locales
 228 Autocargar anotaciones remotas
 229 Deshabilitar la recarga automática remota en cada inicio (para trabajo sin conexión)
-230 Color de selección:
+230 Color del texto seleccionado:
 231 Color de fondo de selección
 232 Orientación
 233 Vertical
@@ -240,7 +240,7 @@
 238 Caracteres inválidos - ¿Recargar como HTML o mostrar análisis de errores?
 239 Caracteres inválidos
 240 Perfil de este documento:
-241 Se ignoran Tags/atributos - vea Vistas/Mostrar errores sintácticos
+241 Se ignoran Tags/atributos - vea Ver / Ver errores sintácticos
 242 La codificación de este documento no está soportada por Amaya
 243 Al editar y guardar este documento se cambiará su tipo
 244 No disponible
@@ -283,7 +283,7 @@
 281 Para usar esta opción el destino tiene que ser una URL HTTP
 282 Error: tipo MIME inválido
 283 Desconocido
-284 Se ignoran los estilos - vea Vistas/Mostrar errores sintácticos
+284 Se ignoran los estilos - vea Ver / Ver errores sintácticos
 285 Este documento ya está cargado en otra ventana
 286 Guardar la copia puede originar un problema de pérdida de actualización
 287 Crear o cambiar el tipo de documento provoca que el documento sea reanalizado.
@@ -349,27 +349,27 @@
 347 Seleccione color final...
 348 Animación definida.
 349 Atributo animado
-350 Elemento sin ID
-351 Añadir ID
-352 Eliminar ID
-353 Añadir/Eliminar IDs
+350 Elemento sin atributo id
+351 Crear atributos id
+352 Borrar atributos id
+353 Crear/Borrar atributos id
 354 Aplicar operación
-355 Escribe un nombre de elemento
-356 Aplicar CSS
+355 Escribe un nombre de etiqueta XHTML:
+356 Aplicar hojas de estilo
 357 Tipo de pantalla actual:
 358 Nuevo Tema
 359 Propiedades de marcador
 360 Propiedades de tema
 361 Jerarquía de temas:
 362 Título:
-363 Llamada:
+363 Enlaza:
 364 Autor:
 365 Creado:
 366 Última modificación:
 367 Descripción:
 368 Por favor, seleccione un elemento
-369 Todas las CSS
+369 Todos las hojas de estilo
 370 Reglas de estilo CSS aplicadas al elemento <%s>\n
-371 Las líneas azules son enlaces activados por un doble clic (o un único clic)\n
+371 Cada línea azul es un enlace a la regla de estilo. Puede activar el enlace con un doble clic (o con un único clic)\n
 372 Cargar objetos (object, embed)
 373 No hay regla de estilo para este elemento

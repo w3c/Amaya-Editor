@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Mon Nov  3 14:40:24 CET 2003" version="60">
+<base last_update="Wed Nov 12 14:43:13 CET 2003" version="61">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -27,7 +27,7 @@
 	<message xml:lang="de">Adresse:</message>
 	<message xml:lang="it">Apri</message>
 	<message xml:lang="tr">Aç</message>
-	<message xml:lang="es">Abrir:</message>
+	<message xml:lang="es">Dirección:</message>
 	<message xml:lang="pt">Abrir</message>
 	<message xml:lang="fi">Avaa</message>
 </label>
@@ -36,7 +36,7 @@
 	<message xml:lang="fr">Nouveau document XHTML 1.1...</message>
 	<message xml:lang="de">XHTML 1.1...</message>
 	<message xml:lang="it">Nuovo documento XHTML 1.1...</message>
-	<message xml:lang="es">Documento XHTML 1.1 nuevo...</message>
+	<message xml:lang="es">Nuevo documento XHTML 1.1</message>
 	<message xml:lang="pt">Novo documento XHTML 1.1...</message>
 	<message xml:lang="fi">Uusi XHTML 1.1 dokumentti...</message>
 	<message xml:lang="tr">Yeni XHTML 1.1 dosyası...</message>
@@ -46,7 +46,7 @@
 	<message xml:lang="fr">Nouveau document XHTML 1.0 Transitional...</message>
 	<message xml:lang="de">XHTML 1.0 Transitional...</message>
 	<message xml:lang="it">Nuovo documento XHTML 1.0 Transitional...</message>
-	<message xml:lang="es">Documento XHTML 1.0 Transitional nuevo...</message>
+	<message xml:lang="es">Nuevo documento XHTML 1.0 Transitional</message>
 	<message xml:lang="pt">Novo documento XHTML 1.0 Transitional...</message>
 	<message xml:lang="fi">Uusi XHTML 1.0 Transitional document...</message>
 	<message xml:lang="tr">Yeni XHTML 1.0 Transitional dosyası...</message>
@@ -56,7 +56,7 @@
 	<message xml:lang="fr">Nouveau document XHTML 1.0 Strict...</message>
 	<message xml:lang="de">XHTML 1.0 Strict...</message>
 	<message xml:lang="it">Nuovo documento XHTML 1.0 Strict...</message>
-	<message xml:lang="es">Documento XHTML 1.0 Strict nuevo...</message>
+	<message xml:lang="es">Nuevo documento XHTML 1.0 Strict</message>
 	<message xml:lang="pt">Novo documento XHTML 1.0 Strict...</message>
 	<message xml:lang="fi">Uusi XHTML 1.0 Strict document...</message>
 	<message xml:lang="tr">Yeni XHTML 1.0 Strict dosyası...</message>
@@ -66,7 +66,7 @@
 	<message xml:lang="fr">Nouveau document XHTML 1.0 Basic ...</message>
 	<message xml:lang="de">XHTML 1.0 Basic...</message>
 	<message xml:lang="it">Nuovo documento XHTML 1.0 Basic...</message>
-	<message xml:lang="es">Documento XHTML 1.0 Basic nuevo...</message>
+	<message xml:lang="es">Nuevo documento XHTML 1.0 Basic</message>
 	<message xml:lang="pt">Novo documento XHTML 1.0 Basic...</message>
 	<message xml:lang="fi">Uusi XHTML 1.0 Basic dokumentti...</message>
 	<message xml:lang="tr">Yeni XHTML 1.0 Basic dosyası...</message>
@@ -76,7 +76,7 @@
 	<message xml:lang="fr">Nouveau document MathML...</message>
 	<message xml:lang="de">MathML...</message>
 	<message xml:lang="it">Nuovo documento MathML...</message>
-	<message xml:lang="es">Documento MathML nuevo...</message>
+	<message xml:lang="es">Nuevo documento MathML</message>
 	<message xml:lang="pt">Novo documento MathML...</message>
 	<message xml:lang="fi">Uusi MathML dokumentti...</message>
 	<message xml:lang="tr">Yeni MathML dosyası...</message>
@@ -86,7 +86,7 @@
 	<message xml:lang="fr">Nouveau document SVG...</message>
 	<message xml:lang="de">SVG...</message>
 	<message xml:lang="it">Nuovo documento SVG...</message>
-	<message xml:lang="es">Documento SVG nuevo...</message>
+	<message xml:lang="es">Nuevo documento SVG</message>
 	<message xml:lang="pt">Novo documento SVG...</message>
 	<message xml:lang="fi">Uusi SVG dokumentti...</message>
 	<message xml:lang="tr">Yeni SVG dosyası...</message>
@@ -96,7 +96,7 @@
 	<message xml:lang="fr">Nouvelle feuille de style...</message>
 	<message xml:lang="de">Formatvorlage...</message>
 	<message xml:lang="it">Nuovo stile CSS...</message>
-	<message xml:lang="es">Nueva hoja de estilo CSS...</message>
+	<message xml:lang="es">Nueva hoja de estilo CSS</message>
 	<message xml:lang="pt">Nova folha de estilo CSS...</message>
 	<message xml:lang="fi">Uusi CSS tyylitiedosto...</message>
 	<message xml:lang="tr">Yeni CSS düz dizayn...</message>
@@ -117,7 +117,7 @@
 	<message xml:lang="de">Öffnen...</message>
 	<message xml:lang="it">Apri documento...</message>
 	<message xml:lang="tr">Belge aç...</message>
-	<message xml:lang="es">Abrir documento...</message>
+	<message xml:lang="es">Abrir documento</message>
 	<message xml:lang="pt">>Abrir documento...</message>
 	<message xml:lang="fi">Avaa dokumentti...</message>
 </label>
@@ -127,7 +127,7 @@
 	<message xml:lang="de">Öffnen (neues Fenster)...</message>
 	<message xml:lang="it">Apri in una nuova finestra...</message>
 	<message xml:lang="tr">Yeni pencerede aç...</message>
-	<message xml:lang="es">Abrir en ventana nueva...</message>
+	<message xml:lang="es">Abrir en ventana nueva</message>
 	<message xml:lang="pt">>Abrir em nova janela...</message>
 	<message xml:lang="fi">Avaa uudessa ikkunass...</message>
 </label>
@@ -295,7 +295,7 @@
 	<message xml:lang="de">URI</message>
 	<message xml:lang="it">Indirizzo</message>
 	<message xml:lang="tr">Adres</message>
-	<message xml:lang="es">Insertar URI o buscar:</message>
+	<message xml:lang="es">Escriba el URI o pulse el botón Buscar:</message>
 	<message xml:lang="pt">Inserir a URI ou procurar</message>
 	<message xml:lang="fi">Syötä URL tai selaa</message>
 </label>
@@ -305,7 +305,7 @@
 	<message xml:lang="de">Titel</message>
 	<message xml:lang="it">Titolo</message>
 	<message xml:lang="tr">Başlık</message>
-	<message xml:lang="es">Título</message>
+	<message xml:lang="es">Título:</message>
 	<message xml:lang="pt">Título</message>
 	<message xml:lang="fi">Otsikko</message>
 </label>
@@ -314,7 +314,7 @@
 	<message xml:lang="fr">Changer le titre...</message>
 	<message xml:lang="de">Titel ändern</message>
 	<message xml:lang="it">Cambia Titolo...</message>
-	<message xml:lang="es">Cambiar Título...</message>
+	<message xml:lang="es">Título (title)</message>
 	<message xml:lang="pt">Mudar título...</message>
 	<message xml:lang="fi">Muuta otsake...</message>
 	<message xml:lang="tr">Başlığı değiştir</message>
@@ -655,7 +655,7 @@
 	<message xml:lang="de">Formel</message>
 	<message xml:lang="it">Formule matematiche</message>
 	<message xml:lang="tr">Matematik</message>
-	<message xml:lang="es">Matemáticas</message>
+	<message xml:lang="es">MathML</message>
 	<message xml:lang="pt">Matemática</message>
 	<message xml:lang="fi">Matematiikka</message>
 </label>
@@ -665,7 +665,7 @@
 	<message xml:lang="de">Grafik (SVG)</message>
 	<message xml:lang="it">Grafica</message>
 	<message xml:lang="tr">Grafik</message>
-	<message xml:lang="es">Gráficos</message>
+	<message xml:lang="es">SVG</message>
 	<message xml:lang="pt">Gráficos</message>
 	<message xml:lang="fi">Grafiikka</message>
 </label>
@@ -714,7 +714,7 @@
 	<message xml:lang="fr">Éditeur/Navigateur</message>
 	<message xml:lang="de">Editor/Browser</message>
 	<message xml:lang="it">Editor/Browser</message>
-	<message xml:lang="es">Editor/Navegador</message>
+	<message xml:lang="es">Edición</message>
 	<message xml:lang="pt">Editor/Navegador</message>
 	<message xml:lang="fi">Muokkain/Selain</message>
 	<message xml:lang="tr">Editör/Tarayıcı</message>
@@ -863,7 +863,7 @@
 	<message xml:lang="de">Formatvorlagen</message>
 	<message xml:lang="it">CSS file</message>
 	<message xml:lang="tr">CSS dosyası 1</message>
-	<message xml:lang="es">Archivos CSS</message>
+	<message xml:lang="es">Hojas de estilo enlazadas:</message>
 	<message xml:lang="pt">Arquivos CSS</message>
 	<message xml:lang="fi">CSS tyylitiedostot</message>
 </label>
@@ -872,7 +872,7 @@
 	<message xml:lang="fr">Ouvrir CSS</message>
 	<message xml:lang="it">Apri CSS</message>
 	<message xml:lang="de">Öffnen CSS</message>
-	<message xml:lang="es">Abrir CSS</message>
+	<message xml:lang="es">Abrir hoja de estilo</message>
 	<message xml:lang="pt">Abrir CSS</message>
 	<message xml:lang="fi">Avaa CSS</message>
 	<message xml:lang="tr">Aç CSS</message>
@@ -882,7 +882,7 @@
 	<message xml:lang="fr">Désactiver CSS</message>
 	<message xml:lang="it">Disabilita CSS</message>
 	<message xml:lang="de">Deaktivieren CSS</message>
-	<message xml:lang="es">Desactivar CSS</message>
+	<message xml:lang="es">Desactivar hoja de estilo</message>
 	<message xml:lang="pt">Desabilitar CSS</message>
 	<message xml:lang="fi">Poista käytöstä CSS</message>
 	<message xml:lang="tr">Olumsuzla CSS</message>
@@ -892,7 +892,7 @@
 	<message xml:lang="fr">Réactiver CSS</message>
 	<message xml:lang="it">Abilita CSS</message>
 	<message xml:lang="de">Aktivieren CSS</message>
-	<message xml:lang="es">Activar CSS</message>
+	<message xml:lang="es">Activar hoja de estilo</message>
 	<message xml:lang="pt">Habilitar CSS</message>
 	<message xml:lang="fi">Ota käyttöön CSS</message>
 	<message xml:lang="tr">Olumla CSS</message>
@@ -902,7 +902,7 @@
 	<message xml:lang="fr">Retirer CSS</message>
 	<message xml:lang="it">Rimuovi CSS</message>
 	<message xml:lang="de">Entfernen CSS</message>
-	<message xml:lang="es">Borrar enlace a CSS</message>
+	<message xml:lang="es">Borrar enlace a hoja de estilo</message>
 	<message xml:lang="pt">Remover CSS</message>
 	<message xml:lang="fi">Poista CSS</message>
 	<message xml:lang="tr">Sil CSS</message>
@@ -913,7 +913,7 @@
 	<message xml:lang="de">Der W3C Browser und Editor für das Web</message>
 	<message xml:lang="it">il editor/browser del W3C</message>
 	<message xml:lang="tr">W3C için tarayıcı ve belge düzenleyici</message>
-	<message xml:lang="es">Editor/Navegador de W3C para la Web</message>
+	<message xml:lang="es">Editor/Navegador del W3C para la Web</message>
 	<message xml:lang="pt">Editor/navegador do W3C para a Web</message>
 	<message xml:lang="fi">W3C:n Internetin muokkain/selain</message>
 </label>
@@ -922,7 +922,7 @@
 	<message xml:lang="fr">(envoyez vos questions à www-amaya@w3.org)</message>
 	<message xml:lang="de">(Probleme an www-amaya@w3.org senden)</message>
 	<message xml:lang="it">(scrivere a www-amaya@w3.org per informazioni)</message>
-	<message xml:lang="es">(enviar cuestión a www-amaya@w3.org)</message>
+	<message xml:lang="es">(enviar sugerencias a www-amaya@w3.org)</message>
 	<message xml:lang="pt">(envie questões para www-amaya@w3.org)</message>
 	<message xml:lang="fi">(ilmoita virheistä www-amaya@w3.org)</message>
 	<message xml:lang="tr">Sorularınızı www-amaya@w3.org adreine gönderin</message>
@@ -1002,7 +1002,7 @@
 	<message xml:lang="fr">Pas de fichier CSS possible</message>
 	<message xml:lang="de">Keine Formatvorlage vorhanden</message>
 	<message xml:lang="it">Non è disponibile nessun file CSS</message>
-	<message xml:lang="es">No hay archivo CSS disponible</message>
+	<message xml:lang="es">No hay ninguna hoja de estilo enlazada</message>
 	<message xml:lang="pt">Não há arquivo CSS disponível</message>
 	<message xml:lang="fi">Ei CSS-tiedostoa saatavilla</message>
 	<message xml:lang="tr">Olumlu CSS dosyası yoktur</message>
@@ -1013,7 +1013,7 @@
 	<message xml:lang="de">Stop</message>
 	<message xml:lang="it">Interrompi trasferimento</message>
 	<message xml:lang="tr">Aktarımı kes</message>
-	<message xml:lang="es">Interrumpir transferencia</message>
+	<message xml:lang="es">Detener</message>
 	<message xml:lang="pt">Interromper transferência</message>
 	<message xml:lang="fi">Keskeytä tiedonsiirto</message>
 </label>
@@ -1023,7 +1023,7 @@
 	<message xml:lang="de">Zurück</message>
 	<message xml:lang="it">Documento precedente</message>
 	<message xml:lang="tr">Önceki belge</message>
-	<message xml:lang="es">Documento anterior</message>
+	<message xml:lang="es">Atrás</message>
 	<message xml:lang="pt">Documento precedente</message>
 	<message xml:lang="fi">Edellinen dokumentti</message>
 </label>
@@ -1033,7 +1033,7 @@
 	<message xml:lang="de">Vorwärts</message>
 	<message xml:lang="it">Documento successivo</message>
 	<message xml:lang="tr">Sonraki belge</message>
-	<message xml:lang="es">Documento siguiente</message>
+	<message xml:lang="es">Adelante</message>
 	<message xml:lang="pt">Documento seguinte</message>
 	<message xml:lang="fi">Seuraava dokumentti</message>
 </label>
@@ -1043,7 +1043,7 @@
 	<message xml:lang="de">Aktualisieren</message>
 	<message xml:lang="it">Ricarica</message>
 	<message xml:lang="tr">Yeniden yükle</message>
-	<message xml:lang="es">Recargar</message>
+	<message xml:lang="es">Actualizar</message>
 	<message xml:lang="pt">Recarregar</message>
 	<message xml:lang="fi">Päivitä</message>
 </label>
@@ -1103,7 +1103,7 @@
 	<message xml:lang="de">Code</message>
 	<message xml:lang="it">Font non proporzionale</message>
 	<message xml:lang="tr">Sabit genişlikli yazıtipi</message>
-	<message xml:lang="es">Fuente fija</message>
+	<message xml:lang="es">Código (code)</message>
 	<message xml:lang="pt">Tipo (font) fixo</message>
 	<message xml:lang="fi">Vakio fontti</message>
 </label>
@@ -1123,7 +1123,7 @@
 	<message xml:lang="de">Bild</message>
 	<message xml:lang="it">Inserisci immagine</message>
 	<message xml:lang="tr">Görüntü ekle</message>
-	<message xml:lang="es">Insertar imagen</message>
+	<message xml:lang="es">Imagen</message>
 	<message xml:lang="pt">Inserir imagem</message>
 	<message xml:lang="fi">Syötä kuva</message>
 </label>
@@ -1133,7 +1133,7 @@
 	<message xml:lang="de">Überschrift Ebene 1</message>
 	<message xml:lang="it">Intestazione di livello 1</message>
 	<message xml:lang="tr">Başlık 1</message>
-	<message xml:lang="es">Cabecera Nivel 1</message>
+	<message xml:lang="es">Cabecera nivel 1 (h1)</message>
 	<message xml:lang="pt">Cabeçalho nível 1</message>
 	<message xml:lang="fi">Otsikkokoko 1</message>
 </label>
@@ -1143,7 +1143,7 @@
 	<message xml:lang="de">Überschrift Ebene 2</message>
 	<message xml:lang="it">Intestazione di livello 2</message>
 	<message xml:lang="tr">Başlık 2</message>
-	<message xml:lang="es">Cabecera Nivel 2</message>
+	<message xml:lang="es">Cabecera nivel 2 (h2)</message>
 	<message xml:lang="pt">Cabeçalho nível 2</message>
 	<message xml:lang="fi">Otsikkokoko 2</message>
 </label>
@@ -1153,7 +1153,7 @@
 	<message xml:lang="de">Überschrift Ebene 3</message>
 	<message xml:lang="it">Intestazione di livello 3</message>
 	<message xml:lang="tr">Başlık 3</message>
-	<message xml:lang="es">Cabecera Nivel 3</message>
+	<message xml:lang="es">Cabecera nivel 3 (h3)</message>
 	<message xml:lang="pt">Cabeçalho nível 3</message>
 	<message xml:lang="fi">Otsikkokoko 3</message>
 </label>
@@ -1163,7 +1163,7 @@
 	<message xml:lang="de">Ungeordnete Liste</message>
 	<message xml:lang="it">Lista puntata</message>
 	<message xml:lang="tr">Liste</message>
-	<message xml:lang="es">Lista no numerada</message>
+	<message xml:lang="es">Lista no numerada (ul)</message>
 	<message xml:lang="pt">Lista com bolinhas</message>
 	<message xml:lang="fi">Pisteellinen luettelo</message>
 </label>
@@ -1173,7 +1173,7 @@
 	<message xml:lang="de">Geordnete Liste</message>
 	<message xml:lang="it">Lista numerata</message>
 	<message xml:lang="tr">Numaralı liste</message>
-	<message xml:lang="es">Lista numerada</message>
+	<message xml:lang="es">Lista numerada (ol)</message>
 	<message xml:lang="pt">Lista numerada</message>
 	<message xml:lang="fi">Numeroituluettelo</message>
 </label>
@@ -1183,7 +1183,7 @@
 	<message xml:lang="de">Definitionsliste</message>
 	<message xml:lang="it">Lista di definizioni</message>
 	<message xml:lang="tr">Tanım listesi</message>
-	<message xml:lang="es">Lista de definición</message>
+	<message xml:lang="es">Lista de definición (dl)</message>
 	<message xml:lang="pt">Lista de definição</message>
 	<message xml:lang="fi">Määrittelyluettelo</message>
 </label>
@@ -1532,7 +1532,7 @@
 	<message xml:lang="fr">Nombre de lignes</message>
 	<message xml:lang="de">Zeilen:</message>
 	<message xml:lang="it">Numero di righe</message>
-	<message xml:lang="es">Número de filas</message>
+	<message xml:lang="es">Número de filas:</message>
 	<message xml:lang="pt">Número de linhas</message>
 	<message xml:lang="fi">Rivien lukumäärä</message>
 	<message xml:lang="tr">Sıra sayısı</message>
@@ -1542,7 +1542,7 @@
 	<message xml:lang="fr">Nombre de colonnes</message>
 	<message xml:lang="de">Spalten:</message>
 	<message xml:lang="it">Numero di colonne</message>
-	<message xml:lang="es">Número de columnas</message>
+	<message xml:lang="es">Número de columnas:</message>
 	<message xml:lang="pt">Número de colunas</message>
 	<message xml:lang="fi">Sarakkeiden lukumäärä</message>
 	<message xml:lang="tr">Sütün sayısı</message>
@@ -1552,7 +1552,7 @@
 	<message xml:lang="fr">Bordure</message>
 	<message xml:lang="de">Rahmen:</message>
 	<message xml:lang="it">Bordo</message>
-	<message xml:lang="es">Borde</message>
+	<message xml:lang="es">Grosor del borde:</message>
 	<message xml:lang="pt">Borda</message>
 	<message xml:lang="fi">Reunus</message>
 	<message xml:lang="tr">çerçeve</message>
@@ -1562,7 +1562,7 @@
 	<message xml:lang="fr">Texte de remplacement</message>
 	<message xml:lang="de">Alternativer Text:</message>
 	<message xml:lang="it">Testo alternativo</message>
-	<message xml:lang="es">Texto alternativo</message>
+	<message xml:lang="es">Texto alternativo:</message>
 	<message xml:lang="pt">Texto alternativo</message>
 	<message xml:lang="fi">Vuorottainen teksti</message>
 	<message xml:lang="tr">Yeniden yerleştirme metini</message>
@@ -1943,7 +1943,7 @@
 	<message xml:lang="fr">Configuration de la géométrie</message>
 	<message xml:lang="de">Fenstergeometrie</message>
 	<message xml:lang="it">Preferenze della geometria</message>
-	<message xml:lang="es">Preferencias de geometría</message>
+	<message xml:lang="es">Preferencias de geometría de la ventana</message>
 	<message xml:lang="pt">Preferências de geometria</message>
 	<message xml:lang="fi">Geometria asetukset</message>
 	<message xml:lang="tr">Geometri ayarları</message>
@@ -1953,7 +1953,7 @@
 	<message xml:lang="fr">Sauver la géométrie courante</message>
 	<message xml:lang="de">Aktuelle Geometrie speichern</message>
 	<message xml:lang="it">Salva la geometria corrente</message>
-	<message xml:lang="es">Guardar geometría actual</message>
+	<message xml:lang="es">Guardar la geometría actual</message>
 	<message xml:lang="pt">Salvar geometria atual</message>
 	<message xml:lang="fi">Tallenna nykyinen geometria</message>
 	<message xml:lang="tr">Yakın geometriyi kaydet</message>
@@ -1983,7 +1983,7 @@
 	<message xml:lang="fr">Configuration des couleurs</message>
 	<message xml:lang="de">Farben</message>
 	<message xml:lang="it">Preferenze dei colori</message>
-	<message xml:lang="es">Preferencias de color</message>
+	<message xml:lang="es">Preferencias de colores</message>
 	<message xml:lang="pt">Preferências de cor</message>
 	<message xml:lang="fi">Väri asetukset</message>
 	<message xml:lang="tr">Renk ayarları</message>
@@ -1993,7 +1993,7 @@
 	<message xml:lang="fr">Couleur du texte</message>
 	<message xml:lang="de">Schrift (Dokument)</message>
 	<message xml:lang="it">Colore in primo piano nei documenti</message>
-	<message xml:lang="es">Color del documento:</message>
+	<message xml:lang="es">Color del texto del documento:</message>
 	<message xml:lang="pt">Cor do plano frontal do documento</message>
 	<message xml:lang="fi">Dokumentin piirtoväri</message>
 	<message xml:lang="tr">Belgenin ön-plan rengi</message>
@@ -2003,7 +2003,7 @@
 	<message xml:lang="fr">Couleur de fond</message>
 	<message xml:lang="de">Hintergrund(Dokument)</message>
 	<message xml:lang="it">Colore dello sfondo nei documenti</message>
-	<message xml:lang="es">Color del fondo del documento:</message>
+	<message xml:lang="es">Color de fondo del documento:</message>
 	<message xml:lang="pt">Cor de fundo do documento</message>
 	<message xml:lang="fi">Dokumentin taustaväri</message>
 	<message xml:lang="tr">Belgenin arka-plan rengi</message>
@@ -2023,7 +2023,7 @@
 	<message xml:lang="fr">Couleur de fond des menus</message>
 	<message xml:lang="de">Hintergrund (Menüs)</message>
 	<message xml:lang="it">Colore dello sfondo nei menu</message>
-	<message xml:lang="es">Color del fondo del menú</message>
+	<message xml:lang="es">Color de fondo del menú</message>
 	<message xml:lang="pt">Cor de fundo do menu</message>
 	<message xml:lang="fi">Valikon taustaväri</message>
 	<message xml:lang="tr">Menünün arka-plan rengi</message>
@@ -2033,7 +2033,7 @@
 	<message xml:lang="fr">Impossible d'initialiser le cache. Vous avez peut-être specifié un répertoire invalide ou vous exécutez un autre Amaya en méme-temps.</message>
 	<message xml:lang="de">Kann den Cache nicht starten. Möglicherweise ist das Cacheverzeichnis ungültig, oder ein anderer Prozeß verwendet den Cache.</message>
 	<message xml:lang="it">Impossibile attivare la cache. Puoi avere specificato una directory di cache non valida, oppure un'altra istanza di Amaya sta usando la cache.</message>
-	<message xml:lang="es">No pude iniciar el caché. Puede haber especificado un directorio de caché inválido u otro Amaya está usando el caché.</message>
+	<message xml:lang="es">No pude iniciar la caché. Puede haber especificado un directorio de caché inválido u otro Amaya está usando el caché.</message>
 	<message xml:lang="pt">Não foi possível inicializar o cache. Você pode ter especificado um diretório de cache inválido ou tem outro Amaya usando o cache.</message>
 	<message xml:lang="fi">Välimuistin käynnistys epäonnistui.Välimuistin hakemisto on viallinen tai toinen Amaya-prosessi käyttää välimuistia.</message>
 	<message xml:lang="tr">Gizli bölümü sıfırlama imkansızdır. Belkide geçersiz bir repertuar kullandınız veya aynı zamanda başka bir amaya kullandınız</message>
@@ -2183,7 +2183,7 @@
 	<message xml:lang="fr">Nom du caractère</message>
 	<message xml:lang="de">Zeichenname</message>
 	<message xml:lang="it">Nome del carattere</message>
-	<message xml:lang="es">Nombre de carácter</message>
+	<message xml:lang="es">Nombre de carácter:</message>
 	<message xml:lang="pt">Nome de carácter</message>
 	<message xml:lang="fi">Henkilön nimi</message>
 	<message xml:lang="tr">Karakterin ismi</message>
@@ -2223,7 +2223,7 @@
 	<message xml:lang="fr">Négociation de langues</message>
 	<message xml:lang="de">Sprachen</message>
 	<message xml:lang="it">Negoziazione della lingua</message>
-	<message xml:lang="es">Negociación de idioma</message>
+	<message xml:lang="es">Preferencias de negociación de idioma</message>
 	<message xml:lang="pt">Negociação de idioma</message>
 	<message xml:lang="fi">Kieliasetukset</message>
 	<message xml:lang="tr">dil pazarlaması</message>
@@ -2243,7 +2243,7 @@
 	<message xml:lang="fr">Nom de l'utilisateur</message>
 	<message xml:lang="de">Autor</message>
 	<message xml:lang="it">Nome utente</message>
-	<message xml:lang="es">Anotación de usuario:</message>
+	<message xml:lang="es">Usuario anotaciones/marcadores:</message>
 	<message xml:lang="pt">Usuário anotador</message>
 	<message xml:lang="fi">Käyttäjän huomautukset</message>
 	<message xml:lang="tr">Kullanıyıcı ismi</message>
@@ -2303,7 +2303,7 @@
 	<message xml:lang="fr">Couleur de sélection</message>
 	<message xml:lang="de">Markierung</message>
 	<message xml:lang="it">Colore della selezione</message>
-	<message xml:lang="es">Color de selección:</message>
+	<message xml:lang="es">Color del texto seleccionado:</message>
 	<message xml:lang="pt">Cor de seleção</message>
 	<message xml:lang="fi">Valintaväri</message>
 	<message xml:lang="tr">Renk seçimi</message>
@@ -2409,7 +2409,7 @@
 	<message xml:lang="fr">Des balises/attributs sont ignorés - voir Vues/Montrer les erreurs</message>
 	<message xml:lang="it">I tag/attributi sono ignorati - vedi Viste/Mostra le errore</message>
 	<message xml:lang="de">Einige Tags/Attribute wurden ignoriert - siehe Ansicht/Parserfehler anzeigen</message>
-	<message xml:lang="es">Se ignoran Tags/atributos - vea Vistas/Mostrar errores sintácticos</message>
+	<message xml:lang="es">Se ignoran Tags/atributos - vea Ver / Ver errores sintácticos</message>
 	<message xml:lang="pt">Algumas marcas(tags)/atributos são ignorados - veja Vistas/Exibir erros de gramática (parsing)</message>
 	<message xml:lang="fi">Jotkut tagit/määrittelyt ohitettiin - katso Näytä/Näytä käännösvirheet</message>
 	<message xml:lang="tr">Işaretler ve tarz tanımları bilinmiyor - Görünümler/Hataları göster bakın</message>
@@ -2839,7 +2839,7 @@
 	<message xml:lang="fr">Styles ignorés - voir Vues/Montrer les erreurs</message>
 	<message xml:lang="it">I stili sono ignorati - vedi Viste/Mostra le errore</message>
 	<message xml:lang="de">Formatvorlagen wurden ignoriert - siehe Ansicht/Parserfehler anzeigen</message>
-	<message xml:lang="es">Se ignoran los estilos - vea Vistas/Mostrar errores sintácticos</message>
+	<message xml:lang="es">Se ignoran los estilos - vea Ver / Ver errores sintácticos</message>
 	<message xml:lang="pt">Estilos ignorados -veja Vistas/Exibir erros de gramática (parsing)</message>
 	<message xml:lang="fi">Tyylit ohitetaan - katso Näytä/Näytä käännösvirheet</message>
 	<message xml:lang="tr">Dizayn bilinmiyor - Görünümler/Hataları göster bakın</message>
@@ -3479,26 +3479,26 @@
 	<message xml:lang="de">Element ohne ID</message>
 	<message xml:lang="fi">Elementti ilman tunnusta</message>
 	<message xml:lang="it">Elemento senza ID</message>
-	<message xml:lang="es">Elemento sin ID</message>
+	<message xml:lang="es">Elemento sin atributo id</message>
 	<message xml:lang="tr">Tanımsız eleman</message>
 </label>
 <label define="ADD_ID">
 	<message xml:lang="en">Add ID</message>
 	<message xml:lang="fr">Ajouter ID</message>
 	<message xml:lang="it">Aggiungi ID</message>
-	<message xml:lang="es">Añadir ID</message>
+	<message xml:lang="es">Crear atributos id</message>
 </label>
 <label define="REMOVE_ID">
 	<message xml:lang="en">Remove ID</message>
 	<message xml:lang="fr">Supprimer ID</message>
 	<message xml:lang="it">Elimina ID</message>
-	<message xml:lang="es">Eliminar ID</message>
+	<message xml:lang="es">Borrar atributos id</message>
 </label>
 <label define="ADD_REMOVE_ID">
 	<message xml:lang="en">Add/Remove IDs</message>
 	<message xml:lang="fr">Ajouter/Supprimer IDs</message>
 	<message xml:lang="it">Aggiungi/Elimina ID</message>
-	<message xml:lang="es">Añadir/Eliminar IDs</message>
+	<message xml:lang="es">Crear/Borrar atributos id</message>
 </label>
 <label define="APPLY_OPERATION">
 	<message xml:lang="en">Apply operation</message>
@@ -3510,13 +3510,13 @@
 	<message xml:lang="en">Enter an element name</message>
 	<message xml:lang="fr">Entrer le nom d'un élément</message>
 	<message xml:lang="it">Inserisci un nome di elemento</message>
-	<message xml:lang="es">Escribe un nombre de elemento</message>
+	<message xml:lang="es">Escribe un nombre de etiqueta XHTML:</message>
 </label>
 <label define="AM_LOAD_CSS">
 	<message xml:lang="en">Apply CSS</message>
 	<message xml:lang="fr">Appliquer CSS</message>
 	<message xml:lang="it">Applica il CSS</message>
-	<message xml:lang="es">Aplicar CSS</message>
+	<message xml:lang="es">Aplicar hojas de estilo</message>
 </label>
 <label define="AM_SCREEN_TYPE">
 	<message xml:lang="en">Current screen type</message>
@@ -3562,7 +3562,7 @@
 	<message xml:lang="en">Recalls:</message>
 	<message xml:lang="fr">Rappele:</message>
 	<message xml:lang="it">Richiama :</message>
-	<message xml:lang="es">Llamada:</message>
+	<message xml:lang="es">Enlaza:</message>
 </label>
 <label define="AM_BM_AUTHOR">
 	<message xml:lang="en">Author:</message>
@@ -3601,7 +3601,7 @@
 	<message xml:lang="en">All CSS</message>
 	<message xml:lang="fr">Toutes les CSS</message>
 	<message xml:lang="it">Tutti i CSS</message>
-	<message xml:lang="es">Todas las CSS</message>
+	<message xml:lang="es">Todos las hojas de estilo</message>
 </label>
 <label define="AM_STYLE_APPLIED">
 	<message xml:lang="en">CSS style rules applied to the &lt;%s> element\n</message>
@@ -3613,7 +3613,7 @@
 	<message xml:lang="en">Blue lines are links activated by a double (or a single) click\n</message>
 	<message xml:lang="fr">Les lignes bleues sont des liens activés par un double (ou simple) click\n</message>
 	<message xml:lang="it">Le righe in blu sono collegamenti attivati con un doppio (o semplice) clic\n</message>
-	<message xml:lang="es">Las líneas azules son enlaces activados por un doble clic (o un único clic)\n</message>
+	<message xml:lang="es">Cada línea azul es un enlace a la regla de estilo. Puede activar el enlace con un doble clic (o con un único clic)\n</message>
 </label>
 <label define="AM_LOAD_OBJECTS">
 	<message xml:lang="en">Load objects (object, embed)</message>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Mon Nov  3 14:40:24 CET 2003" version="15">
+<base last_update="Wed Nov 12 14:43:13 CET 2003" version="16">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">de</language>
@@ -17,7 +17,7 @@
 	<message xml:lang="fr">Nombre de propositions</message>
 	<message xml:lang="it">Numero di proposte alternative</message>
 	<message xml:lang="tr">Önerilerin sayısı</message>
-	<message xml:lang="es">Número de propuestas</message>
+	<message xml:lang="es">Número de propuestas:</message>
 	<message xml:lang="pt">Número de propostas</message>
 	<message xml:lang="fi">Ehdotuksien lukumäärä</message>
 </label>
@@ -87,7 +87,7 @@
 	<message xml:lang="fr">incluant les caractères :</message>
 	<message xml:lang="it">parole contenenti:</message>
 	<message xml:lang="tr">Karakterleri içeren:</message>
-	<message xml:lang="es">palabras que contengan:</message>
+	<message xml:lang="es">Palabras que contengan:</message>
 	<message xml:lang="pt">Palavras contendo:</message>
 	<message xml:lang="fi">sanat, joissa:</message>
 </label>
@@ -97,7 +97,7 @@
 	<message xml:lang="fr">Corriger...</message>
 	<message xml:lang="it">Controllo ortografico...</message>
 	<message xml:lang="tr">Yazım hataları düzelt...</message>
-	<message xml:lang="es">Verificando ortografía ...</message>
+	<message xml:lang="es">Verificar ortografía</message>
 	<message xml:lang="pt">Verificar ortografia...</message>
 	<message xml:lang="fi">Oikeinkirjoituksen tarkistus ...</message>
 </label>
@@ -127,7 +127,7 @@
 	<message xml:lang="fr">en lettres capitales</message>
 	<message xml:lang="it">parole tutte maiuscole</message>
 	<message xml:lang="tr">Hepsi büyük harf olan sözcükler</message>
-	<message xml:lang="es">palabras en mayúsculas</message>
+	<message xml:lang="es">Palabras en mayúsculas</message>
 	<message xml:lang="pt">palavras todas maíusculas</message>
 	<message xml:lang="fi">sanat, joissa kaikki isolla</message>
 </label>
@@ -137,7 +137,7 @@
 	<message xml:lang="fr">incluant des chiffres</message>
 	<message xml:lang="it">parole contenenti cifre</message>
 	<message xml:lang="tr">Rakam içeren sözcükler</message>
-	<message xml:lang="es">palabras con dígitos</message>
+	<message xml:lang="es">Palabras con dígitos</message>
 	<message xml:lang="pt">palavras com dígitos</message>
 	<message xml:lang="fi">sanat, joissa numeroita</message>
 </label>
