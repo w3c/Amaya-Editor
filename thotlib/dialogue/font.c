@@ -1606,9 +1606,11 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
 		}
 	    }
 	}
+
       if (ptfont == NULL && script != 'E')
 	{
-	  if (script != '1' && script != 'L' && script != 'G' && size != -1)
+	  if (FirstFreeFont < MAX_FONT &&
+	      script != '1' && script != 'L' && script != 'G' && size != -1)
 	    /* try without highlight and no specific size */
 	    ptfont = LoadNearestFont (script, family, 0,
 				      -1, requestedsize, frame, FALSE, FALSE);
@@ -1624,7 +1626,8 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
 		    }
 		}
 	    }
-	  if (ptfont == NULL && script == '7')
+
+	  if (FirstFreeFont < MAX_FONT && ptfont == NULL && script == '7')
 	    {
 	      /* look for a font Symbol */
 	      ptfont = LoadNearestFont ('G', family, 0, -1, requestedsize,
@@ -1654,8 +1657,11 @@ ThotFont LoadNearestFont (char script, int family, int highlight,
 
   if (ptfont && size == requestedsize)
     {
+
       if (i == FirstFreeFont || TtFonts[i] == NULL)
 	{
+ if (FirstFreeFont >= MAX_FONT)
+   printf ("Too many fonts\n");
 	  /* initialize a new entry */
 	  FirstFreeFont = i + 1;
 	  strcpy (&TtFontName[deb], text);
@@ -2540,6 +2546,7 @@ static void FreeAFont (int i)
 	  strncpy (&TtFontName[i * MAX_FONTNAME],
 		   &TtFontName[j * MAX_FONTNAME], MAX_FONTNAME);
 	  TtFonts[j] = NULL;
+	  TtFontMask[j] = 0;
 	  /* the table is packed now */
 	}
       TtFonts[FirstFreeFont] = NULL;
