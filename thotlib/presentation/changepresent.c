@@ -1608,7 +1608,8 @@ PtrElement          pEl;
 				  break;
 			       case PtFunction:
 				 if (pPRule->PrPresFunction == FnPictureMode
-				     || pPRule->PrPresFunction == FnBackgroundPicture)
+				     || pPRule->PrPresFunction == FnBackgroundPicture
+				     || pPRule->PrPresFunction == FnShowBox)
 				   pAb->AbAspectChange = TRUE;
 				 else
 				   pAb->AbChange = TRUE;
@@ -2378,7 +2379,8 @@ PtrPSchema          pSPR;
       break;
     case PtFunction:
       if (pRP->PrPresFunction == FnPictureMode
-	  || pRP->PrPresFunction == FnBackgroundPicture)
+	  || pRP->PrPresFunction == FnBackgroundPicture
+	  || pRP->PrPresFunction == FnShowBox)
 	pAb->AbAspectChange = TRUE;
       else
 	pAb->AbChange = TRUE;
@@ -2588,6 +2590,8 @@ boolean            remove;
 			      else if (pCurrentRule->PrPresFunction == FnPictureMode
 				       && pAb->AbPictBackground != NULL)
 				((PictInfo *) (pAb->AbPictBackground))->PicPresent = FillFrame;
+			      else if (pCurrentRule->PrPresFunction == FnShowBox)
+				pAb->AbFillBox = FALSE;
 			      pAb->AbAspectChange = TRUE;
 			    }
 			}
