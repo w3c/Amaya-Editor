@@ -807,7 +807,7 @@ static void ComputeBoundingBoxes (int frame, int xmin, int xmax, int ymin, int y
   Clipy = -1; 
   Clipw = 0; 
   Cliph = 0;  
-if (FrameTable[frame].FrView == 1)
+  if (FrameTable[frame].FrView == 1)
     FormattedFrame = TRUE;
   else
     FormattedFrame = FALSE;

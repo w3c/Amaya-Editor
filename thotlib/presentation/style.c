@@ -884,7 +884,6 @@ static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
 {
   AttributePres      *attrs, *new;
   PtrSSchema          pSS;
-  PtrPSchema          pPS;
   PtrPRule           *ppRule;
   char               *attrVal;
   int                 nbrules, val, match;
@@ -896,17 +895,11 @@ static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
     {
       /* select the last entry */
       nbrules = tsch->PsNAttrPRule->Num[attrType - 1] + 1;
-
       /* add the new entry */
       GetAttributePres (&new);
       tsch->PsNAttrPRule->Num[attrType - 1] = nbrules;
       if (att > 0 && ctxt->type)
-	{
 	new->ApElemType = ctxt->type;
-	pPS = PresentationSchema (pSS, LoadedDocument[ctxt->doc - 1]);
-	pPS->PsNInheritedAttrs->Num[ctxt->type - 1] += 1;
-	pPS->PsNHeirElems->Num[attrType - 1] += 1;
-	}
       if (attrs)
 	{
 	  new->ApNextAttrPres = attrs->ApNextAttrPres;

@@ -2825,7 +2825,7 @@ static char *ParseCSSBackgroundColor (Element element, PSchema tsch,
 
   best.typed_data.unit = UNIT_INVALID;
   best.typed_data.real = FALSE;
-  if (!strncasecmp (cssRule, "transparent", strlen ("transparent")))
+  if (!strncasecmp (cssRule, "transparent", 11))
     {
       best.typed_data.value = PATTERN_NONE;
       best.typed_data.unit = UNIT_REL;
@@ -3174,6 +3174,7 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
       image.pointer = NULL;
       TtaSetStylePresentation (PRBackgroundPicture, element, tsch, context,
 			       image);
+      cssRule += 4;
     }
   else if (!strncasecmp (cssRule, "url", 3))
     {  
@@ -3388,7 +3389,7 @@ static char *ParseCSSBackground (Element element, PSchema tsch,
   while (*cssRule != ';' && *cssRule != EOS && *cssRule != ',')
     {
       /* perhaps a Background Image */
-      if (!strncasecmp (cssRule, "url", 3))
+      if (!strncasecmp (cssRule, "url", 3) || !strncasecmp (cssRule, "none", 4))
          cssRule = ParseCSSBackgroundImage (element, tsch, context, cssRule,
 					    css, isHTML);
       /* perhaps a Background Attachment */
