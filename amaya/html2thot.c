@@ -5044,6 +5044,18 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 					    }
 					}
 				    }
+				  else
+				    {
+				      ptr = strstr (&FileBuffer[i], "xhtml-math");
+				      if (!ptr || (ptr && ptr > end))
+					ptr = strstr (&FileBuffer[i], "XHTML-MATH");
+				      if (ptr && ptr < end)
+					{
+					  *thotType = docHTML;
+					  *isknown = TRUE;
+					  *parsingLevel = L_Xhtml11;
+					}
+				    }
 				}
 			    }
 			  else
