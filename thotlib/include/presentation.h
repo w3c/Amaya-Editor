@@ -21,6 +21,7 @@
 typedef int        *PRule;
 
 /* Types of presentation rule */
+/* These values must follow the order of PRuleType defined in typeprs.h */
 
 #define PRVisibility 0
 #define PRFunction 1
@@ -30,56 +31,56 @@ typedef int        *PRule;
 #define PRWidth 5
 #define PRVertPos 6
 #define PRHorizPos 7
-#define PRSize 8
-#define PRStyle 9
-#define PRFont 10
-#define PRUnderline 11
-#define PRThickness 12
-#define PRIndent 13
-#define PRLineSpacing 14
-#define PRDepth 15
-#define PRAdjust 16
-#define PRJustify 17
-#define PRLineStyle 18
-#define PRLineWeight 19
-#define PRFillPattern 20
-#define PRBackground 21
-#define PRForeground 22
-#define PRHyphenate 23
-/* 24 and 25 reserved */
-#define PRNoBreak1 26
-#define PRNoBreak2 27
-/* 28 reserved */
-#define PRNotInLine 29
-#define PRShowBox 30
-#define PRBackgroundPicture 31
-#define PRPictureMode 32
-#define PRMarginTop 33
-#define PRMarginLeft 34
-#define PRMarginBottom 35
-#define PRMarginRight 36
-#define PRCreateEnclosing 37
-#define PRHorizOverflow 38
-#define PRVertOverflow 39
-#define PRLine 40
-#define PRNone 41
-#define PRWeight 42
-#define PRPaddingTop 43
-#define PRPaddingRight 44
-#define PRPaddingBottom 45
-#define PRPaddingLeft 46
-#define PRBorderTopWidth 47
-#define PRBorderRightWidth 48
-#define PRBorderBottomWidth 49
-#define PRBorderLeftWidth 50
-#define PRBorderTopColor 51
-#define PRBorderRightColor 52
-#define PRBorderBottomColor 53
-#define PRBorderLeftColor 54
-#define PRBorderTopStyle 55
-#define PRBorderRightStyle 56
-#define PRBorderBottomStyle 57
-#define PRBorderLeftStyle 58
+#define PRMarginTop 8
+#define PRMarginRight 9
+#define PRMarginBottom 10
+#define PRMarginLeft 11
+#define PRPaddingTop 12
+#define PRPaddingRight 13
+#define PRPaddingBottom 14
+#define PRPaddingLeft 15
+#define PRBorderTopWidth 16
+#define PRBorderRightWidth 17
+#define PRBorderBottomWidth 18
+#define PRBorderLeftWidth 19
+#define PRBorderTopColor 20
+#define PRBorderRightColor 21
+#define PRBorderBottomColor 22
+#define PRBorderLeftColor 23
+#define PRBorderTopStyle 24
+#define PRBorderRightStyle 25
+#define PRBorderBottomStyle 26
+#define PRBorderLeftStyle 27
+#define PRSize 28
+#define PRStyle 29
+#define PRWeight 30
+#define PRFont 31
+#define PRUnderline 32
+#define PRThickness 33
+#define PRIndent 34
+#define PRLineSpacing 35
+#define PRDepth 36
+#define PRAdjust 37
+#define PRJustify 38
+#define PRLineStyle 39
+#define PRLineWeight 40
+#define PRFillPattern 41
+#define PRBackground 42
+#define PRForeground 43
+#define PRHyphenate 44
+#define PRVertOverflow 45
+#define PRHorizOverflow 46
+#define PRNoBreak1 47
+#define PRNoBreak2 48
+/* 49 reserved */
+#define PRLine 50
+#define PRCreateEnclosing 51
+#define PRShowBox 52
+#define PRBackgroundPicture 53
+#define PRPictureMode 54
+#define PRNotInLine 55
+#define PRNone 56
+#define LAST_PRES_RULE_TYPE 56
 
 /* values for rule PRStyle */
 #define StyleRoman 1
@@ -253,27 +254,69 @@ extern void         TtaRemovePRule (Element element, PRule pRule, Document docum
    document: the document to which the element belongs.
 
    Valid values according to rule type:
-   PRSize: an integer between 6 and 72 (body size in points).
+   PRDepth: an integer (z-index of the element).
+   PRVisibility: an integer >= 0 (visibility level).
+   PRFillPattern: rank of the pattern in file thot.pattern.
+   PRBackground: rank of the background color in file thot.color.
+   PRForeground: rank of the foreground color in file thot.color.
+   PRBorderTopColor, PRBorderRightColor, PRBorderBottomColor,PRBorderLeftColor:
+      if value >= 0: rank of the color in file thot.color.
+      if value < 0 : -2 means transparent and -1 means same color as foreground
+   PRFont: FontTimes, FontHelvetica, FontCourier.
    PRStyle: StyleRoman, StyleItalics, StyleOblique.
    PRWeight: WeightNormal, WeightBold.
-   PRFont: FontTimes, FontHelvetica, FontCourier.
    PRUnderline: NoUnderline, Underline, Overline, CrossOut.
    PRThickness: ThinUnderline, ThickUnderline.
+   PRLineStyle, PRBorderTopStyle, PRBorderRightStyle, PRBorderBottomStyle,
+      PRBorderLeftStyle: SolidLine, DashedLine, DottedLine.
+   PRNoBreak1, PRNoBreak2: a positive integer (distance in points).
    PRIndent: a positive, null or negative integer (indentation in points).
+   PRSize: an integer between 6 and 72 (body size in points).
    PRLineSpacing: a positive integer (line spacing in points).
-   PRDepth: a positive integer (depth of the element).
-   PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots.
+   PRLineWeight: a positive or null integer (stroke width for graphics in
+      points).
+   PRMarginTop, PRMarginLeft, PRMarginBottom, PRMarginRight: a positive, null
+      or negative integer (margin in points).
+   PRPaddingTop, PRPaddingRight, PRPaddingBottom, PRPaddingLeft: an integer
+      > 0 (padding in points).
+   PRBorderTopWidth, PRBorderRightWidth, PRBorderBottomWidth, PRBorderLeftWidth:
+      an integer > 0 (border width in points).
    PRJustify: Justified, NotJustified.
    PRHyphenate: Hyphenation, NoHyphenation.
-   PRLineStyle: SolidLine, DashedLine, DottedLine.
-   PRLineWeight: a positive or null integer (stroke width for graphics).
-   PRFillPattern: rank of the pattern in the file thot.pattern.
-   PRBackground: rank of the background color in the file thot.color.
-   PRForeground: rank of the foreground color in the file thot.color.
-   PRWidth, PRHeight, PRVertPos, PRHorizPos: a positive or null integer.
+   PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots.
 
   ----------------------------------------------------------------------*/
 extern void         TtaSetPRuleValue (Element element, PRule pRule, int value, Document document);
+
+/*----------------------------------------------------------------------
+   TtaSetPRuleValueWithUnit
+
+   Changes the value and the length unit of a presentation rule.
+   The presentation rule must be attached to an element that is part of
+   a document.
+
+   Parameters:
+   element: the element to which the presentation rule is attached.
+   pRule: the presentation rule to be changed.
+   value: the value to be set.
+   unit: the length unit in which the value is expressed.
+   document: the document to which the element belongs.
+
+   Valid values according to rule type:
+   PRNoBreak1, PRNoBreak2: a positive integer (distance).
+   PRIndent: a positive, null or negative integer (indentation).
+   PRSize: an integer between 6 and 72 (body size).
+   PRLineSpacing: a positive integer (line spacing).
+   PRLineWeight: a positive or null integer (stroke width for graphics).
+   PRMarginTop, PRMarginLeft, PRMarginBottom, PRMarginRight: a positive, null
+      or negative integer (margin).
+   PRPaddingTop, PRPaddingRight, PRPaddingBottom, PRPaddingLeft: an integer
+      > 0 (padding).
+   PRBorderTopWidth, PRBorderRightWidth, PRBorderBottomWidth, PRBorderLeftWidth:
+      an integer > 0 (border width).
+
+  ----------------------------------------------------------------------*/
+extern void         TtaSetPRuleValueWithUnit (Element element, PRule pRule, int value, TypeUnit unit, Document document);
 
 /*----------------------------------------------------------------------
    TtaSetPRuleView
@@ -479,24 +522,35 @@ extern int          TtaGetPRuleType (PRule pRule);
    pRule: the presentation rule of interest.
 
    Return values according to rule type:
-   PRSize: an integer between 6 and 72 (body size in points).
+   PRVisibility: an integer >= 0 (visibility level).
+   PRDepth: an integer (z-index of the element).
+   PRFillPattern: rank of the pattern in file thot.pattern.
+   PRBackground: rank of the background color in file thot.color.
+   PRForeground: rank of the foreground color in file thot.color.
+   PRBorderTopColor, PRBorderRightColor, PRBorderBottomColor,PRBorderLeftColor:
+      if value >= 0: rank of the color in file thot.color.
+      if value < 0 : -2 means transparent and -1 means same color as foreground
+   PRFont: FontTimes, FontHelvetica, FontCourier.
    PRStyle: StyleRoman, StyleItalics, StyleOblique.
    PRWeight: WeightNormal, WeightBold.
-   PRFont: FontTimes, FontHelvetica, FontCourier.
-   RPUnderline: NoUnderline, Underline, Overline, CrossOut.
+   PRUnderline: NoUnderline, Underline, Overline, CrossOut.
    PRThickness: ThinUnderline, ThickUnderline.
+   PRLineStyle, PRBorderTopStyle, PRBorderRightStyle, PRBorderBottomStyle,
+      PRBorderLeftStyle: SolidLine, DashedLine, DottedLine.
+   PRNoBreak1, PRNoBreak2: a positive integer (distance in points).
    PRIndent: a positive, null or negative integer (indentation in points).
+   PRSize: an integer between 6 and 72 (body size in points).
    PRLineSpacing: a positive integer (line spacing in points).
-   PRDepth: a positive integer (depth of the element).
-   PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots.
+   PRLineWeight: a positive or null integer (stroke width for graphics).
+   PRMarginTop, PRMarginLeft, PRMarginBottom, PRMarginRight: a positive, null
+      or negative integer (margin in points).
+   PRPaddingTop, PRPaddingRight, PRPaddingBottom, PRPaddingLeft: an integer
+      > 0 (padding in points).
+   PRBorderTopWidth, PRBorderRightWidth, PRBorderBottomWidth, PRBorderLeftWidth:
+      an integer > 0 (border width in points).
    PRJustify: Justified, NotJustified.
    PRHyphenate: Hyphenation, NoHyphenation.
-   PRLineStyle: SolidLine, DashedLine, DottedLine.
-   PRLineWeight: a positive or null integer (stroke width for graphics).
-   PRFillPattern: rank of the pattern in the file thot.pattern.
-   PRBackground: rank of the background color in the file thot.color.
-   PRForeground: rank of the foreground color in the file thot.color.
-   PRWidth, PRHeight, PRVertPos, PRHorizPos: a positive or null integer.
+   PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots.
 
   ----------------------------------------------------------------------*/
 extern int          TtaGetPRuleValue (PRule pRule);
@@ -557,6 +611,7 @@ extern PRule        TtaCopyPRule ( /* PRule pRule */ );
 extern void         TtaAttachPRule ( /* Element element, PRule pRule, Document document */ );
 extern void         TtaRemovePRule ( /* Element element, PRule pRule, Document document */ );
 extern void         TtaSetPRuleValue ( /* Element element, PRule pRule, int value, Document document */ );
+extern void         TtaSetPRuleValueWithUnit ( /* Element element, PRule pRule, int value, TypeUnit unit, Document document */ );
 extern void         TtaSetPRuleView ( /* PRule pRule, int view */ );
 extern void         TtaChangeBoxSize ( /* Element element, View view, Document document, int deltaX, int deltaY, TypeUnit unit */ );
 extern void         TtaChangeBoxPosition ( /* Element element, Document document, View view, int X, int Y, TypeUnit unit */ );

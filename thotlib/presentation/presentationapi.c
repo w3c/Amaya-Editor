@@ -211,7 +211,8 @@ ThotBool            display;
    if (pAb->AbBox != NULL && Y != pAb->AbBox->BxYOrg)
      {
        /* cherche d'abord la regle de position qui s'applique a l'element */
-       pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch, PtVertPos, FnAny, FALSE, TRUE, &pAttr);
+       pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch,
+				    PtVertPos, FnAny, FALSE, TRUE, &pAttr);
        /* on ne decale pas les paves qui ont une position flottante ou qui */
        /* sont dans une mise en ligne */
        if (pRStd->PrPosRule.PoPosDef != NoEdge
@@ -229,14 +230,16 @@ ThotBool            display;
 	     }
 	   else
 	     {
-	       dy = LogicalValue (dy, pRStd->PrPosRule.PoDistUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+	       dy = LogicalValue (dy, pRStd->PrPosRule.PoDistUnit, pAb,
+				  ViewFrameTable[frame - 1].FrMagnification);
 	     }
 
 	   /* cherche si la position verticale de l'element est determinee */
 	   /* par un attribut auquel est associee l'exception NewVPos */
 	   attr = FALSE;
 	   if (pAttr != NULL)
-	     if (AttrHasException (ExcNewVPos, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
+	     if (AttrHasException (ExcNewVPos, pAttr->AeAttrNum,
+				   pAttr->AeAttrSSchema))
 	       /* la nouvelle position sera rangee dans l'attribut */
 	       attr = TRUE;
 	   doit = TRUE;
@@ -255,7 +258,8 @@ ThotBool            display;
 		   notifyAttr.document = doc;
 		   notifyAttr.element = (Element) pEl;
 		   notifyAttr.attribute = (Attribute) pAttr;
-		   notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
+		   notifyAttr.attributeType.AttrSSchema =
+		                          (SSchema) (pAttr->AeAttrSSchema);
 		   notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
 		   if (CallEventAttribute (&notifyAttr, TRUE))
 		     doit = FALSE;
@@ -264,12 +268,12 @@ ThotBool            display;
 		       if (!BoxCreating)
 		         AddAttrEditOpInHistory (pAttr, pEl, pDoc, TRUE, TRUE);
 		       pAttr->AeAttrValue += dy;
-		       /* fait reafficher les variables de presentation utilisant */
-		       /* l'attribut */
+		       /* fait reafficher les variables de presentation */
+		       /* utilisant l'attribut */
 		       RedisplayAttribute (pAttr, pEl, pDoc);
 		       if (display)
-			 /* la nouvelle valeur de l'attribut doit etre prise en */
-			 /* compte dans les copies-inclusions de l'element */
+			 /* la nouvelle valeur de l'attribut doit etre prise */
+			 /* en compte dans les copies-inclusions de l'element*/
 			 RedisplayCopies (pEl, pDoc, TRUE);
 		     }
 		 }
@@ -280,7 +284,8 @@ ThotBool            display;
 	     {
 	       /* cherche si l'element possede deja une regle de position */
 	       /* verticale specifique */
-	       pPRule = SearchPresRule (pEl, PtVertPos, 0, &isNew, pDoc, pAb->AbDocView);
+	       pPRule = SearchPresRule (pEl, PtVertPos, 0, &isNew, pDoc,
+					pAb->AbDocView);
 	       
 	       if (isNew)
 		 /* l'element n'avait pas de regle de position */
@@ -321,8 +326,10 @@ ThotBool            display;
 	       for (view = 1; view <= MAX_VIEW_DOC; view++)
 		 if (pEl->ElAbstractBox[view - 1] != NULL)
 		   /* l'element traite' a un pave dans cette view */
-		   if (pDoc->DocView[view - 1].DvSSchema == pDoc->DocView[pAb->AbDocView - 1].DvSSchema
-		       && pDoc->DocView[view - 1].DvPSchemaView == pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView)
+		   if (pDoc->DocView[view - 1].DvSSchema ==
+		               pDoc->DocView[pAb->AbDocView - 1].DvSSchema &&
+		       pDoc->DocView[view - 1].DvPSchemaView ==
+		               pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView)
 		     /* c'est une view de meme type que la view traitee, on */
 		     /* traite le pave de l'element dans cette view */
 		     {
@@ -340,7 +347,7 @@ ThotBool            display;
 
 		       if (pAbbCur != NULL)
 			 {
-			   /* applique la nouvelle regle de position verticale */
+			   /*applique la nouvelle regle de position verticale*/
 			   ApplyRule (pPRule, pSPR, pAbbCur, pDoc, pAttr);
 			   pAbbCur->AbVertPosChange = TRUE;
 			   /* la position vert.du pave a change' */
@@ -348,9 +355,11 @@ ThotBool            display;
 			   reDisp = TRUE;
 			   /* il faut reafficher le pave */
 			   if (!AssocView (pEl))
-			     updateframe[view - 1] = pDoc->DocViewFrame[view - 1];
+			     updateframe[view - 1] =
+			              pDoc->DocViewFrame[view - 1];
 			   else
-			     updateframe[view - 1] = pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
+			     updateframe[view - 1] =
+			              pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
 			 }
 		     }
 	       if (attr)
@@ -365,7 +374,8 @@ ThotBool            display;
    if (pAb->AbBox != NULL && X != pAb->AbBox->BxXOrg)
      /* cherche d'abord la regle de position qui s'applique a l'element */
      {
-       pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch, PtHorizPos, FnAny, FALSE, TRUE, &pAttr);
+       pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch,
+				    PtHorizPos, FnAny, FALSE, TRUE, &pAttr);
        /* on ne decale pas les paves qui ont une position flottante ou qui */
        /* sont mis en lignes */
        if (pRStd->PrPosRule.PoPosDef != NoEdge
@@ -383,14 +393,16 @@ ThotBool            display;
 	     }
 	   else
 	     {
-	       dx = LogicalValue (dx, pRStd->PrPosRule.PoDistUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+	       dx = LogicalValue (dx, pRStd->PrPosRule.PoDistUnit, pAb,
+				  ViewFrameTable[frame - 1].FrMagnification);
 	     }
 
 	   /* cherche si la position horizontale de l'element est determinee */
 	   /* par un attribut auquel est associee l'exception NewHPos */
 	   attr = FALSE;
 	   if (pAttr != NULL)
-	     if (AttrHasException (ExcNewHPos, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
+	     if (AttrHasException (ExcNewHPos, pAttr->AeAttrNum,
+				   pAttr->AeAttrSSchema))
 	       /* la nouvelle position sera rangee dans l'attribut */
 	       attr = TRUE;
 	   doit = TRUE;
@@ -409,7 +421,8 @@ ThotBool            display;
 		   notifyAttr.document = doc;
 		   notifyAttr.element = (Element) pEl;
 		   notifyAttr.attribute = (Attribute) pAttr;
-		   notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
+		   notifyAttr.attributeType.AttrSSchema =
+		                          (SSchema) (pAttr->AeAttrSSchema);
 		   notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
 		   if (CallEventAttribute (&notifyAttr, TRUE))
 		     doit = FALSE;
@@ -418,12 +431,12 @@ ThotBool            display;
 		       if (!BoxCreating)
 		         AddAttrEditOpInHistory (pAttr, pEl, pDoc, TRUE, TRUE);
 		       pAttr->AeAttrValue += dx;
-		       /* fait reafficher les variables de presentation utilisant */
-		       /* l'attribut */
+		       /* fait reafficher les variables de presentation */
+		       /* utilisant l'attribut */
 		       RedisplayAttribute (pAttr, pEl, pDoc);
 		       if (display)
-			 /* la nouvelle valeur de l'attribut doit etre prise en */
-			 /* compte dans les copies-inclusions de l'element */
+			 /* la nouvelle valeur de l'attribut doit etre prise */
+			 /* en compte dans les copies-inclusions de l'element*/
 			 RedisplayCopies (pEl, pDoc, TRUE);
 		     }
 		 }
@@ -434,9 +447,10 @@ ThotBool            display;
 	     {
 	       /* cherche si l'element possede deja une regle de position */
 	       /* horizontale specifique */
-	       pPRule = SearchPresRule (pEl, PtHorizPos, 0, &isNew, pDoc, pAb->AbDocView);
+	       pPRule = SearchPresRule (pEl, PtHorizPos, 0, &isNew, pDoc,
+					pAb->AbDocView);
 	       if (isNew)
-		 /* on a cree' une regle de position horizontale pour l'element */
+		 /* on a cree' une regle de position horiz. pour l'element */
 		 {
 		   pR = pPRule->PrNextPRule;
 		   /* recopie la regle standard */
@@ -471,8 +485,10 @@ ThotBool            display;
 	       for (view = 1; view <= MAX_VIEW_DOC; view++)
 		 if (pEl->ElAbstractBox[view - 1] != NULL)
 		   /* l'element traite' a un pave dans cette view */
-		   if ((pDoc->DocView[view - 1].DvSSchema == pDoc->DocView[pAb->AbDocView - 1].DvSSchema)
-		       && (pDoc->DocView[view - 1].DvPSchemaView == pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView))
+		   if ((pDoc->DocView[view - 1].DvSSchema ==
+			      pDoc->DocView[pAb->AbDocView - 1].DvSSchema) &&
+		       (pDoc->DocView[view - 1].DvPSchemaView ==
+			      pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView))
 		     /* c'est une view de meme type que la view traitee, on */
 		     /* traite le pave de l'element dans cette view */
 		     {
@@ -490,7 +506,7 @@ ThotBool            display;
 
 		       if (pAbbCur != NULL)
 			 {
-			   /* applique la nouvelle regle de position verticale */
+			   /* applique la nouvelle regle de position vertic. */
 			   ApplyRule (pPRule, pSPR, pAbbCur, pDoc, pAttr);
 			   pAbbCur->AbHorizPosChange = TRUE;
 			   /* indique le pave a reafficher */
@@ -498,9 +514,11 @@ ThotBool            display;
 			   /* il faut reafficher le pave */
 			   reDisp = TRUE;
 			   if (!AssocView (pEl))
-			     updateframe[view - 1] = pDoc->DocViewFrame[view - 1];
+			     updateframe[view - 1] =
+			              pDoc->DocViewFrame[view - 1];
 			   else
-			     updateframe[view - 1] = pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
+			     updateframe[view - 1] =
+			              pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
 			 }
 		     }
 	       if (attr)
@@ -600,7 +618,8 @@ ThotBool            display;
    if (width != 0 && pAb->AbBox != NULL && width != pAb->AbBox->BxWidth)
      {
        /* cherche d'abord la regle de dimension qui s'applique a l'element */
-       pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch, PtWidth, FnAny, FALSE, TRUE, &pAttr);
+       pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch,
+				    PtWidth, FnAny, FALSE, TRUE, &pAttr);
        /* on ne change pas la largeur si c'est celle du contenu ou si */
        /* c'est une boite elastique.  */
        ok = TRUE;
@@ -636,14 +655,16 @@ ThotBool            display;
 	   else
 	     {
 	       /* convert the new height in logical value */
-	       dx = LogicalValue (dx, pAb->AbWidth.DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+	       dx = LogicalValue (dx, pAb->AbWidth.DimUnit, pAb,
+				  ViewFrameTable[frame - 1].FrMagnification);
 	     }
 	   
 	   /* cherche si la largeur de l'element est determinee par un */
 	   /* attribut auquel est associee l'exception NewWidth */
 	   attr = FALSE;
 	   if (pAttr != NULL)
-	     if (AttrHasException (ExcNewWidth, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
+	     if (AttrHasException (ExcNewWidth, pAttr->AeAttrNum,
+				   pAttr->AeAttrSSchema))
 	       /* la nouvelle largeur sera rangee dans l'attribut */
 	       attr = TRUE;
 	   
@@ -663,7 +684,8 @@ ThotBool            display;
 		   notifyAttr.document = doc;
 		   notifyAttr.element = (Element) pEl;
 		   notifyAttr.attribute = (Attribute) pAttr;
-		   notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
+		   notifyAttr.attributeType.AttrSSchema =
+		                          (SSchema) (pAttr->AeAttrSSchema);
 		   notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
 		   if (CallEventAttribute (&notifyAttr, TRUE))
 		     doit = FALSE;
@@ -677,8 +699,8 @@ ThotBool            display;
 		       /* utilisant l'attribut */
 		       RedisplayAttribute (pAttr, pEl, pDoc);
 		       if (display)
-			 /* la nouvelle valeur de l'attribut doit etre prise en */
-			 /* compte dans les copies-inclusions de l'element */
+			 /* la nouvelle valeur de l'attribut doit etre prise */
+			 /* en compte dans les copies-inclusions de l'element*/
 			 RedisplayCopies (pEl, pDoc, TRUE);
 		     }
 		 }
@@ -687,8 +709,9 @@ ThotBool            display;
 	     /* la nouvelle largeur doit etre rangee dans une regle */
 	     /* de presentation specifique */
 	     {
-	       /* cherche si l'element a deja une regle de largeur specifique */
-	       pPRule = SearchPresRule (pEl, PtWidth, 0, &isNew, pDoc, pAb->AbDocView);
+	       /* cherche si l'element a deja une regle de largeur specifique*/
+	       pPRule = SearchPresRule (pEl, PtWidth, 0, &isNew, pDoc,
+					pAb->AbDocView);
 	       if (isNew)
 		 /* create a new rule for the element */
 		 {
@@ -714,9 +737,11 @@ ThotBool            display;
 		   /* specific case for pictures:
 		      the rule is NULL but the width is not */
 		   if (pRStd->PrDimRule.DrUnit == UnPercent)
-		     value = LogicalValue (width, UnPercent, (PtrAbstractBox) widthRef, 0);
+		     value = LogicalValue (width, UnPercent,
+					   (PtrAbstractBox) widthRef, 0);
 		   else
-		     value = LogicalValue (width, pAb->AbWidth.DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+		     value = LogicalValue (width, pAb->AbWidth.DimUnit, pAb,
+				    ViewFrameTable[frame - 1].FrMagnification);
 		 }
 	       else
 		 {
@@ -739,8 +764,10 @@ ThotBool            display;
 	       for (view = 1; view <= MAX_VIEW_DOC; view++)
 		 if (pEl->ElAbstractBox[view - 1] != NULL)
 		   /* l'element traite' a un pave dans cette view */
-		   if (pDoc->DocView[view - 1].DvSSchema == pDoc->DocView[pAb->AbDocView - 1].DvSSchema
-		       && pDoc->DocView[view - 1].DvPSchemaView == pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView)
+		   if (pDoc->DocView[view - 1].DvSSchema ==
+		               pDoc->DocView[pAb->AbDocView - 1].DvSSchema &&
+		       pDoc->DocView[view - 1].DvPSchemaView ==
+		               pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView)
 		     /* c'est une view de meme type que la view traitee, on */
 		     /* traite le pave de l'element dans cette view */
 		     {
@@ -767,9 +794,11 @@ ThotBool            display;
 			     /* il faut reafficher le pave */
 			     reDisp = TRUE;
 			     if (!AssocView (pEl))
-			       updateframe[view - 1] = pDoc->DocViewFrame[view - 1];
+			       updateframe[view - 1] =
+				      pDoc->DocViewFrame[view - 1];
 			     else
-			       updateframe[view - 1] = pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
+			       updateframe[view - 1] =
+				      pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
 			   }
 		     }
 	       if (attr)
@@ -784,7 +813,8 @@ ThotBool            display;
    if (height != 0 && pAb->AbBox != NULL && height != pAb->AbBox->BxHeight)
      /* cherche d'abord la regle de dimension qui s'applique a l'element */
      {
-       pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch, PtHeight, FnAny, FALSE, TRUE, &pAttr);
+       pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch,
+				    PtHeight, FnAny, FALSE, TRUE, &pAttr);
        /* on ne change pas la hauteur si c'est celle du contenu ou si c'est */
        /* une boite elastique. */
        ok = TRUE;
@@ -814,19 +844,21 @@ ThotBool            display;
 		 heightRef = pAb->AbEnclosing->AbBox->BxHeight;
 
 	       /* get the new percent value */
-	       dy = LogicalValue (dy, UnPercent, (PtrAbstractBox) heightRef, 0);
+	       dy = LogicalValue (dy, UnPercent, (PtrAbstractBox)heightRef, 0);
 	     }
 	   else
 	     {
 	       /* convert the new height in logical value */
-	       dy = LogicalValue (dy, pAb->AbHeight.DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+	       dy = LogicalValue (dy, pAb->AbHeight.DimUnit, pAb,
+				  ViewFrameTable[frame - 1].FrMagnification);
 	     }
 	   
 	   /* cherche si la hauteur de l'element est determinee par un */
 	   /* attribut auquel est associee l'exception NewHeight */
 	   attr = FALSE;
 	   if (pAttr != NULL)
-	     if (AttrHasException (ExcNewHeight, pAttr->AeAttrNum, pAttr->AeAttrSSchema))
+	     if (AttrHasException (ExcNewHeight, pAttr->AeAttrNum,
+				   pAttr->AeAttrSSchema))
 	       /* la nouvelle hauteur sera rangee dans l'attribut */
 	       attr = TRUE;
 	   doit = TRUE;
@@ -845,7 +877,8 @@ ThotBool            display;
 		   notifyAttr.document = doc;
 		   notifyAttr.element = (Element) pEl;
 		   notifyAttr.attribute = (Attribute) pAttr;
-		   notifyAttr.attributeType.AttrSSchema = (SSchema) (pAttr->AeAttrSSchema);
+		   notifyAttr.attributeType.AttrSSchema =
+		                          (SSchema) (pAttr->AeAttrSSchema);
 		   notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
 		   if (CallEventAttribute (&notifyAttr, TRUE))
 		     doit = FALSE;
@@ -858,8 +891,8 @@ ThotBool            display;
 		       /* utilisant l'attribut */
 		       RedisplayAttribute (pAttr, pEl, pDoc);
 		       if (display)
-			 /* la nouvelle valeur de l'attribut doit etre prise en */
-			 /* compte dans les copies-inclusions de l'element */
+			 /* la nouvelle valeur de l'attribut doit etre prise */
+			 /* en compte dans les copies-inclusions de l'element*/
 			 RedisplayCopies (pEl, pDoc, TRUE);
 		     }
 		 }
@@ -868,8 +901,9 @@ ThotBool            display;
 	     /* la nouvelle hauteur doit etre rangee dans une regle */
 	     /* de presentation specifique */
 	     {
-	       /* cherche si l'element a deja une regle de hauteur specifique */
-	       pPRule = SearchPresRule (pEl, PtHeight, 0, &isNew, pDoc, pAb->AbDocView);
+	       /* cherche si l'element a deja une regle de hauteur specifique*/
+	       pPRule = SearchPresRule (pEl, PtHeight, 0, &isNew, pDoc,
+					pAb->AbDocView);
 	       if (isNew)
 		 /* create a new rule for the element */
 		 {
@@ -895,9 +929,11 @@ ThotBool            display;
 		   /* specific case for pictures:
 		      the rule is NULL but the height is not */
 		   if (pRStd->PrDimRule.DrUnit == UnPercent)
-		     value = LogicalValue (height, UnPercent, (PtrAbstractBox) heightRef, 0);
+		     value = LogicalValue (height, UnPercent,
+					   (PtrAbstractBox) heightRef, 0);
 		   else
-		     value = LogicalValue (height, pAb->AbHeight.DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+		     value = LogicalValue (height, pAb->AbHeight.DimUnit, pAb,
+				    ViewFrameTable[frame - 1].FrMagnification);
 		 }
 	       else
 		 {
@@ -921,8 +957,10 @@ ThotBool            display;
 	       for (view = 1; view <= MAX_VIEW_DOC; view++)
 		 if (pEl->ElAbstractBox[view - 1] != NULL)
 		   /* l'element traite' a un pave dans cette view */
-		   if (pDoc->DocView[view - 1].DvSSchema == pDoc->DocView[pAb->AbDocView - 1].DvSSchema
-		       && pDoc->DocView[view - 1].DvPSchemaView == pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView)
+		   if (pDoc->DocView[view - 1].DvSSchema ==
+		               pDoc->DocView[pAb->AbDocView - 1].DvSSchema &&
+		       pDoc->DocView[view - 1].DvPSchemaView ==
+		               pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView)
 		     /* c'est une view de meme type que la view traitee, on */
 		     /* traite le pave de l'element dans cette view */
 		     {
@@ -942,12 +980,15 @@ ThotBool            display;
 			 if (ApplyRule (pPRule, pSPR, pAbbCur, pDoc, pAttr))
 			   {
 			     pAbbCur->AbHeightChange = TRUE;
-			     RedispAbsBox (pAbbCur, pDoc);	/* indique le pave a reafficher */
+			     /* indique le pave a reafficher */
+			     RedispAbsBox (pAbbCur, pDoc);
 			     reDisp = TRUE;	/* il faut reafficher */
 			     if (!AssocView (pEl))
-			       updateframe[view - 1] = pDoc->DocViewFrame[view - 1];
+			       updateframe[view - 1] =
+				      pDoc->DocViewFrame[view - 1];
 			     else
-			       updateframe[view - 1] = pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
+			       updateframe[view - 1] =
+				      pDoc->DocAssocFrame[pEl->ElAssocNum - 1];
 			   }
 		     }
 	       if (attr)
@@ -995,10 +1036,7 @@ ThotBool            display;
 
    Parameter:
    presentationType: type of the presentation rule to be created. Available
-   values are PRSize, PRStyle, PRWeight, PRFont, PRUnderline, PRThickness,
-   PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRJustify, PRLineStyle,
-   PRLineWeight, PRFillPattern, PRBackground, PRForeground, PRHyphenate,
-   PRWidth, PRHeight, PRVertPos, PRHorizPos.
+   values are defined in file presentation.h
    view: the view (this view must be open).
    document: the document.
 
@@ -1020,7 +1058,7 @@ Document            document;
 
    UserErrorCode = 0;
    pPres = NULL;
-   if (presentationType < 0 || presentationType > PRHyphenate)
+   if (presentationType < 0 || presentationType > LAST_PRES_RULE_TYPE)
      TtaError (ERR_invalid_parameter);
    else if (document < 1 || document > MAX_DOCUMENTS)
      TtaError (ERR_invalid_document_parameter);
@@ -1051,9 +1089,38 @@ Document            document;
        if (v > 0)
 	 {
 	   GetPresentRule (&pPres);
-	   pPres->PrType = (PRuleType) presentationType;
 	   pPres->PrNextPRule = NULL;
 	   pPres->PrViewNum = v;
+           switch (presentationType)
+	     {
+	     case PRShowBox:
+	       pPres->PrType = PtFunction;
+	       pPres->PrPresFunction = FnShowBox;
+	       break;
+	     case PRNotInLine:
+	       pPres->PrType = PtFunction;
+	       pPres->PrPresFunction = FnNotInLine;
+	       break;
+	     case PRBackgroundPicture:
+	       pPres->PrType = PtFunction;
+	       pPres->PrPresFunction = FnBackgroundPicture;
+	       break;
+	     case PRPictureMode:
+	       pPres->PrType = PtFunction;
+	       pPres->PrPresFunction = FnPictureMode;
+	       break;
+	     case PRCreateEnclosing:
+	       pPres->PrType = PtFunction;
+	       pPres->PrPresFunction = FnCreateEnclosing;
+	       break;
+	     case PRLine:
+	       pPres->PrType = PtFunction;
+	       pPres->PrPresFunction = FnLine;
+	       break;
+	     default:
+	       pPres->PrType = (PRuleType) presentationType;
+	       break;
+	     }
 	 }
      }
    return ((PRule) pPres);
@@ -1067,10 +1134,7 @@ Document            document;
 
    Parameter:
    presentationType: type of the presentation rule to be created. Available
-   values are PRSize, PRStyle, PRWeight, PRFont, PRUnderline, PRThickness,
-   PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRJustify, PRLineStyle,
-   PRLineWeight, PRFillPattern, PRBackground, PRForeground, PRHyphenate,
-   PRShowBox, PRNotInLine.
+   values are defined in file presentation.h
    viewName: the name of the view (this view does not need to be open).
    document: the document.
 
@@ -1091,9 +1155,7 @@ Document            document;
 
    UserErrorCode = 0;
    pPres = NULL;
-   if (presentationType != PRNotInLine &&
-       presentationType != PRShowBox &&
-       (presentationType < 0 || presentationType > PRHyphenate))
+   if (presentationType < 0 || presentationType > LAST_PRES_RULE_TYPE)
      TtaError (ERR_invalid_parameter);
    else if (document < 1 || document > MAX_DOCUMENTS)
      TtaError (ERR_invalid_document_parameter);
@@ -1107,18 +1169,36 @@ Document            document;
        GetPresentRule (&pPres);
        pPres->PrNextPRule = NULL;
        pPres->PrViewNum = view;
-       if (presentationType == PRShowBox)
+       switch (presentationType)
 	 {
+	 case PRShowBox:
 	   pPres->PrType = PtFunction;
 	   pPres->PrPresFunction = FnShowBox;
-	 }
-       else if (presentationType == PRNotInLine)
-	 {
+	   break;
+	 case PRNotInLine:
 	   pPres->PrType = PtFunction;
 	   pPres->PrPresFunction = FnNotInLine;
+	   break;
+	 case PRBackgroundPicture:
+	   pPres->PrType = PtFunction;
+	   pPres->PrPresFunction = FnBackgroundPicture;
+	   break;
+	 case PRPictureMode:
+	   pPres->PrType = PtFunction;
+	   pPres->PrPresFunction = FnPictureMode;
+	   break;
+	 case PRCreateEnclosing:
+	   pPres->PrType = PtFunction;
+	   pPres->PrPresFunction = FnCreateEnclosing;
+	   break;
+	 case PRLine:
+	   pPres->PrType = PtFunction;
+	   pPres->PrPresFunction = FnLine;
+	   break;
+	 default:
+	   pPres->PrType = (PRuleType) presentationType;
+	   break;
 	 }
-       else
-	 pPres->PrType = (PRuleType) presentationType;
      }
    return ((PRule) pPres);
 }
@@ -1131,10 +1211,7 @@ Document            document;
 
    Parameter:
    presentationType: type of the presentation rule to be created. Available
-   values are PRSize, PRStyle, PRWeight, PRFont, PRUnderline, PRThickness,
-   PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRJustify, PRLineStyle,
-   PRLineWeight, PRFillPattern, PRBackground, PRForeground, PRHyphenate,
-   PRShowBox, PRNotInLine.
+   values are defined in file presentation.h
    viewName: the name of the view (this view does not need to be open).
    document: the document.
 
@@ -1159,9 +1236,7 @@ Document            document;
 
    UserErrorCode = 0;
    pPres = NULL;
-   if (presentationType != PRShowBox &&
-       presentationType != PRNotInLine &&
-       (presentationType < 0 || presentationType > PRHyphenate))
+   if (presentationType < 0 || presentationType > LAST_PRES_RULE_TYPE)
      TtaError (ERR_invalid_parameter);
    else if (document < 1 || document > MAX_DOCUMENTS)
      TtaError (ERR_invalid_document_parameter);
@@ -1193,18 +1268,36 @@ Document            document;
 	   GetPresentRule (&pPres);
 	   pPres->PrNextPRule = NULL;
 	   pPres->PrViewNum = vue;
-	   if (presentationType == PRShowBox)
+           switch (presentationType)
 	     {
+	     case PRShowBox:
 	       pPres->PrType = PtFunction;
 	       pPres->PrPresFunction = FnShowBox;
-	     }
-	   else	if (presentationType == PRNotInLine)
-	     {
+	       break;
+	     case PRNotInLine:
 	       pPres->PrType = PtFunction;
 	       pPres->PrPresFunction = FnNotInLine;
+	       break;
+	     case PRBackgroundPicture:
+	       pPres->PrType = PtFunction;
+	       pPres->PrPresFunction = FnBackgroundPicture;
+	       break;
+	     case PRPictureMode:
+	       pPres->PrType = PtFunction;
+	       pPres->PrPresFunction = FnPictureMode;
+	       break;
+	     case PRCreateEnclosing:
+	       pPres->PrType = PtFunction;
+	       pPres->PrPresFunction = FnCreateEnclosing;
+	       break;
+	     case PRLine:
+	       pPres->PrType = PtFunction;
+	       pPres->PrPresFunction = FnLine;
+	       break;
+	     default:
+	       pPres->PrType = (PRuleType) presentationType;
+	       break;
 	     }
-	   else
-	     pPres->PrType = (PRuleType) presentationType;
 	 }
      }
    return ((PRule) pPres);
@@ -1213,8 +1306,8 @@ Document            document;
 /*----------------------------------------------------------------------
    TtaCopyPRule
 
-   Creates a new presentation rule and initializes it with a copy of an existing
-   presentation rule.
+   Creates a new presentation rule and initializes it with a copy of an
+   existing presentation rule.
 
    Parameter:
    pRule: presentation rule to be copied.
@@ -1331,24 +1424,37 @@ Document            document;
    document: the document to which the element belongs.
 
    Valid values according to rule type:
-   PRSize: an integer between 6 and 72 (body size in points).
+   PRDepth: an integer (z-index of the element).
+   PRVisibility: an integer >= 0 (visibility level).
+   PRFillPattern: rank of the pattern in file thot.pattern.
+   PRBackground: rank of the background color in file thot.color.
+   PRForeground: rank of the foreground color in file thot.color.
+   PRBorderTopColor, PRBorderRightColor, PRBorderBottomColor,PRBorderLeftColor:
+      if value >= 0: rank of the color in file thot.color.
+      if value < 0 : -2 means transparent and -1 means same color as foreground
+   PRFont: FontTimes, FontHelvetica, FontCourier.
    PRStyle: StyleRoman, StyleItalics, StyleOblique.
    PRWeight: WeightNormal, WeightBold.
-   PRFont: FontTimes, FontHelvetica, FontCourier.
    PRUnderline: NoUnderline, Underline, Overline, CrossOut.
    PRThickness: ThinUnderline, ThickUnderline.
+   PRLineStyle, PRBorderTopStyle, PRBorderRightStyle, PRBorderBottomStyle,
+      PRBorderLeftStyle: SolidLine, DashedLine, DottedLine.
+   PRNoBreak1, PRNoBreak2: a positive integer (distance in points).
    PRIndent: a positive, null or negative integer (indentation in points).
+   PRSize: an integer between 6 and 72 (body size in points).
    PRLineSpacing: a positive integer (line spacing in points).
-   PRDepth: a positive integer (depth of the element).
-   PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots.
+   PRLineWeight: a positive or null integer (stroke width for graphics in
+      points).
+   PRMarginTop, PRMarginLeft, PRMarginBottom, PRMarginRight: a positive, null
+      or negative integer (margin in points).
+   PRPaddingTop, PRPaddingRight, PRPaddingBottom, PRPaddingLeft: an integer
+      > 0 (padding in points).
+   PRBorderTopWidth, PRBorderRightWidth, PRBorderBottomWidth, PRBorderLeftWidth:
+      an integer > 0 (border width in points).
    PRJustify: Justified, NotJustified.
    PRHyphenate: Hyphenation, NoHyphenation.
-   PRLineStyle: SolidLine, DashedLine, DottedLine.
-   PRLineWeight: a positive or null integer (stroke width for graphics).
-   PRFillPattern: rank of the pattern in the file thot.pattern.
-   PRBackground: rank of the background color in the file thot.color.
-   PRForeground: rank of the foreground color in the file thot.color.
-   PRWidth, PRHeight, PRVertPos, PRHorizPos: a positive or null integer.
+   PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots.
+
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TtaSetPRuleValue (Element element, PRule pRule, int value, Document document)
@@ -1380,12 +1486,65 @@ Document            document;
 #endif
        switch (((PtrPRule) pRule)->PrType)
 	 {
-	 case PtSize:
-	   /* Body-size in typographic points */
+	 case PtFunction:
+	   if (((PtrPRule) pRule)->PrPresFunction == FnBackgroundPicture)
+	     ((PtrPRule) pRule)->PrPresBox[0] = value;
+	   else if (((PtrPRule) pRule)->PrPresFunction == FnPictureMode)
+	     ((PtrPRule) pRule)->PrPresBox[0] = value;
+	   break;
+
+	 case PtDepth:
 	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
-	   ((PtrPRule) pRule)->PrMinUnit = UnPoint;
-	   ((PtrPRule) pRule)->PrMinAttr = FALSE;
-	   ((PtrPRule) pRule)->PrMinValue = value;
+	   ((PtrPRule) pRule)->PrIntValue = value;
+	   ((PtrPRule) pRule)->PrAttrValue = FALSE;
+	   break;
+	 case PtVisibility:
+	 case PtFillPattern:
+	 case PtBackground:
+	 case PtForeground:
+	   if (value < 0)
+	     TtaError (ERR_invalid_parameter);
+	   else
+	     {
+	       ((PtrPRule) pRule)->PrPresMode = PresImmediate;
+	       ((PtrPRule) pRule)->PrIntValue = value;
+	       ((PtrPRule) pRule)->PrAttrValue = FALSE;
+	     }
+	   break;
+	 case PtBorderTopColor:
+	 case PtBorderRightColor:
+	 case PtBorderBottomColor:
+	 case PtBorderLeftColor:
+	   if (value < -2)
+	     TtaError (ERR_invalid_parameter);
+	   else
+	     {
+	       ((PtrPRule) pRule)->PrPresMode = PresImmediate;
+	       ((PtrPRule) pRule)->PrIntValue = value;
+	       ((PtrPRule) pRule)->PrAttrValue = FALSE;
+	     }
+	   break;
+
+	 case PtFont:
+	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
+	   switch (value)
+	     {
+	     case FontTimes:
+	       ((PtrPRule) pRule)->PrChrValue = 'T';
+	       break;
+	     case FontHelvetica:
+	       ((PtrPRule) pRule)->PrChrValue = 'H';
+	       break;
+	     case FontCourier:
+	       ((PtrPRule) pRule)->PrChrValue = 'C';
+	       break;
+	     default:
+#ifndef NODISPLAY
+	       done = FALSE;
+#endif
+	       TtaError (ERR_invalid_parameter);
+	       break;
+	     }
 	   break;
 	 case PtStyle:
 	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
@@ -1417,27 +1576,6 @@ Document            document;
 	       break;
 	     case WeightBold:
 	       ((PtrPRule) pRule)->PrChrValue = 'B';
-	       break;
-	     default:
-#ifndef NODISPLAY
-	       done = FALSE;
-#endif
-	       TtaError (ERR_invalid_parameter);
-	       break;
-	     }
-	   break;
-	 case PtFont:
-	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
-	   switch (value)
-	     {
-	     case FontTimes:
-	       ((PtrPRule) pRule)->PrChrValue = 'T';
-	       break;
-	     case FontHelvetica:
-	       ((PtrPRule) pRule)->PrChrValue = 'H';
-	       break;
-	     case FontCourier:
-	       ((PtrPRule) pRule)->PrChrValue = 'C';
 	       break;
 	     default:
 #ifndef NODISPLAY
@@ -1489,38 +1627,22 @@ Document            document;
 	       break;
 	     }
 	   break;
-	 case PtIndent:
-	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
-	   ((PtrPRule) pRule)->PrMinUnit = UnPoint;
-	   ((PtrPRule) pRule)->PrMinAttr = FALSE;
-	   ((PtrPRule) pRule)->PrMinValue = value;
-	   break;
-	 case PtLineSpacing:
-	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
-	   ((PtrPRule) pRule)->PrMinUnit = UnPoint;
-	   ((PtrPRule) pRule)->PrMinAttr = FALSE;
-	   ((PtrPRule) pRule)->PrMinValue = value;
-	   break;
-	 case PtDepth:
-	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
-	   ((PtrPRule) pRule)->PrIntValue = value;
-	   ((PtrPRule) pRule)->PrAttrValue = FALSE;
-	   break;
-	 case PtAdjust:
+	 case PtLineStyle:
+	 case PtBorderTopStyle:
+	 case PtBorderRightStyle:
+	 case PtBorderBottomStyle:
+	 case PtBorderLeftStyle:
 	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
 	   switch (value)
 	     {
-	     case AdjustLeft:
-	       ((PtrPRule) pRule)->PrAdjust = AlignLeft;
+	     case SolidLine:
+	       ((PtrPRule) pRule)->PrChrValue = 'S';
 	       break;
-	     case AdjustRight:
-	       ((PtrPRule) pRule)->PrAdjust = AlignRight;
+	     case DashedLine:
+	       ((PtrPRule) pRule)->PrChrValue = '-';
 	       break;
-	     case Centered:
-	       ((PtrPRule) pRule)->PrAdjust = AlignCenter;
-	       break;
-	     case LeftWithDots:
-	       ((PtrPRule) pRule)->PrAdjust = AlignLeftDots;
+	     case DottedLine:
+	       ((PtrPRule) pRule)->PrChrValue = '.';
 	       break;
 	     default:
 #ifndef NODISPLAY
@@ -1530,6 +1652,31 @@ Document            document;
 	       break;
 	     }
 	   break;
+
+	 case PtBreak1:
+	 case PtBreak2:
+	 case PtIndent:
+	 case PtSize:
+	 case PtLineSpacing:
+	 case PtLineWeight:
+	 case PtMarginTop:
+	 case PtMarginRight:
+	 case PtMarginBottom:
+	 case PtMarginLeft:
+	 case PtPaddingTop:
+	 case PtPaddingRight:
+	 case PtPaddingBottom:
+	 case PtPaddingLeft:
+	 case PtBorderTopWidth:
+	 case PtBorderRightWidth:
+	 case PtBorderBottomWidth:
+	 case PtBorderLeftWidth:
+	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
+	   ((PtrPRule) pRule)->PrMinUnit = UnPoint;
+	   ((PtrPRule) pRule)->PrMinAttr = FALSE;
+	   ((PtrPRule) pRule)->PrMinValue = value;
+	   break;
+
 	 case PtJustify:
 	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
 	   switch (value)
@@ -1566,18 +1713,22 @@ Document            document;
 	       break;
 	     }
 	   break;
-	 case PtLineStyle:
+
+	 case PtAdjust:
 	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
 	   switch (value)
 	     {
-	     case SolidLine:
-	       ((PtrPRule) pRule)->PrChrValue = 'S';
+	     case AdjustLeft:
+	       ((PtrPRule) pRule)->PrAdjust = AlignLeft;
 	       break;
-	     case DashedLine:
-	       ((PtrPRule) pRule)->PrChrValue = '-';
+	     case AdjustRight:
+	       ((PtrPRule) pRule)->PrAdjust = AlignRight;
 	       break;
-	     case DottedLine:
-	       ((PtrPRule) pRule)->PrChrValue = '.';
+	     case Centered:
+	       ((PtrPRule) pRule)->PrAdjust = AlignCenter;
+	       break;
+	     case LeftWithDots:
+	       ((PtrPRule) pRule)->PrAdjust = AlignLeftDots;
 	       break;
 	     default:
 #ifndef NODISPLAY
@@ -1587,39 +1738,102 @@ Document            document;
 	       break;
 	     }
 	   break;
+
+	 default:
+	   TtaError (ERR_invalid_parameter);
+#ifndef NODISPLAY
+	   done = FALSE;
+#endif
+	   break;
+	 }
+#ifndef NODISPLAY
+       if (done)
+	 RedisplayNewPRule (document, (PtrElement) element, (PtrPRule) pRule);
+#endif
+     }
+}
+
+/*----------------------------------------------------------------------
+   TtaSetPRuleValueWithUnit
+
+   Changes the value and the length unit of a presentation rule.
+   The presentation rule must be attached to an element that is part of
+   a document.
+
+   Parameters:
+   element: the element to which the presentation rule is attached.
+   pRule: the presentation rule to be changed.
+   value: the value to be set.
+   unit: the length unit in which the value is expressed.
+   document: the document to which the element belongs.
+
+   Valid values according to rule type:
+   PRNoBreak1, PRNoBreak2: a positive integer (distance).
+   PRIndent: a positive, null or negative integer (indentation).
+   PRSize: an integer between 6 and 72 (body size).
+   PRLineSpacing: a positive integer (line spacing).
+   PRLineWeight: a positive or null integer (stroke width for graphics).
+   PRMarginTop, PRMarginLeft, PRMarginBottom, PRMarginRight: a positive, null
+      or negative integer (margin).
+   PRPaddingTop, PRPaddingRight, PRPaddingBottom, PRPaddingLeft: an integer
+      > 0 (padding).
+   PRBorderTopWidth, PRBorderRightWidth, PRBorderBottomWidth, PRBorderLeftWidth:
+      an integer > 0 (border width).
+
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaSetPRuleValueWithUnit (Element element, PRule pRule, int value, TypeUnit unit, Document document)
+#else  /* __STDC__ */
+void                TtaSetPRuleValueWithUnit (element, pRule, value, unit, document)
+Element             element;
+PRule               pRule;
+int                 value;
+TypeUnit            unit;
+Document            document;
+#endif /* __STDC__ */
+{
+#ifndef NODISPLAY
+   ThotBool            done;
+#endif
+
+   UserErrorCode = 0;
+   if (element == NULL || pRule == NULL)
+     TtaError (ERR_invalid_parameter);
+   else if (document < 1 || document > MAX_DOCUMENTS)
+     /* verifies the parameter document */
+     TtaError (ERR_invalid_document_parameter);
+   else if (LoadedDocument[document - 1] == NULL)
+     TtaError (ERR_invalid_document_parameter);
+   else
+     /* parameter document is correct */
+     {
+#ifndef NODISPLAY
+       done = TRUE;
+#endif
+       switch (((PtrPRule) pRule)->PrType)
+	 {
+	 case PtBreak1:
+	 case PtBreak2:
+	 case PtIndent:
+	 case PtSize:
+	 case PtLineSpacing:
 	 case PtLineWeight:
-	   /* value = thickness of the line in typo points. */
+	 case PtMarginTop:
+	 case PtMarginRight:
+	 case PtMarginBottom:
+	 case PtMarginLeft:
+	 case PtPaddingTop:
+	 case PtPaddingRight:
+	 case PtPaddingBottom:
+	 case PtPaddingLeft:
+	 case PtBorderTopWidth:
+	 case PtBorderRightWidth:
+	 case PtBorderBottomWidth:
+	 case PtBorderLeftWidth:
 	   ((PtrPRule) pRule)->PrPresMode = PresImmediate;
-	   ((PtrPRule) pRule)->PrMinUnit = UnPoint;
+	   ((PtrPRule) pRule)->PrMinUnit = unit;
 	   ((PtrPRule) pRule)->PrMinAttr = FALSE;
 	   ((PtrPRule) pRule)->PrMinValue = value;
-	   break;
-	 case PtFillPattern:
-	   if (value < 0)
-	     TtaError (ERR_invalid_parameter);
-	   else
-	     {
-	       ((PtrPRule) pRule)->PrPresMode = PresImmediate;
-	       ((PtrPRule) pRule)->PrIntValue = value;
-	       ((PtrPRule) pRule)->PrAttrValue = FALSE;
-	     }
-	   break;
-	 case PtBackground:
-	 case PtForeground:
-	   if (value < 0)
-	     TtaError (ERR_invalid_parameter);
-	   else
-	     {
-	       ((PtrPRule) pRule)->PrPresMode = PresImmediate;
-	       ((PtrPRule) pRule)->PrIntValue = value;
-	       ((PtrPRule) pRule)->PrAttrValue = FALSE;
-	     }
-	   break;
-	 case PtFunction:
-	   if (((PtrPRule) pRule)->PrPresFunction == FnBackgroundPicture)
-	     ((PtrPRule) pRule)->PrPresBox[0] = value;
-	   else if (((PtrPRule) pRule)->PrPresFunction == FnPictureMode)
-	     ((PtrPRule) pRule)->PrPresBox[0] = value;
 	   break;
 	 default:
 	   TtaError (ERR_invalid_parameter);
@@ -1686,11 +1900,11 @@ void                TtaChangeBoxSize (Element element, Document document, View v
 #else  /* __STDC__ */
 void                TtaChangeBoxSize (element, document, view, deltaX, deltaY, unit)
 Element             element;
+Document            document;
 View                view;
 int                 deltaX;
 int                 deltaY;
-Document            document;
-
+TypeUnit            unit;
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pAb;
@@ -2173,10 +2387,7 @@ int                *height;
    Parameters:
    element: the element of interest.
    presentationType: type of the desired presentation rule. Available
-   values are PRSize, PtStyle, PtWeight, PRFont, PRUnderline, PRThickness,
-   PRIndent, PRLineSpacing, PRDepth, PRAdjust, PRJustify, PRLineStyle,
-   PRLineWeight, PRFillPattern, PRBackground, PRForeground, PRHyphenate,
-   PRShowBox, PRNotInLine.
+   values are defined in file presentation.h
 
    Return value:
    the presentation rule found, or NULL if the element
@@ -2214,7 +2425,8 @@ int                 presentationType;
       found = FALSE;
       while (pPres != NULL && !found)
 	if (((int)(pPres->PrType) == presentationType && func == -1) ||
-	    (pPres->PrType == PtFunction && (int)(pPres->PrPresFunction) == func))
+	    (pPres->PrType == PtFunction &&
+	     (int)(pPres->PrPresFunction) == func))
 	  {
 	    pRule = pPres;
 	    found = TRUE;
@@ -2234,10 +2446,8 @@ int                 presentationType;
    pRule: the presentation rule of interest.
 
    Return value:
-   type of that presentation rule. Available values are RSize, RStyle, RWeight,
-   RFont, RUnderline, RThickness, PtIndent, RLineSpacing, RDepth, RAdjust,
-   RJustify, RLineStyle, RLineWeight, RFillPattern, RBackground,
-   RForeground, RHyphenate, PRShowBox, PRNotInLine.
+   type of that presentation rule. Available values are defined in
+           file presentation.h
 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2255,11 +2465,14 @@ PRule               pRule;
     TtaError (ERR_invalid_parameter);
   else
     {
-      presentationType = ((PtrPRule) pRule)->PrType;
-      if (presentationType == PtFunction && ((PtrPRule) pRule)->PrPresFunction == FnShowBox)
+      if (presentationType == PtFunction &&
+	  ((PtrPRule) pRule)->PrPresFunction == FnShowBox)
 	presentationType = PRShowBox;
-      else if (presentationType == PtFunction && ((PtrPRule) pRule)->PrPresFunction == FnNotInLine)
+      else if (presentationType == PtFunction &&
+	       ((PtrPRule) pRule)->PrPresFunction == FnNotInLine)
 	presentationType = PRNotInLine;
+      else
+        presentationType = ((PtrPRule) pRule)->PrType;
     }
   return presentationType;
 }
@@ -2273,24 +2486,35 @@ PRule               pRule;
    pRule: the presentation rule of interest.
 
    Return values according to rule type:
-   PRSize: an integer between 6 and 72 (body size in points).
+   PRVisibility: an integer >= 0 (visibility level).
+   PRDepth: an integer (z-index of the element).
+   PRFillPattern: rank of the pattern in file thot.pattern.
+   PRBackground: rank of the background color in file thot.color.
+   PRForeground: rank of the foreground color in file thot.color.
+   PRBorderTopColor, PRBorderRightColor, PRBorderBottomColor,PRBorderLeftColor:
+      if value >= 0: rank of the color in file thot.color.
+      if value < 0 : -2 means transparent and -1 means same color as foreground
+   PRFont: FontTimes, FontHelvetica, FontCourier.
    PRStyle: StyleRoman, StyleItalics, StyleOblique.
    PRWeight: WeightNormal, WeightBold.
-   PRFont: FontTimes, FontHelvetica, FontCourier.
-   RPUnderline: NoUnderline, Underline, Overline, CrossOut.
+   PRUnderline: NoUnderline, Underline, Overline, CrossOut.
    PRThickness: ThinUnderline, ThickUnderline.
-   PtIndent: a positive, null or negative integer (indentation in points).
+   PRLineStyle, PRBorderTopStyle, PRBorderRightStyle, PRBorderBottomStyle,
+      PRBorderLeftStyle: SolidLine, DashedLine, DottedLine.
+   PRNoBreak1, PRNoBreak2: a positive integer (distance in points).
+   PRIndent: a positive, null or negative integer (indentation in points).
+   PRSize: an integer between 6 and 72 (body size in points).
    PRLineSpacing: a positive integer (line spacing in points).
-   PRDepth: a positive integer (depth of the element).
-   PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots.
+   PRLineWeight: a positive or null integer (stroke width for graphics).
+   PRMarginTop, PRMarginLeft, PRMarginBottom, PRMarginRight: a positive, null
+      or negative integer (margin in points).
+   PRPaddingTop, PRPaddingRight, PRPaddingBottom, PRPaddingLeft: an integer
+      > 0 (padding in points).
+   PRBorderTopWidth, PRBorderRightWidth, PRBorderBottomWidth, PRBorderLeftWidth:
+      an integer > 0 (border width in points).
    PRJustify: Justified, NotJustified.
    PRHyphenate: Hyphenation, NoHyphenation.
-   PRLineStyle: SolidLine, DashedLine, DottedLine.
-   PRLineWeight: a positive or null integer (stroke width for graphics).
-   PRFillPattern: rank of the pattern in the file thot.pattern.
-   PRBackground: rank of the background color in the file thot.color.
-   PRForeground: rank of the foreground color in the file thot.color.
-   PRWidth, PRHeight, PRVertPos, PRHorizPos: a positive or null integer.
+   PRAdjust: AdjustLeft, AdjustRight, Centered, LeftWithDots.
  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -2309,9 +2533,34 @@ PRule               pRule;
   else
     switch (((PtrPRule) pRule)->PrType)
       {
-      case PtSize:
-	/* Body-size in typographic points */
-	value = ((PtrPRule) pRule)->PrMinValue;
+      case PtVisibility:
+      case PtDepth:
+      case PtFillPattern:
+      case PtBackground:
+      case PtForeground:
+      case PtBorderTopColor:
+      case PtBorderRightColor:
+      case PtBorderBottomColor:
+      case PtBorderLeftColor:
+	value = ((PtrPRule) pRule)->PrIntValue;
+	break;
+
+      case PtFont:
+	switch (((PtrPRule) pRule)->PrChrValue)
+	  {
+	  case 'T':
+	    value = FontTimes;
+	    break;
+	  case 'H':
+	    value = FontHelvetica;
+	    break;
+	  case 'C':
+	    value = FontCourier;
+	    break;
+	  default:
+	    TtaError (ERR_invalid_parameter);
+	    break;
+	  }
 	break;
       case PtStyle:
 	switch (((PtrPRule) pRule)->PrChrValue)
@@ -2338,23 +2587,6 @@ PRule               pRule;
 	    break;
 	  case 'B':
 	    value = WeightBold;
-	    break;
-	  default:
-	    TtaError (ERR_invalid_parameter);
-	    break;
-	  }
-	break;
-      case PtFont:
-	switch (((PtrPRule) pRule)->PrChrValue)
-	  {
-	  case 'T':
-	    value = FontTimes;
-	    break;
-	  case 'H':
-	    value = FontHelvetica;
-	    break;
-	  case 'C':
-	    value = FontCourier;
 	    break;
 	  default:
 	    TtaError (ERR_invalid_parameter);
@@ -2395,15 +2627,72 @@ PRule               pRule;
 	    break;
 	  }
 	break;
+      case PtLineStyle:
+      case PtBorderTopStyle:
+      case PtBorderRightStyle:
+      case PtBorderBottomStyle:
+      case PtBorderLeftStyle:
+	switch (((PtrPRule) pRule)->PrChrValue)
+	  {
+	  case 'S':
+	    value = SolidLine;
+	    break;
+	  case '-':
+	    value = DashedLine;
+	    break;
+	  case '.':
+	    value = DottedLine;
+	    break;
+	  default:
+	    TtaError (ERR_invalid_parameter);
+	    break;
+	  }
+	break;
+
+      case PtBreak1:
+      case PtBreak2:
       case PtIndent:
-	value = ((PtrPRule) pRule)->PrMinValue;
-	break;
+      case PtSize:
       case PtLineSpacing:
+      case PtLineWeight:
+      case PtMarginTop:
+      case PtMarginRight:
+      case PtMarginBottom:
+      case PtMarginLeft:
+      case PtPaddingTop:
+      case PtPaddingRight:
+      case PtPaddingBottom:
+      case PtPaddingLeft:
+      case PtBorderTopWidth:
+      case PtBorderRightWidth:
+      case PtBorderBottomWidth:
+      case PtBorderLeftWidth:
 	value = ((PtrPRule) pRule)->PrMinValue;
 	break;
-      case PtDepth:
-	value = ((PtrPRule) pRule)->PrIntValue;
+
+      case PtVertPos:
+      case PtHorizPos:
+	value = ((PtrPRule) pRule)->PrPosRule.PoDistance;
 	break;
+
+      case PtWidth:
+      case PtHeight:
+	value = ((PtrPRule) pRule)->PrDimRule.DrValue;
+	break;
+
+      case PtJustify:
+	if (((PtrPRule) pRule)->PrJustify)
+	  value = Justified;
+	else
+	  value = NotJustified;
+	break;
+      case PtHyphenate:
+	if (((PtrPRule) pRule)->PrJustify)
+	  value = Hyphenation;
+	else
+	  value = NoHyphenation;
+	break;
+
       case PtAdjust:
 	switch (((PtrPRule) pRule)->PrAdjust)
 	  {
@@ -2424,52 +2713,7 @@ PRule               pRule;
 	    break;
 	  }
 	break;
-      case PtJustify:
-	if (((PtrPRule) pRule)->PrJustify)
-	  value = Justified;
-	else
-	  value = NotJustified;
-	break;
-      case PtHyphenate:
-	if (((PtrPRule) pRule)->PrJustify)
-	  value = Hyphenation;
-	else
-	  value = NoHyphenation;
-	break;
-      case PtLineStyle:
-	switch (((PtrPRule) pRule)->PrChrValue)
-	  {
-	  case 'S':
-	    value = SolidLine;
-	    break;
-	  case '-':
-	    value = DashedLine;
-	    break;
-	  case '.':
-	    value = DottedLine;
-	    break;
-	  default:
-	    TtaError (ERR_invalid_parameter);
-	    break;
-	  }
-	break;
-      case PtLineWeight:
-	/* value = thickness of the line in typographic points */
-	value = ((PtrPRule) pRule)->PrMinValue;
-	break;
-      case PtFillPattern:
-      case PtBackground:
-      case PtForeground:
-	value = ((PtrPRule) pRule)->PrIntValue;
-	break;
-      case PtWidth:
-      case PtHeight:
-	value = ((PtrPRule) pRule)->PrDimRule.DrValue;
-	break;
-      case PtVertPos:
-      case PtHorizPos:
-	value = ((PtrPRule) pRule)->PrPosRule.PoDistance;
-	break;
+
       default:
 	TtaError (ERR_invalid_parameter);
 	break;
@@ -2485,8 +2729,14 @@ PRule               pRule;
    Parameters:
    pRule: the presentation rule of interest.
 
-   Return the unit of the rule type PRSize, PRIndent, PRLineSpacing, PRLineWeight,
-   PRWidth, PRHeight, PRVertPos, PRHorizPos.
+   Return the unit of the rule type PRNoBreak1, PRNoBreak2,
+   PRIndent, PRSize, PRLineSpacing, PRLineWeight,
+   PRMarginTop, PRMarginRight, PRMarginBottom, PRMarginLeft,
+   PRPaddingTop, PRPaddingRight, PRPaddingBottom, PRPaddingLeft,
+   PRBorderTopWidth, PRBorderRightWidth, PRBorderBottomWidth,
+   PRBorderLeftWidth,
+   PRVertPos, PRHorizPos, PRWidth, PRHeight.
+
    This unit could be UnRelative, UnXHeight, UnPoint, UnPixel, UnPercent.
    Return UnRelative in other cases.
 
@@ -2507,18 +2757,24 @@ PRule               pRule;
   else
     switch (((PtrPRule) pRule)->PrType)
       {
-      case PtSize:
-	/* Body-size in typographic points */
-	value = ((PtrPRule) pRule)->PrMinUnit;
-	break;
+      case PtBreak1:
+      case PtBreak2:
       case PtIndent:
-	value = ((PtrPRule) pRule)->PrMinUnit;
-	break;
+      case PtSize:
       case PtLineSpacing:
-	value = ((PtrPRule) pRule)->PrMinUnit;
-	break;
       case PtLineWeight:
-	/* value = thickness of the line in typographic points */
+      case PtMarginTop:
+      case PtMarginRight:
+      case PtMarginBottom:
+      case PtMarginLeft:
+      case PtPaddingTop:
+      case PtPaddingRight:
+      case PtPaddingBottom:
+      case PtPaddingLeft:
+      case PtBorderTopWidth:
+      case PtBorderRightWidth:
+      case PtBorderBottomWidth:
+      case PtBorderLeftWidth:
 	value = ((PtrPRule) pRule)->PrMinUnit;
 	break;
       case PtWidth:
@@ -2606,62 +2862,86 @@ PRule               pRule2;
 		    if (pR1->PrPresMode == pR2->PrPresMode)
 		       if (pR1->PrPresMode == PresImmediate)
 			  switch (pR1->PrType)
-				{
-				   case PtVisibility:
-				   case PtDepth:
-				   case PtFillPattern:
-				   case PtBackground:
-				   case PtForeground:
-				      if (pR1->PrAttrValue == pR2->PrAttrValue)
-					 if (pR1->PrIntValue == pR2->PrIntValue)
-					    result = 1;
-				      break;
-				   case PtFont:
-				   case PtStyle:
-				   case PtWeight:
-				   case PtUnderline:
-				   case PtThickness:
-				   case PtLineStyle:
-				      if (pR1->PrChrValue == pR2->PrChrValue)
-					 result = 1;
-				      break;
-				   case PtBreak1:
-				   case PtBreak2:
-				   case PtIndent:
-				   case PtSize:
-				   case PtLineSpacing:
-				   case PtLineWeight:
-				      if (pR1->PrMinUnit == pR2->PrMinUnit)
-					 if (pR1->PrMinAttr == pR2->PrMinAttr)
-					    if (pR1->PrMinValue == pR2->PrMinValue)
-					       result = 1;
-				      break;
-				   case PtVertRef:
-				   case PtHorizRef:
-				   case PtVertPos:
-				   case PtHorizPos:
-				      if (pR1->PrPosRule.PoDistUnit == pR2->PrPosRule.PoDistUnit)
-					 if (pR1->PrPosRule.PoDistance == pR2->PrPosRule.PoDistance)
-					    result = 1;
-				      break;
-				   case PtHeight:
-				   case PtWidth:
-				      if (pR1->PrDimRule.DrUnit == pR2->PrDimRule.DrUnit)
-					 if (pR1->PrDimRule.DrValue == pR2->PrDimRule.DrValue)
-					    result = 1;
-				      break;
-				   case PtJustify:
-				   case PtHyphenate:
-				      if (pR1->PrJustify == pR2->PrJustify)
-					 result = 1;
-				      break;
-				   case PtAdjust:
-				      if (pR1->PrAdjust == pR2->PrAdjust)
-					 result = 1;
-				      break;
-				   default:
-				      break;
-				}
+			    {
+			    case PtVisibility:
+			    case PtDepth:
+			    case PtFillPattern:
+			    case PtBackground:
+			    case PtForeground:
+			    case PtBorderTopColor:
+			    case PtBorderRightColor:
+			    case PtBorderBottomColor:
+			    case PtBorderLeftColor:
+			      if (pR1->PrAttrValue == pR2->PrAttrValue)
+				if (pR1->PrIntValue == pR2->PrIntValue)
+				  result = 1;
+			      break;
+			    case PtFont:
+			    case PtStyle:
+			    case PtWeight:
+			    case PtUnderline:
+			    case PtThickness:
+			    case PtLineStyle:
+			    case PtBorderTopStyle:
+			    case PtBorderRightStyle:
+			    case PtBorderBottomStyle:
+			    case PtBorderLeftStyle:
+			      if (pR1->PrChrValue == pR2->PrChrValue)
+				result = 1;
+			      break;
+			    case PtBreak1:
+			    case PtBreak2:
+			    case PtIndent:
+			    case PtSize:
+			    case PtLineSpacing:
+			    case PtLineWeight:
+			    case PtMarginTop:
+			    case PtMarginRight:
+			    case PtMarginBottom:
+			    case PtMarginLeft:
+			    case PtPaddingTop:
+			    case PtPaddingRight:
+			    case PtPaddingBottom:
+			    case PtPaddingLeft:
+			    case PtBorderTopWidth:
+			    case PtBorderRightWidth:
+			    case PtBorderBottomWidth:
+			    case PtBorderLeftWidth:
+			      if (pR1->PrMinUnit == pR2->PrMinUnit)
+				if (pR1->PrMinAttr == pR2->PrMinAttr)
+				  if (pR1->PrMinValue == pR2->PrMinValue)
+				    result = 1;
+			      break;
+			    case PtVertRef:
+			    case PtHorizRef:
+			    case PtVertPos:
+			    case PtHorizPos:
+			      if (pR1->PrPosRule.PoDistUnit ==
+				                     pR2->PrPosRule.PoDistUnit)
+				if (pR1->PrPosRule.PoDistance ==
+				                     pR2->PrPosRule.PoDistance)
+				  result = 1;
+			      break;
+			    case PtHeight:
+			    case PtWidth:
+			      if (pR1->PrDimRule.DrUnit ==
+				                     pR2->PrDimRule.DrUnit)
+				if (pR1->PrDimRule.DrValue ==
+				                     pR2->PrDimRule.DrValue)
+				  result = 1;
+			      break;
+			    case PtJustify:
+			    case PtHyphenate:
+			      if (pR1->PrJustify == pR2->PrJustify)
+				result = 1;
+			      break;
+			    case PtAdjust:
+			      if (pR1->PrAdjust == pR2->PrAdjust)
+				result = 1;
+			      break;
+			    default:
+			      break;
+			    }
      }
    return result;
 }
