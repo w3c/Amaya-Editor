@@ -3094,6 +3094,14 @@ char               *data;
 		  /* Pop-up menu 'Creation element reference'' */
 		  (*ThotLocalActions[T_raskfornew]) ((int) data);
 		  break;
+               case NumMenuChangeType:
+                  /* Pop-up menu 'ChangeType' */
+                  (*ThotLocalActions[T_rchangetype]) ((int)data);
+                  break;
+               case NumMenuSurround:
+                  /* Pop-up menu 'Surround' */
+                  (*ThotLocalActions[T_rsurround]) ((int)data);
+                  break;
 
 	       case NumMenuAttrRequired:
 	       case NumMenuAttrNumNeeded:
@@ -3248,6 +3256,10 @@ char               *data;
 		       TtaSetDialoguePosition ();
 		       (*ThotLocalActions[T_rattr]) (ref, (int) data, ActiveFrame);
 		    }
+                  if (ref >= NumMenuPresNature && ref <= NumMenuPresNature + NbMaxMenuPresNature)
+                     /* retour des menus de changement de schema de presentation */
+                       if (ThotLocalActions[T_rchangepres] != NULL)
+                         (*ThotLocalActions[T_rchangepres]) (ref, (int)data);
 		  break;
 	    }
    else
