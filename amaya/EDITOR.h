@@ -32,7 +32,7 @@
 #define BSave  18
 #define BSaveAs  19
 #define BPrint  20
-#define BPrintSetUp  21
+#define BSetUpandPrint  21
 #define BClose  22
 #define BExit  23
 #define BCloseView  24
@@ -137,7 +137,6 @@
 #define BTransform  123
 #define TSectionNumber  124
 #define BMakeBook  125
-#define BRtimeHTML  126
-#define BInformation  127
+#define BInformation  126
 
-#define MAX_EDITOR_LABEL       129
+#define MAX_EDITOR_LABEL       128

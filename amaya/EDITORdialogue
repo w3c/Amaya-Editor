@@ -19,7 +19,7 @@
 18  BSave
 19  BSaveAs
 20  BPrint
-21  BPrintSetUp
+21  BSetUpandPrint
 22  BClose
 23  BExit
 24  BCloseView
@@ -124,5 +124,4 @@
 123  BTransform
 124  TSectionNumber
 125  BMakeBook
-126  BRtimeHTML
-127  BInformation
+126  BInformation

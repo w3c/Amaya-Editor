@@ -16,7 +16,6 @@
 #include "amaya.h"
 #include "css.h"
 #include "trans.h"
-#include "print.h"
 
 #include "stopN.xpm"
 #include "stopR.xpm"
@@ -48,6 +47,7 @@
 #include <direct.h>
 #endif
 #endif
+
 
 #ifdef WITH_SOCKS
 char                __res = 0;
@@ -84,21 +84,20 @@ static Pixmap       iconPlugin;
 #include "HTMLhistory_f.h"
 #include "html2thot_f.h"
 #include "init_f.h"
+#include "query_f.h"
+#include "trans_f.h"
+#include "AHTURLTools_f.h"
 #include "EDITORactions_f.h"
 #include "EDITimage_f.h"
 #include "EDITstyle_f.h"
 #include "HTMLactions_f.h"
+#include "HTMLbook_f.h"
 #include "HTMLedit_f.h"
 #include "HTMLhistory_f.h"
 #include "HTMLimage_f.h"
 #include "HTMLsave_f.h"
 #include "HTMLstyle_f.h"
 #include "UIcss_f.h"
-#include "trans_f.h"
-#ifndef AMAYA_JAVA
-#include "query_f.h"
-#endif
-#include "AHTURLTools_f.h"
 
 #ifdef AMAYA_PLUGIN
 extern void CreateFormPlugin (Document, View);
@@ -245,19 +244,21 @@ Document            doc;
 
 #endif
 {
-#ifndef AMAYA_JAVA
    if (FilesLoading[document] > 0)
      {
+#ifndef AMAYA_JAVA
 	if (FilesLoading[document] == 1)
 	   TtaSetStatus (document, 1, TtaGetMessage (AMAYA,
 						 AM_DOCUMENT_LOADED), NULL);
+#endif
 
 	FilesLoading[document] = 0;
+#ifndef AMAYA_JAVA
 	if (TtaGetViewFrame (document, 1) != 0)
 	   /* this document is displayed */
 	   TtaChangeButton (document, 1, 1, stopN);
+#endif
      }
-#endif /* AMAYA_JAVA */
 }
 
 /*----------------------------------------------------------------------
@@ -271,12 +272,10 @@ Document            doc;
 
 #endif
 {
-#ifndef AMAYA_JAVA
    FilesLoading[document] = 1;
    if (TtaGetViewFrame (document, 1) != 0)
       /* this document is displayed */
       TtaChangeButton (document, 1, 1, stopR);
-#endif /* AMAYA_JAVA */
 }
 
 
@@ -292,9 +291,6 @@ View                view;
 
 #endif
 {
-#ifdef AMAYA_JAVA
-   StopRequest (document);
-#else /* !AMAYA_JAVA */
    if (FilesLoading[document] != 0)
      {
 	TtaChangeButton (document, 1, 1, stopN);
@@ -304,7 +300,6 @@ View                view;
 	StopRequest (document);
 	FilesLoading[document] = 0;
      }
-#endif /* AMAYA_JAVA */
 }
 
 /*----------------------------------------------------------------------
@@ -1844,6 +1839,8 @@ NotifyEvent        *event;
 
    /* init the Picture context */
    InitImage ();
+   /* init the Picture context */
+   InitPrint ();
    /* init the CSS context */
    InitCSS ();
    /* initialize the structure transformation context */
@@ -1916,9 +1913,9 @@ NotifyEvent        *event;
   If the root has such an attribute, delete it.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ChangeAttrOnRoot (Document document, int attrNum)
+void         ChangeAttrOnRoot (Document document, int attrNum)
 #else
-static void         ChangeAttrOnRoot (document, view)
+void         ChangeAttrOnRoot (document, view)
 Document            document;
 int                 attrNum;
 #endif
@@ -1948,21 +1945,6 @@ int                 attrNum;
 }
 
 /*----------------------------------------------------------------------
-  SectionNumbering
-  Execute the "Section Numbering" command
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                SectionNumbering (Document document, View view)
-#else
-void                SectionNumbering (document, view)
-Document            document;
-View                view;
-#endif
-{
-   ChangeAttrOnRoot (document, HTML_ATTR_SectionNumbering);
-}
-
-/*----------------------------------------------------------------------
   ShowMapAreas
   Execute the "Show Map Areas" command
   ----------------------------------------------------------------------*/
@@ -1976,400 +1958,6 @@ View                view;
 #endif
 {
    ChangeAttrOnRoot (document, HTML_ATTR_ShowAreas);
-}
-
-/*----------------------------------------------------------------------
-  UpdateURLsInSubtree
-  Update NAMEs and URLs in subtree of el element, to take into account
-  the move from one document to another.
-  If a NAME attribute already exists in the new document, it is changed
-  to avoid duplicate names.
-  Transform the HREF and SRC attribute to make them independent from their
-  former base.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         UpdateURLsInSubtree (NotifyElement *event, Element el)
-#else
-static void         UpdateURLsInSubtree (event, el)
-NotifyElement      *event;
-Element             el;
-#endif
-{
-Element             nextEl;
-
-  event->element = el;
-  ElementPasted (event);
-  nextEl = TtaGetFirstChild (el);
-  while (nextEl != NULL)
-    {
-      UpdateURLsInSubtree (event, nextEl);
-      TtaNextSibling (&nextEl);
-    }
-}
-
-
-/*----------------------------------------------------------------------
-  MoveDocumentBody
-  Copy the elements contained in the BODY of document sourceDoc to the
-  position of element *el in document destDoc.
-  Delete the element containing *el and all its empty ancestors.
-  If deleteTree is TRUE, copied elements are deleted from the source
-  document.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         MoveDocumentBody (Element *el, Document destDoc,
-				      Document sourceDoc, boolean deleteTree)
-#else
-static void         MoveDocumentBody (el, destDoc, sourceDoc, deleteTree)
-Element            *el;
-Document           destDoc;
-Document           sourceDoc;
-boolean            deleteTree;
-#endif
-{
-   Element	   root, body, ancestor, elem, firstInserted,
-		   lastInserted, srce, copy, old, parent, sibling;
-   ElementType	   elType;
-   NotifyElement   event;
-
-   firstInserted = NULL;
-   /* get the BODY element of source document */
-   root = TtaGetMainRoot (sourceDoc);
-   elType = TtaGetElementType (root);
-   elType.ElTypeNum = HTML_EL_BODY;
-   body = TtaSearchTypedElement (elType, SearchForward, root);
-   if (body != NULL)
-     {
-     /* get elem, the ancestor of *el which is a child of a DIV or BODY
-	element in the destination document. The copied elements will be
-	inserted just before this element. */
-     elem = *el;
-     do
-	{
-        ancestor = TtaGetParent (elem);
-	if (ancestor != NULL);
-	   {
-	   elType = TtaGetElementType (ancestor);
-	   if (elType.ElTypeNum == HTML_EL_BODY ||
-	       elType.ElTypeNum == HTML_EL_Division)
-	      ancestor = NULL;
-	   else
-	      elem = ancestor;
-	   }
-	}
-     while (ancestor != NULL);
-     parent = TtaGetParent (elem);
-     
-     /* do copy */
-     lastInserted = NULL;
-     srce = TtaGetFirstChild (body);
-     while (srce != NULL)
-	{
-	copy = TtaCopyTree (srce, sourceDoc, destDoc, parent);
-	if (copy != NULL)
-	   {
-	   if (lastInserted == NULL)
-	      /* this is the first copied element. Insert it before elem */
-	      {
-	      TtaInsertSibling (copy, elem, TRUE, destDoc);
-	      firstInserted = copy;
-	      }
-	   else
-	      /* insert the new copied element after the element previously
-		 copied */
-	      TtaInsertSibling (copy, lastInserted, FALSE, destDoc);
-	   lastInserted = copy;
-	   /* update the NAMEs and URLs in the copied element */
-	   event.document = destDoc;
-	   event.position = sourceDoc;
-	   UpdateURLsInSubtree(&event, copy);
-	   }
-	/* get the next element in the source document */
-	old = srce;
-	TtaNextSibling (&srce);
-	if (deleteTree)
-	  TtaDeleteTree (old, sourceDoc);
-	}
-
-     /* delete the element(s) containing the link to the copied document */
-     /* delete the parent element of *el and all empty ancestors */
-     elem = TtaGetParent (*el);
-     do
-	{
-	sibling = elem;
-        TtaNextSibling (&sibling);
-	if (sibling == NULL)
-	   {
-	   sibling = elem;
-	   TtaPreviousSibling (&sibling);
-	   if (sibling == NULL)
-	      elem = TtaGetParent (elem);
-	   }
-	}
-     while (sibling == NULL);
-     TtaDeleteTree (elem, destDoc);
-     /* return the address of the first copied element */
-     *el = firstInserted;
-     }
-}
-
-/*----------------------------------------------------------------------
-  GetIncludedDocuments
-  Look forward, starting from element el, for a link (A) with attribute
-  REL="chapter" and replace that link by the contents of the target document.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static Element      GetIncludedDocuments (Element el, Document document)
-#else
-static Element      GetIncludedDocuments (el, document)
-Element		    el;
-Document            document;
-#endif
-{
-   Element		link, next;
-   Attribute		RelAttr, HrefAttr;
-   AttributeType	attrType;
-   int			length;
-   char			*text, *ptr;
-   Document		includedDocument, newdoc;
-
-   attrType.AttrSSchema = TtaGetDocumentSSchema (document);
-   attrType.AttrTypeNum = HTML_ATTR_REL;
-   link = el;
-   RelAttr = NULL;
-   /* looks for an anchor having an attribute REL="chapter" */
-   while (link != NULL && RelAttr == NULL)
-     {
-       TtaSearchAttribute (attrType, SearchForward, link, &link, &RelAttr);
-       if (link != NULL && RelAttr != NULL)
-	 {
-	   length = TtaGetTextAttributeLength (RelAttr);
-	   text = TtaGetMemory (length + 1);
-	   TtaGiveTextAttributeValue (RelAttr, text, &length);
-	   if (strcasecmp (text, "chapter"))
-	     RelAttr = NULL;
-	   TtaFreeMemory (text);
-	 }
-     }
-
-   if (RelAttr != NULL && link != NULL)
-     /* a link with attribute REL="Chapter" has been found */
-     {
-       next = link;
-       attrType.AttrTypeNum = HTML_ATTR_HREF_;
-       HrefAttr = TtaGetAttribute (link, attrType);
-       if (HrefAttr != NULL)
-	 /* this link has an attribute HREF */
-	 {
-	   length = TtaGetTextAttributeLength (HrefAttr);
-	   text = TtaGetMemory (length + 1);
-	   TtaGiveTextAttributeValue (HrefAttr, text, &length);
-	   /* ignore links to a particular position within a document */
-	   ptr = strrchr (text, '#');
-	   if (ptr == NULL)
-	     /* this link designate the whole document */
-	     {
-	       /* create a new document and loads the target document */
-	       includedDocument = TtaNewDocument ("HTML", "tmp");
-	       newdoc = GetHTMLDocument (text, NULL, includedDocument,
-					 document, DC_TRUE);
-	       if (newdoc != 0 && newdoc != document)
-		   /* it's not the document itself */
-		   /* copy the target document at the position of the link */
-		   MoveDocumentBody (&next, document, newdoc,
-				     newdoc == includedDocument);
-	       FreeDocumentResource (includedDocument);
-	       TtaCloseDocument (includedDocument);
-	     }
-	   TtaFreeMemory (text);
-	 }
-       return (next);
-     }
-   return (NULL);
-}
-
-/*----------------------------------------------------------------------
-  SetInternalLinks
-  Associate a InternalLink attribute with all anchor (A) elements of the
-  document which designate another anchor in the same document.
-  InternalLink is a Thot reference attribute that links a source and a
-  target anchor and that allows P schemas to display and print cross-references
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void                SetInternalLinks (Element el, Document document)
-#else
-static void                SetInternalLinks (el, document)
-Element		    el;
-Document            document;
-#endif
-{
-   Element		link, target;
-   ElementType		elType;
-   Attribute		HrefAttr, IntLinkAttr;
-   AttributeType	attrType;
-   int			length;
-   char			*text;
-
-   elType.ElSSchema = TtaGetDocumentSSchema (document);
-   elType.ElTypeNum = HTML_EL_Anchor;
-   attrType.AttrSSchema = elType.ElSSchema;
-   /* looks for all anchors in the document */
-   link = el;
-   while (link != NULL)
-     {
-       link = TtaSearchTypedElement (elType, SearchForward, link);
-       if (link != NULL)
-	 /* an anchor has been found */
-	 {
-	 attrType.AttrTypeNum = HTML_ATTR_HREF_;
-         HrefAttr = TtaGetAttribute (link, attrType);
-         if (HrefAttr != NULL)
-	   /* this anchor has an HREF attribute */
-	   {
-	   length = TtaGetTextAttributeLength (HrefAttr);
-	   text = TtaGetMemory (length + 1);
-	   TtaGiveTextAttributeValue (HrefAttr, text, &length);
-	   if (text[0] == '#')
-	      /* it'a an internal link. Attach an attribute InternalLink to */
-	      /* the link, if this attribute does not exist yet */
-	      {
-	        attrType.AttrTypeNum = HTML_ATTR_InternalLink;
-		IntLinkAttr = TtaGetAttribute (link, attrType);
-		if (IntLinkAttr == NULL)
-		   {
-		     IntLinkAttr = TtaNewAttribute (attrType);
-		     TtaAttachAttribute (link, IntLinkAttr, document);
-		   }
-		/* looks for the target element */
-		target = SearchNAMEattribute (document, &text[1], NULL);
-		if (target != NULL)
-		   /* set the Thot link */
-		   TtaSetAttributeReference (IntLinkAttr, link, document,
-					     target, document);
-	      }
-	   TtaFreeMemory (text);
-	   }
-	 }
-     }
-}
-
-
-/*----------------------------------------------------------------------
-  MakeBook
-  Replace all links in a document which have an attribute REL="chapter"
-  by the corresponding target document.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                MakeBook (Document document, View view)
-#else
-void                MakeBook (document, view)
-Document            document;
-View                view;
-#endif
-{
-   Element	    root, body, el;
-   ElementType	    elType;
-
-   root = TtaGetMainRoot (document);
-   elType = TtaGetElementType (root);
-   elType.ElTypeNum = HTML_EL_BODY;
-   body = TtaSearchTypedElement (elType, SearchForward, root);
-   TtaSetDocumentModified (document);
-   el = body;
-   while (el != NULL)
-      el = GetIncludedDocuments (el, document);
-   SetInternalLinks (body, document);		
-   /********/
-   TtaPrint (document, "Formatted_view Table_of_contents");
-   /*********/
-}
-
-
-#ifdef R_HTML
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         LoadEntity (Document document, char *text)
-#else
-static void         LoadEntity (document, text)
-Document            document;
-char               *text;
-#endif
-{
-  Document          includedDocument;
-  Attribute	    attr;
-  AttributeType	    attrType;
-  Element           el, includedEl;
-  ElementType	    elType;
-  int               length;
-
-  /* create the temporary document */
-  includedDocument = TtaNewDocument ("HTML", "tmp");
-  /* read the temporary document */
-  includedDocument = GetHTMLDocument (text, NULL, includedDocument, document, DC_TRUE);
-  
-  if (includedDocument != 0)
-    {
-      /* To do: Seach entity in the table */
-      /* locate the entity in the document */
-      el = TtaGetMainRoot (document);
-      elType = TtaGetElementType (el);
-      elType.ElTypeNum = HTML_EL_Entity;
-      /* TtaSearchElementByLabel (label, el); */
-      el = TtaSearchTypedElement (elType, SearchForward, el);
-      /* keep the entity name to know where to insert the sub-tree */
-      attrType.AttrSSchema = TtaGetDocumentSSchema (document);
-      attrType.AttrTypeNum = HTML_ATTR_entity_name;
-      attr = TtaGetAttribute (el, attrType);
-      if (attr != NULL)
-	{
-	  length = TtaGetTextAttributeLength (attr);
-	  text = TtaGetMemory (length + 1);
-	  TtaGiveTextAttributeValue (attr, text, &length);
-	}
-      /* To do: translate the entity name into element type
-	 and search this first element type in included document */
-      includedEl = TtaGetMainRoot (includedDocument);
-      elType = TtaGetElementType (includedEl);
-      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-      includedEl = TtaSearchTypedElement (elType, SearchForward, includedEl);
-      /* remove Entity */
-      /* To do: insert sub-trees */
-      FreeDocumentResource (includedDocument);
-      TtaCloseDocument (includedDocument);
-    }
-}
-#endif /* R_HTML */
-
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                RealTimeHTML (Document document, View view)
-#else
-void                RealTimeHTML (document, view)
-Document            document;
-View                view;
-#endif
-{
-#ifdef R_HTML
-  Element	    root, el;
-  ElementType	    elType;
-
-  root = TtaGetMainRoot (document);
-  elType = TtaGetElementType (root);
-  elType.ElTypeNum = HTML_EL_Entity;
-  el = TtaSearchTypedElement (elType, SearchForward, root);
-  if (el != NULL)
-    {
-      /* document contains entities */
-      /* To do -> build table of entities */
-
-      /* simulate reception of different entities */
-      LoadEntity (document, "0/0");
-      LoadEntity (document, "0/1");
-    }
-#endif /* R_HTML */
 }
 
 

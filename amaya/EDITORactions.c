@@ -1108,14 +1108,11 @@ Element             element;
 	else
 	  {
 	     /* to make a circle, height and width have to be equal */
-	     if (x2 < y2)
-	       {
-		  TtaSetAttributeValue (attrW, y2, element, document);
-		  x2 = y2;
-	       }
-	     else if (x2 > y2)
-		TtaSetAttributeValue (attrH, x2, element, document);
-	     x2 = x2 / 2;
+	     if (x2 > y2)
+	       x2 = y2 / 2;
+	     else
+	       x2 = x2 / 2;
+	     TtaSetAttributeValue (attrW, x2, element, document);
 	     sprintf (text, "%d,%d,%d", x1 + x2, y1 + x2, x2);
 	  }
      }

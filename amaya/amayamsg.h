@@ -134,5 +134,7 @@ int                 AMAYA;
 #define AM_PARSE		      122
 #define AM_ACTIVE_TRANSFERS	      123
 #define AM_WAITING_TRANSFERS	      124
-#define AMAYA_MSG_MAX                 125
+#define AM_PRINT_TOC		      125
+#define AM_NUMBERED_LINKS	      126
+#define AMAYA_MSG_MAX                 127
 

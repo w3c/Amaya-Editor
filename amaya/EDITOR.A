@@ -24,7 +24,7 @@ MENUS
 	view:1 File button:BSaveAs -> SaveDocumentAs;
 	view:1 File Separator;
 	view:1 File button:BPrint -> TtcPrint;
-	view:1 File button:BPrintSetUp -> TtcPrintSetup;
+	view:1 File button:BSetUpandPrint -> SetupAndPrint;
 	view:1 File Separator;
 	view:1 File button:BClose -> TtcCloseDocument;
 	view:1 File button:BExit -> AmayaClose;
@@ -149,7 +149,6 @@ MENUS
 	view:1 Special Separator;
 	view:1 Special toggle:TSectionNumber -> SectionNumbering;
 	view:1 Special button:BMakeBook -> MakeBook;
-	view:1 Special button:BRtimeHTML -> RealTimeHTML;
 
 	Attributes_;
 

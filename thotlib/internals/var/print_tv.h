@@ -13,7 +13,7 @@ THOT_EXPORT PathBuffer   PSdir;
 THOT_EXPORT boolean      PaperPrint;
 THOT_EXPORT boolean      ManualFeed;
 THOT_EXPORT boolean      NewPaperPrint;
-THOT_EXPORT char         pPrinter[MAX_NAME_LENGTH];
+THOT_EXPORT char         pPrinter[MAX_PATH];
 THOT_EXPORT PtrDocument  pDocPrint;
 THOT_EXPORT char         PageSize[MAX_NAME_LENGTH];
 THOT_EXPORT int	    FirstPage;

@@ -274,12 +274,12 @@ PtrDocument pDoc;
        /* we are changing the current printed document */
        pDocPrint = pDoc;
        PaperPrint = defPaperPrint;
-       ManualFeed = defManualFeed ;
-       FirstPage = defFirstPage ;
-       LastPage = defLastPage ;
-       NbCopies = defNbCopies ;
-       Reduction = defReduction ;
-       PagesPerSheet = defPagesPerSheet ;
+       ManualFeed = defManualFeed;
+       FirstPage = defFirstPage;
+       LastPage = defLastPage;
+       NbCopies = defNbCopies;
+       Reduction = defReduction;
+       PagesPerSheet = defPagesPerSheet;
        Paginate = defPaginate;
        if (defPageSize == PP_A4)
          strcpy(PageSize,"A4");
@@ -300,8 +300,12 @@ PtrDocument pDoc;
              }
            else
              {
+#ifdef _WINDOWS
+               strcpy (PSdir,"C:\\TEMP");
+#else  /* !_WINDOWS */
                strcpy (PSdir,"/tmp");
-               lg = 4;
+#endif /* !_WINDOWS */
+               lg = strlen (PSdir);
              }
 	   sprintf (&PSdir[lg], "/%s.ps", pDocPrint->DocDName);
          }
@@ -325,7 +329,7 @@ View                view;
 
    strcpy (viewsToPrint, TtaGetViewName (document, view));
    strcat (viewsToPrint, " ");
-   TtaPrint (document, viewsToPrint) ;
+   TtaPrint (document, viewsToPrint);
 }
 
 /*----------------------------------------------------------------------
@@ -353,7 +357,6 @@ char               *viewNames;
    int                 orientation, lg;
 
    pDoc = LoadedDocument[document - 1];
-   InitPrintParameters (pDoc);
    /* prepares the execution of the print command */
    strcpy (savePres, pDoc->DocSSchema->SsDefaultPSchema);
    ConfigGetPSchemaForPageSize (pDoc->DocSSchema, PageSize, newPres);
@@ -490,7 +493,6 @@ PrintParameter parameter;
 int value;
 #endif /*__STDC__ */
 {
-   InitPrintParameters ((PtrDocument)NULL);
    switch (parameter)
      {
      case PP_FirstPage:
@@ -579,13 +581,9 @@ int value;
         {
           defPageSize = value;
           if(value == PP_A4)
-            {
-              strcpy (PageSize, "A4");
-            }
+	    strcpy (PageSize, "A4");
           else
-            {
-              strcpy (PageSize, "US");
-            }
+	    strcpy (PageSize, "US");
         }
        break;
      case PP_Destination:
@@ -636,87 +634,87 @@ char               *txt;
 
 #endif /* __STDC__ */
 {
-   if (pDocPrint != NULL)
-      if (pDocPrint->DocSSchema != NULL)
-	 /* the document to be printed still exists */
-	 switch (ref)
-	       {
-		  case NumMenuSupport:
-		     /* paper print/save PostScript submenu */
-		     switch (val)
-			   {
-			      case 0:
-				 if (!NewPaperPrint)
-				   {
-				      NewPaperPrint = TRUE;
-				      TtaSetTextForm (NumZonePrinterName, pPrinter);
-				   }
-				 break;
-			      case 1:
-				 if (NewPaperPrint)
-				   {
-				      NewPaperPrint = FALSE;
-				      TtaSetTextForm (NumZonePrinterName, PSdir);
-				   }
-				 break;
-			   }
-		     break;
-		  case NumMenuPaperFormat:
-		     /* page size submenu */
-		     switch (val)
-			   {
-			      case 0:
-				 strcpy (PageSize, "A4");
-				 break;
-			      case 1:
-				 strcpy (PageSize, "US");
-				 break;
-			   }
-		     break;
-		  case NumMenuOptions:
-		    switch (val)
-                      {
-                       case 0:
-                         /* Manual feed option */
-                         ManualFeed = !ManualFeed;
-                         break;
-                       case 1:
-                         /* Repagination option */
-                         Paginate = !Paginate;
-                         break;
-                       }
-		     break;
-		  case NumZonePrinterName:
-		     if (txt[0] != '\0')
-			if (NewPaperPrint)
-			   /* text capture zone for the printer name */
-			   strncpy (pPrinter, txt, MAX_NAME_LENGTH);
-			else
-			   /* text capture zone for the name of the PostScript file */
-			   strncpy (PSdir, txt, MAX_PATH);
-		     break;
-		  case NumFormPrint:
-		     /* Print form option */
-		     TtaDestroyDialogue (NumFormPrint);
-		     switch (val)
-			   {
-			      case 1:
-				 /* confirms the paper print option */
-				 /* the other options are not taken into account without this
-				    confirmation */
-				 PaperPrint = NewPaperPrint;
-				 if(ThotLocalActions[T_rextprint]!=NULL)
-				   (*ThotLocalActions[T_rextprint])(ref, val, txt);
-				 break;
-			      default:
-				 break;
-			   }
-		     break;
-		  default:
-		    if(ThotLocalActions[T_rextprint]!=NULL)
-		      (*ThotLocalActions[T_rextprint])(ref, val, txt);
-		     break;
-	       }
+  if (pDocPrint != NULL)
+    if (pDocPrint->DocSSchema != NULL)
+      /* the document to be printed still exists */
+      switch (ref)
+	{
+	case NumMenuSupport:
+	  /* paper print/save PostScript submenu */
+	  switch (val)
+	    {
+	    case 0:
+	      if (!NewPaperPrint)
+		{
+		  NewPaperPrint = TRUE;
+		  TtaSetTextForm (NumZonePrinterName, pPrinter);
+		}
+	      break;
+	    case 1:
+	      if (NewPaperPrint)
+		{
+		  NewPaperPrint = FALSE;
+		  TtaSetTextForm (NumZonePrinterName, PSdir);
+		}
+	      break;
+	    }
+	  break;
+	case NumMenuPaperFormat:
+	  /* page size submenu */
+	  switch (val)
+	    {
+	    case 0:
+	      strcpy (PageSize, "A4");
+	      break;
+	    case 1:
+	      strcpy (PageSize, "US");
+	      break;
+	    }
+	  break;
+	case NumMenuOptions:
+	  switch (val)
+	    {
+	    case 0:
+	      /* Manual feed option */
+	      ManualFeed = !ManualFeed;
+	      break;
+	    case 1:
+	      /* Repagination option */
+	      Paginate = !Paginate;
+	      break;
+	    }
+	  break;
+	case NumZonePrinterName:
+	  if (txt[0] != '\0')
+	    if (NewPaperPrint)
+	      /* text capture zone for the printer name */
+	      strncpy (pPrinter, txt, MAX_PATH);
+	    else
+	      /* text capture zone for the name of the PostScript file */
+	      strncpy (PSdir, txt, MAX_PATH);
+	  break;
+	case NumFormPrint:
+	  /* Print form option */
+	  TtaDestroyDialogue (NumFormPrint);
+	  switch (val)
+	    {
+	    case 1:
+	      /* confirms the paper print option */
+	      /* the other options are not taken into account without this
+		 confirmation */
+	      PaperPrint = NewPaperPrint;
+	      if(ThotLocalActions[T_rextprint]!=NULL)
+		(*ThotLocalActions[T_rextprint])(ref, val, txt);
+	      break;
+	    default:
+	      break;
+	    }
+	  break;
+	default:
+	  if(ThotLocalActions[T_rextprint]!=NULL)
+	    (*ThotLocalActions[T_rextprint])(ref, val, txt);
+	  break;
+	}
 }
 
 /*----------------------------------------------------------------------
