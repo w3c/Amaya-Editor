@@ -79,7 +79,6 @@ void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype)
       else
 	/* don't reset the presentation value */
 	picPresent = imageDesc->PicPresent;
-      
       ptr = filename;
     }
   else if (pAb->AbLeafType == LtCompound)
@@ -102,7 +101,7 @@ void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype)
        /* create the text buffer */
       if (filename == NULL)
 	{
-	  if (ptr != NULL)
+	  if (ptr)
 	    {
 	      TtaFreeMemory (ptr);
 	      ptr = NULL;
@@ -113,7 +112,7 @@ void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype)
 	  len = strlen (filename) + 1;
 	  if (ptr == NULL || len > (int) strlen (ptr) + 1)
 	    {
-	      if (imageDesc && imageDesc->PicFileName == ptr)
+	      if (imageDesc->PicFileName == ptr)
 		imageDesc->PicFileName = NULL;
 	      TtaFreeMemory (ptr);
 	      ptr = TtaGetMemory (len);
@@ -121,6 +120,8 @@ void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype)
 	  strcpy (ptr, filename);
 	}
     }
+  else
+    return;
 
   if (imageDesc && imageDesc->PicFileName != ptr)
     {
@@ -152,9 +153,6 @@ void NewPictInfo (PtrAbstractBox pAb, PathBuffer filename, int imagetype)
       imageDesc->PicType    = imagetype;
       imageDesc->PicPresent = picPresent;
     }
-	else
-		if (ptr != NULL)
-			TtaFreeMemory (ptr);
 }
 
 
