@@ -1556,7 +1556,7 @@ void TtaSetANamespaceDeclaration (Document document, Element element,
   TtaShowElemNamespaceDeclarations
   Show the namespaces declarations related to an element
  ----------------------------------------------------------------------*/
-void TtaShowElemNamespaceDeclarations (Document document, Element element)
+void TtaShowNamespaceDeclarations (Document document)
 {
   PtrDocument pDoc;
 
@@ -1570,7 +1570,7 @@ void TtaShowElemNamespaceDeclarations (Document document, Element element)
     {
       /* parameter document is correct */
       pDoc = LoadedDocument[document - 1];
-      ShowElemNamespaceDeclarations (pDoc, (PtrElement) element);
+      ShowNamespaceDeclarations (pDoc);
     }
 }
 

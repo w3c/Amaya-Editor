@@ -825,10 +825,10 @@ void TtaFreeElemNamespaceDeclarations (Document document, Element element);
 void TtaFreeNamespaceDeclarations (Document document);
 
 /*----------------------------------------------------------------------
-  TtaShowElemNamespaceDeclarations
-  Show the namespaces declarations related to an element
+  TtaShowNamespaceDeclarations
+  Show the namespaces declarations related to a document
  ----------------------------------------------------------------------*/
-void TtaShowElemNamespaceDeclarations (Document document, Element element);
+void TtaShowNamespaceDeclarations (Document document);
 
 /*----------------------------------------------------------------------
   TtaSetUriSSchema

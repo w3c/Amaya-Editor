@@ -2734,10 +2734,10 @@ void SetNamespaceDeclaration (PtrDocument pDoc, PtrElement element,
 }
 
 /*----------------------------------------------------------------------
-  ShowElemNamespaceDeclarations
-  Show the namespaces declarations related to an element
+  ShowNamespaceDeclarations
+  Show the namespace declarations related to a document
  ----------------------------------------------------------------------*/
-void ShowElemNamespaceDeclarations (PtrDocument pDoc, PtrElement element)
+void ShowNamespaceDeclarations (PtrDocument pDoc)
 {
 
   PtrNsUriDescr     uriDecl;
@@ -2752,21 +2752,16 @@ void ShowElemNamespaceDeclarations (PtrDocument pDoc, PtrElement element)
 	  prefixDecl = uriDecl->NsPtrPrefix;
 	  while (prefixDecl != NULL)
 	    {
-	      if ((element != NULL && 
-		   prefixDecl->NsPrefixElem == element) ||
-		  (element == NULL))
+	      if (prefixDecl->NsPrefixName != NULL)
 		{
-		  if (prefixDecl->NsPrefixName != NULL)
-		    {
-		      printf ("\nxmlns:%s", prefixDecl->NsPrefixName);
-		      if (uriDecl->NsUriName != NULL)
-			printf ("=\"%s\"", uriDecl->NsUriName);
-		    }
-		  else
-		    {
-		      if (uriDecl->NsUriName != NULL)
-			printf ("\nxmlns=\"%s\" (default)", uriDecl->NsUriName);
-		    }
+		  printf ("\nxmlns:%s", prefixDecl->NsPrefixName);
+		  if (uriDecl->NsUriName != NULL)
+		    printf ("=\"%s\"", uriDecl->NsUriName);
+		}
+	      else
+		{
+		  if (uriDecl->NsUriName != NULL)
+		    printf ("\nxmlns=\"%s\" (default)", uriDecl->NsUriName);
 		}
 	      prefixDecl = prefixDecl->NsNextPrefixDecl;   
 	    }	  

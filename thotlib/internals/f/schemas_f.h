@@ -66,7 +66,7 @@ extern void CreateGuestViewList ( PtrDocument pDoc,
                                   int view );
 extern void BuildDocNatureTable ( PtrDocument pDoc );
 extern void SearchNatures ( PtrDocument pDoc,
-                            PtrSSchema natureTable[10],
+                            PtrSSchema natureTable[10 ],
                             int *natureTableLen );
 extern void AppendXmlAttribute ( char *xmlName,
                                  AttributeType *attrType,
@@ -101,8 +101,7 @@ extern void SetNamespaceDeclaration ( PtrDocument pDoc,
                                       PtrElement element,
                                       char *NsPrefix,
                                       char *NsUri );
-extern void ShowElemNamespaceDeclarations ( PtrDocument pDoc,
-                                            PtrElement element );
+extern void ShowNamespaceDeclarations ( PtrDocument pDoc );
 extern char * GiveCurrentNsUri ( PtrDocument pDoc,
                                  PtrElement pEl );
 
@@ -168,7 +167,7 @@ extern void CreateGuestViewList (/* PtrDocument pDoc,
                                     int view */);
 extern void BuildDocNatureTable (/* PtrDocument pDoc */);
 extern void SearchNatures (/* PtrDocument pDoc,
-                              PtrSSchema natureTable[10],
+                              PtrSSchema natureTable[10 ],
                               int *natureTableLen */);
 extern void AppendXmlAttribute (/* char *xmlName,
                                    AttributeType *attrType,
@@ -203,8 +202,7 @@ extern void SetNamespaceDeclaration (/* PtrDocument pDoc,
                                         PtrElement element,
                                         char *NsPrefix,
                                         char *NsUri */);
-extern void ShowElemNamespaceDeclarations (/* PtrDocument pDoc,
-                                              PtrElement element */);
+extern void ShowNamespaceDeclarations (/* PtrDocument pDoc */);
 extern char * GiveCurrentNsUri (/* PtrDocument pDoc,
                                    PtrElement pEl */);
 
