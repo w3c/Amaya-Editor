@@ -186,6 +186,10 @@ SOURCE=..\..\thotlib\dialogue\font.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\thotlib\dialogue\fontconfig.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\thotlib\dialogue\fontserver.c
 # End Source File
 # Begin Source File
