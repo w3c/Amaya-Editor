@@ -1375,8 +1375,8 @@ PtrPSchema      ReadPresentationSchema (char *fileName, PtrSSchema pSS)
       do
 	if (!TtaReadByte (file, (unsigned char*)&buf[i++]))
 	  error = True;
-      while (buf[i - 1] != EOS && i < MAX_PATH && !error) ;
-      buf[MAX_PATH - 1] = EOS;
+      while (buf[i - 1] != EOS && i < MAX_TXT_LEN && !error) ;
+      buf[MAX_TXT_LEN - 1] = EOS;
       pPSch->PsStructName = TtaStrdup (buf);
       TtaReadShort (file, &pPSch->PsStructCode);
       /* read the name of all declared views */
