@@ -1077,7 +1077,7 @@ Prop_DAV PreferenceDlgWX::GetValueDialog_DAV()
   prop.toggleAwareness1 = XRCCTRL(*this, "wxID_CHECK_GENERAL", wxCheckBox)->GetValue();
   prop.toggleAwareness2 = XRCCTRL(*this, "wxID_EXIT_AWARENESS", wxCheckBox)->GetValue();
 
-  retrun prop;
+  return prop;
 }
 #endif /* DAV */
 
