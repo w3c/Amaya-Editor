@@ -145,29 +145,33 @@
                                               <object class="wxBoxSizer">
                                                 <orient>wxHORIZONTAL</orient>
                                                 <object class="sizeritem">
+                                                  <object class="wxBitmapButton" name="wxID_OK">
+                                                    <bitmap>../icons/16x16/ok.png</bitmap>
+                                                    <default></default>
+                                                  </object>
+                                                  <option>0</option>
+                                                  <flag>wxRIGHT|wxEXPAND|wxALIGN_RIGHT</flag>
+                                                  <border>2</border>
+                                                </object>
+                                                <object class="sizeritem">
                                                   <object class="wxBitmapButton" name="wxID_BUTTON_DEL_ATTR">
                                                     <bitmap>../icons/16x16/trash.png</bitmap>
                                                     <style>wxBU_AUTODRAW</style>
                                                     <tooltip>*Supprimer*</tooltip>
                                                   </object>
-                                                  <flag>wxRIGHT|wxEXPAND</flag>
+                                                  <flag>wxRIGHT|wxEXPAND|wxALIGN_RIGHT</flag>
                                                   <border>2</border>
+                                                </object>
+                                                <object class="spacer">
+                                                  <option>1</option>
                                                 </object>
                                                 <object class="sizeritem">
-                                                  <object class="wxButton" name="wxID_OK">
-                                                    <label>*Apply*</label>
+                                                  <object class="wxCheckBox" name="wxID_CHECK_AUTOREF">
+                                                    <label>*Refresh*</label>
+                                                    <checked>1</checked>
                                                   </object>
-                                                  <option>1</option>
-                                                  <flag>wxRIGHT|wxEXPAND</flag>
-                                                  <border>2</border>
+                                                  <flag>wxEXPAND</flag>
                                                 </object>
-                                              </object>
-                                              <flag>wxEXPAND</flag>
-                                            </object>
-                                            <object class="sizeritem">
-                                              <object class="wxCheckBox" name="wxID_CHECK_AUTOREF">
-                                                <label>*Refresh*</label>
-                                                <checked>1</checked>
                                               </object>
                                               <flag>wxEXPAND</flag>
                                             </object>
