@@ -39,10 +39,9 @@ See these topics for more information on editing:</p>
 current document as well as browse in the window.</p>
 
 <p>The button bar displays the <img src="../icons/Editor.gif"
-alt="Editor button"> button when the window is in editor mode. The button bar
-displays the <img src="../icons/browser.gif" alt="Browser Button"> button
-when the window is in browser mode. In this mode, you can only browse and
-fill in forms.</p>
+alt="Editor button"> button when the window is in editor mode, and the <img
+src="../icons/browser.gif" alt="Browser Button"> button when the window is in
+browser mode. In browse mode, you can only browse and fill in forms.</p>
 
 <p>To toggle the window from editor mode to browser mode, click the <img
 src="../icons/Editor.gif" alt="Editor button"> button. Click the <img
@@ -51,8 +50,8 @@ mode. You can also select this mode by choosing <strong>Editor Mode</strong>
 from the <strong>Edit</strong> menu, or by using a keyboard shortcut (the
 default is <code>Shift-Control-*</code>).</p>
 
-<p class="Note"><b>Note</b>: You can set the mode independently for each
-document window.</p>
+<p class="Note"><b>Note</b>: <br>
+You can set the mode independently for each document window.</p>
 
 <h2>Character Sets</h2>
 
@@ -75,11 +74,12 @@ document window.</p>
 authors often create documents using the incorrect charset. For example,
 consider an XHTML document that uses ISO-Latin-1 but does not provide
 information about the charset. When the XML parser analyzing the document
-encounters a character that does not match a valid UTF 8 character, the
-document is considered to be invalid. The parsing stops and Amaya displays an
-error message. Amaya then activates the <strong>Reopen in
-ISO-latin-1</strong> option on the <strong>File</strong> menu. Choose this
-option to set the document's charset to ISO-Latin-1 and reopen the document
+encounters a character  that  does not match a valid UTF 8 character, the
+document is considered to be not well  formed.  Parsing stops and Amaya
+displays an error message that proposes either to reload the  document  as an
+HTML document or to show parsing errors. If show parsing errors is selected,
+Amaya activates the Reparse in HTML option on the File menu. Choose this
+option to set the document's charset to ISO-Latin-1 and re-open the document
 so it can be properly parsed. Amaya considers the reopened document to be
 modified (because a charset was added) and you can save it.</p>
 
