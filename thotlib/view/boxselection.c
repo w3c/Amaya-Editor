@@ -164,7 +164,7 @@ void ClearViewSelection (int frame)
 			DefClip (frame, x1, pBox1->BxYOrg, x2,
 			     pBox1->BxYOrg + pBox1->BxHeight);
 #else /* _GLTRANSFORMATION */
-			DefClip (frame, x1, pBox1->BxClipY, x2,
+			DefRegion (frame, x1, pBox1->BxClipY, x2,
 			     pBox1->BxClipY + pBox1->BxClipH);
 #endif /* _GLTRANSFORMATION */
 
@@ -182,7 +182,7 @@ void ClearViewSelection (int frame)
 #else /* _GLTRANSFORMATION */
 		x1 = pBox1->BxClipX + pFrame->FrSelectionBegin.VsXPos;
 		x2 = pBox1->BxClipX + pBox1->BxClipW;
-		DefClip (frame, x1, pBox1->BxClipY, x2,
+		DefRegion (frame, x1, pBox1->BxClipY, x2,
 			 pBox1->BxClipY + pBox1->BxClipH);
 #endif /* _GLTRANSFORMATION */
 		
@@ -195,7 +195,7 @@ void ClearViewSelection (int frame)
 			     pBox1->BxXOrg + pBox1->BxWidth,
 			     pBox1->BxYOrg + pBox1->BxHeight);
 #else /* _GLTRANSFORMATION */
-		    DefClip (frame, pBox1->BxClipX, pBox1->BxClipY,
+		    DefRegion (frame, pBox1->BxClipX, pBox1->BxClipY,
 			     pBox1->BxClipX + pBox1->BxClipW,
 			     pBox1->BxClipY + pBox1->BxClipH);
 #endif /* _GLTRANSFORMATION */
@@ -210,7 +210,7 @@ void ClearViewSelection (int frame)
 #else /* _GLTRANSFORMATION */
 		x1 = pBox2->BxClipX;
 		x2 = pBox2->BxClipX + pFrame->FrSelectionEnd.VsXPos;
-		DefClip (frame, x1, pBox2->BxClipY, x2,
+		DefRegion (frame, x1, pBox2->BxClipY, x2,
 			 pBox2->BxClipY + pBox2->BxClipH);
 #endif /* _GLTRANSFORMATION */
 	      }
@@ -252,7 +252,7 @@ void ClearViewSelection (int frame)
 		    DefClip (frame, x1, pBox1->BxYOrg, x2,
 			     pBox1->BxYOrg + pBox1->BxHeight);
 #else /* _GLTRANSFORMATION */
-		    DefClip (frame, x1, pBox1->BxYOrg, x2,
+		    DefRegion (frame, x1, pBox1->BxYOrg, x2,
 			     pBox1->BxClipY + pBox1->BxClipH);
 #endif /* _GLTRANSFORMATION */
 
@@ -269,7 +269,7 @@ void ClearViewSelection (int frame)
 				     pBox->BxXOrg + pBox->BxWidth,
 				     pBox->BxYOrg + pBox->BxHeight);
 #else /* _GLTRANSFORMATION */
-			    DefClip (frame, pBox->BxClipX, pBox->BxClipY,
+			    DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
 				     pBox->BxClipX + pBox->BxClipW,
 				     pBox->BxClipY + pBox->BxClipH);
 #endif /* _GLTRANSFORMATION */
@@ -314,7 +314,7 @@ void ClearViewSelection (int frame)
 		    DefClip (frame, x1, pBox2->BxYOrg, x2,
 			     pBox2->BxYOrg + pBox2->BxHeight);
 #else /* _GLTRANSFORMATION */
-		    DefClip (frame, x1, pBox2->BxYOrg, x2,
+		    DefRegion (frame, x1, pBox2->BxYOrg, x2,
 			     pBox2->BxClipY + pBox2->BxClipH);
 #endif /* _GLTRANSFORMATION */
 
@@ -331,7 +331,7 @@ void ClearViewSelection (int frame)
 				     pBox->BxXOrg + pBox->BxWidth,
 				     pBox->BxYOrg + pBox->BxHeight);
 #else /* _GLTRANSFORMATION */
-			    DefClip (frame, pBox->BxClipX, pBox->BxClipY,
+			    DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
 				     pBox->BxClipX + pBox->BxClipW,
 				     pBox->BxClipY + pBox->BxClipH);
 #endif /* _GLTRANSFORMATION */
@@ -741,7 +741,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 				   pBox->BxXOrg + pViewSel->VsXPos,
 				   pBox->BxYOrg + pBox->BxHeight);
 #else /*  _GLTRANSFORMATION */
-			  DefClip (frame,
+			  DefRegion (frame,
 				   pBox->BxClipX,
 				   pBox->BxClipY,
 				   pBox->BxClipX + pViewSel->VsXPos,
@@ -755,7 +755,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 				   pBox->BxXOrg + pBox->BxWidth,
 				   pBox->BxYOrg + pBox->BxHeight);
 #else /*  _GLTRANSFORMATION */
-			  DefClip (frame, pBox->BxClipX + pViewSel->VsXPos,
+			  DefRegion (frame, pBox->BxClipX + pViewSel->VsXPos,
 				   pBox->BxClipY,
 				   pBox->BxClipX + pBox->BxClipW,
 				   pBox->BxClipY + pBox->BxClipH);
@@ -771,7 +771,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 				   pBox->BxXOrg + pBox->BxWidth,
 				   pBox->BxYOrg + pBox->BxHeight);
 #else /*  _GLTRANSFORMATION */
-			  DefClip (frame,
+			  DefRegion (frame,
 				   pBox->BxClipX + pViewSel->VsXPos,
 				   pBox->BxClipY,
 				   pBox->BxClipX + pBox->BxClipW,
@@ -785,7 +785,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 				   pBox->BxXOrg + pViewSel->VsXPos,
 				   pBox->BxYOrg + pBox->BxHeight);
 #else /*  _GLTRANSFORMATION */
-			  DefClip (frame, pBox->BxClipX,
+			  DefRegion (frame, pBox->BxClipX,
 				   pBox->BxClipY,
 				   pBox->BxClipX + pViewSel->VsXPos,
 				   pBox->BxClipY + pBox->BxClipH);
@@ -800,7 +800,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 				   pBox->BxXOrg + pBox->BxWidth,
 				   pBox->BxYOrg + pBox->BxHeight);
 #else /*_GLTRANSFORMATION */
-			  DefClip (frame, pBox->BxClipX, pBox->BxClipY,
+			  DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
 				   pBox->BxClipX + pBox->BxClipW,
 				   pBox->BxClipY + pBox->BxClipH);
 #endif /*_GLTRANSFORMATION */
@@ -813,7 +813,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 			     pBox->BxXOrg + pBox->BxWidth,
 			     pBox->BxYOrg + pBox->BxHeight);
 #else /*_GLTRANSFORMATION */
-		  DefClip (frame, pBox->BxClipX, pBox->BxClipY,
+		  DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
 			   pBox->BxClipX + pBox->BxClipW,
 			   pBox->BxClipY + pBox->BxClipH);
 #endif /*_GLTRANSFORMATION */
@@ -825,7 +825,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 			     pBox->BxYOrg, pBox->BxXOrg + pViewSelEnd->VsXPos,
 			     pBox->BxYOrg + pBox->BxHeight);
 #else /*_GLTRANSFORMATION */
-		    DefClip (frame,
+		    DefRegion (frame,
 			     pBox->BxClipX + pViewSel->VsXPos,
 			     pBox->BxClipY, pBox->BxClipX + pViewSelEnd->VsXPos,
 			     pBox->BxClipY + pBox->BxClipH);
@@ -852,7 +852,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 			     pBox->BxXOrg + pBox->BxWidth,
 			     pBox->BxYOrg + pBox->BxHeight);
 #else /*_GLTRANSFORMATION */
-		  DefClip (frame, pBox->BxClipX, pBox->BxClipY,
+		  DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
 			   pBox->BxClipX + pBox->BxClipW,
 			   pBox->BxClipY + pBox->BxClipH);
 #endif /*_GLTRANSFORMATION */
@@ -864,7 +864,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 			     pBox->BxXOrg + pBox->BxWidth,
 			     pBox->BxYOrg + pBox->BxHeight);
 #else /*_GLTRANSFORMATION */
-		  DefClip (frame, pBox->BxClipX + pViewSelEnd->VsXPos, 
+		  DefRegion (frame, pBox->BxClipX + pViewSelEnd->VsXPos, 
 			   pBox->BxClipY,
 			   pBox->BxClipX + pBox->BxClipW,
 			   pBox->BxClipY + pBox->BxClipH);
@@ -877,7 +877,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 			     pBox->BxXOrg + pViewSelEnd->VsXPos,
 			     pBox->BxYOrg + pBox->BxHeight);
 #else /*_GLTRANSFORMATION */
-		  DefClip (frame, pBox->BxClipX,
+		  DefRegion (frame, pBox->BxClipX,
 			   pBox->BxClipY,
 			   pBox->BxClipX + pViewSelEnd->VsXPos,
 			   pBox->BxClipY + pBox->BxClipH);
@@ -895,7 +895,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 				   pBox->BxXOrg + pBox->BxWidth,
 				   pBox->BxYOrg + pBox->BxHeight);
 #else /*_GLTRANSFORMATION */
-			  DefClip (frame, pBox->BxClipX, pBox->BxClipY,
+			  DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
 				   pBox->BxClipX + pBox->BxClipW,
 				   pBox->BxClipY + pBox->BxClipH);
 #endif /*_GLTRANSFORMATION */
@@ -924,7 +924,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 			     pBox->BxXOrg + pBox->BxWidth,
 			     pBox->BxYOrg + pBox->BxHeight);
 #else /*_GLTRANSFORMATION */
-		  DefClip (frame, pBox->BxClipX, pBox->BxClipY,
+		  DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
 			   pBox->BxClipX + pBox->BxClipW,
 			   pBox->BxClipY + pBox->BxClipH);
 #endif /*_GLTRANSFORMATION */
@@ -936,7 +936,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 			     pBox->BxXOrg + pViewSel->VsXPos,
 			     pBox->BxYOrg + pBox->BxHeight);
 #else /*_GLTRANSFORMATION */
-		  DefClip (frame, pBox->BxClipX, 
+		  DefRegion (frame, pBox->BxClipX, 
 			   pBox->BxClipY,
 			   pBox->BxClipX + pViewSelEnd->VsXPos,
 			   pBox->BxClipY + pBox->BxClipH);
@@ -949,7 +949,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 			     pBox->BxXOrg + pBox->BxWidth,
 			     pBox->BxYOrg + pBox->BxHeight);
 #else /*_GLTRANSFORMATION */
-		  DefClip (frame, pBox->BxClipX + pViewSelEnd->VsXPos, 
+		  DefRegion (frame, pBox->BxClipX + pViewSelEnd->VsXPos, 
 			   pBox->BxClipY,
 			   pBox->BxClipX + pBox->BxClipW,
 			   pBox->BxClipY + pBox->BxClipH);
@@ -967,7 +967,7 @@ void InsertViewSelMarks (int frame, PtrAbstractBox pAb, int firstChar,
 				   pBox->BxXOrg + pBox->BxWidth,
 				   pBox->BxYOrg + pBox->BxHeight);
 #else /*_GLTRANSFORMATION */
-			  DefClip (frame, pBox->BxClipX, pBox->BxClipY,
+			  DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
 				   pBox->BxClipX + pBox->BxClipW,
 				   pBox->BxClipY + pBox->BxClipH);
 #endif /*_GLTRANSFORMATION */

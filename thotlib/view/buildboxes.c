@@ -2443,7 +2443,7 @@ void BoxUpdate (PtrBox pBox, PtrLine pLine, int charDelta, int spaceDelta,
        DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 		pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
 #else /*  _GLTRANSFORMATION */      
-     DefClip (frame, pBox->BxClipX, pBox->BxClipY,
+     DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
 	      pBox->BxClipX + pBox->BxClipW, pBox->BxClipY + pBox->BxClipH);
 #endif /* _GLTRANSFORMATION */
      }
@@ -2791,10 +2791,10 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 			   pCurrentBox->BxXOrg + pCurrentBox->BxWidth + k,
 			   pCurrentBox->BxYOrg + pCurrentBox->BxHeight + k);
 #else /* _GLTRANSFORMATION */
-	      DefClip (frame, pCurrentBox->BxClipX - k,
-		       pCurrentBox->BxClipY - k,
-		       pCurrentBox->BxClipX + pCurrentBox->BxClipW + k,
-		       pCurrentBox->BxClipY + pCurrentBox->BxClipH + k);
+	      DefRegion (frame, pCurrentBox->BxClipX - k,
+			 pCurrentBox->BxClipY - k,
+			 pCurrentBox->BxClipX + pCurrentBox->BxClipW + k,
+			 pCurrentBox->BxClipY + pCurrentBox->BxClipH + k);
 #endif /* _GLTRANSFORMATION */
 	    }
 	}
@@ -2914,7 +2914,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 			 pBox->BxXOrg + pBox->BxWidth,
 			 pBox->BxYOrg + pBox->BxHeight);
 #else /* _GLTRANSFORMATION */
-	      DefClip (frame, pBox->BxClipX, pBox->BxClipY,
+	      DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
 		       pBox->BxClipX + pBox->BxClipW,
 		       pBox->BxClipY + pBox->BxClipH);
 #endif /* _GLTRANSFORMATION */
@@ -3911,7 +3911,7 @@ static void ClearFlexibility (PtrAbstractBox pAb, int frame)
 	     DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 		      pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
 #else  /* _GLTRANSFORMATION */
-	    DefClip (frame, pBox->BxClipX, pBox->BxClipY,
+	    DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
 		      pBox->BxClipX + pBox->BxClipW, pBox->BxClipY + pBox->BxClipH);
 #endif /*  _GLTRANSFORMATION */
 	     /* Annulation de la position */
@@ -3941,7 +3941,7 @@ static void ClearFlexibility (PtrAbstractBox pAb, int frame)
 			    pBox->BxXOrg + pBox->BxWidth,
 			    pBox->BxYOrg + pBox->BxHeight);
 #else  /* _GLTRANSFORMATION */
-	    DefClip (frame, pBox->BxClipX, pBox->BxClipY,
+	    DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
 		      pBox->BxClipX + pBox->BxClipW, pBox->BxClipY + pBox->BxClipH);
 #endif /*  _GLTRANSFORMATION */
 	       }

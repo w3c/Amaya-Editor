@@ -1030,12 +1030,12 @@ void XMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 			     pBox->BxYOrg + pBox->BxHeight + i);
 #else /* _GLTRANSFORMATION */
 		  if (delta > 0)
-		    DefClip (frame, pBox->BxClipX - delta - i,
+		    DefRegion (frame, pBox->BxClipX - delta - i,
 			     pBox->BxClipY - i,
 			     pBox->BxClipX + pBox->BxClipW + i,
 			     pBox->BxClipY + pBox->BxClipH + i);
 		  else
-		    DefClip (frame, pBox->BxClipX - i,
+		    DefRegion (frame, pBox->BxClipX - i,
 			     pBox->BxClipY - i,
 			     pBox->BxClipX + pBox->BxClipW - delta + i,
 			     pBox->BxClipY + pBox->BxClipH + i);
@@ -1212,12 +1212,12 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 			     pBox->BxYOrg + pBox->BxHeight - delta + i);
 #else /* _GLTRANSFORMATION */
 		  if (delta > 0)
-		    DefClip (frame, pBox->BxClipX - i,
+		    DefRegion (frame, pBox->BxClipX - i,
 			     pBox->BxClipY - delta - i,
 			     pBox->BxClipX + pBox->BxClipW + i,
 			     pBox->BxClipY + pBox->BxClipH + i);
 		  else
-		    DefClip (frame, pBox->BxClipX - i,
+		    DefRegion (frame, pBox->BxClipX - i,
 			     pBox->BxClipY - i,
 			     pBox->BxClipX + pBox->BxClipW + i,
 			     pBox->BxClipY + pBox->BxClipH - delta + i);
@@ -1412,7 +1412,7 @@ void MoveVertRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 			    j += delta;
 			  else
 			    i += delta;
-			  DefClip (frame, i - k, pBox->BxClipY - k, j + k,
+			  DefRegion (frame, i - k, pBox->BxClipY - k, j + k,
 				   pBox->BxClipY + pBox->BxClipH + k);
 #endif /*  _GLTRANSFORMATION */
 			}
@@ -1957,7 +1957,7 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	      DefClip (frame, i - k, pBox->BxYOrg - k, j + k,
 		       pBox->BxYOrg + pBox->BxHeight + k);
 #else /* _GLTRANSFORMATION */
-	      DefClip (frame, i - k, pBox->BxClipY - k, j + k,
+	      DefRegion (frame, i - k, pBox->BxClipY - k, j + k,
 		       pBox->BxClipY + pBox->BxClipH + k);
 #endif /* _GLTRANSFORMATION */
 	    }
@@ -2456,7 +2456,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	      DefClip (frame, pBox->BxXOrg - k, i - k,
 		       pBox->BxXOrg + pBox->BxWidth + k, j + k);
 #else /* _GLTRANSFORMATION */
-	      DefClip (frame, pBox->BxClipX - k, i - k,
+	      DefRegion (frame, pBox->BxClipX - k, i - k,
 		       pBox->BxClipX + pBox->BxClipW + k, j + k);
 #endif/*  _GLTRANSFORMATION */
 	    }
@@ -2927,8 +2927,8 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 		  else
 		    i += delta;
 		  if (pBox->BxHeight > 0)
-		  DefClip (frame, i - k, pBox->BxClipY - k, j + k,
-			   pBox->BxClipY + pBox->BxClipH + k);
+		    DefRegion (frame, i - k, pBox->BxClipY - k, j + k,
+			       pBox->BxClipY + pBox->BxClipH + k);
 #endif /* _GLTRANSFORMATION */
 		}
 	      /* Is the box not included? */
@@ -2950,11 +2950,11 @@ void XMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 			     pBox->BxYOrg + pBox->BxHeight);
 #else /* _GLTRANSFORMATION */
 		  if (delta > 0)
-		    DefClip (frame, pBox->BxClipX + i - delta, pBox->BxClipY,
+		    DefRegion (frame, pBox->BxClipX + i - delta, pBox->BxClipY,
 			     pBox->BxClipX + pBox->BxClipW + i,
 			     pBox->BxClipY + pBox->BxClipH);
 		  else
-		    DefClip (frame, pBox->BxClipX + i, pBox->BxClipY,
+		    DefRegion (frame, pBox->BxClipX + i, pBox->BxClipY,
 			     pBox->BxClipX + pBox->BxClipW - delta + i,
 			     pBox->BxClipY + pBox->BxClipH);
 #endif /* _GLTRANSFORMATION */
@@ -3168,7 +3168,7 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 		    DefClip (frame, pBox->BxXOrg - k, i - k,
 			     pBox->BxXOrg + pBox->BxWidth + k, j + k);
 #else /* _GLTRANSFORMATION */
-		  DefClip (frame, pBox->BxClipX - k, i - k,
+		  DefRegion (frame, pBox->BxClipX - k, i - k,
 			   pBox->BxClipX + pBox->BxClipW + k, j + k);
 #endif /* _GLTRANSFORMATION */
 		}
@@ -3190,11 +3190,11 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 			     pBox->BxYOrg + pBox->BxHeight - delta);
 #else /* _GLTRANSFORMATION */
 		  if (delta > 0)
-		    DefClip (frame, pBox->BxClipX + i, pBox->BxClipY - delta,
+		    DefRegion (frame, pBox->BxClipX + i, pBox->BxClipY - delta,
 			     pBox->BxClipX + pBox->BxClipW + i,
 			     pBox->BxClipY + pBox->BxClipH);
 		  else
-		    DefClip (frame, pBox->BxClipX + i, pBox->BxClipY,
+		    DefRegion (frame, pBox->BxClipX + i, pBox->BxClipY,
 			     pBox->BxClipX + pBox->BxClipW + i, 
 			     pBox->BxClipY + pBox->BxClipH - delta);
 #endif /* _GLTRANSFORMATION */
@@ -3509,7 +3509,7 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 			DefClip (frame, i - k, pChildBox->BxYOrg - k, j + k,
 				 pChildBox->BxYOrg + pChildBox->BxHeight + k);
 #else /* _GLTRANSFORMATION */
-			DefClip (frame, i - k, pChildBox->BxClipY - k, j + k,
+			DefRegion (frame, i - k, pChildBox->BxClipY - k, j + k,
 				 pChildBox->BxClipY + pChildBox->BxClipH + k);
 #endif /* _GLTRANSFORMATION */
 		      }
@@ -3747,7 +3747,7 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 			DefClip (frame, pChildBox->BxXOrg - k, i - k,
 				 pChildBox->BxXOrg + pChildBox->BxWidth + k, j + k);
 #else /* _GLTRANSFORMATION */
-			DefClip (frame, pChildBox->BxClipX - k, i - k,
+			DefRegion (frame, pChildBox->BxClipX - k, i - k,
 				 pChildBox->BxClipX + pChildBox->BxClipW + k, j + k);
 #endif /* _GLTRANSFORMATION */
 		      }

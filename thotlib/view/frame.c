@@ -95,13 +95,8 @@ void DefClip (int frame, int xd, int yd, int xf, int yf)
    if (frame > 0 && frame <= MAX_FRAME)
      {
 	pFrame = &ViewFrameTable[frame - 1];
-#ifndef _GLTRANSFORMATION2
 	scrollx = pFrame->FrXOrg;	
 	scrolly = pFrame->FrYOrg; 
-#else /* _GLTRANSFORMATION */
-	scrollx = 0;	
-	scrolly = 0; 
-#endif /* _GLTRANSFORMATION */
 	xb = pFrame->FrClipXBegin - scrollx;
 	xe = pFrame->FrClipXEnd - scrollx - xb; 
 	yb = pFrame->FrClipYBegin - scrolly;
@@ -174,15 +169,11 @@ void DefClip (int frame, int xd, int yd, int xf, int yf)
   ----------------------------------------------------------------------*/
 void DefRegion (int frame, int xd, int yd, int xf, int yf)
 {
-#ifndef _GLTRANSFORMATION2
   ViewFrame          *pFrame;
 
   pFrame = &ViewFrameTable[frame - 1];
   DefClip (frame, xd + pFrame->FrXOrg, yd + pFrame->FrYOrg,
 	   xf + pFrame->FrXOrg, yf + pFrame->FrYOrg);
-#else /* _GLTRANSFORMATION */
-  DefClip (frame, xd, yd, xf, yf);
-#endif/*  _GLTRANSFORMATION */
 }
 
 /*----------------------------------------------------------------------
@@ -422,8 +413,6 @@ static void SyncBoundingboxesReal (PtrAbstractBox pInitAb,
   int                 x, y, w, h;
   int                 xbox, ybox, wbox, hbox;
   
-  if (XFrame == 0 && YFrame == 0)
-    return;
   box = pInitAb->AbBox;
   x = box->BxClipX - XFrame;
   y = box->BxClipY - YFrame;
@@ -451,8 +440,20 @@ static void SyncBoundingboxesReal (PtrAbstractBox pInitAb,
 	}
       else
 	{
-	    /* compute children of this box*/
-	    SyncBoundingboxesReal (pAb, XFrame, YFrame, frame);
+	  if (pAb->AbElement->ElSystemOrigin)
+	    {
+	      CoordinateSystemUpdate (pAb, frame, 
+				      pAb->AbBox->BxXOrg, 
+				      pAb->AbBox->BxYOrg);
+	      /* pAb->AbBox->BxXOrg = 0; */
+	      /* pAb->AbBox->BxYOrg = 0; */
+	      SyncBoundingboxesReal (pAb, XFrame, YFrame, frame);
+	    }
+	  else 
+	    {
+	      /* compute children of this box*/
+	      SyncBoundingboxesReal (pAb, XFrame, YFrame, frame);
+	    }
 	    box = pAb->AbBox;
 	  }
       if (0 && box)
@@ -563,7 +564,7 @@ static void ComputeBoundingBoxes (int frame, int xmin, int xmax, int ymin, int y
   PtrBox              pBox, box;
   PtrBox              topBox;
   ViewFrame          *pFrame;
-  PictInfo           *imageDesc;
+  /* PictInfo           *imageDesc; */
   int                 plane;
   int                 nextplane;
   int                 winTop, winBottom;

@@ -3122,7 +3122,7 @@ static void CompressLine (PtrLine pLine, int xDelta, int frame, int spaceDelta)
 	    limit + pLine->LiXMax,
      pBox->BxYOrg + pBox->BxHorizRef - pLine->LiHorizRef + pLine->LiHeight);
 #else /* _GLTRANSFORMATION */
-   DefClip (frame, pBox->BxClipX, pBox->BxClipY,
+   DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
 	    pBox->BxClipX + pBox->BxClipW,
 	    pBox->BxClipY + pBox->BxClipH);
 #endif /* _GLTRANSFORMATION */
@@ -3399,9 +3399,9 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 		l = pBox->BxClipW;
 	     l += pBox->BxClipX;
 	     if (height > pBox->BxClipH)
-	       DefClip (frame, pBox->BxClipX, h, l, pBox->BxClipY + height);
+	       DefRegion (frame, pBox->BxClipX, h, l, pBox->BxClipY + height);
 	     else
-	       DefClip (frame, pBox->BxClipX, h, l, pBox->BxClipY + pBox->BxClipH);
+	       DefRegion (frame, pBox->BxClipX, h, l, pBox->BxClipY + pBox->BxClipH);
 #endif /*_GLTRANSFORMATION*/
 	  }
 

@@ -1310,7 +1310,7 @@ static void LoadShape (char c, PtrLine pLine, ThotBool defaultHeight,
 #ifndef _GLTRANSFORMATION
 	  DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, pBox->BxXOrg + width + EXTRA_GRAPH, pBox->BxYOrg + height + EXTRA_GRAPH);
 #else/* _GLTRANSFORMATION */  
-	  DefClip (frame, pBox->BxClipX - EXTRA_GRAPH, pBox->BxClipY - EXTRA_GRAPH, pBox->BxClipX + width + EXTRA_GRAPH, pBox->BxClipY + height + EXTRA_GRAPH);
+	  DefRegion (frame, pBox->BxClipX - EXTRA_GRAPH, pBox->BxClipY - EXTRA_GRAPH, pBox->BxClipX + width + EXTRA_GRAPH, pBox->BxClipY + height + EXTRA_GRAPH);
 #endif /* _GLTRANSFORMATION */
 
 	  break;
@@ -2280,7 +2280,7 @@ static void ContentEditing (int editType)
 			  DefClip (frame, pBox->BxXOrg - EXTRA_GRAPH, pBox->BxYOrg - EXTRA_GRAPH, 
 				   pBox->BxXOrg + pBox->BxWidth + EXTRA_GRAPH, pBox->BxYOrg + pBox->BxHeight + EXTRA_GRAPH);
 #else/* _GLTRANSFORMATION */  
-			  DefClip (frame, pBox->BxClipX - EXTRA_GRAPH, pBox->BxClipY - EXTRA_GRAPH, 
+			  DefRegion (frame, pBox->BxClipX - EXTRA_GRAPH, pBox->BxClipY - EXTRA_GRAPH, 
 				   pBox->BxClipX + pBox->BxClipW + EXTRA_GRAPH, pBox->BxClipY + pBox->BxClipH + EXTRA_GRAPH);			  
 #endif /* _GLTRANSFORMATION */
 			}
@@ -2326,7 +2326,7 @@ static void ContentEditing (int editType)
 			   pSelBox->BxXOrg + pSelBox->BxWidth,
 			   pSelBox->BxYOrg + pSelBox->BxHeight);
 #else /* _GLTRANSFORMATION */
-		  DefClip (frame, pSelBox->BxClipX, pSelBox->BxClipY,
+		  DefRegion (frame, pSelBox->BxClipX, pSelBox->BxClipY,
 			   pSelBox->BxClipX + pSelBox->BxClipW,
 			   pSelBox->BxClipY + pSelBox->BxClipH);
 #endif /* _GLTRANSFORMATION */
@@ -2338,7 +2338,7 @@ static void ContentEditing (int editType)
 			   pBox->BxXOrg + pBox->BxWidth,
 			   pBox->BxYOrg + pBox->BxHeight);
 #else /* _GLTRANSFORMATION */
-		  DefClip (frame, pBox->BxClipX, pBox->BxClipY,
+		  DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
 			   pBox->BxClipX + pBox->BxClipW,
 			   pBox->BxClipY + pBox->BxClipH);
 #endif /* _GLTRANSFORMATION */
@@ -2431,7 +2431,7 @@ static void ContentEditing (int editType)
 				   pBox->BxXOrg + pBox->BxWidth,
 				   pBox->BxYOrg + pBox->BxHeight);
 #else /* _GLTRANSFORMATION */
-			  DefClip (frame, pBox->BxClipX, pBox->BxClipY,
+			  DefRegion (frame, pBox->BxClipX, pBox->BxClipY,
 				   pBox->BxClipX + pBox->BxClipW,
 				   pBox->BxClipY + pBox->BxClipH);
 #endif /* _GLTRANSFORMATION */
@@ -2986,7 +2986,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			      DefClip (frame, pSelBox->BxXOrg, topY,
 				       pSelBox->BxXOrg + pSelBox->BxWidth, bottomY);
 #else /* _GLTRANSFORMATION */
-			      DefClip (frame, pSelBox->BxClipX, topY,
+			      DefRegion (frame, pSelBox->BxClipX, topY,
 				       pSelBox->BxClipX + pSelBox->BxClipWidth, bottomY);
 #endif /* _GLTRANSFORMATION */
 			      /* split the current box */
@@ -3028,7 +3028,6 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			      else
 				/* insert before the first box */
 				box->BxClipX = pSelBox->BxClipX;
-
 #endif /* _GL */
 			      box->BxW = 0;
 			      box->BxWidth = 0;
@@ -3110,7 +3109,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				       pSelBox->BxXOrg + pSelBox->BxWidth,
 				       pSelBox->BxYOrg + pSelBox->BxHeight);
 #else /* _GLTRANSFORMATION */
-			      DefClip (frame, pSelBox->BxClipX, pSelBox->BxClipY,
+			      DefRegion (frame, pSelBox->BxClipX, pSelBox->BxClipY,
 				       pSelBox->BxClipX + pSelBox->BxClipW,
 				       pSelBox->BxClipY + pSelBox->BxClipH);
 #endif /* _GLTRANSFORMATION */

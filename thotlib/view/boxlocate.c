@@ -1440,10 +1440,20 @@ static ThotBool IsInShape (PtrAbstractBox pAb, int x, int y)
   float               value1, value2;
   PtrBox              box;
   ThotBool            ok;
+  int                 width, height;
 
   box = pAb->AbBox;
+#ifndef _GLTRANSFORMATION
   x -= box->BxXOrg;
   y -= box->BxYOrg;
+  width = box->BxWidth;
+  height = box->BxHeight;
+#else /* _GLTRANSFORMATION */
+  x -= box->BxClipX;
+  y -= box->BxClipY;
+  width = box->BxClipW;
+  height = box->BxClipH;
+#endif /* _GLTRANSFORMATION */
   max = 0;
 
   /* Is there a characteristic point of the drawing? */
@@ -1463,10 +1473,10 @@ static ThotBool IsInShape (PtrAbstractBox pAb, int x, int y)
       point[0][0] = 0;
       point[0][1] = 0;
       point[1][0] = 0;
-      point[1][1] = box->BxHeight;
-      point[2][0] = box->BxWidth;
-      point[2][1] = box->BxHeight;
-      point[3][0] = box->BxWidth;
+      point[1][1] = height;
+      point[2][0] = width;
+      point[2][1] = height;
+      point[3][0] = width;
       point[3][1] = 0;
       max = 3;
       break;
@@ -1476,16 +1486,16 @@ static ThotBool IsInShape (PtrAbstractBox pAb, int x, int y)
       point[0][0] = 0;
       point[0][1] = arc;
       point[1][0] = 0;
-      point[1][1] = box->BxHeight - arc;
+      point[1][1] = height - arc;
       point[2][0] = arc;
-      point[2][1] = box->BxHeight;
-      point[3][0] = box->BxWidth - arc;
-      point[3][1] = box->BxHeight;
-      point[4][0] = box->BxWidth;
-      point[4][1] = box->BxHeight - arc;
-      point[5][0] = box->BxWidth;
+      point[2][1] = height;
+      point[3][0] = width - arc;
+      point[3][1] = height;
+      point[4][0] = width;
+      point[4][1] = height - arc;
+      point[5][0] = width;
       point[5][1] = arc;
-      point[6][0] = box->BxWidth - arc;
+      point[6][0] = width - arc;
       point[6][1] = 0;
       point[7][0] = arc;
       point[7][1] = 0;
@@ -1493,23 +1503,23 @@ static ThotBool IsInShape (PtrAbstractBox pAb, int x, int y)
       break;
     case 'L':		/* losange */
       point[0][0] = 0;
-      point[0][1] = box->BxHeight / 2;
-      point[1][0] = box->BxWidth / 2;
-      point[1][1] = box->BxHeight;
-      point[2][0] = box->BxWidth;
-      point[2][1] = box->BxHeight / 2;
-      point[3][0] = box->BxWidth / 2;
+      point[0][1] = height / 2;
+      point[1][0] = width / 2;
+      point[1][1] = height;
+      point[2][0] = width;
+      point[2][1] = height / 2;
+      point[3][0] = width / 2;
       point[3][1] = 0;
       max = 3;
       break;
     case 'a':		/* circles */
     case 'c':		/* ovals */
     case 'Q':		/* ellipses */
-      value1 = x - ((float) box->BxWidth / 2);
-      value2 = (y - ((float) box->BxHeight / 2)) *
-                ((float) box->BxWidth / (float) box->BxHeight);
+      value1 = x - ((float) width / 2);
+      value2 = (y - ((float) height / 2)) *
+                ((float) width / (float) height);
       value1 = value1 * value1 + value2 * value2;
-      value2 = (float) box->BxWidth / 2;
+      value2 = (float) width / 2;
       value2 = value2 * value2;
       if (value1 <= value2)
 	return (TRUE);	/* within the circle */
@@ -1602,11 +1612,20 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
   int                 controlPoint;
   int                 arc, xm, xp;
   float               value1, value2, value3;
-
+  int                 width, height;
   /* relative coords of the box (easy work) */
   pBox = pAb->AbBox;
+#ifndef _GLTRANSFORMATION
   x -= pBox->BxXOrg;
   y -= pBox->BxYOrg;
+  width = pBox->BxWidth;
+  height = pBox->BxHeight;
+#else /* _GLTRANSFORMATION */
+  x -= pBox->BxClipX;
+  y -= pBox->BxClipY;
+  width = pBox->BxClipW;
+  height = pBox->BxClipH;
+#endif /* _GLTRANSFORMATION */
   *selpoint = 0;
   /* Keep in mind the selected caracteristic point       */
   /*            1-------------2-------------3            */
@@ -1620,28 +1639,28 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
   if (x < DELTA_SEL)
     if (y < DELTA_SEL)
       controlPoint = 1;
-    else if (y > pBox->BxHeight / 2 - DELTA_SEL &&
-	     y < pBox->BxHeight / 2 + DELTA_SEL)
+    else if (y > height / 2 - DELTA_SEL &&
+	     y < height / 2 + DELTA_SEL)
       controlPoint = 8;
-    else if (y > pBox->BxHeight - 10)
+    else if (y > height - 10)
       controlPoint = 7;
     else
       controlPoint = 0;
-  else if (x > pBox->BxWidth / 2 - DELTA_SEL &&
-	   x < pBox->BxWidth / 2 + DELTA_SEL)
+  else if (x > width / 2 - DELTA_SEL &&
+	   x < width / 2 + DELTA_SEL)
     if (y < DELTA_SEL)
       controlPoint = 2;
-    else if (y > pBox->BxHeight - DELTA_SEL)
+    else if (y > height - DELTA_SEL)
       controlPoint = 6;
     else
       controlPoint = 0;
-  else if (x > pBox->BxWidth - DELTA_SEL)
+  else if (x > width - DELTA_SEL)
     if (y < DELTA_SEL)
       controlPoint = 3;
-    else if (y > pBox->BxHeight / 2 - DELTA_SEL &&
-	     y < pBox->BxHeight / 2 + DELTA_SEL)
+    else if (y > height / 2 - DELTA_SEL &&
+	     y < height / 2 + DELTA_SEL)
       controlPoint = 4;
-    else if (y > pBox->BxHeight - 10)
+    else if (y > height - 10)
       controlPoint = 5;
     else
       controlPoint = 0;
@@ -1655,9 +1674,9 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
       xp =  FontHeight (font);
       xm = xp / 2;
       xp = xp / 4;
-      if (IsOnSegment (x, y, 1, 2 * (pBox->BxHeight / 3), xp, pBox->BxHeight) ||
-	  IsOnSegment (x, y, xp, pBox->BxHeight, xm, 1) ||
-	  IsOnSegment (x, y, xm, 1, pBox->BxWidth, 1))
+      if (IsOnSegment (x, y, 1, 2 * (height / 3), xp, height) ||
+	  IsOnSegment (x, y, xp, height, xm, 1) ||
+	  IsOnSegment (x, y, xm, 1, width, 1))
 	return (pBox);
     }
   else
@@ -1675,46 +1694,46 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
     case '7':
     case '8':
       /* rectangle */
-      if (IsOnSegment (x, y, 0, 0, pBox->BxWidth, 0) ||
-	  IsOnSegment (x, y, 0, pBox->BxHeight, pBox->BxWidth,
-			pBox->BxHeight) ||
-	  IsOnSegment (x, y, 0, 0, 0, pBox->BxHeight) ||
-	  IsOnSegment (x, y, pBox->BxWidth, 0, pBox->BxWidth, pBox->BxHeight))
+      if (IsOnSegment (x, y, 0, 0, width, 0) ||
+	  IsOnSegment (x, y, 0, height, width,
+			height) ||
+	  IsOnSegment (x, y, 0, 0, 0, height) ||
+	  IsOnSegment (x, y, width, 0, width, height))
 	return (pBox);
       break;
     case 'L':
-      if (IsOnSegment (x, y, 0, pBox->BxHeight / 2, pBox->BxWidth / 2, 0) ||
-	  IsOnSegment (x, y, 0, pBox->BxHeight / 2, pBox->BxWidth / 2,
-			pBox->BxHeight) ||
-	  IsOnSegment (x, y, pBox->BxWidth, pBox->BxHeight / 2,
-			pBox->BxWidth / 2, 0) ||
-	  IsOnSegment (x, y, pBox->BxWidth, pBox->BxHeight / 2,
-			pBox->BxWidth / 2, pBox->BxHeight))
+      if (IsOnSegment (x, y, 0, height / 2, width / 2, 0) ||
+	  IsOnSegment (x, y, 0, height / 2, width / 2,
+			height) ||
+	  IsOnSegment (x, y, width, height / 2,
+			width / 2, 0) ||
+	  IsOnSegment (x, y, width, height / 2,
+			width / 2, height))
 	return (pBox);
       break;
     case 'C':
     case 'P':
       /* rectangle with rounded corners */
       arc = (int) ((3 * DOT_PER_INCH) / 25.4 + 0.5);
-      if (IsOnSegment (x, y, arc, 0, pBox->BxWidth - arc, 0) ||
-	  IsOnSegment (x, y, 0, arc, 0, pBox->BxHeight - arc) ||
-	  IsOnSegment (x, y, arc, pBox->BxHeight, pBox->BxWidth - arc,
-			pBox->BxHeight) ||
-	  IsOnSegment (x, y, pBox->BxWidth, arc, pBox->BxWidth,
-			pBox->BxHeight - arc))
+      if (IsOnSegment (x, y, arc, 0, width - arc, 0) ||
+	  IsOnSegment (x, y, 0, arc, 0, height - arc) ||
+	  IsOnSegment (x, y, arc, height, width - arc,
+			height) ||
+	  IsOnSegment (x, y, width, arc, width,
+			height - arc))
 	return (pBox);
       break;
     case 'a': /* circle */
     case 'c': /* ellipse */
     case 'Q': /* ellipse with a bar */
       /* ellipse or circle */
-      value1 = x - ((float) pBox->BxWidth / 2);
-      value2 = (y - ((float) pBox->BxHeight / 2)) *
-                ((float) pBox->BxWidth / (float) pBox->BxHeight);
+      value1 = x - ((float) width / 2);
+      value2 = (y - ((float) height / 2)) *
+                ((float) width / (float) height);
       /* value1 = square of (distance from center to point) */
       value1 = value1 * value1 + value2 * value2;
       /* value2 = square of (radius - DELTA_SEL) */
-      value2 = (float) pBox->BxWidth / 2;
+      value2 = (float) width / 2;
       value3 = value2;
       value2 -= DELTA_SEL;
       value2 = value2 * value2;
@@ -1728,31 +1747,31 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
     case 'W':
       /* upper right corner of the box */
       if (controlPoint == 1 || controlPoint == 3 || controlPoint == 5 ||
-	  IsOnSegment (x, y, 0, 0, pBox->BxWidth, 0) ||
-	  IsOnSegment (x, y, pBox->BxWidth, 0, pBox->BxWidth, pBox->BxHeight))
+	  IsOnSegment (x, y, 0, 0, width, 0) ||
+	  IsOnSegment (x, y, width, 0, width, height))
 	return (pBox);
       break;
     case 'X':
       /* lower right corner of the box */
       if (controlPoint == 3 || controlPoint == 5 || controlPoint == 7 ||
-	  IsOnSegment (x, y, pBox->BxWidth, 0, pBox->BxWidth,
-			pBox->BxHeight) ||
-	  IsOnSegment (x, y, pBox->BxWidth, pBox->BxHeight, 0,pBox->BxHeight))
+	  IsOnSegment (x, y, width, 0, width,
+			height) ||
+	  IsOnSegment (x, y, width, height, 0,height))
 	return (pBox);
       break;
     case 'Y':
       /* a segment with an arrow head at the end */
       if (controlPoint == 1 || controlPoint == 5 || controlPoint == 7 ||
-	  IsOnSegment (x, y, pBox->BxWidth, pBox->BxHeight, 0,
-			pBox->BxHeight) ||
-	  IsOnSegment (x, y, 0, pBox->BxHeight, 0, 0))
+	  IsOnSegment (x, y, width, height, 0,
+			height) ||
+	  IsOnSegment (x, y, 0, height, 0, 0))
 	return (pBox);
       break;
     case 'Z':
       /* the upper left corner of the box */
       if (controlPoint == 1 || controlPoint == 3 || controlPoint == 7 ||
-	  IsOnSegment (x, y, 0, pBox->BxHeight, 0, 0) ||
-	  IsOnSegment (x, y, 0, 0, pBox->BxWidth, 0))
+	  IsOnSegment (x, y, 0, height, 0, 0) ||
+	  IsOnSegment (x, y, 0, 0, width, 0))
 	return (pBox);
       break;
     case 'h':
@@ -1760,20 +1779,20 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
     case '>':
       /* a horizontal line or arrow */
       if (controlPoint == 4 || controlPoint == 8 ||
-	  IsOnSegment (x, y, 0, pBox->BxHeight / 2, pBox->BxWidth,
-			pBox->BxHeight / 2))
+	  IsOnSegment (x, y, 0, height / 2, width,
+			height / 2))
 	return (pBox);
       break;
     case 't':
       /* a horizontal line along the upper side of the box */
       if (controlPoint == 1 || controlPoint == 2 || controlPoint == 3 ||
-	  IsOnSegment (x, y, 0, 0, pBox->BxWidth, 0))
+	  IsOnSegment (x, y, 0, 0, width, 0))
 	return (pBox);
       break;
     case 'b':
       /* a horizontal line along the lower side of the box */
       if (controlPoint == 5 || controlPoint == 6 || controlPoint == 7 ||
-	  IsOnSegment (x, y, pBox->BxWidth, pBox->BxHeight, 0,pBox->BxHeight))
+	  IsOnSegment (x, y, width, height, 0,height))
 	return (pBox);
       break;
     case 'v':
@@ -1781,20 +1800,20 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
     case 'V':
       /* a vertical line or arrow as tall as the box and placed in its middle*/
       if (controlPoint == 2 || controlPoint == 6 ||
-	  IsOnSegment (x, y, pBox->BxWidth / 2, 0, pBox->BxWidth / 2,
-			pBox->BxHeight))
+	  IsOnSegment (x, y, width / 2, 0, width / 2,
+			height))
 	return (pBox);
       break;
     case 'l':
       /* a vertical line on the left side of the box */
       if (controlPoint == 1 || controlPoint == 7 || controlPoint == 8 ||
-	  IsOnSegment (x, y, 0, pBox->BxHeight, 0, 0))
+	  IsOnSegment (x, y, 0, height, 0, 0))
 	return (pBox);
       break;
     case 'r':
       /* a vertical line on the right side of the box */
       if (controlPoint == 3 || controlPoint == 4 || controlPoint == 5 ||
-	  IsOnSegment (x, y, pBox->BxWidth, 0, pBox->BxWidth, pBox->BxHeight))
+	  IsOnSegment (x, y, width, 0, width, height))
 	return (pBox);
       break;
     case '\\':
@@ -1803,7 +1822,7 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
       /* The northwest/southeast diagonal of the box possibly with an
 	 arrowhead */
       if (controlPoint == 1 || controlPoint == 5 ||
-	  IsOnSegment (x, y, 0, 0, pBox->BxWidth, pBox->BxHeight))
+	  IsOnSegment (x, y, 0, 0, width, height))
 	return (pBox);
       break;
     case '/':
@@ -1812,7 +1831,7 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
       /* The southwest/northeast diagonal of the box possibly with an
 	 arrowhead */
       if (controlPoint == 3 || controlPoint == 7 ||
-	  IsOnSegment (x, y, 0, pBox->BxHeight, pBox->BxWidth, 0))
+	  IsOnSegment (x, y, 0, height, width, 0))
 	return (pBox);
       break;
     case 'g':
@@ -1827,7 +1846,7 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
 	      *selpoint = controlPoint;
 	      return (pBox);
 	    }
-	  else  if (IsOnSegment (x, y, 0, 0, pBox->BxWidth, pBox->BxHeight))
+	  else  if (IsOnSegment (x, y, 0, 0, width, height))
 	    return (pBox);
 	}
       else
@@ -1838,7 +1857,7 @@ static PtrBox IsOnShape (PtrAbstractBox pAb, int x, int y, int *selpoint)
 	      *selpoint = controlPoint;
 	      return (pBox);
 	    }
-	  else  if (IsOnSegment (x, y, 0, pBox->BxHeight, pBox->BxWidth, 0))
+	  else  if (IsOnSegment (x, y, 0, height, width, 0))
 	    return (pBox);
 	}
       break;
@@ -2812,7 +2831,7 @@ void ApplyDirectTranslate (int frame, int xm, int ym)
 			   pBox->BxXOrg + width + EXTRA_GRAPH,
 			   pBox->BxYOrg + height + EXTRA_GRAPH);
 #else /* _GLTRANSFORMATION */
-		  DefClip (frame, pBox->BxClipX - EXTRA_GRAPH,
+		  DefRegion (frame, pBox->BxClipX - EXTRA_GRAPH,
 			   pBox->BxClipY - EXTRA_GRAPH,
 			   pBox->BxClipX + width + EXTRA_GRAPH,
 			   pBox->BxClipY + height + EXTRA_GRAPH);
@@ -3263,7 +3282,7 @@ void                DirectCreation (PtrBox pBox, int frame)
       DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
 	       pBox->BxXOrg + width, pBox->BxYOrg + height);
 #else /* _GLTRANSFORMATION */
-      DefClip (frame, pBox->BxClipX,
+      DefRegion (frame, pBox->BxClipX,
 	       pBox->BxClipY,
 	       pBox->BxClipX + width,
 	       pBox->BxClipY + height);

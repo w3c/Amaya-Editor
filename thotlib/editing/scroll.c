@@ -713,6 +713,7 @@ void ShowSelectedBox (int frame, ThotBool actif)
 	  }
 	if (pBo1 != NULL)
 	  {
+#ifndef _GLTRANSFORMATION
 	     x = pBo1->BxXOrg;
 	     y = pBo1->BxYOrg;
 	     GetSizesFrame (frame, &dx, &dy);
@@ -720,6 +721,15 @@ void ShowSelectedBox (int frame, ThotBool actif)
 	     xmax = xmin + dx;
 	     ymin = pFrame->FrYOrg;
 	     ymax = ymin + dy;
+#else /* _GLTRANSFORMATION */
+	     x = pBo1->BxClipX;
+	     y = pBo1->BxClipY;
+	     GetSizesFrame (frame, &dx, &dy);
+	     xmin = 0;
+	     xmax = dx;
+	     ymin = 0;
+	     ymax = dy;
+#endif /* _GLTRANSFORMATION*/
 	     /* MilieuX de la fenetre */
 	     dx = pFrame->FrSelectionBegin.VsXPos;
 	     dy = 13;
@@ -773,9 +783,15 @@ ThotBool IsAbsBoxVisible (int frame, PtrAbstractBox pAb)
       return (FALSE);		/* la boite n'est pas visible par definition */
    else
      {
+#ifndef _GLTRANSFORMATION
 	y = pAb->AbBox->BxYOrg;
 	GetSizesFrame (frame, &dx, &dy);
 	ymax = pFrame->FrYOrg + dy;
+#else /* _GLTRANSFORMATION */
+	y = pAb->AbBox->BxClipY;
+	GetSizesFrame (frame, &dx, &dy);
+	ymax = dy;
+#endif /* _GLTRANSFORMATION */
 	if (y <= ymax)
 	   return (FALSE);
 	else
