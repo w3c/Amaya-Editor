@@ -1,0 +1,10 @@
+APPLICATION Topics;
+
+DEFAULT
+
+ELEMENTS
+   Bookmark_item: BEGIN
+ 	ElemRClick.Pre -> BM_SimpleClick;
+   END;
+END 
+
