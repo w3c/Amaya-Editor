@@ -7135,6 +7135,7 @@ void HelpAmaya (Document document, View view)
 #ifdef AMAYA_DEBUG
    Element             el;
    View                structView, altView, linksView, tocView;
+   int                 n;
    FILE               *list;
 
   /* get the root element */
@@ -7233,7 +7234,12 @@ void HelpAmaya (Document document, View view)
    strcat (localname, DIR_STR);
    strcat (localname, "style_element.debug");
    list = fopen (localname, "w");
-   TtaListStyleOfCurrentElement (document, list);
+   n = TtaListStyleOfCurrentElement (document, list);
+   if (n == 0)
+     {
+       fprintf (list, "\n     ");
+       fprintf (list, TtaGetMessage (AMAYA, AM_NO_STYLE_FOR_ELEM));
+     }
    fclose (list);
 #endif /* AMAYA_DEBUG */
 

@@ -771,6 +771,11 @@ void ShowAppliedStyle (Document doc, View view)
 	       GetXMLElementName (elType, doc));      
       fprintf (list, TtaGetMessage (AMAYA, AM_LINK_LINE));      
       n = TtaListStyleOfCurrentElement (doc, list);
+      if (n == 0)
+	{
+	  fprintf (list, "\n     ");
+	  fprintf (list, TtaGetMessage (AMAYA, AM_NO_STYLE_FOR_ELEM));
+	}
       fclose (list);
       newdoc = GetAmayaDoc (fileName, "STYLE.LST", 0, doc, CE_LOG, FALSE, NULL,
 			    NULL, TtaGetDefaultCharset ());
@@ -825,6 +830,11 @@ void SynchronizeAppliedStyle (NotifyElement *event)
 		 GetXMLElementName (elType, doc));      
 	fprintf (list, TtaGetMessage (AMAYA, AM_LINK_LINE));      
 	n = TtaListStyleOfCurrentElement (doc, list);
+	if (n == 0)
+	  {
+	    fprintf (list, "\n     ");
+	    fprintf (list, TtaGetMessage (AMAYA, AM_NO_STYLE_FOR_ELEM));
+	  }
 	fclose (list);
 	StartParser (i, fileName, "STYLE.LST", dirName, "STYLE.LST", TRUE);
 	return;
