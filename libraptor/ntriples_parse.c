@@ -42,7 +42,8 @@
 #endif
 
 #ifndef WIN32
-extern int errno;
+/* extern int errno; */
+#include <errno.h>
 #endif
 
 #ifdef LIBRDF_INTERNAL

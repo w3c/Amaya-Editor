@@ -61,7 +61,8 @@ DllMain(HANDLE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
 #endif
 
 #ifndef WIN32
-extern int errno;
+/* extern int errno; */
+#include <errno.h>
 #endif
 
 #ifdef LIBRDF_INTERNAL
