@@ -1800,13 +1800,6 @@ static void       EndOfXmlElement (char *name)
    PtrParserCtxt  savParserCtxt = NULL;
    int            nslevel;
 
-   if (XMLcontext.parsingTextArea)
-     if (strcasecmp (elementName, "textarea") != 0)
-       /* We are parsing the contents of a textarea element. */
-       /* The end tag is not the one closing the current textarea, */
-       /* consider it as plain text */
-       return;
-
    /* Look for the context associated with that element */
    savParserCtxt = currentParserCtxt;
    buffer = TtaGetMemory ((strlen (name) + 1));
@@ -1836,6 +1829,13 @@ static void       EndOfXmlElement (char *name)
        elementName = TtaGetMemory (strlen (buffer) + 1);
        strcpy (elementName, buffer);
      }
+
+   if (XMLcontext.parsingTextArea)
+     if (strcasecmp (elementName, "textarea") != 0)
+       /* We are parsing the contents of a textarea element. */
+       /* The end tag is not the one closing the current textarea, */
+       /* consider it as plain text */
+       return;
  
    if (currentParserCtxt == NULL)
      {
