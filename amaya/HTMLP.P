@@ -3047,7 +3047,7 @@ RULES
 	Width: Enclosing . Width;
 	VertPos: Top = Previous not MAP . Bottom;
 	if not within Definition and not within List_Item
-	   MarginTop: 0.5;
+	        MarginTop: 0.5;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
@@ -3066,7 +3066,7 @@ RULES
 	Width: Enclosing . Width;
 	VertPos: Top = Previous not MAP . Bottom;
 	if not within Definition and not within List_Item
-	   MarginTop: 0.5;
+	        MarginTop: 0.5;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;

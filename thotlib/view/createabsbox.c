@@ -3643,8 +3643,9 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
     if (selectedRule[i])
       if (!ApplyRule (selectedRule[i], schemaOfSelectedRule[i], pNewAbbox,
 		      pDoc, attrOfSelectedRule[i]))
-	WaitingRule (selectedRule[i], pNewAbbox, schemaOfSelectedRule[i], NULL,
-		     queuePA, queuePS, queuePP, queuePR, lqueue);
+	WaitingRule (selectedRule[i], pNewAbbox, schemaOfSelectedRule[i],
+		     attrOfSelectedRule[i], queuePA, queuePS, queuePP,
+		     queuePR, lqueue);
 }
 
 /*----------------------------------------------------------------------
