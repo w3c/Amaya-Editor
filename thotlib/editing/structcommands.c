@@ -1419,7 +1419,8 @@ boolean             save;
 					    pour SearchPresSchema appele' par
 					    UpdateNumbers et pour RedisplayCopies */
 				      }
-                                    if (last == TTE_STANDARD_DELETE_LAST_ITEM)
+                                    if ((last == TTE_STANDARD_DELETE_LAST_ITEM)
+				        && !cutPage)
                                        pEl = NULL;
 				 }
 			    }
