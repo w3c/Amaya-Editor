@@ -42,6 +42,11 @@ static int          documentStatus;
  
 extern char               *GetActiveImageInfo (Document document, Element element);
 
+#ifdef _WINDOWS 
+Document  opDoc;
+Element   opOption [200];
+#endif /* _WINDOWS */
+
 /*----------------------------------------------------------------------
  -----------------------------------------------------------------------*/ 
 #ifdef __STDC__
@@ -1027,6 +1032,10 @@ Element             el;
    if (el == NULL)
       return;
 
+#  ifdef _WINDOWS  
+   opDoc = doc;
+#  endif /* _WINDOWS */
+
    /* search the option element */
    elType = TtaGetElementType (el);
    while (elType.ElTypeNum != HTML_EL_BODY && elType.ElTypeNum != HTML_EL_Option)
@@ -1050,6 +1059,9 @@ Element             el;
 		  if (elType.ElTypeNum == HTML_EL_Option)
 		    {
 		       option[nbitems] = el;
+#              ifdef _WINDOWS 
+               opOption[nbitems] = el;
+#              endif /* _WINDOWS */
 		       length = 200;
 		       elText = TtaGetFirstChild (el);
 		       TtaGiveTextContent (elText, text, &length, &lang);

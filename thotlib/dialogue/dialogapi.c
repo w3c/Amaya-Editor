@@ -185,6 +185,11 @@ typedef struct FrCatalogue {
 
 
 FrCatalogue FrameCatList [MAX_FRAME + 1] ;
+
+extern int       ReturnOption;
+extern Document  opDoc;
+extern Element   opOption [200];
+
 #ifdef __STDC__
 LRESULT CALLBACK WndProc        (HWND, UINT, WPARAM, LPARAM) ;
 LRESULT CALLBACK ClientWndProc  (HWND, UINT, WPARAM, LPARAM) ;
@@ -2982,10 +2987,10 @@ char               *equiv;
 #                         ifdef _WINDOWS
               if (equiv_item && equiv_item [0] != 0) {
                  sprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item); 
-                 AppendMenu (menu, MF_STRING, ref + i, menu_item);
+                 AppendMenu (menu, MF_STRING | MF_UNCHECKED, ref + i, menu_item);
                  equiv_item[0] = 0;
               } else 
-                   AppendMenu (menu, MF_STRING, ref + i, &text[index + 1]);
+                   AppendMenu (menu, MF_STRING | MF_UNCHECKED, ref + i, &text[index + 1]);
 			  adbloc->E_ThotWidget[ent] = (ThotWidget) i;
                           copyCat = catalogue;
                           WIN_AddFrameCatalogue (parent, copyCat) ;
@@ -3006,12 +3011,9 @@ char               *equiv;
                  equiv_item [0] = 0;
               } else
                    sprintf (menu_item, "%s", &text[index + 1]);
-              if (i == 0 || i == 1) 
-			     /* AppendMenu (menu, MF_STRING | MF_CHECKED, ref + i, menu_item); */
-			     AppendMenu (menu, MF_STRING, ref + i, menu_item);
-			  else
-			      /* AppendMenu (menu, MF_STRING | MF_UNCHECKED, ref + i, menu_item); */
-			      AppendMenu (menu, MF_STRING, ref + i, menu_item);
+
+              AppendMenu (menu, MF_STRING | MF_UNCHECKED, ref + i, menu_item);
+
 			  adbloc->E_ThotWidget[ent] = (ThotWidget) i;
                           copyCat = catalogue;
                           WIN_AddFrameCatalogue (parent, copyCat) ;
@@ -4441,11 +4443,11 @@ boolean             react;
 #                           ifdef _WINDOWS
                             if (equiv_item && equiv_item[0] != 0) {
                                sprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item);
-                               AppendMenu (w, MF_STRING | MF_CHECKED, ref + i, menu_item);
+                               AppendMenu (w, MF_STRING | MF_UNCHECKED, ref + i, menu_item);
                                equiv_item [0] = 0;
                             } else 
-                                 AppendMenu (w, MF_STRING | MF_CHECKED, ref + i, &text[index + 1]);
-			    adbloc->E_ThotWidget[ent] = (ThotWidget) i;
+                                 AppendMenu (w, MF_STRING | MF_UNCHECKED, ref + i, &text[index + 1]);
+                            adbloc->E_ThotWidget[ent] = (ThotWidget) i;
                             copyCat = catalogue;
                             WIN_AddFrameCatalogue (currentMenu, copyCat) ;
 #                           else  /* _WINDOWS */
@@ -4887,6 +4889,17 @@ boolean             react;
    toutes les entre'es). Le parame`tre on indique que le bouton       
    correspondant doit e^tre allume' (on positif) ou e'teint (on nul). 
   ----------------------------------------------------------------------*/
+#ifdef _WINDOWS 
+#ifdef __STDC__
+void                WIN_TtaSetToggleMenu (int ref, int val, boolean on, HWND owner)
+#else  /* __STDC__ */
+void                WIN_TtaSetToggleMenu (ref, val, on, owner)
+int                 ref;
+int                 val;
+boolean             on;
+HWND                owner;
+#endif /* __STDC__ */
+#else  /* !_WINDOWS */
 #ifdef __STDC__
 void                TtaSetToggleMenu (int ref, int val, boolean on)
 #else  /* __STDC__ */
@@ -4896,8 +4909,15 @@ int                 val;
 boolean             on;
 
 #endif /* __STDC__ */
+#endif /* _WINDOWS */
 {
-#  ifndef _WINDOWS 
+#  ifdef _WINDOWS 
+   HMENU hMenu = GetMenu (owner);
+   if (on)
+      CheckMenuItem (hMenu, ref + val, MF_CHECKED); 
+   else 
+       CheckMenuItem (hMenu, ref + val, MF_UNCHECKED); 
+#  else  /* !_WINDOWS  */
    ThotWidget          w;
    Arg                 args[MAX_ARGS];
    register int        i, n;
@@ -5002,7 +5022,6 @@ boolean             on;
 	if (!visible)
 	   XtUnmanageChild (catalogue->Cat_Widget);
      }
-#  else /* _WINDOWS */
 #  endif /* _WINDOWS */
 }
 
@@ -5152,14 +5171,14 @@ int                 activate;
 	else
 	  {
 	     w = adbloc->E_ThotWidget[ent];
-#            ifndef _WINDOWS
+#        ifndef _WINDOWS
 	     /* Recupere si necessaire la couleur par defaut */
 	     n = 0;
 	     /* Faut-il changer la police de caracteres ? */
 	     if (fontname != NULL)
-		font = XmFontListCreate (XLoadQueryFont (GDp, fontname), XmSTRING_DEFAULT_CHARSET);
+            font = XmFontListCreate (XLoadQueryFont (GDp, fontname), XmSTRING_DEFAULT_CHARSET);
 	     else
-		font = DefaultFont;
+            font = DefaultFont;
 	     XtSetArg (args[n], XmNfontList, font);
 	     n++;
 
@@ -5917,7 +5936,9 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-   POINT ptCursor;
+   POINT   ptCursor;
+   BOOL    modified;
+   Element el;
    struct Cat_Context* catalogue;
    int                 no = 0;
    int                 frame = GetMainFrameNumber (hWnd);
@@ -5941,6 +5962,13 @@ LPARAM lParam;
              case CAT_MENU:
              case CAT_POPUP:
                   CallMenu (no, catalogue, NULL);
+                  if (ReturnOption >= 0) {
+                     el = opOption[ReturnOption];
+                     modified = TtaIsDocumentModified (opDoc);
+                     OnlyOneOptionSelected (el, opDoc, FALSE);
+                     if (!modified)
+                        TtaSetDocumentUnmodified (opDoc);
+				  }
                   break;
 
              case CAT_TMENU:

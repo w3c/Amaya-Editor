@@ -318,7 +318,7 @@ char* title	;
    hwnFromDialog = CreateWindow (szAppName, title,
                                  DS_MODALFRAME | WS_POPUP | 
                                  WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
-                                 CW_USEDEFAULT, CW_USEDEFAULT,
+                                 ClickX, ClickY,
                                  335, 200,
                                  parent, NULL, hInstance, NULL) ;
 
@@ -459,7 +459,7 @@ char* title	;
    hwnSheetDialog = CreateWindow (szAppName, title,
                                  DS_MODALFRAME | WS_POPUP | 
                                  WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
-                                 CW_USEDEFAULT, CW_USEDEFAULT,
+                                 ClickX, ClickY,
                                  335, 200,
                                  parent, NULL, hInstance, NULL) ;
 
@@ -629,7 +629,7 @@ char* title	;
    hwnNumAttrDialog = CreateWindow (szAppName, title,
                                     DS_MODALFRAME | WS_POPUP | 
                                     WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
-                                    CW_USEDEFAULT, CW_USEDEFAULT,
+                                    ClickX, ClickY,
                                     180, 150,
                                     parent, NULL, hInstance, NULL) ;
 
@@ -1226,7 +1226,11 @@ PtrDocument         pDoc;
 				  nbItemAttr, bufMenuAttr, NULL);
 		  /* marque les attributs actifs */
 		  for (i = 0; i < nbItemAttr; i++)
+#            ifdef _WINDOWS
+		     WIN_TtaSetToggleMenu (ref, i, (ActiveAttr[i] == 1), FrMainRef [frame]);
+#            else  /* !_WINDOWS */
 		     TtaSetToggleMenu (ref, i, (ActiveAttr[i] == 1));
+#            endif /* _WINDOWS */
 		  TtaSetMenuOn (document, view, menuID);
 	       }
 	  }
@@ -1253,7 +1257,11 @@ PtrDocument         pDoc;
 				  nbItemAttr, bufMenuAttr, NULL);
 		  /* marque les attributs actifs */
 		  for (i = 0; i < nbItemAttr; i++)
+#            ifdef _WINDOWS
+		     WIN_TtaSetToggleMenu (ref, i, (ActiveAttr[i] == 1), FrMainRef [frame]);
+#            else  /* !_WINDOWS */
 		     TtaSetToggleMenu (ref, i, (ActiveAttr[i] == 1));
+#            endif /* _WINDOWS */
 		  TtaSetMenuOn (document, view, menu);
 	       }
 	  }
@@ -1496,10 +1504,12 @@ int                 frame;
 		     SchCurrentAttr = AttrStruct[att];
 		     NumCurrentAttr = AttrNumber[att];
 		     /* restaure l'etat courant du toggle */
+#            ifndef _WINDOWS 
 		     if (ActiveAttr[att] == 0)
                 TtaSetToggleMenu (refmenu, att, FALSE);
 		     else
                 TtaSetToggleMenu (refmenu, att, TRUE);
+#            endif /* _WINDOWS */
 		     /* et memorise l'attribut en cours de traitement */
 		     CurrentAttr = att;
 		     /* affiche le formulaire */

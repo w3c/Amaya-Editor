@@ -3287,7 +3287,11 @@ boolean             on;
 	ref = ((menu - 1) * MAX_ITEM) + frame + MAX_LocalMenu;
 	if (submenu != 0)
 	   ref += submenu * MAX_MENU * MAX_ITEM;
+#   ifdef _WINDOWS
+	WIN_TtaSetToggleMenu (ref, item, on, FrMainRef[frame]);
+#   else  /* _WINDOWS */
 	TtaSetToggleMenu (ref, item, on);
+#   endif /* _WINDOWS */
      }
 }
 
@@ -3314,6 +3318,9 @@ int                 itemID;
    int                 action;
    char                fontname[100];
    char                text[20];
+#  ifdef _WINDOWS
+   HMENU               hMenu;
+#  endif /* _WINDOWS */
 
    /* Si les parametres sont invalides */
    if (document == 0 && view == 0)
@@ -3337,6 +3344,10 @@ int                 itemID;
 	   ref = ((menu - 1) * MAX_ITEM) + frame + MAX_LocalMenu;
 	   if (submenu != 0)
 	      ref += submenu * MAX_MENU * MAX_ITEM;
+#      ifdef _WINDOWS
+       hMenu = GetMenu (TtaGetViewFrame (document, view));
+	   EnableMenuItem (hMenu, ref + item, MFS_GRAYED);
+#      else  /* !_WINDOWS */
 	   if (TtWDepth > 1)
 	      TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
 	   else
@@ -3344,6 +3355,7 @@ int                 itemID;
 		FontIdentifier ('L', 'T', 2, 11, UnPoint, text, fontname);
 		TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
 	     }
+#      endif /* _WINDOWS */
 	}
 }
 

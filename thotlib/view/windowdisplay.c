@@ -3013,6 +3013,7 @@ int yf;
 #ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   EndOfString check wether string end by suffix.
+
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int                 EndOfString (char *string, char *suffix)

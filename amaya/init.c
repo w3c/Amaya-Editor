@@ -902,7 +902,7 @@ View                view;
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + OpenForm, FALSE);
 #  else /* _WINDOWS */
-   CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), docToOpen)	;
+   CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), docToOpen, BaseDialog, OpenForm)	;
    if (InNewWindow)
       GetHTMLDocument (docToOpen, NULL, 0, 0, CE_FALSE, NULL, 0, FALSE);
    else 
@@ -2468,14 +2468,18 @@ char               *data;
 	 case 0:	/* "Save as HTML" button */
 	   SaveAsHTML = !SaveAsHTML;
 	   SaveAsText = !SaveAsHTML;
+#      ifndef _WINDOWS
 	   TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsText);
+#       endif /* _WINDOWS */
 	   UpdateSaveAsButtons ();
 	   SetFileSuffix ();
 	   break;
 	 case 1:	/* "Save as Text" button */
 	   SaveAsText = !SaveAsText;
 	   SaveAsHTML = !SaveAsText;
+#      ifndef _WINDOWS
 	   TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
+#      endif /* _WINDOWS */
 	   UpdateSaveAsButtons ();
 	   SetFileSuffix ();
 	   break;

@@ -48,6 +48,7 @@ int                 errorCode;
 
 #endif /* __STDC__ */
 {
+#  ifndef _WINDOWS
    char                buffer[50];
 
    UserErrorCode = errorCode;
@@ -173,5 +174,6 @@ int                 errorCode;
 	      }
 	fprintf (stderr, buffer);
      }
+#   endif /* WINDOWS */
 }
 #endif /* _WIN_PRINT */

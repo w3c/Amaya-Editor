@@ -876,7 +876,9 @@ View                view;
    TtaNewToggleMenu (NumMenuOptions, NumFormPrint,
 		TtaGetMessage (LIB, TMSG_OPTIONS), 1, bufMenu, NULL, FALSE);
    if (ManualFeed)
+#     ifndef _WINDOWS
       TtaSetToggleMenu (NumMenuOptions, 0, TRUE);
+#     endif /* _WINDOWS */
 
    /* Paper format submenu */
    i = 0;

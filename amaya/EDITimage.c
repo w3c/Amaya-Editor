@@ -355,7 +355,7 @@ View                view;
    TtaShowDialogue (BaseImage + FormImage, FALSE);
    TtaWaitShowDialogue ();
 #  else /* _WINDOWS */
-   CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), LastURLImage) ;
+   CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), LastURLImage, BaseImage, FormImage) ;
 
 #  endif /* _WINDOWS */
    return (LastURLImage);

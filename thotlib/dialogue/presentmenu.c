@@ -760,7 +760,9 @@ View                view;
    TtaNewToggleMenu (NumMenuPresentStandard, NumFormPresentStandard,
 		TtaGetMessage (LIB, TMSG_STD_PRES), 5, string, NULL, TRUE);
    /* annule toutes les options du choix multiple Presentation standard */
+#  ifndef _WINDOWS 
    TtaSetToggleMenu (NumMenuPresentStandard, -1, FALSE);
+#  endif /* _WINDOWS */
    /* active le formulaire "Presentation standard" */
    DocModPresent = pDoc;
    TtaShowDialogue (NumFormPresentStandard, TRUE);

@@ -100,7 +100,7 @@ extern HWND      StatusBar;
 extern HWND      currentWindow;
 extern HWND      WIN_curWin;
 extern HINSTANCE hInstance;
-
+extern int       ReturnOption;
 #ifndef _WIN_PRINT
 extern int  Window_Curs;
 #if 0
@@ -1136,6 +1136,7 @@ LPARAM      lParam;
     RECT   rect;
     int    doc, view ;
     char*  viewName ;
+	static HPALETTE hPal;
 	/*
 	HDC    hDC, hMemDC;
 	BITMAP bm;
@@ -1178,6 +1179,16 @@ LPARAM      lParam;
                 UpdateWindow (hwndClient);
 
                 return 0 ;
+
+           case WM_PALETTECHANGED: 
+			   if ((HWND) wParam != hwnd) {
+                  HDC hDC = GetDC (hwnd);
+                  SelectPalette (hDC, hPal, 0);
+                  if (RealizePalette (hDC))
+                     UpdateColors (hDC);
+                  ReleaseDC (hwnd, hDC);
+               }
+               break;
 
            case WM_VSCROLL:
                 WIN_ChangeVScroll (frame, LOWORD (wParam), HIWORD (wParam));
@@ -1444,6 +1455,7 @@ LPARAM lParam;
                  return 0;
 
             case WM_LBUTTONDBLCLK:/* left double click handling */
+				 ReturnOption = -1;
                  TtaAbortShowDialogue ();
 	  
                  /* memorise la position de la souris */

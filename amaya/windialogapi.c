@@ -99,6 +99,8 @@ static int          fontStyle;
 static int          fontUnderline;
 static int          fontSize;
 static int          NumMenuAlphabetLanguage;
+static int          baseDoc;
+static int          formDoc;
 static BOOL         manualFeed      = FALSE;
 static BOOL         tableOfContents = FALSE;
 static BOOL         numberedLinks   = FALSE;
@@ -332,13 +334,18 @@ int   toggle_save;
  CreateOPenDocDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateOpenDocDlgWindow (HWND parent, char* doc_to_open)
+void CreateOpenDocDlgWindow (HWND parent, char* doc_to_open, int base_doc, int form_doc)
 #else  /* !__STDC__ */
-void CreateOpenDocDlgWindow (parent, doc_to_open)
+void CreateOpenDocDlgWindow (parent, doc_to_open, base_doc, form_doc)
 HWND  parent;
 char* doc_to_open;
+int   base_doc;
+int   for_doc;
 #endif /* __STDC__ */
 {  
+	baseDoc = base_doc;
+	formDoc = form_doc;
+
 	DialogBox (hInstance, MAKEINTRESOURCE (OPENDOCDIALOG), parent, (DLGPROC) OpenDocDlgProc);
 	strcpy (doc_to_open, urlToOpen);
 }
@@ -1251,10 +1258,12 @@ LPARAM lParam;
 	                           strcpy (urlToOpen, OpenFileName.lpstrFile);
 	                        }
 
-					        EndDialog (hwnDlg, IDC_BROWSE);
+                            SetDlgItemText (hwnDlg, IDC_GETURL, urlToOpen);
+					        /* EndDialog (hwnDlg, IDC_BROWSE); */
 							break;
 
 				       case IDCANCEL:
+                            ThotCallback (baseDoc + formDoc, INTEGER_DATA, (char*) 0);
 					        EndDialog (hwnDlg, IDCANCEL);
 							break;
 				}

@@ -49,6 +49,12 @@ struct my_error_mgr
 
 typedef struct my_error_mgr *my_error_ptr;
 
+#ifdef _WINDOWS
+extern int bgRed;
+extern int bgGreen;
+extern int bgBlue;
+#endif /* _WINDOWS */
+
 #ifdef __STDC__
 static void my_error_exit (j_common_ptr cinfo)
 #else  /* !__STDC__ */

@@ -668,7 +668,7 @@ int                 y;
    hwnColorPal = CreateWindow (szAppName, TtaGetMessage (LIB, TMSG_COLORS),
                                DS_MODALFRAME | WS_POPUP | 
                                WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
-                               CW_USEDEFAULT, CW_USEDEFAULT,
+                               ClickX, ClickY,
                                280, 385,
                                NULL, NULL, hInstance, NULL) ;
 

@@ -116,14 +116,23 @@ int WIN_InitSystemColors ()
 #endif /* __STDC __ */
 {
     int i;
+	HDC hDC;
 
     if (peInitialized)
        return 1;
+
+	hDC = GetDC (NULL);
     
     if (!(GetDeviceCaps (TtDisplay, RASTERCAPS) & RC_PALETTE)) {
+       ReleaseDC (NULL, hDC);
        return 1;
     }
 
+    nbSysColors = GetSystemPaletteEntries (hDC, 0, GetDeviceCaps (hDC, SIZEPALETTE), sysPalEntries);
+	ReleaseDC (NULL, hDC);
+
+
+    /*********************************************************************************************************
     ptrLogPal = (PLOGPALETTE) LocalAlloc (LMEM_FIXED, sizeof(LOGPALETTE) + MAX_COLOR * sizeof(PALETTEENTRY));
     ptrLogPal->palVersion    = 0x300;
     ptrLogPal->palNumEntries = MAX_COLOR;
@@ -139,12 +148,9 @@ int WIN_InitSystemColors ()
     LocalFree (ptrLogPal);
       
     if (TtCmap == NULL) {
-#      ifdef _WIN_DEBUG
-       fprintf (stderr, "couldn't CreatePalette\n");												  
-#      endif 
        WinErrorBox (WIN_Main_Wd);
     }
-
+    **********************************************************************************************************/
     peInitialized = TRUE;
     return 0;
 }
@@ -161,13 +167,13 @@ int g;
 int b;
 #endif /* __STDC__ */
 {
-    BYTE                best;
-    BYTE                i;
-    unsigned short      delred, delgreen, delblue;
+    int                 best;
+    int                 i;
+    unsigned int      delred, delgreen, delblue;
     unsigned int        dsquare;
     unsigned int        best_dsquare = (unsigned int) -1;
 
-    for (i = 0; i < MAX_COLOR; i++) {
+    for (i = 0; i < nbSysColors; i++) {
         delred   = sysPalEntries[i].peRed;
         delgreen = sysPalEntries[i].peGreen;
 		delblue  = sysPalEntries[i].peBlue;
@@ -180,7 +186,7 @@ int b;
            best_dsquare = dsquare;
         }
     }
-    return (best);
+    return ((BYTE)best);
 }
 #endif /* _WINDOWS */
 
@@ -207,7 +213,7 @@ int                 ignore;
    unsigned char      *dptr;
 
    /*
-      **  Initialize the Compression routines
+    **  Initialize the Compression routines
     */
    if (!ReadOK (fd, &c, 1))
       return (NULL);
@@ -216,7 +222,7 @@ int                 ignore;
       return (NULL);
 
    /*
-      **  If this is an "uninteresting picture" ignore it.
+    **  If this is an "uninteresting picture" ignore it.
     */
    if (ignore) {
       while (LWZReadByte (fd, FALSE, c) >= 0)
@@ -316,41 +322,20 @@ ThotColorStruct colrs[256];
    verbose = FALSE;
    showComment = FALSE;
    data = NULL;
-   if (!ReadOK (fd, buf, 6))
-     {
-#if 0
-	fprintf (stderr, "error reading magic number\n");
-#endif
-	return (NULL);
-     }
+   if (!ReadOK (fd, buf, 6)) 
+      return (NULL);
 
    if (strncmp ((char *) buf, "GIF", 3) != 0)
-     {
-#if 0
-	if (verbose)
-	   fprintf (stderr, "not a GIF file\n");
-#endif
-	return (NULL);
-     }
+      return (NULL);
 
    strncpy (version, (char *) buf + 3, 3);
    version[3] = EOS;
 
    if ((strcmp (version, "87a") != 0) && (strcmp (version, "89a") != 0))
-     {
-#if 0
-	fprintf (stderr, "bad version number, not '87a' or '89a'\n");
-#endif
-	return (NULL);
-     }
+      return (NULL);
 
    if (!ReadOK (fd, buf, 7))
-     {
-#if 0
-	fprintf (stderr, "failed to read screen descriptor\n");
-#endif
-	return (NULL);
-     }
+      return (NULL);
 
    GifScreen.Width  = LM_to_uint (buf[0], buf[1]);
    GifScreen.Height = LM_to_uint (buf[2], buf[3]);
@@ -361,100 +346,100 @@ ThotColorStruct colrs[256];
    GifScreen.AspectRatio = buf[6];
 
    if (BitSet (buf[4], LOCALCOLORMAP)) { /* Global Colormap */
-	if (ReadColorMap (fd, GifScreen.BitPixel, GifScreen.ColorMap))
-	   return (NULL);
-	for (i = 0; i < (int) GifScreen.BitPixel; i++) {
-#           ifndef _WINDOWS
-	    colrs[i].red   = GifScreen.ColorMap[0][i] * scale;
-	    colrs[i].green = GifScreen.ColorMap[1][i] * scale;
-	    colrs[i].blue  = GifScreen.ColorMap[2][i] * scale;
-	    colrs[i].pixel = i;
-	    colrs[i].flags = DoRed | DoGreen | DoBlue;
-#           else  /* _WINDOWS */
-	    colrs[i].red   = GifScreen.ColorMap[0][i];
-	    colrs[i].green = GifScreen.ColorMap[1][i];
-	    colrs[i].blue  = GifScreen.ColorMap[2][i];
-#           endif /* !_WINDOWS */
-	}
+      if (ReadColorMap (fd, GifScreen.BitPixel, GifScreen.ColorMap))
+         return (NULL);
+      for (i = 0; i < (int) GifScreen.BitPixel; i++) {
+#         ifndef _WINDOWS
+          colrs[i].red   = GifScreen.ColorMap[0][i] * scale;
+          colrs[i].green = GifScreen.ColorMap[1][i] * scale;
+          colrs[i].blue  = GifScreen.ColorMap[2][i] * scale;
+          colrs[i].pixel = i;
+          colrs[i].flags = DoRed | DoGreen | DoBlue;
+#         else  /* _WINDOWS */
+          colrs[i].red   = GifScreen.ColorMap[0][i];
+          colrs[i].green = GifScreen.ColorMap[1][i];
+          colrs[i].blue  = GifScreen.ColorMap[2][i];
+#         endif /* !_WINDOWS */
+	  }
 
-	for (i = GifScreen.BitPixel; i < MAXCOLORMAPSIZE; i++) {
-	    colrs[i].red = 0;
-	    colrs[i].green = 0;
-	    colrs[i].blue = 0;
-#           ifndef _WINDOWS
-	    colrs[i].pixel = i;
-	    colrs[i].flags = DoRed | DoGreen | DoBlue;
-#           endif /* !_WINDOWS */
-	}
+      for (i = GifScreen.BitPixel; i < MAXCOLORMAPSIZE; i++) {
+          colrs[i].red = 0;
+          colrs[i].green = 0;
+          colrs[i].blue = 0;
+#         ifndef _WINDOWS
+          colrs[i].pixel = i;
+          colrs[i].flags = DoRed | DoGreen | DoBlue;
+#         endif /* !_WINDOWS */
+	  }
 
-     }
+   }
 
    for (;;) {
        if (!ReadOK (fd, &c, 1))
-	  return (NULL);
+          return (NULL);
 
        if (c == ';') { /* GIF terminator */
-	  if (imageCount < imageNumber)
-	     return (NULL);
-	  break;
-       }
+          if (imageCount < imageNumber)
+             return (NULL);
+          break;
+	   }
 
        if (c == '!') { /* Extension */
-	  if (!ReadOK (fd, &c, 1))
-	     return (NULL);
-	  DoExtension (fd, c);
-	  continue;
-       }
-
-	if (c != ',')
-	   continue;
-
-	++imageCount;
-
-	if (!ReadOK (fd, buf, 9))
-	   return (NULL);
-
-	useGlobalColormap = !BitSet (buf[8], LOCALCOLORMAP);
-
-	bitPixel = 1 << ((buf[8] & 0x07) + 1);
-
-	*w = LM_to_uint (buf[4], buf[5]);
-	*h = LM_to_uint (buf[6], buf[7]);
-	if (!useGlobalColormap) {
-	   if (ReadColorMap (fd, bitPixel, localColorMap))
-	      return (NULL);
-	   for (i = 0; i < bitPixel; i++) {
-#              ifndef _WINDOWS
-	       colrs[i].red   = localColorMap[0][i] * scale;
-	       colrs[i].green = localColorMap[1][i] * scale;
-	       colrs[i].blue  = localColorMap[2][i] * scale;
-	       colrs[i].pixel = i;
-	       colrs[i].flags = DoRed | DoGreen | DoBlue;
-#              else  /* _WINDOWS */
-	    colrs[i].red   = GifScreen.ColorMap[0][i];
-	    colrs[i].green = GifScreen.ColorMap[1][i];
-	    colrs[i].blue  = GifScreen.ColorMap[2][i];
-#              endif /* _WINDOWS */
+          if (!ReadOK (fd, &c, 1))
+             return (NULL);
+          DoExtension (fd, c);
+          continue;
 	   }
-	   for (i = bitPixel; i < MAXCOLORMAPSIZE; i++) {
-	       colrs[i].red   = 0;
-	       colrs[i].green = 0;
-	       colrs[i].blue  = 0;
-#              ifndef _WINDOWS
-	       colrs[i].pixel = i;
-	       colrs[i].flags = DoRed | DoGreen | DoBlue;
-#              endif /* _WINDOWS */
+
+       if (c != ',')
+          continue;
+
+       ++imageCount;
+
+       if (!ReadOK (fd, buf, 9))
+          return (NULL);
+
+       useGlobalColormap = !BitSet (buf[8], LOCALCOLORMAP);
+
+       bitPixel = 1 << ((buf[8] & 0x07) + 1);
+
+       *w = LM_to_uint (buf[4], buf[5]);
+       *h = LM_to_uint (buf[6], buf[7]);
+       if (!useGlobalColormap) {
+          if (ReadColorMap (fd, bitPixel, localColorMap))
+             return (NULL);
+          for (i = 0; i < bitPixel; i++) {
+#             ifndef _WINDOWS
+              colrs[i].red   = localColorMap[0][i] * scale;
+              colrs[i].green = localColorMap[1][i] * scale;
+              colrs[i].blue  = localColorMap[2][i] * scale;
+              colrs[i].pixel = i;
+              colrs[i].flags = DoRed | DoGreen | DoBlue;
+#             else  /* _WINDOWS */
+              colrs[i].red   = GifScreen.ColorMap[0][i];
+              colrs[i].green = GifScreen.ColorMap[1][i];
+              colrs[i].blue  = GifScreen.ColorMap[2][i];
+#             endif /* _WINDOWS */
+		  }
+          for (i = bitPixel; i < MAXCOLORMAPSIZE; i++) {
+              colrs[i].red   = 0;
+              colrs[i].green = 0;
+              colrs[i].blue  = 0;
+#             ifndef _WINDOWS
+              colrs[i].pixel = i;
+              colrs[i].flags = DoRed | DoGreen | DoBlue;
+#             endif /* _WINDOWS */
+		  }
+          data = ReadGifImage (fd, LM_to_uint (buf[4], buf[5]),
+                               LM_to_uint (buf[6], buf[7]), localColorMap,
+                               BitSet (buf[8], INTERLACE), imageCount != imageNumber);
+          return (data);	/* anticipating the exit to prevent gif video */
+	   } else {
+             data = ReadGifImage (fd, LM_to_uint (buf[4], buf[5]),
+                                  LM_to_uint (buf[6], buf[7]), GifScreen.ColorMap,
+                                  BitSet (buf[8], INTERLACE), imageCount != imageNumber);
+             return (data);	/* anticipating the exit to prevent gif video */
 	   }
-	   data = ReadGifImage (fd, LM_to_uint (buf[4], buf[5]),
-				LM_to_uint (buf[6], buf[7]), localColorMap,
-		                BitSet (buf[8], INTERLACE), imageCount != imageNumber);
-	   return (data);	/* anticipating the exit to prevent gif video */
-	} else {
-	       data = ReadGifImage (fd, LM_to_uint (buf[4], buf[5]),
-			            LM_to_uint (buf[6], buf[7]), GifScreen.ColorMap,
-		                    BitSet (buf[8], INTERLACE), imageCount != imageNumber);
-	       return (data);	/* anticipating the exit to prevent gif video */
-	}
 	
    }
    return (data);
@@ -476,12 +461,8 @@ unsigned char       buffer[3][MAXCOLORMAPSIZE];
    unsigned char       rgb[3];
 
    for (i = 0; i < number; ++i) {
-       if (!ReadOK (fd, rgb, sizeof (rgb))) {
-#         if 0
-	  fprintf (stderr, "bad colormap\n");
-#         endif
-	  return (TRUE);
-       }
+       if (!ReadOK (fd, rgb, sizeof (rgb)))
+          return (TRUE);
 
        buffer[CM_RED][i]   = rgb[0];
        buffer[CM_GREEN][i] = rgb[1];
@@ -505,32 +486,30 @@ int                 label;
    unsigned char                buf[256];
 
    switch (label) {
-	  case 0x01:		/* Plain Text Extension */
-	       break;
-          case 0xff:		/* Application Extension */
-	       break;
-	  case 0xfe:		/* Comment Extension */
-	       while (GetDataBlock (fd, (unsigned char *) buf) != 0)
-		  ;
-	       return FALSE;
-	  case 0xf9:		/* Graphic Control Extension */
-	       (void) GetDataBlock (fd, (unsigned char *) buf);
-	       Gif89.disposal = (buf[0] >> 2) & 0x7;
-	       Gif89.inputFlag = (buf[0] >> 1) & 0x1;
-	       Gif89.delayTime = LM_to_uint (buf[1], buf[2]);
-	       if ((buf[0] & 0x1) != 0)
-		  Gif89.transparent = (int) buf[3];
+           case 0x01: /* Plain Text Extension */
+           case 0xff: /* Application Extension */
+                      break;
 
-	       while (GetDataBlock (fd, (unsigned char *) buf) != 0)
-		  ;
-	       return FALSE;
-	  default:
-	       sprintf (buf, "UNKNOWN (0x%02x)", label);
-	       break;
+           case 0xfe: /* Comment Extension */
+                while (GetDataBlock (fd, (unsigned char *) buf) != 0) ;
+                return FALSE;
+
+           case 0xf9: /* Graphic Control Extension */
+                      (void) GetDataBlock (fd, (unsigned char *) buf);
+                      Gif89.disposal = (buf[0] >> 2) & 0x7;
+                      Gif89.inputFlag = (buf[0] >> 1) & 0x1;
+                      Gif89.delayTime = LM_to_uint (buf[1], buf[2]);
+                      if ((buf[0] & 0x1) != 0)
+                         Gif89.transparent = (int) buf[3];
+
+                      while (GetDataBlock (fd, (unsigned char *) buf) != 0) ;
+                      return FALSE;
+
+           default: sprintf (buf, "UNKNOWN (0x%02x)", label);
+                    break;
    }
 
-   while (GetDataBlock (fd, (unsigned char *) buf) != 0)
-      ;
+   while (GetDataBlock (fd, (unsigned char *) buf) != 0);
    return FALSE;
 }
 
@@ -1385,10 +1364,11 @@ ThotColorStruct     colrs[256];
             DeleteDC (destMemDC);
             return (Pixmap) bmp;
          }
-    
+    /********************************
 		 SelectPalette (destMemDC, TtCmap, FALSE);
 		 nbPalColors = RealizePalette (destMemDC);
          nbSysColors = GetSystemPaletteEntries (TtDisplay, 0, GetDeviceCaps (TtDisplay, SIZEPALETTE), sysPalEntries);
+		 *********************************/
 
          SelectObject (destMemDC, bmp);
 

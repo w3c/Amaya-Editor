@@ -267,7 +267,7 @@ void                TtaQuit ()
 #  ifndef NODISPLAY
 #  ifdef _WINDOWS
    if (!TtIsTrueColor)
-	  if (!DeleteObject (TtCmap))
+	  if (TtCmap && !DeleteObject (TtCmap))
          WinErrorBox (WIN_Main_Wd);
 #  endif /* _WINDOWS */
    FreeAllMessages ();

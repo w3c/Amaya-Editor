@@ -418,7 +418,7 @@ Document            doc;
 
 
 /*----------------------------------------------------------------------
-   DoubleClick     The user has double-clicked an element.         
+   ]lick     The user has double-clicked an element.         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             DoubleClick (NotifyElement * event)

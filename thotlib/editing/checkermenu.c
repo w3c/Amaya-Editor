@@ -534,7 +534,9 @@ char               *data;
 	if (!IgnoreSpecial)
 	  {
 	    IgnoreSpecial = TRUE;
+#       ifndef _WINDOWS 
 	    TtaSetToggleMenu (SpellingBase + ChkrMenuIgnore, 3, IgnoreSpecial);
+#       endif /* _WINDOWS */
 	  }
 	break;
       case ChkrCaptureNC:
