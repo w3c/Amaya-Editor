@@ -3075,7 +3075,6 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
   else
     {
       TtaExtendUndoSequence (doc);
-      /***      TtaOpenUndoSequence (doc, selEl, selEl, firstSelChar, lastSelChar); ***/
       closeUndoSeq = TRUE;
     }
   TtaSetDisplayMode (doc, DeferredDisplay);
