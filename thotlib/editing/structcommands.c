@@ -3311,8 +3311,8 @@ int                 entree;
    GetCurrentSelection (&pDoc, &pEl, &lastEl, &firstChar, &lastChar);
    if (pEl == NULL)
       return;
-   DoChangeType (pEl, pDoc, ChangeTypeTypeNum[entree - 1],
-		 ChangeTypeSSchema[entree - 1]);
+   DoChangeType (pEl, pDoc, ChangeTypeTypeNum[entree],
+		 ChangeTypeSSchema[entree]);
 }
 
 /*----------------------------------------------------------------------
