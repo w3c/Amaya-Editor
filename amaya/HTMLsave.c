@@ -784,6 +784,8 @@ void SaveDocumentAs (Document doc, View view)
   /* charset */
   if (DocumentMeta[doc] && DocumentMeta[doc]->charset)
     strcpy (UserCharset, DocumentMeta[doc]->charset);
+  else if (DocumentTypes[doc] == docCSS || DocumentTypes[doc] == docText)
+    strcpy (UserCharset, "iso-8859-1");
   else
     UserCharset[0] = EOS;
 

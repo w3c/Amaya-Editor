@@ -53,33 +53,50 @@ SaveAsDlgWX::SaveAsDlgWX( int ref,
   SetTitle( wx_title );
 
   // Document format radio box
-  XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_DOCUMENT_FORMAT) ));
-  XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->SetString(0, TtaConvMessageToWX( "HTML"  ) );
-  XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->SetString(1, TtaConvMessageToWX( "XML" ));
-  XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->SetString(2, TtaConvMessageToWX( "Text" ));
-  if ((DocumentMeta[doc] && DocumentMeta[doc]->xmlformat) ||
-      doc_type == docMath ||
-      doc_type == docSVG ||
-      doc_type == docXml)
-    XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->SetSelection(1);
-  else if (doc_type == docHTML)
-    XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->SetSelection(0);
+  if ( doc_type == docCSS ||  doc_type == docText)
+    {
+      // now hide unused field (destroy it)
+      wxSizer * p_sizer = XRCCTRL(*this, "wxID_DOC_FORMAT", wxStaticText)->GetContainingSizer();
+      XRCCTRL(*this, "wxID_IMG_LOCATION", wxStaticText)->Hide();
+      XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->Hide();
+      p_sizer->Layout();
+      p_sizer = XRCCTRL(*this, "wxID_DOC_FORMAT", wxStaticText)->GetContainingSizer();
+      XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->Hide();
+      XRCCTRL(*this, "wxID_OPTIONS", wxStaticText)->Hide();
+      XRCCTRL(*this, "wxID_CPY_IMAGES_CHK", wxCheckBox)->Hide();
+      XRCCTRL(*this, "wxID_TRANSFORM_URLS_CHK", wxCheckBox)->Hide();
+      p_sizer->Layout();
+     }
+  else
+    {
+      XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage (LIB, TMSG_DOCUMENT_FORMAT) ));
+      XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->SetString(0, TtaConvMessageToWX( "HTML"  ) );
+      XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->SetString(1, TtaConvMessageToWX( "XML" ));
+      XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->SetString(2, TtaConvMessageToWX( "Text" ));
+      if ((DocumentMeta[doc] && DocumentMeta[doc]->xmlformat) ||
+	  doc_type == docMath ||
+	  doc_type == docSVG ||
+	  doc_type == docXml)
+	XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->SetSelection(1);
+      else if (doc_type == docHTML)
+	XRCCTRL(*this, "wxID_DOC_FORMAT", wxRadioBox)->SetSelection(0);
 
-  // Options check box
-  XRCCTRL(*this, "wxID_OPTIONS", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_OPTIONS) ));
-  XRCCTRL(*this, "wxID_CPY_IMAGES_CHK", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BCOPY_IMAGES) ));
-  XRCCTRL(*this, "wxID_TRANSFORM_URLS_CHK", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BTRANSFORM_URL) ));
-  XRCCTRL(*this, "wxID_CPY_IMAGES_CHK", wxCheckBox)->SetValue(CopyImages);
-  XRCCTRL(*this, "wxID_TRANSFORM_URLS_CHK", wxCheckBox)->SetValue(UpdateURLs);
+      // Options check box
+      XRCCTRL(*this, "wxID_OPTIONS", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(LIB, TMSG_OPTIONS) ));
+      XRCCTRL(*this, "wxID_CPY_IMAGES_CHK", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BCOPY_IMAGES) ));
+      XRCCTRL(*this, "wxID_TRANSFORM_URLS_CHK", wxCheckBox)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_BTRANSFORM_URL) ));
+      XRCCTRL(*this, "wxID_CPY_IMAGES_CHK", wxCheckBox)->SetValue(CopyImages);
+      XRCCTRL(*this, "wxID_TRANSFORM_URLS_CHK", wxCheckBox)->SetValue(UpdateURLs);
 
+      // Image directory
+      XRCCTRL(*this, "wxID_IMG_LOCATION", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_IMAGES_LOCATION) ));
+      XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->SetValue(TtaConvMessageToWX( SaveImgsURL));
+    }
+  
   // Document location
   XRCCTRL(*this, "wxID_DOC_LOCATION", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_DOC_LOCATION) ));
   XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->SetValue(pathname);
 
-  // Image directory
-  XRCCTRL(*this, "wxID_IMG_LOCATION", wxStaticText)->SetLabel(TtaConvMessageToWX( TtaGetMessage(AMAYA, AM_IMAGES_LOCATION) ));
-  XRCCTRL(*this, "wxID_IMG_LOCATION_CTRL", wxTextCtrl)->SetValue(TtaConvMessageToWX( SaveImgsURL));
-  
   // Charset  
   wxString wx_label = TtaConvMessageToWX( "Charset :" );
   wxString wx_ascii = TtaConvMessageToWX( "us-ascii" );
@@ -225,7 +242,9 @@ SaveAsDlgWX::SaveAsDlgWX( int ref,
   // Set focus to ...
   //  XRCCTRL(*this, "wxID_DOC_LOCATION_CTRL", wxTextCtrl)->SetFocus();
 
-  Layout();
+  Fit();
+  Refresh();
+  //Layout();
   
   SetAutoLayout( TRUE );
 }
