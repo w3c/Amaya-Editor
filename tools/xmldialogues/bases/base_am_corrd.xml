@@ -1,168 +1,168 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base_message version="6" last_update="Fri May 26 10:44:11 CEST 2000">
+<base version="5" last_update="Tue Jun 27 11:11:43 CEST 2000">
 <control>
 	<language encoding="latin1">en</language>
-	<language encoding="latin1">fr</language>
 	<language encoding="latin1">de</language>
+	<language encoding="latin1">fr</language>
 	<language encoding="latin1">it</language>
 	<language encoding="latin1">tr</language>
 </control>
 <messages>
 <label define="Number_Propositions">
-	<message xml::lang="en" last_update="Fri May 26 10:14:45 CEST 2000">Number of proposals</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:43:46 CEST 2000">Nombre de propositions</message>
-	<message xml::lang="de" last_update="Fri May 26 10:43:52 CEST 2000">Zahl der Vorschläge</message>
-	<message xml::lang="it" last_update="Fri May 26 10:43:58 CEST 2000">Numero di proposte alternative</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:44:11 CEST 2000" >Önerilerin sayýsý</message>
+	<message xml:lang="en">Number of proposals</message>
+	<message xml:lang="de">Zahl der Vorschläge</message>
+	<message xml:lang="fr">Nombre de propositions</message>
+	<message xml:lang="it">Numero di proposte alternative</message>
+	<message xml:lang="tr">Önerilerin sayýsý</message>
 </label>
 <label define="What">
-	<message xml::lang="en" last_update="Fri May 26 10:14:45 CEST 2000">Checking</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:43:46 CEST 2000">Où corriger</message>
-	<message xml::lang="de" last_update="Fri May 26 10:43:52 CEST 2000">Überprüfe</message>
-	<message xml::lang="it" last_update="Fri May 26 10:43:58 CEST 2000">Controlla</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:44:11 CEST 2000" >Kontrol ediliyor</message>
+	<message xml:lang="en">Checking</message>
+	<message xml:lang="de">Überprüfe</message>
+	<message xml:lang="fr">Où corriger</message>
+	<message xml:lang="it">Controlla</message>
+	<message xml:lang="tr">Kontrol ediliyor</message>
 </label>
 <label define="Pass_Without">
-	<message xml::lang="en" last_update="Fri May 26 10:14:45 CEST 2000">Search/Skip</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:43:46 CEST 2000">Chercher/Suivant</message>
-	<message xml::lang="de" last_update="Fri May 26 10:43:52 CEST 2000">Nicht ändern</message>
-	<message xml::lang="it" last_update="Fri May 26 10:43:58 CEST 2000">Cerca</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:44:11 CEST 2000" >Atla ve sonraki</message>
+	<message xml:lang="en">Search/Skip</message>
+	<message xml:lang="de">Nicht ändern</message>
+	<message xml:lang="fr">Chercher/Suivant</message>
+	<message xml:lang="it">Cerca</message>
+	<message xml:lang="tr">Atla ve sonraki</message>
 </label>
 <label define="Replace_With">
-	<message xml::lang="en" last_update="Fri May 26 10:14:45 CEST 2000">Replace (+ dic)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:43:46 CEST 2000">Remplacer (+ dic)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:43:52 CEST 2000">Ändern (+ Wörterbuch)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:43:59 CEST 2000">Sostituisci (+ diz)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:44:11 CEST 2000" >Deðiþtir (+ sözlük)</message>
+	<message xml:lang="en">Replace (+ dic)</message>
+	<message xml:lang="de">Ändern (+ Wörterbuch)</message>
+	<message xml:lang="fr">Remplacer (+ dic)</message>
+	<message xml:lang="it">Sostituisci (+ diz)</message>
+	<message xml:lang="tr">Deðiþtir (+ sözlük)</message>
 </label>
 <label define="Replace_Without">
-	<message xml::lang="en" last_update="Fri May 26 10:14:45 CEST 2000">Replace and next</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:43:46 CEST 2000">Remplacer</message>
-	<message xml::lang="de" last_update="Fri May 26 10:43:52 CEST 2000">Ändern</message>
-	<message xml::lang="it" last_update="Fri May 26 10:43:59 CEST 2000">Sostituisci e continua</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:44:11 CEST 2000" >Deðiþtir ve sonraki</message>
+	<message xml:lang="en">Replace and next</message>
+	<message xml:lang="de">Ändern</message>
+	<message xml:lang="fr">Remplacer</message>
+	<message xml:lang="it">Sostituisci e continua</message>
+	<message xml:lang="tr">Deðiþtir ve sonraki</message>
 </label>
 <label define="Keep_Unknown">
-	<message xml::lang="en" last_update="Fri May 26 10:14:45 CEST 2000">Other language</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:43:46 CEST 2000">Autre langue</message>
-	<message xml::lang="de" last_update="Fri May 26 10:43:52 CEST 2000">Sprache wählen</message>
-	<message xml::lang="it" last_update="Fri May 26 10:43:59 CEST 2000">Altra lingua</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:44:11 CEST 2000" >Baþka dil</message>
+	<message xml:lang="en">Other language</message>
+	<message xml:lang="de">Sprache wählen</message>
+	<message xml:lang="fr">Autre langue</message>
+	<message xml:lang="it">Altra lingua</message>
+	<message xml:lang="tr">Baþka dil</message>
 </label>
 <label define="Pass_With">
-	<message xml::lang="en" last_update="Fri May 26 10:14:45 CEST 2000">Skip (+ dic)</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:43:46 CEST 2000">Suivant (+ dic)</message>
-	<message xml::lang="de" last_update="Fri May 26 10:43:52 CEST 2000">Nicht ändern (+ Wörterbuch)</message>
-	<message xml::lang="it" last_update="Fri May 26 10:43:59 CEST 2000">Salta (+ diz)</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:44:11 CEST 2000" >Atla (+ sozluk)</message>
+	<message xml:lang="en">Skip (+ dic)</message>
+	<message xml:lang="de">Nicht ändern (+ Wörterbuch)</message>
+	<message xml:lang="fr">Suivant (+ dic)</message>
+	<message xml:lang="it">Salta (+ diz)</message>
+	<message xml:lang="tr">Atla (+ sozluk)</message>
 </label>
 <label define="Specials">
-	<message xml::lang="en" last_update="Fri May 26 10:14:45 CEST 2000">words containing:</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:43:46 CEST 2000">incluant les caractères :</message>
-	<message xml::lang="de" last_update="Fri May 26 10:43:52 CEST 2000">Wörter mit:</message>
-	<message xml::lang="it" last_update="Fri May 26 10:43:59 CEST 2000">parole contenenti:</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:44:11 CEST 2000" >words containing:</message>
+	<message xml:lang="en">words containing:</message>
+	<message xml:lang="de">Wörter mit:</message>
+	<message xml:lang="fr">incluant les caractères :</message>
+	<message xml:lang="it">parole contenenti:</message>
+	<message xml:lang="tr">words containing:</message>
 </label>
 <label define="Correct">
-	<message xml::lang="en" last_update="Fri May 26 10:14:45 CEST 2000">Spell checking ...</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:43:46 CEST 2000">Corriger...</message>
-	<message xml::lang="de" last_update="Fri May 26 10:43:52 CEST 2000">Rechtschreibung ...</message>
-	<message xml::lang="it" last_update="Fri May 26 10:43:59 CEST 2000">Controllo ortografico...</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:44:11 CEST 2000" >Yazým hatalarý aranýyor...</message>
+	<message xml:lang="en">Spell checking ...</message>
+	<message xml:lang="de">Rechtschreibung ...</message>
+	<message xml:lang="fr">Corriger...</message>
+	<message xml:lang="it">Controllo ortografico...</message>
+	<message xml:lang="tr">Yazým hatalarý aranýyor...</message>
 </label>
 <label define="Romans">
-	<message xml::lang="en" last_update="Fri May 26 10:14:45 CEST 2000">Roman numerals</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:43:46 CEST 2000">en chiffres romains</message>
-	<message xml::lang="de" last_update="Fri May 26 10:43:52 CEST 2000">Römische Zahlen</message>
-	<message xml::lang="it" last_update="Fri May 26 10:43:59 CEST 2000">numerali romani</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:44:11 CEST 2000" >Roma rakamlarý</message>
+	<message xml:lang="en">Roman numerals</message>
+	<message xml:lang="de">Römische Zahlen</message>
+	<message xml:lang="fr">en chiffres romains</message>
+	<message xml:lang="it">numerali romani</message>
+	<message xml:lang="tr">Roma rakamlarý</message>
 </label>
 <label define="Ignore">
-	<message xml::lang="en" last_update="Fri May 26 10:14:45 CEST 2000">Ignore</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:43:46 CEST 2000">Ignorer les mots</message>
-	<message xml::lang="de" last_update="Fri May 26 10:43:52 CEST 2000">Ignoriere</message>
-	<message xml::lang="it" last_update="Fri May 26 10:43:59 CEST 2000">Ignora</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:44:11 CEST 2000" >Aldýrma</message>
+	<message xml:lang="en">Ignore</message>
+	<message xml:lang="de">Ignoriere</message>
+	<message xml:lang="fr">Ignorer les mots</message>
+	<message xml:lang="it">Ignora</message>
+	<message xml:lang="tr">Aldýrma</message>
 </label>
 <label define="Capitals">
-	<message xml::lang="en" last_update="Fri May 26 10:14:45 CEST 2000">words that are all caps</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:43:46 CEST 2000">en lettres capitales</message>
-	<message xml::lang="de" last_update="Fri May 26 10:43:52 CEST 2000">Wörter in Großbuchstaben</message>
-	<message xml::lang="it" last_update="Fri May 26 10:43:59 CEST 2000">parole tutte maiuscole</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:44:11 CEST 2000" >Hepsi büyük harf olan sözcükler</message>
+	<message xml:lang="en">words that are all caps</message>
+	<message xml:lang="de">Wörter in Großbuchstaben</message>
+	<message xml:lang="fr">en lettres capitales</message>
+	<message xml:lang="it">parole tutte maiuscole</message>
+	<message xml:lang="tr">Hepsi büyük harf olan sözcükler</message>
 </label>
 <label define="Arabics">
-	<message xml::lang="en" last_update="Fri May 26 10:14:45 CEST 2000">words with digits</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:43:46 CEST 2000">incluant des chiffres</message>
-	<message xml::lang="de" last_update="Fri May 26 10:43:52 CEST 2000">Wörter mit Ziffern</message>
-	<message xml::lang="it" last_update="Fri May 26 10:43:59 CEST 2000">parole contenenti cifre</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:44:11 CEST 2000" >Rakam içeren sözcükler</message>
+	<message xml:lang="en">words with digits</message>
+	<message xml:lang="de">Wörter mit Ziffern</message>
+	<message xml:lang="fr">incluant des chiffres</message>
+	<message xml:lang="it">parole contenenti cifre</message>
+	<message xml:lang="tr">Rakam içeren sözcükler</message>
 </label>
 <label define="NO_PARAM">
-	<message xml::lang="en" last_update="Fri May 26 10:14:45 CEST 2000">Parameter file error</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:43:46 CEST 2000">Erreur dans le fichier des paramètres</message>
-	<message xml::lang="de" last_update="Fri May 26 10:43:52 CEST 2000">Fehler in der Parameterdatei</message>
-	<message xml::lang="it" last_update="Fri May 26 10:43:59 CEST 2000">Errore nel file dei parametri</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:44:11 CEST 2000" >Parametre dosya hatasý</message>
+	<message xml:lang="en">Parameter file error</message>
+	<message xml:lang="de">Fehler in der Parameterdatei</message>
+	<message xml:lang="fr">Erreur dans le fichier des paramètres</message>
+	<message xml:lang="it">Errore nel file dei parametri</message>
+	<message xml:lang="tr">Parametre dosya hatasý</message>
 </label>
 <label define="NO_KEYBOARD">
-	<message xml::lang="en" last_update="Fri May 26 10:14:45 CEST 2000">No keyboard file</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:43:46 CEST 2000">Absence de fichier clavier</message>
-	<message xml::lang="de" last_update="Fri May 26 10:43:52 CEST 2000">Tastaturdatei fehlt</message>
-	<message xml::lang="it" last_update="Fri May 26 10:43:59 CEST 2000">Il file della tastiera non esiste</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:44:11 CEST 2000" >Tuþtakýmý dosyasý yok</message>
+	<message xml:lang="en">No keyboard file</message>
+	<message xml:lang="de">Tastaturdatei fehlt</message>
+	<message xml:lang="fr">Absence de fichier clavier</message>
+	<message xml:lang="it">Il file della tastiera non esiste</message>
+	<message xml:lang="tr">Tuþtakýmý dosyasý yok</message>
 </label>
 <label define="NO_SAVE">
-	<message xml::lang="en" last_update="Fri May 26 10:14:45 CEST 2000">Cannot save the document dictionary</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:43:46 CEST 2000">Impossible d\'enregistrer le dictionnaire du document</message>
-	<message xml::lang="de" last_update="Fri May 26 10:43:52 CEST 2000">Kann das Dokumentenwörterbuch nicht speichern</message>
-	<message xml::lang="it" last_update="Fri May 26 10:43:59 CEST 2000">Impossibile salvare il dizionario del documento</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:44:11 CEST 2000" >Belge sözlüðü kaydedilemiyor</message>
+	<message xml:lang="en">Cannot save the document dictionary</message>
+	<message xml:lang="de">Kann das Dokumentenwörterbuch nicht speichern</message>
+	<message xml:lang="fr">Impossible d\'enregistrer le dictionnaire du document</message>
+	<message xml:lang="it">Impossibile salvare il dizionario del documento</message>
+	<message xml:lang="tr">Belge sözlüðü kaydedilemiyor</message>
 </label>
 <label define="REFUSE_WORD">
-	<message xml::lang="en" last_update="Fri May 26 10:14:45 CEST 2000">Incorrect word "%s" refused in this dictionary</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:43:46 CEST 2000">Mot "%s" incorrect refusé dans ce dictionnaire</message>
-	<message xml::lang="de" last_update="Fri May 26 10:43:52 CEST 2000">Fehlerhaftes Wort "%s" im Wörterbuch zurückgewiesen</message>
-	<message xml::lang="it" last_update="Fri May 26 10:43:59 CEST 2000">Parola scorretta "%s" rifiutata in questo dizionario</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:44:11 CEST 2000" >Yanlýþ sözcük "%s" bu sözlükte kabul edilmiyor</message>
+	<message xml:lang="en">Incorrect word "%s" refused in this dictionary</message>
+	<message xml:lang="de">Fehlerhaftes Wort "%s" im Wörterbuch zurückgewiesen</message>
+	<message xml:lang="fr">Mot "%s" incorrect refusé dans ce dictionnaire</message>
+	<message xml:lang="it">Parola scorretta "%s" rifiutata in questo dizionario</message>
+	<message xml:lang="tr">Yanlýþ sözcük "%s" bu sözlükte kabul edilmiyor</message>
 </label>
 <label define="ADD_WORD">
-	<message xml::lang="en" last_update="Fri May 26 10:14:45 CEST 2000">Word "%s" added in the document dictionary</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:43:46 CEST 2000">Mot "%s" ajouté dans le dictionnaire du document</message>
-	<message xml::lang="de" last_update="Fri May 26 10:43:52 CEST 2000">Wort "%s" zum Dokumentenwörterbuch hinzugefügt</message>
-	<message xml::lang="it" last_update="Fri May 26 10:43:59 CEST 2000">Parola "%s" aggiunta nel dizionario del documento</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:44:11 CEST 2000" >"%s" sözcüðü belge sözlüðüne eklendi</message>
+	<message xml:lang="en">Word "%s" added in the document dictionary</message>
+	<message xml:lang="de">Wort "%s" zum Dokumentenwörterbuch hinzugefügt</message>
+	<message xml:lang="fr">Mot "%s" ajouté dans le dictionnaire du document</message>
+	<message xml:lang="it">Parola "%s" aggiunta nel dizionario del documento</message>
+	<message xml:lang="tr">"%s" sözcüðü belge sözlüðüne eklendi</message>
 </label>
 <label define="END_CHECK">
-	<message xml::lang="en" last_update="Fri May 26 10:14:45 CEST 2000">End of spell checking</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:43:46 CEST 2000">Correction terminée</message>
-	<message xml::lang="de" last_update="Fri May 26 10:43:52 CEST 2000">Rechtschreibprüfung beendet</message>
-	<message xml::lang="it" last_update="Fri May 26 10:43:59 CEST 2000">Fine controllo ortografico</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:44:11 CEST 2000" >Yazým hatalarý arama sonu</message>
+	<message xml:lang="en">End of spell checking</message>
+	<message xml:lang="de">Rechtschreibprüfung beendet</message>
+	<message xml:lang="fr">Correction terminée</message>
+	<message xml:lang="it">Fine controllo ortografico</message>
+	<message xml:lang="tr">Yazým hatalarý arama sonu</message>
 </label>
 <label define="STOP_CHECK">
-	<message xml::lang="en" last_update="Fri May 26 10:14:45 CEST 2000">Spell checking aborted</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:43:46 CEST 2000">Correction interrompue</message>
-	<message xml::lang="de" last_update="Fri May 26 10:43:52 CEST 2000">Rechtschreibprüfung abgebrochen</message>
-	<message xml::lang="it" last_update="Fri May 26 10:43:59 CEST 2000">Controllo ortografico interrotto</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:44:11 CEST 2000" >Yazým hatasý aramasý iptal edildi</message>
+	<message xml:lang="en">Spell checking aborted</message>
+	<message xml:lang="de">Rechtschreibprüfung abgebrochen</message>
+	<message xml:lang="fr">Correction interrompue</message>
+	<message xml:lang="it">Controllo ortografico interrotto</message>
+	<message xml:lang="tr">Yazým hatasý aramasý iptal edildi</message>
 </label>
 <label define="NO_SELECT">
-	<message xml::lang="en" last_update="Fri May 26 10:14:45 CEST 2000">Please select a document</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:43:46 CEST 2000">Rien à corriger : sélectionnez un document</message>
-	<message xml::lang="de" last_update="Fri May 26 10:43:53 CEST 2000">Bitte ein Dokument auswählen</message>
-	<message xml::lang="it" last_update="Fri May 26 10:43:59 CEST 2000">Seleziona un documento</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:44:11 CEST 2000" >Lütfen bir belge seçin</message>
+	<message xml:lang="en">Please select a document</message>
+	<message xml:lang="de">Bitte ein Dokument auswählen</message>
+	<message xml:lang="fr">Rien à corriger : sélectionnez un document</message>
+	<message xml:lang="it">Seleziona un documento</message>
+	<message xml:lang="tr">Lütfen bir belge seçin</message>
 </label>
 <label define="OK_SAVE">
-	<message xml::lang="en" last_update="Fri May 26 10:14:45 CEST 2000">Document dictionary saved: %s</message>
-	<message xml::lang="fr" last_update="Fri May 26 10:43:46 CEST 2000">Sauvegarde du dictionnaire "%s"</message>
-	<message xml::lang="de" last_update="Fri May 26 10:43:53 CEST 2000">Dokumentenwörterbuch gespeichert unter: %s</message>
-	<message xml::lang="it" last_update="Fri May 26 10:43:59 CEST 2000">Dizionario del documento salvato: %s</message>
-	<message xml::lang="tr" last_update="Fri May 26 10:44:11 CEST 2000" >Belge sözlüðü kaydedildi: %s</message>
+	<message xml:lang="en">Document dictionary saved: %s</message>
+	<message xml:lang="de">Dokumentenwörterbuch gespeichert unter: %s</message>
+	<message xml:lang="fr">Sauvegarde du dictionnaire "%s"</message>
+	<message xml:lang="it">Dizionario del documento salvato: %s</message>
+	<message xml:lang="tr">Belge sözlüðü kaydedildi: %s</message>
 </label>
 <label define="MSG_MAX_CHECK">
-<!--this label must still empty end the latest because itshows the end of labels that are used for Amaya --></label>
+</label>
 </messages>
-<!--end of base --></base_message>
+<!--end of base --></base>
