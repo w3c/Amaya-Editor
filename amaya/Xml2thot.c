@@ -521,6 +521,7 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
       XMLCharacterNotSupported = TRUE;
       break;
     case errorParsing:
+    case warningMessage:
       if (line == 0)
 	{
 	  fprintf (ErrFile, "  line %d, char %d: %s\n",
@@ -529,8 +530,9 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
 		   msg);
 	}
       else
-	fprintf (ErrFile, "  line %d: %s\n", line, msg); 
-      XMLErrorsFound = TRUE;
+	fprintf (ErrFile, "  line %d: %s\n", line, msg);
+      if (type == errorParsing)
+        XMLErrorsFound = TRUE;
       break;
     case errorParsingProfile:
       if (line == 0)
@@ -3660,7 +3662,7 @@ static void  InitializeExpatParser (CHARSET charset)
       Parser = XML_ParserCreateNS ("UTF-8", NS_SEP);
       /* Display a warning message */
       sprintf (msgBuffer,
-		"No encoding specified, assuming UTF-8");
+	       "Warning: no encoding specified, assuming UTF-8");
       XmlParseError (undefinedEncoding, msgBuffer, 0);
       /* Enable "Read as Iso-Latin1 entry" */
       TtaSetItemOn (XMLcontext.doc, 1, File, BLatinReading);
@@ -4367,7 +4369,7 @@ void StartXmlParser (Document doc,
   char           *s;
   char            tempname[MAX_LENGTH];
   char            temppath[MAX_LENGTH];
-  int             length, error;
+  int             error;
   ThotBool        isXHTML;
   CHARSET         charset;
 
@@ -4399,18 +4401,8 @@ void StartXmlParser (Document doc,
       TtaAppendDocumentPath (documentDirectory);
 
       /* Set document URL */
-      length = strlen (pathURL);
-      if (strcmp (pathURL, fileName) == 0)
-	{
-	  docURL = TtaGetMemory (length + 1);
-	  strcpy (docURL, pathURL);
-	}
-      else
-	{
-	  length += strlen (fileName) + 20;
-	  docURL = TtaGetMemory (length+1);
-	  sprintf (docURL, "%s temp file: %s", pathURL, fileName);
-	}
+      docURL = TtaGetMemory (strlen (pathURL) + 1);
+      strcpy (docURL, pathURL);
 
       /* Do not check the Thot abstract tree against the structure */
       /* schema while building the Thot document. */

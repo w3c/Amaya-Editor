@@ -197,7 +197,7 @@ static void  CSSParseError (char *msg, char *value)
 
       if (DocURL != NULL)
 	{
-	  fprintf (ErrFile, "*** CSS Errors/Warnings in %s\n", DocURL);
+	  fprintf (ErrFile, "*** Errors/warnings in %s\n", DocURL);
 	  /* set to NULL as long as the CSS file doesn't change */
 	  DocURL = NULL;
 	}

@@ -6419,7 +6419,6 @@ void StartParser (Document doc, char *fileName,
   char           *s;
   char            tempname[MAX_LENGTH];
   char            temppath[MAX_LENGTH];
-  int             length;
   ThotBool        isHTML;
 
   HTMLcontext.doc = doc;
@@ -6458,150 +6457,138 @@ void StartParser (Document doc, char *fileName,
 	    documentDirectory[0] = EOS;
 	}
       TtaAppendDocumentPath (documentDirectory);
-      /* create a Thot document of type HTML */
-      /* the Thot document has been successfully created */
-      {
-	length = strlen (pathURL);
-	if (strcmp (pathURL, fileName) == 0)
-	  {
-	    docURL = TtaGetMemory (length + 1);
-	    strcpy (docURL, pathURL);
-	  }
-	else
-	  {
-	    length += strlen (fileName) + 20;
-	    docURL = TtaGetMemory (length+1);
-	    sprintf (docURL, "%s temp file: %s", pathURL, fileName);
-	  }
-	/* do not check the Thot abstract tree against the structure */
-	/* schema while building the Thot document. */
-	TtaSetStructureChecking (0, doc);
-	/* set the notification mode for the new document */
-	TtaSetNotificationMode (doc, 1);
-	HTMLcontext.language = TtaGetDefaultLanguage ();
-	DocumentSSchema = TtaGetDocumentSSchema (doc);
-	/* is the current document a HTML document */
+
+      docURL = TtaGetMemory (strlen (pathURL) + 1);
+      strcpy (docURL, pathURL);
+
+      /* do not check the Thot abstract tree against the structure */
+      /* schema while building the Thot document. */
+      TtaSetStructureChecking (0, doc);
+      /* set the notification mode for the new document */
+      TtaSetNotificationMode (doc, 1);
+      HTMLcontext.language = TtaGetDefaultLanguage ();
+      DocumentSSchema = TtaGetDocumentSSchema (doc);
+      /* is the current document a HTML document */
 #ifdef ANNOTATIONS
-	if (DocumentTypes[doc] == docAnnot)
-	  {
-	    /* @@@ we know this is true, but we should try to protect */
-	    isHTML = 1;
-	    DocumentSSchema = TtaGetSSchema ("HTML", doc);
-	    attrType.AttrSSchema = DocumentSSchema;
-	  }
-	else
+      if (DocumentTypes[doc] == docAnnot)
+	{
+	  /* @@@ we know this is true, but we should try to protect */
+	  isHTML = 1;
+	  DocumentSSchema = TtaGetSSchema ("HTML", doc);
+	  attrType.AttrSSchema = DocumentSSchema;
+	}
+      else
 #endif /* ANNOTATIONS */
-	  isHTML = (strcmp (TtaGetSSchemaName (DocumentSSchema), "HTML") == 0);
-	if (plainText)
-	  {
-	    rootElement = TtaGetRootElement (doc);
-	    if (DocumentTypes[doc] == docSource)
-	      {
-		/* add the attribute Source */
-		attrType.AttrSSchema = DocumentSSchema;
-		attrType.AttrTypeNum = TextFile_ATTR_Source;
-		attr = TtaGetAttribute (rootElement, attrType);
-		if (attr == 0)
-		  {
-		    attr = TtaNewAttribute (attrType);
-		    TtaAttachAttribute (rootElement, attr, doc);
-		  }
-	      }
-	    
-	    /* add the default attribute PrintURL */
-	    attrType.AttrSSchema = DocumentSSchema;
-	    attrType.AttrTypeNum = TextFile_ATTR_PrintURL;
-	    attr = TtaGetAttribute (rootElement, attrType);
-	    if (attr == 0)
-	      {
-		attr = TtaNewAttribute (attrType);
-		TtaAttachAttribute (rootElement, attr, doc);
-	      }
-	  }
-	else
-	  {
-	    if (!isHTML)
-	      {
-		/* change the document type */
-		TtaFreeView (doc, 1);
-		doc = TtaNewDocument ("HTML", documentName);
-		if (TtaGetScreenDepth () > 1)
-		  TtaSetPSchema (doc, "HTMLP");
-		else
-		  TtaSetPSchema (doc, "HTMLPBW");
-		DocumentSSchema = TtaGetDocumentSSchema (doc);
-		isHTML = TRUE;
-	      }
-	    LoadUserStyleSheet (doc);
+	isHTML = (strcmp (TtaGetSSchemaName (DocumentSSchema), "HTML") == 0);
+      if (plainText)
+	{
+	  rootElement = TtaGetRootElement (doc);
+	  if (DocumentTypes[doc] == docSource)
+	    {
+	      /* add the attribute Source */
+	      attrType.AttrSSchema = DocumentSSchema;
+	      attrType.AttrTypeNum = TextFile_ATTR_Source;
+	      attr = TtaGetAttribute (rootElement, attrType);
+	      if (attr == 0)
+		{
+		  attr = TtaNewAttribute (attrType);
+		  TtaAttachAttribute (rootElement, attr, doc);
+		}
+	    }
+	  
+	  /* add the default attribute PrintURL */
+	  attrType.AttrSSchema = DocumentSSchema;
+	  attrType.AttrTypeNum = TextFile_ATTR_PrintURL;
+	  attr = TtaGetAttribute (rootElement, attrType);
+	  if (attr == 0)
+	    {
+	      attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (rootElement, attr, doc);
+	    }
+	}
+      else
+	{
+	  if (!isHTML)
+	    {
+	      /* change the document type */
+	      TtaFreeView (doc, 1);
+	      doc = TtaNewDocument ("HTML", documentName);
+	      if (TtaGetScreenDepth () > 1)
+		TtaSetPSchema (doc, "HTMLP");
+	      else
+		TtaSetPSchema (doc, "HTMLPBW");
+	      DocumentSSchema = TtaGetDocumentSSchema (doc);
+	      isHTML = TRUE;
+	    }
+	  LoadUserStyleSheet (doc);
 #ifdef ANNOTATIONS
-	    if (DocumentTypes[doc] == docAnnot)
-	      rootElement = ANNOT_GetHTMLRoot (doc); 
-	    else
+	  if (DocumentTypes[doc] == docAnnot)
+	    rootElement = ANNOT_GetHTMLRoot (doc); 
+	  else
 #endif /* ANNOTATIONS */
-	      rootElement = TtaGetMainRoot (doc);
-	    /* add the default attribute PrintURL */
-	    attrType.AttrSSchema = DocumentSSchema;
-	    attrType.AttrTypeNum = HTML_ATTR_PrintURL;
-	    attr = TtaGetAttribute (rootElement, attrType);
-	    if (!attr)
-	      {
-		attr = TtaNewAttribute (attrType);
-		TtaAttachAttribute (rootElement, attr, doc);
-	      }
-	  }
+	    rootElement = TtaGetMainRoot (doc);
+	  /* add the default attribute PrintURL */
+	  attrType.AttrSSchema = DocumentSSchema;
+	  attrType.AttrTypeNum = HTML_ATTR_PrintURL;
+	  attr = TtaGetAttribute (rootElement, attrType);
+	  if (!attr)
+	    {
+	      attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (rootElement, attr, doc);
+	    }
+	}
 
-	TtaSetDisplayMode (doc, NoComputedDisplay);
-	/* delete all element except the root element and its parent document
-	   element */
-	el = TtaGetFirstChild (rootElement);
-	while (el != NULL)
-	  {
-	    oldel = el;
-	    TtaNextSibling (&el);
-	    TtaDeleteTree (oldel, doc);
-	  }
+      TtaSetDisplayMode (doc, NoComputedDisplay);
+      /* delete all element except the root element and its parent document
+	 element */
+      el = TtaGetFirstChild (rootElement);
+      while (el != NULL)
+	{
+	  oldel = el;
+	  TtaNextSibling (&el);
+	  TtaDeleteTree (oldel, doc);
+	}
 
-	/* save the path or URL of the document */
-	TtaExtractName (pathURL, temppath, tempname);
-	TtaSetDocumentDirectory (doc, temppath);
+      /* save the path or URL of the document */
+      TtaExtractName (pathURL, temppath, tempname);
+      TtaSetDocumentDirectory (doc, temppath);
 
-	/* disable auto save */
-	TtaSetDocumentBackUpInterval (doc, 0);
-	
-	/* parse the input file and build the Thot document */
-	if (plainText)
-	  ReadTextFile (stream, NULL, doc, pathURL);
-	else
-	  {
-	    /* initialize parsing environment */
-	    InitializeHTMLParser (NULL, FALSE, 0);
-	    HTMLparse (stream, NULL);
-	    /* completes all unclosed elements */
-	    el = HTMLcontext.lastElement;
-	    while (el != NULL)
-	      {
-		ElementComplete (el);
-		el = TtaGetParent (el);
-	      }
-	    /* check the Thot abstract tree */
-	    CheckAbstractTree (pathURL, HTMLcontext.doc);
-	  }
+      /* disable auto save */
+      TtaSetDocumentBackUpInterval (doc, 0);
 
-	gzclose (stream);
-	TtaFreeMemory (docURL);
+      /* parse the input file and build the Thot document */
+      if (plainText)
+	ReadTextFile (stream, NULL, doc, pathURL);
+      else
+	{
+	  /* initialize parsing environment */
+	  InitializeHTMLParser (NULL, FALSE, 0);
+	  HTMLparse (stream, NULL);
+	  /* completes all unclosed elements */
+	  el = HTMLcontext.lastElement;
+	  while (el != NULL)
+	    {
+	      ElementComplete (el);
+	      el = TtaGetParent (el);
+	    }
+	  /* check the Thot abstract tree */
+	  CheckAbstractTree (pathURL, HTMLcontext.doc);
+	}
 
-	/* an HTML document could be a template */
-	if (!plainText)
-	  OpenTemplateDocument (doc);
-	TtaSetDisplayMode (doc, DisplayImmediately);
-	/* check the Thot abstract tree against the structure schema. */
-	TtaSetStructureChecking (1, doc);
-	DocumentSSchema = NULL;
-      }
+      gzclose (stream);
+      TtaFreeMemory (docURL);
+
+      /* an HTML document could be a template */
+      if (!plainText)
+	OpenTemplateDocument (doc);
+      TtaSetDisplayMode (doc, DisplayImmediately);
+      /* check the Thot abstract tree against the structure schema. */
+      TtaSetStructureChecking (1, doc);
+      DocumentSSchema = NULL;
     }
 
-   TtaSetDocumentUnmodified (doc);
-   HTMLcontext.doc = 0;
+  TtaSetDocumentUnmodified (doc);
+  HTMLcontext.doc = 0;
 }
 
 /* end of module */

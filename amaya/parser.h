@@ -90,6 +90,7 @@ typedef enum
   errorParsing,
   errorParsingProfile,
   undefinedEncoding,
+  warningMessage
 } ErrorType;
 
 #endif /* PARSER_H */

@@ -37,6 +37,7 @@ static AttrValueMapping GraphMLAttrValueMappingTable[] =
 #include "html2thot_f.h"
 #include "styleparser_f.h"
 #include "XMLparser_f.h"
+#include "Xml2thot_f.h"
 
 /*----------------------------------------------------------------------
    GraphMLGetDTDName
@@ -1379,6 +1380,7 @@ void ParsePathDataAttribute (Attribute attr, Element el, Document doc)
 	     relative = FALSE;
 	   case 'a':
 	     /* elliptical arc */
+	     XmlParseError (warningMessage, "Warning: elliptical arc not supported", 0);
              ptr = TtaSkipBlanks (ptr);
              ptr = GetNumber (ptr, &rx);            /* must be non-negative */
              ptr = GetNumber (ptr, &ry);            /* must be non-negative */
