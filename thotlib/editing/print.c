@@ -395,8 +395,8 @@ int                 org;
   FrameTable[frame].FrTopMargin = PixelValue (TopMargin, UnPoint, NULL, 0);
   /* define the clipping to display the page header */
   pFrame = &ViewFrameTable[frame - 1];
-  pFrame->FrClipXBegin = 0;
-  pFrame->FrClipXEnd = PixelValue (32000, UnPoint, NULL, 0);
+  framexmin = pFrame->FrClipXBegin = 0;
+  framexmax = pFrame->FrClipXEnd = PixelValue (32000, UnPoint, NULL, 0);
   pFrame->FrClipYBegin = 0;
   /* pFrame->FrYOrg = PixelValue (org, UnPoint, pFrame->FrAbstractBox, 0); */
   pFrame->FrYOrg = org;
@@ -2619,7 +2619,7 @@ char              **argv;
   
   ShowSpace = 1;  /* Restitution des espaces */
   InitLanguage ();
-  Dict_Init ();
+  /*Dict_Init ();*/
 
   /* Initialisation de la gestion memoire */
   InitKernelMemory ();

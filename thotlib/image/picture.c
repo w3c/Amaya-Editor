@@ -139,12 +139,7 @@ extern ThotBool peInitialized;
  * RETURNS : The number of colors in the DIB.                           *
  *                                                                      *
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 WORD DibNumColors (VOID FAR* pv)
-#else  /* !__STDC__ */
-WORD DibNumColors (pv)
-VOID FAR* pv;
-#endif /* __STDC__ */
 {
     INT                 bits;
     LPBITMAPINFOHEADER  lpbi;
@@ -208,12 +203,7 @@ WORD PaletteSize (VOID FAR * pv)
  *  RETURNS    : TRUE  - if successful.                                 *
  *               FALSE - otherwise                                      *
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 BOOL DibInfo (LPBITMAPINFOHEADER lpbi)
-#else /* !__STDC__ */
-BOOL DibInfo (lpbi)
-LPBITMAPINFOHEADER lpbi;
-#endif /* __STDC__ */
 {
     if (lpbi){
        /* fill in the default fields */
@@ -229,40 +219,9 @@ LPBITMAPINFOHEADER lpbi;
     return FALSE;
 }
 
-/* ---------------------------------------------------------------------- *
- *                                                                        *
- * FUNCTION:  PrintDIB(HWND hWnd, HDC hDC, int x, int y, int dx, int dy)  *
- *                                                                        *
- * PURPOSE :  Set the DIB bits to the printer DC.                         *
- *                                                                        *
- * ---------------------------------------------------------------------- */
-#ifdef __STDC__
-void PrintDIB (LPBITMAPINFO lpBmpInfo, LPBYTE lpBits, HWND hWnd, HDC hDC, int x, int y, int dx, int dy)
-#else  /* !__STDC__ */
-void PrintDIB (lpBmpInfo, lpBits, hWnd, hDC, x, y, dx, dy)
-LPBITMAPINFOHEADER lpBmpInfo;
-LPBYTE             lpBits;
-HWND               hWnd;
-HDC                hDC;
-int                x;
-int                y;
-int                dx;
-int                dy;
-#endif /* __STDC__*/
-{
-    StretchDIBits (TtPrinterDC, x, y, dx, dy, 0, 0, lpBmpInfo->bmiHeader.biWidth, lpBmpInfo->bmiHeader.biHeight, lpBits, lpBmpInfo, DIB_RGB_COLORS, SRCCOPY);
-    /* SetDIBitsToDevice (TtPrinterDC, x, y, lpBmpInfo->biWidth, lpBmpInfo->biHeight, 0, 0, 0, lpBmpInfo->biHeight, lpBits, lpBmpInfo, DIB_RGB_COLORS); */
-}
-
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 LPBITMAPINFO CreateBitmapInfoStruct(HWND hwnd, HBITMAP hBmp) 
-#else /* !__STDC__ */
-LPBITMAPINFO CreateBitmapInfoStruct(hwnd, hBmp) 
-HWND    hwnd;
-HBITMAP hBmp;
-#endif /* __STDC__ */
 { 
   BITMAP       bmp;
   LPBITMAPINFO pbmi;
@@ -332,21 +291,7 @@ HBITMAP hBmp;
  * FUNCTION: GetTransparentDIBits (HBITMAP pixmap)                      *
  *                                                                      *
  *----------------------------------------------------------------------*/
-#ifdef __STDC__
 LPBYTE GetTransparentDIBits (int frame, HBITMAP pixmap, int x, int y, int width, int height, int red, int green, int blue, LPBITMAPINFO* lpBmpInfo)
-#else  /* !__STDC__ */
-LPBYTE GetTransparentDIBits (frame, pixmap, x, y, width, height, red, green, blue, lpBmpInfo)
-int     frame;
-HBITMAP pixmap;
-int          x;
-int          y;
-int          width;
-int          height;
-int          red;
-int          green;
-int          blue;
-LPBITMAPINFO* lpBmpInfo;
-#endif /* __STDC__ */
 {
    HDC      hDC;
    HDC      hImageDC;
@@ -468,19 +413,7 @@ LPBITMAPINFO* lpBmpInfo;
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void TransparentPicture (HBITMAP pixmap, int xFrame, int yFrame, int w, int h, int red, int green, int blue)
-#else  /* !__STDC__ */
-static void TransparentPicture (pixmap, xFrame, yFrame, w, h, red, green, blue)
-HBITMAP  pixmap;
-int      xFrame;
-int      yFrame;
-int      w;
-int      h;
-int      red;
-int      green;
-int      blue;
-#endif /* __STDC__ */
 {
    HDC      hMemDC;
    HDC      hOrDC;
@@ -592,13 +525,7 @@ int      blue;
    Match_Format returns TRUE if the considered header file matches   
    the image file description, FALSE in the the other cases        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool     Match_Format (int typeImage, STRING fileName)
-#else  /* __STDC__ */
-static ThotBool     Match_Format (typeImage, fileName)
-int                 typeImage;
-STRING              fileName;
-#endif /* __STDC__ */
 {
    if (PictureHandlerTable[typeImage].Match_Format != NULL)
       return (*(PictureHandlerTable[typeImage].Match_Format)) (fileName);
@@ -610,13 +537,7 @@ STRING              fileName;
    FreePixmap frees the pixmap allocated in the X server if it is not
    empty and if it is not one of the internal images        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                FreePixmap (Pixmap pixmap)
-#else  /* __STDC__ */
-void                FreePixmap (pixmap)
-Pixmap              pixmap;
-
-#endif /* __STDC__ */
 {
   if (pixmap != None && pixmap != PictureLogo && pixmap != EpsfPictureLogo)
 #ifndef _WINDOWS
@@ -640,21 +561,7 @@ Pixmap              pixmap;
    if the picture size is greater than the frame then      
    picXOrg or picYOrg are positive.                            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void Picture_Center (int picWArea, int picHArea, int wFrame, int hFrame, PictureScaling pres, int *xTranslate, int *yTranslate, int *picXOrg, int *picYOrg)
-#else  /* __STDC__ */
-static void Picture_Center (picWArea, picHArea, wFrame, hFrame, pres, xTranslate, yTranslate, picXOrg, picYOrg)
-int                 picWArea;
-int                 picHArea;
-int                 wFrame;
-int                 hFrame;
-PictureScaling      pres;
-int                *xTranslate;
-int                *yTranslate;
-int                *picXOrg;
-int                *picYOrg;
-
-#endif /* __STDC__ */
 {
   float               Rapw, Raph;
 
@@ -699,16 +606,7 @@ int                *picYOrg;
 /*----------------------------------------------------------------------
    SetPictureClipping clips the picture into boundaries.              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         SetPictureClipping (int *picWArea, int *picHArea, int wFrame, int hFrame, PictInfo *imageDesc)
-#else  /* __STDC__ */
-static void         SetPictureClipping (picWArea, picHArea, wFrame, hFrame, imageDesc)
-int                *picWArea;
-int                *picHArea;
-int                 wFrame;
-int                 hFrame;
-PictInfo           *imageDesc;
-#endif /* __STDC__ */
 {
    if ((imageDesc->PicWArea == 0 && imageDesc->PicHArea == 0) ||
        (imageDesc->PicWArea > MAX_PICT_SIZE ||
@@ -729,22 +627,7 @@ PictInfo           *imageDesc;
   by the drawable.                                                          
   if picXOrg or picYOrg are postive, the copy operation is shifted      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void  LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg, int picYOrg, int w, int h, int xFrame, int yFrame, int frame, PictInfo *imageDesc, PtrBox box)
-#else  /* __STDC__ */
-static void  LayoutPicture(pixmap, drawable, picXOrg, picYOrg, w, h, xFrame, yFrame, frame, imageDesc, box)
-Pixmap       pixmap;
-Drawable     drawable;
-int          picXOrg;
-int          picYOrg;
-int          w;
-int          h;
-int          xFrame;
-int          yFrame;
-int          frame;
-PictInfo    *imageDesc;
-PtrBox       box;
-#endif /* __STDC__ */
 {
   ViewFrame*        pFrame;
   PictureScaling    picPresent;
@@ -1047,13 +930,7 @@ PtrBox       box;
    GetPictureFormat returns the format of a file picture           
    the file  fileName or UNKNOWN_FORMAT if not recognized          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int          GetPictureFormat (STRING fileName)
-#else  /* __STDC__ */
-static int          GetPictureFormat (fileName)
-STRING              fileName;
-
-#endif /* __STDC__ */
 {
    int                 i;
    int                 l = 0;
@@ -1080,14 +957,7 @@ STRING              fileName;
    Supported_Format is of an known type                       
    and Corrupted_File in the other cases                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 Picture_Report PictureFileOk (STRING fileName, int *typeImage)
-#else  /* __STDC__ */
-Picture_Report PictureFileOk (fileName, typeImage)
-STRING              fileName;
-int                *typeImage;
-
-#endif /* __STDC__ */
 {
    Picture_Report      status;
 
@@ -1125,13 +995,7 @@ int                *typeImage;
 /*----------------------------------------------------------------------
    Private Initializations of picture handlers and the visual type 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                InitPictureHandlers (ThotBool printing)
-#else  /* __STDC__ */
-void                InitPictureHandlers (printing)
-ThotBool            printing;
-
-#endif /* __STDC__ */
 {
 #ifndef _WINDOWS
 #ifdef _GTK
@@ -1262,14 +1126,7 @@ ThotBool            printing;
    This function is used to create the GUI Menu            
    We return in count the number of handlers               
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                GetPictHandlersList (int *count, char* buffer)
-#else  /* __STDC__ */
-void                GetPictHandlersList (count, buffer)
-int                *count;
-char*              buffer;
-
-#endif /* __STDC__ */
 {
    int                 i = 0;
    int                 index = 0;
@@ -1293,14 +1150,7 @@ char*              buffer;
    Si filename est un nom de fichier absolu, retourne dans simplename le nom
    simple du fichier.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void         SimpleName (STRING filename, STRING simplename)
-#else  /* __STDC__ */
-static void         SimpleName (filename, simplename)
-STRING              filename;
-STRING              simplename;
-
-#endif /* __STDC__ */
 {
    register STRING     from, to;
    CHAR_T                URL_DIR_SEP;
@@ -1333,16 +1183,7 @@ STRING              simplename;
 /*----------------------------------------------------------------------
    DrawEpsBox draws the eps logo into the picture box.            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame, int wlogo, int hlogo)
-#else  /* __STDC__ */
-static void         DrawEpsBox (box, imageDesc, frame, wlogo, hlogo)
-PtrBox              box;
-PictInfo           *imageDesc;
-int                 frame;
-int                 wlogo;
-int                 hlogo;
-#endif /* __STDC__ */
+static void  DrawEpsBox (PtrBox box, PictInfo *imageDesc, int frame, int wlogo, int hlogo)
 {
 #ifndef _GTK
    Pixmap              pixmap;
@@ -1515,14 +1356,7 @@ int                 hlogo;
   DrawPicture draws the picture in the frame window.
   Parameters x, y, w, h give the displayed area of the box.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                DrawPicture (PtrBox box, PictInfo *imageDesc, int frame, int x, int y, int w, int h)
-#else  /* __STDC__ */
-void                DrawPicture (box, imageDesc, frame)
-PtrBox              box;
-PictInfo           *imageDesc;
-int                 frame;
-#endif /* __STDC__ */
+void  DrawPicture (PtrBox box, PictInfo *imageDesc, int frame, int x, int y, int w, int h)
 {
   PathBuffer          fileName;
   PictureScaling      pres;
@@ -1534,6 +1368,7 @@ int                 frame;
   ThotColor           BackGroundPixel;
 #ifdef _WIN_PRINT
   LPBITMAPINFO        lpBmpInfo;
+  LPBYTE              lpBits;
 #endif /* _WIN_PRINT */
   
   if (w == 0 && h == 0)
@@ -1618,59 +1453,53 @@ int                 frame;
 #ifdef _WINDOWS
 #ifdef _WIN_PRINT
     if (TtPrinterDC)
-      {
-        LPBYTE lpBits;
-
-        LoadPicture (frame, box, imageDesc);
-	if (imageDesc->PicPixmap == None) 
-	  WinErrorBox (NULL, TEXT("DrawPicture (1)"));
-	else
+	{
+      LoadPicture (frame, box, imageDesc);
+	  if (imageDesc->PicPixmap == None) 
+	    WinErrorBox (NULL, TEXT("DrawPicture (1)"));
+	  else
 	  {
 	    lpBmpInfo = CreateBitmapInfoStruct(FrRef[frame], imageDesc->PicPixmap);
-
-	    lpBits = (LPBYTE) GlobalAlloc (GMEM_FIXED, lpBmpInfo->bmiHeader.biSizeImage);
+	    lpBits = GlobalAlloc (GMEM_FIXED, lpBmpInfo->bmiHeader.biSizeImage);
 	    if (!lpBits) 
 	      WinErrorBox (NULL, TEXT("DrawPicture (2)"));
-
-	    if (!GetDIBits (TtDisplay, (HBITMAP) (imageDesc->PicPixmap), 0, (UINT)lpBmpInfo->bmiHeader.biHeight, lpBits, lpBmpInfo, DIB_RGB_COLORS)) 
-	      WinErrorBox (NULL, TEXT("DrawPicture (3)"));
-	    
-	    PrintDIB (lpBmpInfo, lpBits, FrRef[frame], TtPrinterDC, x, y, w, h);
-               if (GlobalFree (lpBits) != NULL)
-                  WinErrorBox (NULL, TEXT("DrawPicture (4)"));
+        else
+		{
+	      if (!GetDIBits (TtDisplay, (HBITMAP) (imageDesc->PicPixmap), 0,
+		                 (UINT)lpBmpInfo->bmiHeader.biHeight,
+			              lpBits, lpBmpInfo, DIB_RGB_COLORS)) 
+	        WinErrorBox (NULL, TEXT("DrawPicture (3)"));
+		  else
+		  {
+            StretchDIBits (TtPrinterDC, x, y, w, h, 0, 0,
+	                       lpBmpInfo->bmiHeader.biWidth,
+	                       lpBmpInfo->bmiHeader.biHeight,
+	                       lpBits, lpBmpInfo, DIB_RGB_COLORS, SRCCOPY);
+            if (GlobalFree (lpBits) != NULL)
+              WinErrorBox (NULL, TEXT("DrawPicture (4)"));
+		  }
+		}
 	  }
-      }
-    else
-      {
-	(*(PictureHandlerTable[typeImage].Produce_Postscript)) (fileName, pres, x, y, w, h, picXArea,
-                   picYArea, picWArea, picHArea,
-                   (FILE *) drawable, BackGroundPixel);
-      }
+	}
 #endif /* _WIN_PRINT */
    WIN_ReleaseDeviceContext ();
 #else  /* _WINDOWS */
-  (*(PictureHandlerTable[typeImage].Produce_Postscript)) (fileName,
-                   pres, x, y, w, h, picXArea,
-		   picYArea, picWArea, picHArea,
-		   (FILE *) drawable, BackGroundPixel);
+  (*(PictureHandlerTable[typeImage].Produce_Postscript)) (fileName,pres, x, y, w, h,
+	                                                      picXArea, picYArea,
+														  picWArea, picHArea,
+		                                                  (FILE *) drawable, BackGroundPixel);
 #endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
   UnmapImage unmaps plug-in widgets   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void       UnmapImage (PictInfo* imageDesc)
-#else /* __STDC__ */
-void       UnmapImage (imageDesc)
-PictInfo  *imageDesc;
-#endif /* __STDC__ */
 {
   int   typeImage;
 
   if (imageDesc == NULL)
     return;
-
   typeImage = imageDesc->PicType;
 #ifndef _WINDOWS
   if (typeImage >= InlineHandlers && imageDesc->mapped && imageDesc->created)
@@ -1685,17 +1514,7 @@ PictInfo  *imageDesc;
 /*----------------------------------------------------------------------
    Routine handling the zoom-in zoom-out of an image   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 unsigned char *ZoomPicture (unsigned char *cpic, int cWIDE, int cHIGH , int eWIDE, int eHIGH, int bperpix)
-#else  /* __STDC__ */
-unsigned char *ZoomPicture (cpic, cWIDE, cHIGH , eWIDE, eHIGH, bperpix)
-unsigned char *cpic;
-int            cWIDE;
-int            cHIGH;
-int            eWIDE;
-int            eHIGH;
-int            bperpix;
-#endif /* __STDC__ */
 {
   int           cy, ex, ey,*cxarr, *cxarrp;
   unsigned char *clptr,*elptr,*epptr, *epic;
@@ -1758,14 +1577,7 @@ int            bperpix;
 /*----------------------------------------------------------------------
    Requests the picture handlers to get the corresponding pixmaps    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
-#else  /* __STDC__ */
-void                LoadPicture (frame, box, imageDesc)
-int                 frame;
-PtrBox              box;
-PictInfo           *imageDesc;
-#endif /* __STDC__ */
 {
 #ifndef _GTK
   PathBuffer          fileName;
@@ -2021,13 +1833,7 @@ PictInfo           *imageDesc;
    GetPictureType returns the type of the image based on the index 
    in the GUI form.                                        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 GetPictureType (int GUIIndex)
-#else  /* __STDC__ */
-int                 GetPictureType (GUIIndex)
-int                 menuIndex;
-
-#endif /* __STDC__ */
 {
    if (GUIIndex == 0)
       return UNKNOWN_FORMAT;
@@ -2041,12 +1847,7 @@ int                 menuIndex;
    GetPictTypeIndex returns the menu type index of the picture.    
    		If the type is unkown we return 0.                      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 GetPictTypeIndex (int picType)
-#else  /* __STDC__ */
-int                 GetPictTypeIndex (picType)
-int                 picType;
-#endif /* __STDC__ */
 {
    int                 i = 0;
 
@@ -2066,13 +1867,7 @@ int                 picType;
    GetPictPresIndex returns the index of of the presentation.      
    	If the presentation is unknown we return RealSize.      
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 int                 GetPictPresIndex (PictureScaling picPresent)
-#else  /* __STDC__ */
-int                 GetPictPresIndex (picPresent)
-PictureScaling      picPresent;
-
-#endif /* __STDC__ */
 {
   int               i;
 
@@ -2099,14 +1894,7 @@ PictureScaling      picPresent;
    This function is used to create the menu picture.       
    It returns the number of handlers in count.             
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                GetPictureHandlersList (int *count, char* buffer)
-#else  /* __STDC__ */
-void                GetPictureHandlersList (count, buffer)
-int                *count;
-char*               buffer;
-
-#endif /* __STDC__ */
 {
    int                 i = 0;
    int                 index = 0;
