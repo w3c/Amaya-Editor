@@ -1107,10 +1107,9 @@ ThotBool            generic;
 	  type == PtPaddingBottom ||     type == PtPaddingLeft ||
 	  type == PtBorderTopWidth ||    type == PtBorderRightWidth ||
 	  type == PtBorderBottomWidth || type == PtBorderLeftWidth ||
-          type == PtSize ||              type == PtThickness ||
+          type == PtLineWeight ||              type == PtThickness ||
 	  type == PtIndent ||            type == PtLineSpacing ||
-          type == PtLineWeight ||
-          type == PtBreak1 ||            type == PtBreak2)
+           type == PtBreak1 ||            type == PtBreak2)
 	value *= 10;
       break;
     case STYLE_UNIT_EM:
