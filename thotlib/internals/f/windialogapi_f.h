@@ -29,7 +29,7 @@ extern void CreateSaveAsDlgWindow (HWND, char*, int, int, int, int, int, int);
 extern void CreateOpenDocDlgWindow (HWND, char*, char*, char*, int, int, int, int, int, int);
 extern void CreateGraphicsDlgWindow (int, int, int, HWND);
 extern void CreateSaveListDlgWindow (HWND, int, char*, int, int);
-extern void CreateCloseDocDlgWindow (HWND, char*, char*, BOOL*, BOOL*);
+extern void CreateCloseDocDlgWindow (HWND, char*, char*, int, BOOL*, BOOL*);
 extern void CreateLanguageDlgWindow (HWND, char*, char*, int, char*, char*, int, int, int, char*);
 extern void CreateCharacterDlgWindow (HWND, int, int, int, int);
 extern void CreateAttributeDlgWindow (char*, int, int);

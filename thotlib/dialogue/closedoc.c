@@ -146,7 +146,7 @@ ThotBool           *save;
    ustrcat (buftext, pDoc->DocDName);
    ustrcat (buftext, TEXT(" "));
    ustrcat (buftext, TtaGetMessage (LIB, TMSG_BEFORE_CLOSING));
-   CreateCloseDocDlgWindow (TtaGetViewFrame(document,view), TtaGetMessage (LIB, TMSG_CLOSE_DOC), buftext, &save_befor, &close_dont_save);
+   CreateCloseDocDlgWindow (TtaGetViewFrame(document,view), TtaGetMessage (LIB, TMSG_CLOSE_DOC), buftext, NumFormClose, &save_befor, &close_dont_save);
    SaveBeforeClosing = save_befor ;
    CloseDontSave     = close_dont_save;
 #  endif /* _WINDOWS */

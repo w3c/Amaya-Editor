@@ -423,7 +423,7 @@ void                TtaQuit ()
   FreeMenus ();
 #endif /* NODISPLAY */
   TtaFreeAppRegistry ();
-  if (*AppClosingFunction)
+  if (AppClosingFunction)
     (*AppClosingFunction) ();
   exit (0);
 }
