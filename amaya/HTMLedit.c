@@ -3246,8 +3246,6 @@ ThotBool            AttrNAMEinMenu (NotifyAttribute * event)
   ----------------------------------------------------------------------*/
 ThotBool  AttrScriptLanguageinMenu (NotifyAttribute * event)
 {
-   AttributeType       attrType;
-   Attribute           attr;
    ElementType         elType;
 
    elType = TtaGetElementType (event->element);
