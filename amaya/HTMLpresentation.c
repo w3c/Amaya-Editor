@@ -275,7 +275,7 @@ void AttrClassChanged (NotifyAttribute * event)
   MovePRule
   remove presentation rule presRule from element fromEl and associate a copy
   of that rule with element toEl, for the main view.
-  showBoxAllowed is TRUE if the ShowBox rule could be generated
+  showBoxAllowed is TRUE if the ShowBox rule could be generated.
   ----------------------------------------------------------------------*/
 void MovePRule (PRule presRule, Element fromEl, Element toEl, Document doc,
 		ThotBool showBoxAllowed)
@@ -639,8 +639,7 @@ ThotBool ChangePRule (NotifyPresentation *event)
 		MovePRule (presRule, event->element, el, doc, TRUE);
 		ret = TRUE; /* don't let Thot perform normal operation */
 	      }	  
-	    else if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph ||
-		     elType.ElTypeNum == HTML_EL_Table)
+	    else if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
 	      /* if the PRule is on a Pseudo-Paragraph, move it to the
 		 enclosing element */
 	      {

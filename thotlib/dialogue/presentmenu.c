@@ -139,31 +139,42 @@ extern int   WIN_NormalLineSpacing;
 
 /*----------------------------------------------------------------------
    GetEnclosingBlock
-   return the first ancestor of element pEl that has a Line presentation
-   rule for the active view.
+   return the current element or its ancestor if they have a Line
+   presentation rule for the active view.
   ----------------------------------------------------------------------*/
 static PtrElement GetEnclosingBlock (PtrElement pEl, PtrDocument pDoc)
 {
-  PtrElement	pBlock;
-  int		viewSch;
+  PtrElement	pBlock, el;
   PtrPRule	pPRule;
   PtrPSchema	pSPR;
   PtrSSchema	pSSR;
   PtrAttribute	pAttr;
+  int		viewSch;
 
   pBlock = NULL;
+  if (pEl->ElTerminal)
+    el = pEl->ElParent;
+  else
+    el = pEl;
   viewSch = AppliedView (pEl, NULL, pDoc, SelectedView);
-  while (pBlock == NULL && pEl)
+  while (pBlock == NULL && el)
      {
-       if (pEl->ElTerminal)
-	 pPRule = NULL;
+       pPRule = GlobalSearchRulepEl (el, pDoc, &pSPR, &pSSR, 0, NULL, viewSch,
+				     PtFunction, FnLine, FALSE, TRUE, &pAttr);
+       if (pPRule)
+	 pBlock = el;
+       else if (el == pEl)
+	 {
+	   pPRule = GlobalSearchRulepEl (el, pDoc, &pSPR, &pSSR, 0, NULL, viewSch,
+					 PtFloat, (FunctionType)0, FALSE, TRUE, &pAttr);
+	   if (pPRule)
+	      el = NULL;
+	   else
+	     /* check if the parent element of the current selection is a block */
+	     el = pEl->ElParent;
+	 }
        else
-	 pPRule = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, 0, NULL, viewSch,
-				       PtFunction, FnLine, FALSE, TRUE, &pAttr);
-     if (pPRule)
-	pBlock = pEl;
-     else
-	pEl = pEl->ElParent;
+	 el = NULL;
      }
   return pBlock;
 }
@@ -749,6 +760,9 @@ static void ModifyLining (PtrElement pEl, PtrDocument pDoc,
 			  ThotBool modifHyphen, ThotBool Hyphenate)
 {
   PtrPRule            pPRule;
+  PtrPSchema	      pSPR;
+  PtrSSchema	      pSSR;
+  PtrAttribute	      pAttr;
   int                 value;
   int                 viewSch;
   ThotBool            isNew;
@@ -757,40 +771,96 @@ static void ModifyLining (PtrElement pEl, PtrDocument pDoc,
   /* apply changes */
   if (modifAdjust && Adjust > 0)
     {
-      pPRule = SearchPresRule (pEl, PtAdjust, (FunctionType)0, &isNew,
-			       pDoc, viewToApply);
-      pPRule->PrType = PtAdjust;
-      pPRule->PrViewNum = viewSch;
-      /* this rule will be translated into style attribute for the element */
-      pPRule->PrSpecificity = 100;
-      pPRule->PrPresMode = PresImmediate;
-      switch (Adjust)
+      pPRule = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, 0, NULL, viewSch,
+				    PtFunction, FnLine, FALSE, TRUE, &pAttr);
+      if (pPRule || pEl->ElTerminal ||
+	  TypeHasException (ExcIsCell, pEl->ElTypeNumber, pEl->ElStructSchema) ||
+	  TypeHasException (ExcIsRow, pEl->ElTypeNumber, pEl->ElStructSchema))
 	{
-	case 1:
-	  value = AlignLeft;
-	  break;
-	case 2:
-	  value = AlignRight;
-	  break;
-	case 3:
-	  value = AlignCenter;
-	  break;
-	case 4:
-	  value = AlignJustify;
-	  break;
-	case 5:
-	  value = AlignLeftDots;
-	  break;
-	default:
-	  value = AlignLeft;
-	  break;
+	  pPRule = SearchPresRule (pEl, PtAdjust, (FunctionType)0, &isNew,
+				   pDoc, viewToApply);
+	  pPRule->PrType = PtAdjust;
+	  pPRule->PrViewNum = viewSch;
+	  /* this rule will be translated into style attribute for the element */
+	  pPRule->PrSpecificity = 100;
+	  pPRule->PrPresMode = PresImmediate;
+	  switch (Adjust)
+	    {
+	    case 2:
+	      value = AlignRight;
+	      break;
+	    case 3:
+	      value = AlignCenter;
+	      break;
+	    case 4:
+	      value = AlignJustify;
+	      break;
+	    case 5:
+	      value = AlignLeftDots;
+	      break;
+	    default:
+	      value = AlignLeft;
+	      break;
+	    }
+	  pPRule->PrAdjust = (BAlignment)value;
+	  if (!PRuleMessagePre (pEl, pPRule, Adjust, pDoc, isNew))
+	    {
+	      ApplyNewRule (pDoc, pPRule, pEl);
+	      PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	      SetDocumentModified (pDoc, TRUE, 0);
+	    }
 	}
-      pPRule->PrAdjust = (BAlignment)value;
-      if (!PRuleMessagePre (pEl, pPRule, Adjust, pDoc, isNew))
+      else
 	{
-	  ApplyNewRule (pDoc, pPRule, pEl);
-	  PRuleMessagePost (pEl, pPRule, pDoc, isNew);
-	  SetDocumentModified (pDoc, TRUE, 0);
+	  /* compound element without lines */
+	  pPRule = SearchPresRule (pEl, PtMarginLeft, (FunctionType)0, &isNew,
+				   pDoc, viewToApply);
+	  pPRule->PrType = PtMarginLeft;
+	  pPRule->PrViewNum = viewSch;
+	  /* this rule will be translated into style attribute for the element */
+	  pPRule->PrSpecificity = 100;
+	  pPRule->PrPresMode = PresImmediate;
+	  pPRule->PrMinValue = 0;
+	  value = 0;
+	  switch (Adjust)
+	    {
+	    case 2: /* right */
+	    case 3: /* center */
+	    case 4: /* justify */
+	      pPRule->PrMinUnit = UnAuto;
+	      break;
+	    default: /* left */
+	      pPRule->PrMinUnit = UnPixel;
+	      break;
+	    }
+	  if (!PRuleMessagePre (pEl, pPRule, Adjust, pDoc, isNew))
+	    {
+	      ApplyNewRule (pDoc, pPRule, pEl);
+	      PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	      SetDocumentModified (pDoc, TRUE, 0);
+	    }
+	  pPRule = SearchPresRule (pEl, PtMarginRight, (FunctionType)0, &isNew,
+				   pDoc, viewToApply);
+	  pPRule->PrType = PtMarginRight;
+	  pPRule->PrViewNum = viewSch;
+	  /* this rule will be translated into style attribute for the element */
+	  pPRule->PrSpecificity = 100;
+	  pPRule->PrPresMode = PresImmediate;
+	  switch (Adjust)
+	    {
+	    case 2: /* right */
+	      pPRule->PrMinUnit = UnPixel;
+	      break;
+	    default: /* left *//* center *//* justify */
+	      pPRule->PrMinUnit = UnAuto;
+	      break;
+	    }
+	  if (!PRuleMessagePre (pEl, pPRule, Adjust, pDoc, isNew))
+	    {
+	      ApplyNewRule (pDoc, pPRule, pEl);
+	      PRuleMessagePost (pEl, pPRule, pDoc, isNew);
+	      SetDocumentModified (pDoc, TRUE, 0);
+	    }	  
 	}
     }
 
