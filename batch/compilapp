@@ -94,10 +94,6 @@ then
 	echo ${MSG30}
 	(cd ${FILEDIR};${THOTBIN}/app ${NAME});
 	(cd ${FILEDIR};
-	if [ "${NAME}" != "EDITOR" ]
-	then
-	      (${THOTBIN}/printstr -h ${NAME} > ${NAME}.h) || (echo ${MSG16}; exit 1;)
-	fi
 	)
 	echo ${MSG29}
 	rm ${FILEDIR}/${NAME}.SCH
