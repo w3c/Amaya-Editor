@@ -9,6 +9,7 @@
  * Initialization functions and button functions of Amaya application.
  *
  * Author: I. Vatton
+ *         R. Guetari (W3C/INRIA) - Windows NT/95
  */
 
 /* Included headerfiles */
@@ -970,14 +971,11 @@ View                view;
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseDialog + OpenForm, FALSE);
 #  else /* _WINDOWS */
-   /*
-   TtaListDirectory (DirectoryName, BaseDialog + OpenForm,
-		     TtaGetMessage (LIB, TMSG_DOC_DIR),
-		     BaseDialog + DirSelect, ScanFilter,
-		     TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSelect);
-			 */
    WIN_ListOpenDirectory (BaseDialog + DirSelect, BaseDialog + OpenForm, DirectoryName, ScanFilter);
-   GetHTMLDocument (docToOpen, NULL, 0, 0, DC_FALSE);
+   if (InNewWindow)
+      GetHTMLDocument (docToOpen, NULL, 0, 0, DC_FALSE);
+   else 
+       GetHTMLDocument (docToOpen, NULL, document, document, DC_FALSE);
 #  endif /* _WINDOWS */
 }
 

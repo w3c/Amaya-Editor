@@ -964,6 +964,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
+#  ifndef _WINDOWS
    boolean             ok;
    PtrDocument         pDocSel;
    PtrElement          pFirstSel;
@@ -1070,6 +1071,9 @@ View                view;
      }
    searchDomain->SDocument = pDoc;
    TextOK = FALSE;
+#  else  /* _WINDOWS */
+   CreateSearchDlgWindow (TtaGetViewFrame (document, view));
+#  endif /* _WINDOWS */ 
 }
 
 

@@ -34,6 +34,10 @@
 #include "trans_f.h"
 #include "selection.h"
 
+#ifdef _WINDOWS
+HWND currentWindow = NULL;
+#endif /* _WINDOWS */
+
 /*----------------------------------------------------------------------
    SetFontOrPhraseOnElement                                
   ----------------------------------------------------------------------*/
@@ -1066,9 +1070,11 @@ Element             el;
 	AttrHREFelement = el;
 	AttrHREFdocument = doc;
 	/* Dialogue form to insert HREF name */
+#       ifndef _WINDOWS 
 	TtaNewForm (BaseDialog + AttrHREFForm, TtaGetViewFrame (doc, 1),  TtaGetMessage (AMAYA, AM_ATTRIBUTE), TRUE, 2, 'L', D_DONE);
 	TtaNewTextForm (BaseDialog + AttrHREFText, BaseDialog + AttrHREFForm,
 			TtaGetMessage (AMAYA, AM_HREF_VALUE), 50, 1, FALSE);
+#       endif /* !__WINDOWS */
 	/* If the anchor has an HREF attribute, put its value in the form */
 	attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
 	attrType.AttrTypeNum = HTML_ATTR_HREF_;
@@ -1080,11 +1086,17 @@ Element             el;
 	     buffer = TtaGetMemory (length + 1);
 	     /* copy the HREF attribute into the buffer */
 	     TtaGiveTextAttributeValue (attrHREF, buffer, &length);
+#            ifndef _WINDOWS
 	     /* initialise the text field in the dialogue box */
 	     TtaSetTextForm (BaseDialog + AttrHREFText, buffer);
+#            else  /* _WINDOWS */
+             CreateLinkDlgWindow (currentWindow);
+#            endif /* _WINDOWS */
 	     TtaFreeMemory (buffer);
 	  }
+#       ifndef _WINDOWS
 	TtaShowDialogue (BaseDialog + AttrHREFForm, FALSE);
+#       endif  /* _WINDOWS */
      }
    else
      {

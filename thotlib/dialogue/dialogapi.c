@@ -175,7 +175,7 @@ struct struct_winerror win_errtab[] = {
  * MS-Windows Specific part. *
  *****************************/
 
-#define MAX_FRAMECAT 200
+#define MAX_FRAMECAT 500
 
 typedef struct FrCatalogue {
         struct Cat_Context*  Cat_Table[MAX_FRAMECAT] ;
@@ -2350,13 +2350,10 @@ char* suffix;
     OpenFileName.nFileExtension    = 0; 
     OpenFileName.lpstrDefExt       = TEXT ("*.html"); 
     OpenFileName.lCustData         = 0; 
-    OpenFileName.Flags             = OFN_SHOWHELP | OFN_PATHMUSTEXIST
-                                     | OFN_FILEMUSTEXIST 
-                                     | OFN_HIDEREADONLY; 
+    OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY; 
  
-    if (GetOpenFileName (&OpenFileName)) { 
+    if (GetOpenFileName (&OpenFileName)) 
 	   sprintf (docToOpen, "%s", OpenFileName.lpstrFile);
-    } 
 
 #if 0
    hWnd = CreateWindow ("listbox", NULL, WS_CHILDWINDOW | WS_VISIBLE | LBS_STANDARD,

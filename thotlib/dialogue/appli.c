@@ -69,6 +69,7 @@ static XmString     null_string;
 extern HWND      hwndClient ;
 extern HWND      ToolBar    ;
 extern HWND      StatusBar  ;
+extern HWND      currentWindow;
 extern HINSTANCE hInstance  ;
 
 static HWND      hwndHead   ;
@@ -861,7 +862,7 @@ View                view;
 #ifndef _WINDOWS
       return (FrameTable[frame].WdFrame);
 #else  /* _WINDOWS */
-      return (FrMainRef[frame]);
+      return (FrRef[frame]);
 #endif /* _WINDOWS */
 }
 
@@ -1136,6 +1137,7 @@ LPARAM lParam;
          */
         if (ClickIsDone == 1 && ((mMsg == WM_LBUTTONDOWN) || (mMsg == WM_RBUTTONDOWN))) {
 	   ClickIsDone = 0;
+	   currentWindow = hwnd;
 	   ClickFrame = frame;
 	   ClickX = LOWORD (lParam);
 	   ClickY = HIWORD (lParam);
@@ -1168,7 +1170,7 @@ LPARAM lParam;
 	       WIN_CharTranslation (FrRef[frame], frame, mMsg, wParam, lParam);
 	       return 0;
 
-	  case WM_LBUTTONDOWN: 
+	  case WM_LBUTTONDOWN:
 	      /* Activate the client window */
 	       SetFocus (FrRef[frame]);
 	       /* stop any current insertion of text */
@@ -1635,10 +1637,11 @@ int                *pave;
 #endif /* __STDC__ */
 
 {
-#ifndef _WINDOWS
+#  ifndef _WINDOWS
    ThotEvent              event;
-
-#endif /* !_WINDOWS */
+#  else  /* _WINDOWS */
+   MSG                    event;
+#  endif /* _WINDOWS */
    int                 i;
    Drawable            drawable;
 
@@ -1664,10 +1667,13 @@ int                *pave;
    ClickY = 0;
    while (ClickIsDone == 1)
      {
-#ifndef _WINDOWS
+#   ifndef _WINDOWS
 	TtaFetchOneEvent (&event);
 	TtaHandleOneEvent (&event);
-#endif /* _WINDOWS */
+#   else  /* _WINDOWS */
+	GetMessage (&event, NULL, 0, 0);
+	TtaHandleOneWindowEvent (&event);
+#   endif /* _WINDOWS */
      }				/*while */
 
    /* Restauration du curseur */

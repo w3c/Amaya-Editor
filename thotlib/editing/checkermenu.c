@@ -139,6 +139,7 @@ Document            doc;
 view                view;
 #endif /* __STDC__ */
 {
+#  ifndef _WINDOWS
    PtrDocument         document;
    PtrElement          pEl1, pElN;
    int                 c1, cN;
@@ -263,7 +264,9 @@ view                view;
    ChkrRange->SDocument = document;
    /* ne cree pas inutilement le dictionnaire fichier */
    TtaLoadDocumentDictionary (document, (int*) &ChkrFileDict, FALSE);
-
+#  else  /* _WINDOWS */
+   MessageBox (NULL, "Not yet supported", "Spell checker", MB_ICONINFORMATION);
+#  endif /* _WINDOWS */
 }
 
 

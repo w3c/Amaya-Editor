@@ -438,7 +438,7 @@ View                view;
    /* activates the Print form */
     TtaShowDialogue (basePrint+NumFormPrint, FALSE);
 #   else  /* _WINDOWS */
-    MessageBox(NULL, "Not yet supported.", "Setup and print", MB_ICONINFORMATION); 
+    CreatePrintDlgWindow (TtaGetViewFrame (document, view)); 
 #   endif /* _WINDOWS */
 }
 

@@ -18,6 +18,7 @@
  * Close commands
  *
  * Author: I. Vatton (INRIA)
+ *         R. Guetari (W3C/INRIA) - Windows NT/95 routines
  *
  */
  
@@ -61,6 +62,7 @@ char               *data;
 
 #endif /* __STDC__ */
 {
+#  ifndef _WINDOWS
    switch ((int) data)
 	 {
 	    case 0:
@@ -77,6 +79,7 @@ char               *data;
 	       break;
 	 }
    TtaDestroyDialogue (NumFormClose);
+#  endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -96,6 +99,7 @@ boolean            *save;
 
 #endif /* __STDC__ */
 {
+#  ifndef _WINDOWS
    char                buftext[300];
    char                bufbutton[300];
    int                 i;
@@ -111,6 +115,10 @@ boolean            *save;
    strcat (buftext, " ");
    strcat (buftext, TtaGetMessage (LIB, TMSG_BEFORE_CLOSING));
 
+#  ifdef _WINDOWS
+   sprintf (message, buftext);
+#  endif /* _WINDOWS */
+
    /* Feuille de dialogue Fermer */
    strcpy (bufbutton, TtaGetMessage (LIB, TMSG_SAVE_DOC));
    i = strlen (TtaGetMessage (LIB, TMSG_SAVE_DOC)) + 1;
@@ -124,6 +132,18 @@ boolean            *save;
    TtaShowDialogue (NumFormClose, FALSE);
    /* attend le retour de ce formulaire (traite' par CallbackCloseDocMenu) */
    TtaWaitShowDialogue ();
+#  else  /* _WINDOWS */
+   char    buftext[300];
+   boolean save_befor, close_dont_save;
+   strcpy (buftext, TtaGetMessage (LIB, TMSG_SAVE_DOC));
+   strcat (buftext, " ");
+   strcat (buftext, pDoc->DocDName);
+   strcat (buftext, " ");
+   strcat (buftext, TtaGetMessage (LIB, TMSG_BEFORE_CLOSING));
+   CreateCloseDocDlgWindow (TtaGetViewFrame(document,view), TtaGetMessage (LIB, TMSG_CLOSE_DOC), buftext, &save_befor, &close_dont_save);
+   SaveBeforeClosing = save_befor ;
+   CloseDontSave     = close_dont_save;
+#  endif /* _WINDOWS */
    *save = SaveBeforeClosing;
    *confirmation = !CloseDontSave;
 }
