@@ -3,8 +3,8 @@
 .java.class : 
 	javac $*.java
 
-AMAYA_DIRS=w3c/amaya
-THOTLIB_DIRS=w3c/thotlib
+AMAYA_DIRS=org/w3c/amaya
+THOTLIB_DIRS=org/w3c/thotlib
 JIGSAW_DIRS=w3c/www w3c/tools w3c/util w3c/jigsaw
 
 CLASSROOT=`pwd`
@@ -17,9 +17,10 @@ all : debug w3c_compile
 debug :
 	@echo CLASSPATH=$$CLASSPATH
 	@echo PATH=$$PATH
+	@echo MAKEDIR=$(MAKEDIR)
 
 w3c_compile:
-	@(if [ -d w3c ] ; then cd w3c ; make ; fi)
+	@(if [ -d org/w3c ] ; then cd org/w3c ; export MAKEDIR="`pwd`/../../../makefiles"; make AMAYAPACKAGES='amaya thotlib' JIGSAWPACKAGES='' ; fi)
 
 zips :
 	rm -f jigsaw.zip thotlib.zip amaya.zip sources.zip
@@ -32,9 +33,4 @@ zips :
 	       makefile Makefile
 
 clean :
-	@(if [ -d w3c ] ; then cd w3c ; make clean ; fi)
-	@(for subdir in $(SUBDIRS) ; do \
-	  if [ -d $$subdir ] ; \
-	  then \
-	      cd $$subdir ; make clean ; cd .. ; \
-	  fi ; done)
+	@(if [ -d org/w3c ] ; then cd org/w3c ; export MAKEDIR="`pwd`/../../../makefiles"; make AMAYAPACKAGES='amaya thotlib' JIGSAWPACKAGES='' clean ; fi)

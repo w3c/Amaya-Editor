@@ -25,15 +25,15 @@ typedef union tst_jlong { struct ints { jint low; jint high; } ints;
 
 static void check_jlong_storage(void)
 {
-    struct Hw3c_thotlib_Element *object;
+    struct Horg_w3c_thotlib_Element *object;
     jlong  test_value = CPtr2JavaLong((int *) 0xdeadbeef);
     jlong  fetch_value;
 
     /*
      * Initialize a Java Element object with test_value.
      */
-    object = (struct Hw3c_thotlib_Element *) execute_java_constructor(0,
-                "w3c.thotlib.Element", 0, "(J)V", test_value);
+    object = (struct Horg_w3c_thotlib_Element *) execute_java_constructor(0,
+                "org.w3c.thotlib.Element", 0, "(J)V", test_value);
     fetch_value = unhand(object)->element;
 
     /*
@@ -345,7 +345,7 @@ jlong CPtr2JavaLong(void *in)
 /*
  * C object <=> Java object content
  */
-void JavaElement2CElement(struct Hw3c_thotlib_Element *in, Element *out)
+void JavaElement2CElement(struct Horg_w3c_thotlib_Element *in, Element *out)
 {
     *out = (Element) Get_Element_Ptr_element(in);
 }
@@ -353,110 +353,110 @@ void JavaElement2CElement(struct Hw3c_thotlib_Element *in, Element *out)
 /*
  * C object pointer <=> pointers to Java object content
  */
-void JavaElement2CElementPtr(struct Hw3c_thotlib_Element* in, Element **out)
+void JavaElement2CElementPtr(struct Horg_w3c_thotlib_Element* in, Element **out)
 {
     *out = (Element *) malloc(sizeof(Element));
     *(*out) = (Element) Get_Element_Ptr_element(in);
 }
-void CElementPtr2JavaElement(Element *in, struct Hw3c_thotlib_Element** out)
+void CElementPtr2JavaElement(Element *in, struct Horg_w3c_thotlib_Element** out)
 {
     Set_Element_Ptr_element(*(in), *out);
     free(in);
 }
 
-void JavaElementType2CElementTypePtr(struct Hw3c_thotlib_ElementType* in, ElementType **out)
+void JavaElementType2CElementTypePtr(struct Horg_w3c_thotlib_ElementType* in, ElementType **out)
 {
     *out = (ElementType *) malloc(sizeof(ElementType));
     (*out)->ElSSchema = (SSchema) Get_ElementType_Ptr_sschema(in);
     (*out)->ElTypeNum = Get_ElementType_Int_type(in);
 }
-void CElementTypePtr2JavaElementType(ElementType *in, struct Hw3c_thotlib_ElementType** out)
+void CElementTypePtr2JavaElementType(ElementType *in, struct Horg_w3c_thotlib_ElementType** out)
 {
     Set_ElementType_Ptr_sschema(in->ElSSchema, *out);
     Set_ElementType_Int_type(in->ElTypeNum, *out);
     free(in);
 }
-void CElementType2JavaElementType(ElementType in, struct Hw3c_thotlib_ElementType* out)
+void CElementType2JavaElementType(ElementType in, struct Horg_w3c_thotlib_ElementType* out)
 {
     Set_ElementType_Ptr_sschema(in.ElSSchema, out);
     Set_ElementType_Int_type(in.ElTypeNum, out);
 }
 
 
-void JavaDocument2CDocumentPtr(struct Hw3c_thotlib_Document* in, Document **out)
+void JavaDocument2CDocumentPtr(struct Horg_w3c_thotlib_Document* in, Document **out)
 {
     *out = (Document *) malloc(sizeof(Document));
     *(*out) = (Document) Get_Document_Int_document(in);
 }
-void CDocumentPtr2JavaDocument(Document *in, struct Hw3c_thotlib_Document** out)
+void CDocumentPtr2JavaDocument(Document *in, struct Horg_w3c_thotlib_Document** out)
 {
     Set_Document_Int_document(*(in), *out);
     free(in);
 }
 
-void JavaSSchema2CSSchemaPtr(struct Hw3c_thotlib_SSchema* in, SSchema **out)
+void JavaSSchema2CSSchemaPtr(struct Horg_w3c_thotlib_SSchema* in, SSchema **out)
 {
     *out = (SSchema *) malloc(sizeof(SSchema));
     *(*out) = (SSchema) Get_SSchema_Ptr_sschema(in);
 }
-void CSSchemaPtr2JavaSSchema(SSchema *in, struct Hw3c_thotlib_SSchema** out)
+void CSSchemaPtr2JavaSSchema(SSchema *in, struct Horg_w3c_thotlib_SSchema** out)
 {
     Set_SSchema_Ptr_sschema(*(in), *out);
     free(in);
 }
 
-void JavaAttribute2CAttributePtr(struct Hw3c_thotlib_Attribute* in, Attribute **out)
+void JavaAttribute2CAttributePtr(struct Horg_w3c_thotlib_Attribute* in, Attribute **out)
 {
     *out = (Attribute *) malloc(sizeof(Attribute));
     *(*out) = (Attribute) Get_Attribute_Ptr_attribute(in);
 }
-void CAttributePtr2JavaAttribute(Attribute *in, struct Hw3c_thotlib_Attribute** out)
+void CAttributePtr2JavaAttribute(Attribute *in, struct Horg_w3c_thotlib_Attribute** out)
 {
     Set_Attribute_Ptr_attribute(*(in), *out);
     free(in);
 }
 
-void JavaPRule2CPRulePtr(struct Hw3c_thotlib_PRule* in, PRule **out)
+void JavaPRule2CPRulePtr(struct Horg_w3c_thotlib_PRule* in, PRule **out)
 {
     *out = (PRule *) malloc(sizeof(PRule));
     **out = (PRule) Get_PRule_Ptr_prule(in);
 }
-void CPRulePtr2JavaPRule(PRule *in, struct Hw3c_thotlib_PRule** out)
+void CPRulePtr2JavaPRule(PRule *in, struct Horg_w3c_thotlib_PRule** out)
 {
     Set_PRule_Ptr_prule(*in, *out);
     free(in);
 }
 
-void JavaAttributeType2CAttributeTypePtr(struct Hw3c_thotlib_AttributeType* in, AttributeType **out)
+void JavaAttributeType2CAttributeTypePtr(struct Horg_w3c_thotlib_AttributeType* in, AttributeType **out)
 {
     *out = (AttributeType *) malloc(sizeof(AttributeType));
     (*out)->AttrSSchema = (SSchema) Get_AttributeType_Ptr_sschema(in);
     (*out)->AttrTypeNum = Get_AttributeType_Int_type(in);
 }
-void CAttributeTypePtr2JavaAttributeType(AttributeType *in, struct Hw3c_thotlib_AttributeType** out)
+void CAttributeTypePtr2JavaAttributeType(AttributeType *in, struct Horg_w3c_thotlib_AttributeType** out)
 {
     Set_AttributeType_Ptr_sschema(in->AttrSSchema, *out);
     Set_AttributeType_Int_type(in->AttrTypeNum, *out);
     free(in);
 }
 
-void JavaIntPtr2CintPtr(struct Hw3c_thotlib_IntPtr* in, int **out)
+void JavaIntPtr2CintPtr(struct Horg_w3c_thotlib_IntPtr* in, int **out)
 {
     *out = (int *) malloc(sizeof(int));
     **out = (int) Get_IntPtr_Int_value(in);
 }
-void CintPtr2JavaIntPtr(int *in, struct Hw3c_thotlib_IntPtr **out)
+void CintPtr2JavaIntPtr(int *in, struct Horg_w3c_thotlib_IntPtr **out)
 {
     Set_IntPtr_Int_value(*in, *out);
     free(in);
 }
 
-void JavaLanguage2CLanguagePtr(struct Hw3c_thotlib_Language* in, Language **out)
+void JavaLanguage2CLanguagePtr(struct Horg_w3c_thotlib_Language* in, Language **out)
 {
     *out = (Language *) malloc(sizeof(Language));
     *(*out) = (char) Get_Language_Char_lang(in);
 }
-void CLanguagePtr2JavaLanguage(Language *in, struct Hw3c_thotlib_Language** out)
+void CLanguagePtr2JavaLanguage(Language *in, struct Horg_w3c_thotlib_Language** out)
 {
     Set_Language_Char_lang(*(in), *out);
     free(in);

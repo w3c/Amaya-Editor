@@ -135,7 +135,7 @@ proto : rebuild bin/cextract
 
 mkid : 
 	@(echo rebuilding $(THOTDIR)/ID reference file)
-	@(cd $(THOTDIR); mkid --lang-map=makes/id-lang.map . classes/w3c/* )
+	@(cd $(THOTDIR); mkid --lang-map=makes/id-lang.map . classes/org/w3c/*)
 
 #
 # Rule du rebuild the Thot schemas

@@ -39,35 +39,35 @@ extern void addNativeMethod(char*, void*);
  */
 
 #include "java_lang_StringBuffer.h"
-#include "w3c_thotlib_Document.h"
-#include "w3c_thotlib_SSchema.h"
-#include "w3c_thotlib_Element.h"
-#include "w3c_thotlib_ElementType.h"
-#include "w3c_thotlib_Attribute.h"
-#include "w3c_thotlib_AttributeType.h"
-#include "w3c_thotlib_PRule.h"
-#include "w3c_thotlib_Language.h"
-#include "w3c_thotlib_IntPtr.h"
-#include "w3c_thotlib_ButtonCallback.h"
+#include "org_w3c_thotlib_Document.h"
+#include "org_w3c_thotlib_SSchema.h"
+#include "org_w3c_thotlib_Element.h"
+#include "org_w3c_thotlib_ElementType.h"
+#include "org_w3c_thotlib_Attribute.h"
+#include "org_w3c_thotlib_AttributeType.h"
+#include "org_w3c_thotlib_PRule.h"
+#include "org_w3c_thotlib_Language.h"
+#include "org_w3c_thotlib_IntPtr.h"
+#include "org_w3c_thotlib_ButtonCallback.h"
 
 /*
  * Includes auto-generated interface to stubs.
  */
-#include "w3c_thotlib_APIApplication.h"
-#include "w3c_thotlib_APIDocument.h"
-#include "w3c_thotlib_APITree.h"
-#include "w3c_thotlib_APIContent.h"
-#include "w3c_thotlib_APIAttribute.h"
-#include "w3c_thotlib_APIReference.h"
-#include "w3c_thotlib_APILanguage.h"
-#include "w3c_thotlib_APIPresentation.h"
-#include "w3c_thotlib_APIView.h"
-#include "w3c_thotlib_APISelection.h"
-#include "w3c_thotlib_APIInterface.h"
-#include "w3c_thotlib_APIRegistry.h"
-#include "w3c_thotlib_APIDialog.h"
-#include "w3c_amaya_APIAmayaMsg.h"
-#include "w3c_amaya_APIJavaAmaya.h"
+#include "org_w3c_thotlib_APIApplication.h"
+#include "org_w3c_thotlib_APIDocument.h"
+#include "org_w3c_thotlib_APITree.h"
+#include "org_w3c_thotlib_APIContent.h"
+#include "org_w3c_thotlib_APIAttribute.h"
+#include "org_w3c_thotlib_APIReference.h"
+#include "org_w3c_thotlib_APILanguage.h"
+#include "org_w3c_thotlib_APIPresentation.h"
+#include "org_w3c_thotlib_APIView.h"
+#include "org_w3c_thotlib_APISelection.h"
+#include "org_w3c_thotlib_APIInterface.h"
+#include "org_w3c_thotlib_APIRegistry.h"
+#include "org_w3c_thotlib_APIDialog.h"
+#include "org_w3c_amaya_APIAmayaMsg.h"
+#include "org_w3c_amaya_APIJavaAmaya.h"
 
 /*
  * The signatures of the conversion functions.
@@ -82,36 +82,36 @@ extern void addNativeMethod(char*, void*);
 extern void JavaThotlibLock();
 extern void JavaThotlibRelease();
 
-#define w3c_thotlib_APIApplication_LOCK() JavaThotlibLock()
-#define w3c_thotlib_APIAttribute_LOCK() JavaThotlibLock()
-#define w3c_thotlib_APIContent_LOCK() JavaThotlibLock()
-#define w3c_thotlib_APIDocument_LOCK() JavaThotlibLock()
-#define w3c_thotlib_APIDialog_LOCK() JavaThotlibLock()
-#define w3c_thotlib_APIInterface_LOCK() JavaThotlibLock()
-#define w3c_thotlib_APILanguage_LOCK() JavaThotlibLock()
-#define w3c_thotlib_APIPresentation_LOCK() JavaThotlibLock()
-#define w3c_thotlib_APIReference_LOCK() JavaThotlibLock()
-#define w3c_thotlib_APIRegistry_LOCK() JavaThotlibLock()
-#define w3c_thotlib_APISelection_LOCK() JavaThotlibLock()
-#define w3c_thotlib_APITree_LOCK() JavaThotlibLock()
-#define w3c_thotlib_APIView_LOCK() JavaThotlibLock()
-#define w3c_amaya_APIJavaAmaya_LOCK() JavaThotlibLock()
-#define w3c_amaya_APIAmayaMsg_LOCK() JavaThotlibLock()
+#define org_w3c_thotlib_APIApplication_LOCK() JavaThotlibLock()
+#define org_w3c_thotlib_APIAttribute_LOCK() JavaThotlibLock()
+#define org_w3c_thotlib_APIContent_LOCK() JavaThotlibLock()
+#define org_w3c_thotlib_APIDocument_LOCK() JavaThotlibLock()
+#define org_w3c_thotlib_APIDialog_LOCK() JavaThotlibLock()
+#define org_w3c_thotlib_APIInterface_LOCK() JavaThotlibLock()
+#define org_w3c_thotlib_APILanguage_LOCK() JavaThotlibLock()
+#define org_w3c_thotlib_APIPresentation_LOCK() JavaThotlibLock()
+#define org_w3c_thotlib_APIReference_LOCK() JavaThotlibLock()
+#define org_w3c_thotlib_APIRegistry_LOCK() JavaThotlibLock()
+#define org_w3c_thotlib_APISelection_LOCK() JavaThotlibLock()
+#define org_w3c_thotlib_APITree_LOCK() JavaThotlibLock()
+#define org_w3c_thotlib_APIView_LOCK() JavaThotlibLock()
+#define org_w3c_amaya_APIJavaAmaya_LOCK() JavaThotlibLock()
+#define org_w3c_amaya_APIAmayaMsg_LOCK() JavaThotlibLock()
 
-#define w3c_thotlib_APIApplication_UNLOCK() JavaThotlibRelease()
-#define w3c_thotlib_APIAttribute_UNLOCK() JavaThotlibRelease()
-#define w3c_thotlib_APIContent_UNLOCK() JavaThotlibRelease()
-#define w3c_thotlib_APIDocument_UNLOCK() JavaThotlibRelease()
-#define w3c_thotlib_APIDialog_UNLOCK() JavaThotlibRelease()
-#define w3c_thotlib_APIInterface_UNLOCK() JavaThotlibRelease()
-#define w3c_thotlib_APILanguage_UNLOCK() JavaThotlibRelease()
-#define w3c_thotlib_APIPresentation_UNLOCK() JavaThotlibRelease()
-#define w3c_thotlib_APIReference_UNLOCK() JavaThotlibRelease()
-#define w3c_thotlib_APIRegistry_UNLOCK() JavaThotlibRelease()
-#define w3c_thotlib_APISelection_UNLOCK() JavaThotlibRelease()
-#define w3c_thotlib_APITree_UNLOCK() JavaThotlibRelease()
-#define w3c_thotlib_APIView_UNLOCK() JavaThotlibRelease()
-#define w3c_amaya_APIJavaAmaya_UNLOCK() JavaThotlibRelease()
-#define w3c_amaya_APIAmayaMsg_UNLOCK() JavaThotlibRelease()
+#define org_w3c_thotlib_APIApplication_UNLOCK() JavaThotlibRelease()
+#define org_w3c_thotlib_APIAttribute_UNLOCK() JavaThotlibRelease()
+#define org_w3c_thotlib_APIContent_UNLOCK() JavaThotlibRelease()
+#define org_w3c_thotlib_APIDocument_UNLOCK() JavaThotlibRelease()
+#define org_w3c_thotlib_APIDialog_UNLOCK() JavaThotlibRelease()
+#define org_w3c_thotlib_APIInterface_UNLOCK() JavaThotlibRelease()
+#define org_w3c_thotlib_APILanguage_UNLOCK() JavaThotlibRelease()
+#define org_w3c_thotlib_APIPresentation_UNLOCK() JavaThotlibRelease()
+#define org_w3c_thotlib_APIReference_UNLOCK() JavaThotlibRelease()
+#define org_w3c_thotlib_APIRegistry_UNLOCK() JavaThotlibRelease()
+#define org_w3c_thotlib_APISelection_UNLOCK() JavaThotlibRelease()
+#define org_w3c_thotlib_APITree_UNLOCK() JavaThotlibRelease()
+#define org_w3c_thotlib_APIView_UNLOCK() JavaThotlibRelease()
+#define org_w3c_amaya_APIJavaAmaya_UNLOCK() JavaThotlibRelease()
+#define org_w3c_amaya_APIAmayaMsg_UNLOCK() JavaThotlibRelease()
 
 #endif /* _Included_Java_Type_H_ */

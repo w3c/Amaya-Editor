@@ -6,12 +6,12 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void w3c_thotlib_Element_Debug ( struct Hw3c_thotlib_Element* el );
+extern void org_w3c_thotlib_Element_Debug ( struct Horg_w3c_thotlib_Element* el );
 extern void register_debug_stubs ( void );
 
 #else /* __STDC__ */
 
-extern void w3c_thotlib_Element_Debug (/* struct Hw3c_thotlib_Element* el */);
+extern void org_w3c_thotlib_Element_Debug (/* struct Horg_w3c_thotlib_Element* el */);
 extern void register_debug_stubs (/* void */);
 
 #endif /* __STDC__ */
