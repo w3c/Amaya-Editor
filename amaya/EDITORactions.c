@@ -29,6 +29,7 @@
 #else
 #include "query_f.h"
 #endif /* AMAYA_JAVA */
+#include "AHTURLTools_f.h"
 #include "EDITORactions_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLedit_f.h"

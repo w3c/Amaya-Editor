@@ -225,10 +225,10 @@ static ThotIcon       iconJava;
 extern int       currentFrame;
 extern int       menu_item;
 extern CHAR_T    LostPicturePath [512];
+int              tipIndex;
+ThotBool         tbStringsInitialized = FALSE;
 
 static ThotBool  itemChecked = FALSE;
-static ThotBool  tbStringsInitialized = FALSE;
-static int       tipIndex;
 static int       iString;
 
 #include "wininclude.h"
