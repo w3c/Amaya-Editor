@@ -156,7 +156,8 @@ static int GetSecondaryFile (char *fName, PtrDocument pDoc, ThotBool open)
   in other case it will be translated according to the document encoding.
   ----------------------------------------------------------------------*/
 static void PutChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
-		     ThotBool lineBreak, ThotBool translate)
+		     ThotBool lineBreak, ThotBool translate,
+		     ThotBool entityName)
 {
   PtrTSchema          pTSch;
   FILE               *fileDesc;
@@ -183,10 +184,14 @@ static void PutChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
 	  mbc[nb_bytes2write] = EOS;
 	}
       /* translate the input character */
-      else if (GetEntityFunction && c > 127 && pDoc->DocCharset == US_ASCII)
+      else if ((c > 127 && pDoc->DocCharset == US_ASCII) ||
+	       (c > 255 && pDoc->DocCharset == ISO_8859_1))
 	{
-	  /* generate an entity into an ASCII file */
-	  (*GetEntityFunction) (c, &entity);
+	  /* generate an entity into an ASCII or ISO_8859_1 file */
+	  if (entityName && GetEntityFunction)
+	    (*GetEntityFunction) (c, &entity);
+	  else
+	    entity = NULL;
 	  mbc[0] = '&';
 	  if (entity)
 	    {
@@ -196,25 +201,8 @@ static void PutChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
 	  else
 	    {
 	      mbc[1] = '#';
-	      sprintf (&mbc[2], "%d", (int)c);
-	    }
-	  nb_bytes2write = strlen (mbc);
-	  mbc[nb_bytes2write++] = ';';
-	}
-      else if (GetEntityFunction && c > 255 && pDoc->DocCharset == ISO_8859_1)
-	{
-	  /* generate an entity into an ISO_8859_1 file */
-	  (*GetEntityFunction) (c, &entity);
-	  mbc[0] = '&';
-	  if (entity)
-	    {
-	      strncpy (&mbc[1], entity, 40);
-	      mbc[42] = EOS;
-	    }
-	  else
-	    {
-	      mbc[1] = '#';
-	      sprintf (&mbc[2], "%d", (int)c);
+	      mbc[2] = 'x';
+	      sprintf (&mbc[3], "%x", (int)c);
 	    }
 	  nb_bytes2write = strlen (mbc);
 	  mbc[nb_bytes2write++] = ';';
@@ -233,8 +221,11 @@ static void PutChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
 	  mbc[0] = TtaGetCharFromWC (c, pDoc->DocCharset);
 	  if (mbc[0] == EOS && c != EOS)
 	    {
-	      /* generate an entity into an ISO_8859_1 file */
-	      (*GetEntityFunction) (c, &entity);
+	      /* generate an entity */
+	      if (entityName && GetEntityFunction)
+		(*GetEntityFunction) (c, &entity);
+	      else
+		entity = NULL;
 	      mbc[0] = '&';
 	      if (entity)
 		{
@@ -244,7 +235,8 @@ static void PutChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
 	      else
 		{
 		  mbc[1] = '#';
-		  sprintf (&mbc[2], "%d", (int)c);
+		  mbc[2] = 'x';
+		  sprintf (&mbc[3], "%x", (int)c);
 		}
 	      nb_bytes2write = strlen (mbc);
 	      mbc[nb_bytes2write++] = ';';
@@ -414,7 +406,7 @@ static void PutColor (int n, int fnum, PtrDocument pDoc, ThotBool lineBreak)
       while (ptr[i] != EOS)
 	{
 	  c = ptr[i++];
-	  PutChar ((wchar_t) c, fnum, NULL, pDoc, lineBreak, FALSE);
+	  PutChar ((wchar_t) c, fnum, NULL, pDoc, lineBreak, FALSE, FALSE);
 	}
     }
 }
@@ -436,7 +428,7 @@ static void PutPattern (int n, int fnum, PtrDocument pDoc, ThotBool lineBreak)
       while (ptr[i] != EOS)
 	{
 	  c = ptr[i++];
-	  PutChar ((wchar_t) c, fnum, NULL, pDoc, lineBreak, FALSE);
+	  PutChar ((wchar_t) c, fnum, NULL, pDoc, lineBreak, FALSE, FALSE);
 	}
     }
 }
@@ -455,7 +447,7 @@ static void PutInt (int n, int fnum, char *outBuf, PtrDocument pDoc,
   i = 0;
   while (buffer[i] != EOS)
     PutChar ((wchar_t) buffer[i++], fnum, outBuf, pDoc, lineBreak,
-	     FALSE);
+	     FALSE, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -536,7 +528,8 @@ static PtrTSchema GetTransSchForContent (PtrElement pEl, LeafType leafType,
   When the parameter attrVal is TRUE doublequotes are translated into
   the entity &#34;.
   ----------------------------------------------------------------------*/
-static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
+static void TranslateText (PtrTextBuffer pBufT, PtrSSchema pSS,
+			   PtrTSchema pTSch,
 			   ScriptTransl *pTransAlph, ThotBool lineBreak,
 			   int fnum, PtrDocument pDoc, ThotBool attrVal)
 {
@@ -655,16 +648,16 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
 		    {
 		      /* write a numeric entity */
 		      PutChar ((wchar_t) '&', fnum, NULL, pDoc,
-			       FALSE, FALSE);
+			       FALSE, FALSE, FALSE);
 		      PutChar ((wchar_t) '#', fnum, NULL, pDoc,
-			       FALSE, FALSE);
+			       FALSE, FALSE, FALSE);
 		      PutInt (34, fnum, NULL, pDoc, FALSE);
 		      PutChar ((wchar_t) ';', fnum, NULL, pDoc,
-			       FALSE, FALSE);
+			       FALSE, FALSE, FALSE);
 		    }
 		  else
 		  PutChar ((wchar_t) cs, fnum, NULL, pDoc, lineBreak,
-			   TRUE);
+			   TRUE, !strcmp(pSS->SsName, "MathML"));
 		  j++;
 		}
 	      /* prepare la prochaine recherche dans la table */
@@ -702,15 +695,16 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
 	    {
 	      /* write a numeric entity */
 	      PutChar ((wchar_t) '&', fnum, NULL, pDoc,
-		       FALSE, FALSE);
+		       FALSE, FALSE, FALSE);
 	      PutChar ((wchar_t) '#', fnum, NULL, pDoc,
-		       FALSE, FALSE);
+		       FALSE, FALSE, FALSE);
 	      PutInt (34, fnum, NULL, pDoc, FALSE);
 	      PutChar ((wchar_t) ';', fnum, NULL, pDoc,
-		       FALSE, FALSE);
+		       FALSE, FALSE, FALSE);
 	    }
 	  else if (c != EOS)
-	    PutChar ((wchar_t) c, fnum, NULL, pDoc, lineBreak, TRUE);
+	    PutChar ((wchar_t) c, fnum, NULL, pDoc, lineBreak, TRUE,
+		     !strcmp(pSS->SsName, "MathML"));
 	}
       else
 	/* on avait commence' a analyser une sequence de caracteres. */
@@ -737,15 +731,16 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
 		{
 		  /* write a numeric entity */
 		  PutChar ((wchar_t) '&', fnum, NULL, pDoc,
-			   FALSE, FALSE);
+			   FALSE, FALSE, FALSE);
 		  PutChar ((wchar_t) '#', fnum, NULL, pDoc,
-			   FALSE, FALSE);
+			   FALSE, FALSE, FALSE);
 		  PutInt (34, fnum, NULL, pDoc, FALSE);
 		  PutChar ((wchar_t) ';', fnum, NULL, pDoc,
-			   FALSE, FALSE);
+			   FALSE, FALSE, FALSE);
 		}
 	      else
-		PutChar ((wchar_t) cs, fnum, NULL, pDoc, lineBreak, TRUE);
+		PutChar ((wchar_t) cs, fnum, NULL, pDoc, lineBreak, TRUE,
+			 !strcmp(pSS->SsName, "MathML"));
 	    }
 	  b = 0;
 	  ft = textTransBegin;
@@ -774,13 +769,14 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
        if (attrVal && c == 34)
 	 {
 	   /* write a numeric entity */
-	   PutChar ((wchar_t) '&', fnum, NULL, pDoc, FALSE, FALSE);
-	   PutChar ((wchar_t) '#', fnum, NULL, pDoc, FALSE, FALSE);
+	   PutChar ((wchar_t) '&', fnum, NULL, pDoc, FALSE, FALSE, FALSE);
+	   PutChar ((wchar_t) '#', fnum, NULL, pDoc, FALSE, FALSE, FALSE);
 	   PutInt (34, fnum, NULL, pDoc, FALSE);
-	   PutChar ((wchar_t) ';', fnum, NULL, pDoc, FALSE, FALSE);
+	   PutChar ((wchar_t) ';', fnum, NULL, pDoc, FALSE, FALSE, FALSE);
 	 }
        else
-	 PutChar ((wchar_t) c, fnum, NULL, pDoc, lineBreak, TRUE);
+	 PutChar ((wchar_t) c, fnum, NULL, pDoc, lineBreak, TRUE,
+		  !strcmp(pSS->SsName, "MathML"));
      }
 }
 
@@ -826,13 +822,15 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
 		while (pBufT->BuContent[i] != EOS)
 		  {
 		    c = pBufT->BuContent[i++];
-		    PutChar ((wchar_t) c, fnum, NULL, pDoc, lineBreak, TRUE);
+		    PutChar ((wchar_t) c, fnum, NULL, pDoc, lineBreak, TRUE,
+			     !strcmp(pEl->ElStructSchema->SsName, "MathML"));
 		  }
 		pBufT = pBufT->BuNext;
 	      }
 	  else if (pTSch != NULL)
 	    /* effectue les traductions de caracteres selon la table */
-	    TranslateText (pBufT, pTSch, pTransAlph, lineBreak, fnum, pDoc, FALSE);
+	    TranslateText (pBufT, pEl->ElStructSchema, pTSch, pTransAlph,
+			   lineBreak, fnum, pDoc, FALSE);
 	}
       break;
 
@@ -846,18 +844,18 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
 	    {
 	      /* translate into UTF_8 the unicode value */
 	      PutChar ((wchar_t) pEl->ElWideChar, fnum, NULL, pDoc,
-		       lineBreak, TRUE);
+		       lineBreak, TRUE, FALSE);
 	    }
 	  else
 	    {
 	      /* write a numeric entity */
 	      PutChar ((wchar_t) '&', fnum, NULL, pDoc, lineBreak,
-		       FALSE);
+		       FALSE, FALSE);
 	      PutChar ((wchar_t) '#', fnum, NULL, pDoc, lineBreak,
-		       FALSE);
+		       FALSE, FALSE);
 	      PutInt (pEl->ElWideChar, fnum, NULL, pDoc, lineBreak);
 	      PutChar ((wchar_t) ';', fnum, NULL, pDoc, lineBreak,
-		       FALSE);
+		       FALSE, FALSE);
 	    }
 	}
       else if (pTSch != NULL)
@@ -885,7 +883,7 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
 	    /* pas de traduction */
 	    {
 	      if (ci != EOS)
-		PutChar ((wchar_t) ci, fnum, NULL, pDoc, lineBreak, TRUE);
+		PutChar ((wchar_t) ci, fnum, NULL, pDoc, lineBreak, TRUE, FALSE);
 	    }
 	  else
 	    /* on traduit l'element */
@@ -903,14 +901,14 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
 		    {
 		      ci = pTrans->StTarget[b];
 		      PutChar ((wchar_t) ci, fnum, NULL, pDoc,
-			       lineBreak, TRUE);
+			       lineBreak, TRUE, FALSE);
 		      b++;
 		    }
 		}
 	      else
 		/* ce symbole ne se traduit pas */
 		if (ci != EOS)
-		  PutChar ((wchar_t) ci, fnum, NULL, pDoc, lineBreak, TRUE);
+		  PutChar ((wchar_t) ci, fnum, NULL, pDoc, lineBreak, TRUE, FALSE);
 	    }
 	  if (pEl->ElLeafType == LtPolyLine && pEl->ElNPoints > 0)
 	    /* la ligne a au moins un point de controle */
@@ -923,11 +921,11 @@ static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
 		  for (i = 0; i < pBufT->BuLength; i++)
 		    {
 		      PutChar ((wchar_t) ' ', fnum, NULL, pDoc, lineBreak,
-			       FALSE);
+			       FALSE, FALSE);
 		      PutInt (pBufT->BuPoints[i].XCoord, fnum, NULL, pDoc,
 			      lineBreak);
 		      PutChar ((wchar_t) ',', fnum, NULL, pDoc, lineBreak,
-			       FALSE);
+			       FALSE, FALSE);
 		      PutInt (pBufT->BuPoints[i].YCoord, fnum, NULL, pDoc,
 			      lineBreak);
 		    }
@@ -2273,7 +2271,7 @@ static void PutVariable (PtrElement pEl, PtrAttribute pAttr,
 	    {
 	      c = pTSch->TsConstant[i - 1];
 	      PutChar ((wchar_t) c, fnum, outBuf, pDoc,
-		       lineBreak, TRUE);
+		       lineBreak, TRUE, FALSE);
 	      i++;
 	    }
 	  break;
@@ -2322,7 +2320,7 @@ static void PutVariable (PtrElement pEl, PtrAttribute pAttr,
 		 j = j * 10;
 		 if (j > i)
 		   PutChar ((wchar_t) '0', fnum, outBuf,
-			    pDoc, lineBreak, FALSE);
+			    pDoc, lineBreak, FALSE, FALSE);
 	       }
 	   }
 	 /* convertit la valeur du compteur dans le style demande' */
@@ -2330,7 +2328,7 @@ static void PutVariable (PtrElement pEl, PtrAttribute pAttr,
 	 /* sort la valeur du compteur */
 	 for (k = 0; k < j; k++)
 	   PutChar ((wchar_t) (number[k]), fnum, outBuf, pDoc,
-		    lineBreak, TRUE);
+		    lineBreak, TRUE, FALSE);
 	 break;
 	 
 	case VtBuffer:
@@ -2340,7 +2338,7 @@ static void PutVariable (PtrElement pEl, PtrAttribute pAttr,
 	    {
 	      c = pTSch->TsBuffer[varItem->TvItem - 1][i];
 	      PutChar ((wchar_t) c, fnum, outBuf, pDoc,
-		       lineBreak, TRUE);
+		       lineBreak, TRUE, FALSE);
 	      i++;
 	    }
 	  break;
@@ -2378,15 +2376,15 @@ static void PutVariable (PtrElement pEl, PtrAttribute pAttr,
 		      while (i < pBuf->BuLength)
 			{
 			  c = pBuf->BuContent[i++];
-			PutChar ((wchar_t) c, fnum, outBuf, pDoc, FALSE, TRUE);
+			PutChar ((wchar_t) c, fnum, outBuf, pDoc, FALSE, TRUE, FALSE);
 			}
 		      pBuf = pBuf->BuNext;
 		    }
 		  break;
 		case AtReferenceAttr:
-		  PutChar ((wchar_t) 'R', fnum, outBuf, pDoc, lineBreak, FALSE);
-		  PutChar ((wchar_t) 'E', fnum, outBuf, pDoc, lineBreak, FALSE);
-		  PutChar ((wchar_t) 'F', fnum, outBuf, pDoc, lineBreak, FALSE);
+		  PutChar ((wchar_t) 'R', fnum, outBuf, pDoc, lineBreak, FALSE, FALSE);
+		  PutChar ((wchar_t) 'E', fnum, outBuf, pDoc, lineBreak, FALSE, FALSE);
+		  PutChar ((wchar_t) 'F', fnum, outBuf, pDoc, lineBreak, FALSE, FALSE);
 		  break;
 		case AtEnumAttr:
 		  i = 0;
@@ -2395,7 +2393,7 @@ static void PutVariable (PtrElement pEl, PtrAttribute pAttr,
 		    {
 		      c = attrTrans->AttrEnumValue[pA->AeAttrValue - 1][i++];
 		    PutChar ((wchar_t) c, fnum, outBuf, pDoc,
-			     lineBreak, TRUE);
+			     lineBreak, TRUE, FALSE);
 		    }
 		  break;
 		}
@@ -2405,31 +2403,31 @@ static void PutVariable (PtrElement pEl, PtrAttribute pAttr,
 	case VtFileDir:	/* le nom du directory de sortie */
 	  i = 0;
 	  while (fileDirectory[i] != EOS)
-	    PutChar ((wchar_t) fileDirectory[i++], fnum, outBuf, pDoc, lineBreak, TRUE);
+	    PutChar ((wchar_t) fileDirectory[i++], fnum, outBuf, pDoc, lineBreak, TRUE, FALSE);
 	  break;
 	  
 	case VtFileName:	/* le nom du fichier de sortie */
 	  i = 0;
 	  while (fileName[i] != EOS)
-	    PutChar ((wchar_t) fileName[i++], fnum, outBuf, pDoc, lineBreak, TRUE);
+	    PutChar ((wchar_t) fileName[i++], fnum, outBuf, pDoc, lineBreak, TRUE, FALSE);
 	  break;
 	 
 	case VtExtension:	/* le nom de l'extension de fichier */
 	  i = 0;
 	  while (fileExtension[i] != EOS)
-	    PutChar ((wchar_t) fileExtension[i++], fnum, outBuf, pDoc, lineBreak, TRUE);
+	    PutChar ((wchar_t) fileExtension[i++], fnum, outBuf, pDoc, lineBreak, TRUE, FALSE);
 	  break;
 
 	case VtDocumentName:	/* le nom du document */
 	  i = 0;
 	  while (pDoc->DocDName[i] != EOS)
-	    PutChar ((wchar_t) pDoc->DocDName[i++], fnum, outBuf, pDoc, lineBreak, TRUE);
+	    PutChar ((wchar_t) pDoc->DocDName[i++], fnum, outBuf, pDoc, lineBreak, TRUE, FALSE);
 	  break;
 
 	case VtDocumentDir:	/* le repertoire du document */
 	  i = 0;
 	  while (pDoc->DocDirectory[i] != EOS)
-	    PutChar ((wchar_t) pDoc->DocDirectory[i++], fnum, outBuf, pDoc, lineBreak, TRUE);
+	    PutChar ((wchar_t) pDoc->DocDirectory[i++], fnum, outBuf, pDoc, lineBreak, TRUE, FALSE);
 	  break;
 	  
 	default:
@@ -2521,7 +2519,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	    {
 	      c = pTSch->TsConstant[i - 1];
 	      PutChar ((wchar_t) c, fnum, NULL, pDoc,
-		       *lineBreak, TRUE);
+		       *lineBreak, TRUE, FALSE);
 	      i++;
 	    }
 	  break;
@@ -2533,7 +2531,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	    {
 	      c = pTSch->TsBuffer[pTRule->TrObjectNum - 1][i++];
 	      PutChar ((wchar_t) c, fnum,
-		       NULL, pDoc, *lineBreak, TRUE);
+		       NULL, pDoc, *lineBreak, TRUE, FALSE);
 	    }
 	  break;
 
@@ -2590,24 +2588,24 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 				{
 				  /* write a numeric entity */
 				  PutChar ((wchar_t) '&', fnum, NULL, pDoc,
-					   FALSE, FALSE);
+					   FALSE, FALSE, FALSE);
 				  PutChar ((wchar_t) '#', fnum, NULL, pDoc,
-					   FALSE, FALSE);
+					   FALSE, FALSE, FALSE);
 				  PutInt (34, fnum, NULL, pDoc, FALSE);
 				  PutChar ((wchar_t) ';', fnum, NULL, pDoc,
-					   FALSE, FALSE);
+					   FALSE, FALSE, FALSE);
 				}
 			      else
 				PutChar ((wchar_t) c, fnum, NULL, pDoc,
-					 FALSE, TRUE);
+					 FALSE, TRUE, FALSE);
 			    }
 			  pBuf = pBuf->BuNext;
 			}
 		    else
 		      /* translate the attribute value, but don't insert
 			 line breaks. */
-		      TranslateText (pBuf, pTransTextSch, pTransAlph, FALSE,
-				     fnum, pDoc, TRUE);
+		      TranslateText (pBuf, pA->AeAttrSSchema, pTransTextSch,
+				     pTransAlph, FALSE, fnum, pDoc, TRUE);
 		  }
 		break;
 	      case AtReferenceAttr:
@@ -2621,7 +2619,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 		  {
 		    c = attrTrans->AttrEnumValue[pA->AeAttrValue - 1][i++];
 		    PutChar ((wchar_t) c, fnum,
-			     NULL, pDoc, *lineBreak, TRUE);
+			     NULL, pDoc, *lineBreak, TRUE, FALSE);
 		  }
 		break;
 	      default:
@@ -2649,7 +2647,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	      case PtDirection:
 	      case PtUnicodeBidi:
 	      case PtLineStyle:
-		PutChar ((wchar_t) (pRPres->PrChrValue), fnum, NULL, pDoc, *lineBreak, FALSE);
+		PutChar ((wchar_t) (pRPres->PrChrValue), fnum, NULL, pDoc, *lineBreak, FALSE, FALSE);
 		break;
 	      case PtIndent:
 	      case PtSize:
@@ -2666,27 +2664,27 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 		break;
 	      case PtHyphenate:
 		if (pRPres->PrBoolValue)
-		  PutChar ((wchar_t) 'Y', fnum, NULL, pDoc, *lineBreak, FALSE);
+		  PutChar ((wchar_t) 'Y', fnum, NULL, pDoc, *lineBreak, FALSE, FALSE);
 		else
-		  PutChar ((wchar_t) 'N', fnum, NULL, pDoc, *lineBreak, FALSE);
+		  PutChar ((wchar_t) 'N', fnum, NULL, pDoc, *lineBreak, FALSE, FALSE);
 		break;
 	      case PtAdjust:
 		switch (pRPres->PrAdjust)
 		  {
 		  case AlignLeft:
-		    PutChar ((wchar_t) 'L', fnum, NULL, pDoc, *lineBreak, FALSE);
+		    PutChar ((wchar_t) 'L', fnum, NULL, pDoc, *lineBreak, FALSE, FALSE);
 		    break;
 		  case AlignRight:
-		    PutChar ((wchar_t) 'R', fnum, NULL, pDoc, *lineBreak, FALSE);
+		    PutChar ((wchar_t) 'R', fnum, NULL, pDoc, *lineBreak, FALSE, FALSE);
 		    break;
 		  case AlignCenter:
-		    PutChar ((wchar_t) 'C', fnum, NULL, pDoc, *lineBreak, FALSE);
+		    PutChar ((wchar_t) 'C', fnum, NULL, pDoc, *lineBreak, FALSE, FALSE);
 		    break;
 		  case AlignLeftDots:
-		    PutChar ((wchar_t) 'D', fnum, NULL, pDoc, *lineBreak, FALSE);
+		    PutChar ((wchar_t) 'D', fnum, NULL, pDoc, *lineBreak, FALSE, FALSE);
 		    break;
 		  case AlignJustify:
-		    PutChar ((wchar_t) 'J', fnum, NULL, pDoc, *lineBreak, FALSE);
+		    PutChar ((wchar_t) 'J', fnum, NULL, pDoc, *lineBreak, FALSE, FALSE);
 		    break;
 		  }
 		break;
@@ -2724,32 +2722,32 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	  /* produit le nom du directory */
 	  i = 0;
 	  while (fileDirectory[i] != EOS)
-	    PutChar ((wchar_t) fileDirectory[i++], fnum, NULL, pDoc, *lineBreak, TRUE);
+	    PutChar ((wchar_t) fileDirectory[i++], fnum, NULL, pDoc, *lineBreak, TRUE, FALSE);
 	  break;
 
 	case ToFileName:
 	  /* produit le nom de fichier */
 	  i = 0;
 	  while (fileName[i] != EOS)
-	    PutChar ((wchar_t) fileName[i++], fnum, NULL, pDoc, *lineBreak, TRUE);
+	    PutChar ((wchar_t) fileName[i++], fnum, NULL, pDoc, *lineBreak, TRUE, FALSE);
 	  break;
 
 	case ToExtension:
 	  i = 0;
 	  while (fileExtension[i] != EOS)
-	    PutChar ((wchar_t) fileExtension[i++], fnum, NULL, pDoc, *lineBreak, TRUE);
+	    PutChar ((wchar_t) fileExtension[i++], fnum, NULL, pDoc, *lineBreak, TRUE, FALSE);
 	  break;
 	  
 	case ToDocumentName:
 	  i = 0;
 	  while (pDoc->DocDName[i] != EOS)
-	    PutChar ((wchar_t) (pDoc->DocDName[i++]), fnum, NULL, pDoc, *lineBreak, TRUE);
+	    PutChar ((wchar_t) (pDoc->DocDName[i++]), fnum, NULL, pDoc, *lineBreak, TRUE, FALSE);
 	  break;
 
 	case ToDocumentDir:
 	  i = 0;
 	  while (pDoc->DocDirectory[i] != EOS)
-	    PutChar ((wchar_t) (pDoc->DocDirectory[i++]), fnum, NULL, pDoc, *lineBreak, TRUE);
+	    PutChar ((wchar_t) (pDoc->DocDirectory[i++]), fnum, NULL, pDoc, *lineBreak, TRUE, FALSE);
 	  break;
 
 	case ToReferredDocumentName:
@@ -2806,7 +2804,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	      if (nameBuffer != NULL)
 		while (*nameBuffer != EOS)
 		  {
-		    PutChar ((wchar_t) (*nameBuffer), fnum, NULL, pDoc, *lineBreak, TRUE);
+		    PutChar ((wchar_t) (*nameBuffer), fnum, NULL, pDoc, *lineBreak, TRUE, FALSE);
 		    nameBuffer++;
 		  }
 	    }
@@ -2916,7 +2914,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 		      i = 0;
 		      while (pRef->RdReferred->ReReferredLabel[i] != EOS)
 			PutChar ((wchar_t) (pRef->RdReferred->ReReferredLabel[i++]),
-				 fnum, NULL, pDoc, *lineBreak, TRUE);
+				 fnum, NULL, pDoc, *lineBreak, TRUE, FALSE);
 		    }
 		}
 	    }
@@ -2988,7 +2986,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	    {
 	      i = 0;
 	      while (pElGet->ElLabel[i] != EOS)
-		PutChar ((wchar_t) pElGet->ElLabel[i++], fnum, NULL, pDoc, *lineBreak, TRUE);
+		PutChar ((wchar_t) pElGet->ElLabel[i++], fnum, NULL, pDoc, *lineBreak, TRUE, FALSE);
 	    }
 	  break;
 	  
@@ -3216,7 +3214,7 @@ static void ApplyTRule (PtrTRule pTRule, PtrTSchema pTSch, PtrSSchema pSSch,
 	{
 	  while (TtaReadByte (includedFile, &car))
 	    /* on ecrit dans le fichier principal courant */
-	    PutChar ((wchar_t) car, 1, NULL, pDoc, *lineBreak, TRUE);
+	    PutChar ((wchar_t) car, 1, NULL, pDoc, *lineBreak, TRUE, FALSE);
 	  TtaReadClose (includedFile);
 	}
       break;
@@ -3829,37 +3827,42 @@ static void ExportXmlText (PtrDocument pDoc,  PtrElement pNode,
 		   mbc[nb_bytes2write] = EOS;
 		 }
 	       /* Predefined entities */
-	       else if (c == 0X22 /* &quot; */)
+	       else if (c == 0X22) /* &quot; */
 		 {
 		   strcpy (&mbc[0], "&quot;");
 		   nb_bytes2write = 6;
 		 }
-	       else if (c == 0X26 /* &amp; */)
+	       else if (c == 0X26) /* &amp; */
 		 {
 		   strcpy (&mbc[0], "&amp;");
 		   nb_bytes2write = 5;
 		 }
-	       else if (c == 0X3C /* &lt; */)
+	       else if (c == 0X3C) /* &lt; */
 		 {
 		   strcpy (&mbc[0], "&lt;");
 		   nb_bytes2write = 4;
 		 }
-	       else if (c == 0X3E /* &gt; */)
+	       else if (c == 0X3E) /* &gt; */
 		 {
 		   strcpy (&mbc[0], "&gt;");
 		   nb_bytes2write = 4;
 		 }
-	       else if (c == 0XA0 /* &nbsp; */)
+	       else if (c == 0XA0) /* &nbsp; */
 		 {
 		   strcpy (&mbc[0], "&nbsp;");
 		   nb_bytes2write = 6;
 		 }
 	       /* Translate the input character */
-	       else if (GetEntityFunction && c > 127 &&
-			pDoc->DocCharset == US_ASCII)
+	       else if ((c > 127 && pDoc->DocCharset == US_ASCII) ||
+			(c > 255 && pDoc->DocCharset == ISO_8859_1))
 		 {
-		   /* generate an entity into an ASCII file */
-		   (*GetEntityFunction) (c, &entity);
+		   /* generate an entity into an ASCII or ISO_8859_1 file */
+		   if (GetEntityFunction && 
+		       !strcmp(pNode->ElStructSchema->SsName, "MathML"))
+		     /* in MathML, try to generate the name of the char. */
+		     (*GetEntityFunction) (c, &entity);
+                   else
+                     entity = NULL;
 		   mbc[0] = '&';
 		   if (entity)
 		     {
@@ -3869,26 +3872,8 @@ static void ExportXmlText (PtrDocument pDoc,  PtrElement pNode,
 		   else
 		     {
 		       mbc[1] = '#';
-		       sprintf (&mbc[2], "%d", (int)c);
-		     }
-		   nb_bytes2write = strlen (mbc);
-		   mbc[nb_bytes2write++] = ';';
-		 }
-	       else if (GetEntityFunction && c > 255 &&
-			pDoc->DocCharset == ISO_8859_1)
-		 {
-		   /* generate an entity into an ISO_8859_1 file */
-		   (*GetEntityFunction) (c, &entity);
-		   mbc[0] = '&';
-		   if (entity)
-		     {
-		       strncpy (&mbc[1], entity, 40);
-		       mbc[42] = EOS;
-		     }
-		   else
-		     {
-		       mbc[1] = '#';
-		       sprintf (&mbc[2], "%d", (int)c);
+		       mbc[2] = 'x';
+		       sprintf (&mbc[3], "%x", (int)c);
 		     }
 		   nb_bytes2write = strlen (mbc);
 		   mbc[nb_bytes2write++] = ';';
@@ -3908,7 +3893,11 @@ static void ExportXmlText (PtrDocument pDoc,  PtrElement pNode,
 		   if (mbc[0] == EOS && c != EOS)
 		     {
 		       /* generate an entity into an ISO_8859_1 file */
-		       (*GetEntityFunction) (c, &entity);
+		       if (GetEntityFunction && 
+			   !strcmp(pNode->ElStructSchema->SsName, "MathML"))
+			 (*GetEntityFunction) (c, &entity);
+		       else
+			 entity = NULL;
 		       mbc[0] = '&';
 		       if (entity)
 			 {
@@ -3918,7 +3907,8 @@ static void ExportXmlText (PtrDocument pDoc,  PtrElement pNode,
 		       else
 			 {
 			   mbc[1] = '#';
-			   sprintf (&mbc[2], "%d", (int)c);
+			   mbc[2] = 'x';
+			   sprintf (&mbc[3], "%x", (int)c);
 			 }
 		       nb_bytes2write = strlen (mbc);
 		       mbc[nb_bytes2write++] = ';';
