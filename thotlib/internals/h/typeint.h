@@ -56,7 +56,7 @@ typedef enum
 given element */
 typedef struct _ExternalDoc
 {
-  PtrExternalDoc		EdNext;
+  PtrExternalDoc	EdNext;
   DocumentIdentifier	EdDocIdent;
 } ExternalDoc;
 
@@ -567,6 +567,27 @@ typedef struct _EditOperation
   } u;
 } EditOperation;
 
+typedef struct _NsPrefixDescr *PtrNsPrefixDescr; 
+/* Description of a namespace prefix declaration */
+typedef struct _NsPrefixDescr
+{
+  PtrNsPrefixDescr  NsNextPrefixDecl;/* next prefix for a namespace */
+  char             *NsPrefixName;    /* namespace prefix */
+  PtrElement        NsPrefixElem;    /* thot element associated with that prefix */
+} NsPrefixDescr;
+
+
+typedef struct _NsUriDescr *PtrNsUriDescr; 
+/* Description of a namespace declaration */
+typedef struct _NsUriDescr
+{
+  PtrNsUriDescr    NsNextUriDecl;   /* next namespace declaration */
+  char            *NsUriName;       /* namespace uri */
+  PtrSSchema       NsUriSSchema;    /* associated Thot schema */
+  PtrNsPrefixDescr NsPtrPrefix;     /* first associated prefix */
+} NsUriDescr;
+
+
 #define EoFirstSelectedEl u.s0._EoFirstSelectedEl_
 #define EoFirstSelectedChar u.s0._EoFirstSelectedChar_
 #define EoLastSelectedEl u.s0._EoLastSelectedEl_
@@ -658,6 +679,7 @@ typedef struct _DocumentDescr
   CHARSET         DocCharset;     /* charset of the document */
   ThotBool	  DocDefaultCharset;/* TRUE if the charset is set by default */
   int		  DocProfile;	  /* profile of the document */
+  PtrNsUriDescr   DocNsUriDecl;   /* namespace declarations */
 } DocumentDescr;
 
 #endif /* __TYPE_INT_H__ */

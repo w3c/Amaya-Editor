@@ -1521,3 +1521,25 @@ PtrDocument         DocToPtr (Document document)
    return LoadedDocument[document - 1];
 }
 
+/*----------------------------------------------------------------------
+  TtaSetNamespaceDeclaration
+  Sets one namespace declaration
+ ----------------------------------------------------------------------*/
+void TtaSetNamespaceDeclaration (Document document, Element element,
+				 char *NsPrefix, char *NsUri)
+{
+  PtrDocument pDoc;
+
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    {
+      /* parameter document is correct */
+      pDoc = LoadedDocument[document - 1];
+      UpdateNamespaceDeclaration (pDoc, (PtrElement) element, NsPrefix, NsUri);
+    }
+}

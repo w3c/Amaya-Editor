@@ -921,6 +921,38 @@ void FreeAbstractBox (PtrAbstractBox pAb)
 }
 
 /*----------------------------------------------------------------------
+  FreeNamespaceDeclarations
+  Free all namespace declarations
+  ----------------------------------------------------------------------*/
+static void FreeNamespaceDeclarations (PtrDocument pDoc)
+{
+  PtrNsUriDescr    uriDecl, nextUriDecl;
+  PtrNsPrefixDescr prefixDecl, nextPrefixDecl;
+  
+  if (pDoc->DocNsUriDecl == NULL)
+    return;
+  
+  uriDecl = pDoc->DocNsUriDecl;
+  while (uriDecl != NULL)
+    {
+      nextUriDecl = uriDecl->NsNextUriDecl;
+      prefixDecl = uriDecl->NsPtrPrefix;
+      while (prefixDecl != NULL)
+	{
+	  nextPrefixDecl = prefixDecl->NsNextPrefixDecl;
+	  if (prefixDecl->NsPrefixName != NULL)
+	    TtaFreeMemory (prefixDecl->NsPrefixName);
+	  TtaFreeMemory (prefixDecl);
+	  prefixDecl = nextPrefixDecl;
+	}
+      if (uriDecl->NsUriName != NULL)
+	TtaFreeMemory (uriDecl->NsUriName);
+      TtaFreeMemory (uriDecl);
+      uriDecl = nextUriDecl;
+    } 
+}
+
+/*----------------------------------------------------------------------
    GetDocument alloue un descripteur de document.                  
   ----------------------------------------------------------------------*/
 void GetDocument (PtrDocument * pDoc)
@@ -974,6 +1006,7 @@ void FreeDocument (PtrDocument pDoc)
        pDoc->DocViewModifiedAb[i] = NULL;
      }
    pDoc->DocLabels = NULL;
+   FreeNamespaceDeclarations (pDoc);
 #ifdef DEBUG_MEMORY
    TtaFreeMemory (pDoc);
 #else

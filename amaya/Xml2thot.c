@@ -611,11 +611,11 @@ void  SubWithinTable ()
 }
 
 /*----------------------------------------------------------------------
-  NsStartProcessing
+  NsDeclarationProcessing
   Treatment called by the namespace declaratatin start handler.
   Update both namespace tables.
   ----------------------------------------------------------------------*/
-void  NsStartProcessing (char *ns_prefix, char *ns_uri)
+static void  NsDeclarationProcessing (char *ns_prefix, char *ns_uri)
 
 {
   int i;
@@ -628,9 +628,9 @@ void  NsStartProcessing (char *ns_prefix, char *ns_uri)
     }
   
   /* Filling up the table of namespaces declared for the current element */
-  CurNs_Level ++;
   CurNs_Prefix[CurNs_Level] = TtaStrdup (ns_prefix);
   CurNs_Uri[CurNs_Level] = TtaStrdup (ns_uri);
+  CurNs_Level ++;
 
   /* Filling up the table of namespaces declared in the document */
   if (ns_uri == NULL)
@@ -650,12 +650,12 @@ void  NsStartProcessing (char *ns_prefix, char *ns_uri)
 }
 
 /*----------------------------------------------------------------------
-  NsDeclaredProcessing
+  NsStartProcessing
   Look for (a) namespace declaration(s) for the current element. If there
   is (are) such (a) declaration(s), update the Document informations.
   Remove all current namespace declaration(s).
   ----------------------------------------------------------------------*/
-void  NsDeclaredProcessing ()
+static void  NsStartProcessing (Element newElement)
 
 {
   int i;
@@ -663,11 +663,12 @@ void  NsDeclaredProcessing ()
   if (CurNs_Level == 0)
     return;
 
-  /* Update the Document informations */
-
-  /* Remove all current namespace declarations */
+  /* Update the Namespace Document informations */
+  /* and remove the useless declarations */
   for (i = 0; i < CurNs_Level; i++)
     {
+      TtaSetNamespaceDeclaration (XMLcontext.doc, newElement,
+				  CurNs_Prefix[i], CurNs_Uri[i]);
       if (CurNs_Prefix[i])
 	{
 	  TtaFreeMemory (CurNs_Prefix[i]);
@@ -1514,12 +1515,9 @@ static void   XhtmlCheckContext (char *elName,
    Search in the mapping tables the entry for the element type of
    name Xmlname and returns the corresponding Thot element type.
   ----------------------------------------------------------------------*/
-static void   GetXmlElType (char *uriName,
-			    char *elementName,
-			    ElementType *elType,
-			    char **mappedName,
-			    char *content,
-			    ThotBool *level)
+static void   GetXmlElType (char *uriName, char *elementName,
+			    ElementType *elType, char **mappedName,
+			    char *content, ThotBool *level)
 
 {
 #ifdef XML_GENERIC
@@ -1788,12 +1786,14 @@ static void       StartOfXmlStartElement (char *name)
 	      
 	      XmlSetElemLineNumber (newElement);
 	      InsertXmlElement (&newElement);
-	      /* Is there current namespace declarations for this element ? */
-	      /* NsDeclaredProcessing (); */
+	      
+	      /* Store the current namespace declarations for this element */
+	      if (CurNs_Level > 0)
+		NsStartProcessing (newElement);
 
 	      if (newElement != NULL && elType.ElTypeNum == 1)
-		/* If an empty Text element has been created, the */
-		/* following character data must go to that element */
+		/* If an empty Text element has been created, */
+		/* the following character data must go to that element */
 		XMLcontext.mergeText = TRUE;
 	      
 	      elementStack[stackLevel] = newElement;
@@ -2177,7 +2177,7 @@ void PutInXmlElement (char *data, int length)
        if (bufferws[i] != EOS)
 	 {
 	   length = strlen (bufferws);
-	   buffer = TtaGetMemory (length + 1);
+	   buffer = TtaGetMemory (length+1);
 	   if (RemoveContiguousSpace)
 	     {
 	       for (i1 = i; i1 <= length; i1++)
@@ -3871,7 +3871,7 @@ static void     Hndl_NameSpaceStart (void *userData,
 #ifdef EXPAT_PARSER_DEBUG
   printf ("Hndl_NameSpaceStart - prefix=\"%s\" uri=\"%s\"\n", ns_prefix, ns_uri);
 #endif /* EXPAT_PARSER_DEBUG */
-  NsStartProcessing ((char *) ns_prefix, (char*) ns_uri);
+  NsDeclarationProcessing ((char *) ns_prefix, (char*) ns_uri);
 }
 
 /*----------------------------------------------------------------------

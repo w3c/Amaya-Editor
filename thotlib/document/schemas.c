@@ -2435,11 +2435,115 @@ void TtaChangeGenericSchemaNames (char *sSchemaUri, char *sSchemaName,
 }
 
 /*----------------------------------------------------------------------
-   WrText export in the fileDescriptor file the content of the text list
-   buffer, pBT is the first one.  
+  AddANewNamespacePrefix
+ ----------------------------------------------------------------------*/
+static void AddANewNamespacePrefix (PtrDocument pDoc, PtrElement element,
+				    char *NsPrefix, PtrNsUriDescr uriDecl)
+{
+  PtrNsPrefixDescr newPrefixDecl, prefixDecl, prevPrefixDecl;
+
+  newPrefixDecl = (PtrNsPrefixDescr) TtaGetMemory (sizeof (NsPrefixDescr));
+  if (newPrefixDecl == NULL)
+    return;
+  memset (newPrefixDecl, 0, sizeof (NsPrefixDescr));
+  if (NsPrefix != NULL)
+    {
+      newPrefixDecl->NsPrefixName = TtaGetMemory (strlen (NsPrefix) + 1);
+      strcpy (newPrefixDecl->NsPrefixName, NsPrefix);
+    }
+  newPrefixDecl->NsPrefixElem = element;
+
+  if (uriDecl->NsPtrPrefix == NULL)
+    uriDecl->NsPtrPrefix = newPrefixDecl;
+  else
+    {
+      prevPrefixDecl = uriDecl->NsPtrPrefix;
+      prefixDecl = prevPrefixDecl->NsNextPrefixDecl;
+      while (prefixDecl != NULL)
+	{
+	  prevPrefixDecl = prefixDecl;
+	  prefixDecl = prefixDecl->NsNextPrefixDecl;
+	}
+      prevPrefixDecl->NsNextPrefixDecl = newPrefixDecl;
+    }
+}
+
+/*----------------------------------------------------------------------
+  AddANewNamespaceUri
+ ----------------------------------------------------------------------*/
+static void AddANewNamespaceUri (PtrDocument pDoc, PtrElement element,
+				 char *NsPrefix, char *NsUri)
+{
+  PtrNsUriDescr  newUriDecl, uriDecl, prevUriDecl;
+
+  newUriDecl = (PtrNsUriDescr) TtaGetMemory (sizeof (NsUriDescr));
+  if (newUriDecl == NULL)
+    return;
+  memset (newUriDecl, 0, sizeof (NsUriDescr));
+  newUriDecl->NsUriName = TtaGetMemory (strlen (NsUri) + 1);
+  strcpy (newUriDecl->NsUriName, NsUri);
+
+  if (pDoc->DocNsUriDecl == NULL)
+    pDoc->DocNsUriDecl = newUriDecl;
+  else
+    { 
+      prevUriDecl = pDoc->DocNsUriDecl;
+      uriDecl = prevUriDecl->NsNextUriDecl;
+      while (uriDecl != NULL)
+	{
+	  prevUriDecl = uriDecl;
+	  uriDecl = uriDecl->NsNextUriDecl;
+	}
+      prevUriDecl->NsNextUriDecl = newUriDecl;
+    }
+
+  /* Add a new prefix/element declaration */
+  AddANewNamespacePrefix (pDoc, element, NsPrefix, newUriDecl);
+}
+
+/*----------------------------------------------------------------------
+  UpdateNamespaceDeclaration
+  Add a namespace declaration for the document
+ ----------------------------------------------------------------------*/
+void UpdateNamespaceDeclaration (PtrDocument pDoc, PtrElement element,
+				 char *NsPrefix, char *NsUri)
+{
+
+  PtrNsUriDescr   uriDecl;
+  ThotBool        found;
+
+  found = FALSE;
+  if (pDoc->DocNsUriDecl != NULL)
+    {
+      /* There is alreadty a namespace declaration */
+      /* Search if this uri has been already declared */
+      uriDecl = pDoc->DocNsUriDecl;
+      while (!found && (uriDecl != NULL))
+	{
+	  if (uriDecl->NsUriName != NULL)
+	    {
+	      if (strcmp (uriDecl->NsUriName, NsUri) == 0)
+		found = TRUE;
+	      else
+		uriDecl = uriDecl->NsNextUriDecl;
+	    }
+	}      
+    }
+  if (!found)
+    /* Add a new uri declaration */
+    AddANewNamespaceUri (pDoc, element, NsPrefix, NsUri);
+  else
+    /* Add a new prefix/element declaration */
+    AddANewNamespacePrefix (pDoc, element, NsPrefix, uriDecl);
+}
+
+/*----------------------------------------------------------------------
+   ExportText
+   Export in the fileDescriptor file the content of the text 
+   list buffer, pBT is the first one.
    length: max length to export.                         
   ----------------------------------------------------------------------*/
-static void WrText (PtrTextBuffer pBT, int length, FILE *fileDescriptor)
+static void ExportText (PtrTextBuffer pBT, int length, FILE *fileDescriptor)
 {
    PtrTextBuffer       b;
    int                 i, l;
@@ -2463,16 +2567,68 @@ static void WrText (PtrTextBuffer pBT, int length, FILE *fileDescriptor)
 	   i++;
 	   l++;
 	 }
-       /* following text buffer buffer for the same element */
+       /* following the text buffer for the same element */
        b = b->BuNext;
      }
+   return;
 }
 
 /*----------------------------------------------------------------------
-   ExportXmlDoc
+   ExportNsDeclaration
+   Export in the fileDescriptor file the namespace attributes
+   of the Element pNode.
+   length: max length to export.                         
   ----------------------------------------------------------------------*/
-void ExportXmlDoc (PtrDocument pDoc, PtrElement pNode, int indent,
-		   FILE *fileDescriptor, ThotBool premierfils)
+static void ExportNsDeclaration (PtrDocument pDoc, PtrElement pNode, 
+				 int length, FILE *fileDescriptor)
+{
+  PtrNsUriDescr    uriDecl;
+  PtrNsPrefixDescr prefixDecl;
+  ThotBool         found;
+  int              i;
+
+  found = FALSE;
+  if (pDoc->DocNsUriDecl == NULL)
+    /* There is no namespace declaration for this document */
+    return;
+
+  i = 0;
+  /* Search all namespace declaration for the element */
+  uriDecl = pDoc->DocNsUriDecl;
+  while (uriDecl != NULL)
+    {
+      prefixDecl = uriDecl->NsPtrPrefix;
+      while (prefixDecl != NULL)
+	{
+	  if (prefixDecl->NsPrefixElem == pNode)
+	    {
+	      if (i > 0)
+		  fprintf (fileDescriptor, "\n");
+	      /* One Ns declaration has been found for this element */
+	      fprintf (fileDescriptor, " xmlns");
+	      if (prefixDecl->NsPrefixName != NULL)
+		fprintf (fileDescriptor, ":%s", prefixDecl->NsPrefixName);
+	      fprintf (fileDescriptor, "=\"%s\"", uriDecl->NsUriName);
+	      i++;
+	    }
+	    prefixDecl = prefixDecl->NsNextPrefixDecl;
+	}
+      uriDecl = uriDecl->NsNextUriDecl;
+    }
+
+  return;
+}
+
+/*----------------------------------------------------------------------
+   ExportXmlDocument
+   Produces in a file a human-readable form of an XML abstract tree.
+   Parameters:
+   pDoc: the root element of the tree to be exported.
+   fileDescriptor: file descriptor of the file that will contain the document.
+   This file must be open when calling the function.
+  ----------------------------------------------------------------------*/
+void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode, int indent,
+			FILE *fileDescriptor, ThotBool premierfils)
 {
   PtrElement          f;
   PtrSRule            pRe1;
@@ -2493,7 +2649,7 @@ void ExportXmlDoc (PtrDocument pDoc, PtrElement pNode, int indent,
 
       if (!pNode->ElTerminal)
 	{
-	  /* don't export Document element */
+	  /* Don't export the Document element */
 	  if (pNode == pDoc->DocDocElement)
 	    {
 	      fprintf (fileDescriptor, "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>");
@@ -2501,7 +2657,7 @@ void ExportXmlDoc (PtrDocument pDoc, PtrElement pNode, int indent,
 	  else
 	    {
 	      specialTag = FALSE;
-	      /* export element name */
+	      /* Export the element name */
 	      pRe1 = pNode->ElStructSchema->SsRule->SrElem[pNode->ElTypeNumber - 1];
 	      if (strcmp (pRe1->SrOrigName, "XMLcomment") == 0)
 		{
@@ -2515,11 +2671,29 @@ void ExportXmlDoc (PtrDocument pDoc, PtrElement pNode, int indent,
 		  strcpy (endName, "?>");
 		  specialTag = TRUE;
 		}
+	      else if (strcmp (pRe1->SrOrigName, "DOCTYPE") == 0)
+		{
+		  strcpy (startName, "\n<!DOCTYPE ");
+		  strcpy (endName, ">");
+		  specialTag = TRUE;
+		}
+	      else if (strcmp (pRe1->SrOrigName, "CDATA") == 0)
+		{
+		  strcpy (startName, "\n<![CDATA[");
+		  strcpy (endName, "]]>");
+		  specialTag = TRUE;
+		}
 	      else if ((strcmp (pRe1->SrOrigName, "XMLcomment_line") == 0) ||
-		       (strcmp (pRe1->SrOrigName, "XMLPI_line") == 0))
+		       (strcmp (pRe1->SrOrigName, "XMLPI_line") == 0) ||
+		       (strcmp (pRe1->SrOrigName, "CDATA_line") == 0) ||
+		       (strcmp (pRe1->SrOrigName, "DOCTYPE_line") == 0))
 		{
 		  startName[0] = EOS;
-		  endName[0] = EOS;
+		  f = pNode->ElNext;
+		  if (f != NULL)
+		    strcpy (endName, "\n");
+		  else
+		    endName[0] = EOS;
 		}
 	      else
 		{
@@ -2531,7 +2705,10 @@ void ExportXmlDoc (PtrDocument pDoc, PtrElement pNode, int indent,
 		}
 	      fprintf (fileDescriptor, "%s", startName);
 	      
-	      /* export element attributes */
+	      /* Export the namespace declarations */
+	      ExportNsDeclaration (pDoc, pNode, 72-indent, fileDescriptor);
+
+	      /* Export the attributes */
 	      pAttr = pNode->ElFirstAttr;
 	      if (pAttr != NULL)
 		fprintf (fileDescriptor, " ");
@@ -2568,32 +2745,34 @@ void ExportXmlDoc (PtrDocument pDoc, PtrElement pNode, int indent,
 		fprintf (fileDescriptor, ">");
 	    }
 	  
-	  /* element children */
+	  /* Recursive export */
 	  f = pNode->ElFirstChild;
 	  while (f != NULL)
 	    {
-	      ExportXmlDoc (pDoc, f, indent, fileDescriptor, premierfils);
-	      /* ExportXmlDoc (f, indent + 2, fileDescriptor, premierfils); */
+	      ExportXmlDocument (pDoc, f, indent, fileDescriptor, premierfils);
+	      /* ExportXmlDocument (pDoc, f, indent+2, fileDescriptor, premierfils); */
 	      if (!premierfils)
 		f = f->ElNext;
 	      else
 		f = NULL;
 	    }
+
+	  /* Export End tag */
 	  if (pNode != pDoc->DocDocElement)
 	    fprintf (fileDescriptor, "%s", endName);
 	}
       else
 	{
-	  /* terminal element */
+	  /* It is a terminal element */
 	  for (i = 1; i <= indent; i++)
 	    fprintf (fileDescriptor, " ");
 	  switch (pNode->ElLeafType)
 	    {
 	    case LtPicture:
-	      WrText (pNode->ElText, 72 - indent, fileDescriptor);
+	      ExportText (pNode->ElText, 72 - indent, fileDescriptor);
 	      break;
 	    case LtText:
-	      WrText (pNode->ElText, 72 - indent, fileDescriptor);
+	      ExportText (pNode->ElText, 72 - indent, fileDescriptor);
 	      break;
 	    default:
 	      break;	

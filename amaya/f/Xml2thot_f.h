@@ -16,9 +16,6 @@ extern void SetParsingTextArea ( ThotBool value );
 extern void SetLanguagInXmlStack ( Language lang );
 extern int IsWithinTable ( void );
 extern void SubWithinTable ( void );
-extern void NsStartProcessing ( char *ns_prefix,
-                                char *ns_uri );
-extern void NsDeclaredProcessing ( void );
 extern void InsertXmlElement ( Element *el );
 extern Element XmlLastLeafInElement ( Element el );
 extern void PutInXmlElement ( char *data,
@@ -67,9 +64,6 @@ extern void SetParsingTextArea (/* ThotBool value */);
 extern void SetLanguagInXmlStack (/* Language lang */);
 extern int IsWithinTable (/* void */);
 extern void SubWithinTable (/* void */);
-extern void NsStartProcessing (/* char *ns_prefix,
-                                  char *ns_uri */);
-extern void NsDeclaredProcessing (/* void */);
 extern void InsertXmlElement (/* Element *el */);
 extern Element XmlLastLeafInElement (/* Element el */);
 extern void PutInXmlElement (/* char *data,

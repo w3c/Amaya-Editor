@@ -79,6 +79,10 @@ extern void TtaGetSchemaPath ( char *buffer,
                                int bufferLength );
 extern Document TtaGetDocumentOfSavedElements ( void );
 extern PtrDocument DocToPtr ( Document document );
+extern void TtaSetNamespaceDeclaration ( Document document,
+                                         Element element,
+                                         char *NsPrefix,
+                                         char *NsUri );
 
 #else /* __STDC__ */
 
@@ -155,6 +159,10 @@ extern void TtaGetSchemaPath (/* char *buffer,
                                  int bufferLength */);
 extern Document TtaGetDocumentOfSavedElements (/* void */);
 extern PtrDocument DocToPtr (/* Document document */);
+extern void TtaSetNamespaceDeclaration (/* Document document,
+                                           Element element,
+                                           char *NsPrefix,
+                                           char *NsUri */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

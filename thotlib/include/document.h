@@ -804,6 +804,13 @@ extern int TtaGetDocumentProfile (Document document);
  ----------------------------------------------------------------------*/
 extern void TtaSetDocumentProfile (Document document, int profile);
 
+/*----------------------------------------------------------------------
+  TtaSetNamespaceDeclaration
+  Sets one namespace declaration
+ ----------------------------------------------------------------------*/
+void TtaSetNamespaceDeclaration (Document document, Element element,
+				 char *Ns_Prefix, char *Ns_Uri);
+
 #endif /* __CEXTRACT__ */
 
 #endif
