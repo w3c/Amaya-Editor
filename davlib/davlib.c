@@ -14,7 +14,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.3  2002-06-03 14:37:42  kirschpi
+ ** Revision 1.4  2002-06-04 14:51:41  kirschpi
+ ** Fixing bug on InitDAV.
+ ** Manuele
+ **
+ ** Revision 1.3  2002/06/03 14:37:42  kirschpi
  ** The name of some public functions have been changed to avoid conflic with
  ** other libraries.
  **
@@ -148,7 +152,6 @@ void InitDAV (void) {
     if (ptr && (*ptr)) {
         if (!strcasecomp (ptr,"yes"))
             DAVAwareness = YES; 
-        HT_FREE (ptr);
     }
     else {
         TtaSetEnvString (DAV_AWARENESS,"no",TRUE);
@@ -162,7 +165,6 @@ void InitDAV (void) {
     if (ptr && (*ptr)) {
         if (!strcasecomp (ptr,"yes"))
             DAVAwarenessExit = YES; 
-        HT_FREE (ptr);
     }    
     else {
         TtaSetEnvString (DAV_AWARENESS_EXIT,"no",TRUE);
@@ -185,13 +187,13 @@ void InitDAV (void) {
 
 
     /* *********************** SETING FILTERS *************** */
-    HTNet_addAfter (FilterFailedDependency_handler,"http://*", NULL, \
+    HTNet_addAfter (FilterFailedDependency_handler,"http://*", NULL, 
                                            HT_FAILED_DEPENDENCY,HT_FILTER_MIDDLE);
 
-    HTNet_addAfter (FilterLocked_handler,"http://*", NULL, \
+    HTNet_addAfter (FilterLocked_handler,"http://*", NULL, 
                                            HT_LOCKED,HT_FILTER_MIDDLE);
 
-    HTNet_addAfter (FilterMultiStatus_handler,"http://*", NULL, \
+    HTNet_addAfter (FilterMultiStatus_handler,"http://*", NULL, 
                                            HT_MULTI_STATUS,HT_FILTER_MIDDLE);
 
 
