@@ -1,3 +1,5 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
   <title>The Languages of Thot</title>
@@ -13,7 +15,7 @@
 
 <h4>Translated from French by Ethan Munson</h4>
 
-<h4>Version of November 22, 2000</h4>
+<h4>Version of December 26, 2000</h4>
 
 <p>© 1996-2000 INRIA</p>
 <hr>
@@ -1896,7 +1898,7 @@ skeleton form not load the contents of a particular element type, the keyword
   will be loaded, while for sections, the title will be loaded, and for
   bibliographic entries, only the title that they contain will be loaded. Note
   that bibliographic elements are defined in another structure schema, RefBib.
-   To produce this result, the following declarations should be placed in the
+  To produce this result, the following declarations should be placed in the
   Article structure schema:</p>
   <pre>EXPORT
    Article_title,
@@ -2087,8 +2089,10 @@ exceptions are indicated by a name.  They are separated by semicolons.</p>
   <dt><tt>HighlightChildren</tt></dt>
     <dd>This exception can only be applied to element types.  Elements of a
       type to which this exception is applied are not highlighted themselves
-      when they are selected, but all their children are highlighted
-    instead.</dd>
+      when they are selected in the main view, but all their children are
+      highlighted instead. If children have this exception too, the process is
+      applied recursively. Only the main view defined in the presentation
+      schema is concerned. Tee exception is ignored for other views.</dd>
   <dt><tt>ExtendedSelection</tt></dt>
     <dd>This exception can only be applied to element types.  The selection
       extension command (middle button of the mouse) only add the clicked
@@ -7387,7 +7391,7 @@ keyword. It is terminated, like all rules, by a semicolon.</p>
 
 <p>The <tt>Ignore</tt> rule indicates that nothing should be generated, in the
 translated document, for the element to which the rule applies. The whole
-element is simply ignored by the translator. </p>
+element is simply ignored by the translator.</p>
 
 <p>The <tt>Ignore</tt> rule is simply written with the <tt>Ignore</tt>
 keyword. It is terminated, like all rules, by a semicolon.</p>

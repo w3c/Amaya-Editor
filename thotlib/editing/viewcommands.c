@@ -134,7 +134,8 @@ PtrDocument         pDoc;
 
    ok = FALSE;
    if (!pEl->ElTerminal)
-      if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsList)
+      if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct ==
+	                                                               CsList)
 	 /* c'est bien une liste */
 	{
 	   /* essaie de creer une descendance de cette liste qui mene a une */
@@ -435,7 +436,8 @@ CHAR_T*             fileName;
 	     /* pas de preference pour un schema de presentation particulier */
 	     PSchemaName[0] = EOS;
 	     /* charge le schema de structure et le schema de presentation */
-	     LoadSchemas (SSchemaName, PSchemaName, &pDoc->DocSSchema, NULL, FALSE);
+	     LoadSchemas (SSchemaName, PSchemaName, &pDoc->DocSSchema, NULL,
+			  FALSE);
 	     if (pDoc->DocSSchema != NULL)
 	       {
 		 /* send the event notification to the application */
@@ -446,14 +448,15 @@ CHAR_T*             fileName;
 		   {
 		     /* cree la representation interne d'un document minimum */
 		     pDoc->DocRootElement = NewSubtree (pDoc->DocSSchema->SsRootElem,
-							pDoc->DocSSchema, pDoc, 0, TRUE,
-							TRUE, TRUE, TRUE);
+						        pDoc->DocSSchema, pDoc,
+							0, TRUE, TRUE, TRUE,
+							TRUE);
 		     /* supprime les elements exclus */
 		     RemoveExcludedElem (&pDoc->DocRootElement, pDoc);
 		   }
 	       }
 	     if (pDoc->DocRootElement == NULL)
-	       /* on n'a pas pu charger les schemas ou l'application a refuse'*/
+	       /* on n'a pas pu charger les schemas ou l'application refuse */
 	       UnloadDocument (&pDoc);
 	     else
 	       {
@@ -465,14 +468,17 @@ CHAR_T*             fileName;
 		 ustrncpy (pDoc->DocIdent, fileName, MAX_DOC_IDENT_LEN);
 		 pDoc->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
 		 ustrncpy (pDoc->DocDirectory, directory, MAX_PATH);
-		 /* conserve le path actuel des schemas dans le contexte du doc. */
+		 /* conserve le path actuel des schemas dans le contexte
+		    du document */
 		 ustrncpy (pDoc->DocSchemasPath, SchemaPath, MAX_PATH);
-		 /* lit le fichier a importer et met son contenu dans le document */
+		 /* lit le fichier a importer et met son contenu dans le
+		    document */
 		 ok = ReadImportFile (file, pDoc);
 		 if (!ok)
 		   /* echec */
 		   TtaDisplaySimpleMessage (INFO, LIB, TMSG_IMPORT_FILE_IMP);
-		 /* indique a l'application interessee qu'un document a ete cree' */
+		 /* indique a l'application interessee qu'un document a ete
+		    cree' */
 		 notifyDoc.event = TteDocCreate;
 		 notifyDoc.document = doc;
 		 notifyDoc.view = 0;
@@ -485,7 +491,7 @@ CHAR_T*             fileName;
 		   {
 		     /* traitement des exceptions */
 		     if (ThotLocalActions[T_createtable] != NULL)
-		       (*ThotLocalActions[T_createtable]) (pDoc->DocRootElement,
+		       (*ThotLocalActions[T_createtable])(pDoc->DocRootElement,
 							   pDoc);
 		     /* ouvre les vues du document cree' */
 		     OpenDefaultViews (pDoc);
@@ -806,7 +812,8 @@ PtrSSchema          pNatSSchema;
 	    /* RedisplayNatureView puisse creer les images completes */
 	    volume = pDoc->DocViewFreeVolume[view];
 	    pDoc->DocViewFreeVolume[view] = THOT_MAXINT;
-	    if (RedisplayNatureView (pDoc, pRootAb, pNatSSchema, view + 1, frame))
+	    if (RedisplayNatureView (pDoc, pRootAb, pNatSSchema, view + 1,
+				     frame))
 	      {
 		DisplayFrame (frame);
 		ShowSelection (pRootAb, TRUE);
@@ -877,7 +884,8 @@ ThotBool            withEvent;
 	AddSchemaGuestViews (pDoc, pNatSSchema);
 	/*etablit la liste de toutes les natures utilisees dans le document */
 	NnaturePSchemas = 0;
-	SearchNatures (pDoc->DocSSchema, naturePSchema, &NnaturePSchemas, FALSE);
+	SearchNatures (pDoc->DocSSchema, naturePSchema, &NnaturePSchemas,
+		       FALSE);
 	/* change de schema de presentation pour chaque occurence de */
 	/* la nature concernee */
 	for (nat = 0; nat < NnaturePSchemas; nat++)
@@ -991,7 +999,8 @@ int                 val;
       if (pDocChangeSchPresent->DocSSchema != NULL)
 	/* le document est toujours present */
 	{
-	  nbPres = ConfigMakeMenuPres (TableNaturesSchPresent[nat]->SsName, NULL);
+	  nbPres = ConfigMakeMenuPres (TableNaturesSchPresent[nat]->SsName,
+				       NULL);
 	  if (nbPres > 0)
 	    {
 	      if (pDoc == pDocChangeSchPresent)
@@ -1013,7 +1022,8 @@ int                 val;
 	      else
 		/* c'est une nature dans le document */
 		ChangeNaturePSchema (pDocChangeSchPresent,
-				     TableNaturesSchPresent[nat], newpres, TRUE);
+				     TableNaturesSchPresent[nat], newpres,
+				     TRUE);
 	    }
 	}
 }
@@ -1079,21 +1089,23 @@ View                view;
         else
            /* il y a des schemas de presentation definis pour cette nature */
           {
-             /* on cherche dans cette liste le schema de presentation utilise' */
+             /* on cherche dans cette liste le schema de presentation
+		utilise' */
              /* actuellement dans le document */
              for (k = 1; k <= nbPres && entreeDesact[nat] == 0; k++)
                {
                   /* demande le nom reel du schema de presentation */
                   ConfigGetPSchemaName (k, NomPres);
-                  if (ustrcmp (TableNatures[nat]->SsPSchema->PsPresentName, NomPres) == 0)
+                  if (ustrcmp (TableNatures[nat]->SsPSchema->PsPresentName,
+			       NomPres) == 0)
                      /* c'est le nom du schema de presentation actuel */
-                     /* on desactivera l'entree correspondante dans le sous-menu */
-                     /* des schemas de presentation de cette nature */
+                     /* on desactivera l'entree correspondante dans le
+			sous-menu des schemas de presentation de cette nature*/
                      entreeDesact[nat] = k;
                }
              if (nbPres == 1 && entreeDesact[nat] != 0)
                 /* il n'y a qu'un schema de presentation prevu par la */
-                /* configuration et c'est celui qui est utilise' actuellement. */
+                /* configuration et c'est celui qui est utilise' actuellement*/
                 /* On ne peut donc pas changer de schema pour cette nature */
                 TableNatures[nat] = NULL;
              else if (nbNatures >= NbMaxMenuPresNature)
@@ -1111,7 +1123,8 @@ View                view;
                      i = CONFIG_EXTENSION_STRUCT; /* schema d'extension */
                   else
                      i = CONFIG_NATURE_STRUCT; /* schema de nature */
-                  TtaConfigSSchemaExternalName (NomUtilisateur, TableNatures[nat]->SsName, i);
+                  TtaConfigSSchemaExternalName (NomUtilisateur,
+						TableNatures[nat]->SsName, i);
                   if (NomUtilisateur[0] == EOS)
                      ustrcpy (ptrBufNat, TableNatures[nat]->SsName);
                   else
@@ -1128,7 +1141,8 @@ View                view;
         /* on cree le menu de ces natures s'il y en a plus d'une */
         if (nbNatures > 1)
           {
-             TtaNewPopup (NumMenuPresNature, 0, TtaGetMessage (LIB, TMSG_GLOBAL_LAYOUT),
+             TtaNewPopup (NumMenuPresNature, 0,
+			  TtaGetMessage (LIB, TMSG_GLOBAL_LAYOUT),
                           nbNatures, BufMenuNatures, NULL, TEXT('L'));
              MenuAActiver = NumMenuPresNature;
           }
@@ -1141,7 +1155,8 @@ View                view;
              {
                 /* demande la liste des presentations prevues dans la */
                 /* configuration de l'utilisateur */
-                nbPres = ConfigMakeMenuPres (TableNatures[nat]->SsName, BufMenu);
+                nbPres = ConfigMakeMenuPres (TableNatures[nat]->SsName,
+					     BufMenu);
                 /* compose un sous-menu a partir de cette liste */
                 if (nbPres > 0)
                   {
@@ -1157,9 +1172,8 @@ View                view;
                           dest += l + 1;
                           src += l + 1;
                        }
-                     /* cree le sous-menu des presentations proposees pour cette
- */
-                     /* nature */
+                     /* cree le sous-menu des presentations proposees pour */
+                     /* cette nature */
                      NumSousMenu++;
                      if (TableNatures[nat] == pDoc->DocSSchema)
                         i = CONFIG_DOCUMENT_STRUCT; /* schema du document */
@@ -1167,7 +1181,9 @@ View                view;
                         i = CONFIG_EXTENSION_STRUCT; /* schema d'extension */
                      else
                         i = CONFIG_NATURE_STRUCT; /* schema de nature */
-                     TtaConfigSSchemaExternalName (NomUtilisateur, TableNatures[nat]->SsName, i);
+                     TtaConfigSSchemaExternalName (NomUtilisateur,
+						   TableNatures[nat]->SsName,
+						   i);
                      if (NomUtilisateur[0] == EOS)
                         ustrcpy (NomUtilisateur, TableNatures[nat]->SsName);
                      if (nbNatures == 1)
@@ -1177,18 +1193,20 @@ View                view;
                           TtaNewPopup (MenuAActiver, 0, NomUtilisateur, nbPres, BufMenuB, NULL, 'L');
                        }
                      else
-                        /* il y a plusieurs natures, c'est un sous-menu du menu */
-                        /* des natures */
+                        /* il y a plusieurs natures, c'est un sous-menu du */
+                        /* menu des natures */
                         TtaNewSubmenu (NumMenuPresNature + NumSousMenu,
                                        NumMenuPresNature, NumSousMenu - 1,
                              NomUtilisateur, nbPres, BufMenuB, NULL, False);
-                     /* met a jour la table qui servira au retour du sous-menu */
-                     TableNaturesSchPresent[NumSousMenu - 1] = TableNatures[nat];
-                     /* desactive l'entree de ce sous-menu qui correspond a la */
-                     /* presentation actuelle */
+                     /* met a jour la table qui servira au retour du
+			sous-menu */
+                     TableNaturesSchPresent[NumSousMenu-1] = TableNatures[nat];
+                     /* desactive l'entree de ce sous-menu qui correspond a */
+                     /* la presentation actuelle */
 #ifndef _WINDOWS
                      if (entreeDesact[nat] > 0)
-                        UnsetEntryMenu (NumMenuPresNature + NumSousMenu, entreeDesact[nat] - 1);
+                        UnsetEntryMenu (NumMenuPresNature + NumSousMenu,
+					entreeDesact[nat] - 1);
 #endif /* !_WINDOWS */
                   }
              }

@@ -1,21 +1,12 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
 /*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
-/*
- * visualisation of Selections.
+ * visualization of Selection.
  *
  * Author: I. Vatton (INRIA)
  *
@@ -124,13 +115,13 @@ int                 pointselect;
 	      if (pointselect == 0 || pointselect == i)
 		{
 		  x = leftX + PixelValue (pBuffer->BuPoints[j].XCoord,
-					  UnPixel, NULL,
-					  ViewFrameTable[frame - 1].FrMagnification);
+				   UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
 		  if (x > rightX)
 		    x =  rightX;
 		  y = topY + PixelValue (pBuffer->BuPoints[j].YCoord,
-					 UnPixel, NULL,
-					 ViewFrameTable[frame - 1].FrMagnification);
+				   UnPixel, NULL,
+				   ViewFrameTable[frame - 1].FrMagnification);
 		  if (y > bottomY)
 		    y =  bottomY;
 		  DrawRectangle (frame, 0, 0,
@@ -348,8 +339,10 @@ int                 pointselect;
 	  case 'g':
 	    /* Coords of the line are given by the enclosing box */
 	    pAb = pAb->AbEnclosing;
-	    if ((pAb->AbHorizPos.PosEdge == Left && pAb->AbVertPos.PosEdge == Top) ||
-		(pAb->AbHorizPos.PosEdge == Right && pAb->AbVertPos.PosEdge == Bottom))
+	    if ((pAb->AbHorizPos.PosEdge == Left &&
+		 pAb->AbVertPos.PosEdge == Top) ||
+		(pAb->AbHorizPos.PosEdge == Right &&
+		 pAb->AbVertPos.PosEdge == Bottom))
 	      {
 		/* draw a \ */
 		/* 2 characteristic points */
@@ -397,11 +390,17 @@ PtrBox       pBox;
       pFrame = &ViewFrameTable[frame - 1];
       pAb = pBox->BxAbstractBox;
       
+      /* exception HighlightChildren applies only to the main view defined
+	 in the presentation schema */
       if (pBox->BxType == BoGhost ||
 	  (pAb != NULL &&
-	   TypeHasException (ExcHighlightChildren, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema)))
+           FrameTable[frame].FrView == 1 &&
+	   TypeHasException (ExcHighlightChildren,
+			     pAb->AbElement->ElTypeNumber,
+			     pAb->AbElement->ElStructSchema)))
 	{
-	  /* the box is not displayed, select its children */
+	  /* the box is not displayed or has exception HighlightChildren.
+	     Select its children */
 	  if (pAb->AbFirstEnclosed != NULL)
 	    {
 	      pChildBox = pAb->AbFirstEnclosed->AbBox;
@@ -506,11 +505,17 @@ PtrBox       pBox;
   if (pBox != NULL)
     {
       pAb = pBox->BxAbstractBox;      
-      if (pBox->BxType == BoGhost
-	  || (pAb != NULL
-	      && TypeHasException (ExcHighlightChildren, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema)))
+      /* exception HighlightChildren applies only to the main view defined
+	 in the presentation schema */
+      if (pBox->BxType == BoGhost ||
+	  (pAb != NULL &&
+           FrameTable[frame].FrView == 1 &&
+	   TypeHasException (ExcHighlightChildren,
+			     pAb->AbElement->ElTypeNumber,
+			     pAb->AbElement->ElStructSchema)))
 	{
-	  /* the box is not displayed, select its children */
+	  /* the box is not displayed or has exception HighlightChildren.
+	     Select its children */
 	  if (pAb->AbFirstEnclosed != NULL)
 	    {
 	      pChildBox = pAb->AbFirstEnclosed->AbBox;
@@ -538,7 +543,9 @@ PtrBox       pBox;
       else
 	{
 	  /* display other elements */
-	  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+	  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
+		   pBox->BxXOrg + pBox->BxWidth,
+		   pBox->BxYOrg + pBox->BxHeight);
 	  RedrawFrameBottom (frame, 0, pAb);
 	}
     }
@@ -635,7 +642,8 @@ PtrBox              pBox;
       /* clipped by the enclosing box */
       height = pParentBox->BxYOrg + pParentBox->BxHeight - pFrame->FrYOrg;
       /* and the scrolling zone */
-      width = FrameTable[frame].FrScrollOrg + FrameTable[frame].FrScrollWidth - pFrame->FrXOrg;
+      width = FrameTable[frame].FrScrollOrg + FrameTable[frame].FrScrollWidth
+	      - pFrame->FrXOrg;
 
       topY = pBox->BxYOrg - pFrame->FrYOrg;
       h = pBox->BxHeight;
@@ -659,8 +667,6 @@ PtrBox              pBox;
 	col = InsertColor;
       else
 	col = SelColor;
-      DrawRectangle (frame, 0, 0, leftX, topY, width, h,
-		     0, 0, 0, col, 2);
+      DrawRectangle (frame, 0, 0, leftX, topY, width, h, 0, 0, 0, col, 2);
     }
 }
-

@@ -1,14 +1,5 @@
 /*
- * Copyright (c) 1996 INRIA, All rights reserved
- */
-
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
+ * Copyright (c) INRIA 1996-2000
  */
 
 /*
@@ -2541,12 +2532,13 @@ gint ExposeEvent2 (GtkWidget *widget, GdkEventButton *event, gpointer data)
 #endif /* _GTK */
 
 /*----------------------------------------------------------------------
-   Cree une frame a' la position X,Y et aux dimensions width et       
+   MakeFrame
+   Cree une frame a` la position X,Y et aux dimensions width et       
    height (s'ils sont positifs).                                        
-   Le parametre texte donne le titre de la fenetree^tre.                      
+   Le parametre texte donne le titre de la fenetre.                      
    Le parametre schema donne le nom du sche'ma pour lequel on cre'e   
-   la fenetre de document (NULL pour la fenetree^tre application).       
-   Le parametre name donne le titre de la fenetree^tre.                       
+   la fenetre de document (NULL pour la fenetre application).       
+   Le parametre name donne le titre de la fenetre.                       
    Le paramentre doc donne le numero du document.                     
    Retourne :                                                         
    - Le volume affichable dans la fenetre en equivalent caracteres.   

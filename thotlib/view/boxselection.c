@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  * Manage box selections
  *
@@ -145,13 +136,18 @@ int                 frame;
 	    pFrame->FrSelectionBegin.VsBox = NULL;
 	    pFrame->FrSelectionEnd.VsBox = NULL;
 
-	    if ( pFrame->FrClipXBegin == 0 && pFrame->FrClipXEnd == 0)
+	    if (pFrame->FrClipXBegin == 0 && pFrame->FrClipXEnd == 0)
 	      {
 		/* ready to un/display the current selection */
 		if (pBox1 == pBox2)
 		  {
 		    /* only one box is selected */
-		    if (pBox1->BxType == BoGhost)
+		    if (pBox1->BxType == BoGhost ||
+			(pAb1 != NULL &&
+			 FrameTable[frame].FrView == 1 &&
+			 TypeHasException (ExcHighlightChildren,
+					   pAb1->AbElement->ElTypeNumber,
+					   pAb1->AbElement->ElStructSchema)))
 		      /* the highlight is transmitted to children */
 		      DrawBoxSelection (frame, pBox1);
 		    else
@@ -171,9 +167,11 @@ int                 frame;
 			if (x1 == x2)
 			  /* removing the caret at the end of a text */
 			  x2 = x1 + 2;
-			DefClip (frame, x1, pBox1->BxYOrg, x2, pBox1->BxYOrg + pBox1->BxHeight);
+			DefClip (frame, x1, pBox1->BxYOrg, x2,
+				 pBox1->BxYOrg + pBox1->BxHeight);
 			/* undisplay the current selection */
-			if (pAb1->AbLeafType == LtGraphics || pAb1->AbLeafType == LtPolyLine)
+			if (pAb1->AbLeafType == LtGraphics ||
+			    pAb1->AbLeafType == LtPolyLine)
 			  /* need to redraw more than one box */
 			  RedrawFrameBottom (frame, 0, NULL);
 			else
@@ -186,27 +184,36 @@ int                 frame;
 		    /* the first one */
 		    x1 = pBox1->BxXOrg + pFrame->FrSelectionBegin.VsXPos;
 		    x2 = pBox1->BxXOrg + pBox1->BxWidth;
-		    DefClip (frame, x1, pBox1->BxYOrg, x2, pBox1->BxYOrg + pBox1->BxHeight);
+		    DefClip (frame, x1, pBox1->BxYOrg, x2,
+			     pBox1->BxYOrg + pBox1->BxHeight);
 		    RedrawFrameBottom (frame, 0, pAb1);
 		    /* intermediate boxes */
 		    pBox1 = pBox1->BxNexChild;
 		    while (pBox1 != pBox2)
 		      {
-			DefClip (frame, pBox1->BxXOrg, pBox1->BxYOrg, pBox1->BxXOrg + pBox1->BxWidth, pBox1->BxYOrg + pBox1->BxHeight);
+			DefClip (frame, pBox1->BxXOrg, pBox1->BxYOrg,
+				 pBox1->BxXOrg + pBox1->BxWidth,
+				 pBox1->BxYOrg + pBox1->BxHeight);
 			RedrawFrameBottom (frame, 0, pAb1);
 			pBox1 = pBox1->BxNexChild;
 		      }
 		    /* the last one */
 		    x1 = pBox2->BxXOrg;
 		    x2 = pBox2->BxXOrg + pFrame->FrSelectionEnd.VsXPos;
-		    DefClip (frame, x1, pBox2->BxYOrg, x2, pBox2->BxYOrg + pBox2->BxHeight);
+		    DefClip (frame, x1, pBox2->BxYOrg, x2,
+			     pBox2->BxYOrg + pBox2->BxHeight);
 		    /* undisplay the current selection */
 		    RedrawFrameBottom (frame, 0, pAb1);
 		  }
 		else
 		  {
 		    /* undisplay the beginning of the selection */
-		    if (pBox1->BxType == BoGhost)
+		    if (pBox1->BxType == BoGhost ||
+			(pAb1 != NULL &&
+			 FrameTable[frame].FrView == 1 &&
+			 TypeHasException (ExcHighlightChildren,
+					   pAb1->AbElement->ElTypeNumber,
+					   pAb1->AbElement->ElStructSchema)))
 		      /* the highlight is transmitted to children */
 		      DrawBoxSelection (frame, pBox1);
 		    else
@@ -222,7 +229,8 @@ int                 frame;
 			    x1 = pBox1->BxXOrg + pFrame->FrSelectionBegin.VsXPos;
 			    x2 = pBox1->BxXOrg + pBox1->BxWidth;
 			  }
-			DefClip (frame, x1, pBox1->BxYOrg, x2, pBox1->BxYOrg + pBox1->BxHeight);
+			DefClip (frame, x1, pBox1->BxYOrg, x2,
+				 pBox1->BxYOrg + pBox1->BxHeight);
 			if (pAb1->AbLeafType == LtGraphics ||
 			    pAb1->AbLeafType == LtPolyLine)
 			  /* need to redraw more thsn one box */
@@ -236,7 +244,9 @@ int                 frame;
 			    pBox = pBox1->BxNexChild;
 			    while (pBox)
 			      {
-				DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+				DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
+					 pBox->BxXOrg + pBox->BxWidth,
+					 pBox->BxYOrg + pBox->BxHeight);
 				RedrawFrameBottom (frame, 0, pAb1);
 				pBox = pBox->BxNexChild;
 			      }
@@ -244,7 +254,12 @@ int                 frame;
 		      }
 		
 		    /* undisplay the end of the selection */
-		    if (pBox2->BxType == BoGhost)
+		    if (pBox2->BxType == BoGhost ||
+			(pAb2 != NULL &&
+			 FrameTable[frame].FrView == 1 &&
+			 TypeHasException (ExcHighlightChildren,
+					   pAb2->AbElement->ElTypeNumber,
+					   pAb2->AbElement->ElStructSchema)))
 		      /* the highlight is transmitted to children */
 		      DrawBoxSelection (frame, pBox2);
 		    else
@@ -260,8 +275,10 @@ int                 frame;
 			    x1 = pBox2->BxXOrg;
 			    x2 = pBox2->BxXOrg + pFrame->FrSelectionEnd.VsXPos;
 			  }
-			DefClip (frame, x1, pBox2->BxYOrg, x2, pBox2->BxYOrg + pBox2->BxHeight);
-			if (pAb2->AbLeafType == LtGraphics || pAb2->AbLeafType == LtPolyLine)
+			DefClip (frame, x1, pBox2->BxYOrg, x2,
+				 pBox2->BxYOrg + pBox2->BxHeight);
+			if (pAb2->AbLeafType == LtGraphics ||
+			    pAb2->AbLeafType == LtPolyLine)
 			  /* need to redraw more than one box */
 			  RedrawFrameBottom (frame, 0, NULL);
 			else
@@ -273,7 +290,9 @@ int                 frame;
 			    pBox =  pAb2->AbBox->BxNexChild;
   			    while (pBox && pBox != pBox2)
 			      {
-				DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+				DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
+					 pBox->BxXOrg + pBox->BxWidth,
+					 pBox->BxYOrg + pBox->BxHeight);
 				RedrawFrameBottom (frame, 0, pAb2);
 				pBox = pBox->BxNexChild;
 			      }
@@ -424,23 +443,23 @@ int                *index;
    still = (*pBuffer != NULL);
    while (still)
      {
-	/* Est-ce le bon buffer ? */
-	if ((*pBuffer)->BuLength < *index)
-	   /* Non : il faut passer au buffer suivant */
-	   if ((*pBuffer)->BuNext == NULL)
-	     {
-		/* arrive en fin de liste de buffers sans trouver le caractere */
-		*index = (*pBuffer)->BuLength + 1;
-		still = FALSE;
-	     }
-	   else
-	      /* passe au buffer suivant */
-	     {
-		*index -= (*pBuffer)->BuLength;
-		*pBuffer = (*pBuffer)->BuNext;
-	     }
-	else
-	   still = FALSE;
+       /* Est-ce le bon buffer ? */
+       if ((*pBuffer)->BuLength < *index)
+	 /* Non : il faut passer au buffer suivant */
+	 if ((*pBuffer)->BuNext == NULL)
+	   {
+	     /* arrive en fin de liste de buffers sans trouver le caractere */
+	     *index = (*pBuffer)->BuLength + 1;
+	     still = FALSE;
+	   }
+	 else
+	   /* passe au buffer suivant */
+	   {
+	     *index -= (*pBuffer)->BuLength;
+	     *pBuffer = (*pBuffer)->BuNext;
+	   }
+       else
+	 still = FALSE;
      }
 }
 
@@ -460,127 +479,130 @@ ViewSelection      *selMark;
 
 #endif /* __STDC__ */
 {
-   PtrTextBuffer       pBuffer;
-   PtrTextBuffer       pSelBuffer;
-   PtrBox              pBox;
-   int                 beginInd, x;
-   int                 spaceWidth;
-   int                 max, i;
-   int                 dummy;
-   ThotBool            stop;
+  PtrTextBuffer       pBuffer;
+  PtrTextBuffer       pSelBuffer;
+  PtrBox              pBox;
+  int                 beginInd, x;
+  int                 spaceWidth;
+  int                 max, i;
+  int                 dummy;
+  ThotBool            stop;
 
-   if (selMark->VsBox->BxAbstractBox->AbLeafType == LtText)
-     {
-	/* note l'index et le buffer du caractere precedant la marque */
-	pSelBuffer = selMark->VsBuffer;
-	pBox = selMark->VsBox;
-	if (selMark->VsIndBuf == 1 && pSelBuffer != pBox->BxBuffer)
+  if (selMark->VsBox->BxAbstractBox->AbLeafType == LtText)
+    {
+      /* note l'index et le buffer du caractere precedant la marque */
+      pSelBuffer = selMark->VsBuffer;
+      pBox = selMark->VsBox;
+      if (selMark->VsIndBuf == 1 && pSelBuffer != pBox->BxBuffer)
+	{
+	  if (pSelBuffer->BuPrevious == NULL)
+	    pSelBuffer = pBox->BxBuffer;
+	  else
+	    /* En debut de buffer */
+	    pSelBuffer = pSelBuffer->BuPrevious;
+	  i = pSelBuffer->BuLength;
+	}
+      else
+	/* En fin ou en cours de buffer */
+	i = selMark->VsIndBuf - 1;
+      stop = FALSE;
+
+      /* Est-ce une boite coupee ? */
+      if (pBox->BxType == BoSplit)
+	pBox = pBox->BxNexChild;
+
+      /* Recherche l'index du caractere et la boite de coupure */
+      pBuffer = pBox->BxBuffer;
+      beginInd = 1 - pBox->BxFirstChar;
+      max = pBox->BxNChars;
+      /* Calcule le saut entre cette boite et la suivante pour */
+      /* determiner si on peut selectionner en fin de boite */
+      if (pBox->BxNexChild == NULL)
+	dummy = 0;
+      else
+	dummy = pBox->BxNexChild->BxIndChar - pBox->BxIndChar - pBox->BxNChars;
+
+      /* Boucle tant que le caractere designe se trouve dans */
+      /* le buffer suivant ou dans la boite suivante */
+      while (!stop && (pBuffer != pSelBuffer || max - beginInd + dummy <= i))
+	if (max - beginInd + dummy <= i || pBuffer == NULL)
 	  {
-	     if (pSelBuffer->BuPrevious == NULL)
-		pSelBuffer = pBox->BxBuffer;
-	     else
-		/* En debut de buffer */
-		pSelBuffer = pSelBuffer->BuPrevious;
-	     i = pSelBuffer->BuLength;
-	  }
-	else
-	   /* En fin ou en cours de buffer */
-	   i = selMark->VsIndBuf - 1;
-	stop = FALSE;
+	    /* Box de coupure GetNextBox */
+	    /* Cas particulier des blancs supprimes en fin de boite */
+	    /* Est-ce qu'il y a une boite apres ? */
+	    if (pBox->BxNexChild == NULL)
+	      stop = TRUE;
+	    /* Il existe une boite apres mais c'est une boite fantome */
+	    else if (pBox->BxNexChild->BxNChars == 0 &&
+		     SearchLine (pBox->BxNexChild) == NULL)
+	      stop = TRUE;
+	    else
+	      stop = FALSE;
 
-	/* Est-ce une boite coupee ? */
-	if (pBox->BxType == BoSplit)
-	   pBox = pBox->BxNexChild;
-
-	/* Recherche l'index du caractere et la boite de coupure */
-	pBuffer = pBox->BxBuffer;
-	beginInd = 1 - pBox->BxFirstChar;
-	max = pBox->BxNChars;
-	/* Calcule le saut entre cette boite et la suivante pour */
-	/* determiner si on peut selectionner en fin de boite */
-	if (pBox->BxNexChild == NULL)
-	   dummy = 0;
-	else
-	   dummy = pBox->BxNexChild->BxIndChar - pBox->BxIndChar - pBox->BxNChars;
-
-	/* Boucle tant que le caractere designe se trouve dans */
-	/* le buffer suivant ou dans la boite suivante */
-	while (!stop && (pBuffer != pSelBuffer || max - beginInd + dummy <= i))
-	   if (max - beginInd + dummy <= i || pBuffer == NULL)
-	     {
-		/* Box de coupure GetNextBox */
-		/* Cas particulier des blancs supprimes en fin de boite */
-		/* Est-ce qu'il y a une boite apres ? */
+	    /* Est-ce que la selection est en fin de boite ? */
+	    if (stop)
+	      {
+		dummy = i - max + beginInd;
+		/* Position dans les blancs de fin de ligne */
+		selMark->VsIndBox = pBox->BxNChars + dummy;
+		selMark->VsXPos = pBox->BxWidth;
+		selMark->VsNSpaces = pBox->BxNSpaces + dummy;
+	      }
+	    /* Sinon on passe a la boite suivante */
+	    else
+	      {
+		pBox = pBox->BxNexChild;
+		beginInd = 1 - pBox->BxFirstChar;
+		max = pBox->BxNChars;
+		pBuffer = pBox->BxBuffer;
+		/* Calcule le saut entre cette boite et la suivante pour */
+		/* determiner si on peut selectionner en fin de boite */
 		if (pBox->BxNexChild == NULL)
-		   stop = TRUE;
-		/* Il existe une boite apres mais c'est une boite fantome */
-		else if (pBox->BxNexChild->BxNChars == 0 && SearchLine (pBox->BxNexChild) == NULL)
-		   stop = TRUE;
+		  dummy = 0;
 		else
-		   stop = FALSE;
-
-		/* Est-ce que la selection est en fin de boite ? */
-		if (stop)
+		  dummy = pBox->BxNexChild->BxIndChar - pBox->BxIndChar -
+		          pBox->BxNChars;
+		/* Cas particulier du premier caractere d'une boite coupee */
+		if (pSelBuffer == pBuffer->BuPrevious)
 		  {
-		     dummy = i - max + beginInd;
-		     /* Position dans les blancs de fin de ligne */
-		     selMark->VsIndBox = pBox->BxNChars + dummy;
-		     selMark->VsXPos = pBox->BxWidth;
-		     selMark->VsNSpaces = pBox->BxNSpaces + dummy;
+		    selMark->VsIndBox = 0;
+		    selMark->VsXPos = 0;
+		    selMark->VsNSpaces = 0;
+		    stop = TRUE;
 		  }
-		/* Sinon on passe a la boite suivante */
-		else
-		  {
-		     pBox = pBox->BxNexChild;
-		     beginInd = 1 - pBox->BxFirstChar;
-		     max = pBox->BxNChars;
-		     pBuffer = pBox->BxBuffer;
-		     /* Calcule le saut entre cette boite et la suivante pour */
-		     /* determiner si on peut selectionner en fin de boite */
-		     if (pBox->BxNexChild == NULL)
-			dummy = 0;
-		     else
-			dummy = pBox->BxNexChild->BxIndChar - pBox->BxIndChar - pBox->BxNChars;
-		     /* Cas particulier du premier caractere d'une boite coupee */
-		     if (pSelBuffer == pBuffer->BuPrevious)
-		       {
-			  selMark->VsIndBox = 0;
-			  selMark->VsXPos = 0;
-			  selMark->VsNSpaces = 0;
-			  stop = TRUE;
-		       }
-		  }
-	     }
-	   else
-	     {
-		beginInd += pBuffer->BuLength;
-		pBuffer = pBuffer->BuNext;
-	     }
-
-	/* a trouve la boite de coupure */
-	if (!stop)
-	  {
-	     selMark->VsIndBox = beginInd + i;
-	     /* Reevaluation du decalage dans la boite */
-	     /* 0 si on prend la largeur reelle du blanc */
-	     spaceWidth = pBox->BxSpaceWidth;
-	     /* Index du premier caractere a traiter */
-	     x = pBox->BxFirstChar;
-	     GiveTextParams (pBox->BxBuffer, selMark->VsIndBox, pBox->BxFont, &x, &spaceWidth);
-	     selMark->VsXPos = x;
-	     selMark->VsNSpaces = spaceWidth;
-	     /* ajoute eventuellement les pixels repartis */
-	     if (pBox->BxSpaceWidth != 0)
-	       {
-		if (selMark->VsNSpaces < pBox->BxNPixels)
-		   selMark->VsXPos += selMark->VsNSpaces;
-		else
-		   selMark->VsXPos += pBox->BxNPixels;
-	       }
+	      }
 	  }
-	selMark->VsBox = pBox;
-     }
-   selMark->VsLine = SearchLine (selMark->VsBox);
+	else
+	  {
+	    beginInd += pBuffer->BuLength;
+	    pBuffer = pBuffer->BuNext;
+	  }
+
+      /* on a trouve' la boite de coupure */
+      if (!stop)
+	{
+	  selMark->VsIndBox = beginInd + i;
+	  /* Reevaluation du decalage dans la boite */
+	  /* 0 si on prend la largeur reelle du blanc */
+	  spaceWidth = pBox->BxSpaceWidth;
+	  /* Index du premier caractere a traiter */
+	  x = pBox->BxFirstChar;
+	  GiveTextParams (pBox->BxBuffer, selMark->VsIndBox, pBox->BxFont,
+			  &x, &spaceWidth);
+	  selMark->VsXPos = x;
+	  selMark->VsNSpaces = spaceWidth;
+	  /* ajoute eventuellement les pixels repartis */
+	  if (pBox->BxSpaceWidth != 0)
+	    {
+	      if (selMark->VsNSpaces < pBox->BxNPixels)
+		selMark->VsXPos += selMark->VsNSpaces;
+	      else
+		selMark->VsXPos += pBox->BxNPixels;
+	    }
+	}
+      selMark->VsBox = pBox;
+    }
+  selMark->VsLine = SearchLine (selMark->VsBox);
 }
 
 /*----------------------------------------------------------------------
@@ -627,7 +649,8 @@ ThotBool            alone;
 	  /* eteint la selection */
 	  pBox = pAb->AbBox;
 	  adline = SearchLine (pBox);
-	  graphSel = (pAb->AbLeafType == LtPolyLine || pAb->AbLeafType == LtGraphics);
+	  graphSel = (pAb->AbLeafType == LtPolyLine ||
+		      pAb->AbLeafType == LtGraphics);
 
 	  /* verifie la coherence des indices de caracteres */
 	  if (pAb->AbLeafType == LtText)
@@ -673,7 +696,8 @@ ThotBool            alone;
 		{
 		  pViewSel = &pFrame->FrSelectionBegin;
 		  pViewSel->VsBox = pBox;
-		  if (endSelection && !graphSel && pAb->AbLeafType != LtPicture)
+		  if (endSelection && !graphSel &&
+		      pAb->AbLeafType != LtPicture)
 		    /* tout selectionne */
 		    pViewSel->VsIndBox = 0;
 		  else
@@ -755,7 +779,8 @@ ThotBool            alone;
 		    }
 		  else
 		    {
-		      /* startSelection et endSelection sur deux caracteres differents */
+		      /* startSelection et endSelection sur deux caracteres
+			 differents */
 		      if (startSelection)
 			{
 			  pBuffer = pAb->AbText;
@@ -809,7 +834,12 @@ ThotBool            alone;
 		{
 		  /* only one box is selected */
 		  pBox = pViewSel->VsBox;
-		  if (pBox->BxType == BoGhost)
+		  if (pBox->BxType == BoGhost ||
+		      (pAb != NULL &&
+		       FrameTable[frame].FrView == 1 &&
+		       TypeHasException (ExcHighlightChildren,
+					 pAb->AbElement->ElTypeNumber,
+					 pAb->AbElement->ElStructSchema)))
 		    /* the highlight is transmitted to children */
 		    DrawBoxSelection (frame, pBox);
 		  else
@@ -818,28 +848,38 @@ ThotBool            alone;
 			{
 			  /* several pieces of a split box are selected */
 			  /* the last one */
-			  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pViewSel->VsXPos, pBox->BxYOrg + pBox->BxHeight);
+			  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
+				   pBox->BxXOrg + pViewSel->VsXPos,
+				   pBox->BxYOrg + pBox->BxHeight);
 			  RedrawFrameBottom (frame, 0, pAb);
 			  /* the first one */
 			  pBox = pFrame->FrSelectionBegin.VsBox;
-			  DefClip (frame, pBox->BxXOrg + pFrame->FrSelectionBegin.VsXPos, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+			  DefClip (frame,
+				pBox->BxXOrg + pFrame->FrSelectionBegin.VsXPos,
+				pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth,
+				pBox->BxYOrg + pBox->BxHeight);
 			  RedrawFrameBottom (frame, 0, pAb);
 			  /* intermediate boxes */
 			  pBox = pBox->BxNexChild;
 			  while (pBox != pFrame->FrSelectionEnd.VsBox)
 			    {
-			      DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+			      DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
+				       pBox->BxXOrg + pBox->BxWidth,
+				       pBox->BxYOrg + pBox->BxHeight);
 			      RedrawFrameBottom (frame, 0, pAb);
 			      pBox = pBox->BxNexChild;
 			    }
 			}
-		      else if (pFrame->FrSelectionBegin.VsIndBox == 0 || graphSel)
+		      else if (pFrame->FrSelectionBegin.VsIndBox == 0 ||
+			       graphSel)
 			{
 			  /* the whole box is selected */
 			  w =  pBox->BxWidth;
 			  if (w == 0)
 			    w = 2;
-			  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + w, pBox->BxYOrg + pBox->BxHeight);
+			  DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
+				   pBox->BxXOrg + w,
+				   pBox->BxYOrg + pBox->BxHeight);
 			  if (graphSel)
 			    /* need to redraw more than one box */
 			    RedrawFrameBottom (frame, 0, NULL);
@@ -849,7 +889,10 @@ ThotBool            alone;
 		      else
 			{
 			  /* a substring or a point of the box is selected */
-			  DefClip (frame, pBox->BxXOrg + pFrame->FrSelectionBegin.VsXPos, pBox->BxYOrg, pBox->BxXOrg + pViewSel->VsXPos, pBox->BxYOrg + pBox->BxHeight);
+			  DefClip (frame,
+				pBox->BxXOrg + pFrame->FrSelectionBegin.VsXPos,
+                                pBox->BxYOrg, pBox->BxXOrg + pViewSel->VsXPos,
+                                pBox->BxYOrg + pBox->BxHeight);
 			  if (graphSel)
 			    /* need to redraw more than one box */
 			    RedrawFrameBottom (frame, 0, NULL);
@@ -862,17 +905,26 @@ ThotBool            alone;
 		{
 		  /* display the end of the selection */
 		  pBox = pViewSel->VsBox;
-		  if (pBox->BxType == BoGhost)
+		  if (pBox->BxType == BoGhost ||
+		      (pAb != NULL &&
+		       FrameTable[frame].FrView == 1 &&
+		       TypeHasException (ExcHighlightChildren,
+					 pAb->AbElement->ElTypeNumber,
+					 pAb->AbElement->ElStructSchema)))
 		    /* the highlight is transmitted to children */
 		    DrawBoxSelection (frame, pBox);
 		  else
 		    {
 		      if (pViewSel->VsIndBox == 0)
 			/* the whole box is selected */
-			DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+			DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
+				 pBox->BxXOrg + pBox->BxWidth,
+				 pBox->BxYOrg + pBox->BxHeight);
 		      else
 			/* a substring or a point of the box is selected */
-			DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pViewSel->VsXPos, pBox->BxYOrg + pBox->BxHeight);
+			DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
+				 pBox->BxXOrg + pViewSel->VsXPos,
+				 pBox->BxYOrg + pBox->BxHeight);
 		      if (graphSel)
 			/* need to redraw more than one box */
 			RedrawFrameBottom (frame, 0, NULL);
@@ -885,7 +937,9 @@ ThotBool            alone;
 			  pBox = pAb->AbBox->BxNexChild;
 			  while (pBox != pViewSel->VsBox)
 			    {
-			      DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+			      DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
+				       pBox->BxXOrg + pBox->BxWidth,
+				       pBox->BxYOrg + pBox->BxHeight);
 			      RedrawFrameBottom (frame, 0, pAb);
 			      pBox = pBox->BxNexChild;
 			    }
@@ -896,17 +950,26 @@ ThotBool            alone;
 		{
 		  /* display the beginning of the selection */
 		  pBox = pViewSel->VsBox;
-		  if (pBox->BxType == BoGhost)
+		  if (pBox->BxType == BoGhost ||
+		      (pAb != NULL &&
+		       FrameTable[frame].FrView == 1 &&
+		       TypeHasException (ExcHighlightChildren,
+					 pAb->AbElement->ElTypeNumber,
+					 pAb->AbElement->ElStructSchema)))
 		    /* the highlight is transmitted to children */
 		    DrawBoxSelection (frame, pBox);
 		  else
 		    {
 		      if (pViewSel->VsIndBox == 0)
 			/* the whole box is selected */
-			DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+			DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
+				 pBox->BxXOrg + pBox->BxWidth,
+				 pBox->BxYOrg + pBox->BxHeight);
 		      else
 			/* a substring or a point of the box is selected */
-			DefClip (frame, pBox->BxXOrg + pViewSel->VsXPos, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+			DefClip (frame, pBox->BxXOrg + pViewSel->VsXPos,
+				 pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth,
+				 pBox->BxYOrg + pBox->BxHeight);
 		      if (graphSel)
 			/* need to redraw more than one box */
 			RedrawFrameBottom (frame, 0, NULL);
@@ -920,7 +983,9 @@ ThotBool            alone;
 			  pBox = pBox->BxNexChild;
 			  while (pBox)
 			    {
-			      DefClip (frame, pBox->BxXOrg, pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
+			      DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
+				       pBox->BxXOrg + pBox->BxWidth,
+				       pBox->BxYOrg + pBox->BxHeight);
 			      RedrawFrameBottom (frame, 0, pAb);
 			      pBox = pBox->BxNexChild;
 			    }
@@ -932,8 +997,8 @@ ThotBool            alone;
 	    {
 	      /* the selection is outside the box */
 	      w = pBox->BxXOrg + pBox->BxWidth;
-	    DefClip (frame, w, pBox->BxYOrg,
-		     w + 2, pBox->BxYOrg + pBox->BxHeight);
+	      DefClip (frame, w, pBox->BxYOrg, w + 2,
+		       pBox->BxYOrg + pBox->BxHeight);
 	    }
 	}
     }
@@ -968,7 +1033,8 @@ int                 frame;
    GetSizesFrame (frame, &min, &max);
    min = ViewFrameTable[frame - 1].FrYOrg;
    max += min;
-   if (pAb->AbBox->BxYOrg + pAb->AbBox->BxHeight < min || pAb->AbBox->BxYOrg > max)
+   if (pAb->AbBox->BxYOrg + pAb->AbBox->BxHeight < min ||
+       pAb->AbBox->BxYOrg > max)
       return FALSE;
    else
       return TRUE;

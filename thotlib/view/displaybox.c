@@ -877,9 +877,9 @@ ThotBool            selected;
     withline = TRUE;
   else
     withline = FALSE;
-  /* in SVG foreground and background are inverted */
+  /* in SVG foreground and background are inverted in the main view */
   if (!ustrcmp(pAb->AbElement->ElStructSchema->SsName, TEXT("GraphML")) &&
-      pAb->AbDocView == 1)
+      FrameTable[frame].FrView == 1)
     {
     bg = pAb->AbForeground;
     fg = pAb->AbBackground;
