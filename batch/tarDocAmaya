@@ -13,8 +13,8 @@ cd $THOTDIR
 
 $TAR - \
 doc/amaya/*.html \
-doc/amaya/*.gif \
 doc/amaya/amaya.css \
 doc/amaya/daniel.css \
+Icons/*.gif \
 Icons/WWW/ \
  | $COMPRESS  > $DEST/amaya-user-doc.tar.gz

@@ -1,6 +1,6 @@
 #!/bin/sh
 cd ../..
-AMAYAVERSION=1.1a
+AMAYAVERSION=1.1b
 THOTDIR=/tahiti/diffusion/opera
 PLATFORMS="solaris2 SUN4 SGI RS6000 osf1"
 cd $THOTDIR

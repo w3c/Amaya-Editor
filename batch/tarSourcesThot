@@ -13,7 +13,7 @@
 #       English.tar.gz
 # and   French.tar.gz
 #
-THOTVERSION=2.1d
+THOTVERSION=2.1e
 
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape

@@ -6,7 +6,7 @@
 #
 # And the associated Librairies for supported versions.
 #
-EDITORVERSION=2.1d
+EDITORVERSION=2.1e
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
 
@@ -32,6 +32,7 @@ config/fr-thotdialogue \
 config/en-appdialogue \
 config/en-compildialogue \
 config/en-corrdialogue \
+config/en-cssmessage \
 config/en-drawdialogue \
 config/en-grmdialogue \
 config/en-inddialogue \
@@ -48,6 +49,7 @@ config/en-typdialogue \
 config/fr-appdialogue \
 config/fr-compildialogue \
 config/fr-corrdialogue \
+config/fr-cssmessage \
 config/fr-drawdialogue \
 config/fr-grmdialogue \
 config/fr-inddialogue \

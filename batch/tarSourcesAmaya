@@ -8,7 +8,7 @@
 #
 #       amaya-libs-$MACH-$AMAYAVERSION.tar.gz
 #
-AMAYAVERSION=1.1a
+AMAYAVERSION=1.1b
 THOTDIR=/tahiti/diffusion/opera
 DEST=/tahiti/thottape
 
@@ -19,9 +19,8 @@ cd $THOTDIR
 
 $TAR - \
 INSTALL \
-WINNT \
-tools/dns_daemon/Makefile.in \
-tools/javastub/Makefile.in \
+WINNT/*.mak \
+WINNT/Makefile.orig \
 amaya/Makefile.in \
 amaya/Makefile.libwww \
 amaya/Makefile.math \
