@@ -2379,7 +2379,7 @@ PtrAbstractBox     pAb;
   /* Sinon on remonte dans la hierarchie */
   else
     {
-      while (pAb != NULL && pAb->AbEnclosing != NULL && pAb->AbEnclosing->AbNext == NULL)
+      while (pAb != NULL && pAb->AbEnclosing != NULL && pAb->AbNext == NULL)
 	pAb = pAb->AbEnclosing;
 
       if (pAb != NULL)
