@@ -295,17 +295,21 @@ void AmayaSubPanel::ChangeState( unsigned int new_state )
   if (IsExpanded())
     {
 #ifndef _WINDOWS
+#ifndef _MACOS
       p_expand_button->SetBitmapLabel( m_Bitmap_ExpandOn );
       p_expand_button->SetBitmapSelected( wxBitmap() );
       p_expand_button->SetBitmapFocus( wxBitmap() );
+#endif /*  _MACOS */
 #endif /* _WINDOWS */
     }
   else
     {
 #ifndef _WINDOWS
+#ifndef _MACOS
       p_expand_button->SetBitmapLabel( m_Bitmap_ExpandOff );
       p_expand_button->SetBitmapSelected( wxBitmap() );
       p_expand_button->SetBitmapFocus( wxBitmap() );
+#endif /*  _MACOS */
 #endif /* _WINDOWS */
     }
 
@@ -315,8 +319,10 @@ void AmayaSubPanel::ChangeState( unsigned int new_state )
       // disable the expand button
       p_expand_button->Disable();
 #ifndef _WINDOWS
+#ifndef _MACOS
 	  // setup bitmaps
       p_detach_button->SetBitmapLabel( m_Bitmap_DetachOn );
+#endif /*  _MACOS */
 #endif /* _WINDOWS */
     }
   else
@@ -324,8 +330,10 @@ void AmayaSubPanel::ChangeState( unsigned int new_state )
       // enable the expand button
       p_expand_button->Enable();
 #ifndef _WINDOWS
+#ifndef _MACOS
       // setup bitmaps
       p_detach_button->SetBitmapLabel( m_Bitmap_DetachOff );
+#endif /*  _MACOS */
 #endif /* _WINDOWS */
     }
   Refresh();
