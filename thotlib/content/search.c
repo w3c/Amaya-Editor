@@ -684,14 +684,12 @@ ThotBool SearchText (PtrDocument pDoc, PtrElement *firstEl, int *firstChar,
 Element TtaSearchText (Document document, Element element, ThotBool forward,
 		       char *text, CHARSET encoding)
 {
-  PtrDocument         pDoc;
+  PtrDocument         pDoc = NULL;
   PtrElement          elFound;
   PtrElement          pfirstEl, plastEl;
   int                 firstChar = 0, lastChar = 0;
   ThotBool            found;
-#ifdef _I18N_
   CHAR_T             *ptr;
-#endif /* _I18N_ */
 
    UserErrorCode = 0;
    /* Checks the parameter document */
@@ -715,9 +713,8 @@ Element TtaSearchText (Document document, Element element, ThotBool forward,
 #endif /* _I18N_ */
        found = SearchText (pDoc, &pfirstEl, &firstChar, &plastEl,
 			   &lastChar, forward, TRUE, ptr, ustrlen (ptr));
-#ifdef _I18N_
-       TtaFreeMemory (ptr);
-#endif /* _I18N_ */
+       if (ptr)
+	 TtaFreeMemory (ptr);
        if (found)
 	 elFound = pfirstEl;
      }
