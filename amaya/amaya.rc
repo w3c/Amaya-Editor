@@ -300,7 +300,7 @@ END
 DOCINFOMENU DIALOGEX 100, 100, 237, 106
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Document Information"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     PUSHBUTTON      "Done",ID_DONE,93,84,50,14
     LTEXT           "Location:",IDC_DIURL,10,11,70,8
@@ -759,8 +759,9 @@ STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 CAPTION "Printing ..."
 FONT 8, "MS Sans Serif"
 BEGIN
-    PUSHBUTTON      "Cancel print job",IDCANCEL,32,28,67,14
-    LTEXT           "Printing in progress ...",IDC_STATIC,29,14,72,9
+    DEFPUSHBUTTON   "Cancel print job",IDCANCEL,32,39,67,14
+    LTEXT           "Printing in progress ...",IDC_STATIC,29,9,72,9
+    LTEXT           "page number",IDC_PAGENO,41,24,55,9
 END
 
 CSSDIALOG DIALOG DISCARDABLE  100, 100, 281, 138
