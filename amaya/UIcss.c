@@ -227,7 +227,10 @@ void  UpdateStyleSheet (char *url, char *tempdoc)
       if (css)
 	{
 	  for (doc = 1; doc < DocumentTableLength; doc++)
-	    if (css->documents[doc] && css->enabled[doc])
+	    if (css->documents[doc] && css->enabled[doc] &&
+		/* don't manage a document used by make book */
+		(DocumentMeta[doc] == NULL ||
+		 DocumentMeta[doc]->method != CE_MAKEBOOK))
 	      {
 		/* Change the Display Mode to take into account the new presentation */
 		dispMode = TtaGetDisplayMode (doc);
@@ -295,7 +298,10 @@ void AttrMediaChanged (NotifyAttribute *event)
    attrType.AttrSSchema = elType.ElSSchema;
    attrType.AttrTypeNum = HTML_ATTR_HREF_;
    attr = TtaGetAttribute (el, attrType);
-   if (attr != NULL)
+   if (attr &&
+       /* don't manage a document used by make book */
+       (DocumentMeta[doc] == NULL ||
+	DocumentMeta[doc]->method != CE_MAKEBOOK))
      {
        length = TtaGetTextAttributeLength (attr);
        name2 = TtaGetMemory (length + 1);
@@ -501,7 +507,10 @@ static void CallbackCSS (int ref, int typedata, char *data)
     {
     case CSSForm:
       TtaDestroyDialogue (ref);
-      if (val == 1 && CSSpath)
+      if (val == 1 && CSSpath &&
+	  /* don't manage a document used by make book */
+	  (DocumentMeta[CSSdocument] == NULL ||
+	   DocumentMeta[CSSdocument]->method != CE_MAKEBOOK))
 	{
 	  switch (CSScase)
 	    {

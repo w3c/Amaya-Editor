@@ -416,7 +416,10 @@ void SetREFattribute (Element element, Document doc, char *targetURL,
 	       if (piType.ElTypeNum == piNum)
 		 {
 		   /* The CSS is linked with the PI element */
-		   LoadStyleSheet (targetURL, doc, piEl, NULL, CSS_ALL, FALSE);
+		   /* don't manage a document used by make book */
+		   if (DocumentMeta[doc] == NULL ||
+		       DocumentMeta[doc]->method != CE_MAKEBOOK)
+		     LoadStyleSheet (targetURL, doc, piEl, NULL, CSS_ALL, FALSE);
 		   /* We use the Latin_Script language to avoid the spell_chekcer */
 		   /* to check this element */
 		   strcpy (buffer, "xml-stylesheet type=\"text/css\" href=\"");

@@ -1682,7 +1682,8 @@ void CheckCSSLink (Element el, Document doc, SSchema schema)
       /* Load that style sheet */
       attrType.AttrTypeNum = HTML_ATTR_HREF_;
       attr = TtaGetAttribute (el, attrType);
-      if (attr != NULL)
+      if (attr &&
+	  DocumentMeta[doc] && DocumentMeta[doc]->method != CE_MAKEBOOK)
 	{
 	  length = TtaGetTextAttributeLength (attr);
 	  buff = TtaGetMemory (length + 1);

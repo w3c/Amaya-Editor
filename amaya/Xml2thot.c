@@ -3585,12 +3585,15 @@ void      XmlStyleSheetPi (char *PiData, Element piEl)
 	   ptr++;
 	   while (ptr[0] != EOS && ptr[0] == ' ')
 	     ptr++;
-	   if (ptr[0] != EOS)
+	   if (ptr[0] != EOS &&
+	       /* don't manage a document used by make book */
+	       (DocumentMeta[XMLcontext.doc] == NULL ||
+		DocumentMeta[XMLcontext.doc]->method != CE_MAKEBOOK))
 	     {
 	       delimitor = ptr[0];
 	       css_href = TtaGetMemory (length + 1);
 	       end = strchr (&ptr[1], delimitor);
-	       if (end && end[0] != EOS && css_href != NULL)
+	       if (end && end[0] != EOS && css_href)
 		 {
 		   end[0] = EOS;
 		   strcpy (css_href, &ptr[1]);

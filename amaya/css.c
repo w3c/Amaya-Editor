@@ -665,117 +665,112 @@ void LoadStyleSheet (char *url, Document doc, Element el, CSSInfoPtr css,
 
   import = (css != NULL);
   printing = TtaIsPrinting ();
-  if (TtaGetViewFrame (doc, 1) != 0 || printing)
+  LoadRemoteStyleSheet (url, doc, el, css, tempURL, tempfile);
+  oldcss = SearchCSS (0, tempURL, NULL);
+  if (oldcss == NULL)
     {
-      LoadRemoteStyleSheet (url, doc, el, css, tempURL, tempfile);
-      oldcss = SearchCSS (0, tempURL, NULL);
-      if (oldcss == NULL)
-	{
-	  /* It's a new CSS file: allocate a new Presentation structure */
-	  if (import)
-	    {
-	      /* a @import CSS: add the CSS descriptor just before the main css */
-	      oldcss = AddCSS (0, doc, CSS_IMPORT, tempURL, tempfile, (Element) css);
-	      oldcss->media[doc] = media;
-	    }
-	  else
-	    {
-	      if (user)
-		css = AddCSS (0, doc, CSS_USER_STYLE, tempURL, tempfile, NULL);
-	      else
-		css = AddCSS (0, doc, CSS_EXTERNAL_STYLE, tempURL, tempfile, NULL);
-	      css->media[doc] = media;
-	    }
-	  oldcss = css;
-	}
-      else if (!oldcss->documents[doc])
-	{
-	  /* we have to apply the style sheet to this document */
-	  oldcss->documents[doc] = TRUE;
-	  oldcss->enabled[doc] = TRUE;
-	  /* update the current media value */
-	  if (media == CSS_ALL)
-	    oldcss->media[doc] = media;
-	  else if (oldcss->media[doc] != media ||
-		   oldcss->media[doc] != CSS_ALL)
-	    {
-	      if ((printing && media == CSS_PRINT) ||
-		  (!printing && media == CSS_SCREEN))
-		oldcss->media[doc] = media;
-	    }
-	}
-
+      /* It's a new CSS file: allocate a new Presentation structure */
       if (import)
-	oldcss = css;
-      if (tempfile[0] == EOS)
-	/* cannot do more */
-	return;
-      else if (media == CSS_OTHER || oldcss == NULL ||
-	       (!printing && media == CSS_PRINT) ||
-	       (printing && media == CSS_SCREEN) ||
-	       !oldcss->enabled[doc])
-	/* nothing more to do */
-	return;
-
-      /* store the element which links the CSS */
-      pInfo = oldcss->infos;
-      while (pInfo && pInfo->PiDoc != doc)
-	/* next info context */
-	pInfo = pInfo->PiNext;
-      if (pInfo == NULL)
 	{
-	  /* add the presentation info block */
-	  pInfo = (PInfoPtr) TtaGetMemory (sizeof (PInfo));
-	  pInfo->PiNext = oldcss->infos;
-	  pInfo->PiDoc = doc;
-	  pInfo->PiLink = el;
-	  pInfo->PiSchemas = NULL;
-	  oldcss->infos = pInfo;
+	  /* a @import CSS: add the CSS descriptor just before the main css */
+	  oldcss = AddCSS (0, doc, CSS_IMPORT, tempURL, tempfile, (Element) css);
+	  oldcss->media[doc] = media;
 	}
-
-
-      /* apply CSS rules in current Presentation structure (import) */
-      if ( pInfo->PiSchemas == NULL || import)
+      else
 	{
-	  /* load the resulting file in memory */
-	  res = fopen (tempfile, "r");
-	  if (res == NULL)
-	    {
-	      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
-	      return;
-	    }
-#ifdef _WINDOWS
-	  if (fstat (_fileno (res), &buf))
-#else  /* _WINDOWS */
-	  if (fstat (fileno (res), &buf))
-#endif /* _WINDOWS */
-	    {
-	      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
-	      fclose (res);
-	      return;
-	    }
-	  tmpBuff = TtaGetMemory (buf.st_size + 1000);
-	  if (tmpBuff == NULL)
-	    {
-	      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
-	      fclose (res);
-	      return;
-	    }
-	  len = fread (tmpBuff, buf.st_size, 1, res);
-	  if (len != 1)
-	    {
-	      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
-	      fclose (res);
-	      TtaFreeMemory (tmpBuff);
-	      return;
-	    }
-	  tmpBuff[buf.st_size] = 0;
-	  fclose (res);
-
-	  ReadCSSRules (doc, oldcss, tmpBuff, tempURL, 0, FALSE, NULL);
-	  TtaFreeMemory (tmpBuff);
+	  if (user)
+	    css = AddCSS (0, doc, CSS_USER_STYLE, tempURL, tempfile, NULL);
+	  else
+	    css = AddCSS (0, doc, CSS_EXTERNAL_STYLE, tempURL, tempfile, NULL);
+	  css->media[doc] = media;
+	}
+      oldcss = css;
+    }
+  else if (!oldcss->documents[doc])
+    {
+      /* we have to apply the style sheet to this document */
+      oldcss->documents[doc] = TRUE;
+      oldcss->enabled[doc] = TRUE;
+      /* update the current media value */
+      if (media == CSS_ALL)
+	oldcss->media[doc] = media;
+      else if (oldcss->media[doc] != media ||
+	       oldcss->media[doc] != CSS_ALL)
+	{
+	  if ((printing && media == CSS_PRINT) ||
+	      (!printing && media == CSS_SCREEN))
+	    oldcss->media[doc] = media;
 	}
     }
+  
+  if (import)
+    oldcss = css;
+  if (tempfile[0] == EOS)
+    /* cannot do more */
+    return;
+  else if (media == CSS_OTHER || oldcss == NULL ||
+	   (!printing && media == CSS_PRINT) ||
+	   (printing && media == CSS_SCREEN) ||
+	   !oldcss->enabled[doc])
+    /* nothing more to do */
+    return;
+  
+  /* store the element which links the CSS */
+  pInfo = oldcss->infos;
+  while (pInfo && pInfo->PiDoc != doc)
+    /* next info context */
+    pInfo = pInfo->PiNext;
+  if (pInfo == NULL)
+    {
+      /* add the presentation info block */
+      pInfo = (PInfoPtr) TtaGetMemory (sizeof (PInfo));
+      pInfo->PiNext = oldcss->infos;
+      pInfo->PiDoc = doc;
+      pInfo->PiLink = el;
+      pInfo->PiSchemas = NULL;
+      oldcss->infos = pInfo;
+    }
+
+  /* apply CSS rules in current Presentation structure (import) */
+  if ( pInfo->PiSchemas == NULL || import)
+    {
+      /* load the resulting file in memory */
+      res = fopen (tempfile, "r");
+      if (res == NULL)
+	{
+	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
+	  return;
+	}
+#ifdef _WINDOWS
+      if (fstat (_fileno (res), &buf))
+#else  /* _WINDOWS */
+	if (fstat (fileno (res), &buf))
+#endif /* _WINDOWS */
+	  {
+	    TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
+	    fclose (res);
+	    return;
+	  }
+      tmpBuff = TtaGetMemory (buf.st_size + 1000);
+      if (tmpBuff == NULL)
+	{
+	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
+	  fclose (res);
+	  return;
+	}
+      len = fread (tmpBuff, buf.st_size, 1, res);
+      if (len != 1)
+	{
+	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
+	  fclose (res);
+	  ReadCSSRules (doc, oldcss, tmpBuff, tempURL, 0, FALSE, NULL);
+	  TtaFreeMemory (tmpBuff);
+	  return;
+	}
+      tmpBuff[buf.st_size] = 0;
+      fclose (res);
+
+      ReadCSSRules (doc, oldcss, tmpBuff, tempURL, 0, FALSE, NULL);
+      TtaFreeMemory (tmpBuff);
+    }
 }
-
-
