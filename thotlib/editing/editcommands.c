@@ -2213,7 +2213,7 @@ void ContentEditing (int editType)
 	  if (pAb)
 	    {
 	      if ((editType == TEXT_CUT || editType == TEXT_DEL) &&
-		  pAb->AbCreatorAttr && pAb->AbVolume == 0)
+		  pAb->AbCreatorAttr && pAb->AbVolume == 0 && SelPosition)
 		{
 		  /* delete on an empty attribute value removes the attribute */
 		  pAttr = pAb->AbCreatorAttr;
@@ -2227,13 +2227,14 @@ void ContentEditing (int editType)
 		  notifyAttr.attributeType.AttrTypeNum = pAttr->AeAttrNum;
 		  if (!CallEventAttribute (&notifyAttr, TRUE))
 		    {
-		  if (pDoc->DocEditSequence)
-		    /* close the previous sequence */
-		    CloseHistorySequence (pDoc);
-		  OpenHistorySequence (pDoc, pEl, pEl, pAttr, 1, 0);
-		  TtaRemoveAttribute ((Element) pEl, (Attribute) pAttr, doc);
-		  CloseHistorySequence (pDoc);
-		  SelectElement (pDoc, pEl, FALSE, FALSE);
+		      if (pDoc->DocEditSequence)
+			/* close the previous sequence */
+			CloseHistorySequence (pDoc);
+		      OpenHistorySequence (pDoc, pEl, pEl, pAttr, 1, 0);
+		      TtaRemoveAttribute ((Element) pEl, (Attribute) pAttr,
+					  doc);
+		      CloseHistorySequence (pDoc);
+		      SelectElement (pDoc, pEl, FALSE, FALSE);
 		    }
 		  notifyAttr.attribute = NULL;
 		  CallEventAttribute (&notifyAttr, FALSE);
