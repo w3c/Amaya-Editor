@@ -1892,15 +1892,7 @@ void TtcCreateElement (Document doc, View view)
 		  /* si on est dans un element copie' par inclusion, */
 		  /* on met a jour les copies de cet element. */
 		  RedisplayCopies (pNew, pDoc, TRUE);
-#ifdef IV
-		  /* old position of the sequence */
-		  dispMode = TtaGetDisplayMode (doc);
-		  if (dispMode == DisplayImmediately)
-		    TtaSetDisplayMode (doc, DeferredDisplay);
-#endif
 		  UpdateNumbers (NextElement (pNew), pNew, pDoc, TRUE);
-		  if (dispMode == DisplayImmediately)
-		    TtaSetDisplayMode (doc, dispMode);
 
 		  /* Set the document modified */
 		  SetDocumentModified (pDoc, TRUE, 30);
@@ -1910,6 +1902,9 @@ void TtcCreateElement (Document doc, View view)
 		      (*ThotLocalActions[T_unlock]) ();
 		      lock = TRUE; /* unlock is done */
 		    }
+
+		  if (dispMode == DisplayImmediately)
+		    TtaSetDisplayMode (doc, dispMode);
 		  /* restore a selection */
 		  SelectElementWithEvent (pDoc, FirstLeaf (pNew), TRUE, TRUE);
 		}

@@ -484,7 +484,7 @@ void TtaShowElement (Document document, View view, Element element, int position
 	    DestroyAbsBoxesView (pEl, LoadedDocument[document - 1], FALSE,
 				 aView);
 	  /* and CheckAbsBox will rebuild it at the beginning of the element */
-	  CheckAbsBox (pEl, aView, LoadedDocument[document - 1], FALSE, FALSE);
+	  CheckAbsBox (pEl, aView, LoadedDocument[document - 1], FALSE, TRUE);
 	  if (pEl->ElAbstractBox[aView - 1] != NULL)
 	    ShowBox (frame, pEl->ElAbstractBox[aView - 1]->AbBox, 0, position);
 	}

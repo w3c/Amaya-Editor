@@ -969,8 +969,19 @@ printf ("Specific Widths ...\n");
       pTabRel->TaRTable[0]->AbEnclosing->AbBox)
     {
       /* pack all rows */
+#ifndef _GL
+      DefClip (frame,
+	       pBox->BxXOrg,
+	       pBox->BxYOrg, pBox->BxXOrg + pBox->BxWidth,
+	       pBox->BxYOrg + pBox->BxHeight);
+#else /*_GL */
+      DefRegion (frame,
+		 pBox->BxClipX,
+		 pBox->BxClipY, pBox->BxClipX + pBox->BxClipW,
+		 pBox->BxClipY + pBox->BxClipH);
+#endif /*_GL */
       PackRows = TRUE;
-      width =  table->AbBox->BxW;
+      width =  pBox->BxW;
       box = pBox->BxRows->TaRTable[0]->AbEnclosing->AbBox;
       delta = box->BxLPadding + box->BxRPadding + box->BxLBorder + box->BxRBorder;
       width -=  delta;

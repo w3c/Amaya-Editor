@@ -947,7 +947,7 @@ static void UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
     {
       /* enable structure checking */
       TtaSetStructureChecking (TRUE, doc);
-      TtaSetDisplayMode (doc, DisplayImmediately);
+      /*TtaSetDisplayMode (doc, DisplayImmediately);*/
       /* set the selection that is recorded */
       if (editOp->EoFirstSelectedEl && editOp->EoLastSelectedEl)
         {
@@ -1315,13 +1315,23 @@ static void OpenRedoSequence (Document doc)
 void UndoNoRedo (Document doc)
 {
    PtrDocument          pDoc;
-   ThotBool		doit;
+   DisplayMode          dispMode;
+   ThotBool		doit, lock;
 
    pDoc = LoadedDocument [doc - 1];
    if (!pDoc->DocLastEdit)
      /* history is empty */
       return;
-   TtaSetDisplayMode (doc, DeferredDisplay);
+   dispMode = TtaGetDisplayMode (doc);
+   if (dispMode != DeferredDisplay)
+     TtaSetDisplayMode (doc, DeferredDisplay);
+   if (ThotLocalActions[T_islock])
+     {
+       (*(Proc1)ThotLocalActions[T_islock]) ((void*)&lock);
+       if (!lock)
+	 /* table formatting is not locked, lock it now */
+	 (*ThotLocalActions[T_lock]) ();
+     }
    /* disable structure checking */
    TtaSetStructureChecking (FALSE, doc);
 
@@ -1337,6 +1347,12 @@ void UndoNoRedo (Document doc)
          Remove it from the editing history */
       CancelAnEdit (pDoc->DocLastEdit, pDoc, TRUE);
       }
+
+   if (!lock)
+     /* unlock table formatting */
+     (*ThotLocalActions[T_unlock]) ();
+   if (dispMode != DeferredDisplay)
+     TtaSetDisplayMode (doc, dispMode);
 }
 
 /*----------------------------------------------------------------------
@@ -1360,7 +1376,7 @@ void TtcUndo (Document doc, View view)
    OpenRedoSequence (doc);
 
    dispMode = TtaGetDisplayMode (doc);
-   if (dispMode == DisplayImmediately)
+   if (dispMode != DeferredDisplay)
      TtaSetDisplayMode (doc, DeferredDisplay);
    TtaUnselect (doc);
    if (ThotLocalActions[T_islock])
@@ -1393,8 +1409,8 @@ void TtcUndo (Document doc, View view)
    if (!lock)
      /* unlock table formatting */
      (*ThotLocalActions[T_unlock]) ();
-   if (dispMode == DisplayImmediately)
-     TtaSetDisplayMode (doc, DisplayImmediately);
+   if (dispMode != DeferredDisplay)
+     TtaSetDisplayMode (doc, dispMode);
 }
 
 /*----------------------------------------------------------------------
@@ -1435,7 +1451,7 @@ void TtcRedo (Document doc, View view)
    OpenHistorySequence (pDoc, (PtrElement)firstSel, (PtrElement)lastSel,
 			pAttr, firstSelChar, lastSelChar);
    dispMode = TtaGetDisplayMode (doc);
-   if (dispMode == DisplayImmediately)
+   if (dispMode != DeferredDisplay)
      TtaSetDisplayMode (doc, DeferredDisplay);
    /* disable structure checking */
    TtaSetStructureChecking (FALSE, doc);
@@ -1458,7 +1474,7 @@ void TtcRedo (Document doc, View view)
       }
    /* close sequence in Undo queue */
    pDoc->DocEditSequence = FALSE;
-   if (dispMode == DisplayImmediately)
-     TtaSetDisplayMode (doc, DisplayImmediately);
+   if (dispMode != DeferredDisplay)
+     TtaSetDisplayMode (doc, dispMode);
 }
 
