@@ -11,8 +11,8 @@ AMAYA_MATH_OBJ= \
 	Mathedit.o
 
 AMAYA_MATH_SRC= \
-        $(AMAYA)/MathML.h \
-	$(AMAYA)/MathMLAPP.c 
+        MathML.h \
+	MathMLAPP.c 
 
 AMAYA_MATH_LIBS= 
 
@@ -50,8 +50,11 @@ $(AMAYA)/MathMLT.TRA : $(AMAYA)/MathMLT.T ../bin/tra
 #
 # Interface schemas compilation
 #
-$(AMAYA)/MathML.h $(AMAYA)/MathMLAPP.c : $(AMAYA)/MathML.STR $(AMAYA)/MathML.A
-	APP=`pwd`/../bin/app;\
-	cd $(AMAYA); THOTDIR=`pwd`/.. ;export THOTDIR; \
-	$$APP $(ALL_AMAYA_OPTIONS) MathML
+MathML.h MathMLAPP.c : $(AMAYA)/MathML.STR $(AMAYA)/MathML.A
+	(if test "$(AMAYA)" != "" -a "$(AMAYA)" != "." ; then \
+	    $(CP) $(AMAYA)/MathML.A .  ; \
+	    $(CP) $(AMAYA)/MathML.STR .  ; \
+	fi)
+	THOTDIR=$(THOTDIR) ; export THOTDIR ; \
+	../bin/app $(ALL_AMAYA_OPTIONS) MathML.A
 
