@@ -194,6 +194,7 @@ void *TtaNewTransform ()
    PtrTransform pPa;
 
    pPa = TtaGetMemory (sizeof (Transform));
+   memset (pPa, 0, sizeof (Transform));
    return (pPa);
 }
 
