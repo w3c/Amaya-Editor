@@ -194,7 +194,7 @@ static void GL_SetupPixelFormat (HDC hDC)
         0,                              /* alpha bits (ignored) */
         0,                              /* no accumulation buffer */
         0, 0, 0, 0,                     /* accum bits (ignored) */
-        32,                             /* depth buffer */
+        0,                             /* depth buffer */
         0,                              /* no stencil buffer */
         0,                              /* no auxiliary buffers */
         PFD_MAIN_PLANE,                 /* main layer */
@@ -823,10 +823,11 @@ int GL_UnicodeDrawString (int fg,
     }
   else
     str[end] = EOS;
-  TranslateChars (str);
+  /*TranslateChars (str);*/
   SetPixelTransferBias (fg);
-  glRasterPos2f (x, y);
-  width = UnicodeFontRender (GL_font, str, x, y, end);
+  /*glRasterPos2f (x, y);*/
+  width = UnicodeFontRender (GL_font, str, x, y, end, 
+			     FrameTable[ActiveFrame].FrHeight);
   ResetPixelTransferBias();
   return width;
 }
@@ -855,7 +856,6 @@ int UnicodeCharacterWidth (CHAR_T c, PtrFont font)
     return 0;
   else if (c == INVISIBLE_CHAR)
     return 1;
-
   if (c == START_ENTITY)
     c = '&';
   else if (c == TAB || c == UNBREAKABLE_SPACE)

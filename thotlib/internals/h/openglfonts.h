@@ -45,12 +45,15 @@ static void          FontBBox (GL_font *font,
 			       float *llx, float *lly, 
 			       float *llz, float *urx, 
 			       float  *ury, float *urz);
-static float         FontAdvance (GL_font *font, const char* string);
 static void          FreeGlyphList (GL_font *font);
+
+/*
+  static float         FontAdvance (GL_font *font, const char* string);
+*/
 
 /* Font handling internals */
 static int           FTLibraryInit ();
-static void          FTLibraryFree ();
+void                 FTLibraryFree ();
 
 
 static void          FaceKernAdvance (FT_Face face, unsigned int index1, 

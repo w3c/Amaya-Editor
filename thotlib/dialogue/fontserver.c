@@ -129,6 +129,8 @@ int GetFontFilename (char script, int family,
 	      XftPatternAddString (pat, XFT_FAMILY, "helvetica");
 	      XftPatternAddString (pat, XFT_FAMILY, "Helvetica");
 	      XftPatternAddString (pat, XFT_FAMILY, "ArmNet Helvetica");
+	      XftPatternAddString (pat, XFT_FAMILY, "Arial");
+	      XftPatternAddString (pat, XFT_FAMILY, "arial");	      
 	      XftPatternAddString (pat, XFT_FAMILY, "verdana");
 	      XftPatternAddString (pat, XFT_FAMILY, "Verdana");
 	      XftPatternAddString (pat, XFT_FAMILY, "lucidux");
@@ -142,6 +144,9 @@ int GetFontFilename (char script, int family,
 	      break;
 	    case 3:
 	      XftPatternAddString (pat, XFT_FAMILY, "courier");
+	      XftPatternAddString (pat, XFT_FAMILY, "courier new");
+	      XftPatternAddString (pat, XFT_FAMILY, "Courier");
+	      XftPatternAddString (pat, XFT_FAMILY, "Courier New");
 	      XftPatternAddString (pat, XFT_FAMILY, "mono");
 	      XftPatternAddString (pat, XFT_FAMILY, "sans");
 	      XftPatternAddString (pat, XFT_FAMILY, "serif");
@@ -153,7 +158,7 @@ int GetFontFilename (char script, int family,
 	      break;
 	    }
 	}
-  
+    
       switch (highlight)
 	{
 	case 0:
@@ -161,6 +166,7 @@ int GetFontFilename (char script, int family,
 	  XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_ROMAN);
 	  break;
 	case 1:
+	  XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_BOLD);
 	  if (UseLucidaFamily && family == 1)
 	    XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_DEMIBOLD);
 	  else
@@ -176,20 +182,20 @@ int GetFontFilename (char script, int family,
 	    XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_ITALIC);
 	  break;
 	case 4:
+	  XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_BOLD);
 	case 5:
 	  if (UseLucidaFamily && family == 1)
 	    {
-	      XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_DEMIBOLD);
+	      XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_BOLD);
 	      XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_ITALIC);
 	    }
-	  else if (family == 2 || family == 2)
+	  else if (family == 2 || family == 3)
 	    {	    
 	      XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_BOLD);	    
 	      XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_OBLIQUE);
 	    }
 	  else
-	    {
-	    
+	    {	    
 	      XftPatternAddInteger (pat, XFT_WEIGHT, XFT_WEIGHT_BOLD);	    
 	      XftPatternAddInteger (pat, XFT_SLANT, XFT_SLANT_ITALIC);
 	    }

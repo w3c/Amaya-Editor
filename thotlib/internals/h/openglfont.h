@@ -9,4 +9,6 @@ int GetFontFilename(char script, int family,
 		   int highlight, int size, 
 		    int UseLucidaFamily, int UseAdobeFamily,
 		    char *filename);
-int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int size);
+
+int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, 
+		       int size, int TotalHeight);

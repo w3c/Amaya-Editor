@@ -259,10 +259,15 @@ unsigned char *ReadGIF (FILE *fd, int *w, int *h, int *ncolors, int *cpp,
 	   if (ReadColorMap (fd, bitPixel, localColorMap))
              return (NULL);
 	   for (i = 0; i < bitPixel; i++)
-	     {
+	     { 
+	       colrs[i].red   = localColorMap[0][i];
+	       colrs[i].green = localColorMap[1][i];
+	       colrs[i].blue  = localColorMap[2][i];
+	       /*
 	       colrs[i].red   = GifScreen.ColorMap[0][i];
 	       colrs[i].green = GifScreen.ColorMap[1][i];
 	       colrs[i].blue  = GifScreen.ColorMap[2][i];
+	       */
 	     }
 
 	   for (i = bitPixel; i < MAXCOLORMAPSIZE; i++)
@@ -1510,35 +1515,32 @@ Drawable GifCreate (char *fn, PictInfo *imageDesc, int *xif, int *yif,
     return ((Drawable) NULL);	
 
 #ifdef _GL
-  {
-    
-    
-    ptr = TtaGetMemory (w * h * 4);
-    y = h;
-    while (y--)
-      {
-	buffer2 = buffer + y*w;
-	for (x = 0; x < w; x++)
-	  {		
-	    i = *buffer2++;
-	    if (GifTransparent == i)
-	      {
-		ptr += 3;
-		*ptr++ = 0;
-	      }
-	    else
-	      {
-		*ptr++ = colrs[i].red;
-		*ptr++ = colrs[i].green;
-		*ptr++ = colrs[i].blue;	
-		*ptr++ = 255;
-	      }
-	  }
-      }
-    ptr -= w*h*4;
-    TtaFreeMemory (buffer);
-    pixmap = buffer = ptr;
-  }
+  ptr = TtaGetMemory (w * h * 4);
+  y = h;
+  while (y--)
+    {
+      buffer2 = buffer + y*w;
+      for (x = 0; x < w; x++)
+	{		
+	  i = *buffer2++;
+	  if (GifTransparent == i)
+	    {
+	      ptr += 3;
+	      *ptr++ = 0;
+	    }
+	  else
+	    {
+	      *ptr++ = colrs[i].red;
+	      *ptr++ = colrs[i].green;
+	      *ptr++ = colrs[i].blue;	
+	      *ptr++ = 255;
+	    }
+	}
+    }
+  ptr -= w*h*4;
+  TtaFreeMemory (buffer);
+  buffer = ptr;
+  pixmap = (Pixmap) buffer;
 #else /* _GL */
   if (GifTransparent >= 0)
     {

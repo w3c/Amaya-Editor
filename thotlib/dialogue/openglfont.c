@@ -44,7 +44,7 @@ static int FTLibraryInit ()
 /*--------------------------------------------------
   FTLibraryFree : Free the Freetype hamdle
 ---------------------------------------------------*/
-static void FTLibraryFree ()
+void FTLibraryFree ()
 {
   if (init_done)
     {
@@ -368,7 +368,9 @@ static void FaceKernAdvance (FT_Face face,
 
 /*--------------------------------------------------
   FontAdvance : Return advance of a string
----------------------------------------------------*/
+  without displaying it (With Kerning)
+Not used... for now
+
 static float FontAdvance (GL_font *font, const char* string)
 {
   const unsigned char* c = (unsigned char*)string;
@@ -389,6 +391,8 @@ static float FontAdvance (GL_font *font, const char* string)
     }
   return width;
 }
+---------------------------------------------------*/
+
 
 /* Generic Calls */ 
 
@@ -473,22 +477,14 @@ void *gl_font_init (const char *font_filename, char alphabet, int size)
 	 ft_encoding_adobe_expert ft_encoding_adobe_custom
 	 ft_encoding_apple_roman 
       */
-      
-      if (alphabet == 'G')
-	{
-	  err = FontCharMap (gl_font, ft_encoding_symbol, alphabet);
-	}
-      else
-	{
-	  err = FontCharMap (gl_font, ft_encoding_unicode, alphabet);
-	}
+      err = FontCharMap (gl_font, ft_encoding_unicode, alphabet);
       if (err)
 	{
 	  FT_Done_Face (*(gl_font->face));
 	  free (gl_font);
 	  return NULL;
 	}
-      err = FontFaceSize (gl_font, size, 75);	
+      err = FontFaceSize (gl_font, size, 0);	
       if (err)
 	{
 	  FT_Done_Face (*(gl_font->face));
@@ -500,15 +496,17 @@ void *gl_font_init (const char *font_filename, char alphabet, int size)
   return NULL;
 }
 /*--------------------------------------------------
-  BitmapAppend : Add a bitmap at end
+  BitmapAppend : Add the right portion of a 
+  bitmap at end of another one.
 ---------------------------------------------------*/
 static void BitmapAppend (unsigned char *data, 
-			   unsigned char *append_data,
-			   unsigned int width, register int height,
-			   unsigned int Width)
+			  unsigned char *append_data,
+			  unsigned int width, 
+			  register int height,
+			  unsigned int Width)
 {  
   register int i = 0;
-  
+ 
   while (height--)
     {      
       while (i < width)
@@ -523,7 +521,8 @@ static void BitmapAppend (unsigned char *data,
     }
 }
 /*--------------------------------------------------
-  gl_font_init : Add a bitmap at beginning
+  BitmapPrepend : Add a bitmap at the beginning of 
+  another one
 ---------------------------------------------------*/
 static void BitmapPrepend (unsigned char *data, 
 			   unsigned char *prepend_data,
@@ -543,14 +542,15 @@ static void BitmapPrepend (unsigned char *data,
   UnicodeFontRender : Render an unicode string in a Bitmap
   (That can be use as a texture)
 ---------------------------------------------------------*/
-int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int size)
+int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int size,
+		       int TotalHeight)
 {
   GL_font* font;
   GL_glyph *glyph;
   FT_Vector pen;
   FT_Vector kernAdvance;
   register int left, right;
-  unsigned int Height, Width,  miny, maxy, currenty, finalwidth;
+  int Height, Width, maxy, miny, currenty;
   unsigned char *data, *data2;
 
   font = (GL_font *) gl_font;
@@ -560,9 +560,8 @@ int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int siz
   memset (data, 0, sizeof (unsigned char)*(Height * 2) * Width);
   miny = Height;
   maxy = 0;
-  pen.x = 0; 
+  pen.x = 0;
   pen.y = 0;
-  finalwidth = 0;
   left = FT_Get_Char_Index (*(font->face), *string);
   if (!font->glyphList[left])
       font->glyphList[left] = MakeBitmapGlyph (font, left);
@@ -570,42 +569,53 @@ int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int siz
     {
       glyph = font->glyphList[left];
       currenty = Height - glyph->pos.y;
-      right = FT_Get_Char_Index (*(font->face), *(string + 1));
-      if(!font->glyphList[right])
-	font->glyphList[right] = MakeBitmapGlyph (font, right);
-      FaceKernAdvance( *(font->face), left, right, &kernAdvance);
-      pen.x +=  kernAdvance.x;
-      BitmapAppend (data + currenty*Width + pen.x + glyph->pos.x, 
+      BitmapAppend (data + currenty*Width + pen.x + glyph->pos.x,
 		   glyph->data,
 		   glyph->dimension.x, 
 		   glyph->dimension.y,
 		   Width);
       miny = (miny < currenty) ? miny : currenty;
       currenty = currenty + glyph->dimension.y;
-      maxy = (maxy > currenty) ? maxy : currenty;      
-      pen.x +=  glyph->advance;
-      /*finalwidth += glyph->dimension.x;*/
+      maxy = (maxy > currenty) ? maxy : currenty; 
+      right = FT_Get_Char_Index (*(font->face), *(string + 1));
+      if (!font->glyphList[right])
+	font->glyphList[right] = MakeBitmapGlyph (font, right);
+      FaceKernAdvance (*(font->face), left, right, &kernAdvance);
+      pen.x +=  glyph->advance + kernAdvance.x;
       left = right;
       string++;
     }
-  finalwidth = pen.x;/*(finalwidth > pen.x)? finalwidth: pen.x;*/
+  if (glyph->advance < glyph->dimension.x)
+    pen.x += glyph->dimension.x - glyph->advance;
+  /*the string real's Conputed Heigth*/
   currenty = maxy - miny;
   data2 = (unsigned char *) TtaGetMemory (sizeof (unsigned char)
-					  * currenty * finalwidth);
+					  * currenty * pen.x); 
+  y = y + (float) (Height - miny);
+  Height = ((int) y) - TotalHeight;
+  /* If rasterpos is out of the canvas 
+   We must create a smaller bitmap that fits in*/
+  if (Height > 0)
+    {
+      y = (float) TotalHeight;
+      miny = miny + Height;
+      currenty = maxy - miny;
+      if (currenty <= 0)
+	return pen.x;
+    }      
   BitmapPrepend (data2, 
 		 data + miny*Width,
 		 Width, 
 		 currenty,
-		 finalwidth);
-  
-  glRasterPos2f (x, y + Height - miny);
-  glDrawPixels (finalwidth,
+		 pen.x);
+  free (data);
+  glRasterPos2f (x, y);   
+  glDrawPixels (pen.x,
 		currenty,
 		GL_ALPHA,
 		GL_UNSIGNED_BYTE,
-		(const GLubyte *) (data2));
+		(const GLubyte *) data2);
   free (data2);
-  free (data);  
   return pen.x;
 }
 #endif /* _GL */

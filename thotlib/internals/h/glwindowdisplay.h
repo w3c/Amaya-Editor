@@ -60,7 +60,6 @@ void GL_DrawUnicodeChar (CHAR_T const c,
 			 float x, float y, 
 			 void *GL_font, int fg);
 
-int UnicodeFontRender (void *gl_font, wchar_t *string, float x, float y, int size);
 
 
 void GL_ActivateDrawing();

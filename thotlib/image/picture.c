@@ -10,7 +10,7 @@
  * Authors: I. Vatton (INRIA)
  *          N. Layaida (INRIA) - New picture formats
  *          R. Guetari (W3C/INRIA) - Windows version
- *			P. Cheyrou-lagreze (INRIA) - Opengl Version
+ *          P. Cheyrou-lagreze (INRIA) - Opengl Version
  */
 
 #define PNG_SETJMP_SUPPORTED
@@ -18,7 +18,9 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
+#ifndef _GTK
 #include "lost.xpm"
+#endif /*_GTK*/
 #include "picture.h"
 #include "frame.h"
 #include "epsflogo.h"
@@ -472,7 +474,7 @@ static ThotBool Match_Format (int typeImage, char *fileName)
 void FreePixmap (Pixmap pixmap)
 {
   if (pixmap != None 
-      && pixmap != PictureLogo 
+      && pixmap != (Pixmap) PictureLogo 
       && pixmap != EpsfPictureLogo)
 #ifdef _GL
     TtaFreeMemory (pixmap);
@@ -1324,6 +1326,7 @@ void GetPictHandlersList (int *count, char* buffer)
 
 }
 
+#ifndef _GTK
 /*----------------------------------------------------------------------
    SimpleName
 
@@ -1358,7 +1361,7 @@ static void SimpleName (char *filename, char *simplename)
       *to++ = *from++;
    *to = EOS;
 }
-
+#endif /*_GTK*/
 
 /*----------------------------------------------------------------------
    DrawEpsBox draws the eps logo into the picture box.            
@@ -1631,8 +1634,9 @@ void DrawPicture (PtrBox box, PictInfo *imageDesc, int frame, int x,
 		                            x + xTranslate, y + yTranslate);
 	    }
 	  else
-	    LayoutPicture (imageDesc->PicPixmap, drawable, picXOrg, picYOrg,
-			   w, h, x + xTranslate, y + yTranslate, frame,
+	    LayoutPicture ((Pixmap) imageDesc->PicPixmap, drawable,
+			   picXOrg, picYOrg, w, h, 
+			   x + xTranslate, y + yTranslate, frame,
 			   imageDesc, box);
 	}
     }

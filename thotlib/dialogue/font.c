@@ -390,10 +390,11 @@ int BoxCharacterWidth (CHAR_T c, SpecFont specfont)
 #endif /* _I18N_ */
 #else /*_GL*/
   PtrFont         font;
+  unsigned char   car;
 
   if (SpecialCharBoxWidth (c))
     return 1;
-  GetFontAndIndexFromSpec (c, specfont, &font);
+  car = GetFontAndIndexFromSpec (c, specfont, &font);
   if (font == NULL)
     return 6;
   else 
@@ -441,7 +442,7 @@ int CharacterHeight (unsigned char c, PtrFont font)
 int CharacterAscent (unsigned char c, PtrFont font)
 {
 #ifdef _GL
-  int               ascent;
+  int               ascent, i;
 #else /*_GL*/
 #ifndef _WINDOWS
 #ifdef _GTK
@@ -459,14 +460,14 @@ int CharacterAscent (unsigned char c, PtrFont font)
 #ifdef _GL
 else
    ascent = gl_font_char_ascent (font, &c);
-  /*if (c == 244)
+  if (c == 244)
     {
       i = 0;
       while (i < MAX_FONT && font != TtFonts[i])
 	i++;
       if (TtPatchedFont[i])
 	ascent -= 2;
-    }*/
+    }
   return (ascent);
 #else /*_GL*/
 #ifdef _WINDOWS
