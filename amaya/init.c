@@ -2760,7 +2760,7 @@ static Document LoadDocument (Document doc, char *pathname,
 		/* replace the current document by a new one */
 		newdoc = InitDocView (doc, documentname, docType, 0, FALSE);
 	    }
-	  else if (method == CE_ABSOLUTE)
+	  else if (method == CE_ABSOLUTE || method == CE_HELP)
 	    /* replace the current document by a new one */
 	    newdoc = InitDocView (doc, documentname, docType, 0, FALSE);
 #ifdef ANNOTATIONS
