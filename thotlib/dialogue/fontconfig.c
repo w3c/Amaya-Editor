@@ -21,6 +21,9 @@
 #include "frame.h"
 #include "appdialogue.h"
 #include "application.h"
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
+#include "frame_tv.h"
 
 #ifdef _GTK
 #include <gdk/gdkx.h>
