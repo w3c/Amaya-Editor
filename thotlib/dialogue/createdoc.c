@@ -241,6 +241,7 @@ View                view;
    int		       entry = 0;
    char                BufMenu[MAX_TXT_LEN];
    char                BufDir[MAX_PATH];
+   ThotWidget	       parentWidget;
 
    if (ThotLocalActions[T_createdoc] == NULL)
      {
@@ -251,7 +252,8 @@ View                view;
      }
    /* Creation du formulaire Creer document */
    /* +++++++++++++++++++++++++++++++++++++ */
-   TtaNewForm (NumFormCreateDoc,  0,
+   parentWidget = TtaGetViewFrame (document, view);
+   TtaNewForm (NumFormCreateDoc,  parentWidget,
 	       TtaGetMessage (LIB, TMSG_CREATE_DOC), TRUE, 2, 'L', D_CANCEL);
    /* zone de saisie des dossiers documents */
    BuildPathDocBuffer (BufDir, '\0', &nbitem);
@@ -317,7 +319,7 @@ View                view;
    strcpy (BufMenu, TtaGetMessage (LIB, TMSG_RENAME));
    i = strlen (BufMenu) + 1;
    strcpy (&BufMenu[i], TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-   TtaNewDialogSheet (NumFormConfirm,  0, NULL, 2, BufMenu, FALSE, 1, 'L');
+   TtaNewDialogSheet (NumFormConfirm, parentWidget, NULL, 2, BufMenu, FALSE, 1, 'L');
 
 /* affichage du formulaire Creer document */
    TtaSetDialoguePosition ();

@@ -494,7 +494,7 @@ View                view;
    PathBuffer          docName;
    int                 length, nbItems, entry;
    char                URL_DIR_SEP;
-
+   ThotWidget	       parentWidget;
    if (ThotLocalActions[T_opendoc] == NULL)
      {
 	/* Connecte les actions liees au traitement de la opendoc */
@@ -506,7 +506,8 @@ View                view;
      }
 
    /* Creation du Formulaire Ouvrir */
-   TtaNewForm (NumFormOpenDoc,  0,
+   parentWidget = TtaGetViewFrame (document, view);
+   TtaNewForm (NumFormOpenDoc,  parentWidget,
 	       TtaGetMessage (LIB, TMSG_OPEN_DOC), TRUE, 2, 'L', D_CANCEL);
    /* zone de saisie des dossiers documents */
    BuildPathDocBuffer (bufDir, '\0', &nbItems);
