@@ -1783,8 +1783,7 @@ static char *ParseCSSFont (Element element, PSchema tsch,
 /*----------------------------------------------------------------------
   ParseCSSTextDecoration: parse a CSS text decor string   
   we expect the input string describing the attribute to be     
-  underline, overline, line-through, box, shadowbox, box3d,       
-  cartouche, blink or none
+  underline, overline, line-through, blink or none.
   ----------------------------------------------------------------------*/
 static char *ParseCSSTextDecoration (Element element, PSchema tsch,
 				     PresentationContext context, char *cssRule,
@@ -1811,29 +1810,9 @@ static char *ParseCSSTextDecoration (Element element, PSchema tsch,
 	decor.typed_data.value = CrossOut;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "box", strlen ("box")))
-     {
-       /* the box text-decoration attribute is not yet supported */
-	cssRule = SkipWord (cssRule);
-     }
-   else if (!strncasecmp (cssRule, "boxshadow", strlen ("boxshadow")))
-     {
-       /* the boxshadow text-decoration attribute is not yet supported */
-	cssRule = SkipWord (cssRule);
-     }
-   else if (!strncasecmp (cssRule, "box3d", strlen ("box3d")))
-     {
-       /* the box3d text-decoration attribute is not yet supported */
-	cssRule = SkipWord (cssRule);
-     }
-   else if (!strncasecmp (cssRule, "cartouche", strlen ("cartouche")))
-     {
-	/*the cartouche text-decoration attribute is not yet supported */
-	cssRule = SkipWord (cssRule);
-     }
    else if (!strncasecmp (cssRule, "blink", strlen ("blink")))
      {
-	/*the blink text-decoration attribute will not be supported */
+	/* the blink text-decoration attribute is not supported */
 	cssRule = SkipWord (cssRule);
      }
    else if (!strncasecmp (cssRule, "none", strlen ("none")))

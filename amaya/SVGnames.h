@@ -71,6 +71,7 @@ static AttributeMapping SVGAttributeMappingTable[] =
    {"style", "", 'A', SVG_ATTR_style_, L_OtherValue},
    {"systemLanguage", "", 'A', SVG_ATTR_systemLanguage, L_OtherValue},
    {"target", "", 'A', SVG_ATTR_target_, L_OtherValue},
+   {"text-decoration", "", 'A', SVG_ATTR_text_decoration, L_OtherValue},
    {"title", "", 'A', SVG_ATTR_title_, L_OtherValue},
    {"transform", "", 'A', SVG_ATTR_transform, L_OtherValue},
    {"type", "", 'A', SVG_ATTR_type, L_OtherValue},

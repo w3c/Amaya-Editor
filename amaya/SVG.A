@@ -129,6 +129,12 @@ ATTRIBUTES
 	AttrCreate.Post -> AttrCSSequivModified;
 	AttrDelete.Pre ->  AttrCSSequivDelete;
 	END;
+   text_decoration:
+	BEGIN
+	AttrModify.Post -> AttrCSSequivModified;
+	AttrCreate.Post -> AttrCSSequivModified;
+	AttrDelete.Pre ->  AttrCSSequivDelete;
+	END;	
    fill:
         BEGIN
 	AttrModify.Post -> AttrCSSequivModified;

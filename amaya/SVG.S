@@ -32,6 +32,7 @@ STRUCT
 	      font_variant = normal_, small_caps, inherit;
 	      font_weight = normal_, bold_, bolder, lighter, w100, w200, w300,
 			    w400, w500, w600, w700, w800, w900, inherit;
+	      text_decoration = text;
 	      viewBox = text;
 	      x = text;
               y = text;
@@ -45,6 +46,7 @@ STRUCT
 	      stroke = text;
 	      stroke_width = text;
 	      font_family; font_size; font_style; font_variant; font_weight;
+	      text_decoration;
 	      transform = text)
         = LIST OF (GraphicsElement);
 
@@ -57,6 +59,7 @@ STRUCT
 	      stroke;
 	      stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
+	      text_decoration;
 	      transform;
 	      { graphicsElementEvents })
         = LIST OF (GraphicsElement);
@@ -159,6 +162,7 @@ STRUCT
 
    text_
         (ATTR font_family; font_size; font_style; font_variant; font_weight;
+	      text_decoration;
 	      transform;
 	      x;
 	      y)
@@ -166,6 +170,7 @@ STRUCT
 
    tspan
 	(ATTR font_family; font_size; font_style; font_variant; font_weight;
+	      text_decoration;
 	      x;
               y;
 	      dx = text;
@@ -192,6 +197,7 @@ STRUCT
 	      stroke;
 	      stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
+	      text_decoration;
 	      transform;
 	      { graphicsElementEvents }
 	      x; 
@@ -221,6 +227,7 @@ STRUCT
 	      stroke;
 	      stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
+	      text_decoration;
 	      viewBox;
 	      preserveAspectRatio = text; 
 	      { graphicsElementEvents })
@@ -247,6 +254,7 @@ STRUCT
               stroke;
 	      stroke_width;
 	      font_family; font_size; font_style; font_variant; font_weight;
+	      text_decoration;
 	      transform;
 	      { graphicsElementEvents }
 	      target_ = text)
@@ -287,6 +295,7 @@ STRUCT
 	      externalResourcesRequired;
 	      { PresentationAttributes-All }
 	      font_family; font_size; font_style; font_variant; font_weight;
+	      text_decoration;
 	      transform;
 	      { graphicsElementEvents })
 	= LIST OF (CASE OF
@@ -294,14 +303,15 @@ STRUCT
 	              END);
 
    foreignObject
-        (ATTR transform;
+        (ATTR fill;
+              stroke;
+	      font_family; font_size; font_style; font_variant; font_weight;
+	      text_decoration;
+	      transform;
 	      x; 
               y;
               width_;
-              height_; 
-              fill;
-              stroke;
-	      font_family; font_size; font_style; font_variant; font_weight)
+              height_)
 	= BEGIN CASE OF
 	      HTML; MathML;
 	      END;
@@ -348,7 +358,7 @@ STRUCT
    XMLPI = LIST OF (XMLPI_line = TEXT);
 
    Unknown_namespace = TEXT;
-	
+
 EXCEPT
 
    SVG:                 IsDraw, MoveResize, NoMove;

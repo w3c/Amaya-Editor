@@ -599,6 +599,14 @@ ATTRIBUTES
 	create 'font-weight="inherit"';
 	END;
 
+   text_decoration:
+	BEGIN
+	create SAN;
+	create 'text-decoration="';
+	create text_decoration;
+	create DoubleQuote;
+	END;
+
    viewBox:
 	BEGIN
 	create SAN;

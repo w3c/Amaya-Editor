@@ -990,6 +990,12 @@ ATTRIBUTES
 	Weight: Enclosing =;
 	END;
 
+  text_decoration:
+	BEGIN
+	CreateBefore(AttrName);
+	CreateBefore(AttrValue);
+	END;
+
   viewBox:
         BEGIN
         CreateBefore(AttrName);
