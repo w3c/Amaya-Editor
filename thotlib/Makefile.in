@@ -89,7 +89,6 @@ THOTK_OBJ = \
 	document/readstr.o \
 	document/readtra.o \
 	document/schtrad.o \
-	document/translation.o \
 	tree/exceptions.o \
 	tree/tree.o \
 	tree/checkaccess.o \
@@ -126,6 +125,7 @@ DISPLAY_OBJ = \
 	document/documentapi.o \
 	document/readpivot.o \
 	document/schemas.o \
+	document/translation.o \
 	editing/applicationapi.o \
 	image/abspictures.o \
 	image/epshandler.o \

@@ -22,6 +22,7 @@
 #include "libmsg.h"
 #include "appaction.h"
 #include "appstruct.h"
+#include "application.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -29,7 +30,7 @@
 #include "thotcolor_tv.h"
 #include "select_tv.h"
 #include "edit_tv.h"
-
+/*#include "HTMLnames.h"*/
 /* maximum length of an output buffer */
 #define MAX_BUFFER_LEN 1000
 
@@ -3566,4 +3567,75 @@ void ExportTree (PtrElement pEl, PtrDocument pDoc, STRING fName,
   ClearTranslationSchemasTable ();
   fflush (stdout);
   fflush (stderr);
+}
+
+/*----------------------------------------------------------------------
+   TtaExportDocument
+
+   Saves a whole document into a file in a particular format. The output
+   format is specified by a translation schema. The document is not closed
+   by the function and it can still be accessed by the application program.
+
+   Parameters:
+   document: the document to be exported.
+   fileName: name of the file in which the document must be saved,
+   including the directory name.
+   TSchemaName: name of the translation schema to be used. The directory
+   name must not be specified in parameter TSchemaName. See
+   function TtaSetSchemaPath.
+  ----------------------------------------------------------------------*/
+ThotBool TtaExportDocument (Document document, STRING fileName, STRING TSchemaName)
+{
+  ThotBool ok = FALSE;
+
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    /* parameter document is correct */
+    ok = ExportDocument (LoadedDocument[document - 1], fileName, TSchemaName,
+			 FALSE);
+  return (ok);
+}
+
+
+/*----------------------------------------------------------------------
+   TtaExportDocumentWithNewLineNumbers
+
+   Saves a whole document into a file in a particular format. The output
+   format is specified by a translation schema. The document is not closed
+   by the function and it can still be accessed by the application program.
+   Line numbers recorded in document elements are updated according to the
+   generated file.
+
+   Parameters:
+   document: the document to be exported.
+   fileName: name of the file in which the document must be saved,
+   including the directory name.
+   TSchemaName: name of the translation schema to be used. The directory
+   name must not be specified in parameter TSchemaName. See
+   function TtaSetSchemaPath.
+  ----------------------------------------------------------------------*/
+ThotBool  TtaExportDocumentWithNewLineNumbers (Document document,
+					       STRING fileName,
+					       STRING TSchemaName)
+{
+  ThotBool ok = FALSE;
+
+  UserErrorCode = 0;
+  /* verifies the parameter document */
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else if (fileName == NULL)
+    TtaError (ERR_invalid_parameter);
+  else
+    /* parameter document is correct */
+    ok = ExportDocument (LoadedDocument[document - 1], fileName, TSchemaName,
+			 TRUE);
+  return (ok);
 }
