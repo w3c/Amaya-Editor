@@ -1161,7 +1161,7 @@ char                  *newURL;
 					 pImage->status = IMAGE_MODIFIED;
 				       else
 					 pImage->status = IMAGE_NOT_LOADED;
-				       pImage->elImage = (struct _ElemImage *) content;
+				       /*pImage->elImage = (struct _ElemImage *) content;*/
 				     }
 				 }
 			       else
@@ -1318,7 +1318,7 @@ DBG(fprintf(stderr, "     SRC from %s to %s\n", buf, url);)
 					 pImage->status = IMAGE_MODIFIED;
 				       else
 					 pImage->status = IMAGE_NOT_LOADED;
-				       pImage->elImage = (struct _ElemImage *) el;
+				       /*pImage->elImage = (struct _ElemImage *) el;*/
 				     }
 				 }
 			       else

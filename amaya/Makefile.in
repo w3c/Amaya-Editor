@@ -10,7 +10,8 @@ THOTDIR = @top_srcdir@
 include ../Options
 
 INCLUDES= -DHAVE_CONFIG_H $(AMAYA_INCLUDES) $(X_FLAGS)
-LIBS	=  $(AMAYA_OPTION_LIBS) \
+LIBS	=  $(LIBWWW_LIBS) $(AMAYA_JAVA_LIBS) $(AMAYA_PLUGIN_LIBS) \
+	  $(AMAYA_MATH_LIBS) $(AMAYA_GRAPH_LIBS) $(AMAYA_ILU_LIBS) \
           -L../tablelib -L../thotlib -L.. -lThotTable -lThotEditor \
           $(IMGLIBS) $(AMAYA_OPTION_EXTRA_LIBS) \
 	  $(MOTIF_LIBRARIES) -lXm $(X_LIBS) -lXt $(X_PRE_LIBS) \

@@ -1383,7 +1383,7 @@ boolean		    history;
 	}
       DocumentMeta[newdoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
       DocumentMeta[newdoc]->form_data = TtaStrdup (form_data);
-      DocumentMeta[newdoc]->method = method;
+      DocumentMeta[newdoc]->method = (ClickEvent) method;
 
       if (TtaGetViewFrame (newdoc, 1) != 0)
 	/* this document is displayed */

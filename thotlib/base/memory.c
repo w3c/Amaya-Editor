@@ -30,7 +30,7 @@
 #include "libmsg.h"
 #include "message.h"
 #include "fileaccess.h"
-/*#define DEBUG_MEMORY 1*/
+/*#define DEBUG_MEMORY*/
 
 #undef  THOT_EXPORT
 #define THOT_EXPORT
@@ -222,8 +222,6 @@ void                FreeAll ()
       ptr = (void *)PtFree_Element;
       PtFree_Element = PtFree_Element->ElNext;
       TtaFreeMemory (ptr);
-      if (PtFree_Element == -1)
-	PtFree_Element = NULL;
     }
   NbFree_Element = 0;
 

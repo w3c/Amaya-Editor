@@ -14,7 +14,7 @@ AMAYA_LIBWWW_OBJ= \
 	AHTMemConv.o 
 
 AMAYA_LIBWWW_LIBS= ../libwww.a
-
+LIBWWW_LIBS= -L.. -lwww
 AMAYA_LIBWWW_EXTRA_LIBS=
 
 AMAYA_LIBWWW_INCLUDES= -I$(THOTDIR)/libwww/Library/src
