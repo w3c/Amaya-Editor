@@ -508,7 +508,6 @@ int CharacterWidth (int c, PtrFont font)
   XCharStruct        *xc;
 #endif /* !defined(_WINDOWS) && !defined(_GTK) */
   int                 i = 0, l = 0;
-  int                 space = 32;
 #ifdef _WINARAB
   SIZE                wsize;
   TEXTMETRIC          textMetric;
@@ -535,38 +534,27 @@ int CharacterWidth (int c, PtrFont font)
     {
 #ifdef _WINDOWS
       if (font->FiScript == '6')
-	  {
+	{
 #ifdef _WINARAB
-		  ActiveFont =  WIN_LoadFont (font->FiScript,font->FiFamily, font->FiHighlight, font->FiSize);
-		  if (TtPrinterDC != NULL)
-		{
-		  display = TtPrinterDC;
-		  hOldFont = SelectObject (TtPrinterDC, ActiveFont);
-		}
-	      else
-		{
-		  display = GetDC(FrRef[1]);
-		  hOldFont = SelectObject (display, ActiveFont);
-		}
-		  
-		  
-           GetTextMetrics (display, &textMetric);
-	       GetTextExtentPoint32 (display, (LPCTSTR) (&c),
-				      1, (LPSIZE) (&wsize));
-
-		  return wsize.cx;
+	  ActiveFont =  WIN_LoadFont (font->FiScript,font->FiFamily,
+				      font->FiHighlight, font->FiSize);
+	  if (TtPrinterDC != NULL)
+	    {
+	      display = TtPrinterDC;
+	      hOldFont = SelectObject (TtPrinterDC, ActiveFont);
+	    }
+	  else
+	    {
+	      display = GetDC(FrRef[1]);
+	      hOldFont = SelectObject (display, ActiveFont);
+	    }  
+	  GetTextMetrics (display, &textMetric);
+	  GetTextExtentPoint32 (display, (LPCTSTR) (&c), 1, (LPSIZE) (&wsize));
+	  return wsize.cx;
 #else /*_WINARAB*/
-		  return 8;
+	  return 8;
 #endif _WINARAB
-
-
-
-
-
-
-		  
-	  } 
-		 
+	}  
       if (c == EM_QUAD || c == EM_SPACE || c == THICK_SPACE ||
 	  c == FOUR_PER_EM || c == SIX_PER_EM || c == PUNC_SPACE ||
 	  c == THIN_SPACE || c == HAIR_SPACE || c == MEDIUM_SPACE)
