@@ -848,16 +848,19 @@ static int MoveCut (PtrDocument pDoc, PtrAbstractBox pAb, ThotBool NoBr1,
     else if (NoBr1)
       /* break allowed check the rule NoBreak1 */
       {
-	if (pRNoBr1 != NULL)
+	if (pRNoBr1)
 	  {
 	    if (pAb->AbLeafType != LtCompound)
 	      cutAbsBox = FALSE;
-	    else if (pAb->AbInLine)
+	    else if (pAb->AbBox &&
+		     (pAb->AbBox->BxType == BoBlock ||
+		      pAb->AbBox->BxType == BoFloatBlock))
 	      cutAbsBox = FALSE;
 	    else
 	      /* don't check if the element is truncated */
 	      cutAbsBox = pAb->AbTruncatedHead;
-	    if (pAb->AbBox != NULL &&pAb->AbBox->BxType == BoGhost)
+	    if (pAb->AbBox &&
+		(pAb->AbBox->BxType == BoGhost || pAb->AbBox->BxType == BoFloatGhost))
 	      /* ignore the rule NoBreak1 */
 	      cutAbsBox = TRUE;
 	    if (!cutAbsBox)
@@ -877,17 +880,20 @@ static int MoveCut (PtrDocument pDoc, PtrAbstractBox pAb, ThotBool NoBr1,
 	      }
 	  }
       }
-    else if (pRNoBr2 != NULL)
+    else if (pRNoBr2)
       /* break allowed check the rule NoBreak2 */
       {
 	if (pAb->AbLeafType != LtCompound)
 	  cutAbsBox = FALSE;
-	else if (pAb->AbInLine)
+	else if (pAb->AbBox &&
+		 (pAb->AbBox->BxType == BoBlock ||
+		  pAb->AbBox->BxType == BoFloatBlock))
 	  cutAbsBox = FALSE;
 	else
 	  /* don't check if the element is truncated */
 	  cutAbsBox = pAb->AbTruncatedHead;
-	if (pAb->AbBox != NULL &&pAb->AbBox->BxType == BoGhost)
+	if (pAb->AbBox &&
+	    (pAb->AbBox->BxType == BoGhost || pAb->AbBox->BxType == BoFloatGhost))
 	  /* ignore the rule NoBreak1 */
 	  cutAbsBox = TRUE;
 	if (!cutAbsBox)

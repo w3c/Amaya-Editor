@@ -1924,7 +1924,7 @@ PtrBox GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX,
 	    }
 	  return (NULL);
 	}
-      else if (pBox->BxType == BoGhost)
+      else if (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
 	/* dummy box */
 	return (NULL);
       else if (pAb->AbLeafType == LtGraphics &&
@@ -2142,7 +2142,7 @@ PtrBox GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y, int xDelta, int
 		  if (pLine  && pLine->LiPrevious)
 		    {
 		      box = pBox->BxAbstractBox->AbEnclosing->AbBox;
-		      while (box->BxType == BoGhost)
+		      while (box->BxType == BoGhost || box->BxType == BoFloatGhost)
 			box = box->BxAbstractBox->AbEnclosing->AbBox;
 		      *x = box->BxXOrg + pLine->LiPrevious->LiRealLength;
 		      yDelta = -2;
@@ -2510,7 +2510,8 @@ static void         GiveMovingArea (PtrAbstractBox pAb, int frame,
 	    pParentAb = pAb;
 	    do
 	      pParentAb = pParentAb->AbEnclosing;
-	    while (pParentAb->AbBox->BxType == BoGhost);
+	    while (pParentAb->AbBox->BxType == BoGhost ||
+		   pParentAb->AbBox->BxType == BoFloatGhost);
 	  }
 	else
 	   pParentAb = ViewFrameTable[frame - 1].FrAbstractBox;
@@ -2594,8 +2595,9 @@ static ThotBool     CanBeTranslated (PtrAbstractBox pAb, int frame,
     /* no position rule */
     ok = FALSE;
   else if ( pParentAb->AbBox->BxType == BoBlock ||
-	    pParentAb->AbBox->BxType == BoFloatBlock 
-	    || pParentAb->AbBox->BxType == BoGhost)
+	    pParentAb->AbBox->BxType == BoFloatBlock ||
+	    pParentAb->AbBox->BxType == BoGhost ||
+	    pParentAb->AbBox->BxType == BoFloatGhost)
     /* box displayed in block of lines */
     ok = FALSE;
   else
@@ -2914,7 +2916,8 @@ static ThotBool   CanBeResized (PtrAbstractBox pAb, int frame,
   else if (pAb->AbLeafType == LtText &&
 	   (pParentAb->AbBox->BxType == BoBlock ||
 	    pParentAb->AbBox->BxType == BoFloatBlock ||
-	    pParentAb->AbBox->BxType == BoGhost))
+	    pParentAb->AbBox->BxType == BoGhost ||
+	    pParentAb->AbBox->BxType == BoFloatGhost))
     /* text box displayed in block of lines */
     ok = FALSE;
   /* Il est impossible de modifier la dimension du contenu */

@@ -334,7 +334,9 @@ static void MovingCommands (int code, Document doc, View view,
       if (pBoxBegin)
 	{
 	  xpos = pViewSel->VsXPos;
-	  while (pBoxBegin && pBoxBegin->BxType == BoGhost &&
+	  while (pBoxBegin &&
+		 (pBoxBegin->BxType == BoGhost ||
+		  pBoxBegin->BxType == BoFloatGhost) &&
 		 pBoxBegin->BxAbstractBox &&
 		 pBoxBegin->BxAbstractBox->AbFirstEnclosed)
 	    /* the real selection is on child elements */
@@ -345,7 +347,9 @@ static void MovingCommands (int code, Document doc, View view,
       pBoxEnd = pViewSelEnd->VsBox;
       if (pBoxEnd != NULL)
 	{
-	  while (pBoxEnd != NULL && pBoxEnd->BxType == BoGhost &&
+	  while (pBoxEnd &&
+		 (pBoxEnd->BxType == BoGhost ||
+		  pBoxEnd->BxType == BoFloatGhost) &&
 		 pBoxEnd->BxAbstractBox &&
 		 pBoxEnd->BxAbstractBox->AbFirstEnclosed)
 	    {
@@ -609,7 +613,8 @@ static void MovingCommands (int code, Document doc, View view,
 		      pBox = pBoxEnd;
 		      pEl = pBox->BxAbstractBox->AbElement;
 		      if ((!extendSel && pViewSelEnd->VsBox &&
-			  pViewSelEnd->VsBox->BxType == BoGhost) ||
+			  (pViewSelEnd->VsBox->BxType == BoGhost ||
+			   pViewSelEnd->VsBox->BxType == BoFloatGhost)) ||
 		      (pBox->BxAbstractBox &&
 				pBox->BxAbstractBox->AbLeafType == LtCompound) ||
 		      (pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1]->SrConstruct == CsConstant))

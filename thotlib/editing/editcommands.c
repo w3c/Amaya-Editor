@@ -417,7 +417,7 @@ static ThotBool CloseTextInsertionWithControl ()
 		      LastInsertThotWindow = frame;
 		      pBox = NULL;
 		    }
-		  else if (pBox->BxType != BoGhost)
+		  else if (pBox->BxType != BoGhost && pBox->BxType != BoFloatGhost)
 		    pBox = NULL;
 		}
 	    }
@@ -1162,9 +1162,9 @@ void CloseParagraphInsertion (PtrAbstractBox pAb, int frame)
 	  else
 	    {
 	      pBox = pAb->AbBox;
-	      if (pBox != NULL)
+	      if (pBox)
 		{
-		  if (pBox->BxType == BoGhost)
+		  if (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
 		    pAb = pAb->AbEnclosing;
 		  else
 		    {

@@ -595,6 +595,7 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef,
 	      pParent->BxType != BoBlock &&
 	      pParent->BxType != BoFloatBlock &&
 	      pParent->BxType != BoGhost &&
+	      pParent->BxType != BoFloatGhost &&
 	      pParent->BxW >= dim)
 	    {
 	      dim = - dim + pParent->BxW - pBox->BxLPadding - pBox->BxRPadding - pBox->BxLBorder - pBox->BxRBorder;
@@ -767,7 +768,9 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
       else
 	{
 	  /* explicite rule */
-	  while (pRefAb && pRefAb->AbBox && pRefAb->AbBox->BxType == BoGhost)
+	  while (pRefAb && pRefAb->AbBox &&
+		 (pRefAb->AbBox->BxType == BoGhost ||
+		  pRefAb->AbBox->BxType == BoFloatGhost))
 	    pRefAb = pRefAb->AbEnclosing;
 	  if (pAb->AbEnclosing == pRefAb && !pBox->BxHorizFlex)
 	    /* it's not a stretchable box and it depends on its enclosing */
@@ -978,10 +981,12 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
 	  x = box->BxXOrg;
 	  y = box->BxYOrg;
 	}
-      else if (pRefBox->BxType == BoGhost)
+      else if (pRefBox->BxType == BoGhost || pRefBox->BxType == BoFloatGhost)
 	{
 	  child = pRefAb;
-	  while (child->AbBox->BxType == BoGhost && child->AbFirstEnclosed &&
+	  while ((child->AbBox->BxType == BoGhost ||
+		  child->AbBox->BxType == BoFloatGhost) &&
+		 child->AbFirstEnclosed &&
 		 child->AbFirstEnclosed->AbBox)
 	    child = child->AbFirstEnclosed;
 	  box = child->AbBox;
@@ -1655,7 +1660,8 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 	      inLine = (pAb->AbFloat == 'N' && !pAb->AbNotInLine &&
 			(pParentAb->AbBox->BxType == BoBlock ||
 			 pParentAb->AbBox->BxType == BoFloatBlock ||
-			 pParentAb->AbBox->BxType == BoGhost));
+			 pParentAb->AbBox->BxType == BoGhost ||
+			 pParentAb->AbBox->BxType == BoFloatGhost));
 	      if (horizRef)
 		{
 		  if (!inLine && pAb->AbWidth.DimUnit == UnAuto)
@@ -1715,10 +1721,12 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 			{
 			  /* look for the right ancestor */
 			  pAncestor = pParentAb->AbEnclosing;
-			  while (pAncestor != NULL &&
-				 ((pAncestor->AbWidth.DimAbRef == NULL && pAncestor->AbWidth.DimValue <= 0) ||
+			  while (pAncestor &&
+				 ((pAncestor->AbWidth.DimAbRef == NULL &&
+				   pAncestor->AbWidth.DimValue <= 0) ||
 				  pAncestor->AbInLine ||
-				  pAncestor->AbBox->BxType == BoGhost))
+				  pAncestor->AbBox->BxType == BoGhost ||
+				  pAncestor->AbBox->BxType == BoFloatGhost))
 			    pAncestor = pAncestor->AbEnclosing;
 			  if (pAncestor == NULL)
 			    {
@@ -2312,9 +2320,11 @@ void ComputeAxisRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool hori
 
   /* Deplacement par rapport a la boite distante */
   /* L'axe est place par rapport a la boite elle-meme */
-  if (pRefBox == pBox
-      || pBox->BxType == BoGhost
-      || (pAb->AbInLine && pAb->AbLeafType == LtCompound))
+  if (pRefBox == pBox ||
+      pBox->BxType == BoGhost ||
+      pBox->BxType == BoFloatGhost ||
+      pBox->BxType == BoBlock ||
+      pBox->BxType == BoFloatBlock)
     {
       x = pBox->BxLMargin + pBox->BxLBorder + pBox->BxLPadding;
       y = pBox->BxTMargin + pBox->BxTBorder + pBox->BxTPadding;

@@ -2546,15 +2546,17 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
   else
     {
       mbox = pAb->AbEnclosing->AbBox;
-      if (mbox->BxType == BoGhost)
+      if (mbox->BxType == BoGhost || mbox->BxType == BoFloatGhost)
 	{
 	  selected = selected || mbox->BxAbstractBox->AbSelected;
-	  while (mbox->BxType == BoGhost &&
-		 mbox->BxAbstractBox->AbEnclosing != NULL)
+	  while (mbox->BxAbstractBox->AbEnclosing &&
+		 (mbox->BxType == BoGhost ||
+		  mbox->BxType == BoFloatGhost))
 	    {
 	      mbox = mbox->BxAbstractBox->AbEnclosing->AbBox;
 	      selected = selected ||
-		(mbox->BxType == BoGhost && mbox->BxAbstractBox->AbSelected);
+		(mbox->BxAbstractBox->AbSelected &&
+		 (mbox->BxType == BoGhost || mbox->BxType == BoFloatGhost));
 	    }
 	}
     }     

@@ -1887,6 +1887,8 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 		      case LtCompound:
 			 if (pBox->BxType == BoGhost)
 			    fprintf (fileDescriptor, " GHOST");
+			 else if (pBox->BxType == BoFloatGhost)
+			    fprintf (fileDescriptor, " FLOAT_GHOST");
 			 else if (pBox->BxType == BoBlock)
 			   fprintf (fileDescriptor, " BLOCK");
 			 else if (pBox->BxType == BoFloatBlock)

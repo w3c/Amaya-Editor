@@ -63,7 +63,8 @@ PtrBox GetNextBox (PtrAbstractBox pAb)
 	      /* Est-ce la derniere boite fille d'une boite eclatee */
 	      if (pAb->AbEnclosing &&
 		  pAb->AbEnclosing->AbBox &&
-		  pAb->AbEnclosing->AbBox->BxType == BoGhost)
+		  (pAb->AbEnclosing->AbBox->BxType == BoGhost ||
+		   pAb->AbEnclosing->AbBox->BxType == BoFloatGhost))
 		{
 		   /* remonte la hierarchie */
 		   pAb = pAb->AbEnclosing;
@@ -76,13 +77,15 @@ PtrBox GetNextBox (PtrAbstractBox pAb)
 	   else if (pNextAb->AbBox == NULL)
 	      pNextAb = pNextAb->AbNext;
 	/* Est-ce un pave compose eclate ? */
-	   else if (pNextAb->AbBox->BxType == BoGhost)
+	   else if (pNextAb->AbBox->BxType == BoGhost ||
+		    pNextAb->AbBox->BxType == BoFloatGhost)
 	     {
 		/* descend la hierarchie */
 		while (loop)
 		   if (pNextAb->AbBox == NULL)
 		      pNextAb = pNextAb->AbNext;
-		   else if (pNextAb->AbBox->BxType == BoGhost)
+		   else if (pNextAb->AbBox->BxType == BoGhost ||
+			    pNextAb->AbBox->BxType == BoFloatGhost)
 		      pNextAb = pNextAb->AbFirstEnclosed;
 		   else
 		      loop = FALSE;
@@ -121,7 +124,8 @@ static PtrBox GetPreviousBox (PtrAbstractBox pAb)
      {
       if (pNextAb == NULL)
 	 /* Est-ce la derniere boite fille d'une boite eclatee */
-	 if (pAb->AbEnclosing->AbBox->BxType == BoGhost)
+	 if (pAb->AbEnclosing->AbBox->BxType == BoGhost ||
+	     pAb->AbEnclosing->AbBox->BxType == BoFloatGhost)
 	   {
 	      /* remonte la hierarchie */
 	      pAb = pAb->AbEnclosing;
@@ -134,10 +138,13 @@ static PtrBox GetPreviousBox (PtrAbstractBox pAb)
       else if (pNextAb->AbBox == NULL)
 	 pNextAb = pNextAb->AbPrevious;
       /* Est-ce un pave compose eclate ? */
-      else if (pNextAb->AbBox->BxType == BoGhost)
+      else if (pNextAb->AbBox->BxType == BoGhost ||
+	       pNextAb->AbBox->BxType == BoFloatGhost)
 	{
 	   /* descend la hierarchie */
-	   while (!pNextAb->AbDead && pNextAb->AbBox->BxType == BoGhost)
+	   while (!pNextAb->AbDead &&
+		  (pNextAb->AbBox->BxType == BoGhost ||
+		   pNextAb->AbBox->BxType == BoFloatGhost))
 	     {
 	       if (pNextAb->AbFirstEnclosed->AbDead)
 		 pNextAb->AbBox->BxType = BoComplete;
@@ -1507,6 +1514,7 @@ static void InitLine (PtrLine pLine, PtrBox pBlock, int indent,
 	clearR = 'R';
     }
   variable = (pBox && pAb &&
+	      pBox->BxType != BoFloatGhost &&
 	      (pAb->AbLeafType == LtText ||
 	       (pAb->AbFloat == 'N' && pAb->AbLeafType == LtCompound &&
 		pAb->AbWidth.DimAbRef &&
@@ -2647,7 +2655,8 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 		  pChildAb->AbDisplay == 'U' &&
 		  pChildAb->AbFloat == 'N')
 	  pChildAb = pChildAb->AbNext;
-	else if (pChildAb->AbBox->BxType == BoGhost)
+	else if (pChildAb->AbBox->BxType == BoGhost ||
+		 pChildAb->AbBox->BxType == BoFloatGhost)
 	  /* go down into the hierarchy */
 	  pChildAb = pChildAb->AbFirstEnclosed;
 	else
@@ -3330,7 +3339,8 @@ void RemoveLines (PtrBox pBox, int frame, PtrLine pFirstLine,
 	    if (pAb->AbBox == NULL)
 	      /* la boite a deja ete detruite */
 	      pAb = pAb->AbNext;
-	    else if (pAb->AbBox->BxType == BoGhost)
+	    else if (pAb->AbBox->BxType == BoGhost ||
+		     pAb->AbBox->BxType == BoFloatGhost)
 	      /* c'est un pave fantome -> descend la hierarchie */
 	      pAb = pAb->AbFirstEnclosed;
 	    else
@@ -3373,7 +3383,7 @@ void RecomputeLines (PtrAbstractBox pAb, PtrLine pFirstLine, PtrBox ibox,
 
 
    /* Si la boite est eclatee, on remonte jusqu'a la boite bloc de lignes */
-   while (pAb->AbBox->BxType == BoGhost)
+   while (pAb->AbBox->BxType == BoGhost || pAb->AbBox->BxType == BoFloatGhost)
       pAb = pAb->AbEnclosing;
 
    pBox = pAb->AbBox;
@@ -3554,7 +3564,7 @@ void UpdateLineBlock (PtrAbstractBox pAb, PtrLine pLine, PtrBox pBox,
   int                 nSpaces;
 
   /* For ghost boxes go up to the block of lines */
-  while (pAb->AbBox->BxType == BoGhost)
+  while (pAb->AbBox->BxType == BoGhost || pAb->AbBox->BxType == BoFloatGhost)
     pAb = pAb->AbEnclosing;
   pParentBox = pAb->AbBox;
   if (pLine)

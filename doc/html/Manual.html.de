@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Amaya Benutzerhandbuch</title>
-  <meta name="GENERATOR" content="amaya 7.1, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 7.2+, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
   <style type="text/css">
   </style>
@@ -25,7 +24,7 @@
 
 <h1 style="text-align: center">Benutzerhandbuch</h1>
 
-<h4 style="text-align: center">Version 7.2&nbsp;&nbsp;&nbsp; January 2003</h4>
+<h4 style="text-align: center">Version 8.0&nbsp;&nbsp;&nbsp; April 2003</h4>
 <hr />
 <dl>
   <dt><strong>Autoren:</strong></dt>

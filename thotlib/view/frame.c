@@ -259,7 +259,7 @@ void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
   ThotBool            setWindow;
 
   pBox = pAb->AbBox;
-  if (pBox->BxType == BoGhost)
+  if (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
     return;
   pFrame = &ViewFrameTable[frame - 1];
   x = pFrame->FrXOrg;

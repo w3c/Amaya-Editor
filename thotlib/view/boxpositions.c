@@ -473,7 +473,7 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
 	    if (pChildBox->BxType == BoSplit || pChildBox->BxType == BoMulScript)
 	      {
 		box1 = pChildBox->BxNexChild;
-		while (box1 != NULL)
+		while (box1)
 		  {
 		    if (horizRef)
 		      {
@@ -484,6 +484,8 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
 		      }
 		    if (vertRef)
 		      {
+if (box1->BxAbstractBox->AbLeafType == LtPicture)
+  printf ("Translate=%d  %s\n", y, box1->BxAbstractBox->AbElement->ElLabel);
 			box1->BxYOrg += y;
 #ifdef _GL
 			box1->BxClipY += y;
@@ -679,7 +681,11 @@ void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
 		      /* il faut deplacer tout le contenu de la boite */
 		      YMoveAllEnclosed (pChildBox, y, frame);
 		    else
-		      pChildBox->BxYOrg += y;
+		      {
+if (pChildBox->BxAbstractBox->AbLeafType == LtPicture)
+  printf ("AddTranslate=%d  %s\n", y, pChildBox->BxAbstractBox->AbElement->ElLabel);
+			pChildBox->BxYOrg += y;
+		      }
 		    /* La boite est placee */
 		    pChildBox->BxYToCompute = FALSE;
 		    /* detecte les debordements en Y de la boite englobante */

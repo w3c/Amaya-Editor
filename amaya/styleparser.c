@@ -1287,7 +1287,7 @@ static char *ParseCSSClear (Element element, PSchema tsch,
   ptr = cssRule;
   cssRule = SkipWord (cssRule);
   if (pval.typed_data.value == 0)
-    CSSParseError ("Invalid float value", ptr, cssRule);
+    CSSParseError ("Invalid clear value", ptr, cssRule);
   else
     {
       if (DoApply)
@@ -4199,6 +4199,41 @@ void PToCss (PresentationSetting settings, char *buffer, int len, Element el)
 	  break;
 	case Marker:
 	  strcpy (buffer, "display: marker");
+	  break;
+	default:
+	  break;
+	}
+      break;
+    case PRFloat:
+      switch (settings->value.typed_data.value)
+	{
+	case FloatNone:
+	  strcpy (buffer, "float: none");
+	  break;
+	case FloatLeft:
+	  strcpy (buffer, "float: left");
+	  break;
+	case FloatRight:
+	  strcpy (buffer, "float: right");
+	  break;
+	default:
+	  break;
+	}
+      break;
+    case PRClear:
+      switch (settings->value.typed_data.value)
+	{
+	case ClearNone:
+	  strcpy (buffer, "clear: none");
+	  break;
+	case ClearLeft:
+	  strcpy (buffer, "clear: left");
+	  break;
+	case ClearRight:
+	  strcpy (buffer, "clear: right");
+	  break;
+	case ClearBoth:
+	  strcpy (buffer, "clear: both");
 	  break;
 	default:
 	  break;

@@ -576,7 +576,7 @@ void ShowBox (int frame, PtrBox pBox, int position, int percent)
 
    if (pBox == NULL)
       return;
-   while (pBox->BxType == BoGhost)
+   while (pBox->BxType == BoGhost || pBox->BxType == BoFloatGhost)
      pBox = pBox->BxAbstractBox->AbEnclosing->AbBox;
 
    if (pBox->BxType == BoSplit)
@@ -769,32 +769,33 @@ void ShowSelectedBox (int frame, ThotBool actif)
   ----------------------------------------------------------------------*/
 ThotBool IsAbsBoxVisible (int frame, PtrAbstractBox pAb)
 {
-   ViewFrame          *pFrame;
-   int                 y, ymax;
-   int                 dx, dy;
+  ViewFrame          *pFrame;
+  int                 y, ymax;
+  int                 dx, dy;
 
-   pFrame = &ViewFrameTable[frame - 1];
-   if (pAb == NULL)
-      return (FALSE);		/* pas de pave a tester */
-   else if (pAb->AbBox == NULL)
-      return (FALSE);		/* pas de boite a tester */
-   else if (pAb->AbVisibility < pFrame->FrVisibility ||
-	    pAb->AbBox->BxType == BoGhost)
-      return (FALSE);		/* la boite n'est pas visible par definition */
-   else
-     {
+  pFrame = &ViewFrameTable[frame - 1];
+  if (pAb == NULL)
+    return (FALSE);		/* pas de pave a tester */
+  else if (pAb->AbBox == NULL)
+    return (FALSE);		/* pas de boite a tester */
+  else if (pAb->AbVisibility < pFrame->FrVisibility ||
+	   pAb->AbBox->BxType == BoGhost ||
+	   pAb->AbBox->BxType == BoFloatGhost)
+    return (FALSE);		/* la boite n'est pas visible par definition */
+  else
+    {
 #ifndef _GL
-	y = pAb->AbBox->BxYOrg;
-	GetSizesFrame (frame, &dx, &dy);
-	ymax = pFrame->FrYOrg + dy;
+      y = pAb->AbBox->BxYOrg;
+      GetSizesFrame (frame, &dx, &dy);
+      ymax = pFrame->FrYOrg + dy;
 #else /* _GL */
-	y = pAb->AbBox->BxClipY;
-	GetSizesFrame (frame, &dx, &dy);
-	ymax = dy;
+      y = pAb->AbBox->BxClipY;
+      GetSizesFrame (frame, &dx, &dy);
+      ymax = dy;
 #endif /* _GL */
-	if (y <= ymax)
-	   return (FALSE);
-	else
-	   return (TRUE);
-     }
+      if (y <= ymax)
+	return (FALSE);
+      else
+	return (TRUE);
+    }
 }

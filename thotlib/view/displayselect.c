@@ -542,7 +542,8 @@ void DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox)
       else
 	{
 	  pParentBox = pBox->BxAbstractBox->AbEnclosing->AbBox;
-	  while (pParentBox->BxType == BoGhost)
+	  while (pParentBox->BxType == BoGhost ||
+		 pParentBox->BxType == BoFloatGhost)
 	    {
 	      pAb = pParentBox->BxAbstractBox;
 	      if (pAb->AbEnclosing == NULL)
