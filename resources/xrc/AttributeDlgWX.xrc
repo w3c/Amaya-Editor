@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource version="2.3.0.1" xmlns="http://www.wxwindows.org/wxxrc">
+  <object class="wxDialog" name="wxID_DLG_ATTRIBUTE">
+    <title></title>
+    <style>wxDEFAULT_DIALOG_STYLE|wxSTAY_ON_TOP|wxDIALOG_MODAL|wxRESIZE_BORDER|wxTAB_TRAVERSAL</style>
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <orient>wxHORIZONTAL</orient>
+          <object class="sizeritem">
+            <object class="wxCheckListBox">
+              <content>
+                <item checked="1">href</item>
+                <item checked="0">id</item>
+                <item checked="0">class</item>
+              </content>
+            </object>
+            <option>1</option>
+            <flag>wxALL|wxEXPAND</flag>
+          </object>
+          <object class="sizeritem">
+            <object class="wxStaticBoxSizer">
+              <label>Value</label>
+              <orient>wxVERTICAL</orient>
+              <object class="sizeritem">
+                <object class="wxPanel" name="wxID_PANEL_VALUE_DUMMY"/>
+                <option>1</option>
+                <flag>wxALL|wxEXPAND</flag>
+              </object>
+            </object>
+            <option>1</option>
+            <flag>wxLEFT|wxEXPAND</flag>
+            <border>5</border>
+          </object>
+        </object>
+        <option>1</option>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>5</border>
+      </object>
+      <object class="sizeritem">
+        <object class="wxCheckBox" name="wxID_CHECK_AUTOREF">
+          <label>Auto refresh</label>
+        </object>
+        <option>0</option>
+        <flag>wxALL|wxEXPAND</flag>
+      </object>
+      <object class="sizeritem">
+        <object class="wxBoxSizer">
+          <orient>wxHORIZONTAL</orient>
+          <object class="spacer">
+            <option>1</option>
+            <flag>wxEXPAND</flag>
+          </object>
+          <object class="sizeritem">
+            <object class="wxButton" name="wxID_OK">
+              <label>OK</label>
+            </object>
+            <flag>wxRIGHT</flag>
+            <border>5</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxButton" name="wxID_CANCEL">
+              <label>CANCEL</label>
+            </object>
+          </object>
+        </object>
+        <option>0</option>
+        <flag>wxALL|wxEXPAND</flag>
+        <border>5</border>
+      </object>
+    </object>
+  </object>
+</resource>
