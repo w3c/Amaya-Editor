@@ -878,7 +878,12 @@ static void         InitEnviron ()
 
    /* default values for various global variables */
    FirstCreation = FALSE;
-   CurSaveInterval = DEF_SAVE_INTVL;
+   CurSaveInterval = 0;
+   pT = (char *)TtaGetEnvString ("AUTOSAVE");
+   if (pT != NULL)
+     CurSaveInterval = atoi(pT);
+   if (CurSaveInterval <= 0)
+     CurSaveInterval = DEF_SAVE_INTVL;
    HighlightBoxErrors = FALSE;
    InsertionLevels = 4;
 
