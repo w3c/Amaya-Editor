@@ -3807,11 +3807,11 @@ static void ExportXmlText (PtrDocument pDoc,  PtrElement pNode,
   parent = pNode->ElParent;
 
   pRe1 = parent->ElStructSchema->SsRule->SrElem[parent->ElTypeNumber - 1];
-  if (pRe1->SrName != NULL &&
-      ((strcmp (pRe1->SrName, "xmlcomment_line") == 0) ||
-       (strcmp (pRe1->SrName, "xmlpi_line") == 0) ||
-       (strcmp (pRe1->SrName, "cdata_line") == 0) ||
-       (strcmp (pRe1->SrName, "doctype_line") == 0)))
+  if (pRe1->SrOrigName != NULL &&
+      ((strcmp (pRe1->SrOrigName, "xmlcomment_line") == 0) ||
+       (strcmp (pRe1->SrOrigName, "xmlpi_line") == 0) ||
+       (strcmp (pRe1->SrOrigName, "cdata_line") == 0) ||
+       (strcmp (pRe1->SrOrigName, "doctype_line") == 0)))
     translate = FALSE;
 
   /* in MathML, try to generate the name of the char. */
@@ -4006,10 +4006,10 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode,
 	      specialTag = FALSE;
 	      /* Export the element name */
 	      pRe1 = pNode->ElStructSchema->SsRule->SrElem[pNode->ElTypeNumber - 1];
-	      if ((strcmp (pRe1->SrName, "xmlcomment_line") == 0) ||
-		  (strcmp (pRe1->SrName, "xmlpi_line") == 0) ||
-		  (strcmp (pRe1->SrName, "cdata_line") == 0) ||
-		  (strcmp (pRe1->SrName, "doctype_line") == 0))
+	      if ((strcmp (pRe1->SrOrigName, "xmlcomment_line") == 0) ||
+		  (strcmp (pRe1->SrOrigName, "xmlpi_line") == 0) ||
+		  (strcmp (pRe1->SrOrigName, "cdata_line") == 0) ||
+		  (strcmp (pRe1->SrOrigName, "doctype_line") == 0))
 		{
 		  startName[0] = EOS;
 		  f = pNode->ElNext;
@@ -4026,25 +4026,25 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode,
 		  for (i = 1; i <= indent; i++)
 		    fprintf (fileDescriptor, " ");
 		  
-		  if (strcmp (pRe1->SrName, "xmlcomment") == 0)
+		  if (strcmp (pRe1->SrOrigName, "xmlcomment") == 0)
 		    {
 		      strcpy (startName, "<!--");
 		      strcpy (endName, "-->");
 		      specialTag = TRUE;
 		    }
-		  else if (strcmp (pRe1->SrName, "xmlpi") == 0)
+		  else if (strcmp (pRe1->SrOrigName, "xmlpi") == 0)
 		    {
 		      strcpy (startName, "<?");
 		      strcpy (endName, "?>");
 		      specialTag = TRUE;
 		    }
-		  else if (strcmp (pRe1->SrName, "doctype") == 0)
+		  else if (strcmp (pRe1->SrOrigName, "doctype") == 0)
 		    {
 		      strcpy (startName, "<!DOCTYPE ");
 		      strcpy (endName, ">");
 		      specialTag = TRUE;
 		    }
-		  else if (strcmp (pRe1->SrName, "cdata") == 0)
+		  else if (strcmp (pRe1->SrOrigName, "cdata") == 0)
 		    {
 		      strcpy (startName, "<![CDATA[");
 		      strcpy (endName, "]]>");
@@ -4062,8 +4062,8 @@ void ExportXmlDocument (PtrDocument pDoc, PtrElement pNode,
 			  strcat (endName, ns_prefix);
 			  strcat (endName, ":");
 			}
-		      strcat (startName, pRe1->SrName);
-		      strcat (endName, pRe1->SrName);
+		      strcat (startName, pRe1->SrOrigName);
+		      strcat (endName, pRe1->SrOrigName);
 		      strcat (endName, ">");
 		    }
 		}
