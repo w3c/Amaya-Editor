@@ -1024,7 +1024,7 @@ void CreateAnchor (Document doc, View view, ThotBool createLink)
 		/* it's a caret */
 		lastChar = firstChar;
 	      lg = TtaGetElementVolume (last);
-	      if (lastChar < lg)
+	      if (lastChar <= lg)
 		/* split the last text */
 		{
 		  TtaRegisterElementReplace (last, doc);
