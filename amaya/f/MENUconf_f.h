@@ -32,8 +32,6 @@ extern void SetGeometryConf ( int document,
                               const char * view_name );
 extern void GeometryConfMenu ( Document document,
                                View view );
-extern void LanNegConfMenu ( Document document,
-                             View view );
 extern void AnnotConfMenu ( Document document,
                             View view );
 extern int GetPrefGeneralBase ( void );
@@ -43,8 +41,8 @@ extern int GetPrefProxyBase ( void );
 extern int GetPrefPublishBase ( void );
 extern int GetPrefColorBase ( void );
 extern int GetPrefGeometryBase ( void );
-extern int GetPrefLanNegBase ( void );
 extern int GetPrefAnnotBase ( void );
+extern int GetPrefDAVBase ( void );
 extern void SetProp_General ( const Prop_General * prop );
 extern Prop_General GetProp_General ( void );
 extern void SetProp_Browse ( const Prop_Browse * prop );
@@ -57,8 +55,10 @@ extern void SetProp_Proxy ( const Prop_Proxy * prop );
 extern Prop_Proxy GetProp_Proxy ( void );
 extern void SetProp_Color ( const Prop_Color * prop );
 extern Prop_Color GetProp_Color ( void );
-extern void SetProp_LanNeg ( const Prop_LanNeg * prop );
-extern Prop_LanNeg GetProp_LanNeg ( void );
+extern void SetProp_Annot ( const Prop_Annot * prop );
+extern Prop_Annot GetProp_Annot ( void );
+extern void SetProp_DAV ( const Prop_DAV * prop );
+extern Prop_DAV GetProp_DAV ( void );
 extern void PreferenceMenu ( Document document,
                              View view );
 extern void InitConfMenu ( void );
@@ -91,8 +91,6 @@ extern void SetGeometryConf ( int document,
                                 const char * view_name );
 extern void GeometryConfMenu ( Document document,
                                  View view );
-extern void LanNegConfMenu ( Document document,
-                               View view );
 extern void AnnotConfMenu ( Document document,
                               View view );
 extern int GetPrefGeneralBase ( void );
@@ -102,8 +100,8 @@ extern int GetPrefProxyBase ( void );
 extern int GetPrefPublishBase ( void );
 extern int GetPrefColorBase ( void );
 extern int GetPrefGeometryBase ( void );
-extern int GetPrefLanNegBase ( void );
 extern int GetPrefAnnotBase ( void );
+extern int GetPrefDAVBase ( void );
 extern void SetProp_General ( const Prop_General * prop );
 extern Prop_General GetProp_General ( void );
 extern void SetProp_Browse ( const Prop_Browse * prop );
@@ -116,10 +114,10 @@ extern void SetProp_Proxy ( const Prop_Proxy * prop );
 extern Prop_Proxy GetProp_Proxy ( void );
 extern void SetProp_Color ( const Prop_Color * prop );
 extern Prop_Color GetProp_Color ( void );
-extern void SetProp_LanNeg ( const Prop_LanNeg * prop );
-extern Prop_LanNeg GetProp_LanNeg ( void );
-extern Prop_DAV GetProp_DAV ( void );
+extern void SetProp_Annot ( const Prop_Annot * prop );
+extern Prop_Annot GetProp_Annot ( void );
 extern void SetProp_DAV ( const Prop_DAV * prop );
+extern Prop_DAV GetProp_DAV ( void );
 extern void PreferenceMenu ( Document document,
                                View view );
 extern void InitConfMenu ( void );

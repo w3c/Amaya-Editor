@@ -31,11 +31,11 @@ extern void DAVShowInfo ( AHTReqContext *context );
 extern void DAVShowPropfindInfo ( AHTReqContext *context );
 extern AwList * GetPropfindInfoFromNode ( AwNode *propnode );
 extern void DAVShowMultiStatusInfo ( AHTReqContext *context );
-extern void DAVSetPreferences ( void );
-extern void DAVGetPreferences ( void );
-extern void DAVShowPreferencesDlg_callback ( int ref,
-                                             int typedata,
-                                             char *data );
+extern void SetDAVConf ( void );
+extern void GetDAVConf ( void );
+extern void DAVPreferencesDlg_callback ( int ref,
+                                         int typedata,
+                                         char *data );
 extern void InitDAVPreferences ( void );
 extern void DAVShowPreferencesDlg ( Document document );
 
@@ -66,11 +66,11 @@ extern void DAVShowInfo ( AHTReqContext *context );
 extern void DAVShowPropfindInfo ( AHTReqContext *context );
 extern AwList * GetPropfindInfoFromNode ( AwNode *propnode );
 extern void DAVShowMultiStatusInfo ( AHTReqContext *context );
-extern void DAVSetPreferences ( void );
-extern void DAVGetPreferences ( void );
-extern void DAVShowPreferencesDlg_callback ( int ref,
-                                               int typedata,
-                                               char *data );
+extern void SetDAVConf ( void );
+extern void GetDAVConf ( void );
+extern void DAVPreferencesDlg_callback ( int ref,
+                                           int typedata,
+                                           char *data );
 extern void InitDAVPreferences ( void );
 extern void DAVShowPreferencesDlg ( Document document );
 

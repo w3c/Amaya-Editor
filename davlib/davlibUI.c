@@ -15,7 +15,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.18  2004-09-22 16:07:08  cvs
+ ** Revision 1.19  2004-09-23 16:18:44  vatton
+ ** Reorganization of Preferences menus.
+ ** Irene
+ **
+ ** Revision 1.18  2004/09/22 16:07:08  cvs
  ** Win32 WebAV preferences.
  ** Irene
  **
@@ -122,7 +126,7 @@
  *                         PRIVATE VARIABLES                             *
  * ********************************************************************* */
 
-static int      DAVPreferencesBase;
+extern int      DAVBase;
 extern Prop_DAV GProp_DAV;
 #ifdef _WINGUI
 #include "resource.h"
@@ -805,10 +809,10 @@ void DAVShowMultiStatusInfo (AHTReqContext *context)
 
 
 /*----------------------------------------------------------------------
-  DAVSetPreferences: update the DAV preferences based on the 
+  SetDAVConf: update the DAV preferences based on the 
                      preference dialog options.         
   ---------------------------------------------------------------------- */
-void DAVSetPreferences (void)
+void SetDAVConf (void)
 {
   /* ****** User reference -  DAVUserURL ***** */
   /* if there's something in textUserReference, analyse it*/    
@@ -851,10 +855,10 @@ void DAVSetPreferences (void)
 
 
 /*----------------------------------------------------------------------
-  DAVGetPreferences: set the DAV preferences dialog with the 
+  GetDAVConf: set the DAV preferences dialog with the 
                      active values.                     
   ---------------------------------------------------------------------- */
-void DAVGetPreferences (void)
+void GetDAVConf (void)
 {
   char *ptr = NULL;
 
@@ -922,27 +926,27 @@ void DAVGetPreferences (void)
 #ifdef _WX
 #endif /* _WX */
 #ifdef _GTK
-  TtaSetTextForm (DAVPreferencesBase + DAVtextUserReference,
+  TtaSetTextForm (DAVBase + DAVtextUserReference,
 		  GProp_DAV.textUserReference);
-  TtaSetTextForm (DAVPreferencesBase + DAVtextUserResources,
+  TtaSetTextForm (DAVBase + DAVtextUserResources,
 		  GProp_DAV.textUserResources);
   if (!strcmp (GProp_DAV.radioDepth, "infinity")) 
-    TtaSetMenuForm (DAVPreferencesBase + DAVradioDepth, 1);
+    TtaSetMenuForm (DAVBase + DAVradioDepth, 1);
   else 
-    TtaSetMenuForm (DAVPreferencesBase + DAVradioDepth, 0);
+    TtaSetMenuForm (DAVBase + DAVradioDepth, 0);
   if (!strcmp (GProp_DAV.radioLockScope, "shared")) 
-    TtaSetMenuForm (DAVPreferencesBase + DAVradioLockScope, 1);
+    TtaSetMenuForm (DAVBase + DAVradioLockScope, 1);
   else 
-    TtaSetMenuForm (DAVPreferencesBase + DAVradioLockScope, 0);
+    TtaSetMenuForm (DAVBase + DAVradioLockScope, 0);
   if (!strcmp (GProp_DAV.radioTimeout, "Infinite"))
-    TtaSetMenuForm (DAVPreferencesBase + DAVradioTimeout, 0);
+    TtaSetMenuForm (DAVBase + DAVradioTimeout, 0);
   else
-    TtaSetMenuForm (DAVPreferencesBase + DAVradioTimeout, 1);
-  TtaSetNumberForm (DAVPreferencesBase + DAVnumberTimeout,
+    TtaSetMenuForm (DAVBase + DAVradioTimeout, 1);
+  TtaSetNumberForm (DAVBase + DAVnumberTimeout,
 		    GProp_DAV.numberTimeout);
-  TtaSetToggleMenu (DAVPreferencesBase + DAVtoggleAwareness, 0,
+  TtaSetToggleMenu (DAVBase + DAVtoggleAwareness, 0,
 		    GProp_DAV.toggleAwareness1);
-  TtaSetToggleMenu (DAVPreferencesBase + DAVtoggleAwareness, 1,
+  TtaSetToggleMenu (DAVBase + DAVtoggleAwareness, 1,
 		    GProp_DAV.toggleAwareness2);
 #endif /* _GTK */    
 }
@@ -992,8 +996,7 @@ LRESULT CALLBACK WIN_DAVPreferencesDlg (HWND hwnDlg, UINT msg, WPARAM wParam,
 		     TtaGetMessage (AMAYA, AM_DAV_TIMEOUT_INFINITE));
       SetWindowText (GetDlgItem (hwnDlg, IDC_OTHER_DAVTIMEOUT),
 		     TtaGetMessage (AMAYA, AM_DAV_TIMEOUT_OTHER));
-      SetWindowText (GetDlgItem (hwnDlg, IDC_TIMEOUT_SECOND),
-		     TtaGetMessage (AMAYA, AM_DAV_TIMEOUT_SECONDS));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_TIMEOUT_SECOND), "");
 
       SetWindowText (GetDlgItem (hwnDlg, IDC_DAVAWARENESS),
 		     TtaGetMessage (AMAYA, AM_DAV_AWARENESS));
@@ -1001,7 +1004,7 @@ LRESULT CALLBACK WIN_DAVPreferencesDlg (HWND hwnDlg, UINT msg, WPARAM wParam,
 		     TtaGetMessage (AMAYA, AM_DAV_AWARENESS_GENERAL));
       SetWindowText (GetDlgItem (hwnDlg, IDC_EXIT_DAVAWARENESS),
 		     TtaGetMessage (AMAYA, AM_DAV_AWARENESS_ONEXIT));
-      DAVGetPreferences();
+      GetDAVConf();
       break;
       
     case WM_CLOSE:
@@ -1035,32 +1038,33 @@ LRESULT CALLBACK WIN_DAVPreferencesDlg (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  /* toggle buttons */
 	case IDC_ZERO_DAVDEPTH:
 	  strcpy (GProp_DAV.radioDepth, "0");
-      CheckRadioButton (DAVDlg, IDC_ZERO_DAVDEPTH, IDC_INFINITE_DAVDEPTH, IDC_ZERO_DAVDEPTH);
+	  CheckRadioButton (DAVDlg, IDC_ZERO_DAVDEPTH, IDC_INFINITE_DAVDEPTH,
+			    IDC_ZERO_DAVDEPTH);
 	  break;
 	case IDC_INFINITE_DAVDEPTH:
 	  strcpy (GProp_DAV.radioDepth, "infinity");
-      CheckRadioButton (DAVDlg, IDC_ZERO_DAVDEPTH, IDC_INFINITE_DAVDEPTH,
-		       IDC_INFINITE_DAVDEPTH);
+	  CheckRadioButton (DAVDlg, IDC_ZERO_DAVDEPTH, IDC_INFINITE_DAVDEPTH,
+			    IDC_INFINITE_DAVDEPTH);
 	  break;
 	case IDC_EXCLUSIVE_DAVSCOPE:
 	  strcpy (GProp_DAV.radioLockScope, "exclusive");
-      CheckRadioButton (DAVDlg, IDC_EXCLUSIVE_DAVSCOPE, IDC_SHARED_DAVSCOPE,
-		       IDC_EXCLUSIVE_DAVSCOPE);
+	  CheckRadioButton (DAVDlg, IDC_EXCLUSIVE_DAVSCOPE, IDC_SHARED_DAVSCOPE,
+			    IDC_EXCLUSIVE_DAVSCOPE);
 	  break;
 	case IDC_SHARED_DAVSCOPE:
 	  strcpy (GProp_DAV.radioLockScope, "shared");
-      CheckRadioButton (DAVDlg, IDC_EXCLUSIVE_DAVSCOPE, IDC_SHARED_DAVSCOPE,
-		       IDC_SHARED_DAVSCOPE);
+	  CheckRadioButton (DAVDlg, IDC_EXCLUSIVE_DAVSCOPE, IDC_SHARED_DAVSCOPE,
+			    IDC_SHARED_DAVSCOPE);
 	  break;
 	case IDC_INFINITE_DAVTIMEOUT:
 	  strcpy (GProp_DAV.radioTimeout, "Infinite");
-      CheckRadioButton (DAVDlg, IDC_INFINITE_DAVTIMEOUT, IDC_OTHER_DAVTIMEOUT,
-		       IDC_INFINITE_DAVTIMEOUT);
+	  CheckRadioButton (DAVDlg, IDC_INFINITE_DAVTIMEOUT, IDC_OTHER_DAVTIMEOUT,
+			    IDC_INFINITE_DAVTIMEOUT);
 	  break;
 	case IDC_OTHER_DAVTIMEOUT:
 	  strcpy (GProp_DAV.radioTimeout, "Second-");
-      CheckRadioButton (DAVDlg, IDC_INFINITE_DAVTIMEOUT, IDC_OTHER_DAVTIMEOUT,
-		       IDC_OTHER_DAVTIMEOUT);
+	  CheckRadioButton (DAVDlg, IDC_INFINITE_DAVTIMEOUT, IDC_OTHER_DAVTIMEOUT,
+			    IDC_OTHER_DAVTIMEOUT);
 	  break;
 	case IDC_GENERAL_DAVAWARENESS:
 	  GProp_DAV.toggleAwareness1 = !(GProp_DAV.toggleAwareness1);
@@ -1071,7 +1075,7 @@ LRESULT CALLBACK WIN_DAVPreferencesDlg (HWND hwnDlg, UINT msg, WPARAM wParam,
 
 	  /* action buttons */
 	case ID_APPLY:
-	  DAVSetPreferences();
+	  SetDAVConf();
 	  /* reset the status flag */
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
@@ -1082,7 +1086,7 @@ LRESULT CALLBACK WIN_DAVPreferencesDlg (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DEFAULTS:
-	  DAVGetPreferences();
+	  GetDAVConf();
 	  break;
 	}
       break;	     
@@ -1098,24 +1102,24 @@ void DAVPreferencesDlg_callback (int ref, int typedata, char *data)
 {
   if (ref == -1)
     /* removes the network conf menu */
-    TtaDestroyDialogue (DAVPreferencesBase + DAVPreferencesDlg);
+    TtaDestroyDialogue (DAVBase + DAVPreferencesDlg);
   else 
     {       
-      switch (ref - DAVPreferencesBase)
+      switch (ref - DAVBase)
         {
 	case DAVPreferencesDlg:
 	  switch ((int)data) 
 	    {
 	    case 1:
-	      DAVSetPreferences();
+	      SetDAVConf();
 	    case 0:
 #ifndef _WX
-	      TtaDestroyDialogue (DAVPreferencesBase + DAVPreferencesDlg);
+	      TtaDestroyDialogue (DAVBase + DAVPreferencesDlg);
 #endif /* _WX */
 	      break;
 	    case 2:
 	      /*reset to old values */
-	      DAVGetPreferences();
+	      GetDAVConf();
 	      break;
 	    }
 	  break;
@@ -1191,7 +1195,7 @@ void DAVPreferencesDlg_callback (int ref, int typedata, char *data)
 void InitDAVPreferences ()
 {
 #ifndef _WINGUI
-  DAVPreferencesBase = TtaSetCallback ((Proc)DAVPreferencesDlg_callback,
+  DAVBase = TtaSetCallback ((Proc)DAVPreferencesDlg_callback,
 				       MAX_DAVPREF_DLG);
 #endif /* _WINGUI */
 }
@@ -1206,63 +1210,63 @@ void DAVShowPreferencesDlg (Document document)
     
   sprintf (buf,"%s%c%s%c",TtaGetMessage (AMAYA, AM_APPLY_BUTTON),EOS,
 	   TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON),EOS);
-  TtaNewSheet (DAVPreferencesBase + DAVPreferencesDlg, 
+  TtaNewSheet (DAVBase + DAVPreferencesDlg, 
 	       TtaGetViewFrame (document, DAV_VIEW),
 	       TtaGetMessage (AMAYA, AM_DAV_PREFERENCES),
 	       2, buf, TRUE, 3, 'L', D_DONE);
     
   /* first line */
-  TtaNewTextForm (DAVPreferencesBase + DAVtextUserReference,
-		  DAVPreferencesBase + DAVPreferencesDlg,
+  TtaNewTextForm (DAVBase + DAVtextUserReference,
+		  DAVBase + DAVPreferencesDlg,
 		  TtaGetMessage (AMAYA, AM_DAV_USER_URL),
 		  40, 1, FALSE);
-  TtaNewLabel (DAVPreferencesBase + DAVlabelEmpty1,DAVPreferencesBase + DAVPreferencesDlg, " ");
-  TtaNewLabel (DAVPreferencesBase + DAVlabelEmpty2,DAVPreferencesBase + DAVPreferencesDlg, " ");
+  TtaNewLabel (DAVBase + DAVlabelEmpty1,DAVBase + DAVPreferencesDlg, " ");
+  TtaNewLabel (DAVBase + DAVlabelEmpty2,DAVBase + DAVPreferencesDlg, " ");
   
   /* second line */
   sprintf (buf, "B0%cB%s%c", EOS,TtaGetMessage (AMAYA, AM_DAV_DEPTH_INFINITY), EOS);
-  TtaNewSubmenu (DAVPreferencesBase + DAVradioDepth,
-		 DAVPreferencesBase + DAVPreferencesDlg,
+  TtaNewSubmenu (DAVBase + DAVradioDepth,
+		 DAVBase + DAVPreferencesDlg,
 		 0, TtaGetMessage (AMAYA, AM_DAV_DEPTH), 2, buf, NULL, 0, FALSE);
   sprintf (buf, "B%s%cB%s%c",TtaGetMessage (AMAYA, AM_DAV_TIMEOUT_INFINITE),EOS,
 	   TtaGetMessage (AMAYA, AM_DAV_TIMEOUT_OTHER), EOS);
-  TtaNewSubmenu (DAVPreferencesBase + DAVradioTimeout,
-		 DAVPreferencesBase + DAVPreferencesDlg,
+  TtaNewSubmenu (DAVBase + DAVradioTimeout,
+		 DAVBase + DAVPreferencesDlg,
 		 0,TtaGetMessage (AMAYA, AM_DAV_TIMEOUT), 2, buf, NULL, 0,FALSE);
-  TtaNewNumberForm (DAVPreferencesBase + DAVnumberTimeout,
-		    DAVPreferencesBase + DAVPreferencesDlg,
-		    TtaGetMessage (AMAYA, AM_DAV_TIMEOUT_SECONDS), 300,9999, FALSE);  
+  TtaNewNumberForm (DAVBase + DAVnumberTimeout,
+		    DAVBase + DAVPreferencesDlg,
+		    "", 300,9999, FALSE);  
   
   /* third line */
   sprintf (buf, "B%s%cB%s%c",TtaGetMessage (AMAYA, AM_DAV_LOCKSCOPE_EXCLUSIVE), EOS, 
 	   TtaGetMessage (AMAYA, AM_DAV_LOCKSCOPE_SHARED), EOS);
-  TtaNewSubmenu (DAVPreferencesBase + DAVradioLockScope,
-		 DAVPreferencesBase + DAVPreferencesDlg,
+  TtaNewSubmenu (DAVBase + DAVradioLockScope,
+		 DAVBase + DAVPreferencesDlg,
 		 0, TtaGetMessage (AMAYA, AM_DAV_LOCKSCOPE), 2, buf, NULL, 0, FALSE);
-  TtaNewLabel (DAVPreferencesBase + DAVlabelEmpty3,DAVPreferencesBase + DAVPreferencesDlg, " ");
-  TtaNewLabel (DAVPreferencesBase + DAVlabelEmpty4,DAVPreferencesBase + DAVPreferencesDlg, " ");
+  TtaNewLabel (DAVBase + DAVlabelEmpty3,DAVBase + DAVPreferencesDlg, " ");
+  TtaNewLabel (DAVBase + DAVlabelEmpty4,DAVBase + DAVPreferencesDlg, " ");
   
   /* fourth line */
   sprintf (buf, "B%s%cB%s%c", TtaGetMessage (AMAYA, AM_DAV_AWARENESS_GENERAL), EOS, 
 	   TtaGetMessage (AMAYA, AM_DAV_AWARENESS_ONEXIT), EOS);
-  TtaNewToggleMenu (DAVPreferencesBase + DAVtoggleAwareness,
-		    DAVPreferencesBase + DAVPreferencesDlg,
+  TtaNewToggleMenu (DAVBase + DAVtoggleAwareness,
+		    DAVBase + DAVPreferencesDlg,
 		    TtaGetMessage (AMAYA, AM_DAV_AWARENESS), 2, buf, NULL, TRUE);
-  TtaNewLabel (DAVPreferencesBase + DAVlabelEmpty5,DAVPreferencesBase + DAVPreferencesDlg, "    ");
-  TtaNewLabel (DAVPreferencesBase + DAVlabelEmpty6,DAVPreferencesBase + DAVPreferencesDlg, "    ");
+  TtaNewLabel (DAVBase + DAVlabelEmpty5,DAVBase + DAVPreferencesDlg, "    ");
+  TtaNewLabel (DAVBase + DAVlabelEmpty6,DAVBase + DAVPreferencesDlg, "    ");
   
   /* fifth line */
-  TtaNewTextForm (DAVPreferencesBase + DAVtextUserResources,
-		  DAVPreferencesBase + DAVPreferencesDlg,
+  TtaNewTextForm (DAVBase + DAVtextUserResources,
+		  DAVBase + DAVPreferencesDlg,
 		  TtaGetMessage (AMAYA, AM_DAV_USER_RESOURCES),
 		  40, 1, FALSE);
   
   /* get the active values and set the dialogue variables */
-  DAVGetPreferences();
+  GetDAVConf();
   
   /* show the dialogue */
   TtaSetDialoguePosition ();
-  TtaShowDialogue (DAVPreferencesBase + DAVPreferencesDlg, TRUE);
+  TtaShowDialogue (DAVBase + DAVPreferencesDlg, TRUE);
 #endif /* _GTK */
 #ifdef _WINGUI
   if (!DAVDlg)

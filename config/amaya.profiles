@@ -39,8 +39,8 @@
 #+templates
 +edit
 ConfigAnnot
+CooperationConfig
 CustomQuery
-DAVPreferences
 FilterAnnot
 ShowButtons
 ShowAddress
@@ -58,6 +58,9 @@ ZoomOut
 ################# AMAYA BROWSER
 <Browser>
 +browsing
+ConfigAnnot
+CooperationConfig
+CustomQuery
 ZoomIn
 ZoomOut
 
@@ -235,7 +238,6 @@ UnlockDocument
 PropDocument
 CopyLockInformation
 LockIndicator
-CooperationConfig
 DAVLockDocument
 
 ######### BROWSING
@@ -653,7 +655,6 @@ ConfigCache
 ConfigProxy
 ConfigColor
 ConfigGeometry
-ConfigLanNeg
 HelpConfigure
 HelpShortCuts
 

@@ -181,6 +181,7 @@ static AM_WIN_MenuText WIN_BrowseMenuText[] =
 	{IDC_DOUBLECLICK, AM_ENABLE_DOUBLECLICK},
 	{IDC_ENABLEFTP, AM_ENABLE_FTP},
 	{IDC_SCREEN, AM_SCREEN_TYPE},
+	{IDC_TLANNEG, AM_LANG_NEGOTIATION},
 	{0, 0}
 };
 #endif /* _WINGUI */
@@ -252,23 +253,10 @@ static AM_WIN_MenuText WIN_GeometryMenuText[] =
 #endif /* _WINGUI */
 
 
-/* ============> Language negotiation menu options */
-static int          LanNegBase;
-static Prop_LanNeg  GProp_LanNeg;
-#ifdef _WINGUI
-static HWND        LanNegHwnd = NULL;
-static AM_WIN_MenuText WIN_LanNegMenuText[] = 
-{
-	{AM_INIT_ALL, AM_LANNEG_MENU},
-	{IDC_TLANNEG, AM_LANG_NEGOTIATION},
-	{0, 0}
-};
-#endif /* _WINGUI*/
-
-
 /* ============> Annotation menu option */
 #ifdef ANNOTATIONS
-static int      AnnotBase;
+int      AnnotBase;
+static Prop_Annot  GProp_Annot;
 static char     AnnotUser[MAX_LENGTH];
 static char     AnnotPostServer[MAX_LENGTH];
 static char     AnnotServers[MAX_LENGTH];
@@ -296,6 +284,7 @@ static AM_WIN_MenuText WIN_AnnotMenuText[] =
 
 /* ============> WebDAV menu option */
 #ifdef DAV
+int       DAVBase;
 Prop_DAV  GProp_DAV;
 #endif /* DAV */
 
@@ -2738,6 +2727,7 @@ void GetBrowseConf (void)
   AHTFTPURL_flag_set (GProp_Browse.EnableFTP);
   GetEnvString ("SCREEN_TYPE", GProp_Browse.ScreenType);
   TtaGetEnvInt ("DOUBLECLICKDELAY", &(GProp_Browse.DoubleClickDelay));
+  GetEnvString ("ACCEPT_LANGUAGES", GProp_Browse.LanNeg);
 }
 
 /*----------------------------------------------------------------------
@@ -2758,6 +2748,9 @@ void SetBrowseConf (void)
   TtaSetEnvBoolean ("ENABLE_FTP", GProp_Browse.EnableFTP, TRUE);
   AHTFTPURL_flag_set (GProp_Browse.EnableFTP);
   TtaSetEnvString ("SCREEN_TYPE", GProp_Browse.ScreenType, TRUE);
+  TtaSetEnvString ("ACCEPT_LANGUAGES", GProp_Browse.LanNeg, TRUE);
+  /* change the current settings */
+  libwww_updateNetworkConf (AMAYA_LANNEG_RESTART);
   TtaSaveAppRegistry ();
 }
 
@@ -2781,6 +2774,7 @@ void GetDefaultBrowseConf ()
 		   BrowseBase + mToggleBrowse, 5);
   GetDefEnvString ("SCREEN_TYPE", GProp_Browse.ScreenType);
   TtaGetDefEnvInt ("DOUBLECLICKDELAY", &(GProp_Browse.DoubleClickDelay));
+  GetDefEnvString ("ACCEPT_LANGUAGES", GProp_Browse.LanNeg);
 }
 
 #ifdef _WINGUI
@@ -2825,6 +2819,7 @@ void WIN_RefreshBrowseMenu (HWND hwnDlg)
   CheckDlgButton (hwnDlg, IDC_ENABLEFTP, (GProp_Browse.EnableFTP) 
 		  ? BST_CHECKED : BST_UNCHECKED);
   BuildScreensList ();
+  SetDlgItemText (hwnDlg, IDC_LANNEG, GProp_Browse.LanNeg);
 }
 
 /*----------------------------------------------------------------------
@@ -2881,6 +2876,9 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	  CurrentScreen = SendMessage (ScreensList, LB_GETCURSEL, 0, 0);
 	  CurrentScreen = SendMessage (ScreensList, LB_GETTEXT, CurrentScreen,
 				   (LPARAM) NewScreen);
+	case IDC_LANNEG:
+	  GetDlgItemText (hwnDlg, IDC_LANNEG, GProp_Browse.LanNeg,
+			  sizeof (GProp_Browse.LanNeg) - 1);
 	  break;
 
 	  /* action buttons */
@@ -2985,6 +2983,7 @@ static void RefreshBrowseMenu ()
   TtaSetToggleMenu (BrowseBase + mToggleBrowse, 5, GProp_Browse.EnableFTP);
   /* preselect the screen matching the user preference */
   BuildScreenSelector ();
+  TtaSetTextForm (BrowseBase + mLanNeg, GProp_Browse.LanNeg);
 }
 
 /*----------------------------------------------------------------------
@@ -3084,6 +3083,13 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
       strcpy (NewScreen, data);
 	  break;
 
+	case mLanNeg:
+	  if (data)
+	    strcpy (GProp_Browse.LanNeg, data);
+	  else
+	    GProp_Browse.LanNeg[0] = EOS;
+	  break;
+
 	default:
 	  break;
 	}
@@ -3136,6 +3142,10 @@ void BrowseConfMenu (Document document, View view)
 		    NULL,
 		    FALSE);
   BuildScreenSelector ();
+  /* last line */
+  TtaNewTextForm (BrowseBase + mLanNeg, BrowseBase + BrowseMenu,
+		   TtaGetMessage (AMAYA, AM_LANG_NEGOTIATION),
+		   20, 1, FALSE);
   RefreshBrowseMenu ();
   TtaSetDialoguePosition ();
   TtaShowDialogue (BrowseBase + BrowseMenu, TRUE);
@@ -3774,212 +3784,6 @@ void         GeometryConfMenu (Document document, View view)
 #endif /* !_WINGUI */
 }
 
-
-/**********************
-** LanNeg Menu
-**********************/
-/*----------------------------------------------------------------------
-  GetLanNegConf
-  Makes a copy of the current registry LanNeg values
-  ----------------------------------------------------------------------*/
-static void GetLanNegConf (void)
-{
-  GetEnvString ("ACCEPT_LANGUAGES", GProp_LanNeg.LanNeg);
-}
-
-/*----------------------------------------------------------------------
-  GetDefaultLanNegConf
-  Makes a copy of the default registry LanNeg values
-  ----------------------------------------------------------------------*/
-static void GetDefaultLanNegConf (void)
-{
-  GetDefEnvString ("ACCEPT_LANGUAGES", GProp_LanNeg.LanNeg);
-}
-
-/*----------------------------------------------------------------------
-  SetLanNegConf
-  Updates the registry LanNeg values
-  ----------------------------------------------------------------------*/
-static void SetLanNegConf (void)
-{
-  TtaSetEnvString ("ACCEPT_LANGUAGES", GProp_LanNeg.LanNeg, TRUE);
-  TtaSaveAppRegistry ();
-
-  /* change the current settings */
-  libwww_updateNetworkConf (AMAYA_LANNEG_RESTART);
-}
-
-#ifdef _WINGUI
-/*----------------------------------------------------------------------
-  WIN_RefreshLanNegMenu
-  Displays the current registry values in the menu
-  ----------------------------------------------------------------------*/
-void WIN_RefreshLanNegMenu (HWND hwnDlg)
-{
-  SetDlgItemText (hwnDlg, IDC_LANNEG, GProp_LanNeg.LanNeg);
-}
-
-/*----------------------------------------------------------------------
-  WIN_LanNegDlgProc
-  Windows callback for the LanNeg menu
-  ----------------------------------------------------------------------*/
-LRESULT CALLBACK WIN_LanNegDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
-				     LPARAM lParam)
-{
-  switch (msg)
-    {
-    case WM_INITDIALOG:
-      LanNegHwnd = hwnDlg;
-      /* initialize the menu text */
-      WIN_SetMenuText (hwnDlg, WIN_LanNegMenuText);
-      /* write the current values in the dialog entries */
-      WIN_RefreshLanNegMenu (hwnDlg);
-      break;
-
-    case WM_CLOSE:
-    case WM_DESTROY:
-      /* reset the status flag */
-      LanNegHwnd = NULL;
-      EndDialog (hwnDlg, ID_DONE);
-      break;
-
-    case WM_COMMAND:
-      switch (LOWORD (wParam))
-	{
-	case IDC_LANNEG:
-	  GetDlgItemText (hwnDlg, IDC_LANNEG, GProp_LanNeg.LanNeg,
-			  sizeof (GProp_LanNeg.LanNeg) - 1);
-	  break;
-	  /* action buttons */
-	case ID_APPLY:
-	  SetLanNegConf ();	  
-	  /* reset the status flag */
-	  EndDialog (hwnDlg, ID_DONE);
-	  break;
-	case ID_DONE:
-	case IDCANCEL:
-	  /* reset the status flag */
-	  LanNegHwnd = NULL;
-	  EndDialog (hwnDlg, ID_DONE);
-	  break;
-	case ID_DEFAULTS:
-	  /* always signal this as modified */
-	  GetDefaultLanNegConf ();
-	  WIN_RefreshLanNegMenu (hwnDlg);
-	  break;
-	}
-      break;	     
-    default: return FALSE;
-    }
-  return TRUE;
-}
-
-#else /* _WINGUI */
-/*----------------------------------------------------------------------
-  RefreshLanNegMenu
-  Displays the current registry values in the menu
-  ----------------------------------------------------------------------*/
-static void RefreshLanNegMenu ()
-{
-  TtaSetTextForm (LanNegBase + mLanNeg, GProp_LanNeg.LanNeg);
-}
-
-/*----------------------------------------------------------------------
-   callback of the LanNeg configuration menu
-  ----------------------------------------------------------------------*/
-static void LanNegCallbackDialog (int ref, int typedata, char *data)
-{
-  int val;
-
-  if (ref == -1)
-    {
-      /* removes the LanNeg conf menu */
-      TtaDestroyDialogue (LanNegBase + LanNegMenu);
-    }
-  else
-    {
-      /* has the user changed the options? */
-      val = (int) data;
-      switch (ref - LanNegBase)
-	{
-	case LanNegMenu:
-	  switch (val) 
-	    {
-	    case 0:
-	      TtaDestroyDialogue (ref);
-	      break;
-	    case 1:
-	      SetLanNegConf ();
-#ifndef _WX
-	      TtaDestroyDialogue (ref);
-#endif /* _WX */
-	      break;
-	    case 2:
-	      GetDefaultLanNegConf ();
-	      RefreshLanNegMenu ();
-	      break;
-	    default:
-	      break;
-	    }
-	  break;
-
-	case mLanNeg:
-	  if (data)
-	    strcpy (GProp_LanNeg.LanNeg, data);
-	  else
-	    GProp_LanNeg.LanNeg[0] = EOS;
-	  break;
-	  
-	default:
-	  break;
-	}
-    }
-}
-#endif /* !_WINGUI */
-
-
-/*----------------------------------------------------------------------
-  LanNegConfMenu
-  Build and display the Conf Menu dialog box and prepare for input.
-  ----------------------------------------------------------------------*/
-void         LanNegConfMenu (Document document, View view)
-{
-#ifndef _WINGUI
-   int              i;
-
-   /* Create the dialogue form */
-   i = 0;
-   strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
-   i += strlen (&s[i]) + 1;
-   strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
-
-   TtaNewSheet (LanNegBase + LanNegMenu, TtaGetViewFrame (document, view),
-		TtaGetMessage (AMAYA, AM_LANNEG_MENU), 2, s, TRUE, 1, 
-		'L', D_DONE);
-   /* first line */
-   TtaNewTextForm (LanNegBase + mLanNeg, LanNegBase + LanNegMenu,
-		   TtaGetMessage (AMAYA, AM_LANG_NEGOTIATION),
-		   20, 1, FALSE);
-#endif   /* !_WINGUI */
- 
-   /* load and display the current values */
-   GetLanNegConf ();
-#ifndef _WINGUI
-   RefreshLanNegMenu ();
-   /* display the menu */
-   TtaSetDialoguePosition ();
-   TtaShowDialogue (LanNegBase + LanNegMenu, TRUE);
-#else 
-   if (!LanNegHwnd)
-    /* only activate the menu if it isn't active already */
-	  DialogBox (hInstance, MAKEINTRESOURCE (LANNEGMENU), NULL, 
-		     (DLGPROC) WIN_LanNegDlgProc);
-   else
-     SetFocus (LanNegHwnd);
-#endif /* !_WINGUI */
-}
-
-
 /*********************
 ** Annotations configuration menu
 ***********************/
@@ -4379,14 +4183,6 @@ int GetPrefGeometryBase()
 /*----------------------------------------------------------------------
   Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
   ----------------------------------------------------------------------*/
-int GetPrefLanNegBase()
-{
-  return LanNegBase;
-}
-
-/*----------------------------------------------------------------------
-  Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
-  ----------------------------------------------------------------------*/
 int GetPrefAnnotBase()
 {
 #ifdef ANNOTATIONS
@@ -4394,6 +4190,18 @@ int GetPrefAnnotBase()
 #else /* ANNOTATIONS */
   return 0;
 #endif /* ANNOTATIONS */
+}
+
+/*----------------------------------------------------------------------
+  Returns a tab dialog reference (used into PreferenceDlgWX callbacks)
+  ----------------------------------------------------------------------*/
+int GetPrefDAVBase()
+{
+#ifdef DAV
+  return DAVBase;
+#else /* DAV */
+  return 0;
+#endif /* DAV */
 }
 
 /*----------------------------------------------------------------------
@@ -4541,25 +4349,25 @@ Prop_Color GetProp_Color()
 }
 
 /*----------------------------------------------------------------------
-  Use to set the Amaya global variables (LanNeg preferences)
+  Use to set the Amaya global variables (Annotations preferences)
   ----------------------------------------------------------------------*/
-void SetProp_LanNeg( const Prop_LanNeg * prop )
+void SetProp_Annot( const Prop_Annot * prop )
 {
 #ifdef _WX
-  GProp_LanNeg = *prop;
+  GProp_Annot = *prop;
 #endif /* _WX */
 }
 
 /*----------------------------------------------------------------------
-  Use to get the Amaya global variables (LanNeg preferences)
+  Use to get the Amaya global variables (Annotations preferences)
   ----------------------------------------------------------------------*/
-Prop_LanNeg GetProp_LanNeg()
+Prop_Annot GetProp_Annot()
 {
 #ifdef _WX
-  return GProp_LanNeg;
+  return GProp_Annot;
 #else /* _WX */
-  Prop_LanNeg prop;
-  memset(&prop, 0, sizeof(Prop_LanNeg) );
+  Prop_Annot prop;
+  memset(&prop, 0, sizeof(Prop_Annot) );
   return prop;
 #endif /* _WX */
 }
@@ -4589,6 +4397,7 @@ Prop_DAV GetProp_DAV()
   return prop;
 #endif /* _WX && DAV */
 }
+
 
 /*----------------------------------------------------------------------
   PreferenceMenu
@@ -4627,11 +4436,13 @@ void PreferenceMenu (Document document, View view)
   /* ---> Geometry Tab */   
   GeometryDoc = document;
 
-  /* ---> LanNeg Tab */
-  GetLanNegConf ();
+#ifdef ANNOTATIONS
+  /* ---> Annot Tab */
+  GetAnnotConf ();
+#endif /* ANNOTATIONS */
 #ifdef DAV
   /* ---> WebDAV Tab */
-  GetLanNegConf ();
+  GetDAVConf ();
 #endif /* DAV */
   ThotBool created = CreatePreferenceDlgWX ( PreferenceBase,
 					     TtaGetViewFrame (document, view),
@@ -4701,8 +4512,6 @@ void InitConfMenu (void)
 			      MAX_COLORMENU_DLG);
   GeometryBase = TtaSetCallback ((Proc)GeometryCallbackDialog,
 				 MAX_GEOMETRYMENU_DLG);
-  LanNegBase = TtaSetCallback ((Proc)LanNegCallbackDialog,
-			       MAX_LANNEGMENU_DLG);
 #ifdef ANNOTATIONS
   AnnotBase = TtaSetCallback ((Proc)AnnotCallbackDialog,
 			      MAX_ANNOTMENU_DLG);

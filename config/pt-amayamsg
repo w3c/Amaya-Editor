@@ -162,7 +162,7 @@
 160 Aplicar
 161 Valores padrão
 162 Esvaziar cache
-163 Preferências de cache
+163 Cache
 164 Habilitar cache
 165 Documentos protegidos em cache
 166 Modo desconectado
@@ -170,10 +170,10 @@
 168 Diretório cache
 169 Tamanho de cache (MB)
 170 Tamanho limite de entrada de cache (MB)
-171 Preferências de proxy
+171 Proxy
 172 Proxy HTTP (por exemplo www.w3.org:1234)
 173 Lista de domínios proxy (por exemplo lists.w3.org)
-174 Preferências gerais
+174 Geral
 175 Página principal
 176 Retardo de mensagens de apoio (ToolTip) (ms)
 177 Retardo de duplo clique (ms)
@@ -188,18 +188,18 @@
 186 Exibir endereço
 187 Exibir destinos
 188 Exportar CR/LF
-189 **Browsing Preferences
+189 **Browsing
 190 **Load images (img)
 191 Duplo clique ativa enlace
-192 Preferências de publicação
+192 Publicação
 193 Usar ETAGS e pré-condições
 194 Verificar cada PUT com um GET
 195 Nome padrão para URLs terminadas em '/'
-196 Preferências de geometria
+196 Geometria
 197 Salvar geometria atual
 198 restaurar geometria padrão
 199 As mudanças serão efetivadas quando uma nova janela abrir.
-200 Preferências de cor
+200 Cores
 201 Cor do plano frontal do documento
 202 Cor de fundo do documento
 203 Cor do plano frontal do menu
@@ -207,170 +207,167 @@
 205 Não foi possível inicializar o cache. Você pode ter especificado um diretório de cache inválido ou tem outro Amaya usando o cache.
 206 Home
 207 Lista de idiomas preferidos como "pt, en":
-208 Localização do arquivo de definição de perfís
-209 Seleção de perfil
-210 Estas modificações não serão modificadas até que se reinicialize Amaya.
-211 Permitir redirecionamentos PUT automáticos nestes domínios
-212 Ignorar folhas de estilo
-213 Tipo de transformação
-214 (separar cada entrada com um espaço)
-215 Não há proxy nestes domínios
-216 Somente com proxy estes domínios
-217 Nome de carácter
-218 Diretório de usuário Amaya
-219 Diretório temporário
-220 Usar paleta
-221 Negociação de idioma
-222 Configuração para anotações
-223 Usuário anotador
-224 Servidor de publicação de anotações
-225 Servidores de anotações
-226 Autocarregar anotações locais
-227 Autocarregar anotações remotas
-228 Desabilitar autocarga remota em cada partida (para trabalho off-line)
-229 Cor de seleção
-230 **Selection background color
-231 Orientação
-232 Vertical
-233 Horizontal
-234 Habilitar FTP
-235 XML inválido - recarregar como HTML ou mostrar erros sintáticos?
-236 XML inválido - mostrar erros na leitura?
-237 **Try the 'File/Force a Character Coding' entry
-238 Caracteres inválidos
-239 Perfil del documento:
-240 Algumas marcas(tags)/atributos são ignorados - veja Vistas/Exibir erros de gramática (parsing)
-241 A codificação deste documento não é suportada por Amaya
-242 Editar ou salvar este documento vai mudar seu tipo
-243 Indisponível
-244 Navegar
-245 Navegador de arquivos
-246 Seleção
-247 Menu filtro local de anotações
-248 Exibir
-249 Esconder
-250 Exibir tudo
-251 Esconder tudo
-252 * significa escondido, - significa parcialmente escondido
-253 Opções de filtragem
-254 Por autor
-255 Por tipo
-256 Por servidor
-257 Teclas de acesso
-258 Ignorar
-259 Elemento de estilo
-260 Não é possível criar um XPointer
-261 Impossível anexar um XPointer inicial a um elemento adicionado internamente
-262 Impossível anexar um XPointer final a um elemento adicionado internamente
-263 Não é possível achar para onde mover a anotação
-264 Não é possível mover a anotação para outro documento
-265 Você não pode fazer anotações em um documento modificado. Por favor salve-o antes.
-266 Não foi declarado o usuário da anotação. Por favor abra o menu Anotações/Configurar
-267 Incapaz de construir um XPointer para esta anotação
-268 Fazer uma nova anotação
-269 A postagem da anotação falhou
-270 A supressão da anotação falhou
-271 Anotação suprimida!
-272 Carregamento do índice de anotação falhou
-273 Erro
-274 Selecionar um conjunto de caracteres (charset)
-275 Selecionar o tipo MIME
-276 Mudar conjunto de caracteres (Charset)
-277 Mudar o tipo MIME
-278 Modificar
-279 este tipo de documento não suporta conjuntos de caracteres (charsets)
-280 O destino deve ser uma URL HTTP para usar esta opção
-281 Erro: tipo MIME inválido
-282 Desconhecido
-283 Estilos ignorados -veja Vistas/Exibir erros de gramática (parsing)
-284 Este documento já está carregado em outra Janela
-285 Salvar esta instância pode causar um problema de perda de atualização
-286 **Adding or changing the doctype will remove some elements or attributes
-287 **Please confirm operation
-288 Utilise o tipo MIME application/xhtml+xml para documentos XHTML
-289 **Charset for new documents
-290 Documento foi travado com sucesso!
-291 Documento não pode ser travado com sucesso!
-292 Travando %s...
-293 Documento %s está travado!
-294 Documento %s foi travado por %s (tempo restante %s)
-295 Sobrepor trava?
-296 Copiar informação da trava? 
-297 Tente destravar o documento...
-298 Documento foi destravado com sucesso!
-299 Documento não pode ser destravado com sucesso!
-300 Destravando %s...
-301 Documento %s está destravado!
-302 Destravar o documento? 
-303 Propriedades do documento
-304 Propriedades do documento não estão disponíveis
-305 Propriedades do documento estão temporariamente indisponíveis. Tente de novo mais tarde...
-306 Buscando as propriedades do documento...
-307 Lamento, WebDAV não supporta URLs como %s
-308 Impossível salvar informação de trava localmente
-309 Impossível remover informação de trava local
-310 Lamento, esta operação não é permitida para %s
-311 Operação falhou! Causa: Falha de dependência
-312 Operaçã falhou! Causa: %s
-313 Tentar de novo? 
-314 Preferências WebDAV
-315 Referência Pessoal do Usuário (URL)
-316 Lista de Recursos WebDAV do Usuário (URL URL)
-317 Profundidade da Trava
-318 infinita
-319 Duração da Trava
-320 Infinito
-321 Outro
-322 Segundos
-323 Escopo da Trava
-324 exclusivo
-325 compartilhado
-326 Percepção
-327 Percepção geral
-328 Percepção ao sair
-329 **Animation
-330 **SVG Library
-331 **Copy option
-332 **Copy selection
-333 **Refer to selection
-334 **Add new model into library
-335 **URL of the new SVG file ...
-336 **Library title
-337 **Library URL
-338 **Create library
-339 **Browse library
-340 **Create or search library
-341 **The selection includes no SVG elements. Please reselect
-342 **The library title is mandatory
-343 **Move the position cursor in edited document to define a new key position...
-344 **Key position defined. Move the slider to define animation duration...
-345 **Select starting color of element...
-346 **Starting color defined. Move the slider to define animation duration...
-347 **Select ending color...
-348 **Animation defined.
-349 **Animated attribute
-350 **Element without ID
-351 **Add ID
-352 **Remove ID
-353 **Add/Remove IDs
-354 **Apply operation
-355 **Enter an element name
-356 **Apply CSS
-357 **Current screen type
-358 **New Topic
-359 **Bookmark Properties
-360 **Topic Properties
-361 **Topic hierarchy:
-362 Título:
-363 **Recalls:
-364 Autor:
-365 **Created:
-366 **Last modified:
-367 **Description:
-368 **Please select an element
-369 **All CSS
-370 **CSS style rules applied to the <%s> element\n
-371 **Blue lines are links activated by a double (or a single) click\n
-372 **Load objects (object, embed, iframe)
-373 **No style rule for this element
-374 **No insert position defined. Please select first
+208 Estas modificações não serão modificadas até que se reinicialize Amaya.
+209 Permitir redirecionamentos PUT automáticos nestes domínios
+210 Ignorar folhas de estilo
+211 Tipo de transformação
+212 (separar cada entrada com um espaço)
+213 Não há proxy nestes domínios
+214 Somente com proxy estes domínios
+215 Nome de carácter
+216 Diretório de usuário Amaya
+217 Diretório temporário
+218 Usar paleta
+219 Negociação de idioma
+220 Anotações
+221 Usuário anotador
+222 Servidor de publicação de anotações
+223 Servidores de anotações
+224 Autocarregar anotações locais
+225 Autocarregar anotações remotas
+226 Desabilitar autocarga remota em cada partida (para trabalho off-line)
+227 Cor de seleção
+228 **Selection background color
+229 Orientação
+230 Vertical
+231 Horizontal
+232 Habilitar FTP
+233 XML inválido - recarregar como HTML ou mostrar erros sintáticos?
+234 XML inválido - mostrar erros na leitura?
+235 **Try the 'File/Force a Character Coding' entry
+236 Caracteres inválidos
+237 Perfil del documento:
+238 Algumas marcas(tags)/atributos são ignorados - veja Vistas/Exibir erros de gramática (parsing)
+239 A codificação deste documento não é suportada por Amaya
+240 Editar ou salvar este documento vai mudar seu tipo
+241 Indisponível
+242 Navegar
+243 Navegador de arquivos
+244 Seleção
+245 Menu filtro local de anotações
+246 Exibir
+247 Esconder
+248 Exibir tudo
+249 Esconder tudo
+250 * significa escondido, - significa parcialmente escondido
+251 Opções de filtragem
+252 Por autor
+253 Por tipo
+254 Por servidor
+255 Teclas de acesso
+256 Ignorar
+257 Elemento de estilo
+258 Não é possível criar um XPointer
+259 Impossível anexar um XPointer inicial a um elemento adicionado internamente
+260 Impossível anexar um XPointer final a um elemento adicionado internamente
+261 Não é possível achar para onde mover a anotação
+262 Não é possível mover a anotação para outro documento
+263 Você não pode fazer anotações em um documento modificado. Por favor salve-o antes.
+264 Não foi declarado o usuário da anotação. Por favor abra o menu Anotações/Configurar
+265 Incapaz de construir um XPointer para esta anotação
+266 Fazer uma nova anotação
+267 A postagem da anotação falhou
+268 A supressão da anotação falhou
+269 Anotação suprimida!
+270 Carregamento do índice de anotação falhou
+271 Erro
+272 Selecionar um conjunto de caracteres (charset)
+273 Selecionar o tipo MIME
+274 Mudar conjunto de caracteres (Charset)
+275 Mudar o tipo MIME
+276 Modificar
+277 este tipo de documento não suporta conjuntos de caracteres (charsets)
+278 O destino deve ser uma URL HTTP para usar esta opção
+279 Erro: tipo MIME inválido
+280 Desconhecido
+281 Estilos ignorados -veja Vistas/Exibir erros de gramática (parsing)
+282 Este documento já está carregado em outra Janela
+283 Salvar esta instância pode causar um problema de perda de atualização
+284 **Adding or changing the doctype will remove some elements or attributes
+285 **Please confirm operation
+286 Utilise o tipo MIME application/xhtml+xml para documentos XHTML
+287 **Charset for new documents
+288 Documento foi travado com sucesso!
+289 Documento não pode ser travado com sucesso!
+290 Travando %s...
+291 Documento %s está travado!
+292 Documento %s foi travado por %s (tempo restante %s)
+293 Sobrepor trava?
+294 Copiar informação da trava? 
+295 Tente destravar o documento...
+296 Documento foi destravado com sucesso!
+297 Documento não pode ser destravado com sucesso!
+298 Destravando %s...
+299 Documento %s está destravado!
+300 Destravar o documento? 
+301 Propriedades do documento
+302 Propriedades do documento não estão disponíveis
+303 Propriedades do documento estão temporariamente indisponíveis. Tente de novo mais tarde...
+304 Buscando as propriedades do documento...
+305 Lamento, WebDAV não supporta URLs como %s
+306 Impossível salvar informação de trava localmente
+307 Impossível remover informação de trava local
+308 Lamento, esta operação não é permitida para %s
+309 Operação falhou! Causa: Falha de dependência
+310 Operaçã falhou! Causa: %s
+311 Tentar de novo? 
+312 WebDAV
+313 Referência Pessoal do Usuário (URL)
+314 Lista de Recursos WebDAV do Usuário (URL URL)
+315 Profundidade da Trava
+316 infinita
+317 Duração da Trava
+318 Infinito
+319 Outro (Segundos)
+320 Escopo da Trava
+321 exclusivo
+322 compartilhado
+323 Percepção
+324 Percepção geral
+325 Percepção ao sair
+326 **Animation
+327 **SVG Library
+328 **Copy option
+329 **Copy selection
+330 **Refer to selection
+331 **Add new model into library
+332 **URL of the new SVG file ...
+333 **Library title
+334 **Library URL
+335 **Create library
+336 **Browse library
+337 **Create or search library
+338 **The selection includes no SVG elements. Please reselect
+339 **The library title is mandatory
+340 **Move the position cursor in edited document to define a new key position...
+341 **Key position defined. Move the slider to define animation duration...
+342 **Select starting color of element...
+343 **Starting color defined. Move the slider to define animation duration...
+344 **Select ending color...
+345 **Animation defined.
+346 **Animated attribute
+347 **Element without ID
+348 **Add ID
+349 **Remove ID
+350 **Add/Remove IDs
+351 **Apply operation
+352 **Enter an element name
+353 **Apply CSS
+354 **Current screen type
+355 **New Topic
+356 **Bookmark Properties
+357 **Topic Properties
+358 **Topic hierarchy:
+359 Título:
+360 **Recalls:
+361 Autor:
+362 **Created:
+363 **Last modified:
+364 **Description:
+365 **Please select an element
+366 **All CSS
+367 **CSS style rules applied to the <%s> element\n
+368 **Blue lines are links activated by a double (or a single) click\n
+369 **Load objects (object, embed, iframe)
+370 **No style rule for this element
+371 **No insert position defined. Please select first

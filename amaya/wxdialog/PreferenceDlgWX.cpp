@@ -99,7 +99,9 @@ PreferenceDlgWX::PreferenceDlgWX( int ref,
   SetupLabelDialog_Proxy();
   SetupLabelDialog_Color();
   SetupLabelDialog_Geometry();
-  SetupLabelDialog_LanNeg();
+#ifdef ANNOTATIONS
+  SetupLabelDialog_Annot();
+#endif /* ANNOTATIONS */
 #ifdef DAV
   SetupLabelDialog_DAV();
 #endif /* DAV */
@@ -115,7 +117,9 @@ PreferenceDlgWX::PreferenceDlgWX( int ref,
   SetupDialog_Cache( GetProp_Cache() );
   SetupDialog_Proxy( GetProp_Proxy() );
   SetupDialog_Color( GetProp_Color() );
-  SetupDialog_LanNeg( GetProp_LanNeg() );
+#ifdef ANNOTATIONS
+  SetupDialog_Annot( GetProp_Annot() );
+#endif /* ANNOTATIONS */
 #ifdef DAV
   SetupDialog_DAV( GetProp_DAV() );
 #endif /* DAV */
@@ -213,7 +217,6 @@ void PreferenceDlgWX::SetupLabelDialog_General()
   page_id = GetPagePosFromXMLID( _T("wxID_PAGE_GENERAL") );
   if (page_id >= 0)
     p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_GENERAL_MENU)) );
-
 
   // update dialog General tab labels with given ones
   XRCCTRL(*this, "wxID_LABEL_HOMEPAGE", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_HOME_PAGE)) );
@@ -330,6 +333,7 @@ void PreferenceDlgWX::SetupLabelDialog_Browse()
   XRCCTRL(*this, "wxID_CHECK_APPLYCSS", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_LOAD_CSS)) );
   XRCCTRL(*this, "wxID_CHECK_LINKDBCLICK", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ENABLE_DOUBLECLICK)) );
   XRCCTRL(*this, "wxID_CHECK_ENABLEFTP", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ENABLE_FTP)) );
+  XRCCTRL(*this, "wxID_LABEL_LANNEGLISTLG", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_LANG_NEGOTIATION)) );
 }
 
 /*----------------------------------------------------------------------
@@ -350,6 +354,7 @@ void PreferenceDlgWX::SetupDialog_Browse( const Prop_Browse & prop )
   XRCCTRL(*this, "wxID_CHECK_ENABLEFTP", wxCheckBox)->SetValue( prop.EnableFTP );
   
   XRCCTRL(*this, "wxID_CHOICE_SCREEN", wxChoice)->SetStringSelection( TtaConvMessageToWX(prop.ScreenType) );
+  XRCCTRL(*this, "wxID_VALUE_LANNEGLISTLG", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.LanNeg) );
 }
 
 /*----------------------------------------------------------------------
@@ -375,6 +380,9 @@ Prop_Browse PreferenceDlgWX::GetValueDialog_Browse()
   
   value = XRCCTRL(*this, "wxID_CHOICE_SCREEN", wxChoice)->GetStringSelection();
   strcpy( prop.ScreenType, (const char*)value.mb_str(wxConvUTF8) );
+
+  value = XRCCTRL(*this, "wxID_VALUE_LANNEGLISTLG",  wxTextCtrl)->GetValue();
+  strcpy( prop.LanNeg, (const char*)value.mb_str(wxConvUTF8) );
 
   return prop;
 }
@@ -575,12 +583,12 @@ void PreferenceDlgWX::SetupLabelDialog_Proxy()
   if (page_id >= 0)
     p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_PROXY_MENU)) );
 
-  XRCCTRL(*this, "wxID_LABEL_PROXYHTTP", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_HTTP_PROXY)) );
-  XRCCTRL(*this, "wxID_LABEL_PROXYDOM", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_PROXY_DOMAIN)) );
+  XRCCTRL(*this, "wxID_LABEL_PROXYHTTP", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_HTTP_PROXY)) );
+  XRCCTRL(*this, "wxID_LABEL_PROXYDOM", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_PROXY_DOMAIN)) );
   XRCCTRL(*this, "wxID_LABEL_PROXYSPACE", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_PROXY_DOMAIN_INFO)) );
 
-  XRCCTRL(*this, "wxID_RADIOBOX_NOTUSEPROXY", wxRadioButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DONT_PROXY_DOMAIN)) );
-  XRCCTRL(*this, "wxID_RADIOBOX_USEPROXY", wxRadioButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ONLY_PROXY_DOMAIN)) );
+  XRCCTRL(*this, "wxID_RADIOBOX_NOTUSEPROXY", wxRadioButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DONT_PROXY_DOMAIN)) );
+  XRCCTRL(*this, "wxID_RADIOBOX_USEPROXY", wxRadioButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_ONLY_PROXY_DOMAIN)) );
 }
 
 /*----------------------------------------------------------------------
@@ -900,61 +908,57 @@ void PreferenceDlgWX::OnGeomRestor( wxCommandEvent& event )
 
 
 /************************************************************************/
-/* LanNeg tab                                                           */
+/* Annotation tab                                                           */
 /************************************************************************/
-
+#ifdef ANNOTATIONS
 /*----------------------------------------------------------------------
-  SetupLabelDialog_LanNeg init labels
+  SetupLabelDialog_Annot init labels
   params:
   returns:
   ----------------------------------------------------------------------*/
-void PreferenceDlgWX::SetupLabelDialog_LanNeg()
+void PreferenceDlgWX::SetupLabelDialog_Annot()
 {
-  wxLogDebug( _T("PreferenceDlgWX::SetupLabelDialog_LanNeg") );
+  wxLogDebug( _T("PreferenceDlgWX::SetupLabelDialog_Annot") );
 
   // Setup notebook tab names :
   int page_id;
   wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
-  page_id = GetPagePosFromXMLID( _T("wxID_PAGE_LANNEG") );
+  page_id = GetPagePosFromXMLID( _T("wxID_PAGE_ANNOT") );
   if (page_id >= 0)
-    p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_LANNEG_MENU)) );
+    p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_ANNOT_CONF_MENU)) );
 
-  XRCCTRL(*this, "wxID_LABEL_LANNEGLISTLG", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_LANG_NEGOTIATION)) );
+  XRCCTRL(*this, "wxID_LABEL_ANNOT_USER",     wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_ANNOT_USER)) );
 }
 
 /*----------------------------------------------------------------------
-  SetupDialog_LanNeg send init value to dialog 
+  SetupDialog_Annot send init value to dialog 
   params:
-    + const Prop_LanNeg & prop : the values to setup into the dialog
+    + const Prop_Annot & prop : the values to setup into the dialog
   returns:
   ----------------------------------------------------------------------*/
-void PreferenceDlgWX::SetupDialog_LanNeg( const Prop_LanNeg & prop )
+void PreferenceDlgWX::SetupDialog_Annot( const Prop_Annot & prop )
 {
-  wxLogDebug( _T("PreferenceDlgWX::SetupDialog_LanNeg") );
+  wxLogDebug( _T("PreferenceDlgWX::SetupDialog_Annot") );
 
-  XRCCTRL(*this, "wxID_VALUE_LANNEGLISTLG", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.LanNeg) );
 }
 
 /*----------------------------------------------------------------------
-  GetValueDialog_LanNeg get dialog values
+  GetValueDialog_Annot get dialog values
   params:
   returns:
-    + Prop_LanNeg prop : the dialog values
+    + Prop_Annot prop : the dialog values
   ----------------------------------------------------------------------*/
-Prop_LanNeg PreferenceDlgWX::GetValueDialog_LanNeg()
+Prop_Annot PreferenceDlgWX::GetValueDialog_Annot()
 {
   wxString        value;
-  Prop_LanNeg     prop;
-  memset( &prop, 0, sizeof(Prop_LanNeg) );
+  Prop_Annot     prop;
+  memset( &prop, 0, sizeof(Prop_Annot) );
 
-  wxLogDebug( _T("PreferenceDlgWX::GetValueDialog_LanNeg") );
-
-  value = XRCCTRL(*this, "wxID_VALUE_LANNEGLISTLG",  wxTextCtrl)->GetValue();
-  strcpy( prop.LanNeg, (const char*)value.mb_str(wxConvUTF8) );
+  wxLogDebug( _T("PreferenceDlgWX::GetValueDialog_Annot") );
 
   return prop;
 }
-
+#endif /*ANNOTATIONS */
 
 /************************************************************************/
 /* WebDAV tab                                                           */
@@ -973,28 +977,107 @@ void PreferenceDlgWX::SetupLabelDialog_DAV()
   int page_id;
   wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
   page_id = GetPagePosFromXMLID( _T("wxID_PAGE_DAV") );
-  //if (page_id >= 0)
-   // p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_GENERAL_MENU)) );
+  if (page_id >= 0)
+   p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DAV_PREFERENCES)) );
 
-  // update dialog General tab labels with given ones
-  //XRCCTRL(*this, "wxID_LABEL_HOMEPAGE", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_HOME_PAGE)) );
+  // update dialog WebDAV tab labels with given ones
+  XRCCTRL(*this, "wxID_LABEL_USER_REF", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DAV_USER_URL)) );
+  XRCCTRL(*this, "wxID_LABEL_RESOURCES", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DAV_USER_RESOURCES)) );
+
+  XRCCTRL(*this, "wxID_RADIO_LOCK_DEPTH", wxRadioBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DAV_DEPTH)) );
+  XRCCTRL(*this, "wxID_RADIO_LOCK_DEPTH", wxRadioBox)->SetString(1, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DAV_DEPTH_INFINITY)) );
+
+  XRCCTRL(*this, "wxID_RADIO_SCOPE_DEPTH", wxRadioBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DAV_LOCKSCOPE)) );
+  XRCCTRL(*this, "wxID_RADIO_SCOPE_DEPTH", wxRadioBox)->SetString(0, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DAV_LOCKSCOPE_EXCLUSIVE)) );
+  XRCCTRL(*this, "wxID_RADIO_SCOPE_DEPTH", wxRadioBox)->SetString(1, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DAV_LOCKSCOPE_SHARED)) );
+
+  XRCCTRL(*this, "wxID_RADIO_TIMEOUT", wxRadioBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DAV_TIMEOUT)) );
+  XRCCTRL(*this, "wxID_RADIO_TIMEOUT", wxRadioBox)->SetString(0, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DAV_TIMEOUT_INFINITE)) );
+  XRCCTRL(*this, "wxID_RADIO_TIMEOUT", wxRadioBox)->SetString(1, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DAV_TIMEOUT_OTHER)) );
+
+  XRCCTRL(*this, "wxID_CHECK_GENERAL", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DAV_AWARENESS_GENERAL)) );
+  XRCCTRL(*this, "wxID_EXIT_AWARENESS", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_DAV_AWARENESS_ONEXIT)) );
 }
 
 /*----------------------------------------------------------------------
-  SetupLabelDialog_DAV init labels
+  SetupDialog_DAV init labels
   params:
   returns:
   ----------------------------------------------------------------------*/
 void PreferenceDlgWX::SetupDialog_DAV( const Prop_DAV & prop)
 {
-  wxLogDebug( _T("PreferenceDlgWX::SetupLabelDialog_DAV") );
+  int          val;
 
-  // Setup notebook tab names :
-  int page_id;
-  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
-  page_id = GetPagePosFromXMLID( _T("wxID_PAGE_GENERAL") );
-  if (page_id >= 0)
-    p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_GENERAL_MENU)) );
+  wxLogDebug( _T("PreferenceDlgWX::SetupDialog_DAV") );
+
+  XRCCTRL(*this, "wxID_VALUE_DAV_USER", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.textUserReference) );
+  XRCCTRL(*this, "wxID_VALUE_DAV_RESOURCES", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.textUserResources) );
+
+  if (!strcmp (prop.radioDepth, "infinity"))
+    val = 1;
+  else
+    val = 0;
+  XRCCTRL(*this, "wxID_RADIO_LOCK_DEPTH", wxRadioBox)->SetSelection( val);
+  if (!strcmp (prop.radioLockScope, "shared")) 
+    val = 1;
+  else
+    val = 0;
+  XRCCTRL(*this, "wxID_RADIO_SCOPE_DEPTH", wxRadioBox)->SetSelection( val );
+  if (!strcmp (prop.radioTimeout, "Second"))
+    val = 1;
+  else
+    val = 0;
+  XRCCTRL(*this, "wxID_RADIO_TIMEOUT", wxRadioBox)->SetSelection( val );
+  if (prop.numberTimeout < 300)
+  XRCCTRL(*this, "wxID_TIMEOUT_VALUE", wxSlider)->SetValue( 300 );
+  else
+    XRCCTRL(*this, "wxID_TIMEOUT_VALUE", wxSlider)->SetValue( prop.numberTimeout );
+
+  XRCCTRL(*this, "wxID_CHECK_GENERAL", wxCheckBox)->SetValue( prop.toggleAwareness1 );
+  XRCCTRL(*this, "wxID_EXIT_AWARENESS", wxCheckBox)->SetValue( prop.toggleAwareness2 );
+}
+
+/*----------------------------------------------------------------------
+  GetValueDialog_DAV init labels
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+Prop_DAV PreferenceDlgWX::GetValueDialog_DAV()
+{
+  wxString        value;
+  Prop_DAV        prop;
+  int             val;
+  memset( &prop, 0, sizeof(Prop_General) );
+
+  wxLogDebug( _T("PreferenceDlgWX::GetValueDialog_DAV") );
+
+
+  XRCCTRL(*this, "wxID_VALUE_DAV_USER", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.textUserReference) );
+  XRCCTRL(*this, "wxID_VALUE_DAV_RESOURCES", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.textUserResources) );
+
+  val = XRCCTRL(*this, "wxID_RADIO_LOCK_DEPTH", wxRadioBox)->GetSelection();
+  if (val == 1)
+    strcpy (prop.radioDepth, "infinity");
+  else
+    strcpy (prop.radioDepth, "0");
+
+  val = XRCCTRL(*this, "wxID_RADIO_SCOPE_DEPTH", wxRadioBox)->GetSelection();
+  if (val == 1) 
+    strcpy (prop.radioLockScope, "shared");
+  else
+    strcpy (prop.radioLockScope, "exclusive");
+  val = XRCCTRL(*this, "wxID_RADIO_TIMEOUT", wxRadioBox)->GetSelection();
+  if (val == 1)
+    strcpy (prop.radioTimeout, "Second-");
+  else
+    strcpy (prop.radioTimeout, "Infinite");
+
+  prop.numberTimeout = XRCCTRL(*this, "wxID_TIMEOUT_VALUE",  wxSlider)->GetValue();
+
+  prop.toggleAwareness1 = XRCCTRL(*this, "wxID_CHECK_GENERAL", wxCheckBox)->GetValue();
+  prop.toggleAwareness2 = XRCCTRL(*this, "wxID_EXIT_AWARENESS", wxCheckBox)->GetValue();
+
+  retrun prop;
 }
 #endif /* DAV */
 
@@ -1030,9 +1113,9 @@ void PreferenceDlgWX::OnOk( wxCommandEvent& event )
   SetProp_Color( &prop_color );
   ThotCallback (GetPrefColorBase() + ColorMenu, INTEGER_DATA, (char*) 1);
 
-  Prop_LanNeg prop_lan = GetValueDialog_LanNeg();
-  SetProp_LanNeg( &prop_lan );
-  ThotCallback (GetPrefLanNegBase() + LanNegMenu, INTEGER_DATA, (char*) 1);
+  Prop_Annot prop_lan = GetValueDialog_Annot();
+  SetProp_Annot( &prop_lan );
+  ThotCallback (GetPrefAnnotBase() + AnnotMenu, INTEGER_DATA, (char*) 1);
 
   ThotCallback (m_Ref, INTEGER_DATA, (char*) 1);
 }
@@ -1084,11 +1167,20 @@ void PreferenceDlgWX::OnDefault( wxCommandEvent& event )
   else if ( p_page->GetId() == wxXmlResource::GetXRCID(_T("wxID_PAGE_GEOMETRY")) )
     {
     }
+#ifdef ANNOTATIONS
   else if ( p_page->GetId() == wxXmlResource::GetXRCID(_T("wxID_PAGE_LANNEG")) )
     {
-      ThotCallback (GetPrefLanNegBase() + LanNegMenu, INTEGER_DATA, (char*) 2);
-      SetupDialog_LanNeg( GetProp_LanNeg() );
+      ThotCallback (GetPrefAnnotBase() + AnnotMenu, INTEGER_DATA, (char*) 2);
+      SetupDialog_Annot( GetProp_Annot() );
     }
+#endif /* ANNOTATIONS */
+#ifdef DAV
+  else if ( p_page->GetId() == wxXmlResource::GetXRCID(_T("wxID_PAGE_DAV")) )
+    {
+      ThotCallback (GetPrefDAVBase() + DAVMenu, INTEGER_DATA, (char*) 2);
+      SetupDialog_DAV( GetProp_DAV() );
+    }
+#endif /* DAV */
 
   ThotCallback (m_Ref, INTEGER_DATA, (char*) 2);
 }
@@ -1107,7 +1199,12 @@ void PreferenceDlgWX::OnCancel( wxCommandEvent& event )
   ThotCallback (GetPrefProxyBase() + ProxyMenu, INTEGER_DATA, (char*) 0);
   ThotCallback (GetPrefColorBase() + ColorMenu, INTEGER_DATA, (char*) 0);
   ThotCallback (GetPrefGeometryBase() + GeometryMenu, INTEGER_DATA, (char*) 0);
-  ThotCallback (GetPrefLanNegBase() + LanNegMenu, INTEGER_DATA, (char*) 0);
+#ifdef ANNOTATIONS
+  ThotCallback (GetPrefAnnotBase() + AnnotMenu, INTEGER_DATA, (char*) 0);
+#endif /* ANNOTATIONS */
+#ifdef DAV
+  ThotCallback (GetPrefDAVBase() + DAVMenu, INTEGER_DATA, (char*) 0);
+#endif /* DAV */
   ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
 }
 

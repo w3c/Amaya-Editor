@@ -2638,6 +2638,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 
 #ifndef DAV    /* don't active the WebDAV menu if flag is off */
        TtaSetMenuOff (doc, 1, Cooperation_);
+       TtaSetItemOff (doc, 1, Edit_, BCoopConfig);
 #endif  /* DAV */
 
        /* do we have to redraw buttons and menus? */
@@ -2930,6 +2931,7 @@ Document InitDocAndView (Document oldDoc, ThotBool replaceOldDoc,
 	       TtaSetItemOff (doc, 1, File, BForward);
 #ifdef ANNOTATIONS
 	       TtaSetMenuOff (doc, 1, Annotations_);
+	       TtaSetItemOff (doc, 1, Edit_, BConfigAnnotations);
 #endif /* ANNOTATIONS */
 #ifdef BOOKMARKS
 	       TtaSetMenuOff (doc, 1, Bookmarks_);

@@ -285,6 +285,26 @@
                   <flag>wxALL|wxEXPAND</flag>
                   <border>10</border>
                 </object>
+                <object class="sizeritem">
+                  <object class="wxBoxSizer">
+                    <orient>wxVERTICAL</orient>
+                    <object class="sizeritem">
+                      <object class="wxStaticText" name="wxID_LABEL_LANNEGLISTLG">
+                        <label>Liste des langues preferees comme fr en   :</label>
+                      </object>
+                    </object>
+                    <object class="spacer">
+                      <size>0,5</size>
+                    </object>
+                    <object class="sizeritem">
+                      <object class="wxTextCtrl" name="wxID_VALUE_LANNEGLISTLG"/>
+                      <flag>wxEXPAND</flag>
+                    </object>
+                  </object>
+                  <option>0</option>
+                  <flag>wxALL|wxEXPAND</flag>
+                  <border>10</border>
+                </object>
               </object>
               <style>wxTAB_TRAVERSAL</style>
               <focused>1</focused>
@@ -419,7 +439,7 @@
                     </object>
                     <object class="sizeritem">
                       <object class="wxCheckBox" name="wxID_CHECK_DISCO">
-                        <label>Mode deconnecte</label>
+                        <label>En mode deconnecte</label>
                       </object>
                     </object>
                     <object class="sizeritem">
@@ -768,22 +788,22 @@
           </object>
           <object class="notebookpage">
             <label>Negociation de langues</label>
-            <object class="wxPanel" name="wxID_PAGE_LANNEG">
+            <object class="wxPanel" name="wxID_PAGE_ANNOT">
               <object class="wxBoxSizer">
                 <orient>wxVERTICAL</orient>
                 <object class="sizeritem">
                   <object class="wxBoxSizer">
                     <orient>wxVERTICAL</orient>
                     <object class="sizeritem">
-                      <object class="wxStaticText" name="wxID_LABEL_LANNEGLISTLG">
-                        <label>Liste des langues preferees comme fr en   :</label>
+                      <object class="wxStaticText" name="wxID_LABEL_ANNOT_USER">
+                        <label>Nom de l utilisateur des annotations et signets :</label>
                       </object>
                     </object>
                     <object class="spacer">
                       <size>0,5</size>
                     </object>
                     <object class="sizeritem">
-                      <object class="wxTextCtrl" name="wxID_VALUE_LANNEGLISTLG"/>
+                      <object class="wxTextCtrl" name="wxID_ANNOT_USER"/>
                       <flag>wxEXPAND</flag>
                     </object>
                   </object>
@@ -826,10 +846,10 @@
                     <orient>wxHORIZONTAL</orient>
                     <object class="sizeritem">
                       <object class="wxRadioBox" name="wxID_RADIO_LOCK_DEPTH">
-                        <label>Portee du verrou WebDAV</label>
+                        <label>Profondeur du verrou WebDAV</label>
                         <content>
-                          <item>exclusive</item>
-                          <item>partagee</item>
+                          <item>0</item>
+                          <item>Profondeur infinie</item>
                         </content>
                         <style>wxRA_SPECIFY_ROWS</style>
                       </object>
@@ -840,11 +860,11 @@
                       <size>10,0</size>
                     </object>
                     <object class="sizeritem">
-                      <object class="wxRadioBox" name="wxID_RADIO_LOCK_DEPTH">
-                        <label>Profondeur du verrou WebDAV</label>
+                      <object class="wxRadioBox" name="wxID_RADIO_SCOPE_DEPTH">
+                        <label>Portee du verrou WebDAV</label>
                         <content>
-                          <item>0</item>
-                          <item>Infinie</item>
+                          <item>verrou exclusif</item>
+                          <item>verrou partage</item>
                         </content>
                         <style>wxRA_SPECIFY_ROWS</style>
                       </object>

@@ -67,14 +67,18 @@ private:
   void OnGeomSave( wxCommandEvent& event );
   void OnGeomRestor( wxCommandEvent& event );
 
-  // "LanNeg" tab 
-  void SetupLabelDialog_LanNeg();
-  void SetupDialog_LanNeg( const Prop_LanNeg & prop );
-  Prop_LanNeg GetValueDialog_LanNeg();
+  // "Annot" tab 
+  void SetupLabelDialog_Annot();
+  void SetupDialog_Annot( const Prop_Annot & prop );
+  Prop_Annot GetValueDialog_Annot();
+
+
 
   // "DAV" tab
   void SetupLabelDialog_DAV();
   void SetupDialog_DAV( const Prop_DAV & prop );
+  Prop_DAV GetValueDialog_DAV();
+
 
   int GetPagePosFromXMLID( const wxString & xml_id );
 

@@ -6,8 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void UnsetEntryMenu ( int ref,
-                             int ent );
 extern void TtcSpellCheck ( Document doc,
                             View view );
 extern void ResetCheckInDocument ( PtrDocument pDoc );
@@ -21,8 +19,6 @@ extern void TtaGetChkrLanguageName ( char **lang );
 
 #else /* __STDC__ */
 
-extern void UnsetEntryMenu ( int ref,
-                               int ent );
 extern void TtcSpellCheck ( Document doc,
                               View view );
 extern void ResetCheckInDocument ( PtrDocument pDoc );

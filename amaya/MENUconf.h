@@ -45,7 +45,8 @@
 #define BrowseMenu          1
 #define mToggleBrowse       2
 #define mScreenSelector     3
-#define MAX_BROWSEMENU_DLG  4
+#define mLanNeg             4
+#define MAX_BROWSEMENU_DLG  5
 
 #define PublishMenu         1
 #define mTogglePublish      2
@@ -69,9 +70,8 @@
 #define mGeometryLabel2      3
 #define MAX_GEOMETRYMENU_DLG 4
 
-#define LanNegMenu           1
-#define mLanNeg              2
-#define MAX_LANNEGMENU_DLG   3
+#define DAVMenu           1
+#define MAX_DAVMENU_DLG   2
 
 #define AnnotMenu               1
 #define mAnnotUser              2
@@ -107,6 +107,7 @@ typedef struct Prop_Browse_t
   ThotBool EnableFTP;
   ThotBool BgImages;
   char     ScreenType[MAX_LENGTH];
+  char     LanNeg[MAX_LENGTH];
   int      DoubleClickDelay; /* not used ? */
 } Prop_Browse;
 
@@ -149,10 +150,9 @@ typedef struct Prop_Color_t
   char     MenuBgColor[MAX_LENGTH];
 } Prop_Color;
 
-typedef struct Prop_LanNeg_t
+typedef struct Prop_Annot_t
 {
-  char     LanNeg[MAX_LENGTH];
-} Prop_LanNeg;
+} Prop_Annot;
 
 typedef struct Prop_DAV_t
 {

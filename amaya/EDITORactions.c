@@ -3920,14 +3920,6 @@ void ConfigProxy (Document doc, View view)
   ProxyConfMenu (doc, view);
 }
 
-/*----------------------------------------------------------------------
-  ConfigLanNeg
-  A frontend to the LanNeg configuration menu
-  ----------------------------------------------------------------------*/
-void ConfigLanNeg (Document doc, View view)
-{
-   LanNegConfMenu (doc, view);
-}
 
 /*----------------------------------------------------------------------
   SaveOptions

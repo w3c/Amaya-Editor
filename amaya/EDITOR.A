@@ -124,7 +124,8 @@ MENUS
 	Edit_.Coptions button:BConfigProxy -> ConfigProxy;
 	Edit_.Coptions button:BConfigColor -> ConfigColor;
 	Edit_.Coptions button:BConfigGeometry -> ConfigGeometry;
-	Edit_.Coptions button:BConfigLanNeg -> ConfigLanNeg;
+	Edit_.Coptions button:BConfigAnnotations -> ConfigAnnot;
+	Edit_.Coptions button:BCoopConfig -> CooperationConfig;
 
 	Types button:BTitle -> ChangeTitle;
 	Types Separator;
@@ -335,7 +336,6 @@ MENUS
 	view:1 Annotations_ Separator;
 	view:1 Annotations_ button:BCustomQuery -> CustomQuery;
 	view:1 Annotations_ button:BFilterAnnotations -> FilterAnnot;
-	view:1 Annotations_ button:BConfigAnnotations -> ConfigAnnot;
 
 	view:1 Bookmarks_ button:BViewBookmarks -> ViewBookmarks;
 	view:1 Bookmarks_ button:BBookmarkFile -> BookmarkFile;
@@ -350,8 +350,6 @@ MENUS
 	view:1 Cooperation_ button:BCopyLock -> CopyLockInformation;
 	view:1 Cooperation_ Separator;
         view:1 Cooperation_ toggle:BLockIndicator -> LockIndicator;
-	view:1 Cooperation_ Separator;
-	view:1 Cooperation_ button:BCoopConfig -> CooperationConfig;
 
 	view:1 Help_ button:BInformation -> HelpAmaya;
 	view:1 Help_ button:BAtW3C -> HelpAtW3C;

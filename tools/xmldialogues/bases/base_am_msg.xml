@@ -1792,15 +1792,15 @@
 	<message xml:lang="ru">Сбросить кэш</message>
 </label>
 <label define="AM_CACHE_MENU">
-	<message xml:lang="en">Cache Preferences</message>
-	<message xml:lang="fr">Configuration du cache</message>
+	<message xml:lang="en">Cache</message>
+	<message xml:lang="fr">Cache</message>
 	<message xml:lang="de">Cache</message>
-	<message xml:lang="it">Preferenze sulla cache</message>
-	<message xml:lang="es">Preferencias de caché</message>
-	<message xml:lang="pt">Preferências de cache</message>
-	<message xml:lang="fi">Välimuistin asetukset</message>
-	<message xml:lang="tr">Gizli bölümün ayaraları</message>
-	<message xml:lang="ru">Настройки кэша</message>
+	<message xml:lang="it">Cache</message>
+	<message xml:lang="es">Caché</message>
+	<message xml:lang="pt">Cache</message>
+	<message xml:lang="fi">Välimuisti</message>
+	<message xml:lang="tr">Önbellekleme</message>
+	<message xml:lang="ru">Кэш</message>
 </label>
 <label define="AM_ENABLE_CACHE">
 	<message xml:lang="en">Enable cache</message>
@@ -1880,15 +1880,15 @@
 	<message xml:lang="ru">Лимит на элемент кэша (Мб)</message>
 </label>
 <label define="AM_PROXY_MENU">
-	<message xml:lang="en">Proxy Preferences</message>
-	<message xml:lang="fr">Configuration du proxy</message>
+	<message xml:lang="en">Proxy</message>
+	<message xml:lang="fr">Proxy</message>
 	<message xml:lang="de">Proxy</message>
-	<message xml:lang="it">Preferenze sull'uso dei proxy</message>
-	<message xml:lang="es">Preferencias de proxy</message>
-	<message xml:lang="pt">Preferências de proxy</message>
-	<message xml:lang="fi">Välityspalvelimen asetukset</message>
-	<message xml:lang="tr">Proxy ayarları</message>
-	<message xml:lang="ru">Настройки прокси сервера</message>
+	<message xml:lang="it">Proxy</message>
+	<message xml:lang="es">Proxy</message>
+	<message xml:lang="pt">Proxy</message>
+	<message xml:lang="fi">Välimuisti</message>
+	<message xml:lang="tr">Önbellekleme</message>
+	<message xml:lang="ru">Кэш</message>
 </label>
 <label define="AM_HTTP_PROXY">
 	<message xml:lang="en">HTTP proxy (e.g., www.w3.org:1234)</message>
@@ -1913,15 +1913,15 @@
 	<message xml:lang="ru">Доменный список proxy (т.е., lists.w3.org)</message>
 </label>
 <label define="AM_GENERAL_MENU">
-	<message xml:lang="en">General Preferences</message>
-	<message xml:lang="fr">Configuration générale</message>
+	<message xml:lang="en">General</message>
+	<message xml:lang="fr">Générale</message>
 	<message xml:lang="de">Allgemein</message>
-	<message xml:lang="it">Preferenze generali</message>
-	<message xml:lang="es">Preferencias generales</message>
-	<message xml:lang="pt">Preferências gerais</message>
-	<message xml:lang="fi">Yleiset asetukset</message>
-	<message xml:lang="tr">Genel ayarlar</message>
-	<message xml:lang="ru">Основные настройки</message>
+	<message xml:lang="it">Generali</message>
+	<message xml:lang="es">Generales</message>
+	<message xml:lang="pt">Geral</message>
+	<message xml:lang="fi">Yleiset</message>
+	<message xml:lang="tr">Genel</message>
+	<message xml:lang="ru">Просмотр</message>
 </label>
 <label define="AM_HOME_PAGE">
 	<message xml:lang="en">Home Page</message>
@@ -2069,14 +2069,14 @@
 	<message xml:lang="ru">Экспортировать CR/LF</message>
 </label>
 <label define="AM_BROWSE_MENU">
-	<message xml:lang="en">Browsing Preferences</message>
-	<message xml:lang="fr">Configuration de navigation</message>
+	<message xml:lang="en">Browsing</message>
+	<message xml:lang="fr">Navigation</message>
 	<message xml:lang="de">Browser</message>
-	<message xml:lang="fi">Selaus asetukset</message>
-	<message xml:lang="it">Preferenze per la visualizzazione</message>
-	<message xml:lang="es">Preferencias de navegación</message>
-	<message xml:lang="tr">Tarayıcı ayarları</message>
-	<message xml:lang="ru">Настройки просмотра</message>
+	<message xml:lang="fi">Selaus</message>
+	<message xml:lang="it">Visualizzazione</message>
+	<message xml:lang="es">Navegación</message>
+	<message xml:lang="tr">Tarama</message>
+	<message xml:lang="ru">Просмотр</message>
 </label>
 <label define="AM_LOAD_IMAGES">
 	<message xml:lang="en">Load images (img)</message>
@@ -2100,15 +2100,15 @@
 	<message xml:lang="ru">Двойной щелчок активирует ссылку</message>
 </label>
 <label define="AM_PUBLISH_MENU">
-	<message xml:lang="en">Publishing Preferences</message>
-	<message xml:lang="fr">Configuration de la publication</message>
+	<message xml:lang="en">Publishing</message>
+	<message xml:lang="fr">Publication</message>
 	<message xml:lang="de">Veröffentlichen</message>
-	<message xml:lang="it">Preferenze per la pubblicazione</message>
-	<message xml:lang="es">Preferencias de publicación</message>
-	<message xml:lang="pt">Preferências de publicação</message>
-	<message xml:lang="fi">Julkaisu asetukset</message>
-	<message xml:lang="tr">Dağıtım ayarları</message>
-	<message xml:lang="ru">Настройки публикации</message>
+	<message xml:lang="it">Pubblicazione</message>
+	<message xml:lang="es">Publicación</message>
+	<message xml:lang="pt">Publicação</message>
+	<message xml:lang="fi">Julkaisu</message>
+	<message xml:lang="tr">Derleme</message>
+	<message xml:lang="ru">Публикация</message>
 </label>
 <label define="AM_USE_ETAGS">
 	<message xml:lang="en">Use ETAGS and preconditions</message>
@@ -2144,15 +2144,15 @@
 	<message xml:lang="ru">Имя по умолчанию для URLs заканчивающихся на '/'</message>
 </label>
 <label define="AM_GEOMETRY_MENU">
-	<message xml:lang="en">Geometry Preferences</message>
-	<message xml:lang="fr">Configuration de la géométrie</message>
+	<message xml:lang="en">Geometry</message>
+	<message xml:lang="fr">Géométrie</message>
 	<message xml:lang="de">Fenstergeometrie</message>
-	<message xml:lang="it">Preferenze della geometria</message>
-	<message xml:lang="es">Preferencias de geometría de la ventana</message>
-	<message xml:lang="pt">Preferências de geometria</message>
-	<message xml:lang="fi">Geometria asetukset</message>
-	<message xml:lang="tr">Geometri ayarları</message>
-	<message xml:lang="ru">Настройки геометрии</message>
+	<message xml:lang="it">Geometria</message>
+	<message xml:lang="es">Geometría</message>
+	<message xml:lang="pt">Geometria</message>
+	<message xml:lang="fi">Geometria</message>
+	<message xml:lang="tr">Geometri</message>
+	<message xml:lang="ru">Язык обсуже&amp;дения</message>
 </label>
 <label define="AM_SAVE_GEOMETRY">
 	<message xml:lang="en">Save current geometry</message>
@@ -2188,15 +2188,15 @@
 	<message xml:lang="ru">Изменения вступят в силу после открытия нового окна.</message>
 </label>
 <label define="AM_COLOR_MENU">
-	<message xml:lang="en">Color Preferences</message>
-	<message xml:lang="fr">Configuration des couleurs</message>
+	<message xml:lang="en">Colors</message>
+	<message xml:lang="fr">Couleurs</message>
 	<message xml:lang="de">Farben</message>
-	<message xml:lang="it">Preferenze dei colori</message>
-	<message xml:lang="es">Preferencias de colores</message>
-	<message xml:lang="pt">Preferências de cor</message>
-	<message xml:lang="fi">Väri asetukset</message>
+	<message xml:lang="it">Colori</message>
+	<message xml:lang="es">Colores</message>
+	<message xml:lang="pt">Cores</message>
+	<message xml:lang="fi">Väri</message>
 	<message xml:lang="tr">Renk ayarları</message>
-	<message xml:lang="ru">Настройки цвета</message>
+	<message xml:lang="ru">Цвет</message>
 </label>
 <label define="AM_DOC_FG_COLOR">
 	<message xml:lang="en">Document foreground color</message>
@@ -2274,28 +2274,6 @@
 	<message xml:lang="fi">Luettelo valituista kielistä "fi, en":</message>
 	<message xml:lang="tr">Istenilen dillerin listesi (mesela "en, fr"):</message>
 	<message xml:lang="ru">Список предпочитаемых языков "ru, en, fr":</message>
-</label>
-<label define="AM_PROFILES_FILE">
-	<message xml:lang="en">Location of profiles definition file</message>
-	<message xml:lang="fr">Emplacement du fichier de définition de profils</message>
-	<message xml:lang="de">Datei der Profildefinitionen</message>
-	<message xml:lang="it">File di definizione dei profili</message>
-	<message xml:lang="es">Ubicación del archivo de definición de perfiles:</message>
-	<message xml:lang="pt">Localização do arquivo de definição de perfís</message>
-	<message xml:lang="fi">Profiilien määrittelytiedoston sijainti</message>
-	<message xml:lang="tr">Profillerin tanımlama dosyanın yeri</message>
-	<message xml:lang="ru">Расположение файла определения профилей</message>
-</label>
-<label define="AM_PROFILE_SELECT">
-	<message xml:lang="en">Profile Selection</message>
-	<message xml:lang="fr">Sélection du profil</message>
-	<message xml:lang="de">Verfügbare Profile</message>
-	<message xml:lang="it">Selezione dei profili</message>
-	<message xml:lang="es">Perfil elegido:</message>
-	<message xml:lang="pt">Seleção de perfil</message>
-	<message xml:lang="fi">Profiilin valinta</message>
-	<message xml:lang="tr">Profil seçimi</message>
-	<message xml:lang="ru">Выбор профиля</message>
 </label>
 <label define="AM_PROFILE_CHANGE">
 	<message xml:lang="en">These changes won't be effective until Amaya is restarted</message>
@@ -2423,22 +2401,22 @@
 	<message xml:lang="fr">Négociation de langues</message>
 	<message xml:lang="de">Sprachen</message>
 	<message xml:lang="it">Negoziazione della lingua</message>
-	<message xml:lang="es">Preferencias de negociación de idioma</message>
+	<message xml:lang="es">Negociación de idioma</message>
 	<message xml:lang="pt">Negociação de idioma</message>
 	<message xml:lang="fi">Kieliasetukset</message>
-	<message xml:lang="tr">dil pazarlaması</message>
+	<message xml:lang="tr">Ülke dilleri</message>
 	<message xml:lang="ru">Язык обсуждения</message>
 </label>
 <label define="AM_ANNOT_CONF_MENU">
-	<message xml:lang="en">Configuration for annotations</message>
-	<message xml:lang="fr">Configurer les annotations</message>
-	<message xml:lang="de">Anmerkungen konfigurieren</message>
-	<message xml:lang="it">Configurazione delle annotazioni</message>
-	<message xml:lang="es">Configuración de anotaciones</message>
-	<message xml:lang="pt">Configuração para anotações</message>
-	<message xml:lang="fi">Huomautuksien asetukset</message>
-	<message xml:lang="tr">Not ayarları</message>
-	<message xml:lang="ru">Конфигурация для аннотаций</message>
+	<message xml:lang="en">Annotations</message>
+	<message xml:lang="fr">Annotations</message>
+	<message xml:lang="de">Anmerkungen</message>
+	<message xml:lang="it">Annotazioni</message>
+	<message xml:lang="es">Anotaciones</message>
+	<message xml:lang="pt">Anotações</message>
+	<message xml:lang="fi">Huomautuksien</message>
+	<message xml:lang="tr">Eklemeler</message>
+	<message xml:lang="ru">Анно&amp;тации</message>
 </label>
 <label define="AM_ANNOT_USER">
 	<message xml:lang="en">Annotation and bookmark user</message>
@@ -3427,15 +3405,15 @@
 	<message xml:lang="ru">Попробовать снова?</message>
 </label>
 <label define="AM_DAV_PREFERENCES">
-	<message xml:lang="en">WebDAV Preferences</message>
-	<message xml:lang="fr">Configuration WebDAV</message>
-	<message xml:lang="pt">Preferências WebDAV</message>
-	<message xml:lang="de">WebDAV Einstellungen</message>
-	<message xml:lang="fi">WebDAV asetukset</message>
-	<message xml:lang="it">Preferenze WebDAV</message>
-	<message xml:lang="es">Preferencias WebDAV</message>
-	<message xml:lang="tr">WebDAV ayarları</message>
-	<message xml:lang="ru">Настройки WebDAV</message>
+	<message xml:lang="en">WebDAV</message>
+	<message xml:lang="fr">WebDAV</message>
+	<message xml:lang="pt">WebDAV</message>
+	<message xml:lang="de">WebDAV</message>
+	<message xml:lang="fi">WebDAV</message>
+	<message xml:lang="it">WebDAV</message>
+	<message xml:lang="es">WebDAV</message>
+	<message xml:lang="tr">WebDAV</message>
+	<message xml:lang="ru">WebDAV</message>
 </label>
 <label define="AM_DAV_USER_URL">
 	<message xml:lang="en">User's Personal Reference (URL)</message>
@@ -3504,26 +3482,15 @@
 	<message xml:lang="ru">Бесконечно</message>
 </label>
 <label define="AM_DAV_TIMEOUT_OTHER">
-	<message xml:lang="en">Other</message>
-	<message xml:lang="fr">Autre</message>
-	<message xml:lang="pt">Outro</message>
-	<message xml:lang="de">Andere</message>
-	<message xml:lang="fi">Muu</message>
-	<message xml:lang="it">Altro</message>
-	<message xml:lang="es">Otro</message>
-	<message xml:lang="tr">Diyer</message>
-	<message xml:lang="ru">Другой</message>
-</label>
-<label define="AM_DAV_TIMEOUT_SECONDS">
-	<message xml:lang="en">Seconds</message>
-	<message xml:lang="fr">Secondes</message>
-	<message xml:lang="pt">Segundos</message>
-	<message xml:lang="de">Sekunden</message>
-	<message xml:lang="fi">Sekuntia</message>
-	<message xml:lang="it">Secondi</message>
-	<message xml:lang="es">Segundos</message>
-	<message xml:lang="tr">Saniye</message>
-	<message xml:lang="ru">Секунды</message>
+	<message xml:lang="en">Other (Seconds)</message>
+	<message xml:lang="fr">Autre (Secondes)</message>
+	<message xml:lang="pt">Outro (Segundos)</message>
+	<message xml:lang="de">Andere (Sekunden)</message>
+	<message xml:lang="fi">Muu (Sekuntia)</message>
+	<message xml:lang="it">Altro (Secondi)</message>
+	<message xml:lang="es">Otro (Segundos)</message>
+	<message xml:lang="tr">Diyer (Saniye)</message>
+	<message xml:lang="ru">Другой (Секунды)</message>
 </label>
 <label define="AM_DAV_LOCKSCOPE">
 	<message xml:lang="en">Lock Scope</message>
