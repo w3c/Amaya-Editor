@@ -119,10 +119,6 @@ static ThotBool     WelcomePage = FALSE;
 /* we have to mark the initial loading status to avoid to re-open the
    document view twice */
 static int          Loading_method = CE_INIT;
-/* list of previous open URLs */
-#define MAX_URL_list 20
-static char        *URL_list = NULL;
-static int          URL_list_len = 0;
 
 #ifndef _WINDOWS
 static ThotIcon       stopR;
@@ -1494,7 +1490,7 @@ static int  CompleteUrl(char **url)
    The Address text field in a document window has been modified by the user
    Load the corresponding document in that window.
   ----------------------------------------------------------------------*/
-static void         TextURL (Document doc, View view, char *text)
+static void TextURL (Document doc, View view, char *text)
 {
   char             *s = NULL;
   char             *url;
@@ -1520,7 +1516,7 @@ static void         TextURL (Document doc, View view, char *text)
       if (!CanReplaceCurrentDocument (doc, view))
 	{
 	  /* restore the previous value @@ */
-	  TtaSetTextZone (doc, view, 1, DocumentURLs[doc]);
+	  TtaSetTextZone (doc, view, DocumentURLs[doc], URL_list);
 	  /* cannot load the new document */
 	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), text);
 	  /* abort the command */
@@ -1531,7 +1527,7 @@ static void         TextURL (Document doc, View view, char *text)
       if (change)
 	{
 	  /* change the text value */
-	  TtaSetTextZone (doc, view, 1, url);
+	  TtaSetTextZone (doc, view, url, URL_list);
 	  CallbackDialogue (BaseDialog + URLName, STRING_DATA, url);
 	}
       else
@@ -3672,7 +3668,10 @@ static Document LoadDocument (Document doc, char *pathname,
 	{
 #ifdef _SVGLIB
 	  if (DocumentTypes[newdoc] == docLibrary)
+	    {
 	      s = GetLibraryTitleFromPath (DocumentURLs[newdoc]);
+	      TtaSetTextZone (newdoc, 1, s, NULL);
+	    }
 	  else
 #endif /* _SVGLIB */
 	    {
@@ -3687,8 +3686,8 @@ static Document LoadDocument (Document doc, char *pathname,
 		sprintf (s, "%s?%s", pathname, form_data);
 	      else
 		strcpy (s, pathname);
+	      TtaSetTextZone (newdoc, 1, s, URL_list);
 	    }
-	  TtaSetTextZone (newdoc, 1, 1, s);
 	  TtaFreeMemory (s);
 	}
 
@@ -4523,16 +4522,16 @@ void GetAmayaDoc_callback (int newdoc, int status, char *urlName,
 	       /* save the document name into the document table */
 	       s = TtaStrdup (pathname);
 	       DocumentURLs[newdoc] = s;
-#ifdef _SVGLIB
 	       if (DocumentTypes[newdoc] == docLibrary)
 		 {
-		   s = GetLibraryTitleFromPath (DocumentURLs[newdoc]);
-		 }
-	       if (s)
-		 TtaSetTextZone (newdoc, 1, 1, s);
-#else /* !_SVGLIB */
-	       TtaSetTextZone (newdoc, 1, 1, s);
+#ifdef _SVGLIB
+		 s = GetLibraryTitleFromPath (DocumentURLs[newdoc]);
+		 if (s)
+		   TtaSetTextZone (newdoc, 1, s, NULL);
 #endif /* _SVGLIB */
+		 }
+	       else
+		 TtaSetTextZone (newdoc, 1, s, URL_list);
 	       /* save the document's formdata into the document table */
 	       if (DocumentMeta[newdoc])
 		   DocumentMetaClear (DocumentMeta[(int) newdoc]);
@@ -6078,7 +6077,7 @@ static int RestoreOneAmayaDoc (Document doc, char *tempdoc, char *docname,
 	  DocumentURLs[newdoc] = TtaGetMemory (len);
 	  strcpy (DocumentURLs[newdoc], docname);
 	  DocumentSource[newdoc] = 0;
-	  TtaSetTextZone (newdoc, 1, 1, docname);
+	  TtaSetTextZone (newdoc, 1, docname, URL_list);
 	  /* change its directory name */
 	  TtaSetDocumentDirectory (newdoc, DirectoryName);
 	}
@@ -6602,6 +6601,8 @@ void InitAmaya (NotifyEvent * event)
 #ifdef _SVGLIB
    InitLibrary();
 #endif /* _SVGLIB */
+   URL_list = NULL;
+    URL_list_len = 0;
    InitStringForCombobox ();   
    CurrentDocument = 0;
    DocBook = 0;
@@ -6614,20 +6615,22 @@ void InitAmaya (NotifyEvent * event)
    if (appArgc % 2 == 0)
      /* The last argument in the command line is the document to be opened */
      s = appArgv[appArgc - 1];
-   if (!s && (URL_list == NULL || URL_list[0] == EOS || URL_list[0] == EOL))
-      /* No argument in the command line, no HOME_PAGE variable (). Open the */
-      /* default Amaya URL */
-     GoToHome (0, 1);
-   else if (!s)
+   if (s == NULL || s[0] == EOS)
+     /* no argument: display the Home Page */
+     s = TtaGetEnvString ("HOME_PAGE");
+   if (s == NULL || s[0] == EOS)
      {
+       /* no argument and no Home: display the previous open URI */
        for (i = 0; URL_list[i] != EOS && URL_list[i] != EOL; i++)
 	 ptr[i] = URL_list[i];
        ptr[i] = EOS;
        s = ptr;
      }
-   if (s)
-   {
-	   if (IsW3Path (s))
+
+   if (s == NULL || s[0] == EOS)
+      /* no argument, no Home, and no previous page: display default Amaya URL */
+     GoToHome (0, 1);
+   else if (IsW3Path (s))
      {
        /* it's a remote document */
        strcpy (LastURLName, s);
@@ -6664,7 +6667,6 @@ void InitAmaya (NotifyEvent * event)
 	   CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
 	 }
      }
-   }
    TtaFreeMemory (ptr);
    ptr = NULL;
    Loading_method = CE_ABSOLUTE;
@@ -7353,39 +7355,35 @@ void AddURLInCombobox (char *url)
   /* keep the previous list */
   ptr = URL_list;
   /* create a new list */
-  len = strlen (url);
+  len = strlen (url) + 1;
   i = 0;
   j = len;
   nb = 1;
-  URL_list_len = URL_list_len + len + 2;
+  URL_list_len = URL_list_len + len + 1;
   URL_list = TtaGetMemory (URL_list_len);  
   if (file)
     {
       /* put the new url */
       strcpy (URL_list, url);
       fprintf (file, "\"%s\"\n", url);
-      if (ptr)
+      if (*ptr != EOS)
 	{
 	  /* now write other urls */
 	  while (ptr[i] != EOS && nb < MAX_URL_list)
 	    {
-	      end = 0;
-	      while (ptr[i + end] != EOL && ptr[i + end] != EOS)
-		end++;
-	      ptr[i + end] = EOS;
+	      end = strlen (&ptr[i]) + 1;
 	      if (end != len || strncmp (url, &ptr[i], len))
 		{
 		  /* add the newline between two urls */
-		  URL_list[j++] = EOL;
 		  strcpy (&URL_list[j], &ptr[i]);
 		  fprintf (file, "\"%s\"\n", &ptr[i]);
 		  j += end;
 		  nb++;
 		}
-	      i = i + end + 1;
+	      i = i + end;
 	    }
 	}
-      URL_list[j + 1] = EOS;
+      URL_list[j] = EOS;
       TtaWriteClose (file);
     }
   TtaFreeMemory (ptr);
@@ -7425,8 +7423,8 @@ void InitStringForCombobox ()
       while (fscanf (file, "%s", urlstring) > 0 && nb < MAX_URL_list)
 	{
 	  if (i > 0)
-	    /* add the newline between two urls */
-	    URL_list[i++] = EOL;
+	    /* add an EOS between two urls */
+	    URL_list[i++] = EOS;
 	  len = strlen (urlstring) - 1;
 	  if (urlstring[0] == '"' && urlstring[len] == '"')
 	    {

@@ -33,7 +33,6 @@ extern void SVGLIB_FreeDocumentResource ( void );
 extern char *GetLibraryTitleFromPath ( char *path );
 extern char *GetLibraryPathFromTitle ( char *title );
 extern char *InitSVGBufferForComboBox ( void );
-extern char *InitSVGLibraryListURL ( void );
 extern void InitSVGLibraryManagerStructure ( void );
 extern ThotBool IsLibraryName ( const char *path );
 extern void OpenCatalogue ( Document doc,
@@ -121,7 +120,6 @@ extern void SVGLIB_FreeDocumentResource (/* void */);
 extern char *GetLibraryTitleFromPath (/* char *path */);
 extern char *GetLibraryPathFromTitle (/* char *title */);
 extern char *InitSVGBufferForComboBox (/* void */);
-extern char *InitSVGLibraryListURL (/* void */);
 extern void InitSVGLibraryManagerStructure (/* void */);
 extern ThotBool IsLibraryName (/* const char *path */);
 extern void OpenCatalogue (/* Document doc,

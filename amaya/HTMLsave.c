@@ -3113,8 +3113,8 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
 		  TtaSetTextContent (doc_url, DocumentURLs[xmlDoc],
 				     TtaGetDefaultLanguage (), xmlDoc);
 		}
-     
-	      TtaSetTextZone (xmlDoc, 1, 1, DocumentURLs[xmlDoc]);
+	      AddURLInCombobox (DocumentURLs[xmlDoc]);
+	      TtaSetTextZone (xmlDoc, 1, DocumentURLs[xmlDoc], URL_list);
 	      if (DocumentSource[doc])
 		{
 	          TtaFreeMemory (DocumentURLs[DocumentSource[doc]]);

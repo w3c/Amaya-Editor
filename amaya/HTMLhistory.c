@@ -410,16 +410,14 @@ void GotoPreviousHTML (Document doc, View view)
   
   /* is it the current document ? */     
   if (DocumentURLs[doc] && !strcmp (url, DocumentURLs[doc]) && same_form_data)
-    {
-      /* it's just a move in the same document */
-      GotoPreviousHTML_callback (doc, 0, url, NULL, NULL, (void *) ctx);
-    }
+    /* it's just a move in the same document */
+    GotoPreviousHTML_callback (doc, 0, url, NULL, NULL, (void *) ctx);
   else
     {
       StopTransfer (doc, 1);
-      (void) GetAmayaDoc (url, form_data, doc, doc, method, FALSE,
-			  (void *) GotoPreviousHTML_callback,(void *) ctx,
-			  UTF_8);
+      AddURLInCombobox (url);
+      GetAmayaDoc (url, form_data, doc, doc, method, FALSE,
+		   (void *) GotoPreviousHTML_callback,(void *) ctx, UTF_8);
       /* out of the critic section */
       Back_Forward = FALSE;
     }
@@ -578,6 +576,7 @@ void GotoNextHTML (Document doc, View view)
   else
     {
       StopTransfer (doc, 1);
+      AddURLInCombobox (url);
       (void) GetAmayaDoc (url, form_data, doc, doc, method, FALSE,
 			  (void *) GotoNextHTML_callback, (void *) ctx,
 			  UTF_8);

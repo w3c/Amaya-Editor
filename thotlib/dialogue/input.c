@@ -560,13 +560,11 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
      so we must now know where is the focus, 
      to analyse the meaning of the keypress
      and setting it on one of the  textfields*/
-  if (FrameTable[frame].Text_Zone[1])
+  if (FrameTable[frame].Text_Zone)
     {
-      if (GTK_WIDGET_HAS_FOCUS (FrameTable[frame].Text_Zone[1]))
-	{ 
-	  /* We're in the url zone*/
-	  return FALSE;
-	} 
+      if (GTK_WIDGET_HAS_FOCUS (FrameTable[frame].Text_Zone))
+	/* We're in the url zone*/
+	return FALSE;
       else
 	{ 
 	  /* We're in the drawing so get the hidden textfield adress*/		 

@@ -2063,128 +2063,95 @@ void TtcSwitchButtonBar (Document doc, View view)
 #ifndef _GTK
 void APP_TextCallback (ThotWidget w, int frame, void *call_d)
 {
-   Document            doc;
-   View                view;
-   int                 i;
+  Document            doc;
+  View                view;
 #ifndef _WINDOWS
-   char               *text;
+  char               *text;
 #else  /* _WINDOWS */
-   char                text[1024];
+  char                text[1024];
 
-   w = GetParent (w);
+  w = GetParent (w);
 #endif /* _WINDOWS */
-
-   CloseInsertion ();
-   i = 0;
-   while (i < MAX_TEXTZONE && FrameTable[frame].Text_Zone[i] != w)
-      i++;
-   if (i < MAX_TEXTZONE)
-     {
-	FrameToView (frame, &doc, &view);
-
+  CloseInsertion ();
+  if (FrameTable[frame].Text_Zone == w)
+    {
+      FrameToView (frame, &doc, &view);
 #ifdef _WINDOWS
-	w = GetWindow (w, GW_CHILD);
-	GetWindowText (w, text, sizeof (text) + 1);
+      w = GetWindow (w, GW_CHILD);
+      GetWindowText (w, text, sizeof (text) + 1);
 #else /* _WINDOWS */
-	text = XmTextGetString (w);
+      text = XmTextGetString (w);
 #endif /* _WINDOWS */
-
-	(*FrameTable[frame].Call_Text[i]) (doc, view, text);
-     }
+      (*FrameTable[frame].Call_Text) (doc, view, text);
+    }
 }
 #else /* _GTK */
 gboolean APP_TextCallbackGTK (GtkWidget *w, int frame)
 {
-   Document            doc;
-   View                view;
-   int                 i, j;
-   char               *text;
-   GtkEntry           *text_widget;
+  Document            doc;
+  View                view;
+  char               *text;
+  GtkEntry           *text_widget;
 
-   CloseInsertion ();
-   i = j = 0;
-   while (i < MAX_TEXTZONE && FrameTable[frame].Text_Zone[i] != w)
-      i++;
-   if (i < MAX_TEXTZONE)
-     {
-	FrameToView (frame, &doc, &view);
-	text_widget = GTK_ENTRY (w);
-	text = gtk_entry_get_text (GTK_ENTRY (w));
-	(*FrameTable[frame].Call_Text[i]) (doc, view, text);
-	return TRUE;
-     }
-   /* False value permits the enter signal propagation
-    For a callback in the signal catching hierarchy*/
-   return FALSE;
+  CloseInsertion ();
+  if (FrameTable[frame].Text_Zone == w)
+    {
+      FrameToView (frame, &doc, &view);
+      text_widget = GTK_ENTRY (w);
+      text = gtk_entry_get_text (GTK_ENTRY (w));
+      (*FrameTable[frame].Call_Text) (doc, view, text);
+      return TRUE;
+    }
+  /* False value permits the enter signal propagation
+     For a callback in the signal catching hierarchy*/
+  return FALSE;
 }
 #endif /* _GTK */
 #ifdef _GTK
 gboolean APP_TextEnterGTK (GtkWidget *w, int frame)
 {
-   Document            doc;
-   View                view;
-   int                 i, j;
-   char               *text;
-   GtkEntry           *text_widget;
+  Document            doc;
+  View                view;
+  char               *text;
+  GtkEntry           *text_widget;
 
-   i = j = 0;
-   while (i < MAX_TEXTZONE && 
-	  FrameTable[frame].Text_Zone[i] != w)
-      i++;
-   if (i < MAX_TEXTZONE)
-     {
-	FrameToView (frame, &doc, &view);
-	text_widget = GTK_ENTRY (w);
-	text = gtk_entry_get_text (GTK_ENTRY (w));
-	(*FrameTable[frame].Call_Text[i]) (doc, view, text);
-	return TRUE;
-     }
-   return TRUE;
+  if (FrameTable[frame].Text_Zone == w)
+    {
+      FrameToView (frame, &doc, &view);
+      text_widget = GTK_ENTRY (w);
+      text = gtk_entry_get_text (GTK_ENTRY (w));
+      (*FrameTable[frame].Call_Text) (doc, view, text);
+      return TRUE;
+    }
+  return TRUE;
 }
 #endif /* _GTK */
 
 /*----------------------------------------------------------------------
-  InitComboBoxList
-
-  Initialize listebox of a "combo box" by reading a string like:
-        string\nstring...\nstring\0
+  InitComboBoxList initializes listebox of a "combo box" by reading a
+  string like: string\nstring...\nstring\0
   With API GTK this function initialize a GList
-  Stop when reading '\0'
+  Stop when reading EOS
   Parameters:
-  items: list to initialize
   buffer: string which contains list box initialize information
   ----------------------------------------------------------------------*/
 #ifdef _GTK
-GList *InitComboBoxList (char * buffer)
+GList *InitComboBoxList (char *buffer)
 {
   GList       *list_items = NULL;
-  char        *ptrStr, *ptrStr1;
-  int          end = 0;
+  char        *ptr, *ptr1;
 
-   ptrStr = buffer;
-  /* 
-   * function with stop condition by  ptrStr1 on EOS
-   */
+   ptr = buffer;
+  /* function will stop on double EOS */
   if (buffer)
     {
-      while (end == 0)
+      while (*ptr != EOS)
 	{
-	  ptrStr1 = ptrStr;
-	  while ((*ptrStr1 != EOS && *ptrStr1 != NEW_LINE) /*&& stop_boucle == 0*/)
-	    {
-	      ptrStr1++;
-	    }
-	  if (*ptrStr1 == NEW_LINE)
-	    {
-	      *ptrStr1 = EOS;
-	      list_items = g_list_append (list_items, (gpointer) ptrStr);
-	      ptrStr = ++ptrStr1;
-	    }
-	  else
-	    {
-	      list_items = g_list_append (list_items, (gpointer) ptrStr);
-	      end = 1;
-	    }
+	  ptr1 = ptr;
+	  while (*ptr1 != EOS)
+	      ptr1++;
+	  list_items = g_list_append (list_items, (gpointer) ptr);
+	  ptr = ptr1 + 1;
 	}
     }
   return list_items;
@@ -2194,41 +2161,25 @@ GList *InitComboBoxList (char * buffer)
 void InitWdComboBoxList (ThotWindow hwnCB, char *buffer)
 {
   int          cpt = 0;
-  char        *ptrStr, *ptrStr1;
-  int          end = 0;
+  char        *ptr, *ptr1;
 
-   ptrStr = buffer;
-  /* 
-   * function with stop condition by  ptrStr1 on EOS
-   */
+   ptr = buffer;
+  /*  function will stop on double EOS */
   if (buffer)
     {
-      while (end == 0)
+      while (*ptr != EOS)
 	{
-	  ptrStr1 = ptrStr;
-	  while ((*ptrStr1 != EOS && *ptrStr1 != NEW_LINE) /*&& stop_boucle == 0*/)
-	    {
-	      ptrStr1++;
-	    }
-	  if (*ptrStr1 == NEW_LINE)
-	    {
-	      *ptrStr1 = EOS;
-		  SendMessage (hwnCB, CB_INSERTSTRING/*CB_ADDSTRING*/, cpt,
-                             (LPARAM) ptrStr);
-		  cpt++;
-	      ptrStr = ++ptrStr1;
-	    }
-	  else
-	    {
-		  SendMessage (hwnCB, CB_INSERTSTRING, cpt,
-                             (LPARAM) ptrStr);
-		  cpt++;
-	      end = 1;
-	    }
+	  ptr1 = ptr;
+	  while (*ptr1 != EOS)
+	      ptr1++;
+	  SendMessage (hwnCB, CB_INSERTSTRING, cpt, (LPARAM) ptr);
+	  cpt++;
+	  ptr = ptr1 + 1;
 	}
     }
 }
 #endif /* _WINDOWS */
+
 /*----------------------------------------------------------------------
    TtaAddTextZone
 
@@ -2240,11 +2191,12 @@ void InitWdComboBoxList (ThotWindow hwnCB, char *buffer)
    label: label of the new entry.
    procedure: procedure to be executed when the new entry is changed by the
    user.
+   listUrl gives URLs that will be displayed in the combobox.
   ----------------------------------------------------------------------*/
 int TtaAddTextZone (Document doc, View view, char *label,
 		    ThotBool editable, void (*procedure) (), char *listUrl)
 {
-  int            frame, i;
+  int            frame, ret;
   ThotWidget     w, row;
 #ifndef _WINDOWS
 #ifndef _GTK
@@ -2265,8 +2217,8 @@ int TtaAddTextZone (Document doc, View view, char *label,
 #endif /* _WINDOWS */
 
   UserErrorCode = 0;
-  i = 0;
   w = 0;
+  ret = 0;
   /* verifie le parametre document */
   if (doc == 0 && view == 0)
     TtaError (ERR_invalid_parameter);
@@ -2275,270 +2227,251 @@ int TtaAddTextZone (Document doc, View view, char *label,
       frame = GetWindowNumber (doc, view);
       if (frame == 0 || frame > MAX_FRAME)
 	TtaError (ERR_invalid_parameter);
-      else if (FrameTable[frame].WdFrame != 0)
+      else if (FrameTable[frame].WdFrame && !FrameTable[frame].Text_Zone)
 	{
-	  i = 0;
-	  while (i < MAX_TEXTZONE && FrameTable[frame].Text_Zone[i] != 0)
-	    i++;
-	  if (i < MAX_TEXTZONE)
-	    {
-	      row = FrameTable[frame].Text_Zone[0];
+	  row = FrameTable[frame].Row_Zone;
 #ifndef _WINDOWS
 #ifndef _GTK
-	      XtUnmanageChild (XtParent (XtParent (row)));
-	      XtManageChild (row);
-	      
-	      /* Insere la nouvelle zone de texte */
-	      n = 0;
-	      XtSetArg (args[n], XmNchildren, &brother);
+	  XtUnmanageChild (XtParent (XtParent (row)));
+	  XtManageChild (row);
+	  
+	  /* Insere la nouvelle zone de texte */
+	  n = 0;
+	  XtSetArg (args[n], XmNchildren, &brother);
+	  n++;
+	  XtGetValues (row, args, n);
+	  
+	  n = 0;
+	  XtSetArg (args[n], XmNmarginWidth, 0);
+	  n++;
+	  XtSetArg (args[n], XmNmarginHeight, 0);
+	  n++;
+	  XtSetArg (args[n], XmNbackground, BgMenu_Color);
+	  n++;
+	  XtSetArg (args[n], XmNleftAttachment, XmATTACH_FORM);
+	  n++;
+	  if (brother == NULL)
+	    {
+	      XtSetArg (args[n], XmNtopAttachment, XmATTACH_FORM);
 	      n++;
-	      XtGetValues (row, args, n);
-	      
-	      n = 0;
-	      XtSetArg (args[n], XmNmarginWidth, 0);
+	    }
+	  else
+	    {
+	      XtSetArg (args[n], XmNtopAttachment, XmATTACH_WIDGET);
 	      n++;
-	      XtSetArg (args[n], XmNmarginHeight, 0);
+	      XtSetArg (args[n], XmNtopWidget, *brother);
 	      n++;
-	      XtSetArg (args[n], XmNbackground, BgMenu_Color);
+	      XtSetArg (args[n], XmNbottomWidget, *brother);
 	      n++;
-	      XtSetArg (args[n], XmNleftAttachment, XmATTACH_FORM);
-	      n++;
-	      if (brother == NULL)
-		{
-		  XtSetArg (args[n], XmNtopAttachment, XmATTACH_FORM);
-		  n++;
-		}
-	      else
-		{
-		  XtSetArg (args[n], XmNtopAttachment, XmATTACH_WIDGET);
-		  n++;
-		  XtSetArg (args[n], XmNtopWidget, *brother);
-		  n++;
-		  XtSetArg (args[n], XmNbottomWidget, *brother);
-		  n++;
-		}
-	      XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM);
-	      n++;
-	      rowh = XmCreateForm (row, "Dialogue", args, n);
-	      XtManageChild (rowh);
-	      if (label != NULL)
-		{
-		  n = 0;
-		  XtSetArg (args[n], XmNbackground, BgMenu_Color);
-		  n++;
-		  XtSetArg (args[n], XmNforeground, FgMenu_Color);
-		  n++;
-		  XtSetArg (args[n], XmNheight, (Dimension) FontHeight (LargeFontDialogue));
-		  n++;
-		  XtSetArg (args[n], XmNfontList, DefaultFont);
-		  n++;
-		  title_string = XmStringCreateSimple (label);
-		  XtSetArg (args[n], XmNlabelString, title_string);
-		  n++;
-		  XtSetArg (args[n], XmNalignment, XmALIGNMENT_CENTER);
-		  n++;
-		  XtSetArg (args[n], XmNy, (Dimension) 10);
-		  n++;
-		  XtSetArg (args[n], XmNwidth, (Dimension) 60);
-		  n++;
-		  w = XmCreateLabel (rowh, "Dialogue", args, n);
-		  XtManageChild (w);
-		  XmStringFree (title_string);
-		}
-
+	    }
+	  XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM);
+	  n++;
+	  rowh = XmCreateForm (row, "Dialogue", args, n);
+	  XtManageChild (rowh);
+	  if (label)
+	    {
 	      n = 0;
 	      XtSetArg (args[n], XmNbackground, BgMenu_Color);
 	      n++;
 	      XtSetArg (args[n], XmNforeground, FgMenu_Color);
 	      n++;
-	      XtSetArg (args[n], XmNeditMode, XmSINGLE_LINE_EDIT);
+	      XtSetArg (args[n], XmNheight, (Dimension) FontHeight (LargeFontDialogue));
 	      n++;
-	      XtSetArg (args[n], XmNtraversalOn, TRUE);
+	      XtSetArg (args[n], XmNfontList, DefaultFont);
 	      n++;
-	      XtSetArg (args[n], XmNkeyboardFocusPolicy, XmEXPLICIT);
+	      title_string = XmStringCreateSimple (label);
+	      XtSetArg (args[n], XmNlabelString, title_string);
 	      n++;
-	      XtSetArg (args[n], XmNsensitive, TRUE);
+	      XtSetArg (args[n], XmNalignment, XmALIGNMENT_CENTER);
 	      n++;
-	      XtSetArg (args[n], XmNeditable, editable);
+	      XtSetArg (args[n], XmNy, (Dimension) 10);
 	      n++;
-	      XtSetArg (args[n], XmNtopAttachment, XmATTACH_FORM);
+	      XtSetArg (args[n], XmNwidth, (Dimension) 60);
 	      n++;
-	      XtSetArg (args[n], XmNbottomAttachment, XmATTACH_FORM);
-	      n++;
-	      XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM);
-	      n++;
-	      if (label != NULL)
-		{
-		  XtSetArg (args[n], XmNleftAttachment, XmATTACH_WIDGET);
-		  n++;
-		  XtSetArg (args[n], XmNleftWidget, w);
-		  n++;
-		}
-	      else
-		{
-		  XtSetArg (args[n], XmNleftAttachment, XmATTACH_FORM);
-		  n++;
-		}
-
-	      w = XmCreateText (rowh, "Dialogue", args, n);
+	      w = XmCreateLabel (rowh, "Dialogue", args, n);
 	      XtManageChild (w);
-	      FrameTable[frame].Text_Zone[i] = w;
-	      if (procedure != NULL)
-		{
-		  XtAddCallback (w, XmNactivateCallback,
-				 (XtCallbackProc) APP_TextCallback,
-				 (XtPointer) frame);
-		  FrameTable[frame].Call_Text[i] = (Proc) procedure;
-		}
-	      XtManageChild (XtParent (XtParent (XtParent (row))));
-	      XtManageChild (XtParent (XtParent (row)));
-
-#else /* _GTK */
-	      /* row est de type GTK_HBOX */
-	      gtk_widget_hide (row->parent->parent);
-	      gtk_widget_show (row);
-	      
-	      /* Insert a label for the entry text */	      
-	      if (label != NULL)
-		{
-		  w = gtk_label_new (label);
-		  w->style->font=DefaultFont;
-		  gtk_misc_set_alignment (GTK_MISC (w), 0.5, 0.5);
-		  gtk_widget_show (w);
-		  gtk_box_pack_start (GTK_BOX (row), w, FALSE, TRUE, 5);
-		}
-	      combo = gtk_combo_new ();
-	      gtk_widget_ref (combo);
-	      gtk_widget_show (combo);
-	      /* Initialize combobox list */
-	      if (listUrl)/* list of URL in normal mode or list of Title in library mode */
-		{
-		  combo1_items = InitComboBoxList (listUrl);
-		  /* Put created list into into combo */
-		  gtk_combo_set_popdown_strings (GTK_COMBO (combo), combo1_items);
-		  /* handle arrow key in combobox */
-		  gtk_combo_set_use_arrows_always (GTK_COMBO (combo), TRUE);
-		  /* Free memory */
-		  g_list_free (combo1_items);
-		}
-	      w = GTK_COMBO (combo)->entry;
-	      if (editable == TRUE)
-		{/* Normal combobox in Amaya */
-		  gtk_combo_disable_activate (GTK_COMBO(combo));
-		  /* callback to know if the mouse is over the edit zone or not */
- 		  ConnectSignalGTK (GTK_OBJECT (w),
-				    "enter-notify-event",
-				    GTK_SIGNAL_FUNC(EnterCallbackGTK),
-				    (gpointer)frame);
-		  ConnectSignalGTK (GTK_OBJECT (w),
-				    "leave-notify-event",
-				    GTK_SIGNAL_FUNC(LeaveCallbackGTK),
-				    (gpointer)frame);
-		  if (procedure != NULL)
-		    {
-		      /* execute APP_TextCallback GTK when pressing enter */
-		      gtk_signal_connect_after (GTK_OBJECT (w),
-						"activate",
-						GTK_SIGNAL_FUNC (APP_TextCallbackGTK),
-						(gpointer)frame);
-		      FrameTable[frame].Call_Text[i] = (Proc) procedure;
-		      gtk_widget_show_all (row->parent->parent);
-		    }
-		  else
-		    {
-		      gtk_widget_show_all (row->parent);
-		    }
-		}
-	      else
-		{/* Open SVG library in Amaya */
-		  gtk_combo_disable_activate (GTK_COMBO(combo));
-		  /* Make the text zone non editable */
-		  gtk_entry_set_editable (GTK_ENTRY (w), FALSE);
-		  /* GTK_WIDGET_UNSET_FLAGS(GTK_ENTRY(w), GTK_CAN_FOCUS); */
-		  ComboList = GTK_COMBO (combo)->list;
-		  gtk_list_set_selection_mode (GTK_LIST (ComboList), GTK_SELECTION_SINGLE);
-		  if (procedure != NULL)
-		    {
-		      ConnectSignalGTK (GTK_OBJECT (w),
-					"changed",
-					GTK_SIGNAL_FUNC (APP_TextCallbackGTK),
-					(gpointer)frame);
-		      FrameTable[frame].Call_Text[i] = (Proc) procedure;
-		      gtk_widget_show_all (row->parent->parent);
-		    }
-		  else
-		    {
-		      gtk_widget_show_all (row->parent);
-		    }
-		}
-	      gtk_widget_show (w);
-	      w->style->font=DefaultFont;
-	      gtk_box_pack_start (GTK_BOX(row), combo, TRUE, TRUE, 20);
- 	      FrameTable[frame].Text_Zone[i] = w;
-#endif /* _GTK */
-#else  /* _WINDOWS */
-	      currentFrame = frame;
-	      GetClientRect (FrMainRef [frame], &rect);
-
-		  if (editable == TRUE)
-		  {
-/* IDC_COMBO1,26,36,48,30,CBS_DROPDOWN | CBS_AUTOHSCROLL | 
-                    CBS_SORT | WS_VSCROLL | WS_TABSTOP */
-
-			w = CreateWindow ("COMBOBOX", "",
-					WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | WS_VSCROLL |
-					CBS_AUTOHSCROLL | CBS_DROPDOWN | CBS_HASSTRINGS ,
-					0, 0, 0, 100, FrMainRef[frame], (HMENU) i, hInstance, NULL);
-		  }
-		  else
-		  {
-			w = CreateWindow ("COMBOBOX", "",
-					WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL |
-					CBS_AUTOHSCROLL | CBS_DROPDOWN | CBS_HASSTRINGS | WS_TABSTOP,
-					0, 0, 0, 100, FrMainRef[frame], (HMENU) i, hInstance, NULL);
-			w = GetWindow (w, GW_CHILD);
-			EnableWindow (w, TRUE);
-			w = GetParent (w);
-		  }
-		  /* get the default GUI font */
-	      newFont = GetStockObject (DEFAULT_GUI_FONT); 
-	      /* set the font of the window */
-	      if(newFont)
-			  SendMessage (w, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-	      FrameTable[frame].Text_Zone[i] = w;
-	      FrameTable[frame].Call_Text[i] = (Proc) procedure;
-
-	      if (lpfnTextZoneWndProc == (WNDPROC) 0)
-		lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (GetWindow (w, GW_CHILD),
-                              GWL_WNDPROC, (DWORD) TextZoneProc);
-	      else
-		SetWindowLong (GetWindow (w, GW_CHILD), GWL_WNDPROC, 
-                      (DWORD) TextZoneProc);
-	      if (lpfnComboBoxWndProc == (WNDPROC) 0)
-			  lpfnComboBoxWndProc = (WNDPROC) SetWindowLong (w,
-									GWL_WNDPROC, (DWORD) ComboBoxProc);
-	      else
-			  SetWindowLong (w, GWL_WNDPROC, 
-							(DWORD) ComboBoxProc);
-		  		  /* Initialize listbox linked to combobox */
-		  InitWdComboBoxList (w, listUrl);
-		   wLabel = CreateWindow ("STATIC", label, WS_CHILD | WS_VISIBLE | SS_LEFT, 
-				     5, 8, 0, 0, FrMainRef[frame], (HMENU) (i + MAX_TEXTZONE),
-					 hInstance, NULL);
-	      if(newFont)
-		SendMessage (wLabel, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
-	      FrameTable[frame].Label[i] = wLabel;
-		  /*FrameTable[frame].showLogo = TRUE;*/
-	      PostMessage (FrMainRef[frame], WM_SIZE, 0, MAKELPARAM (rect.right, rect.bottom));
-#endif /* _WINDOWS */
+	      XmStringFree (title_string);
+	    }
+	  
+	  n = 0;
+	  XtSetArg (args[n], XmNbackground, BgMenu_Color);
+	  n++;
+	  XtSetArg (args[n], XmNforeground, FgMenu_Color);
+	  n++;
+	  XtSetArg (args[n], XmNeditMode, XmSINGLE_LINE_EDIT);
+	  n++;
+	  XtSetArg (args[n], XmNtraversalOn, TRUE);
+	  n++;
+	  XtSetArg (args[n], XmNkeyboardFocusPolicy, XmEXPLICIT);
+	  n++;
+	  XtSetArg (args[n], XmNsensitive, TRUE);
+	  n++;
+	  XtSetArg (args[n], XmNeditable, editable);
+	  n++;
+	  XtSetArg (args[n], XmNtopAttachment, XmATTACH_FORM);
+	  n++;
+	  XtSetArg (args[n], XmNbottomAttachment, XmATTACH_FORM);
+	  n++;
+	  XtSetArg (args[n], XmNrightAttachment, XmATTACH_FORM);
+	  n++;
+	  if (label)
+	    {
+	      XtSetArg (args[n], XmNleftAttachment, XmATTACH_WIDGET);
+	      n++;
+	      XtSetArg (args[n], XmNleftWidget, w);
+	      n++;
 	    }
 	  else
-	    i = 0;
+	    {
+	      XtSetArg (args[n], XmNleftAttachment, XmATTACH_FORM);
+	      n++;
+	    }
+	  w = XmCreateText (rowh, "Dialogue", args, n);
+	  XtManageChild (w);
+	  FrameTable[frame].Text_Zone = w;
+	  if (procedure)
+	    {
+	      XtAddCallback (w, XmNactivateCallback,
+			     (XtCallbackProc) APP_TextCallback,
+			     (XtPointer) frame);
+	      FrameTable[frame].Call_Text = (Proc) procedure;
+	    }
+	  XtManageChild (XtParent (XtParent (XtParent (row))));
+	  XtManageChild (XtParent (XtParent (row)));
+#else /* _GTK */
+	  /* row est de type GTK_HBOX */
+	  gtk_widget_hide (row->parent->parent);
+	  gtk_widget_show (row);
+	  /* Insert a label for the entry text */	      
+	  if (label)
+	    {
+	      w = gtk_label_new (label);
+	      w->style->font = DefaultFont;
+	      gtk_misc_set_alignment (GTK_MISC (w), 0.5, 0.5);
+	      gtk_widget_show (w);
+	      gtk_box_pack_start (GTK_BOX (row), w, FALSE, TRUE, 5);
+	    }
+	  combo = gtk_combo_new ();
+	  FrameTable[frame].Combo = combo;
+	  gtk_widget_ref (combo);
+	  gtk_widget_show (combo);
+	  /* Initialize combobox list */
+	  if (listUrl)
+	    /* list of URL in normal mode or list of Title in library mode */
+	    {
+	      combo1_items = InitComboBoxList (listUrl);
+	      /* Put created list into into combo */
+	      gtk_combo_set_popdown_strings (GTK_COMBO (combo), combo1_items);
+	      /* handle arrow key in combobox */
+	      gtk_combo_set_use_arrows_always (GTK_COMBO (combo), TRUE);
+	      /* Free memory */
+	      g_list_free (combo1_items);
+	    }
+	  w = GTK_COMBO (combo)->entry;
+	  if (editable)
+	    {/* Normal combobox in Amaya */
+	      gtk_combo_disable_activate (GTK_COMBO (combo));
+	      /* callback to know if the mouse is over the edit zone or not */
+	      ConnectSignalGTK (GTK_OBJECT (w), "enter-notify-event",
+				GTK_SIGNAL_FUNC (EnterCallbackGTK),
+				(gpointer)frame);
+	      ConnectSignalGTK (GTK_OBJECT (w), "leave-notify-event",
+				GTK_SIGNAL_FUNC (LeaveCallbackGTK),
+				(gpointer)frame);
+	      if (procedure)
+		{
+		  /* execute APP_TextCallback GTK when pressing enter */
+		  gtk_signal_connect_after (GTK_OBJECT (w), "activate",
+					    GTK_SIGNAL_FUNC (APP_TextCallbackGTK),
+					    (gpointer)frame);
+		  FrameTable[frame].Call_Text = (Proc) procedure;
+		  gtk_widget_show_all (row->parent->parent);
+		}
+	      else
+		gtk_widget_show_all (row->parent);
+	    }
+	  else
+	    {/* Open SVG library in Amaya */
+	      gtk_combo_disable_activate (GTK_COMBO (combo));
+	      /* Make the text zone non editable */
+	      gtk_entry_set_editable (GTK_ENTRY (w), FALSE);
+	      /* GTK_WIDGET_UNSET_FLAGS(GTK_ENTRY(w), GTK_CAN_FOCUS); */
+	      ComboList = GTK_COMBO (combo)->list;
+	      gtk_list_set_selection_mode (GTK_LIST (ComboList), GTK_SELECTION_SINGLE);
+	      if (procedure)
+		{
+		  ConnectSignalGTK (GTK_OBJECT (w), "changed",
+				    GTK_SIGNAL_FUNC (APP_TextCallbackGTK),
+				    (gpointer)frame);
+		  FrameTable[frame].Call_Text = (Proc) procedure;
+		  gtk_widget_show_all (row->parent->parent);
+		}
+	      else
+		gtk_widget_show_all (row->parent);
+	    }
+	  gtk_widget_show (w);
+	  w->style->font = DefaultFont;
+	  gtk_box_pack_start (GTK_BOX (row), combo, TRUE, TRUE, 20);
+	  FrameTable[frame].Text_Zone = w;
+#endif /* _GTK */
+#else  /* _WINDOWS */
+	  currentFrame = frame;
+	  GetClientRect (FrMainRef [frame], &rect);
+	  if (editable)
+	    {
+	      /* IDC_COMBO1,26,36,48,30,CBS_DROPDOWN | CBS_AUTOHSCROLL | 
+		 CBS_SORT | WS_VSCROLL | WS_TABSTOP */
+	      w = CreateWindow ("COMBOBOX", "",
+				WS_CHILD | WS_VISIBLE | WS_BORDER | WS_TABSTOP | WS_VSCROLL |
+				CBS_AUTOHSCROLL | CBS_DROPDOWN | CBS_HASSTRINGS ,
+				0, 0, 0, 100, FrMainRef[frame], (HMENU) i, hInstance, NULL);
+	    }
+	  else
+	    {
+	      w = CreateWindow ("COMBOBOX", "",
+				WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL |
+				CBS_AUTOHSCROLL | CBS_DROPDOWN | CBS_HASSTRINGS | WS_TABSTOP,
+				0, 0, 0, 100, FrMainRef[frame], (HMENU) i, hInstance, NULL);
+	      w = GetWindow (w, GW_CHILD);
+	      EnableWindow (w, TRUE);
+	      w = GetParent (w);
+	    }
+	  /* get the default GUI font */
+	  newFont = GetStockObject (DEFAULT_GUI_FONT); 
+	  /* set the font of the window */
+	  if(newFont)
+	    SendMessage (w, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+	  FrameTable[frame].Text_Zone = w;
+	  FrameTable[frame].Call_Text = (Proc) procedure;
+	  
+	  if (lpfnTextZoneWndProc == (WNDPROC) 0)
+	    lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (GetWindow (w, GW_CHILD),
+							   GWL_WNDPROC, (DWORD) TextZoneProc);
+	  else
+	    SetWindowLong (GetWindow (w, GW_CHILD), GWL_WNDPROC, 
+			   (DWORD) TextZoneProc);
+	  if (lpfnComboBoxWndProc == (WNDPROC) 0)
+	    lpfnComboBoxWndProc = (WNDPROC) SetWindowLong (w, GWL_WNDPROC,
+							   (DWORD) ComboBoxProc);
+	  else
+	    SetWindowLong (w, GWL_WNDPROC, (DWORD) ComboBoxProc);
+	  /* Initialize listbox linked to combobox */
+	  InitWdComboBoxList (w, listUrl);
+	  wLabel = CreateWindow ("STATIC", label, WS_CHILD | WS_VISIBLE | SS_LEFT, 
+				 5, 8, 0, 0, FrMainRef[frame], (HMENU) (i + 1),
+				 hInstance, NULL);
+	  if(newFont)
+	    SendMessage (wLabel, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+	  FrameTable[frame].Label = wLabel;
+	  /*FrameTable[frame].showLogo = TRUE;*/
+	  PostMessage (FrMainRef[frame], WM_SIZE, 0, MAKELPARAM (rect.right, rect.bottom));
+#endif /* _WINDOWS */
+	  ret = 1;
 	}
     }
   /* force la mise a jour de la fenetre */
   TtaHandlePendingEvents ();
-  return (i);
+  return ret;
 }
 
 
@@ -2550,44 +2483,63 @@ int TtaAddTextZone (Document doc, View view, char *label,
    Parameters:
    doc: identifier of the document.
    view: identifier of the view.
-   index: 
+   text: the text to be displayed
+   listUrl gives URLs that will be displayed in the combobox.
   ----------------------------------------------------------------------*/
-void TtaSetTextZone (Document doc, View view, int index, char *text)
+void TtaSetTextZone (Document doc, View view, char *text, char *listUrl)
 {
-   int                 frame;
-   ThotWidget          w;
-
-   UserErrorCode = 0;
-   /* verifie le parametre document */
-   if (doc == 0 && view == 0 && (index < 1 || index >= MAX_TEXTZONE) && text != NULL)
-      TtaError (ERR_invalid_parameter);
-   else
-     {
-	frame = GetWindowNumber (doc, view);
-	if (frame == 0 || frame > MAX_FRAME)
-	   TtaError (ERR_invalid_parameter);
-	else if (FrameTable[frame].WdFrame != 0)
-	  {
-#ifndef _WINDOWS
-	     w = FrameTable[frame].Text_Zone[index];
-#ifndef _GTK
-	     if (w != 0)
-		XmTextSetString (w, text);
+  int            frame;
+  ThotWidget     w;
+#ifdef _GTK
+  GList         *combo1_items = NULL;
+  ThotWidget     combo;
 #else /* _GTK */
-	     if (w != 0)
-	       gtk_entry_set_text (GTK_ENTRY (w), text);
 #endif /* _GTK */
-#else  /* _WINDOWS */
-	     w = FrameTable[frame].Text_Zone[index - 1];
-	     if (w != 0)
-                 SetWindowText (w, text);
 
+  UserErrorCode = 0;
+  /* verifie le parametre document */
+  if (doc == 0 && view == 0 && text)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      frame = GetWindowNumber (doc, view);
+      if (frame == 0 || frame > MAX_FRAME)
+	TtaError (ERR_invalid_parameter);
+      else if (FrameTable[frame].WdFrame != 0)
+	{
+	  w = FrameTable[frame].Text_Zone;
+	  if (w != 0)
+	    {
+#ifdef _WINDOWS
+	      SetWindowText (w, text);
+	      /* Initialize listbox linked to combobox */
+	      if (listUrl)
+		InitWdComboBoxList (w, listUrl);
+#else  /* _WINDOWS */
+#ifndef _GTK
+	      XmTextSetString (w, text);
+#else /* _GTK */
+	      gtk_entry_set_text (GTK_ENTRY (w), text);
+	      if (listUrl)
+		/* list of URL OR Title OF librarIES */
+		{
+		  combo =  FrameTable[frame].Combo;
+		  combo1_items = InitComboBoxList (listUrl);
+		  /* Put created list into into combo */
+		  gtk_combo_set_popdown_strings (GTK_COMBO (combo), combo1_items);
+		  /* handle arrow key in combobox */
+		  gtk_combo_set_use_arrows_always (GTK_COMBO (combo), TRUE);
+		  /* Free memory */
+		  g_list_free (combo1_items);
+		}
+#endif /* _GTK */
 #endif /* _WINDOWS */
-	  }
-     }
+	    }
+	}
+    }
 #ifndef _WINDOWS
 #ifndef _GTK
-   XFlush (TtDisplay);
+  XFlush (TtDisplay);
 #endif /* _GTK */
 #endif /* _WINDOWS */
 }
@@ -2633,7 +2585,7 @@ void TtcSwitchCommands (Document doc, View view)
 	  {
 #ifndef _WINDOWS
 #ifndef _GTK
-	     row = XtParent (FrameTable[frame].Text_Zone[0]);
+	     row = XtParent (FrameTable[frame].Row_Zone);
 	     XtSetArg (args[0], XmNwidth, &dy);
 	     if (row != 0)
 	       {
@@ -2660,17 +2612,13 @@ void TtcSwitchCommands (Document doc, View view)
 		  XtManageChild (XtParent (XtParent (row)));
 	       }
 #else /* _GTK */
-	     row = GTK_WIDGET(FrameTable[frame].Text_Zone[0])->parent;
+	     row = GTK_WIDGET (FrameTable[frame].Row_Zone)->parent;
 	     if (row != 0)
 	       {
 		 if (GTK_WIDGET_VISIBLE(row))
-		    {
-		      gtk_widget_hide (row);
-		    }
+		   gtk_widget_hide (row);
 		  else
-		    {
-		      gtk_widget_show_all (row);
-		    }
+		    gtk_widget_show_all (row);
 		  /* Il faut forcer la reevaluation de la fenetre */
 		 /*		  w = FrameTable[frame].WdFrame;
 		  FrameResized ((int *) w, frame, NULL);
@@ -2678,34 +2626,30 @@ void TtcSwitchCommands (Document doc, View view)
 	       }
 #endif /* _GTK */
 #else  /* _WINDOWS */
-	     for (index = 0; index <  MAX_TEXTZONE; index++)
+	     if (FrameTable[frame].Text_Zone &&
+		 IsWindowVisible (FrameTable[frame].Text_Zone))
 	       {
-		 if (FrameTable[frame].Text_Zone[index] &&
-		     IsWindowVisible (FrameTable[frame].Text_Zone[index]))
+		 if (!itemChecked)
 		   {
-		     if (!itemChecked)
-		       {
-			 hmenu = WIN_GetMenu (frame); 
-			 CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_UNCHECKED); 
-			 itemChecked = TRUE;
-		       }
-		     ShowWindow (FrameTable[frame].Label [index], SW_HIDE);
-		     ShowWindow (FrameTable[frame].Text_Zone [index], SW_HIDE);
+		     hmenu = WIN_GetMenu (frame); 
+		     CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_UNCHECKED); 
+		     itemChecked = TRUE;
 		   }
-		 else
-		   {
-		     if (!itemChecked)
-		       {
-			 hmenu = WIN_GetMenu (frame); 
-			 CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_CHECKED); 
-		       }
-		     ShowWindow (FrameTable[frame].Label [index], SW_SHOW);
-		     ShowWindow (FrameTable[frame].Text_Zone [index], SW_SHOW);
-		   }
+		 ShowWindow (FrameTable[frame].Label, SW_HIDE);
+		 ShowWindow (FrameTable[frame].Text_Zone, SW_HIDE);
 	       }
-
-             GetClientRect (FrMainRef [frame], &r);
-             PostMessage (FrMainRef [frame], WM_SIZE, 0, MAKELPARAM (r.right, r.bottom));
+	     else
+	       {
+		 if (!itemChecked)
+		   {
+		     hmenu = WIN_GetMenu (frame); 
+		     CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_CHECKED); 
+		   }
+		 ShowWindow (FrameTable[frame].Label, SW_SHOW);
+		 ShowWindow (FrameTable[frame].Text_Zone, SW_SHOW);
+	       }
+             GetClientRect (FrMainRef[frame], &r);
+             PostMessage (FrMainRef[frame], WM_SIZE, 0, MAKELPARAM (r.right, r.bottom));
 #endif /* _WINDOWS */
 	  }
      }
@@ -3274,9 +3218,8 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   hbox2 = gtk_hbox_new (FALSE, 0);
 	   gtk_widget_show (hbox2);
 	   gtk_box_pack_start (GTK_BOX (hbox1), hbox2, TRUE, TRUE, 0);
-	   for (i = 1; i < MAX_TEXTZONE; i++)
-	     FrameTable[frame].Text_Zone[i] = 0;
-	   FrameTable[frame].Text_Zone[0] = hbox2;
+	   FrameTable[frame].Text_Zone = 0;
+	   FrameTable[frame].Row_Zone = hbox2;
 
 	   /* Creation of the table which includes drawingarea and scrollbars */
       	   table2 = gtk_table_new (2, 2, FALSE);
@@ -3294,10 +3237,11 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   /* Put the drawing area */
 #ifdef _GL
 	   /* Is opengl working ? */
-	   if(gdk_gl_query() == FALSE) {
-	     g_print("OpenGL not supported!\n");
-	     exit(0);
-	   }
+	   if(gdk_gl_query() == FALSE)
+	     {
+	       g_print("OpenGL not supported!\n");
+	       exit(0);
+	     }
 	   /* can we create a new opengl context 
 	      (or shall we share it with the first one
 	      we had in order to share display list and texture binding ?)*/
@@ -3335,12 +3279,12 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   /* the hidden input catcher textbox is so small 
 	      that it won't be displayed.. */	
 	   gtk_widget_set_usize (GTK_WIDGET(wrap_text), 1, 1);
-	    /* A storage for a pointer on the text catcher 
+	   /* A storage for a pointer on the text catcher 
 	      (so we can acess it in the future)  */
 	   gtk_object_set_data (GTK_OBJECT (drawing_area), 
-	       "Text_catcher", wrap_text); 
+				"Text_catcher", wrap_text); 
 	   gtk_object_set_data (GTK_OBJECT (wrap_text), 
-	       "Drawing_area", drawing_area);
+				"Drawing_area", drawing_area);
 	   /* Callback connection on events */
 	   /*   GDK_BUTTON_PRESS_MASK used to detect if a mouse button is pressed */
 	   /*   GDK_BUTTON_RELEASE_MASK used to detect if a mouse button is relesed */
@@ -3358,33 +3302,31 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 				  | GDK_EXPOSURE_MASK
 				  );
 	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
-	       "button_press_event",
-	       GTK_SIGNAL_FUNC(FrameCallbackGTK),
-	       (gpointer)frame);
+			     "button_press_event",
+			     GTK_SIGNAL_FUNC(FrameCallbackGTK),
+			     (gpointer)frame);
 	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
-	       "button_release_event",
-	       GTK_SIGNAL_FUNC(FrameCallbackGTK),
-	       (gpointer)frame);
+			     "button_release_event",
+			     GTK_SIGNAL_FUNC(FrameCallbackGTK),
+			     (gpointer)frame);
 	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
-	       "motion_notify_event",
-	       GTK_SIGNAL_FUNC(FrameCallbackGTK),
-	       (gpointer)frame);
-
+			     "motion_notify_event",
+			     GTK_SIGNAL_FUNC(FrameCallbackGTK),
+			     (gpointer)frame);
 	   /* On focus, we get the system (Xwindow) clipboard content*/
 	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
-	       "grab-focus",
-	       GTK_SIGNAL_FUNC(get_targets),
-	       NULL);
+			     "grab-focus",
+			     GTK_SIGNAL_FUNC(get_targets),
+			     NULL);
 	   ConnectSignalGTK (GTK_OBJECT(wrap_text),
-	       "grab-focus",
-	       GTK_SIGNAL_FUNC(get_targets),
-	       NULL);
+			     "grab-focus",
+			     GTK_SIGNAL_FUNC(get_targets),
+			     NULL);
 	   /*Then when the app that own the selection responds we store it*/
 	   ConnectSignalGTK (GTK_OBJECT (drawing_area), 
-	       "selection_received", 
-	       GTK_SIGNAL_FUNC (selection_received), 
-	       NULL);   
-
+			     "selection_received", 
+			     GTK_SIGNAL_FUNC (selection_received), 
+			     NULL);   
 	   /*
 	     When another app steal the clipboard handling
 	     recommanded by the GTK
@@ -3392,30 +3334,27 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	     BUT it works better without. 
 	     I've posted in the gtk-devel-list in order to have clues...
 	    */
-
-	     gtk_signal_connect (GTK_OBJECT(drawing_area), 
-	    	       "selection_clear_event", 
-	    	       GTK_SIGNAL_FUNC (selection_clear),  
-	    	       NULL);    
-
+	   gtk_signal_connect (GTK_OBJECT(drawing_area), 
+			       "selection_clear_event", 
+			       GTK_SIGNAL_FUNC (selection_clear),  
+			       NULL);    
 	   /* register as a selection handler */
 	   gtk_selection_add_target (GTK_WIDGET(drawing_area),
-	       GDK_SELECTION_PRIMARY,
-	       GDK_SELECTION_TYPE_STRING,
-	       1);
-
+				     GDK_SELECTION_PRIMARY,
+				     GDK_SELECTION_TYPE_STRING,
+				     1);
 	   /* Callback called by other app to get the amaya selection*/
 	   gtk_signal_connect (GTK_OBJECT(drawing_area), 
-	       "selection_get", 
-	       GTK_SIGNAL_FUNC (selection_handle), 
-	       NULL); 
+			       "selection_get", 
+			       GTK_SIGNAL_FUNC (selection_handle), 
+			       NULL); 
 	   /* the key press event is intercepted by the main frame, 
 	      not by the drawing area.
 	      the result is analysed in the callback */
 	   ConnectSignalGTK (GTK_OBJECT (Main_Wd),
-	       "key_press_event",
-	       GTK_SIGNAL_FUNC(CharTranslationGTK),
-	       (gpointer)frame);
+			     "key_press_event",
+			     GTK_SIGNAL_FUNC(CharTranslationGTK),
+			     (gpointer)frame);
 	   /* callbacks to know if it's necessary to redisplay */
 	   ConnectSignalGTK (GTK_OBJECT (drawing_area),
 			     "expose_event",
@@ -3465,19 +3404,17 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			     "configure_event",
 			     GTK_SIGNAL_FUNC(FrameResizedGTK),
 			     (gpointer)frame);
-
 	   /* Put the scrollbars */
 	   tmpw = gtk_adjustment_new (0, 0, dy, 6, dy-13, dy);
 	   ConnectSignalGTK (GTK_OBJECT (tmpw),
 			     "value_changed",
 			     GTK_SIGNAL_FUNC(FrameVScrolledGTK),
 			     (gpointer)frame);
-
     	   vscrl = gtk_vscrollbar_new (GTK_ADJUSTMENT (tmpw));
 	   /* ALL the signal connecting code permits to 
-	    override the Vertical scrollbar behaviour
-	   which is wrong in amaya case (bad callback handling, bad y...), 
-	   so now it's KeyScrolledGTK that  handle it (in dialogue/input.c)*/
+	      override the Vertical scrollbar behaviour
+	      which is wrong in amaya case (bad callback handling, bad y...), 
+	      so now it's KeyScrolledGTK that  handle it (in dialogue/input.c)*/
 	   gtk_widget_show (vscrl); 
 	   GTK_WIDGET_SET_FLAGS (GTK_WIDGET(vscrl), GTK_CAN_FOCUS);
 	   GTK_WIDGET_SET_FLAGS (GTK_WIDGET(vscrl), GTK_CAN_DEFAULT);
@@ -3525,32 +3462,28 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			     "value_changed",
 			     GTK_SIGNAL_FUNC(FrameHScrolledGTK),
 			     (gpointer)frame);
-	   
       	   hscrl = gtk_hscrollbar_new (GTK_ADJUSTMENT(tmpw)); 
 	   /*gtk_widget_show (hscrl);*/
-
 	   gtk_table_attach (GTK_TABLE (table2), hscrl, 0, 1, 1, 2,
 			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK),
 			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK), 0, 0);
 #ifdef _GTKRULERS
 	   {
-	     
 	     ThotWidget button;
 	     
 	     /* create rulers button */
-	   button = gtk_button_new_with_label ("/");
-	   
-	   /* when the button is clicked, we call the "callback" function
-	    * with a pointer to "button 1" as its argument */
-	   /*
-	     (	   gtk_signal_connect (GTK_OBJECT (button), "clicked",
-	     GTK_SIGNAL_FUNC (callback), (gpointer) "button 1");
-	   */
-	   /* insert button into the upper left quadrant of the table */
-	   gtk_table_attach (GTK_TABLE(table2), button, 1, 2, 1, 2,
-			     (GtkAttachOptions) (GTK_SHRINK),
-			     (GtkAttachOptions) (GTK_SHRINK), 0, 0);
-	   gtk_widget_show (button);
+	     button = gtk_button_new_with_label ("/");
+	     /* when the button is clicked, we call the "callback" function
+	      * with a pointer to "button 1" as its argument */
+	     /*
+	       (	   gtk_signal_connect (GTK_OBJECT (button), "clicked",
+	       GTK_SIGNAL_FUNC (callback), (gpointer) "button 1");
+	     */
+	     /* insert button into the upper left quadrant of the table */
+	     gtk_table_attach (GTK_TABLE(table2), button, 1, 2, 1, 2,
+			       (GtkAttachOptions) (GTK_SHRINK),
+			       (GtkAttachOptions) (GTK_SHRINK), 0, 0);
+	     gtk_widget_show (button);
 	   }
 #endif
 	   /* Put the statusbar */
@@ -3566,20 +3499,14 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	   FrameTable[frame].WdStatus = statusbar;
 	   FrameTable[frame].WdScrollH = hscrl;
 	   FrameTable[frame].WdScrollV = vscrl;
-
 	   /* approximate the real size of the drawing area */
 	   FrameTable[frame].FrWidth  = (int) dx - 20;
 	   FrameTable[frame].FrScrollWidth  = (int) dx - 20;
 	   FrameTable[frame].FrHeight = (int) dy - 20;
-
 	   /* show the main window */
 	   gtk_widget_show_all (Main_Wd);
-	   
-
-
            FrameTable[frame].WdFrame =  drawing_area;
            FrRef[frame] = drawing_area->window;
-
 	   /* Add App icone */
 	   gdk_window_set_icon_name (Main_Wd->window, "Amaya");
 	   gdk_window_set_icon (Main_Wd->window, NULL, (GdkPixmap *)wind_pixmap, NULL);
@@ -3738,9 +3665,8 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	     }
 
 	   vbox1 = XmCreateForm (hbox1, "", args, n);
-	   for (i = 1; i < MAX_TEXTZONE; i++)
-	     FrameTable[frame].Text_Zone[i] = 0;
-	   FrameTable[frame].Text_Zone[0] = vbox1;
+	   FrameTable[frame].Text_Zone = 0;
+	   FrameTable[frame].Row_Zone = vbox1;
 
 	   /*** The document frame ***/
 	   n = 0;
@@ -3907,93 +3833,83 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
   ----------------------------------------------------------------------*/
 void DestroyFrame (int frame)
 {
-   ThotWidget          w;
-   int                 action;
-   int                 ref, i;
-   int                 item;
-   Menu_Ctl           *ptrmenu;
-   Item_Ctl           *ptr;
-#ifdef _WINDOWS
-   int                 txtZoneIndex;
-#endif /* _WINDOWS */
+  ThotWidget          w;
+  Menu_Ctl           *ptrmenu;
+  Item_Ctl           *ptr;
+  int                 action;
+  int                 ref, i;
+  int                 item;
 
-   if (ThotLocalActions[T_stopinsert] != NULL)
-     (*ThotLocalActions[T_stopinsert]) ();
-   w = FrameTable[frame].WdFrame;
-   if (w != 0)
-     {
-	/* Destruction des menus attaches a la fenetre */
-	ptrmenu = FrameTable[frame].FrMenus;
-	i = 0;
-	ref = frame + MAX_LocalMenu;	/* reference du menu construit */
-	while (ptrmenu != NULL)
-	  {
-	     /* saute les menus qui ne concernent pas cette vue */
-	     if (ptrmenu->MenuView == 0 || ptrmenu->MenuView == FrameTable[frame].FrView)
-	       {
-		  FrameTable[frame].WdMenus[i] = 0;
-		  TtaDestroyDialogue (ref);
-		  item = 0;
-		  ptr = ptrmenu->ItemsList;
-		  while (item < ptrmenu->ItemsNb)
-		    {
-		       action = ptr[item].ItemAction;
-		       if (action != -1
-			   && (ptr[item].ItemType == 'B' || ptr[item].ItemType == 'T'))
-			  /* Desactive l'action correspondante pour cette fenetre */
-			  MenuActionList[action].ActionActive[frame] = FALSE;
-		       item++;
-		    }
-	       }
-	     ptrmenu = ptrmenu->NextMenu;
-	     ref += MAX_ITEM;
-	     i++;
-	  }
-
+  if (ThotLocalActions[T_stopinsert] != NULL)
+    (*ThotLocalActions[T_stopinsert]) ();
+  w = FrameTable[frame].WdFrame;
+  if (w != 0)
+    {
+      /* Destruction des menus attaches a la fenetre */
+      ptrmenu = FrameTable[frame].FrMenus;
+      i = 0;
+      ref = frame + MAX_LocalMenu;	/* reference du menu construit */
+      while (ptrmenu != NULL)
+	{
+	  /* saute les menus qui ne concernent pas cette vue */
+	  if (ptrmenu->MenuView == 0 || ptrmenu->MenuView == FrameTable[frame].FrView)
+	    {
+	      FrameTable[frame].WdMenus[i] = 0;
+	      TtaDestroyDialogue (ref);
+	      item = 0;
+	      ptr = ptrmenu->ItemsList;
+	      while (item < ptrmenu->ItemsNb)
+		{
+		  action = ptr[item].ItemAction;
+		  if (action != -1
+		      && (ptr[item].ItemType == 'B' || ptr[item].ItemType == 'T'))
+		    /* Desactive l'action correspondante pour cette fenetre */
+		    MenuActionList[action].ActionActive[frame] = FALSE;
+		  item++;
+		}
+	    }
+	  ptrmenu = ptrmenu->NextMenu;
+	  ref += MAX_ITEM;
+	  i++;
+	}
 #ifndef _WINDOWS
 #ifndef _GTK
-        XFlushOutput (0);
-        /* Detache les procedures de callback */
-        XtRemoveCallback (XtParent (XtParent (w)), XmNdestroyCallback, (XtCallbackProc) FrameKilled, (XtPointer) frame);
-
-        XDestroyWindow (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
+      XFlushOutput (0);
+      /* Detache les procedures de callback */
+      XtRemoveCallback (XtParent (XtParent (w)), XmNdestroyCallback, (XtCallbackProc) FrameKilled, (XtPointer) frame);
+      XDestroyWindow (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
 #else /* _GTK */
-	gtk_widget_destroy (GTK_WIDGET (gtk_widget_get_toplevel (GTK_WIDGET (FrameTable[frame].WdFrame))));
+      gtk_widget_destroy (GTK_WIDGET (gtk_widget_get_toplevel (GTK_WIDGET (FrameTable[frame].WdFrame))));
 #endif /* _GTK */
-
-        for (i = 0; i < MAX_BUTTON; i++)
-	  FrameTable[frame].Button[i] = 0;
-
+      for (i = 0; i < MAX_BUTTON; i++)
+	FrameTable[frame].Button[i] = 0;
 #else  /* _WINDOWS */
-        for (txtZoneIndex = 0; txtZoneIndex < MAX_TEXTZONE; txtZoneIndex++)
-	  FrameTable[frame].Text_Zone[txtZoneIndex] = 0;
-        if (hAccel [frame])
-	  {
-	    DestroyAcceleratorTable (hAccel [frame]);
-	    hAccel [frame] = NULL;
-	  }
-    /* clean the whole CatList of the frame */
-	CleanFrameCatList (frame, 0);
-
-        for (i = 0; i < MAX_BUTTON; i++)
-	  {
-            TtaFreeMemory (FrameTable[frame].Button[i]);
-            FrameTable[frame].Button[i] = 0;
-	    FrameTable[frame].ButtonId[i] = -1;
-	  }
-
+      FrameTable[frame].Row_Zone = 0;
+      FrameTable[frame].Text_Zone = 0;
+      if (hAccel[frame])
+	{
+	  DestroyAcceleratorTable (hAccel[frame]);
+	  hAccel[frame] = NULL;
+	}
+      /* clean the whole CatList of the frame */
+      CleanFrameCatList (frame, 0);
+      for (i = 0; i < MAX_BUTTON; i++)
+	{
+	  TtaFreeMemory (FrameTable[frame].Button[i]);
+	  FrameTable[frame].Button[i] = 0;
+	  FrameTable[frame].ButtonId[i] = -1;
+	}
 #endif /* _WINDOWS */
-	FrRef[frame] = 0;
-	FrameTable[frame].WdFrame = 0;
-	FrameTable[frame].FrDoc = 0;
-	/* Elimine les evenements ButtonRelease, DestroyNotify, FocusOut */
-
-	ClearConcreteImage (frame);
-	ThotFreeFont (frame);	/* On libere les polices de caracteres utilisees */
-     }
+      FrRef[frame] = 0;
+      FrameTable[frame].WdFrame = 0;
+      FrameTable[frame].FrDoc = 0;
+      /* Elimine les evenements ButtonRelease, DestroyNotify, FocusOut */
+      ClearConcreteImage (frame);
+      ThotFreeFont (frame);	/* On libere les polices de caracteres utilisees */
+    }
 #ifdef _WINDOWS
-   if (FrMainRef [frame])
-      DestroyWindow (FrMainRef[frame]);
+  if (FrMainRef[frame])
+    DestroyWindow (FrMainRef[frame]);
 #endif /* _WINDAUB */
 }
 

@@ -491,6 +491,10 @@ THOT_EXPORT int                      DocNetworkStatus[DocumentTableLength];
 
 THOT_EXPORT Document                 W3Loading; /* the document being loaded */
 THOT_EXPORT Document                 BackupDocument; /* the current backup */
+/* list of previous open URLs */
+#define MAX_URL_list 20
+THOT_EXPORT char                    *URL_list;
+THOT_EXPORT int                      URL_list_len;
 
 /* button indexes */
 THOT_EXPORT int iStop;

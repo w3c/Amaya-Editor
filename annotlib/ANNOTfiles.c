@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1999.
+ *  (c) COPYRIGHT MIT and INRIA, 1999-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  * 
  */
@@ -1233,7 +1233,7 @@ void ANNOT_PrepareAnnotView (Document document)
     TtaSetItemOff (document, view, File, BOpenDoc);
     TtaSetItemOff (document, view, File, BOpenInNewWindow);
     TtaSetItemOff (document, view, File, BSaveAs);
-    TtaSetTextZone (document, view, 1, DocumentURLs[document]);
+    TtaSetTextZone (document, view, DocumentURLs[document], NULL);
 
     /* views */
     TtaSetItemOff (document, view, Views, TShowTextZone);

@@ -33,7 +33,7 @@ extern void MapGenericXmlElement ( char *XMLName,
                                    Document doc );
 extern void InsertCssInXml ( Document doc,
                              View view );
-extern void XmlStyleSheetWillBeModified ( NotifyOnTarget *event );
+extern ThotBool XmlStyleSheetWillBeModified ( NotifyOnTarget *event );
 extern void XmlStyleSheetModified ( NotifyOnTarget *event );
 extern ThotBool XmlStyleSheetDeleted ( NotifyElement * event );
 extern void XmlStyleSheetPasted ( NotifyElement *event );
@@ -67,7 +67,7 @@ extern void MapGenericXmlElement (/* char *XMLName,
                                      Document doc */);
 extern void InsertCssInXml (/* Document doc,
                                View view */);
-extern void XmlStyleSheetWillBeModified (/* NotifyOnTarget *event */);
+extern ThotBool XmlStyleSheetWillBeModified (/* NotifyOnTarget *event */);
 extern void XmlStyleSheetModified (/* NotifyOnTarget *event */);
 extern ThotBool XmlStyleSheetDeleted (/* NotifyElement * event */);
 extern void XmlStyleSheetPasted (/* NotifyElement *event */);

@@ -107,7 +107,8 @@ extern void TtaSwitchButton (Document document, View view, int index);
    picture: the new icon.
    state: TRUE to enable the button, false to disable it.
   ----------------------------------------------------------------------*/
-extern void TtaChangeButton (Document document, View view, int index, ThotIcon picture, ThotBool state);
+extern void TtaChangeButton (Document document, View view, int index,
+			     ThotIcon picture, ThotBool state);
 
 /*----------------------------------------------------------------------
    TtaAddTextZone
@@ -119,8 +120,10 @@ extern void TtaChangeButton (Document document, View view, int index, ThotIcon p
    label: label of the new entry.
    procedure: procedure to be executed when the new entry is changed by the
    user.
+   listUrl gives URLs that will be displayed in the combobox.
   ----------------------------------------------------------------------*/
-extern int TtaAddTextZone (Document document, View view, char *label, ThotBool editable, void (*procedure) (), char *listUrl);
+extern int TtaAddTextZone (Document document, View view, char *label,
+			   ThotBool editable, void (*procedure) (), char *listUrl);
 
 /*----------------------------------------------------------------------
    TtaSetTextZone
@@ -129,9 +132,10 @@ extern int TtaAddTextZone (Document document, View view, char *label, ThotBool e
    Parameters:
    document: identifier of the document.
    view: identifier of the view.
-   index: 
+   text: the text to be displayed
+   listUrl gives URLs that will be displayed in the combobox.
   ----------------------------------------------------------------------*/
-extern void TtaSetTextZone (Document document, View view, int index, char *text);
+extern void TtaSetTextZone (Document document, View view, char *text, char *listUrl);
 
 /*----------------------------------------------------------------------
    TtaSetMenuOff desactive le menu (1 a n) de la vue du document ou   

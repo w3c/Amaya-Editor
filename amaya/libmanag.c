@@ -147,8 +147,8 @@ static char         listTitle [MAX_BUFF];
 /*-----------------------------------------------------------------------
  PasteLibraryModelDlgProc
  ------------------------------------------------------------------------*/
-LRESULT CALLBACK PasteLibraryModelDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
-									  LPARAM lParam)
+LRESULT CALLBACK PasteLibraryModelDlgProc (ThotWindow hwnDlg, UINT msg,
+					   WPARAM wParam, LPARAM lParam)
 {
 #ifdef _SVGLIB
     switch (msg)
@@ -199,83 +199,83 @@ int    iCurrItem = -1;
 int    length = 0;
 HWND   hwndLibraryListCtrl; /* handle the library title list */
 
-hwndLibraryListCtrl = GetDlgItem (hwnDlg, IDC_LIBRARYLIST);
+ hwndLibraryListCtrl = GetDlgItem (hwnDlg, IDC_LIBRARYLIST);
+ switch (msg)
+   {
+   case WM_INITDIALOG:
+     SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_SVGLIB_ADD_SVG_MODEL_DIALOG));
+     SetWindowText (GetDlgItem (hwnDlg, IDC_LIBRARYTITLE),
+		    TtaGetMessage (AMAYA, AM_SVGLIB_CATALOGUE_TITLE));
+     SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
+		    TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+     SetWindowText (GetDlgItem (hwnDlg, ID_CREATELIBRARY), 
+		    TtaGetMessage (AMAYA, AM_SVGLIB_CREATE_NEW_CATALOGUE));
+     SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
 
-    switch (msg)
-      {
-      case WM_INITDIALOG:
-	SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_SVGLIB_ADD_SVG_MODEL_DIALOG));
-	SetWindowText (GetDlgItem (hwnDlg, IDC_LIBRARYTITLE),
-		TtaGetMessage (AMAYA, AM_SVGLIB_CATALOGUE_TITLE));
-    SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
-		TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-	SetWindowText (GetDlgItem (hwnDlg, ID_CREATELIBRARY), 
-		TtaGetMessage (AMAYA, AM_SVGLIB_CREATE_NEW_CATALOGUE));
-	SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+     /* Reset library list content */
+     SendDlgItemMessage (hwnDlg, IDC_LIBRARYLIST, LB_RESETCONTENT, 0, 0);
+     /* Set library list variable to handle text */
+     SendDlgItemMessage (hwnDlg, IDC_LIBRARYLIST, LBS_HASSTRINGS, 0, 0);
 
-	/* Reset library list content */
-	SendDlgItemMessage (hwnDlg, IDC_LIBRARYLIST, LB_RESETCONTENT, 0, 0);
-	/* Set library list variable to handle text */
-	SendDlgItemMessage (hwnDlg, IDC_LIBRARYLIST, LBS_HASSTRINGS, 0, 0);
-
-	/*SendMessage (hwndLibraryListCtrl, LBS_HASSTRING, 0, 0);*/
-	for (iListIndex = 0; iListIndex < nbTitle; ++iListIndex)
-      {
-        /* Insert code here to retrieve the name of each library title, and then 
-         put the library title in Title. */
-        /* Add the title string to the list control. */
-        SendDlgItemMessage (hwnDlg, IDC_LIBRARYLIST, LB_INSERTSTRING/*LB_ADDSTRING*/, iListIndex, 
-                                 (LPARAM) &listTitle[length]);
-		length += strlen (&listTitle[length]) + 1;
+     /*SendMessage (hwndLibraryListCtrl, LBS_HASSTRING, 0, 0);*/
+     for (iListIndex = 0; iListIndex < nbTitle; ++iListIndex)
+       {
+	 /* Insert code here to retrieve the name of each library title, and then 
+	    put the library title in Title. */
+	 /* Add the title string to the list control. */
+	 SendDlgItemMessage (hwnDlg, IDC_LIBRARYLIST, LB_INSERTSTRING/*LB_ADDSTRING*/, iListIndex, 
+			     (LPARAM) &listTitle[length]);
+	 length += strlen (&listTitle[length]) + 1;
          /*Set a 32-bit value, (LPARAM) iListIndex, that is associated
            with the newly added item in the list control.*/
-        /*SendMessage (hwndLibraryListCtrl, LB_SETITEMDATA,      
-                     (WPARAM) iCurrItem, (LPARAM) iListIndex);*/
-      }
+	 /*SendMessage (hwndLibraryListCtrl, LB_SETITEMDATA,      
+	   (WPARAM) iCurrItem, (LPARAM) iListIndex);*/
+       }
 
-      /* Select the first library title in the list control. */
-      SendDlgItemMessage (hwnDlg, IDC_LIBRARYLIST, LB_SETCURSEL, 0, 0);
-	  return TRUE;
-	break;
-      case WM_COMMAND:
-	switch (LOWORD (wParam))
-	  {
-	case ID_CONFIRM:
-          /* Retrieve the index of the currently selected library.*/
-          if ((iCurrItem = SendDlgItemMessage (hwnDlg, IDC_LIBRARYLIST, LB_GETCURSEL, 
-                                               0, 0)) != LB_ERR)
-          {
-            /*length = SendDlgItemMessage (hwnDlg, IDC_LIBRARYLIST, LB_GETTEXTLEN, 
-                                         iCurrItem, 0);*/
-			length = SendDlgItemMessage (hwnDlg, IDC_LIBRARYLIST, LB_GETTEXT,
-										 iCurrItem, (LPARAM) szBuffer);
-			ThotCallback (BaseLibrary + SVGLibCatalogueTitle, STRING_DATA, (char *) szBuffer);
-			ThotCallback (BaseLibrary + AddSVGModel, INTEGER_DATA, (char *) 1);
-            EndDialog (hwnDlg, 0);
-          }
-		break;
+     /* Select the first library title in the list control. */
+     SendDlgItemMessage (hwnDlg, IDC_LIBRARYLIST, LB_SETCURSEL, 0, 0);
+     return TRUE;
+     break;
+   case WM_COMMAND:
+     switch (LOWORD (wParam))
+       {
+       case ID_CONFIRM:
+	 /* Retrieve the index of the currently selected library.*/
+	 if ((iCurrItem = SendDlgItemMessage (hwnDlg, IDC_LIBRARYLIST, LB_GETCURSEL, 
+					      0, 0)) != LB_ERR)
+	   {
+	     /*length = SendDlgItemMessage (hwnDlg, IDC_LIBRARYLIST, LB_GETTEXTLEN, 
+	       iCurrItem, 0);*/
+	     length = SendDlgItemMessage (hwnDlg, IDC_LIBRARYLIST, LB_GETTEXT,
+					  iCurrItem, (LPARAM) szBuffer);
+	     ThotCallback (BaseLibrary + SVGLibCatalogueTitle, STRING_DATA, (char *) szBuffer);
+	     ThotCallback (BaseLibrary + AddSVGModel, INTEGER_DATA, (char *) 1);
+	     EndDialog (hwnDlg, 0);
+	   }
+	 break;
 
-	case ID_CREATELIBRARY:
-	  ThotCallback (BaseLibrary + AddSVGModel, INTEGER_DATA, (char *) 2);
-	  break;
-
-	case IDCANCEL:
-	    ThotCallback (BaseLibrary + FormLibrary, INTEGER_DATA, (char*) 0);
-	    EndDialog (hwnDlg, IDCANCEL);
-	    break;
-	}	
-	break;
-      default:
-	return FALSE;
-      }
+       case ID_CREATELIBRARY:
+	 ThotCallback (BaseLibrary + AddSVGModel, INTEGER_DATA, (char *) 2);
+	 break;
+	 
+       case IDCANCEL:
+	 ThotCallback (BaseLibrary + FormLibrary, INTEGER_DATA, (char*) 0);
+	 EndDialog (hwnDlg, IDCANCEL);
+	 break;
+       }	
+     break;
+   default:
+     return FALSE;
+   }
 #endif /* _SVGLIB */
-    return TRUE;
+ return TRUE;
 }
+
 /*-----------------------------------------------------------------------
  NewLibraryDlgProc
  ------------------------------------------------------------------------*/
-LRESULT CALLBACK NewLibraryDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
-									  LPARAM lParam)
+LRESULT CALLBACK NewLibraryDlgProc (ThotWindow hwnDlg, UINT msg,
+				    WPARAM wParam, LPARAM lParam)
 {
 #ifdef _SVGLIB
    AddNewModelHwnd = hwnDlg;
@@ -957,36 +957,24 @@ void ShowLibraryBrowser ()
 /*----------------------------------------------------------------------
   SVGLibraryListItemNumber
   This function return the number of elements of a List
-  and modify a string by changing EOL in EOS
+  A double EOS closes the list.
   ----------------------------------------------------------------------*/
 int SVGLibraryListItemNumber (char *buffer)
 {
   int          cpt = 0;
 #ifdef _SVGLIB
-  char        *ptrStr, *ptrStr1;
-  int          fin = 0;
+  char        *ptr, *ptr1;
 
-  ptrStr = buffer;
+  ptr = buffer;
   if (buffer)
     {
-      while (fin == 0)
+      while (*ptr != EOS)
 	{
-	  ptrStr1 = ptrStr;
-	  while ((*ptrStr1 != EOS && *ptrStr1 != EOL))
-	    {
-	      ptrStr1++;
-	    }
-	  if (*ptrStr1 == EOL)
-	    {
-	      *ptrStr1 = EOS;
-	      cpt++;
-	      ptrStr = ++ptrStr1;
-	    }
-	  else
-	    {
-	      cpt++;
-	      fin = 1;
-	    }
+	  ptr1 = ptr;
+	  while (*ptr1 != EOS)
+	      ptr1++;
+	  cpt++;
+	  ptr = ptr1 + 1;
 	}
     }
 #endif /* _SVGLIB */
@@ -1006,17 +994,15 @@ char *IsSVGCatalogueExist (char *data)
   ListUriTitle      *curList = HeaderListUriTitle;
 
   while (curList &&
-	 (strcmp (curList->URI, (char *) data) != 0) &&
-	 (strcmp (curList->Title, (char *) data) != 0))
-    {
-      curList = curList->next;
-    }
-  if (curList != NULL)
+	 strcmp (curList->URI, (char *) data) != 0 &&
+	 strcmp (curList->Title, (char *) data) != 0)
+    curList = curList->next;
+  if (curList)
     catalogueUri = curList->URI;
   else
     catalogueUri = NULL;
 #endif /* _SVGLIB */
-      return catalogueUri;
+  return catalogueUri;
 }
 
 /*----------------------------------------------------------------------
@@ -1071,7 +1057,7 @@ Document CreateNewLibraryFile (char *libUrl, char *libtitle)
 
   /* save the document name into the document table */
   s = TtaStrdup (libUrl);
-  TtaSetTextZone (newLibraryDoc, 1, 1, libUrl);
+  TtaSetTextZone (newLibraryDoc, 1, libUrl, NULL);
   DocumentURLs[newLibraryDoc] = s;
   DocumentMeta[newLibraryDoc] = DocumentMetaDataAlloc ();
   DocumentMeta[newLibraryDoc]->form_data = NULL;
@@ -1452,7 +1438,7 @@ void SVGLIB_FreeDocumentResource ()
       i = 1;
       while (i < DocumentTableLength && DocumentTypes[i] != docLibrary)
 	i++;
-      if (DocumentTypes[i] == docLibrary && !TtaIsDocumentModified (i))
+      if (i < DocumentTableLength && !TtaIsDocumentModified (i))
 	{
 	  FreeDocumentResource (i);
 	  TtaCloseDocument (i);
@@ -1520,13 +1506,9 @@ char *GetLibraryPathFromTitle (char *title)
       /* list exist */
       listCur = HeaderListUriTitle;
       while (listCur && (strcmp (listCur->Title, title) != 0))
-	{
-	  listCur = listCur->next;
-	}
+	listCur = listCur->next;
       if (listCur)
-	{
-	  path = listCur->URI;
-	}
+	path = listCur->URI;
     }
 #endif /* _SVGLIB */
   return path;
@@ -1557,56 +1539,20 @@ char *InitSVGBufferForComboBox ()
       buffer = (char *) TtaGetMemory (lg + 10);
       curList = HeaderListUriTitle;
       buffer[0] = EOS;
-      while (curList)
-	{
-	  strcat (buffer, curList->Title);
-	  curList = curList->next;
-	  if (curList)
-	    sprintf (buffer,"%s%c", buffer, EOL);
-	}
-      return buffer;
-    }
-#endif /* _SVGLIB */
-  return NULL;
-}
-
-/*------------------------------------------------------------------
-  InitSVGLibraryListURL
-  Initializes a string by reading data in a Library Manager Structure List
-  This function allocates memory and return it.
-  So you have to free them after calling this function.
-  ------------------------------------------------------------------*/
-char *InitSVGLibraryListURL()
-{
-#ifdef _SVGLIB
-  ListUriTitle     *curList;
-  char             *buffer;
-  int               lg = 0;
-
-  if (HeaderListUriTitle)
-    {
-      /* length of the string */
-      curList = HeaderListUriTitle;
-      while (curList)
-	{
-	  lg += strlen (curList->URI) + 1;
-	  curList = curList->next;
-	}
-      buffer = (char *) TtaGetMemory (lg + 10);
-      curList = HeaderListUriTitle;
       lg = 0;
-      buffer[lg] = EOS;
       while (curList)
 	{
-	  strcpy (&buffer[lg], curList->URI);
-	  lg += strlen (curList->URI) + 1;
+	  strcpy (&buffer[lg], curList->Title);
+	  lg += strlen (curList->Title) + 1;
 	  curList = curList->next;
 	}
+       buffer[lg] = EOS;
       return buffer;
     }
 #endif /* _SVGLIB */
   return NULL;
 }
+
 
 /*------------------------------------------------------------------
   InitSVGLibraryManagerStructure
@@ -1914,22 +1860,22 @@ char *GetURIId (char *href)
 {
   char    *result = NULL;
 #ifdef _SVGLIB
-  char    *ptrStr1;
+  char    *ptr1;
   int      length;
 
   if (href)
     {
-      ptrStr1 = href;
-      while (*ptrStr1 != '#' && *ptrStr1 != EOS)
+      ptr1 = href;
+      while (*ptr1 != '#' && *ptr1 != EOS)
 	{
-	  ptrStr1++;
+	  ptr1++;
 	}
-      if (*ptrStr1 == '#')
+      if (*ptr1 == '#')
 	{
-	  ptrStr1++;
-	  length = strlen (ptrStr1) + 1;
-	  result = (char *) TtaGetMemory (strlen (ptrStr1) + 1);
-	  strcpy (result, ptrStr1);
+	  ptr1++;
+	  length = strlen (ptr1) + 1;
+	  result = (char *) TtaGetMemory (strlen (ptr1) + 1);
+	  strcpy (result, ptr1);
 	}
       else
 	result = NULL;
@@ -3068,16 +3014,14 @@ char *MakeUniqueSuffixFilename (char * libraryURL, char *suffix)
 void ExtractLibraryPrefixFilename (char *filename)
 {
 #ifdef _SVGLIB
-  char   *ptrStr, *oldptrStr;
+  char   *ptr, *oldptr;
 
   if (filename)
     {
-      ptrStr = oldptrStr = filename;
-      ptrStr = strrchr (oldptrStr, '.');
-      if (ptrStr)
-	{
-	  *ptrStr = EOS;
-	}
+      ptr = oldptr = filename;
+      ptr = strrchr (oldptr, '.');
+      if (ptr)
+	*ptr = EOS;
     }
 #endif /* _SVGLIB */
 }
@@ -3109,16 +3053,14 @@ ThotBool WriteInterSessionLibraryFileManager ()
     {
       succeed = TRUE;
       /* necessité de tester le nombre d'uri a placer dans lib_files.dat
-	 pour éviter d'avoir un EOL à la fin du fichier
-	 (Pas sous GTK)*/
+	 pour éviter d'avoir un EOL à la fin du fichier (Pas sous GTK)*/
       while (curList)
 	{
-	  if(curList->customLibrary)
-	    {
-	      /* it's a custom Library, add it to APP_HOME/lib_files.dat */
-	      strcpy (urlstring, curList->URI);
-	      fprintf (libfile, "%s%c", urlstring, EOL);
-	    }
+	  if (curList->customLibrary)
+	    /* it's a custom Library, add it to APP_HOME/lib_files.dat */
+	    fprintf (libfile, "%s\n", curList->URI);
+	  else
+	    fprintf (libfile, "%s", curList->URI);
 	  curList = curList->next;
 	}
     }

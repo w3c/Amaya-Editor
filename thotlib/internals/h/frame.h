@@ -16,7 +16,6 @@
 #define MAX_FONT    60
 #define MAX_FONTNAME   10
 #define MAX_BUTTON  30
-#define MAX_TEXTZONE 3
 
 typedef struct _Frame_Ctl {
   int        FrTopMargin;               /* Window Top Margin                 */
@@ -51,10 +50,13 @@ typedef struct _Frame_Ctl {
 #ifdef _WINDOWS
   int        ButtonId[MAX_BUTTON];
   char      *TbStrings[MAX_BUTTON];     /* Tooltips text                     */
-  ThotWidget Label[MAX_TEXTZONE];       /* Labels of text zones              */
+  ThotWidget Label;                     /* Labels of text zones              */
+#else /* _WINDOWS */
+  ThotWidget Row_Zone;                  /* Parent widget of Text_Zone        */
+  ThotWidget Combo;                     /* List of combobox Widgets          */
 #endif /* _WINDOWS */
-  ThotWidget Text_Zone[MAX_TEXTZONE];   /* List of text-zone Widgets         */
-  Proc       Call_Text[MAX_TEXTZONE];   /* List of text-zone Callbacks       */
+  ThotWidget Text_Zone;                 /* List of text-zone Widgets         */
+  Proc       Call_Text;                 /* List of text-zone Callbacks       */
 } Frame_Ctl;
 #endif /* !NODISPLAY */
 
