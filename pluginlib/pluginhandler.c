@@ -56,7 +56,7 @@ extern char*          pluginPath;
 
 int                   pluginIndex;
 #ifdef AMAYA_PLUGIN
-int                   currentPlugin = 0;
+extern int            currentPlugin;
 #else  /* AMAYA_PLUGIN */
 int                   currentPlugin = 0;
 #endif /* AMAYA_PLUGIN */
@@ -160,10 +160,10 @@ char*     fileName;
 #ifdef NEW_WILLOWS
   return(NULL);
 #else  /* NEW_WILLOWS */
-  int     status;
-  int     w, h; 
+  /* int     status;
+  int     w, h; */
   Pixmap  bitmap = None;
-  int     xHot, yHot;
+  /* int     xHot, yHot; */
   Widget  canvas;
   int     n;
   Arg     arg[10];
@@ -237,10 +237,11 @@ char* fileName;
 #ifdef NEW_WILLOWS
   return FALSE;
 #else  /* NEW_WILLOWS */
-  int    status;
+  /*  int    status;
   int    w, h; 
-  Pixmap bitmap = None;
-  int    l, xHot, yHot;
+  Pixmap bitmap = None;*/
+  int    l; 
+  /* int xHot, yHot; */
 
   char    suffix [10];
   int     index1 = 0;

@@ -6,7 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern int Ap_OpenPluginDriver ( boolean model );
+extern int Ap_OpenPluginDriver ( boolean model,
+                                 int indexHandler );
 extern void AP_ClosePluginDriver ( void );
 extern void Ap_InitImage ( void );
 extern void Ap_DrawPicture ( PictInfo* imageDesc,
@@ -28,10 +29,14 @@ extern void Ap_ProducePostscript ( char* fileName,
                                    int fd,
                                    unsigned int BackGroundPixel );
 extern boolean Ap_MatchFormat ( char* fileName );
+extern void InitPluginHandlers ( boolean printing,
+                                 int indexHandler );
+extern void PluginLoadResources ( void );
 
 #else /* __STDC__ */
 
-extern int Ap_OpenPluginDriver (/* boolean model */);
+extern int Ap_OpenPluginDriver (/* boolean model,
+                                   int indexHandler */);
 extern void AP_ClosePluginDriver (/* void */);
 extern void Ap_InitImage (/* void */);
 extern void Ap_DrawPicture (/* PictInfo* imageDesc,
@@ -53,6 +58,9 @@ extern void Ap_ProducePostscript (/* char* fileName,
                                      int fd,
                                      unsigned int BackGroundPixel */);
 extern boolean Ap_MatchFormat (/* char* fileName */);
+extern void InitPluginHandlers (/* boolean printing,
+                                   int indexHandler */);
+extern void PluginLoadResources (/* void */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

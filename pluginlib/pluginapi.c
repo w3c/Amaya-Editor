@@ -141,10 +141,11 @@ const char* pluginMimeType;
               while (!endOfSuffixes) {
                     while (pluginMimeType [index] == SPACE || pluginMimeType [index] == TAB)
 		          index++;
-                    if (pluginMimeType [index] == ':' || pluginMimeType [index] == ';') {
+                    if (pluginMimeType [index] == ':' || pluginMimeType [index] == ';' || pluginMimeType [index] == EOS) {
                        token [ndx] = EOS;
                        endOfSuffixes = TRUE ;
-                       index++;
+                       if (pluginMimeType [index] != EOS)
+                          index++;
                     } else {
                             if (pluginMimeType [index] == '.') index++ ;
                             while (isalnum (pluginMimeType [index]))
@@ -154,17 +155,19 @@ const char* pluginMimeType;
                        token [ndx++] = suffixes [suffixNdx++] = pluginMimeType [index++];
               }
               printf ("suffixes: %s\n", token);
-              ndx = 0;
-              while (pluginMimeType [index] != EOS && pluginMimeType [index] != ';' && pluginMimeType [index] != ':')
-                    token [ndx++] = pluginMimeType [index++];
-              token [ndx] = EOS;
-              if (pluginMimeType [index] == ';') {
-                 suffixes [suffixNdx++] = ',' ;
-                 index++;
+              if (pluginMimeType [index] !=EOS) {
+                 ndx = 0;
+                 while (pluginMimeType [index] != EOS && pluginMimeType [index] != ';' && pluginMimeType [index] != ':')
+                       token [ndx++] = pluginMimeType [index++];
+                 token [ndx] = EOS;
+                 if (pluginMimeType [index] == ';') {
+                    suffixes [suffixNdx++] = ',' ;
+                    index++;
+                 }
+                 if (pluginMimeType [index] == ':')
+                    index++;
+                 printf ("comment: %s\n", token);
               }
-              if (pluginMimeType [index] == ':')
-                 index++;
-              printf ("comment: %s\n", token);
          }
    }
    suffixes [suffixNdx] = EOS;

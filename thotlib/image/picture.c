@@ -393,9 +393,11 @@ char               *fileName;
   int                 i;
   int                 l = 0;
 
-  i = HandlersCounter - 1 ;
+  /*  i = HandlersCounter - 1 ; */
+  i = 0 ;
 #ifdef AMAYA_PLUGIN
-  currentPlugin = HandlersCounter - InlineHandlers - 1;
+  /* currentPlugin = HandlersCounter - InlineHandlers - 1; */
+  currentPlugin = 0;
 #endif /* AMAYA_PLUGIN */
   l = strlen (fileName);
   if (l > 4)
@@ -413,7 +415,18 @@ char               *fileName;
       if (strcmp (fileName + l - 4, ".png") == 0)
 	return PNG_FORMAT;
     }
+
+   while (i < HandlersCounter) {
+#ifdef AMAYA_PLUGIN
+         if (i >= InlineHandlers)
+            currentPlugin = i - InlineHandlers ;
+#endif /* AMAYA_PLUGIN */
+         if (Match_Format (i, fileName))
+            return i ;
+         ++i ;
+   }
   
+  /*
   while (i > UNKNOWN_FORMAT)
     {
       if (Match_Format (i, fileName))
@@ -423,9 +436,10 @@ char               *fileName;
 	  i--;
 #ifdef AMAYA_PLUGIN
 	  currentPlugin--;
-#endif /* AMAYA_PLUGIN */
+#endif 
 	}
     }
+    */
   return UNKNOWN_FORMAT;
 }
 

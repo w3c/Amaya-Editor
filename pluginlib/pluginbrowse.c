@@ -11,10 +11,12 @@
  * Last modification: Jan 23 1997
  */
 
-#include "pluginbrowse.h"
-#include "pluginbrowse_f.h"
 #include "npapi.h"
 #include "npupp.h"
+
+#include "pluginbrowse.h"
+#include "pluginbrowse_f.h"
+#include "pluginapi_f.h"
 
 static char  ls_unixFiles[MAX_NAME * NAME_LENGTH];
 static int   ls_fileNbr;

@@ -62,6 +62,8 @@ extern void CreateElemBold ( Document document,
                              View view );
 extern void CreateElemTeletype ( Document document,
                                  View view );
+extern void CreateElemUnderline ( Document document,
+                                  View view );
 extern void CreateElemStrikeOut ( Document document,
                                   View view );
 extern void CreateElemBig ( Document document,
@@ -147,6 +149,8 @@ extern void CreateElemBold (/* Document document,
                                View view */);
 extern void CreateElemTeletype (/* Document document,
                                    View view */);
+extern void CreateElemUnderline (/* Document document,
+                                    View view */);
 extern void CreateElemStrikeOut (/* Document document,
                                     View view */);
 extern void CreateElemBig (/* Document document,

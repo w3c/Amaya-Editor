@@ -44,9 +44,12 @@ extern void Ap_ReloadPlugins ( NPBool reloadPages );
 extern NPError Ap_GetValue ( NPP instance,
                              NPNVariable variable,
                              void* r_value );
-extern void Ap_InitializeTable ( void );
-extern void Ap_InitializePlugin ( char* path );
-extern void Ap_CreatePluginInstance ( Window window,
+extern void Ap_InitializeAmayaTable ( void );
+extern void Ap_InitializePluginTable ( int indexHandler );
+extern void Ap_InitializePlugin ( char* path,
+                                  int indexHandler );
+extern void Ap_CreatePluginInstance ( int indexPlug,
+                                      Window window,
                                       Display* display,
                                       char* filename );
 
@@ -90,9 +93,12 @@ extern void Ap_ReloadPlugins (/* NPBool reloadPages */);
 extern NPError Ap_GetValue (/* NPP instance,
                                NPNVariable variable,
                                void* r_value */);
-extern void Ap_InitializeTable (/* void */);
-extern void Ap_InitializePlugin (/* char* path */);
-extern void Ap_CreatePluginInstance (/* Window window,
+extern void Ap_InitializeAmayaTable (/* void */);
+extern void Ap_InitializePluginTable (/* int indexHandler */);
+extern void Ap_InitializePlugin (/* char* path,
+                                    int indexHandler */);
+extern void Ap_CreatePluginInstance (/* int indexPlug,
+                                        Window window,
                                         Display* display,
                                         char* filename */);
 
