@@ -146,7 +146,7 @@ typedef struct _AnnotMetaDataList {
 #include "ANNOTevent_f.h"
 #include "ANNOTfiles_f.h"
 #include "ANNOTmenu_f.h"
-#include "rdf2annot_f.h"
+#include "AHTrdf2annot_f.h"
 
 /*************
  ** Annot Filter menu
