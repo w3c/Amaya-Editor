@@ -64,7 +64,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W3 /GR /GX /ZI /Od /I "..\..\libwww\modules\r" /I "..\..\libraptor" /I "..\..\..\libwww\modules\expat\lib" /D "_DEBUG" /D "_MBCS" /D "__STDC__" /D "HAVE_STDLIB_H" /D "HAVE_STDARG_H" /D "WIN32" /D "_WINDOWS" /FD /I /GZ /c
+# ADD CPP /nologo /MTd /W3 /GR /GX /ZI /Od /I "..\..\libwww\modules\r" /I "..\..\..\redland\librdf" /I "..\..\..\redland\raptor" /I "..\..\..\libwww\modules\expat\lib" /D "_DEBUG" /D "_MBCS" /D "__STDC__" /D "HAVE_STDLIB_H" /D "HAVE_STDARG_H" /D "WIN32" /D "_WINDOWS" /D "RAPTOR_INTERNAL" /D "LIBRDF_INTERNAL" /FD /I /GZ /c
 # ADD BASE RSC /l 0x40c /d "_DEBUG"
 # ADD RSC /l 0x40c /d "_DEBUG"
 BSC32=bscmake.exe
@@ -82,15 +82,83 @@ LIB32=link.exe -lib
 # Name "libraptor - Win32 Debug"
 # Begin Source File
 
-SOURCE=..\..\libraptor\ntriples_parse.c
+SOURCE=..\..\..\redland\raptor\getopt.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\libraptor\raptor_parse.c
+SOURCE=..\..\..\redland\raptor\ntriples_parse.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\libraptor\raptor_uri.c
+SOURCE=..\..\..\redland\raptor\raptor_general.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\redland\raptor\raptor_identifier.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\redland\raptor\raptor_locator.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\redland\raptor\raptor_namespace.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\redland\raptor\raptor_parse.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\redland\raptor\raptor_qname.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\redland\raptor\raptor_sax2.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\redland\raptor\raptor_sequence.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\redland\raptor\raptor_set.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\redland\raptor\raptor_stringbuffer.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\redland\raptor\raptor_uri.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\redland\raptor\raptor_utf8.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\redland\raptor\raptor_win32.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\redland\raptor\raptor_www.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\redland\raptor\raptor_xml.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\redland\raptor\raptor_xml_writer.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\redland\raptor\strcasecmp.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\..\redland\raptor\win32_config.h
 # End Source File
 # End Target
 # End Project
