@@ -274,9 +274,9 @@ BOXES
 	VertOverflow : Yes;
 	HorizOverflow : Yes;
 	Inline: No;
-	Visibility: Creator =;
+	Visibility: 0;
 	IN Structure_view
-		Visibility: 0;
+		Visibility: Creator =;
 	IN Alternate_view
 		Visibility: 0;
 	END;
@@ -1911,7 +1911,7 @@ ATTRIBUTES
 	if NOT TEXT_UNIT and NOT PICTURE_UNIT and NOT Unknown_namespace
   	   CreateBefore(UnknownAttrValue);
 	END;
- 
+
   Highlight:
 	BEGIN
         if TEXT_UNIT
