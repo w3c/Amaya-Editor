@@ -2307,7 +2307,7 @@ void TtcChangeFormat (Document document, View view)
          for (i = 0; i < 4; i++)
             TtaRedrawMenuEntry (NumMenuAlignment, i, "icones", ThotColorNone, -1);
          /* initialise le menu de cadrage des lignes */
-#endif _WINDOWS
+#endif /*  _WINDOWS */
          switch (pAb->AbAdjust)
 	   {
 	   case AlignLeft:

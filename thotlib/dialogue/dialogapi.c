@@ -859,7 +859,6 @@ static void CallMenuGTK (ThotWidget w, struct Cat_Context *catalogue)
      }
 }
 
-
 /*----------------------------------------------------------------------
    Callback pour un bouton du sous-menu de formulaire                 
   ----------------------------------------------------------------------*/
@@ -2842,7 +2841,7 @@ void TtaNewPulldown (int ref, ThotMenu parent, char *title, int number,
 			 }
 			 else
 			     w = gtk_menu_item_new_with_label (menu_item);
-			 gtk_signal_connect (GTK_OBJECT(w), 
+			 ConnectSignalGTK (GTK_OBJECT(w), 
 			     "activate",
 			     GTK_SIGNAL_FUNC (CallMenuGTK), 
 			     (gpointer)catalogue);	
@@ -3433,7 +3432,7 @@ void TtaNewPopup (int ref, ThotWidget parent, char *title, int number,
 		      }
 		    else
 		      w = gtk_menu_item_new_with_label (menu_item);
-		    gtk_signal_connect (GTK_OBJECT(w), 
+		    ConnectSignalGTK (GTK_OBJECT(w), 
 					"activate",
 					GTK_SIGNAL_FUNC (CallMenuGTK), 
 					(gpointer)catalogue);	
@@ -3936,7 +3935,7 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
   struct Cat_Context *catalogue;
   struct Cat_Context *parentCatalogue;
   struct E_List      *adbloc;
-  char                button;
+  char                button=0;
   register int        count;
   register int        index;
   int                 eindex;
@@ -4665,6 +4664,8 @@ void TtaSetMenuForm (int ref, int val)
 #ifndef _GTK
    register int        n;
    Arg                 args[MAX_ARGS];
+#else
+   guint               id_toggled;
 #endif /* _GTK */
 #endif /* _WINDOWS */
    struct Cat_Context *catalogue;
@@ -4720,9 +4721,13 @@ void TtaSetMenuForm (int ref, int val)
 		       n++;
 		       XtSetValues (adbloc->E_ThotWidget[i], args, n);
 #else /* _GTK */
-		       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (adbloc->E_ThotWidget[i]), TRUE);
-		       /*gtk_button_set_relief (GTK_BUTTON (adbloc->E_ThotWidget[i]),
-			 GTK_RELIEF_HALF);*/
+
+		       id_toggled  = (guint) gtk_object_get_data (GTK_OBJECT (adbloc->E_ThotWidget[i]),
+							  "toggled");
+		       gtk_signal_handler_block (GTK_OBJECT(adbloc->E_ThotWidget[i]), 
+						 id_toggled);
+		       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (adbloc->E_ThotWidget[i]), 
+						     TRUE);
 #endif /* _GTK */
 		    }
 		  else
@@ -4732,10 +4737,14 @@ void TtaSetMenuForm (int ref, int val)
 		       XtSetArg (args[n], XmNset, FALSE);
 		       n++;
 		       XtSetValues (adbloc->E_ThotWidget[i], args, n);
-#else /* _GTK */
-		       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (adbloc->E_ThotWidget[i]), FALSE);
-		       /*gtk_button_set_relief (GTK_BUTTON (adbloc->E_ThotWidget[i]),
-			 GTK_RELIEF_NONE);*/
+#else /* _GTK */  
+
+		       id_toggled  = (guint) gtk_object_get_data (GTK_OBJECT (adbloc->E_ThotWidget[i]),
+							  "toggled");
+		       gtk_signal_handler_block (GTK_OBJECT(adbloc->E_ThotWidget[i]), 
+						 id_toggled);
+		       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (adbloc->E_ThotWidget[i]), 
+						     FALSE);
 #endif /* _GTK */
 		    }
 		  i++;
@@ -4749,6 +4758,29 @@ void TtaSetMenuForm (int ref, int val)
 	if (!visible)
 	   XtUnmanageChild (catalogue->Cat_Widget);
 #else /* _GTK */
+	adbloc = catalogue->Cat_Entries;
+	ent = 0;
+	i = 2;			/* decalage de 2 pour le widget titre */
+	while (adbloc != NULL)
+	  {
+	    while (i < C_NUMBER)
+	      {
+		if (adbloc->E_ThotWidget[i] == 0)
+		  i = C_NUMBER;
+		else
+		  {
+		    id_toggled  = (guint) gtk_object_get_data (GTK_OBJECT (adbloc->E_ThotWidget[i]),
+							       "toggled");
+		    gtk_signal_handler_unblock (GTK_OBJECT(adbloc->E_ThotWidget[i]), 
+						id_toggled); 
+		  }
+		  i++;
+		  ent++;
+	       }
+	     /* Passe au bloc suivant */
+	     adbloc = adbloc->E_Next;
+	     i = 0;
+	  }		
 	if (!visible)
 	  gtk_widget_hide (catalogue->Cat_Widget);
 #endif /* _GTK */
