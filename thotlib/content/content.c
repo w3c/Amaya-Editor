@@ -1089,27 +1089,28 @@ int TtaGetTextLength (Element element)
   else if (pEl->ElLeafType != LtText && pEl->ElLeafType != LtPicture)
     TtaError (ERR_invalid_element_type);
   else
-    length = pEl->ElTextLength;
-#ifdef _I18N_
-  pBuf = pEl->ElText;
-  l = 0;
-  while (pBuf != NULL && length > 0)
     {
-      i = 0;
-      while (i < pBuf->BuLength && i < length)
+      length = pEl->ElTextLength;
+#ifdef _I18N_
+      pBuf = pEl->ElText;
+      l = 0;
+      while (pBuf != NULL && length > 0)
 	{
-	  ptr = c;
-	  l += TtaWCToMBstring (pBuf->BuContent[i], &ptr);
-	  i++;
+	  i = 0;
+	  while (i < pBuf->BuLength && i < length)
+	    {
+	      ptr = c;
+	      l += TtaWCToMBstring (pBuf->BuContent[i], &ptr);
+	      i++;
+	    }
+	  /* next buffer */
+	  length -= pBuf->BuLength;
+	  pBuf = pBuf->BuNext;
 	}
-      /* next buffer */
-      length -= pBuf->BuLength;
-      pBuf = pBuf->BuNext;
-    }
-  return l;
-#else /* _I18N_ */
-  return length;
+      length = l;
 #endif /* _I18N_ */
+    }
+  return length;
 }
 
 /*----------------------------------------------------------------------

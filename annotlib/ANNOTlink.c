@@ -388,6 +388,8 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
   firstElType = TtaGetElementType (first);
   docSchemaName = TtaGetSSchemaName (firstElType.ElSSchema);
 
+  check_mode = TtaGetStructureChecking (source_doc);
+  TtaSetStructureChecking (FALSE, source_doc);
   /* @@ JK: this doesn't seem useful anymore */
   /* is the user trying to annotate an annotation? */
   el = TtaGetTypedAncestor (first, elType);
@@ -410,10 +412,7 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
 	    break;
 	  el = TtaGetParent (el);
 	}
-      check_mode = TtaGetStructureChecking (source_doc);
-      TtaSetStructureChecking (FALSE, source_doc);
       TtaInsertFirstChild (&anchor, el, source_doc);
-      TtaSetStructureChecking (check_mode, source_doc);
     }
   else if (!strcmp (docSchemaName, "SVG"))
     {
@@ -428,12 +427,9 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
 	    break;
 	  el = TtaGetParent (el);
 	}
-      check_mode = TtaGetStructureChecking (source_doc);
-      TtaSetStructureChecking (FALSE, source_doc);
       TtaInsertFirstChild (&anchor, el, source_doc);
-      TtaSetStructureChecking (check_mode, source_doc);
     }
-  else 
+  else if (!strcmp (docSchemaName, "HTML"))
     {
       /* it's an HTML document */
       el = first;
@@ -545,6 +541,8 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
 	    }
 	}
     }
+
+  TtaSetStructureChecking (check_mode, source_doc);
   /* add the Xlink attribute */
   SetXLinkTypeSimple (anchor, source_doc, FALSE);
 
