@@ -509,6 +509,11 @@ AHTReqContext      *me;
        if (me->formdata)
 	 HTAssocList_delete (me->formdata);
        
+#ifdef ANNOTATIONS
+       if (me->document)
+	 TtaFreeMemory (me->document);
+#endif /* ANNOTATIONS */
+
        /* to trace bugs */
        memset ((void *) me, 0, sizeof (AHTReqContext));
        
@@ -1606,11 +1611,12 @@ View view;
     /* don't do anything if we're not using a cache */
     return;
   /* temporarily close down the cache, purge it, then restart */
-  tmp = ISO2WideChar (HTCacheMode_getRoot ());
+  tmp = HTCacheMode_getRoot ();
   /* don't do anything if we don't have a valid cache dir */
   if (!tmp || *tmp == EOS)
 	  return;
-  cache_dir = TtaStrdup (tmp);
+  cache_dir = TtaStrdup (ISO2WideChar (tmp));
+  HT_FREE (tmp);
   cache_size = HTCacheMode_maxSize ();
   cache_expire = HTCacheMode_expires ();
   cache_disconnect = HTCacheMode_disconnected ();
@@ -1966,56 +1972,55 @@ static void ProxyInit ()
   CharUnit* str = NULL;
   char*     name;
   ThotBool  proxy_is_onlyproxy;
-  char*     tmp = (char*) 0;
+  char*     tmp = NULL;
   char*     strptrA;
 
   /* get the proxy settings from the thot.ini file */
   strptr = TtaGetEnvString ("HTTP_PROXY");
-  if (strptr) {
-     tmp = (char*) TtaGetMemory (StringLength (strptr) + 1);
-     cus2iso_strcpy (tmp, strptr);
-  }
+  if (strptr && *strptr)
+    {
+      tmp = (char*) TtaGetMemory (StringLength (strptr) + 1);
+      cus2iso_strcpy (tmp, strptr);
 
-  if (strptr && *strptr) {
-     /* does the proxy env string has an "http://" prefix? */
-     if (!StringNCaseCompare (strptr, CUSTEXT("http://"), 7)) 
+      /* does the proxy env string has an "http://" prefix? */
+      if (!StringNCaseCompare (strptr, CUSTEXT("http://"), 7)) 
         HTProxy_add ("http", tmp);
-     else {
-          strptrA = (char*) TtaGetMemory (ustrlen (strptr) + 9);
-          strcpy (strptrA, "http://");
-          strcat (strptrA, tmp);
-          HTProxy_add ("http", strptrA);
-          TtaFreeMemory (strptrA);
-	 }
-     TtaFreeMemory (tmp);
-     tmp = (char*) 0;
-  }
+      else 
+	{
+	  strptrA = (char*) TtaGetMemory (ustrlen (strptr) + 9);
+	  strcpy (strptrA, "http://");
+	  strcat (strptrA, tmp);
+	  HTProxy_add ("http", strptrA);
+	  TtaFreeMemory (strptrA);
+	}
+      TtaFreeMemory (tmp);
+    }
 
   /* get the no_proxy settings from the thot.ini file */
   strptr = TtaGetEnvString ("PROXYDOMAIN");
-  if (strptr) {
-     tmp = (char*) TtaGetMemory (StringLength (strptr) + 1);
-     cus2iso_strcpy (tmp, strptr);
-  }
-
-  if (strptr && *strptr) {
-     str = StringDuplicate (strptr);          /* Get copy we can mutilate */
-     strptr = str;
-     while ((name = HTNextField (&tmp)) != NULL) {
-           char* portstr = strchr (name, ':');
-           unsigned port=0;
-           if (portstr) { 
-              *portstr++ = EOS;
-              if (*portstr) port = (unsigned) atoi (portstr);
-		   }
-           /* Register it for all access methods */
-           HTNoProxy_add (name, NULL, port);
-	 }
-     TtaFreeMemory (str);
-     TtaFreeMemory (tmp);
-     tmp = (char*)0;
-  }
-
+  if (strptr && *strptr) 
+    {
+      strptrA = (char*) TtaGetMemory (StringLength (strptr) + 1);
+      cus2iso_strcpy (strptrA, strptr);
+      /* as HTNextField changes the ptr we pass as an argument, we'll
+	 work with another variable, so that we can free the strptrA
+	 block later on */
+      tmp = strptrA;
+      while ((name = HTNextField (&tmp)) != NULL) 
+	{
+	  char* portstr = strchr (name, ':');
+	  unsigned port=0;
+	  if (portstr) { 
+	    *portstr++ = EOS;
+	    if (*portstr) 
+	      port = (unsigned) atoi (portstr);
+	  }
+	  /* Register it for all access methods */
+	  HTNoProxy_add (name, NULL, port);
+	}
+      TtaFreeMemory (strptrA);
+    }
+  
   /* how should we interpret the proxy domain list? */
   TtaGetEnvBoolean ("PROXYDOMAIN_IS_ONLYPROXY", &proxy_is_onlyproxy);
   HTProxy_setNoProxyIsOnlyProxy (proxy_is_onlyproxy);
@@ -2571,7 +2576,50 @@ char *value;
   HTRequest_addExtraHeader (request, "Accept", value);
 }
 
-	       
+/*----------------------------------------------------------------------
+  GetFileSize
+  Returns 0 and the filesize in the 2nd parameter.
+  Otherwise, returns -1.
+  ---------------------------------------------------------------------*/
+
+#ifdef __STDC__
+static ThotBool GetFileSize (char *fileName, unsigned long *file_size)
+#else
+static ThotBool GetFileSize (fileName, file_size)
+char *fileName;
+unsigned long *file_size;
+#endif /* __STDC__ */
+{
+  int fd;
+  struct stat file_stat;
+
+  if (!TtaFileExist (fileName))
+    return -1;
+
+  /* verify the file's size */
+#ifndef _WINDOWS
+  if ((fd = open (fileName, O_RDONLY)) == -1)
+#else 
+    if ((fd = uopen (fileName, _O_RDONLY | _O_BINARY)) == -1)
+#endif /* _WINDOWS */
+      {
+	/* if we could not open the file, exit */
+	/*error msg here */
+	return (-1);
+      }
+  
+  fstat (fd, &file_stat);
+
+#ifdef _WINDOWS
+  _close (fd);
+#else /* _WINDOWS */
+  close (fd);
+#endif /* _WINDOWS */
+  
+  *file_size = (unsigned long) file_stat.st_size;
+
+   return 0;
+}
 
 /*----------------------------------------------------------------------
   InvokeGetObjectWWW_callback
@@ -2781,10 +2829,7 @@ STRING        content_type;
 
    /* Specific initializations for POST and GET */
    if (mode & AMAYA_FORM_POST
-#ifdef ANNOTATIONS
-       || mode & AMAYA_ANNOT_POST
-#endif /* ANNOTATIONS */
-       ) 
+       || mode & AMAYA_FILE_POST)
      {
        me->method = METHOD_POST;
        HTRequest_setMethod (me->request, METHOD_POST);
@@ -2890,7 +2935,7 @@ STRING        content_type;
      } 
 
    /* create the formdata element for libwww */
-   if (formdata)
+   if (formdata && ! (mode & AMAYA_FILE_POST))
      me->formdata = PrepareFormdata (formdata);
 
    /* do the request */
@@ -2904,18 +2949,58 @@ STRING        content_type;
        status = posted ? YES : NO; 
      }
 #ifdef ANNOTATIONS
-   if (mode & AMAYA_ANNOT_POST)
+   if (mode & AMAYA_FILE_POST)
      {
-       /* @@@ a very ugly patch :))) */
-       HTParentAnchor * posted = NULL;
+       unsigned long filesize;
+       char *fileURL;
 
-       me->source =  HTAnchor_findAddress (DocumentURLs[docid]);
+       /* @@@ a very ugly patch :)))
+	I'm copying here some of the functionality I use in the PUT
+       I need to put the common parts in another module */
+       GetFileSize (WideChar2ISO (formdata), &filesize);
+       filesize = filesize + strlen ("w3c_annotate=");
+       me->block_size = filesize;
+
+       fileURL = HTParse (WideChar2ISO (formdata), "file:/", PARSE_ALL);
+       me->source = HTAnchor_findAddress (fileURL);
+       HT_FREE (fileURL);
+
+       /* hardcoded ... */
+       AHTRequest_setCustomAcceptHeader (me->request, "application/xml");
        HTAnchor_setFormat (HTAnchor_parent (me->source),
 			   HTAtom_for ("application/xml"));
-       posted = HTPostAnchor (HTAnchor_parent (me->source), 
+       HTAnchor_setFormat (me->anchor,
+			   HTAtom_for ("application/xml"));
+       HTAnchor_setLength ((HTParentAnchor *) me->source, me->block_size);
+       /* @@ here I need to actually read the file and put it in document,
+	  then, when I kill the request, I need to kill it */
+       {
+	 FILE *fp;
+	 int i;
+	 char c;
+
+	 me->document = TtaGetMemory (me->block_size 
+				      + strlen ("w3c_annotate=") + 1);
+	 fp = fopen (WideChar2ISO (formdata), "r");
+	 i = 0;
+	 strcpy (me->document, "w3c_annotate=");
+	 c = getc (fp);
+	 i = strlen(me->document);
+	 while (!feof (fp))
+	   {
+	     me->document[i++] = c;
+	     c = getc (fp);
+	   }
+	 me->document[i] = '\0';
+	 fclose (fp);
+       }
+       HTAnchor_setDocument ( (HTParentAnchor *) me->source,
+			      (void * ) me->document);
+       HTRequest_setEntityAnchor (me->request, HTAnchor_parent (me->source));
+ 
+       status = HTPostAnchor (HTAnchor_parent (me->source), 
 			      (HTAnchor *) me->anchor, 
 			      me->request);
-       status = posted ? YES : NO; 
      }
 #endif /* ANNOTATIONS */
    else if (formdata)
@@ -3017,8 +3102,7 @@ void               *context_tcbf;
 {
    AHTReqContext      *me;
    int                 status;
-   int                 fd;
-   struct stat         file_stat;
+   unsigned long      file_size;
    char               *fileURL;
    char               *etag = NULL;
    HTParentAnchor     *dest_anc_parent;
@@ -3049,26 +3133,8 @@ void               *context_tcbf;
 	return HT_ERROR;
      }
 
-   /* verify the file's size */
-#ifndef _WINDOWS
-   if ((fd = open (fileName, O_RDONLY)) == -1)
-#else 
-   if ((fd = uopen (fileName, _O_RDONLY | _O_BINARY)) == -1)
-#endif /* _WINDOWS */
-     {
-	/* if we could not open the file, exit */
-	/*error msg here */
-	return (HT_ERROR);
-     }
-
-   fstat (fd, &file_stat);
-#ifdef _WINDOWS
-   _close (fd);
-#else /* _WINDOWS */
-   close (fd);
-#endif /* _WINDOWS */
-
-   if (file_stat.st_size == 0)
+   /* get the size of the file */
+   if (GetFileSize (fileName, &file_size) || file_size == 0)
      {
 	/* file was empty */
 	/*errmsg here */
@@ -3077,7 +3143,7 @@ void               *context_tcbf;
 
    /* prepare the request context */
    if (THD_TRACE)
-      fprintf (stderr, "file size == %u\n", (unsigned) file_stat.st_size);
+      fprintf (stderr, "file size == %u\n", (unsigned) file_size);
 
    me = AHTReqContext_new (docid);
    if (me == NULL)
@@ -3115,7 +3181,7 @@ void               *context_tcbf;
    esc_url = EscapeURL (urlName);
    me->urlName = TtaStrdup (WideChar2ISO (esc_url));
    TtaFreeMemory (esc_url);
-   me->block_size =  file_stat.st_size;
+   me->block_size =  file_size;
    /* select the parameters that distinguish a PUT from a GET/POST */
    me->method = METHOD_PUT;
    me->output = stdout;
