@@ -1026,6 +1026,8 @@ static ThotBool        IsEmptyElement (Element el)
 
    ret = FALSE;
    elType = TtaGetElementType (el);
+   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
+       return ret;
    i = 0;
    while (EmptyElement[i] > 0 && EmptyElement[i] != elType.ElTypeNum)
       i++;
@@ -1046,6 +1048,8 @@ ThotBool            IsCharacterLevelElement (Element el)
 
    ret = FALSE;
    elType = TtaGetElementType (el);
+   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
+       return ret;
    i = 0;
    while (CharLevelElement[i] > 0 &&
 	  CharLevelElement[i] != elType.ElTypeNum)
@@ -1066,6 +1070,8 @@ ThotBool         IsBlockElement (Element el)
 
    ret = FALSE;
    elType = TtaGetElementType (el);
+   if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
+       return ret;
    i = 0;
    while (BlockLevelElement[i] > 0 &&
 	  BlockLevelElement[i] != elType.ElTypeNum)
