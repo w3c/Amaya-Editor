@@ -97,28 +97,9 @@ extern ThotBool viewClosed;
 /* extern bmpID;  */
 #endif /* _WINDOWS */
 
-static int          AmayaInitialized = 0;
-static STRING       Manual[] = {
-TEXT("Browsing.html"),
-TEXT("Selecting.html"),
-TEXT("Searching.html"),
-TEXT("Views.html"),
-TEXT("Creating.html"),
-TEXT("Links.html"),
-TEXT("Changing.html"),
-TEXT("Tables.html"),
-TEXT("Math.html"),
-TEXT("ImageMaps.html"),
-TEXT("StyleSheets.html"),
-TEXT("Attributes.html"),
-TEXT("SpellChecking.html"),
-TEXT("Publishing.html"),
-TEXT("Printing.html"),
-TEXT("Numbering.html"),
-TEXT("MakeBook.html"),
-TEXT("Configure.html")
-};
+#include "helpmenu.h"
 
+static int          AmayaInitialized = 0;
 static ThotBool  NewCSSfile = FALSE;
 static ThotBool  NewHTMLfile = FALSE;
 /* we have to mark the initial loading status to avoid to re-open the

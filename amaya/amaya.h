@@ -358,25 +358,6 @@ typedef struct _FetchImage_context {
 THOT_EXPORT LoadedImageDesc *ImageURLs;
 THOT_EXPORT LoadedImageDesc *ImageLocal;
 
-#define BROWSING       0
-#define SELECTING      1
-#define SEARCHING      2
-#define VIEWS          3
-#define CREATING       4
-#define LINKS          5
-#define CHANGING       6
-#define TABLES         7
-#define MATH           8
-#define IMAGEMAPS      9
-#define CSS           10
-#define ATTRIBUTES    11
-#define SPELLCHECKING 12
-#define PUBLISHING    13
-#define PRINTING      14
-#define NUMBERING     15
-#define MAKEBOOK      16
-#define CONFIGURE     17
-
 /* The default Amaya HOME pages (page shown at boot time */
 
 #if defined(_I18N_) || defined(__JIS__)
