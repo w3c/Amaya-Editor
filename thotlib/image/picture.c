@@ -1390,12 +1390,6 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
   if ((picPresent == ReScale || picPresent == RealSize) &&
       pAb->AbLeafType != LtCompound)
     {
-      /* size of the copied zone */
-      clipWidth = pFrame->FrClipXEnd - pFrame->FrClipXBegin;
-      clipHeight = pFrame->FrClipYEnd - pFrame->FrClipYBegin;
-      /* shift in the source image */
-      x = pFrame->FrClipXBegin - box->BxXOrg - l /*- box->BxLMargin*/;
-      y = pFrame->FrClipYBegin - box->BxYOrg - t /*- box->BxTMargin*/;
 #ifdef _MOTIF
       if (imageDesc->PicMask)
 	{
@@ -1441,12 +1435,18 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
       else
 	{
 	  /* No color transparence */
+      /* size of the copied zone */
+      clipWidth = pFrame->FrClipXEnd - pFrame->FrClipXBegin;
+      clipHeight = pFrame->FrClipYEnd - pFrame->FrClipYBegin;
+      /* shift in the source image */
+      x = pFrame->FrClipXBegin - box->BxXOrg - l;
+      y = pFrame->FrClipYBegin - box->BxYOrg - t;
 	  hMemDC = CreateCompatibleDC (TtDisplay);
 	  SetMapMode (hMemDC, GetMapMode (TtDisplay));
 	  GetObject (pixmap, sizeof (BITMAP), (LPVOID) &bm);
-	  if (clipWidth > bm.bmWidth - x)
+	  if (x > 0 && clipWidth > bm.bmWidth - x)
 	    clipWidth = bm.bmWidth - x;
-	  if (clipHeight > bm.bmHeight - y)
+	  if (y > 0 && clipHeight > bm.bmHeight - y)
 	    clipHeight = bm.bmHeight - y;
 	  bitmap = SelectObject (hMemDC, pixmap);
 	  BitBlt (TtDisplay, xFrame + x, yFrame + y,
@@ -1479,8 +1479,8 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
 	  !TypeHasException (ExcSetWindowBackground, pAb->AbElement->ElTypeNumber,
 			     pAb->AbElement->ElStructSchema))
 	{
-	  dx = dx - box->BxXOrg - l/* - box->BxLMargin*/;
-	  dy = dy - box->BxYOrg - t/* - box->BxTMargin*/;
+	  dx = dx - box->BxXOrg - l;
+	  dy = dy - box->BxYOrg - t;
 	}
       if ((picPresent == FillFrame || picPresent == XRepeat) &&
 	  imageDesc->PicWArea)
@@ -1586,57 +1586,53 @@ static void LayoutPicture (ThotPixmap pixmap, ThotDrawable drawable, int picXOrg
 #endif /* !_GL && _WINGUI */
       if (w > 0 && h > 0)
 	{
-	  j = y;
+	  j = 0;
 	  /* initial shift */
 	  jy = dy;
 	  do
 	    {
-	      i = x;
+	      i = 0;
 	      /* initial shift */
 	      ix = dx;
 	      do
 		{
 		  /* check if the limits of the copied zone */
 		  iw = imageDesc->PicWArea - ix;
-		  if (i + iw > x + w)
-		    iw = x + w - i;
+		  if (i + iw > w)
+		    iw = w - i;
 		  jh = imageDesc->PicHArea - jy;
-		  if (j + jh > y + h)
-		    jh = y + h - j;
+		  if (j + jh > h)
+		    jh = h - j;
 #ifdef _GL
-		  GL_TexturePartialMap (imageDesc, ix, jy, i, j, iw, jh, frame);
+		  GL_TexturePartialMap (imageDesc, ix, jy, x+i, y+j, iw, jh, frame);
 #else /* _GL */
 #ifdef _GTK
 		  if (imageDesc->PicMask)
 		    {
-		      gdk_gc_set_clip_origin (TtGraphicGC, i-ix, j-jy);
+		      gdk_gc_set_clip_origin (TtGraphicGC, x+i-ix, y+j-jy);
 		      gdk_gc_set_clip_mask (TtGraphicGC, 
 					    (ThotPixmap) imageDesc->PicMask);
 		    }
 		  gdk_draw_pixmap ((GdkDrawable *)drawable, TtGraphicGC,
 				   (ThotPixmap) imageDesc->PicPixmap, 
-				   ix, jy, i, j, iw, jh);
+				   ix, jy, x+i, y+j, iw, jh);
 #endif /* _GTK */
 #ifdef _WINGUI
-		  BitBlt (hMemDC, i, y + j, iw, jh, hOrigDC, ix, jy, SRCCOPY);
+		  BitBlt (hMemDC, i, j, iw, jh, hOrigDC, ix, jy, SRCCOPY);
 #endif /* _WINGUI */
 #endif /* _GL */
 		  i += iw;
 		  ix = 0;
-		} while (i < x + w);
+		} while (i < w);
 	      j += jh;
 	      jy = 0;
 	    }
-	  while (j < y + h);
+	  while (j < h);
 	}
 
 #if !defined(_GL) && defined(_WINGUI)
-	  /*if (imageDesc->PicBgMask == -1 || imageDesc->PicType == -1)*/
+      if (w > 0 && h > 0)
 	    BitBlt (TtDisplay, xFrame, yFrame, w, h, hMemDC, 0, 0, SRCCOPY);
-	  /*else
-	    TransparentPicture (bitmapTiled, xFrame, yFrame, w, h,
-				imageDesc->PicBgMask);*/
-	}
       SelectObject (hOrigDC, bitmap);
       SelectObject (hMemDC, pBitmapTiled);
       SelectClipRgn(TtDisplay, NULL);
