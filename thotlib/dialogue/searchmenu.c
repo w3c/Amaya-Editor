@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2000
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  * searchmenu.c : diverse document search functions.
  *
@@ -77,7 +68,7 @@ static int          ReplaceStringLen;
 static PtrReference CurrRef;
 
 /* indicating whether there's a character Upper/lower case distinction */
-static ThotBool     CaseEquivalent;
+static ThotBool     CaseEquivalent = TRUE;
 /* find and replace strings */
 static ThotBool     WithReplace;
 /* pointer to the external document containing the current reference */
@@ -1023,6 +1014,7 @@ View                view;
 
    /* compose le titre du formulaire "Recherche dans le document..." */
    ustrcpy (bufTitle, TtaGetMessage (LIB, TMSG_SEARCH_IN));
+   ustrcat (bufTitle, TEXT(" "));
    ustrcat (bufTitle, pDoc->DocDName);
 #  ifdef _WINDOWS
    ustrcpy (msgCaption, bufTitle);
@@ -1587,7 +1579,7 @@ void                SearchLoadResources ()
 	GetSearchContext (&searchDomain);
 	pSearchedString[0] = EOS;
 	SearchedStringLen = 0;
-	CaseEquivalent = FALSE;
+	CaseEquivalent = TRUE;
 	WithReplace = FALSE;
 	pReplaceString[0] = EOS;
 	ReplaceStringLen = 0;
