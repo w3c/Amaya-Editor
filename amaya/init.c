@@ -98,7 +98,7 @@ extern char      LostPicturePath [512];
 #include "ANNOTfiles_f.h"
 #include "ANNOTtools_f.h"
 #endif /* ANNOTATIONS */
-#ifdef BOOKMAKRS
+#ifdef BOOKMARKS
 #include "BMevent_f.h"
 #endif /* BOOKMARKS */
 
