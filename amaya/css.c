@@ -76,6 +76,7 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
   AttributeType       attrType;
   Attribute           attr;
   char                buffer[MAX_LENGTH];
+  char               *name;
   int                 length;
   ThotBool            found, before;
 
@@ -151,26 +152,56 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
 	  prevLink = pInfo->PiLink;
 	  parent = TtaGetParent (prevLink);
 	  elType = TtaGetElementType (prevLink);
-	  attrType.AttrSSchema = elType.ElSSchema;
-	  /******* todo do the same thing for other structure schemas ****/
+	  name = TtaGetSSchemaName (elType.ElSSchema);
 	  styleType.ElSSchema = elType.ElSSchema;
-	  styleType.ElTypeNum = HTML_EL_STYLE_;
-	  attrType.AttrTypeNum = HTML_ATTR_REL;
+	  attrType.AttrSSchema = elType.ElSSchema;
+	  if (!strcmp (name, "HTML"))
+	    {
+	      styleType.ElTypeNum = HTML_EL_STYLE_;
+	      prevStyle = TtaSearchTypedElementInTree (styleType, SearchBackward,
+						       parent, prevLink);
+	      nextStyle = TtaSearchTypedElementInTree (styleType, SearchForward,
+						       parent, prevLink);
+	      attrType.AttrTypeNum = HTML_ATTR_REL;
+	    }
+	  else
+	    {
+#ifdef _SVG
+	  /* if it's a SVG document, remove the style defined in the SVG DTD */
+	      if (!strcmp (name, "SVG"))
+		{
+		  styleType.ElTypeNum = SVG_EL_style__;
+		  prevStyle = TtaSearchTypedElementInTree (styleType, SearchBackward,
+							   parent, prevLink);
+		  nextStyle = TtaSearchTypedElementInTree (styleType, SearchForward,
+							   parent, prevLink);
+		}
+	      else
+		{
+		  prevStyle = NULL;
+		  nextStyle = NULL;
+		}
+	      attrType.AttrTypeNum = 0;
+#endif /* _SVG */
+	    }
 	  found = FALSE;
-	  prevStyle = TtaSearchTypedElementInTree (styleType, SearchBackward, parent, prevLink);
-	  nextStyle = TtaSearchTypedElementInTree (styleType, SearchForward, parent, prevLink);
 	  while (!found && (prevLink || prevStyle))
 	    {
 	      prevLink = TtaSearchTypedElementInTree (elType, SearchBackward, parent, prevLink);
 	      if (prevLink)
 		{
-		  attr = TtaGetAttribute (prevLink, attrType);
-		  if (attr != 0)
+		  if (attrType.AttrTypeNum == 0)
+		    found = TRUE;
+		  else
 		    {
-		      /* get a buffer for the attribute value */
-		      length = MAX_LENGTH;
-		      TtaGiveTextAttributeValue (attr, buffer, &length);
-		      found = (!strcasecmp (buffer, "STYLESHEET") || !strcasecmp (buffer, "STYLE"));
+		      attr = TtaGetAttribute (prevLink, attrType);
+		      if (attr)
+			{
+			  /* get a buffer for the attribute value */
+			  length = MAX_LENGTH;
+			  TtaGiveTextAttributeValue (attr, buffer, &length);
+			  found = (!strcasecmp (buffer, "STYLESHEET") || !strcasecmp (buffer, "STYLE"));
+			}
 		    }
 		}
 	      if (!found && prevStyle)
@@ -225,13 +256,18 @@ PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
 		  nextLink = TtaSearchTypedElementInTree (elType, SearchForward, parent, nextLink);
 		  if (nextLink)
 		    {
-		      attr = TtaGetAttribute (nextLink, attrType);
-		      if (attr != 0)
+		      if (attrType.AttrTypeNum == 0)
+			found = TRUE;
+		      else
 			{
-			  /* get a buffer for the attribute value */
-			  length = MAX_LENGTH;
-			  TtaGiveTextAttributeValue (attr, buffer, &length);
-			  found = (!strcasecmp (buffer, "STYLESHEET") || !strcasecmp (buffer, "STYLE"));
+			  attr = TtaGetAttribute (nextLink, attrType);
+			  if (attr)
+			    {
+			      /* get a buffer for the attribute value */
+			      length = MAX_LENGTH;
+			      TtaGiveTextAttributeValue (attr, buffer, &length);
+			      found = (!strcasecmp (buffer, "STYLESHEET") || !strcasecmp (buffer, "STYLE"));
+			    }
 			}
 		    }
 		  if (!found && prevStyle)
