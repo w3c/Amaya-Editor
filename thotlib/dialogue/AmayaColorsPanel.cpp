@@ -56,16 +56,14 @@ AmayaColorsPanel::AmayaColorsPanel( wxWindow * p_parent_window, AmayaNormalWindo
   RefreshToolTips();
   m_pTitleText->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_COLORS)));
 
-  m_Bitmap_Empty        = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_MISC, "empty.png" ) );
-  m_Bitmap_DefaultColor = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "default.png" ) );
+  m_Bitmap_Empty        = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_MISC, "empty.png" ), wxBITMAP_TYPE_PNG );
+  m_Bitmap_DefaultColor = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_16X16, "default.png" ), wxBITMAP_TYPE_PNG );
   m_Color_ButtonBG      = XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_FGCOLOR", wxBitmapButton)->GetBackgroundColour();
 
-#ifndef _WINDOWS
 #ifndef _MACOS
   XRCCTRL(*this, "wxID_BUTTON_BGCOLOR", wxBitmapButton)->SetBitmapLabel(m_Bitmap_DefaultColor);
   XRCCTRL(*this, "wxID_BUTTON_FGCOLOR", wxBitmapButton)->SetBitmapLabel(m_Bitmap_DefaultColor);
 #endif /*  _MACOS */
-#endif /* _WINDOWS */
 
   // on windows, the color selector dialog must be complete.
   m_ColourData.SetChooseFull(true);
@@ -184,17 +182,13 @@ void AmayaColorsPanel::SendDataToPanel( AmayaParams& p )
     {
       wxColour * p_bg_colour = ColorPixel(m_ThotBGColor);
       XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_BGCOLOR", wxBitmapButton)->SetBackgroundColour( *p_bg_colour );
-#ifndef _WINDOWS
       XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_BGCOLOR", wxBitmapButton)->SetBitmapLabel(m_Bitmap_Empty);
-#endif /* _WINDOWS */
     }
   else
     {
       // default bg color is ? white ?
       XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_BGCOLOR", wxBitmapButton)->SetBackgroundColour( m_Color_ButtonBG );
-#ifndef _WINDOWS
       XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_BGCOLOR", wxBitmapButton)->SetBitmapLabel(m_Bitmap_DefaultColor);
-#endif /* _WINDOWS */
     }
 
   m_ThotFGColor = (int)p.param2;
@@ -202,17 +196,13 @@ void AmayaColorsPanel::SendDataToPanel( AmayaParams& p )
     {
       wxColour * p_fg_colour = ColorPixel(m_ThotFGColor);
       XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_FGCOLOR", wxBitmapButton)->SetBackgroundColour( *p_fg_colour );
-#ifndef _WINDOWS
       XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_FGCOLOR", wxBitmapButton)->SetBitmapLabel(m_Bitmap_Empty);
-#endif /* _WINDOWS */
     }
   else
     {
       // default fg color is ? black ?
       XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_FGCOLOR", wxBitmapButton)->SetBackgroundColour( m_Color_ButtonBG );
-#ifndef _WINDOWS
       XRCCTRL(*m_pPanelContentDetach, "wxID_BUTTON_FGCOLOR", wxBitmapButton)->SetBitmapLabel(m_Bitmap_DefaultColor);
-#endif /* _WINDOWS */
     }
 }
 

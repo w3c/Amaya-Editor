@@ -79,10 +79,10 @@ AmayaSubPanel::AmayaSubPanel( wxWindow *      p_parent_window
   m_pTitleText          = XRCCTRL(*this, "wxID_LABEL_TITLE", wxStaticText);
   
   // load bitmaps
-  m_Bitmap_DetachOn  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_MISC, "detach_floating.png" ) );
-  m_Bitmap_DetachOff = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_MISC, "detach.png" ) );
-  m_Bitmap_ExpandOn  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_MISC, "expand_on.png" ) );
-  m_Bitmap_ExpandOff = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_MISC, "expand_off.png" ) );
+  m_Bitmap_DetachOn  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_MISC, "detach_floating.png" ), wxBITMAP_TYPE_PNG);
+  m_Bitmap_DetachOff = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_MISC, "detach.png" ), wxBITMAP_TYPE_PNG);
+  m_Bitmap_ExpandOn  = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_MISC, "expand_on.png" ), wxBITMAP_TYPE_PNG);
+  m_Bitmap_ExpandOff = wxBitmap( TtaGetResourcePathWX(WX_RESOURCES_ICON_MISC, "expand_off.png" ), wxBITMAP_TYPE_PNG);
 
   m_pFloatingPanel = NULL;
 
@@ -294,23 +294,19 @@ void AmayaSubPanel::ChangeState( unsigned int new_state )
   wxBitmapButton* p_expand_button = XRCCTRL(*this, "wxID_BUTTON_EXPAND", wxBitmapButton);
   if (IsExpanded())
     {
-#ifndef _WINDOWS
 #ifndef _MACOS
       p_expand_button->SetBitmapLabel( m_Bitmap_ExpandOn );
       p_expand_button->SetBitmapSelected( wxBitmap() );
       p_expand_button->SetBitmapFocus( wxBitmap() );
 #endif /*  _MACOS */
-#endif /* _WINDOWS */
     }
   else
     {
-#ifndef _WINDOWS
 #ifndef _MACOS
       p_expand_button->SetBitmapLabel( m_Bitmap_ExpandOff );
       p_expand_button->SetBitmapSelected( wxBitmap() );
       p_expand_button->SetBitmapFocus( wxBitmap() );
 #endif /*  _MACOS */
-#endif /* _WINDOWS */
     }
 
   wxBitmapButton* p_detach_button = XRCCTRL(*this, "wxID_BUTTON_DETACH", wxBitmapButton);
@@ -318,23 +314,19 @@ void AmayaSubPanel::ChangeState( unsigned int new_state )
     {
       // disable the expand button
       p_expand_button->Disable();
-#ifndef _WINDOWS
 #ifndef _MACOS
 	  // setup bitmaps
       p_detach_button->SetBitmapLabel( m_Bitmap_DetachOn );
 #endif /*  _MACOS */
-#endif /* _WINDOWS */
     }
   else
     {
       // enable the expand button
       p_expand_button->Enable();
-#ifndef _WINDOWS
 #ifndef _MACOS
       // setup bitmaps
       p_detach_button->SetBitmapLabel( m_Bitmap_DetachOff );
 #endif /*  _MACOS */
-#endif /* _WINDOWS */
     }
   Refresh();
 }
