@@ -62,9 +62,14 @@ static const SockOps ReadBits = FD_READ | FD_ACCEPT | FD_CLOSE;
 static const SockOps WriteBits = FD_WRITE | FD_CONNECT;
 static const SockOps ExceptBits = FD_OOB;
 
+#ifdef DEBUG_PERSISTENT
+
 #define SOCK_TABLE_SIZE 67
 #define HASH(s) ((s) % SOCK_TABLE_SIZE)
 static XtInputId persSockets[SOCK_TABLE_SIZE];
+
+#endif /* DEBUG_PERSISTENT */
+
 
 /* Private functions */
 
@@ -98,7 +103,9 @@ XtInputId          *id;
    HTRequest          *rqp = NULL;
    AHTReqContext      *me;
    SockOps             ops;	
+#ifdef DEBUG_PERSISTENT
    int                 v;
+#endif /* DEBUG_PERSISTENT */
    int 		       socket = *s;
    HTEventCallback    *cbf;
 
@@ -479,9 +486,9 @@ HTPriority          p;
   AHTReqContext      *me;      /* current request */
   int                 status;  /* libwww status associated with 
 				  the socket number */
-#ifndef _WINDOWS
+#ifdef DEBUG_PERSISTENT
   int                 v;
-#endif /* _WINDOWS */
+#endif /* DEBUG_PERSISTENT */
 
 #ifdef DEBUG_LIBWWW
 	  fprintf(stderr, "HTEvent_register\n");
@@ -601,8 +608,11 @@ SockOps             ops;
    HTRequest          *rqp = NULL;
 #ifndef _WINDOWS
    AHTReqContext      *me;
-   int                 v;
 #endif /* _WINDOWS */
+
+#ifdef DEBUG_PERSISTENT
+   int                 v;
+#endif /* DEBUG_PERSISTENT */
 
 
    /* Libwww 5.0a does not take into account the third parameter
