@@ -4615,7 +4615,7 @@ static void HTMLparse (FILE * infile, char* HTMLbuf)
 	  /* Replace HT by space, except in preformatted text. */
 	  /* Ignore spaces at the beginning and at the end of input lines */
 	  /* Ignore non printable characters except HT, LF, FF. */
-	  if ((int) charRead == EOL)
+	  if ((int) charRead == EOL || (int) charRead == CR)
 	    /* LF = end of input line */
 	    {
 	      /* don't replace end of line by space in a doctype declaration */
