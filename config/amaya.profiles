@@ -411,6 +411,7 @@ HelpNumbering
 &MakeIDMenu
 
 [annot]
+AnnotateSelection
 AnnotateDocument
 LoadAnnotations
 PostAnnotation
