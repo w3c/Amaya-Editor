@@ -54,7 +54,7 @@ extern void       CreateGraphicsDlgWindow (int, int, int, HWND);
 extern void       CreateSaveListDlgWindow (HWND, int, STRING, int, int);
 extern void       CreateCloseDocDlgWindow (HWND, STRING, STRING, BOOL*, BOOL*);
 extern void       CreateLanguageDlgWindow (HWND, STRING, STRING, int, STRING, STRING, int, STRING);
-extern void       CreateCharacterDlgWindow (HWND, int, int, int, int);
+extern void       CreateCharacterDlgWindow (HWND, int, int, int, int, int);
 extern void       CreateAttributeDlgWindow (STRING, int, int);
 extern void       CreateCreateRuleDlgWindow (HWND, int, int, int, int, STRING);
 extern void       CreateApplyClassDlgWindow (HWND, int, int, int, int, STRING);
