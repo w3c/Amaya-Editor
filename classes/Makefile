@@ -10,8 +10,10 @@ all : http subdir
 http :
 	@(cd w3c ; make MAKEDIR=`pwd`)
 
-zip :
+zips :
 	zip jigsaw.zip `find w3c -name \*.class`
+	zip thotlib.zip `find thotlib -name \*.class`
+	zip amaya.zip `find amaya -name \*.class`
 
 subdir :
 	@(for subdir in $(SUBDIRS) ; do cd $$subdir ; make ; cd .. ; done)
