@@ -5,7 +5,6 @@
 
 #ifndef __CEXTRACT__
 #ifdef __STDC__
-
 extern DocumentMetaDataElement *DocumentMetaDataAlloc ( void );
 extern void DocumentMetaClear ( DocumentMetaDataElement *me );
 extern char * DocumentTypeString ( Document document );
@@ -146,6 +145,12 @@ extern void FreeAmayaStructures ( void );
 extern void InitAmaya ( NotifyEvent * event );
 extern void ChangeAttrOnRoot ( Document doc,
                                int attrNum );
+extern void ShowPanel ( Document doc,
+                        View view );
+extern void FullScreen ( Document doc,
+                         View view );
+extern void SplitUnsplitPage ( Document doc,
+                               View view );
 extern void ShowMapAreas ( Document doc,
                            View view );
 extern void ShowButtons ( Document doc,
@@ -176,7 +181,6 @@ extern void SaveGeometryOnExit ( int document,
                                  const char * view_name );
 
 #else /* __STDC__ */
-
 extern DocumentMetaDataElement *DocumentMetaDataAlloc ( void );
 extern void DocumentMetaClear ( DocumentMetaDataElement *me );
 extern char * DocumentTypeString ( Document document );
@@ -317,6 +321,12 @@ extern void FreeAmayaStructures ( void );
 extern void InitAmaya ( NotifyEvent * event );
 extern void ChangeAttrOnRoot ( Document doc,
                                  int attrNum );
+extern void ShowPanel ( Document doc,
+                          View view );
+extern void FullScreen ( Document doc,
+                           View view );
+extern void SplitUnsplitPage ( Document doc,
+                                 View view );
 extern void ShowMapAreas ( Document doc,
                              View view );
 extern void ShowButtons ( Document doc,

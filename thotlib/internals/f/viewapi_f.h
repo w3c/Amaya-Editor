@@ -65,6 +65,7 @@ extern View TtaGetViewFromName ( Document document,
                                  char *viewName );
 extern void TtaGiveActiveView ( Document * document,
                                 View * view );
+extern int TtaGiveActiveFrame ( void );
 extern void DisplayHolophrasted ( PtrElement pEl,
                                   Document document );
 extern void RedisplayReference ( PtrElement element,
@@ -149,6 +150,7 @@ extern View TtaGetViewFromName ( Document document,
                                    char *viewName );
 extern void TtaGiveActiveView ( Document * document,
                                   View * view );
+extern int TtaGiveActiveFrame ( void );
 extern void DisplayHolophrasted ( PtrElement pEl,
                                     Document document );
 extern void RedisplayReference ( PtrElement element,

@@ -139,7 +139,6 @@ static AmayaAttributePanel * TtaGetAttributePanel()
   if (!p_window)
     return NULL;
   AmayaPanel * p_panel = p_window->GetAmayaPanel();
-  wxASSERT(p_panel);
   if (!p_panel)
     return NULL;
 

@@ -73,6 +73,7 @@ AmayaWindow::AmayaWindow (  int            window_id
 {
   wxLogDebug( _T("AmayaWindow::AmayaWindow: window_id=%d"), m_WindowId );
   SetIcon( wxIcon(TtaGetResourcePathWX( WX_RESOURCES_ICON, (const char *)"logo.png"),wxBITMAP_TYPE_PNG) );
+  CenterOnParent();
 }
 
 /*
