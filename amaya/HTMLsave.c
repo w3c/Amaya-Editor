@@ -1075,8 +1075,8 @@ void SetNamespacesAndDTD (Document doc)
   Parse a temporary saved version of the document to detect
   the parsing errors due to the new doctype
   ----------------------------------------------------------------------*/
-ThotBool  ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
-			       char *documentname, int new_doctype, ThotBool *error)
+ThotBool  ParseWithNewDoctype (Document doc, char *localFile, char *tempdir, char *documentname,
+			       int new_doctype, ThotBool *error, ThotBool xml_doctype)
 {
   SSchema       schema;
   CHARSET       charset;
@@ -1118,7 +1118,7 @@ ThotBool  ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
       DocumentMeta[ext_doc]->method = DocumentMeta[doc]->method;
       DocumentSource[ext_doc] = 0;
       DocumentMeta[ext_doc]->charset = TtaStrdup (DocumentMeta[doc]->charset);
-      DocumentMeta[ext_doc]->xmlformat = DocumentMeta[doc]->xmlformat;
+      DocumentMeta[ext_doc]->xmlformat = xml_doctype;
       charset = TtaGetDocumentCharset (doc);
       TtaSetDocumentCharset (ext_doc, charset, FALSE);
 
@@ -1160,6 +1160,10 @@ ThotBool  ParseWithNewDoctype (Document doc, char *localFile, char *tempdir,
     }
   else
     ok = TRUE;
+
+  /* Update the xml indicator for the document */
+  if (ok)
+    DocumentMeta[doc]->xmlformat = xml_doctype;
 
   /* Delete the external document */
   if (ext_doc != 0)

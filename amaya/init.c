@@ -2484,6 +2484,17 @@ void UpdateDoctypeMenu (Document doc, ThotBool withDocType)
 	  TtaSetItemOff (doc, 1, File, BDoctypeHtmlStrict);
 	}
     }
+  else
+ 	{
+	  TtaSetItemOff (doc, 1, File, BRemoveDoctype);
+	  TtaSetItemOff (doc, 1, File, BAddDoctype);
+	  TtaSetItemOff (doc, 1, File, BDoctypeXhtml11);
+	  TtaSetItemOff (doc, 1, File, BDoctypeXhtmlTransitional);
+	  TtaSetItemOff (doc, 1, File, BDoctypeXhtmlStrict);
+	  TtaSetItemOff (doc, 1, File, BDoctypeXhtmlBasic);
+	  TtaSetItemOff (doc, 1, File, BDoctypeHtmlTransitional);
+	  TtaSetItemOff (doc, 1, File, BDoctypeHtmlStrict);
+	}   
 }
 
 /*----------------------------------------------------------------------

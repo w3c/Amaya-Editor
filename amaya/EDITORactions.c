@@ -578,7 +578,7 @@ static void CreateOrChangeDoctype (Document doc, View view, int new_doctype)
   /* Parse the document with the new doctype */
   tempdoc = GetLocalPath (doc, DocumentURLs[doc]);
   TtaExtractName (tempdoc, tempdir, documentname);
-  ok = ParseWithNewDoctype (doc, tempdoc, tempdir, documentname, new_doctype, &error);
+  ok = ParseWithNewDoctype (doc, tempdoc, tempdir, documentname, new_doctype, &error, XmlDoctype);
 
   if (ok)
     {

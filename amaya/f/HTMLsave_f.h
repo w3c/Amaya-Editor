@@ -25,7 +25,8 @@ extern ThotBool ParseWithNewDoctype ( Document doc,
                                       char *tempdir,
                                       char *documentname,
                                       int new_doctype,
-                                      ThotBool *error );
+                                      ThotBool *error,
+                                      ThotBool xml_doctype );
 extern void RestartParser ( Document doc,
                             char *localFile,
                             char *tempdir,
@@ -67,7 +68,8 @@ extern ThotBool ParseWithNewDoctype ( Document doc,
                                         char *tempdir,
                                         char *documentname,
                                         int new_doctype,
-                                        ThotBool *error );
+                                        ThotBool *error,
+                                        ThotBool xml_doctype );
 extern void RestartParser ( Document doc,
                               char *localFile,
                               char *tempdir,
