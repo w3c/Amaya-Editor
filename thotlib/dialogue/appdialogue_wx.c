@@ -156,6 +156,7 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
       TtaSetEnvBoolean("OPEN_PANEL", TRUE, FALSE);
       TtaSetEnvBoolean("OPEN_PANEL_XHTML", TRUE, FALSE);
       TtaSetEnvBoolean("OPEN_PANEL_ATTRIBUTE", TRUE, FALSE);
+      TtaSetEnvBoolean("OPEN_PANEL_XML", TRUE, FALSE);
       TtaSetEnvBoolean("OPEN_PANEL_MATHML", TRUE, FALSE);
       TtaSetEnvBoolean("OPEN_PANEL_COLORS", TRUE, FALSE);
       TtaSetEnvBoolean("OPEN_PANEL_CHARSTYLE", TRUE, FALSE);
@@ -179,6 +180,11 @@ int TtaMakeWindow( int x, int y, int w, int h, int kind, int parent_window_id )
 	p_panel->OpenSubPanel( WXAMAYA_PANEL_ATTRIBUTE );
       else
 	p_panel->CloseSubPanel( WXAMAYA_PANEL_ATTRIBUTE );
+      TtaGetEnvBoolean ("OPEN_PANEL_XML", &value);
+      if (value)
+	p_panel->OpenSubPanel( WXAMAYA_PANEL_XML );
+      else
+	p_panel->CloseSubPanel( WXAMAYA_PANEL_XML );
       TtaGetEnvBoolean ("OPEN_PANEL_MATHML", &value);
       if (value)
 	p_panel->OpenSubPanel( WXAMAYA_PANEL_MATHML );

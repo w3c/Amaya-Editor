@@ -466,6 +466,12 @@ void AmayaSubPanelManager::SaveSubPanelState( AmayaSubPanel * p_panel )
     case WXAMAYA_PANEL_APPLYCLASS:
       TtaSetEnvBoolean("OPEN_PANEL_APPLYCLASS", value, TRUE);
       break;
+    case WXAMAYA_PANEL_MATHML:
+      TtaSetEnvBoolean("OPEN_PANEL_MATHML", value, TRUE);
+      break;
+    case WXAMAYA_PANEL_XML:
+      TtaSetEnvBoolean("OPEN_PANEL_XML", value, TRUE);
+      break;
     }
 }
 
