@@ -927,6 +927,7 @@ Element elemLast;
   RContext->CIdCount = 0;
   ptrElem = elemFirst;
   RContext->CNbOldElems = 0;
+  RContext->CSrcSchema = NULL;
   do
     {  
       elType = TtaGetElementType (ptrElem);
@@ -952,9 +953,9 @@ Element elemLast;
       RContext->CPrintMethod[0] = PM_GENERIC;
       RContext->CPrintMethod[1] = PM_EFFECTIF;
       /* RContext->CPrintMethod[2] = PM_EFFECTIF | PM_PUREEFF;*/
-      RContext->CPrintMethod[2] = PM_EFFECTIF | PM_WTHTCHOICE;
+      RContext->CPrintMethod[2] = PM_EFFECTIF | PM_WTHTLIST;
       /*   RContext->CPrintMethod[4] = PM_EFFECTIF | PM_PUREEFF | PM_WTHTCHOICE; */
-      RContext->CPrintMethod[3] = PM_EFFECTIF | PM_WTHTLIST;
+      RContext->CPrintMethod[3] = PM_EFFECTIF | PM_WTHTCHOICE;
       /*   RContext->CPrintMethod[6] = PM_EFFECTIF | PM_PUREEFF | PM_WTHTLIST; */
       RContext->CPrintMethod[4] = PM_EFFECTIF | PM_WTHTCHOICE | PM_WTHTLIST;
       /*   RContext->CPrintMethod[8] = PM_EFFECTIF | PM_PUREEFF | PM_WTHTCHOICE | PM_WTHTLIST; */

@@ -17,6 +17,25 @@ static boolean RestTransformChildren (Restruct restr, Element oldElem, Element n
 static boolean RestTransformChildren (/* restr, oldElem, newElem, typeTree, doc */);
 #endif  /* __STDC__ */
 
+
+#ifdef __STDC__
+static boolean IsNodeOfType (TypeTree node, ElementType elType)
+#else  /* __STDC__ */
+static boolean IsNodeOfType (node, elType)
+TypeTree node;
+ElementType elType;
+#endif  /* __STDC__ */
+{
+  boolean result = FALSE;
+
+  if (node->TypeNum == elType.ElTypeNum)
+    result = TRUE;
+  else if (node->TPrintSymb == 'U')
+    if (TtaIsLeaf (elType))
+      result = TRUE;
+  
+  return result;
+}
 /*----------------------------------------------------------------------
   RestNextEffNode retourne le noeud effectif suivant lastNode dans tree
   Profondeur d'abord
@@ -306,18 +325,19 @@ Element rootElem;
   dans le document doc.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean RestTransformElement (Restruct restr, Element elSource, Element elDestParent, TypeTree parentTree, Document doc)
+static boolean RestTransformElement (Restruct restr, Element elSource, Element elDestParent, TypeTree sourceTree, TypeTree parentTree, Document doc)
 #else  /* __STDC__ */
-static boolean RestTransformElement (restr, elSource, elDestParent, parentTree, doc)
+static boolean RestTransformElement (restr, elSource, elDestParent, sourceTree, parentTree, doc)
 Restruct restr;
 Element elSource;
 Element elDestParent;
+TypeTree sourceTree;
 TypeTree parentTree;
 Document doc;
 #endif  /* __STDC__ */
 {
   ElementType elType, targetType;
-  Element elTarget, elTargetParent, prev, elParent;
+  Element elTarget, elTargetParent, prev, elParent, elChild;
   TypeTree target, treeChild, targetParent;
   boolean result = FALSE;
   
@@ -353,18 +373,20 @@ Document doc;
     }
   else
     { 
+      /*
       treeChild = RestNextEffNode (parentTree, parentTree);
-      /* recherche le type de elChild dans l'arbre de types source */
-      while (treeChild != NULL && treeChild->TypeNum != elType.ElTypeNum)
+      *//* recherche le type de elChild dans l'arbre de types source *//*
+      while (treeChild != NULL && !IsNodeOfType(treeChild, elType))
 	treeChild = RestNextEffNode (parentTree, treeChild);
-      if (treeChild != NULL)
+	*/
+      if (/*treeChild*/ sourceTree != NULL && sourceTree->TEffective)
 	{
 #ifdef DEBUG
 	  printf("trouve noeud effectif ");
 #endif 
 
 	  /* on a trouve un noeud effectif correspondant au type du fils */
-	  target = RestTarget (treeChild, restr);
+	  target = RestTarget (sourceTree, restr);
 	  if (parentTree->TPrintSymb != '*')
 	    targetParent = RestTarget (parentTree, restr);
 	  else
@@ -396,7 +418,7 @@ Document doc;
 	    /* on cree la descendence de elDestParent */
 	    elTargetParent = TtaCreateDescent (doc, elDestParent, targetType);
 	  if (elTargetParent != NULL)
-	    if (target == NULL || target->TypeNum == treeChild->TypeNum)
+	    if (target == NULL || target->TypeNum == sourceTree->TypeNum)
 	      {
 		/* les noeuds couples sont de meme type, */
 		/* on copie la source */
@@ -416,13 +438,13 @@ Document doc;
 		  TtaDeleteTree (elTargetParent, doc);
 		result = !TtaGetErrorCode();
 	      }
-	    else
+	    else 
 	      { 
 		/* applique la transformation aux descendants */
 		result = RestTransformChildren (restr, 
 						elSource, 
 						elTargetParent, 
-						treeChild, 
+						sourceTree, 
 						doc);
 		if (result) 
 		  result = RestTransAttr (elSource, 
@@ -436,11 +458,23 @@ Document doc;
 	/* l'element n'a pas de type marque comme effectif,
 	   c'est donc un choix ou une liste uniquement instanciee
 	   on transforme sa descendence en l'ignorant. */
-	result = RestTransformElement (restr, 
-				       TtaGetFirstChild(elSource), 
-				       elDestParent, 
-				       parentTree, 
-				       doc);
+	{
+	  /* recherche le fils de elSource et son arbre de type */
+	  elChild = TtaGetFirstChild (elSource);
+	  elType = TtaGetElementType (elChild);
+	  treeChild = sourceTree->TChild;
+	  while (treeChild != NULL && !IsNodeOfType (treeChild, elType))
+	    /*treeChild->TypeNum != elType.ElTypeNum*/
+	    treeChild = treeChild->TNext;
+	  
+	  result = (treeChild != NULL &&
+		    RestTransformElement (restr, 
+					  elChild, 
+					  elDestParent,
+					  treeChild,
+					  parentTree, 
+					  doc));
+	}
     }
   return result;
 }
@@ -462,13 +496,22 @@ Document doc;
 #endif  /* __STDC__ */
 {
   Element elChild;
+  ElementType elType;
   boolean result = TRUE;
-  
+  TypeTree childTree;
+
   /* traite succesivement chacun des fils de oldElem */
   elChild = TtaGetFirstChild (srcElem);
   while (elChild != NULL && result)
     {
-      result = result && RestTransformElement (restr, elChild, newElem, typeTree, doc);
+      childTree = typeTree->TChild;
+      elType = TtaGetElementType (elChild);
+      while (childTree != NULL && !IsNodeOfType (childTree, elType))
+	/* childTree->TypeNum != elType.ElTypeNum */
+	childTree = childTree->TNext;
+      result = (result && 
+		(childTree != NULL) && 
+		RestTransformElement (restr, elChild, newElem, childTree, typeTree, doc));
       /* traite le fils suivant */
       TtaNextSibling (&elChild);
     }
@@ -492,9 +535,6 @@ Restruct restruct;
   int i;
   ElementType destType, targetType;
   boolean result = TRUE;
-#ifdef DEBUG
-  char msgbuf[100];
-#endif
 
   destType = restruct->RDestType;
   ptrTree =  restruct->RSrcPrint->STree;
@@ -531,7 +571,7 @@ Restruct restruct;
     else
       /* source multiples : transforme chacun des elements */
       if (ptrTree->TPrintSymb == '*')
-	result = result && RestTransformElement (restruct, RContext->COldElems[i], newInstance, ptrTree, doc);
+	result = result && RestTransformElement (restruct, RContext->COldElems[i], newInstance, ptrTree->TChild, ptrTree, doc);
       else
 	{
 	  /* element source unique */
