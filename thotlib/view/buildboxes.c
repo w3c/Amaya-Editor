@@ -2892,6 +2892,7 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
   ViewFrame          *pFrame;
   AbDimension        *pDimAb;
   AbPosition         *pPosAb;
+  PictInfo	         *picture;
   int                 width, height;
   int                 nSpaces;
   int                 i, k, charDelta, adjustDelta;
@@ -3356,7 +3357,8 @@ ThotBool ComputeUpdates (PtrAbstractBox pAb, int frame)
 		  /* force filling */
 		  pAb->AbFillBox = TRUE;
 		  /* load the picture */
-		  LoadPicture (frame, pBox, (PictInfo *) pAb->AbPictBackground);
+           picture = (PictInfo *) pAb->AbPictBackground;
+		  LoadPicture (frame, pBox, picture);
 		}
 	    }
 	  else if (pAb->AbLeafType == LtGraphics && pAb->AbShape == 'C')
