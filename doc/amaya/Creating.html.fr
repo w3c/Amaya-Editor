@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Creating elements</title>
+  <meta name="GENERATOR" content="amaya V3.2.1" />
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+</head>
+
+<body xml:lang="en" lang="en">
+
+<table border="0" width="100%" summary="toc">
+  <tbody>
+    <tr>
+      <td><p><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home" /> <img
+        border="0" alt="Amaya" src="../Icons/amaya.gif" /></p>
+      </td>
+      <td><p align="right"><a href="Views.html"><img alt="previous" border="0"
+        src="../Icons/left.gif" /></a> <a href="Manual.html"><img alt="top"
+        border="0" src="../Icons/up.gif" /></a> <a href="Links.html"><img
+        alt="next" border="0" src="../Icons/right.gif" /></a></p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div id="Creating">
+<h2>Creating new elements</h2>
+
+<h3><a name="Types">Buttons and types</a> menu</h3>
+
+<p>The simplest way to create new elements in a document is to move the
+insertion point to the desired position and to use the <strong>Types</strong>
+menu or the buttons corresponding to the most common elements (image,
+headings, lists, etc.). These buttons and menu items create the corresponding
+element at the current position.</p>
+
+<p>In some cases, the desired element cannot be created exactly at the
+position chosen, because of the constraints imposed by the HTML DTD.
+<strong>Amaya</strong> then tries to create the element at the closest
+position where it is allowed.  For instance, if the insertion point is at the
+end of the last line of a paragraph when you click on the <img
+src="../Icons/H2.gif" alt="H2" /> button, <strong>Amaya</strong> does not
+create the new heading at that particular position (which would be invalid),
+but after the paragraph (which is probably what you intended).</p>
+
+<p>In some other cases, <strong>Amaya</strong> changes the existing structure
+for creating the desired element. If the insertion point is somewhere within a
+list item (<code>LI</code>) when you create a second level heading (for
+example with the <img src="../Icons/H2.gif" alt="H2" /> button, or from the
+menu), the list item and its enclosing list are automatically split, in order
+to create the requested heading at the chosen position and to comply with the
+HTML DTD.</p>
+
+<p>When creating new elements, it is important to select an <em>insertion
+point</em>, not some text nor a single character: if the current selection is
+not empty, <strong>Amaya</strong> tries to <a
+href="Changing.html#L631"><em>transform</em></a> the selected part into the
+element type chosen.</p>
+
+<p>Some documentation of <a href="HTML-elements/infoTypes.html">how to use
+element types</a> is available, as well as a briefly annotated <a
+href="HTML.html">list of all the HTML 4.0 elements</a>.</p>
+
+<h3><a name="Structure">Structure menu</a></h3>
+
+<p>The <a href="#Types"><strong>Types</strong> menu</a> allows you to create
+only elements that are part of the document <code>BODY</code>. To create
+elements in the document <code>HEAD</code>, use the <strong>Structure</strong>
+menu from the <a href="Views.html#Structure">Structure view</a>. This menu
+works in the same way as the <strong>Types</strong> menu: put the caret at the
+desired position and choose the element type from the
+<strong>Structure</strong> menu.</p>
+
+<p>The <strong>Structure</strong> menu also allows you to create comments,
+using its <strong>Comment</strong> entry. Comments are shown only in the <a
+href="Views.html#Structure">Structure view</a>, but they can be inserted at
+any position in the document.</p>
+
+<h4>Generated elements</h4>
+
+<p>Some HTML elements are constituted by several other elements of different
+types. For instance, a table contains usually a caption (<code>CAPTION</code>)
+and several rows (<code>TR</code>) and several cells (<code>TD</code> or
+<code>TH</code>) in each row.</p>
+
+<p>When <strong>Amaya</strong> creates such elements, it also creates their
+components. A table is created with a caption and a row containing a single
+cell. The insertion point is placed automatically in the first of these
+components. You can enter the content of that component immediately or later.
+You can move to the next (empty) component with the mouse or with the arrow
+keys.</p>
+
+<h3><a name="L906">The Enter (or Return) key</a></h3>
+
+<p>When you are writing a new document or a new part in a document, you often
+create elements sequentially. To do that, just press the Enter (or Return)
+key. The current element is terminated and a new one is created just after.
+This applies obviously to paragraphs, but also to other types of elements,
+such as headings or <a href="Tables.html#Editing">table cells</a> for
+instance.</p>
+
+<p>Most often, the new element created is simply a paragraph, whatever the
+type of the previous element. If you need another element type, you can
+immediately change the type of that element, by selecting the desired type in
+the <strong>Types</strong> menu or by clicking on the corresponding button,
+but you can also keep typing and <a href="Changing.html#L653">change the
+type</a> later.</p>
+
+<h4>Multiple Enters at the end of an element</h4>
+
+<p>When the insertion point is in an empty element, pressing the Enter key
+<em>replaces</em> that element by another empty element at the next higher
+level in the document structure. This feature allows you to create complex
+nested structures very quickly.</p>
+
+<p>As an example, consider the following structure:</p>
+<ol>
+  <li>The first item in the highest level list.
+    <p>A paragraph in the first item.</p>
+  </li>
+  <li>The second item.
+    <ol type="a">
+      <li>First item in the nested list.</li>
+      <li>Second item in the nested list.</li>
+    </ol>
+  </li>
+  <li>Last item in the list.</li>
+</ol>
+
+<p>To create that structure, create first a numbered list with a first item
+(for example by clicking on the <img alt="Numbered List " border="0"
+src="../Icons/NumList.gif" align="middle" /> button) and type in the first
+line. At the end of that first line, press the Enter key: it creates a new
+paragraph in the item. At the end of this paragraph, press the Enter key: it
+creates yet another paragraph, but pressing the same key again replaces that
+paragraph by an empty item 2. At the end of the first line of item 2, create a
+new list with its first item (for example click on the <img border="0"
+alt="Numbered List " src="../Icons/NumList.gif" align="middle" /> button). The
+new list will automatically be nested.  Item b. is created by a double Enter
+at the end of item a. When the insertion point is at the end of item b, create
+item 3 by four successive Enters. To create the paragraph that follows these
+lists, press Enter three times when the insertion point is at the end of item
+3.</p>
+
+<h4>Multiple Enters at the beginning of an element</h4>
+
+<p>The Enter key works in the same way when the insertion point is at the
+beginning of an element, but it creates new elements <em>before</em> the
+current element.</p>
+
+<p>For instance, you can add an initial paragraph in a list item by moving the
+insertion point before the first character of that item and pressing Enter. If
+you press Enter twice, you get a new item before the current item. This is
+useful for inserting a new item before the first one.</p>
+
+<p>This use of the Enter key does not apply only to lists and paragraphs, but
+to all elements. It is for instance very convenient for <a
+href="Manual.html">creating tables</a>.</p>
+
+<h4>Exiting anchors or styled character strings</h4>
+
+<p>When a paragraph or another block of text is styled - terminated by an
+anchor or a character string in bold, italic or other such style - moving the
+insertion point to the end and typing appends characters to the anchor or the
+styled string. If you want to exit this styled element and enter plain text,
+just press Enter to exit from the anchor or styled element, and continue
+typing.</p>
+
+<p>The same method can be used to enter plain text at the <em>beginning</em>
+of a block starting with an anchor or styled characters.</p>
+
+<h4>Editing definition lists (dl/dt/dd)</h4>
+
+<p>The Enter key is also useful for editing definitions lists. Consider the
+following example:</p>
+
+<blockquote>
+  <dl>
+    <dt>Term1</dt>
+    <dt>Term2</dt>
+      <dd>Definition of both terms.</dd>
+  </dl>
+</blockquote>
+
+<p>It is a definition list (<code>dl</code>) containing two terms
+(<code>dt</code>) followed by a definition (<code>dd</code>). To add a new
+paragraph within the definition (<code>dd</code>), put the caret at the end
+(after word "terms") and hit the Enter key. If you hit Enter twice, you exit
+from the current definition (<code>dd</code>) and you create a new term
+(<code>dt</code>). At the end of that new term, pressing Enter once allows you
+to create another new term (<code>dt</code>). Pressing Enter twice creates a
+new definition (<code>dd</code>) instead.</p>
+
+<p>If you want to create a new term and its definition <em>before</em> Term1,
+put the caret at the beginning of "Term1" and press Enter. Type the new term
+(<code>dt</code>). Then press Enter twice: a new definition (<code>dd</code>)
+is created right after the new term.</p>
+
+<h4><a name="Changing">Changing the document Title</a></h4>
+
+<p>You can edit the document title (TITLE element) in with the menu entry
+<strong>Types/Change Title</strong>.</p>
+
+<p>You can also edit the document title in the <a
+href="Views.html#Structure">structure view</a>.</p>
+</div>
+
+<p align="right"><a href="Views.html"><img alt="previous" border="0"
+src="../Icons/left.gif" /></a> <a href="Manual.html"><img alt="top" border="0"
+src="../Icons/up.gif" /></a> <a href="Links.html"><img alt="next" border="0"
+src="../Icons/right.gif" /></a></p>
+<hr />
+</body>
+</html>
