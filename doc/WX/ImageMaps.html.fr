@@ -28,29 +28,48 @@
   </tbody>
 </table>
 
-<div id="Client-sid">
-<h2><a name="L1013">Images et Zones actives</a></h2>
+<div class="toc">
+<ul>
+  <li><a href="#Images">Images et Zones actives</a>
+    <ul>
+      <li><a href="#Ajouter">Ajouter une image</a></li>
+      <li><a href="#Remplacer">Remplacer une image</a></li>
+      <li><a href="#Texte">Texte de remplacement et descriptions
+      longues</a></li>
+      <li><a href="#Utiliser">Utiliser des zones actives</a></li>
+    </ul>
+  </li>
+</ul>
+</div>
 
-<h3><a name="Adding">Ajouter une image</a></h3>
+<div id="Client-sid">
+<h2 id="Images"><a name="L1013">Images et Zones actives</a></h2>
+
+<h3 id="Ajouter"><a name="Adding">Ajouter une image</a></h3>
 
 <p>Pour insérer une image, choisissez l'entrée <strong>Image</strong> depuis
 le menu <strong>XHTML</strong> ou cliquez sur le bouton <img alt="Image "
 src="../../resources/icons/22x22/XHTML_Image.png" longdesc="longdesc.htm" />
-(ou encore utilisez le raccourci clavier control-h, control-i pour Unix).
-Ceci fait apparaître une boîte de dialogue qui vous permet de rentrer le nom
-du fichier et le <a href="#Alternative">texte de remplacement</a> ('ALT'
-texte) de l'image désirée. Si vous souhaitez fournir une longue description
-(par exemple si votre image présente une information complexe) vous devriez
-la faire dans un document séparé et la relier en donnant l'URI comme un
-descripteur long (<strong>longdesc</strong>), également disponible dans le
-menu <strong>Attributs</strong>.</p>
+(ou encore utilisez le raccourci clavier <code>Ctrl h Ctrl i</code>). Ceci
+fait apparaître une boîte de dialogue qui vous permet de rentrer le nom du
+fichier et le <a href="#Alternative">texte de remplacement</a> (Attribut
+<strong>Alt</strong>) de l'image désirée.</p>
+
+<p class="Note"><strong>Note</strong>: le texte de remplacement est
+obligatoire. Vous devez saisir un texte dans le champ correspondant.</p>
 
 <p>Pour faciliter la recherche d'un fichier image vous pouvez entrer une
 valeur de <strong>filtre</strong>, et utiliser le bouton
 <strong>filtre</strong>. Ainsi le dialogue listera seulement les fichiers qui
 correspondent à votre critère.</p>
 
-<h3>Remplacer une image</h3>
+<p>Si vous souhaitez fournir une longue description (par exemple si votre
+image présente une information complexe) vous devriez la faire dans un
+document séparé et la relier en donnant l'URI comme un descripteur long
+(<strong>longdesc</strong>), également disponible dans la liste des
+<strong>Attributs</strong>.</p>
+
+<h3 id="Remplacer">Remplacer une image</h3>
 
 <p>Pour remplacer une image sélectionnez cette image en draguant sur l'image
 avec la souris. Procédez alors comme pour l'ajout d'une image (voir
@@ -58,7 +77,7 @@ ci-dessus). Lorsqu'une image (et seulement une image) est entièrement
 sélectionnée, la boîte de dialogue des images effectue le remplacement de
 l'image sélectionnée au lieu d'insérer une nouvelle image.</p>
 
-<h3><a name="Alternative">Texte de remplacement et descriptions
+<h3 id="Texte"><a name="Alternative">Texte de remplacement et descriptions
 longues</a></h3>
 
 <p>Pour les éléments comme les images (et autres objets multimédia) vous
@@ -74,17 +93,17 @@ exemple, si l'image est utilisée pour fournir une icône de lien (c'est le cas
 de l'icône du W3C en haut de cette page) ainsi le titre de la page référencée
 serait un bon texte de remplacement.</p>
 
-<p>Il existe des cas où une image n'est utilisée pour un effet visuel, et
+<p>Il existe des cas où une image n'est utilisée que pour un effet visuel, et
 n'apporte aucune information supplémentaire à la page. Dans ce cas, il est
 approprié d'utiliser un blanc de remplacement car il faut toujours un texte
-de substitution - entrez deux guillemets comme alternative (eg. alt="").</p>
+de substitution.</p>
 
 <p>Dans les cas où l'image transporte une information importante qui n'est
 pas disponible depuis le texte du document, vous devez fournir une
-description de l'information. L'option <strong>longdesc</strong> du menu
-<strong>Attributs</strong> vous permet de relier une description (qui est un
-URI - un document séparé, ou une partie nommée du document courant) à une
-image.</p>
+description de l'information. L'option <strong>longdesc</strong> dans la
+liste des <strong>Attributs</strong> vous permet de relier une description
+(qui est un URI - un document séparé, ou une partie nommée du document
+courant) à une image.</p>
 
 <p>Afin de donner une idée de comment une page sans les images doit être
 présentée, Amaya fournit une option <strong>Montrer la vue alternée</strong>
@@ -94,77 +113,28 @@ href="Views.html.fr#Alternate">vue alternée</a> pourrait être simplement lue
 pages deviendraient difficiles voire impossibles à naviguer, et les
 utilisateurs seraient condamnés à trouver "leur chemin dans le noir".</p>
 
-<h3><a name="Using">Utiliser des zones actives</a></h3>
+<h3 id="Utiliser"><a name="Using">Utiliser des zones actives</a></h3>
 
 <p><strong>Amaya</strong> vous donne la possibilité d'utiliser des zones
 actives :</p>
+
+<p class="ProcedureCaption">Pour activer une zone dans un plan</p>
 <ul>
-  <li>Pour activer une zone dans un plan, double-cliquez sur la zone avec le
-    bouton gauche de la souris. L'URI attaché à cette zone est alors
-  importé.</li>
-  <li>Pour visualiser les zones existantes, choisissez <strong>Montrer les
-    zones actives</strong> du menu <strong>Vues</strong>.</li>
+  <li>Double-cliquez sur la zone avec le bouton gauche de la souris. L'URI
+    attaché à cette zone est alors importé.</li>
 </ul>
 
-<h3><a name="Creating">Créer des zones actives</a></h3>
-
-<p>Pour créer une nouvelle zone active, insérez une image à l'intérieur du
-document, et définissez les zones comme des liens.</p>
-
-<p>Pour créer une zone dans une image, sélectionnez l'image ou une zone
-existante de cette image. Ensuite, choisissez une des options
-<strong>Rectangle</strong>, <strong>Cercle</strong>,
-<strong>Polygone</strong> depuis le sous-menu <strong>Zone active</strong> du
-menu <strong>XHTML</strong>, suivant la forme de la nouvelle zone que vous
-souhaitez créer. L'option <strong>Montrer les zones actives</strong> du menu
-<strong>Vues</strong> tracera le contour de chaque zone active existante sur
-une image.</p>
+<p class="ProcedureCaption">Pour visualiser les zones existantes</p>
 <ul>
-  <li>Pour créer une zone rectangulaire ou circulaire, vous devez tout
-    d'abord sélectionner la position du coin en cliquant avec le bouton
-    gauche de la souris. Laissez le bouton appuyé et déplacez la souris
-    jusqu'à la position du coin opposé, puis lâchez le bouton. La zone est
-    maintenant définie.</li>
-  <li>Pour un polygone, entrez chaque point en cliquant la position
-    correspondante avec le bouton gauche de la souris. Pour indiquer le
-    dernier point, cliquez avec le bouton du milieu.</li>
-</ul>
+  <li>Choisissez <strong>Montrer les zones actives</strong> du menu
+    <strong>Vues</strong>.<br />
 
-<p>Quand la zone a été définie, vous devez fournir <a href="#Alternative">le
-texte de remplacement</a> dans la boîte de dialogue qui apparaît et entrer la
-cible du lien associée à cette zone. Sélectionnez uniquement la cible (ou
-entrer son URI si elle n'est pas visualisée), de la même manière que pour <a
-href="Links.html.fr#L245">créer des liens</a>.</p>
-
-<h3>Déplacer des zones actives<strong></strong></h3>
-
-<p>Quand une zone a été définie, vous pouvez la déplacer :</p>
-<ul>
-  <li><p>Par manipulation directe - en combinant la <strong>touche
-    Control</strong> et le <strong>bouton gauche</strong> de la souris dans
-    la zone active, vous pourrez déplacer cette zone.</p>
-  </li>
-  <li><p>En éditant l'attribut <strong>coords</strong> de la zone dans la vue
-    structure.</p>
-  </li>
-</ul>
-
-<h3><a name="L1171">Redimensionner des zones actives</a></h3>
-<ul>
-  <li>Par manipulation directe - en combinant la <strong>touche
-    Control</strong> et le <strong>bouton du milieu</strong> ou le
-    <strong>bouton droit</strong> de la souris à l'intérieur de la zone
-    active, vous pourrez redimensionner cette zone.</li>
-  <li>En éditant l'attribut <strong>coords</strong> de la zone dans la vue.
-    <p></p>
+    <p class="Note"><strong>Note</strong> : Vous pouvez aussi visualiser les
+    zones actives depuis le clavier par la séquence <code>Ctrl v Ctrl
+    t</code> (<code>Ctrl u</code><code>Ctrl t</code> sur les plates-formes
+    Windows).</p>
   </li>
 </ul>
 </div>
-
-<p><a href="Tables.html.fr#Editing"><img alt="previous"
-src="../images/left.gif" /></a> <a href="Manual.html.fr"><img alt="top"
-src="../images/up.gif" /></a> <a href="Math.html.fr#Math"><img alt="next"
-src="../images/right.gif" /></a></p>
-<hr />
 </body>
 </html>
