@@ -1642,7 +1642,10 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 	  else
 	    {
 	      /* it's not the root box */
-	      inLine = pParentAb->AbInLine || pParentAb->AbBox->BxType == BoGhost;
+	      inLine = (pAb->AbFloat == 'N' && pAb->AbAcceptLineBreak &&
+			(pParentAb->AbBox->BxType == BoBlock ||
+			 pParentAb->AbBox->BxType == BoFloatBlock ||
+			 pParentAb->AbBox->BxType == BoGhost));
 	      if (horizRef)
 		{
 		  if (!inLine && pAb->AbWidth.DimUnit == UnAuto)

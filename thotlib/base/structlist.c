@@ -1583,6 +1583,8 @@ void ListAbsBoxes (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 	wrThotBool (pAb->AbAcceptLineBreak, fileDescriptor);
 	fprintf (fileDescriptor, " PageBreak:");
 	wrThotBool (pAb->AbAcceptPageBreak, fileDescriptor);
+	fprintf (fileDescriptor, " Float:%c", pAb->AbFloat);
+	fprintf (fileDescriptor, " Clear:%c", pAb->AbClear);
 	if (pAb->AbBuildAll)
 	  fprintf (fileDescriptor, " Gather");
 	fprintf (fileDescriptor, "\n");
@@ -1885,8 +1887,10 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 		      case LtCompound:
 			 if (pBox->BxType == BoGhost)
 			    fprintf (fileDescriptor, " GHOST");
-			 else if (pAb->AbInLine)
-			   fprintf (fileDescriptor, " LINES");
+			 else if (pBox->BxType == BoBlock)
+			   fprintf (fileDescriptor, " BLOCK");
+			 else if (pBox->BxType == BoFloatBlock)
+			   fprintf (fileDescriptor, " FLOAT_BLOCK");
 			 else if (pBox->BxType == BoTable)
 			    fprintf (fileDescriptor, " TABLE");
 			 else if (pBox->BxType == BoColumn)
@@ -1897,8 +1901,11 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 			    fprintf (fileDescriptor, " CELL");
 			 else
 			    fprintf (fileDescriptor, " COMP");
-			 if (pAb->AbInLine || pBox->BxType == BoTable ||
-			     pBox->BxType == BoColumn || pBox->BxType == BoRow)
+			 if (pBox->BxType == BoBlock ||
+			     pBox->BxType == BoFloatBlock ||
+			     pBox->BxType == BoTable ||
+			     pBox->BxType == BoColumn ||
+			     pBox->BxType == BoRow)
 			   {
 			     fprintf (fileDescriptor, "\n");
 			     for (j = 1; j <= Indent + 4; j++)

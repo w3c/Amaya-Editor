@@ -312,7 +312,8 @@ PtrAbstractBox InitAbsBoxes (PtrElement pEl, DocViewNumber view, int Visib,
    pAb->AbVolume = 0;
    pAb->AbTypeNum = pEl->ElTypeNumber;
    pAb->AbNum = 0;
-
+   pAb->AbFloat = 'N';
+   pAb->AbClear = 'N';
    pAb->AbVertRef.PosEdge = VertRef;
    pAb->AbVertRef.PosRefEdge = VertRef;
    pAb->AbVertRef.PosDistance = 0;

@@ -3929,8 +3929,17 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 	    }
 	  break;
 	case PtFloat:
+#ifdef _CSS_FLOAT
 	  pAb->AbFloat = CharRule (pPRule, pAb->AbElement, pAb->AbDocView,
 				   &appl);
+	  if (pAb->AbFloat != 'N')
+	    {
+	      if (pAb->AbEnclosing)
+		/* rule gather on the parent box */
+		pAb->AbEnclosing->AbBuildAll = TRUE;
+	      pAb->AbAcceptLineBreak = FALSE;
+	    }
+#endif /* _CSS_FLOAT */
 	  break;
 	case PtClear:
 	  pAb->AbClear = CharRule (pPRule, pAb->AbElement, pAb->AbDocView,

@@ -169,7 +169,6 @@ void DefClip (int frame, int xd, int yd, int xf, int yf)
      }
 }
 
-
 /*----------------------------------------------------------------------
   DefRegion store the area of frame which need to be redrawn.
   ----------------------------------------------------------------------*/
@@ -256,7 +255,7 @@ void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
   PtrBox              pBox;
   ViewFrame          *pFrame;
   PictInfo           *imageDesc;
-  PictureScaling      picPresent;
+  PictureScaling      pres;
   int                 x, y;
   int                 xd, yd;
   int                 width, height;
@@ -371,18 +370,11 @@ void DrawFilledBox (PtrAbstractBox pAb, int frame, int xmin,
 	  if (imageDesc)
 	    {
 	      /* draw the background image the default presentation is repeat */
-	      picPresent = imageDesc->PicPresent;
-	      if (picPresent == DefaultPres)
-		picPresent = FillFrame;
-	      if (setWindow || picPresent == YRepeat || picPresent == FillFrame ||
-		  (picPresent == XRepeat/* && !pAb->AbTruncatedHead*/))
+	      pres = imageDesc->PicPresent;
+	      if (pres == DefaultPres)
+		pres = FillFrame;
+	      if (pres == YRepeat || pres == FillFrame || !pAb->AbTruncatedHead)
 		DrawPicture (pBox, imageDesc, frame,  xd - x, yd - y, width, height);
-	      else if (!pAb->AbTruncatedHead)
-		/* the clipping will work automatically */
-		DrawPicture (pBox, imageDesc, frame,
-			     pBox->BxXOrg + pBox->BxLMargin - x,
-			     pBox->BxYOrg + pBox->BxTMargin + FrameTable[frame].FrTopMargin - y,
-			     width, height);
 	    }
 	}
     }

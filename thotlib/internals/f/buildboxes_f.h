@@ -45,6 +45,7 @@ extern ThotBool CheckMBP ( PtrAbstractBox pAb,
                            PtrBox pBox,
                            int frame,
                            ThotBool evalAuto );
+extern ThotBool HasFloatingChild ( PtrAbstractBox pAb );
 extern PtrAbstractBox SearchEnclosingType ( PtrAbstractBox pAb,
                                             BoxType type1,
                                             BoxType type2 );
@@ -115,6 +116,7 @@ extern ThotBool CheckMBP (/* PtrAbstractBox pAb,
                              PtrBox pBox,
                              int frame,
                              ThotBool evalAuto */);
+extern ThotBool HasFloatingChild (/* PtrAbstractBox pAb */);
 extern PtrAbstractBox SearchEnclosingType (/* PtrAbstractBox pAb,
                                               BoxType type1,
                                               BoxType type2 */);

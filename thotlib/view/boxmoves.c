@@ -1197,8 +1197,6 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 		  else
 		    i = 0;
 
-
-
 #ifndef _GLTRANSFORMATION
 		 if (delta > 0)
 		    DefClip (frame, pBox->BxXOrg - i,
@@ -1309,7 +1307,7 @@ void YMoveAllEnclosed (PtrBox pBox, int delta, int frame)
 	      /* the box position is now complete */
 	      pBox->BxYToCompute = FALSE;
 
-	      /* Wen the box height depends on the contents and a child
+	      /* When the box height depends on the contents and a child
 		 position depends on an external box, it's necessary
 		 to check the new width
 	      */
@@ -1534,10 +1532,11 @@ void MoveVertRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 		      if (Propagate == ToAll && pBox->BxXOrg < 0)
 			XMoveAllEnclosed (pBox, -pBox->BxXOrg, frame);
 		    }
-		  else if (!pAb->AbInLine
-			   && pAb->AbBox->BxType != BoGhost
-			   && !IsParentBox (pAb->AbBox, pRefBox)
-			   && !IsParentBox (pAb->AbBox, PackBoxRoot))
+		  else if (pAb->AbBox->BxType != BoBlock &&
+			   pAb->AbBox->BxType != BoFloatBlock &&
+			   pAb->AbBox->BxType != BoGhost &&
+			   !IsParentBox (pAb->AbBox, pRefBox) &&
+			   !IsParentBox (pAb->AbBox, PackBoxRoot))
 		    /* check the inclusion of the sibling box */
 		    WidthPack (pAb, pRefBox, frame);
 		}
@@ -1755,7 +1754,9 @@ void MoveHorizRef (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 		      if (Propagate == ToAll && pBox->BxYOrg < 0)
 			YMoveAllEnclosed (pBox, -pBox->BxYOrg, frame);
 		    }
-		  else if (pAb->AbInLine || pAb->AbBox->BxType == BoGhost)
+		  else if (pAb->AbBox->BxType == BoBlock ||
+			   pAb->AbBox->BxType == BoFloatBlock ||
+			   pAb->AbBox->BxType == BoGhost)
 		    {
 		      if (Propagate == ToAll)
 			EncloseInLine (pBox, frame, pAb);
@@ -2197,7 +2198,8 @@ void ResizeWidth (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	  if (!toMove)
 	    {
 	      /* look for the enclosing block of lines  */
-	      while (/*!pAb->AbInLine || */pAb->AbBox->BxType == BoGhost)
+	      while (pAb->AbBox->BxType != BoBlock &&
+		     pAb->AbBox->BxType != BoFloatBlock)
 		pAb = pAb->AbEnclosing;
 	    }
 	  
@@ -2651,7 +2653,9 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 			{
 			  if (pAb->AbEnclosing == pCurrentAb)
 			    {
-			      if (pCurrentAb->AbInLine || pBox->BxType == BoGhost)
+			      if (pBox->BxType == BoBlock ||
+				  pBox->BxType == BoFloatBlock ||
+				  pBox->BxType == BoGhost)
 				{
 				  /* inherit from the line height */
 				  pLine = SearchLine (box);
@@ -2718,7 +2722,8 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	  if (!toMove)
 	    {
 	      /* look for the enclosing block of lines  */
-	      while (!pAb->AbInLine || pAb->AbBox->BxType == BoGhost)
+	      while (pAb->AbBox->BxType != BoBlock &&
+		     pAb->AbBox->BxType != BoFloatBlock)
 		pAb = pAb->AbEnclosing;
 	    }
 	  
@@ -2737,11 +2742,12 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	       * if pSourceBox is a child and the inclusion is not performed
 	       * by another sibling box, we need to propagate the change
 	       */
-	      if ((Propagate == ToAll || externalRef)
-		  && !IsSiblingBox (pBox, pFromBox)
-		  && !IsSiblingBox (pBox, pSourceBox))
+	      if ((Propagate == ToAll || externalRef) &&
+		  !IsSiblingBox (pBox, pFromBox) &&
+		  !IsSiblingBox (pBox, pSourceBox))
 		{
-		  if (pAb->AbInLine)
+		  if (pAb->AbBox->BxType == BoBlock ||
+		      pAb->AbBox->BxType == BoFloatBlock)
 		    /* Within a block of line */
 		    EncloseInLine (pBox, frame, pAb);
 		  /* if the inclusion is not checked at the end */
@@ -3502,8 +3508,9 @@ void WidthPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
 	      if (pBox->BxXOrg < 0)
 		XMoveAllEnclosed (pBox, -pBox->BxXOrg, frame);
 	    }
-	  else if (!pAb->AbEnclosing->AbInLine
-		   && pAb->AbEnclosing->AbBox->BxType != BoGhost)
+	  else if (pAb->AbEnclosing->AbBox->BxType != BoBlock &&
+		   pAb->AbEnclosing->AbBox->BxType != BoFloatBlock &&
+		   pAb->AbEnclosing->AbBox->BxType != BoGhost)
 	    WidthPack (pAb->AbEnclosing, pSourceBox, frame);
 	}
       /* the job is performed */
@@ -3733,13 +3740,11 @@ void HeightPack (PtrAbstractBox pAb, PtrBox pSourceBox, int frame)
       /* Now check the ascestor box */
       else if (toMove)
 	{
-	if (pAb->AbEnclosing == NULL)
+	if (pAb->AbEnclosing == NULL || pAb->AbEnclosing->AbBox == NULL)
 	  {
 	    if (pBox->BxYOrg < 0)
 	      YMoveAllEnclosed (pBox, -pBox->BxYOrg, frame);
 	  }
-	else if (pAb->AbEnclosing->AbInLine)
-	  EncloseInLine (pBox, frame, pAb->AbEnclosing);
 	else if (pAb->AbEnclosing->AbBox->BxType == BoGhost ||
 		 pAb->AbEnclosing->AbBox->BxType == BoBlock ||
 		 pAb->AbEnclosing->AbBox->BxType == BoFloatBlock)

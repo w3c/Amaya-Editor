@@ -14,6 +14,21 @@ extern void Align ( PtrBox pParentBox,
                     int frame,
                     ThotBool orgXComplete,
                     ThotBool orgYComplete );
+extern void ChechBlockHeight ( PtrBox pBlock,
+                               ThotBool orgYComplete,
+                               int *height );
+extern int SetFloat ( PtrBox box,
+                      PtrBox pBlock,
+                      PtrLine pLine,
+                      PtrAbstractBox pRootAb,
+                      ThotBool notComplete,
+                      ThotBool *full,
+                      ThotBool *adjust,
+                      ThotBool *breakLine,
+                      int frame,
+                      int indent,
+                      PtrBox *floatL,
+                      PtrBox *floatR );
 extern void ComputeLines ( PtrBox pBox,
                            int frame,
                            int *height );
@@ -46,6 +61,21 @@ extern void Align (/* PtrBox pParentBox,
                       int frame,
                       ThotBool orgXComplete,
                       ThotBool orgYComplete */);
+extern void ChechBlockHeight (/* PtrBox pBlock,
+                                 ThotBool orgYComplete,
+                                 int *height */);
+extern int SetFloat (/* PtrBox box,
+                        PtrBox pBlock,
+                        PtrLine pLine,
+                        PtrAbstractBox pRootAb,
+                        ThotBool notComplete,
+                        ThotBool *full,
+                        ThotBool *adjust,
+                        ThotBool *breakLine,
+                        int frame,
+                        int indent,
+                        PtrBox *floatL,
+                        PtrBox *floatR */);
 extern void ComputeLines (/* PtrBox pBox,
                              int frame,
                              int *height */);

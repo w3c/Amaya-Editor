@@ -16,6 +16,7 @@
 #include "constmedia.h"
 #include "typemedia.h"
 #include "appdialogue.h"
+#include "picture.h"
 
 #define THOT_EXPORT extern
 #include "boxes_tv.h"
@@ -32,45 +33,6 @@
 #include "textcommands_f.h"
 #include "xwindowdisplay_f.h"
 
-/*----------------------------------------------------------------------
-  WithBackgroundImage returns TRUE if the abstract box has a background
-  image.
-  If the abstract box is the root element, checks also if a child element
-  has the exception ExcSetWindowBackground and a background image.
-  ----------------------------------------------------------------------*/
-ThotBool WithBackgroundImage (PtrAbstractBox pAb)
-{
-  PtrAbstractBox       pChild;
-  ThotBool             found;
-
-  if (pAb)
-    {
-      if (pAb->AbDocView == 1 && pAb->AbLeafType == LtCompound &&
-	  pAb->AbPictBackground &&
-	  TypeHasException (ExcSetWindowBackground, pAb->AbElement->ElTypeNumber,
-			    pAb->AbElement->ElStructSchema))
-	return TRUE;
-      if (pAb->AbEnclosing == NULL)
-	{
-	  /* check also its children */
-	  pAb = pAb->AbFirstEnclosed;
-	  while (pAb)
-	    {
-	      if (WithBackgroundImage (pAb))
-		return TRUE;
-	      pChild = pAb->AbFirstEnclosed;
-	      while (pChild)
-		{
-		  if (WithBackgroundImage (pChild))
-		    return TRUE;
-		  pChild = pChild->AbNext;
-		}
-	      pAb = pAb->AbNext;
-	    }
-	}
-    }
-  return FALSE;
-}
 
 /*----------------------------------------------------------------------
    VerticalScroll scrolls forward (delta > 0) or backward (delta < 0).
@@ -132,20 +94,11 @@ void VerticalScroll (int frame, int delta, int selection)
 			  y = delta;
 			  height = hframe - y;
 			  width = lframe + 1;
-			  if (WithBackgroundImage (pAbb))
-			    /* redisplay the whole window */
-			    DefClip (frame, pFrame->FrXOrg,
-				     pFrame->FrYOrg,
-				     pFrame->FrXOrg + width,
-				     pFrame->FrYOrg + hframe + delta);
-			  else
-			    {
-			      Scroll (frame, width, height, 0, y, 0, 0);
-			      height = pFrame->FrYOrg + hframe;
-			      DefClip (frame, pFrame->FrXOrg, height,
-				       pFrame->FrXOrg + lframe, 
-				       height + delta);
-			    }
+			  Scroll (frame, width, height, 0, y, 0, 0);
+			  height = pFrame->FrYOrg + hframe;
+			  DefClip (frame, pFrame->FrXOrg, height,
+				   pFrame->FrXOrg + lframe, 
+				   height + delta);
 			  add = RedrawFrameBottom (frame, delta, NULL);
 		       }
 		     else
@@ -156,19 +109,10 @@ void VerticalScroll (int frame, int delta, int selection)
 			  height = hframe + delta;
 			  width = lframe + 1;
 			  y = -delta;
-			  if (WithBackgroundImage (pAbb))
-			    /* redisplay the whole window */
-			    DefClip (frame, pFrame->FrXOrg,
-				     pFrame->FrYOrg + delta,
-				     pFrame->FrXOrg + width,
-				     pFrame->FrYOrg + hframe);
-			  else
-			    {
-			      Scroll (frame, width, height, 0, 0, 0, y);
-			      height = pFrame->FrYOrg;
-			      DefClip (frame, pFrame->FrXOrg, height + delta,
-				       pFrame->FrXOrg + lframe, height);
-			    }
+			  Scroll (frame, width, height, 0, 0, 0, y);
+			  height = pFrame->FrYOrg;
+			  DefClip (frame, pFrame->FrXOrg, height + delta,
+				   pFrame->FrXOrg + lframe, height);
 			  add = RedrawFrameTop (frame, -delta);
 		       }
 		     /* recompute scrolls */

@@ -2594,7 +2594,9 @@ static ThotBool     CanBeTranslated (PtrAbstractBox pAb, int frame,
   else if (!horizRef && pAb->AbVertPos.PosAbRef == NULL)
     /* no position rule */
     ok = FALSE;
-  else if (pParentAb->AbInLine || pParentAb->AbBox->BxType == BoGhost)
+  else if ( pParentAb->AbBox->BxType == BoBlock ||
+	    pParentAb->AbBox->BxType == BoFloatBlock 
+	    || pParentAb->AbBox->BxType == BoGhost)
     /* box displayed in block of lines */
     ok = FALSE;
   else
@@ -2911,7 +2913,9 @@ static ThotBool   CanBeResized (PtrAbstractBox pAb, int frame,
     /* stretchable box */
     ok = FALSE;
   else if (pAb->AbLeafType == LtText &&
-	   (pParentAb->AbInLine || pParentAb->AbBox->BxType == BoGhost))
+	   (pParentAb->AbBox->BxType == BoBlock ||
+	    pParentAb->AbBox->BxType == BoFloatBlock ||
+	    pParentAb->AbBox->BxType == BoGhost))
     /* text box displayed in block of lines */
     ok = FALSE;
   /* Il est impossible de modifier la dimension du contenu */

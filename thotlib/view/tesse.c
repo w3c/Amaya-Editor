@@ -1,7 +1,19 @@
-#ifdef _GL
+/*
+ *
+ *  (c) COPYRIGHT INRIA, 2003-2003
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+
+/*
+ * Handling of paths with OpenGL
+ * Authors: P. Cheyrou-lagreze (INRIA)
+ */
+
 #include <stdio.h>
 #include <malloc.h>
 #include <string.h>
+#ifdef _GL
 #include <GL/gl.h>
 #include <GL/glu.h>
 #endif /* _GL */
