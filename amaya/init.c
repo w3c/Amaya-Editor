@@ -176,11 +176,11 @@ static ThotIcon       iconJava;
 #define iconH1        12
 #define iconH1No      12
 #define iconH2        13
-#define iconH2        13
+#define iconH2No      13
 #define iconH3        14
-#define iconH3        14
+#define iconH3No      14
 #define iconBullet    15
-#define iconBullet    15
+#define iconBulletNo  15
 #define iconNum       16
 #define iconNumNo     16
 #define	iconDL        17
@@ -192,8 +192,8 @@ static ThotIcon       iconJava;
 #ifdef AMAYA_PLUGIN
 #define iconPlugin    20
 #endif AMAYA_PLUGIN
-#define iconBrowser   24
-#define iconEditor    24
+#define iconBrowser   23
+#define iconEditor    23
 
 static boolean itemChecked = FALSE;
 extern int     currentFrame;
@@ -1456,7 +1456,7 @@ boolean             logFile;
 			 TtaGetMessage (AMAYA, AM_BUTTON_BrowseEdit),
 			 TBSTYLE_BUTTON, TRUE);
 	   /* SEPARATOR */
-	   TtaAddButton (doc, 1, None, NULL, NULL, TBSTYLE_BUTTON, FALSE);
+	   TtaAddButton (doc, 1, None, NULL, NULL, TBSTYLE_SEP, FALSE);
 	   TtaAddButton (doc, 1, iconSave, SaveDocument,
 			 TtaGetMessage (AMAYA, AM_BUTTON_SAVE),
 			 TBSTYLE_BUTTON, TRUE);
@@ -1467,7 +1467,7 @@ boolean             logFile;
 			 TtaGetMessage (AMAYA, AM_BUTTON_SEARCH),
 			 TBSTYLE_BUTTON, TRUE);
 	   /* SEPARATOR */
-	   TtaAddButton (doc, 1, None, NULL, NULL, TBSTYLE_BUTTON, FALSE);
+	   TtaAddButton (doc, 1, None, NULL, NULL, TBSTYLE_SEP, FALSE);
 	   IButton =  TtaAddButton (doc, 1, iconI, SetCharEmphasis,
 				    TtaGetMessage (AMAYA, AM_BUTTON_ITALICS),
 				    TBSTYLE_CHECK, TRUE);
@@ -1478,7 +1478,7 @@ boolean             logFile;
 				    TtaGetMessage (AMAYA, AM_BUTTON_CODE),
 				    TBSTYLE_CHECK, TRUE);
 	   /* SEPARATOR */
-	   TtaAddButton (doc, 1, None, NULL, NULL, TBSTYLE_BUTTON, FALSE);
+	   TtaAddButton (doc, 1, None, NULL, NULL, TBSTYLE_SEP, FALSE);
 	   TtaAddButton (doc, 1, iconImage, CreateImage,
 			 TtaGetMessage (AMAYA, AM_BUTTON_IMG),
 			 TBSTYLE_BUTTON, TRUE);
