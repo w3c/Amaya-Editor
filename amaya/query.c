@@ -1993,6 +1993,8 @@ static void ProxyInit ()
   STRING strptr;
   STRING str = NULL;
   STRING name;
+  ThotBool proxy_is_onlyproxy;
+
   char*  strptrA;
 
   /* get the proxy settings from the thot.ini file */
@@ -2000,7 +2002,7 @@ static void ProxyInit ()
   if (strptr && *strptr)
     HTProxy_add ("http", WideChar2ISO (strptr));
   /* get the no_proxy settings from the thot.ini file */
-  strptr = TtaGetEnvString ("NO_PROXY");
+  strptr = TtaGetEnvString ("PROXYDOMAIN");
   if (strptr && *strptr) 
     {
       str = TtaStrdup (strptr);          /* Get copy we can mutilate */
@@ -2018,8 +2020,12 @@ static void ProxyInit ()
       }
       TtaFreeMemory (str);
     }
-  
-  /* use libw3's routine to get all proxy settings from the environment */
+
+  /* how should we interpret the proxy domain list? */
+  TtaGetEnvBoolean ("PROXYDOMAIN_IS_ONLYPROXY", &proxy_is_onlyproxy);
+  HTProxy_setNoProxyIsOnlyProxy (proxy_is_onlyproxy);
+
+  /* use libwww's routine to get all proxy settings from the environment */
    HTProxy_getEnvVar ();
 }
 

@@ -150,8 +150,8 @@
 149 Cache size (Mb)
 150 Cache entry size limit (Mb)
 151 Proxy Preferences
-152 HTTP proxy (e.g, http://groucho.marx.edu)
-153 No proxy on these domains (e.g., www.w3.org)
+152 HTTP proxy (e.g, groucho.marx.edu:1234)
+153 Proxy domain list (e.g., www.w3.org)
 154 General Preferences
 155 Home Page
 156 ToolTip delay (ms)

@@ -81,7 +81,8 @@ static HWND ProxyHwnd = NULL;
 #endif /* _WINDOWS */
 static int ProxyBase;
 static CHAR_T HttpProxy [MAX_LENGTH];
-static CHAR_T NoProxy [MAX_LENGTH];
+static CHAR_T ProxyDomain [MAX_LENGTH];
+static ThotBool ProxyDomainIsOnlyProxy;
 
 /* General menu options */
 #ifdef _WINDOWS
@@ -239,8 +240,9 @@ void InitAmayaDefEnv ()
   TtaSetDefEnvString (_DNSTIMEOUT_EVAR_, TEXT("1800"), FALSE);
   TtaSetDefEnvString (_MAXSOCKET_EVAR_, TEXT("32"), FALSE);
   TtaSetDefEnvString (_ENABLEMDA_EVAR_, TEXT("yes"), FALSE);
-  TtaSetDefEnvString (_NOPROXY_EVAR_, _EMPTYSTR_, FALSE);
   TtaSetDefEnvString (_HTTPPROXY_EVAR_, _EMPTYSTR_, FALSE);
+  TtaSetDefEnvString (_PROXYDOMAIN_EVAR_, _EMPTYSTR_, FALSE);
+  TtaSetDefEnvString (_PROXYDOMAINISONLYPROXY_EVAR_, TEXT("no"), FALSE);
   TtaSetDefEnvString (_MAXCACHEENTRYSIZE_EVAR_, TEXT("3"), FALSE);
   TtaSetDefEnvString (_CACHESIZE_EVAR_, TEXT("10"), FALSE);
   if (TempFileDirectory)
@@ -989,7 +991,8 @@ static void GetProxyConf ()
 #endif /* __STDC__ */
 {
   GetEnvString (_HTTPPROXY_EVAR_, HttpProxy);
-  GetEnvString (_NOPROXY_EVAR_, NoProxy);
+  GetEnvString (_PROXYDOMAIN_EVAR_, ProxyDomain);
+  TtaGetEnvBoolean (_PROXYDOMAINISONLYPROXY_EVAR_, &ProxyDomainIsOnlyProxy);
 }
 
 /*----------------------------------------------------------------------
@@ -1003,7 +1006,9 @@ static void SetProxyConf ()
 #endif /* __STDC__ */
 {
   TtaSetEnvString (_HTTPPROXY_EVAR_, HttpProxy, TRUE);
-  TtaSetEnvString (_NOPROXY_EVAR_, NoProxy, TRUE);
+  TtaSetEnvString (_PROXYDOMAIN_EVAR_, ProxyDomain, TRUE);
+  TtaSetEnvBoolean (_PROXYDOMAINISONLYPROXY_EVAR_, ProxyDomainIsOnlyProxy,
+		    TRUE);
 
   TtaSaveAppRegistry ();
 }
@@ -1021,7 +1026,8 @@ static void GetDefaultProxyConf ()
 {
   /* read the default values */
   GetDefEnvString (_HTTPPROXY_EVAR_, HttpProxy);
-  GetDefEnvString (_NOPROXY_EVAR_, NoProxy);
+  GetDefEnvString (_PROXYDOMAIN_EVAR_, ProxyDomain);
+  TtaGetDefEnvBoolean (_PROXYDOMAINISONLYPROXY_EVAR_, &ProxyDomainIsOnlyProxy);
 }
 
 #ifdef _WINDOWS
@@ -1037,7 +1043,11 @@ HWND hwnDlg;
 #endif /* __STDC__ */
 {
   SetDlgItemText (hwnDlg, IDC_HTTPPROXY, HttpProxy);
-  SetDlgItemText (hwnDlg, IDC_NOPROXY, NoProxy);
+  SetDlgItemText (hwnDlg, IDC_PROXYDOMAIN, ProxyDomain);
+  if (ProxyDomainIsOnlyProxy)
+    CheckRadioButton (hwnDlg, IDC_NOPROXY, IDC_ONLYPROXY, IDC_ONLYPROXY);
+  else
+    CheckRadioButton (hwnDlg, IDC_NOPROXY, IDC_ONLYPROXY, IDC_NOPROXY);
 }
 #else /* WINDOWS */
 /*----------------------------------------------------------------------
@@ -1052,7 +1062,8 @@ static void RefreshProxyMenu ()
 {
   /* set the menu entries to the current values */
   TtaSetTextForm (ProxyBase + mHttpProxy, HttpProxy);
-  TtaSetTextForm (ProxyBase + mNoProxy, NoProxy);
+  TtaSetTextForm (ProxyBase + mProxyDomain, ProxyDomain);
+  TtaSetMenuForm (ProxyBase + mToggleProxy, ProxyDomainIsOnlyProxy);
 }
 #endif /* !_WINDOWS */
 
@@ -1096,15 +1107,25 @@ LPARAM lParam;
 			      sizeof (HttpProxy) - 1);
 	      ProxyStatus |= AMAYA_PROXY_RESTART;
 	      break;
-	    case IDC_NOPROXY:
-	      GetDlgItemText (hwnDlg, IDC_NOPROXY, NoProxy,
-			      sizeof (NoProxy) - 1);
+	    case IDC_PROXYDOMAIN:
+	      GetDlgItemText (hwnDlg, IDC_PROXYDOMAIN, ProxyDomain,
+			      sizeof (ProxyDomain) - 1);
 	      ProxyStatus |= AMAYA_PROXY_RESTART;
 	      break;
 	    }
 	}
       switch (LOWORD (wParam))
 	{
+	  /* switch buttons */
+	case IDC_NOPROXY:
+	  ProxyDomainIsOnlyProxy = FALSE;
+	  ProxyStatus |= AMAYA_PROXY_RESTART;
+	  break;
+	case IDC_ONLYPROXY:
+	  ProxyDomainIsOnlyProxy = TRUE;
+	  ProxyStatus |= AMAYA_PROXY_RESTART;
+	  break;
+
 	  /* action buttons */
 	case ID_APPLY:
 	  SetProxyConf ();	  
@@ -1194,12 +1215,25 @@ STRING              data;
 	    HttpProxy [0] = EOS;
 	  break;
 
-	case mNoProxy:
+	case mProxyDomain:
 	  ProxyStatus |= AMAYA_PROXY_RESTART;
 	  if (data)
-	    ustrcpy (NoProxy, data);
+	    ustrcpy (ProxyDomain, data);
 	  else
-	    NoProxy [0] = EOS;
+	    ProxyDomain [0] = EOS;
+	  break;
+
+	case mToggleProxy:
+	  ProxyStatus |= AMAYA_PROXY_RESTART;
+	  switch (val) 
+	    {
+	    case 0:
+	      ProxyDomainIsOnlyProxy = FALSE;
+	      break;
+	    case 1:
+	      ProxyDomainIsOnlyProxy = TRUE;
+	      break;
+	    }
 	  break;
 
 	default:
@@ -1242,13 +1276,26 @@ View                view;
 		   20,
 		   1,
 		   TRUE);
-   TtaNewTextForm (ProxyBase + mNoProxy,
+   TtaNewTextForm (ProxyBase + mProxyDomain,
 		   ProxyBase + ProxyMenu,
-		   TtaGetMessage (AMAYA, AM_NO_PROXY),
+		   TtaGetMessage (AMAYA, AM_PROXY_DOMAIN),
 		   20,
 		   1,
 		   TRUE);
+
+   usprintf (s, "T%s%cT%s", 
+	     "No proxy on these domains", EOS,
+	     "Only proxy these domains");
+   TtaNewSubmenu (ProxyBase + mToggleProxy,
+		  ProxyBase + ProxyMenu,
+		  0,
+		  NULL,
+		  2,
+		  s,
+		  NULL,
+		  TRUE);
 #endif /* !_WINDOWS */
+
    /* reset the modified flag */
    ProxyStatus = 0;
    /* load and display the current values */
@@ -3814,3 +3861,11 @@ void                InitConfMenu ()
 			       MAX_LANNEGMENU_DLG);
 #endif /* !_WINDOWS */
 }
+
+
+
+
+
+
+
+

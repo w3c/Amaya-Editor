@@ -162,7 +162,7 @@ int                 AMAYA;
 #define AM_CACHE_ENTRY_SIZE           150
 #define AM_PROXY_MENU                 151
 #define AM_HTTP_PROXY                 152
-#define AM_NO_PROXY                   153
+#define AM_PROXY_DOMAIN               153
 #define AM_GENERAL_MENU               154
 #define AM_HOME_PAGE                  155
 #define AM_TOOLTIP_DELAY              156
@@ -198,4 +198,4 @@ int                 AMAYA;
 #define AM_SAFE_PUT_REDIRECT          186
 #define AM_WITH_CSS                   187
 #define AM_TRANS		      188
-#define AMAYA_MSG_MAX                 189
+#define AMAYA_MSG_MAX                 190
