@@ -1,5 +1,5 @@
 #
-# spec file for package amaya (Version 2.0)
+# spec file for package amaya (Version 4.2)
 # 
 # Copyright  (c)  1998  S.u.S.E. GmbH  Fuerth, Germany.
 #
@@ -8,13 +8,13 @@
 
 # neededforbuild  autoconf automake mmcore mmbase mmslib xpm libz libpng libjpeg
 
-%define version 2.1
+%define version 4.2.1
 
 Vendor:       W3C World Wide Web Consortium
 Distribution: W3C
 Name:         amaya
 Release:      1
-Copyright:    Copyright 1995 (MIT) (INRIA), (L)GPL compatible
+Copyright:    Copyright 1995-2000 (MIT) (INRIA), (L)GPL compatible
 Group:        X11/Applications/Networking
 URL:          http://www.w3.org/Amaya/
 Autoreqprov:  on
@@ -22,10 +22,15 @@ Packager:     Daniel.Veillard@w3.org
 
 Summary:      Web Browser/Editor from the World Wide Web Consortium
 Version:      %{version}
-Source: ftp://ftp.w3.org/pub/amaya/amaya-src-%{version}.tar.gz
-Source1: ftp://ftp.w3.org/pub/amaya/English.tar.gz
-Source2: ftp://ftp.w3.org/pub/amaya/French.tar.gz
-Patch: amaya-src-%{version}.diff
+Source: ftp://ftp.w3.org/pub/amaya/amaya-src-%{version}.tgz
+Source1: ftp://ftp.w3.org/pub/amaya/English.tgz
+Source2: ftp://ftp.w3.org/pub/amaya/French.tgz
+Source3: ftp://ftp.w3.org/pub/amaya/Italian.tgz
+Source4: ftp://ftp.w3.org/pub/amaya/Swedish.tgz
+Source5: ftp://ftp.w3.org/pub/amaya/German.tgz
+Source6: ftp://ftp.w3.org/pub/amaya/Spanish.tgz
+Source7: ftp://ftp.w3.org/pub/amaya/Dutch.tgz
+# Patch: amaya-src-%{version}.diff
 %description
 
 Amaya is a complete web browsing and authoring environment and comes
@@ -35,12 +40,17 @@ need to know the HTML or CSS languages.
 
 Authors:
 --------
-    Irene.Vatton@w3.org,Jose.Kahan@w3.org, Vincent.Quint@w3.org,
-    Daniel.Veillard@w3.org
+    Irene.Vatton@w3.org,Jose.Kahan@w3.org,
+    Vincent.Quint@w3.org
 
 %changelog
-* Fri Jul 30 2000 Jose Kahan <kahan@w3.org>
-- Updated the author list
+* Mon Jan 8 2001 Irene Vatton <Irene.Vatton@w3.org>
+- updated for amaya-4.1
+* Sat Nov 11 2000 Daniel Veillard <Daniel.Veillard@w3.org>
+- updated for amaya-4.0
+* Tue Jul 04 2000 Daniel Veillard <Daniel.Veillard@w3.org>
+- Updated for amaya-3.2
+- Removed Ramzi Guetari and Daniel Veillard from authors
 * Fri Jun 24 1999 Daniel Veillard <Daniel.Veillard@w3.org>
 - Updated for amaya-2.1
 * Fri Oct 16 1998 Daniel Veillard <Daniel.Veillard@w3.org>
@@ -49,16 +59,16 @@ Authors:
 
 %prep
 %setup -n Amaya
-%patch
+# %patch
 %build
 export CFLAGS=-O2
-rm -R libjpeg
+# rm -R libjpeg
 # rm -R libpng
 autoconf
 mkdir linux
 cd linux
 export HOME=`pwd`
-../configure --with-amaya --prefix=/usr --exec-prefix=/usr
+../configure --with-amaya --prefix=/usr/share --exec-prefix=/usr 
 #cp Options.orig Options
 make all
 %install
@@ -83,10 +93,10 @@ if [ -e /usr/bin/amaya ] ; then
 fi
 cd linux
 make install
-cd ..
-cp -a amaya/AmayaPage.html /usr/share/thot/amaya
+#cd ..
+#cp -a amaya/AmayaPage.html /usr/share/Amaya/amaya
 %files
 %doc COPYRIGHT README.amaya
 /usr/bin/amaya
-/usr/share/thot
+/usr/share/Amaya
 
