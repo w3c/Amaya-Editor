@@ -16,6 +16,9 @@
  
 /*
  * Module dedicated to manage user commands.
+ *
+ * Author: I. Vatton (INRIA)
+ *
  */
 
 #include "thot_gui.h"
@@ -954,7 +957,6 @@ View                view;
 #endif /* __STDC__ */
 {
    ViewSelection      *pViewSel;
-   PtrElement          pEl;
    int                 frame;
 
    if (document != 0)
@@ -974,16 +976,6 @@ View                view;
 		}
 	      else
 		TtcPreviousChar (document, view);
-#ifdef IV
-	    else
-	      {
-		  pEl = pViewSel->VsBox->BxAbstractBox->AbElement;
-		  if (pEl->ElLeafType == LtText)
-		    SelectString (LoadedDocument[document - 1], pEl, 1, 1);
-		  else
-		    SelectElement (LoadedDocument[document - 1], pEl, FALSE, FALSE);
-	      }
-#endif
 	  }
 	InsertChar (frame, 127, -1);
      }

@@ -16,6 +16,10 @@
  
 /*
    This module handles the Paste command in unstructured mode.
+ *
+ * Author: I. Vatton (INRIA)
+ * Separation between structured and unstructured mode : S. Bonhomme (INRIA)
+ *
  */
 
 #include "thot_sys.h"

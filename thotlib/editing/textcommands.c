@@ -16,6 +16,10 @@
  
 /*
  * Module dedicated to manage text commands.
+ *
+ * Author: I. Vatton (INRIA)
+ * Separation between structured and unstructured mode : S. Bonhomme (INRIA)
+ *
  */
 
 #include "thot_gui.h"
@@ -159,8 +163,9 @@ int                 yDelta;
    PtrBox              pBox, pLastBox, pLimitBox;
    PtrTextBuffer       pBuffer;
    PtrAbstractBox      pAb;
+   PtrLine             pLine;
    int                 nbbl, max;
-   int                 nChars;
+   int                 nChars, h;
 
    /* pLastBox = boite d'element precedemment selectionnee */
    pLastBox = ViewFrameTable[frame - 1].FrSelectionBegin.VsBox;
@@ -198,18 +203,24 @@ int                 yDelta;
 	   pBox = pLastBox;
 	if (pBox == pLastBox || pBox->BxAbstractBox->AbBox == pLastBox)
 	  {
+	    /* compute the move height */
+	    pLine = SearchLine (pBox);
+	    if (pLine != NULL)
+	      h = pLine->LiHeight / 2;
+	    else
+	      h = 10;
 	     if (xDelta > 0 && pLimitBox == pBox)
 	       {
 		  /* move one line down */
 		  y = pBox->BxYOrg + pBox->BxHeight;
-		  LocateLeafBox (frame, 0, y, 0, 10);
+		  LocateLeafBox (frame, 0, y, 0, h);
 		  return;
 	       }
 	     else if (xDelta < 0 && pLimitBox == pBox)
 	       {
 		  /* move one line up */
 		  y = pBox->BxYOrg;
-		  LocateLeafBox (frame, max, y, 0, -10);
+		  LocateLeafBox (frame, max, y, 0, -h);
 		  return;
 	       }
 	  }

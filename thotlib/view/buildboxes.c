@@ -1371,16 +1371,14 @@ boolean             splitBox;
 
 #endif /* __STDC__ */
 {
-   int                 j;
    PtrBox              box1;
    PtrBox              pMainBox;
-   PtrLine             ligne;
    Propagation         savpropage;
    PtrAbstractBox      pAb;
    AbPosition         *pPosAb;
    AbDimension        *pDimAb;
+   int                 j;
 
-   ligne = pLine;
    /* Traitement particulier aux boites de coupure */
    if (pBox->BxType == BoPiece || pBox->BxType == BoDotted)
      {
@@ -1426,7 +1424,7 @@ boolean             splitBox;
    pDimAb = &(pBox->BxAbstractBox->AbWidth);
    if (pBox->BxContentWidth || (!pDimAb->DimIsPosition && pDimAb->DimMinimum))
       /* Blanc entre deux boites de coupure */
-      if (splitBox && ligne != NULL)
+      if (splitBox && pLine != NULL)
 	{
 	   /* Il faut mettre a jour la largeur de la boite coupee */
 	   if ((pBox->BxType == BoSplit) || (adjustDelta == 0))
@@ -1434,7 +1432,7 @@ boolean             splitBox;
 	   else
 	      pBox->BxWidth += adjustDelta;
 	   /* Puis refaire la mise en lignes */
-	   RecomputeLines (pAb->AbEnclosing, ligne, pBox, frame);
+	   RecomputeLines (pAb->AbEnclosing, pLine, pBox, frame);
 	}
    /* Box coupee */
       else if (pBox->BxType == BoSplit)
@@ -1449,8 +1447,8 @@ boolean             splitBox;
 	   /* Faut-il mettre a jour le bloc de ligne englobant ? */
 	   if (Propagate == ToAll)
 	     {
-		ligne = SearchLine (pBox->BxNexChild);
-		RecomputeLines (pAb->AbEnclosing, ligne, pBox, frame);
+		pLine = SearchLine (pBox->BxNexChild);
+		RecomputeLines (pAb->AbEnclosing, pLine, pBox, frame);
 	     }
 	}
    /* Box entiere ou de coupure */
@@ -1493,9 +1491,9 @@ int                 frame;
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pChildAb;
+   PtrBox              pCurrentBox;
    boolean             changeSelectBegin;
    boolean             changeSelectEnd;
-   PtrBox              pCurrentBox;
 
    if (pAb != NULL)
      {
