@@ -256,8 +256,8 @@ ThotBool            nature;
 	       /* verifie que la vue n'est pas encore dans la liste */
 	       present = FALSE;
 	       for (i = 0; i < *nViews && !present; i++)
-		  present = (viewList[i].VdView == view + 1
-			     && viewList[i].VdSSchema->SsCode == pSS->SsCode);
+		 present = (viewList[i].VdView == view + 1 &&
+			    !ustrcmp (viewList[i].VdSSchema->SsName, pSS->SsName));
 	       if (!present)
 		  {
 		  /* on met la vue dans la liste */
@@ -734,9 +734,9 @@ PtrElement          viewRoot;
 	 assoc = 0;
 	 do
 	    {
-	    if (pDoc->DocAssocRoot[assoc] != NULL)
-	      if (pDoc->DocAssocRoot[assoc]->ElStructSchema->SsCode ==
-		                                                 pSS->SsCode)
+	    if (pDoc->DocAssocRoot[assoc] != NULL &&
+		!ustrcmp (pDoc->DocAssocRoot[assoc]->ElStructSchema->SsName,
+			  pSS->SsName))
 		 assocPresent = pDoc->DocAssocRoot[assoc]->ElTypeNumber == r;
 	    assoc++;
 	    }

@@ -172,7 +172,7 @@ PtrSSchema          pSS;
 		if (pAttr == NULL)
 		   stop = TRUE;	/* dernier attribut */
 		else if (pAttr->AeAttrNum == pCo->CnItem[0].CiInitAttr &&
-			 pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
+			 !ustrcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName))
 		   stop = TRUE;	/* c'est l'attribut cherche' */
 		else
 		   pAttr = pAttr->AeNext;	/* au suivant */
@@ -223,7 +223,7 @@ PtrSSchema          pSS;
 	if (pAttr == NULL)
 	   stop = TRUE;	/* dernier attribut */
 	else if (pAttr->AeAttrNum == pCountItem->CiCondAttr &&
-		 pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
+		 !ustrcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName))
 	   stop = TRUE;	/* c'est l'attribut cherche' */
 	else
 	   pAttr = pAttr->AeNext;	/* au suivant */
@@ -326,49 +326,52 @@ ThotBool            Maximum;
 
 	     if (Maximum)
 	       {
-		  /* mais on veut la valeur maximale; alors, on continue */
-		  pEl = pElNum;
-		  pEl2 = pEl;
-		  while (pEl2->ElParent != NULL)
-		     pEl2 = pEl2->ElParent;
-		  pSSpr = pEl2->ElStructSchema;
-		  /* view a laquelle appartient la marque de page cherchee */
-		  if (pCo1->CnItem[0].CiViewNum > 0)
-		     view = pCo1->CnItem[0].CiViewNum;
-		  if (pCo1->CnItem[0].CiViewNum == 0 && pElNum->ElAssocNum > 0)
-		     view = pElNum->ElViewPSchema;
-		  /* cherche la marque de page qui precede l'element */
-		  stop = FALSE;
-		  do
-		    {
-		       pEl = BackSearchTypedElem (pEl, TypeRank, NULL);
-		       if (pEl == NULL)
-			  /* pas de marque de page precedente */
-			  stop = TRUE;
-		       else
-			 {
-			    if (pElNum->ElStructSchema->SsCode != pSSpr->SsCode)
-			       /* Saut de page d'une view squelette */
-			       /* on ne que compte les pages etrangeres au schema */
-			       /* principal */
-			       pstop = pEl->ElStructSchema->SsCode !=
-				  pSSpr->SsCode;
-			    else
-			       pstop = pEl->ElStructSchema->SsCode ==
-				  pSSpr->SsCode;
+		 /* mais on veut la valeur maximale; alors, on continue */
+		 pEl = pElNum;
+		 pEl2 = pEl;
+		 while (pEl2->ElParent != NULL)
+		   pEl2 = pEl2->ElParent;
+		 pSSpr = pEl2->ElStructSchema;
+		 /* view a laquelle appartient la marque de page cherchee */
+		 if (pCo1->CnItem[0].CiViewNum > 0)
+		   view = pCo1->CnItem[0].CiViewNum;
+		 if (pCo1->CnItem[0].CiViewNum == 0 && pElNum->ElAssocNum > 0)
+		   view = pElNum->ElViewPSchema;
+		 /* cherche la marque de page qui precede l'element */
+		 stop = FALSE;
+		 do
+		   {
+		     pEl = BackSearchTypedElem (pEl, TypeRank, NULL);
+		     if (pEl == NULL)
+		       /* pas de marque de page precedente */
+		       stop = TRUE;
+		     else
+		       {
+			 if (ustrcmp (pElNum->ElStructSchema->SsName, pSSpr->SsName))
+			   /* Saut de page d'une view squelette */
+			   /* on ne que compte les pages etrangeres au schema */
+			   /* principal */
+			   pstop = ustrcmp (pEl->ElStructSchema->SsName,
+					    pSSpr->SsName);
+			 else
+			   pstop = !ustrcmp (pEl->ElStructSchema->SsName,
+					     pSSpr->SsName);
 
-			    /* on ignore les pages qui ne concernent pas la view */
-			    if ((pEl->ElViewPSchema == view) && (pstop))
-			       stop = TRUE;
-			 }
-		    }
-		  while (!stop);
+			 /* on ignore les pages qui ne concernent pas la view */
+			 if ((pEl->ElViewPSchema == view) && (pstop))
+			   stop = TRUE;
+		       }
+		   }
+		 while (!stop);
 
-		  if (pEl == NULL)	/* pas de marque de page precedente */
+		 if (pEl == NULL)
+		   {
+		     /* pas de marque de page precedente */
 		     if (initattr)
-			value = valueinitattr;
+		       value = valueinitattr;
 		     else
 			value = 0;
+		   }
 		  else
 		     /* on prend pour valeur le numero de la marque de page */
 		     /* precedente */
@@ -499,8 +502,9 @@ ThotBool            Maximum;
 		  {
 		     pEl = FwdSearchElem2Types (pEl, TypeIncr, pElNum->ElTypeNumber, pSchIncr,
 						pElNum->ElStructSchema);
-		     if (pEl != NULL)
-			if (EquivalentType (pEl, TypeIncr, pSchIncr))
+		     if (pEl != NULL &&
+			 EquivalentType (pEl, TypeIncr, pSchIncr))
+		       {
 			   /* on a trouve' un element du type qui incremente */
 			if (!CondAttr)
 			   value += GetCounterValEl (pCo1, pEl, CntrAdd, pSS);
@@ -512,6 +516,7 @@ ThotBool            Maximum;
 			      if (CondAttrOK (&pCo1->CnItem[i], pEl, pSS))
 			         value += GetCounterValEl (pCo1, pEl, CntrAdd, pSS);
 			   }
+		       }
 		  }
 		while (pEl != NULL && !EquivalentType (pEl, TypeSet, pSS));
 	  }
@@ -576,7 +581,8 @@ int                 view;
 	while (pEl != NULL)
 	  {
 	     if (pEl->ElTypeNumber == TypeRLevel &&
-		 pEl->ElStructSchema->SsCode == pElNum->ElStructSchema->SsCode)
+		 !ustrcmp (pEl->ElStructSchema->SsName,
+			   pElNum->ElStructSchema->SsName))
 		/* cet element englobant a le type qui incremente le compteur*/
 		/* if there is a condition about an attribute attached to the
 		   element, check that condition */
@@ -616,12 +622,14 @@ int                 view;
 		     stop = TRUE;
 		  else
 		    {
-		       if (pElNum->ElStructSchema->SsCode != pSSpr->SsCode)
+		       if (ustrcmp (pElNum->ElStructSchema->SsName, pSSpr->SsName))
 			  /* Saut de page d'une view squelette */
 			  /*on ne que compte les pages etrangeres au schema principal */
-			  pstop = pEl->ElStructSchema->SsCode != pSSpr->SsCode;
+			  pstop = ustrcmp (pEl->ElStructSchema->SsName,
+					   pSSpr->SsName);
 		       else
-			  pstop = pEl->ElStructSchema->SsCode == pSSpr->SsCode;
+			  pstop = !ustrcmp (pEl->ElStructSchema->SsName,
+					    pSSpr->SsName);
 
 		       /* on ignore les pages qui ne concernent pas la view */
 		       /* on ignore les pages qui ne concernent pas la view */
@@ -675,8 +683,8 @@ int                 view;
 		  while (level > 0 && pEl != NULL)
 		    {
 		       if (pEl->ElTypeNumber == TypeRank &&
-			   pEl->ElStructSchema->SsCode ==
-			   pElNum->ElStructSchema->SsCode)
+			   !ustrcmp (pEl->ElStructSchema->SsName,
+				     pElNum->ElStructSchema->SsName))
 			  /* cet element englobant a le type qui incremente le
 			     compteur */
 			    {
@@ -706,27 +714,27 @@ int                 view;
 		  pAttr = NULL;
 		  pElReinit = NULL;
 		  if (pCo1->CnItem[0].CiReinitAttr != 0)
-		     /* le compteur est reinitialise' par un attribut */
-		     /* cherche si l'element ou un de ses freres precedents */
-		     /* porte cet attribut */
+		    /* le compteur est reinitialise' par un attribut */
+		    /* cherche si l'element ou un de ses freres precedents */
+		    /* porte cet attribut */
 		    {
-		       pElReinit = pEl;
-		       while (pElReinit != NULL && pAttr == NULL)
-			 {
-			    pAttr = pElReinit->ElFirstAttr;
-			    stop = FALSE;	/* parcourt les attributs de l'element */
-			    do
-			       if (pAttr == NULL)
-				  stop = TRUE;	/* dernier attribut */
-			       else if (pAttr->AeAttrNum == pCo1->CnItem[0].CiReinitAttr &&
-				pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
-				  stop = TRUE;	/* c'est l'attribut cherche' */
-			       else
-				  pAttr = pAttr->AeNext;	/* au suivant */
-			    while (!stop);
+		      pElReinit = pEl;
+		      while (pElReinit != NULL && pAttr == NULL)
+			{
+			  pAttr = pElReinit->ElFirstAttr;
+			  stop = FALSE;	/* parcourt les attributs de l'element */
+			  do
 			    if (pAttr == NULL)
-			       pElReinit = pElReinit->ElPrevious;
-			 }
+			      stop = TRUE;	/* dernier attribut */
+			    else if (pAttr->AeAttrNum == pCo1->CnItem[0].CiReinitAttr &&
+				     !ustrcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName))
+			      stop = TRUE;	/* c'est l'attribut cherche' */
+			    else
+			      pAttr = pAttr->AeNext;	/* au suivant */
+			  while (!stop);
+			  if (pAttr == NULL)
+			    pElReinit = pElReinit->ElPrevious;
+			}
 		    }
 		  /* on compte les elements qui precedent l'element a numeroter */
 		  /* en s'arretant sur l'element qui reinitialise le compteur */
@@ -805,19 +813,21 @@ int                 view;
 		  pEl = FwdSearchElem2Types (pEl, TypeIncr,
 					     pElNum->ElTypeNumber, pSchIncr,
 					     pElNum->ElStructSchema);
-		  if (pEl != NULL)
-		     if (EquivalentType (pEl, TypeIncr, pSchIncr))
-			/* on a trouve' un element du type qui incremente */
-			if (!CondAttr)
-			   value += GetCounterValEl (pCo1, pEl, CntrAdd, pSS);
-			else
-			   /* check conditions on attributes */
-			   {
-			   i = GetCounterItem (pCo1, CntrAdd, pSS, pEl);
-			   if (i >= 0)
-			      if (CondAttrOK (&pCo1->CnItem[i], pEl, pSS))
-				 value += GetCounterValEl (pCo1, pEl, CntrAdd, pSS);
-			   }
+		  if (pEl != NULL &&
+		      EquivalentType (pEl, TypeIncr, pSchIncr))
+		    {
+		      /* on a trouve' un element du type qui incremente */
+		      if (!CondAttr)
+			value += GetCounterValEl (pCo1, pEl, CntrAdd, pSS);
+		      else
+			/* check conditions on attributes */
+			{
+			  i = GetCounterItem (pCo1, CntrAdd, pSS, pEl);
+			  if (i >= 0)
+			    if (CondAttrOK (&pCo1->CnItem[i], pEl, pSS))
+			      value += GetCounterValEl (pCo1, pEl, CntrAdd, pSS);
+			}
+		    }
 	       }
 	     while (pEl != NULL && pEl != pElNum);
 	  }
@@ -866,6 +876,7 @@ int                 view;
 		  pEl = BackSearchElem2Types (pEl, TypeSet, TypeIncr, pSchSet,
 					      pSchIncr);
 		  if (pEl != NULL)
+		    {
 		     if (EquivalentType (pEl, TypeIncr, pSchIncr))
 			/* on a trouve' un element du type qui incremente */
 			{
@@ -910,6 +921,7 @@ int                 view;
 				 }
 			   }
 			}
+		    }
 	       }
 	     while (pEl != NULL);
 	  value += Nincr * incrVal;
@@ -1028,198 +1040,200 @@ PtrDocument         pDoc;
      {
 	pVa1 = &pPr1->PvItem[f - 1];
 	switch (pVa1->ViType)
+	  {
+	    /* traitement specifique selon le type de l'element de variable */
+	  case VarText:
+	    /* constante textuelle */
+	    pPres1 = &pSchP->PsConstant[pVa1->ViConstant - 1];
+	    CopyStringToText (pPres1->PdString, pAb->AbText, &l);
+	    pAb->AbVolume += l;
+	    pAb->AbLanguage = TtaGetLanguageIdFromAlphabet (pPres1->PdAlphabet);
+	    break;
+	    
+	  case VarAttrValue:
+	    /* valeur d'un attribut */
+	    /* cherche si l'element auquel se rapporte le pave (ou l'un de */
+	    /* ses ascendants) possede cet attribut */
+	    pEl = pAb->AbElement;
+	    found = FALSE;
+	    while (!found && pEl != NULL)
 	      {
-		    /* traitement specifique selon le type de l'element de variable */
-		 case VarText:
-		    /* constante textuelle */
-		    pPres1 = &pSchP->PsConstant[pVa1->ViConstant - 1];
-		    CopyStringToText (pPres1->PdString, pAb->AbText, &l);
-		    pAb->AbVolume += l;
-		    pAb->AbLanguage = TtaGetLanguageIdFromAlphabet (pPres1->PdAlphabet);
-		    break;
-
-		 case VarAttrValue:
-		    /* valeur d'un attribut */
-		    /* cherche si l'element auquel se rapporte le pave (ou l'un de */
-		    /* ses ascendants) possede cet attribut */
-		    pEl = pAb->AbElement;
-		    found = FALSE;
-		    while (!found && pEl != NULL)
-		      {
-			 pAttr = pEl->ElFirstAttr;	/* premier attribut */
-			 while (!found && pAttr != NULL)
-			    if (pAttr->AeAttrNum == pVa1->ViAttr &&
-				pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
-			       found = TRUE;
-			    else
-			       pAttr = pAttr->AeNext;
-			 if (!found)
-			    /* passe a l'element ascendant */
-			    pEl = pEl->ElParent;
-		      }
-		    if (found)
-		       /* l'element possede l'attribut */
-		      {
-			 switch (pAttr->AeAttrType)
-			       {
-				  case AtNumAttr:
-				     /* traduit l'entier en ASCII selon le style voulu */
-				     GetCounterValue (pAttr->AeAttrValue, pVa1->ViStyle, number, &l);
-				     CopyStringToText (number, pAb->AbText, &l);
-				     pAb->AbVolume += l;
-				     pAb->AbCreatorAttr = pAttr;
-				     break;
-				  case AtTextAttr:
-				     if (pAttr->AeAttrText != NULL)
-				       {
-					  CopyTextToText (pAttr->AeAttrText,
-							  pAb->AbText, &l);
-					  pAb->AbVolume += l;
-				       }
-				     pAb->AbCreatorAttr = pAttr;
-				     break;
-				  case AtReferenceAttr:
-				     CopyStringToText (TEXT("REF"), pAb->AbText, &l);
-				     pAb->AbVolume += l;
-				     break;
-				  case AtEnumAttr:
-				     pAttr1 = &pSS->SsAttribute[pVa1->ViAttr - 1];
-				     CopyStringToText (pAttr1->AttrEnumValue[pAttr->AeAttrValue - 1],
-						       pAb->AbText, &l);
-				     pAb->AbVolume += l;
-				     pAb->AbCreatorAttr = pAttr;
-				     break;
-			       }
-			 /* end case AttrType */
-		      }
-		    break;
-		 case VarCounter:
-		    /* valeur d'un compteur */
-		    pCo1 = &pSchP->PsCounter[pVa1->ViCounter - 1];
-		    if (pVa1->ViCounterVal == CntMaxVal)
-		       /* on cherche la valeur maximale du compteur */
-		       i = CounterValMinMax (pVa1->ViCounter, pSS, pSchP, pAb->AbElement,
-					     pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView, TRUE);
-		    else if (pVa1->ViCounterVal == CntMinVal)
-		       /* on cherche la valeur minimale du compteur */
-		       i = CounterValMinMax (pVa1->ViCounter, pSS, pSchP,
-					     pAb->AbElement,
-			    pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView,
-					     FALSE);
-		    else
-		       /* valeur courante du compteur */
-		       i = CounterVal (pVa1->ViCounter, pSS, pSchP, pAb->AbElement,
-			   pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView);
-		    /* le cas particulier des compteurs en bas de page (ou il */
-		    /* fallait decrementer la valeur) est supprime dans V4 car  */
-		    /* le bas de page est associe a la page courante et non la */
-		    /* page suivante comme avant */
-		    if (pCo1->CnPageFooter)
-		       /* c'est un compteur qui s'affiche en bas de page */
-		       if (pAb->AbElement->ElTerminal
-			   && pAb->AbElement->ElLeafType == LtPageColBreak)
-			  /* on calcule sa valeur pour une marque de page, on */
-			  /* reduit la valeur du compteur */
-			  if (pCo1->CnItem[0].CiCntrOp == CntrRank)
-			     i--;
-			  else
-			     i -= pCo1->CnItem[1].CiParamValue;
-		    /* traduit l'entier en ASCII */
-		    GetCounterValue (i, pVa1->ViStyle, number, &l);
-		    CopyStringToText (number, pAb->AbText, &l);
-		    pAb->AbVolume += l;
-		    break;
-		 case VarDate:
-		    /* date en anglais */
-		    pt = &tod;
-		    *pt = time (NULL);
-		    ptm = localtime (pt);
-
-		    GetCounterValue (ptm->tm_year, CntArabic, number, &l);
-		    CopyStringToText (number, pAb->AbText, &l);
-		    pAb->AbVolume += l;
-		    CopyStringToText (TEXT("/"), pAb->AbText, &l);
-		    pAb->AbVolume += l;
-		    GetCounterValue (ptm->tm_mon + 1, CntArabic, number, &l);
-		    CopyStringToText (number, pAb->AbText, &l);
-		    pAb->AbVolume += l;
-		    CopyStringToText (TEXT("/"), pAb->AbText, &l);
-		    pAb->AbVolume += l;
-		    GetCounterValue (ptm->tm_mday, CntArabic, number, &l);
-		    CopyStringToText (number, pAb->AbText, &l);
-		    pAb->AbVolume += l;
-		    break;
-		 case VarFDate:
-		    /* date en francais */
-		    pt = &tod;
-		    *pt = time (NULL);
-		    ptm = localtime (pt);
-		    GetCounterValue (ptm->tm_mday, CntArabic, number, &l);
-		    CopyStringToText (number, pAb->AbText, &l);
-		    pAb->AbVolume += l;
-		    CopyStringToText (TEXT("/"), pAb->AbText, &l);
-		    pAb->AbVolume += l;
-		    GetCounterValue (ptm->tm_mon + 1, CntArabic, number, &l);
-		    CopyStringToText (number, pAb->AbText, &l);
-		    pAb->AbVolume += l;
-		    CopyStringToText (TEXT("/"), pAb->AbText, &l);
-		    pAb->AbVolume += l;
-		    GetCounterValue (ptm->tm_year, CntArabic, number, &l);
-		    CopyStringToText (number, pAb->AbText, &l);
-		    pAb->AbVolume += l;
-		    break;
-		 case VarDocName:
-		    /* Name du document */
-		    CopyStringToText (pDoc->DocDName, pAb->AbText, &l);
-		    pAb->AbVolume += l;
-		    break;
-		 case VarDirName:
-		    /* Name du document */
-		    CopyStringToText (pDoc->DocDirectory, pAb->AbText, &l);
-		    pAb->AbVolume += l;
-		    break;
-		 case VarElemName:
-		    /* Name de l'element */
-		    pEl = pAb->AbElement;
-		    CopyStringToText (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].
-				      SrName, pAb->AbText, &l);
-		    pAb->AbVolume += l;
-		    break;
-		 case VarAttrName:
-		    /* Name de l'attribut */
-		    /* non implemente' */
-		    break;
-		 case VarPageNumber:
-		    /* numero de la marque de page precedente dans la */
-		    /* view ViView */
-		    /* cherche en arriere la premiere marque de page de cette view */
-		    pEl = pAb->AbElement;
-		    found = FALSE;
-		    do
-		      {
-			 pEl = BackSearchTypedElem (pEl, PageBreak + 1, NULL);
-			 if (pEl != NULL)
-			    /* on ignore les pages qui ne concernent pas la view */
-			    if (pEl->ElViewPSchema == pVa1->ViView)
-			       found = TRUE;
-		      }
-		    while ((!found) && (pEl != NULL));
-		    if (pEl == NULL)
-		       i = 1;	/* pas trouve', on considere que c'est la page 1 */
-		    else
-		       i = pEl->ElPageNumber;	/* numero de la page trouvee */
-		    /* traduit le numero de page en ASCII selon le style voulu */
-		    GetCounterValue (i, pVa1->ViStyle, number, &l);
-		    CopyStringToText (number, pAb->AbText, &l);
-		    pAb->AbVolume += l;
-		    break;
-		 default:
-		    break;
+		pAttr = pEl->ElFirstAttr;	/* premier attribut */
+		while (!found && pAttr != NULL)
+		  if (pAttr->AeAttrNum == pVa1->ViAttr &&
+		      !ustrcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName))
+		    found = TRUE;
+		  else
+		    pAttr = pAttr->AeNext;
+		if (!found)
+		  /* passe a l'element ascendant */
+		  pEl = pEl->ElParent;
 	      }
+	    if (found)
+	      /* l'element possede l'attribut */
+	      {
+		switch (pAttr->AeAttrType)
+		  {
+		  case AtNumAttr:
+		    /* traduit l'entier en ASCII selon le style voulu */
+		    GetCounterValue (pAttr->AeAttrValue, pVa1->ViStyle, number, &l);
+		    CopyStringToText (number, pAb->AbText, &l);
+		    pAb->AbVolume += l;
+		    pAb->AbCreatorAttr = pAttr;
+		    break;
+		  case AtTextAttr:
+		    if (pAttr->AeAttrText != NULL)
+		      {
+			CopyTextToText (pAttr->AeAttrText,
+					pAb->AbText, &l);
+			pAb->AbVolume += l;
+		      }
+		    pAb->AbCreatorAttr = pAttr;
+		    break;
+		  case AtReferenceAttr:
+		    CopyStringToText (TEXT("REF"), pAb->AbText, &l);
+		    pAb->AbVolume += l;
+		    break;
+		  case AtEnumAttr:
+		    pAttr1 = &pSS->SsAttribute[pVa1->ViAttr - 1];
+		    CopyStringToText (pAttr1->AttrEnumValue[pAttr->AeAttrValue - 1],
+				      pAb->AbText, &l);
+		    pAb->AbVolume += l;
+		    pAb->AbCreatorAttr = pAttr;
+		    break;
+		  }
+		/* end case AttrType */
+	      }
+	    break;
+	  case VarCounter:
+	    /* valeur d'un compteur */
+	    pCo1 = &pSchP->PsCounter[pVa1->ViCounter - 1];
+	    if (pVa1->ViCounterVal == CntMaxVal)
+	      /* on cherche la valeur maximale du compteur */
+	      i = CounterValMinMax (pVa1->ViCounter, pSS, pSchP, pAb->AbElement,
+				    pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView, TRUE);
+	    else if (pVa1->ViCounterVal == CntMinVal)
+	      /* on cherche la valeur minimale du compteur */
+	      i = CounterValMinMax (pVa1->ViCounter, pSS, pSchP,
+				    pAb->AbElement,
+				    pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView,
+				    FALSE);
+	    else
+	      /* valeur courante du compteur */
+	      i = CounterVal (pVa1->ViCounter, pSS, pSchP, pAb->AbElement,
+			      pDoc->DocView[pAb->AbDocView - 1].DvPSchemaView);
+	    /* le cas particulier des compteurs en bas de page (ou il */
+	    /* fallait decrementer la valeur) est supprime dans V4 car  */
+	    /* le bas de page est associe a la page courante et non la */
+	    /* page suivante comme avant */
+	    if (pCo1->CnPageFooter)
+	      /* c'est un compteur qui s'affiche en bas de page */
+	      if (pAb->AbElement->ElTerminal
+		  && pAb->AbElement->ElLeafType == LtPageColBreak)
+		{
+		/* on calcule sa valeur pour une marque de page, on */
+		/* reduit la valeur du compteur */
+		if (pCo1->CnItem[0].CiCntrOp == CntrRank)
+		  i--;
+		else
+		  i -= pCo1->CnItem[1].CiParamValue;
+		}
+	    /* traduit l'entier en ASCII */
+	    GetCounterValue (i, pVa1->ViStyle, number, &l);
+	    CopyStringToText (number, pAb->AbText, &l);
+	    pAb->AbVolume += l;
+	    break;
+	  case VarDate:
+	    /* date en anglais */
+	    pt = &tod;
+	    *pt = time (NULL);
+	    ptm = localtime (pt);
+	    
+	    GetCounterValue (ptm->tm_year, CntArabic, number, &l);
+	    CopyStringToText (number, pAb->AbText, &l);
+	    pAb->AbVolume += l;
+	    CopyStringToText (TEXT("/"), pAb->AbText, &l);
+	    pAb->AbVolume += l;
+	    GetCounterValue (ptm->tm_mon + 1, CntArabic, number, &l);
+	    CopyStringToText (number, pAb->AbText, &l);
+	    pAb->AbVolume += l;
+	    CopyStringToText (TEXT("/"), pAb->AbText, &l);
+	    pAb->AbVolume += l;
+	    GetCounterValue (ptm->tm_mday, CntArabic, number, &l);
+	    CopyStringToText (number, pAb->AbText, &l);
+	    pAb->AbVolume += l;
+	    break;
+	  case VarFDate:
+	    /* date en francais */
+	    pt = &tod;
+	    *pt = time (NULL);
+	    ptm = localtime (pt);
+	    GetCounterValue (ptm->tm_mday, CntArabic, number, &l);
+	    CopyStringToText (number, pAb->AbText, &l);
+	    pAb->AbVolume += l;
+	    CopyStringToText (TEXT("/"), pAb->AbText, &l);
+	    pAb->AbVolume += l;
+	    GetCounterValue (ptm->tm_mon + 1, CntArabic, number, &l);
+	    CopyStringToText (number, pAb->AbText, &l);
+	    pAb->AbVolume += l;
+	    CopyStringToText (TEXT("/"), pAb->AbText, &l);
+	    pAb->AbVolume += l;
+	    GetCounterValue (ptm->tm_year, CntArabic, number, &l);
+	    CopyStringToText (number, pAb->AbText, &l);
+	    pAb->AbVolume += l;
+	    break;
+	  case VarDocName:
+	    /* Name du document */
+	    CopyStringToText (pDoc->DocDName, pAb->AbText, &l);
+	    pAb->AbVolume += l;
+	    break;
+	  case VarDirName:
+	    /* Name du document */
+	    CopyStringToText (pDoc->DocDirectory, pAb->AbText, &l);
+	    pAb->AbVolume += l;
+	    break;
+	  case VarElemName:
+	    /* Name de l'element */
+	    pEl = pAb->AbElement;
+	    CopyStringToText (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].
+			      SrName, pAb->AbText, &l);
+	    pAb->AbVolume += l;
+	    break;
+	  case VarAttrName:
+	    /* Name de l'attribut */
+	    /* non implemente' */
+	    break;
+	  case VarPageNumber:
+	    /* numero de la marque de page precedente dans la */
+	    /* view ViView */
+	    /* cherche en arriere la premiere marque de page de cette view */
+	    pEl = pAb->AbElement;
+	    found = FALSE;
+	    do
+	      {
+		pEl = BackSearchTypedElem (pEl, PageBreak + 1, NULL);
+		if (pEl != NULL &&
+		    /* on ignore les pages qui ne concernent pas la view */
+		    pEl->ElViewPSchema == pVa1->ViView)
+		  found = TRUE;
+	      }
+	    while ((!found) && (pEl != NULL));
+	    if (pEl == NULL)
+	      i = 1;	/* pas trouve', on considere que c'est la page 1 */
+	    else
+	      i = pEl->ElPageNumber;	/* numero de la page trouvee */
+	    /* traduit le numero de page en ASCII selon le style voulu */
+	    GetCounterValue (i, pVa1->ViStyle, number, &l);
+	    CopyStringToText (number, pAb->AbText, &l);
+	    pAb->AbVolume += l;
+	    break;
+	  default:
+	    break;
+	  }
 	/* termine la mise a jour du pave */
      }
    if (PresAbsBoxUserEditable (pAb))
-      /* le contenu de ce pave de presentation est donc modifiable */
+     /* le contenu de ce pave de presentation est donc modifiable */
       pAb->AbCanBeModified = TRUE;
    pAb->AbLeafType = LtText;
    if (isOld == NULL)

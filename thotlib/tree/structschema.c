@@ -304,33 +304,31 @@ PtrSSchema          pSS;
    	SameSRules teste si les regles de numero typeNum1 et		
    	typeNum2 dans les schemas de structure pSS1 et pSS2 sont egales	
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 ThotBool            SameSRules (int typeNum1, PtrSSchema pSS1, int typeNum2, PtrSSchema pSS2)
-
 #else  /* __STDC__ */
 ThotBool            SameSRules (typeNum1, pSS1, typeNum2, pSS2)
 int                 typeNum1;
 PtrSSchema          pSS1;
 int                 typeNum2;
 PtrSSchema          pSS2;
-
 #endif /* __STDC__ */
-
 {
-   ThotBool            ret;
-
-   ret = FALSE;
-   if (typeNum1 == typeNum2)
+  ThotBool            ret;
+  
+  ret = FALSE;
+  if (typeNum1 == typeNum2)
+    {
       if (typeNum2 <= MAX_BASIC_TYPE)
-	 /* les types de base sont les memes dans tous les schemas */
-	 ret = TRUE;
-      else if (pSS1->SsCode == pSS2->SsCode)
-	 if (typeNum1 < pSS1->SsFirstDynNature || pSS1->SsFirstDynNature == 0)
-	    /* ce n'est pas une regle ajoutee par l'editeur pour une */
-	    /* nature chargee dynamiquement */
-	    ret = TRUE;
-   return ret;
+	/* les types de base sont les memes dans tous les schemas */
+	ret = TRUE;
+      else if ((typeNum1 < pSS1->SsFirstDynNature || pSS1->SsFirstDynNature == 0) &&
+	       !ustrcmp (pSS1->SsName, pSS2->SsName))
+	/* ce n'est pas une regle ajoutee par l'editeur pour une */
+	/* nature chargee dynamiquement */
+	ret = TRUE;
+    }
+  return ret;
 }
 
 /*----------------------------------------------------------------------
@@ -377,10 +375,12 @@ PtrElement          pEl;
 	if (pSRule->SrAssocElem)
 	   test = FALSE;
 	else if (pSRule->SrRecursive)
+	  {
 	   if (pSRule->SrRecursDone)
 	      test = FALSE;
 	   else
 	      pSRule->SrRecursDone = TRUE;
+	  }
 	if (test)
 	   switch (pSRule->SrConstruct)
 		 {
@@ -624,7 +624,7 @@ PtrSSchema          pSS;
 		     StrSchOK = TRUE;
 		  else
 		     /* On compare les codes identifiant les schemas de structure */
-		     StrSchOK = pSSasc->SsCode == pSS->SsCode;
+		     StrSchOK = !ustrcmp (pSSasc->SsName, pSS->SsName);
 		  if (StrSchOK)
 		     /* les schemas de structure correspondent */
 		    {
@@ -791,6 +791,7 @@ PtrSSchema         *pSS;
 	pSRule = &(*pSS)->SsRule[*typeNum - 1];
 	test = TRUE;
 	if (pSRule->SrRecursive)
+	  {
 	   if (pSRule->SrRecursDone)
 	     {
 		test = FALSE;
@@ -799,6 +800,7 @@ PtrSSchema         *pSS;
 	     }
 	   else
 	      pSRule->SrRecursDone = TRUE;
+	  }
 	if (test)
 	   switch (pSRule->SrConstruct)
 		 {
@@ -1151,6 +1153,7 @@ ThotBool           *optional;
 			     while (*typeNum == 0 && i < pRule->SrNComponents) ;
 
 			     if (*typeNum == 0)
+			       {
 				/* l'element n'est pas un des composants de
 				   l'agregat, c'est sans doute une inclusion */
 				if (AllowedIncludedElem (pDoc, pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema))
@@ -1194,11 +1197,14 @@ ThotBool           *optional;
 				else
 				   /* ce n'est pas une inclusion, on arrete */
 				   pEl = NULL;
+			       }
 			  }
 
 			if (*typeNum != 0)
+			  {
 			   /* trouve' */
 			   if (before)
+			     {
 			      /* on cherche a creer avant */
 			      if (i <= distance)
 				 *typeNum = 0;
@@ -1220,9 +1226,9 @@ ThotBool           *optional;
 					pE = pE->ElPrevious;
 				     }
 				}
-			   else
+			     }
+			   else if (*typeNum + distance > pRule->SrNComponents)
 			      /* on cherche a creer apres */
-			   if (*typeNum + distance > pRule->SrNComponents)
 			      *typeNum = 0;
 			   else
 			      /* type de l'element possible */
@@ -1241,6 +1247,7 @@ ThotBool           *optional;
 				     pE = pE->ElNext;
 				  }
 			     }
+			  }
 		     }
 		}
 	}
@@ -1279,6 +1286,7 @@ PtrDocument         pDoc;
    TtAttribute        *pAtt;
 
    if (pRefEl != NULL)
+     {
       /* c'est un element reference */
       if (pRefEl->ElSource != NULL)
 	 /* c'est une reference inclusion */
@@ -1317,6 +1325,7 @@ PtrDocument         pDoc;
 		   }
 	     }
 	}
+     }
    if (pRefAttr != NULL)
       /* c'est un attribut reference */
      {
@@ -1385,6 +1394,7 @@ PtrElement          pElCut;
    ret = TRUE;
    InCutBuffer = FALSE;
    if (pEl != NULL)
+     {
       if (TypeHasException (ExcNoCut, pEl->ElTypeNumber, pEl->ElStructSchema))
 	 /* l'exception NoCut est associee au type de l'element */
 	{
@@ -1437,7 +1447,9 @@ PtrElement          pElCut;
 		     }
 		}
 	   }
+     }
    if (ret)
+     {
       /* est-ce la racine d'un sous-arbre d'affichage */
       if (pEl->ElAssocNum > 0)
 	 /* element associe */
@@ -1459,6 +1471,7 @@ PtrElement          pElCut;
 		    (pEl != viewRoot && !ElemIsAnAncestor (pEl, viewRoot)));
 		}
 	}
+     }
    return ret;
 }
 
@@ -1471,10 +1484,8 @@ PtrElement          pElCut;
    user indique si l'insertion est demandee par l'utilisateur.	
    inTree indique si l'element est deja en place dans l'arbre.	
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 ThotBool            AllowedSibling (PtrElement pEl, PtrDocument pDoc, int typeNum, PtrSSchema pSS, ThotBool before, ThotBool user, ThotBool inTree)
-
 #else  /* __STDC__ */
 ThotBool            AllowedSibling (pEl, pDoc, typeNum, pSS, before, user, inTree)
 PtrElement          pEl;
@@ -1484,291 +1495,295 @@ PtrSSchema          pSS;
 ThotBool            before;
 ThotBool            user;
 ThotBool            inTree;
-
 #endif /* __STDC__ */
-
 {
-   int                 ascTypeNum;
-   PtrSSchema          pAscSS;
-   SRule              *pRule;
-   PtrElement          pEl1;
-   ThotBool            ok;
-   ThotBool            isPageBrOrIncl;
-   ThotBool            optional;
-   ThotBool            stop;
-   int                 compNum;
-   int                 i;
-   ThotBool            beforeElement;
+  PtrSSchema          pAscSS;
+  SRule              *pRule;
+  PtrElement          pEl1;
+  ThotBool            ok;
+  ThotBool            isPageBrOrIncl;
+  ThotBool            optional;
+  ThotBool            stop;
+  int                 ascTypeNum;
+  int                 compNum;
+  int                 i;
+  ThotBool            beforeElement;
 
-   beforeElement = before;
-
-   ok = FALSE;
-   if (pEl != NULL)
-      /* on ne peut rien inserer a cote' de la racine d'un arbre */
-      if (pEl->ElParent != NULL)
-	{
-	   /* on peut inserer une marque de page n'importe ou` */
-	   /* OK si c'est une inclusion pour l'un des ascendants */
-	   isPageBrOrIncl = (typeNum == PageBreak + 1 ||
-			     AllowedIncludedElem (pDoc, pEl->ElParent, typeNum, pSS));
-	   if ( isPageBrOrIncl || AllowedIncludedElem (pDoc, pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema)) 
-              /* dans le cas d'une inclusion ou d'une marque de page */
-	      /* on ne peut quand meme pas inserer comme descendant direct */
-	      /* d'un noeud CsChoice ou CsIdentity' */
-	     {
-                ok = isPageBrOrIncl; 
-		pRule = &pEl->ElParent->ElStructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1];
-		/* on ne fait pas cette verification si l'element y est deja */
-		if (!inTree)
-		   if (pRule->SrConstruct == CsChoice)
-		      ok = FALSE;
-		   else if (pRule->SrConstruct == CsIdentity)
-		      if (EquivalentSRules (pEl->ElParent->ElTypeNumber,
-					    pEl->ElParent->ElStructSchema, 
-					    pEl->ElTypeNumber, pEl->ElStructSchema,
-					    pEl))
-			 /* le fils et le pere sont de type equivalent, refus */
-			 ok = FALSE;
-	     }
-	   if(!isPageBrOrIncl)
-	     {
-		if ((pEl->ElTerminal && pEl->ElLeafType == LtPageColBreak)
-                 || (AllowedIncludedElem (pDoc, pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema))) 
-		   /* on veut inserer a cote' d'une marque de page ou d'une inclusion. */
+  beforeElement = before;
+  ok = FALSE;
+  if (pEl != NULL)
+    /* on ne peut rien inserer a cote' de la racine d'un arbre */
+    if (pEl->ElParent != NULL)
+      {
+	/* on peut inserer une marque de page n'importe ou` */
+	/* OK si c'est une inclusion pour l'un des ascendants */
+	isPageBrOrIncl = (typeNum == PageBreak + 1 ||
+			  AllowedIncludedElem (pDoc, pEl->ElParent, typeNum, pSS));
+	if ( isPageBrOrIncl || AllowedIncludedElem (pDoc, pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema)) 
+	  /* dans le cas d'une inclusion ou d'une marque de page */
+	  /* on ne peut quand meme pas inserer comme descendant direct */
+	  /* d'un noeud CsChoice ou CsIdentity' */
+	  {
+	    ok = isPageBrOrIncl; 
+	    pRule = &(pEl->ElParent->ElStructSchema->SsRule[pEl->ElParent->ElTypeNumber - 1]);
+	    /* on ne fait pas cette verification si l'element y est deja */
+	    if (!inTree)
+	      {
+	      if (pRule->SrConstruct == CsChoice)
+		ok = FALSE;
+	      else if (pRule->SrConstruct == CsIdentity &&
+		       EquivalentSRules (pEl->ElParent->ElTypeNumber,
+					 pEl->ElParent->ElStructSchema, 
+					 pEl->ElTypeNumber, pEl->ElStructSchema,
+					 pEl))
+		/* le fils et le pere sont de type equivalent, refus */
+		ok = FALSE;
+	      }
+	  }
+	if(!isPageBrOrIncl)
+	  {
+	    if ((pEl->ElTerminal && pEl->ElLeafType == LtPageColBreak) ||
+		AllowedIncludedElem (pDoc, pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema)) 
+	      /* on veut inserer a cote' d'une marque de page ou d'une inclusion. */
+	      {
+		pEl1 = pEl;
+		stop = FALSE;
+		/* si on insere avant, on cherche le premier suivant */
+		/* qui n'est pas une marque de page, sinon le precedent */
+		while (!stop)
+		  if ((!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak) &&
+		      !AllowedIncludedElem (pDoc, pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema))
+		    /* ce n'est pas une page, ni une inclusion, on a trouve' */
+		    stop = TRUE;
+		  else
+		    /* c'est une page ou une inclusion, on continue */
+		    {
+		      if (before)
+			pEl = pEl->ElNext;
+		      else
+			pEl = pEl->ElPrevious;
+		      if (pEl == NULL)
+			stop = TRUE;
+		    }
+		if (pEl == NULL && !inTree)
+		  /* pas encore trouve', on cherche dans l'autre sens */
+		  /* si l'element n'est pas deja a sa place */
 		  {
-		     pEl1 = pEl;
-		     stop = FALSE;
-		     /* si on insere avant, on cherche le premier suivant */
-		     /* qui n'est pas une marque de page, sinon le precedent */
-		     while (!stop)
-			if ((!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak)
-                           && !AllowedIncludedElem (pDoc, pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema)) 
-			   /* ce n'est pas une page, ni une inclusion, on a trouve' */
-			   stop = TRUE;
-			else
-			   /* c'est une page ou une inclusion, on continue */
-			  {
-			     if (before)
-				pEl = pEl->ElNext;
-			     else
-				pEl = pEl->ElPrevious;
-			     if (pEl == NULL)
-				stop = TRUE;
-			  }
-		     if (pEl == NULL && !inTree)
-			/* pas encore trouve', on cherche dans l'autre sens */
-			/* si l'element n'est pas deja a sa place */
-		       {
-			  pEl = pEl1;
-			  stop = FALSE;
-			  while (!stop)
-			     if ((!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak)
-                                && !AllowedIncludedElem (pDoc, pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema)) 
+		    pEl = pEl1;
+		    stop = FALSE;
+		    while (!stop)
+		      if ((!pEl->ElTerminal || pEl->ElLeafType != LtPageColBreak) &&
+			  !AllowedIncludedElem (pDoc, pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema)) 
 				/* ce n'est pas une page ni une inclusion, on a trouve' */
-				stop = TRUE;
-			     else
-				/* c'est une page ou une inclusion , on continue */
-			       {
-				  if (before)
-				     pEl = pEl->ElPrevious;
-				  else
-				     pEl = pEl->ElNext;
-				  if (pEl == NULL)
-				     stop = TRUE;
-			       }
-			  before = !before;
-		       }
-		     if (pEl == NULL)
-			/* il n'y a que des sauts de page et des inclusions, c'est comme si */
-			/* l'element etait vide */
-			ok = AllowedFirstChild (pEl1->ElParent, pDoc, typeNum, pSS,
-						user, inTree);
-		  }
-		if (pEl != NULL)
-		  {
-		     /* Teste si l'element pointe par pEl est un element de */
-		     /* liste ou d'agregat */
-		     ascTypeNum = pEl->ElParent->ElTypeNumber;
-		     pAscSS = pEl->ElParent->ElStructSchema;
-		     ListOrAggregateRule (pDoc, pEl, &ascTypeNum, &pAscSS);
-		     if (ascTypeNum > 0)
-			/* c'est un element de liste ou d'agregat */
-		       {
-			  pRule = &pAscSS->SsRule[ascTypeNum - 1];
-			  if (pRule->SrConstruct == CsList)
-			     /* c'est un element de liste */
-			    {
-			       ok = TRUE;
-			       if (!inTree)
-				  /*  verifie qu'on peut ajouter un element a la liste */
-				  if (!CanChangeNumberOfElem (pEl->ElParent, 1))
-				     /* liste pleine */
-				     ok = FALSE;
-			       /* verifie le type des elements de liste */
-			       if (ok)
-				  ok = EquivalentSRules (pRule->SrListItem, pAscSS, typeNum,
-							 pSS, pEl->ElParent);
-			    }
+			stop = TRUE;
+		      else
+			/* c'est une page ou une inclusion , on continue */
+			{
+			  if (before)
+			    pEl = pEl->ElPrevious;
 			  else
-			     /* c'est un element d'agregat */
-			    {
-			       if (pRule->SrConstruct == CsUnorderedAggregate)
-				  /* examine tous les composants declare's dans la regle */
-				  for (i = 0; i < pRule->SrNComponents && !ok; i++)
-				     if (pRule->SrComponent[i] == typeNum &&
-					 pAscSS->SsCode == pSS->SsCode)
-				       {
-					  ok = TRUE;
-					  compNum = i + 1;
-				       }
-			       if (pRule->SrConstruct == CsAggregate)
-				  /* agregat ordonne' */
-				 {
-				    /* cherche le rang compNum de l'element pEl dans l'agregat */
-				    compNum = 0;
-				    for (i = 0; i < pRule->SrNComponents && compNum == 0; i++)
-				       if (pRule->SrComponent[i] == pEl->ElTypeNumber &&
-					   pAscSS->SsCode == pEl->ElStructSchema->SsCode)
-					  compNum = i + 1;
-				    if (compNum == 0)
-				       /* l'element pEl n'est pas un composant prevu de */
-				       /* l'agregat (c'est sans doute une inclusion) */
-				      {
-					 pEl1 = pEl;
-					 stop = FALSE;
-					 /* on cherche le frere le plus proche qui ne soit */
-					 /* ni une marque de page ni une inclusion */
-					 while (!stop)
-					    if (!(pEl->ElTerminal && pEl->ElLeafType == LtPageColBreak) && !AllowedIncludedElem (pDoc, pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema))
-					       /* ce n'est ni une page ni une inclusion, on a trouve' */
-					       stop = TRUE;
-					    else
-					       /* on continue */
-					      {
-						 if (before)
-						    pEl = pEl->ElNext;
-						 else
-						    pEl = pEl->ElPrevious;
-						 if (pEl == NULL)
-						    stop = TRUE;
-					      }
-					 if (pEl == NULL && !inTree)
-					    /* pas encore trouve', on cherche dans l'autre */
-					    /* sens si l'element n'est pas deja a sa place */
-					   {
-					      pEl = pEl1;
-					      stop = FALSE;
-					      while (!stop)
-						 if (!(pEl->ElTerminal && pEl->ElLeafType == LtPageColBreak) && !AllowedIncludedElem (pDoc, pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema))
-						    /* ce n'est ni une page ni une inclusion, on a trouve' */
-						    stop = TRUE;
-						 else
-						    /* on continue */
-						   {
-						      if (before)
-							 pEl = pEl->ElPrevious;
-						      else
-							 pEl = pEl->ElNext;
-						      if (pEl == NULL)
-							 stop = TRUE;
-						   }
-					      before = !before;
-					   }
-					 if (pEl == NULL)
-					    /* il n'y a que des sauts de page et des */
-					    /* inclusions, c'est comme si le pere etait vide */
-					    ok = AllowedFirstChild (pEl1->ElParent, pDoc, typeNum,
-							 pSS, user, inTree);
-					 else
-					    /* on a trouve un frere qui n'est ni un saut de */
-					    /* page ni une inclusion. On cherche son */
-					    /* rang dans la regle qui definit l'agregat */
-					    for (i = 0; i < pRule->SrNComponents && compNum == 0; i++)
-					       if (pRule->SrComponent[i] == pEl->ElTypeNumber &&
-						   pAscSS->SsCode == pEl->ElStructSchema->SsCode)
-						  compNum = i + 1;
-				      }
-				    if (pEl != NULL)
-				      {
-					 /* tous les composants sont optionnels si on n'est */
-					 /* pas en mode de controle strict */
-					 optional = TRUE;
-					 if (before)
-					   {
-					      if (compNum > 1)
-						 /* pas de composant avant le premier */
-						 for (i = compNum - 1; i >= 1 && optional && !ok; i--)
-						    if (pRule->SrComponent[i-1] == typeNum &&
-							pAscSS->SsCode == pSS->SsCode)
-						       ok = TRUE;
-						    else
-						       optional = (pRule->SrOptComponent[i - 1] || !FullStructureChecking);
-					   }
-					 else
-					    /* on veut inserer apres pEl */
-					   {
-					      if (compNum < pRule->SrNComponents)
-						 /* pas de composant apres le dernier */
-						 for (i = compNum + 1; i <= pRule->SrNComponents && optional
-						      && !ok; i++)
-						    if (pRule->SrComponent[i-1] == typeNum &&
-							pAscSS->SsCode == pSS->SsCode)
-						       ok = TRUE;
-						    else
-						       optional = (pRule->SrOptComponent[i - 1] || !FullStructureChecking);
-					   }
-				      }
-				 }
-			       /* verifie si ce composant existe deja */
-			       if (ok && !inTree && pEl != NULL)
-				 {
-				    pEl1 = pEl->ElParent->ElFirstChild;
-				    while (pEl1 != NULL && ok)
-				      if (typeNum == pEl1->ElTypeNumber)
-					  /* il existe deja */
-					  ok = FALSE;
-				      else
-					  pEl1 = pEl1->ElNext;
-				 }
-			    }
-		       }
-		     if (!ok && pEl != NULL)
-			if (typeNum == CharString + 1)
-			   if (pEl->ElTypeNumber == CharString + 1)
-			      /* on veut inserer un element Texte a cote' d'un autre */
-			      /* element texte, OK */
-			      ok = TRUE;
+			    pEl = pEl->ElNext;
+			  if (pEl == NULL)
+			    stop = TRUE;
+			}
+		    before = !before;
 		  }
-	     }
-	   if (!ok)
-	      /* si l'element a verifier porte une exception ExcPageBreakRepetition */
+		if (pEl == NULL)
+		  /* il n'y a que des sauts de page et des inclusions, c'est comme si */
+		  /* l'element etait vide */
+		  ok = AllowedFirstChild (pEl1->ElParent, pDoc, typeNum, pSS,
+					  user, inTree);
+	      }
+	    if (pEl != NULL)
+	      {
+		/* Teste si l'element pointe par pEl est un element de */
+		/* liste ou d'agregat */
+		ascTypeNum = pEl->ElParent->ElTypeNumber;
+		pAscSS = pEl->ElParent->ElStructSchema;
+		ListOrAggregateRule (pDoc, pEl, &ascTypeNum, &pAscSS);
+		if (ascTypeNum > 0)
+		  /* c'est un element de liste ou d'agregat */
+		  {
+		    pRule = &pAscSS->SsRule[ascTypeNum - 1];
+		    if (pRule->SrConstruct == CsList)
+		      /* c'est un element de liste */
+		      {
+			ok = TRUE;
+			if (!inTree &&
+			    /*  verifie qu'on peut ajouter un element a la liste */
+			    !CanChangeNumberOfElem (pEl->ElParent, 1))
+			  /* liste pleine */
+			  ok = FALSE;
+			/* verifie le type des elements de liste */
+			if (ok)
+			  ok = EquivalentSRules (pRule->SrListItem, pAscSS, typeNum,
+						 pSS, pEl->ElParent);
+		      }
+		    else
+		      /* c'est un element d'agregat */
+		      {
+			if (pRule->SrConstruct == CsUnorderedAggregate)
+				/* examine tous les composants declare's dans la regle */
+			  for (i = 0; i < pRule->SrNComponents && !ok; i++)
+			    if (pRule->SrComponent[i] == typeNum &&
+				!ustrcmp (pAscSS->SsName, pSS->SsName))
+			      {
+				ok = TRUE;
+				compNum = i + 1;
+			      }
+			if (pRule->SrConstruct == CsAggregate)
+				/* agregat ordonne' */
+			  {
+			    /* cherche le rang compNum de l'element pEl dans l'agregat */
+			    compNum = 0;
+			    for (i = 0; i < pRule->SrNComponents && compNum == 0; i++)
+			      if (pRule->SrComponent[i] == pEl->ElTypeNumber &&
+				  !ustrcmp (pAscSS->SsName, pEl->ElStructSchema->SsName))
+				compNum = i + 1;
+			    if (compNum == 0)
+			      /* l'element pEl n'est pas un composant prevu de */
+			      /* l'agregat (c'est sans doute une inclusion) */
+			      {
+				pEl1 = pEl;
+				stop = FALSE;
+				/* on cherche le frere le plus proche qui ne soit */
+				/* ni une marque de page ni une inclusion */
+				while (!stop)
+				  if (!(pEl->ElTerminal && pEl->ElLeafType == LtPageColBreak) && !AllowedIncludedElem (pDoc, pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema))
+				    /* ce n'est ni une page ni une inclusion, on a trouve' */
+				    stop = TRUE;
+				  else
+				    /* on continue */
+				    {
+				      if (before)
+					pEl = pEl->ElNext;
+				      else
+					pEl = pEl->ElPrevious;
+				      if (pEl == NULL)
+					stop = TRUE;
+				    }
+				if (pEl == NULL && !inTree)
+				  /* pas encore trouve', on cherche dans l'autre */
+				  /* sens si l'element n'est pas deja a sa place */
+				  {
+				    pEl = pEl1;
+				    stop = FALSE;
+				    while (!stop)
+				      if (!(pEl->ElTerminal && pEl->ElLeafType == LtPageColBreak) && !AllowedIncludedElem (pDoc, pEl->ElParent, pEl->ElTypeNumber, pEl->ElStructSchema))
+					/* ce n'est ni une page ni une inclusion, on a trouve' */
+					stop = TRUE;
+				      else
+					/* on continue */
+					{
+					  if (before)
+					    pEl = pEl->ElPrevious;
+					  else
+					    pEl = pEl->ElNext;
+					  if (pEl == NULL)
+					    stop = TRUE;
+					}
+				    before = !before;
+				  }
+				if (pEl == NULL)
+				  /* il n'y a que des sauts de page et des */
+				  /* inclusions, c'est comme si le pere etait vide */
+				  ok = AllowedFirstChild (pEl1->ElParent, pDoc, typeNum,
+							  pSS, user, inTree);
+				else
+				  /* on a trouve un frere qui n'est ni un saut de */
+				  /* page ni une inclusion. On cherche son */
+				  /* rang dans la regle qui definit l'agregat */
+				  for (i = 0; i < pRule->SrNComponents && compNum == 0; i++)
+				    if (pRule->SrComponent[i] == pEl->ElTypeNumber &&
+					!ustrcmp (pAscSS->SsName, pEl->ElStructSchema->SsName))
+				      compNum = i + 1;
+			      }
+			    if (pEl != NULL)
+			      {
+				/* tous les composants sont optionnels si on n'est */
+				/* pas en mode de controle strict */
+				optional = TRUE;
+				if (before && compNum > 1)
+				  /* pas de composant avant le premier */
+				  for (i = compNum - 1; i >= 1 && optional && !ok; i--)
+				    {
+				      if (pRule->SrComponent[i-1] == typeNum &&
+					  !ustrcmp (pAscSS->SsName, pSS->SsName))
+					ok = TRUE;
+				      else
+					optional = (pRule->SrOptComponent[i - 1] || !FullStructureChecking);
+				    }
+				else if (compNum < pRule->SrNComponents)
+				  /* on veut inserer apres pEl */
+				  {
+				    /* pas de composant apres le dernier */
+				    for (i = compNum + 1; i <= pRule->SrNComponents && optional && !ok; i++)
+				      {
+					if (pRule->SrComponent[i-1] == typeNum &&
+					    !ustrcmp (pAscSS->SsName, pSS->SsName))
+					  ok = TRUE;
+					else
+					  optional = (pRule->SrOptComponent[i - 1] || !FullStructureChecking);
+				      }
+				  }
+			      }
+			  }
+			/* verifie si ce composant existe deja */
+			if (ok && !inTree && pEl != NULL)
+			  {
+			    pEl1 = pEl->ElParent->ElFirstChild;
+			    while (pEl1 != NULL && ok)
+			      if (typeNum == pEl1->ElTypeNumber)
+				/* il existe deja */
+				ok = FALSE;
+			      else
+				pEl1 = pEl1->ElNext;
+			  }
+		      }
+		  }
+		if (!ok && pEl != NULL &&
+		    typeNum == CharString + 1 &&
+		    pEl->ElTypeNumber == CharString + 1)
+		  /* on veut inserer un element Texte a cote' d'un autre */
+		  /* element texte, OK */
+		  ok = TRUE;
+	      }
+	  }
+	if (!ok)
+	  {
+	  /* si l'element a verifier porte une exception ExcPageBreakRepetition */
+	  /* ExcPageBreakRepBefore, on l'autorise quand meme */
+	  if (TypeHasException (ExcPageBreakRepBefore, typeNum, pSS))
+	    ok = TRUE;
+	  else if (TypeHasException (ExcPageBreakRepetition, typeNum, pSS))
+	    ok = TRUE;
+	  }
+	if (pEl != NULL)
+	  {
+	    if (!ok)
+	      {
+	      /* si l'element voisin porte une exception ExcPageBreakRepetition */
 	      /* ExcPageBreakRepBefore, on l'autorise quand meme */
-	      if (TypeHasException (ExcPageBreakRepBefore, typeNum, pSS))
-		 ok = TRUE;
-	      else if (TypeHasException (ExcPageBreakRepetition, typeNum, pSS))
-		 ok = TRUE;
-	   if (pEl != NULL)
-	     {
-		if (!ok)
-		   /* si l'element voisin porte une exception ExcPageBreakRepetition */
-		   /* ExcPageBreakRepBefore, on l'autorise quand meme */
-		   if (TypeHasException (ExcPageBreakRepBefore, pEl->ElTypeNumber, pEl->ElStructSchema))
-		      ok = TRUE;
-		   else if (TypeHasException (ExcPageBreakRepetition, pEl->ElTypeNumber, pEl->ElStructSchema))
-		      ok = TRUE;
-		if (ok)
-		   /* refus si c'est une exclusion pour l'un des ascendants */
-		   if (ExcludedType (pEl->ElParent, typeNum, pSS))
-		      ok = FALSE;
-		if (ok && user)
-		   /* l'insertion est demande'e par l'utilisateur */
-                   if (CannotInsertNearElement (pEl, beforeElement))
-		      ok = FALSE;
-		   else if (TypeHasException (ExcNoCreate, typeNum, pSS))
-		      ok = FALSE;
-	     }
-	}
-   return ok;
+	      if (TypeHasException (ExcPageBreakRepBefore, pEl->ElTypeNumber, pEl->ElStructSchema))
+		ok = TRUE;
+	      else if (TypeHasException (ExcPageBreakRepetition, pEl->ElTypeNumber, pEl->ElStructSchema))
+		ok = TRUE;
+	      }
+	    if (ok &&
+	      /* refus si c'est une exclusion pour l'un des ascendants */
+		ExcludedType (pEl->ElParent, typeNum, pSS))
+	      ok = FALSE;
+	    if (ok && user)
+	      {
+	      /* l'insertion est demande'e par l'utilisateur */
+	      if (CannotInsertNearElement (pEl, beforeElement))
+		ok = FALSE;
+	      else if (TypeHasException (ExcNoCreate, typeNum, pSS))
+		ok = FALSE;
+	      }
+	  }
+      }
+  return ok;
 }
 
 
@@ -1818,7 +1833,7 @@ PtrSSchema          pCompSS;
 			       ok = TRUE;
 			 }
 		       else if (pRule->SrComponent[i] == compTypeNum &&
-				pAggrSS->SsCode == pCompSS->SsCode)
+				!ustrcmp (pAggrSS->SsName, pCompSS->SsName))
 			  ok = TRUE;
 		       else
 			 {
@@ -1846,7 +1861,7 @@ PtrSSchema          pCompSS;
 			  ok = TRUE;
 		    }
 		  else if (pRule->SrComponent[i] == compTypeNum &&
-			   pAggrSS->SsCode == pCompSS->SsCode)
+			   !ustrcmp (pAggrSS->SsName, pCompSS->SsName))
 		     ok = TRUE;
 	       break;
 	    default:
@@ -1930,143 +1945,144 @@ ThotBool            inTree;
 		     ok = AllowedSibling (pChild, pDoc, typeNum, pSS, TRUE, user, inTree);
 		  }
 	     }
-	   if (empty)
-	      if (pEl->ElTypeNumber > 0 && pEl->ElTypeNumber <= pEl->ElStructSchema->SsNRules)
-		{
-		   /* on peut inserer une marque de page n'importe ou` */
-		   if (typeNum == PageBreak + 1)
-		      ok = TRUE;
-		   /* OK si c'est une inclusion pour l'un des ascendants */
-		   else if (AllowedIncludedElem (pDoc, pEl, typeNum, pSS))
-		      ok = TRUE;
-		   pRule1 = &pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1];
-		   if (ok)
-		      /* dans le cas d'une inclusion ou d'une marque de page */
-		      /* on ne peut quand meme pas inserer comme descendant */
-		      /* direct d'un noeud CsChoice */
+	   if (empty &&
+	      pEl->ElTypeNumber > 0 && pEl->ElTypeNumber <= pEl->ElStructSchema->SsNRules)
+	     {
+	       /* on peut inserer une marque de page n'importe ou` */
+	       if (typeNum == PageBreak + 1)
+		 ok = TRUE;
+	       /* OK si c'est une inclusion pour l'un des ascendants */
+	       else if (AllowedIncludedElem (pDoc, pEl, typeNum, pSS))
+		 ok = TRUE;
+	       pRule1 = &pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1];
+	       if (ok)
+		 /* dans le cas d'une inclusion ou d'une marque de page */
+		 /* on ne peut quand meme pas inserer comme descendant */
+		 /* direct d'un noeud CsChoice */
+		 {
+		   if (!inTree)
+		     if (pRule1->SrConstruct == CsChoice)
+		       ok = FALSE;
+		 }
+	       else
+		 {
+		   /* traitement selon le constructeur du type de l'element */
+		   switch (pRule1->SrConstruct)
 		     {
-			if (!inTree)
-			   if (pRule1->SrConstruct == CsChoice)
-			      ok = FALSE;
+		     case CsChoice:
+		       if (pRule1->SrNChoices == -1)
+			 /* c'est une regle NATURE */
+			 {
+			   if (typeNum == pSS->SsRootElem)
+			     /* on veut inserer un element construit selon la */
+			     /* regle racine de son schema de structure, OK */
+			     ok = TRUE;
+			 }
+		       else if (pRule1->SrNChoices == 0)
+			 /* c'est une regle UNIT */
+			 if (typeNum <= MAX_BASIC_TYPE)
+			   /* on veut inserer un element de base, OK */
+			   ok = TRUE;
+			 else
+			   {
+			     if (pSS->SsRule[typeNum - 1].SrUnitElem)
+			       /* l'element a inserer est defini comme une unite' */
+			       /* dans son schema. On cherche si ce schema est */
+			       /* celui d'un des ascendants ou une extension */
+			       {
+				 pAsc = pEl;
+				 while (pAsc != NULL && !ok)
+				   if (!ustrcmp (pAsc->ElStructSchema->SsName,
+				       pSS->SsName))
+				     ok = TRUE;
+				   else if (ValidExtension (pAsc, &pSS))
+				     ok = TRUE;
+				   else
+				     pAsc = pAsc->ElParent;
+			       }
+			   }
+		       else
+			 /* c'est un choix avec indication des types possibles */
+			 /* on regarde si le type a inserer est parmi les types */
+			 /* possibles de ce choix */
+			 {
+			   i = 0;
+			   while (!ok && i < pRule1->SrNChoices)
+			     {
+			       ok = EquivalentSRules (pRule1->SrChoice[i], pEl->ElStructSchema,
+						      typeNum, pSS, pEl);
+			       i++;
+			     }
+			 }
+		       break;
+		     case CsAggregate:
+		     case CsUnorderedAggregate:
+		       ok = AllowedFirstComponent (pEl->ElTypeNumber, pEl->ElStructSchema,
+						   typeNum, pSS);
+		       break;
+		     case CsList:
+		       /* on regarde si le type de l'element a inserer est */
+		       /* equivalent au type des elements de la liste */
+		       ok = EquivalentSRules (pRule1->SrListItem, pEl->ElStructSchema,
+					      typeNum, pSS, pEl->ElParent);
+		       break;
+		     case CsNatureSchema:
+		       /* le type a inserer doit etre la racine de la nature */
+		       if (typeNum == pSS->SsRootElem &&
+			   pRule1->SrSSchemaNat != NULL &&
+			   !ustrcmp (pRule1->SrSSchemaNat->SsName, pSS->SsName))
+			 ok = TRUE;
+		       break;
+		     case CsIdentity:
+		       /* on verifie d'abord si les types sont equivalents */
+		       ok = EquivalentSRules (pRule1->SrIdentRule, pEl->ElStructSchema,
+					      typeNum, pSS, pEl);
+		       if (!ok)
+			 /* les types ne sont pas directement equivalents */
+			 /* peut-on passer par une regle CsList ou CsAggregate ? */
+			 {
+			   /* suit la chaine des identite's jusqu'au dernier */
+			   /* type identique au type de pEl */
+			   pRule2 = pRule1;
+			   do
+			     {
+			       t = pRule2->SrIdentRule;
+			       pRule2 = &pEl->ElStructSchema->SsRule[t - 1];
+			     }
+			   while (pRule2->SrConstruct == CsIdentity);
+			   /* s'il s'agit d'une liste, le type a inserer doit */
+			   /* etre equivalent aux elements de la liste */
+			   if (pRule2->SrConstruct == CsList)
+			     ok = EquivalentSRules (pRule2->SrListItem, pEl->ElStructSchema,
+						    typeNum, pSS, pEl);
+			   else if (pRule2->SrConstruct == CsAggregate ||
+				    pRule2->SrConstruct == CsUnorderedAggregate)
+			     /* c'est une regle CsAggregate */
+			     ok = AllowedFirstComponent (t, pEl->ElStructSchema, typeNum,
+							 pSS);
+			 }
+		       break;
+		     case CsBasicElement:
+		     case CsReference:
+		     case CsConstant:
+		     case CsPairedElement:
+		       /* pas de descendance possible */
+		       break;
+		     default:
+		       break;
 		     }
-		   else
-		     {
-			/* traitement selon le constructeur du type de l'element */
-			switch (pRule1->SrConstruct)
-			      {
-				 case CsChoice:
-				    if (pRule1->SrNChoices == -1)
-				       /* c'est une regle NATURE */
-				      {
-					 if (typeNum == pSS->SsRootElem)
-					    /* on veut inserer un element construit selon la */
-					    /* regle racine de son schema de structure, OK */
-					    ok = TRUE;
-				      }
-				    else if (pRule1->SrNChoices == 0)
-				       /* c'est une regle UNIT */
-				       if (typeNum <= MAX_BASIC_TYPE)
-					  /* on veut inserer un element de base, OK */
-					  ok = TRUE;
-				       else
-					 {
-					    if (pSS->SsRule[typeNum - 1].SrUnitElem)
-					       /* l'element a inserer est defini comme une unite' */
-					       /* dans son schema. On cherche si ce schema est */
-					       /* celui d'un des ascendants ou une extension */
-					      {
-						 pAsc = pEl;
-						 while (pAsc != NULL && !ok)
-						    if (pAsc->ElStructSchema->SsCode ==
-							pSS->SsCode)
-						       ok = TRUE;
-						    else if (ValidExtension (pAsc, &pSS))
-						       ok = TRUE;
-						    else
-						       pAsc = pAsc->ElParent;
-					      }
-					 }
-				    else
-				       /* c'est un choix avec indication des types possibles */
-				       /* on regarde si le type a inserer est parmi les types */
-				       /* possibles de ce choix */
-				      {
-					 i = 0;
-					 while (!ok && i < pRule1->SrNChoices)
-					   {
-					      ok = EquivalentSRules (pRule1->SrChoice[i], pEl->ElStructSchema,
-							 typeNum, pSS, pEl);
-					      i++;
-					   }
-				      }
-				    break;
-				 case CsAggregate:
-				 case CsUnorderedAggregate:
-				    ok = AllowedFirstComponent (pEl->ElTypeNumber, pEl->ElStructSchema,
-							      typeNum, pSS);
-				    break;
-				 case CsList:
-				    /* on regarde si le type de l'element a inserer est */
-				    /* equivalent au type des elements de la liste */
-				    ok = EquivalentSRules (pRule1->SrListItem, pEl->ElStructSchema,
-					       typeNum, pSS, pEl->ElParent);
-				    break;
-				 case CsNatureSchema:
-				    /* le type a inserer doit etre la racine de la nature */
-				    if (typeNum == pSS->SsRootElem)
-				       if (pRule1->SrSSchemaNat != NULL)
-					  if (pRule1->SrSSchemaNat->SsCode == pSS->SsCode)
-					     ok = TRUE;
-				    break;
-				 case CsIdentity:
-				    /* on verifie d'abord si les types sont equivalents */
-				    ok = EquivalentSRules (pRule1->SrIdentRule, pEl->ElStructSchema,
-							 typeNum, pSS, pEl);
-				    if (!ok)
-				       /* les types ne sont pas directement equivalents */
-				       /* peut-on passer par une regle CsList ou CsAggregate ? */
-				      {
-					 /* suit la chaine des identite's jusqu'au dernier */
-					 /* type identique au type de pEl */
-					 pRule2 = pRule1;
-					 do
-					   {
-					      t = pRule2->SrIdentRule;
-					      pRule2 = &pEl->ElStructSchema->SsRule[t - 1];
-					   }
-					 while (pRule2->SrConstruct == CsIdentity);
-					 /* s'il s'agit d'une liste, le type a inserer doit */
-					 /* etre equivalent aux elements de la liste */
-					 if (pRule2->SrConstruct == CsList)
-					    ok = EquivalentSRules (pRule2->SrListItem, pEl->ElStructSchema,
-							 typeNum, pSS, pEl);
-					 else if (pRule2->SrConstruct == CsAggregate ||
-						  pRule2->SrConstruct == CsUnorderedAggregate)
-					    /* c'est une regle CsAggregate */
-					    ok = AllowedFirstComponent (t, pEl->ElStructSchema, typeNum,
-									pSS);
-				      }
-				    break;
-				 case CsBasicElement:
-				 case CsReference:
-				 case CsConstant:
-				 case CsPairedElement:
-				    /* pas de descendance possible */
-				    break;
-				 default:
-				    break;
-			      }
-		     }
-		   if (ok)
-		      if (ExcludedType (pEl, typeNum, pSS))
-			 ok = FALSE;
-		   if (ok && user)
-		      /* l'insertion est demande'e par l'utilisateur */
-		      if (ElementIsReadOnly (pEl))
-			 ok = FALSE;
-		      else if (TypeHasException (ExcNoCreate, typeNum, pSS))
-			 ok = FALSE;
-		}
+		 }
+	       if (ok && ExcludedType (pEl, typeNum, pSS))
+		 ok = FALSE;
+	       if (ok && user)
+		 {
+		   /* l'insertion est demande'e par l'utilisateur */
+		   if (ElementIsReadOnly (pEl))
+		     ok = FALSE;
+		   else if (TypeHasException (ExcNoCreate, typeNum, pSS))
+			ok = FALSE;
+		 }
+	     }
 	}
    return ok;
 }
@@ -2154,6 +2170,7 @@ PtrSSchema          pDescSS;
 	pEl = NULL;
 	stop = FALSE;
 	if (pRule1->SrRecursive)
+	  {
 	   /* SRule recursive */
 	   if (pRule1->SrRecursDone)
 	      /* on est deja passe' sur cette regle, on arrete */
@@ -2161,6 +2178,7 @@ PtrSSchema          pDescSS;
 	   else
 	      /* on marque qu'on est passe' sur cette regle */
 	      pRule1->SrRecursDone = TRUE;
+	  }
 	if (!stop)
 	   switch (pRule1->SrConstruct)
 		 {
@@ -2292,11 +2310,13 @@ PtrSSchema          pDescSS;
 				     pLeaf, assocNum, descTypeNum, pDescSS);
 			    while (pDesc == NULL && i < pRule1->SrNChoices);
 			    if (pDesc != NULL)
+			      {
 			       /* une descendance possible du type voulu */
-			       if ((pRule1->SrChoice[i - 1] <= MAX_BASIC_TYPE
-				    || pDesc->ElTypeNumber == pRule1->SrChoice[i - 1])
-				   && (pDesc->ElStructSchema->SsCode == pSS->SsCode
-				       || pSS->SsRule[pRule1->SrChoice[i - 1] - 1].SrConstruct == CsNatureSchema))
+			       if ((pRule1->SrChoice[i - 1] <= MAX_BASIC_TYPE ||
+				    pDesc->ElTypeNumber == pRule1->SrChoice[i - 1]) &&
+				   (!ustrcmp (pDesc->ElStructSchema->SsName,
+					      pSS->SsName) ||
+				    pSS->SsRule[pRule1->SrChoice[i - 1] - 1].SrConstruct == CsNatureSchema))
 				  pEl = pDesc;
 			       else
 				 {
@@ -2305,6 +2325,7 @@ PtrSSchema          pDescSS;
 				    if (pEl != NULL)
 				       InsertChildFirst (pEl, pDesc, pLeaf, pDoc);
 				 }
+			      }
 			 }
 		       break;
 		    case CsAggregate:
@@ -2338,10 +2359,11 @@ PtrSSchema          pDescSS;
 			  /* on a pu creer une descendance */
 			 {
 			    i --;
-			    if ((pRule1->SrComponent[i] <= MAX_BASIC_TYPE
-				 || pDesc->ElTypeNumber == pRule1->SrComponent[i])
-			    && (pDesc->ElStructSchema->SsCode == pSS->SsCode
-				|| pSS->SsRule[pRule1->SrComponent[i] - 1].SrConstruct == CsNatureSchema))
+			    if ((pRule1->SrComponent[i] <= MAX_BASIC_TYPE ||
+				 pDesc->ElTypeNumber == pRule1->SrComponent[i]) &&
+				(!ustrcmp (pDesc->ElStructSchema->SsName,
+					   pSS->SsName) ||
+				 pSS->SsRule[pRule1->SrComponent[i] - 1].SrConstruct == CsNatureSchema))
 			       pEl1 = pDesc;
 			    else
 			      {
@@ -2479,10 +2501,12 @@ PtrSSchema          pExtSS;
 		  {
 		     r = 0;
 		     while (RegleExt == NULL && r < pExtSS->SsNExtensRules)
+		       {
 			if (pExtSS->SsExtensBlock->EbExtensRule[r].SrName[0] == EOS)
 			   RegleExt = &(pExtSS->SsExtensBlock->EbExtensRule[r]);
 			else
 			   r++;
+		       }
 		  }
 	     }
 	}
@@ -2494,17 +2518,13 @@ PtrSSchema          pExtSS;
    peut etre appliquee au schema de l'element pEl et, dans ce cas, 
    retourne dans pExt le schema a appliquer.                       
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 ThotBool            ValidExtension (PtrElement pEl, PtrSSchema * pExt)
-
 #else  /* __STDC__ */
 ThotBool            ValidExtension (pEl, pExt)
 PtrElement          pEl;
 PtrSSchema         *pExt;
-
 #endif /* __STDC__ */
-
 {
    PtrSSchema          pExtSS, pSS;
    ThotBool            result;
@@ -2518,7 +2538,7 @@ PtrSSchema         *pExt;
 	/* parcourt les extensions du schema pSS */
 	pExtSS = pSS->SsNextExtens;
 	while (pExtSS != NULL && !result)
-	   if (pExtSS->SsCode == (*pExt)->SsCode)
+	   if (!ustrcmp (pExtSS->SsName, (*pExt)->SsName))
 	     {
 		*pExt = pExtSS;
 		result = TRUE;
@@ -2566,7 +2586,7 @@ PtrAttribute        pAttr;
 	/* attribute 1: Langue, quel que soit le schema */
 	if (pA->AeAttrNum == pAttr->AeAttrNum &&
 	    (pA->AeAttrNum == 1 ||
-	     pA->AeAttrSSchema->SsCode == pAttr->AeAttrSSchema->SsCode))
+	     !ustrcmp (pA->AeAttrSSchema->SsName, pAttr->AeAttrSSchema->SsName)))
 	   /* c'est l'attribut cherche' */
 	   found = TRUE;
 	else
@@ -2643,41 +2663,41 @@ ThotBool            *mandatory;
    else
       /* c'est un attribut local */
      {
-	/* a priori, on ne peut pas l'appliquer a ce type d'element */
-	allowed = FALSE;
-	if (pEl->ElStructSchema->SsCode == pNewAttr->AeAttrSSchema->SsCode)
-	  {
-	     /* l'attribut est defini dans le meme schema que l'element */
-	     pRe1 = &pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1];
-	     for (locAtt = 0; locAtt < pRe1->SrNLocalAttrs; locAtt++)
-		if (pRe1->SrLocalAttr[locAtt] == pNewAttr->AeAttrNum)
-		   /* l'attribut fait partie des attributs locaux de ce */
-		   /* type d'element, on peut l'appliquer a l'element */
-		  {
+       /* a priori, on ne peut pas l'appliquer a ce type d'element */
+       allowed = FALSE;
+       if (!ustrcmp (pEl->ElStructSchema->SsName, pNewAttr->AeAttrSSchema->SsName))
+	 {
+	   /* l'attribut est defini dans le meme schema que l'element */
+	   pRe1 = &pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1];
+	   for (locAtt = 0; locAtt < pRe1->SrNLocalAttrs; locAtt++)
+	     if (pRe1->SrLocalAttr[locAtt] == pNewAttr->AeAttrNum)
+	       /* l'attribut fait partie des attributs locaux de ce */
+	       /* type d'element, on peut l'appliquer a l'element */
+	       {
+		 allowed = TRUE;
+		 *mandatory = pRe1->SrRequiredAttr[locAtt];
+	       }
+	 }
+       else if (pNewAttr->AeAttrSSchema->SsExtension)
+	 /* il s'agit d'un attribut defini dans une extension de schema */
+	 if (ValidExtension (pEl, &pNewAttr->AeAttrSSchema))
+	   /* cette extension s'applique au schema definissant l'element */
+	   {
+	     pRe1 = ExtensionRule (pEl->ElStructSchema, pEl->ElTypeNumber,
+				   pNewAttr->AeAttrSSchema);
+	     if (pRe1 != NULL)
+	       /* ce type d'element a une regle d'extension: pRe1 */
+	       /* on cherche si l'attribut fait partie des attributs locaux */
+	       /* de cette regle d'extension */
+	       for (locAtt = 0; locAtt < pRe1->SrNLocalAttrs; locAtt++)
+		 if (pRe1->SrLocalAttr[locAtt] == pNewAttr->AeAttrNum)
+		   /* l'attribut fait partie des attributs locaux */
+		   /* on peut l'appliquer a l'element */
+		   {
 		     allowed = TRUE;
 		     *mandatory = pRe1->SrRequiredAttr[locAtt];
-		  }
-	  }
-	else if (pNewAttr->AeAttrSSchema->SsExtension)
-	   /* il s'agit d'un attribut defini dans une extension de schema */
-	   if (ValidExtension (pEl, &pNewAttr->AeAttrSSchema))
-	      /* cette extension s'applique au schema definissant l'element */
-	     {
-		pRe1 = ExtensionRule (pEl->ElStructSchema, pEl->ElTypeNumber,
-				      pNewAttr->AeAttrSSchema);
-		if (pRe1 != NULL)
-		   /* ce type d'element a une regle d'extension: pRe1 */
-		   /* on cherche si l'attribut fait partie des attributs locaux */
-		   /* de cette regle d'extension */
-		   for (locAtt = 0; locAtt < pRe1->SrNLocalAttrs; locAtt++)
-		      if (pRe1->SrLocalAttr[locAtt] == pNewAttr->AeAttrNum)
-			 /* l'attribut fait partie des attributs locaux */
-			 /* on peut l'appliquer a l'element */
-			{
-			   allowed = TRUE;
-			   *mandatory = pRe1->SrRequiredAttr[locAtt];
-			}
-	     }
+		   }
+	   }
      }
 
    return (!requested && allowed);
@@ -2738,12 +2758,15 @@ PtrElement         *pSplitEl;
 			    possede une exception ParagraphBreak */
 			 pE = firstEl->ElParent;
 			 while (pE != NULL && *pList == NULL)
+			   {
 			   if (TypeHasException (ExcParagraphBreak,
 					 pE->ElTypeNumber, pE->ElStructSchema))
 			     *pList = AncestorList (pE);
 			   else
 			     pE = pE->ElParent;
+			   }
 			 if (*pList == NULL)
+			   {
 			   if (GetElementConstruct (firstEl->ElParent, &nComp)
 			       == CsList)
 			     *pList = AncestorList (firstEl->ElParent);
@@ -2757,15 +2780,15 @@ PtrElement         *pSplitEl;
 				   pE = firstEl->ElParent->ElParent;
 			     *pList = AncestorList (pE);
 			     }
+			   }
 		       }
-	     if (*pList != NULL)
-		if (TypeHasException (ExcNoCreate,
-				      (*pList)->ElFirstChild->ElTypeNumber,
-				      (*pList)->ElFirstChild->ElStructSchema))
-		   *pList = NULL;
-	     if (*pList != NULL)
-		if (!CanChangeNumberOfElem (*pList, 1))
-		   *pList = NULL;
+	     if (*pList != NULL &&
+		 TypeHasException (ExcNoCreate,
+				   (*pList)->ElFirstChild->ElTypeNumber,
+				   (*pList)->ElFirstChild->ElStructSchema))
+	       *pList = NULL;
+	     if (*pList != NULL && !CanChangeNumberOfElem (*pList, 1))
+	       *pList = NULL;
 	  }
 	else
 	  /* on veut diviser un "gros" element en deux */
@@ -2784,13 +2807,14 @@ PtrElement         *pSplitEl;
 
 	     /* forbid splitting ReadOnly element, except after the end or
 		before the beginning of	a character string */
-	     if (pE)
-	       if (ElementIsReadOnly (pE))
+	     if (pE && ElementIsReadOnly (pE))
+	       {
 		 if (pE->ElTypeNumber != CharString + 1)
 		   pE = NULL;
 		 else
 		   if (firstChar > 1 && firstChar <= pE->ElTextLength)
 		     pE = NULL;
+	       }
 
 	     if (pE)
 	       {

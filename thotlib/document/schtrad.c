@@ -267,10 +267,10 @@ PtrSSchema          pSS;
    i = 0;
    do
      {
-	if (LoadedTSchema[i].pStructSchema != NULL)
-	   found = (ustrcmp (pSS->SsName, LoadedTSchema[i].pStructSchema->SsName) == 0);
-	if (!found)
-	   i++;
+       if (LoadedTSchema[i].pStructSchema != NULL)
+	 found = (!ustrcmp (pSS->SsName, LoadedTSchema[i].pStructSchema->SsName));
+       if (!found)
+	 i++;
      }
    while (!found && i < MAX_TSCHEMAS);
    if (found)

@@ -303,31 +303,33 @@ PtrSSchema          pSS;
 	     pAscendant = pEl;
 	     while (pAscendant->ElParent != NULL && pAscendant->ElSource == NULL)
 		pAscendant = pAscendant->ElParent;
-	     if (pAscendant->ElSource == NULL)
+	     if (pAscendant->ElSource == NULL &&
 		/* on n'est pas dans une inclusion */
-		if (!ElementIsHidden (pEl))
-		   /* l'element n'est pas cache' */
-		  {
-		     /* cherche l'attribut sur l'element */
-		     pAttr = pEl->ElFirstAttr;
-		     if (pAttr != NULL)
-			/* si on cherche un attribut quelconque, on prend le */
-			/* premier attribut qui n'est pas cache' */
-			/* parcourt les attributs de l'element */
-			do
-			  {
-			     if ((pSS == NULL || pAttr->AeAttrSSchema->SsCode == pSS->SsCode) &&
-				 (GetAttributeOfElement == 0 || pAttr->AeAttrNum == GetAttributeOfElement))
+		 !ElementIsHidden (pEl))
+	       /* l'element n'est pas cache' */
+	       {
+		 /* cherche l'attribut sur l'element */
+		 pAttr = pEl->ElFirstAttr;
+		 if (pAttr != NULL)
+		   /* si on cherche un attribut quelconque, on prend le */
+		   /* premier attribut qui n'est pas cache' */
+		   /* parcourt les attributs de l'element */
+		   do
+		     {
+		       if ((GetAttributeOfElement == 0 ||
+			    pAttr->AeAttrNum == GetAttributeOfElement) &&
+			   (pSS == NULL ||
+			    !ustrcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName)))
 				/* c'est l'attribut cherche' */
-				if (!AttrHasException (ExcInvisible, pAttr->AeAttrNum,
-						       pAttr->AeAttrSSchema))
-				   /* l'attribut est montrable a l'utilisateur */
-				   trouve = TRUE;
-			     if (!trouve)
-				pAttr = pAttr->AeNext;
-			  }
-			while (pAttr != NULL && !trouve);
-		  }
+			 if (!AttrHasException (ExcInvisible, pAttr->AeAttrNum,
+						pAttr->AeAttrSSchema))
+			   /* l'attribut est montrable a l'utilisateur */
+			   trouve = TRUE;
+		       if (!trouve)
+			 pAttr = pAttr->AeNext;
+		     }
+		   while (pAttr != NULL && !trouve);
+	       }
 	  }
      }
    while (pEl != NULL && !trouve);
@@ -423,6 +425,7 @@ STRING               NomType;
      }
    while (pEl != NULL && !trouve);
    if (pEl != NULL && trouve)
+     {
       /* on a trouve' */
       /* l'element trouve' est pointe' par pEl */
       if (context->SStartToEnd)
@@ -447,6 +450,7 @@ STRING               NomType;
 		    /* fait comme si on n'avait pas trouve' */
 		    pEl = NULL;
 	}
+     }
    return (pEl);
 }
 
@@ -595,6 +599,7 @@ PtrSSchema          pSchAttr;
    trouve = FALSE;
    pA = pEl->ElFirstAttr;
    if (pA != NULL)
+     {
       /* l'element a au moins un attribut */
       if (pSchAttr == NULL && NumAttr == 0)
 	 /* on cherche un attribut quelconque, on a trouve */
@@ -602,13 +607,15 @@ PtrSSchema          pSchAttr;
       else
 	 /* parcourt les attributs de l'element */
 	 do
-	    if ((pSchAttr == NULL || pA->AeAttrSSchema->SsCode == pSchAttr->SsCode)
-		&& pA->AeAttrNum == NumAttr)
+	    if (pA->AeAttrNum == NumAttr &&
+		(pSchAttr == NULL ||
+		 !ustrcmp (pA->AeAttrSSchema->SsName, pSchAttr->SsName)))
 	       /* c'est l'attribut cherche' */
 	       trouve = TRUE;
 	    else
 	       pA = pA->AeNext;
 	 while (pA != NULL && !trouve);
+     }
    if (trouve && (ValAttrCherche != 0 || ValAttrTxtCherche[0] != EOS))
       /* on a trouve l'attribut cherche', on verifie sa valeur */
      {
@@ -666,6 +673,7 @@ PtrAttribute       *AttrTrouve;
      {
 	pEl = ChType (pEl, context, NomType);
 	if (pEl != NULL)
+	  {
 	   /* on a trouve' un element du type cherche' */
 	   if (!AvecAttribut)
 	      /* on ne cherche que sur le type, on a trouve' */
@@ -699,6 +707,7 @@ PtrAttribute       *AttrTrouve;
 		while (pAsc != NULL && pAttrTrouve == NULL);
 		trouve = (pAttrTrouve != NULL);
 	     }
+	  }
      }
    while (pEl != NULL && !trouve);
 

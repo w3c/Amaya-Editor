@@ -1143,7 +1143,7 @@ ThotBool           remove;
 	  if (elType > 0)
 	    /* presentation rules are associated with an element type */
 	    found = (pAb->AbElement->ElTypeNumber == elType &&
-	             pAb->AbElement->ElStructSchema->SsCode == pSS->SsCode);
+	             !ustrcmp (pAb->AbElement->ElStructSchema->SsName, pSS->SsName));
 	  else if (attrType > 0)
 	    {
 	      /* presentation rules are associated with an attribute type */
@@ -1151,7 +1151,7 @@ ThotBool           remove;
 	      while (!found && pAttr != NULL)
 		{
 		  found = (pAttr->AeAttrNum == attrType &&
-			   pAttr->AeAttrSSchema->SsCode == pSS->SsCode);
+			   !ustrcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName));
 		  if (!found)
 		     pAttr = pAttr->AeNext;
 		}

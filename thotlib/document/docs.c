@@ -900,7 +900,7 @@ int                *removedAttributes;
 	curExtension = previousSSchema->SsNextExtens;
 	found = FALSE;
 	while (!found && curExtension != NULL)
-	   if (((PtrSSchema) extension)->SsCode == curExtension->SsCode)
+	   if (!ustrcmp (((PtrSSchema) extension)->SsName, curExtension->SsName))
 	      found = TRUE;
 	   else
 	     {

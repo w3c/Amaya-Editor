@@ -194,21 +194,6 @@ printprs : ../thotlib/libThotKernel.a ../bin ../bin/printprs
 	$(CC) $(LDFLAGS) -o $@ $(PRINTPRS_OBJ) $(LIBS)
 	@$(ECHO) "====>" printprs is done
 
-#
-# printtyp : decompiler
-#
-PRINTTYP_OBJ = \
-	../thotlib/document/readtyp.o \
-	printtyp.o
-
-printtyp : ../thotlib/libThotKernel.a ../bin ../bin/printtyp
-	 
-
-../bin/printtyp : $(PRINTTYP_OBJ) ../thotlib/libThotKernel.a
-	$(CC) $(LDFLAGS) -o $@ $(PRINTTYP_OBJ) $(LIBS)
-	@$(ECHO) "====>" printtyp is done
-
-
 clean :
 	$(RM) -f *.o dns_daemon
 

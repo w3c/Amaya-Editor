@@ -2438,6 +2438,7 @@ NotifyAttribute    *event;
 	   event->attributeType.AttrTypeNum == HTML_ATTR_Class ||
 	   event->attributeType.AttrTypeNum == HTML_ATTR_Style_ ||
 	   event->attributeType.AttrTypeNum == HTML_ATTR_Title)
+	 {
 	 if (elType.ElTypeNum == HTML_EL_HEAD ||
 	     elType.ElTypeNum == HTML_EL_TITLE ||
 	     elType.ElTypeNum == HTML_EL_META ||
@@ -2446,9 +2447,11 @@ NotifyAttribute    *event;
 	   return TRUE;
 	 else
 	   return FALSE; /* let Thot perform normal operation */
+	 }
        /* i18n */
        if (event->attributeType.AttrTypeNum == HTML_ATTR_dir ||
 	   event->attributeType.AttrTypeNum == HTML_ATTR_Langue)
+	 {
 	 if (elType.ElTypeNum == HTML_EL_BR ||
 	     elType.ElTypeNum == HTML_EL_Applet ||
 	     elType.ElTypeNum == HTML_EL_Horizontal_Rule ||
@@ -2458,6 +2461,7 @@ NotifyAttribute    *event;
 	   return TRUE;
 	 else
 	   return FALSE;
+	 }
        /* events */
        if (event->attributeType.AttrTypeNum == HTML_ATTR_onclick ||
 	   event->attributeType.AttrTypeNum == HTML_ATTR_ondblclick ||

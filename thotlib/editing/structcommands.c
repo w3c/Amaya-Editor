@@ -264,7 +264,6 @@ PtrSSchema          pSS1;
 int                 typeNum1;
 PtrSSchema          pSS2;
 int                 typeNum2;
-
 #endif /* __STDC__ */
 {
    SRule              *pSRule1, *pSRule2;
@@ -272,7 +271,7 @@ int                 typeNum2;
    ThotBool            ret;
 
    ret = FALSE;
-   if (pSS1->SsCode == pSS2->SsCode && typeNum1 == typeNum2)
+   if (typeNum1 == typeNum2 && !ustrcmp (pSS1->SsName, pSS2->SsName))
       /* meme regle */
       ret = TRUE;
    else
@@ -350,16 +349,16 @@ int                 typeNum;
 
    /* on ne propose pas le type qu'a deja l'element */
    if (pEl->ElTypeNumber != typeNum ||
-       pEl->ElStructSchema->SsCode != pSS->SsCode)
+       ustrcmp (pEl->ElStructSchema->SsName, pSS->SsName))
       /* on ne fait rien si la table est pleine */
       if (NChangeTypeItems < MAX_ITEMS_CHANGE_TYPE - 1)
 	{
 	   /* on cherche si ce type est deja dans la table */
 	   found = FALSE;
 	   for (i = 0; i < NChangeTypeItems && !found; i++)
-	      if (typeNum == ChangeTypeTypeNum[i])
-		 if (pSS->SsCode == ChangeTypeSSchema[i]->SsCode)
-		    found = TRUE;
+	      if (typeNum == ChangeTypeTypeNum[i] &&
+		 !ustrcmp (pSS->SsName, ChangeTypeSSchema[i]->SsName))
+		found = TRUE;
 	   if (!found)
 	     {
 	       strResDyn = NULL;
@@ -426,8 +425,8 @@ PtrDocument         pDoc;
    int                 att, newType;
    ThotBool            found;
 
-   if (pEl->ElStructSchema->SsCode == pSS->SsCode &&
-       pEl->ElTypeNumber == typeNum)
+   if (pEl->ElTypeNumber == typeNum &&
+       !ustrcmp (pEl->ElStructSchema->SsName, pSS->SsName))
       /* l'element a deja le type voulu, il n'y a rien a faire */
       return;
    pSRule = &pSS->SsRule[typeNum - 1];
@@ -471,7 +470,8 @@ PtrDocument         pDoc;
 	  {
 	     pNextDoubleAttr = pAttrDouble->AeNext;
 	     if (pAttrDouble->AeAttrNum == pAttr->AeAttrNum &&
-		 pAttrDouble->AeAttrSSchema->SsCode == pAttr->AeAttrSSchema->SsCode)
+		 !ustrcmp (pAttrDouble->AeAttrSSchema->SsName,
+			   pAttr->AeAttrSSchema->SsName))
 	       {
 		  if (pNextAttr == pAttrDouble)
 		     pNextAttr = pNextDoubleAttr;
@@ -494,7 +494,8 @@ PtrDocument         pDoc;
 	     while (pIsoD != NULL)
 	       {
 		  if (pIsoD->IDtypeNum == pChild->ElTypeNumber &&
-		      pIsoD->IDStructSch->SsCode == pChild->ElStructSchema->SsCode)
+		      !ustrcmp (pIsoD->IDStructSch->SsName,
+				pChild->ElStructSchema->SsName))
 		    {
 		       newType = pIsoD->IDtypeNumIso;
 		       pNewSS = pIsoD->IDStructSchIso;
@@ -1197,6 +1198,7 @@ ThotBool            save;
       /* on detruit les elements selectionnes, sauf si le document est en */
       /* lecture seule. */
       if (canCut)
+	{
 	if (pSelDoc->DocReadOnly)
 	  TtaDisplaySimpleMessage (INFO, LIB, TMSG_RO_DOC_FORBIDDEN);
 	else
@@ -1478,6 +1480,7 @@ ThotBool            save;
 			       de paire dont l'homologue ne serait pas
 			       dans la selection */
 			    if (!IsolatedPairedElem (pE, pE, lastSel))
+			      {
 			      /* envoie l'evenement ElemDelete.Pre et
 				 demande a l'application si elle est
 				 d'accord pour detruire l'element */
@@ -1485,6 +1488,7 @@ ThotBool            save;
 				last = TTE_STANDARD_DELETE_LAST_ITEM;
 			      else
 				last = TTE_STANDARD_DELETE_FIRST_ITEMS;
+			      }
 			    if (!SendEventSubTree (TteElemDelete, pSelDoc, pE, last))
 			      {
 				/* detruit les paves de l'element courant */
@@ -1624,6 +1628,7 @@ ThotBool            save;
 		    for (i = 0; i < MAX_ANCESTOR && pNext == NULL; i++)
 		      {
 			if (pAncestorNext[i] != NULL)
+			  {
 			  if (pAncestorNext[i]->ElStructSchema != NULL &&
 			      DocumentOfElement (pAncestorNext[i]) == pSelDoc)
 			    pNext = pAncestorNext[i];
@@ -1633,12 +1638,14 @@ ThotBool            save;
 				  DocumentOfElement (pAncestorPrev[i]) == pSelDoc)
 				if (pAncestorPrev[i]->ElNext != NULL)
 				  pNext = pAncestorPrev[i]->ElNext;
+			  }
 		      }
 		    
 		    pPrev = NULL;
 		    for (i = 0; i < MAX_ANCESTOR && pPrev == NULL; i++)
 		      {
 			if (pAncestorPrev[i] != NULL)
+			  {
 			  if (pAncestorPrev[i]->ElStructSchema != NULL &&
 			      DocumentOfElement (pAncestorPrev[i]) == pSelDoc)
 			    pPrev = pAncestorPrev[i];
@@ -1648,6 +1655,7 @@ ThotBool            save;
 				  DocumentOfElement (pAncestorNext[i]) == pSelDoc)
 				if (pAncestorNext[i]->ElPrevious != NULL)
 				  pPrev = pAncestorNext[i]->ElPrevious;
+			  }
 		      }
 		    
 		    /* reaffiche les paves qui copient les elements detruits */
@@ -1831,6 +1839,7 @@ ThotBool            save;
 		  }
 	      }
 	  }
+	}
     }
 }
 
@@ -1932,11 +1941,13 @@ PtrDocument         pDoc;
 	     ok = AllowedFirstChild (pElSurround, pDoc, pEl->ElTypeNumber,
 				     pEl->ElStructSchema, TRUE, FALSE);
 	     if (ok)
+	       {
 		/* passe a l'element suivant */
 		if (pEl == lastEl)
 		   pEl = NULL;
 		else
 		   pEl = pEl->ElNext;
+	       }
 	  }
 	/* retire et libere l'element cree' temporairement */
 	DeleteElement (&pElSurround, pDoc);
@@ -2044,8 +2055,9 @@ PtrSSchema          pSS;
 				  FALSE, TRUE, TRUE, TRUE);
 	pRoot = pElSurround;
 	unit = FALSE;
-	if (pElSurround->ElStructSchema->SsCode !=
-	    pEl1->ElParent->ElStructSchema->SsCode)
+	if (ustrcmp (pElSurround->ElStructSchema->SsName,
+		     pEl1->ElParent->ElStructSchema->SsName))
+	  {
 	   /* cet element appartient a un schema de structure different de */
 	   /* celui de l'element qui devrait devenir son pere */
 	   if (pElSurround->ElStructSchema->SsRule[pElSurround->ElTypeNumber - 1].SrUnitElem)
@@ -2063,6 +2075,7 @@ PtrSSchema          pSS;
 		/* devient le fils de ce nouvel element */
 		InsertFirstChild (pRoot, pElSurround);
 	     }
+	  }
 
 	if (pRoot == NULL || pElSurround == NULL)
 	   /* impossible de creer l'element voulu, abandon */
@@ -2205,13 +2218,14 @@ int                *param;
 
    found = FALSE;
    Anchor = (PtrChoiceOptionDescr *) param;
-   if (pSS->SsCode != pEl->ElStructSchema->SsCode ||
-       typeNum != pEl->ElTypeNumber)
+   if (typeNum != pEl->ElTypeNumber ||
+       ustrcmp (pSS->SsName, pEl->ElStructSchema->SsName))
       /* on n'est pas arrive' encore au type de l'element pEl */
      {
 	pSRule = &(pSS->SsRule[typeNum - 1]);
 	doit = TRUE;
 	if (pSRule->SrRecursive)
+	  {
 	   /* regle recursive */
 	   if (pSRule->SrRecursDone)
 	      /* elle a deja ete rencontree, on ne fait rien */
@@ -2219,6 +2233,7 @@ int                *param;
 	   else
 	      /* elle n'a pas encore ete rencontree, on la traite */
 	      pSRule->SrRecursDone = TRUE;
+	  }
 	if (doit)
 	   /* traitement selon le constructeur du type */
 	   switch (pSRule->SrConstruct)
@@ -2244,22 +2259,23 @@ int                *param;
 		       else if (pSRule->SrNChoices > 0)
 			  /* SRule CsChoice avec options explicites */
 			 {
-			    /* on verifie d'abord si le type de l'element est une */
-			    /* des options de ce choix */
-			    if (pSS->SsCode == pEl->ElStructSchema->SsCode)
-			       for (choice = 0; choice < pSRule->SrNChoices &&
+			   /* on verifie d'abord si le type de l'element est une */
+			   /* des options de ce choix */
+			   if (!ustrcmp (pSS->SsName, pEl->ElStructSchema->SsName))
+			     for (choice = 0; choice < pSRule->SrNChoices &&
 				    !found; choice++)
-				  if (pSRule->SrChoice[choice] == pEl->ElTypeNumber)
-				     /* c'est effectivement une des options */
-				     found = TRUE;
-			    if (!found)
-			       /* on n'a pas trouve'. On cherche a partir des
-			          regles qui definissent les options du choix */
-			       for (choice = 0; choice < pSRule->SrNChoices &&
+			       if (pSRule->SrChoice[choice] == pEl->ElTypeNumber)
+				 /* c'est effectivement une des options */
+				 found = TRUE;
+			   if (!found)
+			     /* on n'a pas trouve'. On cherche a partir des
+				regles qui definissent les options du choix */
+			     for (choice = 0; choice < pSRule->SrNChoices &&
 				    !found; choice++)
-				  found = SearchChoiceRules (pSS,
-					      pSRule->SrChoice[choice], pEl,
-							     (int *) Anchor);
+			       found = SearchChoiceRules (pSS,
+							  pSRule->SrChoice[choice],
+
+							  pEl, (int *) Anchor);
 			 }
 		       if (found)
 			  /* cette regle CsChoice mene au type de pEl */
@@ -2469,9 +2485,9 @@ PtrSSchema          newSSchema;
 			  ok = FALSE;
 			  for (ent = 0; !ok && ent < NChangeTypeItems; ent++)
 			    {
-			       if (newTypeNum == ChangeTypeTypeNum[ent])
-				  if (newSSchema->SsCode ==
-				      ChangeTypeSSchema[ent]->SsCode)
+			       if (newTypeNum == ChangeTypeTypeNum[ent] &&
+				   !ustrcmp (newSSchema->SsName,
+					     ChangeTypeSSchema[ent]->SsName))
 				    {
                                       method = ChangeTypeMethod[ent];
 				      ok = TRUE;
@@ -2500,12 +2516,14 @@ PtrSSchema          newSSchema;
 			    }
 		       }
 		     if (!done)
+		       {
 			/* on essaie de changer le type du pere si on est sur
 			   un fils unique */
 			if (pEl->ElPrevious == NULL && pEl->ElNext == NULL)
 			   pEl = pEl->ElParent;
 			else
 			   pEl = NULL;
+		       }
 		  }
 	     }
 	   if (!done)
@@ -2576,6 +2594,7 @@ PtrDocument	 pDoc;
      /* isolate pElem from its sibling. If pElem is a component */
      /* of an aggregate, AllowedSibling would always say no otherwise */
      if (*splitElem)
+       {
        if (createAfter)
          {
          Sibling = pElem->ElNext;
@@ -2586,13 +2605,16 @@ PtrDocument	 pDoc;
          Sibling = pElem->ElPrevious;
          pElem->ElPrevious = NULL;
          }
+       }
      ok = AllowedSibling (pElem, pDoc, typeNum, pSS, (ThotBool)(!createAfter), TRUE,FALSE);
      /* restore link with sibling */
      if (*splitElem)
+       {
        if (createAfter)
          pElem->ElNext = Sibling;
        else
          pElem->ElPrevious = Sibling;
+       }
 
      if (ok)
        *pEl = pElem;
@@ -2890,6 +2912,7 @@ ThotBool            Before;
 				    &pSplitEl, &pElSplit, createAfter,
 				    ancestorRule, pSS, pSelDoc);
 		      if (!ok && ancestorRule > 0)
+			{
 			if (ancestorRule == prevrule ||
 			    ancestorRule == prevprevrule)
 			   rule = 0;
@@ -2899,6 +2922,7 @@ ThotBool            Before;
 			   prevrule = rule;
 			   rule = ancestorRule;
 			   }
+			}
 		    }
 		}
 	    }
@@ -3023,6 +3047,7 @@ ThotBool            Before;
 		      pSibling = pEl->ElPrevious;
 		      InsertElementBefore (pEl, pNew);
 		      if (empty)
+			{
 			/* on doit detruire l'element vide devant lequel on
 			   vient de creer un nouvel element */
 			/* verifie si l'element a detruire porte l'exception
@@ -3037,6 +3062,7 @@ ThotBool            Before;
 						TTE_STANDARD_DELETE_LAST_ITEM))
 			    /* l'application refuse de detruire cet element */
 			    empty = FALSE;
+			}
 		      /* register the new element in the editing history */
 		      AddEditOpInHistory (pNew, pSelDoc, FALSE, TRUE);       
 		      deleted = FALSE;
@@ -3179,7 +3205,6 @@ static void         AddEntrySurround (PtrSSchema pSS, int typeNum)
 static void         AddEntrySurround (pSS, typeNum)
 PtrSSchema          pSS;
 int                 typeNum;
-
 #endif /* __STDC__ */
 {
    int                 i;
@@ -3190,7 +3215,7 @@ int                 typeNum;
    i = 0;
    while (!found && i < NElSurround)
       if (typeNumSurround[i] == typeNum &&
-	  pSSSurround[i]->SsCode == pSS->SsCode)
+	  !ustrcmp (pSSSurround[i]->SsName, pSS->SsName))
 	 found = TRUE;
       else
 	 i++;

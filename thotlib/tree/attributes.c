@@ -229,7 +229,7 @@ PtrDocument         pDoc;
       if (pAttr->AeAttrNum == attrNum &&
       /* attrNum = 1: Langue, quel que soit le schema de structure */
 	  (attrNum == 1 ||
-	   pAttr->AeAttrSSchema->SsCode == pSS->SsCode))
+	   !ustrcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName)))
 	 found = TRUE;
       else
 	 pAttr = pAttr->AeNext;
@@ -1254,28 +1254,29 @@ PtrElement          pEl;
 int                 ExceptNum;
 #endif /* __STDC__ */
 {
-   PtrSSchema          pSS;
-   PtrAttribute        pAttr;
-   ThotBool            found;
-   int                 attrNum;
+  PtrSSchema          pSS;
+  PtrAttribute        pAttr;
+  ThotBool            found;
+  int                 attrNum;
 
-   pSS = pEl->ElStructSchema;
-   /* on recupere le numero d'attribut associe a l'exception */
-   attrNum = GetAttrWithException (ExceptNum, pEl->ElStructSchema);
-   if (attrNum != 0)
-     {
-	/* on cherche un attribut sur l'element */
-	pAttr = pEl->ElFirstAttr;
-	found = FALSE;
-	while (pAttr != NULL && !found)
-	   if (pAttr->AeAttrSSchema->SsCode == pSS->SsCode && pAttr->AeAttrNum == attrNum)
-	      found = TRUE;
-	   else
-	      pAttr = pAttr->AeNext;
-	return pAttr;
-     }
-   else
-      return NULL;
+  pSS = pEl->ElStructSchema;
+  /* on recupere le numero d'attribut associe a l'exception */
+  attrNum = GetAttrWithException (ExceptNum, pEl->ElStructSchema);
+  if (attrNum != 0)
+    {
+      /* on cherche un attribut sur l'element */
+      pAttr = pEl->ElFirstAttr;
+      found = FALSE;
+      while (pAttr != NULL && !found)
+	if (!ustrcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName) &&
+	    pAttr->AeAttrNum == attrNum)
+	  found = TRUE;
+	else
+	  pAttr = pAttr->AeNext;
+      return pAttr;
+    }
+  else
+    return NULL;
 }
 
 /* ----------------------------------------------------------------------
@@ -1327,27 +1328,27 @@ AttributeType       attributeType;
 	   TtaError (ERR_invalid_attribute_type);
 	else
 	  {
-	     attribute = NULL;
-	     pAttr = ((PtrElement) element)->ElFirstAttr;
-	     found = FALSE;
-	     while (pAttr != NULL && !found)
-	       {
-		  if (pAttr->AeAttrNum == attributeType.AttrTypeNum)
-		    {
-		      /* Same attribute number */
-		      if (attributeType.AttrSSchema == NULL)
-			/* The structure schema does not interest us */
-			found = TRUE;
-		      else if (pAttr->AeAttrSSchema->SsCode ==
-			       ((PtrSSchema) (attributeType.AttrSSchema))->SsCode)
-			/* Same schema of structure */
-			found = TRUE;
-		    }
-		  if (found)
-		     attribute = pAttr;
-		  else
-		     pAttr = pAttr->AeNext;
-	       }
+	    attribute = NULL;
+	    pAttr = ((PtrElement) element)->ElFirstAttr;
+	    found = FALSE;
+	    while (pAttr != NULL && !found)
+	      {
+		if (pAttr->AeAttrNum == attributeType.AttrTypeNum)
+		  {
+		    /* Same attribute number */
+		    if (attributeType.AttrSSchema == NULL)
+		      /* The structure schema does not interest us */
+		      found = TRUE;
+		    else if (!ustrcmp (pAttr->AeAttrSSchema->SsName,
+				       ((PtrSSchema) (attributeType.AttrSSchema))->SsName))
+		      /* Same schema of structure */
+		      found = TRUE;
+		  }
+		if (found)
+		  attribute = pAttr;
+		else
+		  pAttr = pAttr->AeNext;
+	      }
 	  }
      }
    return ((Attribute) attribute);

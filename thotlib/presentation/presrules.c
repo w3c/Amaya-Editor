@@ -769,10 +769,12 @@ PtrAbstractBox      pAb;
                          val = pAbb->AbSize + i;
                       *unit = pAbb->AbSizeUnit;
                       if (*unit == UnRelative)
+			{
                          if (val > MAX_LOG_SIZE)
                             val = MAX_LOG_SIZE;
                          else if (val < 0)
                             val = 0;
+			}
                       break;
                    case PtIndent:
                       if (pPRule->PrInhPercent)
@@ -1098,11 +1100,11 @@ PtrAbstractBox      pAb;
 	  pAttr = pAb->AbElement->ElFirstAttr;
 	  attrFound = FALSE;
 	  while (pAttr != NULL && !attrFound)
-             if (pAttr->AeAttrSSchema->SsCode == pSP->PsStructCode &&
-		 pAttr->AeAttrNum == numAbType)
-                attrFound = TRUE;
-             else
-                pAttr = pAttr->AeNext;
+	    if (pAttr->AeAttrNum == numAbType &&
+		!ustrcmp (pAttr->AeAttrSSchema->SsName, pSP->PsStructName))
+	      attrFound = TRUE;
+	    else
+	      pAttr = pAttr->AeNext;
 	  }
       if (notType)
 	/* on accepte le pave s'il est de type different de numAbType */
@@ -2163,17 +2165,20 @@ ThotBool           *appl;
 		PPos->PosUserSpecified = CheckPPosUser (pAbb1, pDoc);
 	     *appl = TRUE;
 	     /* verifie si le pave deroge a la regle d'englobement */
-	     if (pPosRule->PoRelation == RlRoot)
-		if (PPos->PosAbRef != pAbb1->AbEnclosing)
-		   /* ce pave deroge a la regle d'englobement */
-		   if (pPRule->PrType == PtHorizPos)
-		      pAbb1->AbHorizEnclosing = FALSE;
-		   else if (pPRule->PrType == PtVertPos)
-		      pAbb1->AbVertEnclosing = FALSE;
+	     if (pPosRule->PoRelation == RlRoot &&
+		 PPos->PosAbRef != pAbb1->AbEnclosing)
+	       {
+		 /* ce pave deroge a la regle d'englobement */
+		 if (pPRule->PrType == PtHorizPos)
+		   pAbb1->AbHorizEnclosing = FALSE;
+		 else if (pPRule->PrType == PtVertPos)
+		   pAbb1->AbVertEnclosing = FALSE;
+	       }
 	     if (PPos->PosAbRef == pAbb1->AbEnclosing)
+	       {
 		/* le pave se positionne par rapport a l'englobant */
-
 		if (pPRule->PrType == PtHorizPos)
+		  {
 		   /* position horizontale */
 		   if (PPos->PosDistance < 0)
 		     {
@@ -2185,14 +2190,13 @@ ThotBool           *appl;
 		     }
 		   else
 		     {
-			if (PPos->PosDistance > 0)
-			  {
-			     if (PPos->PosEdge == Right && PPos->PosRefEdge == Right)
-				/* le cote droit du pave est a droite du */
-				/* cote droit de l'englobant: debordement */
-				pAbb1->AbHorizEnclosing = FALSE;
-			  }
+		       if (PPos->PosDistance > 0 &&
+			   PPos->PosEdge == Right && PPos->PosRefEdge == Right)
+			 /* le cote droit du pave est a droite du */
+			 /* cote droit de l'englobant: debordement */
+			 pAbb1->AbHorizEnclosing = FALSE;
 		     }
+		  }
 		else if (pPRule->PrType == PtVertPos)
 		  {
 		     /* regarde si le premier fils de l'englobant est un saut de page */
@@ -2236,6 +2240,7 @@ ThotBool           *appl;
 			   /* bas de l'englobant: debordement */
 			   pAbb1->AbVertEnclosing = FALSE;
 		  }
+	       }
 	  }
 	else
 	   /* on n'a pas trouve' le pave' de reference */
@@ -2702,13 +2707,15 @@ PtrAbstractBox     *pAb;
    PtrAbstractBox      pAbbCur;
 
    result = FALSE;
-   if ((*pAb)->AbPresentationBox)
-      if ((*pAb)->AbLeafType == LtText)
-	 if (Ntype != 0)
-	    result = ustrcmp ((*pAb)->AbPSchema->PsPresentBox[(*pAb)->AbTypeNum - 1].PbName, pSchP->PsPresentBox[Ntype - 1].PbName) == 0;
-	 else
-	    result = ustrcmp ((*pAb)->AbPSchema->PsPresentBox[(*pAb)->AbTypeNum - 1].PbName, presBoxName) == 0;
+   if ((*pAb)->AbPresentationBox && (*pAb)->AbLeafType == LtText)
+     {
+       if (Ntype != 0)
+	 result = !ustrcmp ((*pAb)->AbPSchema->PsPresentBox[(*pAb)->AbTypeNum - 1].PbName, pSchP->PsPresentBox[Ntype - 1].PbName);
+       else
+	 result = !ustrcmp ((*pAb)->AbPSchema->PsPresentBox[(*pAb)->AbTypeNum - 1].PbName, presBoxName);
+     }
    if (!result)
+     {
       if ((*pAb)->AbFirstEnclosed == NULL)
 	 result = FALSE;
       else
@@ -2723,6 +2730,7 @@ PtrAbstractBox     *pAb;
 	   if (result)
 	      *pAb = pAbbCur;
 	}
+     }
    return result;
 }
 
@@ -2773,28 +2781,29 @@ PtrElement         *pEl;
 	 stop = TRUE;
       else
 	{
-	   /* la regle est une fonction de presentation */
-	   pPRule = pPRuleCre;
-	   if (pPRule->PrPresFunction == FnCreateBefore
-	       || pPRule->PrPresFunction == FnCreateWith
-	       || pPRule->PrPresFunction == FnCreateAfter
-	       || pPRule->PrPresFunction == FnCreateFirst
-	       || pPRule->PrPresFunction == FnCreateLast)
+	  /* la regle est une fonction de presentation */
+	  pPRule = pPRuleCre;
+	  if (pPRule->PrPresFunction == FnCreateBefore
+	      || pPRule->PrPresFunction == FnCreateWith
+	      || pPRule->PrPresFunction == FnCreateAfter
+	      || pPRule->PrPresFunction == FnCreateFirst
+	      || pPRule->PrPresFunction == FnCreateLast)
+	    {
 	      /* c'est une regle de creation */
 	      if (*presBoxType != 0)
 		{
-		   result = pPRule->PrPresBox[0] == *presBoxType;
-		   if (result)
-		      result = ustrcmp (pSS->SsName, (*pSchS)->SsName) == 0;
-		   /* on supprime le test sur l'egalite des schemas P et on teste uniquement */
-		   /* les schemas de structure : cela permet a des chapitres de se referencer */
-		   /* mutuellement meme si leur schema de presentation different legerement */
-		   /* il faut que les schemas P aient les memes boites de presentation utilisees */
-		   /* en copie */
+		  result = pPRule->PrPresBox[0] == *presBoxType;
+		  if (result)
+		    result = ustrcmp (pSS->SsName, (*pSchS)->SsName) == 0;
+		  /* on supprime le test sur l'egalite des schemas P et on teste uniquement */
+		  /* les schemas de structure : cela permet a des chapitres de se referencer */
+		  /* mutuellement meme si leur schema de presentation different legerement */
+		  /* il faut que les schemas P aient les memes boites de presentation utilisees */
+		  /* en copie */
 		}
 	      else
-		 result = ustrcmp (pSP->PsPresentBox[pPRule->PrPresBox[0] - 1].PbName, presBoxName)
-		    == 0;
+		result = !ustrcmp (pSP->PsPresentBox[pPRule->PrPresBox[0] - 1].PbName, presBoxName);
+	    }
 	   if (result && (pSP != *pSchP))
 	      /* retourne le schema de presentation et le */
 	      /* numero de type de la boite creee */
@@ -2933,8 +2942,8 @@ Name                typeName;
      }
    else
       /* on compare les numero de type et code de schema de structure */
-      if (pElRoot->ElTypeNumber == elType
-	  && pElRoot->ElStructSchema->SsCode == pSS->SsCode)
+      if (pElRoot->ElTypeNumber == elType &&
+	  !ustrcmp (pElRoot->ElStructSchema->SsName, pSS->SsName))
       /* c'est l'element cherche' */
       pEC = pElRoot;
    if (pEC == NULL)
@@ -3041,6 +3050,7 @@ ThotBool            withDescCopy;
      {
 	/* c'est une copie par reference */
 	if (pE != NULL)
+	  {
 	   /* l'element qui est reference' existe, il est pointe' par pE */
 	   if (pPRule->PrElement)
 	      /* il faut copier le contenu d'un element structure' contenu */
@@ -3144,6 +3154,7 @@ ThotBool            withDescCopy;
 		       }
 		  }
 	     }
+	  }
      }
    else
       /* ce n'est pas une copie par reference */
@@ -3267,7 +3278,6 @@ PtrAttribute        pAttr;
 	  case PtFunction:
 	    switch (pPRule->PrPresFunction)
 	      {
-
 	      case FnLine:
 		if (pAb->AbLeafType == LtCompound)
 		  /* si la regle de mise en lignes est definie pour la */
@@ -3356,6 +3366,7 @@ PtrAttribute        pAttr;
 
 	      case FnPictureMode:
 		if (pPRule->PrViewNum == viewSch)
+		  {
 		  if (pAb->AbElement->ElTerminal &&
 		      pAb->AbElement->ElLeafType == LtPicture)
 		    {
@@ -3381,6 +3392,7 @@ PtrAttribute        pAttr;
 			                  (PictureScaling)pPRule->PrPresBox[0];
 		      appl = TRUE;
 		    }
+		  }
 		break;
 
 	      case FnNotInLine:
@@ -3910,22 +3922,17 @@ PtrAttribute        pAttr;
 	    if (pAb->AbPrevious != NULL)
 	      /* il y a un pave precedent */
 	      {
-		if (!pAb->AbPrevious->AbDead
-		    && pAb->AbPrevious->AbElement->
-		    ElTypeNumber == PageBreak + 1
-		    && pAb->AbElement->ElTypeNumber != PageBreak + 1)
-		  if (pPRule->PrPosRule.PoRelation == RlSameLevel
-		      || pPRule->PrPosRule.PoRelation == RlPrevious)
-		    afterPageBreak = TRUE;
-		  else
-		    {
-		      if (pPRule->PrPosRule.PoRelation == RlEnclosing)
-			{
-			  if (pAb->AbPrevious->AbElement->
-			      ElPageType != PgBegin)
-			    afterPageBreak = TRUE;
-			}
-		    }
+		if (!pAb->AbPrevious->AbDead &&
+		    pAb->AbPrevious->AbElement-> ElTypeNumber == PageBreak + 1 &&
+		    pAb->AbElement->ElTypeNumber != PageBreak + 1)
+		  {
+		    if (pPRule->PrPosRule.PoRelation == RlSameLevel
+			|| pPRule->PrPosRule.PoRelation == RlPrevious)
+		      afterPageBreak = TRUE;
+		    else if (pPRule->PrPosRule.PoRelation == RlEnclosing &&
+			     pAb->AbPrevious->AbElement-> ElPageType != PgBegin)
+		      afterPageBreak = TRUE;
+		  }
 	      }
 	    else
 	      /* il n'y a pas de pave precedent */
@@ -4115,12 +4122,14 @@ int                 view;
 	     while (pResultRule == NULL)
 	       {
 		  found = FALSE;
-		  if (pPRule->PrViewNum == pDoc->DocView[view-1].DvPSchemaView)
-		     if (pPRule->PrType == ruleType)
-			if (ruleType == PtFunction)
-			   found = (pPRule->PrPresFunction == funcType);
-			else
-			   found = TRUE;
+		  if (pPRule->PrViewNum == pDoc->DocView[view-1].DvPSchemaView &&
+		      pPRule->PrType == ruleType)
+		    {
+		      if (ruleType == PtFunction)
+			found = (pPRule->PrPresFunction == funcType);
+		      else
+			found = TRUE;
+		    }
 		  if (found)
 		     /* la regle existe deja */
 		     pResultRule = pPRule;

@@ -79,45 +79,47 @@ int                *nbEntry;
    /* PRINT du schema de presentation du document */
    for (v = 1; v <= pDoc->DocSSchema->SsPSchema->PsNPrintedViews; v++)
      {
-	pVueImp = &pDoc->DocSSchema->SsPSchema->PsPrintedView[v - 1];
-	/* cherche cette vue dans la liste des vues possibles */
-	i = 0;
-	trouve = False;
-	while (i < NbVuesImprimables && !trouve)
-	  {
-	     i++;
-	     if (pVueImp->VpAssoc)
-		/* c'est une vue d'elements associes */
-		trouve = (LesVuesImprimables[i - 1].VdAssocNum == pVueImp->VpNumber)
-		   && (LesVuesImprimables[i - 1].VdSSchema->SsCode == pDoc->DocSSchema->SsCode);
-	     else
-		/* c'est une vue de l'arbre principal */
-		trouve = LesVuesImprimables[i - 1].VdView == pVueImp->VpNumber
-		   && LesVuesImprimables[i - 1].VdSSchema->SsCode == pDoc->DocSSchema->SsCode;
-	  }
-	if (trouve)
-	  {
-	     /* met le nom de la vue dans le menu */
-	     lgentree = ustrlen (LesVuesImprimables[i - 1].VdViewName) + 1;
-	     if (lgmenu + lgentree < MAX_TXT_LEN)
-	       {
-		  buffer[lgmenu] = TEXT('B');
-		  lgmenu++;
-		  ustrcpy (buffer + lgmenu, LesVuesImprimables[i - 1].VdViewName);
-		  lgmenu += lgentree;
-		  if (!LesVuesImprimables[i - 1].VdPaginated)
-		     /* vue sans pages, on met une etoile a la fin du nom */
-		    {
-		       buffer[lgmenu - 1] = TEXT('*');
-		       buffer[lgmenu] = TEXT(EOS);
-		       lgmenu++;
-		    }
-		  EntreesMenuVuesAImprimer[nbentrees] = i;
-		  nbentrees++;
-	       }
-	     /* indique que la vue est dans le menu */
-	     LesVuesImprimables[i - 1].VdOpen = TRUE;
-	  }
+       pVueImp = &pDoc->DocSSchema->SsPSchema->PsPrintedView[v - 1];
+       /* cherche cette vue dans la liste des vues possibles */
+       i = 0;
+       trouve = False;
+       while (i < NbVuesImprimables && !trouve)
+	 {
+	   i++;
+	   if (pVueImp->VpAssoc)
+	     /* c'est une vue d'elements associes */
+	     trouve = (LesVuesImprimables[i - 1].VdAssocNum == pVueImp->VpNumber) &&
+	       (!ustrcmp (LesVuesImprimables[i - 1].VdSSchema->SsName,
+			  pDoc->DocSSchema->SsName));
+	   else
+	     /* c'est une vue de l'arbre principal */
+	     trouve = LesVuesImprimables[i - 1].VdView == pVueImp->VpNumber &&
+	       !ustrcmp (LesVuesImprimables[i - 1].VdSSchema->SsName,
+			 pDoc->DocSSchema->SsName);
+	 }
+       if (trouve)
+	 {
+	   /* met le nom de la vue dans le menu */
+	   lgentree = ustrlen (LesVuesImprimables[i - 1].VdViewName) + 1;
+	   if (lgmenu + lgentree < MAX_TXT_LEN)
+	     {
+	       buffer[lgmenu] = TEXT('B');
+	       lgmenu++;
+	       ustrcpy (buffer + lgmenu, LesVuesImprimables[i - 1].VdViewName);
+	       lgmenu += lgentree;
+	       if (!LesVuesImprimables[i - 1].VdPaginated)
+		 /* vue sans pages, on met une etoile a la fin du nom */
+		 {
+		   buffer[lgmenu - 1] = TEXT('*');
+		   buffer[lgmenu] = TEXT(EOS);
+		   lgmenu++;
+		 }
+	       EntreesMenuVuesAImprimer[nbentrees] = i;
+	       nbentrees++;
+	     }
+	   /* indique que la vue est dans le menu */
+	   LesVuesImprimables[i - 1].VdOpen = TRUE;
+	 }
      }
    /* met ensuite dans le menu les autres vues */
    for (i = 1; i <= NbVuesImprimables; i++)

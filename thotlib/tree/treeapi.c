@@ -39,6 +39,7 @@
 #include "exceptions_f.h"
 #include "externalref_f.h"
 #include "labelalloc_f.h"
+#include "memory_f.h"
 #include "references_f.h"
 #include "structcommands_f.h"
 #include "structcreation_f.h"
@@ -466,54 +467,51 @@ Element             parent;
      }
    else
      {
-	/* Looks for the structure schema to use for the copy */
-	if (sourceDocument == destinationDocument)
-	   pSS = ((PtrElement) sourceElement)->ElStructSchema;
-	else
-	  {
-	     pSS = NULL;
-	     ancestor = (PtrElement) parent;
-	     while (pSS == NULL && ancestor != NULL)
-		if (ancestor->ElStructSchema->SsCode ==
-		    ((PtrElement) sourceElement)->ElStructSchema->SsCode)
-		   pSS = ancestor->ElStructSchema;
-		else
-		   ancestor = ancestor->ElParent;
-	     if (pSS == NULL)
-                if (((PtrElement) sourceElement)->ElStructSchema->SsExtension)
-                  {
-                     nextExtension = LoadedDocument[destinationDocument - 1]->DocSSchema->SsNextExtens;
-                     while (nextExtension != NULL)
-                       {
-                          if (nextExtension->SsCode ==
-                              ((PtrElement) sourceElement)->ElStructSchema->SsCode)
-                             break;
-                          nextExtension = nextExtension->SsNextExtens;
-                       }
-                     if (nextExtension == NULL)
-                       {
-                          TtaError (ERR_invalid_parameter);
-                       }
-                     pSS = nextExtension;
-                  }
-                else
-                  {
-		     if (LoadedDocument[destinationDocument - 1]->DocSSchema->SsCode ==
-		         ((PtrElement) sourceElement)->ElStructSchema->SsCode)
-		        pSS = LoadedDocument[destinationDocument - 1]->DocSSchema;
-		     else if (((PtrElement) sourceElement)->ElTerminal)
-		        pSS = ((PtrElement) parent)->ElStructSchema;
-		     else
-		        pSS = ((PtrElement) sourceElement)->ElStructSchema;
-                  }
-	  }
-	/* Copying */
-	element = CopyTree (((PtrElement) sourceElement),
-			    LoadedDocument[sourceDocument - 1], 0, pSS,
-			    LoadedDocument[destinationDocument - 1],
-			    (PtrElement) parent,
-			    TRUE, TRUE);
-	TransRef (element, element, LoadedDocument[destinationDocument - 1]);
+       /* Looks for the structure schema to use for the copy */
+       if (sourceDocument == destinationDocument)
+	 pSS = ((PtrElement) sourceElement)->ElStructSchema;
+       else
+	 {
+	   pSS = NULL;
+	   ancestor = (PtrElement) parent;
+	   while (pSS == NULL && ancestor != NULL)
+	     if (!ustrcmp (ancestor->ElStructSchema->SsName,
+			   ((PtrElement) sourceElement)->ElStructSchema->SsName))
+	       pSS = ancestor->ElStructSchema;
+	     else
+	       ancestor = ancestor->ElParent;
+	   if (pSS == NULL)
+	     {
+	       if (((PtrElement) sourceElement)->ElStructSchema->SsExtension)
+		 {
+		   nextExtension = LoadedDocument[destinationDocument - 1]->DocSSchema->SsNextExtens;
+		   while (nextExtension != NULL)
+		     {
+		       if (!ustrcmp (nextExtension->SsName,
+				     ((PtrElement) sourceElement)->ElStructSchema->SsName))
+			 break;
+		       nextExtension = nextExtension->SsNextExtens;
+		     }
+		   if (nextExtension == NULL)
+		     TtaError (ERR_invalid_parameter);
+		   pSS = nextExtension;
+		 }
+	       else if (!ustrcmp (LoadedDocument[destinationDocument - 1]->DocSSchema->SsName,
+			((PtrElement) sourceElement)->ElStructSchema->SsName))
+		 pSS = LoadedDocument[destinationDocument - 1]->DocSSchema;
+	       else if (((PtrElement) sourceElement)->ElTerminal)
+		 pSS = ((PtrElement) parent)->ElStructSchema;
+	       else
+		 pSS = ((PtrElement) sourceElement)->ElStructSchema;
+	     }
+	 }
+       /* Copying */
+       element = CopyTree (((PtrElement) sourceElement),
+			   LoadedDocument[sourceDocument - 1], 0, pSS,
+			   LoadedDocument[destinationDocument - 1],
+			   (PtrElement) parent,
+			   TRUE, TRUE);
+       TransRef (element, element, LoadedDocument[destinationDocument - 1]);
      }
    return ((Element) element);
 }
@@ -635,11 +633,13 @@ ThotBool            withContent;
 		{
 		  pSon = pEl->ElFirstChild;
 		  if (pSon != NULL)
+		    {
 		    if (pSon->ElTerminal &&
 			pSon->ElLeafType == LtPageColBreak)
 		      SkipPageBreakBegin (&pSon);
 		    else
 		      pSon = NULL;
+		    }
 		  if (pSon != NULL)
 		    /* Insert the element after the page mark */
 		    InsertElementAfter (pSon, firstCreated);
@@ -655,6 +655,7 @@ ThotBool            withContent;
 		      if (AllowedSibling (pSon, LoadedDocument[document - 1],
 					  firstCreated->ElTypeNumber, firstCreated->ElStructSchema,
 					  FALSE, FALSE, FALSE))
+			{
 			/* One put the tree after pSon */
 			if (pSon->ElNext == NULL)
 			  ok = TRUE;
@@ -665,6 +666,7 @@ ThotBool            withContent;
 					       firstCreated->ElTypeNumber,
 					       firstCreated->ElStructSchema,
 					       TRUE, FALSE, FALSE);
+			}
 		      if (!ok)
 			pSon = pSon->ElNext;
 		    }
@@ -828,12 +830,14 @@ Document            document;
 	     UndisplayElement (pEl, document);
 #endif
 	     if (root)
+	       {
 		if (pDoc->DocRootElement == pEl)
 		   /* The whole main tree is destroyed */
 		   pDoc->DocRootElement = NULL;
 		else if (pEl->ElAssocNum > 0 &&
 			 pDoc->DocAssocRoot[pEl->ElAssocNum - 1] == pEl)
 		   pDoc->DocAssocRoot[pEl->ElAssocNum - 1] = NULL;
+	       }
 	     DeleteElement (&pEl, pDoc);
 	  }
      }
@@ -886,7 +890,7 @@ Document            document;
        /* verifies that the tree type is defined into the document schema 
 	  or into one of its extensions */
        found = FALSE;
-       if (pDoc->DocSSchema->SsCode == pRoot->ElStructSchema->SsCode)
+       if (!ustrcmp (pDoc->DocSSchema->SsName, pRoot->ElStructSchema->SsName))
 	 /* document schema */
 	 found = TRUE;
        else if (pRoot->ElStructSchema->SsExtension)
@@ -895,7 +899,7 @@ Document            document;
 	 {
 	   curExtension = pDoc->DocSSchema->SsNextExtens;
 	   while (!found && curExtension != NULL)
-	     if (pRoot->ElStructSchema->SsCode == curExtension->SsCode)
+	     if (!ustrcmp (pRoot->ElStructSchema->SsName, curExtension->SsName))
 	       found = TRUE;
 	     else
 	       curExtension = curExtension->SsNextExtens;
@@ -1222,11 +1226,13 @@ Document            document;
 	  {
 	     pSon = ((PtrElement) parent)->ElFirstChild;
 	     if (pSon != NULL)
+	       {
 		if (pSon->ElTerminal && pSon->ElLeafType == LtPageColBreak)
 		   /* Ignore the page marks */
 		   SkipPageBreakBegin (&pSon);
 		else
 		   pSon = NULL;
+	       }
 	     if (pSon != NULL)
 		/* There is page marks, the element is inserted after these marks */
 		InsertElementAfter (pSon, (PtrElement) (*newElement));
@@ -1350,12 +1356,14 @@ Document            document;
 	RemoveElement ((PtrElement) element);
 #endif
 	if (root)
+	  {
 	   if (pDoc->DocRootElement == (PtrElement) element)
 	      /* Tha main tree is cleared */
 	      pDoc->DocRootElement = NULL;
 	   else if (pDoc->DocAssocRoot[((PtrElement) element)->ElAssocNum - 1] == (PtrElement) element)
 	      /* Verifies if it is the root of an associated tree */
 	      pDoc->DocAssocRoot[((PtrElement) element)->ElAssocNum - 1] = NULL;
+	  }
      }
 }
 
@@ -1470,6 +1478,7 @@ Document            document;
 	    }
 #ifndef NODISPLAY
 	  if (newAccessRight != oldAccessRight)
+	    {
 	    /* Rights of the element are modified */
 	    if (newAccessRight == AccessHidden)
 	      /* The element is hidden, clear its abstract boxes */
@@ -1497,6 +1506,7 @@ Document            document;
 		      TtaSetDisplayMode (document, SaveDisplayMode);
 		  }
 	      }
+	    }
 #endif
 	}
     }
@@ -1768,17 +1778,15 @@ Element             parent;
    UserErrorCode = 0;
    child = NULL;
    if (parent == NULL)
+     TtaError (ERR_invalid_parameter);
+   else if (!((PtrElement) parent)->ElTerminal &&
+	    ((PtrElement) parent)->ElFirstChild != NULL)
      {
-	TtaError (ERR_invalid_parameter);
+       if (((PtrElement) parent)->ElFirstChild->ElParent != (PtrElement) parent)
+	 TtaError (ERR_incorrect_tree);
+       else
+	 child = ((PtrElement) parent)->ElFirstChild;
      }
-   else if (!((PtrElement) parent)->ElTerminal)
-      if (((PtrElement) parent)->ElFirstChild != NULL)
-	 if (((PtrElement) parent)->ElFirstChild->ElParent != (PtrElement) parent)
-	   {
-	      TtaError (ERR_incorrect_tree);
-	   }
-	 else
-	    child = ((PtrElement) parent)->ElFirstChild;
    return ((Element) child);
 }
 
@@ -1805,21 +1813,19 @@ Element             parent;
    UserErrorCode = 0;
    child = NULL;
    if (parent == NULL)
+     TtaError (ERR_invalid_parameter);
+   else if (!((PtrElement) parent)->ElTerminal &&
+	    ((PtrElement) parent)->ElFirstChild != NULL)
      {
-	TtaError (ERR_invalid_parameter);
+       if (((PtrElement) parent)->ElFirstChild->ElParent != (PtrElement) parent)
+	 TtaError (ERR_incorrect_tree);
+       else
+	 {
+	   child = ((PtrElement) parent)->ElFirstChild;
+	   while (child->ElNext != NULL)
+	     child = child->ElNext;
+	 }
      }
-   else if (!((PtrElement) parent)->ElTerminal)
-      if (((PtrElement) parent)->ElFirstChild != NULL)
-	 if (((PtrElement) parent)->ElFirstChild->ElParent != (PtrElement) parent)
-	   {
-	      TtaError (ERR_incorrect_tree);
-	   }
-	 else
-	   {
-	      child = ((PtrElement) parent)->ElFirstChild;
-	      while (child->ElNext != NULL)
-		 child = child->ElNext;
-	   }
    return ((Element) child);
 }
 
@@ -1905,16 +1911,14 @@ Element            *element;
    UserErrorCode = 0;
    sibling = NULL;
    if ((PtrElement) (*element) == NULL)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
+     TtaError (ERR_invalid_parameter);
    else if (((PtrElement) (*element))->ElPrevious != NULL)
+     {
       if (((PtrElement) (*element))->ElPrevious->ElNext != (PtrElement) (*element))
-	{
-	   TtaError (ERR_incorrect_tree);
-	}
+	TtaError (ERR_incorrect_tree);
       else
 	 sibling = ((PtrElement) (*element))->ElPrevious;
+     }
    *element = (Element) sibling;
 }
 
@@ -1941,16 +1945,14 @@ Element            *element;
    UserErrorCode = 0;
    sibling = 0;
    if (*element == NULL)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
+     TtaError (ERR_invalid_parameter);
    else if (((PtrElement) (*element))->ElNext != NULL)
+     {
       if (((PtrElement) (*element))->ElNext->ElPrevious != (PtrElement) (*element))
-	{
-	   TtaError (ERR_incorrect_tree);
-	}
+	TtaError (ERR_incorrect_tree);
       else
 	 sibling = ((PtrElement) (*element))->ElNext;
+     }
    *element = (Element) sibling;
 }
 
@@ -2334,8 +2336,8 @@ ElementType         type2;
 	 result = 1;
    else if (type2.ElTypeNum > ((PtrSSchema) (type2.ElSSchema))->SsNRules)
       TtaError (ERR_invalid_element_type);
-   else if (((PtrSSchema) (type1.ElSSchema))->SsCode ==
-	    ((PtrSSchema) (type2.ElSSchema))->SsCode)
+   else if (!ustrcmp (((PtrSSchema) (type1.ElSSchema))->SsName,
+		      ((PtrSSchema) (type2.ElSSchema))->SsName))
       result = 1;
    else
       result = 0;

@@ -451,6 +451,7 @@ CHAR_T                strng[THOT_MAX_CHAR];
 		stop = TRUE;
 	  }
 	if (!stop)
+	  {
 	   if (EquivalentChar (pBuf->BuContent[ind - 1], strng[ir - 1], caseEquiv))
 	     {
 		if (ir == 1)
@@ -483,6 +484,7 @@ CHAR_T                strng[THOT_MAX_CHAR];
 		ind++;
 		(*firstChar)++;
 	     }
+	  }
      }
    while (!stop);
 }
@@ -522,47 +524,49 @@ int                 strngLen;
    /* index dans ChaineCherchee du caractere a comparer */
    do
      {
-	if (ind < 1)
-	  {
-	     pBuf = pBuf->BuPrevious;
-	     if (pBuf != NULL)
-		ind = pBuf->BuLength;
-	     else
-		stop = TRUE;
-	  }
-	if (!stop && ind > 0)
-	   if (EquivalentChar (pBuf->BuContent[ind - 1], strng[ir - 1], caseEquiv))
-	     {
-		if (ir == strngLen)
-		  {
-		     ix = ind;
-		     pBufx = pBuf;
-		     icx = *firstChar;
-		  }
-		if (ir == 1)
-		  {
-		     *found = TRUE;
-		     stop = TRUE;
-		  }
-		else
-		  {
-		     ind--;
-		     ir--;
-		  }
-	     }
-	   else if (ix != 0)
-	     {
-		ind = ix - 1;
-		pBuf = pBufx;
-		*firstChar = icx - 1;
-		ix = 0;
-		ir = strngLen;
-	     }
+       if (ind < 1)
+	 {
+	   pBuf = pBuf->BuPrevious;
+	   if (pBuf != NULL)
+	     ind = pBuf->BuLength;
 	   else
-	     {
-		ind--;
-		(*firstChar)--;
-	     }
+	     stop = TRUE;
+	 }
+       if (!stop && ind > 0)
+	 {
+	 if (EquivalentChar (pBuf->BuContent[ind - 1], strng[ir - 1], caseEquiv))
+	   {
+	     if (ir == strngLen)
+	       {
+		 ix = ind;
+		 pBufx = pBuf;
+		 icx = *firstChar;
+	       }
+	     if (ir == 1)
+	       {
+		 *found = TRUE;
+		 stop = TRUE;
+	       }
+	     else
+	       {
+		 ind--;
+		 ir--;
+	       }
+	   }
+	 else if (ix != 0)
+	   {
+	     ind = ix - 1;
+	     pBuf = pBufx;
+	     *firstChar = icx - 1;
+	     ix = 0;
+	     ir = strngLen;
+	   }
+	 else
+	   {
+	     ind--;
+	     (*firstChar)--;
+	   }
+	 }
      }
    while (!stop);
 }
@@ -717,33 +721,35 @@ int                 strngLen;
 	   /* l'element trouve' est pointe' par pEl et ichar est le rang */
 	   /* dans cet element du 1er caractere de la chaine trouvee */
 	   if (*lastEl != NULL)
+	     {
 	      /* il faut s'arreter avant l'extremite' du document */
 	      if (pEl == *lastEl)
 		 /* la chaine trouvee est dans l'element ou il faut s'arreter */
 		{
-		   if (forward)
-		     {
-			if (ichar + strngLen - 1 > *lastChar)
-			   /* la chaine trouvee se termine au-dela du caractere ou il */
-			   /* faut s'arreter, on fait comme si on n'avait pas trouve' */
-			   found = FALSE;
-		     }
-		   else
-		     {
-			if (*lastChar > 0)
-			   if (ichar < *lastChar)
-			      found = FALSE;
-		     }
+		  if (forward)
+		    {
+		      if (ichar + strngLen - 1 > *lastChar)
+			/* la chaine trouvee se termine au-dela du caractere ou il */
+			/* faut s'arreter, on fait comme si on n'avait pas trouve' */
+			found = FALSE;
+		    }
+		  else
+		    {
+		      if (*lastChar > 0)
+			if (ichar < *lastChar)
+			  found = FALSE;
+		    }
 		}
 	      else if (forward)
 		{
-		   if (ElemIsBefore (*lastEl, pEl))
-		      /* l'element trouve' est apres l'element de fin, on fait */
-		      /* comme si on n'avait pas trouve' */
-		      found = FALSE;
+		  if (ElemIsBefore (*lastEl, pEl))
+		    /* l'element trouve' est apres l'element de fin, on fait */
+		    /* comme si on n'avait pas trouve' */
+		    found = FALSE;
 		}
 	      else if (ElemIsBefore (pEl, *lastEl))
-		 found = FALSE;
+		found = FALSE;
+	     }
 	if (found)
 	  {
 	     *firstEl = pEl;
@@ -789,7 +795,7 @@ ThotBool            onlyOne;
 	/* verifie que ce schema n'est pas deja dans la table */
 	n = 0;
 	while (n < *natureTableLen && !present)
-	   if (natureTable[n++]->SsCode == pSS->SsCode)
+	   if (!ustrcmp (natureTable[n++]->SsName, pSS->SsName))
 	      present = TRUE;
      }
    if (!present)
@@ -884,25 +890,26 @@ ThotBool            relative;
 	pElP = pEl;
 	while (pageNum > 0 && pElP != NULL)
 	  {
-	     pElP = FwdSearchTypedElem (pEl, PageBreak + 1, NULL);
-	     if (pElP != NULL)
-	       {
-		  if (pElP->ElViewPSchema == view)
-		     if (relative)
-		       {
-			  result = pElP;
-			  pageNum--;
-		       }
-		     else
-			/* on cherche la page de numero pageNum */
-		     if (pElP->ElPageNumber == pageNum)
-			/* c'est la page cherchee */
-		       {
-			  result = pElP;
-			  pageNum = 0;
-		       }
-		  pEl = pElP;
-	       }
+	    pElP = FwdSearchTypedElem (pEl, PageBreak + 1, NULL);
+	    if (pElP != NULL)
+	      {
+		if (pElP->ElViewPSchema == view)
+		  {
+		    if (relative)
+		      {
+			result = pElP;
+			pageNum--;
+		      }
+		    else if (pElP->ElPageNumber == pageNum)
+		      /* on cherche la page de numero pageNum */
+		      /* c'est la page cherchee */
+		      {
+			result = pElP;
+			pageNum = 0;
+		      }
+		  }
+		pEl = pElP;
+	      }
 	  }
      }
    else

@@ -733,7 +733,7 @@ int                 frame;
       if (!pAb->AbPresentationBox)
 	{
 	  pEl = pAb->AbElement;
-	  if (pEl->ElStructSchema->SsCode != pNatSSchema->SsCode)
+	  if (ustrcmp (pEl->ElStructSchema->SsName, pNatSSchema->SsName))
 	    /* ce n'est pas un pave d'un element de la nature voulue */
 	    /* on cherche parmi ses descendants */
 	    {
@@ -881,7 +881,7 @@ ThotBool            withEvent;
 	/* change de schema de presentation pour chaque occurence de */
 	/* la nature concernee */
 	for (nat = 0; nat < NnaturePSchemas; nat++)
-	   if (naturePSchema[nat]->SsCode == pNatSSchema->SsCode)
+	   if (!ustrcmp (naturePSchema[nat]->SsName, pNatSSchema->SsName))
 	      /* c'est la nature concernee */
 	      if (naturePSchema[nat] != pNatSSchema)
 		 /* ce n'est pas celle qu'on a deja traite' */

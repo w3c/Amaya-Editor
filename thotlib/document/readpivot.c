@@ -1262,7 +1262,8 @@ int                *contentType;
    if (*contentType != 0 && *pContSS != NULL)
      {
 	ok = FALSE;
-	if ((*pContSS)->SsCode == (*pSS)->SsCode)
+	if (!ustrcmp ((*pContSS)->SsName, (*pSS)->SsName))
+	  {
 	   if (*elType == *contentType)
 	      /* meme numero de type */
 	      ok = TRUE;
@@ -1285,39 +1286,41 @@ int                *contentType;
 			while (!ok && i < pSRule->SrNChoices);
 		     }
 	     }
-	if (!ok)
-	   if (*elType == (*pSS)->SsRootElem)
-	     {
-		pSRule = &(*pContSS)->SsRule[*contentType - 1];
-		if (pSRule->SrConstruct == CsNatureSchema)
+	  }
+
+	if (!ok &&
+	    *elType == (*pSS)->SsRootElem)
+	  {
+	    pSRule = &(*pContSS)->SsRule[*contentType - 1];
+	    if (pSRule->SrConstruct == CsNatureSchema)
+	      {
+		/* le contenu cherche' est justement une racine de nature */
+		if (pSRule->SrSSchemaNat != NULL)
+		  ok = !ustrcmp (pSRule->SrSSchemaNat->SsName, (*pSS)->SsName);
+	      }
+	    else if (pSRule->SrConstruct == CsChoice &&
+		     pSRule->SrNChoices > 0)
+	      /* le contenu cherche' est un choix. Y a-t-il, parmi les */
+	      /* options de ce choix, la nature dont l'element courant est */
+	      /* racine? */
+	      /* choix explicite */
+	      {
+		i = 0;
+		do
 		  {
-		     /* le contenu cherche' est justement une racine de nature */
-		     if (pSRule->SrSSchemaNat != NULL)
-			ok = pSRule->SrSSchemaNat->SsCode == (*pSS)->SsCode;
+		    i++;
+		    if ((*pContSS)->SsRule[pSRule->SrChoice[i - 1] - 1].SrConstruct == CsNatureSchema &&
+			/* l'option i est un changement de nature */
+			(*pContSS)->SsRule[pSRule->SrChoice[i - 1] - 1].SrSSchemaNat != NULL)
+		      ok = (!ustrcmp ((*pContSS)->SsRule[pSRule->SrChoice[i - 1] - 1].SrSSchemaNat->SsName, (*pSS)->SsName));
 		  }
-		else if (pSRule->SrConstruct == CsChoice)
-		   /* le contenu cherche' est un choix. Y a-t-il, parmi les */
-		   /* options de ce choix, la nature dont l'element courant est */
-		   /* racine? */
-		   if (pSRule->SrNChoices > 0)
-		      /* choix explicite */
-		     {
-			i = 0;
-			do
-			  {
-			     i++;
-			     if ((*pContSS)->SsRule[pSRule->SrChoice[i - 1] - 1].SrConstruct == CsNatureSchema)
-				/* l'option i est un changement de nature */
-				if ((*pContSS)->SsRule[pSRule->SrChoice[i - 1] - 1].SrSSchemaNat != NULL)
-				   ok = ((*pContSS)->SsRule[pSRule->SrChoice[i - 1] - 1].SrSSchemaNat->SsCode == (*pSS)->SsCode);
-			  }
-			while (!ok && i < pSRule->SrNChoices);
-		     }
-	     }
+		while (!ok && i < pSRule->SrNChoices);
+	      }
+	  }
 	if (ok)
 	  {
-	     *createAll = TRUE;	/* on cree toute la descendance de l'element */
-	     *contentType = 0;	/* on ne creera plus de contenu pour cet element */
+	    *createAll = TRUE;	/* on cree toute la descendance de l'element */
+	    *contentType = 0;	/* on ne creera plus de contenu pour cet element */
 	  }
      }
 }
@@ -1353,7 +1356,7 @@ PtrSSchema          pSS;
 	   found = FALSE;
 	   while (pAttr != NULL && !found)
 	      if (pAttr->AeAttrNum == att &&
-		  pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
+		  !ustrcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName))
 		 found = TRUE;
 	      else
 		 pAttr = pAttr->AeNext;
@@ -1896,9 +1899,9 @@ ThotBool            link;
 	  {
 	    /* get a complete rule */
 	    dimpos = TRUE;
-	    TtaReadShort (pivFile, &def);
-	    TtaReadShort (pivFile, &ref);
-	    TtaReadShort (pivFile, &rel);
+	    TtaReadShort (pivFile, (int *) &def);
+	    TtaReadShort (pivFile, (int *) &ref);
+	    TtaReadShort (pivFile, (int *) &rel);
 	    TtaReadShort (pivFile, &val);
 	    unit = ReadUnit (pivFile);
 	    sign = ReadSign (pivFile);
@@ -1917,9 +1920,9 @@ ThotBool            link;
 	if (pDoc->DocPivotVersion >= 6)
 	  {
 	    /* get a complete rule */
-	    TtaReadShort (pivFile, &def);
-	    TtaReadShort (pivFile, &ref);	    
-	    TtaReadShort (pivFile, &rel);
+	    TtaReadShort (pivFile, (int *) &def);
+	    TtaReadShort (pivFile, (int *) &ref);	    
+	    TtaReadShort (pivFile, (int *) &rel);
 	  }
 	TtaReadShort (pivFile, &val);
 	unit = ReadUnit (pivFile);
@@ -2529,6 +2532,7 @@ static  LabelString         label;
       
       /* lit le tag "Element-reference'" si elle est presente */
       if (!error)
+	{
 	if (*tag == C_PIV_REFERRED)
 	  {
 	    withReferences = TRUE;
@@ -2537,6 +2541,7 @@ static  LabelString         label;
 	  }
 	else
 	  withReferences = FALSE;
+	}
 
       /* traite le label s'il est present */
       label[0] = EOS;
@@ -2679,6 +2684,7 @@ static  LabelString         label;
 	    case CsBasicElement:
 	      leafType = pSSchema->SsRule[elType - 1].SrBasicType;
 	      if (leafType == CharString)
+		{
 		if (pDoc->DocPivotVersion >= 4)
 		  {
 		    if (*tag != C_PIV_LANG)
@@ -2742,6 +2748,7 @@ static  LabelString         label;
 			  }
 		      }
 		  }
+		}
 	      
 	      if (*tag == C_PIV_BEGIN && !error)
 		{
@@ -2802,14 +2809,16 @@ static  LabelString         label;
 					  }
 				    /* changement des oe et OE */
 				    if (pDoc->DocPivotVersion < 4)
+				      {
 				      if (ch == '\230')
-                         ch = '\367';
+					ch = '\367';
 				      else if (ch == '\367')
-                           ch = '\230';
-                      else if (ch == '\231')
-                           ch = '\327';
-                      else if (ch == '\327')
-                           ch = '\231';
+					ch = '\230';
+				      else if (ch == '\231')
+					ch = '\327';
+				      else if (ch == '\327')
+					ch = '\231';
+				      }
 				    /* range le caractere et lit le suivant */
 				    pBuf->BuContent[n - 1] = ch;
 				    if (!TtaReadByte (pivFile, &ch))
@@ -3310,9 +3319,7 @@ PtrDocument         pDoc;
 char*               tag;
 PtrSSchema          pLoadedSS;
 void (*withThisPSchema) ();
-
 #endif /* __STDC__ */
-
 {
    Name                SSName, PSchemaName;
    PtrSSchema          pSS;
@@ -3422,6 +3429,7 @@ void (*withThisPSchema) ();
                 (*withThisPSchema) ((Document) IdentDocument (pDoc), SSName, PSchemaName);
 	     PutNatureInTable (pDoc, SSName, rank);
 	     if (pDoc->DocNatureSSchema[rank - 1] == NULL)
+	       {
 		if (ExtensionSch)
 		   /* charge l'extension de schema */
 		   pSS = LoadExtension (SSName, PSchemaName, pDoc);
@@ -3433,6 +3441,7 @@ void (*withThisPSchema) ();
 		     else
 			pSS = pDoc->DocSSchema->SsRule[i - 1].SrSSchemaNat;
 		  }
+	       }
 	  }
 	if (!error && pSS != NULL)
 	  {
@@ -3885,57 +3894,57 @@ ThotBool		    removeExclusions
 	  }
 
 	/* lit le corps du document */
-	if (!error)
-	   if (tag != (CHAR_T) C_PIV_DOC_END)
-	      if (tag != (CHAR_T) C_PIV_STRUCTURE)
-		{
-		   PivotError (file, TEXT("Open"));
-		}
-	      else
-		{
-		   if (!TtaReadByte (file, &tag))
-		      PivotError (file, TEXT("Open 1"));
-		   if (tag != (CHAR_T) C_PIV_TYPE && tag != (CHAR_T) C_PIV_NATURE)
-		     {
-			PivotError (file, TEXT("Open 2"));
-		     }
-		   else
-		     {
-			rule = 0;
-			pNat = NULL;
-			p = ReadTreePiv (file, pDoc->DocSSchema, pDoc, &tag, 0,
-			     FALSE, (ThotBool)(!pDoc->DocExportStructure), &rule, &pNat,
-				  &typeRead, &pSS, createPages, NULL, TRUE);
-			if (withEvent && pDoc->DocSSchema != NULL && !error)
-			   SendEventAttrRead (p, pDoc);
-			/* force la creation d'un element racine */
-			if (p == NULL)
-			   /* rien n'a ete cree */
-			   p = NewSubtree (pDoc->DocSSchema->SsRootElem, pDoc->DocSSchema, pDoc, 0,
-					   FALSE, TRUE, TRUE, TRUE);
-			else if (p->ElStructSchema != pDoc->DocSSchema
-			 || p->ElTypeNumber != pDoc->DocSSchema->SsRootElem)
-			   /* ce n'est pas la racine attendue */
-			  {
-			     s = p;
-			     p = NewSubtree (pDoc->DocSSchema->SsRootElem, pDoc->DocSSchema, pDoc, 0,
-					     FALSE, TRUE, TRUE, TRUE);
-			     InsertFirstChild (p, s);
-			  }
-			/* traite les elements exclus */
-			if (removeExclusions)
-			   RemoveExcludedElem (&p, pDoc);
-			/* accouple les paires */
-			AssociatePairs (p);
-			pDoc->DocRootElement = p;
-			if (pDoc->DocCheckingMode & PIV_CHECK_MASK)
-			   /* verifie que cet arbre est correct */
-			  {
-			     ok = AbstractTreeOK (p, pDoc);
-			     structureOK = structureOK && ok;
-			  }
-		     }
-		}
+	if (!error &&
+	    tag != (CHAR_T) C_PIV_DOC_END)
+	  {
+	    if (tag != (CHAR_T) C_PIV_STRUCTURE)
+	      PivotError (file, TEXT("Open"));
+	    else
+	      {
+		if (!TtaReadByte (file, &tag))
+		  PivotError (file, TEXT("Open 1"));
+		if (tag != (CHAR_T) C_PIV_TYPE && tag != (CHAR_T) C_PIV_NATURE)
+		  {
+		    PivotError (file, TEXT("Open 2"));
+		  }
+		else
+		  {
+		    rule = 0;
+		    pNat = NULL;
+		    p = ReadTreePiv (file, pDoc->DocSSchema, pDoc, &tag, 0,
+				     FALSE, (ThotBool)(!pDoc->DocExportStructure), &rule, &pNat,
+				     &typeRead, &pSS, createPages, NULL, TRUE);
+		    if (withEvent && pDoc->DocSSchema != NULL && !error)
+		      SendEventAttrRead (p, pDoc);
+		    /* force la creation d'un element racine */
+		    if (p == NULL)
+		      /* rien n'a ete cree */
+		      p = NewSubtree (pDoc->DocSSchema->SsRootElem, pDoc->DocSSchema, pDoc, 0,
+				      FALSE, TRUE, TRUE, TRUE);
+		    else if (p->ElStructSchema != pDoc->DocSSchema
+			     || p->ElTypeNumber != pDoc->DocSSchema->SsRootElem)
+		      /* ce n'est pas la racine attendue */
+		      {
+			s = p;
+			p = NewSubtree (pDoc->DocSSchema->SsRootElem, pDoc->DocSSchema, pDoc, 0,
+					FALSE, TRUE, TRUE, TRUE);
+			InsertFirstChild (p, s);
+		      }
+		    /* traite les elements exclus */
+		    if (removeExclusions)
+		      RemoveExcludedElem (&p, pDoc);
+		    /* accouple les paires */
+		    AssociatePairs (p);
+		    pDoc->DocRootElement = p;
+		    if (pDoc->DocCheckingMode & PIV_CHECK_MASK)
+		      /* verifie que cet arbre est correct */
+		      {
+			ok = AbstractTreeOK (p, pDoc);
+			structureOK = structureOK && ok;
+		      }
+		  }
+	      }
+	  }
 	if (!structureOK)
 	   /* Le document n'est pas correct */
 	  {

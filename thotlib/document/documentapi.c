@@ -1475,15 +1475,15 @@ SSchema             schema2;
 #endif /* __STDC__ */
 
 {
-   int                 result;
+  int                 result;
 
-   UserErrorCode = 0;
-   result = 0;
-   if (schema1 == NULL || schema2 == NULL)
-	TtaError (ERR_invalid_parameter);
-   else if (((PtrSSchema) schema1)->SsCode == ((PtrSSchema) schema2)->SsCode)
-      result = 1;
-   return result;
+  UserErrorCode = 0;
+  result = 0;
+  if (schema1 == NULL || schema2 == NULL)
+    TtaError (ERR_invalid_parameter);
+  else if (!ustrcmp (((PtrSSchema) schema1)->SsName, ((PtrSSchema) schema2)->SsName))
+    result = 1;
+  return result;
 }
 
 /*----------------------------------------------------------------------

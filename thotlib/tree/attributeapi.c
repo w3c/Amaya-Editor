@@ -89,11 +89,12 @@ PtrSSchema          pSS;
 	      found = FALSE;
 	      while (pAttr != NULL && !found)
 		 if (pAttr->AeAttrNum == att &&
-		  (att == 1 || pAttr->AeAttrSSchema->SsCode == pSS->SsCode))
-		    /* att = 1: Langue, quel que soit le schema de structure */
-		    found = TRUE;
+		     (att == 1 ||
+		      !ustrcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName)))
+		   /* att = 1: Langue, quel que soit le schema de structure */
+		   found = TRUE;
 		 else
-		    pAttr = pAttr->AeNext;
+		   pAttr = pAttr->AeNext;
 	      if (!found)
 		 /* l'element ne possede pas cet attribut requis */
 		{
@@ -486,9 +487,10 @@ Document            document;
       found = FALSE;
       while (pAttr != NULL && !found)
 	{
-	  if (pAttr->AeAttrSSchema->SsCode == ((PtrAttribute) attribute)->AeAttrSSchema->SsCode)
-	    if (pAttr->AeAttrNum == ((PtrAttribute) attribute)->AeAttrNum)
-	      found = TRUE;
+	  if (pAttr->AeAttrNum == ((PtrAttribute) attribute)->AeAttrNum &&
+	      !ustrcmp (pAttr->AeAttrSSchema->SsName,
+			((PtrAttribute) attribute)->AeAttrSSchema->SsName))
+	    found = TRUE;
 	  if (!found)
 	    pAttr = pAttr->AeNext;
 	}
@@ -1007,10 +1009,10 @@ AttributeType       type2;
      }
    else
      {
-	if (type1.AttrTypeNum == type2.AttrTypeNum)
-	   if (((PtrSSchema) (type1.AttrSSchema))->SsCode ==
-	       ((PtrSSchema) (type2.AttrSSchema))->SsCode)
-	      result = 1;
+	if (type1.AttrTypeNum == type2.AttrTypeNum &&
+	    !ustrcmp (((PtrSSchema) (type1.AttrSSchema))->SsName,
+		      ((PtrSSchema) (type2.AttrSSchema))->SsName))
+	  result = 1;
      }
    return result;
 }
@@ -1337,29 +1339,26 @@ Attribute          *attributeFound;
 	else
 	   pEl = FwdSearchAttribute ((PtrElement) element, searchedAttribute.AttrTypeNum, 0, TEXT(""),
 			      (PtrSSchema) (searchedAttribute.AttrSSchema));
-	if (pEl != NULL)
-	   if (scope == SearchInTree)
-	     {
-		if (!ElemIsWithinSubtree (pEl, (PtrElement) element))
-		   pEl = NULL;
-	     }
+	if (pEl != NULL && scope == SearchInTree &&
+	    !ElemIsWithinSubtree (pEl, (PtrElement) element))
+	  pEl = NULL;
 	if (pEl != NULL)
 	  {
 	     *elementFound = (Element) pEl;
 	     pAttr = pEl->ElFirstAttr;
-	     if (pAttr != NULL)
-		/* if we look at any attribute, we find the first attribut of the given element, */
-		/* else we go over the attributs of the element until we find the right one */
-		if (searchedAttribute.AttrSSchema != NULL)
-		   do
-		      if (pAttr->AeAttrSSchema->SsCode ==
-		      ((PtrSSchema) (searchedAttribute.AttrSSchema))->SsCode
-		       && pAttr->AeAttrNum == searchedAttribute.AttrTypeNum)
-			 /* the expected attribute */
-			 *attributeFound = (Attribute) pAttr;
-		      else
-			 pAttr = pAttr->AeNext;
-		   while (pAttr != NULL && *attributeFound == NULL);
+	     if (pAttr != NULL &&
+		 searchedAttribute.AttrSSchema != NULL)
+	       /* if we look at any attribute, we find the first attribut of the given element, */
+	       /* else we go over the attributs of the element until we find the right one */
+	       do
+		 if (pAttr->AeAttrNum == searchedAttribute.AttrTypeNum &&
+		     !ustrcmp (pAttr->AeAttrSSchema->SsName,
+			       ((PtrSSchema) (searchedAttribute.AttrSSchema))->SsName))
+		   /* the expected attribute */
+		   *attributeFound = (Attribute) pAttr;
+		 else
+		   pAttr = pAttr->AeNext;
+	       while (pAttr != NULL && *attributeFound == NULL);
 	  }
      }
 }

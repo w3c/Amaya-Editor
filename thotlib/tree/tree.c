@@ -137,6 +137,7 @@ PtrElement          pEl;
 
    pOther = NULL;
    if (pEl != NULL)
+     {
       if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsPairedElement)
 	 /* check if it's a pair element */
 	 if (pEl->ElOtherPairedEl != NULL)
@@ -181,6 +182,7 @@ PtrElement          pEl;
 		      pEl->ElPairIdent = pOther->ElPairIdent;
 		}
 	   }
+     }
    return pOther;
 }
 
@@ -359,11 +361,13 @@ STRING              typeName;
 		    {
 		       pAsc = pAsc->ElNext;
 		       if (pAsc != NULL)
+			 {
 			  if (ustrcmp (typeName, pAsc->ElStructSchema->SsRule[pAsc->ElTypeNumber - 1].SrName) == 0)
 			     /* found */
 			     pRet = pAsc;
 			  else
 			     pRet = FwdSearchElemByTypeName (pAsc, typeName);
+			 }
 		    }
 	       }
 	  }
@@ -508,43 +512,47 @@ PtrSSchema          pSS;
    ThotBool            ret;
 
    ret = FALSE;
-   if (pEl->ElFirstAttr != NULL)	/* element has an attribute */
-      if (pSS == NULL && attrNum == 0)
+   if (pEl->ElFirstAttr != NULL)
+     {
+       /* element has an attribute */
+       if (pSS == NULL && attrNum == 0)
 	 /* we search any attribute */
 	 ret = TRUE;		/* found ! */
-      else
+       else
 	 /* searches the element's attributes */
-	{
+	 {
 	   pAttr = pEl->ElFirstAttr;
 	   while (pAttr != NULL && pAttr->AeAttrSSchema != NULL && !ret)
 	     {
-		if ((pSS == NULL || pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
-		    && pAttr->AeAttrNum == attrNum)
-		   /* it's the attribute we are searching */
-		   if (val == 0)
-		      /* we are looking for any value */
-		      ret = TRUE;	/* found ! */
-		   else
-		      switch (pAttr->AeAttrType)
-			    {
-			       case AtNumAttr:
-			       case AtEnumAttr:
-				  if (pAttr->AeAttrValue == val)
-				     /* searched value */
-
-				     ret = TRUE;	/* found ! */
-				  break;
-			       case AtTextAttr:
-				  if (StringAndTextEqual (textVal, pAttr->AeAttrText))
-				     ret = TRUE;
-				  break;
-			       default:
-				  break;
-			    }
-
-		pAttr = pAttr->AeNext;
+	       if ((pSS == NULL ||
+		    !ustrcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName))
+		   && pAttr->AeAttrNum == attrNum)
+		 {
+		 /* it's the attribute we are searching */
+		 if (val == 0)
+		   /* we are looking for any value */
+		   ret = TRUE;	/* found ! */
+		 else
+		   switch (pAttr->AeAttrType)
+		     {
+		     case AtNumAttr:
+		     case AtEnumAttr:
+		       if (pAttr->AeAttrValue == val)
+			 /* searched value */
+			 ret = TRUE;	/* found ! */
+		       break;
+		     case AtTextAttr:
+		       if (StringAndTextEqual (textVal, pAttr->AeAttrText))
+			 ret = TRUE;
+		       break;
+		     default:
+		       break;
+		     }
+		 }
+	       pAttr = pAttr->AeNext;
 	     }
-	}
+	 }
+     }
    return ret;
 }
 
@@ -605,6 +613,7 @@ PtrSSchema          pSS;
 
    pRet = NULL;
    if (pEl->ElFirstAttr != NULL)
+     {
       /* element has an attribute */
       if (pSS == NULL && attrNum == 0)
 	 /* we search any attribute */
@@ -615,47 +624,50 @@ PtrSSchema          pSS;
 	   pAttr = pEl->ElFirstAttr;
 	   while (pAttr != NULL && pRet == NULL)
 	     {
-		if ((pSS == NULL ||
-		     pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
-		    && pAttr->AeAttrNum == attrNum)
-		   /* it's the attribute we are looking for */
-		   if (val == 0)
+		if (pAttr->AeAttrNum == attrNum &&
+		    (pSS == NULL ||
+		     !ustrcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName)))
+		  {
+		    /* it's the attribute we are looking for */
+		    if (val == 0)
 		      /* search any value */
 		      pRet = pEl;	/* found ! */
-		   else
+		    else
 		      switch (pAttr->AeAttrType)
-			    {
-			       case AtNumAttr:
-			       case AtEnumAttr:
-				  if (pAttr->AeAttrValue == val)
-				     /* it's the value we are looking for */
-				     pRet = pEl;	/* found ! */
-				  break;
-			       case AtTextAttr:
-				  if (StringAndTextEqual (textVal, pAttr->AeAttrText))
-				     pRet = pEl;	/* found ! */
-				  break;
-			       default:
-				  break;
-			    }
+			{
+			case AtNumAttr:
+			case AtEnumAttr:
+			  if (pAttr->AeAttrValue == val)
+			    /* it's the value we are looking for */
+			    pRet = pEl;	/* found ! */
+			  break;
+			case AtTextAttr:
+			  if (StringAndTextEqual (textVal, pAttr->AeAttrText))
+			    pRet = pEl;	/* found ! */
+			  break;
+			default:
+			  break;
+			}
+		  }
 
 		pAttr = pAttr->AeNext;
 	     }
 	}
-   if (pRet == NULL)		/* searches the last child */
-      if (!pEl->ElTerminal)
-	{
-	   pChild = pEl->ElFirstChild;
-	   if (pChild != NULL)
-	      while (pChild->ElNext != NULL)
-		 pChild = pChild->ElNext;
-	   /* search the previous siblings */
-	   while (pChild != NULL && pRet == NULL)
-	     {
-		pRet = BackSearchAttrInSubtree (pChild, textVal, val, attrNum, pSS);
-		pChild = pChild->ElPrevious;
-	     }
-	}
+     }
+   if (pRet == NULL && !pEl->ElTerminal)
+     {
+       /* searches the last child */
+       pChild = pEl->ElFirstChild;
+       if (pChild != NULL)
+	 while (pChild->ElNext != NULL)
+	   pChild = pChild->ElNext;
+       /* search the previous siblings */
+       while (pChild != NULL && pRet == NULL)
+	 {
+	   pRet = BackSearchAttrInSubtree (pChild, textVal, val, attrNum, pSS);
+	   pChild = pChild->ElPrevious;
+	 }
+     }
    return pRet;
 }
 
@@ -1342,7 +1354,7 @@ PtrSSchema          pSS;
       SSok = TRUE;		/* use any struct. scheme */
    else
       /* compares the identifier of the structure scheme */
-      SSok = pEl->ElStructSchema->SsCode == pSS->SsCode;
+      SSok = !ustrcmp (pEl->ElStructSchema->SsName, pSS->SsName);
    if (SSok && pEl->ElTypeNumber == typeNum)
       ok = TRUE;
    else if (pSS != NULL)
@@ -1361,7 +1373,7 @@ PtrSSchema          pSS;
 		     /* compares the element type to the choice options */
 		    {
 		       if (pEl->ElTypeNumber == pRe1->SrChoice[i])
-			  ok = pEl->ElStructSchema->SsCode == pSS->SsCode;
+			  ok = !ustrcmp (pEl->ElStructSchema->SsName, pSS->SsName);
 		       else
 			 {
 			    pRe2 = &pSS->SsRule[pRe1->SrChoice[i] - 1];
@@ -1622,11 +1634,11 @@ PtrSSchema          pSS;
      {
 	/* if the found element has only one type equivalent to the type we are looking for,
 	   we search if an ancestor does not have this type */
-	if (typeNum != pEl->ElTypeNumber)
-	   if (pEl->ElParent != NULL)
-	      if (pEl->ElParent->ElTypeNumber == typeNum)
-		 if (pEl->ElParent->ElStructSchema->SsCode == pSS->SsCode)
-		    pEl = pEl->ElParent;
+	if (typeNum != pEl->ElTypeNumber &&
+	    pEl->ElParent != NULL &&
+	    pEl->ElParent->ElTypeNumber == typeNum &&
+	    !ustrcmp (pEl->ElParent->ElStructSchema->SsName, pSS->SsName))
+	  pEl = pEl->ElParent;
 	pAsc = pEl;
      }
    else
@@ -1983,10 +1995,12 @@ PtrSSchema          pSS;
 		    {
 		       pAsc = pAsc->ElNext;
 		       if (pAsc != NULL)
+			 {
 			  if (AttrFound (pAsc, textVal, val, attrNum, pSS))
 			     pRet = pAsc;	/* found */
 			  else
 			     pRet = FwdSearchAttribute (pAsc, attrNum, val, textVal, pSS);
+			 }
 		    }
 	       }
 	  }
@@ -2099,8 +2113,8 @@ PtrElement         *pEl;
      {
      if (*pEl == NULL)
        stop = TRUE;
-     else if ((*pEl)->ElStructSchema->SsCode ==
-              (*pEl)->ElParent->ElStructSchema->SsCode)
+     else if (!ustrcmp ((*pEl)->ElStructSchema->SsName,
+			(*pEl)->ElParent->ElStructSchema->SsName))
        {
           if (!(*pEl)->ElTerminal)
             stop = TRUE;
@@ -2481,11 +2495,11 @@ ThotBool            del;
    /* except if it's the root of an associated element */
    if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrAssocElem)
       replace = FALSE;
-   if (!replace)
-      if (pEl->ElTypeNumber == (*pNew)->ElTypeNumber)
-	 if (pEl->ElStructSchema->SsCode == (*pNew)->ElStructSchema->SsCode)
-	    /* the two elements are of the same type; one will replace the other */
-	    replace = TRUE;
+   if (!replace &&
+       pEl->ElTypeNumber == (*pNew)->ElTypeNumber &&
+       !ustrcmp (pEl->ElStructSchema->SsName, (*pNew)->ElStructSchema->SsName))
+     /* the two elements are of the same type; one will replace the other */
+     replace = TRUE;
    if (del)
       replace = TRUE;
    if (!replace)
@@ -2807,11 +2821,13 @@ ThotBool            withLabel;
 	  }
 	pSRule = &pSS->SsRule[typeNum - 1];
 	if (!error)
+	  {
 	   if (pSRule->SrParamElem)
 	      pEl = CreateParameter (typeNum, pSS, pDoc, assocNum);
 	   else
 	     /* get an element */
-	      GetElement (&pEl);	
+	      GetElement (&pEl);
+	  }
 	if (pEl != NULL)
 	  {
 	     if (typeNum == pSS->SsRootElem)
@@ -2933,6 +2949,7 @@ ThotBool            withLabel;
      {
 	gener = TRUE;
 	if (pSRule->SrRecursive)
+	  {
 	   /* recursive rule */
 	   if (pSRule->SrRecursDone)
 	      /* rule's already been applied */
@@ -2941,6 +2958,7 @@ ThotBool            withLabel;
 	      /* it's not been yet applied */
 	     /* apply the rule and remember this */
 	      pSRule->SrRecursDone = TRUE;
+	  }
      }
    if (gener)
       /* generate the  according to the constructor of the rule */
@@ -3062,17 +3080,18 @@ PtrDocument         pDoc;
 		     /* examines all the exclusions defined by the rule */
 		     for (i = 1; i <= pRule->SrNExclusions; i++)
 		       {
-			  if (pRule->SrExclusion[i - 1] == (*pEl)->ElTypeNumber)
+			 if (pRule->SrExclusion[i - 1] == (*pEl)->ElTypeNumber)
+			   {
 			     /* the current element has the same number of type that that
 				of an element excluded by the ancestor */
 			     if ((*pEl)->ElTypeNumber <= MAX_BASIC_TYPE)
 				/* it's a base type, it's excluded */
-				exclus = TRUE;
-			     else
+			       exclus = TRUE;
+			     else if (!ustrcmp (pSS->SsName, (*pEl)->ElStructSchema->SsName))
 				/* compares the identifiers of the structure schemes */
-			     if (pSS->SsCode == (*pEl)->ElStructSchema->SsCode)
 				/* same structure schemes, excluded type */
-				exclus = TRUE;
+			       exclus = TRUE;
+			   }
 			  if (!exclus)
 			     if ((*pEl)->ElTypeNumber == (*pEl)->ElStructSchema->SsRootElem)
 				/* the current element is the root element of its 
@@ -3091,7 +3110,7 @@ PtrDocument         pDoc;
 			     /* we still haven't excluded our element */
 			     if (pRule->SrExclusion[i - 1] + 1 == (*pEl)->ElTypeNumber)
 				/* the precedent type is excluded */
-				if (pSS->SsCode == (*pEl)->ElStructSchema->SsCode)
+				if (!ustrcmp (pSS->SsName, (*pEl)->ElStructSchema->SsName))
 				   /* we are in the correct structure scheme */
 				   if ((*pEl)->ElStructSchema->SsRule[(*pEl)->ElTypeNumber - 1].SrConstruct == CsPairedElement)
 				      /* the element is member of a pair */
@@ -3553,27 +3572,26 @@ PtrElement          pParent;
 ThotBool            checkAttr;
 ThotBool            shareRef;
 #endif /* __STDC__ */
-
 {
-   PtrElement          pEl, pS2, pC1, pC2;
-   PtrReference        rf;
-   int                 copyType, nR;
-   SRule              *pSRule;
-   PtrElement          pAsc;
-   PtrSSchema          pSS;
-   ThotBool            sameSSchema;
-   ThotBool            doCopy;
+  PtrElement          pEl, pS2, pC1, pC2;
+  PtrReference        rf;
+  int                 copyType, nR;
+  SRule              *pSRule;
+  PtrElement          pAsc;
+  PtrSSchema          pSS;
+  ThotBool            sameSSchema;
+  ThotBool            doCopy;
 
-   pEl = NULL;
-   /* pointer to the element that will be created */
-   if (pSource != NULL && pSSchema != NULL)
-      {
+  pEl = NULL;
+  /* pointer to the element that will be created */
+  if (pSource != NULL && pSSchema != NULL)
+    {
       doCopy = TRUE;
       /* we don't copy the page breaks */
       if (pSource->ElTerminal && pSource->ElLeafType == LtPageColBreak)
 	doCopy = FALSE;
-      else
-	if (pSource->ElSource != NULL)
+      else if (pSource->ElSource != NULL)
+	{
 	  /* this element is an inclusion copy. We don't copy it if it was
 	     created before or after a page break (e.g., the table headers) */
 	  if (TypeHasException (ExcPageBreakRepBefore, pSource->ElTypeNumber,
@@ -3583,119 +3601,124 @@ ThotBool            shareRef;
 				     pSource->ElTypeNumber,
 				     pSource->ElStructSchema))
 	    doCopy = FALSE;
+	}
       if (doCopy)
-	 {
-	 copyType = pSource->ElTypeNumber;
-	 if (ustrcmp (pSource->ElStructSchema->SsName, pSSchema->SsName) != 0)
+	{
+	  copyType = pSource->ElTypeNumber;
+	  if (ustrcmp (pSource->ElStructSchema->SsName, pSSchema->SsName) != 0)
+	    {
 	    /* change the generic structure */
-	    if (pSource->ElStructSchema->SsRule[pSource->ElTypeNumber - 1].
-		   SrUnitElem ||
+	    if (pSource->ElStructSchema->SsRule[pSource->ElTypeNumber - 1]. SrUnitElem ||
 		pSource->ElStructSchema->SsExtension ||
 		pSource->ElTypeNumber <= MAX_BASIC_TYPE)
-	       /* the source element is a unit or an element defined
-		  in a scheme extension */
-	       if (!checkAttr)
+	      {
+		/* the source element is a unit or an element defined
+		   in a scheme extension */
+		if (!checkAttr)
 		  /* we don't verify the units. The copy will inherit the
 		     structure scheme of the source */
 		  pSSchema = pSource->ElStructSchema;
-	       else
+		else
 		  {
-		  /* verifies if the "future" ancestor of the copy has an
-		     element belonging to the scheme where the source element
-		     is defined */
-		  if (pParent == NULL)
-		     pAsc = pDocCopy->DocRootElement;
-		  else
-		     pAsc = pParent;
-		  sameSSchema = pSource->ElTypeNumber <= MAX_BASIC_TYPE;
-		  if (pAsc != NULL && !sameSSchema)
-		     do
+		    /* verifies if the "future" ancestor of the copy has an
+		       element belonging to the scheme where the source element
+		       is defined */
+		    if (pParent == NULL)
+		      pAsc = pDocCopy->DocRootElement;
+		    else
+		      pAsc = pParent;
+		    sameSSchema = pSource->ElTypeNumber <= MAX_BASIC_TYPE;
+		    if (pAsc != NULL && !sameSSchema)
+		      do
 		        {
-			if (pSource->ElStructSchema->SsCode ==
-			    pAsc->ElStructSchema->SsCode)
-			   {
-			   /* the copy will inherit the structure scheme of
-			      its document */
-			   pSSchema = pAsc->ElStructSchema;
-			   sameSSchema = TRUE;
-			   }
-			else if (pSource->ElStructSchema->SsExtension)
-			   /* verifies if the ancestor has this scheme
-			      extension */
-			   {
-			   pSSchema = pSource->ElStructSchema;
-			   if (ValidExtension (pAsc, &pSSchema))
+			  if (!ustrcmp (pSource->ElStructSchema->SsName,
+					pAsc->ElStructSchema->SsName))
+			    {
+			      /* the copy will inherit the structure scheme of
+				 its document */
+			      pSSchema = pAsc->ElStructSchema;
 			      sameSSchema = TRUE;
-			   }
-			else if (pAsc->ElStructSchema->SsExtension)
-			   /* the ancestor is an extension */
-			   {
-			   pSS = pAsc->ElStructSchema;
-			   if (ValidExtension (pSource, &pSS))
-			      {
+			    }
+			  else if (pSource->ElStructSchema->SsExtension)
+			    /* verifies if the ancestor has this scheme
+			       extension */
+			    {
 			      pSSchema = pSource->ElStructSchema;
-			      sameSSchema = TRUE;
-			      }
-			   }
-			if (!sameSSchema)
-			   /* climbs one level to the next ancestor element */
-			   if ((pAsc->ElParent == NULL) &&
-			       (pAsc->ElStructSchema->SsExtension))
+			      if (ValidExtension (pAsc, &pSSchema))
+				sameSSchema = TRUE;
+			    }
+			  else if (pAsc->ElStructSchema->SsExtension)
+			    /* the ancestor is an extension */
+			    {
+			      pSS = pAsc->ElStructSchema;
+			      if (ValidExtension (pSource, &pSS))
+				{
+				  pSSchema = pSource->ElStructSchema;
+				  sameSSchema = TRUE;
+				}
+			    }
+			  if (!sameSSchema)
+			    {
+			    /* climbs one level to the next ancestor element */
+			    if ((pAsc->ElParent == NULL) &&
+				(pAsc->ElStructSchema->SsExtension))
 			      pAsc = pDocCopy->DocRootElement;
-			   else
+			    else
 			      pAsc = pAsc->ElParent;
+			    }
 			}
-		     while (pAsc != NULL && !sameSSchema);
-		  if (!sameSSchema)
-		     /* No ancestor has this structure scheme, so the unit is
-			invalid */
-		     {
+		      while (pAsc != NULL && !sameSSchema);
+		    if (!sameSSchema)
+		      /* No ancestor has this structure scheme, so the unit is
+			 invalid */
+		      {
 #ifdef IV
-		     if (ResdynCt.ElSour != NULL &&
-			 !pSource->ElStructSchema->SsExtension)
-		        /* if we are doing a restructuration, we search for a
-			   compatible unit */
-		       GDRCompatibleUnit ((Element) pSource, (Element) pParent,
-					  &copyType, (int **) &pSSchema);
-		     else
+			if (ResdynCt.ElSour != NULL &&
+			    !pSource->ElStructSchema->SsExtension)
+			  /* if we are doing a restructuration, we search for a
+			     compatible unit */
+			  GDRCompatibleUnit ((Element) pSource, (Element) pParent,
+					     &copyType, (int **) &pSSchema);
+			else
 #endif
-		       copyType = 0;
-		     }
+			  copyType = 0;
+		      }
 		  }
+	      }
 	    else
-	       /* the source is another document or another nature, we must
-		  load the schemes for the copy */
-	       {
-	       /* loads the structure and presentation schemes for the copy */
-	       /* no preference for the presentation scheme */
-	       nR = CreateNature (pSource->ElStructSchema->SsName, NULL,
-				  pSSchema);
-	       if (nR == 0)
+	      /* the source is another document or another nature, we must
+		 load the schemes for the copy */
+	      {
+		/* loads the structure and presentation schemes for the copy */
+		/* no preference for the presentation scheme */
+		nR = CreateNature (pSource->ElStructSchema->SsName, NULL, pSSchema);
+		if (nR == 0)
 		  /* could not load the schema */
 		  copyType = 0;
-	       else
+		else
 		  /* schema is loaded, changes the structure scheme of the copy */
 		  {
-		  pSRule = &pSSchema->SsRule[nR - 1];
-		  pSSchema = pSRule->SrSSchemaNat;
-		  AddSchemaGuestViews (pDocCopy, pSSchema);
+		    pSRule = &pSSchema->SsRule[nR - 1];
+		    pSSchema = pSRule->SrSSchemaNat;
+		    AddSchemaGuestViews (pDocCopy, pSSchema);
 		  }
-	       }
-	 if (copyType != 0)
+	      }
+	    }
+	  if (copyType != 0)
 	    {
-	    /* gest an element for the copy */
-	    GetElement (&pEl);
-	    /* fills the copy */
-	    pEl->ElStructSchema = pSSchema;
-	    pEl->ElTypeNumber = copyType;
-	    if (pEl->ElTypeNumber == pEl->ElStructSchema->SsRootElem)
-	       /* we create an element and build it according to the root rule
-		  of its structure scheme. We then increment the counter */
-	       pSSchema->SsNObjects++;
-	    pEl->ElAssocNum = assocNum;
-	    /* copies the attributes */
-	    CopyAttributes (pSource, pEl, pDocSource, pDocCopy, checkAttr);
-	    /* copies the specific presentation rules */
+	      /* gest an element for the copy */
+	      GetElement (&pEl);
+	      /* fills the copy */
+	      pEl->ElStructSchema = pSSchema;
+	      pEl->ElTypeNumber = copyType;
+	      if (pEl->ElTypeNumber == pEl->ElStructSchema->SsRootElem)
+		/* we create an element and build it according to the root rule
+		   of its structure scheme. We then increment the counter */
+		pSSchema->SsNObjects++;
+	      pEl->ElAssocNum = assocNum;
+	      /* copies the attributes */
+	      CopyAttributes (pSource, pEl, pDocSource, pDocCopy, checkAttr);
+	      /* copies the specific presentation rules */
 	    CopyPresRules (pSource, pEl);	
 	    /* copies the commentary associated to the element */
 	    if (pSource->ElComment != NULL)
@@ -3844,7 +3867,7 @@ PtrSSchema          pSS;
 		FwdSkipPageBreakAndExtension (&pEl2);
 		if (pEl2 != NULL)
 		   if (pEl2->ElTypeNumber == typeNum &&
-		       pEl2->ElStructSchema->SsCode == pSS->SsCode)
+		       !ustrcmp (pEl2->ElStructSchema->SsName, pSS->SsName))
 		     {
 			pEl = pEl2;
 			stop = TRUE;
@@ -4016,10 +4039,10 @@ PtrDocument         pDoc;
 			      default:
 				 break;
 			   }
-		  else if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsChoice
-			   && (pEl->ElTypeNumber != pSource->ElTypeNumber
-			       || pEl->ElStructSchema->SsCode !=
-			       pSource->ElStructSchema->SsCode))
+		  else if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct == CsChoice &&
+			   (pEl->ElTypeNumber != pSource->ElTypeNumber ||
+			    ustrcmp (pEl->ElStructSchema->SsName,
+				     pSource->ElStructSchema->SsName)))
 		    {
 		       pC1 = CopyTree (pSource, pDocSource, pEl->ElAssocNum, pEl
 				   ->ElStructSchema, pDoc, pEl, TRUE, TRUE);
@@ -4136,13 +4159,15 @@ PtrSSchema          pSSattr;
    while (pAttr != NULL && !found)
      {
 	if (pAttr->AeAttrNum == attrNum)
+	  {
 	   /* same attribute numbers */
 	   if (attrNum == 1)
 	      /* it's the language attribute, no use to compare the schemes */
 	      found = TRUE;
-	   else if (pAttr->AeAttrSSchema->SsCode == pSSattr->SsCode)
+	   else if (!ustrcmp (pAttr->AeAttrSSchema->SsName, pSSattr->SsName))
 	      /* same schemes : it's the attribute we are looking for */
 	      found = TRUE;
+	  }
 	if (!found)
 	   /* go on to the next attribute of the same element */
 	   pAttr = pAttr->AeNext;

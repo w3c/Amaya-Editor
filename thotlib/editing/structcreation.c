@@ -656,6 +656,7 @@ ThotBool            before;
 			     if (before)
 			        {
 				if (firstChar > 1)
+				  {
 				   if (firstChar > pEl->ElTextLength)
 				      /* insert after the selected element */
 				      before = FALSE;
@@ -666,6 +667,7 @@ ThotBool            before;
 				      /* caractere selectionne' */
 				      IsolateSelection (pDoc, &pEl, &lastSel, &firstChar, &lastChar, FALSE);
 				      }
+				  }
 				}
 			     else if (lastChar <= pEl->ElTextLength)
 				{
@@ -704,10 +706,12 @@ ThotBool            before;
 				  }
 			      }
 			  if (pE != NULL)
+			    {
 			    if (before)
 			      InsertElementBefore (pEl, pE);
 			    else
 			      InsertElementAfter (pEl, pE);
+			    }
 			}
 		    }
 	      }
@@ -1173,7 +1177,8 @@ PtrReference       *pRef;
 	   if (pAttrEl != NULL)
 	     do
 	       if (pAttrEl->AeAttrNum == pAttr->AeAttrNum &&
-		   pAttrEl->AeAttrSSchema->SsCode == pAttr->AeAttrSSchema->SsCode)
+		   !ustrcmp (pAttrEl->AeAttrSSchema->SsName,
+			     pAttr->AeAttrSSchema->SsName))
 		 found = TRUE;
 	       else
 		 pAttrEl = pAttrEl->AeNext;
@@ -1365,7 +1370,7 @@ PtrSSchema          pSS;
 	else
 	  {
 	     pSSassoc = pDoc->DocAssocRoot[nAssoc]->ElStructSchema;
-	     if (pSSassoc->SsCode == pSS->SsCode)
+	     if (!ustrcmp (pSSassoc->SsName, pSS->SsName))
 	       {
 		  r = pDoc->DocAssocRoot[nAssoc]->ElTypeNumber;
 		  if (pDoc->DocAssocRoot[nAssoc]->ElFirstChild == NULL)
@@ -1544,11 +1549,13 @@ PtrElement         *pSelEl;
 	   pEl = NULL;
 	*pSelEl = CreateFirstAssocElement (pDoc, referredTypeNum, pSS);
 	if (*pSelEl != NULL)
+	  {
 	  if (!SetReference (pEl, pAttr, *pSelEl, pDoc, pDoc, TRUE, TRUE))
 	    TtaDisplaySimpleMessage (INFO, LIB, TMSG_UNABLE_LINK_NEW_ELEM);
 	  else
             /* une reference modifiee vaut 10 caracteres saisis */
             SetDocumentModified (pDoc, TRUE, 10);
+	  }
 	pCreatedElem = *pSelEl;
 	ret = TRUE;
      }
@@ -2064,6 +2071,7 @@ ThotBool            desc;
 	     pSRule = &ChosenTypeSSchema->SsRule[choiceTypeNum - 1];
 	     /* si ce n'est pas une regle de choix, on ne fait rien */
 	     if (pSRule->SrConstruct == CsChoice)
+	       {
 		if (pSRule->SrNChoices == -1)
 		   /* c'est une regle NATURE */
 		  {
@@ -2078,6 +2086,7 @@ ThotBool            desc;
 		     menu = TRUE;
 		     nItems = MenuChoixElem (ChosenTypeSSchema, choiceTypeNum, *pEl, menuBuf, menuTitle, pDoc);
 		  }
+	       }
 	     choiceTypeNum = 0;
 	     ChosenTypeNum = 0;
 	     if (menu)
@@ -2350,16 +2359,17 @@ ThotBool            inclusion;
 		     RemoveExcludedElem (&pNew, pDoc);
 		  else
 		     pRet = NULL;
-		  if (inclusion)
-		     if (pLeaf->ElSource != NULL)
-			/* l'element a inclure est connu, on le copie */
-			if (inclusion)
-			   CopyIncludedElem (pLeaf, pDoc);
-			else
-			  {
-			     ApplyTransmitRules (pLeaf, pDoc);
-			     RepApplyTransmitRules (pLeaf, pLeaf, pDoc);
-			  }
+		  if (inclusion && pLeaf->ElSource != NULL)
+		    {
+		      /* l'element a inclure est connu, on le copie */
+		      if (inclusion)
+			CopyIncludedElem (pLeaf, pDoc);
+		      else
+			{
+			  ApplyTransmitRules (pLeaf, pDoc);
+			  RepApplyTransmitRules (pLeaf, pLeaf, pDoc);
+			}
+		    }
 		  /* Affichage retarde de l'element associe eventuellement */
 		  /* cree par ReferredElement soit dans CreeChoix (cas d'un choix), */
 		  /* soit directement un peu plus haut (cas d'une reference) */
@@ -2411,6 +2421,7 @@ ThotBool            inclusion;
 			    /* si CreeChoix a deja envoye' l'evenement TteElemNew */
 			    /* pour l'element pNew, il ne faut pas l'envoyer a nouveau */
 			    if (pNew != notifiedElem)
+			      {
 			       if (inclusion)
 				 {
 				    notifyEl.event = TteElemInclude;
@@ -2423,6 +2434,7 @@ ThotBool            inclusion;
 				 }
 			       else
 				  NotifySubTree (TteElemNew, pDoc, pNew, 0);
+			      }
 			    if (createAbsBox)
 			       /* cree les paves du nouvel element et les affiche */
 			       CreateAllAbsBoxesOfEl (pNew, pDoc);
@@ -3766,16 +3778,15 @@ ThotBool           *ret;
 				     /* et si la selection n'est pas vide */
 				     if (pAncestSS->SsRule[pSRule->SrInclusion[i] - 1].
 					 SrConstruct == CsPairedElement)
+				       {
 					if (!create)
 					   ok = FALSE;	/* c'est pour la commande Coller ou Inclure */
-					else
-					  {
-					     if (firstSel == lastSel)
-						if (firstSel->ElTerminal)
-						   if (firstSel->ElLeafType == LtText)
-						      if (firstSel->ElTextLength < firstChar)
-							 ok = FALSE;	/* selection vide */
-					  }
+					else if (firstSel == lastSel &&
+						 firstSel->ElTerminal &&
+						 firstSel->ElLeafType == LtText &&
+						 firstSel->ElTextLength < firstChar)
+					  ok = FALSE;	/* selection vide */
+				       }
 				     if (ok)
 					/* on ajoute une entree au menu */
 				       {
@@ -3865,65 +3876,66 @@ ThotBool           *ret;
 			/* si inclusion, on ne propose pas les references */
 			if (create || paste || pSS->SsRule[typeNum - 1].SrConstruct != CsReference)
 			  {
-			     ok = TRUE;
-			     if (pEl == firstSel && pEl->ElTypeNumber == (CharString + 1) && firstChar > 1)
+			    ok = TRUE;
+			    if (pEl == firstSel && pEl->ElTypeNumber == (CharString + 1) && firstChar > 1)
 				/* la selection commence a l'interieur d'une chaine de */
 				/* caracteres, on ne peut pas inserer si elle est protegee */
-				ok = !ElementIsReadOnly (firstSel);
-			     else
-                                ok = !CannotInsertNearElement (pEl,
-                                                               TRUE); /* Before element. */
-			     if (ok)
+			      ok = !ElementIsReadOnly (firstSel);
+			    else
+			      /* Before element. */
+			      ok = !CannotInsertNearElement (pEl, TRUE);
+			    if (ok &&
 				/* on ne propose les elements de paire que pour une */
 				/* creation et si la selection n'est pas vide */
-				if (pSS->SsRule[typeNum - 1].SrConstruct == CsPairedElement)
-				   if (!create)
-				      ok = FALSE;	/* c'est pour la commande Coller ou Inclure */
-				   else
-				     {
-					if (firstSel == lastSel)
-					   if (firstSel->ElTerminal)
-					      if (firstSel->ElLeafType == LtText)
-						 if (firstSel->ElTextLength < firstChar)
-						    ok = FALSE;		/* selection vide */
-				     }
-			     if (ok)
+				pSS->SsRule[typeNum - 1].SrConstruct == CsPairedElement)
+			      {
+				if (!create)
+				  ok = FALSE;	/* c'est pour la commande Coller ou Inclure */
+				else if (firstSel == lastSel &&
+					 firstSel->ElTerminal &&
+					 firstSel->ElLeafType == LtText &&
+					 firstSel->ElTextLength < firstChar)
+				  ok = FALSE;	/* selection vide */
+			      }
+			    if (ok)
 				/* ajoute une entree pour ce voisin */
-			       {
-				  GetExternalTypeName (pSS, typeNum, typeName1);
-				  UserElementName (pEl, TRUE, typeName2);
-				  if (separatorBefore)
-				    {
-				       /* un separateur est demande' avant cette entree, on le met */
-				       AddSeparatorInMenu (&prevMenuInd, &nItems, &menuInd, menuBuf);
-				       separatorBefore = FALSE;
-				    }
-				  if (pSS->SsRule[typeNum - 1].SrConstruct == CsPairedElement)
-				     /* une paire de marques autour de la selection */
-				    {
-				       ustrncpy (N, TtaGetMessage (LIB, TMSG_AROUND), MAX_NAME_LENGTH);
-				       typeName2[0] = EOS;
-				       ok = TteItemMenuInsert (pSS, typeNum + 1, lastSel, pDoc, InsertAfter);
-				    }
-				  else
-				     ustrncpy (N, TtaGetMessage (LIB, TMSG_BEFORE), MAX_NAME_LENGTH);
-				  if (ok)
-				     /* envoie l'evenement item a creer */
-				     if (TteItemMenuInsert (pSS, typeNum, pEl, pDoc, InsertBefore))
-					if (!AddInsertMenuItem (typeName1, N, typeName2, &prevMenuInd,
-						&nItems, &menuInd, menuBuf))
-					   /* menu sature' */
-					   pEl = NULL;
-					else
-					  {
-					     Action[nItems - 1] = InsertBefore;
-					     UserAction[nItems - 1] = InsertBefore;
-					     ElemAction[nItems - 1] = pEl;
-					     ElemTypeAction[nItems - 1] = typeNum;
-					     SSchemaAction[nItems - 1] = pSS;
-					     separatorAfter = TRUE;
-					  }
-			       }
+			      {
+				GetExternalTypeName (pSS, typeNum, typeName1);
+				UserElementName (pEl, TRUE, typeName2);
+				if (separatorBefore)
+				  {
+				    /* un separateur est demande' avant cette entree, on le met */
+				    AddSeparatorInMenu (&prevMenuInd, &nItems, &menuInd, menuBuf);
+				    separatorBefore = FALSE;
+				  }
+				if (pSS->SsRule[typeNum - 1].SrConstruct == CsPairedElement)
+				  /* une paire de marques autour de la selection */
+				  {
+				    ustrncpy (N, TtaGetMessage (LIB, TMSG_AROUND), MAX_NAME_LENGTH);
+				    typeName2[0] = EOS;
+				    ok = TteItemMenuInsert (pSS, typeNum + 1, lastSel, pDoc, InsertAfter);
+				  }
+				else
+				  ustrncpy (N, TtaGetMessage (LIB, TMSG_BEFORE), MAX_NAME_LENGTH);
+				if (ok &&
+				  /* envoie l'evenement item a creer */
+				    TteItemMenuInsert (pSS, typeNum, pEl, pDoc, InsertBefore))
+				  {
+				    if (!AddInsertMenuItem (typeName1, N, typeName2, &prevMenuInd,
+							    &nItems, &menuInd, menuBuf))
+				      /* menu sature' */
+				      pEl = NULL;
+				    else
+				      {
+					Action[nItems - 1] = InsertBefore;
+					UserAction[nItems - 1] = InsertBefore;
+					ElemAction[nItems - 1] = pEl;
+					ElemTypeAction[nItems - 1] = typeNum;
+					SSchemaAction[nItems - 1] = pSS;
+					separatorAfter = TRUE;
+				      }
+				  }
+			      }
 			  }
 
 		  /* si le voisin possible est un composant d'agregat, ajoute */
@@ -3936,38 +3948,40 @@ ThotBool           *ret;
 			 {
 			    distance++;
 			    SRuleForSibling (pDoc, pEl, TRUE, distance, &typeNum, &pSS, &isList, &optional);
-			    if (typeNum > 0)
-			       if (!TypeHasException (ExcNoCreate, typeNum, pSS))
-				  /* pas d'exception interdisant a l'utilisateur */
-				  /* de creer ce type d'element */
-				  /* si inclusion, on ne propose pas les ref. */
-				  if (!ExcludedType (pEl->ElParent, typeNum, pSS))
-				     if (create || paste
-					 || pSS->SsRule[typeNum - 1].SrConstruct != CsReference)
-				       {
-					  GetExternalTypeName (pSS, typeNum, typeName1);
-					  UserElementName (pEl, TRUE, typeName2);
-					  /* envoie l'evenement item a creer */
-					  if (TteItemMenuInsert (pSS, typeNum, pEl, pDoc, InsertBefore))
-					     if (!AddInsertMenuItem (typeName1,
-								     TtaGetMessage (LIB, TMSG_BEFORE),
-								     typeName2, &prevMenuInd, &nItems,
-							 &menuInd, menuBuf))
-						/* menu sature' */
-					       {
-						  pEl = NULL;
-						  optional = FALSE;
-					       }
-					     else
-					       {
-						  Action[nItems - 1] = InsertBefore;
-						  UserAction[nItems - 1] = InsertBefore;
-						  ElemAction[nItems - 1] = pEl;
-						  ElemTypeAction[nItems - 1] = typeNum;
-						  SSchemaAction[nItems - 1] = pSS;
-						  CheckAction (&prevMenuInd, &menuInd, &nItems);
-					       }
-				       }
+			    if (typeNum > 0 &&
+			       !TypeHasException (ExcNoCreate, typeNum, pSS) &&
+				/* pas d'exception interdisant a l'utilisateur */
+				/* de creer ce type d'element */
+				/* si inclusion, on ne propose pas les ref. */
+				!ExcludedType (pEl->ElParent, typeNum, pSS) &&
+				(create || paste ||
+				 pSS->SsRule[typeNum - 1].SrConstruct != CsReference))
+			      {
+				GetExternalTypeName (pSS, typeNum, typeName1);
+				UserElementName (pEl, TRUE, typeName2);
+				/* envoie l'evenement item a creer */
+				if (TteItemMenuInsert (pSS, typeNum, pEl, pDoc, InsertBefore))
+				  {
+				    if (!AddInsertMenuItem (typeName1,
+							    TtaGetMessage (LIB, TMSG_BEFORE),
+							    typeName2, &prevMenuInd, &nItems,
+							    &menuInd, menuBuf))
+				      /* menu sature' */
+				      {
+					pEl = NULL;
+					optional = FALSE;
+				      }
+				    else
+				      {
+					Action[nItems - 1] = InsertBefore;
+					UserAction[nItems - 1] = InsertBefore;
+					ElemAction[nItems - 1] = pEl;
+					ElemTypeAction[nItems - 1] = typeNum;
+					SSchemaAction[nItems - 1] = pSS;
+					CheckAction (&prevMenuInd, &menuInd, &nItems);
+				      }
+				  }
+			      }
 			 }
 		       while (!isList && pEl != NULL && typeNum != 0);
 		    }
@@ -4138,6 +4152,7 @@ ThotBool           *ret;
 				    }
 				  /* envoie l'evenement item a creer */
 				  if (TteItemMenuInsert (pSS, typeNum, pEl, pDoc, InsertAfter))
+				    {
 				     if (!AddInsertMenuItem (typeName1, TtaGetMessage (LIB, TMSG_AFTER), typeName2,
 							     &prevMenuInd, &nItems, &menuInd, menuBuf))
 					/* menu sature' */
@@ -4152,51 +4167,54 @@ ThotBool           *ret;
 					  separatorAfter = TRUE;
 					  CheckAction (&prevMenuInd, &menuInd, &nItems);
 				       }
+				    }
 			       }
 		       }
 		  /* si le voisin possible est un composant d'agregat, ajoute des */
 		  /* entrees pour les voisins possibles suivants */
 		  if (!isList)
 		    {
-		       distance = 1;
-		       do
-			  /* boucle sur les voisins suivants */
-			 {
-			    distance++;
-			    SRuleForSibling (pDoc, pEl, FALSE, distance, &typeNum, &pSS, &isList, &optional);
-			    if (typeNum > 0)
-			       if (!TypeHasException (ExcNoCreate, typeNum, pSS))
-				  /* pas d'exception interdisant a l'utilisateur */
-				  /* de creer ce type d'element */
-				  if (!ExcludedType (pEl->ElParent, typeNum, pSS))
-				     /* si inclusion, on ne propose pas les ref. */
-				     if (create || paste
-					 || pSS->SsRule[typeNum - 1].SrConstruct != CsReference)
-				       {
-					  GetExternalTypeName (pSS, typeNum, typeName1);
-					  UserElementName (pEl, FALSE, typeName2);
-					  /* envoie l'evenement item a creer */
-					  if (TteItemMenuInsert (pSS, typeNum, pEl, pDoc, InsertAfter))
-					     if (!AddInsertMenuItem (typeName1,
-					     TtaGetMessage (LIB, TMSG_AFTER),
-								     typeName2, &prevMenuInd, &nItems,
-							 &menuInd, menuBuf))
-						/* menu sature' */
-					       {
-						  pEl = NULL;
-						  optional = FALSE;
-					       }
-					     else
-					       {
-						  Action[nItems - 1] = InsertAfter;
-						  UserAction[nItems - 1] = InsertAfter;
-						  ElemAction[nItems - 1] = pEl;
-						  ElemTypeAction[nItems - 1] = typeNum;
-						  SSchemaAction[nItems - 1] = pSS;
-					       }
-				       }
-			 }
-		       while (!isList && pEl != NULL && typeNum != 0);
+		      distance = 1;
+		      do
+			/* boucle sur les voisins suivants */
+			{
+			  distance++;
+			  SRuleForSibling (pDoc, pEl, FALSE, distance, &typeNum, &pSS, &isList, &optional);
+			  if (typeNum > 0 &&
+			      !TypeHasException (ExcNoCreate, typeNum, pSS) &&
+				/* pas d'exception interdisant a l'utilisateur */
+				/* de creer ce type d'element */
+			      !ExcludedType (pEl->ElParent, typeNum, pSS) &&
+				/* si inclusion, on ne propose pas les ref. */
+			      (create || paste
+			       || pSS->SsRule[typeNum - 1].SrConstruct != CsReference))
+			    {
+			      GetExternalTypeName (pSS, typeNum, typeName1);
+			      UserElementName (pEl, FALSE, typeName2);
+				/* envoie l'evenement item a creer */
+			      if (TteItemMenuInsert (pSS, typeNum, pEl, pDoc, InsertAfter))
+				{
+				  if (!AddInsertMenuItem (typeName1,
+							  TtaGetMessage (LIB, TMSG_AFTER),
+							  typeName2, &prevMenuInd, &nItems,
+							  &menuInd, menuBuf))
+				    /* menu sature' */
+				    {
+				      pEl = NULL;
+				      optional = FALSE;
+				    }
+				  else
+				    {
+				      Action[nItems - 1] = InsertAfter;
+				      UserAction[nItems - 1] = InsertAfter;
+				      ElemAction[nItems - 1] = pEl;
+				      ElemTypeAction[nItems - 1] = typeNum;
+				      SSchemaAction[nItems - 1] = pSS;
+				    }
+				}
+			    }
+			}
+		      while (!isList && pEl != NULL && typeNum != 0);
 		    }
 		  i++;
 	       }
@@ -4621,10 +4639,12 @@ int                 item;
 			  newsel = newsel->ElParent;
 		       }
 		     if (newsel != NULL && !withinImage)
+		       {
 			if (char1 == 0)
 			   SelectElementWithEvent (pDoc, newsel, TRUE, TRUE);
 			else
 			   SelectStringWithEvent (pDoc, newsel, char1, 0);
+		       }
 
 		  }
 

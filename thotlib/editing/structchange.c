@@ -250,6 +250,7 @@ PtrSSchema          pSS;
 		     if (!before)
 			NSiblings++;
 		     if (typeNum != 0)
+		       {
 			if (list)
 			   typeOK = EquivalentSRules (typeNum, pSS,
 						      pSavedEl->ElTypeNumber,
@@ -259,6 +260,7 @@ PtrSSchema          pSS;
 			   typeOK = SameSRules (typeNum, pSS,
 						pSavedEl->ElTypeNumber,
 						pSavedEl->ElStructSchema);
+		       }
 		     if (!typeOK)
 			/* l'element a coller n'a pas un type correct */
 			/* Il est peut-etre autorise' par une inclusion */
@@ -588,11 +590,12 @@ PtrSSchema          pSS;
 		 UpdateRefAttributes (CreatedElement[i], pDoc);
 
 	   if (CreatedElement[0]!=NULL)
+	     {
 	     if (before)
 	       *pFirstPastedEl = CreatedElement[NCreatedElements - 1];
 	     else
 	       *pFirstPastedEl = CreatedElement[0];
-	   
+	     }
 
 #ifdef IV
 	   /* cherche a fusionner les nouveaux elements avec leurs voisins */
@@ -678,8 +681,8 @@ PtrElement         *pFirstFree;
    if (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrConstruct ==
        CsReference &&
        pSavedEl->ElTypeNumber == pEl->ElTypeNumber &&
-       pSavedEl->ElStructSchema->SsCode == pEl->ElStructSchema->SsCode &&
-       FirstSavedElement->PeNext == NULL)
+       FirstSavedElement->PeNext == NULL &&
+       !ustrcmp (pSavedEl->ElStructSchema->SsName, pEl->ElStructSchema->SsName))
       /* l'element dans lequel on colle est une reference du meme type
          que l'element a coller, et il n'y a qu'un element a coller */
      {
@@ -749,8 +752,9 @@ PtrElement         *pFirstFree;
 			  ok = TRUE;
 			  pSavedEl = pSavedChild;
 			  if (pEl->ElTypeNumber == pSavedChild->ElTypeNumber)
-			     if (pEl->ElStructSchema->SsCode ==
-				 pSavedChild->ElStructSchema->SsCode)
+			    if (!ustrcmp (pEl->ElStructSchema->SsName,
+					  pSavedChild->ElStructSchema->SsName))
+			      {
 				/* le contenu est du meme type que l'element a
 				   l'interieur duquel on colle. On prend le
 				   contenu du contenu */
@@ -758,6 +762,7 @@ PtrElement         *pFirstFree;
 				   pSavedEl = NULL;
 				else
 				   pSavedEl = pSavedEl->ElFirstChild;
+			      }
 		       }
 		  }
 	     if (!ok)
@@ -1000,6 +1005,7 @@ int                 lastChar;
 
    *result = TRUE;
    if (firstSel != lastSel)
+     {
       if (firstSel->ElParent != lastSel->ElParent)
 	 *result = FALSE;
       else
@@ -1010,6 +1016,7 @@ int                 lastChar;
 	   *result = (pParent->ElStructSchema->SsRule[elemTypeId - 1].SrConstruct == CsList ||
 		      elemTypeId == CharString + 1);
 	}
+     }
    if (!*result)
       TtaDisplaySimpleMessage (INFO, LIB, TMSG_COPYING_DIFFERENT_COMPONENTS_IMP);
    else

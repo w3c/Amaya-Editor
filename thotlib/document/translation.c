@@ -154,6 +154,38 @@ ThotBool	    open;
 
 
 /*----------------------------------------------------------------------
+  uputc write one or more characters according to the current encoding
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void    uputc (UCHAR_T c, FILE *fileDesc, PtrDocument pDoc)
+#else  /* __STDC__ */
+static void    uputc (c, fileDesc, pDoc)
+UCHAR_T        c;
+FILE          *fileDesc;
+PtrDocument    pDoc;
+#endif /* __STDC__ */
+{
+  int                 nb_bytes2write, index;
+  unsigned char       mbc [MAX_BYTES];
+
+#ifdef _I18N_ 
+  nb_bytes2write = TtaWC2MB (c, mbc, pDoc->DocCharset);
+  for (index = 0; index < nb_bytes2write; index++)
+    putc (mbc[index], fileDesc);
+#else  /* !_I18N_ */
+  if (pDoc->DocCharset == UTF_8)
+    {
+      nb_bytes2write = TtaWC2MB ((wchar_t) c, mbc, pDoc->DocCharset);
+      for (index = 0; index < nb_bytes2write; index++)
+	putc (mbc[index], fileDesc);
+    }
+  else
+    putc (c, fileDesc);
+#endif /* !_I18N_ */
+}
+
+
+/*----------------------------------------------------------------------
    PutChar   ecrit le caractere c sur le terminal ou dans le fichier de  
    sortie, selon fileNum. S'il s'agit du fichier de sortie,        
    le caractere est range' dans le buffer de sortie et ce buffer   
@@ -161,25 +193,21 @@ ThotBool	    open;
    est atteinte.                                                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PutChar (UCHAR_T c, int fileNum, STRING outBuffer,
+static void    PutChar (UCHAR_T c, int fileNum, STRING outBuffer,
 			     PtrDocument pDoc, ThotBool lineBreak)
 #else  /* __STDC__ */
-static void         PutChar (c, fileNum, outBuffer, pDoc, lineBreak)
-UCHAR_T             c;
-int                 fileNum;
-STRING              outBuffer;
-PtrDocument         pDoc;
-ThotBool            lineBreak;
+static void    PutChar (c, fileNum, outBuffer, pDoc, lineBreak)
+UCHAR_T        c;
+int            fileNum;
+STRING         outBuffer;
+PtrDocument    pDoc;
+ThotBool       lineBreak;
 #endif /* __STDC__ */
 {
   int                 i, j, indent;
   PtrTSchema          pTSch;
   FILE               *fileDesc;
   UCHAR_T             tmp[2];
-#ifdef _I18N_
-  int                 nb_bytes2write, index;
-  unsigned char       mbc [MAX_BYTES];
-#endif /* !_I18N_ */
 
   if (outBuffer != NULL)
     {
@@ -206,13 +234,7 @@ ThotBool            lineBreak;
 	    {
 	      /* pas de longueur max. des lignes de sortie, on ecrit */
 	      /* directement le caractere dans le fichier de sortie */
-#ifdef _I18N_ 
-	      nb_bytes2write = TtaWC2MB (c, mbc, pDoc->DocCharset);
-	      for (index = 0; index < nb_bytes2write; index++)
-		putc (mbc[index], fileDesc);
-#else  /* !_I18N_ */
-	      putc (c, fileDesc);
-#endif /* !_I18N_ */
+	      uputc (c, fileDesc, pDoc);
 	      if (c == pTSch->TsEOL[0])
 		OutputFile[fileNum].OfLineNumber++;
 	    }
@@ -220,15 +242,8 @@ ThotBool            lineBreak;
 	    {
 	      /*  fin de ligne, on ecrit le contenu du buffer de sortie */
 	      for (i = 0; i < OutputFile[fileNum].OfBufferLen; i++)
-		{
-#ifdef _I18N_
-		  nb_bytes2write = TtaWC2MB (OutputFile[fileNum].OfBuffer[i], mbc, pDoc->DocCharset);
-		  for (index = 0; index < nb_bytes2write; index++)
-		    putc (mbc[index], fileDesc);
-#else  /* !_I18N_ */
-		  putc ((int)OutputFile[fileNum].OfBuffer[i], fileDesc);
-#endif /* !_I18N_ */
-		}
+		uputc ((int)OutputFile[fileNum].OfBuffer[i], fileDesc, pDoc);
+
 	      ufprintf (fileDesc, pTSch->TsEOL);
 	      /* le buffer de sortie est vide maintenant */
 	      OutputFile[fileNum].OfBufferLen = 0;
@@ -242,15 +257,7 @@ ThotBool            lineBreak;
 		{
 		  /* le buffer de sortie est plein, on ecrit son contenu */
 		  for (i = 0; i < OutputFile[fileNum].OfBufferLen; i++)
-		    {
-#ifdef _I18N_
-		      nb_bytes2write = TtaWC2MB (OutputFile[fileNum].OfBuffer[i], mbc, pDoc->DocCharset);
-		      for (index = 0; index < nb_bytes2write; index++)
-			putc (mbc[index], fileDesc);
-#else  /* !_I18N_ */
-		      putc (OutputFile[fileNum].OfBuffer[i], fileDesc);
-#endif /* !_I18N_ */
-		    }
+		    uputc (OutputFile[fileNum].OfBuffer[i], fileDesc, pDoc);
 		  OutputFile[fileNum].OfBufferLen = 0;
 		}
 	      if (OutputFile[fileNum].OfStartOfLine)
@@ -295,16 +302,8 @@ ThotBool            lineBreak;
 			       d'indentation */
 			    /* on ecrit tout ce qui precede ce blanc */
 			    for (j = 0; j < i; j++)
-			      {
-#ifdef _I18N_
-				nb_bytes2write = TtaWC2MB (OutputFile[fileNum].OfBuffer[j],
-							   mbc, pDoc->DocCharset);
-				for (index = 0; index < nb_bytes2write; index++)
-				  putc (mbc[index], fileDesc);
-#else  /* !_I18N_ */
-				putc (OutputFile[fileNum].OfBuffer[j], fileDesc); 
-#endif /* !_I18N_ */
-			      }
+			      uputc (OutputFile[fileNum].OfBuffer[j], fileDesc,
+				     pDoc); 
 			    /* on ecrit un saut de ligne */
 			    ufprintf (fileDesc, pTSch->TsTranslEOL);
 			    OutputFile[fileNum].OfLineNumber++;
@@ -399,11 +398,9 @@ ThotBool            lineBreak;
    PutInt convertit le nombre n sous la forme d'une chaine de         
    caracteres et sort cette chaine de caracteres dans fichier      
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void PutInt (int n, int fileNum, STRING outBuffer, PtrDocument pDoc,
 		    ThotBool lineBreak)
-
 #else  /* __STDC__ */
 static void PutInt (n, fileNum, outBuffer, pDoc, lineBreak)
 int                 n;
@@ -431,17 +428,15 @@ ThotBool            lineBreak;
    feuilles de type leafType.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrTSchema GetTransSchForContent (PtrElement pEl, LeafType leafType,
-					 AlphabetTransl **pTransAlph)
+static PtrTSchema   GetTransSchForContent (PtrElement pEl, LeafType leafType,
+					   AlphabetTransl **pTransAlph)
 
 #else  /* __STDC__ */
 static PtrTSchema   GetTransSchForContent (pEl, leafType, pTransAlph)
-PtrElement      pEl;
-LeafType        leafType;
-AlphabetTransl** pTransAlph;
-
+PtrElement          pEl;
+LeafType            leafType;
+AlphabetTransl    **pTransAlph;
 #endif /* __STDC__ */
-
 {
    PtrTSchema   pTSch;
    PtrSSchema   pSS;
@@ -510,12 +505,10 @@ AlphabetTransl** pTransAlph;
    TranslateText
    effectue les traductions de caracteres selon la table
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
 			   AlphabetTransl *pTransAlph, ThotBool lineBreak,
 			   int fileNum, PtrDocument pDoc)
-
 #else  /* __STDC__ */
 static void TranslateText (pBufT, pTSch, *pTransAlph, lineBreak, fileNum, pDoc)
 PtrTextBuffer   pBufT;
@@ -524,9 +517,7 @@ AlphabetTransl  *pTransAlph;
 ThotBool        lineBreak;
 int             fileNum;
 PtrDocument     pDoc;
-
 #endif /* __STDC__ */
-
 {
    PtrTextBuffer        pNextBufT, pPrevBufT;
    int                  i, j, k, b, ft, lt;
@@ -719,10 +710,9 @@ PtrDocument     pDoc;
    traduisant son contenu si transChar est vrai. Produit le	
    contenu dans le fichier de sortie fileNum.			
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
-static void TranslateLeaf (PtrElement pEl, ThotBool transChar,
-			   ThotBool lineBreak, int fileNum, PtrDocument pDoc)
+static void         TranslateLeaf (PtrElement pEl, ThotBool transChar,
+				   ThotBool lineBreak, int fileNum, PtrDocument pDoc)
 
 #else  /* __STDC__ */
 static void         TranslateLeaf (pEl, transChar, lineBreak, fileNum, pDoc)
@@ -731,9 +721,7 @@ ThotBool            transChar;
 ThotBool            lineBreak;
 int                 fileNum;
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
-
 {
    PtrTSchema          pTSch;
    PtrTextBuffer       pBufT;
@@ -741,6 +729,8 @@ PtrDocument         pDoc;
    int                 i, j, b, ft, lt;
    AlphabetTransl     *pTransAlph;
    StringTransl       *pTrans;
+   int                 nb_bytes2write, index;
+   unsigned char       mbc[MAX_BYTES + 1];
 
    pTransAlph = NULL;
    lt = 0;
@@ -781,10 +771,24 @@ PtrDocument         pDoc;
        /* if it's an Unicode character, output its code */
        if (pEl->ElLeafType == LtSymbol && pEl->ElGraph == '?')
 	 {
-	   PutChar ('&', fileNum, NULL, pDoc, lineBreak);
-	   PutChar ('#', fileNum, NULL, pDoc, lineBreak);
-	   PutInt (pEl->ElWideChar, fileNum, NULL, pDoc, lineBreak);
-	   PutChar (';', fileNum, NULL, pDoc, lineBreak);
+	   if (pDoc->DocCharset == UTF_8)
+	     {
+	       /* translate to UTF_8 the unicode value */
+	       nb_bytes2write = TtaWC2MB (pEl->ElWideChar,
+					  mbc,
+					  pDoc->DocCharset);
+	       for (index = 0; index < nb_bytes2write; index++)
+		putc (mbc[index], OutputFile[1].OfFileDesc);
+	       PutInt (pEl->ElWideChar, fileNum, NULL, pDoc, lineBreak);
+	     }
+	   else
+	     {
+	       /* write a numeric entity */
+	       PutChar ('&', fileNum, NULL, pDoc, lineBreak);
+	       PutChar ('#', fileNum, NULL, pDoc, lineBreak);
+	       PutInt (pEl->ElWideChar, fileNum, NULL, pDoc, lineBreak);
+	       PutChar (';', fileNum, NULL, pDoc, lineBreak);
+	     }
 	 }
        else if (pTSch != NULL)
 	 {
@@ -906,16 +910,12 @@ PtrDocument         pDoc;
    PresRuleValue      retourne le code caractere de la valeur de la   
    regle de presentation specifique pointee par pPRule.            
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static UCHAR_T      PresRuleValue (PtrPRule pPRule)
-
 #else  /* __STDC__ */
 static UCHAR_T      PresRuleValue (pPRule)
 PtrPRule            pPRule;
-
 #endif /* __STDC__ */
-
 {
    UCHAR_T                val;
 
@@ -1033,20 +1033,16 @@ PtrElement          pEl;
    pAttr s'il est different de NULL. Retourne vrai si la condition est
    satisfaite, faux sinon.                                         
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static ThotBool     ConditionIsTrue (PtrTRuleBlock pBlock, PtrElement pEl,
 				     PtrAttribute pAttr, PtrDocument pDoc)
-
 #else  /* __STDC__ */
 static ThotBool     ConditionIsTrue (pBlock, pEl, pAttr, pDoc)
 PtrTRuleBlock       pBlock;
 PtrElement          pEl;
 PtrAttribute        pAttr;
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
-
 {
    PtrAttribute        pAttrEl;
    PtrSSchema          pSS, pRefSS;
@@ -1161,7 +1157,8 @@ PtrDocument         pDoc;
 	       
 	     case TcondDefined:
 	       /* la condition est satisfaite si l'element, qui est un
-		  parametre, a une valeur parcourt les parametres du document*/
+		  parametre, a une valeur */
+	       /* parcourt les parametres du document*/
 	       par = 0;
 	       ret = FALSE;
 	       do
@@ -1171,8 +1168,7 @@ PtrDocument         pDoc;
 		   {
 		   pEl1 = pDoc->DocParameters[par - 1];
 		   ret = pEl1->ElTypeNumber == pElem->ElTypeNumber &&
-		         pEl1->ElStructSchema->SsCode ==
-		                               pElem->ElStructSchema->SsCode;
+		         !ustrcmp (pEl1->ElStructSchema->SsName, pElem->ElStructSchema->SsName);
 		   }
 		 }
 	       while (!ret && par < MAX_PARAM_DOC);
@@ -1383,7 +1379,7 @@ PtrDocument         pDoc;
 		 /* parcourt les attributs de l'element */
 		 while (pAttrEl != NULL && !ret)
 		   {
-		   if (pAttrEl->AeAttrSSchema->SsCode == pSS->SsCode &&
+		   if (!ustrcmp (pAttrEl->AeAttrSSchema->SsName, pSS->SsName) &&
 		       pAttrEl->AeAttrNum == Cond->TcAttr)
 		     /* c'est l'attribut cherche', on teste sa valeur selon
 		        son type */
@@ -1461,8 +1457,8 @@ PtrDocument         pDoc;
 	       ret = FALSE;
 	       if (pAttr != NULL)
 		 if (pElem->ElTypeNumber == Cond->TcAttr &&
-		     pElem->ElStructSchema->SsCode ==
-		                               pAttr->AeAttrSSchema->SsCode)
+		     !ustrcmp (pElem->ElStructSchema->SsName,
+			       pAttr->AeAttrSSchema->SsName))
 		   ret = TRUE;
 	       break;
 
@@ -1548,19 +1544,15 @@ PtrDocument         pDoc;
    s'applique au schema de structure pointe' par pSS) pour         
    l'element pointe' par pElNum.                                   
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static int          CounterVal (int countNum, PtrTSchema pTSch, PtrSSchema pSS, PtrElement pElNum)
-
 #else  /* __STDC__ */
 static int          CounterVal (countNum, pTSch, pSS, pElNum)
 int                 countNum;
 PtrTSchema          pTSch;
 PtrSSchema          pSS;
 PtrElement          pElNum;
-
 #endif /* __STDC__ */
-
 {
    PtrElement          pEl;
    PtrSSchema          pSSch;
@@ -1597,7 +1589,7 @@ PtrElement          pElNum;
 	 if (pAttr == NULL)
 	   stop = TRUE;	/* dernier attribut */
 	 else if (pAttr->AeAttrNum == pCntr->TnAttrInit &&
-		  pAttr->AeAttrSSchema->SsCode == pSS->SsCode)
+		  !ustrcmp (pAttr->AeAttrSSchema->SsName, pSS->SsName))
 	   stop = TRUE;	/* c'est l'attribut cherche' */
 	 else
 	   pAttr = pAttr->AeNext;	/* au suivant */
@@ -1618,7 +1610,7 @@ PtrElement          pElNum;
        while (pEl != NULL)
 	 {
 	 if (pEl->ElTypeNumber == pCntr->TnElemType1 &&
-	     pEl->ElStructSchema->SsCode == pElNum->ElStructSchema->SsCode)
+	     !ustrcmp (pEl->ElStructSchema->SsName, pElNum->ElStructSchema->SsName))
 	   /* l'element rencontre' a la meme type que l'element traite' */
 	   val++;	/* incremente le compteur */
 	 pEl = pEl->ElParent;
@@ -1657,7 +1649,7 @@ PtrElement          pElNum;
 	   while (level > 0 && pEl != NULL)
 	     {
 	     if (pEl->ElTypeNumber == pCntr->TnElemType1 &&
-		 pEl->ElStructSchema->SsCode == pElNum->ElStructSchema->SsCode)
+		 !ustrcmp (pEl->ElStructSchema->SsName, pElNum->ElStructSchema->SsName))
 	       /* cet element englobant a le type qui incremente le compteur */
 	       {
 	       level--;
@@ -1749,20 +1741,16 @@ PtrElement          pElNum;
    structure pointe' par pSS, ou si pSS est nul dans le schema de  
    nom schemaName.                                                 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void SearchDescent (PtrElement * pEl, int typeNum, PtrSSchema pSS,
 			   Name schemaName)
-
 #else  /* __STDC__ */
 static void SearchDescent (pEl, typeNum, pSS, schemaName)
 PtrElement         *pEl;
 int                 typeNum;
 PtrSSchema          pSS;
 Name                schemaName;
-
 #endif /* __STDC__ */
-
 {
    PtrElement          pChild;
    PtrSSchema          pSSchema;
@@ -1782,12 +1770,12 @@ Name                schemaName;
        /* le fils a-t-il le type cherche' ? */
        if (pSS == NULL)
 	 {
-	 SSchemaOK = ustrcmp (schemaName, pChild->ElStructSchema->SsName) == 0;
+	 SSchemaOK = !ustrcmp (schemaName, pChild->ElStructSchema->SsName);
 	 pSSchema = pChild->ElStructSchema;
 	 }
        else
 	 {
-	 SSchemaOK = pChild->ElStructSchema->SsCode == pSS->SsCode;
+	 SSchemaOK = !ustrcmp (pChild->ElStructSchema->SsName, pSS->SsName);
 	 pSSchema = pSS;
 	 }
        if (SSchemaOK && EquivalentSRules (typeNum, pSSchema,
@@ -1867,14 +1855,12 @@ static void ApplyTRule ( /* pTRule, pTSch, pSSch, pEl, transChar,
    ApplyAttrRulesToElem    applique a l'element pEl les regles de	
    traduction associees a l'attribut pAttr.			
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void ApplyAttrRulesToElem (TOrder position, PtrElement pEl,
 				  PtrAttribute pAttr, ThotBool * removeEl,
 				  ThotBool * ignoreEl,
 				  ThotBool * transChar, ThotBool * lineBreak,
 				  PtrDocument pDoc, ThotBool recordLineNb)
-
 #else  /* __STDC__ */
 static void ApplyAttrRulesToElem (position, pEl, pAttr, removeEl, ignoreEl,
 				  transChar, lineBreak, pDoc, recordLineNb)
@@ -1887,9 +1873,7 @@ ThotBool           *transChar;
 ThotBool           *lineBreak;
 PtrDocument         pDoc;
 ThotBool            recordLineNb;
-
 #endif /* __STDC__ */
-
 {
    PtrTRuleBlock       pBlock;
    PtrTRule            pTRule;
@@ -1999,14 +1983,12 @@ ThotBool            recordLineNb;
 /*----------------------------------------------------------------------
    ApplyAttrRules                                                        
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void ApplyAttrRules (TOrder position, PtrElement pEl,
 			    ThotBool * removeEl, ThotBool * ignoreEl,
 			    ThotBool * transChar,
 			    ThotBool * lineBreak, PtrDocument pDoc,
 			    ThotBool recordLineNb)
-
 #else  /* __STDC__ */
 static void ApplyAttrRules (position, pEl, removeEl, ignoreEl, transChar,
 			    lineBreak, pDoc, recordLineNb)
@@ -2018,9 +2000,7 @@ ThotBool           *transChar;
 ThotBool           *lineBreak;
 PtrDocument         pDoc;
 ThotBool            recordLineNb;
-
 #endif /* __STDC__ */
-
 {
    PtrElement          pAsc;
    PtrAttribute        pAttr, nextAttr;
@@ -2094,7 +2074,8 @@ ThotBool            recordLineNb;
 	     /* parcourt les attributs de chaque ascendant */
 	     pAttr = pAsc->ElFirstAttr;
 	     while (pAttr != NULL && !*ignoreEl)
-	       if (pAttr->AeAttrSSchema->SsCode == pEl->ElStructSchema->SsCode
+	       if (!ustrcmp (pAttr->AeAttrSSchema->SsName,
+			     pEl->ElStructSchema->SsName)
 		   && pAttr->AeAttrNum == att)
 		 /* on a trouve' */
 		 {
@@ -2122,14 +2103,12 @@ ThotBool            recordLineNb;
    ApplyPresTRules applique a l'element pointe' par pEl les regles de	
    traduction associees aux presentations portees par l'element.   
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void ApplyPresTRules (TOrder position, PtrElement pEl,
 			     ThotBool * removeEl, ThotBool * ignoreEl,
 			     ThotBool * transChar,
 			     ThotBool * lineBreak, PtrAttribute pAttr,
 			     PtrDocument pDoc, ThotBool recordLineNb)
-
 #else  /* __STDC__ */
 static void ApplyPresTRules (position, pEl, removeEl, ignoreEl, transChar,
 			     lineBreak, pAttr, pDoc, recordLineNb)
@@ -2142,9 +2121,7 @@ ThotBool           *lineBreak;
 PtrAttribute        pAttr;
 PtrDocument         pDoc;
 ThotBool            recordLineNb;
-
 #endif /* __STDC__ */
-
 {
    PtrPRule            pPRule;
    PtrTSchema          pTSch;
@@ -2293,13 +2270,11 @@ ThotBool            recordLineNb;
 /*----------------------------------------------------------------------
    PutVariable                               				
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void PutVariable (PtrElement pEl, PtrAttribute pAttr,
 			 PtrTSchema pTSch, PtrSSchema pSS, int varNum,
 			 ThotBool ref, STRING outBuffer, int fileNum,
 			 PtrDocument pDoc, ThotBool lineBreak)
-
 #else  /* __STDC__ */
 
 static void         PutVariable (pEl, pAttr, pTSch, pSS, varNum, ref,
@@ -2314,7 +2289,6 @@ STRING              outBuffer;
 int                 fileNum;
 PtrDocument         pDoc;
 ThotBool            lineBreak;
-
 #endif /* __STDC__ */
 {
    TranslVariable     *varTrans;
@@ -2426,8 +2400,8 @@ ThotBool            lineBreak;
 	   {
 	   pA = pAncest->ElFirstAttr;	/* premier attribut */
 	   while (!found && pA != NULL)
-	     if (pA->AeAttrNum == varItem->TvItem
-		 && pA->AeAttrSSchema->SsCode == pSS->SsCode)
+	     if (pA->AeAttrNum == varItem->TvItem &&
+		 !ustrcmp (pA->AeAttrSSchema->SsName, pSS->SsName))
 	       found = TRUE;
 	     else
 	       pA = pA->AeNext;
@@ -2508,11 +2482,9 @@ ThotBool            lineBreak;
 static void         TranslateTree (PtrElement pEl, PtrDocument pDoc,
 				   ThotBool transChar, ThotBool lineBreak,
 				   ThotBool enforce, ThotBool recordLineNb);
-
 #else  /* __STDC__ */
 static void         TranslateTree ( /* pEl, pDoc, transChar, lineBreak,
 				       enforce, recordLineNb */ );
-
 #endif /* __STDC__ */
 
 /*----------------------------------------------------------------------
@@ -2579,10 +2551,6 @@ ThotBool            recordLineNb;
    char		       cmd[MAX_PATH];
    char                fileNameStr[MAX_PATH];
 #endif /* _WINDOWS */
-#ifdef _I18N_
-   int                 nb_bytes2write, index;
-   unsigned char       mbc[MAX_BYTES + 1];
-#endif /* _I18N_ */
 
    if (*ignoreEl)
       return;
@@ -2646,8 +2614,8 @@ ThotBool            recordLineNb;
 	     pA = pEl->ElFirstAttr;	/* 1er attribut de l'element */
 	     /* parcourt les attributs de l'element */
 	     while (pA != NULL && !found)
-	       if (pA->AeAttrSSchema->SsCode == pSSch->SsCode &&
-		   pA->AeAttrNum == pTRule->TrObjectNum)
+	       if (pA->AeAttrNum == pTRule->TrObjectNum &&
+		   !ustrcmp (pA->AeAttrSSchema->SsName, pSSch->SsName))
 		 found = TRUE;
 	       else
 		 pA = pA->AeNext;
@@ -3099,16 +3067,8 @@ ThotBool            recordLineNb;
 	   /* on a reussi a ouvrir le nouveau fichier */
 	   {
 	   /* on vide le buffer en cours dans l'ancien fichier */
-	   for (i = 0; i < OutputFile[1].OfBufferLen; i++) {
-#ifdef _I18N_
-	     nb_bytes2write = TtaWC2MB (OutputFile[1].OfBuffer[i], mbc,
-					pDoc->DocCharset);
-	     for (index = 0; index < nb_bytes2write; index++)
-	       putc (mbc[index], OutputFile[1].OfFileDesc);
-#else  /* !_I18N_ */
-	     putc (OutputFile[1].OfBuffer[i], OutputFile[1].OfFileDesc);
-#endif /* !_I18N_ */
-	   }
+	   for (i = 0; i < OutputFile[1].OfBufferLen; i++)
+	     uputc (OutputFile[1].OfBuffer[i], OutputFile[1].OfFileDesc, pDoc);
 	   /* on ferme l'ancien fichier */
 	   fclose (OutputFile[1].OfFileDesc);
 	   /* on bascule sur le nouveau fichier */
@@ -3201,13 +3161,13 @@ ThotBool            recordLineNb;
 	   /* cherche ensuite parmi les freres successifs */
 	   found = FALSE;
 	   do
-	     if ((pElGet->ElStructSchema->SsCode ==
-		  pEl->ElStructSchema->SsCode ||
-		  (ustrcmp (pTRule->TrElemNature,
-			    pElGet->ElStructSchema->SsName) == 0)) &&
-		 EquivalentSRules (pTRule->TrElemType, pElGet->ElStructSchema,
-				   pElGet->ElTypeNumber,pElGet->ElStructSchema,
-				   pElGet->ElParent))
+	     if ((!ustrcmp (pElGet->ElStructSchema->SsName,
+			    pEl->ElStructSchema->SsName) ||
+		  !ustrcmp (pTRule->TrElemNature,
+			    pElGet->ElStructSchema->SsName)) &&
+		  EquivalentSRules (pTRule->TrElemType, pElGet->ElStructSchema,
+				    pElGet->ElTypeNumber,pElGet->ElStructSchema,
+				    pElGet->ElParent))
 	       found = TRUE;
 	     else
 	       pElGet = pElGet->ElNext;
@@ -3367,7 +3327,6 @@ ThotBool            recordLineNb;
    de traduction qui correspondent a son type et qui doivent       
    s'appliquer a la position position.                             
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void ApplyElTypeRules (TOrder position, ThotBool * transChar,
 			      ThotBool * lineBreak, ThotBool * removeEl,
@@ -3375,7 +3334,6 @@ static void ApplyElTypeRules (TOrder position, ThotBool * transChar,
 			      PtrElement pEl, int TypeEl, PtrTSchema pTSch,
 			      PtrSSchema pSS, PtrDocument pDoc,
 			      ThotBool recordLineNb)
-
 #else  /* __STDC__ */
 static void  ApplyElTypeRules (position, transChar, lineBreak, removeEl,
 			       ignoreEl, pEl, TypeEl, pTSch, pSS, pDoc,
@@ -3443,12 +3401,10 @@ ThotBool            recordLineNb
    et applique les regles de traduction des feuilles si transChar  
    est vrai.                                                       
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         TranslateTree (PtrElement pEl, PtrDocument pDoc,
 				   ThotBool transChar, ThotBool lineBreak,
 				   ThotBool enforce, ThotBool recordLineNb)
-
 #else  /* __STDC__ */
 static void         TranslateTree (pEl, pDoc, transChar, lineBreak, enforce,
 				   recordLineNb)
@@ -3633,15 +3589,12 @@ ThotBool            recordLineNb;
    ResetTranslTags   remet a zero tous les indicateurs "deja traduit" 
    de l'arbre de racine pEl.                                       
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         ResetTranslTags (PtrElement pEl)
 #else  /* __STDC__ */
 static void         ResetTranslTags (pEl)
 PtrElement          pEl;
-
 #endif /* __STDC__ */
-
 {
    PtrElement          pChild;
 
@@ -3665,15 +3618,12 @@ PtrElement          pEl;
 /*----------------------------------------------------------------------
    InitOutputFiles initialise les fichiers de sortie.              
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         InitOutputFiles (FILE * mainFile, PtrDocument pDoc)
-
 #else  /* __STDC__ */
 static void         InitOutputFiles (mainFile, pDoc)
 FILE               *mainFile;
 PtrDocument         pDoc;
-
 #endif /* _STDC__ */
 {
    /* Entree 0 : standard output */
@@ -3702,35 +3652,21 @@ PtrDocument         pDoc;
    FlushOutputFiles vide les buffers dans les fichiers de sortie      
    correspondants.                                                 
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 static void         FlushOutputFiles (PtrDocument pDoc)
-
 #else  /* __STDC__ */
 static void         FlushOutputFiles (pDoc)
 PtrDocument         pDoc;
-
 #endif /* __STDC__ */
 {
    int                 i, fich;
-#ifdef _I18N_
-   int                 nb_bytes2write, index;
-   unsigned char       mbc[MAX_BYTES];
-#endif /* !_I18N_ */
 
    for (fich = 1; fich < NOutputFiles; fich++)
      if (OutputFile[fich].OfFileDesc != NULL)
         {
 	for (i = 0; i < OutputFile[fich].OfBufferLen; i++)
-	  {
-#ifdef _I18N_
-	  nb_bytes2write = TtaWC2MB (OutputFile[fich].OfBuffer[i], mbc, pDoc->DocCharset);
-	  for (index = 0; index < nb_bytes2write; index++)
-	    putc (mbc[index], OutputFile[fich].OfFileDesc);
-#else  /* !_I18N_ */
-	  putc (OutputFile[fich].OfBuffer[i], OutputFile[fich].OfFileDesc);
-#endif /* !_I18N_ */
-	  }
+	  uputc (OutputFile[fich].OfBuffer[i], OutputFile[fich].OfFileDesc,
+		 pDoc);
 	if (OutputFile[fich].OfFileDesc != NULL)
 	  fclose (OutputFile[fich].OfFileDesc);
         }
@@ -3742,20 +3678,16 @@ PtrDocument         pDoc;
    dans le fichier de nom fName.
    Retourne TRUE si export reussi.
   ----------------------------------------------------------------------*/
-
 #ifdef __STDC__
 ThotBool      ExportDocument (PtrDocument pDoc, STRING fName,
 			      STRING TSchemaName, ThotBool recordLineNb)
-
 #else  /* __STDC__ */
 ThotBool      ExportDocument (pDoc, fName, TSchemaName, recordLineNb)
 PtrDocument         pDoc;
 STRING              fName;
 STRING              TSchemaName;
 ThotBool            recordLineNb;
-
 #endif /* __STDC__ */
-
 {
    FILE               *outputFile; /* fichier de sortie principal */
    int                 i;
