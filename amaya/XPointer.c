@@ -19,6 +19,10 @@
 
 #undef DEBUG_XPOINTER
 
+#ifdef _WINDOWS
+#define snprintf _snprintf
+#endif /* _WINDOWS */
+
 #define THOT_EXPORT extern
 #include "amaya.h"
 #include "XPointer.h"
@@ -216,12 +220,12 @@ static ThotBool TestElName (Element el, char *name)
 }
 
 /*----------------------------------------------------------------------
-  GetParent
+  AGetParent
 
   returns the first parent element which doesn't have
   an exception, or NULL otherwise
   ----------------------------------------------------------------------*/
-static Element GetParent (Element el)
+static Element AGetParent (Element el)
 {
   Element parent;
 
@@ -501,7 +505,7 @@ ThotBool firstF;
   el = start;
   /* if we chose a hidden element, climb up */
   if (ElIsHidden (el))
-    el = GetParent (el);
+    el = AGetParent (el);
   
   /* browse the tree */
   while (el)
@@ -532,7 +536,7 @@ ThotBool firstF;
       xpath_item->next = xpath_list;
       xpath_list = xpath_item;
       /* climb up one level */
-      el = GetParent (el);
+      el = AGetParent (el);
     }
 
   if (id_value)
