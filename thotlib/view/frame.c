@@ -825,7 +825,7 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
       tVol = bVol = 0;
       delta = top - h / 2;
       pRootBox = topBox = NULL;
-      y = 0;      
+      y = 0;
       /* used to store boxes created on the fly */
       create = NULL;
       /* Redraw from top to bottom all filled boxes */
@@ -851,105 +851,104 @@ ThotBool RedrawFrameBottom (int frame, int scroll, PtrAbstractBox subtree)
 #if defined(_WINDOWS) && !defined(_WIN_PRINT)
 	      WIN_ReleaseDeviceContext ();
 #endif /* __WINDOWS && !_WINT_PRINT */
-	      
-	      /* if needed complete the partial existing image */
-	      pRootBox = pFrame->FrAbstractBox->AbBox;
-	      if (!FrameUpdating && (!TextInserting || scroll > 0))
+	      if (!Printing)
 		{
-
-		  /* The concrete image is being updated */
-		  FrameUpdating = TRUE;
-		  y = top - pRootBox->BxYOrg;
-		  if (pFrame->FrAbstractBox->AbInLine)
-		    FrameUpdating = FALSE;
-		  else if (pFrame->FrAbstractBox->AbTruncatedHead && y < 0)
+		  /* if needed complete the partial existing image */
+		  pRootBox = pFrame->FrAbstractBox->AbBox;
+		  if (!FrameUpdating && (!TextInserting || scroll > 0))
 		    {
-		      /* it lacks a piece of the concrete image at the frame top */
-		      /* filling on top will shift the whole concrete image */
-		      top = h / 2 - y;
-		      /* Height to add */
-		      top = top * l;
-		      /* Volume of the area to recompute */
-		      if (topBox != NULL)
+		      /* The concrete image is being updated */
+		      FrameUpdating = TRUE;
+		      y = top - pRootBox->BxYOrg;
+		      if (pFrame->FrAbstractBox->AbInLine)
+			FrameUpdating = FALSE;
+		      else if (pFrame->FrAbstractBox->AbTruncatedHead && y < 0)
 			{
-			  /* register previous location */
-			  y = topBox->BxYOrg;
-			  delta = y + topBox->BxHeight;
+			  /* it lacks a piece of the concrete image at the frame top */
+			  /* filling on top will shift the whole concrete image */
+			  top = h / 2 - y;
+			  /* Height to add */
+			  top = top * l;
+			  /* Volume of the area to recompute */
+			  if (topBox != NULL)
+			    {
+			      /* register previous location */
+			      y = topBox->BxYOrg;
+			      delta = y + topBox->BxHeight;
+			    }
+			  /* Adding abstract boxes at the beginning */
+			  IncreaseVolume (TRUE, GetCharsCapacity (top), frame);
+			  toadd = TRUE;
+			  /* Recompute the location of the frame in the abstract image */
+			  if (topBox != NULL)
+			    {
+			      y = -y + topBox->BxYOrg;
+			      /* y equal the shift of previous first box */
+			      /* What's already displayed is related to this */
+			      /* previous first box location */
+			      pFrame->FrYOrg += y;
+			      /* delta equal the limit of redrawing after shifting */
+			      if (y > 0)
+				delta = topBox->BxYOrg + topBox->BxHeight;
+			      /* new limit */
+			      pFrame->FrClipYEnd = delta;
+			    }
+			  RedrawFrameTop (frame, 0);
 			}
-		      /* Adding abstract boxes at the beginning */
-		      IncreaseVolume (TRUE, GetCharsCapacity (top), frame);
-		      toadd = TRUE;
-		      /* Recompute the location of the frame in the abstract image */
-		      if (topBox != NULL)
+		      y = bottom - pRootBox->BxYOrg - pRootBox->BxHeight;
+		      if (pFrame->FrAbstractBox->AbTruncatedTail &&
+			  (y >= 0/* || (!pFrame->FrAbstractBox->AbHeight.DimIsPosition &&
+				    pFrame->FrAbstractBox->AbHeight.DimMinimum &&
+				    !pRootBox->BxContentHeight)*/))
 			{
-			  y = -y + topBox->BxYOrg;
-			  /* y equal the shift of previous first box */
-			  /* What's already displayed is related to this */
-			  /* previous first box location */
-			  pFrame->FrYOrg += y;
-			  /* delta equal the limit of redrawing after shifting */
-			  if (y > 0)
-			    delta = topBox->BxYOrg + topBox->BxHeight;
-			  /* new limit */
-			  pFrame->FrClipYEnd = delta;
-			}
-		      RedrawFrameTop (frame, 0);
-		    }
-		  y = bottom - pRootBox->BxYOrg - pRootBox->BxHeight;
-		  if (pFrame->FrAbstractBox->AbTruncatedTail &&
-		      (y >= 0/* || (!pFrame->FrAbstractBox->AbHeight.DimIsPosition &&
-				pFrame->FrAbstractBox->AbHeight.DimMinimum &&
-				!pRootBox->BxContentHeight)*/))
-		    {
-		      /* it lacks some abstract image at the bottom of the frame */
-		      if (tVol > 0 && tVol < pFrame->FrAbstractBox->AbVolume)
-			{
-			  /* free abstract boxes on top of the frame */
-			  if (topBox)
-			    y = topBox->BxYOrg;
-			  DecreaseVolume (TRUE, tVol, frame);
-			  DefClip (frame, 0, 0, 0, 0);
-			  /* check location of frame in concrete image */
-			  if (topBox)
-			    pFrame->FrYOrg = pFrame->FrYOrg - y + topBox->BxYOrg;
-			}
-		      if (pFrame->FrAbstractBox == NULL)
-			{
-			  printf ("ERR: No more abstract box in %d\n", frame);
-			  tVol = -pFrame->FrVolume;
+			  /* it lacks some abstract image at the bottom of the frame */
+			  if (tVol > 0 && tVol < pFrame->FrAbstractBox->AbVolume)
+			    {
+			      /* free abstract boxes on top of the frame */
+			      if (topBox)
+				y = topBox->BxYOrg;
+			      DecreaseVolume (TRUE, tVol, frame);
+			      DefClip (frame, 0, 0, 0, 0);
+			      /* check location of frame in concrete image */
+			      if (topBox)
+				pFrame->FrYOrg = pFrame->FrYOrg - y + topBox->BxYOrg;
+			    }
+			  if (pFrame->FrAbstractBox == NULL)
+			    {
+			      printf ("ERR: No more abstract box in %d\n", frame);
+			      tVol = -pFrame->FrVolume;
+			    }
+			  else
+			    tVol = pFrame->FrVolume - pFrame->FrAbstractBox->AbVolume;
+			  
+			  /* cleanup the bottom of the frame */
+			  Clear (frame, l, y, 0, pRootBox->BxYOrg + pRootBox->BxHeight);
+			  /* don't loop is volume didn't change */
+			  tVol = pFrame->FrAbstractBox->AbVolume;
+			  /* Volume to add */
+			  bottom = (y + h / 2) * l;
+			  IncreaseVolume (FALSE, GetCharsCapacity (bottom), frame);
+			  tVol -= pFrame->FrAbstractBox->AbVolume;
+			  /* Image should be completed */
+			  FrameUpdating = FALSE;
+			  if (tVol != 0)
+			    /* Maybe the image is not complete yet */
+			    RedrawFrameBottom (frame, 0, NULL);
 			}
 		      else
-			tVol = pFrame->FrVolume - pFrame->FrAbstractBox->AbVolume;
-		      
-		      /* cleanup the bottom of the frame */
-		      Clear (frame, l, y, 0, pRootBox->BxYOrg + pRootBox->BxHeight);
-		      /* don't loop is volume didn't change */
-		      tVol = pFrame->FrAbstractBox->AbVolume;
-		      /* Volume to add */
-		      bottom = (y + h / 2) * l;
-		      IncreaseVolume (FALSE, GetCharsCapacity (bottom), frame);
-		      tVol -= pFrame->FrAbstractBox->AbVolume;
-		      /* Image should be completed */
-		      FrameUpdating = FALSE;
-		      if (tVol != 0)
-			/* Maybe the image is not complete yet */
-			RedrawFrameBottom (frame, 0, NULL);
+			{
+			  /* Volume computed is sufficient */
+			  /* Is a cleanup of the bottom of frame needed ? */
+			  if (y > 0)
+			    Clear (frame, l, y, 0, pRootBox->BxYOrg + pRootBox->BxHeight);
+			  pFrame->FrVolume = pFrame->FrAbstractBox->AbVolume;
+			}
 		    }
-		  else
-		    {
-		      /* Volume computed is sufficient */
-		      /* Is a cleanup of the bottom of frame needed ? */
-		      if (y > 0)
-			Clear (frame, l, y, 0, pRootBox->BxYOrg + pRootBox->BxHeight);
-		      pFrame->FrVolume = pFrame->FrAbstractBox->AbVolume;
-		    }
-		  
 		  /* update of image is finished */
 		  FrameUpdating = FALSE;
-
 		}
 #ifdef _GL 
-		  GL_realize ();
+	      GL_realize ();
 	    }
 #endif /* _GL */
 	  /* Interactive creation of boxes */
