@@ -1,4 +1,4 @@
-! file MathML.trans : transformation in MathML
+! file MathML.trans : structure transformation for MathML
 ! see HTML.trans for a description of Trans language
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -8,39 +8,75 @@
 !surround an element with a root
 root : *;
 	{
-	*>MROOT:*;
-	*>MROOT:MTEXT." ";
+	* > MROOT:*;
+	* > MROOT:NONE;
 	}
 
 !surround an element with a square root
 square root: *;
         {
-        *> MSQRT:*;
+        * > MSQRT:*;
         }
 
-!surround a set of elements with a square root
+!surround a sequence of elements with a root
+root: *,*+,last:*;
+        {
+        * > MROOT.MROW:*;
+	last > MROOT.MROW:*;
+	last > MROOT:NONE;
+        }
+
+!surround a sequence of elements with a square root
 square root: *,*+;
         {
-        *> MSQRT.MROW:*;
+        * > MSQRT.MROW:*;
         }
 
-! removes a square root
-remove sqrt: MSQRT{*+};
+!remove a square root
+remove square root: MSQRT{*+};
         {
-        *> :*;
+        * > :*;
         }
 
-!surround element(s) with a fraction
-fraction: (num:*,den:*) | MROW{num:*,den:*} | *;
+!transform 2 elements into a fraction
+fraction: (num:*,den:*) | MROW{num:*,den:*};
         {
         num > MFRAC:*;
         den > MFRAC:*;
-        *> MFRAC:*;
-        *> MFRAC:MTEXT." ";
         }
 
-!removes a fraction level, replacing it by mrow
-remove frac: MFRAC{(num:*,den:*)|numalone:*};
+!transform an element into a numerator
+numerator: *;
+        {
+        * > MFRAC:*;
+        * > MFRAC:NONE;
+        }
+
+!transform an sequence of elements into a numerator
+numerator: *,*+,last:*;
+        {
+        * > MFRAC.MROW:*;
+	last > MFRAC.MROW:*;
+        last > MFRAC:NONE;
+        }
+
+!transform an element into a denominator
+denominator: *;
+        {
+        *> MFRAC:NONE;
+        *> MFRAC:*;
+        }
+
+!transform an sequence of elements into a denominator
+denominator: first:*,*+;
+        {
+        first > MFRAC:NONE;
+	first > MFRAC.MROW:*;
+        * > MFRAC.MROW:*;
+        }
+
+!remove a fraction, replacing it by mrow
+remove fraction: MFRAC{(num:*,den:*)|numalone:*};
         {
         num > MROW:*;
         den > MROW:*;
@@ -48,90 +84,89 @@ remove frac: MFRAC{(num:*,den:*)|numalone:*};
         }
 
 
-!surroud element with a subsup
-add subsup:*;
+!surroud an element with a subsup
+add sub and sup:*;
 	{
 	* > MSUBSUP:*;
-	* > MSUBSUP:MTEXT." ";
-	* > MSUBSUP:MTEXT." ";
+	* > MSUBSUP:NONE;
+	* > MSUBSUP:NONE;
 	}
 
 !surroud element with a sub
 add subscript:*;
 	{
 	* > MSUB:*;
-	* > MSUB:MTEXT." ";
+	* > MSUB:NONE;
 	}
 
-!surroud element with a sup
+!surroud an element with a sup
 add superscript:*;
 	{
 	* > MSUP:*;
-	* > MSUP:MTEXT." ";
+	* > MSUP:NONE;
 	}
 
-!surroud element with a underover
-add underover:*;
+!surroud an element with a underover
+add under and over:*;
 	{
 	* > MUNDEROVER:*;
-	* > MUNDEROVER:MTEXT." ";
-	* > MUNDEROVER:MTEXT." ";
+	* > MUNDEROVER:NONE;
+	* > MUNDEROVER:NONE;
 	}
 
-!surroud element with a over
+!surroud an element with a over
 add over:*;
 	{
 	* > MOVER:*;
-	* > MOVER:MTEXT." ";
+	* > MOVER:NONE;
 	}
 
-!surroud element with a under
+!surroud an element with a under
 add under:*;
 	{
 	* > MUNDER:*;
-	* > MUNDER:MTEXT." ";
+	* > MUNDER:NONE;
 	}
 
-!changes MSUB in MSUP
+!change MSUB into MSUP
 superscript:MSUB;
 	{
 	MSUB > MSUP;
 	}
 
-!changes MSUP in MSUB
+!change MSUP into MSUB
 subscript:MSUP;
 	{
 	MSUP > MSUB;
 	}
 
-!changes MSUB or MSUP in MSUBSUP
+!change MSUB or MSUP into MSUBSUP
 subsup:MSUB{base:*,sub:*} | MSUP{base:*,sup:*};
 	{
 	base > MSUBSUP:*;
-	sup > MSUBSUP:MTEXT." ";
+	sup > MSUBSUP:NONE;
 	sup > MSUBSUP:*;
 	sub > MSUBSUP:*;
-	sub > MSUBSUP:MTEXT." ";
+	sub > MSUBSUP:NONE;
 	}
 
 
-! removes a Row level
+! remove a Row level
 remove row: MROW{*+};
         {
-        *> :*;
+        * > :*;
         }
 
-
-!surround element with parenthesis
-parenthesise:*;
+!surround an element with parentheses
+parenthesize:*;
         {
         * > MROW:MF."(";
         * > MROW:*;
         * > MROW:MF.")";
         }
 
-!surround several elements with parenthesis
-parenthesise: first:*,?*, last:* ;
+!surround a sequence of elements with parentheses
+parenthesize: first:*,?*, last:* ;
         {
         first > MROW:MF."(";
         first > MROW:*;
