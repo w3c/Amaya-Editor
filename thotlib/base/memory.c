@@ -1343,8 +1343,6 @@ void FreeExternalBlock (PtrExtensBlock pBE)
 void GetSchStruct (PtrSSchema * pSS)
 {
   PtrSSchema    pNewSS;
-  TtAttrTable   *pAtt;
-  int           i;
 
   if (PtFree_SchStruct == NULL)
       pNewSS = (PtrSSchema) TtaGetMemory (sizeof (StructSchema));

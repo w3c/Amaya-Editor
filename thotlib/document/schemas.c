@@ -1381,7 +1381,7 @@ static void      InsertXmlAtRules (PtrPSchema pPS, int nAtRules)
 {
 
   AttributePres *pAtPres;
-  PtrPRule       prevPRule, pRule, nextPRule;
+  PtrPRule       prevPRule, pRule;
 
   GetAttributePres (&pAtPres);
 
@@ -1574,10 +1574,10 @@ void    TtaGetXmlAttributeType (char *XMLName, AttributeType *attrType)
    Add a specific presentation rule.
   ----------------------------------------------------------------------*/
 static PtrPRule InsertAXmlPRule (PRuleType type,  int view, PresMode mode,
-				 PtrPRule prevPRule, PtrPSchema pPSch, int nSRule)
+				 PtrPRule prevPRule, PtrPSchema pPSch,
+				 int nSRule)
 {
-   PtrAttribute pAttr;
-   PtrPRule     pRule         ;
+   PtrPRule     pRule;
 
    pRule = NULL;
    GetPresentRule (&pRule);
