@@ -8,8 +8,6 @@ have been introduced in Amaya and Thot since version 1.4 of Amaya.
 Extensions 1.5a:
 ---------------
 
-* Added DEFLATE support under Windows
-
 * First implementation of a multi-document, multi-level Undo/Redo command
 
 * WAI guidelines on Image and Maps.
@@ -50,7 +48,14 @@ Extensions 1.5a:
 
 * The 409 HTTP error message (conflict) is now shown in a popup window.
 
-* The Verify_Save option is now turned off by default
+* The VERIFY_PUBLISH option is now turned off by default
+
+* Added DEFLATE content encoding support under Windows
+
+* First version of the Network and Browsing/Editing configuration menus
+  (only under Unix)
+
+* Support of disconnected browsing mode thru the libwww cache
 
 Fixed bugs 1.5a:
 ---------------
@@ -102,5 +107,5 @@ Fixed bugs 1.5a:
 * People who compiled Amaya on windows platforms couldn't display jpeg images.
   The problem is fixed now.
 
-* The authentication handlers were desactivated while doing a HEAD pre check
+* The authentication handlers were  desactivated while doing a HEAD pre check
   during the lost update PUT procedure
