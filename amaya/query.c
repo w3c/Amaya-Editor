@@ -1728,7 +1728,7 @@ int i;
     {
       real_dir = TtaGetMemory (strlen (TempFileDirectory)
                                + strlen (CACHE_DIR_NAME) + 20);
-      sprintf (real_dir, "%s%c%s", TempFileDirectory, DIR_SEP, CACHE_DIR_NAME);
+      sprintf (real_dir, "%s%s", TempFileDirectory, CACHE_DIR_NAME);
     }
 
   /* compatiblity with previous versions of Amaya: does real_dir
@@ -1765,7 +1765,7 @@ int i;
       /* how to remove the lock? force remove it? */
       cache_lockfile = TtaGetMemory (strlen (real_dir) + 20);
       strcpy (cache_lockfile, real_dir);
-      strcat (cache_lockfile, DIR_STR".lock");
+      strcat (cache_lockfile, ".lock");
       cache_locked = FALSE;
       if (TtaFileExist (cache_lockfile)
 	  && !(cache_locked = test_cachelock (cache_lockfile)))

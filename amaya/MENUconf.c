@@ -310,7 +310,7 @@ void InitAmayaDefEnv ()
   TtaSetDefEnvString ("CACHE_SIZE", "10", FALSE);
   if (TempFileDirectory)
   {
-    sprintf (s, "%s%clibwww-cache%c", TempFileDirectory, DIR_SEP,DIR_SEP);
+    usprintf (s, "%s%clibwww-cache", TempFileDirectory, DIR_SEP);
     TtaSetDefEnvString ("CACHE_DIR", s, FALSE);
 	TtaSetDefEnvString ("ENABLE_CACHE", "yes", FALSE);
   }
@@ -436,30 +436,31 @@ const STRING end_path;
 {
   boolean result = FALSE;
   STRING ptr;
+  STRING dir_sep = NULL;
 
   if (dirname[0] != EOS)
     {
-	  /* if dirname has no end DIR_SEP, add it */
-	  if (dirname [strlen (dirname) -1] != DIR_SEP)
+	  /* if dirname ends in DIR_SEP, we remove it */
+	  if (dirname [ustrlen (dirname) -1] == DIR_SEP)
 	  {
-		  strcat (dirname, DIR_STR);
+		  dir_sep = ustrrchr (dirname, DIR_SEP);
+		  *dir_sep = EOS;
 		  result = TRUE;
 	  }
-      ptr = strstr (dirname, end_path);
+      ptr = ustrstr (dirname, end_path);
       if (ptr)
 	{
 	  if (ustrcasecmp (ptr, end_path))
 	    /* end_path missing, add it to the parent dir */
 	    {
-	      /* avoid adding two DIR_SEPS */
-	   	  ustrcat (dirname, &end_path[1]);
+	   	  ustrcat (dirname, end_path);
 	      result = TRUE;
 	    }
 	}
       else
 	/* no DIR_SEP, so we add the end_path */
 	{
-	  ustrcat (dirname, &end_path[1]);
+	  ustrcat (dirname, end_path);
 	  result = TRUE;
 	}
     }
@@ -513,10 +514,10 @@ const STRING filename;
 {
  CHAR_T source_file [MAX_LENGTH+1];
  
- sprintf (source_file, "%s%c%s", source_dir, DIR_SEP, filename);
+ usprintf (source_file, "%s%c%s", source_dir, DIR_SEP, filename);
  if (TtaFileExist (source_file))
  {
-   sprintf (s, "%s%c%s", dest_dir, DIR_SEP, filename);
+   usprintf (s, "%s%c%s", dest_dir, DIR_SEP, filename);
    TtaFileCopy (source_file, s);
  }
 }
@@ -797,10 +798,10 @@ static void ValidateCacheConf ()
 #endif /* _WINDOWS */
 
  /* validate the cache dir */
- /* what we do is add a DIR_STRlibwww-cacheDIR_STR */
+ /* what we do is add a DIR_STRlibwww-cache */
  if (CacheDirectory[0] != EOS)
    /* n.b., this variable may be empty */
-   change = NormalizeDirName (CacheDirectory, DIR_STR"libwww-cache"DIR_STR);
+   change = NormalizeDirName (CacheDirectory, DIR_STR"libwww-cache");
 
   if (change)
 #ifdef _WINDOWS
@@ -927,16 +928,16 @@ View                view;
    /* Create the dialogue form */
    i = 0;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
-   i += strlen (&s[i]) + 1;
+   i += ustrlen (&s[i]) + 1;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
-   i += strlen (&s[i]) + 1;
+   i += ustrlen (&s[i]) + 1;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_FLUSH_CACHE_BUTTON));
    TtaNewSheet (CacheBase + CacheMenu, 
 		TtaGetViewFrame (document, view),
 		TtaGetMessage (AMAYA, AM_CACHE_MENU),
 		3, s, FALSE, 6, 'L', D_DONE);
 
-   sprintf (s, "B%s%cB%s%cB%s%cB%s",
+   usprintf (s, "B%s%cB%s%cB%s%cB%s",
 	    TtaGetMessage (AMAYA, AM_ENABLE_CACHE), EOS, 
 	    TtaGetMessage (AMAYA, AM_CACHE_PROT_DOCS), EOS,
 	    TtaGetMessage (AMAYA, AM_DISCONNECTED_MODE), EOS,
@@ -1256,7 +1257,7 @@ View                view;
    /* Create the dialogue form */
    i = 0;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
-   i += strlen (&s[i]) + 1;
+   i += ustrlen (&s[i]) + 1;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
 
    TtaNewSheet (ProxyBase + ProxyMenu, 
@@ -1552,15 +1553,23 @@ static void ValidateGeneralConf ()
     change = FALSE;
   SetDlgItemInt (GeneralHwnd, IDC_ZOOM, Zoom, TRUE);
 
-  /* validate the tmp dir */
+  /* 
+  **validate the tmp dir
+  */
+  /* remove the last DIR_SEP, if we have it */
+  if (TmpDir && TmpDir [ustrlen (TmpDir) -1] == DIR_SEP)
+	  {
+		  ptr = ustrrchr (TmpDir, DIR_SEP);
+		  *ptr = EOS;
+	  }
+   /* try to create the directory. If it doesn't work, then
+ 	  restore the default value */
   if (!TtaCheckDirectory (TmpDir) && !CreateDir (TmpDir)) 
-    {
-      /* try to create the directory. If it doesn't work, then
-	 restore the default value */
+    { 
       GetDefEnvString ("TMPDIR", TmpDir);
       if (!CreateDir (TmpDir))
 	{
-	  sprintf (s, "Error creating directory %s", TmpDir);
+	  usprintf (s, "Error creating directory %s", TmpDir);
 	  MessageBox (GeneralHwnd, s, "MenuConf:VerifyGeneralConf", MB_OK);
 	  exit (1);
 	}
@@ -1577,7 +1586,7 @@ static void ValidateGeneralConf ()
       change = TRUE;
     }
   else
-    change = NormalizeDirName (AppHome, DIR_STR"amaya"DIR_STR);
+    change = NormalizeDirName (AppHome, DIR_STR"amaya");
   
   /* try to create the APP_HOME dir */
   if (!TtaCheckDirectory (AppHome) && !CreateDir (AppHome))
@@ -1587,7 +1596,7 @@ static void ValidateGeneralConf ()
       
       if (!CreateDir (AppHome))
 	{
-	  sprintf (s, "Error creating directory %s", AppHome);
+	  usprintf (s, "Error creating directory %s", AppHome);
 	  MessageBox (GeneralHwnd, s, "MenuConf:VerifyGeneralConf", MB_OK);
 	  exit (1);
 	}
@@ -1596,7 +1605,7 @@ static void ValidateGeneralConf ()
   /* create the temporary subdirectories that go inside APP_HOME */
   for (i = 0; i < DocumentTableLength; i++)
     {
-      sprintf (s, "%s%c%d", AppHome, DIR_SEP, i);
+      usprintf (s, "%s%c%d", AppHome, DIR_SEP, i);
       CreateDir (s);
     }
   /* move the amaya.css, amaya.kbd and whatever else we find to this
@@ -1605,7 +1614,15 @@ static void ValidateGeneralConf ()
     {
       AmCopyFile (old_AppHome, AppHome, "amaya.css");
       AmCopyFile (old_AppHome, AppHome, "amaya.kbd");
-      /* add here other files that you'd like to copy */
+	  /* copy the cache if it was under apphome */
+	  usprintf (s, "%s%clibwww-cache", old_AppHome, DIR_SEP); 
+	  if (TtaCheckDirectory (s))
+	  {
+          usprintf (s, "%s%clibwww-cache", AppHome, DIR_SEP);		  
+		  TtaSetEnvString ("CACHE_DIR", s, YES);
+		  libwww_updateNetworkConf (AMAYA_CACHE_RESTART);
+	  }
+      /* add here other files that you'd like to copy to the new app_home */
     }
   if (change)
     SetDlgItemText (GeneralHwnd, IDC_APPHOME, AppHome);
@@ -1621,7 +1638,7 @@ static void ValidateGeneralConf ()
     }
   ustrncpy (lang, DialogueLang, 2);
   lang[2] = EOS;
-  sprintf (s, "%s%cconfig%c%s-amayamsg", ptr, DIR_SEP, DIR_SEP, lang);
+  usprintf (s, "%s%cconfig%c%s-amayamsg", ptr, DIR_SEP, DIR_SEP, lang);
   if (!TtaFileExist (s))
   {
     GetDefEnvString ("LANG", DialogueLang);
@@ -1773,7 +1790,7 @@ STRING              pathname;
    /* Create the dialogue form */
    i = 0;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
-   i += strlen (&s[i]) + 1;
+   i += ustrlen (&s[i]) + 1;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
 
    TtaNewSheet (GeneralBase + GeneralMenu, 
@@ -1819,7 +1836,7 @@ STRING              pathname;
 		   FALSE);
    TtaNewLabel (GeneralBase + mGeneralEmpty2, GeneralBase + GeneralMenu, " ");   
    /* fifth line */
-   sprintf (s, "B%s%cB%s%cB%s", 
+   usprintf (s, "B%s%cB%s%cB%s", 
 	    TtaGetMessage (AMAYA, AM_ENABLE_MULTIKEY), EOS, 
 	    TtaGetMessage (AMAYA, AM_SHOW_BG_IMAGES), EOS, 
 	    TtaGetMessage (AMAYA, AM_ENABLE_DOUBLECLICK));
@@ -2121,14 +2138,14 @@ STRING              pathname;
    /* Create the dialogue form */
    i = 0;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
-   i += strlen (&s[i]) + 1;
+   i += ustrlen (&s[i]) + 1;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
 
    TtaNewSheet (PublishBase + PublishMenu, 
 		TtaGetViewFrame (document, view),
 	       TtaGetMessage (AMAYA, AM_PUBLISH_MENU),
 		2, s, FALSE, 11, 'L', D_DONE);
-   sprintf (s, "B%s%cB%s", 
+   usprintf (s, "B%s%cB%s", 
 	    TtaGetMessage (AMAYA, AM_USE_ETAGS), EOS, 
 	    TtaGetMessage (AMAYA, AM_VERIFY_PUT));
    TtaNewToggleMenu (PublishBase + mTogglePublish,
@@ -2345,7 +2362,7 @@ STRING              pathname;
    /* Create the dialogue form */
    i = 0;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_APPLY_BUTTON));
-   i += strlen (&s[i]) + 1;
+   i += ustrlen (&s[i]) + 1;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_DEFAULT_BUTTON));
 
    TtaNewSheet (ColorBase + ColorMenu, 
@@ -2645,7 +2662,7 @@ STRING              pathname;
   /* Create the dialogue form */
   i = 0;
   strcpy (&s[i], TtaGetMessage (AMAYA, AM_SAVE_GEOMETRY));
-  i += strlen (&s[i]) + 1;
+  i += ustrlen (&s[i]) + 1;
   strcpy (&s[i], TtaGetMessage (AMAYA, AM_RESTORE_GEOMETRY));
   
   TtaNewSheet (GeometryBase + GeometryMenu, 
@@ -2705,7 +2722,7 @@ STRING env_var;
      registry entry */
   TtaClearEnvString (env_var);
   TtaGetViewGeometryMM (GeometryDoc, env_var, &x, &y, &w, &h);
-  sprintf (s, "%d %d %d %d", 
+  usprintf (s, "%d %d %d %d", 
 	   x,
 	   y,
 	   w,
@@ -2736,7 +2753,7 @@ STRING view_name
     {
       /* get current geometry */
       TtaGetViewWH (GeometryDoc, view, &w, &h);
-      sprintf (s, "%d %d %d %d", 
+      usprintf (s, "%d %d %d %d", 
 	       x,
 	       y,
 	       w,
