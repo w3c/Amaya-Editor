@@ -1721,7 +1721,7 @@ static PtrFont LoadNearestFont (char script, int family, int highlight,
 	  /* last case the default font */
 #ifdef _GL
 	  if (ptfont == NULL)
-	    ptfont = DefaultGLFont;
+	    ptfont = (PtrFont) DefaultGLFont;
 #else /* _GL */
 	  if (ptfont == NULL)
 	    ptfont = DialogFont;
@@ -2356,9 +2356,9 @@ void InitDialogueFonts (char *name)
 #endif /* SYSV */
 	      dirlist[ncurrent] = FONT_PATH;
 	      XSetFontPath (TtDisplay, dirlist, ndir);
-	      TtaFreeMemory ( dirlist);
+	      TtaFreeMemory (dirlist);
 	    }
-	  TtaFreeMemory ( currentlist);
+	  TtaFreeMemory (currentlist);
 	}
     }
   for (i = 0; i < MAX_FONT; i++)
@@ -2435,7 +2435,7 @@ static void FreeAFont (int i)
   int                 j;
   ThotBool            found;
 
-  if ( TtFonts[i] )
+  if (TtFonts[i])
     {
       /* the font structure could be used by another entry */
       j = 0;
@@ -2462,10 +2462,10 @@ static void FreeAFont (int i)
 #else  /* _WINDOWS */
 #ifdef _GTK
 #ifndef _GL 
-	if ( TtFonts[i] != DefaultFont )
+	if (TtFonts[i] != DefaultFont)
 	  gdk_font_unref (TtFonts[i]);
 #else /*_GL */
-	if ( TtFonts[i] != DefaultGLFont )	
+	if (TtFonts[i] != (PtrFont) DefaultGLFont)	
 	  gl_font_delete (TtFonts[i]);
 #endif /*_GL*/
 #else /* _GTK */
@@ -2630,29 +2630,28 @@ void LoadingArabicFont (SpecFont fontset ,PtrFont *font)
 
 int Width[MAX_TABLE][2];
 
-	/*-------------------------------------------
-	 Char_Width returns the width of the index 
-	 giving x .the values are stored in a table
-	 --------------------------------------------*/
+/*---------------------------------------------------------------------------
+  Char_Width returns the width of the index giving x.
+  The values are stored in a table
+  ----------------------------------------------------------------------------*/
 int Char_Width (int x )
 {
 	int i;
-	for (i = 0 ; i < MAX_TABLE ; i++ )
-		if ( Width[i][0] == x )
+	for (i = 0 ; i < MAX_TABLE ; i++)
+		if (Width[i][0] == x)
 			return Width[i][1];
 	return -1;
 }
 
-	/*---------------------------------------------
-	  put the char index and his width in a table
-	  'Width'
-     ----------------------------------------------*/
+/*---------------------------------------------------------------------------
+  put the char index and his width in a table 'Width'
+  ----------------------------------------------------------------------------*/
 void Put_Char_Width (int car, int l )
 {
 	int i;
-	for (i=0 ; i < MAX_TABLE ; i++ )
+	for (i=0 ; i < MAX_TABLE ; i++)
 	{
-		if ( Width[i][0] == 0 )
+		if (Width[i][0] == 0)
 			break;
 	}
 	if ( i < MAX_TABLE ) 
