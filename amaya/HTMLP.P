@@ -5570,7 +5570,10 @@ RULES
 	CreateBefore(TR_S);
 	CreateWith(VerticalLine);
 #ifdef PAGE
-	{PageBreak: No;}
+	{**** the next rule should be deleted, but deleting it causes
+	      the print program to crash when formatting a very high
+	      table row *****}
+	PageBreak: No;
 #endif
 	IN Structure_view BEGIN
 		VertPos: Top = Previous . Bottom;

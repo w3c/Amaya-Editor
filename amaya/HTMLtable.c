@@ -1283,6 +1283,41 @@ NotifyElement      *event;
 
 
 /*----------------------------------------------------------------------
+   TablebodyDeleted                                             
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TablebodyDeleted (NotifyElement * event)
+#else
+void                TablebodyDeleted (event)
+NotifyElement      *event;
+#endif
+{
+  Element             sibling, table;
+  ElementType	      elType;
+  Document            doc;
+  boolean	      empty;
+
+  doc = event->document;
+  table = event->element;
+  sibling = TtaGetFirstChild (table);
+  empty = TRUE;
+  while (sibling != NULL && empty)
+     {
+     elType = TtaGetElementType (sibling);
+     if (elType.ElTypeNum == HTML_EL_CAPTION ||
+	 elType.ElTypeNum == HTML_EL_thead ||
+	 elType.ElTypeNum == HTML_EL_Table_body ||
+	 elType.ElTypeNum == HTML_EL_tfoot)
+	if (TtaGetElementVolume (sibling) > 0)
+	   empty = FALSE;
+     TtaNextSibling (&sibling);
+     }
+  if (empty)
+     TtaDeleteTree (table, doc);
+}
+
+
+/*----------------------------------------------------------------------
    RowCreated                                              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__

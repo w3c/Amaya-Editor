@@ -62,6 +62,9 @@ ELEMENTS
    Table:
 	ElemNew.Post -> TableCreated;
 
+   Table_body:
+	ElemDelete.Post -> TablebodyDeleted;
+
    Data_cell:
 	BEGIN
 	ElemNew.Post -> CellCreated;
