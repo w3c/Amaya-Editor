@@ -12,7 +12,7 @@
 #
 
 # default parameters
-AMAYAVERSION="8.2"
+AMAYAVERSION="8.r62"
 DEST=$HOME
 
 # Check argument number on the command line
@@ -45,12 +45,11 @@ AMAYADIR=${AMAYADIR#$TARDIR}
 LIBWWWDIR=libwww
 REDLANDDIR=redland
 
-TAR="tar cvbfh 200"
-COMPRESS="gzip -9"
+TAR="tar czvfh "
 
 echo "Generating the source tar file from $AMAYADIR and $LIBWWWDIR"
 
-$TAR - \
+$TAR $DEST/amaya-src-$AMAYAVERSION.tgz \
 ${AMAYADIR}/README.amaya \
 ${AMAYADIR}/README \
 ${AMAYADIR}/README.gl \
@@ -89,7 +88,6 @@ ${AMAYADIR}/amaya/*.rc \
 ${AMAYADIR}/amaya/*.ico \
 ${AMAYADIR}/amaya/*.cur \
 ${AMAYADIR}/amaya/wxdialog/*.h \
-${AMAYADIR}/amaya/wxdialog/*.c \
 ${AMAYADIR}/amaya/wxdialog/*.cpp \
 ${AMAYADIR}/amaya/f/*.h \
 ${AMAYADIR}/amaya/xpm/*.xpm \
@@ -119,6 +117,7 @@ ${AMAYADIR}/config/amaya.kb \
 ${AMAYADIR}/config/amaya.keyboard \
 ${AMAYADIR}/config/amaya.emacs \
 ${AMAYADIR}/config/amaya.profiles \
+${AMAYADIR}/config/gtkrc \
 ${AMAYADIR}/config/*-amayadialogue \
 ${AMAYADIR}/config/*-amayamsg \
 ${AMAYADIR}/config/*-libdialogue \
@@ -402,6 +401,5 @@ ${LIBWWWDIR}/config/missing \
 ${LIBWWWDIR}/config/mkinstalldirs \
 ${LIBWWWDIR}/config/winConfigure.pl \
 ${LIBWWWDIR}/config/depcomp \
-${REDLANDDIR} \
- | $COMPRESS  > $DEST/amaya-src-$AMAYAVERSION.tgz
+${REDLANDDIR} 
 

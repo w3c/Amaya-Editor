@@ -10,7 +10,7 @@
 #
 
 # default parameters
-AMAYAVERSION="8.3"
+AMAYAVERSION="8.6"
 DEST=$HOME
 PLATFORMS="LINUX-ELF GTK GL"
 
@@ -43,7 +43,6 @@ TARDIR=$PWD/
 AMAYADIR=${AMAYADIR#$TARDIR}
 
 TAR="tar cvzfh "
-COMPRESS="gzip -9"
 
 echo "Generating binary tar files from " $AMAYADIR
 
@@ -92,6 +91,7 @@ echo "Platform ------->" $MACH
    ${AMAYADIR}/config/amaya.keyboard \
    ${AMAYADIR}/config/amaya.profiles \
    ${AMAYADIR}/config/annot.schemas \
+   ${AMAYADIR}/config/gtkrc \
    ${AMAYADIR}/config/fonts.* \
    ${AMAYADIR}/config/lib_files.dat \
    ${AMAYADIR}/config/libconfig/*.css \
