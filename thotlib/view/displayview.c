@@ -294,6 +294,7 @@ PtrDocument pDoc;
 #endif /* __STDC__ */
 
 {
+   PtrAbstractBox      pAb;
    int                 view;
 
    /* on ne cree les paves que s'ils tombent dans la partie de l'image */
@@ -328,6 +329,16 @@ PtrDocument pDoc;
 	       /* cree effectivement les paves du nouvel element dans la vue */
 	       if (pDoc->DocViewFreeVolume[view - 1] > 0)
 	          CreateNewAbsBoxes (pEl, pDoc, view);
+	       else
+		 {
+		   /* mark enclosing abstract boxes as truncated */
+		   pAb = pEl->ElParent->ElAbstractBox[view - 1];
+		   while (pAb && !pAb->AbTruncatedTail)
+		     {
+		       pAb->AbTruncatedTail = TRUE;
+		       pAb = pAb->AbEnclosing;
+		     }
+		 }
 	       }
 	 }
    else
