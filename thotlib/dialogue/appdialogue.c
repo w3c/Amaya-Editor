@@ -95,6 +95,9 @@ CallbackCTX;
 static PtrCallbackCTX FirstCallbackAPI;
 static int          FreeMenuAction;
 static Pixmap       wind_pixmap;
+#ifdef _GTK
+static Pixmap       wind_mask; /* the icone mask for transparence */
+#endif /* _GTK */
 static  void       *LastProcedure = NULL;   
 
 /* LISTES DES MENUS : chaque menu pointe sur une liste d'items.  */
@@ -1148,6 +1151,8 @@ void TteOpenMainWindow (char *name, Pixmap logo, Pixmap icon)
    char               *ptr;
 
 #ifdef _GTK
+   GdkColor           black;
+   GdkColor           white;
    /*   printf("appel de TteOpenMainWindow\n");*/
 #endif
 
@@ -1213,8 +1218,29 @@ void TteOpenMainWindow (char *name, Pixmap logo, Pixmap icon)
 	/* icone des fenetres de documents */
 #ifndef _WINDOWS
 #ifndef _GTK
-	wind_pixmap = XCreateBitmapFromData (TtDisplay, XDefaultRootWindow (TtDisplay),
-		      logowindow_bits, logowindow_width, logowindow_height);
+	wind_pixmap = XCreateBitmapFromData (TtDisplay,
+					     XDefaultRootWindow (TtDisplay),
+					     logowindow_bits,
+					     logowindow_width,
+					     logowindow_height);
+#else /* _GTK */
+	gdk_color_black (TtCmap, &black);
+	gdk_color_white (TtCmap, &white);
+	wind_pixmap =  gdk_pixmap_create_from_data (DefaultWindow->window,
+						    (gchar *) logowindow_bits ,
+						    (gint) logowindow_width,
+						    (gint) logowindow_height,
+						    1,
+						    &white,
+						    &black);
+	wind_mask =  gdk_pixmap_create_from_data (DefaultWindow->window,
+						  (gchar *) logowindow_bits ,
+						  (gint) logowindow_width,
+						  (gint) logowindow_height,
+						  1,
+						  &white,
+						  &white);
+ 
 #endif /* !_GTK */
 #endif /* _WINDOWS */
         /**** creation des menus ****/
@@ -2677,6 +2703,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 #ifdef _GTK
 	   /*** Build the document window ***/
 	   Main_Wd = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+	   /*	   gtk_widget_realize (Main_Wd);*/
 	   Main_Wd->style->font = DefaultFont;
 	   gtk_window_set_title (GTK_WINDOW (Main_Wd), name);
 	   gtk_window_set_policy (GTK_WINDOW (Main_Wd), TRUE, TRUE, FALSE);
@@ -2691,8 +2718,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 
 	   gtk_widget_show (vbox1);
 	   gtk_container_add (GTK_CONTAINER (Main_Wd), vbox1);
-
-	   /* RAJOUTER L'ICONE DE L APPLICATION */
 
 
 #else /* _GTK */
@@ -3015,6 +3040,10 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 
 	   /* show the main window */
 	   gtk_widget_show_all (Main_Wd);
+
+	   /* Add App icone */
+	   gdk_window_set_icon_name (Main_Wd->window, "Amaya");
+	   gdk_window_set_icon (Main_Wd->window, NULL, wind_pixmap, wind_mask);
 
 	   FrameTable[frame].WdScrollH = hscrl;
 	   FrameTable[frame].WdScrollV = vscrl;

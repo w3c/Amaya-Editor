@@ -79,8 +79,10 @@ Pixmap TtaCreatePixmapLogo (char **d)
    pixmap = 0;
    if (d != NULL)
      {
-       pixmap = gdk_pixmap_create_from_xpm_d (DefaultWindow->window, &mask ,
-					      &DefaultWindow->style->bg[GTK_STATE_NORMAL] ,(gchar **) d); 
+       pixmap = gdk_pixmap_create_from_xpm_d (DefaultWindow->window,
+					      &mask ,
+					      &DefaultWindow->style->bg[GTK_STATE_NORMAL] ,
+					      (gchar **) d); 
        icon = gtk_pixmap_new (pixmap, mask);
        gdk_pixmap_unref (pixmap);
        gdk_bitmap_unref (mask);	
