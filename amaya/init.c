@@ -4004,7 +4004,7 @@ STRING              data;
        else
 	 ustrcpy (tempfile, data);
        
-       if (tempfile[ustrlen (tempfile) - 1] == sep)
+       if (*tempfile && tempfile[ustrlen (tempfile) - 1] == sep)
 	 {
 	   ustrcpy (SavePath, tempfile);
 	   SaveName[0] = EOS;
