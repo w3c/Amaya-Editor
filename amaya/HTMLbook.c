@@ -962,8 +962,12 @@ static Element MoveDocumentBody (Element el, Document destDoc,
 		TtaInsertSibling (copy, lastInserted, FALSE, destDoc);
 	      lastInserted = copy;
 	      /* update the NAMEs and URLs in the copied element */
+	      event.event = TteElemPaste;
 	      event.document = destDoc;
+	      event.element = copy;
+	      event.elementType = TtaGetElementType (copy);
 	      event.position = sourceDoc;
+	      event.info = 0;
 	      UpdateURLsInSubtree(&event, copy);
 	    }
 	  /* get the next element in the source document */

@@ -2199,8 +2199,12 @@ void ElementPasted (NotifyElement * event)
   CheckPseudoParagraph (el, doc);
 
   /* Check attribute NAME or ID in order to make sure that its value */
-  /* is unique in the document */
-  MakeUniqueName (el, doc);
+  /* is unique in the document, except if we are including an external
+     document referred by an <object> or <embed> element. In this case, there
+     is no need to check IDs as the included document will never be changed
+     nor saved */
+  if (event->elementType.ElTypeNum > 0)
+     MakeUniqueName (el, doc);
 
   elType = TtaGetElementType (el);
   anchor = NULL;

@@ -5066,8 +5066,14 @@ void ParseExternalDocument (char     *fileName,
 	  copy = TtaCopyTree (idEl, externalDoc, doc, extEl);
 	  TtaInsertFirstChild (&copy, extEl, doc);
 	  /* Update the Images and the URLs in the pasted sub-tree */
+	  event.event = TteElemPaste;
 	  event.document = doc;
+          event.element = copy;
+          event.elementType.ElSSchema = 0;
+	  event.elementType.ElTypeNum = 0; /* tell UpdateURLsInSubtree not to
+					 change IDs through MaqueUniqueName */
 	  event.position = externalDoc;
+          event.info = 0;
 	  UpdateURLsInSubtree(&event, copy);
 	}
       /* Move presentation-schema extensions of the external document */
