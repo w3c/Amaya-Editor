@@ -469,29 +469,36 @@ Document doc;
 	}
     }
 
-  if (!IsW3Path (DocumentURLs[doc])
-      && !TtaFileExist (DocumentURLs[doc]))
+  /* if we're deleting an annotation document */
+  if (DocumentTypes[i] == docAnnot)
     {
-      int source_doc;
-      AnnotMeta *annot;
-      Element annotEl;
-
-      source_doc = DocumentMeta[doc]->source_doc;
-      annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].annotations,
-				     DocumentURLs[doc],
-				     AM_BODY_FILE);
-      if (annot)
+      /* @@ JK: I don't remember why we do this test here? */
+      if (!IsW3Path (DocumentURLs[doc])
+	  && !TtaFileExist (DocumentURLs[doc]))
 	{
-	  annotEl = SearchAnnotation (source_doc, annot->name);
-	  /* remove the annotation metadata and the annotation icon */
-	  ANNOT_FreeAnnotResource (source_doc, annotEl, annot);
-	  /* remove the annotation from the document's annotation list and 
-	     update it */
-	  AnnotList_delAnnot (&(AnnotMetaData[source_doc].annotations),
-			      annot->body_url, FALSE);
+	  int source_doc;
+	  AnnotMeta *annot;
+	  Element annotEl;
+	  
+	  source_doc = DocumentMeta[doc]->source_doc;
+	  annot = AnnotList_searchAnnot (AnnotMetaData[source_doc].annotations,
+					 DocumentURLs[doc],
+					 AM_BODY_FILE);
+	  if (annot)
+	    {
+	      annotEl = SearchAnnotation (source_doc, annot->name);
+	      /* remove the annotation metadata and the annotation icon */
+	      ANNOT_FreeAnnotResource (source_doc, annotEl, annot);
+	      /* remove the annotation from the document's annotation list and 
+		 update it */
+	      /* @@ JK: Why do we have to delete it?? */
+	      AnnotList_delAnnot (&(AnnotMetaData[source_doc].annotations),
+				  annot->body_url, FALSE);
+	    }
 	}
     }
-  /* free the allocated memory */
+  
+  /* free the memory allocated for annotations */
   LINK_DelMetaFromMemory (doc);
   /* reset the state */
   AnnotMetaData[doc].local_annot_loaded = FALSE;
