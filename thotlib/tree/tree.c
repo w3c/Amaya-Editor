@@ -2010,11 +2010,12 @@ void InsertElemInChoice (PtrElement pEl, PtrElement *pNew, PtrDocument pDoc,
 			 ThotBool del)
 {
   ThotBool            replace;
-  PtrAttribute        pAttr;
+  PtrAttribute        pAttr, pA, pPrevA;
   PtrSSchema          pSS;
   int                 T;
   PtrElement          pE;
   PtrSRule            pSRule;
+  PtrTextBuffer       buf, nextbuf;
   
   /* the new element will replace the CHOICE element */
   replace = TRUE;
@@ -2076,6 +2077,51 @@ void InsertElemInChoice (PtrElement pEl, PtrElement *pNew, PtrDocument pDoc,
 	    pAttr = pAttr->AeNext;
 	  /* links the attributs of pNew after those of pEl */
 	  pAttr->AeNext = (*pNew)->ElFirstAttr;
+	  /* look for duplicate attributes */
+	  pAttr = pEl->ElFirstAttr;
+	  while (pAttr)
+	    {
+	      /* compare the current attribute (pAttr) to the following
+		 attributes (pA) */
+	      pA = pAttr->AeNext;
+	      pPrevA = pAttr;
+	      while (pA)
+		{
+		  if (pA->AeAttrSSchema == pAttr->AeAttrSSchema &&
+		      pA->AeAttrNum == pAttr->AeAttrNum)
+		    /* duplicate attribute. Delete pA */
+		    {
+		      /* Remove it from the chain */
+		      pPrevA->AeNext = pA->AeNext;
+		      /* frees the memory allocated to the attribute */
+		      if (pA->AeAttrType == AtReferenceAttr)
+			/* frees the reference */
+			if (pA->AeAttrReference != NULL)
+			  {
+			    DeleteReference (pA->AeAttrReference);
+			    FreeReference (pA->AeAttrReference);
+			    pA->AeAttrReference = NULL;
+			  }
+		      if (pA->AeAttrType == AtTextAttr)
+			/* frees the text buffers */
+			{
+			  buf = pA->AeAttrText;
+			  while (buf != NULL)
+			    {
+			      nextbuf = buf->BuNext;
+			      FreeTextBuffer (buf);
+			      buf = nextbuf;
+			    }
+			  pA->AeAttrText = NULL;
+			}
+		      FreeAttribute (pA);
+		      pA = pPrevA;
+		    }
+		  pPrevA = pA;
+		  pA = pA->AeNext;
+		}
+	      pAttr = pAttr->AeNext;
+	    }
 	}
       /* pNew does not have any attributes */
       (*pNew)->ElFirstAttr = NULL;
