@@ -27,6 +27,7 @@
 #include "fileaccess.h"
 #include "openglfonts.h"
 #include "font_f.h"
+#include "glwindowdisplay.h"
 
 
 #ifdef _SUPERS
