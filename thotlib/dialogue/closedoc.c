@@ -49,7 +49,7 @@ static ThotBool     SaveBeforeClosing;
    CallbackCloseDocMenu 
    handles the callbacks of the CloseDoc menu
   ----------------------------------------------------------------------*/
-void                CallbackCloseDocMenu (int ref, int typedata, STRING data)
+void CallbackCloseDocMenu (int ref, int typedata, STRING data)
 {
 #ifndef _WINDOWS
   switch ((int) data)
@@ -76,9 +76,8 @@ void                CallbackCloseDocMenu (int ref, int typedata, STRING data)
    asks the user if he wants to save before closing the pDoc document.
    save takes a TRUE value if the document should be saved.
   ----------------------------------------------------------------------*/
-void                AskToConfirm (PtrDocument pDoc, Document document,
-				  View view, ThotBool * confirmation,
-				  ThotBool * save)
+void AskToConfirm (PtrDocument pDoc, Document document, View view,
+		   ThotBool *confirmation, ThotBool *save)
 {
   CHAR_T              buftext[300];
 #ifndef _WINDOWS
@@ -151,8 +150,7 @@ ThotBool            CloseADocument (Document document, Document docform,
 		TteConnectAction (T_confirmclose, (Proc) AskToConfirm);
 		TteConnectAction (T_rconfirmclose, (Proc)CallbackCloseDocMenu);
 		}
-	      (*ThotLocalActions[T_confirmclose])(pDoc, docform, viewform,
-						  &ok, &save);
+	      AskToConfirm (pDoc, docform, viewform, &ok, &save);
 	      if (ok)
 		/* pas d'annulation */
 		{
