@@ -5327,10 +5327,7 @@ View                view;
 {
   TtcCloseDocument (doc, view);
   if (!W3Loading)
-    {
-      DocumentTypes[doc] = docHTML;
-      CheckAmayaClosed ();
-    }
+    CheckAmayaClosed ();
 }
 
 /*----------------------------------------------------------------------
