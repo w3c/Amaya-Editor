@@ -157,21 +157,40 @@ static AM_WIN_MenuText WIN_GeneralMenuText[] =
 };
 #endif /* _WINGUI */
 static int      GeneralBase;
+
+#ifndef _WINGUI
 static Prop_General GProp_General;
-static int &    Zoom = GProp_General.Zoom;
-static char *   DialogueLang = GProp_General.DialogueLang;
-static int &    AccesskeyMod = GProp_General.AccesskeyMod;
-static int &    FontMenuSize = GProp_General.FontMenuSize;
-static char *   HomePage = GProp_General.HomePage;
+static int &    Zoom              = GProp_General.Zoom;
+static char *   DialogueLang      = GProp_General.DialogueLang;
+static int &    AccesskeyMod      = GProp_General.AccesskeyMod;
+static int &    FontMenuSize      = GProp_General.FontMenuSize;
+static char *   HomePage          = GProp_General.HomePage;
 static ThotBool & PasteLineByLine = GProp_General.PasteLineByLine;
-static ThotBool & S_Buttons = GProp_General.S_Buttons;
-static ThotBool & S_Address = GProp_General.S_Address;
-static ThotBool & S_Targets = GProp_General.S_Targets;
-static ThotBool & S_Numbers = GProp_General.S_Numbers;
+static ThotBool & S_Buttons       = GProp_General.S_Buttons;
+static ThotBool & S_Address       = GProp_General.S_Address;
+static ThotBool & S_Targets       = GProp_General.S_Targets;
+static ThotBool & S_Numbers       = GProp_General.S_Numbers;
 #define DEF_SAVE_INTVL 10	/* number of typed characters triggering 
 				   automatic saving */
-static ThotBool & S_AutoSave = GProp_General.S_AutoSave;
-static ThotBool & S_Geometry = GProp_General.S_Geometry;
+static ThotBool & S_AutoSave      = GProp_General.S_AutoSave;
+static ThotBool & S_Geometry      = GProp_General.S_Geometry;
+#else /* _WINGUI */
+/* do not use references on Windows C compiler, it doesn't understand it :( */
+static int      Zoom;
+static char     DialogueLang[MAX_LENGTH];
+static int      AccesskeyMod;
+static int      FontMenuSize;
+static char     HomePage[MAX_LENGTH];
+static ThotBool PasteLineByLine;
+static ThotBool S_Buttons;
+static ThotBool S_Address;
+static ThotBool S_Targets;
+static ThotBool S_Numbers;
+#define DEF_SAVE_INTVL 10	/* number of typed characters triggering 
+				   automatic saving */
+static ThotBool S_AutoSave;
+static ThotBool S_Geometry;
+#endif /* _WINGUI */
 
 /* Browse menu options */
 #ifdef _WINGUI
@@ -201,6 +220,7 @@ static char    *ScreensTxt[]={
   "handheld", "print", "projection", "screen", "tty", "tv"
 };
 
+#ifndef _WINGUI
 static Prop_Browse GProp_Browse;
 static ThotBool & LoadImages = GProp_Browse.LoadImages;
 static ThotBool & LoadObjects = GProp_Browse.LoadObjects;
@@ -210,6 +230,18 @@ static ThotBool & EnableFTP = GProp_Browse.EnableFTP;
 static ThotBool & BgImages = GProp_Browse.BgImages;
 static char    * ScreenType = GProp_Browse.ScreenType;
 static int     & DoubleClickDelay = GProp_Browse.DoubleClickDelay;
+#else /* _WINGUI */
+/* do not use references on Windows C compiler, it doesn't understand it :( */
+static ThotBool LoadImages;
+static ThotBool LoadObjects;
+static ThotBool LoadCss;
+static ThotBool DoubleClick;
+static ThotBool EnableFTP;
+static ThotBool BgImages;
+static char     ScreenType[MAX_LENGTH];;
+static int      DoubleClickDelay;
+#endif /* _WINGUI */
+
 
 /* Publish menu options */
 #ifdef _WINGUI
@@ -230,6 +262,7 @@ static AM_WIN_MenuText WIN_PublishMenuText[] =
 #endif /* _WINGUI */
 static int      PublishBase;
 
+#ifndef _WINGUI
 static Prop_Publish GProp_Publish;
 static char     * DefaultName = GProp_Publish.DefaultName;
 static ThotBool & UseXHTMLMimeType = GProp_Publish.UseXHTMLMimeType;
@@ -238,6 +271,16 @@ static ThotBool & ExportCRLF = GProp_Publish.ExportCRLF;
 static ThotBool & VerifyPublish = GProp_Publish.VerifyPublish;
 static char     * SafePutRedirect = GProp_Publish.SafePutRedirect;
 static char     * CharsetType = GProp_Publish.CharsetType;
+#else /* _WINGUI */
+/* do not use references on Windows C compiler, it doesn't understand it :( */
+static char     DefaultName[MAX_LENGTH];
+static ThotBool UseXHTMLMimeType;
+static ThotBool LostUpdateCheck;
+static ThotBool ExportCRLF;
+static ThotBool VerifyPublish;
+static char     SafePutRedirect[MAX_LENGTH];
+static char     CharsetType[MAX_LENGTH];
+#endif /* _WINGUI */
 
 static int      CurrentCharset;
 static char     NewCharset[MAX_LENGTH];
