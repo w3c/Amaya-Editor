@@ -43,6 +43,7 @@
 #endif /* _WINDOWS */
 
 #define MAX_ARGS	20
+#define MaxEquivLen     400
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -537,7 +538,6 @@ void    FreeMenus ()
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TteAddMenuAction (char* actionName, Proc procedure, ThotBool state)
-
 #else  /* __STDC__ */
 void                TteAddMenuAction (actionName, procedure, state)
 char*               actionName;
@@ -575,11 +575,9 @@ ThotBool            state;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int          FindMenuAction (char* actionName)
-
 #else  /* __STDC__ */
 static int          FindMenuAction (actionName)
 char*               actionName;
-
 #endif /* __STDC__ */
 {
    int                 i;
@@ -599,12 +597,10 @@ char*               actionName;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                TteZeroMenu (WindowType windowtype, CHAR_T* schemaName)
-
 #else  /* __STDC__ */
 void                TteZeroMenu (windowtype, schemaName)
 WindowType          windowtype;
 CHAR_T*             schemaName;
-
 #endif /* __STDC__ */
 {
    SchemaMenu_Ctl     *ptrschema;
@@ -983,7 +979,6 @@ int                 frame;
    int                 item;
    int                 action;
    CHAR_T              string[700];
-#define MaxEquivLen 200
    char                equiv[MaxEquivLen];
    ThotBool            withEquiv;
    Item_Ctl           *ptritem;
