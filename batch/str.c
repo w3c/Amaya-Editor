@@ -1832,6 +1832,9 @@ static void         ProcessToken (indLine wi, indLine wl, SyntacticCode c,
        case KWD_ReturnCreateWithin:
 	 ExceptionNum (ExcReturnCreateWithin, True, False, False, wi);
 	 break;
+       case KWD_NoBreakByReturn:
+	 ExceptionNum (ExcNoBreakByReturn, True, False, False, wi);
+	 break;
        case KWD_ParagraphBreak:
 	 ExceptionNum (ExcParagraphBreak, True, False, False, wi);
 	 break;

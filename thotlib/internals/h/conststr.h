@@ -62,7 +62,8 @@
 #define ExcParagraphBreak 36
 #define ExcReturnCreateNL 37
 #define ExcReturnCreateWithin 38
-#define ExcNoReplicate 39
+#define ExcNoBreakByReturn 39
+#define ExcNoReplicate 40
 
 /* Draw exceptions */
 #define ExcSelectParent 310

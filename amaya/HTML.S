@@ -868,7 +868,7 @@ STRUCT
 EXCEPT
 	HTML:           NoMove, NoResize;
 	BODY:		NoCut, CssBackground, NoMove, NoResize,
-		        SetWindowBackground;
+		        SetWindowBackground, NoBreakByReturn;
 	HEAD:		NoCut;
 	TITLE:		NoCut;
 	Document_URL:	Hidden, NoSpellCheck, NoCut;
@@ -915,7 +915,7 @@ EXCEPT
 	STYLE_:		ReturnCreateNL, NoReplicate;
 	SCRIPT_:	ReturnCreateNL, NoReplicate;
 	Text_Area:	ReturnCreateNL, NoReplicate;
-	HTMLfragment:	NoMove, NoResize, Hidden;
+	HTMLfragment:	NoMove, NoResize, Hidden, NoBreakByReturn;
 	Division:	NoMove, NoResize;
 	Form:           NoReplicate;
 
@@ -952,8 +952,8 @@ EXCEPT
 	Charset:	Invisible;
 	PI:     	Invisible;
 	shape:		Invisible;
-	Data_cell:	IsCell, NoMove, NoResize;
-	Heading_cell:	IsCell, NoMove, NoResize;
+	Data_cell:	IsCell, NoMove, NoResize, NoBreakByReturn;
+	Heading_cell:	IsCell, NoMove, NoResize, NoBreakByReturn;
 	Table:		IsTable, PageBreak, NoReplicate;
 	Column_head:	IsColHead, NoCut, Hidden;
 	Table_head:	NoCut, Hidden, NoSelect;
@@ -963,12 +963,13 @@ EXCEPT
 	Cols:		Hidden, NoSelect;
 	Table_body:	PageBreakAllowed, Hidden;
 	Table_row:	IsRow, PageBreakPlace;
+	IFRAME:	        NoBreakByReturn;
 	ColExt:		Invisible;
 	RowExt:		Invisible;
 	Ref_column:	ColRef, Invisible;
 	colspan_:	ColSpan;
 	rowspan_:	RowSpan;
-	Object_Content: Hidden, NoCreate, NoCut;
+	Object_Content: Hidden, NoCreate, NoCut, NoBreakByReturn;
 	Ghost_restruct:	Invisible;
         IntEntity:	Invisible;
         EntityName:	Invisible;

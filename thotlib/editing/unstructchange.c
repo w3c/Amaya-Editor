@@ -1114,7 +1114,19 @@ void TtcCreateElement (Document doc, View view)
 	      {
 		pParent = pElem->ElParent;
 		pListEl = AncestorList (pParent);
-		if (pListEl == NULL)
+		if (TypeHasException (ExcNoBreakByReturn,pParent->ElTypeNumber,
+				      pParent->ElStructSchema))
+		  /* the parent element can't be split with the Return key.
+		     Do not delete the empty element, but create a new copy
+		     of it right after. */
+		  {
+		    ready = TRUE;
+		    pElDelete = NULL;
+		    pListEl = NULL;
+		    createAfter = TRUE;
+		    pElReplicate = pElem;
+		  }
+		else if (pListEl == NULL)
 		  {
 		    if (GetElementConstruct (pParent->ElParent, &nComp) == CsAggregate)
 		      {

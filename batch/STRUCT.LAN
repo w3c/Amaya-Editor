@@ -109,30 +109,28 @@ ExceptList =	 Except ';' < Except ';' > .
 Except =	 ExceptType ':' ExValList .
 ExceptType =	 BasicType / [ 'EXTERN' ] [ FirstSec ] ElemName / AttrName / ConstName .
 ExValList =	 ExceptVal < ',' ExceptVal > .
-ExceptVal =	 'NoCut' / 'NoCreate' / 'NoReplicate' / 'NoHMove' / 'NoVMove' /
-		 'NoHResize' / 'NoVResize' / 
-		 'NewWidth' / 'NewHeight' /
+ExceptVal =	 'NoCut' / 'NoCreate' / 'NoReplicate' /
+                 'NoHMove' / 'NoVMove' / 'NoMove' /
+		 'NoHResize' / 'NoVResize' / 'NoResize' /
+                 'MoveResize' /
+		 'NewWidth' / 'NewHeight' / 'NewPercentWidth' /
 		 'NewHPos' / 'NewVPos' /
-                 'Invisible' /
-		 'GraphCreation' /
-		 'Hidden' / 'IsDraw' /
-                 'NoMove' / 'NoResize' / 'MoveResize' /
-                 'NoSelect' / 'NoSpellCheck' /
+                 'Invisible' / 'Hidden' /
 	         'PageBreak' / 'PageBreakAllowed' / 'PageBreakPlace' /
 	         'PageBreakRepetition' / 'PageBreakRepBefore' /
-		 'ActiveRef' /
-                 'NoPaginate' /
-                 'ImportLine' / 'ImportParagraph' /
-		 'ParagraphBreak' / 'SelectParent' /
+                 'NoPaginate' / 'NoSpellCheck' /
+		 'ActiveRef' /  'NoSelect' /
                  'HighlightChildren' / 'ExtendedSelection' /
-                 'ClickableSurface' /
-		 'ReturnCreateNL' / 'ReturnCreateWithin' /
-		 'IsTable' / 'IsRow' /
-		 'IsColHead' / 'IsCell' / 'NewPercentWidth' /
-		 'ColRef' / 'ColSpan' / 'RowSpan' / 'Shadow' /
+                 'SelectParent' / 'ClickableSurface' /
+		 'ParagraphBreak' /
+		 'ReturnCreateNL' / 'ReturnCreateWithin' / 'NoBreakByReturn' /
+                 'ImportLine' / 'ImportParagraph' /
+		 'GraphCreation' / 'IsDraw' / 'IsGroup' / 'EmptyGraphic' /
+		 'IsTable' / 'IsRow' / 'IsColHead' / 'IsCell' /
+		 'ColRef' / 'ColSpan' / 'RowSpan' /
 		 'CssBackground' / 'CssClass' / 'CssId' / 'CssPseudoClass' /
-		 'EventAttr' / 'NoShowBox' / 'SetWindowBackground' /
-		 'IsGroup' / 'EmptyGraphic' / 'SpacePreserve' /
+		 'NoShowBox' / 'SetWindowBackground' /
+		 'Shadow' / 'EventAttr' / 'SpacePreserve' /
 		 ExceptNum .
 ExceptNum =	 NUMBER .
 

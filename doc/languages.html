@@ -15,7 +15,7 @@
 
 <h4>Translated from French by Ethan Munson</h4>
 
-<h4>Version of September 22, 2003</h4>
+<h4>Version of December 4, 2003</h4>
 
 <p>© 1996-2003 INRIA</p>
 <hr />
@@ -1871,24 +1871,29 @@ exceptions are indicated by a name. They are separated by semicolons.</p>
                      ':' ExcValSeq .
      ExcTypeOrAttr = ElemID / AttrID .
      ExcValSeq     = ExcValue &lt; ',' ExcValue &gt; .
-     ExcValue      ='NoCut' / 'NoCreate' / 'NoHMove' / 
-                    'NoVMove' / 'NoHResize' / 'NoVResize' /
-                    'NoMove' / 'NoResize' / 'MoveResize' /
-                    'NewWidth' / 'NewHeight' / 'NewHPos' /
-                    'NewVPos' / 'Invisible' /
-                    'NoSelect' / 'NoSpellCheck' /
-                    'Hidden' / 'ActiveRef' /
-                    'ImportLine' / 'ImportParagraph' /
-                    'NoPaginate' / 'ParagraphBreak' /
+     ExcValue      ='NoCut' / 'NoCreate' / 'NoReplicate' /
+                    'NoHMove' / 'NoVMove' / 'NoMove' /
+                    'NoHResize' / 'NoVResize' / 'NoResize' /
+                    'MoveResize' /
+                    'NewWidth' / 'NewHeight' / 'NewPercentWidth' /
+                    'NewHPos' / 'NewVPos' /
+                    'Invisible' / 'Hidden' /
                     'PageBreak' / 'PageBreakAllowed' / 'PageBreakPlace' /
                     'PageBreakRepetition' / 'PageBreakRepBefore' /
+                    'NoPaginate' / 'NoSpellCheck' /
+                    'ActiveRef' /  'NoSelect' /
                     'HighlightChildren' / 'ExtendedSelection' /
                     'SelectParent' / 'ClickableSurface' /
-                    'ReturnCreateNL' / 'ReturnCreateWithin' /
-                    'IsDraw' / 'IsTable' /
-                    'IsRow' / 'IsColHead' / 'IsCell' /
-                    'NewPercentWidth' / 'ColRef' / 'ColSpan' /
-                    'RowSpan' / 'SaveDocument' / 'Shadow' .</pre>
+                    'ParagraphBreak' /
+                    'ReturnCreateNL' / 'ReturnCreateWithin' / 'NoBreakByReturn' /
+                    'ImportLine' / 'ImportParagraph' /
+                    'GraphCreation' / 'IsDraw' / 'IsGroup' / 'EmptyGraphic' /
+                    'IsTable' / 'IsRow' / 'IsColHead' / 'IsCell' /
+                    'ColRef' / 'ColSpan' / 'RowSpan' /
+                    'CssBackground' / 'CssClass' / 'CssId' / 'CssPseudoClass' /
+                    'NoShowBox' / 'SetWindowBackground' /
+                    'Shadow' / 'EventAttr' / 'SpacePreserve' /
+                    ExceptNum .</pre>
 
 <p>The following are the available exceptions:</p>
 <dl>
@@ -1901,6 +1906,11 @@ exceptions are indicated by a name. They are separated by semicolons.</p>
       type to which this exception is applied cannot be created by ordinary
       commands for creating new elements. These elements are usually created
       by special actions associated with other exceptions.</dd>
+  <dt><tt>NoReplicate</tt></dt>
+    <dd>This exception can only be applied to element types. Elements of a
+      type to which this exception is applied cannot be duplicated by
+      pressing the Return key. A default element (such as a paragraph) is
+      created instead.</dd>
   <dt><tt>NoHMove</tt></dt>
     <dd>This exception can only be applied to element types. Elements of a
       type to which this exception is applied cannot be moved horizontally
@@ -1943,6 +1953,8 @@ exceptions are indicated by a name. They are separated by semicolons.</p>
       height of an element which has this attribute is modified with the
       mouse, the value of the new height will be assigned to the
     attribute.</dd>
+  <dt><tt>NewPercentWidth</tt></dt>
+    <dd>@@@@@</dd>
   <dt><tt>NewHPos</tt></dt>
     <dd>This exception can only be applied to numeric attributes. If the
       horizontal position of an element which has this attribute is modified
@@ -1959,63 +1971,42 @@ exceptions are indicated by a name. They are separated by semicolons.</p>
       seen by the user and that its value must not be changed directly. This
       exception is usually used when another exception manipulates the value
       of an attribute.</dd>
-  <dt><tt>NoSelect</tt></dt>
-    <dd>This exception can only be applied to element types. Elements of a
-      type to which this exception is applied cannot be selected directly
-      with the mouse, but they can be selected by other methods provided by
-      the editor.</dd>
-  <dt>NoSpellCheck</dt>
-    <dd>This exception can only be applied to element types. Elements of a
-      type to which this exception is applied are not taken into account by
-      the spell checker.</dd>
   <dt><tt>Hidden</tt></dt>
     <dd>This exception can only be applied to element types. It indicates
       that elements of this type, although present in the document's
       structure, must not be shown to the user of the editor. In particular,
       the creation menus must not propose this type and the selection message
       must not pick it.</dd>
+  <dt><tt>PageBreak</tt></dt>
+    <dd>@@@@</dd>
+  <dt><tt>PageBreakAllowed</tt></dt>
+    <dd>@@@@</dd>
+  <dt><tt>PageBreakPlace</tt></dt>
+    <dd>@@@@</dd>
+  <dt><tt>PageBreakRepetition</tt></dt>
+    <dd>@@@@</dd>
+  <dt><tt>PageBreakRepBefore</tt></dt>
+    <dd>@@@@</dd>
+  <dt><tt>NoPaginate</tt></dt>
+    <dd>This exception can only be applied to the root element, i.e. the name
+      that appear after the keyword <tt>STRUCTURE</tt> at the beginning of
+      the structure schema. It indicates that the editor should not allow the
+      user to paginate documents of that type.</dd>
+  <dt>NoSpellCheck</dt>
+    <dd>This exception can only be applied to element types. Elements of a
+      type to which this exception is applied are not taken into account by
+      the spell checker.</dd>
   <dt><tt>ActiveRef</tt></dt>
     <dd>This exception can only be applied to attributes of the reference
       type. It indicates that when the user of the editor makes a double
       click on an element which possesses a reference attribute having this
       exception, the element designated by the reference attribute will be
       selected.</dd>
-  <dt><tt>ImportLine</tt></dt>
-    <dd>This exception can only be applied to element types. It indicates
-      that elements of this type should receive the content of imported text
-      files. An element is created for each line of the imported file. A
-      structure schema cannot contain several exceptions <tt>ImportLine</tt>
-      and, if it contains one, it should not contain any exception
-      <tt>ImportParagraph</tt>.</dd>
-  <dt><tt>ImportParagraph</tt></dt>
-    <dd>This exception can only be applied to element types. It indicates
-      that elements of this type should receive the content of imported text
-      files. An element is created for each paragraph of the imported file. A
-      paragraph is a sequence of lines without any empty line. A structure
-      schema cannot contain several exceptions <tt>ImportParagraph</tt> and,
-      if it contains one, it should not contain any exception
-      <tt>ImportLine</tt>.</dd>
-  <dt><tt>NoPaginate</tt></dt>
-    <dd>This exception can only be applied to the root element, i.e. the name
-      that appear after the keyword <tt>STRUCTURE</tt> at the beginning of
-      the structure schema. It indicates that the editor should not allow the
-      user to paginate documents of that type.</dd>
-  <dt><tt>ParagraphBreak</tt></dt>
-    <dd>This exception can only be applied to element types. When the caret
-      is within an element of a type to which this exception is applied, it
-      is that element that will be split when the user hits the Return
-    key.</dd>
-  <dt><tt>ReturnCreateNL</tt></dt>
-    <dd>This exception can only be applied to element types. When the caret
-      is within an element of a type to which this exception is applied, the
-      Return key simply inserts a New line character (code \212) at the
-      current position. The Return key does not create a new element; it does
-      not split the current element either.</dd>
-  <dt><tt>ReturnCreateWithin</tt></dt>
-    <dd>This exception can only be applied to element types. When the caret
-      is within an element of a type to which this exception is applied, the
-      Return key will create a new element within that element, not a sibling
-      after that element.</dd>
+  <dt><tt>NoSelect</tt></dt>
+    <dd>This exception can only be applied to element types. Elements of a
+      type to which this exception is applied cannot be selected directly
+      with the mouse, but they can be selected by other methods provided by
+      the editor.</dd>
   <dt><tt>HighlightChildren</tt></dt>
     <dd>This exception can only be applied to element types. Elements of a
       type to which this exception is applied are not highlighted themselves
@@ -2037,24 +2028,81 @@ exceptions are indicated by a name. They are separated by semicolons.</p>
     <dd>This exception can only be applied to element types. When the user
       clicks within a child of an element of that type, this child is
       selected even if it is a graphic leaf that is not filled.</dd>
-  <dt><code>IsDraw</code>, <code>IsTable</code>, <code>IsColHead</code>,
-  <code>IsRow</code>, <code>IsCell</code></dt>
+  <dt><tt>ParagraphBreak</tt></dt>
+    <dd>This exception can only be applied to element types. When the caret
+      is within an element of a type to which this exception is applied, it
+      is that element that will be split when the user hits the Return
+    key.</dd>
+  <dt><tt>ReturnCreateNL</tt></dt>
+    <dd>This exception can only be applied to element types. When the caret
+      is within an element of a type to which this exception is applied, the
+      Return key simply inserts a New line character (code \212) at the
+      current position. The Return key does not create a new element; it does
+      not split the current element either.</dd>
+  <dt><tt>ReturnCreateWithin</tt></dt>
+    <dd>This exception can only be applied to element types. When the caret
+      is within an element of a type to which this exception is applied, the
+      Return key will create a new element within that element, not a sibling
+      after that element.</dd>
+  <dt><tt>NoBreakByReturn</tt></dt>
+    <dd>This exception can only be applied to element types. When the
+      caret is in an empty element, child of an element of a type to which
+      this exception is applied, the Return key will not split the element,
+      but will create a new empty element after the current empty
+      element. </dd>
+  <dt><tt>ImportLine</tt></dt>
+    <dd>This exception can only be applied to element types. It indicates
+      that elements of this type should receive the content of imported text
+      files. An element is created for each line of the imported file. A
+      structure schema cannot contain several exceptions <tt>ImportLine</tt>
+      and, if it contains one, it should not contain any exception
+      <tt>ImportParagraph</tt>.</dd>
+  <dt><tt>ImportParagraph</tt></dt>
+    <dd>This exception can only be applied to element types. It indicates
+      that elements of this type should receive the content of imported text
+      files. An element is created for each paragraph of the imported file. A
+      paragraph is a sequence of lines without any empty line. A structure
+      schema cannot contain several exceptions <tt>ImportParagraph</tt> and,
+      if it contains one, it should not contain any exception
+      <tt>ImportLine</tt>.</dd>
+  <dt><tt>GraphCreation</tt></dt>
+    <dd>@@@@</dd>
+  <dt><tt>EmptyGraphic</tt></dt>
+    <dd>@@@@</dd>
+  <dt><tt>IsDraw</tt>, <tt>IsGroup</tt>, <tt>IsTable</tt>,
+    <tt>IsRow</tt>, <tt>IsColHead</tt>, <tt>IsCell</tt></dt>
     <dd>These exceptions can only be applied to element types. Elements of a
       type to which these exceptions are applied are identified as Draws,
       Tables, Colheads, Rows or Cells and specific processing are applied to
       them.</dd>
-  <dt><code>ColRef</code></dt>
+  <dt><tt>ColRef</tt></dt>
     <dd>This exception can only be applied to attributes of the reference
       type. It indicates that this attribute refers to the column head (see
       exception IsColHead) which the element belongs to.</dd>
-  <dt><code>ColSpan</code>, <code>RowSpan</code></dt>
+  <dt><tt>ColSpan</tt>, <tt>RowSpan</tt></dt>
     <dd>These exceptions can only be applied to numeric attributes of cells.
       They indicate that attribute values give how many columns or rows the
       element spans.</dd>
-  <dt><code>Shadow</code></dt>
+  <dt><tt>CssBackground</tt></dt>
+    <dd>@@@@</dd>
+  <dt><tt>CssClass</tt></dt>
+    <dd>@@@@</dd>
+  <dt><tt>CssId</tt></dt>
+    <dd>@@@@</dd>
+  <dt><tt>CssPseudoClass</tt></dt>
+    <dd>@@@@</dd>
+  <dt><tt>NoShowBox</tt></dt>
+    <dd>@@@@</dd>
+  <dt><tt>SetWindowBackground</tt></dt>
+    <dd>@@@@</dd>
+  <dt><tt>Shadow</tt></dt>
     <dd>This exception can only be applied to element types. Text of elements
       of a type to which this exception is applied are displayed and printed
       as a set of stars ('*').</dd>
+  <dt><tt>EventAttr</tt></dt>
+    <dd>@@@@</dd>
+  <dt><tt>SpacePreserve</tt></dt>
+    <dd>@@@@</dd>
 </dl>
 
 <blockquote class="example">
@@ -7891,19 +7939,30 @@ Except         = [ 'EXTERN' ] [ FirstSec ] ExcTypeOrAttr ':'
                  ExcValSeq .
 ExcTypeOrAttr  = ElemID / AttrID .
 ExcValSeq      = ExcValue &lt; ',' ExcValue &gt; .
-ExcValue       = 'NoCut' / 'NoCreate' /
+ExcValue       = 'NoCut' / 'NoCreate' / 'NoReplicate' /
                  'NoHMove' / 'NoVMove' / 'NoMove' /
                  'NoHResize' / 'NoVResize' / 'NoResize' /
                  'MoveResize' /
-                 'NewWidth' / 'NewHeight' /
+                 'NewWidth' / 'NewHeight' / 'NewPercentWidth' /
                  'NewHPos' / 'NewVPos' /
-                 'Invisible' / 'NoSelect' /
-                 'Hidden' / 'ActiveRef' /
-                 'ImportLine' / 'ImportParagraph' /
-                 'NoPaginate' / 'ParagraphBreak' /
+                 'Invisible' / 'Hidden' /
+                 'PageBreak' / 'PageBreakAllowed' / 'PageBreakPlace' /
+                 'PageBreakRepetition' / 'PageBreakRepBefore' /
+                 'NoPaginate' / 'NoSpellCheck' /
+                 'ActiveRef' /  'NoSelect' /
                  'HighlightChildren' / 'ExtendedSelection' /
                  'SelectParent' / 'ClickableSurface' /
-                 'ReturnCreateNL' / 'ReturnCreateWithin' .
+                 'ParagraphBreak' /
+                 'ReturnCreateNL' / 'ReturnCreateWithin' / 'NoBreakByReturn' /
+                 'ImportLine' / 'ImportParagraph' /
+                 'GraphCreation' / 'IsDraw' / 'IsGroup' / 'EmptyGraphic' /
+                 'IsTable' / 'IsRow' / 'IsColHead' / 'IsCell' /
+                 'ColRef' / 'ColSpan' / 'RowSpan' /
+                 'CssBackground' / 'CssClass' / 'CssId' / 'CssPseudoClass' /
+                 'NoShowBox' / 'SetWindowBackground' /
+                 'Shadow' / 'EventAttr' / 'SpacePreserve' /
+                 ExceptNum .
+ExceptNum =      NUMBER .
 
 ExtensRuleSeq  = ExtensRule ';' &lt; ExtensRule ';' &gt; .
 ExtensRule     = RootOrElem [ LocAttrSeq ]

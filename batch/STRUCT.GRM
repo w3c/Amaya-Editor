@@ -51,57 +51,58 @@ NoCreate 1135
 NoReplicate 1136
 NoHMove 1137
 NoVMove 1138
-NoHResize 1139
-NoVResize 1140
-NewWidth 1141
-NewHeight 1142
-NewHPos 1143
-NewVPos 1144
-Invisible 1145
-GraphCreation 1146
-Hidden 1147
-IsDraw 1148
-NoMove 1149
-NoResize 1150
-MoveResize 1151
-NoSelect 1152
-NoSpellCheck 1153
-PageBreak 1154
-PageBreakAllowed 1155
-PageBreakPlace 1156
-PageBreakRepetition 1157
-PageBreakRepBefore 1158
-ActiveRef 1159
-NoPaginate 1160
-ImportLine 1161
-ImportParagraph 1162
-ParagraphBreak 1163
-SelectParent 1164
-HighlightChildren 1165
-ExtendedSelection 1166
-ClickableSurface 1167
-ReturnCreateNL 1168
-ReturnCreateWithin 1169
-IsTable 1170
-IsRow 1171
-IsColHead 1172
-IsCell 1173
-NewPercentWidth 1174
-ColRef 1175
-ColSpan 1176
-RowSpan 1177
-Shadow 1178
-CssBackground 1179
-CssClass 1180
-CssId 1181
-CssPseudoClass 1182
-EventAttr 1183
-NoShowBox 1184
-SetWindowBackground 1185
-IsGroup 1186
-EmptyGraphic 1187
-SpacePreserve 1188
-Root 1189
+NoMove 1139
+NoHResize 1140
+NoVResize 1141
+NoResize 1142
+MoveResize 1143
+NewWidth 1144
+NewHeight 1145
+NewPercentWidth 1146
+NewHPos 1147
+NewVPos 1148
+Invisible 1149
+Hidden 1150
+PageBreak 1151
+PageBreakAllowed 1152
+PageBreakPlace 1153
+PageBreakRepetition 1154
+PageBreakRepBefore 1155
+NoPaginate 1156
+NoSpellCheck 1157
+ActiveRef 1158
+NoSelect 1159
+HighlightChildren 1160
+ExtendedSelection 1161
+SelectParent 1162
+ClickableSurface 1163
+ParagraphBreak 1164
+ReturnCreateNL 1165
+ReturnCreateWithin 1166
+NoBreakByReturn 1167
+ImportLine 1168
+ImportParagraph 1169
+GraphCreation 1170
+IsDraw 1171
+IsGroup 1172
+EmptyGraphic 1173
+IsTable 1174
+IsRow 1175
+IsColHead 1176
+IsCell 1177
+ColRef 1178
+ColSpan 1179
+RowSpan 1180
+CssBackground 1181
+CssClass 1182
+CssId 1183
+CssPseudoClass 1184
+NoShowBox 1185
+SetWindowBackground 1186
+Shadow 1187
+EventAttr 1188
+SpacePreserve 1189
+Root 1190
 
    1 1101 2001 1102 2002    2 1001 1103    3 1001 2001 1104    4 2002 2001 1105 
    5 2002 2001 1106    6 2002 2001 1107    7 2002 2001 1108    6 2002 2001 1109 
@@ -164,9 +165,9 @@ Root 1189
 2003 1158 2003 1159 2003 1160 2003 1161 2003 1162 2003 1163 2003 1164 2003 1165 
 2003 1166 2003 1167 2003 1168 2003 1169 2003 1170 2003 1171 2003 1172 2003 1173 
 2003 1174 2003 1175 2003 1176 2003 1177 2003 1178 2003 1179 2003 1180 2003 1181 
-2003 1182 2003 1183 2003 1184 2003 1185 2003 1186 2003 1187 2003 1188 2003   52 
-2000 
+2003 1182 2003 1183 2003 1184 2003 1185 2003 1186 2003 1187 2003 1188 2003 1189 
+2003   52 2000 
   52 3002 2000 
   53   54 2001   23 2002 2001 1007 1003   27 1004 2002 2001 1008 1003   28 1004 
 2002 2001 1123   29 2002 2000 
-  54 1189 2003    2 2000 
+  54 1190 2003    2 2000 
