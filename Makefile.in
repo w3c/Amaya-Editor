@@ -29,7 +29,7 @@ bindir = @bindir@
 
 srcdir	= $(THOTDIR)
 
-default : tools wxwidgets thotlib batch amaya_prog @PRINTIFNOTGL@
+default : tools gl wxwidgets thotlib batch amaya_prog @PRINTIFNOTGL@
 
 amaya : amaya_prog tools thotlib @PRINTIFNOTGL@
 
@@ -59,6 +59,10 @@ amaya_prog: rebuild force bin/str
 wxwidgets: rebuild force
 	@(if test -d "$(WX_BUILDDIR)" ; then cd "$(WX_BUILDDIR)" ; \
 	  $(MAKE) ; fi)
+
+gl: rebuild force
+	@(if test -d "$(GL_BUILDDIR)" ; then cd "$(GL_BUILDDIR)" ; \
+	  $(MAKE) linux-static ; fi)
 
 @NOPRINT@print_prog: rebuild force bin/str
 @NOPRINT@	@(if test -d thotlib ; then cd thotlib ; \

@@ -379,35 +379,14 @@ if test "$with_mesa" = "yes" ; then
   fi
 
   OLDDIR=`pwd`
-  cd ../../Mesa
   GL_BUILDDIR="${OLDDIR}/Mesa"
 
-  echo "---> Compiling Mesa library."
-  if test "$OS_OPTIONS" = "-D_UNIX" ; then
-    # LINUX
-    # compile only .a libraries because Amaya is linked staticaly with mesa
-    make linux-static    
-    if test $? != 0 ; then
-      AC_MSG_ERROR(A problem occurs durring Mesa library compilation. Please fix the problem and try again.)
-    fi
-  fi
-  echo "---> Compiling Mesa library. - DONE"
-
-
   echo "---> Install Mesa library into ${GL_BUILDDIR}"
-  # remove old lib
-  rm -rf ${GL_BUILDDIR}/lib/*
-  # create directories
-  mkdir -p ${GL_BUILDDIR}
-  mkdir -p ${GL_BUILDDIR}/include
-  mkdir -p ${GL_BUILDDIR}/lib
-  # copy includes
-  cp -r include/GL ${GL_BUILDDIR}/include/
-  # copy libraries (only .a because we dont want to share)
-  cp lib/*.a ${GL_BUILDDIR}/lib/
-  echo "---> Install Mesa library into ${GL_BUILDDIR} - DONE"
 
-  cd $OLDDIR
+  mkdir -p ${GL_BUILDDIR}
+  cp -r ../../Mesa/* ${GL_BUILDDIR}
+
+  echo "---> Install Mesa library into ${GL_BUILDDIR} - DONE"
 
   # this is the flags used to build amaya with OpenGL
   GL_OPTIONS="-D_GL"
