@@ -797,7 +797,6 @@ void CreateTargetAnchor (Document doc, Element el, ThotBool forceID,
 		    space = i;
 		  }
 		else if (url[i] == '_' ||
-			 url[i] == ':' ||
 			 (i-space > 0 && url[i] == '.') ||
 			 (i-space > 0 && url[i] == '-') ||
 			 ((unsigned int) url[i] >= 65 &&          /*  'A'  */
@@ -809,6 +808,8 @@ void CreateTargetAnchor (Document doc, Element el, ThotBool forceID,
 			  (unsigned int) url[i] <= 57))           /*  '9'  */
 		  /* valid character for an ID */
 		  i++;
+		else if (i > 2)
+		  url[i] = ' ';
 		else
 		  /* invalid name for an ID */
 		  i = length;

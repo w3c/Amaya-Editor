@@ -1922,10 +1922,10 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool *changeSelectBegin,
   PtrAbstractBox      pAb;
   ViewFrame          *pFrame;
   ViewSelection      *pViewSel, *pViewSelEnd;
-  int                 x, width;
-  int                 nspace;
-  int                 lost;
-  int                 diff, nchar;
+  int                 x, width = 0;
+  int                 nspace = 0;
+  int                 lost = 0;
+  int                 diff, nchar = 0;
 
   pFrame = &ViewFrameTable[frame - 1];
   pViewSel = &pFrame->FrSelectionBegin;
