@@ -1214,6 +1214,12 @@ ATTRIBUTES
         CreateBefore(AttrValue);
         END;
 
+  version:
+        BEGIN
+        CreateBefore(AttrName);
+        CreateBefore(AttrValue);
+        END;
+
   x:
 	BEGIN
 	CreateBefore (AttrName);

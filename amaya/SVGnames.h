@@ -85,6 +85,7 @@ static AttributeMapping SVGAttributeMappingTable[] =
    {"transform", "", 'A', SVG_ATTR_transform, L_OtherValue},
    {"type", "", 'A', SVG_ATTR_type, L_OtherValue},
    {"unicode-bidi", "", 'A', SVG_ATTR_unicode_bidi, L_OtherValue},
+   {"version", "", 'A', SVG_ATTR_version, L_OtherValue},
    {"viewBox", "", 'A', SVG_ATTR_viewBox, L_OtherValue},
    {"width", "", 'A', SVG_ATTR_width_, L_OtherValue},
    {"x", "", 'A', SVG_ATTR_x, L_OtherValue},

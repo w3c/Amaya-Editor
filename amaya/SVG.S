@@ -46,6 +46,7 @@ STRUCT
 	      text_decoration = text;
 	      unicode_bidi = normal_, embed_, bidi_override, inherit;
 	      viewBox = text;
+	      version = text;
 	      x = text;
               y = text;
 	      width_ = text;

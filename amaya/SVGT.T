@@ -770,6 +770,14 @@ ATTRIBUTES
 	create 'unicode-bidi="inherit"';
 	END;
 
+   version:
+	BEGIN
+	create SAN;
+	create 'version="';
+	create version;
+	create DoubleQuote;
+	END;
+
    viewBox:
 	BEGIN
 	create SAN;
