@@ -693,6 +693,7 @@
 #define IDC_GALPHA1                     1412
 #define IDC_BORDEREDIT                  1412
 #define IDC_ALTMESSAGE                  1412
+#define IDC_IGNORE_CSS                  1412
 #define IDC_GPOLYLINE                   1413
 #define IDC_NUMROWS                     1413
 #define IDC_OVERLINE                    1413
