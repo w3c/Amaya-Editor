@@ -17,7 +17,7 @@ INCLUDES =-DHAVE_CONFIG_H -I.. \
 	  -I@top_srcdir@/../libwww/Library/src \
 	  -I@top_srcdir@/../libwww/modules/expat/lib \
 	  -I$(DAVLIB)/tree/h -I$(DAVLIB)/h \
-	  @THOTINCLUDES@ $(X_FLAGS)
+	  @THOTINCLUDES@
 
 OPTIONS	= @AMAYA_OPTIONS@ $(AMAYA_DAV_OPTIONS)
 

@@ -12,10 +12,8 @@ THOTINCLUDES=@THOTINCLUDES@
 
 include ../Options
 
-INCLUDES= -DHAVE_CONFIG_H -I.. -I@top_srcdir@/amaya/xpm ${THOTINCLUDES} $(X_FLAGS) ${EXTRA_INCLUDES}
-LIBS	= -L. -L.. $(IMGLIBS) $(GTK_LIBRARIES) $(WX_LIBRARIES) \
-	  $(X_LIBS) -lXext $(X_PRE_LIBS) \
-          -lX11 $(X_EXTRA_LIBS) @LIBS@ $(EXTRA_LIBS) -lm  $(GL_LIBRARIES) $(WX_LIBRARIES)
+INCLUDES= -DHAVE_CONFIG_H -I.. -I@top_srcdir@/amaya/xpm ${THOTINCLUDES} $(GUI_INCLUDES) $(GL_INCLUDES) ${EXTRA_INCLUDES}
+LIBS	= -L. -L.. @LIBS@ $(IMGLIBS) $(EXTRA_LIBS) $(GL_LIBRARIES) $(GTK_LIBRARIES) $(WX_LIBRARIES)
 
 prefix = @prefix@
 exec_prefix = @exec_prefix@

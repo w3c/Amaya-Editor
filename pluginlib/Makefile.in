@@ -10,7 +10,7 @@ THOTDIR = @top_srcdir@
 include ../Options
 
 INCLUDES= -DHAVE_CONFIG_H -I../amaya -I.. -I@srcdir@/f -I@top_srcdir@/amaya \
-          -I@top_srcdir@/amaya/f @THOTINCLUDES@ $(X_FLAGS)
+          -I@top_srcdir@/amaya/f @THOTINCLUDES@
 
 OPTIONS	= @AMAYA_OPTIONS@ @PLUGIN_OPTIONS@ \
           -I@top_srcdir@/../libwww/Library/src
