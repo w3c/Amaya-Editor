@@ -46,7 +46,10 @@
 #include "Xmlbuilder_f.h"
 #endif /* XML_GENERIC */
 #include "XLinkbuilder_f.h"
-
+#ifdef ANNOTATIONS
+#include "annotlib.h"
+#include "ANNOTtools_f.h"
+#endif /* ANNOTATIONS */
 #include "xmlparse.h"
 #define NS_SEP '|'
 /* maximum length of a Thot structure schema name */
@@ -4333,7 +4336,16 @@ void StartXmlParser (Document doc,
   CHARSET         charset;
 
   /* General initialization */
-  RootElement = TtaGetMainRoot (doc);
+#ifdef ANNOTATIONS
+  if (DocumentTypes[doc] == docAnnot)
+    {
+      /* we search the start of HTML document in the annotation struct */
+      RootElement = ANNOT_GetHTMLRoot (doc);
+    }
+  else
+#endif /* ANNOTATIONS */
+    RootElement = TtaGetMainRoot (doc);
+
   InitializeXmlParsingContext (doc, RootElement, FALSE, FALSE);
 
   /* Specific Initialization */
