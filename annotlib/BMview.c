@@ -259,6 +259,7 @@ void BM_InitItem (Document doc, Element el, BookmarkP me)
   ElementType         elType;
   Attribute           attr;
   AttributeType       attrType;
+  char               *ptr;
 
   /* initialize */
   elType = TtaGetElementType (el);
@@ -267,13 +268,20 @@ void BM_InitItem (Document doc, Element el, BookmarkP me)
   if (me->isTopic)
     {
       /* topic title  */
-      BM_topicSetTitle (doc, el, me->title);
-      /* model href */
+      if (me->title && *me->title)
+	ptr = me->title;
+      else
+	ptr = me->self_url;
+      BM_topicSetTitle (doc, el, ptr);
     }
   else
     {
       /* bookmark title  */
-      BM_bookmarkSetTitle (doc, el, me->title);
+      if (me->title && *me->title)
+	ptr = me->title;
+      else
+	ptr = me->self_url;
+      BM_bookmarkSetTitle (doc, el, ptr);
       /* bookmarks href */
       attrType.AttrTypeNum = Topics_ATTR_HREF_;
       attr = TtaNewAttribute (attrType);
