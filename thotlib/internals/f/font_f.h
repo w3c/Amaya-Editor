@@ -33,11 +33,6 @@ extern int BoxFontBase ( SpecFont specfont );
 extern int FontRelSize ( int size );
 extern int FontPointSize ( int size );
 extern PtrFont LoadFont ( char *name );
-extern void GeneratePostcriptFont ( char r_name[10],
-                                    char script,
-                                    int family,
-                                    int highlight,
-                                    int size );
 extern void GetFontIdentifier ( char script,
                                 int family,
                                 int highlight,
@@ -109,11 +104,6 @@ extern int BoxFontBase (/* SpecFont specfont */);
 extern int FontRelSize (/* int size */);
 extern int FontPointSize (/* int size */);
 extern PtrFont LoadFont (/* char *name */);
-extern void GeneratePostcriptFont (/* char r_name[10],
-                                      char script,
-                                      int family,
-                                      int highlight,
-                                      int size */);
 extern void GetFontIdentifier (/* char script,
                                   int family,
                                   int highlight,

@@ -1183,10 +1183,10 @@ PtrFont LoadFont (char *name)
 }
 
 /*----------------------------------------------------------------------
- GeneratePostcriptFont : 
- As postcript name serves also for the font cache
+ GeneratePostscriptFont : 
+ As Postscript name serves also for the font cache
  ----------------------------------------------------------------------*/
-static void GeneratePostcriptFont (char r_name[10], char script, int family,
+static void GeneratePostscriptFont (char r_name[10], char script, int family,
 				   int highlight, int size)
 {
   
@@ -1246,7 +1246,7 @@ static void FontIdentifier (char script, int family, int highlight, int size,
       highlight=4;
       sprintf (r_nameX, "%s-%s-%s-normal-*-%d-173-100-100-p-106-iso10646-1",
 		 ffamily, wght, slant, size);
-      GeneratePostcriptFont (r_name, script, family, highlight, size);
+      GeneratePostscriptFont (r_name, script, family, highlight, size);
 #if defined(_GTK) || defined(_MOTIF)
       ptfont = LoadFont (r_nameX);
 #endif /*#if defined(_GTK) || defined(_MOTIF)*/
@@ -1385,7 +1385,7 @@ static void FontIdentifier (char script, int family, int highlight, int size,
 	  sprintf (r_nameX, "%s-%s-%s-*-*-%d-*-75-75-*-*-iso8859-1",
 		   ffamily, wght, slant, size);
 	}
-      GeneratePostcriptFont (r_name, script, family, highlight, size);
+      GeneratePostscriptFont (r_name, script, family, highlight, size);
     }
 }
 
@@ -1446,7 +1446,7 @@ void GetFontIdentifier (char script, int family, int highlight, int size,
 	  while (i < j && result[i] != '-')
 	    i++;
 	  strcat (textX, result + i);  
-	  GeneratePostcriptFont (text, script, family, highlight, internalsize);
+	  GeneratePostscriptFont (text, script, family, highlight, internalsize);
 	}
     }
 #endif /* #if ( defined(_GTK) || defined(_MOTIF) ) && !defined(_GL) */
