@@ -1571,8 +1571,6 @@ void UpdateContextSensitiveMenus (Document doc)
    int                 firstChar, lastChar;
    ThotBool            NewSelInElem;
 
-   if (ReadOnlyDocument[doc])
-     return;
    TtaGiveFirstSelectedElement (doc, &firstSel, &firstChar, &lastChar);
    /* 
     * elements PICTURE, Object, Applet, Big_text, Small_text, Subscript,

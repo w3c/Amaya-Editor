@@ -1593,8 +1593,9 @@ void TtaSwitchButton (Document doc, View view, int index)
 	TtaError (ERR_invalid_parameter);
       else if (FrameTable[frame].WdFrame != 0)
 	{
-	  if (index < MAX_BUTTON && index > 0 && FrameTable[frame].Button[index] != 0)
-	    {
+	  if (index < MAX_BUTTON && index > 0 &&
+		  FrameTable[frame].Button[index] != 0)
+	  {
 	      /* Change the button state */
 	      status = FrameTable[frame].CheckedButton[index];
 	      FrameTable[frame].CheckedButton[index] = !status;
@@ -1670,7 +1671,6 @@ void TtaChangeButton (Document doc, View view, int index,
 	  if (index < MAX_BUTTON && index > 0 && FrameTable[frame].Button[index] != 0)
 	    {
 	      /* store the new state */
-	      FrameTable[frame].EnabledButton[index] = state;
 #ifdef _WINDOWS
 	      SendMessage (WinToolBar[frame], TB_ENABLEBUTTON,
 			   (WPARAM) FrameTable[frame].ButtonId[index],
@@ -1680,16 +1680,7 @@ void TtaChangeButton (Document doc, View view, int index,
 		  /* store the new icone */
 		  FrameTable[frame].Button[index]->iBitmap = picture;
 		  TtaSwitchButton (doc, view, index);
-		}
-	      else if (state == FALSE &&
-		       FrameTable[frame].CheckedButton[index] == TRUE)
-		{
-		  FrameTable[frame].CheckedButton[index] = FALSE;
-		  SendMessage (WinToolBar[frame], TB_CHECKBUTTON,
-			       (WPARAM) FrameTable[frame].ButtonId[index],
-			       (LPARAM) MAKELONG (TRUE, 0));
-		}
-		
+		}		
 #else  /* !_WINDOWS */
 	      /* Insert the new icone */
 #ifndef _GTK
@@ -1713,6 +1704,7 @@ void TtaChangeButton (Document doc, View view, int index,
 	      gtk_widget_show_all (GTK_WIDGET(FrameTable[frame].Button[index]));
 #endif /* !_GTK */
 #endif /* _WINDOWS */
+	      FrameTable[frame].EnabledButton[index] = state;
 	    }
 	}
     }
