@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Amaya Benutzerhandbuch</title>
-  <meta name="GENERATOR" content="amaya 7.0, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 7.1, see http://www.w3.org/Amaya/" />
   <link href="style.css" rel="stylesheet" type="text/css" />
   <style type="text/css">
   </style>
@@ -25,8 +25,7 @@
 
 <h1 style="text-align: center">Benutzerhandbuch</h1>
 
-<h4 style="text-align: center">Version 7.0&nbsp;&nbsp;&nbsp;&nbsp; December
-2002</h4>
+<h4 style="text-align: center">Version 7.1&nbsp;&nbsp;&nbsp; January 2003</h4>
 <hr />
 <dl>
   <dt><strong>Autoren:</strong></dt>
@@ -514,16 +513,15 @@ href="../../amaya/AmayaPage.html.de">Begrüßungsseite</a></strong> von
   href="mailto:rudolf.troeller@dwd.de">R. Tröller</a> deutsche Übersetzung
 </address>
 
-<p><small><a
-href="http://www.w3.org/Consortium/Legal/ipr-notice.html.de#Copyright">Copyright</a>&nbsp;2000-2002
-<a href="http://www.w3.org/">W3C</a> (<a
+<p><small>Copyright&nbsp;2000-2003 <a href="http://www.inria.fr/">INRIA</a>
+and <a href="http://www.w3.org/">W3C</a> (<a
 href="http://www.lcs.mit.edu/">MIT</a>, <a
-href="http://www.inria.fr/">INRIA</a>, <a
+href="http://www.ercim.org/">ERCIM</a>, <a
 href="http://www.keio.ac.jp/">Keio</a>), alle Rechte vorbehalten. Die
 Reglementierungen des W3C über <a
-href="http://www.w3.org/Consortium/Legal/ipr-notice.html.de#Legal Disclaimer">Haftung,</a>
+href="http://www.w3.org/Consortium/Legal/ipr-notice.html.de#Legal_Disclaimer">Haftung,</a>
 <a
-href="http://www.w3.org/Consortium/Legal/ipr-notice.html.de#W3C Trademarks">Schutzmarken</a>,
+href="http://www.w3.org/Consortium/Legal/ipr-notice.html.de#W3C_Trademarks">Schutzmarken</a>,
 <a
 href="http://www.w3.org/Consortium/Legal/copyright-documents.html.de">Verwendung
 von Dokumenten</a> und <a
