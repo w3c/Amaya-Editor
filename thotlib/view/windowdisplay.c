@@ -466,7 +466,7 @@ void DrawRadical (int frame, int thick, int x, int y, int l, int h,
 void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
 		   int type, PtrFont font, int fg)
 {
-  int      xm, yf, yend, exnum, delta;
+  int      xm, yf, yend, delta;
   int      wd, asc, hd;
 
   if (fg < 0 || thick <= 0)
@@ -477,7 +477,6 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
 #endif /* _WIN_PRINT */
 
   y += FrameTable[frame].FrTopMargin;
-  exnum = 0;
   if (FontHeight (font) *1.2 >= h)
     {
       /* display a single glyph */
@@ -494,23 +493,17 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
       yend = y + h - CharacterHeight (245, font) + CharacterAscent (245, font) - 1;
       DrawChar ('\365', frame, xm, yend, font, fg);
       asc = CharacterAscent (244, font);
-      yf += asc;
-      yend -= asc;
-      delta = yend - yf;
       hd = CharacterHeight (244, font);
+      delta = yend - yf - hd;
+      yf += asc;
       wd = (CharacterWidth (243, font) - CharacterWidth (244, font)) / 2;
-      if (delta >= 0)
+      if (delta > 0)
 	{
 	  while (yf < yend)
 	    {
 	      DrawChar ('\364', frame, xm+wd, yf, font, fg);
 	      yf += hd;
-	      exnum++;
 	    }
-	  if (exnum)
-	    DrawChar ('\364', frame, xm+wd, yend, font, fg);
-	  else
-	    DrawChar ('\364', frame, xm+wd, yf + ((delta - hd) / 2), font, fg);
 	}
   }
 
@@ -887,14 +880,13 @@ void DrawPointyBracket (int frame, int thick, int x, int y, int l, int h,
 void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
 		      int direction, PtrFont font, int fg)
 {
-  int                 xm, yf, yend, exnum, delta, hd, asc;
+  int                 xm, yf, yend, delta, hd, asc;
 
   if (fg < 0)
     return;
 #ifdef _WIN_PRINT
   if (TtPrinterDC)
     {
-      exnum = 0;
       if (h <= (int) (1.3 * FontHeight (font)))
 	{
 	  /* With only one glyph */
@@ -923,21 +915,16 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
 	      yend = y + h - CharacterHeight (232, font) + CharacterAscent (232, font) - 1;
 	      DrawChar ('\350', frame, xm, yend, font, fg);
 	      asc = CharacterAscent (231, font);
+	      hd = CharacterHeight (247, font);
+	      delta = yend - yf - hd;
 	      yf += asc;
-	      yend -= asc;
-	      delta = yend - yf;
-	      if (delta >= 0)
+	      if (delta > 0)
 		{
 		  while (yf < yend)
 		    {
 		      DrawChar ('\347', frame, xm, yf, font, fg);
 		      yf += hd;
-		      exnum++;
 		    }
-		  if (exnum)
-		    DrawChar ('\347', frame, xm, yend, font, fg);
-		  else
-		    DrawChar ('\347', frame, xm, yf + ((delta - hd) / 2), font, fg);
 		}
 	    }
 	  else
@@ -949,28 +936,21 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
 	      yend = y + h - CharacterHeight (248, font) + CharacterAscent (248, font) - 1;
 	      DrawChar ('\370', frame, xm, yend, font, fg);
 	      asc = CharacterAscent (247, font);
-	      yf += asc;
-	      yend -= asc;
-	      delta = yend - yf;
 	      hd = CharacterHeight (247, font);
-	      if (delta >= 0)
+	      delta = yend - yf - hd;
+	      yf += asc;
+	      if (delta > 0)
 		{
 		  while (yf < yend)
 		    {
 		      DrawChar ('\367', frame, xm, yf, font, fg);
 		      yf += hd;
-		      exnum++;
 		    }
-		  if (exnum)
-		    DrawChar ('\367', frame, xm, yend, font, fg);
-		  else
-		    DrawChar ('\367', frame, xm, yf + ((delta - hd) / 2), font, fg);
 		}
 	    }
 	}
    }
 #else  /* !_WIN_PRINT */
-  exnum = 0;
   if (h <= (int) (1.3 * FontHeight (font)) )
     {
       /* With only one glyph */
@@ -1001,22 +981,16 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
 	  yend = y + h - CharacterHeight (232, font) + CharacterAscent (232, font) - 1;
 	  DrawChar ('\350', frame, xm, yend, font, fg);
 	  asc = CharacterAscent (231, font);
-	  yf += asc;
-	  yend -= asc;
-	  delta = yend - yf;
 	  hd = CharacterHeight (231, font);
-	  if (delta >= 0)
+	  delta = yend - yf - hd;
+	  yf += asc;
+	  if (delta > 0)
 	    {
 	      while (yf < yend)
 		{
 		  DrawChar ('\347', frame, xm, yf, font, fg);
 		  yf += hd;
-		  exnum++;
 		}
-	      if (exnum)
-		DrawChar ('\347', frame, xm, yend, font, fg);
-	      else
-		DrawChar ('\347', frame, xm, yf + ((delta - hd) / 2), font, fg);
 	    }
 	}
       else
@@ -1028,22 +1002,16 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
 	  yend = y + h - CharacterHeight (248, font) + CharacterAscent (248, font) - 1;
 	  DrawChar ('\370', frame, xm, yend, font, fg);
 	  asc = CharacterAscent (247, font);
-	  yf += asc;
-	  yend -= asc;
-	  delta = yend - yf;
 	  hd = CharacterHeight (247, font);
-	  if (delta >= 0)
+	  delta = yend - yf - hd;
+	  yf += asc;
+	  if (delta > 0)
 	    {
 	      while (yf < yend)
 		{
 		  DrawChar ('\367', frame, xm, yf, font, fg);
 		  yf += hd;
-		  exnum++;
 		}
-	      if (exnum)
-		DrawChar ('\367', frame, xm, yend, font, fg);
-	      else
-		DrawChar ('\367', frame, xm, yf + ((delta - hd) / 2), font, fg);
 	    }
 	}
     }
@@ -1057,9 +1025,8 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
 void DrawBrace (int frame, int thick, int x, int y, int l, int h,
 		int direction, PtrFont font, int fg)
 {
-  int         xm, ym, yf, yend, exnum, delta, hd, asc;
+  int         xm, ym, yf, yend, delta, hd, asc;
 
-  exnum = 0;
   if (fg < 0)
     return;
 
@@ -1099,41 +1066,28 @@ void DrawBrace (int frame, int thick, int x, int y, int l, int h,
 
 	  /* finish top */
 	  asc = CharacterAscent (239, font);
-	  yf += asc;
-	  yend -= asc;
-	  delta = yend - yf;
 	  hd = CharacterHeight (239, font);
-	  if (delta >= 0)
+	  delta = ym - yf - hd;
+	  yf += asc;
+	  if (delta > 0)
 	    {
 	      while (yf < yend)
 		{
 		  DrawChar ('\357', frame, xm, yf, font, fg);
 		  yf += hd;
-		  exnum++;
 		}
-	      if (exnum)
-		DrawChar ('\357', frame, xm, ym, font, fg);
-	      else
-		DrawChar ('\357', frame, xm, yf + ((delta - hd) / 2), font, fg);
 	    }
 	  /* finish bottom */
 	  yf = ym + CharacterHeight ('\355', font);
+	  delta = yend - yf - hd;
 	  yf += asc;
-	  yend -= asc;
-	  delta = yend - yf;
-	  hd = CharacterHeight (239, font);
-	  if (delta >= 0)
+	  if (delta > 0)
 	    {
 	      while (yf < yend)
 		{
 		  DrawChar ('\357', frame, xm, yf, font, fg);
 		  yf += hd;
-		  exnum++;
 		}
-	      if (exnum)
-		DrawChar ('\357', frame, xm, yend, font, fg);
-	      else
-		DrawChar ('\357', frame, xm, yf + ((delta - hd) / 2), font, fg);
 	    }
 	}
       else
@@ -1150,41 +1104,28 @@ void DrawBrace (int frame, int thick, int x, int y, int l, int h,
 	  DrawChar ('\376', frame, xm, yend, font, fg);
 	  /* finish top */
 	  asc = CharacterAscent (239, font);
-	  yf += asc;
-	  yend -= asc;
-	  delta = yend - yf;
 	  hd = CharacterHeight (239, font);
-	  if (delta >= 0)
+	  delta = yend - yf - hd;
+	  yf += asc;
+	  if (delta > 0)
 	    {
 	      while (yf < yend)
 		{
 		  DrawChar ('\347', frame, xm, yf, font, fg);
 		  yf += hd;
-		  exnum++;
 		}
-	      if (exnum)
-		DrawChar ('\357', frame, xm, ym, font, fg);
-	      else
-		DrawChar ('\357', frame, xm, yf + ((delta - hd) / 2), font, fg);
 	    }
 	  /* finish bottom */
 	  yf = ym + CharacterHeight ('\375', font);
+	  delta = yend - yf - hd;
 	  yf += asc;
-	  yend -= asc;
-	  delta = yend - yf;
-	  hd = CharacterHeight (239, font);
-	  if (delta >= 0)
+	  if (delta > 0)
 	    {
 	      while (yf < yend)
 		{
 		  DrawChar ('\357', frame, xm, yf, font, fg);
 		  yf += hd;
-		  exnum++;
 		}
-	      if (exnum)
-		DrawChar ('\357', frame, xm, yend, font, fg);
-	      else
-		DrawChar ('\357', frame, xm, yf + ((delta - hd) / 2), font, fg);
 	    }
 	}
     }

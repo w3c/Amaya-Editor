@@ -1032,7 +1032,7 @@ static int CopyXClipboard (unsigned char **buffer, View view)
 		  /* Add new lines */
 		  text[i++] = NEW_LINE;
 		  text[i++] = NEW_LINE;
-		  text[i++] = EOS;
+		  text[i] = EOS;
 		}
 	      /* Recopie le texte de l'element */
 	      pOldBlock = pBlock;

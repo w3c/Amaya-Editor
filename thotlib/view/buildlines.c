@@ -88,7 +88,12 @@ PtrBox GetNextBox (PtrAbstractBox pAb)
 	if (pNextAb == NULL)
 	   result = NULL;
 	else
-	  result = pNextAb->AbBox;
+	  {
+	    result = pNextAb->AbBox;
+	    if (result->BxType == BoMulScript)
+	      /* return the first script box */
+	      result = result->BxNexChild;
+	  }
      }
    return result;
 }
@@ -143,7 +148,13 @@ static PtrBox GetPreviousBox (PtrAbstractBox pAb)
    if (pNextAb == NULL)
       result = NULL;
    else
-      result = pNextAb->AbBox;
+     {
+       result = pNextAb->AbBox;
+       if (result->BxType == BoMulScript)
+	 /* return the last script box */
+	 while (result->BxNexChild)
+	   result = result->BxNexChild;
+     }
    return result;
 }
 
@@ -1514,8 +1525,6 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
    /* look for a box to split */
    while (still)
      {
-       if (pNextBox->BxType == BoMulScript)
-	 pNextBox = pNextBox->BxNexChild;
        if (!pNextBox->BxAbstractBox->AbHorizEnclosing)
 	 {
 	   /* that box is not concerned */
@@ -1685,8 +1694,8 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
 	   while (toCut)
 	     {
 	       if (pNextBox)
-		 /*pNextBox = GetPreviousBox (pNextBox->BxAbstractBox);*/
-		 pNextBox = pNextBox->BxPrevious;
+		 pNextBox = GetPreviousBox (pNextBox->BxAbstractBox);
+	       /*pNextBox = pNextBox->BxPrevious;*/
 	       
 	       /* if we are working on the first box, we won't try again */
 	       if (pNextBox == pLine->LiFirstPiece)
@@ -1746,7 +1755,8 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
 		   else
 		     {
 		       /* break before the last box */
-		       pBox = lastbox->BxPrevious;
+                       pBox = GetPreviousBox (lastbox->BxAbstractBox);
+		       /*pBox = lastbox->BxPrevious;*/
 		       if (pBox == NULL)
 			 pBox = lastbox;
 		       if (pBox == pLine->LiFirstBox && pLine->LiFirstPiece)

@@ -840,11 +840,11 @@ void DrawIntegral (int frame, int thick, int x, int y, int l, int h,
      yend = y + h - CharacterHeight (245, font) + CharacterAscent (245, font) - 1;
      DrawChar ('\365', frame, xm, yend, font, fg);
      asc = CharacterAscent (244, font);
-     yf += asc;
-     delta = yend - yf;
      hd = CharacterHeight (244, font);
+     delta = yend - yf - asc;
+     yf += asc;
      wd = (CharacterWidth (243, font) - CharacterWidth (244, font)) / 2;
-     if (delta >= 0)
+     if (delta > 0)
        {
 	 while (yf < yend)
 	   {
@@ -1300,10 +1300,10 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
 	  yend = y + h - CharacterHeight (232, font) + CharacterAscent (232, font) - 1;
 	  DrawChar ('\350', frame, xm, yend, font, fg);
 	  asc = CharacterAscent (231, font);
-	  yf += asc;
-	  delta = yend - yf;
 	  hd = CharacterHeight (231, font);
-	  if (delta >= 0)
+	  delta = yend - yf- hd;
+	  yf += asc;
+	  if (delta > 0)
 	    {
 	      while (yf < yend)
 		{
@@ -1322,10 +1322,10 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
 	  yend = y + h - CharacterHeight (248, font) + CharacterAscent (248, font) - 1;
 	  DrawChar ('\370', frame, xm, yend, font, fg);
 	  asc = CharacterAscent (247, font);
-	  yf += asc;
-	  delta = yend - yf;
 	  hd = CharacterHeight (247, font);
-	  if (delta >= 0)
+	  delta = yend - yf - hd;
+	  yf += asc;
+	  if (delta > 0)
 	    {
 	      while (yf < yend)
 		{
@@ -1381,10 +1381,10 @@ void DrawBrace (int frame, int thick, int x, int y, int l, int h,
 	  DrawChar ('\356', frame, xm, yend, font, fg);
 	  /* finish top */
 	  asc = CharacterAscent (239, font);
-	  yf += asc;
-	  delta = yend - yf;
 	  hd = CharacterHeight (239, font);
-	  if (delta >= 0)
+	  delta = ym - yf - hd;
+	  yf += asc;
+	  if (delta > 0)
 	    {
 	      while (yf < yend)
 		{
@@ -1394,11 +1394,9 @@ void DrawBrace (int frame, int thick, int x, int y, int l, int h,
 	    }
 	  /* finish bottom */
 	  yf = ym + CharacterHeight ('\355', font);
+	  delta = yend - yf - hd;
 	  yf += asc;
-	  yend -= asc;
-	  delta = yend - yf;
-	  hd = CharacterHeight (239, font);
-	  if (delta >= 0)
+	  if (delta > 0)
 	    {
 	      while (yf < yend)
 		{
@@ -1421,10 +1419,10 @@ void DrawBrace (int frame, int thick, int x, int y, int l, int h,
 	  DrawChar ('\376', frame, xm, yend, font, fg);
 	  /* finish top */
 	  asc = CharacterAscent (239, font);
-	  yf += asc;
-	  delta = yend - yf;
 	  hd = CharacterHeight (239, font);
-	  if (delta >= 0)
+	  delta = ym - yf - hd;
+	  yf += asc;
+	  if (delta > 0)
 	    {
 	      while (yf < yend)
 		{
@@ -1434,11 +1432,9 @@ void DrawBrace (int frame, int thick, int x, int y, int l, int h,
 	    }
 	  /* finish bottom */
 	  yf = ym + CharacterHeight ('\375', font);
+	  delta = yend - yf - hd;
 	  yf += asc;
-	  yend -= asc;
-	  delta = yend - yf;
-	  hd = CharacterHeight (239, font);
-	  if (delta >= 0)
+	  if (delta > 0)
 	    {
 	      while (yf < yend)
 		{
