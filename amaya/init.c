@@ -5259,7 +5259,8 @@ void CallbackDialogue (int ref, int typedata, char *data)
 	      strcat (tempfile, DIR_STR);
 	      strcat (tempfile, DocumentName);
 	      /* update the list of URLs */
-	      if (FileExistTarget (tempfile))
+	      NormalizeFile (tempfile, tempname, AM_CONV_ALL);
+	      if (FileExistTarget (tempname))
 		{
 		  if (InNewWindow)
 		    GetAmayaDoc (tempfile, NULL, 0, 0, Loading_method,
