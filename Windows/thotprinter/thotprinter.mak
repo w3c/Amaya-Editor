@@ -247,24 +247,24 @@ LINK32_OBJS= \
 !IF  "$(CFG)" == "thotprinter - Win32 Release"
 
 "libThotTable - Win32 Release" : 
-   cd "\users\guetari\Amaya\Windows\libThotTable"
+   cd "..\libThotTable"
    $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Release" 
    cd "..\thotprinter"
 
 "libThotTable - Win32 ReleaseCLEAN" : 
-   cd "\users\guetari\Amaya\Windows\libThotTable"
+   cd "..\libThotTable"
    $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Release" RECURSE=1 CLEAN 
    cd "..\thotprinter"
 
 !ELSEIF  "$(CFG)" == "thotprinter - Win32 Debug"
 
 "libThotTable - Win32 Debug" : 
-   cd "\users\guetari\Amaya\Windows\libThotTable"
+   cd "..\libThotTable"
    $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Debug" 
    cd "..\thotprinter"
 
 "libThotTable - Win32 DebugCLEAN" : 
-   cd "\users\guetari\Amaya\Windows\libThotTable"
+   cd "..\libThotTable"
    $(MAKE) /$(MAKEFLAGS) /F .\libThotTable.mak CFG="libThotTable - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\thotprinter"
 
@@ -273,24 +273,24 @@ LINK32_OBJS= \
 !IF  "$(CFG)" == "thotprinter - Win32 Release"
 
 "printlib - Win32 Release" : 
-   cd "\users\guetari\Amaya\Windows\printlib"
+   cd "..\printlib"
    $(MAKE) /$(MAKEFLAGS) /F .\printlib.mak CFG="printlib - Win32 Release" 
    cd "..\thotprinter"
 
 "printlib - Win32 ReleaseCLEAN" : 
-   cd "\users\guetari\Amaya\Windows\printlib"
+   cd "..\printlib"
    $(MAKE) /$(MAKEFLAGS) /F .\printlib.mak CFG="printlib - Win32 Release" RECURSE=1 CLEAN 
    cd "..\thotprinter"
 
 !ELSEIF  "$(CFG)" == "thotprinter - Win32 Debug"
 
 "printlib - Win32 Debug" : 
-   cd "\users\guetari\Amaya\Windows\printlib"
+   cd "..\printlib"
    $(MAKE) /$(MAKEFLAGS) /F .\printlib.mak CFG="printlib - Win32 Debug" 
    cd "..\thotprinter"
 
 "printlib - Win32 DebugCLEAN" : 
-   cd "\users\guetari\Amaya\Windows\printlib"
+   cd "..\printlib"
    $(MAKE) /$(MAKEFLAGS) /F .\printlib.mak CFG="printlib - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\thotprinter"
 

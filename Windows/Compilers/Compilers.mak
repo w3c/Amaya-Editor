@@ -229,24 +229,24 @@ LINK32_OBJS= \
 !IF  "$(CFG)" == "Compilers - Win32 Release"
 
 "app - Win32 Release" : 
-   cd "\users\guetari\Amaya\Windows\app"
+   cd "..\app"
    $(MAKE) /$(MAKEFLAGS) /F .\app.mak CFG="app - Win32 Release" 
    cd "..\Compilers"
 
 "app - Win32 ReleaseCLEAN" : 
-   cd "\users\guetari\Amaya\Windows\app"
+   cd "..\app"
    $(MAKE) /$(MAKEFLAGS) /F .\app.mak CFG="app - Win32 Release" RECURSE=1 CLEAN 
    cd "..\Compilers"
 
 !ELSEIF  "$(CFG)" == "Compilers - Win32 Debug"
 
 "app - Win32 Debug" : 
-   cd "\users\guetari\Amaya\Windows\app"
+   cd "..\app"
    $(MAKE) /$(MAKEFLAGS) /F .\app.mak CFG="app - Win32 Debug" 
    cd "..\Compilers"
 
 "app - Win32 DebugCLEAN" : 
-   cd "\users\guetari\Amaya\Windows\app"
+   cd "..\app"
    $(MAKE) /$(MAKEFLAGS) /F .\app.mak CFG="app - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\Compilers"
 
@@ -255,24 +255,24 @@ LINK32_OBJS= \
 !IF  "$(CFG)" == "Compilers - Win32 Release"
 
 "prs - Win32 Release" : 
-   cd "\users\guetari\Amaya\Windows\prs"
+   cd "..\prs"
    $(MAKE) /$(MAKEFLAGS) /F .\prs.mak CFG="prs - Win32 Release" 
    cd "..\Compilers"
 
 "prs - Win32 ReleaseCLEAN" : 
-   cd "\users\guetari\Amaya\Windows\prs"
+   cd "..\prs"
    $(MAKE) /$(MAKEFLAGS) /F .\prs.mak CFG="prs - Win32 Release" RECURSE=1 CLEAN 
    cd "..\Compilers"
 
 !ELSEIF  "$(CFG)" == "Compilers - Win32 Debug"
 
 "prs - Win32 Debug" : 
-   cd "\users\guetari\Amaya\Windows\prs"
+   cd "..\prs"
    $(MAKE) /$(MAKEFLAGS) /F .\prs.mak CFG="prs - Win32 Debug" 
    cd "..\Compilers"
 
 "prs - Win32 DebugCLEAN" : 
-   cd "\users\guetari\Amaya\Windows\prs"
+   cd "..\prs"
    $(MAKE) /$(MAKEFLAGS) /F .\prs.mak CFG="prs - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\Compilers"
 
@@ -281,24 +281,24 @@ LINK32_OBJS= \
 !IF  "$(CFG)" == "Compilers - Win32 Release"
 
 "str - Win32 Release" : 
-   cd "\users\guetari\Amaya\Windows\str"
+   cd "..\str"
    $(MAKE) /$(MAKEFLAGS) /F .\str.mak CFG="str - Win32 Release" 
    cd "..\Compilers"
 
 "str - Win32 ReleaseCLEAN" : 
-   cd "\users\guetari\Amaya\Windows\str"
+   cd "..\str"
    $(MAKE) /$(MAKEFLAGS) /F .\str.mak CFG="str - Win32 Release" RECURSE=1 CLEAN 
    cd "..\Compilers"
 
 !ELSEIF  "$(CFG)" == "Compilers - Win32 Debug"
 
 "str - Win32 Debug" : 
-   cd "\users\guetari\Amaya\Windows\str"
+   cd "..\str"
    $(MAKE) /$(MAKEFLAGS) /F .\str.mak CFG="str - Win32 Debug" 
    cd "..\Compilers"
 
 "str - Win32 DebugCLEAN" : 
-   cd "\users\guetari\Amaya\Windows\str"
+   cd "..\str"
    $(MAKE) /$(MAKEFLAGS) /F .\str.mak CFG="str - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\Compilers"
 
@@ -307,24 +307,24 @@ LINK32_OBJS= \
 !IF  "$(CFG)" == "Compilers - Win32 Release"
 
 "tra - Win32 Release" : 
-   cd "\users\guetari\Amaya\Windows\tra"
+   cd "..\tra"
    $(MAKE) /$(MAKEFLAGS) /F .\tra.mak CFG="tra - Win32 Release" 
    cd "..\Compilers"
 
 "tra - Win32 ReleaseCLEAN" : 
-   cd "\users\guetari\Amaya\Windows\tra"
+   cd "..\tra"
    $(MAKE) /$(MAKEFLAGS) /F .\tra.mak CFG="tra - Win32 Release" RECURSE=1 CLEAN 
    cd "..\Compilers"
 
 !ELSEIF  "$(CFG)" == "Compilers - Win32 Debug"
 
 "tra - Win32 Debug" : 
-   cd "\users\guetari\Amaya\Windows\tra"
+   cd "..\tra"
    $(MAKE) /$(MAKEFLAGS) /F .\tra.mak CFG="tra - Win32 Debug" 
    cd "..\Compilers"
 
 "tra - Win32 DebugCLEAN" : 
-   cd "\users\guetari\Amaya\Windows\tra"
+   cd "..\tra"
    $(MAKE) /$(MAKEFLAGS) /F .\tra.mak CFG="tra - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\Compilers"
 

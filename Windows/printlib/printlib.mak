@@ -466,24 +466,24 @@ LIB32_OBJS= \
 !IF  "$(CFG)" == "printlib - Win32 Release"
 
 "libjpeg - Win32 Release" : 
-   cd "\users\guetari\Amaya\Windows\libjpeg"
+   cd "..\libjpeg"
    $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Release" 
    cd "..\printlib"
 
 "libjpeg - Win32 ReleaseCLEAN" : 
-   cd "\users\guetari\Amaya\Windows\libjpeg"
+   cd "..\libjpeg"
    $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Release" RECURSE=1 CLEAN 
    cd "..\printlib"
 
 !ELSEIF  "$(CFG)" == "printlib - Win32 Debug"
 
 "libjpeg - Win32 Debug" : 
-   cd "\users\guetari\Amaya\Windows\libjpeg"
+   cd "..\libjpeg"
    $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Debug" 
    cd "..\printlib"
 
 "libjpeg - Win32 DebugCLEAN" : 
-   cd "\users\guetari\Amaya\Windows\libjpeg"
+   cd "..\libjpeg"
    $(MAKE) /$(MAKEFLAGS) /F .\libjpeg.mak CFG="libjpeg - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\printlib"
 
@@ -492,24 +492,24 @@ LIB32_OBJS= \
 !IF  "$(CFG)" == "printlib - Win32 Release"
 
 "libpng - Win32 Release" : 
-   cd "\users\guetari\Amaya\Windows\libpng"
+   cd "..\libpng"
    $(MAKE) /$(MAKEFLAGS) /F .\libpng.mak CFG="libpng - Win32 Release" 
    cd "..\printlib"
 
 "libpng - Win32 ReleaseCLEAN" : 
-   cd "\users\guetari\Amaya\Windows\libpng"
+   cd "..\libpng"
    $(MAKE) /$(MAKEFLAGS) /F .\libpng.mak CFG="libpng - Win32 Release" RECURSE=1 CLEAN 
    cd "..\printlib"
 
 !ELSEIF  "$(CFG)" == "printlib - Win32 Debug"
 
 "libpng - Win32 Debug" : 
-   cd "\users\guetari\Amaya\Windows\libpng"
+   cd "..\libpng"
    $(MAKE) /$(MAKEFLAGS) /F .\libpng.mak CFG="libpng - Win32 Debug" 
    cd "..\printlib"
 
 "libpng - Win32 DebugCLEAN" : 
-   cd "\users\guetari\Amaya\Windows\libpng"
+   cd "..\libpng"
    $(MAKE) /$(MAKEFLAGS) /F .\libpng.mak CFG="libpng - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\printlib"
 

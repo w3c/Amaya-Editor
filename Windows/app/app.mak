@@ -235,24 +235,24 @@ LINK32_OBJS= \
 !IF  "$(CFG)" == "app - Win32 Release"
 
 "cpp - Win32 Release" : 
-   cd "\users\guetari\Amaya\Windows\cpp"
+   cd "..\cpp"
    $(MAKE) /$(MAKEFLAGS) /F .\cpp.mak CFG="cpp - Win32 Release" 
    cd "..\app"
 
 "cpp - Win32 ReleaseCLEAN" : 
-   cd "\users\guetari\Amaya\Windows\cpp"
+   cd "..\cpp"
    $(MAKE) /$(MAKEFLAGS) /F .\cpp.mak CFG="cpp - Win32 Release" RECURSE=1 CLEAN 
    cd "..\app"
 
 !ELSEIF  "$(CFG)" == "app - Win32 Debug"
 
 "cpp - Win32 Debug" : 
-   cd "\users\guetari\Amaya\Windows\cpp"
+   cd "..\cpp"
    $(MAKE) /$(MAKEFLAGS) /F .\cpp.mak CFG="cpp - Win32 Debug" 
    cd "..\app"
 
 "cpp - Win32 DebugCLEAN" : 
-   cd "\users\guetari\Amaya\Windows\cpp"
+   cd "..\cpp"
    $(MAKE) /$(MAKEFLAGS) /F .\cpp.mak CFG="cpp - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\app"
 
@@ -261,24 +261,24 @@ LINK32_OBJS= \
 !IF  "$(CFG)" == "app - Win32 Release"
 
 "LibThotKernel - Win32 Release" : 
-   cd "\users\guetari\Amaya\Windows\LibThotKernel"
+   cd "..\LibThotKernel"
    $(MAKE) /$(MAKEFLAGS) /F .\LibThotKernel.mak CFG="LibThotKernel - Win32 Release" 
    cd "..\app"
 
 "LibThotKernel - Win32 ReleaseCLEAN" : 
-   cd "\users\guetari\Amaya\Windows\LibThotKernel"
+   cd "..\LibThotKernel"
    $(MAKE) /$(MAKEFLAGS) /F .\LibThotKernel.mak CFG="LibThotKernel - Win32 Release" RECURSE=1 CLEAN 
    cd "..\app"
 
 !ELSEIF  "$(CFG)" == "app - Win32 Debug"
 
 "LibThotKernel - Win32 Debug" : 
-   cd "\users\guetari\Amaya\Windows\LibThotKernel"
+   cd "..\LibThotKernel"
    $(MAKE) /$(MAKEFLAGS) /F .\LibThotKernel.mak CFG="LibThotKernel - Win32 Debug" 
    cd "..\app"
 
 "LibThotKernel - Win32 DebugCLEAN" : 
-   cd "\users\guetari\Amaya\Windows\LibThotKernel"
+   cd "..\LibThotKernel"
    $(MAKE) /$(MAKEFLAGS) /F .\LibThotKernel.mak CFG="LibThotKernel - Win32 Debug" RECURSE=1 CLEAN 
    cd "..\app"
 
