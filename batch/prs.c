@@ -1299,6 +1299,7 @@ SyntacticCode       gCode;
      case CHR_61:
        /*  =  */
        if (gCode == RULE_InheritVal || gCode == RULE_NameInherit ||
+	   gCode == RULE_Color ||
 	   gCode == RULE_BoolInherit || gCode == RULE_InheritDist ||
 	   gCode == RULE_InheritSize || gCode == RULE_AdjustInherit ||
 	   gCode == RULE_LineStyleInherit ||

@@ -581,14 +581,17 @@ int                 shadow;
       Y = PixelToPoint (y + FontBase (font));
       NbWhiteSp = 0;
 
-      /* Do we need to change the current color ? */
-      if (TtPrinterDC)
-	  SetTextColor (TtPrinterDC, ColorPixel (fg));
+      if (fg >=0 )
+	{
+         /* Do we need to change the current color ? */
+	 if (TtPrinterDC)
+	   SetTextColor (TtPrinterDC, ColorPixel (fg));
 
-      /* Do we need to change the current font ? */
-      if (TtPrinterDC)
-         hOldFont = WinLoadFont (TtPrinterDC, font);
-   }
+	 /* Do we need to change the current font ? */
+	 if (TtPrinterDC)
+	   hOldFont = WinLoadFont (TtPrinterDC, font);
+	}
+     }
 
    if (shadow)
      {
@@ -604,26 +607,30 @@ int                 shadow;
      ptcar = &buff[i - 1];
 
    /* Add the justified white space */
-   if (TtPrinterDC) {
-      SetMapperFlags (TtPrinterDC, 1);
-      GetTextExtentPoint (TtPrinterDC, ptcar, lg, &size);
-      width = size.cx;
-      if (ptcar[0] == '\212' || ptcar[0] == '\12') {
+   if (TtPrinterDC)
+     {
+       if (ptcar[0] == '\212' || ptcar[0] == '\12')
+	 {
          /* skip the Control return char */
-         ptcar++;
+	 ptcar++;
          lg--;
-	  }
-
-      if (lg > 0)
-         if (!TextOut (TtPrinterDC, x, y, (USTRING) ptcar, lg))
-            WinErrorBox (NULL, TEXT("windowdisplay.c - DrawString (1)"));
-
-      if (hyphen) /* draw the hyphen */
-         if (!TextOut (TtPrinterDC, x + width, y, TEXT("\255"), 1))
-            WinErrorBox (NULL, TEXT("windowdisplay.c - DrawString (2)"));
-      if (lgboite != 0)
-          SameBox = 0;
-   }
+	 }
+       if (fg >= 0)
+	 {
+          SetMapperFlags (TtPrinterDC, 1);
+	  GetTextExtentPoint (TtPrinterDC, ptcar, lg, &size);
+	  width = size.cx;
+	  if (lg > 0)
+	    if (!TextOut (TtPrinterDC, x, y, (USTRING) ptcar, lg))
+	      WinErrorBox (NULL, TEXT("windowdisplay.c - DrawString (1)"));
+	  
+	  if (hyphen) /* draw the hyphen */
+	    if (!TextOut (TtPrinterDC, x + width, y, TEXT("\255"), 1))
+	      WinErrorBox (NULL, TEXT("windowdisplay.c - DrawString (2)"));
+	 }
+       if (lgboite != 0)
+	 SameBox = 0;
+     }
    if (lg > 0)
      {
        /* compute the width of the string */
@@ -633,47 +640,56 @@ int                 shadow;
 	 width += CharacterWidth (ptcar[j++], font);
        return (width);
      } 
-
+   
    if (shadow)
      TtaFreeMemory (ptcar);
    return (0);
-
+   
 #else  /* _WIN_PRINT */
    w = FrRef[frame];
-   if (lg > 0 && w != None) {
-      ptcar = &buff[i - 1];
+   if (lg > 0 && w != None)
+     {
       /* Dealing with BR tag for windows */
       WIN_GetDeviceContext (frame);
       SetMapperFlags (TtDisplay, 1);
       hOldFont = WinLoadFont (TtDisplay, font);
+      ptcar = &buff[i - 1];
       GetTextExtentPoint (TtDisplay, ptcar, lg, &size);
       width = size.cx;
+
+      if (fg < 0)
+	/* color is transparent. Don't do anything */
+        return (width);
 
       result = SelectClipRgn (TtDisplay, clipRgn);  
       if (result == ERROR)
          ClipError (frame);
       /* if (!GetClipRgn(TtDisplay, clipRgn))
-         WinErrorBox (NULL); */
+            WinErrorBox (NULL); */
 
       WinLoadGC (TtDisplay, fg, RO);
-      if (!ShowSpace || shadow) {
-         /* draw the spaces */
+      if (!ShowSpace || shadow)
+	{
+	 /* draw the spaces */
          ptcar = TtaAllocString (lg + 1);
-         if (shadow) {
-            /* replace each character by a star */
-	        j = 0;
-	        while (j < lg)
-	              ptcar[j++] = TEXT('*');
-	        ptcar[lg] = EOS;
-		 } else {
-                ustrncpy (ptcar, &buff[i - 1], lg);
-                ptcar[lg] = EOS;
-                SpaceToChar (ptcar);	/* substitute spaces */
-		 } 
+         if (shadow)
+	   {
+	    /* replace each character by a star */
+	    j = 0;
+	    while (j < lg)
+	      ptcar[j++] = TEXT('*');
+	    ptcar[lg] = EOS;
+	   }
+	 else
+	   {
+	    ustrncpy (ptcar, &buff[i - 1], lg);
+	    ptcar[lg] = EOS;
+	    SpaceToChar (ptcar);	/* substitute spaces */
+	   } 
          GetClientRect (FrRef [frame], &rect);
          outOpt = 0;
 
-#        if 0 /* ifdef _I18N_ */
+#if 0 /* ifdef _I18N_ */
          fontLangInfo = GetFontLanguageInfo (TtDisplay);
 
          if (fontLangInfo == GCP_ERROR) /* There is a Problem. */
@@ -682,22 +698,26 @@ int                 shadow;
          if (fontLangInfo & GCP_DIACRITIC)
             infoFlag |= GCP_DIACRITIC;
          
-         if (fontLangInfo & GCP_GLYPHSHAPE) {
-            /* The font/language contains multiple glyphs per code point or per code point */
-            /* combination (supports shaping and/or ligation), and the font contains advanced */
-            /* glyph tables to provide extra glyphs for the extra shapes. If this value is given, */
-            /* the lpGlyphs array must be used with the GetCharacterPlacement function and the */
-            /* ETO_GLYPHINDEX value must be passed to the ExtTextOut function when the string is drawn. */
-            infoFlag |= GCP_GLYPHSHAPE;
-		 } 
+         if (fontLangInfo & GCP_GLYPHSHAPE)
+	   {
+            /* The font/language contains multiple glyphs per code point or
+	       per code point combination (supports shaping and/or ligation),
+	       and the font contains advanced glyph tables to provide extra
+	       glyphs for the extra shapes. If this value is given,
+	       the lpGlyphs array must be used with the GetCharacterPlacement
+	       function and the ETO_GLYPHINDEX value must be passed to the
+	       ExtTextOut function when the string is drawn. */
+	     infoFlag |= GCP_GLYPHSHAPE;
+	   } 
          
          if (fontLangInfo & GCP_USEKERNING)
-            /* The font contains a kerning table which can be used to provide better spacing */
-            /* between the characters and glyphs. */
+            /* The font contains a kerning table which can be used to
+	       provide better spacing between the characters and glyphs. */
             infoFlag |= GCP_USEKERNING;
          
          if (fontLangInfo & GCP_REORDER)
-            /* The language requires reordering for display--for example, Hebrew or Arabic. */
+            /* The language requires reordering for display--for example,
+	       Hebrew or Arabic. */
             infoFlag |= GCP_CLASSIN;
 
          infoFlag |= GCP_DISPLAYZWG;
@@ -712,82 +732,101 @@ int                 shadow;
          results.nGlyphs     = 2000;
          results.nMaxFit     = 0;
 
-         GetCharacterPlacement (TtDisplay, ptcar, ustrlen (ptcar), GCP_MAXEXTENT, &results, infoFlag);
+         GetCharacterPlacement (TtDisplay, ptcar, ustrlen (ptcar),
+				GCP_MAXEXTENT, &results, infoFlag);
 
-         ExtTextOut (TtDisplay, x, y + FrameTable[frame].FrTopMargin, outOpt, &rect, (USTRING) szNewText, lg, anDX); 
-#        endif /* else  /* !_I18N_ */
-         /* ExtTextOut (TtDisplay, x, y + FrameTable[frame].FrTopMargin, 0, &rect, (USTRING) ptcar, lg, NULL);  */
-         TextOut (TtDisplay, x, y + FrameTable[frame].FrTopMargin, (USTRING) ptcar, lg);
+         ExtTextOut (TtDisplay, x, y + FrameTable[frame].FrTopMargin, outOpt,
+		     &rect, (USTRING) szNewText, lg, anDX); 
+#endif /* else  /* !_I18N_ */
+         /* ExtTextOut (TtDisplay, x, y + FrameTable[frame].FrTopMargin, 0,
+	                &rect, (USTRING) ptcar, lg, NULL);  */
+         TextOut (TtDisplay, x, y + FrameTable[frame].FrTopMargin,
+		  (USTRING) ptcar, lg);
 /* #        endif /* !_I18N_ */
          TtaFreeMemory (ptcar);
-      } else {
-             if (ptcar[0] == TEXT('\212') || ptcar[0] == TEXT('\12')) {
-                /* skip the Control return char */
-                ptcar++;
-               lg--;
-			 }
-             if (lg != 0) {
-                /* GetClipRgn(TtDisplay, clipRgn); */
-                outOpt = 0;
+	}
+      else
+	{
+	 if (ptcar[0] == TEXT('\212') || ptcar[0] == TEXT('\12'))
+	   {
+	    /* skip the Control return char */
+	    ptcar++;
+	    lg--;
+	   }
+	 if (lg != 0)
+	   {
+	    /* GetClipRgn(TtDisplay, clipRgn); */
+	    outOpt = 0;
 
-#               if 0 /* ifdef _I18N_ */
-                fontLangInfo = GetFontLanguageInfo (TtDisplay);
+#if 0 /* ifdef _I18N_ */
+	    fontLangInfo = GetFontLanguageInfo (TtDisplay);
 
-                if (fontLangInfo == GCP_ERROR) /* There is a Problem. */
-                   WinErrorBox (NULL, TEXT("windowdisplay.c - DrawString (2)"));
+	    if (fontLangInfo == GCP_ERROR) /* There is a Problem. */
+	      WinErrorBox (NULL, TEXT("windowdisplay.c - DrawString (2)"));
 
-                if (fontLangInfo & GCP_DIACRITIC)
-                   infoFlag |= GCP_DIACRITIC;
+	    if (fontLangInfo & GCP_DIACRITIC)
+	      infoFlag |= GCP_DIACRITIC;
+	    
+	    if (fontLangInfo & GCP_GLYPHSHAPE)
+	      {
+	       /* The font/language contains multiple glyphs per code point
+		  or per code point combination (supports shaping and/or
+		  ligation), and the font contains advanced glyph tables
+		  to provide extra glyphs for the extra shapes. If this
+		  value is given, the lpGlyphs array must be used with
+		  the GetCharacterPlacement function and the ETO_GLYPHINDEX
+		  value must be passed to the ExtTextOut function when
+		  the string is drawn. */
+		infoFlag |= GCP_GLYPHSHAPE;
+	      }  
          
-                if (fontLangInfo & GCP_GLYPHSHAPE) {
-		           /* The font/language contains multiple glyphs per code point or per code point */
-		           /* combination (supports shaping and/or ligation), and the font contains advanced */
-                   /* glyph tables to provide extra glyphs for the extra shapes. If this value is given, */
-                   /* the lpGlyphs array must be used with the GetCharacterPlacement function and the */
-                   /* ETO_GLYPHINDEX value must be passed to the ExtTextOut function when the string is drawn. */
-                   infoFlag |= GCP_GLYPHSHAPE;
-				}  
+	    if (fontLangInfo & GCP_USEKERNING)
+	      /* The font contains a kerning table which can be used to
+		 provide better spacing between the characters and glyphs. */
+	      infoFlag |= GCP_USEKERNING;
          
-                if (fontLangInfo & GCP_USEKERNING)
-                   /* The font contains a kerning table which can be used to provide better spacing */
-                   /* between the characters and glyphs. */
-                   infoFlag |= GCP_USEKERNING;
-         
-                if (fontLangInfo & GCP_REORDER)
-                   /* The language requires reordering for display--for example, Hebrew or Arabic. */
-                   infoFlag |= GCP_CLASSIN;
+	    if (fontLangInfo & GCP_REORDER)
+	      /* The language requires reordering for display--for example,
+		 Hebrew or Arabic. */
+	      infoFlag |= GCP_CLASSIN;
 
-                infoFlag |= GCP_DISPLAYZWG;
+	    infoFlag |= GCP_DISPLAYZWG;
 
-                results.lStructSize = sizeof (results);
-                results.lpOutString = &szNewText[0];
-                results.lpOrder     = NULL;
-                results.lpDx        = &anDX[0];
-                results.lpCaretPos  = NULL;
-                results.lpClass     = NULL;
-                results.lpGlyphs    = &auGlyphs[0];
-                results.nGlyphs     = 2000;
-                results.nMaxFit     = 0;
-	            GetCharacterPlacement (TtDisplay, ptcar, ustrlen (ptcar), GCP_MAXEXTENT, &results, infoFlag);
+	    results.lStructSize = sizeof (results);
+	    results.lpOutString = &szNewText[0];
+	    results.lpOrder     = NULL;
+	    results.lpDx        = &anDX[0];
+	    results.lpCaretPos  = NULL;
+	    results.lpClass     = NULL;
+	    results.lpGlyphs    = &auGlyphs[0];
+	    results.nGlyphs     = 2000;
+	    results.nMaxFit     = 0;
+	    GetCharacterPlacement (TtDisplay, ptcar, ustrlen (ptcar),
+				   GCP_MAXEXTENT, &results, infoFlag);
 
-                ExtTextOut (TtDisplay, x, y + FrameTable[frame].FrTopMargin, outOpt, &rect, (USTRING) szNewText, lg, anDX);
-#               endif /* 00000 else  /* !_I18N_ */ */
-                TextOut (TtDisplay, x, y + FrameTable[frame].FrTopMargin, (USTRING) ptcar, lg);
+	    ExtTextOut (TtDisplay, x, y + FrameTable[frame].FrTopMargin,
+			outOpt, &rect, (USTRING) szNewText, lg, anDX);
+#endif /* 00000 else  /* !_I18N_ */ */
+	    TextOut (TtDisplay, x, y + FrameTable[frame].FrTopMargin,
+		     (USTRING) ptcar, lg);
 /* #               endif /* !_18N_ */
-			 } 
-	  } 
+	   } 
+	} 
  
-      if (hyphen) {
+      if (hyphen)
+	{
          /* draw the hyphen */
          /* GetClipRgn(TtDisplay, clipRgn); */
-         TextOut (TtDisplay, x + width, y + FrameTable[frame].FrTopMargin, TEXT("\255"), 1);
-	  } 
+         TextOut (TtDisplay, x + width, y + FrameTable[frame].FrTopMargin,
+		  TEXT("\255"), 1);
+	} 
       SelectObject (TtDisplay, hOldFont);
       DeleteObject (currentActiveFont);
       currentActiveFont = (HFONT)0;
       /* WIN_ReleaseDeviceContext (); */
       return (width);
-     } else
+     }
+   else
      return (0);
 #endif /* _WIN_PRINT */
 }

@@ -130,8 +130,8 @@ Rule3 =		  Creation '(' BoxName ')' /
 Rule4 =		  'LineStyle' ':' LineStyleInherit /
 		  'LineWeight' ':' DistInherit /
 		  'FillPattern' ':' NameInherit /
-		  'Background' ':' NameInherit /
-		  'Foreground' ':' NameInherit /
+		  'Background' ':' Color /
+		  'Foreground' ':' Color /
 		  'ShowBox' /
 		  'BackgroundPicture' ':' FileName /
 		  'PictureMode' ':' PictMode .
@@ -270,6 +270,7 @@ PercentSizeA =	  PercentSize / AttrName .
 PercentSize =	  NUMBER .
 
 NameInherit =	  Link '=' / FontColorName .
+Color =           'Transparent' / Link '=' / FontColorName .
 StyleInherit =	  Link '=' / 'Roman' / 'Italics' / 'Oblique' /
 		  { the next three values are obsolete }
 		  'Bold' / 'BoldItalics' / 'BoldOblique' .

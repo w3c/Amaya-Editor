@@ -3336,7 +3336,7 @@ RULES
 	BEGIN
 	CreateBefore(MPHANTOM_S);
 	CreateWith(VerticalLine);
-	Foreground: White;	{****** should be Transparent ****}
+	Foreground: Transparent;
         HorizRef: Enclosed . HRef;
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN

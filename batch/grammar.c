@@ -49,7 +49,7 @@ typedef CHAR_T        fname[30];	/* nom de fichier */
 #define MAXREF   50		/* nombre max de references a une regle */
 
 #define MAX_STRING_GRM	250	/* nombre max de chaines dans une grammaire */
-#define MAX_RULE_GRM	160	/* nombre max de regles de la grammaire */
+#define MAX_RULE_GRM	170	/* nombre max de regles de la grammaire */
 #define MAX_RULE_REF	70	/* nombre max de references a une regle */
 
 typedef struct _RefList

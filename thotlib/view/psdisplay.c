@@ -359,12 +359,15 @@ int                 shadow;
       Y = PixelToPoint (y + FontBase (font));
       NbWhiteSp = 0;
 
-      /* Do we need to change the current color ? */
-      CurrentColor (fout, fg);
+      if (fg >= 0)
+	{
+	 /* Do we need to change the current color ? */
+         CurrentColor (fout, fg);
 
-      /* Do we need to change the current font ? */
-      encoding = CurrentFont (fout, font);
-      fprintf (fout, "(");
+         /* Do we need to change the current font ? */
+         encoding = CurrentFont (fout, font);
+         fprintf (fout, "(");
+	}
    }
 
    if (shadow)
@@ -381,47 +384,56 @@ int                 shadow;
      ptcar = &buff[i - 1];
 
    /* Add the justified white space */
-       if (bl > 0)
-	 {
-	   NbWhiteSp++;
-	   Transcode (fout, encoding, ' ');
-	 }
-
-       /* Emit the chars */
-       for (j = 0; j < lg; j++)
-	 {
-	   /* enumerate the white spaces */
-	   if (ptcar[j] == ' ')
-	     if (NonJustifiedWhiteSp == 0)
-	       {
-		 /* write a justified white space */
-		 NbWhiteSp++;
-		 Transcode (fout, encoding, ptcar[j]);
-	       }
-	     else /* write a fixed lenght white space */
-	       fputs ("\\240", fout);
-	   else
-	     {
-	       NonJustifiedWhiteSp = 0;
+   if (bl > 0)
+     {
+       NbWhiteSp++;
+       if (fg >= 0)
+	 Transcode (fout, encoding, ' ');
+     }
+   
+   /* Emit the chars */
+   for (j = 0; j < lg; j++)
+     {
+       /* enumerate the white spaces */
+       if (ptcar[j] == ' ')
+	 if (NonJustifiedWhiteSp == 0)
+	   {
+	     /* write a justified white space */
+	     NbWhiteSp++;
+	     if (fg >= 0)
 	       Transcode (fout, encoding, ptcar[j]);
-	     }
-	 }
-
-       /* Is an hyphen needed ? */
-       if (hyphen)
-	 Transcode (fout, encoding, '\255');
-
-       /* is this the end of the box */
-       if (lgboite != 0)
+	   }
+	 else /* write a fixed lenght white space */
+	   {
+	   if (fg >= 0)
+	     fputs ("\\240", fout);
+	   }
+       else
 	 {
-	   lgboite = PixelToPoint (lgboite);
-	   /* Is justification needed ? */
-	   if (NbWhiteSp == 0)
-	     fprintf (fout, ") %d %d -%d s\n", lgboite, X, Y);
-	   else
-	     fprintf (fout, ") %d %d %d -%d j\n", NbWhiteSp, lgboite, X, Y);
-	   SameBox = 0;
+	   NonJustifiedWhiteSp = 0;
+	   if (fg >= 0)
+	     Transcode (fout, encoding, ptcar[j]);
 	 }
+     }
+   
+   /* Is an hyphen needed ? */
+   if (hyphen && fg >= 0)
+     Transcode (fout, encoding, '\255');
+   
+   /* is this the end of the box */
+   if (lgboite != 0)
+     {
+       lgboite = PixelToPoint (lgboite);
+       /* Is justification needed ? */
+       if (fg >= 0)
+	 {
+	 if (NbWhiteSp == 0)
+	   fprintf (fout, ") %d %d -%d s\n", lgboite, X, Y);
+	 else
+	   fprintf (fout, ") %d %d %d -%d j\n", NbWhiteSp, lgboite, X, Y);
+	 }
+       SameBox = 0;
+     }
    if (lg > 0)
      {
        /* compute the width of the string */
@@ -431,7 +443,7 @@ int                 shadow;
 	 width += CharacterWidth (ptcar[j++], font);
        return (width);
      } 
-
+   
    if (shadow)
      TtaFreeMemory (ptcar);
    return (0);

@@ -369,75 +369,85 @@ int                 shadow;
    w = FrRef[frame];
    if (lg > 0 && w != None)
      {
-      ptcar = &buff[i - 1];
       /* Dealing with BR tag for windows */
 #ifndef _GTK
-      XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid);
+      if (fg >= 0)
+         XSetFont (TtDisplay, TtLineGC, ((XFontStruct *) font)->fid);
 #endif /* _GTK */
+      ptcar = &buff[i - 1];
       /* compute the width of the string */
       width = 0;
       j = 0;
       while (j < lg)
 	width += CharacterWidth (ptcar[j++], font);
 
-      LoadColor (0, RO, active, fg);
-
-      if (!ShowSpace || shadow)
+      if (fg >= 0)
 	{
-         /* draw the spaces */
-         ptcar = TtaAllocString (lg + 1);
-	 if (shadow)
-	   {
+	LoadColor (0, RO, active, fg);
+
+	if (!ShowSpace || shadow)
+	  {
+          /* draw the spaces */
+          ptcar = TtaAllocString (lg + 1);
+	  if (shadow)
+	    {
 	     /* replace each character by a star */
 	     j = 0;
 	     while (j < lg)
 	       ptcar[j++] = TEXT('*');
 	     ptcar[lg] = EOS;
-	   }
-	 else
-	   {
+	    }
+	  else
+	    {
 	     ustrncpy (ptcar, &buff[i - 1], lg);
 	     ptcar[lg] = EOS;
 	     SpaceToChar (ptcar);	/* substitute spaces */
-	   }
+	    }
+
 #ifdef _GTK
-	     gdk_draw_string ( w, font,TtLineGC, x, 
-			       y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar);
+	  gdk_draw_string (w, font,TtLineGC, x, 
+			   y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar);
 #else /* _GTK */
-         XDrawString (TtDisplay, w, TtLineGC, x, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
+	  XDrawString (TtDisplay, w, TtLineGC, x,
+		       y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
 #endif /* _GTK */
-         TtaFreeMemory (ptcar);
-      } else {
-           if (ptcar[0] == TEXT('\212') || ptcar[0] == TEXT('\12')) {
-              /* skip the Control return char */
-              ptcar++;
-             lg--;
-           }
-           if (lg != 0) {
+	  TtaFreeMemory (ptcar);
+	  }
+	else
+	  {
+	  if (ptcar[0] == TEXT('\212') || ptcar[0] == TEXT('\12'))
+	    {
+	      /* skip the Control return char */
+	      ptcar++;
+	      lg--;
+	    }
+	  if (lg != 0)
+	    {
 #ifdef _GTK
-	     car = ptcar[lg];
-	     ptcar[lg] = EOS;
-	     gdk_draw_string ( w, font,TtLineGC, x, 
-			       y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar);
-	     ptcar[lg] = car;
+	      car = ptcar[lg];
+	      ptcar[lg] = EOS;
+	      gdk_draw_string ( w, font,TtLineGC, x, 
+				y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar);
+	      ptcar[lg] = car;
 #else /* _GTK */
 	      XDrawString (TtDisplay, w, TtLineGC, x, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
 #endif /* _GTK */
-	     }
-	}
-
-      if (hyphen)
-	{
-         /* draw the hyphen */
+	    }
+	  }
+      
+	if (hyphen)
+	  {
+	  /* draw the hyphen */
 #ifdef _GTK
      	  gdk_draw_string (w, font,TtLineGC, x + width,
 			   y + FrameTable[frame].FrTopMargin + FontBase (font), "\255");
 #else /* _GTK */
-         XDrawString (TtDisplay, w, TtLineGC, x + width,
-         y + FrameTable[frame].FrTopMargin + FontBase (font), "\255", 1);
+	  XDrawString (TtDisplay, w, TtLineGC, x + width,
+		       y + FrameTable[frame].FrTopMargin + FontBase (font), "\255", 1);
 #endif /* _GTK */
+	  }
+	FinishDrawing (0, RO, active);
 	}
-      FinishDrawing (0, RO, active);
       return (width);
      }
    else
