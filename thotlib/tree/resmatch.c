@@ -18,16 +18,7 @@
 /*----------------------------------------------------------------------  
   RestCoupler
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool RestCoupler (Restruct restr, int indSrc, int indDst, int indRecFrom, int indRecTo)
-#else  /* __STDC__ */
-static ThotBool RestCoupler (restr, indSrc, indDst, indRecFrom, indRecTo)
-Restruct restr;
-int indSrc;
-int indDst;
-int indRecFrom;
-int indRecTo;
-#endif  /* __STDC__ */
 {
 #ifdef DEBUG
   fprintf (stdout, "      Coupler  : %d %c - %d %c\n",
@@ -60,13 +51,7 @@ int indRecTo;
 /*----------------------------------------------------------------------  
   RestDeCoupler
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool RestDeCoupler (Restruct resctx, int indSrc)
-#else  /* __STDC__ */
-static ThotBool RestDeCoupler (resctx, indSrc)
-Restruct resctx;
-int indSrc;
-#endif  /* __STDC__ */
 {
 #ifdef DEBUG
   fprintf (stdout, "      Decoupler source : %d %c\n",indSrc, resctx->RSrcPrint->SPrint[indSrc]);
@@ -87,12 +72,7 @@ int indSrc;
 /*----------------------------------------------------------------------  
   RestEraseCouple
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool RestEraseCouple (Restruct resctx)
-#else  /* __STDC__ */
-static ThotBool RestEraseCouple (resctx)
-Restruct resctx;
-#endif  /* __STDC__ */
 {
   int i;
   
@@ -113,14 +93,7 @@ Restruct resctx;
 /*----------------------------------------------------------------------  
   RestMatchSymb
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static TyRelation RestMatchSymb (Restruct resctx, int ISrc, int IDst)
-#else  /* __STDC__ */
-static TyRelation RestMatchSymb (Restruct resctx, ISrc, IDst)
-Restruct resctx;
-int ISrc;
-int IDst;
-#endif  /* __STDC__ */
 {
    TyRelation result;
    char CSrc, CDst;
@@ -178,12 +151,7 @@ int IDst;
 /*----------------------------------------------------------------------  
   RestCalcShift
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int *RestCalcShift (char *pattern)
-#else  /* __STDC__ */
-static int *RestCalcShift (pattern)
-char *pattern;
-#endif  /* __STDC__ */
 {
   int  j, k, Lgpattern;
   int *Shift;
@@ -212,12 +180,7 @@ char *pattern;
 /*----------------------------------------------------------------------  
   RestFacteur
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void RestFacteur (Restruct resctx)
-#else  /* __STDC__ */
-static void RestFacteur (resctx)
-Restruct resctx;
-#endif  /* __STDC__ */
 {
   int                *ShiftTab;        /* tableau de decalages */
   int                 IndSrc, IndDst;
@@ -259,12 +222,7 @@ Restruct resctx;
 /*----------------------------------------------------------------------  
   RestEquivalence
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void RestEquivalence (Restruct resctx)
-#else  /* __STDC__ */
-static void RestEquivalence (resctx)
-Restruct resctx;
-#endif  /* __STDC__ */
 {
     int                 i, j, l;
     char *SEmp;
@@ -297,15 +255,7 @@ Restruct resctx;
   RestCalcIndRec
   calcule la table d'indice des noeuds récursifs
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void RestCalcIndRec (int **tabIndices, char *emp, int len, Restruct resctx)
-#else  /* __STDC__ */
-static void ( tabIndices, emp, len, resctx)
-int **tabIndices;
-char *emp;
-int len;
-Restruct resctx;
-#endif  /* __STDC__ */
 {
   int j, k;
 
@@ -334,12 +284,7 @@ Restruct resctx;
   egaux, on continue la comparaisons sur les symboles de fin des noeuds
   consideres
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void RestCluster (Restruct resctx)
-#else  /* __STDC__ */
-static void RestCluster (resctx)
-Restruct resctx;
-#endif  /* __STDC__ */
 {
   char               *V, *CSrc, *CDst; /* empreintes */
   int                 LgU, LgV, LgMax;
@@ -557,16 +502,7 @@ Restruct resctx;
 /*----------------------------------------------------------------------  
   RestMatchPrints
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void RestMatchPrints (Restruct resctx)
-#else  /* __STDC__ */
-void RestMatchPrints (resctx)
-Restruct resctx;
-int indDest;
-ThotBool effective;
-ThotBool avecCouplage;
-#endif  /* __STDC__ */
 {
   RestEquivalence (resctx);
   if (resctx->RRelation == NONE)

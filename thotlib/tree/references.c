@@ -47,17 +47,7 @@
    l'element portant un label donne'.                              
    Retourne un pointeur sur cet element ou NULL si pas trouve'.    
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static PtrElement   SearchElemLabel (PtrElement pEl, LabelString label)
-
-#else  /* __STDC__ */
-static PtrElement   SearchElemLabel (pEl, label)
-PtrElement          pEl;
-LabelString         label;
-
-#endif /* __STDC__ */
-
 {
    PtrElement          result, pChild;
 
@@ -92,15 +82,8 @@ LabelString         label;
    retourne dans docIdent une chaine vide et dans ce cas   
    pDoc est NULL.                                          
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PtrElement          ReferredElement (PtrReference pRef, DocumentIdentifier * docIdent, PtrDocument * pDoc)
-#else  /* __STDC__ */
-PtrElement          ReferredElement (pRef, docIdent, pDoc)
-PtrReference        pRef;
-DocumentIdentifier *docIdent;
-PtrDocument        *pDoc;
-#endif /* __STDC__ */
-
+PtrElement ReferredElement (PtrReference pRef, DocumentIdentifier *docIdent,
+			    PtrDocument *pDoc)
 {
    PtrElement          pEl;
    PtrElement          pE;
@@ -232,21 +215,10 @@ PtrDocument        *pDoc;
    mais ce document n'est pas charge' (cela ne se  	
    produit que si processNotLoaded est TRUE).      	
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-PtrReference        SearchExternalReferenceToElem (PtrElement pEl, PtrDocument pDocEl, ThotBool processNotLoaded, PtrDocument * pDocRef, PtrExternalDoc * pExtDoc, ThotBool nextExtDoc)
-
-#else  /* __STDC__ */
-PtrReference        SearchExternalReferenceToElem (pEl, pDocEl, processNotLoaded, pDocRef, pExtDoc, nextExtDoc)
-PtrElement          pEl;
-PtrDocument         pDocEl;
-ThotBool            processNotLoaded;
-PtrDocument        *pDocRef;
-PtrExternalDoc     *pExtDoc;
-ThotBool            nextExtDoc;
-
-#endif /* __STDC__ */
-
+PtrReference SearchExternalReferenceToElem (PtrElement pEl, PtrDocument pDocEl,
+					    ThotBool processNotLoaded,
+					    PtrDocument *pDocRef,
+					    PtrExternalDoc *pExtDoc, ThotBool nextExtDoc)
 {
    PtrDocument         pDoc;
    PtrReferredDescr    pRefD;
@@ -330,16 +302,7 @@ ThotBool            nextExtDoc;
    NewReferredElDescr cree un descripteur d'element referenc'e et le met en    
    tete de la chaine pour le document pointe par pDoc.     
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 PtrReferredDescr    NewReferredElDescr (PtrDocument pDoc)
-
-#else  /* __STDC__ */
-PtrReferredDescr    NewReferredElDescr (pDoc)
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
 {
    PtrReferredDescr    pRefD;
 
@@ -360,16 +323,7 @@ PtrDocument         pDoc;
    DeleteReferredElDescr supprime le descripteur d'element reference' pointe'
    par pRefD.                                                
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                DeleteReferredElDescr (PtrReferredDescr pRefD)
-
-#else  /* __STDC__ */
-void                DeleteReferredElDescr (pRefD)
-PtrReferredDescr    pRefD;
-
-#endif /* __STDC__ */
-
 {
    PtrExternalDoc      pExtDoc, pNextExtDoc;
 
@@ -399,16 +353,7 @@ PtrReferredDescr    pRefD;
    le descripteur d'element reference' qui lui est         
    attache'.                                               
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                DeleteAllReferences (PtrElement pEl)
-
-#else  /* __STDC__ */
-void                DeleteAllReferences (pEl)
-PtrElement          pEl;
-
-#endif /* __STDC__ */
-
 {
    PtrReference        pRef, pNextRef;
 
@@ -442,16 +387,7 @@ PtrElement          pEl;
 /*----------------------------------------------------------------------
    DeleteReference de'chaine la reference pointee par pRef.          
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void                DeleteReference (PtrReference pRef)
-
-#else  /* __STDC__ */
-void                DeleteReference (pRef)
-PtrReference        pRef;
-
-#endif /* __STDC__ */
-
 {
    if (pRef->RdPrevious == NULL)	/* premier de la chaine */
      {
@@ -485,14 +421,7 @@ PtrReference        pRef;
    CancelReference annule la reference de l'element pEl			
    (pEl doit etre terminal et de nature Refer).            
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CancelReference (PtrElement pEl, PtrDocument pDoc)
-#else  /* __STDC__ */
-void                CancelReference (pEl, pDoc)
-PtrElement          pEl;
-PtrDocument         pDoc;
-#endif /* __STDC__ */
-
 {
   PtrElement          pAsc, pChild, pC1;
   PtrTextBuffer       pTxtBuf, pNextTxtBuf;
@@ -617,14 +546,7 @@ PtrDocument         pDoc;
 /*----------------------------------------------------------------------
    CopyReference                                                        
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                CopyReference (PtrReference pCopyRef, PtrReference pSourceRef, PtrElement * pEl)
-#else  /* __STDC__ */
-void                CopyReference (pCopyRef, pSourceRef, pEl)
-PtrReference        pCopyRef;
-PtrReference        pSourceRef;
-PtrElement         *pEl;
-#endif /* __STDC__ */
+void CopyReference (PtrReference pCopyRef, PtrReference pSourceRef, PtrElement *pEl)
 {
    PtrReferredDescr    pRefD;
 
@@ -656,15 +578,8 @@ PtrElement         *pEl;
    Toutes les references externes contenues dans le        
    sous-arbre sont e'galement annule'es.                   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TransferReferences (PtrElement pTarget, PtrDocument pDoc, PtrElement pEl, PtrDocument pSourceDoc)
-#else  /* __STDC__ */
-void                TransferReferences (pTarget, pDoc, pEl, pSourceDoc)
-PtrElement          pTarget;
-PtrDocument         pDoc;
-PtrElement          pEl;
-PtrDocument         pSourceDoc;
-#endif /* __STDC__ */
+void TransferReferences (PtrElement pTarget, PtrDocument pDoc, PtrElement pEl,
+			 PtrDocument pSourceDoc)
 {
    PtrElement          pChild;
    PtrReferredDescr    pDescRef;
@@ -746,15 +661,7 @@ PtrDocument         pSourceDoc;
    	docIdent a la liste des documents contenant des references	
    	externes a l'element pEl qui appartient au document pDoc2.	
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                AddDocOfExternalRef (PtrElement pEl, DocumentIdentifier docIdent, PtrDocument pDoc2)
-#else  /* __STDC__ */
-void                AddDocOfExternalRef (pEl, docIdent, pDoc2)
-PtrElement          pEl;
-DocumentIdentifier  docIdent;
-PtrDocument         pDoc2;
-#endif /* __STDC__ */
-
+void AddDocOfExternalRef (PtrElement pEl, DocumentIdentifier docIdent, PtrDocument pDoc2)
 {
    ThotBool            found;
    PtrExternalDoc      pExtDoc;
@@ -812,22 +719,10 @@ PtrDocument         pDoc2;
    	l'attribut reference pRefAttr sur cet element et retourne	
    	'Vrai'. Sinon retourne 'Faux'.					
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-ThotBool            SetReference (PtrElement pRefEl, PtrAttribute pRefAttr, PtrElement pTargetEl, PtrDocument pDoc, PtrDocument pTargetDoc, ThotBool ancestor, ThotBool withAppEvent)
-
-#else  /* __STDC__ */
-ThotBool            SetReference (pRefEl, pRefAttr, pTargetEl, pDoc, pTargetDoc, ancestor, withAppEvent)
-PtrElement          pRefEl;
-PtrAttribute        pRefAttr;
-PtrElement          pTargetEl;
-PtrDocument         pDoc;
-PtrDocument         pTargetDoc;
-ThotBool            ancestor;
-ThotBool            withAppEvent;
-
-#endif /* __STDC__ */
-
+ThotBool SetReference (PtrElement pRefEl, PtrAttribute pRefAttr,
+		       PtrElement pTargetEl, PtrDocument pDoc,
+		       PtrDocument pTargetDoc, ThotBool ancestor,
+		       ThotBool withAppEvent)
 {
    PtrElement          pEl, pAsc;
    PtrSSchema          pSS;
@@ -1013,16 +908,8 @@ too. In this case, the others documents are opened temporarely. If
 removeExclusions is TRUE, the exclusions are removed from the documents
 opened temporarely.
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void	      UpdateInclusionElements (PtrDocument pDoc, ThotBool loadExternalDoc,
-ThotBool removeExclusions)
-#else  /* __STDC__ */
-void	      UpdateInclusionElements (pDoc, loadExternalDoc, removeExclusions)
-PtrDocument   pDoc;
-ThotBool      loadExternalDoc;
-ThotBool      removeExclusions;
-#endif /* __STDC__ */
+void UpdateInclusionElements (PtrDocument pDoc, ThotBool loadExternalDoc,
+			      ThotBool removeExclusions)
 {
   PtrDocument           pSourceDoc;
   PtrDocument           pExternalDoc[MAX_EXT_DOC];

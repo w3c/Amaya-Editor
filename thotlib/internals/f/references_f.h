@@ -7,13 +7,13 @@
 #ifdef __STDC__
 
 extern PtrElement ReferredElement ( PtrReference pRef,
-                                    DocumentIdentifier * docIdent,
-                                    PtrDocument * pDoc );
+                                    DocumentIdentifier *docIdent,
+                                    PtrDocument *pDoc );
 extern PtrReference SearchExternalReferenceToElem ( PtrElement pEl,
                                                     PtrDocument pDocEl,
                                                     ThotBool processNotLoaded,
-                                                    PtrDocument * pDocRef,
-                                                    PtrExternalDoc * pExtDoc,
+                                                    PtrDocument *pDocRef,
+                                                    PtrExternalDoc *pExtDoc,
                                                     ThotBool nextExtDoc );
 extern PtrReferredDescr NewReferredElDescr ( PtrDocument pDoc );
 extern void DeleteReferredElDescr ( PtrReferredDescr pRefD );
@@ -23,7 +23,7 @@ extern void CancelReference ( PtrElement pEl,
                               PtrDocument pDoc );
 extern void CopyReference ( PtrReference pCopyRef,
                             PtrReference pSourceRef,
-                            PtrElement * pEl );
+                            PtrElement *pEl );
 extern void TransferReferences ( PtrElement pTarget,
                                  PtrDocument pDoc,
                                  PtrElement pEl,
@@ -45,13 +45,13 @@ extern void UpdateInclusionElements ( PtrDocument pDoc,
 #else /* __STDC__ */
 
 extern PtrElement ReferredElement (/* PtrReference pRef,
-                                      DocumentIdentifier * docIdent,
-                                      PtrDocument * pDoc */);
+                                      DocumentIdentifier *docIdent,
+                                      PtrDocument *pDoc */);
 extern PtrReference SearchExternalReferenceToElem (/* PtrElement pEl,
                                                       PtrDocument pDocEl,
                                                       ThotBool processNotLoaded,
-                                                      PtrDocument * pDocRef,
-                                                      PtrExternalDoc * pExtDoc,
+                                                      PtrDocument *pDocRef,
+                                                      PtrExternalDoc *pExtDoc,
                                                       ThotBool nextExtDoc */);
 extern PtrReferredDescr NewReferredElDescr (/* PtrDocument pDoc */);
 extern void DeleteReferredElDescr (/* PtrReferredDescr pRefD */);
@@ -61,7 +61,7 @@ extern void CancelReference (/* PtrElement pEl,
                                 PtrDocument pDoc */);
 extern void CopyReference (/* PtrReference pCopyRef,
                               PtrReference pSourceRef,
-                              PtrElement * pEl */);
+                              PtrElement *pEl */);
 extern void TransferReferences (/* PtrElement pTarget,
                                    PtrDocument pDoc,
                                    PtrElement pEl,

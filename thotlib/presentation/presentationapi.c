@@ -1123,7 +1123,7 @@ PRule TtaNewPRuleForView (int presentationType, int view, Document document)
    Return value:
    new presentation rule.
   ----------------------------------------------------------------------*/
-PRule TtaNewPRuleForNamedView (int presentationType, STRING viewName,
+PRule TtaNewPRuleForNamedView (int presentationType, char *viewName,
 			       Document document)
 {
    PtrPRule            pPres;
@@ -1149,7 +1149,7 @@ PRule TtaNewPRuleForNamedView (int presentationType, STRING viewName,
        /* Searching into the main tree views */
        if (pPS != NULL)
 	 for (v = 1; v <= MAX_VIEW && vue == 0; v++)
-	   if (ustrcmp (pPS->PsView[v - 1], viewName) == 0)
+	   if (strcmp (pPS->PsView[v - 1], viewName) == 0)
 	     vue = v;
        if (vue == 0)
 	 TtaError (ERR_invalid_parameter);

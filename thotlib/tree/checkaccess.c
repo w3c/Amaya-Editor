@@ -1,6 +1,6 @@
 /*
  *
- * (c) COPYRIGHT INRIA, 1996.
+ * (c) COPYRIGHT INRIA, 1996-2001.
  * Please first read the full copyright statement in file COPYRIGHT.
  * 
  */
@@ -51,17 +51,9 @@
     hidden to the user, or if it belongs to a hidden tree.
     This is the Thot default.
 --------------------------------------------------------------*/
-
-#ifdef __STDC__
-void      HierarchicalCheckHiddenAccess (PtrElement pEl, ThotBool * isHidden)
-#else  /* __STDC__ */
-void      HierarchicalCheckHiddenAccess (pEl, isHidden)
-PtrElement pEl;
-ThotBool *isHidden;
-#endif /* __STDC__ */
-
+void HierarchicalCheckHiddenAccess (PtrElement pEl, ThotBool *isHidden)
 {
-PtrElement pAsc;
+  PtrElement pAsc;
 
    *isHidden = FALSE;
    pAsc = pEl;
@@ -83,20 +75,11 @@ PtrElement pAsc;
     a protected tree.
     This is the Thot default.
 --------------------------------------------------------------*/
-
-#ifdef __STDC__
-void      HierarchicalCheckReadOnlyAccess (PtrElement pEl,
-					             ThotBool * isReadOnly)
-#else  /* __STDC__ */
-void      HierarchicalCheckReadOnlyAccess (pEl,
-					             isReadOnly)
-PtrElement pEl;
-ThotBool *isReadOnly;
-#endif /* __STDC__ */
-
+void HierarchicalCheckReadOnlyAccess (PtrElement pEl,
+				      ThotBool *isReadOnly)
 {
-PtrElement pAsc;
-ThotBool  testRO;
+  PtrElement pAsc;
+  ThotBool  testRO;
 
    *isReadOnly = FALSE;
    testRO = TRUE;
@@ -123,28 +106,15 @@ ThotBool  testRO;
     returns TRUE in the cannotInsert variable if a new element
     cannot be inserted before or after the element.
     returns FALSE if insertion is authorized.
-
     If TRUE, the variable beforeElement indicates if insertion is
     planned before the element, FALSE for an insertion after the
     element.
-
     Rules by with this procedure decides to authorize or not such
     insertion are Thot default ones.
 --------------------------------------------------------------*/
-
-#ifdef __STDC__
-void      HierarchicalCheckInsertNearElement (PtrElement pEl,
-                                              ThotBool beforeElement,
-					      ThotBool * cannotInsert)
-#else  /* __STDC__ */
-void      HierarchicalCheckInsertNearElement (pEl,
-                                              beforeElement,
-					      cannotInsert)
-PtrElement pEl;
-ThotBool  beforeElement;
-ThotBool *cannotInsert;
-#endif /* __STDC__ */
-
+void HierarchicalCheckInsertNearElement (PtrElement pEl,
+					 ThotBool beforeElement,
+					 ThotBool *cannotInsert)
 {
 
    *cannotInsert = FALSE;
@@ -158,20 +128,9 @@ ThotBool *cannotInsert;
     overload default procedures to check if an element is hidden
     or in read-only mode.
 --------------------------------------------------------------*/
-
-#ifdef __STDC__
-void      TtaSetCheckAccessFunctions (Proc checkHiddenProc,
-                                      Proc checkReadOnlyProc,
-				      Proc checkInsertProc)
-#else  /* __STDC__ */
-void      TtaSetCheckAccessFunctions (checkHiddenProc,
-				      checkReadOnlyProc,
-				      checkInsertProc)
-Proc      checkHiddenProc;
-Proc      checkReadOnlyProc;
-Proc      checkInsertProc;
-#endif /* __STDC__ */
-
+void TtaSetCheckAccessFunctions (Proc checkHiddenProc,
+				 Proc checkReadOnlyProc,
+				 Proc checkInsertProc)
 {
 
    if (checkHiddenProc == NULL)
@@ -203,13 +162,7 @@ Proc      checkInsertProc;
     functions to determine the different cases in which elements
     may be considered as hidden or in read-only mode.
 --------------------------------------------------------------*/
-
-#ifdef __STDC__
 void      CheckAccessLoadResources ()
-#else  /* __STDC__ */
-void      CheckAccessLoadResources ()
-#endif /* __STDC__ */
-
 {
 
    if (ThotLocalActions[T_checkHiddenElement] == NULL)

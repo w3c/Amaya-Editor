@@ -522,7 +522,7 @@ static PtrAttribute GetEnclosingAttr (PtrElement pEl, int attrNumber, PtrAttribu
       attrNumber = -attrNumber;
    if (pAInit != NULL &&
        pAInit->AeAttrNum == attrNumber &&
-       !ustrcmp (pAInit->AeAttrSSchema->SsName, pEl->ElStructSchema->SsName))
+       !strcmp (pAInit->AeAttrSSchema->SsName, pEl->ElStructSchema->SsName))
       pAttr = pAInit;
    else
       {
@@ -532,7 +532,7 @@ static PtrAttribute GetEnclosingAttr (PtrElement pEl, int attrNumber, PtrAttribu
          pA = pAsc->ElFirstAttr;
          while (pAttr == NULL && pA != NULL)
 	    if (pA->AeAttrNum == attrNumber &&
-	        !ustrcmp (pA->AeAttrSSchema->SsName, pEl->ElStructSchema->SsName))
+	        !strcmp (pA->AeAttrSSchema->SsName, pEl->ElStructSchema->SsName))
 	       pAttr = pA;
 	    else
 	       pA = pA->AeNext;
@@ -970,7 +970,7 @@ static void         VerifyAbsBox (ThotBool * found, PtrPSchema pSP, RefKind refK
 	  attrFound = FALSE;
 	  while (pAttr != NULL && !attrFound)
 	    if (pAttr->AeAttrNum == numAbType &&
-		!ustrcmp (pAttr->AeAttrSSchema->SsName, pSP->PsStructName))
+		!strcmp (pAttr->AeAttrSSchema->SsName, pSP->PsStructName))
 	      attrFound = TRUE;
 	    else
 	      pAttr = pAttr->AeNext;
@@ -2427,9 +2427,9 @@ static ThotBool FindAbsBox (int Ntype, PtrPSchema pSchP, Name presBoxName,
    if ((*pAb)->AbPresentationBox && (*pAb)->AbLeafType == LtText)
      {
        if (Ntype != 0)
-	 result = !ustrcmp ((*pAb)->AbPSchema->PsPresentBox[(*pAb)->AbTypeNum - 1].PbName, pSchP->PsPresentBox[Ntype - 1].PbName);
+	 result = !strcmp ((*pAb)->AbPSchema->PsPresentBox[(*pAb)->AbTypeNum - 1].PbName, pSchP->PsPresentBox[Ntype - 1].PbName);
        else
-	 result = !ustrcmp ((*pAb)->AbPSchema->PsPresentBox[(*pAb)->AbTypeNum - 1].PbName, presBoxName);
+	 result = !strcmp ((*pAb)->AbPSchema->PsPresentBox[(*pAb)->AbTypeNum - 1].PbName, presBoxName);
      }
    if (!result)
      {
@@ -2503,7 +2503,7 @@ static ThotBool SearchElCrPresBoxCopy (int *presBoxType, PtrPSchema * pSchP,
 		{
 		  result = pPRule->PrPresBox[0] == *presBoxType;
 		  if (result)
-		    result = ustrcmp (pSS->SsName, (*pSchS)->SsName) == 0;
+		    result = strcmp (pSS->SsName, (*pSchS)->SsName) == 0;
 		  /* on supprime le test sur l'egalite des schemas P et on teste uniquement */
 		  /* les schemas de structure : cela permet a des chapitres de se referencer */
 		  /* mutuellement meme si leur schema de presentation different legerement */
@@ -2511,7 +2511,7 @@ static ThotBool SearchElCrPresBoxCopy (int *presBoxType, PtrPSchema * pSchP,
 		  /* en copie */
 		}
 	      else
-		result = !ustrcmp (pSP->PsPresentBox[pPRule->PrPresBox[0] - 1].PbName, presBoxName);
+		result = !strcmp (pSP->PsPresentBox[pPRule->PrPresBox[0] - 1].PbName, presBoxName);
 	    }
 	   if (result && (pSP != *pSchP))
 	      /* retourne le schema de presentation et le */
@@ -2592,7 +2592,7 @@ static void CopyLeaves (PtrElement pEC, PtrAbstractBox * pAb,
 		  pBuffP->BuPrevious = *pBuffPrec;
 		  (*pBuffPrec)->BuNext = pBuffP;
 	       }
-	     ustrncpy (pBuffP->BuContent, pBuffE->BuContent, THOT_MAX_CHAR);
+	     strncpy (pBuffP->BuContent, pBuffE->BuContent, THOT_MAX_CHAR);
 	     /* copie le contenu */
 	     pBuffP->BuLength = pBuffE->BuLength;
 	     /* copie la longueur */
@@ -2617,16 +2617,16 @@ static PtrElement SearchElInSubTree (PtrElement pElRoot, int elType,
    PtrElement          pEC, pElChild;
 
    pEC = NULL;			/* a priori on n'a pas trouve' */
-   if (typeName[0] != WC_EOS)
+   if (typeName[0] != EOS)
       /* on compare les noms de type */
      {
-	if (ustrcmp (typeName, pElRoot->ElStructSchema->SsRule[pElRoot->ElTypeNumber - 1].SrName) == 0)
+	if (strcmp (typeName, pElRoot->ElStructSchema->SsRule[pElRoot->ElTypeNumber - 1].SrName) == 0)
 	   pEC = pElRoot;
      }
    else
       /* on compare les numero de type et code de schema de structure */
       if (pElRoot->ElTypeNumber == elType &&
-	  !ustrcmp (pElRoot->ElStructSchema->SsName, pSS->SsName))
+	  !strcmp (pElRoot->ElStructSchema->SsName, pSS->SsName))
       /* c'est l'element cherche' */
       pEC = pElRoot;
    if (pEC == NULL)
@@ -2734,7 +2734,7 @@ void ApplyCopy (PtrDocument pDoc, PtrPRule pPRule, PtrAbstractBox pAb,
 		  /* la boite de presentation a copier est definie par son nom */
 		  {
 		    boxType = 0;
-		    ustrncpy (boxName, pPRule->PrPresBoxName, MAX_NAME_LENGTH);
+		    strncpy (boxName, pPRule->PrPresBoxName, MAX_NAME_LENGTH);
 		    /* nom de la boite a cherche */
 		  }
 		else
@@ -3005,11 +3005,11 @@ ThotBool ApplyRule (PtrPRule pPRule, PtrPSchema pSchP, PtrAbstractBox pAb,
 			     pConst->PdString[2] == DIR_SEP))
 #endif /* _WINDOWS */
 			  /* absolute file name */
-			  ustrncpy (fname, pConst->PdString, MAX_PATH - 1);
+			  strncpy (fname, pConst->PdString, MAX_PATH - 1);
 			else
 			  /* relative file name */
 			  {
-			    ustrncpy (directoryName, SchemaPath, MAX_PATH - 1);
+			    strncpy (directoryName, SchemaPath, MAX_PATH - 1);
 			    MakeCompleteName (pConst->PdString, "",
 					      directoryName, fname, &i);
 			  }

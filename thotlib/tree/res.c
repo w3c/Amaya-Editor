@@ -40,16 +40,12 @@ char IndexSymols[] = {'%', /* pre couplage */
 static StrUnitDesc *ListUnitDesc = NULL;
 static TypeTree BuildStack[MAXDEPTH];
 static int BuildStackTop;
+
+
 /*----------------------------------------------------------------------
   RestCompSymbols
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int RestCompSymbols(char s1, char s2)
-#else  /* __STDC__ */
-static int RestCompSymbols(char s1, char s2)
-char s1;
-char s2;
-#endif  /* __STDC__ */
 {
   ThotBool found = FALSE;
   int i = 0;
@@ -75,13 +71,7 @@ char s2;
   retourne 1 si first est avant second, 0 s'il est apres 2 si les deux 
   sont egaux.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static int RestIsBefore (TypeTree first, TypeTree second) 
-#else  /* __STDC__ */
-static int RestIsBefore (first, second) 
-TypeTree first;
-TypeTree second;
-#endif  /* __STDC__ */
 {
   TypeTree fChild, sChild;
   int fDepth = 0;
@@ -134,13 +124,7 @@ TypeTree second;
   RestInsertNode
   insere le noeud child dans l'arbre de types comme fils de parent
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void RestInsertNode (TypeTree child, TypeTree parent) 
-#else  /* __STDC__ */
-void RestInsertNode (child, parent) 
-TypeTree child;
-TypeTree parent;
-#endif  /* __STDC__ */
 {
   TypeTree sibling, last;
   ThotBool found;
@@ -187,12 +171,7 @@ TypeTree parent;
   RestReorderChild
   detache et re-insere le noeud child dans l'arbre de types 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void RestReorderChild (TypeTree child) 
-#else  /* __STDC__ */
-void RestReorderChild (child) 
-TypeTree child;
-#endif  /* __STDC__ */
 {
   TypeTree parent;
   
@@ -214,12 +193,7 @@ TypeTree child;
   RestNewTypeNode
   alloue un noeud d'arbre de types.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static TypeTree RestNewTypeNode(ElementType elemType)
-#else  /* __STDC__ */
-static TypeTree RestNewTypeNode(elemType)
-ElementType elemType;
-#endif  /* __STDC__ */
 {
   TypeTree theTree = NULL;
   int i;
@@ -249,13 +223,7 @@ ElementType elemType;
   RestSearchPreCouple
   recherche si typeNode est compatible avec un précouplage
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void RestSearchPreCouple (TypeTree typeNode, ThotBool isSource) 
-#else  /* __STDC__ */
-static void RestSearchPreCouple (typeNode, isSource) 
-TypeTree typeNode;
-ThotBool isSource;
-#endif  /* __STDC__ */
 {
   
 }
@@ -264,13 +232,7 @@ ThotBool isSource;
   RecBuildTypeTree
   construit l'arbre des types du type elemType
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static TypeTree RecBuildTypeTree (ElementType elemType, ThotBool isSource) 
-#else  /* __STDC__ */
-static TypeTree RecBuildTypeTree (elemType, isSource) 
-ElementType elemType;
-ThotBool isSource;
-#endif  /* __STDC__ */
 {
   TypeTree theTree = NULL;
   TypeTree newNode;
@@ -417,13 +379,7 @@ ThotBool isSource;
   retourne un pointeur sur le noeud de l'arbre de type du schema 
   correspondant au type d'element elemType 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static TypeTree GetTypeTree(ElementType elemType, ThotBool isSource)
-#else  /* __STDC__ */
-static TypeTree GetTypeTree(elemType, isSource)
-ElementType elemType;
-ThotBool isSource;
-#endif  /* __STDC__ */
 {
   BuildStackTop = -1; 
   return RecBuildTypeTree (elemType, isSource); 
@@ -488,12 +444,7 @@ static TypeTree GetElemSourceTree()
   RestFreeTree
   libere un arbre de types
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void RestFreeTree(TypeTree tree)
-#else  /* __STDC__ */
-void RestFreeTree(tree)
-TypeTree tree;
-#endif  /* __STDC__ */
 {
   TypeTree child, nextchild;
   if (tree != NULL)
@@ -513,12 +464,7 @@ TypeTree tree;
   retourne le symbole correspondant au noeud unite tree ('U' si aucune
   information n'est presente pour ce noeud).
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static char GetUDescSymb (TypeTree tree)
-#else  /* __STDC__ */
-static char GetUDescSymb (tree)
-TypeTree tree;
-#endif  /* __STDC__ */	
 {
   StrUnitDesc *ptrDesc;
 
@@ -538,13 +484,7 @@ TypeTree tree;
   retire l'entree si elle existe deja et n'est pas instanciee avec le
   type de base donne
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void AddUnitDescriptor (TypeTree tree, ElementType elType)
-#else  /* __STDC__ */
-static void AddUnitDescriptor (tree, elType)
-TypeTree tree;
-ElementType elType;
-#endif  /* __STDC__ */
 {
   StrUnitDesc *ptrDesc, *previous;
   
@@ -578,16 +518,8 @@ ElementType elType;
 /*----------------------------------------------------------------------  
   RestRecPrintType
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void RestRecPrintType(TypeTree theTree, char *buffer, TypeTree *nodes, int *indice, PrintMethod method)
-#else  /* __STDC__ */
-static void RestRecPrintType(theTree, buffer, nodes, indice, method)
-TypeTree theTree;
-char *buffer;
-TypeTree *nodes;
-int *indice;
-PrintMethod method;
-#endif  /* __STDC__ */
+static void RestRecPrintType(TypeTree theTree, char *buffer, TypeTree *nodes,
+			     int *indice, PrintMethod method)
 {
   TypeTree child, markedTree;
 
@@ -679,14 +611,7 @@ PrintMethod method;
   empreinte effective
   si effective est vrai cree l'empreinte des types effectifs 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void RestPrintType(void *restruct, int bufsize, ThotBool isSource)
-#else  /* __STDC__ */
-void RestPrintType(restruct, bufsize, isSource)
-void *restruct;
-int bufsize;
-ThotBool isSource;
-#endif  /* __STDC__ */
 {
   int indice;
   TypeTree childTree;
@@ -734,13 +659,7 @@ ThotBool isSource;
   RestCompatible
   renvoie vrai si elem est une instance de tree
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool RestCompatible (ElementType elType, TypeTree tree)
-#else  /* __STDC__ */
-static ThotBool RestCompatible (elType, tree)
-ElementType elType;
-TypeTree tree;
-#endif  /* __STDC__ */
 {
   ThotBool result = FALSE;
   ElementType elTTree;
@@ -783,14 +702,7 @@ TypeTree tree;
   RecInstanciateType : marque les noeuds de tree comme effectifs s'il
   sonts representes dans l'instance elem.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool RecInstanciateType (TypeTree tree, Element elem, PrintMethod method)
-#else  /* __STDC__ */
-static ThotBool RecInstanciateType (tree, elem, method)
-TypeTree tree;
-Element elem;
-PrintMethod method;
-#endif  /* __STDC__ */
 {
   ElementType elType, childType;
   ThotBool    result, found, alone;
@@ -889,12 +801,7 @@ PrintMethod method;
 /*----------------------------------------------------------------------  
   RestUnmarkEffective
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void RestUnmarkEffective (TypeTree tree)
-#else  /* __STDC__ */
-static void RestUnmarkEffective (tree)
-TypeTree tree;
-#endif  /* __STDC__ */
 {
   TypeTree child;
   StrUnitDesc *ptrDesc;
@@ -926,14 +833,7 @@ TypeTree tree;
 /*----------------------------------------------------------------------  
   RestInstanciateType : instanciation de l'arbre des types 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static ThotBool RestInstanciateType(SourcePrint sourcePrint, PrintMethod method)
-#else  /* __STDC__ */
-static ThotBool RestInstanciateType(sourcePrint, method)
-Restruct restruct;
-Element elem;
-PrintMethod method;
-#endif  /* __STDC__ */
 {
   ThotBool ok = TRUE;
   int i;
@@ -953,12 +853,7 @@ PrintMethod method;
 /*----------------------------------------------------------------------  
   RestGetSourcePrint
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static SourcePrint RestGetSourcePrint (PrintMethod method)
-#else  /* __STDC__ */
-static SourcePrint RestGetSourcePrint (method)
-PrintMethod method;
-#endif  /* __STDC__ */
 {
   SourcePrint sPrint;
   ThotBool found = FALSE;
@@ -1016,12 +911,7 @@ PrintMethod method;
 /*----------------------------------------------------------------------  
   RestNewRestruct
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 Restruct RestNewRestruct (ElementType typeDest)
-#else  /* __STDC__ */
-Restruct RestNewRestruct (typeDest)
-ElementType typeDest;
-#endif  /* __STDC__ */
 {
   Restruct restruct;
   int i;
@@ -1044,13 +934,7 @@ ElementType typeDest;
 /*----------------------------------------------------------------------  
   RestInitMatch : initialisation du contexte de transformation
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool RestInitMatch (Element elemFirst, Element elemLast)
-#else  /* __STDC__ */
-ThotBool RestInitMatch (elemFirst, elemLast)
-Element elemFirst;
-Element elemLast;
-#endif  /* __STDC__ */
 {
   Element ptrElem;
   ElementType elType;
@@ -1128,15 +1012,8 @@ Element elemLast;
 /*----------------------------------------------------------------------  
   RestMatchElements
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool RestMatchElements(Element elemFirst, Element elemLast, SSchema strSch, int typeNum)
-#else  /* __STDC__ */
-ThotBool RestMatchElements(elemFirst, elemLast, strSch, typeNum)
-Element elemFirst;
-Element elemLast;
-SSchema strSch;
-int typeNum;
-#endif  /* __STDC__ */
+ThotBool RestMatchElements(Element elemFirst, Element elemLast, SSchema strSch,
+			   int typeNum)
 {
   ElementType elType;
   Restruct restCour;
@@ -1238,15 +1115,7 @@ int typeNum;
   applique une transformation automatique pour changer sur place 
   le type d'un element 
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool RestChangeType(Element elem, Document doc, int dstTypeNum, SSchema dstSch)
-#else  /* __STDC__ */
-ThotBool RestChangeType(elem, doc, dstTypeNum, dstSch)
-Element elem;
-Document doc;
-int dstTypeNum;
-SSchema dstSch;
-#endif  /* __STDC__ */
 {
   ThotBool    found = FALSE;
   Restruct    cur;

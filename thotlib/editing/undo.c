@@ -54,13 +54,7 @@
 /*----------------------------------------------------------------------
    HistError
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void HistError (int errorCode)
-#else  /* __STDC__ */
-static void HistError (errorCode)
-int errorCode;
-
-#endif /* __STDC__ */
 {
 #ifdef THOT_DEBUG
    fprintf (stderr, "**** Undo error %d ****\n", errorCode);
@@ -71,14 +65,7 @@ int errorCode;
    UpdateHistoryLength
    Add diff to variable pDoc->DocNbEditsInHistory
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void UpdateHistoryLength (int diff, PtrDocument pDoc)
-#else  /* __STDC__ */
-static void UpdateHistoryLength (diff, pDoc)
-     int diff;
-     PtrDocument pDoc;
-
-#endif /* __STDC__ */
 {
    if (pDoc->DocNbEditsInHistory == 0 && diff > 0)
      /* enable Undo command */
@@ -93,14 +80,7 @@ static void UpdateHistoryLength (diff, pDoc)
    UpdateRedoLength
    Add diff to variable pDoc->DocNbUndone
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void UpdateRedoLength (int diff, PtrDocument pDoc)
-#else  /* __STDC__ */
-static void UpdateRedoLength (diff, pDoc)
-     int diff;
-     PtrDocument pDoc;
-
-#endif /* __STDC__ */
 {
    if (pDoc->DocNbUndone == 0 && diff > 0)
      /* enable Redo command */
@@ -116,14 +96,7 @@ static void UpdateRedoLength (diff, pDoc)
    Remove the last editing operation from the undo or redo queue
    (depending on parameter undo) and return it.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static PtrEditOperation UnchainLatestOp (PtrDocument pDoc, ThotBool undo)
-#else  /* __STDC__ */
-static PtrEditOperation UnchainLatestOp (pDoc, undo)
-PtrDocument pDoc;
-ThotBool undo;
-
-#endif /* __STDC__ */
 {
    PtrEditOperation	*editOp, last;
 
@@ -142,15 +115,7 @@ ThotBool undo;
    CancelAnEdit
    Remove and delete an editing operation from the history
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void CancelAnEdit (PtrEditOperation editOp, PtrDocument pDoc, ThotBool undo)
-#else  /* __STDC__ */
-static void CancelAnEdit (editOp, pDoc, undo)
-PtrEditOperation editOp;
-PtrDocument pDoc;
-ThotBool undo;
-
-#endif /* __STDC__ */
 {
    PtrElement		pEl;
    PtrAttribute         pAttr;
@@ -231,13 +196,7 @@ ThotBool undo;
    ClearRedoQueue
    Clear the Redo queue of document pDoc
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void ClearRedoQueue (PtrDocument pDoc)
-#else  /* __STDC__ */
-static void ClearRedoQueue (pDoc)
-PtrDocument pDoc;
-
-#endif /* __STDC__ */
 {
    PtrEditOperation editOp, previousEditOp;
 
@@ -260,13 +219,7 @@ PtrDocument pDoc;
    ClearHistory
    Clear the editing history of document pDoc
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void ClearHistory (PtrDocument pDoc)
-#else  /* __STDC__ */
-void ClearHistory (pDoc)
-PtrDocument pDoc;
-
-#endif /* __STDC__ */
 {
    PtrEditOperation editOp, previousEditOp;
 
@@ -296,14 +249,7 @@ PtrDocument pDoc;
    If the selection saved in Op refers to elements that have been copied
    from subtree pTree, change the saved selection to the corresponding copies.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void ChangePointersOlderEdits (PtrEditOperation Op, PtrElement pTree)
-#else  /* __STDC__ */
-static void ChangePointersOlderEdits (Op, pTree)
-PtrEditOperation Op;
-PtrElement pTree;
-
-#endif /* __STDC__ */
 {
   PtrEditOperation	editOp, prevOp;
 
@@ -373,17 +319,8 @@ PtrElement pTree;
    removeWhenUndoing: element pEl to must be deleted when the operation will
 	 be undone.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void AddEditOpInHistory (PtrElement pEl, PtrDocument pDoc, ThotBool save,
 			 ThotBool removeWhenUndoing)
-#else  /* __STDC__ */
-void AddEditOpInHistory (pEl, pDoc, save, removeWhenUndoing)
-PtrElement pEl;
-PtrDocument pDoc;
-ThotBool save;
-ThotBool removeWhenUndoing;
-
-#endif /* __STDC__ */
 {
    PtrEditOperation	editOp;
    PtrElement		pCopy;
@@ -436,15 +373,7 @@ ThotBool removeWhenUndoing;
    If Op and older editing operations in the history refer to attribute
    pAttr, change these reference to the corresponding copy pCopyAttr.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void ChangeAttrPointersOlderEdits (PtrEditOperation Op, PtrAttribute pAttr, PtrAttribute pCopyAttr)
-#else  /* __STDC__ */
-static void ChangeAttrPointersOlderEdits (Op, pAttr, pCopyAttr)
-PtrEditOperation Op;
-PtrAttribute pAttr;
-PtrAttribute pCopyAttr;
-
-#endif /* __STDC__ */
 {
   PtrEditOperation	editOp;
 
@@ -474,17 +403,8 @@ PtrAttribute pCopyAttr;
    removeWhenUndoing: attribute pAttr to must be deleted when the operation
 	 will be undone.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void AddAttrEditOpInHistory (PtrAttribute pAttr, PtrElement pEl, PtrDocument pDoc, ThotBool save, ThotBool removeWhenUndoing)
-#else  /* __STDC__ */
-void AddAttrEditOpInHistory (pAttr, pEl, pDoc, save, removeWhenUndoing)
-PtrAttribute pAttr;
-PtrElement pEl;
-PtrDocument pDoc;
-ThotBool save;
-ThotBool removeWhenUndoing;
-
-#endif /* __STDC__ */
+void AddAttrEditOpInHistory (PtrAttribute pAttr, PtrElement pEl, PtrDocument pDoc,
+			     ThotBool save, ThotBool removeWhenUndoing)
 {
    PtrEditOperation	editOp = NULL;
    PtrAttribute		pCopy, pOldAttr;
@@ -555,17 +475,7 @@ ThotBool removeWhenUndoing;
    of document, only if it's an attribute operation for element oldEl.
    In that case, make it related to element newEl and attribute newAttr.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void ChangeLastRegisteredAttr (PtrElement oldEl, PtrElement newEl, PtrAttribute oldAttr, PtrAttribute newAttr, PtrDocument pDoc)
-#else  /* __STDC__ */
-void ChangeLastRegisteredAttr (oldEl, newEl, oldAttr, newAttr, pDoc)
-PtrElement oldEl;
-PtrElement newEl;
-PtrAttribute oldAttr;
-PtrAttribute newAttr;
-PtrDocument pDoc;
-
-#endif /* __STDC__ */
 {
    ThotBool	done;
 
@@ -611,13 +521,7 @@ PtrDocument pDoc;
    Replace the latest operation registered in the editing history of document:
    an attribute value modification becomes an attribute value deletion.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void ReplaceLastRegisteredAttr (PtrDocument pDoc)
-#else  /* __STDC__ */
-void ReplaceLastRegisteredAttr (pDoc)
-PtrDocument pDoc;
-
-#endif /* __STDC__ */
 {
    if (pDoc->DocLastEdit)
      if (pDoc->DocLastEdit->EoType == EtAttribute)
@@ -630,13 +534,7 @@ PtrDocument pDoc;
    CancelLastEditFromHistory
    Cancel the most recent editing operation registered in the editing history.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void CancelLastEditFromHistory (PtrDocument pDoc)
-#else  /* __STDC__ */
-void CancelLastEditFromHistory (pDoc)
-PtrDocument pDoc;
-
-#endif /* __STDC__ */
 {
    if (!pDoc->DocLastEdit)
      /* history empty. Error */
@@ -665,13 +563,7 @@ PtrDocument pDoc;
 
    Cancel the oldest sequence in the Undo (if undo==TRUE) or Redo queue.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void CancelOldestSequence (PtrDocument pDoc, ThotBool undo)
-#else  /* __STDC__ */
-static void CancelOldestSequence (pDoc, undo)
-PtrDocument pDoc;
-ThotBool undo;
-#endif /* __STDC__ */
 {
    PtrEditOperation    editOp, nextOp;
 
@@ -701,16 +593,8 @@ ThotBool undo;
    firstSel, lastSel, firstSelChar, lastSelChar: indicate the selection
 	 that must be set when the operation will be undone.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void OpenHistorySequence (PtrDocument pDoc, PtrElement firstSel, PtrElement lastSel, int firstSelChar, int lastSelChar)
-#else  /* __STDC__ */
-void OpenHistorySequence (pDoc, firstSel, lastSel, firstSelChar, lastSelChar)
-PtrDocument pDoc;
-PtrElement firstSel;
-PtrElement lastSel;
-int firstSelChar;
-int lastSelChar;
-#endif /* __STDC__ */
+void OpenHistorySequence (PtrDocument pDoc, PtrElement firstSel,
+			  PtrElement lastSel, int firstSelChar, int lastSelChar)
 {
   PtrEditOperation	editOp;
 
@@ -747,13 +631,7 @@ int lastSelChar;
    Close a sequence of editing operations in the history.
    return FALSE if the Sequence is empty.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool CloseHistorySequence (PtrDocument pDoc)
-#else  /* __STDC__ */
-ThotBool CloseHistorySequence (pDoc)
-PtrDocument pDoc;
-
-#endif /* __STDC__ */
 {
   ThotBool	result;
 
@@ -783,13 +661,7 @@ PtrDocument pDoc;
    Cancel the last sequence of editing operations registered in the
    editing history of document.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                CancelLastSequenceFromHistory (PtrDocument pDoc)
-#else  /* __STDC__ */
-void                CancelLastSequenceFromHistory (pDoc)
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
 {
    ThotBool	stop;
 
@@ -813,15 +685,7 @@ PtrDocument         pDoc;
    If reverse, the editing operation descriptor will decribe the reverse
    editing operation when returning.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void	UndoOperation (ThotBool undo, Document doc, ThotBool reverse)
-#else  /* __STDC__ */
-static void	UndoOperation (undo, doc, reverse)
-ThotBool undo;
-Document doc;
-ThotBool reverse;
-
-#endif /* __STDC__ */
 {
    PtrEditOperation	editOp;
    PtrElement		pEl, pSibling,
@@ -1069,13 +933,7 @@ ThotBool reverse;
    Move the latest undone edit of document pDoc from the Undo queue to
    the Redo queue.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void MoveEditToRedoQueue (PtrDocument pDoc)
-#else  /* __STDC__ */
-static void MoveEditToRedoQueue (pDoc)
-PtrDocument pDoc;
-
-#endif /* __STDC__ */
 {
    PtrEditOperation	editOp;
 
@@ -1094,13 +952,7 @@ PtrDocument pDoc;
    Move the latest redone edit of document pDoc from the Redo queue to
    the Undo queue.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void MoveEditToUndoQueue (PtrDocument pDoc)
-#else  /* __STDC__ */
-static void MoveEditToUndoQueue (pDoc)
-PtrDocument pDoc;
-
-#endif /* __STDC__ */
 {
    PtrEditOperation	editOp;
 
@@ -1118,13 +970,7 @@ PtrDocument pDoc;
    OpenRedoSequence
    Open a sequence of editing operations in the Redo queue.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void OpenRedoSequence (Document doc)
-
-#else  /* __STDC__ */
-static void OpenRedoSequence (doc)
-Document doc;
-#endif /* __STDC__ */
 {
   PtrDocument		pDoc;
   PtrEditOperation	editOp;
@@ -1161,13 +1007,7 @@ Document doc;
    of document doc and forget about this sequence: it won't be redone by
    the next Redo command issued by the user.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                UndoNoRedo (Document doc)
-#else  /* __STDC__ */
-void                UndoNoRedo (doc)
-Document            doc;
-
-#endif /* __STDC__ */
 {
    PtrDocument          pDoc;
    ThotBool		doit;
@@ -1199,14 +1039,7 @@ Document            doc;
    Undo the latest sequence of editing operations recorded in the history
    of document doc and register it in the Redo queue.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcUndo (Document doc, View view)
-#else  /* __STDC__ */
-void                TtcUndo (doc, view)
-Document            doc;
-View                view;
-
-#endif /* __STDC__ */
 {
    PtrDocument          pDoc;
    DisplayMode          dispMode;
@@ -1252,14 +1085,7 @@ View                view;
    Redo the latest sequence of editing operations undone by the TtcUndo
    and register it in the editing history.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                TtcRedo (Document doc, View view)
-#else  /* __STDC__ */
-void                TtcRedo (doc, view)
-Document            doc;
-View                view;
-
-#endif /* __STDC__ */
 {
    PtrDocument          pDoc;
    Element		firstSel, lastSel;

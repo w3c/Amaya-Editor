@@ -1,19 +1,10 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
 
-/*
- * Warning:
- * This module is part of the Thot library, which was originally
- * developed in French. That's why some comments are still in
- * French, but their translation is in progress and the full module
- * will be available in English in the next release.
- * 
- */
- 
 /*
  * Module dedicated to box positions managing.
  *
@@ -50,15 +41,7 @@
   SetYCompleteForOutOfStruct checks if an external box has a Y position
   that depends on that box.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         SetYCompleteForOutOfStruct (PtrBox pBox, int visibility, int y, int frame)
-#else  /* __STDC__ */
-static void         SetYCompleteForOutOfStruct (pBox, visibility, y, frame)
-PtrBox              pBox;
-int                 visibility;
-int                 y;
-int                 frame;
-#endif /* __STDC__ */
+static void SetYCompleteForOutOfStruct (PtrBox pBox, int visibility, int y, int frame)
 {
   PtrPosRelations     pPosRel;
   BoxRelation        *pRelation;
@@ -102,15 +85,7 @@ int                 frame;
   SetXCompleteForOutOfStruct checks if an external box has a X position
   that depends on that box.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         SetXCompleteForOutOfStruct (PtrBox pBox, int visibility, int x, int frame)
-#else  /* __STDC__ */
-static void         SetXCompleteForOutOfStruct (pBox, visibility, x, frame)
-PtrBox              pBox;
-int                 visibility;
-int                 x;
-int                 frame;
-#endif /* __STDC__ */
+static void SetXCompleteForOutOfStruct (PtrBox pBox, int visibility, int x, int frame)
 {
   PtrPosRelations     pPosRel;
   BoxRelation        *pRelation;
@@ -157,14 +132,7 @@ int                 frame;
    Dans ce cas, au retour de la fonction le parame`tre     
    height est modifie' et isPageBreakChanged est Vrai.     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         OnPage (PtrAbstractBox pAb, int *height, ThotBool * isPageBreakChanged)
-#else  /* __STDC__ */
-static void         OnPage (pAb, height, isPageBreakChanged)
-PtrAbstractBox      pAb;
-int                *height;
-ThotBool           *isPageBreakChanged;
-#endif /* __STDC__ */
+static void OnPage (PtrAbstractBox pAb, int *height, ThotBool *isPageBreakChanged)
 {
   if (pAb != NULL)
     {
@@ -193,15 +161,7 @@ ThotBool           *isPageBreakChanged;
    marque's comme sur la page ou hors de la page et si     
    le pave' est englobe' verticalement.                    
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         OutOfPage (PtrAbstractBox pAb, int *height, ThotBool *isPageBreakChanged)
-#else  /* __STDC__ */
-static void         OutOfPage (pAb, height, isPageBreakChanged)
-PtrAbstractBox      pAb;
-int                *height;
-ThotBool           *isPageBreakChanged;
-
-#endif /* __STDC__ */
+static void OutOfPage (PtrAbstractBox pAb, int *height, ThotBool *isPageBreakChanged)
 {
   PtrAbstractBox      pParentAb;
 
@@ -255,15 +215,8 @@ ThotBool           *isPageBreakChanged;
    Dans ce cas, au retour de la fonction le parame`tre     
    height est modifie' et isPageBreakChanged est Vrai.     
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         SetPageIndicators (PtrAbstractBox pAb, PtrAbstractBox table, int *height, ThotBool * isPageBreakChanged)
-#else  /* __STDC__ */
-static void         SetPageIndicators (pAb, table, height, isPageBreakChanged)
-PtrAbstractBox      pAb;
-PtrAbstractBox      table;
-int                *height;
-ThotBool           *isPageBreakChanged;
-#endif /* __STDC__ */
+static void SetPageIndicators (PtrAbstractBox pAb, PtrAbstractBox table,
+			       int *height, ThotBool *isPageBreakChanged)
 {
   PtrAbstractBox      pChildAb;
   PtrBox              pBox;
@@ -393,14 +346,7 @@ ThotBool           *isPageBreakChanged;
    Le parame`tre page donne la position de la limite de    
    page.                                                   
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-ThotBool            SetPageBreakPosition (PtrAbstractBox pAb, int *page)
-#else  /* __STDC__ */
-ThotBool            SetPageBreakPosition (pAb, page)
-PtrAbstractBox      pAb;
-int                *page;
-
-#endif /* __STDC__ */
+ThotBool SetPageBreakPosition (PtrAbstractBox pAb, int *page)
 {
   PtrAbstractBox      table;
   int                 height;
@@ -435,17 +381,8 @@ int                *page;
   update is allowde or not.
   If necessary the enclosing of boxes is checked after the update.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame, ThotBool horizRef, ThotBool vertRef)
-#else  /* __STDC__ */
-void                AddBoxTranslations (pAb, visibility, frame, horizRef, vertRef)
-PtrAbstractBox      pAb;
-int                 visibility;
-int                 frame;
-ThotBool            horizRef;
-ThotBool            vertRef;
-
-#endif /* __STDC__ */
+void AddBoxTranslations (PtrAbstractBox pAb, int visibility, int frame,
+			 ThotBool horizRef, ThotBool vertRef)
 {
   PtrBox              box1;
   PtrBox              pChildBox;
@@ -789,15 +726,7 @@ ThotBool            vertRef;
    - nChars: the number of characters that can be inserted in the page
              or the volume of the box.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                SetPageHeight (PtrAbstractBox pAb, int *ht, int *pos, int *nChars)
-#else  /* __STDC__ */
-void                SetPageHeight (pAb, ht, pos, nChars)
-PtrAbstractBox      pAb;
-int                *ht;
-int                *pos;
-int                *nChars;
-#endif /* __STDC__ */
+void SetPageHeight (PtrAbstractBox pAb, int *ht, int *pos, int *nChars)
 {
    PtrBox              box;
    PtrBox              pChildBox;
@@ -911,15 +840,7 @@ int                *nChars;
    SetBoxToTranslate marque le sous-arbre des paves en cours de    
    placement.                                              
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                SetBoxToTranslate (PtrAbstractBox pAb, ThotBool horizRef, ThotBool vertRef)
-#else  /* __STDC__ */
-void                SetBoxToTranslate (pAb, horizRef, vertRef)
-PtrAbstractBox      pAb;
-ThotBool            horizRef;
-ThotBool            vertRef;
-
-#endif /* __STDC__ */
+void SetBoxToTranslate (PtrAbstractBox pAb, ThotBool horizRef, ThotBool vertRef)
 {
    PtrAbstractBox      pChildAb;
    PtrBox              pBox;

@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void GetClickedStructBox ( PtrBox * result,
+extern void GetClickedStructBox ( PtrBox *result,
                                   PtrAbstractBox pRootAb,
                                   int frame,
                                   int x,
@@ -15,7 +15,7 @@ extern void GetClickedStructBox ( PtrBox * result,
 
 #else /* __STDC__ */
 
-extern void GetClickedStructBox (/* PtrBox * result,
+extern void GetClickedStructBox (/* PtrBox *result,
                                     PtrAbstractBox pRootAb,
                                     int frame,
                                     int x,

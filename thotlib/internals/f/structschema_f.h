@@ -9,7 +9,7 @@
 extern void CreateDocument ( PtrDocument *pDoc,
                              Document *document );
 extern void GetSRuleFromName ( int *typeNum,
-                               PtrSSchema * pSS,
+                               PtrSSchema *pSS,
                                Name typeName,
                                int whichName );
 extern void GetAttrRuleFromName ( int *attrNum,
@@ -83,16 +83,16 @@ extern ThotBool AllowedFirstChild ( PtrElement pEl,
                                     ThotBool inTree );
 extern void InsertChildFirst ( PtrElement pEl,
                                PtrElement pChild,
-                               PtrElement * pFeuille,
+                               PtrElement *pLeaf,
                                PtrDocument pDoc );
 extern PtrElement CreateDescendant ( int typeNum,
                                      PtrSSchema pSS,
                                      PtrDocument pDoc,
-                                     PtrElement * pLeaf,
+                                     PtrElement *pLeaf,
                                      int descTypeNum,
                                      PtrSSchema pDescSS );
 extern SSchema TtaGetSchemaExtension ( Document document,
-                                       STRING NomExtension );
+                                       char *NomExtension );
 extern SRule *ExtensionRule ( PtrSSchema pSS,
                               int typeNum,
                               PtrSSchema pExtSS );
@@ -118,7 +118,7 @@ extern ThotBool CanSplitElement ( PtrElement firstEl,
 extern void CreateDocument (/* PtrDocument *pDoc,
                                Document *document */);
 extern void GetSRuleFromName (/* int *typeNum,
-                                 PtrSSchema * pSS,
+                                 PtrSSchema *pSS,
                                  Name typeName,
                                  int whichName */);
 extern void GetAttrRuleFromName (/* int *attrNum,
@@ -192,16 +192,16 @@ extern ThotBool AllowedFirstChild (/* PtrElement pEl,
                                       ThotBool inTree */);
 extern void InsertChildFirst (/* PtrElement pEl,
                                  PtrElement pChild,
-                                 PtrElement * pFeuille,
+                                 PtrElement *pLeaf,
                                  PtrDocument pDoc */);
 extern PtrElement CreateDescendant (/* int typeNum,
                                        PtrSSchema pSS,
                                        PtrDocument pDoc,
-                                       PtrElement * pLeaf,
+                                       PtrElement *pLeaf,
                                        int descTypeNum,
                                        PtrSSchema pDescSS */);
 extern SSchema TtaGetSchemaExtension (/* Document document,
-                                         STRING NomExtension */);
+                                         char *NomExtension */);
 extern SRule *ExtensionRule (/* PtrSSchema pSS,
                                 int typeNum,
                                 PtrSSchema pExtSS */);

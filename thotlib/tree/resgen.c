@@ -11,13 +11,13 @@
 #include "constres.h"
 #include "resmatch_f.h"
 
-extern STRING TtaAllocString (unsigned int);
-
 static ThotBool RestTransformChildren (Restruct restr, Element oldElem,
 				       Element newElem, TypeTree typeTree,
 				       TypeTree ancestTree, Document srcDoc,
 				       Document dstDoc);
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 static ThotBool IsNodeOfType (TypeTree node, ElementType elType)
 {
   ThotBool result = FALSE;
@@ -107,7 +107,7 @@ static ThotBool RestTransferContent (Element oldElem, Element newElem,
 {
   ElementType newType, oldType;
   Language lang;
-  STRING   buffer;
+  char    *buffer;
   char     shape;
   int      len, rank, x, y;
   ThotBool result = FALSE;
@@ -126,7 +126,7 @@ static ThotBool RestTransferContent (Element oldElem, Element newElem,
       case RestTypeTexte:
       case RestTypeImage:
         len = TtaGetTextLength (oldElem);
-        buffer = TtaAllocString (len++);
+        buffer = TtaGetMemory (len++);
         TtaGiveTextContent (oldElem, buffer, &len, &lang); 
 #ifdef DEBUG
 	strncpy (msgbuf, buffer, 20);

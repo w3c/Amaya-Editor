@@ -33,7 +33,7 @@ extern PRule TtaNewPRuleForView ( int presentationType,
                                   int view,
                                   Document document );
 extern PRule TtaNewPRuleForNamedView ( int presentationType,
-                                       STRING viewName,
+                                       char *viewName,
                                        Document document );
 extern PRule TtaCopyPRule ( PRule pRule );
 extern void TtaAttachPRule ( Element element,
@@ -126,7 +126,7 @@ extern PRule TtaNewPRuleForView (/* int presentationType,
                                     int view,
                                     Document document */);
 extern PRule TtaNewPRuleForNamedView (/* int presentationType,
-                                         STRING viewName,
+                                         char *viewName,
                                          Document document */);
 extern PRule TtaCopyPRule (/* PRule pRule */);
 extern void TtaAttachPRule (/* Element element,

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -30,26 +30,14 @@
    TtaCreateBitmapLogo
 
    Creates a logo pixmap from a bitmap description: width, height and bit array.
-
    Parameters:
    width: the width value of the bitmap.
    height: the height value of the bitmap.
    bits: the bit array.
-
    Return value:
    The created pixmap for the logo.
-
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 Pixmap              TtaCreateBitmapLogo (int width, int height, char *bits)
-#else  /* __STDC__ */
-Pixmap              TtaCreateBitmapLogo (width, height, bits)
-int                 width;
-int                 height;
-char               *bits;
-
-#endif /* __STDC__ */
-
 {
 #ifndef _WINDOWS
    if (bits != NULL)
@@ -64,12 +52,7 @@ char               *bits;
 /*----------------------------------------------------------------------
    TtaCreatePixmapLogo create a pixmap from an XPM file.           
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 Pixmap              TtaCreatePixmapLogo (char **d)
-#else  /* __STDC__ */
-Pixmap              TtaCreatePixmapLogo (d)
-char              **d;
-#endif /* __STDC__ */
 {
 #ifdef _WINDOWS
    return (Pixmap) NULL;

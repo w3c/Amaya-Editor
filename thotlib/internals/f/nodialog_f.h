@@ -81,6 +81,7 @@ extern PtrElement NextInSelection ( PtrElement pEl,
 extern void AddInSelection ( PtrElement pEl,
                              ThotBool dernier );
 extern void ClearViewSelection ( int frame );
+extern int TtaGetElementLineNumber ( Element element );
 extern void TtaClearViewSelections ( void );
 extern void SelectElement ( PtrDocument pDoc,
                             PtrElement pEl,
@@ -204,6 +205,7 @@ extern PtrElement NextInSelection (/* PtrElement pEl,
 extern void AddInSelection (/* PtrElement pEl,
                                ThotBool dernier */);
 extern void ClearViewSelection (/* int frame */);
+extern int TtaGetElementLineNumber (/* Element element */);
 extern void TtaClearViewSelections (/* void */);
 extern void SelectElement (/* PtrDocument pDoc,
                               PtrElement pEl,

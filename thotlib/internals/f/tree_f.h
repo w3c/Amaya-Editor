@@ -14,9 +14,9 @@ extern ThotBool ElementIsReadOnly ( PtrElement pEl );
 extern ThotBool CannotInsertNearElement ( PtrElement pEl,
                                           ThotBool beforeElement );
 extern PtrElement FwdSearchElemByTypeName ( PtrElement pEl,
-                                            STRING typeName );
+                                            char *typeName );
 extern PtrElement BackSearchElemByTypeName ( PtrElement pEl,
-                                             STRING typeName );
+                                             char *typeName );
 extern PtrElement FwdSearchRefOrEmptyElem ( PtrElement pEl,
                                             int Kind );
 extern PtrElement BackSearchRefOrEmptyElem ( PtrElement pEl,
@@ -63,12 +63,12 @@ extern PtrElement BackSearchVisibleElem ( PtrElement pRoot,
 extern PtrElement FwdSearchAttribute ( PtrElement pEl,
                                        int attrNum,
                                        int val,
-                                       STRING textVal,
+                                       char *textVal,
                                        PtrSSchema pSS );
 extern PtrElement BackSearchAttribute ( PtrElement pEl,
                                         int attNum,
                                         int val,
-                                        STRING textVal,
+                                        char *textVal,
                                         PtrSSchema pSS );
 extern void FwdSkipPageBreak ( PtrElement * pEl );
 extern void FwdSkipPageBreakAndExtension ( PtrElement * pEl );
@@ -153,9 +153,9 @@ extern ThotBool ElementIsReadOnly (/* PtrElement pEl */);
 extern ThotBool CannotInsertNearElement (/* PtrElement pEl,
                                             ThotBool beforeElement */);
 extern PtrElement FwdSearchElemByTypeName (/* PtrElement pEl,
-                                              STRING typeName */);
+                                              char *typeName */);
 extern PtrElement BackSearchElemByTypeName (/* PtrElement pEl,
-                                               STRING typeName */);
+                                               char *typeName */);
 extern PtrElement FwdSearchRefOrEmptyElem (/* PtrElement pEl,
                                               int Kind */);
 extern PtrElement BackSearchRefOrEmptyElem (/* PtrElement pEl,
@@ -202,12 +202,12 @@ extern PtrElement BackSearchVisibleElem (/* PtrElement pRoot,
 extern PtrElement FwdSearchAttribute (/* PtrElement pEl,
                                          int attrNum,
                                          int val,
-                                         STRING textVal,
+                                         char *textVal,
                                          PtrSSchema pSS */);
 extern PtrElement BackSearchAttribute (/* PtrElement pEl,
                                           int attNum,
                                           int val,
-                                          STRING textVal,
+                                          char *textVal,
                                           PtrSSchema pSS */);
 extern void FwdSkipPageBreak (/* PtrElement * pEl */);
 extern void FwdSkipPageBreakAndExtension (/* PtrElement * pEl */);

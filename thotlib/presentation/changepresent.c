@@ -493,7 +493,7 @@ int          NumTypePRuleAPI (PtrPRule pRule)
 /*----------------------------------------------------------------------
    	RuleSetIn teste l'appartenance d'un element a` un ensemble.	
   ----------------------------------------------------------------------*/
-int                 RuleSetIn (register int num, RuleSet RuleS1)
+int RuleSetIn (register int num, RuleSet RuleS1)
 {
    if (num >= 0 && num < SETSIZE * 8)
       return RuleS1[num >> 3] & (1 << (num & 7));
@@ -505,7 +505,7 @@ int                 RuleSetIn (register int num, RuleSet RuleS1)
 /*----------------------------------------------------------------------
    	RuleSetPut ajoute un element a` un ensemble.			
   ----------------------------------------------------------------------*/
-void                RuleSetPut (RuleSet RuleS1, int num)
+void RuleSetPut (RuleSet RuleS1, int num)
 {
    if (num >= 0 && num < SETSIZE * 8)
       RuleS1[num >> 3] |= (1 << (num & 7));
@@ -515,9 +515,9 @@ void                RuleSetPut (RuleSet RuleS1, int num)
 /*----------------------------------------------------------------------
    	RuleSetClr met a` 0 l'ensemble RuleS1.				
   ----------------------------------------------------------------------*/
-void                RuleSetClr (RuleSet RuleS1)
+void RuleSetClr (RuleSet RuleS1)
 {
-   USTRING s1;
+   unsigned char *s1;
    int     num;
 
    s1 = RuleS1;
@@ -530,7 +530,7 @@ void                RuleSetClr (RuleSet RuleS1)
    		pEl1 et pEl2 possedent des regles de presentation	
    		specifique.						
   ----------------------------------------------------------------------*/
-ThotBool            BothHaveNoSpecRules (PtrElement pEl1, PtrElement pEl2)
+ThotBool BothHaveNoSpecRules (PtrElement pEl1, PtrElement pEl2)
 {
    ThotBool            equal;
 
@@ -546,7 +546,7 @@ ThotBool            BothHaveNoSpecRules (PtrElement pEl1, PtrElement pEl2)
    		qui appartient a la view view				
    		et qui n'est pas un pave de presentation.		
   ----------------------------------------------------------------------*/
-PtrAbstractBox      AbsBoxOfEl (PtrElement pEl, int view)
+PtrAbstractBox AbsBoxOfEl (PtrElement pEl, int view)
 {
    PtrAbstractBox      pAb;
    ThotBool            stop;

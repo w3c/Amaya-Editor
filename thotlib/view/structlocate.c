@@ -52,17 +52,8 @@
   Si un pave et son fils repondent a la condition, c'est le pave fils qui
   l'emporte.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                GetClickedStructBox (PtrBox * result, PtrAbstractBox pRootAb, int frame, int x, int y, int *pointselect)
-#else  /* __STDC__ */
-void                GetClickedStructBox (result, pRootAb, frame, x, y, pointselect)
-PtrBox             *result;
-PtrAbstractBox      pRootAb;
-int                 frame;
-int                 x;
-int                 y;
-int                *pointselect;
-#endif /* __STDC__ */
+void GetClickedStructBox (PtrBox *result, PtrAbstractBox pRootAb, int frame,
+			  int x, int y, int *pointselect)
 {
    PtrAbstractBox      pAb;
    PtrBox              pSelBox, pBox;

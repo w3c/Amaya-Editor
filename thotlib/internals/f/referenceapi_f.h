@@ -30,27 +30,27 @@ extern void TtaUpdateInclusionElements ( Document document,
                                          ThotBool loadExternalDoc,
                                          ThotBool removeExclusions );
 extern void TtaGiveReferredElement ( Element element,
-                                     Element * target,
-                                     STRING targetDocumentName,
-                                     Document * targetDocument );
+                                     Element *target,
+                                     char *targetDocumentName,
+                                     Document *targetDocument );
 extern int TtaIsElementTypeReference ( ElementType elementType );
 extern int TtaSameReferences ( Element element1,
                                Element element2 );
 extern void TtaGiveReferenceAttributeValue ( Attribute attribute,
-                                             Element * target,
-                                             STRING targetDocumentName,
-                                             Document * targetDocument );
+                                             Element *target,
+                                             char *targetDocumentName,
+                                             Document *targetDocument );
 extern int TtaIsElementReferred ( Element element );
 extern int TtaSameReferenceAttributes ( Attribute attribute1,
                                         Attribute attribute2 );
 extern void TtaNextLoadedReference ( Element target,
                                      Document targetDocument,
-                                     Element * referenceElement,
-                                     Attribute * referenceAttribute,
-                                     Document * referenceDocument );
+                                     Element *referenceElement,
+                                     Attribute *referenceAttribute,
+                                     Document *referenceDocument );
 extern void TtaNextUnloadedReferringDocument ( Element target,
                                                Document targetDocument,
-                                               STRING referringDocumentName );
+                                               char *referringDocumentName );
 extern Element TtaSearchReferenceElement ( SearchDomain scope,
                                            Element element );
 
@@ -80,27 +80,27 @@ extern void TtaUpdateInclusionElements (/* Document document,
                                            ThotBool loadExternalDoc,
                                            ThotBool removeExclusions */);
 extern void TtaGiveReferredElement (/* Element element,
-                                       Element * target,
-                                       STRING targetDocumentName,
-                                       Document * targetDocument */);
+                                       Element *target,
+                                       char *targetDocumentName,
+                                       Document *targetDocument */);
 extern int TtaIsElementTypeReference (/* ElementType elementType */);
 extern int TtaSameReferences (/* Element element1,
                                  Element element2 */);
 extern void TtaGiveReferenceAttributeValue (/* Attribute attribute,
-                                               Element * target,
-                                               STRING targetDocumentName,
-                                               Document * targetDocument */);
+                                               Element *target,
+                                               char *targetDocumentName,
+                                               Document *targetDocument */);
 extern int TtaIsElementReferred (/* Element element */);
 extern int TtaSameReferenceAttributes (/* Attribute attribute1,
                                           Attribute attribute2 */);
 extern void TtaNextLoadedReference (/* Element target,
                                        Document targetDocument,
-                                       Element * referenceElement,
-                                       Attribute * referenceAttribute,
-                                       Document * referenceDocument */);
+                                       Element *referenceElement,
+                                       Attribute *referenceAttribute,
+                                       Document *referenceDocument */);
 extern void TtaNextUnloadedReferringDocument (/* Element target,
                                                  Document targetDocument,
-                                                 STRING referringDocumentName */);
+                                                 char *referringDocumentName */);
 extern Element TtaSearchReferenceElement (/* SearchDomain scope,
                                              Element element */);
 

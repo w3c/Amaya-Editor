@@ -1051,11 +1051,10 @@ static void SetPage (PtrElement *pPage, int frame, PtrAbstractBox *origCutAbsBox
 {
   int                 turn, newheight, oldheight;
   ThotBool            NoBr1;
-
 #ifdef PRINT_DEBUG
-FILE     *list;
-CHAR_T      localname[50];
-static int       n = 1;
+  FILE               *list;
+  char                localname[50];
+  static int          n = 1;
 
    sprintf (localname, "/local_home/vatton/.amaya/printpage%d.debug", n);
    n++;
@@ -1119,9 +1118,9 @@ static PtrElement  PutMark (PtrElement rootEl, int nbView, PtrDocument pDoc,
   ThotBool            stop;
   ThotBool            needBreak;
 #ifdef PRINT_DEBUG
-  FILE     *list;
-  CHAR_T      localname[50];
-static int       n = 1;
+  FILE               *list;
+  char                localname[50];
+  static int          n = 1;
    
   sprintf (localname, "/local_home/vatton/.amaya/print%d.debug", n);
   n++;

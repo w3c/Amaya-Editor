@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -31,16 +31,7 @@ static T_LabelAllocator *labelAllocator = NULL;
    TtaSetLabelAllocator override the default label allocator strategy
    with user defined routines.
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                TtaSetLabelAllocator (T_LabelAllocator * labelAlloc)
-
-#else  /* __STDC__ */
-void                TtaSetLabelAllocator (labelAlloc)
-T_LabelAllocator   *labelAlloc;
-
-#endif /* __STDC__ */
-
+void TtaSetLabelAllocator (T_LabelAllocator * labelAlloc)
 {
    labelAllocator = labelAlloc;
 }
@@ -48,16 +39,7 @@ T_LabelAllocator   *labelAlloc;
 /*----------------------------------------------------------------------
    NewLabel allocate a new label for a document and returns it's value.
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-int                 NewLabel (PtrDocument pDoc)
-
-#else  /* __STDC__ */
-int                 NewLabel (pDoc)
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+int NewLabel (PtrDocument pDoc)
 {
    if (labelAllocator == NULL)
      {
@@ -65,7 +47,7 @@ PtrDocument         pDoc;
 	return pDoc->DocLabelExpMax;
      }
    else
-/*** New label allocator request! ***/
+     /*** New label allocator request! ***/
       return (labelAllocator->NewLabel ((Document) IdentDocument (pDoc)));
 }
 
@@ -73,21 +55,12 @@ PtrDocument         pDoc;
    GetCurrentLabel returns the biggest label currently allocated to
    a document pDoc.                 
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-int                 GetCurrentLabel (PtrDocument pDoc)
-
-#else  /* __STDC__ */
-int                 GetCurrentLabel (pDoc)
-PtrDocument         pDoc;
-
-#endif /* __STDC__ */
-
+int GetCurrentLabel (PtrDocument pDoc)
 {
    if (labelAllocator == NULL)
       return pDoc->DocLabelExpMax;
    else
-/*** Current label value of new allocator ! ***/
+     /*** Current label value of new allocator ! ***/
       return (labelAllocator->GetCurLabel ((Document) IdentDocument (pDoc)));
 }
 
@@ -95,22 +68,11 @@ PtrDocument         pDoc;
    SetCurrentLabel changes the value of the biggest label currently
    set to a document element.
   ----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-void                SetCurrentLabel (PtrDocument pDoc, int label)
-
-#else  /* __STDC__ */
-void                SetCurrentLabel (pDoc, label)
-PtrDocument         pDoc;
-int                 label;
-
-#endif /* __STDC__ */
-
+void SetCurrentLabel (PtrDocument pDoc, int label)
 {
-   if (labelAllocator == NULL)
-      pDoc->DocLabelExpMax = label;
-   else
-/*** Set label value of new allocator ! ***/
-      labelAllocator->SetCurLabel ((Document) IdentDocument (pDoc),
-				   label);
+  if (labelAllocator == NULL)
+    pDoc->DocLabelExpMax = label;
+  else
+    /*** Set label value of new allocator ! ***/
+    labelAllocator->SetCurLabel ((Document) IdentDocument (pDoc), label);
 }
