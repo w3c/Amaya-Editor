@@ -260,6 +260,11 @@ static void InitGraphicContexts (void)
  ----------------------------------------------------------------------*/
 void ThotInitDisplay (char* name, int dx, int dy)
 {
+#ifdef _WX
+   int display_width_px, display_height_px;
+   int display_width_mm, display_height_mm;
+#endif /* _WX */
+
 #ifdef _WINGUI
    WIN_GetDeviceContext (-1);
    TtWDepth = GetDeviceCaps (TtDisplay, PLANES);
@@ -319,15 +324,22 @@ void ThotInitDisplay (char* name, int dx, int dy)
 #endif /* _WINGUI */
 
 #ifdef _WX
-   int display_width_px, display_height_px;
-   int display_width_mm, display_height_mm;
    wxDisplaySize(&display_width_px, &display_height_px);
    wxDisplaySizeMM(&display_width_mm, &display_height_mm);
    DOT_PER_INCH = (int)((((float)display_width_px)*25.4) / ((float)display_width_mm));
+#ifdef _GL
+   TtWDepth = wxDisplayDepth(); 
+#endif /*_GL */
+   InitDocColors (name);
+   InitColors (name);
+   InitGraphicContexts ();
+   InitCurs ();
+   InitDialogueFonts (name);
+   /* Initialization of Picture Drivers */
+   InitPictureHandlers (FALSE);
 #endif /* _WX */
 
 #ifdef _GTK
-   
    /* Declaration of a DefaultDrawable useful for the creation of Pixmap and the
       initialization of GraphicContexts */
    DefaultWindow = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -339,11 +351,9 @@ void ThotInitDisplay (char* name, int dx, int dy)
    /* int x, y, width, height, depth;
       gdk_window_get_geometry (DefaultDrawable, &x, &y, &width, &height, &depth);*/
    TtRootWindow = DefaultWindow->window;
-
 #ifndef _GL
    gtk_widget_push_visual (gdk_imlib_get_visual ());
    gtk_widget_push_colormap (gdk_imlib_get_colormap ());
-  
    TtWDepth = gdk_visual_get_best_depth (); 
    TtCmap = gdk_imlib_get_colormap ();
 #else /*_GL*/
@@ -355,25 +365,9 @@ void ThotInitDisplay (char* name, int dx, int dy)
    InitGraphicContexts ();
    InitCurs ();
    InitDialogueFonts (name);
-
    /* Initialization of Picture Drivers */
    InitPictureHandlers (FALSE);
 #endif /* _GTK */
-#ifdef _WX  
-#ifdef _GL
-   TtWDepth = wxDisplayDepth(); 
-   /* not used : TtCmap = gdk_colormap_new (gdk_rgb_get_visual (), TRUE);*/
-#endif /*_GL */
-
-   InitDocColors (name);
-   InitColors (name);
-   InitGraphicContexts ();
-   InitCurs ();
-   InitDialogueFonts (name);
-
-   /* Initialization of Picture Drivers */
-   InitPictureHandlers (FALSE);
-#endif /* _WX */
 }
 
 /*----------------------------------------------------------------------

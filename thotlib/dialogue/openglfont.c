@@ -352,15 +352,9 @@ static int FontFaceSize (GL_font *font, unsigned int size, unsigned int res)
     return 0;
   size = SUPERSAMPLINGMUL (size);
 
-#if defined(_GTK) || defined(_WX)
   err = FT_Set_Char_Size (font->face, 0, size * 64, res, res);
   if (err) 
     err = FT_Set_Char_Size (font->face, 0, size * 64, 75, 75);
-#endif /* #if defined(_GTK) || defined(_WX) */
-
-#ifdef _WINGUI
-  err = FT_Set_Char_Size (font->face, 0, size * 64, 75, 75);
-#endif /*_WINGUI*/
 
   /*res x_resolution, res, y_resolution*/
   if (err)
@@ -913,8 +907,8 @@ static void GL_TextMap (float x, float y, int width, int height,
   float GL_w, GL_h;
   int xFrame, yFrame;
 
-  GL_w = SUPERSAMPLING ((float)width / (float)Texture_w);  
-  GL_h = SUPERSAMPLING ((float)height / (float)Texture_h);
+  GL_w =/* SUPERSAMPLING*/ ((float)width / (float)Texture_w);  
+  GL_h = /*SUPERSAMPLING*/ ((float)height / (float)Texture_h);
   xFrame = (int) x;
   yFrame = (int) y;
   glBegin (GL_QUADS); 
