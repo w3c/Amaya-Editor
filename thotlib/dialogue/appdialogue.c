@@ -2315,8 +2315,12 @@ void ConnectSignalGTK (GtkObject *w, gchar *signal_name, GtkSignalFunc callback,
 void RemoveSignalGTK (GtkObject *w, gchar *signal_name)
 {
   guint id;
+  id = 0;
   id = (guint)gtk_object_get_data (GTK_OBJECT (w), signal_name);
-  gtk_signal_disconnect (GTK_OBJECT (w), id);
+  if (id){
+      gtk_signal_disconnect (GTK_OBJECT (w), id);
+      gtk_object_remove_data (GTK_OBJECT (w), signal_name);
+  }
 }
 
 /* Signal handler called when the selections owner 
@@ -2800,9 +2804,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	      that it won't be displayed.. */	
 	   gtk_widget_set_usize (GTK_WIDGET(wrap_text), 1, 1);
 
-
-
-
 	    /* A storage for a pointer on the text catcher 
 	      (so we can acess it in the future)  */
 	   gtk_object_set_data (GTK_OBJECT (drawing_area), 
@@ -2897,8 +2898,16 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			     "value_changed",
 			     GTK_SIGNAL_FUNC(FrameVScrolledGTK),
 			     (gpointer)frame);
-	   
+
     	   vscrl = gtk_vscrollbar_new (GTK_ADJUSTMENT (tmpw));
+	   ConnectSignalGTK (GTK_OBJECT (vscrl),
+			     "key_press_event",
+			     GTK_SIGNAL_FUNC(KeyScrolledGTK),
+			     (gpointer)frame);
+	   ConnectSignalGTK (GTK_OBJECT (vscrl),
+			     "button_press_event",
+			     GTK_SIGNAL_FUNC(KeyScrolledGTK),
+			     (gpointer)frame);
 	   gtk_widget_show (vscrl);
 	   gtk_table_attach (GTK_TABLE (table2), vscrl, 1, 2, 0, 1,
 			     (GtkAttachOptions) (GTK_FILL | GTK_SHRINK),
@@ -2909,6 +2918,7 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 			     "value_changed",
 			     GTK_SIGNAL_FUNC(FrameHScrolledGTK),
 			     (gpointer)frame);
+	   
       	   hscrl = gtk_hscrollbar_new (GTK_ADJUSTMENT(tmpw)); 
 	   gtk_widget_show (hscrl);
 

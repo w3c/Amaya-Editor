@@ -546,6 +546,11 @@ void WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam,
    handling function.
   ----------------------------------------------------------------------*/
 #ifdef _GTK
+static gboolean HiddenTextHide(GtkWidget *w, gpointer data)
+{
+    gtk_widget_hide (GTK_WIDGET(data));   
+}
+
 gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
 {
    int                 status;
@@ -556,8 +561,8 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
    KeySym              KS;
    GtkWidget          *drawing_area;
    GtkEntry           *textzone;
-   
-      
+   char               *Multikey;  
+
    frame = (int) data;
    if (frame > MAX_FRAME)
      frame = 0;
@@ -573,15 +578,15 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
        {
 	   
 	 if (GTK_WIDGET_HAS_FOCUS (FrameTable[frame].Text_Zone[1]))
-	     {
+	    { 
 		 /* We're in the url zone*/
 		 return FALSE;
-	     }
-	 
+	    } 
 	 else
-	     {
-		 /* We're in the drawing so get the hidden textfield adress*/
+	    { 
+		 /* We're in the drawing so get the hidden textfield adress*/		 
 		 textzone = gtk_object_get_data (GTK_OBJECT (drawing_area), "Text_catcher");
+		 Multikey = TtaGetEnvString ("ENABLE_MULTIKEY");
 		 gtk_widget_grab_focus (GTK_WIDGET(textzone));
 	     }
      }
@@ -604,13 +609,48 @@ gboolean CharTranslationGTK (GtkWidget *w, GdkEventKey* event, gpointer data)
    /*if (state & GDK_LOCK_MASK)
      PicMask |= THOT_MOD_SHIFT;*/
    if (state & GDK_CONTROL_MASK)
-      PicMask |= THOT_MOD_CTRL;
+       PicMask |= THOT_MOD_CTRL;
    if (state & GDK_MOD1_MASK || state & GDK_MOD4_MASK)
       PicMask |= THOT_MOD_ALT;
    ThotInput (frame, &string[0], event->length, PicMask, KS);
    return FALSE;
 }
-
+gboolean KeyScrolledGTK (GtkWidget *w, GdkEvent* event, gpointer data)
+{ 
+  int y_middle;
+  int frame;
+  GdkEventKey    *eventkey;
+  GdkEventButton *eventmouse;
+  
+  frame = (int) data;
+  if (event->type == GDK_BUTTON_PRESS)
+    {
+      eventmouse = (GdkEventButton*) event;
+      if (eventmouse->state & GDK_CONTROL_MASK 
+	  && eventmouse->button == 1)
+	{
+	  y_middle = w->allocation.height / 2;
+	  if (eventmouse->y > y_middle)
+	    JumpIntoView (frame, 100);			
+	  else
+	    JumpIntoView (frame, 0);
+	  return FALSE;
+	}
+    }
+  else if (event->type == GDK_KEY_PRESS)
+    {
+      eventkey = (GdkEventKey*) event;
+      if (eventkey->keyval == GDK_Up) 
+	{
+	  return FALSE;
+	}
+      else if (eventkey->keyval == GDK_Down)
+	{
+	  return FALSE;
+	}
+    }
+  return TRUE;
+}
 #else /* _GTK */
 void CharTranslation (ThotKeyEvent *event)
 {
