@@ -104,7 +104,10 @@ KERNEL_OBJ = \
 	content/contentND.o \
 	dialogue/nodisplay.o \
 	document/documentapiND.o \
+	document/pivot.o \
+	document/readpivot.o \
 	document/schemasND.o \
+	document/writepivotND.o \
 	editing/applicationapiND.o \
 	presentation/presentationapiND.o \
 	tree/attributeapiND.o \

@@ -752,7 +752,11 @@ static void   PutPresRule (BinFile pivFile, PtrPRule pPRule)
 	  else
 	    /* negative value */
 	    PutShort (pivFile, 1);
+#ifdef NODISPLAY
+	  red = green = blue = 0;
+#else /* NODISPLAY */
 	  TtaGiveThotRGB (pPRule->PrIntValue, &red, &green, &blue);
+#endif /* NODISPLAY */
 	  PutShort (pivFile, red);
 	  PutShort (pivFile, green);
 	  PutShort (pivFile, blue);
@@ -967,6 +971,7 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
 			}
 		      /* peut-on concatener l'element suivant ? */
 		      stop = TRUE;
+#ifndef NODISPLAY
 		      if (pEl1->ElLeafType == LtText && pEl1->ElNext != NULL &&
 			  /* c'est du texte, il y a un suivant.. */
 			  pEl1->ElNext->ElTerminal &&
@@ -986,6 +991,7 @@ void Externalise (BinFile pivFile, PtrElement *pEl, PtrDocument pDoc,
 			    stop = FALSE;
 			    pEl1 = pEl1->ElNext;
 			  }
+#endif /* NODISPLAY */
 		    }
 		  while (!stop);
 		  /* update pEl value */
@@ -1173,6 +1179,7 @@ static void PutName (BinFile pivFile, Name N)
   ----------------------------------------------------------------------*/
 void WriteSchemaNamesOfDoc (BinFile pivFile, PtrDocument pDoc)
 {
+#ifndef NODISPLAY
    int                 nat;
 
    BuildDocNatureTable (pDoc);
@@ -1191,6 +1198,7 @@ void WriteSchemaNamesOfDoc (BinFile pivFile, PtrDocument pDoc)
 	/* ecrit le nom du schema de presentation associe' */
 	PutName (pivFile, pDoc->DocNatureSSchema[nat]->SsDefaultPSchema);
      }
+#endif /* NODISPLAY */
 }
 
 /*----------------------------------------------------------------------

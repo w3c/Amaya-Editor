@@ -11,7 +11,7 @@ THOTDIR = @top_srcdir@
 
 include ../Options
 
-LIBS	= ../thotlib/libThotKernel.a @LIBS@ @EXTRA_LIBS@
+LIBS	= -L ../thotlib/ -lThotKernel @LIBS@ @EXTRA_LIBS@
 INCLUDES= -DHAVE_CONFIG_H -I.. -I@srcdir@/f @THOTINCLUDES@ $(X_FLAGS)
 
 prefix = @prefix@
