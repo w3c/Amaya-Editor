@@ -1611,7 +1611,8 @@ PictInfo           *imageDesc;
    w = 0;
    h = 0;
 
-   if (status != Supported_Format) {  
+  Bgcolor = ColorPixel (box->BxAbstractBox->AbBackground);
+  if (status != Supported_Format) {  
       if (TtPrinterDC == NULL) {
          imageDesc->PicType = 3;
          pres = RealSize;
@@ -2056,7 +2057,6 @@ PictInfo           *imageDesc;
 #endif /* _WINDOWS */
 	 }
 
-       Bgcolor = ColorPixel (box->BxAbstractBox->AbBackground);
        if (PictureHandlerTable[typeImage].Produce_Picture != NULL)
 	 {
 	   if (typeImage >= InlineHandlers)
