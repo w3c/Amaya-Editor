@@ -4901,7 +4901,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
   - an html namespace
   Other returns:
   The indicator isXML
-  The document type transitional, strict, basic, other (parsingLevel)
+  The document type transitional, XHTML 1.1, basic, other (parsingLevel)
   The charset value if the XML declaration gives an encoding or
   UNDEFINED_CHARSET.
   The type of the document (given by the first element name)
@@ -5023,9 +5023,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 			    *parsingLevel = L_Basic;
 			  else
 			    {
-			      ptr = strstr (&FileBuffer[i], "Strict");
-			      if (!ptr || (ptr && ptr > end))
-				ptr = strstr (&FileBuffer[i], "strict");
+			      ptr = strstr (&FileBuffer[i], "1.1");
 			      if (ptr && ptr < end)
 				*parsingLevel = L_Strict;
 			    }
@@ -5117,9 +5115,7 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 			  if (ptr && ptr < end)
 			    *isXML = TRUE;
 			  
-			  ptr = strstr (&FileBuffer[i], "Strict");
-			  if (!ptr || (ptr && ptr > end))
-			    ptr = strstr (&FileBuffer[i], "strict");
+			  ptr = strstr (&FileBuffer[i], "1.1");
 			  if (ptr && ptr < end)
 			    *parsingLevel = L_Strict;
 			}

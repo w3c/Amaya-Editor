@@ -84,7 +84,7 @@ static char        *QuotedText;
 static char *HTMLDocTypes_1[] =
 {
   "\"-//W3C//DTD XHTML Basic 1.0//EN\"",
-  "\"-//W3C//DTD XHTML 1.0 Strict//EN\"",
+  "\"-//W3C//DTD XHTML 1.1//EN\"",
   "\"-//W3C//DTD XHTML 1.0 Transitional//EN\"",
   "\"-//W3C//DTD XHTML 1.0 Frameset//EN\"",
   "\"-//W3C//DTD HTML 4.01//EN\"",
@@ -95,7 +95,7 @@ static char *HTMLDocTypes_1[] =
 static char *HTMLDocTypes_2[] =
 {
   "\"http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd\">\n",
-  "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n",
+  "\"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n",
   "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n",
   "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd\">\n",
   "\"http://www.w3.org/TR/html4/strict.dtd\">\n",
