@@ -122,30 +122,20 @@ void SetRowExt (Element cell, int span, Document doc, ThotBool inMath)
        spannedrow = row;
        while (span > 0 && spannedrow != NULL)
 	 {
-	   nextspannedrow = spannedrow;
-	   TtaNextSibling (&nextspannedrow);
-	   elType = TtaGetElementType (spannedrow);
-	   /* process only Table_row elements */
-	   if ((!inMath && elType.ElTypeNum == HTML_EL_Table_row) ||
-	       (inMath && (elType.ElTypeNum == MathML_EL_MTR ||
-			   elType.ElTypeNum == MathML_EL_MLABELEDTR)))
+	   nextspannedrow = GetSiblingRow (spannedrow, FALSE, inMath);
+	   if ((span == 1 || nextspannedrow == NULL) && spannedrow != row)
 	     {
-	       if ((span == 1 || nextspannedrow == NULL) &&
-		   spannedrow != row)
+	       attr = TtaGetAttribute (cell, attrType);
+	       if (attr == NULL)
 		 {
-		   attr = TtaGetAttribute (cell, attrType);
-		   if (attr == NULL)
-		     {
-		       attr = TtaNewAttribute (attrType);
-		       if (attr != NULL)
-			 TtaAttachAttribute (cell, attr, doc);
-		     }
-		   if (attr)
-		     TtaSetAttributeReference (attr, cell, doc, spannedrow,
-					       doc);
+		   attr = TtaNewAttribute (attrType);
+		   if (attr != NULL)
+		     TtaAttachAttribute (cell, attr, doc);
 		 }
-	       span--;
+	       if (attr)
+		 TtaSetAttributeReference (attr, cell, doc, spannedrow, doc);
 	     }
+	   span--;
 	   spannedrow = nextspannedrow;
 	 }
      }
@@ -560,7 +550,7 @@ Element NewColumnHead (Element lastcolhead, ThotBool before,
 		      /* add a new cell after */
 		      AddEmptyCellInRow (currentrow, colhead, child, FALSE,
 					 doc, inMath, FALSE, TRUE);
-      TtaChangeInfoLastRegisteredElem (doc, 3);
+		      TtaChangeInfoLastRegisteredElem (doc, 3);
 		    }
 		}
 	      else
@@ -574,7 +564,7 @@ Element NewColumnHead (Element lastcolhead, ThotBool before,
 		  /* add a cell before */
 		  AddEmptyCellInRow (currentrow, colhead, child, TRUE, doc,
 				     inMath, FALSE, TRUE);
-      TtaChangeInfoLastRegisteredElem (doc, 3);
+		  TtaChangeInfoLastRegisteredElem (doc, 3);
 		}
 	      if (rowspan == 0)
 		rowspan = THOT_MAXINT;
@@ -1004,6 +994,7 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 	nextCell = TtaGetFirstChild (row);
 	if (nextCell)
 	  elType = TtaGetElementType (nextCell);
+	/* skip non-cell elements */
 	while (nextCell &&
 	       (elType.ElSSchema != tableSS ||
 		(inMath && elType.ElTypeNum != MathML_EL_MTD) ||
@@ -1039,7 +1030,7 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 	  elType = TtaGetElementType (cell);
 	  if (!inMath && elType.ElTypeNum == HTML_EL_Table_cell)
 	    {
-	    /* replace the Table_cell by a Data_cell */
+	    /* replace a Table_cell by a Data_cell */
 	    elType.ElTypeNum = HTML_EL_Data_cell;
 	    new_ = TtaNewTree (doc, elType, "");
 	    TtaInsertFirstChild (&new_, cell, doc);
@@ -1263,19 +1254,6 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
       }
     }
 
-  /* apply delayed colspan */
-  if (cDelayed)
-    {
-      i = 0;
-      while (i < cDelayed)
-	{
-	  attr = TtaGetAttribute (delayedColExt[i], attrTypeHSpan);
-	  span = TtaGetAttributeValue (attr);
-	  ChangeColspan (delayedColExt[i], 1, span, doc);
-	  SetColExt (delayedColExt[i], span, doc, inMath);
-	  i++;
-	}
-    }
   /* if there are some empty columns at the end, remove them */
   if (deleteLastEmptyColumns && cNumber > 0)
     {
@@ -1294,6 +1272,20 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 	/* the column was empty and has been removed */
 	colhead = prevColhead;     
       }
+    }
+
+  /* apply delayed colspan */
+  if (cDelayed)
+    {
+      i = 0;
+      while (i < cDelayed)
+	{
+	  attr = TtaGetAttribute (delayedColExt[i], attrTypeHSpan);
+	  span = TtaGetAttributeValue (attr);
+	  ChangeColspan (delayedColExt[i], 1, span, doc);
+	  SetColExt (delayedColExt[i], span, doc, inMath);
+	  i++;
+	}
     }
 
   TtaFreeMemory (colElement);
