@@ -295,6 +295,20 @@ ATTRIBUTES
         AttrDelete.Post -> AttrColAlignMtdDeleted;
         END;
 
+   rowspacing:
+        BEGIN
+        AttrCreate.Post -> AttrRowspacingCreated;
+        AttrModify.Post -> AttrRowspacingCreated;
+        AttrDelete.Post -> AttrRowspacingDeleted;
+        END;
+
+   columnspacing:
+        BEGIN
+        AttrCreate.Post -> AttrColumnspacingCreated;
+        AttrModify.Post -> AttrColumnspacingCreated;
+        AttrDelete.Post -> AttrColumnspacingDeleted;
+        END;
+
    rowlines:
         BEGIN
         AttrCreate.Post -> AttrRowlinesCreated;

@@ -5059,6 +5059,50 @@ void AttrColAlignMtdDeleted (NotifyAttribute *event)
 }
 
 /*----------------------------------------------------------------------
+ AttrRowspacingCreated
+ An attribute rowspacing has been created or updated by the user on a mstyle or
+ mtable. Create or update the corresponding style for all cells.
+ -----------------------------------------------------------------------*/
+void AttrRowspacingCreated (NotifyAttribute *event)
+{
+  HandleRowspacingAttribute (event->attribute, event->element, event->document,
+			     FALSE);
+}
+
+/*----------------------------------------------------------------------
+ AttrRowspacingDeleted
+ The user has deleted an attribute rowspacing from a mstyle or mtable
+ element.
+ Remove the corresponding style from all cells.
+ -----------------------------------------------------------------------*/
+void AttrRowspacingDeleted (NotifyAttribute *event)
+{
+  HandleRowspacingAttribute (NULL, event->element, event->document, TRUE);
+}
+
+/*----------------------------------------------------------------------
+ AttrColumnspacingCreated
+ An attribute columnspacing has been created or updated by the user on a
+ mstyle or mtable. Create or update the corresponding style for all cells.
+ -----------------------------------------------------------------------*/
+void AttrColumnspacingCreated (NotifyAttribute *event)
+{
+  HandleColumnspacingAttribute (event->attribute, event->element,
+				event->document, FALSE);
+}
+
+/*----------------------------------------------------------------------
+ AttrColumnspacingDeleted
+ The user has deleted an attribute columnspacing from a mstyle or mtable
+ element.
+ Remove the corresponding style from all cells.
+ -----------------------------------------------------------------------*/
+void AttrColumnspacingDeleted (NotifyAttribute *event)
+{
+  HandleColumnspacingAttribute (NULL, event->element, event->document, TRUE);
+}
+
+/*----------------------------------------------------------------------
  AttrRowlinesCreated
  An attribute rowlines has been created or updated by the user on a mstyle or
  mtable. Create or update the corresponding style for all rows.
@@ -5155,6 +5199,19 @@ void HandleColAndRowAlignAttributes (Element row, Document doc)
      /* the enclosing mtable element has a rowalign attribute.
 	applies that attribute again to the whole table */
      HandleRowalignAttribute (attr, table, doc, FALSE);
+   attrType.AttrTypeNum = MathML_ATTR_rowspacing;
+   attr = TtaGetAttribute (table, attrType);
+   /* if the enclosing mtable element has a rowspacing attribute, applies that
+      attribute again to the whole table, otherwise, just set the external
+      padding to 0. */
+   HandleRowspacingAttribute (attr, table, doc, FALSE);
+   attrType.AttrTypeNum = MathML_ATTR_columnspacing;
+   attr = TtaGetAttribute (table, attrType);
+   /* if the enclosing mtable element has a columnspacing attribute, applies
+      that attribute again to the whole table, otherwise, just set the external
+      padding to 0. */
+   HandleColumnspacingAttribute (attr, table, doc, FALSE);
+
    attrType.AttrTypeNum = MathML_ATTR_rowlines;
    attr = TtaGetAttribute (table, attrType);
    if (attr)

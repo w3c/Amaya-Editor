@@ -2625,6 +2625,478 @@ void HandleColalignAttribute (Attribute attr, Element el, Document doc,
 }
 
 /*----------------------------------------------------------------------
+   HandleRowspacingAttribute
+   An attribute rowspacing has been created, updated or deleted (if delete
+   is TRUE) for element el in document doc. Update the top and bottom padding
+   of all cells accordingly.
+  ----------------------------------------------------------------------*/
+void HandleRowspacingAttribute (Attribute attr, Element el, Document doc,
+                                ThotBool delete)
+{
+  ElementType         elType, rowType, cellType;
+  int                 length, val, topVal, topValUnit, bottomVal,
+                      bottomValUnit, rowspan, cellBottomVal, i;
+  char               *value, *ptr, *spanPtr;
+  PresentationValue   pval;
+  PresentationContext ctxt;
+  Element             row, nextRow, cell;
+  ThotBool            stop, firstRow;
+  AttributeType       rowspanType;
+  Attribute           rowspanAttr;
+
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum != MathML_EL_MTABLE ||
+      strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+    /* ignore rowspacing attribute on mstyle elements */
+    /* process it only on mtable elements */
+    return;
+
+  value = NULL;
+  if (!delete && attr)
+    {
+      length = TtaGetTextAttributeLength (attr);
+      if (length > 0)
+	{
+	  value = TtaGetMemory (length+1);
+	  value[0] = EOS;
+	  TtaGiveTextAttributeValue (attr, value, &length);
+	}
+    }
+
+  ctxt = TtaGetSpecificStyleContext (doc);
+  /* the specific presentation to be created is not a CSS rule */
+  ctxt->cssSpecificity = 0;
+  ptr = value;
+  rowspanType.AttrSSchema = elType.ElSSchema;
+  rowspanType.AttrTypeNum = MathML_ATTR_rowspan_;
+
+  /* check all rows within the table */
+  firstRow = TRUE;
+  bottomVal = 0;
+  elType.ElTypeNum = MathML_EL_TableRow;
+  row = TtaSearchTypedElement (elType, SearchInTree, el);
+  while (row)
+    {
+      /* get the next row to check if the current row is the last one */
+      nextRow = row;
+      stop = FALSE;
+      do
+	{
+	  TtaNextSibling (&nextRow);
+	  if (!nextRow)
+	    stop = TRUE;
+	  else
+	    {
+	      rowType = TtaGetElementType (nextRow);
+	      /* skip comments and other non mrow elements */
+	      if ((rowType.ElTypeNum == MathML_EL_MTR ||
+		   rowType.ElTypeNum == MathML_EL_MLABELEDTR) &&
+		  !strcmp (TtaGetSSchemaName (rowType.ElSSchema), "MathML"))
+		/* it's the next mrow */
+		stop = TRUE;
+	    }
+	}
+      while (!stop);
+
+      /* prepare the value of the padding to be associated with the cells
+	 of that row */
+      if (delete)
+	/* remove the presentation rules */
+	{
+	  pval.typed_data.value = 0;
+	  val = 0;
+	}
+      else
+	{
+	  if (!value)
+	    {
+	      pval.typed_data.unit = STYLE_UNIT_PT;
+	      pval.typed_data.value = 0;
+	      pval.typed_data.real = FALSE;
+	      val = 0;
+	    }
+	  else
+	    {
+	      /* get the next field in the attribute value (a number followed
+		 by a unit) */
+	      ptr = TtaSkipBlanks (ptr);
+	      if (*ptr != EOS)
+		{
+		  ptr = ParseCSSUnit (ptr, &pval);
+		  if (pval.typed_data.unit != STYLE_UNIT_INVALID)
+		    {
+		      /* if the value is an integer, make it a real to avoid
+			 errors in dividing small integers, such as "1cm" */
+		      if (!pval.typed_data.real)
+			{
+			  pval.typed_data.value *= 1000;
+			  pval.typed_data.real = TRUE;
+			}
+		      val = pval.typed_data.value / 2;
+		    }
+		}
+	    }
+	}
+
+      /* initialize the padding to be set at the top and at the bottom
+	 of each cell */
+      /* the top padding of a row is the same as the bottom padding of the
+	 previous row */
+      topVal = bottomVal;
+      topValUnit = bottomValUnit;
+      if (!nextRow)
+	/* row is the last in the table. It must not have any padding
+	   at the bottom */
+	bottomVal = 0;
+      else
+	{
+	  bottomVal = val;
+	  bottomValUnit = pval.typed_data.unit;
+	}
+
+      /* get the first cell of that row (ignoring Label cells) */
+      elType.ElTypeNum = MathML_EL_MTD;
+      cell = TtaSearchTypedElement (elType, SearchInTree, row);
+      /* update attribute MLineBelowtop padding and bottom padding for all
+	 cells in that row */
+      while (cell)
+	{
+	  cellType = TtaGetElementType (cell);
+	  /* skip comments and other non mtd elements */
+	  if (cellType.ElTypeNum == MathML_EL_MTD &&
+	      !strcmp (TtaGetSSchemaName (cellType.ElSSchema), "MathML"))
+	    /* that's a mtd element. Process it */
+	    {
+	      /* by default, use the value for the current row */
+	      cellBottomVal = bottomVal;
+	      if (!delete && value)
+		/* take row spanning into account */
+		{
+		  /* is there a rowspan attribute on that cell? */
+		  rowspanAttr = TtaGetAttribute (cell, rowspanType);
+		  if (!rowspanAttr)
+		    rowspan = 1;
+		  else
+		    rowspan = TtaGetAttributeValue (rowspanAttr);
+		  if (!delete)
+		    {
+		      /* skip rowspan-1 words in the value of attribute
+			 rowlines */
+		      if (rowspan > 1)
+			{
+			  spanPtr = ptr;
+			  for (i = 1; i < rowspan && *spanPtr != EOS; i++)
+			    {
+			      spanPtr = TtaSkipBlanks (spanPtr);
+			      spanPtr = ParseCSSUnit (spanPtr, &pval);
+			    }
+			  if (pval.typed_data.unit == STYLE_UNIT_INVALID)
+			    {
+			      val = 0;
+			      cellBottomVal = 0;
+			      bottomValUnit = STYLE_UNIT_PT;
+			    }
+			  else
+			    {
+			      /* if the value is an integer, make it a real to
+				 avoid errors in dividing small integers,
+				 such as "1cm" */
+			      if (!pval.typed_data.real)
+				{
+				  pval.typed_data.value *= 1000;
+				  pval.typed_data.real = TRUE;
+				}
+			      val = pval.typed_data.value / 2;
+			      cellBottomVal = val;
+			      bottomValUnit = pval.typed_data.unit;
+			    }
+			}
+		    }
+		}
+
+	      if ((delete || !value) && !firstRow)
+		ctxt->destroy = TRUE;
+	      else
+		{
+		  pval.typed_data.value = topVal;
+		  pval.typed_data.unit = topValUnit;
+		  ctxt->destroy = FALSE;
+		}
+	      TtaSetStylePresentation (PRPaddingTop, cell, NULL, ctxt, pval);
+	      if ((delete || !value) && nextRow)
+		ctxt->destroy = TRUE;
+	      else
+		{
+		  pval.typed_data.value = cellBottomVal;
+		  pval.typed_data.unit = bottomValUnit;
+		  ctxt->destroy = FALSE;
+		}
+	      TtaSetStylePresentation (PRPaddingBottom, cell, NULL, ctxt,pval);
+	    }
+	  TtaNextSibling (&cell);
+	}
+      row = nextRow;
+      firstRow = FALSE;
+    }
+
+  TtaFreeMemory (ctxt);
+  if (value)
+    TtaFreeMemory (value);
+}
+
+/*----------------------------------------------------------------------
+  ConvertNamedSpace
+  if name is the name of a space, return the value of this space
+  in value, otherwise return an empty string in value.
+ -----------------------------------------------------------------------*/
+static char* ConvertNamedSpace (char *name, char *value)
+  {
+       if (strcmp (name, "veryverythinmathspace") == 0)
+	 {
+	   strcpy (value, "0.0555556em");
+	   return (name + strlen("veryverythinmathspace"));
+	 }
+       else if (strcmp (name, "verythinmathspace") == 0)
+	 {
+	   strcpy (value, "0.111111em");
+	   return (name + strlen("verythinmathspace"));
+	 }
+       else if (strcmp (name, "thinmathspace") == 0)
+	 {
+	   strcpy (value, "0.166667em");
+	   return (name + strlen("thinmathspace"));
+	 }
+       else if (strcmp (name, "mediummathspace") == 0)
+	 {
+	   strcpy (value, "0.222222em");
+	   return (name + strlen("mediummathspace"));
+	 }
+       else if (strcmp (name, "thickmathspace") == 0)
+	 {
+	   strcpy (value, "0.277778em");
+	   return (name + strlen("thickmathspace"));
+	 }
+       else if (strcmp (name, "verythickmathspace") == 0)
+	 {
+	   strcpy (value, "0.333333em");
+	   return (name + strlen("verythickmathspace"));
+	 }
+       else if (strcmp (name, "veryverythickmathspace") == 0)
+	 {
+	   strcpy (value, "0.388889em");
+	   return (name + strlen("veryverythickmathspace"));
+	 }
+       else
+	 {
+	   value[0] = EOS;
+	   return name;
+	 }
+  }
+         
+/*----------------------------------------------------------------------
+   HandleColumnspacingAttribute
+   An attribute columnspacing has been created, updated or deleted (if delete
+   is TRUE) for element el in document doc. Update the left and right padding
+   of all cells accordingly.
+  ----------------------------------------------------------------------*/
+void HandleColumnspacingAttribute (Attribute attr, Element el, Document doc,
+                                ThotBool delete)
+{
+  ElementType         elType;
+  int                 length, val, valUnit, leftVal, leftValUnit,
+                      rightVal, rightValUnit, colspan, i;
+  char               *value, *ptr, valueOfNamedSpace[20];
+  PresentationValue   pval;
+  PresentationContext ctxt;
+  Element             row, cell, nextCell;
+  ThotBool            stop, firstCell;
+  Attribute          spanAttr;
+  AttributeType       colspanType;
+
+  elType = TtaGetElementType (el);
+  if (elType.ElTypeNum != MathML_EL_MTABLE ||
+      strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+    /* ignore columnspacing attribute on mstyle elements */
+    /* process it only on mtable elements */
+    return;
+
+  value = NULL;
+  if (!delete && attr)
+    {
+      length = TtaGetTextAttributeLength (attr);
+      if (length > 0)
+	{
+	  value = TtaGetMemory (length+1);
+	  value[0] = EOS;
+	  TtaGiveTextAttributeValue (attr, value, &length);
+	}
+    }
+
+  ctxt = TtaGetSpecificStyleContext (doc);
+  /* the specific presentation to be created is not a CSS rule */
+  ctxt->cssSpecificity = 0;
+  val = 0;
+  colspanType.AttrSSchema = elType.ElSSchema;
+  colspanType.AttrTypeNum = MathML_ATTR_columnspan;
+  
+  /* check all cells in all rows within the table */
+  elType.ElTypeNum = MathML_EL_TableRow;
+  row = TtaSearchTypedElement (elType, SearchInTree, el);
+  while (row)
+    {
+      elType = TtaGetElementType (row);
+      if ((elType.ElTypeNum == MathML_EL_MTR ||
+	   elType.ElTypeNum == MathML_EL_MLABELEDTR) &&
+	  strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
+	/* that's a table row. check all its cells */
+	{
+	  ptr = value;
+	  firstCell = TRUE;
+	  rightVal = 0;
+          val = 0;
+	  valUnit = STYLE_UNIT_PT;
+	  ptr = value;
+	  /* get the first cell of that row (ignoring Label cells) */
+	  elType.ElTypeNum = MathML_EL_MTD;
+	  cell = TtaSearchTypedElement (elType, SearchInTree, row);
+	  while (cell)
+	    {
+	      /* prepare the value of the padding to be associated with the 
+		 cells */
+	      if (delete)
+		/* remove the presentation rules */
+		{
+		  pval.typed_data.value = 0;
+		  val = 0;
+		  valUnit = STYLE_UNIT_PT;
+		}
+	      else
+		{
+		  if (!value)
+		    {
+		      pval.typed_data.unit = STYLE_UNIT_PT;
+		      pval.typed_data.value = 0;
+		      pval.typed_data.real = FALSE;
+		      val = 0;
+		      valUnit = STYLE_UNIT_PT;
+		    }
+		  else
+		    {
+		      /* parse the next field in the attribute value (a number
+			 followed by a unit or a named space) */
+		      ptr = TtaSkipBlanks (ptr);
+		      if (*ptr != EOS)
+			{
+			  /* is there a columnspan attribute on that cell? */
+			  spanAttr = TtaGetAttribute (cell, colspanType);
+			  if (!spanAttr)
+			    colspan = 1;
+			  else
+			    colspan = TtaGetAttributeValue (spanAttr);
+			  /* skip (colspan - 1) words in the attribute */
+			  for (i = 1; i <= colspan && *ptr != EOS; i++)
+			    {
+			      ptr = TtaSkipBlanks (ptr);
+			      ptr = ConvertNamedSpace (ptr, valueOfNamedSpace);
+			      if (valueOfNamedSpace[0] != EOS)
+				/* it's a named space */
+				ptr = ParseCSSUnit (valueOfNamedSpace, &pval);
+			      else
+				ptr = ParseCSSUnit (ptr, &pval);
+			      if (pval.typed_data.unit == STYLE_UNIT_INVALID)
+				{
+				  val = 0;
+				  valUnit = STYLE_UNIT_PT;
+				}
+			      else
+				{
+				  /* if the value is an integer, make it a real
+				     to avoid errors in dividing small
+				     integers, such as "1cm" */
+				  if (!pval.typed_data.real)
+				    {
+				      pval.typed_data.value *= 1000;
+				      pval.typed_data.real = TRUE;
+				    }
+				  val = pval.typed_data.value / 2;
+				  valUnit = pval.typed_data.unit;
+				}
+			    }
+			}
+		    }
+		}
+
+	      /* get the next cell in the current row to check if the current
+		 cell is the last one in the row */
+	      nextCell = cell;
+	      stop = FALSE;
+	      do
+		{
+		  TtaNextSibling (&nextCell);
+		  if (!nextCell)
+		    stop = TRUE;
+		  else
+		    {
+		      elType = TtaGetElementType (nextCell);
+		      /* skip comments and other non mtd elements */
+		      if (elType.ElTypeNum == MathML_EL_MTD &&
+			  strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
+			/* it's the next cell */
+			stop = TRUE;
+		    }
+		}
+	      while (!stop);
+
+	      /* initialize the padding to be set at the right and at the left
+		 of each cell */
+	      /* the leftPadding of a cell is the same as the right padding
+		 of the previous cell */
+	      leftVal = rightVal;
+	      leftValUnit = rightValUnit;
+	      if (!nextCell)
+		/* it's the last cell in the row. It must not have any
+		   padding on the right */
+		{
+		  rightVal = 0;
+		  rightValUnit = STYLE_UNIT_PT;
+		}
+	      else
+		{
+		  rightVal = val;
+		  rightValUnit = valUnit;
+		}
+
+	      /* set the left and right padding for this cell */
+	      if ((delete || !value) && !firstCell)
+		ctxt->destroy = TRUE;
+	      else
+		{
+		  pval.typed_data.value = leftVal;
+		  pval.typed_data.unit = leftValUnit;
+		  ctxt->destroy = FALSE;
+		}
+	      TtaSetStylePresentation (PRPaddingLeft, cell, NULL, ctxt, pval);
+	      if ((delete || !value) && nextCell)
+		ctxt->destroy = TRUE;
+	      else
+		{
+		  pval.typed_data.value = rightVal;
+		  pval.typed_data.unit = rightValUnit;
+		  ctxt->destroy = FALSE;
+		}
+	      TtaSetStylePresentation (PRPaddingRight, cell, NULL, ctxt, pval);
+	      cell = nextCell;
+	      firstCell = FALSE;
+	    }
+	}
+      TtaNextSibling (&row);
+    }
+
+  if (value)
+    TtaFreeMemory (value);
+}
+
+/*----------------------------------------------------------------------
    HandleRowlinesAttribute
    An attribute rowlines has been created, updated or deleted (if delete
    is TRUE) for element el in document doc. Update attribute MLineBelow
@@ -3112,12 +3584,24 @@ void      MathMLElementComplete (ParserData *context, Element el, int *error)
 	  attr = TtaGetAttribute (el, attrType);
 	  if (attr)
 	     HandleColalignAttribute (attr, el, doc, FALSE, FALSE);
+	  /* process the rowspacing attribute, or set the top padding of the
+	     first row and the bottom padding of the last row to 0. */
+          attrType.AttrSSchema = MathMLSSchema;
+          attrType.AttrTypeNum = MathML_ATTR_rowspacing;
+	  attr = TtaGetAttribute (el, attrType);
+	  HandleRowspacingAttribute (attr, el, doc, FALSE);
+	  /* process the columnspacing attribute, or set the left padding of
+	     the first column and the right padding of the last column to 0 */
+          attrType.AttrSSchema = MathMLSSchema;
+          attrType.AttrTypeNum = MathML_ATTR_columnspacing;
+	  attr = TtaGetAttribute (el, attrType);
+	  HandleColumnspacingAttribute (attr, el, doc, FALSE);
 	  /* if the table has a rowlines attribute, process it */
           attrType.AttrSSchema = MathMLSSchema;
           attrType.AttrTypeNum = MathML_ATTR_rowlines;
 	  attr = TtaGetAttribute (el, attrType);
 	  if (attr)
-	     HandleRowlinesAttribute (attr, el, doc, FALSE);
+	    HandleRowlinesAttribute (attr, el, doc, FALSE);
 	  /* if the table has a columnlines attribute, process it */
           attrType.AttrTypeNum = MathML_ATTR_columnlines;
 	  attr = TtaGetAttribute (el, attrType);
@@ -3255,7 +3739,7 @@ void MathMLlinethickness (Document doc, Element el, char *value)
 void MathMLAttrToStyleProperty (Document doc, Element el, char *value,
 				int attr)
 {
-  char           css_command[buflen+20];
+  char           css_command[buflen+20], namedSpaceVal[20];
   int            i;
 
   switch (attr)
@@ -3278,21 +3762,10 @@ void MathMLAttrToStyleProperty (Document doc, Element el, char *value,
 	 strcpy (css_command, "padding-left: ");
        else
 	 strcpy (css_command, "padding-right: ");
-       /* is the value a named space? */
-       if (strcmp (value, "veryverythinmathspace") == 0)
-	 strcat (css_command, "0.0555556em");
-       else if (strcmp (value, "verythinmathspace") == 0)
-	 strcat (css_command, "0.111111em");
-       else if (strcmp (value, "thinmathspace") == 0)
-	 strcat (css_command, "0.166667em");
-       else if (strcmp (value, "mediummathspace") == 0)
-	 strcat (css_command, "0.222222em");
-       else if (strcmp (value, "thickmathspace") == 0)
-	 strcat (css_command, "0.277778em");
-       else if (strcmp (value, "verythickmathspace") == 0)
-	 strcat (css_command, "0.333333em");
-       else if (strcmp (value, "veryverythickmathspace") == 0)
-	 strcat (css_command, "0.388889em");
+       ConvertNamedSpace (value, namedSpaceVal);
+       if (namedSpaceVal[0] != EOS)
+	 /* it's a named space */
+	 strcat (css_command, namedSpaceVal);
        else
 	 {
 	   strcat (css_command, value);

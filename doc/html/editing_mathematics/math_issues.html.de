@@ -6,7 +6,7 @@
   <title>Bekannte Probleme bei MathML</title>
   <style type="text/css">
   </style>
-  <meta name="generator" content="amaya 6.1, see http://www.w3.org/Amaya/">
+  <meta name="generator" content="amaya 6.2, see http://www.w3.org/Amaya/">
   <link href="../style.css" rel="stylesheet" type="text/css">
 </head>
 
@@ -40,7 +40,8 @@ summary="Inhaltsverzeichnis">
     numalign, denomalign, bevelled, notation, lquote, rquote, lspace, rspace,
     subscriptshift, superscriptshift, form, width </code>(mspace only),
     <code>height</code> (mspace only),  <code>depth</code> (mspace only),
-    <code>align, rowalign, columnalign, frame, rowspan, columnspan</code>.</p>
+    <code>align, rowalign, columnalign, frame, side, rowspan, columnspan,
+    rowspacing, columnspacing, rowlines, columnlines</code> .</p>
   </li>
   <li><span><span>Die Attribute <code>class</code>, <code>id</code> und
     <code>style</code> sind mit der gleichen Semantik wie in HTML verfügbar:
