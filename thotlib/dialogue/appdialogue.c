@@ -201,26 +201,66 @@ LRESULT ToolBarNotify (int frame, HWND hwnd, WPARAM wParam, LPARAM lParam)
   ----------------------------------------------------------------------*/
 LRESULT CALLBACK TextZoneProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-  switch (msg)
+  HWND hwndcombo;
+  char text[256];
+  int length, start, end;
+  int index;
+  static ThotBool AutoCompleting = FALSE;
+  
+  if (AutoCompleting == TRUE)
     {
+      /*after I set selection on the auto completed part of the string, 
+	  I	get another key event without any sens... so I block It*/
+      AutoCompleting = FALSE;
+      return 0;
+    }
+
+  switch (msg)
+    {  
     case WM_KEYDOWN: 
       switch (wParam)
 	{ 
-	case VK_RETURN: 
+	case VK_RETURN:
 	  SendMessage(GetParent (hwnd), WM_ENTER, 0, 0); 
 	  return 0;
-	} 
+	case VK_BACK:
+	case VK_DELETE:
+	case VK_SHIFT:
+	case VK_LEFT:
+	case VK_UP:
+	case VK_RIGHT:
+	case VK_DOWN:
+	  break;
+	  
+	default:
+	  {
+	    /*current pos*/	    
+	    length = SendMessage(hwnd, WM_GETTEXTLENGTH, 0, 0);
+	    SendMessage(hwnd, EM_GETSEL, (WPARAM)&start,
+			(LPARAM)&end);
+	    /* if not already partially selected */
+	    if (end >= length)
+	      { 
+		GetWindowText(hwnd, text, sizeof(text));
+		text[start++] = (char)wParam;
+		text[start] = 0;
+				
+		hwndcombo = GetParent(hwnd);
+		/* if found, add the proposition */
+		if ((index = SendMessage(hwndcombo, CB_FINDSTRING, -1,
+					 (LPARAM)text)) >= 0)
+		  {
+		    SendMessage(hwndcombo, CB_SETCURSEL, index, 0);
+		    SendMessage(hwnd, EM_SETSEL, start, -1);
+		    AutoCompleting = TRUE;	
+		    return 0;
+		  }
+	      }
+	    break;
+	  } 
+	}
       break; 
- 
-    case WM_KEYUP: 
-    case WM_CHAR: 
-      switch (wParam)
-	{ 
-	case VK_RETURN: 
-	  return 0; 
-	} 
     }
- 
   /* Call the original window procedure for default processing */ 
   return CallWindowProc (lpfnTextZoneWndProc, hwnd, msg, wParam, lParam); 
 }
@@ -230,96 +270,25 @@ LRESULT CALLBACK TextZoneProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
 LRESULT CALLBACK ComboBoxProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
   switch (msg)
-    {
-    case WM_KEYDOWN:
-		switch (wParam)
-		{
-		case VK_RETURN:
-			SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
-			return 0;
-		}
-		break;
-	case WM_ENTER:
-		SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
-		return 0;
-
-	case CB_GETDROPPEDSTATE:
-			switch (wParam)
-			{
-			case WM_ENTER:
-				SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
-				return 0;
-			case VK_RETURN:
-				SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
-				return 0;
-			}
-			switch (lParam)
-			{
-			case TRUE:
-				SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
-				return 0;
-			case FALSE:
-				SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
-				return 0;
-			}
-			
-		break;
-
-	case WM_COMMAND:
-
-		switch (HIWORD(wParam))
-		{
-		case WM_KEYDOWN:
-			switch (wParam)
-			{
-			case VK_RETURN:
-				SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
-				return 0;
-			}
-			break;
-
-		    case WM_CHAR: 
-			switch (wParam)
-			{ 
-			case VK_RETURN: 
-			SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
-			return 0; 
-			}
- 
-		case CBN_DROPDOWN:
-			SendMessage (hwnd, CB_SHOWDROPDOWN, 0, 0);
-			break;
-		case CBN_SELCHANGE:
-			CallWindowProc (lpfnComboBoxWndProc, hwnd, msg, wParam, lParam);
-			SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
-			return 0;
-		case CBN_EDITCHANGE:
-			SendMessage (hwnd, CB_GETEDITSEL, 0, 0);
-			break;
-		case VK_RETURN:
-			SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
-			return 0;
-		case CBN_EDITUPDATE:
-			SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
-			break;
-		}
-		break;
-
-	case VK_RETURN: 
-		SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
-		break; 
-
-    case WM_KEYUP: 
-    case WM_CHAR: 
-      switch (wParam)
-	{ 
-	case VK_RETURN: 
-		SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
-	  return 0; 
+    {   
+    case WM_ENTER:
+      /*Transmit the enter key press event to 
+		the Window containing the combo box */
+      SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
+      return 0;
+      
+    case WM_COMMAND:
+      /*Handle specific combobox messages*/
+      switch (HIWORD(wParam))
+	{
+	case CBN_SELCHANGE:
+	  /*Load Url When Selection change*/
+	  CallWindowProc (lpfnComboBoxWndProc, hwnd, msg, wParam, lParam);
+	  SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
+	  return 0;
 	}
+      break;
     }
-	 
- 
   /* Call the original window procedure for default processing */ 
   return CallWindowProc (lpfnComboBoxWndProc, hwnd, msg, wParam, lParam); 
 }
