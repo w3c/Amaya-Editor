@@ -1787,43 +1787,6 @@ boolaen             link;
 }
 
 /*----------------------------------------------------------------------
-   GetActiveImageInfo returns the URL information if the current      
-   element is an image map and NULL if it is not.          
-   The non-null returned string has the form "?X,Y"        
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-char               *GetActiveImageInfo (Document document, Element element)
-#else  /* __STDC__ */
-char               *GetActiveImageInfo (document, element)
-Document            document;
-Element             element;
-
-#endif /* __STDC__ */
-{
-   char               *ptr;
-   int                 X, Y;
-
-   ptr = NULL;
-   if (element != NULL)
-     {
-	     /* initialize X and Y. The user may click in any view. If it's not */
-	     /* the formatted view (view 1), TtaGiveSelectPosition does not */
-	     /* change variables X and Y. */
-	     X = Y = 0;
-	     /* Get the coordinates of the mouse within the image */
-	     TtaGiveSelectPosition (document, element, 1, &X, &Y);
-	     if (X < 0)
-		X = 0;
-	     if (Y < 0)
-		Y = 0;
-	     /* create the search string to be appended to the URL */
-	     ptr = TtaGetMemory (27);
-	     sprintf (ptr, "?%d,%d", X, Y);
-     }
-   return ptr;
-}
-
-/*----------------------------------------------------------------------
    UpdateAtom : on X-Windows, update the content of atom           
    BROWSER_HISTORY_INFO with title and url of current doc  
    c.f: http://zenon.inria.fr/koala/colas/browser-history/       

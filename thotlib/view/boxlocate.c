@@ -1366,8 +1366,13 @@ int                *max;
    else
      {
 	/* Si le pave est englobe depend de son englobant direct */
-	if (pAb->AbVertEnclosing)
-	   pParentAb = pAb->AbEnclosing;
+	if (pAb->AbVertEnclosing && pAb->AbEnclosing != NULL)
+	  {
+	    pParentAb = pAb;
+	    do
+	      pParentAb = pParentAb->AbEnclosing;
+	    while (pParentAb->AbBox->BxType == BoGhost);
+	  }
 	else
 	   pParentAb = ViewFrameTable[frame - 1].FrAbstractBox;
 

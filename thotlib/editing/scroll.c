@@ -389,7 +389,7 @@ int                 height;
 
 
 /*----------------------------------------------------------------------
-   PositionAbsBox rend la position de l'image abstraite de la fenetree^tre      
+   PositionAbsBox rend la position de l'image abstraite de la fenetre^tre      
    frame dans le document.                                 
    Cette fonction retourne la valeur :                              
    -1 si l'image abstraite est vide.                                

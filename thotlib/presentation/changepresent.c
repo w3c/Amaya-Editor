@@ -1181,7 +1181,7 @@ boolean             display;
    int                 viewSch;
    int                 view;
    int                 value;
-   boolean             bValue;
+   boolean             bValue, bAbs;
    boolean             attr, stop, doit;
    boolean             isNew, reDisp, ok;
 #ifdef __COLPAGE__
@@ -1189,8 +1189,8 @@ boolean             display;
 #endif /* __COLPAGE__ */
 
    /* nettoie la table des frames a reafficher */
-   for (view = 1; view <= MAX_VIEW_DOC; view++)
-     updateframe[view - 1] = 0;
+   for (view = 0; view < MAX_VIEW_DOC; view++)
+     updateframe[view] = 0;
    /* rien a reafficher */
    reDisp = FALSE;
    /* l'element auquel correspond le pave */
@@ -1202,7 +1202,7 @@ boolean             display;
    doit = FALSE;
 
    /* traite le changement de largeur */
-   if (width != 0)
+   if (width != 0 && pAb->AbBox != NULL && width != pAb->AbBox->BxWidth)
      {
        /* cherche d'abord la regle de dimension qui s'applique a l'element */
        pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch, PtWidth, FnAny, FALSE, TRUE, &pAttr);
@@ -1304,9 +1304,10 @@ boolean             display;
 		 }
 
 	       bValue = pPRule->PrDimRule.DrAttr;
-	       value = pPRule->PrDimRule.DrAttr;
-	       pPRule->PrDimRule.DrAttr = FALSE;
+	       bAbs = pPRule->PrDimRule.DrAbsolute;
+	       value = pPRule->PrDimRule.DrValue;
 	       /* change la regle specifique - dimension absolue !! */
+	       pPRule->PrDimRule.DrAttr = FALSE;
 	       pPRule->PrDimRule.DrAbsolute = TRUE;
 	       pPRule->PrDimRule.DrValue = x;
 
@@ -1316,6 +1317,7 @@ boolean             display;
 		 {
 		   /* reset previous values */
 		   pPRule->PrDimRule.DrAttr = bValue;
+		   pPRule->PrDimRule.DrAbsolute = bAbs;
 		   pPRule->PrDimRule.DrValue = value;
 		 }
 	     }
@@ -1371,7 +1373,7 @@ boolean             display;
      }
 
    /* traite le changement de hauteur de la boite */
-   if (height != 0)
+   if (height != 0 && pAb->AbBox != NULL && height != pAb->AbBox->BxHeight)
      /* cherche d'abord la regle de dimension qui s'applique a l'element */
      {
        pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch, PtHeight, FnAny, FALSE, TRUE, &pAttr);
@@ -1453,7 +1455,7 @@ boolean             display;
 	       /* cherche si l'element a deja une regle de hauteur specifique */
 	       pPRule = SearchPresRule (pEl, PtHeight, 0, &isNew, pDoc, pAb->AbDocView);
 	       if (isNew)
-		 /* on a cree' une regle de largeur pour l'element */
+		 /* on a cree' une regle de hauteur pour l'element */
 		 {
 		   pR = pPRule->PrNextPRule;
 		   /* on recopie la regle standard */
@@ -1471,9 +1473,11 @@ boolean             display;
 		 }
 
 	       bValue = pPRule->PrDimRule.DrAttr;
-	       value = pPRule->PrDimRule.DrAttr;
-	       pPRule->PrDimRule.DrValue = FALSE;
+	       bAbs = pPRule->PrDimRule.DrAbsolute;
+	       value = pPRule->PrDimRule.DrValue;
 	       /* change la regle specifique - dimension absolue !! */
+	       pPRule->PrDimRule.DrAttr = FALSE;
+	       pPRule->PrDimRule.DrAbsolute = TRUE;
 	       pPRule->PrDimRule.DrValue = y;
 
 	       /* envoie un message APP a l'application */
@@ -1482,6 +1486,7 @@ boolean             display;
 		 {
 		   /* reset previous values */
 		   pPRule->PrDimRule.DrAttr = bValue;
+		   pPRule->PrDimRule.DrAbsolute = bAbs;
 		   pPRule->PrDimRule.DrValue = value;
 		 }
 	     }

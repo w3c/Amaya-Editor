@@ -453,33 +453,9 @@ int                *info;
 	     notifyDoc.verticalValue = dy;
 	     notifyDoc.horizontalValue = dx;
 	     CallEventType ((NotifyEvent *) & notifyDoc, FALSE);
-#ifdef IV
-	     /* Met a jour les widgets de texte */
-	     i = 1;
-	     n = 0;
-	     /*XtSetArg(args[n], XmNeditable, TRUE); n++; */
-	     XtSetArg (args[n], XmNwidth, (Dimension) (width - 100));
-	     n++;
-	     while (i < MAX_TEXTZONE && FrameTable[frame].Text_Zone[i] != 0)
-	       {
-		  /* recupere l'indicateur editable
-		     XtSetArg(argument[0], XmNeditable, &editable);
-		     XtGetValues(FrameTable[frame].Text_Zone[i], argument, 1); */
-		  /* retire l'indicateur non-editable pour mettre a jour la taille */
-		  XtSetValues (FrameTable[frame].Text_Zone[i], args, n);
-		  /*
-		     if (!editable)
-		     {
-		     XtSetArg(argument[0], XmNeditable, editable);
-		     XtSetValues(FrameTable[frame].Text_Zone[i], argument, 1);
-		     }
-		   */
-		  i++;
-	       }
-#endif /* IV */
 	  }
      }
-}				/*FrameResized */
+}
 
 #endif /* !_WINDOWS */
 

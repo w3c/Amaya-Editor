@@ -82,8 +82,6 @@ extern void CreateElemFont ( Document document,
 extern Element SearchAnchor ( Document doc,
                               Element element,
                               boolean link );
-extern char *GetActiveImageInfo ( Document document,
-                                  Element element );
 extern void UpdateAtom ( Document doc,
                          char *url,
                          char *title );
@@ -169,8 +167,6 @@ extern void CreateElemFont (/* Document document,
 extern Element SearchAnchor (/* Document doc,
                                 Element element,
                                 boolean link */);
-extern char *GetActiveImageInfo (/* Document document,
-                                    Element element */);
 extern void UpdateAtom (/* Document doc,
                            char *url,
                            char *title */);

@@ -56,6 +56,7 @@
 #include "frame_f.h"
 #include "picture_f.h"
 #include "memory_f.h"
+#include "scroll_f.h"
 #include "structselect_f.h"
 #include "textcommands_f.h"
 
@@ -2798,79 +2799,98 @@ int                 frame;
 
 #endif /* __STDC__ */
 {
+   ViewFrame          *pFrame;
+   PtrAbstractBox      pAb, pVisibleAb;
+   PtrBox              pBox;
+   int                 width, height;
+   int                 position;
    boolean             condition;
    boolean             status;
-   ViewFrame          *pFrame;
-   PtrAbstractBox      pAb;
-   PtrBox              pCurrentBox;
-   int                 width, height;
 
    pFrame = &ViewFrameTable[frame - 1];
    if (pFrame->FrAbstractBox != NULL)
      {
-	pAb = pFrame->FrAbstractBox;
-	if (pAb->AbBox != NULL)
-	  {
-	     pCurrentBox = pAb->AbBox;
-	     status = pFrame->FrReady;
-	     pFrame->FrReady = FALSE;	/* La frame n'est pas affichable */
-	     /* Faut-il changer les dimensions de la boite document */
-	     if (!pCurrentBox->BxContentWidth
-		 || (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum))
-	       {
-		  /* la dimension de la boite depend de la fenetre */
-		  condition = ComputeDimRelation (pAb, frame, TRUE);
-		  /* S'il y a une regle de minimum il faut la verifier */
-		  if (!condition)
-		    {
-		       GiveEnclosureSize (pAb, frame, &width, &height);
-		       ChangeDefaultWidth (pCurrentBox, pCurrentBox, width, 0, frame);
-		    }
-	       }
-	     if (!pCurrentBox->BxContentHeight
-	      || (!pAb->AbHeight.DimIsPosition && pAb->AbHeight.DimMinimum))
-	       {
-		  /* la dimension de la boite depend de la fenetre */
-		  condition = ComputeDimRelation (pAb, frame, FALSE);
-		  /* S'il y a une regle de minimum il faut la verifier */
-		  if (!condition)
-		    {
-		       GiveEnclosureSize (pAb, frame, &width, &height);
-		       ChangeDefaultHeight (pCurrentBox, pCurrentBox, height, frame);
-		    }
-	       }
+       pAb = pFrame->FrAbstractBox;
+       if (pAb->AbBox != NULL)
+	 {
+	   /* get the first visible abstract box and its current postion */
+	   GetSizesFrame (frame, &width, &height);
+	   pBox = pAb->AbBox;
+	   while (pBox != NULL && pBox->BxYOrg < pFrame->FrYOrg &&
+		  pBox->BxNext != NULL)
+	     pBox = pBox->BxNext;
+	   if (pBox != NULL)
+	     {
+	       /* position of the box top in the frame given in % */
+	       position = (pBox->BxYOrg - pFrame->FrYOrg) * 100 / height;
+	       pVisibleAb = pBox->BxAbstractBox;
+	     }
+	   else
+	     pVisibleAb = NULL;
+       
+	   pBox = pAb->AbBox;
+	   status = pFrame->FrReady;
+	   pFrame->FrReady = FALSE;	/* La frame n'est pas affichable */
+	   /* Remove la selection eventuelle */
+	   SwitchSelection (frame, FALSE);
+	   /* Faut-il changer les dimensions de la boite document */
+	   if (!pBox->BxContentWidth
+	       || (!pAb->AbWidth.DimIsPosition && pAb->AbWidth.DimMinimum))
+	     {
+	       /* la dimension de la boite depend de la fenetre */
+	       condition = ComputeDimRelation (pAb, frame, TRUE);
+	       /* S'il y a une regle de minimum il faut la verifier */
+	       if (!condition)
+		 {
+		   GiveEnclosureSize (pAb, frame, &width, &height);
+		   ChangeDefaultWidth (pBox, pBox, width, 0, frame);
+		 }
+	     }
+	   if (!pBox->BxContentHeight
+	       || (!pAb->AbHeight.DimIsPosition && pAb->AbHeight.DimMinimum))
+	     {
+	       /* la dimension de la boite depend de la fenetre */
+	       condition = ComputeDimRelation (pAb, frame, FALSE);
+	       /* S'il y a une regle de minimum il faut la verifier */
+	       if (!condition)
+		 {
+		   GiveEnclosureSize (pAb, frame, &width, &height);
+		   ChangeDefaultHeight (pBox, pBox, height, frame);
+		 }
+	     }
+	   
+	   /* Faut-il deplacer la boite document dans la fenetre? */
+	   ComputePosRelation (pAb->AbHorizPos, pBox, frame, TRUE);
+	   ComputePosRelation (pAb->AbVertPos, pBox, frame, FALSE);
+	   
+	   /* On elimine le scroll horizontal */
+	   GetSizesFrame (frame, &width, &height);
+	   if (pFrame->FrXOrg != 0)
+	     {
+	       pFrame->FrXOrg = 0;
+	       /* Force le reaffichage */
+	       DefClip (frame, 0, 0, width, height);
+	     }
+	   /* Si la vue n'est pas coupee en tete on elimine le scroll vertical */
+	   if (!pAb->AbTruncatedHead && pFrame->FrYOrg != 0)
+	     {
+	       pFrame->FrYOrg = 0;
+	       /* Force le reaffichage */
+	       DefClip (frame, 0, 0, width, height);
+	     }
+	   /* La frame est affichable */
+	   pFrame->FrReady = status;
+	   /* Traitement des englobements retardes */
+	   ComputeEnclosing (frame);
 
-	     /* Faut-il deplacer la boite document dans la fenetre? */
-	     ComputePosRelation (pAb->AbHorizPos, pCurrentBox, frame, TRUE);
-	     ComputePosRelation (pAb->AbVertPos, pCurrentBox, frame, FALSE);
-
-	     /* On elimine le scroll horizontal */
-	     GetSizesFrame (frame, &width, &height);
-	     if (pFrame->FrXOrg != 0)
-	       {
-		  pFrame->FrXOrg = 0;
-		  /* Force le reaffichage */
-		  DefClip (frame, 0, 0, width, height);
-	       }
-	     /* Si la vue n'est pas coupee en tete on elimine le scroll vertical */
-	     if (!pAb->AbTruncatedHead && pFrame->FrYOrg != 0)
-	       {
-		  pFrame->FrYOrg = 0;
-		  /* Force le reaffichage */
-		  DefClip (frame, 0, 0, width, height);
-	       }
-	     pFrame->FrReady = status;	/* La frame est affichable */
-
-	     /* Traitement des englobements retardes */
-	     ComputeEnclosing (frame);
-
-	     /* RemoveElement la selection eventuelle */
-	     SwitchSelection (frame, FALSE);
-	     /* Affichage de toute la fenetre */
+	   /* Affiche la fenetre */
+	   if (pVisibleAb != NULL)
+	     ShowBox (frame, pVisibleAb->AbBox, 0, position);
+	   else
 	     RedrawFrameBottom (frame, 0);
-	     /* Restaure la selection */
-	     ShowSelection (pAb, FALSE);
-	  }
+	   /* Restaure la selection */
+	   ShowSelection (pAb, FALSE);
+	 }
      }
 }
 
@@ -2891,48 +2911,48 @@ int                 frame;
 #endif /* __STDC__ */
 {
    PtrAbstractBox      pChildAb;
-   PtrBox              pCurrentBox;
+   PtrBox              pBox;
 
    if (pAb->AbNew)
       return;
    else if (pAb->AbBox != NULL)
      {
-	pCurrentBox = pAb->AbBox;
+	pBox = pAb->AbBox;
 	/* Faut-il reevaluer les regles d'une boite elastique */
-	if (pCurrentBox->BxHorizFlex && pAb->AbWidthChange)
+	if (pBox->BxHorizFlex && pAb->AbWidthChange)
 	  {
-	     DefClip (frame, pCurrentBox->BxXOrg, pCurrentBox->BxYOrg,
-		      pCurrentBox->BxXOrg + pCurrentBox->BxWidth, pCurrentBox->BxYOrg + pCurrentBox->BxHeight);
+	     DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
+		      pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
 
 	     /* Annulation de la position */
 	     if (pAb->AbHorizPosChange)
 	       {
-		  ClearPosRelation (pCurrentBox, TRUE);
-		  XMove (pCurrentBox, NULL, -pCurrentBox->BxXOrg, frame);
+		  ClearPosRelation (pBox, TRUE);
+		  XMove (pBox, NULL, -pBox->BxXOrg, frame);
 	       }
 
 	     /* Annulation ancienne largeur */
-	     ClearDimRelation (pCurrentBox, TRUE, frame);
+	     ClearDimRelation (pBox, TRUE, frame);
 	     /* Reinitialisation du trace reel */
-	     MirrorShape (pAb, pCurrentBox->BxHorizInverted, pCurrentBox->BxVertInverted, FALSE);
+	     MirrorShape (pAb, pBox->BxHorizInverted, pBox->BxVertInverted, FALSE);
 	  }
 
-	if (pCurrentBox->BxVertFlex && pAb->AbHeightChange)
+	if (pBox->BxVertFlex && pAb->AbHeightChange)
 	  {
-	     if (!pCurrentBox->BxHorizFlex || !pAb->AbWidthChange)
-		DefClip (frame, pCurrentBox->BxXOrg, pCurrentBox->BxYOrg,
-			 pCurrentBox->BxXOrg + pCurrentBox->BxWidth, pCurrentBox->BxYOrg + pCurrentBox->BxHeight);
+	     if (!pBox->BxHorizFlex || !pAb->AbWidthChange)
+		DefClip (frame, pBox->BxXOrg, pBox->BxYOrg,
+			 pBox->BxXOrg + pBox->BxWidth, pBox->BxYOrg + pBox->BxHeight);
 	     /* Annulation et reevaluation de la position */
 	     if (pAb->AbVertPosChange)
 	       {
-		  ClearPosRelation (pCurrentBox, FALSE);
-		  YMove (pCurrentBox, NULL, -pCurrentBox->BxYOrg, frame);
+		  ClearPosRelation (pBox, FALSE);
+		  YMove (pBox, NULL, -pBox->BxYOrg, frame);
 	       }
 
 	     /* Annulation ancienne hauteur */
-	     ClearDimRelation (pCurrentBox, FALSE, frame);
+	     ClearDimRelation (pBox, FALSE, frame);
 	     /* Reinitialisation du trace reel */
-	     MirrorShape (pAb, pCurrentBox->BxHorizInverted, pCurrentBox->BxVertInverted, FALSE);
+	     MirrorShape (pAb, pBox->BxHorizInverted, pBox->BxVertInverted, FALSE);
 	  }
 
 	/* Traitement des paves fils */
@@ -2996,10 +3016,10 @@ int                 frame;
    PtrLine             pLine;
    PtrBox              pBox;
    PtrBox              pCurrentBox;
+   Propagation         propStatus;
    boolean             toUpdate;
    boolean             result;
    boolean             change;
-   Propagation         propStatus;
 
    change = FALSE;
    if (pAb->AbDead && (pAb->AbNew || pAb->AbBox == NULL))

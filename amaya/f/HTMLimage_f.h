@@ -32,6 +32,8 @@ extern void FetchImage ( Document doc,
                          int flags,
                          LoadedImageCallback callback,
                          void *extra );
+extern char *GetActiveImageInfo ( Document document,
+                                  Element element );
 extern void FetchAndDisplayImages ( Document doc,
                                     int flags );
 
@@ -57,6 +59,8 @@ extern void libWWWImageLoaded (/* int doc,
                                   char *outputfile,
                                   char *content_type,
                                   void * context */);
+extern char *GetActiveImageInfo (/* Document document,
+                                    Element element */);
 extern void FetchImage (/* Document doc,
                            Element el,
                            char *URL,

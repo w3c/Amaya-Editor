@@ -532,7 +532,7 @@ static boolean CloseTextInsertionWithControl ()
    precedent.                                              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SetInsert (PtrAbstractBox * pAb, int *frame, LeafType nat, boolean del)
+static void         SetInsert (PtrAbstractBox *pAb, int *frame, LeafType nat, boolean del)
 #else  /* __STDC__ */
 static void         SetInsert (pAb, frame, nat, del)
 PtrAbstractBox     *pAb;
@@ -542,119 +542,139 @@ boolean             del;
 
 #endif /* __STDC__ */
 {
-   PtrAbstractBox      pSelAb;
-   ViewFrame          *pFrame;
-   ViewSelection      *pViewSel;
-   LeafType            natureToCreate;
-   int                 i;
-   boolean             moveSelection;
-   boolean             notified;
+  PtrAbstractBox      pSelAb;
+  PtrBox              pBox;
+  ViewFrame          *pFrame;
+  ViewSelection      *pViewSel;
+  LeafType            natureToCreate;
+  int                 i;
+  boolean             moveSelection;
+  boolean             notified, before;
+  
+  *pAb = NULL;
+  notified = FALSE;
+  /* verifie la validite du debut de la selection */
+  if (*frame > 0)
+    {
+      pFrame = &ViewFrameTable[*frame - 1];
+      pViewSel = &pFrame->FrSelectionBegin;
+      /* Si la selection porte sur des caracteres, le debut de la selection */
+      /* visualisee correspond forcement au debut de la selection reelle    */
+      /* Sinon il faut verifier la validite de la selection */
+      if (pViewSel->VsBox == NULL || pViewSel->VsIndBuf == 0)
+	TtaSetFocus ();
+      pBox = pViewSel->VsBox;
 
-   *pAb = NULL;
-   notified = FALSE;
-   /* verifie la validite du debut de la selection */
-   if (*frame > 0)
-     {
-	pFrame = &ViewFrameTable[*frame - 1];
-	pViewSel = &pFrame->FrSelectionBegin;
-	/* Si la selection porte sur des caracteres, le debut de la selection */
-	/* visualisee correspond forcement au debut de la selection reelle    */
-	/* Sinon il faut verifier la validite de la selection */
-	if (pViewSel->VsBox == NULL || pViewSel->VsIndBuf == 0)
-	   TtaSetFocus ();
+      /* Il faut maintenant verifier la nature demandee */
+      i = 1;			/* Par defaut insere avant le 1er caractere */
+      moveSelection = FALSE;
+      if (nat == LtReference)
+	natureToCreate = LtText;
+      else
+	natureToCreate = nat;
+      
+      if (pBox == NULL)
+	*pAb = NULL;
+      else
+	*pAb = pBox->BxAbstractBox;
 
-	/* Il faut maintenant verifier la nature demandee */
-	i = 1;			/* Par defaut insere avant le 1er caractere */
-	moveSelection = FALSE;
-	if (nat == LtReference)
-	   natureToCreate = LtText;
-	else
-	   natureToCreate = nat;
-
-	if (pViewSel->VsBox == NULL)
-	   *pAb = NULL;
-	else
-	   *pAb = pViewSel->VsBox->BxAbstractBox;
-
-	pSelAb = *pAb;
-	if (pSelAb != NULL)
-	  {
-	     /* deplace l'insertion avant le pave selectionne pour detruire */
-	     if (del && pViewSel->VsIndBox == 0
-		 && (pViewSel->VsBox == pSelAb->AbBox
-		     || pViewSel->VsBox == pSelAb->AbBox->BxNexChild))
-	       {
-		  pSelAb = pSelAb->AbPrevious;
-		  *pAb = NULL;
-		  if (pSelAb != NULL)
-		     if (pSelAb->AbCanBeModified && pSelAb->AbLeafType == natureToCreate)
-		       {
-			  moveSelection = TRUE;
-			  notified = CloseTextInsertionWithControl ();
-			  if (!notified)
-			    {
-			      i = pSelAb->AbVolume + 1;
-			      *pAb = pSelAb;
-			    }
-		       }
-	       }
-	     /* deplace l'insertion dans le pave de composition vide */
-	     else if (pSelAb->AbLeafType == LtCompound && pSelAb->AbFirstEnclosed == NULL)
-	       {
-		  *pAb = CreateALeaf (pSelAb, frame, natureToCreate, TRUE);
+      pSelAb = *pAb;
+      if (pSelAb != NULL)
+	{
+	  /* deplace l'insertion avant le pave selectionne pour detruire */
+	  if (del && pViewSel->VsIndBox == 0 &&
+	      (pBox == pSelAb->AbBox || pBox == pSelAb->AbBox->BxNexChild))
+	    {
+	      pSelAb = pSelAb->AbPrevious;
+	      *pAb = NULL;
+	      if (pSelAb != NULL &&
+		  pSelAb->AbCanBeModified && pSelAb->AbLeafType == natureToCreate)
+		{
 		  moveSelection = TRUE;
-	       }
-	     /* deplace l'insertion avant ou apres le pave selectionne */
-	     else if (!pSelAb->AbCanBeModified
-		      || pSelAb->AbLeafType == LtCompound
-		      || (pSelAb->AbLeafType != nat && nat != LtReference))
-	       {
-		  if (pSelAb->AbLeafType == LtPicture && pViewSel->VsXPos > 0)
+		  notified = CloseTextInsertionWithControl ();
+		  if (!notified)
 		    {
-		       /* Insertion en fin d'image */
-		       pSelAb = pSelAb->AbNext;
-		       moveSelection = TRUE;
-		       if (pSelAb == NULL)
-			  *pAb = CreateALeaf (*pAb, frame, natureToCreate, FALSE);
-		       else if (!pSelAb->AbCanBeModified || natureToCreate != LtText || pSelAb->AbLeafType != natureToCreate)
-			  *pAb = CreateALeaf (*pAb, frame, natureToCreate, FALSE);
-		       else
-			 {
-			    i = 1;
-			    *pAb = pSelAb;
-			 }
+		      i = pSelAb->AbVolume + 1;
+		      *pAb = pSelAb;
 		    }
+		}
+	    }
+	  /* deplace l'insertion dans le pave de composition vide */
+	  else if (pSelAb->AbLeafType == LtCompound && pSelAb->AbFirstEnclosed == NULL)
+	    {
+	      *pAb = CreateALeaf (pSelAb, frame, natureToCreate, TRUE);
+	      moveSelection = TRUE;
+	    }
+	  /* deplace l'insertion avant ou apres le pave selectionne */
+	  else if (!pSelAb->AbCanBeModified ||  pSelAb->AbLeafType == LtCompound ||
+		   (pSelAb->AbLeafType != nat && nat != LtReference))
+	    {
+	      if (pViewSel->VsXPos > 0 &&
+		  (pSelAb->AbLeafType == LtPicture ||
+		   pSelAb->AbLeafType == LtSymbol ||
+		   pSelAb->AbLeafType == LtGraphics))
+		{
+		  /* Insertion en fin d'image */
+		  pSelAb = pSelAb->AbNext;
+		  moveSelection = TRUE;
+		  if (pSelAb == NULL)
+		    *pAb = CreateALeaf (*pAb, frame, natureToCreate, FALSE);
+		  else if (!pSelAb->AbCanBeModified || natureToCreate != LtText || pSelAb->AbLeafType != natureToCreate)
+		    *pAb = CreateALeaf (*pAb, frame, natureToCreate, FALSE);
 		  else
 		    {
-		       pSelAb = pSelAb->AbPrevious;
-		       moveSelection = TRUE;
-		       if (pSelAb == NULL)
-			  *pAb = CreateALeaf (*pAb, frame, natureToCreate, TRUE);
-		       else if (!pSelAb->AbCanBeModified || natureToCreate != LtText || pSelAb->AbLeafType != natureToCreate)
-			  *pAb = CreateALeaf (*pAb, frame, natureToCreate, TRUE);
-		       else
-			 {
-			    i = pSelAb->AbVolume + 1;
-			    *pAb = pSelAb;
-			 }
+		      i = 1;
+		      *pAb = pSelAb;
 		    }
-	       }
-	  }
-
-	if (notified)
-	  /* selection could be modified by the application re-do the work */
-	  SetInsert (pAb, frame, nat, del);
-	else
-	  {
-	    pSelAb = *pAb;
-	    if (pSelAb != NULL && pSelAb->AbElement != NULL && moveSelection)
-	      /* signale le changement de selection a l'editeur */
-	      if (pSelAb->AbVolume == 0)
-		ChangeSelection (*frame, pSelAb, 0, FALSE, TRUE, FALSE, FALSE);
+		}
 	      else
-		ChangeSelection (*frame, pSelAb, i, FALSE, TRUE, FALSE, FALSE);
-	  }
-     }
+		{
+		  moveSelection = TRUE;
+		  before = TRUE;
+		  if (pSelAb->AbLeafType == LtText)
+		    {
+		      /* on veut inserer autre chose que du texte */
+		      if (pViewSel->VsIndBox + pBox->BxIndChar >= pSelAb->AbVolume)
+			/* insere apres le texte */
+			before = FALSE;
+		      notified = CloseTextInsertionWithControl ();
+		    }
+		  else
+		    /* insere avant autre element */
+		    pSelAb = pSelAb->AbPrevious;
+
+		  if (!notified)
+		    {
+		      if (pSelAb == NULL)
+			*pAb = CreateALeaf (*pAb, frame, natureToCreate, before);
+		      else if (!pSelAb->AbCanBeModified ||
+			       natureToCreate != LtText ||
+			       pSelAb->AbLeafType != natureToCreate)
+			*pAb = CreateALeaf (*pAb, frame, natureToCreate, before);
+		      else
+			{
+			  i = pSelAb->AbVolume + 1;
+			  *pAb = pSelAb;
+			}
+		    }
+		}
+	    }
+	}
+	  
+      if (notified)
+	/* selection could be modified by the application re-do the work */
+	SetInsert (pAb, frame, nat, del);
+      else
+	{
+	  pSelAb = *pAb;
+	  if (pSelAb != NULL && pSelAb->AbElement != NULL && moveSelection)
+	    /* signale le changement de selection a l'editeur */
+	    if (pSelAb->AbVolume == 0)
+	      ChangeSelection (*frame, pSelAb, 0, FALSE, TRUE, FALSE, FALSE);
+	    else
+	      ChangeSelection (*frame, pSelAb, i, FALSE, TRUE, FALSE, FALSE);
+	}
+    }
 }
 
 
@@ -2611,6 +2631,9 @@ int                 keyboard;
       pViewSel = &pFrame->FrSelectionBegin;
       pViewSelEnd = &pFrame->FrSelectionEnd;
       
+      if (pAb == NULL && nat != LtText)
+	return;
+
       if (pAb == NULL)
 	{
 	  /* detruit dans l'element precedent ou fusionne les elements */
