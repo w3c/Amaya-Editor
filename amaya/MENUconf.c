@@ -173,8 +173,8 @@ static AM_WIN_MenuText WIN_BrowseMenuText[] =
 #endif /* _WINDOWS */
 static int      BrowseBase;
 static int      CurrentScreen;
-static ThotBool LoadImages;
-static ThotBool LoadCss;
+static ThotBool LoadImages, InitLoadImages;
+static ThotBool LoadCss, InitLoadCss;
 static ThotBool DoubleClick;
 static ThotBool EnableFTP;
 static char     ScreenType[MAX_LENGTH];
@@ -2702,8 +2702,8 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
     {
     case WM_INITDIALOG:
       BrowseHwnd = hwnDlg;
-	  ScreensList = GetDlgItem (hwnDlg, IDC_SCREENLIST);
- 	  WIN_SetDialogfont (ScreensList);
+      ScreensList = GetDlgItem (hwnDlg, IDC_SCREENLIST);
+      WIN_SetDialogfont (ScreensList);
       /* initialize the menu text */
       WIN_SetMenuText (hwnDlg, WIN_BrowseMenuText);
       /* write the current values in the dialog entries */
@@ -2740,7 +2740,9 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 
 	  /* action buttons */
 	case ID_APPLY:
-	  if (strcmp (ScreenType, NewScreen))
+	  if (strcmp (ScreenType, NewScreen) ||
+	      InitLoadImages != LoadImages ||
+	      InitLoadCss != LoadCss)
 	    {
 	      strcpy (ScreenType, NewScreen);
 	      SetBrowseConf ();
@@ -2751,7 +2753,11 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 		      DocumentTypes[doc] == docMath)
 		    Synchronize (doc, 1);
 		}
+	      InitLoadImages = LoadImages;
+	      InitLoadCss = LoadCss;
 	    }
+	  else
+	    SetBrowseConf ();
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
 	case ID_DONE:
@@ -2848,7 +2854,9 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 1:
-	      if (strcmp (NewScreen, ScreenType))
+	      if (strcmp (ScreenType, NewScreen) ||
+		  InitLoadImages != LoadImages ||
+		  InitLoadCss != LoadCss)
 		{
 		  strcpy (ScreenType, NewScreen);
 		  SetBrowseConf ();
@@ -2859,7 +2867,11 @@ static void BrowseCallbackDialog (int ref, int typedata, char *data)
 			  DocumentTypes[doc] == docMath)
 			Synchronize (doc, 1);
 		    }
+		  InitLoadImages = LoadImages;
+		  InitLoadCss = LoadCss;
 		}
+	      else
+		SetBrowseConf ();
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 2:
@@ -2915,6 +2927,9 @@ void BrowseConfMenu (Document document, View view)
   SafePutStatus = 0;
   /* load the current values */
   GetBrowseConf ();
+  /* keep initial values to detect an change */
+  InitLoadImages = LoadImages;
+  InitLoadCss = LoadCss;
 #ifndef _WINDOWS
   /* Create the dialogue form */
   i = 0;
