@@ -4633,7 +4633,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule, char *sel,
 		      }
 		  }
 		/* there is a value */
-		if (quoted && *selector != '"')
+		if (quoted && *selector == '"')
 		  {
 		    selector++;
 		    quoted = FALSE;
