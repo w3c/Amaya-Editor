@@ -73,14 +73,14 @@ extern HWND        ToolBar    ;
 extern HWND        StatusBar  ;
 extern HINSTANCE   hInstance  ;
 
-static int         cyTxtZone  ;
+static HWND        hwndHead   ;
+
+static char*       txtZoneLabel;
 
 int    cyToolBar ;
 HWND   hwndTB ;
 DWORD  dwToolBarStyles   = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP | CCS_NODIVIDER /*| TBSTYLE_TOOLTIPS */ ;
 DWORD  dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP ;
-
-LRESULT CALLBACK TextZoneWndProc (HWND, UINT, WPARAM, LPARAM) ;
 #endif /* _WINDOWS */
 
 #include "appli_f.h"
@@ -255,9 +255,9 @@ void               *ev;
    MS-Windows.                                                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                WIN_ChangeTaille (int frame, int width, int height, int top_delta, int bottom_delta)
+void WIN_ChangeTaille (int frame, int width, int height, int top_delta, int bottom_delta)
 #else  /* !__STDC__ */
-void                WIN_ChangeTaille (frame, width, height, top_delta, bottom_delta)
+void WIN_ChangeTaille (frame, width, height, top_delta, bottom_delta)
 int frame; 
 int width; 
 int height; 
@@ -380,9 +380,9 @@ int                *info;
    Demande de scroll vertical.                                      
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                WIN_ChangeVScroll (int frame, int reason, int value)
+void WIN_ChangeVScroll (int frame, int reason, int value)
 #else  /* __STDC__ */
-void                WIN_ChangeVScroll (frame, reason, value)
+void WIN_ChangeVScroll (frame, reason, value)
 int                 frame;
 int                 reason;
 int                 value;
@@ -1004,72 +1004,26 @@ BOOL  bCheck;
 }
 
 /* -------------------------------------------------------------------
-   InitToolBar
+   InitTextZone
    ------------------------------------------------------------------- */
 #ifdef __STDC__
-HWND InitToolBar (HWND hwndParent)
+HWND InitTextZone (HWND hwndParent, int width, char* label)
 #else  /* !__STDC__ */
-HWND InitToolBar (hwndParent)
-HWND hwndParent;
+HWND InitTextZone (hwndParent, width, label)
+HWND  hwndParent;
+int   width;
+char* label;
 #endif /* __STDC__ */
 {
-     int        iNumButtons ;
-     int        x, y, cx, cy ;
-     UINT       uiBitmap;
-     RECT       r ;
-     LPTBBUTTON ptbb ;
+    RECT r ;
+    HWND txtZone;
 
-     hwndTB = CreateWindow (TOOLBARCLASSNAME, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP,
-                            0, 0, 0, 0, hwndParent, (HMENU) 1, hInstance, 0) ;
+    txtZoneLabel = strdup (label);
 
-#ifdef RAMZI
-     if (bComboBox) {
-         /* Calculate coordinates for combo box */
-         ToolBar_GetItemRect (hwndTB, 0, &r) ;
-         x  = r.left ;
-         y  = r.top ;
-         cy = 100 ;
-         ToolBar_GetItemRect (hwndTB, 18, &r) ;
-         cx = r.right - x + 1 ;
+    txtZone = CreateWindow ("WinTxtZone", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER,
+                            0, 0, width, 30, hwndParent, (HMENU) 1, hInstance, 0) ;
 
-         hwndCombo = CreateWindow ("combobox", NULL, WS_CHILD | WS_VISIBLE |
-                                   CBS_DROPDOWN, x, y, cx, cy, hwndParent,
-                                   (HMENU) IDC_TB_COMBOBOX, hInstance, 0) ;
-
-         /* Set toolbar as combo box window parent */
-         SetParent (hwndCombo, hwndTB) ;
-
-         SendMessage (hwndCombo, CB_ADDSTRING, 0, (LPARAM) "One") ;
-         SendMessage (hwndCombo, CB_ADDSTRING, 0, (LPARAM) "Two") ;
-         SendMessage (hwndCombo, CB_ADDSTRING, 0, (LPARAM) "Three") ;
-
-         /* Calculate toolbar height */
-         GetWindowRect (hwndCombo, &r) ;
-         cyToolBar = r.bottom - r.top + 1 ;
-         cyToolBar += y ;
-         cyToolBar += (2 * GetSystemMetrics (SM_CYBORDER)) ;
-         ToolBar_GetItemRect (hwndTB, 0, &r) ;
-         cyToolBar = max (cyToolBar, r.bottom+5) ;
-     }
-#endif /* RAMZI */
-     return hwndTB ;
-}
-
-/* -------------------------------------------------------------------
-   InitStatusBar
-   ------------------------------------------------------------------- */
-#ifdef __STDC__
-HWND InitStatusBar (HWND hwndParent)
-#else  /* !__STDC__ */
-HWND InitStatusBar (hwndParent)
-HWND HWND hwndParent;
-#endif /* __STDC__ */
-{
-     HWND hwndSB ;
-
-     /* Initialize values for WM_MENUSELECT message handling */
-     hwndSB = CreateStatusWindow (dwStatusBarStyles, "", hwndParent, 2) ;
-     return hwndSB ;
+    return txtZone ;
 }
 
 /*----------------------------------------------------------------------
@@ -1086,29 +1040,42 @@ WPARAM      wParam;
 LPARAM      lParam; 
 #endif /* __STDC__ */
 {
-     int frame = GetMainFen (hwnd);
+     int  frame = GetMainFrameNumber (hwnd);
 
      switch (mMsg) {
             case WM_CREATE: {
 	         /* Create toolbar (source resides in toolbar.c). */
-                 ToolBar = InitToolBar (hwnd) ;
+                 ToolBar = CreateWindow (TOOLBARCLASSNAME, NULL, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TOP,
+                            0, 0, 0, 0, hwnd, (HMENU) 1, hInstance, 0) ;
                  ShowWindow (ToolBar, SW_SHOWNORMAL);
                  UpdateWindow (ToolBar);
 
                  /* Create status bar (source resides in statbar.c). */
-                 StatusBar = InitStatusBar (hwnd) ;
+                 StatusBar = CreateStatusWindow (dwStatusBarStyles, "", hwnd, 2) ;
                  ShowWindow (StatusBar, SW_SHOWNORMAL);
                  UpdateWindow (StatusBar);
 
                  /* Create client window (contains notify list). */
+		 /*
                  hwndClient = CreateWindowEx (WS_EX_CLIENTEDGE, "ClientWndProc", NULL,
                                               WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_BORDER | 
                                               WS_VSCROLL, 0, 0, 0, 0,
-                                              hwnd, (HMENU) 1, hInstance, NULL) ;
+                                              hwnd, (HMENU) 2, hInstance, NULL) ;
+		 */
+                 hwndClient = CreateWindowEx (WS_EX_CLIENTEDGE, "ClientWndProc", NULL,
+                                              WS_CHILD | WS_VISIBLE | WS_BORDER, 0, 0, 0, 0,
+                                              hwnd, (HMENU) 2, hInstance, NULL) ;
                  ShowWindow (hwndClient, SW_SHOWNORMAL);
                  UpdateWindow (hwndClient);
+
                  return 0 ;
 	    }
+	    /*
+            case WM_DESTROY:
+                 SendMessage (FrRef [frame], "WM_DESTROY", (WPARAM) 0, (LPARAM) 0) ;
+                 DestroyWindow (hwnd) ;
+                 return 0;
+	    */
 	    case WM_KEYDOWN:
                  SendMessage (FrRef [frame], WM_KEYDOWN, wParam, lParam);
                  return 0;
@@ -1121,6 +1088,7 @@ LPARAM      lParam;
 	         return (0);
 
             case WM_DESTROY:
+                 SendMessage (FrRef [frame], "WM_DESTROY", (WPARAM) 0, (LPARAM) 0) ;
                  PostQuitMessage (0) ;
                  return 0 ;
 
@@ -1128,9 +1096,12 @@ LPARAM      lParam;
                  int   cx = LOWORD (lParam) ;
                  int   cy = HIWORD (lParam) ;
                  int   cyStatus ;
+                 int   cxVSB ;
+                 int   cyHSB ;
                  int   cyTB ;
                  int   x, y ;
                  int   index = 0;
+                 int   cyTxtZone = 0 ;
                  DWORD dwStyle ;
                  RECT  rWindow ;
 
@@ -1152,6 +1123,15 @@ LPARAM      lParam;
 
                  cyTxtZone = cyTB ;
 
+                 /* Adjust text zones */
+                 for (index = 0; index < MAX_TEXTZONE; index++) {
+                     if (FrameTable[frame].Text_Zone[index] && IsWindowVisible (FrameTable[frame].Text_Zone[index])) {
+                        MoveWindow (FrameTable[frame].Label[index], 5, cyTxtZone + 5, 100, 20, TRUE);
+                        MoveWindow (FrameTable[frame].Text_Zone[index], 105, cyTxtZone + 5, cx - 120, 20, TRUE) ;
+                        cyTxtZone += 25 ;
+                     }
+		 }
+
                  /* Adjust status bar size. */
                  if (IsWindowVisible (FrameTable[frame].WdStatus)) {
                     GetWindowRect (FrameTable[frame].WdStatus, &rWindow) ;
@@ -1160,17 +1140,172 @@ LPARAM      lParam;
 	         } else
                        cyStatus = 0 ;
 
+		 /* ******* VERTICAL SCROLL BAR ******* */
+                 MoveWindow (FrameTable[frame].WdScrollV, cx - 15, cyTxtZone, 15, cy - (cyStatus + cyTxtZone + 15), TRUE) ;
+                
+		 /* ******* HORIZENTAL SCROLL BAR ******* */
+                 MoveWindow (FrameTable[frame].WdScrollH, 0, cy - (cyStatus + 15), cx - 15, 15, TRUE) ;
+
                 /* Adjust client window size. */
+                 GetWindowRect (FrameTable[frame].WdScrollV, &rWindow) ;
+                 cxVSB = rWindow.right - rWindow.left ;
+
+                 GetWindowRect (FrameTable[frame].WdScrollH, &rWindow) ;
+                 cyHSB = rWindow.bottom - rWindow.top ;
+
                  x = 0 ;
                  y = cyTxtZone ;
-                 cy = cy - (cyStatus + cyTB) ;
+                 cx = cx - cxVSB ;
+                 cy = cy - (cyStatus + cyTxtZone + cyHSB) ;
                  MoveWindow (FrRef [frame], x, y, cx, cy, TRUE) ;
+                 /* WIN_ChangeTaille (frame, cx, cy, 0, 0) ; */
+                 /* PostMessage (FrRef [frame], WM_SIZE, 0, MAKELPARAM (cx, cy)); */
                  return 0;
 	    }
 
             default:
                   return (DefWindowProc (hwnd, mMsg, wParam, lParam)) ;
      }
+}
+
+/* -------------------------------------------------------------------
+   TxtZoneWndProc
+   ------------------------------------------------------------------- */
+#ifdef __STDC__
+LRESULT CALLBACK TxtZoneWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK TxtZoneWndProc (hwnd, mMsg, wParam, lParam)
+HWND   hwnd; 
+UINT   mMsg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+    HWND labelWin ;
+    HWND editWin ;
+
+   int cx ;
+   int cy ;
+
+    switch (mMsg) {
+           case WM_CREATE:
+                cx = LOWORD (lParam) ;
+                printf ("CX : %d\n", cx) ;
+                cy = HIWORD (lParam) ;
+                printf ("CY : %d\n", cy) ;
+
+                labelWin = CreateWindow ("STATIC", txtZoneLabel, WS_CHILD | WS_VISIBLE | SS_LEFT,
+                                         10, 10, 100, 15, hwnd, (HMENU) 101, hInstance, NULL);
+                ShowWindow (labelWin, SW_SHOWNORMAL);
+                UpdateWindow (labelWin);
+
+                editWin  = CreateWindow ("EDIT", "", WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
+                                         100, 8, cx - 10, 20, hwnd, (HMENU) 102, hInstance, NULL);
+                ShowWindow (editWin, SW_SHOWNORMAL);
+                UpdateWindow (editWin);
+                return 0;
+
+           case WM_SIZE:
+                cx = LOWORD (lParam) ;
+                cy = HIWORD (lParam) ;
+
+                MoveWindow (labelWin, 10, 10, 100, 15, TRUE) ;
+                MoveWindow (editWin, 100, 8, cx - 10, 20, TRUE) ;
+                return 0;
+
+           default: return (DefWindowProc (hwnd, mMsg, wParam, lParam)) ;
+    }
+}
+
+/* -------------------------------------------------------------------
+   HeadDlgProc
+   ------------------------------------------------------------------- */
+#ifdef __STDC__
+LRESULT CALLBACK HeadDlgProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK HeadDlgProc (hwnd, mMsg, wParam, lParam)
+HWND   hwnd; 
+UINT   mMsg; 
+WPARAM wParam; 
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+    TEXTMETRIC tm;
+    HBITMAP    hBitmap ;
+    BITMAP     bm;
+    HWND       URLLabel   ;
+    HWND       URLEdit    ;
+    HWND       TitleLabel ;
+    HWND       TitleEdit  ;
+    HDC        hdc;
+    HDC        hMemDC ;
+    int        cx ;
+    int        cy ;
+    int        charWidth ;
+
+    switch (mMsg) {
+           case WM_CREATE: {
+                cx = LOWORD (lParam) ;
+                cy = HIWORD (lParam) ;
+
+	        /* Create a bitmap as a logo (temporary) */
+                hdc     = GetDC (hwnd) ;
+
+                GetTextMetrics (hdc, &tm);
+                charWidth = tm.tmAveCharWidth * 6 + 10 ;
+
+                /* Create The URL zone */
+                URLLabel = CreateWindow ("STATIC", "Adress", WS_CHILD | WS_VISIBLE | SS_LEFT,
+                                         84, 10, charWidth, 20, hwnd, (HMENU) 101, hInstance, NULL) ;
+                ShowWindow (URLLabel, SW_SHOWNORMAL);
+                UpdateWindow (URLLabel);
+                URLEdit  = CreateWindow ("EDIT", "http://www.w3.org/pub/WWW/Amaya/",
+                                         WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
+                                         100 + charWidth, 10, cx, 20, hwnd, (HMENU) 102, hInstance, NULL) ;
+                ShowWindow (URLEdit, SW_SHOWNORMAL);
+                UpdateWindow (URLEdit);
+
+                /* Create the document Title zobe */
+                TitleLabel = CreateWindow ("STATIC", "Title", WS_CHILD | WS_VISIBLE | SS_LEFT,
+                                           84, 40, charWidth, 20, hwnd, (HMENU) 103, hInstance, NULL) ;
+                ShowWindow (TitleLabel, SW_SHOWNORMAL);
+                UpdateWindow (TitleLabel);
+                TitleEdit  = CreateWindow ("EDIT", "Amaya Overview",
+                                           WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
+                                           100 + charWidth, 40, cx, 20, hwnd, (HMENU) 104, hInstance, NULL) ;
+                ShowWindow (TitleEdit, SW_SHOWNORMAL);
+                UpdateWindow (TitleEdit);
+                
+                ReleaseDC (hwnd, hdc);
+                return 0;
+           }
+
+           case WM_SIZE:
+                cx = LOWORD (lParam) ;
+                cy = HIWORD (lParam) ;
+                MoveWindow (URLLabel, 100 + charWidth, 10, cx - 10, 20, TRUE);
+                MoveWindow (TitleLabel, 100 + charWidth, 40, cx - 10, 20, TRUE);
+                return 0;
+
+           case WM_PAINT:
+                cx      = LOWORD (lParam) ;
+                cy      = HIWORD (lParam) ;
+                hBitmap = CreateBitmap (64, 64, 1, 1, NULL) ;
+                hdc     = GetDC (hwnd) ;
+                hMemDC  = CreateCompatibleDC (hdc);
+                SelectObject (hMemDC, hBitmap) ;
+                Rectangle (hMemDC, 0, 0, 64, 64);
+                SelectObject (hMemDC, GetStockObject (GRAY_BRUSH)) ;
+                Ellipse (hMemDC, 0, 0, 64, 64);
+                BitBlt (hdc, 10, 10, 64, 64, hMemDC, 0, 0, SRCCOPY) ;
+
+                ReleaseDC (hwnd, hdc);
+                DeleteDC (hMemDC) ;
+                DeleteObject (hBitmap) ;
+                return 0;
+
+           default: return (DefWindowProc (hwnd, mMsg, wParam, lParam)) ;
+    }
 }
 
 /* -------------------------------------------------------------------
@@ -1192,7 +1327,7 @@ LPARAM lParam;
      PAINTSTRUCT ps;
      RECT        rect;
 
-     frame = GetFen (hwnd);
+     frame = GetFrameNumber (hwnd);
 
      /* do not handle events if the Document is in NoComputedDisplay mode. */
 
@@ -1228,8 +1363,6 @@ LPARAM lParam;
                HWND hwndNotify = GetWindow (hwnd, GW_CHILD) ;
                int  cx         = LOWORD (lParam) ;
                int  cy         = HIWORD (lParam) ;
-               int  cyStatus ;
-               int  cyToolBar;
 
                /* Ignore if notification window is absent. */
                /* if (hwndNotify != NULL)
@@ -1315,6 +1448,10 @@ LPARAM lParam;
 		    LocateSelectionInView (frame, LOWORD (lParam), HIWORD (lParam), 0);
 		 }
 	       return (0);
+
+          case WM_DESTROY: 
+               DestroyWindow (hwnd);
+               return 0;
 	       
           default:
                return (DefWindowProc (hwnd, mMsg, wParam, lParam)) ;

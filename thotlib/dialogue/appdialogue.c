@@ -81,6 +81,7 @@ static Menu_Ctl    *DocumentMenuList;
 
 /* CsList des menus attache's aux frames de documents particuliers */
 static SchemaMenu_Ctl *SchemasMenuList;
+
 #ifdef _WINDOWS
 HWND hwndClient ;
 HWND ToolBar ;
@@ -1384,8 +1385,10 @@ View                view;
    Dimension           dy;
    Arg                 args[MAX_ARGS];
    ThotWidget          row;
-
 #endif
+#ifdef _WINDOWS
+   RECT r;
+#endif /* _WINDOWS */
 
    UserErrorCode = 0;
    /* verifie le parametre document */
@@ -1426,6 +1429,14 @@ View                view;
 	XtManageChild (XtParent (row));
 	XtManageChild (XtParent (XtParent (row)));
      }
+#else  /* _WINDOWS */
+     if (WinToolBar[frame] && IsWindowVisible (WinToolBar[frame]))
+        ShowWindow (WinToolBar[frame], SW_HIDE);
+     else
+         ShowWindow (WinToolBar[frame], SW_SHOW);
+     /* Resize other windows */
+     GetClientRect (FrMainRef [frame], &r);
+     PostMessage (FrMainRef [frame], WM_SIZE, 0, MAKELPARAM (r.right, r.bottom));
 #endif /* _WINDOWS */
    /* force la mise a jour de la fenetre */
    TtaHandlePendingEvents ();
@@ -1514,11 +1525,7 @@ void                (*procedure) ();
 	else if (FrameTable[frame].WdFrame != 0)
 	  {
 	     i = 0;
-#ifndef _WINDOWS
 	     while (i < MAX_TEXTZONE && FrameTable[frame].Text_Zone[i] != 0)
-#else  /* _WINDOWS */
-	     while (i < MAX_TEXTZONE && FrameTable[frame].TxtZoneCreated[i])
-#endif /* _WINDOWS */
 		i++;
 	     if (i < MAX_TEXTZONE)
 	       {
@@ -1633,17 +1640,14 @@ void                (*procedure) ();
 		  XtManageChild (XtParent (XtParent (row)));
 		  XtManageChild (XtParent (XtParent (XtParent (row))));
 #else  /* _WINDOWS */
-#ifdef RAMZI
-                  if (i == 0) /* There no text zone created    */
-                     GetWindowRect (WinToolBar[frame], &rect) ;                     
-		  else       /* At least one text zone exists */
-                      GetWindowRect (FrameTable[frame].Text_Zone[i-1], &rect) ;   
-                  
-		  FrameTable[frame].Text_Zone[i] = 0 ;
-                  /* w = InitTextZone (FrMainRef[frame], rect.bottom, label) ;*/
-                  w = InitTextZone (FrMainRef[frame], label) ;
+                  GetClientRect (FrMainRef [frame], &rect);
+                  w = CreateWindow ("EDIT", "", WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
+                                    0, 0, 0, 0, FrMainRef [frame], (HMENU) i, hInstance, NULL) ;
                   FrameTable[frame].Text_Zone[i] = w;
-#endif /* RAMZI */
+                  w = CreateWindow ("STATIC", label, WS_CHILD | WS_VISIBLE | SS_LEFT, 
+                                    0, 0, 0, 0, FrMainRef [frame], (HMENU) (i + MAX_TEXTZONE), hInstance, NULL);
+                  FrameTable[frame].Label[i] = w ;
+                  PostMessage (FrMainRef [frame], WM_SIZE, 0, MAKELPARAM (rect.right, rect.bottom));
 #endif /* _WINDOWS */
 	       }
 	     else
@@ -1693,11 +1697,16 @@ char               *text;
 	   TtaError (ERR_invalid_parameter);
 	else if (FrameTable[frame].WdFrame != 0)
 	  {
-	     w = FrameTable[frame].Text_Zone[index];
+	      /* w = FrameTable[frame].Text_Zone[index]; */
 	     /*XtRemoveCallback(w, XmNmodifyVerifyCallback, (XtCallbackProc)APP_TextCallback, (XtPointer)frame); */
 #ifndef _WINDOWS
+	     w = FrameTable[frame].Text_Zone[index];
 	     if (w != 0)
 		XmTextSetString (w, text);
+#else  /* _WINDOWS */
+	     w = FrameTable[frame].Text_Zone[index - 1];
+	     if (w != 0)
+                SetWindowText (w, text) ;
 #endif /* _WINDOWS */
 	     /*XtAddCallback(w, XmNmodifyVerifyCallback, (XtCallbackProc)APP_TextCallback, (XtPointer)frame); */
 	  }
@@ -1735,6 +1744,10 @@ View                view;
    Arg                 args[MAX_ARGS];
 
 #endif
+#ifdef _WINDOWS
+   int  index ;
+   RECT r;
+#endif /* _WINDOWS */
    ThotWidget          row, w;
 
    UserErrorCode = 0;
@@ -1775,6 +1788,19 @@ View                view;
 		  FrameResized ((int *) w, frame, NULL);
 		  XtManageChild (XtParent (XtParent (row)));
 	       }
+#else  /* _WINDOWS */
+	     for (index = 0 ; index <  MAX_TEXTZONE; index++) {
+		 if (FrameTable[frame].Text_Zone[index] && IsWindowVisible (FrameTable[frame].Text_Zone[index])) {
+		    ShowWindow (FrameTable[frame].Label [index], SW_HIDE) ;
+		    ShowWindow (FrameTable[frame].Text_Zone [index], SW_HIDE) ;
+		 } else {
+		      ShowWindow (FrameTable[frame].Label [index], SW_SHOW) ;
+		      ShowWindow (FrameTable[frame].Text_Zone [index], SW_SHOW) ;
+		 }
+	     }
+
+             GetClientRect (FrMainRef [frame], &r);
+             PostMessage (FrMainRef [frame], WM_SIZE, 0, MAKELPARAM (r.right, r.bottom));
 #endif /* _WINDOWS */
 	  }
      }
@@ -1848,10 +1874,10 @@ int                 doc;
 #else  /* _WINDOWS */
    ThotWidget          menu_bar;
    ThotWidget          w, row1, row2, rowv;
+#endif /* _WINDOWS */
    ThotWidget          hscrl;
    ThotWidget          vscrl;
 
-#endif /* _WINDOWS */
    int                 i, n;
    int                 ref;
    char                string[700];
@@ -1897,10 +1923,6 @@ int                 doc;
 	   frame = 0;
 	else if (FrameTable[frame].WdFrame == 0)
 	  {
-#ifdef _WINDOWS
-             for (indexTxtZone = 0; indexTxtZone < MAX_TEXTZONE; indexTxtZone++)
-                 FrameTable[frame].TxtZoneCreated[indexTxtZone] = FALSE ;
-#endif /* _WINDOWS */
 	     /* il faut creer effectivement la fenetre */
 	     FrameTable[frame].FrLeftMargin = 0;
 	     FrameTable[frame].FrTopMargin = 0;
@@ -2128,8 +2150,16 @@ int                 doc;
 	     XtAddCallback (hscrl, XmNpageIncrementCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
 	     XtAddCallback (hscrl, XmNtoTopCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
 	     XtAddCallback (hscrl, XmNtoBottomCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
+#else  /* _WINDOWS */
+             hscrl = CreateWindow ("scrollbar", NULL, WS_CHILD | WS_VISIBLE | WS_TABSTOP | SBS_HORZ,
+                                   0, 0, 0, 0, Main_Wd, (HMENU) frame, hInstance, NULL) ;
 
+             SetScrollRange (hscrl, SB_CTL, 0, 255, FALSE);
+             SetScrollPos (hscrl, SB_CTL, 0, FALSE) ;
+#endif /* _WINDOWS */
 	     /*** La barre de scroll verticale ***/
+#ifndef _WINDOWS
+
 	     n = 0;
 	     XtSetArg (args[n], XmNbackground, Scroll_Color);
 	     n++;
@@ -2147,7 +2177,16 @@ int                 doc;
 	     XtAddCallback (vscrl, XmNpageIncrementCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
 	     XtAddCallback (vscrl, XmNtoTopCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
 	     XtAddCallback (vscrl, XmNtoBottomCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
+#else  /* _WINDOWS */
+             vscrl = CreateWindow ("scrollbar", NULL, WS_CHILD | WS_VISIBLE | WS_TABSTOP | SBS_VERT,
+                                   0, 0, 0, 0, Main_Wd, (HMENU) frame + 1, hInstance, NULL) ;
+
+             SetScrollRange (vscrl, SB_CTL, 0, 255, FALSE);
+             SetScrollPos (vscrl, SB_CTL, 0, FALSE) ;
+#endif /* _WINDOWS */
+
 	     /* Row vertical pour mettre le logo au dessous des boutons */
+#ifndef _WINDOWS
 	     n = 0;
 	     XtSetArg (args[n], XmNmarginWidth, 0);
 	     n++;
@@ -2340,9 +2379,10 @@ int                 doc;
 
 	     XtAddCallback (w, XmNresizeCallback, (XtCallbackProc) FrameResized, (XtPointer) frame);
 	     FrRef[frame] = XtWindowOfObject (w);
+#endif /* !_WINDOWS */
 	     FrameTable[frame].WdScrollH = hscrl;
 	     FrameTable[frame].WdScrollV = vscrl;
-
+#ifndef _WINDOWS
 	     n = 0;
 	     XtSetArg (args[n], XmNwidth, &dx);
 	     n++;
@@ -2446,6 +2486,8 @@ int                 frame;
 
 	XDestroyWindow (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
 #endif /* _WINDOWS */
+        /* SendMessage (FrMainRef[frame], "WM_DESTROY", (WPARAM) 0, (LPARAM) 0) ; */
+        DestroyWindow (FrMainRef[frame]);
 	FrRef[frame] = 0;
 #ifdef _WINDOWS
         FrMainRef [0] = 0 ;

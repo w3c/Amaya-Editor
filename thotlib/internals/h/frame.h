@@ -42,7 +42,7 @@ typedef struct _Frame_Ctl
   Proc  	Call_Button[MAX_BUTTON];/* Callback des boutons		   */
   ThotWidget	Text_Zone[MAX_TEXTZONE];/* Widget des boutons		   */
 #ifdef _WINDOWS
-  int           TxtZoneCreated[MAX_TEXTZONE];
+  ThotWidget    Label[MAX_TEXTZONE];  /* Labels of text zones             */
 #endif /* _WINDOWS */
   Proc  	Call_Text[MAX_TEXTZONE];/* Callback des boutons		   */
 }Frame_Ctl;

@@ -62,33 +62,33 @@
 
 struct E_List
   {
-     struct E_List      *E_Next;	/* CsList d'entrees suivante         */
-     char                E_Free[C_NUMBER];	/* Disponibilite des entrees         */
-     char                E_Type[C_NUMBER];	/* CsList des types des entrees      */
-     ThotWidget          E_ThotWidget[C_NUMBER];	/* ThotWidgets associes aux entrees  */
+     struct E_List      *E_Next;	         /* CsList d'entrees suivante         */
+     char                E_Free[C_NUMBER];	 /* Disponibilite des entrees         */
+     char                E_Type[C_NUMBER];	 /* CsList des types des entrees      */
+     ThotWidget          E_ThotWidget[C_NUMBER]; /* ThotWidgets associes aux entrees  */
   };
 
 struct Cat_Context
   {
-     short               Cat_Ref;	/* CsReference appli du catalogue  */
-     unsigned char       Cat_Type;	/* Type du catalogue             */
-     unsigned char       Cat_Button;	/* Le bouton qui active          */
+     short               Cat_Ref;	         /* CsReference appli du catalogue    */
+     unsigned char       Cat_Type;	         /* Type du catalogue                 */
+     unsigned char       Cat_Button;	         /* Le bouton qui active              */
      union {
-	 int             Catu_Data;	/* Valeur de retour              */
+	 int             Catu_Data;	         /* Valeur de retour                  */
 	 ThotWidget	 Catu_XtWParent;
      } Cat_Union1;
      union {
-	 int             Catu_in_lines;	/* Orientation des formulaires   */
+	 int             Catu_in_lines;	         /* Orientation des formulaires       */
 	 ThotWidget	 Catu_SelectLabel;
      } Cat_Union2;
-     ThotWidget          Cat_Widget;	/* Le widget associe au catalogue */
-     ThotWidget          Cat_Title;	/* Le widget du titre            */
-     struct Cat_Context *Cat_PtParent;	/* Adresse du catalogue pere     */
-     short               Cat_EntryParent;	/* Entree du menu parent         */
-     boolean             Cat_React;	/* Indicateur reaction immediate */
-     boolean             Cat_SelectList;	/* Indicateur selecteur = liste  */
-     struct E_List      *Cat_Entries;	/* CsList des entrees d'un menu   */
-     /* ou widget de saisie de texte  */
+     ThotWidget          Cat_Widget;	         /* Le widget associe au catalogue    */
+     ThotWidget          Cat_Title;	         /* Le widget du titre                */
+     struct Cat_Context *Cat_PtParent;	         /* Adresse du catalogue pere         */
+     short               Cat_EntryParent;	 /* Entree du menu parent             */
+     boolean             Cat_React;	         /* Indicateur reaction immediate     */
+     boolean             Cat_SelectList;	 /* Indicateur selecteur = liste      */
+     struct E_List      *Cat_Entries;	         /* CsList des entrees d'un menu      */
+                                                 /* ou widget de saisie de texte      */
   };
 
 /* Redefiniton de champs de catalogues dans certains cas */
@@ -154,21 +154,30 @@ void                DebugBreak (void)
 {
 }
 #else
-typedef struct struct_winerror
-{
-   WORD                errNo;
-   char               *errstr;
+
+typedef struct struct_winerror {
+        WORD  errNo;
+        char* errstr;
 };
 
-struct struct_winerror win_errtab[] =
-{
+struct struct_winerror win_errtab[] = {
 #include "winerrdata.c"
 };
 
 #define NB_WIN_ERROR (sizeof(win_errtab) / sizeof(struct struct_winerror))
-/*
- * MS-Windows Specific part.
- */
+
+/*****************************
+ * MS-Windows Specific part. *
+ *****************************/
+
+#define MAX_FRAMECAT 200
+
+typedef struct FrCatalogue {
+        struct Cat_Context*  Cat_Table[MAX_FRAMECAT] ;
+} FrCatalogue ;
+
+
+FrCatalogue FrameCatList [MAX_FRAME] ;
 
 char* thotargv[] = {
       "amaya", "/users/guetari/opera/WINNT/test.html"
@@ -177,9 +186,10 @@ char* thotargv[] = {
 int                 thotargc = 1;
 
 
-LRESULT CALLBACK WndProc       (HWND, UINT, WPARAM, LPARAM) ;
-LRESULT CALLBACK ClientWndProc (HWND, UINT, WPARAM, LPARAM) ;
-LRESULT CALLBACK ThotDlgProc   (HWND, UINT, WPARAM, LPARAM) ;
+LRESULT CALLBACK WndProc        (HWND, UINT, WPARAM, LPARAM) ;
+LRESULT CALLBACK ClientWndProc  (HWND, UINT, WPARAM, LPARAM) ;
+LRESULT CALLBACK ThotDlgProc    (HWND, UINT, WPARAM, LPARAM) ;
+LRESULT CALLBACK TxtZoneWndProc (HWND, UINT, WPARAM, LPARAM) ;
 
 /* following variables are declared as extern in frame_tv.h */
 HINSTANCE           hInstance = 0;
@@ -218,7 +228,9 @@ void terminate__Fv (void) {
 }
 
 typedef struct WIN_Form {
-        char* BLabels [10]; /* Button labels            */
+        HWND Buttons [10]; /* Dialog Button      */
+        int  x  [10];      /* Initial x position */
+        int  cx [10];      /* Button width       */
 } WIN_Form ;
 
 static int      bIndex   = 0;
@@ -231,9 +243,9 @@ static WIN_Form formulary ;
    X-Window window.                                            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int GetFen (ThotWindow win)
+int GetFrameNumber (ThotWindow win)
 #else  /* !__STDC__ */
-int GetFen (win)
+int GetFrameNumber (win)
 ThotWindow win;
 #endif /* __STDC__ */
 {
@@ -247,16 +259,15 @@ ThotWindow win;
    return (-1);
 }
 
-
 #ifdef _WINDOWS
 /*----------------------------------------------------------------------
    GetClientFen :  returns the Thot window number associated to an     
    MS-Windows window.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int GetMainFen (ThotWindow win)
+int GetMainFrameNumber (ThotWindow win)
 #else  /* !__STDC__ */
-int GetMainFen (win)
+int GetMainFrameNumber (win)
 ThotWindow win ;
 #endif /* __STDC__ */
 {
@@ -268,6 +279,36 @@ ThotWindow win ;
 
    fprintf (stderr, "Could not get MS-Windows number for %X\n", win);
    return -1;
+}
+
+/*----------------------------------------------------------------------
+   GetMenuFrameNumber :  returns the Thot window number associated to a     
+   given menu.                                          
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int GetMenuFrameNumber (ThotWidget menu)
+#else  /* !__STDC__ */
+int GetMenuFrameNumber (win)
+ThotWindow win ;
+#endif /* __STDC__ */
+{
+   int     menuIndex;
+   int     frameIndex = 0;
+   int     frame      = -1;
+   boolean found      = FALSE;
+  
+   while (frameIndex < MAX_FRAME && !found) {
+         menuIndex = 0;
+         while (menuIndex < MAX_MENU && !found) 
+	     if (FrameTable[frameIndex].WdMenus[menuIndex] == menu) {
+                frame = frameIndex ;
+                found = TRUE ;
+             } else 
+                  menuIndex++ ;
+         if (!found)
+            frameIndex++ ;
+   }
+   return frame ;
 }
 
 /*----------------------------------------------------------------------
@@ -301,35 +342,28 @@ int frame;
    
    win = FrRef[frame];
    
-   if (win == 0)
-     {
-	fprintf (stderr, "WIN_GetDeviceContext : No Window #%d\n", frame);
-	return;
-     }
+   if (win == 0) {
+      fprintf (stderr, "WIN_GetDeviceContext : No Window #%d\n", frame);
+      return;
+   }
 
-   /*
-    * if the correct Device Context is already selected, returns.
-    */
+   /* if the correct Device Context is already selected, returns. */
    if ((WIN_curWin == win) && (WIN_curHdc != 0))
       return;
-   /*
-    * release the previous Device Context.
-    */
+
+   /* release the previous Device Context. */
    if ((WIN_curHdc != 0) && (WIN_curWin != -1))
       ReleaseDC (WIN_curWin, WIN_curHdc);
+
    WIN_curWin = -1;
    WIN_curHdc = 0;
 
-   /*
-    * load the new Context.
-    */
+   /* load the new Context. */
    WIN_curHdc = GetDC (win);
    if (WIN_curHdc == 0)
-     {
-	fprintf (stderr, "Could not get Device Context for Window %X\n", win);
-     }
+      fprintf (stderr, "Could not get Device Context for Window %X\n", win);
    else
-     WIN_curWin = win;
+       WIN_curWin = win;
 }
 
 /*----------------------------------------------------------------------
@@ -344,98 +378,112 @@ ThotWindow win;
 #endif /* __STDC__ */
 {
    if (win == 0)
-     return;
+      return;
 
-   /*
-    * if the correct Device Context is already selected, returns.
-    */
+   /* if the correct Device Context is already selected, returns. */
    if ((WIN_curWin == win) && (WIN_curHdc != 0))
-     return;
+      return;
 
-   /*
-    * release the previous Device Context.
-    */
+   /* release the previous Device Context. */
    if ((WIN_curHdc != 0) && (WIN_curWin != -1))
       ReleaseDC (WIN_curWin, WIN_curHdc);
+
    WIN_curWin = -1;
    WIN_curHdc = 0;
 
-   /*
-    * load the new Context.
-    */
+   /* load the new Context. */
    WIN_curHdc = GetDC (win);
    if (WIN_curHdc == 0)
-     {
-	fprintf (stderr, "Could not get Device Context for Window %X\n", win);
-     }
+      fprintf (stderr, "Could not get Device Context for Window %X\n", win);
    else
-     WIN_curWin = win;
+       WIN_curWin = win;
 }
 
 /*----------------------------------------------------------------------
    WIN_ReleaseDeviceContext :  unselect the Device Context           
   ----------------------------------------------------------------------*/
-void                WIN_ReleaseDeviceContext (void)
+#ifdef __STDC__
+void WIN_ReleaseDeviceContext (void)
+#else  /* !__STDC__ */
+void WIN_ReleaseDeviceContext ()
+#endif /* __STDC__ */
 {
-   /*
-    * release the previous Device Context.
-    */
+   /* release the previous Device Context. */
    if ((WIN_curHdc != 0) && (WIN_curWin != -1))
       ReleaseDC (WIN_curWin, WIN_curHdc);
+
    WIN_curWin = -1;
    WIN_curHdc = 0;
 }
+
+
+#ifdef __STDC__
+void WIN_AddFrameCatalogue (ThotWidget parent, struct Cat_Context* catalogue)
+#else  /* !__STDC__ */
+void WIN_AddFrameCatalogue (parent, catalogue)
+ThotWidget          parent; 
+struct Cat_Context* catalogue;
+#endif /* __STDC__ */
+{
+   int frame = GetMenuFrameNumber (parent) ;
+   if (frame != -1) {
+      int found = FALSE ;
+      int i = 0;
+      while ((i < MAX_FRAMECAT) && (FrameCatList[frame].Cat_Table[i] != 0) && !found)
+            if (FrameCatList[frame].Cat_Table[i]->Cat_Ref == catalogue->Cat_Ref)
+               found = TRUE ;
+            else
+               i++ ;
+      if (i < MAX_FRAMECAT) 
+         FrameCatList[frame].Cat_Table[i] = catalogue ;
+   }
+}
+
 
 /*----------------------------------------------------------------------
    WinLookupCatEntry Lookup the Catalogue table for an entry          
    corresponding to an existing Window.                    
   ----------------------------------------------------------------------*/
-static struct Cat_Context *WinLookupCatEntry (int ref)
+#ifdef __STDC__
+static struct Cat_Context *WinLookupCatEntry (ThotWidget win, int ref)
+#else  /* !__STDC__ */
+static struct Cat_Context *WinLookupCatEntry (win, ref)
+ThotWidget win;
+int        ref;
+#endif /* __STDC__ */
 {
-   register int        icat;
+   register int        icat = 1;
+   boolean             found = FALSE;
+   int                 frame = GetMainFrameNumber (win) ;
    int                 best = -1;
-   struct Cat_Context *catval;
-   struct Cat_Context *catalogue;
-   struct Cat_List    *adlist;
+   struct Cat_Context* catval;
+   struct Cat_Context* catalogue;
 
-   /* Si la reference depasse la borne declaree */
-   if (ref >= FirstFreeRef)
-      return (NULL);
+   if (frame == -1)
+      return NULL;
 
-   /* L'entree qui porte la reference */
-   catval = NULL;
-
-   /* Parcours toutes les entrees existantes */
-   adlist = PtrCatalogue;
-   while (adlist != NULL)
-     {
-	icat = 0;
-	while (icat < MAX_CAT)
-	  {
-	     catalogue = &adlist->Cat_Table[icat];
-
-	     if ((catalogue->Cat_Widget != 0) &&
-		 (catalogue->Cat_Ref <= ref) &&
-		 (catalogue->Cat_Ref > best))
-	       {
-		  catval = catalogue;
-		  best = catalogue->Cat_Ref;
-	       }
-
-	     icat++;
-	  }
-
-	adlist = adlist->Cat_Next;
-     }
-
-   return (catval);
+   catalogue = FrameCatList[frame].Cat_Table [0];
+   while (icat < MAX_FRAMECAT) {
+         if (catalogue && catalogue->Cat_Ref == ref)
+            return catalogue ;
+         if (catalogue && FrameCatList[frame].Cat_Table [icat] &&
+             (FrameCatList[frame].Cat_Table[icat]->Cat_Ref > ref) && (catalogue->Cat_Ref <= ref))
+            return catalogue ;
+         catalogue = FrameCatList[frame].Cat_Table [icat];
+         icat++ ;
+   }
+   return NULL ;
 }
 
 /*----------------------------------------------------------------------
    WinErrorBox :  Pops-up a message box when an MS-Window error      
    occured.                                                    
   ----------------------------------------------------------------------*/
-void                WinErrorBox (void)
+#ifdef __STDC__
+void WinErrorBox (void)
+#else  /* !__STDC__ */
+void WinErrorBox ()
+#endif /* __STDC__ */
 {
    int                 msg;
    char                str[200];
@@ -445,18 +493,21 @@ void                WinErrorBox (void)
       return;
 
    for (msg = 0; msg < NB_WIN_ERROR; msg++)
-      if (win_errtab[msg].errNo == WinLastError)
-	 break;
+       if (win_errtab[msg].errNo == WinLastError)
+	  break;
 
    if (msg >= NB_WIN_ERROR)
       sprintf (str, "Error %d : not registered\n", WinLastError);
    else
-      sprintf (str, "Error %d : %s\n", WinLastError, win_errtab[msg].errstr);
+       sprintf (str, "Error %d : %s\n", WinLastError, win_errtab[msg].errstr);
 
    fprintf (stderr, str);
    MessageBox (WIN_Main_Wd, str, tszAppName, MB_OK);
 }
 
+/*----------------------------------------------------------------------
+   WinMain
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 BOOL PASCAL WinMain (HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCommand, int nShow)
 #else  /* !__STDC__ */
@@ -1289,7 +1340,7 @@ Display           **Dp;
    RootShell.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
    RootShell.hIcon         = LoadIcon (hInstance, IDI_APPLICATION) ;
    RootShell.lpszMenuName  = "AmayaMain" ;
-   RootShell.hbrBackground = (HBRUSH) GetStockObject (WHITE_BRUSH);
+   RootShell.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH) ;
    RootShell.style         = 0 ;
    RootShell.cbClsExtra    = 0 ;
    RootShell.cbWndExtra    = 0 ;
@@ -2125,7 +2176,7 @@ struct Cat_Context *catalogue;
 		     XtUnmanageChild (adbloc->E_ThotWidget[ent]);
 		     XtDestroyWidget (adbloc->E_ThotWidget[ent]);
 #endif /* _WINDOWS */
-		     adbloc->E_ThotWidget[ent] = 0;
+		     adbloc->E_ThotWidget[ent] = (ThotWidget) 0;
 
 		     /* Faut-il changer de bloc d'entrees ? */
 		     ent++;
@@ -2200,9 +2251,6 @@ char               *equiv;
    ThotWidget          w;
    char                heading[200];
 
-#ifdef _WINDOWS
-   HMENU WinSubMenu ;
-#endif /* _WINDOWS */
 #ifndef _WINDOWS
    XmString            title_string;
 #endif
@@ -2282,6 +2330,8 @@ char               *equiv;
 #ifndef _WINDOWS
 		  XtManageChild (parent);
 		  XtAddCallback (parent, XmNcascadingCallback, (XtCallbackProc) CallMenu, catalogue);
+#else  /* _WINDOWS */
+                  WIN_AddFrameCatalogue (parent, catalogue) ;
 #endif /* _WINDOWS */
 	       }
 	     return;
@@ -2313,7 +2363,9 @@ char               *equiv;
 		  w = XmCreateLabel (menu, "Dialogue", args, n);
 		  XtManageChild (w);
 		  adbloc->E_ThotWidget[0] = w;
-#endif /* !_WINDOWS */
+#else  /* _WINDOWS */
+		  adbloc->E_ThotWidget[0] = (ThotWidget) 0;
+#endif /* _WINDOWS */
 		  n = 0;
 #ifndef _WINDOWS
 		  XtSetArg (args[n], XmNmarginHeight, 0);
@@ -2327,7 +2379,9 @@ char               *equiv;
 		  w = XmCreateSeparator (menu, "Dialogue", args, n);
 		  XtManageChild (w);
 		  adbloc->E_ThotWidget[1] = w;
-#endif /* !_WINDOWS */
+#else  /* _WINDOWS */
+		  adbloc->E_ThotWidget[1] = (ThotWidget) 0;
+#endif /* _WINDOWS */
 	       }
 #ifndef _WINDOWS
 	     else if (adbloc->E_ThotWidget[0] != 0)
@@ -2406,7 +2460,8 @@ char               *equiv;
 		       {
 #ifdef _WINDOWS
 			  AppendMenu (menu, MF_STRING, ref + i, &text[index + 1]);
-			  adbloc->E_ThotWidget[ent] = i;
+			  adbloc->E_ThotWidget[ent] = (ThotWidget) i;
+                          WIN_AddFrameCatalogue (parent, catalogue) ;
 #else  /* _WINDOWS */
 			  w = XmCreatePushButton (menu, &text[index + 1], args, n);
 			  XtManageChild (w);
@@ -2420,7 +2475,8 @@ char               *equiv;
 			  /* un toggle a faux */
 #ifdef _WINDOWS
 			  AppendMenu (menu, MF_STRING | MF_CHECKED, ref + i, &text[index + 1]);
-			  adbloc->E_ThotWidget[ent] = i;
+			  adbloc->E_ThotWidget[ent] = (ThotWidget) i;
+                          WIN_AddFrameCatalogue (parent, catalogue) ;
 #else  /* _WINDOWS */
 			  XtSetArg (args[n], XmNvisibleWhenOff, TRUE);
 			  XtSetArg (args[n + 1], XmNselectColor, White_Color);
@@ -2451,7 +2507,7 @@ char               *equiv;
 #ifdef _WINDOWS
 			  w = (HMENU) CreateMenu ();
 			  AppendMenu (menu, MF_POPUP, (UINT) w, &heading);
-			  adbloc->E_ThotWidget[ent] = i;
+			  adbloc->E_ThotWidget[ent] = (ThotWidget) w;
 #else  /* _WINDOWS */
 			  w = XmCreatePushButton (menu, heading, args, n);
 			  XtManageChild (w);
@@ -2463,7 +2519,7 @@ char               *equiv;
 		       {
 #ifdef _WINDOWS
 			  AppendMenu (menu, MF_SEPARATOR, 0, NULL);
-			  adbloc->E_ThotWidget[ent] = i;
+			  adbloc->E_ThotWidget[ent] = (ThotWidget) 0;
 #else  /* _WINDOWS */
 			  XtSetArg (args[n], XmNseparatorType, XmSINGLE_DASHED_LINE);
 			  w = XmCreateSeparator (menu, "Dialogue", args, n + 1);
@@ -2758,8 +2814,8 @@ char                button;
 	     if (!rebuilded)
 	       {
 #ifdef _WINDOWS
-		  adbloc->E_ThotWidget[0] = 0;
-		  adbloc->E_ThotWidget[1] = 0;
+		  adbloc->E_ThotWidget[0] = (ThotWidget) 0;
+		  adbloc->E_ThotWidget[1] = (ThotWidget) 0;
 #else  /* _WINDOWS */
 		  XtSetArg (args[n], XmNfontList, DefaultFont);
 		  n++;
@@ -2855,7 +2911,7 @@ char                button;
 		       {
 #ifdef _WINDOWS
 			  AppendMenu (menu, MF_STRING, ref + i, &text[index + 1]);
-			  adbloc->E_ThotWidget[ent] = i;
+			  adbloc->E_ThotWidget[ent] = (ThotWidget) i;
 #else  /* _WINDOWS */
 			  w = XmCreatePushButton (menu, &text[index + 1], args, n);
 			  XtManageChild (w);
@@ -2868,7 +2924,7 @@ char                button;
 		       {
 #ifdef _WINDOWS
 			  AppendMenu (menu, MF_STRING | MF_CHECKED, ref + i, &text[index + 1]);
-			  adbloc->E_ThotWidget[ent] = i;
+			  adbloc->E_ThotWidget[ent] = (ThotWidget) i;
 #else  /* _WINDOWS */
 			  XtSetArg (args[n], XmNvisibleWhenOff, TRUE);
 			  XtSetArg (args[n + 1], XmNselectColor, White_Color);
@@ -2884,7 +2940,7 @@ char                button;
 			  /* En attendant le sous-menu on cree un bouton */
 #ifdef _WINDOWS
 			  AppendMenu (menu, MF_STRING, ref + i, &text[index + 1]);
-			  adbloc->E_ThotWidget[ent] = i;
+			  adbloc->E_ThotWidget[ent] = (ThotWidget) i;
 #else  /* _WINDOWS */
 			  w = XmCreateCascadeButton (menu, &text[index + 1], args, n);
 			  adbloc->E_ThotWidget[ent] = w;
@@ -2897,7 +2953,7 @@ char                button;
 			  strcat (heading, "...");
 #ifdef _WINDOWS
 			  AppendMenu (menu, MF_STRING, ref + i, &heading);
-			  adbloc->E_ThotWidget[ent] = i;
+			  adbloc->E_ThotWidget[ent] = (ThotWidget) i;
 #else  /* _WINDOWS */
 			  w = XmCreatePushButton (menu, heading, args, n);
 			  XtManageChild (w);
@@ -2909,7 +2965,7 @@ char                button;
 		       {
 #ifdef _WINDOWS
 			  AppendMenu (menu, MF_SEPARATOR, 0, NULL);
-			  adbloc->E_ThotWidget[ent] = i;
+			  adbloc->E_ThotWidget[ent] = (ThotWidget) i;
 #else  /* _WINDOWS */
 			  XtSetArg (args[n], XmNseparatorType, XmSINGLE_DASHED_LINE);
 			  w = XmCreateSeparator (menu, "Dialogue", args, n + 1);
@@ -3756,6 +3812,7 @@ boolean             react;
 #ifdef _WINDOWS
 			     /* w = adbloc->E_ThotWidget[ent]; */
                             AppendMenu (w, MF_STRING, ref + i, &text[index + 1]);
+			    adbloc->E_ThotWidget[ent] = (ThotWidget) i;
 #else  /* _WINDOWS */
 			    w = XmCreatePushButton (menu, &text[index + 1], args, n);
 			    XtManageChild (w);
@@ -3768,6 +3825,7 @@ boolean             react;
 			 {
 #ifdef _WINDOWS
                             AppendMenu (w, MF_STRING | MF_CHECKED, ref + i, &text[index + 1]);
+			    adbloc->E_ThotWidget[ent] = (ThotWidget) i;
 #else  /* _WINDOWS */
 			    /* un toggle a faux */
 			    XtSetArg (args[n], XmNvisibleWhenOff, TRUE);
@@ -4600,7 +4658,7 @@ int                 ref;
 #ifndef _WINDOWS
 			    XtUnmanageChild (catalogue->Cat_Widget);
 #endif /* _WINDOWS */
-			    adbloc->E_ThotWidget[entry] = 0;
+			    adbloc->E_ThotWidget[entry] = (ThotWidget) 0;
 			    adbloc->E_Free[entry] = 'Y';
 			 }
 		       else if ((parentCatalogue->Cat_Type == CAT_POPUP)
@@ -4764,7 +4822,7 @@ int                 ref;
 			 /*___________________________________ Sous-menu d'un formulaire __*/
 			 {
 			    /* Libere l'entree du sous-menu dans le formulaire */
-			    adbloc->E_ThotWidget[entry] = 0;
+			    adbloc->E_ThotWidget[entry] = (ThotWidget) 0;
 			    adbloc->E_Free[entry] = 'Y';
 
 			 }
@@ -4895,6 +4953,8 @@ int                 cattype;
    int                 n;
    int                 index;
    int                 count;
+   int                 res;
+   int                 strSize;
    struct Cat_Context* catalogue;
    struct E_List*      adbloc;
 
@@ -4907,6 +4967,14 @@ int                 cattype;
    Arg                 args[MAX_ARGS];
    Arg                 argform[1];
    XmString            title_string;
+#endif /* _WINDOWS */
+#ifdef _WINDOWS
+   int        charWidth;
+   TEXTMETRIC tm;
+
+   WIN_GetDeviceContext (-1);
+   GetTextMetrics (WIN_curHdc, &tm);
+   charWidth = tm.tmAveCharWidth;
 #endif /* _WINDOWS */
 
    if (ref == 0)
@@ -5096,8 +5164,14 @@ int                 cattype;
 	     XtSetValues (form, argform, 1);
 	     ent = 1;
 #else  /* _WINDOWS */
-             formulary.BLabels[bIndex] = strdup (Confirm_string);
+             strSize = strlen (Confirm_string) * charWidth + 10;
+             formulary.Buttons[bIndex] = CreateWindow ("BUTTON", Confirm_string, 
+                                                       WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
+                                                       bAbsBase, 300, strSize, 20, parent, 
+                                                       (HMENU) IDCANCEL, hInstance, NULL) ;
+             bAbsBase += (strSize + 10);
              bIndex++ ;
+	     adbloc->E_ThotWidget[1] = w;
 #endif /* _WINDOWS */
 	  }
 	else
@@ -5124,8 +5198,14 @@ int                 cattype;
 		       XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallSheet, catalogue);
 		       adbloc->E_ThotWidget[ent] = w;
 #else  /* _WINDOWS */
-                       formulary.BLabels[bIndex] = strdup (&text[index]) ;
+                       strSize = strlen (&text[index]) * charWidth + 10;
+                       formulary.Buttons[bIndex] = CreateWindow ("BUTTON", &text[index], 
+                                                                 WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
+                                                                 bAbsBase, 300, strSize, 20, parent, 
+                                                                 (HMENU) IDCANCEL, hInstance, NULL) ;
+                       bAbsBase += (strSize + 10);
                        bIndex++ ;
+	               adbloc->E_ThotWidget[ent] = w;
 #endif /* _WINDOWS */
 		    }
 #ifndef _WINDOWS
@@ -5147,14 +5227,24 @@ int                 cattype;
 #ifndef _WINDOWS
 		       w = XmCreatePushButton (row, Cancel_string, args, n);
 #else  /* _WINDOWS */
-                       formulary.BLabels[bIndex] = strdup (Cancel_string) ;
+                       strSize = strlen (Cancel_string) * charWidth + 10;
+                       formulary.Buttons[bIndex] = CreateWindow ("BUTTON", Cancel_string, 
+                                                                 WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
+                                                                 bAbsBase, 300, strSize, 20, parent, 
+                                                                 (HMENU) IDCANCEL, hInstance, NULL) ;
+                       bAbsBase += (strSize + 10);
 #endif /* _WINDOWS */
 		       break;
 		    case D_DONE:
 #ifndef _WINDOWS
 		       w = XmCreatePushButton (row, Done_string, args, n);
 #else  /* _WINDOWS */
-                       formulary.BLabels[bIndex] = strdup (Done_string) ;
+                       strSize = strlen (Done_string) * charWidth + 10;
+                       formulary.Buttons[bIndex] = CreateWindow ("BUTTON", Done_string, 
+                                                                 WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
+                                                                 bAbsBase, 300, strSize, 20, parent, 
+                                                                 (HMENU) IDCANCEL, hInstance, NULL) ;
+                       bAbsBase += (strSize + 10);
 #endif /* _WINDOWS */
 		       break;
 		 }
@@ -5163,7 +5253,12 @@ int                 cattype;
 	   w = XmCreatePushButton (row, ptr, args, n);
 #else  /* _WINDOWS */
 	  {
-             formulary.BLabels[bIndex] = strdup (ptr) ;
+             strSize = strlen (ptr) * charWidth + 10;
+             formulary.Buttons[bIndex] = CreateWindow ("BUTTON", ptr, 
+                                                       WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
+                                                       bAbsBase, 300, strSize, 20, parent, 
+                                                       (HMENU) IDCANCEL, hInstance, NULL) ;
+             bAbsBase += (strSize + 10);
 	  } 
           bIndex++ ;
 #endif /* _WINDOWS */
@@ -5171,9 +5266,10 @@ int                 cattype;
 #ifndef _WINDOWS
 	XtManageChild (w);
 	XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallSheet, catalogue);
+#endif /* !_WINDOWS */
 	/* Range le bouton dans le 1er bloc de widgets */
 	adbloc->E_ThotWidget[0] = w;
-#else  /* _WINDOWS */
+#ifdef _WINDOWS
         form = CreateWindow ("WNDIALOGBOX", title, DS_MODALFRAME | WS_POPUP | 
                              WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
 	  		     CW_USEDEFAULT, CW_USEDEFAULT, 500, 400,
@@ -5182,7 +5278,8 @@ int                 cattype;
 	fprintf (stderr, "Created ComboBox %X\n", form);
 	ShowWindow (form, SW_SHOWNORMAL);
 	UpdateWindow (form);
-        bIndex   = 0;
+        bIndex   =  0;
+        bAbsBase = 60;
 #endif /* _WINDOWS */
      }
 }
@@ -5202,31 +5299,20 @@ LPARAM lParam;
 #endif /* __STDC__ */
 {
     int        ndx ;
-    int        charWidth;
-    HDC        hdc;
-    TEXTMETRIC tm;
     
     switch (msg) {
            case WM_CREATE: {
-                hdc = GetDC (hwnDlg);
-                GetTextMetrics (hdc, &tm);
-                charWidth = tm.tmAveCharWidth;
 	        for (ndx = 0; ndx < bIndex; ndx ++) {
-                    int strSize = strlen (formulary.BLabels[ndx]) * charWidth + 10;
-                    HWND hButton = CreateWindow ("BUTTON", formulary.BLabels[ndx], WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-                                             bAbsBase, 300, strSize, 20, hwnDlg, (HMENU) IDCANCEL, hInstance, NULL) ;
-                    ShowWindow (hButton, SW_SHOW);
-                    bAbsBase += (strSize + 10);
+                    SetParent (formulary.Buttons[ndx], hwnDlg);
+                    ShowWindow (formulary.Buttons[ndx], SW_SHOW);
 		}
-                ReleaseDC (hwnDlg, hdc);
-                bAbsBase = 60 ;
                 return 0;
 	   }
            case WM_COMMAND:
 	        switch (LOWORD (wParam)) {
                        case IDCANCEL: DestroyWindow (hwnDlg);
                                       return 0;
-		       default:       WinThotCallBack (hwnDlg, wParam, lParam);
+		       default:       WinThotCallBack (hwnDlg, wParam , lParam);
                                       return 0;
 		}
            default: return (DefWindowProc (hwnDlg, msg, wParam, lParam)) ;
@@ -6841,11 +6927,16 @@ LPARAM lParam;
 {
    struct Cat_Context *catalogue;
    int                 no = 0;
+   int frame = GetMainFrameNumber (hWnd);
 
    fprintf (stderr, "Got WinThotCallBack(%X, %X(%d:%d), %X(%d))\n",
 	    hWnd, wParam, HIWORD (wParam), LOWORD (wParam), lParam, lParam);
 
-   catalogue = WinLookupCatEntry (LOWORD (wParam));
+   if (frame != - 1) {
+
+   }
+
+   catalogue = WinLookupCatEntry (hWnd, LOWORD (wParam));
    if (catalogue != NULL)
       no = LOWORD (wParam) - catalogue->Cat_Ref;
    fprintf (stderr, "catalogue : %X, entry %d\n", catalogue, no);

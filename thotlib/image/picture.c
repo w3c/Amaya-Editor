@@ -151,7 +151,7 @@ Pixmap              pix;
 {
 #ifndef _WINDOWS
    if ((pix != None) && (pix != PictureLogo) && (pix != EpsfPictureLogo))
-     XFreePixmap (TtDisplay, pix);
+      XFreePixmap (TtDisplay, pix);
 #endif /* _WINDOWS */
 }
 
@@ -405,14 +405,6 @@ char               *fileName;
 
   i = HandlersCounter - 1;
 
-  /*   while (i < HandlersCounter)
-     {
-         if (i >= InlineHandlers)
-            currentExtraHandler = i - InlineHandlers;
-         if (Match_Format (i, fileName))
-            return i ;
-         ++i ;
-     }*/
    while (i > UNKNOWN_FORMAT)
      {
          if (i >= InlineHandlers)
@@ -905,11 +897,14 @@ void           UnmapImage (imageDesc)
 PictInfo      *imageDesc;
 #endif /* __STDC__ */
 {
-#ifndef _WINDOWS
-    int typeImage = imageDesc->PicType;
+    int typeImage;
 
     if (imageDesc == NULL)
       return;
+
+    typeImage = imageDesc->PicType;
+
+#ifndef _WINDOWS
     if ((typeImage >= InlineHandlers) && (imageDesc->mapped) && (imageDesc->created))
       {	
 	XtUnmapWidget ((Widget) (imageDesc->wid));
