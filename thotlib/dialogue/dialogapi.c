@@ -5084,6 +5084,8 @@ void TtaSetToggleMenu (int ref, int val, ThotBool on)
   HMENU              hMenu;
   struct E_List      *adbloc;
   int                ent = 2;
+  int                tmp_val;
+  UINT               uCheck;
 
   catalogue = CatEntry (ref);
   adbloc = catalogue->Cat_Entries;
@@ -5093,35 +5095,43 @@ void TtaSetToggleMenu (int ref, int val, ThotBool on)
     TtaError (ERR_invalid_reference);
   else
     {
-      hMenu = catalogue->Cat_Widget;
-      if (on)
-	{
+	  if (on)
+		  uCheck = MF_CHECKED;
+	  else
+		  uCheck = MF_UNCHECKED;
+
+	  hMenu = catalogue->Cat_Widget;
+
+	  tmp_val = val;
+	  /* find the correct block for the val entry */
+	  while (ent + tmp_val > C_NUMBER)
+	  {
+    	/* the entry is not in the first block,
+		    we update the catalog index entry */
+		  /* point to the next block */
+		  adbloc = adbloc->E_Next;
+		  tmp_val = tmp_val - (C_NUMBER - 1);
+		  /* the first two entries of the first block entry 
+		     are reserved */
+		  if (ent == 2)
+			  ent = 0;
+	  }
+ 
 	  if (IsMenu (adbloc->E_ThotWidget[ent + val]))
 	    {
-              if (CheckMenuItem (adbloc->E_ThotWidget[ent], ref + val + 1, MF_CHECKED) == 0xFFFFFFFF) 
-		WinErrorBox (NULL, "WIN_TtaSetToggleMenu (1)");
+		  /* change the menu item */
+          if (CheckMenuItem (adbloc->E_ThotWidget[ent], ref + val + 1, uCheck) == 0xFFFFFFFF) 
+		       WinErrorBox (NULL, "WIN_TtaSetToggleMenu (1)");
 	    }
-	  else if (CheckMenuItem (hMenu, ref + val, MF_CHECKED) == 0xFFFFFFFF)
+	  else if (CheckMenuItem (hMenu, ref + val, uCheck) == 0xFFFFFFFF)
 	    {
+		  /* get the parent menu reference */
 	      hMenu = GetMenu (owner);
-	      if (CheckMenuItem (hMenu, ref + val, MF_CHECKED) == 0xFFFFFFFF) 
-		WinErrorBox (NULL, "WIN_TtaSetToggleMenu (2)");
+	      if (CheckMenuItem (hMenu, ref + val, uCheck) == 0xFFFFFFFF) 
+		     WinErrorBox (NULL, "WIN_TtaSetToggleMenu (2)");
 	    }
-        }
-      else
-	{
-	  if (CheckMenuItem (hMenu, ref + val, MF_UNCHECKED) == 0xFFFFFFFF)
-	    {
-	      hMenu = GetMenu (owner);
-	      if (CheckMenuItem (hMenu, ref + val, MF_UNCHECKED) == 0xFFFFFFFF)
-		{
-                  if (IsMenu (adbloc->E_ThotWidget[ent + val]) &&
-		      CheckMenuItem (adbloc->E_ThotWidget[ent], ref + val + 1, MF_UNCHECKED) == 0xFFFFFFFF) 
-		      WinErrorBox (NULL, "WIN_TtaSetToggleMenu (3)");
-		}
-	    }
-	}
    }
+
 #else  /* !_WINDOWS  */
    ThotWidget          w;
 #ifndef _GTK
