@@ -6,6 +6,14 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void SetRowExt ( Element cell,
+			int span,
+			Document doc,
+			ThotBool inMath );
+extern void SetColExt ( Element cell,
+			int span,
+			Document doc,
+			ThotBool inMath );
 extern Element NewColumnHead ( Element lastcolhead,
                                ThotBool before,
                                ThotBool last,
@@ -56,6 +64,14 @@ extern void RowspanDeleted ( NotifyAttribute * event );
 
 #else /* __STDC__ */
 
+extern void SetRowExt (/* Element cell,
+			  int span,
+			  Document doc,
+			  ThotBool inMath */);
+extern void SetColExt (/* Element cell,
+			  int span,
+			  Document doc,
+			  ThotBool inMath */);
 extern Element NewColumnHead (/* Element lastcolhead,
                                  ThotBool before,
                                  ThotBool last,
