@@ -3651,7 +3651,7 @@ char                c;
 #ifdef MATHML
    if (WithinMathML)
 	{
-	if (strcmp(inputBuffer, "XML") == 0)
+	if (strcasecmp(inputBuffer, "XML") == 0)
 	   WithinMathML = FALSE;
 	else
 	   {
@@ -4866,7 +4866,6 @@ static sourceTransition sourceAutomaton[] =
    {5, '\"', (Proc) StartOfAttrValue, 6},
    {5, '\'', (Proc) StartOfAttrValue, 9},
    {5, 'S', (Proc) Do_nothing, 5},
-   {5, '/', (Proc) EndOfStartTag, 23},		/* XML */
    {5, '>', (Proc) EndOfStartTag, 0},
    {5, '*', (Proc) PutInBuffer, 7},
 /* state 6: reading an attribute value between double quotes */
@@ -4875,7 +4874,6 @@ static sourceTransition sourceAutomaton[] =
    {6, '&', (Proc) PutInBuffer, 6},	/* ...except for HREF */
    {6, '*', (Proc) PutInBuffer, 6},
 /* state 7: reading an attribute value without delimiting quotes */
-   {7, '/', (Proc) EndOfAttrValueAndTag, 23}, 	/* XML */
    {7, '>', (Proc) EndOfAttrValueAndTag, 0},
    {7, 'S', (Proc) EndOfAttrValue, 16},
    {7, '&', (Proc) StartOfEntity, -20},		/* call subautomaton 20 */

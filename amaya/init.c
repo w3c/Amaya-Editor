@@ -58,6 +58,7 @@
 #include "fence.xpm"
 #include "n.xpm"
 #include "o.xpm"
+#include "txt.xpm"
 #define FormMaths 0
 #define MenuMaths 1
 #define MAX_MATHS  2
@@ -104,7 +105,7 @@ static Pixmap       iconJava;
 #endif /* AMAYA_JAVA */
 #ifdef MATHML
 static Pixmap       iconMath;
-static Pixmap       mIcons[9] = {0, 0, 0, 0, 0};
+static Pixmap       mIcons[10];
 static int          MathsDialogue;
 static boolean      InitMaths;
 #endif /* MATHML */
@@ -344,6 +345,10 @@ char               *data;
 	  newType.ElTypeNum = MathML_EL_MO;
 	  addConstruction = FALSE;
 	  break;
+	case 9:
+	  newType.ElTypeNum = MathML_EL_MTEXT;
+	  addConstruction = FALSE;
+	  break;
 	default:
 	  return;
 	}
@@ -403,10 +408,20 @@ char               *data;
 	    TtaInsertSibling (el, sibling, before, doc);
 	}
 
+      if (addConstruction)
+	{
+	  newType.ElTypeNum = MathML_EL_Construction;
+	  sibling = TtaNewTree (doc, newType, "");
+	  TtaInsertSibling (sibling, el, FALSE, doc);
+	}
       /* selected the first child of the new element */
-      sibling = TtaGetFirstChild (el);
+      while (el != NULL)
+	{
+	  sibling = el;
+	  el = TtaGetFirstChild (sibling);
+	}
       TtaSelectElement (doc, sibling);
-      elType = TtaGetElementType (el);
+      elType = TtaGetElementType (sibling);
       if (elType.ElTypeNum == MathML_EL_SYMBOL_UNIT)
 	TtcDisplayMathKeyboard (doc, 1);
       break;
@@ -436,7 +451,7 @@ View                view;
 		   TtaGetMessage (AMAYA, AM_BUTTON_MATH),
 		   0, NULL, TRUE, 1, 'L', D_DONE);
       TtaNewIconMenu (MathsDialogue + MenuMaths, MathsDialogue + FormMaths, 0,
-		   NULL, 9, mIcons, FALSE);
+		   NULL, 10, mIcons, FALSE);
       TtaSetMenuForm (MathsDialogue + MenuMaths, 0);
       TtaSetDialoguePosition ();
     }
@@ -2257,6 +2272,7 @@ NotifyEvent        *event;
    mIcons[6] = TtaCreatePixmapLogo (fence_xpm);
    mIcons[7] = TtaCreatePixmapLogo (n_xpm);
    mIcons[8] = TtaCreatePixmapLogo (o_xpm);
+   mIcons[9] = TtaCreatePixmapLogo (txt_xpm);
 # endif /* MATHML */
 
    TargetName = NULL;

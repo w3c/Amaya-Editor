@@ -202,14 +202,17 @@ Element             el;
    ElementType         elType;
    Element             elText;
    Language            lang;
+   SSchema             docSchema;
    char               *text, url[MAX_LENGTH];
    int                 length, i, space;
    boolean             found;
 
+   docSchema = TtaGetDocumentSSchema (doc);
    elType = TtaGetElementType (el);
    /* get the NAME or ID attribute */
    attrType.AttrSSchema = elType.ElSSchema;
-   if (elType.ElTypeNum == HTML_EL_Anchor || elType.ElTypeNum == HTML_EL_MAP)
+   if (docSchema == elType.ElSSchema &&
+       (elType.ElTypeNum == HTML_EL_Anchor || elType.ElTypeNum == HTML_EL_MAP))
      {
        attrType.AttrTypeNum = HTML_ATTR_NAME;
        attr = TtaGetAttribute (el, attrType);
@@ -227,7 +230,7 @@ Element             el;
      }
 
    /* get the Label text to build the name value */
-   if (elType.ElTypeNum == HTML_EL_MAP)
+   if (docSchema == elType.ElSSchema && elType.ElTypeNum == HTML_EL_MAP)
      {
        /* mapxxx for a map element */
        strcpy (url, "map");
@@ -302,27 +305,33 @@ boolean             createLink;
 {
   Element             first, last, el, next;
   Element             parag, prev, child, anchor;
-  int                 c1, cN, lg, i;
+  SSchema            docSchema;
   ElementType         elType;
   AttributeType       attrType;
   Attribute           attr;
-  boolean             noAnchor;
   DisplayMode         dispMode;
+  int                 c1, cN, lg, i;
+  boolean             noAnchor;
 
   dispMode = TtaGetDisplayMode (doc);
   /* get the first and last selected element */
   TtaGiveFirstSelectedElement (doc, &first, &c1, &i);
   TtaGiveLastSelectedElement (doc, &last, &i, &cN);
+  docSchema = TtaGetDocumentSSchema (doc);
 
   /* Check whether the selected elements are a valid content for an anchor */
   elType = TtaGetElementType (first);
-  if (elType.ElTypeNum == HTML_EL_Anchor && first == last)
+  if (elType.ElTypeNum == HTML_EL_Anchor && elType.ElSSchema == docSchema
+      && first == last)
     /* add an attribute on the current anchor */
     anchor = first;
   else
     {
       /* search if the selection is included into an anchor */
-      el = SearchAnchor (doc, first, !createLink);
+      if (elType.ElSSchema == docSchema)
+	el = SearchAnchor (doc, first, !createLink);
+      else
+	el = NULL;
       if (el != NULL)
 	/* add an attribute on this anchor */
 	anchor = el;
@@ -334,7 +343,9 @@ boolean             createLink;
 	  while (!noAnchor && el != NULL)
 	    {
 	      elType = TtaGetElementType (el);
-	      if (elType.ElTypeNum != HTML_EL_TEXT_UNIT &&
+	      if (elType.ElSSchema != docSchema)
+		noAnchor = TRUE;
+	      else if (elType.ElTypeNum != HTML_EL_TEXT_UNIT &&
 		  elType.ElTypeNum != HTML_EL_PICTURE_UNIT &&
 		  elType.ElTypeNum != HTML_EL_Teletype_text &&
 		  elType.ElTypeNum != HTML_EL_Italic_text &&
@@ -367,7 +378,7 @@ boolean             createLink;
 	  if (noAnchor)
 	    {
 	      if (createLink || el != NULL)
-		/* create an anchor or more than one structured element */
+		/* cannot create an anchor here */
 		TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_INVALID_ANCHOR1), NULL);
 	      else
 		{
@@ -689,17 +700,19 @@ NotifyElement      *event;
   AttributeType       attrType;
   Attribute           attr;
   ElementType         elType;
+  SSchema             docSchema;
   int                 length, i, iName;
   char               *value, *base;
   char                documentURL[MAX_LENGTH];
   char                tempURL[MAX_LENGTH];
   char                path[MAX_LENGTH];
 
+  docSchema = TtaGetDocumentSSchema (doc);
   el = event->element;
   doc = event->document;
   CheckPseudoParagraph (el, doc);
   elType = TtaGetElementType (el);
-  if (elType.ElTypeNum == HTML_EL_Anchor)
+  if (docSchema == elType.ElSSchema && elType.ElTypeNum == HTML_EL_Anchor)
     {
       /* Check attribute NAME in order to make sure that its value unique */
       /* in the document */
