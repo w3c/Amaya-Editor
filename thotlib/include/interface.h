@@ -37,6 +37,7 @@ extern int          TtaUseOwnXLookupString;
 #define Graphic_keyboard		3
 
 #ifdef __STDC__
+typedef void (* ExternalInitMainLoop)(void);
 typedef void (* ExternalMainLoop)(ThotAppContext app_ctxt);
 typedef void (* ExternalFetchEvent)(ThotAppContext app_ctxt, ThotEvent *ev);
 typedef boolean (* ExternalFetchAvailableEvent)(ThotAppContext app_ctxt, ThotEvent *ev);
@@ -49,7 +50,8 @@ typedef boolean (* ExternalFetchAvailableEvent)();
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void         TtaSetMainLoop (ExternalMainLoop loop,
+extern void         TtaSetMainLoop (ExternalInitMainLoop init,
+                                    ExternalMainLoop loop,
                                     ExternalFetchEvent fetch,
 				    ExternalFetchAvailableEvent fetchavail);
 
@@ -92,7 +94,8 @@ extern void         TtaGiveSelectPosition (Document document, Element element, V
 
 #else  /* __STDC__ */
 
-extern void         TtaSetMainLoop ( /* ExternalMainLoop loop,
+extern void         TtaSetMainLoop ( /* ExternalInitMainLoop init,
+                                    ExternalMainLoop loop,
                                     ExternalFetchEvent fetch,
 				    ExternalFetchAvailableEvent fetchavail */ );
 

@@ -1027,6 +1027,7 @@ ThotEvent             *event;
  * overrides the built-in event-handling mechanisms.
  */
 
+static ExternalInitMainLoop NewInitMainLoop = NULL;
 static ExternalMainLoop NewMainLoop = NULL;
 static ExternalFetchEvent NewFetchEvent = NULL;
 static ExternalFetchAvailableEvent NewFetchAvailableEvent = NULL;
@@ -1039,15 +1040,18 @@ static ExternalFetchAvailableEvent NewFetchAvailableEvent = NULL;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC
-void                TtaSetMainLoop (ExternalMainLoop loop,
-      ExternalFetchEvent fetch, ExternalFetchAvailableEvent fetchavail)
+void                TtaSetMainLoop (ExternalInitMainLoop init,
+      ExternalMainLoop loop, ExternalFetchEvent fetch,
+      ExternalFetchAvailableEvent fetchavail)
 #else  /* __STDC__ */
-void                TtaSetMainLoop (loop, fetch, fetchavail)
+void                TtaSetMainLoop (init, loop, fetch, fetchavail)
+ExternalInitMainLoop init;
 ExternalMainLoop    loop;
 ExternalFetchEvent fetch;
 ExternalFetchAvailableEvent fetchavail;
 #endif /* __STDC__ */
 {
+   NewInitMainLoop = init;
    NewMainLoop = loop;
    NewFetchEvent = fetch;
    NewFetchAvailableEvent = fetchavail;
@@ -1070,6 +1074,9 @@ ThotEvent             *ev;
         NewFetchEvent(app_cont, ev);
 	return;
     }
+#ifndef _WINDOWS
+    XtAppNextEvent (app_cont, ev);
+#endif /* ! _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -1094,20 +1101,11 @@ ThotEvent             *ev;
       return(NewFetchAvailableEvent(app_cont, ev));
 
 #ifndef _WINDOWS
-   /* loop: waiting for the pending events */
    status = XtAppPending (app_cont);
-   while (status != 0)
-     {
-	if (status == XtIMXEvent)
-	  {
-	     XtAppNextEvent (app_cont, ev);
-	     return(TRUE);
-	  }
-	else
-	   XtAppProcessEvent (app_cont, (XtIMAll & (~XtIMXEvent)));
-	status = XtAppPending (app_cont);
-     }
-
+   if (status != 0) {
+       XtAppNextEvent (app_cont, ev);
+       return(TRUE);
+   }
    return(FALSE);
 #endif /* ! _WINDOWS */
 }
@@ -1232,24 +1230,11 @@ MSG                *msg;
 void                TtaHandlePendingEvents ()
 {
 #ifndef _WINDOWS
-   XtInputMask         status;
    ThotEvent              ev;
 
-   /* loop: wainting for the penging events */
-   status = XtAppPending (app_cont);
-   while (status != 0)
-     {
-	if (status == XtIMXEvent)
-	  {
-	     XtAppNextEvent (app_cont, &ev);
-	     TtaHandleOneEvent (&ev);
-	  }
-	else
-	   XtAppProcessEvent (app_cont, (XtIMAll & (~XtIMXEvent)));
-
-	status = XtAppPending (app_cont);
-     }
-
+   while (TtaFetchOneAvailableEvent(&ev)) {
+       TtaHandleOneEvent (&ev);
+   }
 #endif /* _WINDOWS */
 }
 
@@ -1270,6 +1255,8 @@ void                TtaMainLoop ()
    ThotEvent              ev;
    XtInputMask         status;
 #endif /* _WINDOWS */
+
+   if (NewInitMainLoop) NewInitMainLoop();
 
 #ifndef _WINDOWS
    TtaInstallMultiKey ();
@@ -1293,21 +1280,7 @@ void                TtaMainLoop ()
 	}
 #ifndef _WINDOWS
         TtaFetchOneEvent(&ev);
-	status = XtAppPending (app_cont);
-	if (status & XtIMXEvent)
-	  {
-	     XtAppNextEvent (app_cont, &ev);
-	     TtaHandleOneEvent (&ev);
-	  }
-	else if (status & (XtIMAll & (~XtIMXEvent)))
-	  {
-	     XtAppProcessEvent (app_cont, (XtIMAll & (~XtIMXEvent)));
-	  }
-	else
-	  {
-	     XtAppNextEvent (app_cont, &ev);
-	     TtaHandleOneEvent (&ev);
-	  }
+	TtaHandleOneEvent(&ev);
 #else  /* WWW_XWINDOWS */
 	GetMessage (&msg, NULL, 0, 0);
 	TranslateMessage (&msg);

@@ -26,10 +26,10 @@
 #include "thotlib_APIRegistry_stubs.h"
 #include "thotlib_APIDialog_stubs.h"
 
-#define BISS_AWT "-Dawt.toolkit=biss.awt.kernel.Toolkit"
-
 /* DEBUG_KAFFE    will print lot of debug messages                      */
-/* DEBUG_SELECT   will do some sanity checking and print debug messages */
+/* DEBUG_SELECT   will print debug messages on Select and Poll use      */
+/* DEBUG_SELECT_CHANNELS   will do some sanity checking and print debug */
+/*                         messages on extra channel uses               */
 
 /*
  * Kaffe runtime accesses not published in native.h
@@ -39,11 +39,7 @@ extern int threadedFileDescriptor(int fd);
 extern void yieldThread();
 extern int blockOnFile(int fd, int op);
 extern int (*select_call)(int, fd_set*, fd_set*, fd_set*, struct timeval*);
-
 static void register_stubs(void);
-
-static int JavaEventLoopInitialized =0;
-static int x_window_socket;
 
 /************************************************************************
  *									*
@@ -90,6 +86,9 @@ static fd_set extra_exceptfds;
 
 static SelectCallback JavaSelectCallback = NULL;
 
+static int JavaEventLoopInitialized =0;
+static int x_window_socket;
+
 /*
  * If DoJavaSelectPoll is selected, any JavaSelectCall on the
  * x-window socket will fail with value -1 if BreakJavaSelectPoll
@@ -122,6 +121,9 @@ void               InitJavaSelect()
     FD_ZERO(&extra_readfds);
     FD_ZERO(&extra_writefds);
     FD_ZERO(&extra_exceptfds);
+#ifdef DEBUG_SELECT
+    fprintf(stderr,"InitJavaSelect\n");
+#endif
     JavaSelectInitialized = 1;
 }
 
@@ -162,7 +164,7 @@ int io;
     if (DoJavaSelectPoll) BreakJavaSelectPoll++;
     if ((fd < 0) || (fd > sizeof(fd_set) * 8)) return;
     if (fd >= max_extra_fd) max_extra_fd = fd;
-#ifdef DEBUG_SELECT
+#ifdef DEBUG_SELECT_CHANNELS
     if (io & 1) fprintf(stderr, "adding channel %d for read\n", fd);
     if (io & 2) fprintf(stderr, "adding channel %d for write\n", fd);
     if (io & 4) fprintf(stderr, "adding channel %d for exceptions\n", fd);
@@ -193,7 +195,7 @@ int io;
     if (!JavaSelectInitialized) InitJavaSelect();
     if (DoJavaSelectPoll) BreakJavaSelectPoll++;
     if ((fd < 0) || (fd > sizeof(fd_set) * 8)) return;
-#ifdef DEBUG_SELECT
+#ifdef DEBUG_SELECT_CHANNELS
     if (io & 1) fprintf(stderr, "removing channel %d for read\n", fd);
     if (io & 2) fprintf(stderr, "removing channel %d for write\n", fd);
     if (io & 4) fprintf(stderr, "removing channel %d for exceptions\n", fd);
@@ -243,31 +245,21 @@ ThotEvent *ev;
     static int InJavaSelect = 0;
 
     if (!JavaSelectInitialized) InitJavaSelect();
+
+    /*
+     * Check for reentrancy, would be a Very Bad Thing (c)
+     */
     if (InJavaSelect) {
         char *p = NULL;
         fprintf(stderr, "JavaSelect reentrancy !\n");
-	/* call debugger ! */
+	/* call debugger or dump core ! */
 	*p = 0;
     }
+    InJavaSelect = 1;
 
-    /*
-     * Check for extra file descriptor polling.
-     */
-    if ((DoJavaSelectPoll) && (BreakJavaSelectPoll)) {
-        if (((readfds != NULL) && (FD_ISSET(x_window_socket, readfds))) ||
-            ((writefds != NULL) && (FD_ISSET(x_window_socket, writefds))) ||
-            ((exceptfds != NULL) && (FD_ISSET(x_window_socket, exceptfds)))) {
-#ifdef DEBUG_SELECT
-            fprintf(stderr,"JavaSelect : Poll break!\n");
-#endif
-	    errno = EBADF;
-	    return(-1);
-	}
-    }
 #ifdef DEBUG_SELECT
     fprintf(stderr,"<");
 #endif
-    InJavaSelect = 1;
 
 restart_select:
     /*
@@ -277,10 +269,17 @@ restart_select:
     COPY_FD(nb, &extra_readfds, &lextra_readfds);
     COPY_FD(nb, &extra_writefds, &lextra_writefds);
     COPY_FD(nb, &extra_exceptfds, &lextra_exceptfds);
-    if (timeout != NULL)
+
+    /*
+     * Do not block if there is a Poll Break requested.
+     */
+    if ((DoJavaSelectPoll) && (BreakJavaSelectPoll)) {
+       tm.tv_usec = 0;
+       tm.tv_sec = 0;
+    } else if (timeout != NULL)
        memcpy(&tm, timeout, sizeof(tm));
 
-#ifdef DEBUG_SELECT
+#ifdef DEBUG_SELECT_CHANNELS
     /*
      * Check that Kaffe and External descriptor sets don't overlap.
      */
@@ -323,21 +322,25 @@ restart_select:
      * Do the select on the merged channels descriptors.
      */
     NbJavaSelect++;
-    if (timeout != NULL)
+    if (((DoJavaSelectPoll) && (BreakJavaSelectPoll)) ||
+        (timeout != NULL))
        res = select(nb, &full_readfds, &full_writefds, &full_exceptfds, &tm);
     else
        res = select(nb, &full_readfds, &full_writefds, &full_exceptfds, NULL);
 
-#ifdef DEBUG_SELECT
-fprintf(stderr,"res:%d nb:%d rd:",res,nb);
-for (fd = 0;fd < nb;fd++)
-    if (FD_ISSET(fd, &full_readfds)) fprintf(stderr,"r");
-    else fprintf(stderr,"-");
-fprintf(stderr," wr:");
-for (fd = 0;fd < nb;fd++)
-    if (FD_ISSET(fd, &full_writefds)) fprintf(stderr,"w");
-    else fprintf(stderr,"-");
-fprintf(stderr,"\n");
+#ifdef DEBUG_SELECT_CHANNELS
+    /*
+     * shows the channel state.
+     */
+    fprintf(stderr,"res:%d nb:%d rd:",res,nb);
+    for (fd = 0;fd < nb;fd++)
+        if (FD_ISSET(fd, &full_readfds)) fprintf(stderr,"r");
+        else fprintf(stderr,"-");
+    fprintf(stderr," wr:");
+    for (fd = 0;fd < nb;fd++)
+        if (FD_ISSET(fd, &full_writefds)) fprintf(stderr,"w");
+        else fprintf(stderr,"-");
+    fprintf(stderr,"\n");
 #endif
 
     /*
@@ -365,6 +368,13 @@ fprintf(stderr,"\n");
 #ifdef DEBUG_SELECT
         fprintf(stderr,">");
 #endif
+	if ((DoJavaSelectPoll) && (BreakJavaSelectPoll))  {
+#ifdef DEBUG_SELECT
+            fprintf(stderr,"JavaSelect : Poll break !\n");
+#endif
+	    errno = EBADF;
+            return(-1);
+        }
         return(0);
     }
 
@@ -375,7 +385,7 @@ fprintf(stderr,"\n");
 
     for (fd = 0;(fd < nb) && (res > 0); fd++) {
         if (FD_ISSET(fd, &lextra_readfds) && FD_ISSET(fd, &full_readfds)) {
-#ifdef DEBUG_SELECT
+#ifdef DEBUG_SELECT_CHANNELS
             fprintf(stderr,"reading on channel %d\n", fd);
 #endif
             JavaSelectCallback(fd, EVENT_READ);
@@ -388,7 +398,7 @@ fprintf(stderr,"\n");
 	    res--;
         }
         if (FD_ISSET(fd, &lextra_writefds) && FD_ISSET(fd, &full_writefds)) {
-#ifdef DEBUG_SELECT
+#ifdef DEBUG_SELECT_CHANNELS
             fprintf(stderr,"writing on channel %d\n", fd);
 #endif
             JavaSelectCallback(fd, EVENT_WRITE);
@@ -401,7 +411,7 @@ fprintf(stderr,"\n");
 	    res--;
         }
         if (FD_ISSET(fd, &lextra_exceptfds) && FD_ISSET(fd, &full_exceptfds)) {
-#ifdef DEBUG_SELECT
+#ifdef DEBUG_SELECT_CHANNELS
             fprintf(stderr,"exception on channel %d\n", fd);
 #endif
 	    if (DoJavaSelectPoll) {
@@ -423,16 +433,6 @@ fprintf(stderr,"\n");
 #ifdef DEBUG_SELECT
         fprintf(stderr,"|");
 #endif
-/***************************************
-	if ((DoJavaSelectPoll) && (BreakJavaSelectPoll))  {
-#ifdef DEBUG_SELECT
-            fprintf(stderr,"JavaSelect : Poll break 2!\n");
-#endif
-	    InJavaSelect = 0;
-	    errno = EBADF;
-            return(-1);
-        }
- ***************************************/
         goto restart_select;
     }
 
@@ -487,14 +487,12 @@ ThotEvent *ev;
 #ifdef WWW_XWINDOWS
   /*
    * Need to check whether something else has to be scheduled.
+   */
   status = XtAppPending (app_ctxt);
   if (!status) {
-     blockOnFile(x_window_socket, 0);
+     status = blockOnFile(x_window_socket, 0);
+     if (status < 0) return(status);
   }
-   */
-
-  status = blockOnFile(x_window_socket, 0);
-  if (status < 0) return(status);
   XtAppNextEvent (app_ctxt, ev);
 #else  /* WWW_XWINDOWS */
 #endif /* !WWW_XWINDOWS */

@@ -1149,11 +1149,11 @@ void               *event;
 			   else if (t1 + (Time) 500 > ev->xbutton.time)
 			     {
 				TtaAbortShowDialogue ();
-				XtAppNextEvent (app_cont, &event);
+				TtaFetchOneEvent (&event);
 				while (event.type != ButtonRelease)
 				  {
 				     TtaHandleOneEvent (&event);
-				     XtAppNextEvent (app_cont, &event);
+				     TtaFetchOneEvent (&event);
 				  }	/*while */
 
 				/* memorise la position de la souris */
@@ -1173,7 +1173,7 @@ void               *event;
 
 				/* Regarde s'il s'agit d'un drag ou d'une simple marque d'insertion */
 				comm = 0;	/* il n'y a pas de drag */
-				XtAppNextEvent (app_cont, &event);
+				TtaFetchOneEvent (&event);
 				while (event.type != ButtonRelease)
 				  {
 				     dx = event.xbutton.x - ClickX;
@@ -1185,7 +1185,7 @@ void               *event;
 					  comm = 1;	/* il y a un drag */
 				       }
 				     TtaHandleOneEvent (&event);
-				     XtAppNextEvent (app_cont, &event);
+				     TtaFetchOneEvent (&event);
 				  }	/*while */
 				TtaHandleOneEvent (&event);
 
@@ -1489,7 +1489,7 @@ int                *pave;
    while (ClickIsDone == 1)
      {
 #ifndef _WINDOWS
-	XtAppNextEvent (app_cont, &event);
+	TtaFetchOneEvent (&event);
 	TtaHandleOneEvent (&event);
 #endif /* _WINDOWS */
      }				/*while */

@@ -6621,7 +6621,7 @@ void                TtaWaitShowDialogue ()
 
    while (ShowReturn == 1)
      {
-	XtAppNextEvent (Def_AppCont, &event);
+	TtaFetchOneEvent (&event);
 	TtaHandleOneEvent (&event);
      }
 

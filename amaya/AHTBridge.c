@@ -73,6 +73,7 @@ static const SockOps ExceptBits = FD_OOB;
  * Experimental functions
  */
 
+#ifdef AMAYA_JAVA
 /*--------------------------------------------------------------------
   W3ContinueRequest
   -------------------------------------------------------------------*/
@@ -213,6 +214,7 @@ int                 event;
    me->reqStatus = HT_WAITING;
    return;
 }
+#endif /* AMAYA_JAVA */
 
 /*
  * Private functions
@@ -619,6 +621,11 @@ SOCKET sock;
 
 #endif /* __STDC__ */
 {
+#ifdef AMAYA_JAVA
+  JavaFdSetState (sock, 1);
+  me->read_sock = sock;
+  return;
+#endif
 #ifdef WWW_XWINDOWS
   if (me->read_xtinput_id)
     {
@@ -639,10 +646,6 @@ SOCKET sock;
 	     me->read_xtinput_id, sock);
 #endif /* WWW_XWINDOWS */
 
-#ifdef AMAYA_JAVA
-  JavaFdSetState (sock, 1);
-  me->read_sock = sock;
-#endif
 }
 
 /*----------------------------------------------------------------------
@@ -657,6 +660,12 @@ AHTReqContext      *me;
 
 #endif /* __STDC__ */
 {
+#ifdef AMAYA_JAVA
+  JavaFdResetState (me->read_sock, 1);
+  me->read_sock = INVSOC;
+  return;
+#endif
+
 #ifdef WWW_XWINDOWS
    if (me->read_xtinput_id)
      {
@@ -666,11 +675,6 @@ AHTReqContext      *me;
 	me->read_xtinput_id = (XtInputId) NULL;
      }
 #endif /* WWW_XWINDOWS */
-
-#ifdef AMAYA_JAVA
-  JavaFdResetState (me->read_sock, 1);
-  me->read_sock = INVSOC;
-#endif
 }
 
 /*----------------------------------------------------------------------
@@ -686,6 +690,11 @@ SOCKET              sock;
 
 #endif /* __STDC__ */
 {
+#ifdef AMAYA_JAVA
+  JavaFdSetState (sock, 2);
+  me->write_sock = sock;
+  return;
+#endif
 #ifdef WWW_XWINDOWS
    if (me->write_xtinput_id)
     {
@@ -705,11 +714,6 @@ SOCKET              sock;
     fprintf (stderr, "(BT) adding Xtinput %lu Socket %d W\n",
 	     me->write_xtinput_id, sock);
 #endif /* WWW_XWINDOWS */
-
-#ifdef AMAYA_JAVA
-  JavaFdSetState (sock, 2);
-  me->write_sock = sock;
-#endif
 }
 
 /*----------------------------------------------------------------------
@@ -725,6 +729,11 @@ AHTReqContext      *me;
 
 #endif /* __STDC__ */
 {
+#ifdef AMAYA_JAVA
+  JavaFdResetState (me->write_sock, 2);
+  me->write_sock = INVSOC;
+  return;
+#endif
 #ifdef WWW_XWINDOWS
    if (me->write_xtinput_id)
      {
@@ -734,11 +743,6 @@ AHTReqContext      *me;
 	me->write_xtinput_id = (XtInputId) NULL;
      }
 #endif /* WWW_XWINDOWS */
-
-#ifdef AMAYA_JAVA
-  JavaFdResetState (me->write_sock, 2);
-  me->write_sock = INVSOC;
-#endif
 }
 
 /*----------------------------------------------------------------------
@@ -754,6 +758,12 @@ SOCKET              sock;
 
 #endif /* __STDC__ */
 {
+#ifdef AMAYA_JAVA
+  JavaFdSetState (sock, 4);
+  me->except_sock = sock;
+  return;
+#endif
+
 #ifdef WWW_XWINDOWS
    if (me->except_xtinput_id)
      {
@@ -774,12 +784,6 @@ SOCKET              sock;
 	     me->write_xtinput_id, sock);
 
 #endif /* WWW_XWINDOWS */
-
-#ifdef AMAYA_JAVA
-  JavaFdSetState (sock, 4);
-  me->except_sock = sock;
-#endif
-
 }
 
 /*----------------------------------------------------------------------
@@ -795,6 +799,11 @@ AHTReqContext      *me;
 
 #endif /* __STDC__ */
 {
+#ifdef AMAYA_JAVA
+  JavaFdResetState (me->except_sock, 4);
+  me->except_sock = INVSOC;
+#endif
+
 #ifdef WWW_XWINDOWS
    if (me->except_xtinput_id)
      {
@@ -804,11 +813,6 @@ AHTReqContext      *me;
 	me->except_xtinput_id = (XtInputId) NULL;
      }
 #endif /* WWW_XWINDOWS */
-
-#ifdef AMAYA_JAVA
-  JavaFdResetState (me->except_sock, 4);
-  me->except_sock = INVSOC;
-#endif
 }
 
 /*

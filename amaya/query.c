@@ -1131,6 +1131,10 @@ void                QueryInit ()
 #endif
 {
 
+#ifdef AMAYA_JAVA
+   JavaSetSelectCallback(W3ContinueRequest);
+#endif
+
    AmayaIsAlive = TRUE;
    AHTProfile_newAmaya (HTAppName, HTAppVersion);
 
@@ -1217,22 +1221,26 @@ static int          LoopForStop (AHTReqContext * me)
 	  /* Amaya was killed by one of the callback handlers */
 	  exit (0);
 
-	status = XtAppPending (app_cont);
-	if (status & XtIMXEvent)
-	  {
-	     XtAppNextEvent (app_cont, &ev);
-	     TtaHandleOneEvent (&ev);
-	  }
-	else if (status & (XtIMAll & (~XtIMXEvent)))
-	  {
-	     XtAppProcessEvent (app_cont,
-				(XtIMAll & (~XtIMXEvent)));
-	  }
-	else
-	  {
-	     XtAppNextEvent (app_cont, &ev);
-	     TtaHandleOneEvent (&ev);
-	  }
+#ifdef AMAYA_JAVA
+        JavaPollLoop(app_cont);
+#else /* ! AMAYA_JAVA */
+        status = XtAppPending (app_cont);
+        if (status & XtIMXEvent)
+          {
+             XtAppNextEvent (app_cont, &ev);
+             TtaHandleOneEvent (&ev);
+          }
+        else if (status & (XtIMAll & (~XtIMXEvent)))
+          {
+             XtAppProcessEvent (app_cont,
+                                (XtIMAll & (~XtIMXEvent)));
+          }
+        else
+          {
+             XtAppNextEvent (app_cont, &ev);
+             TtaHandleOneEvent (&ev);
+          }
+#endif /* AMAYA_JAVA */
 #endif /* WWW_XWINDOWS */
      }
 
@@ -1974,21 +1982,6 @@ int                 docid;
 /*
   end of Module query.c
 */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
