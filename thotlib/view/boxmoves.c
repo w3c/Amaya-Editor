@@ -43,6 +43,32 @@
 #endif /*_GL*/
 
 /*----------------------------------------------------------------------
+  GetSystemOrigins: Return the coords of the current SystemOrigin.
+  ----------------------------------------------------------------------*/
+void GetSystemOrigins (PtrAbstractBox pAb, int *x, int *y)
+{
+  PtrAbstractBox      parent;
+
+  *x = 0;
+  *y = 0;
+#ifdef _GL
+  while (pAb)
+    {
+      parent = pAb->AbEnclosing;
+      if (parent && parent->AbElement &&
+	  parent->AbBox &&
+	  parent->AbElement->ElSystemOrigin)
+	{
+	  *x = parent->AbBox->BxXOrg;
+	  *y = parent->AbBox->BxYOrg;
+/*printf ("Origin y=%d\n", parent->AbBox->BxYOrg);*/
+	}
+      pAb = parent;
+    } 
+#endif /* _GL */
+}
+
+/*----------------------------------------------------------------------
   IsXYPosComplete returns TRUE indicators when the box position is
   relative to the root box instead of the parent box.
   They could be FALSE when the box building is in progress and any
@@ -52,21 +78,27 @@
 void IsXYPosComplete (PtrBox pBox, ThotBool *horizRef, ThotBool *vertRef)
 {
   PtrBox              pParentBox;
+  int                 x, y;
 
+  GetSystemOrigins (pBox->BxAbstractBox, &x, &y);
   pParentBox = pBox;
   *vertRef = (Propagate != ToSiblings);
   *horizRef = *vertRef;
-  while ((!*vertRef || !*horizRef) && pParentBox != NULL)
+  if (x == 0 && y == 0)
     {
-      if (!*vertRef)
-	*vertRef = (pParentBox->BxVertFlex || pParentBox->BxYOutOfStruct);
-      if (!*horizRef)
-	*horizRef = (pParentBox->BxHorizFlex || pParentBox->BxXOutOfStruct);
-      /* Remonte a la boite englobante */
-      if (pParentBox->BxAbstractBox->AbEnclosing == NULL)
-	pParentBox = NULL;
-      else
-	pParentBox = pParentBox->BxAbstractBox->AbEnclosing->AbBox;
+      /* Work with absolute values when out of a translated SVG */
+      while ((!*vertRef || !*horizRef) && pParentBox)
+	{
+	  if (!*vertRef)
+	    *vertRef = (pParentBox->BxVertFlex || pParentBox->BxYOutOfStruct);
+	  if (!*horizRef)
+	    *horizRef = (pParentBox->BxHorizFlex || pParentBox->BxXOutOfStruct);
+	  /* Remonte a la boite englobante */
+	  if (pParentBox->BxAbstractBox->AbEnclosing == NULL)
+	    pParentBox = NULL;
+	  else
+	    pParentBox = pParentBox->BxAbstractBox->AbEnclosing->AbBox;
+	}
     }
 
   if (pBox->BxYToCompute &&
@@ -86,18 +118,24 @@ void IsXYPosComplete (PtrBox pBox, ThotBool *horizRef, ThotBool *vertRef)
 ThotBool IsXPosComplete (PtrBox pBox)
 {
   PtrBox              pParentBox;
+  int                 x, y;
   ThotBool            Ok;
 
+  GetSystemOrigins (pBox->BxAbstractBox, &x, &y);
   pParentBox = pBox;
   Ok = (Propagate != ToSiblings);
-  while (!Ok && pParentBox != NULL)
+  if (x == 0 && y == 0)
     {
-      Ok = (pParentBox->BxHorizFlex || pParentBox->BxXOutOfStruct);
-      /* Remonte a la boite englobante */
-      if (pParentBox->BxAbstractBox->AbEnclosing == NULL)
-	pParentBox = NULL;
-      else
-	pParentBox = pParentBox->BxAbstractBox->AbEnclosing->AbBox;
+      /* Work with absolute values when out of a translated SVG */
+      while (!Ok && pParentBox)
+	{
+	  Ok = (pParentBox->BxHorizFlex || pParentBox->BxXOutOfStruct);
+	  /* Remonte a la boite englobante */
+	  if (pParentBox->BxAbstractBox->AbEnclosing == NULL)
+	    pParentBox = NULL;
+	  else
+	    pParentBox = pParentBox->BxAbstractBox->AbEnclosing->AbBox;
+	}
     }
   return (Ok);
 }
@@ -113,18 +151,24 @@ ThotBool IsXPosComplete (PtrBox pBox)
 ThotBool IsYPosComplete (PtrBox pBox)
 {
   PtrBox              pParentBox;
+  int                 x, y;
   ThotBool            Ok;
 
+  GetSystemOrigins (pBox->BxAbstractBox, &x, &y);
   pParentBox = pBox;
   Ok = (Propagate != ToSiblings);
-  while (!Ok && pParentBox != NULL)
+  if (x == 0 && y == 0)
     {
-      Ok = (pParentBox->BxVertFlex || pParentBox->BxYOutOfStruct);
-      /* Remonte a la boite englobante */
-      if (pParentBox->BxAbstractBox->AbEnclosing == NULL)
-	pParentBox = NULL;
-      else
-	pParentBox = pParentBox->BxAbstractBox->AbEnclosing->AbBox;
+      /* Work with absolute values when out of a translated SVG */
+      while (!Ok && pParentBox)
+	{
+	  Ok = (pParentBox->BxVertFlex || pParentBox->BxYOutOfStruct);
+	  /* Remonte a la boite englobante */
+	  if (pParentBox->BxAbstractBox->AbEnclosing == NULL)
+	    pParentBox = NULL;
+	  else
+	    pParentBox = pParentBox->BxAbstractBox->AbEnclosing->AbBox;
+	}
     }
   return (Ok);
 }
@@ -950,10 +994,10 @@ void MoveBoxEdge (PtrBox pBox, PtrBox pSourceBox, OpRelation op, int delta,
 void CoordinateSystemUpdate (PtrAbstractBox pAb, int frame, int x, int y)
 {  
 #ifdef _GL 
-  int    doc, view;
+  int    doc;
       
   /* est-ce un systeme de coordonnee ?*/
-  FrameToView (frame, &doc, &view);
+  doc = FrameTable[frame].FrDoc;
   TtaReplaceTransform ((Element) pAb->AbElement, 
 		       TtaNewBoxTransformTranslate ((float) x, 
 						    (float) y),
@@ -3401,6 +3445,8 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
 	   * and it's not a stretchable box.
 	   * In other cases, move also enclosed boxes.
 	   */
+/*if (pBox->BxAbstractBox->AbLeafType == LtGraphics)
+	    printf ("YMove %c y=%d + %d\n", pBox->BxAbstractBox->AbRealShape, pBox->BxYOrg, delta);*/
 	  if (absoluteMove)
 	    {
 	      YMoveAllEnclosed (pBox, delta, frame);

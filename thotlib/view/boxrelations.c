@@ -1152,10 +1152,10 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
       else
 	{
 #ifdef _GL
-	  if (pRefBox->BxAbstractBox &&
-	      pRefBox->BxAbstractBox->AbElement &&
-	      pRefBox->BxAbstractBox->AbElement->ElSystemOrigin && 
-	      pRefBox->BxAbstractBox->AbNext != pAb &&
+	  if (pRefAb &&
+	      pRefAb->AbElement &&
+	      pRefAb->AbElement->ElSystemOrigin && 
+	      pRefAb->AbNext != pAb &&
 	      FrameTable[frame].FrView == 1)
 	    {	      
 	      x = 0;
@@ -1163,8 +1163,9 @@ void ComputePosRelation (AbPosition rule, PtrBox pBox, int frame, ThotBool horiz
 	    }
 	  else
 	    {
-	      x = pRefBox->BxXOrg;
-	      y = pRefBox->BxYOrg;
+	      GetSystemOrigins (pRefBox->BxAbstractBox, &x, &y);
+	      x = -x + pRefBox->BxXOrg;
+	      y = -y + pRefBox->BxYOrg;
 	    }
 #else /* _GL */
 	  x = pRefBox->BxXOrg;

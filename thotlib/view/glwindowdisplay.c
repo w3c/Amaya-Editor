@@ -1156,6 +1156,7 @@ void printBuffer (GLint size, GLfloat *buffer)
 	  }
 	  break;
        
+	case  GL_LINE_RESET_TOKEN:
 	case  GL_LINE_TOKEN:
 	  {
 	    /*pour les lignes*/
@@ -1227,6 +1228,7 @@ void getboundingbox (GLint size, GLfloat *buffer, int frame,
 	    computeisminmax (TotalHeight - buffer[size-count], &y, &h);count--;
 	  }
 	  break;
+	case  GL_LINE_RESET_TOKEN:
 	case  GL_LINE_TOKEN:
 	  {
 	    computeisminmax (buffer[size-count], &x, &w);count--;

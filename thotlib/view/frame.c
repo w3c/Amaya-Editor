@@ -797,7 +797,7 @@ static void SyncBoundingboxesReal (PtrAbstractBox pInitAb,
 }
 
 /*----------------------------------------------------------------------
-  SyncBoundingboxes : sync Bounding box of a group
+  SyncBoundingboxes: synchronize Bounding box of a group
   ----------------------------------------------------------------------*/
 static void SyncBoundingboxes (PtrAbstractBox pInitAb, 
 			       int XFrame, int YFrame, int frame, 
@@ -867,7 +867,7 @@ static void SyncBoundingboxes (PtrAbstractBox pInitAb,
 }
 
 /*----------------------------------------------------------------------
-  ComputeBoundingBoxes : Compute clipping coordinate for each box.
+  ComputeBoundingBoxes: Compute clipping coordinate for each box.
   ----------------------------------------------------------------------*/
 static void ComputeBoundingBoxes (int frame, int xmin, int xmax, int ymin,
 				  int ymax, PtrAbstractBox pInitAb)
@@ -1660,7 +1660,7 @@ void ComputeABoundingBox (PtrAbstractBox pAbSeeked, int frame)
 					       pBox->BxWidth, 
 					       pBox->BxHeight);
 
-		      if (pAb->AbElement->ElSystemOrigin)						 
+		      if (pAb->AbElement->ElSystemOrigin)
 			{
 			  if (pFrame->FrXOrg ||pFrame->FrYOrg)
 			    {
@@ -1671,7 +1671,7 @@ void ComputeABoundingBox (PtrAbstractBox pAbSeeked, int frame)
 			      ClipXOfFirstCoordSys = pBox->BxClipX;
 			      ClipYOfFirstCoordSys = pBox->BxClipY;
 			    }
-			}	
+			}
 		      if (pAb == pAbSeeked) 
 			{
 			  if (pAb->AbLeafType == LtCompound)
@@ -1688,7 +1688,7 @@ void ComputeABoundingBox (PtrAbstractBox pAbSeeked, int frame)
 				{
 				  while (pBox->BxNexChild)
 				    {
-				      pBox = pBox->BxNexChild;			
+				      pBox = pBox->BxNexChild;
 				      ComputeBoundingBox (pBox, frame, 0, l, 0, h);
 				    }
 				}
