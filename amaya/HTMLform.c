@@ -842,6 +842,8 @@ void SubmitForm (Document doc, Element element)
     return;
 
   charset = TtaGetDocumentCharset (doc);
+  if (charset == UNDEFINED_CHARSET)
+    charset = ISO_8859_1;
   button_type = 0;
   attrType.AttrSSchema = elType.ElSSchema;
   switch (elType.ElTypeNum)
