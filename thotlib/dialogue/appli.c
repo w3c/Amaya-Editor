@@ -617,7 +617,7 @@ int                 value;
                sPos = GetScrollPos (FrameTable[frame].WdScrollH, SB_CTL);
                delta = value - sPos;
                nbPages = abs (delta) / width;
-               remaining = ((abs (delta) - (width * nbPages)) * FrameTable[frame].FrWidth)) / width;
+               remaining = ((abs (delta) - (width * nbPages)) * FrameTable[frame].FrWidth) / width;
 	       if (nbPages <= 3) {
                   if (delta > 0)
                     delta = nbPages * FrameTable[frame].FrWidth + remaining;
