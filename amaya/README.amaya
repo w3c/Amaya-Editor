@@ -9,14 +9,14 @@ Amaya is intended to be a comprehensive environment for testing and
 evaluating new proposals for Web standards and formats. This is the
 first source release.
 
-Amaya is based on the Thot Library distributed separately, please
-check the installation instructions in order to build a correct
+Amaya is based on the Thot Library distributed separately. Please
+read the installation instructions below in order to build a correct
 environment.
 
 Feedback
 ========
 
-Comments, and bug reports are welcome.
+Comments and bug reports are welcome.
 
 For communicating with the Amaya team, please use the mailing lists.
 
@@ -64,7 +64,7 @@ Please follow the installation instructions found in the W3C server at:
 
 http://www.w3.org/member/WWW/Amaya/User/
 
-for members, or
+for W3C members, or
 
 http://www.w3.org/pub/WWW/Amaya/User/
 
