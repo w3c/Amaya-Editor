@@ -287,7 +287,7 @@ AHTReqContext      *me;
 	HTRequest_delete (me->request);
 
 	if (me->error_stream != (char *) NULL)
-	   HT_FREE (me->error_stream);
+	  HT_FREE (me->error_stream);
 	
 	if (me->read_xtinput_id || me->write_xtinput_id ||
             me->except_xtinput_id)
@@ -523,11 +523,12 @@ HTRequest          *request;
 HTResponse         *response;
 void               *context;
 int                 status;
-
 #endif
 {
    AHTReqContext      *me = (AHTReqContext *) HTRequest_context (request);
    boolean             error_flag;
+   char                msg_status[10];
+   HTError             *error;
 
    if (!me)
       return HT_OK;		/* not an Amaya request */
@@ -656,11 +657,49 @@ int                 status;
 
    /* don't remove or Xt will hang up during the put */
 
-   if (AmayaIsAlive && (me->method == METHOD_PUT || me->method == METHOD_POST))
+   if (AmayaIsAlive  && ((me->method == METHOD_POST) ||
+			 (me->method == METHOD_PUT)))
      {
-	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_PROG_WRITE),
-		       me->urlName);
+       /* JK: Experimental */
+       if (me->method == METHOD_PUT) 
+	 {
+	   TtaHandlePendingEvents ();
+	 }
 
+       /* output the status of the request */
+       if (status == 200)
+	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REQUEST_SUCCEEDED), me->urlName);
+       else if (status == 201)
+	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CREATED_NEW_REMOTE_RESSOURCE), me->urlName);
+       else if (status == 204 && me->method == METHOD_PUT)
+	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UPDATED_REMOTE_RESSOURCE), me->urlName);
+       else if (status == 204 && me->method == METHOD_PUT)
+	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_NO_DATA), (char *) NULL);
+       else if (status == -400 || status == 505)
+	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_SERVER_DID_NOT_UNDERSTAND_REQ_SYNTAX), (char *) NULL);
+       else if (status == -401)
+	   TtaSetStatus (me->docid, 1,
+			 TtaGetMessage (AMAYA, AM_AUTHENTICATION_FAILURE), me->urlName);
+       else if (status == -403)
+	 TtaSetStatus (me->docid, 1,
+			 TtaGetMessage (AMAYA, AM_FORBIDDEN_ACCESS), me->urlName);
+       else if (status == -405)
+	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_METHOD_NOT_ALLOWED), (char *) NULL);
+       else if (status == -1)
+	 {
+	   HTError = HTRequest_error (request);
+	   if ((HTErrorElement) HTError->element == HTERR_INTERNAL)
+	     /* an error Henrik forgot :-/ */
+	     {
+	       TtaSetStatus (me->docid, 1, "Internal Server Error", (char *) NULL);
+	       status = -500; 
+	     }
+	 }
+       else if (status != -1)
+	 {
+	   sprintf (msg_status, "%d", status); 
+	 TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UNKNOWN_XXX_STATUS), msg_status);
+	 }
      }
    return HT_OK;
 }
@@ -938,7 +977,7 @@ static void         AHTAlertInit ()
    HTAlert_add (AHTProgress, HT_A_PROGRESS);
    HTAlert_add ((HTAlertCallback *) Add_NewSocket_to_Loop, HT_PROG_CONNECT);
    HTAlert_add (AHTError_print, HT_A_MESSAGE);
-   HTError_setShow (0xFF);	/* process all messages */
+   HTError_setShow (~((int) 0 ) & ~((int) HT_ERR_SHOW_DEBUG));	/* process all messages except debug ones*/
    HTAlert_add (AHTConfirm, HT_A_CONFIRM);
    HTAlert_add (AHTPrompt, HT_A_PROMPT);
    HTAlert_add (AHTPromptPassword, HT_A_SECRET);
@@ -1703,6 +1742,7 @@ void               *context_tcbf;
 			  context_tcbf, (char *) NULL);
 
    TtaFreeMemory (mem_ptr);
+   TtaHandlePendingEvents ();
 
 #endif /*WWW_XWINDOWS */
 
@@ -1790,22 +1830,18 @@ char               *outputfile;
 
    me->anchor = (HTParentAnchor *) HTAnchor_findAddress (urlName);
 
-   /* Set the Content-Type of the file we are uplaoding */
+   /* Set the Content-Type of the file we are uploading */
    HTAnchor_setFormat ((HTParentAnchor *) me->anchor, AHTGuessAtom_for (me->urlName, contentType));
 
    HTAnchor_setLength ((HTParentAnchor *) me->anchor, me->block_size);
    HTRequest_setEntityAnchor (me->request, me->anchor);
    status = HTLoadAbsolute (urlName, me->request);
 
-   if (status == HT_ERROR || me->reqStatus == HT_END
-       || me->reqStatus == HT_ERR || HTError_hasSeverity (HTRequest_error (me->request), ERR_NON_FATAL))
+   if (status == HT_ERROR || me->reqStatus == HT_END || me->reqStatus == HT_ERR || HTError_hasSeverity (HTRequest_error (me->request), ERR_INFO))
      {
-       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE),
-		     me->urlName);
-
        status = HT_ERROR;
        AHTReqContext_delete (me);
-     }
+     }     
    else
      {
 	TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_REMOTE_SAVING),
@@ -1819,10 +1855,9 @@ char               *outputfile;
 	     AHTReqContext_delete (me);
 	  }
      }
-
    return (status);
-
 }
+
 
 
 /*----------------------------------------------------------------------

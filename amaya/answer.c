@@ -125,6 +125,7 @@ void               *input, HTAlertPar * reply;
 	       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UNKNOWN_STATUS), NULL);
 	       break;
 	 }
+
    return YES;
 }
 
@@ -286,6 +287,10 @@ HTAlertPar         *reply;
    char               *username = NULL;
    char               *password = NULL;
    AHTReqContext      *me = HTRequest_context (request);
+   
+   /* Update the status bar */
+     TtaSetStatus (me->docid, 1,
+		   TtaGetMessage (AMAYA, AM_PLEASE_AUTHENTICATE), me->urlName);
 
    /* initialise */
    Answer_name[0] = EOS;
@@ -336,6 +341,7 @@ HTAlertPar         *reply;
    HTList             *cur = (HTList *) input;
    HTError            *pres;
    AHTReqContext      *me = (AHTReqContext *) HTRequest_context (request);
+   int                 index;
 
    if (WWWTRACE)
       HTTrace ("HTError..... Generating message\n");
@@ -343,18 +349,28 @@ HTAlertPar         *reply;
       return NO;
    while ((pres = (HTError *) HTList_nextObject (cur)))
      {
-	int                 index = HTError_index (pres);
-
-	switch (index)
-	      {
-		 case HTERR_UNAUTHORIZED:
-		    TtaSetStatus (me->docid, 1,
-				  TtaGetMessage (AMAYA, AM_AUTHENTICATION_FAILURE), me->urlName);
-		    break;
-		 default:
-		    break;
-	      }
+       index = HTError_index (pres);
+       switch (index)
+	 {
+	 case HTERR_UNAUTHORIZED:
+	   TtaSetStatus (me->docid, 1,
+			 TtaGetMessage (AMAYA, AM_AUTHENTICATION_FAILURE), me->urlName);
+	   break;
+	 case HTERR_FORBIDDEN:
+	   TtaSetStatus (me->docid, 1,
+			 TtaGetMessage (AMAYA, AM_FORBIDDEN_ACCESS), me->urlName);
+	   break;
+	 case HTERR_SYSTEM:
+	   if (!strcmp ("connect",  HTError_location (pres)))
+	     TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_CANT_CONNECT_TO_HOST), (char *) NULL);
+	   else
+	     TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_UNKNOWN_SAVE_ERROR), me->urlName);
+	   break;
+	 default:
+	   break;
+	 }
      }
+
    return YES;
 }
 
@@ -394,8 +410,16 @@ HTRequest          *request;
 		      case HTERR_INTERNAL:
 			 if (pres->par != NULL)
 			   {
-			      sprintf (buffer, TtaGetMessage (AMAYA, AM_SYS_ERROR_TMPL), me->urlName, me->urlName, pres->element, (char *) pres->par);
-			      StrAllocCat (me->error_stream, buffer);
+			     if (me->method != METHOD_PUT) 
+			       {
+				 sprintf (buffer, TtaGetMessage (AMAYA, AM_SYS_ERROR_TMPL), me->urlName, me->urlName, pres->element, (char *) pres->par);
+				 StrAllocCat (me->error_stream, buffer);
+			       }
+			     else
+			       {
+				 sprintf (buffer, "Error: Server is unavaiable or doesn't exist");
+				 StrAllocCat (me->error_stream, buffer);
+			       }
 			   }
 			 break;
 		      default:
