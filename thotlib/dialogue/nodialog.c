@@ -221,25 +221,6 @@ void                RedisplayCopies ()
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int RO, int active, int fg)
-
-#else  /* __STDC__ */
-void                DrawChar (car, frame, x, y, font, RO, active, fg)
-UCHAR_T             car;
-int                 frame;
-int                 x;
-int                 y;
-ptrfont             font;
-int                 RO;
-int                 active;
-int                 fg;
-#endif /* __STDC__ */
-{
-}
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void                DrawSupprAttr (PtrAttribute pAttr, PtrElement pEl)
 #else  /* __STDC__ */
 void                DrawSupprAttr (pAttr, pEl)

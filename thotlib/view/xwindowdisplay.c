@@ -77,6 +77,25 @@ int          *pY;
    *pY += ((XFontStruct *) font)->ascent;
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                DrawChar (UCHAR_T car, int frame, int x, int y, ptrfont font, int RO, int active, int fg)
+
+#else  /* __STDC__ */
+void                DrawChar (car, frame, x, y, font, RO, active, fg)
+UCHAR_T             car;
+int                 frame;
+int                 x;
+int                 y;
+ptrfont             font;
+int                 RO;
+int                 active;
+int                 fg;
+#endif /* __STDC__ */
+{
+}
+
 
 /*----------------------------------------------------------------------
   LoadColor load the given color in the drawing Graphic Context.

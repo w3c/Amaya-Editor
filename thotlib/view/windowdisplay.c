@@ -2763,6 +2763,8 @@ C_points           *controls;
 
 #endif /* __STDC__ */
 {
+#ifdef _WIN_PRINT
+#else /* _WIN_PRINT */
    PtrTextBuffer       adbuff;
    int                 i, j;
    float               x1, y1, x2, y2;
@@ -2846,6 +2848,7 @@ C_points           *controls;
    /* free the table of points */
    WIN_ReleaseDeviceContext ();
    free (points);
+#endif /* _WIN_PRINT */
 }
 
 /*----------------------------------------------------------------------
@@ -2880,6 +2883,8 @@ C_points           *controls;
 
 #endif /* __STDC__ */
 {
+#ifdef _WIN_PRINT
+#else /* _WIN_PRINT */
    PtrTextBuffer       adbuff;
    int                 i, j;
    float               x1, y1, x2, y2;
@@ -2992,6 +2997,7 @@ C_points           *controls;
 
    /* free the table of points */
    free (points);
+#endif /* _WIN_PRINT */
 }
 
 /*----------------------------------------------------------------------
@@ -3911,6 +3917,7 @@ int                 height;
 {
 }
 
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   Clear clear the area of frame located at (x, y) and of size width x height.
   ----------------------------------------------------------------------*/
@@ -3981,36 +3988,6 @@ ThotGC              GClocal;
 
 
 /*----------------------------------------------------------------------
-  VideoInvert switch to inverse video the area of frame located at
-  (x,y) and of size width x height.
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                VideoInvert (int frame, int width, int height, int x, int y)
-#else  /* __STDC__ */
-void                VideoInvert (frame, width, height, x, y)
-int                 frame;
-int                 width;
-int                 height;
-int                 x;
-int                 y;
-
-#endif /* __STDC__ */
-{
-   ThotWindow          w;
-
-   w = FrRef[frame];
-   if (w != None) {
-      if (TtDisplay)
-         WIN_ReleaseDeviceContext ();
-       
-      WIN_GetDeviceContext (frame); 
-      PatBlt (TtDisplay, x, y + FrameTable[frame].FrTopMargin, width, height, PATINVERT);
-      WIN_ReleaseDeviceContext ();
-   }
-}
-
-
-/*----------------------------------------------------------------------
   Scroll do a scrolling/Bitblt of frame of a width x height area
   from (xd,yd) to (xf,yf).
   ----------------------------------------------------------------------*/
@@ -4037,6 +4014,36 @@ int yf;
       else 
 	/* UpdateWindow (FrRef [frame]); */
 	ScrollWindowEx (FrRef [frame], xf - xd, yf - yd, NULL, &cltRect, NULL, NULL, SW_INVALIDATE);
+      WIN_ReleaseDeviceContext ();
+   }
+}
+#endif /* _WIN_PRINT */
+
+/*----------------------------------------------------------------------
+  VideoInvert switch to inverse video the area of frame located at
+  (x,y) and of size width x height.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                VideoInvert (int frame, int width, int height, int x, int y)
+#else  /* __STDC__ */
+void                VideoInvert (frame, width, height, x, y)
+int                 frame;
+int                 width;
+int                 height;
+int                 x;
+int                 y;
+
+#endif /* __STDC__ */
+{
+   ThotWindow          w;
+
+   w = FrRef[frame];
+   if (w != None) {
+      if (TtDisplay)
+         WIN_ReleaseDeviceContext ();
+       
+      WIN_GetDeviceContext (frame); 
+      PatBlt (TtDisplay, x, y + FrameTable[frame].FrTopMargin, width, height, PATINVERT);
       WIN_ReleaseDeviceContext ();
    }
 }

@@ -2577,15 +2577,15 @@ char *value;
 }
 
 /*----------------------------------------------------------------------
-  GetFileSize
+  QGetFileSize
   Returns 0 and the filesize in the 2nd parameter.
   Otherwise, returns -1.
   ---------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static ThotBool GetFileSize (char *fileName, unsigned long *file_size)
+static ThotBool QGetFileSize (char *fileName, unsigned long *file_size)
 #else
-static ThotBool GetFileSize (fileName, file_size)
+static ThotBool QGetFileSize (fileName, file_size)
 char *fileName;
 unsigned long *file_size;
 #endif /* __STDC__ */
@@ -2957,7 +2957,7 @@ STRING        content_type;
        /* @@@ a very ugly patch :)))
 	I'm copying here some of the functionality I use in the PUT
        I need to put the common parts in another module */
-       GetFileSize (WideChar2ISO (formdata), &filesize);
+       QGetFileSize (WideChar2ISO (formdata), &filesize);
        filesize = filesize + strlen ("w3c_annotate=");
        me->block_size = filesize;
 
@@ -3134,7 +3134,7 @@ void               *context_tcbf;
      }
 
    /* get the size of the file */
-   if (GetFileSize (fileName, &file_size) || file_size == 0)
+   if (QGetFileSize (fileName, &file_size) || file_size == 0)
      {
 	/* file was empty */
 	/*errmsg here */
