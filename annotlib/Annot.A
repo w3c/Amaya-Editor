@@ -1,11 +1,5 @@
 APPLICATION Annot;
 
-DEFAULT
-
-   BEGIN
-	ElemActivate.Pre -> Annot_RaiseSourceDoc;
-   END;
-
 ELEMENTS
 
    SourceDoc: BEGIN
@@ -19,6 +13,10 @@ ELEMENTS
    ATitle: BEGIN
      ElemTextModify.Post -> Annot_UpdateTitle;
    END;
+
+  Thread_item: BEGIN
+      ElemActivate.Pre -> Annot_RaiseSourceDoc; 
+  END;
 
 END 
 
