@@ -110,6 +110,8 @@ void *GetNewMesh ()
   path->cont = 0;    
   path->mesh_list = NULL;  
   return ((void *) path);  
+#else
+  return NULL;
 #endif /* _GL */
 }
 
