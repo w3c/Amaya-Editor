@@ -718,6 +718,12 @@ void ANNOT_Create (doc, view)
   Document    doc_annot;
   AnnotMeta  *annot;
   XPointerContextPtr ctx;
+#if 0
+  /* not used for the moment... select the annotation doc
+     right away */
+  Element     el;
+  ElementType elType;
+#endif
 
   if (!ANNOT_CanAnnotate (doc))
     return;
@@ -751,11 +757,11 @@ void ANNOT_Create (doc, view)
 
   ANNOT_InitDocumentStructure (doc, doc_annot, annot, TRUE);
 
-  /* remove the existing selection */
-  TtaUnselect (doc);
   /* @@ JK: do I need to do this? */
   UpdateContextSensitiveMenus (doc);
+
   /* add the annotation icon */
+  TtaUnselect (doc);
   LINK_AddLinkToSource (doc, annot);
 
   /* reselect the annotated text starting from the xpointer */
@@ -765,6 +771,21 @@ void ANNOT_Create (doc, view)
       XPointer_select (ctx);
       XPointer_free (ctx);
     }
+  
+#if 0
+  /* ready for primetime, but do we want to do it or highlight
+     the annotated text? */
+  /* select the new annotation document */
+  el = TtaGetMainRoot (doc_annot);
+  elType.ElSSchema =  TtaGetSSchema (TEXT("HTML"), doc);
+  elType.ElTypeNum = HTML_EL_BODY;
+  el = TtaSearchTypedElement (elType, SearchInTree, el);
+  /* then move the root variable so that it points to the beginning of the
+     HTML document */
+  el = TtaGetFirstChild (el);
+  TtaSelectElement (doc_annot, el);
+  TtaSelectView (doc, 1);
+#endif
 }
 
 /*-----------------------------------------------------------------------
