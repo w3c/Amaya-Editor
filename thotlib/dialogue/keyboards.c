@@ -723,7 +723,7 @@ static void CreateKeyboard (int number, char *title, PtrFont pFont,
   button1 = gtk_button_new_with_label (TtaGetMessage (LIB, TMSG_CANCEL));
   gtk_widget_show (button1);
   GTK_WIDGET_SET_FLAGS (GTK_WIDGET(button1), GTK_CAN_DEFAULT);
-  gtk_widget_grab_default(GTK_WIDGET(button1));
+  gtk_widget_grab_default (GTK_WIDGET(button1));
   gtk_box_pack_start (GTK_BOX (hbox2), button1, TRUE, TRUE, 2); 
   gtk_container_set_border_width (GTK_CONTAINER (button1), 2);
   ConnectSignalGTK (GTK_OBJECT (button1),

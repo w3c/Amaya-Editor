@@ -2099,8 +2099,8 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
    formFONT = XmFontListCreate (XLoadQueryFont (GDp, "fixed"), XmSTRING_DEFAULT_CHARSET);
    XmSetColorCalculation ((XmColorProc) ThotXmColorProc);
 #else /* _GTK */
-   DefaultFont = gdk_font_load("fixed");
-   formFONT = gdk_font_load("fixed");
+   DefaultFont = gdk_font_load ("fixed");
+   formFONT = gdk_font_load ("fixed");
    TextTranslations = NULL;
    TtDisplay = GDK_DISPLAY ();
 #endif /* _GTK */
@@ -2178,7 +2178,7 @@ void DisplayConfirmMessage (char *text)
    /* Create the window message */
    msgbox = gtk_window_new (GTK_WINDOW_TOPLEVEL);
    gtk_widget_realize (GTK_WIDGET(msgbox));
-   msgbox->style->font=DefaultFont;
+   msgbox->style->font = DefaultFont;
    gtk_window_set_title (GTK_WINDOW (msgbox), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
    gtk_window_set_policy (GTK_WINDOW (msgbox), TRUE, TRUE, FALSE);
    gtk_widget_set_uposition(GTK_WIDGET(msgbox), ShowX, ShowY);
@@ -4116,7 +4116,7 @@ void TtaNewIconMenu (int ref, int ref_parent, int entry, char *title,
 	     w = gtk_label_new (title);
 	     gtk_misc_set_alignment (GTK_MISC (w), 0.0, 0.5);
 	     gtk_widget_show_all (w);
-	     w->style->font=DefaultFont;
+	     w->style->font = DefaultFont;
 	     /*	     gtk_label_set_justify (GTK_LABEL (w), GTK_JUSTIFY_LEFT);*/
 	     gtk_box_pack_start (GTK_BOX(menu), w, FALSE, FALSE, 0);
 	     adbloc->E_ThotWidget[0] = w;
@@ -4349,7 +4349,7 @@ void TtaNewSubmenu (int ref, int ref_parent, int entry, char *title,
 		  w = gtk_label_new (title);
 		  gtk_misc_set_alignment (GTK_MISC (w), 0.0, 0.5);
 		  gtk_widget_show_all (w);
-		  w->style->font=DefaultFont;
+		  w->style->font = DefaultFont;
 		  gtk_label_set_justify (GTK_LABEL (w), GTK_JUSTIFY_LEFT);
 		  gtk_widget_set_name (w, "Dialogue");
 		  gtk_box_pack_start (GTK_BOX(menu), w, FALSE, FALSE, 0);
