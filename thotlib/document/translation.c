@@ -535,7 +535,7 @@ static ThotBool CheckDate (unsigned char c, int fnum, char *outBuf,
 			    FALSE, FALSE, FALSE);
 	      /* generate the current date */
 	      GetTime (tm);
-	      for (index = 0; tm[index] != EOL; index++)
+	      for (index = 0; tm[index] != EOS; index++)
 		ExportChar ((wchar_t) tm[index], fnum, outBuf, pDoc,
 			    FALSE, FALSE, FALSE);
 	      DateIndex = 0;
