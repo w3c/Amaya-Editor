@@ -136,7 +136,7 @@
 #define THOT_KEY_BackSpace	WXK_BACK
 #define THOT_KEY_Escape		WXK_ESCAPE
 #define THOT_KEY_Delete		WXK_DELETE
-#define THOT_KEY_Insert		WXK_Insert
+#define THOT_KEY_Insert		WXK_INSERT
 #define THOT_KEY_Tab            WXK_TAB
 #define THOT_KEY_TAB            WXK_TAB
 #define THOT_KEY_F1		WXK_F1
