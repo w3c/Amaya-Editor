@@ -1872,9 +1872,9 @@ int i;
           ustrcat (real_dir, CACHE_DIR_NAME);
     }
 
- 
-  cache_dir = TtaAllocString (ustrlen (real_dir) + 10);
-  usprintf (cache_dir, TEXT("file:%s"), real_dir);
+  /* convert the local cache dir into a file URL, as expected by
+     libwww */
+  cache_dir = HTLocalToWWW (WideChar2ISO (real_dir), "file:");
 
   /* get the cache size (or use a default one) */
   strptr = TtaGetEnvString ("CACHE_SIZE");
@@ -1924,7 +1924,7 @@ int i;
 	    HTCacheMode_setDisconnected (HT_DISCONNECT_NORMAL);
 	  else
 	    HTCacheMode_setDisconnected (HT_DISCONNECT_NONE);
-	  if (HTCacheInit (WideChar2ISO (cache_dir), cache_size))
+	  if (HTCacheInit (cache_dir, cache_size))
 	    {
 	      if (set_cachelock (cache_lockfile) == -1)
 		/* couldn't open the .lock file, so, we close the cache to
@@ -1963,7 +1963,7 @@ int i;
       HTCacheMode_setEnabled (FALSE);
     }
   if (cache_dir)
-    TtaFreeMemory (cache_dir);
+    HT_FREE (cache_dir);
   if (real_dir)
     TtaFreeMemory (real_dir);
   /* warn the user if the cache isn't active */

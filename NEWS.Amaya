@@ -28,7 +28,8 @@ Fixed bugs 2.3:
 * HTML:
   - the <input type=image> was not well supported.
 
-
+* Cache:
+  - Spaces in the cache directory path were being ignored.
 
 =============================================================
 2.2
