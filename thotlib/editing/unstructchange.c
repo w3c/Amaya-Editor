@@ -2166,7 +2166,7 @@ void DeleteNextChar (int frame, PtrElement pEl, ThotBool before)
 	        }
 	     else if (pSel->ElNext != NULL)
 	        {
-	        pSel = FirstLeaf (pSel->ElPrevious);
+	        pSel = FirstLeaf (pSel->ElNext);
 	        if (pSel->ElTerminal && pSel->ElLeafType == LtText)
 	           MoveCaret (pDoc, pSel, 1);
 	        else
