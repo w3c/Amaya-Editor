@@ -1489,8 +1489,8 @@ void TtaRaiseView (Document document, View view)
 	if (w != 0)
 	   XMapRaised (TtDisplay, XtWindowOfObject (XtParent (XtParent (XtParent (w)))));
 #else /* _GTK */
-	if (w!=0)
-	  gdk_window_raise (GTK_WIDGET(w->parent->parent->parent)->window);
+	if (w != 0)
+	  gdk_window_show (gtk_widget_get_parent_window(GTK_WIDGET(w)));
 #endif /* _GTK */
 #else  /* _WINDOWS */
 	SetForegroundWindow (FrMainRef [idwindow]);
