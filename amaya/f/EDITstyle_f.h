@@ -6,10 +6,10 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern STRING UpdateCSSBackgroundImage ( STRING oldpath,
-                                         STRING newpath,
-                                         STRING imgpath,
-                                         STRING styleString );
+extern char * UpdateCSSBackgroundImage ( char *oldpath,
+                                         char *newpath,
+                                         char *imgpath,
+                                         char *styleString );
 extern ThotBool UpdateStyleDelete ( NotifyAttribute * event );
 extern ThotBool ChangeStyle ( NotifyElement * event );
 extern ThotBool DeleteStyle ( NotifyElement * event );
@@ -19,7 +19,7 @@ extern void StyleChanged ( NotifyAttribute * event );
 extern void UpdateStylePost ( NotifyAttribute * event );
 extern void GetHTMLStyleString ( Element el,
                                  Document doc,
-                                 STRING buf,
+                                 char *buf,
                                  int *len );
 extern void CreateClass ( Document doc,
                           View view );
@@ -27,14 +27,14 @@ extern void ApplyClass ( Document doc,
                          View view );
 extern void StyleCallbackDialogue ( int ref,
                                     int typedata,
-                                    CHAR_T* data );
+                                    char *data );
 
 #else /* __STDC__ */
 
-extern STRING UpdateCSSBackgroundImage (/* STRING oldpath,
-                                           STRING newpath,
-                                           STRING imgpath,
-                                           STRING styleString */);
+extern char * UpdateCSSBackgroundImage (/* char *oldpath,
+                                           char *newpath,
+                                           char *imgpath,
+                                           char *styleString */);
 extern ThotBool UpdateStyleDelete (/* NotifyAttribute * event */);
 extern ThotBool ChangeStyle (/* NotifyElement * event */);
 extern ThotBool DeleteStyle (/* NotifyElement * event */);
@@ -44,7 +44,7 @@ extern void StyleChanged (/* NotifyAttribute * event */);
 extern void UpdateStylePost (/* NotifyAttribute * event */);
 extern void GetHTMLStyleString (/* Element el,
                                    Document doc,
-                                   STRING buf,
+                                   char *buf,
                                    int *len */);
 extern void CreateClass (/* Document doc,
                             View view */);
@@ -52,7 +52,7 @@ extern void ApplyClass (/* Document doc,
                            View view */);
 extern void StyleCallbackDialogue (/* int ref,
                                       int typedata,
-                                      CHAR_T* data */);
+                                      char *data */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

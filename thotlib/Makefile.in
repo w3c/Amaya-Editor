@@ -93,7 +93,6 @@ THOTK_OBJ = \
 	tree/tree.o \
 	tree/checkaccess.o \
 	tree/labelalloc.o \
-	unicode/uaccess.o \
 	unicode/uconvert.o \
 	unicode/ustring.o \
 	unicode/uio.o

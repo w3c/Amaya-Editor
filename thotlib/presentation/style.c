@@ -37,19 +37,18 @@
 #include "inites_f.h"
 #include "memory_f.h"
 #include "style_f.h"
-#include "uaccess_f.h"
 
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-unsigned int TtaHexaVal (CHAR_T c)
+unsigned int TtaHexaVal (char c)
 {
-   if (c >= TEXT('0') && c <= TEXT('9'))
-      return (c - TEXT('0'));
-   if (c >= TEXT('a') && c <= TEXT('f'))
-      return (c - TEXT('a') + 10);
-   if (c >= TEXT('A') && c <= TEXT('F'))
-      return (c - TEXT('A') + 10);
+   if (c >= '0' && c <= '9')
+      return (c - '0');
+   if (c >= 'a' && c <= 'f')
+      return (c - 'a' + 10);
+   if (c >= 'A' && c <= 'F')
+      return (c - 'A' + 10);
    return (0);
 }
 
@@ -80,11 +79,11 @@ static ThotBool ThotGiveRGB (char *colname, unsigned short *red,
   Returns the RGB of the color and the pointer to the following text in
   value if the parsing was finished.
  ----------------------------------------------------------------------*/
-CHAR_T *TtaGiveRGB (CHAR_T *value, unsigned short *red, unsigned short *green,
+char *TtaGiveRGB (char *value, unsigned short *red, unsigned short *green,
 		    unsigned short *blue)
 {
-  CHAR_T              colname[100];
-  CHAR_T             *ptr;
+  char              colname[100];
+  char             *ptr;
   int                 i, len;
   int                 r, g, b;
   ThotBool            failed;
@@ -94,10 +93,10 @@ CHAR_T *TtaGiveRGB (CHAR_T *value, unsigned short *red, unsigned short *green,
   *red = -1;
   *green = 0;
   *blue = 0;
-  if (*ptr == TEXT('#') ||
+  if (*ptr == '#' ||
       (isxdigit (ptr[0]) && isxdigit (ptr[1]) && isxdigit (ptr[2])))
     {
-      if (*ptr == TEXT('#'))
+      if (*ptr == '#')
 	ptr++;
       /* we expect an hexa encoding like F00 or FF0000 */
       if (isxdigit (ptr[0]) && isxdigit (ptr[1]) && isxdigit (ptr[2]))
@@ -122,27 +121,27 @@ CHAR_T *TtaGiveRGB (CHAR_T *value, unsigned short *red, unsigned short *green,
 	    }
 	}
     }
-  else if (!ustrncasecmp (ptr, TEXT("rgb"), 3))
+  else if (!strncasecmp (ptr, "rgb", 3))
     {
       ptr = &ptr[3];
-      ptr = TtaSkipWCBlanks (ptr);
-      if (*ptr == TEXT('('))
+      ptr = TtaSkipBlanks (ptr);
+      if (*ptr == '(')
 	{
 	  ptr++;
-	  ptr = TtaSkipWCBlanks (ptr);
+	  ptr = TtaSkipBlanks (ptr);
 	  failed = FALSE;
-	  if (*ptr == TEXT('%'))
+	  if (*ptr == '%')
 	    {
 	      /* encoded as rgb(%red,%green,&blue) */
-	      usscanf (ptr, TEXT("%%%d"), &r);
-	      while (*ptr != WC_EOS && *ptr != TEXT(','))
+	      sscanf (ptr, "%%%d", &r);
+	      while (*ptr != EOS && *ptr != ',')
 		ptr++;
 	      ptr++;
-	      usscanf (ptr, TEXT("%%%d"), &g);
-	      while (*ptr != WC_EOS && *ptr != TEXT(','))
+	      sscanf (ptr, "%%%d", &g);
+	      while (*ptr != EOS && *ptr != ',')
 		ptr++;
 	      ptr++;
-	      usscanf (ptr, TEXT("%%%d"), &b);
+	      sscanf (ptr, "%%%d", &b);
 	      *red = (unsigned short)(r * 255 / 100);
 	      *green = (unsigned short)(g * 255 / 100);
 	      *blue = (unsigned short)(b * 255 / 100);
@@ -150,39 +149,39 @@ CHAR_T *TtaGiveRGB (CHAR_T *value, unsigned short *red, unsigned short *green,
 	  else
 	    {
 	      /* encoded as rgb(red,green,blue) */
-	      usscanf (ptr, TEXT("%d"), &r);
-	      while (*ptr != WC_EOS && *ptr != TEXT(','))
+	      sscanf (ptr, "%d", &r);
+	      while (*ptr != EOS && *ptr != ',')
 		ptr++;
 	      ptr++;
-	      usscanf (ptr, TEXT("%d"), &g);
-	      while (*ptr != WC_EOS && *ptr != TEXT(','))
+	      sscanf (ptr, "%d", &g);
+	      while (*ptr != EOS && *ptr != ',')
 		ptr++;
 	      ptr++;
-	      usscanf (ptr, TEXT("%d"), &b);
+	      sscanf (ptr, "%d", &b);
 	      *red = (unsigned short)r;
 	      *green = (unsigned short)g;
 	      *blue = (unsigned short)b;
 	    }
 	  /* search the rgb end */
-	  while (*ptr != WC_EOS && *ptr != TEXT(')'))
+	  while (*ptr != EOS && *ptr != ')')
 	    ptr++;
 	  ptr++;
 	}
     }
-  else if (TtaIsAlpha (*ptr))
+  else if (isalpha (*ptr))
     {
       /* we expect a color name like "red", store it in colname */
-      len = (sizeof (colname) / sizeof (CHAR_T)) - 1;
-      for (i = 0; i < len && TtaIsAlnum (*ptr); i++)
+      len = (sizeof (colname) / sizeof (char)) - 1;
+      for (i = 0; i < len && isalnum (*ptr); i++)
 	{
 	  colname[i] = *ptr;
 	  ptr++;
 	}
-      colname[i] = WC_EOS;
+      colname[i] = EOS;
       
       /* Lookup the color name in our own color name database */
       for (i = 0; i < (int)NBCOLORNAME && failed; i++)
-	if (!ustrcasecmp (ColornameTable[i].name, colname))
+	if (!strcasecmp (ColornameTable[i].name, colname))
 	  {
 	    *red = ColornameTable[i].red;
 	    *green = ColornameTable[i].green;
@@ -204,28 +203,27 @@ CHAR_T *TtaGiveRGB (CHAR_T *value, unsigned short *red, unsigned short *green,
   ----------------------------------------------------------------------*/
 static void         BuildBoxName (GenericContext ctxt, Name *boxname)
 {
-  int                 i;
-  int                 len;
-  CHAR_T              buffer[100];
+  int               i;
+  int               len;
+  char              buffer[100];
 
   buffer[0] = 0;
   len = 0;
   for (i = 0; i < MAX_ANCESTORS && ctxt->name[i]; i++)
     {
       if (ctxt->names_nb[i] > 1)
-	usprintf (&buffer[len], TEXT("%d:%d/"), ctxt->name[i], ctxt->names_nb[i]);
+	sprintf (&buffer[len], "%d:%d/", ctxt->name[i], ctxt->names_nb[i]);
       else
-	usprintf (&buffer[len], TEXT("%d/"), ctxt->name[i]);
-      len = ustrlen (buffer);
+	sprintf (&buffer[len], "%d/", ctxt->name[i]);
+      len = strlen (buffer);
     }
   if (ctxt->type)
-    usprintf (&buffer[len], TEXT("%d,"), ctxt->type);
-  len = ustrlen (buffer);
+    sprintf (&buffer[len], "%d,", ctxt->type);
+  len = strlen (buffer);
   if (ctxt->attrType[0])
-    usprintf (&buffer[len], TEXT("%d.%s,"), ctxt->attrType[0], ctxt->attrText[0]);
-  len = ustrlen (buffer);
-
-  ustrncpy (*boxname, buffer, sizeof (Name));
+    sprintf (&buffer[len], "%d.%s,", ctxt->attrType[0], ctxt->attrText[0]);
+  len = strlen (buffer);
+  strncpy (*boxname, buffer, sizeof (Name));
 }
 
 /*----------------------------------------------------------------------
@@ -242,7 +240,7 @@ static PtrPRule     BoxRuleSearch (PtrPSchema tsch, GenericContext ctxt)
   /* search for the BOXE in the Presentation Schema */
   for (i = 1; i <= tsch->PsNPresentBoxes; i++)
     {
-      if (!ustrcmp (ctxt->attrText[0], tsch->PsPresentBox[i - 1].PbName))
+      if (!strcmp (ctxt->attrText[0], tsch->PsPresentBox[i - 1].PbName))
 	{
 	  ctxt->box = i;
 	  return (tsch->PsPresentBox[i - 1].PbFirstPRule);
@@ -447,7 +445,7 @@ static PtrPRule    *BoxRuleInsert (PtrPSchema tsch, GenericContext ctxt)
   /* search for the BOXE in the Presentation Schema */
   for (i = 1; i <= tsch->PsNPresentBoxes; i++)
     {
-      if (!ustrcmp (boxname, tsch->PsPresentBox[i - 1].PbName))
+      if (!strcmp (boxname, tsch->PsPresentBox[i - 1].PbName))
 	{
 	  ctxt->box = i;
 	  return (&tsch->PsPresentBox[i - 1].PbFirstPRule);
@@ -465,7 +463,7 @@ static PtrPRule    *BoxRuleInsert (PtrPSchema tsch, GenericContext ctxt)
   tsch->PsNPresentBoxes++;
   ctxt->box = tsch->PsNPresentBoxes;
   box = &tsch->PsPresentBox[tsch->PsNPresentBoxes - 1];
-  ustrncpy (box->PbName, boxname, sizeof (box->PbName));
+  strncpy (box->PbName, boxname, sizeof (box->PbName));
   box->PbFirstPRule = NULL;
   box->PbAcceptPageBreak = TRUE;
   box->PbAcceptLineBreak = TRUE;
@@ -487,7 +485,7 @@ static PtrPRule    *BoxRuleInsert (PtrPSchema tsch, GenericContext ctxt)
   PresConstInsert : add a constant to the constant array of a
   Presentation Schema and returns the associated index.
   ----------------------------------------------------------------------*/
-static int          PresConstInsert (PSchema tcsh, STRING value)
+static int          PresConstInsert (PSchema tcsh, char *value)
 {
   PtrPSchema pSchemaPrs = (PtrPSchema) tcsh;
   int i;
@@ -499,7 +497,7 @@ static int          PresConstInsert (PSchema tcsh, STRING value)
   for (i = 0; i < pSchemaPrs->PsNConstants; i++)
     {
       if (pSchemaPrs->PsConstant[i].PdType == CharString &&
-	  !ustrncmp (value, pSchemaPrs->PsConstant[i].PdString, MAX_PRES_CONST_LEN))
+	  !strncmp (value, pSchemaPrs->PsConstant[i].PdString, MAX_PRES_CONST_LEN))
 	return (i+1);
     }
 
@@ -509,7 +507,7 @@ static int          PresConstInsert (PSchema tcsh, STRING value)
   i = pSchemaPrs->PsNConstants;
   pSchemaPrs->PsConstant[i].PdType = CharString;
   pSchemaPrs->PsConstant[i].PdAlphabet = 'L';
-  ustrncpy (&pSchemaPrs->PsConstant[i].PdString[0], value, MAX_PRES_CONST_LEN);
+  strncpy (&pSchemaPrs->PsConstant[i].PdString[0], value, MAX_PRES_CONST_LEN);
   pSchemaPrs->PsNConstants++;
   return(i+1);
 }
@@ -675,7 +673,7 @@ static PtrPRule *FirstPresAttrRuleSearch (PtrPSchema tsch, int attrType,
   PtrPRule           *ppRule;
   PtrSSchema          pSS;
   AttributePres      *attrs;
-  CHAR_T*             attrVal;
+  char               *attrVal;
   unsigned int        elementType;
   int                 nbrules;
   int                 i, j, val;
@@ -708,7 +706,7 @@ static PtrPRule *FirstPresAttrRuleSearch (PtrPSchema tsch, int attrType,
 	    {
 	    case AtNumAttr:
 	      if (attrVal)
-		usscanf (attrVal, TEXT("%d"), &val);
+		sscanf (attrVal, "%d", &val);
 	      else
 		val = 0;
 	      if (val)
@@ -727,7 +725,7 @@ static PtrPRule *FirstPresAttrRuleSearch (PtrPSchema tsch, int attrType,
 		}
 	      break;
 	    case AtTextAttr:
-	      if (attrVal && !ustrcmp (attrs->ApString, attrVal))
+	      if (attrVal && !strcmp (attrs->ApString, attrVal))
 		ppRule = &(attrs->ApTextFirstPRule);
 	      else if (!attrVal && attrs->ApString[0] == EOS)
 		ppRule = &(attrs->ApTextFirstPRule);
@@ -737,7 +735,7 @@ static PtrPRule *FirstPresAttrRuleSearch (PtrPSchema tsch, int attrType,
 	      break;
 	    case AtEnumAttr:
 	      if (attrVal)
-		usscanf (attrVal, TEXT("%d"), &val);
+		sscanf (attrVal, "%d", &val);
 	      else
 		val = 0;
 	      if (val)
@@ -764,7 +762,7 @@ static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
   AttributePres      *attrs, *new;
   PtrSSchema          pSS;
   PtrPRule           *ppRule;
-  STRING              attrVal;
+  char               *attrVal;
   int                 nbrules, val;
 
   pSS = (PtrSSchema) ctxt->schema;
@@ -800,7 +798,7 @@ static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
 	case AtNumAttr:
 	  new->ApNCases = 1;
 	  if (attrVal)
-	    usscanf (attrVal, TEXT("%d"), &val);
+	    sscanf (attrVal, "%d", &val);
 	  else
 	    val = 0;
 	  if (val)
@@ -819,7 +817,7 @@ static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
 	  break;
 	case AtTextAttr:
 	  if (attrVal)
-	    ustrcpy (new->ApString, attrVal);
+	    strcpy (new->ApString, attrVal);
 	  else
 	    attrs->ApString[0] = EOS;
 	  new->ApTextFirstPRule = NULL;
@@ -831,7 +829,7 @@ static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
 	  break;
 	case AtEnumAttr:
 	  if (attrVal)
-	    usscanf (attrVal, TEXT("%d"), &val);
+	    sscanf (attrVal, "%d", &val);
 	  else
 	    val = 0;
 	  if (val)
@@ -866,8 +864,8 @@ static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
   * -1 if the rule has less conditions than neeeded
   * 1 if the rule has more conditions than neeeded
   ----------------------------------------------------------------------*/
-static int TstRuleContext (PtrPRule rule, GenericContext ctxt, PRuleType pres,
-			   unsigned int att)
+static int TstRuleContext (PtrPRule rule, GenericContext ctxt,
+			   PRuleType pres, unsigned int att)
 {
   PtrCondition        firstCond, cond;
   int                 i, nbcond;
@@ -1591,7 +1589,7 @@ static void PresentationValueToPRule (PresentationValue val, int type,
 	  rule->PrElement = FALSE;
 	  rule->PrNPresBoxes = 0;
 	  rule->PrPresBox[0] = 0;
-	  rule->PrPresBoxName[0] = WC_EOS;
+	  rule->PrPresBoxName[0] = EOS;
 	  break;
 	}
       break;
@@ -2199,16 +2197,8 @@ int TtaSetStylePresentation (unsigned int type, Element el, PSchema tsch,
   TtaGetStylePresentation returns the style rule attached to an element
   or to an extended presentation schema.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-int                 TtaGetStylePresentation (unsigned int type, Element el, PSchema tsch, PresentationContext c, PresentationValue *v)
-#else
-int                 TtaGetStylePresentation (type, el, tsch, c, v)
-unsigned int        type;
-Element             el;
-PSchema             tsch;
-PresentationContext c;
-PresentationValue  *v;
-#endif
+int TtaGetStylePresentation (unsigned int type, Element el, PSchema tsch,
+			     PresentationContext c, PresentationValue *v)
 {
   PtrPRule          rule, *chain;
   PRuleType         intRule;
@@ -2238,14 +2228,7 @@ PresentationValue  *v;
   PRuleToPresentationSetting : Translate the internal values stored
   in a PRule to a valid PresentationSetting.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         PRuleToPresentationSetting (PtrPRule rule, PresentationSetting setting, int extra)
-#else
-static void         PRuleToPresentationSetting (rule, setting, extra)
-PtrPRule            rule;
-PresentationSetting setting;
-int                 extra;
-#endif
+static void PRuleToPresentationSetting (PtrPRule rule, PresentationSetting setting, int extra)
 {
   /* first decoding step : analyze the type of the rule */
   switch (rule->PrType)
@@ -2402,12 +2385,7 @@ int                 extra;
   GetGenericStyleContext : user level function needed to allocate and
   initialize a GenericContext.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-GenericContext      TtaGetGenericStyleContext (Document doc)
-#else  /* __STDC__ */
-GenericContext      TtaGetGenericStyleContext (doc)
-Document            doc;
-#endif /* __STDC__ */
+GenericContext TtaGetGenericStyleContext (Document doc)
 {
   GenericContext      ctxt;
   int                 i;
@@ -2435,12 +2413,7 @@ Document            doc;
   TtaGetSpecificStyleContext : user level function needed to allocate and
   initialize a SpecificContext.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-PresentationContext     TtaGetSpecificStyleContext (Document doc)
-#else  /* __STDC__ */
-PresentationContext     TtaGetSpecificStyleContext (doc)
-Document                doc;
-#endif /* __STDC__ */
+PresentationContext TtaGetSpecificStyleContext (Document doc)
 {
    PresentationContext     ctxt;
 
@@ -2458,14 +2431,7 @@ Document                doc;
   Function used to remove all presentation for a given element or an
   extended presentation schema
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                TtaCleanStylePresentation (Element el, PSchema tsch, Document doc)
-#else
-void                TtaCleanStylePresentation (el, tsch, doc)
-Element             el;
-PSchema             tsch;
-Document            doc;
-#endif
+void TtaCleanStylePresentation (Element el, PSchema tsch, Document doc)
 {
   PRule               rule, nextRule;
   PtrPRule            pRule;
@@ -2576,16 +2542,9 @@ Document            doc;
   associated to the corresponding Specific Context 
   structure, and calls the given handler for each one.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                 TtaApplyAllSpecificSettings (Element el, Document doc, SettingsApplyHandler handler, void *param)
-#else  /* __STDC__ */
-void                 TtaApplyAllSpecificSettings (el, doc, handler, param)
-Element              el;
-Document             doc;
-SettingsApplyHandler handler;
-void                *param;
-
-#endif /* __STDC__ */
+void TtaApplyAllSpecificSettings (Element el, Document doc,
+				  SettingsApplyHandler handler,
+				  void *param)
 {
   PtrPRule                 rule;
   PresentationSettingBlock setting;

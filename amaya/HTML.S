@@ -790,7 +790,7 @@ EXCEPT
 	TITLE:		NoCut;
 	Document_URL:	Hidden, NoSpellCheck;
 	C_Empty:	Hidden;
-	C_BR:		NoSelect;
+	C_BR:		SelectParent;
 	Head_misc:	Hidden;
 	Frames:		Hidden;
 	Frame:		Hidden, NoCut;

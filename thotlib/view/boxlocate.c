@@ -940,7 +940,8 @@ PtrBox          GetEnclosingClickedBox (PtrAbstractBox pAb, int higherX, int low
 PtrBox         GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y, int xDelta, int yDelta)
 {
   int                 i;
-  PtrBox              pBox, pLimitBox, lastBox;
+  PtrBox              pBox, pLimitBox;
+  PtrBox              box, lastBox;
   PtrLine             pLine;
   int                 max;
   int                 h, lastY;
@@ -984,6 +985,11 @@ PtrBox         GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y, int xDe
 				     pBox->BxAbstractBox->AbElement->ElTypeNumber,
 				     pBox->BxAbstractBox->AbElement->ElStructSchema))
 	    pBox = pSourceBox;
+	  else if (TypeHasException (ExcSelectParent,
+				     pBox->BxAbstractBox->AbElement->ElTypeNumber,
+				     pBox->BxAbstractBox->AbElement->ElStructSchema) &&
+		   pBox->BxAbstractBox->AbEnclosing)
+	    pBox = pBox->BxAbstractBox->AbEnclosing->AbBox;
 	  if (pBox == pSourceBox || pBox->BxAbstractBox->AbBox == pSourceBox ||
 	      IsParentBox (pSourceBox, pBox))
 	    {
@@ -1005,10 +1011,21 @@ PtrBox         GetLeafBox (PtrBox pSourceBox, int frame, int *x, int *y, int xDe
 	      else if (xDelta < 0 && pLimitBox == pBox)
 		{
 		  /* move one line up */
-		  *x = max;
+		  if (pLine  && pLine->LiPrevious)
+		    {
+		      box = pBox->BxAbstractBox->AbEnclosing->AbBox;
+		      while (box->BxType == BoGhost)
+			box = box->BxAbstractBox->AbEnclosing->AbBox;
+		      *x = box->BxXOrg + pLine->LiPrevious->LiRealLength;
+		      yDelta = -2;
+		    }
+		  else
+		    {
+		    *x = max;
+		    yDelta = -h;
+		    }
 		  *y = pBox->BxYOrg;
 		  xDelta = 0;
-		  yDelta = -h;
 		  found = FALSE;
 		}
 	    }

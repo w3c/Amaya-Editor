@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996.
+ *  (c) COPYRIGHT INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -74,6 +74,7 @@
 #define ExcReturnCreateWithin 38
 
 /* Draw exceptions */
+#define ExcSelectParent 310
 #define ExcHighlightChildren 311
 #define ExcExtendedSelection 312
 #define ExcIsDraw 313

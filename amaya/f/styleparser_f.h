@@ -7,7 +7,6 @@
 #ifdef __STDC__
 
 extern char *SkipBlanksAndComments ( char *ptr );
-extern char *SkipWCBlanksAndComments ( char *ptr );
 extern char *SkipProperty ( char *ptr );
 extern char *ParseNumber ( char *cssRule,
                            PresentationValue *pval );
@@ -15,7 +14,7 @@ extern char *ParseCSSUnit ( char *cssRule,
                             PresentationValue *pval );
 extern void ParseCSSBackgroundImageCallback ( Document doc,
                                               Element element,
-                                              STRING file,
+                                              char *file,
                                               void *extra );
 extern char *GetCSSBackgroundURL ( char *styleString );
 extern void PToCss ( PresentationSetting settings,
@@ -66,7 +65,6 @@ extern char ReadCSSRules ( Document docRef,
 #else /* __STDC__ */
 
 extern char *SkipBlanksAndComments (/* char *ptr */);
-extern char *SkipWCBlanksAndComments (/* char *ptr */);
 extern char *SkipProperty (/* char *ptr */);
 extern char *ParseNumber (/* char *cssRule,
                              PresentationValue *pval */);
@@ -74,7 +72,7 @@ extern char *ParseCSSUnit (/* char *cssRule,
                               PresentationValue *pval */);
 extern void ParseCSSBackgroundImageCallback (/* Document doc,
                                                 Element element,
-                                                STRING file,
+                                                char *file,
                                                 void *extra */);
 extern char *GetCSSBackgroundURL (/* char *styleString */);
 extern void PToCss (/* PresentationSetting settings,

@@ -10,7 +10,6 @@
  * be contained in this module.
  *
  * Author: I. Vatton
- *         R. Guetari: Unicode.
  *
  */
 
@@ -22,7 +21,6 @@
 #include "registry.h"
 #include "fetchHTMLname.h"
 #include "GraphML.h"
-#include "uaccess.h"
 
 typedef struct _BackgroundImageCallbackBlock
 {
@@ -75,15 +73,15 @@ struct unit_def
 
 static struct unit_def CSSUnitNames[] =
 {
-   {TEXT("pt"), STYLE_UNIT_PT},
-   {TEXT("pc"), STYLE_UNIT_PC},
-   {TEXT("in"), STYLE_UNIT_IN},
-   {TEXT("cm"), STYLE_UNIT_CM},
-   {TEXT("mm"), STYLE_UNIT_MM},
-   {TEXT("em"), STYLE_UNIT_EM},
-   {TEXT("px"), STYLE_UNIT_PX},
-   {TEXT("ex"), STYLE_UNIT_XHEIGHT},
-   {TEXT("%"), STYLE_UNIT_PERCENT}
+   {"pt", STYLE_UNIT_PT},
+   {"pc", STYLE_UNIT_PC},
+   {"in", STYLE_UNIT_IN},
+   {"cm", STYLE_UNIT_CM},
+   {"mm", STYLE_UNIT_MM},
+   {"em", STYLE_UNIT_EM},
+   {"px", STYLE_UNIT_PX},
+   {"ex", STYLE_UNIT_XHEIGHT},
+   {"%", STYLE_UNIT_PERCENT}
 };
 
 #define NB_UNITS (sizeof(CSSUnitNames) / sizeof(struct unit_def))
@@ -96,9 +94,9 @@ static char *SkipWord (char *ptr)
 # ifdef _WINDOWS
   /* iswalnum is supposed to be supported by the i18n veriosn of libc 
      use it when available */
-  while (iswalnum (*ptr) || *ptr == TEXT('-') || *ptr == TEXT('%'))
+  while (iswalnum (*ptr) || *ptr == '-' || *ptr == '%')
 # else  /* !_WINDOWS */
-  while (isalnum((int)*ptr) || *ptr == TEXT('-') || *ptr == TEXT('%'))
+  while (isalnum((int)*ptr) || *ptr == '-' || *ptr == '%')
 # endif /* !_WINDOWS */
         ptr++;
   return (ptr);
@@ -107,7 +105,7 @@ static char *SkipWord (char *ptr)
 /*----------------------------------------------------------------------
    SkipBlanksAndComments:                                                  
   ----------------------------------------------------------------------*/
-char        *SkipBlanksAndComments (char *ptr)
+char *SkipBlanksAndComments (char *ptr)
 {
   ptr = TtaSkipBlanks (ptr);
   while (ptr[0] == '/' && ptr[1] == '*')
@@ -123,24 +121,6 @@ char        *SkipBlanksAndComments (char *ptr)
   return (ptr);
 }
 
-/*----------------------------------------------------------------------
-   SkipWCBlanksAndComments:                                                  
-  ----------------------------------------------------------------------*/
-char *SkipWCBlanksAndComments (char *ptr)
-{
-  ptr = TtaSkipWCBlanks (ptr);
-  while (ptr[0] == TEXT('/') && ptr[1] == TEXT('*'))
-    {
-      /* look for the end of the comment */
-      ptr = &ptr[2];
-      while (ptr[0] != WC_EOS && (ptr[0] != TEXT('*') || ptr[1] != TEXT('/')))
-	ptr++;
-      if (ptr[0] != WC_EOS)
-	ptr = &ptr[2];
-      ptr = TtaSkipWCBlanks (ptr);
-    }
-  return (ptr);
-}
 
 /*----------------------------------------------------------------------
    SkipQuotedString:                                                  
@@ -157,18 +137,18 @@ static char *SkipQuotedString (char *ptr, char quote)
        ptr++;
        stop = TRUE;
        }
-    else if (*ptr == WC_EOS)
+    else if (*ptr == EOS)
        stop = TRUE;
-    else if (*ptr == TEXT('\\'))
+    else if (*ptr == '\\')
        /* escape character */
        {
        ptr++;
-       if ((*ptr >= TEXT('0') && *ptr <= TEXT('9')) || (*ptr >= TEXT('A') && *ptr <= TEXT('F')) ||
-	   (*ptr >= TEXT('a') && *ptr <= TEXT('f')))
+       if ((*ptr >= '0' && *ptr <= '9') || (*ptr >= 'A' && *ptr <= 'F') ||
+	   (*ptr >= 'a' && *ptr <= 'f'))
 	  {
 	  ptr++;
-          if ((*ptr >= TEXT('0') && *ptr <= TEXT('9')) || (*ptr >= TEXT('A') && *ptr <= TEXT('F')) ||
-	      (*ptr >= TEXT('a') && *ptr <= TEXT('f')))
+          if ((*ptr >= '0' && *ptr <= '9') || (*ptr >= 'A' && *ptr <= 'F') ||
+	      (*ptr >= 'a' && *ptr <= 'f'))
 	     ptr++;
 	  }
        else
@@ -185,7 +165,7 @@ static char *SkipQuotedString (char *ptr, char quote)
   ----------------------------------------------------------------------*/
 char *SkipProperty (char *ptr)
 {
-  while (*ptr != WC_EOS && *ptr != TEXT(';') && *ptr != TEXT('}'))
+  while (*ptr != EOS && *ptr != ';' && *ptr != '}')
     ptr++;
   return (ptr);
 }
@@ -204,51 +184,51 @@ char *ParseNumber (char *cssRule, PresentationValue *pval)
 
   pval->typed_data.unit = STYLE_UNIT_REL;
   pval->typed_data.real = FALSE;
-  cssRule = SkipWCBlanksAndComments (cssRule);
-  if (*cssRule == TEXT('-'))
+  cssRule = SkipBlanksAndComments (cssRule);
+  if (*cssRule == '-')
     {
       minus = 1;
       cssRule++;
-      cssRule = SkipWCBlanksAndComments (cssRule);
+      cssRule = SkipBlanksAndComments (cssRule);
     }
 
-  if (*cssRule == TEXT('+'))
+  if (*cssRule == '+')
     {
       cssRule++;
-      cssRule = SkipWCBlanksAndComments (cssRule);
+      cssRule = SkipBlanksAndComments (cssRule);
     }
 
-  while ((*cssRule >= TEXT('0')) && (*cssRule <= TEXT('9')))
+  while ((*cssRule >= '0') && (*cssRule <= '9'))
     {
       val *= 10;
-      val += *cssRule - TEXT('0');
+      val += *cssRule - '0';
       cssRule++;
       valid = 1;
     }
 
-  if (*cssRule == TEXT('.'))
+  if (*cssRule == '.')
     {
       real = TRUE;
       f = val;
       val = 0;
       cssRule++;
       /* keep only 3 digits */
-      if (*cssRule >= TEXT('0') && *cssRule <= TEXT('9'))
+      if (*cssRule >= '0' && *cssRule <= '9')
 	{
-	  val = (*cssRule - TEXT('0')) * 100;
+	  val = (*cssRule - '0') * 100;
 	  cssRule++;
-	  if (*cssRule >= TEXT('0') && *cssRule <= TEXT('9'))
+	  if (*cssRule >= '0' && *cssRule <= '9')
 	    {
-	      val += (*cssRule - TEXT('0')) * 10;
+	      val += (*cssRule - '0') * 10;
 	      cssRule++;
-	      if ((*cssRule >= TEXT('0')) && (*cssRule <= TEXT('9')))
+	      if ((*cssRule >= '0') && (*cssRule <= '9'))
 		{
-		  val += *cssRule - TEXT('0');
+		  val += *cssRule - '0';
 		  cssRule++;
 		}
 	    }
 
-	  while (*cssRule >= TEXT('0') && *cssRule <= TEXT('9'))
+	  while (*cssRule >= '0' && *cssRule <= '9')
 	    cssRule++;
 	  valid = 1;
 	}
@@ -285,7 +265,7 @@ char *ParseNumber (char *cssRule, PresentationValue *pval)
    parse a CSS Unit substring and returns the corresponding      
    value and its unit.                                           
   ----------------------------------------------------------------------*/
-char            *ParseCSSUnit (char *cssRule, PresentationValue *pval)
+char *ParseCSSUnit (char *cssRule, PresentationValue *pval)
 {
   unsigned int        uni;
 
@@ -295,14 +275,14 @@ char            *ParseCSSUnit (char *cssRule, PresentationValue *pval)
       cssRule = SkipWord (cssRule);
   else
     {
-      cssRule = SkipWCBlanksAndComments (cssRule);
+      cssRule = SkipBlanksAndComments (cssRule);
       for (uni = 0; uni < NB_UNITS; uni++)
 	{
-	  if (!ustrncasecmp (CSSUnitNames[uni].sign, cssRule,
-			     ustrlen (CSSUnitNames[uni].sign)))
+	  if (!strncasecmp (CSSUnitNames[uni].sign, cssRule,
+			     strlen (CSSUnitNames[uni].sign)))
 	    {
 	      pval->typed_data.unit = CSSUnitNames[uni].unit;
-	      return (cssRule + ustrlen (CSSUnitNames[uni].sign));
+	      return (cssRule + strlen (CSSUnitNames[uni].sign));
 	    }
 	}
       /* not in the list of predefined units */
@@ -320,25 +300,25 @@ static char *ParseBorderValue (char *cssRule, PresentationValue *border)
    border->typed_data.value = 0;
    border->typed_data.unit = STYLE_UNIT_INVALID;
    border->typed_data.real = FALSE;
-   if (!ustrncasecmp (cssRule, TEXT("thin"), 4))
+   if (!strncasecmp (cssRule, "thin", 4))
      {
        border->typed_data.unit = STYLE_UNIT_PX;
        border->typed_data.value = 1;
        cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("medium"), 6))
+   else if (!strncasecmp (cssRule, "medium", 6))
      {
        border->typed_data.unit = STYLE_UNIT_PX;
        border->typed_data.value = 3;
        cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("thick"), 5))
+   else if (!strncasecmp (cssRule, "thick", 5))
      {
        border->typed_data.unit = STYLE_UNIT_PX;
        border->typed_data.value = 5;
        cssRule = SkipWord (cssRule);
      }
-   else if (TtaIsDigit (*cssRule))
+   else if (isdigit (*cssRule))
      cssRule = ParseCSSUnit (cssRule, border);
    return (cssRule);
 }
@@ -352,25 +332,25 @@ static char *ParseBorderStyle (char *cssRule, PresentationValue *border)
    border->typed_data.value = 0;
    border->typed_data.unit = STYLE_UNIT_PX;
    border->typed_data.real = FALSE;
-   if (!ustrncasecmp (cssRule, TEXT("none"), 4))
+   if (!strncasecmp (cssRule, "none", 4))
      border->typed_data.value = STYLE_BORDERNONE;
-   else if (!ustrncasecmp (cssRule, TEXT("hidden"), 6))
+   else if (!strncasecmp (cssRule, "hidden", 6))
      border->typed_data.value = STYLE_BORDERHIDDEN;
-   else if (!ustrncasecmp (cssRule, TEXT("dotted"), 6))
+   else if (!strncasecmp (cssRule, "dotted", 6))
      border->typed_data.value = STYLE_BORDERDOTTED;
-   else if (!ustrncasecmp (cssRule, TEXT("dashed"), 6))
+   else if (!strncasecmp (cssRule, "dashed", 6))
      border->typed_data.value = STYLE_BORDERDASHED;
-   else if (!ustrncasecmp (cssRule, TEXT("solid"), 5))
+   else if (!strncasecmp (cssRule, "solid", 5))
      border->typed_data.value = STYLE_BORDERSOLID;
-   else if (!ustrncasecmp (cssRule, TEXT("double"), 6))
+   else if (!strncasecmp (cssRule, "double", 6))
      border->typed_data.value = STYLE_BORDERDOUBLE;
-   else if (!ustrncasecmp (cssRule, TEXT("groove"), 6))
+   else if (!strncasecmp (cssRule, "groove", 6))
      border->typed_data.value = STYLE_BORDERGROOVE;
-   else if (!ustrncasecmp (cssRule, TEXT("ridge"), 5))
+   else if (!strncasecmp (cssRule, "ridge", 5))
      border->typed_data.value = STYLE_BORDERRIDGE;
-   else if (!ustrncasecmp (cssRule, TEXT("inset"), 5))
+   else if (!strncasecmp (cssRule, "inset", 5))
      border->typed_data.value = STYLE_BORDERINSET;
-   else if (!ustrncasecmp (cssRule, TEXT("outset"), 6))
+   else if (!strncasecmp (cssRule, "outset", 6))
      border->typed_data.value = STYLE_BORDEROUTSET;
    else
      {
@@ -398,7 +378,7 @@ static char *ParseCSSColor (char *cssRule, PresentationValue * val)
   unsigned short      blueval = 0;	/* default to red if unknown ! */
   int                 best = 0;	/* best color in list found */
 
-  cssRule = SkipWCBlanksAndComments (cssRule);
+  cssRule = SkipBlanksAndComments (cssRule);
   val->typed_data.unit = STYLE_UNIT_INVALID;
   val->typed_data.real = FALSE;
   val->typed_data.value = 0;
@@ -431,7 +411,7 @@ static char *ParseCSSBorderTopWidth (Element element, PSchema tsch,
 {
   PresentationValue   border;
   
-  cssRule = SkipWCBlanksAndComments (cssRule);
+  cssRule = SkipBlanksAndComments (cssRule);
   cssRule = ParseBorderValue (cssRule, &border);
   if (border.typed_data.unit != STYLE_UNIT_INVALID)
     {
@@ -453,7 +433,7 @@ static char *ParseCSSBorderBottomWidth (Element element, PSchema tsch,
 {
   PresentationValue   border;
   
-  cssRule = SkipWCBlanksAndComments (cssRule);
+  cssRule = SkipBlanksAndComments (cssRule);
   /* first parse the attribute string */
   cssRule = ParseBorderValue (cssRule, &border);
   if (border.typed_data.unit != STYLE_UNIT_INVALID)
@@ -476,7 +456,7 @@ static char *ParseCSSBorderLeftWidth (Element element, PSchema tsch,
 {
   PresentationValue   border;
   
-  cssRule = SkipWCBlanksAndComments (cssRule);
+  cssRule = SkipBlanksAndComments (cssRule);
   /* first parse the attribute string */
   cssRule = ParseBorderValue (cssRule, &border);
   if (border.typed_data.unit != STYLE_UNIT_INVALID)
@@ -499,7 +479,7 @@ static char *ParseCSSBorderRightWidth (Element element, PSchema tsch,
 {
   PresentationValue   border;
   
-  cssRule = SkipWCBlanksAndComments (cssRule);
+  cssRule = SkipBlanksAndComments (cssRule);
   /* first parse the attribute string */
   cssRule = ParseBorderValue (cssRule, &border);
   if (border.typed_data.unit != STYLE_UNIT_INVALID)
@@ -522,11 +502,11 @@ static char *ParseCSSBorderWidth (Element element, PSchema tsch,
 {
   char *ptrT, *ptrR, *ptrB, *ptrL;
 
-  ptrT = SkipWCBlanksAndComments (cssRule);
+  ptrT = SkipBlanksAndComments (cssRule);
   /* First parse Border-Top */
   ptrR = ParseCSSBorderTopWidth (element, tsch, context, ptrT, css, isHTML);
-  ptrR = SkipWCBlanksAndComments (ptrR);
-  if (*ptrR == TEXT(';') || *ptrR == WC_EOS || *ptrR == TEXT(','))
+  ptrR = SkipBlanksAndComments (ptrR);
+  if (*ptrR == ';' || *ptrR == EOS || *ptrR == ',')
     {
       cssRule = ptrR;
       /* apply the Border-Top to all */
@@ -538,8 +518,8 @@ static char *ParseCSSBorderWidth (Element element, PSchema tsch,
     {
       /* parse Border-Right */
       ptrB = ParseCSSBorderRightWidth (element, tsch, context, ptrR, css, isHTML);
-      ptrB = SkipWCBlanksAndComments (ptrB);
-      if (*ptrB == TEXT(';') || *ptrB == WC_EOS || *ptrB == TEXT(','))
+      ptrB = SkipBlanksAndComments (ptrB);
+      if (*ptrB == ';' || *ptrB == EOS || *ptrB == ',')
 	{
 	  cssRule = ptrB;
 	  /* apply the Border-Top to Border-Bottom */
@@ -551,8 +531,8 @@ static char *ParseCSSBorderWidth (Element element, PSchema tsch,
 	{
 	  /* parse Border-Bottom */
 	  ptrL = ParseCSSBorderBottomWidth (element, tsch, context, ptrB, css, isHTML);
-	  ptrL = SkipWCBlanksAndComments (ptrL);
-	  if (*ptrL == TEXT(';') || *ptrL == WC_EOS || *ptrL == TEXT(','))
+	  ptrL = SkipBlanksAndComments (ptrL);
+	  if (*ptrL == ';' || *ptrL == EOS || *ptrL == ',')
 	    {
 	      cssRule = ptrL;
 	      /* apply the Border-Right to Border-Left */
@@ -561,7 +541,7 @@ static char *ParseCSSBorderWidth (Element element, PSchema tsch,
 	  else
 	    /* parse Border-Left */
 	    cssRule = ParseCSSBorderLeftWidth (element, tsch, context, ptrL, css, isHTML);
-	  cssRule = SkipWCBlanksAndComments (cssRule);
+	  cssRule = SkipBlanksAndComments (cssRule);
 	}
     }
   return (cssRule);
@@ -650,11 +630,11 @@ static char *ParseCSSBorderColor (Element element, PSchema tsch,
 {
   char *ptrT, *ptrR, *ptrB, *ptrL;
 
-  ptrT = SkipWCBlanksAndComments (cssRule);
+  ptrT = SkipBlanksAndComments (cssRule);
   /* First parse Border-Top */
   ptrR = ParseCSSBorderColorTop (element, tsch, context, ptrT, css, isHTML);
-  ptrR = SkipWCBlanksAndComments (ptrR);
-  if (*ptrR == TEXT(';') || *ptrR == WC_EOS || *ptrR == TEXT(','))
+  ptrR = SkipBlanksAndComments (ptrR);
+  if (*ptrR == ';' || *ptrR == EOS || *ptrR == ',')
     {
       cssRule = ptrR;
       /* apply the Border-Top to all */
@@ -666,8 +646,8 @@ static char *ParseCSSBorderColor (Element element, PSchema tsch,
     {
       /* parse Border-Right */
       ptrB = ParseCSSBorderColorRight (element, tsch, context, ptrR, css, isHTML);
-      ptrB = SkipWCBlanksAndComments (ptrB);
-      if (*ptrB == TEXT(';') || *ptrB == WC_EOS || *ptrB == TEXT(','))
+      ptrB = SkipBlanksAndComments (ptrB);
+      if (*ptrB == ';' || *ptrB == EOS || *ptrB == ',')
 	{
 	  cssRule = ptrB;
 	  /* apply the Border-Top to Border-Bottom */
@@ -679,8 +659,8 @@ static char *ParseCSSBorderColor (Element element, PSchema tsch,
 	{
 	  /* parse Border-Bottom */
 	  ptrL = ParseCSSBorderColorBottom (element, tsch, context, ptrB, css, isHTML);
-	  ptrL = SkipWCBlanksAndComments (ptrL);
-	  if (*ptrL == TEXT(';') || *ptrL == WC_EOS || *ptrL == TEXT(','))
+	  ptrL = SkipBlanksAndComments (ptrL);
+	  if (*ptrL == ';' || *ptrL == EOS || *ptrL == ',')
 	    {
 	      cssRule = ptrL;
 	      /* apply the Border-Right to Border-Left */
@@ -689,7 +669,7 @@ static char *ParseCSSBorderColor (Element element, PSchema tsch,
 	  else
 	    /* parse Border-Left */
 	    cssRule = ParseCSSBorderColorLeft (element, tsch, context, ptrL, css, isHTML);
-	  cssRule = SkipWCBlanksAndComments (cssRule);
+	  cssRule = SkipBlanksAndComments (cssRule);
 	}
     }
   return (cssRule);
@@ -706,7 +686,7 @@ static char *ParseCSSBorderStyleTop (Element element, PSchema tsch,
 {
   PresentationValue   border;
   
-  cssRule = SkipWCBlanksAndComments (cssRule);
+  cssRule = SkipBlanksAndComments (cssRule);
   cssRule = ParseBorderStyle (cssRule, &border);
   if (border.typed_data.unit != STYLE_UNIT_INVALID)
     TtaSetStylePresentation (PRBorderTopStyle, element, tsch, context, border);
@@ -724,7 +704,7 @@ static char *ParseCSSBorderStyleLeft (Element element, PSchema tsch,
 {
   PresentationValue   border;
   
-  cssRule = SkipWCBlanksAndComments (cssRule);
+  cssRule = SkipBlanksAndComments (cssRule);
   cssRule = ParseBorderStyle (cssRule, &border);
   if (border.typed_data.unit != STYLE_UNIT_INVALID)
     TtaSetStylePresentation (PRBorderLeftStyle, element, tsch, context, border);
@@ -742,7 +722,7 @@ static char *ParseCSSBorderStyleBottom (Element element, PSchema tsch,
 {
   PresentationValue   border;
   
-  cssRule = SkipWCBlanksAndComments (cssRule);
+  cssRule = SkipBlanksAndComments (cssRule);
   cssRule = ParseBorderStyle (cssRule, &border);
   if (border.typed_data.unit != STYLE_UNIT_INVALID)
     TtaSetStylePresentation (PRBorderBottomStyle, element, tsch, context, border);
@@ -760,7 +740,7 @@ static char *ParseCSSBorderStyleRight (Element element, PSchema tsch,
 {
   PresentationValue   border;
   
-  cssRule = SkipWCBlanksAndComments (cssRule);
+  cssRule = SkipBlanksAndComments (cssRule);
   cssRule = ParseBorderStyle (cssRule, &border);
   if (border.typed_data.unit != STYLE_UNIT_INVALID)
     TtaSetStylePresentation (PRBorderRightStyle, element, tsch, context, border);
@@ -778,11 +758,11 @@ static char *ParseCSSBorderStyle (Element element, PSchema tsch,
 {
   char *ptrT, *ptrR, *ptrB, *ptrL;
 
-  ptrT = SkipWCBlanksAndComments (cssRule);
+  ptrT = SkipBlanksAndComments (cssRule);
   /* First parse Border-Top */
   ptrR = ParseCSSBorderStyleTop (element, tsch, context, ptrT, css, isHTML);
-  ptrR = SkipWCBlanksAndComments (ptrR);
-  if (*ptrR == TEXT(';') || *ptrR == WC_EOS || *ptrR == TEXT(','))
+  ptrR = SkipBlanksAndComments (ptrR);
+  if (*ptrR == ';' || *ptrR == EOS || *ptrR == ',')
     {
       cssRule = ptrR;
       /* apply the Border-Top to all */
@@ -794,8 +774,8 @@ static char *ParseCSSBorderStyle (Element element, PSchema tsch,
     {
       /* parse Border-Right */
       ptrB = ParseCSSBorderStyleRight (element, tsch, context, ptrR, css, isHTML);
-      ptrB = SkipWCBlanksAndComments (ptrB);
-      if (*ptrB == TEXT(';') || *ptrB == WC_EOS || *ptrB == TEXT(','))
+      ptrB = SkipBlanksAndComments (ptrB);
+      if (*ptrB == ';' || *ptrB == EOS || *ptrB == ',')
 	{
 	  cssRule = ptrB;
 	  /* apply the Border-Top to Border-Bottom */
@@ -807,8 +787,8 @@ static char *ParseCSSBorderStyle (Element element, PSchema tsch,
 	{
 	  /* parse Border-Bottom */
 	  ptrL = ParseCSSBorderStyleBottom (element, tsch, context, ptrB, css, isHTML);
-	  ptrL = SkipWCBlanksAndComments (ptrL);
-	  if (*ptrL == TEXT(';') || *ptrL == WC_EOS || *ptrL == TEXT(','))
+	  ptrL = SkipBlanksAndComments (ptrL);
+	  if (*ptrL == ';' || *ptrL == EOS || *ptrL == ',')
 	    {
 	      cssRule = ptrL;
 	      /* apply the Border-Right to Border-Left */
@@ -817,7 +797,7 @@ static char *ParseCSSBorderStyle (Element element, PSchema tsch,
 	  else
 	    /* parse Border-Left */
 	    cssRule = ParseCSSBorderStyleLeft (element, tsch, context, ptrL, css, isHTML);
-	  cssRule = SkipWCBlanksAndComments (cssRule);
+	  cssRule = SkipBlanksAndComments (cssRule);
 	}
     }
   return (cssRule);
@@ -833,8 +813,8 @@ static char *ParseCSSBorderTop (Element element, PSchema tsch,
 {
   char           *ptr;
 
-  cssRule = SkipWCBlanksAndComments (cssRule);
-  while (*cssRule != TEXT(';') && *cssRule != WC_EOS && *cssRule != TEXT(','))
+  cssRule = SkipBlanksAndComments (cssRule);
+  while (*cssRule != ';' && *cssRule != EOS && *cssRule != ',')
     {
       ptr = cssRule;
       cssRule = ParseCSSBorderStyleTop (element, tsch, context, cssRule, css, isHTML);
@@ -845,7 +825,7 @@ static char *ParseCSSBorderTop (Element element, PSchema tsch,
       if (ptr == cssRule)
 	/* rule not found */
 	cssRule = SkipProperty (cssRule);
-      cssRule = SkipWCBlanksAndComments (cssRule);
+      cssRule = SkipBlanksAndComments (cssRule);
     }
   return (cssRule);
 }
@@ -860,8 +840,8 @@ static char *ParseCSSBorderLeft (Element element, PSchema tsch,
 {
   char           *ptr;
 
-  cssRule = SkipWCBlanksAndComments (cssRule);
-  while (*cssRule != TEXT(';') && *cssRule != WC_EOS && *cssRule != TEXT(','))
+  cssRule = SkipBlanksAndComments (cssRule);
+  while (*cssRule != ';' && *cssRule != EOS && *cssRule != ',')
     {
       ptr = cssRule;
       cssRule = ParseCSSBorderStyleLeft (element, tsch, context, cssRule, css, isHTML);
@@ -872,7 +852,7 @@ static char *ParseCSSBorderLeft (Element element, PSchema tsch,
       if (ptr == cssRule)
 	/* rule not found */
 	cssRule = SkipProperty (cssRule);
-      cssRule = SkipWCBlanksAndComments (cssRule);
+      cssRule = SkipBlanksAndComments (cssRule);
     }
   return (cssRule);
 }
@@ -887,8 +867,8 @@ static char *ParseCSSBorderBottom (Element element, PSchema tsch,
 {
   char           *ptr;
 
-  cssRule = SkipWCBlanksAndComments (cssRule);
-  while (*cssRule != TEXT(';') && *cssRule != WC_EOS && *cssRule != TEXT(','))
+  cssRule = SkipBlanksAndComments (cssRule);
+  while (*cssRule != ';' && *cssRule != EOS && *cssRule != ',')
     {
       ptr = cssRule;
       cssRule = ParseCSSBorderStyleBottom (element, tsch, context, cssRule, css, isHTML);
@@ -899,7 +879,7 @@ static char *ParseCSSBorderBottom (Element element, PSchema tsch,
       if (ptr == cssRule)
 	/* rule not found */
 	cssRule = SkipProperty (cssRule);
-      cssRule = SkipWCBlanksAndComments (cssRule);
+      cssRule = SkipBlanksAndComments (cssRule);
     }
   return (cssRule);
 }
@@ -914,8 +894,8 @@ static char *ParseCSSBorderRight (Element element, PSchema tsch,
 {
   char            *ptr;
 
-  cssRule = SkipWCBlanksAndComments (cssRule);
-  while (*cssRule != TEXT(';') && *cssRule != WC_EOS && *cssRule != TEXT(','))
+  cssRule = SkipBlanksAndComments (cssRule);
+  while (*cssRule != ';' && *cssRule != EOS && *cssRule != ',')
     {
       ptr = cssRule;
       cssRule = ParseCSSBorderStyleRight (element, tsch, context, cssRule, css, isHTML);
@@ -926,7 +906,7 @@ static char *ParseCSSBorderRight (Element element, PSchema tsch,
       if (ptr == cssRule)
 	/* rule not found */
 	cssRule = SkipProperty (cssRule);
-      cssRule = SkipWCBlanksAndComments (cssRule);
+      cssRule = SkipBlanksAndComments (cssRule);
     }
   return (cssRule);
 }
@@ -941,11 +921,11 @@ static char *ParseCSSBorder (Element element, PSchema tsch,
 {
   char *ptrT, *ptrR;
 
-  ptrT = SkipWCBlanksAndComments (cssRule);
+  ptrT = SkipBlanksAndComments (cssRule);
   /* First parse Border-Top */
   ptrR = ParseCSSBorderTop (element, tsch, context, ptrT, css, isHTML);
-  ptrR = SkipWCBlanksAndComments (ptrR);
-  if (*ptrR == TEXT(';') || *ptrR == WC_EOS || *ptrR == TEXT(','))
+  ptrR = SkipBlanksAndComments (ptrR);
+  if (*ptrR == ';' || *ptrR == EOS || *ptrR == ',')
     {
       cssRule = ptrR;
       /* apply the Border-Top to all */
@@ -978,26 +958,26 @@ static char *ParseCSSDisplay (Element element, PSchema tsch,
 
    pval.typed_data.unit = STYLE_UNIT_REL;
    pval.typed_data.real = FALSE;
-   cssRule = SkipWCBlanksAndComments (cssRule);
-   if (!ustrncasecmp (cssRule, TEXT("block"), 5))
+   cssRule = SkipBlanksAndComments (cssRule);
+   if (!strncasecmp (cssRule, "block", 5))
      {
        /* pval.typed_data.value = STYLE_INLINE;
 	TtaSetStylePresentation (PRLine, element, tsch, context, pval);
 	cssRule = SkipWord (cssRule); */
      }
-   else if (!ustrncasecmp (cssRule, TEXT("inline"), 6))
+   else if (!strncasecmp (cssRule, "inline", 6))
      {
        /* pval.typed_data.value = STYLE_INLINE;
 	TtaSetStylePresentation (PRLine, element, tsch, context, pval);
 	cssRule = SkipWord (cssRule); */
      }
-   else if (!ustrncasecmp (cssRule, TEXT("none"), 4))
+   else if (!strncasecmp (cssRule, "none", 4))
      {
 	pval.typed_data.value = STYLE_HIDE;
 	TtaSetStylePresentation (PRVisibility, element, tsch, context, pval);
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("list-item"), 9))
+   else if (!strncasecmp (cssRule, "list-item", 9))
      cssRule = SkipProperty (cssRule);
    else
      fprintf (stderr, "invalid display value %s\n", cssRule);
@@ -1091,23 +1071,23 @@ static char *ParseCSSTextAlign (Element element, PSchema tsch,
    align.typed_data.unit = STYLE_UNIT_REL;
    align.typed_data.real = FALSE;
 
-   cssRule = SkipWCBlanksAndComments (cssRule);
-   if (!ustrncasecmp (cssRule, TEXT("left"), 4))
+   cssRule = SkipBlanksAndComments (cssRule);
+   if (!strncasecmp (cssRule, "left", 4))
      {
 	align.typed_data.value = AdjustLeft;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("right"), 5))
+   else if (!strncasecmp (cssRule, "right", 5))
      {
 	align.typed_data.value = AdjustRight;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("center"), 6))
+   else if (!strncasecmp (cssRule, "center", 6))
      {
 	align.typed_data.value = Centered;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("justify"), 7))
+   else if (!strncasecmp (cssRule, "justify", 7))
      {
 	align.typed_data.value = Justify;
 	cssRule = SkipWord (cssRule);
@@ -1136,7 +1116,7 @@ static char *ParseCSSTextIndent (Element element, PSchema tsch,
 {
    PresentationValue   pval;
 
-   cssRule = SkipWCBlanksAndComments (cssRule);
+   cssRule = SkipBlanksAndComments (cssRule);
    cssRule = ParseCSSUnit (cssRule, &pval);
    if (pval.typed_data.unit == STYLE_UNIT_INVALID)
      return (cssRule);
@@ -1177,10 +1157,10 @@ static char *ParseCSSWhiteSpace (Element element, PSchema tsch,
 				 PresentationContext context, char *cssRule,
 				 CSSInfoPtr css, ThotBool isHTML)
 {
-   cssRule = SkipWCBlanksAndComments (cssRule);
-   if (!ustrncasecmp (cssRule, TEXT("normal"), 6))
+   cssRule = SkipBlanksAndComments (cssRule);
+   if (!strncasecmp (cssRule, "normal", 6))
      cssRule = SkipWord (cssRule);
-   else if (!ustrncasecmp (cssRule, TEXT("pre"), 3))
+   else if (!strncasecmp (cssRule, "pre", 3))
      cssRule = SkipWord (cssRule);
    else
      return (cssRule);
@@ -1236,56 +1216,56 @@ static char *ParseCSSFontSize (Element element, PSchema tsch,
    ThotBool	       real;
 
    pval.typed_data.real = FALSE;
-   cssRule = SkipWCBlanksAndComments (cssRule);
-   if (!ustrncasecmp (cssRule, TEXT("larger"), 6))
+   cssRule = SkipBlanksAndComments (cssRule);
+   if (!strncasecmp (cssRule, "larger", 6))
      {
 	pval.typed_data.unit = STYLE_UNIT_PERCENT;
 	pval.typed_data.value = 130;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("smaller"), 7))
+   else if (!strncasecmp (cssRule, "smaller", 7))
      {
 	pval.typed_data.unit = STYLE_UNIT_PERCENT;
 	pval.typed_data.value = 80;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("xx-small"), 8))
+   else if (!strncasecmp (cssRule, "xx-small", 8))
      {
 	pval.typed_data.unit = STYLE_UNIT_REL;
 	pval.typed_data.value = 1;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("x-small"), 7))
+   else if (!strncasecmp (cssRule, "x-small", 7))
      {
 	pval.typed_data.unit = STYLE_UNIT_REL;
 	pval.typed_data.value = 2;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("small"), 5))
+   else if (!strncasecmp (cssRule, "small", 5))
      {
 	pval.typed_data.unit = STYLE_UNIT_REL;
 	pval.typed_data.value = 3;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("medium"), 6))
+   else if (!strncasecmp (cssRule, "medium", 6))
      {
 	pval.typed_data.unit = STYLE_UNIT_REL;
 	pval.typed_data.value = 4;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("large"), 5))
+   else if (!strncasecmp (cssRule, "large", 5))
      {
 	pval.typed_data.unit = STYLE_UNIT_REL;
 	pval.typed_data.value = 5;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("x-large"), 7))
+   else if (!strncasecmp (cssRule, "x-large", 7))
      {
 	pval.typed_data.unit = STYLE_UNIT_REL;
 	pval.typed_data.value = 6;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("xx-large"), 8))
+   else if (!strncasecmp (cssRule, "xx-large", 8))
      {
 	pval.typed_data.unit = STYLE_UNIT_REL;
 	pval.typed_data.value = 7;
@@ -1294,11 +1274,11 @@ static char *ParseCSSFontSize (Element element, PSchema tsch,
    else
      {
        /* look for a '/' within the current cssRule */
-       ptr = ustrchr (cssRule, TEXT('/'));
+       ptr = strchr (cssRule, '/');
        if (ptr != NULL)
 	 {
 	   /* keep the line spacing rule */
-	   ptr[0] = WC_EOS;
+	   ptr[0] = EOS;
 	   ptr = &ptr[1];
 	 }
        cssRule = ParseCSSUnit (cssRule, &pval);
@@ -1350,27 +1330,27 @@ static char *ParseCSSFontFamily (Element element, PSchema tsch,
   font.typed_data.value = 0;
   font.typed_data.unit = STYLE_UNIT_REL;
   font.typed_data.real = FALSE;
-  cssRule = SkipWCBlanksAndComments (cssRule);
-  if (*cssRule == TEXT('"') || *cssRule == TEXT('\''))
+  cssRule = SkipBlanksAndComments (cssRule);
+  if (*cssRule == '"' || *cssRule == '\'')
      {
      quoteChar = *cssRule;
      cssRule++;
      }
   else
-     quoteChar = WC_EOS;
+     quoteChar = EOS;
 
-  if (!ustrncasecmp (cssRule, TEXT("times"), 5))
+  if (!strncasecmp (cssRule, "times", 5))
       font.typed_data.value = STYLE_FONT_TIMES;
-  else if (!ustrncasecmp (cssRule, TEXT("serif"), 5))
+  else if (!strncasecmp (cssRule, "serif", 5))
       font.typed_data.value = STYLE_FONT_TIMES;
-  else if (!ustrncasecmp (cssRule, TEXT("helvetica"), 9) ||
-           !ustrncasecmp (cssRule, TEXT("verdana"), 7))
+  else if (!strncasecmp (cssRule, "helvetica", 9) ||
+           !strncasecmp (cssRule, "verdana", 7))
       font.typed_data.value = STYLE_FONT_HELVETICA;
-  else if (!ustrncasecmp (cssRule, TEXT("sans-serif"), 10))
+  else if (!strncasecmp (cssRule, "sans-serif", 10))
       font.typed_data.value = STYLE_FONT_HELVETICA;
-  else if (!ustrncasecmp (cssRule, TEXT("courier"), 7))
+  else if (!strncasecmp (cssRule, "courier", 7))
       font.typed_data.value = STYLE_FONT_COURIER;
-  else if (!ustrncasecmp (cssRule, TEXT("monospace"), 9))
+  else if (!strncasecmp (cssRule, "monospace", 9))
       font.typed_data.value = STYLE_FONT_COURIER;
   else
     /* unknown font name.  Skip it */
@@ -1379,8 +1359,8 @@ static char *ParseCSSFontFamily (Element element, PSchema tsch,
          cssRule = SkipQuotedString (cssRule, quoteChar);
       } else
          cssRule = SkipWord (cssRule);
-      cssRule = SkipWCBlanksAndComments (cssRule);
-      if (*cssRule == TEXT(','))
+      cssRule = SkipBlanksAndComments (cssRule);
+      if (*cssRule == ',')
 	{
 	cssRule++;
 	cssRule = ParseCSSFontFamily (element, tsch, context, cssRule, css, isHTML);
@@ -1411,53 +1391,53 @@ static char *ParseCSSFontWeight (Element element, PSchema tsch,
    weight.typed_data.value = 0;
    weight.typed_data.unit = STYLE_UNIT_REL;
    weight.typed_data.real = FALSE;
-   cssRule = SkipWCBlanksAndComments (cssRule);
-   if (!ustrncasecmp (cssRule, TEXT("100"), 3) && !TtaIsAlpha (cssRule[3]))
+   cssRule = SkipBlanksAndComments (cssRule);
+   if (!strncasecmp (cssRule, "100", 3) && !isalpha (cssRule[3]))
      {
 	weight.typed_data.value = -3;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("200"), 3) && !TtaIsAlpha (cssRule[3]))
+   else if (!strncasecmp (cssRule, "200", 3) && !isalpha (cssRule[3]))
      {
 	weight.typed_data.value = -2;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("300"), 3) && !TtaIsAlpha (cssRule[3]))
+   else if (!strncasecmp (cssRule, "300", 3) && ! isalpha(cssRule[3]))
      {
 	weight.typed_data.value = -1;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("normal"), 6) || (!ustrncasecmp (cssRule, TEXT("400"), 3) && !TtaIsAlpha (cssRule[3])))
+   else if (!strncasecmp (cssRule, "normal", 6) || (!strncasecmp (cssRule, "400", 3) && !isalpha (cssRule[3])))
      {
 	weight.typed_data.value = 0;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("500"), 3) && !TtaIsAlpha (cssRule[3]))
+   else if (!strncasecmp (cssRule, "500", 3) && !isalpha (cssRule[3]))
      {
 	weight.typed_data.value = +1;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("600"), 3) && !TtaIsAlpha (cssRule[3]))
+   else if (!strncasecmp (cssRule, "600", 3) && !isalpha (cssRule[3]))
      {
 	weight.typed_data.value = +2;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("bold"), 4) || (!ustrncasecmp (cssRule, TEXT("700"), 3) && !TtaIsAlpha (cssRule[3])))
+   else if (!strncasecmp (cssRule, "bold", 4) || (!strncasecmp (cssRule, "700", 3) && !isalpha (cssRule[3])))
      {
 	weight.typed_data.value = +3;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("800"), 3) && !TtaIsAlpha (cssRule[3]))
+   else if (!strncasecmp (cssRule, "800", 3) && !isalpha (cssRule[3]))
      {
 	weight.typed_data.value = +4;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("900"), 3) && !TtaIsAlpha (cssRule[3]))
+   else if (!strncasecmp (cssRule, "900", 3) && !isalpha (cssRule[3]))
      {
 	weight.typed_data.value = +5;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("inherit"), 7) || !ustrncasecmp (cssRule, TEXT("bolder"), 6) || !ustrncasecmp (cssRule, TEXT("lighter"), 7))
+   else if (!strncasecmp (cssRule, "inherit", 7) || !strncasecmp (cssRule, "bolder", 6) || !strncasecmp (cssRule, "lighter", 7))
      {
      /* not implemented */
      cssRule = SkipWord (cssRule);
@@ -1494,18 +1474,18 @@ static char *ParseCSSFontVariant (Element element, PSchema tsch,
    style.typed_data.value = 0;
    style.typed_data.unit = STYLE_UNIT_REL;
    style.typed_data.real = FALSE;
-   cssRule = SkipWCBlanksAndComments (cssRule);
-   if (!ustrncasecmp (cssRule, TEXT("small-caps"), 10))
+   cssRule = SkipBlanksAndComments (cssRule);
+   if (!strncasecmp (cssRule, "small-caps", 10))
      {
        /* Not supported yet */
        cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("normal"), 6))
+   else if (!strncasecmp (cssRule, "normal", 6))
      {
        /* Not supported yet */
        cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("inherit"), 7))
+   else if (!strncasecmp (cssRule, "inherit", 7))
      {
        /* Not supported yet */
        cssRule = SkipWord (cssRule);
@@ -1535,18 +1515,18 @@ static char *ParseCSSFontStyle (Element element, PSchema tsch,
    size.typed_data.value = 0;
    size.typed_data.unit = STYLE_UNIT_REL;
    size.typed_data.real = FALSE;
-   cssRule = SkipWCBlanksAndComments (cssRule);
-   if (!ustrncasecmp (cssRule, TEXT("italic"), 6))
+   cssRule = SkipBlanksAndComments (cssRule);
+   if (!strncasecmp (cssRule, "italic", 6))
      {
 	style.typed_data.value = STYLE_FONT_ITALICS;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("oblique"), 7))
+   else if (!strncasecmp (cssRule, "oblique", 7))
      {
 	style.typed_data.value = STYLE_FONT_OBLIQUE;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("normal"), 6))
+   else if (!strncasecmp (cssRule, "normal", 6))
      {
 	style.typed_data.value = STYLE_FONT_ROMAN;
 	cssRule = SkipWord (cssRule);
@@ -1592,22 +1572,22 @@ static char *ParseCSSFont (Element element, PSchema tsch,
 {
   char           *ptr;
 
-  cssRule = SkipWCBlanksAndComments (cssRule);
-  if (!ustrncasecmp (cssRule, TEXT("caption"), 7))
+  cssRule = SkipBlanksAndComments (cssRule);
+  if (!strncasecmp (cssRule, "caption", 7))
     ;
-  else if (!ustrncasecmp (cssRule, TEXT("icon"), 4))
+  else if (!strncasecmp (cssRule, "icon", 4))
     ;
-  else if (!ustrncasecmp (cssRule, TEXT("menu"), 4))
+  else if (!strncasecmp (cssRule, "menu", 4))
     ;
-  else if (!ustrncasecmp (cssRule, TEXT("message-box"), 11))
+  else if (!strncasecmp (cssRule, "message-box", 11))
     ;
-  else if (!ustrncasecmp (cssRule, TEXT("small-caption"), 13))
+  else if (!strncasecmp (cssRule, "small-caption", 13))
     ;
-  else if (!ustrncasecmp (cssRule, TEXT("status-bar"), 10))
+  else if (!strncasecmp (cssRule, "status-bar", 10))
     ;
   else
     {
-      while (*cssRule != TEXT(';') && *cssRule != WC_EOS && *cssRule != TEXT(','))
+      while (*cssRule != ';' && *cssRule != EOS && *cssRule != ',')
 	{
 	  ptr = cssRule;
 	  cssRule = ParseCSSFontStyle (element, tsch, context, cssRule, css, isHTML);
@@ -1619,7 +1599,7 @@ static char *ParseCSSFont (Element element, PSchema tsch,
 	    cssRule = ParseCSSFontSize (element, tsch, context, cssRule, css, isHTML);
 	  if (ptr == cssRule)
 	    cssRule = ParseCSSFontFamily (element, tsch, context, cssRule, css, isHTML);
-	  cssRule = SkipWCBlanksAndComments (cssRule);
+	  cssRule = SkipBlanksAndComments (cssRule);
 	}
     }
   return (cssRule);
@@ -1640,48 +1620,48 @@ static char *ParseCSSTextDecoration (Element element, PSchema tsch,
    decor.typed_data.value = 0;
    decor.typed_data.unit = STYLE_UNIT_REL;
    decor.typed_data.real = FALSE;
-   cssRule = SkipWCBlanksAndComments (cssRule);
-   if (!ustrncasecmp (cssRule, TEXT("underline"), strlen ("underline")))
+   cssRule = SkipBlanksAndComments (cssRule);
+   if (!strncasecmp (cssRule, "underline", strlen ("underline")))
      {
 	decor.typed_data.value = Underline;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("overline"), strlen ("overline")))
+   else if (!strncasecmp (cssRule, "overline", strlen ("overline")))
      {
 	decor.typed_data.value = Overline;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("line-through"), strlen ("line-through")))
+   else if (!strncasecmp (cssRule, "line-through", strlen ("line-through")))
      {
 	decor.typed_data.value = CrossOut;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("box"), strlen ("box")))
+   else if (!strncasecmp (cssRule, "box", strlen ("box")))
      {
        /* the box text-decoration attribute is not yet supported */
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("boxshadow"), strlen ("boxshadow")))
+   else if (!strncasecmp (cssRule, "boxshadow", strlen ("boxshadow")))
      {
        /* the boxshadow text-decoration attribute is not yet supported */
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("box3d"), strlen ("box3d")))
+   else if (!strncasecmp (cssRule, "box3d", strlen ("box3d")))
      {
        /* the box3d text-decoration attribute is not yet supported */
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("cartouche"), strlen ("cartouche")))
+   else if (!strncasecmp (cssRule, "cartouche", strlen ("cartouche")))
      {
 	/*the cartouche text-decoration attribute is not yet supported */
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("blink"), strlen ("blink")))
+   else if (!strncasecmp (cssRule, "blink", strlen ("blink")))
      {
 	/*the blink text-decoration attribute will not be supported */
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, TEXT("none"), strlen ("none")))
+   else if (!strncasecmp (cssRule, "none", strlen ("none")))
      {
 	decor.typed_data.value = NoUnderline;
 	cssRule = SkipWord (cssRule);
@@ -1708,10 +1688,10 @@ static char *ParseCSSTextDecoration (Element element, PSchema tsch,
 static char *ParseCSSHeight (Element element, PSchema tsch,
 				 PresentationContext context, char *cssRule, CSSInfoPtr css, ThotBool isHTML)
 {
-   cssRule = SkipWCBlanksAndComments (cssRule);
+   cssRule = SkipBlanksAndComments (cssRule);
 
    /* first parse the attribute string */
-   if (!ustrcasecmp (cssRule, TEXT("auto")))
+   if (!strcasecmp (cssRule, "auto"))
      {
 	cssRule = SkipWord (cssRule);
 	/* ParseCSSHeight: auto */
@@ -1730,10 +1710,10 @@ static char *ParseCSSWidth (Element element, PSchema tsch,
 			      char *cssRule, CSSInfoPtr css,
 			      ThotBool isHTML)
 {
-   cssRule = SkipWCBlanksAndComments (cssRule);
+   cssRule = SkipBlanksAndComments (cssRule);
 
    /* first parse the attribute string */
-   if (!ustrcasecmp (cssRule, TEXT("auto")))
+   if (!strcasecmp (cssRule, "auto"))
      {
 	cssRule = SkipWord (cssRule);
 	return (cssRule);
@@ -1753,7 +1733,7 @@ static char *ParseCSSMarginTop (Element element, PSchema tsch,
 {
   PresentationValue   margin;
   
-  cssRule = SkipWCBlanksAndComments (cssRule);
+  cssRule = SkipBlanksAndComments (cssRule);
   /* first parse the attribute string */
   cssRule = ParseCSSUnit (cssRule, &margin);
   if (margin.typed_data.unit != STYLE_UNIT_INVALID)
@@ -1775,7 +1755,7 @@ static char *ParseCSSMarginBottom (Element element, PSchema tsch,
 {
   PresentationValue   margin;
   
-  cssRule = SkipWCBlanksAndComments (cssRule);
+  cssRule = SkipBlanksAndComments (cssRule);
   /* first parse the attribute string */
   cssRule = ParseCSSUnit (cssRule, &margin);
   if (margin.typed_data.unit != STYLE_UNIT_INVALID)
@@ -1793,7 +1773,7 @@ static char *ParseCSSMarginLeft (Element element, PSchema tsch,
 {
   PresentationValue   margin;
   
-  cssRule = SkipWCBlanksAndComments (cssRule);
+  cssRule = SkipBlanksAndComments (cssRule);
   /* first parse the attribute string */
   cssRule = ParseCSSUnit (cssRule, &margin);
   if (margin.typed_data.unit != STYLE_UNIT_INVALID)
@@ -1815,7 +1795,7 @@ static char *ParseCSSMarginRight (Element element, PSchema tsch,
 {
   PresentationValue   margin;
   
-  cssRule = SkipWCBlanksAndComments (cssRule);
+  cssRule = SkipBlanksAndComments (cssRule);
   /* first parse the attribute string */
   cssRule = ParseCSSUnit (cssRule, &margin);
   if (margin.typed_data.unit != STYLE_UNIT_INVALID)
@@ -1833,11 +1813,11 @@ static char *ParseCSSMargin (Element element, PSchema tsch,
 {
   char *ptrT, *ptrR, *ptrB, *ptrL;
 
-  ptrT = SkipWCBlanksAndComments (cssRule);
+  ptrT = SkipBlanksAndComments (cssRule);
   /* First parse Margin-Top */
   ptrR = ParseCSSMarginTop (element, tsch, context, ptrT, css, isHTML);
-  ptrR = SkipWCBlanksAndComments (ptrR);
-  if (*ptrR == TEXT(';') || *ptrR == WC_EOS || *ptrR == TEXT(','))
+  ptrR = SkipBlanksAndComments (ptrR);
+  if (*ptrR == ';' || *ptrR == EOS || *ptrR == ',')
     {
       cssRule = ptrR;
       /* apply the Margin-Top to all */
@@ -1849,8 +1829,8 @@ static char *ParseCSSMargin (Element element, PSchema tsch,
     {
       /* parse Margin-Right */
       ptrB = ParseCSSMarginRight (element, tsch, context, ptrR, css, isHTML);
-      ptrB = SkipWCBlanksAndComments (ptrB);
-      if (*ptrB == TEXT(';') || *ptrB == WC_EOS || *ptrB == TEXT(','))
+      ptrB = SkipBlanksAndComments (ptrB);
+      if (*ptrB == ';' || *ptrB == EOS || *ptrB == ',')
 	{
 	  cssRule = ptrB;
 	  /* apply the Margin-Top to Margin-Bottom */
@@ -1862,8 +1842,8 @@ static char *ParseCSSMargin (Element element, PSchema tsch,
 	{
 	  /* parse Margin-Bottom */
 	  ptrL = ParseCSSMarginBottom (element, tsch, context, ptrB, css, isHTML);
-	  ptrL = SkipWCBlanksAndComments (ptrL);
-	  if (*ptrL == TEXT(';') || *ptrL == WC_EOS || *ptrL == TEXT(','))
+	  ptrL = SkipBlanksAndComments (ptrL);
+	  if (*ptrL == ';' || *ptrL == EOS || *ptrL == ',')
 	    {
 	      cssRule = ptrL;
 	      /* apply the Margin-Right to Margin-Left */
@@ -1872,7 +1852,7 @@ static char *ParseCSSMargin (Element element, PSchema tsch,
 	  else
 	    /* parse Margin-Left */
 	    cssRule = ParseCSSMarginLeft (element, tsch, context, ptrL, css, isHTML);
-	  cssRule = SkipWCBlanksAndComments (cssRule);
+	  cssRule = SkipBlanksAndComments (cssRule);
 	}
     }
   return (cssRule);
@@ -1888,7 +1868,7 @@ static char *ParseCSSPaddingTop (Element element, PSchema tsch,
 {
   PresentationValue   padding;
   
-  cssRule = SkipWCBlanksAndComments (cssRule);
+  cssRule = SkipBlanksAndComments (cssRule);
   /* first parse the attribute string */
   cssRule = ParseCSSUnit (cssRule, &padding);
   if (padding.typed_data.unit != STYLE_UNIT_INVALID)
@@ -1906,7 +1886,7 @@ static char *ParseCSSPaddingBottom (Element element, PSchema tsch,
 {
   PresentationValue   padding;
   
-  cssRule = SkipWCBlanksAndComments (cssRule);
+  cssRule = SkipBlanksAndComments (cssRule);
   /* first parse the attribute string */
   cssRule = ParseCSSUnit (cssRule, &padding);
   if (padding.typed_data.unit != STYLE_UNIT_INVALID)
@@ -1924,7 +1904,7 @@ static char *ParseCSSPaddingLeft (Element element, PSchema tsch,
 {
   PresentationValue   padding;
   
-  cssRule = SkipWCBlanksAndComments (cssRule);
+  cssRule = SkipBlanksAndComments (cssRule);
   /* first parse the attribute string */
   cssRule = ParseCSSUnit (cssRule, &padding);
   if (padding.typed_data.unit != STYLE_UNIT_INVALID)
@@ -1942,7 +1922,7 @@ static char *ParseCSSPaddingRight (Element element, PSchema tsch,
 {
   PresentationValue   padding;
   
-  cssRule = SkipWCBlanksAndComments (cssRule);
+  cssRule = SkipBlanksAndComments (cssRule);
   /* first parse the attribute string */
   cssRule = ParseCSSUnit (cssRule, &padding);
   if (padding.typed_data.unit != STYLE_UNIT_INVALID)
@@ -1960,11 +1940,11 @@ static char *ParseCSSPadding (Element element, PSchema tsch,
 {
   char *ptrT, *ptrR, *ptrB, *ptrL;
 
-  ptrT = SkipWCBlanksAndComments (cssRule);
+  ptrT = SkipBlanksAndComments (cssRule);
   /* First parse Padding-Top */
   ptrR = ParseCSSPaddingTop (element, tsch, context, ptrT, css, isHTML);
-  ptrR = SkipWCBlanksAndComments (ptrR);
-  if (*ptrR == TEXT(';') || *ptrR == WC_EOS || *ptrR == TEXT(','))
+  ptrR = SkipBlanksAndComments (ptrR);
+  if (*ptrR == ';' || *ptrR == EOS || *ptrR == ',')
     {
       cssRule = ptrR;
       /* apply the Padding-Top to all */
@@ -1976,8 +1956,8 @@ static char *ParseCSSPadding (Element element, PSchema tsch,
     {
       /* parse Padding-Right */
       ptrB = ParseCSSPaddingRight (element, tsch, context, ptrR, css, isHTML);
-      ptrB = SkipWCBlanksAndComments (ptrB);
-      if (*ptrB == TEXT(';') || *ptrB == WC_EOS || *ptrB == TEXT(','))
+      ptrB = SkipBlanksAndComments (ptrB);
+      if (*ptrB == ';' || *ptrB == EOS || *ptrB == ',')
 	{
 	  cssRule = ptrB;
 	  /* apply the Padding-Top to Padding-Bottom */
@@ -1989,8 +1969,8 @@ static char *ParseCSSPadding (Element element, PSchema tsch,
 	{
 	  /* parse Padding-Bottom */
 	  ptrL = ParseCSSPaddingBottom (element, tsch, context, ptrB, css, isHTML);
-	  ptrL = SkipWCBlanksAndComments (ptrL);
-	  if (*ptrL == TEXT(';') || *ptrL == WC_EOS || *ptrL == TEXT(','))
+	  ptrL = SkipBlanksAndComments (ptrL);
+	  if (*ptrL == ';' || *ptrL == EOS || *ptrL == ',')
 	    {
 	      cssRule = ptrL;
 	      /* apply the Padding-Right to Padding-Left */
@@ -1999,7 +1979,7 @@ static char *ParseCSSPadding (Element element, PSchema tsch,
 	  else
 	    /* parse Padding-Left */
 	    cssRule = ParseCSSPaddingLeft (element, tsch, context, ptrL, css, isHTML);
-	  cssRule = SkipWCBlanksAndComments (cssRule);
+	  cssRule = SkipBlanksAndComments (cssRule);
 	}
     }
   return (cssRule);
@@ -2049,7 +2029,7 @@ static char *ParseCSSBackgroundColor (Element element, PSchema tsch,
 
   best.typed_data.unit = STYLE_UNIT_INVALID;
   best.typed_data.real = FALSE;
-  if (!ustrncasecmp (cssRule, TEXT("transparent"), strlen ("transparent")))
+  if (!strncasecmp (cssRule, "transparent", strlen ("transparent")))
     {
       best.typed_data.value = STYLE_PATTERN_NONE;
       best.typed_data.unit = STYLE_UNIT_REL;
@@ -2091,7 +2071,7 @@ static char *ParseSVGStroke (Element element, PSchema tsch,
 
   best.typed_data.unit = STYLE_UNIT_INVALID;
   best.typed_data.real = FALSE;
-  if (!ustrncasecmp (cssRule, TEXT("none"), 4))
+  if (!strncasecmp (cssRule, "none", 4))
     {
       best.typed_data.value = -2;  /* -2 means transparent */
       best.typed_data.unit = STYLE_UNIT_REL;
@@ -2119,7 +2099,7 @@ static char *ParseSVGFill (Element element, PSchema tsch,
 
   best.typed_data.unit = STYLE_UNIT_INVALID;
   best.typed_data.real = FALSE;
-  if (!ustrncasecmp (cssRule, TEXT("none"), 4))
+  if (!strncasecmp (cssRule, "none", 4))
     {
       best.typed_data.value = STYLE_PATTERN_NONE;
       best.typed_data.unit = STYLE_UNIT_REL;
@@ -2146,16 +2126,18 @@ static char *ParseSVGFill (Element element, PSchema tsch,
   ParseCSSBackgroundImageCallback: Callback called asynchronously by
   FetchImage when a background image has been fetched.
   ----------------------------------------------------------------------*/
-void ParseCSSBackgroundImageCallback (Document doc, Element element, STRING file, void *extra)
+void ParseCSSBackgroundImageCallback (Document doc, Element element,
+				      char *file, void *extra)
 {
-  DisplayMode         dispMode;
-  BackgroundImageCallbackPtr callblock = (BackgroundImageCallbackPtr) extra;
-  Element             el;
-  PSchema             tsch;
-  PresentationContext context;
-  PresentationValue   image;
-  PresentationValue   value;
+  DisplayMode                dispMode;
+  BackgroundImageCallbackPtr callblock;
+  Element                    el;
+  PSchema                    tsch;
+  PresentationContext        context;
+  PresentationValue          image;
+  PresentationValue          value;
 
+  callblock = (BackgroundImageCallbackPtr) extra;
   if (callblock == NULL)
     return;
 
@@ -2196,39 +2178,39 @@ char *GetCSSBackgroundURL (char *styleString)
   int              len;
 
   ptr = NULL;
-  b = ustrstr (styleString, TEXT("url"));
+  b = strstr (styleString, "url");
   if (b != NULL)
     {
       b += 3;
-      b = SkipWCBlanksAndComments (b);
-      if (*b == TEXT('('))
+      b = SkipBlanksAndComments (b);
+      if (*b == '(')
 	{
 	  b++;
-	  b = SkipWCBlanksAndComments (b);
+	  b = SkipBlanksAndComments (b);
 	  /*** Caution: Strings can either be written with double quotes or
 	       with single quotes. Only double quotes are handled here.
 	       Escaped quotes are not handled. See function SkipQuotedString */
-	  if (*b == TEXT('"'))
+	  if (*b == '"')
 	    {
 	      b++;
 	      /* search the url end */
 	      e = b;
-	      while (*e != WC_EOS && *e != TEXT('"'))
+	      while (*e != EOS && *e != '"')
 		e++;
 	    }
 	  else
 	    {
 	      /* search the url end */
 	      e = b;
-	      while (*e != WC_EOS && *e != TEXT(')'))
+	      while (*e != EOS && *e != ')')
 		e++;
 	    }
-	  if (*e != WC_EOS)
+	  if (*e != EOS)
 	    {
 	      len = (int)(e - b);
-	      ptr = (char*) TtaAllocString (len+1);
-	      ustrncpy (ptr, b, len);
-	      ptr[len] = WC_EOS;
+	      ptr = (char*) TtaGetMemory (len+1);
+	      strncpy (ptr, b, len);
+	      ptr[len] = EOS;
 	    }
 	}
     }
@@ -2250,7 +2232,7 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
   BackgroundImageCallbackPtr callblock;
   PresentationValue          image, value;
   char                      *url;
-  STRING                     bg_image;
+  char                      *bg_image;
   char                       saved;
   char                      *base;
   char                       tempname[MAX_LENGTH];
@@ -2276,15 +2258,15 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
     el = element;
 
   url = NULL;
-  cssRule = SkipWCBlanksAndComments (cssRule);
-  if (!ustrncasecmp (cssRule, TEXT("url"), 3))
+  cssRule = SkipBlanksAndComments (cssRule);
+  if (!strncasecmp (cssRule, "url", 3))
     {  
       cssRule += 3;
-      cssRule = SkipWCBlanksAndComments (cssRule);
+      cssRule = SkipBlanksAndComments (cssRule);
       if (*cssRule == '(')
 	{
 	  cssRule++;
-	  cssRule = SkipWCBlanksAndComments (cssRule);
+	  cssRule = SkipBlanksAndComments (cssRule);
 	  /*** Caution: Strings can either be written with double quotes or
 	    with single quotes. Only double quotes are handled here.
 	    Escaped quotes are not handled. See function SkipQuotedString */
@@ -2292,7 +2274,7 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
 	    {
 	      cssRule++;
 	      base = cssRule;
-	      while (*cssRule != WC_EOS && *cssRule != TEXT('"'))
+	      while (*cssRule != EOS && *cssRule != '"')
 		cssRule++;
 	    }
 	  else
@@ -2302,8 +2284,8 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
 		cssRule++;
 	    }
 	  saved = *cssRule;
-	  *cssRule = WC_EOS;
-	  url = TtaWCSdup (base);
+	  *cssRule = EOS;
+	  url = TtaStrdup (base);
 	  *cssRule = saved;
 	  if (saved == '"')
 	    /* we need to skip two characters */
@@ -2328,7 +2310,7 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
       else if (url)
 	{
 	  bg_image = TtaGetEnvString ("ENABLE_BG_IMAGES");
-	  if (bg_image == NULL || !ustrcasecmp (bg_image, TEXT("yes")))
+	  if (bg_image == NULL || !strcasecmp (bg_image, "yes"))
 	    {
 	      callblock = (BackgroundImageCallbackPtr) TtaGetMemory(sizeof(BackgroundImageCallbackBlock));
 	      if (callblock != NULL)
@@ -2397,14 +2379,14 @@ static char *ParseCSSBackgroundRepeat (Element element, PSchema tsch,
   repeat.typed_data.value = STYLE_REALSIZE;
   repeat.typed_data.unit = STYLE_UNIT_REL;
   repeat.typed_data.real = FALSE;
-  cssRule = SkipWCBlanksAndComments (cssRule);
-  if (!ustrncasecmp (cssRule, TEXT("no-repeat"), 9))
+  cssRule = SkipBlanksAndComments (cssRule);
+  if (!strncasecmp (cssRule, "no-repeat", 9))
     repeat.typed_data.value = STYLE_REALSIZE;
-  else if (!ustrncasecmp (cssRule, TEXT("repeat-y"), 8))
+  else if (!strncasecmp (cssRule, "repeat-y", 8))
     repeat.typed_data.value = STYLE_VREPEAT;
-  else if (!ustrncasecmp (cssRule, TEXT("repeat-x"), 8))
+  else if (!strncasecmp (cssRule, "repeat-x", 8))
     repeat.typed_data.value = STYLE_HREPEAT;
-  else if (!ustrncasecmp (cssRule, TEXT("repeat"), 6))
+  else if (!strncasecmp (cssRule, "repeat", 6))
     repeat.typed_data.value = STYLE_REPEAT;
   else
     return (cssRule);
@@ -2444,10 +2426,10 @@ static char *ParseCSSBackgroundAttachment (Element element, PSchema tsch,
 	}
     }
 
-   cssRule = SkipWCBlanksAndComments (cssRule);
-   if (!ustrncasecmp (cssRule, TEXT("scroll"), 6))
+   cssRule = SkipBlanksAndComments (cssRule);
+   if (!strncasecmp (cssRule, "scroll", 6))
      cssRule = SkipWord (cssRule);
-   else if (!ustrncasecmp (cssRule, TEXT("fixed"), 5))
+   else if (!strncasecmp (cssRule, "fixed", 5))
      cssRule = SkipWord (cssRule);
 
   /* restore the refered element */
@@ -2483,19 +2465,19 @@ static char *ParseCSSBackgroundPosition (Element element, PSchema tsch,
 	}
     }
 
-   cssRule = SkipWCBlanksAndComments (cssRule);
+   cssRule = SkipBlanksAndComments (cssRule);
    ok = TRUE;
-   if (!ustrncasecmp (cssRule, TEXT("left"), 4))
+   if (!strncasecmp (cssRule, "left", 4))
      cssRule = SkipWord (cssRule);
-   else if (!ustrncasecmp (cssRule, TEXT("right"), 5))
+   else if (!strncasecmp (cssRule, "right", 5))
      cssRule = SkipWord (cssRule);
-   else if (!ustrncasecmp (cssRule, TEXT("center"), 6))
+   else if (!strncasecmp (cssRule, "center", 6))
      cssRule = SkipWord (cssRule);
-   else if (!ustrncasecmp (cssRule, TEXT("top"), 3))
+   else if (!strncasecmp (cssRule, "top", 3))
      cssRule = SkipWord (cssRule);
-   else if (!ustrncasecmp (cssRule, TEXT("bottom"), 6))
+   else if (!strncasecmp (cssRule, "bottom", 6))
      cssRule = SkipWord (cssRule);
-   else if (TtaIsDigit (*cssRule))
+   else if (isdigit (*cssRule))
      cssRule = SkipWord (cssRule);
    else
      ok = FALSE;
@@ -2524,32 +2506,32 @@ static char *ParseCSSBackground (Element element, PSchema tsch,
 {
   char     *ptr;
 
-  cssRule = SkipWCBlanksAndComments (cssRule);
-  while (*cssRule != TEXT(';') && *cssRule != WC_EOS && *cssRule != TEXT(','))
+  cssRule = SkipBlanksAndComments (cssRule);
+  while (*cssRule != ';' && *cssRule != EOS && *cssRule != ',')
     {
       /* perhaps a Background Image */
-      if (!ustrncasecmp (cssRule, TEXT("url"), 3))
+      if (!strncasecmp (cssRule, "url", 3))
          cssRule = ParseCSSBackgroundImage (element, tsch, context, cssRule,
 					    css, isHTML);
       /* perhaps a Background Attachment */
-      else if (!ustrncasecmp (cssRule, TEXT("scroll"), 6) ||
-               !ustrncasecmp (cssRule, TEXT("fixed"), 5))
+      else if (!strncasecmp (cssRule, "scroll", 6) ||
+               !strncasecmp (cssRule, "fixed", 5))
 	cssRule = ParseCSSBackgroundAttachment (element, tsch, context,
 						cssRule, css, isHTML);
       /* perhaps a Background Repeat */
-      else if (!ustrncasecmp (cssRule, TEXT("no-repeat"), 9) ||
-               !ustrncasecmp (cssRule, TEXT("repeat-y"), 8)  ||
-               !ustrncasecmp (cssRule, TEXT("repeat-x"), 8)  ||
-               !ustrncasecmp (cssRule, TEXT("repeat"), 6))
-	cssRule = ParseCSSBackgroundRepeat (element, tsch, context, cssRule,
-					    css, isHTML);
+      else if (!strncasecmp (cssRule, "no-repeat", 9) ||
+               !strncasecmp (cssRule, "repeat-y", 8)  ||
+               !strncasecmp (cssRule, "repeat-x", 8)  ||
+               !strncasecmp (cssRule, "repeat", 6))
+	cssRule = ParseCSSBackgroundRepeat (element, tsch, context,
+					    cssRule, css, isHTML);
       /* perhaps a Background Position */
-      else if (!ustrncasecmp (cssRule, TEXT("left"), 4)   ||
-               !ustrncasecmp (cssRule, TEXT("right"), 5)  ||
-               !ustrncasecmp (cssRule, TEXT("center"), 6) ||
-               !ustrncasecmp (cssRule, TEXT("top"), 3)    ||
-               !ustrncasecmp (cssRule, TEXT("bottom"), 6) ||
-               TtaIsDigit (*cssRule))
+      else if (!strncasecmp (cssRule, "left", 4)   ||
+               !strncasecmp (cssRule, "right", 5)  ||
+               !strncasecmp (cssRule, "center", 6) ||
+               !strncasecmp (cssRule, "top", 3)    ||
+               !strncasecmp (cssRule, "bottom", 6) ||
+               isdigit (*cssRule))
            cssRule = ParseCSSBackgroundPosition (element, tsch, context,
 						 cssRule, css, isHTML);
       /* perhaps a Background Color */
@@ -2557,13 +2539,13 @@ static char *ParseCSSBackground (Element element, PSchema tsch,
 	{
 	  /* check if the rule has been found */
 	  ptr = cssRule;
-	  cssRule = ParseCSSBackgroundColor (element, tsch, context, cssRule,
-					     css, isHTML);
+	  cssRule = ParseCSSBackgroundColor (element, tsch, context,
+					     cssRule, css, isHTML);
 	  if (ptr == cssRule)
 	    /* rule not found */
 	    cssRule = SkipProperty (cssRule);
 	}
-      cssRule = SkipWCBlanksAndComments (cssRule);
+      cssRule = SkipBlanksAndComments (cssRule);
     }
    return (cssRule);
 }
@@ -2579,33 +2561,33 @@ static char *ParseCSSPageBreakBefore (Element element, PSchema tsch,
 
   page.typed_data.unit = STYLE_UNIT_INVALID;
   page.typed_data.real = FALSE;
-  cssRule = SkipWCBlanksAndComments (cssRule);
-  if (!ustrncasecmp (cssRule, TEXT("auto"), 4))
+  cssRule = SkipBlanksAndComments (cssRule);
+  if (!strncasecmp (cssRule, "auto", 4))
     {
       /*page.typed_data.unit = STYLE_UNIT_REL;*/
       page.typed_data.value = STYLE_AUTO;
     }
-  else if (!ustrncasecmp (cssRule, TEXT("always"), 6))
+  else if (!strncasecmp (cssRule, "always", 6))
     {
       page.typed_data.unit = STYLE_UNIT_REL;
       page.typed_data.value = STYLE_ALWAYS;
     }
-  else if (!ustrncasecmp (cssRule, TEXT("avoid"), 5))
+  else if (!strncasecmp (cssRule, "avoid", 5))
     {
       page.typed_data.unit = STYLE_UNIT_REL;
       page.typed_data.value = STYLE_AVOID;
     }
-  else if (!ustrncasecmp (cssRule, TEXT("left"), 4))
+  else if (!strncasecmp (cssRule, "left", 4))
     {
       page.typed_data.unit = STYLE_UNIT_REL;
       page.typed_data.value = STYLE_PAGELEFT;
     }
-  else if (!ustrncasecmp (cssRule, TEXT("right"), 5))
+  else if (!strncasecmp (cssRule, "right", 5))
     {
       page.typed_data.unit = STYLE_UNIT_REL;
       page.typed_data.value = STYLE_PAGERIGHT;
     }
-  else if (!ustrncasecmp (cssRule, TEXT("inherit"), 7))
+  else if (!strncasecmp (cssRule, "inherit", 7))
     {
       /*page.typed_data.unit = STYLE_UNIT_REL;*/
       page.typed_data.value = STYLE_INHERIT;
@@ -2630,33 +2612,33 @@ static char *ParseCSSPageBreakAfter (Element element, PSchema tsch,
 
   page.typed_data.unit = STYLE_UNIT_INVALID;
   page.typed_data.real = FALSE;
-  cssRule = SkipWCBlanksAndComments (cssRule);
-  if (!ustrncasecmp (cssRule, TEXT("auto"), 4))
+  cssRule = SkipBlanksAndComments (cssRule);
+  if (!strncasecmp (cssRule, "auto", 4))
     {
       /*page.typed_data.unit = STYLE_UNIT_REL;*/
       page.typed_data.value = STYLE_AUTO;
     }
-  else if (!ustrncasecmp (cssRule, TEXT("always"), 6))
+  else if (!strncasecmp (cssRule, "always", 6))
     {
       page.typed_data.unit = STYLE_UNIT_REL;
       page.typed_data.value = STYLE_ALWAYS;
     }
-  else if (!ustrncasecmp (cssRule, TEXT("avoid"), 5))
+  else if (!strncasecmp (cssRule, "avoid", 5))
     {
       page.typed_data.unit = STYLE_UNIT_REL;
       page.typed_data.value = STYLE_AVOID;
     }
-  else if (!ustrncasecmp (cssRule, TEXT("left"), 4))
+  else if (!strncasecmp (cssRule, "left", 4))
     {
       page.typed_data.unit = STYLE_UNIT_REL;
       page.typed_data.value = STYLE_PAGELEFT;
     }
-  else if (!ustrncasecmp (cssRule, TEXT("right"), 5))
+  else if (!strncasecmp (cssRule, "right", 5))
     {
       page.typed_data.unit = STYLE_UNIT_REL;
       page.typed_data.value = STYLE_PAGERIGHT;
     }
-  else if (!ustrncasecmp (cssRule, TEXT("inherit"), 7))
+  else if (!strncasecmp (cssRule, "inherit", 7))
     {
       /*page.typed_data.unit = STYLE_UNIT_REL;*/
       page.typed_data.value = STYLE_INHERIT;
@@ -2680,18 +2662,18 @@ static char *ParseCSSPageBreakInside (Element element, PSchema tsch,
 
   page.typed_data.unit = STYLE_UNIT_INVALID;
   page.typed_data.real = FALSE;
-  cssRule = SkipWCBlanksAndComments (cssRule);
-  if (!ustrncasecmp (cssRule, TEXT("auto"), 4))
+  cssRule = SkipBlanksAndComments (cssRule);
+  if (!strncasecmp (cssRule, "auto", 4))
     {
       /*page.typed_data.unit = STYLE_UNIT_REL;*/
       page.typed_data.value = STYLE_AUTO;
     }
-  else if (!ustrncasecmp (cssRule, TEXT("avoid"), 5))
+  else if (!strncasecmp (cssRule, "avoid", 5))
     {
       page.typed_data.unit = STYLE_UNIT_REL;
       page.typed_data.value = STYLE_AVOID;
     }
-  else if (!ustrncasecmp (cssRule, TEXT("inherit"), 7))
+  else if (!strncasecmp (cssRule, "inherit", 7))
     {
       /*page.typed_data.unit = STYLE_UNIT_REL;*/
       page.typed_data.value = STYLE_INHERIT;
@@ -2714,11 +2696,11 @@ static char *ParseSVGStrokeWidth (Element element, PSchema tsch,
 {
   PresentationValue   width;
   
-  cssRule = SkipWCBlanksAndComments (cssRule);
+  cssRule = SkipBlanksAndComments (cssRule);
   width.typed_data.value = 0;
   width.typed_data.unit = STYLE_UNIT_INVALID;
   width.typed_data.real = FALSE;
-  if (TtaIsDigit (*cssRule))
+  if (isdigit (*cssRule))
      cssRule = ParseCSSUnit (cssRule, &width);
   if (width.typed_data.unit != STYLE_UNIT_INVALID)
      {
@@ -2740,84 +2722,84 @@ static char *ParseSVGStrokeWidth (Element element, PSchema tsch,
  */
 static CSSProperty CSSProperties[] =
 {
-   {TEXT("font-family"), ParseCSSFontFamily},
-   {TEXT("font-style"), ParseCSSFontStyle},
-   {TEXT("font-variant"), ParseCSSFontVariant},
-   {TEXT("font-weight"), ParseCSSFontWeight},
-   {TEXT("font-size"), ParseCSSFontSize},
-   {TEXT("font"), ParseCSSFont},
+   {"font-family", ParseCSSFontFamily},
+   {"font-style", ParseCSSFontStyle},
+   {"font-variant", ParseCSSFontVariant},
+   {"font-weight", ParseCSSFontWeight},
+   {"font-size", ParseCSSFontSize},
+   {"font", ParseCSSFont},
 
-   {TEXT("color"), ParseCSSForeground},
-   {TEXT("background-color"), ParseCSSBackgroundColor},
-   {TEXT("background-image"), ParseCSSBackgroundImage},
-   {TEXT("background-repeat"), ParseCSSBackgroundRepeat},
-   {TEXT("background-attachment"), ParseCSSBackgroundAttachment},
-   {TEXT("background-position"), ParseCSSBackgroundPosition},
-   {TEXT("background"), ParseCSSBackground},
+   {"color", ParseCSSForeground},
+   {"background-color", ParseCSSBackgroundColor},
+   {"background-image", ParseCSSBackgroundImage},
+   {"background-repeat", ParseCSSBackgroundRepeat},
+   {"background-attachment", ParseCSSBackgroundAttachment},
+   {"background-position", ParseCSSBackgroundPosition},
+   {"background", ParseCSSBackground},
 
-   {TEXT("word-spacing"), ParseCSSWordSpacing},
-   {TEXT("letter-spacing"), ParseCSSLetterSpacing},
-   {TEXT("text-decoration"), ParseCSSTextDecoration},
-   {TEXT("vertical-align"), ParseCSSVerticalAlign},
-   {TEXT("text-transform"), ParseCSSTextTransform},
-   {TEXT("text-align"), ParseCSSTextAlign},
-   {TEXT("text-indent"), ParseCSSTextIndent},
-   {TEXT("line-height"), ParseCSSLineSpacing},
+   {"word-spacing", ParseCSSWordSpacing},
+   {"letter-spacing", ParseCSSLetterSpacing},
+   {"text-decoration", ParseCSSTextDecoration},
+   {"vertical-align", ParseCSSVerticalAlign},
+   {"text-transform", ParseCSSTextTransform},
+   {"text-align", ParseCSSTextAlign},
+   {"text-indent", ParseCSSTextIndent},
+   {"line-height", ParseCSSLineSpacing},
 
-   {TEXT("margin-top"), ParseCSSMarginTop},
-   {TEXT("margin-right"), ParseCSSMarginRight},
-   {TEXT("margin-bottom"), ParseCSSMarginBottom},
-   {TEXT("margin-left"), ParseCSSMarginLeft},
-   {TEXT("margin"), ParseCSSMargin},
+   {"margin-top", ParseCSSMarginTop},
+   {"margin-right", ParseCSSMarginRight},
+   {"margin-bottom", ParseCSSMarginBottom},
+   {"margin-left", ParseCSSMarginLeft},
+   {"margin", ParseCSSMargin},
 
-   {TEXT("padding-top"), ParseCSSPaddingTop},
-   {TEXT("padding-right"), ParseCSSPaddingRight},
-   {TEXT("padding-bottom"), ParseCSSPaddingBottom},
-   {TEXT("padding-left"), ParseCSSPaddingLeft},
-   {TEXT("padding"), ParseCSSPadding},
+   {"padding-top", ParseCSSPaddingTop},
+   {"padding-right", ParseCSSPaddingRight},
+   {"padding-bottom", ParseCSSPaddingBottom},
+   {"padding-left", ParseCSSPaddingLeft},
+   {"padding", ParseCSSPadding},
 
-   {TEXT("border-top-width"), ParseCSSBorderTopWidth},
-   {TEXT("border-right-width"), ParseCSSBorderRightWidth},
-   {TEXT("border-bottom-width"), ParseCSSBorderBottomWidth},
-   {TEXT("border-left-width"), ParseCSSBorderLeftWidth},
-   {TEXT("border-width"), ParseCSSBorderWidth},
-   {TEXT("border-top-color"), ParseCSSBorderColorTop},
-   {TEXT("border-right-color"), ParseCSSBorderColorRight},
-   {TEXT("border-bottom-color"), ParseCSSBorderColorBottom},
-   {TEXT("border-left-color"), ParseCSSBorderColorLeft},
-   {TEXT("border-color"), ParseCSSBorderColor},
-   {TEXT("border-top-style"), ParseCSSBorderStyleTop},
-   {TEXT("border-right-style"), ParseCSSBorderStyleRight},
-   {TEXT("border-bottom-style"), ParseCSSBorderStyleBottom},
-   {TEXT("border-left-style"), ParseCSSBorderStyleLeft},
-   {TEXT("border-style"), ParseCSSBorderStyle},
-   {TEXT("border-top"), ParseCSSBorderTop},
-   {TEXT("border-right"), ParseCSSBorderRight},
-   {TEXT("border-bottom"), ParseCSSBorderBottom},
-   {TEXT("border-left"), ParseCSSBorderLeft},
-   {TEXT("border"), ParseCSSBorder},
+   {"border-top-width", ParseCSSBorderTopWidth},
+   {"border-right-width", ParseCSSBorderRightWidth},
+   {"border-bottom-width", ParseCSSBorderBottomWidth},
+   {"border-left-width", ParseCSSBorderLeftWidth},
+   {"border-width", ParseCSSBorderWidth},
+   {"border-top-color", ParseCSSBorderColorTop},
+   {"border-right-color", ParseCSSBorderColorRight},
+   {"border-bottom-color", ParseCSSBorderColorBottom},
+   {"border-left-color", ParseCSSBorderColorLeft},
+   {"border-color", ParseCSSBorderColor},
+   {"border-top-style", ParseCSSBorderStyleTop},
+   {"border-right-style", ParseCSSBorderStyleRight},
+   {"border-bottom-style", ParseCSSBorderStyleBottom},
+   {"border-left-style", ParseCSSBorderStyleLeft},
+   {"border-style", ParseCSSBorderStyle},
+   {"border-top", ParseCSSBorderTop},
+   {"border-right", ParseCSSBorderRight},
+   {"border-bottom", ParseCSSBorderBottom},
+   {"border-left", ParseCSSBorderLeft},
+   {"border", ParseCSSBorder},
 
-   {TEXT("width"), ParseCSSWidth},
-   {TEXT("height"), ParseCSSHeight},
-   {TEXT("float"), ParseCSSFloat},
-   {TEXT("clear"), ParseCSSClear},
+   {"width", ParseCSSWidth},
+   {"height", ParseCSSHeight},
+   {"float", ParseCSSFloat},
+   {"clear", ParseCSSClear},
 
-   {TEXT("display"), ParseCSSDisplay},
-   {TEXT("white-space"), ParseCSSWhiteSpace},
+   {"display", ParseCSSDisplay},
+   {"white-space", ParseCSSWhiteSpace},
 
-   {TEXT("list-style-type"), ParseCSSListStyleType},
-   {TEXT("list-style-image"), ParseCSSListStyleImage},
-   {TEXT("list-style-position"), ParseCSSListStylePosition},
-   {TEXT("list-style"), ParseCSSListStyle},
+   {"list-style-type", ParseCSSListStyleType},
+   {"list-style-image", ParseCSSListStyleImage},
+   {"list-style-position", ParseCSSListStylePosition},
+   {"list-style", ParseCSSListStyle},
 
-   {TEXT("page-break-before"), ParseCSSPageBreakBefore},
-   {TEXT("page-break-after"), ParseCSSPageBreakAfter},
-   {TEXT("page-break-inside"), ParseCSSPageBreakInside},
+   {"page-break-before", ParseCSSPageBreakBefore},
+   {"page-break-after", ParseCSSPageBreakAfter},
+   {"page-break-inside", ParseCSSPageBreakInside},
 
    /* SVG extensions */
-   {TEXT("stroke-width"), ParseSVGStrokeWidth},
-   {TEXT("stroke"), ParseSVGStroke},
-   {TEXT("fill"), ParseSVGFill}
+   {"stroke-width", ParseSVGStrokeWidth},
+   {"stroke", ParseSVGStroke},
+   {"fill", ParseSVGFill}
 };
 #define NB_CSSSTYLEATTRIBUTE (sizeof(CSSProperties) / sizeof(CSSProperty))
 
@@ -2842,16 +2824,16 @@ static void  ParseCSSRule (Element element, PSchema tsch,
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (context->doc, DeferredDisplay);
 
-  while (*cssRule != WC_EOS)
+  while (*cssRule != EOS)
     {
-      cssRule = SkipWCBlanksAndComments (cssRule);
+      cssRule = SkipBlanksAndComments (cssRule);
       
       found = FALSE;
       /* look for the type of property */
       for (i = 0; i < NB_CSSSTYLEATTRIBUTE && !found; i++)
 	{
-	  lg = ustrlen (CSSProperties[i].name);
-	  if (!ustrncasecmp (cssRule, CSSProperties[i].name, lg))
+	  lg = strlen (CSSProperties[i].name);
+	  if (!strncasecmp (cssRule, CSSProperties[i].name, lg))
 	    {
 	      cssRule += lg;
 	      found = TRUE;
@@ -2864,11 +2846,11 @@ static void  ParseCSSRule (Element element, PSchema tsch,
       else
 	{
 	  /* update index and skip the ":" indicator if present */
-	  cssRule = SkipWCBlanksAndComments (cssRule);
-	  if (*cssRule == TEXT(':'))
+	  cssRule = SkipBlanksAndComments (cssRule);
+	  if (*cssRule == ':')
 	    {
 	      cssRule++;
-	      cssRule = SkipWCBlanksAndComments (cssRule);
+	      cssRule = SkipBlanksAndComments (cssRule);
 	      /* try to parse the value associated with this property */
 	      if (CSSProperties[i].parsing_function != NULL)
 		{
@@ -2882,11 +2864,11 @@ static void  ParseCSSRule (Element element, PSchema tsch,
 	    cssRule = SkipProperty (cssRule);
 	}
       /* next property */
-      cssRule = SkipWCBlanksAndComments (cssRule);
-      if (*cssRule == TEXT(',') || *cssRule == TEXT(';'))
+      cssRule = SkipBlanksAndComments (cssRule);
+      if (*cssRule == ',' || *cssRule == ';')
 	{
 	  cssRule++;
-	  cssRule = SkipWCBlanksAndComments (cssRule);
+	  cssRule = SkipBlanksAndComments (cssRule);
 	}
     }
 
@@ -2915,7 +2897,7 @@ void PToCss (PresentationSetting settings, char *buffer, int len, Element el)
   unsigned int        unit, i;
   ThotBool            real = FALSE;
 
-  buffer[0] = WC_EOS;
+  buffer[0] = EOS;
   if (len < 40)
     return;
 
@@ -2935,13 +2917,13 @@ void PToCss (PresentationSetting settings, char *buffer, int len, Element el)
       switch (settings->value.typed_data.value)
 	{
 	case STYLE_FONT_HELVETICA:
-	  ustrcpy (buffer, TEXT("font-family: helvetica"));
+	  strcpy (buffer, "font-family: helvetica");
 	  break;
 	case STYLE_FONT_TIMES:
-	  ustrcpy (buffer, TEXT("font-family: times"));
+	  strcpy (buffer, "font-family: times");
 	  break;
 	case STYLE_FONT_COURIER:
-	  ustrcpy (buffer, TEXT("font-family: courier"));
+	  strcpy (buffer, "font-family: courier");
 	  break;
 	}
       break;
@@ -2949,13 +2931,13 @@ void PToCss (PresentationSetting settings, char *buffer, int len, Element el)
       switch (settings->value.typed_data.value)
 	{
 	case STYLE_FONT_ROMAN:
-	  ustrcpy (buffer, TEXT("font-style: normal"));
+	  strcpy (buffer, "font-style: normal");
 	  break;
 	case STYLE_FONT_ITALICS:
-	  ustrcpy (buffer, TEXT("font-style: italic"));
+	  strcpy (buffer, "font-style: italic");
 	  break;
 	case STYLE_FONT_OBLIQUE:
-	  ustrcpy (buffer, TEXT("font-style: oblique"));
+	  strcpy (buffer, "font-style: oblique");
 	  break;
 	}
       break;
@@ -2963,10 +2945,10 @@ void PToCss (PresentationSetting settings, char *buffer, int len, Element el)
       switch (settings->value.typed_data.value)
 	{
 	case STYLE_WEIGHT_BOLD:
-	  ustrcpy (buffer, TEXT("font-weight: bold"));
+	  strcpy (buffer, "font-weight: bold");
 	  break;
 	case STYLE_WEIGHT_NORMAL:
-	  ustrcpy (buffer, TEXT("font-weight: normal"));
+	  strcpy (buffer, "font-weight: normal");
 	  break;
 	}
       break;
@@ -2975,29 +2957,29 @@ void PToCss (PresentationSetting settings, char *buffer, int len, Element el)
 	{
 	  if (real)
 	    {
-	      usprintf (buffer, TEXT("font-size: %g"), fval);
+	      sprintf (buffer, "font-size: %g", fval);
 	      add_unit = 1;
 	    }
 	  else
 	    switch (settings->value.typed_data.value)
 	      {
 	      case 1:
-		ustrcpy (buffer, TEXT("font-size: xx-small"));
+		strcpy (buffer, "font-size: xx-small");
 		break;
 	      case 2:
-		ustrcpy (buffer, TEXT("font-size: x-small"));
+		strcpy (buffer, "font-size: x-small");
 		break;
 	      case 3:
-		ustrcpy (buffer, TEXT("font-size: small"));
+		strcpy (buffer, "font-size: small");
 		break;
 	      case 4:
-		ustrcpy (buffer, TEXT("font-size: medium"));
+		strcpy (buffer, "font-size: medium");
 		break;
 	      case 5:
-		ustrcpy (buffer, TEXT("font-size: large"));
+		strcpy (buffer, "font-size: large");
 		break;
 	      case 6:
-		ustrcpy (buffer, TEXT("font-size: x-large"));
+		strcpy (buffer, "font-size: x-large");
 		break;
 	      case 7:
 	      case 8:
@@ -3005,16 +2987,16 @@ void PToCss (PresentationSetting settings, char *buffer, int len, Element el)
 	      case 10:
 	      case 11:
 	      case 12:
-		ustrcpy (buffer, TEXT("font-size: xx-large"));
+		strcpy (buffer, "font-size: xx-large");
 		break;
 	      }
 	}
       else
 	{
 	  if (real)
-	    usprintf (buffer, TEXT("font-size: %g"), fval);
+	    sprintf (buffer, "font-size: %g", fval);
 	  else
-	    usprintf (buffer, TEXT("font-size: %d"),
+	    sprintf (buffer, "font-size: %d",
 		      settings->value.typed_data.value);
 	  add_unit = 1;
 	}
@@ -3023,29 +3005,29 @@ void PToCss (PresentationSetting settings, char *buffer, int len, Element el)
       switch (settings->value.typed_data.value)
 	{
 	case STYLE_UNDERLINE:
-	  ustrcpy (buffer, TEXT("text-decoration: underline"));
+	  strcpy (buffer, "text-decoration: underline");
 	  break;
 	case STYLE_OVERLINE:
-	  ustrcpy (buffer, TEXT("text-decoration: overline"));
+	  strcpy (buffer, "text-decoration: overline");
 	  break;
 	case STYLE_CROSSOUT:
-	  ustrcpy (buffer, TEXT("text-decoration: line-through"));
+	  strcpy (buffer, "text-decoration: line-through");
 	  break;
 	}
       break;
     case PRIndent:
       if (real)
-	usprintf (buffer, TEXT("text-indent: %g"), fval);
+	sprintf (buffer, "text-indent: %g", fval);
       else
-	usprintf (buffer, TEXT("text-indent: %d"),
+	sprintf (buffer, "text-indent: %d",
 		  settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRLineSpacing:
       if (real)
-	usprintf (buffer, TEXT("line-height: %g"), fval);
+	sprintf (buffer, "line-height: %g", fval);
       else
-	usprintf (buffer, TEXT("line-height: %d"),
+	sprintf (buffer, "line-height: %d",
 		  settings->value.typed_data.value);
       add_unit = 1;
       break;
@@ -3053,19 +3035,19 @@ void PToCss (PresentationSetting settings, char *buffer, int len, Element el)
       switch (settings->value.typed_data.value)
 	{
 	case STYLE_ADJUSTLEFT:
-	  ustrcpy (buffer, TEXT("text-align: left"));
+	  strcpy (buffer, "text-align: left");
 	  break;
 	case STYLE_ADJUSTRIGHT:
-	  ustrcpy (buffer, TEXT("text-align: right"));
+	  strcpy (buffer, "text-align: right");
 	  break;
 	case STYLE_ADJUSTCENTERED:
-	  ustrcpy (buffer, TEXT("text-align: center"));
+	  strcpy (buffer, "text-align: center");
 	  break;
 	case STYLE_ADJUSTLEFTWITHDOTS:
-	  ustrcpy (buffer, TEXT("text-align: left"));
+	  strcpy (buffer, "text-align: left");
 	  break;
         case STYLE_ADJUSTJUSTIFY:
-	  ustrcpy (buffer, TEXT("text-align: justify"));
+	  strcpy (buffer, "text-align: justify");
 	  break;
 	}
       break;
@@ -3077,33 +3059,33 @@ void PToCss (PresentationSetting settings, char *buffer, int len, Element el)
       TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
       elType = TtaGetElementType(el);
 #ifdef GRAPHML
-      if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")) == 0)
-	usprintf (buffer, TEXT("fill: #%02X%02X%02X"), red, green, blue);
+      if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
+	sprintf (buffer, "fill: #%02X%02X%02X", red, green, blue);
       else
 #endif /* GRAPHML */
-         usprintf (buffer, TEXT("background-color: #%02X%02X%02X"), red, green,
+         sprintf (buffer, "background-color: #%02X%02X%02X", red, green,
 		   blue);
       break;
     case PRForeground:
       TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
       elType = TtaGetElementType(el);
 #ifdef GRAPHML
-      if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")) == 0)
-	usprintf (buffer, TEXT("stroke: #%02X%02X%02X"), red, green, blue);
+      if (strcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML") == 0)
+	sprintf (buffer, "stroke: #%02X%02X%02X", red, green, blue);
       else
 #endif /* GRAPHML */
-	usprintf (buffer, TEXT("color: #%02X%02X%02X"), red, green, blue);
+	sprintf (buffer, "color: #%02X%02X%02X", red, green, blue);
       break;
     case PRLineWeight:
       elType = TtaGetElementType(el);
 #ifdef GRAPHML
-      if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
+      if (!strcmp(TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
 #endif /* GRAPHML */
 	{
 	  if (real)
-	    usprintf (buffer, TEXT("stroke-width: %g"), fval);
+	    sprintf (buffer, "stroke-width: %g", fval);
 	  else
-	    usprintf (buffer, TEXT("stroke-width: %d"),
+	    sprintf (buffer, "stroke-width: %d",
 		      settings->value.typed_data.value);
 	}
       add_unit = 1;
@@ -3111,61 +3093,61 @@ void PToCss (PresentationSetting settings, char *buffer, int len, Element el)
 
     case PRMarginTop:
       if (real)
-	usprintf (buffer, TEXT("marging-top: %g"), fval);
+	sprintf (buffer, "marging-top: %g", fval);
       else
-	usprintf (buffer, TEXT("marging-top: %d"),
+	sprintf (buffer, "marging-top: %d",
 		  settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRMarginLeft:
       if (real)
-	usprintf (buffer, TEXT("margin-left: %g"), fval);
+	sprintf (buffer, "margin-left: %g", fval);
       else
-	usprintf (buffer, TEXT("margin-left: %d"),
+	sprintf (buffer, "margin-left: %d",
 		  settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRHeight:
       if (real)
-	usprintf (buffer, TEXT("height: %g"), fval);
+	sprintf (buffer, "height: %g", fval);
       else
-	usprintf (buffer, TEXT("height: %d"), settings->value.typed_data.value);
+	sprintf (buffer, "height: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRWidth:
       if (real)
-	usprintf (buffer, TEXT("width: %g"), fval);
+	sprintf (buffer, "width: %g", fval);
       else
-	usprintf (buffer, TEXT("width: %d"), settings->value.typed_data.value);
+	sprintf (buffer, "width: %d", settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRLine:
       if (settings->value.typed_data.value == STYLE_INLINE)
-	ustrcpy (buffer, TEXT("display: inline"));
+	strcpy (buffer, "display: inline");
       else if (settings->value.typed_data.value == STYLE_NOTINLINE)
-	ustrcpy (buffer, TEXT("display: block"));
+	strcpy (buffer, "display: block");
       break;
     case PRBackgroundPicture:
       if (settings->value.pointer != NULL)
-	usprintf (buffer, TEXT("background-image: url(%s)"),
+	sprintf (buffer, "background-image: url(%s)",
 		  (char*)(settings->value.pointer));
       else
-	usprintf (buffer, TEXT("background-image: none"));
+	sprintf (buffer, "background-image: none");
       break;
     case PRPictureMode:
       switch (settings->value.typed_data.value)
 	{
 	case STYLE_REALSIZE:
-	  usprintf (buffer, TEXT("background-repeat: no-repeat"));
+	  sprintf (buffer, "background-repeat: no-repeat");
 	  break;
 	case STYLE_REPEAT:
-	  usprintf (buffer, TEXT("background-repeat: repeat"));
+	  sprintf (buffer, "background-repeat: repeat");
 	  break;
 	case STYLE_VREPEAT:
-	  usprintf (buffer, TEXT("background-repeat: repeat-y"));
+	  sprintf (buffer, "background-repeat: repeat-y");
 	  break;
 	case STYLE_HREPEAT:
-	  usprintf (buffer, TEXT("background-repeat: repeat-x"));
+	  sprintf (buffer, "background-repeat: repeat-x");
 	  break;
 	}
       break;
@@ -3180,7 +3162,7 @@ void PToCss (PresentationSetting settings, char *buffer, int len, Element el)
 	{
 	  if (CSSUnitNames[i].unit == unit)
 	    {
-	      ustrcat (buffer, CSSUnitNames[i].sign);
+	      strcat (buffer, CSSUnitNames[i].sign);
 	      break;
 	    }
 	}
@@ -3204,7 +3186,7 @@ void  ParseHTMLSpecificStyle (Element el, char *cssRule, Document doc,
 
    /*  A rule applying to BODY is really meant to address HTML */
    elType = TtaGetElementType (el);
-   isHTML = (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0);
+   isHTML = (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0);
    /* create the context of the Specific presentation driver */
    context = TtaGetSpecificStyleContext (doc);
    if (context == NULL)
@@ -3245,7 +3227,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   ThotBool           isHTML;
   ThotBool           level;
 
-  sel[0] = WC_EOS;
+  sel[0] = EOS;
   for (i = 0; i < MAX_ANCESTORS; i++)
     {
       names[i] = NULL;
@@ -3265,7 +3247,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   /* the priority level of the rule depends on the selector */
   ctxt->cssLevel = 0;
   
-  selector = SkipWCBlanksAndComments (selector);
+  selector = SkipBlanksAndComments (selector);
   cur = &sel[0];
   max = 0; /* number of loops */
   while (1)
@@ -3273,12 +3255,12 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       deb = cur;
       /* copy an item of the selector into sel[] */
       /* put one word in the sel buffer */
-      while (*selector != WC_EOS && *selector != TEXT(',') &&
-             *selector != TEXT('.') && *selector != TEXT(':') &&
-             *selector != TEXT('#') && !TtaIsWCBlank (selector))
+      while (*selector != EOS && *selector != ',' &&
+             *selector != '.' && *selector != ':' &&
+             *selector != '#' && !TtaIsBlank (selector))
             *cur++ = *selector++;
-      *cur++ = WC_EOS; /* close the first string  in sel[] */
-      if (deb[0] != WC_EOS)
+      *cur++ = EOS; /* close the first string  in sel[] */
+      if (deb[0] != EOS)
 	names[0] = deb;
       else
 	names[0] = NULL;
@@ -3290,78 +3272,78 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 
       /* now names[0] points to the beginning of the parsed item
 	 and cur to the next chain to be parsed */
-      if (*selector == TEXT(':') || *selector == TEXT('.') || *selector == TEXT('#'))
+      if (*selector == ':' || *selector == '.' || *selector == '#')
 	/* keep the element name which precedes the id or
 	 pseudo class or the class */
 	deb = cur;
 
-      if (*selector == TEXT('.'))
+      if (*selector == '.')
 	{
 	  /* copy into sel[] the class */
 	  classes[0] = cur;
 	  selector++;
-	  while (*selector != WC_EOS && *selector != TEXT(',') &&
-		 *selector != TEXT('.') && *selector != TEXT(':') &&
-		 !TtaIsWCBlank (selector))
+	  while (*selector != EOS && *selector != ',' &&
+		 *selector != '.' && *selector != ':' &&
+		 !TtaIsBlank (selector))
 	    *cur++ = *selector++;
-	  *cur++ = WC_EOS;
+	  *cur++ = EOS;
 	}
-      else if (*selector == TEXT(':'))
+      else if (*selector == ':')
 	{
 	  /* copy into sel[] the pseudoclass */
 	  pseudoclasses[0]= cur;
 	  selector++;
-	  while (*selector != WC_EOS && *selector != TEXT(',') &&
-             *selector != TEXT('.') && *selector != TEXT(':') &&
-             !TtaIsWCBlank (selector))
+	  while (*selector != EOS && *selector != ',' &&
+             *selector != '.' && *selector != ':' &&
+             !TtaIsBlank (selector))
             *cur++ = *selector++;
-	  *cur++ = WC_EOS;
+	  *cur++ = EOS;
 	}
-      else if (*selector == TEXT('#'))
+      else if (*selector == '#')
 	{
 	  /* copy into sel[] the attribute */
 	  ids[0] = cur;
 	  selector++;
-	  while (*selector != WC_EOS && *selector != TEXT(',') &&
-             *selector != TEXT('.') && *selector != TEXT(':') &&
-             !TtaIsWCBlank (selector))
+	  while (*selector != EOS && *selector != ',' &&
+             *selector != '.' && *selector != ':' &&
+             !TtaIsBlank (selector))
             *cur++ = *selector++;
-	  *cur++ = WC_EOS;
+	  *cur++ = EOS;
 	}
-      else if (*selector == TEXT('['))
+      else if (*selector == '[')
 	{
 	  /* copy into sel[] the attribute */
 	  attrs[0] = cur;
 	  selector++;
-	  while (*selector != WC_EOS && *selector != TEXT(']') && *selector != TEXT('='))
+	  while (*selector != EOS && *selector != ']' && *selector != '=')
 	    *cur++ = *selector++;
-	  if (*cur == TEXT('='))
+	  if (*cur == '=')
 	    {
 	      /* there is a value "xxxx" */
-	      *cur++ = WC_EOS;
-	      while (*selector != WC_EOS && *selector != TEXT(']') && *selector != TEXT('"'))
+	      *cur++ = EOS;
+	      while (*selector != EOS && *selector != ']' && *selector != '"')
 		selector++;
-	      if (*selector != WC_EOS)
+	      if (*selector != EOS)
 		{
 		  /* we are now parsing the attribute value */
 		  attrvals[0] = cur;
 		  selector++;
-		  while (*selector != WC_EOS && *selector != TEXT('"'))
+		  while (*selector != EOS && *selector != '"')
 		    *cur++ = *selector++;
-		  if (*selector != WC_EOS)
+		  if (*selector != EOS)
 		    selector++;
 		}
 	    }
-	  *cur++ = WC_EOS;
+	  *cur++ = EOS;
 	}
 
-      selector = SkipWCBlanksAndComments (selector);
+      selector = SkipBlanksAndComments (selector);
 
       /* is it a multi-level selector? */
-      if (*selector == WC_EOS)
+      if (*selector == EOS)
 	/* end of the selector */
 	break;
-      else if (*selector == TEXT(','))
+      else if (*selector == ',')
 	{
 	  /* end of the current selector */
 	  selector++;
@@ -3492,7 +3474,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   /* Get the schema name of the main element */
   if (ctxt->schema == NULL)
     ctxt->schema = TtaGetDocumentSSchema (doc);
-  isHTML = (ustrcmp (TtaGetSSchemaName (ctxt->schema), TEXT("HTML")) == 0);
+  isHTML = (strcmp (TtaGetSSchemaName (ctxt->schema), "HTML") == 0);
   tsch = GetPExtension (doc, ctxt->schema, css);
   structName = TtaGetSSchemaName (ctxt->schema);
   if (cssRule)
@@ -3518,34 +3500,34 @@ static void  ParseStyleDeclaration (Element el, char *cssRule, Document doc,
   char                saved2;
 
   /* separate the selectors string */
-  cssRule = SkipWCBlanksAndComments (cssRule);
+  cssRule = SkipBlanksAndComments (cssRule);
   decl_end = cssRule;
-  while ((*decl_end != WC_EOS) && (*decl_end != TEXT('{')))
+  while (*decl_end != EOS && *decl_end != '{')
     decl_end++;
-  if (*decl_end == WC_EOS)
+  if (*decl_end == EOS)
     return;
   /* verify and clean the selector string */
   sel_end = decl_end - 1;
-  while (*sel_end == WC_SPACE || *sel_end == WC_BSPACE ||
-	 *sel_end == WC_EOL || *sel_end == WC_CR)
+  while (*sel_end == SPACE || *sel_end == BSPACE ||
+	 *sel_end == EOL || *sel_end == CR)
     sel_end--;
   sel_end++;
   saved1 = *sel_end;
-  *sel_end = WC_EOS;
+  *sel_end = EOS;
   selector = cssRule;
 
   /* now, deal with the content ... */
   decl_end++;
   cssRule = decl_end;
-  while (*decl_end != WC_EOS && *decl_end != TEXT('}'))
+  while (*decl_end != EOS && *decl_end != '}')
     decl_end++;
-  if (*decl_end == WC_EOS)
+  if (*decl_end == EOS)
     {
       fprintf (stderr, "Invalid STYLE declaration: %s\n", cssRule);
       return;
     }
   saved2 = *decl_end;
-  *decl_end = WC_EOS;
+  *decl_end = EOS;
 
   /*
    * parse the style attribute string and install the corresponding
@@ -3556,7 +3538,7 @@ static void  ParseStyleDeclaration (Element el, char *cssRule, Document doc,
     return;
   ctxt->destroy = destroy;
 
-  while ((selector != NULL) && (*selector != WC_EOS))
+  while ((selector != NULL) && (*selector != EOS))
     selector = ParseGenericSelector (selector, cssRule, ctxt, doc, css);
   TtaFreeMemory (ctxt);
 
@@ -3585,7 +3567,7 @@ int         IsImplicitClassName (char *class, Document doc)
    SSchema      schema;
 
    /* make a local copy */
-   ustrncpy (name, class, 199);
+   strncpy (name, class, 199);
    name[199] = 0;
 
    /* loop looking if each word is a GI */
@@ -3601,7 +3583,7 @@ int         IsImplicitClassName (char *class, Document doc)
 	     return (0);
 	  }
 	*cur = save;
-	cur = SkipWCBlanksAndComments (cur);
+	cur = SkipBlanksAndComments (cur);
      }
    return (1);
 }
@@ -3619,7 +3601,7 @@ void    HTMLSetBackgroundColor (Document doc, Element el, char *color)
 {
    char             css_command[100];
 
-   usprintf (css_command, TEXT("background-color: %s"), color);
+   sprintf (css_command, "background-color: %s", color);
    ParseHTMLSpecificStyle (el, css_command, doc, 1, FALSE);
 }
 
@@ -3633,15 +3615,15 @@ void HTMLSetBackgroundImage (Document doc, Element el, int repeat, char *image)
    char           css_command[400];
 
    /******* check buffer overflow ********/
-   usprintf (css_command, TEXT("background-image: url(%s); background-repeat: "), image);
+   sprintf (css_command, "background-image: url(%s); background-repeat: ", image);
    if (repeat == STYLE_REPEAT)
-     ustrcat (css_command, TEXT("repeat"));
+     strcat (css_command, "repeat");
    else if (repeat == STYLE_HREPEAT)
-     ustrcat (css_command, TEXT("repeat-x"));
+     strcat (css_command, "repeat-x");
    else if (repeat == STYLE_VREPEAT)
-     ustrcat (css_command, TEXT("repeat-y"));
+     strcat (css_command, "repeat-y");
    else
-     ustrcat (css_command, TEXT("no-repeat"));
+     strcat (css_command, "no-repeat");
    ParseHTMLSpecificStyle (el, css_command, doc, 1, FALSE);
 }
 
@@ -3652,7 +3634,7 @@ void   HTMLSetForegroundColor (Document doc, Element el, char *color)
 {
    char           css_command[100];
 
-   usprintf (css_command, TEXT("color: %s"), color);
+   sprintf (css_command, "color: %s", color);
    ParseHTMLSpecificStyle (el, css_command, doc, 1, FALSE);
 }
 
@@ -3663,7 +3645,7 @@ void                HTMLResetBackgroundColor (Document doc, Element el)
 {
    char           css_command[100];
 
-   usprintf (css_command, TEXT("background: red"));
+   sprintf (css_command, "background: red");
    ParseHTMLSpecificStyle (el, css_command, doc, 1, TRUE);
 }
 
@@ -3674,7 +3656,7 @@ void                HTMLResetBackgroundImage (Document doc, Element el)
 {
    char           css_command[1000];
 
-   usprintf (css_command, TEXT("background-image: url(xx); background-repeat: repeat"));
+   sprintf (css_command, "background-image: url(xx); background-repeat: repeat");
    ParseHTMLSpecificStyle (el, css_command, doc, 1, TRUE);
 }
 
@@ -3686,7 +3668,7 @@ void                HTMLResetForegroundColor (Document doc, Element el)
    char           css_command[100];
 
    /* it's not necessary to well know the current color but it must be valid */
-   usprintf (css_command, TEXT("color: red"));
+   sprintf (css_command, "color: red");
    ParseHTMLSpecificStyle (el, css_command, doc, 1, TRUE);
 }
 
@@ -3697,7 +3679,7 @@ void                HTMLSetAlinkColor (Document doc, char *color)
 {
    char           css_command[100];
 
-   usprintf (css_command, TEXT("a:link { color: %s }"), color);
+   sprintf (css_command, "a:link { color: %s }", color);
    ApplyCSSRules (NULL, css_command, doc, FALSE);
 }
 
@@ -3708,7 +3690,7 @@ void                HTMLSetAactiveColor (Document doc, char *color)
 {
    char           css_command[100];
 
-   usprintf (css_command, TEXT("a:active { color: %s }"), color);
+   sprintf (css_command, "a:active { color: %s }", color);
    ApplyCSSRules (NULL, css_command, doc, FALSE);
 }
 
@@ -3719,7 +3701,7 @@ void                HTMLSetAvisitedColor (Document doc, char *color)
 {
    char           css_command[100];
 
-   usprintf (css_command, TEXT("a:visited { color: %s }"), color);
+   sprintf (css_command, "a:visited { color: %s }", color);
    ApplyCSSRules (NULL, css_command, doc, FALSE);
 }
 
@@ -3730,7 +3712,7 @@ void                HTMLResetAlinkColor (Document doc)
 {
    char           css_command[100];
 
-   usprintf (css_command, TEXT("a:link { color: red }"));
+   sprintf (css_command, "a:link { color: red }");
    ApplyCSSRules (NULL, css_command, doc, TRUE);
 }
 
@@ -3741,7 +3723,7 @@ void                HTMLResetAactiveColor (Document doc)
 {
    char           css_command[100];
 
-   usprintf (css_command, TEXT("a:active { color: red }"));
+   sprintf (css_command, "a:active { color: red }");
    ApplyCSSRules (NULL, css_command, doc, TRUE);
 }
 
@@ -3752,7 +3734,7 @@ void                HTMLResetAvisitedColor (Document doc)
 {
    char           css_command[100];
 
-   usprintf (css_command, TEXT("a:visited { color: red }"));
+   sprintf (css_command, "a:visited { color: red }");
    ApplyCSSRules (NULL, css_command, doc, TRUE);
 }
 
@@ -3792,9 +3774,9 @@ void ApplyCSSRules (Element el, char *cssRule, Document doc, ThotBool destroy)
   ----------------------------------------------------------------------*/
 char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, ThotBool withUndo)
 {
-  char              c;
-  char              *cssRule, *base;
   DisplayMode         dispMode;
+  char                c;
+  char               *cssRule, *base;
   int                 index;
   int                 CSSindex;
   int                 CSScomment;
@@ -3815,7 +3797,7 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, ThotBool withU
   import = MAX_CSS_LENGTH;
   eof = FALSE;
   openRule = 0;
-  c = WC_SPACE;
+  c = SPACE;
   index = 0;
   /* avoid too many redisplay */
   dispMode = TtaGetDisplayMode (docRef);
@@ -3828,148 +3810,175 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, ThotBool withU
   if (css == NULL)
     css = AddCSS (docRef, docRef, CSS_DOCUMENT_STYLE, NULL, NULL);
 
-  while (CSSindex < MAX_CSS_LENGTH && c != EOS && !eof) {
-        c = buffer[index++];
-        eof = (c == WC_EOS);
-        CSSbuffer[CSSindex] = c;
-        if (CSScomment == MAX_CSS_LENGTH || c == TEXT('*') || c == TEXT('/') || c == TEXT('<')) {
-           /* we're not within a comment or we're parsing * or / */
-           switch (c) {
-                  case TEXT('@'): /* perhaps an import primitive */
-                       import = CSSindex;
-                       break;
-                  case TEXT(';'):
-                       if (import != MAX_CSS_LENGTH && !media) { 
-                          if (ustrncasecmp (&CSSbuffer[import+1], TEXT("import"), 6))
-                             /* it's not an import */
-                             import = MAX_CSS_LENGTH;
-                         /* save the text */
-                         noRule = TRUE;
-                       }
-                       break;
-                  case TEXT('*'):
-                       if (CSScomment == MAX_CSS_LENGTH && CSSindex > 0 && CSSbuffer[CSSindex - 1] == TEXT('/'))
-                          /* start a comment */
-                          CSScomment = CSSindex - 1;
-                       break;
-                  case TEXT('/'):
-                       if (CSSindex > 1 && CSScomment != MAX_CSS_LENGTH && CSSbuffer[CSSindex - 1] == TEXT('*')) {
-                          /* close a comment:and ignore its contents */
-                          CSSindex = CSScomment - 1; /* will be incremented later */
-                          CSScomment = MAX_CSS_LENGTH;
-                       } else if (CSScomment == MAX_CSS_LENGTH && CSSindex > 0 && CSSbuffer[CSSindex - 1] ==  TEXT('<')) {
-                              /* this is the closing tag ! */
-                              CSSindex -= 2; /* remove </ from the CSS string */
-                              noRule = TRUE;
-                       } 
-                       break;
-                  case TEXT('<'):
-                       if (CSScomment == MAX_CSS_LENGTH) {
-                          /* only if we're not parsing a comment */
-                          c = buffer[index++];
-                          eof = (c == WC_EOS);
-                          if (c == TEXT('!')) {
-                             /* CSS within an HTML comment */
-                             HTMLcomment = TRUE;
-                             CSSindex++;
-                             CSSbuffer[CSSindex] = c;
-                          } else if (c == WC_EOS)
-                                 CSSindex++;
-                       }
-                       break;
-                  case TEXT('-'):
-                       if (CSSindex > 0 && CSSbuffer[CSSindex - 1] == TEXT('-') && HTMLcomment)
-                          /* CSS within an HTML comment */
-                          noRule = TRUE;
-                       break;
-                  case TEXT('>'):
-                       if (HTMLcomment)
-                          noRule = TRUE;
-                       break;
-                  case TEXT(' '):
-                       if (import != MAX_CSS_LENGTH && openRule == 0)
-                          media = !ustrncmp (&CSSbuffer[import+1], TEXT("media"), 5);
-                       break;
-                  case TEXT('{'):
-                       openRule++;
-                       if (import != MAX_CSS_LENGTH && openRule == 1 && media) {
-                          /* is it the screen concerned? */
-                          CSSbuffer[CSSindex+1] = WC_EOS;
-                          if (TtaIsPrinting ())
-                             base = ustrstr (&CSSbuffer[import], TEXT("print"));
-                          else
-                               base = ustrstr (&CSSbuffer[import], TEXT("screen"));
-                          if (base == NULL)
-                             ignoreMedia = TRUE;
-                          noRule = TRUE;
-                       }
-                       break;
-                  case TEXT('}'):
-                       openRule--;
-                       if (import != MAX_CSS_LENGTH && openRule == 0) {
-                          import = MAX_CSS_LENGTH;
-                          noRule = TRUE;
-                          ignoreMedia = FALSE;
-                          media = FALSE;
-                       } else
-                              toParse = TRUE;
-                       break;
-                  default:
-                       break;
-           }
-        }    
-        if (c != WC_CR)
-           CSSindex++;
+  while (CSSindex < MAX_CSS_LENGTH && c != EOS && !eof)
+    {
+      c = buffer[index++];
+      eof = (c == EOS);
+      CSSbuffer[CSSindex] = c;
+      if (CSScomment == MAX_CSS_LENGTH ||
+	  c == '*' || c == '/' || c == '<')
+	{
+	  /* we're not within a comment or we're parsing * or / */
+	  switch (c)
+	    {
+	    case '@': /* perhaps an import primitive */
+	      import = CSSindex;
+	      break;
+	    case ';':
+	      if (import != MAX_CSS_LENGTH && !media)
+		{ 
+		  if (strncasecmp (&CSSbuffer[import+1], "import", 6))
+		    /* it's not an import */
+		    import = MAX_CSS_LENGTH;
+		  /* save the text */
+		  noRule = TRUE;
+		}
+	      break;
+	    case '*':
+	      if (CSScomment == MAX_CSS_LENGTH && CSSindex > 0 &&
+		  CSSbuffer[CSSindex - 1] == '/')
+		/* start a comment */
+		CSScomment = CSSindex - 1;
+	      break;
+	    case '/':
+	      if (CSSindex > 1 && CSScomment != MAX_CSS_LENGTH &&
+		  CSSbuffer[CSSindex - 1] == '*')
+		{
+		  /* close a comment:and ignore its contents */
+		  CSSindex = CSScomment - 1; /* will be incremented later */
+		  CSScomment = MAX_CSS_LENGTH;
+		}
+	      else if (CSScomment == MAX_CSS_LENGTH && CSSindex > 0 &&
+		       CSSbuffer[CSSindex - 1] ==  '<')
+		{
+		  /* this is the closing tag ! */
+		  CSSindex -= 2; /* remove </ from the CSS string */
+		  noRule = TRUE;
+		} 
+	      break;
+	    case '<':
+	      if (CSScomment == MAX_CSS_LENGTH)
+		{
+		  /* only if we're not parsing a comment */
+		  c = buffer[index++];
+		  eof = (c == EOS);
+		  if (c == '!')
+		    {
+		      /* CSS within an HTML comment */
+		      HTMLcomment = TRUE;
+		      CSSindex++;
+		      CSSbuffer[CSSindex] = c;
+		    }
+		  else if (c == EOS)
+		    CSSindex++;
+		}
+	      break;
+	    case '-':
+	      if (CSSindex > 0 && CSSbuffer[CSSindex - 1] == '-' &&
+		  HTMLcomment)
+		/* CSS within an HTML comment */
+		noRule = TRUE;
+	      break;
+	    case '>':
+	      if (HTMLcomment)
+		noRule = TRUE;
+	      break;
+	    case ' ':
+	      if (import != MAX_CSS_LENGTH && openRule == 0)
+		media = !strncmp (&CSSbuffer[import+1], "media", 5);
+	      break;
+	    case '{':
+	      openRule++;
+	      if (import != MAX_CSS_LENGTH && openRule == 1 && media)
+		{
+		  /* is it the screen concerned? */
+		  CSSbuffer[CSSindex+1] = EOS;
+		  if (TtaIsPrinting ())
+		    base = strstr (&CSSbuffer[import], "print");
+		  else
+		    base = strstr (&CSSbuffer[import], "screen");
+		  if (base == NULL)
+		    ignoreMedia = TRUE;
+		  noRule = TRUE;
+		}
+	      break;
+	    case '}':
+	      openRule--;
+	      if (import != MAX_CSS_LENGTH && openRule == 0)
+		{
+		  import = MAX_CSS_LENGTH;
+		  noRule = TRUE;
+		  ignoreMedia = FALSE;
+		  media = FALSE;
+		}
+	      else
+		toParse = TRUE;
+	      break;
+	    default:
+	      break;
+	    }
+        }
+      if (c != CR)
+	CSSindex++;
 
-        if (CSSindex >= MAX_CSS_LENGTH && CSScomment < MAX_CSS_LENGTH)
-           /* we're still parsing a comment: remove the text comment */
-           CSSindex = CSScomment;
+      if (CSSindex >= MAX_CSS_LENGTH && CSScomment < MAX_CSS_LENGTH)
+	/* we're still parsing a comment: remove the text comment */
+	CSSindex = CSScomment;
 
-        if (CSSindex >= MAX_CSS_LENGTH || toParse || noRule) {
-           CSSbuffer[CSSindex] = WC_EOS;
-           /* parse a not empty string */
-           if (CSSindex > 0) {
+      if (CSSindex >= MAX_CSS_LENGTH || toParse || noRule)
+	{
+	  CSSbuffer[CSSindex] = EOS;
+	  /* parse a not empty string */
+	  if (CSSindex > 0)
+	    {
               /* apply CSS rule if it's not just a saving of text */
               if (!noRule && !ignoreMedia)
-                 ParseStyleDeclaration (NULL, CSSbuffer, docRef, css, FALSE);
-              else if (import != MAX_CSS_LENGTH && !ustrncasecmp (&CSSbuffer[import+1], TEXT("import"), 6)) {
-                   /* import section */
-                   cssRule = &CSSbuffer[import+7];
-                   cssRule = TtaSkipWCBlanks (cssRule);
-                   if (!ustrncasecmp (cssRule, TEXT("url"), 3)) {
+		ParseStyleDeclaration (NULL, CSSbuffer, docRef, css, FALSE);
+              else if (import != MAX_CSS_LENGTH &&
+		       !strncasecmp (&CSSbuffer[import+1], "import", 6))
+		{
+		  /* import section */
+		  cssRule = &CSSbuffer[import+7];
+		  cssRule = TtaSkipBlanks (cssRule);
+		  if (!strncasecmp (cssRule, "url", 3))
+		    {
                       cssRule = &cssRule[3];
-                      cssRule = TtaSkipWCBlanks (cssRule);
-                      if (*cssRule == TEXT('(')) {
-                         cssRule++;
-                         cssRule = TtaSkipWCBlanks (cssRule);
-                         base = cssRule;
-                         while (*cssRule != WC_EOS && *cssRule != TEXT(')'))
-                                cssRule++;
-                         *cssRule = WC_EOS;
-                         LoadStyleSheet (base, docRef, NULL, css, css->media[docRef]);
-                      }
-                   }
-                   /*** Caution: Strings can either be written with double quotes or
-                        with single quotes. Only double quotes are handled here.
-                        Escaped quotes are not handled. See function SkipQuotedString */
-                   else if (*cssRule == TEXT('"')) {
-                        cssRule++;
-                        base = cssRule;
-                        while (*cssRule != WC_EOS && *cssRule != TEXT('"'))
-                              cssRule++;
-                        *cssRule = WC_EOS;
-                        LoadStyleSheet (base, docRef, NULL, css, css->media[docRef]);
-                   }
-                   import = MAX_CSS_LENGTH;
-              }
-           }
-           toParse = FALSE;
-           noRule = FALSE;
-           CSSindex = 0;
+                      cssRule = TtaSkipBlanks (cssRule);
+                      if (*cssRule == '(')
+			{
+			  cssRule++;
+			  cssRule = TtaSkipBlanks (cssRule);
+			  base = cssRule;
+			  while (*cssRule != EOS && *cssRule != ')')
+			    cssRule++;
+			  *cssRule = EOS;
+			  LoadStyleSheet (base, docRef, NULL, css, css->media[docRef]);
+			}
+		    }
+		  /*
+		    Caution: Strings can either be written with double quotes or
+		    with single quotes. Only double quotes are handled here.
+		    Escaped quotes are not handled. See function SkipQuotedString
+		  */
+		  else if (*cssRule == '"')
+		    {
+		      cssRule++;
+		      base = cssRule;
+		      while (*cssRule != EOS && *cssRule != '"')
+			cssRule++;
+		      *cssRule = EOS;
+		      LoadStyleSheet (base, docRef, NULL, css, css->media[docRef]);
+		    }
+		  import = MAX_CSS_LENGTH;
+		}
+	    }
+	  toParse = FALSE;
+	  noRule = FALSE;
+	  CSSindex = 0;
         }
-  }
+    }
   /* restore the display mode */
   if (dispMode == DisplayImmediately)
-     TtaSetDisplayMode (docRef, dispMode);
+    TtaSetDisplayMode (docRef, dispMode);
   return (c);
 }

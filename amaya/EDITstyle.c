@@ -8,7 +8,6 @@
 /*
  *
  * Authors: I. Vatton
- *          R. Guetari (W3C/INRIA) Unicode and Windows version
  *
  */
  
@@ -32,18 +31,18 @@
 #include "html2thot_f.h"
 #include "init_f.h"
 #include "styleparser_f.h"
-
 #ifdef _WINDOWS
 #include "wininclude.h"
 #endif /* _WINDOWS */
 
-static CHAR_T       ListBuffer[MAX_CSS_LENGTH];
-static STRING       OldBuffer;
+static char         ListBuffer[MAX_CSS_LENGTH];
+static char        *OldBuffer;
 static int          NbClass = 0;
-static CHAR_T       CurrentClass[80];
+static char         CurrentClass[80];
 static Element      ClassReference;
 static Document     DocReference;
 static Document	    ApplyClassDoc;
+
 
 /*----------------------------------------------------------------------
   RemoveElementStyle cleans all the presentation rules of a given element.
@@ -55,7 +54,7 @@ static void  RemoveElementStyle (Element el, Document doc, ThotBool removeSpan)
    Attribute            attr;
    AttributeType        attrType;
    Element		firstChild, lastChild;
-   STRING               name;
+   char                *name;
 
    if (el == NULL)
       return;
@@ -63,7 +62,7 @@ static void  RemoveElementStyle (Element el, Document doc, ThotBool removeSpan)
    /* if it's a MathML element, remove the style attribute defined in the
       MathML DTD */
    name = TtaGetSSchemaName (elType.ElSSchema);
-   if (!ustrcmp (name, TEXT("MathML")))
+   if (!strcmp (name, "MathML"))
       {
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = MathML_ATTR_style_;
@@ -72,7 +71,7 @@ static void  RemoveElementStyle (Element el, Document doc, ThotBool removeSpan)
 #ifdef GRAPHML
    /* if it's a GraphML element, remove the style attribute defined in the
       GraphML DTD */
-   if (!ustrcmp (name, TEXT("GraphML")))
+   if (!strcmp (name, "GraphML"))
       {
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = GraphML_ATTR_style_;
@@ -81,7 +80,7 @@ static void  RemoveElementStyle (Element el, Document doc, ThotBool removeSpan)
 #endif
       /* remove the style attribute defined in the HTML DTD */
       {
-      attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+      attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
       attrType.AttrTypeNum = HTML_ATTR_Style_;
       }
    attr = TtaGetAttribute (el, attrType);
@@ -109,52 +108,52 @@ static void  RemoveElementStyle (Element el, Document doc, ThotBool removeSpan)
    image url is obtained by concatenation of imgpath and the image name.
    Returns NULL or a new allocated styleString.
   ----------------------------------------------------------------------*/
-STRING              UpdateCSSBackgroundImage (STRING oldpath, STRING newpath,
-					      STRING imgpath,
-					      STRING styleString)
+char * UpdateCSSBackgroundImage (char *oldpath, char *newpath,
+				 char *imgpath,
+				 char *styleString)
 {
-  STRING              b, e, ptr, oldptr, sString;
-  CHAR_T              old_url[MAX_LENGTH];
-  CHAR_T              tempname[MAX_LENGTH];
-  CHAR_T              imgname[MAX_LENGTH];
-  STRING              new_url;
+  char               *b, *e, *ptr, *oldptr, *sString;
+  char                old_url[MAX_LENGTH];
+  char                tempname[MAX_LENGTH];
+  char                imgname[MAX_LENGTH];
+  char               *new_url;
   int                 len;
 
   ptr = NULL;
   sString = styleString;
-  b = ustrstr (sString, TEXT("url"));
+  b = strstr (sString, "url");
   while (b != NULL)
     {
       /* we need to compare this url with the new doc path */
       b += 3;
-      b = SkipWCBlanksAndComments (b);
-      if (*b == TEXT('('))
+      b = SkipBlanksAndComments (b);
+      if (*b == '(')
 	{
 	  b++;
-	  b = SkipWCBlanksAndComments (b);
+	  b = SkipBlanksAndComments (b);
 	  /*** Caution: Strings can either be written with double quotes or
 	       with single quotes. Only double quotes are handled here.
 	       Escaped quotes are not handled. See function SkipQuotedString */
-	  if (*b == TEXT('"'))
+	  if (*b == '"')
 	    {
 	      /* search the url end */
 	      b++;
 	      e = b;
-	      while (*e != WC_EOS && *e != TEXT('"'))
+	      while (*e != EOS && *e != '"')
 		e++;
 	    }
 	  else
 	    {
 	      /* search the url end */
 	      e = b;
-	      while (*e != WC_EOS && *e != TEXT(')'))
+	      while (*e != EOS && *e != ')')
 		e++;
 	    }
-	  if (*e != WC_EOS)
+	  if (*e != EOS)
 	    {
 	      len = (int)(e - b);
-	      ustrncpy (old_url, b, len);
-	      old_url[len] = WC_EOS;
+	      strncpy (old_url, b, len);
+	      old_url[len] = EOS;
 	      /* get the old full image name */
 	      NormalizeURL (old_url, 0, tempname, imgname, oldpath);
 	      /* build the new full image name */
@@ -166,28 +165,28 @@ STRING              UpdateCSSBackgroundImage (STRING oldpath, STRING newpath,
 	      if (ptr != NULL)
 		{
 		  oldptr = ptr;
-		  len = - len + ustrlen (oldptr) + ustrlen (new_url) + 1;
-		  ptr = TtaAllocString (len);	  
+		  len = - len + strlen (oldptr) + strlen (new_url) + 1;
+		  ptr = TtaGetMemory (len);	  
 		  len = (int)(b - oldptr);
-		  ustrncpy (ptr, oldptr, len);
+		  strncpy (ptr, oldptr, len);
 		  sString = &ptr[len];
 		  /* new name */
-		  ustrcpy (sString, new_url);
+		  strcpy (sString, new_url);
 		  /* following text */
-		  ustrcat (sString, e);
+		  strcat (sString, e);
 		  TtaFreeMemory (oldptr);
 		}
 	      else
 		{
-		  len = - len + ustrlen (styleString) + ustrlen (new_url) + 1;
-		  ptr = TtaAllocString (len);
+		  len = - len + strlen (styleString) + strlen (new_url) + 1;
+		  ptr = TtaGetMemory (len);
 		  len = (int)(b - styleString);
-		  ustrncpy (ptr, styleString, len);
+		  strncpy (ptr, styleString, len);
 		  sString = &ptr[len];
 		  /* new name */
-		  ustrcpy (sString, new_url);
+		  strcpy (sString, new_url);
 		  /* following text */
-		  ustrcat (sString, e);
+		  strcat (sString, e);
 		}
 	      TtaFreeMemory (new_url);
 	    }
@@ -197,7 +196,7 @@ STRING              UpdateCSSBackgroundImage (STRING oldpath, STRING newpath,
       else
 	sString = b;
       /* next background-image */
-      b = ustrstr (sString, TEXT("url")); 
+      b = strstr (sString, "url"); 
     }
   return (ptr);
 }
@@ -206,18 +205,18 @@ STRING              UpdateCSSBackgroundImage (STRING oldpath, STRING newpath,
    UpdateStyleDelete : attribute Style will be deleted.            
    remove the existing style presentation.                      
   ----------------------------------------------------------------------*/
-ThotBool            UpdateStyleDelete (NotifyAttribute * event)
+ThotBool UpdateStyleDelete (NotifyAttribute * event)
 {
    ElementType         elType;
    Element             el;
-   CHAR_T*             style = NULL;
+   char               *style = NULL;
    int                 len;
 
    el = event->element;
    /*  A rule applying to BODY is really meant to address the HTML element */
    elType = TtaGetElementType (event->element);
    if (elType.ElTypeNum == HTML_EL_BODY &&
-       ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
+       strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
       el = TtaGetParent (el);
    len = TtaGetTextAttributeLength (event->attribute);
    if ((len < 0) || (len > 10000))
@@ -230,11 +229,11 @@ ThotBool            UpdateStyleDelete (NotifyAttribute * event)
      {
 	/* parse the old content and remove the corresponding presentation
 	   rules */
-	style = TtaAllocString (len + 2);
+	style = TtaGetMemory (len + 2);
 	if (!style)
 	   return FALSE;
 	TtaGiveTextAttributeValue (event->attribute, style, &len);
-	style[len] = WC_EOS;
+	style[len] = EOS;
 	ParseHTMLSpecificStyle (el, style, event->document, 1, TRUE);
 	TtaFreeMemory (style);
      }
@@ -271,15 +270,15 @@ void           EnableStyleElement (Document doc)
 {
   Element               el;
   ElementType		elType;
-  STRING                name;
-  STRING                buffer;
+  char                 *name;
+  char                 *buffer;
 
   el = TtaGetMainRoot (doc);
   elType = TtaGetElementType (el);
   name = TtaGetSSchemaName (elType.ElSSchema);
 #ifdef GRAPHML
    /* if it's a SVG document, remove the style defined in the GraphML DTD */
-   if (!ustrcmp (name, TEXT("GraphML")))
+   if (!strcmp (name, "GraphML"))
      elType.ElTypeNum = GraphML_EL_style__;
    else
 #endif
@@ -301,7 +300,7 @@ void           DeleteStyleElement (Document doc)
 {
   Element               el;
   ElementType		elType;
-  STRING                name;
+  char                 *name;
 
   RemoveStyleSheet (NULL, doc, TRUE, TRUE);
   /* get the style element in the document head */
@@ -310,7 +309,7 @@ void           DeleteStyleElement (Document doc)
   name = TtaGetSSchemaName (elType.ElSSchema);
 #ifdef GRAPHML
    /* if it's a SVG document, remove the style defined in the GraphML DTD */
-   if (!ustrcmp (name, TEXT("GraphML")))
+   if (!strcmp (name, "GraphML"))
      elType.ElTypeNum = GraphML_EL_style__;
    else
 #endif
@@ -332,9 +331,9 @@ void           DeleteStyleElement (Document doc)
   ----------------------------------------------------------------------*/
 void                StyleChanged (NotifyAttribute * event)
 {
-  STRING              buffer, ptr1, ptr2;
-  STRING              pEnd, nEnd;
-  CHAR_T              c;
+  char               *buffer, *ptr1, *ptr2;
+  char               *pEnd, *nEnd;
+  char                c;
   int                 i, j;
   int                 previousEnd, nextEnd;
   int                 braces;
@@ -352,16 +351,16 @@ void                StyleChanged (NotifyAttribute * event)
   else
     {
       /* handle only differences */
-      while (OldBuffer[i] == *ptr1 && *ptr1 != WC_EOS)
+      while (OldBuffer[i] == *ptr1 && *ptr1 != EOS)
 	{
-	  if (i > 0 && OldBuffer[i-1] == TEXT('{'))
+	  if (i > 0 && OldBuffer[i-1] == '{')
 	    braces++;
 	  if (i > 0 &&
-	      (OldBuffer[i-1] == TEXT('}') ||
-	       ((OldBuffer[i-1] == TEXT(';') || OldBuffer[i-1] == TEXT('>')) &&
+	      (OldBuffer[i-1] == '}' ||
+	       ((OldBuffer[i-1] == ';' || OldBuffer[i-1] == '>') &&
 		braces == 0)))
 	    {
-	      if (OldBuffer[i-1] == TEXT('}'))
+	      if (OldBuffer[i-1] == '}')
 		braces--;
 	      previousEnd = i;
 	      pEnd = ptr1;
@@ -371,23 +370,23 @@ void                StyleChanged (NotifyAttribute * event)
 	}
       
       /* now ptr1 and OldBuffer[i] point to different strings */
-      if (*ptr1 != WC_EOS)
+      if (*ptr1 != EOS)
 	{
-	  ptr2 = ptr1 + ustrlen (ptr1);
-	  j = i + ustrlen (&OldBuffer[i]);
+	  ptr2 = ptr1 + strlen (ptr1);
+	  j = i + strlen (&OldBuffer[i]);
 	  nextEnd = j;
 	  nEnd = ptr2;
 	  braces = 0;
 	  while (OldBuffer[j] == *ptr2 && ptr2 != ptr1)
 	    {
-	      if (j > i && OldBuffer[j-1] == TEXT('{'))
+	      if (j > i && OldBuffer[j-1] == '{')
 		braces++;
 	      if (j > i &&
-		  (OldBuffer[j-1] == TEXT('}') ||
-           ((OldBuffer[j-1] == TEXT('@') || OldBuffer[j-1] == TEXT('<')) &&
+		  (OldBuffer[j-1] == '}' ||
+		   ((OldBuffer[j-1] == '@' || OldBuffer[j-1] == '<') &&
 		    braces == 0)))
 		{
-		  if (OldBuffer[j-1] == TEXT('}'))
+		  if (OldBuffer[j-1] == '}')
 		    braces--;
 		  nextEnd = j;
 		  nEnd = ptr2;
@@ -398,21 +397,21 @@ void                StyleChanged (NotifyAttribute * event)
 	  if (ptr1 != ptr2)
 	    {
 	      /* take complete CSS rules */
-	      OldBuffer[nextEnd] = WC_EOS;
-	      *nEnd = WC_EOS;
+	      OldBuffer[nextEnd] = EOS;
+	      *nEnd = EOS;
 	  
 	      /* remove previous rules */
 	      ptr1 = &OldBuffer[previousEnd];
 	      ptr2 = ptr1;
 	      do
 		{
-		  while (*ptr2 != TEXT('}') && *ptr2 != WC_EOS)
+		  while (*ptr2 != '}' && *ptr2 != EOS)
 		    ptr2++;
-		  if (*ptr2 != WC_EOS)
+		  if (*ptr2 != EOS)
 		    ptr2++;
 		  /* cut here */
 		  c = *ptr2;
-		  *ptr2 = WC_EOS;
+		  *ptr2 = EOS;
 		  ApplyCSSRules (event->element, ptr1, event->document, TRUE);
 		  /**** update image contexts
 			url1 = GetCSSBackgroundURL (ptr1);
@@ -427,25 +426,25 @@ void                StyleChanged (NotifyAttribute * event)
 		  *ptr2 = c;
 		  ptr1 = ptr2;
 		}
-	      while (*ptr2 != WC_EOS);
+	      while (*ptr2 != EOS);
 	      
 	      /* add new rules */
 	      ptr1 = pEnd;
 	      ptr2 = ptr1;
 	      do
 		{
-		  while (*ptr2 != TEXT('}') && *ptr2 != WC_EOS)
+		  while (*ptr2 != '}' && *ptr2 != EOS)
 		    ptr2++;
-		  if (*ptr2 != WC_EOS)
+		  if (*ptr2 != EOS)
 		    ptr2++;
 		  /* cut here */
 		  c = *ptr2;
-		  *ptr2 = WC_EOS;
+		  *ptr2 = EOS;
 		  ApplyCSSRules (event->element, ptr1, event->document, FALSE);
 		  *ptr2 = c;
 		  ptr1 = ptr2;
 		}
-	      while (*ptr2 != WC_EOS);
+	      while (*ptr2 != EOS);
 	    }
 	}
       
@@ -460,14 +459,14 @@ void                StyleChanged (NotifyAttribute * event)
    UpdateStylePost : attribute Style has been updated or created.  
    reflect the new style presentation.                          
   ----------------------------------------------------------------------*/
-void                UpdateStylePost (NotifyAttribute * event)
+void UpdateStylePost (NotifyAttribute * event)
 {
    Element             el, firstChild, lastChild, oldParent, newParent;
    ElementType	       elType;
    Document            doc;
    Attribute           at;
    AttributeType       atType;
-   CHAR_T*             style = NULL;
+   char               *style = NULL;
    int                 len;
 
    el = event->element;
@@ -482,7 +481,7 @@ void                UpdateStylePost (NotifyAttribute * event)
 	elType = TtaGetElementType (el);
         /* if it's a MathML element, delete the style attribute defined in the
            MathML DTD */
-	if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
+	if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
 	   {
 	   atType.AttrSSchema = elType.ElSSchema;
 	   atType.AttrTypeNum = MathML_ATTR_style_;
@@ -491,7 +490,7 @@ void                UpdateStylePost (NotifyAttribute * event)
 #ifdef GRAPHML
         /* if it's a GraphML element, delete the style attribute defined in the
            GraphML DTD */
-	if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
+	if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
 	   {
 	   atType.AttrSSchema = elType.ElSSchema;
 	   atType.AttrTypeNum = GraphML_ATTR_style_;
@@ -500,7 +499,7 @@ void                UpdateStylePost (NotifyAttribute * event)
 #endif
 	   /* delete the style attribute defined in the HTML DTD */
 	   {
-	   atType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+	   atType.AttrSSchema = TtaGetSSchema ("HTML", doc);
 	   atType.AttrTypeNum = HTML_ATTR_Style_;
 	   }
 	at = TtaGetAttribute (el, atType);
@@ -522,11 +521,11 @@ void                UpdateStylePost (NotifyAttribute * event)
    else
      {
 	/* parse and apply the new style content */
-	style = TtaAllocString (len + 2);
+	style = TtaGetMemory (len + 2);
 	if (style == NULL)
 	   return;
 	TtaGiveTextAttributeValue (event->attribute, style, &len);
-	style[len] = WC_EOS;
+	style[len] = EOS;
 	/* create a Span element if it's a TEXT leaf */
 	oldParent = TtaGetParent (el);
 	AttrToSpan (el, event->attribute, doc);
@@ -551,7 +550,7 @@ static void         DoApplyClass (Document doc)
   ElementType	      elType;
   Attribute           attr;
   AttributeType       attrType;
-  CHAR_T*             a_class = CurrentClass;
+  char               *a_class = CurrentClass;
   int		      firstSelectedChar, lastSelectedChar, i, lg;
   DisplayMode         dispMode;
   ThotBool	      setClassAttr;
@@ -560,9 +559,9 @@ static void         DoApplyClass (Document doc)
     return;
 
   /* remove any leading dot in a class definition. */
-  if (*a_class == TEXT('.'))
+  if (*a_class == '.')
     a_class++;
-  if (*a_class == WC_EOS)
+  if (*a_class == EOS)
     return;
 
   TtaGiveFirstSelectedElement (doc, &firstSelectedEl, &firstSelectedChar, &i);
@@ -574,7 +573,7 @@ static void         DoApplyClass (Document doc)
   if (dispMode == DisplayImmediately)
      TtaSetDisplayMode (doc, DeferredDisplay);
 
-  if (ustrcmp (CurrentClass, TEXT("default")) &&
+  if (strcmp (CurrentClass, "default") &&
       !IsImplicitClassName (CurrentClass, doc))
      setClassAttr = TRUE;
   else
@@ -601,7 +600,7 @@ static void         DoApplyClass (Document doc)
 	   parent = TtaGetParent (lastSelectedEl);
 	   elType = TtaGetElementType (parent);
 	   if (elType.ElTypeNum == HTML_EL_Span &&
-	       !ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+	       !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
 	      /* the parent element is a SPAN */
 	      if (lastSelectedEl == TtaGetFirstChild (parent) &&
 	          lastSelectedEl == TtaGetLastChild (parent))
@@ -627,7 +626,7 @@ static void         DoApplyClass (Document doc)
 	  parent = TtaGetParent (firstSelectedEl);
 	  elType = TtaGetElementType (parent);
 	  if (elType.ElTypeNum == HTML_EL_Span &&
-	      !ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+	      !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
 	    /* parent is a SPAN element */
 	    if (firstSelectedEl == TtaGetFirstChild (parent) &&
 		firstSelectedEl == TtaGetLastChild (parent))
@@ -687,7 +686,7 @@ static void         DoApplyClass (Document doc)
 	      elType.ElTypeNum == HTML_EL_Basic_Elem)
 	    {
 	      /* that's a text element */
-	      if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
+	      if (strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
 		/* not a HTML element, move to the parent element */
 		curEl = TtaGetParent (curEl);
 	      else
@@ -709,14 +708,14 @@ static void         DoApplyClass (Document doc)
 		    }
 	        }
 	    }
-	  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
+	  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
 	    {
 	      attrType.AttrSSchema = elType.ElSSchema;
 	      attrType.AttrTypeNum = MathML_ATTR_class;
 	    }
 	  else
 #ifdef GRAPHML
-	    if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
+	    if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
 	      {
 		attrType.AttrSSchema = elType.ElSSchema;
 		attrType.AttrTypeNum = GraphML_ATTR_class;
@@ -724,7 +723,7 @@ static void         DoApplyClass (Document doc)
 	    else
 #endif
 	      {
-		attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+		attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
 		attrType.AttrTypeNum = HTML_ATTR_Class;
 	      }
 	  /* set the Class attribute of the element */
@@ -763,11 +762,11 @@ static void  SpecificSettingsToCSS (Element el, Document doc,
 				    PresentationSetting settings, void *param)
 {
   LoadedImageDesc    *imgInfo;
-  CHAR_T*             css_rules = param;
-  CHAR_T              string[150];
-  CHAR_T*             ptr;
+  char               *css_rules = param;
+  char                string[150];
+  char               *ptr;
 
-  string[0] = WC_EOS;
+  string[0] = EOS;
   if (settings->type == PRBackgroundPicture)
     {
       /* transform absolute URL into relative URL */
@@ -783,10 +782,10 @@ static void  SpecificSettingsToCSS (Element el, Document doc,
   else
     PToCss (settings, string, sizeof(string), el);
 
-  if (string[0] != WC_EOS && *css_rules != WC_EOS)
-    ustrcat (css_rules, TEXT("; "));
-  if (string[0] != WC_EOS)
-    ustrcat (css_rules, string);
+  if (string[0] != EOS && *css_rules != EOS)
+    strcat (css_rules, "; ");
+  if (string[0] != EOS)
+    strcat (css_rules, string);
 }
 
 /*----------------------------------------------------------------------
@@ -795,10 +794,10 @@ static void  SpecificSettingsToCSS (Element el, Document doc,
   For stupid reasons, if the target element is HTML or BODY,
   one returns the concatenation of both element style strings.
   ----------------------------------------------------------------------*/
-void        GetHTMLStyleString (Element el, Document doc, STRING buf, int *len)
+void GetHTMLStyleString (Element el, Document doc, char *buf, int *len)
 {
   ElementType        elType;
-  STRING             name;
+  char              *name;
 
   if (buf == NULL || len == NULL || *len <= 0)
     return;
@@ -807,14 +806,14 @@ void        GetHTMLStyleString (Element el, Document doc, STRING buf, int *len)
    * this will transform all the Specific Settings associated to
    * the element to one CSS string.
    */
-  buf[0] = WC_EOS;
+  buf[0] = EOS;
   TtaApplyAllSpecificSettings (el, doc, SpecificSettingsToCSS, &buf[0]);
-  *len = ustrlen (buf);
+  *len = strlen (buf);
 
   /* BODY / HTML elements specific handling */
   elType = TtaGetElementType (el);
   name = TtaGetSSchemaName (elType.ElSSchema);
-  if (ustrcmp(name, TEXT("HTML")) == 0)
+  if (strcmp(name, "HTML") == 0)
     {
       if (elType.ElTypeNum == HTML_EL_HTML)
 	{
@@ -823,11 +822,11 @@ void        GetHTMLStyleString (Element el, Document doc, STRING buf, int *len)
 	  if (!el)
 	    return;
 	  if (*len > 0)
-	    ustrcat(buf, TEXT(";"));
-	  *len = ustrlen (buf);
+	    strcat(buf, ";");
+	  *len = strlen (buf);
 	  TtaApplyAllSpecificSettings (el, doc, SpecificSettingsToCSS,
 				       &buf[*len]);
-	  *len = ustrlen (buf);
+	  *len = strlen (buf);
 	}
       else if (elType.ElTypeNum == HTML_EL_BODY)
 	{
@@ -835,11 +834,11 @@ void        GetHTMLStyleString (Element el, Document doc, STRING buf, int *len)
 	  if (!el)
 	    return;
 	  if (*len > 0)
-	    ustrcat(buf, TEXT(";"));
-	  *len = ustrlen (buf);
+	    strcat(buf, ";");
+	  *len = strlen (buf);
 	  TtaApplyAllSpecificSettings (el, doc, SpecificSettingsToCSS,
 				       &buf[*len]);
-	  *len = ustrlen (buf);
+	  *len = strlen (buf);
 	}
     }
 }
@@ -855,10 +854,10 @@ static void         UpdateClass (Document doc)
   AttributeType       attrType;
   Element             el, parent, child, title, head, line, prev;
   ElementType         elType, selType;
-  STRING              stylestring;
-  STRING              text;
-  STRING              a_class;
-  STRING              schName;
+  char               *stylestring;
+  char               *text;
+  char               *a_class;
+  char               *schName;
   int                 len, base, i;
   Language            lang;
   ThotBool            found, empty, insertNewLine;
@@ -875,14 +874,14 @@ static void         UpdateClass (Document doc)
 
   /* get the current style attribute*/
   schName = TtaGetSSchemaName (elType.ElSSchema);
-  if (ustrcmp (schName, TEXT("MathML")) == 0)
+  if (strcmp (schName, "MathML") == 0)
     {
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = MathML_ATTR_style_;
     }
   else
 #ifdef GRAPHML
-  if (ustrcmp (schName, TEXT("GraphML")) == 0)
+  if (strcmp (schName, "GraphML") == 0)
     {
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = GraphML_ATTR_style_;
@@ -890,36 +889,36 @@ static void         UpdateClass (Document doc)
   else
 #endif
     {
-      attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+      attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
       attrType.AttrTypeNum = HTML_ATTR_Style_;
     }
   attr = TtaGetAttribute (ClassReference, attrType);
-  base = ustrlen (CurrentClass) + 2;
+  base = strlen (CurrentClass) + 2;
   if (attr)
     len = TtaGetTextAttributeLength (attr) + base + 3;
   else
     len = base + 3;
   /* create a string containing the new CSS definition. */
-  stylestring = TtaAllocString (len);
-  stylestring[0] = WC_EOS;
+  stylestring = TtaGetMemory (len);
+  stylestring[0] = EOS;
   if (selType.ElTypeNum == 0)
     {
       /* it's not an element type */
       if (CurrentClass[0] != '.' && CurrentClass[0] != '#')
 	{
 	  /* it's an invalid class name, insert a dot */
-	  ustrcat (stylestring, TEXT("."));
+	  strcat (stylestring, ".");
 	  base++;
 	}
     }
-  ustrcat (stylestring, CurrentClass);
-  ustrcat (stylestring, TEXT(" {"));
+  strcat (stylestring, CurrentClass);
+  strcat (stylestring, " {");
   if (attr)
     {
       len = len - base;
       TtaGiveTextAttributeValue (attr, &stylestring[base], &len);
     }
-  ustrcat (stylestring, TEXT("}"));
+  strcat (stylestring, "}");
   TtaOpenUndoSequence (doc, ClassReference, ClassReference, 0, 0);
 
   /* create the class attribute */
@@ -928,14 +927,14 @@ static void         UpdateClass (Document doc)
       a_class = &CurrentClass[0];
       if (*a_class == '.')
 	 a_class++;
-      if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
+      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
 	 {
 	   attrType.AttrSSchema = elType.ElSSchema;
 	   attrType.AttrTypeNum = MathML_ATTR_class;
 	 }
       else
 #ifdef GRAPHML
-      if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
+      if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
 	 {
 	   attrType.AttrSSchema = elType.ElSSchema;
 	   attrType.AttrTypeNum = GraphML_ATTR_class;
@@ -943,7 +942,7 @@ static void         UpdateClass (Document doc)
       else
 #endif
 	 {
-	   attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+	   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
 	   attrType.AttrTypeNum = HTML_ATTR_Class;
 	 }
       attr = TtaGetAttribute (ClassReference, attrType);
@@ -986,9 +985,9 @@ static void         UpdateClass (Document doc)
 	  if (attr)
 	    {
 	      len = TtaGetTextAttributeLength (attr);
-	      a_class = TtaAllocString (len + 1);
+	      a_class = TtaGetMemory (len + 1);
 	      TtaGiveTextAttributeValue (attr, a_class, &len);
-	      found = (!ustrcmp (a_class, TEXT("text/css")));
+	      found = (!strcmp (a_class, "text/css"));
 	      TtaFreeMemory (a_class);
 	    }
 	}
@@ -1008,7 +1007,7 @@ static void         UpdateClass (Document doc)
 	TtaInsertFirstChild (&el, head, doc);
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (el, attr, doc);
-      TtaSetAttributeText (attr, TEXT("text/css"), el, doc);
+      TtaSetAttributeText (attr, "text/css", el, doc);
     }
 
   child = TtaGetLastChild (el);
@@ -1030,7 +1029,7 @@ static void         UpdateClass (Document doc)
 	 skip it */
       {
 	len = TtaGetTextLength (child) + 1;
-	text = TtaAllocString (len);
+	text = TtaGetMemory (len);
 	TtaGiveTextContent (child, text, &len, &lang);
 	empty = TRUE;
 	insertNewLine = TRUE;
@@ -1068,7 +1067,7 @@ static void         UpdateClass (Document doc)
 	      {
 		child = TtaGetLastChild (line);
 		len = TtaGetTextLength (child) + 1;
-		text = TtaAllocString (len);
+		text = TtaGetMemory (len);
 		TtaGiveTextContent (child, text, &len, &lang);
 		empty = TRUE;
 		insertNewLine = TRUE;
@@ -1105,7 +1104,7 @@ static void         UpdateClass (Document doc)
     len = TtaGetTextLength (child);
     if (insertNewLine)
       {
-       TtaInsertTextContent (child, len, TEXT("\n"), doc);
+       TtaInsertTextContent (child, len, "\n", doc);
        len++;
       }
     TtaInsertTextContent (child, len, stylestring, doc);
@@ -1128,11 +1127,11 @@ static void         UpdateClass (Document doc)
    Put the value of attribute attr at the end of the buff buffer if
    it's not there already.
   ----------------------------------------------------------------------*/
-static void PutClassName (Attribute attr, STRING buf, int* index, int* free,
+static void PutClassName (Attribute attr, char *buf, int* index, int* free,
 			  int* nb)
 {
   int		len, cur, i;
-  CHAR_T        selector[100];
+  char          selector[100];
   ThotBool      found;
 
   len = 99;
@@ -1144,18 +1143,18 @@ static void PutClassName (Attribute attr, STRING buf, int* index, int* free,
     {
       if (buf[cur] == '.')
 	cur++;
-      len = ustrlen (&buf[cur]) + 1;
-      found = !ustrcmp (selector, &buf[cur]);
+      len = strlen (&buf[cur]) + 1;
+      found = !strcmp (selector, &buf[cur]);
       cur += len;
     }
   if (!found)
     {
-      len = ustrlen (selector);
+      len = strlen (selector);
       if (len > *free)
 	return;
       /* add this new class name and the dot */
       buf[(*index)++] = '.';
-      ustrcpy (&buf[*index], selector);
+      strcpy (&buf[*index], selector);
       len++; /* add the \0 */
       *free -= len;
       *index += len;
@@ -1167,8 +1166,7 @@ static void PutClassName (Attribute attr, STRING buf, int* index, int* free,
    BuildClassList
    Build the whole list of class names in use after the first name.
   ----------------------------------------------------------------------*/
-static int          BuildClassList (Document doc, STRING buf, int size,
-				    STRING first)
+static int BuildClassList (Document doc, char *buf, int size, char *first)
 {
   Element             el;
   Attribute           attr;
@@ -1179,14 +1177,14 @@ static int          BuildClassList (Document doc, STRING buf, int size,
   int                 index;
 
   /* add the first element if specified */
-  buf[0] = WC_EOS;
+  buf[0] = EOS;
   nb = 0;
   index = 0;
   free = size;
   if (first)
     {
-      ustrcpy (&buf[index], first);
-      len = ustrlen (first);
+      strcpy (&buf[index], first);
+      len = strlen (first);
       len++;
       free -= len;
       index += len;
@@ -1195,7 +1193,7 @@ static int          BuildClassList (Document doc, STRING buf, int size,
 
   /* list all class values */
   /* looks first for the Class attribute defined in the HTML DTD */
-  attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+  attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
   attrType.AttrTypeNum = HTML_ATTR_Class;
   el = TtaGetMainRoot (doc);
   while (el != NULL)
@@ -1205,7 +1203,7 @@ static int          BuildClassList (Document doc, STRING buf, int size,
 	PutClassName (attr, buf, &index, &free, &nb);
      }
   /* looks for the class attribute defined in the MathML DTD */
-  attrType.AttrSSchema = TtaGetSSchema (TEXT("MathML"), doc);
+  attrType.AttrSSchema = TtaGetSSchema ("MathML", doc);
   if (attrType.AttrSSchema)
      /* there are some MathML elements in this document */
      {
@@ -1220,7 +1218,7 @@ static int          BuildClassList (Document doc, STRING buf, int size,
      }
 #ifdef GRAPHML
   /* looks for the class attribute defined in the GraphML DTD */
-  attrType.AttrSSchema = TtaGetSSchema (TEXT("GraphML"), doc);
+  attrType.AttrSSchema = TtaGetSSchema ("GraphML", doc);
   if (attrType.AttrSSchema)
      /* there are some GraphML elements in this document */
      {
@@ -1244,15 +1242,15 @@ static int          BuildClassList (Document doc, STRING buf, int size,
    CreateClass
    creates a class from the Style attribute of the selected element
   ----------------------------------------------------------------------*/
-void                CreateClass (Document doc, View view)
+void CreateClass (Document doc, View view)
 {
   Attribute           attr;
   AttributeType       attrType;
   Element             last_elem;
   ElementType         elType;
-  CHAR_T              a_class[50];
-  STRING              elHtmlName;
-  STRING              schName;
+  char                a_class[50];
+  char               *elHtmlName;
+  char               *schName;
   int                 len, i, j;
   int                 firstSelectedChar, lastSelectedChar;
 
@@ -1280,14 +1278,14 @@ void                CreateClass (Document doc, View view)
 
   /* check if the element has a style attribute */
   schName = TtaGetSSchemaName (elType.ElSSchema);
-  if (ustrcmp (schName, TEXT("MathML")) == 0)
+  if (strcmp (schName, "MathML") == 0)
     {
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = MathML_ATTR_style_;
     }
   else
 #ifdef GRAPHML
-  if (ustrcmp (schName, TEXT("GraphML")) == 0)
+  if (strcmp (schName, "GraphML") == 0)
     {
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = GraphML_ATTR_style_;
@@ -1295,7 +1293,7 @@ void                CreateClass (Document doc, View view)
   else
 #endif
     {
-      attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+      attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
       attrType.AttrTypeNum = HTML_ATTR_Style_;
     }
   attr = TtaGetAttribute (ClassReference, attrType);
@@ -1305,7 +1303,7 @@ void                CreateClass (Document doc, View view)
 
   /* update the class name selector. */
   elHtmlName =  GetXMLElementName (TtaGetElementType (ClassReference), doc);
-  if (elHtmlName[0] == TEXT('?'))
+  if (elHtmlName[0] == '?')
     InitConfirm (doc, 1, TtaGetMessage (AMAYA, AM_SEL_CLASS));
   else
     {
@@ -1321,11 +1319,11 @@ void                CreateClass (Document doc, View view)
 #endif /* !_WINDOWS */
       
       /* preselect the entry corresponding to the class of the element. */
-      if (!ustrcmp (schName, TEXT("MathML")))
+      if (!strcmp (schName, "MathML"))
 	attrType.AttrTypeNum = MathML_ATTR_class;
       else
 #ifdef GRAPHML
-	if (!ustrcmp (schName, TEXT("GraphML")))
+	if (!strcmp (schName, "GraphML"))
 	  attrType.AttrTypeNum = GraphML_ATTR_class;
 	else
 #endif
@@ -1339,14 +1337,14 @@ void                CreateClass (Document doc, View view)
 #ifndef _WINDOWS
 	  TtaSetSelector (BaseDialog + ClassSelect, -1, a_class);
 #endif /* _WINDOWS */
-	  ustrcpy (CurrentClass, a_class);
+	  strcpy (CurrentClass, a_class);
 	}
       else
 	{
 #ifndef _WINDOWS
 	  TtaSetSelector (BaseDialog + ClassSelect, 0, NULL);
 #endif /* _WINDOWS */
-	  ustrcpy (CurrentClass, elHtmlName);
+	  strcpy (CurrentClass, elHtmlName);
 	}
   
       /* pop-up the dialogue box. */
@@ -1368,28 +1366,28 @@ void                ApplyClass (Document doc, View view)
   AttributeType       attrType;
   Element             firstSelectedEl;
   ElementType	      elType;
-  CHAR_T              a_class[50];
+  char                a_class[50];
   int                 len;
   int                 firstSelectedChar, lastSelectedChar;
 #ifndef _WINDOWS
-   CHAR_T              bufMenu[MAX_TXT_LEN];
+   char                bufMenu[MAX_TXT_LEN];
 #endif /* _WINDOWS */
 
   TtaGiveFirstSelectedElement (doc, &firstSelectedEl,
 			       &firstSelectedChar, &lastSelectedChar);
   if (!firstSelectedEl)
      return;
-  CurrentClass[0] = WC_EOS;
+  CurrentClass[0] = EOS;
   ApplyClassDoc = doc;
 
   /* updating the class name selector. */
 #ifndef _WINDOWS
-   ustrcpy (bufMenu, TtaGetMessage (LIB, TMSG_APPLY));
+   strcpy (bufMenu, TtaGetMessage (LIB, TMSG_APPLY));
    TtaNewSheet (BaseDialog + AClassForm, TtaGetViewFrame (doc, 1), 
 		TtaGetMessage (AMAYA, AM_APPLY_CLASS), 1,
 		bufMenu, FALSE, 2, 'L', D_DONE);
 #endif /* !_WINDOWS */
-  NbClass = BuildClassList (doc, ListBuffer, MAX_CSS_LENGTH, TEXT("default"));
+  NbClass = BuildClassList (doc, ListBuffer, MAX_CSS_LENGTH, "default");
 #ifndef _WINDOWS
   TtaNewSelector (BaseDialog + AClassSelect, BaseDialog + AClassForm,
 		  TtaGetMessage (AMAYA, AM_SEL_CLASS),
@@ -1399,7 +1397,7 @@ void                ApplyClass (Document doc, View view)
   /* preselect the entry corresponding to the class of the first selected
      element. */
   elType = TtaGetElementType (firstSelectedEl);
-  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
+  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
      {
      attrType.AttrSSchema = elType.ElSSchema;
      attrType.AttrTypeNum = MathML_ATTR_class;
@@ -1407,7 +1405,7 @@ void                ApplyClass (Document doc, View view)
   else
 #ifdef GRAPHML
   elType = TtaGetElementType (firstSelectedEl);
-  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("GraphML")))
+  if (!strcmp (TtaGetSSchemaName (elType.ElSSchema), "GraphML"))
      {
      attrType.AttrSSchema = elType.ElSSchema;
      attrType.AttrTypeNum = GraphML_ATTR_class;
@@ -1415,7 +1413,7 @@ void                ApplyClass (Document doc, View view)
   else
 #endif
      {
-     attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+     attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
      attrType.AttrTypeNum = HTML_ATTR_Class;
      }
   attr = TtaGetAttribute (firstSelectedEl, attrType);
@@ -1426,14 +1424,14 @@ void                ApplyClass (Document doc, View view)
 #ifndef _WINDOWS
       TtaSetSelector (BaseDialog + AClassSelect, -1, a_class);
 #endif /* !_WINDOWS */
-      ustrcpy (CurrentClass, a_class);
+      strcpy (CurrentClass, a_class);
     }
   else
     {
 #ifndef _WINDOWS
       TtaSetSelector (BaseDialog + AClassSelect, 0, NULL);
 #endif /* !_WINDOWS */
-      ustrcpy (CurrentClass, TEXT("default"));
+      strcpy (CurrentClass, "default");
     }
 
    /* pop-up the dialogue box. */
@@ -1447,7 +1445,7 @@ void                ApplyClass (Document doc, View view)
 /*----------------------------------------------------------------------
    StyleCallbackDialogue : procedure for style dialogue events        
   ----------------------------------------------------------------------*/
-void                StyleCallbackDialogue (int ref, int typedata, CHAR_T* data)
+void StyleCallbackDialogue (int ref, int typedata, char  *data)
 {
   int               val;
 
@@ -1467,10 +1465,10 @@ void                StyleCallbackDialogue (int ref, int typedata, CHAR_T* data)
       TtaDestroyDialogue (BaseDialog + ClassForm);
       break;
     case ClassSelect:
-      ustrcpy (CurrentClass, data);
+      strcpy (CurrentClass, data);
       break;
     case AClassSelect:
-      ustrcpy (CurrentClass, data);
+      strcpy (CurrentClass, data);
       DoApplyClass (ApplyClassDoc);
       break;
     case AClassForm:

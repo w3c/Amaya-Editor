@@ -36,7 +36,7 @@ typedef struct struct_GenericContext
     int                   name[MAX_ANCESTORS]; /* ancestors type */
     int                   names_nb[MAX_ANCESTORS]; /* number of occurences */
     int                   attrType[MAX_ANCESTORS]; /* type of the attribute */
-    CHAR_T*               attrText[MAX_ANCESTORS]; /* attr. or box name */
+    char                 *attrText[MAX_ANCESTORS]; /* attr. or box name */
   }
 GenericContextBlock, *GenericContext;
 
@@ -249,12 +249,10 @@ extern void TtaCleanStylePresentation (Element el, PSchema tsch, Document doc );
 
    Produces in a file a human-readable form of style schemas applied to 
    the current document.
-
    Parameters:
    document: the document.
    fileDescriptor: file descriptor of the file that will contain the list.
    This file must be open when calling the function.
-
   ----------------------------------------------------------------------*/
 extern void TtaListStyleSchemas (Document document, FILE * fileDescriptor);
 
