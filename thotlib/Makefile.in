@@ -83,7 +83,6 @@ THOTK_OBJ = \
 	base/wxAmayaSocketEvent.o \
 	base/wxAmayaSocketEventLoop.o \
 	base/global.o \
-	base/fileaccess.o \
 	base/memory.o \
 	base/message.o \
 	base/platform.o \
@@ -109,6 +108,7 @@ THOTK_OBJ = \
 
 KERNEL_OBJ = \
 	base/batchmessage.o \
+	base/fileaccessND.o \
 	base/structlist.o \
 	content/contentapiND.o \
 	content/contentND.o \
@@ -126,6 +126,7 @@ KERNEL_OBJ = \
 	tree/treeapiND.o 
 
 DISPLAY_OBJ = \
+	base/fileaccess.o \
 	content/content.o \
 	content/dictionary.o \
 	image/encdec.o \
