@@ -8,6 +8,7 @@
     H3 { color : #0050B2 }
     P { text-align: justify; line-height : 16pt; text-indent : 15pt }
   </style>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
 
 <body lang="en" style="background : #FFFFFF">
@@ -165,7 +166,8 @@ element</strong>).</p>
       <li>standard units</li>
     </ul>
   </li>
-  <li>Cascading order should be fine.</li>
+  <li>Cascading order should be fine but prorities and specificities are not
+    managed yet..</li>
   <li>CSS properties: Everything should be parsed correctly, but the back-end
     may lack support for some attributes (see <a
     href="CSSStatus.html">CSSStatus</a> file for more details).
@@ -192,17 +194,16 @@ element</strong>).</p>
 <p>First, considering the current draft compliance, the main issues for full
 CSS2 support are:</p>
 <ul>
-  <li>The <strong>Print</strong> command does not currently render
-    presentation defined in style sheets.</li>
   <li>The CSS2 formatting model for border and padding is not yet
   implemented.</li>
   <li>Pseudo elements are difficult to handle.</li>
   <li>The current implementation is a bit restrictive on fonts.</li>
+  <li>Page  properties are not managed yet.</li>
 </ul>
 <hr>
 
 <address>
-  <p><a name="L511" href="mailto:vatton@w3.org">Ir&egrave;ne Vatton</a><br>
+  <p><a name="L511" href="mailto:vatton@w3.org">Irène Vatton</a><br>
   $Date$</p>
 
 </address>
