@@ -196,8 +196,6 @@ BOXES
         HorizRef: * . Bottom;
 	HorizPos: Left = Enclosing . Left;
 	VertPos: Top = Enclosing . Top;
-	IN Structure_view
-		Visibility: 0;
    	IN Links_view
 		Visibility: ATTR_Visibility;
 #endif
@@ -206,18 +204,27 @@ BOXES
 RULES
 
  XLink:	BEGIN
+        if AnnotIcon1
+           CreateFirst(Annot_gif1);
 	IN Structure_view BEGIN
 		Visibility: 0;
 		END;
 	IN Links_view
 		BEGIN
-		VertPos: Top = Previous . Bottom;
+		VertPos: Top = Previous AnyElem . Bottom;
 		HorizPos: Left = Enclosing . Left;
 		Visibility: 5;
 		END;
 	END;
 
 ATTRIBUTES
+  AnnotOrphIcon:
+	BEGIN
+	Visibility: 0;
+        CreateFirst(Annotorph_gif);
+	IN Links_view
+		Visibility: 5;
+	END;
 
   type = simple:
 	BEGIN
@@ -253,10 +260,8 @@ ATTRIBUTES
 	BEGIN
         CreateBefore(ATTR_href);
   	CreateBefore(VALUE_href);
-        if AnnotIcon1
-           CreateFirst(Annot_gif1);
-        if AnnotOrphIcon
-           CreateFirst(Annotorph_gif);
+   	IN Links_view
+		Visibility: ATTR_Visibility;
 	END;
 
   AnnotIsHidden :
