@@ -2481,6 +2481,7 @@ void ANNOT_CreateBodyTree (Document doc, DocumentType bodyType)
   Element body, el;
   ThotBool result;
   ThotBool oldStructureChecking;
+  char *ns_uri = NULL;
 
   if (DocumentTypes[doc] == docAnnot)
     {
@@ -2493,11 +2494,13 @@ void ANNOT_CreateBodyTree (Document doc, DocumentType bodyType)
 	{
 	  elType.ElSSchema = GetSVGSSchema (doc);
 	  elType.ElTypeNum = SVG_EL_SVG;
+	  ns_uri = SVG_URI;
 	}
       else if (bodyType == docMath)
 	{
 	  elType.ElSSchema = GetMathMLSSchema (doc);
 	  elType.ElTypeNum = MathML_EL_MathML;
+	  ns_uri = MathML_URI;
 	}
       else if (bodyType == docText)
 	{
@@ -2513,12 +2516,16 @@ void ANNOT_CreateBodyTree (Document doc, DocumentType bodyType)
 	{
 	  elType.ElSSchema = GetXHTMLSSchema (doc);
 	  elType.ElTypeNum = HTML_EL_HTML;
+	  ns_uri = XHTML_URI;
 	}
       el = TtaNewTree (doc, elType, "");
       result = TtaCanInsertFirstChild (elType, body, doc);
       oldStructureChecking = TtaGetStructureChecking (doc);
       TtaSetStructureChecking (FALSE, doc);
       TtaInsertFirstChild (&el, body, doc);
+      /* set the namespace declaration */
+      if (ns_uri)
+	TtaSetANamespaceDeclaration (doc, el, NULL, ns_uri);
       /* set attribute dir on the Document element */
       AddDirAttributeToDocEl (doc);
       TtaSetStructureChecking (oldStructureChecking, doc);
