@@ -89,6 +89,7 @@ static SchemaMenu_Ctl *SchemasMenuList;
 extern TBADDBITMAP AmayaTBBitmap;
 
 static WNDPROC lpfnTextZoneWndProc = (WNDPROC) 0;
+static BOOL    doSwitchButton = TRUE;
 int     currentFrame;
 
 HWND hwndClient ;
@@ -1242,10 +1243,12 @@ caddr_t             call_d;
       i++;
    if (i < MAX_BUTTON)
      {
+	doSwitchButton = FALSE;
 	CloseInsertion ();
 	FrameToView (frame, &document, &view);
 	(*FrameTable[frame].Call_Button[i]) (document, view);
      }
+	doSwitchButton = TRUE;
 }
 
 #ifndef _WINDOWS
@@ -1316,15 +1319,16 @@ ThotWidget          toplevel;
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
 #ifdef __STDC__
-int WIN_TtaAddButton (Document document, View view, int picture, void (*procedure) (), char *info, BYTE state)
+int WIN_TtaAddButton (Document document, View view, int picture, void (*procedure) (), char *info, BYTE type, BOOL state)
 #else  /* __STDC__ */
-int WIN_TtaAddButton (document, view, picture, procedure, info, state)
+int WIN_TtaAddButton (document, view, picture, procedure, info, type, state)
 Document document;
 View     view;
 int      picture;
 void     (*procedure) ();
 char*    info;
-BYTE     state;
+BYTE     type;
+BOOL     state;
 #endif /* __STDC__ */
 #else  /* !_WINDOWS */
 #ifdef __STDC__
@@ -1424,8 +1428,8 @@ char               *info;
                      w = (TBBUTTON*) TtaGetMemory (sizeof (TBBUTTON));
                      w->iBitmap   = picture;
                      w->idCommand = TBBUTTONS_BASE + i; 
-                     w->fsState   = state;
-                     w->fsStyle   = TBSTYLE_BUTTON;
+                     w->fsState   = TBSTATE_ENABLED;
+                     w->fsStyle   = type;
                      w->dwData    = 0;
                      w->iString   = i;
 #                    ifdef AMAYA_TOOLTIPS
@@ -1438,12 +1442,13 @@ char               *info;
 					 ToolBar_ButtonStructSize (WinToolBar[frame]);
                      ToolBar_AddBitmap (WinToolBar[frame], i+1 , &AmayaTBBitmap);
                      ToolBar_InsertButton (WinToolBar[frame], i, w);
+                     SendMessage (WinToolBar[frame], TB_ENABLEBUTTON, (WPARAM) (index + TBBUTTONS_BASE), (LPARAM) MAKELONG (state, 0));
                   } else {
                         w = (TBBUTTON*) TtaGetMemory (sizeof (TBBUTTON));
                         w->iBitmap   = 0;
                         w->idCommand = 0; 
                         w->fsState   = TBSTATE_ENABLED;
-                        w->fsStyle   = TBSTYLE_SEP;
+                        w->fsStyle   = type;
                         w->dwData    = 0;
                         w->iString   = 0;
                         FrameTable[frame].Button[i] = w;
@@ -1519,7 +1524,14 @@ int                 index;
 	     else
 	       {
 		  /* Change l'etat du bouton */
-#                 ifndef _WINDOWS
+#                 ifdef _WINDOWS
+		  if (doSwitchButton) {
+             if (!SendMessage (WinToolBar[frame], TB_ISBUTTONCHECKED, (WPARAM) (index + TBBUTTONS_BASE), (LPARAM) 0))
+                SendMessage (WinToolBar[frame], TB_CHECKBUTTON, (WPARAM) (index + TBBUTTONS_BASE), (LPARAM) MAKELONG (TRUE, 0));
+		     else
+                SendMessage (WinToolBar[frame], TB_CHECKBUTTON, (WPARAM) (index + TBBUTTONS_BASE), (LPARAM) MAKELONG (FALSE, 0));
+		  }
+#                 else  /* !_WINDOWS */
 		  n = 0;
 		  XtSetArg (args[n], XmNtopShadowColor, &top);
 		  n++;
@@ -1553,14 +1565,14 @@ int                 index;
   ----------------------------------------------------------------------*/
 #ifdef _WINDOWS
 #ifdef __STDC__
-void                WIN_TtaChangeButton (Document document, View view, int index, int picture, BYTE state)
+void                WIN_TtaChangeButton (Document document, View view, int index, int picture, BOOL state)
 #else  /* __STDC__ */
 void                WIN_TtaChangeButton (document, view, index, picture, state)
 Document            document;
 View                view;
 int                 index;
 int                 picture;
-BYTE                state;
+BOOL                state;
 #endif /* __STDC__ */
 #else  /* !_WINDOWS */
 #ifdef __STDC__
@@ -1604,8 +1616,8 @@ Pixmap              picture;
 	       {
 		  /* Insere le nouvel icone */
 #                 ifdef _WINDOWS
-          SendMessage (WinToolBar[frame], TB_CHANGEBITMAP, (WPARAM) (index + TBBUTTONS_BASE - 1), (LPARAM) MAKELONG (picture, 0));
           SendMessage (WinToolBar[frame], TB_ENABLEBUTTON, (WPARAM) (index + TBBUTTONS_BASE - 1), (LPARAM) MAKELONG (state, 0));
+          /* SendMessage (WinToolBar[frame], TB_CHANGEBITMAP, (WPARAM) (index + TBBUTTONS_BASE - 1), (LPARAM) MAKELONG (picture, 0)); */
 #                 else  /* !_WINDOWS */
 		  n = 0;
 		  XtSetArg (args[n], XmNlabelPixmap, picture);
