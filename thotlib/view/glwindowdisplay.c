@@ -180,7 +180,7 @@ static int GL_Background[50];
   ----------------------------------------------------------------------*/
 void ClearAll (int frame)
 {  
-  /* if (GL_prepare (frame)) */ 
+  if (GL_prepare (frame))
   {
     /* SetMainWindowBackgroundColor (frame, GL_Background[frame]); */
     glClear (GL_COLOR_BUFFER_BIT); 
@@ -248,19 +248,18 @@ void SetMainWindowBackgroundColor (int frame, int color)
   ----------------------------------------------------------------------*/
 void Clear (int frame, int width, int height, int x, int y)
 {
-  /* if (GL_prepare (frame)) */
-  /*     { */
-  FrameTable[frame].DblBuffNeedSwap = TRUE; 
-  y = y + FrameTable[frame].FrTopMargin;
-  GL_SetForeground (GL_Background[frame]); 
-  glBegin (GL_QUADS);
-  glVertex2i (x, y); 
-  glVertex2i (x, y + height);
-  glVertex2i (x +  width, y + height);
-  glVertex2i (x + width, y);
-  glEnd ();
-
-  /*  } */
+  if (GL_prepare (frame))
+    { 
+      FrameTable[frame].DblBuffNeedSwap = TRUE; 
+      y = y + FrameTable[frame].FrTopMargin;
+      GL_SetForeground (GL_Background[frame]); 
+      glBegin (GL_QUADS);
+      glVertex2i (x, y); 
+      glVertex2i (x, y + height);
+      glVertex2i (x +  width, y + height);
+      glVertex2i (x + width, y);
+      glEnd ();
+    } 
 }
 #endif /*_WIN_PRINT*/
 
