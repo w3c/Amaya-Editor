@@ -1309,8 +1309,18 @@ PresentationValue   v;
    PtrPRule           *chain = NULL;
    PtrPRule            cur = NULL;
    PtrPRule            prev = NULL;
+   PtrPRule            destroy = NULL;
    int                 nbrules = 0;
    int                 i, j, tmp, nb_ancestors;
+   Document doc;
+   PtrSSchema pSS;
+   int elType = 0;
+   int attrType = 0;
+   int presBox = 0;
+   PtrPRule pRule;
+
+   doc = ctxt->doc;
+   pSS = (PtrSSchema) TtaGetDocumentSSchema (doc);
 
    /* first sort the ancestors list */
    for (i = 0; i < MAX_ANCESTORS; i++)
@@ -1344,7 +1354,7 @@ PresentationValue   v;
      }
 
    /*
-    * first locate the attribute presentation rule block concerning this
+    * locate the attribute presentation rule block concerning this
     * attribute.
     */
    for (i = 0; i < nbrules; i++)
@@ -1371,16 +1381,19 @@ PresentationValue   v;
      {
 	if (found == NULL)
 	   return (0);
+	attrType = ctxt->classattr;
 	chain = &found->ApTextFirstPRule;
      }
    else if (ctxt->attr)
      {
 	if (found == NULL)
 	   return (0);
+	attrType = ctxt->attr;
 	chain = &found->ApEnumFirstPRule[ctxt->attrval];
      }
    else
      {
+        elType = ctxt->type;
 	chain = &pSchemaPrs->PsElemPRule[ctxt->type - 1];
      }
 
@@ -1399,13 +1412,15 @@ PresentationValue   v;
 	     if (prev == NULL)
 	       {
 		  *chain = cur->PrNextPRule;
-		  FreePresentRule (cur);	/* conditions are automagically freed ! */
+		  cur->PrNextPRule = destroy;
+		  destroy = cur;
 		  cur = *chain;
 	       }
 	     else
 	       {
 		  prev->PrNextPRule = cur->PrNextPRule;
-		  FreePresentRule (cur);
+		  cur->PrNextPRule = destroy;
+		  destroy = cur;
 		  cur = prev->PrNextPRule;
 	       }
 	     continue;
@@ -1415,6 +1430,22 @@ PresentationValue   v;
 	prev = cur;
 	cur = cur->PrNextPRule;
      }
+
+   /*
+    * All the target PRules have been removed from the list,
+    * update the presentation.
+    */
+   if ((elType != 0) || (attrType != 0) || (presBox != 0))
+       ApplyPRules (doc, pSS, elType, attrType, presBox, destroy, TRUE);
+
+   /*
+    * Free all the destroyed PRules.
+    */
+   while (destroy != NULL) {
+       cur = destroy;
+       destroy = destroy->PrNextPRule;
+       FreePresentRule (cur);
+   }
    return (0);
 }
 

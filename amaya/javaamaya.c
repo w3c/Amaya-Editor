@@ -1,5 +1,5 @@
 /*
- * javaamaya.h : defines part of the Java related Amaya API.
+ * javaamaya.c : defines part of the Java related Amaya API.
  */
 
 #ifdef AMAYA_JAVA
@@ -137,10 +137,11 @@ char *GetTempDirectory ()
 #define JAVA_MAX_REF	 20
 
 #define JAVA_FORM        1   /* For plugin's selection */
-#define JAVA_APPLET_NAME 2   /* Selector for Applet Name */
-#define JAVA_LOCAL_NAME  3   /* Selector for Applet Name */
-#define JAVA_DIR_SELECT  4   /* Selector for Applet Name */
-#define JAVA_APL_SELECT  5   /* Selector for Applet Name */
+#define JAVA_DIR_SELECT  2   /* Selector for Directory */
+#define JAVA_APL_SELECT  3   /* Selector for Name */
+#define JAVA_APPLET_NAME 4   /* Full Applet path entry */
+#define JAVA_LOCAL_NAME  5   /*  */
+#define JAVA_APPLET_ARGS 6   /* Full Applet path entry */
 
 char*                 appletPath;
 int                   appletCounter ;
@@ -186,18 +187,18 @@ char* data;
 			      ".class", TtaGetMessage (AMAYA, AM_FILES),
 			      BaseJava + JAVA_APL_SELECT);
 	 }
+       else if (val == 1)
+	  /* Parse */
+	 {
+	     if (JavaApplet[0] != EOS)
+	       {
+		 LaunchJavaApplet(JavaApplet, JavaCurrentDocument);
+	       }
+	 }
        else
 	 {
 	    TtaDestroyDialogue (BaseJava + JAVA_FORM);
-	    if (val == 1)
-	       /* OK */
-	      {
-		 if (JavaApplet[0] != EOS)
-		   {
-		     LaunchJavaApplet(JavaApplet, JavaCurrentDocument);
-		   }
-		 CurrentDocument = 0;
-	      }
+	    JavaCurrentDocument = 0;
 	 }
        break;
     case JAVA_APPLET_NAME:
@@ -299,11 +300,8 @@ View     view;
    strcpy (&s[i], TtaGetMessage (AMAYA, AM_PARSE));
 
    TtaNewSheet (BaseJava + JAVA_FORM, TtaGetViewFrame (document, view),
-                TtaGetMessage (AMAYA, AM_OPEN_URL),
+                TtaGetMessage (AMAYA, AM_LOAD_JAVA_CLASS),
 		3, s, TRUE, 2, 'L', D_CANCEL);
-   TtaNewTextForm (BaseJava + JAVA_APPLET_NAME, BaseJava + JAVA_FORM,
-		   TtaGetMessage (AMAYA, AM_OPEN_URL), 50, 1, TRUE);
-   TtaNewLabel (BaseJava + JAVA_LOCAL_NAME, BaseJava + JAVA_FORM, " ");
    TtaListDirectory (JavaAppletDirectory, BaseJava + JAVA_FORM,
 		     TtaGetMessage (LIB, TMSG_DOC_DIR),
 		     BaseJava + JAVA_DIR_SELECT, ".class",
@@ -318,6 +316,9 @@ View     view;
 	strcat (s, JavaAppletName);
 	TtaSetTextForm (BaseJava + JAVA_APPLET_NAME, s);
      }
+   TtaNewTextForm (BaseJava + JAVA_APPLET_NAME, BaseJava + JAVA_FORM,
+		   TtaGetMessage (AMAYA, AM_LOAD_JAVA_CLASS), 50, 1, TRUE);
+   TtaNewLabel (BaseJava + JAVA_LOCAL_NAME, BaseJava + JAVA_FORM, " ");
    TtaSetDialoguePosition ();
    TtaShowDialogue (BaseJava + JAVA_FORM, FALSE);
    TtaFreeMemory (s);

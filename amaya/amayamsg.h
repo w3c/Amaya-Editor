@@ -137,5 +137,6 @@ int                 AMAYA;
 #define AM_PRINT_TOC		      125
 #define AM_NUMBERED_LINKS	      126
 #define AM_BUTTON_JAVA                127
-#define AMAYA_MSG_MAX                 128
+#define AM_LOAD_JAVA_CLASS            128
+#define AMAYA_MSG_MAX                 129
 
