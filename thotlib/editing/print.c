@@ -1783,10 +1783,10 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
   /* les parametres d'appel du programme print */
   for (v = 0; v < viewsCounter; v++)
    {
-#ifdef _GTK
+#if defined(_GTK) || defined(_WX)
       if (DoAbort)
 	  return 1;
-#endif /* _GTK */
+#endif /* _GTK || _WX */
       CurrentView = 0;
       withPages = FALSE;
       /* cherche si la vue est une vue de l'arbre principal */
