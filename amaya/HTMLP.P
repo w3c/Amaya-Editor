@@ -820,7 +820,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
-		Weight: TAG_Weight;
+		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: TAG_Visibility;  Foreground: TAG_Color;
 		END;
 	END;
