@@ -58,6 +58,7 @@ echo "Plarform ------->" $MACH
    Amaya/doc/amaya/Tables.html \
    Amaya/doc/amaya/Transform.html \
    Amaya/doc/amaya/Views.html \
+   Amaya/doc/amaya/*.html.fr \
    Amaya/doc/Icons/*.gif \
    Amaya/doc/Icons/*.png \
    Amaya/Icons/WWW/activity_48x48 \
@@ -73,6 +74,7 @@ echo "Plarform ------->" $MACH
    Amaya/annotlib/AnnotT.TRA \
    Amaya/amaya/COPYRIGHT* \
    Amaya/amaya/AmayaPage.html \
+   Amaya/amaya/AmayaPage.html.fr \
    Amaya/amaya/*.conf \
    Amaya/amaya/HTML.STR \
    Amaya/amaya/HTML.trans \

@@ -47,6 +47,7 @@ Amaya/amaya/Makefile.libwww \
 Amaya/amaya/Makefile.math \
 Amaya/amaya/Makefile.graph \
 Amaya/amaya/AmayaPage.html \
+Amaya/amaya/AmayaPage.html.fr \
 Amaya/amaya/*.c \
 Amaya/amaya/*.h \
 Amaya/amaya/*.conf \
@@ -169,6 +170,7 @@ Amaya/doc/amaya/StyleSheets.html \
 Amaya/doc/amaya/Tables.html \
 Amaya/doc/amaya/Transform.html \
 Amaya/doc/amaya/Views.html \
+Amaya/doc/amaya/*.html.fr \
 Amaya/doc/Icons/*.gif \
 Amaya/doc/Icons/*.png \
 Amaya/fonts/Families.list \
