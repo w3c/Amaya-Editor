@@ -586,6 +586,7 @@
 #define IDC_SECOLOR                     1452
 #define IDC_INCOLOR                     1453
 #define IDC_CHANGCOLOR                  1454
+#define IDC_CHANGCOLOR2                 1455
 #define IDC_LANNEG                      1456
 #define IDC_NORMALBOLD                  1457
 #define IDC_DEFAULTBOLD                 1459
@@ -667,7 +668,6 @@
 #define ID_BUTTON40051                  40051
 #define IDC_CHECKGROUP                  65500
 #define IDC_IGNOREGROUP                 65501
-#define IDC_CHECKGROUP2                 65501
 #define IDC_INDENTGROUP                 65530
 #define IDCALIGNGROUP                   65531
 #define IDC_JUSTIFGROUP                 65532
