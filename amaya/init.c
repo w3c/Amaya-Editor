@@ -1636,6 +1636,89 @@ DoubleClickEvent    DC_event;
 
 
 /*----------------------------------------------------------------------
+   UpdateSaveAsButtons
+   Maintain consistency between buttons in the Save As dialog box
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void	UpdateSaveAsButtons ()
+#else
+static void	UpdateSaveAsButtons ()
+
+#endif
+{
+  if (!SaveAsHTML)
+     {
+     if (CopyImages)
+	{
+        CopyImages = FALSE;
+        TtaSetToggleMenu (BaseDialog + ToggleSave, 3, CopyImages);
+	}
+     if (UpdateURLs)
+	{
+        UpdateURLs = FALSE;
+        TtaSetToggleMenu (BaseDialog + ToggleSave, 4, UpdateURLs);
+	}
+     }
+}
+
+/*----------------------------------------------------------------------
+   SetFileSuffix
+   Set the suffix of the file name used for saving a document
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void	SetFileSuffix ()
+#else
+static void	SetFileSuffix ()
+
+#endif
+{
+  char		      suffix[6];
+  char               *filename;
+  int		      i;
+
+  if (SavingDocument != (Document) None)
+    if (DocumentName[0] != EOS)
+      {
+      if (SaveAsHTML)
+	 strcpy (suffix, "html");
+      else if (SaveAsText)
+	 strcpy (suffix, "txt");
+      else
+	 return;
+
+      /* looks for a suffix at the end of the document name */
+      for (i = strlen (DocumentName)-1; i > 0 && DocumentName[i] != '.'; i--);
+      if (DocumentName[i] != '.')
+         /* there is no suffix */
+	 {
+	 i = strlen (DocumentName);
+	 DocumentName[i++] = '.';
+	 }
+      else
+	 /* there is a suffix */
+	 {
+	 i++;
+	 if (strncmp (suffix, &DocumentName[i], 3) == 0)
+	    /* the requested suffix is already here. Do nothing */
+	    i = 0;
+	 }
+
+      if (i > 0)
+	 /* change or append the suffix */
+	 {
+	 strcpy (&DocumentName[i], suffix);
+	 /* display the new filename in the dialog box */
+	 filename = TtaGetMemory (MAX_LENGTH);
+	 strcpy (filename, DirectoryName);
+	 strcat (filename, DIR_STR);
+	 strcat (filename, DocumentName);
+	 TtaSetTextForm (BaseDialog + NameSave, filename);
+	 TtaFreeMemory (filename);
+	 }
+      }
+}
+
+/*----------------------------------------------------------------------
    Callback procedure for dialogue events.                            
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -1851,36 +1934,38 @@ char               *data;
 	 TtaSetTextForm (BaseDialog + PasswordText, Display_password);
        break;
        
-     case ToggleSave:
        /* *********Save document as********* */
+     case ToggleSave:
+       /* Output format */
        switch (val)
 	 {
 	 case 0:	/* "Save as HTML" button */
 	   SaveAsHTML = !SaveAsHTML;
 	   SaveAsText = !SaveAsHTML;
-	   TtaSetToggleMenu (BaseDialog + ToggleSave, 1,
-			     SaveAsText);
+	   TtaSetToggleMenu (BaseDialog + ToggleSave, 1, SaveAsText);
+	   UpdateSaveAsButtons ();
+	   SetFileSuffix ();
 	   break;
 	 case 1:	/* "Save as Text" button */
 	   SaveAsText = !SaveAsText;
 	   SaveAsHTML = !SaveAsText;
-	   TtaSetToggleMenu (BaseDialog + ToggleSave, 0,
-			     SaveAsHTML);
-	   CopyImages = FALSE;
-	   TtaSetToggleMenu (BaseDialog + ToggleSave, 3, CopyImages);
-	   UpdateURLs = FALSE;
-	   TtaSetToggleMenu (BaseDialog + ToggleSave, 4, UpdateURLs);
+	   TtaSetToggleMenu (BaseDialog + ToggleSave, 0, SaveAsHTML);
+	   UpdateSaveAsButtons ();
+	   SetFileSuffix ();
 	   break;
 	 case 3:	/* "Copy Images" button */
 	   CopyImages = !CopyImages;
+	   UpdateSaveAsButtons ();
 	   break;
 	 case 4:	/* "Transform URLs" button */
 	   UpdateURLs = !UpdateURLs;
+	   UpdateSaveAsButtons ();
 	   break;
 	 }
        break;
      case SaveForm:
        if (val == 1)
+	 /* "Confirm" Button */
 	 {
 	   TtaDestroyDialogue (BaseDialog + SaveForm);
 	   if (SavingDocument != 0)
@@ -1889,7 +1974,7 @@ char               *data;
 	     DoSaveObjectAs ();
 	 }
        else if (val == 2)
-	 /* Clear */
+	 /* "Clear" button */
 	 {
 	   if (SavingDocument != 0)
 	     {
@@ -1901,7 +1986,7 @@ char               *data;
 	     }
 	 }
        else if (val == 3)
-	 /* Parse */
+	 /* "Filter" button */
 	 {
 	   /* reinitialize directories and document lists */
 	   if (SavingDocument != 0)
@@ -1911,6 +1996,7 @@ char               *data;
 			       TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSave);
 	 }
        else
+	 /* "Cancel" button */
 	 {
 	   TtaDestroyDialogue (BaseDialog + SaveForm);
 	   SavingDocument = 0;
@@ -1918,6 +2004,7 @@ char               *data;
 	 }
        break;
      case NameSave:
+       /* Document location */
        tempfile = TtaGetMemory (MAX_LENGTH);
        if (!IsW3Path (data))
 	 {
@@ -1948,9 +2035,11 @@ char               *data;
        TtaFreeMemory (tempfile);
        break;
      case ImgDirSave:
+       /* Image directory */
        strcpy (SaveImgsURL, data);
        break;
      case DirSave:
+       /* Document directories */
        tempfile = TtaGetMemory (MAX_LENGTH);
        if (!strcmp (data, ".."))
 	 {
@@ -1978,6 +2067,7 @@ char               *data;
        TtaFreeMemory (tempfile);
        break;
      case DocSave:
+       /* Files */
        if (DirectoryName[0] == EOS)
 	 /* set path on current directory */
 	 getcwd (DirectoryName, MAX_LENGTH);
@@ -1991,6 +2081,7 @@ char               *data;
        TtaSetTextForm (BaseDialog + NameSave, tempfile);
        TtaFreeMemory (tempfile);
        break;
+
      case ConfirmSave:
        /* *********SaveConfirm********* */
        UserAnswer = (val == 1);

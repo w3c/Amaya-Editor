@@ -144,8 +144,6 @@ static void         FreeSubDocTable ()
   document which designate an element in the same document.
   InternalLink is a Thot reference attribute that links a source and a
   target anchor and that allows P schemas to display and print cross-references
-  Associate an ExternalLink attribute with all anchor (A) elements of the
-  document which designate an element in another document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void             SetInternalLinks (Document document)

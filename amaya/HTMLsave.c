@@ -110,7 +110,7 @@ DBG(fprintf(stderr, "SetRelativeURLs\n");)
 
 /*----------------------------------------------------------------------
   InitSaveForm
-  Draw the Save As Dialog and prepare for input.
+  Build and display the Save As dialog box and prepare for input.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         InitSaveForm (Document document, View view, char *pathname)
@@ -212,7 +212,7 @@ View                view;
 	   DocumentURLs[SavingDocument] = (char *) TtaStrdup (tempname);
 	 }
        
-       /* if it is a W3 document use the current DirectoryName */
+       /* if it is a Web document use the current DirectoryName */
        if (IsW3Path (tempname))
 	 TtaExtractName (tempname, DirectoryName, DocumentName);
        else
@@ -234,7 +234,7 @@ View                view;
        strcat (tempname, DocumentName);
      }
 
-   /* display saving form */
+   /* display the dialog box */
    InitSaveForm (document, 1, tempname);
 }
 
@@ -757,9 +757,12 @@ char                  *newURL;
    /* path to search image descriptors */
    sprintf (localpath, "%s%s%d%s", TempFileDirectory, DIR_STR, SavingDocument, DIR_STR);
 
-   /* change the document url */
-   TtaFreeMemory (DocumentURLs[SavingDocument]);
-   DocumentURLs[SavingDocument] = (char *) TtaStrdup (newURL);
+   /* change the document url if it is not saved as Text */
+   if (!SaveAsText)
+      {
+      TtaFreeMemory (DocumentURLs[SavingDocument]);
+      DocumentURLs[SavingDocument] = (char *) TtaStrdup (newURL);
+      }
 
    root = TtaGetMainRoot (SavingDocument);
    elType.ElSSchema = TtaGetDocumentSSchema (SavingDocument);
