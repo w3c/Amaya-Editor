@@ -9,12 +9,12 @@
 </head>
 
 <body>
-<pre><em>ThotLib V3.1.e</em></pre>
-<pre>Date: May 23, 2001</pre>
+<pre><em>ThotLib V4</em></pre>
+<pre>Date: June, 2002</pre>
 
 <h1>The Thot Application Generation Language</h1>
 <address>
-  Vincent QUINT, Irène VATTON - INRIA
+  Vincent QUINT, Irène VATTON - INRIA 
 </address>
 <hr>
 
@@ -1062,11 +1062,32 @@ typedef struct {
       element. The <code>position</code> field has no meaning.</dd>
 </dl>
 <dl>
+  <dt>ElemLClick.Pre (NotifyElement):</dt>
+    <dd>The user has just clicked (Left button down) on the element
+      <code>element</code>. The selection was not changed. This event is
+      accepted for all elements (references or not). The
+      <code>position</code> field has no meaning.</dd>
+</dl>
+<dl>
+  <dt>ElemMClick.Pre (NotifyElement):</dt>
+    <dd>The user has just clicked (Middle button down) on the element
+      <code>element</code>. The selection was not changed. This event is
+      accepted for all elements (references or not). The
+      <code>position</code> field has no meaning.</dd>
+</dl>
+<dl>
+  <dt>ElemRClick.Pre (NotifyElement):</dt>
+    <dd>The user has just clicked (Middle button down) on the element
+      <code>element</code>. The selection was not changed. This event is
+      accepted for all elements (references or not). The
+      <code>position</code> field has no meaning.</dd>
+</dl>
+<dl>
   <dt>ElemClick.Pre (NotifyElement):</dt>
-    <dd>The user has just clicked on the element <code>element</code>. The
-      selection has not already changed. This event is accepted for all
-      elements (references or not). The <code>position</code> field has no
-      meaning.</dd>
+    <dd>The user has just clicked (button up) on the element
+      <code>element</code>. The selection was changed. This event is accepted
+      for all elements (references or not). The <code>position</code> field
+      has no meaning.</dd>
 </dl>
 <dl>
   <dt>ElemClick.Post (NotifyElement):</dt>
@@ -1103,7 +1124,8 @@ typedef struct {
     <dd>The element <code>element</code> will be removed from its abstract
       tree if a  « Delete » or « Cut » command is issued by the user, or if
       the Thot kernel has detected two Text elements that may be merged. This
-      element is still included in the abstract tree when the event is raised.
+      element is still included in the abstract tree when the event is
+      raised. 
       <p>The <code>position</code> field may take different values depending
       on the three following cases:</p>
       <dl>
@@ -1754,6 +1776,9 @@ listed):</p>
   TteElemSelect,
   TteElemExtendSelect,
   TteElemClick,
+  TteElemLClick,
+  TteElemMClick,
+  TteElemRClick,
   TteElemActivate,
   TteElemSetReference,
   TteElemInclude,
