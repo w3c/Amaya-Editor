@@ -1156,7 +1156,7 @@ static void      RemoveTrailingSpaces (Element el)
 {
    int           length;
    ElementType   elType;
-   Element       lastLeaf;
+   Element       lastLeaf, lastChild;
    AttributeType attrType;
    Attribute     attr = NULL;
 
@@ -1175,7 +1175,8 @@ static void      RemoveTrailingSpaces (Element el)
 	       attrType.AttrSSchema = elType.ElSSchema;
 	       if (strcmp ((char *)currentParserCtxt->SSchemaName, "HTML") == 0)
 		 attrType.AttrTypeNum = HTML_ATTR_EntityName;
-	       else if (strcmp ((char *)currentParserCtxt->SSchemaName, "MathML") == 0)
+	       else if (strcmp ((char *)currentParserCtxt->SSchemaName,
+				"MathML") == 0)
 		 attrType.AttrTypeNum = MathML_ATTR_EntityName;
 	       else
 		 {
@@ -1189,6 +1190,24 @@ static void      RemoveTrailingSpaces (Element el)
 	       if (attr == NULL)
 		 TtaRemoveFinalSpaces (lastLeaf, XMLcontext.doc,
 				       RemoveTrailingSpace);
+	     }
+	 }
+     }
+   if (strcmp ((char *)currentParserCtxt->SSchemaName, "HTML") == 0)
+     {
+       lastChild = TtaGetLastChild (el);
+       if (lastChild)
+	 {
+	   elType = TtaGetElementType (lastChild);
+	   if (elType.ElTypeNum == MathML_EL_MathML &&
+	       strcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
+	     /* the last child of this HTML element is a <math> element */
+	     {
+	       /* create an empty text element after the math element */
+	       elType.ElSSchema = currentParserCtxt->XMLSSchema;
+	       elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	       lastLeaf = TtaNewElement (XMLcontext.doc, elType);
+	       TtaInsertSibling (lastLeaf, lastChild, FALSE, XMLcontext.doc);
 	     }
 	 }
      }
