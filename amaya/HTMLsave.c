@@ -446,7 +446,7 @@ boolean             with_images;
    char                url[MAX_LENGTH];
    char                tempname[MAX_LENGTH];
    char                documentname[MAX_LENGTH];
-   char                msg[10000];
+   char                msg[5000];
    int                 free = 10000;
    int                 index = 0, len, nb = 0;
    LoadedImageDesc    *pImage;
