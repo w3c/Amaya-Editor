@@ -57,6 +57,8 @@ extern void SetProp_Browse ( const Prop_Browse * prop );
 extern Prop_Browse GetProp_Browse ( void );
 extern void SetProp_Publish ( const Prop_Publish * prop );
 extern Prop_Publish GetProp_Publish ( void );
+extern void SetProp_Cache ( const Prop_Cache * prop );
+extern Prop_Cache GetProp_Cache ( void );
 extern void PreferenceMenu ( Document document,
                              View view );
 extern void InitConfMenu ( void );
@@ -114,6 +116,8 @@ extern void SetProp_Browse ( const Prop_Browse * prop );
 extern Prop_Browse GetProp_Browse ( void );
 extern void SetProp_Publish ( const Prop_Publish * prop );
 extern Prop_Publish GetProp_Publish ( void );
+extern void SetProp_Cache ( const Prop_Cache * prop );
+extern Prop_Cache GetProp_Cache ( void );
 extern void PreferenceMenu ( Document document,
                                View view );
 extern void InitConfMenu ( void );

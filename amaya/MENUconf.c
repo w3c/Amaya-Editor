@@ -107,6 +107,17 @@ static AM_WIN_MenuText WIN_CacheMenuText[] =
 #endif /* _WINGUI */
 
 static int      CacheBase;
+
+#ifndef _WINGUI
+static Prop_Cache GProp_Cache;
+static ThotBool & EnableCache = GProp_Cache.EnableCache;
+static ThotBool & CacheProtectedDocs = GProp_Cache.CacheProtectedDocs;
+static ThotBool & CacheDisconnectMode = GProp_Cache.CacheDisconnectMode;
+static ThotBool & CacheExpireIgnore = GProp_Cache.CacheExpireIgnore;
+static char *     CacheDirectory = GProp_Cache.CacheDirectory;
+static int &      CacheSize = GProp_Cache.CacheSize;
+static int &      MaxCacheFile = GProp_Cache.MaxCacheFile;
+#else /* _WINGUI */
 static ThotBool EnableCache;
 static ThotBool CacheProtectedDocs;
 static ThotBool CacheDisconnectMode;
@@ -114,6 +125,7 @@ static ThotBool CacheExpireIgnore;
 static char     CacheDirectory[MAX_LENGTH];
 static int      CacheSize;
 static int      MaxCacheFile;
+#endif /* _WINGUI */
 
 /* Proxy menu options */
 #ifdef _WINGUI
@@ -1207,6 +1219,10 @@ static void CacheCallbackDialog (int ref, int typedata, char *data)
 	    case 1:
 	      ValidateCacheConf ();
 	      SetCacheConf ();
+#ifdef _WX
+	      /* force the cache restart because this is a long task to write the code to know if a widget status has changed or not */
+	      CacheStatus |= AMAYA_CACHE_RESTART;
+#endif /* _WX */
 	      libwww_updateNetworkConf (CacheStatus);
 	      /* reset the status flag */
 	      CacheStatus = 0;
@@ -5074,6 +5090,10 @@ Prop_General GetProp_General()
 {
 #ifdef _WX
   return GProp_General;
+#else /* _WX */
+  Prop_General prop;
+  memset(&prop, 0, sizeof(Prop_General) );
+  return prop;
 #endif /* _WX */
 }
 
@@ -5094,9 +5114,13 @@ Prop_Browse GetProp_Browse()
 {
 #ifdef _WX
   return GProp_Browse;
+#else /* _WX */
+  Prop_Browse prop;
+  memset(&prop, 0, sizeof(Prop_Browse) );
+  return prop;
 #endif /* _WX */
 }
-
+ 
 /*----------------------------------------------------------------------
   Use to set the Amaya global variables (Publish preferences)
   ----------------------------------------------------------------------*/
@@ -5114,9 +5138,36 @@ Prop_Publish GetProp_Publish()
 {
 #ifdef _WX
   return GProp_Publish;
+#else /* _WX */
+  Prop_Publish prop;
+  memset(&prop, 0, sizeof(Prop_Publish) );
+  return prop;
 #endif /* _WX */
 }
 
+/*----------------------------------------------------------------------
+  Use to set the Amaya global variables (Cache preferences)
+  ----------------------------------------------------------------------*/
+void SetProp_Cache( const Prop_Cache * prop )
+{
+#ifdef _WX
+  GProp_Cache = *prop;
+#endif /* _WX */
+}
+
+/*----------------------------------------------------------------------
+  Use to get the Amaya global variables (Cache preferences)
+  ----------------------------------------------------------------------*/
+Prop_Cache GetProp_Cache()
+{
+#ifdef _WX
+  return GProp_Cache;
+#else /* _WX */
+  Prop_Cache prop;
+  memset(&prop, 0, sizeof(Prop_Cache) );
+  return prop;
+#endif /* _WX */
+}
 
 /*----------------------------------------------------------------------
   PreferenceMenu
@@ -5140,6 +5191,11 @@ void PreferenceMenu (Document document, View view)
   /* ---> Publish Tab */
   GetPublishConf ();
   SafePutStatus = 0;  /* reset the modified flag */
+
+  /* ---> Cache Tab */
+  CacheStatus = 0; /* reset the modified flag */
+  GetCacheConf (); /* load and display the current values */
+
 
   ThotBool created = CreatePreferenceDlgWX ( PreferenceBase,
 					     TtaGetViewFrame (document, view),

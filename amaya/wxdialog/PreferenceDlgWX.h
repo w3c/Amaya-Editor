@@ -43,6 +43,12 @@ private:
   void SetupDialog_Publish( const Prop_Publish & prop );
   Prop_Publish GetValueDialog_Publish();
 
+  // "Cache" tab
+  void SetupLabelDialog_Cache();
+  void SetupDialog_Cache( const Prop_Cache & prop );
+  Prop_Cache GetValueDialog_Cache();
+  void OnEmptyCache( wxCommandEvent& event );
+
   int GetPagePosFromXMLID( const wxString & xml_id );
 
   void OnOk( wxCommandEvent& event );

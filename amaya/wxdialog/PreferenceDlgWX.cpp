@@ -25,6 +25,10 @@ BEGIN_EVENT_TABLE(PreferenceDlgWX, AmayaDialog)
   EVT_BUTTON(     XRCID("wxID_OK"),           PreferenceDlgWX::OnOk )
   EVT_BUTTON(     XRCID("wxID_DEFAULT"),      PreferenceDlgWX::OnDefault )
   EVT_BUTTON(     XRCID("wxID_CANCEL"),       PreferenceDlgWX::OnCancel )
+
+  // Cache tab callbacks
+  EVT_BUTTON(     XRCID("wxID_BUTTON_EMPTYCACHE"), PreferenceDlgWX::OnEmptyCache )
+
 END_EVENT_TABLE()
 
 /*----------------------------------------------------------------------
@@ -54,6 +58,7 @@ PreferenceDlgWX::PreferenceDlgWX( int ref,
   SetupLabelDialog_General();
   SetupLabelDialog_Browse();
   SetupLabelDialog_Publish();
+  SetupLabelDialog_Cache();
 
   XRCCTRL(*this, "wxID_OK",      wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage (AMAYA, AM_APPLY_BUTTON)));
   XRCCTRL(*this, "wxID_CANCEL",  wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(LIB, TMSG_CANCEL)) );
@@ -63,6 +68,7 @@ PreferenceDlgWX::PreferenceDlgWX( int ref,
   SetupDialog_General( GetProp_General() );
   SetupDialog_Browse( GetProp_Browse() );
   SetupDialog_Publish( GetProp_Publish() );
+  SetupDialog_Cache( GetProp_Cache() );
 
   // give focus to ...
   XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->SetFocus();
@@ -142,12 +148,12 @@ void PreferenceDlgWX::SetupLabelDialog_General()
   XRCCTRL(*this, "wxID_RADIO_QUICKAXX", wxRadioBox)->SetString(2,TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_NONE)) );
 
   // setup range of zoom
-  XRCCTRL(*this, "wxID_CHARZOOM_VALUE",  wxSlider)->SetRange( 10, 1000 );
+  XRCCTRL(*this, "wxID_CHARZOOM_VALUE", wxSlider)->SetRange( 10, 1000 );
   // setup menu font size range
-  XRCCTRL(*this, "wxID_CHARMENUSIZE_VALUE",  wxSlider)->SetRange( 8, 20 );
+  XRCCTRL(*this, "wxID_CHARMENUSIZE_VALUE", wxSlider)->SetRange( 8, 20 );
 
   // fill the combobox with url list
-  XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE",     wxComboBox)->Append(m_UrlList);
+  XRCCTRL(*this, "wxID_COMBOBOX_HOMEPAGE", wxComboBox)->Append(m_UrlList);
 }
 
 /*----------------------------------------------------------------------
@@ -371,6 +377,99 @@ Prop_Publish PreferenceDlgWX::GetValueDialog_Publish()
 }
 
 
+/************************************************************************/
+/* Cache tab                                                            */
+/************************************************************************/
+
+/*----------------------------------------------------------------------
+  SetupLabelDialog_Cache init labels
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::SetupLabelDialog_Cache()
+{
+  wxLogDebug( _T("PreferenceDlgWX::SetupLabelDialog_Cache") );
+
+  // Setup notebook tab names :
+  int page_id;
+  wxNotebook * p_notebook = XRCCTRL(*this, "wxID_NOTEBOOK", wxNotebook);
+  page_id = GetPagePosFromXMLID( _T("wxID_PAGE_CACHE") );
+  if (page_id >= 0)
+    p_notebook->SetPageText( page_id, TtaConvMessageToWX(TtaGetMessage(AMAYA, AM_CACHE_MENU)) );
+
+  XRCCTRL(*this, "wxID_LABEL_CACHEDIR", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_CACHE_DIR)) );
+  XRCCTRL(*this, "wxID_LABEL_CACHESIZE", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_CACHE_SIZE)) );
+  XRCCTRL(*this, "wxID_LABEL_MAXSIZEITEM", wxStaticText)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_CACHE_ENTRY_SIZE)) );
+
+  XRCCTRL(*this, "wxID_CHECK_ENABLECACHE", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_ENABLE_CACHE)) );
+  XRCCTRL(*this, "wxID_CHECK_PROTECTEDDOC", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_CACHE_PROT_DOCS)) );
+  XRCCTRL(*this, "wxID_CHECK_DISCO", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_DISCONNECTED_MODE)) );
+  XRCCTRL(*this, "wxID_CHECK_EXPIGNORE", wxCheckBox)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_IGNORE_EXPIRES)) );
+
+  XRCCTRL(*this, "wxID_BUTTON_EMPTYCACHE", wxButton)->SetLabel( TtaConvMessageToWX(TtaGetMessage(AMAYA,AM_FLUSH_CACHE_BUTTON)) );
+
+  XRCCTRL(*this, "wxID_CACHESIZE_VALUE",  wxSlider)->SetRange( 1, 100 );
+  XRCCTRL(*this, "wxID_MAXSIZEITEM_VALUE",  wxSlider)->SetRange( 1, 5 );
+}
+
+/*----------------------------------------------------------------------
+  SetupDialog_Cache send init value to dialog 
+  params:
+    + const Prop_Cache & prop : the values to setup into the dialog
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::SetupDialog_Cache( const Prop_Cache & prop )
+{
+  wxLogDebug( _T("PreferenceDlgWX::SetupDialog_Cache") );
+
+  XRCCTRL(*this, "wxID_CHECK_ENABLECACHE", wxCheckBox)->SetValue( prop.EnableCache );
+  XRCCTRL(*this, "wxID_CHECK_PROTECTEDDOC", wxCheckBox)->SetValue( prop.CacheProtectedDocs );
+  XRCCTRL(*this, "wxID_CHECK_DISCO", wxCheckBox)->SetValue( prop.CacheDisconnectMode );
+  XRCCTRL(*this, "wxID_CHECK_EXPIGNORE", wxCheckBox)->SetValue( prop.CacheExpireIgnore );
+
+  XRCCTRL(*this, "wxID_VALUE_CACHEDIR", wxTextCtrl)->SetValue( TtaConvMessageToWX(prop.CacheDirectory) );
+
+  XRCCTRL(*this, "wxID_CACHESIZE_VALUE",  wxSlider)->SetValue( prop.CacheSize );
+  XRCCTRL(*this, "wxID_MAXSIZEITEM_VALUE",  wxSlider)->SetValue( prop.MaxCacheFile );
+}
+
+/*----------------------------------------------------------------------
+  GetValueDialog_Cache get dialog values
+  params:
+  returns:
+    + Prop_Cache prop : the dialog values
+  ----------------------------------------------------------------------*/
+Prop_Cache PreferenceDlgWX::GetValueDialog_Cache()
+{
+  wxString        value;
+  Prop_Cache      prop;
+  memset( &prop, 0, sizeof(Prop_Cache) );
+
+  prop.EnableCache         = XRCCTRL(*this, "wxID_CHECK_ENABLECACHE", wxCheckBox)->GetValue();
+  prop.CacheProtectedDocs  = XRCCTRL(*this, "wxID_CHECK_PROTECTEDDOC", wxCheckBox)->GetValue();
+  prop.CacheDisconnectMode = XRCCTRL(*this, "wxID_CHECK_DISCO", wxCheckBox)->GetValue();
+  prop.CacheExpireIgnore   = XRCCTRL(*this, "wxID_CHECK_EXPIGNORE", wxCheckBox)->GetValue();
+
+  value = XRCCTRL(*this, "wxID_VALUE_CACHEDIR", wxTextCtrl)->GetValue();
+  strcpy( prop.CacheDirectory, (const char*)value.mb_str(wxConvUTF8) );
+
+  prop.CacheSize    = XRCCTRL(*this, "wxID_CACHESIZE_VALUE",  wxSlider)->GetValue();
+  prop.MaxCacheFile = XRCCTRL(*this, "wxID_MAXSIZEITEM_VALUE",  wxSlider)->GetValue();
+
+  return prop;
+}
+
+/*----------------------------------------------------------------------
+  OnEmptyCache is called when the user click on emptycache button (Cache tab)
+  params:
+  returns:
+  ----------------------------------------------------------------------*/
+void PreferenceDlgWX::OnEmptyCache( wxCommandEvent& event )
+{
+  wxLogDebug( _T("PreferenceDlgWX::OnEmptyCache") );
+  ThotCallback (GetPrefCacheBase() + CacheMenu, INTEGER_DATA, (char*) 3);
+}
+
 /*----------------------------------------------------------------------
   OnOk called when the user validates his selection
   params:
@@ -389,6 +488,10 @@ void PreferenceDlgWX::OnOk( wxCommandEvent& event )
   Prop_Publish prop_pub = GetValueDialog_Publish();
   SetProp_Publish( &prop_pub );
   ThotCallback (GetPrefPublishBase() + PublishMenu, INTEGER_DATA, (char*) 1);
+
+  Prop_Cache prop_cache = GetValueDialog_Cache();
+  SetProp_Cache( &prop_cache );
+  ThotCallback (GetPrefCacheBase() + CacheMenu, INTEGER_DATA, (char*) 1);
 
   ThotCallback (m_Ref, INTEGER_DATA, (char*) 1);
 }
@@ -422,6 +525,11 @@ void PreferenceDlgWX::OnDefault( wxCommandEvent& event )
       ThotCallback (GetPrefPublishBase() + PublishMenu, INTEGER_DATA, (char*) 2);
       SetupDialog_Publish( GetProp_Publish() );
     }
+  else if ( p_page->GetId() == wxXmlResource::GetXRCID(_T("wxID_PAGE_CACHE")) )
+    {
+      ThotCallback (GetPrefCacheBase() + CacheMenu, INTEGER_DATA, (char*) 2);
+      SetupDialog_Cache( GetProp_Cache() );
+    }
 
   ThotCallback (m_Ref, INTEGER_DATA, (char*) 2);
 }
@@ -436,6 +544,7 @@ void PreferenceDlgWX::OnCancel( wxCommandEvent& event )
   ThotCallback (GetPrefGeneralBase() + GeneralMenu, INTEGER_DATA, (char*) 0);
   ThotCallback (GetPrefBrowseBase() + BrowseMenu, INTEGER_DATA, (char*) 0);
   ThotCallback (GetPrefPublishBase() + PublishMenu, INTEGER_DATA, (char*) 0);
+  ThotCallback (GetPrefCacheBase() + CacheMenu, INTEGER_DATA, (char*) 0);
   ThotCallback (m_Ref, INTEGER_DATA, (char*) 0);
 }
 

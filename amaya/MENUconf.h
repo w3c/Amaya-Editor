@@ -135,4 +135,15 @@ typedef struct Prop_Publish_t
   char     CharsetType[MAX_LENGTH];
 } Prop_Publish;
 
+typedef struct Prop_Cache_t
+{
+  ThotBool EnableCache;
+  ThotBool CacheProtectedDocs;
+  ThotBool CacheDisconnectMode;
+  ThotBool CacheExpireIgnore;
+  char     CacheDirectory[MAX_LENGTH];
+  int      CacheSize;
+  int      MaxCacheFile;
+} Prop_Cache;
+
 #endif /* _MENUCONF.h */
