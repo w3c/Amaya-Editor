@@ -1582,7 +1582,7 @@ STRING              target;
 	else if (src[0] == TEXT('~'))
 	  {
 	    /* replace ~ */
-	    s = TtaGetEnvString (TEXT("HOME"));
+	    s = TtaGetEnvString ("HOME");
 	    ustrcpy (target, s);
 	    ustrcat (target, &src[5]);
 	  }

@@ -623,7 +623,7 @@ View                view;
 	     TtaExtractName (tempname, SavePath, SaveName);
 	     if (SaveName[0] == EOS)
 	       {
-		 DefaultName = TtaGetEnvString (_DEFAULTNAME_EVAR_);
+		 DefaultName = TtaGetEnvString ("DEFAULTNAME");
 		 if (DefaultName == NULL || *DefaultName == EOS)
 		   DefaultName = StdDefaultName;
 		 ustrcpy (SaveName, DefaultName);
@@ -941,7 +941,7 @@ ThotBool          *ok;
       else if (url[len -1] != DIR_SEP)
 	ustrcat (msg, DIR_STR);
       /* get default name */
-      DefaultName = TtaGetEnvString (_DEFAULTNAME_EVAR_);
+      DefaultName = TtaGetEnvString ("DEFAULTNAME");
       if (DefaultName == NULL || *DefaultName == EOS)
 	DefaultName = StdDefaultName;
 
@@ -982,7 +982,7 @@ ThotBool            use_preconditions;
   int               res;
   int               mode = 0;
 
-  verify_publish = TtaGetEnvString(_VERIFYPUBLISH_EVAR_);
+  verify_publish = TtaGetEnvString("VERIFY_PUBLISH");
   /* verify the PUT by default */
   if (verify_publish == NULL)
     verify_publish = TEXT("yes");

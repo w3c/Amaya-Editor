@@ -2372,7 +2372,7 @@ ThotBool            isHTML;
 	}
       else if (url)
 	{
-	  bg_image = TtaGetEnvString (TEXT("ENABLE_BG_IMAGES"));
+	  bg_image = TtaGetEnvString ("ENABLE_BG_IMAGES");
 	  if (bg_image == NULL || !ustrcasecmp (bg_image, TEXT("yes")))
 	    {
 	      callblock = (BackgroundImageCallbackPtr) TtaGetMemory(sizeof(BackgroundImageCallbackBlock));

@@ -7342,7 +7342,7 @@ ThotBool	    plainText;
 	{
 	  ustrcpy (documentName, documentDirectory);
 	  documentDirectory[0] = EOS;
-	  s = TtaGetEnvString (TEXT("PWD"));
+	  s = TtaGetEnvString ("PWD");
 	  /* set path on current directory */
 	  if (s != NULL)
 	    ustrcpy (documentDirectory, s);

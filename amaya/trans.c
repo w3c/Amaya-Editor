@@ -866,7 +866,7 @@ Document doc;
   else
   *****/
     {
-      ustrcpy (tmpfilename, TtaGetEnvString (TEXT("TMPDIR")));
+      ustrcpy (tmpfilename, TtaGetEnvString ("TMPDIR"));
       ustrcat (tmpfilename, DIR_STR);
       ustrcat (tmpfilename, TEXT("amayatrans.tmp"));
       TtaExportTree (subTree, doc, tmpfilename, TEXT("HTMLT"));     

@@ -1415,10 +1415,10 @@ View            view;
 {
   STRING        s;
 
-  s = TtaGetEnvString (TEXT("HOME_PAGE"));
+  s = TtaGetEnvString ("HOME_PAGE");
    if (!s)
      {
-       s = TtaGetEnvString (TEXT("THOTDIR"));
+       s = TtaGetEnvString ("THOTDIR");
        if (s != NULL)
 	 ustrcpy (LastURLName, s);
        else
@@ -1534,7 +1534,7 @@ ThotBool     logFile;
 	 }
 
        /* get the geometry of the main view */
-       TtaGetViewGeometryRegistry (doc, TEXT("Formatted_view"), &x, &y, &w, &h);
+       TtaGetViewGeometryRegistry (doc, "Formatted_view", &x, &y, &w, &h);
        TtaSetNotificationMode (doc, 1);
        /* change the position slightly to avoid hiding completely the main
 	  view of other documents */
@@ -2387,7 +2387,7 @@ ThotBool	    history;
 	/* reset the history of the new window */
 	InitDocHistory (newdoc);
         /* hide template entry if no template server is configured */
-      if (TtaGetEnvString (TEXT("TEMPLATE_URL")) == NULL)
+      if (TtaGetEnvString ("TEMPLATE_URL") == NULL)
  	TtaSetItemOff (newdoc, 1, File, BTemplate);
 #ifdef ANNOTATIONS
       /* auto-load the annotations associated with the document */
@@ -2643,7 +2643,7 @@ View                view;
     }
 
   /* compare to the standard value? */
-  zoomStr = TtaGetEnvString (_ZOOM_EVAR_);
+  zoomStr = TtaGetEnvString ("ZOOM");
   if (zoomStr == NULL)
     zoomVal = 0;
   else
@@ -2683,7 +2683,7 @@ View                view;
     }
 
   /* compare to the standard value? */
-  zoomStr = TtaGetEnvString (_ZOOM_EVAR_);
+  zoomStr = TtaGetEnvString ("ZOOM");
   if (zoomStr == NULL)
     zoomVal = 0;
   else
@@ -2834,7 +2834,7 @@ View                view;
      TtaRaiseView (document, structView);
    else
      {
-       TtaGetViewGeometryRegistry (document, TEXT("Structure_view"), &x, &y, &w, &h);
+       TtaGetViewGeometryRegistry (document, "Structure_view", &x, &y, &w, &h);
        structView = TtaOpenView (document, TEXT("Structure_view"), x, y, w, h);
        if (structView != 0)
 	 {
@@ -2860,7 +2860,7 @@ View                view;
      TtaRaiseView (document, mathView);
    else
      {
-       TtaGetViewGeometryRegistry (document, TEXT("Math_Structure_view"), &x, &y, 
+       TtaGetViewGeometryRegistry (document, "Math_Structure_view", &x, &y, 
 				   &w, &h);
        mathView = TtaOpenView (document, TEXT("Math_Structure_view"), x, y, w, h);
        if (mathView != 0)
@@ -2933,7 +2933,7 @@ View                view;
       TtaRaiseView (document, altView);
    else
      {
-	TtaGetViewGeometryRegistry (document, TEXT("Alternate_view"), &x, &y, &w,
+	TtaGetViewGeometryRegistry (document, "Alternate_view", &x, &y, &w,
 				    &h);
 	altView = TtaOpenView (document, TEXT("Alternate_view"), x, y, w, h);
 	if (altView != 0)
@@ -2977,7 +2977,7 @@ View                view;
       TtaRaiseView (document, linksView);
    else
      {
-	TtaGetViewGeometryRegistry (document, TEXT("Links_view"), &x, &y, &w, &h);
+	TtaGetViewGeometryRegistry (document, "Links_view", &x, &y, &w, &h);
 	linksView = TtaOpenView (document, TEXT("Links_view"), x, y, w, h);
 	if (linksView != 0)
 	  {
@@ -3020,7 +3020,7 @@ View                view;
       TtaRaiseView (document, tocView);
    else
      {
-	TtaGetViewGeometryRegistry (document, TEXT("Table_of_contents"), &x, &y, 
+	TtaGetViewGeometryRegistry (document, "Table_of_contents", &x, &y, 
 				    &w, &h);
 	tocView = TtaOpenView (document, TEXT("Table_of_contents"), x, y, w, h);
 	if (tocView != 0)
@@ -4597,7 +4597,7 @@ NotifyEvent        *event;
     * Initialize the Amaya user and tmp directories
     */
 
-   s = TtaGetEnvString (TEXT("APP_TMPDIR"));
+   s = TtaGetEnvString ("APP_TMPDIR");
    if (!CheckMakeDirectory (s, TRUE))
      /* try to use the default value */
      {
@@ -4623,7 +4623,7 @@ NotifyEvent        *event;
    TtaAppendDocumentPath (TempFileDirectory);
  
 #ifdef _WINDOWS
-   s = TtaGetEnvString (TEXT("APP_HOME"));
+   s = TtaGetEnvString ("APP_HOME");
    if (!CheckMakeDirectory (s, TRUE))
      /* didn't work, so we exit */
      {
@@ -4739,16 +4739,16 @@ NotifyEvent        *event;
      return;
    else
       /* No argument in the command line. Try the variable HOME_PAGE */
-      s = TtaGetEnvString (_HOMEPAGE_EVAR_);
+      s = TtaGetEnvString ("HOME_PAGE");
 
 #  ifdef _WINDOWS
-   usprintf (LostPicturePath, TEXT("%s\\amaya\\lost.gif"), TtaGetEnvString (_THOTDIR_EVAR_));              
+   usprintf (LostPicturePath, TEXT("%s\\amaya\\lost.gif"), TtaGetEnvString ("THOTDIR"));              
 #  endif /* _WINDOWS */
    if (!s)
       /* No argument in the command line, no HOME_PAGE variable. Open the */
       /* default Amaya URL */
      {
-       s = TtaGetEnvString (_THOTDIR_EVAR_);
+       s = TtaGetEnvString ("THOTDIR");
        if (s != NULL)
 	 ustrcpy (LastURLName, s);
        else
@@ -4981,7 +4981,7 @@ int         index;
   STRING  s;
   
   localname[0] = EOS;
-  s = TtaGetEnvString (_THOTDIR_EVAR_);
+  s = TtaGetEnvString ("THOTDIR");
   if (s != NULL)
     usprintf (localname, TEXT("%s%cdoc%camaya%c%s"), s, DIR_SEP, DIR_SEP, DIR_SEP, Manual[index]);
 

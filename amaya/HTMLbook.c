@@ -389,7 +389,7 @@ Document            document;
        docPrint = document;
 
        /* define the new default PS file */
-       ptr = TtaGetEnvString (TEXT("APP_TMPDIR"));
+       ptr = TtaGetEnvString ("APP_TMPDIR");
        if (ptr != NULL && TtaCheckDirectory (ptr))
 	     ustrcpy(PSdir, ptr);
        else
@@ -550,7 +550,7 @@ STRING              data;
 	  TtaSetPrintCommand (pPrinter);
 	  TtaSetPsFile (PSdir);
 	  /* update the environment variable */
-	  TtaSetEnvString (_THOTPRINT_EVAR_, pPrinter, TRUE);
+	  TtaSetEnvString ("THOTPRINT", pPrinter, TRUE);
 	  TtaSetEnvInt (_PAPERSIZE_EVAR_, PageSize, TRUE);
 	  PrintDocument (docPrint, 1);
 	  break;
@@ -647,7 +647,7 @@ void                InitPrint ()
 
    /* init printer variables */
    /* read default printer variable */
-   ptr = TtaGetEnvString (_THOTPRINT_EVAR_);
+   ptr = TtaGetEnvString ("THOTPRINT");
    if (ptr == NULL)
      ustrcpy (pPrinter, _EMPTYSTR_);
    else

@@ -57,7 +57,7 @@ extern HINSTANCE hInstance;
 #endif /* _WINDOWS */
 
 /* this one should be exported from the thotlib */
-extern STRING ColorName (int num);
+extern char* ColorName (int num);
 
 static int CacheStatus;
 static int ProxyStatus;
@@ -369,7 +369,7 @@ void InitAmayaDefEnv ()
   STRING ptr;
 
   /* browsing editing options */
-  ptr = TtaGetEnvString (_THOTDIR_EVAR_);
+  ptr = TtaGetEnvString ("THOTDIR");
   if (ptr != NULL)
     {
       ustrcpy (HomePage, ptr);
@@ -377,17 +377,17 @@ void InitAmayaDefEnv ()
     }
   else
     HomePage[0]  = EOS;
-  TtaSetDefEnvString (_HOMEPAGE_EVAR_, HomePage, FALSE);
+  TtaSetDefEnvString ("HOME_PAGE", HomePage, FALSE);
   HomePage[0] = EOS;
-  TtaSetDefEnvString (_ENABLEMULTIKEY_EVAR_, TEXT("no"), FALSE);
-  TtaSetDefEnvString (_ENABLEBGIMAGES_EVAR_, TEXT("yes"), FALSE);
-  TtaSetDefEnvString (_VERIFYPUBLISH_EVAR_, TEXT("no"), FALSE);
+  TtaSetDefEnvString ("ENABLE_MULTIKEY", TEXT("no"), FALSE);
+  TtaSetDefEnvString ("ENABLE_BG_IMAGES", TEXT("yes"), FALSE);
+  TtaSetDefEnvString ("VERIFY_PUBLISH", TEXT("no"), FALSE);
   TtaSetDefEnvString (_ENABLELOSTUPDATECHECK_EVAR_, TEXT("yes"), FALSE);
-  TtaSetDefEnvString (_DEFAULTNAME_EVAR_, TEXT("Overview.html"), FALSE);
-  TtaSetDefEnvString (_FontMenuSize_EVAR_, TEXT("12"), FALSE);
-  TtaSetDefEnvString (_ENABLEDOUBLECLICK_EVAR_, TEXT("yes"), FALSE);
+  TtaSetDefEnvString ("DEFAULTNAME", TEXT("Overview.html"), FALSE);
+  TtaSetDefEnvString ("FontMenuSize", TEXT("12"), FALSE);
+  TtaSetDefEnvString ("ENABLE_DOUBLECLICK", TEXT("yes"), FALSE);
   /* @@@ */
-  TtaGetEnvBoolean (_ENABLEDOUBLECLICK_EVAR_, &DoubleClick);
+  TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
   /* @@@ */
 #ifndef _WINDOWS
   TtaSetDefEnvString ("THOTPRINT", "lpr", FALSE);
@@ -1709,13 +1709,13 @@ static void GetGeneralConf ()
 #endif /* __STDC__ */
 {
   TtaGetEnvInt (_DOUBLECLICKDELAY_EVAR_, &DoubleClickDelay);
-  TtaGetEnvInt (_ZOOM_EVAR_, &Zoom);
-  TtaGetEnvBoolean (_ENABLEMULTIKEY_EVAR_, &Multikey);
+  TtaGetEnvInt ("ZOOM", &Zoom);
+  TtaGetEnvBoolean ("ENABLE_MULTIKEY", &Multikey);
   TtaGetEnvBoolean (_ENABLEBGIMAGES_EVAR_, &BgImages);
   TtaGetEnvBoolean (_ENABLEDOUBLECLICK_EVAR_, &DoubleClick);
-  GetEnvString (_HOMEPAGE_EVAR_, HomePage);
-  GetEnvString (_LANG_EVAR_, DialogueLang);
-  TtaGetEnvInt (_FontMenuSize_EVAR_, &FontMenuSize);
+  GetEnvString ("HOME_PAGE", HomePage);
+  GetEnvString ("LANG", DialogueLang);
+  TtaGetEnvInt ("FontMenuSize", &FontMenuSize);
 #ifdef _WINDOWS
   GetEnvString (TEXT("APP_TMPDIR"), AppTmpDir);
   GetEnvString (TEXT("APP_HOME"), AppHome);
@@ -1797,7 +1797,7 @@ static void ValidateGeneralConf ()
       /* if the cache was in AppTmpDir and AppTmpDir changed, move
 	 the cache */
       usprintf (s, TEXT("%s%clibwww-cache"), old_AppTmpDir, DIR_SEP); 
-      ptr = TtaGetEnvString (TEXT("CACHE_DIR"));
+      ptr = TtaGetEnvString ("CACHE_DIR");
       if (ptr && !ustrcasecmp (s, ptr))
 	{
 	  usprintf (s, TEXT("%s%clibwww-cache"), AppTmpDir, DIR_SEP);		  
@@ -1820,7 +1820,7 @@ static void ValidateGeneralConf ()
   
   /* validate the dialogue language */
   change = 0;
-  ptr = TtaGetEnvString (_THOTDIR_EVAR_);
+  ptr = TtaGetEnvString ("THOTDIR");
   if (ustrcmp (DialogueLang, _EnUSLANG_))
     {
       change++;
@@ -1831,7 +1831,7 @@ static void ValidateGeneralConf ()
   usprintf (s, TEXT("%s%cconfig%c%s-amayamsg"), ptr, DIR_SEP, DIR_SEP, lang);
   if (!TtaFileExist (s))
   {
-    GetDefEnvString (_LANG_EVAR_, DialogueLang);
+	  GetDefEnvString ("LANG", DialogueLang);
     change++;
   }
   if (change)
@@ -1856,14 +1856,14 @@ static void SetGeneralConf ()
   int oldZoom;
 
   TtaSetEnvInt (_DOUBLECLICKDELAY_EVAR_, DoubleClickDelay, TRUE);
-  TtaGetEnvInt (_ZOOM_EVAR_, &oldZoom);
+  TtaGetEnvInt ("ZOOM", &oldZoom);
   if (oldZoom != Zoom)
     {
-      TtaSetEnvInt (_ZOOM_EVAR_, Zoom, TRUE);
+      TtaSetEnvInt ("ZOOM", Zoom, TRUE);
       /* recalibrate the zoom settings in all the active documents */
       GotoZoom (Zoom - oldZoom);
     }
-  TtaSetEnvBoolean (_ENABLEMULTIKEY_EVAR_, Multikey, TRUE);
+  TtaSetEnvBoolean ("ENABLE_MULTIKEY", Multikey, TRUE);
   TtaSetMultikey (Multikey);
   TtaSetEnvBoolean (_ENABLEBGIMAGES_EVAR_, BgImages, TRUE);
   TtaSetEnvBoolean (_ENABLEDOUBLECLICK_EVAR_, DoubleClick, TRUE);
@@ -1893,16 +1893,16 @@ static void GetDefaultGeneralConf ()
 #endif /*__STDC__*/
 {
   TtaGetDefEnvInt (_DOUBLECLICKDELAY_EVAR_, &DoubleClickDelay);
-  TtaGetDefEnvInt (_ZOOM_EVAR_, &Zoom);
-  GetDefEnvToggle (_ENABLEMULTIKEY_EVAR_, &Multikey, 
+  TtaGetDefEnvInt ("ZOOM", &Zoom);
+  GetDefEnvToggle ("ENABLE_MULTIKEY", &Multikey, 
 		       GeneralBase + mToggleGeneral, 0);
   GetDefEnvToggle (_ENABLEBGIMAGES_EVAR_, &BgImages,
 		       GeneralBase + mToggleGeneral, 1);
   GetDefEnvToggle (_ENABLEDOUBLECLICK_EVAR_, &DoubleClick,
 		       GeneralBase + mToggleGeneral, 2);
-  GetDefEnvString (_HOMEPAGE_EVAR_, HomePage);
-  GetDefEnvString (_LANG_EVAR_, DialogueLang);
-  TtaGetDefEnvInt (_FontMenuSize_EVAR_, &FontMenuSize);
+  GetDefEnvString ("HOME_PAGE", HomePage);
+  GetDefEnvString ("LANG", DialogueLang);
+  TtaGetDefEnvInt ("FontMenuSize", &FontMenuSize);
 #ifdef _WINDOWS
   GetDefEnvString (TEXT("APP_TMPDIR"), AppTmpDir);
   GetDefEnvString (TEXT("APP_HOME"), AppHome);
@@ -2232,8 +2232,8 @@ static void GetPublishConf ()
 #endif /* __STDC__ */
 {
   TtaGetEnvBoolean (_ENABLELOSTUPDATECHECK_EVAR_, &LostUpdateCheck);
-  TtaGetEnvBoolean (_VERIFYPUBLISH_EVAR_, &VerifyPublish);
-  GetEnvString (_DEFAULTNAME_EVAR_, DefaultName);
+  TtaGetEnvBoolean ("VERIFY_PUBLISH", &VerifyPublish);
+  GetEnvString ("DEFAULTNAME", DefaultName);
 }
 
 /*----------------------------------------------------------------------
@@ -2248,8 +2248,8 @@ static void SetPublishConf ()
 #endif /* __STDC__ */
 {
   TtaSetEnvBoolean (_ENABLELOSTUPDATECHECK_EVAR_, LostUpdateCheck, TRUE);
-  TtaSetEnvBoolean (_VERIFYPUBLISH_EVAR_, VerifyPublish, TRUE);
-  TtaSetEnvString (_DEFAULTNAME_EVAR_, DefaultName, TRUE);
+  TtaSetEnvBoolean ("VERIFY_PUBLISH", VerifyPublish, TRUE);
+  TtaSetEnvString ("DEFAULTNAME", DefaultName, TRUE);
 
   TtaSaveAppRegistry ();
 }
@@ -2266,9 +2266,9 @@ static void GetDefaultPublishConf ()
 {
   GetDefEnvToggle (_ENABLELOSTUPDATECHECK_EVAR_, &LostUpdateCheck, 
 		    PublishBase + mTogglePublish, 0);
-  GetDefEnvToggle (_VERIFYPUBLISH_EVAR_, &VerifyPublish,
+  GetDefEnvToggle ("VERIFY_PUBLISH", &VerifyPublish,
 		    PublishBase + mTogglePublish, 1);
-  GetDefEnvString (_DEFAULTNAME_EVAR_, DefaultName);
+  GetDefEnvString ("DEFAULTNAME", DefaultName);
 }
 
 #ifdef _WINDOWS

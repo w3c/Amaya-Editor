@@ -1305,7 +1305,7 @@ HTList             *c;
   if (c == (HTList *) NULL) 
       return;
   
-  lang_list = TtaGetEnvString (TEXT("ACCEPT_LANGUAGES"));
+  lang_list = TtaGetEnvString ("ACCEPT_LANGUAGES");
   s[2] = EOS;
   if (lang_list && *lang_list != EOS)
     {
@@ -1479,7 +1479,7 @@ static void         AHTProtocolInit (void)
 #endif
 
    /* initialize pipelining */
-  strptr = (char *) TtaGetEnvString (TEXT ("ENABLE_PIPELINING"));
+  strptr = (char *) TtaGetEnvString ("ENABLE_PIPELINING");
   if (strptr && *strptr && strcasecmp (strptr,"yes" ))
     HTTP_setConnectionMode (HTTP_11_NO_PIPELINING);
 }
@@ -1789,21 +1789,21 @@ static void Cacheinit ()
 int i;
 
   /* activate cache? */
-  strptr = TtaGetEnvString (TEXT("ENABLE_CACHE"));
+  strptr = TtaGetEnvString ("ENABLE_CACHE");
   if (strptr && *strptr && ustrcasecmp (strptr, TEXT("yes")))
     cache_enabled = NO;
   else
     cache_enabled = YES;
 
   /* cache protected documents? */
-  strptr = TtaGetEnvString (TEXT("CACHE_PROTECTED_DOCS"));
+  strptr = TtaGetEnvString ("CACHE_PROTECTED_DOCS");
   if (strptr && *strptr && !ustrcasecmp (strptr, TEXT("yes")))
     HTCacheMode_setProtected (YES);
   else
     HTCacheMode_setProtected (NO);
 
   /* get the cache dir (or use a default one) */
-  strptr = TtaGetEnvString (TEXT("CACHE_DIR"));
+  strptr = TtaGetEnvString ("CACHE_DIR");
   if (strptr && *strptr) 
     {
       real_dir = TtaAllocString (ustrlen (strptr) + ustrlen (CACHE_DIR_NAME) + 20);
@@ -1837,7 +1837,7 @@ int i;
   usprintf (cache_dir, TEXT("file:%s"), real_dir);
 
   /* get the cache size (or use a default one) */
-  strptr = TtaGetEnvString (TEXT("CACHE_SIZE"));
+  strptr = TtaGetEnvString ("CACHE_SIZE");
   if (strptr && *strptr) 
     cache_size = uctoi (strptr);
   else
@@ -1956,11 +1956,11 @@ static void ProxyInit ()
   char*  strptrA;
 
   /* get the proxy settings from the thot.ini file */
-  strptr = TtaGetEnvString (TEXT("HTTP_PROXY"));
+  strptr = TtaGetEnvString ("HTTP_PROXY");
   if (strptr && *strptr)
     HTProxy_add ("http", WideChar2ISO (strptr));
   /* get the no_proxy settings from the thot.ini file */
-  strptr = TtaGetEnvString (TEXT("NO_PROXY"));
+  strptr = TtaGetEnvString ("NO_PROXY");
   if (strptr && *strptr) 
     {
       str = TtaStrdup (strptr);          /* Get copy we can mutilate */
@@ -2040,7 +2040,7 @@ STRING AppVersion;
    HTAA_newModule ("basic", HTBasic_generate, HTBasic_parse, NULL,
 		    HTBasic_delete);
    /* activate MDA by defaul */
-   strptr = TtaGetEnvString (TEXT("ENABLE_MDA"));
+   strptr = TtaGetEnvString ("ENABLE_MDA");
    if (!strptr || (strptr && *strptr && ustrcasecmp (strptr, TEXT("no"))))
      HTAA_newModule ("digest", HTDigest_generate, HTDigest_parse, 
 		     HTDigest_updateInfo, HTDigest_delete);
@@ -2184,7 +2184,7 @@ void                QueryInit ()
    /* Setting up different network parameters */
 
    /* Maximum number of simultaneous open sockets */
-   strptr = TtaGetEnvString (TEXT("MAX_SOCKET"));
+   strptr = TtaGetEnvString ("MAX_SOCKET");
    if (strptr && *strptr) 
      tmp_i = uctoi (strptr);
    else
@@ -2193,7 +2193,7 @@ void                QueryInit ()
 
    /* different network services timeouts */
    /* dns timeout */
-   strptr = TtaGetEnvString (TEXT("DNS_TIMEOUT"));
+   strptr = TtaGetEnvString ("DNS_TIMEOUT");
    if (strptr && *strptr) 
      tmp_i = uctoi (strptr);
    else
@@ -2201,7 +2201,7 @@ void                QueryInit ()
    HTDNS_setTimeout (tmp_i);
 
    /* persistent connections timeout */
-   strptr = TtaGetEnvString (TEXT("PERSIST_CX_TIMEOUT"));
+   strptr = TtaGetEnvString ("PERSIST_CX_TIMEOUT");
    if (strptr && *strptr) 
      tmp_l = uctol (strptr);
    else
@@ -2209,7 +2209,7 @@ void                QueryInit ()
    HTHost_setPersistTimeout (tmp_l);
 
    /* default timeout in ms */
-   strptr = TtaGetEnvString (TEXT("NET_EVENT_TIMEOUT"));
+   strptr = TtaGetEnvString ("NET_EVENT_TIMEOUT");
    if (strptr && *strptr) 
      tmp_i = uctoi (strptr);
    else
@@ -2828,7 +2828,7 @@ void               *context_tcbf;
    ThotBool            lost_update_check = TRUE;
 
    /* should we protect the PUT against lost updates? */
-   tmp = TtaGetEnvString (TEXT("ENABLE_LOST_UPDATE_CHECK"));
+   tmp = TtaGetEnvString ("ENABLE_LOST_UPDATE_CHECK");
    if (tmp && *tmp && ustrcasecmp (tmp, TEXT("yes")))
      lost_update_check = FALSE;
 
