@@ -3898,6 +3898,8 @@ ThotBool            react;
   struct Cat_Context *copyCat;
 
   equiv_item[0] = 0;
+  button = 'L';
+  menu = NULL;
 #endif /* !_WINDOWS */
 
   if (ref == 0)

@@ -96,7 +96,7 @@ extern void         TtaSetTransformCallback (Func function);
 /* List of editor dialogue actions */
 extern void         TtcChangeCharacters (Document document, View view);
 extern void         TtcChangeColors (Document document, View view);
-extern void         TtcGetPaletteColors (int *fgcolor, int *bgcolor);
+extern void         TtcGetPaletteColors (int *fgcolor, int *bgcolor, ThotBool palType);
 extern void         TtcChangeFormat (Document document, View view);
 extern void         TtcChangeGraphics (Document document, View view);
 extern void         TtcChangePresentation (Document document, View view);
@@ -192,7 +192,7 @@ extern void         TtaSetTransformCallback ( /*Func function*/ );
 /* List of editor dialogue actions */
 extern void         TtcChangeCharacters ( /*Document document, View view */ );
 extern void         TtcChangeColors ( /*Document document, View view */ );
-extern void         TtcGetPaletteColors ( /* int *fgcolor, int *bgcolor */ );
+extern void         TtcGetPaletteColors ( /* int *fgcolor, int *bgcolor, ThotBool palType */ );
 extern void         TtcChangeFormat ( /*Document document, View view */ );
 extern void         TtcChangeGraphics ( /*Document document, View view */ );
 extern void         TtcChangePresentation ( /*Document document, View view */ );

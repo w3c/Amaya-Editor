@@ -37,6 +37,9 @@
 
 static int fgcolor, bgcolor;
 static ThotBool applyToSelection = TRUE;
+/* @@ JK: a quick, ugly hack just for selecting the messages drawn on the
+color palette */
+static ThotBool PalMessageSet1 = TRUE;
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
@@ -741,13 +744,19 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
     case WM_CREATE:
       cxBlock = 39;
       cyBlock = 15;
-      hwnLButton = CreateWindow (TEXT("STATIC"), TtaGetMessage (LIB, TMSG_BUTTON_1), 
+      hwnLButton = CreateWindow (TEXT("STATIC"),
+			     (applyToSelection || PalMessageSet1)
+				  ? TtaGetMessage (LIB, TMSG_BUTTON_1)
+				  : TtaGetMessage (LIB, TMSG_CPBUTTON_1), 
 				 WS_CHILD | WS_VISIBLE | SS_LEFT, 0, 0, 320, 20,
 				 hwnd, (HMENU) 99, hInstance, NULL);
       ShowWindow (hwnLButton, SW_SHOWNORMAL);
       UpdateWindow (hwnLButton);
     
-      hwnRButton = CreateWindow (TEXT("STATIC"), TtaGetMessage (LIB, TMSG_BUTTON_2), 
+      hwnRButton = CreateWindow (TEXT("STATIC"),
+			     (applyToSelection ||  PalMessageSet1)
+				  ? TtaGetMessage (LIB, TMSG_BUTTON_2)
+				  : TtaGetMessage (LIB, TMSG_CPBUTTON_2), 
 				 WS_CHILD | WS_VISIBLE | SS_LEFT, 0, 20, 320, 20,
 				 hwnd, (HMENU) 101, hInstance, NULL);
       ShowWindow (hwnRButton, SW_SHOWNORMAL);
@@ -813,7 +822,15 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
 	      EndPaint (hwnd, &ps);
 	      DeleteDC (hdc);
 	    }
-	  SetFocus (FrRef[currentFrame]);
+	  /* SetFocus (FrRef[currentFrame]); */
+	  /* destroy the menu right away */
+      if (!applyToSelection)
+	  {
+	    if (!DeleteObject (TtCmap))
+	       WinErrorBox (WIN_Main_Wd, TEXT("ThotColorPaletteWndProc: _IDDONE_"));
+	     TtCmap = 0;
+	    DestroyWindow (hwnd);
+	  }
 	} 
       break;
       
@@ -860,7 +877,15 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
 	  EndPaint (hwnd, &ps);
 	  DeleteDC (hdc);
 	}
-      SetFocus (FrRef[currentFrame]);
+      /* SetFocus (FrRef[currentFrame]); */
+	  /* destroy the menu right away */
+      if (!applyToSelection)
+	  {
+	    if (!DeleteObject (TtCmap))
+	       WinErrorBox (WIN_Main_Wd, TEXT("ThotColorPaletteWndProc: _IDDONE_"));
+	     TtCmap = 0;
+	    DestroyWindow (hwnd);
+	  }
       break;
       
     case WM_RBUTTONDOWN:
@@ -908,7 +933,15 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
 	  DeleteDC (hdc);
 	}
       
-      SetFocus (FrRef[currentFrame]);
+      /* SetFocus (FrRef[currentFrame]); */
+	  /* destroy the menu right away */
+      if (!applyToSelection)
+	  {
+	    if (!DeleteObject (TtCmap))
+	       WinErrorBox (WIN_Main_Wd, TEXT("ThotColorPaletteWndProc: _IDDONE_"));
+	     TtCmap = 0;
+	    DestroyWindow (hwnd);
+	  }
       break;
       
     case WM_PAINT:
@@ -1092,18 +1125,20 @@ View                view;
    colors chosen by the user.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void TtcGetPaletteColors (int *fg, int *bg)
+void TtcGetPaletteColors (int *fg, int *bg, ThotBool palType)
 #else  /* __STDC__ */
-void TtcGetPaletteColors (fg, bg)
+void TtcGetPaletteColors (fg, bg, palType)
 int *fg;
 int *bg;
+int palType;
 #endif /* __STDC__ */
 { 
 #ifdef _WINDOWS
-	fgcolor = bgcolor = -1;
+    PalMessageSet1 = palType;
+    fgcolor = bgcolor = -1;
 	applyToSelection = FALSE;
 	ThotCreatePalette (200, 200);
-	*fg = fgcolor;
+    *fg = fgcolor;
 	*bg = bgcolor;
 	applyToSelection = TRUE;
 #endif /* _WINDOWS */
