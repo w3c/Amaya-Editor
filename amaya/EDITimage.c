@@ -320,8 +320,7 @@ View                view;
 #  ifndef _WINDOWS
    LoadedImageDesc   *desc;
    char               tempfile[MAX_LENGTH];
-   char               tempname[MAX_LENGTH];
-   char                s[MAX_LENGTH];
+   char               s[MAX_LENGTH];
    int                 i;
 
    /* Dialogue form for open URL or local */
@@ -345,10 +344,10 @@ View                view;
       TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
    else
      {
-	strcpy (s, DirectoryImage);
-	strcat (s, DIR_STR);
-	strcat (s, ImageName);
-	TtaSetTextForm (BaseImage + ImageURL, s);
+	strcpy (LastURLImage, DirectoryImage);
+	strcat (LastURLImage, DIR_STR);
+	strcat (LastURLImage, ImageName);
+	TtaSetTextForm (BaseImage + ImageURL, LastURLImage);
      }
 
    TtaNewTextForm (BaseImage + ImageFilter, BaseImage + FormImage,
@@ -363,16 +362,24 @@ View                view;
 	 load a local image into a remote document 
 	 copy image file into the temporary directory of the document
 	 */
-       TtaExtractName (LastURLImage, tempfile, tempname);
-       NormalizeURL (tempname, document, tempfile, tempname, NULL);
-       AddLoadedImage (tempname, tempfile, document, &desc);
-       desc->status = IMAGE_MODIFIED;
-       TtaFileCopy (LastURLImage, desc->localName);
+       TtaExtractName (LastURLImage, tempfile, s);
+       if (s[0] == EOS)
+	 return (LastURLImage);
+       else
+	 {
+	   NormalizeURL (s, document, tempfile, ImageName, NULL);
+	   AddLoadedImage (ImageName, tempfile, document, &desc);
+	   desc->status = IMAGE_MODIFIED;
+	   TtaFileCopy (LastURLImage, desc->localName);
+	   return (ImageName);
+	 }
      }
+   else
+     return (LastURLImage);
 #  else /* _WINDOWS */
    CreateOpenDocDlgWindow (TtaGetViewFrame (document, view), LastURLImage, BaseImage, FormImage, -1, -1) ;
-#  endif /* _WINDOWS */
    return (LastURLImage);
+#  endif /* _WINDOWS */
 }
 
 

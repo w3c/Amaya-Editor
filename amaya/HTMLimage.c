@@ -504,16 +504,16 @@ void               *extra;
 
 #endif /* __STDC__ */
 {
-  int                 length, i;
-  char               *imageName;
+  ElemImage          *ctxEl;
   AttributeType       attrType;
   Attribute           attr;
   LoadedImageDesc    *desc;
-  char*               pathname = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
-  char*               tempfile = (char*) TtaGetMemory (sizeof (char) * MAX_LENGTH);
+  char               *imageName;
+  char                pathname[MAX_LENGTH];
+  char                tempfile[MAX_LENGTH];
+  int                 length, i;
   boolean             update;
   boolean             newImage;
-  ElemImage          *ctxEl;
 
   pathname[0] = EOS;
   tempfile[0] = EOS;
@@ -631,8 +631,6 @@ void               *extra;
       if (attr != NULL && imageName)
 	TtaFreeMemory (imageName);
     }
-  TtaFreeMemory (pathname);
-  TtaFreeMemory (tempfile);
   TtaHandlePendingEvents ();
 }
 
