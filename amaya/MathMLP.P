@@ -265,9 +265,9 @@ BOXES
  RootSymbol:
 	BEGIN
 	LineWeight: 1 pt;
-	Height: Enclosing . Height;
 	Width: RootBase . Width + ROOT_OFFSET;
-	VertPos: Top = Enclosing . Top;
+	Height: RootBase . Height + 0.1;
+	VertPos: Top = RootBase . Top - 0.1;
 	HorizPos: Left = RootBase . Left - ROOT_OFFSET;
 	Content: Symbol 'r';		{ root symbol }
 	LineStyle: Solid;
@@ -692,7 +692,7 @@ RULES
    	BEGIN
 	HorizRef: Enclosed . HRef;
    	HorizPos: Left = Enclosing . Left;
-   	VertPos: Top = Enclosing . Top;
+	VertPos: HRef = RootBase . Top + 0.5;
 	Width: ROOT_OFFSET min;
    	Size: Enclosing * 50 %;
 	IN Structure_view BEGIN
