@@ -730,6 +730,7 @@ int                 status;
 	TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_RED_FETCHING),
 		      me->status_urlName);
 
+	/* @@ verify if this is important */
 	/* Start request with new credentials */
 	if (HTRequest_outputStream (me->request) != NULL) {
 	  AHTFWriter_FREE (HTRequest_outputStream (me->request));
@@ -743,15 +744,18 @@ int                 status;
 	  }
 	}
 
+	/*
+	** launch the request
+	*/
 	/* reset the status */
 	me->reqStatus = HT_NEW; 
 	/* clear the errors */
 	HTError_deleteAll (HTRequest_error (request));
 	HTRequest_setError (request, NULL);
 
-	if (me->method == METHOD_PUT 
-	    || me->method == METHOD_POST)	/* PUT, POST etc. */
-	  status = HTLoadAbsolute (me->urlName, request);
+	if (me->method == METHOD_POST 
+	  || me->method == METHOD_PUT) 	/* PUT, POST etc. */
+       status = HTLoadAbsolute (me->urlName, request);
 	else
 	  HTLoadAnchor (new_anchor, request);
      }
@@ -811,16 +815,18 @@ int                 status;
 	  fclose (me->output);
 	  me->output = NULL;
 	}
-      /* turn off preconditions */
-      HTRequest_setPreconditions(me->request, HT_NO_MATCH);
       /*
       ** reset the Amaya and libwww request status 
       */
-      me->reqStatus = HT_NEW; 
       /* clear the errors */
       HTError_deleteAll (HTRequest_error (request));
       HTRequest_setError (request, NULL);
-      /* make the request */
+      /* the method has to be GET in order to download the source file */
+      HTRequest_setMethod (me->request, METHOD_GET);
+      /* turn off preconditions */
+      HTRequest_setPreconditions(me->request, HT_NO_MATCH);
+      me->reqStatus = HT_NEW; 
+      /* make the request */      
       status = HTPutDocumentAnchor (HTAnchor_parent (me->source), me->dest, me->request);
       /* stop here */
       return HT_ERROR;
@@ -876,7 +882,13 @@ static int check_handler (HTRequest * request, HTResponse * response,
     {
       /* it's a new ressource, so we start a new PUT request with a 
 	 "if-none-match *" precondition */
+      /* clear the errors */
+      HTError_deleteAll (HTRequest_error (request));
+      HTRequest_setError (request, NULL);
+      /* the method has to be GET in order to download the source file */
+      HTRequest_setMethod (me->request, METHOD_GET);
       HTRequest_setPreconditions(me->request, HT_DONT_MATCH_ANY);
+      me->reqStatus = HT_NEW;
       status = HTPutDocumentAnchor (HTAnchor_parent (me->source), me->dest, me->request);
       return HT_ERROR; /* stop here */
     } 
@@ -891,7 +903,14 @@ static int check_handler (HTRequest * request, HTResponse * response,
       if (force_put)
 	{
 	  /* Start a new PUT request without preconditions */
+	  /* clear the errors */
+	  HTError_deleteAll (HTRequest_error (request));
+	  HTRequest_setError (request, NULL);
+	  /* the method has to be GET in order to download the source file */
+	  HTRequest_setMethod (me->request, METHOD_GET);
+	  /* Start a new PUT request without preconditions */
 	  HTRequest_setPreconditions(me->request, HT_NO_MATCH);
+	  me->reqStatus = HT_NEW; 
 	  status = HTPutDocumentAnchor (HTAnchor_parent (me->source), me->dest, me->request);
 	  return HT_ERROR; /* stop here */
 	} 
@@ -2346,6 +2365,8 @@ char 	     *content_type;
      {
        me->method = METHOD_POST;
        HTRequest_setMethod (me->request, METHOD_POST);
+       /* don't use the cache for post requests */
+       HTRequest_setReloadMode (me->request, HT_CACHE_FLUSH);
      }
    else 
      {
@@ -2623,7 +2644,6 @@ void               *context_tcbf;
    me->block_size =  file_stat.st_size;
    /* select the parameters that distinguish a PUT from a GET/POST */
    me->method = METHOD_PUT;
-   HTRequest_setMethod (me->request, METHOD_PUT);
    me->output = stdout;
    /* we are not expecting to receive any input from the server */
    me->outputfile = (char *) NULL; 
@@ -2665,9 +2685,6 @@ void               *context_tcbf;
 		       HTAtom_for (tmp));
    HTRequest_setOutputFormat (me->request,
 			      HTAtom_for (tmp));
-
-   /* associate the anchor to the request */
-   HTRequest_setEntityAnchor (me->request, HTAnchor_parent (me->source));
 
    /* define other request characteristics */
 #ifdef _WINDOWS
