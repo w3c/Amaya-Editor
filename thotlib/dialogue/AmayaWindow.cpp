@@ -663,12 +663,6 @@ bool AmayaWindow::CheckSpecialKey( wxKeyEvent& event )
   }
 #endif /* _WINDOWS */
 
-  if ( !p_panel && !p_gl_canvas && thot_keysym != WXK_F2 )
-    {
-      event.Skip();
-      return false;
-    }
-
   if ( proceed_key )
     {
       int thotMask = 0;
@@ -696,7 +690,7 @@ bool AmayaWindow::CheckSpecialKey( wxKeyEvent& event )
 bool AmayaWindow::CheckShortcutKey( wxKeyEvent& event )
 {
   if ( event.ControlDown() || event.AltDown() )
-    {      
+    {
       wxChar thot_keysym = event.GetUnicodeKey();  
 
 #ifdef _WINDOWS
