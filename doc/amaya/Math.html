@@ -1,0 +1,193 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>
+Editing mathematics</title>
+<meta name="GENERATOR" content="amaya V1.1 Beta">
+</head>
+<body>
+
+<div id="head">
+<p>
+<a href="../../"><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home">
+</a> <a href="../"><img border="0" alt="Amaya" src="amaya.gif"></a> <a
+href=""><img alt="Using" border="0" src="../../Icons/WWW/guide48x"></a></p>
+</div>
+
+<div id="Math">
+
+<h2>Editing mathematics</h2>
+<p>
+Amaya allows you to include mathematical expressions in your web pages,
+following the <a href="http://www.w3.org/TR/WD-math/">MathML</a> (Mathematical
+Markup Language) specification.</p>
+<p>
+In the current version of Amaya only a (small) part of MathML is implemented,
+actually a subset of the <em>Presentation Markup</em>. The purpose of this
+version is just to show how MathML may improve scientific communication over
+the Web. A more complete and more robust  implementation is expected in future
+releases.</p>
+
+<h3>Creating a math expression</h3>
+<p>
+To create a math expression in a document, move the caret to the position
+where you want to insert that expression and click the Math button. It
+displays a menu that allows you to choose the first construct to be inserted.
+The available constructs are, from top to bottom:</p>
+<ul>
+<li>
+Root, with an index (MROOT in MathML): <math>
+  <mroot>
+    <mrow>
+      <mi>x</mi>
+      <mo>+</mo>
+      <mn>1</mn>
+    </mrow>
+    <mn>3</mn>
+  </mroot>
+</math>
+
+<li>
+Square root (MSQRT): <math>
+  <msqrt>
+    <mrow>
+      <mi>x</mi>
+      <mo>+</mo>
+      <mn>1</mn>
+    </mrow>
+  </msqrt>
+</math>
+
+<li>
+Fraction (MFRAC): <math>
+  <mfrac>
+    <mn>1</mn>
+    <mrow>
+      <mi>x</mi>
+      <mo>+</mo>
+      <mn>1</mn>
+    </mrow>
+  </mfrac>
+</math>
+
+<li>
+Expression with subscript and superscript (MSUBSUP): <math>
+  <msubsup>
+    <mi>x</mi>
+    <mrow>
+      <mi>i</mi>
+      <mo>+</mo>
+      <mn>1</mn>
+    </mrow>
+    <mi>n</mi>
+  </msubsup>
+</math>
+
+<li>
+Expression with a superscript (MSUP): <math>
+  <msup>
+    <mi>x</mi>
+    <mi>n</mi>
+  </msup>
+</math>
+
+<li>
+Expression with a subscript (MSUB): <math>
+  <msub>
+    <mi>x</mi>
+    <mi>i</mi>
+  </msub>
+</math>
+
+<li>
+Expression with under- and overscript (MUNDEROVER): <math>
+  <munderover>
+    <mo>&sum;</mo>
+    <mrow>
+      <mi>i</mi>
+      <mo>=</mo>
+      <mn>1</mn>
+    </mrow>
+    <mi>n</mi>
+  </munderover>
+</math>
+
+<li>
+Expression with overscript (MOVER): <math>
+  <mrow>
+    <mi>x</mi>
+    <mover>
+      <mo>&rarr;</mo>
+      <mtext>maps to</mtext>
+    </mover>
+    <mi>y</mi>
+  </mrow>
+</math>
+
+<li>
+Expression with underscript (MUNDER): <math>
+  <munder>
+    <mi>x</mi>
+    <mo>-</mo>
+  </munder>
+</math>
+
+<li>
+Expression with parentheses (MF): <math>
+  <mrow>
+    <mf>(</mf>
+    <mrow>
+      <mi>a</mi>
+      <mo>+</mo>
+      <mi>b</mi>
+    </mrow>
+    <mf>)</mf>
+  </mrow>
+</math>
+
+<li>
+A number (MN), an operator (MO), an identifier (MI), and some text (MTEXT). 
+</ul>
+
+<h3>Math_Structure view</h3>
+<p>
+Whenever a document contains some MathML elements, opening the <a
+href="Views.html#Structure">Structure view</a> opens actually two views:</p>
+<ul>
+<li>
+the Structure view shows the main structure of the HTML document. Only the
+<code>MATH</code> or <code>MATHDISP</code> elements are shown, not their
+contents. 
+<li>
+the Math_Structure wiew shows only MathML elements, but it shows all the
+details. 
+</ul>
+
+<h3>Editing math elements</h3>
+<p>
+To edit math elements, just <a href="Selecting.html#Selecting">move the
+insertion point</a> to the desired position, with the mouse or the arrow keys,
+and type or select a construct from the math menu.</p>
+<p>
+You don't need to enter each element with the math menu. When you type a
+character string in a MathML element, Amaya parses that string and generates
+the MO, MN, MI, MTEXT elements automatically. As an example, to enter <math>
+  <mrow>
+    <mi>x</mi>
+    <mo>=</mo>
+    <mn>2</mn>
+    <mi>a</mi>
+    <mo>+</mo>
+    <mi>b</mi>
+  </mrow>
+</math>
+just type <code>x=2a+b</code>.</p>
+<p>
+The copy, cut and paste operations from the <strong>Edit</strong> menu are
+available for math and function as expected.</p>
+<p>
+</p>
+<hr>
+</div>
+</body>
+</html>

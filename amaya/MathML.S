@@ -21,8 +21,8 @@ STRUCT
    Construction = CASE OF
 		  MTEXT = TEXT;
 		  MROOT = BEGIN
-		  	Index = Component;
 			RootBase = Component;
+		  	Index = Component;
 			END;
 		  MSQRT = BEGIN
 			RootBase;

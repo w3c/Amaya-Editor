@@ -220,6 +220,7 @@ MathEntity        MathEntityTable[] =
    {"InvisibleTimes", 129, 'L'},	/** thin space, should be 0 **/
    {"PlusMinus", 177, 'G'},
    {"RightArrow", 174, 'G'},
+   {"Sum", 229, 'G'},
    {"af", 129, 'L'},	/** thin space, should be 0 **/
    {"dd", 100, 'L'},
    {"delta", 100, 'G'},
@@ -228,6 +229,8 @@ MathEntity        MathEntityTable[] =
    {"int", 242, 'G'},
    {"it", 242, 'G'},
    {"lt", 62, 'L'},
+   {"rarr", 174, 'G'},
+   {"sum", 229, 'G'},
    {"thickspace", 32, 'L'},
    {"zzzz", -1, ' '}			/* this last entry is required */
 };
