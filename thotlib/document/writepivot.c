@@ -1683,9 +1683,9 @@ PtrDocument         pDoc;
 	/* Charge le fichier .EXT du document externe */
 	/* demande d'abord dans quel directory se trouve le fichier .PIV */
 	ustrncpy (directoryName, DocumentPath, MAX_PATH);
-	MakeCompleteName (extDocIdent, "PIV", directoryName, fileName, &i);
+	MakeCompleteName (extDocIdent, PIV_EXT2, directoryName, fileName, &i);
 	/* cherche le fichier .EXT dans le meme directory */
-	FindCompleteName (extDocIdent, "EXT", directoryName, fileName, &i);
+	FindCompleteName (extDocIdent, EXT_EXT2, directoryName, fileName, &i);
 	if (fileName[0] != EOS)
 	  {
 	     extFile = TtaReadOpen (fileName);
@@ -1897,7 +1897,7 @@ PtrDocument         pDoc;
 	GetInputRef (&pExtFileD);
 	/* ce fichier est dans le meme directory que le document */
 	ustrncpy (directoryName, pDoc->DocDirectory, MAX_PATH);
-	FindCompleteName (pDoc->DocDName, "EXT", directoryName, fileName, &i);
+	FindCompleteName (pDoc->DocDName, EXT_EXT2, directoryName, fileName, &i);
 	/* initialise le descripteur du fichier .EXT */
 	pExtFileD->ErFirstReferredEl = NULL;
 	CopyDocIdent (&pExtFileD->ErDocIdent, pDoc->DocIdent);
@@ -2006,9 +2006,9 @@ PtrDocument         pDoc;
 		       /* demande d'abord dans quel directory se trouve le */
 		       /* fichier .PIV de ce document */
 		       ustrncpy (directoryName, DocumentPath, MAX_PATH);
-		       MakeCompleteName (pFile->RcDocIdent, "PIV", directoryName, fileName, &i);
+		       MakeCompleteName (pFile->RcDocIdent, PIV_EXT2, directoryName, fileName, &i);
 		       /* cherche le fichier .REF dans le meme directory */
-		       FindCompleteName (pFile->RcDocIdent, "REF", directoryName, fileName, &i);
+		       FindCompleteName (pFile->RcDocIdent, REF_EXT2, directoryName, fileName, &i);
 		       ustrncpy (pFile->RcFileName, fileName, MAX_PATH);
 		       if (fileName[0] != EOS)
 			 {
@@ -2229,10 +2229,10 @@ ThotBool            copyDoc;
 		  /* demande d'abord dans quel directory se trouve le */
 		  /* fichier .PIV */
 		  ustrncpy (directoryName, DocumentPath, MAX_PATH);
-		  MakeCompleteName (pRefD->ReExtDocument, "PIV", directoryName,
+		  MakeCompleteName (pRefD->ReExtDocument, PIV_EXT2, directoryName,
 				    fileName, &i);
 		  /* cherche le fichier .EXT dans le meme directory */
-		  FindCompleteName (pRefD->ReExtDocument, "EXT", directoryName, fileName, &i);
+		  FindCompleteName (pRefD->ReExtDocument, EXT_EXT2, directoryName, fileName, &i);
 		  if (fileName[0] != EOS)
 		    {
 		       extFile = TtaReadOpen (fileName);
@@ -2367,9 +2367,9 @@ Name                newName;
 		       /* demande dans quel directory se trouve le fichier */
 		       /* .PIV de ce document */
 		       ustrncpy (directoryName, DocumentPath, MAX_PATH);
-		       MakeCompleteName (pFile->RcDocIdent, "PIV", directoryName, fileName, &i);
+		       MakeCompleteName (pFile->RcDocIdent, PIV_EXT2, directoryName, fileName, &i);
 		       /* cherche le fichier .REF dans le meme directory */
-		       FindCompleteName (pFile->RcDocIdent, "REF", directoryName, pFile->RcFileName, &i);
+		       FindCompleteName (pFile->RcDocIdent, REF_EXT2, directoryName, pFile->RcFileName, &i);
 		    }
 		  /* passe au descripteur de document referencant suivant */
 		  pExtDoc = pExtDoc->EdNext;

@@ -105,7 +105,7 @@ PtrActionEvent      pactevent;
       return;
 
    WriteAnEvent (eventName, pactevent->AEvNext);
-   fprintf (AppFile, "  TteAddActionEvent (appliActions, %d, %s, %d, \"%s\");\n",
+   fprintf (AppFile, "  TteAddActionEvent (appliActions, %d, %s, %d, TEXT(\"%s\"));\n",
 	    pactevent->AEvType,
 	    eventName,
 	    pactevent->AEvPre,
@@ -141,14 +141,14 @@ PtrEventsSet        pAppli;
    PrintSubMenu                                                    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PrintSubMenu (PtrAppMenuItem item, WindowType winType, char *schemaName, char *menuName)
+static void         PrintSubMenu (PtrAppMenuItem item, WindowType winType, STRING schemaName, STRING menuName)
 
 #else  /* __STDC__ */
 static void         PrintSubMenus (item, winType, schemaName, menuName)
 PtrAppMenuItem      item;
 WindowType          winType;
-char               *schemaName;
-char               *menuName;
+STRING              schemaName;
+STRING              menuName;
 
 #endif /* __STDC__ */
 
@@ -177,7 +177,7 @@ char               *menuName;
 	       fprintf (AppFile, "DocTypeWindow");
 	       break;
 	 }
-   fprintf (AppFile, ", \"%s\", %s, %s, %d);\n", schemaName, menuName,
+   fprintf (AppFile, ", TEXT(\"%s\"), %s, %s, %d);\n", schemaName, menuName,
 	    item->AppItemName, itemsNumber);
 
    /* traite la liste des items du sous-menu */
@@ -197,15 +197,15 @@ char               *menuName;
 		    fprintf (AppFile, "DocTypeWindow");
 		    break;
 	      }
-	fprintf (AppFile, ", \"%s\", %s, %s", schemaName, menuName, item->AppItemName);
+	fprintf (AppFile, ", TEXT(\"%s\"), %s, %s", schemaName, menuName, item->AppItemName);
 	if (subitem->AppItemName == NULL)
 	   fprintf (AppFile, ", 0");
 	else
 	   fprintf (AppFile, ", %s", subitem->AppItemName);
 	if (subitem->AppItemActionName == NULL)
-	   fprintf (AppFile, ", NULL, '%c');\n", subitem->AppItemType);
+	   fprintf (AppFile, ", NULL, TEXT('%c'));\n", subitem->AppItemType);
 	else
-	   fprintf (AppFile, ", \"%s\", '%c');\n", subitem->AppItemActionName, subitem->AppItemType);
+	   fprintf (AppFile, ", TEXT(\"%s\"), TEXT('%c'));\n", subitem->AppItemActionName, subitem->AppItemType);
 
 	/* item suivant */
 	subitem = subitem->AppNextItem;
@@ -247,7 +247,7 @@ char               *schemaName;
 		    fprintf (AppFile, "DocTypeWindow");
 		    break;
 	      }
-	fprintf (AppFile, ", \"%s\");\n", schemaName);
+	fprintf (AppFile, ", TEXT(\"%s\"));\n", schemaName);
      }
    else
      {
@@ -277,25 +277,25 @@ char               *schemaName;
 			 fprintf (AppFile, "DocTypeWindow");
 			 break;
 		   }
-	     fprintf (AppFile, ", \"%s\", %d, %s, %d", schemaName,
+	     fprintf (AppFile, ", TEXT(\"%s\"), %d, %s, %d", schemaName,
 		      menu->AppMenuView, menu->AppMenuName, itemsNumber);
 	     /* Declare les menus dynamiques */
-	     if (!strcmp (menu->AppMenuName, "Attributes_"))
+	     if (!ustrcmp (menu->AppMenuName, TEXT("Attributes_")))
 	       {
-		  fprintf (AppFile, ", \"MenuAttribute\");\n");
+		  fprintf (AppFile, ", TEXT(\"MenuAttribute\"));\n");
 		  fprintf (AppFile, "  AttributeMenuLoadResources();\n");
 	       }
-	     else if (!strcmp (menu->AppMenuName, "Selection_"))
+	     else if (!ustrcmp (menu->AppMenuName, TEXT("Selection_")))
 	       {
 		  fprintf (AppFile, ", \"MenuSelection\");\n");
 		  fprintf (AppFile, "  SelectionMenuLoadResources();\n");
 	       }
-	     else if (!strcmp (menu->AppMenuName, "Help_"))
+	     else if (!ustrcmp (menu->AppMenuName, TEXT("Help_")))
 	       {
-		  fprintf (AppFile, ", \"MenuHelp\");\n");
+		  fprintf (AppFile, ", TEXT(\"MenuHelp\"));\n");
 	       }
 	     else
-		fprintf (AppFile, ", \"\");\n");
+		fprintf (AppFile, ", TEXT(\"\"));\n");
 
 	     /* traite la liste des items du menu */
 	     item = menu->AppMenuItems;
@@ -319,15 +319,15 @@ char               *schemaName;
 				   fprintf (AppFile, "DocTypeWindow");
 				   break;
 			     }
-		       fprintf (AppFile, ", \"%s\", %s, -1", schemaName, menu->AppMenuName);
+		       fprintf (AppFile, ", TEXT(\"%s\"), %s, -1", schemaName, menu->AppMenuName);
 		       if (item->AppItemName == NULL)
 			  fprintf (AppFile, ", 0");
 		       else
 			  fprintf (AppFile, ", %s", item->AppItemName);
 		       if (item->AppItemActionName == NULL)
-			  fprintf (AppFile, ", NULL, '%c');\n", item->AppItemType);
+			  fprintf (AppFile, ", NULL, TEXT('%c'));\n", item->AppItemType);
 		       else
-			  fprintf (AppFile, ", \"%s\", '%c');\n", item->AppItemActionName, item->AppItemType);
+			  fprintf (AppFile, ", TEXT(\"%s\"), TEXT('%c'));\n", item->AppItemActionName, item->AppItemType);
 		    }
 		  /* item suivant */
 		  item = item->AppNextItem;
@@ -365,7 +365,7 @@ PtrEventsSet        pAppli;
    fprintf (AppFile, "void %sApplicationInitialise ()\n", fname);
    fprintf (AppFile, "{\n PtrEventsSet appliActions;\n\n");
    fprintf (AppFile, "  /* Create the new application context*/\n");
-   fprintf (AppFile, "  appliActions = TteNewEventsSet (%d, \"%s\");\n",
+   fprintf (AppFile, "  appliActions = TteNewEventsSet (%d, TEXT(\"%s\"));\n",
 	    pAppli->EvSStructId, pAppli->EvSName);
 
    WriteEventsList (pAppli);
@@ -387,7 +387,7 @@ char               *fname;
    PtrAction           action;
    char                actionFname[50];
    FILE               *actionFile;
-   char                s[200];
+   CHAR_T              s[200];
    PtrAppDocType       menusDoc;
    PtrAppName          SchUsed;
    PtrAppName          menuAction;
@@ -423,24 +423,24 @@ char               *fname;
 	fprintf (actionFile, "#ifdef __STDC__\n");
 	strcpy (s, "#else /* __STDC__*/\n");
 	fprintf (AppFile, "extern ");
-	if (strcmp (action->ActName, "NoAction"))
+	if (ustrcmp (action->ActName, TEXT("NoAction")))
 	  {
 	     /* Output the data to the actions-file */
 	     if (action->ActPre)
 	       {
 		  fprintf (AppFile, "ThotBool %s (", action->ActName);
 		  fprintf (actionFile, "ThotBool %s (", action->ActName);
-		  strcat (s, "ThotBool ");
-		  strcat (s, action->ActName);
-		  strcat (s, "(");
+		  ustrcat (s, TEXT("ThotBool "));
+		  ustrcat (s, action->ActName);
+		  ustrcat (s, TEXT("("));
 	       }
 	     else
 	       {
 		  fprintf (AppFile, "void %s (", action->ActName);
 		  fprintf (actionFile, "void %s (", action->ActName);
-		  strcat (s, "void ");
-		  strcat (s, action->ActName);
-		  strcat (s, "(");
+		  ustrcat (s, TEXT("void "));
+		  ustrcat (s, action->ActName);
+		  ustrcat (s, TEXT("("));
 	       }
 
 	     switch (action->ActEvent)
@@ -557,7 +557,7 @@ char               *fname;
    while (action != NULL)
      {
 	fprintf (AppFile, "extern ");
-	if (strcmp (action->ActName, "NoAction"))
+	if (ustrcmp (action->ActName, TEXT("NoAction")))
 	  {
 	     /* Output the data to the actions-file */
 	     if (action->ActPre)
@@ -651,7 +651,7 @@ char               *fname;
    action = ActionList;
    while (action != NULL)
      {
-	fprintf (AppFile, "  TteAddAction (\"%s\", (Proc)%s);\n",
+	fprintf (AppFile, "  TteAddAction (TEXT(\"%s\"), (Proc)%s);\n",
 		 action->ActName,
 		 action->ActName);
 	action = action->ActNext;
@@ -675,12 +675,12 @@ char               *fname;
 	    SchUsed = SchemasUsed;
 	    while (SchUsed != NULL)
 	      {
-		if (!strcmp (SchUsed->AppNameValue, "Xml")
-		    || !strcmp (SchUsed->AppNameValue, "Pivot"))
+		if (!ustrcmp (SchUsed->AppNameValue, TEXT("Xml"))
+		    || !ustrcmp (SchUsed->AppNameValue, TEXT("Pivot")))
 		  /* an explicit choice between struct and no struct */
 		  documentWriteMode = TRUE;
-		if (!strcmp (SchUsed->AppNameValue, "StructSelect")
-		    || !strcmp (SchUsed->AppNameValue, "NoStructSelect"))
+		if (!ustrcmp (SchUsed->AppNameValue, TEXT("StructSelect"))
+		    || !ustrcmp (SchUsed->AppNameValue, TEXT("NoStructSelect")))
 		  /* an explicit choice between struct and no struct */
 		  structSelectResource = TRUE;
 		fprintf (AppFile, "  %sLoadResources ();\n", SchUsed->AppNameValue);
@@ -730,19 +730,19 @@ char               *fname;
 	fprintf (AppFile, "{\n");
 
 	fprintf (AppFile, "  int lg; /* identify dialogue messages */\n");
-	fprintf (AppFile, "  char appName[MAX_PATH]; /* name of the application */\n");
-	fprintf (AppFile, "  char workName[MAX_PATH]; /* path of the application */\n");
+	fprintf (AppFile, "  CHAR_T appName[MAX_PATH]; /* name of the application */\n");
+	fprintf (AppFile, "  CHAR_T workName[MAX_PATH]; /* path of the application */\n");
 
 	fprintf (AppFile, "  /* initialize the Registry */\n");
-	fprintf (AppFile, "  TtaInitializeAppRegistry (argv[0]);\n");
+	fprintf (AppFile, "  TtaInitializeAppRegistry (ISO2WideChar (argv[0]));\n");
 	fprintf (AppFile, "  /* save argc and argv */\n");
 	fprintf (AppFile, "  appArgc = argc;\n  appArgv = argv;\n");
 	fprintf (AppFile, "  /* extract the name of the application */\n");
-	fprintf (AppFile, "  TtaExtractName (argv[0], workName, appName);\n");
+	fprintf (AppFile, "  TtaExtractName (ISO2WideChar(argv[0]), workName, appName);\n");
 	fprintf (AppFile, "  /* application name is limited to 19 characters */\n");
-	fprintf (AppFile, "  lg = strlen(appName);\n");
+	fprintf (AppFile, "  lg = ustrlen (appName);\n");
 	fprintf (AppFile, "  if (lg > 19)\n");
-	fprintf (AppFile, "    appName[19] = (char)0;\n");
+	fprintf (AppFile, "    appName[19] = (CHAR_T)0;\n");
 	fprintf (AppFile, "  TtaInitialize (appName);\n");
 	fprintf (AppFile, "\n  TteInitMenus (appName, %d);\n", nbActions);
 
@@ -751,7 +751,7 @@ char               *fname;
 	menuAction = ActionsUsed;
 	while (menuAction != NULL)
 	  {
-	     fprintf (AppFile, "  TteAddMenuAction(\"%s\", (Proc)%s);\n",
+	     fprintf (AppFile, "  TteAddMenuAction(TEXT(\"%s\"), (Proc)%s);\n",
 		      menuAction->AppNameValue, menuAction->AppNameValue);
 	     if (!menuAction->AppStandardName)
 		/* ecrit les fonctions non standard des menus dans XXXaction.c */
@@ -771,15 +771,15 @@ char               *fname;
 	     else
 	       {
 		  /* Is it an editing standard function ? */
-		  if (!strcmp (menuAction->AppNameValue, "TtcInsert")
-		      || !strcmp (menuAction->AppNameValue, "TtcPasteFromClipboard")
-		      || !strcmp (menuAction->AppNameValue, "TtcPaste")
-		    || !strcmp (menuAction->AppNameValue, "TtcCutSelection")
-		  || !strcmp (menuAction->AppNameValue, "TtcDeleteSelection")
-		      || !strcmp (menuAction->AppNameValue, "TtcInsertChar")
-		      || !strcmp (menuAction->AppNameValue, "TtcDeletePreviousChar")
-		   || !strcmp (menuAction->AppNameValue, "TtcCopySelection")
-		      || !strcmp (menuAction->AppNameValue, "TtcInclude"))
+		  if (!ustrcmp (menuAction->AppNameValue, TEXT("TtcInsert"))
+		      || !ustrcmp (menuAction->AppNameValue, TEXT("TtcPasteFromClipboard"))
+		      || !ustrcmp (menuAction->AppNameValue, TEXT("TtcPaste"))
+              || !ustrcmp (menuAction->AppNameValue, TEXT("TtcCutSelection"))
+              || !ustrcmp (menuAction->AppNameValue, TEXT("TtcDeleteSelection"))
+		      || !ustrcmp (menuAction->AppNameValue, TEXT("TtcInsertChar"))
+		      || !ustrcmp (menuAction->AppNameValue, TEXT("TtcDeletePreviousChar"))
+              || !ustrcmp (menuAction->AppNameValue, TEXT("TtcCopySelection"))
+		      || !ustrcmp (menuAction->AppNameValue, TEXT("TtcInclude")))
 		     editingResource = TRUE;
 	       }
 	     menuAction = menuAction->AppNextName;
@@ -801,8 +801,8 @@ char               *fname;
 	  }
 
 	fprintf (AppFile, "  /* load appName+\"dialogue\" message file */\n");
-	fprintf (AppFile, "  strcpy(workName, appName);\n");
-	fprintf (AppFile, "  strcat(workName, \"dialogue\");\n");
+	fprintf (AppFile, "  ustrcpy (workName, appName);\n");
+	fprintf (AppFile, "  ustrcat(workName, TEXT(\"dialogue\"));\n");
 	fprintf (AppFile, "  TtaGetMessageTable (workName, MAX_EDITOR_LABEL);\n");
 	/* if necessary load editing Resources */
 	if (editingResource)
@@ -890,12 +890,12 @@ PtrEventsSet        pAppli;
    int                 lg, ht;
    char              **ptr;
    unsigned char      *bits;
-   char               *fileSuffix;
+   STRING             fileSuffix;
    FILE               *dotHFile;
    FILE               *infoFILE;
 
    i = 0;
-   fileSuffix = TtaStrdup (fname);
+   fileSuffix = TtaStrdup (ISO2WideChar (fname));
 
    /* met le suffixe APP.c a la fin du nom de fichier */
    while (fname[i] != ' ' && fname[i] != '\0')
@@ -918,7 +918,7 @@ PtrEventsSet        pAppli;
 	WriteIncludeFile (dotHFile, infoFILE);
 	fclose (infoFILE);
 	fclose (dotHFile);
-	if (!TtaFileExist ("logo.xpm"))
+	if (!TtaFileExist (TEXT("logo.xpm")))
 	  {
 	     /* cree le fichier logo.xpm */
 	     infoFILE = fopen ("logo.xpm", "w");
@@ -933,7 +933,7 @@ PtrEventsSet        pAppli;
 	     fprintf (infoFILE, "\"%s\"};\n", ptr[i]);
 	     fclose (infoFILE);
 	  }
-	if (!TtaFileExist ("logo.xbm"))
+	if (!TtaFileExist (TEXT("logo.xbm")))
 	  {
 	     /* cree le fichier logo.xbm */
 	     infoFILE = fopen ("logo.xbm", "w");

@@ -106,15 +106,15 @@ USTRING     word;
    indline = 0;
    word[0] = EOS;
    /* saute les espaces de debut de ligne */
-   while (line[indline] <= ' ' && line[indline] != EOS)
+   while (line[indline] <= SPACE && line[indline] != EOS)
       indline++;
-   if (line[indline] == '#')
+   if (line[indline] == TEXT('#'))
       /* cette ligne ne comporte qu'un commentaire */
       return;
    /* copie tous les caracteres jusqu'a rencontrer le 1er espace ou ":" */
    /* ou la fin de ligne */
    indword = 0;
-   while (line[indline] > ' ' && line[indline] != ':' &&
+   while (line[indline] > SPACE && line[indline] != TEXT(':') &&
 	  line[indline] != EOS)
       word[indword++] = line[indline++];
    /* marque la fin du mot trouve' */
@@ -139,25 +139,25 @@ USTRING     word;
    indline = 0;
    word[0] = EOS;
    /* saute les espaces de debut de ligne */
-   while (line[indline] <= ' ' && line[indline] != EOS)
+   while (line[indline] <= SPACE && line[indline] != EOS)
       indline++;
-   if (line[indline] == '#')
+   if (line[indline] == TEXT('#'))
       /* cette ligne ne comporte qu'un commentaire */
       return;
    /* saute le 1er mot, jusqu'a rencontrer le 1er espace */
    /* ou la fin de ligne */
-   while (line[indline] > ' ' && line[indline] != EOS)
+   while (line[indline] > SPACE && line[indline] != EOS)
       indline++;
    /* saute les espaces qui suivent le 1er mot */
-   while (line[indline] <= ' ' && line[indline] != EOS)
+   while (line[indline] <= SPACE && line[indline] != EOS)
       indline++;
-   if (line[indline] == '#')
+   if (line[indline] == TEXT('#'))
       /* le premier mot est suivi d'un commentaire */
       return;
    /* copie tous les caracteres du 2eme mot jusqu'a rencontrer le 1er */
    /* espace ou la fin de ligne */
    indword = 0;
-   while (line[indline] > ' ' && line[indline] != EOS)
+   while (line[indline] > SPACE && line[indline] != EOS)
       word[indword++] = line[indline++];
    /* marque la fin du mot trouve' */
    word[indword] = EOS;
@@ -178,18 +178,18 @@ USTRING     line;
 
    ind = 0;
    /* saute les espaces de debut de ligne */
-   while (line[ind] <= ' ' && line[ind] != EOS)
+   while (line[ind] <= SPACE && line[ind] != EOS)
       ind++;
-   if (line[ind] == '#')
+   if (line[ind] == TEXT('#'))
       /* la ligne commence par un commentaire */
       return FALSE;
    /* saute le premier mot */
-   while (line[ind] > ' ' && line[ind] != '#' && line[ind] != ':' && line[ind] != EOS)
+   while (line[ind] > SPACE && line[ind] != TEXT('#') && line[ind] != TEXT(':') && line[ind] != EOS)
       ind++;
    /* saute les espaces qui suivent le 1er mot */
-   while (line[ind] <= ' ' && line[ind] != EOS)
+   while (line[ind] <= SPACE && line[ind] != EOS)
       ind++;
-   if (line[ind] == '#' || line[ind] == EOS)
+   if (line[ind] == TEXT('#') || line[ind] == EOS)
       /* il ne reste rien dans la ligne ou seulement un commentaire */
       return TRUE;
    else
@@ -214,21 +214,21 @@ USTRING     text;
 
    indline = 0;
    text[0] = EOS;
-   while (line[indline] != ':' && line[indline] != EOS)
+   while (line[indline] != TEXT(':') && line[indline] != EOS)
       indline++;
-   if (line[indline] == ':')
+   if (line[indline] == TEXT(':'))
      {
 	indline++;
-	while (line[indline] <= ' ' && line[indline] != EOS)
+	while (line[indline] <= SPACE && line[indline] != EOS)
 	   indline++;
-	if (line[indline] == '#' || line[indline] == EOS)
+	if (line[indline] == TEXT('#') || line[indline] == EOS)
 	   return;
 	indtext = 0;
-	while (line[indline] != '#' && line[indline] != EOS)
+	while (line[indline] != TEXT('#') && line[indline] != EOS)
 	   text[indtext++] = line[indline++];
 	/* elimine les blancs de fin de ligne */
 	indtext--;
-	while (text[indtext] <= ' ' && indtext >= 0)
+	while (text[indtext] <= SPACE && indtext >= 0)
 	   indtext--;
 	indtext++;
 	/* termine la chaine */
@@ -264,7 +264,7 @@ STRING              word2;
    stop = FALSE;
    ret = 0;
    do
-      if (fgets (line, MAX_TXT_LEN - 1, file) == NULL)
+      if (ufgets (line, MAX_TXT_LEN - 1, file) == NULL)
 	 /* fin de fichier */
 	 stop = TRUE;
       else
@@ -312,8 +312,8 @@ ThotBool           *import;
    *typ = CONFIG_UNKNOWN_TYPE;
    *import = FALSE;
 
-   if (fname && ustrchr (fname, '/'))
-	  URL_DIR_SEP = '/';
+   if (fname && ustrchr (fname, TEXT('/')))
+	  URL_DIR_SEP = TEXT('/');
    else 
 	   URL_DIR_SEP = DIR_SEP;
 
@@ -327,7 +327,7 @@ ThotBool           *import;
    /* cherche le premier mot du fichier, hors commentaires et espaces */
    stop = FALSE;
    do
-      if (fgets (line, MAX_TXT_LEN - 1, file) == NULL)
+      if (ufgets (line, MAX_TXT_LEN - 1, file) == NULL)
 	 stop = TRUE;
       else
 	{
@@ -340,13 +340,13 @@ ThotBool           *import;
       /* le premier mot n'est pas seul dans la ligne, erreur */
       return;
 
-   if (ustrcmp (word, "document") == 0)
+   if (ustrcmp (word, _DocumentCST_) == 0)
       *typ = CONFIG_DOCUMENT_STRUCT;
-   else if (ustrcmp (word, "nature") == 0)
+   else if (ustrcmp (word, _NatureCST_) == 0)
       *typ = CONFIG_NATURE_STRUCT;
-   else if (ustrcmp (word, "extension") == 0)
+   else if (ustrcmp (word, _ExtensionCST_) == 0)
       *typ = CONFIG_EXTENSION_STRUCT;
-   else if (ustrcmp (word, "document-nature") == 0)
+   else if (ustrcmp (word, _DocumentNatureCST_) == 0)
       *typ = CONFIG_EXCLUSION;
    else
       /* le premier mot du fichier est invalide */
@@ -357,9 +357,9 @@ ThotBool           *import;
 
    /* cherche le "." marquant le suffixe a la fin du nom de fichier */
    i = ustrlen (fname);
-   while (i > 0 && fname[i] != '.')
+   while (i > 0 && fname[i] != TEXT('.'))
       i--;
-   if (fname[i] == '.')
+   if (fname[i] == TEXT('.'))
       point = i;
    else
       point = 0;
@@ -368,32 +368,32 @@ ThotBool           *import;
       i--;
    if (fname[i] == URL_DIR_SEP)
       i++;
-   if (fname[i] == '_')
+   if (fname[i] == TEXT('_'))
       /* ignore les fichiers dont le nom commence par "-" */
       return;
    l = ustrlen (&fname[i]) + 1;
-   *doctypeOrig = TtaGetMemory (l);
+   *doctypeOrig = TtaAllocString (l);
    if (point != 0)
       fname[point] = EOS;
    ustrcpy (*doctypeOrig, &fname[i]);
    /* retablit le '.' du suffixe dans le nom de fichier */
    if (point != 0)
-      fname[point] = '.';
+      fname[point] = TEXT('.');
 
    if (*typ == CONFIG_DOCUMENT_STRUCT || *typ == CONFIG_EXCLUSION)
       /* Il s'agit d'un type de document, on cherche une ligne */
       /* contenant un seul mot: "import" ou "translation" */
-      res = readUntil (file, "import", "translation");
+      res = readUntil (file, _ImportCST_, _TranslationCST_);
    else
       /* il s'agit d'une nature ou d'une extension, on ne cherche */
       /* que la ligne "translation" */
-      res = readUntil (file, "", "translation");
+      res = readUntil (file, _EMPTYSTR_, _TranslationCST_);
    if (res == 1)
       /* on a trouve' le mot "import" */
      {
 	*import = TRUE;
 	/* cherche la ligne comportant le seul mot "translation" */
-	res = readUntil (file, "", "translation");
+	res = readUntil (file, _EMPTYSTR_, _TranslationCST_);
      }
    if (res == 2)
       /* on a trouve' le mot translation */
@@ -401,7 +401,7 @@ ThotBool           *import;
 	/* on cherche la ligne qui donne la traduction du nom de schema */
 	stop = FALSE;
 	do
-	   if (fgets (line, MAX_TXT_LEN - 1, file) == NULL)
+	   if (ufgets (line, MAX_TXT_LEN - 1, file) == NULL)
 	     {
 		stop = TRUE;
 		word[0] = EOS;
@@ -422,7 +422,7 @@ ThotBool           *import;
 		fprintf (stderr, "invalid line in file %s\n   %s\n", fname, line);
 	     else
 	       {
-		  *doctypeTrans = TtaGetMemory (ustrlen (text) + 1);
+		  *doctypeTrans = TtaAllocString (ustrlen (text) + 1);
 		  ustrcpy (*doctypeTrans, AsciiTranslate (text));
 	       }
 	  }
@@ -433,7 +433,7 @@ ThotBool           *import;
    /* le nom du schema, on prend le nom d'origine comme traduction */
    if (*doctypeTrans == NULL)
      {
-	*doctypeTrans = TtaGetMemory (l);
+	*doctypeTrans = TtaAllocString (l);
 	ustrcpy (*doctypeTrans, *doctypeOrig);
      }
 }
@@ -473,11 +473,11 @@ STRING              aSchemaPath;
    suffix = TtaGetVarLANG ();
 
 #  ifdef _WINDOWS
-   if (!ustrncasecmp (suffix, "fr", 2))
+   if (!ustrncasecmp (suffix, _FrLANG_, 2))
       app_lang = FR_LANG;
-   else if (!ustrncasecmp (suffix, "en", 2))
+   else if (!ustrncasecmp (suffix, _EnLANG_, 2))
       app_lang = EN_LANG;
-   else if (!ustrncasecmp (suffix, "de", 2))
+   else if (!ustrncasecmp (suffix, _DeLANG_, 2))
       app_lang = DE_LANG;
 #  endif /* _WINDOWS */
 
@@ -545,7 +545,7 @@ STRING              aSchemaPath;
 		  thotDir.buf = fname;
 		  thotDir.bufLen = sizeof (fname);
 		  thotDir.PicMask = ThotDirBrowse_FILES;
-		  if (ThotDirBrowse_first (&thotDir, Dir, "*.", suffix) == 1)
+		  if (ThotDirBrowse_first (&thotDir, Dir, _ANYFILE_, suffix) == 1)
 		     do
 		       {
 			  namesOfDocType (fname, &nameOrig, &nameTrans, &typ, &import);
@@ -567,8 +567,8 @@ STRING              aSchemaPath;
 				 }
 			       if (typ == CONFIG_EXCLUSION)
 				 {
-				    nat_items[nbitemnat] = TtaGetMemory(ustrlen(nameOrig)+1);
-				    nat_items_menu[nbitemnat] = TtaGetMemory(ustrlen(nameTrans)+1);
+				    nat_items[nbitemnat] = TtaAllocString (ustrlen (nameOrig) + 1);
+				    nat_items_menu[nbitemnat] = TtaAllocString (ustrlen (nameTrans) + 1);
 				    ustrcpy(nat_items[nbitemnat],nameOrig);
                                     ustrcpy(nat_items_menu[nbitemnat],nameTrans);
 				    nbitemnat++;
@@ -801,7 +801,7 @@ ThotBool            lang;
 
 {
 
-   CHAR_T                suffix[10];
+   CHAR_T              suffix[10];
    STRING              ptr;
    int                 i;
    PathBuffer          DirBuffer, filename;
@@ -813,10 +813,10 @@ ThotBool            lang;
 	ustrcpy (suffix, ptr);
      }
    else
-      ustrcpy (suffix, "conf");
+      ustrcpy (suffix, _CONFSUFFIX_);
 
    /* Search in HOME directory */
-   ptr = TtaGetEnvString ("APP_HOME");
+   ptr = TtaGetEnvString (_APPHOME_EVAR_);
    ustrcpy (DirBuffer, ptr);
    MakeCompleteName (name, suffix, DirBuffer, filename, &i);
    if (!TtaFileExist (filename))
@@ -863,10 +863,10 @@ STRING              BufMenu;
    if (file == NULL)
       return 0;
    stop = FALSE;
-   if (readUntil (file, "presentation", ""))
+   if (readUntil (file, _PresentationCST_, _EMPTYSTR_))
       do
 	{
-	   if (fgets (line, MAX_TXT_LEN - 1, file) == NULL)
+	   if (ufgets (line, MAX_TXT_LEN - 1, file) == NULL)
 	      stop = TRUE;
 	   else
 	     {
@@ -877,11 +877,11 @@ STRING              BufMenu;
 		     /* si la ligne contient un mot cle marquant le debut d'une autre */
 		     /* section, on a fini */
 		     if (singleWord (line))
-			if (ustrcmp (word, "export") == 0)
+			if (ustrcmp (word, _ExportCST_) == 0)
 			   stop = TRUE;
-			else if (ustrcmp (word, "import") == 0)
+			else if (ustrcmp (word, _ImportCST_) == 0)
 			   stop = TRUE;
-			else if (ustrcmp (word, "translation") == 0)
+			else if (ustrcmp (word, _TranslationCST_) == 0)
 			   stop = TRUE;
 		     if (!stop)
 		       {
@@ -893,12 +893,12 @@ STRING              BufMenu;
 			       ustrcpy (textISO, AsciiTranslate (text));
 			       if (pres_items[nbitem] != NULL)
 				  TtaFreeMemory (pres_items[nbitem]);
-			       pres_items[nbitem] = TtaGetMemory (ustrlen (word) + 1);
+			       pres_items[nbitem] = TtaAllocString (ustrlen (word) + 1);
 			       ustrcpy (pres_items[nbitem], word);
 			       if (pres_items_menu[nbitem] != NULL)
 				  TtaFreeMemory (pres_items_menu[nbitem]);
 			       len = ustrlen (textISO) + 1;
-			       pres_items_menu[nbitem] = TtaGetMemory (len);
+			       pres_items_menu[nbitem] = TtaAllocString (len);
 			       ustrcpy (pres_items_menu[nbitem], textISO);
 			       if (BufMenu != NULL)
 				 {
@@ -1016,10 +1016,10 @@ STRING              BufMenu;
    if (file == NULL)
       return 0;
    stop = FALSE;
-   if (readUntil (file, "export", ""))
+   if (readUntil (file, _ExportCST_, _EMPTYSTR_))
       do
 	{
-	   if (fgets (line, MAX_TXT_LEN - 1, file) == NULL)
+	   if (ufgets (line, MAX_TXT_LEN - 1, file) == NULL)
 	      stop = TRUE;
 	   else
 	     {
@@ -1030,11 +1030,11 @@ STRING              BufMenu;
 		     /* si la ligne contient un mot cle marquant le debut d'une autre */
 		     /* section, on a fini */
 		     if (singleWord (line))
-			if (ustrcmp (word, "presentation") == 0)
+			if (ustrcmp (word, _PresentationCST_) == 0)
 			   stop = TRUE;
-			else if (ustrcmp (word, "import") == 0)
+			else if (ustrcmp (word, _ImportCST_) == 0)
 			   stop = TRUE;
-			else if (ustrcmp (word, "translation") == 0)
+			else if (ustrcmp (word, _TranslationCST_) == 0)
 			   stop = TRUE;
 		     if (!stop)
 		       {
@@ -1046,12 +1046,12 @@ STRING              BufMenu;
 			       ustrcpy (textISO, AsciiTranslate (text));
 			       if (export_items[nbitem] != NULL)
 				  TtaFreeMemory (export_items[nbitem]);
-			       export_items[nbitem] = TtaGetMemory (ustrlen (word) + 1);
+			       export_items[nbitem] = TtaAllocString (ustrlen (word) + 10);
 			       ustrcpy (export_items[nbitem], word);
 			       if (export_items_menu[nbitem] != NULL)
 				  TtaFreeMemory (export_items_menu[nbitem]);
 			       len = ustrlen (textISO) + 1;
-			       export_items_menu[nbitem] = TtaGetMemory (len);
+			       export_items_menu[nbitem] = TtaAllocString (len);
 			       ustrcpy (export_items_menu[nbitem], textISO);
 			       if (BufMenu != NULL)
 				 {
@@ -1111,7 +1111,7 @@ STRING              trans;
    CHAR_T		       terme[MAX_NAME_LENGTH];
 
    found = FALSE;
-   strncpy (terme, AsciiTranslate (word), MAX_NAME_LENGTH - 1);
+   ustrncpy (terme, AsciiTranslate (word), MAX_NAME_LENGTH - 1);
    /* cherche le mot a traduire d'abord parmi les noms d'elements */
    for (i = 0; i < pSS->SsNRules; i++)
       if (ustrcmp (terme, pSS->SsRule[i].SrName) == 0)
@@ -1180,17 +1180,17 @@ PtrSSchema          pSS;
    stop = FALSE;
    /* avance dans le fichier jusqu'a la ligne qui contient le seul */
    /* mot "translation" */
-   line = TtaGetMemory (MAX_TXT_LEN);
-   text = TtaGetMemory (MAX_TXT_LEN);
-   word = TtaGetMemory (MAX_TXT_LEN);
-   if (readUntil (file, "translation", ""))
+   line = TtaAllocString (MAX_TXT_LEN);
+   text = TtaAllocString (MAX_TXT_LEN);
+   word = TtaAllocString (MAX_TXT_LEN);
+   if (readUntil (file, _TranslationCST_, _EMPTYSTR_))
       /* lit le fichier ligne a ligne */
       do
 	{
 	   error = FALSE;
 	   /* lit une ligne du fichier */
 
-	   if (fgets (line, MAX_TXT_LEN - 1, file) == NULL)
+	   if (ufgets (line, MAX_TXT_LEN - 1, file) == NULL)
 	      /* fin de fichier */
 	      stop = TRUE;
 	   else
@@ -1203,11 +1203,11 @@ PtrSSchema          pSS;
 		     /* si la ligne contient un mot cle marquant le debut d'une autre */
 		     /* section, on a fini */
 		     if (singleWord (line))
-			if (ustrcmp (word, "presentation") == 0)
+			if (ustrcmp (word, _PresentationCST_) == 0)
 			   stop = TRUE;
-			else if (ustrcmp (word, "export") == 0)
+			else if (ustrcmp (word, _ExportCST_) == 0)
 			   stop = TRUE;
-			else if (ustrcmp (word, "import") == 0)
+			else if (ustrcmp (word, _ImportCST_) == 0)
 			   stop = TRUE;
 			else
 			  {
@@ -1265,14 +1265,14 @@ STRING              schpres;
 	stop = FALSE;
 	do
 	   /* lit une ligne */
-	   if (fgets (line, MAX_TXT_LEN - 1, file) == NULL)
+	   if (ufgets (line, MAX_TXT_LEN - 1, file) == NULL)
 	      /* fin de fichier */
 	      stop = TRUE;
 	   else
 	     {
 		/* prend le premier mot de la ligne */
 		getFirstWord (line, word);
-		if (ustrcmp (word, "style") == 0)
+		if (ustrcmp (word, _StyleCST_) == 0)
 		  {
 		     /* le 1er mot est "style". Cherche le mot qui suit : c'est le */
 		     /* nom du schema de presentation cherche' */
@@ -1316,13 +1316,13 @@ STRING              namePSchema;
    stop = FALSE;
    ok = FALSE;
    do
-      if (fgets (line, MAX_TXT_LEN - 1, file) == NULL)
+      if (ufgets (line, MAX_TXT_LEN - 1, file) == NULL)
 	 /* fin de fichier */
 	 stop = TRUE;
       else
 	{
 	   getFirstWord (line, word);
-	   if (ustrcmp (word, "style") == 0)
+	   if (ustrcmp (word, _StyleCST_) == 0)
 	     {
 		getSecondWord (line, word);
 		if (ustrcmp (word, namePSchema) == 0)
@@ -1367,7 +1367,7 @@ STRING              sectName;
 	}
       else
 	 /* cherche le debut de la section voulue */
-      if (!readUntil (file, sectName, ""))
+      if (!readUntil (file, sectName, _EMPTYSTR_))
 	 /* pas trouve' */
 	{
 	   TtaReadClose (file);
@@ -1402,7 +1402,7 @@ STRING              line;
    stop = FALSE;
    do
       /* lit une ligne */
-      if (fgets (line, MAX_TXT_LEN - 1, file) == NULL)
+      if (ufgets (line, MAX_TXT_LEN - 1, file) == NULL)
 	 /* fin de fichier */
 	 stop = TRUE;
       else
@@ -1417,13 +1417,13 @@ STRING              line;
 		if (singleWord (line))
 		   /* la ligne contient un seul mot */
 		  {
-		     if (ustrcmp (word1, "open") == 0)
+		     if (ustrcmp (word1, _OpenCST_) == 0)
 			stop = TRUE;
-		     else if (ustrcmp (word1, "geometry") == 0)
+		     else if (ustrcmp (word1, _GeometryCST_) == 0)
 			stop = TRUE;
-		     else if (ustrcmp (word1, "presentation") == 0)
+		     else if (ustrcmp (word1, _PresentationCST_) == 0)
 			stop = TRUE;
-		     else if (ustrcmp (word1, "options") == 0)
+		     else if (ustrcmp (word1, _OptionsCST_) == 0)
 			stop = TRUE;
 		     else
 			/* ligne contenant un seul mot. on considere que c'est OK... */
@@ -1431,10 +1431,10 @@ STRING              line;
 		  }
 		else
 		   /* la ligne contient plus d'un mot */
-		if (ustrcmp (word1, "style") == 0)
+		if (ustrcmp (word1, _StyleCST_) == 0)
 		  {
 		     getSecondWord (line, word2);
-		     if (word2[0] != ':')
+		     if (word2[0] != TEXT(':'))
 			/* la ligne est du type "style xxxx". C'est une fin de section */
 			stop = TRUE;
 		     else
@@ -1467,7 +1467,7 @@ int             *y;
 
    *x = 600;
    *y = 100;
-   file = openConfigFile ("keyboard", FALSE);
+   file = openConfigFile (_KeyboardCST_, FALSE);
    if (file == NULL)
       return;
 
@@ -1478,7 +1478,7 @@ int             *y;
    if (seqLine[0] != EOS)
      {
        /* extrait les 4 entiers */
-       nbIntegers = sscanf (seqLine, "%d %d", x, y);
+       nbIntegers = usscanf (seqLine, TEXT("%d %d"), x, y);
        if (nbIntegers == 2)
          if (DOT_PER_INCHE != 83)
 	   {
@@ -1523,7 +1523,7 @@ int                *height;
    else
      {
 	/* extrait les 4 entiers */
-	nbIntegers = sscanf (seqLine, "%d %d %d %d", x, y, width, height);
+	nbIntegers = usscanf (seqLine, TEXT("%d %d %d %d"), x, y, width, height);
 	if (nbIntegers != 4)
 	   fprintf (stderr, "invalid line in file %s.conf\n   %s\n",
 		    pDoc->DocSSchema->SsName, line);
@@ -1562,7 +1562,7 @@ PtrDocument         pDoc;
    CHAR_T                nameview[MAX_TXT_LEN];
 
    /* ouvre le fichier .conf du document et avance jusqu'a la section "open" */
-   file = openConfFileAndReadUntil (pDoc->DocSSchema, "open");
+   file = openConfFileAndReadUntil (pDoc->DocSSchema, _OpenCST_);
    if (file != NULL)
      {
 	/* on a trouve' le debut de la section open. On lit le fichier .conf */
@@ -1611,7 +1611,7 @@ int                *height;
 
    /* ouvre le fichier .conf du document et avance jusqu'a la section 
       "open" */
-   file = openConfFileAndReadUntil (pDoc->DocSSchema, "open");
+   file = openConfFileAndReadUntil (pDoc->DocSSchema, _OpenCST_);
    if (file != NULL)
      {
        /* on a trouve' le debut de la section open. On lit le fichier 
@@ -1630,7 +1630,7 @@ int                *height;
 	    section "geometry" */
 	 {
 	   TtaReadClose (file);
-	   file = openConfFileAndReadUntil (pDoc->DocSSchema, "geometry");
+	   file = openConfFileAndReadUntil (pDoc->DocSSchema, _GeometryCST_);
 	   if (file != NULL)
 	       while (!found && getNextLineInSection (file, line))
 		 {
@@ -1779,7 +1779,7 @@ int                *height;
       
       if (found)
 	{
-	  sprintf (line, ":%s", ptr);
+	  usprintf (line, TEXT(":%s"), ptr);
 	  getXYWidthHeight (line, pDoc, x, y, width, height);
 	}
       else
@@ -1880,7 +1880,7 @@ STRING              presNature;
    presNature[0] = EOS;
    ok = FALSE;
    /* ouvre le fichier .conf du document et avance jusqu'a la section "presentation" */
-   file = openConfFileAndReadUntil (pSS, "presentation");
+   file = openConfFileAndReadUntil (pSS, _PresentationCST_);
    if (file != NULL)
      {
 	/* on a trouve' le debut de la section presentation. On lit le fichier */
@@ -1942,7 +1942,7 @@ STRING              optionValue;
 
    optionValue[0] = EOS;
    /* ouvre le fichier .conf du document et avance jusqu'a la section "options" */
-   file = openConfFileAndReadUntil (pSS, "options");
+   file = openConfFileAndReadUntil (pSS, _OptionsCST_);
    if (file != NULL)
      {
 	/* on a trouve' le debut de la section options. On lit le fichier */
@@ -2018,14 +2018,14 @@ STRING              schemaName;
 	stop = FALSE;
 	do
 	   /* on lit une ligne */
-	   if (fgets (line, MAX_TXT_LEN - 1, file) == NULL)
+	   if (ufgets (line, MAX_TXT_LEN - 1, file) == NULL)
 	      /* fin de fichier */
 	      stop = TRUE;
 	   else
 	     {
 		/* prend le 1er mot de la ligne lue */
 		getFirstWord (line, word);
-		if (ustrcmp (word, "style") == 0)
+		if (ustrcmp (word, _StyleCST_) == 0)
 		   /* c'est une ligne "style". On conserve le nom du schema de */
 		   /* presentation qui suit le mot-cle "style" */
 		  {
@@ -2047,7 +2047,7 @@ STRING              schemaName;
 		      }
 			  
 		  }
-		else if (ustrcmp (word, "pagesize") == 0)
+		else if (ustrcmp (word, _PagesizeCST_) == 0)
 		   /* c'est une ligne "pagesize", on la traite */
 		  {
 		     getStringAfterColon (line, seqLine);
@@ -2215,7 +2215,7 @@ STRING              schtypo;
 
    /* ouvre le fichier .conf du document */
    /* et avance jusqu'a la section "typography" */
-   file = openConfFileAndReadUntil (pSS, "typography");
+   file = openConfFileAndReadUntil (pSS, _TypographyCST_);
    ok = FALSE;
    if (file != NULL)
      {

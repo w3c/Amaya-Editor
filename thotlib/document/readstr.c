@@ -419,7 +419,7 @@ PtrSSchema          pSS;
 #  endif  /* !_WINDOWS_COMPILERS */
    ustrncpy (dirBuffer, SchemaPath, MAX_PATH);
 /* #  endif * _WINDOWS_COMPILERS */
-   MakeCompleteName (fileName, "STR", dirBuffer, buf, &i);
+   MakeCompleteName (fileName, STR_EXT2, dirBuffer, buf, &i);
 
    /* ouvre le fichier */
    file = TtaReadOpen (buf);
@@ -427,7 +427,7 @@ PtrSSchema          pSS;
       /* echec */
      {
 	ustrncpy (buf, fileName, MAX_PATH);
-	ustrcat (buf, ".STR");
+	ustrcat (buf, STR_EXT);
 	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), buf);
 	return FALSE;
      }

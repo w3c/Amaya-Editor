@@ -6252,28 +6252,28 @@ char              **argv;
    COMPWnd = hwnd;
    compilersDC = GetDC (hwnd);
    _CY_ = *Y;
-   ustrcpy (msg, "Executing prs ");
+   ustrcpy (msg, TEXT("Executing prs "));
    for (ndx = 1; ndx < argc; ndx++) {
        ustrcat (msg, argv [ndx]);
-       ustrcat (msg, " ");
+       ustrcat (msg, TEXT(" "));
    }
    TtaDisplayMessage (INFO, msg);
 #  endif /* _WINDOWS */
 
    TtaInitializeAppRegistry (argv[0]);
-   i = TtaGetMessageTable ("libdialogue", TMSG_LIB_MSG_MAX);
-   COMPIL = TtaGetMessageTable ("compildialogue", COMP_MSG_MAX);
-   PRS = TtaGetMessageTable ("prsdialogue", PRS_MSG_MAX);
+   i = TtaGetMessageTable (TEXT("libdialogue"), TMSG_LIB_MSG_MAX);
+   COMPIL = TtaGetMessageTable (TEXT("compildialogue"), COMP_MSG_MAX);
+   PRS = TtaGetMessageTable (TEXT("prsdialogue"), PRS_MSG_MAX);
    error = False;
    /* initialize the parser */
    InitParser ();
    /* load the compiler grammar */
-   InitSyntax ("PRESEN.GRM");
+   InitSyntax (TEXT("PRESEN.GRM"));
    if (!error) {
       /* prepare the cpp command */
 #     ifdef _WINDOWS
       cmd [pIndex] = (STRING) malloc (4 * sizeof (CHAR_T));
-      ustrcpy (cmd [pIndex++], "cpp");
+      ustrcpy (cmd [pIndex++], TEXT("cpp"));
 #     else  /* !_WINDOWS */
       ustrcpy (cmd, CPP " ");
 #     endif /* _WINDOWS */
@@ -6308,8 +6308,8 @@ char              **argv;
       ptr = ustrrchr(fname, '.');
       nb = ustrlen (srceFileName);
       if (!ptr) /* there is no suffix */
-         ustrcat (srceFileName, ".P");
-      else if (ustrcmp(ptr, ".P")) { /* it's not the valid suffix */
+         ustrcat (srceFileName, TEXT(".P"));
+      else if (ustrcmp(ptr, TEXT(".P"))) { /* it's not the valid suffix */
            TtaDisplayMessage (FATAL, TtaGetMessage (PRS, INVALID_FILE), srceFileName);
 #          ifdef _WINDOWS 
            ReleaseDC (hwnd, compilersDC);
@@ -6323,7 +6323,7 @@ char              **argv;
              nb -= 2; /* length without the suffix */
 	  } 
       /* add the suffix .SCH in srceFileName */
-      ustrcat (fname, ".SCH");
+      ustrcat (fname, TEXT(".SCH"));
 	
       /* does the file to compile exist */
       if (TtaFileExist (srceFileName) == 0)
@@ -6331,16 +6331,16 @@ char              **argv;
       else {
            /* provide the real source file */
            TtaFileUnlink (fname);
-           pwd = TtaGetEnvString ("PWD");
+           pwd = TtaGetEnvString (TEXT("PWD"));
 #          ifndef _WINDOWS
            i = ustrlen (cmd);
 #          endif /* _WINDOWS */
            if (pwd != NULL) {
 #             ifdef _WINDOWS
               cmd [pIndex] = (STRING) malloc (3 + ustrlen (pwd));
-              sprintf (cmd [pIndex++], "-I%s", pwd);
+              usprintf (cmd [pIndex++], TEXT("-I%s"), pwd);
               cmd [pIndex] = (STRING) malloc (3);
-              ustrcpy (cmd [pIndex++], "-C");
+              ustrcpy (cmd [pIndex++], TEXT("-C"));
               cmd [pIndex] = (STRING) malloc (ustrlen (srceFileName) + 1);
               ustrcpy (cmd [pIndex++], srceFileName);
               cmd [pIndex] = (STRING) malloc (ustrlen (fname) + 1);
@@ -6351,7 +6351,7 @@ char              **argv;
            } else {
 #                 ifdef _WINDOWS
                   cmd [pIndex] = (STRING) malloc (3);
-                  ustrcpy (cmd [pIndex++], "-C");
+                  ustrcpy (cmd [pIndex++], TEXT("-C"));
                   cmd [pIndex] = (STRING) malloc (ustrlen (srceFileName) + 1);
                   ustrcpy (cmd [pIndex++], srceFileName);
                   cmd [pIndex] = (STRING) malloc (ustrlen (fname) + 1);
@@ -6361,7 +6361,7 @@ char              **argv;
 #                 endif /* _WINDOWS */
 		   }
 #          ifdef _WINDOWS
-           cppLib = LoadLibrary ("cpp");
+           cppLib = LoadLibrary (TEXT("cpp"));
            ptrMainProc = GetProcAddress (cppLib, "CPPmain");
            i = ptrMainProc (hwnd, pIndex, cmd, &_CY_);
            FreeLibrary (cppLib);
@@ -6406,7 +6406,7 @@ char              **argv;
                     CompilerMessage (1, PRS, FATAL, MAX_LINE_SIZE_OVERFLOW, inputLine, LineNum);
                  else if (inputLine[0] == '#') {
                       /* cette ligne contient une directive du preprocesseur cpp */
-                      sscanf (inputLine, "# %d %s", &LineNum, buffer);
+                      usscanf (inputLine, TEXT("# %d %s"), &LineNum, buffer);
                       LineNum--;
 				 } else {
                         /* traduit tous les caracteres de la ligne */
@@ -6454,7 +6454,7 @@ char              **argv;
               /* write the compiled schema into the output file */
               /* remove temporary file */
               TtaFileUnlink (fname);
-              ustrcat (srceFileName, ".PRS");
+              ustrcat (srceFileName, TEXT(".PRS"));
               fileOK = WritePresentationSchema (srceFileName, pPSchema, pSSchema);
               if (!fileOK)
                  TtaDisplayMessage (FATAL, TtaGetMessage (PRS, WRITE_ERROR), srceFileName);

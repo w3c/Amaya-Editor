@@ -17,8 +17,8 @@
 /*
  * Dialogue API routines
  *
- * Author: I. Vatton (INRIA)
- *         R. Guetari (W3C/INRIA): Windows NT/95 routines
+ * Authors: I. Vatton (INRIA)
+ *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  *
  */
 
@@ -146,6 +146,7 @@ static  OPENFILENAME OpenFileName;
 static  int cyValue = 10;
 
 static HWND   currentParent;
+
 #else  /* _WINDOWS */
 static XmFontList   formFONT;
 static ThotAppContext Def_AppCont;
@@ -194,7 +195,7 @@ LRESULT CALLBACK TxtZoneWndProc () ;
 
 /* following variables are declared as extern in frame_tv.h */
 HINSTANCE           hInstance = 0;
-STRING               tszAppName;
+/* STRING               tszAppName; */
 int                 nAmayaShow;
 DWORD               WinLastError;
 ThotWindow          WinToolBar[MAX_FRAME + 2];
@@ -217,7 +218,11 @@ extern CHAR_T         docToOpen [256];
 #undef  APPFILENAMEFILTER
 #endif  /* APPFILENAMEFILTER */
 
+#ifdef _I18N_
+#define APPFILENAMEFILTER   L"HTML Files (*.html)\0*.html\0HTML Files (*.htm)\0*.htm\0Image files (*.gif)\0*.gif\0Image files (*.jpg)\0*.jpg\0Image files (*.png)\0*.png\0Image files (*.bmp)\0*.bmp\0All files (*.*)\0*.*\0"
+#else  /* !_I18N_ */
 #define APPFILENAMEFILTER   "HTML Files (*.html)\0*.html\0HTML Files (*.htm)\0*.htm\0Image files (*.gif)\0*.gif\0Image files (*.jpg)\0*.jpg\0Image files (*.png)\0*.png\0Image files (*.bmp)\0*.bmp\0All files (*.*)\0*.*\0"
+#endif /* !_I18N_ */
 
 
 void terminate__Fv (void) {
@@ -269,12 +274,11 @@ HWND hWnd;
 	  break;
 
    if (msg >= NB_WIN_ERROR)
-      usprintf (str, "Error %d : not registered\n", WinLastError);
+      usprintf (str, TEXT("Error %d : not registered\n"), WinLastError);
    else
-       usprintf (str, "Error %d : %s\n", WinLastError, win_errtab[msg].errstr);
+       usprintf (str, TEXT("Error %d : %s\n"), WinLastError, win_errtab[msg].errstr);
 
-   MessageBox (hWnd, str, tszAppName, MB_OK);
-#  else /* _AMAYA_RELEASE_ */
+   MessageBox (hWnd, str, TEXT("Amaya"), MB_OK);
 #  endif /* _AMAYA_RELEASE_ */
 }
 
@@ -288,7 +292,7 @@ CONST STRING text;
 #endif /* __STDC__ */
 {
     STRING pText = text;
-    while (pText && *pText == ' ')
+    while (pText && *pText == SPACE)
 	  pText++;
     if (*pText == EOS)
        return TRUE;
@@ -396,82 +400,82 @@ BYTE       *fVirt;
 CHAR_T     *key;
 #endif /* __STDC__ */
 {
-  if (!ustrcmp (word, "F1"))
+  if (!ustrcmp (word, TEXT("F1")))
     {
       *fVirt |= FVIRTKEY;
       *key = VK_F1;
     }
-  else if (!ustrcmp (word, "F2"))
+  else if (!ustrcmp (word, TEXT("F2")))
     {
       *fVirt |= FVIRTKEY;
       *key = VK_F2;
     }
-  else if (!ustrcmp (word, "F3"))
+  else if (!ustrcmp (word, TEXT("F3")))
     {
       *fVirt |= FVIRTKEY;
       *key = VK_F3;
     }
-  else if (!ustrcmp (word, "F4"))
+  else if (!ustrcmp (word, TEXT("F4")))
     {
       *fVirt |= FVIRTKEY;
       *key = VK_F4;
     }
-  else if (!ustrcmp (word, "F5"))
+  else if (!ustrcmp (word, TEXT("F5")))
     {
       *fVirt |= FVIRTKEY;
       *key = VK_F5;
     }
-  else if (!ustrcmp (word, "F6"))
+  else if (!ustrcmp (word, TEXT("F6")))
     {
       *fVirt |= FVIRTKEY;
       *key = VK_F6;
     }
-  else if (!ustrcmp (word, "F7"))
+  else if (!ustrcmp (word, TEXT("F7")))
     {
       *fVirt |= FVIRTKEY;
       *key = VK_F7;
     }
-  else if (!ustrcmp (word, "F8"))
+  else if (!ustrcmp (word, TEXT("F8")))
     {
       *fVirt |= FVIRTKEY;
       *key = VK_F8;
     }
-  else if (!ustrcmp (word, "F9"))
+  else if (!ustrcmp (word, TEXT("F9")))
     {
       *fVirt |= FVIRTKEY;
       *key = VK_F9;
     }
-  else if (!ustrcmp (word, "F10"))
+  else if (!ustrcmp (word, TEXT("F10")))
     {
       *fVirt |= FVIRTKEY;
       *key = VK_F10;
     }
-  else if (!ustrcmp (word, "F11"))
+  else if (!ustrcmp (word, TEXT("F11")))
     {
       *fVirt |= FVIRTKEY;
       *key = VK_F11;
     }
-  else if (!ustrcmp (word, "F12"))
+  else if (!ustrcmp (word, TEXT("F12")))
     {
       *fVirt |= FVIRTKEY;
       *key = VK_F12;
     }
-  else if (!ustrcmp (word, "F13"))
+  else if (!ustrcmp (word, TEXT("F13")))
     {
       *fVirt |= FVIRTKEY;
       *key = VK_F13;
     }
-  else if (!ustrcmp (word, "F14"))
+  else if (!ustrcmp (word, TEXT("F14")))
     {
       *fVirt |= FVIRTKEY;
       *key = VK_F14;
     }
-  else if (!ustrcmp (word, "F15"))
+  else if (!ustrcmp (word, TEXT("F15")))
     {
       *fVirt |= FVIRTKEY;
       *key = VK_F15;
     }
-  else if (!ustrcmp (word, "F16"))
+  else if (!ustrcmp (word, TEXT("F16")))
     {
       *fVirt |= FVIRTKEY;
       *key = VK_F16;
@@ -518,11 +522,11 @@ CHAR_T     *key;
 	 *pw++ = *pc++;
        *pw = EOS;
        
-         if (!ustrcmp (word, "Ctrl")) 
+         if (!ustrcmp (word, TEXT("Ctrl"))) 
 	   return FALSE;
-         else if (!ustrcmp (word, "Alt"))
+         else if (!ustrcmp (word, TEXT("Alt")))
 	   *fVirt |= FALT;
-         else if (!ustrcmp (word, "Shift"))
+         else if (!ustrcmp (word, TEXT("Shift")))
 	   *fVirt |= FSHIFT;
 	 
          while (*pc == SPACE || *pc == TAB)			  
@@ -533,14 +537,14 @@ CHAR_T     *key;
 	   *pw++ = *pc++;
          *pw = EOS;
 	 
-         if (!ustrcmp (word, "Ctrl")) 
+         if (!ustrcmp (word, TEXT("Ctrl"))) 
 	   return FALSE;
-         else if (!ustrcmp (word, "Alt"))
+         else if (!ustrcmp (word, TEXT("Alt")))
 	   {
 	     *fVirt |= FALT;
 	     getEquivChar = TRUE;
 	   }
-	 else if (!ustrcmp (word, "Shift"))
+	 else if (!ustrcmp (word, TEXT("Shift")))
 	   {
 	     *fVirt |= FSHIFT;
 	     getEquivChar = TRUE;
@@ -872,29 +876,29 @@ int        ref;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int makeArgcArgv (HINSTANCE hInst, char*** pArgv, LPSTR commandLine)
+int makeArgcArgv (HINSTANCE hInst, char*** pArgv, char* commandLine)
 #else  /* __STDC__ */
 int makeArgcArgv (hInst, pArgv, commandLine)
 HINSTANCE hInst; 
-STRING**   pArgv; 
-STRING     commandLine;
+char***   pArgv; 
+char*     commandLine;
 #endif /* __STDC__ */
 {
-    int          argc;
-    static char* argv[20];
-    static char  argv0[256];
-    char*        ptr     = commandLine;
-    char         lookFor = 0;
+    int           argc;
+    static char*  argv[20];
+    static CHAR_T argv0[256];
+    char*         ptr     = commandLine;
+    char          lookFor = 0;
 
     enum {
-	nowAt_start, 
-	nowAt_text
+         nowAt_start, 
+         nowAt_text
     } nowAt;
 
     *pArgv = argv;
     argc   = 0;
-    GetModuleFileName (hInst, (LPTSTR) argv0, sizeof (argv0));
-    argv[argc++] = argv0;
+    GetModuleFileName (hInst, (LPTSTR)argv0, sizeof (argv0));
+    argv[argc++] = WideChar2ISO (argv0);
     for (nowAt = nowAt_start;;) {
         if (!*ptr) 
            return (argc);
@@ -911,13 +915,13 @@ STRING     commandLine;
 	   ptr++;
 	   continue;
         }
-        if (*ptr == ' ' || *ptr == '\t') {
+        if (*ptr == SPACE || *ptr == TAB) {
            *ptr = 0;
 	   ptr++;
 	   nowAt = nowAt_start;
 	   continue;
         }
-        if ((*ptr == '\'' || *ptr == '\"' || *ptr == '`') && nowAt == nowAt_start) {
+        if ((*ptr == TEXT('\'') || *ptr == TEXT('\"') || *ptr == TEXT('`')) && nowAt == nowAt_start) {
            lookFor = *ptr;
 	   nowAt = nowAt_start;
 	   ptr++;
@@ -944,12 +948,13 @@ STRING    lpCommand;
 int       nShow;
 #endif /* __STDC__ */
 { 
-   int    argc ;
-   char** argv;
+   int     argc ;
+   char**  argv;
 
    hInstance  = hInst;
    nAmayaShow = nShow;
-   tszAppName = "Amaya";
+   /* tszAppName = "Amaya"; */
+
 
    argc = makeArgcArgv (hInst, &argv, lpCommand);
    main (argc, argv);
@@ -1252,7 +1257,7 @@ caddr_t             call_d;
 		    {
 		       entry = 0;
 		       /* Bascule la valeur du bouton correspondant a l'entree */
-		       adbloc->E_Free[i] = 'Y';
+		       adbloc->E_Free[i] = TEXT('Y');
 
 		       /* signale que l'entree est basculee si le menu est reactif */
 		       if (catalogue->Cat_React)
@@ -1299,10 +1304,10 @@ struct Cat_Context *catalogue;
 	     while (i < C_NUMBER && ent < max)
 	       {
 		 /*** Retour les entrees selectionnees vers l'application ***/
-		  if (adbloc->E_Free[i] == 'Y')
+		  if (adbloc->E_Free[i] == TEXT('Y'))
 		    {
 		       (*CallbackDialogue) (catalogue->Cat_Ref, INTEGER_DATA, index);
-		       adbloc->E_Free[i] = 'N';
+		       adbloc->E_Free[i] = TEXT('N');
 		    }
 		  i++;
 		  ent++;
@@ -1350,7 +1355,7 @@ caddr_t             call_d;
 	while (adbloc->E_ThotWidget[ent] != 0)
 	  {
 	     /* Il faut sauter les widgets des RowColumns */
-	     if (adbloc->E_Free[ent] == 'N')
+	     if (adbloc->E_Free[ent] == TEXT('N'))
 	       {
 		  catalogue = (struct Cat_Context *) adbloc->E_ThotWidget[ent];
 #                 ifndef _WINDOWS
@@ -1684,7 +1689,7 @@ XmListCallbackStruct *infos;
 	   ok = XmStringGetLtoR (infos->item, XmSTRING_DEFAULT_CHARSET, &text);
 	   /* retourne l'entree choisie */
 	   if (ok && text != NULL)
-	      if (text[0] != EOS && text[0] != ' ')
+	      if (text[0] != EOS && text[0] != SPACE)
 		 (*CallbackDialogue) (catalogue->Cat_Ref, STRING_DATA, text);
 	}
 }
@@ -1832,7 +1837,7 @@ Display           **Dp;
 #  endif /* !_WINDOWS */
 
 #  ifdef _WINDOWS
-   iconID = "IDI_APPICON";
+   iconID = _IDI_APPICONCST_;
 
    RootShell.style         = 0;
    RootShell.lpfnWndProc   = WndProc ;
@@ -1842,8 +1847,8 @@ Display           **Dp;
    RootShell.hIcon         = LoadIcon (hInstance, iconID) ;
    RootShell.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
    RootShell.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH) ;
-   RootShell.lpszMenuName  = "AmayaMain" ;
-   RootShell.lpszClassName = tszAppName;
+   RootShell.lpszMenuName  = _AmayaMainCST_ ;
+   RootShell.lpszClassName = TEXT("Amaya");
    RootShell.cbSize        = sizeof(WNDCLASSEX);
    RootShell.hIconSm       = LoadIcon (hInstance, iconID) ;
 
@@ -1858,7 +1863,7 @@ Display           **Dp;
    RootShell.hIcon         = LoadIcon (hInstance, iconID) ;
    RootShell.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
    RootShell.hbrBackground = (HBRUSH) (COLOR_WINDOW + 1) ;
-   RootShell.lpszClassName = "ClientWndProc" ;
+   RootShell.lpszClassName = _ClientWndProcCST_ ;
    RootShell.lpszMenuName  = NULL ;
    RootShell.cbSize        = sizeof(WNDCLASSEX);
    RootShell.hIconSm       = LoadIcon (hInstance, iconID) ;
@@ -1873,7 +1878,7 @@ Display           **Dp;
    RootShell.hInstance     = hInstance ;
    RootShell.hIcon         = LoadIcon (hInstance, iconID) ;
    RootShell.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
-   RootShell.lpszClassName = "WNDIALOGBOX" ;
+   RootShell.lpszClassName = _WNDIALOGBOXCST_ ;
    RootShell.lpszMenuName  = NULL ;
    RootShell.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH) ;
    RootShell.cbSize        = sizeof(WNDCLASSEX);
@@ -2044,7 +2049,7 @@ STRING              textmenu;
    PopShell = 0;
    FrameTable[0].WdFrame = 0;	/* widget frame */
    n = 0;
-   value = TtaGetEnvString ("Geometry");
+   value = TtaGetEnvString (_GeometryCST_);
 
 #  ifndef _WINDOWS
    if (value != NULL)
@@ -2421,7 +2426,7 @@ int                 msgType;
 		  while (n + lg + 1 >= 450)
 		    {
 		       /* search next New Line */
-		       pointer = ustrchr (buff, '\n');
+		       pointer = ustrchr (buff, TEXT('\n'));
 		       if (pointer == NULL)
 			  n = 0;
 		       else
@@ -2454,7 +2459,7 @@ int                 msgType;
 	else if (msgType == OVERHEAD)
 	  {
 	     /* search last New Line */
-	     while (buff[n] != '\n' && n >= 0)
+	     while (buff[n] != EOL && n >= 0)
 		n--;
 	     /* replace last message by the new one */
 	     XmTextReplace (FrameTable[0].WdStatus, n + 1, ustrlen (buff), text);
@@ -2673,7 +2678,7 @@ STRING fileName;
     OpenFileName.lpstrFile         = szFileName; 
     OpenFileName.nMaxFile          = sizeof (szFileName); 
     OpenFileName.lpstrFileTitle    = szFileTitle; 
-	OpenFileName.lpstrTitle        = "Save File as"; 
+	OpenFileName.lpstrTitle        = _SaveFileAsCST_; 
     OpenFileName.nMaxFileTitle     = sizeof (szFileTitle); 
     OpenFileName.lpstrInitialDir   = NULL; 
     OpenFileName.Flags             = OFN_SHOWHELP | OFN_OVERWRITEPROMPT | OFN_HIDEREADONLY ;
@@ -2888,7 +2893,7 @@ STRING              equiv;
 
 	catalogue->Cat_Ref = ref;
 	catalogue->Cat_Type = CAT_PULL;
-	catalogue->Cat_Button = 'L';
+	catalogue->Cat_Button = TEXT('L');
 	catalogue->Cat_Data = -1;
 
 	catalogue->Cat_Widget = (ThotWidget) menu;
@@ -3015,7 +3020,7 @@ STRING              equiv;
 
 		     /* Recupere le type de l'entree */
 		     adbloc->E_Type[ent] = text[index];
-		     adbloc->E_Free[ent] = 'Y';
+		     adbloc->E_Free[ent] = TEXT('Y');
 
 		     /* Note l'accelerateur */
 		     if (equiv != NULL)
@@ -3024,7 +3029,7 @@ STRING              equiv;
                           if (&equiv[eindex] != EOS) {
                              if (parseAccelerator (&equiv[eindex], &fVirt, &key))
                                 addAccelerator (currentFrame, fVirt, key, ref + i);
-                             usprintf (equiv_item, "%s", &equiv[eindex]); 
+                             usprintf (equiv_item, TEXT("%s"), &equiv[eindex]); 
                           }
                           eindex += ustrlen (&equiv[eindex]) + 1;
 #                         else  /* !_WINDOWS */
@@ -3034,12 +3039,12 @@ STRING              equiv;
 #                         endif /* _WINDOWS */
 		       }
 
-		     if (text[index] == 'B')
+		     if (text[index] == TEXT('B'))
 		       /*__________________________________________ Creation d'un bouton __*/
 		       {
 #                         ifdef _WINDOWS
               if (equiv_item && equiv_item [0] != 0) {
-                 usprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item); 
+                 usprintf (menu_item, TEXT("%s\t%s"), &text[index + 1], equiv_item); 
                  AppendMenu (menu, MF_STRING | MF_UNCHECKED, ref + i, menu_item);
                  /* InsertMenu (menu, i, MF_STRING | MF_UNCHECKED, ref + i, menu_item); */
                  equiv_item[0] = 0;
@@ -3056,16 +3061,16 @@ STRING              equiv;
 			  XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallMenu, catalogue);
 #                         endif /* _WINDOWS */
 		       }
-		     else if (text[index] == 'T')
+		     else if (text[index] == TEXT('T'))
 		       /*__________________________________________ Creation d'un toggle __*/
 		       {
 			  /* un toggle a faux */
 #                         ifdef _WINDOWS
               if (equiv_item && equiv_item [0] != 0) {
-                 usprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item);
+                 usprintf (menu_item, TEXT("%s\t%s"), &text[index + 1], equiv_item);
                  equiv_item [0] = 0;
               } else
-                   usprintf (menu_item, "%s", &text[index + 1]);
+                   usprintf (menu_item, TEXT("%s"), &text[index + 1]);
 
               /* InsertMenu (menu, i, MF_STRING | MF_UNCHECKED, ref + i, menu_item); */
               AppendMenu (menu, MF_STRING | MF_UNCHECKED, ref + i, menu_item);
@@ -3082,7 +3087,7 @@ STRING              equiv;
 			  XtAddCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallMenu, catalogue);
 #                         endif /* _WINDOWS */
 		       }
-		     else if (text[index] == 'M')
+		     else if (text[index] == TEXT('M'))
 		       /*_______________________________________ Creation d'un sous-menu __*/
 		       {
 			  /* En attendant le sous-menu on cree un bouton */
@@ -3090,7 +3095,7 @@ STRING              equiv;
                           w = (HMENU) CreatePopupMenu ();
                           subMenuID [currentFrame] = (UINT) w;
                           if (equiv_item && equiv_item [0] != 0) {
-                             usprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item); 
+                             usprintf (menu_item, TEXT("%s\t%s"), &text[index + 1], equiv_item); 
                              /* InsertMenu (menu, i, MF_POPUP, (UINT) w, menu_item); */
                              AppendMenu (menu, MF_POPUP, (UINT) w, menu_item);
                              equiv_item [0] = 0;
@@ -3107,11 +3112,11 @@ STRING              equiv;
 			  adbloc->E_ThotWidget[ent] = w;
 #                         endif /* _WINDOWS */
 		       }
-		     else if (text[index] == 'F')
+		     else if (text[index] == TEXT('F'))
 		       /*_________________________________ Creation d'un sous-formulaire __*/
 		       {
 			  ustrcpy (heading, &text[index + 1]);
-			  ustrcat (heading, "...");
+			  ustrcat (heading, TEXT("..."));
 #                         ifdef _WINDOWS
 			  w = (HMENU) CreateMenu ();
               /* InsertMenu (menu, i, MF_POPUP, (UINT) w, (LPCTSTR) (&heading)); */
@@ -3123,7 +3128,7 @@ STRING              equiv;
 			  adbloc->E_ThotWidget[ent] = w;
 #                         endif /* _WINDOWS */
 		       }
-		     else if (text[index] == 'S')
+		     else if (text[index] == TEXT('S'))
 		       /*_________________________________ Creation d'un separateur __*/
 		       {
 #                         ifdef _WINDOWS
@@ -3385,13 +3390,13 @@ CHAR_T                button;
 
 	/* Cree le menu correspondant */
 #       ifndef _WINDOWS
-	if (button == 'R')
+	if (button == TEXT('R'))
 	   XtSetArg (args[0], XmNwhichButton, Button3);
-	else if (button == 'M')
+	else if (button == TEXT('M'))
 	   XtSetArg (args[0], XmNwhichButton, Button2);
 	else
 	  {
-	     button = 'L';
+	     button = TEXT('L');
 	     XtSetArg (args[0], XmNwhichButton, Button1);
 	  }
 #       endif /* !_WINDOWS */
@@ -3545,7 +3550,7 @@ CHAR_T                button;
 
 		     /* Recupere le type de l'entree */
 		     adbloc->E_Type[ent] = text[index];
-		     adbloc->E_Free[ent] = 'Y';
+		     adbloc->E_Free[ent] = TEXT('Y');
 
 		     /* Note l'accelerateur */
 		     if (equiv != NULL)
@@ -3563,7 +3568,7 @@ CHAR_T                button;
 #                         endif /* !_WINDOWS */
 		       }
 
-		     if (text[index] == 'B')
+		     if (text[index] == TEXT('B'))
 		       /*__________________________________________ Creation d'un bouton __*/
 		       {
 #                         ifdef _WINDOWS
@@ -3576,7 +3581,7 @@ CHAR_T                button;
 			  XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallMenu, catalogue);
 #                         endif /* !_WINDOWS */
 		       }
-		     else if (text[index] == 'T')
+		     else if (text[index] == TEXT('T'))
 		       /*__________________________________________ Creation d'un toggle __*/
 		       {
 #                         ifdef _WINDOWS
@@ -3591,7 +3596,7 @@ CHAR_T                button;
 			  XtAddCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallMenu, catalogue);
 #                         endif /* !_WINDOWS */
 		       }
-		     else if (text[index] == 'M')
+		     else if (text[index] == TEXT('M'))
 		       /*_______________________________________ Creation d'un sous-menu __*/
 		       {
 			  /* En attendant le sous-menu on cree un bouton */
@@ -3606,11 +3611,11 @@ CHAR_T                button;
 			  adbloc->E_ThotWidget[ent] = w;
 #                         endif /* !_WINDOWS */
 		       }
-		     else if (text[index] == 'F')
+		     else if (text[index] == TEXT('F'))
 		       /*_________________________________ Creation d'un sous-formulaire __*/
 		       {
 			  ustrcpy (heading, &text[index + 1]);
-			  ustrcat (heading, "...");
+			  ustrcat (heading, TEXT("..."));
 #                         ifdef _WINDOWS
 			  AppendMenu (menu, MF_STRING, (UINT) (ref + i), (LPCTSTR) (&heading));
 			  adbloc->E_ThotWidget[ent] = (ThotWidget) i;
@@ -3620,7 +3625,7 @@ CHAR_T                button;
 			  adbloc->E_ThotWidget[ent] = w;
 #                         endif /* !_WINDOWS */
 		       }
-		     else if (text[index] == 'S')
+		     else if (text[index] == TEXT('S'))
 		       /*_________________________________ Creation d'un separateur __*/
 		       {
 #                         ifdef _WINDOWS
@@ -3747,7 +3752,7 @@ struct E_List     **adbloc;
 	XtManageChild (w);
 #       endif /* _WINDOWS */
 	(*adbloc)->E_ThotWidget[*entry] = w;
-	(*adbloc)->E_Free[*entry] = 'X';
+	(*adbloc)->E_Free[*entry] = TEXT('X');
 
 	(*index)++;
 	(*entry)++;
@@ -3858,7 +3863,7 @@ ThotBool            horizontal;
 	     catalogue->Cat_Widget = menu;
 	     catalogue->Cat_PtParent = parentCatalogue;
 	     adbloc->E_ThotWidget[ent] = (ThotWidget) (catalogue);
-	     adbloc->E_Free[ent] = 'N';
+	     adbloc->E_Free[ent] = TEXT('N');
 	     catalogue->Cat_EntryParent = i;
 	     adbloc = NewEList ();
 	     catalogue->Cat_Entries = adbloc;
@@ -3938,8 +3943,8 @@ ThotBool            horizontal;
 	       }
 
 	     /* On ne traite que des entrees de type bouton */
-	     adbloc->E_Type[ent] = 'B';
-	     adbloc->E_Free[ent] = 'Y';
+	     adbloc->E_Type[ent] = TEXT('B');
+	     adbloc->E_Free[ent] = TEXT('Y');
 	     XtSetArg (args[n], XmNlabelPixmap, icons[i]);
 	     w = XmCreateCascadeButton (row, "dialogue", args, n + 1);
 	     XtManageChild (w);
@@ -4085,7 +4090,7 @@ ThotBool            react;
 		  catalogue->Cat_Widget = menu;
 		  catalogue->Cat_PtParent = parentCatalogue;
 		  adbloc->E_ThotWidget[ent] = (ThotWidget) (catalogue);
-		  adbloc->E_Free[ent] = 'N';
+		  adbloc->E_Free[ent] = TEXT('N');
 		  catalogue->Cat_EntryParent = i;
 		  adbloc = NewEList ();
 		  catalogue->Cat_Entries = adbloc;
@@ -4209,8 +4214,8 @@ ThotBool            react;
 			 }	/*if */
 
 		       /* On ne traite que des entrees de type bouton */
-		       adbloc->E_Type[ent] = 'B';
-		       adbloc->E_Free[ent] = 'Y';
+		       adbloc->E_Type[ent] = TEXT('B');
+		       adbloc->E_Free[ent] = TEXT('Y');
 
 		       /* Note l'accelerateur */
 		       if (equiv != NULL)
@@ -4275,7 +4280,7 @@ ThotBool            react;
 			    ent -= C_NUMBER;
 			 }	/*while */
 
-		       if ((adbloc->E_Type[ent] == 'M') && (adbloc->E_Free[ent] == 'Y'))
+		       if ((adbloc->E_Type[ent] == TEXT('M')) && (adbloc->E_Free[ent] == TEXT('Y')))
 			 {
 			    /* Cree un sous-menu d'un menu */
 			    w = parentCatalogue->Cat_Widget;
@@ -4285,9 +4290,9 @@ ThotBool            react;
 			    XtSetArg (args[n], XmNbackground, BgMenu_Color);
 			    n++;
 			    button = parentCatalogue->Cat_Button;
-			    if (button == 'R')
+			    if (button == TEXT('R'))
 			       XtSetArg (args[n], XmNwhichButton, Button3);
-			    else if (button == 'M')
+			    else if (button == TEXT('M'))
 			       XtSetArg (args[n], XmNwhichButton, Button2);
 			    else
 			       XtSetArg (args[n], XmNwhichButton, Button1);
@@ -4324,7 +4329,7 @@ ThotBool            react;
 			    XtManageChild (w);
 			    XtManageChild (menu);
 #                           endif /* !_WINDOWS */
-			    adbloc->E_Free[ent] = 'N';
+			    adbloc->E_Free[ent] = TEXT('N');
 
 			    adbloc = NewEList ();
 			    catalogue->Cat_Entries = adbloc;
@@ -4437,7 +4442,7 @@ ThotBool            react;
 
 		       /* Recupere le type de l'entree */
 		       adbloc->E_Type[ent] = text[index];
-		       adbloc->E_Free[ent] = 'Y';
+		       adbloc->E_Free[ent] = TEXT('Y');
 
 		       /* Note l'accelerateur */
 		       if (equiv != NULL)
@@ -4446,7 +4451,7 @@ ThotBool            react;
                             if (&equiv[eindex] != EOS) {
                                if (parseAccelerator (&equiv[eindex], &fVirt, &key))
                                   addAccelerator (currentFrame, fVirt, key, ref + i);
-                               usprintf (equiv_item, "%s", &equiv[eindex]);
+                               usprintf (equiv_item, TEXT("%s"), &equiv[eindex]);
                             }
                             eindex += ustrlen (&equiv[eindex]) + 1;
 #                           else  /* !_WINDOWS */
@@ -4456,12 +4461,12 @@ ThotBool            react;
 #                           endif /* !_WINDOWS */
 			 }
 
-		       if (text[index] == 'B')
+		       if (text[index] == TEXT('B'))
 			 /*________________________________________ Creation d'un bouton __*/
 			 {
 #                           ifdef _WINDOWS
                             if (equiv_item && equiv_item[0] != 0) {
-                               usprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item);
+                               usprintf (menu_item, TEXT("%s\t%s"), &text[index + 1], equiv_item);
                                AppendMenu (w, MF_STRING, ref + i, menu_item);
                                equiv_item [0] = 0;
                             } else 
@@ -4477,12 +4482,12 @@ ThotBool            react;
 			    XtAddCallback (w, XmNactivateCallback, (XtCallbackProc) CallMenu, catalogue);
 #                           endif /* !_WINDOWS */
 			 }
-		       else if (text[index] == 'T')
+		       else if (text[index] == TEXT('T'))
 			 /*________________________________________ Creation d'un toggle __*/
 			 {
 #                           ifdef _WINDOWS
                             if (equiv_item && equiv_item[0] != 0) {
-                               usprintf (menu_item, "%s\t%s", &text[index + 1], equiv_item);
+                               usprintf (menu_item, TEXT("%s\t%s"), &text[index + 1], equiv_item);
                                AppendMenu (w, MF_STRING | MF_UNCHECKED, ref + i, menu_item);
                                equiv_item [0] = 0;
                             } else 
@@ -4502,7 +4507,7 @@ ThotBool            react;
 			    XtAddCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallMenu, catalogue);
 #                           endif /* !_WINDOWS */
 			 }
-		       else if (text[index] == 'M')
+		       else if (text[index] == TEXT('M'))
 			 /*________________________________________ Appel d'un sous-menu __*/
 			 {
 #                           ifdef _WINDOWS
@@ -4511,7 +4516,7 @@ ThotBool            react;
 			    adbloc->E_ThotWidget[ent] = w;
 #                           endif /* !_WINDOWS */
 			 }
-		       else if (text[index] == 'F')
+		       else if (text[index] == TEXT('F'))
 			 /*__________________________________ Appel d'un sous-formulaire __*/
 			 {
 #                           ifdef _WINDOWS
@@ -4523,7 +4528,7 @@ ThotBool            react;
 			    adbloc->E_ThotWidget[ent] = w;
 #                           endif /* !_WINDOWS */
 			 }
-		       else if (text[index] == 'S')
+		       else if (text[index] == TEXT('S'))
 			 /*_________________________________ Creation d'un separateur __*/
 			 {
 #                           ifdef _WINDOWS
@@ -4756,7 +4761,7 @@ ThotBool            react;
 		  catalogue->Cat_Widget = menu;
 		  catalogue->Cat_PtParent = parentCatalogue;
 		  adbloc->E_ThotWidget[ent] = (ThotWidget) catalogue;
-		  adbloc->E_Free[ent] = 'N';
+		  adbloc->E_Free[ent] = TEXT('N');
 		  catalogue->Cat_EntryParent = i;
 		  /* prepare le nouveau catalogue */
 		  adbloc = NewEList ();
@@ -4875,7 +4880,7 @@ ThotBool            react;
 
 		       /* E_Free est utilise pour marquer les entrees selectionnes */
 		       /* Intialement les entrees sont non selectionnees */
-		       adbloc->E_Free[ent] = 'N';
+		       adbloc->E_Free[ent] = TEXT('N');
 
 		       /* Note l'accelerateur */
 		       if (equiv != NULL)
@@ -4884,17 +4889,17 @@ ThotBool            react;
 			    eindex += ustrlen (&equiv[eindex]) + 1;
 			 }
 		       /* On accepte toggles, boutons et separateurs */
-		       if (text[index] == 'B' || text[index] == 'T')
+		       if (text[index] == TEXT('B') || text[index] == TEXT('T'))
 			 /*________________________________________ Creation d'un bouton __*/
 			 {
-			   adbloc->E_Type[ent] = 'B';
+			   adbloc->E_Type[ent] = TEXT('B');
 			   w = XmCreateToggleButton (row, &text[index + 1], args, n);
 		       
 			   XtManageChild (w);
 			   adbloc->E_ThotWidget[ent] = w;
 			   XtAddCallback (w, XmNarmCallback, (XtCallbackProc) CallToggle, catalogue);
 			 }
-		       else if (text[index] == 'S')
+		       else if (text[index] == TEXT('S'))
 			 /*_________________________________ Creation d'un separateur __*/
 			 {
 			    XtSetArg (args[n], XmNseparatorType, XmSINGLE_DASHED_LINE);
@@ -5043,7 +5048,7 @@ ThotBool            on;
 		  /* C'est une entree qu'il faut initialiser */
 		  else if ((ent == val) || (val == -1))
 		    {
-		       if (catalogue->Cat_Type != CAT_TMENU && adbloc->E_Type[i] != 'T')
+		       if (catalogue->Cat_Type != CAT_TMENU && adbloc->E_Type[i] != TEXT('T'))
 			 {
 			    /* ce n'est pas une entree du toggle */
 			    TtaError (ERR_invalid_reference);
@@ -5080,7 +5085,7 @@ ThotBool            on;
 			    else
 			       XtAddCallback (w, XmNvalueChangedCallback, (XtCallbackProc) CallMenu, catalogue);
 			 }
-		       adbloc->E_Free[i] = 'N';		/* La valeur est la valeur initiale */
+		       adbloc->E_Free[i] = TEXT('N');		/* La valeur est la valeur initiale */
 		    }
 		  /* Sinon l'entree garde son etat precedent  */
 		  i++;
@@ -5365,22 +5370,22 @@ int                 ref;
 			    XtUnmanageChild (catalogue->Cat_Widget);
 #                           endif /* _WINDOWS */
 			    adbloc->E_ThotWidget[entry] = (ThotWidget) 0;
-			    adbloc->E_Free[entry] = 'Y';
+			    adbloc->E_Free[entry] = TEXT('Y');
 			 }
 		       else if ((parentCatalogue->Cat_Type == CAT_POPUP)
 				|| (parentCatalogue->Cat_Type == CAT_PULL)
 				|| (parentCatalogue->Cat_Type == CAT_MENU))
 			 /*________________________________ Formulaire attache a un menu __*/
 			 {
-			    if ((adbloc->E_Type[entry] == 'F')
-				&& (adbloc->E_Free[entry] == 'N'))
+			    if ((adbloc->E_Type[entry] == TEXT('F'))
+				&& (adbloc->E_Free[entry] == TEXT('N')))
 			      {
 				 /* Detache le formulaire du bouton du menu */
 				 w = adbloc->E_ThotWidget[entry];
 #                                ifndef _WINDOWS
 				 XtRemoveCallback (w, XmNactivateCallback, (XtCallbackProc) INITetPOSform, catalogue);
 #                                endif /* _WINDOWS */
-				 adbloc->E_Free[entry] = 'Y';
+				 adbloc->E_Free[entry] = TEXT('Y');
 			      }
 			 }
 		    }
@@ -5530,14 +5535,14 @@ int                 ref;
 			 {
 			    /* Libere l'entree du sous-menu dans le formulaire */
 			    adbloc->E_ThotWidget[entry] = (ThotWidget) 0;
-			    adbloc->E_Free[entry] = 'Y';
+			    adbloc->E_Free[entry] = TEXT('Y');
 
 			 }
 		       else
 			 /*_________________________________________ Sous-menu d'un menu __*/
 			 {
-			    if ((adbloc->E_Type[entry] == 'M')
-				&& (adbloc->E_Free[entry] == 'N'))
+			    if ((adbloc->E_Type[entry] == TEXT('M'))
+				&& (adbloc->E_Free[entry] == TEXT('N')))
 			      {
 /*** Delie le sous-menu du bouton du menu ***/
 				 w = adbloc->E_ThotWidget[entry];
@@ -5559,7 +5564,7 @@ int                 ref;
 				 XtSetValues (w, args, n);
 				 XtManageChild (w);
 #                                endif /* _WINDOWS */
-				 adbloc->E_Free[entry] = 'Y';
+				 adbloc->E_Free[entry] = TEXT('Y');
 			      }
 			 }
 		    }		/*if entry */
@@ -5842,7 +5847,7 @@ int                 cattype;
 	w = XmCreateRowColumn (w, "Dialogue", args, n);
 	XtManageChild (w);
 	adbloc->E_ThotWidget[0] = w;
-	adbloc->E_Free[0] = 'X';
+	adbloc->E_Free[0] = TEXT('X');
 
 	if (number < 0)
 	   /* il n'y a pas de boutons a engendrer */
@@ -5897,7 +5902,7 @@ int                 cattype;
 	     XtSetValues (form, argform, 1);
 #            else  /* _WINDOWS */
              strSize = ustrlen (TtaGetMessage (LIB, TMSG_LIB_CONFIRM)) * charWidth + 20;
-             formulary.Buttons[bIndex] = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_LIB_CONFIRM), 
+             formulary.Buttons[bIndex] = CreateWindow (_BUTTONCST_, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), 
                                                        WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
                                                        bAbsBase, 300, strSize, 20, parent, 
                                                        (HMENU) IDCANCEL, hInstance, NULL) ;
@@ -5960,7 +5965,7 @@ int                 cattype;
 		       w = XmCreatePushButton (row, TtaGetMessage (LIB, TMSG_CANCEL), args, n);
 #                      else  /* _WINDOWS */
                        strSize = ustrlen (TtaGetMessage (LIB, TMSG_CANCEL)) * charWidth + 10;
-                       formulary.Buttons[bIndex] = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_CANCEL), 
+                       formulary.Buttons[bIndex] = CreateWindow (_BUTTONCST_, TtaGetMessage (LIB, TMSG_CANCEL), 
                                                                  WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
                                                                  bAbsBase, 300, strSize, 20, parent, 
                                                                  (HMENU) IDCANCEL, hInstance, NULL) ;
@@ -5973,7 +5978,7 @@ int                 cattype;
 		       w = XmCreatePushButton (row, TtaGetMessage (LIB, TMSG_DONE), args, n);
 #                      else  /* _WINDOWS */
                        strSize = ustrlen (TtaGetMessage (LIB, TMSG_DONE)) * charWidth + 10;
-                       formulary.Buttons[bIndex] = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DONE), 
+                       formulary.Buttons[bIndex] = CreateWindow (_BUTTONCST_, TtaGetMessage (LIB, TMSG_DONE), 
                                                                  WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
                                                                  bAbsBase, 300, strSize, 20, parent, 
                                                                  (HMENU) IDCANCEL, hInstance, NULL) ;
@@ -5988,7 +5993,7 @@ int                 cattype;
 #          else  /* _WINDOWS */
 	  {
              strSize = ustrlen (ptr) * charWidth + 10;
-             formulary.Buttons[bIndex] = CreateWindow ("BUTTON", ptr, 
+             formulary.Buttons[bIndex] = CreateWindow (_BUTTONCST_, ptr, 
                                                        WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
                                                        bAbsBase, 300, strSize, 20, parent, 
                                                        (HMENU) (ref + bIndex), hInstance, NULL) ;
@@ -6005,7 +6010,7 @@ int                 cattype;
 	/* Range le bouton dans le 1er bloc de widgets */
 	adbloc->E_ThotWidget[0] = w;
 #       ifdef _WINDOWS
-        form = CreateWindow ("WNDIALOGBOX", title, DS_MODALFRAME | WS_POPUP | 
+        form = CreateWindow (_WNDIALOGBOXCST_, title, DS_MODALFRAME | WS_POPUP | 
                              WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
 	  		     CW_USEDEFAULT, CW_USEDEFAULT, bAbsBase + 20, 400,
 			     w, 0, hInstance, 0); 
@@ -6282,10 +6287,10 @@ int                 ref;
 	     entry -= C_NUMBER;
 	  }
 
-	if (adbloc->E_Free[entry] == 'Y')
+	if (adbloc->E_Free[entry] == TEXT('Y'))
 	  {
 	     /* marque que le sous-menu est attache */
-	     adbloc->E_Free[entry] = 'N';
+	     adbloc->E_Free[entry] = TEXT('N');
 	     /* affiche le widget sur l'ecran */
 #            ifndef _WINDOWS
 	     if (XtIsManaged (parentCatalogue->Cat_Widget))
@@ -6358,10 +6363,10 @@ int                 ref;
 	     entry -= C_NUMBER;
 	  }
 
-	if (adbloc->E_Free[entry] == 'N')
+	if (adbloc->E_Free[entry] == TEXT('N'))
 	  {
 	     /* marque que le sous-menu est detache */
-	     adbloc->E_Free[entry] = 'Y';
+	     adbloc->E_Free[entry] = TEXT('Y');
 	     /* retire le widget de l'ecran */
 #            ifndef _WINDOWS
 	     if (XtIsManaged (catalogue->Cat_Widget))
@@ -6589,7 +6594,7 @@ ThotBool            react;
 	catalogue->Cat_ListLength = number;
 	catalogue->Cat_Widget = row;
 	adbloc->E_ThotWidget[ent] = (ThotWidget) catalogue;
-	adbloc->E_Free[ent] = 'N';
+	adbloc->E_Free[ent] = TEXT('N');
 	catalogue->Cat_EntryParent = i;
 	catalogue->Cat_Title = 0;
 
@@ -7018,7 +7023,7 @@ STRING              text;
 	w = XmCreateLabel (w, "Dialogue", args, n);
 #       else  /* _WINDOWS */
 	if (!isOnlyBlank (text)) {
-	   w = CreateWindow ("STATIC", text, WS_CHILD | WS_VISIBLE | SS_LEFT, 10, cyValue, 100, 30, 
+	   w = CreateWindow (_STATICCST_, text, WS_CHILD | WS_VISIBLE | SS_LEFT, 10, cyValue, 100, 30, 
 			     parentCatalogue->Cat_Widget, (HMENU) ref, hInstance, NULL);
 	   cyValue += 40;
 	}
@@ -7029,7 +7034,7 @@ STRING              text;
 	catalogue->Cat_Type = CAT_LABEL;
 	catalogue->Cat_PtParent = parentCatalogue;
 	adbloc->E_ThotWidget[ent] = (ThotWidget) (catalogue);
-	adbloc->E_Free[ent] = 'N';
+	adbloc->E_Free[ent] = TEXT('N');
 	catalogue->Cat_EntryParent = i;
 	catalogue->Cat_Entries = NULL;
      }
@@ -7178,7 +7183,7 @@ ThotBool            react;
 		  /*XtSetArg(args[n], XmNscrollVertical, FALSE); n++; */
 		  w = XmCreateText (row, "Dialogue", args, n);
 #                 else  /* _WINDOWS */
-		  w = CreateWindow ("EDIT", "", WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER, 
+		  w = CreateWindow (_EDITCST_, _EMPTYSTR_, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER, 
 				    10, cyValue, 200, 30, parentCatalogue->Cat_Widget, (HMENU) ref, hInstance, NULL);
 		  cyValue += 40;
 #                 endif /* _WINDOWS */
@@ -7216,7 +7221,7 @@ ThotBool            react;
 #            endif /* _WINDOWS */
 	     catalogue->Cat_PtParent = parentCatalogue;
 	     adbloc->E_ThotWidget[ent] = (ThotWidget) catalogue;
-	     adbloc->E_Free[ent] = 'N';
+	     adbloc->E_Free[ent] = TEXT('N');
 	     catalogue->Cat_EntryParent = i;
 	  }
      }
@@ -7369,7 +7374,7 @@ ThotBool            react;
 	     catalogue->Cat_Widget = row;
 	     catalogue->Cat_PtParent = parentCatalogue;
 	     adbloc->E_ThotWidget[ent] = (ThotWidget) catalogue;
-	     adbloc->E_Free[ent] = 'N';
+	     adbloc->E_Free[ent] = TEXT('N');
 	     catalogue->Cat_EntryParent = i;
 	     catalogue->Cat_Ref = ref;
 	     catalogue->Cat_Type = CAT_INT;

@@ -15,8 +15,8 @@ extern Document IsDocumentLoaded ( char *documentURL,
 				   char *form_data);
 extern void ExtractParameters ( char *aName,
                                 char *parameters );
-extern void ExtractSuffix ( char *aName,
-                            char *aSuffix );
+extern void ExtractSuffix ( STRING aName,
+                            STRING aSuffix );
 extern void ResetStop ( Document document );
 extern void ActiveTransfer ( Document document );
 extern void StopTransfer ( Document document,
@@ -31,7 +31,7 @@ extern void InitFormAnswer ( Document document,
                              View view );
 extern void InitConfirm ( Document document,
                           View view,
-                          char *label );
+                          STRING label );
 extern void OpenDocInNewWindow ( Document document,
                                  View view );
 extern void OpenDoc ( Document document,
@@ -48,8 +48,8 @@ extern void ShowToC ( Document document,
                       View view );
 extern void ShowMapAreas ( Document document,
                            View view );
-extern ThotBool NormalizeFile ( char *src,
-                               char *target );
+extern ThotBool NormalizeFile ( STRING src,
+                               STRING target );
 extern void SectionNumbering ( Document document,
                                View view );
 extern void MakeBook ( Document document,

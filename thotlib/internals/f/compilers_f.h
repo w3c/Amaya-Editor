@@ -6,11 +6,11 @@
 #define DLLEXPORT __declspec(dllexport)
 
 #ifdef __STDC__ 
-DLLEXPORT int APPmain (HWND, int, char**, int*);
-DLLEXPORT int PRSmain (HWND, int, char**, int*);
-DLLEXPORT int STRmain (HWND, int, char**, int*);
-DLLEXPORT int TRAmain (HWND, int, char**, int*);
-DLLEXPORT int CPPmain (HWND, int, char**, int*);
+DLLEXPORT int APPmain (HWND, int, STRING*, int*);
+DLLEXPORT int PRSmain (HWND, int, STRING*, int*);
+DLLEXPORT int STRmain (HWND, int, STRING*, int*);
+DLLEXPORT int TRAmain (HWND, int, STRING*, int*);
+DLLEXPORT int CPPmain (HWND, int, STRING*, int*);
 #else  /* __STDC__ */
 DLLEXPORT int APPmain ();
 DLLEXPORT int PRSmain ();

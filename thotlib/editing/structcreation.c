@@ -1002,7 +1002,7 @@ PtrAbstractBox      pAbEl;
 		   case LtGraphics:
 		     pAb->AbLeafType = LtGraphics;
 		     pAb->AbShape = pEl->ElGraph;
-		     pAb->AbGraphAlphabet = 'G';
+		     pAb->AbGraphAlphabet = TEXT('G');
 		     break;
 		   default:
 		     break;
@@ -1078,7 +1078,7 @@ PtrAbstractBox      pAb;
 	     switch (pNewAttr->AeAttrType)
 		   {
 		      case AtNumAttr:
-			 usscanf (pAb->AbText->BuContent, "%d", &pNewAttr->AeAttrValue);
+			 usscanf (pAb->AbText->BuContent, TEXT("%d"), &pNewAttr->AeAttrValue);
 			 break;
 		      case AtTextAttr:
 			 if (pNewAttr->AeAttrText == NULL)
@@ -1295,7 +1295,7 @@ PtrSSchema          StructEl;
 	if (pAttr == NULL)
 	   pF = BackSearchTypedElem (pF, pEl->ElTypeNumber, pEl->ElStructSchema);
 	else
-	   pF = BackSearchAttribute (pF, pAttr->AeAttrNum, 0, "", pAttr->AeAttrSSchema);
+	   pF = BackSearchAttribute (pF, pAttr->AeAttrNum, 0, _EMPTYSTR_, pAttr->AeAttrSSchema);
 	CheckFirstReference (pF, pAttr, &stop, &pRef);
      }
    while (!stop);
@@ -1310,7 +1310,7 @@ PtrSSchema          StructEl;
 	     if (pAttr == NULL)
 		pF = FwdSearchTypedElem (pF, pEl->ElTypeNumber, pEl->ElStructSchema);
 	     else
-		pF = FwdSearchAttribute (pF, pAttr->AeAttrNum, 0, "", pAttr->AeAttrSSchema);
+		pF = FwdSearchAttribute (pF, pAttr->AeAttrNum, 0, _EMPTYSTR_, pAttr->AeAttrSSchema);
 	     CheckFirstReference (pF, pAttr, &stop, &pRef);
 	  }
 	while (!stop);
@@ -3241,7 +3241,7 @@ STRING              menuBuf;
 	/* copie le deuxieme mot */
 	if (*menuInd < MAX_TXT_LEN - 1 && word2[0] != EOS)
 	  {
-	     ustrcat (&menuBuf[*menuInd - 1], " ");
+	     ustrcat (&menuBuf[*menuInd - 1], TEXT(" "));
 	     j = ustrlen (word2) + 1;
 	     if (j >= MAX_TXT_LEN - *menuInd)
 		j = MAX_TXT_LEN - *menuInd;
@@ -3253,7 +3253,7 @@ STRING              menuBuf;
 	/* copie le troisieme mot */
 	if (*menuInd < MAX_TXT_LEN - 1 && word3[0] != EOS)
 	  {
-	     ustrcat (&menuBuf[*menuInd - 1], " ");
+	     ustrcat (&menuBuf[*menuInd - 1], TEXT(" "));
 	     j = ustrlen (word3) + 1;
 	     if (j >= MAX_TXT_LEN - *menuInd)
 		j = MAX_TXT_LEN - *menuInd;
@@ -3426,7 +3426,7 @@ PtrDocument         pDoc;
 		 action = InsertAfter;
 	      /* envoie l'evenement item a creer */
 	      if (TteItemMenuInsert (pSS, typeNum, pEl, pDoc, action))
-		 if (AddInsertMenuItem (typeName, N, "", prevMenuInd, nItems,
+		 if (AddInsertMenuItem (typeName, N, _EMPTYSTR_, prevMenuInd, nItems,
 					menuInd, menuBuf))
 		   {
 		      if (before)
@@ -3474,7 +3474,7 @@ PtrDocument         pDoc;
 					     {
 						GetExternalTypeName (pSS, typeNum, typeName);
 
-						if (!AddInsertMenuItem (typeName, N, "",
+						if (!AddInsertMenuItem (typeName, N, _EMPTYSTR_,
 							prevMenuInd, nItems,
 							  menuInd, menuBuf))
 						   /* menu sature' */
@@ -3708,7 +3708,7 @@ ThotBool           *ret;
 
 	if (ok)
 	   if (AddInsertMenuItem (TtaGetMessage (LIB, TMSG_WITHIN_SEL),
-			  "", "", &prevMenuInd, &nItems, &menuInd, menuBuf))
+			  _EMPTYSTR_, _EMPTYSTR_, &prevMenuInd, &nItems, &menuInd, menuBuf))
 	     {
 		Action[nItems - 1] = InsertWithin;
 		UserAction[nItems - 1] = InsertWithin;
@@ -3751,7 +3751,7 @@ ThotBool           *ret;
 
 				 /* on ajoute une entree pour creer l'element associe */
 				 if (AddInsertMenuItem (firstSel->ElStructSchema->
-							SsRule[refTypeNum - 1].SrName, TtaGetMessage (LIB, TMSG_TO_CREATE), "",
+							SsRule[refTypeNum - 1].SrName, TtaGetMessage (LIB, TMSG_TO_CREATE), _EMPTYSTR_,
 				  &prevMenuInd, &nItems, &menuInd, menuBuf))
 				   {
 				      Action[nItems - 1] = ReferredElem;

@@ -362,8 +362,8 @@ Restruct resctx;
   /* creer la pile de massif a vide */
   TopMS = 0;
   ClusterStack = (TyClusterStack *) TtaGetMemory((LgMax + 1) * sizeof (TyClusterStack));
-  ClusterStack[0].Emp = ' ';
-  ClusterStack[0].Inverse = ' ';
+  ClusterStack[0].Emp = SPACE;
+  ClusterStack[0].Inverse = SPACE;
   ClusterStack[0].Retour = -1;
   ClusterStack[0].Compteur = -1;
 

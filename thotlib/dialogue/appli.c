@@ -17,8 +17,8 @@
 /*
  * Handle application frames
  *
- * Author: I. Vatton (INRIA)
- *         R. Guetari (W3C/INRIA): Windows NT and Window 95 Routines
+ * Authors: I. Vatton (INRIA)
+ *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  *
  */
 
@@ -212,7 +212,7 @@ LPTOOLTIPTEXT lpttt;
 
    /* Check for valid parameter */
    if (iButton > cMax)
-      pString = "Invalid Button Index";
+      pString = _InvalidButtonNdxMSG_;
    else {
        /* Cycle through to requested string */
        pString = &szTbStrings [0] ;
@@ -1188,7 +1188,7 @@ CONST STRING        name;
 #endif /* __STDC__ */
 {
    int                 frame;
-   CHAR_T                s[1024];
+   STRING              s = TtaAllocString (1024);
 
 #  ifndef _WINDOWS
    Arg                 args[MAX_ARGS];
@@ -1218,7 +1218,7 @@ CONST STRING        name;
 	       }
 	     else
 #               ifdef _WINDOWS
-		ustrncpy (&s[0], text, sizeof (s));
+		ustrncpy (&s[0], text, 1024);
 #               else  /* !_WINDOWS */
 		title_string = XmStringCreateSimple (text);
 #               endif /* !_WINDOWS */
@@ -1234,6 +1234,7 @@ CONST STRING        name;
 #            endif /* _WINDOWS */
 	    }
      }
+   TtaFreeMemory (s);
 }
 
 
@@ -1317,12 +1318,12 @@ LPARAM      lParam;
                    InitToolTip (ToolBar) ;	
 
                 /* Create status bar  */
-                StatusBar = CreateStatusWindow (dwStatusBarStyles, "", hwnd, 2) ;
+                StatusBar = CreateStatusWindow (dwStatusBarStyles, _EMPTYSTR_, hwnd, 2) ;
                 ShowWindow (StatusBar, SW_SHOWNORMAL);
                 UpdateWindow (StatusBar);
 
                 /* Create client window */
-                hwndClient = CreateWindowEx (WS_EX_CLIENTEDGE, "ClientWndProc", NULL,
+                hwndClient = CreateWindowEx (WS_EX_CLIENTEDGE, _ClientWndProcCST_, NULL,
                                              WS_CHILD | WS_VISIBLE | WS_BORDER, 0, 0, 0, 0,
                                              hwnd, (HMENU) 2, hInstance, NULL) ;
                 ShowWindow (hwndClient, SW_SHOWNORMAL);
@@ -1358,6 +1359,7 @@ LPARAM      lParam;
                 SendMessage (FrRef [frame], WM_KEYDOWN, wParam, lParam);
                 return 0;
 
+           case WM_IME_CHAR:
            case WM_CHAR:
                 SendMessage (FrRef [frame], WM_CHAR, wParam, lParam);
                 return 0;
@@ -1393,7 +1395,7 @@ LPARAM      lParam;
                 if (!viewClosed) {
                    FrameToView (frame, &doc, &view);
                    viewName = TtaGetViewName (doc, view);
-                   if (!ustrcmp (viewName, "Formatted_view"))
+                   if (!ustrcmp (viewName, _FormattedViewCST_))
                       TtcCloseDocument (doc, view);
                    else
                        TtcCloseView (doc, view);
@@ -1937,7 +1939,7 @@ void               *event;
 	     {
 	       TtaSetDialoguePosition ();
 	       if (ThotLocalActions[T_insertpaste] != NULL)
-		 (*ThotLocalActions[T_insertpaste]) (TRUE, FALSE, 'R', &ok);
+		 (*ThotLocalActions[T_insertpaste]) (TRUE, FALSE, TEXT('R'), &ok);
 	     }
 	   
 	 default:

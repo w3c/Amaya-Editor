@@ -77,7 +77,7 @@ STRING              s1, s2;
 static PathBuffer   DirectoryName;
 static Name         SchStrImport;
 static int          NbDocSuffix = 1;
-static char         tabDocSuffix [10][10] = {".PIV", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0", "\0"};
+static CHAR_T       tabDocSuffix [10][10] = {PIV_EXT, _EMPTYSTR_, _EMPTYSTR_, _EMPTYSTR_, _EMPTYSTR_, _EMPTYSTR_, _EMPTYSTR_, _EMPTYSTR_, _EMPTYSTR_, _EMPTYSTR_};
 static CHAR_T       docSuffix [5];
 /* static PathBuffer DirectoryDocImport; */
 static Name         NewSchemaName;
@@ -273,7 +273,7 @@ static void BuildImportForm()
 	TtaNewSelector (NumSelectImportClass, NumFormImportClass,
 			TtaGetMessage (LIB, TMSG_IMPORT_DOC_TYPE), nbItems, bufMenu, length, NULL, TRUE, FALSE);
 	/* initialise le selecteur sur sa premiere entree */
-	TtaSetSelector (NumSelectImportClass, 0, "");
+	TtaSetSelector (NumSelectImportClass, 0, _EMPTYSTR_);
      }
 }
 /*----------------------------------------------------------------------
@@ -339,8 +339,8 @@ STRING              data;
    CHAR_T              bufDir[MAX_PATH];
    CHAR_T              URL_DIR_SEP;
 
-   if (typedata == STRING_DATA && data && ustrchr (data, '/'))
-     URL_DIR_SEP = '/';
+   if (typedata == STRING_DATA && data && ustrchr (data, TEXT('/')))
+     URL_DIR_SEP = TEXT('/');
    else 
      URL_DIR_SEP = DIR_SEP;
 
@@ -457,7 +457,7 @@ STRING              data;
 		  /* le fichier existe, on ouvre le document */
 		 {
 		   /* charge le document */
-		   if ((!ustrcmp (docSuffix, ".xml")) && 
+		   if ((!ustrcmp (docSuffix, XML_EXT)) && 
 		       ThotLocalActions[T_xmlparsedoc] != NULL)
                       LoadXmlDocument (&pDoc, docName);
                    else
@@ -470,7 +470,7 @@ STRING              data;
 		 {
 		    /* cherche s'il existe un fichier de ce nom, sans extension */
 		    ustrncpy (DirectoryName, DocumentPath, MAX_PATH);
-		    MakeCompleteName (DefaultDocumentName, "", DirectoryName, docName, &i);
+		    MakeCompleteName (DefaultDocumentName, _EMPTYSTR_, DirectoryName, docName, &i);
 		    if (TtaFileExist (docName) == 0)
 		       /* le fichier n'existe pas */
 		       TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), DefaultDocumentName);
@@ -521,7 +521,7 @@ View                view;
      }
    if (ThotLocalActions[T_xmlparsedoc] != NULL && NbDocSuffix <= 1)
     {
-      ustrcpy (tabDocSuffix[NbDocSuffix++], ".xml");
+      ustrcpy (tabDocSuffix[NbDocSuffix++], XML_EXT);
     }
 
    /* Creation du Formulaire Ouvrir */
@@ -541,8 +541,8 @@ View                view;
      }
    else if (DirectoryName[0] != EOS)
      {
-       if (ustrchr (DirectoryName, '/'))
-	 URL_DIR_SEP = '/';
+       if (ustrchr (DirectoryName, TEXT('/')))
+	 URL_DIR_SEP = TEXT('/');
        else 
 	 URL_DIR_SEP = DIR_SEP;
 
@@ -575,7 +575,7 @@ View                view;
    	length = 0;
    	for (entry=0; entry<NbDocSuffix; entry++)
      	  {
-            usprintf (&bufDir[length], "T%s", tabDocSuffix[entry]+1);
+            usprintf (&bufDir[length], TEXT("T%s"), tabDocSuffix[entry]+1);
             length += ustrlen (&bufDir[length])+1;
           }
         TtaNewSubmenu (NumToggleDocTypeToOpen, NumFormOpenDoc, 0, TtaGetMessage (LIB, TMSG_DOCUMENT_FORMAT),

@@ -1236,10 +1236,10 @@ Attribute          *attributeFound;
    if (ok)
      {
 	if (scope == SearchBackward)
-	   pEl = BackSearchAttribute ((PtrElement) element, searchedAttribute.AttrTypeNum, 0, "",
+	   pEl = BackSearchAttribute ((PtrElement) element, searchedAttribute.AttrTypeNum, 0, _EMPTYSTR_,
 			      (PtrSSchema) (searchedAttribute.AttrSSchema));
 	else
-	   pEl = FwdSearchAttribute ((PtrElement) element, searchedAttribute.AttrTypeNum, 0, "",
+	   pEl = FwdSearchAttribute ((PtrElement) element, searchedAttribute.AttrTypeNum, 0, _EMPTYSTR_,
 			      (PtrSSchema) (searchedAttribute.AttrSSchema));
 	if (pEl != NULL)
 	   if (scope == SearchInTree)

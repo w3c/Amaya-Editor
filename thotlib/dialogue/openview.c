@@ -7,8 +7,8 @@
 
 /*
  *
- * Author: I. Vatton (INRIA)
- *         R. Guetari - Adaptation to Windows platforms.
+ * Authors: I. Vatton (INRIA)
+ *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  *
  */
 
@@ -113,7 +113,7 @@ View                view;
 	     src = &buf[0];
 	     for (k = 1; k <= nbItems; k++)
 	       {
-		  ustrcpy (dest, "B");
+		  ustrcpy (dest, _B_);
 		  dest++;
 		  l = ustrlen (src);
 		  ustrcpy (dest, src);

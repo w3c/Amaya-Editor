@@ -43,7 +43,7 @@ static int AHTFWriter_flush ( HTStream * me );
 static int AHTFWriter_put_character ( HTStream * me,
                                               char c );
 static int AHTFWriter_put_string ( HTStream * me,
-                                           const char *s );
+                                           const char* s );
 static int AHTFWriter_write ( HTStream * me,
                                       const char *s,
                                       int l );
@@ -68,7 +68,7 @@ static int         AHTFWriter_put_character (HTStream * me, char c)
 #else				/* __STDC__ */
 static int         AHTFWriter_put_character (me, c)
 Stream             *me;
-char                c;
+char               c;
 
 #endif /* __STDC__ */
 {
@@ -95,7 +95,7 @@ char                c;
    if (reqcont && reqcont->incremental_cbf)
      (*reqcont->incremental_cbf)
        (reqcont->docid, 1, reqcont->urlName, reqcont->outputfile,  
-	reqcont->content_type, &c, 1, reqcont->context_icbf);
+	   reqcont->content_type, &c, 1, reqcont->context_icbf);
 
    return status;
 }
@@ -104,11 +104,11 @@ char                c;
   AHTFWriter_put_string
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int         AHTFWriter_put_string (HTStream * me, const char *s)
+static int         AHTFWriter_put_string (HTStream * me, const char* s)
 #else  /* __STDC__ */
 static int         AHTFWriter_put_string (me, s)
 HTStream           *me;
-const char         *s;
+const char*        s;
 #endif /* __STDC__ */
 {
    int                 status = HT_OK;

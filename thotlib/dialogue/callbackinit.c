@@ -189,7 +189,7 @@ STRING              name;
    PtrEventsSet        pevset;
 
    /* Find it */
-   if (ustrcmp (name, "EDITOR") == 0)
+   if (ustrcmp (name, _EDITORCST_) == 0)
      /* it is the global set */
      return(EditorEvents);
    else
@@ -231,7 +231,7 @@ STRING              name;
    newEvSet->EvSNext = NULL;
 
    /* Link it */
-   if (ustrcmp (name, "EDITOR") == 0)
+   if (ustrcmp (name, _EDITORCST_) == 0)
      {
 	/* it is the global set */
 	EditorEvents = newEvSet;

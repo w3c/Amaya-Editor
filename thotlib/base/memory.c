@@ -20,6 +20,7 @@
  * Authors: V. Quint (INRIA)
  *          I. Vatton (INRIA) - Boxes and lines
  *          H. Richy (IRISA) - Dictionaries
+ *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  *
  */
 
@@ -164,10 +165,10 @@ STRING             TtaAllocString (n)
 unsigned int       n;
 #endif /* __STDC__ */
 {
-  if (n == 0)
-    n++;
+    if (n == 0)
+       n++;
 
-  return ((STRING) malloc ((size_t) n * sizeof (CHAR_T)));
+    return ((STRING) malloc ((size_t) n * sizeof (CHAR_T)));
 }
 
 /*----------------------------------------------------------------------
@@ -200,7 +201,7 @@ unsigned int        n;
 
   if (!res)
 #ifdef _WINDOWS
-    MessageBox (NULL, TtaGetMessage (LIB, TMSG_NOT_ENOUGH_MEMORY),"Amaya: fatal error", MB_ICONERROR);
+    MessageBox (NULL, TtaGetMessage (LIB, TMSG_NOT_ENOUGH_MEMORY), TEXT("Amaya: fatal error"), MB_ICONERROR);
 #else  /* _WINDOWS */
   TtaDisplaySimpleMessage (FATAL, LIB, TMSG_NOT_ENOUGH_MEMORY);
 #endif /* _WINDOWS */

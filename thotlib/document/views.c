@@ -574,13 +574,13 @@ STRING              newName;
    ustrncpy (pDoc->DocIdent, newName, MAX_DOC_IDENT_LEN);
    pDoc->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
    len = ustrlen (newName);
-   if (ustrcmp (newName + len - 4, ".PIV") == 0)
+   if (ustrcmp (newName + len - 4, PIV_EXT) == 0)
      {
 	buffer[len - 4] = EOS;
 	pDoc->DocDName[len - 4] = EOS;
 	pDoc->DocIdent[len - 4] = EOS;
      }
-   ustrcat (buffer, "  ");
+   ustrcat (buffer, TEXT("  "));
    len = ustrlen (buffer);
    /* traite les vues de l'arbre principal */
    for (view = 0; view < MAX_VIEW_DOC; view++)
@@ -1391,7 +1391,7 @@ int                *nItems;
 		  if (AllViews[j].VdOpen)
 		    {
 		       /* Marque par une etoile a la fin du nom que la vue est deja ouverte */
-		       buffer[i - 1] = '*';
+		       buffer[i - 1] = TEXT('*');
 		       buffer[i] = EOS;
 		       i++;
 		    }

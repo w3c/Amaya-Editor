@@ -12,7 +12,7 @@
  * requests.
  *
  * Author: J Kahan
- *         J. K./R. G. Windows NT/95 routines
+ *         J. K./R. Guetari. Windows NT/95 routines
  *
  */
 #ifndef AMAYA_JAVA
@@ -178,8 +178,8 @@ int status;
   if (me->reqStatus == HT_END)
     {
       if (AmayaIsAlive ()  && me->terminate_cbf)
-	(*me->terminate_cbf) (me->docid, 0, me->urlName, me->outputfile,
-			      me->content_type, me->context_tcbf);
+	(*me->terminate_cbf) (me->docid, 0, ISO2WideChar(me->urlName), ISO2WideChar(me->outputfile),
+			      ISO2WideChar(me->content_type), me->context_tcbf);
 
     }
   else if (me->reqStatus == HT_ABORT)
@@ -187,11 +187,11 @@ int status;
        button. We erase the incoming file, if it exists */
     {
       if (AmayaIsAlive () && me->terminate_cbf)
-	(*me->terminate_cbf) (me->docid, -1, me->urlName, me->outputfile,
-			      me->content_type, me->context_tcbf);
+	(*me->terminate_cbf) (me->docid, -1, ISO2WideChar(me->urlName), ISO2WideChar(me->outputfile),
+			      ISO2WideChar(me->content_type), me->context_tcbf);
       if (me->outputfile && me->outputfile[0] != EOS)
 	{
-	  TtaFileUnlink (me->outputfile);
+	  TtaFileUnlink (ISO2WideChar (me->outputfile));
 	  me->outputfile[0] = EOS;
 	}
     }
@@ -199,12 +199,12 @@ int status;
     {
       /* there was an error */
       if (AmayaIsAlive && me->terminate_cbf)
-	(*me->terminate_cbf) (me->docid, -1, me->urlName, me->outputfile,
-			      me->content_type, me->context_tcbf);
+	(*me->terminate_cbf) (me->docid, -1, ISO2WideChar(me->urlName), ISO2WideChar(me->outputfile),
+			      ISO2WideChar(me->content_type), me->context_tcbf);
       
       if (me->outputfile && me->outputfile[0] != EOS)
 	{
-	  TtaFileUnlink (me->outputfile);
+	  TtaFileUnlink (ISO2WideChar (me->outputfile));
 	  me->outputfile[0] = EOS;
 	}
     }
@@ -255,12 +255,12 @@ HTAlertPar         *reply;
        if (!(me->output)
 	   && (me->output != stdout) 
 	   && me->outputfile
-	   &&  (me->output = fopen (me->outputfile, "wb")) == NULL) {
+	   &&  (me->output = ufopen (ISO2WideChar (me->outputfile), _WBinaryMODE_)) == NULL) {
 	 /* the request is associated with a file */
 	 me->outputfile[0] = EOS;	/* file could not be opened */
 	 TtaSetStatus (me->docid, 1, 
 		       TtaGetMessage (AMAYA, AM_CANNOT_CREATE_FILE),
-		       me->outputfile);
+		       ISO2WideChar(me->outputfile));
 	 me->reqStatus = HT_ERR;
 
 	 if (me->error_html)

@@ -120,7 +120,7 @@ STRING              data;
       if (CSSpath != NULL)
 	TtaFreeMemory (CSSpath);
       length = ustrlen (data);
-      CSSpath = TtaGetMemory (length + 1);
+      CSSpath = TtaAllocString (length + 1);
       ustrcpy (CSSpath, data);      
       break;
     default:
@@ -201,13 +201,13 @@ STRING              s;
 	      if (css->url)
 		{
 		  len = ustrlen (css->url);
-		  CSSpath = TtaGetMemory (len + 1);
+		  CSSpath = TtaAllocString (len + 1);
 		  ustrcpy (CSSpath, css->url);
 		}
 	      else
 		{
 		  len = ustrlen (css->localName);
-		  CSSpath = TtaGetMemory (len + 1);
+		  CSSpath = TtaAllocString (len + 1);
 		  ustrcpy (CSSpath, css->localName);
 		}
 	      select = i;

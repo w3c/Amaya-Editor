@@ -850,7 +850,7 @@ int                *nChars;
 			     i = box1->BxFirstChar - 1;
 			     still = TRUE;
 			     while (still)
-				if (adbuff->BuContent[i] == ' ')
+				if (adbuff->BuContent[i] == SPACE)
 				  {
 				     /* a trouve le blanc */
 				     still = FALSE;

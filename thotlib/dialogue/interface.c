@@ -8,9 +8,9 @@
 /*
  * document windows API
  *
- * Author: I. Vatton (INRIA)
- *         D. Veillard (W3C/INRIA) Multikey + Event rewrite
- *         R. Guetari (W3C/INRIA) - Windows routines.
+ * Authors: I. Vatton (INRIA)
+ *          D. Veillard (W3C/INRIA) Multikey + Event rewrite
+ *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  *
  */
 
@@ -600,34 +600,34 @@ ThotComposeStatus  *status;	/* not implemented */
       switch (sym)
 	{
 	case XK_KP_Space:
-	  buffer[0] = ' ';
+	  buffer[0] = SPACE;
 	  return (1);
 	case XK_KP_Enter:
-	  buffer[0] = '\r';
+	  buffer[0] = __CR__;
 	  return (1);
 	case XK_KP_Equal:
-	  buffer[0] = '=';
+	  buffer[0] = TEXT('=');
 	  return (1);
 	case XK_KP_Multiply:
-	  buffer[0] = '*';
+	  buffer[0] = TEXT('*');
 	  return (1);
 	case XK_KP_Add:
-	  buffer[0] = '+';
+	  buffer[0] = TEXT('+');
 	  return (1);
 	case XK_KP_Separator:
-	  buffer[0] = ',';
+	  buffer[0] = TEXT(',');
 	  return (1);
 	case XK_KP_Subtract:
-	  buffer[0] = '-';
+	  buffer[0] = TEXT('-');
 	  return (1);
 	case XK_KP_Decimal:
-	  buffer[0] = '.';
+	  buffer[0] = TEXT('.');
 	  return (1);
 	case XK_KP_Divide:
-	  buffer[0] = '/';
+	  buffer[0] = TEXT('/');
 	  return (1);
 	case XK_Return:
-	  buffer[0] = '\n';
+	  buffer[0] = EOL;
 	  return (1);
 	}
     }
@@ -679,8 +679,8 @@ void                TtaInstallMultiKey ()
   STRING ptr;
 
 # ifdef _WINDOWS 
-  ptr = TtaGetEnvString ("ENABLE_MULTIKEY");
-  if (ptr != NULL && !ustrcasecmp (ptr, "yes"))
+  ptr = TtaGetEnvString (_ENABLEMULTIKEY_EVAR_);
+  if (ptr != NULL && !ustrcasecmp (ptr, TEXT("yes")))
     Enable_Multikey = TRUE;
   else
     Enable_Multikey = FALSE;

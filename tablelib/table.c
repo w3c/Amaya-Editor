@@ -24,7 +24,6 @@
       Traitements specifiques a la structure Tableau             
   ----------------------------------------------------------------------*/
 
-#include "ustring.h"
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"

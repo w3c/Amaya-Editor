@@ -14,8 +14,8 @@
 /*
  * Handle windows and menu bars of Thot applications
  *
- * Author: I. Vatton (INRIA)
- *         R. Guetari (W3C/INRIA): Windows NT and Window 95 routines
+ * Authors: I. Vatton (INRIA)
+ *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  *
  */
 
@@ -278,7 +278,11 @@ int                 number;
      {
 	i = 1;
 	while (i < appArgc - 1)
+#      ifdef _WINDOWS
+	   if (ustrcmp (appArgv[i], TEXT("-display")) != 0)
+#      else  /* !_WINDOWS */
 	   if (ustrcmp (appArgv[i], "-display") != 0)
+#      endif /* _WINDOWS */
 	      i++;
 	   else
 	     {
@@ -314,8 +318,8 @@ int                 number;
 #  endif /* !_WINDOWS */
 
    alphabet = TtaGetAlphabet (TtaGetDefaultLanguage ());
-   FontIdentifier (alphabet, 'H', 0, MenuSize, UnPoint, text, namef1);
-   FontIdentifier (alphabet, 'H', 1, MenuSize, UnPoint, text, namef2);
+   FontIdentifier (alphabet, TEXT('H'), 0, MenuSize, UnPoint, text, namef1);
+   FontIdentifier (alphabet, TEXT('H'), 1, MenuSize, UnPoint, text, namef2);
    TtaChangeDialogueFonts (namef1, namef2);
 
    /* reserve les menus de Thot */
@@ -336,7 +340,11 @@ int                 number;
 	   MenuActionList[FreeMenuAction].ActionActive[i] = TRUE;
      }
    for (i = FreeMenuAction;i < MaxMenuAction;i++) {
+#   ifdef _WINDOWS 
+	MenuActionList[i].ActionName = _EMPTYSTR_;
+#   else  /* !_WINDOWS */
 	MenuActionList[i].ActionName = "";
+#   endif /* _WINDOWS */
 	MenuActionList[i].Call_Action = NULL;
 	MenuActionList[i].User_Action = NULL;
 	MenuActionList[i].ActionEquiv = NULL;
@@ -472,7 +480,7 @@ Proc                procedure;
    if (FreeMenuAction < MaxMenuAction && lg != 0)
      {
 	/* Alloue une chaine de caractere pour le nom de l'action */
-	ptr = TtaGetMemory (lg + 1);
+	ptr = TtaAllocString (lg + 1);
 	ustrcpy (ptr, actionName);
 	MenuActionList[FreeMenuAction].ActionName = ptr;
 	MenuActionList[FreeMenuAction].Call_Action = procedure;
@@ -534,7 +542,7 @@ void               *arg;
    if (FreeMenuAction < MaxMenuAction && lg != 0)
      {
 	/* Dup' the action name string */
-	ptr = TtaGetMemory (lg + 1);
+	ptr = TtaAllocString (lg + 1);
 	ustrcpy (ptr, actionName);
 	MenuActionList[FreeMenuAction].ActionName = ptr;
 	MenuActionList[FreeMenuAction].Call_Action = (Proc) NULL;
@@ -599,7 +607,7 @@ STRING              schemaName;
 	  {
 	     /* creation et initialisation du contexte specifique au schema */
 	     ptrschema = (SchemaMenu_Ctl *) TtaGetMemory (sizeof (SchemaMenu_Ctl));
-	     ptrschema->SchemaName = TtaGetMemory (ustrlen (schemaName) + 1);
+	     ptrschema->SchemaName = TtaAllocString (ustrlen (schemaName) + 1);
 	     ustrcpy (ptrschema->SchemaName, schemaName);
 	     ptrschema->SchemaMenu = NULL;
 	     ptrschema->NextSchema = NULL;
@@ -620,7 +628,7 @@ STRING              schemaName;
 		  /* creation et initialisation du contexte specifique au schema */
 		  ptrschema->NextSchema = (SchemaMenu_Ctl *) TtaGetMemory (sizeof (SchemaMenu_Ctl));
 		  ptrschema = ptrschema->NextSchema;
-		  ptrschema->SchemaName = TtaGetMemory (ustrlen (schemaName) + 1);
+		  ptrschema->SchemaName = TtaAllocString (ustrlen (schemaName) + 1);
 		  ustrcpy (ptrschema->SchemaName, schemaName);
 		  ptrschema->SchemaMenu = NULL;
 		  ptrschema->NextSchema = NULL;
@@ -664,11 +672,11 @@ STRING              menuName;
    newmenu->MenuAttr = FALSE;
    newmenu->MenuSelect = FALSE;
    newmenu->MenuHelp = FALSE;
-   if (!ustrcmp (menuName, "MenuAttribute"))
+   if (!ustrcmp (menuName, _MenuAttributeCST_))
       newmenu->MenuAttr = TRUE;
-   else if (!ustrcmp (menuName, "MenuSelection"))
+   else if (!ustrcmp (menuName, _MenuSelectionCST_))
       newmenu->MenuSelect = TRUE;
-   else if (!ustrcmp (menuName, "MenuHelp"))
+   else if (!ustrcmp (menuName, _MenuHelpCST_))
       newmenu->MenuHelp = TRUE;
 
    /* creation et initialisation de la table des items */
@@ -677,7 +685,7 @@ STRING              menuName;
      {
 	ptr[i].ItemID = -1;
 	ptr[i].ItemAction = -1;
-	ptr[i].ItemType = ' ';
+	ptr[i].ItemType = SPACE;
      }
    newmenu->ItemsList = ptr;
    newmenu->NextMenu = NULL;
@@ -713,7 +721,7 @@ STRING              menuName;
 		 {
 		    /* creation et initialisation du contexte specifique au schema */
 		    ptrschema = (SchemaMenu_Ctl *) TtaGetMemory (sizeof (SchemaMenu_Ctl));
-		    ptrschema->SchemaName = TtaGetMemory (ustrlen (schemaName) + 1);
+		    ptrschema->SchemaName = TtaAllocString (ustrlen (schemaName) + 1);
 		    ustrcpy (ptrschema->SchemaName, schemaName);
 		    ptrschema->SchemaMenu = newmenu;
 		    ptrschema->NextSchema = NULL;
@@ -735,7 +743,7 @@ STRING              menuName;
 			 /* creation et initialisation du contexte specifique au schema */
 			 ptrschema->NextSchema = (SchemaMenu_Ctl *) TtaGetMemory (sizeof (SchemaMenu_Ctl));
 			 ptrschema = ptrschema->NextSchema;
-			 ptrschema->SchemaName = TtaGetMemory (ustrlen (schemaName) + 1);
+			 ptrschema->SchemaName = TtaAllocString (ustrlen (schemaName) + 1);
 			 ustrcpy (ptrschema->SchemaName, schemaName);
 			 ptrschema->SchemaMenu = newmenu;
 			 ptrschema->NextSchema = NULL;
@@ -814,7 +822,7 @@ int                 itemsNumber;
 	/* recherche l'item dans le menu */
 	ptrItem = ptrmenu->ItemsList;
 	j = 0;
-	while (j < ptrmenu->ItemsNb && ptrItem[j].ItemType != ' ')
+	while (j < ptrmenu->ItemsNb && ptrItem[j].ItemType != SPACE)
 	   j++;
 	if (j < ptrmenu->ItemsNb)
 	  {
@@ -833,14 +841,14 @@ int                 itemsNumber;
 	       {
 		  ptr[i].ItemID = -1;
 		  ptr[i].ItemAction = -1;
-		  ptr[i].ItemType = ' ';
+		  ptr[i].ItemType = SPACE;
 	       }
 	     newmenu->ItemsList = ptr;
 	     newmenu->NextMenu = NULL;
 	     /* relie le sous-menu a l'item */
 	     ptrItem[j].SubMenu = newmenu;
 	     ptrItem[j].ItemID = itemID;
-	     ptrItem[j].ItemType = 'M';
+	     ptrItem[j].ItemType = TEXT('M');
 	  }
      }
 }
@@ -916,7 +924,7 @@ CHAR_T                itemType;
    /* ajoute l'item dans le menu */
    i = 0;
    ptr = ptrmenu->ItemsList;
-   while (i < ptrmenu->ItemsNb && ptr[i].ItemType != ' ')
+   while (i < ptrmenu->ItemsNb && ptr[i].ItemType != SPACE)
       i++;
 
    if (i < ptrmenu->ItemsNb)
@@ -989,15 +997,15 @@ int                 frame;
 	/* Regarde si le texte des commandes ne deborde pas */
 	ptr = TtaGetMessage (THOT, ptritem[item].ItemID);
 	lg = ustrlen (ptr) + 1;
-	if (ptritem[item].ItemType == 'S' && i + 2 < 700)
+	if (ptritem[item].ItemType == TEXT('S') && i + 2 < 700)
 	  {
-	     ustrcpy (&string[i], "S");
+	     ustrcpy (&string[i], _S_);
 	     i += 2;
 	  }
 	else if (i + lg < 699)
 	  {
-	     if (ptritem[item].ItemType == 'D')
-		string[i] = 'B';
+	     if (ptritem[item].ItemType == TEXT('D'))
+		string[i] = TEXT('B');
 	     else
 		string[i] = ptritem[item].ItemType;
 	     ustrcpy (&string[i + 1], ptr);
@@ -1078,15 +1086,15 @@ int                 doc;
 	/* Regarde si le texte des commandes ne deborde pas */
 	ptr = TtaGetMessage (THOT, ptritem[item].ItemID);
 	lg = ustrlen (ptr) + 1;
-	if (ptritem[item].ItemType == 'S' && i + 2 < 700)
+	if (ptritem[item].ItemType == TEXT('S') && i + 2 < 700)
 	  {
-	     ustrcpy (&string[i], "S");
+	     ustrcpy (&string[i], _S_);
 	     i += 2;
 	  }
 	else if (i + lg < 699)
 	  {
-	     if (ptritem[item].ItemType == 'D')
-		string[i] = 'B';
+	     if (ptritem[item].ItemType == TEXT('D'))
+		string[i] = TEXT('B');
 	     else
 		string[i] = ptritem[item].ItemType;
 	     ustrcpy (&string[i + 1], ptr);
@@ -1099,7 +1107,7 @@ int                 doc;
 	/* traite le contenu de l'item de menu */
 	if (action != -1)
 	  {
-	     if (ptritem[item].ItemType == 'B' || ptritem[item].ItemType == 'T')
+	     if (ptritem[item].ItemType == TEXT('B') || ptritem[item].ItemType == TEXT('T'))
 	       {
 		  /* Active l'action correspondante pour cette fenetre */
 		  if (MenuActionList[action].ActionEquiv != NULL)
@@ -1113,19 +1121,19 @@ int                 doc;
 			 }
 		    }
 		  /* Is it the Paste command */
-		  if (!ustrcmp (MenuActionList[action].ActionName, "TtcPaste"))
+		  if (!ustrcmp (MenuActionList[action].ActionName, _TtcPasteCST_))
 		    {
 		      FrameTable[frame].MenuPaste = ref;
 		      FrameTable[frame].EntryPaste = item;
 		    }
 		  /* Is it the Undo command */
-		  if (!ustrcmp (MenuActionList[action].ActionName, "TtcUndo"))
+		  if (!ustrcmp (MenuActionList[action].ActionName, _TtcUndoCST_))
 		    {
 		      FrameTable[frame].MenuUndo = ref;
 		      FrameTable[frame].EntryUndo = item;
 		    }
 		  /* Is it the Redo command */
-		  if (!ustrcmp (MenuActionList[action].ActionName, "TtcRedo"))
+		  if (!ustrcmp (MenuActionList[action].ActionName, _TtcRedoCST_))
 		    {
 		      FrameTable[frame].MenuRedo = ref;
 		      FrameTable[frame].EntryRedo = item;
@@ -1159,7 +1167,7 @@ int                 doc;
 	action = ptritem[item].ItemAction;
 	if (action != -1)
 	  {
-	     if (ptritem[item].ItemType == 'M')
+	     if (ptritem[item].ItemType == TEXT('M'))
 	       {
 		  if (action != 0 && item < MAX_MENU)
 		     /* creation du sous-menu */
@@ -2138,7 +2146,7 @@ void                (*procedure) ();
 #                 else  /* _WINDOWS */
 		          currentFrame = frame;
                   GetClientRect (FrMainRef [frame], &rect);
-                  w = CreateWindow ("EDIT", "", WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER | ES_AUTOHSCROLL,
+                  w = CreateWindow (_EDITCST_, _EMPTYSTR_, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER | ES_AUTOHSCROLL,
                                     0, 0, 0, 0, FrMainRef[frame], (HMENU) i, hInstance, NULL);
 
                   FrameTable[frame].Text_Zone[i] = w;
@@ -2149,7 +2157,7 @@ void                (*procedure) ();
 				  else
 				     SetWindowLong (FrameTable[frame].Text_Zone[i], GWL_WNDPROC, (DWORD) textZoneProc);
 
-                  wLabel = CreateWindow ("STATIC", label, WS_CHILD | WS_VISIBLE | SS_LEFT, 
+                  wLabel = CreateWindow (_STATICCST_, label, WS_CHILD | WS_VISIBLE | SS_LEFT, 
                                          0, 0, 0, 0, FrMainRef[frame], (HMENU) (i + MAX_TEXTZONE), hInstance, NULL);
                   FrameTable[frame].Label[i] = wLabel;
 				  /* FrameTable[frame].showLogo = TRUE ; */
@@ -2482,8 +2490,8 @@ int                 doc;
 	     appLogo = (HBITMAP) LoadImage (hInstance, bmpID, IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
 #          endif /* 0 */
 
-	   Main_Wd = CreateWindowEx (0L, tszAppName,    /* window class name */
-				     tszAppName,	/* window caption    */
+	   Main_Wd = CreateWindowEx (0L, TEXT("Amaya"),    /* window class name */
+				     TEXT("Amaya"),	/* window caption    */
 				     WS_OVERLAPPEDWINDOW, /* window style            */
 				     X,	    /* initial x pos           */
 				     Y,	    /* initial y pos           */
@@ -2680,7 +2688,7 @@ int                 doc;
 	   XtAddCallback (hscrl, XmNtoTopCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
 	   XtAddCallback (hscrl, XmNtoBottomCallback, (XtCallbackProc) FrameHScrolled, (XtPointer) frame);
 #          else  /* _WINDOWS */
-	   hscrl = CreateWindow ("scrollbar", NULL, WS_CHILD | WS_VISIBLE | SBS_HORZ,
+	   hscrl = CreateWindow (_ScrollbarCST_, NULL, WS_CHILD | WS_VISIBLE | SBS_HORZ,
 				 0, 0, 0, 0, Main_Wd, (HMENU) frame, hInstance, NULL);
 	   
 	   SetScrollRange (hscrl, SB_CTL, 0, 100, FALSE);
@@ -2707,7 +2715,7 @@ int                 doc;
 	   XtAddCallback (vscrl, XmNtoTopCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
 	   XtAddCallback (vscrl, XmNtoBottomCallback, (XtCallbackProc) FrameVScrolled, (XtPointer) frame);
 #            else  /* _WINDOWS */
-	   vscrl = CreateWindow ("scrollbar", NULL, WS_CHILD | WS_VISIBLE | SBS_VERT,
+	   vscrl = CreateWindow (_ScrollbarCST_, NULL, WS_CHILD | WS_VISIBLE | SBS_VERT,
 				 0, 0, 0, 0, Main_Wd, (HMENU) (frame + 1), hInstance, NULL);
 	   
 	   SetScrollRange (vscrl, SB_CTL, 0, 100, FALSE);
@@ -2882,7 +2890,7 @@ int                 doc;
 	   title_string = XmStringCreateSimple (" ");
 	   XtSetArg (args[n], XmNlabelString, title_string);
 	   n++;
-	   i = CharacterWidth ('M', LargeFontDialogue) * 50;
+	   i = CharacterWidth (TEXT('M'), LargeFontDialogue) * 50;
 	   XtSetArg (args[n], XmNwidth, (Dimension) i);
 	   n++;
 	   FrameTable[frame].WdStatus = XmCreateLabel (row2, "Thot_MSG", args, n);
@@ -2919,7 +2927,7 @@ int                 doc;
 	   FrameTable[frame].WdFrame = w;
 
 	   /* get registry default values for zoom and visibility */
-	   zoomStr = TtaGetEnvString ("ZOOM");
+	   zoomStr = TtaGetEnvString (_ZOOMCST_);
 	   if (zoomStr == NULL)
 	     zoomVal = 0;
 	   else
@@ -2928,7 +2936,7 @@ int                 doc;
 	       if (zoomVal > 10 || zoomVal < -10)
 		 zoomVal = 0;
 	     }
-	   visiStr = TtaGetEnvString ("VISIBILITY");
+	   visiStr = TtaGetEnvString (_VISIBILITYCST_);
 	   if (visiStr == NULL)
 	     visiVal = 5;
 	   else
@@ -3005,7 +3013,7 @@ int                 frame;
 		    {
 		       action = ptr[item].ItemAction;
 		       if (action != -1
-			   && (ptr[item].ItemType == 'B' || ptr[item].ItemType == 'T'))
+			   && (ptr[item].ItemType == TEXT('B') || ptr[item].ItemType == TEXT('T')))
 			  /* Desactive l'action correspondante pour cette fenetre */
 			  MenuActionList[action].ActionActive[frame] = FALSE;
 		       item++;
@@ -3179,7 +3187,7 @@ int                *action;
 	       j = ptr[i].ItemAction;
 	       if (j == -1)
 		 i++;	/* separator */
-	       else if (ptr[i].ItemType == 'M')
+	       else if (ptr[i].ItemType == TEXT('M'))
 		 {
 		   /* search in that submenu */
 		   sm = i + 1;
@@ -3244,7 +3252,7 @@ ThotBool     on;
 #ifndef _WINDOWS 
   CHAR_T                fontname[100];
   CHAR_T                text[20];
-#else _WINDOWS
+#else /* _WINDOWS */
   HMENU               hMenu;
 #endif /* _WINDOWS */
   int                 view, assoc, frame;
@@ -3274,7 +3282,7 @@ ThotBool     on;
 		TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
 	      else
 		{
-		  FontIdentifier ('L', 'T', 2, 11, UnPoint, text, fontname);
+		  FontIdentifier (TEXT('L'), TEXT('T'), 2, 11, UnPoint, text, fontname);
 		  TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
 		}
 #endif /* _WINDOWS */
@@ -3301,7 +3309,7 @@ ThotBool     on;
 	    TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
 	  else
 	    {
-	      FontIdentifier ('L', 'T', 2, 11, UnPoint, text, fontname);
+	      FontIdentifier (TEXT('L'), TEXT('T'), 2, 11, UnPoint, text, fontname);
 	      TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
 	    }
 #endif /* _WINDOWS */
@@ -3324,7 +3332,7 @@ ThotBool     on;
 #ifndef _WINDOWS 
   CHAR_T                fontname[100];
   CHAR_T                text[20];
-#else _WINDOWS
+#else /* _WINDOWS */
   HMENU               hMenu;
 #endif /* _WINDOWS */
   int                 view, assoc, frame;
@@ -3354,7 +3362,7 @@ ThotBool     on;
 		TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
 	      else
 		{
-		  FontIdentifier ('L', 'T', 2, 11, UnPoint, text, fontname);
+		  FontIdentifier (TEXT('L'), TEXT('T'), 2, 11, UnPoint, text, fontname);
 		  TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
 		}
 #endif /* _WINDOWS */
@@ -3381,7 +3389,7 @@ ThotBool     on;
 	    TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
 	  else
 	    {
-	      FontIdentifier ('L', 'T', 2, 11, UnPoint, text, fontname);
+	      FontIdentifier (TEXT('L'), TEXT('T'), 2, 11, UnPoint, text, fontname);
 	      TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
 	    }
 #endif /* _WINDOWS */
@@ -3404,7 +3412,7 @@ ThotBool     on;
 #ifndef _WINDOWS 
   CHAR_T                fontname[100];
   CHAR_T                text[20];
-#else _WINDOWS
+#else /* _WINDOWS */
   HMENU               hMenu;
 #endif /* _WINDOWS */
   int                 frame;
@@ -3436,7 +3444,7 @@ ThotBool     on;
 		    TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
 		  else
 		    {
-		      FontIdentifier ('L', 'T', 2, 11, UnPoint, text, fontname);
+		      FontIdentifier (TEXT('L'), TEXT('T'), 2, 11, UnPoint, text, fontname);
 		      TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
 		    }
 #endif /* _WINDOWS */
@@ -3687,7 +3695,7 @@ int                 itemID;
 #ifndef _WINDOWS 
    CHAR_T                fontname[100];
    CHAR_T                text[20];
-#else _WINDOWS
+#else /* _WINDOWS */
    HMENU               hMenu;
 #endif /* _WINDOWS */
 
@@ -3721,7 +3729,7 @@ int                 itemID;
 	   TtaRedrawMenuEntry (ref, item, NULL, InactiveB_Color, 0);
 	 else
 	   {
-	     FontIdentifier ('L', 'T', 2, 11, UnPoint, text, fontname);
+	     FontIdentifier (TEXT('L'), TEXT('T'), 2, 11, UnPoint, text, fontname);
 	     TtaRedrawMenuEntry (ref, item, fontname, -1, 0);
 	   }
 #endif /* _WINDOWS */

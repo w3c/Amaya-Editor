@@ -2585,7 +2585,7 @@ int                 spaceDelta;
 		    else
 		      pViewSel->VsXPos += pViewSel->VsNSpaces;
 		    if (pViewSel->VsIndBox < pFirstBox->BxNChars
-			&& pViewSel->VsBuffer->BuContent[pViewSel->VsIndBuf - 1] == ' ')
+			&& pViewSel->VsBuffer->BuContent[pViewSel->VsIndBuf - 1] == SPACE)
 		      pViewSel->VsXPos -= spaceValue;
 		  }
 	      }

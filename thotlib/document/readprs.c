@@ -55,7 +55,7 @@ BinFile             file;
 
    if (!TtaReadByte (file, &c))
      {
-	c = ' ';
+	c = SPACE;
 	error = True;
      }
    switch (c)
@@ -166,7 +166,7 @@ BinFile             file;
 
    if (!TtaReadByte (file, &c))
      {
-	c = ' ';
+	c = SPACE;
 	error = True;
      }
    switch (c)
@@ -203,7 +203,7 @@ BinFile             file;
 
    if (!TtaReadByte (file, &c))
      {
-	c = ' ';
+	c = SPACE;
 	error = True;
      }
    switch (c)
@@ -245,7 +245,7 @@ BinFile             file;
 
    if (!TtaReadByte (file, &c))
      {
-	c = ' ';
+	c = SPACE;
 	error = True;
      }
    switch (c)
@@ -292,7 +292,7 @@ ThotBool           *repeat;
    *repeat = FALSE;
    if (!TtaReadByte (file, &c))
      {
-	c = ' ';
+	c = SPACE;
 	error = True;
      }
    switch (c)
@@ -394,7 +394,7 @@ BinFile             file;
 
    if (!TtaReadByte (file, &c))
      {
-	c = ' ';
+	c = SPACE;
 	error = True;
      }
    switch (c)
@@ -438,7 +438,7 @@ BinFile             file;
 
    if (!TtaReadByte (file, &c))
      {
-	c = ' ';
+	c = SPACE;
 	error = True;
      }
    switch (c)
@@ -540,7 +540,7 @@ BinFile             file;
 
    if (!TtaReadByte (file, &c))
      {
-	c = ' ';
+	c = SPACE;
 	error = True;
      }
    switch (c)
@@ -574,7 +574,7 @@ BinFile             file;
 
    if (!TtaReadByte (file, &c))
      {
-	c = ' ';
+	c = SPACE;
 	error = True;
      }
    switch (c)
@@ -633,7 +633,7 @@ BinFile             file;
 
    if (!TtaReadByte (file, &c))
      {
-	c = ' ';
+	c = SPACE;
 	error = True;
      }
    switch (c)
@@ -693,7 +693,7 @@ BinFile             file;
 
    if (!TtaReadByte (file, &c))
      {
-	c = ' ';
+	c = SPACE;
 	error = True;
      }
    switch (c)
@@ -736,7 +736,7 @@ BinFile             file;
 
    if (!TtaReadByte (file, &c))
      {
-	c = ' ';
+	c = SPACE;
 	error = True;
      }
    switch (c)
@@ -785,7 +785,7 @@ BinFile             file;
 
    if (!TtaReadByte (file, &c))
      {
-	c = ' ';
+	c = SPACE;
 	error = True;
      }
    switch (c)
@@ -846,7 +846,7 @@ BinFile             file;
 
    if (!TtaReadByte (file, &c))
      {
-	c = ' ';
+	c = SPACE;
 	error = True;
      }
    switch (c)
@@ -892,7 +892,7 @@ BinFile             file;
 
    if (!TtaReadByte (file, &c))
      {
-	c = ' ';
+	c = SPACE;
 	error = True;
      }
    switch (c)
@@ -932,7 +932,7 @@ BinFile             file;
 
    if (!TtaReadByte (file, &c))
      {
-	c = ' ';
+	c = SPACE;
 	error = True;
      }
    switch (c)
@@ -997,7 +997,7 @@ BinFile             file;
    CHAR_T                c;
 
    if (!TtaReadByte (file, &c))
-      c = ' ';
+      c = SPACE;
    switch (c)
 	 {
 	    case C_KIND_ELEMENT_TYPE:
@@ -1057,7 +1057,7 @@ BinFile             file;
    CHAR_T                c;
 
    if (!TtaReadByte (file, &c))
-      c = ' ';
+      c = SPACE;
    switch (c)
 	 {
 	    case C_COMP_CONST:
@@ -1311,7 +1311,7 @@ PtrSSchema          pSS;
    pPSch = NULL;
    /* compose le nom du fichier a ouvrir */
    ustrncpy (dirBuffer, SchemaPath, MAX_PATH);
-   MakeCompleteName (fileName, "PRS", dirBuffer, buf, &i);
+   MakeCompleteName (fileName, PRS_EXT2, dirBuffer, buf, &i);
 
    /* teste si le fichier existe */
    file = TtaReadOpen (buf);
@@ -1319,7 +1319,7 @@ PtrSSchema          pSS;
      {
 	/* message 'Fichier inaccessible' */
 	ustrncpy (buf, fileName, MAX_NAME_LENGTH);
-	ustrcat (buf, ".PRS");
+	ustrcat (buf, PRS_EXT);
 	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_MISSING_FILE), buf);
      }
    else

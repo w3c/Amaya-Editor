@@ -20,14 +20,20 @@ typedef unsigned int*   STRING;
 typedef unsigned int*   USTRING;
 
 #else  /* !__JIS__ */
-
+/*
 typedef unsigned short  CHAR_T;
 typedef unsigned short* PCHAR_T;
 typedef unsigned short  UCHAR_T;
 typedef unsigned short* PUCHAR_T;
 typedef unsigned short* STRING;
 typedef unsigned short* USTRING;
-
+*/
+typedef wchar_t  CHAR_T;
+typedef wchar_t* PCHAR_T;
+typedef wchar_t  UCHAR_T;
+typedef wchar_t* PUCHAR_T;
+typedef wchar_t* STRING;
+typedef wchar_t* USTRING;
 #endif /* __JIS__ */
 
 #else  /* _I18N_ */
@@ -49,7 +55,7 @@ extern int          ustrcmp      (const STRING, const STRING);
 extern int          ustrcoll     (const STRING, const STRING);
 extern STRING       ustrcpy      (STRING, const STRING);
 extern STRING       ustrdup      (const STRING);
-extern int          ustrlen      (const STRING);
+extern size_t       ustrlen      (const STRING);
 extern int          ustrncasecmp (STRING, const STRING, unsigned int);
 extern STRING       ustrncat     (STRING, const STRING, unsigned int);
 extern STRING       ustrncmp     (const STRING, const STRING, unsigned int);
@@ -65,7 +71,7 @@ extern int          ustrcmp      ();
 extern int          ustrcoll     ();
 extern STRING       ustrcpy      ();
 extern STRING       ustrdup      ();
-extern int          ustrlen      ();
+extern size_t       ustrlen      ();
 extern int          ustrncasecmp ();
 extern STRING       ustrncat     ();
 extern STRING       ustrncmp     ();

@@ -191,7 +191,7 @@ static void         Initialize ()
      }
    /* create the language attribute */
    pAttr = &pSSchema->SsAttribute[0];
-   ustrncpy (pAttr->AttrName, "Langue", MAX_NAME_LENGTH);
+   ustrncpy (pAttr->AttrName, TEXT("Langue"), MAX_NAME_LENGTH);
    pAttr->AttrOrigName[0] = '\0';
    pAttr->AttrGlobal = True;
    pAttr->AttrType = AtTextAttr;
@@ -200,25 +200,25 @@ static void         Initialize ()
    pSSchema->SsNRules = 0;
    /* first rules of the structure schema are those that define basic types */
    pRule = &pSSchema->SsRule[CharString];
-   InitBasicType (pRule, "TEXT_UNIT", CharString);
+   InitBasicType (pRule, TEXT("TEXT_UNIT"), CharString);
 
    pRule = &pSSchema->SsRule[GraphicElem];
-   InitBasicType (pRule, "GRAPHICS_UNIT", GraphicElem);
+   InitBasicType (pRule, TEXT("GRAPHICS_UNIT"), GraphicElem);
 
    pRule = &pSSchema->SsRule[Symbol];
-   InitBasicType (pRule, "SYMBOL_UNIT", Symbol);
+   InitBasicType (pRule, TEXT("SYMBOL_UNIT"), Symbol);
 
    pRule = &pSSchema->SsRule[Picture];
-   InitBasicType (pRule, "PICTURE_UNIT", Picture);
+   InitBasicType (pRule, TEXT("PICTURE_UNIT"), Picture);
 
    pRule = &pSSchema->SsRule[Refer];
-   InitBasicType (pRule, "REFERENCE_UNIT", Refer);
+   InitBasicType (pRule, TEXT("REFERENCE_UNIT"), Refer);
 
    pRule = &pSSchema->SsRule[PageBreak];
-   InitBasicType (pRule, "PAGE_BREAK", PageBreak);
+   InitBasicType (pRule, TEXT("PAGE_BREAK"), PageBreak);
 
    pRule = &pSSchema->SsRule[UnusedBasicType];
-   InitBasicType (pRule, "UNUSED", UnusedBasicType);
+   InitBasicType (pRule, TEXT("UNUSED"), UnusedBasicType);
 
    pSSchema->SsNRules = MAX_BASIC_TYPE;
    pSSchema->SsConstBuffer[0] = '\0';
@@ -2615,7 +2615,7 @@ static void         ListAssocElem ()
 		ustrncpy (pRule->SrName, pSSchema->SsRule[i].SrName, MAX_NAME_LENGTH - 2);
 		/* ... followed by 's' */
 		pRule->SrName[MAX_NAME_LENGTH - 2] = '\0';
-		ustrcat (pRule->SrName, "s");
+		ustrcat (pRule->SrName, TEXT("s"));
 		pRule->SrNDefAttrs = 0;
 		pRule->SrNLocalAttrs = 0;
 		pRule->SrNInclusions = 0;
@@ -2855,27 +2855,27 @@ char              **argv;
    COMPWnd = hwnd;
    compilersDC = GetDC (hwnd);
    _CY_ = *Y;
-   ustrcpy (msg, "Executing str ");
+   ustrcpy (msg, TEXT("Executing str "));
    for (ndx = 1; ndx < argc; ndx++) {
        ustrcat (msg, argv [ndx]);
-       ustrcat (msg, " ");
+       ustrcat (msg, TEXT(" "));
    }
    TtaDisplayMessage (INFO, msg);
 #  endif /* _WINDOWS */
 
    TtaInitializeAppRegistry (argv[0]);
-   (void *) TtaGetMessageTable ("libdialogue", TMSG_LIB_MSG_MAX);
-   COMPIL = TtaGetMessageTable ("compildialogue", COMP_MSG_MAX);
-   STR = TtaGetMessageTable ("strdialogue", STR_MSG_MAX);
+   (void *) TtaGetMessageTable (TEXT("libdialogue"), TMSG_LIB_MSG_MAX);
+   COMPIL = TtaGetMessageTable (TEXT("compildialogue"), COMP_MSG_MAX);
+   STR = TtaGetMessageTable (TEXT("strdialogue"), STR_MSG_MAX);
    error = False;
    /* initialize the parser */
    InitParser ();
-   InitSyntax ("STRUCT.GRM");
+   InitSyntax (TEXT("STRUCT.GRM"));
    if (!error) {
       /* prepare the cpp command */
 #     ifdef _WINDOWS 
       cmd [pIndex] = (STRING) malloc (4 * sizeof (CHAR_T));
-      ustrcpy (cmd [pIndex++], "cpp");
+      ustrcpy (cmd [pIndex++], TEXT("cpp"));
 #     else  /* !_WINDOWS */
       ustrcpy (cmd, CPP " ");
 #     endif /* _WINDOWS */
@@ -2911,8 +2911,8 @@ char              **argv;
       ptr = ustrrchr(fname, '.');
       nb = ustrlen (srceFileName);
       if (!ptr) /* there is no suffix */
-         ustrcat (srceFileName, ".S");
-      else if (ustrcmp (ptr, ".S")) {
+         ustrcat (srceFileName, TEXT(".S"));
+      else if (ustrcmp (ptr, TEXT(".S"))) {
            /* it's not the valid suffix */
            TtaDisplayMessage (FATAL, TtaGetMessage (STR, STR_INVALID_FILE), srceFileName);
 #          ifdef _WINDOWS 
@@ -2927,7 +2927,7 @@ char              **argv;
              nb -= 2; /* length without the suffix */
 	  } 
       /* add the suffix .SCH in srceFileName */
-      ustrcat (fname, ".SCH");
+      ustrcat (fname, TEXT(".SCH"));
 	
       /* does the file to compile exist */
       if (TtaFileExist (srceFileName) == 0)
@@ -2935,16 +2935,16 @@ char              **argv;
       else {
            /* provide the real source file */
            TtaFileUnlink (fname);
-           pwd = TtaGetEnvString ("PWD");
+           pwd = TtaGetEnvString (TEXT("PWD"));
 #          ifndef _WINDOWS
            i = ustrlen (cmd);
 #          endif /* _WINDOWS */
            if (pwd != NULL) {
 #             ifdef _WINDOWS
               cmd [pIndex] = (STRING) malloc (3 + ustrlen (pwd));
-              sprintf (cmd [pIndex++], "-I%s", pwd);
+              usprintf (cmd [pIndex++], TEXT("-I%s"), pwd);
               cmd [pIndex] = (STRING) malloc (3);
-              ustrcpy (cmd [pIndex++], "-C");
+              ustrcpy (cmd [pIndex++], TEXT("-C"));
               cmd [pIndex] = (STRING) malloc (ustrlen (srceFileName) + 1);
               ustrcpy (cmd [pIndex++], srceFileName);
               cmd [pIndex] = (STRING) malloc (ustrlen (fname) + 1);
@@ -2955,11 +2955,11 @@ char              **argv;
 		   } else {
 #                 ifdef _WINDOWS
                   cmd [pIndex] = (STRING) malloc (3);
-                  ustrcpy (cmd [pIndex++], "-C");
+                  ustrcpy (cmd [pIndex++], TEXT("-C"));
                   cmd [pIndex] = (STRING) malloc (ustrlen (srceFileName) + 1);
                   ustrcpy (cmd [pIndex++], srceFileName);
                   cmd [pIndex] = (STRING) malloc (2);
-                  ustrcpy (cmd [pIndex++], ">");
+                  ustrcpy (cmd [pIndex++], TEXT(">"));
                   cmd [pIndex] = (STRING) malloc (ustrlen (fname) + 1);
                   ustrcpy (cmd [pIndex++], fname);
 #                 else  /* !_WINDOWS */
@@ -2967,7 +2967,7 @@ char              **argv;
 #                 endif /* _WINDOWS */
 		   } 
 #          ifdef _WINDOWS
-           cppLib = LoadLibrary ("cpp");
+           cppLib = LoadLibrary (TEXT("cpp"));
            ptrMainProc = GetProcAddress (cppLib, "CPPmain");
            i = ptrMainProc (hwnd, pIndex, cmd, &_CY_);
            FreeLibrary (cppLib);
@@ -3019,7 +3019,7 @@ char              **argv;
                     CompilerMessage (1, STR, FATAL, STR_LINE_TOO_LONG, inputLine, LineNum);
                  else if (inputLine[0] == '#') {
                       /* this line contains a cpp directive */
-                      sscanf (inputLine, "# %d %s", &LineNum, buffer);
+                      usscanf (inputLine, TEXT("# %d %s"), &LineNum, buffer);
                       LineNum--;
 				 } else {
                         /* translate line characters */
@@ -3065,7 +3065,7 @@ char              **argv;
               if (!error) {
                  /* remove temporary file */
                  TtaFileUnlink (fname);
-                 ustrcat (srceFileName, ".STR");
+                 ustrcat (srceFileName, TEXT(".STR"));
                  fileOK = WriteStructureSchema (srceFileName, pSSchema, 0);
                  if (!fileOK)
                     TtaDisplayMessage (FATAL, TtaGetMessage (STR, STR_CANNOT_WRITE), srceFileName);

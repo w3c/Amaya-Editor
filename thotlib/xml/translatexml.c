@@ -13,6 +13,12 @@
 
 #include "fileaccess_f.h"
 
+#ifdef __STDC__
+extern STRING TtaAllocString (unsigned int);
+#else  /* __STDC__ */
+extern STRING TtaAllocString (n);
+#endif /* __STDC__ */
+
 static PtrTranslationSchema TranslationSchemas = NULL;
 static int                  NbTranslationSchema = 0;
 static int                  CurrentTypeNum      = 0;
@@ -31,22 +37,22 @@ static int                  CurrentTableRank;
                       was inserted
 ----------------------------------------------------------------------- */
 #ifdef __STDC__
-static int InsertNameInAlpha (char **table, char *string, int size)
+static int InsertNameInAlpha (STRING* table, STRING string, int size)
 #else /*__STDC__*/
 static int InsertNameInAlpha (table, string, size)
-char **table;
-char  *string;
+STRING* table;
+STRING  string;
 int    size;
 #endif /*__STDC__*/
 
 {
-  int result = -1;
-  int index = 0;
-  int i= 0;
-  char *s;
+  int    result = -1;
+  int    index = 0;
+  int    i= 0;
+  STRING s;
   
-  s = TtaGetMemory (strlen(string)+1);
-  strcpy (s, string);
+  s = TtaAllocString (ustrlen (string) + 1);
+  ustrcpy (s, string);
   while (result == -1 && index < size)
     {
       if (table[index] == NULL || s [i] == '\0')	
@@ -87,25 +93,25 @@ int    size;
                  The index of Schema used is always NbSchema-1
 ----------------------------------------------------------------------- */
 #ifdef __STDC__
-static void InsertInTable (PtrTranslationSchema TSchema, char *ThotName,char *XmlName)
+static void InsertInTable (PtrTranslationSchema TSchema, STRING ThotName,STRING XmlName)
 #else /*__STDC__*/
 static void InsertInTable (TSchema, ThotName, XmlName)
 PtrTranslationSchema TSchema;
-char *ThotName;
-char *XmlName;
+STRING ThotName;
+STRING XmlName;
 #endif /*__STDC__*/
 
 {
-  char          tempName [32];
+  CHAR_T        tempName [32];
   ElementType   elType;
   AttributeType atType;
-  char         *theName;
+  STRING        theName;
   TYPETABLE     index;
   ThotBool      found;
   int           n;
 
   /* chooses the name to be inserted */
-  if (XmlName[0] == '\0')
+  if (XmlName[0] == EOS)
     theName = NULL;
   else
     theName = XmlName;
@@ -119,12 +125,10 @@ char *XmlName;
       elType.ElTypeNum = CurrentTypeNum;
       ustrcpy (tempName, TtaGetElementTypeOriginalName (elType));
       while ((CurrentTypeNum < MaxTypeNum-1) && 
-	     (strcmp (ThotName, tempName) != 0))
+	     (ustrcmp (ThotName, tempName) != 0))
 	{
 	  CurrentTableRank ++;
-	  index = InsertNameInAlpha (&(TSchema->XmlNameTable[1]), 
-				     tempName, 
-				     CurrentTableRank) + 1;
+	  index = InsertNameInAlpha (&(TSchema->XmlNameTable[1]), tempName, CurrentTableRank) + 1;
 	  for (n = 1; n<CurrentTypeNum; n++)
 	    if (TSchema->XmlElemNameTable[n] >= index)
 	      (TSchema->XmlElemNameTable[n])++;
@@ -142,9 +146,7 @@ char *XmlName;
       {
 	/* inserts an element name */
 	CurrentTableRank ++;
-	index = InsertNameInAlpha (&(TSchema->XmlNameTable[1]), 
-				   theName, 
-				   CurrentTableRank) + 1;
+	index = InsertNameInAlpha (&(TSchema->XmlNameTable[1]), theName, CurrentTableRank) + 1;
 	for (n = 1; n<CurrentTypeNum; n++)
 	  if (TSchema->XmlElemNameTable[n] >= index)
 	    (TSchema->XmlElemNameTable[n])++;
@@ -176,14 +178,12 @@ char *XmlName;
 	      ustrcpy (tempName, TtaGetAttributeOriginalName (atType));
 	    }
 	  while ((CurrentAttrNum < MaxAttrNum) && 
-		 (strcmp (ThotName, tempName) != 0))
+		 (ustrcmp (ThotName, tempName) != 0))
 	    {
 	      /* inserts a new thot attribute name */
 	      CurrentTableRank++;
 	      index = (TSchema->FirstAttr) + 
-		InsertNameInAlpha (&(TSchema->XmlNameTable[TSchema->FirstAttr]), 
-				   tempName,
-				   (CurrentTableRank - (TSchema->FirstAttr))+1);
+		InsertNameInAlpha (&(TSchema->XmlNameTable[TSchema->FirstAttr]), tempName, (CurrentTableRank - (TSchema->FirstAttr))+1);
 	      for (n = 1; n < CurrentAttrNum; n++)
 		if (TSchema->XmlAttrNameTable[n].AttrNameRank >= index)
 		  (TSchema->XmlAttrNameTable[n].AttrNameRank)++;
@@ -329,16 +329,16 @@ SSchema sSchema;
 #endif /*__STDC__*/
 
 {
-  BinFile   file;
-  int       i=0;
-  int       f=0;
-  ThotBool  ok=FALSE;
-  unsigned char      c='\0';
-  char      filename[200];
-  char      paths[1000];
-  char      thotbuf[50];
-  char      xmlbuf[50];
-  char     *currentbuf=thotbuf;
+  BinFile       file;
+  int           i=0;
+  int           f=0;
+  ThotBool       ok = FALSE;
+  UCHAR_T       c = EOS;
+  CHAR_T    filename[200];
+  CHAR_T    paths[1000];
+  CHAR_T    thotbuf[50];
+  CHAR_T    xmlbuf[50];
+  CHAR_T   *currentbuf=thotbuf;
   PtrTranslationSchema pts;
 
   /* Gets all SchemasPaths */
@@ -355,7 +355,7 @@ SSchema sSchema;
 	  filename[f++]='/';
 	  filename[f++]='\0';
 	  ustrcat(filename,TtaGetSSchemaName(sSchema));
-	  ustrcat(filename, ".X");
+	  ustrcat(filename, X_EXT);
 	  if (TtaFileExist(filename))
 	    {
 	      file = TtaReadOpen (filename);
@@ -436,7 +436,7 @@ SSchema sSchema;
                    value is searched else 0
 ----------------------------------------------------------------------- */
 #ifdef __STDC__
-int NameXmlToThot(SSchema schema, char *xmlName, int elTypeNum, int attrTypeNum)
+int NameXmlToThot(SSchema schema, STRING xmlName, int elTypeNum, int attrTypeNum)
 #else /*__STDC__*/
 int NameXmlToThot(schema, xmlName, elTypeNum, attrTypeNum)
 SSchema schema;
@@ -569,9 +569,9 @@ int attrTypeNum;
                     (0 if an attribute name is searched)       
 ----------------------------------------------------------------------- */
 #ifdef __STDC__
-char *NameThotToXml(SSchema schema, int elTypeNum, int attrTypeNum, int attrVal)
+STRING NameThotToXml(SSchema schema, int elTypeNum, int attrTypeNum, int attrVal)
 #else /*__STDC__*/
-char *NameThotToXml(schema, elTypeNum, attrTypeNum, attrVal)
+STRING NameThotToXml(schema, elTypeNum, attrTypeNum, attrVal)
 SSchema schema;
 int elTypeNum;
 int attrTypeNum;
@@ -580,7 +580,7 @@ int attrVal;
 {
   PtrTranslationSchema curTS;
   TYPETABLE            i;
-  char                *res;
+  STRING               res;
   AttributeType        attrType;
   ElementType          elType;
 

@@ -9,7 +9,7 @@
  * frame.c : incremental display in frames.
  *
  * Authors: I. Vatton (INRIA)
- *          R. Guetari (INRIA) - Plugins
+ *          R. Guetari (W3C/INRIA) - Unicode, Windows version and Plug-ins
  *
  */
 

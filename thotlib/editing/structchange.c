@@ -1049,7 +1049,7 @@ void                StructPasteCommand ()
    else
      {
 	if (ThotLocalActions[T_insertpaste] != NULL)
-	   (*ThotLocalActions[T_insertpaste]) (FALSE, TRUE, 'L', &ok);
+	   (*ThotLocalActions[T_insertpaste]) (FALSE, TRUE, TEXT('L'), &ok);
 	else
 	   ok = FALSE;
 	if (ok)

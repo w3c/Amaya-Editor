@@ -18,6 +18,7 @@
  * Handle specific presentation of pictures
  * Authors: I. Vatton (INRIA)
  *          N. Layaida (INRIA) - New picture formats
+ *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  *
  */
 
@@ -133,10 +134,10 @@ int                 imagetype;
       else
 	{
 	  len = ustrlen (filename) + 1;
-	  if (ptr == NULL || len > ustrlen (ptr) + 1)
+	  if (ptr == NULL || len > (int) ustrlen (ptr) + 1)
 	    {
 	      TtaFreeMemory (ptr);
-	      ptr = TtaGetMemory (len);
+	      ptr = TtaAllocString (len);
 	    }
 	  ustrcpy (ptr, filename);
 	}

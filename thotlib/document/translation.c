@@ -134,7 +134,7 @@ ThotBool		    open;
      }
    else
      {
-	OutputFile[NOutputFiles].OfFileDesc = ufopen (fName, "w");
+	OutputFile[NOutputFiles].OfFileDesc = ufopen (fName, _WriteMODE_);
 	if (OutputFile[NOutputFiles].OfFileDesc == NULL)
 	  {
 	     if (!OutputFile[NOutputFiles].OfCannotOpen)
@@ -183,7 +183,7 @@ ThotBool            lineBreak;
    int                 i, j, indent;
    PtrTSchema          pTSch;
    FILE               *fileDesc;
-   CHAR_T                tmp[2];
+   CHAR_T              tmp[2];
 
    if (outBuffer != NULL)
       /* la sortie doit se faire dans le buffer outBuffer. On ajoute le */
@@ -241,7 +241,7 @@ ThotBool            lineBreak;
 			   indent = 0;
 			}
 		     for (j = 0; j < indent; j++)
-			OutputFile[fileNum].OfBuffer[j] = ' ';
+			OutputFile[fileNum].OfBuffer[j] = SPACE;
 		     OutputFile[fileNum].OfBufferLen = indent;
 		     OutputFile[fileNum].OfStartOfLine = FALSE;
 		     }
@@ -254,15 +254,15 @@ ThotBool            lineBreak;
 			/* on cherche le dernier blanc */
 		       {
 			  i = OutputFile[fileNum].OfBufferLen - 1;
-			  while (OutputFile[fileNum].OfBuffer[i] != ' ' && i > 0)
+			  while (OutputFile[fileNum].OfBuffer[i] != SPACE && i > 0)
 			     i--;
-			  if (OutputFile[fileNum].OfBuffer[i] == ' ')
+			  if (OutputFile[fileNum].OfBuffer[i] == SPACE)
 			    /* on a trouve' le dernier blanc */
 			    {
 			    /* cherche s'il y a au moins un caractere non blanc
 			       avant */
-			    for (j = i; j > 0 && OutputFile[fileNum].OfBuffer[j] <= ' '; j--);
-			    if (OutputFile[fileNum].OfBuffer[j] != ' ')
+			    for (j = i; j > 0 && OutputFile[fileNum].OfBuffer[j] <= SPACE; j--);
+			    if (OutputFile[fileNum].OfBuffer[j] != SPACE)
 			       /* le blanc trouve' ne fait pas partie des
 				  blancs d'indentation */
 			       {
@@ -279,7 +279,7 @@ ThotBool            lineBreak;
 			       if (indent < 0)
 				  indent = 0;
 			       for (j = 0; j < indent; j++)
-				  OutputFile[fileNum].OfBuffer[j] = ' ';
+				  OutputFile[fileNum].OfBuffer[j] = SPACE;
 			       i -= indent;
 			       i++;
 			       if (i < 0)
@@ -379,7 +379,7 @@ ThotBool            lineBreak;
    CHAR_T                buffer[20];
    int                 i;
 
-   usprintf (buffer, "%d", n);
+   usprintf (buffer, TEXT("%d"), n);
    i = 0;
    while (buffer[i] != EOS)
       PutChar (buffer[i++], fileNum, outBuffer, pDoc, lineBreak);
@@ -418,7 +418,7 @@ AlphabetTransl** pTransAlph;
    if (pEl->ElTerminal && pEl->ElLeafType == LtText)
       alphabet = TtaGetAlphabet (pEl->ElLanguage);
    else
-      alphabet = 'L';
+      alphabet = TEXT('L');
    do
      {
      if (pSS != pAncestor->ElStructSchema)
@@ -696,7 +696,7 @@ PtrDocument         pDoc;
 {
    PtrTSchema          pTSch;
    PtrTextBuffer       pBufT;
-   CHAR_T                c;
+   CHAR_T              c;
    int                 i, j, b, ft, lt;
    AlphabetTransl     *pTransAlph;
    StringTransl       *pTrans;
@@ -801,10 +801,10 @@ PtrDocument         pDoc;
 			      {
 				 for (i = 0; i < pBufT->BuLength; i++)
 				   {
-				      PutChar (' ', fileNum, NULL, pDoc, lineBreak);
+				      PutChar (TEXT(' '), fileNum, NULL, pDoc, lineBreak);
 				      PutInt (pBufT->BuPoints[i].XCoord, fileNum, NULL,
 					      pDoc, lineBreak);
-				      PutChar (',', fileNum, NULL, pDoc, lineBreak);
+				      PutChar (TEXT(','), fileNum, NULL, pDoc, lineBreak);
 				      PutInt (pBufT->BuPoints[i].YCoord, fileNum, NULL,
 					      pDoc, lineBreak);
 				   }
@@ -872,7 +872,7 @@ PtrPRule            pPRule;
 {
    CHAR_T                val;
 
-   val = ' ';
+   val = SPACE;
    switch (pPRule->PrType)
 	 {
 	    case PtFont:
@@ -885,29 +885,29 @@ PtrPRule            pPRule;
 	    case PtJustify:
 	    case PtHyphenate:
 	       if (pPRule->PrJustify)
-		  val = 'Y';
+		  val = TEXT('Y');
 	       else
-		  val = 'N';
+		  val = TEXT('N');
 	       break;
 	    case PtAdjust:
 	       switch (pPRule->PrAdjust)
 		     {
 			case AlignLeft:
-			   val = 'L';
+			   val = TEXT('L');
 			   break;
 			case AlignRight:
-			   val = 'R';
+			   val = TEXT('R');
 			   break;
 			case AlignCenter:
-			   val = 'C';
+			   val = TEXT('C');
 			   break;
 			case AlignLeftDots:
-			   val = 'D';
+			   val = TEXT('D');
 			   break;
 		     }
 	       break;
 	    default:
-	       val = ' ';
+	       val = SPACE;
 	       break;
 	 }
    return val;
@@ -2723,7 +2723,7 @@ ThotBool           *removeEl;
 					   /* le document reference' n'est pas charge' */
 					  {
 					     ustrncpy (directoryName, DocumentPath, MAX_PATH);
-					     MakeCompleteName (docIdent, "PIV", directoryName, fullName, &i);
+					     MakeCompleteName (docIdent, PIV_EXT2, directoryName, fullName, &i);
 					     if (fullName[0] != EOS)
 						/* on a trouve' le fichier */
 						nameBuffer = directoryName;
@@ -2912,7 +2912,7 @@ ThotBool           *removeEl;
 	       PutVariable (pEl, pAttr, pTSch, pSSch, pTRule->TrNewFileVar, FALSE, currentFileName, 0, pDoc, *lineBreak);
 	       if (currentFileName[0] != EOS)
 		 {
-		    newFile = ufopen (currentFileName, "w");
+		    newFile = ufopen (currentFileName, _WriteMODE_);
 		    if (newFile == NULL)
 		       TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_CREATE_FILE_IMP), currentFileName);
 		    else
@@ -3108,7 +3108,7 @@ ThotBool           *removeEl;
 	       if (fname[0] == EOS)
 		  /* pas de nom de fichier */
 		  fullName[0] = EOS;
-	       else if (fname[0] == '/')
+	       else if (fname[0] == TEXT('/'))
 		  /* nom de fichier absolu */
 	          ustrcpy (fullName, fname);
 	       else
@@ -3116,7 +3116,7 @@ ThotBool           *removeEl;
 	           /* compose le nom du fichier a ouvrir avec le nom du
 		      directory des schemas... */
 		    ustrncpy (directoryName, SchemaPath, MAX_PATH);
-		    MakeCompleteName (fname, "", directoryName, fullName, &i);
+		    MakeCompleteName (fname, _EMPTYSTR_, directoryName, fullName, &i);
 		 }
 	       /* si le fichier a inclure est deja ouvert en ecriture, on
 		  le flush.  */
@@ -3495,7 +3495,7 @@ STRING              TSchemaName;
    ThotBool            ok = TRUE;
 
    /* cree le fichier de sortie principal */
-   outputFile = ufopen (fName, "w");
+   outputFile = ufopen (fName, _WriteMODE_);
    if (outputFile == NULL)
      ok = FALSE;
    else
@@ -3530,9 +3530,9 @@ STRING              TSchemaName;
 	     fileExtension[0] = EOS;
 	     i = ustrlen (fileName);
 	     i--;
-	     while (i > 0 && fileName[i] != '.')
+	     while (i > 0 && fileName[i] != TEXT('.'))
 		i--;
-	     if (fileName[i] == '.')
+	     if (fileName[i] == TEXT('.'))
 	       {
 		  ustrncpy (fileExtension, &fileName[i], MAX_PATH);
 		  fileName[i] = EOS;
@@ -3588,7 +3588,7 @@ STRING              TSchemaName;
 
  
   /* cree le fichier de sortie principal */
-  outputFile = ufopen (fName, "w");
+  outputFile = ufopen (fName, _WriteMODE_);
   
   if (outputFile == NULL)
     TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_CREATE_FILE_IMP), fName);
@@ -3622,9 +3622,9 @@ STRING              TSchemaName;
 	  fileExtension[0] = EOS;
 	  i = ustrlen (fileName);
 	  i--;
-	  while (i > 0 && fileName[i] != '.')
+	  while (i > 0 && fileName[i] != TEXT('.'))
 	    i--;
-	  if (fileName[i] == '.')
+	  if (fileName[i] == TEXT('.'))
 	    {
 	      ustrncpy (fileExtension, &fileName[i], MAX_PATH);
 	      fileName[i] = EOS;

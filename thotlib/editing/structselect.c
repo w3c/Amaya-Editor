@@ -3154,7 +3154,7 @@ void                BuildSelectionMessage ()
 {
    PtrElement          pEl;
    PtrDocument         pDoc;
-   CHAR_T                msgBuf[MAX_TXT_LEN];
+   CHAR_T              msgBuf[MAX_TXT_LEN];
    int                 nbasc;
 
    if (DocSelectedAttr != NULL && AbsBoxSelectedAttr != NULL)
@@ -3181,7 +3181,7 @@ void                BuildSelectionMessage ()
 	if (!HiddenType (pEl))
 	  {
 	     /* put a separator */
-	     ustrcat (&msgBuf[ustrlen (msgBuf)], " \\ ");
+	     ustrcat (&msgBuf[ustrlen (msgBuf)], TEXT(" \\ "));
 	     /* put the element type */
 	     ustrcat (&msgBuf[ustrlen (msgBuf)], pEl->ElStructSchema->
 		     SsRule[pEl->ElTypeNumber - 1].SrName);

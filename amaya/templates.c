@@ -23,7 +23,11 @@
 
 
 /* content of the attr name of the meta tag defining the doc's destination URL */
-#define META_TEMPLATE_NAME "AMAYA_TEMPLATE"
+#if defined(_I18N_) || defined(__JIS__)
+#   define META_TEMPLATE_NAME L"AMAYA_TEMPLATE"
+#else /* defined(_I18N_) || defined(__JIS__) */
+#     define META_TEMPLATE_NAME "AMAYA_TEMPLATE"
+#endif /* defined(_I18N_) || defined(__JIS__) */
 /* URL of the script providing templates (for reload) */
 static STRING script_URL;
 
@@ -45,7 +49,7 @@ View view;
    STRING    URLform;
    Document  templateSelect;
 
-   URLform = TtaGetEnvString ("URL_TEMPLATE");
+   URLform = TtaGetEnvString (TEXT("URL_TEMPLATE"));
    if (URLform != NULL)
      {
       templateSelect = GetHTMLDocument (URLform, NULL, 0, 0, CE_ABSOLUTE, FALSE, NULL, NULL);

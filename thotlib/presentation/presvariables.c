@@ -69,7 +69,7 @@ PtrSSchema          pSchStr;
       return pCounter->CnItem[0].CiElemType;
 
    /* initialise l'alias temporaire */
-   ustrcpy (NewAlias->SrName, "Counter alias");
+   ustrcpy (NewAlias->SrName, TEXT("Counter alias"));
    NewAlias->SrNDefAttrs = 0;
    NewAlias->SrNLocalAttrs = 0;
    NewAlias->SrAssocElem = FALSE;
@@ -1079,7 +1079,7 @@ PtrDocument         pDoc;
 				     pAb->AbCreatorAttr = pAttr;
 				     break;
 				  case AtReferenceAttr:
-				     CopyStringToText ("REF", pAb->AbText, &l);
+				     CopyStringToText (REF_EXT2, pAb->AbText, &l);
 				     pAb->AbVolume += l;
 				     break;
 				  case AtEnumAttr:
@@ -1138,12 +1138,12 @@ PtrDocument         pDoc;
 		    GetCounterValue (ptm->tm_year, CntArabic, number, &l);
 		    CopyStringToText (number, pAb->AbText, &l);
 		    pAb->AbVolume += l;
-		    CopyStringToText ("/", pAb->AbText, &l);
+		    CopyStringToText (TEXT("/"), pAb->AbText, &l);
 		    pAb->AbVolume += l;
 		    GetCounterValue (ptm->tm_mon + 1, CntArabic, number, &l);
 		    CopyStringToText (number, pAb->AbText, &l);
 		    pAb->AbVolume += l;
-		    CopyStringToText ("/", pAb->AbText, &l);
+		    CopyStringToText (TEXT("/"), pAb->AbText, &l);
 		    pAb->AbVolume += l;
 		    GetCounterValue (ptm->tm_mday, CntArabic, number, &l);
 		    CopyStringToText (number, pAb->AbText, &l);
@@ -1157,12 +1157,12 @@ PtrDocument         pDoc;
 		    GetCounterValue (ptm->tm_mday, CntArabic, number, &l);
 		    CopyStringToText (number, pAb->AbText, &l);
 		    pAb->AbVolume += l;
-		    CopyStringToText ("/", pAb->AbText, &l);
+		    CopyStringToText (TEXT("/"), pAb->AbText, &l);
 		    pAb->AbVolume += l;
 		    GetCounterValue (ptm->tm_mon + 1, CntArabic, number, &l);
 		    CopyStringToText (number, pAb->AbText, &l);
 		    pAb->AbVolume += l;
-		    CopyStringToText ("/", pAb->AbText, &l);
+		    CopyStringToText (TEXT("/"), pAb->AbText, &l);
 		    pAb->AbVolume += l;
 		    GetCounterValue (ptm->tm_year, CntArabic, number, &l);
 		    CopyStringToText (number, pAb->AbText, &l);

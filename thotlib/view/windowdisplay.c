@@ -10,7 +10,8 @@
  *                   X-Window and MS-Windows (incomplete).
  *
  * Authors: I. Vatton (INRIA)
- *          R. Guetari and D. Veillard (W3C/INRIA) - Windows 95/NT routines
+ *          R. Guetari (W3C/INROA) Unicode and Windows version
+ *          D. Veillard (W3C/INRIA) - Windows 95/NT routines
  *
  */
 
@@ -40,6 +41,39 @@ static ThotPoint   *points;	/* control points for curbs */
 static int          npoints;
 static int          MAX_points;
 
+static unsigned char initial[] = {
+       0xFF, 0xFE, 0x04, 0x0E, 0x27, 0x0E, 0x32, 0x0E, 
+       0x21, 0x0E, 0x1E, 0x0E, 0x22, 0x0E, 0x32, 0x0E,
+       0x22, 0x0E, 0x32, 0x0E, 0x44, 0x0E, 0x2B, 0x0E,
+       0x22, 0x0E, 0x39, 0x0E, 0x48, 0x0E, 0x17, 0x0E,
+       0x35, 0x0E, 0x48, 0x0E, 0x44, 0x0E, 0x2B, 0x0E,
+       0x19, 0x0E, 0x20, 0x00, 0x04, 0x0E, 0x27, 0x0E,
+       0x32, 0x0E, 0x21, 0x0E, 0x2A, 0x0E, 0x33, 0x0E, 
+       0x40, 0x0E, 0x23, 0x0E, 0x47, 0x0E, 0x08, 0x0E,
+       0x2D, 0x0E, 0x22, 0x0E, 0x39, 0x0E, 0x48, 0x0E,
+       0x17, 0x0E, 0x35, 0x0E, 0x48, 0x0E, 0x19, 0x0E,
+       0x31, 0x0E, 0x48, 0x0E, 0x19, 0x0E, 0x0D, 0x00,
+       0x0A, 0x00, 0x31, 0x00, 0x32, 0x00, 0x33, 0x00,
+       0x2D, 0x00, 0x35, 0x00, 0x32, 0x00, 0x20, 0x00,
+       0x69, 0x00, 0x73, 0x00, 0x20, 0x00, 0x37, 0x00,
+       0x31, 0x00, 0x2E, 0x00, 0x0D, 0x00, 0x0A, 0x00,
+       0x31, 0x00, 0x32, 0x00, 0x33, 0x00, 0x2D, 0x00,
+       0x35, 0x00, 0x32, 0x00, 0x20, 0x00, 0x4A, 0x06,
+       0x4F, 0x06, 0x33, 0x06, 0x27, 0x06, 0x48, 0x06,
+       0x50, 0x06, 0x4A, 0x06, 0x20, 0x00, 0x37, 0x00, 
+       0x31, 0x00, 0x2E, 0x00, 0x0D, 0x00, 0x0A, 0x00,
+       0x27, 0x06, 0x44, 0x06, 0x35, 0x06, 0x51, 0x06, 
+       0x50, 0x06, 0x2D, 0x06, 0x29, 0x06, 0x4F, 0x06,
+       0x20, 0x00, 0x2A, 0x06, 0x4E, 0x06, 0x27, 0x06,
+       0x2C, 0x06, 0x4C, 0x06, 0x20, 0x00, 0x39, 0x06,
+       0x4E, 0x06, 0x44, 0x06, 0x49, 0x06, 0x20, 0x00,
+       0x31, 0x06, 0x4F, 0x06, 0x24, 0x06, 0x48, 0x06,
+       0x33, 0x06, 0x50, 0x06, 0x20, 0x00, 0x27, 0x06,
+       0x44, 0x06, 0x23, 0x06, 0x35, 0x06, 0x50, 0x06,
+       0x2D, 0x06, 0x51, 0x06, 0x4E, 0x06, 0x27, 0x06,
+       0x21, 0x06, 0x50, 0x06, 0x0D, 0x00, 0x0A, 0x00
+};
+
 typedef struct stack_point
   {
      float               x1, y1, x2, y2, x3, y3, x4, y4;
@@ -47,6 +81,10 @@ typedef struct stack_point
 StackPoint;
 static StackPoint   stack[MAX_STACK];
 static int          stack_deep;
+
+#ifdef _WINDOWS
+DWORD fontLangInfo = -1;
+#endif /* _WINDOWS */
 
 #include "font_f.h"
 #include "units_f.h"
@@ -59,6 +97,21 @@ static int          stack_deep;
 #include "wininclude.h"
 
 extern BOOL autoScroll;
+#endif /* _WINDOWS */
+
+#ifdef _WINDOWS
+#ifdef __STDC__
+void ClipError (int frame) 
+#else  /* !__STDC__ */
+void ClipError (frame); 
+int  frame;
+#endif /* __STDC__ */
+{
+    HWND parent = NULL;
+    if (frame != -1)
+       parent = FrMainRef [frame];
+    MessageBox (parent, TEXT("Cannot select clipping region"), TEXT("Warning"), MB_OK);
+}
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -332,10 +385,8 @@ int                 fg;
    SetMapperFlags (TtDisplay, 1);
    hOldFont = WinLoadFont (TtDisplay, font);
    result = SelectClipRgn (TtDisplay, clipRgn); 
-#  ifndef _AMAYA_RELEASE_
    if (result == ERROR)
-      MessageBox (FrMainRef [frame], "Cannot select clipping region", "Warning", MB_OK);
-#  endif /* _AMAYA_RELEASE_ */
+      ClipError (frame);
    /* if (!GetClipRgn(TtDisplay, clipRgn))
       WinErrorBox (NULL); */
    TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (USTRING) str, 1);   
@@ -394,6 +445,11 @@ int                 shadow;
    RECT                rect;
    HFONT               hOldFont;
    int                 result;
+   GCP_RESULTS results;
+   USHORT      auGlyphs [2000];
+   CHAR_T      szNewText [2000];
+   UINT        outOpt, infoFlag;
+   int         anDX [2000];
 #  endif /* !_WINDOWS */
 
    w = FrRef[frame];
@@ -409,10 +465,8 @@ int                 shadow;
       width = size.cx;
 
       result = SelectClipRgn (TtDisplay, clipRgn);  
-#     ifndef _AMAYA_RELEASE_
       if (result == ERROR)
-         MessageBox (FrMainRef [frame], "Cannot select clipping region", "Warning", MB_OK);
-#     endif /* _AMAYA_RELEASE_ */
+         ClipError (frame);
       /* if (!GetClipRgn(TtDisplay, clipRgn))
          WinErrorBox (NULL); */
 #     else  /* _WINDOWS */
@@ -433,13 +487,13 @@ int                 shadow;
       if (!ShowSpace || shadow)
 	{
          /* draw the spaces */
-         ptcar = TtaGetMemory (lg + 1);
+         ptcar = TtaAllocString (lg + 1);
 	 if (shadow)
 	   {
 	     /* replace each character by a star */
 	     j = 0;
 	     while (j < lg)
-	       ptcar[j++] = '*';
+	       ptcar[j++] = TEXT('*');
 	     ptcar[lg] = EOS;
 	   }
 	 else
@@ -450,13 +504,71 @@ int                 shadow;
 	   }
 #        ifdef _WINDOWS
          GetClientRect (TtDisplay, &rect);
-         TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (USTRING) ptcar, lg);
+         outOpt = 0;
+         if (fontLangInfo == GCP_ERROR) /* There is a Problem. */
+            WinErrorBox (NULL);
+
+#        if 0
+         if (fontLangInfo & GCP_DBCS) /* The character set is DBCS. */
+            MessageBox (FrMainRef[frame], TEXT("Font Language is: GCP_DBCS"), TEXT("Font Language"), MB_OK);
+#        endif /* 0 */
+         
+		 if (fontLangInfo & GCP_DIACRITIC)
+            infoFlag |= GCP_DIACRITIC;
+         
+#        if 0
+		 if (fontLangInfo & FLI_GLYPHS) /* The font contains extra glyphs not normally accessible using the codepage. */ 
+					                    /* Use GetCharacterPlacement to access the glyphs. This value is for information */
+								        /* only and is not intended to be passed to GetCharacterPlacement. */
+            MessageBox (FrMainRef[frame], TEXT("Font Language is: FLI_GLYPHS"), TEXT("Font Language"), MB_OK);
+#        endif /* 0 */
+         
+		 if (fontLangInfo & GCP_GLYPHSHAPE) {/* The font/language contains multiple glyphs per code point or per code point */
+                                             /* combination (supports shaping and/or ligation), and the font contains advanced */
+                                             /* glyph tables to provide extra glyphs for the extra shapes. If this value is given, */
+                                             /* the lpGlyphs array must be used with the GetCharacterPlacement function and the */
+                                             /* ETO_GLYPHINDEX value must be passed to the ExtTextOut function when the string is drawn. */
+            infoFlag |= GCP_GLYPHSHAPE;
+		 }
+         
+#        if 0
+		 if (fontLangInfo & GCP_KASHIDA) /* The font/ language permits Kashidas. */
+            MessageBox (FrMainRef[frame], TEXT("Font Language is: GCP_KASHIDA"), TEXT("Font Language"), MB_OK);
+         
+		 if (fontLangInfo & GCP_LIGATE) /* The font/language contains ligation glyphs which can be substituted for specific character combinations. */
+            MessageBox (FrMainRef[frame], TEXT("Font Language is: GCP_LIGATE"), TEXT("Font Language"), MB_OK);
+#        endif /* 0 */
+         
+		 if (fontLangInfo & GCP_USEKERNING) /* The font contains a kerning table which can be used to provide better spacing */
+                                            /* between the characters and glyphs. */
+            infoFlag |= GCP_USEKERNING;
+         
+		 if (fontLangInfo & GCP_REORDER) /* The language requires reordering for display--for example, Hebrew or Arabic. */
+            infoFlag |= GCP_CLASSIN;
+
+         infoFlag |= GCP_DISPLAYZWG;
+
+         results.lStructSize = sizeof (results);
+         results.lpOutString = &szNewText[0];
+         results.lpOrder     = NULL;
+         results.lpDx        = &anDX[0];
+         results.lpCaretPos  = NULL;
+         results.lpClass     = NULL;
+         results.lpGlyphs    = &auGlyphs[0];
+         results.nGlyphs     = 2000;
+         results.nMaxFit     = 0;
+
+         fontLangInfo = GetCharacterPlacement (TtDisplay, ptcar, ustrlen (ptcar), GCP_MAXEXTENT, &results, infoFlag);
+
+         ExtTextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, outOpt, &rect, (USTRING) szNewText, lg, anDX); 
+         /* ExtTextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, 0, &rect, (USTRING) ptcar, lg, NULL);  */
+         /* TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (USTRING) ptcar, lg); */
 #        else  /* _WINDOWS */
          XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
 #        endif /* _WINDOWS */
          TtaFreeMemory (ptcar);
       } else {
-           if (ptcar[0] == '\212' || ptcar[0] == '\12') {
+           if (ptcar[0] == TEXT('\212') || ptcar[0] == TEXT('\12')) {
               /* skip the Control return char */
               ptcar++;
              lg--;
@@ -464,6 +576,62 @@ int                 shadow;
            if (lg != 0) {
 #             ifdef _WINDOWS
               /* GetClipRgn(TtDisplay, clipRgn); */
+              outOpt = 0;
+              if (fontLangInfo == GCP_ERROR) /* There is a Problem. */
+                 WinErrorBox (NULL);
+
+#             if 0
+              if (fontLangInfo & GCP_DBCS) /* The character set is DBCS. */
+                 MessageBox (FrMainRef[frame], TEXT("Font Language is: GCP_DBCS"), TEXT("Font Language"), MB_OK);
+#             endif /* 0 */
+         
+              if (fontLangInfo & GCP_DIACRITIC)
+                 infoFlag |= GCP_DIACRITIC;
+         
+#             if 0
+		      if (fontLangInfo & FLI_GLYPHS) /* The font contains extra glyphs not normally accessible using the codepage. */ 
+					                    /* Use GetCharacterPlacement to access the glyphs. This value is for information */
+								        /* only and is not intended to be passed to GetCharacterPlacement. */
+                 MessageBox (FrMainRef[frame], TEXT("Font Language is: FLI_GLYPHS"), TEXT("Font Language"), MB_OK);
+#             endif /* 0 */
+         
+              if (fontLangInfo & GCP_GLYPHSHAPE) {/* The font/language contains multiple glyphs per code point or per code point */
+                                             /* combination (supports shaping and/or ligation), and the font contains advanced */
+                                             /* glyph tables to provide extra glyphs for the extra shapes. If this value is given, */
+                                             /* the lpGlyphs array must be used with the GetCharacterPlacement function and the */
+                                             /* ETO_GLYPHINDEX value must be passed to the ExtTextOut function when the string is drawn. */
+                 infoFlag |= GCP_GLYPHSHAPE;
+			  } 
+         
+#             if 0
+		      if (fontLangInfo & GCP_KASHIDA) /* The font/ language permits Kashidas. */
+                 MessageBox (FrMainRef[frame], TEXT("Font Language is: GCP_KASHIDA"), TEXT("Font Language"), MB_OK);
+         
+              if (fontLangInfo & GCP_LIGATE) /* The font/language contains ligation glyphs which can be substituted for specific character combinations. */
+                 MessageBox (FrMainRef[frame], TEXT("Font Language is: GCP_LIGATE"), TEXT("Font Language"), MB_OK);
+#             endif /* 0 */
+         
+              if (fontLangInfo & GCP_USEKERNING) /* The font contains a kerning table which can be used to provide better spacing */
+                                            /* between the characters and glyphs. */
+                 infoFlag |= GCP_USEKERNING;
+         
+              if (fontLangInfo & GCP_REORDER) /* The language requires reordering for display--for example, Hebrew or Arabic. */
+                 infoFlag |= GCP_CLASSIN;
+
+              infoFlag |= GCP_DISPLAYZWG;
+
+              results.lStructSize = sizeof (results);
+              results.lpOutString = &szNewText[0];
+              results.lpOrder     = NULL;
+              results.lpDx        = &anDX[0];
+              results.lpCaretPos  = NULL;
+              results.lpClass     = NULL;
+              results.lpGlyphs    = &auGlyphs[0];
+              results.nGlyphs     = 2000;
+              results.nMaxFit     = 0;
+			  fontLangInfo = GetCharacterPlacement (TtDisplay, ptcar, ustrlen (ptcar), GCP_MAXEXTENT, &results, infoFlag);
+
+              /* ExtTextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, outOpt, &rect, (USTRING) szNewText, lg, anDX); */
               TextOut (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, (USTRING) ptcar, lg);
 #             else  /* _WINDOWS */
 	      XDrawString (TtDisplay, w, TtLineGC, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin + FontBase (font), ptcar, lg);
@@ -476,7 +644,7 @@ int                 shadow;
          /* draw the hyphen */
 #        ifdef _WINDOWS
          /* GetClipRgn(TtDisplay, clipRgn); */
-         TextOut (TtDisplay, x + width + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, "\255", 1);
+         TextOut (TtDisplay, x + width + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, TEXT("\255"), 1);
 #        else  /* _WINDOWS */
          XDrawString (TtDisplay, w, TtLineGC, x + width + FrameTable[frame].FrLeftMargin,
          y + FrameTable[frame].FrTopMargin + FontBase (font), "\255", 1);
@@ -619,15 +787,15 @@ int                 fg;
    int                 xcour, width, nb;
    STRING              ptcar;
 
-   font = ThotLoadFont ('L', 't', 0, 6, UnPoint, frame);
+   font = ThotLoadFont (TEXT('L'), TEXT('t'), 0, 6, UnPoint, frame);
    if (lgboite > 0)
      {
 	w = FrRef[frame];
 
-	ptcar = " .";
+	ptcar = TEXT(" .");
 
 	/* compute lenght of the string " ." */
-	width = CharacterWidth (' ', font) + CharacterWidth ('.', font);
+	width = CharacterWidth (SPACE, font) + CharacterWidth (TEXT('.'), font);
 
 	/* compute the number of string to write */
 	nb = lgboite / width;
@@ -729,17 +897,17 @@ int                 fg;
      xm = x + ((l - CharacterWidth ('\362', font)) / 2);
      yf = y + ((h - CharacterHeight ('\362', font)) / 2) - FontAscent (font) +
 	  CharacterAscent ('\362', font);
-     DrawChar ('\362', frame, xm, yf, font, RO, active, fg);
+     DrawChar (TEXT('\362'), frame, xm, yf, font, RO, active, fg);
      }
    else
      {
      /* Need more than one glyph */
      xm = x + ((l - CharacterWidth ('\363', font)) / 2);
      yf = y - FontAscent (font) + CharacterAscent ('\363', font);
-     DrawChar ('\363', frame, xm, yf, font, RO, active, fg);
+     DrawChar (TEXT('\363'), frame, xm, yf, font, RO, active, fg);
      yend = y + h - CharacterHeight ('\365', font) - FontAscent (font) +
 	    CharacterAscent ('\365', font) - 1;
-     DrawChar ('\365', frame, xm, yend, font, RO, active, fg);
+     DrawChar (TEXT('\365'), frame, xm, yend, font, RO, active, fg);
 
      yf += CharacterHeight ('\363', font);
      delta = yend - yf;
@@ -752,20 +920,20 @@ int                 fg;
 	     yend -= hd;
 	     yf < yend;
 	     yf += CharacterHeight ('\364', font), exnum++)
-	   DrawChar ('\364', frame, xm+wd, yf, font, RO, active, fg);
+	   DrawChar (TEXT('\364'), frame, xm+wd, yf, font, RO, active, fg);
 	if (exnum)
-	   DrawChar ('\364', frame, xm+wd, yend, font, RO, active, fg);
+	   DrawChar (TEXT('\364'), frame, xm+wd, yend, font, RO, active, fg);
 	else
-	   DrawChar ('\364', frame, xm+wd, yf + ((delta - hd) / 2), font, RO, active, fg);
+	   DrawChar (TEXT('\364'), frame, xm+wd, yf + ((delta - hd) / 2), font, RO, active, fg);
        }
      }
 
    if (type == 2)		/* double integral */
-      DrawIntegral (frame, thick, x + (CharacterWidth ('\364', font) / 2),
+      DrawIntegral (frame, thick, x + (CharacterWidth (TEXT('\364'), font) / 2),
 		    y, l, h, -1, font, RO, active, fg);
 
    else if (type == 1)		/* contour integral */
-      DrawChar ('o', frame, x + ((l - CharacterWidth ('o', font)) / 2),
+      DrawChar (TEXT('o'), frame, x + ((l - CharacterWidth ('o', font)) / 2),
 		y + (h - CharacterHeight ('o', font)) / 2 - FontAscent (font) + CharacterAscent ('o', font),
 		font, RO, active, fg);
 }
@@ -1062,10 +1230,8 @@ int                 fg;
 #  ifdef _WINDOWS
       WIN_GetDeviceContext (frame);
       result = SelectClipRgn (TtDisplay, clipRgn);  
-#     ifndef _AMAYA_RELEASE_
       if (result == ERROR)
-         MessageBox (FrMainRef [frame], "Cannot select clipping region", "Warning", MB_OK);
-#     endif /* _AMAYA_RELEASE_ */
+         ClipError (frame);
       /* if (!GetClipRgn(TtDisplay, clipRgn))
          WinErrorBox (NULL); */
       WinLoadGC (TtDisplay, fg, RO);
@@ -1206,7 +1372,7 @@ int                 fg;
 	     xm = x + ((l - CharacterWidth ('[', font)) / 2);
 	     yf = y + ((h - CharacterHeight ('[', font)) / 2) -
 		FontAscent (font) + CharacterAscent ('[', font);
-	     DrawChar ('[', frame, xm, yf, font, RO, active, fg);
+	     DrawChar (TEXT('['), frame, xm, yf, font, RO, active, fg);
 	  }
 	else
 	  {
@@ -1214,7 +1380,7 @@ int                 fg;
 	     xm = x + ((l - CharacterWidth (']', font)) / 2);
 	     yf = y + ((h - CharacterHeight (']', font)) / 2) -
 		FontAscent (font) + CharacterAscent (']', font);
-	     DrawChar (']', frame, xm, yf, font, RO, active, fg);
+	     DrawChar (TEXT(']'), frame, xm, yf, font, RO, active, fg);
 	  }
      }
    else
@@ -1225,30 +1391,30 @@ int                 fg;
 	     /* Draw a opening bracket */
 	     xm = x + ((l - CharacterWidth ('\351', font)) / 2);
 	     yf = y - FontAscent (font) + CharacterAscent ('\351', font);
-	     DrawChar ('\351', frame, xm, yf, font, RO, active, fg);
+	     DrawChar (TEXT('\351'), frame, xm, yf, font, RO, active, fg);
 	     yend = y + h - CharacterHeight ('\353', font) -
 		FontAscent (font) + CharacterAscent ('\353', font);
-	     DrawChar ('\353', frame, xm, yend, font, RO, active, fg);
+	     DrawChar (TEXT('\353'), frame, xm, yend, font, RO, active, fg);
 	     for (yf = yf + CharacterHeight ('\351', font) -
 		  FontAscent (font) + CharacterAscent ('\352', font);
 		  yf < yend;
 		  yf += CharacterHeight ('\352', font))
-		DrawChar ('\352', frame, xm, yf, font, RO, active, fg);
+		DrawChar (TEXT('\352'), frame, xm, yf, font, RO, active, fg);
 	  }
 	else
 	  {
 	     /* Draw a closing bracket */
 	     xm = x + ((l - CharacterWidth ('\371', font)) / 2);
 	     yf = y - FontAscent (font) + CharacterAscent ('\371', font);
-	     DrawChar ('\371', frame, xm, yf, font, RO, active, fg);
+	     DrawChar (TEXT('\371'), frame, xm, yf, font, RO, active, fg);
 	     yend = y + h - CharacterHeight ('\373', font) -
 		FontAscent (font) + CharacterAscent ('\373', font);
-	     DrawChar ('\373', frame, xm, yend, font, RO, active, fg);
+	     DrawChar (TEXT('\373'), frame, xm, yend, font, RO, active, fg);
 	     for (yf = yf + CharacterHeight ('\371', font) -
 		  FontAscent (font) + CharacterAscent ('\372', font);
 		  yf < yend;
 		  yf += CharacterHeight ('\372', font))
-		DrawChar ('\372', frame, xm, yf, font, RO, active, fg);
+		DrawChar (TEXT('\372'), frame, xm, yf, font, RO, active, fg);
 	  }
      }
 }
@@ -1288,14 +1454,14 @@ int                 fg;
 	     /* draw a opening parenthesis */
 	     xm = x + ((l - CharacterWidth ('(', font)) / 2);
 	     yf = y + ((h - CharacterHeight ('(', font)) / 2) - FontAscent (font) + CharacterAscent ('(', font);
-	     DrawChar ('(', frame, xm, yf, font, RO, active, fg);
+	     DrawChar (TEXT('('), frame, xm, yf, font, RO, active, fg);
 	  }
 	else
 	  {
 	     /* draw a closing parenthesis */
 	     xm = x + ((l - CharacterWidth (')', font)) / 2);
 	     yf = y + ((h - CharacterHeight (')', font)) / 2) - FontAscent (font) + CharacterAscent (')', font);
-	     DrawChar (')', frame, xm, yf, font, RO, active, fg);
+	     DrawChar (TEXT(')'), frame, xm, yf, font, RO, active, fg);
 	  }
      }
 
@@ -1307,9 +1473,9 @@ int                 fg;
 	     /* draw a opening parenthesis */
 	     xm = x + ((l - CharacterWidth ('\346', font)) / 2);
 	     yf = y - FontAscent (font) + CharacterAscent ('\346', font);
-	     DrawChar ('\346', frame, xm, yf, font, RO, active, fg);
+	     DrawChar (TEXT('\346'), frame, xm, yf, font, RO, active, fg);
 	     yend = y + h - CharacterHeight ('\350', font) - FontAscent (font) + CharacterAscent ('\350', font) - 1;
-	     DrawChar ('\350', frame, xm, yend, font, RO, active, fg);
+	     DrawChar (TEXT('\350'), frame, xm, yend, font, RO, active, fg);
 
 	     yf += CharacterHeight ('\346', font) - 1;
 	     delta = yend - yf;
@@ -1319,11 +1485,11 @@ int                 fg;
 		       yend -= CharacterHeight ('\347', font) - 1;
 		       yf < yend;
 		       yf += CharacterHeight ('\347', font), exnum++)
-		     DrawChar ('\347', frame, xm, yf, font, RO, active, fg);
+		     DrawChar (TEXT('\347'), frame, xm, yf, font, RO, active, fg);
 		  if (exnum)
-		     DrawChar ('\347', frame, xm, yend, font, RO, active, fg);
+		     DrawChar (TEXT('\347'), frame, xm, yend, font, RO, active, fg);
 		  else
-		     DrawChar ('\347', frame, xm, yf + ((delta - CharacterHeight ('\347', font)) / 2), font, RO, active, fg);
+		     DrawChar (TEXT('\347'), frame, xm, yf + ((delta - CharacterHeight ('\347', font)) / 2), font, RO, active, fg);
 	       }
 	  }
 
@@ -1332,9 +1498,9 @@ int                 fg;
 	     /* draw a closing parenthesis */
 	     xm = x + ((l - CharacterWidth ('\366', font)) / 2);
 	     yf = y - FontAscent (font) + CharacterAscent ('\366', font);
-	     DrawChar ('\366', frame, xm, yf, font, RO, active, fg);
+	     DrawChar (TEXT('\366'), frame, xm, yf, font, RO, active, fg);
 	     yend = y + h - CharacterHeight ('\370', font) - FontAscent (font) + CharacterAscent ('\370', font) - 1;
-	     DrawChar ('\370', frame, xm, yend, font, RO, active, fg);
+	     DrawChar (TEXT('\370'), frame, xm, yend, font, RO, active, fg);
 
 	     yf += CharacterHeight ('\366', font) - 1;
 	     delta = yend - yf;
@@ -1344,11 +1510,11 @@ int                 fg;
 		       yend -= CharacterHeight ('\367', font) - 1;
 		       yf < yend;
 		       yf += CharacterHeight ('\367', font), exnum++)
-		     DrawChar ('\367', frame, xm, yf, font, RO, active, fg);
+		     DrawChar (TEXT('\367'), frame, xm, yf, font, RO, active, fg);
 		  if (exnum)
-		     DrawChar ('\367', frame, xm, yend, font, RO, active, fg);
+		     DrawChar (TEXT('\367'), frame, xm, yend, font, RO, active, fg);
 		  else
-		     DrawChar ('\367', frame, xm, yf + ((delta - CharacterHeight ('\367', font)) / 2), font, RO, active, fg);
+		     DrawChar (TEXT('\367'), frame, xm, yf + ((delta - CharacterHeight ('\367', font)) / 2), font, RO, active, fg);
 	       }
 	  }
      }
@@ -1392,14 +1558,14 @@ int                 fg;
 	     /* just use the opening brace glyph */
 	     xm = x + ((l - CharacterWidth ('{', font)) / 2);
 	     yf = y + ((h - CharacterHeight ('{', font)) / 2) - FontAscent (font) + CharacterAscent ('{', font);
-	     DrawChar ('{', frame, xm, yf, font, RO, active, fg);
+	     DrawChar (TEXT('{'), frame, xm, yf, font, RO, active, fg);
 	  }
 	else
 	  {
 	     /* just use the closing brace glyph */
 	     xm = x + ((l - CharacterWidth ('}', font)) / 2);
 	     yf = y + ((h - CharacterHeight ('}', font)) / 2) - FontAscent (font) + CharacterAscent ('}', font);
-	     DrawChar ('}', frame, xm, yf, font, RO, active, fg);
+	     DrawChar (TEXT('}'), frame, xm, yf, font, RO, active, fg);
 	  }
      }
 
@@ -1411,14 +1577,14 @@ int                 fg;
 	     /* top */
 	     xm = x + ((l - CharacterWidth ('\354', font)) / 2);
 	     yf = y - FontAscent (font) + CharacterAscent ('\354', font);
-	     DrawChar ('\354', frame, xm, yf, font, RO, active, fg);
+	     DrawChar (TEXT('\354'), frame, xm, yf, font, RO, active, fg);
 	     /* vertical line */
 	     ym = y + ((h - CharacterHeight ('\355', font)) / 2) - FontAscent (font)
 		+ CharacterAscent ('\355', font);
-	     DrawChar ('\355', frame, xm, ym, font, RO, active, fg);
+	     DrawChar (TEXT('\355'), frame, xm, ym, font, RO, active, fg);
 	     /* bottom */
 	     yend = y + h - CharacterHeight ('\356', font) - FontAscent (font) + CharacterAscent ('\356', font);
-	     DrawChar ('\356', frame, xm, yend, font, RO, active, fg);
+	     DrawChar (TEXT('\356'), frame, xm, yend, font, RO, active, fg);
 
 	     /* finish top */
 	     yf += CharacterHeight ('\354', font) - 1;
@@ -1429,11 +1595,11 @@ int                 fg;
 		       ym -= CharacterHeight ('\357', font);
 		       yf < ym;
 		       yf += CharacterHeight ('\357', font), exnum++)
-		     DrawChar ('\357', frame, xm, yf, font, RO, active, fg);
+		     DrawChar (TEXT('\357'), frame, xm, yf, font, RO, active, fg);
 		  if (exnum)
-		     DrawChar ('\357', frame, xm, ym, font, RO, active, fg);
+		     DrawChar (TEXT('\357'), frame, xm, ym, font, RO, active, fg);
 		  else
-		     DrawChar ('\357', frame, xm, yf + ((delta - CharacterHeight ('\357', font)) / 2), font, RO, active, fg);
+		     DrawChar (TEXT('\357'), frame, xm, yf + ((delta - CharacterHeight ('\357', font)) / 2), font, RO, active, fg);
 	       }
 	     /* finish bottom */
 	     yf = ym + CharacterHeight ('\355', font) + CharacterHeight ('\357', font);
@@ -1444,11 +1610,11 @@ int                 fg;
 		       yend -= CharacterHeight ('\357', font);
 		       yf < yend;
 		       yf += CharacterHeight ('\357', font), exnum++)
-		     DrawChar ('\357', frame, xm, yf, font, RO, active, fg);
+		     DrawChar (TEXT('\357'), frame, xm, yf, font, RO, active, fg);
 		  if (exnum)
-		     DrawChar ('\357', frame, xm, yend, font, RO, active, fg);
+		     DrawChar (TEXT('\357'), frame, xm, yend, font, RO, active, fg);
 		  else
-		     DrawChar ('\357', frame, xm, yf + ((delta - CharacterHeight ('\357', font)) / 2), font, RO, active, fg);
+		     DrawChar (TEXT('\357'), frame, xm, yf + ((delta - CharacterHeight ('\357', font)) / 2), font, RO, active, fg);
 	       }
 	  }
 
@@ -1457,15 +1623,15 @@ int                 fg;
 	     /* top */
 	     xm = x + ((l - CharacterWidth ('\374', font)) / 2);
 	     yf = y - FontAscent (font) + CharacterAscent ('\374', font);
-	     DrawChar ('\374', frame, xm, yf, font, RO, active, fg);
+	     DrawChar (TEXT('\374'), frame, xm, yf, font, RO, active, fg);
 	     /* center */
 	     ym = y + ((h - CharacterHeight ('\375', font)) / 2)
 		- FontAscent (font) + CharacterAscent ('\375', font);
-	     DrawChar ('\375', frame, xm, ym, font, RO, active, fg);
+	     DrawChar (TEXT('\375'), frame, xm, ym, font, RO, active, fg);
 	     /* bottom */
 	     yend = y + h - CharacterHeight ('\376', font)
 		- FontAscent (font) + CharacterAscent ('\376', font);
-	     DrawChar ('\376', frame, xm, yend, font, RO, active, fg);
+	     DrawChar (TEXT('\376'), frame, xm, yend, font, RO, active, fg);
 	     /* finish top */
 	     yf += CharacterHeight ('\374', font) - 1;
 	     delta = ym - yf;
@@ -1475,11 +1641,11 @@ int                 fg;
 		       ym -= CharacterHeight ('\357', font);
 		       yf < ym;
 		       yf += CharacterHeight ('\357', font), exnum++)
-		     DrawChar ('\357', frame, xm, yf, font, RO, active, fg);
+		     DrawChar (TEXT('\357'), frame, xm, yf, font, RO, active, fg);
 		  if (exnum)
-		     DrawChar ('\357', frame, xm, ym, font, RO, active, fg);
+		     DrawChar (TEXT('\357'), frame, xm, ym, font, RO, active, fg);
 		  else
-		     DrawChar ('\357', frame, xm, yf + ((delta - CharacterHeight ('\357', font)) / 2), font, RO, active, fg);
+		     DrawChar (TEXT('\357'), frame, xm, yf + ((delta - CharacterHeight ('\357', font)) / 2), font, RO, active, fg);
 	       }
 	     /* finish bottom */
 	     yf = ym + CharacterHeight ('\375', font) + CharacterHeight ('\357', font);
@@ -1490,11 +1656,11 @@ int                 fg;
 		       yend -= CharacterHeight ('\357', font);
 		       yf < yend;
 		       yf += CharacterHeight ('\357', font), exnum++)
-		     DrawChar ('\357', frame, xm, yf, font, RO, active, fg);
+		     DrawChar (TEXT('\357'), frame, xm, yf, font, RO, active, fg);
 		  if (exnum)
-		     DrawChar ('\357', frame, xm, yend, font, RO, active, fg);
+		     DrawChar (TEXT('\357'), frame, xm, yend, font, RO, active, fg);
 		  else
-		     DrawChar ('\357', frame, xm, yf + ((delta - CharacterHeight ('\357', font)) / 2), font, RO, active, fg);
+		     DrawChar (TEXT('\357'), frame, xm, yf + ((delta - CharacterHeight ('\357', font)) / 2), font, RO, active, fg);
 	       }
 	  }
      }
@@ -1599,10 +1765,8 @@ int                 pattern;
    }
    hOldPen = SelectObject (TtDisplay, hPen) ;
    result = SelectClipRgn (TtDisplay, clipRgn); 
-#  ifndef _AMAYA_RELEASE_
    if (result == ERROR)
-      MessageBox (FrMainRef [frame], "Cannot select clipping region", "Warning", MB_OK);
-#  endif /* _AMAYA_RELEASE_ */
+      ClipError (frame);
    if (!Rectangle (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, x + FrameTable[frame].FrLeftMargin + width, y + FrameTable[frame].FrTopMargin + height))
       WinErrorBox (FrRef  [frame]);
    SelectObject (TtDisplay, hOldPen);
@@ -1871,10 +2035,8 @@ int                 pattern;
 #     ifdef _WINDOWS
       WIN_GetDeviceContext (frame);
       result = SelectClipRgn (TtDisplay, clipRgn);  
-#     ifndef _AMAYA_RELEASE_
       if (result == ERROR)
-         MessageBox (FrMainRef [frame], "Cannot select clipping region", "Warning", MB_OK);
-#     endif /* _AMAYA_RELEASE_ */
+         ClipError (frame);
       /* if (!GetClipRgn(TtDisplay, clipRgn))
          WinErrorBox (NULL); */
       WinLoadGC (TtDisplay, fg, RO);
@@ -2279,10 +2441,8 @@ C_points           *controls;
 #     ifdef _WINDOWS
       WIN_GetDeviceContext (frame);
       result = SelectClipRgn (TtDisplay, clipRgn);  
-#     ifndef _AMAYA_RELEASE_
       if (result == ERROR)
-         MessageBox (FrMainRef [frame], "Cannot select clipping region", "Warning", MB_OK);
-#     endif /* _AMAYA_RELEASE_ */
+         ClipError (frame);
       /* if (!GetClipRgn(TtDisplay, clipRgn))
          WinErrorBox (NULL); */
       WinLoadGC (TtDisplay, fg, RO);
@@ -2411,10 +2571,8 @@ int                 pattern;
 
    hOldPen = SelectObject (TtDisplay, hPen) ;
    result = SelectClipRgn (TtDisplay, clipRgn); 
-#  ifndef _AMAYA_RELEASE_
    if (result == ERROR)
-      MessageBox (FrMainRef [frame], "Cannot select clipping region", "Warning", MB_OK);
-#  endif /* _AMAYA_RELEASE_ */
+      ClipError (frame);
    if (!RoundRect (TtDisplay, x + FrameTable[frame].FrLeftMargin, y + FrameTable[frame].FrTopMargin, x + FrameTable[frame].FrLeftMargin + width, y + FrameTable[frame].FrTopMargin + height, arc * 2, arc * 2))
       WinErrorBox (FrRef  [frame]);
    SelectObject (TtDisplay, hOldPen);
@@ -2659,10 +2817,8 @@ int                 pattern;
 
    hOldPen = SelectObject (TtDisplay, hPen) ;
    result = SelectClipRgn (TtDisplay, clipRgn); 
-#  ifndef _AMAYA_RELEASE_
    if (result == ERROR)
-      MessageBox (FrMainRef [frame], "Cannot select clipping region", "Warning", MB_OK);
-#  endif /* _AMAYA_RELEASE_ */
+      ClipError (frame);
    if (!Ellipse (TtDisplay, x, y, x + width, y + height))
       WinErrorBox (FrRef  [frame]);
    SelectObject (TtDisplay, hOldPen);
@@ -3284,10 +3440,8 @@ ThotGC              GClocal;
    SetMapperFlags (TtDisplay, 1);
    hOldFont = WinLoadFont(TtDisplay, font);
    result = SelectClipRgn (TtDisplay, clipRgn);  
-#  ifndef _AMAYA_RELEASE_
    if (result == ERROR)
-      MessageBox (NULL, "Cannot select clipping region", "Warning", MB_OK);
-#  endif /* _AMAYA_RELEASE_ */
+      ClipError (-1);
    /* if (!GetClipRgn(TtDisplay, clipRgn))
       WinErrorBox (NULL); */
    TextOut(TtDisplay, x, y, string, ustrlen(string));

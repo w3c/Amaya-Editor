@@ -79,25 +79,25 @@ STRING              data;
    else if (bouton == 1 && valvisib > 0)
      {
 	valvisib--;
-	usprintf (chaine, "%s : %d", TtaGetMessage (LIB, TMSG_CHANGE_FILTER), 10 - valvisib);
+	usprintf (chaine, TEXT("%s : %d"), TtaGetMessage (LIB, TMSG_CHANGE_FILTER), 10 - valvisib);
 	TtaNewLabel (NumTextVisibility, NumMenuVisibility, chaine);
 	SetFrameParams (Fenvisibilityview, valvisib, valzoom);
      }
    else if (bouton == 2 && valvisib < 10)
      {
 	valvisib++;
-	usprintf (chaine, "%s : %d", TtaGetMessage (LIB, TMSG_CHANGE_FILTER), 10 - valvisib);
+	usprintf (chaine, TEXT("%s : %d"), TtaGetMessage (LIB, TMSG_CHANGE_FILTER), 10 - valvisib);
 	TtaNewLabel (NumTextVisibility, NumMenuVisibility, chaine);
 	SetFrameParams (Fenvisibilityview, valvisib, valzoom);
      }
    else if (bouton == 4)
      {
-	usprintf (chaine, "%s : %d", TtaGetMessage (LIB, TMSG_CHANGE_FILTER), 10 - valvisib);
+	usprintf (chaine, TEXT("%s : %d"), TtaGetMessage (LIB, TMSG_CHANGE_FILTER), 10 - valvisib);
 	TtaNewLabel (NumTextVisibility, NumMenuVisibility, chaine);
      }
    else
      {
-	usprintf (chaine, "%s : %d", TtaGetMessage (LIB, TMSG_VALUE_NOT_CHANGED), 10 - valvisib);
+	usprintf (chaine, TEXT("%s : %d"), TtaGetMessage (LIB, TMSG_VALUE_NOT_CHANGED), 10 - valvisib);
 	TtaNewLabel (NumTextVisibility, NumMenuVisibility, chaine);
      }
 
@@ -155,11 +155,11 @@ View                view;
    i = ustrlen (chaine) + 1;
    ustrcpy (&chaine[i], TtaGetMessage (LIB, TMSG_DECREASE));
    TtaNewSheet (NumMenuVisibility,  0, TtaGetMessage (LIB, TMSG_VISIB),
-		2, chaine, FALSE, 4, 'L', D_DONE);
+		2, chaine, FALSE, 4, TEXT('L'), D_DONE);
 
 
    /* Affiche le nom du document concerne */
-   usprintf (chaine, "%s %s", TtaGetDocumentName (document),
+   usprintf (chaine, TEXT("%s %s"), TtaGetDocumentName (document),
 	    TtaGetViewName (document, view));
    Fenvisibilityview = GetWindowNumber (document, view);
    TtaNewLabel (NumDocVisibility, NumMenuVisibility, chaine);

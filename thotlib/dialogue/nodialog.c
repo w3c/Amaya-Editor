@@ -19,10 +19,10 @@
 
 /* Les fonctions vides pour l'edition de lien */
 #ifdef __STDC__
-Pixmap              TtaCreatePixmapLogo (STRING *data)
+Pixmap              TtaCreatePixmapLogo (char** data)
 #else  /* __STDC__ */
 Pixmap              TtaCreatePixmapLogo (data)
-STRING             *data;
+char**              data;
 #endif /* __STDC__ */
 {
    return None;

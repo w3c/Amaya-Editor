@@ -81,6 +81,7 @@
 #include "writepivot_f.h"
 #include "xmlmodule_f.h"
 
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    RedisplayExternalRefs cherche, pour tous les elements du document	
    pDoc qui sont designes par des references, toutes les   
@@ -166,8 +167,8 @@ STRING              fileName;
    ThotBool            ok;
    CHAR_T                URL_DIR_SEP;
 
-   if (fileName && ustrchr (fileName, '/'))
-	  URL_DIR_SEP = '/';
+   if (fileName && ustrchr (fileName, TEXT('/')))
+	  URL_DIR_SEP = TEXT('/');
    else 
 	   URL_DIR_SEP = DIR_SEP;
 
@@ -180,7 +181,7 @@ STRING              fileName;
 	 {
 	   len = ustrlen (fileName);
 	   if (len > 4)
-	     if (ustrcmp (fileName + len - 4, ".PIV") == 0)
+	     if (ustrcmp (fileName + len - 4, PIV_EXT) == 0)
 	       fileName[len - 4] = EOS;
 	   if (fileName[0] != URL_DIR_SEP)
 	     {
@@ -361,13 +362,13 @@ PathBuffer          directory;
 	   /* compose le nom du fichier a ouvrir avec le nom du directory */
 	   /* des schemas... */
 	   ustrncpy (directoryBuffer, SchemaPath, MAX_PATH);
-	   MakeCompleteName (docType, "STR", directoryBuffer, fileNameBuffer, &i);
+	   MakeCompleteName (docType, STR_EXT2, directoryBuffer, fileNameBuffer, &i);
 	   /* teste si le fichier '.STR' existe */
 
 	   if (TtaFileExist (fileNameBuffer) == 0)
 	     {
 		ustrncpy (fileNameBuffer, docType, MAX_NAME_LENGTH);
-		ustrcat (fileNameBuffer, ".STR");
+		ustrcat (fileNameBuffer, STR_EXT);
 		TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_SCHEMA_NOT_FIND), fileNameBuffer);
 	     }
 	   else
@@ -382,7 +383,7 @@ PathBuffer          directory;
 		else
 		  {
 		     ustrncpy (docNameBuffer, (STRING) SSchemaName, MAX_NAME_LENGTH);
-		     ustrcat (docNameBuffer, "X");
+		     ustrcat (docNameBuffer, _X_);
 		  }
 		if ((*pDoc)->DocSSchema != NULL)
 		   if ((*pDoc)->DocSSchema->SsPSchema != NULL)
@@ -431,7 +432,7 @@ PathBuffer          directory;
 			i++;
 		     directoryBuffer[i] = EOS;
 		  }
-		FindCompleteName (docNameBuffer, "PIV", directoryBuffer, fileNameBuffer, &i);
+		FindCompleteName (docNameBuffer, PIV_EXT2, directoryBuffer, fileNameBuffer, &i);
 		ustrncpy ((*pDoc)->DocDName, docNameBuffer, MAX_NAME_LENGTH);
 		(*pDoc)->DocDName[MAX_NAME_LENGTH - 1] = EOS;
 		ustrncpy ((*pDoc)->DocIdent, docNameBuffer, MAX_DOC_IDENT_LEN);
@@ -565,6 +566,7 @@ PtrDocument         pDoc;
 	  PaginateView (pDoc, docView , viewList[i].VdAssoc);
 	}
 }
+#endif /* _WIN_PRINT */
 
 /*----------------------------------------------------------------------
    SetDocumentModified set the document flag DocModified to the status.
@@ -598,7 +600,7 @@ int            length;
     }
 }
 
-
+#ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
    UpdateIncludedElement met a` jour et reaffiche l'element pEl inclus dans  
    le document pDoc.                                       
@@ -1167,3 +1169,4 @@ void BackupOnFatalErrorLoadResources()
   if (ThotLocalActions[T_backuponfatal] == NULL)
     TteConnectAction (T_backuponfatal, (Proc) BackupAll);
 }
+#endif /* _WIN_PRINT */

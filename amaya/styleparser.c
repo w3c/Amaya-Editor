@@ -47,14 +47,14 @@ BackgroundImageCallbackBlock, *BackgroundImageCallbackPtr;
  * for a font attribute.
  */
 #ifdef __STDC__
-typedef char    *(*PropertyParser) (Element element,
+typedef STRING (*PropertyParser) (Element element,
 				    PSchema tsch,
 				    PresentationContext context,
 				    STRING cssRule,
 				    CSSInfoPtr css,
 				    ThotBool isHTML);
 #else
-typedef char    *(*PropertyParser) ();
+typedef STRING (*PropertyParser) ();
 #endif
 
 /* Description of the set of CSS properties supported */
@@ -75,6 +75,17 @@ struct unit_def
 
 static struct unit_def CSSUnitNames[] =
 {
+#  if defined(_I18N_) || defined(__JIS__)
+   {L"pt", STYLE_UNIT_PT},
+   {L"pc", STYLE_UNIT_PC},
+   {L"in", STYLE_UNIT_IN},
+   {L"cm", STYLE_UNIT_CM},
+   {L"mm", STYLE_UNIT_MM},
+   {L"em", STYLE_UNIT_EM},
+   {L"px", STYLE_UNIT_PX},
+   {L"ex", STYLE_UNIT_XHEIGHT},
+   {L"%", STYLE_UNIT_PERCENT}
+#  else /* if defined(_I18N_) || defined(__JIS__) */
    {"pt", STYLE_UNIT_PT},
    {"pc", STYLE_UNIT_PC},
    {"in", STYLE_UNIT_IN},
@@ -84,6 +95,7 @@ static struct unit_def CSSUnitNames[] =
    {"px", STYLE_UNIT_PX},
    {"ex", STYLE_UNIT_XHEIGHT},
    {"%", STYLE_UNIT_PERCENT}
+#  endif /* if defined(_I18N_) || defined(__JIS__) */
 };
 
 #define NB_UNITS (sizeof(CSSUnitNames) / sizeof(struct unit_def))
@@ -353,7 +365,7 @@ Document            doc;
 
   /* some kind of filtering is probably needed !!! */
   if (res == NULL)
-    return ("unknown");
+    return (TEXT("unknown"));
   return (res);
 }
 
@@ -402,13 +414,13 @@ int                  len
       switch (settings->value.typed_data.value)
 	{
 	case STYLE_FONT_HELVETICA:
-	  ustrcpy (buffer, "font-family: helvetica");
+	  ustrcpy (buffer, TEXT("font-family: helvetica"));
 	  break;
 	case STYLE_FONT_TIMES:
-	  ustrcpy (buffer, "font-family: times");
+	  ustrcpy (buffer, TEXT("font-family: times"));
 	  break;
 	case STYLE_FONT_COURIER:
-	  ustrcpy (buffer, "font-family: courier");
+	  ustrcpy (buffer, TEXT("font-family: courier"));
 	  break;
 	}
       break;
@@ -416,22 +428,22 @@ int                  len
       switch (settings->value.typed_data.value)
 	{
 	case STYLE_FONT_BOLD:
-	  ustrcpy (buffer, "font-weight: bold");
+	  ustrcpy (buffer, TEXT("font-weight: bold"));
 	  break;
 	case STYLE_FONT_ROMAN:
-	  ustrcpy (buffer, "font-style: normal");
+	  ustrcpy (buffer, TEXT("font-style: normal"));
 	  break;
 	case STYLE_FONT_ITALICS:
-	  ustrcpy (buffer, "font-style: italic");
+	  ustrcpy (buffer, TEXT("font-style: italic"));
 	  break;
 	case STYLE_FONT_BOLDITALICS:
-	  ustrcpy (buffer, "font-weight: bold; font-style: italic");
+	  ustrcpy (buffer, TEXT("font-weight: bold; font-style: italic"));
 	  break;
 	case STYLE_FONT_OBLIQUE:
-	  ustrcpy (buffer, "font-style: oblique");
+	  ustrcpy (buffer, TEXT("font-style: oblique"));
 	  break;
 	case STYLE_FONT_BOLDOBLIQUE:
-	  ustrcpy (buffer, "font-weight: bold; font-style: oblique");
+	  ustrcpy (buffer, TEXT("font-weight: bold; font-style: oblique"));
 	  break;
 	}
       break;
@@ -440,29 +452,29 @@ int                  len
 	{
 	  if (real)
 	    {
-	      sprintf (buffer, "font-size: %g", fval);
+	      usprintf (buffer, TEXT("font-size: %g"), fval);
 	      add_unit = 1;
 	    }
 	  else
 	    switch (settings->value.typed_data.value)
 	      {
 	      case 1:
-		ustrcpy (buffer, "font-size: xx-small");
+		ustrcpy (buffer, TEXT("font-size: xx-small"));
 		break;
 	      case 2:
-		ustrcpy (buffer, "font-size: x-small");
+		ustrcpy (buffer, TEXT("font-size: x-small"));
 		break;
 	      case 3:
-		ustrcpy (buffer, "font-size: small");
+		ustrcpy (buffer, TEXT("font-size: small"));
 		break;
 	      case 4:
-		ustrcpy (buffer, "font-size: medium");
+		ustrcpy (buffer, TEXT("font-size: medium"));
 		break;
 	      case 5:
-		ustrcpy (buffer, "font-size: large");
+		ustrcpy (buffer, TEXT("font-size: large"));
 		break;
 	      case 6:
-		ustrcpy (buffer, "font-size: x-large");
+		ustrcpy (buffer, TEXT("font-size: x-large"));
 		break;
 	      case 7:
 	      case 8:
@@ -470,16 +482,16 @@ int                  len
 	      case 10:
 	      case 11:
 	      case 12:
-		ustrcpy (buffer, "font-size: xx-large");
+		ustrcpy (buffer, TEXT("font-size: xx-large"));
 		break;
 	      }
 	}
       else
 	{
 	  if (real)
-	    sprintf (buffer, "font-size: %g", fval);
+	    usprintf (buffer, TEXT("font-size: %g"), fval);
 	  else
-	    sprintf (buffer, "font-size: %d", settings->value.typed_data.value);
+	    usprintf (buffer, TEXT("font-size: %d"), settings->value.typed_data.value);
 	  add_unit = 1;
 	}
       break;
@@ -487,48 +499,48 @@ int                  len
       switch (settings->value.typed_data.value)
 	{
 	case STYLE_UNDERLINE:
-	  ustrcpy (buffer, "text-decoration: underline");
+	  ustrcpy (buffer, TEXT("text-decoration: underline"));
 	  break;
 	case STYLE_OVERLINE:
-	  ustrcpy (buffer, "text-decoration: overline");
+	  ustrcpy (buffer, TEXT("text-decoration: overline"));
 	  break;
 	case STYLE_CROSSOUT:
-	  ustrcpy (buffer, "text-decoration: line-through");
+	  ustrcpy (buffer, TEXT("text-decoration: line-through"));
 	  break;
 	}
       break;
     case PRIndent:
       if (real)
-	sprintf (buffer, "text-indent: %g", fval);
+	usprintf (buffer, TEXT("text-indent: %g"), fval);
       else
-	sprintf (buffer, "text-indent: %d", settings->value.typed_data.value);
+	usprintf (buffer, TEXT("text-indent: %d"), settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRLineSpacing:
       if (real)
-	sprintf (buffer, "line-height: %g", fval);
+	usprintf (buffer, TEXT("line-height: %g"), fval);
       else
-	sprintf (buffer, "line-height: %d", settings->value.typed_data.value);
+	usprintf (buffer, TEXT("line-height: %d"), settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRJustify:
       if (settings->value.typed_data.value == STYLE_JUSTIFIED)
-	sprintf (buffer, "text-align: justify");
+	usprintf (buffer, TEXT("text-align: justify"));
       break;
     case PRAdjust:
       switch (settings->value.typed_data.value)
 	{
 	case STYLE_ADJUSTLEFT:
-	  ustrcpy (buffer, "text-align: left");
+	  ustrcpy (buffer, TEXT("text-align: left"));
 	  break;
 	case STYLE_ADJUSTRIGHT:
-	  ustrcpy (buffer, "text-align: right");
+	  ustrcpy (buffer, TEXT("text-align: right"));
 	  break;
 	case STYLE_ADJUSTCENTERED:
-	  ustrcpy (buffer, "text-align: center");
+	  ustrcpy (buffer, TEXT("text-align: center"));
 	  break;
 	case STYLE_ADJUSTLEFTWITHDOTS:
-	  ustrcpy (buffer, "text-align: left");
+	  ustrcpy (buffer, TEXT("text-align: left"));
 	  break;
 	}
       break;
@@ -538,66 +550,66 @@ int                  len
       break;
     case PRBackground:
       TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
-      sprintf (buffer, "background-color: #%02X%02X%02X", red, green, blue);
+      usprintf (buffer, TEXT("background-color: #%02X%02X%02X"), red, green, blue);
       break;
     case PRForeground:
       TtaGiveThotRGB (settings->value.typed_data.value, &red, &green, &blue);
-      sprintf (buffer, "color: #%02X%02X%02X", red, green, blue);
+      usprintf (buffer, TEXT("color: #%02X%02X%02X"), red, green, blue);
       break;
     case PRTMargin:
       if (real)
-	sprintf (buffer, "marging-top: %g", fval);
+	usprintf (buffer, TEXT("marging-top: %g"), fval);
       else
-	sprintf (buffer, "marging-top: %d", settings->value.typed_data.value);
+	usprintf (buffer, TEXT("marging-top: %d"), settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRLMargin:
       if (real)
-	sprintf (buffer, "margin-left: %g", fval);
+	usprintf (buffer, TEXT("margin-left: %g"), fval);
       else
-	sprintf (buffer, "margin-left: %d", settings->value.typed_data.value);
+	usprintf (buffer, TEXT("margin-left: %d"), settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRHeight:
       if (real)
-	sprintf (buffer, "height: %g", fval);
+	usprintf (buffer, TEXT("height: %g"), fval);
       else
-	sprintf (buffer, "height: %d", settings->value.typed_data.value);
+	usprintf (buffer, TEXT("height: %d"), settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRWidth:
       if (real)
-	sprintf (buffer, "width: %g", fval);
+	usprintf (buffer, TEXT("width: %g"), fval);
       else
-	sprintf (buffer, "width: %d", settings->value.typed_data.value);
+	usprintf (buffer, TEXT("width: %d"), settings->value.typed_data.value);
       add_unit = 1;
       break;
     case PRLine:
       if (settings->value.typed_data.value == STYLE_INLINE)
-	ustrcpy (buffer, "display: inline");
+	ustrcpy (buffer, TEXT("display: inline"));
       else if (settings->value.typed_data.value == STYLE_NOTINLINE)
-	ustrcpy (buffer, "display: block");
+	ustrcpy (buffer, TEXT("display: block"));
       break;
     case PRBackgroundPicture:
       if (settings->value.pointer != NULL)
-	sprintf (buffer, "background-image: url(%s)", (char *)(settings->value.pointer));
+	usprintf (buffer, TEXT("background-image: url(%s)"), (settings->value.pointer));
       else
-	sprintf (buffer, "background-image: none");
+	usprintf (buffer, TEXT("background-image: none"));
       break;
     case PRPictureMode:
       switch (settings->value.typed_data.value)
 	{
 	case STYLE_REALSIZE:
-	  sprintf (buffer, "background-repeat: no-repeat");
+	  usprintf (buffer, TEXT("background-repeat: no-repeat"));
 	  break;
 	case STYLE_REPEAT:
-	  sprintf (buffer, "background-repeat: repeat");
+	  usprintf (buffer, TEXT("background-repeat: repeat"));
 	  break;
 	case STYLE_VREPEAT:
-	  sprintf (buffer, "background-repeat: repeat-y");
+	  usprintf (buffer, TEXT("background-repeat: repeat-y"));
 	  break;
 	case STYLE_HREPEAT:
-	  sprintf (buffer, "background-repeat: repeat-x");
+	  usprintf (buffer, TEXT("background-repeat: repeat-x"));
 	  break;
 	}
       break;
@@ -662,7 +674,7 @@ void                *param;
     PToCss (settings, string, sizeof(string));
 
   if (string[0] != EOS && *css_rules != EOS)
-    ustrcat (css_rules, "; ");
+    ustrcat (css_rules, TEXT("; "));
   if (string[0] != EOS)
     ustrcat (css_rules, string);
 }
@@ -701,7 +713,7 @@ int                *len;
    * BODY / HTML elements specific handling.
    */
   elType = TtaGetElementType (el);
-  if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+  if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
     {
       if (elType.ElTypeNum == HTML_EL_HTML)
 	{
@@ -710,7 +722,7 @@ int                *len;
 	  if (!el)
 	    return;
 	  if (*len > 0)
-	    ustrcat(buf,";");
+	    ustrcat(buf, TEXT(";"));
 	  *len = ustrlen (buf);
 	  TtaApplyAllSpecificSettings (el, doc, SpecificSettingsToCSS, &buf[*len]);
 	  *len = ustrlen (buf);
@@ -721,7 +733,7 @@ int                *len;
 	  if (!el)
 	    return;
 	  if (*len > 0)
-	    ustrcat(buf,";");
+	    ustrcat(buf, TEXT(";"));
 	  *len = ustrlen (buf);
 	  TtaApplyAllSpecificSettings (el, doc, SpecificSettingsToCSS, &buf[*len]);
 	  *len = ustrlen (buf);
@@ -1029,25 +1041,25 @@ ThotBool            isHTML;
    pval.typed_data.unit = STYLE_UNIT_REL;
    pval.typed_data.real = FALSE;
    cssRule = SkipBlanksAndComments (cssRule);
-   if (!ustrncasecmp (cssRule, "block", 5))
+   if (!ustrncasecmp (cssRule, TEXT("block"), 5))
      {
 	pval.typed_data.value = STYLE_NOTINLINE;
 	TtaSetStylePresentation (PRLine, element, tsch, context, pval);
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "inline", 6))
+   else if (!ustrncasecmp (cssRule, TEXT("inline"), 6))
      {
 	pval.typed_data.value = STYLE_INLINE;
 	TtaSetStylePresentation (PRLine, element, tsch, context, pval);
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "none", 4))
+   else if (!ustrncasecmp (cssRule, TEXT("none"), 4))
      {
 	pval.typed_data.value = STYLE_HIDE;
 	TtaSetStylePresentation (PRVisibility, element, tsch, context, pval);
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "list-item", 9))
+   else if (!ustrncasecmp (cssRule, TEXT("list-item"), 9))
      cssRule = SkipProperty (cssRule);
    else
      fprintf (stderr, "invalid display value %s\n", cssRule);
@@ -1207,22 +1219,22 @@ ThotBool            isHTML;
    justify.typed_data.real = FALSE;
 
    cssRule = SkipBlanksAndComments (cssRule);
-   if (!ustrncasecmp (cssRule, "left", 4))
+   if (!ustrncasecmp (cssRule, TEXT("left"), 4))
      {
 	align.typed_data.value = AdjustLeft;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "right", 5))
+   else if (!ustrncasecmp (cssRule, TEXT("right"), 5))
      {
 	align.typed_data.value = AdjustRight;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "center", 6))
+   else if (!ustrncasecmp (cssRule, TEXT("center"), 6))
      {
 	align.typed_data.value = Centered;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "justify", 7))
+   else if (!ustrncasecmp (cssRule, TEXT("justify"), 7))
      {
 	justify.typed_data.value = Justified;
 	cssRule = SkipWord (cssRule);
@@ -1336,9 +1348,9 @@ ThotBool            isHTML;
 #endif
 {
    cssRule = SkipBlanksAndComments (cssRule);
-   if (!ustrncasecmp (cssRule, "normal", 6))
+   if (!ustrncasecmp (cssRule, TEXT("normal"), 6))
      cssRule = SkipWord (cssRule);
-   else if (!ustrncasecmp (cssRule, "pre", 3))
+   else if (!ustrncasecmp (cssRule, TEXT("pre"), 3))
      cssRule = SkipWord (cssRule);
    else
      return (cssRule);
@@ -1390,55 +1402,55 @@ ThotBool            isHTML;
 
    pval.typed_data.real = FALSE;
    cssRule = SkipBlanksAndComments (cssRule);
-   if (!ustrncasecmp (cssRule, "larger", 6))
+   if (!ustrncasecmp (cssRule, TEXT("larger"), 6))
      {
 	pval.typed_data.unit = STYLE_UNIT_PERCENT;
 	pval.typed_data.value = 130;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "smaller", 7))
+   else if (!ustrncasecmp (cssRule, TEXT("smaller"), 7))
      {
 	pval.typed_data.unit = STYLE_UNIT_PERCENT;
 	pval.typed_data.value = 80;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "xx-small", 8))
+   else if (!ustrncasecmp (cssRule, TEXT("xx-small"), 8))
      {
 	pval.typed_data.unit = STYLE_UNIT_REL;
 	pval.typed_data.value = 1;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "x-small", 7))
+   else if (!ustrncasecmp (cssRule, TEXT("x-small"), 7))
      {
 	pval.typed_data.unit = STYLE_UNIT_REL;
 	pval.typed_data.value = 2;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "small", 5))
+   else if (!ustrncasecmp (cssRule, TEXT("small"), 5))
      {
 	pval.typed_data.unit = STYLE_UNIT_REL;
 	pval.typed_data.value = 3;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "medium", 6))
+   else if (!ustrncasecmp (cssRule, TEXT("medium"), 6))
      {
 	pval.typed_data.unit = STYLE_UNIT_REL;
 	pval.typed_data.value = 4;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "large", 5))
+   else if (!ustrncasecmp (cssRule, TEXT("large"), 5))
      {
 	pval.typed_data.unit = STYLE_UNIT_REL;
 	pval.typed_data.value = 5;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "x-large", 7))
+   else if (!ustrncasecmp (cssRule, TEXT("x-large"), 7))
      {
 	pval.typed_data.unit = STYLE_UNIT_REL;
 	pval.typed_data.value = 6;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "xx-large", 8))
+   else if (!ustrncasecmp (cssRule, TEXT("xx-large"), 8))
      {
 	pval.typed_data.unit = STYLE_UNIT_REL;
 	pval.typed_data.value = 7;
@@ -1509,18 +1521,18 @@ ThotBool            isHTML;
   else
      quoteChar = '\0';
 
-  if (!ustrncasecmp (cssRule, "times", 5))
+  if (!ustrncasecmp (cssRule, TEXT("times"), 5))
       font.typed_data.value = STYLE_FONT_TIMES;
-  else if (!ustrncasecmp (cssRule, "serif", 5))
+  else if (!ustrncasecmp (cssRule, TEXT("serif"), 5))
       font.typed_data.value = STYLE_FONT_TIMES;
-  else if (!ustrncasecmp (cssRule, "helvetica", 9) ||
-	   !ustrncasecmp (cssRule, "verdana", 7))
+  else if (!ustrncasecmp (cssRule, TEXT("helvetica"), 9) ||
+	   !ustrncasecmp (cssRule, TEXT("verdana"), 7))
       font.typed_data.value = STYLE_FONT_HELVETICA;
-  else if (!ustrncasecmp (cssRule, "sans-serif", 10))
+  else if (!ustrncasecmp (cssRule, TEXT("sans-serif"), 10))
       font.typed_data.value = STYLE_FONT_HELVETICA;
-  else if (!ustrncasecmp (cssRule, "courier", 7))
+  else if (!ustrncasecmp (cssRule, TEXT("courier"), 7))
       font.typed_data.value = STYLE_FONT_COURIER;
-  else if (!ustrncasecmp (cssRule, "monospace", 9))
+  else if (!ustrncasecmp (cssRule, TEXT("monospace"), 9))
       font.typed_data.value = STYLE_FONT_COURIER;
   else
     /* unknown font name.  Skip it */
@@ -1572,56 +1584,56 @@ ThotBool            isHTML;
    weight.typed_data.unit = STYLE_UNIT_REL;
    weight.typed_data.real = FALSE;
    cssRule = SkipBlanksAndComments (cssRule);
-   if (!ustrncasecmp (cssRule, "100", 3) && !isalpha (cssRule[3]))
+   if (!ustrncasecmp (cssRule, TEXT("100"), 3) && !isalpha (cssRule[3]))
      {
 	weight.typed_data.value = -3;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "200", 3) && !isalpha (cssRule[3]))
+   else if (!ustrncasecmp (cssRule, TEXT("200"), 3) && !isalpha (cssRule[3]))
      {
 	weight.typed_data.value = -2;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "300", 3) && !isalpha (cssRule[3]))
+   else if (!ustrncasecmp (cssRule, TEXT("300"), 3) && !isalpha (cssRule[3]))
      {
 	weight.typed_data.value = -1;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "normal", 6) ||
-	    (!ustrncasecmp (cssRule, "400", 3) && !isalpha (cssRule[3])))
+   else if (!ustrncasecmp (cssRule, TEXT("normal"), 6) ||
+	    (!ustrncasecmp (cssRule, TEXT("400"), 3) && !isalpha (cssRule[3])))
      {
 	weight.typed_data.value = 0;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "500", 3) && !isalpha (cssRule[3]))
+   else if (!ustrncasecmp (cssRule, TEXT("500"), 3) && !isalpha (cssRule[3]))
      {
 	weight.typed_data.value = +1;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "600", 3) && !isalpha (cssRule[3]))
+   else if (!ustrncasecmp (cssRule, TEXT("600"), 3) && !isalpha (cssRule[3]))
      {
 	weight.typed_data.value = +2;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "bold", 4) ||
-	    (!ustrncasecmp (cssRule, "700", 3) && !isalpha (cssRule[3])))
+   else if (!ustrncasecmp (cssRule, TEXT("bold"), 4) ||
+	    (!ustrncasecmp (cssRule, TEXT("700"), 3) && !isalpha (cssRule[3])))
      {
 	weight.typed_data.value = +3;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "800", 3) && !isalpha (cssRule[3]))
+   else if (!ustrncasecmp (cssRule, TEXT("800"), 3) && !isalpha (cssRule[3]))
      {
 	weight.typed_data.value = +4;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "900", 3) && !isalpha (cssRule[3]))
+   else if (!ustrncasecmp (cssRule, TEXT("900"), 3) && !isalpha (cssRule[3]))
      {
 	weight.typed_data.value = +5;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "inherit", 7) ||
-	    !ustrncasecmp (cssRule, "bolder", 6) ||
-	    !ustrncasecmp (cssRule, "lighter", 7))
+   else if (!ustrncasecmp (cssRule, TEXT("inherit"), 7) ||
+	    !ustrncasecmp (cssRule, TEXT("bolder"), 6) ||
+	    !ustrncasecmp (cssRule, TEXT("lighter"), 7))
      {
      /* not implemented */
      cssRule = SkipWord (cssRule);
@@ -1690,17 +1702,17 @@ ThotBool            isHTML;
    style.typed_data.unit = STYLE_UNIT_REL;
    style.typed_data.real = FALSE;
    cssRule = SkipBlanksAndComments (cssRule);
-   if (!ustrncasecmp (cssRule, "small-caps", 10))
+   if (!ustrncasecmp (cssRule, TEXT("small-caps"), 10))
      {
        /* Not supported yet */
        cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "normal", 6))
+   else if (!ustrncasecmp (cssRule, TEXT("normal"), 6))
      {
        /* Not supported yet */
        cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "inherit", 7))
+   else if (!ustrncasecmp (cssRule, TEXT("inherit"), 7))
      {
        /* Not supported yet */
        cssRule = SkipWord (cssRule);
@@ -1740,17 +1752,17 @@ ThotBool            isHTML;
    size.typed_data.unit = STYLE_UNIT_REL;
    size.typed_data.real = FALSE;
    cssRule = SkipBlanksAndComments (cssRule);
-   if (!ustrncasecmp (cssRule, "italic", 6))
+   if (!ustrncasecmp (cssRule, TEXT("italic"), 6))
      {
 	style.typed_data.value = STYLE_FONT_ITALICS;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "oblique", 7))
+   else if (!ustrncasecmp (cssRule, TEXT("oblique"), 7))
      {
 	style.typed_data.value = STYLE_FONT_OBLIQUE;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "normal", 6))
+   else if (!ustrncasecmp (cssRule, TEXT("normal"), 6))
      {
 	style.typed_data.value = STYLE_FONT_ROMAN;
 	cssRule = SkipWord (cssRule);
@@ -1824,17 +1836,17 @@ ThotBool            isHTML;
   STRING            ptr;
 
   cssRule = SkipBlanksAndComments (cssRule);
-  if (!ustrncasecmp (cssRule, "caption", 7))
+  if (!ustrncasecmp (cssRule, TEXT("caption"), 7))
     ;
-  else if (!ustrncasecmp (cssRule, "icon", 4))
+  else if (!ustrncasecmp (cssRule, TEXT("icon"), 4))
     ;
-  else if (!ustrncasecmp (cssRule, "menu", 4))
+  else if (!ustrncasecmp (cssRule, TEXT("menu"), 4))
     ;
-  else if (!ustrncasecmp (cssRule, "message-box", 11))
+  else if (!ustrncasecmp (cssRule, TEXT("message-box"), 11))
     ;
-  else if (!ustrncasecmp (cssRule, "small-caption", 13))
+  else if (!ustrncasecmp (cssRule, TEXT("small-caption"), 13))
     ;
-  else if (!ustrncasecmp (cssRule, "status-bar", 10))
+  else if (!ustrncasecmp (cssRule, TEXT("status-bar"), 10))
     ;
   else
       {
@@ -1920,47 +1932,47 @@ ThotBool            isHTML;
    decor.typed_data.unit = STYLE_UNIT_REL;
    decor.typed_data.real = FALSE;
    cssRule = SkipBlanksAndComments (cssRule);
-   if (!ustrncasecmp (cssRule, "underline", ustrlen ("underline")))
+   if (!ustrncasecmp (cssRule, TEXT("underline"), ustrlen (TEXT("underline"))))
      {
 	decor.typed_data.value = Underline;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "overline", ustrlen ("overline")))
+   else if (!ustrncasecmp (cssRule, TEXT("overline"), ustrlen (TEXT("overline"))))
      {
 	decor.typed_data.value = Overline;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "line-through", ustrlen ("line-through")))
+   else if (!ustrncasecmp (cssRule, TEXT("line-through"), ustrlen (TEXT("line-through"))))
      {
 	decor.typed_data.value = CrossOut;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "box", ustrlen ("box")))
+   else if (!ustrncasecmp (cssRule, TEXT("box"), ustrlen (TEXT("box"))))
      {
        /* the box text-decoration attribute is not yet supported */
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "boxshadow", ustrlen ("boxshadow")))
+   else if (!ustrncasecmp (cssRule, TEXT("boxshadow"), ustrlen (TEXT("boxshadow"))))
      {
        /* the boxshadow text-decoration attribute is not yet supported */
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "box3d", ustrlen ("box3d")))
+   else if (!ustrncasecmp (cssRule, TEXT("box3d"), ustrlen (TEXT("box3d"))))
      {
        /* the box3d text-decoration attribute is not yet supported */
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "cartouche", ustrlen ("cartouche")))
+   else if (!ustrncasecmp (cssRule, TEXT("cartouche"), ustrlen (TEXT("cartouche"))))
      {
 	/*the cartouche text-decoration attribute is not yet supported */
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "blink", ustrlen ("blink")))
+   else if (!ustrncasecmp (cssRule, TEXT("blink"), ustrlen (TEXT("blink"))))
      {
 	/*the blink text-decoration attribute will not be supported */
 	cssRule = SkipWord (cssRule);
      }
-   else if (!ustrncasecmp (cssRule, "none", ustrlen ("none")))
+   else if (!ustrncasecmp (cssRule, TEXT("none"), ustrlen (TEXT("none"))))
      {
 	decor.typed_data.value = NoUnderline;
 	cssRule = SkipWord (cssRule);
@@ -2049,7 +2061,7 @@ PresentationValue  *val;
 	  cssRule = &cssRule[6];
 	}
     }
-  else if (!ustrncasecmp (cssRule, "rgb", 3))
+  else if (!ustrncasecmp (cssRule, TEXT("rgb"), 3))
     {
       cssRule = &cssRule[3];
       cssRule = SkipBlanksAndComments (cssRule);
@@ -2061,15 +2073,15 @@ PresentationValue  *val;
 	  if (*cssRule == '%')
 	    {
 	      /* encoded as rgb(%red,%green,&blue) */
-	      sscanf (cssRule, "%%%d", &r);
-	      while (*cssRule != EOS && *cssRule != ',')
+	      usscanf (cssRule, TEXT("%%%d"), &r);
+	      while (*cssRule != EOS && *cssRule != TEXT(','))
 		cssRule++;
 	      cssRule++;
-	      sscanf (cssRule, "%%%d", &g);
-	      while (*cssRule != EOS && *cssRule != ',')
+	      usscanf (cssRule, TEXT("%%%d"), &g);
+	      while (*cssRule != EOS && *cssRule != TEXT(','))
 		cssRule++;
 	      cssRule++;
-	      sscanf (cssRule, "%%%d", &b);
+	      usscanf (cssRule, TEXT("%%%d"), &b);
 	      redval = (unsigned short)(r * 255 / 100);
 	      greenval = (unsigned short)(g * 255 / 100);
 	      blueval = (unsigned short)(b * 255 / 100);
@@ -2077,15 +2089,15 @@ PresentationValue  *val;
 	  else
 	    {
 	      /* encoded as rgb(red,green,blue) */
-	      sscanf (cssRule, "%d", &r);
-	      while (*cssRule != EOS && *cssRule != ',')
+	      usscanf (cssRule, TEXT("%d"), &r);
+	      while (*cssRule != EOS && *cssRule != TEXT(','))
 		cssRule++;
 	      cssRule++;
-	      sscanf (cssRule, "%d", &g);
-	      while (*cssRule != EOS && *cssRule != ',')
+	      usscanf (cssRule, TEXT("%d"), &g);
+	      while (*cssRule != EOS && *cssRule != TEXT(','))
 		cssRule++;
 	      cssRule++;
-	      sscanf (cssRule, "%d", &b);
+	      usscanf (cssRule, TEXT("%d"), &b);
 	      redval = (unsigned short)r;
 	      greenval = (unsigned short)g;
 	      blueval = (unsigned short)b;
@@ -2162,7 +2174,7 @@ ThotBool            isHTML;
    cssRule = SkipBlanksAndComments (cssRule);
 
    /* first parse the attribute string */
-   if (!ustrcasecmp (cssRule, "auto"))
+   if (!ustrcasecmp (cssRule, TEXT("auto")))
      {
 	cssRule = SkipWord (cssRule);
 	/* ParseCSSHeight : auto */
@@ -2192,7 +2204,7 @@ ThotBool            isHTML;
    cssRule = SkipBlanksAndComments (cssRule);
 
    /* first parse the attribute string */
-   if (!ustrcasecmp (cssRule, "auto"))
+   if (!ustrcasecmp (cssRule, TEXT("auto")))
      {
 	cssRule = SkipWord (cssRule);
 	return (cssRule);
@@ -2553,7 +2565,7 @@ ThotBool            isHTML;
 
   best.typed_data.unit = STYLE_UNIT_INVALID;
   best.typed_data.real = FALSE;
-  if (!ustrncasecmp (cssRule, "transparent", ustrlen ("transparent")))
+  if (!ustrncasecmp (cssRule, TEXT("transparent"), ustrlen (TEXT("transparent"))))
     {
       best.typed_data.value = STYLE_PATTERN_NONE;
       best.typed_data.unit = STYLE_UNIT_REL;
@@ -2667,7 +2679,7 @@ STRING              styleString;
 
   ptr = NULL;
   sString = styleString;
-  b = ustrstr (sString, "url");
+  b = ustrstr (sString, TEXT("url"));
   while (b != NULL)
     {
       /* we need to compare this url with the new doc path */
@@ -2742,7 +2754,7 @@ STRING              styleString;
       else
 	sString = b;
       /* next background-image */
-      b = ustrstr (sString, "url");      
+      b = ustrstr (sString, TEXT("url")); 
     }
   return (ptr);
 }
@@ -2764,7 +2776,7 @@ STRING              styleString;
   int                 len;
 
   ptr = NULL;
-  b = ustrstr (styleString, "url");
+  b = ustrstr (styleString, TEXT("url"));
   if (b != NULL)
     {
       b += 3;
@@ -2854,7 +2866,7 @@ ThotBool            isHTML;
 
   url = NULL;
   cssRule = SkipBlanksAndComments (cssRule);
-  if (!ustrncasecmp (cssRule, "url", 3))
+  if (!ustrncasecmp (cssRule, TEXT("url"), 3))
     {  
       cssRule += 3;
       cssRule = SkipBlanksAndComments (cssRule);
@@ -2904,8 +2916,8 @@ ThotBool            isHTML;
 	}
       else if (url)
 	{
-	  bg_image = TtaGetEnvString ("ENABLE_BG_IMAGES");
-	  if (bg_image == NULL || !ustrcasecmp (bg_image,"yes"))
+	  bg_image = TtaGetEnvString (TEXT("ENABLE_BG_IMAGES"));
+	  if (bg_image == NULL || !ustrcasecmp (bg_image, TEXT("yes")))
 	    {
 	      callblock = (BackgroundImageCallbackPtr) TtaGetMemory(sizeof(BackgroundImageCallbackBlock));
 	      if (callblock != NULL)
@@ -2988,13 +3000,13 @@ ThotBool            isHTML;
   repeat.typed_data.unit = STYLE_UNIT_REL;
   repeat.typed_data.real = FALSE;
   cssRule = SkipBlanksAndComments (cssRule);
-  if (!ustrncasecmp (cssRule, "no-repeat", 9))
+  if (!ustrncasecmp (cssRule, TEXT("no-repeat"), 9))
     repeat.typed_data.value = STYLE_REALSIZE;
-  else if (!ustrncasecmp (cssRule, "repeat-y", 8))
+  else if (!ustrncasecmp (cssRule, TEXT("repeat-y"), 8))
     repeat.typed_data.value = STYLE_VREPEAT;
-  else if (!ustrncasecmp (cssRule, "repeat-x", 8))
+  else if (!ustrncasecmp (cssRule, TEXT("repeat-x"), 8))
     repeat.typed_data.value = STYLE_HREPEAT;
-  else if (!ustrncasecmp (cssRule, "repeat", 6))
+  else if (!ustrncasecmp (cssRule, TEXT("repeat"), 6))
     repeat.typed_data.value = STYLE_REPEAT;
   else
     return (cssRule);
@@ -3043,9 +3055,9 @@ ThotBool            isHTML;
     }
 
    cssRule = SkipBlanksAndComments (cssRule);
-   if (!ustrncasecmp (cssRule, "scroll", 6))
+   if (!ustrncasecmp (cssRule, TEXT("scroll"), 6))
      cssRule = SkipWord (cssRule);
-   else if (!ustrncasecmp (cssRule, "fixed", 5))
+   else if (!ustrncasecmp (cssRule, TEXT("fixed"), 5))
      cssRule = SkipWord (cssRule);
 
   /* restore the refered element */
@@ -3091,15 +3103,15 @@ ThotBool            isHTML;
 
    cssRule = SkipBlanksAndComments (cssRule);
    ok = TRUE;
-   if (!ustrncasecmp (cssRule, "left", 4))
+   if (!ustrncasecmp (cssRule, TEXT("left"), 4))
      cssRule = SkipWord (cssRule);
-   else if (!ustrncasecmp (cssRule, "right", 5))
+   else if (!ustrncasecmp (cssRule, TEXT("right"), 5))
      cssRule = SkipWord (cssRule);
-   else if (!ustrncasecmp (cssRule, "center", 6))
+   else if (!ustrncasecmp (cssRule, TEXT("center"), 6))
      cssRule = SkipWord (cssRule);
-   else if (!ustrncasecmp (cssRule, "top", 3))
+   else if (!ustrncasecmp (cssRule, TEXT("top"), 3))
      cssRule = SkipWord (cssRule);
-   else if (!ustrncasecmp (cssRule, "bottom", 6))
+   else if (!ustrncasecmp (cssRule, TEXT("bottom"), 6))
      cssRule = SkipWord (cssRule);
    else if (isdigit (*cssRule))
      cssRule = SkipWord (cssRule);
@@ -3143,24 +3155,24 @@ ThotBool            isHTML;
   while (*cssRule != ';' && *cssRule != EOS && *cssRule != ',')
     {
       /* perhaps a Backgroud Image */
-      if (!ustrncasecmp (cssRule, "url", 3))
+      if (!ustrncasecmp (cssRule, TEXT("url"), 3))
 	cssRule = ParseCSSBackgroundImage (element, tsch, context, cssRule, css, isHTML);
       /* perhaps a Background Attachment */
-      else if (!ustrncasecmp (cssRule, "scroll", 6) ||
-	       !ustrncasecmp (cssRule, "fixed", 5))
+      else if (!ustrncasecmp (cssRule, TEXT("scroll"), 6) ||
+	       !ustrncasecmp (cssRule, TEXT("fixed"), 5))
 	cssRule = ParseCSSBackgroundAttachment (element, tsch, context, cssRule, css, isHTML);
       /* perhaps a Background Repeat */
-      else if (!ustrncasecmp (cssRule, "no-repeat", 9) ||
-	       !ustrncasecmp (cssRule, "repeat-y", 8) ||
-	       !ustrncasecmp (cssRule, "repeat-x", 8) ||
-	       !ustrncasecmp (cssRule, "repeat", 6))
+      else if (!ustrncasecmp (cssRule, TEXT("no-repeat"), 9) ||
+	       !ustrncasecmp (cssRule, TEXT("repeat-y"), 8) ||
+	       !ustrncasecmp (cssRule, TEXT("repeat-x"), 8) ||
+	       !ustrncasecmp (cssRule, TEXT("repeat"), 6))
 	cssRule = ParseCSSBackgroundRepeat (element, tsch, context, cssRule, css, isHTML);
       /* perhaps a Background Position */
-      else if (!ustrncasecmp (cssRule, "left", 4) ||
-	       !ustrncasecmp (cssRule, "right", 5) ||
-	       !ustrncasecmp (cssRule, "center", 6) ||
-	       !ustrncasecmp (cssRule, "top", 3) ||
-	       !ustrncasecmp (cssRule, "bottom", 6) ||
+      else if (!ustrncasecmp (cssRule, TEXT("left"), 4) ||
+	       !ustrncasecmp (cssRule, TEXT("right"), 5) ||
+	       !ustrncasecmp (cssRule, TEXT("center"), 6) ||
+	       !ustrncasecmp (cssRule, TEXT("top"), 3) ||
+	       !ustrncasecmp (cssRule, TEXT("bottom"), 6) ||
 	       isdigit (*cssRule))
 	cssRule = ParseCSSBackgroundPosition (element, tsch, context, cssRule, css, isHTML);
       /* perhaps a Background Color */
@@ -3191,6 +3203,69 @@ ThotBool            isHTML;
  */
 static CSSProperty CSSProperties[] =
 {
+#  if defined(_I18N_) || defined(__JIS__)
+   {L"font-family", ParseCSSFontFamily},
+   {L"font-style", ParseCSSFontStyle},
+   {L"font-variant", ParseCSSFontVariant},
+   {L"font-weight", ParseCSSFontWeight},
+   {L"font-size", ParseCSSFontSize},
+   {L"font", ParseCSSFont},
+
+   {L"color", ParseCSSForeground},
+   {L"background-color", ParseCSSBackgroundColor},
+   {L"background-image", ParseCSSBackgroundImage},
+   {L"background-repeat", ParseCSSBackgroundRepeat},
+   {L"background-attachment", ParseCSSBackgroundAttachment},
+   {L"background-position", ParseCSSBackgroundPosition},
+   {L"background", ParseCSSBackground},
+
+   {L"word-spacing", ParseCSSWordSpacing},
+   {L"letter-spacing", ParseCSSLetterSpacing},
+   {L"text-decoration", ParseCSSTextDecoration},
+   {L"vertical-align", ParseCSSVerticalAlign},
+   {L"text-transform", ParseCSSTextTransform},
+   {L"text-align", ParseCSSTextAlign},
+   {L"text-indent", ParseCSSTextIndent},
+   {L"line-height", ParseCSSLineSpacing},
+
+   {L"margin-top", ParseCSSMarginTop},
+   {L"margin-right", ParseCSSMarginRight},
+   {L"margin-bottom", ParseCSSMarginBottom},
+   {L"margin-left", ParseCSSMarginLeft},
+   {L"margin", ParseCSSMargin},
+
+   {L"padding-top", ParseCSSPaddingTop},
+   {L"padding-right", ParseCSSPaddingRight},
+   {L"padding-bottom", ParseCSSPaddingBottom},
+   {L"padding-left", ParseCSSPaddingLeft},
+   {L"padding", ParseCSSPadding},
+
+   {L"border-top-width", ParseCSSBorderTopWidth},
+   {L"border-right-width", ParseCSSBorderRightWidth},
+   {L"border-bottom-width", ParseCSSBorderBottomWidth},
+   {L"border-left-width", ParseCSSBorderLeftWidth},
+   {L"border-width", ParseCSSBorderWidth},
+   {L"border-color", ParseCSSBorderColor},
+   {L"border-style", ParseCSSBorderStyle},
+   {L"border-top", ParseCSSBorderTop},
+   {L"border-right", ParseCSSBorderRight},
+   {L"border-bottom", ParseCSSBorderBottom},
+   {L"border-left", ParseCSSBorderLeft},
+   {L"border", ParseCSSBorder},
+
+   {L"width", ParseCSSWidth},
+   {L"height", ParseCSSHeight},
+   {L"float", ParseCSSFloat},
+   {L"clear", ParseCSSClear},
+
+   {L"display", ParseCSSDisplay},
+   {L"white-space", ParseCSSWhiteSpace},
+
+   {L"list-style-type", ParseCSSListStyleType},
+   {L"list-style-image", ParseCSSListStyleImage},
+   {L"list-style-position", ParseCSSListStylePosition},
+   {L"list-style", ParseCSSListStyle}
+#  else /* defined(_I18N_) || defined(__JIS__) */
    {"font-family", ParseCSSFontFamily},
    {"font-style", ParseCSSFontStyle},
    {"font-variant", ParseCSSFontVariant},
@@ -3252,6 +3327,7 @@ static CSSProperty CSSProperties[] =
    {"list-style-image", ParseCSSListStyleImage},
    {"list-style-position", ParseCSSListStylePosition},
    {"list-style", ParseCSSListStyle}
+#  endif /* defined(_I18N_) || defined(__JIS__) */
 };
 #define NB_CSSSTYLEATTRIBUTE (sizeof(CSSProperties) / sizeof(CSSProperty))
 
@@ -3361,7 +3437,7 @@ ThotBool            destroy;
 
    /*  A rule applying to BODY is really meant to address HTML */
    elType = TtaGetElementType (el);
-   isHTML = (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0);
+   isHTML = (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0);
    /* create the context of the Specific presentation driver */
    context = TtaGetSpecificStyleContext (doc);
    if (context == NULL)
@@ -3438,7 +3514,7 @@ CSSInfoPtr      css;
       elem = deb;
       if (*selector == ':' || *selector == '.' || *selector == '#')
 	/* keep the name as attrelemname */
-	strcpy (attrelemname, elem);
+	ustrcpy (attrelemname, elem);
       deb = cur;
 
       if (*selector == '.')
@@ -3568,7 +3644,7 @@ CSSInfoPtr      css;
   ctxt->schema = elType.ElSSchema;
   if (elType.ElSSchema == NULL)
     ctxt->schema = TtaGetDocumentSSchema (doc);
-  isHTML = (ustrcmp(TtaGetSSchemaName (ctxt->schema), "HTML") == 0);
+  isHTML = (ustrcmp(TtaGetSSchemaName (ctxt->schema), TEXT("HTML")) == 0);
   tsch = GetPExtension (doc, ctxt->schema, css);
   structName = TtaGetSSchemaName (ctxt->schema);
   if (ctxt->type == 0 && ctxt->attr == 0 &&
@@ -3857,7 +3933,7 @@ STRING              color;
 {
    CHAR_T             css_command[100];
 
-   sprintf (css_command, "background-color: %s", color);
+   usprintf (css_command, TEXT("background-color: %s"), color);
    ParseHTMLSpecificStyle (el, css_command, doc, FALSE);
 }
 
@@ -3879,15 +3955,15 @@ STRING              image;
    CHAR_T                css_command[400];
 
    /******* check buffer overflow ********/
-   sprintf (css_command, "background-image: url(%s); background-repeat: ", image);
+   usprintf (css_command, TEXT("background-image: url(%s); background-repeat: "), image);
    if (repeat == STYLE_REPEAT)
-     ustrcat (css_command, "repeat");
+     ustrcat (css_command, TEXT("repeat"));
    else if (repeat == STYLE_HREPEAT)
-     ustrcat (css_command, "repeat-x");
+     ustrcat (css_command, TEXT("repeat-x"));
    else if (repeat == STYLE_VREPEAT)
-     ustrcat (css_command, "repeat-y");
+     ustrcat (css_command, TEXT("repeat-y"));
    else
-     ustrcat (css_command, "no-repeat");
+     ustrcat (css_command, TEXT("no-repeat"));
    ParseHTMLSpecificStyle (el, css_command, doc, FALSE);
 }
 
@@ -3905,7 +3981,7 @@ STRING              color;
 {
    CHAR_T             css_command[100];
 
-   sprintf (css_command, "color: %s", color);
+   usprintf (css_command, TEXT("color: %s"), color);
    ParseHTMLSpecificStyle (el, css_command, doc, FALSE);
 }
 
@@ -3922,7 +3998,7 @@ Element             el;
 {
    CHAR_T             css_command[100];
 
-   sprintf (css_command, "background: xx");
+   usprintf (css_command, TEXT("background: xx"));
    ParseHTMLSpecificStyle (el, css_command, doc, TRUE);
 }
 
@@ -3939,7 +4015,7 @@ Element             el;
 {
    CHAR_T             css_command[1000];
 
-   sprintf (css_command, "background-image: url(xx); background-repeat: repeat");
+   usprintf (css_command, TEXT("background-image: url(xx); background-repeat: repeat"));
    ParseHTMLSpecificStyle (el, css_command, doc, TRUE);
 }
 
@@ -3956,7 +4032,7 @@ Element             el;
 {
    CHAR_T             css_command[100];
 
-   sprintf (css_command, "color: xx");
+   usprintf (css_command, TEXT("color: xx"));
    ParseHTMLSpecificStyle (el, css_command, doc, TRUE);
 }
 
@@ -3973,7 +4049,7 @@ STRING              color;
 {
    CHAR_T                css_command[100];
 
-   sprintf (css_command, "A:link { color : %s }", color);
+   usprintf (css_command, TEXT("A:link { color : %s }"), color);
    ApplyCSSRules (NULL, css_command, doc, FALSE);
 }
 
@@ -3990,7 +4066,7 @@ STRING              color;
 {
    CHAR_T                css_command[100];
 
-   sprintf (css_command, "A:active { color : %s }", color);
+   usprintf (css_command, TEXT("A:active { color : %s }"), color);
    ApplyCSSRules (NULL, css_command, doc, FALSE);
 }
 
@@ -4007,7 +4083,7 @@ STRING              color;
 {
    CHAR_T                css_command[100];
 
-   sprintf (css_command, "A:visited { color : %s }", color);
+   usprintf (css_command, TEXT("A:visited { color : %s }"), color);
    ApplyCSSRules (NULL, css_command, doc, FALSE);
 }
 
@@ -4023,7 +4099,7 @@ Document            doc;
 {
    CHAR_T                css_command[100];
 
-   sprintf (css_command, "A:link { color : red }");
+   usprintf (css_command, TEXT("A:link { color : red }"));
    ApplyCSSRules (NULL, css_command, doc, TRUE);
 }
 
@@ -4039,7 +4115,7 @@ Document            doc;
 {
    CHAR_T                css_command[100];
 
-   sprintf (css_command, "A:active { color : red }");
+   usprintf (css_command, TEXT("A:active { color : red }"));
    ApplyCSSRules (NULL, css_command, doc, TRUE);
 }
 
@@ -4055,7 +4131,7 @@ Document            doc;
 {
    CHAR_T                css_command[100];
 
-   sprintf (css_command, "A:visited { color : red }");
+   usprintf (css_command, TEXT("A:visited { color : red }"));
    ApplyCSSRules (NULL, css_command, doc, TRUE);
 }
 
@@ -4153,14 +4229,14 @@ ThotBool            withUndo;
       parent = TtaGetMainRoot (doc);
       elType = TtaGetElementType (parent);
       schemaName = TtaGetSSchemaName (elType.ElSSchema);
-      if (!ustrcmp (schemaName, "HTML"))
+      if (!ustrcmp (schemaName, TEXT("HTML")))
 	{
 	  /* it's the STYLE section of the HTML document */
 	  elType.ElTypeNum = HTML_EL_HEAD;
 	  el = TtaSearchTypedElement (elType, SearchForward, parent);
 	  if (el == NULL)
 	    {
-	      el = TtaNewTree (doc, elType, "");
+	      el = TtaNewTree (doc, elType, _EMPTYSTR_);
 	      TtaInsertFirstChild (&el, parent, doc);
 	      parent = el;
 	      if (withUndo && !createdEl)
@@ -4173,7 +4249,7 @@ ThotBool            withUndo;
 	  /* if the Style element doesn't exist we create it now */
 	  if (el == NULL)
 	    {
-	      el = TtaNewTree (doc, elType, "");
+	      el = TtaNewTree (doc, elType, _EMPTYSTR_);
 	      /* insert the new style element after the title if it exists */
 	      elType.ElTypeNum = HTML_EL_TITLE;
 	      title = TtaSearchTypedElement (elType, SearchForward, parent);
@@ -4185,7 +4261,7 @@ ThotBool            withUndo;
 	      attrType.AttrTypeNum = HTML_ATTR_Notation;
 	      attr = TtaNewAttribute (attrType);
 	      TtaAttachAttribute (el, attr, doc);
-	      TtaSetAttributeText (attr, "text/css", el, doc);
+	      TtaSetAttributeText (attr, TEXT("text/css"), el, doc);
 	      if (withUndo && !createdEl)
 		 /* remember the element to be registered in the Undo queue */
 		 createdEl = el;
@@ -4196,7 +4272,7 @@ ThotBool            withUndo;
 	  if (el == NULL)
 	    {
 	      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-	      el = TtaNewTree (doc, elType, "");
+	      el = TtaNewTree (doc, elType, _EMPTYSTR_);
 	      TtaInsertFirstChild (&el, parent, doc);
 	      if (withUndo && !createdEl)
 		 /* remember the element to be registered in the Undo queue */
@@ -4207,7 +4283,7 @@ ThotBool            withUndo;
 	  if (css == NULL)
 	    css = AddCSS (doc, docRef, CSS_DOCUMENT_STYLE, NULL, NULL);
 	}
-      else if (!ustrcmp (schemaName, "TextFile"))
+      else if (!ustrcmp (schemaName, TEXT("TextFile")))
 	/* it's a CSS document */
 	el = TtaGetLastChild (parent);
       else
@@ -4239,7 +4315,7 @@ ThotBool            withUndo;
 	    case ';':
 	      if (import != MAX_CSS_LENGTH)
 		{
-		  if (ustrncasecmp (&CSSbuffer[import+1], "import", 6))
+		  if (ustrncasecmp (&CSSbuffer[import+1], TEXT("import"), 6))
 		    /* it's not an import */
 		    import = MAX_CSS_LENGTH;
 		  /* save the text */
@@ -4312,7 +4388,7 @@ ThotBool            withUndo;
 		{
 		  /* is it the screen concerned? */
 		  CSSbuffer[CSSindex+1] = EOS;
-		  base = ustrstr (&CSSbuffer[import], "screen");
+		  base = ustrstr (&CSSbuffer[import], TEXT("screen"));
 		  if (base == NULL)
 		    ignoreMedia = TRUE;
 		  noRule = TRUE;
@@ -4366,12 +4442,12 @@ ThotBool            withUndo;
 	      if (!noRule && !ignoreMedia)
 		ParseStyleDeclaration (el, CSSbuffer, docRef, css, FALSE);
 	      else if (import != MAX_CSS_LENGTH &&
-		       !ustrncasecmp (&CSSbuffer[import+1], "import", 6))
+		       !ustrncasecmp (&CSSbuffer[import+1], TEXT("import"), 6))
 		{
 		  /* import section */
 		  cssRule = &CSSbuffer[import+7];
 		  cssRule = TtaSkipBlanks (cssRule);
-		  if (!ustrncasecmp (cssRule, "url", 3))
+		  if (!ustrncasecmp (cssRule, TEXT("url"), 3))
 		    {
 		      cssRule = &cssRule[3];
 		      cssRule = TtaSkipBlanks (cssRule);

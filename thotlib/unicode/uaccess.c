@@ -1,3 +1,14 @@
+/*
+ *
+ *  (c) COPYRIGHT INRIA, 1999.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+
+/* Unicode Routines
+ * Author: R. Guetari (W3C/INRIA)
+ */
+
 #include "uaccess.h"
 
 #ifdef _I18N_

@@ -16,19 +16,17 @@ RULES
 #ifdef XML
 	if HtmlDTD = Frameset
 	   BEGIN
-{****	   this causes some problems with older browsers:
-	   Create '<?xml version="1.0" ?>\12';	****}
+	   Create '<?xml version="1.0" ?>\12';
 	   Create '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN"\12';
-	   Create '                      "http://www.w3.org/TR/xhtml1/DTD/frameset.dtd">\12';
-	   Create '<html xmlns="http://www.w3.org/TR/xhtml1"';
+	   Create '                      "xhtml1-frameset.dtd">\12';
+	   Create '<html xmlns="http://www.w3.org/Profiles/xhtml1-frameset"';
 	   END;
 	if not HtmlDTD = Frameset
 	   BEGIN
-{****	   this causes some problems with older browsers:
-	   Create '<?xml version="1.0" ?>\12';	****}
+	   Create '<?xml version="1.0" ?>\12';
 	   Create '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"\12';
-	   Create '                      "http://www.w3.org/TR/xhtml1/DTD/transitional.dtd">\12';
-	   Create '<html xmlns="http://www.w3.org/TR/xhtml1"';
+	   Create '                      "xhtml1-transitional.dtd">\12';
+	   Create '<html xmlns="http://www.w3.org/Profiles/xhtml1-transitional"';
 	   END;
 	Create Namespaces;
 #else

@@ -100,9 +100,9 @@ LoadedImageDesc   **desc;
 
    /* It is a new loaded image */
    pImage = (LoadedImageDesc *) TtaGetMemory (sizeof (LoadedImageDesc));
-   pImage->originalName = TtaGetMemory (ustrlen (pathname) + 1);
+   pImage->originalName = TtaAllocString (ustrlen (pathname) + 1);
    ustrcpy (pImage->originalName, pathname);
-   pImage->localName = TtaGetMemory (ustrlen (localname) + 1);
+   pImage->localName = TtaAllocString (ustrlen (localname) + 1);
    ustrcpy (pImage->localName, localname);
    pImage->prevImage = previous;
    if (previous != NULL)
@@ -210,7 +210,7 @@ int                 attrNum;
    shape = TtaGetAttributeValue (attrShape);
    /* prepare the coords string */
    length = 2000;
-   text = TtaGetMemory (length);
+   text = TtaAllocString (length);
    if (shape == HTML_ATTR_shape_VAL_rectangle || shape == HTML_ATTR_shape_VAL_circle)
      {
 	/* Search the x_coord attribute */
@@ -293,7 +293,7 @@ int                 attrNum;
 	      }    
 	  }
 	if (shape == HTML_ATTR_shape_VAL_rectangle)
-	   sprintf (text, "%d,%d,%d,%d", x1, y1, x1 + x2, y1 + y2);
+	   usprintf (text, TEXT("%d,%d,%d,%d"), x1, y1, x1 + x2, y1 + y2);
 	else
 	  {
 	     /* to make a circle, height and width have to be equal */
@@ -318,7 +318,7 @@ int                 attrNum;
 		 h = y2 / 2;
 	       else
 		 h = x2 / 2;
-	     sprintf (text, "%d,%d,%d", x1 + h, y1 + h, h);
+	     usprintf (text, TEXT("%d,%d,%d"), x1 + h, y1 + h, h);
 	  }
      }
    else if (shape == HTML_ATTR_shape_VAL_polygon)
@@ -327,15 +327,15 @@ int                 attrNum;
 	length = TtaGetPolylineLength (child);
 	/* keep points */
 	i = 1;
-	buffer = (STRING) TtaGetMemory (100);
+	buffer = TtaAllocString (100);
 	text[0] = EOS;
 	while (i <= length)
 	  {
 	     TtaGivePolylinePoint (child, i, UnPixel, &x1, &y1);
-	     sprintf (buffer, "%d,%d", x1, y1);
+	     usprintf (buffer, TEXT("%d,%d"), x1, y1);
 	     ustrcat (text, buffer);
 	     if (i < length)
-	       ustrcat (text, ",");
+	       ustrcat (text, TEXT(","));
 	     i++;
 	  }
 	TtaFreeMemory (buffer);
@@ -379,7 +379,7 @@ int                 oldHeight;
 	/* Search the MAP element associated with IMAGE element */
 	length = TtaGetTextAttributeLength (attr);
 	length++;
-	text = TtaGetMemory (length);
+	text = TtaAllocString (length);
 	TtaGiveTextAttributeValue (attr, text, &length);
 	if (text[0] == '#')
 	   el = SearchNAMEattribute (document, &text[1], NULL);
@@ -532,7 +532,7 @@ STRING              imageName;
   if (!modified)
     TtaSetDocumentUnmodified (doc);
   /* the image is loaded */
-  TtaSetStatus (doc, 1, " ", NULL);
+  TtaSetStatus (doc, 1, TEXT(" "), NULL);
 }
 
 
@@ -590,7 +590,7 @@ void *context;
 	/* the image could not be loaded */
 	if ((status != 200) && (status != 0))
 	   return;
-	tempfile = (STRING) TtaGetMemory (sizeof (CHAR_T) * MAX_LENGTH);
+	tempfile = TtaAllocString (MAX_LENGTH);
 	/* rename the local file of the image */
 	ustrcpy (tempfile, desc->localName);
 	
@@ -601,10 +601,10 @@ void *context;
 	    if (ptr) 
 	      {
 		ptr++;
-		ustrcpy (ptr, "html");
+		ustrcpy (ptr, html_EXT2);
 	      }
 	    else
-	      ustrcat (tempfile, ".html");
+	      ustrcat (tempfile, html_EXT);
 	    TtaFreeMemory (desc->localName);
 	    desc->localName = TtaStrdup (tempfile);
 
@@ -615,15 +615,15 @@ void *context;
 #   ifndef _WINDOWS
 	    rename (outputfile, tempfile);
 #   else /* _WINDOWS */
-	    if (rename (outputfile, tempfile) != 0)
-	      sprintf (tempfile, "%s", outputfile); 
+	    if (urename (outputfile, tempfile) != 0)
+	      usprintf (tempfile, TEXT("%s"), outputfile); 
 #   endif /* _WINDOWS */
 	  }
 
 	/* save pathname */
 	TtaFreeMemory (desc->originalName);
 	pathname = urlName;
-	desc->originalName = TtaGetMemory (ustrlen (pathname) + 1);
+	desc->originalName = TtaAllocString (ustrlen (pathname) + 1);
 	desc->status = IMAGE_LOADED;
 	ustrcpy (desc->originalName, pathname);
 	/* display for each elements in the list */
@@ -716,8 +716,8 @@ Element             element;
        if (Y < 0)
 	 Y = 0;
        /* create the search string to be appended to the URL */
-       ptr = TtaGetMemory (27);
-       sprintf (ptr, "?%d,%d", X, Y);
+       ptr = TtaAllocString (27);
+       usprintf (ptr, TEXT("?%d,%d"), X, Y);
      }
    return ptr;
 }
@@ -774,7 +774,7 @@ void               *extra;
 	      if (length > 0)
 		{
 		  /* allocate some memory: length of name + 6 cars for noname */
-		  imageName = TtaGetMemory (length + 7);
+		  imageName = TtaAllocString (length + 7);
 		  TtaGiveTextAttributeValue (attr, imageName, &length);
 		}
 	    }
@@ -835,7 +835,7 @@ void               *extra;
 		  /* it is a local image */
 		if (callback)
 		  {
-		    if (!ustrncmp(pathname, "file:/", 6))
+		    if (!ustrncmp(pathname, TEXT("file:/"), 6))
 		      callback(doc, el, &pathname[6], extra);
 		    else
 		      callback(doc, el, &pathname[0], extra);

@@ -334,7 +334,7 @@ typedef struct _StructSchema
 	   the attributes */
 	int             SsException[MAX_EXCEPT_SSCHEMA];
         /* buffer for the text of the constants */
-	char            SsConstBuffer[MAX_LEN_ALL_CONST];
+	CHAR_T           SsConstBuffer[MAX_LEN_ALL_CONST];
         /* number of the rule defining the first dynamically loaded nature */
 	int     SsFirstDynNature;
         /* attributes for this schema */

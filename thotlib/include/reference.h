@@ -147,7 +147,7 @@ extern void         TtaUpdateInclusionElements (Document document, ThotBool load
    element.
 
   ----------------------------------------------------------------------*/
-extern void         TtaGiveReferredElement (Element element, /*OUT*/ Element * target, /*OUT*/ char *targetDocumentName, /*OUT*/ Document * targetDocument);
+extern void         TtaGiveReferredElement (Element element, /*OUT*/ Element * target, /*OUT*/ STRING targetDocumentName, /*OUT*/ Document * targetDocument);
 
 /*----------------------------------------------------------------------
    TtaIsElementTypeReference
@@ -198,7 +198,7 @@ extern int          TtaSameReferences (Element element1, Element element2);
    if the referred element is in the same document as the attribute.
 
   ----------------------------------------------------------------------*/
-extern void         TtaGiveReferenceAttributeValue (Attribute attribute, /*OUT*/ Element * target, /*OUT*/ char *targetDocumentName, /*OUT*/ Document * targetDocument);
+extern void         TtaGiveReferenceAttributeValue (Attribute attribute, /*OUT*/ Element * target, /*OUT*/ STRING targetDocumentName, /*OUT*/ Document * targetDocument);
 
 /*----------------------------------------------------------------------
    TtaIsElementReferred
@@ -278,7 +278,7 @@ extern void         TtaNextLoadedReference (Element target, Document targetDocum
    referring document has been found.
 
   ----------------------------------------------------------------------*/
-extern void         TtaNextUnloadedReferringDocument (Element target, Document targetDocument, /*OUT*/ char *referringDocumentName);
+extern void         TtaNextUnloadedReferringDocument (Element target, Document targetDocument, /*OUT*/ STRING referringDocumentName);
 
 /*----------------------------------------------------------------------
    TtaSearchReferenceElement

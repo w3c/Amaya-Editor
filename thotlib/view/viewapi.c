@@ -16,7 +16,7 @@
 
 /*
  * Authors: V. Quint, I. Vatton (INRIA)
- *          R. Guetari (W3C/INRIA) for Windows 95/NT routines
+ *          R. Guetari (W3C/INRIA) Unicode and Windows version
  */
 
 #include "ustring.h"
@@ -959,7 +959,7 @@ STRING              presentationName;
    result = 0;
    /* Arrange the name of the file to be opened with the schema directory name */
    ustrncpy (DirBuffer, SchemaPath, MAX_PATH);
-   MakeCompleteName (presentationName, "PRS", DirBuffer, text, &i);
+   MakeCompleteName (presentationName, PRS_EXT2, DirBuffer, text, &i);
    /* Checks if the file exists */
    file = TtaReadOpen (text);
    if (file == 0)
@@ -2136,9 +2136,9 @@ int                 delta;
 	     case LtGraphics:
 	       pAbbox1->AbLeafType = element->ElLeafType;
 	       pAbbox1->AbShape = element->ElGraph;
-	       pAbbox1->AbGraphAlphabet = 'G';
+	       pAbbox1->AbGraphAlphabet = TEXT('G');
 	       if (element->ElLeafType == LtGraphics &&
-		   element->ElGraph == 'a' &&
+		   element->ElGraph == TEXT('a') &&
 		   pAbbox1->AbHeight.DimAbRef == NULL)
 		 {
 		   /* force the circle height to be equal to its width */

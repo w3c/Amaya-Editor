@@ -46,7 +46,11 @@
 #include "translatexml_f.h"
 #include "callback_f.h"
 
-
+#ifdef __STDC__
+extern STRING TtaAllocString (unsigned int);
+#else  /* !__STDC__ */
+extern STRING TtaAllocString ();
+#endif /* __STDC__ */
 static PrefixType *Prefixs = NULL;  /* List of namespace prefixs */
                                     /* See typexml.h for structure */
 static int        NbPrefix;         /* counter used for unique prefix name */
@@ -74,11 +78,9 @@ Element el;
     {
       buffer[0] = '#';
       buffer[1] = EOS;
-      ustrncat(buffer, NameThotToXml
-	      (TtaGetElementType(el).ElSSchema, 
-	       TtaGetElementType(el).ElTypeNum, 0, 0),3);
+      ustrncat (buffer, NameThotToXml (TtaGetElementType(el).ElSSchema, TtaGetElementType(el).ElTypeNum, 0, 0),3);
       
-      ustrcat(buffer,"_");
+      ustrcat(buffer, TEXT("_"));
       ustrcat(buffer, TtaGetElementLabel (el) + 1);
     } 
 }
@@ -90,7 +92,6 @@ Element el;
 #ifdef __STDC__
 static ThotBool  XmlWriteString (BinFile xmlFile, STRING str)
 #else /* __STDC__ */
-static ThotBool  XmlWriteString (xmlFile, str)
 BinFile    xmlFile;
 STRING     str;
 #endif /* __STDC__ */
@@ -182,9 +183,9 @@ BinFile             xmlFile;
 int                 n;
 #endif /* __STDC__ */
 {
-  char tempChar[20];
+  CHAR_T tempChar[20];
 
-  sprintf(tempChar,"%d",n);
+  usprintf(tempChar, TEXT("%d"), n);
   return (XmlWriteString(xmlFile, tempChar));
 }
 
@@ -208,11 +209,11 @@ ElementType elType;
    	XmlWriteAttrName
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ThotBool XmlWriteAttrName (BinFile xmlFile, char *attrName)
+static ThotBool  XmlWriteAttrName (BinFile xmlFile, STRING attrName)
 #else /* __STDC__ */
-static ThotBool XmlWriteAttrName (xmlFile, char *attrName)
+static ThotBool XmlWriteAttrName (xmlFile, attrName)
 BinFile  xmlFile;
-har *attrName;
+STRING   attrName;
 #endif /* __STDC__ */
 {
   ThotBool        ok = TRUE;
@@ -246,11 +247,11 @@ int             value;
    	 XmlWriteAttrStrValue
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ThotBool  XmlWriteAttrStrValue (BinFile xmlFile, char *value)
+static ThotBool  XmlWriteAttrStrValue (BinFile xmlFile, STRING value)
 #else /* __STDC__ */
 static ThotBool  XmlWriteAttrStrValue (xmlFile, value)
 BinFile  xmlFile;
-char           *value;
+STRING   value;
 #endif /* __STDC__ */
 {
   ThotBool ok;
@@ -266,11 +267,11 @@ char           *value;
 	                  in Thot documents
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static ThotBool XmlWriteComments (BinFile xmlFile, char *comments)
+static ThotBool XmlWriteComments (BinFile xmlFile, STRING comments)
 #else /* __STDC__ */
 static ThotBool XmlWriteComments (xmlFile, comments)
 BinFile xmlFile;
-char *comments;
+STRING  comments;
 #endif /* __STDC__ */
 {
   ThotBool ok;
@@ -286,19 +287,19 @@ char *comments;
 	the nature name and an arbitrary number
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char           *XmlMakePrefix (SSchema sSchema)
+static STRING  XmlMakePrefix (SSchema sSchema)
 #else /*__STDC__*/
-static char           *XmlMakePrefix (sSchema)
+static STRING  XmlMakePrefix (sSchema)
 SSchema sSchema;
 #endif /*__STDC__*/
 {
-  char           *schemaName;
-  char            tempName[5];
-  PrefixType         *newPrefix;
+  STRING       schemaName;
+  CHAR_T       tempName[5];
+  PrefixType*  newPrefix;
 
   /* Making prefix's name */
   schemaName = TtaGetSSchemaName (sSchema);
-  sprintf (&tempName[2], "%d", NbPrefix++);
+  usprintf (&tempName[2], TEXT("%d"), NbPrefix++);
   tempName[0] = schemaName[0];
   tempName[1] = schemaName[1];
 
@@ -325,7 +326,7 @@ SSchema sSchema;
 #endif /*__STDC__*/
 
 {
-  char           *result = NULL;
+  STRING         result = NULL;
   PrefixType     *tempPrefix;
   ThotBool        ok = TRUE;
 
@@ -340,8 +341,8 @@ SSchema sSchema;
   if (result!=NULL)
     /* Writing prefix */
     {
-      ok = ok && XmlWriteString(xmlFile,result);
-      ok = ok && XmlWriteString(xmlFile,":");
+      ok = ok && XmlWriteString (xmlFile, result);
+      ok = ok && XmlWriteString (xmlFile, TEXT(":"));
     }
   return ok;
 }
@@ -384,16 +385,16 @@ BinFile  xmlFile;
 
   ok = XmlWriteString (xmlFile, OPEN_XML);
   ok = ok && XmlWriteString (xmlFile, XML_SPACE);
-  ok = ok && XmlWriteAttrName (xmlFile, "version");
+  ok = ok && XmlWriteAttrName (xmlFile, TEXT("version"));
   /* Current XML version: 1 */
   ok = ok && XmlWriteAttrIntValue (xmlFile, 1);
   ok = ok && XmlWriteString(xmlFile, XML_SPACE);
-  ok = ok && XmlWriteAttrName (xmlFile, "encoding");
-  ok = ok && XmlWriteAttrStrValue (xmlFile, "ISO-8859-1");
+  ok = ok && XmlWriteAttrName (xmlFile, TEXT("encoding"));
+  ok = ok && XmlWriteAttrStrValue (xmlFile, TEXT("ISO-8859-1"));
   ok = ok && XmlWriteString(xmlFile, XML_SPACE);
   /* Document doesn't work with a DTD */
-  ok = ok && XmlWriteAttrName (xmlFile, "standalone");
-  ok = ok && XmlWriteAttrStrValue (xmlFile, "yes");
+  ok = ok && XmlWriteAttrName (xmlFile, TEXT("standalone"));
+  ok = ok && XmlWriteAttrStrValue (xmlFile, TEXT("yes"));
   ok = ok && XmlWriteString (xmlFile, CLOSE_XML);
   return ok;
 }
@@ -429,7 +430,7 @@ Document        doc;
 #endif /* __STDC__ */
 {
   SSchema         tempSchema;
-  char            tempName[40];
+  CHAR_T          tempName[40];
   ThotBool        ok = TRUE;
 
   /* read document's extensions */
@@ -437,9 +438,9 @@ Document        doc;
   TtaNextSchemaExtension (doc, &tempSchema);
   while (tempSchema != NULL)
     {
-      ok = ok && XmlWriteString(xmlFile, "\n");
+      ok = ok && XmlWriteString(xmlFile, _NEWLINE_);
       ok = ok && XmlWriteString(xmlFile, XML_NAMESPACE_ATTR);
-      ok = ok && XmlWriteString(xmlFile, ":");
+      ok = ok && XmlWriteString(xmlFile, TEXT(":"));
       /* make and write the extension's prefix */
       /* prefix= first 2 letters of ext name and 1 arbitrary number */
       ok = ok && XmlWriteAttrName(xmlFile, XmlMakePrefix (tempSchema));
@@ -447,7 +448,7 @@ Document        doc;
       /* Warning: signifying extension by strcating "_EXT" is not a 
 	          permanent solution. Waiting more of XML NameSpaces... */
       ustrcpy (tempName, TtaGetSSchemaName (tempSchema));
-      strcat (tempName, "_EXT");
+      ustrcat (tempName, TEXT("_EXT"));
       ok = ok && XmlWriteAttrStrValue (xmlFile, tempName);
       TtaNextSchemaExtension (doc, &tempSchema);
     }
@@ -457,9 +458,9 @@ Document        doc;
   TtaNextNature (doc, &tempSchema);
   while (tempSchema != NULL)
     {
-      ok = ok && XmlWriteString(xmlFile, "\n");
+      ok = ok && XmlWriteString(xmlFile, _NEWLINE_);
       ok = ok && XmlWriteString(xmlFile, XML_NAMESPACE_ATTR);
-      ok = ok && XmlWriteString(xmlFile, ":");
+      ok = ok && XmlWriteString(xmlFile, TEXT(":"));
       /* make and write the extension's prefix */
       /* prefix=first 2 letters of ext and  1arbitrary number */
       ok = ok && XmlWriteAttrName(xmlFile, XmlMakePrefix (tempSchema));
@@ -552,8 +553,8 @@ Attribute attr;
 {
   Element    refEl;
   Document   refDoc;
-  char       refDocName[50];
-  char       tempName[100];
+  CHAR_T     refDocName[50];
+  CHAR_T     tempName[100];
   ThotBool   ok=TRUE;
   int        l;
 
@@ -604,13 +605,13 @@ Attribute attr;
 	}
 
       l = 0;
-      if (tempName[0]!='\0')
+      if (tempName[0] != EOS)
 	{
 	/* external reference */	  
 	  TtaGetDocumentDirectory(refDoc,tempName,100);
-	  ustrcat(tempName, "/");
+	  ustrcat(tempName, TEXT("/"));
 	  ustrcat(tempName,TtaGetDocumentName(refDoc));
-	  l = strlen (tempName);
+	  l = ustrlen (tempName);
 	}
       XmlGetElementLabel (&tempName[l], refEl);
       ok = ok && XmlWriteAttrStrValue (xmlFile,tempName);
@@ -657,8 +658,8 @@ Document       doc;
   int             attrKind;
   Element         elRef;
   SSchema         sSchema;
-  char           *tempChar;
-  char            tempName[100];
+  STRING          tempChar;
+  CHAR_T          tempName[100];
   int             tempLength;
   Document        docRef;
   ThotBool        ok = TRUE;
@@ -708,7 +709,7 @@ Document       doc;
 	  break;
 	case TEXT_ATTR_TYPE:
 	  tempLength = TtaGetTextAttributeLength (attr) + 1;
-	  tempChar = TtaGetMemory (tempLength);
+	  tempChar = TtaAllocString (tempLength);
 	  TtaGiveTextAttributeValue (attr, tempChar, &tempLength);
 	  ok = ok && XmlWriteAttrStrValue (xmlFile, tempChar);
 	  TtaFreeMemory(tempChar);
@@ -770,14 +771,14 @@ ThotBool        taggedText;
   Element         tempElem;
   int             x, y;
   SSchema         sSchema;
-  char           *tempChar;
-  char            s[2];
+  STRING          tempChar;
+  CHAR_T          s[2];
   Language        tempLanguage;
   int             tempLength;
   int             i;
   ThotBool        ok = TRUE;
   StrAtomPair     *atomPair, *prevAtomPair;
-  char            buf[32];
+  CHAR_T          buf[32];
 
   elType = TtaGetElementType (el);
   sSchema = elType.ElSSchema;
@@ -848,7 +849,7 @@ ThotBool        taggedText;
 	  ok = ok && XmlWriteString(xmlFile, THOT_SCHEMA);
 	  ok = ok && XmlWriteAttrName (xmlFile, SRC_ATTR);
 	  tempLength = TtaGetTextLength(el)+1;
-	  tempChar = TtaGetMemory (tempLength);
+	  tempChar = TtaAllocString (tempLength);
 	  TtaGiveTextContent (el, tempChar, &tempLength, &tempLanguage);
 	  ok = ok && XmlWriteAttrStrValue (xmlFile, tempChar);
 	  TtaFreeMemory(tempChar);
@@ -858,7 +859,7 @@ ThotBool        taggedText;
 	  
 	  /* Put text content  */
 	  tempLength = TtaGetTextLength(el)+1;
-	  tempChar = TtaGetMemory (tempLength);
+	  tempChar = TtaAllocString (tempLength);
 	  TtaGiveTextContent (el, tempChar, &tempLength, &tempLanguage);
 	  /* language is specified before in TEXT tag */
 	  if (taggedText || writeBeginTextTag)
@@ -870,7 +871,7 @@ ThotBool        taggedText;
 	    ok = ok && XmlWriteString (xmlFile, DEPTH_SPACE);
 #endif
 	  ok = ok && XmlWriteCharData (xmlFile, tempChar);
-	  ok = ok && XmlWriteString (xmlFile, "\n");
+	  ok = ok && XmlWriteString (xmlFile, _NEWLINE_);
 	  TtaFreeMemory(tempChar);
 	  writeBeginTextTag = FALSE;
 	  /* Warning: No API for associating Text sheets */
@@ -965,7 +966,7 @@ ThotBool        withEvent;
 #endif /* __STDC__ */
 {	
   Attribute attr;
-  char            buf[100];
+  CHAR_T          buf[100];
   NotifyAttribute notifyAttr;
   AttributeType   attrType;
   int             attrKind;
@@ -998,7 +999,7 @@ ThotBool        withEvent;
       ok = ok && XmlWriteString(xmlFile, XML_SPACE);
       ok = ok && XmlWriteString(xmlFile, THOT_SCHEMA);
       ok = ok && XmlWriteAttrName (xmlFile, HOLOPHRASTE_ATTR);
-      ok = ok && XmlWriteAttrStrValue (xmlFile, "true");
+      ok = ok && XmlWriteAttrStrValue (xmlFile, TEXT("true"));
     }
   /* Warning: What's imposed attributs ? */
   /*          Export doesn't associate special treatment */
@@ -1050,16 +1051,16 @@ ThotBool        withEvent;
       ok = ok && XmlWriteString(xmlFile, XML_SPACE);
       ok = ok && XmlWriteString(xmlFile, THOT_SCHEMA);
       ok = XmlWriteAttrName(xmlFile, STYLE_ATTR);
-      ok = ok && XmlWriteString(xmlFile, "\"");
+      ok = ok && XmlWriteString(xmlFile, TEXT("\""));
       while (pRule!=NULL)
 	{	
 	  typerule = TtaGetPRuleType(pRule);
 	  if (typerule != PtPictInfo && ((PtrPRule) pRule)->PrType != PtFunction)
 	    {
 	      ok = ok && XmlWriteString(xmlFile, TtaGetViewName(doc,TtaGetPRuleView(pRule)));
-	      ok = ok && XmlWriteString(xmlFile, ":");
+	      ok = ok && XmlWriteString(xmlFile, TEXT(":"));
 	      ok = ok && XmlWriteInteger(xmlFile, typerule);
-	      ok = ok && XmlWriteString(xmlFile, ":");
+	      ok = ok && XmlWriteString(xmlFile, TEXT(":"));
 	      
 	      value = TtaGetPRuleValue(pRule);
 	      if ( typerule == PtHeight ||
@@ -1075,7 +1076,7 @@ ThotBool        withEvent;
 		{ 
 		  /* write the unit */
 		  ok = ok && XmlWriteInteger(xmlFile, TtaGetPRuleUnit(pRule));
-		  ok = ok && XmlWriteString(xmlFile, ":");
+		  ok = ok && XmlWriteString(xmlFile, TEXT(":"));
 		}
 	  
 	      if ((typerule == PtHeight || typerule == PtWidth))
@@ -1083,10 +1084,10 @@ ThotBool        withEvent;
 		  /* write the flag indicating if it is */
 		  /* absolute or relative value */
 		  if(((PtrPRule) pRule)->PrDimRule.DrAbsolute)
-		    ok = ok && XmlWriteString(xmlFile, "A");
+		    ok = ok && XmlWriteString(xmlFile, _A_);
 		  else
-		    ok = ok && XmlWriteString(xmlFile, "R");
-		  ok = ok && XmlWriteString(xmlFile, ":");
+		    ok = ok && XmlWriteString(xmlFile, _R_);
+		  ok = ok && XmlWriteString(xmlFile, TEXT(":"));
 		}
 
 	      /* write the sign */
@@ -1096,15 +1097,15 @@ ThotBool        withEvent;
 		  typerule == PtHorizPos || 
 		  typerule == PtIndent)
 		if (value < 0)
-		  ok = ok && XmlWriteString(xmlFile, "-");
+		  ok = ok && XmlWriteString(xmlFile, TEXT("-"));
 	      
 	      /* write the value */
 	      ok = ok && XmlWriteInteger(xmlFile, abs (value));
-	      ok = ok && XmlWriteString(xmlFile, ";");
+	      ok = ok && XmlWriteString(xmlFile, TEXT(";"));
 	    }
 	  TtaNextPRule (el, &pRule);
 	}
-      ok = ok && XmlWriteString(xmlFile, "\"");
+      ok = ok && XmlWriteString(xmlFile, TEXT("\""));
     }  
   return ok;
 }
@@ -1446,7 +1447,7 @@ ThotBool        withEvent;
   /* Warning: No API function for accessing comments */
   /*   if (doc->DocComment != NULL) */
   /*     ok = ok && PutComment (xmlFile, pDoc->DocComment); */
-  ok = ok && XmlWriteComments(xmlFile,"Generated by Thot");
+  ok = ok && XmlWriteComments(xmlFile, TEXT("Generated by Thot"));
   /* Warning: Structure: Open thot special document begin tag  */
   /* This tag is used to have previous declaration of the main 
      document schema and to have associated tree at the same level
@@ -1484,11 +1485,11 @@ ThotBool        withEvent;
       ok = ok && XmlWriteAttributes (xmlFile, el, doc, withEvent);
       ok = ok && XmlWriteString (xmlFile, CLOSE_TAG);
       
-      ok = ok && XmlWriteString (xmlFile, "\n");
+      ok = ok && XmlWriteString (xmlFile, _NEWLINE_);
       /* Write the schema presentations */
 
       ok = ok && XmlWriteSchemaPres (xmlFile, doc);
-      ok = ok && XmlWriteString (xmlFile, "\n");
+      ok = ok && XmlWriteString (xmlFile, _NEWLINE_);
 	
       if (ok)
 	/* We write root element's child */

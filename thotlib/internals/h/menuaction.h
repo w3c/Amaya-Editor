@@ -24,40 +24,40 @@
 typedef struct _AppName *PtrAppName;
 typedef struct _AppName
 {
-  char			*AppNameValue;
-  ThotBool		AppStandardName;
-  PtrAppName		AppNextName;
+  STRING     AppNameValue;
+  PtrAppName AppNextName;
+  ThotBool   AppStandardName;
 } AppName;
 
 /* description d'un item de menu */
 typedef struct _AppMenuItem *PtrAppMenuItem;
 typedef struct _AppMenuItem
 {
-  char			*AppItemName;
-  char			*AppItemActionName;
-  PtrAppMenuItem	AppSubMenu;
-  CHAR_T			AppItemType;
-  ThotBool		AppStandardAction;
-  PtrAppMenuItem	AppNextItem;
+  STRING         AppItemName;
+  STRING         AppItemActionName;
+  PtrAppMenuItem AppSubMenu;
+  CHAR_T         AppItemType;
+  ThotBool        AppStandardAction;
+  PtrAppMenuItem AppNextItem;
 } AppMenuItem;
 
 /* description d'un menu */
 typedef struct _AppMenu *PtrAppMenu;
 typedef struct _AppMenu
 {
-  char			*AppMenuName;
-  int			AppMenuView;
-  PtrAppMenuItem	AppMenuItems;
-  PtrAppMenu		AppNextMenu;
+  STRING         AppMenuName;
+  int            AppMenuView;
+  PtrAppMenuItem AppMenuItems;
+  PtrAppMenu     AppNextMenu;
 } AppMenu;
 
 /* description des menus propres a un type de document */
 typedef struct _AppDocType *PtrAppDocType;
 typedef struct _AppDocType
 {
-  char			*AppDocTypeName;
-  PtrAppMenu		AppDocTypeMenus;
-  PtrAppDocType		AppNextDocType;
+  STRING        AppDocTypeName;
+  PtrAppMenu    AppDocTypeMenus;
+  PtrAppDocType AppNextDocType;
 } AppDocType;
 
 #endif

@@ -21,6 +21,35 @@
 #ifndef THOT_SYS_H
 #define THOT_SYS_H
 
+#include "ustring.h"
+#include "uconvert.h"
+#include "uio.h"
+#include "unicodeconsts.h"
+
+#if defined(_I18N_) || defined (__JIS__)
+#     define ___TEXT___(str) L##str
+
+#     define __CR__  L'\r'
+#     define EOS     L'\0'
+#     define EOL     L'\n'
+#     define TAB     L'\t'
+#     define SPACE    L' '
+#else /* !defined(_I18N_) && !defined (__JIS__) */
+#     define ___TEXT___(str) str
+
+#     define __CR__  '\r'
+#     define EOS     '\0'
+#     define EOL     '\n'
+#     define TAB     '\t'
+#     define SPACE    ' '
+#endif /* defined(_I18N_) || defined (__JIS__) */
+
+#ifndef TEXT
+#define TEXT(str) ___TEXT___(str)
+#endif  /* TEXT */
+
+#define _EMPTYSTR_ TEXT("")
+
 #include <setjmp.h>
 #include <signal.h>
 #include <math.h>
@@ -46,12 +75,6 @@
 #include "ustring.h"
 #include "uconvert.h"
 #include "thot_uio.h"
-
-#define EOS     '\0'
-#define EOL     '\n'
-#define TAB     '\t'
-#define SPACE    ' '
-
 
 /* If const does work, or hasn't been redefined before */
 #ifndef CONST
@@ -81,8 +104,8 @@
 
 /* Constants for PATHs */
 #define DIR_SEP '/'
-#define DIR_STR "/"
 #define PATH_SEP ':'
+#define DIR_STR "/"
 #define PATH_STR ":"
 #else /* __GNUC__ */ /*---------------------------------GNUC--*/
 /* Ugly patches to cope with Visual C++ */
@@ -105,9 +128,14 @@ int                 _getpid (void);
 
 /* Constants for PATHs */
 #define DIR_SEP '\\'
-#define DIR_STR "\\"
 #define PATH_SEP ';'
-#define PATH_STR ";"
+#ifdef _I18N_
+#      define DIR_STR  L"\\"
+#      define PATH_STR L";"
+#else  /* !_I18N_ */
+#      define DIR_STR "\\"
+#      define PATH_STR ";"
+#endif /* _I18N_ */
 #endif /* ! __GNUC__ */
 /*------------------------------------------------------GNUC--*/
 

@@ -251,7 +251,7 @@ Name                n;
    i = 1;
    while (n[i - 1] != EOS)
      {
-	if (n[i - 1] < ' ' || n[i - 1] > '~')
+	if (n[i - 1] < SPACE || n[i - 1] > TEXT('~'))
 	   /* caractere non imprimable, ecrit son code */
 	  {
 	     fprintf (output, "\\%o", (unsigned char) n[i - 1]);
@@ -1394,7 +1394,7 @@ char               *output_file;
 	wrnom (pSchemaStr->SsName);
 	fprintf (output, ";\n");
 	/* ecrit au terminal les noms des  vues */
-	if (pSc1->PsNViews > 0 && pSc1->PsView[0][0] != ' ')
+	if (pSc1->PsNViews > 0 && pSc1->PsView[0][0] != SPACE)
 	  {
 	     fprintf (output, "\n");
 	     fprintf (output, "VIEWS\n");
@@ -1559,7 +1559,7 @@ char               *output_file;
 		  j = 1;
 		  while (pPr1->PdString[j - 1] != EOS)
 		    {
-		       if (pPr1->PdString[j - 1] < ' ')
+		       if (pPr1->PdString[j - 1] < SPACE)
 			  fprintf (output, "\\%3d", pPr1->PdString[j - 1]);
 		       else
 			  putchar (pPr1->PdString[j - 1]);

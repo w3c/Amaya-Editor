@@ -67,27 +67,27 @@ int                *hif;
    FILE               *fin;
    int                 c;
    STRING              pt; 
-   CHAR_T                buff[BUFSIZE];
+   CHAR_T              buff[BUFSIZE];
    int                 X2, Y2;
 
    *xif = 0;
    *yif = 0;
    *wif = 590;
    *hif = 840;
-   fin = ufopen (fn, "r");
+   fin = ufopen (fn, _ReadMODE_);
    if (fin)
      {
 	pt = buff;
 	for (c = getc (fin); c != EOF; c = getc (fin))
 	  {
 	     if (pt - buff < BUFSIZE - 2)
-		*pt++ = c;
+		*pt++ = (CHAR_T) c;
 	     if (c == '\n')
 	       {
 		  *(--pt) = EOS;
 		  pt = buff;
-		  if ((buff[0] == '%')
-		      && (usscanf (buff, "%%%%BoundingBox: %d %d %d %d", xif, yif, &X2, &Y2) == 4))
+		  if ((buff[0] == TEXT('%'))
+		      && (usscanf (buff, TEXT("%%%%BoundingBox: %d %d %d %d"), xif, yif, &X2, &Y2) == 4))
 		    {
 		       *wif = ABS (X2 - *xif) + 1;
 		       *hif = ABS (Y2 - *yif) + 1;
@@ -248,10 +248,10 @@ unsigned long       BackGroundPixel;
    Chech if the picture header is of an eps file                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            IsEpsFormat (STRING fn)
+ThotBool             IsEpsFormat (char* fn)
 #else  /* __STDC__ */
-ThotBool            IsEpsFormat (fn)
-STRING              fn;
+ThotBool             IsEpsFormat (fn)
+char*               fn;
 
 #endif /* __STDC__ */
 {
@@ -260,7 +260,7 @@ STRING              fn;
    ThotBool            res;
 
    res = FALSE;
-   fin = ufopen (fn, "r");
+   fin = fopen (fn, "r");
    if (fin)
      {
 	/* search for %! signature of the eps and ps files */

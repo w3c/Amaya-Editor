@@ -160,7 +160,7 @@ static void         InitPathImage ()
       bufDir[j] = EOS;
    else
       bufDir[j - 1] = EOS;
-   TtaNewSelector (BaseDlgImage + _ZONE_DIR_IMAGE, BaseDlgImage + _IMAGE_FORM, "Dossiers documents",
+   TtaNewSelector (BaseDlgImage + _ZONE_DIR_IMAGE, BaseDlgImage + _IMAGE_FORM, TEXT("Dossiers documents"),
 		   nb, bufDir, 9, NULL, FALSE, TRUE);
 }
 
@@ -184,8 +184,8 @@ STRING              txt;
    int                 i, val;
    CHAR_T                URL_DIR_SEP;
 
-   if (typeData == STRING_DATA && txt && ustrchr (txt, '/'))
-     URL_DIR_SEP = '/';
+   if (typeData == STRING_DATA && txt && ustrchr (txt, TEXT('/')))
+     URL_DIR_SEP = TEXT('/');
    else 
      URL_DIR_SEP = DIR_SEP;
 
@@ -235,14 +235,14 @@ STRING              txt;
 	   /* compose le path complet du fichier pivot */
 	   ustrncpy (DirectoryImage, DocumentPath, MAX_PATH);
 	   /* recheche indirectement le directory */
-	   MakeCompleteName (txt, "", DirectoryImage, completeName, &i);
+	   MakeCompleteName (txt, _EMPTYSTR_, DirectoryImage, completeName, &i);
 	   /* separe directory et nom */
 	   TtaExtractName (completeName, DirectoryImage, ImageName);
 	 }
        else
 	 {
 	   ustrcpy (completeName, DirectoryImage);
-	   ustrcat (completeName, "/");
+	   ustrcat (completeName, TEXT("/"));
 	   ustrcat (completeName, txt);
 	   ustrcpy (ImageName, txt);
 	 }
@@ -262,7 +262,7 @@ STRING              txt;
 		     i = ustrlen (DocumentPath);
 		     if (i + ustrlen (DirectoryImage) + 2 < MAX_PATH)
 		       {
-			 ustrcat (DocumentPath, ":");
+			 ustrcat (DocumentPath, TEXT(":"));
 			 ustrcat (DocumentPath, DirectoryImage);
 			 InitPathImage ();
 		       }
@@ -334,7 +334,7 @@ PtrBox              pBox;
    InitPathImage ();
 
    /* liste des fichiers existants */
-   TtaListDirectory (DirectoryImage, BaseDlgImage + _IMAGE_FORM, NULL, -1, "", TtaGetMessage (LIB, TMSG_FILES), BaseDlgImage + _IMAGE_SEL);
+   TtaListDirectory (DirectoryImage, BaseDlgImage + _IMAGE_FORM, NULL, -1, _EMPTYSTR_, TtaGetMessage (LIB, TMSG_FILES), BaseDlgImage + _IMAGE_SEL);
 
    /* sous-menu des types d'image du formulaire Picture */
    indx = 0;
@@ -343,7 +343,7 @@ PtrBox              pBox;
    source = &bufTypeImage[0];
    for (i = 1; i <= imageTypeCount; i++)
      {
-	bufMenu[indx] = 'B';
+	bufMenu[indx] = TEXT('B');
 	indx++;
 	length = ustrlen (source) + 1;
 	if (indx + length < MAX_TXT_LEN)
@@ -358,15 +358,15 @@ PtrBox              pBox;
 
    /* sous-menu cadrage du formulaire Picture */
    indx = 0;
-   usprintf (&bufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_REALSIZE));
+   usprintf (&bufMenu[indx], TEXT("B%s"), TtaGetMessage (LIB, TMSG_REALSIZE));
    indx += ustrlen (&bufMenu[indx]) + 1;
-   usprintf (&bufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_RESCALE));
+   usprintf (&bufMenu[indx], TEXT("B%s"), TtaGetMessage (LIB, TMSG_RESCALE));
    indx += ustrlen (&bufMenu[indx]) + 1;
-   usprintf (&bufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_FILLFRAME));
+   usprintf (&bufMenu[indx], TEXT("B%s"), TtaGetMessage (LIB, TMSG_FILLFRAME));
    indx += ustrlen (&bufMenu[indx]) + 1;
-   usprintf (&bufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_XREPEAT));
+   usprintf (&bufMenu[indx], TEXT("B%s"), TtaGetMessage (LIB, TMSG_XREPEAT));
    indx += ustrlen (&bufMenu[indx]) + 1;
-   usprintf (&bufMenu[indx], "B%s", TtaGetMessage (LIB, TMSG_YREPEAT));
+   usprintf (&bufMenu[indx], TEXT("B%s"), TtaGetMessage (LIB, TMSG_YREPEAT));
    TtaNewSubmenu (BaseDlgImage + _MENU_IMAGE_FRAME, BaseDlgImage + _IMAGE_FORM, 0,
 		  TtaGetMessage (LIB, TMSG_PICT_PRES), 5, bufMenu, NULL, FALSE);
 
@@ -374,7 +374,7 @@ PtrBox              pBox;
    TtaNewTextForm (BaseDlgImage + _ZONE_IMAGE_FILE, BaseDlgImage + _IMAGE_FORM,
 		   TtaGetMessage (LIB, TMSG_PICT_FILE), 50, 1, TRUE);
 
-   TtaSetSelector (BaseDlgImage + _ZONE_DIR_IMAGE, -1, "");
+   TtaSetSelector (BaseDlgImage + _ZONE_DIR_IMAGE, -1, _EMPTYSTR_);
    TtaSetTextForm (BaseDlgImage + _ZONE_IMAGE_FILE, name);
    TtaSetMenuForm (BaseDlgImage + _MENU_IMAGE_TYPE, IndexTypeImage);
    TtaSetMenuForm (BaseDlgImage + _MENU_IMAGE_FRAME, IndexPresImage);

@@ -8,7 +8,7 @@
 /*
  *
  * Authors: V. Quint, I. Vatton (INRIA)
- *          R. Guetari (W3C/INRIA): Adaptation for Windows NT/95 
+ *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  *
  */	
 
@@ -63,7 +63,14 @@
 #include "structselect_f.h"
 #include "tree_f.h"
 
-#define VersionId "V2.0"
+#ifdef _I18N_
+#      ifdef _WINDOWS
+#            define VersionId L"V2.0"
+#      else  /* !_WINDOWS */
+#      endif /* !_WINDOWS */
+#else  /* !_I18N_ */
+#      define VersionId "V2.0"
+#endif /* !_I18N_ */
 
 int                 UserErrorCode;
 ThotBool            PrintErrorMessages = TRUE;
@@ -195,7 +202,7 @@ STRING              applicationName;
    int                 i;
 
    UserErrorCode = 0;
-   ustrcpy (DefaultDocumentName, "");
+   ustrcpy (DefaultDocumentName, _EMPTYSTR_);
    InitEditorMemory ();		/* Initializes the memory managment of the editor */
    InitNatures ();		/* Initializes the table of Natures */
 
@@ -233,7 +240,7 @@ STRING              applicationName;
 
    Patterns = Name_patterns;
    /* load the message table of the Thot Library */
-   i = TtaGetMessageTable ("libdialogue", TMSG_LIB_MSG_MAX);
+   i = TtaGetMessageTable (_LibdialogueCST_, TMSG_LIB_MSG_MAX);
    switch (i)
 	 {
 	    case 0:
@@ -364,106 +371,106 @@ int                 errorCode;
    switch (errorCode)
 	 {
 	    case ERR_document_name:
-	       strError = "invalid document name";
+	       strError = _InvalidDocumentNameMSG_;
 	       break;
 	    case ERR_too_many_documents:
-	       strError = "too many documents";
+	       strError = _TooManyDocumentsMSG_;
 	       break;
 	    case ERR_cannot_read_struct_schema:
-	       strError = "cannot read structure schema";
+	       strError = _CannotReadStructureSchemaMSG_;
 	       break;
 	    case ERR_empty_document:
-	       strError = "empty document";
+	       strError = _EmptyDocumentMSG_;
 	       break;
 	    case ERR_cannot_open_pivot_file:
-	       strError = "cannot open pivot file";
+	       strError = _CannotOpenPivotFileMSG_;
 	       break;
 	    case ERR_invalid_document_parameter:
-	       strError = "invalid document parameter";
+	       strError = _InvalidDocumentParameterMSG_;
 	       break;
 	    case ERR_read_only_document:
-	       strError = "read only document";
+	       strError = _ReadOnlyDocumentMSG_;
 	       break;
 	    case ERR_invalid_associated_root:
-	       strError = "invalid associated root";
+	       strError = _InvalidAssociatedRootMSG_;
 	       break;
 	    case ERR_invalid_parameter:
-	       strError = "invalid parameter";
+	       strError = _InvalidParameterMSG_;
 	       break;
 	    case ERR_not_implemented:
-	       strError = "feature not implemented";
+	       strError = _FeatureNotImplementedMSG_;
 	       break;
 	    case ERR_invalid_attribute_value:
-	       strError = "invalid attribute value";
+	       strError = _InvalidAttributeValueMSG_;
 	       break;
 	    case ERR_attribute_element_mismatch:
-	       strError = "attribute element mismatch";
+	       strError = _AttributeElementMismatchMSG_;
 	       break;
 	    case ERR_buffer_too_small:
-	       strError = "buffer too small";
+	       strError = _BufferTooSmallMSG_;
 	       break;
 	    case ERR_invalid_element_type:
-	       strError = "invalid element type";
+	       strError = _InvalidElementTypeMSG_;
 	       break;
 	    case ERR_element_does_not_match_DTD:
-	       strError = "element does not match DTD";
+	       strError = _ElementDoesNotMatchDTDMSG_;
 	       break;
 	    case ERR_invalid_attribute_type:
-	       strError = "invalid attribute type";
+	       strError = _InvalidAttributeTypeMSG_;
 	       break;
 	    case ERR_duplicate_attribute:
-	       strError = "duplicate attribute";
+	       strError = _DuplicateAttributeMSG_;
 	       break;
 	    case ERR_mandatory_attribute:
-	       strError = "mandatory attribute";
+	       strError = _MandatoryAttributeMSG_;
 	       break;
 	    case ERR_cannot_set_link:
-	       strError = "cannot set link";
+	       strError = _CannotSetLinkMSG_;
 	       break;
 	    case ERR_no_selection_in_document:
-	       strError = "no selection in document";
+	       strError = _NoSelectionInDocumentMSG_;
 	       break;
 	    case ERR_incorrect_tree:
-	       strError = "incorrect tree";
+	       strError = _IncorrectTreeMSG_;
 	       break;
 	    case ERR_cannot_open_view:
-	       strError = "cannot open view";
+	       strError = _CannotOpenViewMSG_;
 	       break;
 	    case ERR_there_are_open_views:
-	       strError = "there are open views";
+	       strError = _ThereAreOpenViewsMSG_;
 	       break;
 	    case ERR_cannot_load_pschema:
-	       strError = "cannot load pschema";
+	       strError = _CannotLoadPschemaMSG_;
 	       break;
 	    case ERR_duplicate_presentation_rule:
-	       strError = "duplicate presentation rule";
+	       strError = _DuplicatePresentationRuleMSG_;
 	       break;
 	    case ERR_string_too_long:
-	       strError = "string too long";
+	       strError = _StringTooLongMSG_;
 	       break;
 	    case ERR_cannot_holophrast_a_root:
-	       strError = "cannot holophrast a root";
+	       strError = _CannotHolophrastARootMSG_;
 	       break;
 	    case ERR_cannot_holophrast_that_type:
-	       strError = "cannot holophrast that type";
+	       strError = _CannotHolophrastThatTypeMSG_;
 	       break;
 	    case ERR_main_window_not_open:
-	       strError = "main window not open";
+	       strError = _MainWindowNotOpenMSG_;
 	       break;
 	    case ERR_element_already_inserted:
-	       strError = "element already inserted";
+	       strError = _ElementAlreadyInsertedMSG_;
 	       break;
 	    case ERR_too_many_languages:
-	       strError = "language table is full";
+	       strError = _LanguageTableIsFullMSG_;
 	       break;
 	    case ERR_language_not_found:
-	       strError = "language not found";
+	       strError = _LanguageNotFoundMSG_;
 	       break;
 	    case ERR_no_presentation_schema:
-	       strError = "no presentation schema";
+	       strError = _NoPresentationSchemaMSG_;
 	       break;
 	    case ERR_element_has_no_box:
-	       strError = "element has no box";
+	       strError = _ElementHasNoBoxMSG_;
 	       break;
 	    default:
 	       strError = NULL;
@@ -517,8 +524,8 @@ STRING              aName;
    if (text == NULL || aDirectory == NULL || aName == NULL)
       return;			/* No input text or error in input parameters */
 
-   if (text && ustrchr (text, '/'))
-	  URL_DIR_SEP = '/';
+   if (text && ustrchr (text, TEXT('/')))
+	  URL_DIR_SEP = TEXT('/');
    else 
 	   URL_DIR_SEP = DIR_SEP;
    
@@ -542,7 +549,7 @@ STRING              aName;
 	  }
 	while (ptr != NULL);
 
-	i = (int) (oldptr) - (int) (text);	/* the length of the directory part */
+	i = ((int) (oldptr) - (int) (text)) / sizeof (CHAR_T);	/* the length of the directory part */
 	if (i > 1)
 	  {
 	     ustrncpy (aDirectory, text, i);
@@ -556,7 +563,7 @@ STRING              aName;
      }
 #    ifdef _WINDOWS
      lg = ustrlen (aName);
-     if (!ustrcasecmp (&aName[lg - 4], ".exe"))
+     if (!ustrcasecmp (&aName[lg - 4], EXE_EXT))
         aName[lg - 4] = EOS;
 #    endif /* _WINDOWS */
 }

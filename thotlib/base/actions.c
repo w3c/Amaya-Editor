@@ -15,8 +15,9 @@
  *
  * Handle actions of Thot library
  *
- * Author:  I. Vatton (INRIA)
+ * Authors: I. Vatton (INRIA)
  * Changed: S. Bonhomme (INRIA) 
+ *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  */
 
 #include "thot_gui.h"

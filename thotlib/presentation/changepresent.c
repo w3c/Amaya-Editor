@@ -2063,7 +2063,7 @@ ThotBool            Background;
 			  }
 			else
 			   ModifyGraphics (pEl, SelDoc, SelectedView, FALSE,
-					   ' ', FALSE, 0, FALSE,
+					   SPACE, FALSE, 0, FALSE,
 					   modifFillPattern, fillPatternNum,
 					   (ThotBool)Background, colorNum, (ThotBool)(!Background),
 					   colorNum);
@@ -2154,7 +2154,7 @@ int                 weightUnderline;
 	switch (charStyle)
 	  {
 	  case 0:
-	    pPRule->PrChrValue = 'R';
+	    pPRule->PrChrValue = TEXT('R');
 	    break;
 	  case 1:
 	    pPRule->PrChrValue = 'B';

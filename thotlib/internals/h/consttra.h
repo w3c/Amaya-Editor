@@ -51,6 +51,107 @@
 /* definition for the coding of translation tables produced by the
    T language compiler */ 
 
+#if defined(_I18N_) || defined(__JIS__)
+
+/* a type of translation rule application condition */
+#define C_TR_FIRST L'P'
+#define C_TR_LAST L'D'
+#define C_TR_DEFINED L'd'
+#define C_TR_REFERRED L'R'
+#define C_TR_FIRSTREF L'F'
+#define C_TR_LAST_REF L'L'
+#define C_TR_WITHIN L'T'
+#define C_TR_FIRST_WITHIN L'f'
+#define C_TR_ATTRIBUTE L'A'
+#define C_TR_PRESENT L'S'
+#define C_TR_PRULE L's'
+#define C_TR_COMMENT L'c'
+#define C_TR_ALPHABET L'a'
+#define C_TR_ATTRIBUTES L'E'
+#define C_TR_FIRSTATTR L'p'
+#define C_TR_LASTATTR L'l'
+#define C_TR_COMPUTEDPAGE L'w'
+#define C_TR_STARTPAGE L'x'
+#define C_TR_USERPAGE L'y'
+#define C_TR_REMINDERPAGE L'z'
+#define C_TR_EMPTY L'v'
+#define C_TR_EXTERNALREF L'e'
+#define C_TR_ELEMENTTYPE L't'
+
+/* a translation rule type */
+#define C_TR_CREATE L'C'
+#define C_TR_GET L'G'
+#define C_TR_USE L'U'
+#define C_TR_REMOVE L'R'
+#define C_TR_WRITE L'W'
+#define C_TR_READ L'r'
+#define C_TR_INCLUDE L'I'
+#define C_TR_NOTRANSL L'N'
+#define C_TR_COPY L'c'
+#define C_TR_CHANGEFILE L'F'
+#define C_TR_SET_COUNTER L'S'
+#define C_TR_ADD_COUNTER L'A'
+#define C_TR_NOLINEBREAK L'B'
+#define C_TR_INDENT L'i'
+#define C_TR_REMOVEFILE L'f'
+
+/* position where the translator-produced chains must be created */
+#define C_TR_AFTER L'A'
+#define C_TR_BEFORE L'B'
+
+/* type of thing to create in the output */
+#define C_OB_CONST L'C'
+#define C_OB_BUFFER L'B'
+#define C_OB_VAR L'V'
+#define C_OB_ATTR L'A'
+#define C_OB_CONTENT L'D'
+#define C_OB_PRES_VAL L'P'
+#define C_OB_PRESENTATION L'p'
+#define C_OB_COMMENT L'c'
+#define C_OB_ATTRIBUTES L'T'
+#define C_OB_REFID L'R'
+#define C_OB_PAIRID L'M'
+#define C_OB_REFERRED_ELEM L'r'
+#define C_OB_FILEDIR L'd'
+#define C_OB_FILENAME L'f'
+#define C_OB_EXTENSION L'E'
+#define C_OB_DOCUMENTNAME L'N'
+#define C_OB_DOCUMENTDIR L'I'
+#define C_OB_REFERRED_DOCNAME L'n'
+#define C_OB_REFERRED_DOCDIR L'i'
+#define C_OB_REFERRED_REFID L'F'
+#define C_OB_TRANSLATED_ATT L't'
+
+/* relative position in the abstract tree of an element to get */
+#define C_TR_SIBLING L'F'
+#define C_TR_DESCEND L'D'
+#define C_TR_REFERRED_EL L'd'
+#define C_TR_ASSOC L'A'
+
+/* type of a counter operation */
+#define C_TR_RANK L'R'
+#define C_TR_RLEVEL L'L'
+#define C_TR_SET L'S'
+#define C_TR_NOOP L'N'
+
+/* types of translation variables item */
+#define C_TR_CONST L'T'
+#define C_TR_COUNTER L'C'
+#define C_TR_BUFFER L'B'
+#define C_TR_ATTR L'A'
+#define C_TR_FILEDIR L'd'
+#define C_TR_FILENAME L'F'
+#define C_TR_EXTENSION L'E'
+#define C_TR_DOCUMENTNAME L'N'
+#define C_TR_DOCUMENTDIR L'D'
+
+/* to interpret the field TcAscendLevel */
+#define C_WITHIN_GT L'S'
+#define C_WITHIN_LT L'I'
+#define C_WITHIN_EQ L'E'
+
+#else /* defined(_I18N_) || defined(__JIS__) */
+
 /* a type of translation rule application condition */
 #define C_TR_FIRST 'P'
 #define C_TR_LAST 'D'
@@ -148,4 +249,5 @@
 #define C_WITHIN_LT 'I'
 #define C_WITHIN_EQ 'E'
 
+#endif /* defined(_I18N_) || defined(__JIS__) */
 #endif /* _THOTLIB_CONSTTRA_H_ */

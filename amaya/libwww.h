@@ -100,10 +100,10 @@ typedef struct _AHTReqContext
     SOCKET             except_sock;            /* except socket associated with the request */
     /*** End of experimental stuff ****/
     
-    char               *outputfile;	/* file to receive incoming data         */
+    char*              outputfile;	/* file to receive incoming data         */
     FILE               *output;	        /* file pointer to outputfile            */
     int                 mode;	        /* Mode of request: SYNC/ASYNC/IASYNC/FORM POST/FORM GET   */
-    char               *urlName;	/* url to retrieve/or that was retrieved */
+    char*              urlName;	/* url to retrieve/or that was retrieved */
     char               status_urlName [MAX_LENGTH]; /* url name to be displayed on the status bar */
     TIcbf              *incremental_cbf;	/* For IASYNC mode, @ of callback function */
     /* It'll be called each time a new data package */
@@ -116,7 +116,7 @@ typedef struct _AHTReqContext
     /*                 the following element points to the content type of 
                         a requested node */
     
-    char               *content_type;
+    char*              content_type;
 
     /* The following elements are used for the PUT and POST */
     HTAnchor           *source;
@@ -125,7 +125,7 @@ typedef struct _AHTReqContext
     int                 put_counter;	 /* number of bytes already put           */
     HTAssocList        *formdata;        /* ptr to a struct containing the formdata used with POST */
 
-    char               *error_stream;      /* pointer to an error message associated with the
+    char*               error_stream;      /* pointer to an error message associated with the
 					      request */
     int                 error_stream_size; /* size of the above message */
     ThotBool            error_html;        /* If TRUE, means the applications wants to display
@@ -134,7 +134,7 @@ typedef struct _AHTReqContext
   }
 AHTReqContext;
 
-THOT_EXPORT char AmayaLastHTTPErrorMsg [MAX_LENGTH];
+THOT_EXPORT CHAR_T      AmayaLastHTTPErrorMsg [MAX_LENGTH];
 THOT_EXPORT HTList      *conv;	/* List of global converters */
 THOT_EXPORT AmayaContext *Amaya;	/* Amaya's request global context    */
 #endif /* AMAYA_LIBWWW_H */

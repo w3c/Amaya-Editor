@@ -58,14 +58,12 @@ static void           LoadAlphabet ()
   if (dictPath != NULL)
     ustrcpy (alphaName, dictPath);
   else
-    ustrcpy (alphaName, "");
+    ustrcpy (alphaName, _EMPTYSTR_);
+
+  ustrcat (alphaName, DIR_STR);
+  ustrcat (alphaName, _AlphabetCST_);
   
-# ifdef _WINDOWS
-  ustrcat (alphaName, "\\alphabet");	/* iso alphabet */
-# else  /* _WINDOWS */
-  ustrcat (alphaName, "/alphabet");	/* iso alphabet */
-# endif /* _WINDOWS */
-  if ((falpha = ufopen (alphaName, "r")) != NULL)
+  if ((falpha = ufopen (alphaName, _ReadMODE_)) != NULL)
     {
       for (i = 0; i < 256; i++)
 	Code[i] = (UCHAR_T) 100;
@@ -263,15 +261,15 @@ STRING              dictDirectory;
   int                 ret, i;
   CHAR_T                tempbuffer[THOT_MAX_CHAR];
 
-  FindCompleteName (dictName, "dic", dictDirectory, tempbuffer, &i);
+  FindCompleteName (dictName, _DicCST_, dictDirectory, tempbuffer, &i);
   if (TtaFileExist (tempbuffer) == 0)	/* Unknown file */
     {
       /* Looks for not pre-treated dictionary */
-      FindCompleteName (dictName, "DCT", dictDirectory, tempbuffer, &i);
+      FindCompleteName (dictName, _DCTCST_, dictDirectory, tempbuffer, &i);
       if (TtaFileExist (tempbuffer) == 0)
 	{
 	  /* File .DCT unknown: looks for a dictionary LEX not pre-treated */
-	  FindCompleteName (dictName, "LEX", dictDirectory, tempbuffer, &i);
+	  FindCompleteName (dictName, _LEXCST_, dictDirectory, tempbuffer, &i);
 	  if (TtaFileExist (tempbuffer) == 0)
 	    /* unknown file */
 	    ret = -1;
@@ -360,7 +358,7 @@ PtrDict             dict;
    /* Loading the dictionary */
    while (ufgets (plineGotten, MAXLIGNE, dictFile) != NULL)
      {
-	nbGotten = usscanf (plineGotten, "%s", wordGotten);
+	nbGotten = usscanf (plineGotten, TEXT("%s"), wordGotten);
 	if ((nbGotten > 0)
 	    && (dict->DictNbWords < maxWord - 1)
 	    && ((length = ustrlen (wordGotten)) < MAX_WORD_LEN)
@@ -438,27 +436,27 @@ ThotBool            toTreat;
   *pDictionary = NULL;
   /* Opening the file */
   if (treated)
-    FindCompleteName (dictName, "dic", dictDirectory, tempbuffer, &i);
+    FindCompleteName (dictName, _DicCST_, dictDirectory, tempbuffer, &i);
   else
     {
       if (toTreat)
-	FindCompleteName (dictName, "DCT", dictDirectory, tempbuffer, &i);
+	FindCompleteName (dictName, _DCTCST_, dictDirectory, tempbuffer, &i);
       else
-	FindCompleteName (dictName, "LEX", dictDirectory, tempbuffer, &i);
+	FindCompleteName (dictName, _LEXCST_, dictDirectory, tempbuffer, &i);
     }
   if (readonly == FALSE)
     {
       /* Alterable dictionary */
       if (TtaFileExist (tempbuffer) != 0)
 	{
-	  dictFile = ufopen (tempbuffer, "rw");
+	  dictFile = ufopen (tempbuffer, _RW_MODE_);
 	  /* updating the dictionary */
 	  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_DICO), dictName);
 	}
       else
 	{
 	  new = TRUE;
-	  dictFile = ufopen (tempbuffer, "w+");
+	  dictFile = ufopen (tempbuffer, _AppendMODE_);
 	  /* new dictionary */
 	  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_NEW_DICO), dictName);
 	}
@@ -469,7 +467,7 @@ ThotBool            toTreat;
       if (treated == TRUE)
 	dictFile = TtaReadOpen (tempbuffer);
       else
-	dictFile = ufopen (tempbuffer, "r");
+	dictFile = ufopen (tempbuffer, _ReadMODE_);
       TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_DICO), dictName);
     }
   
@@ -521,7 +519,7 @@ ThotBool            toTreat;
 	  ufgets (tempbuffer, 100, dictFile);
 	  if (tempbuffer[0] != EOS)
 	    {
-	      if (usscanf (tempbuffer, "%d%d", &im, &ic) == 2)
+	      if (usscanf (tempbuffer, TEXT("%d%d"), &im, &ic) == 2)
 		{
 		  pdict->DictMaxWords = im;
 		  pdict->DictMaxChars = ic;
@@ -723,7 +721,7 @@ void                Dict_Init ()
       dictTable[i] = NULL;
 
    /* Inititializing of environments needed by dictionarires */
-   dictPath = TtaGetEnvString ("DICOPAR");
+   dictPath = TtaGetEnvString (_DICOPAR_EVAR_);
    if (dictPath == NULL)
      {
 	/* The environment variable DICOPAR does not exist */

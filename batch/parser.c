@@ -278,7 +278,7 @@ indLine             len;
 {
    int                 num;
 
-   sscanf (&inputLine[index - 1], "%d", &num);
+   usscanf (&inputLine[index - 1], TEXT("%d"), &num);
    if (num > 65535)
      {
 	CompilerMessage (index, COMPIL, FATAL, NUMBER_OVERFLOW, inputLine, LineNum);

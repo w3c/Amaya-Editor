@@ -8,7 +8,7 @@
 /*
  *
  * Authors: I. Vatton
- *          R. Guetari (W3C/INRIA) Windows NT/95
+ *          R. Guetari (W3C/INRIA) Unicode and Windows version
  *
  */
 
@@ -69,7 +69,7 @@ ThotBool          removeSpan;
    /* if it's a MathML element, remove the style attribute defined in the
       MathML DTD, otherwise, remove the style attribute defined in the
       HTML DTD */
-   if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+   if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
       {
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = MathML_ATTR_style_;
@@ -88,7 +88,7 @@ ThotBool          removeSpan;
    else
 #endif
       {
-      attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+      attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
       attrType.AttrTypeNum = HTML_ATTR_Style_;
       }
    attr = TtaGetAttribute (el, attrType);
@@ -146,7 +146,7 @@ NotifyElement      *event;
       buflen += TtaGetTextLength (el);
       TtaNextSibling (&el);
     }
-  OldBuffer = TtaGetMemory (buflen);
+  OldBuffer = TtaAllocString (buflen);
 
   /* now fill the buffer */
   el = first;
@@ -210,7 +210,7 @@ NotifyAttribute    *event;
       buflen += TtaGetTextLength (el);
       TtaNextSibling (&el);
     }
-  buffer = TtaGetMemory (buflen);
+  buffer = TtaAllocString (buflen);
 
   /* now fill the buffer */
   el = first;
@@ -368,7 +368,7 @@ NotifyAttribute    *event;
         /* if it's a MathML element, delete the style attribute defined in the
            MathML DTD, otherwise, delete the style attribute defined in the
            HTML DTD */
-	if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+	if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
 	   {
 	   atType.AttrSSchema = elType.ElSSchema;
 	   atType.AttrTypeNum = MathML_ATTR_style_;
@@ -387,8 +387,8 @@ NotifyAttribute    *event;
 	else
 #endif
 	   {
-	   atType.AttrSSchema = TtaGetSSchema ("HTML", doc);
-	   atType.AttrTypeNum = HTML_ATTR_Style_;
+    	atType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
+    	atType.AttrTypeNum = HTML_ATTR_Style_;
 	   }
 	at = TtaGetAttribute (el, atType);
 	if (at != NULL)
@@ -409,7 +409,7 @@ NotifyAttribute    *event;
    else
      {
 	/* parse and apply the new style content */
-	style = (STRING) TtaGetMemory (len + 2);
+	style = TtaAllocString (len + 2);
 	if (style == NULL)
 	   return;
 	TtaGiveTextAttributeValue (event->attribute, style, &len);
@@ -467,7 +467,7 @@ Document            doc;
   if (dispMode == DisplayImmediately)
      TtaSetDisplayMode (doc, DeferredDisplay);
 
-  if (ustrcmp (CurrentClass, "default") &&
+  if (ustrcmp (CurrentClass, TEXT("default")) &&
       !IsImplicitClassName (CurrentClass, doc))
      setClassAttr = TRUE;
   else
@@ -494,7 +494,7 @@ Document            doc;
 	   parent = TtaGetParent (lastSelectedEl);
 	   elType = TtaGetElementType (parent);
 	   if (elType.ElTypeNum == HTML_EL_Span &&
-	       !ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+	       !ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
 	      /* the parent element is a SPAN */
 	      if (lastSelectedEl == TtaGetFirstChild (parent) &&
 	          lastSelectedEl == TtaGetLastChild (parent))
@@ -519,7 +519,7 @@ Document            doc;
 	parent = TtaGetParent (firstSelectedEl);
 	elType = TtaGetElementType (parent);
 	if (elType.ElTypeNum == HTML_EL_Span &&
-	    !ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+	    !ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
 	   /* parent is a SPAN element */
 	   if (firstSelectedEl == TtaGetFirstChild (parent) &&
 	       firstSelectedEl == TtaGetLastChild (parent))
@@ -576,7 +576,7 @@ Document            doc;
 	  elType = TtaGetElementType (curEl);
 	  if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
 	     /* that's a text element */
-	     if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+	     if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
 		/* not a HTML element, move to the parent element */
 		curEl = TtaGetParent (curEl);
 	     else
@@ -598,7 +598,7 @@ Document            doc;
 		   }
 	        }
 #ifdef MATHML
-	  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+	  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
 	     {
 	     attrType.AttrSSchema = elType.ElSSchema;
 	     attrType.AttrTypeNum = MathML_ATTR_class;
@@ -614,7 +614,7 @@ Document            doc;
 	  else
 #endif
 	     {
-	     attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+	     attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
 	     attrType.AttrTypeNum = HTML_ATTR_Class;
 	     }
 	  /* set the Class attribute of the element */
@@ -666,7 +666,7 @@ Document            doc;
   int                 len, base;
 
   /* check whether it's the element type or a class name */
-  ustrcpy (stylestring, "\n");
+  ustrcpy (stylestring, _NEWLINE_);
   elType = TtaGetElementType (ClassReference);
   GIType (CurrentClass, &selType, doc);
   /* create a string containing the new CSS definition. */
@@ -674,7 +674,7 @@ Document            doc;
     {
       if (CurrentClass[0] != '.' && CurrentClass[0] != '#')
 	/* it's an invalid class name */
-	ustrcat (stylestring, ".");
+	ustrcat (stylestring, TEXT("."));
     }
   else if (selType.ElTypeNum != elType.ElTypeNum)
     {
@@ -683,11 +683,11 @@ Document            doc;
       return;
     }
   ustrcat (stylestring, CurrentClass);
-  ustrcat (stylestring, " { ");
+  ustrcat (stylestring, TEXT(" { "));
   base = ustrlen (stylestring);
   len = 1000 - base - 4;
   GetHTMLStyleString (ClassReference, doc, &stylestring[base], &len);
-  ustrcat (stylestring, "}");
+  ustrcat (stylestring, TEXT("}"));
   
   TtaOpenUndoSequence (doc, ClassReference, ClassReference, 0, 0);
 
@@ -698,7 +698,7 @@ Document            doc;
       if (*a_class == '.')
 	 a_class++;
 #ifdef MATHML
-      if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+      if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
 	 {
 	 attrType.AttrSSchema = elType.ElSSchema;
 	 attrType.AttrTypeNum = MathML_ATTR_class;
@@ -714,7 +714,7 @@ Document            doc;
       else
 #endif
 	 {
-         attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+         attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
          attrType.AttrTypeNum = HTML_ATTR_Class;
 	 }
       attr = TtaGetAttribute (ClassReference, attrType);
@@ -831,7 +831,7 @@ STRING              first;
 
   /* list all class values */
   /* looks first for the Class attribute defined in the HTML DTD */
-  attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+  attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
   attrType.AttrTypeNum = HTML_ATTR_Class;
   el = TtaGetMainRoot (doc);
   while (el != NULL)
@@ -842,7 +842,7 @@ STRING              first;
      }
 #ifdef MATHML
   /* looks for the class attribute defined in the MathML DTD */
-  attrType.AttrSSchema = TtaGetSSchema ("MathML", doc);
+  attrType.AttrSSchema = TtaGetSSchema (TEXT("MathML"), doc);
   if (attrType.AttrSSchema)
      /* there are some MathML elements in this document */
      {
@@ -929,7 +929,7 @@ View                view;
   
   /* preselect the entry corresponding to the class of the element. */
 #ifdef MATHML
-  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
      {
      attrType.AttrSSchema = elType.ElSSchema;
      attrType.AttrTypeNum = MathML_ATTR_class;
@@ -945,7 +945,7 @@ View                view;
   else
 #endif
      {
-     attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+     attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
      attrType.AttrTypeNum = HTML_ATTR_Class;
      }
   attr = TtaGetAttribute (ClassReference, attrType);
@@ -1009,7 +1009,7 @@ View                view;
   TtaNewForm (BaseDialog + AClassForm, TtaGetViewFrame (doc, 1), 
 	      TtaGetMessage (AMAYA, AM_APPLY_CLASS), TRUE, 2, 'L', D_DONE);
 #  endif /* !_WINDOWS */
-  NbClass = BuildClassList (doc, ListBuffer, MAX_CSS_LENGTH, "default");
+  NbClass = BuildClassList (doc, ListBuffer, MAX_CSS_LENGTH, TEXT("default"));
 #  ifndef _WINDOWS
   TtaNewSelector (BaseDialog + AClassSelect, BaseDialog + AClassForm,
 		  TtaGetMessage (AMAYA, AM_SEL_CLASS),
@@ -1020,7 +1020,7 @@ View                view;
      element. */
 #ifdef MATHML
   elType = TtaGetElementType (firstSelectedEl);
-  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML"))
+  if (!ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")))
      {
      attrType.AttrSSchema = elType.ElSSchema;
      attrType.AttrTypeNum = MathML_ATTR_class;
@@ -1037,7 +1037,7 @@ View                view;
   else
 #endif
      {
-     attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+     attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
      attrType.AttrTypeNum = HTML_ATTR_Class;
      }
   attr = TtaGetAttribute (firstSelectedEl, attrType);
@@ -1051,7 +1051,7 @@ View                view;
   else
     {
       TtaSetSelector (BaseDialog + AClassSelect, 0, NULL);
-      ustrcpy (CurrentClass, "default");
+      ustrcpy (CurrentClass, TEXT("default"));
     }
 
    /* pop-up the dialogue box. */

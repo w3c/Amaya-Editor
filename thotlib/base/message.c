@@ -17,7 +17,8 @@
 /*
  * Handles error messages for Thot applications
  *
- * Author: I. Vatton (INRIA)
+ * Authors: I. Vatton (INRIA)
+ *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  *
  */
 
@@ -75,23 +76,23 @@ STRING              pBuffer;
    while (pBuffer[i] != EOS)
      {
 	/* On lit jusqu'au premier backslash rencontre */
-	while ((pBuffer[i] != '\\') && (pBuffer[i] != EOS))
+	while ((pBuffer[i] != TEXT('\\')) && (pBuffer[i] != EOS))
 	   result[j++] = pBuffer[i++];
 
 	/* Teste si on est en presence de deux backslashs ou */
 	/* si on se trouve devant un caractere special */
 	if (pBuffer[i] != EOS)
-	   if (pBuffer[i + 1] == '\\')
+	   if (pBuffer[i + 1] == TEXT('\\'))
 	     {
 		/* On est dans le cas de deux backslashs consecutifs; on les prend */
 		result[j++] = pBuffer[i++];
 		result[j++] = pBuffer[i++];
 	     }
-	   else if (pBuffer[i + 1] == 'n')
+	   else if (pBuffer[i + 1] == TEXT('n'))
 	     {
 		/* On est dans le cas d'un \n */
 		i += 2;
-		result[j++] = '\n';
+		result[j++] = TEXT('\n');
 	     }
 	   else
 	     {
@@ -99,8 +100,8 @@ STRING              pBuffer;
 		i++;
 		/* on construit le nombre correspondant au caractere */
 		k = 0;
-		while ((pBuffer[i] >= '0')
-		       && (pBuffer[i] <= '9')
+		while ((pBuffer[i] >= TEXT('0'))
+		       && (pBuffer[i] <= TEXT('9'))
 		       && (pBuffer[i] != EOS)
 		       && (k <= 2))
 		   nombre[k++] = pBuffer[i++];
@@ -156,16 +157,19 @@ int                 msgNumber;
    int                 num;
    PtrTabMsg           currenttable;
    PtrTabMsg           previoustable;
-   CHAR_T                pBuffer[MAX_TXT_LEN];
-   CHAR_T                fileName[200];
+   CHAR_T              pBuffer[MAX_TXT_LEN];
+   /* CHAR_T              string[MAX_TXT_LEN]; */
+   STRING              string;
+   CHAR_T              fileName[200];
+   char                pBuff[MAX_TXT_LEN];
 
    /* contruction du nom $THOTDIR/bin/$LANG-msgName */
    s = TtaGetVarLANG ();
    ustrcpy (fileName, s);
-   fileName[2] = '-';
+   fileName[2] = TEXT('-');
    ustrcpy (&fileName[3], msgName);
    SearchFile (fileName, 2, pBuffer);
-   file = ufopen (pBuffer, "r");
+   file = ufopen (pBuffer, _ReadMODE_);
    if (file == NULL)
      {
 	printf ("WARNING: cannot open file %s\n", pBuffer);
@@ -200,10 +204,20 @@ int                 msgNumber;
 	  }
 
 	/* Charge les messages */
-	while (((fscanf (file, "%d %[^#\r\n]", &num, pBuffer)) != EOF) && (num < msgNumber))
+	while (((fscanf (file, "%d %[^#\r\n]", &num, pBuff)) != EOF) && (num < msgNumber))
 	  {
-	     s = (STRING) TtaGetMemory (ustrlen (pBuffer) + 1);
-	     ustrcpy (s, AsciiTranslate (pBuffer));
+#        if defined(_I18N_) || defined(__JIS__)
+         string = TtaAllocString (MAX_TXT_LEN);
+#        ifdef _WINDOWS
+         MultiByteToWideChar (CP_ACP, 0, pBuff, -1, string, sizeof (pBuff));
+#        else  /* !_WINDOWS */
+         mbstowcs (string, pBuff, sizeof (pBuff));
+#        endif /* !_WINDOWS */
+#        else /* defined(_I18N_) || defined(__JIS__) */
+         string = pBuff;
+#        endif /* defined(_I18N_) || defined(__JIS__) */
+	     s = TtaAllocString (ustrlen (string) + 1);
+	     ustrcpy (s, AsciiTranslate (string));
 	     currenttable->TabMessages[num] = s;
 	  }
 	fclose (file);
@@ -288,13 +302,13 @@ STRING              fmt;
    va_list             pa;
    int                 i, lg, vald;
    STRING              vals, p;
-   CHAR_T                pBuffer[MAX_PATH];
+   CHAR_T              pBuffer[MAX_PATH];
 
 #  ifdef _WINDOWS
    int len = ustrlen (fmt);
     for (i = 0; i < len; i++)
-        if (fmt [i] == '\n')
-           fmt [i] = ' ';
+        if (fmt [i] == TEXT('\n'))
+           fmt [i] = SPACE;
 #  endif /* _WINDOWS */
 
    if (fmt) {
@@ -306,25 +320,26 @@ STRING              fmt;
 #     endif /* STDC_HEADERS */
       i = 0;
       for (p = fmt; *p && i + 1 < MAX_PATH; p++) {
-          if (*p != '%') 
+          if (*p != TEXT('%')) 
              pBuffer[i++] = *p;
           else {
                p++;
                switch (*p) {
-                      case 'd':
+                      case TEXT('d'):
                            /* it is a value */
                            vald = va_arg (pa, int);
 
                            if (i + 10 < MAX_PATH) {
-                              usprintf (&pBuffer[i], "%d", vald);
+                              usprintf (&pBuffer[i], TEXT("%d"), vald);
                               i += ustrlen (&pBuffer[i]);
 						   } else
                                   i = MAX_PATH;
 			               break;
 
-                      case 's':
+                      case TEXT('s'):
                            /* it is a string */
-                           vals = va_arg (pa, char*);
+                           /* vals = va_arg (pa, char*); */
+                           vals = va_arg (pa, STRING);
 
                            lg = ustrlen (vals);
                            if (i + lg < MAX_PATH) {

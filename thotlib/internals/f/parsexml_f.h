@@ -13,7 +13,7 @@ extern void XmlChangeCurrentLangage ( Language lang );
 extern Element XmlInsertElement ( Element newElement );
 extern void XmlTextToDocument ( void );
 extern void FreeXmlParser ( void );
-extern Document XmlParseDoc ( char* name );
+extern Document XmlParseDoc ( STRING name );
 extern void XmlParserLoadResources ( void );
 
 #else /* __STDC__ */

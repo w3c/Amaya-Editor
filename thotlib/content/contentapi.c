@@ -925,11 +925,11 @@ Document            document;
 	       }
 	     else
 	       {
-		  polyline = (shape == 'S' || shape == 'U' || shape == 'N' ||
-			      shape == 'M' || shape == 'B' || shape == 'A' ||
-			      shape == 'F' || shape == 'D' || shape == 'p' ||
-			      shape == 's' || shape == 'w' || shape == 'x' ||
-			      shape == 'y' || shape == 'z');
+		  polyline = (shape == TEXT('S') || shape == TEXT('U') || shape == TEXT('N') ||
+			      shape == TEXT('M') || shape == TEXT('B') || shape == TEXT('A') ||
+			      shape == TEXT('F') || shape == TEXT('D') || shape == TEXT('p') ||
+			      shape == TEXT('s') || shape == TEXT('w') || shape == TEXT('x') ||
+			      shape == TEXT('y') || shape == TEXT('z'));
 		  if (polyline && ((PtrElement) element)->ElLeafType == LtGraphics)
 		     /* changing simple graphic --> polyline */
 		    {

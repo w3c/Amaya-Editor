@@ -24,10 +24,7 @@
 #include "XMLparser_f.h"
 #include "styleparser_f.h"
 
-#define EOS     '\0'
-#define SPACE    ' '
-
-typedef UCHAR_T  MathEntityName[20];
+typedef UCHAR_T  MathEntityName[30];
 typedef struct _MathEntity
   {			 /* a Math entity representing an operator char */
      MathEntityName      MentityName;	/* entity name */
@@ -41,6 +38,202 @@ static MathEntity        MathEntityTable[] =
    /* This table MUST be in alphabetical order */
    /* This table contains characters from the Symbol font plus some
       specific MathML entities */
+#if defined (_I18N_) || defined (__JIS__)
+    {L"Agr", 65, L'G'},
+    {L"And", 217, L'G'},
+    {L"ApplyFunction", 32, L'L'},  /* render as white space */
+    {L"Backslash", 92, L'L'},
+    {L"Bgr", 66, L'G'},
+    {L"Cap", 199, L'G'},
+    {L"CenterDot", 215, L'G'},
+    {L"CirclePlus", 197, L'G'},
+    {L"CircleTimes", 196, L'G'},
+    {L"Colon", 58, L'G'},
+    {L"Congruent", 64, L'G'},
+    {L"Cup", 200, L'G'},
+    {L"Delta", 68, L'G'},
+    {L"Diamond", 168, L'G'},
+    {L"DoubleDownArrow", 223, L'G'},
+    {L"DoubleLeftArrow", 220, L'G'},
+    {L"DoubleLeftRightArrow", 219, L'G'},
+    {L"DoubleRightArrow", 222, L'G'},
+    {L"DoubleUpArrow", 221, L'G'},
+    {L"DownArrow", 175, L'G'},
+    {L"DownTee", 94, L'G'},
+    {L"EEgr", 72, L'G'},
+    {L"Egr", 69, L'G'},
+    {L"Element", 206, L'G'},
+    {L"Equal", 61, L'L'},
+    {L"EqualTilde", 64, L'G'},
+    {L"Exists", 36, L'G'},
+    {L"ForAll", 34, L'G'},
+    {L"Gamma", 71, L'G'},
+    {L"GreaterEqual", 179, L'G'},
+    {L"Igr", 73, L'G'},
+    {L"Integral", 242, L'G'},
+    {L"Intersection", 199, L'G'},
+    {L"InvisibleTimes", 0, SPACE},
+    {L"Kgr", 75, L'G'},
+    {L"KHgr", 67, L'G'},
+    {L"Lambda", 76, L'G'},
+    {L"LeftArrow", 172, L'G'},
+    {L"LeftRightArrow", 171, L'G'},
+    {L"Mgr", 77, L'G'},
+    {L"Ngr", 78, L'G'},
+    {L"NonBreakingSpace", 160, L'L'},
+    {L"Not", 216, L'G'},
+    {L"NotElement", 207, L'G'},
+    {L"NotEqual", 185, L'G'},
+    {L"NotSubset", 203, L'G'},
+    {L"Ogr", 79, L'G'},
+    {L"Omega", 87, L'G'},
+    {L"Or", 218, L'G'},
+    {L"PI", 213, L'G'},
+    {L"PartialD", 182, L'G'},
+    {L"Phi", 70, L'G'},
+    {L"Pi", 80, L'G'},
+    {L"PlusMinus", 177, L'G'},
+    {L"Product", 213, L'G'},
+    {L"Proportional", 181, L'G'},
+    {L"Psi", 89, L'G'},
+    {L"Rgr", 82, L'G'},
+    {L"RightArrow", 174, L'G'},
+    {L"Sigma", 83, L'G'},
+    {L"Sol", 164, L'G'},
+    {L"Star", 42, L'L'},
+    {L"Subset", 204, L'G'},
+    {L"SubsetEqual", 205, L'G'},
+    {L"SuchThat", 39, L'G'},
+    {L"Sum", 229, L'G'},
+    {L"Superset", 201, L'G'},
+    {L"SupersetEqual", 202, L'G'},
+    {L"Tgr", 84, L'G'},
+    {L"Therefore", 92, L'G'},
+    {L"Theta", 81, L'G'},
+    {L"Tilde", 126, L'L'},
+    {L"TripleDot", 188, L'G'},
+    {L"Union", 200, L'G'},
+    {L"UpArrow", 173, L'G'},
+    {L"Upsi", 85, L'G'},
+    {L"Upsi1", 161, L'G'},
+    {L"Vee", 218, L'G'},
+    {L"Verbar", 189, L'G'},
+    {L"VerticalBar", 124, L'L'},
+    {L"Xi", 88, L'G'},
+    {L"Zgr", 90, L'G'},
+    {L"af", 32, L'L'},             /* render as white space */
+    {L"aleph", 192, L'G'},
+    {L"alpha", 97, L'G'},
+    {L"and", 217, L'G'},
+    {L"angle", 208, L'G'},
+    {L"ap", 187, L'G'},
+    {L"beta", 98, L'G'},
+    {L"bottom", 94, L'G'},
+    {L"bull", 183, L'G'},
+    {L"cap", 199, L'G'},
+    {L"chi", 99, L'G'},
+    {L"clubs", 167, L'G'},
+    {L"cong", 64, L'G'},
+    {L"copysf", 211, L'G'},
+    {L"copyssf", 227, L'G'},
+    {L"cr", 191, L'G'},
+    {L"cup", 200, L'G'},
+    {L"darr", 175, L'G'},
+    {L"dArr", 223, L'G'},
+    {L"dd", 100, L'L'},
+    {L"deg", 176, L'G'},
+    {L"delta", 100, L'G'},
+    {L"diams", 168, L'G'},
+    {L"divide", 184, L'G'},
+    {L"dtri", 209, L'G'},
+    {L"ee", 101, L'L'},
+    {L"empty", 198, L'G'},
+    {L"emsp", 32, L'G'},
+    {L"epsiv", 101, L'G'},
+    {L"equiv", 186, L'G'},
+    {L"eta", 104, L'G'},
+    {L"exist", 36, L'G'},
+    {L"florin", 166, L'G'},
+    {L"forall", 34, L'G'},
+    {L"gamma", 103, L'G'},
+    {L"ge", 179, L'G'},
+    {L"gt", 62, L'L'},
+    {L"hearts", 169, L'G'},
+    {L"horbar", 190, L'G'},
+    {L"ifraktur", 193, L'G'},
+    {L"infin", 165, L'G'},
+    {L"int", 242, L'G'},
+    {L"iota", 105, L'G'},
+    {L"isin", 206, L'G'},
+    {L"it", 242, L'G'},
+    {L"kappa", 107, L'G'},
+    {L"lambda", 108, L'G'},
+    {L"lang", 225, L'G'},
+    {L"larr", 172, L'G'},
+    {L"lArr", 220, L'G'},
+    {L"le", 163, L'G'},
+    {L"lowbar", 95, L'G'},
+    {L"loz", 224, L'G'},
+    {L"lrarr", 171, L'G'},
+    {L"lrArr", 219, L'G'},
+    {L"lsqb", 91, L'G'},
+    {L"lt", 60, L'L'},
+    {L"middot", 215, L'G'},
+	{L"mldr", 188, L'G'},
+	{L"mu", 109, L'G'},
+    {L"ne", 185, L'G'},
+    {L"not", 216, L'G'},
+    {L"notin", 207, L'G'},
+    {L"nu", 110, L'G'},
+    {L"ogr", 111, L'G'},
+    {L"omega", 119, L'G'},
+    {L"oplus", 197, L'G'},
+    {L"or", 218, L'G'},
+    {L"otimes", 196, L'G'},
+    {L"part", 182, L'G'},
+    {L"phi", 102, L'G'},
+    {L"phiv", 106, L'G'},
+    {L"pi", 112, L'G'},
+    {L"piv", 118, L'G'},
+    {L"prop", 181, L'G'},
+    {L"psi", 121, L'G'},
+    {L"radic", 214, L'G'},
+    {L"rarr", 174, L'G'},
+    {L"rArr", 222, L'G'},
+    {L"rdquo", 178, L'G'},
+    {L"regsf", 210, L'G'},
+    {L"regssf", 226, L'G'},
+    {L"rfraktur", 194, L'G'},
+    {L"rho", 114, L'G'},
+    {L"rsqb", 93, L'G'},
+    {L"sigma", 115, L'G'},
+    {L"sigmav", 86, L'G'},
+    {L"spades", 170, L'G'},
+    {L"sub", 204, L'G'},
+    {L"sube", 205, L'G'},
+    {L"subne", 203, L'G'},
+    {L"sum", 229, L'G'},
+    {L"sup", 201, L'G'},
+    {L"supe", 202, L'G'},
+    {L"tau", 116, L'G'},
+    {L"there4", 92, L'G'},
+    {L"theta", 113, L'G'},
+    {L"thetav", 74, L'G'},
+    {L"thickspace", 32, L'L'},
+    {L"times", 180, L'G'},
+    {L"trade", 212, L'G'},
+    {L"tradesf", 212, L'G'},
+    {L"tradessf", 228, L'G'},
+    {L"uarr", 173, L'G'},
+    {L"uArr", 221, L'G'},
+    {L"upsi", 117, L'G'},
+    {L"vee", 218, L'G'},
+    {L"weierp", 195, L'G'},
+    {L"xi", 120, L'G'},
+    {L"zeta", 122, L'G'},
+    {L"zzzz", -1, SPACE}		/* this last entry is required */
+
+#else
    {"Agr", 65, 'G'},
    {"And", 217, 'G'},
    {"ApplyFunction", 32, 'L'},  /* render as white space */
@@ -234,14 +427,52 @@ static MathEntity        MathEntityTable[] =
    {"xi", 120, 'G'},
    {"zeta", 122, 'G'},
    {"zzzz", -1, SPACE}		/* this last entry is required */
-};
 
-/* mapping table of MathML elements */
+#endif
+};
+   /* mapping table of MathML elements */
 
 static ElemMapping    MathMLElemMappingTable[] =
 {
    /* This table MUST be in alphabetical order */
-   {"XMLcomment", SPACE, MathML_EL_XMLcomment},
+#  if defined (_I18N_) || defined (__JIS__)
+	{L"XMLcomment", SPACE, MathML_EL_XMLcomment},
+   {L"XMLcomment_line", SPACE, MathML_EL_XMLcomment_line},
+   {L"maligngroup", 'E', MathML_EL_MALIGNGROUP},
+   {L"malignmark", 'E', MathML_EL_MALIGNMARK},
+   {L"merror", SPACE, MathML_EL_MERROR},
+   {L"mf", SPACE, MathML_EL_MF},  /* for compatibility with an old version of
+				    MathML: WD-math-970704 */
+   {L"mfenced", SPACE, MathML_EL_MFENCED},
+   {L"mfrac", SPACE, MathML_EL_MFRAC},
+   {L"mi", SPACE, MathML_EL_MI},
+   {L"mmultiscripts", SPACE, MathML_EL_MMULTISCRIPTS},
+   {L"mn", SPACE, MathML_EL_MN},
+   {L"mo", SPACE, MathML_EL_MO},
+   {L"mover", SPACE, MathML_EL_MOVER},
+   {L"mpadded", SPACE, MathML_EL_MPADDED},
+   {L"mphantom", SPACE, MathML_EL_MPHANTOM},
+   {L"mprescripts", SPACE, MathML_EL_PrescriptPairs},
+   {L"mroot", SPACE, MathML_EL_MROOT},
+   {L"mrow", SPACE, MathML_EL_MROW},
+   {L"ms", SPACE, MathML_EL_MS},
+   {L"mspace", 'E', MathML_EL_MSPACE},
+   {L"msqrt", SPACE, MathML_EL_MSQRT},
+   {L"mstyle", SPACE, MathML_EL_MSTYLE},
+   {L"msub", SPACE, MathML_EL_MSUB},
+   {L"msubsup", SPACE, MathML_EL_MSUBSUP},
+   {L"msup", SPACE, MathML_EL_MSUP},
+   {L"mtable", SPACE, MathML_EL_MTABLE},
+   {L"mtd", SPACE, MathML_EL_MTD},
+   {L"mtext", SPACE, MathML_EL_MTEXT},
+   {L"mtr", SPACE, MathML_EL_MTR},
+   {L"munder", SPACE, MathML_EL_MUNDER},
+   {L"munderover", SPACE, MathML_EL_MUNDEROVER},
+   {L"none", SPACE, MathML_EL_Construct},
+   {L"sep", 'E', MathML_EL_SEP},
+   {L"", SPACE, 0}	/* Last entry. Mandatory */
+#  else /*  !defined (_I18N_) &&  ! defined (__JIS__) */ 
+	{"XMLcomment", SPACE, MathML_EL_XMLcomment},
    {"XMLcomment_line", SPACE, MathML_EL_XMLcomment_line},
    {"maction", SPACE, MathML_EL_MACTION},
    {"maligngroup", 'E', MathML_EL_MALIGNGROUP},
@@ -277,14 +508,79 @@ static ElemMapping    MathMLElemMappingTable[] =
    {"none", SPACE, MathML_EL_Construct},
    {"sep", 'E', MathML_EL_SEP},
    {"", SPACE, 0}	/* Last entry. Mandatory */
+#  endif /* defined (_I18N_) || defined (__JIS__) */
 };
 
 static AttributeMapping MathMLAttributeMappingTable[] =
 {
    /* The first entry MUST be unknown_attr */
    /* The rest of this table MUST be in alphabetical order */
-   {"unknown_attr", "", 'A', MathML_ATTR_Invalid_attribute},
-   {"ZZGHOST", "", 'A', MathML_ATTR_Ghost_restruct},
+#if defined (_I18N_) || defined (__JIS__) 
+   {L"unknown_attr", _EMPTYSTR_, 'A', MathML_ATTR_Invalid_attribute},
+   {L"ZZGHOST", _EMPTYSTR_, 'A', MathML_ATTR_Ghost_restruct},
+
+   {L"accent", L"", L'A', MathML_ATTR_accent},
+   {L"accentunder", L"", L'A', MathML_ATTR_accentunder},
+   {L"actiontype", L"", L'A', MathML_ATTR_actiontype},
+   {L"align", L"", L'A', MathML_ATTR_align},
+   {L"alignmentscope", L"", L'A', MathML_ATTR_alignmentscope},
+   {L"background", L"", L'A', MathML_ATTR_background_},
+   {L"class", L"", L'A', MathML_ATTR_class},
+   {L"close", L"", L'A', MathML_ATTR_close},
+   {L"columnalign", L"", L'A', MathML_ATTR_columnalign},
+   {L"columnlines", L"", L'A', MathML_ATTR_columnlines},
+   {L"columnspacing", L"", L'A', MathML_ATTR_columnspacing},
+   {L"columnspan", L"", L'A', MathML_ATTR_columnspan},
+   {L"color", L"", L'A', MathML_ATTR_color},
+   {L"depth", L"", L'A', MathML_ATTR_depth_},
+   {L"displaystyle", L"", L'A', MathML_ATTR_displaystyle},
+   {L"edge", L"", L'A', MathML_ATTR_edge},
+   {L"equalcolumns", L"", L'A', MathML_ATTR_equalcolumns},
+   {L"equalrows", L"", L'A', MathML_ATTR_equalrows},
+   {L"fence", L"", L'A', MathML_ATTR_fence},
+   {L"fontfamily", L"", L'A', MathML_ATTR_fontfamily},
+   {L"fontstyle", L"", L'A', MathML_ATTR_fontstyle},
+   {L"fontsize", L"", L'A', MathML_ATTR_fontsize},
+   {L"fontweight", L"", L'A', MathML_ATTR_fontweight},
+   {L"form", L"", L'A', MathML_ATTR_form},
+   {L"frame", L"", L'A', MathML_ATTR_frame},
+   {L"framespacing", L"", L'A', MathML_ATTR_framespacing},
+   {L"groupalign", L"", L'A', MathML_ATTR_groupalign},
+   {L"height", L"", L'A', MathML_ATTR_height_},
+   {L"id", L"", L'A', MathML_ATTR_id},
+   {L"largeop", L"", L'A', MathML_ATTR_largeop},
+   {L"linethickness", L"", L'A', MathML_ATTR_linethickness},
+   {L"link", L"", L'A', MathML_ATTR_link},
+   {L"lquote", L"", L'A', MathML_ATTR_lquote},
+   {L"lspace", L"", L'A', MathML_ATTR_lspace},
+   {L"maxsize", L"", L'A', MathML_ATTR_maxsize},
+   {L"minsize", L"", L'A', MathML_ATTR_minsize},
+   {L"movablelimits", L"", L'A', MathML_ATTR_movablelimits},
+   {L"open", L"", L'A', MathML_ATTR_open},
+   {L"other", L"", L'A', MathML_ATTR_other},
+   {L"rowalign", L"", L'A', MathML_ATTR_rowalign},
+   {L"rowlines", L"", L'A', MathML_ATTR_rowlines},
+   {L"rowspacing", L"", L'A', MathML_ATTR_rowspacing},
+   {L"rowspan", L"", L'A', MathML_ATTR_rowspan_},
+   {L"rquote", L"", L'A', MathML_ATTR_rquote},
+   {L"rspace", L"", L'A', MathML_ATTR_rspace},
+   {L"scriptlevel", L"", L'A', MathML_ATTR_scriptlevel},
+   {L"scriptminsize", L"", L'A', MathML_ATTR_scriptminsize},
+   {L"scriptsizemultiplier", L"", L'A', MathML_ATTR_scriptsizemultiplier},
+   {L"selection", L"", L'A', MathML_ATTR_selection},
+   {L"separator", L"", L'A', MathML_ATTR_separator},
+   {L"separators", L"", L'A', MathML_ATTR_separators},
+   {L"stretchy", L"", L'A', MathML_ATTR_stretchy},
+   {L"style", L"", L'A', MathML_ATTR_style_},
+   {L"subscriptshift", L"", L'A', MathML_ATTR_subscriptshift},
+   {L"superscriptshift", L"", L'A', MathML_ATTR_superscriptshift},
+   {L"symmetric", L"", L'A', MathML_ATTR_symmetric},
+   {L"width", L"", L'A', MathML_ATTR_width_},
+
+    {L"", L"", EOS, 0}		/* Last entry. Mandatory */
+#else /* defined (_I18N_) || defined (__JIS__) */
+   {"unknown_attr", _EMPTYSTR_, 'A', MathML_ATTR_Invalid_attribute},
+   {"ZZGHOST", _EMPTYSTR_, 'A', MathML_ATTR_Ghost_restruct},
 
    {"accent", "", 'A', MathML_ATTR_accent},
    {"accentunder", "", 'A', MathML_ATTR_accentunder},
@@ -344,13 +640,35 @@ static AttributeMapping MathMLAttributeMappingTable[] =
    {"symmetric", "", 'A', MathML_ATTR_symmetric},
    {"width", "", 'A', MathML_ATTR_width_},
 
-   {"", "", EOS, 0}		/* Last entry. Mandatory */
+    {"", "", EOS, 0}		/* Last entry. Mandatory */
+#endif /* defined (_I18N_) || defined (__JIS__) */
 };
 
 /* mapping table of attribute values */
 
 static AttrValueMapping MathMLAttrValueMappingTable[] =
 {
+#  if defined (_I18N_) || defined(__JIS__)
+   {MathML_ATTR_accent, L"true", MathML_ATTR_accent_VAL_true},
+   {MathML_ATTR_accent, L"false", MathML_ATTR_accent_VAL_false},
+   {MathML_ATTR_accentunder, L"true", MathML_ATTR_accentunder_VAL_true},
+   {MathML_ATTR_accentunder, L"false", MathML_ATTR_accentunder_VAL_false},
+   {MathML_ATTR_displaystyle, L"true", MathML_ATTR_displaystyle_VAL_true},
+   {MathML_ATTR_displaystyle, L"false", MathML_ATTR_displaystyle_VAL_false},
+   {MathML_ATTR_edge, L"left", MathML_ATTR_edge_VAL_left_},
+   {MathML_ATTR_edge, L"right", MathML_ATTR_edge_VAL_right_},
+   {MathML_ATTR_fence, L"true", MathML_ATTR_fence_VAL_true},
+   {MathML_ATTR_fence, L"false", MathML_ATTR_fence_VAL_false},
+   {MathML_ATTR_fontstyle, L"italic", MathML_ATTR_fontstyle_VAL_italic},
+   {MathML_ATTR_fontstyle, L"normal", MathML_ATTR_fontstyle_VAL_normal},
+   {MathML_ATTR_link, L"document", MathML_ATTR_link_VAL_document},
+   {MathML_ATTR_link, L"extended", MathML_ATTR_link_VAL_extended},
+   {MathML_ATTR_link, L"group", MathML_ATTR_link_VAL_group},
+   {MathML_ATTR_link, L"locator", MathML_ATTR_link_VAL_locator},
+   {MathML_ATTR_link, L"simple", MathML_ATTR_link_VAL_simple},
+
+   {0, L"", 0}			/* Last entry. Mandatory */
+#  else /* defined (_I18N_) || defined(__JIS__) */
    {MathML_ATTR_accent, "true", MathML_ATTR_accent_VAL_true},
    {MathML_ATTR_accent, "false", MathML_ATTR_accent_VAL_false},
 
@@ -402,6 +720,7 @@ static AttrValueMapping MathMLAttrValueMappingTable[] =
    {MathML_ATTR_symmetric, "false", MathML_ATTR_symmetric_VAL_false},
 
    {0, "", 0}			/* Last entry. Mandatory */
+#  endif /* defined (_I18N_) || defined(__JIS__) */
 };
 
 #define MaxMsgLength 200
@@ -421,9 +740,9 @@ Document	   doc;
 {
   SSchema	MathMLSSchema;
 
-   MathMLSSchema = TtaGetSSchema ("MathML", doc);
+   MathMLSSchema = TtaGetSSchema (TEXT("MathML"), doc);
    if (MathMLSSchema == NULL)
-      MathMLSSchema = TtaNewNature(TtaGetDocumentSSchema(doc), "MathML", "MathMLP");
+      MathMLSSchema = TtaNewNature(TtaGetDocumentSSchema(doc), TEXT("MathML"), TEXT("MathMLP"));
    return (MathMLSSchema);
 }
 
@@ -482,7 +801,7 @@ STRING buffer;
    if (elType.ElTypeNum > 0)
      {
 	i = 0;
-	if (ustrcmp ("MathML", TtaGetSSchemaName (elType.ElSSchema)) == 0)
+	if (ustrcmp (TEXT("MathML"), TtaGetSSchemaName (elType.ElSSchema)) == 0)
 	  do
 	    {
 	     if (MathMLElemMappingTable[i].ThotType == elType.ElTypeNum)
@@ -494,7 +813,7 @@ STRING buffer;
 	    }
 	  while (MathMLElemMappingTable[i].XMLname[0] != EOS);	  
      }
-   *buffer = "???";
+   *buffer = TEXT("???");
    return;
 }
 
@@ -1318,11 +1637,11 @@ static void BuildMultiscript (elMMULTISCRIPT, doc)
 	      TtaInsertSibling (group, base, FALSE, doc);
 	      elTypePair.ElTypeNum = MathML_EL_PostscriptPair;
 	      /* create a first and a last PostscriptPair as placeholders */
-	      pair = TtaNewTree (doc, elTypePair, "");
+	      pair = TtaNewTree (doc, elTypePair, _EMPTYSTR_);
 	      TtaInsertFirstChild (&pair, group, doc);
 	      SetIntPlaceholderAttr (pair, doc);
 	      prevPair = pair;
-	      pair = TtaNewTree (doc, elTypePair, "");
+	      pair = TtaNewTree (doc, elTypePair, _EMPTYSTR_);
 	      TtaInsertSibling (pair, prevPair, FALSE, doc);
 	      SetIntPlaceholderAttr (pair, doc);
 	      prevScript = NULL;
@@ -1376,7 +1695,7 @@ static void BuildMultiscript (elMMULTISCRIPT, doc)
 	      if (elTypeGroup.ElTypeNum != MathML_EL_PostscriptPairs)
 		{
 		  elTypeGroup.ElTypeNum = MathML_EL_PostscriptPairs;
-		  group = TtaNewTree (doc, elTypeGroup, "");
+		  group = TtaNewTree (doc, elTypeGroup, _EMPTYSTR_);
 		  TtaInsertSibling (group, elem, TRUE, doc);
 		  SetIntPlaceholderAttr (group, doc);
 		}
@@ -1387,11 +1706,11 @@ static void BuildMultiscript (elMMULTISCRIPT, doc)
 	      elTypePair.ElTypeNum = MathML_EL_PrescriptPair;
 	      group = elem;
 	      /* create a first and a last PostscriptPair as placeholders */
-	      pair = TtaNewTree (doc, elTypePair, "");
+	      pair = TtaNewTree (doc, elTypePair, _EMPTYSTR_);
 	      TtaInsertFirstChild (&pair, group, doc);
 	      SetIntPlaceholderAttr (pair, doc);
 	      prevPair = pair;
-	      pair = TtaNewTree (doc, elTypePair, "");
+	      pair = TtaNewTree (doc, elTypePair, _EMPTYSTR_);
 	      TtaInsertSibling (pair, prevPair, FALSE, doc);
 	      SetIntPlaceholderAttr (pair, doc);
 	      prevScript = NULL;
@@ -1405,7 +1724,7 @@ static void BuildMultiscript (elMMULTISCRIPT, doc)
   if (elTypeGroup.ElTypeNum != MathML_EL_PrescriptPairs && base != NULL)
     {
       elTypeGroup.ElTypeNum = MathML_EL_PrescriptPairs;
-      elem = TtaNewTree (doc, elTypeGroup, "");
+      elem = TtaNewTree (doc, elTypeGroup, _EMPTYSTR_);
       if (group == NULL)
 	group = base;
       TtaInsertSibling (elem, group, TRUE, doc);
@@ -1444,7 +1763,7 @@ void CheckMTable (elMTABLE, doc)
   MTableHead = TtaNewElement (doc, elType);
   TtaInsertFirstChild (&MTableHead, elMTABLE, doc);
   elType.ElTypeNum = MathML_EL_MColumn_head;
-  firstColHead = TtaNewTree (doc, elType, "");
+  firstColHead = TtaNewTree (doc, elType, _EMPTYSTR_);
   TtaInsertFirstChild (&firstColHead, MTableHead, doc);
 
   /* create a MTable_body */
@@ -2227,7 +2546,7 @@ void SetFontfamily (doc, el, value)
 #define buflen 50
   CHAR_T           css_command[buflen+20];
  
-  sprintf (css_command, "font-family: %s", value);
+  usprintf (css_command, TEXT("font-family: %s"), value);
   ParseHTMLSpecificStyle (el, css_command, doc, FALSE);
 }
 
@@ -2246,7 +2565,7 @@ void SetFontsize (doc, el, value)
 #define buflen 50
   CHAR_T           css_command[buflen+20];
  
-  sprintf (css_command, "font-size: %s", value);
+  usprintf (css_command, TEXT("font-size: %s"), value);
   ParseHTMLSpecificStyle (el, css_command, doc, FALSE);
 }
 
@@ -2314,7 +2633,7 @@ STRING elementName;
 #endif
 {
    /* no other DTD allowed within MathML elements */
-   ustrcpy (DTDname, "");
+   ustrcpy (DTDname, _EMPTYSTR_);
 }
 
 /* end of module */

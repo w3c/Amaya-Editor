@@ -10,7 +10,7 @@
  * These functions concern Image elements.
  *
  * Author: I. Vatton
- *         R. Guetari (W3C/INRIA) Windows routines.
+ *         R. Guetari Unicode and Windows version.
  *
  */
 
@@ -86,7 +86,7 @@ NotifyElement      *event;
      {
        /* Search the IMAGE element associated with the MAP */
        length = MAX_LENGTH;
-       url = (STRING) TtaGetMemory (MAX_LENGTH);
+       url = TtaAllocString (MAX_LENGTH);
        TtaGiveReferenceAttributeValue (attr, &image, url, &length);
        TtaFreeMemory (url);
 
@@ -118,8 +118,8 @@ STRING              data;
   Element            first, last;
   ElementType	     elType, parentType;
   LoadedImageDesc   *desc;
-  char               tempfile[MAX_LENGTH];
-  char               tempname[MAX_LENGTH];
+  CHAR_T             tempfile[MAX_LENGTH];
+  CHAR_T             tempname[MAX_LENGTH];
   int                i, c1, cN;
   int                val;
   ThotBool           change;
@@ -350,7 +350,7 @@ STRING              data;
       ImgAlt[NAME_LENGTH-1] = EOS;
       break;
     case ImageDir:
-      if (!ustrcmp (data, ".."))
+      if (!ustrcmp (data, TEXT("..")))
 	{
 	  /* suppress last directory */
 	  ustrcpy (tempname, DirectoryImage);
@@ -378,7 +378,7 @@ STRING              data;
       if (DirectoryImage[0] == EOS)
 	{
 	  /* set path on current directory */
-	  getcwd (DirectoryImage, MAX_LENGTH);
+	  ugetcwd (DirectoryImage, MAX_LENGTH);
 	}
       /* construct the image full name */
       ustrcpy (LastURLImage, DirectoryImage);
@@ -404,9 +404,9 @@ void                InitImage ()
    BaseImage = TtaSetCallback (CallbackImage, IMAGE_MAX_REF);
    RepeatValue = 0;
    LastURLImage[0] = EOS;
-   ustrcpy(ImgFilter, ".gif");
+   ustrcpy(ImgFilter, TEXT(".gif"));
    /* set path on current directory */
-   getcwd (DirectoryImage, MAX_LENGTH);
+   ugetcwd (DirectoryImage, MAX_LENGTH);
 }
 
 
@@ -480,7 +480,7 @@ STRING              shape;
      return;
 
    elType = TtaGetElementType (el);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) != 0)
      /* not within an HTML element. Nothing to do */
      return;
 
@@ -496,7 +496,7 @@ STRING              shape;
    if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
      /* an image is selected. Create an area for it */
      {
-        url = (STRING) TtaGetMemory (MAX_LENGTH);
+        url = TtaAllocString (MAX_LENGTH);
 	image = el;
 	/* Search the USEMAP attribute */
 	attrType.AttrSSchema = elType.ElSSchema;
@@ -584,7 +584,7 @@ STRING              shape;
 	      {
 		/* Search the IMAGE element associated with the MAP */
 		length = MAX_LENGTH;
-		url = (STRING) TtaGetMemory (MAX_LENGTH);
+		url = TtaAllocString (MAX_LENGTH);
 		TtaGiveReferenceAttributeValue (attr, &image, url, &length);
 		TtaFreeMemory (url);
 	      }
@@ -602,7 +602,7 @@ STRING              shape;
 	if (shape[0] == 'R' || shape[0] == 'a')
 	   TtaAskFirstCreation ();
 
-	el = TtaNewTree (doc, elType, "");
+	el = TtaNewTree (doc, elType, _EMPTYSTR_);
 	if (!newElem)
 	   newElem = el;
 	child = TtaGetLastChild (map);
@@ -683,7 +683,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   CreateAreaMap (doc, view, "R");
+   CreateAreaMap (doc, view, _R_);
 }
 
 /*----------------------------------------------------------------------
@@ -697,7 +697,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   CreateAreaMap (doc, view, "a");
+   CreateAreaMap (doc, view, _a_);
 }
 
 /*----------------------------------------------------------------------
@@ -711,7 +711,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   CreateAreaMap (doc, view, "p");
+   CreateAreaMap (doc, view, _p_);
 }
 
 /*----------------------------------------------------------------------
@@ -810,7 +810,7 @@ void ChangeBackgroundImage (document, view)
      View view;
 #endif /* __STDC__*/
 {
-   STRING           s = (STRING) TtaGetMemory (MAX_LENGTH * sizeof (char)); 
+   STRING           s = TtaAllocString (MAX_LENGTH); 
 #  ifndef _WINDOWS
    int                 i;
 #  endif /* _WINDOWS */
@@ -896,10 +896,10 @@ STRING              text;
 
 #endif /* __STDC__ */
 {
-  char              *value, *base;
-  char               pathimage[MAX_LENGTH];
-  char               localname[MAX_LENGTH];
-  char               imagename[MAX_LENGTH];
+  STRING             value, base;
+  CHAR_T             pathimage[MAX_LENGTH];
+  CHAR_T             localname[MAX_LENGTH];
+  CHAR_T             imagename[MAX_LENGTH];
   LoadedImageDesc   *desc;
 
   /* get the absolute URL of the image */
@@ -981,9 +981,9 @@ NotifyElement      *event;
   Attribute          attr;
   Element            elSRC, el;
   Document           doc;
-  char              *text;
-  char              *pathimage;
-  char              *imagename;
+  STRING             text;
+  STRING             pathimage;
+  STRING             imagename;
 
    /* Select an image name */
    el = event->element;
@@ -1019,11 +1019,11 @@ NotifyElement      *event;
    /* copy image name in ALT attribute */
    if (ImgAlt[0] == EOS)
      {
-       imagename = (STRING) TtaGetMemory (MAX_LENGTH);
-       pathimage = (STRING) TtaGetMemory (MAX_LENGTH);
-       ustrcpy (imagename, " ");
+       imagename = TtaAllocString (MAX_LENGTH);
+       pathimage = TtaAllocString (MAX_LENGTH);
+       ustrcpy (imagename, TEXT(" "));
        TtaExtractName (text, pathimage, &imagename[1]);
-       ustrcat (imagename, " ");
+       ustrcat (imagename, TEXT(" "));
        TtaSetAttributeText (attr, imagename, elSRC, doc);
        TtaFreeMemory (pathimage);
        TtaFreeMemory (imagename);
@@ -1061,9 +1061,9 @@ NotifyAttribute    *event;
    attr = event->attribute;
    /* get a buffer for the attribute value */
    length = MAX_LENGTH;
-   buf1 = TtaGetMemory (length);
-   buf2 = TtaGetMemory (length);
-   imageName = TtaGetMemory (length);
+   buf1 = TtaAllocString (length);
+   buf2 = TtaAllocString (length);
+   imageName = TtaAllocString (length);
    /* copy the SRC attribute into the buffer */
    TtaGiveTextAttributeValue (attr, buf1, &length);
    NormalizeURL (buf1, doc, buf2, imageName, NULL);

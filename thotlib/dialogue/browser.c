@@ -36,7 +36,8 @@ static FILE        *ls_stream;
 static int          ls_car;
 static CHAR_T       ls_unixFiles[MAX_NAME * NAME_LENGTH];
 static int          ls_fileNbr;
-static STRING       EmptyMsg = "";
+
+/* static STRING       EmptyMsg = ""; */
 
 /*----------------------------------------------------------------------
    ExtractFileName
@@ -54,11 +55,11 @@ STRING              word;
    ThotBool            notEof;
 
    i = 0;
-   while (((CHAR_T) ls_car == ' ') || ((CHAR_T) ls_car == '\t') || ((CHAR_T) ls_car == '\n'))
+   while (((CHAR_T) ls_car == SPACE) || ((CHAR_T) ls_car == TAB) || ((CHAR_T) ls_car == EOL))
       ls_car = fgetc (ls_stream);
 
    notEof = TRUE;
-   while (((CHAR_T) ls_car != ' ') && ((CHAR_T) ls_car != '\t') && ((CHAR_T) ls_car != '\n') && (notEof))
+   while (((CHAR_T) ls_car != SPACE) && ((CHAR_T) ls_car != TAB) && ((CHAR_T) ls_car != EOF) && (notEof))
      {
 	if (ls_car == EOF)
 	   notEof = FALSE;
@@ -100,7 +101,7 @@ STRING              suffix;
 	thotDir.bufLen = sizeof (command);
 	thotDir.PicMask = (ThotDirBrowse_mask)
                           (ThotDirBrowse_FILES | ThotDirBrowse_DIRECTORIES);
-	ret = ThotDirBrowse_first (&thotDir, aDirectory, "*", suffix);
+	ret = ThotDirBrowse_first (&thotDir, aDirectory, TEXT("*"), suffix);
 	ThotDirBrowse_close (&thotDir);
      }
    return (ret);
@@ -169,9 +170,9 @@ int                 fileRef;
    ThotBool            stop;
 
    if (dirTitle == NULL)
-      dirTitle = EmptyMsg;
+      dirTitle = _EMPTYSTR_;
    if (fileTitle == NULL)
-      fileTitle = EmptyMsg;
+      fileTitle = _EMPTYSTR_;
 
    /* S'il s'agit d'un directory accessible */
    if (TtaCheckDirectory (aDirectory)

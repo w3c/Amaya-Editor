@@ -21,8 +21,8 @@ typedef struct _PrefixType {
 			      Used in thotmodule.c and xmlmodule.c
 --------------------------------------------------------------------------*/
 typedef struct _XmlAttrEntry {
-  unsigned char AttrName[32];          /* Attr name */
-  Proc          AttrAction;            /* Action    */
+  UCHAR_T      AttrName[32];          /* Attr name */
+  Proc         AttrAction;            /* Action    */
 }XmlAttrEntry;
 
 

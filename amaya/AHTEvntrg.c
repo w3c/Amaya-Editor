@@ -129,7 +129,7 @@ ThotBool AHTEventInit (void)
     }
     if (!(HTSocketWin = CreateWindow(className, "WWW_WIN_ASYNC", WS_POPUP, CW_USEDEFAULT, CW_USEDEFAULT, 
                                      CW_USEDEFAULT, CW_USEDEFAULT, 0, 0, wc.hInstance,0))) {
-       STRING space = (STRING) TtaGetMemory (50 * sizeof (CHAR_T));
+       STRING space = TtaAllocString (50);
        HTTrace("HTLibInit.. Can't CreateWindow \"WWW_WIN_ASYNC\" - error:");
        sprintf(space, "%ld\n", GetLastError());
        HTTrace(space);

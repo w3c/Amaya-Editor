@@ -150,7 +150,7 @@ CSSInfoPtr      css;
 		      /* get a buffer for the attribute value */
 		      length = MAX_LENGTH;
 		      TtaGiveTextAttributeValue (attr, buffer, &length);
-		      found = (!ustrcasecmp (buffer, "STYLESHEET") || !ustrcasecmp (buffer, "STYLE"));
+		      found = (!ustrcasecmp (buffer, TEXT("STYLESHEET")) || !ustrcasecmp (buffer, TEXT("STYLE")));
 		    }
 		  if (found)
 		    {
@@ -203,7 +203,7 @@ CSSInfoPtr      css;
 		      /* get a buffer for the attribute value */
 		      length = MAX_LENGTH;
 		      TtaGiveTextAttributeValue (attr, buffer, &length);
-		      found = (!ustrcasecmp (buffer, "STYLESHEET") || !ustrcasecmp (buffer, "STYLE"));
+		      found = (!ustrcasecmp (buffer, TEXT("STYLESHEET")) || !ustrcasecmp (buffer, TEXT("STYLE")));
 		    }
 		  /* search if the previous CSS has a presentation schema */
 		  if (found)
@@ -623,7 +623,7 @@ CSSInfoPtr          css;
 		  tempdocument = GetLocalPath (0, tempURL);
 		  TtaFileUnlink (tempdocument);
 		  /* now we can rename the local name of a remote document */
-		  rename (tempfile, tempdocument);
+		  urename (tempfile, tempdocument);
 		  ustrcpy (tempfile, tempdocument);
 		  TtaFreeMemory (tempdocument);
 		}
@@ -670,7 +670,7 @@ CSSInfoPtr          css;
       if ( pInfo->PiSchemas == NULL || import)
 	{
 	  /* load the resulting file in memory */
-	  res = fopen (tempfile, "r");
+	  res = ufopen (tempfile, _ReadMODE_);
 	  if (res == NULL)
 	    {
 	      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
@@ -692,7 +692,7 @@ CSSInfoPtr          css;
 		return;
 	      }
 
-	  buffer = (STRING) TtaGetMemory (buf.st_size + 1000);
+	  buffer = TtaAllocString (buf.st_size + 1000);
 	  if (buffer == NULL)
 	    {
 	      TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempURL);
@@ -772,7 +772,7 @@ Document            doc;
   if (ptr[0] != EOS  && TtaFileExist (ptr))
     {
       /* read User preferences */
-      res = fopen (ptr, "r");
+      res = ufopen (ptr, _ReadMODE_);
       if (res != NULL)
 	{
 #     ifdef _WINDOWS
@@ -783,7 +783,7 @@ Document            doc;
 	    fclose (res);
 	  else
 	    {
-	      buffer = (STRING) TtaGetMemory (buf.st_size + 1000);
+	      buffer = TtaAllocString (buf.st_size + 1000);
 	      if (buffer == NULL)
 		fclose (res);
 	      else

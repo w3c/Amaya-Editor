@@ -71,7 +71,7 @@ char                c;
 
 #endif /* __STDC__ */
 {
-   char               *tmp = "";
+   char*              tmp = "";
    AHTReqContext      *reqcont;
 
    if (WWWTRACE)
@@ -89,11 +89,11 @@ char                c;
   AHTMemConv_put_string
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int         AHTMemConv_put_string (HTStream * me, const char *s)
+static int         AHTMemConv_put_string (HTStream * me, const char* s)
 #else  /* __STDC__ */
 static int         AHTMemConv_put_string (me, s)
 HTStream           *me;
-const char         *s;
+const char*        s;
 
 #endif /* __STDC__ */
 {
@@ -239,7 +239,7 @@ HTRequest          *request;
    if (reqcont->error_stream)
      {
 	HT_FREE (reqcont->error_stream);
-	reqcont->error_stream = (char *) NULL;
+	reqcont->error_stream = NULL;
 	reqcont->error_stream_size = 0;
      }
    if (STREAM_TRACE)

@@ -240,7 +240,7 @@ int                 accessMode;
 	     pDoc->DocDName[MAX_NAME_LENGTH - 1] = EOS;
 	     /* suppresses the .PIV suffix if found */
 	     if (lg > 4)
-		if (ustrcmp (&(pDoc->DocDName[lg - 4]), ".PIV") == 0)
+		if (ustrcmp (&(pDoc->DocDName[lg - 4]), PIV_EXT) == 0)
 		   pDoc->DocDName[lg - 4] = EOS;
 	     GetDocIdent (&pDoc->DocIdent, pDoc->DocDName);
 	     ustrncpy (pDoc->DocDirectory, DocumentPath, MAX_PATH);
@@ -312,7 +312,7 @@ STRING              documentName;
       else
 	{
 	  /* Arrange the file name */
-	  FindCompleteName (documentName, "PIV", pDoc->DocDirectory, path, &i);
+	  FindCompleteName (documentName, PIV_EXT2, pDoc->DocDirectory, path, &i);
 	  pivotFile = TtaWriteOpen (path);
 	  if (pivotFile == 0)
 	    TtaError (ERR_cannot_open_pivot_file);
@@ -502,16 +502,16 @@ Document            document;
       UpdateRef (pDoc);
       /* destroys files .PIV, .EXT, .REF et .BAK of the document */
       ustrncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
-      FindCompleteName (pDoc->DocDName, "PIV", DirectoryOrig, text, &i);
+      FindCompleteName (pDoc->DocDName, PIV_EXT2, DirectoryOrig, text, &i);
       TtaFileUnlink (text);
       ustrncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
-      FindCompleteName (pDoc->DocDName, "EXT", DirectoryOrig, text, &i);
+      FindCompleteName (pDoc->DocDName, EXT_EXT2, DirectoryOrig, text, &i);
       TtaFileUnlink (text);
       ustrncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
-      FindCompleteName (pDoc->DocDName, "REF", DirectoryOrig, text, &i);
+      FindCompleteName (pDoc->DocDName, REF_EXT2, DirectoryOrig, text, &i);
       TtaFileUnlink (text);
       ustrncpy (DirectoryOrig, pDoc->DocDirectory, MAX_PATH);
-      FindCompleteName (pDoc->DocDName, "BAK", DirectoryOrig, text, &i);
+      FindCompleteName (pDoc->DocDName, BAK_EXT2, DirectoryOrig, text, &i);
       /* now close the document */
       TtaCloseDocument (document);
     }
@@ -1024,7 +1024,7 @@ STRING              presentationName;
 	pDoc = LoadedDocument[document - 1];
 #ifdef NODISPLAY
 	if (pDoc->DocSSchema != NULL)
-	   strncpy (pDoc->DocSSchema->SsDefaultPSchema, presentationName,
+	   ustrncpy (pDoc->DocSSchema->SsDefaultPSchema, presentationName,
 		    MAX_NAME_LENGTH - 1);
 #else
 	/* verifies that there is no opened views */
@@ -1136,9 +1136,9 @@ STRING              documentName;
 #ifndef NODISPLAY
        ChangeDocumentName (LoadedDocument[document - 1], documentName);
 #else
-       strncpy (LoadedDocument[document - 1]->DocDName, documentName, MAX_NAME_LENGTH);
+       ustrncpy (LoadedDocument[document - 1]->DocDName, documentName, MAX_NAME_LENGTH);
        LoadedDocument[document - 1]->DocDName[MAX_NAME_LENGTH - 1] = EOS;
-       strncpy (LoadedDocument[document - 1]->DocIdent, documentName, MAX_DOC_IDENT_LEN);
+       ustrncpy (LoadedDocument[document - 1]->DocIdent, documentName, MAX_DOC_IDENT_LEN);
        LoadedDocument[document - 1]->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
 #endif
      }
@@ -1469,7 +1469,7 @@ int                 bufferLength;
    else
       /* parameter document is correct */
      {
-	if (ustrlen (LoadedDocument[document - 1]->DocDirectory) >= bufferLength)
+	if (ustrlen (LoadedDocument[document - 1]->DocDirectory) >= (size_t) bufferLength)
 	   TtaError (ERR_buffer_too_small);
 	ustrncpy (buffer, LoadedDocument[document - 1]->DocDirectory, bufferLength - 1);
      }
@@ -1733,10 +1733,10 @@ STRING              presentationName;
 {
    PathBuffer          DirBuffer;
    BinFile             file;
-   CHAR_T                text[MAX_TXT_LEN];
+   CHAR_T              text[MAX_TXT_LEN];
    int                 i;
    ThotBool            error;
-   CHAR_T                charGotten;
+   CHAR_T              charGotten;
    LabelString         lab;
    int                 currentVersion = 0;
 
@@ -1745,7 +1745,7 @@ STRING              presentationName;
    presentationName[0] = EOS;
    /* Arrange the name of the file to be opened with the documents directory name */
    ustrncpy (DirBuffer, DocumentPath, MAX_PATH);
-   MakeCompleteName (documentName, "PIV", DirBuffer, text, &i);
+   MakeCompleteName (documentName, PIV_EXT2, DirBuffer, text, &i);
    /* Verify if the file exists */
    file = TtaReadOpen (text);
    if (file == 0)
@@ -1770,7 +1770,7 @@ STRING              presentationName;
 		error = TRUE;
 	  }
 	/* Gets the label max. of the document if it is present */
-	if (!error && (charGotten == (CHAR_T) C_PIV_SHORT_LABEL || charGotten == (CHAR_T) C_PIV_LONG_LABEL ||
+	if (!error && ((CHAR_T) charGotten == (CHAR_T) C_PIV_SHORT_LABEL || (CHAR_T) charGotten == (CHAR_T) C_PIV_LONG_LABEL ||
 		       charGotten == (CHAR_T) C_PIV_LABEL))
 	  {
 	     ReadLabel (charGotten, lab, file);
@@ -2160,7 +2160,7 @@ int                 bufferLength;
 {
 
    UserErrorCode = 0;
-   if (ustrlen (DocumentPath) >= bufferLength)
+   if (ustrlen (DocumentPath) >= (size_t)bufferLength)
       TtaError (ERR_buffer_too_small);
    ustrncpy (buffer, DocumentPath, bufferLength - 1);
 }
@@ -2193,7 +2193,7 @@ int                 bufferLength;
 {
 
    UserErrorCode = 0;
-   if (ustrlen (SchemaPath) >= bufferLength)
+   if (ustrlen (SchemaPath) >= (size_t)bufferLength)
       TtaError (ERR_buffer_too_small);
    ustrncpy (buffer, SchemaPath, bufferLength - 1);
 }

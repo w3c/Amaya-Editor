@@ -17,8 +17,8 @@
 /*
  * Close commands
  *
- * Author: I. Vatton (INRIA)
- *         R. Guetari (W3C/INRIA) - Windows NT/95 routines
+ * Authors: I. Vatton (INRIA)
+ *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  *
  */
 
@@ -148,9 +148,9 @@ ThotBool           *save;
    CHAR_T    buftext[300];
    BOOL    save_befor, close_dont_save;
    ustrcpy (buftext, TtaGetMessage (LIB, TMSG_SAVE_DOC));
-   ustrcat (buftext, " ");
+   ustrcat (buftext, TEXT(" "));
    ustrcat (buftext, pDoc->DocDName);
-   ustrcat (buftext, " ");
+   ustrcat (buftext, TEXT(" "));
    ustrcat (buftext, TtaGetMessage (LIB, TMSG_BEFORE_CLOSING));
 #  ifndef _WIN_PRINT 
    CreateCloseDocDlgWindow (TtaGetViewFrame(document,view), TtaGetMessage (LIB, TMSG_CLOSE_DOC), buftext, &save_befor, &close_dont_save);

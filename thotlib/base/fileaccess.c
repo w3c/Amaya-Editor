@@ -10,6 +10,7 @@
  *
  * Authors: V. Quint (INRIA)
  *          D. Veillard (INRIA) - new functions for MS-Windows
+ *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  *
  */
 
@@ -44,21 +45,21 @@
    TtaReadByte reads a character (or byte) value.                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            TtaReadByte (BinFile file, char* bval)
+ThotBool             TtaReadByte (BinFile file, PCHAR_T bval)
 #else  /* __STDC__ */
 ThotBool            TtaReadByte (file, bval)
 BinFile             file;
-char*               bval;
+PCHAR_T             bval;
 
 #endif /* __STDC__ */
 {
-   if (fread (bval, sizeof (char), 1, file) == 0)
-     {
-	*bval = EOS;
-	return (FALSE);
-     }
-   else
-     return (TRUE);
+   char v;
+   if (fread (&v, sizeof (char), 1, file) == 0) {
+      *bval = (CHAR_T) EOS;
+      return (FALSE);
+   } 
+   *bval = (CHAR_T) v;
+   return (TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -257,9 +258,9 @@ CONST STRING        filename;
 {
    if (filename && filename [0] != EOS)
 #     ifdef _WINDOWS
-      return ufopen (filename, "rb");
+      return ufopen (filename, _RBinaryMODE_);
 #     else
-      return ufopen (filename, "r");
+      return ufopen (filename, _ReadMODE_);
 #     endif
    else
 	   return (BinFile) NULL;
@@ -294,9 +295,9 @@ CONST STRING        filename;
 #endif /* __STDC__ */
 {
 #ifdef _WINDOWS
-   return ufopen (filename, "wb+");
+   return ufopen (filename, _AppendBinaryMODE_);
 #else
-   return ufopen (filename, "w+");
+   return ufopen (filename, _AppendMODE_);
 #endif
 }
 
@@ -328,7 +329,7 @@ CHAR_T                bval;
 
 #endif /* __STDC__ */
 {
-   if (fwrite (&bval, sizeof (CHAR_T), 1, file) == 0)
+   if (fwrite ((char*) &bval, sizeof (char), 1, file) == 0)
       return FALSE;
    return TRUE;
 }
@@ -590,23 +591,23 @@ STRING              fileName;
    PathBuffer          directory;
    CHAR_T                URL_DIR_SEP;
 
-   if (name && ustrchr (name, '/'))
-     URL_DIR_SEP = '/';
+   if (name && ustrchr (name, TEXT('/')))
+     URL_DIR_SEP = TEXT('/');
    else 
      URL_DIR_SEP = DIR_SEP;
 
    /* Recherche le fichier dans les repertoires de documents */
-   if (name[0] == URL_DIR_SEP || name [1] == ':')
+   if (name[0] == URL_DIR_SEP || name [1] == TEXT(':'))
      ustrcpy (fileName, name);
    else
      {
        ustrcpy (directory, DocumentPath);
-       MakeCompleteName (name, "", directory, fileName, &length);
+       MakeCompleteName (name, _EMPTYSTR_, directory, fileName, &length);
        if (!TtaFileExist (fileName))
 	 {
 	   /* Recherche le fichier dans les repertoires de schemas */
 	   ustrcpy (directory, SchemaPath);
-	   MakeCompleteName (name, "", directory, fileName, &length);
+	   MakeCompleteName (name, _EMPTYSTR_, directory, fileName, &length);
 	 }
      }
 }
@@ -646,7 +647,7 @@ STRING              extension;
 	     ok = (extension[i] == fileName[j]) && ok;
 	     j--;
 	  }
-	ok = ok && (fileName[j] == '.');
+	ok = ok && (fileName[j] == TEXT('.'));
      }
    else
       ok = FALSE;
@@ -683,7 +684,7 @@ int                *length;
    j = ustrlen (fileName);
 
    /* check for tilde indicating the HOME directory */
-   if (directory[0] == '~')
+   if (directory[0] == TEXT('~'))
      {
 #   ifdef _WINDOWS
     home_dir = NULL;
@@ -704,17 +705,17 @@ int                *length;
 
    /* si on cherche a ouvrir un fichier pivot et que le nom de fichier se
       termine par ".piv", on remplace ce suffixe par ".PIV" */
-   if (ustrcmp (extension, "PIV") == 0)
+   if (ustrcmp (extension, PIV_EXT2) == 0)
      {
 	if (j > 4)
-	   if (fileName[j - 4] == '.')
-	      if (fileName[j - 3] == 'p')
-		 if (fileName[j - 2] == 'i')
-		    if (fileName[j - 1] == 'v')
+	   if (fileName[j - 4] == TEXT('.'))
+	      if (fileName[j - 3] == TEXT('p'))
+		 if (fileName[j - 2] == TEXT('i'))
+		    if (fileName[j - 1] == TEXT('v'))
 		      {
-			 fileName[j - 3] = 'P';
-			 fileName[j - 2] = 'I';
-			 fileName[j - 1] = 'V';
+			 fileName[j - 3] = TEXT('P');
+			 fileName[j - 2] = TEXT('I');
+			 fileName[j - 1] = TEXT('V');
 		      }
      }
    if (!IsExtended (fileName, extension) && extension[0] != EOS)
@@ -742,7 +743,7 @@ int                *length;
    if (k != 0)
      {
 	/* on ajoute l'extension */
-	ustrcat (completeName, ".");
+	ustrcat (completeName, TEXT("."));
 	ustrcat (completeName, extension);
      }
    /* on termine la chaine */
@@ -799,8 +800,8 @@ STRING              fileName;
    CHAR_T                c;
    CHAR_T                URL_DIR_SEP;
 
-   if (fileName && ustrchr (fileName, '/'))
-	  URL_DIR_SEP = '/';
+   if (fileName && ustrchr (fileName, TEXT('/')))
+	  URL_DIR_SEP = TEXT('/');
    else 
 	   URL_DIR_SEP = DIR_SEP;
 
@@ -855,7 +856,7 @@ int                *len;
    *len = 0;
    if (number < 0)
      {
-	string[(*len)++] = '-';
+	string[(*len)++] = TEXT('-');
 	number = -number;
      }
 
@@ -864,7 +865,7 @@ int                *len;
 	    case CntArabic:
 	       if (number >= 100000)
 		 {
-		    string[(*len)++] = '?';
+		    string[(*len)++] = TEXT('?');
 		    number = number % 100000;
 		 }
 	       if (number >= 10000)
@@ -881,7 +882,7 @@ int                *len;
 	       i = *len;
 	       do
 		 {
-		    string[i - 1] = (CHAR_T) ((int) ('0') + number % 10);
+		    string[i - 1] = (CHAR_T) ((int) (TEXT('0')) + number % 10);
 		    i--;
 		    number = number / 10;
 		 }
@@ -891,85 +892,85 @@ int                *len;
 	    case CntURoman:
 	    case CntLRoman:
 	       if (number >= 4000)
-		  string[(*len)++] = '?';
+		  string[(*len)++] = TEXT('?');
 	       else
 		 {
 		    begin = *len + 1;
 		    while (number >= 1000)
 		      {
-			 string[(*len)++] = 'M';
+			 string[(*len)++] = TEXT('M');
 			 number -= 1000;
 		      }
 		    if (number >= 900)
 		      {
-			 string[(*len)++] = 'C';
-			 string[(*len)++] = 'M';
+			 string[(*len)++] = TEXT('C');
+			 string[(*len)++] = TEXT('M');
 			 number -= 900;
 		      }
 		    else if (number >= 500)
 		      {
-			 string[(*len)++] = 'D';
+			 string[(*len)++] = TEXT('D');
 			 number -= 500;
 		      }
 		    else if (number >= 400)
 		      {
-			 string[(*len)++] = 'C';
-			 string[(*len)++] = 'D';
+			 string[(*len)++] = TEXT('C');
+			 string[(*len)++] = TEXT('D');
 			 number -= 400;
 		      }
 		    while (number >= 100)
 		      {
-			 string[(*len)++] = 'C';
+			 string[(*len)++] = TEXT('C');
 			 number -= 100;
 		      }
 		    if (number >= 90)
 		      {
-			 string[(*len)++] = 'X';
-			 string[(*len)++] = 'C';
+			 string[(*len)++] = TEXT('X');
+			 string[(*len)++] = TEXT('C');
 			 number -= 90;
 		      }
 		    else if (number >= 50)
 		      {
-			 string[(*len)++] = 'L';
+			 string[(*len)++] = TEXT('L');
 			 number -= 50;
 		      }
 		    else if (number >= 40)
 		      {
-			 string[(*len)++] = 'X';
-			 string[(*len)++] = 'L';
+			 string[(*len)++] = TEXT('X');
+			 string[(*len)++] = TEXT('L');
 			 number -= 40;
 		      }
 		    while (number >= 10)
 		      {
-			 string[(*len)++] = 'X';
+			 string[(*len)++] = TEXT('X');
 			 number -= 10;
 		      }
 		    if (number >= 9)
 		      {
-			 string[(*len)++] = 'I';
-			 string[(*len)++] = 'X';
+			 string[(*len)++] = TEXT('I');
+			 string[(*len)++] = TEXT('X');
 			 number -= 9;
 		      }
 		    else if (number >= 5)
 		      {
-			 string[(*len)++] = 'V';
+			 string[(*len)++] = TEXT('V');
 			 number -= 5;
 		      }
 		    else if (number >= 4)
 		      {
-			 string[(*len)++] = 'I';
-			 string[(*len)++] = 'V';
+			 string[(*len)++] = TEXT('I');
+			 string[(*len)++] = TEXT('V');
 			 number -= 4;
 		      }
 		    while (number >= 1)
 		      {
-			 string[(*len)++] = 'I';
+			 string[(*len)++] = TEXT('I');
 			 number--;
 		      }
 		    if (style == CntLRoman)
 		       /* UPPERCASE --> lowercase */
 		       for (i = begin; i <= *len; i++)
-			  if (string[i - 1] != '?')
+			  if (string[i - 1] != TEXT('?'))
 			     string[i - 1] = (CHAR_T) ((int) (string[i - 1]) + 32);
 		 }
 	       break;
@@ -978,7 +979,7 @@ int                *len;
 	    case CntLowercase:
 	       if (number > 475354)
 		 {
-		  string[(*len)++] = '?';
+		  string[(*len)++] = TEXT('?');
 		  number = number % 475254;
 		 }
 	       if (number > 18278)
@@ -995,9 +996,9 @@ int                *len;
 		 {
 	          number --;
 	          if (style == CntUppercase)
-		     string[i - 1] = (CHAR_T) ((number % 26) + (int) ('A'));
+		     string[i - 1] = (CHAR_T) ((number % 26) + (int) (TEXT('A')));
 	          else
-		     string[i - 1] = (CHAR_T) ((number % 26) + (int) ('a'));
+		     string[i - 1] = (CHAR_T) ((number % 26) + (int) (TEXT('a')));
 		  i --;
 		  c --;
 		  number = number / 26;

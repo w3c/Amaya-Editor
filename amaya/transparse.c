@@ -328,7 +328,7 @@ USTRING     msg;
 #ifndef PPSTANDALONE
    CHAR_T                numline[5];
 
-   sprintf (numline, "%d", numberOfLinesRead);
+   usprintf (numline, TEXT("%d"), numberOfLinesRead);
    TtaSetStatus (TransDoc, 1, TtaGetMessage (AMAYA, AM_TRANS_PARSE_ERROR), numline);
 #else
    fprintf (stderr, "line %d, char %d: %s\n", numberOfLinesRead, numberOfCharRead, msg);
@@ -362,13 +362,13 @@ strSymbDesc           *symb;
 	isjok = FALSE;
 	isnull = (symb == NULL);
 	if (!isnull)
-	   isjok = (!ustrcmp (symb->Tag, "*"));
+	   isjok = (!ustrcmp (symb->Tag, TEXT("*")));
 	pl = *pList;
 	found = ((isnull && pl->Symbol == NULL) || (!isnull && pl->Symbol == symb));
 	if (pl->Next == NULL && !isnull && !found)
 	  {
 	     if ((isjok && pl->Symbol == NULL) ||
-	     (!isjok && (pl->Symbol == NULL || !ustrcmp (pl->Symbol->Tag, "*"))))
+	     (!isjok && (pl->Symbol == NULL || !ustrcmp (pl->Symbol->Tag, TEXT("*")))))
 	       {
 		  *pList = (strListSymb *) TtaGetMemory (sizeof (strListSymb));
 		  (*pList)->Next = pl;
@@ -384,7 +384,7 @@ strSymbDesc           *symb;
 	else
 	  {
 	     while (!found && pl->Next &&
-		    ((isjok || isnull) || (pl->Next->Symbol && ustrcmp (pl->Next->Symbol->Tag, "*")))
+		    ((isjok || isnull) || (pl->Next->Symbol && ustrcmp (pl->Next->Symbol->Tag, TEXT("*"))))
 		    && (isnull || pl->Next->Symbol != NULL))
 	       {
 		  found = ((isnull && pl->Symbol == NULL) ||
@@ -466,8 +466,8 @@ static void         ProcessSymbol ()
        /* cr4eates a new symbol in the pattern internal representation */
 	ppTrans->NbPatSymb++;
 	ppSymb = (strSymbDesc *) TtaGetMemory (sizeof (strSymbDesc));
-	ppSymb->SymbolName = (STRING) TtaGetMemory (NAME_LENGTH);
-	ppSymb->Tag = (STRING) TtaGetMemory (NAME_LENGTH);
+	ppSymb->SymbolName = TtaAllocString (NAME_LENGTH);
+	ppSymb->Tag = TtaAllocString (NAME_LENGTH);
 	ppSymb->Rule = NULL;
 	ppSymb->Children = NULL;
 	ppSymb->Followings = NULL;
@@ -479,7 +479,7 @@ static void         ProcessSymbol ()
 	if (ppIsNamed)
 	  {
 	     ustrcpy (ppSymb->SymbolName, ppName);
-	     ustrcpy (ppName, "");
+	     ustrcpy (ppName, _EMPTYSTR_);
 	  }
 	else
 	   ustrcpy (ppSymb->SymbolName, inputBuffer);
@@ -502,10 +502,10 @@ static void         ProcessSymbol ()
 	     sd->Next = ppSymb;
 	  }
 	schema = ppTransSet->Schema;
-	if (ustrcmp (ppSymb->Tag, "*") && (MapGI (ppSymb->Tag, &schema, 0) == -1))
+	if (ustrcmp (ppSymb->Tag, TEXT("*")) && (MapGI (ppSymb->Tag, &schema, 0) == -1))
 	  {
 	     ppError = TRUE;
-	     sprintf (msgBuffer, "unknown element %s", ppSymb->Tag);
+	     usprintf (msgBuffer, TEXT("unknown element %s"), ppSymb->Tag);
 	     ErrorMessage (msgBuffer);
 	  }
      }
@@ -592,7 +592,7 @@ UCHAR_T       c;
    if (ppLgBuffer == 0)
      {
 	ppError = TRUE;
-	ErrorMessage ("missing tag name");
+	ErrorMessage (TEXT("missing tag name"));
      }
    ppIsNamed = TRUE;
    ustrcpy (ppName, inputBuffer);
@@ -615,7 +615,7 @@ UCHAR_T       c;
      {	/* allocates the descriptor    */
 	patDepth = 0;
 	ppTrans = (strTransDesc *) TtaGetMemory (sizeof (strTransDesc));
-	ppTrans->NameTrans = TtaGetMemory (NAME_LENGTH);
+	ppTrans->NameTrans = TtaAllocString (NAME_LENGTH);
 	ustrcpy (ppTrans->NameTrans, inputBuffer);
 	ppTrans->NbPatSymb = 0;
 	ppTrans->NbRules = 0;
@@ -642,7 +642,7 @@ UCHAR_T       c;
    else
      {
 	ppError = TRUE;
-	ErrorMessage ("Missing Transformation Name");
+	ErrorMessage (TEXT("Missing Transformation Name"));
      }
 }
 
@@ -707,7 +707,7 @@ UCHAR_T       c;
    if (sizeStack < 1 || opStack[sizeStack - 1] != '(')
      {
 	ppError = TRUE;
-	ErrorMessage ("mismatched parenthesises");
+	ErrorMessage (TEXT("mismatched parenthesises"));
      }
    else
      {
@@ -915,7 +915,7 @@ UCHAR_T       c;
    if (sizeStack < 1 || opStack[sizeStack - 1] != '{')
      {
 	ppError = TRUE;
-	ErrorMessage ("mismatched parenthesizes");
+	ErrorMessage (TEXT("mismatched parenthesizes"));
      }
    else
      {
@@ -1030,7 +1030,7 @@ UCHAR_T       c;
    if (sizeStack != 1)
      {
 	ppError = TRUE;
-	ErrorMessage ("Syntax error");
+	ErrorMessage (TEXT("Syntax error"));
      }
    else
      {
@@ -1076,15 +1076,15 @@ UCHAR_T       c;
    if (ppLgBuffer != 0)
      {
 	ppError = TRUE;
-	ErrorMessage ("Syntax Error");
+	ErrorMessage (TEXT("Syntax Error"));
      }
    else
      {
 	ppSymb = (strSymbDesc *) TtaGetMemory (sizeof (strSymbDesc));
-	ppSymb->SymbolName = (STRING) TtaGetMemory (NAME_LENGTH);
-	ppSymb->Tag = (STRING) TtaGetMemory (NAME_LENGTH);
-	ustrcpy (ppSymb->SymbolName, "");
-	ustrcpy (ppSymb->Tag, "");
+	ppSymb->SymbolName = TtaAllocString (NAME_LENGTH);
+	ppSymb->Tag = TtaAllocString (NAME_LENGTH);
+	ustrcpy (ppSymb->SymbolName, _EMPTYSTR_);
+	ustrcpy (ppSymb->Tag, _EMPTYSTR_);
 	ppSymb->Rule = NULL;
 	ppSymb->Children = NULL;
 	ppSymb->Followings = NULL;
@@ -1095,7 +1095,7 @@ UCHAR_T       c;
 	if (ppIsNamed)
 	  {
 	     ustrcpy (ppSymb->SymbolName, ppName);
-	     ustrcpy (ppName, "");
+	     ustrcpy (ppName, _EMPTYSTR_);
 	  }
      }
 }
@@ -1113,11 +1113,11 @@ UCHAR_T       c;
    if (ppLgBuffer != 0)
      {
 	ppError = TRUE;
-	ErrorMessage ("Syntax Error");
+	ErrorMessage (TEXT("Syntax Error"));
      }
    else
      {
-	ustrcpy (ppNode->Tag, "");
+	ustrcpy (ppNode->Tag, _EMPTYSTR_);
 	ppNode->Attributes = NULL;
 	ppNode->Next = NULL;
      }
@@ -1141,10 +1141,10 @@ UCHAR_T       c;
 	ppLgBuffer = 0;
 	ppIsNamed = FALSE;
      }
-   else if (!ustrcmp (ppSymb->Tag, ""))
+   else if (!ustrcmp (ppSymb->Tag, _EMPTYSTR_))
      {
 	ppError = TRUE;
-	ErrorMessage ("Missing Tag Name");
+	ErrorMessage (TEXT("Missing Tag Name"));
      }
 }
 
@@ -1163,10 +1163,10 @@ UCHAR_T       c;
 	ustrcpy (ppNode->Tag, inputBuffer);
 	ppLgBuffer = 0;
      }
-   else if (!ustrcmp (ppNode->Tag, ""))
+   else if (!ustrcmp (ppNode->Tag, _EMPTYSTR_))
      {
 	ppError = TRUE;
-	ErrorMessage ("Missing Tag Name");
+	ErrorMessage (TEXT("Missing Tag Name"));
      }
 }
 
@@ -1195,7 +1195,7 @@ UCHAR_T       c;
 	       {
 		  ppSymb->Attributes = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
 		  ppAttr = ppSymb->Attributes;
-		  ppAttr->NameAttr = (STRING) TtaGetMemory (NAME_LENGTH);
+		  ppAttr->NameAttr = TtaAllocString (NAME_LENGTH);
 		  ppAttr->Next = NULL;
 	       }
 	     else
@@ -1205,13 +1205,13 @@ UCHAR_T       c;
 		  if (!ustrcmp (ppAttr->NameAttr, inputBuffer))
 		    {
 		       ppError = TRUE;
-		       ErrorMessage ("Multi valued attribute");
+		       ErrorMessage (TEXT("Multi valued attribute"));
 		    }
 		  else
 		    {
 		       ppAttr->Next = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
 		       ppAttr = ppAttr->Next;
-		       ppAttr->NameAttr = TtaGetMemory (NAME_LENGTH);
+		       ppAttr->NameAttr = TtaAllocString (NAME_LENGTH);
 		       ppAttr->Next = NULL;
 		    }
 	       }
@@ -1225,7 +1225,7 @@ UCHAR_T       c;
 	else
 	  {
 	     ppError = TRUE;
-	     sprintf (msgBuffer, "unknown attribute %s", inputBuffer);
+	     usprintf (msgBuffer, TEXT("unknown attribute %s"), inputBuffer);
 	     ErrorMessage (msgBuffer);
 	  }
 #endif
@@ -1234,7 +1234,7 @@ UCHAR_T       c;
    else
      {
 	ppError = TRUE;
-	ErrorMessage ("Missing Attribute Name");
+	ErrorMessage (TEXT("Missing Attribute Name"));
      }
 }
 
@@ -1254,8 +1254,8 @@ UCHAR_T       c;
    if (ppLgBuffer != 0)
      {
 #ifndef PPSTANDALONE
-       if (ustrcmp (ppNode->Tag, "*") == 0)
-	 ThotAttrNum = MapThotAttr (inputBuffer, "");
+       if (ustrcmp (ppNode->Tag, TEXT("*")) == 0)
+	 ThotAttrNum = MapThotAttr (inputBuffer, _EMPTYSTR_);
        else
 	 ThotAttrNum = MapThotAttr (inputBuffer, ppNode->Tag);
 	if (ThotAttrNum != -1)
@@ -1266,7 +1266,7 @@ UCHAR_T       c;
 	       {
 		  ppNode->Attributes = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
 		  ppAttr = ppNode->Attributes;
-		  ppAttr->NameAttr = (STRING) TtaGetMemory (NAME_LENGTH);
+		  ppAttr->NameAttr = TtaAllocString (NAME_LENGTH);
 		  ppAttr->Next = NULL;
 	       }
 	     else
@@ -1276,13 +1276,13 @@ UCHAR_T       c;
 		  if (!ustrcmp (ppAttr->NameAttr, inputBuffer))
 		    {
 		       ppError = TRUE;
-		       ErrorMessage ("Multi valued attribute");
+		       ErrorMessage (TEXT("Multi valued attribute"));
 		    }
 		  else
 		    {
 		       ppAttr->Next = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
 		       ppAttr = ppAttr->Next;
-		       ppAttr->NameAttr = TtaGetMemory (NAME_LENGTH);
+		       ppAttr->NameAttr = TtaAllocString (NAME_LENGTH);
 		       ppAttr->Next = NULL;
 		    }
 	       }
@@ -1296,7 +1296,7 @@ UCHAR_T       c;
 	else
 	  {
 	     ppError = TRUE;
-	     sprintf (msgBuffer, "unknown attribute %s", inputBuffer);
+	     usprintf (msgBuffer, TEXT("unknown attribute %s"), inputBuffer);
 	     ErrorMessage (msgBuffer);
 	  }
 #endif
@@ -1305,7 +1305,7 @@ UCHAR_T       c;
    else
      {
 	ppError = TRUE;
-	ErrorMessage ("Missing Attribute Name");
+	ErrorMessage (TEXT("Missing Attribute Name"));
      }
 }
 
@@ -1333,7 +1333,7 @@ UCHAR_T       c;
 	       {
 		  ppNode->Attributes = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
 		  ppAttr = ppNode->Attributes;
-		  ppAttr->NameAttr = (STRING) TtaGetMemory (NAME_LENGTH);
+		  ppAttr->NameAttr = TtaAllocString (NAME_LENGTH);
 		  ppAttr->Next = NULL;
 	       }
 	     else
@@ -1343,19 +1343,19 @@ UCHAR_T       c;
 		  if (!ustrcmp (ppAttr->NameAttr, inputBuffer))
 		    {
 		       ppError = TRUE;
-		       ErrorMessage ("Multi valued attribute");
+		       ErrorMessage (TEXT("Multi valued attribute"));
 		    }
 		  else
 		    {
 		       ppAttr->Next = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
 		       ppAttr = ppAttr->Next;
-		       ppAttr->NameAttr = TtaGetMemory (NAME_LENGTH);
+		       ppAttr->NameAttr = TtaAllocString (NAME_LENGTH);
 		       ppAttr->Next = NULL;
 		    }
 	       }
-	     ppAttr->AttrTag = TtaGetMemory (NAME_LENGTH);
+	     ppAttr->AttrTag = TtaAllocString (NAME_LENGTH);
 	     ustrcpy (ppAttr->AttrTag, inputBuffer);
-	     ustrcpy (ppAttr->NameAttr, "");
+	     ustrcpy (ppAttr->NameAttr, _EMPTYSTR_);
 	     ppAttr->ThotAttr = ThotAttrNum;
 	     ppAttr->IsInt = FALSE;
 	     ppAttr->IsTransf = TRUE;
@@ -1364,7 +1364,7 @@ UCHAR_T       c;
 	else
 	  {
 	     ppError = TRUE;
-	     ErrorMessage ("Unknown attribute");
+	     ErrorMessage (TEXT("Unknown attribute"));
 	  }
 #endif
 	ppLgBuffer = 0;
@@ -1372,7 +1372,7 @@ UCHAR_T       c;
    else
      {
 	ppError = TRUE;
-	ErrorMessage ("Missing Attribute Name");
+	ErrorMessage (TEXT("Missing Attribute Name"));
      }
 }
 
@@ -1389,14 +1389,14 @@ UCHAR_T       c;
    if (ppLgBuffer != 0)
      {
 	ppAttr->IsTransf = TRUE;
-	ppAttr->AttrTag = TtaGetMemory (NAME_LENGTH);
+	ppAttr->AttrTag = TtaAllocString (NAME_LENGTH);
 	ustrcpy (ppAttr->AttrTag, inputBuffer);
 	ppLgBuffer = 0;
      }
    else
      {
 	ppError = TRUE;
-	ErrorMessage ("Missing Tag Name");
+	ErrorMessage (TEXT("Missing Tag Name"));
      }
 }
 
@@ -1412,9 +1412,9 @@ UCHAR_T       c;
 {
    if (ppLgBuffer != 0)
      {
-	ppAttr->AttrAttr = TtaGetMemory (NAME_LENGTH);
+	ppAttr->AttrAttr = TtaAllocString (NAME_LENGTH);
 	ustrcpy (ppAttr->AttrAttr, inputBuffer);
-	if (!ustrcmp (ppAttr->NameAttr, ""))
+	if (!ustrcmp (ppAttr->NameAttr, _EMPTYSTR_))
 	  {
 	     ustrcpy (ppAttr->NameAttr, inputBuffer);
 	  }
@@ -1423,7 +1423,7 @@ UCHAR_T       c;
    else
      {
 	ppError = TRUE;
-	ErrorMessage ("Missing Attribute Name");
+	ErrorMessage (TEXT("Missing Attribute Name"));
      }
 }
 
@@ -1446,7 +1446,7 @@ UCHAR_T       c;
 	c == '<' || c == '.' || c == '!' || c == '?'))
      {
        ppError = TRUE;
-       ErrorMessage ("Invalid char");
+       ErrorMessage (TEXT("Invalid char"));
      }
    else
      {
@@ -1460,7 +1460,7 @@ UCHAR_T       c;
 	     if (ppLgBuffer + len >= MaxBufferLength)
 	       {
 		  ppError = TRUE;
-		  ErrorMessage ("Panic: buffer overflow");
+		  ErrorMessage (TEXT("Panic: buffer overflow"));
 		  ppLgBuffer = 0;
 	       }
 	     if (len == 1)
@@ -1508,9 +1508,9 @@ UCHAR_T       c;
    if (ppLgBuffer == 0)
      {
 	ppAttr->IsInt = FALSE;
-	ppAttr->TextVal = TtaGetMemory (sizeof (CHAR_T) * (ppLgBuffer + 2));
+	ppAttr->TextVal = TtaAllocString (ppLgBuffer + 2);
 
-	ustrcpy (ppAttr->TextVal, "");
+	ustrcpy (ppAttr->TextVal, _EMPTYSTR_);
      }
    else
      {
@@ -1520,7 +1520,7 @@ UCHAR_T       c;
 	if (!isText)
 	  {
 	     ppAttr->IsInt = TRUE;
-	     ppAttr->IntVal = atoi (inputBuffer);
+	     ppAttr->IntVal = uctoi (inputBuffer);
 	  }
 	else
 	  {
@@ -1536,7 +1536,7 @@ UCHAR_T       c;
 	       }
 	     else
 	       {
-		  ppAttr->TextVal = (STRING) TtaGetMemory (sizeof (CHAR_T) * (ppLgBuffer + 2));
+		  ppAttr->TextVal = TtaAllocString (ppLgBuffer + 2);
 		  if (inputBuffer [0] == '\"')
 		    ustrcpy (ppAttr->TextVal, &(inputBuffer[1]));
 		  else
@@ -1576,7 +1576,7 @@ UCHAR_T       c;
    if (ppLgBuffer != 0)
      {				/* allocates a new rule descriptor */
 	ppRule = (strRuleDesc *) TtaGetMemory (sizeof (strRuleDesc));
-	ppRule->RuleName = TtaGetMemory (20);
+	ppRule->RuleName = TtaAllocString (20);
 	ustrcpy (ppRule->RuleName, inputBuffer);
 	ppRule->NextRule = NULL;
 	ppRule->Next = NULL;
@@ -1584,8 +1584,8 @@ UCHAR_T       c;
 	ppRule->DeleteRule = FALSE;
 	ppRule->NewNodes = NULL;
 	ppNode = ppRule->OptionNodes;
-	ppNode->Tag = TtaGetMemory (NAME_LENGTH);
-	ustrcpy (ppNode->Tag, "");
+	ppNode->Tag = TtaAllocString (NAME_LENGTH);
+	ustrcpy (ppNode->Tag, _EMPTYSTR_);
 	ppNode->Attributes = NULL;
 	ppNode->Next = NULL;
 	ppLgBuffer = 0;
@@ -1593,7 +1593,7 @@ UCHAR_T       c;
    else
      {
 	ppError = TRUE;
-	ErrorMessage ("Missing left part of rule");
+	ErrorMessage (TEXT("Missing left part of rule"));
      }
 }
 
@@ -1610,7 +1610,7 @@ UCHAR_T       c;
   if (ppLgBuffer != 0)
     {				/* allocates a new rule descriptor */
       ppRule = (strRuleDesc *) TtaGetMemory (sizeof (strRuleDesc));
-      ppRule->RuleName = TtaGetMemory (20);
+      ppRule->RuleName = TtaAllocString (20);
       ustrcpy (ppRule->RuleName, inputBuffer);
       ppRule->NextRule = NULL;
       ppRule->Next = NULL;
@@ -1623,7 +1623,7 @@ UCHAR_T       c;
   else
     {
       ppError = TRUE;
-      ErrorMessage ("Missing rule name");
+      ErrorMessage (TEXT("Missing rule name"));
     }
 }
 
@@ -1648,7 +1648,7 @@ UCHAR_T       c;
 	if (MapGI (ppNode->Tag, &schema, 0) == -1)
 	  {
 	     ppError = TRUE;
-	     sprintf (msgBuffer, "unknown tag </%s>", ppNode->Tag);
+	     usprintf (msgBuffer, TEXT("unknown tag </%s>"), ppNode->Tag);
 	     ErrorMessage (msgBuffer);
 	  }
      }
@@ -1656,8 +1656,8 @@ UCHAR_T       c;
      {				/* allocate the next node descriptor */
 	ppNode->Next = (strNodeDesc *) TtaGetMemory (sizeof (strNodeDesc));
 	ppNode = ppNode->Next;
-	ppNode->Tag = TtaGetMemory (NAME_LENGTH);
-	ustrcpy (ppNode->Tag, "");
+	ppNode->Tag = TtaAllocString (NAME_LENGTH);
+	ustrcpy (ppNode->Tag, _EMPTYSTR_);
 	ppNode->Attributes = NULL;
 	ppNode->Next = NULL;
      }
@@ -1684,11 +1684,11 @@ UCHAR_T       c;
 	if (MapGI (ppNode->Tag, &schema, 0) == -1)
 	  {
 	     ppError = TRUE;
-	     sprintf (msgBuffer, "unknown tag </%s>", ppNode->Tag);
+	     usprintf (msgBuffer, TEXT("unknown tag </%s>"), ppNode->Tag);
 	     ErrorMessage (msgBuffer);
 	  }
      }
-   if (!ustrcmp (ppRule->OptionNodes->Tag, ""))
+   if (!ustrcmp (ppRule->OptionNodes->Tag, _EMPTYSTR_))
      {
 	/* frees the current node descriptor if it is empty (the rule has no opt. node */
 	ad = ppRule->OptionNodes->Attributes;
@@ -1713,8 +1713,8 @@ UCHAR_T       c;
    /* allocate a New node descriptor */
    ppRule->NewNodes = (strNodeDesc *) TtaGetMemory (sizeof (strNodeDesc));
    ppNode = ppRule->NewNodes;
-   ppNode->Tag = TtaGetMemory (NAME_LENGTH);
-   ustrcpy (ppNode->Tag, "");
+   ppNode->Tag = TtaAllocString (NAME_LENGTH);
+   ustrcpy (ppNode->Tag, _EMPTYSTR_);
    ppNode->Attributes = NULL;
    ppNode->Next = NULL;
 }
@@ -1732,7 +1732,7 @@ UCHAR_T       c;
 
   if (selRuleFlag)
     {
-      sprintf (msgBuffer, "Too much selection rules");
+      usprintf (msgBuffer, TEXT("Too much selection rules"));
       ErrorMessage (msgBuffer);
     }
   else
@@ -1745,7 +1745,7 @@ UCHAR_T       c;
 	    {
 	      ppNode->Attributes = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
 	      ppAttr = ppNode->Attributes;
-	      ppAttr->NameAttr = (STRING) TtaGetMemory (NAME_LENGTH);
+	      ppAttr->NameAttr = TtaAllocString (NAME_LENGTH);
 	      ppAttr->Next = NULL;
 	    }
 	  else
@@ -1755,22 +1755,22 @@ UCHAR_T       c;
 	      if (!ustrcmp (ppAttr->NameAttr, inputBuffer))
 		{
 		  ppError = TRUE;
-		  ErrorMessage ("Multi valued attribute");
+		  ErrorMessage (TEXT("Multi valued attribute"));
 		}
 	      else
 		{
 		  ppAttr->Next = (strAttrDesc *) TtaGetMemory (sizeof (strAttrDesc));
 		  ppAttr = ppAttr->Next;
-		  ppAttr->NameAttr = (STRING) TtaGetMemory (NAME_LENGTH);
+		  ppAttr->NameAttr = TtaAllocString (NAME_LENGTH);
 		  ppAttr->Next = NULL;
 		}
 	    }
-	  ustrcpy (ppAttr->NameAttr, "ZZGHOST");
+	  ustrcpy (ppAttr->NameAttr, TEXT("ZZGHOST"));
 	  ppAttr->ThotAttr = HTML_ATTR_Ghost_restruct;
 	  ppAttr->IsInt = FALSE;
 	  ppAttr->IsTransf = FALSE;
-	  ppAttr->TextVal = (STRING) TtaGetMemory (NAME_LENGTH);
-    	  ustrcpy (ppAttr->TextVal, "Select");
+	  ppAttr->TextVal = TtaAllocString (NAME_LENGTH);
+    	  ustrcpy (ppAttr->TextVal, TEXT("Select"));
 	}
     }
 }
@@ -1797,17 +1797,17 @@ UCHAR_T       c;
       ustrcpy (ppNode->Tag, inputBuffer);
       ppLgBuffer = 0;
       schema = ppTransSet->Schema;
-      if (ustrcmp (ppNode->Tag, "*") && 
-	  ustrcmp (ppNode->Tag, "#") &&
+      if (ustrcmp (ppNode->Tag, TEXT("*")) && 
+	  ustrcmp (ppNode->Tag, TEXT("#")) &&
 	  ppNode->Tag[0] != '\"' &&
 	  (MapGI (ppNode->Tag, &schema, 0) == -1))
 	{
 	  ppError = TRUE;
-	  sprintf (msgBuffer, "unknown tag </%s>", ppNode->Tag);
+	  usprintf (msgBuffer, TEXT("unknown tag </%s>"), ppNode->Tag);
 	  ErrorMessage (msgBuffer);
 	}
     }
-  if (ppRule->OptionNodes && !ustrcmp (ppRule->OptionNodes->Tag, ""))
+  if (ppRule->OptionNodes && !ustrcmp (ppRule->OptionNodes->Tag, _EMPTYSTR_))
     {				/* free the last Option node if it is empty */
       ad = ppRule->OptionNodes->Attributes;
       while (ad)
@@ -1829,7 +1829,7 @@ UCHAR_T       c;
       ppRule->NewNodes = NULL;
     }
 
-  if (ppRule->NewNodes && !ustrcmp (ppRule->NewNodes->Tag, ""))
+  if (ppRule->NewNodes && !ustrcmp (ppRule->NewNodes->Tag, _EMPTYSTR_))
     {				/* free the last New node if it is empty */
       ad = ppRule->NewNodes->Attributes;
       while (ad)
@@ -1892,23 +1892,23 @@ UCHAR_T       c;
 	pnode = ppRule->OptionNodes;
       else
 	pnode = ppRule->NewNodes;
-      if (pnode && ustrcmp (pnode->Tag, "*") != 0)
+      if (pnode && ustrcmp (pnode->Tag, TEXT("*")) != 0)
 	if (ppTrans->DestinationTag == NULL)
 	  {
 	    /* the dest type is undefined => the first tag of the rule defines */
 	    /* the destination type of the transformation */
-	    ppTrans->DestinationTag = TtaGetMemory (NAME_LENGTH);
+	    ppTrans->DestinationTag = TtaAllocString (NAME_LENGTH);
 	    ustrcpy (ppTrans->DestinationTag, pnode->Tag);
 	  }
 	else if (ustrcmp (ppTrans->DestinationTag, pnode->Tag))
 	  /* the first tag of the rule is different from the destination type */
 	  /* the rule has no destination type */
-	  ustrcpy (ppTrans->DestinationTag, "");
+	  ustrcpy (ppTrans->DestinationTag, _EMPTYSTR_);
     }
   else
     {
       ppError = TRUE;
-      ErrorMessage ("undefined pattern symbol");
+      ErrorMessage (TEXT("undefined pattern symbol"));
     }
   ppRule = NULL;
 }
@@ -1928,8 +1928,8 @@ UCHAR_T       c;
    /* create the pattern virtual root node */
    ppTrans->RootDesc = (strSymbDesc *) TtaGetMemory (sizeof (strSymbDesc));
    ppTrans->RootDesc->SymbolName = ppTrans->NameTrans;
-   ppTrans->RootDesc->Tag = TtaGetMemory (NAME_LENGTH);
-   ustrcpy (ppTrans->RootDesc->Tag, "pattern_root");
+   ppTrans->RootDesc->Tag = TtaAllocString (NAME_LENGTH);
+   ustrcpy (ppTrans->RootDesc->Tag, TEXT("pattern_root"));
    /* warning : the Rule points the transformation record (no rule for the root node) */
    ppTrans->RootDesc->Rule = (strRuleDesc *) ppTrans;
    ppTrans->RootDesc->IsOptional = FALSE;
@@ -2371,7 +2371,7 @@ BinFile               infile;
 				      ppNode = NULL;
 				      ppRule = NULL;
 				      ppIsNamed = FALSE;
-				      ustrcpy (ppName, "");
+				      ustrcpy (ppName, _EMPTYSTR_);
 				      opStack[0] = EOS;
 				      symbolStack[0] = NULL;
 				      choiceStack[0] = NULL;
@@ -2488,7 +2488,7 @@ strTransSet        **resTrSet;
         if (fileName[len]!= DIR_SEP)
           ustrcat (fileName,DIR_STR);
         ustrcat (fileName,name);
-        ustrcat (fileName,".trans");
+        ustrcat (fileName, TEXT(".trans"));
 	found = (TtaFileExist(fileName) == 1);
 	if (!found)
 	   if (next == NULL)
@@ -2500,7 +2500,7 @@ strTransSet        **resTrSet;
    /* check if the file is newer than last read */
    StatBuffer = (struct stat *) TtaGetMemory (sizeof (struct stat));
    
-   status = stat (fileName, StatBuffer);
+   status = ustat (fileName, StatBuffer);
    if (status != -1)
      {
 	if (StatBuffer->st_mtime == ppTransSet->timeLastWrite)
@@ -2516,7 +2516,7 @@ strTransSet        **resTrSet;
 #endif
 	   if (infile == 0)
 	     {
-		sprintf (msg, "Can't open file %s.trans", name);
+		usprintf (msg, TEXT("Can't open file %s.trans"), name);
 		ErrorMessage (msg);
 		ppError = TRUE;
 	     }
@@ -2530,7 +2530,7 @@ strTransSet        **resTrSet;
 		ppNode = NULL;
 		ppRule = NULL;
 		ppIsNamed = FALSE;
-		ustrcpy (ppName, "");
+		ustrcpy (ppName, _EMPTYSTR_);
 		opStack[0] = EOS;
 		symbolStack[0] = NULL;
 		choiceStack[0] = NULL;

@@ -43,7 +43,7 @@ extern ThotBool    TtaIsBlank (STRING ptr);
  *       We load the ressources file from the installation directory and
  *       the specific user values from the user HOME dir.
  */
-extern void         TtaInitializeAppRegistry (STRING appArgv0);
+extern void         TtaInitializeAppRegistry (STRING);
 
 /*
  * TtaGetEnvInt : read the integer value associated to an 

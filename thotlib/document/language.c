@@ -20,6 +20,8 @@
 #include "application.h"
 #include "dictionary.h"
 
+#include "uisoentries.h"
+
 /* Variables recuperees de la gestion des dictionaires */
 struct Langue_Ctl   LangTable[MAX_LANGUAGES];
 struct Langue_Ctl   TypoLangTable[MAX_LANGUAGES];
@@ -35,7 +37,7 @@ static CHAR_T       StandardLANG[3];
 
 /*	ISO 639 CODES ALPHABETIC BY LANGUAGE NAME (ENGLISH SPELLING) */
 
-typedef unsigned char aLangName[16];
+typedef UCHAR_T aLangName[16];
 typedef struct _ISO639entry
   {
      aLangName	fullName;
@@ -45,164 +47,164 @@ ISO639entry;
 
 static ISO639entry	ISO639table[] =
 {
-   {"ABKHAZIAN",	"AB"},
-   {"AFAN (OROMO)",	"OM"},
-   {"AFAR",		"AA"},
-   {"AFRIKAANS",	"AF"},
-   {"ALBANIAN",		"SQ"},
-   {"AMHARIC",		"AM"},
-   {"ARABIC",		"AR"},
-   {"ARMENIAN",		"HY"},
-   {"ASSAMESE",		"AS"},
-   {"AYMARA",		"AY"},
-   {"AZERBAIJANI",	"AZ"},
-   {"BASHKIR",		"BA"},
-   {"BASQUE",		"EU"},
-   {"BENGALI",		"BN"},
-   {"BANGLA",		"BN"},
-   {"BHUTANI",		"DZ"},
-   {"BIHARI",		"BH"},
-   {"BISLAMA",		"BI"},
-   {"BRETON",		"BR"},
-   {"BULGARIAN",	"BG"},
-   {"BURMESE",		"MY"},
-   {"BYELORUSSIAN",	"BE"},
-   {"CAMBODIAN",	"KM"},
-   {"CATALAN",		"CA"},
-   {"CHINESE",		"ZH"},
-   {"CORSICAN",		"CO"},
-   {"CROATIAN",		"HR"},
-   {"Czech",		"CS"},
-   {"DANISH",		"DA"},
-   {"Dutch",		"NL"},
-   {"English",		"EN"},
-   {"ESPERANTO",	"EO"},
-   {"ESTONIAN",		"ET"},
-   {"FAROESE",		"FO"},
-   {"FIJI",		"FJ"},
-   {"Finnish",		"FI"},
-   {"French",		"FR"},
-   {"FRISIAN",		"FY"},
-   {"GALICIAN",		"GL"},
-   {"GEORGIAN",		"KA"},
-   {"German",		"DE"},
-   {"Greek",		"EL"},
-   {"GREENLANDIC",	"KL"},
-   {"GUARANI",		"GN"},
-   {"GUJARATI",		"GU"},
-   {"HAUSA",		"HA"},
-   {"HEBREW",		"HE"},
-   {"HINDI",		"HI"},
-   {"HUNGARIAN",	"HU"},
-   {"ICELANDIC",	"IS"},
-   {"INDONESIAN",	"ID"},
-   {"INTERLINGUA",	"IA"},
-   {"INTERLINGUE",	"IE"},
-   {"INUKTITUT",	"IU"},
-   {"INUPIAK",		"IK"},
-   {"IRISH",		"GA"},
-   {"Italian",		"IT"},
-   {"JAPANESE",		"JA"},
-   {"JAVANESE",		"JV"},
-   {"KANNADA",		"KN"},
-   {"KASHMIRI",		"KS"},
-   {"KAZAKH",		"KK"},
-   {"KINYARWANDA",	"RW"},
-   {"KIRGHIZ",		"KY"},
-   {"KURUNDI",		"RN"},
-   {"KOREAN",		"KO"},
-   {"KURDISH",		"KU"},
-   {"LAOTHIAN",		"LO"},
-   {"LATIN",		"LA"},
-   {"LATVIAN",		"LV"},
-   {"LETTISH",		"LV"},
-   {"LINGALA",		"LN"},
-   {"LITHUANIAN",	"LT"},
-   {"MACEDONIAN",	"MK"},
-   {"MALAGASY",		"MG"},
-   {"MALAY",		"MS"},
-   {"MALAYALAM",	"ML"},
-   {"MALTESE",		"MT"},
-   {"MAORI",		"MI"},
-   {"MARATHI",		"MR"},
-   {"MOLDAVIAN",	"MO"},
-   {"MONGOLIAN",	"MN"},
-   {"NAURU",		"NA"},
-   {"NEPALI",		"NE"},
-   {"NORWEGIAN",	"NO"},
-   {"OCCITAN",		"OC"},
-   {"ORIYA",		"OR"},
-   {"PASHTO",		"PS"},
-   {"PUSHTO",		"PS"},
-   {"PERSIAN",		"FA"},
-   {"Polish",		"PL"},
-   {"Portuguese",	"PT"},
-   {"PUNJABI",		"PA"},
-   {"QUECHUA",		"QU"},
-   {"RHAETO-ROMANCE",	"RM"},
-   {"ROMANIAN",		"RO"},
-   {"RUSSIAN",		"RU"},
-   {"SAMOAN",		"SM"},
-   {"SANGHO",		"SG"},
-   {"SANSKRIT",		"SA"},
-   {"SCOTS GAELIC",	"GD"},
-   {"SERBIAN",		"SR"},
-   {"SERBO-CROATIAN",	"SH"},
-   {"SESOTHO",		"ST"},
-   {"SETSWANA",		"TN"},
-   {"SHONA",		"SN"},
-   {"SINDHI",		"SD"},
-   {"SINGHALESE",	"SI"},
-   {"SISWATI",		"SS"},
-   {"SLOVAK",		"SK"},
-   {"SLOVENIAN",	"SL"},
-   {"SOMALI",		"SO"},
-   {"Spanish",		"ES"},
-   {"SUNDANESE",	"SU"},
-   {"SWAHILI",		"SW"},
-   {"Swedish",		"SV"},
-   {"TAGALOG",		"TL"},
-   {"TAJIK",		"TG"},
-   {"TAMIL",		"TA"},
-   {"TATAR",		"TT"},
-   {"TELUGU",		"TE"},
-   {"THAI",		"TH"},
-   {"TIBETAN",		"BO"},
-   {"TIGRINYA",		"TI"},
-   {"TONGA",		"TO"},
-   {"TSONGA",		"TS"},
-   {"TURKISH",		"TR"},
-   {"TURKMEN",		"TK"},
-   {"TWI",		"TW"},
-   {"UIGUR",		"UG"},
-   {"UKRAINIAN",	"UK"},
-   {"URDU",		"UR"},
-   {"UZBEK",		"UZ"},
-   {"VIETNAMESE",	"VI"},
-   {"VOLAPUK",		"VO"},
-   {"WELSH",		"CY"},
-   {"WOLOF",		"WO"},
-   {"XHOSA",		"XH"},
-   {"YIDDISH",		"YI"},
-   {"YORUBA",		"YO"},
-   {"ZHUANG",		"ZA"},
-   {"ZULU",		"ZU"},
-   {"",			""}
+	{_ABKHAZIAN_,  _ABKHAZIAN_ISO},
+	{_AFANOROMO_,    _AFANOROMO_ISO},
+	{_AFAR_,         _AFAR_ISO},
+	{_AFRIKAANS_,    _AFRIKAANS_ISO},
+	{_ALBANIAN_,     _ALBANIAN_ISO},
+	{_AMHARIC_,      _AMHARIC_ISO},
+	{_ARABIC_,       _ARABIC_ISO},
+	{_ARMENIAN_,     _ARMENIAN_ISO},
+	{_ASSAMESE_,     _ASSAMESE_ISO},
+	{_AYMARA_,       _AYMARA_ISO},
+	{_AZERBAIJANI_,  _AZERBAIJANI_ISO},
+	{_BASHKIR_,      _BASHKIR_ISO},
+	{_BASQUE_,       _BASQUE_ISO},
+	{_BENGALI_,      _BENGALI_ISO},
+	{_BANGLA_,       _BANGLA_ISO},
+	{_BHUTANI_,      _BHUTANI_ISO},
+	{_BIHARI_,       _BIHARI_ISO},
+	{_BISLAMA_,      _BISLAMA_ISO},
+	{_BRETON_,       _BRETON_ISO},
+	{_BULGARIAN_,    _BULGARIAN_ISO},
+	{_BURMESE_,      _BURMESE_ISO},
+	{_BYELORUSSIAN_, _BYELORUSSIAN_ISO},
+	{_CAMBODIAN_,    _CAMBODIAN_ISO},
+	{_CATALAN_,      _CATALAN_ISO},
+	{_CHINESE_,      _CHINESE_ISO},
+	{_CORSICAN_,     _CORSICAN_ISO},
+	{_CROATIAN_,     _CROATIAN_ISO},
+	{_Czech_,        _Czech_ISO},
+	{_DANISH_,       _DANISH_ISO},
+	{_Dutch_,        _Dutch_ISO},
+	{_English_,      _English_ISO},
+	{_ESPERANTO_,    _ESPERANTO_ISO},
+	{_ESTONIAN_,     _ESTONIAN_ISO},
+	{_FAROESE_,      _FAROESE_ISO},
+	{_FIJI_,         _FIJI_ISO},
+	{_Finnish_,      _Finnish_ISO},
+	{_French_,       _French_ISO},
+	{_FRISIAN_,      _FRISIAN_ISO},
+	{_GALICIAN_,     _GALICIAN_ISO},
+	{_GEORGIAN_,     _GEORGIAN_ISO},
+	{_German_,       _German_ISO},
+	{_Greek_,        _Greek_ISO},
+	{_GREENLANDIC_,  _GREENLANDIC_ISO},
+	{_GUARANI_,      _GUARANI_ISO},
+	{_GUJARATI_,     _GUJARATI_ISO},
+	{_HAUSA_,        _HAUSA_ISO},
+	{_HEBREW_,       _HEBREW_ISO},
+	{_HINDI_,        _HINDI_ISO},
+	{_HUNGARIAN_,    _HUNGARIAN_ISO},
+	{_ICELANDIC_,    _ICELANDIC_ISO},
+	{_INDONESIAN_,   _INDONESIAN_ISO},
+	{_INTERLINGUA_,  _INTERLINGUA_ISO},
+	{_INTERLINGUE_,  _INTERLINGUE_ISO},
+	{_INUKTITUT_,    _INUKTITUT_ISO},
+	{_INUPIAK_,      _INUPIAK_ISO},
+	{_IRISH_,        _IRISH_ISO},
+	{_Italian_,      _Italian_ISO},
+	{_JAPANESE_,     _JAPANESE_ISO},
+	{_JAVANESE_,     _JAVANESE_ISO},
+	{_KANNADA_,      _KANNADA_ISO},
+	{_KASHMIRI_,     _KASHMIRI_ISO},
+	{_KAZAKH_,       _KAZAKH_ISO},
+	{_KINYARWANDA_,  _KINYARWANDA_ISO},
+	{_KIRGHIZ_,      _KIRGHIZ_ISO},
+	{_KURUNDI_,      _KURUNDI_ISO},
+	{_KOREAN_,       _KOREAN_ISO},
+	{_KURDISH_,      _KURDISH_ISO},
+	{_LAOTHIAN_,     _LAOTHIAN_ISO},
+	{_LATIN_,        _LATIN_ISO},
+	{_LATVIAN_,      _LATVIAN_ISO},
+	{_LETTISH_,      _LETTISH_ISO},
+	{_LINGALA_,      _LINGALA_ISO},
+	{_LITHUANIAN_,   _LITHUANIAN_ISO},
+	{_MACEDONIAN_,   _MACEDONIAN_ISO},
+	{_MALAGASY_,     _MALAGASY_ISO},
+	{_MALAY_,        _MALAY_ISO},
+	{_MALAYALAM_,    _MALAYALAM_ISO},
+	{_MALTESE_,      _MALTESE_ISO},
+	{_MAORI_,        _MAORI_ISO},
+	{_MARATHI_,      _MARATHI_ISO},
+	{_MOLDAVIAN_,    _MOLDAVIAN_ISO},
+	{_MONGOLIAN_,    _MONGOLIAN_ISO},
+	{_NAURU_,        _NAURU_ISO},
+	{_NEPALI_,       _NEPALI_ISO},
+	{_NORWEGIAN_,    _NORWEGIAN_ISO},
+	{_OCCITAN_,      _OCCITAN_ISO},
+	{_ORIYA_,        _ORIYA_ISO},
+	{_PASHTO_,       _PASHTO_ISO},
+	{_PUSHTO_,       _PUSHTO_ISO},
+	{_PERSIAN_,      _PERSIAN_ISO},
+	{_Polish_,       _Polish_ISO},
+	{_Portuguese_,   _Portuguese_ISO},
+	{_PUNJABI_,      _PUNJABI_ISO},
+	{_QUECHUA_,      _QUECHUA_ISO},
+	{_RHAETOROMANCE_,_RHAETOROMANCE_ISO},
+	{_ROMANIAN_,     _ROMANIAN_ISO},
+	{_RUSSIAN_,      _RUSSIAN_ISO},
+	{_SAMOAN_,       _SAMOAN_ISO},
+	{_SANGHO_,       _SANGHO_ISO},
+	{_SANSKRIT_,     _SANSKRIT_ISO},
+	{_SCOTSGAELIC_,  _SCOTSGAELIC_ISO},
+	{_SERBIAN_,      _SERBIAN_ISO},
+	{_SERBOCROATIAN_,_SERBOCROATIAN_ISO},
+	{_SESOTHO_,      _SESOTHO_ISO},
+	{_SETSWANA_,     _SETSWANA_ISO},
+	{_SHONA_,        _SHONA_ISO},
+	{_SINDHI_,       _SINDHI_ISO},
+	{_SINGHALESE_,   _SINGHALESE_ISO},
+	{_SISWATI_,      _SISWATI_ISO},
+	{_SLOVAK_,       _SLOVAK_ISO},
+	{_SLOVENIAN_,    _SLOVENIAN_ISO},
+	{_SOMALI_,       _SOMALI_ISO},
+	{_Spanish_,      _Spanish_ISO},
+	{_SUNDANESE_,    _SUNDANESE_ISO},
+	{_SWAHILI_,      _SWAHILI_ISO},
+	{_Swedish_,      _Swedish_ISO},
+	{_TAGALOG_,      _TAGALOG_ISO},
+	{_TAJIK_,        _TAJIK_ISO},
+	{_TAMIL_,        _TAMIL_ISO},
+	{_TATAR_,        _TATAR_ISO},
+	{_TELUGU_,       _TELUGU_ISO},
+	{_THAI_,         _THAI_ISO},
+	{_TIBETAN_,      _TIBETAN_ISO},
+	{_TIGRINYA_,     _TIGRINYA_ISO},
+	{_TONGA_,        _TONGA_ISO},
+	{_TSONGA_,       _TSONGA_ISO},
+	{_TURKISH_,      _TURKISH_ISO},
+	{_TURKMEN_,      _TURKMEN_ISO},
+	{_TWI_,          _TWI_ISO},
+	{_UIGUR_,        _UIGUR_ISO},
+	{_UKRAINIAN_,    _UKRAINIAN_ISO},
+	{_URDU_,         _URDU_ISO},
+	{_UZBEK_,        _UZBEK_ISO},
+	{_VIETNAMESE_,   _VIETNAMESE_ISO},
+	{_VOLAPUK_,      _VOLAPUK_ISO },
+	{_WELSH_,        _WELSH_ISO},
+	{_WOLOF_,        _WOLOF_ISO},
+	{_XHOSA_,        _XHOSA_ISO},
+	{_YIDDISH_,      _YIDDISH_ISO},
+	{_YORUBA_,       _YORUBA_ISO},
+	{_ZHUANG_,       _ZHUANG_ISO},
+	{ _ZULU_,        _ZULU_ISO},
+	{_EMPTY_,        _EMPTY_}
 };
 
 /* this table associates the ancient language names used in Thot documents
    with their standard code */
 static ISO639entry	OldLangTable[] =
 {
-   {"American",		"EN-US"},
-   {"Deutsch",		"DE"},
-   {"Espa\361ol",	"ES"},
-   {"Fran\347ais",	"FR"},
-   {"ISO_latin_1",	"x-Latin1"},
-   {"ISO_latin_2",	"x-Latin2"},
-   {"Italiano",		"IT"},
-   {"Symbol",		"x-Symbol"},
-   {"",			""}
+	{_American_,    _American_ISO},
+	{_Deutsch_,     _Deutsch_ISO},
+	{_Espanol_,     _Espanol_ISO},
+	{_Francais_,    _Francais_ISO},
+	{_ISOLatin1_,   _ISOLatin1_ISO},
+	{_ISOLatin2_,   _ISOLatin2_ISO},
+	{_Italiano_,    _Italiano_ISO},
+	{_Symbol_,      _Symbol_ISO},
+	{_EMPTY_,       _EMPTY_}
 };
 
 
@@ -284,40 +286,40 @@ static void         InitTypoLanguage ()
      {
 	TypoLangTable[i].LangNom[0] = EOS;
 	TypoLangTable[i].LangCode[0] = EOS;
-	TypoLangTable[i].LangAlphabet = 'L';
+	TypoLangTable[i].LangAlphabet = TEXT('L');
 	for (j = 0; j < MAX_DICTS; j++)
 	   TypoLangTable[i].LangDict[j] = NULL;
 	TypoLangTable[i].LangPattern[0] = EOS;
 	TypoLangTable[i].LangTabPattern.Charge = 0;
      }
-   ustrcpy (TypoLangTable[0].LangNom, "F-Short");
-   TypoLangTable[0].LangAlphabet = 'L';
-   ustrcpy (TypoLangTable[0].LangPrincipal, "Fabbrev");
-   ustrcpy (TypoLangTable[0].LangSecondary, "Ftrabbrev");
+   ustrcpy (TypoLangTable[0].LangNom, TEXT("F-Short"));
+   TypoLangTable[0].LangAlphabet = TEXT('L');
+   ustrcpy (TypoLangTable[0].LangPrincipal, TEXT("Fabbrev"));
+   ustrcpy (TypoLangTable[0].LangSecondary, TEXT("Ftrabbrev"));
 
-   ustrcpy (TypoLangTable[1].LangNom, "E-Short");
-   TypoLangTable[1].LangAlphabet = 'L';
-   ustrcpy (TypoLangTable[1].LangPrincipal, "Eabbrev");
-   ustrcpy (TypoLangTable[1].LangSecondary, "Etrabbrev");
+   ustrcpy (TypoLangTable[1].LangNom, TEXT("E-Short"));
+   TypoLangTable[1].LangAlphabet = TEXT('L');
+   ustrcpy (TypoLangTable[1].LangPrincipal, TEXT("Eabbrev"));
+   ustrcpy (TypoLangTable[1].LangSecondary, TEXT("Etrabbrev"));
 
-   ustrcpy (TypoLangTable[2].LangNom, "F-Acronym");
-   TypoLangTable[2].LangAlphabet = 'L';
-   ustrcpy (TypoLangTable[2].LangPrincipal, "Facronym");
-   ustrcpy (TypoLangTable[2].LangSecondary, "Ftracronym");
+   ustrcpy (TypoLangTable[2].LangNom, TEXT("F-Acronym"));
+   TypoLangTable[2].LangAlphabet = TEXT('L');
+   ustrcpy (TypoLangTable[2].LangPrincipal, TEXT("Facronym"));
+   ustrcpy (TypoLangTable[2].LangSecondary, TEXT("Ftracronym"));
 
-   ustrcpy (TypoLangTable[3].LangNom, "E-Acronym");
-   TypoLangTable[3].LangAlphabet = 'L';
-   ustrcpy (TypoLangTable[3].LangPrincipal, "Eacronym");
-   ustrcpy (TypoLangTable[3].LangSecondary, "Etracronym");
+   ustrcpy (TypoLangTable[3].LangNom, TEXT("E-Acronym"));
+   TypoLangTable[3].LangAlphabet = TEXT('L');
+   ustrcpy (TypoLangTable[3].LangPrincipal, TEXT("Eacronym"));
+   ustrcpy (TypoLangTable[3].LangSecondary, TEXT("Etracronym"));
 
-   ustrcpy (TypoLangTable[4].LangNom, "F-Expo1");
-   TypoLangTable[4].LangAlphabet = 'L';
-   ustrcpy (TypoLangTable[4].LangPrincipal, "Fexpo");
-   ustrcpy (TypoLangTable[4].LangSecondary, "Ftrexpo");
+   ustrcpy (TypoLangTable[4].LangNom, TEXT("F-Expo1"));
+   TypoLangTable[4].LangAlphabet = TEXT('L');
+   ustrcpy (TypoLangTable[4].LangPrincipal, TEXT("Fexpo"));
+   ustrcpy (TypoLangTable[4].LangSecondary, TEXT("Ftrexpo"));
 
-   ustrcpy (TypoLangTable[5].LangNom, "F-Expo2");
-   TypoLangTable[5].LangAlphabet = 'L';
-   ustrcpy (TypoLangTable[5].LangPrincipal, "Fexpolex");
+   ustrcpy (TypoLangTable[5].LangNom, TEXT("F-Expo2"));
+   TypoLangTable[5].LangAlphabet = TEXT('L');
+   ustrcpy (TypoLangTable[5].LangPrincipal, TEXT("Fexpolex"));
 /*  ustrcpy(TypoLangTable[5].LangSecondary, "Fexpo2");
  */
 
@@ -340,7 +342,7 @@ void                InitLanguage ()
      {
 	LangTable[i].LangNom[0] = EOS;
 	LangTable[i].LangCode[0] = EOS;
-	LangTable[i].LangAlphabet = 'L';
+	LangTable[i].LangAlphabet = TEXT('L');
 	for (j = 0; j < MAX_DICTS; j++)
 	   LangTable[i].LangDict[j] = NULL;
 	LangTable[i].LangPattern[0] = EOS;
@@ -348,140 +350,140 @@ void                InitLanguage ()
      }
    /* Loading the default system languages */
    i = 0;
-   ustrcpy (LangTable[i].LangNom, "ISO_latin_1");
-   ustrcpy (LangTable[i].LangCode, "x-Latin1");
-   LangTable[i].LangAlphabet = 'L';
-   ustrcpy (LangTable[i].LangPrincipal, "Usigle");
-   ustrcpy (LangTable[i].LangSecondary, "Uname");
+   ustrcpy (LangTable[i].LangNom, TEXT("ISO_latin_1"));
+   ustrcpy (LangTable[i].LangCode, TEXT("x-Latin1"));
+   LangTable[i].LangAlphabet = TEXT('L');
+   ustrcpy (LangTable[i].LangPrincipal, TEXT("Usigle"));
+   ustrcpy (LangTable[i].LangSecondary, TEXT("Uname"));
 
    i = 1;
-   ustrcpy (LangTable[i].LangNom, "ISO_latin_2");
-   ustrcpy (LangTable[i].LangCode, "x-Latin2");
-   LangTable[i].LangAlphabet = '2';
+   ustrcpy (LangTable[i].LangNom, TEXT("ISO_latin_2"));
+   ustrcpy (LangTable[i].LangCode, TEXT("x-Latin2"));
+   LangTable[i].LangAlphabet = TEXT('2');
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
 
    i = 2;
-   ustrcpy (LangTable[i].LangNom, "ISO_latin_9");
-   ustrcpy (LangTable[i].LangCode, "x-Latin9");
-   LangTable[i].LangAlphabet = '9';
+   ustrcpy (LangTable[i].LangNom, TEXT("ISO_latin_9"));
+   ustrcpy (LangTable[i].LangCode, TEXT("x-Latin9"));
+   LangTable[i].LangAlphabet = TEXT('9');
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
 
    i = 3;
-   ustrcpy (LangTable[i].LangNom, "Symbol");
-   ustrcpy (LangTable[i].LangCode, "x-Symbol");
-   LangTable[i].LangAlphabet = 'G';
+   ustrcpy (LangTable[i].LangNom, TEXT("Symbol"));
+   ustrcpy (LangTable[i].LangCode, TEXT("x-Symbol"));
+   LangTable[i].LangAlphabet = TEXT('G');
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
 
    /* Loading the default user languages */
    FirstUserLang = 4;
    i = 4;
-   ustrcpy (LangTable[i].LangNom, "French");
-   ustrcpy (LangTable[i].LangCode, "fr");
-   LangTable[i].LangAlphabet = 'L';
-   ustrcpy (LangTable[i].LangPrincipal, "Fprinc");
-   ustrcpy (LangTable[i].LangSecondary, "Fperso");
-   ustrcpy (LangTable[i].LangPattern, "francais.ptn");
+   ustrcpy (LangTable[i].LangNom, _FrID_ );
+   ustrcpy (LangTable[i].LangCode, _FrLANG_);
+   LangTable[i].LangAlphabet = TEXT('L');
+   ustrcpy (LangTable[i].LangPrincipal, _FrPrincDictID_);
+   ustrcpy (LangTable[i].LangSecondary, _FrPersoDictID_);
+   ustrcpy (LangTable[i].LangPattern, _FrPatternID_ );
 
    i = 5;
-   ustrcpy (LangTable[i].LangNom, "English");
-   ustrcpy (LangTable[i].LangCode, "en");
-   LangTable[i].LangAlphabet = 'L';
-   ustrcpy (LangTable[i].LangPrincipal, "Eprinc");
-   ustrcpy (LangTable[i].LangSecondary, "Eperso");
-   ustrcpy (LangTable[i].LangPattern, "english.ptn");
+   ustrcpy (LangTable[i].LangNom, _EnID_);
+   ustrcpy (LangTable[i].LangCode, _EnLANG_);
+   LangTable[i].LangAlphabet = TEXT('L');
+   ustrcpy (LangTable[i].LangPrincipal, _EnPrincDictID_);
+   ustrcpy (LangTable[i].LangSecondary, _EnPersoDictID_);
+   ustrcpy (LangTable[i].LangPattern, _EnPatternID_);
 
    i = 6;
-   ustrcpy (LangTable[i].LangNom, "American");
-   ustrcpy (LangTable[i].LangCode, "en-US");
-   LangTable[i].LangAlphabet = 'L';
-   ustrcpy (LangTable[i].LangPrincipal, "Eprinc");
-   ustrcpy (LangTable[i].LangSecondary, "Eperso");
-   ustrcpy (LangTable[i].LangPattern, "american.ptn");
+   ustrcpy (LangTable[i].LangNom, _AmericanID_);
+   ustrcpy (LangTable[i].LangCode, _EnUSLANG_);
+   LangTable[i].LangAlphabet = TEXT('L');
+   ustrcpy (LangTable[i].LangPrincipal, _EnPrincDictID_);
+   ustrcpy (LangTable[i].LangSecondary, _EnPersoDictID_);
+   ustrcpy (LangTable[i].LangPattern, _USPatternID_);
 
    i = 7;
-   ustrcpy (LangTable[i].LangNom, "German");
-   ustrcpy (LangTable[i].LangCode, "de");
-   LangTable[i].LangAlphabet = 'L';
-   ustrcpy (LangTable[i].LangPrincipal, "Gprinc");
+   ustrcpy (LangTable[i].LangNom, _DeID_);
+   ustrcpy (LangTable[i].LangCode, _DeLANG_);
+   LangTable[i].LangAlphabet = TEXT('L');
+   ustrcpy (LangTable[i].LangPrincipal, _DePrincDictID_);
    LangTable[i].LangSecondary[0] = EOS;
-   ustrcpy (LangTable[i].LangPattern, "deutsch.ptn");
+   ustrcpy (LangTable[i].LangPattern, _DePatternID_);
 
    i = 8;
-   ustrcpy (LangTable[i].LangNom, "Italian");
-   ustrcpy (LangTable[i].LangCode, "it");
-   LangTable[i].LangAlphabet = 'L';
-   ustrcpy (LangTable[i].LangPrincipal, "Iprinc");
+   ustrcpy (LangTable[i].LangNom, _ItalianID_);
+   ustrcpy (LangTable[i].LangCode, _ItLANG_);
+   LangTable[i].LangAlphabet = TEXT('L');
+   ustrcpy (LangTable[i].LangPrincipal, _ItPrincDictID_);
    LangTable[i].LangSecondary[0] = EOS;
-   ustrcpy (LangTable[i].LangPattern, "italiano.ptn");
+   ustrcpy (LangTable[i].LangPattern, _ItPatternID_);
 
    i = 9;
-   ustrcpy (LangTable[i].LangNom, "Spanish");
-   ustrcpy (LangTable[i].LangCode, "es");
-   LangTable[i].LangAlphabet = 'L';
-   ustrcpy (LangTable[i].LangPrincipal, "Sprinc");
+   ustrcpy (LangTable[i].LangNom, _EsID_);
+   ustrcpy (LangTable[i].LangCode, _EsLANG_);
+   LangTable[i].LangAlphabet = TEXT('L');
+   ustrcpy (LangTable[i].LangPrincipal, _EsPrincDictID_);
    LangTable[i].LangSecondary[0] = EOS;
-   ustrcpy (LangTable[i].LangPattern, "espanol.ptn");
+   ustrcpy (LangTable[i].LangPattern, _EsPatternID_);
 
    i = 10;
-   ustrcpy (LangTable[i].LangNom, "Portuguese");
-   ustrcpy (LangTable[i].LangCode, "pt");
-   LangTable[i].LangAlphabet = 'L';
+   ustrcpy (LangTable[i].LangNom, _PortugueseID_);
+   ustrcpy (LangTable[i].LangCode, _PtLANG_);
+   LangTable[i].LangAlphabet = TEXT('L');
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
-   ustrcpy (LangTable[i].LangPattern, "portug.ptn");
+   ustrcpy (LangTable[i].LangPattern, _PtPatternID_);
 
    i = 11;
-   ustrcpy (LangTable[i].LangNom, "Dutch");
-   ustrcpy (LangTable[i].LangCode, "nl");
-   LangTable[i].LangAlphabet = 'L';
-   ustrcpy (LangTable[i].LangPrincipal, "Nprinc");
+   ustrcpy (LangTable[i].LangNom, _DutchID_);
+   ustrcpy (LangTable[i].LangCode, _NlLANG_);
+   LangTable[i].LangAlphabet = TEXT('L');
+   ustrcpy (LangTable[i].LangPrincipal, _DutchPrincDictID_);
    LangTable[i].LangSecondary[0] = EOS;
-   ustrcpy (LangTable[i].LangPattern, "nederl.ptn");
+   ustrcpy (LangTable[i].LangPattern, _DutchPatternID_);
 
    i = 12;
-   ustrcpy (LangTable[i].LangNom, "Swedish");
-   ustrcpy (LangTable[i].LangCode, "sv");
-   LangTable[i].LangAlphabet = 'L';
-   ustrcpy (LangTable[i].LangPrincipal, "Wprinc");
+   ustrcpy (LangTable[i].LangNom, _SwedishID_);
+   ustrcpy (LangTable[i].LangCode, _SvLANG_);
+   LangTable[i].LangAlphabet = TEXT('L');
+   ustrcpy (LangTable[i].LangPrincipal, _WPrincDictID_);
    LangTable[i].LangSecondary[0] = EOS;
-   ustrcpy (LangTable[i].LangPattern, "swedish.ptn");
+   ustrcpy (LangTable[i].LangPattern, _SwPatternID_);
 
    i = 13;
-   ustrcpy (LangTable[i].LangNom, "Finnish");
-   ustrcpy (LangTable[i].LangCode, "fi");
-   LangTable[i].LangAlphabet = 'L';
+   ustrcpy (LangTable[i].LangNom, _FinnishID_);
+   ustrcpy (LangTable[i].LangCode, _FiLANG_);
+   LangTable[i].LangAlphabet = TEXT('L');
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
-   ustrcpy (LangTable[i].LangPattern, "finish.ptn");
+   ustrcpy (LangTable[i].LangPattern, _FiPatternID_);
 
    i = 14;
-   ustrcpy (LangTable[i].LangNom, "Greek");
-   ustrcpy (LangTable[i].LangCode, "el");
-   LangTable[i].LangAlphabet = 'G';
+   ustrcpy (LangTable[i].LangNom, _GreekID_);
+   ustrcpy (LangTable[i].LangCode, _ElLANG_);
+   LangTable[i].LangAlphabet = TEXT('G');
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
 
    i = 15;
-   ustrcpy (LangTable[i].LangNom, "Czech");
-   ustrcpy (LangTable[i].LangCode, "cs");
-   LangTable[i].LangAlphabet = '2';
+   ustrcpy (LangTable[i].LangNom, _CzechID_);
+   ustrcpy (LangTable[i].LangCode, _CsLANG_);
+   LangTable[i].LangAlphabet = TEXT('2');
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
 
    i = 17;
-   ustrcpy (LangTable[i].LangNom, "Polish");
-   ustrcpy (LangTable[i].LangCode, "pl");
-   LangTable[i].LangAlphabet = '2';
+   ustrcpy (LangTable[i].LangNom, _PolishID_);
+   ustrcpy (LangTable[i].LangCode, _PlLANG_);
+   LangTable[i].LangAlphabet = TEXT('2');
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
 
    i = 18;
-   ustrcpy (LangTable[i].LangNom, "Turkish");
-   ustrcpy (LangTable[i].LangCode, "tr");
-   LangTable[i].LangAlphabet = '9';
+   ustrcpy (LangTable[i].LangNom, _TurkishID_);
+   ustrcpy (LangTable[i].LangCode, _TrLANG_);
+   LangTable[i].LangAlphabet = TEXT('9');
    LangTable[i].LangPrincipal[0] = EOS;
    LangTable[i].LangSecondary[0] = EOS;
    FreeEntry = 19;
@@ -543,7 +545,7 @@ STRING              secondDictionary;
    else
      {
 	if (ustrlen(languageName) == 2 ||
-	    languageName[1] == '-' || languageName[2] == '-')
+	    languageName[1] == TEXT('-') || languageName[2] == TEXT('-'))
 	   /* it's an ISO-639 code */
 	  {
 	  for (i = 0; i < FreeEntry; i++)
@@ -718,11 +720,11 @@ STRING              TtaGetVarLANG ()
 {
    STRING           name;
 
-   name = TtaGetEnvString ("LANG");
+   name = TtaGetEnvString (_LANG_EVAR_);
    if (name == NULL)
-      ustrcpy (StandardLANG, "en");
-   else if (!ustrcmp (name, "C") || !ustrcasecmp (name, "iso_8859_1"))
-      ustrcpy (StandardLANG, "fr");
+      ustrcpy (StandardLANG, _EnLANG_);
+   else if (!ustrcmp (name, _C_) || !ustrcasecmp (name, _ISO_ID1_))
+      ustrcpy (StandardLANG, _FrLANG_);
    else
      {
 	ustrncpy (StandardLANG, name, 2);
@@ -954,7 +956,7 @@ Language            langageId;
    STRING              ptPattern;
    FILE               *in;
 
-   dictPath = TtaGetEnvString ("DICOPAR");
+   dictPath = TtaGetEnvString (_DICOPAR_EVAR_);
    if (dictPath == NULL)
      {
 	/* The environment variable DICOPAR does not exist */
@@ -967,7 +969,7 @@ Language            langageId;
    lang = (int) langageId;
    ptPattern = LangTable[lang].LangPattern;
    ustrcat (patternFileName, ptPattern);
-   if ((in = ufopen (patternFileName, "r")) == NULL)
+   if ((in = ufopen (patternFileName, _ReadMODE_)) == NULL)
      {
 	TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_HYPHEN_FILE_NOT_OPEN), LangTable[lang].LangPattern);
 	return (FALSE);
@@ -1081,9 +1083,9 @@ CHAR_T              wordToCut[THOT_MAX_CHAR];
      }
    for (i = 0; i < THOT_MAX_CHAR; i++)
       tab_weight[i] = 0;
-   ustrcpy (wordToTreat, ".");
+   ustrcpy (wordToTreat, TEXT("."));
    ustrcat (wordToTreat, wordToCut);
-   ustrcat (wordToTreat, ".");
+   ustrcat (wordToTreat, TEXT("."));
    size_subword = 1;
    while ((size_subword <= wordLength) && (size_subword <= MAX_LET_PATTERN))
      {

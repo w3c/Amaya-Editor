@@ -17,8 +17,8 @@
 /*
  * User interface for checker commands
  *
- * Author: H. Richy (INRISA)
- *         R. Guetari (W3C/INRIA) - Windows routines.
+ * Authors: H. Richy (INRISA)
+ *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  *
  */
 
@@ -54,7 +54,7 @@ static ThotBool     ToReplace;
 static CHAR_T       CorrectWord[MAX_WORD_LEN];
 static CHAR_T       CurrentWord[MAX_WORD_LEN];
 static PtrDocument  pDocSel;
-static STRING       SpecialChars;
+/* static STRING       SpecialChars; */
 
 /* les variables importees de l'editeur */
 
@@ -154,14 +154,14 @@ void WIN_DisplayWords ()
 
 	SetWindowText (wordButton, ChkrCorrection[0]);
 	SendMessage (hwnListWords, LB_RESETCONTENT, 0, 0);
-    if ((ustrcmp (ChkrCorrection[1], "$")) == 0)	{
+    if ((ustrcmp (ChkrCorrection[1], TEXT("$"))) == 0)	{
        currentWord [0] = EOS;
-       SetWindowText (hwndCurrentWord, "");
+       SetWindowText (hwndCurrentWord, _EMPTYSTR_);
 	   SendMessage (hwnListWords, LB_ADDSTRING, 0, (LPARAM) ((LPCTSTR)""));  
     } else {
-         usprintf (currentWord, "%s", ChkrCorrection[1]);
+         usprintf (currentWord, TEXT("%s"), ChkrCorrection[1]);
          SetWindowText (hwndCurrentWord, ChkrCorrection[1]);
-	     for (i = 1; (i <= NC && ustrcmp (ChkrCorrection[i], "$") != 0); i++) {
+	     for (i = 1; (i <= NC && ustrcmp (ChkrCorrection[i], TEXT("$")) != 0); i++) {
 	         SendMessage (hwnListWords, LB_INSERTSTRING, i - 1, (LPARAM) ((LPCTSTR)ChkrCorrection[i]));  
 	   }
 	}
@@ -191,7 +191,7 @@ view                view;
    ThotBool            ok;
 #  endif /* !_WINDOWS */
 
-   SpecialChars = "@#$&+~";
+   /* SpecialChars = "@#$&+~"; */
 
    /* Document concerne */
    document = LoadedDocument[doc - 1];
@@ -215,16 +215,16 @@ view                view;
    ustrcpy(&BufMenu[indx], TtaGetMessage(CORR, Replace_With));
    /* ne pas afficher cette feuille maintenant */
    TtaNewSheet (SpellingBase + ChkrFormCorrect, TtaGetViewFrame (doc, view), 
-		TtaGetMessage (CORR, Correct), 4, BufMenu, FALSE, 4, 'L', D_DONE);
+		TtaGetMessage (CORR, Correct), 4, BufMenu, FALSE, 4, TEXT('L'), D_DONE);
 
    /* initialise le champ langue de correction courante */
    TtaNewLabel (SpellingBase + ChkrLabelLanguage, SpellingBase + ChkrFormCorrect, " ");
 #  endif /* !_WINDOWS */
 
    /* Afficher une liste de mots EMPTY */
-   ustrcpy (ChkrCorrection[0], " ");
+   ustrcpy (ChkrCorrection[0], TEXT(" "));
    for (i = 1; i <= NC; i++)
-      ustrcpy (ChkrCorrection[i], "$");
+      ustrcpy (ChkrCorrection[i], TEXT("$"));
 
 #  ifndef _WINDOWS 
    DisplayWords ();
@@ -284,12 +284,12 @@ view                view;
 
    /* liste des caracteres speciaux dans le formulaire OPTIONS */
    TtaNewTextForm (SpellingBase + ChkrSpecial, SpellingBase + ChkrFormCorrect, NULL, 20, 1, TRUE);
-   TtaSetTextForm (SpellingBase + ChkrSpecial, SpecialChars);
+   TtaSetTextForm (SpellingBase + ChkrSpecial, _SpecialCharsCST_);
 #  endif /* _WINDOWS */
 
 /* ne pas ignorer les mots en capitale, chiffres romains */
    /* ou contenant des chiffres arabes,  certains car. speciaux */
-   ustrncpy (RejectedChar, SpecialChars, MAX_REJECTED_CHARS);	/* liste par defaut */
+   ustrncpy (RejectedChar, _SpecialCharsCST_, MAX_REJECTED_CHARS);	/* liste par defaut */
 
    IgnoreUppercase = FALSE;
    IgnoreArabic = FALSE;
@@ -350,13 +350,13 @@ Language            language;
    WIN_DisplayWords ();
 #  endif /* _WINDOWS */
    /* recopier la premiere proposition dans CorrectWord */
-   if (ustrcmp (ChkrCorrection[1], "$") != 0)
+   if (ustrcmp (ChkrCorrection[1], TEXT("$")) != 0)
       ustrcpy (CorrectWord, ChkrCorrection[1]);
    else
       CorrectWord[0] = EOS;
 
    /* afficher la langue de correction courante */
-   usprintf (Lab, "%s: %s", TtaGetMessage (LIB, TMSG_LANGUAGE), TtaGetLanguageName (ChkrLanguage));
+   usprintf (Lab, TEXT("%s: %s"), TtaGetMessage (LIB, TMSG_LANGUAGE), TtaGetLanguageName (ChkrLanguage));
 #  ifdef _WINDOWS
    SetWindowText (hwndLanguage, Lab);
 #  else  /* !_WINDOWS */
@@ -394,7 +394,7 @@ static ThotBool     StartSpellChecker ()
      {
 	/* Correction TERMINEE */
 #   ifdef _WINDOWS
-    MessageBox (NULL, TtaGetMessage (LIB, TMSG_NOT_FOUND), "Spell checking", MB_OK | MB_ICONINFORMATION);
+    MessageBox (NULL, TtaGetMessage (LIB, TMSG_NOT_FOUND), _SpellCheckingMSG_, MB_OK | MB_ICONINFORMATION);
 #   else  /* _WINDOWS */
 	TtaDisplaySimpleMessage (INFO, CORR, END_CHECK);
 	/* message 'Pas trouve' dans le formulaire */
@@ -632,7 +632,7 @@ void                SpellCheckLoadResources ()
      {
 	TteConnectAction (T_rscorrector, (Proc) CallbackCorrector);
 	TteConnectAction (T_corrector, (Proc) TtcSpellCheck);
-	CORR = TtaGetMessageTable ("corrdialogue", MSG_MAX_CHECK);
+	CORR = TtaGetMessageTable (_CorrdialogueCST_, MSG_MAX_CHECK);
 	SpellingBase = TtaSetCallback (CallbackCorrector, ChkrMaxDialogue);
 	/* Initialisation des variables globales */
 	ParametrizeChecker ();

@@ -1,6 +1,3 @@
-
-
-#include "ustring.h"
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "tree.h"
@@ -13,6 +10,12 @@
 #define THOT_EXPORT extern
 #include "constres.h"
 #include "resmatch_f.h"
+
+#ifdef __STDC__
+extern STRING TtaAllocString (unsigned int);
+#else  /* __STDC__ */
+extern STRING TtaAllocString ();
+#endif /* ___STDC__ */
 
 #ifdef __STDC__
 static ThotBool RestTransformChildren (Restruct restr, Element oldElem, Element newElem, TypeTree typeTree, TypeTree ancestTree, Document srcDoc, Document dstDoc);
@@ -122,9 +125,9 @@ static ThotBool RestTransferContent (Element oldElem, Element newElem, Document 
 {
   ElementType newType, oldType;
   Language lang;
-  char *buffer;
-  char shape;
-  int len, rank, x, y;
+  STRING   buffer;
+  CHAR_T   shape;
+  int      len, rank, x, y;
   ThotBool result = FALSE;
 #ifdef DEBUG
   char msgbuf[100];
@@ -141,7 +144,7 @@ static ThotBool RestTransferContent (Element oldElem, Element newElem, Document 
       case RestTypeTexte:
       case RestTypeImage:
         len = TtaGetTextLength (oldElem);
-        buffer = TtaGetMemory (len++);
+        buffer = TtaAllocString (len++);
         TtaGiveTextContent (oldElem, buffer, &len, &lang); 
 #ifdef DEBUG
 	strncpy (msgbuf, buffer, 20);

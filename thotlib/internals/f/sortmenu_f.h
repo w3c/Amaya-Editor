@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void ExtractSuffix ( char *aName, char *aSuffix );
+extern void ExtractSuffix ( STRING aName, STRING aSuffix );
 extern void Act_LancerDoc ( Document doc, View view );
 extern void NewView ( NotifyDialog *event );
 extern void Act_abandon ( void );

@@ -594,7 +594,7 @@ int                 shadow;
      {
        /* replace each character by a star */
        j = 0;
-       ptcar = TtaGetMemory ((size_t) (lg + 1));
+       ptcar = TtaAllocString ((size_t) (lg + 1));
        while (j < lg)
 	 ptcar[j++] = '*';
        ptcar[lg] = EOS;
@@ -620,7 +620,7 @@ int                 shadow;
             WinErrorBox (NULL);
 
       if (hyphen) /* draw the hyphen */
-         if (!TextOut (TtPrinterDC, x + width, y, "\255", 1))
+         if (!TextOut (TtPrinterDC, x + width, y, TEXT("\255"), 1))
             WinErrorBox (NULL);
       if (lgboite != 0)
           SameBox = 0;

@@ -3319,7 +3319,7 @@ int                *NItems;
 	     if (len + menuInd + 1 < MAX_TXT_LEN)
 	       {
 		  /* indique une nouvelle entree */
-		  menuBuffer[menuInd] = 'B';
+		  menuBuffer[menuInd] = TEXT('B');
 		  ustrcpy (&(menuBuffer[menuInd + 1]), typeName);
 		  menuInd += len;
 		  (*NItems)++;
@@ -3383,7 +3383,7 @@ View                view;
 		  ustrncpy (title, TtaGetMessage (LIB, TMSG_SURROUND), MAX_NAME_LENGTH);
 		  /* cree le pop-up menu Surround */
 		  TtaNewPopup (NumMenuSurround, 0, title, NItems,
-			       menuBuffer, NULL, 'L');
+			       menuBuffer, NULL, TEXT('L'));
 		  /* affiche le pop-up menu */
 		  TtaShowDialogue (NumMenuSurround, FALSE);
 		  /* attend la reponse de l'utilisateur */
@@ -3469,7 +3469,7 @@ PtrElement   pEl;
        len = ustrlen (typeName) + 2;
        if (len + menuInd + 1 < MAX_TXT_LEN)
 	 {
-	   menuBuffer[menuInd] = 'B';
+	   menuBuffer[menuInd] = TEXT('B');
 	   ustrcpy (&(menuBuffer[menuInd + 1]), typeName);
 	   menuInd += len;
 	   (*NItems)++;
@@ -3525,7 +3525,7 @@ View                view;
 			    MAX_NAME_LENGTH);
 		   /* cree le pop-up menu Change Type */
 		   TtaNewPopup (NumMenuChangeType, 0, title, NItems,
-				menuBuffer, NULL, 'L');
+				menuBuffer, NULL, TEXT('L'));
 		   /* affiche le pop-up menu */
 		   TtaShowDialogue (NumMenuChangeType, FALSE);
 		   /* attend la reponse de l'utilisateur */

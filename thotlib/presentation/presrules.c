@@ -322,7 +322,7 @@ ThotBool           *ok;
    CHAR_T                val;
    PtrAbstractBox      pAbba1;
 
-   val = ' ';
+   val = SPACE;
    *ok = TRUE;
    if (pPRule != NULL && pEl != NULL)
      {
@@ -1433,11 +1433,11 @@ PtrDocument         pDoc;
 	pAb->AbLeafType = LtText;
 	GetConstantBuffer (pAb);
 	pBu1 = pAb->AbText;
-	CopyStringToText ("<", pBu1, &lg);
+	CopyStringToText (LT_OP, pBu1, &lg);
 	CopyStringToText (pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName,
 			  pBu1, &i);
 	lg += i;
-	CopyStringToText (">", pBu1, &i);
+	CopyStringToText (GT_OP, pBu1, &i);
 	lg += i;
 	pAb->AbVolume = lg;
 	pAb->AbCanBeModified = FALSE;
@@ -3424,7 +3424,7 @@ PtrAttribute        pAttr;
 			  /* relative file name */
 			  {
 			    ustrncpy (directoryName, SchemaPath, MAX_PATH - 1);
-			    MakeCompleteName (pConst->PdString, "", directoryName, fname, &i);
+			    MakeCompleteName (pConst->PdString, _EMPTYSTR_, directoryName, fname, &i);
 			  }
 			NewPictInfo (pAbb1, fname, UNKNOWN_FORMAT);
 			appl = TRUE;
@@ -3437,14 +3437,14 @@ PtrAttribute        pAttr;
 		      pAbb1->AbElement->ElLeafType == LtPicture)
 		    {
 		      if (pAbb1->AbElement->ElPictInfo == NULL)
-			NewPictInfo (pAbb1, "", UNKNOWN_FORMAT);
+			NewPictInfo (pAbb1, _EMPTYSTR_, UNKNOWN_FORMAT);
 		      ((PictInfo *) (pAbb1->AbElement->ElPictInfo))->PicPresent = (PictureScaling)pPRule->PrPresBox[0];
 		      appl = TRUE;
 		    }
 		  else if (pAbb1->AbPresentationBox)
 		    {
 		      if (pAbb1->AbPictInfo == NULL)
-			NewPictInfo (pAbb1, "", UNKNOWN_FORMAT);
+			NewPictInfo (pAbb1, _EMPTYSTR_, UNKNOWN_FORMAT);
 		      ((PictInfo *) (pAbb1->AbPictInfo))->PicPresent = (PictureScaling)pPRule->PrPresBox[0];
 		      appl = TRUE;
 		    }

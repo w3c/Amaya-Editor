@@ -9,7 +9,7 @@
  * Initialization functions and button functions of Amaya application.
  *
  * Authors: V. Quint, I. Vatton
- *          R. Guetari (W3C/INRIA) - Windows routines.
+ *          R. Guetari (W3C/INRIA) - Unicode and Windows version.
  */
 
 
@@ -215,7 +215,7 @@ Document                document;
 	  while (sibling != NULL);
 	  el = TtaGetParent (el);
 	}
-      sprintf (number, "%d", position*100/volume);
+      usprintf (number, TEXT("%d"), position*100/volume);
       TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_UPDATED_LINK), number);
       TtaHandlePendingEvents ();
       link = TtaSearchTypedElement (elType, SearchForward, link);
@@ -246,7 +246,7 @@ Document                document;
 	    /* this element has an HREF or cite attribute */
 	    {
 	      length = TtaGetTextAttributeLength (HrefAttr);
-	      text = TtaGetMemory (length + 1);
+	      text = TtaAllocString (length + 1);
 	      TtaGiveTextAttributeValue (HrefAttr, text, &length);
 
 	      /* does an external link become an internal link ? */
@@ -301,7 +301,7 @@ Document                document;
 				{
 				  /* continue the search */
 				  i++;
-				  sprintf (&value[length], "%d", i);
+				  usprintf (&value[length], TEXT("%d"), i);
 				  target = SearchNAMEattribute (document,
 							&value[1], NULL);
 				}
@@ -387,24 +387,24 @@ Document            document;
        docPrint = document;
 
        /* define the new default PS file */
-       ptr = TtaGetEnvString ("APP_TMPDIR");
+       ptr = TtaGetEnvString (TEXT("APP_TMPDIR"));
        if (ptr != NULL && TtaCheckDirectory (ptr))
 	     ustrcpy(PSdir,ptr);
        else
-	     ustrcpy (PSdir, TtaGetDefEnvString ("APP_TMPDIR"));
+	     ustrcpy (PSdir, TtaGetDefEnvString (TEXT("APP_TMPDIR")));
 	   lg = ustrlen(PSdir);
 	   if (PSdir[lg - 1] == DIR_SEP)
 	     PSdir[--lg] = EOS;
 
        ustrcpy (docName, TtaGetDocumentName (document));
        ExtractSuffix (docName, suffix);
-       sprintf (&PSdir[lg], "%c%s.ps", DIR_SEP, docName);
+       usprintf (&PSdir[lg], TEXT("%c%s.ps"), DIR_SEP, docName);
        TtaSetPsFile (PSdir);
        /* define the new default PrintSchema */
        numberLinks = FALSE;
        withToC = FALSE;
        printURL = TRUE;
-       TtaSetPrintSchema ("");
+       TtaSetPrintSchema (_EMPTYSTR_);
        /* no manual feed */
        ManualFeed = PP_OFF;
        TtaSetPrintParameter (PP_ManualFeed, ManualFeed);
@@ -434,9 +434,9 @@ Document            doc;
 	      DocumentTypes[doc] == docCSSRO);
 
    CheckPrintingDocument (doc);
-   ustrcpy (viewsToPrint, "Formatted_view ");
+   ustrcpy (viewsToPrint, TEXT("Formatted_view "));
    if (!textFile && withToC)
-     ustrcat (viewsToPrint, "Table_of_contents ");
+     ustrcat (viewsToPrint, TEXT("Table_of_contents "));
    if (!textFile && numberLinks)
      /* display numbered links */
      {
@@ -445,26 +445,26 @@ Document            doc;
 	  properly */
        SetInternalLinks (docPrint);
        if (PageSize == PP_A4)
-	 TtaSetPrintSchema ("HTMLPLP");
+	 TtaSetPrintSchema (TEXT("HTMLPLP"));
        else
-	 TtaSetPrintSchema ("HTMLPLPUS");
-       ustrcat (viewsToPrint, "Links_view ");
+	 TtaSetPrintSchema (TEXT("HTMLPLPUS"));
+       ustrcat (viewsToPrint, TEXT("Links_view "));
      }
    else
      {
        if (PageSize == PP_A4)
 	 {
 	   if (textFile)
-	     TtaSetPrintSchema ("TextFilePP");
+	     TtaSetPrintSchema (TEXT("TextFilePP"));
 	   else
-	     TtaSetPrintSchema ("HTMLPP");
+	     TtaSetPrintSchema (TEXT("HTMLPP"));
 	 }
        else
 	 {
 	   if (textFile)
-	     TtaSetPrintSchema ("TextFilePPUS");
+	     TtaSetPrintSchema (TEXT("TextFilePPUS"));
 	   else
-	     TtaSetPrintSchema ("HTMLPPUS");
+	     TtaSetPrintSchema (TEXT("HTMLPPUS"));
 	 }    
      }
    /* post or remove the PrintURL attribute */
@@ -536,8 +536,8 @@ STRING              data;
 	  TtaSetPrintCommand (pPrinter);
 	  TtaSetPsFile (PSdir);
 	  /* update the environment variable */
-	  TtaSetEnvString ("THOTPRINT", pPrinter, TRUE);
-	  TtaSetEnvInt ("PAPERSIZE", PageSize, TRUE);
+	  TtaSetEnvString (_THOTPRINT_EVAR_, pPrinter, TRUE);
+	  TtaSetEnvInt (_PAPERSIZE_EVAR_, PageSize, TRUE);
 	  PrintDocument (docPrint, 1);
 	  break;
 	case 0:
@@ -633,12 +633,12 @@ void                InitPrint ()
 
    /* init printer variables */
    /* read default printer variable */
-   ptr = TtaGetEnvString ("THOTPRINT");
+   ptr = TtaGetEnvString (_THOTPRINT_EVAR_);
    if (ptr == NULL)
-     ustrcpy (pPrinter, "");
+     ustrcpy (pPrinter, _EMPTYSTR_);
    else
      ustrcpy (pPrinter, ptr);
-   TtaGetEnvInt ("PAPERSIZE", &PageSize);
+   TtaGetEnvInt (_PAPERSIZE_EVAR_, &PageSize);
    PaperPrint = PP_PRINTER;
    printURL = TRUE;
    TtaSetPrintParameter (PP_Destination, PaperPrint);
@@ -1043,9 +1043,9 @@ Document            document;
       if (link != NULL && RelAttr != NULL)
 	{
 	  length = TtaGetTextAttributeLength (RelAttr);
-	  text = TtaGetMemory (length + 1);
+	  text = TtaAllocString (length + 1);
 	  TtaGiveTextAttributeValue (RelAttr, text, &length);
-	  if (ustrcasecmp (text, "chapter") && ustrcasecmp (text, "subdocument"))
+	  if (ustrcasecmp (text, TEXT("chapter")) && ustrcasecmp (text, TEXT("subdocument")))
 	    RelAttr = NULL;
 	  TtaFreeMemory (text);
 	}
@@ -1067,7 +1067,7 @@ Document            document;
 	 /* this link has an attribute HREF */
 	 {
 	   length = TtaGetTextAttributeLength (HrefAttr);
-	   text = TtaGetMemory (length + 1);
+	   text = TtaAllocString (length + 1);
 	   TtaGiveTextAttributeValue (HrefAttr, text, &length);
 	   ptr = ustrrchr (text, '#');
 	   url = text;
@@ -1089,7 +1089,7 @@ Document            document;
 	     /* this link designates an external document */
 	     {
 	       /* create a new document and loads the target document */
-	       IncludedDocument = TtaNewDocument ("HTML", "tmp");
+	       IncludedDocument = TtaNewDocument (TEXT("HTML"), TEXT("tmp"));
 	       if (IncludedDocument != 0)
 		  {
 	          TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_FETCHING), url);

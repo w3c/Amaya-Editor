@@ -123,8 +123,8 @@ STRING              data;
    CHAR_T                BufDir[MAX_PATH];
    CHAR_T                URL_DIR_SEP;
 
-   if (typeData == STRING_DATA && data && ustrchr (data, '/'))
-     URL_DIR_SEP = '/';
+   if (typeData == STRING_DATA && data && ustrchr (data, TEXT('/')))
+     URL_DIR_SEP = TEXT('/');
    else 
      URL_DIR_SEP = DIR_SEP;
 
@@ -143,7 +143,7 @@ STRING              data;
 		    ustrcpy (docName, DirectoryDocToCreate);
 		    ustrcat (docName, DIR_STR);
 		    ustrcat (docName, NameDocToCreate);
-		    ustrcat (docName, ".PIV");
+		    ustrcat (docName, PIV_EXT);
 
 		    if (!TtaCheckDirectory (DirectoryDocToCreate))
 		       TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_MISSING_DIR), DirectoryDocToCreate);
@@ -191,7 +191,7 @@ STRING              data;
 		 {
 		    /* Est-ce un nouveau directory qui contient des documents */
 		    if (!TtaIsInDocumentPath (DirectoryDocToCreate))
-		       if (TtaIsSuffixFileIn (DirectoryDocToCreate, ".PIV"))
+		       if (TtaIsSuffixFileIn (DirectoryDocToCreate, PIV_EXT))
 			 {
 			    /* il faut ajouter le directory au path */
 			    i = ustrlen (DocumentPath);

@@ -9,8 +9,8 @@
  * inites.c : module handling colors and patterns in the context of
  *            drawing on a computer screen (initpses is for Postcript).
  *
- * Author: I. Vatton (INRIA)
- *         R. Guetari (W3C/INRIA) Windows NT/95 routines
+ * Authors: I. Vatton (INRIA)
+ *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  */
 
 #include "ustring.h"
@@ -269,10 +269,10 @@ STRING              name;
 
    reducecolor = FALSE;
    colormap_full = FALSE;
-   value = TtaGetEnvString ("ReduceColor");
+   value = TtaGetEnvString (_ReduceColor_EVAR_);
    if (value == NULL)
       reducecolor = FALSE;
-   else if (!ustrcasecmp (value, "yes"))
+   else if (!ustrcasecmp (value, TEXT("yes")))
       reducecolor = TRUE;
    else
       reducecolor = FALSE;

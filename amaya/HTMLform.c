@@ -95,7 +95,7 @@ UCHAR_T               c;
 #endif
 {
    c &= 0xFF;			/* strange behavior under solaris? */
-   sprintf (string, "%02x", (unsigned int) c);
+   usprintf (string, TEXT("%02x"), (unsigned int) c);
 }
 
 /*----------------------------------------------------------------------
@@ -149,12 +149,12 @@ USTRING             element;
    CHAR_T                tmp2[2];
 
 
-   sprintf (tmp, "%s", "%");
-   sprintf (tmp2, "%s", "a");
+   usprintf (tmp, TEXT("%s"), "%");
+   usprintf (tmp2, TEXT("%s"), "a");
 
    if (buffer == (STRING) NULL)
      {
-	buffer = (STRING) TtaGetMemory (PARAM_INCREMENT);
+	buffer = TtaAllocString (PARAM_INCREMENT);
 	lgbuffer = PARAM_INCREMENT;
 	buffer[0] = EOS;
      }
@@ -234,7 +234,7 @@ STRING              string;
   while (*start && *start == ' ')
     start++;
 
-  end = &string[strlen (string) - 1];
+  end = &string[ustrlen (string) - 1];
 
   while (end > start && *end == ' ')
     end--;
@@ -259,10 +259,10 @@ STRING              name, value,
 #endif
 {
    AddElement (name);
-   AddToBuffer ("=");
+   AddToBuffer (EQ_OP);
    if (value)
       AddElement (value);
-   AddToBuffer ("&");
+   AddToBuffer (AND_OP);
 }
 
 /*----------------------------------------------------------------------
@@ -286,7 +286,7 @@ Document	    doc;
   Language            lang;
 
   /* check if element is selected */
-  attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+  attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
   attrType.AttrTypeNum = HTML_ATTR_Selected;
   attr = TtaGetAttribute (option, attrType);
   if (attr && TtaGetAttributeValue (attr) == HTML_ATTR_Selected_VAL_Yes_)
@@ -380,7 +380,7 @@ Document	   doc;
    Attribute           attr, def;
    AttributeType       attrType;
 
-   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+   attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
    attrType.AttrTypeNum = HTML_ATTR_DefaultSelected;
    def = TtaGetAttribute (option, attrType);
    attrType.AttrTypeNum = HTML_ATTR_Selected;
@@ -431,7 +431,7 @@ Document	   doc;
    ThotBool            multipleSelects, defaultSelected;
 
   /* reset according to the default attribute */
-  attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+  attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
   attrType.AttrTypeNum = HTML_ATTR_Multiple;
   attr = TtaGetAttribute (menu, attrType);
   if (attr && TtaGetAttributeValue (attr) == HTML_ATTR_Multiple_VAL_Yes_)
@@ -574,7 +574,7 @@ int                 mode;
 					  }
 					else
 					  /* give a default checkbox value (On) */
-					  AddNameValue (name, "on");
+					  AddNameValue (name, TEXT("on"));
 				     }
 				}
 			      else if (mode == HTML_EL_Reset_Input)
@@ -654,7 +654,7 @@ int                 mode;
 				  length = MAX_LENGTH - 1;
 				  TtaGiveTextAttributeValue (attr, name, &length);
 				  AddElement (name);
-				  AddToBuffer ("=");
+				  AddToBuffer (TEXT("="));
 				  while (elForm)
 				     {
 				       length = TtaGetTextLength (elForm) + 1;
@@ -664,7 +664,7 @@ int                 mode;
 				       TtaFreeMemory (text);
 				       elForm = TtaSearchTypedElementInTree (elType, SearchForward, el, elForm);
 				     }
-				  AddToBuffer ("&");
+				  AddToBuffer (TEXT("&"));
 				}
 			      else if (mode == HTML_EL_Reset_Input)
 				{
@@ -747,7 +747,7 @@ STRING              action;
    else
      {
        buffer_size = 0;
-       buffer = "";
+       buffer = _EMPTYSTR_;
      }
    if (buffer_size != 0  && (buffer[buffer_size - 1] == '&'))
      {
@@ -771,7 +771,7 @@ STRING              action;
 			}	/* switch */
 	       break;		/* case INDEX */
 	    case HTML_ATTR_METHOD_VAL_Get_:
-	       urlName = TtaGetMemory (ustrlen (action) + buffer_size + 2);
+	       urlName = TtaAllocString (ustrlen (action) + buffer_size + 2);
 	       if (urlName != (STRING) NULL)
 		 {
 		    ustrcpy (urlName, action);
@@ -874,9 +874,9 @@ Element             element;
 		    if (attr != NULL)
 		      {
 			length = TtaGetTextAttributeLength (attr);
-			name = TtaGetMemory (length + 3);
+			name = TtaAllocString (length + 3);
 			TtaGiveTextAttributeValue (attr, name, &length);
-			ustrcat (name, ". ");
+			ustrcat (name, TEXT(". "));
 			length ++;
 			/* get the x and y coordinates */
 			info = GetActiveImageInfo (doc, element);
@@ -915,14 +915,14 @@ Element             element;
 	      {
 		value = NULL;
 		length = TtaGetTextAttributeLength (attr);
-		name = TtaGetMemory (length + 1);
+		name = TtaAllocString (length + 1);
 		TtaGiveTextAttributeValue (attr, name, &length);
 		attrType.AttrTypeNum = HTML_ATTR_Value_;
 		attr = TtaGetAttribute (element, attrType);
 		if (attr != NULL)
 		  {
 		  length = TtaGetTextAttributeLength (attr);
-		  value = TtaGetMemory (length + 1);
+		  value = TtaAllocString (length + 1);
 		  TtaGiveTextAttributeValue (attr, value, &length);
 		  AddNameValue (name, value);
 		  }
@@ -968,7 +968,7 @@ Element             element;
 	    length = TtaGetTextAttributeLength (attr);
 	    if (length)
 	      {
-		action = TtaGetMemory (length + 1);
+		action = TtaAllocString (length + 1);
 		TtaGiveTextAttributeValue (attr, action, &length);
 	      }
 	  }
@@ -1275,7 +1275,7 @@ Element             el;
    opDoc = doc;
 #  endif /* _WINDOWS */
 
-   htmlSch = TtaGetSSchema ("HTML", doc);
+   htmlSch = TtaGetSSchema (TEXT("HTML"), doc);
    /* search the enclosing option element */
    do
      {
@@ -1361,11 +1361,11 @@ Element             el;
 			  /* add an item */
 			  {
                           if (elType.ElTypeNum == HTML_EL_OptGroup)
-                             sprintf (&buffmenu[lgmenu], "M%s", text);
+                             usprintf (&buffmenu[lgmenu], TEXT("M%s"), text);
 			  else if (multipleOptions)
-			     sprintf (&buffmenu[lgmenu], "T%s", text);
+			     usprintf (&buffmenu[lgmenu], TEXT("T%s"), text);
 			  else
-			     sprintf (&buffmenu[lgmenu], "B%s", text);
+			     usprintf (&buffmenu[lgmenu], TEXT("B%s"), text);
 			  nbitems++;
 			  }
 		       lgmenu += length;
@@ -1431,9 +1431,9 @@ Element             el;
                                        length++;
                                        if (lgmenu + length < MAX_LENGTH) { /* append that item to the buffer */
                                           if (multipleOptions)
-                                             sprintf (&buffmenu[lgmenu], "T%s", text);
+                                             usprintf (&buffmenu[lgmenu], TEXT("T%s"), text);
                                           else
-                                             sprintf (&buffmenu[lgmenu], "B%s", text);
+                                             usprintf (&buffmenu[lgmenu], TEXT("B%s"), text);
                                           nbsubitems++;
 									   } 
                                        lgmenu += length;

@@ -45,7 +45,7 @@ STRING              text;
    if (compilersDC) {
       hFont = CreateFont (16, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE, ANSI_CHARSET, 
                           OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, PROOF_QUALITY, 
-                          DEFAULT_PITCH | FF_DONTCARE, "Small Font");
+                          DEFAULT_PITCH | FF_DONTCARE, TEXT("Small Font"));
 
       hOldFont = SelectObject (compilersDC, hFont);
 
@@ -56,7 +56,7 @@ STRING              text;
       _CY_ += cyChar;
 
       if (!TextOut (compilersDC, 5, _CY_, text, ustrlen (text)))
-         MessageBox (NULL, "Error Writing text", "Thot Compilers", MB_OK);
+         MessageBox (NULL, TEXT("Error Writing text"), TEXT("Thot Compilers"), MB_OK);
 
       SelectObject (compilersDC, hOldFont);
 	  DeleteObject (hFont);
@@ -91,7 +91,7 @@ int                 msgType;
                           DEFAULT_PITCH | FF_DONTCARE, "Times New Roman"); */
       hFont = CreateFont (16, 0, 0, 0, FW_SEMIBOLD, FALSE, FALSE, FALSE, ANSI_CHARSET, 
                           OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, PROOF_QUALITY, 
-                          DEFAULT_PITCH | FF_DONTCARE, "Arial");
+                          DEFAULT_PITCH | FF_DONTCARE, TEXT("Arial"));
 
       hOldFont = SelectObject (compilersDC, hFont);
 
@@ -106,7 +106,7 @@ int                 msgType;
            _CY_ += cyChar;
 
       if (!TextOut (compilersDC, 5, _CY_, text, ustrlen (text)))
-         MessageBox (NULL, "Error Writing text", "Thot Compilers", MB_OK);
+         MessageBox (NULL, TEXT("Error Writing text"), TEXT("Thot Compilers"), MB_OK);
 
       SelectObject (compilersDC, hOldFont);
 	  DeleteObject (hFont);
@@ -163,8 +163,8 @@ int                 lineNum;
    TtaDisplayMessage (INFO, TtaGetMessage (COMPIL, ERR_LINE), lineNum);
    if (index != 0)
      {
-	for (i = 0; i < index - 1; buffer[i++] = ' ') ;
-	buffer[index - 1] = '*';
+	for (i = 0; i < index - 1; buffer[i++] = SPACE) ;
+	buffer[index - 1] = TEXT('*');
 	buffer[index] = EOS;
 	TtaDisplayMessage (INFO, TtaGetMessage (COMPIL, COMPIL_STRING), inputline, buffer);
      }
@@ -206,8 +206,8 @@ STRING              string;
    TtaDisplayMessage (INFO, TtaGetMessage (COMPIL, ERR_LINE), lineNum);
    if (index != 0)
      {
-	for (i = 0; i < index - 1; buffer[i++] = ' ') ;
-	buffer[index - 1] = '*';
+	for (i = 0; i < index - 1; buffer[i++] = SPACE) ;
+	buffer[index - 1] = TEXT('*');
 	buffer[index] = EOS;
 	TtaDisplayMessage (INFO, TtaGetMessage (COMPIL, COMPIL_STRING), inputline, buffer);
      }

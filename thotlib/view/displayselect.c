@@ -146,17 +146,17 @@ int                 pointselect;
 	    /* On marque en noir les points caracteristiques de la boite */
 	    switch (pAb->AbRealShape)
 	      {
-	      case ' ':
-	      case 'R':
-	      case '0':
-	      case '1':
-	      case '2':
-	      case '3':
-	      case '4':
-	      case '5':
-	      case '6':
-	      case '7':
-	      case '8':
+	      case SPACE:
+	      case TEXT('R'):
+	      case TEXT('0'):
+	      case TEXT('1'):
+	      case TEXT('2'):
+	      case TEXT('3'):
+	      case TEXT('4'):
+	      case TEXT('5'):
+	      case TEXT('6'):
+	      case TEXT('7'):
+	      case TEXT('8'):
 		/* 8 points caracteristiques */
 		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, leftX - 2, topY - 2);
 		VideoInvert (frame, HANDLE_WIDTH, HANDLE_WIDTH, minX - 2, topY - 2);

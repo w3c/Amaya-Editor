@@ -63,9 +63,9 @@ Name                typeName;
 
    /* creates and activates the menu */
    i = 0;
-   usprintf (&bufMenu[i], "B%s", TtaGetMessage (LIB, TMSG_CREATE_EL_REF));
+   usprintf (&bufMenu[i], TEXT("B%s"), TtaGetMessage (LIB, TMSG_CREATE_EL_REF));
    i += ustrlen (&bufMenu[i]) + 1;
-   usprintf (&bufMenu[i], "B%s", TtaGetMessage (LIB, TMSG_SHOW_EL_REF));
+   usprintf (&bufMenu[i], TEXT("B%s"), TtaGetMessage (LIB, TMSG_SHOW_EL_REF));
    TtaNewPopup (NumMenuCreateReferenceElem, 0,
 	      TtaGetMessage (LIB, TMSG_MODE_INSERT), 2, bufMenu, NULL, 'L');
    TtaShowDialogue (NumMenuCreateReferenceElem, FALSE);
@@ -142,7 +142,7 @@ ThotBool            natureChoice;
 	     TtaNewSelector (NumSelectNatureName, NumFormNature,
 			     TtaGetMessage (LIB, TMSG_OBJECT_TYPE), nbitem, bufMenuB, length, NULL, TRUE, FALSE);
 	     /* sets the selector on its first entry */
-	     TtaSetSelector (NumSelectNatureName, 0, "");
+	     TtaSetSelector (NumSelectNatureName, 0, _EMPTYSTR_);
 	  }
 	else
 	   /* we did not create a selector, we create a capture zone having
@@ -158,7 +158,7 @@ ThotBool            natureChoice;
 	src = &bufMenu[0];
 	for (k = 1; k <= nbEntries; k++)
 	  {
-	     ustrcpy (dest, "B");
+	     ustrcpy (dest, _B_);
 	     dest++;
 	     l = ustrlen (src);
 	     ustrcpy (dest, src);
@@ -191,7 +191,7 @@ STRING              bufMenu;
 {
    *prevMenuInd = *menuInd;
    /* indicates if it's a separator */
-   bufMenu[*menuInd] = 'S';
+   bufMenu[*menuInd] = TEXT('S');
    (*menuInd)++;
    bufMenu[*menuInd] = EOS;
    (*menuInd)++;
@@ -225,9 +225,9 @@ CHAR_T                button;
      {
 	l = ustrlen (src);
 	/* don't add 'B' to the beginning of separators */
-	if (*src != 'S' || l != 1)
+	if (*src != TEXT('S') || l != 1)
 	  {
-	     ustrcpy (dest, "B");
+	     ustrcpy (dest, TEXT("B"));
 	     dest++;
 	  }
 	ustrcpy (dest, src);

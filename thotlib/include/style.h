@@ -34,7 +34,7 @@ typedef struct struct_GenericContext
      int                   box;	     /* specific presentation box if any */
      int                   attr;     /* or attribute */
      int                   attrval;  /* and the corresponding value */
-     char                 *class;    /* class or box name */
+     STRING                class;    /* class or box name */
      int                   classattr;/* class attribute */
      int                   attrelem; /* elem porting the attribute */
      int                   ancestors[MAX_ANCESTORS];	/* ancestors type */

@@ -17,8 +17,8 @@
 /*
  * presentmenu.c : Functions to modify the specific presentation
  *
- * Author: I. Vatton (INRIA)
- *         R. Guetari (W3C/INRIA) - Windows routines.
+ * Authors: I. Vatton (INRIA)
+ *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  *
  */
 
@@ -767,15 +767,15 @@ View                view;
 
    /* choix multiple presentation standard */
    i = 0;
-   usprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_STD_CHAR));
+   usprintf (&string[i], TEXT("B%s"), TtaGetMessage (LIB, TMSG_STD_CHAR));
    i += ustrlen (&string[i]) + 1;
-   usprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_STD_GRAPHICS));
+   usprintf (&string[i], TEXT("B%s"), TtaGetMessage (LIB, TMSG_STD_GRAPHICS));
    i += ustrlen (&string[i]) + 1;
-   usprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_STD_COLORS));
+   usprintf (&string[i], TEXT("B%s"), TtaGetMessage (LIB, TMSG_STD_COLORS));
    i += ustrlen (&string[i]) + 1;
-   usprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_STD_FORMAT));
+   usprintf (&string[i], TEXT("B%s"), TtaGetMessage (LIB, TMSG_STD_FORMAT));
    i += ustrlen (&string[i]) + 1;
-   usprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_STD_GEOMETRY));
+   usprintf (&string[i], TEXT("B%s"), TtaGetMessage (LIB, TMSG_STD_GEOMETRY));
    TtaNewToggleMenu (NumMenuPresentStandard, NumFormPresentStandard,
 		TtaGetMessage (LIB, TMSG_STD_PRES), 5, string, NULL, TRUE);
    /* annule toutes les options du choix multiple Presentation standard */
@@ -886,19 +886,19 @@ STRING              txt;
       switch (val)
 	{
 	case 0:
-	  c = 'T';	/* Times */
+	  c = TEXT('T');	/* Times */
 	  break;
 	case 1:
-	  c = 'H';	/* Helvetica */
+	  c = TEXT('H');	/* Helvetica */
 	  break;
 	case 2:
-	  c = 'C';	/* Courier */
+	  c = TEXT('C');	/* Courier */
 	  break;
 	case 3:
 	  c = EOS;	/* standard */
 	  break;
 	default:
-	  c = 'T';
+	  c = TEXT('T');
 	  break;
 	}
       if (c == EOS)	/* standard */
@@ -1120,18 +1120,18 @@ STRING              txt;
       switch (val)
 	{
 	case 0:
-	  c = 'S';	/* trait continu */
+	  c = TEXT('S');	/* trait continu */
 	  break;
 	case 1:
-	  c = '-';	/* tirets longs */
+	  c = TEXT('-');	/* tirets longs */
 	  break;
 	case 2:
-	  c = '.';	/* tirets courts */
+	  c = TEXT('.');	/* tirets courts */
 	  break;
 	case 3:
 	  c = EOS;	/* standard */
 	default:
-	  c = 'S';	/* trait continu */
+	  c = TEXT('S');	/* trait continu */
 	  break;
 	}
       if (c == EOS)	/* standard */
@@ -1349,20 +1349,20 @@ View                view;
 	     FontFamily = pAb->AbFont;
 	     switch (FontFamily)
 	       {
-	       case 't':
-	       case 'T':
+	       case TEXT('t'):
+	       case TEXT('T'):
 		 i = 1;	/* Times */
 		 break;
-	       case 'h':
-	       case 'H':
+	       case TEXT('h'):
+	       case TEXT('H'):
 		 i = 2;	/* Helvetica */
 		 break;
-	       case 'c':
-	       case 'C':
+	       case TEXT('c'):
+	       case TEXT('C'):
 		 i = 3;	/* Courier */
 		 break;
 	       default:
-		 FontFamily = 'T';
+		 FontFamily = TEXT('T');
 		 i = 0;
 		 break;
 	       }
@@ -1471,31 +1471,31 @@ View                view;
 
 	     /* sous-menu style des traits */
 	     i = 0;
-	     usprintf (&string[i], "%s", "Bsssss");	/* Traits_continu */
+	     usprintf (&string[i], TEXT("%s"), TEXT("Bsssss"));	/* Traits_continu */
 	     i += ustrlen (&string[i]) + 1;
-	     usprintf (&string[i], "%s", "Bttttt");	/* Traits_tirete */
+	     usprintf (&string[i], TEXT("%s"), TEXT("Bttttt"));	/* Traits_tirete */
 	     i += ustrlen (&string[i]) + 1;
-	     usprintf (&string[i], "%s", "Buuuuu");	/* Traits_pointilles */
+	     usprintf (&string[i], TEXT("%s"), TEXT("Buuuuu"));	/* Traits_pointilles */
 	     i += ustrlen (&string[i]) + 1;
-	     usprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_UNCHANGED));
+	     usprintf (&string[i], TEXT("B%s"), TtaGetMessage (LIB, TMSG_UNCHANGED));
 	     TtaNewSubmenu (NumMenuStrokeStyle, NumFormPresGraphics, 0,
 	      TtaGetMessage (LIB, TMSG_LINE_STYLE), 4, string, NULL, TRUE);
 	     /* change la police des 3 premieres entrees du style des traits */
 	     for (i = 0; i < 3; i++)
-		TtaRedrawMenuEntry (NumMenuStrokeStyle, i, "icones", ThotColorNone, -1);
+		TtaRedrawMenuEntry (NumMenuStrokeStyle, i, TEXT("icones"), ThotColorNone, -1);
 	     /* initialise le sous-menu style des traits */
 	     ChngLineStyle = TRUE;
 	     StdLineStyle = FALSE;
 	     LineStyle = pAb->AbLineStyle;
 	     switch (LineStyle)
 	       {
-	       case 'S':
+	       case TEXT('S'):
 		 i = 1;	/* trait continu (Solid) */
 		 break;
-	       case '-':
+	       case TEXT('-'):
 		 i = 2;	/* tirete' */
 		 break;
-	       case '.':
+	       case TEXT('.'):
 		 i = 3;	/* pointille' */
 		 break;
 	       default:
@@ -1511,7 +1511,7 @@ View                view;
 	     StdLineWeight = FALSE;
 	     LineWeight = pAb->AbLineWeight;
 	     /* Toggle button Epaisseur des traits standard */
-	     usprintf (string, "B%s", TtaGetMessage (LIB, TMSG_UNCHANGED));
+	     usprintf (string, TEXT("B%s"), TtaGetMessage (LIB, TMSG_UNCHANGED));
 	     TtaNewToggleMenu (NumToggleWidthUnchanged, NumFormPresGraphics,
 			       NULL, 1, string, NULL, TRUE);
 	     /* initialise la zone de saisie epaisseur des traits */
@@ -1541,11 +1541,11 @@ View                view;
 				  TtaGetMessage (LIB, TMSG_FILL_PATTERN),
 				  nbItems, string, i, NULL, TRUE, TRUE);
 		  /* initialise le selecteur sur sa premiere entree */
-		  TtaSetSelector (NumSelectPattern, pAb->AbFillPattern, "");
+		  TtaSetSelector (NumSelectPattern, pAb->AbFillPattern, _EMPTYSTR_);
 	       }
 	     /* Toggle button Motif de remplissage standard */
 	     i = 0;
-	     usprintf (&string[i], "B%s", TtaGetMessage (LIB, TMSG_UNCHANGED));
+	     usprintf (&string[i], TEXT("B%s"), TtaGetMessage (LIB, TMSG_UNCHANGED));
 	     TtaNewToggleMenu (NumTogglePatternUnchanged, NumFormPresGraphics,
 			       NULL, 1, string, NULL, TRUE);
 	     DocModPresent = pDoc;

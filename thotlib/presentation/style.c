@@ -56,19 +56,19 @@ Name               *boxname;
       if (ctxt->ancestors[i] == 0)
 	break;
       if (ctxt->ancestors_nb[i] > 1)
-	usprintf (&buffer[len], "%d:%d/", ctxt->ancestors[i], ctxt->ancestors_nb[i]);
+	usprintf (&buffer[len], TEXT("%d:%d/"), ctxt->ancestors[i], ctxt->ancestors_nb[i]);
       else
-	usprintf (&buffer[len], "%d/", ctxt->ancestors[i]);
+	usprintf (&buffer[len], TEXT("%d/"), ctxt->ancestors[i]);
       len = ustrlen (buffer);
     }
   if (ctxt->type)
-    usprintf (&buffer[len], "%d,", ctxt->type);
+    usprintf (&buffer[len], TEXT("%d,"), ctxt->type);
   len = ustrlen (buffer);
   if (ctxt->attr)
-    sprintf (&buffer[len], "%d:%d,", ctxt->attr, ctxt->attrval);
+    usprintf (&buffer[len], TEXT("%d:%d,"), ctxt->attr, ctxt->attrval);
   len = ustrlen (buffer);
   if (ctxt->class)
-    sprintf (&buffer[len], "%d.%s,", ctxt->classattr, ctxt->class);
+    usprintf (&buffer[len], TEXT("%d.%s,"), ctxt->classattr, ctxt->class);
   len = ustrlen (buffer);
 
   ustrncpy ((STRING) boxname, buffer, sizeof (Name));
@@ -396,11 +396,11 @@ GenericContext      ctxt;
   Presentation Schema and returns the associated index.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          PresConstInsert (PSchema tcsh, char *value)
+static int          PresConstInsert (PSchema tcsh, STRING value)
 #else  /* __STDC__ */
 static int          PresConstInsert (doc, value)
 PSchema             tcsh;
-char               *value;
+STRING              value;
 #endif /* !__STDC__ */
 {
   PtrPSchema pSchemaPrs = (PtrPSchema) tcsh;

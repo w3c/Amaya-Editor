@@ -124,7 +124,7 @@ typedef struct _TranslCondition
 	  {
 	  struct	/* TcCondition = TcondAlphabet */
 	    {
-	    char        _TcAlphabet_; /* the alphabet on which the condition
+	    CHAR_T      _TcAlphabet_; /* the alphabet on which the condition
 						   applies */ 
 	    } s0;
 	  struct	/* TcCondition = TcondWithin, TcondFirstWithin */
@@ -164,7 +164,7 @@ typedef struct _TranslCondition
 	        } s2;
 	      struct	/* in the case TcondPRule only */
 	        {
-	        char	_TcPresValue_;    /* value of the presentation for which
+	        CHAR_T  _TcPresValue_;    /* value of the presentation for which
 							   the block's rules are applied, 0 if
 							   applied for any value */
 	        } s3;
@@ -381,7 +381,7 @@ typedef struct _TranslVariable
 } TranslVariable;
 
 /* a read buffer */
-typedef char    TranslBuffer[MAX_TRANSL_BUFFER_LEN];
+typedef CHAR_T  TranslBuffer[MAX_TRANSL_BUFFER_LEN];
 
 /* an application case of the translation rules for a numerical value
    attribute */
@@ -451,7 +451,7 @@ typedef struct _PRuleTransl
 	} s0;
       struct	/* other presentations */
 	{
-	  char		_RtPRuleValue_[MAX_TRANSL_PRES_VAL + 1]; 
+	  CHAR_T        _RtPRuleValue_[MAX_TRANSL_PRES_VAL + 1]; 
 					/* possible values of the presentation */
 	  PtrTRuleBlock	_RtPRuleValueBlock_[MAX_TRANSL_PRES_VAL + 1]; 
 					/* address of the first translation rules block
@@ -467,8 +467,8 @@ typedef struct _PRuleTransl
 #define RtPRuleValueBlock u.s1._RtPRuleValueBlock_
 
 /* strings for a characters translation rule */
-typedef char    SourceString[MAX_SRCE_LEN + 1];	/* source string */
-typedef char    TargetString[MAX_TARGET_LEN + 1];	/* target string */
+typedef CHAR_T  SourceString[MAX_SRCE_LEN + 1];	/* source string */
+typedef CHAR_T  TargetString[MAX_TARGET_LEN + 1];	/* target string */
 
 /* an entry of the translation table */
 typedef struct _StringTransl
@@ -480,8 +480,8 @@ typedef struct _StringTransl
 /* indices of the text translation rules for an alphabet */
 typedef struct _AlphabetTransl
 {
-	char	AlAlphabet;
-	int 	AlBegin; 	/* index of the first characters translation
+	CHAR_T  AlAlphabet;
+	int     AlBegin; 	/* index of the first characters translation
 				   rule in the table TsCharTransl */
 	int	AlEnd;	/* index of the last characters translation
 				   rule in the same table */
@@ -542,7 +542,7 @@ typedef struct _TranslSchema
 	int 		TsNCharTransls;	/* total number of characters translation rules */
 	StringTransl    TsCharTransl[MAX_TRANSL_CHAR];	/* the characters translation
 						   				   table */
-	char            TsConstant[MAX_TRANSL_CONST_LEN];	/* string of all the
+	CHAR_T          TsConstant[MAX_TRANSL_CONST_LEN];	/* string of all the
 					   translation constants, separated by NULL */
 } TranslSchema;
 #endif

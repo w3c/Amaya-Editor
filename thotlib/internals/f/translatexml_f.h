@@ -7,10 +7,10 @@
 #ifdef __STDC__
 
 extern int NameXmlToThot ( SSchema schema,
-                           char *xmlName,
+                           STRING xmlName,
                            int elTypeNum,
                            int attrTypeNum );
-extern char *NameThotToXml ( SSchema schema,
+extern STRING NameThotToXml ( SSchema schema,
                              int elTypeNum,
                              int attrTypeNum,
                              int attrVal );
@@ -21,7 +21,7 @@ extern int NameXmlToThot (/* SSchema schema,
                              char *xmlName,
                              int elTypeNum,
                              int attrTypeNum */);
-extern char *NameThotToXml (/* SSchema schema,
+extern STRING NameThotToXml (/* SSchema schema,
                                int elTypeNum,
                                int attrTypeNum,
                                int attrVal */);

@@ -26,6 +26,7 @@
 #include "reference.h"
 #include "tree.h"
 #include "view.h"
+#include "uconvert.h"
 #include "undo.h"
 /* Included headerfiles */
 #include "EDITOR.h"
@@ -33,13 +34,27 @@
 #include "TextFile.h"
 #include "amayamsg.h"
 
+#ifdef __STDC__
+extern STRING TtaAllocString (unsigned int);
+#else  /* !__STDC__ */
+extern STRING TtaAllocString ();
+#endif /* __STDC__ */
+
 #define MAX_LENGTH     512
 #define NAME_LENGTH     32
-#define HTAppName "amaya"
-#define HTAppVersion "V2.1"
 
-#define URL_SEP '/'
-#define URL_STR "/"
+#if defined(_I18N_) || defined(__JIS__) 
+#   define HTAppName     L"amaya"
+#   define HTAppVersion  L"V2.1"
+#   define URL_STR       L"/"
+#   define URL_SEP       L'/'
+#else /* !_I18N_  */
+#     define HTAppName     "amaya"
+#     define HTAppVersion  "V2.1"
+#     define URL_STR       "/"
+#     define URL_SEP       '/'
+#endif /* _I18N_ */
+
 
 /* Number of views used in Amaya */
 #define AMAYA_MAX_VIEW_DOC  7
@@ -51,8 +66,8 @@ typedef void   TIcbf (Document doc, int status, char *urlName,
 		      const char *data_block, int data_block_size,
 		      void *context);
 
-typedef void  TTcbf (Document doc, int status, char *urlName,
-                     char *outputfile, const char *content_type,
+typedef void  TTcbf (Document doc, int status, STRING urlName,
+                     STRING outputfile, const STRING content_type,
                      void *context);
 
 /* How are Network accesses provided ? */
@@ -180,22 +195,22 @@ typedef enum _ClickEvent {
 #define AMAYA_PARSE_ALL         31  /* All the parts */
 
 THOT_EXPORT int          appArgc;
-THOT_EXPORT char       **appArgv;
-THOT_EXPORT char         TempFileDirectory[MAX_LENGTH];
-THOT_EXPORT char         Answer_text[MAX_LENGTH];
-THOT_EXPORT char         Answer_name[NAME_LENGTH];
-THOT_EXPORT char         Answer_password[NAME_LENGTH];
-THOT_EXPORT char         Display_password[NAME_LENGTH];
-THOT_EXPORT char         ScanFilter[NAME_LENGTH]; /* to scan directories    */
-THOT_EXPORT char        *LastURLName;	/* last URL requested               */
-THOT_EXPORT char        *DirectoryName;	/* local path of the document       */
-THOT_EXPORT char        *DocumentName;	/* document name                    */
-THOT_EXPORT char        *SavePath;	/* saving path                      */
-THOT_EXPORT char        *SaveName;	/* saving name of the document      */
-THOT_EXPORT char        *ObjectName;	/* document name                    */
-THOT_EXPORT char        *SaveImgsURL;	/* where to save remote Images      */
-THOT_EXPORT char        *TargetName;
-THOT_EXPORT char        *SavingFile;	/* complete path or URL of the document */
+THOT_EXPORT STRING       *appArgv;
+THOT_EXPORT CHAR_T       TempFileDirectory[MAX_LENGTH];
+THOT_EXPORT CHAR_T       Answer_text[MAX_LENGTH];
+THOT_EXPORT CHAR_T       Answer_name[NAME_LENGTH];
+THOT_EXPORT CHAR_T       Answer_password[NAME_LENGTH];
+THOT_EXPORT CHAR_T       Display_password[NAME_LENGTH];
+THOT_EXPORT CHAR_T       ScanFilter[NAME_LENGTH]; /* to scan directories    */
+THOT_EXPORT STRING       LastURLName;	/* last URL requested               */
+THOT_EXPORT STRING       DirectoryName;	/* local path of the document       */
+THOT_EXPORT STRING       DocumentName;	/* document name                    */
+THOT_EXPORT STRING       SavePath;	/* saving path                      */
+THOT_EXPORT STRING       SaveName;	/* saving name of the document      */
+THOT_EXPORT STRING       ObjectName;	/* document name                    */
+THOT_EXPORT STRING       SaveImgsURL;	/* where to save remote Images      */
+THOT_EXPORT STRING       TargetName;
+THOT_EXPORT STRING       SavingFile;	/* complete path or URL of the document */
 THOT_EXPORT int          Lg_password;
 THOT_EXPORT int          BaseDialog;
 THOT_EXPORT int          ReturnOption;
@@ -259,12 +274,12 @@ typedef enum
 /* a record for data associated with a request */
 typedef struct _DocumentMetaDataElement
 {
-  char *form_data;  /* form data associated with a URL */
+  STRING form_data;  /* form data associated with a URL */
   ClickEvent method;  /* method used to send this data */
 } DocumentMetaDataElement;
 
 #define DocumentTableLength 10
-THOT_EXPORT char        *DocumentURLs[DocumentTableLength];
+THOT_EXPORT STRING     DocumentURLs[DocumentTableLength];
 /* Any formdata associated with a URL */
 THOT_EXPORT DocumentMetaDataElement *DocumentMeta[DocumentTableLength];
 /* TRUE if the document is displayed by help commands */
@@ -308,7 +323,7 @@ THOT_EXPORT int iTable;
 #define IMAGE_MODIFIED		3
 
 #ifdef __STDC__
-typedef void (*LoadedImageCallback)(Document doc, Element el, char *file, void *extra);
+typedef void (*LoadedImageCallback)(Document doc, Element el, STRING file, void *extra);
 #else
 typedef void (*LoadedImageCallback)();
 #endif
@@ -323,8 +338,8 @@ ElemImage;
 
 typedef struct _LoadedImageDesc
   {
-     char               *originalName;	/* complete URL of the image                */
-     char               *localName;	/* local name (without path) of the image   */
+     STRING          originalName;	/* complete URL of the image                */
+     STRING          localName;	/* local name (without path) of the image   */
      struct _LoadedImageDesc *prevImage;/* double linked list                       */
      struct _LoadedImageDesc *nextImage;/* easier to unchain                        */
      Document            document;	/* document concerned                       */
@@ -358,13 +373,21 @@ THOT_EXPORT LoadedImageDesc *ImageLocal;
 
 /* The default Amaya HOME pages (page shown at boot time */
 
-#ifdef _WINDOWS
-#define AMAYA_PAGE "\\amaya\\AmayaPage.html"
-#else  /* _WINDOWS */
-#define AMAYA_PAGE "/amaya/AmayaPage.html"
-#endif /* _WINDOWS */
-
-#define AMAYA_PAGE_DOC "http://www.w3.org/Amaya/User/"
+#if defined(_I18N_) || defined(__JIS__)
+#   ifdef _WINDOWS
+#         define AMAYA_PAGE  L"\\amaya\\AmayaPage.html"
+#   else  /* _WINDOWS */
+#         define AMAYA_PAGE  L"/amaya/AmayaPage.html"
+#   endif /* _WINDOWS */
+#   define   AMAYA_PAGE_DOC       L"http://www.w3.org/Amaya/User/"
+#else /*  !_I18N_ */
+#     ifdef _WINDOWS
+#           define AMAYA_PAGE  "\\amaya\\AmayaPage.html"
+#     else  /* _WINDOWS */
+#           define AMAYA_PAGE "/amaya/AmayaPage.html"
+#     endif /* _WINDOWS */
+#     define   AMAYA_PAGE_DOC       "http://www.w3.org/Amaya/User/"
+#endif /* !_I18N_ */
 
 #endif /* AMAYA_H */
 

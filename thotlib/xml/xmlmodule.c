@@ -130,12 +130,11 @@ STRING schemaName;
 	newPrefix->Name = TtaStrdup (prefixName);
 	newPrefix->Schema = TtaGetSSchema (schemaName, doc);
 	newPrefix->IsExtSchema = FALSE;
-	if (ustrlen (schemaName) > 4 && 
-	    !ustrcmp (&schemaName[ustrlen (schemaName) - 4],"_EXT"))
+	if (ustrlen (schemaName) > 4 && !ustrcmp (&schemaName[ustrlen (schemaName) - 4], TEXT("_EXT")))
 	  /* We've read an extension */
 	  {
 	    if (newPrefix->Schema == NULL)
-	      schemaName[ustrlen(schemaName)-4] = EOS;
+	      schemaName [ustrlen (schemaName) - 4] = EOS;
 	    newPrefix->Schema = TtaNewSchemaExtension (doc, schemaName, 
 						       buf);
 	    newPrefix->IsExtSchema = TRUE;
@@ -409,7 +408,7 @@ static XmlAttrEntry XmlAttr[] =
   {XML_HREF_ATTR,   (Proc) XmlSetTarget},
   {XML_LINK_ATTR,   (Proc) XmlSetLinkType},
   {XML_INLINE_ATTR, (Proc) XmlSetInclusion},
-  {"",              (Proc) NULL}
+  {_EMPTYSTR_, (Proc) NULL}
 };
 
 /*----------------------------------------------------------------------
@@ -428,7 +427,7 @@ STRING value;
   int i = 0;
   
   while (XmlAttr[i].AttrAction != (Proc)NULL && 
-	 ustrcmp (attrName,XmlAttr[i].AttrName)) 
+	 ustrcmp (attrName, XmlAttr[i].AttrName)) 
     i++;
   if (XmlAttr[i].AttrAction != (Proc)NULL)
     {

@@ -53,7 +53,7 @@ ThotBool MakeASpan (elem, span, doc)
   ret = FALSE;
   *span = NULL;
   elType = TtaGetElementType (elem);
-  if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+  if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
     /* it's an HTML element */
     if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
      {
@@ -122,7 +122,7 @@ void DeleteSpanIfNoAttr (el, doc, firstChild, lastChild)
   *lastChild = NULL;
   elType = TtaGetElementType (el);
   if (elType.ElTypeNum == HTML_EL_Span &&
-      ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+      ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
      {
      span = el;
      attr = NULL;
@@ -180,7 +180,7 @@ void  AttrToSpan (elem, attr, doc)
     {
       parent = TtaGetParent (elem);
       elType = TtaGetElementType (parent);
-      if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+      if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
         /* the parent element is an HTML element */
 	/* Create a Span element and move to attribute to this Span element */
         MakeASpan (elem, &span, doc);
@@ -189,7 +189,7 @@ void  AttrToSpan (elem, attr, doc)
 	span = parent;
       if (span != NULL)
         {
-          oldValue = (STRING) TtaGetMemory (sizeof (CHAR_T) * ATTRLEN);
+          oldValue = TtaAllocString (ATTRLEN);
           TtaGiveAttributeType (attr, &attrType, &kind);
 	  newAttr = TtaGetAttribute (span, attrType);
 	  if (newAttr == NULL)
@@ -360,7 +360,7 @@ Element             elem;
    /* does the element have a Style_ attribute ? */
 #ifdef MATHML
    elType = TtaGetElementType (elem);
-   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
+   if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) == 0)
       {
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = MathML_ATTR_style_;
@@ -377,13 +377,13 @@ Element             elem;
    else
 #endif
       {
-      attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+      attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
       attrType.AttrTypeNum = HTML_ATTR_Style_;
       }
    styleAttr = TtaGetAttribute (elem, attrType);
    /* keep the new style string */
    len = STYLELEN;
-   style = (STRING) TtaGetMemory (sizeof (CHAR_T) * STYLELEN);
+   style = TtaAllocString (STYLELEN);
    GetHTMLStyleString (elem, doc, style, &len);
    if (len == 0)
      {
@@ -448,7 +448,7 @@ NotifyPresentation *event;
   presRule = event->pRule;
   elType = TtaGetElementType (el);
   ret = FALSE;
-  HTMLschema = TtaGetSSchema ("HTML", doc);
+  HTMLschema = TtaGetSSchema (TEXT("HTML"), doc);
 
   /* if it's a background rule on element BODY, move it to element HTML */
   /* if it's a rule on element HTML and it's not a background rule, move
@@ -570,9 +570,9 @@ NotifyPresentation *event;
 		    TtaGiveBoxSize (el, doc, 1, unit, &value, &i);
 		    value += TtaGetPRuleValue (presRule);
 		    if (unit == UnPercent)
-		      sprintf (buffer, "%d%%", value);
+		      usprintf (buffer, TEXT("%d%%"), value);
 		    else
-		      sprintf (buffer, "%d", value);
+		      usprintf (buffer, TEXT("%d"), value);
 
 		    attrType.AttrTypeNum = HTML_ATTR_Width__;
 		    attr = TtaGetAttribute (el, attrType);
@@ -712,8 +712,8 @@ static void MoveAttrLang (oldAttr, el, doc)
   Attribute	newAttr, attr;
   AttributeType	attrType;
   int		kind, len;
-  STRING	value    = (STRING) TtaGetMemory (sizeof (CHAR_T) * ATTRLEN); 
-  STRING oldValue = (STRING) TtaGetMemory (sizeof (CHAR_T) * ATTRLEN);
+  STRING	value    = TtaAllocString (ATTRLEN); 
+  STRING oldValue = TtaAllocString (ATTRLEN);
   ThotBool	sameLang;
 
   /* if all siblings have the same LANG attribute, move that attibute to
@@ -790,7 +790,7 @@ void AttrLangCreated(event)
 {
   Element	elem;
   int		len;
-  STRING	value    = (STRING) TtaGetMemory (sizeof (CHAR_T) * ATTRLEN); 
+  STRING	value    = TtaAllocString (ATTRLEN); 
 
   /* move the LANG attribute to the parent element if all sibling have the
      same attribute with the same value */
@@ -799,7 +799,7 @@ void AttrLangCreated(event)
 
   len = ATTRLEN - 1;
   TtaGiveTextAttributeValue (event->attribute, value, &len);
-  if (ustrcasecmp(value, "Symbol") == 0)
+  if (ustrcasecmp(value, TEXT("Symbol")) == 0)
      /* it's a character string in the Symbol character set, it's not really a language */
     {
     TtaRemoveAttribute (elem, event->attribute, event->document);      

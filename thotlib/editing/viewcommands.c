@@ -157,13 +157,13 @@ int                 height;
 
    /* met dans le buffer le nom du document... */
    ustrncpy (buf, pDoc->DocDName, MAX_NAME_LENGTH);
-   ustrcat (buf, "  ");
+   ustrcat (buf, TEXT("  "));
    /* ...suivi du nom de la vue */
    ustrncat (buf, viewName, MAX_NAME_LENGTH);
    /* ...suivi eventuellement de la mention 'Read only' */
    if (pDoc->DocReadOnly)
      {
-	ustrcat (buf, " ");
+	ustrcat (buf, TEXT(" "));
 	ustrcat (buf, TtaGetMessage (LIB, TMSG_READ_ONLY));
      }
    /* creation d'une frame pour la vue */
@@ -367,7 +367,7 @@ PtrDocument         pDoc;
 		       /* une ligne a ete lue dans line */
 		       /* traite le caractere '\n' en fin de ligne */
 		       len = ustrlen (line);
-		       if (line[len - 1] == '\n')
+		       if (line[len - 1] == EOL)
 			 {
 			    if (paragraph)
 			       /* en mode paragraphe, on garde le '\n' qui sera remplace' */
@@ -380,9 +380,9 @@ PtrDocument         pDoc;
 		       /* et teste si la ligne est vide */
 		       emptyLine = TRUE;
 		       for (i = 0; i < len; i++)
-			  if (line[i] <= ' ' || ((int) line[i] >= 127 && (int) line[i] < 160))
+			  if (line[i] <= SPACE || ((int) line[i] >= 127 && (int) line[i] < 160))
 			     /* transforme les caracteres non imprimables en espace */
-			     line[i] = ' ';
+			     line[i] = SPACE;
 			  else
 			     emptyLine = FALSE;
 		       /* traite la ligne lue */
@@ -475,10 +475,10 @@ Name                fileName;
 	   /* pas de directory precise'. On prend le path des documents */
 	   ustrncpy (directory, DocumentPath, MAX_PATH);
 	/* construit le nom complet du fichier a importer */
-	MakeCompleteName (fileName, "", directory, fullName, &i);
+	MakeCompleteName (fileName, _EMPTYSTR_, directory, fullName, &i);
 	TtaDisplaySimpleMessage (INFO, LIB, TMSG_IMPORTING_FILE);
 	/* ouvre le fichier a importer */
-	file = ufopen (fullName, "r");
+	file = ufopen (fullName, _ReadMODE_);
 	if (file != NULL)
 	   /* le fichier a importer est ouvert */
 	  {
@@ -1183,7 +1183,7 @@ View                view;
                 /* on ajoute cette nature dans le menu en construction */
                {
                   nbNatures++;
-                  *ptrBufNat = 'M';     /* il y aura un sous-menu */
+                  *ptrBufNat = TEXT('M');     /* il y aura un sous-menu */
                   ptrBufNat++;
                   if (TableNatures[nat] == pDoc->DocSSchema)
                      i = CONFIG_DOCUMENT_STRUCT; /* schema du document */
@@ -1211,7 +1211,7 @@ View                view;
         if (nbNatures > 1)
           {
              TtaNewPopup (NumMenuPresNature, 0, TtaGetMessage (LIB, TMSG_GLOBAL_LAYOUT),
-                          nbNatures, BufMenuNatures, NULL, 'L');
+                          nbNatures, BufMenuNatures, NULL, TEXT('L'));
              MenuAActiver = NumMenuPresNature;
           }
         /* pour chacune de ces natures, on cree les sous-menus des */
@@ -1233,7 +1233,7 @@ View                view;
                      for (k = 1; k <= nbPres; k++)
                        {
                           /* ajoute 'B' au debut de chaque entree */
-                          ustrcpy (dest, "B");
+                          ustrcpy (dest, _B_);
                           dest++;
                           l = ustrlen (src);
                           ustrcpy (dest, src);
@@ -1260,7 +1260,7 @@ View                view;
                           /* il n'y a qu'une nature, c'est un pop-up menu */
                           MenuAActiver = NumMenuPresNature + NumSousMenu;
                           TtaNewPopup (MenuAActiver, 0, NomUtilisateur, nbPres,
-                                       BufMenuB, NULL, 'L');
+                                       BufMenuB, NULL, TEXT('L'));
                        }
                      else
                         /* il y a plusieurs natures, c'est un sous-menu du menu */

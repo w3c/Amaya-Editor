@@ -111,6 +111,52 @@ static CHAR_T         ActionName[100];
    defined into appaction.h */
 STRING              RegisteredAppEvents[] =
 {
+#  if defined(_I18N_) || defined(__JIS__)
+   L"AttrMenu",
+   L"AttrCreate",
+   L"AttrModify",
+   L"AttrRead",
+   L"AttrSave",
+   L"AttrExport",
+   L"AttrDelete",
+   L"ElemMenu",
+   L"ElemNew",
+   L"ElemRead",
+   L"ElemSave",
+   L"ElemExport",
+   L"ElemDelete",
+   L"ElemSelect",
+   L"ElemExtendSelect",
+   L"ElemClick",
+   L"ElemActivate",
+   L"ElemSetReference",
+   L"ElemInclude",
+   L"ElemFetchInclude",
+   L"ElemCopy",
+   L"ElemPaste",
+   L"ElemChange",
+   L"ElemMove",
+   L"ElemTextModify",
+   L"ElemGraphModify",
+   L"ElemMouseOver",
+   L"ElemMouseOut",
+   L"PRuleCreate",
+   L"PRuleModify",
+   L"PRuleDelete",
+   L"DocOpen",
+   L"DocTmpOpen",
+   L"DocCreate",
+   L"DocClose",
+   L"DocSave",
+   L"DocExport",
+   L"DocNatPresent",
+   L"ViewOpen",
+   L"ViewClose",
+   L"ViewResize",
+   L"ViewScroll",
+   L"Init",
+   L"Exit"
+#  else /* defined(_I18N_) || defined(__JIS__) */
    "AttrMenu",
    "AttrCreate",
    "AttrModify",
@@ -155,6 +201,7 @@ STRING              RegisteredAppEvents[] =
    "ViewScroll",
    "Init",
    "Exit"
+#  endif /* defined(_I18N_) || defined(__JIS__) */
 };
 
 #ifdef _WINDOWS
@@ -382,12 +429,12 @@ static PtrSSchema   ConstructAbstractSchStruct ()
    pSS->SsCode = 0;
 
    /* initialise les types de base */
-   ustrcpy (pSS->SsRule[CharString].SrName, "TEXT_UNIT");
-   ustrcpy (pSS->SsRule[GraphicElem].SrName, "GRAPHICS_UNIT");
-   ustrcpy (pSS->SsRule[Symbol].SrName, "SYMBOL_UNIT");
-   ustrcpy (pSS->SsRule[Picture].SrName, "PICTURE_UNIT");
-   ustrcpy (pSS->SsRule[Refer].SrName, "REFERENCE_UNIT");
-   ustrcpy (pSS->SsRule[PageBreak].SrName, "PAGE_BREAK");
+   ustrcpy (pSS->SsRule[CharString].SrName, TEXT("TEXT_UNIT"));
+   ustrcpy (pSS->SsRule[GraphicElem].SrName, TEXT("GRAPHICS_UNIT"));
+   ustrcpy (pSS->SsRule[Symbol].SrName, TEXT("SYMBOL_UNIT"));
+   ustrcpy (pSS->SsRule[Picture].SrName, TEXT("PICTURE_UNIT"));
+   ustrcpy (pSS->SsRule[Refer].SrName, TEXT("REFERENCE_UNIT"));
+   ustrcpy (pSS->SsRule[PageBreak].SrName, TEXT("PAGE_BREAK"));
    pSS->SsNRules = MAX_BASIC_TYPE - 1;
    pSS->SsNAttributes = 0;
    return pSS;
@@ -542,7 +589,7 @@ static void         NewMenuComplete ()
 	       {
 		  NewItem->AppItemActionName = TtaStrdup (ActionName);
 		  /* Il faut tester s'il s'agit d'une action standard */
-		  NewItem->AppStandardAction = (ustrncmp (ActionName, "Ttc", 3) == 0);
+		  NewItem->AppStandardAction = (ustrncmp (ActionName, TEXT("Ttc"), 3) == 0);
 	       }
 	  }
      }
@@ -656,7 +703,7 @@ indLine             wi;
 
 	    case KWD_USES:
 	       /* le mot-cle' USES */
-	       if (ustrcmp (fileName, "EDITOR") != 0)
+	       if (ustrcmp (fileName, TEXT("EDITOR")) != 0)
 		  /* ce n'est pas EDITOR.A qu'on compile, refus */
 		  CompilerMessage (wi, APP, FATAL, FORBIDDEN_OUTSIDE_EDITOR_I,
 				 inputLine, LineNum);
@@ -685,7 +732,7 @@ indLine             wi;
 	       ElementsSection = False;
 	       AttributesSection = False;
 	       MenusSection = True;
-	       if (ustrcmp (fileName, "EDITOR") != 0)
+	       if (ustrcmp (fileName, TEXT("EDITOR")) != 0)
 		  /* ce n'est pas EDITOR.A qu'on compile, refus */
 		  CompilerMessage (wi, APP, FATAL, FORBIDDEN_OUTSIDE_EDITOR_I,
 				 inputLine, LineNum);
@@ -790,7 +837,7 @@ indLine             wi;
 	       typeNum = 0;
 	       if (pr == RULE_AppliModel)
 		 {
-		    if (ustrcmp (fileName, "EDITOR") == 0)
+		    if (ustrcmp (fileName, TEXT("EDITOR")) == 0)
 		      {
 			 /* construct an abstract schemas structure */
 			 pSSchema = ConstructAbstractSchStruct ();
@@ -849,7 +896,7 @@ indLine             wi;
 			   }
 			 else
 			   {
-			      if (ustrcmp (fileName, "EDITOR") == 0)
+			      if (ustrcmp (fileName, TEXT("EDITOR")) == 0)
 				{
 				   ustrcpy (pSSchema->SsRule[i].SrName, name);
 				   pSSchema->SsNRules++;
@@ -933,7 +980,7 @@ indLine             wi;
 		    if (curEvent >= TteInit)
 		       /* c'est un evenement pour l'application */
 		      {
-			 if (ustrcmp (fileName, "EDITOR") != 0)
+			 if (ustrcmp (fileName, TEXT("EDITOR")) != 0)
 			    /* ce n'est pas EDITOR.A qu'on compile, refus */
 			    CompilerMessage (wi, APP, FATAL, FORBIDDEN_OUTSIDE_EDITOR_I, inputLine,
 					   LineNum);
@@ -967,7 +1014,7 @@ indLine             wi;
 
 	    case RULE_AttrIdent:
 	       attrNum = 0;
-	       if (ustrcmp (fileName, "EDITOR") == 0 && pSSchema == NULL)
+	       if (ustrcmp (fileName, TEXT("EDITOR")) == 0 && pSSchema == NULL)
 		 {
 		    pSSchema = ConstructAbstractSchStruct ();
 		    pAppli = TteNewEventsSet (pSSchema->SsCode, fileName);
@@ -982,7 +1029,7 @@ indLine             wi;
 		       attrNum = i;
 		    else
 		      {
-			 if (ustrcmp (fileName, "EDITOR") == 0)
+			 if (ustrcmp (fileName, TEXT("EDITOR")) == 0)
 			   {
 			      /* the file .A is a EDITOR.A */
 			      ustrcpy (pSSchema->SsAttribute[i - 1].AttrOrigName, name);
@@ -1389,8 +1436,8 @@ STRING              fname;
    Name                HFileName;
    FILE               *Hfile;
 
-   sprintf (HFileName, "%s.h", fname);
-   Hfile = fopen (HFileName, "w");
+   usprintf (HFileName, TEXT("%s.h"), fname);
+   Hfile = ufopen (HFileName, _WriteMODE_);
    if (Hfile != NULL)
      {
         fprintf (Hfile, "/* File generated by app - do not edit! */\n");
@@ -1583,10 +1630,10 @@ char              **argv;
    COMPWnd = hwnd;
    compilersDC = GetDC (hwnd);
    _CY_ = *Y;
-   ustrcpy (msg, "Executing app ");
+   ustrcpy (msg, TEXT("Executing app "));
    for (ndx = 1; ndx < argc; ndx++) {
        ustrcat (msg, argv [ndx]);
-       ustrcat (msg, " ");
+       ustrcat (msg, TEXT(" "));
    }
        
    TtaDisplayMessage (INFO, msg);
@@ -1595,17 +1642,17 @@ char              **argv;
    TtaInitializeAppRegistry (argv[0]);
    /* no external action declared at that time */
    ActionList = NULL;
-   APP = TtaGetMessageTable ("appdialogue", MSG_MAX_APP);
-   COMPIL = TtaGetMessageTable ("compildialogue", COMP_MSG_MAX);
+   APP = TtaGetMessageTable (TEXT("appdialogue"), MSG_MAX_APP);
+   COMPIL = TtaGetMessageTable (TEXT("compildialogue"), COMP_MSG_MAX);
    error = False;
    /* initialize the parser */
    InitParser ();
-   InitSyntax ("APP.GRM");
+   InitSyntax (TEXT("APP.GRM"));
    if (!error) {
       /* prepare the cpp command */
 #     ifdef _WINDOWS
       cmd [pIndex] = (STRING) malloc (4 * sizeof (CHAR_T));
-      ustrcpy (cmd [pIndex++], "cpp");
+      ustrcpy (cmd [pIndex++], TEXT("cpp"));
 #     else  /* !_WINDOWS */
       ustrcpy (cmd, CPP " ");
 #     endif /* _WINDOWS */
@@ -1640,8 +1687,8 @@ char              **argv;
              ptr = ustrrchr(fileName, '.');
              nb = ustrlen (srceFileName);
              if (!ptr) /* there is no suffix */
-                ustrcat (srceFileName, ".A");
-             else if (ustrcmp (ptr, ".A")) {
+                ustrcat (srceFileName, TEXT(".A"));
+             else if (ustrcmp (ptr, TEXT(".A"))) {
                   /* it's not the valid suffix */
                   TtaDisplayMessage (FATAL, TtaGetMessage(APP, INVALID_FILE), srceFileName);
 #                 ifdef _WINDOWS
@@ -1657,7 +1704,7 @@ char              **argv;
 			 } 
 
              /* add the suffix .SCH in srceFileName */
-             ustrcat (fileName, ".SCH");
+             ustrcat (fileName, TEXT(".SCH"));
 	     
              /* does the file to compile exist */
              if (TtaFileExist (srceFileName) == 0)
@@ -1665,16 +1712,16 @@ char              **argv;
              else {
                   /* provide the real source file */
                   TtaFileUnlink (fileName);
-                  pwd = TtaGetEnvString ("PWD");
+                  pwd = TtaGetEnvString (TEXT("PWD"));
 #                 ifndef _WINDOWS
                   i = ustrlen (cmd);
 #                 endif /* _WINDOWS */
                   if (pwd != NULL) {
 #                    ifdef _WINDOWS
                      cmd [pIndex] = (STRING) malloc (3 + ustrlen (pwd));
-                     sprintf (cmd [pIndex++], "-I%s", pwd);
+                     usprintf (cmd [pIndex++], TEXT("-I%s"), pwd);
                      cmd [pIndex] = (STRING) malloc (3);
-                     ustrcpy (cmd [pIndex++], "-C");
+                     ustrcpy (cmd [pIndex++], TEXT("-C"));
                      cmd [pIndex] = (STRING) malloc (ustrlen (srceFileName) + 1);
                      ustrcpy (cmd [pIndex++], srceFileName);
                      cmd [pIndex] = (STRING) malloc (ustrlen (fileName) + 1);
@@ -1685,7 +1732,7 @@ char              **argv;
                   } else {
 #                        ifdef _WINDOWS
                          cmd [pIndex] = (STRING) malloc (3);
-                         ustrcpy (cmd [pIndex++], "-C");
+                         ustrcpy (cmd [pIndex++], TEXT("-C"));
                          cmd [pIndex] = (STRING) malloc (ustrlen (srceFileName) + 1);
                          ustrcpy (cmd [pIndex++], srceFileName);
                          cmd [pIndex] = (STRING) malloc (ustrlen (fileName) + 1);
@@ -1695,7 +1742,7 @@ char              **argv;
 #                        endif /* _WINDOWS */
 				  }
 #                 ifdef _WINDOWS
-                  cppLib = LoadLibrary ("cpp");
+                  cppLib = LoadLibrary (TEXT("cpp"));
                   ptrMainProc = GetProcAddress (cppLib, "CPPmain");
                   i = ptrMainProc (hwnd, pIndex, cmd, &_CY_);
                   FreeLibrary (cppLib);
@@ -1744,7 +1791,7 @@ char              **argv;
                                 CompilerMessage (1, APP, FATAL, MAX_LINE_SIZE_EXCEEDED, inputLine, LineNum);
                              else if (inputLine[0] == '#') {
                                   /* cette ligne contient une directive du preprocesseur cpp */
-                                  sscanf (inputLine, "# %d %s", &LineNum, buffer);
+                                  usscanf (inputLine, TEXT("# %d %s"), &LineNum, buffer);
                                   LineNum--;
 							 } else {
                                     /* traduit tous les caracteres de la ligne */
@@ -1778,9 +1825,9 @@ char              **argv;
                           /* le directory des schemas est le directory courant      */
                           SchemaPath[0] = '\0';
                           ustrcpy (srceFileName, fileName);
-                          GenerateApplication (srceFileName, pAppli);
+                          GenerateApplication (WideChar2ISO(srceFileName), pAppli);
                           ustrcpy (srceFileName, fileName);
-                          if (ustrcmp (srceFileName, "EDITOR") != 0)
+                          if (ustrcmp (srceFileName, TEXT("EDITOR")) != 0)
                           WriteDefineFile (srceFileName);
 					   } 
 				  }  

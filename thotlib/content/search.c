@@ -294,9 +294,9 @@ ThotBool            caseEquiv;
 {
    if (caseEquiv)
      {
-	if ((c1 >= 'A' && c1 <= 'Z') || (c1 >= '\300' && c1 <= '\336'))
+	if ((c1 >= TEXT('A') && c1 <= TEXT('Z')) || (c1 >= TEXT('\300') && c1 <= TEXT('\336')))
 	   c1 = (CHAR_T) ((int) (c1) + 32);
-	if ((c2 >= 'A' && c2 <= 'Z') || (c2 >= '\300' && c2 <= '\336'))
+	if ((c2 >= TEXT('A') && c2 <= TEXT('Z')) || (c2 >= TEXT('\300') && c2 <= TEXT('\336')))
 	   c2 = (CHAR_T) ((int) (c2) + 32);
      }
    return (c1 == c2);
@@ -950,7 +950,7 @@ PtrDocument         pDoc;
 	     while (pAb != NULL)
 		/* recherche du filet */
 		if (pAb->AbLeafType == LtGraphics
-		    && pAb->AbShape == 'h'
+		    && pAb->AbShape == TEXT('h')
 		    && pAb->AbHorizPos.PosAbRef == NULL)
 		  {
 		     pAbGraph = pAb;

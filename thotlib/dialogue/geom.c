@@ -10,7 +10,7 @@
  *          concerning a box position, or size.
  *
  * Authors: I. Vatton (INRIA)
- *          R. Guetari (W3C/INRIA): Windows NT/95
+ *          R. Guetari (W3C/INRIA) - Unicode, Windows version and Plug-ins
  *
  */
 

@@ -86,29 +86,26 @@ ThotBool            ToCreate;
 #endif /* __STDC__ */
 {
   STRING            extenddic;
-# ifdef _WINDOWS
-  STRING            ptr;
-# endif /* !_WINDOWS */
   CHAR_T               path[MAX_PATH], dictname[MAX_PATH];
 
   /* dictionary name = document name */
   *pDictionary = (int) NULL;
   
-  extenddic = TtaGetEnvString ("EXTENDDICT");
+  extenddic = TtaGetEnvString (_EXTENDDICT_EVAR_);
   if (extenddic != NULL)
     {
       TtaExtractName (extenddic, path, dictname);
       if (dictname[0] == EOS)
-	ustrcpy (dictname, "dictionary.DCT");
+	ustrcpy (dictname, TEXT("dictionary.DCT"));
     }
   else
     {
       path[0] = EOS;
-      ustrcpy (dictname, "dictionary.DCT");
+      ustrcpy (dictname, TEXT("dictionary.DCT"));
     }
 
   if (path[0] == EOS ||  !TtaCheckDirectory (path))
-    ustrcpy (path, TtaGetEnvString ("APP_HOME"));
+    ustrcpy (path, TtaGetEnvString (_APPHOME_EVAR_));
   LoadTreatedDict ((PtrDict *) pDictionary, 0, document, dictname,
 		   path, FALSE, ToCreate);
   return (*pDictionary != EOS);
@@ -293,7 +290,7 @@ STRING              string;
 
    while (string[i] != EOS && (iso != 0))
      {
-	iso = isalphiso (string[i]) || string[i] == '-' || string[i] == '\'';
+	iso = isalphiso (string[i]) || string[i] == TEXT('-') || string[i] == TEXT('\'');
 	i++;
      }
    return (iso == 0) ? FALSE : TRUE;
@@ -722,10 +719,10 @@ PtrDict             docDict;
    CHAR_T                tempbuffer[THOT_MAX_CHAR];
    CHAR_T                word[MAX_WORD_LEN];
 
-   FindCompleteName (docDict->DictName, "", docDict->DictDirectory, tempbuffer, &i);
+   FindCompleteName (docDict->DictName, _EMPTYSTR_, docDict->DictDirectory, tempbuffer, &i);
    if (docDict->DictNbWords >= 0)
      {
-	f = ufopen (tempbuffer, "w");
+	f = ufopen (tempbuffer, _WriteMODE_);
 	if (f != NULL)
 	  {
 	    /* enregistrer d'abord nb words and nb chars effectifs */
@@ -855,7 +852,7 @@ static void            InitChecker ()
 
    /* Initialisation de la correction */
    for (j = 0; j <= NC; j++)
-      ustrcpy (ChkrCorrection[j], "$");
+      ustrcpy (ChkrCorrection[j],TEXT("$"));
 }
 
 
@@ -931,15 +928,15 @@ FILE               *ftsub;
 	int                 coeff;
 	UCHAR_T       x, y, valeur;
 
-	usscanf (ch1, "%c", &x);
-	usscanf (ch2, "%c", &y);
-	usscanf (ch3, "%c", &valeur);
+	usscanf (ch1, TEXT("%c"), &x);
+	usscanf (ch2, TEXT("%c"), &y);
+	usscanf (ch3, TEXT("%c"), &valeur);
 	switch (valeur)
 	      {
-		 case 'b':
+		 case TEXT('b'):
 		    coeff = KB;
 		    break;
-		 case 'm':
+		 case TEXT('m'):
 		    coeff = KM;
 		    break;
 		 default:
@@ -1040,7 +1037,7 @@ int                 ParametrizeChecker ()
    if (Clavier_charge == FALSE)
      {
 	/* remplir corrpath pour acces aux fichiers param et clavier */
-	corrpath = TtaGetEnvString ("DICOPAR");
+	corrpath = TtaGetEnvString (_DICOPAR_EVAR_);
 	if (corrpath == NULL)
 	  {
 	     /* pas de variable d'environnement DICOPAR */
@@ -1051,8 +1048,8 @@ int                 ParametrizeChecker ()
 	  {
 	     /* Lecture du fichier parametres */
 	     ustrcpy (paramnom, corrpath);
-	     ustrcat (paramnom, "/param");
-	     if ((fparam = ufopen (paramnom, "r")) != NULL)
+	     ustrcat (paramnom, TEXT("/param"));
+	     if ((fparam = ufopen (paramnom, _ReadMODE_)) != NULL)
 	       /* Existence du fichier */
 		init_param (fparam);
 	     else
@@ -1063,8 +1060,8 @@ int                 ParametrizeChecker ()
 
 	     /* Lecture du  fichier clavier */
 	     ustrcpy (clavnom, corrpath);
-	     ustrcat (clavnom, "/clavier");
-	     if ((ftsub = ufopen (clavnom, "r")) != NULL)
+	     ustrcat (clavnom, TEXT("/clavier"));
+	     if ((ftsub = ufopen (clavnom, _ReadMODE_)) != NULL)
 	       /* Existence du fichier */
 	       {
 		  init_Tsub (ftsub);
@@ -1208,7 +1205,7 @@ STRING              listcar;
 {
    int                 i;
 
-   for (i = 0; i < ustrlen (listcar); i++)
+   for (i = 0; (size_t) i < ustrlen (listcar); i++)
      {
 	if (car == listcar[i])
 	   return (TRUE);
@@ -1264,7 +1261,7 @@ CHAR_T                word[MAX_WORD_LEN];
    if (longueur > 0)
      {
 	for (i = 0; i < longueur && (result == FALSE); i++)
-	   if (word[i] >= '0' && word[i] <= '9')
+	   if (word[i] >= TEXT('0') && word[i] <= TEXT('9'))
 	      result = TRUE;
      }
    return result;
@@ -1293,7 +1290,7 @@ CHAR_T                word[MAX_WORD_LEN];
 
 	result = TRUE;
 	for (i = 0; i < longueur && result; i++)
-	   if (word[i] < '0' || word[i] > '9')
+	   if (word[i] < TEXT('0') || word[i] > TEXT('9'))
 	      result = FALSE;
      }
    return result;
@@ -1311,10 +1308,20 @@ CHAR_T                word[MAX_WORD_LEN];
 #endif /* __STDC__ */
 {
    /* description des chiffres romains (majuscule) */
-   static CHAR_T         NRomain[] =
-   {'M', 'C', 'D', 'L', 'X', 'V', 'I'};
-   static CHAR_T         NRomainIsole[] =
-   {'C', 'L', 'V'};
+   static CHAR_T         NRomain[] = {
+#         if defined(_I18N_) || defined(__JIS__)
+          L'M', L'C', L'D', L'L', L'X', L'V', L'I'
+#         else /* defined(_I18N_) || defined(__JIS__) */
+          'M', 'C', 'D', 'L', 'X', 'V', 'I'
+#         endif /* defined(_I18N_) || defined(__JIS__) */    
+   };
+   static CHAR_T         NRomainIsole[] = {
+#         if defined(_I18N_) || defined(__JIS__)
+          L'C', L'L', L'V'
+#         else /* defined(_I18N_) || defined(__JIS__) */
+          'C', 'L', 'V'
+#         endif /* defined(_I18N_) || defined(__JIS__) */    
+   };
 
    ThotBool            result;
    int                 i, j, nbcar;
@@ -1357,7 +1364,7 @@ CHAR_T                word[MAX_WORD_LEN];
 	  }
 
 	/* ne pas considerer "M" comme un romain */
- if (ustrlen (word) == 1 && word[0] == 'M')
+ if (ustrlen (word) == 1 && word[0] == TEXT('M'))
  result = FALSE;
 	/* verifier aussi l'ordre des I V X L C D M */
 	/* A FAIRE */

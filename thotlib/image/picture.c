@@ -18,7 +18,7 @@
  * Picture Handling
  * Authors: I. Vatton (INRIA)
  *          N. Layaida (INRIA) - New picture formats
- *          R. Guetari (INRIA) - Plugins and Windows 95/NT routines
+ *          R. Guetari (W3C/INRIA) - Unicode, Windows version and Plug-ins
  *
  * Last modification: Jan 09 1997
  */
@@ -647,7 +647,7 @@ STRING              fileName;
 #endif /* __STDC__ */
 {
    if (PictureHandlerTable[typeImage].Match_Format != NULL)
-      return (*(PictureHandlerTable[typeImage].Match_Format)) (fileName);
+      return (*(PictureHandlerTable[typeImage].Match_Format)) (WideChar2ISO(fileName));
    return FALSE;
 }
 
@@ -1349,8 +1349,8 @@ STRING              simplename;
    register STRING     from, to;
    CHAR_T                URL_DIR_SEP;
 
-   if (filename && ustrchr (filename, '/'))
-	  URL_DIR_SEP = '/';
+   if (filename && ustrchr (filename, TEXT('/')))
+	  URL_DIR_SEP = TEXT('/');
    else 
 	   URL_DIR_SEP = DIR_SEP;
  
@@ -1592,7 +1592,7 @@ int                 frame;
    picXOrg = 0;
    picYOrg = 0;
 
-   if ((imageDesc->PicFileName == NULL) || (imageDesc->PicFileName[0] == '\0') || 
+   if ((imageDesc->PicFileName == NULL) || (imageDesc->PicFileName[0] == EOS) || 
 	   (box->BxAbstractBox->AbLeafType == LtCompound && imageDesc->PicPixmap == PictureLogo))
      return;
 
@@ -1826,7 +1826,7 @@ PictInfo           *imageDesc;
      /* the picture is not visible */
      return;
 
-   if (imageDesc->PicFileName == NULL || imageDesc->PicFileName[0] == '\0')
+   if (imageDesc->PicFileName == NULL || imageDesc->PicFileName[0] == EOS)
       return;
 
    GetPictureFileName (imageDesc->PicFileName, fileName);
@@ -1940,7 +1940,7 @@ PictInfo           *imageDesc;
 	       pic2print = FALSE;
 #              endif /* _WINDOWS */
 	       myDrawable = (*(PictureHandlerTable[typeImage].Produce_Picture))
-		 (fileName, imageDesc, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask, &width, &height, ViewFrameTable[frame - 1].FrMagnification);
+		 (WideChar2ISO(fileName), imageDesc, &xFrame, &yFrame, &wFrame, &hFrame, Bgcolor, &picMask, &width, &height, ViewFrameTable[frame - 1].FrMagnification);
 	       /* intrinsic width and height */
 #              ifdef _WINDOWS 
 	       imageDesc->bgRed   = bgRed;
@@ -2052,7 +2052,7 @@ PictInfo           *imageDesc;
      /* the picture is not visible */
      return;
 
-   if (imageDesc->PicFileName == NULL || imageDesc->PicFileName[0] == '\0')
+   if (imageDesc->PicFileName == NULL || imageDesc->PicFileName[0] == EOS)
       return;
 
    GetPictureFileName (imageDesc->PicFileName, fileName);

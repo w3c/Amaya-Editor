@@ -13,7 +13,6 @@
    Comments: this module handle specific thot elements and attributes
              (namespace thot) during xml parsing
 
-
    Compilation directives: -DXML_DEBUG for Debuging
 
    
@@ -52,8 +51,8 @@ typedef struct _XmlPresentationType{
   struct  _XmlPresentationType *Next;
 }XmlPresentationType;
 
-static CHAR_T     PPrefixName[9] = "";
-static CHAR_T     PSchemaName[30] = "";
+static CHAR_T     PPrefixName[9] = _EMPTYSTR_;
+static CHAR_T     PSchemaName[30] = _EMPTYSTR_;
 static int        XmlMaxID = 0;
 /*static PrefixType     *ParserPrefixs;*/
 static XmlPresentationType *XmlPresentation = NULL;
@@ -172,7 +171,7 @@ STRING value;
 {
   if (PPrefixName[0] != EOS)
     if (!ustrcmp (PPrefixName, DEFAULT_VALUE))
-      XmlAddNSPresentation (doc, "", value);
+      XmlAddNSPresentation (doc, _EMPTYSTR_, value);
   else
     XmlAddNSPresentation (doc, PPrefixName, value);
   PSchemaName[0] = EOS;
@@ -339,10 +338,7 @@ Document doc;
       if (newPRule == NULL)
 	/* PRule doesn't exist yet */
 	{
-	  newPRule = TtaNewPRule (XmlPresentation->PRuleNum,
-				  TtaGetViewFromName (doc,
-						      XmlPresentation->ViewName),
-				  doc);
+	  newPRule = TtaNewPRule (XmlPresentation->PRuleNum, TtaGetViewFromName (doc, XmlPresentation->ViewName), doc);
 
 	}
       switch (XmlPresentation->PRuleNum)
@@ -526,7 +522,7 @@ STRING value;
 #endif
 {
   if (value != 0)
-    XmlMaxID = atoi (value);
+    XmlMaxID = uctoi (value);
   else
     {
       ((PtrDocument) LoadedDocument[doc - 1])-> DocLabelExpMax = XmlMaxID;
@@ -549,7 +545,7 @@ static XmlAttrEntry ThotAttr[] =
   {PG_NUM_ATTR, (Proc) XmlSetPageNum},
   {PG_VIEW_ATTR, (Proc) XmlSetPageView},
   {PG_TYPE_ATTR, (Proc) XmlSetPageType},
-  {"", (Proc) NULL},
+  {_EMPTYSTR_, (Proc) NULL},
 };
 
 /*----------------------------------------------------------------------

@@ -208,18 +208,18 @@ ThotBool            move;
 	   sameFile = FALSE;
 
 	/* construit le nom complet de l'ancien fichier de sauvegarde */
-	FindCompleteName (pDoc->DocDName, "BAK", pDoc->DocDirectory, bakName, &i);
+	FindCompleteName (pDoc->DocDName, BAK_EXT2, pDoc->DocDirectory, bakName, &i);
 	ustrncpy (oldDir, pDoc->DocDirectory, MAX_PATH);
 	/*     SECURITE:                                         */
 	/*     on ecrit sur un fichier nomme' X.Tmp et non pas   */
 	/*     directement X.PIV ...                             */
 	/*     On fait ensuite des renommages                    */
-	FindCompleteName (docName, "PIV", dirName, buf, &i);
+	FindCompleteName (docName, PIV_EXT2, dirName, buf, &i);
 	/* on teste d'abord le droit d'ecriture sur le .PIV */
 	ok = FileWriteAccess (buf) == 0;
 	if (ok)
 	  {
-	     FindCompleteName (docName, "Tmp", dirName, tempName, &i);
+	     FindCompleteName (docName, Tmp_EXT2, dirName, tempName, &i);
 	     /* on teste le droit d'ecriture sur le .Tmp */
 	     ok = FileWriteAccess (tempName) == 0;
 	     if (ok)
@@ -233,7 +233,7 @@ ThotBool            move;
 	if (!ok)
 	  {
 	     /* on indique un nom connu de l'utilisateur... */
-	     FindCompleteName (docName, "PIV", dirName, buf, &i);
+	     FindCompleteName (docName, PIV_EXT2, dirName, buf, &i);
 	     TtaDisplayMessage (CONFIRM, TtaGetMessage (LIB, TMSG_WRITING_IMP),
 				buf);
 	     status = FALSE;
@@ -244,14 +244,14 @@ ThotBool            move;
 	     /* Le nom et le directory du document peuvent avoir change'. */
 	     /* le fichier .OLD reste dans l'ancien directory, avec */
 	     /* l'ancien nom */
-	     FindCompleteName (pDoc->DocDName, "PIV", oldDir, pivName, &i);
+	     FindCompleteName (pDoc->DocDName, PIV_EXT2, oldDir, pivName, &i);
 	     if (!copy)
 	       {
-		  FindCompleteName (pDoc->DocDName, "OLD", oldDir, backName, &i);
+		  FindCompleteName (pDoc->DocDName, OLD_EXT2, oldDir, backName, &i);
 		  i = urename (pivName, backName);
 	       }
 	     /* 2- faire mv du .Tmp sur le .PIV */
-	     FindCompleteName (docName, "PIV", dirName, pivName, &i);
+	     FindCompleteName (docName, PIV_EXT2, dirName, pivName, &i);
 	     i = urename (tempName, pivName);
 	     if (i >= 0)
 		/* >> tout s'est bien passe' << */
@@ -274,7 +274,7 @@ ThotBool            move;
 		  /* document */
 		  UpdateRef (pDoc);
 		  /* detruit le fichier .REF du document sauve' */
-		  FindCompleteName (pDoc->DocDName, "REF", oldDir, buf, &i);
+		  FindCompleteName (pDoc->DocDName, REF_EXT2, oldDir, buf, &i);
 		  TtaFileUnlink (buf);
 		  if (!sameFile)
 		    {
@@ -284,11 +284,11 @@ ThotBool            move;
 			  if (move)
 			    {
 			       /* deplacer le fichier .EXT dans le nouveau directory */
-			       FindCompleteName (pDoc->DocDName, "EXT", oldDir, buf, &i);
-			       FindCompleteName (pDoc->DocDName, "EXT", dirName, pivName, &i);
+			       FindCompleteName (pDoc->DocDName, EXT_EXT2, oldDir, buf, &i);
+			       FindCompleteName (pDoc->DocDName, EXT_EXT2, dirName, pivName, &i);
 			       urename (buf, pivName);
 			       /* detruire l'ancien fichier PIV */
-			       FindCompleteName (pDoc->DocDName, "PIV", oldDir, buf, &i);
+			       FindCompleteName (pDoc->DocDName, PIV_EXT2, oldDir, buf, &i);
 			       TtaFileUnlink (buf);
 			    }
 
@@ -311,13 +311,13 @@ ThotBool            move;
 				 ChangeNomRef (pDoc, docName);
 				 /* renomme le fichier .EXT du document qui change */
 				 /* de nom */
-				 FindCompleteName (pDoc->DocDName, "EXT", oldDir, buf,
+				 FindCompleteName (pDoc->DocDName, EXT_EXT2, oldDir, buf,
 						   &i);
-				 FindCompleteName (docName, "EXT", dirName,
+				 FindCompleteName (docName, EXT_EXT2, dirName,
 						   pivName, &i);
 				 urename (buf, pivName);
 				 /* detruit l'ancien fichier .PIV */
-				 FindCompleteName (pDoc->DocDName, "PIV", oldDir, buf,
+				 FindCompleteName (pDoc->DocDName, PIV_EXT2, oldDir, buf,
 						   &i);
 				 TtaFileUnlink (buf);
 			      }
@@ -384,7 +384,7 @@ ThotBool       withMove;
 #endif /* __STDC__ */
 {
   ustrcpy (SaveFileName, fileName);
-  ustrcat (SaveFileName, ".PIV");
+  ustrcat (SaveFileName, PIV_EXT);
   ustrcpy (SaveDirectoryName, directoryName);
   SaveDocWithCopy = withCopy;
   SaveDocWithMove = withMove;
@@ -425,22 +425,22 @@ int                 mode;
 	     ok = interactiveSave (pDoc);
 	   break;
 	 case 1:
-	   ok = saveWithExtension (pDoc, "BAK");
+	   ok = saveWithExtension (pDoc, BAK_EXT2);
 	   if (ok)
 	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_DOC_WRITTEN), pDoc->DocDName);
 	   break;
 	 case 2:
-	   ok = saveWithExtension (pDoc, "BAK");
+	   ok = saveWithExtension (pDoc, BAK_EXT2);
 	   break;
 	 case 3:
-	   ok = saveWithExtension (pDoc, "SAV");
+	   ok = saveWithExtension (pDoc, SAV_EXT2);
 	   break;
 	 case 4:
 	   SetWriteDirectory (pDoc, pDoc->DocDName, pDoc->DocDirectory, FALSE, FALSE);
 	   ok = interactiveSave (pDoc);
 	   break;
 	 case 5:
-	   ok = saveWithExtension (pDoc, "PIV");
+	   ok = saveWithExtension (pDoc, PIV_EXT2);
 	   break;
 	 }
    return ok;
@@ -457,6 +457,6 @@ void PivotLoadResources()
       TteConnectAction (T_writedocument, (Proc) WriteDocument);  
       TteConnectAction (T_setwritedirectory, (Proc) SetWriteDirectory);
     }
-  ustrcpy (DefaultFileSuffix, ".PIV");
+  ustrcpy (DefaultFileSuffix, PIV_EXT);
 }
 

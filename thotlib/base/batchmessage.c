@@ -36,7 +36,7 @@ STRING              text;
 
 #endif /* __STDC__ */
 {
-   fprintf (stderr, text);
+   ufprintf (stderr, text);
 }
 
 
@@ -51,7 +51,7 @@ int                 msgType;
 
 #endif /* __STDC__ */
 {
-   fprintf (stderr, text);
+   ufprintf (stderr, text);
 }
 
 /*----------------------------------------------------------------------

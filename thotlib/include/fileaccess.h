@@ -84,7 +84,7 @@ extern void TtaFileCopy ( CONST STRING sourceFileName,
                           CONST STRING targetFileName );
 
 extern ThotBool TtaReadByte ( BinFile file,
-                             char* bval );
+                             PCHAR_T bval );
 extern ThotBool TtaReadBool ( BinFile file,
                              ThotBool * bval );
 extern ThotBool TtaReadShort ( BinFile file,

@@ -157,9 +157,10 @@ int                *nChars;
 	     (*targetInd)++;
 	     (nb)++;
 	     (*nChars)++;
-	     if (car == ' ')
+	     if (car == SPACE)
 		(*nSpaces)++;
 	     *width += CharacterWidth ((UCHAR_T) car, font);
+	     *width += CharacterWidth ((UCHAR_T) 0, font);
 	  }
      }
 }
@@ -1050,16 +1051,16 @@ int                 keyboard;
       language = plang;
   else if (keyboard == 2)
     /* une langue latine saisie */
-    if (TtaGetAlphabet (plang) == 'L')
+    if (TtaGetAlphabet (plang) == TEXT('L'))
       language = plang;
     else
-      language = TtaGetLanguageIdFromAlphabet ('L');
+      language = TtaGetLanguageIdFromAlphabet (TEXT('L'));
   else if (keyboard == 3)
     /* une langue greque saisie */
-    if (TtaGetAlphabet (plang) == 'G')
+    if (TtaGetAlphabet (plang) == TEXT('G'))
       language = plang;
     else
-      language = TtaGetLanguageIdFromAlphabet ('G');
+      language = TtaGetLanguageIdFromAlphabet (TEXT('G'));
   else
     language = 0;
 
@@ -1505,20 +1506,20 @@ int                 frame;
       /* efface la selection precedente */
       switch (c)
 	{
-	case 'S':	/* Segments */
-	case 'U':	/* Segments vers avant */
-	case 'N':	/* Segments fleches vers arriere */
-	case 'M':	/* Segments fleches dans les deux sens */
-	case 'w':	/* Segments (2 points) */
-	case 'x':	/* Segments (2 points) forward arrow */
-	case 'y':	/* Segments (2 points) backward arrow */
-	case 'z':	/* Segments (2 points) arrows on both directions */
-	case 'B':	/* Beziers (ouvertes) */
-	case 'A':	/* Beziers (ouvertes) flechees vers avant */
-	case 'F':	/* Beziers (ouvertes) flechees vers arriere */
-	case 'D':	/* Beziers (ouvertes) flechees dns les deux sens */
-	case 'p':	/* polygone */
-	case 's':	/* spline fermee */
+	case TEXT('S'):	/* Segments */
+	case TEXT('U'):	/* Segments vers avant */
+	case TEXT('N'):	/* Segments fleches vers arriere */
+	case TEXT('M'):	/* Segments fleches dans les deux sens */
+	case TEXT('w'):	/* Segments (2 points) */
+	case TEXT('x'):	/* Segments (2 points) forward arrow */
+	case TEXT('y'):	/* Segments (2 points) backward arrow */
+	case TEXT('z'):	/* Segments (2 points) arrows on both directions */
+	case TEXT('B'):	/* Beziers (ouvertes) */
+	case TEXT('A'):	/* Beziers (ouvertes) flechees vers avant */
+	case TEXT('F'):	/* Beziers (ouvertes) flechees vers arriere */
+	case TEXT('D'):	/* Beziers (ouvertes) flechees dns les deux sens */
+	case TEXT('p'):	/* polygone */
+	case TEXT('s'):	/* spline fermee */
 	  pAb->AbPolyLineShape = c;
 	  width = pBox->BxWidth;
 	  height = pBox->BxHeight;
@@ -1546,7 +1547,7 @@ int                 frame;
 	      x = pBox->BxXOrg - ViewFrameTable[frame - 1].FrXOrg;
 	      y = pBox->BxYOrg - ViewFrameTable[frame - 1].FrYOrg;
 	      draw = GetParentDraw (pBox);
-	      if (c == 'w' || c == 'x' || c == 'y' || c == 'z')
+	      if (c == TEXT('w') || c == TEXT('x') || c == TEXT('y') || c == TEXT('z'))
 		pAb->AbVolume = PolyLineCreation (frame, &x, &y, pBox, draw, 2);
 	      else
 		pAb->AbVolume = PolyLineCreation (frame, &x, &y, pBox, draw, 0);
@@ -2367,13 +2368,13 @@ int                 editType;
 	     {
 		if (pAb->AbLeafType == LtPolyLine)
 		  {
-		    if (pAb->AbPolyLineShape != 'w' &&
-			pAb->AbPolyLineShape != 'x' &&
-			pAb->AbPolyLineShape != 'y' &&
-			pAb->AbPolyLineShape != 'z')
+		    if (pAb->AbPolyLineShape != TEXT('w') &&
+			pAb->AbPolyLineShape != TEXT('x') &&
+			pAb->AbPolyLineShape != TEXT('y') &&
+			pAb->AbPolyLineShape != TEXT('z'))
 		      {
 			/* Ajout de points dans une polyline */
-			still = (pAb->AbPolyLineShape == 'p' || pAb->AbPolyLineShape == 's');
+			still = (pAb->AbPolyLineShape == TEXT('p') || pAb->AbPolyLineShape == TEXT('s'));
 			x = pBox->BxXOrg - pFrame->FrXOrg;
 			y = pBox->BxYOrg - pFrame->FrYOrg;
 			i = pViewSel->VsIndBox;
@@ -2416,7 +2417,7 @@ int                 editType;
 		else
 		  {
 		     if (ThotLocalActions[T_insertpaste] != NULL)
-			(*ThotLocalActions[T_insertpaste]) (TRUE, FALSE, 'L', &ok);
+			(*ThotLocalActions[T_insertpaste]) (TRUE, FALSE, TEXT('L'), &ok);
 		     else
 			ok = FALSE;
 		     if (ok)
@@ -2427,7 +2428,7 @@ int                 editType;
 	   else if (pAb->AbLeafType != LtPicture)
 	     {
 		if (ThotLocalActions[T_insertpaste] != NULL)
-		   (*ThotLocalActions[T_insertpaste]) (TRUE, FALSE, 'L', &ok);
+		   (*ThotLocalActions[T_insertpaste]) (TRUE, FALSE, TEXT('L'), &ok);
 		else
 		   ok = FALSE;
 		if (ok)
@@ -2512,10 +2513,10 @@ int                 editType;
 		  {
 		    if (pBox->BxNChars <= 3)
 		      TtaDisplaySimpleMessage (INFO, LIB, TMSG_TWO_POINTS_IN_POLYLINE_NEEDED);
-		    else if (pAb->AbPolyLineShape != 'w' &&
-			     pAb->AbPolyLineShape != 'x' &&
-			     pAb->AbPolyLineShape != 'y' &&
-			     pAb->AbPolyLineShape != 'z')
+		    else if (pAb->AbPolyLineShape != TEXT('w') &&
+			     pAb->AbPolyLineShape != TEXT('x') &&
+			     pAb->AbPolyLineShape != TEXT('y') &&
+			     pAb->AbPolyLineShape != TEXT('z'))
 		      {
 			/* Destruction du point courant de la polyline */
 			charsDelta = pViewSel->VsIndBox;
@@ -3005,7 +3006,7 @@ int                 keyboard;
 			    charsDelta = -1;
 			    pix = 0;
 			    adjust = 0;
-			    if (c == ' ')
+			    if (c == SPACE)
 			      spacesDelta = -1;
 			    else
 			      spacesDelta = 0;
@@ -3033,7 +3034,7 @@ int                 keyboard;
 			      }
 			    /* ==> detruit un caractere dans un mot coupe */
 			    /*     ou une coupure forcee (Ctrl Return)       */
-			    else if (previousChars == 0 && c != ' ')
+			    else if (previousChars == 0 && c != SPACE)
 			      {
 				/* Le bloc de ligne et marques de selection sont reevalues */
 				/* -> deplace la marque de selection */
@@ -3087,7 +3088,7 @@ int                 keyboard;
 			      }
 			    /* ==> supprime un blanc de fin de ligne entre deux boites */
 			    else if ((previousChars > pSelBox->BxNChars || previousChars == 0)
-				     && c == ' ')
+				     && c == SPACE)
 			      {
 				/* Le bloc de ligne et marques de selection sont reevalues */
 				/* il faut reevaluer la mise en ligne */
@@ -3123,7 +3124,7 @@ int                 keyboard;
 			    /* ==> Les autre cas de supression */
 			    else
 			      {
-				if (c == ' ')
+				if (c == SPACE)
 				  {
 				    xDelta = -CharacterWidth (_SPACE_, font);
 				    adjust = -pSelBox->BxSpaceWidth;
@@ -3155,7 +3156,7 @@ int                 keyboard;
 			  charsDelta = 1;
 			  pix = 0;
 			  adjust = 0;
-			  if (c == ' ')
+			  if (c == SPACE)
 			    spacesDelta = 1;
 			  else
 			    spacesDelta = 0;
@@ -3225,13 +3226,13 @@ int                 keyboard;
 			  /* ==> Insertion d'un caractere entre deux boites */
 			  else if (previousChars > pSelBox->BxNChars
 				   /* ==> ou d'un blanc en fin de boite      */
-				   || (c == ' ' && (previousChars == pSelBox->BxNChars || previousChars == 0)))
+				   || (c == SPACE && (previousChars == pSelBox->BxNChars || previousChars == 0)))
 			    {
 			      /* Prepare la mise a jour de la boite */
 			      toSplit = TRUE;
 			      xDelta = CharacterWidth (c, font);
 			      
-			      if (c == ' ')
+			      if (c == SPACE)
 				adjust = pSelBox->BxSpaceWidth;
 			      UpdateViewSelMarks (frame, xDelta, spacesDelta, charsDelta);
 			      
@@ -3252,7 +3253,7 @@ int                 keyboard;
 			  /* ==> Les autres cas d'insertion */
 			  else
 			    {
-			      if (c == ' ')
+			      if (c == SPACE)
 				{
 				  xDelta = CharacterWidth (_SPACE_, font);
 				  adjust = pSelBox->BxSpaceWidth;
@@ -3446,7 +3447,7 @@ int                 nbytes;
      {
 	for (i = 0; i < nbytes; i++)
 	  {
-	     if (wasCRbefore && (Xbuffer[i] == '\n'))
+	     if (wasCRbefore && (Xbuffer[i] == EOL))
 	       {
 		  /* Note la longueur courante du dernier buffer du clipboard X */
 		  clipboard->BuLength = j;
@@ -3490,7 +3491,7 @@ int                 nbytes;
 			    clipboard = GetNewBuffer (clipboard, ActiveFrame);
 			    j = 0;
 			 }
-		       clipboard->BuContent[j++] = ' ';
+		       clipboard->BuContent[j++] = SPACE;
 		    }
 		  b = (int) Xbuffer[i];
 		  wasCRbefore = (b == 10);	/* \n */
@@ -3508,7 +3509,7 @@ int                 nbytes;
 
 		       /* Traduit le BS, FF et blanc dur en espace */
 		       if (b == 8 || b == 12 || b == 160)
-			  clipboard->BuContent[j++] = ' ';
+			  clipboard->BuContent[j++] = SPACE;
 		       /* Sinon on filtre que les caracteres imprimables */
 		       else if ((b >= 32 && b < 127)
 				|| (b >= 177 && b < 254))
@@ -3598,7 +3599,7 @@ View                view;
    ThotBool            ok;
 
    if (ThotLocalActions[T_insertpaste] != NULL)
-      (*ThotLocalActions[T_insertpaste]) (FALSE, FALSE, 'L', &ok);
+      (*ThotLocalActions[T_insertpaste]) (FALSE, FALSE, TEXT('L'), &ok);
 }
 
 /*----------------------------------------------------------------------

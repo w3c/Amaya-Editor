@@ -19,7 +19,7 @@
  *
  * Authors: I. Vatton (INRIA)
  *          C. Roisin (INRIA) - Pagination at printing time
- *          R. Guetari (INRIA) - Printing routines for Windows.
+ *          R. Guetari (INRIA) - Unicode - Printing routines for Windows.
  *                               Integration of PostScript prologue. 
  *
  */
@@ -263,11 +263,11 @@ LPSTR  msg;
 #  ifdef _WINDOWS
    suffix = TtaGetVarLANG ();
 
-   if (!ustrncasecmp (suffix, "fr", 2))
+   if (!ustrncasecmp (suffix, _FrLANG_, 2))
       app_lang = FR_LANG;
-   else if (!ustrncasecmp (suffix, "en", 2))
+   else if (!ustrncasecmp (suffix, _EnLANG_, 2))
       app_lang = EN_LANG;
-   else if (!ustrncasecmp (suffix, "de", 2))
+   else if (!ustrncasecmp (suffix, _DeLANG_, 2))
       app_lang = DE_LANG;
 #  endif /* _WINDOWS */
 
@@ -671,10 +671,10 @@ STRING server;
 #  endif /* ! _WINDOWS */
    DefaultBColor = 0;
    DefaultFColor = 1;
-   InitDocColors ("thot");
+   InitDocColors (_THOTElement_);
    /* Initialisation des polices de caracteres */
 #  ifdef _WINDOWS 
-   WIN_InitDialogueFonts (TtPrinterDC, "thot");
+   WIN_InitDialogueFonts (TtPrinterDC, _THOTElement_);
 #  else  /* _WINDOWS */
    InitDialogueFonts ("thot");
 #  endif /* _WINDOWS */
@@ -829,10 +829,10 @@ int                *volume;
 	/* On construit le nom du fichier PostScript */
 	ustrcpy (tmp, DocumentPath);
 	/* On cherche le directory ou existe le .PIV */
-	MakeCompleteName (pDoc->DocDName, "PIV", tmp, fileName, &len);
+	MakeCompleteName (pDoc->DocDName, PIV_EXT2, tmp, fileName, &len);
 	/* On construit le nom complet avec ce directory */
-	FindCompleteName (pDoc->DocDName, "ps", tmp, fileName, &len);	/* ps au lieu de PIV */
-	if ((PSfile = ufopen (fileName, "w")) == NULL)
+	FindCompleteName (pDoc->DocDName, Ps_EXT2, tmp, fileName, &len);	/* ps au lieu de PIV */
+	if ((PSfile = ufopen (fileName, _WriteMODE_)) == NULL)
 	  TtaDisplayMessage (FATAL, TtaGetMessage (PRINT, PRINT_UNABLE_TO_CREATE_FILE), fileName);
 	fflush (PSfile);
 	FrRef[i] = (ThotWindow) PSfile;
@@ -1513,7 +1513,7 @@ int                *volume;
 
 	if (manualFeed == 0)
 	  {
-	     if (!ustrcmp (pageSize, "A3"))
+	     if (!ustrcmp (pageSize, _A3PaperFormat_))
 		fprintf (PSfile, "a3tray\n");
 	  }
 	else
@@ -1961,6 +1961,7 @@ int                viewsCounter;
   int                 schView, rule, v, assocNum, firstFrame;
   ThotBool            present, found, withPages;
 #  ifdef _WINDOWS
+  /* static DOCINFO docInfo = {sizeof (DOCINFO), TEXT("Amaya"), NULL}; */
   int    i;
   int    xRes, yRes, xSize, ySize;
   RECT   Rect;
@@ -2247,8 +2248,8 @@ static int       n = 1;
 	      !pPageAb->AbFirstEnclosed->AbPresentationBox)
 	    /* rend le filet invisible */
 	    {
-	      pPageAb->AbFirstEnclosed->AbShape = ' ';
-	      pPageAb->AbFirstEnclosed->AbRealShape = ' ';
+	      pPageAb->AbFirstEnclosed->AbShape = SPACE;
+	      pPageAb->AbFirstEnclosed->AbRealShape = SPACE;
 	    }
 	  KillAbsBoxBeforePage (pPageAb, CurrentFrame, pDoc, CurrentView, &clipOrg);
 	  CleanTopOfPageElement = False;
@@ -2282,8 +2283,8 @@ static int       n = 1;
 	      /* des paves de presentation */
 	      {
 		stop = TRUE;	/* rend le filet invisible */
-		pAb->AbShape = ' ';
-		pAb->AbRealShape = ' ';
+		pAb->AbShape = SPACE;
+		pAb->AbRealShape = SPACE;
 	      }
 	    else
 	      pAb = pAb->AbNext;
@@ -2510,7 +2511,7 @@ PtrDocument         pDoc;
 		  if (pDocRef != NULL)
 		    {
 		       CopyDocIdent (&pDocRef->DocIdent, pRefD->ReExtDocument);
-		       OpenDocument ("", pDocRef, TRUE, FALSE, NULL, FALSE, FALSE);
+		       OpenDocument (_EMPTYSTR_, pDocRef, TRUE, FALSE, NULL, FALSE, FALSE);
 		    }
 	       }
 	  }
@@ -2604,8 +2605,8 @@ char              **argv;
   HorizShift     = 0;
   VertShift      = 0;
   Zoom           = 100;
-  ustrcpy (pageSize, "A4");
-  Orientation    = "Portrait";
+  ustrcpy (pageSize, _A4PaperFormat_);
+  Orientation    = TEXT("Portrait");
   PoscriptFont = NULL;
   ColorPs = -1;
 
@@ -2619,8 +2620,8 @@ char              **argv;
   ShowSpace = 1;  /* Restitution des espaces */
 
    /* Initialise la table des messages d'erreurs */
-   TtaGetMessageTable ("libdialogue", TMSG_LIB_MSG_MAX);
-   PRINT = TtaGetMessageTable ("printdialogue", PRINT_MSG_MAX);
+   TtaGetMessageTable (TEXT("libdialogue"), TMSG_LIB_MSG_MAX);
+   PRINT = TtaGetMessageTable (TEXT("printdialogue"), PRINT_MSG_MAX);
    InitLanguage ();
    Dict_Init ();
 
@@ -2634,67 +2635,67 @@ char              **argv;
    argCounter = 1;
 #  endif /* _WINDOWS */
   while (argCounter < argc) {  /* Parsing the command line */
-        if (argv [argCounter][0] == '-') { /* the argument is a parameter */
-           if (!ustrcmp (argv [argCounter], "-display")) {
+        if (argv [argCounter][0] == TEXT('-')) { /* the argument is a parameter */
+           if (!ustrcmp (argv [argCounter], TEXT("-display"))) {
               /* The display is distant */
               argCounter++;
-              server = (STRING)  TtaGetMemory (ustrlen (argv[argCounter]) + 1);
+              server = TtaAllocString (ustrlen (argv[argCounter]) + 1);
               ustrcpy (server, argv[argCounter++]);
-           } else if (!ustrcmp (argv [argCounter], "-name")) {
+           } else if (!ustrcmp (argv [argCounter], TEXT("-name"))) {
                   realNameFound = TRUE ;
                   argCounter++;
-                  realName = (STRING) TtaGetMemory (ustrlen (argv[argCounter]) + 1);
+                  realName = TtaAllocString (ustrlen (argv[argCounter]) + 1);
                   ustrcpy (realName, argv[argCounter++]);
-           } else if (!ustrcmp (argv [argCounter], "-ps")) {
+           } else if (!ustrcmp (argv [argCounter], TEXT("-ps"))) {
                   /* The destination is postscript file */
                   if (destination)
                      /* There is a problem, a destination is already given */
                   TtaDisplayMessage (FATAL, TtaGetMessage (PRINT, PRINT_DESTINATION_EXIST));
-                  destination = "PSFILE";
+                  destination = TEXT("PSFILE");
                   argCounter++;
-                  printer = (STRING) TtaGetMemory (ustrlen (argv[argCounter]) + 1);
+                  printer = TtaAllocString (ustrlen (argv[argCounter]) + 1);
                   ustrcpy (printer, argv[argCounter++]);
-           } else if (!ustrcmp (argv [argCounter], "-out")) {
+           } else if (!ustrcmp (argv [argCounter], TEXT("-out"))) {
                   /* The destination is a printer */
                   if (destination)
                      TtaDisplayMessage (FATAL, TtaGetMessage (PRINT, PRINT_DESTINATION_EXIST));
-                  destination = "PRINTER";
+                  destination = TEXT("PRINTER");
                   argCounter++;
-                  printer = (STRING) TtaGetMemory (ustrlen (argv[argCounter]) + 1);
+                  printer = TtaAllocString (ustrlen (argv[argCounter]) + 1);
                   ustrcpy (printer, argv[argCounter++]);
-           } else if (!ustrcmp (argv [argCounter], "-v")) {
+           } else if (!ustrcmp (argv [argCounter], TEXT("-v"))) {
                   /* At least one view must be given in the command line */
                   viewFound = TRUE;
                   argCounter++;
                   ustrcpy (PrintViewName [viewsCounter++], argv [argCounter++]);
-           } else if (!ustrcmp (argv [argCounter], "-npps")) {
+           } else if (!ustrcmp (argv [argCounter], TEXT("-npps"))) {
                   argCounter++;
                   NPagesPerSheet = uctoi (argv[argCounter++]);
-           } else if (!ustrcmp (argv [argCounter], "-bw")) {
+           } else if (!ustrcmp (argv [argCounter], TEXT("-bw"))) {
                   argCounter++;
                   BlackAndWhite = 1;
-           } else if (!ustrcmp (argv [argCounter], "-manualfeed")) {
+           } else if (!ustrcmp (argv [argCounter], TEXT("-manualfeed"))) {
                   argCounter++;
                   manualFeed = 1;
-           } else if (!ustrcmp (argv [argCounter], "-emptybox")) {
+           } else if (!ustrcmp (argv [argCounter], TEXT("-emptybox"))) {
                   argCounter++;
                   NoEmpyBox = 0;
-           } else if (!ustrcmp (argv [argCounter], "-paginate")) {
+           } else if (!ustrcmp (argv [argCounter], TEXT("-paginate"))) {
                   argCounter++;
                   Repaginate = 1;
-           } else if (!ustrcmp (argv [argCounter], "-landscape")) {
-                  Orientation = "Landscape";
+           } else if (!ustrcmp (argv [argCounter], TEXT("-landscape"))) {
+                  Orientation = TEXT("Landscape");
                   argCounter++;
-           } else if (!ustrcmp (argv [argCounter], "-removedir")) {
+           } else if (!ustrcmp (argv [argCounter], TEXT("-removedir"))) {
                   removeDirectory = TRUE;
                   argCounter++;
-           } else if (!ustrcmp (argv [argCounter], "-portrait")) /* Orientation is already set to Portrait value */ 
+           } else if (!ustrcmp (argv [argCounter], TEXT("-portrait"))) /* Orientation is already set to Portrait value */ 
                   argCounter++;
-           else if (!ustrcmp (argv [argCounter], "-sch")) {
+           else if (!ustrcmp (argv [argCounter], TEXT("-sch"))) {
                 /* flag for schema directories */
                 argCounter++;
                 ustrcpy (SchemaPath, argv[argCounter++]);
-           } else if (!ustrcmp (argv [argCounter], "-doc")) {
+           } else if (!ustrcmp (argv [argCounter], TEXT("-doc"))) {
                   /* flag for document directories */
                   argCounter++;
                   ustrcpy (DocumentDir, argv[argCounter++]);
@@ -2704,28 +2705,28 @@ char              **argv;
                 while ((option[index++] = *pChar++));
                 option [index] = EOS;
                 switch (argv [argCounter] [1]) {
-                       case 'F': FirstPrinted = uctoi (option);
+                       case TEXT('F'): FirstPrinted = uctoi (option);
                                  argCounter++;
                                  break;
-                       case 'L': LastPrinted = uctoi (option);
+                       case TEXT('L'): LastPrinted = uctoi (option);
                                  argCounter++;
                                  break;
-                       case 'P': ustrcpy (pageSize, option);
+                       case TEXT('P'): ustrcpy (pageSize, option);
                                  argCounter++;
                                  break;
-                       case '#': NCopies = uctoi (option);
+                       case TEXT('#'): NCopies = uctoi (option);
                                  argCounter++;
                                  break;
-                       case 'H': HorizShift = uctoi (option);
+                       case TEXT('H'): HorizShift = uctoi (option);
                                  argCounter++;
                                  break;
-                       case 'V': VertShift = uctoi (option);
+                       case TEXT('V'): VertShift = uctoi (option);
                                  argCounter++;
                                  break;
-                       case '%': Zoom = uctoi (option);
+                       case TEXT('%'): Zoom = uctoi (option);
                                  argCounter++;
                                  break;
-                       case 'w': thotWindow = (ThotWindow) uctoi (option);
+                       case TEXT('w'): thotWindow = (ThotWindow) uctoi (option);
                                  argCounter++;
                                  break;
                        default:
@@ -2753,7 +2754,7 @@ char              **argv;
   length = ustrlen (name);
   if (!realNameFound)
     {
-      realName = (STRING) TtaGetMemory (length + 1);
+      realName = TtaAllocString (length + 1);
       ustrcpy (realName, name);
     }
 
@@ -2763,7 +2764,7 @@ char              **argv;
   /* The following loop removes the suffix from the filename (name) */
    while ((index < length) && !done)
      {
-       if (name [index] == '.')
+       if (name [index] == TEXT('.'))
 	 {
 	   name [index] = EOS;
 	   done = TRUE;
@@ -2805,7 +2806,7 @@ char              **argv;
        if (l == 0)
 	 ustrcpy (DocumentPath, tempDir);
        else
-	 usprintf (DocumentPath, "%s%c%s", tempDir, PATH_SEP, DocumentDir);
+	 usprintf (DocumentPath, TEXT("%s%c%s"), tempDir, PATH_SEP, DocumentDir);
        
        if (!OpenDocument (name, TheDoc, TRUE, FALSE, NULL, FALSE, FALSE))
 	 TheDoc = NULL;
@@ -2826,11 +2827,11 @@ char              **argv;
    if (TheDoc != NULL)
      if (PrintDocument (TheDoc, viewsCounter) == 0)
        {
-         if (!ustrcmp (destination, "PSFILE"))
+         if (!ustrcmp (destination, TEXT("PSFILE")))
            {
 #            ifdef _WINDOWS 
              /* sprintf (cmd, "copy %s\\%s.ps %s\n", tempDir, name, printer); */
-             usprintf (cmd, "%s\\%s.ps", tempDir, name);
+             usprintf (cmd, TEXT("%s\\%s.ps"), tempDir, name);
              CopyFile (cmd, printer, FALSE);
 #            else  /* !_WINDOWS */
              sprintf (cmd, "/bin/mv %s/%s.ps %s\n", tempDir, name, printer);
@@ -2861,7 +2862,7 @@ char              **argv;
        }
      else
        {
-           usprintf(tempFile, "%s/%s.ps", tempDir, name);
+           usprintf(tempFile, TEXT("%s/%s.ps"), tempDir, name);
 	   TtaDisplayMessage (FATAL, TtaGetMessage (PRINT, PRINT_UNABLE_TO_CREATE_FILE), tempFile);
        }
    
@@ -2870,11 +2871,11 @@ char              **argv;
     {
 #      ifdef _WINDOWS
 	   int i;
-       if (!ustrcmp (destination, "PSFILE") && !DeleteFile (cmd))
+       if (!ustrcmp (destination, TEXT("PSFILE")) && !DeleteFile (cmd))
           WinErrorBox (NULL);
 	   else {
-             STRING pivDoc = (STRING) TtaGetMemory (ustrlen (tmpDocName) + ustrlen (tmpDir) + 6);
-             usprintf (pivDoc, "%s\\%s.PIV", tmpDir, tmpDocName); 
+             STRING pivDoc = TtaAllocString (ustrlen (tmpDocName) + ustrlen (tmpDir) + 6);
+             usprintf (pivDoc, TEXT("%s\\%s.PIV"), tmpDir, tmpDocName); 
 			 if (!DeleteFile (pivDoc))
                 WinErrorBox (NULL);
 	         else if (urmdir (tempDir))

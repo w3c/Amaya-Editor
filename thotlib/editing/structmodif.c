@@ -506,9 +506,9 @@ ThotBool            redisplay;
 			     if (pAb->AbLeafType == LtText)
 				/* change le contenu du pave reference */
 			       {
-				  pAb->AbText->BuContent[0] = '[';
-				  pAb->AbText->BuContent[1] = '?';
-				  pAb->AbText->BuContent[2] = ']';
+				  pAb->AbText->BuContent[0] = TEXT('[');
+				  pAb->AbText->BuContent[1] = TEXT('?');
+				  pAb->AbText->BuContent[2] = TEXT(']');
 				  pAb->AbText->BuContent[3] = EOS;
 				  pAb->AbText->BuLength = 3;
 				  pAb->AbVolume = 3;

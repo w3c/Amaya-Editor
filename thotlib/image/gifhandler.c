@@ -17,7 +17,7 @@
 /*
  *
  * Authors: N. Layaida (INRIA)
- *          R. Guetari (W3C/INRIA) Windows 95/NT routines
+ *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  */
  
 #include "thot_sys.h"

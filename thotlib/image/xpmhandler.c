@@ -18,7 +18,7 @@
  * xpmhandler.c  Pixmap V3.4.c
  *
  * Author: N. Layaida (INRIA)
- *         R. Guetari (W3C/INRIA) - Adaptation to Windows platforms.
+ *         R. Guetari (W3C/INRIA) - Unicode and Windows version.
  */
 
 #include "thot_gui.h"
@@ -241,7 +241,7 @@ unsigned long       BackGroundPixel;
 
    for (i = 0; i < (int) (image.ncolors); i++)
      {
-	if (ustrncmp (image.colorTable[i].c_color, "None", 4) == 0)
+	if (strncmp (image.colorTable[i].c_color, "None", 4) == 0)
 
 	  {
 	     TtaGiveThotRGB ((int) BackGroundPixel, &red, &green, &blue);
@@ -310,18 +310,18 @@ unsigned long       BackGroundPixel;
    IsXpmFormat check if the file header is of a pixmap                
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool               IsXpmFormat (STRING fn)
+ThotBool                IsXpmFormat (char* fn)
 #else  /* __STDC__ */
-ThotBool               IsXpmFormat (fn)
-STRING              fn;
+ThotBool                IsXpmFormat (fn)
+char*                  fn;
 #endif /* __STDC__ */
 {
    FILE               *f;
-   CHAR_T                c;
-   ThotBool               res;
+   char                c;
+   ThotBool            res;
 
    res = FALSE;
-   f = ufopen (fn, "r");
+   f = fopen (fn, "r");
    if (f != NULL)
      {
 	c = getc (f);

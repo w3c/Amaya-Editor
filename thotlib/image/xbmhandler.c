@@ -16,7 +16,7 @@
  
 /*
  * Author: N. Layaida (INRIA)
- *         R. Guetari (W3C/INRIA) Windows NT/95
+ *         R. Guetari (W3C/INRIA) Unicode and Windows version
  */
 
 #include "thot_sys.h"
@@ -276,7 +276,7 @@ unsigned int        BackGroundPixel;
    IsXbmFormat check if the file header is of an xbm format        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            IsXbmFormat (STRING fn)
+ThotBool             IsXbmFormat (char* fn)
 #else  /* __STDC__ */
 ThotBool            IsXbmFormat (fn)
 STRING              fn;

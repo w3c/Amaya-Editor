@@ -53,7 +53,7 @@ LabelString         strng;
 #endif /* __STDC__ */
 
 {
-   usprintf (strng, "L%d", num);
+   usprintf (strng, TEXT("L%d"), num);
 }
 
 
@@ -67,7 +67,7 @@ void                ReadLabel (CHAR_T labelType, LabelString label, BinFile file
 
 #else  /* __STDC__ */
 void                ReadLabel (labelType, label, file)
-CHAR_T                labelType;
+CHAR_T              labelType;
 LabelString         label;
 BinFile             file;
 
@@ -105,7 +105,7 @@ BinFile             file;
 	       while (label[j - 1] != EOS);
 	       break;
 	    default:
-	       DisplayPivotMessage ("S");
+	       DisplayPivotMessage (_S_);
 	       break;
 	 }
 }
@@ -204,7 +204,7 @@ ThotBool            labelsOnly;
 	if (c != (CHAR_T) C_PIV_DOCNAME || error)
 	  {
 	     /* ce n'est pas une marque de nom */
-	     DisplayPivotMessage ("T");
+	     DisplayPivotMessage (_T_);
 	     error = TRUE;
 	  }
 	while (c == (CHAR_T) C_PIV_DOCNAME && !error)
@@ -293,7 +293,7 @@ PtrChangedReferredEl *Anchor;
 	     if (c != (CHAR_T) C_PIV_DOCNAME)
 	       {
 		  /* a name was expected */
-		  DisplayPivotMessage ("T");
+		  DisplayPivotMessage (_T_);
 		  error = TRUE;
 	       }
 	     else
@@ -308,7 +308,7 @@ PtrChangedReferredEl *Anchor;
 		  if (c != (CHAR_T) C_PIV_DOCNAME)
 		    {
 		       /* a name was expected */
-		       DisplayPivotMessage ("T");
+		       DisplayPivotMessage (_T_);
 		       error = TRUE;
 		    }
 		  else

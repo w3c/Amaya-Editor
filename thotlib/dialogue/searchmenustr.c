@@ -172,7 +172,7 @@ PtrDocument         pDoc;
 	if (entree < nbentrees + 1 && lgmenu >= LgMaxListeAttr - MAX_NAME_LENGTH - 4)
 	   /* le buffer est trop petit ... */
 	  {
-	     ustrncpy (ListeAttr + lgmenu, "...", 4);
+	     ustrncpy (ListeAttr + lgmenu, TEXT("..."), 4);
 	     lgmenu += 4;
 	     nbitem++;
 	  }
@@ -180,7 +180,7 @@ PtrDocument         pDoc;
 	TtaNewSelector (NumSelAttributeToSearch, NumFormSearchText,
 			TtaGetMessage (LIB, TMSG_ATTR_TO_SEARCH), nbitem, ListeAttr, 5, NULL, TRUE, FALSE);
 	/* initialise le selecteur (rien n'est selectionne') */
-	TtaSetSelector (NumSelAttributeToSearch, -1, "");
+	TtaSetSelector (NumSelAttributeToSearch, -1, _EMPTYSTR_);
      }
 }
 
@@ -228,7 +228,7 @@ static void         ConstruitSelecteurTypes ()
 	   if (regle <= pSS->SsNRules && lgmenu >= LgMaxListeTypes - MAX_NAME_LENGTH - 4)
 	      /* le buffer est trop petit ... */
 	     {
-		ustrncpy (ListeTypes + lgmenu, "...", 4);
+		ustrncpy (ListeTypes + lgmenu, TEXT("..."), 4);
 		lgmenu += 4;
 		nbitem++;
 	     }
@@ -236,12 +236,12 @@ static void         ConstruitSelecteurTypes ()
    /* cree le selecteur des types disponibles */
    if (nbitem == 0)
       TtaNewSelector (NumSelTypeToSearch, NumFormSearchText,
-		      TtaGetMessage (LIB, TMSG_TYPE_TO_SEARCH), 1, " ", 5, NULL, TRUE, FALSE);
+		      TtaGetMessage (LIB, TMSG_TYPE_TO_SEARCH), 1, TEXT(" "), 5, NULL, TRUE, FALSE);
    else
       TtaNewSelector (NumSelTypeToSearch, NumFormSearchText,
 		      TtaGetMessage (LIB, TMSG_TYPE_TO_SEARCH), nbitem, ListeTypes, 5, NULL, TRUE, FALSE);
    /* initialise le selecteur (rien n'est selectionne') */
-   TtaSetSelector (NumSelTypeToSearch, -1, "");
+   TtaSetSelector (NumSelTypeToSearch, -1, _EMPTYSTR_);
 }
 
 
@@ -487,7 +487,7 @@ PtrDocument         pDoc;
 	lgmenu = 0;
 	for (nat = 0; nat < LgTableNaturesDoc && lgmenu < LgMaxListeTypes - MAX_NAME_LENGTH; nat++)
 	  {
-	     ustrcpy (ListeTypes + lgmenu, "B");
+	     ustrcpy (ListeTypes + lgmenu, _B_);
 	     if (TableNaturesDoc[nat]->SsExtension)
 	       {
 		  ustrncpy (ListeTypes + lgmenu + 1, TableNaturesDoc[nat]->SsName,
@@ -553,9 +553,9 @@ PtrDocument         pDoc;
 		   TtaGetMessage (LIB, TMSG_ANY), 5, NULL, TRUE, FALSE);
 
    /* label indiquant la valeur de l'attribut trouve' */
-   TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, " ");
+   TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, TEXT(" "));
    /* annule le label donnant la valeur de l'attribut trouve' */
-   TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, " ");
+   TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, TEXT(" "));
    NomTypeAChercher[0] = EOS;
    /* construit le menu des natures utilisees dans le document */
    InitMenuNatures ((PtrDocument) pDoc);
@@ -774,7 +774,7 @@ PtrSearchContext    DomaineCherche;
 
 
    /* annule le label donnant la valeur de l'attribut trouve' */
-   TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, " ");
+   TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, TEXT(" "));
    for (i = 1; i <= LgTableNaturesDoc; i++)
       TableNaturesCherchees[i - 1] = FALSE;
    /* cherche le nom de type dans le schema de structure */
@@ -956,7 +956,7 @@ void                ValAttrSearch ()
 	   if (pAttrTrouve->AeAttrType == AtReferenceAttr)
 	      ustrcpy (LabelBuffer, pAttrTrouve->AeAttrSSchema->SsAttribute[pAttrTrouve->AeAttrNum - 1].AttrName);
 	   else
-	      usprintf (NomAtt, "%s = ", pAttrTrouve->AeAttrSSchema->SsAttribute[pAttrTrouve->AeAttrNum - 1].AttrName);
+	      usprintf (NomAtt, TEXT("%s = "), pAttrTrouve->AeAttrSSchema->SsAttribute[pAttrTrouve->AeAttrNum - 1].AttrName);
 	else
 	   ustrcpy (NomAtt, TtaGetMessage (LIB, TMSG_VALUE_OF_ATTR));
 	switch (pAttrTrouve->AeAttrType)
@@ -964,10 +964,10 @@ void                ValAttrSearch ()
 		 case AtReferenceAttr:
 		    break;
 		 case AtNumAttr:
-		    usprintf (LabelBuffer, "%s %d", NomAtt, pAttrTrouve->AeAttrValue);
+		    usprintf (LabelBuffer, TEXT("%s %d"), NomAtt, pAttrTrouve->AeAttrValue);
 		    break;
 		 case AtEnumAttr:
-		    usprintf (LabelBuffer, "%s %s", NomAtt,
+		    usprintf (LabelBuffer,TEXT("%s %s"), NomAtt,
 			     pAttrTrouve->AeAttrSSchema->SsAttribute
 			     [pAttrTrouve->AeAttrNum - 1].AttrEnumValue
 			     [pAttrTrouve->AeAttrValue - 1]);

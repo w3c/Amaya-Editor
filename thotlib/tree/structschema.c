@@ -2591,7 +2591,7 @@ ThotBool            CanAssociateAttr (pEl, pAttr, pNewAttr, mandatory)
 PtrElement          pEl;
 PtrAttribute        pAttr;
 PtrAttribute        pNewAttr;
-ThotBool           *mandatory;
+ThotBool            *mandatory;
 
 #endif /* __STDC__ */
 

@@ -63,7 +63,7 @@ STRING               data;
    int                 valvisib;
    int                 valzoom;
    int                 bouton;
-   CHAR_T                chaine[100];
+   CHAR_T              chaine[100];
 
    bouton = (int) data;
    GetFrameParams (Fenzoomview, &valvisib, &valzoom);
@@ -74,7 +74,7 @@ STRING               data;
      {
 	/* Augmente le zoom */
 	valzoom++;
-	usprintf (chaine, "%s : %d", TtaGetMessage (LIB, TMSG_CHANGE_ZOOM), valzoom);
+	usprintf (chaine, TEXT("%s : %d"), TtaGetMessage (LIB, TMSG_CHANGE_ZOOM), valzoom);
 	TtaNewLabel (NumTextZoom, NumMenuZoom, chaine);
 	SetFrameParams (Fenzoomview, valvisib, valzoom);
      }
@@ -82,18 +82,18 @@ STRING               data;
      {
 	/* Diminue le zoom */
 	valzoom--;
-	usprintf (chaine, "%s : %d", TtaGetMessage (LIB, TMSG_CHANGE_ZOOM), valzoom);
+	usprintf (chaine, TEXT("%s : %d"), TtaGetMessage (LIB, TMSG_CHANGE_ZOOM), valzoom);
 	TtaNewLabel (NumTextZoom, NumMenuZoom, chaine);
 	SetFrameParams (Fenzoomview, valvisib, valzoom);
      }
    else if (bouton == 4)
      {
-	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, TMSG_CHANGE_ZOOM), valzoom);
+	usprintf (chaine, TEXT("%s : %d"), TtaGetMessage (LIB, TMSG_CHANGE_ZOOM), valzoom);
 	TtaNewLabel (NumTextZoom, NumMenuZoom, chaine);
      }
    else
      {
-	sprintf (chaine, "%s : %d", TtaGetMessage (LIB, TMSG_VALUE_NOT_CHANGED), valzoom);
+	usprintf (chaine, TEXT("%s : %d"), TtaGetMessage (LIB, TMSG_VALUE_NOT_CHANGED), valzoom);
 	TtaNewLabel (NumTextZoom, NumMenuZoom, chaine);
      }
 }
@@ -150,10 +150,10 @@ View                view;
    i = ustrlen (chaine) + 1;
    ustrcpy (&chaine[i], TtaGetMessage (LIB, TMSG_DECREASE));
    TtaNewSheet (NumMenuZoom,  0, TtaGetMessage (LIB, TMSG_LIB_ZOOM),
-		2, chaine, FALSE, 4, 'L', D_DONE);
+		2, chaine, FALSE, 4, TEXT('L'), D_DONE);
 
    /* Affiche le nom du document concerne */
-   usprintf (chaine, "%s %s", TtaGetDocumentName (document),
+   usprintf (chaine, TEXT("%s %s"), TtaGetDocumentName (document),
 	    TtaGetViewName (document, view));
    Fenzoomview = GetWindowNumber (document, view);
    TtaNewLabel (NumDocZoom, NumMenuZoom, chaine);

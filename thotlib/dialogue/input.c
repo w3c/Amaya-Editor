@@ -20,7 +20,7 @@
  * Authors: I. Vatton (INRIA)
  *          D. Veillard (INRIA) - Removed X remapping of keys,
  *                                lead to crash in some configurations
- *          R. Guetari (W3C/INRIA) - Windows routines.
+ *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  *
  */
 
@@ -32,7 +32,7 @@
 #include "libmsg.h"
 #include "message.h"
 #include "appdialogue.h"
-
+#include "unicodeconsts.h"
 #define MAX_EQUIV 25
 #define THOT_NO_MOD	0
 #define THOT_MOD_CTRL	1
@@ -133,20 +133,20 @@ STRING              name;
 
 {
    if (ustrlen (name) < 5)
-      if (name[0] == ',')
-	 return ("0x2c");
+      if (name[0] == TEXT(','))
+	 return (TEXT("0x2c"));
       else
 	 return (name);
-   else if (!ustrcasecmp (name, "return"))
-      return ("0x0d");
-   else if (!ustrcasecmp (name, "backspace"))
-      return ("0x08");
-   else if (!ustrcasecmp (name, "space"))
-      return ("0x20");
-   else if (!ustrcasecmp (name, "escape"))
-      return ("0x18");
-   else if (!ustrcasecmp (name, "delete"))
-      return ("0x7f");
+   else if (!ustrcasecmp (name, _ReturnKEY_))
+      return (TEXT("0x0d"));
+   else if (!ustrcasecmp (name, _BackspaceKEY_))
+      return (TEXT("0x08"));
+   else if (!ustrcasecmp (name, _SpaceKEY_))
+      return (TEXT("0x20"));
+   else if (!ustrcasecmp (name, _EscapeKEY_))
+      return (TEXT("0x18"));
+   else if (!ustrcasecmp (name, _DeleteKEY_))
+      return (TEXT("0x7f"));
    else
       return (name);
 }
@@ -166,99 +166,99 @@ STRING              name;
 #endif /* __STDC__ */
 {
    /* is it the name of a special character? */
-   if (!ustrcasecmp (name, "return"))
+   if (!ustrcasecmp (name, _ReturnKEY_))
       return (unsigned int) THOT_KEY_Return;
-   else if (!ustrcasecmp (name, "backspace"))
+   else if (!ustrcasecmp (name, _BackspaceKEY_))
       return (unsigned int) THOT_KEY_BackSpace;
-   else if (!ustrcasecmp (name, "space"))
+   else if (!ustrcasecmp (name, _SpaceKEY_))
       return 32;
-   else if (!ustrcasecmp (name, "escape"))
+   else if (!ustrcasecmp (name, _EscapeKEY_))
       return (unsigned int) THOT_KEY_Escape;
-   else if (!ustrcasecmp (name, "delete"))
+   else if (!ustrcasecmp (name, _DeleteKEY_))
       return (unsigned int) THOT_KEY_Delete;
-   else if (!ustrcasecmp (name, "f1"))
+   else if (!ustrcasecmp (name, _F1KEY_))
       return (unsigned int) THOT_KEY_F1;
-   else if (!ustrcasecmp (name, "f2"))
+   else if (!ustrcasecmp (name, _F2KEY_))
       return (unsigned int) THOT_KEY_F2;
-   else if (!ustrcasecmp (name, "f3"))
+   else if (!ustrcasecmp (name, _F3KEY_))
       return (unsigned int) THOT_KEY_F3;
-   else if (!ustrcasecmp (name, "f4"))
+   else if (!ustrcasecmp (name, _F4KEY_))
       return (unsigned int) THOT_KEY_F4;
-   else if (!ustrcasecmp (name, "f5"))
+   else if (!ustrcasecmp (name, _F5KEY_))
       return (unsigned int) THOT_KEY_F5;
-   else if (!ustrcasecmp (name, "f6"))
+   else if (!ustrcasecmp (name, _F6KEY_))
       return (unsigned int) THOT_KEY_F6;
-   else if (!ustrcasecmp (name, "f7"))
+   else if (!ustrcasecmp (name, _F7KEY_))
       return (unsigned int) THOT_KEY_F7;
-   else if (!ustrcasecmp (name, "f8"))
+   else if (!ustrcasecmp (name, _F8KEY_))
       return (unsigned int) THOT_KEY_F8;
-   else if (!ustrcasecmp (name, "f9"))
+   else if (!ustrcasecmp (name, _F9KEY_))
       return (unsigned int) THOT_KEY_F9;
-   else if (!ustrcasecmp (name, "f10"))
+   else if (!ustrcasecmp (name, _F10KEY_))
       return (unsigned int) THOT_KEY_F10;
-   else if (!ustrcasecmp (name, "f11") || !ustrcasecmp (name, "l1"))
+   else if (!ustrcasecmp (name, _F11KEY_) || !ustrcasecmp (name, TEXT("11")))
       return (unsigned int) THOT_KEY_F11;
-   else if (!ustrcasecmp (name, "f12") || !ustrcasecmp (name, "l2"))
+   else if (!ustrcasecmp (name, _F12KEY_) || !ustrcasecmp (name, TEXT("12")))
       return (unsigned int) THOT_KEY_F12;
-   else if (!ustrcasecmp (name, "f13") || !ustrcasecmp (name, "l3"))
+   else if (!ustrcasecmp (name, _F13KEY_) || !ustrcasecmp (name, TEXT("13")))
       return (unsigned int) THOT_KEY_F13;
-   else if (!ustrcasecmp (name, "f14") || !ustrcasecmp (name, "l4"))
+   else if (!ustrcasecmp (name, _F14KEY_) || !ustrcasecmp (name, TEXT("14")))
       return (unsigned int) THOT_KEY_F14;
-   else if (!ustrcasecmp (name, "f15") || !ustrcasecmp (name, "l5"))
+   else if (!ustrcasecmp (name, _F15KEY_) || !ustrcasecmp (name, TEXT("15")))
       return (unsigned int) THOT_KEY_F15;
-   else if (!ustrcasecmp (name, "f16") || !ustrcasecmp (name, "l6"))
+   else if (!ustrcasecmp (name, _F16KEY_) || !ustrcasecmp (name, TEXT("16")))
       return (unsigned int) THOT_KEY_F16;
-   else if (!ustrcasecmp (name, "f17") || !ustrcasecmp (name, "l7"))
+   else if (!ustrcasecmp (name, _F17KEY_) || !ustrcasecmp (name, TEXT("17")))
       return (unsigned int) THOT_KEY_F17;
-   else if (!ustrcasecmp (name, "f18") || !ustrcasecmp (name, "l8"))
+   else if (!ustrcasecmp (name, _F18KEY_) || !ustrcasecmp (name, TEXT("18")))
       return (unsigned int) THOT_KEY_F18;
-   else if (!ustrcasecmp (name, "f19") || !ustrcasecmp (name, "l9"))
+   else if (!ustrcasecmp (name, _F19KEY_) || !ustrcasecmp (name, TEXT("19")))
       return (unsigned int) THOT_KEY_F19;
-   else if (!ustrcasecmp (name, "f20") || !ustrcasecmp (name, "l10"))
+   else if (!ustrcasecmp (name, _F20KEY_) || !ustrcasecmp (name, TEXT("l10")))
       return (unsigned int) THOT_KEY_F20;
 #ifdef THOT_KEY_R1
-   else if (!ustrcasecmp (name, "f21") || !ustrcasecmp (name, "r1"))
+   else if (!ustrcasecmp (name, _F21KEY_) || !ustrcasecmp (name, "r1"))
       return (unsigned int) THOT_KEY_R1;
-   else if (!ustrcasecmp (name, "f22") || !ustrcasecmp (name, "r2"))
+   else if (!ustrcasecmp (name, _F22KEY_) || !ustrcasecmp (name, "r2"))
       return (unsigned int) THOT_KEY_R2;
-   else if (!ustrcasecmp (name, "f23") || !ustrcasecmp (name, "r3"))
+   else if (!ustrcasecmp (name, _F23KEY_) || !ustrcasecmp (name, "r3"))
       return (unsigned int) THOT_KEY_R3;
-   else if (!ustrcasecmp (name, "f24") || !ustrcasecmp (name, "r4"))
+   else if (!ustrcasecmp (name, _F24KEY_) || !ustrcasecmp (name, "r4"))
       return (unsigned int) THOT_KEY_R4;
-   else if (!ustrcasecmp (name, "f25") || !ustrcasecmp (name, "r5"))
+   else if (!ustrcasecmp (name, _F25KEY_) || !ustrcasecmp (name, "r5"))
       return (unsigned int) THOT_KEY_R5;
-   else if (!ustrcasecmp (name, "f26") || !ustrcasecmp (name, "r6"))
+   else if (!ustrcasecmp (name, _F26KEY_) || !ustrcasecmp (name, "r6"))
       return (unsigned int) THOT_KEY_R6;
-   else if (!ustrcasecmp (name, "f27") || !ustrcasecmp (name, "r7"))
+   else if (!ustrcasecmp (name, _F27KEY_) || !ustrcasecmp (name, "r7"))
       return (unsigned int) THOT_KEY_R7;
-   else if (!ustrcasecmp (name, "f28") || !ustrcasecmp (name, "r8"))
+   else if (!ustrcasecmp (name, _F28KEY_) || !ustrcasecmp (name, "r8"))
       return (unsigned int) THOT_KEY_R8;
-   else if (!ustrcasecmp (name, "f29") || !ustrcasecmp (name, "r9"))
+   else if (!ustrcasecmp (name, _F29KEY_) || !ustrcasecmp (name, "r9"))
       return (unsigned int) THOT_KEY_R9;
-   else if (!ustrcasecmp (name, "f30") || !ustrcasecmp (name, "r10"))
+   else if (!ustrcasecmp (name, _F30KEY_) || !ustrcasecmp (name, "r10"))
       return (unsigned int) THOT_KEY_R10;
-   else if (!ustrcasecmp (name, "f31") || !ustrcasecmp (name, "r11"))
+   else if (!ustrcasecmp (name, _F31KEY_) || !ustrcasecmp (name, "r11"))
       return (unsigned int) THOT_KEY_R11;
-   else if (!ustrcasecmp (name, "f32") || !ustrcasecmp (name, "r12"))
+   else if (!ustrcasecmp (name, _F32KEY_) || !ustrcasecmp (name, "r12"))
       return (unsigned int) THOT_KEY_R12;
-   else if (!ustrcasecmp (name, "f33") || !ustrcasecmp (name, "r13"))
+   else if (!ustrcasecmp (name, _F33KEY_) || !ustrcasecmp (name, "r13"))
       return (unsigned int) THOT_KEY_R13;
-   else if (!ustrcasecmp (name, "f34") || !ustrcasecmp (name, "r14"))
+   else if (!ustrcasecmp (name, _F34KEY_) || !ustrcasecmp (name, "r14"))
       return (unsigned int) THOT_KEY_R14;
-   else if (!ustrcasecmp (name, "f35") || !ustrcasecmp (name, "r15"))
+   else if (!ustrcasecmp (name, _F35KEY_) || !ustrcasecmp (name, "r15"))
       return (unsigned int) THOT_KEY_R15;
 #endif /* THOT_KEY_R1 */
-   else if (!ustrcasecmp (name, "up"))
+   else if (!ustrcasecmp (name, _UpKEY_))
       return (unsigned int) THOT_KEY_Up;
-   else if (!ustrcasecmp (name, "down"))
+   else if (!ustrcasecmp (name, _DownKEY_))
       return (unsigned int) THOT_KEY_Down;
-   else if (!ustrcasecmp (name, "left"))
+   else if (!ustrcasecmp (name, _LeftKEY_))
       return (unsigned int) THOT_KEY_Left;
-   else if (!ustrcasecmp (name, "right"))
+   else if (!ustrcasecmp (name, _RightKEY_))
       return (unsigned int) THOT_KEY_Right;
-   else if (!ustrcasecmp (name, "home"))
+   else if (!ustrcasecmp (name, _HomeKEY_))
       return (unsigned int) THOT_KEY_Home;
-   else if (!ustrcasecmp (name, "end"))
+   else if (!ustrcasecmp (name, _EndKEY_))
       return (unsigned int) THOT_KEY_End;
    else
       return (unsigned int) name[0];
@@ -1035,7 +1035,9 @@ STRING              appliname;
 {
    STRING              text;	   /* fichier de translation transmis a motif */
    CHAR_T              line[200];  /* ligne en construction pour motif */
-   CHAR_T              home[200], name[80], ch[80]; 
+   CHAR_T              home[200], name[80]; 
+   char                ch[80], iname [80]; 
+   STRING              Uch;
    STRING              adr;
    CHAR_T              equiv[MAX_EQUIV]; /* equivalents caracteres pour motif */
    unsigned int        key1, key2; /* 1ere & 2eme cles sous forme de keysym X */
@@ -1045,12 +1047,12 @@ STRING              appliname;
    FILE               *file;
    ThotTranslations    table;
 
-   text = TtaGetEnvString ("APP_HOME");
+   text = TtaGetEnvString (_APPHOME_EVAR_);
    ustrcpy (name, appliname);
 #  ifdef _WINDOWS
-   ustrcat (name, ".kb");
+   ustrcat (name, KB_EXT);
 #  else  /* _WINDOWS */
-   ustrcat (name, ".keyboard");
+   ustrcat (name, Keyboard_EXT);
 #  endif /* _WINDOWS */
 
    ustrcpy (home, text);
@@ -1059,7 +1061,7 @@ STRING              appliname;
    if (!SearchFile (home, 0, line))
      SearchFile (name, 2, line);
 
-   file = ufopen (line, "r");
+   file = ufopen (line, _ReadMODE_);
    if (!file)
      {
 	/*Fichier inaccessible */
@@ -1072,7 +1074,7 @@ STRING              appliname;
 	fseek (file, 0L, 2);	/* fin du fichier */
 
 	len = ftell (file) * 2 + 10;	/* pour assurer de la marge */
-	text = TtaGetMemory (len);
+	text = TtaAllocString (len);
 	fseek (file, 0L, 0);	/* debut du fichier */
 
 	/* Initialise la lecture du fichier */
@@ -1081,265 +1083,358 @@ STRING              appliname;
 	len = ustrlen (CST_InsertChar) + 2;
 
 	/* FnCopy la premiere ligne du fichier (#override, ou #...) */
-	ustrcpy (text, "#override\n");
+	ustrcpy (text, TEXT("#override\n"));
 	fscanf (file, "%80s", ch);
-	do
-	  {
-	     /* Initialisations */
-	     mod1 = mod2 = THOT_NO_MOD;
-	     key1 = key2 = 0;
-	     ustrcpy (line, "!");	/* initialisation de la ligne */
+#   if defined(_I18N_) || defined(__JIS__)
+    Uch = TtaAllocString (strlen (ch) + 1);
+#   ifdef _WINDOWS
+    MultiByteToWideChar (CP_ACP, 0, ch, -1, Uch, sizeof (ch));
+#   else  /* !_WINDOWS */
+    mbstowcs (Uch, ch, sizeof (ch));
+#   endif /* !_WINDOWS */
+#   else /* defined(_I18N_) || defined(__JIS__) */
+    Uch = ch;
+#   endif /* defined(_I18N_) || defined(__JIS__) */
+	do {
+       /* Initialisations */
+       mod1 = mod2 = THOT_NO_MOD;
+       key1 = key2 = 0;
+       ustrcpy (line, TEXT("!"));	/* initialisation de la ligne */
 
-	     /* Est-ce la fin de fichier ? */
-	     if (ustrlen (ch) == 0 || EndOfString (ch, "^"))
-		e = 0;
-	     else if (ch[0] != '#')
-		/* it is not a comment */
-		/* -------> Lecture des autres champs */
-	       {
-		  if (!ustrcasecmp (ch, "shift"))
-		    {
-		      mod1 = THOT_MOD_SHIFT;
-		      /* copie 1er modifieur */
-		      ustrcpy (equiv, "Shift");
-		      ustrcat (equiv, " ");
-		      ustrcat (line, "Shift");
-		      ustrcat (line, " ");
-		      /* Lecture enventuelle d'un deuxieme modifieur */
-		      ch[0] = EOS;
-		      fscanf (file, "%80s", ch);
-		    }
-		  else
-		    {
-		       mod1 = THOT_NO_MOD;
-		       equiv[0] = EOS;
-		    }
+       /* Est-ce la fin de fichier ? */
+       if (ustrlen (Uch) == 0 || EndOfString (Uch, TEXT("^")))
+          e = 0;
+       else if (Uch[0] != TEXT('#')) {
+            /* it is not a comment */
+            /* -------> Lecture des autres champs */
+            if (!ustrcasecmp (Uch, TEXT("shift"))) {
+               mod1 = THOT_MOD_SHIFT;
+               /* copie 1er modifieur */
+               ustrcpy (equiv, TEXT("Shift"));
+               ustrcat (equiv, TEXT(" "));
+               ustrcat (line, TEXT("Shift"));
+               ustrcat (line, TEXT(" "));
+               /* Lecture enventuelle d'un deuxieme modifieur */
+               Uch[0] = EOS;
+               fscanf (file, "%80s", ch);
+#              if defined(_I18N_) || defined(__JIS__)
+               Uch = TtaAllocString (strlen (ch) + 1);
+#              ifdef _WINDOWS
+               MultiByteToWideChar (CP_ACP, 0, ch, -1, Uch, sizeof (ch));
+#              else  /* !_WINDOWS */
+               mbstowcs (Uch, ch, sizeof (ch));
+#              endif /* !_WINDOWS */
+#              else /* defined(_I18N_) || defined(__JIS__) */
+               Uch = ch;
+#              endif /* defined(_I18N_) || defined(__JIS__) */
+			} else {
+                   mod1 = THOT_NO_MOD;
+                   equiv[0] = EOS;
+			}
 
-		  if (!ustrcasecmp (ch, "ctrl"))
-		    {
-		      mod1 += THOT_MOD_CTRL;
-		      /* copie 2eme modifieur */
-		      ustrcat (equiv, "Ctrl");
-		      ustrcat (equiv, " ");
-		      ustrcat (line, "Ctrl");
-		      ustrcat (line, " ");
-		      /* Lecture de la cle */
-		      ch[0] = EOS;
-		      fscanf (file, "%80s", ch);
-		    }
-		  else if (!ustrcasecmp (ch, "alt") || !ustrcasecmp (ch, "meta"))
-		    {
-		      mod1 += THOT_MOD_ALT;
-		      /* copie 2eme modifieur */
-		      ustrcat (equiv, "Alt");
-		      ustrcat (equiv, " ");
-		      ustrcat (line, "Alt");
-		      ustrcat (line, " ");
-		      /* Lecture de la cle */
-		      ch[0] = EOS;
-		      fscanf (file, "%80s", ch);
-		    }
+            if (!ustrcasecmp (Uch, TEXT("ctrl"))) {
+               mod1 += THOT_MOD_CTRL;
+               /* copie 2eme modifieur */
+               ustrcat (equiv, TEXT("Ctrl"));
+               ustrcat (equiv, TEXT(" "));
+               ustrcat (line, TEXT("Ctrl"));
+               ustrcat (line, TEXT(" "));
+               /* Lecture de la cle */
+               Uch[0] = EOS;
+               fscanf (file, "%80s", ch);
+#              if defined(_I18N_) || defined(__JIS__)
+               Uch = TtaAllocString (strlen (ch) + 1);
+#              ifdef _WINDOWS
+               MultiByteToWideChar (CP_ACP, 0, ch, -1, Uch, sizeof (ch));
+#              else  /* !_WINDOWS */
+               mbstowcs (Uch, ch, sizeof (ch));
+#              endif /* !_WINDOWS */
+#              else /* defined(_I18N_) || defined(__JIS__) */
+               Uch = ch;
+#              endif /* defined(_I18N_) || defined(__JIS__) */
+			} else if (!ustrcasecmp (Uch, TEXT("alt")) || !ustrcasecmp (Uch, TEXT("meta"))) {
+                   mod1 += THOT_MOD_ALT;
+                   /* copie 2eme modifieur */
+                   ustrcat (equiv, TEXT("Alt"));
+                   ustrcat (equiv, TEXT(" "));
+                   ustrcat (line, TEXT("Alt"));
+                   ustrcat (line, TEXT(" "));
+                   /* Lecture de la cle */
+                   Uch[0] = EOS;
+                   fscanf (file, "%80s", ch);
+#                  if defined(_I18N_) || defined(__JIS__)
+                   Uch = TtaAllocString (strlen (ch) + 1);
+#                  ifdef _WINDOWS
+                   MultiByteToWideChar (CP_ACP, 0, ch, -1, Uch, sizeof (ch));
+#                  else  /* !_WINDOWS */
+                   mbstowcs (Uch, ch, sizeof (ch));
+#                  endif /* !_WINDOWS */
+#                  else /* defined(_I18N_) || defined(__JIS__) */
+                   Uch = ch;
+#                  endif /* defined(_I18N_) || defined(__JIS__) */
+			} 
 
-		  /* Extrait la valeur de la cle */
-		  name[0] = EOS;
-		  usscanf (ch, "<Key>%80s", name);
-		  if (name[0] != EOS)
-		    {
-		      /* copie de la cle */
-		       ustrcat (line, "<Key>");
-		       i = ustrlen (name);
-		       /* Elimine le : a la fin du nom */
-		       if ((name[i - 1] == ':') && i != 1)
-			 {
-			    /* Il faut engendrer un : apres le nom */
-			    name[i - 1] = EOS;
-			    i = 1;
-			 }
-		       else
-			  i = 0;
-		       /* copie le nom normalise */
-		       ustrcat (line, NameCode (name));
-		       if (i == 1)
-			  ustrcat (line, ": ");
-		       else
-			  ustrcat (line, " ");
-		    }
+            /* Extrait la valeur de la cle */
+            iname[0] = EOS;
+            sscanf (ch, "<Key>%80s", iname);
+#           if defined(_I18N_) || defined(__JIS__)
+            mbstowcs (name, iname, sizeof (iname));
+            Uch = TtaAllocString (strlen (ch) + 1);
+#           ifdef _WINDOWS
+            MultiByteToWideChar (CP_ACP, 0, ch, -1, Uch, sizeof (ch));
+#           else  /* !_WINDOWS */
+            mbstowcs (Uch, ch, sizeof (ch));
+#           endif /* !_WINDOWS */
+#           else /* defined(_I18N_) || defined(__JIS__) */
+            ustrcpy (name, iname);
+            Uch = ch;
+#           endif /* defined(_I18N_) || defined(__JIS__) */
+            if (name[0] != EOS) {
+               /* copie de la cle */
+               ustrcat (line, TEXT("<Key>"));
+               i = ustrlen (name);
+               /* Elimine le : a la fin du nom */
+               if ((name[i - 1] == TEXT(':')) && i != 1) {
+                  /* Il faut engendrer un : apres le nom */
+                  name[i - 1] = EOS;
+                  i = 1;
+			   } else
+                     i = 0;
+               /* copie le nom normalise */
+               ustrcat (line, NameCode (name));
+               if (i == 1)
+                  ustrcat (line, TEXT(": "));
+               else
+                   ustrcat (line, TEXT(" "));
+			}
 
-		  /* convertion vers keysym pour l'automate */
-		  key1 = SpecialKey (name);
-		  ustrcat (equiv, name);
+            /* convertion vers keysym pour l'automate */
+            key1 = SpecialKey (name);
+            ustrcat (equiv, name);
 
-		  /* Lecture eventuelle d'une deuxieme composition */
-		  ustrcpy (name, "");
-		  fscanf (file, "%80s", name);
-		  if (name[0] == ',')
-		    {
-		      /* copie du separateur */
-		      ustrcat (line, ", ");
-		      ch [0] = EOS;
-		      fscanf (file, "%80s", ch);
+            /* Lecture eventuelle d'une deuxieme composition */
+            ustrcpy (name, _EMPTYSTR_);
+            fscanf (file, "%80s", iname);
+            if (iname[0] == ',') {
+               /* copie du separateur */
+               ustrcat (line, TEXT(", "));
+               Uch [0] = EOS;
+               fscanf (file, "%80s", ch);
+#              if defined(_I18N_) || defined(__JIS__)
+               Uch = TtaAllocString (strlen (ch) + 1);
+#              ifdef _WINDOWS
+               MultiByteToWideChar (CP_ACP, 0, ch, -1, Uch, sizeof (ch));
+#              else  /* !_WINDOWS */
+               mbstowcs (Uch, ch, sizeof (ch));
+#              endif /* !_WINDOWS */
+#              else /* defined(_I18N_) || defined(__JIS__) */
+               Uch = ch;
+#              endif /* defined(_I18N_) || defined(__JIS__) */
 		      
-		      if (!ustrcasecmp (ch, "shift"))
-			{
-			  mod2 = THOT_MOD_SHIFT;
-			  /* copie du 2eme modifieur */
-			  ustrcat (equiv, "Shift");
-			  ustrcat (equiv, " ");
-			  ustrcat (line, "Shift");
-			  ustrcat (line, " ");
-			  /* Lecture enventuelle d'un deuxieme modifieur */
-			  ch[0] = EOS;
-			  fscanf (file, "%80s", ch);
+               if (!ustrcasecmp (Uch, TEXT("shift"))) {
+                  mod2 = THOT_MOD_SHIFT;
+                  /* copie du 2eme modifieur */
+                  ustrcat (equiv, TEXT("Shift"));
+                  ustrcat (equiv, TEXT(" "));
+                  ustrcat (line, TEXT("Shift"));
+                  ustrcat (line, TEXT(" "));
+                  /* Lecture enventuelle d'un deuxieme modifieur */
+                  Uch[0] = EOS;
+                  fscanf (file, "%80s", ch);
+#                 if defined(_I18N_) || defined(__JIS__)
+                  Uch = TtaAllocString (strlen (ch) + 1);
+#                 ifdef _WINDOWS
+                  MultiByteToWideChar (CP_ACP, 0, ch, -1, Uch, sizeof (ch));
+#                 else  /* !_WINDOWS */
+                  mbstowcs (Uch, ch, sizeof (ch));
+#                 endif /* !_WINDOWS */
+#                 else /* defined(_I18N_) || defined(__JIS__) */
+                  Uch = ch;
+#                 endif /* defined(_I18N_) || defined(__JIS__) */
+			   } else {
+                      mod2 = THOT_NO_MOD;
+                      ustrcat (equiv, TEXT(" "));
+			   }
+
+               if (!ustrcasecmp (Uch, TEXT("ctrl"))) {
+                  mod2 += THOT_MOD_CTRL;
+                  /* copie 2eme modifieur */
+                  ustrcat (equiv, TEXT("Ctrl"));
+                  ustrcat (equiv, TEXT(" "));
+                  ustrcat (line, TEXT("Ctrl"));
+                  ustrcat (line, TEXT(" "));
+                  /* copie de la cle */
+                  Uch[0] = EOS;
+                  fscanf (file, "%80s", ch);
+#                 if defined(_I18N_) || defined(__JIS__)
+                  Uch = TtaAllocString (strlen (ch) + 1);
+#                 ifdef _WINDOWS
+                  MultiByteToWideChar (CP_ACP, 0, ch, -1, Uch, sizeof (ch));
+#                 else  /* !_WINDOWS */
+                  mbstowcs (Uch, ch, sizeof (ch));
+#                 endif /* !_WINDOWS */
+#                 else /* defined(_I18N_) || defined(__JIS__) */
+                  Uch = ch;
+#                 endif /* defined(_I18N_) || defined(__JIS__) */
+                  ustrcat (line, Uch);
+                  ustrcat (line, TEXT(" "));
+			   } else if (!ustrcasecmp (Uch, TEXT("alt")) || !ustrcasecmp (Uch, TEXT("meta"))) {
+                      mod2 += THOT_MOD_ALT;
+                      /* copie 2eme modifieur */
+                      ustrcat (equiv, TEXT("Alt"));
+                      ustrcat (equiv, TEXT(" "));
+                      ustrcat (line, TEXT("Alt"));
+                      ustrcat (line, TEXT(" "));
+                      /* copie de la cle */
+                      Uch[0] = EOS;
+                      fscanf (file, "%80s", ch);
+#                     if defined(_I18N_) || defined(__JIS__)
+                      Uch = TtaAllocString (strlen (ch) + 1);
+#                     ifdef _WINDOWS
+                      MultiByteToWideChar (CP_ACP, 0, ch, -1, Uch, sizeof (ch));
+#                     else  /* !_WINDOWS */
+                      mbstowcs (Uch, ch, sizeof (ch));
+#                     endif /* !_WINDOWS */
+#                     else /* defined(_I18N_) || defined(__JIS__) */
+                      Uch = ch;
+#                     endif /* defined(_I18N_) || defined(__JIS__) */
+                      ustrcat (line, Uch);
+                      ustrcat (line, TEXT(" "));
+			   }
+
+               /* Extrait la valeur de la cle */
+               iname [0] = EOS ;
+               sscanf (ch, "<Key>%80s", iname);
+#              if defined(_I18N_) || defined(__JIS__)
+               mbstowcs (name, iname, sizeof (iname));
+               Uch = TtaAllocString (strlen (ch) + 1);
+#              ifdef _WINDOWS
+               MultiByteToWideChar (CP_ACP, 0, ch, -1, Uch, sizeof (ch));
+#              else  /* !_WINDOWS */
+               mbstowcs (Uch, ch, sizeof (ch));
+#              endif /* !_WINDOWS */
+#              else /* defined(_I18N_) || defined(__JIS__) */
+               strcpy (name, iname);
+               Uch = ch;
+#              endif /* defined(_I18N_) || defined(__JIS__) */
+               if (name [0] != EOS) {
+                  ustrcat (line, TEXT("<Key>"));	/* copie de la cle */
+                  i = ustrlen (name);
+                  /* Elimine le : a la fin du nom */
+                  if (name[i - 1] == TEXT(':') && i != 1) {
+                     /* Il faut engendrer un : apres le nom */
+                     name[i - 1] = EOS;
+                     i = 1;
+                  } else
+                        i = 0;
+                  ustrcat (line, NameCode (name));	/* copie le nom normalise */
+                  if (i == 1)
+                     ustrcat (line, TEXT(": "));
+                  else
+                      ustrcat (line, TEXT(" "));
+	       } 
+               key2 = SpecialKey (name);
+               ustrcat (equiv, name);
+
+               /* Lecture de l'action */
+               iname [0] = EOS;
+               fscanf (file, "%80s", iname);
+	    }
+
+            /* Isole l'intitule de la commande */
+            strncpy (ch, iname, 80);
+#           if defined(_I18N_) || defined(__JIS__)
+            Uch = TtaAllocString (strlen (ch) + 1);
+#           ifdef _WINDOWS
+            MultiByteToWideChar (CP_ACP, 0, ch, -1, Uch, sizeof (ch));
+#           else  /* !_WINDOWS */
+            mbstowcs (Uch, ch, sizeof (ch));
+#           endif /* !_WINDOWS */
+#           else /* defined(_I18N_) || defined(__JIS__) */
+            Uch = ch;
+#           endif /* defined(_I18N_) || defined(__JIS__) */
+            adr = ustrchr (Uch, TEXT('('));
+            if (adr == NULL)
+               adr = ustrchr (Uch, SPACE);
+            if (adr == NULL)
+               i = max;
+            else {
+                 adr[0] = EOS;
+                 /* Selection de la bonne commande */
+                 for (i = 0; i < max; i++)
+                 if (!ustrcmp (Uch, MenuActionList[i].ActionName))
+                    break;
+			} 
+
+            /* Est-ce une translation valable pour le texte Motif */
+            if (i <= 8) {
+               /* FnCopy la ligne dans le source de la table de translations */
+               ustrcat (text, line);
+               if (!ustrcmp (Uch, CST_InsertChar)) {
+                  ustrcat (text, TEXT("insert-string("));
+                  ustrcat (text, AsciiTranslate (&adr[1]));
+			   } else if (!ustrcmp (Uch, CST_DeleteSelection))
+                      ustrcat (text, TEXT("delete-selection()"));
+               else if (!ustrcmp (Uch, CST_DeletePrevChar))
+                    ustrcat (text, TEXT("delete-prev-char()"));
+               else if (!ustrcmp (Uch, CST_PreviousChar))
+                    ustrcat (text, TEXT("backward-char()"));
+               else if (!ustrcmp (Uch, CST_NextChar))
+                    ustrcat (text, TEXT("forward-char()"));
+               else if (!ustrcmp (Uch, CST_PreviousLine))
+                    ustrcat (text, TEXT("previous-line()"));
+               else if (!ustrcmp (Uch, CST_NextLine))
+                    ustrcat (text, TEXT("next-line()"));
+               else if (!ustrcmp (Uch, CST_BeginningOfLine))
+                    ustrcat (text, TEXT("beginning-of-line()"));
+               else if (!ustrcmp (Uch, CST_EndOfLine))
+                    ustrcat (text, TEXT("end-of-line()"));
+               ustrcat (text, TEXT("\n"));
 			}
-		      else
-			{
-			  mod2 = THOT_NO_MOD;
-			  ustrcat (equiv, " ");
-			}
 
-		      if (!ustrcasecmp (ch, "ctrl"))
-			{
-			  mod2 += THOT_MOD_CTRL;
-			  /* copie 2eme modifieur */
-			  ustrcat (equiv, "Ctrl");
-			  ustrcat (equiv, " ");
-			  ustrcat (line, "Ctrl");
-			  ustrcat (line, " ");
-			  /* copie de la cle */
-			  ch[0] = EOS;
-			  fscanf (file, "%80s", ch);
-			  ustrcat (line, ch);
-			  ustrcat (line, " ");
-			}
-		      else if (!ustrcasecmp (ch, "alt") || !ustrcasecmp (ch, "meta"))
-			{
-			  mod2 += THOT_MOD_ALT;
-			  /* copie 2eme modifieur */
-			  ustrcat (equiv, "Alt");
-			  ustrcat (equiv, " ");
-			  ustrcat (line, "Alt");
-			  ustrcat (line, " ");
-			  /* copie de la cle */
-			  ch[0] = EOS;
-			  fscanf (file, "%80s", ch);
-			  ustrcat (line, ch);
-			  ustrcat (line, " ");
-			}
+            if (i == 0) {
+               /* C'est l'action insert-string */
+               /* FnCopy la ligne dans le source de la table de translations */
+               ustrcat (text, line);
+               ustrcat (text, AsciiTranslate (name));
+               ustrcat (text, TEXT("\n"));
+               /* C'est un encodage de caractere */
+               adr = AsciiTranslate (&name[len]);
+               MemoKey (mod1, key1, mod2, key2, (unsigned int) adr[0], 0);
+			} else if (i < max) {
+                   /* C'est une autre action Thot */
+                   MemoKey (mod1, key1, mod2, key2, /*255+i */ 0, i);
+                   /* On met a jour l'equivalent clavier */
+                   MenuActionList[i].ActionEquiv = TtaAllocString (ustrlen (equiv) + 1);
+                   ustrcpy (MenuActionList[i].ActionEquiv, equiv);
+			}  
+       } else {
+              /* skip this line */
+              do
+                i = fgetc (file);
+             while (i != NEW_LINE);
+	   } 
+       Uch[0] = EOS;
+       fscanf (file, "%80s", ch);
+#      if defined(_I18N_) || defined(__JIS__)
+       Uch = TtaAllocString (strlen (ch) + 1);
+#      ifdef _WINDOWS
+       MultiByteToWideChar (CP_ACP, 0, ch, -1, Uch, sizeof (ch));
+#      else  /* !_WINDOWS */
+       mbstowcs (Uch, ch, sizeof (ch));
+#      endif /* !_WINDOWS */
+#      else /* defined(_I18N_) || defined(__JIS__) */
+       Uch = ch;
+#      endif /* defined(_I18N_) || defined(__JIS__) */
+	} while (e != 0);
 
-		       /* Extrait la valeur de la cle */
-		       name [0] = EOS ;
-		       usscanf (ch, "<Key>%80s", name);
-		       if (name [0] != EOS)
-			 {
-			    ustrcat (line, "<Key>");	/* copie de la cle */
-			    i = ustrlen (name);
-			    /* Elimine le : a la fin du nom */
-			    if (name[i - 1] == ':' && i != 1)
-			      {
-				 /* Il faut engendrer un : apres le nom */
-				 name[i - 1] = EOS;
-				 i = 1;
-			      }
-			    else
-			       i = 0;
-			    ustrcat (line, NameCode (name));	/* copie le nom normalise */
-			    if (i == 1)
-			       ustrcat (line, ": ");
-			    else
-			       ustrcat (line, " ");
-			 }
-		       key2 = SpecialKey (name);
-		       ustrcat (equiv, name);
+    fclose (file);
 
-		       /* Lecture de l'action */
-		       name [0] = EOS;
-		       fscanf (file, "%80s", name);
-		    }
-
-		  /* Isole l'intitule de la commande */
-		  ustrncpy (ch, name, 80);
-		  adr = ustrchr (ch, '(');
-		  if (adr == NULL)
-		    adr = ustrchr (ch, ' ');
-		  if (adr == NULL)
-		     i = max;
-		  else
-		    {
-		       adr[0] = EOS;
-		       /* Selection de la bonne commande */
-		       for (i = 0; i < max; i++)
-			  if (!ustrcmp (ch, MenuActionList[i].ActionName))
-			     break;
-		    }
-
-		  /* Est-ce une translation valable pour le texte Motif */
-		  if (i <= 8)
-		    {
-		       /* FnCopy la ligne dans le source de la table de translations */
-		       ustrcat (text, line);
-		       if (!ustrcmp (ch, CST_InsertChar))
-			 {
-			    ustrcat (text, "insert-string(");
-			    ustrcat (text, AsciiTranslate (&adr[1]));
-			 }
-		       else if (!ustrcmp (ch, CST_DeleteSelection))
-			  ustrcat (text, "delete-selection()");
-		       else if (!ustrcmp (ch, CST_DeletePrevChar))
-			  ustrcat (text, "delete-prev-char()");
-		       else if (!ustrcmp (ch, CST_PreviousChar))
-			  ustrcat (text, "backward-char()");
-		       else if (!ustrcmp (ch, CST_NextChar))
-			  ustrcat (text, "forward-char()");
-		       else if (!ustrcmp (ch, CST_PreviousLine))
-			  ustrcat (text, "previous-line()");
-		       else if (!ustrcmp (ch, CST_NextLine))
-			  ustrcat (text, "next-line()");
-		       else if (!ustrcmp (ch, CST_BeginningOfLine))
-			  ustrcat (text, "beginning-of-line()");
-		       else if (!ustrcmp (ch, CST_EndOfLine))
-			  ustrcat (text, "end-of-line()");
-		       ustrcat (text, "\n");
-		    }
-
-		  if (i == 0)
-		    {
-		       /* C'est l'action insert-string */
-		       /* FnCopy la ligne dans le source de la table de translations */
-		       ustrcat (text, line);
-		       ustrcat (text, AsciiTranslate (name));
-		       ustrcat (text, "\n");
-		       /* C'est un encodage de caractere */
-		       adr = AsciiTranslate (&name[len]);
-		       MemoKey (mod1, key1, mod2, key2, (unsigned int) adr[0], 0);
-		    }
-		  else if (i < max)
-		    {
-		       /* C'est une autre action Thot */
-		       MemoKey (mod1, key1, mod2, key2, /*255+i */ 0, i);
-		       /* On met a jour l'equivalent clavier */
-		       MenuActionList[i].ActionEquiv = TtaGetMemory (ustrlen (equiv) + 1);
-		       ustrcpy (MenuActionList[i].ActionEquiv, equiv);
-		    }
-	       }
-	     else
-	       {
-		 /* skip this line */
-		 do
-		   i = fgetc (file);
-		 while (i != NEW_LINE);
-	       }
-	     ch[0] = EOS;
-	     fscanf (file, "%80s", ch);
-	  }
-	while (e != 0);
-
-	fclose (file);
-
-	/* Creation de la table de translation */
-#       ifndef _WINDOWS
+    /* Creation de la table de translation */
+#   ifndef _WINDOWS
 	table = XtParseTranslationTable (text);
-#       endif  /* !_WINDOWS */
-	TtaFreeMemory (text);
-	return table;
-     }				/*else */
+#   endif  /* !_WINDOWS */
+    TtaFreeMemory (text);
+    return table;
+  }				/*else */
 }				/*InitTranslation */

@@ -155,10 +155,10 @@ BinFile             file;
 	   stop = TRUE;
 	else
 	  {
-	     if (c < ' ')
+	     if (c < SPACE)
 	       {
 		  printf ("^");
-		  c = (CHAR_T) ((int) c + (int) '@');
+		  c = (CHAR_T) ((int) c + (int) TEXT('@'));
 		  i++;
 	       }
 	     printf ("%c", c);
@@ -281,7 +281,7 @@ ThotBool		    removeExclusions
 	     ustrncpy (pDoc->DocIdent, docName, MAX_DOC_IDENT_LEN);
 	     pDoc->DocIdent[MAX_DOC_IDENT_LEN - 1] = EOS;
 	  }
-	if (pDoc->DocDName[0] > ' ')
+	if (pDoc->DocDName[0] > SPACE)
 	   /* nom de document non vide */
 	  {
 	     /* compose le nom du fichier a ouvrir avec le nom du directory */
@@ -290,7 +290,7 @@ ThotBool		    removeExclusions
 		ustrncpy (directoryName, DocumentPath, MAX_PATH);
 	     else
 		ustrncpy (directoryName, pDoc->DocDirectory, MAX_PATH);
-	     MakeCompleteName (pDoc->DocDName, "PIV", directoryName, text, &i);
+	     MakeCompleteName (pDoc->DocDName, PIV_EXT2, directoryName, text, &i);
 	     /* ouvre le fichier 'PIV' */
 	     pivotFile = TtaReadOpen (text);
 	     if (pivotFile != 0)
@@ -309,7 +309,7 @@ ThotBool		    removeExclusions
 		       ret = TRUE;
 		       /* lit le fichier des references externes s'il existe */
 		       /* dans le meme directory que le fichier .PIV */
-		       FindCompleteName (pDoc->DocDName, "EXT", directoryName, text, &i);
+		       FindCompleteName (pDoc->DocDName, EXT_EXT2, directoryName, text, &i);
 		       pivotFile = TtaReadOpen (text);
 		       if (pivotFile != 0)
 			 {
@@ -318,7 +318,7 @@ ThotBool		    removeExclusions
 			 }
 		       /* lit le fichier de mise a jour des references sortantes */
 		       /* s'il existe dans le meme directory que le fichier .PIV */
-		       FindCompleteName (pDoc->DocDName, "REF", directoryName, text, &i);
+		       FindCompleteName (pDoc->DocDName, REF_EXT2, directoryName, text, &i);
 		       pivotFile = TtaReadOpen (text);
 		       if (pivotFile != 0)
 			 {
@@ -441,7 +441,7 @@ ThotBool           *found;
    STRING              name;
 
    name = fileName;
-   if (*name < ' ')
+   if (*name < SPACE)
      {
 	*oldTypeImage = *name++ - 1;
 	*oldPres = (PictureScaling) (*oldTypeImage / 4);
@@ -608,7 +608,7 @@ BinFile             file;
 	       break;
 	    default:
 	       PivotError (file);
-	       DisplayPivotMessage ("l");
+	       DisplayPivotMessage (_l_);
 	       align = AlignLeft;
 	       break;
 	 }
@@ -677,7 +677,7 @@ BinFile             file;
 	       break;
 	    default:
 	       PivotError (file);
-	       DisplayPivotMessage ("C");
+	       DisplayPivotMessage (_C_);
 	       typ = PgComputed;
 	       break;
 	 }
@@ -721,7 +721,7 @@ ThotBool            oldformat;
      {
 	PivotError (file);
 	/* tag debut de commentaire ancien format absente */
-	DisplayPivotMessage ("y");
+	DisplayPivotMessage (_y_);
 	firstBuf = NULL;
      }
    else
@@ -811,7 +811,7 @@ ThotBool            oldformat;
 	     if (c != (CHAR_T) C_PIV_END)
 	       {
 		  PivotError (file);
-		  DisplayPivotMessage ("c");
+		  DisplayPivotMessage (_c_);
 	       }
 	  }
      }
@@ -855,7 +855,7 @@ BinFile             pivFile;
        break;
      default:
        PivotError (pivFile);
-       DisplayPivotMessage ("PICT");
+       DisplayPivotMessage (TEXT("PICT"));
        scaling = RealSize;
        break;
      }
@@ -883,7 +883,7 @@ int                *number;
 
    ok = FALSE;
    *number = 0;
-   if (string[0] == 'L')
+   if (string[0] == TEXT('L'))
      {
 	val = 0;
 	i = 1;
@@ -891,9 +891,9 @@ int                *number;
 	  {
 	     c = string[i];
 	     i++;
-	     if (c >= '0' && c <= '9')
+	     if (c >= TEXT('0') && c <= TEXT('9'))
 	       {
-		  val = (val * 10) + (c - '0');
+		  val = (val * 10) + (c - TEXT('0'));
 		  ok = TRUE;
 	       }
 	     else if (c != EOS)
@@ -1178,7 +1178,7 @@ STRING              tag;
 	if (nat < 0 || nat >= pDoc->DocNNatures)
 	  {
 	     PivotError (pivFile);
-	     DisplayPivotMessage ("Nature Num");
+	     DisplayPivotMessage (TEXT("Nature Num"));
 	  }
 	/* lit le tag de type qui suit */
 	if (!error)
@@ -1206,7 +1206,7 @@ STRING              tag;
 		     if (rule == 0)
 		       {
 			  PivotError (pivFile);
-			  DisplayPivotMessage ("n");
+			  DisplayPivotMessage (_n_);
 		       }
 		     else
 			*pSS = (*pSS)->SsRule[rule - 1].SrSSchemaNat;
@@ -1227,7 +1227,7 @@ STRING              tag;
 	{
 	   rule = 0;
 	   PivotError (pivFile);
-	   DisplayPivotMessage ("t");
+	   DisplayPivotMessage (_t_);
 	}
 
    return rule;
@@ -1460,14 +1460,14 @@ PtrAttribute       *pAttr;
    TtaReadShort (pivFile, &n);
    if (n < 0 || n >= pDoc->DocNNatures)
      {
-	DisplayPivotMessage ("Nature Num GetAttributeOfElement ");
+	DisplayPivotMessage (TEXT("Nature Num GetAttributeOfElement "));
 	PivotError (pivFile);
      }
    else
       pSchAttr = pDoc->DocNatureSSchema[n];
    if (pSchAttr == NULL)
      {
-	DisplayPivotMessage ("Nature GetAttributeOfElement");
+	DisplayPivotMessage (TEXT("Nature GetAttributeOfElement"));
 	PivotError (pivFile);
      }
    /* lit l'attribut */
@@ -1501,7 +1501,7 @@ PtrAttribute       *pAttr;
 			if (!TtaReadByte (pivFile, &c))
 			  {
 			     PivotError (pivFile);
-			     DisplayPivotMessage ("A");
+			     DisplayPivotMessage (_A_);
 			  }
 		     while (!error && c != EOS) ;
 		  else
@@ -1516,7 +1516,7 @@ PtrAttribute       *pAttr;
 			     /* erreur de lecture */
 			    {
 			       PivotError (pivFile);
-			       DisplayPivotMessage ("A");
+			       DisplayPivotMessage (_A_);
 			    }
 			  else
 			     /* on a lu correctement un caractere */
@@ -1538,8 +1538,8 @@ PtrAttribute       *pAttr;
 		       if (attr == 1)
 			  /* language attribute */
 			  if (ustrlen(pPremBuff->BuContent) != 2 &&
-			      pPremBuff->BuContent[1] != '-' &&
-			      pPremBuff->BuContent[2] != '-')
+			      pPremBuff->BuContent[1] != TEXT('-') &&
+			      pPremBuff->BuContent[2] != TEXT('-'))
 			    /* it's not a valid language code. Convert it */
 			    {
 			    ustrcpy (pPremBuff->BuContent,
@@ -1557,9 +1557,9 @@ PtrAttribute       *pAttr;
 	   /* ignore les attributs definis dans les anciennes extensions */
 	   /* ExtCorr et ExtMot */
 	   if (pSchAttr->SsExtension)
-	      if (ustrcmp (pSchAttr->SsName, "ExtCorr") == 0)
+	      if (ustrcmp (pSchAttr->SsName, TEXT("ExtCorr")) == 0)
 		 create = FALSE;
-	      else if (ustrcmp (pSchAttr->SsName, "ExtMot") == 0)
+	      else if (ustrcmp (pSchAttr->SsName, TEXT("ExtMot")) == 0)
 		 create = FALSE;
 	if (!create)
 	   *pAttr = NULL;
@@ -1807,7 +1807,7 @@ ThotBool            link;
       break;
     default:
       PivotError (pivFile);
-      DisplayPivotMessage ("p");
+      DisplayPivotMessage (_p_);
       break;
     }
 
@@ -2177,10 +2177,10 @@ ThotBool            createDesc;
 	    PivotError (pivFile);
 	  else
 	    {
-	      if (c < ' ')
+	      if (c < SPACE)
 		{
 		  printf ("^");
-		  c = (CHAR_T) (((int) c) + ((int) '@'));
+		  c = (CHAR_T) (((int) c) + ((int) TEXT('@')));
 		  i++;
 		}
 	      printf ("%c", c);
@@ -2188,7 +2188,7 @@ ThotBool            createDesc;
 	    }
 	}
       printf ("\n");
-      DisplayPivotMessage ("I");	/* erreur */
+      DisplayPivotMessage (_I_);	/* erreur */
       PivotError (pivFile);
     }
   else
@@ -2368,7 +2368,7 @@ ThotBool            createDesc;
 		  /* portant ce label, erreur */
 		  {
 		    pEl->ElReferredDescr = NULL;
-		    DisplayPivotMessage ("L");
+		    DisplayPivotMessage (_L_);
 		  }
 		else
 		  pEl->ElReferredDescr->ReReferredElem = pEl;
@@ -2435,7 +2435,7 @@ ThotBool            createDesc;
 	      if (*tag != (CHAR_T) C_PIV_REFERENCE)
 		{
 		  PivotError (pivFile);
-		  DisplayPivotMessage ("R");	/* erreur */
+		  DisplayPivotMessage (_R_);	/* erreur */
 		}
 	      else
 		/* traitement des references : on lit la reference */
@@ -2451,7 +2451,7 @@ ThotBool            createDesc;
 	      if (*tag != (CHAR_T) C_PIV_BEGIN)
 		{
 		  PivotError (pivFile);
-		  DisplayPivotMessage ("M");	/* erreur, pas de tag debut */
+		  DisplayPivotMessage (_M_);	/* erreur, pas de tag debut */
 		}
 	      else
 		/* traitement des paires : on lit l'identificateur */
@@ -2467,7 +2467,7 @@ ThotBool            createDesc;
 		    /* erreur, pas de tag de fin */
 		    {
 		      PivotError (pivFile);
-		      DisplayPivotMessage ("m");
+		      DisplayPivotMessage (_m_);
 		    }
 		  else if (!TtaReadByte (pivFile, tag))
 		    PivotError (pivFile);
@@ -2499,7 +2499,7 @@ ThotBool            createDesc;
 			/* langues du document */
 			if (i < 0 || i >= pDoc->DocNLanguages)
 			  {
-			    DisplayPivotMessage ("Invalid language");
+			    DisplayPivotMessage (TEXT("Invalid language"));
 			    pEl->ElLanguage = TtaGetDefaultLanguage ();
 			  }
 			else
@@ -2510,7 +2510,7 @@ ThotBool            createDesc;
 		  /* version pivot < 4 */
 		  {
 		    /* alpabet par defaut = Latin */
-		    alphabet = 'L';
+		    alphabet = TEXT('L');
 		    /* dans le cas d'une inclusion sans expansion, il */
 		    /* n'y a pas d'alphabet. */
 		    /* dans les versions pivot anciennes, il peut y avoir une */
@@ -2583,34 +2583,34 @@ ThotBool            createDesc;
 				    n++;
 				    /* mise a la norme iso des anciens pivots */
 				    if (pDoc->DocPivotVersion < 3)
-				      if (((int) ch) >= 1 && ch < ' ')
+				      if (((int) ch) >= 1 && ch < SPACE)
 					switch (ch)
 					  {
-					  case '\021':
-					    ch = '\040';
+					  case TEXT('\021'):
+					    ch = TEXT('\040');
 					    break;	/*space */
-					  case '\030':
-					    ch = '\230';
+					  case TEXT('\030'):
+					    ch = TEXT('\230');
 					    break;	/*oe */
-					  case '\036':
-					    ch = '\377';
+					  case TEXT('\036'):
+					    ch = TEXT('\377');
 					    break;	/*ydiaresis */
-					  case '\037':
-					    ch = '\351';
+					  case TEXT('\037'):
+					    ch = TEXT('\351');
 					    break;	/*eacute */
 					  default:
 					    ch = (CHAR_T) (((int) ch) + 223);
 					  }
 				    /* changement des oe et OE */
 				    if (pDoc->DocPivotVersion < 4)
-				      if (ch == '\230')
-					ch = '\367';
-				      else if (ch == '\367')
-					ch = '\230';
-				      else if (ch == '\231')
-					ch = '\327';
-				      else if (ch == '\327')
-					ch = '\231';
+				      if (ch == TEXT('\230'))
+					ch = TEXT('\367');
+				      else if (ch == TEXT('\367'))
+					ch = TEXT('\230');
+				      else if (ch == TEXT('\231'))
+					ch = TEXT('\327');
+				      else if (ch == TEXT('\327'))
+					ch = TEXT('\231');
 				    /* range le caractere et lit le suivant */
 				    pBuf->BuContent[n - 1] = ch;
 				    if (!TtaReadByte (pivFile, &ch))
@@ -2648,7 +2648,7 @@ ThotBool            createDesc;
 				    if (n == THOT_MAX_CHAR - 1)
 				      {
 					PivotError (pivFile);
-					DisplayPivotMessage ("x");
+					DisplayPivotMessage (_x_);
 				      }
 				    n++;
 				    /* range le caractere et lit le suivant */
@@ -2695,10 +2695,10 @@ ThotBool            createDesc;
 				  pEl->ElGraph = ch;
 				  /* remplace les anciens rectangles trame's par */
 				  /* de simple rectangles */
-				  if (pEl->ElGraph >= '0' && pEl->ElGraph <= '9')
-				    pEl->ElGraph = 'R';
-				  else if (pEl->ElGraph >= '\260' && pEl->ElGraph <= '\270')
-				    pEl->ElGraph = 'R';
+				  if (pEl->ElGraph >= TEXT('0') && pEl->ElGraph <= TEXT('9'))
+				    pEl->ElGraph = TEXT('R');
+				  else if (pEl->ElGraph >= TEXT('\260') && pEl->ElGraph <= TEXT('\270'))
+				    pEl->ElGraph = TEXT('R');
 				  if (ch == EOS)
 				    pEl->ElVolume = 0;
 				  else
@@ -2769,7 +2769,7 @@ ThotBool            createDesc;
 		  if (*tag != (CHAR_T) C_PIV_END)
 		    {
 		      PivotError (pivFile);
-		      DisplayPivotMessage ("F");
+		      DisplayPivotMessage (_F_);
 		    }
 		  
 		  if (!TtaReadByte (pivFile, tag))
@@ -2784,7 +2784,7 @@ ThotBool            createDesc;
 		    if (pEl->ElTerminal)
 		      {
 			PivotError (pivFile);
-			DisplayPivotMessage ("f");
+			DisplayPivotMessage (_f_);
 		      }
 		  /* erreur: feuille avec contenu */
 		  if (!error)
@@ -3053,7 +3053,7 @@ int                 rank;
 
    if (rank > pDoc->DocNNatures + 1)
       /* le rang voulu pour la nature est invraissemblable */
-      DisplayPivotMessage ("Err nature ???");
+      DisplayPivotMessage (TEXT("Err nature ???"));
    /* on cherche (par son nom) si la nature existe dans la table */
    i = 1;
    found = FALSE;
@@ -3135,7 +3135,7 @@ void (*withThisPSchema) ();
    if (SSName[i - 1] != EOS)
      {
 	PivotError (file);
-	DisplayPivotMessage ("Z");
+	DisplayPivotMessage (_Z_);
      }
    else
      {
@@ -3206,7 +3206,7 @@ void (*withThisPSchema) ();
 	if (!error)
 	   if (!TtaReadByte (file, tag))
 	      PivotError (file);
-	if (*tag >= '!' && *tag <= '~' && !error)
+	if (*tag >= TEXT('!') && *tag <= TEXT('~') && !error)
 	   /* il y a un nom de schema de presentation */
 	  {
 	     PSchemaName[0] = *tag;
@@ -3295,7 +3295,7 @@ STRING              tag;
 	   if (languageName[i - 1] != EOS)
 	     {
 		PivotError (file);
-		DisplayPivotMessage ("Z");
+		DisplayPivotMessage (_Z_);
 	     }
 	   else
 	     {
@@ -3462,7 +3462,7 @@ ThotBool		    removeExclusions
    if (!error && tag != (CHAR_T) C_PIV_NATURE)
      {
 	PivotError (file);
-	DisplayPivotMessage ("N");	/* tag classe absente */
+	DisplayPivotMessage (_N_);	/* tag classe absente */
      }
    if (!error)
       /* lit les noms des schemas de structure et de presentation */
@@ -3506,7 +3506,7 @@ ThotBool		    removeExclusions
 	/* reference's par d'autres documents (on en aura besoin */
 	/* pendant la lecture du fichier .PIV). On cherche ce */
 	/* fichier dans le meme directory que le fichier .PIV */
-	FindCompleteName (pDoc->DocDName, "EXT", pDoc->DocDirectory, buffer, &i);
+	FindCompleteName (pDoc->DocDName, EXT_EXT2, pDoc->DocDirectory, buffer, &i);
 	EXTfile = TtaReadOpen (buffer);
 	if (EXTfile != 0)
 	  {
@@ -3525,7 +3525,7 @@ ThotBool		    removeExclusions
 	   if (i > MAX_PARAM_DOC)
 	     {
 		PivotError (file);
-		DisplayPivotMessage ("Y");
+		DisplayPivotMessage (_Y_);
 	     }
 	   else
 	     {
@@ -3646,7 +3646,7 @@ ThotBool		    removeExclusions
 		       if (!found)
 			 {
 			    PivotError (file);
-			    DisplayPivotMessage ("a");
+			    DisplayPivotMessage (_a_);
 			 }
 		       else
 			  /* cree l'element liste pour ce type d'elements associes */
@@ -3706,7 +3706,7 @@ ThotBool		    removeExclusions
 	      if (tag != (CHAR_T) C_PIV_STRUCTURE)
 		{
 		   PivotError (file);
-		   DisplayPivotMessage ("O");
+		   DisplayPivotMessage (_O_);
 		}
 	      else
 		{
@@ -3715,7 +3715,7 @@ ThotBool		    removeExclusions
 		   if (tag != (CHAR_T) C_PIV_TYPE && tag != (CHAR_T) C_PIV_NATURE)
 		     {
 			PivotError (file);
-			DisplayPivotMessage ("P");
+			DisplayPivotMessage (_P_);
 		     }
 		   else
 		     {
@@ -3789,8 +3789,8 @@ ThotBool		    removeExclusions
 	     previousSSchema = pDoc->DocSSchema;
 	     curExtension = previousSSchema->SsNextExtens;
 	     while (curExtension != NULL)
-		if (ustrcmp (curExtension->SsName, "ExtCorr") == 0 ||
-		    ustrcmp (curExtension->SsName, "ExtMot") == 0)
+		if (ustrcmp (curExtension->SsName, TEXT("ExtCorr")) == 0 ||
+		    ustrcmp (curExtension->SsName, TEXT("ExtMot")) == 0)
 		  {
 		     previousSSchema->SsNextExtens = curExtension->SsNextExtens;
 		     if (curExtension->SsNextExtens != NULL)

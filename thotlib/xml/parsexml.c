@@ -50,8 +50,8 @@ typedef CHAR_T entName[10];
 /* an entity representing an ISO-Latin-1 character */
 typedef struct _EntityDictEntry
   {		
-     entName	charName;	/* entity name */
-     int	charCode;	/* decimal code of the ISO-Latin1 char */
+     entName charName;	/* entity name */
+     int     charCode;	/* decimal code of the ISO-Latin1 char */
   }
 EntityDictEntry;
 
@@ -65,7 +65,7 @@ static EntityDictEntry XmlPredefinedEntities[] =
    {LT_ENTITY, '<'},
    {QUOT_ENTITY, '"'},
 
-   {"zzzz", 0}			/* this last entry is required */
+   {TEXT("zzzz"), 0}			/* this last entry is required */
 };
 
 typedef int         state;	/* a state of the parser automaton */
@@ -150,10 +150,9 @@ STRING text;
 #endif
 {
    if (XmlFirstError)
-     TtaDisplayMessage (INFO, "document: %s", TtaGetDocumentName(doc));
+     TtaDisplayMessage (INFO, TEXT("document: %s"), TtaGetDocumentName(doc));
    XmlFirstError = FALSE;
-   TtaDisplayMessage (INFO, "ligne %d, char %d: %s", 
-		      nbLineRead, nbCharRead, text);
+   TtaDisplayMessage (INFO, TEXT("ligne %d, char %d: %s"), nbLineRead, nbCharRead, text);
 }
 
 /* ---------------------------------------------------------------------
@@ -224,10 +223,10 @@ CHAR_T c;
 #endif
 {
   inputBuffer[bufferLength]=EOS;
-  if (!ustrcmp (inputBuffer, "xml"))
+  if (!ustrcmp (inputBuffer, TEXT("xml")))
     /* Reading an xml element or attribute */
     ReadingXmlElement = TRUE;
-  else if (!ustrcmp (inputBuffer, "thot"))
+  else if (!ustrcmp (inputBuffer, TEXT("thot")))
     /* Reading a thot element or attribute */
     ReadingThotElement = TRUE;
   else
@@ -383,7 +382,7 @@ Element newElement;
 		  descendElement = TtaCreateDescent (currentDocument, elemParent, elType);
 		  if (descendElement == NULL)
 		    /* well... no way to insert that element */
-		    XmlError(currentDocument, "Invalid Document Structure");
+		    XmlError(currentDocument, TEXT("Invalid Document Structure"));
 		  if (TtaGetErrorCode()==0)
 		    {
 		      lastElement = descendElement;
@@ -509,7 +508,7 @@ CHAR_T       c;
 	  if (currentState == 0)
 	    XmlTextToDocument ();
 	  else
-	    XmlError (currentDocument, "Panic: buffer overflow !!!");
+	    XmlError (currentDocument, TEXT("Panic: buffer overflow !!!"));
 	  bufferLength = 0;
 	}
       if (len == 1)
@@ -670,7 +669,7 @@ CHAR_T                c;
 	  if (!ustrcmp (inputBuffer, BR_TAG))
 	    {
 	      /* Warning: not the good string for linebreak */
-	      ustrncpy(inputBuffer, "\212", 5);
+	      ustrncpy(inputBuffer, TEXT("\212"), 5);
 	      bufferLength = 5;
 	      XmlTextToDocument ();
 	      createdElement = NULL;
@@ -687,8 +686,7 @@ CHAR_T                c;
 					     inputBuffer, 0, 0);
 	  if (elType.ElTypeNum == 0)
 	    {
-	      usprintf (msgBuffer, "Unknown Xml or Thot  element %s", 
-			inputBuffer);
+	      usprintf (msgBuffer, TEXT ("Unknown Xml or Thot  element %s"), inputBuffer);
 	      XmlError (currentDocument, msgBuffer);
 	      createdElement = NULL;
 	    }
@@ -762,7 +760,7 @@ CHAR_T                c;
       /* the end tag does not close the current element */
       {
 	/* print an error message */
-	sprintf (msgBuffer, "Unexpected Xml end tag </%s> instead of </%s>",
+	usprintf (msgBuffer, TEXT("Unexpected Xml end tag </%s> instead of </%s>"),
 		 inputBuffer, GIStack[stackLevel - 1]);
 	XmlError (currentDocument, msgBuffer);
       }
@@ -803,13 +801,13 @@ CHAR_T                c;
 #ifdef XML_DEBUG
    printf ("  EndOfAttrPrefix                  ---         %s\n",inputBuffer);
 #endif 
-  if (!ustrcmp(inputBuffer,"xml"))
+  if (!ustrcmp(inputBuffer, TEXT("xml")))
     /* Reading an xml element or attribute */
     ReadingXmlAttribute = TRUE; 
-  else if (!ustrcmp(inputBuffer,"thot"))
+  else if (!ustrcmp(inputBuffer, TEXT("thot")))
     /* Reading a thot element or attribute */
     ReadingThotAttribute = TRUE;
-  else if (!ustrcmp(inputBuffer,"xmlns"))
+  else if (!ustrcmp(inputBuffer, TEXT("xmlns")))
     /* Reading the xmlns attribute (prefix/attr inversed */
     ReadingXmlNSAttribute = TRUE;
   else
@@ -830,7 +828,7 @@ CHAR_T                c;
 
 #endif
 {
-  Attribute	      attr, oldAttr;
+  Attribute	          attr, oldAttr;
   AttributeType	      attrType;
   int                 attrKind;
   NotifyAttribute     notifyAttr;
@@ -865,7 +863,7 @@ CHAR_T                c;
      
       if (attrType.AttrTypeNum == 0 )
 	{
-	  sprintf (msgBuffer, "Unknown Xml attribute %s", inputBuffer);
+	  usprintf (msgBuffer, TEXT("Unknown Xml attribute %s"), inputBuffer);
 	  XmlError (currentDocument, msgBuffer);
 	}
       else
@@ -985,11 +983,11 @@ CHAR_T                c;
 	   case 0:       /* enumerate */
 	     /* Warning: it reads only the integer value */
 	     /* To improve */
-	     sscanf (inputBuffer, "%d", &val);
+	     usscanf (inputBuffer, TEXT("%d"), &val);
 	     TtaSetAttributeValue (currentAttribute, val, createdElement, currentDocument);
 	     break;
 	   case 1:       /* integer */
-	     sscanf (inputBuffer, "%d", &val);
+	     usscanf (inputBuffer, TEXT("%d"), &val);
 	     TtaSetAttributeValue (currentAttribute, val, createdElement, currentDocument);
 	     break;
 	   case 2:       /* text */
@@ -1010,7 +1008,7 @@ CHAR_T                c;
        }
    else
      {
-       sprintf (msgBuffer, "Value of Unknown Xml attribute ");
+       usprintf (msgBuffer, TEXT("Value of Unknown Xml attribute "));
        XmlError (currentDocument, msgBuffer);
      }
   
@@ -1059,7 +1057,7 @@ CHAR_T                c;
 	       i++);
    if (!ustrcmp (XmlPredefinedEntities[i].charName, entityName))
       /* entity found in the predifined table */
-      PutInBuffer ((char) (XmlPredefinedEntities[i].charCode));
+      PutInBuffer ((CHAR_T) (XmlPredefinedEntities[i].charCode));
    else
       /* entity not in the predifined table */
       {
@@ -1069,7 +1067,7 @@ CHAR_T                c;
 	  PutInBuffer (entityName[i]);
 	PutInBuffer (';');
 	/* print an error message */
-	usprintf (msgBuffer, "Unknown Xml entity \"&%s;\"", entityName);
+	usprintf (msgBuffer, TEXT("Unknown Xml entity \"&%s;\""), entityName);
 	XmlError (currentDocument, msgBuffer);
       }
    entityNameLength = 0;
@@ -1095,7 +1093,7 @@ CHAR_T       c;
       /* entity too long */
       {
       /* error message */
-      XmlError (currentDocument, "Xml entity too long");
+      XmlError (currentDocument, TEXT("Xml entity too long"));
       /* consider the entity name read so far as ordinary text */
       PutInBuffer ('&');
       for (i = 0; i < entityNameLength; i++)
@@ -1127,8 +1125,8 @@ CHAR_T                c;
    int                 code;
 
    entityName[entityNameLength] = EOS;
-   sscanf (entityName, "%d", &code);
-   PutInBuffer ((CHAR_T) code);
+   usscanf (entityName, TEXT("%d"), &code);
+   PutInBuffer ((char) code);
    entityNameLength = 0;
 }
 
@@ -1160,7 +1158,7 @@ CHAR_T                c;
 	  currentState = 0;
 	  if (c != SPACE)
 	    /* error message */
-	    XmlError (currentDocument, "Missing semicolon in Xml entity");
+	    XmlError (currentDocument, TEXT("Missing semicolon in Xml entity"));
 	}
 }
 
@@ -1178,7 +1176,7 @@ CHAR_T                c;
 {
    PutInBuffer ('&');
    PutInBuffer (SPACE);
-   XmlError (currentDocument, "Invalid Xml syntax");
+   XmlError (currentDocument, TEXT("Invalid Xml syntax"));
 }
 
 /*----------------------------------------------------------------------
@@ -1643,7 +1641,7 @@ STRING name;
 			{
 			if (!error)
 			   {
-			   XmlError (currentDocument, "Invalid Xml syntax");
+			   XmlError (currentDocument, TEXT("Invalid Xml syntax"));
 			   error = TRUE;
 			   }
 			charRead = EOS;

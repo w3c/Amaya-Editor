@@ -8,6 +8,7 @@
 #ifndef _THOTLIB_TYPEGRM_H_
 #define _THOTLIB_TYPEGRM_H_
 
+#include "ustring.h"
 /*
  * Type definitions for syntactic analysis and compilation.
  *
@@ -28,7 +29,7 @@ typedef enum
 } SyntacticType;
 
 /* an input line to be parsed */
-typedef unsigned char lineBuffer[LINE_LENGTH];
+typedef UCHAR_T lineBuffer[LINE_LENGTH];
 
 /* current position in the input line */
 typedef int	indLine;
@@ -36,21 +37,21 @@ typedef int	indLine;
 /* a key-word in the source language */
 typedef struct _SrcKeywordDesc
 {
-	char		SrcKeyword[KEWWORD_LENGTH];	/* the key word */
-	int		SrcKeywordLen;			/* its length */
-	SyntacticCode	SrcKeywordCode;			/* its syntactic type*/
+	CHAR_T        SrcKeyword[KEWWORD_LENGTH];	/* the key word */
+	int           SrcKeywordLen;			/* its length */
+	SyntacticCode SrcKeywordCode;			/* its syntactic type*/
 } SrcKeywordDesc;
 
 /* an identifier in the source language */
 typedef struct _SrcIdentDesc
 {
-	char            SrcIdentifier[IDENTIFIER_LENGTH]; /* the identifier */
-	int 		SrcIdentLen;		/* length of the identifier */
-	SyntacticCode   SrcIdentCode;		/* syntactic type of the
+	CHAR_T        SrcIdentifier[IDENTIFIER_LENGTH]; /* the identifier */
+	int           SrcIdentLen;		/* length of the identifier */
+	SyntacticCode SrcIdentCode;		/* syntactic type of the
 						   identifier */
-	int	        SrcIdentDefRule;	/* number of the rule which
+	int	          SrcIdentDefRule;	/* number of the rule which
 						   defines the identifier */
-	int	        SrcIdentRefRule;	/* number of the rule where the
+	int	          SrcIdentRefRule;	/* number of the rule where the
 						   identifier is referred to */
 } SrcIdentDesc;
 

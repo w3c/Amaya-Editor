@@ -10,7 +10,7 @@
  * These functions concern links and other HTML general features.
  *
  * Authors: V. Quint, I. Vatton
- *          R.Guetari (W3C/INRIA) - Windows routines.
+ *          R.Guetari (W3C/INRIA) - Unicode and Windows version.
  *
  */
 
@@ -86,7 +86,7 @@ int                 notType;
    ElementType         elType, parentType;
    Element             elFont, parent, prev, next, added, child, last;
 
-   elType.ElSSchema = TtaGetSSchema ("HTML", document);
+   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
    elType.ElTypeNum = notType;
    /* is this element already within an element of the requested type? */
    elFont = TtaGetTypedAncestor (elem, elType);
@@ -177,7 +177,7 @@ int                 newtype;
    ElementType         elType, siblingType;
    Element             prev, next, child, added, parent;
 
-   elType.ElSSchema = TtaGetSSchema ("HTML", document);
+   elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), document);
    elType.ElTypeNum = newtype;
    /* is this element already within an element of the requested type? */
    if (TtaGetTypedAncestor (elem, elType) == NULL)
@@ -384,7 +384,7 @@ Attribute           ignore;
 	     {
 		length = TtaGetTextAttributeLength (nameAttr);
 		length++;
-		name = TtaGetMemory (length);
+		name = TtaAllocString (length);
 		if (name != NULL)
 		  {
 		     TtaGiveTextAttributeValue (nameAttr, name, &length);
@@ -424,7 +424,7 @@ Attribute           ignore;
    AttributeType       attrType;
 
    /* search all elements having an attribute NAME */
-   attrType.AttrSSchema = TtaGetSSchema ("HTML", doc);
+   attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), doc);
    attrType.AttrTypeNum = HTML_ATTR_NAME;
    elFound = GetElemWithAttr (doc, attrType, nameVal, ignore);
 
@@ -439,7 +439,7 @@ Attribute           ignore;
      {
        /* search all elements having an attribute ID (defined in the
 	  MathML DTD) */
-       attrType.AttrSSchema = TtaGetSSchema ("MathML", doc);
+       attrType.AttrSSchema = TtaGetSSchema (TEXT("MathML"), doc);
        if (attrType.AttrSSchema)
 	  /* this document uses the MathML DTD */
 	  {
@@ -539,10 +539,10 @@ void *context;
 	  if (url[0] == '#')
 	    {
 	      if (targetDocument != 0 && elFound)
-		TtaSetAttributeText (PseudoAttr, "visited", anchor, doc);
+		TtaSetAttributeText (PseudoAttr, TEXT("visited"), anchor, doc);
 	    }
 	  else
-	    TtaSetAttributeText (PseudoAttr, "visited", anchor, doc);
+	    TtaSetAttributeText (PseudoAttr, TEXT("visited"), anchor, doc);
 	}
     }
 
@@ -610,7 +610,7 @@ Document            doc;
 
    info = NULL;
    HrefAttr = NULL;
-   HTMLSSchema = TtaGetSSchema ("HTML", doc);
+   HTMLSSchema = TtaGetSSchema (TEXT("HTML"), doc);
 
    if (anchor != NULL)
      {
@@ -638,7 +638,7 @@ Document            doc;
 	/* get a buffer for the URL */
 	length = TtaGetTextAttributeLength (HrefAttr);
 	length++;
-	url = TtaGetMemory (length);
+	url = TtaAllocString (length);
 	if (url != NULL)
 	  {
 	     elType = TtaGetElementType (anchor);
@@ -654,7 +654,7 @@ Document            doc;
 		       PseudoAttr = TtaNewAttribute (attrType);
 		       TtaAttachAttribute (anchor, PseudoAttr, doc);
 		    }
-		  TtaSetAttributeText (PseudoAttr, "active", anchor, doc);
+		  TtaSetAttributeText (PseudoAttr, TEXT("active"), anchor, doc);
 	       }
 	     /* get the URL itself */
 	     TtaGiveTextAttributeValue (HrefAttr, url, &length);
@@ -665,7 +665,7 @@ Document            doc;
 		url[length--] = EOS;
 	     /* save the complete URL of the source document */
 	     length = ustrlen (DocumentURLs[doc])+1;
-	     sourceDocUrl = TtaGetMemory (length);
+	     sourceDocUrl = TtaAllocString (length);
 	     ustrcpy (sourceDocUrl, DocumentURLs[doc]);
 	     /* save the context */
 	     ctx = TtaGetMemory (sizeof (FollowTheLink_context));
@@ -781,7 +781,7 @@ NotifyElement      *event;
 
    element = event->element;
    elType = TtaGetElementType (element);
-   isHTML = (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0);
+   isHTML = (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0);
 
    /* Check if the current element is interested in double click */
    ok = FALSE;
@@ -915,14 +915,14 @@ NotifyElement      *event;
       else
 	{
 	   elType1.ElTypeNum = HTML_EL_LINK;
-	   elType1.ElSSchema = TtaGetSSchema ("HTML", event->document);
+	   elType1.ElSSchema = TtaGetSSchema (TEXT("HTML"), event->document);
 	   anchor = TtaGetTypedAncestor (element, elType1);
 	}
    /* if not found, search a cite or href attribute on an ancestor */
    if (anchor == NULL)
       {
 	ancestor = element;
-	attrType.AttrSSchema = TtaGetSSchema ("HTML", event->document);
+	attrType.AttrSSchema = TtaGetSSchema (TEXT("HTML"), event->document);
 	do
 	   {
 	   attrType.AttrTypeNum = HTML_ATTR_HREF_;
@@ -957,7 +957,7 @@ NotifyElement      *event;
 {
   ThotBool usedouble;
 
-  TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &usedouble);  
+  TtaGetEnvBoolean (_ENABLEDOUBLECLICK_EVAR_, &usedouble);  
   if (usedouble)
     return TRUE;
   else
@@ -990,7 +990,7 @@ Document            doc;
    if (textElem != NULL)
      {
 	length = TtaGetTextLength (textElem) + 1;
-	text = TtaGetMemory (length);
+	text = TtaAllocString (length);
 	TtaGiveTextContent (textElem, text, &length, &lang);
 	TtaSetTextZone (doc, 1, 2, text);
 	UpdateAtom (doc, DocumentURLs[doc], text);
@@ -1026,7 +1026,7 @@ Document       doc;
 	  tempdocument = GetLocalPath (doc, DocumentURLs[doc]);
 	  TtaFileUnlink (tempdocument);
 	  TtaFreeMemory (tempdocument);
-	  sprintf (htmlErrFile, "%s%c%d%cHTML.ERR", TempFileDirectory, DIR_SEP, doc, DIR_SEP);
+	  usprintf (htmlErrFile, TEXT("%s%c%d%cHTML.ERR"), TempFileDirectory, DIR_SEP, doc, DIR_SEP);
 	  if (TtaFileExist (htmlErrFile))
 	    TtaFileUnlink (htmlErrFile);
 	}

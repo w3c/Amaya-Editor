@@ -18,7 +18,7 @@
  * Module dedicated to manage text commands.
  *
  * Authors: I. Vatton (INRIA)
- *          R. Guetari (W3C/INRIA) Windows Routines.
+ *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  * Separation between structured and unstructured mode : S. Bonhomme (INRIA)
  *
  */
@@ -293,8 +293,7 @@ ThotBool            extendSel;
 		   }
 		 else if (!RightExtended && !LeftExtended)
 		   {
-		     if (FirstSelectedElement == FixedElement &&
-			 FirstSelectedChar == FixedChar)
+		     if (FirstSelectedElement == FixedElement && FirstSelectedChar == FixedChar)
 		       {
 			 RightExtended = FALSE;
 			 LeftExtended = TRUE;
@@ -664,7 +663,7 @@ View                view;
    /* On reserve un volant de 100 caracteres pour ajouter des CR */
    max = maxLength + 100;
    /* Alloue un Xbuffer de la longueur voulue */
-   Xbuffer = (USTRING) TtaGetMemory (sizeof (CHAR_T) * max);
+   Xbuffer = TtaAllocString (max);
 
    if (*buffer)
      TtaFreeMemory (*buffer);
@@ -745,7 +744,7 @@ View                view;
                   pBlock = SearchEnclosingType (pEl->ElAbstractBox[v], BoBlock);
 		  if (i != 0 && pBlock != pOldBlock && pOldBlock != NULL)
 		     /* Ajoute un \n en fin d'element */
-		     ustrcpy (&Xbuffer[i++], "\n\n");
+		     ustrcpy (&Xbuffer[i++], TEXT("\n\n"));
 
 		  /* Recopie le texte de l'element */
 		  pOldBlock = pBlock;

@@ -235,7 +235,7 @@ ElementType elemType;
   theTree->TRecursApplied = FALSE;
   theTree->TEffective = TRUE;
   theTree->TDiscard = FALSE;
-  theTree->TPrintSymb = ' ';
+  theTree->TPrintSymb = SPACE;
   theTree->TypeNum = elemType.ElTypeNum;
   theTree->TDepth = 0;
   for (i = 0; i < MAXNODECOUPLE; i++)
@@ -313,7 +313,7 @@ ThotBool isSource;
 #ifdef DEBUG
 		  fprintf (stderr, "Charge nature %s\n", strRule->SrOrigNat);
 #endif
-		  childType.ElSSchema = TtaNewNature (elemType.ElSSchema, strRule->SrOrigNat, "");
+		  childType.ElSSchema = TtaNewNature (elemType.ElSSchema, strRule->SrOrigNat, _EMPTYSTR_);
 		}
 	      childType.ElTypeNum  = ((PtrSSchema)(childType.ElSSchema))->SsRootElem;
 	      theTree = RecBuildTypeTree (childType, isSource);

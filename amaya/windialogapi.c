@@ -39,9 +39,15 @@
 #       define MAX_WORD_LEN 30
 #endif /* MAX_WORD_LEN */
 
-#define APPFILENAMEFILTER    "HTML Files (*.htm[l])\0*.htm*\0XML Files (*.xml)\0*.xml\0All files (*.*)\0*.*\0"
-#define APPIMAGENAMEFILTER   "Image files (*.gif)\0*.gif\0Image files (*.jpg)\0*.jpg\0Image files (*.png)\0*.png\0Image files (*.bmp)\0*.bmp\0All files (*.*)\0*.*\0"
-#define APPALLFILESFILTER    "All files (*.*)\0*.*\0"
+#if defined(_I18N_) || defined(__JIS__)
+#   define APPFILENAMEFILTER    L"HTML Files (*.htm[l])\0*.htm*\0XML Files (*.xml)\0*.xml\0All files (*.*)\0*.*\0"
+#   define APPIMAGENAMEFILTER   L"Image files (*.gif)\0*.gif\0Image files (*.jpg)\0*.jpg\0Image files (*.png)\0*.png\0Image files (*.bmp)\0*.bmp\0All files (*.*)\0*.*\0"
+#   define APPALLFILESFILTER    L"All files (*.*)\0*.*\0"
+#else /* defined(_I18N_) || defined(__JIS__) */
+#     define APPFILENAMEFILTER    "HTML Files (*.htm[l])\0*.htm*\0XML Files (*.xml)\0*.xml\0All files (*.*)\0*.*\0"
+#     define APPIMAGENAMEFILTER   "Image files (*.gif)\0*.gif\0Image files (*.jpg)\0*.jpg\0Image files (*.png)\0*.png\0Image files (*.bmp)\0*.bmp\0All files (*.*)\0*.*\0"
+#     define APPALLFILESFILTER    "All files (*.*)\0*.*\0"
+#endif /* defined(_I18N_) || defined(__JIS__) */
 #define MAX_BUFF 4096
 #define IDC_WORDBUTTON    20000
 #define IDC_EDITRULE      20001
@@ -178,7 +184,7 @@ static HFONT        hOldFont;
 static BOOL	        saveBeforeClose ;
 static BOOL         closeDontSave ;
 static OPENFILENAME OpenFileName;
-static LPSTR        szFilter;
+static STRING       szFilter;
 static CHAR_T       szFileName[256];
 static HWND         currentWnd;
 static HWND         parentWnd;
@@ -370,11 +376,11 @@ STRING title;
 	formCss    = form_css;
 	cssList    = buffer;
     currentWnd = parent;
-	sprintf (message, "%s", msg);
-    sprintf (wndTitle, title);
+	usprintf (message, TEXT("%s"), msg);
+    usprintf (wndTitle, title);
 
     if (nbItem == 0)
-       MessageBox (parent, "No CSS file available", wndTitle, MB_OK | MB_ICONWARNING);
+       MessageBox (parent, TEXT("No CSS file available"), wndTitle, MB_OK | MB_ICONWARNING);
     else 
         switch (app_lang) {
                case FR_LANG:
@@ -434,9 +440,9 @@ STRING     msg1;
 STRING     msg2;
 #endif /* __STDC__ */
 {  
-    sprintf (currentPathName, localname);
-    sprintf (message, msg1);
-	sprintf (message2, msg2);
+    usprintf (currentPathName, localname);
+    usprintf (message, msg1);
+	usprintf (message2, msg2);
 
 	switch (app_lang) {
            case FR_LANG:
@@ -507,7 +513,7 @@ int       num_form_print;
     numMenuPaperFormat = num_menu_paper_format; 
     numZonePrinterName = num_zone_printer_name; 
     numFormPrint       = num_form_print;
-	sprintf (currentFileToPrint, "%s", ps_dir);
+	usprintf (currentFileToPrint, TEXT("%s"), ps_dir);
 
 	switch (app_lang) {
            case FR_LANG:
@@ -650,7 +656,7 @@ int   toggle_save;
 	imgSave          = img_save;
 	toggleSave       = toggle_save;
 	currentParentRef = baseDlg + saveForm;
-	sprintf (currentPathName, path_name);
+	usprintf (currentPathName, path_name);
 
 	switch (app_lang) {
            case FR_LANG:
@@ -689,8 +695,8 @@ int    doc_type;
 	docSelect = doc_select;
 	dirSelect = dir_select;
 	urlName   = url_name;
-    sprintf (wndTitle,  "%s", title);
-    sprintf (tmpDocName, "%s", docName);
+    usprintf (wndTitle,  TEXT("%s"), title);
+    usprintf (tmpDocName, TEXT("%s"), docName);
     
     if (doc_type == TEXT_FILE)
        szFilter = APPFILENAMEFILTER;
@@ -836,8 +842,8 @@ BOOL* save_befor;
 BOOL* close_dont_save;
 #endif /* __STDC__ */
 {  
-	sprintf (message, msg);
-	sprintf (wndTitle, title);
+	usprintf (message, msg);
+	usprintf (wndTitle, title);
 
 	switch (app_lang) {
            case FR_LANG:
@@ -873,10 +879,10 @@ int   lang_value;
 STRING curLang;
 #endif /* __STDC__ */
 {  
-  sprintf (wndTitle, title);
-  sprintf (message, msg1);
-  sprintf (message2, msg2);
-  sprintf (winCurLang, curLang);
+  usprintf (wndTitle, title);
+  usprintf (message, msg1);
+  usprintf (message2, msg2);
+  usprintf (winCurLang, curLang);
   langList                = lang_list;
   nbItem                  = (UINT)nb_item;
   LangValue               = lang_value;
@@ -940,7 +946,7 @@ int   nb_items;
 STRING buffer; 
 #endif /* __STDC__ */
 {
-    sprintf (attDlgTitle, title);
+    usprintf (attDlgTitle, title);
     currAttrVal = curr_val;
 	attDlgNbItems = nb_items;
 
@@ -1093,8 +1099,8 @@ int   chkrSpecial;
 	ChkrMenuIgnore  = chkrMenuIgnore;
 	ChkrCaptureNC   = chkrCaptureNC;
 
-	sprintf (currentLabel, label);
-	sprintf (currentRejectedchars, rejectedChars);
+	usprintf (currentLabel, label);
+	usprintf (currentRejectedchars, rejectedChars);
 
 	switch (app_lang) {
            case FR_LANG:
@@ -1122,8 +1128,8 @@ STRING title;
 STRING msg;
 #endif /* __STDC__ */
 {  
-	sprintf (message, msg);
-	sprintf (wndTitle, title);
+	usprintf (message, msg);
+	usprintf (wndTitle, title);
 	currentRef = ref;
 
 	switch (app_lang) {
@@ -1252,7 +1258,7 @@ STRING image_location;
 	szFilter         = APPIMAGENAMEFILTER;
 	repeatImage      = repeat_image;
 	currentParentRef = baseDlg + bgImageForm;
-    sprintf (currentPathName, "%s", image_location);
+    usprintf (currentPathName, TEXT("%s"), image_location);
 
 	switch (app_lang) {
            case FR_LANG:
@@ -1290,7 +1296,7 @@ LPARAM lParam;
 {
     switch (msg) {
 	       case WM_INITDIALOG:
-			    SetDlgItemText (hwnDlg, IDC_GETALT, "");
+			    SetDlgItemText (hwnDlg, IDC_GETALT, _EMPTYSTR_);
                 break;
 
 		   case WM_COMMAND:
@@ -1304,7 +1310,7 @@ LPARAM lParam;
 			    switch (LOWORD (wParam)) {
                        case ID_CONFIRM:
                             if (!altText || altText [0] == 0)
-                               MessageBox (hwnDlg, "Attribute ALT is mandatory", "Open Image", MB_OK | MB_ICONERROR);
+                               MessageBox (hwnDlg, TEXT("Attribute ALT is mandatory"), TEXT("Open Image"), MB_OK | MB_ICONERROR);
                             else 
                                  EndDialog (hwnDlg, ID_CONFIRM);
                             break;
@@ -1337,24 +1343,24 @@ LPARAM lParam;
 
 	HWND wndMessage;
 
-	static HWND wndCSSList;
-	static UINT itemIndex; 
-	static char szBuffer [MAX_BUFF];
+	static HWND   wndCSSList;
+	static UINT   itemIndex; 
+	static CHAR_T szBuffer [MAX_BUFF];
 
     switch (msg) {
 	       case WM_INITDIALOG:
                 SetWindowText (hwnDlg, wndTitle);
 
-                wndMessage = CreateWindow ("STATIC", message, WS_CHILD | WS_VISIBLE | SS_LEFT,
+                wndMessage = CreateWindow (TEXT("STATIC"), message, WS_CHILD | WS_VISIBLE | SS_LEFT,
                                            10, 10, 200, 20, hwnDlg, (HMENU) 99, 
                                            (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 
-				wndCSSList = CreateWindow ("listbox", NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
+				wndCSSList = CreateWindow (TEXT("listbox"), NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
 					                         10, 35, 400, 120, hwnDlg, (HMENU) 1, 
 											 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 
 	            SendMessage (wndCSSList, LB_RESETCONTENT, 0, 0);
-	            while (i < nbItem && cssList[index] != '\0') {
+	            while (i < nbItem && cssList[index] != EOS) {
 	                  SendMessage (wndCSSList, LB_INSERTSTRING, i, (LPARAM) &cssList[index]);  
 	                  index += ustrlen (&cssList[index]) + 1;	/* Longueur de l'intitule */
 					  i++;
@@ -1416,7 +1422,7 @@ LPARAM lParam;
 	            switch (LOWORD (wParam)) {
 				       case ID_CONFIRM:
 						    GetDlgItemText (hwnDlg, IDC_URLEDIT, urlToOpen, sizeof (urlToOpen) - 1);
-							AttrHREFvalue = (STRING) TtaGetMemory (ustrlen (urlToOpen) + 1);
+							AttrHREFvalue = TtaAllocString (ustrlen (urlToOpen) + 1);
 							ustrcpy (AttrHREFvalue, urlToOpen);
 							ThotCallback (baseDlg + attrHRefTxt, STRING_DATA, urlToOpen);
 							ThotCallback (baseDlg + attrHRefForm, INTEGER_DATA, (STRING) 1);
@@ -1460,13 +1466,13 @@ LPARAM lParam;
 
     switch (msg) {
            case WM_INITDIALOG:
-				messageWnd1 = CreateWindow ("STATIC", currentPathName, WS_CHILD | WS_VISIBLE | SS_LEFT,
+				messageWnd1 = CreateWindow (_STATICCST_, currentPathName, WS_CHILD | WS_VISIBLE | SS_LEFT,
 					                       15, 70, 400, 20, hwnDlg, (HMENU) 9, 
 										   (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
-				messageWnd2 = CreateWindow ("STATIC", message, WS_CHILD | WS_VISIBLE | SS_LEFT,
+				messageWnd2 = CreateWindow (_STATICCST_, message, WS_CHILD | WS_VISIBLE | SS_LEFT,
 					                       15, 90, 400, 60, hwnDlg, (HMENU) 99, 
 										   (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
-				messageWnd3 = CreateWindow ("STATIC", message2, WS_CHILD | WS_VISIBLE | SS_LEFT,
+				messageWnd3 = CreateWindow (_STATICCST_, message2, WS_CHILD | WS_VISIBLE | SS_LEFT,
 					                       15, 110, 400, 60, hwnDlg, (HMENU) 999, 
 										   (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 			    break;
@@ -1801,12 +1807,12 @@ LPARAM lParam;
                 cxChar = tm.tmAveCharWidth;
                 cyChar = tm.tmHeight + tm.tmExternalLeading;
 
-                radio1 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                radio1 = CreateWindow (_BUTTONCST_, &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
 				i++;
-                radio2 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT2, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                radio2 = CreateWindow (_BUTTONCST_, &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT2, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 i++;
-                groupBx = CreateWindow ("BUTTON", attDlgTitle, WS_CHILD | WS_VISIBLE | BS_GROUPBOX, cxChar, 0, rect.right - (2 * cxChar), i * (2 * cyChar) + cyChar, hwnDlg, (HMENU) 1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);                switch (currAttrVal) {
+                groupBx = CreateWindow (_BUTTONCST_, attDlgTitle, WS_CHILD | WS_VISIBLE | BS_GROUPBOX, cxChar, 0, rect.right - (2 * cxChar), i * (2 * cyChar) + cyChar, hwnDlg, (HMENU) 1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);                switch (currAttrVal) {
                        case 1: CheckRadioButton (hwnDlg, OPT1, OPT2, OPT1);
                                break;
 
@@ -1892,15 +1898,15 @@ LPARAM lParam;
                 cyChar = tm.tmHeight + tm.tmExternalLeading;
                 ReleaseDC (hwnDlg, hDC);
 
-                radio1 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                radio1 = CreateWindow (_BUTTONCST_, &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
 				i++;
-                radio2 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT2, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                radio2 = CreateWindow (_BUTTONCST_, &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT2, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
 				i++;
-                radio3 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT3, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                radio3 = CreateWindow (_BUTTONCST_, &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT3, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 i++;
-                groupBx = CreateWindow ("BUTTON", attDlgTitle, WS_CHILD | WS_VISIBLE | BS_GROUPBOX, cxChar, 0, rect.right - (2 * cxChar), i * (2 * cyChar) + cyChar, hwnDlg, (HMENU) 1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                groupBx = CreateWindow (_BUTTONCST_, attDlgTitle, WS_CHILD | WS_VISIBLE | BS_GROUPBOX, cxChar, 0, rect.right - (2 * cxChar), i * (2 * cyChar) + cyChar, hwnDlg, (HMENU) 1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 switch (currAttrVal) {
                        case 1: CheckRadioButton (hwnDlg, OPT1, OPT3, OPT1);
                                break;
@@ -1995,18 +2001,18 @@ LPARAM lParam;
                 cyChar = tm.tmHeight + tm.tmExternalLeading;
                 ReleaseDC (hwnDlg, hDC);
 
-                hwndRadio1 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                hwndRadio1 = CreateWindow (_BUTTONCST_, &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
 				i++;
-                hwndRadio2 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT2, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                hwndRadio2 = CreateWindow (_BUTTONCST_, &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT2, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
 				i++;
-                hwndRadio3 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT3, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                hwndRadio3 = CreateWindow (_BUTTONCST_, &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT3, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
 				i++;
-                hwndRadio3 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT4, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                hwndRadio3 = CreateWindow (_BUTTONCST_, &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT4, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 				i++;
-                groupBx = CreateWindow ("BUTTON", attDlgTitle, WS_CHILD | WS_VISIBLE | BS_GROUPBOX, cxChar, 0, rect.right - (2 * cxChar), i * (2 * cyChar) + cyChar, hwnDlg, (HMENU) 1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                groupBx = CreateWindow (_BUTTONCST_, attDlgTitle, WS_CHILD | WS_VISIBLE | BS_GROUPBOX, cxChar, 0, rect.right - (2 * cxChar), i * (2 * cyChar) + cyChar, hwnDlg, (HMENU) 1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 switch (currAttrVal) {
                        case 1: CheckRadioButton (hwnDlg, OPT1, OPT4, OPT1);
                                break;
@@ -2111,21 +2117,21 @@ LPARAM lParam;
                 cyChar = tm.tmHeight + tm.tmExternalLeading;
                 ReleaseDC (hwnDlg, hDC);
 
-                radio1 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                radio1 = CreateWindow (_BUTTONCST_, &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
 				i++;
-                radio2 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT2, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                radio2 = CreateWindow (_BUTTONCST_, &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT2, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
 				i++;
-                radio3 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT3, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                radio3 = CreateWindow (_BUTTONCST_, &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT3, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
 				i++;
-                radio4 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT4, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                radio4 = CreateWindow (_BUTTONCST_, &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT4, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 ndx += ustrlen (&WIN_buffMenu [ndx]) + 1;
 				i++;
-                radio5 = CreateWindow ("BUTTON", &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT5, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                radio5 = CreateWindow (_BUTTONCST_, &WIN_buffMenu [ndx], WS_CHILD | WS_VISIBLE | BS_AUTORADIOBUTTON, 2 * cxChar, cyChar * (1 + 2 * i), 20 * cxChar, 7 * cyChar / 4, hwnDlg, (HMENU) OPT5, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 i++;
-                groupBx = CreateWindow ("BUTTON", attDlgTitle, WS_CHILD | WS_VISIBLE | BS_GROUPBOX, cxChar, 0, rect.right - (2 * cxChar), i * (2 * cyChar) + cyChar, hwnDlg, (HMENU) 1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+                groupBx = CreateWindow (_BUTTONCST_, attDlgTitle, WS_CHILD | WS_VISIBLE | BS_GROUPBOX, cxChar, 0, rect.right - (2 * cxChar), i * (2 * cyChar) + cyChar, hwnDlg, (HMENU) 1, (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
                 switch (currAttrVal) {
                        case 1: CheckRadioButton (hwnDlg, OPT1, OPT5, OPT1);
                                break;
@@ -2219,8 +2225,8 @@ LPARAM lParam;
 	static BOOL upper_lower = FALSE ;
     switch (msg) {
 	       case WM_INITDIALOG:
-			    SetDlgItemText (hwnDlg, IDC_SEARCHEDIT, "");
-			    SetDlgItemText (hwnDlg, IDC_REPLACEDIT, "");
+			    SetDlgItemText (hwnDlg, IDC_SEARCHEDIT, _EMPTYSTR_);
+			    SetDlgItemText (hwnDlg, IDC_REPLACEDIT, _EMPTYSTR_);
 
 				iMode     = 0 ;
 				iLocation = 3 ;
@@ -2401,8 +2407,8 @@ LPARAM lParam;
 						    break;
 
 				       case ID_CLEAR:
-						    SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, "");
-							SetDlgItemText (hwnDlg, IDC_EDITIMGSAVE, "");
+						    SetDlgItemText (hwnDlg, IDC_EDITDOCSAVE, _EMPTYSTR_);
+							SetDlgItemText (hwnDlg, IDC_EDITIMGSAVE, _EMPTYSTR_);
 							ThotCallback (baseDlg + saveForm, INTEGER_DATA, (STRING) 2);
 							break;
 
@@ -2469,11 +2475,11 @@ LPARAM lParam;
                             OpenFileName.lStructSize       = sizeof (OPENFILENAME); 
                             OpenFileName.hwndOwner         = hwnDlg; 
                             OpenFileName.hInstance         = hInstance ; 
-                            OpenFileName.lpstrFilter       = (LPSTR) szFilter; 
+                            OpenFileName.lpstrFilter       = (LPTSTR) szFilter; 
                             OpenFileName.lpstrCustomFilter = (LPTSTR) NULL; 
                             OpenFileName.nMaxCustFilter    = 0L; 
                             OpenFileName.nFilterIndex      = 1L; 
-                            OpenFileName.lpstrFile         = (LPSTR) szFileName; 
+                            OpenFileName.lpstrFile         = (LPTSTR) szFileName; 
                             OpenFileName.nMaxFile          = 256; 
                             OpenFileName.lpstrInitialDir   = NULL; 
                             OpenFileName.lpstrTitle        = TEXT ("Select"); 
@@ -2523,9 +2529,9 @@ LPARAM lParam;
 {
     switch (msg) {
 	       case WM_INITDIALOG:
-			    SetDlgItemText (hwnDlg, IDC_GETURL, "");
+			    SetDlgItemText (hwnDlg, IDC_GETURL, _EMPTYSTR_);
 				urlToOpen [0] = 0;
-			    SetDlgItemText (hwnDlg, IDC_GETALT, "");
+			    SetDlgItemText (hwnDlg, IDC_GETALT, _EMPTYSTR_);
 				altText [0] = 0;
 				break;
 
@@ -2539,7 +2545,7 @@ LPARAM lParam;
 				       case ID_CONFIRM:
 						    GetDlgItemText (hwnDlg, IDC_GETURL, urlToOpen, sizeof (urlToOpen) - 1);
                             if (!altText || altText [0] == 0)
-                               MessageBox (hwnDlg, "Attribute ALT is mandatory", "Open Image", MB_OK | MB_ICONERROR);
+                               MessageBox (hwnDlg, TEXT("Attribute ALT is mandatory"), TEXT("Open Image"), MB_OK | MB_ICONERROR);
                             else 
                                  EndDialog (hwnDlg, ID_CONFIRM);
 							break;
@@ -2548,11 +2554,11 @@ LPARAM lParam;
                             OpenFileName.lStructSize       = sizeof (OPENFILENAME); 
                             OpenFileName.hwndOwner         = hwnDlg; 
                             OpenFileName.hInstance         = hInstance ; 
-                            OpenFileName.lpstrFilter       = (LPSTR) szFilter; 
+                            OpenFileName.lpstrFilter       = (LPTSTR) szFilter; 
                             OpenFileName.lpstrCustomFilter = (LPTSTR) NULL; 
                             OpenFileName.nMaxCustFilter    = 0L; 
                             OpenFileName.nFilterIndex      = 1L; 
-                            OpenFileName.lpstrFile         = (LPSTR) szFileName; 
+                            OpenFileName.lpstrFile         = (LPTSTR) szFileName; 
                             OpenFileName.nMaxFile          = 256; 
                             OpenFileName.lpstrInitialDir   = NULL; 
                             OpenFileName.lpstrTitle        = TEXT ("Open a File"); 
@@ -2686,7 +2692,7 @@ LPARAM lParam;
 
     switch (msg) {
 	       case WM_INITDIALOG:
-				wndSaveList = CreateWindow ("listbox", NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
+				wndSaveList = CreateWindow (TEXT("listbox"), NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
 					                         10, 30, 260, 180, hwnDlg, (HMENU) 1, 
 											 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 
@@ -2741,7 +2747,7 @@ LPARAM lParam;
     switch (msg) {
 	       case WM_INITDIALOG:
 			    SetWindowText (hwnDlg, wndTitle);
-				messageWnd = CreateWindow ("STATIC", message, WS_CHILD | WS_VISIBLE | SS_LEFT,
+				messageWnd = CreateWindow (_STATICCST_, message, WS_CHILD | WS_VISIBLE | SS_LEFT,
 					                       15, 15, 400, 60, hwnDlg, (HMENU) 99, 
 										   (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 				break;
@@ -2798,11 +2804,11 @@ LPARAM lParam;
     {
     case WM_INITDIALOG:
       SetWindowText (hwnDlg, wndTitle);
-      wndMessage1 = CreateWindow ("STATIC", message, WS_CHILD | WS_VISIBLE | SS_LEFT,
+      wndMessage1 = CreateWindow (TEXT("STATIC"), message, WS_CHILD | WS_VISIBLE | SS_LEFT,
 				  10, 10, 200, 20, hwnDlg, (HMENU) 99, 
 				  (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
       
-      wndLangList = CreateWindow ("listbox", NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
+      wndLangList = CreateWindow (TEXT("listbox"), NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
 				  10, 40, 240, 200, hwnDlg, (HMENU) 1, 
 				  (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
       
@@ -2814,11 +2820,11 @@ LPARAM lParam;
 	  i++;
       }
       
-      wndLangEdit = CreateWindow ("EDIT", NULL, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
+      wndLangEdit = CreateWindow (TEXT("EDIT"), NULL, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
 				  10, 250, 240, 30, hwnDlg, (HMENU) IDC_LANGEDIT, 
 				  (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
       SetWindowText (wndLangEdit, winCurLang);
-      wndMessage2 = CreateWindow ("STATIC", message2, WS_CHILD | WS_VISIBLE | SS_LEFT,
+      wndMessage2 = CreateWindow (TEXT("STATIC"), message2, WS_CHILD | WS_VISIBLE | SS_LEFT,
 				  10, 280, 200, 20, hwnDlg, (HMENU) 99, 
 				  (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
       break;
@@ -3116,7 +3122,7 @@ LPARAM lParam;
 
     switch (msg) {
 	       case WM_INITDIALOG:
-				wndListRule = CreateWindow ("listbox", NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
+				wndListRule = CreateWindow (TEXT("listbox"), NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
 					                         10, 10, 200, 130, hwnDlg, (HMENU) 1, 
 											 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 
@@ -3127,7 +3133,7 @@ LPARAM lParam;
 					  i++;
 				}
 
-				wndEditRule	= CreateWindow ("EDIT", NULL, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
+				wndEditRule	= CreateWindow (_EDITCST_, NULL, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
 					                        10, 150, 200, 30, hwnDlg, (HMENU) IDC_EDITRULE, 
 											(HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 
@@ -3188,7 +3194,7 @@ LPARAM lParam;
 
     switch (msg) {
 	       case WM_INITDIALOG:
-				wndListRule = CreateWindow ("listbox", NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
+				wndListRule = CreateWindow (TEXT("listbox"), NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
 					                         10, 10, 200, 130, hwnDlg, (HMENU) 1, 
 											 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 
@@ -3262,11 +3268,11 @@ LPARAM lParam;
 
     switch (msg) {
 	       case WM_INITDIALOG:
-                hwndLanguage = CreateWindow ("STATIC", NULL, WS_CHILD | WS_VISIBLE | SS_LEFT,
+                hwndLanguage = CreateWindow (_STATICCST_, NULL, WS_CHILD | WS_VISIBLE | SS_LEFT,
                                              13, 10, 150, 16, hwnDlg, (HMENU) 2,  
                                              (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 
-			    wndLabel = CreateWindow ("STATIC", currentLabel, WS_CHILD | WS_VISIBLE | SS_LEFT,
+			    wndLabel = CreateWindow (_STATICCST_, currentLabel, WS_CHILD | WS_VISIBLE | SS_LEFT,
 					                     13, 29, 150, 16, hwnDlg, (HMENU) 99, 
 										 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 
@@ -3274,11 +3280,11 @@ LPARAM lParam;
                                             13, 48, 150, 20, (HWND)hwnDlg, (HMENU)IDC_WORDBUTTON, 
 											(HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 
-				hwnListWords = CreateWindow ("listbox", NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
+				hwnListWords = CreateWindow (TEXT("listbox"), NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
 					                         13, 72, 150, 70, hwnDlg, (HMENU) 1, 
 											 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 
-				hwndCurrentWord = CreateWindow ("EDIT", NULL, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
+				hwndCurrentWord = CreateWindow (_EDITCST_, NULL, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
 					                            13, 146, 150, 20, hwnDlg, (HMENU) IDC_LANGEDIT, 
 											 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
  
@@ -3287,7 +3293,7 @@ LPARAM lParam;
 			    SetDlgItemInt (hwnDlg, IDC_EDITPROPOSALS, 3, FALSE);
 				SetDlgItemText (hwnDlg, IDC_EDITIGNORE, currentRejectedchars); 
 				iLocation = 2;
-                SetWindowText (hwndCurrentWord, "");
+                SetWindowText (hwndCurrentWord, _EMPTYSTR_);
 				WIN_DisplayWords ();
 			    break;
 
@@ -3432,7 +3438,7 @@ LPARAM lParam;
     switch (msg) {
 	       case WM_INITDIALOG:
 			    SetWindowText (hwnDlg, wndTitle);
-				messageWnd = CreateWindow ("STATIC", message, WS_CHILD | WS_VISIBLE | SS_LEFT,
+				messageWnd = CreateWindow (_STATICCST_, message, WS_CHILD | WS_VISIBLE | SS_LEFT,
 					                       15, 15, 303, 60, hwnDlg, (HMENU) 99, 
 										   (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
 				break;
@@ -4335,8 +4341,8 @@ LPARAM lParam;
 
     switch (msg) {
 	       case WM_INITDIALOG:
-			    SetDlgItemText (hwnDlg, IDC_PASSWDEDIT, "");
-			    SetDlgItemText (hwnDlg, IDC_NAMEEDIT, "");
+			    SetDlgItemText (hwnDlg, IDC_PASSWDEDIT, _EMPTYSTR_);
+			    SetDlgItemText (hwnDlg, IDC_NAMEEDIT, _EMPTYSTR_);
                 hwnNameEdit = GetDlgItem (hwnDlg, IDC_NAMEEDIT);
                 hwnPasswdEdit = GetDlgItem (hwnDlg, IDC_PASSWDEDIT);
 				break;
@@ -4420,7 +4426,7 @@ LPARAM lParam;
 			                break;
 
                        case ID_CLEAR:
-							SetDlgItemText (hwnDlg, IDC_BGLOCATION, "");
+							SetDlgItemText (hwnDlg, IDC_BGLOCATION, _EMPTYSTR_);
                             ThotCallback (baseDlg + repeatImage, INTEGER_DATA, (STRING)repeatMode);
                             ThotCallback (baseDlg + bgImageForm, INTEGER_DATA, (STRING)2);
 							break;
@@ -4429,11 +4435,11 @@ LPARAM lParam;
                             OpenFileName.lStructSize       = sizeof (OPENFILENAME); 
                             OpenFileName.hwndOwner         = hwnDlg; 
                             OpenFileName.hInstance         = hInstance ; 
-                            OpenFileName.lpstrFilter       = (LPSTR) szFilter; 
+                            OpenFileName.lpstrFilter       = (LPTSTR) szFilter; 
                             OpenFileName.lpstrCustomFilter = (LPTSTR) NULL; 
                             OpenFileName.nMaxCustFilter    = 0L; 
                             OpenFileName.nFilterIndex      = 1L; 
-                            OpenFileName.lpstrFile         = (LPSTR) szFileName; 
+                            OpenFileName.lpstrFile         = (LPTSTR) szFileName; 
                             OpenFileName.nMaxFile          = 256; 
                             OpenFileName.lpstrInitialDir   = NULL; 
                             OpenFileName.lpstrTitle        = TEXT ("Open a File"); 

@@ -19,6 +19,7 @@
  *
  * Authors: V. Quint (INRIA)
  *          C. Roisin (INRIA) - Columns and pages
+ *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  *
  */
 
@@ -49,7 +50,7 @@
 
 
 #define MaxAsc 30
-static CHAR_T       text[MAX_TXT_LEN];
+/* static CHAR_T       text[MAX_TXT_LEN]; */
 
 
 /*----------------------------------------------------------------------
@@ -69,9 +70,12 @@ ThotBool		    origName;
 
 {
    PtrElement          pEl;
+   STRING              text;
+
+   text = TtaAllocString (MAX_TXT_LEN);
 
    if (pAb == NULL)
-      ustrcpy (text, " ");
+      ustrcpy (text, TEXT(" "));
    else
      {
 	pEl = pAb->AbElement;
@@ -83,7 +87,7 @@ ThotBool		    origName;
 	if (pAb->AbPresentationBox)
 	  /* Ajoute le nom du type de boite de presentation */
 	  {
-	     ustrcat (text, ".");
+	     ustrcat (text, TEXT("."));
 	     ustrcat (text, pAb->AbPSchema->PsPresentBox[pAb->AbTypeNum - 1].PbName);
 	  }
      }

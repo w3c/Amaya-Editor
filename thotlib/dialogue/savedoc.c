@@ -87,7 +87,7 @@ int                 ent;
       TtaRedrawMenuEntry (ref, ent, NULL, InactiveB_Color, 0);
    else
      {
-	FontIdentifier ('L', 'T', 2, 11, 1, text, fontname);
+	FontIdentifier (TEXT('L'), TEXT('T'), 2, 11, 1, text, fontname);
 	TtaRedrawMenuEntry (ref, ent, fontname, -1, 0);
      }
 }				/*UnsetEntryMenu */
@@ -124,18 +124,18 @@ void                BuildSaveDocMenu ()
 	     }
 	   else
 	     {
-	       ustrcat (outputFileName, ".PIV"); 
+	       ustrcat (outputFileName, PIV_EXT); 
 	       (void) StoreDocument (DocumentToSave,
 				     SaveFileName, SaveDirectoryName,
 				     SaveDocWithCopy, SaveDocWithMove);
 	     }
 	 }
      }
-   else if (!ustrcmp (TraductionSchemaName, "_ThotOther_"))
+   else if (!ustrcmp (TraductionSchemaName, TEXT("_ThotOther_")))
      {
        if (DocumentToSave->DocPivotVersion == -1)
          {
-	   ustrcat (outputFileName, ".PIV"); 
+	   ustrcat (outputFileName, PIV_EXT); 
 	   (void) StoreDocument (DocumentToSave,
 				 SaveFileName, SaveDirectoryName,
 				 SaveDocWithCopy, SaveDocWithMove);
@@ -161,7 +161,7 @@ void                BuildSaveDocMenu ()
 	   /* l'application accepte que Thot exporte le document */
 	  {
 	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_EXPORTING), DocumentToSave->DocDName);
-	     FindCompleteName (SaveFileName, "", SaveDirectoryName, outputFileName, &i);
+	     FindCompleteName (SaveFileName, _EMPTYSTR_, SaveDirectoryName, outputFileName, &i);
 	     ExportDocument (DocumentToSave, outputFileName, TraductionSchemaName);
 	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_DOC_WRITTEN), outputFileName);
 	     /* envoie le message DocExport.Post a l'application */
@@ -195,8 +195,8 @@ STRING              txt;
    int                 val;
    CHAR_T                URL_DIR_SEP;
 
-   if (typedata == STRING_DATA && txt && ustrchr (txt, '/'))
-	  URL_DIR_SEP = '/';
+   if (typedata == STRING_DATA && txt && ustrchr (txt, TEXT('/')))
+	  URL_DIR_SEP = TEXT('/');
    else 
 	   URL_DIR_SEP = DIR_SEP;
 
@@ -282,7 +282,7 @@ STRING              txt;
 		 }
 	       else if (val == PivotEntryNum)
 		 {
-		   ustrcpy (TraductionSchemaName, "_ThotOther_");
+		   ustrcpy (TraductionSchemaName, TEXT("_ThotOther_"));
 		   UnsetEntryMenu (NumMenuCopyOrRename, 0);
 		   UnsetEntryMenu (NumMenuCopyOrRename, 1);
 		 }
@@ -400,7 +400,7 @@ PtrDocument         pDoc;
 			      TtaGetMessage (LIB, TMSG_DOC_DIR),
 			      nbitem, BufDir, 6, NULL, FALSE, TRUE);
 	      entry = SearchStringInBuffer(BufDir,pDoc->DocDirectory,nbitem);
-	      TtaSetSelector (NumZoneDirDocToSave, entry, "");
+	      TtaSetSelector (NumZoneDirDocToSave, entry, _EMPTYSTR_);
 	      /* initialise le titre du formulaire Sauver Comme */
 	      ustrcpy (SaveFileName, pDoc->DocDName);
 	      ustrcpy (SaveDirectoryName, pDoc->DocDirectory);
@@ -408,7 +408,7 @@ PtrDocument         pDoc;
 	      /* a ce document, d'apres sa classe */
 	      nbitem = ConfigMakeMenuExport (pDoc->DocSSchema->SsName, BufMenu);
 	      /* met le format Thot en tete */
-	      BufMenuB[0] = 'B';
+	      BufMenuB[0] = TEXT('B');
 	      ustrcpy (&BufMenuB[1], TtaGetMessage (LIB, TMSG_THOT_APP));
 	      l = ustrlen (TtaGetMessage (LIB, TMSG_THOT_APP)) + 2;
 	      /* ajoute 'B' au debut de chaque entree */
@@ -416,7 +416,7 @@ PtrDocument         pDoc;
 	      src = &BufMenu[0];
 	      for (k = 1; k <= nbitem; k++)
 		{
-		   ustrcpy (dest, "B");
+		   ustrcpy (dest, _B_);
 		   dest++;
 		   l = ustrlen (src);
 		   ustrcpy (dest, src);
@@ -426,18 +426,18 @@ PtrDocument         pDoc;
 	      nbitem++;
 	      if (pDoc->DocPivotVersion == -1)
 		{
-		  ustrcpy (dest, "B");
+		  ustrcpy (dest, _B_);
 		  dest++;
-		  ustrcpy (dest, "Pivot");
+		  ustrcpy (dest, TEXT("Pivot"));
 		  PivotEntryNum = nbitem;
 		  nbitem++;
 		}
 	      else if (ThotLocalActions[T_xmlparsedoc] != NULL)
 		/* XML extensions are loaded add xml item */
 		{
-		  ustrcpy (dest, "B");
+		  ustrcpy (dest, _B_);
 		  dest++;
-		  ustrcpy (dest, "XML");
+		  ustrcpy (dest, XML_EXT2);
 		  PivotEntryNum = nbitem;
 		  nbitem++;
 		}
@@ -446,24 +446,24 @@ PtrDocument         pDoc;
 	      TtaSetMenuForm (NumMenuFormatDocToSave, 0);
 	      /* sous-menu copier/renommer un document */
 	      Indx = 0;
-	      usprintf (&BufMenu[Indx], "B%s", TtaGetMessage (LIB, TMSG_COPY));
+	      usprintf (&BufMenu[Indx], TEXT("B%s"), TtaGetMessage (LIB, TMSG_COPY));
 	      Indx += ustrlen (&BufMenu[Indx]) + 1;
-	      usprintf (&BufMenu[Indx], "B%s", TtaGetMessage (LIB, TMSG_RENAME));
+	      usprintf (&BufMenu[Indx], TEXT("B%s"), TtaGetMessage (LIB, TMSG_RENAME));
 	      TtaNewSubmenu (NumMenuCopyOrRename, NumFormSaveAs, 0,
 		   TtaGetMessage (LIB, TMSG_SAVE), 2, BufMenu, NULL, FALSE);
 	      TtaSetMenuForm (NumMenuCopyOrRename, 0);
 	      /* initialise le  nom de document propose */
 	      ustrcpy (BufMenu, TtaGetMessage (LIB, TMSG_SAVE));
-	      ustrcat (BufMenu, " ");
+	      ustrcat (BufMenu, TEXT(" "));
 	      ustrcat (BufMenu, pDoc->DocDName);
 	      TtaChangeFormTitle (NumFormSaveAs, BufMenu);
 	      ustrcpy (BufMenu, SaveDirectoryName);
 	      ustrcat (BufMenu, DIR_STR);
 	      ustrcat (BufMenu, SaveFileName);
 	      if (pDoc->DocPivotVersion == -1)
-		ustrcat (BufMenu, ".xml");
+		ustrcat (BufMenu, XML_EXT);
 	      else
-		ustrcat (BufMenu, ".PIV");
+		ustrcat (BufMenu, PIV_EXT);
 	      /* nom de document propose' */
 	      TtaNewTextForm (NumZoneDocNameTooSave, NumFormSaveAs,
 		      TtaGetMessage (LIB, TMSG_DOCUMENT_NAME), 50, 1, TRUE);

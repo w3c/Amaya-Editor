@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "unicodeconsts.h"
 #include "typebase.h"
 /* The current HDC : the current Device context in use */
 extern HDC          TtDisplay;

@@ -35,7 +35,7 @@
    won't be created.
    If aDirectory doesn't exist, the selectors will be empty.
   ----------------------------------------------------------------------*/
-extern void         TtaListDirectory (char *aDirectory, int formRef, char *dirTitle, int dirRef, char *suffix, char *fileTitle, int fileRef);
+extern void         TtaListDirectory (STRING aDirectory, int formRef, STRING dirTitle, int dirRef, STRING suffix, STRING fileTitle, int fileRef);
 
 /*----------------------------------------------------------------------
    TtaIsSuffixFileIn

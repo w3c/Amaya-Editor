@@ -23,11 +23,11 @@
 
 #define MAX_PRINT_URL_LENGTH 50
 typedef struct _HTURI {
-    char * access;		/* Now known as "scheme" */
-    char * host;
-    char * absolute;
-    char * relative;
-    char * fragment;
+    STRING  access;		/* Now known as "scheme" */
+    STRING  host;
+    STRING  absolute;
+    STRING  relative;
+    STRING  fragment;
 } HTURI;
 
 
@@ -36,10 +36,10 @@ typedef struct _HTURI {
   Converts a string to lowercase.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void         ConvertToLowerCase (char *string)
+void         ConvertToLowerCase (STRING string)
 #else  /* __STDC__ */
 void         ConvertToLowerCase (string)
-char                *string;
+STRING       string;
 
 #endif /* __STDC__ */
 {
@@ -49,7 +49,7 @@ char                *string;
    return;
 
  for (i = 0; string[i] != EOS; i++)
-   string[i] = tolower (string[i]);
+   string[i] = utolower (string[i]);
 }
 
 /*----------------------------------------------------------------------
@@ -90,7 +90,7 @@ char              **file;
       goto finished;
 
    /* go to the end of the URL */
-   while ((*curr != 0) && (*curr != SPACE) && (*curr != '\b') &&
+   while ((*curr != 0) && (*curr != SPACE) && (*curr != TEXT('\b')) &&
 	  (*curr != '\r') && (*curr != EOL))
       curr++;
 
@@ -143,7 +143,7 @@ char              **file;
    if (curr < url)
       goto finished;
 
-   if (*curr == ':')
+   if (*curr == TEXT(':'))
      {
 	*curr = EOS;
 	curr--;
@@ -202,7 +202,7 @@ STRING              aSuffix;
 	oldptr = ptr = &aName[0];
 	do
 	  {
-	     ptr = ustrrchr (oldptr, '.');
+	     ptr = ustrrchr (oldptr, TEXT('.'));
 	     if (ptr)
 		oldptr = &ptr[1];
 	  }
@@ -223,39 +223,39 @@ STRING              aSuffix;
   returns TRUE if path points to an HTML resource.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            IsHTMLName (const char *path)
+ThotBool             IsHTMLName (const STRING path)
 #else  /* __STDC__ */
-ThotBool            IsHTMLName (path)
-const char         *path;
+ThotBool             IsHTMLName (path)
+const STRING        path;
 #endif /* __STDC__ */
 {
-   char                temppath[MAX_LENGTH];
-   char                suffix[MAX_LENGTH];
-   char                nsuffix[MAX_LENGTH];
+   CHAR_T              temppath[MAX_LENGTH];
+   CHAR_T              suffix[MAX_LENGTH];
+   CHAR_T              nsuffix[MAX_LENGTH];
    int                 i;
 
    if (!path)
       return (FALSE);
 
-   strcpy (temppath, path);
+   ustrcpy (temppath, path);
    ExtractSuffix (temppath, suffix);
 
    /* Normalize the suffix */
    i = 0;
    while (suffix[i] != EOS && i < MAX_LENGTH -1)
      {
-       nsuffix[i] = tolower (suffix[i]);
+       nsuffix[i] = utolower (suffix[i]);
        i++;
      }
    nsuffix[i] = EOS;
-   if (!strcmp (nsuffix, "html") ||
-       !strcmp (nsuffix, "htm") ||
-       !strcmp (nsuffix, "shtml") ||
-       !strcmp (nsuffix, "xht") ||
-       !strcmp (nsuffix, "xhtm") ||
-       !strcmp (nsuffix, "xhtml"))
+   if (!ustrcmp (nsuffix, TEXT("html")) ||
+       !ustrcmp (nsuffix, TEXT("htm")) ||
+       !ustrcmp (nsuffix, TEXT("shtml")) ||
+       !ustrcmp (nsuffix, TEXT("xht")) ||
+       !ustrcmp (nsuffix, TEXT("xhtm")) ||
+       !ustrcmp (nsuffix, TEXT("xhtml")))
      return (TRUE);
-   else if (!strcmp (nsuffix, "gz"))
+   else if (!ustrcmp (nsuffix, TEXT("gz")))
      {
        /* take into account compressed files */
        ExtractSuffix (temppath, suffix);       
@@ -267,12 +267,12 @@ const char         *path;
 	   i++;
 	 }
        nsuffix[i] = EOS;
-       if (!strcmp (nsuffix, "html") ||
-	   !strcmp (nsuffix, "htm") ||
-	   !strcmp (nsuffix, "shtml") ||
-	   !strcmp (nsuffix, "xht") ||
-	   !strcmp (nsuffix, "xhtm") ||
-	   !strcmp (nsuffix, "xhtml"))
+       if (!ustrcmp (nsuffix, TEXT("html")) ||
+	   !ustrcmp (nsuffix, TEXT("htm")) ||
+	   !ustrcmp (nsuffix, TEXT("shtml")) ||
+	   !ustrcmp (nsuffix, TEXT("xht")) ||
+	   !ustrcmp (nsuffix, TEXT("xhtm")) ||
+	   !ustrcmp (nsuffix, TEXT("xhtml")))
  
 	 return (TRUE);
        else
@@ -287,34 +287,34 @@ const char         *path;
   returns TRUE if path points to an XML resource.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            IsXMLName (const char *path)
+ThotBool             IsXMLName (const STRING path)
 #else  /* __STDC__ */
-ThotBool            IsXMLName (path)
-const char         *path;
+ThotBool             IsXMLName (path)
+const STRING        path;
 #endif /* __STDC__ */
 {
-   char                temppath[MAX_LENGTH];
-   char                suffix[MAX_LENGTH];
+   CHAR_T              temppath[MAX_LENGTH];
+   CHAR_T              suffix[MAX_LENGTH];
 
    if (!path)
       return (FALSE);
 
-   strcpy (temppath, path);
+   ustrcpy (temppath, path);
    ExtractSuffix (temppath, suffix);
 
-   if (!strcasecmp (suffix, "xml") ||
-       !strcasecmp (suffix, "xht") ||
-       !strcmp (suffix, "xhtm") ||
-       !strcmp (suffix, "xhtml"))
+   if (!ustrcasecmp (suffix, TEXT("xml")) ||
+       !ustrcasecmp (suffix, TEXT("xht")) ||
+       !ustrcmp (suffix, TEXT("xhtm")) ||
+       !ustrcmp (suffix, TEXT("xhtml")))
      return (TRUE);
-   else if (!strcmp (suffix, "gz"))
+   else if (!ustrcmp (suffix, TEXT("gz")))
      {
        /* take into account compressed files */
        ExtractSuffix (temppath, suffix);       
-       if (!strcasecmp (suffix, "xml") ||
-	   !strcasecmp (suffix, "xht") ||
-	   !strcmp (suffix, "xhtm") ||
-	   !strcmp (suffix, "xhtml"))
+       if (!ustrcasecmp (suffix, TEXT("xml")) ||
+	   !ustrcasecmp (suffix, TEXT("xht")) ||
+	   !ustrcmp (suffix, TEXT("xhtm")) ||
+	   !ustrcmp (suffix, TEXT("xhtml")))
 	 return (TRUE);
        else
 	 return (FALSE);
@@ -328,28 +328,28 @@ const char         *path;
   returns TRUE if path points to an XML resource.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            IsCSSName (const char *path)
+ThotBool             IsCSSName (const STRING path)
 #else  /* __STDC__ */
-ThotBool            IsCSSName (path)
-const char         *path;
+ThotBool             IsCSSName (path)
+const STRING        path;
 #endif /* __STDC__ */
 {
-   char                temppath[MAX_LENGTH];
-   char                suffix[MAX_LENGTH];
+   CHAR_T              temppath[MAX_LENGTH];
+   CHAR_T              suffix[MAX_LENGTH];
 
    if (!path)
       return (FALSE);
 
-   strcpy (temppath, path);
+   ustrcpy (temppath, path);
    ExtractSuffix (temppath, suffix);
 
-   if (!strcasecmp (suffix, "css"))
+   if (!ustrcasecmp (suffix, TEXT("css")))
      return (TRUE);
-   else if (!strcmp (suffix, "gz"))
+   else if (!ustrcmp (suffix, TEXT("gz")))
      {
        /* take into account compressed files */
        ExtractSuffix (temppath, suffix);       
-       if (!strcasecmp (suffix, "css"))
+       if (!ustrcasecmp (suffix, TEXT("css")))
 	 return (TRUE);
        else
 	 return (FALSE);
@@ -363,34 +363,34 @@ const char         *path;
   returns TRUE if path points to an image resource.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            IsImageName (const char *path)
+ThotBool             IsImageName (const STRING path)
 #else  /* __STDC__ */
-ThotBool            IsImageName (path)
-const char         *path;
+ThotBool             IsImageName (path)
+const STRING        path;
 #endif /* __STDC__ */
 {
-   char                temppath[MAX_LENGTH];
-   char                suffix[MAX_LENGTH];
-   char                nsuffix[MAX_LENGTH];
+   CHAR_T                temppath[MAX_LENGTH];
+   CHAR_T                suffix[MAX_LENGTH];
+   CHAR_T                nsuffix[MAX_LENGTH];
    int                 i;
 
    if (!path)
       return (FALSE);
 
-   strcpy (temppath, path);
+   ustrcpy (temppath, path);
    ExtractSuffix (temppath, suffix);
 
    /* Normalize the suffix */
    i = 0;
    while (suffix[i] != EOS && i < MAX_LENGTH -1)
      {
-       nsuffix[i] = tolower (suffix[i]);
+       nsuffix[i] = utolower (suffix[i]);
        i++;
      }
    nsuffix[i] = EOS;
-   if ((!strcmp (nsuffix, "gif")) || (!strcmp (nsuffix, "xbm")) ||
-       (!strcmp (nsuffix, "xpm")) || (!strcmp (nsuffix, "jpg")) ||
-       (!strcmp (nsuffix, "png")) || (!strcmp (nsuffix, "au")))
+   if ((!ustrcmp (nsuffix, TEXT("gif"))) || (!ustrcmp (nsuffix, TEXT("xbm"))) ||
+       (!ustrcmp (nsuffix, TEXT("xpm"))) || (!ustrcmp (nsuffix, TEXT("jpg"))) ||
+       (!ustrcmp (nsuffix, TEXT("png"))) || (!ustrcmp (nsuffix, TEXT("au"))))
       return (TRUE);
    return (FALSE);
 }
@@ -400,19 +400,19 @@ const char         *path;
   returns TRUE if type points to an image resource.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            IsImageType (const char *type)
+ThotBool             IsImageType (const STRING type)
 #else  /* __STDC__ */
-ThotBool            IsImageType (type)
-const char         *type;
+ThotBool             IsImageType (type)
+const STRING     type;
 #endif /* __STDC__ */
 {
-   char                temptype[MAX_LENGTH];
+   CHAR_T              temptype[MAX_LENGTH];
    int                 i;
 
    if (!type)
       return (FALSE);
 
-   strcpy (temptype, type);
+   ustrcpy (temptype, type);
    /* Normalize the type */
    i = 0;
    while (temptype[i] != EOS)
@@ -420,9 +420,9 @@ const char         *type;
        temptype[i] = tolower (temptype[i]);
        i++;
      }
-   if ((!strcmp (temptype, "gif")) || (!strcmp (temptype, "x-xbitmap")) ||
-       (!strcmp (temptype, "x-xpixmap")) || (!strcmp (temptype, "jpeg")) ||
-       (!strcmp (temptype, "png")))
+   if ((!ustrcmp (temptype, TEXT("gif"))) || (!ustrcmp (temptype, TEXT("x-xbitmap"))) ||
+       (!ustrcmp (temptype, TEXT("x-xpixmap"))) || (!ustrcmp (temptype, TEXT("jpeg"))) ||
+       (!ustrcmp (temptype, TEXT("png"))))
       return (TRUE);
    return (FALSE);
 }
@@ -431,22 +431,22 @@ const char         *type;
   IsTextName                                                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            IsTextName (const char *path)
+ThotBool             IsTextName (const STRING path)
 #else  /* __STDC__ */
-ThotBool            IsTextName (path)
-const char         *path;
+ThotBool             IsTextName (path)
+const STRING        path;
 
 #endif /* __STDC__ */
 {
-   char                temppath[MAX_LENGTH];
-   char                suffix[MAX_LENGTH];
-   char                nsuffix[MAX_LENGTH];
+   CHAR_T                temppath[MAX_LENGTH];
+   CHAR_T                suffix[MAX_LENGTH];
+   CHAR_T                nsuffix[MAX_LENGTH];
    int                 i;
 
    if (!path)
      return (FALSE);
 
-   strcpy (temppath, path);
+   ustrcpy (temppath, path);
    ExtractSuffix (temppath, suffix);
 
    /* Normalize the suffix */
@@ -458,9 +458,9 @@ const char         *path;
      }
    nsuffix[i] = EOS;
 
-   if ((!strcmp (nsuffix, "txt")) || (!strcmp (nsuffix, "dtd")))
+   if ((!ustrcmp (nsuffix, TEXT("txt"))) || (!ustrcmp (nsuffix, TEXT("dtd"))))
       return (TRUE);
-   else if (!strcmp (nsuffix, "gz"))
+   else if (!ustrcmp (nsuffix, TEXT("gz")))
      {
        /* take into account compressed files */
        ExtractSuffix (temppath, suffix);       
@@ -472,7 +472,7 @@ const char         *path;
 	   i++;
 	 }
        nsuffix[i] = EOS;
-       if ((!strcmp (nsuffix, "txt")) || (!strcmp (nsuffix, "dtd")))
+       if ((!ustrcmp (nsuffix, TEXT("txt"))) || (!ustrcmp (nsuffix, TEXT("dtd"))))
 	 return (TRUE);
        else
 	 return (FALSE);
@@ -486,17 +486,17 @@ const char         *path;
   returns TRUE if path is in fact an http URL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            IsHTTPPath (const char *path)
+ThotBool             IsHTTPPath (const STRING path)
 #else  /* __STDC__ */
-ThotBool            IsHTTPPath (path)
-const char         *path;
+ThotBool             IsHTTPPath (path)
+const STRING       path;
 #endif /* __STDC__ */
 {
    if (!path)
       return FALSE;
 
-   if ((!strncmp (path, "http:", 5) != 0)
-       || !strncmp (path, "internal:", 9))
+   if ((!ustrncmp (path, TEXT("http:"), 5) != 0)
+       || !ustrncmp (path, TEXT("internal:"), 9))
       return TRUE;
    return FALSE;
 }
@@ -531,16 +531,16 @@ const char         *url;
   returns TRUE if path is in fact a URL.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            IsW3Path (const char *path)
+ThotBool             IsW3Path (const STRING path)
 #else  /* __STDC__ */
-ThotBool            IsW3Path (path)
-const char               *path;
+ThotBool             IsW3Path (path)
+const STRING        path;
 #endif /* __STDC__ */
 {
-   if ((strncmp (path, "http:", 5)) && (strncmp (path, "ftp:", 4)) &&
-       (strncmp (path, "telnet:", 7)) && (strncmp (path, "wais:", 5)) &&
-       (strncmp (path, "news:", 5)) && (strncmp (path, "gopher:", 7)) &&
-       (strncmp (path, "mailto:", 7)) && (strncmp (path, "archie:", 7)))
+   if ((ustrncmp (path, TEXT("http:"), 5)) && (ustrncmp (path, TEXT("ftp:"), 4)) &&
+       (ustrncmp (path, TEXT("telnet:"), 7)) && (ustrncmp (path, TEXT("wais:"), 5)) &&
+       (ustrncmp (path, TEXT("news:"), 5)) && (ustrncmp (path, TEXT("gopher:"), 7)) &&
+       (ustrncmp (path, TEXT("mailto:"), 7)) && (ustrncmp (path, TEXT("archie:"), 7)))
       return FALSE;
    return TRUE;
 }
@@ -550,14 +550,14 @@ const char               *path;
   returns true if the url protocol is supported by Amaya.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            IsValidProtocol (const char *url)
+ThotBool             IsValidProtocol (const STRING url)
 #else  /* __STDC__ */
-ThotBool            IsValidProtocol (url)
-const char         *url;
+ThotBool             IsValidProtocol (url)
+const STRING       url;
 #endif /* __STDC__ */
 {
-   if (!strncmp (url, "http:", 5)
-      || !strncmp (url, "internal:", 9))
+   if (!ustrncmp (url, TEXT("http:"), 5)
+      || !ustrncmp (url, TEXT("internal:"), 9))
        /* experimental */
       /***  || !strncmp (url, "ftp:", 4) ***/
      /*** || !strncmp (path, "news:", 5)***/ 
@@ -576,9 +576,9 @@ const char         *url;
       - or the document path (without document name).
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char               *GetBaseURL (Document doc)
+STRING              GetBaseURL (Document doc)
 #else  /* __STDC__ */
-char               *GetBaseURL (doc)
+STRING              GetBaseURL (doc)
 Document            doc;
 #endif /* __STDC__ */
 {
@@ -586,14 +586,14 @@ Document            doc;
   ElementType         elType;
   AttributeType       attrType;
   Attribute           attr;
-  char               *ptr, *basename;
+  STRING              ptr, basename;
   int                 length;
 
   /* @@@ irene */
   if (!DocumentURLs[doc])
 	  return NULL;
-  basename = TtaGetMemory (MAX_LENGTH);
-  strncpy (basename, DocumentURLs[doc], MAX_LENGTH-1);
+  basename = TtaAllocString (MAX_LENGTH);
+  ustrncpy (basename, DocumentURLs[doc], MAX_LENGTH-1);
   basename[MAX_LENGTH-1] = EOS;
   length = MAX_LENGTH -1;
   /* get the root element    */
@@ -622,16 +622,16 @@ Document            doc;
 	  if (basename[0] != EOS && basename[length] != URL_SEP && basename[length] != DIR_SEP) 
 	    /* verify if the base has the form "protocol://server:port" */
 	    {
-	      ptr = AmayaParseUrl (basename, "", AMAYA_PARSE_ACCESS |
+	      ptr = AmayaParseUrl (basename, _EMPTYSTR_, AMAYA_PARSE_ACCESS |
 				                 AMAYA_PARSE_HOST |
 				                 AMAYA_PARSE_PUNCTUATION);
-	      if (ptr && !strcmp (ptr, basename))
+	      if (ptr && !ustrcmp (ptr, basename))
 		{
 		  /* it has this form, we complete it by adding a URL_STR  */
-		  if (strchr (basename, DIR_SEP))
-		    strcat (basename, DIR_STR);
+		  if (ustrchr (basename, DIR_SEP))
+		    ustrcat (basename, DIR_STR);
 		  else
-		    strcat (basename, URL_STR);
+		    ustrcat (basename, URL_STR);
 		  length++;
 		}
 	      if (ptr)
@@ -645,7 +645,7 @@ Document            doc;
    * protocol. If found, end the string there. If neither char is found,
    * then discard the whole base element.
    */
-  length = strlen (basename) - 1;
+  length = ustrlen (basename) - 1;
   /* search for the last DIR_SEP char */
   while (length >= 0  && basename[length] != URL_SEP && basename[length] != DIR_SEP)
     length--;
@@ -655,9 +655,9 @@ Document            doc;
   else
     /* search for the first PATH_STR char */
     {
-      for (length = 0; basename[length] != ':' && 
+      for (length = 0; basename[length] != TEXT(':') && 
 	     basename[length] != EOS; length ++);
-      if (basename[length] == ':')
+      if (basename[length] == TEXT(':'))
 	/* found, so end the string there */
 	basename[length + 1] = EOS;
       else
@@ -673,51 +673,57 @@ Document            doc;
    Allocate and return the local document path associated to the url
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char      *GetLocalPath (Document doc, char *url)
+STRING     GetLocalPath (Document doc, STRING url)
 #else  /* __STDC__ */
-char      *GetLocalPath (doc, url)
+STRING     GetLocalPath (doc, url)
 Document   doc;
-char      *url;
+STRING     url;
 #endif /* __STDC__ */
 {
-  char    *ptr, *n;
-  char    *documentname;
-  char     url_sep;
+  STRING   ptr, n;
+  STRING   documentname;
+  CHAR_T   url_sep;
   int      len;
-  ThotBool noFile;
+  STRING   tmpDir, tmpName;
+  ThotBool  noFile;
 
   if (url != NULL)
     {
       /* check whether the file name exists */
-      len = strlen (url) - 1;
+      len = ustrlen (url) - 1;
       if (IsW3Path)
-	url_sep = '/';
+	url_sep = TEXT('/');
       else 
 	url_sep = DIR_SEP;
       noFile = (url[len] == url_sep);
       if (noFile)
 	url[len] = EOS;
-      ptr = TtaGetMemory (MAX_LENGTH);
-      documentname = TtaGetMemory (MAX_LENGTH);
-      TtaExtractName (url, ptr, documentname);
-      sprintf (ptr, "%s%s%d%s", TempFileDirectory, DIR_STR, doc, DIR_STR);
+      /* ptr = TtaAllocString (MAX_LENGTH);
+      documentname = TtaAllocString (MAX_LENGTH); */
+	  tmpDir = TtaAllocString (MAX_LENGTH );
+	  tmpName = TtaAllocString(MAX_LENGTH );
+      TtaExtractName (url, tmpDir, tmpName);
+	  ptr = tmpDir;
+      documentname = tmpName;
+
+      usprintf (ptr, TEXT("%s%s%d%s"), TempFileDirectory, DIR_STR, doc, DIR_STR);
       if (!TtaCheckDirectory (ptr))
 	/* directory did not exist */
 #   ifdef _WINDOWS
-	_mkdir (ptr);
+	umkdir (ptr);
 #   else  /* !_WINDOWS */
-	mkdir (ptr, S_IRWXU);
+	umkdir (ptr, S_IRWXU);
 #   endif /* !_WINDOWS */
 
       /* don't include the query string within document name */
-      n = strrchr(documentname, '?');
+      n = ustrrchr(documentname, TEXT('?'));
       if (n != NULL)
 	*n = EOS;
       /* don't include ':' within document name */
-      n = strchr (documentname, ':');
+      n = ustrchr (documentname, TEXT(':'));
       if (n != NULL)
 	*n = EOS;
-      strcat (ptr, documentname);
+      ustrcat (ptr, documentname);
       TtaFreeMemory (documentname);
       /* restore the url */
       if (noFile)
@@ -741,21 +747,21 @@ char      *url;
    the name "noname.html".
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                NormalizeURL (char *orgName, Document doc, char *newName, char *docName, char *otherPath)
+void                NormalizeURL (STRING orgName, Document doc, STRING newName, STRING docName, STRING otherPath)
 #else  /* __STDC__ */
 void                NormalizeURL (orgName, doc, newName, docName, otherPath)
-char               *orgName;
+STRING              orgName;
 Document            doc;
-char               *newName;
-char               *docName;
-char               *otherPath;
+STRING              newName;
+STRING              docName;
+STRING              otherPath;
 #endif /* __STDC__ */
 {
-   char               *basename;
-   char                tempOrgName[MAX_LENGTH];
-   char               *ptr;
-   char                used_sep;
-   int                 length;
+   STRING             basename;
+   CHAR_T             tempOrgName[MAX_LENGTH];
+   STRING             ptr;
+   CHAR_T             used_sep;
+   int                length;
    ThotBool            check;
 
 #  ifdef _WINDOWS
@@ -779,8 +785,8 @@ char               *otherPath;
     */
    ptr = orgName;
    /* skip leading white space and new line characters */
-   while ((*ptr == ' ' || *ptr == EOL) && *ptr++ != EOS);
-   strncpy (tempOrgName, ptr, MAX_LENGTH -1);
+   while ((*ptr == SPACE || *ptr == EOL) && *ptr++ != EOS);
+   ustrncpy (tempOrgName, ptr, MAX_LENGTH -1);
    tempOrgName[MAX_LENGTH -1] = EOS;
    /*
     * Make orgName a complete URL
@@ -795,7 +801,7 @@ char               *otherPath;
      }
 
    /* clean trailing white space */
-   length = strlen (tempOrgName) - 1;
+   length = ustrlen (tempOrgName) - 1;
    while (tempOrgName[length] == SPACE && tempOrgName[length] == EOL)
      {
        tempOrgName[length] = EOS;
@@ -804,43 +810,43 @@ char               *otherPath;
 
    /* remove extra dot (which dot???) */
    /* ugly, but faster than a strcmp */
-   if (tempOrgName[length] == '.'
-       && (length == 0 || tempOrgName[length-1] != '.'))
+   if (tempOrgName[length] == TEXT('.')
+       && (length == 0 || tempOrgName[length-1] != TEXT('.')))
 	 tempOrgName[length] = EOS;
 
    if (IsW3Path (tempOrgName))
      {
        /* the name is complete, go to the Sixth Step */
-       strcpy (newName, tempOrgName);
+       ustrcpy (newName, tempOrgName);
        SimplifyUrl (&newName);
        /* verify if the URL has the form "protocol://server:port" */
-       ptr = AmayaParseUrl (newName, "", AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST | AMAYA_PARSE_PUNCTUATION);
-       if (ptr && !strcmp (ptr, newName)) /* it has this form, we complete it by adding a DIR_STR  */
-         strcat (newName, URL_STR);
+       ptr = AmayaParseUrl (newName, _EMPTYSTR_, AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST | AMAYA_PARSE_PUNCTUATION);
+       if (ptr && !ustrcmp (ptr, newName)) /* it has this form, we complete it by adding a DIR_STR  */
+         ustrcat (newName, URL_STR);
 
        if (ptr)
          TtaFreeMemory (ptr);
      }
    else if ( basename == NULL)
      /* the name is complete, go to the Sixth Step */
-     strcpy (newName, tempOrgName);
+     ustrcpy (newName, tempOrgName);
    else
      {
        /* Calculate the absolute URL, using the base or document URL */
 #      ifdef _WINDOWS
        if (!IsW3Path (basename))
 	 {
-	   length = strlen (tempOrgName);
+	   length = ustrlen (tempOrgName);
 	   for (ndx = 0; ndx < length; ndx++)
-	     if (tempOrgName [ndx] == '/')
-	       tempOrgName [ndx] = '\\';
+	     if (tempOrgName [ndx] == TEXT('/'))
+	       tempOrgName [ndx] = TEXT('\\');
 	 }
 #      endif /* _WINDOWS */
        ptr = AmayaParseUrl (tempOrgName, basename, AMAYA_PARSE_ALL);
        if (ptr)
 	 {
 	   SimplifyUrl (&ptr);
-	   strcpy (newName, ptr);
+	   ustrcpy (newName, ptr);
 	   TtaFreeMemory (ptr);
 	 }
        else
@@ -855,7 +861,7 @@ char               *otherPath;
    */
    if (newName[0] != EOS)
      {
-       length = strlen (newName) - 1;
+       length = ustrlen (newName) - 1;
        if (newName[length] == URL_SEP || newName[length] == DIR_SEP)
 	 {
 	   used_sep = newName[length];
@@ -865,35 +871,35 @@ char               *otherPath;
                length--;
                while (length >= 0 && newName[length] != used_sep)
 		 length--;
-               if (!strncmp (&newName[length+1], "..", 2))
+               if (!ustrncmp (&newName[length+1], TEXT(".."), 2))
 		 {
 		   newName[length+1] = EOS;
 		   /* remove also previous directory */
 		   length--;
 		   while (length >= 0 && newName[length] != used_sep)
 		     length--;
-		   if (strncmp (&newName[length+1], "//", 2))
+		   if (ustrncmp (&newName[length+1], TEXT("//"), 2))
 		     /* don't remove server name */
                      newName[length+1] = EOS;
 		 }
-	       else if (!strncmp (&newName[length+1], ".", 1))
+	       else if (!ustrncmp (&newName[length+1], TEXT("."), 1))
 		 newName[length+1] = EOS;
                else
 		 check = FALSE;
 	     }
-	   strcpy (docName, "noname.html");	       
+	   ustrcpy (docName, TEXT("noname.html"));	       
 	   /* docname was not comprised inside the URL, so let's */
 	   /* assign the default ressource name */
-	   strcpy (docName, "noname.html");
+	   ustrcpy (docName, TEXT("noname.html"));
 	 }
        else
 	 { /* docname is comprised inside the URL */
            while (length >= 0 && newName[length] != URL_SEP && newName[length] != DIR_SEP)
 	     length--;
 	   if (length < 0)
-             strcpy (docName, newName);
+             ustrcpy (docName, newName);
 	   else
-	     strcpy (docName, &newName[length+1]);
+	     ustrcpy (docName, &newName[length+1]);
 	 }
      }
    else
@@ -904,20 +910,20 @@ char               *otherPath;
   IsSameHost                                                         
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            IsSameHost (const char *url1, const char *url2)
+ThotBool             IsSameHost (const STRING url1, const STRING url2)
 #else  /* __STDC__ */
-ThotBool            IsSameHost (url1, url2)
-const char         *url1;
-const char         *url2;
+ThotBool             IsSameHost (url1, url2)
+const STRING       url1;
+const STRING       url2;
 #endif /* __STDC__ */
 {
-   char            *basename_ptr1, *basename_ptr2;
-   ThotBool         result;
+   STRING           basename_ptr1, basename_ptr2;
+   ThotBool          result;
 
-   basename_ptr1 = AmayaParseUrl (url1, "", AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST | AMAYA_PARSE_PUNCTUATION);
-   basename_ptr2 = AmayaParseUrl (url2, "", AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST | AMAYA_PARSE_PUNCTUATION);
+   basename_ptr1 = AmayaParseUrl (url1, _EMPTYSTR_, AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST | AMAYA_PARSE_PUNCTUATION);
+   basename_ptr2 = AmayaParseUrl (url2, _EMPTYSTR_, AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST | AMAYA_PARSE_PUNCTUATION);
 
-   if (strcmp (basename_ptr1, basename_ptr2))
+   if (ustrcmp (basename_ptr1, basename_ptr2))
       result = FALSE;
    else
       result = TRUE;
@@ -933,24 +939,24 @@ const char         *url2;
   returns TRUE if path points to a file ending with a suffix.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            HasKnownFileSuffix (const char *path)
+ThotBool             HasKnownFileSuffix (const STRING path)
 #else  /* __STDC__ */
-ThotBool            HasKnownFileSuffix (path)
-const char         *path;
+ThotBool             HasKnownFileSuffix (path)
+const STRING    path;
 #endif /* __STDC__ */
 {
-   char            *root;
-   char             temppath[MAX_LENGTH];
-   char             suffix[MAX_LENGTH];
+   STRING      root;
+   CHAR_T      temppath[MAX_LENGTH];
+   CHAR_T      suffix[MAX_LENGTH];
 
-   if (!path || path[0] == EOS || path[strlen(path)] == DIR_SEP)
+   if (!path || path[0] == EOS || path[ustrlen(path)] == DIR_SEP)
      return (FALSE);
 
-   root = AmayaParseUrl(path, "", AMAYA_PARSE_PATH | AMAYA_PARSE_PUNCTUATION);
+   root = AmayaParseUrl(path, _EMPTYSTR_, AMAYA_PARSE_PATH | AMAYA_PARSE_PUNCTUATION);
 
    if (root) 
      {
-       strcpy (temppath, root);
+       ustrcpy (temppath, root);
        TtaFreeMemory (root);
        /* Get the suffix */
        ExtractSuffix (temppath, suffix); 
@@ -962,7 +968,7 @@ const char         *path;
        /* Normalize the suffix */
        ConvertToLowerCase (suffix);
 
-       if (!strcmp (suffix, "gz"))
+       if (!ustrcmp (suffix, TEXT("gz")))
 	 /* skip the compressed suffix */
 	 {
 	 ExtractSuffix (temppath, suffix);
@@ -973,26 +979,26 @@ const char         *path;
          ConvertToLowerCase (suffix);
 	 }
 
-       if (strcmp (suffix, "gif") &&
-	   strcmp (suffix, "xbm") &&
-	   strcmp (suffix, "xpm") &&
-	   strcmp (suffix, "jpg") &&
-	   strcmp (suffix, "pdf") &&
-	   strcmp (suffix, "png") &&
-	   strcmp (suffix, "tgz") &&
-	   strcmp (suffix, "xpg") &&
-	   strcmp (suffix, "xpd") &&
-	   strcmp (suffix, "ps") &&
-	   strcmp (suffix, "au") &&
-	   strcmp (suffix, "html") &&
-	   strcmp (suffix, "htm") &&
-	   strcmp (suffix, "shtml") &&
-	   strcmp (suffix, "xht") &&
-	   strcmp (suffix, "xhtm") &&
-	   strcmp (suffix, "xhtml") &&
-	   strcmp (suffix, "txt") &&
-	   strcmp (suffix, "css") &&
-	   strcmp (suffix, "eps"))
+       if (ustrcmp (suffix, TEXT("gif")) &&
+	   ustrcmp (suffix, TEXT("xbm")) &&
+	   ustrcmp (suffix, TEXT("xpm")) &&
+	   ustrcmp (suffix, TEXT("jpg")) &&
+	   ustrcmp (suffix, TEXT("pdf")) &&
+	   ustrcmp (suffix, TEXT("png")) &&
+	   ustrcmp (suffix, TEXT("tgz")) &&
+	   ustrcmp (suffix, TEXT("xpg")) &&
+	   ustrcmp (suffix, TEXT("xpd")) &&
+	   ustrcmp (suffix, TEXT("ps")) &&
+	   ustrcmp (suffix, TEXT("au")) &&
+	   ustrcmp (suffix, TEXT("html")) &&
+	   ustrcmp (suffix, TEXT("htm")) &&
+	   ustrcmp (suffix, TEXT("shtml")) &&
+	   ustrcmp (suffix, TEXT("xht")) &&
+	   ustrcmp (suffix, TEXT("xhtm")) &&
+	   ustrcmp (suffix, TEXT("xhtml")) &&
+	   ustrcmp (suffix, TEXT("txt")) &&
+	   ustrcmp (suffix, TEXT("css")) &&
+	   ustrcmp (suffix, TEXT("eps")))
 	 return (FALSE);
        else
 	 return (TRUE);
@@ -1051,30 +1057,30 @@ const char *inputURL;
   	Any which are nonzero point to zero terminated strings.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void scan (char * name, HTURI * parts)
+static void scan (STRING name, HTURI * parts)
 #else  /* __STDC__ */
 static void scan (name, parts)
-char                *name;
-HTURI               *parts;
+STRING      name;
+HTURI       *parts;
 
 #endif /* __STDC__ */
 {
-  char      *p;
-  char      *after_access = name;
+  STRING    p;
+  STRING    after_access = name;
 
   memset (parts, '\0', sizeof (HTURI));
   /* Look for fragment identifier */
-  if ((p = strchr(name, '#')) != NULL)
+  if ((p = ustrchr(name, TEXT('#'))) != NULL)
     {
-      *p++ = '\0';
+      *p++ = TEXT('\0');
       parts->fragment = p;
     }
     
   for (p=name; *p; p++)
     {
-      if (*p == URL_SEP || *p == DIR_SEP || *p=='#' || *p=='?')
+      if (*p == URL_SEP || *p == DIR_SEP || *p == TEXT('#') || *p == TEXT('?'))
 	break;
-      if (*p==':')
+      if (*p == TEXT(':'))
 	{
 	  *p = 0;
 	  parts->access = after_access; /* Scheme has been specified */
@@ -1087,7 +1093,7 @@ HTURI               *parts;
 	  /*		while (*after_access == 0)*/
 	  /*		    after_access++;*/
 	  after_access = p+1;
-	  if (!strcasecmp("URL", parts->access))
+	  if (!ustrcasecmp(TEXT("URL"), parts->access))
 	    /* Ignore IETF's URL: pre-prefix */
 	    parts->access = NULL;
 	  else
@@ -1103,7 +1109,7 @@ HTURI               *parts;
 	    parts->host = p+2;		/* host has been specified 	*/
 	    *p = 0;			/* Terminate access 		*/
 	    /* look for end of host name if any */
-	    p = strchr (parts->host, URL_SEP);
+	    p = ustrchr (parts->host, URL_SEP);
 	    if (p)
 	      {
 	        *p = EOS;			/* Terminate host */
@@ -1137,26 +1143,26 @@ HTURI               *parts;
   	returns		A pointer to a malloc'd string which MUST BE FREED
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char          *AmayaParseUrl (const char *aName, char *relatedName, int wanted)
+STRING        AmayaParseUrl (const STRING aName, STRING relatedName, int wanted)
 #else  /* __STDC__ */
-char          *AmayaParseUrl (aName, relatedName, wanted)
-const char    *aName;
-char          *relatedName;
+STRING        AmayaParseUrl (aName, relatedName, wanted)
+const STRING  aName;
+STRING        relatedName;
 int            wanted;
 
 #endif /* __STDC__ */
 {
-  char      *return_value;
-  char       result[MAX_LENGTH];
-  char       name[MAX_LENGTH];
-  char       rel[MAX_LENGTH];
-  char      *p, *access;
+  STRING     return_value;
+  CHAR_T     result[MAX_LENGTH];
+  CHAR_T     name[MAX_LENGTH];
+  CHAR_T     rel[MAX_LENGTH];
+  STRING     p, access;
   HTURI      given, related;
   int        len;
-  char       used_sep;
-  char      *used_str;
+  CHAR_T     used_sep;
+  STRING     used_str;
 
-  if (strchr (aName, DIR_SEP) || strchr (relatedName, DIR_SEP))
+  if (ustrchr (aName, DIR_SEP) || ustrchr (relatedName, DIR_SEP))
     {
       used_str = DIR_STR;
       used_sep = DIR_SEP;
@@ -1170,9 +1176,9 @@ int            wanted;
   /* Make working copies of input strings to cut up: */
   return_value = NULL;
   result[0] = 0;		/* Clear string  */
-  strcpy (name, aName);
+  ustrcpy (name, aName);
   if (relatedName != NULL)  
-    strcpy (rel, relatedName);
+    ustrcpy (rel, relatedName);
   else
     relatedName[0] = EOS;
   
@@ -1182,14 +1188,14 @@ int            wanted;
   if (wanted & AMAYA_PARSE_ACCESS)
     if (access)
       {
-	strcat (result, access);
+	ustrcat (result, access);
 	if(wanted & AMAYA_PARSE_PUNCTUATION)
-		strcat (result, ":");
+		ustrcat (result, TEXT(":"));
       }
   
   if (given.access && related.access)
     /* If different, inherit nothing. */
-    if (strcmp (given.access, related.access) != 0)
+    if (ustrcmp (given.access, related.access) != 0)
       {
 	related.host = 0;
 	related.absolute = 0;
@@ -1201,13 +1207,13 @@ int            wanted;
     if(given.host || related.host)
       {
 	if(wanted & AMAYA_PARSE_PUNCTUATION)
-	  strcat (result, "//");
-	strcat (result, given.host ? given.host : related.host);
+	  ustrcat (result, TEXT("//"));
+	ustrcat (result, given.host ? given.host : related.host);
       }
   
   if (given.host && related.host)
     /* If different hosts, inherit no path. */
-    if (strcmp(given.host, related.host) != 0)
+    if (ustrcmp (given.host, related.host) != 0)
       {
 	related.absolute = 0;
 	related.relative = 0;
@@ -1220,35 +1226,35 @@ int            wanted;
 	{
 	  /* All is given */
 	  if (wanted & AMAYA_PARSE_PUNCTUATION)
-	    strcat (result, used_str);
-	  strcat (result, given.absolute);
+	    ustrcat (result, used_str);
+	  ustrcat (result, given.absolute);
 	}
       else if (related.absolute)
 	{
 	  /* Adopt path not name */
-	  strcat (result, used_str);
-	  strcat (result, related.absolute);
+	  ustrcat (result, used_str);
+	  ustrcat (result, related.absolute);
 	  if (given.relative)
 	    {
 	      /* Search part? */
-	      p = strchr (result, '?');
+	      p = ustrchr (result, TEXT('?'));
 	      if (!p)
-		p=result+strlen(result)-1;
+		p=result+ustrlen(result)-1;
 	      for (; *p!=used_sep; p--);	/* last / */
 	      /* Remove filename */
 	      p[1]=0;
 	      /* Add given one */
-	      strcat (result, given.relative);
+	      ustrcat (result, given.relative);
 	    }
 	}
       else if (given.relative)
 	/* what we've got */
-	strcat (result, given.relative);
+	ustrcat (result, given.relative);
       else if (related.relative)
-	strcat (result, related.relative);
+	ustrcat (result, related.relative);
       else
 	/* No inheritance */
-	strcat (result, used_str);
+	ustrcat (result, used_str);
     }
   
   if (wanted & AMAYA_PARSE_ANCHOR)
@@ -1258,21 +1264,21 @@ int            wanted;
 	  {
 	    /*Fixes for relURLs...*/
 	    if (wanted & AMAYA_PARSE_PUNCTUATION)
-	      strcat (result, "#");
-	    strcat (result, given.fragment); 
+	      ustrcat (result, TEXT("#"));
+	    ustrcat (result, given.fragment); 
 	  }
 	else if (!(given.absolute) && !(given.fragment))
-	  strcat (result, "");
+	  ustrcat (result, _EMPTYSTR_);
 	else
 	  {
 	    if (wanted & AMAYA_PARSE_PUNCTUATION)
-	      strcat (result, "#");
-	    strcat (result, given.fragment ? given.fragment : related.fragment); 
+	      ustrcat (result, TEXT("#"));
+	    ustrcat (result, given.fragment ? given.fragment : related.fragment); 
 	  }
       }
-  len = strlen (result);
-  if ((return_value = (char *) TtaGetMemory (len + 1)) != NULL)
-    strcpy (return_value, result);
+  len = ustrlen (result);
+  if ((return_value = TtaAllocString (len + 1)) != NULL)
+    ustrcpy (return_value, result);
   return (return_value);		/* exactly the right length */
 }
 
@@ -1289,22 +1295,22 @@ int            wanted;
   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char *HTCanon (char ** filename, char * host)
+static STRING HTCanon (STRING* filename, STRING host)
 #else  /* __STDC__ */
-static char *HTCanon (filename, host)
-char       **filename;
-char        *host;
+static STRING HTCanon (filename, host)
+STRING      *filename;
+STRING      host;
 #endif /* __STDC__ */
 {
-    char *newname = NULL;
-    char *port;
-    char *strptr;
-    char *path;
-    char *access = host-3;
-    char       used_sep;
+    STRING  newname = NULL;
+    STRING  port;
+    STRING  strptr;
+    STRING  path;
+    STRING  access = host-3;
+    CHAR_T  used_sep;
 
   
-     if (*filename && strchr (*filename, URL_SEP))
+     if (*filename && ustrchr (*filename, URL_SEP))
        {
 	 used_sep = URL_SEP;
        }
@@ -1315,11 +1321,11 @@ char        *host;
   
     while (access>*filename && *(access-1)!= used_sep)       /* Find access method */
 	access--;
-    if ((path = strchr(host, used_sep)) == NULL)			/* Find path */
-	path = host + strlen(host);
-    if ((strptr = strchr(host, '@')) != NULL && strptr<path)	   /* UserId */
+    if ((path = ustrchr(host, used_sep)) == NULL)			/* Find path */
+	path = host + ustrlen(host);
+    if ((strptr = ustrchr(host, TEXT('@'))) != NULL && strptr<path)	   /* UserId */
 	host = strptr;
-    if ((port = strchr(host, ':')) != NULL && port>path)      /* Port number */
+    if ((port = ustrchr(host, TEXT(':'))) != NULL && port>path)      /* Port number */
 	port = NULL;
 
     strptr = host;				    /* Convert to lower-case */
@@ -1333,10 +1339,10 @@ char        *host;
        numerical host name. The domain name is already made lower-case
        and without a trailing dot. */
     {
-      char *dot = port ? port : path;
-      if (dot > *filename && *--dot=='.')
+      STRING dot = port ? port : path;
+      if (dot > *filename && *--dot == TEXT('.'))
 	{
-	  char *orig=dot, *dest=dot+1;
+	  STRING orig=dot, dest=dot+1;
 	  while((*orig++ = *dest++));
 	  if (port) port--;
 	  path--;
@@ -1349,32 +1355,32 @@ char        *host;
 	  {
 	    if (!newname)
 	      {
-		char *orig=port, *dest=port+1;
+		STRING orig=port, dest=port+1;
 		while((*orig++ = *dest++));
 	      }
 	  }
-	else if ((!strncmp(access, "http", 4) &&
-		  (*(port+1)=='8'&&*(port+2)=='0'&&(*(port+3)==used_sep||!*(port+3)))) ||
-		 (!strncmp(access, "gopher", 6) &&
-		  (*(port+1)=='7'&&*(port+2)=='0'&&(*(port+3)==used_sep||!*(port+3)))) ||
-		 (!strncmp(access, "ftp", 3) &&
-		  (*(port+1)=='2'&&*(port+2)=='1'&&(*(port+3)==used_sep||!*(port+3))))) {
+	else if ((!ustrncmp(access, TEXT("http"), 4) &&
+		  (*(port+1) == TEXT('8') && *(port+2) == TEXT('0') && (*(port+3) == used_sep || !*(port + 3)))) ||
+		 (!ustrncmp (access, TEXT("gopher"), 6) &&
+		  (*(port+1) == TEXT('7') && *(port+2) == TEXT('0') && (*(port+3) == used_sep || !*(port+3)))) ||
+		 (!ustrncmp(access, TEXT("ftp"), 3) &&
+		  (*(port+1) == TEXT('2') && *(port + 2) == TEXT('1') && (*(port+3) == used_sep || !*(port+3))))) {
 	  if (!newname)
 	    {
-	      char *orig=port, *dest=port+3;
+	      STRING orig=port, dest=port+3;
 	      while((*orig++ = *dest++));
 	      /* Update path position, Henry Minsky */
 	      path -= 3;
 	    }
 	}
 	else if (newname)
-	  strncat(newname, port, (int) (path-port));
+	  ustrncat(newname, port, (int) (path-port));
       }
 
     if (newname)
       {
-	char *newpath = newname+strlen(newname);
-	strcat(newname, path);
+	STRING newpath = newname + ustrlen (newname);
+	ustrcat(newname, path);
 	path = newpath;
 	/* Free old copy */
 	TtaFreeMemory(*filename);
@@ -1410,23 +1416,23 @@ char        *host;
   Returns: A string which might be the old one or a new one.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void         SimplifyUrl (char ** url)
+void         SimplifyUrl (STRING* url)
 #else  /* __STDC__ */
 void         SimplifyUrl (url)
-char        **url;
+STRING       *url;
 #endif /* __STDC__ */
 {
-  char *path, *p;
-  char *newptr, *access;
-  char *orig, *dest, *end;
+  STRING   path, p;
+  STRING   newptr, access;
+  STRING   orig, dest, end;
 
-  char       used_sep;
+  CHAR_T   used_sep;
 
 
   if (!url || !*url)
     return;
 
-  if (strchr (*url, URL_SEP))
+  if (ustrchr (*url, URL_SEP))
     {
       used_sep = URL_SEP;
     }
@@ -1436,20 +1442,20 @@ char        **url;
     }
 
   /* Find any scheme name */
-  if ((path = strstr(*url, "://")) != NULL)
+  if ((path = ustrstr(*url, TEXT("://"))) != NULL)
     {
       /* Find host name */
       access = *url;
       while (access<path && (*access=tolower(*access)))
 	access++;
       path += 3;
-      while ((newptr = strstr(path, "://")) != NULL)
+      while ((newptr = ustrstr(path, TEXT("://"))) != NULL)
         /* For proxies */
 	path = newptr+3;
       /* We have a host name */
       path = HTCanon(url, path);
     }
-  else if ((path = strstr(*url, ":/")) != NULL)
+  else if ((path = ustrstr(*url, TEXT(":/"))) != NULL)
     path += 2;
   else
     path = *url;
@@ -1457,9 +1463,9 @@ char        **url;
   if (*path == used_sep && *(path+1)==used_sep)
     /* Some URLs start //<foo> */
     path += 1;
-  else if (!strncmp(path, "news:", 5))
+  else if (!ustrncmp(path, TEXT("news:"), 5))
     {
-      newptr = strchr(path+5, '@');
+      newptr = ustrchr(path+5, TEXT('@'));
       if (!newptr)
 	newptr = path + 5;
       while (*newptr)
@@ -1474,9 +1480,9 @@ char        **url;
 
   if ((p = path))
     {
-      if (!((end = strchr (path, ';')) || (end = strchr (path, '?')) ||
-	    (end = strchr (path, '#'))))
-	end = path + strlen (path);
+      if (!((end = ustrchr (path, TEXT(';'))) || (end = ustrchr (path, TEXT('?'))) ||
+	    (end = ustrchr (path, TEXT('#')))))
+	end = path + ustrlen (path);
       
       /* Parse string second time to simplify */
       p = path;
@@ -1484,14 +1490,14 @@ char        **url;
 	{
 	  if (*p==used_sep)
 	    {
-	      if (p > *url && *(p+1) == '.' && (*(p+2) == used_sep || !*(p+2)))
+	      if (p > *url && *(p+1) == TEXT('.') && (*(p+2) == used_sep || !*(p+2)))
 		{
 		  orig = p + 1;
 		  dest = (*(p+2)!=used_sep) ? p+2 : p+3;
 		  while ((*orig++ = *dest++)); /* Remove a used_sep and a dot*/
 		  end = orig - 1;
 		}
-	      else if (*(p+1)=='.' && *(p+2)=='.' && (*(p+3)==used_sep || !*(p+3)))
+	      else if (*(p+1) == TEXT('.') && *(p+2) == TEXT('.') && (*(p+3) == used_sep || !*(p+3)))
 		{
 		  newptr = p;
 		  while (newptr>path && *--newptr!=used_sep); /* prev used_sep */
@@ -1527,7 +1533,7 @@ char        **url;
     /*
     **  Check for host/../.. kind of things
     */
-    if (*path==used_sep && *(path+1)=='.' && *(path+2)=='.' && (!*(path+3) || *(path+3)==used_sep))
+    if (*path == used_sep && *(path+1) == TEXT('.') && *(path+2) == TEXT('.') && (!*(path+3) || *(path+3) == used_sep))
 	*(path+1) = EOS;
 
   return;
@@ -1539,36 +1545,36 @@ char        **url;
    Return TRUE if target and src differ.                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool            NormalizeFile (char *src, char *target)
+ThotBool             NormalizeFile (STRING src, STRING target)
 #else
-ThotBool            NormalizeFile (src, target)
-char               *src;
-char               *target;
+ThotBool             NormalizeFile (src, target)
+STRING              src;
+STRING              target;
 
 #endif
 {
-   char               *s;
+   STRING             s;
    ThotBool            change;
 
    change = FALSE;
-   if (strncmp (src, "file:", 5) == 0)
+   if (ustrncmp (src, TEXT("file:"), 5) == 0)
      {
 	/* remove the prefix file: */
 	if (src[5] == EOS)
-	   strcpy (target, DIR_STR);
-	else if (src[0] == '~')
+	   ustrcpy (target, DIR_STR);
+	else if (src[0] == TEXT('~'))
 	  {
 	    /* replace ~ */
-	    s = (char *) TtaGetEnvString ("HOME");
-	    strcpy (target, s);
-	    strcat (target, &src[5]);
+	    s = TtaGetEnvString (TEXT("HOME"));
+	    ustrcpy (target, s);
+	    ustrcat (target, &src[5]);
 	  }
 	else
-	   strcpy (target, &src[5]);
+	   ustrcpy (target, &src[5]);
 	change = TRUE;
      }
 #  ifndef _WINDOWS
-   else if (src[0] == '~')
+   else if (src[0] == TEXT('~'))
      {
 	/* replace ~ */
 	s = (char *) TtaGetEnvString ("HOME");
@@ -1580,12 +1586,12 @@ char               *target;
      }
 #   endif /* _WINDOWS */
    else
-      strcpy (target, src);
+      ustrcpy (target, src);
 
    /* remove /../ and /./ */
    SimplifyUrl (&target);
    if (!change)
-     change = strcmp (src, target);
+     change = ustrcmp (src, target);
    return (change);
 }
 
@@ -1607,19 +1613,19 @@ char               *target;
   	The caller is responsible for freeing the resulting name later.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-char            *MakeRelativeURL (char *aName, char *relatedName)
+STRING           MakeRelativeURL (STRING aName, STRING relatedName)
 #else  /* __STDC__ */
-char            *MakeRelativeURL (aName, relatedName)
-char            *aName;
-char            *relatedName;
+STRING           MakeRelativeURL (aName, relatedName)
+STRING           aName;
+STRING           relatedName;
 #endif  /* __STDC__ */
 {
-  char          *return_value;
-  char           result[MAX_LENGTH];
-  char          *p;
-  char          *q;
-  char          *after_access;
-  char          *last_slash = NULL;
+  STRING         return_value;
+  CHAR_T         result[MAX_LENGTH];
+  STRING         p;
+  STRING         q;
+  STRING         after_access;
+  STRING         last_slash = NULL;
   int            slashes, levels, len;
 
 # ifdef _WINDOWS
@@ -1636,7 +1642,7 @@ char            *relatedName;
   for (; *p && (*p == *q); p++, q++)
     {
       /* Find extent of match */
-      if (*p == ':')
+      if (*p == TEXT(':'))
 	after_access = p + 1;
       if (*p == DIR_SEP)
 	{
@@ -1651,52 +1657,52 @@ char            *relatedName;
     {
       /* New name is a subset of the related name */
       /* exactly the right length */
-      len = strlen (p);
-      if ((return_value = (char *) TtaGetMemory (len + 1)) != NULL)
-	strcpy (return_value, p);
+      len = ustrlen (p);
+      if ((return_value = TtaAllocString (len + 1)) != NULL)
+	ustrcpy (return_value, p);
     }
   else if ((slashes < 2 && after_access == NULL)
       || (slashes < 3 && after_access != NULL))
     {
       /* Two names whitout common path */
       /* exactly the right length */
-      len = strlen (aName);
-      if ((return_value = (char *) TtaGetMemory (len + 1)) != NULL)
-	strcpy (return_value, aName);
+      len = ustrlen (aName);
+      if ((return_value = TtaAllocString (len + 1)) != NULL)
+	ustrcpy (return_value, aName);
     }
   else
     {
       /* Some path in common */
-      if (slashes == 3 && strncmp (aName, "http:", 5) == 0)
+      if (slashes == 3 && ustrncmp (aName, TEXT("http:"), 5) == 0)
 	/* just the same server */
-	strcpy (result, last_slash);
+	ustrcpy (result, last_slash);
       else
 	{
 	  levels= 0; 
-	  for (; *q && *q != '#' && *q!=';' && *q!='?'; q++)
+	  for (; *q && *q != TEXT('#') && *q != TEXT(';') && *q != TEXT('?'); q++)
 	    if (*q == DIR_SEP)
 	      levels++;
 	  
 	  result[0] = EOS;
 	  for (;levels; levels--)
-	    strcat (result, "../");
-	  strcat (result, last_slash+1);
+	    ustrcat (result, TEXT("../"));
+	  ustrcat (result, last_slash+1);
 	} 
 
       if (!*result)
-	strcat (result, "./");
+	ustrcat (result, TEXT("./"));
 
       /* exactly the right length */
-      len = strlen (result);
-      if ((return_value = (char *) TtaGetMemory (len + 1)) != NULL)
-	strcpy (return_value, result);
+      len = ustrlen (result);
+      if ((return_value = TtaAllocString (len + 1)) != NULL)
+	ustrcpy (return_value, result);
 
     }
 # ifdef _WINDOWS
-  len = strlen (return_value);
+  len = ustrlen (return_value);
   for (ndx = 0; ndx < len; ndx ++)
-	  if (return_value[ndx] == '\\')
-	     return_value[ndx] = '/' ;
+	  if (return_value[ndx] == TEXT('\\'))
+	     return_value[ndx] = TEXT('/') ;
 # endif /* _WINDOWS */
   return (return_value);
 }

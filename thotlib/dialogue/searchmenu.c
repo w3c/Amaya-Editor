@@ -17,8 +17,8 @@
 /*
  * searchmenu.c : diverse document search functions.
  *
- * Author: I. Vatton (INRIA)
- *         R. Guetari - Adaptation of code to windows platforms.
+ * Authors: I. Vatton (INRIA)
+ *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  *
  */
 
@@ -134,13 +134,13 @@ int                 ref;
    CHAR_T                string[200];
 
    i = 0;
-   usprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_BEFORE_SEL));
+   usprintf (&string[i], TEXT("%s%s"), "B", TtaGetMessage (LIB, TMSG_BEFORE_SEL));
    i += ustrlen (&string[i]) + 1;
-   usprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_WITHIN_SEL));
+   usprintf (&string[i], TEXT("%s%s"), "B", TtaGetMessage (LIB, TMSG_WITHIN_SEL));
    i += ustrlen (&string[i]) + 1;
-   usprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_AFTER_SEL));
+   usprintf (&string[i], TEXT("%s%s"), "B", TtaGetMessage (LIB, TMSG_AFTER_SEL));
    i += ustrlen (&string[i]) + 1;
-   usprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC));
+   usprintf (&string[i], TEXT("%s%s"), "B", TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC));
    /* sous-menu Ou` rechercher element vide */
    TtaNewSubmenu (NumMenuOrSearchText, ref, 0,
 	    TtaGetMessage (LIB, TMSG_SEARCH_WHERE), 4, string, NULL, FALSE);
@@ -485,7 +485,7 @@ int                 val;
 	      /* on reactive les entrees du sous-menu "Ou chercher" */
 	      ActivateMenuWhereToSearch ();
 	      /* efface le message "Pas trouve'" dans le formulaire */
-	      TtaNewLabel (NumLabelEmptyElemNotFound, NumFormSearchEmptyElement, " ");
+	      TtaNewLabel (NumLabelEmptyElemNotFound, NumFormSearchEmptyElement, TEXT(" "));
 	    }
 	  else
 	    /* on n'a pas trouve' */
@@ -552,7 +552,7 @@ View                view;
    InitMenuWhereToSearch (NumFormSearchEmptyElement);
 
    /* le message "Pas trouve'" */
-   TtaNewLabel (NumLabelEmptyElemNotFound, NumFormSearchEmptyElement, " ");
+   TtaNewLabel (NumLabelEmptyElemNotFound, NumFormSearchEmptyElement, TEXT(" "));
    /* active le formulaire */
    TtaShowDialogue (NumFormSearchEmptyElement, TRUE);
    if (!ok)
@@ -625,7 +625,7 @@ int                 val;
 		     ActivateMenuWhereToSearch ();
 		     /* efface le message 'Pas trouve' dans la feuille de */
 		     /* saisie */
-		     TtaNewLabel (NumLabelEmptyRefereneceNotFound, NumFormSearchEmptyReference, " ");
+		     TtaNewLabel (NumLabelEmptyRefereneceNotFound, NumFormSearchEmptyReference, TEXT(" "));
 		  }
 		else
 		   /* on n'a pas trouve' */
@@ -697,7 +697,7 @@ View                view;
    InitMenuWhereToSearch (NumFormSearchEmptyReference);
 
    /* le message "Pas trouve'" */
-   TtaNewLabel (NumLabelEmptyRefereneceNotFound, NumFormSearchEmptyReference, " ");
+   TtaNewLabel (NumLabelEmptyRefereneceNotFound, NumFormSearchEmptyReference, TEXT(" "));
    /* active le formulaire */
    TtaShowDialogue (NumFormSearchEmptyReference, TRUE);
    if (!ok)
@@ -748,7 +748,7 @@ int                *selEntry;
    src = &bufMenu[0];
    for (k = 1; k <= nbEntries; k++)
      {
-	ustrcpy (dest, "B");
+	ustrcpy (dest, _B_);
 	dest++;
 	l = ustrlen (src);
 	ustrcpy (dest, src);
@@ -756,7 +756,7 @@ int                *selEntry;
 	src += l + 1;
      }
    TtaNewPopup (NumMenuReferenceChoice, 0, TtaGetMessage (LIB, TMSG_LINK), nbEntries,
-		bufMenuB, NULL, 'L');
+		bufMenuB, NULL, TEXT('L'));
    TtaSetDialoguePosition ();
    TtaShowDialogue (NumMenuReferenceChoice, FALSE);
    /* attend que l'utilisateur ait repondu au menu et que le */
@@ -783,7 +783,7 @@ ThotBool            docExtNext;
 		  &CurrRefElemDoc, &pExtCurrDoc, docExtNext);
    if (CurrRef != NULL)
       /* on a trouve', on efface le message qui traine */
-      ustrcpy (msg, " ");
+      ustrcpy (msg, TEXT(" "));
    else if (pExtCurrDoc != NULL)
       /* references dans un document non charge' */
      {
@@ -851,11 +851,11 @@ PtrDocument         pDoc;
 	     /* initialise le label du formulaire en y mettant le type de */
 	     /* l'element reference' */
 	     ustrcpy (bufText, TtaGetMessage (LIB, TMSG_SEARCH_REF_TO_EL));
-	     ustrcat (bufText, " ");
+	     ustrcat (bufText, TEXT(" "));
 	     ustrcat (bufText, pEl->ElStructSchema->SsRule[pEl->ElTypeNumber - 1].SrName);
 	     TtaNewLabel (NumLabelSearchReference, NumFormSearchReference,
 			  bufText);
-	     TtaNewLabel (NumLabelReferenceNotFound, NumFormSearchReference, " ");
+	     TtaNewLabel (NumLabelReferenceNotFound, NumFormSearchReference, TEXT(" "));
 	     /* active le formulaire de recherche */
 	     TtaShowDialogue (NumFormSearchReference, FALSE);
 	  }
@@ -888,13 +888,13 @@ View                view;
 	i = ustrlen (TtaGetMessage (LIB, TMSG_SEARCH)) + 1;
 	ustrcpy (BufMenu + i, TtaGetMessage (LIB, TMSG_OPEN));
 	TtaNewSheet (NumFormSearchReference, TtaGetViewFrame (document, view), 
-		     TtaGetMessage (LIB, TMSG_SEARCH_REF), 2, BufMenu, TRUE, 1, 'L', D_DONE);
+		     TtaGetMessage (LIB, TMSG_SEARCH_REF), 2, BufMenu, TRUE, 1, TEXT('L'), D_DONE);
 	/* label indiquant le type d'element dont on cherche les references */
 	TtaNewLabel (NumLabelSearchReference, NumFormSearchReference,
 		     TtaGetMessage (LIB, TMSG_SEARCH_REF_TO_EL));
 
 	/* label "Pas trouve'" pour Recherche des references a` un element */
-	TtaNewLabel (NumLabelReferenceNotFound, NumFormSearchReference, " ");
+	TtaNewLabel (NumLabelReferenceNotFound, NumFormSearchReference, TEXT(" "));
 	BuildSearchReferences (pDoc);
      }
 }
@@ -943,7 +943,7 @@ int                 data;
 			 if (pDoc != NULL)
 			   {
 			     /* efface le label */
-			     TtaNewLabel (NumLabelReferenceNotFound, NumFormSearchReference, " ");
+			     TtaNewLabel (NumLabelReferenceNotFound, NumFormSearchReference, TEXT(" "));
 			     SearchAReference (FALSE);
 			   }
 		       }
@@ -1006,7 +1006,7 @@ View                view;
    ustrcpy (string + i, TtaGetMessage (LIB, TMSG_DO_NOT_REPLACE));
 #  ifndef _WINDOWS
    TtaNewSheet (NumFormSearchText, TtaGetViewFrame (document, view), 
-		bufTitle, 2, string, FALSE, 6, 'L', D_DONE);
+		bufTitle, 2, string, FALSE, 6, TEXT('L'), D_DONE);
 
    /* zone de saisie du texte a` rechercher */
    TtaNewTextForm (NumZoneTextSearch, NumFormSearchText,
@@ -1058,7 +1058,7 @@ View                view;
    WithReplace = FALSE;
    ReplaceDone = FALSE;
    AutoReplace = FALSE;
-   ustrcpy (pPrecedentString, "");
+   ustrcpy (pPrecedentString, _EMPTYSTR_);
 
 #  ifndef _WINDOWS
    /* efface le label "References dans le document X" */
@@ -1181,7 +1181,7 @@ STRING              txt;
       break;
     case NumFormSearchText:
       /* Boutons de la feuille de dialogue */
-      TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, " ");
+      TtaNewLabel (NumLabelAttributeValue, NumFormSearchText, TEXT(" "));
       if (searchDomain->SDocument == NULL)
 	{
 	  TtaDestroyDialogue (NumFormSearchText);
@@ -1480,7 +1480,7 @@ ThotBool            assoc;
    ustrcat (buffTitle, pDoc->DocDName);
    /* cree formulaire de saisie du numero de la page cherchee */
    TtaNewSheet (NumFormSearchPage,  0,
-		buffTitle, 1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 1, 'L', D_CANCEL);
+		buffTitle, 1, TtaGetMessage (LIB, TMSG_LIB_CONFIRM), TRUE, 1, TEXT('L'), D_CANCEL);
 
    /* cree zone de saisie du numero de la page cherchee */
    TtaNewNumberForm (NumZoneSearchPage, NumFormSearchPage,

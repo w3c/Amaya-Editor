@@ -1498,7 +1498,7 @@ PtrSSchema          pSS;
 
 					      case AtTextAttr:
 						 /* attribut a valeur textuelle */
-						 CopyStringToText (" ", pAttr->AeAttrText, &len);
+						 CopyStringToText (TEXT(" "), pAttr->AeAttrText, &len);
 						 break;
 
 					      case AtEnumAttr:

@@ -15,8 +15,8 @@
  */
 
 /*
- * Author: N. Layaida (INRIA)
- *         R. Guetari (W3C/INRIA) Windows 95/NT routines
+ * Authors: N. Layaida (INRIA)
+ *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  */
 
 #include "thot_gui.h"
@@ -228,13 +228,13 @@ int *bg;
    /* Set up the input control if you are using standard C streams */
    png_init_io(png_ptr, infile);
 
-#else no_streams /* PNG file I/O method 2 */
+#else /* no_streams */ /* PNG file I/O method 2 */
    /* If you are using replacement read functions, instead of calling
     * png_init_io() here you would call:
     */
    png_set_read_fn(png_ptr, (void *)user_io_ptr, user_read_fn);
    /* where user_io_ptr is a structure you want available to the callbacks */
-#endif no_streams /* Use only one I/O method! */
+#endif /* no_streams */ /* Use only one I/O method! */
 
    /* If we have already read some of the signature */
    png_set_sig_bytes(png_ptr, sig_read);
@@ -418,7 +418,7 @@ int *bg;
 #ifdef entire /* Read the entire image in one go */
    png_read_image(png_ptr, row_pointers);
 
-#else no_entire /* Read the image one or more scanlines at a time */
+#else /* no_entire */ /* Read the image one or more scanlines at a time */
    /* The other way to read images - deal with interlacing: */
 
    for (pass = 0; pass < number_passes; pass++)
@@ -430,22 +430,22 @@ int *bg;
          png_read_rows(png_ptr, &row_pointers, NULL, 1);
       }
 
-#else no_single /* Read the image several rows at a time */
+#else /* no_single */  /* Read the image several rows at a time */
       for (y = 0; y < height; y += number_of_rows)
       {
 #ifdef sparkle /* Read the image using the "sparkle" effect. */
          png_read_rows(png_ptr, row_pointers, NULL, number_of_rows);
         
-#else no_sparkle /* Read the image using the "rectangle" effect */
+#else /* no_sparkle */ /* Read the image using the "rectangle" effect */
          png_read_rows(png_ptr, NULL, row_pointers, number_of_rows);
-#endif no_sparkle /* use only one of these two methods */
+#endif /* no_sparkle */ /* use only one of these two methods */
       }
      
       /* if you want to display the image after every pass, do
          so here */
-#endif no_single /* use only one of these two methods */
+#endif /* no_single */ /* use only one of these two methods */
    }
-#endif no_entire /* use only one of these two methods */
+#endif /* no_entire */ /* use only one of these two methods */
 
    /* read rest of file, and get additional chunks in info_ptr - REQUIRED */
    png_read_end(png_ptr, info_ptr);
@@ -857,7 +857,7 @@ int*            bg;
 #    ifndef _WINDOWS  
      fp = ufopen (datafile, "r");
 #    else  /* _WINDOWS */
-     fp = ufopen (datafile, "rb");
+     fp = ufopen (datafile, _RBinaryMODE_);
 #    endif /* _WINDOWS */
      if (fp != NULL) {
 	bit_data = ReadPng (fp, w, h, ncolors, cpp, colrs, bg);
@@ -1098,10 +1098,10 @@ unsigned long  BackGroundPixel;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool IsPngFormat(STRING fn)
+ThotBool IsPngFormat(char* fn)
 #else /* __STDC__ */
 ThotBool IsPngFormat(fn)
-STRING  fn;
+char*   fn;
 #endif /* __STDC__ */
 {
   
@@ -1109,7 +1109,7 @@ STRING  fn;
    char buf[8];
    int ret;
 
-   fp = ufopen(fn , "rb");
+   fp = fopen(fn , "rb");
    if (!fp)
       return 0;
    ret = fread(buf, 1, 8, fp);

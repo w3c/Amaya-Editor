@@ -119,7 +119,7 @@ ThotBool            isHTML;
       title = TtaSearchTypedElement (elType, SearchInTree, root);
       text = TtaGetFirstChild (title);
       if (TtaGetTextLength (text) == 0)
-	TtaSetTextContent (text, "No title", language, doc);
+	TtaSetTextContent (text, TEXT("No title"), language, doc);
       
       elType.ElTypeNum = HTML_EL_HEAD;
       head = TtaSearchTypedElement (elType, SearchInTree, root);
@@ -153,12 +153,12 @@ ThotBool            isHTML;
       attrType.AttrTypeNum = HTML_ATTR_meta_name;
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (meta, attr, doc);
-      TtaSetAttributeText (attr, "GENERATOR", meta, doc);
+      TtaSetAttributeText (attr, TEXT("GENERATOR"), meta, doc);
       attrType.AttrTypeNum = HTML_ATTR_meta_content;
       attr = TtaNewAttribute (attrType);
       TtaAttachAttribute (meta, attr, doc);
       ustrcpy (tempfile, HTAppName);
-      ustrcat (tempfile, " ");
+      ustrcat (tempfile, TEXT(" "));
       ustrcat (tempfile, HTAppVersion);
       TtaSetAttributeText (attr, tempfile, meta, doc);
       TtaInsertSibling (meta, child, FALSE, doc);
@@ -168,7 +168,7 @@ ThotBool            isHTML;
       body = TtaSearchTypedElement (elType, SearchInTree, root);
       if (!body)
 	{
-	  body = TtaNewTree (doc, elType, "");
+	  body = TtaNewTree (doc, elType, _EMPTYSTR_);
 	  TtaInsertSibling (body, head, FALSE, doc);
 	}
 
@@ -190,7 +190,7 @@ ThotBool            isHTML;
       if (el == NULL)
 	{
 	  elType.ElTypeNum = TextFile_EL_Document_URL;
-	  el = TtaNewTree (doc, elType, "");
+	  el = TtaNewTree (doc, elType, _EMPTYSTR_);
 	  TtaInsertFirstChild (&el, root, doc);
 	}
       el = TtaGetFirstChild (el);     
@@ -199,7 +199,7 @@ ThotBool            isHTML;
       body = TtaGetLastChild (root);
       /* create a new line */
       elType.ElTypeNum = TextFile_EL_Line_;
-      el = TtaNewTree (doc, elType, "");
+      el = TtaNewTree (doc, elType, _EMPTYSTR_);
       /* first line */
       TtaInsertFirstChild (&el, body, doc);
 
@@ -233,7 +233,7 @@ View                view;
 
    root = TtaGetMainRoot (document);
    elType = TtaGetElementType (root);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
      {
        elType.ElTypeNum = HTML_EL_BODY;
        body = TtaSearchTypedElement (elType, SearchInTree, root);
@@ -248,7 +248,7 @@ View                view;
 	   /* create the Language attribute */
 	   attr = TtaNewAttribute (attrType);
 	   TtaAttachAttribute (body, attr, document);
-	   TtaSetAttributeText (attr, "en", body, document);
+	   TtaSetAttributeText (attr, TEXT("en"), body, document);
 	 }
        /* get the current selection */
        TtaGiveFirstSelectedElement (document, &el, &firstchar, &lastchar);
@@ -284,7 +284,7 @@ View                view;
    if (el == NULL)
      return;
    elType = TtaGetElementType (el);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) != 0)
      /* not within HTML element */
      return;
 
@@ -346,7 +346,7 @@ int              elementT;
    ThotBool            before;
 
    docSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (docSchema), "HTML") != 0)
+   if (ustrcmp(TtaGetSSchemaName (docSchema), TEXT("HTML")) != 0)
      /* not within an HTML document */
      return (NULL);
    else
@@ -409,7 +409,7 @@ int              elementT;
 	   if (TtaSearchTypedElement (elType, SearchInTree, head))
 	     return (NULL);
 	 }
-       new = TtaNewTree (document, elType, "");
+       new = TtaNewTree (document, elType, _EMPTYSTR_);
        TtaInsertSibling (new, el, before, document);
        /* register this element in the editing history */
        TtaOpenUndoSequence (document, firstSel, lastSel, firstChar, lastChar);
@@ -517,7 +517,7 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
      {
        elType.ElTypeNum = HTML_EL_Comment_;
        TtaInsertElement (elType, document);
@@ -549,9 +549,9 @@ View                view;
      {
        elType = TtaGetElementType (el);
        if (elType.ElTypeNum != HTML_EL_HEAD ||
-	   ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+	   ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
 	 {
-	   if (!ustrcmp(TtaGetSSchemaName (docSchema), "HTML"))
+	   if (!ustrcmp(TtaGetSSchemaName (docSchema), TEXT("HTML")))
 	     {
 	       /* it's a HTML document search the head element */
 	       elType.ElTypeNum = HTML_EL_HEAD;
@@ -567,7 +567,7 @@ View                view;
      {
        /* create Script within the body */
        elType.ElSSchema = docSchema;
-       if (ustrcmp(TtaGetSSchemaName (docSchema), "HTML") == 0)
+       if (ustrcmp(TtaGetSSchemaName (docSchema), TEXT("HTML")) == 0)
 	 {
 	   elType.ElTypeNum = HTML_EL_SCRIPT;
 	   TtaCreateElement (elType, document);
@@ -590,7 +590,7 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
      {
        elType.ElTypeNum = HTML_EL_Paragraph;
        TtaCreateElement (elType, document);
@@ -612,7 +612,7 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
      {
        elType.ElTypeNum = HTML_EL_H1;
        TtaCreateElement (elType, document);
@@ -634,7 +634,7 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
      {
        elType.ElTypeNum = HTML_EL_H2;
        TtaCreateElement (elType, document);
@@ -675,7 +675,7 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
      {
        elType.ElTypeNum = HTML_EL_H4;
        TtaCreateElement (elType, document);
@@ -697,7 +697,7 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
      {
        elType.ElTypeNum = HTML_EL_H5;
        TtaCreateElement (elType, document);
@@ -719,7 +719,7 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
      {
        elType.ElTypeNum = HTML_EL_H6;
        TtaCreateElement (elType, document);
@@ -741,7 +741,7 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
      {
        elType.ElTypeNum = HTML_EL_Unnumbered_List;
        TtaCreateElement (elType, document);
@@ -762,7 +762,7 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
      {
        elType.ElTypeNum = HTML_EL_Numbered_List;
        TtaCreateElement (elType, document);
@@ -783,7 +783,7 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
      {
        elType.ElTypeNum = HTML_EL_Definition_List;
        TtaCreateElement (elType, document);
@@ -804,7 +804,7 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
      {
        elType.ElTypeNum = HTML_EL_Term;
        TtaCreateElement (elType, document);
@@ -825,7 +825,7 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
      {
        elType.ElTypeNum = HTML_EL_Definition;
        TtaCreateElement (elType, document);
@@ -846,7 +846,7 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
      {
        elType.ElTypeNum = HTML_EL_Horizontal_Rule;
        TtaCreateElement (elType, document);
@@ -868,7 +868,7 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
      {
        elType.ElTypeNum = HTML_EL_Block_Quote;
        TtaCreateElement (elType, document);
@@ -890,7 +890,7 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
      {
        elType.ElTypeNum = HTML_EL_Preformatted;
        TtaCreateElement (elType, document);
@@ -912,7 +912,7 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
      {
        elType.ElTypeNum = HTML_EL_Address;
        TtaCreateElement (elType, document);
@@ -943,7 +943,7 @@ View                view;
       return;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
      {
        /* check the selection */
        displayTableForm = TtaIsSelectionEmpty ();
@@ -1013,7 +1013,7 @@ View                view;
 		 } 
 	       while (NumberCols > 1)
 		 {
-		   new = TtaNewTree (document, elType, "");
+		   new = TtaNewTree (document, elType, _EMPTYSTR_);
 		   TtaInsertSibling (new, cell, FALSE, document);
 		   NumberCols--;
 		 }
@@ -1024,7 +1024,7 @@ View                view;
 	       row = TtaSearchTypedElement (elType, SearchInTree, el);
 	       while (NumberRows > 1)
 		 {
-		   new = TtaNewTree (document, elType, "");
+		   new = TtaNewTree (document, elType, _EMPTYSTR_);
 		   TtaInsertSibling (new, row, FALSE, document);
 		   NumberRows--;
 		 }
@@ -1054,7 +1054,7 @@ View                view;
    if (el != NULL)
      {
        elType = TtaGetElementType (el);
-       if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+       if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
 	 {
 	   /* it's an HTML element */
 	   if (elType.ElTypeNum != HTML_EL_Table && TtaIsSelectionEmpty ())
@@ -1096,7 +1096,7 @@ View                view;
    if (el != NULL)
      {
        elType = TtaGetElementType (el);
-       if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+       if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
 	 {
 	   /* it's an HTML element */
 	   if (elType.ElTypeNum == HTML_EL_COLGROUP ||
@@ -1106,7 +1106,7 @@ View                view;
 	       child = el;
 	       /* create the Colgroup element */
 	       elType.ElTypeNum = HTML_EL_COLGROUP;
-	       el = TtaNewTree (document, elType, "");
+	       el = TtaNewTree (document, elType, _EMPTYSTR_);
 	       TtaInsertSibling (el, child, FALSE, document);
 	       /* update the selection */
 	       child = TtaGetFirstChild (el);
@@ -1145,7 +1145,7 @@ View                view;
 		   TtaGiveFirstSelectedElement (document, &el, &i, &j);
 		   /* create a COL element within */
 		   elType.ElTypeNum = HTML_EL_COL;
-		   child = TtaNewTree (document, elType, "");
+		   child = TtaNewTree (document, elType, _EMPTYSTR_);
 		   TtaInsertFirstChild (&child, el, document);
 		   /* update the selection */
 		   TtaSelectElement (document, child);
@@ -1174,7 +1174,7 @@ View                view;
    if (el != NULL)
      {
        elType = TtaGetElementType (el);
-       if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+       if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
 	 {
 	   /* it's an HTML element */
 	   if (elType.ElTypeNum == HTML_EL_COLGROUP)
@@ -1182,7 +1182,7 @@ View                view;
 	       /* insert within the curent element */
 	       /* create the Colgroup element */
 	       elType.ElTypeNum = HTML_EL_COL;
-	       child = TtaNewTree (document, elType, "");
+	       child = TtaNewTree (document, elType, _EMPTYSTR_);
 	       TtaInsertFirstChild (&child, el, document);
 	       /* update the selection */
 	       TtaSelectElement (document, child);
@@ -1193,7 +1193,7 @@ View                view;
 	       child = el;
 	       /* create the COL element */
 	       elType.ElTypeNum = HTML_EL_COL;
-	       el = TtaNewTree (document, elType, "");
+	       el = TtaNewTree (document, elType, _EMPTYSTR_);
 	       TtaInsertSibling (el, child, FALSE, document);
 	       /* update the selection */
 	       TtaSelectElement (document, el);
@@ -1251,7 +1251,7 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
      {
        elType.ElTypeNum = HTML_EL_thead;
        TtaCreateElement (elType, document);
@@ -1273,7 +1273,7 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
      {
        elType.ElTypeNum = HTML_EL_tbody;
        TtaCreateElement (elType, document);
@@ -1295,7 +1295,7 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
      {
        elType.ElTypeNum = HTML_EL_tfoot;
        TtaCreateElement (elType, document);
@@ -1318,7 +1318,7 @@ View                view;
 
    TtaSetDisplayMode (document, SuspendDisplay);
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
      {
        elType.ElTypeNum = HTML_EL_Table_row;
        TtaCreateElement (elType, document);
@@ -1342,7 +1342,7 @@ View                view;
 
    TtaSetDisplayMode (document, SuspendDisplay);
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
      {
        elType.ElTypeNum = HTML_EL_Data_cell;
        TtaCreateElement (elType, document);
@@ -1366,7 +1366,7 @@ View                view;
 
    TtaSetDisplayMode (document, SuspendDisplay);
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
      {
        elType.ElTypeNum = HTML_EL_Heading_cell;
        TtaCreateElement (elType, document);
@@ -1402,7 +1402,7 @@ View                view;
   if (el != NULL)
     {
       elType = TtaGetElementType (el);
-      HTMLSSchema = TtaGetSSchema ("HTML", document);
+      HTMLSSchema = TtaGetSSchema (TEXT("HTML"), document);
       if (elType.ElSSchema == HTMLSSchema &&
 	  elType.ElTypeNum == HTML_EL_Data_cell)
 	  cell = el;
@@ -1485,7 +1485,7 @@ View                view;
      {
 	/* there is a selection */
 	elType = TtaGetElementType (el);
-	while (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0
+	while (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) != 0
 	       && elType.ElTypeNum != HTML_EL_BODY
 	       && elType.ElTypeNum != HTML_EL_Form)
 	  {
@@ -1542,7 +1542,7 @@ ThotBool           *withinP;
        form = TtaGetTypedAncestor (el, elType);
        if (form == NULL)
 	 {
-	   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+	   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
 	     {
 	       /* create the form element */
 	       elType.ElTypeNum = HTML_EL_Form;
@@ -1562,7 +1562,7 @@ ThotBool           *withinP;
 	   while (parent != form
 		  && elType.ElTypeNum != HTML_EL_Paragraph
 		  && elType.ElTypeNum != HTML_EL_Pseudo_paragraph
-		  && !ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+		  && !ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
 	     {
 	       parent = TtaGetParent (parent);
 	       elType = TtaGetElementType (parent);
@@ -1585,7 +1585,7 @@ ThotBool           *withinP;
 		   len = TtaGetTextLength (el);
 		   if (len == 0)
 		     {
-		       TtaSetTextContent (el, " ", TtaGetDefaultLanguage (), doc);
+		       TtaSetTextContent (el, TEXT(" "), TtaGetDefaultLanguage (), doc);
 		       TtaSelectString (doc, el, 2, 2);
 		     }
 		   
@@ -1648,7 +1648,7 @@ int                 elInput;
 	   TtaGiveFirstSelectedElement (doc, &parent, &firstchar, &lastchar);
 	   /* create the input element */
 	   elType.ElTypeNum = elInput;
-	   input = TtaNewTree (doc, elType, "");
+	   input = TtaNewTree (doc, elType, _EMPTYSTR_);
 	   TtaInsertFirstChild (&input, parent, doc);	   
 	   /* Insert a text element before */
 	   elType.ElTypeNum = HTML_EL_TEXT_UNIT;
@@ -1714,7 +1714,7 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
      {
        elType.ElTypeNum = HTML_EL_FIELDSET;
        TtaCreateElement (elType, document);
@@ -1820,13 +1820,13 @@ View                view;
        /* create the option */
        elType = TtaGetElementType (el);
        elType.ElTypeNum = HTML_EL_Option;
-       new = TtaNewTree (doc, elType, "");
+       new = TtaNewTree (doc, elType, _EMPTYSTR_);
        TtaInsertFirstChild (&new, el, doc);
        OnlyOneOptionSelected (new, doc, FALSE);
        /* Select the text element within the option */
        el = TtaGetFirstChild (new);
        TtaSelectElement (doc, el);
-       TtaSelectView (doc, TtaGetViewFromName (doc, "Structure_view"));
+       TtaSelectView (doc, TtaGetViewFromName (doc, TEXT("Structure_view")));
      }
 }
 
@@ -1846,7 +1846,7 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
      {
        elType.ElTypeNum = HTML_EL_OptGroup;
        TtaCreateElement (elType, document);
@@ -2012,7 +2012,7 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
      {
        elType.ElTypeNum = HTML_EL_Division;
        TtaCreateElement (elType, document);
@@ -2033,7 +2033,7 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
      {
        elType.ElTypeNum = HTML_EL_NOSCRIPT;
        TtaCreateElement (elType, document);
@@ -2060,7 +2060,7 @@ View                view;
    int                 firstchar, lastchar;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
      {
        elType.ElTypeNum = HTML_EL_Object;
        TtaCreateElement (elType, document);
@@ -2078,7 +2078,7 @@ View                view;
 	   length = TtaGetTextAttributeLength (attr);
 	   if (length > 0)
 	     {
-	       name1 = TtaGetMemory (length + 1);
+	       name1 = TtaAllocString (length + 1);
 	       TtaGiveTextAttributeValue (attr, name1, &length);
 	       attrType.AttrTypeNum = HTML_ATTR_data;
 	       attr = TtaNewAttribute (attrType);
@@ -2104,7 +2104,7 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML"))
+   if (!ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")))
      {
        elType.ElTypeNum = HTML_EL_Parameter;
        TtaInsertElement (elType, document);
@@ -2125,7 +2125,7 @@ View                view;
    ElementType         elType;
 
    elType.ElSSchema = TtaGetDocumentSSchema (document);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
      {
        elType.ElTypeNum = HTML_EL_IFRAME;
        TtaCreateElement (elType, document);
@@ -2194,7 +2194,7 @@ View                view;
       /* no selection. Do nothing */
       return;
    elType = TtaGetElementType (firstSelectedElement);
-   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") != 0)
+   if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) != 0)
       /* the first selected element is not an HTML element. Do nothing */
       return;
 

@@ -169,7 +169,7 @@ PtrDocument         pDoc;
 	     ok = TRUE;
 	   else
 	     {
-	       FindCompleteName (SaveFileName, "Tmp",
+	       FindCompleteName (SaveFileName, Tmp_EXT2,
 				 SaveDirectoryName, buf, &i);
 	       ok = (FileWriteAccess (buf) == 0);
 	       if (ok)
@@ -178,7 +178,7 @@ PtrDocument         pDoc;
 		   ok = XmlSimpleSave ((Document)IdentDocument (pDoc), buf, TRUE);
 		   /* if ok, should update all inclusions */
 		 }
-	       FindCompleteName (SaveFileName, "xml", SaveDirectoryName,
+	       FindCompleteName (SaveFileName, _XMLElement_, SaveDirectoryName,
 				 docname, &i);
 	       if (!ok)
 		 {
@@ -190,7 +190,7 @@ PtrDocument         pDoc;
 	       else
 		 {
 		   /* 1- faire mv .xml sur .xml.old */
-		   FindCompleteName (SaveFileName, "xml.old", 
+		   FindCompleteName (SaveFileName, TEXT("xml.old"), 
 				     SaveDirectoryName, buf2, &i);
 		   i = urename (docname, buf2);
 		   /* 2- faire mv du .Tmp sur le .xml */
@@ -199,7 +199,7 @@ PtrDocument         pDoc;
 		     /* >> tout s'est bien passe' << */
 		     /* detruit l'ancienne sauvegarde */
 		     {
-		       FindCompleteName (pDoc->DocDName, "xml~", 
+		       FindCompleteName (pDoc->DocDName, TEXT("xml~"), 
 					 pDoc->DocDirectory, buf, &i);
 		       TtaFileUnlink (buf);
 		       TtaDisplayMessage (INFO, 
@@ -212,7 +212,7 @@ PtrDocument         pDoc;
 			    ustrcmp (SaveDirectoryName, pDoc->DocDirectory) != 0) &&
 			   SaveDocWithMove)
 			 {
-			   FindCompleteName (pDoc->DocDName, "xml", 
+			   FindCompleteName (pDoc->DocDName, _XMLElement_, 
 					     pDoc->DocDirectory, buf, &i);
 			   TtaFileUnlink (buf);
 			 }
@@ -275,22 +275,22 @@ int                 mode;
 	  ok = interactiveSave (pDoc);
 	break;
       case 1:
-	ok = saveWithExtension (pDoc, "xml~");
+	ok = saveWithExtension (pDoc, TEXT("xml~"));
 	if (ok)
 	  TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LIB_DOC_WRITTEN), pDoc->DocDName);
 	break;
       case 2:
-	ok = saveWithExtension (pDoc, "xml~");
+	ok = saveWithExtension (pDoc, TEXT("xml~"));
 	break;
       case 3:
-	ok = saveWithExtension (pDoc, "xml.sav");
+	ok = saveWithExtension (pDoc, TEXT("xml.sav"));
 	break;
       case 4:
 	XmlSetWriteDirectory (pDoc, pDoc->DocDName, pDoc->DocDirectory, FALSE, FALSE);
 	ok = interactiveSave (pDoc);
 	break;
       case 5:
-	ok = saveWithExtension (pDoc, "xml");
+	ok = saveWithExtension (pDoc, _XMLElement_);
 	break;
       }
   return ok;
@@ -309,6 +309,6 @@ void XmlLoadResources()
       TteConnectAction (T_setwritedirectory, (Proc) XmlSetWriteDirectory);
     }
   XmlParserLoadResources ();
-  ustrcpy (DefaultFileSuffix, ".xml");
+  ustrcpy (DefaultFileSuffix, XML_EXT);
 
 }

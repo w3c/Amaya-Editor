@@ -1751,7 +1751,7 @@ ThotBool            before;
 		     SelectPositionWithEvent (pDoc, pSibling,
 					      pSibling->ElTextLength + 1);
 		     /* simulate a backspace */
-		     InsertChar (frame, '\177', -1);
+		     InsertChar (frame, TEXT('\177'), -1);
 		   }
 		 else
 		   {

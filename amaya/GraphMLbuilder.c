@@ -24,9 +24,6 @@
 #include "HTML.h"
 #include "parser.h"
 
-#define EOS     '\0'
-#define SPACE    ' '
-
 /* mapping table of GraphML elements */
 
 static ElemMapping    GraphMLElemMappingTable[] =
@@ -640,7 +637,7 @@ Document	doc;
       if (spaceAttr)
         {
         length = TtaGetTextAttributeLength (spaceAttr) + 2;
-        text = TtaGetMemory (length);
+        text = TtaAllocString (length);
         if (text != NULL)
           {
           /* get the value of the text attribute */
@@ -875,7 +872,7 @@ Document	doc;
       return;
    /* text attribute. Get its value */
    length = TtaGetTextAttributeLength (attr) + 2;
-   text = TtaGetMemory (length);
+   text = TtaAllocString (length);
    if (text != NULL)
       {
       /* first, delete all points in the polyline */
@@ -936,7 +933,7 @@ Document	doc;
    Attribute            attrX, attrY;
 
    length = TtaGetTextAttributeLength (attr) + 2;
-   text = TtaGetMemory (length);
+   text = TtaAllocString (length);
    if (text != NULL)
       {
       /* get the value of the position attribute */
@@ -994,7 +991,7 @@ Document	doc;
    STRING		text, ptr;
 
    length = TtaGetTextAttributeLength (attr) + 2;
-   text = TtaGetMemory (length);
+   text = TtaAllocString (length);
    if (text != NULL)
       {
       /* get the value of the text attribute */

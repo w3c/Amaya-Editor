@@ -17,8 +17,8 @@
 /*
  * Colors Keyboard routines
  *
- * Author: I. Vatton (INRIA)
- *         R. Guetari (W3C/INRIA) - Windows NT/95 routines
+ * Authors: I. Vatton (INRIA)
+ *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  *
  */
 
@@ -677,10 +677,10 @@ int                 y;
    WNDCLASSEX  wndThotPaletteClass ;
    HWND  HwndColorPal;
    int   frame;
-   static STRING szAppName;
+   /* static STRING szAppName; */
    MSG         msg;
 
-   szAppName = "ThotColorPalette" ;
+   /* szAppName = "ThotColorPalette" ; */
    WIN_LastBg = -1;
    WIN_LastFg = -1;
 
@@ -695,7 +695,7 @@ int                 y;
       wndThotPaletteClass.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
       wndThotPaletteClass.hbrBackground = (HBRUSH) GetStockObject (WHITE_BRUSH) ;
       wndThotPaletteClass.lpszMenuName  = NULL ;
-      wndThotPaletteClass.lpszClassName = szAppName ;
+      wndThotPaletteClass.lpszClassName = _ThotColorPaletteCST_ ;
       wndThotPaletteClass.cbSize        = sizeof(WNDCLASSEX);
       wndThotPaletteClass.hIconSm       = LoadIcon (hInstance, iconID) ;
 
@@ -703,7 +703,7 @@ int                 y;
          return FALSE;
    }
 
-   HwndColorPal = CreateWindow (szAppName, TtaGetMessage (LIB, TMSG_COLORS),
+   HwndColorPal = CreateWindow (_ThotColorPaletteCST_, TtaGetMessage (LIB, TMSG_COLORS),
                                DS_MODALFRAME | WS_POPUP | 
                                WS_VISIBLE | WS_CAPTION | WS_SYSMENU,
                                ClickX, ClickY,
@@ -761,25 +761,25 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
 			   cxBlock = 39 ;
 			   cyBlock = 15 ;
 
-			   hwnLButton = CreateWindow ("STATIC", TtaGetMessage (LIB, TMSG_BUTTON_1), 
+			   hwnLButton = CreateWindow (_STATICCST_, TtaGetMessage (LIB, TMSG_BUTTON_1), 
 				                          WS_CHILD | WS_VISIBLE | SS_LEFT, 0, 0, 320, 20,
 										  hwnd, (HMENU) 99, hInstance, NULL) ;
                ShowWindow (hwnLButton, SW_SHOWNORMAL);
                UpdateWindow (hwnLButton);
 
-			   hwnRButton = CreateWindow ("STATIC", TtaGetMessage (LIB, TMSG_BUTTON_2), 
+			   hwnRButton = CreateWindow (_STATICCST_, TtaGetMessage (LIB, TMSG_BUTTON_2), 
 				                          WS_CHILD | WS_VISIBLE | SS_LEFT, 0, 20, 320, 20,
 										  hwnd, (HMENU) 101, hInstance, NULL) ;
                ShowWindow (hwnRButton, SW_SHOWNORMAL);
                UpdateWindow (hwnRButton);
 
-			   hwnDefaultColors = CreateWindow ("STATIC", TtaGetMessage (LIB, TMSG_STD_COLORS), 
+			   hwnDefaultColors = CreateWindow (_STATICCST_, TtaGetMessage (LIB, TMSG_STD_COLORS), 
 				                                WS_CHILD | WS_VISIBLE | SS_CENTER | WS_BORDER, 0, 40, 320, 20,
 										        hwnd, (HMENU) DEFAULTCOLOR, hInstance, NULL) ; 
                ShowWindow (hwnDefaultColors, SW_SHOWNORMAL);
                UpdateWindow (hwnDefaultColors);
 
-			   doneButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DONE), 
+			   doneButton = CreateWindow (_BUTTONCST_, TtaGetMessage (LIB, TMSG_DONE), 
                                           WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
                                           95, 350, 80, 20, hwnd, 
                                           (HMENU) _IDDONE_, hInstance, NULL) ;

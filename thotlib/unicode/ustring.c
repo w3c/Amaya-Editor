@@ -1,3 +1,16 @@
+/*
+ *
+ *  (c) COPYRIGHT INRIA, 1999.
+ *  Please first read the full copyright statement in file COPYRIGHT.
+ *
+ */
+
+/* Unicode Routines
+ * Author: R. Guetari (W3C/INRIA)
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
 #include "thot_sys.h"
 
 #ifdef _I18N_
@@ -135,14 +148,14 @@ const STRING str;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-int ustrlen (const STRING str)
+size_t ustrlen (const STRING str)
 #else  /* __STDC__ */
-int ustrlen (str)
+size_t ustrlen (str)
 const STRING str;
 #endif /* __STDC__ */
 {
 #   ifdef _WINDOWS
-    return (unsigned int) wcslen ((wchar_t*)str);
+    return wcslen ((wchar_t*)str);
 #   else  /* !_WINDOWS */
 #   endif /* !_WINDOWS */
 }
@@ -237,7 +250,7 @@ CHAR_T         c;
 #endif /* __STDC__ */
 {
 #   ifdef _WINDOWS
-    return (STRING) wcsrchr ((wchar_t*)str, (int)c);
+    return (STRING) (wcsrchr ((wchar_t*)str, (int)c));
 #   else  /* !_WINDOWS */
 #   endif /* !_WINDOWS */
 }
@@ -401,13 +414,13 @@ const STRING str;
   -------------------------------------------------------------*/
  
 #ifdef __STDC__
-int ustrlen (const STRING str)
+size_t ustrlen (const STRING str)
 #else  /* __STDC__ */
 int ustrlen (str)
 const STRING str;
 #endif /* __STDC__ */
 {
-    return (int) strlen ((char*)str);
+    return (size_t) strlen ((char*)str);
 }
 
 /*-------------------------------------------------------------

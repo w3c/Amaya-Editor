@@ -9,9 +9,9 @@
 extern AmayaNetRequestPtr NextNetRequest ( void );
 extern void StopRequest ( int doc );
 extern AmayaNetStatus GetObjectWWW ( int doc,
-                                     char *urlName,
-                                     char *postString,
-                                     char *outputfile,
+                                     STRING urlName,
+                                     STRING postString,
+                                     STRING outputfile,
                                      int mode,
                                      TIcbf * incremental_cbf,
                                      void *context_icbf,
@@ -19,8 +19,8 @@ extern AmayaNetStatus GetObjectWWW ( int doc,
                                      void *context_tcbf,
                                      ThotBool error_html );
 extern int PutObjectWWW ( int doc,
-                          char *fileName,
-                          char *urlName,
+                          STRING fileName,
+                          STRING urlName,
                           int mode,
                           PicType contentType,
                           TTcbf * terminate_cbf,

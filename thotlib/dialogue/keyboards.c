@@ -17,8 +17,8 @@
 /*
  * Latin, Greek, Math keyboards
  *
- * Author: I. Vatton (INRIA)
- *         R. Guetari (W3C/INRIA) - Windows routines.
+ * Authors: I. Vatton (INRIA)
+ *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  *
  */
 

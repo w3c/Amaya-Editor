@@ -423,7 +423,7 @@ int                 construct;
       if (construct == 1)
 	/* Math button */
 	{
-	if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0)
+	if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0)
 	   /* selection is in an HTML element */
 	   {
            newType.ElTypeNum = HTML_EL_Math;
@@ -458,7 +458,7 @@ int                 construct;
       mrowCreated = FALSE;
 
       /* Check whether the selected element is a MathML element */
-      if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), "MathML") == 0)
+      if (ustrcmp(TtaGetSSchemaName (elType.ElSSchema), TEXT("MathML")) == 0)
 	{
 	  /* the selection concerns a MathML element */
 	  mathSchema = elType.ElSSchema;
@@ -480,8 +480,8 @@ int                 construct;
 	{
 	  /* get the MathML schema for this document or associate it to the
 	     document if it is not associated yet */
-	  mathSchema = TtaNewNature (docSchema, "MathML", "MathMLP");
-	  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0 &&
+	  mathSchema = TtaNewNature (docSchema, TEXT("MathML"), TEXT("MathMLP"));
+	  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0 &&
 	      elType.ElTypeNum != HTML_EL_Math)
 	    /* the current selection is in an HTML element, but it's not
 	       a Math element */
@@ -503,7 +503,7 @@ int                 construct;
 			/* create an empty character string after the
 			   Math element to come */
 			{
-		        el = TtaNewTree (doc, elType, "");
+		        el = TtaNewTree (doc, elType, _EMPTYSTR_);
 		        TtaInsertSibling (el, sibling, FALSE, doc);
 			TtaRegisterElementCreate (el, doc);
 			}
@@ -551,7 +551,7 @@ int                 construct;
 		}
 	    }
 
-	  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML") == 0 &&
+	  if (ustrcmp (TtaGetSSchemaName (elType.ElSSchema), TEXT("HTML")) == 0 &&
 	      elType.ElTypeNum == HTML_EL_Math)
 	    /* the current selection is in an HTML element, and it's a
 	       Math element */
@@ -570,7 +570,7 @@ int                 construct;
 	      surround = FALSE;
 	      insertSibling = TRUE;
 	      /* try to create a Math element at the current position */
-	      elType.ElSSchema = TtaGetSSchema ("HTML", doc);
+	      elType.ElSSchema = TtaGetSSchema (TEXT("HTML"), doc);
 	      elType.ElTypeNum = HTML_EL_Math;
 	      if (TtaCanInsertSibling (elType, sibling, before, doc))
 		 /* create a new Math element as a sibling */
@@ -618,7 +618,7 @@ int                 construct;
               else
                  {
 		 /* create a Math element */
-                 el = TtaNewTree (doc, elType, "");
+                 el = TtaNewTree (doc, elType, _EMPTYSTR_);
                  if (insertSibling)
                     /* insert the new Math element as a sibling element */
                     TtaInsertSibling (el, sibling, before, doc);
@@ -724,7 +724,7 @@ int                 construct;
       if (!surround || !TransformIntoType (newType, doc))
 	{
 	  TtaUnselect (doc);
-          el = TtaNewTree (doc, newType, "");
+          el = TtaNewTree (doc, newType, _EMPTYSTR_);
 	  /* do not check the Thot abstract tree against the structure */
 	  /* schema while changing the structure */
 	  oldStructureChecking = TtaGetStructureChecking (doc);
@@ -818,7 +818,7 @@ int                 construct;
 		  child = TtaSearchTypedElement (elType, SearchInTree, el);
 		  while (NumberCols > 1)
 		    {
-		      new = TtaNewTree (doc, elType, "");
+		      new = TtaNewTree (doc, elType, _EMPTYSTR_);
 		      TtaInsertSibling (new, child, FALSE, doc);
 		      NumberCols--;
 		    }
@@ -829,7 +829,7 @@ int                 construct;
 		  row = TtaSearchTypedElement (elType, SearchInTree, el);
 		  while (NumberRows > 1)
 		    {
-		      new = TtaNewTree (doc, elType, "");
+		      new = TtaNewTree (doc, elType, _EMPTYSTR_);
 		      TtaInsertSibling (new, row, FALSE, doc);
 		      NumberRows--;
 		    }
@@ -2334,7 +2334,7 @@ ThotBool MathAttrFontsizeDelete(event)
   /* ask the CSS handler to remove the effect of the CSS property font-size */
   /* in the statement below, "10pt" is meaningless. It's here just to
      make the CSS parser happy */
-  ParseHTMLSpecificStyle (event->element, "font-size: 10pt", event->document,
+  ParseHTMLSpecificStyle (event->element, TEXT("font-size: 10pt"), event->document,
 			  TRUE);
   return FALSE; /* let Thot perform normal operation */
 }
@@ -2378,7 +2378,7 @@ ThotBool MathAttrFontfamilyDelete (event)
   /* ask the CSS handler to remove the effect of property font-family */
   /* in the statement below, "serif" is meaningless. It's here just to
      make the CSS parser happy */
-  ParseHTMLSpecificStyle (event->element, "font-family: serif", event->document,
+  ParseHTMLSpecificStyle (event->element, TEXT("font-family: serif"), event->document,
 			  TRUE);
   return FALSE; /* let Thot perform normal operation */
 }

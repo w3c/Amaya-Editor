@@ -18,6 +18,7 @@
  * platform.c : basic system functions
  *
  * Authors: I. Vatton, D. Veillard (INRIA)
+ *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  *
  */
 
@@ -44,7 +45,7 @@ CONST STRING        filename;
 #if defined(_WINDOWS) && !defined(__GNUC__)
    DWORD               attribs;
 
-   attribs = GetFileAttributes (filename);
+   attribs = GetFileAttributes ((LPCTSTR)filename);
    if (attribs == 0xFFFFFFFF)
       status = 0;
    else if (attribs & FILE_ATTRIBUTE_DIRECTORY)
@@ -107,7 +108,7 @@ ThotDirBrowse      *me;
 #if defined(_WINDOWS) && !defined(__GNUC__)
    DWORD               attr;
 
-   if (ustrlen (me->data.cFileName) + me->dirLen > me->bufLen)
+   if (ustrlen (me->data.cFileName) + me->dirLen > (size_t)me->bufLen)
       return -2;
    ustrcpy (me->buf + me->dirLen, me->data.cFileName);
    if ((attr = GetFileAttributes (me->buf)) == 0xFFFFFFFF)
@@ -127,13 +128,13 @@ ThotDirBrowse      *me;
      {
 	ls_car = fgetc (me->ls_stream);
 	/* saute les caracteres de separation */
-	while (((CHAR_T) ls_car == ' ') || ((CHAR_T) ls_car == '\t') ||
-	       ((CHAR_T) ls_car == '\n'))
+	while (((CHAR_T) ls_car == SPACE) || ((CHAR_T) ls_car == TAB) ||
+	       ((CHAR_T) ls_car == EOL))
 	   ls_car = fgetc (me->ls_stream);
 	notEof = TRUE;
 	i = 0;
-	while (((CHAR_T) ls_car != ' ') && ((CHAR_T) ls_car != '\t') &&
-	       ((CHAR_T) ls_car != '\n') && (notEof))
+	while (((CHAR_T) ls_car != SPACE) && ((CHAR_T) ls_car != TAB) &&
+	       ((CHAR_T) ls_car != EOL) && (notEof))
 	  {
 	     if (ls_car == EOF)
 		notEof = FALSE;
@@ -186,7 +187,7 @@ STRING              ext;
    ustrcpy (me->buf, dir);
    ustrcpy (me->buf + (me->dirLen++), DIR_STR);
 #if defined(_WINDOWS) && !defined(__GNUC__)
-   usprintf (space, "%s\\%s%s", dir ? dir : "", name ? name : "", ext ? ext : "");
+   usprintf (space, TEXT("%s\\%s%s"), dir ? dir : _EMPTYSTR_, name ? name : _EMPTYSTR_, ext ? ext : _EMPTYSTR_);
    me->handle = INVALID_HANDLE_VALUE;
    if ((me->handle = FindFirstFile (space, &me->data)) ==
        INVALID_HANDLE_VALUE)
@@ -571,7 +572,7 @@ CONST STRING        targetFileName;
    if (ustrcmp (sourceFileName, targetFileName) != 0)
      {
 #ifdef _WINDOWS
-	if ((targetf = ufopen (targetFileName, "wb")) == NULL)
+	if ((targetf = ufopen (targetFileName, _WBinaryMODE_)) == NULL)
 #else
 	if ((targetf = ufopen (targetFileName, "w")) == NULL)
 #endif
@@ -580,7 +581,7 @@ CONST STRING        targetFileName;
 	else
 	  {
 #ifdef _WINDOWS
-	     if ((sourcef = ufopen (sourceFileName, "rb")) == NULL)
+	     if ((sourcef = ufopen (sourceFileName, _RBinaryMODE_)) == NULL)
 #else
 	     if ((sourcef = ufopen (sourceFileName, "r")) == NULL)
 #endif
@@ -628,13 +629,13 @@ CONST STRING        file2;
     if (file1 == NULL) return(FALSE);
     if (file2 == NULL) return(FALSE);
 #ifdef _WINDOWS
-    f1 = ufopen(file1,"rb");
+    f1 = ufopen(file1,_RBinaryMODE_);
 #else
     f1 = ufopen(file1,"r");
 #endif
     if (f1 == NULL) return(FALSE);
 #ifdef _WINDOWS
-    f2 = ufopen(file2,"rb");
+    f2 = ufopen(file2, _RBinaryMODE_);
 #else
     f2 = fopen(file2,"r");
 #endif

@@ -21,7 +21,7 @@ typedef struct _RGBstruct{
 #define MAX_COLOR 152
 
 extern RGBstruct RGB_colors[];
-extern char *Name_colors[];
+extern STRING Name_colors[];
 
 #endif /* THOT_COLOR_H */
 

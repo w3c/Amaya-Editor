@@ -8,8 +8,8 @@
 /*
  * logo and image managment                                    
  *
- * Author: I. Vatton (INRIA)
- *         R. Guetari (W3C/INRIA) Windows 95/NT routines
+ * Authors: I. Vatton (INRIA)
+ *          R. Guetari (W3C/INRIA) - Unicode and Windows version
  */
 
 #include "thot_sys.h"
@@ -23,7 +23,15 @@
 #define THOT_EXPORT extern
 #include "frame_tv.h"
 #include "platform_tv.h"
-static STRING         NoneTxt = "None";
+
+#ifdef _I18N_
+#      ifdef _WINDOWS 
+#            define NoneTxt L"None"
+#      else  /* !_WINDOWS */
+#      endif /* !_WINDOWS */
+#else  /* !_I18N_ */
+#      define NoneTxt "None"
+#endif /* !_I18N_ */
 
 #include "memory_f.h"
 

@@ -60,7 +60,7 @@ static int ProxyStatus;
 /* Cache menu options */
 #ifdef _WINDOWS
 static HWND CacheHwnd = NULL;
-#endif _WINDOWS
+#endif /* _WINDOWS */
 static int CacheBase;
 static ThotBool EnableCache;
 static ThotBool CacheProtectedDocs;
@@ -73,7 +73,7 @@ static int MaxCacheFile;
 /* Proxy menu options */
 #ifdef _WINDOWS
 static HWND ProxyHwnd = NULL;
-#endif _WINDOWS
+#endif /* _WINDOWS */
 static int ProxyBase;
 static CHAR_T HttpProxy [MAX_LENGTH+1];
 static CHAR_T NoProxy [MAX_LENGTH+1];
@@ -83,7 +83,7 @@ static CHAR_T NoProxy [MAX_LENGTH+1];
 static CHAR_T AppHome [MAX_LENGTH+1];
 static CHAR_T AppTmpDir [MAX_LENGTH+1];
 static HWND GeneralHwnd = NULL;
-#endif _WINDOWS
+#endif /* _WINDOWS */
 static int GeneralBase;
 static int DoubleClickDelay;
 static int Zoom;
@@ -97,7 +97,7 @@ static int FontMenuSize;
 /* Publish menu options */
 #ifdef _WINDOWS
 static HWND PublishHwnd =  NULL;
-#endif _WINDOWS
+#endif /* _WINDOWS */
 static int PublishBase;
 static ThotBool LostUpdateCheck;
 static ThotBool VerifyPublish;
@@ -106,7 +106,7 @@ static CHAR_T HomePage [MAX_LENGTH+1];
 /* Color menu options */
 #ifdef _WINDOWS
 static HWND ColorHwnd = NULL;
-#endif _WINDOWS
+#endif /* _WINDOWS */
 static int ColorBase;
 static CHAR_T FgColor [MAX_LENGTH+1];
 static CHAR_T BgColor [MAX_LENGTH+1];
@@ -127,7 +127,7 @@ CHAR_T s[MAX_LENGTH+1]; /* general purpose buffer */
 /* Language negotiation menu options */
 #ifdef _WINDOWS
 static HWND LanNegHwnd = NULL;
-#endif _WINDOWS
+#endif /* _WINDOWS */
 static int LanNegBase;
 static CHAR_T LanNeg [MAX_LENGTH+1];
 
@@ -296,7 +296,7 @@ void InitAmayaDefEnv ()
   STRING ptr;
 
   /* browsing editing options */
-  ptr = TtaGetEnvString ("THOTDIR");
+  ptr = TtaGetEnvString (_THOTDIR_EVAR_);
   if (ptr != NULL)
     {
       ustrcpy (HomePage, ptr);
@@ -304,17 +304,17 @@ void InitAmayaDefEnv ()
     }
   else
     HomePage[0]  = EOS;
-  TtaSetDefEnvString ("HOME_PAGE", HomePage, FALSE);
+  TtaSetDefEnvString (_HOMEPAGE_EVAR_, HomePage, FALSE);
   HomePage[0] = EOS;
-  TtaSetDefEnvString ("ENABLE_MULTIKEY", "no", FALSE);
-  TtaSetDefEnvString ("ENABLE_BG_IMAGES", "yes", FALSE);
-  TtaSetDefEnvString ("VERIFY_PUBLISH", "no", FALSE);
-  TtaSetDefEnvString ("ENABLE_LOST_UPDATE_CHECK", "yes", FALSE);
-  TtaSetDefEnvString ("DEFAULTNAME", "Overview.html", FALSE);
-  TtaSetDefEnvString ("FontMenuSize", "12", FALSE);
-  TtaSetDefEnvString ("ENABLE_DOUBLECLICK", "yes", FALSE);
+  TtaSetDefEnvString (_ENABLEMULTIKEY_EVAR_, TEXT("no"), FALSE);
+  TtaSetDefEnvString (_ENABLEBGIMAGES_EVAR_, TEXT("yes"), FALSE);
+  TtaSetDefEnvString (_VERIFYPUBLISH_EVAR_, TEXT("no"), FALSE);
+  TtaSetDefEnvString (_ENABLELOSTUPDATECHECK_EVAR_, TEXT("yes"), FALSE);
+  TtaSetDefEnvString (_DEFAULTNAME_EVAR_, TEXT("Overview.html"), FALSE);
+  TtaSetDefEnvString (_FontMenuSize_EVAR_, TEXT("12"), FALSE);
+  TtaSetDefEnvString (_ENABLEDOUBLECLICK_EVAR_, TEXT("yes"), FALSE);
   /* @@@ */
-  TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
+  TtaGetEnvBoolean (_ENABLEDOUBLECLICK_EVAR_, &DoubleClick);
   /* @@@ */
 #ifndef _WINDOWS
   TtaSetDefEnvString ("THOTPRINT", "lpr", FALSE);
@@ -322,31 +322,31 @@ void InitAmayaDefEnv ()
   TtaSetDefEnvString ("PAPERSIZE", "0", FALSE);
 #endif
   /* network configuration */
-  TtaSetDefEnvString ("ENABLE_LOST_UPDATE_CHECK", "yes", FALSE);
-  TtaSetDefEnvString ("ENABLE_PIPELINING", "yes", FALSE);
-  TtaSetDefEnvString ("NET_EVENT_TIMEOUT", "60000", FALSE);
-  TtaSetDefEnvString ("PERSIST_CX_TIMEOUT", "60", FALSE);
-  TtaSetDefEnvString ("DNS_TIMEOUT", "1800", FALSE);
-  TtaSetDefEnvString ("MAX_SOCKET", "32", FALSE);
-  TtaSetDefEnvString ("ENABLE_MDA", "yes", FALSE);
-  TtaSetDefEnvString ("NO_PROXY", "", FALSE);
-  TtaSetDefEnvString ("HTTP_PROXY", "", FALSE);
-  TtaSetDefEnvString ("MAX_CACHE_ENTRY_SIZE", "3", FALSE);
-  TtaSetDefEnvString ("CACHE_SIZE", "10", FALSE);
+  TtaSetDefEnvString (_ENABLELOSTUPDATECHECK_EVAR_, TEXT("yes"), FALSE);
+  TtaSetDefEnvString (_ENABLEPIPELINING_EVAR_, TEXT("yes"), FALSE);
+  TtaSetDefEnvString (_NETEVENTTIMEOUT_EVAR_, TEXT("60000"), FALSE);
+  TtaSetDefEnvString (_PERSISTCXTIMEOUT_EVAR_, TEXT("60"), FALSE);
+  TtaSetDefEnvString (_DNSTIMEOUT_EVAR_, TEXT("1800"), FALSE);
+  TtaSetDefEnvString (_MAXSOCKET_EVAR_, TEXT("32"), FALSE);
+  TtaSetDefEnvString (_ENABLEMDA_EVAR_, TEXT("yes"), FALSE);
+  TtaSetDefEnvString (_NOPROXY_EVAR_, _EMPTYSTR_, FALSE);
+  TtaSetDefEnvString (_HTTPPROXY_EVAR_, _EMPTYSTR_, FALSE);
+  TtaSetDefEnvString (_MAXCACHEENTRYSIZE_EVAR_, TEXT("3"), FALSE);
+  TtaSetDefEnvString (_CACHESIZE_EVAR_, TEXT("10"), FALSE);
   if (TempFileDirectory)
   {
-    usprintf (s, "%s%clibwww-cache", TempFileDirectory, DIR_SEP);
-    TtaSetDefEnvString ("CACHE_DIR", s, FALSE);
-	TtaSetDefEnvString ("ENABLE_CACHE", "yes", FALSE);
+    usprintf (s, TEXT("%s%clibwww-cache"), TempFileDirectory, DIR_SEP);
+    TtaSetDefEnvString (_CACHEDIR_EVAR_, s, FALSE);
+	TtaSetDefEnvString (_ENABLECACHE_EVAR_, TEXT("yes"), FALSE);
   }
   else
   {
-    TtaSetDefEnvString ("CACHE_DIR", "", FALSE);
-	TtaSetDefEnvString ("ENABLE_CACHE", "yes", FALSE);
+    TtaSetDefEnvString (_CACHEDIR_EVAR_, _EMPTYSTR_, FALSE);
+	TtaSetDefEnvString (_ENABLECACHE_EVAR_, TEXT("yes"), FALSE);
   }
-  TtaSetDefEnvString ("CACHE_PROTECTED_DOCS", "yes", FALSE);
-  TtaSetDefEnvString ("CACHE_DISCONNECTED_MODE", "no", FALSE);
-  TtaSetDefEnvString ("CACHE_EXPIRE_IGNORE", "no", FALSE);
+  TtaSetDefEnvString (_CACHEPROTECTEDDOCS_EVAR_, TEXT("yes"), FALSE);
+  TtaSetDefEnvString (_CACHEDISCONNECTEDMODE_EVAR_, TEXT("no"), FALSE);
+  TtaSetDefEnvString (_CACHEEXPIREIGNORE_EVAR_, TEXT("no"), FALSE);
   /* appearance */
 
 }
@@ -515,10 +515,10 @@ const STRING filename;
 {
  CHAR_T source_file [MAX_LENGTH+1];
  
- usprintf (source_file, "%s%c%s", source_dir, DIR_SEP, filename);
+ usprintf (source_file, TEXT("%s%c%s"), source_dir, DIR_SEP, filename);
  if (TtaFileExist (source_file))
  {
-   usprintf (s, "%s%c%s", dest_dir, DIR_SEP, filename);
+   usprintf (s, TEXT("%s%c%s"), dest_dir, DIR_SEP, filename);
    TtaFileCopy (source_file, s);
  }
 }
@@ -849,15 +849,15 @@ static void GetCacheConf (void)
 static void GetCacheConf ()
 #endif /* __STDC__ */
 {
-  TtaGetEnvBoolean ("ENABLE_CACHE", &EnableCache);
+  TtaGetEnvBoolean (_ENABLECACHE_EVAR_, &EnableCache);
   TtaGetEnvBoolean 
-    ("CACHE_PROTECTED_DOCS", &CacheProtectedDocs);
+    (_CACHEPROTECTEDDOCS_EVAR_, &CacheProtectedDocs);
   TtaGetEnvBoolean 
-    ("CACHE_DISCONNECTED_MODE", &CacheDisconnectMode);
-  TtaGetEnvBoolean ("CACHE_EXPIRE_IGNORE", &CacheExpireIgnore);
-  GetEnvString ("CACHE_DIR", CacheDirectory);
-  TtaGetEnvInt ("CACHE_SIZE", &CacheSize);
-  TtaGetEnvInt ("MAX_CACHE_ENTRY_SIZE", &MaxCacheFile);
+    (_CACHEDISCONNECTEDMODE_EVAR_, &CacheDisconnectMode);
+  TtaGetEnvBoolean (_CACHEEXPIREIGNORE_EVAR_, &CacheExpireIgnore);
+  GetEnvString (_CACHEDIR_EVAR_, CacheDirectory);
+  TtaGetEnvInt (_CACHESIZE_EVAR_, &CacheSize);
+  TtaGetEnvInt (_MAXCACHEENTRYSIZE_EVAR_, &MaxCacheFile);
 }
 
 /*----------------------------------------------------------------------
@@ -907,7 +907,7 @@ static void ValidateCacheConf ()
  change += RemoveLastDirSep (CacheDirectory);
  if (CacheDirectory[0] == EOS)
  {
-   GetDefEnvString ("CACHE_DIR", CacheDirectory);
+   GetDefEnvString (_CACHEDIR_EVAR_, CacheDirectory);
    change = 1;
  }
 
@@ -917,7 +917,7 @@ static void ValidateCacheConf ()
  change += RemoveLastDirSep (CacheDirectory);
  /* n.b., this variable may be empty */
 #ifdef _WINDOWS
-  change += NormalizeDirName (CacheDirectory, "\\libwww-cache");
+  change += NormalizeDirName (CacheDirectory, TEXT("\\libwww-cache"));
 #else
   change += NormalizeDirName (CacheDirectory, "/libwww-cache");
 #endif /* _WINDOWS */
@@ -939,15 +939,15 @@ static void SetCacheConf (void)
 static void SetCacheConf ()
 #endif /* __STDC__ */
 {
-  TtaSetEnvBoolean ("ENABLE_CACHE", EnableCache, TRUE);
-  TtaSetEnvBoolean ("CACHE_PROTECTED_DOCS", 
+  TtaSetEnvBoolean (_ENABLECACHE_EVAR_, EnableCache, TRUE);
+  TtaSetEnvBoolean (_CACHEPROTECTEDDOCS_EVAR_, 
 		    CacheProtectedDocs, TRUE);
-  TtaSetEnvBoolean ("CACHE_DISCONNECTED_MODE", 
+  TtaSetEnvBoolean (_CACHEDISCONNECTEDMODE_EVAR_, 
 		    CacheDisconnectMode, TRUE);
-  TtaSetEnvBoolean ("CACHE_EXPIRE_IGNORE", CacheExpireIgnore, TRUE);
-  TtaSetEnvString ("CACHE_DIR", CacheDirectory, TRUE);
-  TtaSetEnvInt ("CACHE_SIZE", CacheSize, TRUE);
-  TtaSetEnvInt ("MAX_CACHE_ENTRY_SIZE", MaxCacheFile, TRUE);
+  TtaSetEnvBoolean (_CACHEEXPIREIGNORE_EVAR_, CacheExpireIgnore, TRUE);
+  TtaSetEnvString (_CACHEDIR_EVAR_, CacheDirectory, TRUE);
+  TtaSetEnvInt (_CACHESIZE_EVAR_, CacheSize, TRUE);
+  TtaSetEnvInt (_MAXCACHEENTRYSIZE_EVAR_, MaxCacheFile, TRUE);
 
   TtaSaveAppRegistry ();
 }
@@ -964,19 +964,19 @@ static void GetDefaultCacheConf ()
 #endif /*__STDC__*/
 {
   /* read the default values */
-  GetDefEnvToggle ("ENABLE_CACHE", &EnableCache, 
+  GetDefEnvToggle (_ENABLECACHE_EVAR_, &EnableCache, 
 		    CacheBase + mCacheOptions, 0);
   GetDefEnvToggle 
-    ("CACHE_PROTECTED_DOCS", &CacheProtectedDocs,
+    (_CACHEPROTECTEDDOCS_EVAR_, &CacheProtectedDocs,
      CacheBase + mCacheOptions, 1);
   GetDefEnvToggle 
-    ("CACHE_DISCONNECTED_MODE", &CacheDisconnectMode,
+    (_CACHEDISCONNECTEDMODE_EVAR_, &CacheDisconnectMode,
      CacheBase + mCacheOptions, 2);
-  GetDefEnvToggle ("CACHE_EXPIRE_IGNORE", &CacheExpireIgnore, 
+  GetDefEnvToggle (_CACHEEXPIREIGNORE_EVAR_, &CacheExpireIgnore, 
 		   CacheBase + mCacheOptions, 3);
-  GetDefEnvString ("CACHE_DIR", CacheDirectory);
-  TtaGetDefEnvInt ("CACHE_SIZE", &CacheSize);
-  TtaGetDefEnvInt ("MAX_CACHE_ENTRY_SIZE", &MaxCacheFile);
+  GetDefEnvString (_CACHEDIR_EVAR_, CacheDirectory);
+  TtaGetDefEnvInt (_CACHESIZE_EVAR_, &CacheSize);
+  TtaGetDefEnvInt (_MAXCACHEENTRYSIZE_EVAR_, &MaxCacheFile);
 }
 
 #ifdef _WINDOWS
@@ -1288,8 +1288,8 @@ static void GetProxyConf (void)
 static void GetProxyConf ()
 #endif /* __STDC__ */
 {
-  GetEnvString ("HTTP_PROXY", HttpProxy);
-  GetEnvString ("NO_PROXY", NoProxy);
+  GetEnvString (_HTTPPROXY_EVAR_, HttpProxy);
+  GetEnvString (_NOPROXY_EVAR_, NoProxy);
 }
 
 /*----------------------------------------------------------------------
@@ -1302,8 +1302,8 @@ static void SetProxyConf (void)
 static void SetProxyConf ()
 #endif /* __STDC__ */
 {
-  TtaSetEnvString ("HTTP_PROXY", HttpProxy, TRUE);
-  TtaSetEnvString ("NO_PROXY", NoProxy, TRUE);
+  TtaSetEnvString (_HTTPPROXY_EVAR_, HttpProxy, TRUE);
+  TtaSetEnvString (_NOPROXY_EVAR_, NoProxy, TRUE);
 
   TtaSaveAppRegistry ();
 }
@@ -1320,8 +1320,8 @@ static void GetDefaultProxyConf ()
 #endif /*__STDC__*/
 {
   /* read the default values */
-  GetDefEnvString ("HTTP_PROXY", HttpProxy);
-  GetDefEnvString ("NO_PROXY", NoProxy);
+  GetDefEnvString (_HTTPPROXY_EVAR_, HttpProxy);
+  GetDefEnvString (_NOPROXY_EVAR_, NoProxy);
 }
 
 #ifdef _WINDOWS
@@ -1631,17 +1631,17 @@ static void GetGeneralConf (void)
 static void GetGeneralConf ()
 #endif /* __STDC__ */
 {
-  TtaGetEnvInt ("DOUBLECLICKDELAY", &DoubleClickDelay);
-  TtaGetEnvInt ("ZOOM", &Zoom);
-  TtaGetEnvBoolean ("ENABLE_MULTIKEY", &Multikey);
-  TtaGetEnvBoolean ("ENABLE_BG_IMAGES", &BgImages);
-  TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
-  GetEnvString ("HOME_PAGE", HomePage);
-  GetEnvString ("LANG", DialogueLang);
-  TtaGetEnvInt ("FontMenuSize", &FontMenuSize);
+  TtaGetEnvInt (_DOUBLECLICKDELAY_EVAR_, &DoubleClickDelay);
+  TtaGetEnvInt (_ZOOM_EVAR_, &Zoom);
+  TtaGetEnvBoolean (_ENABLEMULTIKEY_EVAR_, &Multikey);
+  TtaGetEnvBoolean (_ENABLEBGIMAGES_EVAR_, &BgImages);
+  TtaGetEnvBoolean (_ENABLEDOUBLECLICK_EVAR_, &DoubleClick);
+  GetEnvString (_HOMEPAGE_EVAR_, HomePage);
+  GetEnvString (_LANG_EVAR_, DialogueLang);
+  TtaGetEnvInt (_FontMenuSize_EVAR_, &FontMenuSize);
 #ifdef _WINDOWS
-  GetEnvString ("APP_TMPDIR", AppTmpDir);
-  GetEnvString ("APP_HOME", AppHome);
+  GetEnvString (TEXT("APP_TMPDIR"), AppTmpDir);
+  GetEnvString (TEXT("APP_HOME"), AppHome);
 #endif /* _WINDOWS */
 }
 
@@ -1685,7 +1685,7 @@ static void ValidateGeneralConf ()
   change += RemoveLastDirSep (AppTmpDir);
   if (AppTmpDir[0] == EOS)
   {
-    GetDefEnvString ("APP_TMPDIR", AppTmpDir);
+    GetDefEnvString (TEXT("APP_TMPDIR"), AppTmpDir);
     change = 1;
   }
   /* remove the last DIR_SEP, if we have it, twice to
@@ -1696,11 +1696,11 @@ static void ValidateGeneralConf ()
  	 restore the default value */
   if (!TtaMakeDirectory (AppTmpDir))
     { 
-      GetDefEnvString ("APP_TMPDIR", AppTmpDir);
+      GetDefEnvString (TEXT("APP_TMPDIR"), AppTmpDir);
       if (!TtaMakeDirectory (AppTmpDir))
 	{
-	  usprintf (s, "Error creating directory %s", AppTmpDir);
-	  MessageBox (GeneralHwnd, s, "MenuConf:VerifyGeneralConf", MB_OK);
+	  usprintf (s, TEXT("Error creating directory %s"), AppTmpDir);
+	  MessageBox (GeneralHwnd, s, TEXT("MenuConf:VerifyGeneralConf"), MB_OK);
 	  exit (1);
 	} 
       else
@@ -1710,21 +1710,21 @@ static void ValidateGeneralConf ()
     SetDlgItemText (GeneralHwnd, IDC_TMPDIR, AppTmpDir);
 
   /* if AppTmpDir changed, update the cache dir env variables */
-  GetEnvString ("APP_TMPDIR", old_AppTmpDir);
+  GetEnvString (TEXT("APP_TMPDIR"), old_AppTmpDir);
   if (ustrcasecmp (AppTmpDir, old_AppTmpDir))
     {
       /* the new default cache value is AppTmpDir/libwww-cache */
-      usprintf (s, "%s%clibwww-cache", AppTmpDir, DIR_SEP);
-      TtaSetDefEnvString ("CACHE_DIR", s, TRUE);
+      usprintf (s, TEXT("%s%clibwww-cache"), AppTmpDir, DIR_SEP);
+      TtaSetDefEnvString (TEXT("CACHE_DIR"), s, TRUE);
 
       /* if the cache was in AppTmpDir and AppTmpDir changed, move
 	 the cache */
-      usprintf (s, "%s%clibwww-cache", old_AppTmpDir, DIR_SEP); 
-      ptr = TtaGetEnvString ("CACHE_DIR");
+      usprintf (s, TEXT("%s%clibwww-cache"), old_AppTmpDir, DIR_SEP); 
+      ptr = TtaGetEnvString (TEXT("CACHE_DIR"));
       if (ptr && !ustrcasecmp (s, ptr))
 	{
-	  usprintf (s, "%s%clibwww-cache", AppTmpDir, DIR_SEP);		  
-	  TtaSetEnvString ("CACHE_DIR", s, TRUE);
+	  usprintf (s, TEXT("%s%clibwww-cache"), AppTmpDir, DIR_SEP);		  
+	  TtaSetEnvString (TEXT("CACHE_DIR"), s, TRUE);
 	  libwww_updateNetworkConf (AMAYA_CACHE_RESTART);
 	}
     }
@@ -1736,25 +1736,25 @@ static void ValidateGeneralConf ()
   /* create the temporary subdirectories that go inside APP_TMPDIR */
   for (i = 0; i < DocumentTableLength; i++)
     {
-      usprintf (s, "%s%c%d", AppTmpDir, DIR_SEP, i);
+      usprintf (s, TEXT("%s%c%d"), AppTmpDir, DIR_SEP, i);
       TtaMakeDirectory (s);
     }
 #endif /* _WINDOWS */
   
   /* validate the dialogue language */
   change = 0;
-  ptr = TtaGetEnvString ("THOTDIR");
-  if (ustrcmp (DialogueLang, "en-us"))
+  ptr = TtaGetEnvString (_THOTDIR_EVAR_);
+  if (ustrcmp (DialogueLang, _EnUSLANG_))
     {
       change++;
       DialogueLang[2] = EOS;
     }
   ustrncpy (lang, DialogueLang, 2);
   lang[2] = EOS;
-  usprintf (s, "%s%cconfig%c%s-amayamsg", ptr, DIR_SEP, DIR_SEP, lang);
+  usprintf (s, TEXT("%s%cconfig%c%s-amayamsg"), ptr, DIR_SEP, DIR_SEP, lang);
   if (!TtaFileExist (s))
   {
-    GetDefEnvString ("LANG", DialogueLang);
+    GetDefEnvString (_LANG_EVAR_, DialogueLang);
     change++;
   }
   if (change)
@@ -1778,26 +1778,26 @@ static void SetGeneralConf ()
 {
   int oldZoom;
 
-  TtaSetEnvInt ("DOUBLECLICKDELAY", DoubleClickDelay, TRUE);
-  TtaGetEnvInt ("ZOOM", &oldZoom);
+  TtaSetEnvInt (_DOUBLECLICKDELAY_EVAR_, DoubleClickDelay, TRUE);
+  TtaGetEnvInt (_ZOOM_EVAR_, &oldZoom);
   if (oldZoom != Zoom)
     {
-      TtaSetEnvInt ("ZOOM", Zoom, TRUE);
+      TtaSetEnvInt (_ZOOM_EVAR_, Zoom, TRUE);
       /* recalibrate the zoom settings in all the active documents */
       GotoZoom (Zoom - oldZoom);
     }
-  TtaSetEnvBoolean ("ENABLE_MULTIKEY", Multikey, TRUE);
+  TtaSetEnvBoolean (_ENABLEMULTIKEY_EVAR_, Multikey, TRUE);
   TtaSetMultikey (Multikey);
-  TtaSetEnvBoolean ("ENABLE_BG_IMAGES", BgImages, TRUE);
-  TtaSetEnvBoolean ("ENABLE_DOUBLECLICK", DoubleClick, TRUE);
+  TtaSetEnvBoolean (_ENABLEBGIMAGES_EVAR_, BgImages, TRUE);
+  TtaSetEnvBoolean (_ENABLEDOUBLECLICK_EVAR_, DoubleClick, TRUE);
   /* @@@ */
-  TtaGetEnvBoolean ("ENABLE_DOUBLECLICK", &DoubleClick);
+  TtaGetEnvBoolean (_ENABLEDOUBLECLICK_EVAR_, &DoubleClick);
   /* @@@ */
-  TtaSetEnvString ("HOME_PAGE", HomePage, TRUE);
-  TtaSetEnvString ("LANG", DialogueLang, TRUE);
-  TtaSetEnvInt ("FontMenuSize", FontMenuSize, TRUE);
+  TtaSetEnvString (TEXT("HOME_PAGE"), HomePage, TRUE);
+  TtaSetEnvString (TEXT("LANG"), DialogueLang, TRUE);
+  TtaSetEnvInt (TEXT("FontMenuSize"), FontMenuSize, TRUE);
 #ifdef _WINDOWS
-  TtaSetEnvString ("APP_TMPDIR", AppTmpDir, TRUE);
+  TtaSetEnvString (TEXT("APP_TMPDIR"), AppTmpDir, TRUE);
   ustrcpy (TempFileDirectory, AppTmpDir);
   TtaAppendDocumentPath (TempFileDirectory);
 #endif /* _WINDOWS */
@@ -1815,20 +1815,20 @@ static void GetDefaultGeneralConf ()
 static void GetDefaultGeneralConf ()
 #endif /*__STDC__*/
 {
-  TtaGetDefEnvInt ("DOUBLECLICKDELAY", &DoubleClickDelay);
-  TtaGetDefEnvInt ("ZOOM", &Zoom);
-  GetDefEnvToggle ("ENABLE_MULTIKEY", &Multikey, 
+  TtaGetDefEnvInt (_DOUBLECLICKDELAY_EVAR_, &DoubleClickDelay);
+  TtaGetDefEnvInt (_ZOOM_EVAR_, &Zoom);
+  GetDefEnvToggle (_ENABLEMULTIKEY_EVAR_, &Multikey, 
 		       GeneralBase + mToggleGeneral, 0);
-  GetDefEnvToggle ("ENABLE_BG_IMAGES", &BgImages,
+  GetDefEnvToggle (_ENABLEBGIMAGES_EVAR_, &BgImages,
 		       GeneralBase + mToggleGeneral, 1);
-  GetDefEnvToggle ("ENABLE_DOUBLECLICK", &DoubleClick,
+  GetDefEnvToggle (_ENABLEDOUBLECLICK_EVAR_, &DoubleClick,
 		       GeneralBase + mToggleGeneral, 2);
-  GetDefEnvString ("HOME_PAGE", HomePage);
-  GetDefEnvString ("LANG", DialogueLang);
-  TtaGetDefEnvInt ("FontMenuSize", &FontMenuSize);
+  GetDefEnvString (_HOMEPAGE_EVAR_, HomePage);
+  GetDefEnvString (_LANG_EVAR_, DialogueLang);
+  TtaGetDefEnvInt (_FontMenuSize_EVAR_, &FontMenuSize);
 #ifdef _WINDOWS
-  GetDefEnvString ("APP_TMPDIR", AppTmpDir);
-  GetDefEnvString ("APP_HOME", AppHome);
+  GetDefEnvString (TEXT("APP_TMPDIR"), AppTmpDir);
+  GetDefEnvString (TEXT("APP_HOME"), AppHome);
 #endif /* _WINDOWS */
 }
 
@@ -1857,7 +1857,7 @@ HWND hwnDlg;
   SetDlgItemText (hwnDlg, IDC_TMPDIR, AppTmpDir);
   SetDlgItemText (hwnDlg, IDC_APPHOME, AppHome);
 }
-#endif _WINDOWS
+#endif /* _WINDOWS */
 
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
@@ -2154,9 +2154,9 @@ static void GetPublishConf (void)
 static void GetPublishConf ()
 #endif /* __STDC__ */
 {
-  TtaGetEnvBoolean ("ENABLE_LOST_UPDATE_CHECK", &LostUpdateCheck);
-  TtaGetEnvBoolean ("VERIFY_PUBLISH", &VerifyPublish);
-  GetEnvString ("DEFAULTNAME", DefaultName);
+  TtaGetEnvBoolean (_ENABLELOSTUPDATECHECK_EVAR_, &LostUpdateCheck);
+  TtaGetEnvBoolean (_VERIFYPUBLISH_EVAR_, &VerifyPublish);
+  GetEnvString (_DEFAULTNAME_EVAR_, DefaultName);
 }
 
 /*----------------------------------------------------------------------
@@ -2170,9 +2170,9 @@ static void SetPublishConf (void)
 static void SetPublishConf ()
 #endif /* __STDC__ */
 {
-  TtaSetEnvBoolean ("ENABLE_LOST_UPDATE_CHECK", LostUpdateCheck, TRUE);
-  TtaSetEnvBoolean ("VERIFY_PUBLISH", VerifyPublish, TRUE);
-  TtaSetEnvString ("DEFAULTNAME", DefaultName, TRUE);
+  TtaSetEnvBoolean (_ENABLELOSTUPDATECHECK_EVAR_, LostUpdateCheck, TRUE);
+  TtaSetEnvBoolean (_VERIFYPUBLISH_EVAR_, VerifyPublish, TRUE);
+  TtaSetEnvString (_DEFAULTNAME_EVAR_, DefaultName, TRUE);
 
   TtaSaveAppRegistry ();
 }
@@ -2187,11 +2187,11 @@ static void GetDefaultPublishConf ()
 static void GetDefaultPublishConf ()
 #endif /*__STDC__*/
 {
-  GetDefEnvToggle ("ENABLE_LOST_UPDATE_CHECK", &LostUpdateCheck, 
+  GetDefEnvToggle (_ENABLELOSTUPDATECHECK_EVAR_, &LostUpdateCheck, 
 		    PublishBase + mTogglePublish, 0);
-  GetDefEnvToggle ("VERIFY_PUBLISH", &VerifyPublish,
+  GetDefEnvToggle (_VERIFYPUBLISH_EVAR_, &VerifyPublish,
 		    PublishBase + mTogglePublish, 1);
-  GetDefEnvString ("DEFAULTNAME", DefaultName);
+  GetDefEnvString (_DEFAULTNAME_EVAR_, DefaultName);
 }
 
 #ifdef _WINDOWS
@@ -2605,8 +2605,8 @@ static void GetColorConf (void)
 static void GetColorConf ()
 #endif /* __STDC__ */
 {
-  GetEnvString ("ForegroundColor", FgColor);
-  GetEnvString ("BackgroundColor", BgColor);
+  GetEnvString (_ForegroundColor_EVAR_, FgColor);
+  GetEnvString (_BackgroundColor_EVAR_, BgColor);
 #ifndef _WINDOWS
   GetEnvString ("MenuFgColor", MenuFgColor);
   GetEnvString ("MenuBgColor", MenuBgColor);
@@ -2623,8 +2623,8 @@ static void GetDefaultColorConf (void)
 static void GetDefaultColorConf ()
 #endif /* __STDC__ */
 {
-  GetDefEnvString ("ForegroundColor", FgColor);
-  GetDefEnvString ("BackgroundColor", BgColor);
+  GetDefEnvString (_ForegroundColor_EVAR_, FgColor);
+  GetDefEnvString (_BackgroundColor_EVAR_, BgColor);
 #ifndef _WINDOWS
   GetDefEnvString ("MenuFgColor", MenuFgColor);
   GetDefEnvString ("MenuBgColor", MenuBgColor);
@@ -2642,8 +2642,8 @@ static void SetColorConf (void)
 static void SetColorConf ()
 #endif /* __STDC__ */
 {
-  TtaSetEnvString ("ForegroundColor", FgColor, TRUE);
-  TtaSetEnvString ("BackgroundColor", BgColor, TRUE);
+  TtaSetEnvString (_ForegroundColor_EVAR_, FgColor, TRUE);
+  TtaSetEnvString (_BackgroundColor_EVAR_, BgColor, TRUE);
 #ifndef _WINDOWS
   TtaSetEnvString ("MenuFgColor", MenuFgColor, TRUE);
   TtaSetEnvString ("MenuBgColor", MenuBgColor, TRUE);
@@ -2854,7 +2854,7 @@ STRING env_var;
      registry entry */
   TtaClearEnvString (env_var);
   TtaGetViewGeometryMM (GeometryDoc, env_var, &x, &y, &w, &h);
-  usprintf (s, "%d %d %d %d", 
+  usprintf (s, TEXT("%d %d %d %d"), 
 	   x,
 	   y,
 	   w,
@@ -2885,7 +2885,7 @@ STRING view_name
     {
       /* get current geometry */
       TtaGetViewWH (GeometryDoc, view, &w, &h);
-      usprintf (s, "%d %d %d %d", 
+      usprintf (s, TEXT("%d %d %d %d"), 
 	       x,
 	       y,
 	       w,
@@ -2905,13 +2905,13 @@ static void RestoreDefaultGeometryConf (void)
 static void RestoreDefaultGeometryConf ()
 #endif /* __STDC__ */
 {
-  RestoreDefEnvGeom ("Formatted_view");
-  RestoreDefEnvGeom ("Structure_view");
-  RestoreDefEnvGeom ("Math_Structure_view");
-  RestoreDefEnvGeom ("Graph_Structure_view");
-  RestoreDefEnvGeom ("Alternate_view");
-  RestoreDefEnvGeom ("Links_view");
-  RestoreDefEnvGeom ("Table_of_contents");
+  RestoreDefEnvGeom (TEXT("Formatted_view"));
+  RestoreDefEnvGeom (TEXT("Structure_view"));
+  RestoreDefEnvGeom (TEXT("Math_Structure_view"));
+  RestoreDefEnvGeom (TEXT("Graph_Structure_view"));
+  RestoreDefEnvGeom (TEXT("Alternate_view"));
+  RestoreDefEnvGeom (TEXT("Links_view"));
+  RestoreDefEnvGeom (TEXT("Table_of_contents"));
 
   /* save the options */
   TtaSaveAppRegistry ();
@@ -2929,17 +2929,17 @@ static void SetEnvCurrentGeometry ()
   /* only do the processing if the document exists */
   if (DocumentURLs[GeometryDoc])
     {
-      SetEnvGeom ("Formatted_view");
-      SetEnvGeom ("Structure_view");
+      SetEnvGeom (TEXT("Formatted_view"));
+      SetEnvGeom (TEXT("Structure_view"));
 #ifdef MATHML
-      SetEnvGeom ("Math_Structure_view");
+      SetEnvGeom (TEXT("Math_Structure_view"));
 #endif /* MATHML */
 #ifdef GRAPHML
       SetEnvGeom ("Graph_Structure_view");
 #endif /* GRAPHML */
-      SetEnvGeom ("Alternate_view");
-      SetEnvGeom ("Links_view");
-      SetEnvGeom ("Table_of_contents");
+      SetEnvGeom (TEXT("Alternate_view"));
+      SetEnvGeom (TEXT("Links_view"));
+      SetEnvGeom (TEXT("Table_of_contents"));
     } /* if GeometryDoc exists */
 }
 
@@ -3189,7 +3189,7 @@ static void GetLanNegConf (void)
 static void GetLanNegConf ()
 #endif /* __STDC__ */
 {
-  GetEnvString ("ACCEPT_LANGUAGES", LanNeg);
+  GetEnvString (TEXT("ACCEPT_LANGUAGES"), LanNeg);
 }
 
 /*----------------------------------------------------------------------
@@ -3202,7 +3202,7 @@ static void GetDefaultLanNegConf (void)
 static void GetDefaultLanNegConf ()
 #endif /* __STDC__ */
 {
-  GetDefEnvString ("ACCEPT_LANGUAGES", LanNeg);
+  GetDefEnvString (TEXT("ACCEPT_LANGUAGES"), LanNeg);
 }
 
 
@@ -3216,7 +3216,7 @@ static void SetLanNegConf (void)
 static void SetLanNegConf ()
 #endif /* __STDC__ */
 {
-  TtaSetEnvString ("ACCEPT_LANGUAGES", LanNeg, TRUE);
+  TtaSetEnvString (TEXT("ACCEPT_LANGUAGES"), LanNeg, TRUE);
   TtaSaveAppRegistry ();
 
   /* change the current settings */
