@@ -10,7 +10,7 @@ CFLAGS=-g -Wall
 all : dns_daemon
 
 dns_daemon : dns_daemon.o
-	$(CC) $(CFLAGS) -o $@ dns_daemon.o
+	$(CC) $(CFLAGS) -o $@ dns_daemon.o -lsocket
 
 dns_daemon.o : dns_daemon.c
 	$(CC) $(CFLAGS) -c $<

@@ -6,10 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern double __copysign ( double __x,
-                           double __y );
-extern __long_double_t __copysignl ( __long_double_t __x,
-                                     __long_double_t __y );
 extern void thotlib_APIApplication_TtaInitialize ( struct Hthotlib_APIApplication* none,
                                                    struct Hjava_lang_String* japplicationName );
 extern void thotlib_APIApplication_TtaQuit ( struct Hthotlib_APIApplication* none );
@@ -31,10 +27,6 @@ extern void register_thotlib_APIApplication_stubs ( void );
 
 #else /* __STDC__ */
 
-extern double __copysign (/* double __x,
-                             double __y */);
-extern __long_double_t __copysignl (/* __long_double_t __x,
-                                       __long_double_t __y */);
 extern void thotlib_APIApplication_TtaInitialize (/* struct Hthotlib_APIApplication* none,
                                                      struct Hjava_lang_String* japplicationName */);
 extern void thotlib_APIApplication_TtaQuit (/* struct Hthotlib_APIApplication* none */);

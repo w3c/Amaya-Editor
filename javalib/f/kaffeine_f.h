@@ -6,10 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern double __copysign ( double __x,
-                           double __y );
-extern __long_double_t __copysignl ( __long_double_t __x,
-                                     __long_double_t __y );
 extern void InitJavaSelect ( void );
 extern int JavaSelect ( int n,
                         fd_set *readfds,
@@ -38,10 +34,6 @@ extern void throwOutOfMemory ( void );
 
 #else /* __STDC__ */
 
-extern double __copysign (/* double __x,
-                             double __y */);
-extern __long_double_t __copysignl (/* __long_double_t __x,
-                                       __long_double_t __y */);
 extern void InitJavaSelect (/* void */);
 extern int JavaSelect (/* int n,
                           fd_set *readfds,

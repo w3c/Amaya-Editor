@@ -506,6 +506,7 @@ int dns_daemonResultChannel[2];
 FILE *dns_daemonRequest;
 FILE *dns_daemonResult;
 int dns_daemon_pid;
+int JavaDnsInitialized = 0;
 extern char BinariesDirectory[];
 
 static void JavaInitDns(void) {
@@ -574,6 +575,7 @@ static void JavaInitDns(void) {
      */
     dns_daemonRequest = fdopen(dns_daemonRequestChannel[1], "w");
     dns_daemonResult = fdopen(dns_daemonResultChannel[0], "r");
+    JavaDnsInitialized++;
 }
 
 static struct hostent gethostbyname_result;
@@ -591,6 +593,8 @@ struct hostent *gethostbyname(const char *name) {
     int retries = 0;
     int ip[4];
 
+    if (!JavaDnsInitialized) JavaInitDns();
+
 retry:
     /*
      * Send request to the DNS server.
@@ -606,9 +610,10 @@ retry:
      * The key point of all this DNS thing : replace a blocking system
      * call to a polled one !!!
      */
-    do {
-	res = blockOnFile(dns_daemonResultChannel[0], 0);
-    } while (res < 0);
+    if (JavaSelectInitialized)
+	do {
+	    res = blockOnFile(dns_daemonResultChannel[0], 0);
+	} while (res < 0);
 
     /*
      * Process the result from the server.
