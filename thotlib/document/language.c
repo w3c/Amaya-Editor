@@ -548,7 +548,7 @@ Language TtaGetLanguageIdFromName (char *name)
     TtaError (ERR_string_too_long);
   else
     {
-      /* Consults the languages table to see if the language exists */
+      /* Checks the languages table to see if the language exists */
       again = TRUE;
       while (again && i < FreeEntry)
 	{
@@ -556,6 +556,9 @@ Language TtaGetLanguageIdFromName (char *name)
 	    /* The language is already defined */
 	    again = FALSE;
 	  else if (!strcasecmp (name, LangTable[i].LangName))
+	    again = FALSE;
+	  else if (name[2] == '-' &&
+		   !strncasecmp (name, LangTable[i].LangCode, 2))
 	    again = FALSE;
 	  else
 	    i++;
