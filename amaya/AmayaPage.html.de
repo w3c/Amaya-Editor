@@ -72,7 +72,6 @@
       </image>
     </a>
   </g>
-
   <text xmlns:xlink="http://www.w3.org/1999/xlink" y="98px" x="477px"
         style="fill:#dc5b53; font: bold 16px" xlink:type="simple"
         xlink:href="../doc/html/Annotations.html.de">Anmerkungen
@@ -109,7 +108,7 @@
           style="font: 24px helvetica; font-weight: bold; fill: #488B9B;">AMAYA
     </text>
     <text id="version" x="360px" y="320"
-          style="font: bold 16px italic; fill: #0192BF;">Version 8.0
+          style="font: bold 16px italic; fill: #0192BF;">Version 8.1
     </text>
     <g id="polygonMask" style="stroke: none;">
       <polygon style="fill: #0192BF;" points="0,0 0,170 78,148"
@@ -145,8 +144,7 @@
                 </msqrt>
               </mfrac>
             </mrow>
-          </math>
-        </foreignObject>
+          </math></foreignObject>
       </switch>
     </g>
   </g>
