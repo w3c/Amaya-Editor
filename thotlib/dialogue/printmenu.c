@@ -115,11 +115,11 @@ char               *viewsToPrint;
       strcpy (Orientation, "Landscape");
 
    if (printer[0] != '\0')
-      sprintf (cmd, "%s/print %s %s %d %d %d %s \"%s\" %s %d %d %d %s %d %d %d %d %d %ld PRINTER %s &\n",
+      sprintf (cmd, "%s/print %s %s %d %d %d %s \"%s\" %s %d %d %d %s %d %d %d %d %d %ld PRINTER %s &",
 	       BinariesDirectory, name, dir, repaginate, firstPage, lastPage, realName, printer, PageSize, nCopies, hShift,
 	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], viewsToPrint);
    else
-      sprintf (cmd, "%s/print %s %s %d %d %d %s \"%s\" %s %d %d %d %s %d %d %d %d %d %ld PRINTER %s &\n",
+      sprintf (cmd, "%s/print %s %s %d %d %d %s \"%s\" %s %d %d %d %s %d %d %d %d %d %ld PRINTER %s &",
 	       BinariesDirectory, name, dir, repaginate, firstPage, lastPage, realName, "lp", PageSize, nCopies, hShift,
 	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], viewsToPrint);
 
@@ -313,14 +313,14 @@ char               *viewNames;
 #else  /* WWW_MSWINDOWS */
    mktemp (tmpDocName);
 #endif /* !WWW_MSWINDOWS */
+   strncpy (dirName, pDoc->DocDirectory, MAX_PATH);
+   strncpy (docName, pDoc->DocDName, MAX_NAME_LENGTH);
    if (pFuncExportPrintDoc !=NULL)
      /* a export procedure is defined */
        ok = (*pFuncExportPrintDoc)(document, tmpDocName, tmpDirName);
    else
      /* standard export */
      {
-       strncpy (dirName, pDoc->DocDirectory, MAX_PATH);
-       strncpy (docName, pDoc->DocDName, MAX_NAME_LENGTH);
        docReadOnly = pDoc->DocReadOnly;
 
        strcpy (pDoc->DocDirectory, tmpDirName);
