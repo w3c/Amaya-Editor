@@ -734,7 +734,7 @@ int                 key;
 	     if (command != CMD_DeletePrevChar)
 		/* Ce n'est pas un delete, il faut terminer l'insertion courante */
 		CloseInsertion ();
-	     /* Faut-il passer un parametre ? */
+	     /* Call action if it's active */
 	     if (MenuActionList[command].ActionActive[frame])
 	       {
 		  /* l'action est active pour la fenetre courante */
@@ -749,14 +749,7 @@ int                 key;
 	/* Traitemet des caracteres au cas par cas */
 	else
 	  {
-	     if (!StructSelectionMode && !ViewFrameTable[frame - 1].FrSelectOnePosition)
-	       {
-		  /* Delete the current selection */
-		  CloseInsertion ();
-		  if (MenuActionList[CMD_DeleteSelection].Call_Action != NULL)
-		     (*MenuActionList[CMD_DeleteSelection].Call_Action) (document, view);
-	       }
-	     else if (value == 8 || value == 127)
+	     if (value == 8 || value == 127)
 	       {
 		  /* Par defaut BackSpace detruit le caractere precedent */
 		  /* sans se soucier de la langue courante */
@@ -765,7 +758,7 @@ int                 key;
 		  return;
 	       }
 
-/*** Sequence de traitement des espaces ***/
+	     /*** Sequence de traitement des espaces ***/
 	     if (value == BREAK_LINE
 		 || (InputSpace && value == SHOWN_BREAK_LINE))
 	       {
@@ -804,7 +797,7 @@ int                 key;
 	       }
 	  }
      }
-}				/*ThotInput */
+}
 
 
 #ifdef WWW_XWINDOWS

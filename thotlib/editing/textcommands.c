@@ -200,16 +200,33 @@ int                 yDelta;
 	  {
 	     if (xDelta > 0 && pLimitBox == pBox)
 	       {
-		  /* Faut-il descendre d'une ligne ? */
+		  /* move one line down */
 		  y = pBox->BxYOrg + pBox->BxHeight;
 		  LocateLeafBox (frame, 0, y, 0, 10);
 		  return;
 	       }
 	     else if (xDelta < 0 && pLimitBox == pBox)
 	       {
-		  /* Faut-il remonter d'une ligne ? */
+		  /* move one line up */
 		  y = pBox->BxYOrg;
 		  LocateLeafBox (frame, max, y, 0, -10);
+		  return;
+	       }
+	  }
+	else if (IsParentBox (pLastBox, pBox))
+	  {
+	     if (xDelta > 0)
+	       {
+		  /* move to the end of the box */
+		  y = pLastBox->BxYOrg + pLastBox->BxHeight;
+		  LocateLeafBox (frame, x, y, 0, 0);
+		  return;
+	       }
+	     else if (xDelta < 0)
+	       {
+		  /* move to the beginning of the box */
+		  y = pLastBox->BxYOrg;
+		  LocateLeafBox (frame, x, y, 0, 0);
 		  return;
 	       }
 	  }

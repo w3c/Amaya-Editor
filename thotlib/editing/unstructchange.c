@@ -1328,6 +1328,13 @@ boolean             before;
 			  /* simulate a delete */
 			  TtcDeleteSelection (0, 0);
 		       }
+		  else if (pSibling->ElLeafType == LtPicture)
+		    {
+			  /* set selection before the first character of the string */
+			  SelectElement (pDoc, pSibling, FALSE, FALSE);
+			  /* simulate a delete */
+			  TtcDeleteSelection (0, 0);
+		    }
 	       }
 	     /* done */
 	     pElem = NULL;

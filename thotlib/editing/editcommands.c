@@ -515,9 +515,9 @@ static void         GiveInsertPoint (PtrAbstractBox pAb, int frame, PtrBox * pBo
 #else  /* __STDC__ */
 static void         GiveInsertPoint (pAb, frame, pBox, pBuffer, ind, x, previousChars)
 PtrAbstractBox      pAb;
-int                 frame;
 PtrBox             *pBox;
 PtrTextBuffer      *pBuffer;
+int                 frame;
 int                *ind;
 int                *x;
 int                *previousChars;
@@ -526,21 +526,29 @@ int                *previousChars;
 {
    ViewSelection      *pViewSel;
    boolean             OK;
+   boolean             endOfPicture;
 
    /* Si le pave n'est pas identifie on prend */
    /* le pave de la premiere boite selectionnee  */
-   if (pAb == NULL && ViewFrameTable[frame - 1].FrSelectionBegin.VsBox != NULL)
-      pAb = ViewFrameTable[frame - 1].FrSelectionBegin.VsBox->BxAbstractBox;
+   pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
+   endOfPicture = FALSE;
+   if (pAb == NULL && pViewSel->VsBox != NULL)
+     {
+       pAb = pViewSel->VsBox->BxAbstractBox;
+     }
 
    /* S'il n'y a pas de pave selectionne */
    if (pAb != NULL)
+     if (pAb->AbLeafType == LtPicture && pViewSel->VsIndBox == 1)
+       endOfPicture =TRUE;
       /* Tant que le pave est un pave de presentation on saute au pave suivant */
       /* ne saute pas les paves de presentation modifiables, i.e. les paves */
       /* qui affichent la valeur d'un attribut */
       do
 	{
 	   if (pAb != NULL)
-	      OK = pAb->AbPresentationBox && (!pAb->AbCanBeModified);
+	      OK = ((pAb->AbPresentationBox && !pAb->AbCanBeModified)
+		    || (pAb->AbLeafType == LtPicture && endOfPicture));
 	   else
 	      OK = FALSE;
 	   if (OK)
@@ -559,7 +567,6 @@ int                *previousChars;
      }
    else if (pAb->AbLeafType == LtText)
      {
-	pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
 	if (pViewSel->VsBox != 0 && pViewSel->VsBox->BxAbstractBox == pAb)
 	  {
 	     *pBox = pViewSel->VsBox;
@@ -721,10 +728,12 @@ int                 keyboard;
 {
    PtrAbstractBox      pSelAb;
    PtrBox              pBox;
+   ViewSelection      *pViewSel;
    Language            language;
    int                 index;
    boolean             cut;
 
+   pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
    if (keyboard == -1 || keyboard == 2)
       /* une langue latine saisie */
       if (TtaGetAlphabet ((*pAb)->AbLanguage) == 'L')
@@ -745,8 +754,8 @@ int                 keyboard;
 	{
 	   CloseTextInsertion ();
 	   cut = TRUE;
-	   pBox = ViewFrameTable[frame - 1].FrSelectionBegin.VsBox;
-	   index = pBox->BxIndChar + ViewFrameTable[frame - 1].FrSelectionBegin.VsIndBox + 1;
+	   pBox = pViewSel->VsBox;
+	   index = pBox->BxIndChar + pViewSel->VsIndBox + 1;
 	   if (index <= 1)
 	     {
 		pSelAb = (*pAb)->AbPrevious;
@@ -762,7 +771,7 @@ int                 keyboard;
 	   if (cut)
 	      NewTextLanguage (*pAb, index, language);
 	   /* la boite peut avoir change */
-	   pBox = ViewFrameTable[frame - 1].FrSelectionBegin.VsBox;
+	   pBox = pViewSel->VsBox;
 	   if (pBox != NULL)
 	      *pAb = pBox->BxAbstractBox;
 	   else
@@ -884,11 +893,27 @@ char                c;
 
 #endif /* __STDC__ */
 {
+   ViewSelection      *pViewSel;
    int                 frame;
 
    if (document != 0)
      {
 	frame = GetWindowNumber (document, view);
+	if (!StructSelectionMode && !ViewFrameTable[frame - 1].FrSelectOnePosition)
+	  {
+	    /* Delete the current selection */
+	    CloseInsertion ();
+	    pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
+	    if (pViewSel->VsBox != NULL)
+	      if (pViewSel->VsBox->BxAbstractBox->AbLeafType == LtPicture
+		  ||  pViewSel->VsBox->BxAbstractBox->AbLeafType == LtText)
+		{
+		  if (MenuActionList[CMD_DeleteSelection].Call_Action != NULL)
+		    (*MenuActionList[CMD_DeleteSelection].Call_Action) (document, view);
+		}
+	      else
+		TtcPreviousChar (document, view);
+	  }
 	InsertChar (frame, c, -1);
      }
 }
@@ -928,11 +953,38 @@ View                view;
 
 #endif /* __STDC__ */
 {
+   ViewSelection      *pViewSel;
+   PtrElement          pEl;
    int                 frame;
 
    if (document != 0)
      {
 	frame = GetWindowNumber (document, view);
+	if (!StructSelectionMode && !ViewFrameTable[frame - 1].FrSelectOnePosition)
+	  {
+	    /* Delete the current selection */
+	    CloseInsertion ();
+	    pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
+	    if (pViewSel->VsBox != NULL)
+	      if (pViewSel->VsBox->BxAbstractBox->AbLeafType == LtPicture
+		    ||  pViewSel->VsBox->BxAbstractBox->AbLeafType == LtText)
+		{
+		  if (MenuActionList[CMD_DeleteSelection].Call_Action != NULL)
+		    (*MenuActionList[CMD_DeleteSelection].Call_Action) (document, view);
+		}
+	      else
+		TtcPreviousChar (document, view);
+#ifdef IV
+	    else
+	      {
+		  pEl = pViewSel->VsBox->BxAbstractBox->AbElement;
+		  if (pEl->ElLeafType == LtText)
+		    SelectString (LoadedDocument[document - 1], pEl, 1, 1);
+		  else
+		    SelectElement (LoadedDocument[document - 1], pEl, FALSE, FALSE);
+	      }
+#endif
+	  }
 	InsertChar (frame, 127, -1);
      }
 }
@@ -2112,7 +2164,7 @@ int                 editType;
 
 	if (pAb != NULL)
 	  {
-/*-- Les commandes sont traitees dans l'application */
+	    /*-- Les commandes sont traitees dans l'application */
 	     /* si la selection ne porte que sur un pave */
 	     pBox = ViewFrameTable[frame - 1].FrSelectionEnd.VsBox;
 	     if (pBox == NULL)
@@ -2128,7 +2180,16 @@ int                 editType;
 	     /* Recherche le point d'insertion (&i non utilise) */
 	     GiveInsertPoint (pAb, frame, &pBox, &pBuffer, &i, &xDelta, &charsDelta);
 	     if (pBox == NULL)
-		pAb = NULL;
+	       {
+		 /* take in account another box */
+		 if (ThotLocalActions[T_deletenextchar] != NULL)
+		   {
+		     (*ThotLocalActions[T_deletenextchar]) (frame, pAb->AbElement, FALSE);
+		     return;
+		   }
+		 else
+		   pAb = NULL;
+	       }
 	     else if (pAb != NULL)
 		pAb = pBox->BxAbstractBox;
 

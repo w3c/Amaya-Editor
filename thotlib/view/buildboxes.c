@@ -60,9 +60,9 @@
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         control_points (float x, float y, float l1, float l2, float theta1, float theta2, C_points * cp)
+static void         SetControlPoints (float x, float y, float l1, float l2, float theta1, float theta2, C_points * cp)
 #else  /* __STDC__ */
-static void         control_points (x, y, l1, l2, theta1, theta2, cp)
+static void         SetControlPoints (x, y, l1, l2, theta1, theta2, cp)
 float               x, y, l1, l2, theta1, theta2;
 C_points           *cp;
 
@@ -165,7 +165,7 @@ int                 nb;
       theta1 += _2xPI;
    if (theta2 < 0)
       theta2 += _2xPI;
-   control_points (x2, y2, l1, l2, theta1, theta2, &controls[2]);
+   SetControlPoints (x2, y2, l1, l2, theta1, theta2, &controls[2]);
 
    nb--;			/* dernier point */
    x = x2;			/* memorise les points pour fermer la courbe */
@@ -210,7 +210,7 @@ int                 nb;
 	   theta2 = atan2 ((double) dy, (double) dx);
 	if (theta2 < 0)
 	   theta2 += _2xPI;
-	control_points (x2, y2, l1, l2, theta1, theta2, &controls[i]);
+	SetControlPoints (x2, y2, l1, l2, theta1, theta2, &controls[i]);
      }
 
    /* Traitement du 1er point */
@@ -231,7 +231,7 @@ int                 nb;
       theta2 = atan2 ((double) dy, (double) dx);
    if (theta2 < 0)
       theta2 += _2xPI;
-   control_points (x2, y2, l1, l2, theta1, theta2, &controls[1]);
+   SetControlPoints (x2, y2, l1, l2, theta1, theta2, &controls[1]);
 
    return (controls);
 }
