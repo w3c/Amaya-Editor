@@ -10,38 +10,28 @@
 
 package main;
 
+use strict;
 use XML::Parser;
 use Unicode::String qw(utf8 latin1);
-# read User configuration file
-#use Am_var_global;
 
-use strict;
 # Global variables and default values
-my $script_dir = "/home/ehuck/manuperl";
-my $in_labeldirectory;
-my $in_labelfile_name;
-my $in_textdirectory;
-my $in_textsufix;
+my $script_dir = "/home/ehuck/opera/Amaya/tools/xmldialogues/scripts/";
+my $in_labeldirectory = "/home/ehuck/opera/Amaya/amaya/";
+my $in_labelfile_name = "amayamsg.h";
+my $in_textdirectory= "/home/ehuck/opera/Amaya/config/";
+my $in_textsufix = "-amayamsg";
 	
-my $base_directory = "/home/ehuck/xmldoc/";
+my $base_directory = "/home/ehuck/opera/Amaya/tools/xmldialogues/docs/";
 my $basename = "base_am_msg.xml"; 
 	
 # declaration static of the variables used 
-my $date = "date";
+my $date = `date`;
+	chomp ($date);
 
-eval `cat $script_dir/Am_var_global.dat`;
-
-
-# inutile pour l'instant:
-#Use XML_SetCharacterDataHandler.
-#    $us = Unicode::String->new( [$initial_value] )
-#    $us->latin1("something");
-#     equivalent a
-#    $us = latin1("something");
 
 
 # $debug is a boolean used during the typing and used for tests
-	my $debug = 1;
+	my $debug = 0;
 # declaration static of the files used 
 	my $language_code = $ARGV[0];
    my $in_labelfile = $in_labeldirectory . $in_labelfile_name;
@@ -65,13 +55,9 @@ eval `cat $script_dir/Am_var_global.dat`;
 
 # declaration of the parser
 	my $parser = new XML::Parser (
-				ErrorContext  => 0, #number of lines shown 
-															  #after a mistake  
-				NoExpand	=> 1  #like his name (i.e. don't
-																#translate '&lt'; into '<') 
-            # Namespaces    => 0, ?????
-            # ParseParamEnt => 1,  ?????
-            );
+				ErrorContext  => 0, #number of lines shown after a mistake  
+				NoExpand	=> 1  #like his name (i.e. don't translate '&lt'; into '<') 
+             );
 #	declaration of the subs used when events are noted	
 	$parser->setHandlers(
 				Start => \&start_hndl,
@@ -119,10 +105,7 @@ sub addlabel {
 
 	if ( $_[0] ne "" && $_[0] =~ /^#define/i ) {
 		chomp ($_[0]);
-#		$_[0] =~ s/\s{2,}/ /; #because there is often a lot of spaces 
 		($_,$label,$label_ref,@else) = split (/\s+/, $_[0]);
-#		$label =~ s/\s+//; # to avoid that $label still had spaces						 
-#		debug ("$label $label_ref\n");
 		$labels{$label} = $label_ref;
 	}
 	else {
@@ -145,11 +128,12 @@ sub initlabel {# fill the %labels from $in_labelfile that is reading
 	do{
 		$line = <LABEL>;
 		$line_count++;
-	} while ($line eq "" || !($line =~ /^#define/i));		
+	} 
+	while ($line eq "" || !($line =~ /^#define/i) );		
 #	the first line witch we are interested in have been already read	
-	 if ($line ne "") {
-	    addlabel ($line,$line_count);
-	 }
+	if ($line ne "") {
+		addlabel ($line,$line_count);
+	}
 	
 #	reads and adds all the labels
 #	warning, the rest of the file must be well-formed without errors 	
@@ -170,7 +154,7 @@ sub initlabel {# fill the %labels from $in_labelfile that is reading
 #		}
 #	}
 	
-	print " % labels initialized ! \n";
+	debug (" % labels initialized !");
 } #end initlabel
 
 #--------------------------------------------------------------------
@@ -182,7 +166,7 @@ sub addtext {
 
 	if ( $_[0] ne "" ){
 		chomp ($_[0]);
-		($label_ref,@else) = split (/\s+/, $_[0]); # cut the spaces
+		($label_ref,@else) = split (/\s+/, $_[0]); # cut below to spaces
 		
 #	group @else in $text with ' ' like character space beetween the elements
 		$text = join (' ', @else);
@@ -195,9 +179,10 @@ sub addtext {
 			$text =~ s/&/&amp;/g;
 			$text	=~ s/</&lt;/g;
 # import an ISO-latin1 string into UTF-8 if necessary
-			$text	= latin1($text);
-		#debug ("$label_ref  pour $text");
-			$texts{"$label_ref"} = $text->utf8;
+			if ($encodage eq "latin1") {
+				$text	= latin1($text);
+				$texts{"$label_ref"} = $text->utf8;
+			}
 		}
 	}
 	else {
@@ -217,8 +202,8 @@ sub inittext {
 	my @rest;
 	
 # open $in_textlfile only if it exists and is readable
-	unless (-r $in_textfile){ print "fichier $in_textfile introuvable"}
-   else {open (TEXT, "<$in_textfile") || die "erreur de lecture de $in_textfile: $!";}
+	unless (-r $in_textfile){ print "fichier $in_textfile introuvable\n"}
+   else {open (TEXT, "<$in_textfile") || die "erreur de lecture de $in_textfile:$!\n";}
 
 	
 #	reads and adds all the texts
@@ -228,7 +213,6 @@ sub inittext {
 		$line_count++;
 		if ($line =~ /^# encoding=/) {
 			($diese, $define, $encodage, @rest) = split( /\s/,$line);
-			debug("the encodage is$encodage voila");
 		}
 		elsif ($line ne "") {
 			addtext ($line, $line_count);

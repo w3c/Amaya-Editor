@@ -13,7 +13,7 @@ use strict;
 	my $i;
 
    my $in_filename = "/home/ehuck/opera/Amaya/amaya/amayamsg.h";
-	my $out_basename = "/home/ehuck/xmldoc/base_am_msg.xml" ;
+	my $out_basename = "/home/ehuck/opera/Amaya/tools/xmldialogues/docs/base_am_msg.xml" ;
 #	an other posybility is to initialize them with parameters like that
 #	($filename,$out_basename) = @ARGV;
 
