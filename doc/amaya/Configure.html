@@ -4,7 +4,7 @@
 <head>
   <title>Configuring Amaya</title>
   <style type="text/css">.menuItems { color: #E55500}</style>
-  <meta name="GENERATOR" content="amaya V3.1">
+  <meta name="GENERATOR" content="amaya V3.2">
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </head>
 
@@ -153,8 +153,8 @@ href="#lang">language negotiation</a>, <a href="#Profiles">profiles</a>, and
 <a href="#Templates">templates</a>. In each of these menus, there are three
 common action buttons:</p>
 
-<table border="0" cellspacing="10" cellpadding="5" summary="action button
-chart">
+<table border="0" cellspacing="10" cellpadding="5"
+summary="action button chart">
   <tbody>
     <tr>
       <th bgcolor="C0C0C0">Apply</th>
@@ -174,8 +174,8 @@ chart">
 
 <h4><a name="General">General preferences</a></h4>
 
-<p style="text-align: center"><img src="../Icons/GeneralMenu.gif" alt="General
-Preferences Menu"></p>
+<p style="text-align: center"><img src="../Icons/GeneralMenu.gif"
+alt="General Preferences Menu"></p>
 <dl>
   <dt><strong>Amaya user directory</strong> (Windows platforms only, not shown
   in the included figure)</dt>
@@ -279,8 +279,8 @@ Preferences Menu"></p>
 
 <h4><a name="Publishing">Publishing preferences</a></h4>
 
-<p style="text-align: center"><img src="../Icons/PublishMenu.gif" alt="Publish
-Preferences Menu"></p>
+<p style="text-align: center"><img src="../Icons/PublishMenu.gif"
+alt="Publish Preferences Menu"></p>
 <dl>
   <dt><strong>Use ETAGS and preconditions</strong></dt>
     <dd>HTTP/1.1 introduces new headers that allow to avoid the <a
@@ -310,8 +310,8 @@ Preferences Menu"></p>
 
 <h4><a name="Cache">Cache preferences</a></h4>
 
-<p style="text-align: center"><img src="../Icons/CacheMenu.gif" alt="Cache
-Preferences Menu"></p>
+<p style="text-align: center"><img src="../Icons/CacheMenu.gif"
+alt="Cache Preferences Menu"></p>
 
 <p>Amaya provides a cache through libwww. By default, the cache is enabled by
 default and is stored in the <strong>AmayaTemp/libwww-cache</strong>
@@ -343,8 +343,8 @@ erasing the cache directory.</p>
 
 <h4><a name="Specifying1">Proxy preferences</a></h4>
 
-<p style="text-align: center"><img src="../Icons/ProxyMenu.gif" alt="Proxy
-Preferences Menu"></p>
+<p style="text-align: center"><img src="../Icons/ProxyMenu.gif"
+alt="Proxy Preferences Menu"></p>
 
 <p>You can specify a proxy and a set of domains where the proxy should or
 should not be used by means of this menu.</p>
@@ -368,7 +368,7 @@ should not be used by means of this menu.</p>
     <dd>Gives a list of space separated domains where you want to use or not
       use your proxy. For example:
       <pre>harpo.marx.edu zeppo.marx.edu chico.marx.edu
-                    ^--------------^----> space separated entries
+                    ^--------------^----&gt; space separated entries
             </pre>
       <p>Use the switch buttons to specify if the proxy should or shouldn't be
       used with this domain list.</p>
@@ -377,22 +377,30 @@ should not be used by means of this menu.</p>
 
 <h4><a name="color">Color preferences</a></h4>
 
-<p style="text-align: center"><img src="../Icons/ColorMenu.gif" alt="Color
-Preferences Menu"></p>
+<p style="text-align: center"><img src="../Icons/ColorMenu.gif"
+alt="Color Preferences Menu"></p>
 
-<p>This menu allows selection of the foreground and background colors for
-documents. The Unix version also provides entries for changing the menu
-colors. To change menu colors in Windows, you will need to use the standard
-Windows configuration control, found in the Control Panel folder.</p>
+<p>This menu allows selection of the default foreground and background colors
+for documents. It allows also to control the colors: used by Amaya to display
+the current selection</p>
+<ul type="square">
+  <li><strong>Caret color</strong> gives the foreground color that shows the
+    selection when it's limited to an insert point;</li>
+  <li><strong>Selection colo</strong>r gives the background that shows the
+    current selection when it's extended.</li>
+</ul>
 
-<p>Colors may be selected by name, hex code, or rgb format.</p>
+<p>The Unix version also provides entries for changing the menu colors. To
+change menu colors in Windows, you will need to use the standard Windows
+configuration control, found in the Control Panel folder.</p>
 
-<p>Valid names are: Aqua, Black, Blue, Fuchsia, Gray, Green, Lime, Maroon,
-Navy, Olive, Purple, Red, Silver, Teal, Yellow, and White.</p>
-
-<p>Valid hexcode format is #FF00FF as an example.</p>
-
-<p>Valid rgb format is rgb(255, 0, 255) as an example.</p>
+<p>All these colors may be selected by name, hex code, or rgb format:</p>
+<ul type="square">
+  <li>Valid names are: Aqua, Black, Blue, Fuchsia, Gray, Green, Lime, Maroon,
+    Navy, Olive, Purple, Red, Silver, Teal, Yellow, and White.</li>
+  <li>Valid hexcode format is #FF00FF as an example.</li>
+  <li>Valid rgb format is rgb(255, 0, 255) as an example.</li>
+</ul>
 
 <p>If you enter an invalid color, the default colors will be used instead.</p>
 
@@ -406,8 +414,8 @@ done through the Amaya.css style sheet.</p>
 
 <h4><a name="HTML">Window geometry preferences</a></h4>
 
-<p style="text-align: center"><img src="../Icons/GeomMenu.gif" alt="Geometry
-Preferences Menu"></p>
+<p style="text-align: center"><img src="../Icons/GeomMenu.gif"
+alt="Geometry Preferences Menu"></p>
 
 <p>This menu allows you to save the current window size of the different views
 of a document (formatted, structure, alternate, links, and Table of Contents.)
@@ -474,7 +482,7 @@ command.</p>
 <pre> Directive = KeySeq ':' IdentCommand ;
  KeysSeq = KeySet [ ',' KeySet ] ;
  KeySet = [ Modifier ] [ 'Shift' ] Key ;
- Key = '&lt;Key>' KeyValue / '&lt;Key>' SpecialKey ;
+ Key = '&lt;Key&gt;' KeyValue / '&lt;Key&gt;' SpecialKey ;
  Modifier = 'Ctrl' / 'Alt' / 'Meta' ;
  KeyValue = 'a' / 'b' / ... ;
  SpecialKey = 'Escape' / 'Delete' / 'Space' / 'BackSpace' /
