@@ -3265,6 +3265,7 @@ void DisplayPRule (PtrPRule rule, FILE *fileDescriptor,
 {
   PresentationSettingBlock setting;
   char                     buffer[200];
+  int                      l;
 
   if (rule == NULL)
     return;
@@ -3278,7 +3279,12 @@ void DisplayPRule (PtrPRule rule, FILE *fileDescriptor,
     return;
   
   fprintf (fileDescriptor, "%s", buffer);
-  fprintf (fileDescriptor, "\t");
+  l = strlen (buffer);
+  while (l < 30)
+    {
+      fprintf (fileDescriptor, " ");
+      l++;
+    }
   if (rule->PrImportant)
     fprintf (fileDescriptor, "!important");
   if (rule->PrSpecificity == 100)

@@ -2400,10 +2400,8 @@ static PresentationValue PRuleToPresentationValue (PtrPRule rule)
 	unit = UNIT_REL;
       else
 	unit = UNIT_EM;
-      /*value /= 10;*/
       break;
     case UnXHeight:
-      /*value /= 10;*/
       unit = UNIT_XHEIGHT;
       break;
     case UnPoint:

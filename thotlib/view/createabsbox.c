@@ -3532,7 +3532,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 			}
 		    }
 		  else if (fileDescriptor)
-		    DisplayPRule (pRule, fileDescriptor, pEl, pSchP);
+		    DisplayPRule (pRule, fileDescriptor, pEl, pSchPres);
 		  else if (!ApplyRule (pRule, pSchPres, pNewAbbox, pDoc,NULL))
 		      WaitingRule (pRule, pNewAbbox, pSchPres, NULL, queuePA,
 				   queuePS, queuePP, queuePR, lqueue);
@@ -3589,7 +3589,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 			}
 		    }
 		  else if (fileDescriptor)
-		    DisplayPRule (pRule, fileDescriptor, pEl, pSchP);
+		    DisplayPRule (pRule, fileDescriptor, pEl, pSchPres);
 		  else if (!ApplyRule (pRule, pSchPres, pNewAbbox, pDoc, NULL))
 		    WaitingRule (pRule, pNewAbbox, pSchPres,
 				 NULL, queuePA, queuePS, queuePP,
@@ -3689,7 +3689,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 					  }
 				      }
 				    else if (fileDescriptor)
-				      DisplayPRule (ruleToApply, fileDescriptor, pEl, pSchP);
+				      DisplayPRule (ruleToApply, fileDescriptor, pEl, pSchPres);
 				    else if (!ApplyRule (ruleToApply, pSchPres,
 							 pNewAbbox, pDoc, pAttr))
 				      /* not the main view, apply the rule now */
@@ -3779,7 +3779,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 				    }
 				}
 			      else if (fileDescriptor)
-				DisplayPRule (ruleToApply, fileDescriptor, pEl, pSchP);
+				DisplayPRule (ruleToApply, fileDescriptor, pEl, pSchPattr);
 			      else if (!ApplyRule (ruleToApply, pSchPattr,
 						   pNewAbbox, pDoc, pAttr))
 				/* not the main view, apply the rule now */
@@ -3862,7 +3862,7 @@ void ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
     if (selectedRule[i])
       {
 	if (fileDescriptor)
-	  DisplayPRule (selectedRule[i], fileDescriptor, pEl, pSchP);
+	  DisplayPRule (selectedRule[i], fileDescriptor, pEl, schemaOfSelectedRule[i]);
 	else if (!ApplyRule (selectedRule[i], schemaOfSelectedRule[i], pNewAbbox,
 			     pDoc, attrOfSelectedRule[i]))
 	  WaitingRule (selectedRule[i], pNewAbbox, schemaOfSelectedRule[i],
