@@ -531,10 +531,11 @@ void TtaGetTime (char *s, CHARSET charset)
 static ThotBool CheckDate (unsigned char c, int fnum, char *outBuf,
 			   Document doc)
 {
-  PtrDocument pDoc = LoadedDocument[doc - 1];
+  PtrDocument pDoc;
   char        tm[DATESTRLEN];
   int         index;
 
+  pDoc = LoadedDocument[doc - 1];
   if (StartDate)
     {
       if (c == '-' || c == '>' || c == SPACE)
@@ -4043,13 +4044,13 @@ static void ExportNsDeclaration (Document doc, PtrElement pNode)
   int              i, fnum;
 
   fnum = 1; /* main output file */
+  pDoc = LoadedDocument[doc - 1];
   if (pDoc->DocNsUriDecl == NULL)
     /* There is no namespace declaration for this document */
     return;
 
   i = 0;
   /* Search all the namespace declarations declared for this element */
-  pDoc = LoadedDocument[doc - 1];
   uriDecl = pDoc->DocNsUriDecl;
   while (uriDecl != NULL)
     {
