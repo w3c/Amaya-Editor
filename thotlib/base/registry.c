@@ -1589,22 +1589,22 @@ CHAR_T*             appArgv0;
       len = readlink (c_execname, c_filename, sizeof (filename) / sizeof (CHAR_T));
       if (len > 0)
 	{
-	  c_filename[len] = 0;
 	  /*
 	   * Two cases : can be an absolute link to the binary
 	   * or a relative link.
 	   */
+	  c_filename[len] = 0;
 	  if (c_filename[0] == DIR_SEP)
+	    strcpy (c_execname, c_filename);
+	  else
 	    {
-	      strcpy (c_execname, c_filename);
 	      c_end = c_execname;
 	      while (*c_end)
 		c_end++; /* go to the ending NUL */
 	      while (c_end > c_execname && *c_end != DIR_SEP)
 		c_end--;
+	      strcpy (c_end + 1, c_filename);
 	    }
-	  else
-	    strcpy (c_end + 1, c_filename);
 	} 
     }
   iso2wc_strcpy (execname, c_execname);
