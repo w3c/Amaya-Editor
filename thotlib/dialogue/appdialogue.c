@@ -4087,6 +4087,9 @@ void  TtaSetItemOff (Document document, View view, int menuID, int itemID)
    int                 menu, submenu;
    int                 item;
    int                 action;
+#ifndef _WX
+   int                 ref;
+#endif /* _WX */
 
    /* Check parameters */
    if (document == 0 || view == 0)
@@ -4108,7 +4111,6 @@ void  TtaSetItemOff (Document document, View view, int menuID, int itemID)
    if (menu > 0)
      TtaRefreshMenuItemStats( document, NULL, itemID );
 #else /* _WX */
-   int                 ref;
    if (action > 0 && action < MaxMenuAction &&
        MenuActionList[action].ActionActive[frame])
      /* the entry is found and is active */
