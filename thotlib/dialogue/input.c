@@ -1025,6 +1025,15 @@ ThotBool ThotInput (int frame, unsigned int value, int command, int PicMask, int
   int                 mainframe;
   int                 index = -1;
   ThotBool            found, done;
+
+#ifdef _WX
+  wxLogDebug( _T("ThotInput: frame=%d\tvalue=%d\tcommand=%d\tPicMask=%d\tkey=%d"),
+	      frame,
+	      value,
+	      command,
+	      PicMask,
+	      key );
+#endif /* _WX */
   
   modtype = THOT_NO_MOD;
   if (frame > MAX_FRAME)
