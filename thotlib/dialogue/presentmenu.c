@@ -59,6 +59,10 @@
 #include "actions_f.h"
 #include "units_f.h"
 
+#ifdef _WINDOWS 
+#include "windialogapi_f.h"
+#endif /* _WINDOWS */
+
 static PtrDocument  DocModPresent;
 static boolean             ChngStandardColor;	/* standard presentation colors  */
 static boolean             ChngStandardGeom;	/* standard geometry */
@@ -130,13 +134,9 @@ static int          NormalLineSpacing;
 static void         ResetMenus ();
 
 #ifdef _WINDOWS 
-#ifdef __STDC__
-extern void CreateCharacterDlgWindow (HWND, int, int, int, int);
-extern void CreateChangeFormatDlgWindow (HWND);
-#else /* __STDC__ */
-extern void CreateCharacterDlgWindow ();
-extern void CreateChangeFormatDlgWindow ();
-#endif /* __STDC__ */
+extern int WIN_IndentValue;
+extern int WIN_OldLineSp;
+extern int WIN_NormalLineSpacing;
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -1024,6 +1024,9 @@ char               *txt;
     case NumZoneRecess:	/* renfoncement de la premiere ligne */
       ChngIndent = TRUE;
       IndentValue = val;
+#     ifdef _WINDOWS 
+      WIN_IndentValue = val;
+#     endif /* _WINDOWS */
       if (IndentSign != 0 && IndentValue == 0)
 	{
 	  IndentSign = 0;
@@ -1053,11 +1056,17 @@ char               *txt;
 	  if (IndentSign != 0 && IndentValue == 0)
 	    {
 	      IndentValue = 15;
+#         ifdef _WINDOWS
+          WIN_IndentValue = 15;
+#         endif /* _WINDOWS */
 	      TtaSetNumberForm (NumZoneRecess, 15);
 	    }
 	  else if (IndentSign == 0 && IndentValue != 0)
 	    {
 	      IndentValue = 0;
+#         ifdef _WINDOWS 
+          WIN_IndentValue = 0;
+#         endif /* _WINDOWS */
 	      TtaSetNumberForm (NumZoneRecess, 0);
 	    }
 	}
@@ -1068,6 +1077,9 @@ char               *txt;
       if (OldLineSp != val)
 	{
 	  OldLineSp = val;
+#     ifdef _WINDOWS 
+      WIN_OldLineSp = val;
+#     endif /* _WINDOWS */
 	  if (val < (NormalLineSpacing * 3) / 2)
 	    i = 0;
 	  else if (val >= NormalLineSpacing * 2)
@@ -1090,6 +1102,9 @@ char               *txt;
 	  StdLineSp = FALSE;
 	  /* l'utilisateur demande a changer l'interligne */
 	  OldLineSp = ((val + 2) * NormalLineSpacing) / 2;
+#     ifdef _WINDOWS
+      WIN_OldLineSp = OldLineSp;
+#     endif /* _WINDOWS */
 	  TtaSetNumberForm (NumZoneLineSpacing, OldLineSp);
 	}
       ApplyPresentMod (Apply_LineSp);
@@ -1555,9 +1570,14 @@ View                view;
    PtrElement          pFirstSel, pLastSel;
    PtrAbstractBox      pAb;
    int                 firstChar, lastChar;
-#  ifndef _WINDOWS 
-   char                string[MAX_TXT_LEN];
    int                 i;
+#  ifdef _WINDOWS 
+   int                 alignNum;
+   int                 justificationNum;
+   int                 lineSpacingNum;
+   int                 indentNum;
+#  else  /* _WINDOWS */
+   char                string[MAX_TXT_LEN];
 #  endif /* !_WINDOWS */
    boolean             selectionOK;
 
@@ -1565,147 +1585,159 @@ View                view;
 
    /* demande quelle est la selection courante */
    selectionOK = GetCurrentSelection (&pSelDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar);
-   if (!selectionOK)
-     {
-	/* par defaut la racine du document */
-	pSelDoc = pDoc;
-	pFirstSel = pDoc->DocRootElement;
-	selectionOK = TRUE;
-     }
+   if (!selectionOK) {
+      /* par defaut la racine du document */
+      pSelDoc = pDoc;
+      pFirstSel = pDoc->DocRootElement;
+      selectionOK = TRUE;
+   }
 
-   if (selectionOK && pSelDoc == pDoc)
+   if (selectionOK && pSelDoc == pDoc) {
       /* il y a une selection */
-     {
-	/* recherche le pave concerne */
-	if (view > 100)
-	   pAb = AbsBoxOfEl (pFirstSel, 1);
-	else
-	   pAb = AbsBoxOfEl (pFirstSel, view);
+      /* recherche le pave concerne */
+      if (view > 100)
+         pAb = AbsBoxOfEl (pFirstSel, 1);
+      else
+          pAb = AbsBoxOfEl (pFirstSel, view);
 
-	if (pAb != NULL)
-	  {
+      if (pAb != NULL) {
 
-	     ResetMenus ();
-#            ifndef _WINDOWS
-	     /* formulaire Presentation Format */
-	     TtaNewSheet (NumFormPresFormat, TtaGetViewFrame (document, view), 
-			  TtaGetMessage (LIB, TMSG_FORMAT),
-		  1, TtaGetMessage (LIB, TMSG_APPLY), TRUE, 3, 'L', D_DONE);
+         ResetMenus ();
+#        ifndef _WINDOWS
+         /* formulaire Presentation Format */
+         TtaNewSheet (NumFormPresFormat, TtaGetViewFrame (document, view), 
+                      TtaGetMessage (LIB, TMSG_FORMAT),
+                      1, TtaGetMessage (LIB, TMSG_APPLY), TRUE, 3, 'L', D_DONE);
 
-	     /* sous-menu Alignement */
-	     i = 0;
-	     sprintf (&string[i], "%s", "Bmiidn");	/* gauche */
-	     i += strlen (&string[i]) + 1;
-	     sprintf (&string[i], "%s", "Bmeiin");	/* droite */
-	     i += strlen (&string[i]) + 1;
-	     sprintf (&string[i], "%s", "Bmfogn");	/* Centrer */
-	     i += strlen (&string[i]) + 1;
-	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));	/* Inchange */
-	     TtaNewSubmenu (NumMenuAlignment, NumFormPresFormat, 0,
-		   TtaGetMessage (LIB, TMSG_ALIGN), 4, string, NULL, TRUE);
-	     /* change la police des 3 premieres entrees */
-	     for (i = 0; i < 3; i++)
-		TtaRedrawMenuEntry (NumMenuAlignment, i, "icones", ThotColorNone, -1);
-	     /* initialise le menu de cadrage des lignes */
-	     switch (pAb->AbAdjust)
-		   {
-		      case AlignLeft:
-			 i = 1;
-			 break;
-		      case AlignRight:
-			 i = 2;
-			 break;
-		      case AlignCenter:
-			 i = 3;
-			 break;
-		      default:
-			 i = 1;
-			 break;
-		   }
-	     TtaSetMenuForm (NumMenuAlignment, i - 1);
+         /* sous-menu Alignement */
+         i = 0;
+         sprintf (&string[i], "%s", "Bmiidn");	/* gauche */
+         i += strlen (&string[i]) + 1;
+         sprintf (&string[i], "%s", "Bmeiin");	/* droite */
+         i += strlen (&string[i]) + 1;
+         sprintf (&string[i], "%s", "Bmfogn");	/* Centrer */
+         i += strlen (&string[i]) + 1;
+         sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));	/* Inchange */
+         TtaNewSubmenu (NumMenuAlignment, NumFormPresFormat, 0,
+         TtaGetMessage (LIB, TMSG_ALIGN), 4, string, NULL, TRUE);
+         /* change la police des 3 premieres entrees */
+         for (i = 0; i < 3; i++)
+             TtaRedrawMenuEntry (NumMenuAlignment, i, "icones", ThotColorNone, -1);
+         /* initialise le menu de cadrage des lignes */
+#        endif _WINDOWS
+         switch (pAb->AbAdjust) {
+                case AlignLeft:   i = 1;
+                                  break;
+                case AlignRight:  i = 2;
+                                  break;
+                case AlignCenter: i = 3;
+                                  break;
+                default:          i = 1;
+                                  break;
+		 }
+#        ifdef _WINDOWS
+         alignNum = i - 1;
+#        else  /* _WINDOWS */
+         TtaSetMenuForm (NumMenuAlignment, i - 1);
+         /* zone de saisie du renfoncement en points typo */
+         TtaNewNumberForm (NumZoneRecess, NumFormPresFormat,
+         TtaGetMessage (LIB, TMSG_INDENT_PTS), 0, 300, TRUE);
+         /* initialise la valeur du renfoncement */
+#        endif /* _WINDOWS */
+         IndentValue = PixelToPoint (PixelValue (abs (pAb->AbIndent),
+                                     pAb->AbIndentUnit, pAb, ViewFrameTable[ActiveFrame - 1].FrMagnification));
+#        ifndef _WINDOWS
+         TtaSetNumberForm (NumZoneRecess, IndentValue);
 
-	     /* zone de saisie du renfoncement en points typo */
-	     TtaNewNumberForm (NumZoneRecess, NumFormPresFormat,
-			TtaGetMessage (LIB, TMSG_INDENT_PTS), 0, 300, TRUE);
-	     /* initialise la valeur du renfoncement */
-	     IndentValue = PixelToPoint(PixelValue (abs (pAb->AbIndent),
-					pAb->AbIndentUnit, pAb, ViewFrameTable[ActiveFrame - 1].FrMagnification));
-	     TtaSetNumberForm (NumZoneRecess, IndentValue);
+         /* sous-menu sens de renfoncement */
+         i = 0;
+         sprintf (&string[i], "%s", "Bm_`an");
+         i += strlen (&string[i]) + 1;
+         sprintf (&string[i], "%s", "Bmb`an");
+         i += strlen (&string[i]) + 1;
+         sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
+         TtaNewSubmenu (NumMenuRecessSense, NumFormPresFormat, 0,
+                        TtaGetMessage (LIB, TMSG_INDENT), 3, string, NULL, TRUE);
+         /* change la police des 3 premieres entrees du sous-menu */
+         for (i = 0; i < 2; i++)
+         TtaRedrawMenuEntry (NumMenuRecessSense, i, "icones", ThotColorNone, -1);
+         /* initialise le sens de renfoncement */
+#        endif /* _WINDOWS */
+         if (pAb->AbIndent > 0)
+            i = 0;
+         else
+             i = 1;
+#        ifdef _WINDOWS
+         indentNum = i;
+#        else  /* _WINDOWS */
+         TtaSetMenuForm (NumMenuRecessSense, i);
 
-	     /* sous-menu sens de renfoncement */
-	     i = 0;
-	     sprintf (&string[i], "%s", "Bm_`an");
-	     i += strlen (&string[i]) + 1;
-	     sprintf (&string[i], "%s", "Bmb`an");
-	     i += strlen (&string[i]) + 1;
-	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
-	     TtaNewSubmenu (NumMenuRecessSense, NumFormPresFormat, 0,
-		   TtaGetMessage (LIB, TMSG_INDENT), 3, string, NULL, TRUE);
-	     /* change la police des 3 premieres entrees du sous-menu */
-	     for (i = 0; i < 2; i++)
-		TtaRedrawMenuEntry (NumMenuRecessSense, i, "icones", ThotColorNone, -1);
-	     /* initialise le sens de renfoncement */
-	     if (pAb->AbIndent > 0)
-		i = 0;
-	     else
-		i = 1;
-	     TtaSetMenuForm (NumMenuRecessSense, i);
+         /* sous-menu de justification */
+         i = 0;
+         sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_LIB_YES));
+         i += strlen (&string[i]) + 1;
+         sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_LIB_NO));
+         i += strlen (&string[i]) + 1;
+         sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
+         TtaNewSubmenu (NumMenuJustification, NumFormPresFormat, 0,
+                        TtaGetMessage (LIB, TMSG_JUSTIFY), 3, string, NULL, TRUE);
+#        endif /* _WINDOWS */
+         /* menu de justification */
+         if (pAb->AbJustify)
+            i = 1;  /* avec justification */
+         else
+             i = 2; /* sans justification */
+#        ifdef _WINDOWS 
+         justificationNum = i - 1;
+#        else /* _WINDOWS */
+         TtaSetMenuForm (NumMenuJustification, i - 1);
 
-	     /* sous-menu de justification */
-	     i = 0;
-	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_LIB_YES));
-	     i += strlen (&string[i]) + 1;
-	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_LIB_NO));
-	     i += strlen (&string[i]) + 1;
-	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
-	     TtaNewSubmenu (NumMenuJustification, NumFormPresFormat, 0,
-		 TtaGetMessage (LIB, TMSG_JUSTIFY), 3, string, NULL, TRUE);
-	     /* menu de justification */
-	     if (pAb->AbJustify)
-		i = 1;		/* avec justification */
-	     else
-		i = 2;		/* sans justification */
-	     TtaSetMenuForm (NumMenuJustification, i - 1);
+         /* zone de saisie de l'interligne en points typo */
+         TtaNewNumberForm (NumZoneLineSpacing, NumFormPresFormat,
+                           TtaGetMessage (LIB, TMSG_LINE_SPACING_PTS), 1, 200, TRUE);
 
-	     /* zone de saisie de l'interligne en points typo */
-	     TtaNewNumberForm (NumZoneLineSpacing, NumFormPresFormat,
-		  TtaGetMessage (LIB, TMSG_LINE_SPACING_PTS), 1, 200, TRUE);
-
-	     /* sous-menu Interligne (Grandeur) */
-	     i = 0;
-	     sprintf (&string[i], "%s", "BmTTTn");	/* 'Normal%' */
-	     i += strlen (&string[i]) + 1;
-	     sprintf (&string[i], "%s", "BmWWWn");	/* 'Double%' */
-	     i += strlen (&string[i]) + 1;
-	     sprintf (&string[i], "%s", "BmZZZn");	/* 'Triple%' */
-	     i += strlen (&string[i]) + 1;
-	     sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
-	     TtaNewSubmenu (NumMenuLineSpacing, NumFormPresFormat, 0,
-	     TtaGetMessage (LIB, TMSG_LINE_SPACING), 4, string, NULL, TRUE);
-	     /* change la police des 3 premieres entrees */
-	     for (i = 0; i < 3; i++)
-		TtaRedrawMenuEntry (NumMenuLineSpacing, i, "icones", ThotColorNone, -1);
-	     /* initialise l'interligne en points typographiques */
-	     OldLineSp = PixelToPoint(PixelValue (pAb->AbLineSpacing,
-					  pAb->AbLineSpacingUnit, pAb, ViewFrameTable[ActiveFrame - 1].FrMagnification));
-	     TtaSetNumberForm (NumZoneLineSpacing, OldLineSp);
-
-	     NormalLineSpacing = PixelToPoint(PixelValue (10, UnRelative, pAb, ViewFrameTable[ActiveFrame - 1].FrMagnification));
-	     /* saisie de l'interligne par un menu */
-	     if (OldLineSp < (NormalLineSpacing * 3) / 2)
-		i = 0;
-	     else if (OldLineSp >= NormalLineSpacing * 2)
-		i = 2;
-	     else
-		i = 1;
-	     TtaSetMenuForm (NumMenuLineSpacing, i);
-	     DocModPresent = pDoc;
-	     TtaShowDialogue (NumFormPresFormat, TRUE);
-#            else  /* _WINDOWS */
-             CreateChangeFormatDlgWindow (TtaGetViewFrame (document, view));
-#            endif /* _WINDOWS */
-	  }
-     }
+         /* sous-menu Interligne (Grandeur) */
+         i = 0;
+         sprintf (&string[i], "%s", "BmTTTn");	/* 'Normal%' */
+         i += strlen (&string[i]) + 1;
+         sprintf (&string[i], "%s", "BmWWWn");	/* 'Double%' */
+         i += strlen (&string[i]) + 1;
+         sprintf (&string[i], "%s", "BmZZZn");	/* 'Triple%' */
+         i += strlen (&string[i]) + 1;
+         sprintf (&string[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_UNCHANGED));
+         TtaNewSubmenu (NumMenuLineSpacing, NumFormPresFormat, 0,
+                        TtaGetMessage (LIB, TMSG_LINE_SPACING), 4, string, NULL, TRUE);
+         /* change la police des 3 premieres entrees */
+         for (i = 0; i < 3; i++)
+             TtaRedrawMenuEntry (NumMenuLineSpacing, i, "icones", ThotColorNone, -1);
+#        endif /* _WINDOWS */
+         /* initialise l'interligne en points typographiques */
+         OldLineSp = PixelToPoint (PixelValue (pAb->AbLineSpacing,
+                                     pAb->AbLineSpacingUnit, pAb, ViewFrameTable[ActiveFrame - 1].FrMagnification));
+#        ifndef _WINDOWS
+         TtaSetNumberForm (NumZoneLineSpacing, OldLineSp);
+#        endif /* _WINDOWS */
+         NormalLineSpacing = PixelToPoint(PixelValue (10, UnRelative, pAb, ViewFrameTable[ActiveFrame - 1].FrMagnification));
+#        ifdef _WINDOWS
+         WIN_NormalLineSpacing = NormalLineSpacing;
+#        endif /* _WINDOWS */
+         /* saisie de l'interligne par un menu */
+         if (OldLineSp < (NormalLineSpacing * 3) / 2)
+            i = 0;
+         else if (OldLineSp >= NormalLineSpacing * 2)
+              i = 2;
+         else
+              i = 1;
+#        ifdef _WINDOWS
+         lineSpacingNum = i;
+         CreateChangeFormatDlgWindow (NumZoneRecess, NumZoneLineSpacing, alignNum, IndentValue, indentNum, justificationNum, OldLineSp, lineSpacingNum);
+#        else  /* _WINDOWS */
+         TtaSetMenuForm (NumMenuLineSpacing, i);
+         DocModPresent = pDoc;
+         TtaShowDialogue (NumFormPresFormat, TRUE);
+#        endif /* _WINDOWS */
+      }
+   }	
 }
 #endif /* _WIN_PRINT */
 

@@ -92,6 +92,16 @@ static PtrDocument  OldDocMsgSelect;
 #define ToolTip_AddTool(hwnd, lpti) \
     (BOOL)SendMessage((hwnd), TTM_ADDTOOL, 0, (LPARAM) (LPTOOLINFO) lpti)
 
+#ifdef __STDC__
+extern int WIN_TtaHandleMultiKeyEvent (UINT, WPARAM, LPARAM, char*);
+#else  /* __STDC__ */
+extern int WIN_TtaHandleMultiKeyEvent ();
+UINT    msg; 
+WPARAM wParam; 
+LPARAM lParam;
+char*  k;
+#endif /* __STDC__ */
+
 extern HWND      hwndClient;
 extern HWND      ToolBar;
 extern HWND      logoFrame;
@@ -99,6 +109,7 @@ extern HWND      StatusBar;
 extern HWND      currentWindow;
 extern HWND      WIN_curWin;
 extern HINSTANCE hInstance;
+extern HWND      currentDlg;
 extern int       ReturnOption;
 #ifndef _WIN_PRINT
 extern int  Window_Curs;
@@ -334,7 +345,8 @@ LPARAM     lParam;
          GetClientRect (w, &rect);
          DefRegion (frame, ps.rcPaint.left, ps.rcPaint.top, ps.rcPaint.right, ps.rcPaint.bottom);
          SwitchSelection (frame, FALSE);
-         RedrawFrameBottom (frame, 0);
+         /* RedrawFrameBottom (frame, 0); */
+         DisplayFrame (frame);
          SwitchSelection (frame, TRUE);
          EndPaint (w, &ps);
          WIN_ReleaseDeviceContext ();
@@ -2270,8 +2282,7 @@ int                 raz;
 #endif /* __STDC__ */
 {
    int              clipx, clipy, clipwidth, clipheight;
-#  ifdef _WINDOWS
-#  else  /* !_WINDOWS */
+#  ifndef _WINDOWS
    XRectangle        rect;
 #  endif /* _WINDOWS */
 
@@ -2309,6 +2320,8 @@ int                 raz;
 	XSetClipRectangles (TtDisplay, TtGraphicGC, clipx + FrameTable[frame].FrLeftMargin,
 		 clipy + FrameTable[frame].FrTopMargin, &rect, 1, Unsorted);
 #   else  /* _WINDOWS */ 
+    if (TtDisplay == (HDC) 0)
+       WIN_GetDeviceContext (frame);
     clipRgn = CreateRectRgn (clipx + FrameTable[frame].FrLeftMargin, clipy + FrameTable[frame].FrTopMargin, 
                              clipx + FrameTable[frame].FrLeftMargin + clipwidth, clipy + FrameTable[frame].FrTopMargin + clipheight);
     SelectClipRgn(TtDisplay, clipRgn); 

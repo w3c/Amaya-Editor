@@ -688,7 +688,7 @@ char               *viewNames;
    fprintf (stderr,"printmenu : temp dir %s \n",tmpDirName);
 #endif
 #  ifdef _WINDOWS
-   mkdir (tmpDirName);
+   _mkdir (tmpDirName);
 #  else /* !_WINDOWS */
    sprintf (cmd, "/bin/mkdir %s\n", tmpDirName);
    system (cmd);

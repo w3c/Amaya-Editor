@@ -51,11 +51,12 @@
 #ifdef _WINDOWS
 #      define HORIZ_DIV  8
 #      define VERT_DIV  19
-#      define Button1 1		
+#      define Button1    1		
 #      ifdef _IDDONE_
 #            undef _IDDONE_
 #      endif /* _IDDONE_ */
-#      define _IDDONE_ 100
+#      define _IDDONE_     100
+#      define DEFAULTCOLOR 103
 
 static BOOL   wndRegistered = FALSE ;
 
@@ -717,6 +718,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
 	 HBRUSH      hBrush;
 	 HBRUSH      hOldBrush;
      int         i, x, y, nbPalEntries;
+	 int         XPos, YPos;
 	 HWND        hwnLButton;
 	 HWND        hwnRButton;
 	 HWND        hwnDefaultColors;
@@ -741,7 +743,7 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
 
 			   hwnDefaultColors = CreateWindow ("STATIC", "                   Default Colors", 
 				                                WS_CHILD | WS_VISIBLE | SS_LEFT, 0, 30, 274, 15,
-										        hwnd, (HMENU) 103, hInstance, NULL) ;
+										        hwnd, (HMENU) DEFAULTCOLOR, hInstance, NULL) ;
                ShowWindow (hwnDefaultColors, SW_SHOWNORMAL);
                UpdateWindow (hwnDefaultColors);
 
@@ -755,9 +757,11 @@ LRESULT CALLBACK ThotColorPaletteWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, L
 			   break;
 
           case WM_LBUTTONDOWN:
-			   if (HIWORD (lParam) >= 45 && HIWORD (lParam) <= 330) 
+               YPos = HIWORD (lParam);
+               if (HIWORD (lParam) >= 32 && HIWORD (lParam) <= 330) {
 			      ColorsPress (1, LOWORD (lParam), HIWORD (lParam));
-               SetFocus (FrRef[currentFrame]);
+                  SetFocus (FrRef[currentFrame]);
+			   } 
 			   break;
 
           case WM_MBUTTONDOWN:

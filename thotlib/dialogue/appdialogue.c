@@ -2027,7 +2027,7 @@ void                (*procedure) ();
                   FrameTable[frame].Call_Text[i] = (Proc) procedure;
 
 				  if (lpfnTextZoneWndProc == (WNDPROC) 0)
-                     lpfnTextZoneWndProc = SetWindowLong (FrameTable[frame].Text_Zone[i], GWL_WNDPROC, (DWORD) textZoneProc);
+                     lpfnTextZoneWndProc = (WNDPROC) SetWindowLong (FrameTable[frame].Text_Zone[i], GWL_WNDPROC, (DWORD) textZoneProc);
 				  else
 				     SetWindowLong (FrameTable[frame].Text_Zone[i], GWL_WNDPROC, (DWORD) textZoneProc);
 

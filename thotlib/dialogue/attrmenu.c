@@ -51,7 +51,7 @@ static char         WIN_Lab [1024];
 static int          WIN_nbItem;
 
 int                 WIN_MenuAlphabet;
-#  endif /* _WINDOWS */
+#endif /* _WINDOWS */
 
 /* the menu attributes */
 static PtrSSchema   AttrStruct[LgMaxAttributeMenu];
@@ -138,6 +138,7 @@ LRESULT CALLBACK InitNumAttrDialogWndProc ();
 
 #ifdef _WINDOWS
 #include "win_f.h"
+#include "windialogapi_f.h"
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
@@ -392,13 +393,13 @@ LRESULT CALLBACK InitFormDialogWndProc (HWND hwnd, UINT iMsg, WPARAM wParam, LPA
 				/* Create Confirm button */
                 confirmButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_LIB_CONFIRM), 
                                               WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-                                              100, 150, 55, 20, hwnd, 
+                                              50, 150, 100, 20, hwnd, 
                                               (HMENU) ID_CONFIRM, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
 
 				/* Create Done Button */
 				doneButton = CreateWindow ("BUTTON", TtaGetMessage (LIB, TMSG_DONE), 
                                            WS_CHILD | BS_PUSHBUTTON | WS_VISIBLE,
-                                           175, 150, 55, 20, hwnd, 
+                                           185, 150, 100, 20, hwnd, 
                                            (HMENU) ID_DONE, ((LPCREATESTRUCT) lParam)->hInstance, NULL) ;
  
 				break;
@@ -1250,7 +1251,7 @@ PtrDocument         pDoc;
 		  /* marque les attributs actifs */
 		  for (i = 0; i < nbItemAttr; i++)
 #            ifdef _WINDOWS
-		     WIN_TtaSetToggleMenu (ref, i, (ActiveAttr[i] == 1), FrMainRef [frame]);
+		     WIN_TtaSetToggleMenu (ref, i, (boolean) (ActiveAttr[i] == 1), FrMainRef [frame]);
 #            else  /* !_WINDOWS */
 		     TtaSetToggleMenu (ref, i, (ActiveAttr[i] == 1));
 #            endif /* _WINDOWS */

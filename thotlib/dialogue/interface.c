@@ -980,13 +980,13 @@ ThotEvent             *event;
 
 #ifdef _WINDOWS 
 #ifdef __STDC__
-int                 WIN_TtaHandleMultiKeyEvent (UINT msg, WPARAM wParam, LPARAM lParam, char* k)
+int                 WIN_TtaHandleMultiKeyEvent (UINT msg, WPARAM wParam, LPARAM lParam, int* k)
 #else  /* __STDC__ */
 int                 WIN_TtaHandleMultiKeyEvent (msg, wParam, lParam, k)
 UINT    msg; 
 WPARAM wParam; 
 LPARAM lParam;
-char*  k;
+int*   k;
 #endif /* __STDC__ */
 {
    int          index;
@@ -1011,7 +1011,7 @@ char*  k;
               * The corresponding sequence is found. 
               * Generation of the corresponding character
               */
-	         *k = mk_tab[index].r;
+	         (char) *k = mk_tab[index].r;
              return 1;
 		  }
 
