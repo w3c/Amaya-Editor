@@ -686,6 +686,8 @@ void LINK_LoadAnnotationIndex (Document doc, char *annotIndex, ThotBool mark_vis
   DisplayMode dispMode;
   /* counts the number of orphan annotations in the document */
   int orphan_count = 0;
+  Document doc_thread;
+  AnnotThreadList *thread;
 
   if (!annotIndex || !(TtaFileExist (annotIndex)))
     /* there are no annotations */
@@ -736,16 +738,24 @@ void LINK_LoadAnnotationIndex (Document doc, char *annotIndex, ThotBool mark_vis
 #ifdef ANNOT_ON_ANNOT
 	  if (annot->isReplyTo)
 	    {
-	      AnnotThreadList *thread;
+	      doc_thread = AnnotThread_searchRoot (annot->rootOfThread);
+	      /* if there's no other thread, then use the source doc as the
+		 start of the thread */
+	      if (doc_thread ==  0)
+		{
+		  thread = NULL;
+		  doc_thread = doc;
+		}
+	      else
+		thread = &AnnotThread[doc_thread];
 
-	      thread = AnnotThread_searchRoot (annot->rootOfThread);
 	      if (!thread)
 		{
 		  /* add the root of thread (used by load index later on) */
 		  AnnotThread[doc].rootOfThread = 
 		    TtaStrdup (annot->rootOfThread);
 		  AnnotThread[doc].references = 1;
-		  thread = &AnnotThread[doc];
+		  thread = &AnnotThread[doc_thread];
 		}
 	      List_add (&(thread->annotations), (void *) annot);
 	      if (!AnnotMetaData[doc].thread)
@@ -753,7 +763,7 @@ void LINK_LoadAnnotationIndex (Document doc, char *annotIndex, ThotBool mark_vis
 	      annot->thread = thread;
 	      /* sigh, hard coded for the moment */
 	      /* add and show the thread item */
-	      ANNOT_AddThreadItem (2, annot);
+	      ANNOT_AddThreadItem (doc_thread, annot);
 	    }
 	  else
 #endif /* ANNOT_ON_ANNOT */

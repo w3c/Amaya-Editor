@@ -582,7 +582,7 @@ void AnnotFilter_build (Document doc)
 
 /*------------------------------------------------------------
    AnnotList_search
-   Returns list item that contains the object
+   Returns the list item that contains the object
    ------------------------------------------------------------*/
 List *AnnotList_search (List *list, char *object)
 {
@@ -701,10 +701,11 @@ ThotBool AnnotList_delAnnot (List **list, char *url, ThotBool useAnnotUrl)
 }
 
 /*------------------------------------------------------------
-   AnnotList_searchAnnot
-   Returns the thread that corresponds to the root URL.
+   AnnotThread_searchRoot
+   Returns the doc reference of the thread that corresponds to 
+   the root URL.
    ------------------------------------------------------------*/
-AnnotThreadList *AnnotThread_searchRoot (char *root)
+Document AnnotThread_searchRoot (char *root)
 {
 #ifdef ANNOT_ON_ANNOT
   int i;
@@ -718,10 +719,66 @@ AnnotThreadList *AnnotThread_searchRoot (char *root)
 	break;
     }
 
-  return (i == DocumentTableLength) ? NULL : &AnnotThread[i];
+  return (i == DocumentTableLength) ? 0 : i;
 #else
-  return NULL;
+  return 0;
+#endif /* ANNOT_ON_ANNOT */
+}
+
+/*------------------------------------------------------------
+   AnnotThread_searchThreadDoc
+   Returns the docid of the thread to which an annotation belongs 
+   or 0 if it's not found.
+   ------------------------------------------------------------*/
+Document AnnotThread_searchThreadDoc (char *annot_url)
+{
+  int i;
+  AnnotMetaDataSearch searchType;
+
+  if (IsW3Path (annot_url))
+    searchType = AM_BODY_URL;
+  else
+    searchType = AM_BODY_FILE;
+
+  for (i = 0; i < DocumentTableLength; i++)
+    {
+      if (!AnnotThread[i].rootOfThread)
+	continue;
+      if (AnnotList_searchAnnot (AnnotThread[i].annotations, 
+				 annot_url, searchType))
+	break;
+    }
+  return (i == DocumentTableLength) ? 0 : i;
+}
+
+/*------------------------------------------------------------
+  AnnotThread_link2ThreadDoc
+  If the document is an annotation and if this aannotation is
+  part of a thread, we link the annotation's metadata with the 
+  thread.
+  Returns TRUE if it could do the link, FALSE otherwise.
+  ------------------------------------------------------------*/
+ThotBool AnnotThread_link2ThreadDoc (Document doc)
+{
+  ThotBool result = FALSE;
+#ifdef ANNOT_ON_ANNOT
+  Document thread_doc;
+
+  /* @@ JK: if doc is of type annot, search for an annotation for its
+     url. If we found one and it is of type inreplyto, then init the
+     DocumentMetaData.thread for this annotation to point to the source
+     of the thread */
+  if (DocumentTypes[doc] == docAnnot && AnnotMetaData[doc].thread == NULL)
+    {
+      thread_doc = AnnotThread_searchThreadDoc (DocumentURLs[doc]);
+      if (thread_doc > 0)
+	{
+	  AnnotMetaData[doc].thread = &AnnotThread[thread_doc];
+	  result = TRUE;
+	}
+    }
 #endif ANNOT_ON_ANNOT
+  return result;
 }
 
 /* ------------------------------------------------------------
