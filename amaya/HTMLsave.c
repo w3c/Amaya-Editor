@@ -68,12 +68,12 @@ static CHAR_T *HTMLDocTypes_1[] =
 static CHAR_T *HTMLDocTypes_2[] =
 {
   TEXT("\"http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd\">\n"),
-  TEXT("\"DTD/xhtml1-1-strict.dtd\">\n"),
-  TEXT("\"DTD/xhtml1-1-transitional.dtd\">\n"),
-  TEXT("\'DTD/xhtml1-1-frameset.dtd\">\n"),
-  TEXT("\"http://www.w3.org/TR/REC-html401/strict.dtd\">\n"),
-  TEXT("\"http://www.w3.org/TR/REC-html401/loose.dtd\">\n"),
-  TEXT("\"http://www.w3.org/TR/REC-html401/frameset.dtd\">\n"),
+  TEXT("\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n"),
+  TEXT("\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n"),
+  TEXT("\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd\">\n"),
+  TEXT("\"http://www.w3.org/TR/html4/strict.dtd\">\n"),
+  TEXT("\"http://www.w3.org/TR/html4/loose.dtd\">\n"),
+  TEXT("\"http://www.w3.org/TR/html4/frameset.dtd\">\n"),
 };
 
 #include "AHTURLTools_f.h"
