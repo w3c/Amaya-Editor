@@ -277,7 +277,7 @@ int                 typeNum;
 		    found = TRUE;
 	   if (!found)
 	     {
-	       strResDyn = TtaGetEnvString ("RESDYN");
+	       strResDyn = NULL;
 	       /* ce type n'est pas deja dans la table */
 	       if (IsomorphicTypes (pEl->ElStructSchema, pEl->ElTypeNumber,
 				    pSS, typeNum))
@@ -291,7 +291,6 @@ int                 typeNum;
 		 }
 	       /* existe-t-il une relation facteur ou massif */
 	       else if (strResDyn != NULL &&
-			!strcmp (strResDyn, "YES") &&
 			RestMatchElements ((Element)pEl, (Element)pEl, 
 					   (SSchema)pSS, typeNum))
 		 {
@@ -2148,8 +2147,8 @@ PtrElement          pEl;
 		     pIsoD = pNextIsoD;
 		  }
 		firstIsomorphDesc = NULL;
-		strResDyn = TtaGetEnvString ("RESDYN");
-		if (strResDyn!= NULL && !strcmp (strResDyn, "YES"))
+		strResDyn = NULL;
+		if (strResDyn!= NULL)
 		  /* on initialise la transformation automatique */
 		  RestInitMatch ((Element)pEl, (Element)pEl);
 

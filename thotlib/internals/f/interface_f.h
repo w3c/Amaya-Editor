@@ -20,6 +20,7 @@ extern void TtaSetMainLoop ( ExternalInitMainLoop init,
                              ExternalFetchEvent fetch,
                              ExternalFetchAvailableEvent fetchavail );
 extern void TtaFetchOneEvent ( ThotEvent *ev );
+extern void TtaFetchOrWaitEvent (ThotEvent *ev);
 extern boolean TtaFetchOneAvailableEvent ( ThotEvent *ev );
 extern void TtaHandleOneEvent ( ThotEvent * ev );
 extern void TtaHandlePendingEvents ( void );
@@ -53,6 +54,7 @@ extern void TtaSetMainLoop (/* ExternalInitMainLoop init,
                                ExternalFetchEvent fetch,
                                ExternalFetchAvailableEvent fetchavail */);
 extern void TtaFetchOneEvent (/* ThotEvent *ev */);
+extern void TtaFetchOrWaitEvent (/* ThotEvent *ev */);
 extern boolean TtaFetchOneAvailableEvent (/* ThotEvent *ev */);
 extern void TtaHandleOneEvent (/* ThotEvent * ev */);
 extern void TtaHandlePendingEvents (/* void */);

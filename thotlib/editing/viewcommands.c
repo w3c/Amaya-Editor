@@ -152,11 +152,7 @@ int                 height;
    int                 createdFrame;
 #  endif /* _WIN_PRINT */
    char                buf[MAX_TXT_LEN];
-   char                *debugstr;
 
-   debugstr = TtaGetEnvString ("DEBUG");
-   if ((width == 0 || height == 0) && (debugstr!=NULL) && (!strcasecmp(debugstr,"YES")))
-      fprintf (stderr, TtaGetMessage (LIB, TMSG_CREATE_FRAME_FOR_VIEW), viewName);
    /* met dans le buffer le nom du document... */
    strncpy (buf, pDoc->DocDName, MAX_NAME_LENGTH);
    strcat (buf, "  ");

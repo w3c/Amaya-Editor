@@ -100,9 +100,11 @@ int                *pointselect;
 	       }
 	   /* Si le pave est sur un plan au dessus du precedent */
 	   /* ou si le pave est un fils du precedent */
-	     else if (pSelBox->BxAbstractBox->AbDepth > pAb->AbDepth
-		      || (pSelBox->BxAbstractBox->AbLeafType == LtCompound && pBox->BxAbstractBox->AbLeafType != LtCompound)
-		      || IsParentBox (pSelBox, pBox))
+	     else if (pSelBox->BxAbstractBox->AbDepth > pAb->AbDepth ||
+		      (pSelBox->BxAbstractBox->AbDepth == pAb->AbDepth &&
+		       (pSelBox->BxAbstractBox->AbLeafType == LtCompound &&
+		       pAb->AbLeafType != LtCompound) ||
+		       IsParentBox (pSelBox, pBox)))
 	       {
 		 pSelBox = pBox;
 		 *pointselect = pointIndex;

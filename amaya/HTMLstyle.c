@@ -181,7 +181,7 @@ char        *SkipProperty (ptr)
 char               *ptr;
 #endif
 {
-  while (*ptr != EOS && *ptr != ';' && *ptr != '}' && *ptr != ',')
+  while (*ptr != EOS && *ptr != ';' && *ptr != '}')
     ptr++;
   return (ptr);
 }
@@ -192,7 +192,7 @@ char               *ptr;
    value and its unit.                                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static char        *ParseCSSUnit (char *cssRule, PresentationValue * pval)
+static char        *ParseCSSUnit (char *cssRule, PresentationValue *pval)
 #else
 static char        *ParseCSSUnit (cssRule, pval)
 char               *cssRule;
@@ -229,93 +229,91 @@ PresentationValue  *pval;
       valid = 1;
     }
 
-   if (*cssRule == '.')
-     {
-       real = 1;
-       f = val;
-       val = 0;
-       cssRule++;
-       /* keep only 3 digits */
-       if ((*cssRule >= '0') && (*cssRule <= '9'))
-	 {
-	   val = (*cssRule - '0') * 100;
-	   cssRule++;
-	   if ((*cssRule >= '0') && (*cssRule <= '9'))
-	     {
-	       val += (*cssRule - '0') * 10;
-	       cssRule++;
-	       if ((*cssRule >= '0') && (*cssRule <= '9'))
-		 {
-		   val += *cssRule - '0';
-		   cssRule++;
-		 }
-	     }
+  if (*cssRule == '.')
+    {
+      real = 1;
+      f = val;
+      val = 0;
+      cssRule++;
+      /* keep only 3 digits */
+      if (*cssRule >= '0' && *cssRule <= '9')
+	{
+	  val = (*cssRule - '0') * 100;
+	  cssRule++;
+	  if (*cssRule >= '0' && *cssRule <= '9')
+	    {
+	      val += (*cssRule - '0') * 10;
+	      cssRule++;
+	      if ((*cssRule >= '0') && (*cssRule <= '9'))
+		{
+		  val += *cssRule - '0';
+		  cssRule++;
+		}
+	    }
 
-	   while ((*cssRule >= '0') && (*cssRule <= '9'))
-	     cssRule++;
-	   valid = 1;
-	 }
-     }
+	  while (*cssRule >= '0' && *cssRule <= '9')
+	    cssRule++;
+	  valid = 1;
+	}
+    }
 
-   if (!valid)
-     {
-       cssRule = SkipWord (cssRule);
-       pval->typed_data.unit = DRIVERP_UNIT_INVALID;
-       pval->typed_data.value = 0;
-       return (cssRule);
-     }
+  if (!valid)
+    {
+      cssRule = SkipWord (cssRule);
+      pval->typed_data.unit = DRIVERP_UNIT_INVALID;
+      pval->typed_data.value = 0;
+      return (cssRule);
+    }
 
-   cssRule = SkipBlanks (cssRule);
-   for (uni = 0; uni < NB_UNITS; uni++)
-     {
+  cssRule = SkipBlanks (cssRule);
+  for (uni = 0; uni < NB_UNITS; uni++)
+    {
 #ifdef WWW_WINDOWS
-       if (!_strnicmp (CSSUnitNames[uni].sign, cssRule,
-		       strlen (CSSUnitNames[uni].sign)))
+      if (!_strnicmp (CSSUnitNames[uni].sign, cssRule,
+		      strlen (CSSUnitNames[uni].sign)))
 #else  /* WWW_WINDOWS */
-	 if (!strncasecmp (CSSUnitNames[uni].sign, cssRule,
-			   strlen (CSSUnitNames[uni].sign)))
+      if (!strncasecmp (CSSUnitNames[uni].sign, cssRule,
+			strlen (CSSUnitNames[uni].sign)))
 #endif /* !WWW_WINDOWS */
-	   {
-	     pval->typed_data.unit = CSSUnitNames[uni].unit;
-	     if (real)
-	       {
-		 DRIVERP_UNIT_SET_FLOAT (pval->typed_data.unit);
-		 if (minus)
-		   pval->typed_data.value = -(f * 1000 + val);
-		 else
-		   pval->typed_data.value = f * 1000 + val;
-	       }
-	     else
-	       {
-		 if (minus)
-		   pval->typed_data.value = -val;
-		 else
-		   pval->typed_data.value = val;
-	       }
-	     return (cssRule + strlen (CSSUnitNames[uni].sign));
-	   }
-     }
+	{
+	  pval->typed_data.unit = CSSUnitNames[uni].unit;
+	  if (real)
+	    {
+	      DRIVERP_UNIT_SET_FLOAT (pval->typed_data.unit);
+	      if (minus)
+		pval->typed_data.value = -(f * 1000 + val);
+	      else
+		pval->typed_data.value = f * 1000 + val;
+	    }
+	  else
+	    {
+	      if (minus)
+		pval->typed_data.value = -val;
+	      else
+		pval->typed_data.value = val;
+	    }
+	  return (cssRule + strlen (CSSUnitNames[uni].sign));
+	}
+    }
 
-   /*
-    * not in the list of predefined units.
-    */
-   pval->typed_data.unit = DRIVERP_UNIT_REL;
-   if (real)
-     {
-	DRIVERP_UNIT_SET_FLOAT (pval->typed_data.unit);
-	if (minus)
-	   pval->typed_data.value = -(f * 1000 + val);
-	else
-	   pval->typed_data.value = f * 1000 + val;
-     }
-   else
-     {
-	if (minus)
-	   pval->typed_data.value = -val;
-	else
-	   pval->typed_data.value = val;
-     }
-   return (cssRule);
+  /* not in the list of predefined units */
+  pval->typed_data.unit = DRIVERP_UNIT_REL;
+  if (real)
+    {
+      DRIVERP_UNIT_SET_FLOAT (pval->typed_data.unit);
+      if (minus)
+	pval->typed_data.value = -(f * 1000 + val);
+      else
+	pval->typed_data.value = f * 1000 + val;
+    }
+  else
+    {
+      if (minus)
+	pval->typed_data.value = -val;
+      else
+	pval->typed_data.value = val;
+    }
+  return (cssRule);
 }
 
 /************************************************************************
@@ -1671,17 +1669,10 @@ char               *cssRule;
    cssRule = SkipBlanks (cssRule);
    cssRule = ParseCSSUnit (cssRule, &pval);
    if (pval.typed_data.unit == DRIVERP_UNIT_INVALID)
-     {
-	fprintf (stderr, "invalid font size\n");
-	return (cssRule);
-     }
-   /*
-    * install the attribute
-    */
+     return (cssRule);
+   /* install the attribute */
    if (context->drv->SetIndent != NULL)
-     {
-	context->drv->SetIndent (target, context, pval);
-     }
+     context->drv->SetIndent (target, context, pval);
    return (cssRule);
 }
 
@@ -1761,24 +1752,6 @@ char               *cssRule;
 }
 
 /*----------------------------------------------------------------------
-   ParseCSSFont : parse a CSS font attribute string      
-   we expect the input string describing the attribute to be     
-   !!!!!!                                                  
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static char        *ParseCSSFont (PresentationTarget target,
-				 PresentationContext context, char *cssRule)
-#else
-static char        *ParseCSSFont (target, context, cssRule)
-PresentationTarget  target;
-PresentationContext context;
-char               *cssRule;
-#endif
-{
-  return (SkipProperty (cssRule));
-}
-
-/*----------------------------------------------------------------------
    ParseCSSFontSize : parse a CSS font size attr string  
    we expect the input string describing the attribute to be     
    xx-small, x-small, small, medium, large, x-large, xx-large      
@@ -1836,22 +1809,20 @@ char               *cssRule;
    else if (!strncasecmp (cssRule, "xx-large", 8))
      {
 	pval.typed_data.unit = DRIVERP_UNIT_REL;
-	pval.typed_data.value = 8;
+	pval.typed_data.value = 7;
 	cssRule = SkipWord (cssRule);
      }
    else
      {
-	cssRule = ParseCSSUnit (cssRule, &pval);
-	if (pval.typed_data.unit == DRIVERP_UNIT_INVALID)
-	  {
-	     fprintf (stderr, "invalid font size\n");
-	     return (cssRule);
-	  }
+       cssRule = ParseCSSUnit (cssRule, &pval);
+       if (pval.typed_data.unit == DRIVERP_UNIT_INVALID)
+	 return (cssRule);
+       if (pval.typed_data.unit == DRIVERP_UNIT_REL && pval.typed_data.value > 0)
+	 /* CSS relative sizes have to be higher than Thot ones */
+	 pval.typed_data.value += 1;
      }
 
-   /*
-    * install the attribute
-    */
+   /* install the attribute */
    if (context->drv->SetFontSize)
       context->drv->SetFontSize (target, context, pval);
    return (cssRule);
@@ -1872,56 +1843,56 @@ PresentationContext context;
 char               *cssRule;
 #endif
 {
-   PresentationValue   font;
-   unsigned char       msgBuffer[MAX_BUFFER_LENGTH];
+  PresentationValue   font;
+  unsigned char       msgBuffer[MAX_BUFFER_LENGTH];
 
-   font.typed_data.value = 0;
-   font.typed_data.unit = 1;
-   cssRule = SkipBlanks (cssRule);
-   if (!strncasecmp (cssRule, "times", strlen("times")))
-     {
-	font.typed_data.value = DRIVERP_FONT_TIMES;
-	cssRule = SkipProperty (cssRule);
-     }
-   else if (!strncasecmp (cssRule, "serif", strlen("serif")))
-     {
-	font.typed_data.value = DRIVERP_FONT_TIMES;
-	cssRule = SkipProperty (cssRule);
-     }
-   else if (!strncasecmp (cssRule, "helvetica", strlen("helvetica")))
-     {
-	font.typed_data.value = DRIVERP_FONT_HELVETICA;
-	cssRule = SkipProperty (cssRule);
-     }
-   else if (!strncasecmp (cssRule, "sans-serif", strlen("sans")))
-     {
-	font.typed_data.value = DRIVERP_FONT_HELVETICA;
-	cssRule = SkipProperty (cssRule);
-     }
-   else if (!strncasecmp (cssRule, "courier", strlen("courier")))
-     {
-	font.typed_data.value = DRIVERP_FONT_COURIER;
-	cssRule = SkipProperty (cssRule);
-     }
-   else if (!strncasecmp (cssRule, "monospace", strlen("monospace")))
-     {
-	font.typed_data.value = DRIVERP_FONT_COURIER;
-	cssRule = SkipProperty (cssRule);
-     }
-   else
-     {
-	/* !!!!!! many font families are missing !!!!!!!! */
-	sprintf (msgBuffer, "unknown font family: %s\n", cssRule);
-	cssRule = SkipProperty (cssRule);
-	return (cssRule);
-     }
+  font.typed_data.value = 0;
+  font.typed_data.unit = 1;
+  cssRule = SkipBlanks (cssRule);
+  if (!strncasecmp (cssRule, "times", 5))
+    {
+      font.typed_data.value = DRIVERP_FONT_TIMES;
+      cssRule = SkipProperty (cssRule);
+    }
+  else if (!strncasecmp (cssRule, "serif", 5))
+    {
+      font.typed_data.value = DRIVERP_FONT_TIMES;
+      cssRule = SkipProperty (cssRule);
+    }
+  else if (!strncasecmp (cssRule, "helvetica", 9) ||
+	   !strncasecmp (cssRule, "verdana", 7))
+    {
+      font.typed_data.value = DRIVERP_FONT_HELVETICA;
+      cssRule = SkipProperty (cssRule);
+    }
+  else if (!strncasecmp (cssRule, "sans-serif", 10))
+    {
+      font.typed_data.value = DRIVERP_FONT_HELVETICA;
+      cssRule = SkipProperty (cssRule);
+    }
+  else if (!strncasecmp (cssRule, "courier", 7))
+    {
+      font.typed_data.value = DRIVERP_FONT_COURIER;
+      cssRule = SkipProperty (cssRule);
+    }
+  else if (!strncasecmp (cssRule, "monospace", 9))
+    {
+      font.typed_data.value = DRIVERP_FONT_COURIER;
+      cssRule = SkipProperty (cssRule);
+    }
+  else
+    {
+      cssRule = SkipWord (cssRule);
+      cssRule = SkipBlanks (cssRule);
+      if (*cssRule == ',')
+	cssRule++;
+      return (ParseCSSFontFamily (target, context, cssRule));
+    }
 
-   /*
-    * install the new presentation.
-    */
-   if (context->drv->SetFontFamily)
-      context->drv->SetFontFamily (target, context, font);
-   return (cssRule);
+  /* install the new presentation */
+  if (context->drv->SetFontFamily)
+    context->drv->SetFontFamily (target, context, font);
+  return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -1946,84 +1917,66 @@ char               *cssRule;
    weight.typed_data.value = 0;
    weight.typed_data.unit = 1;
    cssRule = SkipBlanks (cssRule);
-   if (!strncasecmp (cssRule, "extra-light", strlen ("extra-light")))
+   if (!strncasecmp (cssRule, "extra-light", 11))
      {
 	weight.typed_data.value = -3;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "light", strlen ("light")))
+   else if (!strncasecmp (cssRule, "light", 5))
      {
 	weight.typed_data.value = -2;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "demi-light", strlen ("demi-light")))
+   else if (!strncasecmp (cssRule, "demi-light", 10))
      {
 	weight.typed_data.value = -1;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "normal", strlen ("normal")))
+   else if (!strncasecmp (cssRule, "normal", 6))
      {
 	weight.typed_data.value = 0;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "medium", strlen ("medium")))
+   else if (!strncasecmp (cssRule, "medium", 6))
      {
 	weight.typed_data.value = 0;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "extra-bold", strlen ("extra-bold")))
+   else if (!strncasecmp (cssRule, "extra-bold", 10))
      {
 	weight.typed_data.value = +3;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "bold", strlen ("bold")))
+   else if (!strncasecmp (cssRule, "bold", 4))
      {
 	weight.typed_data.value = +2;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "demi-bold", strlen ("demi-bold")))
+   else if (!strncasecmp (cssRule, "demi-bold", 9))
      {
 	weight.typed_data.value = +1;
 	cssRule = SkipWord (cssRule);
      }
-   else if (sscanf (cssRule, "%d", &val) > 0)
+   else if (isdigit(*cssRule))
      {
-	if ((val < -3) || (val > 3))
-	  {
-	     fprintf (stderr, "invalid font weight %d\n", val);
-	     weight.typed_data.value = 0;
-	  }
-	else
-	   weight.typed_data.value = val;
-	while (isdigit(*cssRule))
-	  cssRule++;
+       sscanf (cssRule, "%d", &val);
+       weight.typed_data.value = val;
+       while (isdigit(*cssRule))
+	 cssRule++;
      }
    else
-     {
-	fprintf (stderr, "invalid font weight\n");
-	return (cssRule);
-     }
+     return (cssRule);
+
    /*
     * Here we have to reduce since font weight is not well supported
     * by the Thot presentation API.
     */
-   switch (weight.typed_data.value)
-	 {
-	    case 3:
-	    case 2:
-	    case 1:
-	       weight.typed_data.value = DRIVERP_FONT_BOLD;
-	       break;
-	    case -3:
-	    case -2:
-	    case -1:
-	       weight.typed_data.value = DRIVERP_FONT_ITALICS;
-	       break;
-	 }
+   if (weight.typed_data.value < 0)
+     weight.typed_data.value = DRIVERP_FONT_BOLD;
+   else if (weight.typed_data.value > 0)
+     weight.typed_data.value = DRIVERP_FONT_ITALICS;
 
-   /*
-    * install the new presentation.
-    */
+   /* install the new presentation */
    if (context->drv->SetFontStyle)
       context->drv->SetFontStyle (target, context, weight);
    return (cssRule);
@@ -2044,36 +1997,57 @@ PresentationContext context;
 char               *cssRule;
 #endif
 {
-   PresentationValue   style;
+   PresentationValue   style, pval;
+   PresentationValue   previous_style;
 
    style.typed_data.value = 0;
    style.typed_data.unit = 1;
    cssRule = SkipBlanks (cssRule);
-   if (!strncasecmp (cssRule, "small-caps", strlen ("small-caps")))
+   if (!strncasecmp (cssRule, "small-caps", 10))
      {
-        /*
-	 * Not supported yet, so we use bold for rendering
-	 */
+       pval.typed_data.unit = DRIVERP_UNIT_REL;
+       pval.typed_data.value = -1;
+       if (context->drv->SetFontSize)
+	 context->drv->SetFontSize (target, context, pval);
+        /* Not supported yet, so we use bold for rendering */
 	style.typed_data.value = DRIVERP_FONT_BOLD;
 	cssRule = SkipWord (cssRule);
      }
-   else if (!strncasecmp (cssRule, "normal", strlen ("normal")))
+   else if (!strncasecmp (cssRule, "normal", 6) ||
+	    !strncasecmp (cssRule, "100", 3) ||
+	    !strncasecmp (cssRule, "200", 3) ||
+	    !strncasecmp (cssRule, "300", 3) ||
+	    !strncasecmp (cssRule, "400", 3) ||
+	    !strncasecmp (cssRule, "500", 3))
+     {
+	style.typed_data.value = DRIVERP_FONT_HELVETICA;
+	cssRule = SkipWord (cssRule);
+     }
+   else if (!strncasecmp (cssRule, "bold", 4) ||
+	    !strncasecmp (cssRule, "600", 3) ||
+	    !strncasecmp (cssRule, "700", 3) ||
+	    !strncasecmp (cssRule, "800", 3) ||
+	    !strncasecmp (cssRule, "900", 3))
+     {
+	style.typed_data.value = DRIVERP_FONT_ROMAN;
+	cssRule = SkipWord (cssRule);
+     }
+   else if (!strncasecmp (cssRule, "bolder", 6))
+     {
+	style.typed_data.value = DRIVERP_FONT_BOLD;
+	cssRule = SkipWord (cssRule);
+     }
+   else if (!strncasecmp (cssRule, "lighter", 7))
      {
 	style.typed_data.value = DRIVERP_FONT_ROMAN;
 	cssRule = SkipWord (cssRule);
      }
    else
-     {
 	return (cssRule);
-     }
 
-   /*
-    * install the new presentation.
-    */
+   /* install the new presentation */
    if (style.typed_data.value != 0)
      {
-	PresentationValue   previous_style;
-
 	if ((context->drv->GetFontStyle) &&
 	    (!context->drv->GetFontStyle (target, context, &previous_style)))
 	  {
@@ -2087,11 +2061,8 @@ char               *cssRule;
 	     if (context->drv->SetFontStyle)
 		context->drv->SetFontStyle (target, context, style);
 	  }
-	else
-	  {
-	     if (context->drv->SetFontStyle)
-		context->drv->SetFontStyle (target, context, style);
-	  }
+	else if (context->drv->SetFontStyle)
+	  context->drv->SetFontStyle (target, context, style);
      }
    return (cssRule);
 }
@@ -2186,6 +2157,63 @@ char               *cssRule;
 		context->drv->SetFontSize (target, context, size);
 	  }
      }
+   return (cssRule);
+}
+
+/*----------------------------------------------------------------------
+   ParseCSSFont : parse a CSS font attribute string      
+   we expect the input string describing the attribute to be     
+   !!!!!!                                                  
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static char        *ParseCSSFont (PresentationTarget target,
+				 PresentationContext context, char *cssRule)
+#else
+static char        *ParseCSSFont (target, context, cssRule)
+PresentationTarget  target;
+PresentationContext context;
+char               *cssRule;
+#endif
+{
+  char             *ptr;
+
+  cssRule = SkipBlanks (cssRule);
+  if (!strncasecmp (cssRule, "caption", 7))
+    ;
+  else if (!strncasecmp (cssRule, "icon", 4))
+    ;
+  else if (!strncasecmp (cssRule, "menu", 4))
+    ;
+  else if (!strncasecmp (cssRule, "message-box", 11))
+    ;
+  else if (!strncasecmp (cssRule, "small-caption", 13))
+    ;
+  else if (!strncasecmp (cssRule, "status-bar", 10))
+    ;
+  else
+      {
+	ptr = cssRule;
+	cssRule = ParseCSSFontStyle (target, context, cssRule);
+	if (ptr == cssRule)
+	  cssRule = ParseCSSFontVariant (target, context, cssRule);
+	if (ptr == cssRule)
+	  cssRule = ParseCSSFontWeight (target, context, cssRule);
+	cssRule = ParseCSSFontSize (target, context, cssRule);
+	if (*cssRule == '/')
+	  {
+	    cssRule++;
+	    SkipBlanks (cssRule);
+	    cssRule = SkipWord (cssRule);
+	  }
+	cssRule = ParseCSSFontFamily (target, context, cssRule);
+	cssRule = SkipBlanks (cssRule);
+	while (*cssRule != ';' && *cssRule != EOS)
+	  {
+	    /* now skip remainding info */
+	    cssRule = SkipWord (cssRule);
+	    cssRule = SkipBlanks (cssRule);
+	  }
+      }
    return (cssRule);
 }
 

@@ -26,9 +26,7 @@
 #include "thot_sys.h"
 #include "thot_key.h"
 #include "constmedia.h"
-
 #include "constmenu.h"
-
 #include "typemedia.h"
 #include "message.h"
 #include "dialog.h"
@@ -40,16 +38,14 @@
 
 #define MAX_ARGS 20
 
-#undef THOT_EXPORT
-#define THOT_EXPORT extern
-
 #ifndef _WINDOWS
 static XmString  null_string;
 #endif
 static char         OldMsgSelect[MAX_TXT_LEN];
 static PtrDocument  OldDocMsgSelect;
 
-
+#undef THOT_EXPORT
+#define THOT_EXPORT extern
 #include "boxes_tv.h"
 #include "font_tv.h"
 #include "edit_tv.h"
@@ -235,6 +231,7 @@ LPTOOLTIPTEXT lpttt;
 #include "font_f.h"
 #include "frame_f.h"
 #include "input_f.h"
+#include "interface_f.h"
 #include "keyboards_f.h"
 #include "memory_f.h"
 #include "message_f.h"
@@ -1733,7 +1730,9 @@ void               *event;
 	       h = FrameTable[frame].FrHeight;
 	       while (event.type != ButtonRelease)
 		 {
-		   if (event.type == MotionNotify)
+		   if (event.type == MotionNotify ||
+		       (event.type != ConfigureNotify &&
+			(event.xmotion.y > h || event.xmotion.y < 0)))
 		     {
 		       dx = event.xmotion.x - ClickX;
 		       dy = event.xmotion.y - ClickY;
@@ -1741,22 +1740,14 @@ void               *event;
 			 {
 			   LocateSelectionInView (frame, event.xbutton.x, event.xbutton.y, 1);
 			   comm = 1;	/* il y a un drag */
-			   if (event.xmotion.y > h - 4)
-			     {
-			       TtcLineDown (document, view);
-			       XWarpPointer (TtDisplay, None, FrRef[frame], 0, 0, 0, 0,
-					     event.xmotion.x, h - 4);
-			     }
-			   else if (event.xmotion.y < 4)
-			     {
-			       TtcLineUp (document, view);
-			       XWarpPointer (TtDisplay, None, FrRef[frame], 0, 0, 0, 0,
-					     event.xmotion.x, 4);
-			     }
+			   if (event.xmotion.y > h)
+			     TtcLineDown (document, view);
+			   else if (event.xmotion.y < 0)
+			     TtcLineUp (document, view);
 			 }
 		     }
 		   TtaHandleOneEvent (&event);
-		   TtaFetchOneEvent (&event);
+		   TtaFetchOrWaitEvent (&event);
 		 }
 	       TtaHandleOneEvent (&event);
 	       

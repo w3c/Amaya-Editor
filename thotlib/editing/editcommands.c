@@ -1276,21 +1276,26 @@ View                view;
 	    pViewSel = &ViewFrameTable[frame - 1].FrSelectionBegin;
 	    if (pViewSel->VsBox != NULL)
 	      if (pViewSel->VsBox->BxAbstractBox->AbLeafType == LtPicture
-		    ||  pViewSel->VsBox->BxAbstractBox->AbLeafType == LtText)
+		  ||  pViewSel->VsBox->BxAbstractBox->AbLeafType == LtText)
 		{
-		  if (MenuActionList[CMD_DeleteSelection].User_Action != NULL) {
-		      if (((*MenuActionList[CMD_DeleteSelection].User_Action) (
-		             MenuActionList[CMD_DeleteSelection].User_Arg, document, view)) &&
+		  if (MenuActionList[CMD_DeleteSelection].User_Action != NULL)
+		    {
+		      if (((*MenuActionList[CMD_DeleteSelection].User_Action)
+			   (MenuActionList[CMD_DeleteSelection].User_Arg, document, view)) &&
                           (MenuActionList[CMD_DeleteSelection].Call_Action != NULL))
-		          (*MenuActionList[CMD_DeleteSelection].Call_Action) (document, view);
-		  } else
-		     if (MenuActionList[CMD_DeleteSelection].Call_Action != NULL)
-		        (*MenuActionList[CMD_DeleteSelection].Call_Action) (document, view);
+			(*MenuActionList[CMD_DeleteSelection].Call_Action) (document, view);
+		    }
+		  else if (MenuActionList[CMD_DeleteSelection].Call_Action != NULL)
+		    (*MenuActionList[CMD_DeleteSelection].Call_Action) (document, view);
 		}
 	      else
-		TtcPreviousChar (document, view);
+		{
+		  TtcPreviousChar (document, view);
+		  InsertChar (frame, 127, -1);
+		}
 	  }
-	InsertChar (frame, 127, -1);
+	else
+	  InsertChar (frame, 127, -1);
      }
 }
 

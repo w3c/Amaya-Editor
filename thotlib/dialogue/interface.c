@@ -45,14 +45,14 @@
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
 
-#include "displaybox_f.h"
+#include "actions_f.h"
+#include "appdialogue_f.h"
 #include "appli_f.h"
+#include "applicationapi_f.h"
+#include "callback_f.h"
 #include "context_f.h"
 #include "dialogapi_f.h"
-#include "views_f.h"
-#include "appdialogue_f.h"
-#include "actions_f.h"
-#include "callback_f.h"
+#include "displaybox_f.h"
 #include "font_f.h"
 #include "inites_f.h"
 #include "input_f.h"
@@ -60,10 +60,8 @@
 #include "message_f.h"
 #include "thotmsg_f.h"
 #include "viewapi_f.h"
-#include "applicationapi_f.h"
+#include "views_f.h"
 
-#ifdef _WINDOWS
-#endif /* _WINDOWS */
 
 #ifndef _WINDOWS
 /*----------------------------------------------------------------------
@@ -75,6 +73,7 @@
   ----------------------------------------------------------------------*/
 /* #define DEBUG_KEYMAP *//* give debug information when installing keymap */
 /* #define DEBUG_MULTIKEY *//* give debug information when using multikey */
+static char        *Enable_Multikey;
 static KeySym       TtaIsoKeySymTab[256] =
 {
    XK_nobreakspace,		/* First keysyms are mapped directly  */
@@ -575,22 +574,6 @@ int                 keycode;
 }
 
 /*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static char        *ks_name (KeySym k)
-#else  /* __STDC__ */
-static char        *ks_name (k)
-KeySym              k;
-#endif /* __STDC__ */
-{
-   char               *res = XKeysymToString (k);
-
-   if (res == NULL)
-      return ("NoSymbol");
-   return (res);
-}
-
-/*----------------------------------------------------------------------
    TtaInstallMultiKey
 
    Install support for Iso-Latin-1 KeySyms in the Keyboard Map managed
@@ -622,6 +605,11 @@ void                TtaInstallMultiKey ()
   int                 index;
 
   TtaDisplay = dpy;
+  /* check whether multi-key is enabled */
+  Enable_Multikey = TtaGetEnvString ("ENABLE_MULTIKEY");
+  if (Enable_Multikey != NULL && !strcasecmp (Enable_Multikey, "no"))
+      Enable_Multikey = NULL;
+
   /* load the current keyboard mapping */
   XDisplayKeycodes (dpy, &TtaMinKeyCode, &TtaMaxKeyCode);
   keymap = XGetKeyboardMapping (dpy, TtaMinKeyCode,
@@ -838,7 +826,6 @@ ThotEvent             *event;
    KeySym              KS;
    char                buf[2];
    ThotComposeStatus   status;
-   unsigned int        state2;
    unsigned int        state;
    int                 keycode;
    int                 index;
@@ -979,6 +966,9 @@ ThotEvent             *event;
        event->xkey.state = previous_state;
        return (1);
      }
+   else if (Enable_Multikey == NULL)
+     /* no multi-key allowed */
+     return (1);
    else if (KS == XK_grave ||
 	    KS == XK_acute ||
 	    KS == XK_apostrophe ||
@@ -1047,11 +1037,53 @@ ThotEvent             *ev;
 {
   if (NewFetchEvent)
     {
-      NewFetchEvent(ev);
+      NewFetchEvent (ev);
       return;
     }
 #ifndef _WINDOWS
   XtAppNextEvent (app_cont, ev);
+#endif /* ! _WINDOWS */
+}
+
+#ifndef _WINDOWS
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+static void *TimerCallback (XtPointer cdata, XtIntervalId *id)
+{
+  return (0);
+}
+#endif /* ! _WINDOWS */
+
+/*----------------------------------------------------------------------
+   TtaFetchOneAvailableEvent
+
+   retrieve one X-Windows Event from the queue if one is immediately
+   available.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaFetchOrWaitEvent (ThotEvent *ev)
+#else  /* __STDC__ */
+void                TtaFetchOrWaitEvent (ev)
+ThotEvent          *ev;
+#endif /* __STDC__ */
+{
+#ifndef _WINDOWS
+   XtInputMask         status;
+#endif /* ! _WINDOWS */
+
+   if (NewFetchAvailableEvent)
+      NewFetchAvailableEvent(ev);
+
+#ifndef _WINDOWS
+   status = XtAppPending (app_cont);
+   if (status != 0)
+       XtAppNextEvent (app_cont, ev);
+   else
+     {
+       /* active a time-out and wait */
+       XtAppAddTimeOut (app_cont, 1000, (XtTimerCallbackProc) TimerCallback, NULL);
+       XtAppNextEvent (app_cont, ev);
+     }
 #endif /* ! _WINDOWS */
 }
 
@@ -1073,19 +1105,17 @@ ThotEvent             *ev;
 #endif /* ! _WINDOWS */
 
    if (NewFetchAvailableEvent)
-      return(NewFetchAvailableEvent(ev));
+      return (NewFetchAvailableEvent(ev));
 
 #ifndef _WINDOWS
    status = XtAppPending (app_cont);
    if (status != 0)
      {
        XtAppNextEvent (app_cont, ev);
-       return(TRUE);
+       return (TRUE);
      }
-   return(FALSE);
-#else /* ! _WINDOWS */
-   return(FALSE);
 #endif /* ! _WINDOWS */
+   return (FALSE);
 }
 
 

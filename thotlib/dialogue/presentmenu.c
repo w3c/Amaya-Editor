@@ -686,6 +686,8 @@ View                view;
   int		      firstChar, lastChar;
   boolean             selectionOK;
 
+  /* just to avoid deadlocks */
+  TtaHandlePendingEvents ();
   selectionOK = GetCurrentSelection (&pSelDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar);
   if (selectionOK && pSelDoc != NULL)
     if (pSelDoc->DocSSchema != NULL)

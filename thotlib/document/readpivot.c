@@ -3431,7 +3431,6 @@ boolean		    removeExclusions
    int                 i, j, assoc, rule, typeRead;
    char                buffer[MAX_TXT_LEN];
    char                tag;
-   char 	       *debugstr;
    boolean             structureOK, createPages, found, ok;
 
    pDoc->DocToBeChecked = FALSE;
@@ -3754,6 +3753,7 @@ boolean		    removeExclusions
 	  {
 	     /* on previent l'utilisateur */
 	     TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_INCORRECT_DOC_STRUCTURE), pDoc->DocDName);
+#ifdef IV
              debugstr = TtaGetEnvString ("DEBUG");
 	     if(debugstr == NULL || strcasecmp(debugstr,"YES"))
 	       {
@@ -3761,6 +3761,7 @@ boolean		    removeExclusions
 	         pDoc->DocReadOnly = TRUE;
 	         TtaDisplayMessage (INFO, TtaGetMessage (LIB, TMSG_LOCKED_DOC), pDoc->DocDName);
                }
+#endif
 	  }
 	/* libere les labels des elements reference's par d'autres */
 	/* documents */
