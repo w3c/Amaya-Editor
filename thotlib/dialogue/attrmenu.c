@@ -1428,8 +1428,9 @@ static void AttachAttrToElem (PtrAttribute pAttr, PtrElement pEl, PtrDocument pD
    AttachAttrToRange applique l'attribut pAttr a une partie de document
   ----------------------------------------------------------------------*/
 static void AttachAttrToRange (PtrAttribute pAttr, int lastChar, 
-							   int firstChar, PtrElement pLastSel, 
-							   PtrElement pFirstSel, PtrDocument pDoc, ThotBool reDisplay)
+			       int firstChar, PtrElement pLastSel, 
+			       PtrElement pFirstSel, PtrDocument pDoc,
+			       ThotBool reDisplay)
 {
    PtrElement          pEl;
 
@@ -1440,8 +1441,8 @@ static void AttachAttrToRange (PtrAttribute pAttr, int lastChar,
    IsolateSelection (pDoc, &pFirstSel, &pLastSel, &firstChar, &lastChar, TRUE);
    /* start an operation sequence in editing history */
    if (ThotLocalActions[T_openhistory] != NULL)
-     (*ThotLocalActions[T_openhistory]) (pDoc, pFirstSel, pLastSel, firstChar,
-					 lastChar);
+     (*ThotLocalActions[T_openhistory]) (pDoc, pFirstSel, pLastSel, NULL,
+					 firstChar, lastChar);
    /* parcourt les elements selectionnes */
    pEl = pFirstSel;
    while (pEl != NULL)

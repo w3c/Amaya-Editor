@@ -1719,13 +1719,13 @@ static void DeleteSelection (ThotBool defaultHeight, ThotBool defaultWidth,
 	  pFrame = &ViewFrameTable[frame - 1];
 	  /* index of the beginning */
 	  pTargetBuffer = NULL;
-	  start = pFrame->FrSelectionBegin.VsIndBox;
+	  start = pFrame->FrSelectionBegin.VsIndBuf;
 	  end = pFrame->FrSelectionEnd.VsIndBuf;
 	  if (SelPosition)
 	    /* suppress the next char */
 	    end++;
 	  /* get values xDelta, spacesDelta, charsDelta */
-	  if (start == pAb->AbVolume)
+	  if (pFrame->FrSelectionBegin.VsIndBox == pAb->AbVolume)
 	    {
 	      xDelta = 0;
 	      spacesDelta = 0;
@@ -3476,7 +3476,7 @@ void TtcInsertChar (Document doc, View view, CHAR_T c)
 				 FirstSelectedCharInAttr,
 				 LastSelectedCharInAttr);
 	  else if (firstChar < lastChar)
-	    /* the history sequence will be closed at the end of the insertiont */
+	    /* the history sequence will be closed at the end of the insertion */
 	    OpenHistorySequence (pDoc, firstEl, lastEl, NULL, firstChar, lastChar);
 	  /* lock tables formatting */
 	  if (ThotLocalActions[T_islock])

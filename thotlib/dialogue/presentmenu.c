@@ -421,7 +421,7 @@ void         ModifyColor (int colorNum, ThotBool Background)
 
 	if (ThotLocalActions[T_openhistory] != NULL)
 	  (*ThotLocalActions[T_openhistory]) (SelDoc, pElFirstSel, pElLastSel,
-					      firstChar, lastChar);
+					      NULL, firstChar, lastChar);
 	/* parcourt les elements selectionnes */
 	pEl = pElFirstSel;
 	while (pEl != NULL)

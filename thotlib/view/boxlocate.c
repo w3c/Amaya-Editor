@@ -171,7 +171,7 @@ ThotBool APPgraphicModify (PtrElement pEl, int value, int frame, ThotBool pre)
 	  (pEl->ElLeafType == LtPath))
 	{
 	  if (ThotLocalActions[T_openhistory] != NULL)
-	    (*ThotLocalActions[T_openhistory]) (pDoc, pEl, pEl, 0, 0);
+	    (*ThotLocalActions[T_openhistory]) (pDoc, pEl, pEl, NULL, 0, 0);
 	  if (ThotLocalActions[T_addhistory] != NULL)
 	    (*ThotLocalActions[T_addhistory]) (pEl, pDoc, TRUE, TRUE);
 	}
