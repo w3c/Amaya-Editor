@@ -434,9 +434,10 @@ void GL_SetPicForeground ()
 {
   unsigned short us_opac;
 
-  us_opac= (GLubyte) FillOpacity;
-  glColor4ub ((GLubyte) 255,  (GLubyte) 255, (GLubyte) 255, (GLubyte) us_opac);    
+  us_opac = (GLubyte) FillOpacity;
+  glColor4ub ((GLubyte) 255, (GLubyte) 255, (GLubyte) 255, (GLubyte) us_opac);    
 }
+
 /*----------------------------------------------------------------------
   InitDrawing update the Graphic Context accordingly to parameters.
   The parameter fg indicates the drawing color
@@ -446,7 +447,6 @@ void InitDrawing (int style, int thick, int fg)
   float float_thick;
   
   float_thick = (GLfloat) thick;
-  
   if (style >= 5)
     {
       /* solid */
@@ -587,6 +587,7 @@ void GL_DrawRectangle (int fg, int x, int y, int width, int height)
   glVertex2i (x, y + height);
   glEnd ();
 }
+
 /*----------------------------------------------------------------------
   GL_DrawRectangle
   (don't use glrect because it's exactly the same but require opengl 1.2)
@@ -601,6 +602,7 @@ void GL_DrawRectanglef (int fg, float x, float y, float width, float height)
   glVertex2f (x, y + height);
   glEnd ();
 }
+
 /*----------------------------------------------------------------------
   GL_DrawLine
   ----------------------------------------------------------------------*/
@@ -1665,22 +1667,13 @@ void SetGlPipelineState ()
 }
 
 
-
-
-
-/*---------------------------------------
+/*----------------------------------------------------------------------
   GL_window_copy_area : 
-  Soft : We copy region content of the back buffer 
-  on the exposed region 
+  Soft : We copy region content of the back buffer on the exposed region 
   (=> opengl region buffer swapping )
-  --------------------------------------------*/
-void GL_window_copy_area (int frame, 
-			  int xf, 
-			  int yf, 
-			  int x_source, /*source x*/
-			  int y_source, /*source y*/
-			  int width, 
-			  int height)
+  ----------------------------------------------------------------------*/
+void GL_window_copy_area (int frame, int xf, int yf, int x_source, int y_source,
+			  int width, int height)
 {
   if (GL_prepare (frame) == FALSE)
     return;  
@@ -1778,10 +1771,9 @@ void GL_window_copy_area (int frame,
     }
 }
 
-/*-----------------------------------
-  GLSynchronize : Make sure all 
-    opengl calls are done
-  ------------------------------------*/
+/*----------------------------------------------------------------------
+  GLSynchronize: Make sure all opengl calls are done
+  ----------------------------------------------------------------------*/
 void gl_synchronize ()
 {
 #ifdef _GTK
@@ -1794,11 +1786,10 @@ void gl_synchronize ()
 #endif /* _GTK */
 }
 
-/*-----------------------------------
-  GLResize : 
-  remake the current coordonate system 
-  upon resize
-  ------------------------------------*/
+/*----------------------------------------------------------------------
+  GLResize: 
+  remake the current coordonate system upon resize
+  ----------------------------------------------------------------------*/
 void GLResize (int width, int height, int x, int y)
 {
   /* gl_synchronize(); */
@@ -1819,17 +1810,17 @@ void GLResize (int width, int height, int x, int y)
   glEnable (GL_SCISSOR_TEST);  
 }
 
-/*-----------------------------------
-  glhard : if a 3d card is involved.
-------------------------------------*/
+/*----------------------------------------------------------------------
+  glhard: if a 3d card is involved.
+  ----------------------------------------------------------------------*/
 ThotBool glhard()
 {
   return (!Software_Mode);
 }
-/*-----------------------------------
-  glMatroxBUG : expose without a drawing 
-  make black swapbuffer...
-------------------------------------*/
+
+/*----------------------------------------------------------------------
+  glMatroxBUG: expose without a drawing make black swapbuffer...
+  ----------------------------------------------------------------------*/
 int glMatroxBUG (int frame, int x, int y, 
 		 int width, int height)
 {
@@ -1841,10 +1832,11 @@ int glMatroxBUG (int frame, int x, int y,
     }
   return 0;  
 }
-/*-------------------------------
- SaveBuffer :
- Take a picture (png) of the backbuffer.
---------------------------------*/
+
+/*----------------------------------------------------------------------
+  SaveBuffer:
+  Take a picture (png) of the backbuffer.
+  ----------------------------------------------------------------------*/
 void saveBuffer (char *filename, int width, int height)
 {
   unsigned char *Data;
@@ -1870,8 +1862,8 @@ void saveBuffer (char *filename, int width, int height)
   Parameters fg, bg, and pattern are for drawing
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-void FDrawRectangle (int frame, int thick, int style, float x, float y, float width,
-		     float height, int fg, int bg, int pattern)
+void FDrawRectangle (int frame, int thick, int style, float x, float y,
+		     float width, float height, int fg, int bg, int pattern)
 {
   if (width <= 0 || height <= 0)
     return;
@@ -1879,25 +1871,20 @@ void FDrawRectangle (int frame, int thick, int style, float x, float y, float wi
     return;
   y += FrameTable[frame].FrTopMargin;
   if (pattern == 2) 
-    { 
-      GL_DrawRectanglef (bg, 
-			 x + thick/2, y + thick/2, 
-			 width - thick/2, height - thick/2);
-    }
+    GL_DrawRectanglef (bg, x + thick/2, y + thick/2, 
+		       width - thick/2, height - thick/2);
   /* Draw the border */
   if (thick > 0 && fg >= 0)
     {     
       InitDrawing (style, thick, fg); 
-      GL_DrawEmptyRectanglef (fg, 
-			      x,  y, 
-			      width, 
-			      height, 
-			      thick);
+      GL_DrawEmptyRectanglef (fg, x,  y, width, height, thick);
     }
 }
 
 
 #ifdef PICK
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 void processHits2 (GLint hits, GLuint buffer[], int sw)
 {
    GLint i, j, numberOfNames;
@@ -1911,7 +1898,8 @@ void processHits2 (GLint hits, GLuint buffer[], int sw)
       ptr++;// premier z
       ptr++;// deuxieme z
       ptr++;// positionné sur l'identifiant (enfin !)
-      for (j = 0; j < names; j++) {
+      for (j = 0; j < names; j++)
+	{
 	switch (*ptr){
 	 case SPLINE:
 	  printf ("SPLINE Est dans la zone ! ");
@@ -1932,11 +1920,10 @@ void processHits2 (GLint hits, GLuint buffer[], int sw)
    }
 }
 
-/*-----------------------------------------
-  startPicking : Selection Mode Activation 
-and then Object Clicked is return, and "normal" 
-(projection mode) is setted back.
- -----------------------------------------*/
+/*----------------------------------------------------------------------
+  startPicking: Selection Mode Activation and then Object Clicked
+  is return, and "normal" (projection mode) is setted back.
+  ----------------------------------------------------------------------*/
 void PickObject (int frame, int x, int y) 
 {
   GLint viewport[4];
@@ -1991,7 +1978,9 @@ void PickObject (int frame, int x, int y)
 /* TESTING NOT REALLY USED (FOR DEBUGGING)*/
 
 /* Drawing grid (for canvas geometry precision tests)*/
-void DrawGrid(int width, int height)
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+void DrawGrid (int width, int height)
 {  
   GLfloat grid2x2[2][2][3];
 
@@ -2032,7 +2021,9 @@ void DrawGrid(int width, int height)
 /* stupid animation render testing
    in order to vizualise renderings 
    times */
-int make_carre()
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+int make_carre ()
 {
   static float k = 0.0;
   static float l = 0.0;
@@ -2058,10 +2049,10 @@ int make_carre()
    return 0;
 }
 
-int  savetga (const char *filename, 
-		 unsigned char *Data,
-		 unsigned int width,
-		 unsigned int height)
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+int savetga (const char *filename, unsigned char *Data,
+	     unsigned int width, unsigned int height)
 {
   FILE *screenFile;
   int length;
@@ -2104,7 +2095,10 @@ int  savetga (const char *filename,
   fclose(screenFile);
   return 0;
 }
+
 #ifdef NOtENOUGHTIMEPRECIsION
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 static wintime()
 {
   /*if get tick count gets is more than 50 ms precise...*/

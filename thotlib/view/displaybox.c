@@ -557,7 +557,8 @@ void DisplayEmptyBox (PtrBox pBox, int frame, ThotBool selected,
       
     }
 }
-#ifdef _GL
+
+
 /*----------------------------------------------------------------------
   DisplayGraph display a graphic.
   The parameter selected is TRUE when the graphic is selected.
@@ -572,20 +573,35 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
   int                 fg, bg;
   int                 pat;
   int                 style;
-  float               xd, yd;
+#ifdef _GL
+  float               xd, yd, left, top;
   float               width, height;
+#else /* _GL */
+  int                 xd, yd, left, top; 
+  int                 width, height;
+#endif /* _GL */
 
   pAb = pBox->BxAbstractBox;
   pFrame = &ViewFrameTable[frame - 1];
   if (pAb->AbVisibility >= pFrame->FrVisibility)
     {
-      bg = pAb->AbBackground;
-      pat = pAb->AbFillPattern;
-      fg = pAb->AbForeground;
-      xd = pBox->BxXOrg + (float) (pBox->BxLMargin + l + pBox->BxLBorder +
-	pBox->BxLPadding - pFrame->FrXOrg);
-      yd = pBox->BxYOrg + (float) (pBox->BxTMargin + t + pBox->BxTBorder +
-	pBox->BxTPadding - pFrame->FrYOrg);
+      if (selected && pAb->AbPresentationBox)
+	{
+	/* paint with selection colors */
+	  bg = BgSelColor;
+	  fg = FgSelColor;
+	  pat = 2;
+	}
+      else
+	{
+	  bg = pAb->AbBackground;
+	  fg = pAb->AbForeground;
+	  pat = pAb->AbFillPattern;
+	}
+      left = pBox->BxLMargin + l + pBox->BxLBorder + pBox->BxLPadding - pFrame->FrXOrg;
+      top = pBox->BxTMargin + t + pBox->BxTBorder + pBox->BxTPadding - pFrame->FrYOrg;
+      xd = pBox->BxXOrg + left;
+      yd = pBox->BxYOrg + top;
       width = pBox->BxW;
       height = pBox->BxH;
       if (Printing)
@@ -613,6 +629,7 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
 	width = 0;
       if (height < 0)
 	height = 0;
+
       /* Style and thickness of drawing */
       i = GetLineWeight (pAb, frame);
       switch (pAb->AbLineStyle)
@@ -632,45 +649,14 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
 
       switch (pAb->AbRealShape)
 	{
-	case '\260':
-	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
-			 bg, 2);
-	  break;
-	case '\261':
-	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
-			 bg, 5);
-	  break;
-	case '\262':
-	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
-			 bg, 6);
-	  break;
-	case '\263':
-	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
-			 bg, 7);
-	  break;
-	case '\264':
-	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
-			 bg, 8);
-	  break;
-	case '\265':
-	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
-			 bg, 9);
-	  break;
-	case '\266':
-	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
-			 bg, 1);
-	  break;
-	case '\267':
-	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
-			 bg, 0);
-	  break;
-	case '\270':
-	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
-			 bg, 4);
-	  break;
 	case '0':
+#ifdef _GL
 	  FDrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
+			  bg, pat);
+#else /* _GL */
+	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
 			 bg, pat);
+#endif /* _GL */
 	  break;
 	case '1':
 	case '2':
@@ -681,8 +667,13 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
 	case '7':
 	case '8':
 	case 'R':
+#ifdef _GL
 	  FDrawRectangle (frame, i, style, xd, yd, width, height,
+			  fg, bg, pat);
+#else /* _GL */
+	  DrawRectangle (frame, i, style, xd, yd, width, height,
 			 fg, bg, pat);
+#endif /* _GL */
 	  break;
 	case 'g':
 	  /* Coords of the line are given by the enclosing box */
@@ -699,254 +690,11 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
 	  break;
 	case 'C':
 	  if (pBox->BxRx == 0 && pBox->BxRy == 0)	    
+#ifdef _GL
 	    FDrawRectangle (frame, i, style, xd, yd, width, height, fg, bg, pat);
-	  else
-	    DrawOval (frame, i, style, xd, yd, width, height, pBox->BxRx,
-		      pBox->BxRy, fg, bg, pat);
-	  break;
-	case 'L':
-	  DrawDiamond (frame, i, style, xd, yd, width, height, fg, bg, pat);
-	  break;
-	case 'a':
-	case 'c':
-	  DrawEllips (frame, i, style, xd, yd, width, height, fg, bg, pat);
-	  break;
-	case 'h':
-	  DrawHorizontalLine (frame, i, style, xd, yd, width, height, 1, fg);
-	  break;
-	case 't':
-	  DrawHorizontalLine (frame, i, style, xd, yd, width, height, 0, fg);
-	  break;
-	case 'b':
-	  DrawHorizontalLine (frame, i, style, xd, yd, width, height, 2, fg);
-	  break;
-	case 'v':
-	  DrawVerticalLine (frame, i, style, xd, yd, width, height, 1, fg);
-	  break;
-	case 'l':
-	  DrawVerticalLine (frame, i, style, xd, yd, width, height, 0, fg);
-	  break;
-	case 'r':
-	  DrawVerticalLine (frame, i, style, xd, yd, width, height, 2, fg);
-	  break;
-	case '/':
-	  DrawSlash (frame, i, style, xd, yd, width, height, 0, fg);
-	  break;
-	case '\\':
-	  DrawSlash (frame, i, style, xd, yd, width, height, 1, fg);
-	  break;
-	case '>':
-	  DrawArrow (frame, i, style, xd, yd, width, height, 0, fg);
-	  break;
-	case 'E':
-	  DrawArrow (frame, i, style, xd, yd, width, height, 45, fg);
-	  break;
-	case '^':
-	  DrawArrow (frame, i, style, xd, yd, width, height, 90, fg);
-	  break;
-	case 'O':
-	  DrawArrow (frame, i, style, xd, yd, width, height, 135, fg);
-	  break;
-	case '<':
-	  DrawArrow (frame, i, style, xd, yd, width, height, 180, fg);
-	  break;
-	case 'o':
-	  DrawArrow (frame, i, style, xd, yd, width, height, 225, fg);
-	  break;
-	case 'V':
-	  DrawArrow (frame, i, style, xd, yd, width, height, 270, fg);
-	  break;
-	case 'e':
-	  DrawArrow (frame, i, style, xd, yd, width, height, 315, fg);
-	  break;
-	    
-	case 'P':
-	  DrawRectangleFrame (frame, i, style, xd, yd, width,
-			      height, fg, bg, pat);
-	  break;
-	case 'Q':
-	  DrawEllipsFrame (frame, i, style, xd, yd, width,
-			   height, fg, bg, pat);
-	  break;
-	case 'W':
-	  DrawCorner (frame, i, style, xd, yd, width, height, 0, fg);
-	  break;
-	case 'X':
-	  DrawCorner (frame, i, style, xd, yd, width, height, 1, fg);
-	  break;
-	case 'Y':
-	  DrawCorner (frame, i, style, xd, yd, width, height, 2, fg);
-	  break;
-	case 'Z':
-	  DrawCorner (frame, i, style, xd, yd, width, height, 3, fg);
-	  break;
-	    
-	default:
-	  break;
-	}
-	
-      if (pBox->BxEndOfBloc > 0)
-	{
-	  /* fill the end of the line with dots */
-	  yd = pBox->BxYOrg + pBox->BxHorizRef - pFrame->FrYOrg;
-	  DrawPoints (frame, xd + width, yd, pBox->BxEndOfBloc, fg);
-	}
-
-      /* show the selection on the whole image */
-      if (selected)
-	{
-	  if (pFrame->FrSelectOnePosition)
-	    DisplayPointSelection (frame, pBox,
-				   pFrame->FrSelectionBegin.VsIndBox);
-	  else
-	    DisplayPointSelection (frame, pBox, 0);
-	}
-    }
-}
 #else /* _GL */
-/*----------------------------------------------------------------------
-  DisplayGraph display a graphic.
-  The parameter selected is TRUE when the graphic is selected.
-  ----------------------------------------------------------------------*/
-void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
-		    int t, int b, int l, int r)
-{
-  ViewFrame          *pFrame;
-  PtrAbstractBox      pAb;
-  int                 i;  
-  int                 xd,yd; 
-  int                 fg, bg;
-  int                 pat;
-  int                 style;
-  int                 width, height;
-
-  pAb = pBox->BxAbstractBox;
-  pFrame = &ViewFrameTable[frame - 1];
-  if (pAb->AbVisibility >= pFrame->FrVisibility)
-    {
-      bg = pAb->AbBackground;
-      pat = pAb->AbFillPattern;
-      fg = pAb->AbForeground;
-      xd = pBox->BxXOrg + pBox->BxLMargin + l + pBox->BxLBorder +
-	pBox->BxLPadding - pFrame->FrXOrg;
-      yd = pBox->BxYOrg + pBox->BxTMargin + t + pBox->BxTBorder +
-	pBox->BxTPadding - pFrame->FrYOrg;
-      width = pBox->BxW;
-      height = pBox->BxH;
-      if (Printing)
-	{
-	  /* clip the origin */
-	  if (xd < 0)
-	    {
-	      width += xd;
-	      xd = 0;
-	    }
-	  if (yd < 0)
-	    {
-	      height += yd;
-	      yd = 0;
-	    }
-	  /* clip the width */
-	  if (xd + width > pFrame->FrClipXEnd - pFrame->FrXOrg)
-	    width = pFrame->FrClipXEnd - pFrame->FrXOrg - xd;
-	  /* limite la hauteur a la valeur du clipping */
-	  if (yd + height > pFrame->FrClipYEnd - pFrame->FrYOrg)
-	    height = pFrame->FrClipYEnd - pFrame->FrYOrg - yd;
-	}
-      /* box sizes have to be positive */
-      if (width < 0)
-	width = 0;
-      if (height < 0)
-	height = 0;
-
-      /* Style and thickness of drawing */
-
-      i = GetLineWeight (pAb, frame);
-      switch (pAb->AbLineStyle)
-	{
-	case 'S':
-	  style = 5; /* solid */
-	  break;
-	case '-':
-	  style = 4; /* dashed */
-	  break;
-	case '.':
-	  style = 3; /* dotted */
-	  break;
-	default:
-	  style = 5; /* solid */
-	}
-
-      switch (pAb->AbRealShape)
-	{
-	case '\260':
-	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
-			 bg, 2);
-	  break;
-	case '\261':
-	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
-			 bg, 5);
-	  break;
-	case '\262':
-	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
-			 bg, 6);
-	  break;
-	case '\263':
-	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
-			 bg, 7);
-	  break;
-	case '\264':
-	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
-			 bg, 8);
-	  break;
-	case '\265':
-	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
-			 bg, 9);
-	  break;
-	case '\266':
-	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
-			 bg, 1);
-	  break;
-	case '\267':
-	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
-			 bg, 0);
-	  break;
-	case '\270':
-	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
-			 bg, 4);
-	  break;
-	case '0':
-	  DrawRectangle (frame, 0, 0, xd, yd, width, height, fg,
-			 bg, pat);
-	  break;
-	case '1':
-	case '2':
-	case '3':
-	case '4':
-	case '5':
-	case '6':
-	case '7':
-	case '8':
-	case 'R':
-	  DrawRectangle (frame, i, style, xd, yd, width, height,
-			 fg, bg, pat);
-	  break;
-	case 'g':
-	  /* Coords of the line are given by the enclosing box */
-	  pAb = pAb->AbEnclosing;
-	  if ((pAb->AbHorizPos.PosEdge == Left &&
-	       pAb->AbVertPos.PosEdge == Top) ||
-	      (pAb->AbHorizPos.PosEdge == Right &&
-	       pAb->AbVertPos.PosEdge == Bottom))
-	    /* draw a \ */
-	    DrawSlash (frame, i, style, xd, yd, width, height, 1, fg);
-	  else
-	    /* draw a / */
-	    DrawSlash (frame, i, style, xd, yd, width, height, 0, fg);
-	  break;
-	case 'C':
-	  if (pBox->BxRx == 0 && pBox->BxRy == 0)
 	    DrawRectangle (frame, i, style, xd, yd, width, height, fg, bg, pat);
+#endif /* _GL */
 	  else
 	    DrawOval (frame, i, style, xd, yd, width, height, pBox->BxRx,
 		      pBox->BxRy, fg, bg, pat);
@@ -1008,8 +756,8 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
 	  break;
 	    
 	case 'P':
-	  DrawRectangleFrame (frame, i, style, xd, yd, width,
-			      height, fg, bg, pat);
+	  DrawRectangleFrame (frame, i, style, xd, yd, width, height,
+			      fg, bg, pat);
 	  break;
 	case 'Q':
 	  DrawEllipsFrame (frame, i, style, xd, yd, width,
@@ -1040,7 +788,7 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
 	}
 
       /* show the selection on the whole image */
-      if (selected)
+      if (selected && !pAb->AbPresentationBox)
 	{
 	  if (pFrame->FrSelectOnePosition)
 	    DisplayPointSelection (frame, pBox,
@@ -1050,7 +798,6 @@ void  DisplayGraph (PtrBox pBox, int frame, ThotBool selected,
 	}
     }
 }
-#endif /* _GL */
 
 /*----------------------------------------------------------------------
   PolyTransform checks whether a polyline Box need to be transformed
@@ -2492,7 +2239,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
     if (pAb->AbShape == EOS)
       DisplayEmptyBox (box, frame, selfsel, t, b, l, r);
     else
-      DisplayGraph (box, frame, selfsel, t, b, l, r);
+      DisplayGraph (box, frame, selected, t, b, l, r);
   else if (pAb->AbLeafType == LtPolyLine)
     /* Polyline */
     DisplayPolyLine (box, frame, selfsel, t, b, l, r);
