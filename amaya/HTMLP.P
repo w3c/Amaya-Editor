@@ -7845,9 +7845,6 @@ RULES
  Cols:  BEGIN
 	Visibility: 0;
 	IN Structure_view BEGIN
-		VertPos: Top = Previous . Bottom;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Width: Enclosing . Width - STRUCT_INDENT;
 		Visibility: Enclosing =;
 		END;
 	END;
@@ -7870,12 +7867,8 @@ RULES
 	BEGIN
 	Visibility: 1;
 	CreateBefore(COL_S);
-	CreateWith(VerticalLine);
 	IN Structure_view BEGIN
-		VertPos: Top = Previous . Bottom;
-		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
-		Width: Enclosing . Width - STRUCT_INDENT;
-		Adjust: Left;
+		Height: 1 px;
 		Visibility: Enclosing =;
 		END;
 	END;

@@ -644,7 +644,7 @@ STRUCT
 	 { datapagesize }
 	BEGIN
 	CAPTION;						{ CAPTION }
-	Cols = LIST OF (Col_elem = CASE OF
+      ? Cols = LIST OF (Col_elem = CASE OF
 				COL;				{ COL }
 				COLGROUP;			{ COLGROUP }
 				END);
