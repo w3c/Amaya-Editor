@@ -32,20 +32,16 @@
 #define RDFS_SUBCLASSOF "http://www.w3.org/2000/01/rdf-schema#subClassOf"
 
 /* DC Property names */
-#define DC_NS "http://purl.org/dc/elements/1.0/"
-#define DC1_NS "http://purl.org/dc/elements/1.1/"
+#define DC_NS "http://purl.org/dc/elements/1.1/"
+#define DC0_NS "http://purl.org/dc/elements/1.0/"
 #define DC_CREATOR "creator"
 #define DCNS_CREATOR DC_NS"#"DC_CREATOR
-#define DC1NS_CREATOR DC1_NS"#"DC_CREATOR
 #define DC_DATE "date"
 #define DCNS_DATE DC_NS"#"DC_DATE
-#define DC1NS_DATE DC1_NS"#"DC_DATE
 #define DC_TITLE "title"
 #define DCNS_TITLE DC_NS"#"DC_TITLE
-#define DC1NS_TITLE DC1_NS"#"DC_TITLE
 #define DC_DESCRIPTION "description"
 #define DCNS_DESCRIPTION DC_NS"#"DC_DESCRIPTION
-#define DC1NS_DESCRIPTION DC1_NS"#"DC_DESCRIPTION
 
 /* Annotea NS property names */
 #define ANNOT_NS1 "http://www.w3.org/2000/10/annotation-ns"

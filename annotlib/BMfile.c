@@ -532,7 +532,7 @@ ThotBool BM_addBookmark (BookmarkP me)
   /* creator */
   tmp = TtaConvertByteToMbs (me->author, ISO_8859_1);
   subject = librdf_new_node_from_uri_string (world, bookmarkid);
-  predicate = librdf_new_node_from_uri_string (world, DC1NS_CREATOR);
+  predicate = librdf_new_node_from_uri_string (world, DCNS_CREATOR);
   object =  librdf_new_node_from_literal (world, 
 					  tmp,  /* literal string value */
 					  NULL,  /* literal XML language */
@@ -552,7 +552,7 @@ ThotBool BM_addBookmark (BookmarkP me)
 
   /* modified  */
   subject = librdf_new_node_from_uri_string (world, bookmarkid);
-  predicate = librdf_new_node_from_uri_string (world, DC1NS_DATE);
+  predicate = librdf_new_node_from_uri_string (world, DCNS_DATE);
   object =  librdf_new_node_from_literal (world, 
 					  me->modified,  /* literal string value */
 					  NULL,  /* literal XML language */
@@ -563,7 +563,7 @@ ThotBool BM_addBookmark (BookmarkP me)
   /* title */
   tmp = TtaConvertByteToMbs (me->title, ISO_8859_1); 
   subject = librdf_new_node_from_uri_string (world, bookmarkid);
-  predicate = librdf_new_node_from_uri_string (world, DC1NS_TITLE);
+  predicate = librdf_new_node_from_uri_string (world, DCNS_TITLE);
   object =  librdf_new_node_from_literal (world, 
 					  tmp,   /* literal string value */
 					  NULL,  /* literal XML language */
@@ -574,7 +574,7 @@ ThotBool BM_addBookmark (BookmarkP me)
  /* description */
   tmp = TtaConvertByteToMbs (me->description, ISO_8859_1); 
   subject = librdf_new_node_from_uri_string (world, bookmarkid);
-  predicate = librdf_new_node_from_uri_string (world, DC1NS_DESCRIPTION);
+  predicate = librdf_new_node_from_uri_string (world, DCNS_DESCRIPTION);
   object =  librdf_new_node_from_literal (world, 
 					  tmp,   /* literal string value */
 					  NULL,  /* literal XML language */
@@ -684,7 +684,7 @@ ThotBool BM_addTopic (BookmarkP me, ThotBool generateID)
   /* creator */
   tmp = TtaConvertByteToMbs (me->author, ISO_8859_1); 
   subject = librdf_new_node_from_uri_string (world, topicid);
-  predicate = librdf_new_node_from_uri_string (world, DC1NS_CREATOR);
+  predicate = librdf_new_node_from_uri_string (world, DCNS_CREATOR);
   object =  librdf_new_node_from_literal (world, 
 					  tmp,  /* literal string value */
 					  NULL,  /* literal XML language */
@@ -704,7 +704,7 @@ ThotBool BM_addTopic (BookmarkP me, ThotBool generateID)
 
   /* modified  */
   subject = librdf_new_node_from_uri_string (world, topicid);
-  predicate = librdf_new_node_from_uri_string (world, DC1NS_DATE);
+  predicate = librdf_new_node_from_uri_string (world, DCNS_DATE);
   object =  librdf_new_node_from_literal (world, 
 					  me->modified,  /* literal string value */
 					  NULL,  /* literal XML language */
@@ -715,7 +715,7 @@ ThotBool BM_addTopic (BookmarkP me, ThotBool generateID)
   /* title */
   tmp = TtaConvertByteToMbs (me->title, ISO_8859_1); 
   subject = librdf_new_node_from_uri_string (world, topicid);
-  predicate = librdf_new_node_from_uri_string (world, DC1NS_TITLE);
+  predicate = librdf_new_node_from_uri_string (world, DCNS_TITLE);
   object =  librdf_new_node_from_literal (world, 
 					  tmp,
 					  NULL,  /* literal XML language */
@@ -726,7 +726,7 @@ ThotBool BM_addTopic (BookmarkP me, ThotBool generateID)
  /* description */
   tmp = TtaConvertByteToMbs (me->description, ISO_8859_1); 
   subject = librdf_new_node_from_uri_string (world, topicid);
-  predicate = librdf_new_node_from_uri_string (world, DC1NS_DESCRIPTION);
+  predicate = librdf_new_node_from_uri_string (world, DCNS_DESCRIPTION);
   object =  librdf_new_node_from_literal (world, 
 					  tmp,
 					  NULL,  /* literal XML language */
@@ -841,10 +841,10 @@ static void Model_getItemInfo (librdf_world *world, librdf_model *model,
     }
   
   /* modified  */
-  item->modified = Model_getObjectAsString (world, model, subject, DC1NS_DATE);
+  item->modified = Model_getObjectAsString (world, model, subject, DCNS_DATE);
   
   /* title */
-  item->title = Model_getObjectAsString (world, model, subject, DC1NS_TITLE);
+  item->title = Model_getObjectAsString (world, model, subject, DCNS_TITLE);
 }
 
 /*----------------------------------------------------------------------
@@ -1256,19 +1256,19 @@ BookmarkP BM_getItem (char *url, ThotBool isTopic)
       uri_str = librdf_uri_to_string (rdf_uri);
 
       /* creator */
-      if (!strcmp (uri_str, DC1NS_CREATOR))
+      if (!strcmp (uri_str, DCNS_CREATOR))
 	me->author =  Model_getNodeAsString (object, TRUE);
       /* created */
       else if (!strcmp (uri_str, ANNOTNS_CREATED))
 	me->created = Model_getNodeAsString (object, TRUE);
       /* modified  */
-      else if (!strcmp (uri_str, DC1NS_DATE))
+      else if (!strcmp (uri_str, DCNS_DATE))
 	me->modified = Model_getNodeAsString (object, TRUE);
       /* title */
-      else if (!strcmp (uri_str, DC1NS_TITLE))
+      else if (!strcmp (uri_str, DCNS_TITLE))
 	me->title = Model_getNodeAsString (object, TRUE);
       /* description */
-      else if (!strcmp (uri_str, DC1NS_DESCRIPTION))
+      else if (!strcmp (uri_str, DCNS_DESCRIPTION))
 	me->description = Model_getNodeAsString (object, TRUE);
       /* bookmark / topics distinctions */
       else
@@ -1392,10 +1392,10 @@ ThotBool BM_updateItem (BookmarkP me, ThotBool isTopic)
 
       /* topic folder */
       /* we remove all the known properties first, then update the model */
-      if (!strcmp (uri_str, DC1NS_CREATOR)
-	  || !strcmp (uri_str, DC1NS_DATE)
-	  || !strcmp (uri_str, DC1NS_TITLE)
-	  || !strcmp (uri_str, DC1NS_DESCRIPTION))
+      if (!strcmp (uri_str, DCNS_CREATOR)
+	  || !strcmp (uri_str, DCNS_DATE)
+	  || !strcmp (uri_str, DCNS_TITLE)
+	  || !strcmp (uri_str, DCNS_DESCRIPTION))
 	librdf_model_remove_statement (model, statement);
       else
 	{
@@ -1427,7 +1427,7 @@ ThotBool BM_updateItem (BookmarkP me, ThotBool isTopic)
   /* creator */
   tmp = TtaConvertByteToMbs (me->author, ISO_8859_1);
   subject = librdf_new_node_from_uri_string (world, me->self_url);
-  predicate = librdf_new_node_from_uri_string (world, DC1NS_CREATOR);
+  predicate = librdf_new_node_from_uri_string (world, DCNS_CREATOR);
   object =  librdf_new_node_from_literal (world, 
 					  tmp,  /* literal string value */
 					  NULL,  /* literal XML language */
@@ -1437,7 +1437,7 @@ ThotBool BM_updateItem (BookmarkP me, ThotBool isTopic)
 
   /* modified  */
   subject = librdf_new_node_from_uri_string (world, me->self_url);
-  predicate = librdf_new_node_from_uri_string (world, DC1NS_DATE);
+  predicate = librdf_new_node_from_uri_string (world, DCNS_DATE);
   object =  librdf_new_node_from_literal (world, 
 					  me->modified,  /* literal string value */
 					  NULL,  /* literal XML language */
@@ -1448,7 +1448,7 @@ ThotBool BM_updateItem (BookmarkP me, ThotBool isTopic)
   /* title */
   tmp = TtaConvertByteToMbs (me->title, ISO_8859_1); 
   subject = librdf_new_node_from_uri_string (world, me->self_url);
-  predicate = librdf_new_node_from_uri_string (world, DC1NS_TITLE);
+  predicate = librdf_new_node_from_uri_string (world, DCNS_TITLE);
   object =  librdf_new_node_from_literal (world, 
 					  tmp,  /* literal string value */
 					  NULL,  /* literal XML language */
@@ -1459,7 +1459,7 @@ ThotBool BM_updateItem (BookmarkP me, ThotBool isTopic)
  /* description */
   tmp = TtaConvertByteToMbs (me->description, ISO_8859_1); 
   subject = librdf_new_node_from_uri_string (world, me->self_url);
-  predicate = librdf_new_node_from_uri_string (world, DC1NS_DESCRIPTION);
+  predicate = librdf_new_node_from_uri_string (world, DCNS_DESCRIPTION);
   object =  librdf_new_node_from_literal (world, 
 					  me->description,  /* literal string value */
 					  NULL,  /* literal XML language */
