@@ -353,24 +353,28 @@ int *bg;
        *ncolors = info_ptr->num_palette; 	
        for (i=0; i < *ncolors; i++) {
 #          ifndef _WINDOWS
-	   colrs[i].red   = info_ptr->palette[i].red << 8;
-	   colrs[i].green = info_ptr->palette[i].green << 8;
-	   colrs[i].blue  = info_ptr->palette[i].blue << 8;
-	   colrs[i].pixel = i;
-	   colrs[i].flags = DoRed|DoGreen|DoBlue;
+           colrs[i].red   = info_ptr->palette[i].red << 8;
+           colrs[i].green = info_ptr->palette[i].green << 8;
+           colrs[i].blue  = info_ptr->palette[i].blue << 8;
+           colrs[i].pixel = i;
+           colrs[i].flags = DoRed|DoGreen|DoBlue;
 #          else /* _WINDOWS */
-	   colrs[i].red   = info_ptr->palette[i].red;
-	   colrs[i].green = info_ptr->palette[i].green;
-	   colrs[i].blue  = info_ptr->palette[i].blue;
+           colrs[i].red   = info_ptr->palette[i].red;
+           colrs[i].green = info_ptr->palette[i].green;
+           colrs[i].blue  = info_ptr->palette[i].blue;
 #          endif /* _WINDOWS */
 	}
     } else if (color_type == PNG_COLOR_TYPE_RGB ) {
            *ncolors = 128; 
 	   for (i=0; i < *ncolors ; i++) {
+#          ifdef _WINDOWS 
+	       colrs[i].red   = std_color_cube[i].red;
+	       colrs[i].green = std_color_cube[i].green;
+	       colrs[i].blue  = std_color_cube[i].blue;
+#          else  /* !_WINDOWS */
 	       colrs[i].red   = std_color_cube[i].red << 8;
 	       colrs[i].green = std_color_cube[i].green << 8;
 	       colrs[i].blue  = std_color_cube[i].blue << 8;
-#              ifndef _WINDOWS
 	       colrs[i].pixel = i;
 	       colrs[i].flags = DoRed|DoGreen|DoBlue;
 #              endif /* _WINDOWS */

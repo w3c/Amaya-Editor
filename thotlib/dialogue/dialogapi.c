@@ -149,6 +149,7 @@ static Display*       GDp;
 #endif
 
 #ifdef _WINDOWS
+int    iconID;
 static OPENFILENAME OpenFileName;
 static int cyValue = 10;
 
@@ -183,7 +184,7 @@ typedef struct FrCatalogue {
 } FrCatalogue ;
 
 
-FrCatalogue FrameCatList [MAX_FRAME] ;
+FrCatalogue FrameCatList [MAX_FRAME + 1] ;
 #ifdef __STDC__
 LRESULT CALLBACK WndProc        (HWND, UINT, WPARAM, LPARAM) ;
 LRESULT CALLBACK ClientWndProc  (HWND, UINT, WPARAM, LPARAM) ;
@@ -548,7 +549,7 @@ ThotWindow win ;
    int     frame      = -1;
    boolean found      = FALSE;
   
-   while (frameIndex < MAX_FRAME && !found) {
+   while (frameIndex <= MAX_FRAME && !found) {
          menuIndex = 0;
          while (menuIndex < MAX_MENU && !found) 
 	     if (FrameTable[frameIndex].WdMenus[menuIndex] == menu) {
@@ -699,7 +700,7 @@ struct Cat_Context* catalogue;
          frameIndex = 0 ;
          found      = FALSE ;
 
-         while (frameIndex < MAX_FRAME && !found) {
+         while (frameIndex <= MAX_FRAME && !found) {
                catIndex = 0 ;
             
                while (catIndex < MAX_FRAMECAT && !found) {
@@ -1744,7 +1745,7 @@ Display           **Dp;
    RootShell.cbClsExtra    = 0 ;
    RootShell.cbWndExtra    = 0 ;
    RootShell.hInstance     = hInstance ;
-   RootShell.hIcon         = LoadIcon (hInstance, IDI_APPLICATION) ;
+   RootShell.hIcon         = LoadIcon (hInstance, iconID) ;
    RootShell.hCursor       = LoadCursor (NULL, IDC_ARROW) ;
    RootShell.hbrBackground = (HBRUSH) GetStockObject (LTGRAY_BRUSH) ;
    RootShell.lpszMenuName  = "AmayaMain" ;

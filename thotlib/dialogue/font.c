@@ -54,6 +54,14 @@ static boolean      UseBitStreamFamily;
 #include "registry_f.h"
 
 #ifdef _WINDOWS
+typedef struct FontCharacteristics {
+        char     alphabet; 
+        char     family; 
+        int      highlight; 
+        int      size; 
+        TypeUnit unit;
+} FCharacteristics;
+
 static char  WIN_lpszFace [255];
 static int   WIN_nHeight;
 static int   WIN_nWidth;
@@ -61,11 +69,46 @@ static int   WIN_fnWeight;
 static int   WIN_fdwItalic;
 static int   WIN_fdwUnderline;
 static int   WIN_fdwStrikeOut;
-static HFONT previousFont;
+
+static FCharacteristics FCTable [MAX_FONT];
+static int              nbFontsCreated = 0;
 #endif /* _WINDOWS */
 
 
 #ifdef _WINDOWS
+/*----------------------------------------------------------------------
+ *    FontCreated
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static int FontCreated (char alphabet, char family, int highlight, int size, TypeUnit unit)
+#else  /* __STDC__ */
+static int FontCreated (alphabet, family, highlight, size, unit)
+char     alphabet;
+char     family;
+int      highlight;
+int      size;
+TypeUnit unit;
+#endif /* __STDC__ */
+{
+    int i = 0;
+	BOOL found = FALSE;
+
+	while (i < nbFontsCreated && !found) {
+          if (FCTable [i].alphabet       == alphabet         &&
+             toupper(FCTable [i].family) == toupper (family) &&
+             FCTable [i].highlight       == highlight        &&
+             FCTable [i].size            == size             &&
+             FCTable [i].unit            == unit)
+			 found = TRUE ;
+		  else 
+			  i++;
+    }
+
+	if (found)
+       return i;
+    return -1;
+}
+
 /*----------------------------------------------------------------------
  *    WIN_LoadFont :  load a Windows TRUEType with a defined set of
  *                    characteristics.
@@ -82,6 +125,7 @@ TypeUnit unit;
 #endif /* __STDC__ */
 {
    HFONT hFont;
+   int   fIndex;
 
    WIN_nHeight      = 0;
    WIN_nWidth       = 0;
@@ -90,6 +134,15 @@ TypeUnit unit;
    WIN_fdwUnderline = FALSE;
    WIN_fdwStrikeOut = FALSE;
 
+   if ((fIndex = FontCreated (alphabet, family, highlight, size, unit)) != -1)
+      return TtFonts [fIndex];
+   else {
+        FCTable [nbFontsCreated].alphabet  = alphabet;
+        FCTable [nbFontsCreated].family    = family;
+        FCTable [nbFontsCreated].highlight = highlight;
+        FCTable [nbFontsCreated].size      = size;
+        FCTable [nbFontsCreated].unit      = unit;
+		nbFontsCreated++;
    if (alphabet != 'L' && alphabet != 'G' && alphabet != 'g')
       return NULL;
 
@@ -154,7 +207,8 @@ TypeUnit unit;
       WinErrorBox (WIN_Main_Wd);
    } 
 
-   return (hFont);									   
+   return (hFont);
+   }
 }
 
 /*----------------------------------------------------------------------

@@ -525,16 +525,18 @@ int                 value;
                delta = value - sPos;
                nbPages = abs (delta) / height;
                remaining = abs (delta) - (height * nbPages);
+			   InvalidateRect (FrRef[frame], NULL, TRUE);
 			   if (nbPages <= 3) {
-               if (delta > 0)
-                   delta = nbPages * FrameTable[frame].FrHeight + (int) ((remaining * FrameTable[frame].FrHeight) / height);
-               else 
-                   delta = -(nbPages * FrameTable[frame].FrHeight + (int) ((remaining * FrameTable[frame].FrHeight) / height));
-               VerticalScroll (frame, delta, TRUE);
+                  if (delta > 0)
+                      delta = nbPages * FrameTable[frame].FrHeight + (int) ((remaining * FrameTable[frame].FrHeight) / height);
+                  else 
+                      delta = -(nbPages * FrameTable[frame].FrHeight + (int) ((remaining * FrameTable[frame].FrHeight) / height));
+                  VerticalScroll (frame, delta, TRUE);
 			   } else {
                      delta = (int) (((float)value / (float)FrameTable[frame].FrHeight) * 100) ;
                      JumpIntoView (frame, delta);
                }
+               InvalidateRect (FrRef[frame], NULL, TRUE);
                break;
    }
 }
