@@ -2424,9 +2424,6 @@ ThotBool            ComputeUpdates (PtrAbstractBox pAb, int frame)
 	      /* Is there a background image ? */
 	      if (pAb->AbPictBackground != NULL)
 		{
-		  if (pAb->AbFillPattern == 2)
-		    /* change "backgroundcolor" into "nopattern" */
-		    pAb->AbFillPattern = 0;
 		  /* force filling */
 		  pAb->AbFillBox = TRUE;
 		  /* load the picture */
