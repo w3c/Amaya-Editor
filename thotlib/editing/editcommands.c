@@ -79,7 +79,7 @@ static boolean      FromKeyboard;
 #include "content_f.h"
 #include "editcommands_f.h"
 #include "callback_f.h"
-#include "unit_f.h"
+#include "units_f.h"
 #include "font_f.h"
 #include "geom_f.h"
 #include "picture_f.h"
