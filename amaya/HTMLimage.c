@@ -878,8 +878,8 @@ void FetchImage (Document doc, Element el, char *URL, int flags,
 	 that begins with the string  'data' */
 
       if (imageName &&
-	  (strncmp (imageName, "data", 4) != 0) &&
-	  (strncmp (imageName, "DATA", 4) != 0))
+	  (strncmp (imageName, "data:", 5) != 0) &&
+	  (strncmp (imageName, "DATA:", 5) != 0))
 	{
 	  update = TRUE;
 	  /* add BASE to image name, if necessary */
