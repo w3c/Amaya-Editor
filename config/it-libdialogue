@@ -42,7 +42,7 @@
 40 A4
 41 US
 42 Formato della carta
-43 Fatto
+43 Chiudi
 44 Directory
 45 Il documento %s esiste già. Vuoi sovrascriverlo?
 46 Il pulsante sinistro cambia il colore del testo
@@ -163,3 +163,4 @@
 161 Controllo ortografico interrotto
 162 Seleziona un documento
 163 Dizionario del documento salvato: %s
+164 **Pas disponible dans cette version

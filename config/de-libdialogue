@@ -42,7 +42,7 @@
 40 A4
 41 US
 42 Papierformat
-43 Beenden
+43 Registerkarte
 44 Verzeichnisse
 45 %s existiert bereits. Überschreiben?
 46 Maustaste 1 setzt die Textfarbe
@@ -163,3 +163,4 @@
 161 Rechtschreibprüfung abgebrochen
 162 Bitte ein Dokument auswählen
 163 Dokumentwörterbuch unter %s gespeichert
+164 **Pas disponible dans cette version

@@ -482,12 +482,12 @@
 	<message xml:lang="ru">Выйти</message>
 </label>
 <label define="TMSG_DONE">
-	<message xml:lang="en">Done</message>
-	<message xml:lang="fr">Terminer</message>
-	<message xml:lang="de">Beenden</message>
-	<message xml:lang="it">Fatto</message>
+	<message xml:lang="en">Close</message>
+	<message xml:lang="fr">Fermer</message>
+	<message xml:lang="de">Registerkarte</message>
+	<message xml:lang="it">Chiudi</message>
 	<message xml:lang="tr">Tamam</message>
-	<message xml:lang="es">Aceptar</message>
+	<message xml:lang="es">Cerrar</message>
 	<message xml:lang="pt">Feito</message>
 	<message xml:lang="fi">Valmis</message>
 	<message xml:lang="ru">Директории</message>
@@ -1807,6 +1807,10 @@
 	<message xml:lang="pt">Dicionário do documento salvo: %s</message>
 	<message xml:lang="fi">Dokumentin sanasto tallennettu: %s</message>
 	<message xml:lang="ru">Словарь сохранён в: %s</message>
+</label>
+<label define="TMSG_NOT_AVAILABLE">
+	<message xml:lang="en">Not available in this version</message>
+	<message xml:lang="en">Pas disponible dans cette version</message>
 </label>
 <label define="TMSG_LIB_MSG_MAX">
 </label>

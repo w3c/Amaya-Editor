@@ -416,7 +416,7 @@ ShowLinks
 ShowSource
 ShowStructure
 ShowToC
-ShowTimeLineWindow
+#ShowTimeLineWindow
 TtcCloseView
 
 ########### PRINTING

@@ -166,6 +166,7 @@
 #define TMSG_STOP_CHECK		161
 #define TMSG_NO_SELECT		162
 #define TMSG_OK_SAVE		163
-#define TMSG_LIB_MSG_MAX		164
+#define TMSG_NOT_AVAILABLE		164
+#define TMSG_LIB_MSG_MAX		165
 
 #endif

@@ -42,7 +42,7 @@
 40 A4
 41 US
 42 Format du papier
-43 Terminer
+43 Fermer
 44 Répertoires
 45 Le document %s existe déjà. Voulez-vous l'écraser ?
 46 Bouton gauche change la couleur du texte
@@ -163,3 +163,4 @@
 161 Correction interrompue
 162 Rien à corriger : sélectionnez un document
 163 Sauvegarde du dictionnaire "%s"
+164 **Pas disponible dans cette version

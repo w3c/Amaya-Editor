@@ -42,7 +42,7 @@
 40 A4
 41 US
 42 Formato de papel
-43 Aceptar
+43 Cerrar
 44 Directorios
 45 El documento %s ya existe. ¿Quiere sobreescribirlo?
 46 El botón izquierdo fija el color del texto
@@ -163,3 +163,4 @@
 161 Corrección ortográfica abortada
 162 Por favor, seleccione un documento
 163 Diccionario del documento guardado: %s
+164 **Pas disponible dans cette version
