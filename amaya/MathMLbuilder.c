@@ -106,6 +106,7 @@ static MathEntity        MathEntityTable[] =
     {L"Tgr", 84, L'G'},
     {L"Therefore", 92, L'G'},
     {L"Theta", 81, L'G'},
+    {L"ThickSpace", 32, L'L'},
     {L"Tilde", 126, L'L'},
     {L"TripleDot", 188, L'G'},
     {L"Union", 200, L'G'},
