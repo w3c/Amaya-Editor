@@ -7935,6 +7935,7 @@ void InitAutoSave ()
 		  else
 		    urlstring[len++] = (char)c;
 		}
+		    urlstring[len] = EOS;
 	      if (i > 0 && len)
 		/* add an EOS between two urls */
 		AutoSave_list[i++] = EOS;
