@@ -1275,32 +1275,56 @@ void CheckMTable (Element elMTABLE, Document doc, ThotBool placeholder)
 void SetFontstyleAttr (Element el, Document doc)
 {
   ElementType	elType;
-  AttributeType	attrType;
+  AttributeType	attrType, attrType1;
   Attribute	attr, IntAttr;
-  Element       textEl;
+  Element       ancestor, textEl;
   int		len;
   char         *value;
   ThotBool      italic;
 
   if (el != NULL)
     {
-      /* search the fontstyle attribute */
+      /* search the (deprecated) fontstyle attribute or the mathvariant
+         attribute on the element and its ancestors */
       elType = TtaGetElementType (el);
       attrType.AttrSSchema = elType.ElSSchema;
       attrType.AttrTypeNum = MathML_ATTR_fontstyle;
-      attr = TtaGetAttribute (el, attrType);
+      attrType1.AttrSSchema = elType.ElSSchema;
+      attrType1.AttrTypeNum = MathML_ATTR_mathvariant;
+      ancestor = el;
+      attr = NULL;
+      do
+	{
+	  attr = TtaGetAttribute (ancestor, attrType);
+	  if (!attr)
+	    attr = TtaGetAttribute (ancestor, attrType1);
+	  if (!attr)
+	    {
+	      ancestor = TtaGetParent (ancestor);
+	      if (ancestor)
+		{
+		  elType = TtaGetElementType (ancestor);
+		  if (elType.ElSSchema != attrType.AttrSSchema)
+		    /* this ancestor is not in the MathML namespace */
+		    ancestor = NULL;
+		}
+	    }
+	}
+      while (ancestor && !attr);
+
       attrType.AttrTypeNum = MathML_ATTR_IntFontstyle;
       IntAttr = TtaGetAttribute (el, attrType);
       if (attr != NULL)
-	/* there is a fontstyle attribute. Remove the corresponding
-	   internal attribute that is not needed */
+	/* there is a fontstyle or mathvariant attribute. Remove the
+	   IntFontstyle internal attribute that is not needed */
 	{
 	  if (IntAttr != NULL)
 	    TtaRemoveAttribute (el, IntAttr, doc);
 	}
       else
-	/* there is no fontstyle attribute. Create an internal attribute
-	   IntFontstyle with a value that depends on the content of the MI */
+	/* there is no fontstyle or mathvariant attribute. Create an internal
+	   IntFontstyle attribute with a value that depends on the content of
+	   the MI element */
 	{
 	  /* get content length */
 	  len = TtaGetElementVolume (el);

@@ -1722,6 +1722,7 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(AttrNameAndValue);
 	Font: times;
+        Style: roman;
 	Weight: normal;
 	IN Structure_view
 		BEGIN
