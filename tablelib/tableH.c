@@ -27,6 +27,7 @@
 #include "frame_tv.h"
 
 static PtrTabUpdate FirstColUpdate;
+static boolean ComputeColInWork = FALSE;
 #include "attributes_f.h"
 #include "boxmoves_f.h"
 #include "boxrelations_f.h"
@@ -1084,6 +1085,8 @@ int             frame;
   if (cNumber == 0)
     return;
 
+  /* Enter a critical section */
+  ComputeColInWork = TRUE;
   /* register widths of each columns */
   pTabRel = table->AbBox->BxColumns;
   cRef = 0;
@@ -1495,6 +1498,8 @@ int             frame;
   /* Now check row heights */
   CheckRowHeights (table, rspanNumber, rowSpanCell, rowSpans, frame);
   pDoc->DocModified = modified;
+  /* Exit a critical section */
+  ComputeColInWork = FALSE;
 }
 
 
@@ -1555,6 +1560,10 @@ Document        document;
 #endif
 {
   PtrTabUpdate pTabUpdate, pPrevTabUpdate, pOldTabUpdate;
+
+  /* check if we are executing a ComputeColWidth */
+  if (ComputeColInWork)
+    return;
 
   pPrevTabUpdate = NULL;
   pTabUpdate = FirstColUpdate;

@@ -1127,7 +1127,7 @@ PtrAttribute        pNewAttr;
 	       l'attribut sur l'element lui-meme */
 	    RemoveAttrPresentation (pEl, pDoc, pAttr, FALSE, NULL);
 	    /* supprime l'attribut */
-	    RemoveAttribute (pEl, pAttr);
+	    /*RemoveAttribute (pEl, pAttr);*/
 	    /* indique que le document a ete modifie' */
 	    pDoc->DocModified = TRUE;
 	    /* un changement d'attribut vaut dix caracteres saisis */
@@ -1188,6 +1188,8 @@ PtrAttribute        pNewAttr;
 	     /* traitement special a la suppression d'un attribut a un element
 	        d'un objet Draw */
 	     DrawSupprAttr (pNewAttr, pEl);
+	     /* valide les modifications */
+	     AbstractImageUpdated (pDoc);
 	     /* la suppression est maintenant prise en compte dans les
 	        copies-inclusions de l'element */
 	     RedisplayCopies (pEl, pDoc, TRUE);
@@ -1233,6 +1235,7 @@ PtrAttribute        pNewAttr;
 	        sous-arbre avec ce type d'attribut */
 	     ApplyAttrPRules (pEl, pDoc, pAttrAsc);
 	  }
+
 	/* prepare et envoie a l'application l'evenement TteAttrCreate.Post */
 	if (notifyAttr.event == TteAttrCreate)
 	  notifyAttr.attribute = (Attribute) pAttr;
