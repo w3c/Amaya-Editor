@@ -496,17 +496,18 @@ ThotBool    horiz;
 /*----------------------------------------------------------------------
   UpdateAttrText creates or updates the text attribute attr of the
   element el.
-  The parameter update is TRUE when the value gives a delta. In that case
-  the attribute must be parsed after the change.
+  The parameter delta is TRUE when the value is 
+  The parameter update is TRUE when the attribute must be parsed after the change.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void   UpdateAttrText (Element el, Document doc, AttributeType attrType, int value, ThotBool update)
+static void   UpdateAttrText (Element el, Document doc, AttributeType attrType, int value, ThotBool delta, ThotBool update)
 #else /* __STDC__*/
-static void   UpdateAttrText (el, doc, attrType, value, update)
+static void   UpdateAttrText (el, doc, attrType, value, delta, update)
 Element       el;
 Document      doc;
 AttributeType attrType;
 int           value;
+ThotBool      delta;
 ThotBool      update;
 #endif /* __STDC__*/
 {
@@ -546,6 +547,7 @@ ThotBool      update;
 	  i++;
 	}
       unit[0] = WC_EOS;
+      pe = 0;
       if (v)
 	usscanf (&buffer[v], TEXT("%d%s"), &pe, unit);
       else
@@ -568,25 +570,26 @@ ThotBool      update;
 	}
       else if (!ustrcmp (unit, "cm"))
 	{
-	  v = value / 28;
+	  v = (value + 14) / 28;
 	  e = value - (v * 28);
 	}
       else if (!ustrcmp (unit, "mm"))
 	{
-	  v = (value * 10) / 28;
-	  e = value - (v * 28 / 10);
+	  value = value * 10;
+	  v = (value + 14) / 28;
+	  e = value - (v * 28);
 	}
       else
 	{
 	  v = value;
 	  e = 0;
 	}
-      if (update)
+      if (delta)
 	{
 	  v = v + pval;
 	  e = e + pe;
 	}
-      if (e)
+      if (e > 0)
 	usprintf (buffer, TEXT("%d.%d%s"), v, e, unit);
       else
 	usprintf (buffer, TEXT("%d%s"), v, unit);
@@ -666,7 +669,7 @@ ThotBool    horiz;
     /* no attribute available */
     return;
 
-  UpdateAttrText (el, doc, attrType, org, FALSE);
+  UpdateAttrText (el, doc, attrType, org, FALSE, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -759,7 +762,7 @@ ThotBool    horiz;
     /* no attribute available */
     return;
 
-  UpdateAttrText (el, doc, attrType, dim, FALSE);
+  UpdateAttrText (el, doc, attrType, dim, FALSE, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -911,23 +914,24 @@ Element          el;
 		  else if (elType.ElTypeNum == GraphML_EL_line_)
 		    {
 		      attrType.AttrTypeNum = GraphML_ATTR_x1;
-		      UpdateAttrText (child, doc, attrType, val, TRUE);
+		      UpdateAttrText (child, doc, attrType, val, TRUE, TRUE);
 		      attrType.AttrTypeNum = GraphML_ATTR_x2;
 		    }
 		  else
 		    attrType.AttrTypeNum = 0;
 		  if (attrType.AttrTypeNum != 0)
-		    UpdateAttrText (child, doc, attrType, val, TRUE);
+		    UpdateAttrText (child, doc, attrType, val, TRUE, TRUE);
 		}
 	      /* check if the SVG width includes that element */
 	      TtaGiveBoxPosition (child, doc, 1, unit, &x, &dummy);
 	      TtaGiveBoxSize (child, doc, 1, unit, &w, &h);
 	      TtaGiveBoxSize (graphRoot, doc, 1, unit, &wR, &hR);
-	      if (w + x > wR)
+	      dw = w + x - wR;
+	      if (dw > 0)
 		{
 		  /* increase the width of the SVG element */
 		  attrType.AttrTypeNum = GraphML_ATTR_width_;
-		  UpdateAttrText (graphRoot, doc, attrType, w + x - wR, TRUE);
+		  UpdateAttrText (graphRoot, doc, attrType, x + w, FALSE, TRUE);
 		}
 	      /* next element */
 	      TtaNextSibling (&child);
@@ -943,10 +947,9 @@ Element          el;
 	    {
 	      /* increase the width of the SVG element */
 	      attrType.AttrTypeNum = GraphML_ATTR_width_;
-	      UpdateAttrText (graphRoot, doc, attrType, dw, TRUE);
+	      UpdateAttrText (graphRoot, doc, attrType, x + w, FALSE, TRUE);
 	    }
 	}
-
       /* get the unit of the SVG width */
       rule = TtaGetPRule (graphRoot, PRHeight);
       if (rule)
@@ -983,23 +986,24 @@ Element          el;
 		  else if (elType.ElTypeNum == GraphML_EL_line_)
 		    {
 		      attrType.AttrTypeNum = GraphML_ATTR_y1;
-		      UpdateAttrText (child, doc, attrType, val, TRUE);
+		      UpdateAttrText (child, doc, attrType, val, TRUE, TRUE);
 		      attrType.AttrTypeNum = GraphML_ATTR_y2;
 		    }
 		  else
 		    attrType.AttrTypeNum = 0;
 		  if (attrType.AttrTypeNum != 0)
-		    UpdateAttrText (child, doc, attrType, val, TRUE);
+		    UpdateAttrText (child, doc, attrType, val, TRUE, TRUE);
 		}
 	      /* check if the SVG height includes that element */
 	      TtaGiveBoxPosition (child, doc, 1, unit, &dummy, &y);
 	      TtaGiveBoxSize (child, doc, 1, unit, &w, &h);
 	      TtaGiveBoxSize (graphRoot, doc, 1, unit, &wR, &hR);
-	      if (h + y > hR)
+	      dh = h + y - hR;
+	      if (dh > 0)
 		{
 		  /* increase the height of the root element */
 		  attrType.AttrTypeNum = GraphML_ATTR_height_;
-		  UpdateAttrText (graphRoot, doc, attrType, h + y - hR, TRUE);
+		  UpdateAttrText (graphRoot, doc, attrType, y + h, FALSE, TRUE);
 		}
 	      /* next element */
 	      TtaNextSibling (&child);
@@ -1015,7 +1019,7 @@ Element          el;
 	    {
 	      /* increase the height of the root element */
 	      attrType.AttrTypeNum = GraphML_ATTR_height_;
-	      UpdateAttrText (graphRoot, doc, attrType, dh, TRUE);
+	      UpdateAttrText (graphRoot, doc, attrType, y + h, FALSE, TRUE);
 	    }
 	}
 
@@ -1068,24 +1072,19 @@ NotifyElement *event;
  A presentation rule is going to be changed by Thot.
  -----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                GraphicsPRuleChanged (NotifyPresentation *event)
+void                GraphicsChanged (NotifyPresentation *event)
 #else /* __STDC__*/
-void                GraphicsPRuleChanged (event)
+void                GraphicsChanged (event)
 NotifyPresentation *event;
 #endif /* __STDC__*/
 {
-  int           presType;
-
   if (InCreation)
     /* don't check anything during the creation */
     return;
 
-  presType = event->pRuleType;
-  if (presType == PRVertPos || presType == PRHorizPos ||
-      presType == PRHeight ||  presType == PRWidth)
     /* check that the enclosing svg element still encompasses the
        element whose size or position has just been changed */
-    CheckGraphMLRoot (event->document, event->element);
+  CheckGraphMLRoot (event->document, event->element);
 }
 
 
@@ -1240,7 +1239,7 @@ void ControlPointChanged(event)
   int             x, y;
 
   el = event->element;
-  elType = TtaGetElementType (event->element);
+  elType = TtaGetElementType (el);
   doc = event->document;
   attrType.AttrSSchema = elType.ElSSchema;
   if (elType.ElSSchema != GetGraphMLSSchema (doc))
@@ -1278,6 +1277,8 @@ void ControlPointChanged(event)
 	TtaSetAttributeText (attr, text, el, doc);
 	TtaFreeMemory (text);
      }
+  /* continue the work */
+  GraphicsChanged (event);
 }
 
 /*----------------------------------------------------------------------
@@ -1580,7 +1581,7 @@ int          construct;
 	/* create an HTML DIV element in the new element */
 	{
 	  attrType.AttrTypeNum = GraphML_ATTR_width_;
-	  UpdateAttrText (newEl, doc, attrType, 100, TRUE);
+	  UpdateAttrText (newEl, doc, attrType, 100, FALSE, TRUE);
 	    /* the document is supposed to be HTML */
 	  childType.ElSSchema = TtaNewNature (doc, docSchema, TEXT("HTML"),
 					      TEXT("HTMLP"));
@@ -1619,8 +1620,8 @@ int          construct;
     {
       if (shape != 'g')
 	{
-	  TtaGiveBoxSize (parent, doc, 1, UnPoint, &w, &h);
-	  TtaChangeLimitOfPolyline (child, UnPoint, w, h, doc);
+	  TtaGiveBoxSize (parent, doc, 1, UnPixel, &w, &h);
+	  TtaChangeLimitOfPolyline (child, UnPixel, w, h, doc);
 	}
       TtcInsertGraph (doc, 1, shape);
       if (shape != 'g' && TtaGetVolume (selEl) < 3)

@@ -7,8 +7,6 @@ DEFAULT
 	ElemPaste.Post -> GraphElemPasted;
 	PRuleCreate.Pre -> GraphicsPRuleChange;
 	PRuleModify.Pre -> GraphicsPRuleChange;
-	PRuleCreate.Post -> GraphicsPRuleChanged;
-	PRuleModify.Post -> GraphicsPRuleChanged;
         ElemSelect.Post -> GraphicsSelectionChanged;
 	ElemExtendSelect.Pre -> ExtendSelectGraphMLElement;
    END;
@@ -34,7 +32,17 @@ ELEMENTS
 	ElemPaste.Post ->       TspanCreated;
 	END;
    foreignObject:
+	BEGIN
 	ElemExport.Pre ->       ExportForeignObject;
+	ElemGraphModify.Post -> GraphicsChanged;
+	END;
+   rect:
+	ElemGraphModify.Post -> GraphicsChanged;
+   circle:
+	ElemGraphModify.Post -> GraphicsChanged;
+   ellipse:
+	ElemGraphModify.Post -> GraphicsChanged;
+
    GRAPHICS_UNIT:
 	ElemDelete.Post ->      GraphLeafDeleted;
    PICTURE_UNIT:

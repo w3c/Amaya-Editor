@@ -599,9 +599,9 @@ int      maxY;
    /* the specific presentation is not a CSS rule */
    ctxt->cssLevel = 0;
    ctxt->destroy = FALSE;
-   pval.typed_data.unit = STYLE_UNIT_PT;
+   pval.typed_data.unit = STYLE_UNIT_PX;
 
-   unit = UnPoint;
+   unit = UnPixel;
    width = maxX - minX;
    height = maxY - minY;
    nbPoints = TtaGetPolylineLength (leaf);
@@ -687,7 +687,7 @@ Document	doc;
       nbPoints = 0;
       minX = minY = 32000;
       maxX = maxY = 0;
-      unit = UnPoint;
+      unit = UnPixel;
       while (*ptr != EOS)
          {
          x = y = 0;
@@ -855,7 +855,7 @@ ThotBool   delete;
 		 TtaGetElementType(child).ElTypeNum != GRAPHICS_UNIT)
 	    TtaNextSibling (&child);
 	  pval.typed_data.value = 0;
-          pval.typed_data.unit = STYLE_UNIT_PT;
+          pval.typed_data.unit = STYLE_UNIT_PX;
 	  ctxt->destroy = FALSE;
 	  TtaSetStylePresentation (ruleType, child, NULL, ctxt, pval);
 	  ctxt->destroy = TRUE;
