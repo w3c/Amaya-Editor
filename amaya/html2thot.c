@@ -41,6 +41,7 @@
 #include "zlib.h"
 #endif
 
+#include "language.h"
 #include "css_f.h"
 #include "html2thot_f.h"
 #include "HTMLactions_f.h"
@@ -859,6 +860,7 @@ static Element      ElementStack[MaxStack];  /* element in the Thot abstract
 						tree */
 static int          ThotLevel[MaxStack];     /* level of element in the Thot
 						tree */
+static Language	    LanguageStack[MaxStack]; /* element language */
 static int          StackLevel = 0;	     /* first free element on the
 						stack */
 /* information about the input file */
@@ -3530,6 +3532,9 @@ int                 entry;
 	       }
 	     else
 	       i--;
+	   if (StackLevel > 0)
+	     currentLanguage = LanguageStack[StackLevel - 1];
+
 	   /* check the Thot structure of the complete element */
 	   CheckMathElement (lastElement);
 	 }
@@ -3684,6 +3689,9 @@ int                 start;
 	       }
 	     else
 	       i--;
+	   if (StackLevel > 0)
+	     currentLanguage = LanguageStack[StackLevel - 1];
+
 	   /* complete all closed elements */
 	   if (el != lastElement)
 	     if (!TtaIsAncestor(el, lastElement))
@@ -4242,6 +4250,7 @@ char               *GIname;
 		  ThotLevel[StackLevel] = ThotLevel[StackLevel - 1];
 		else
 		  ThotLevel[StackLevel] = ThotLevel[StackLevel - 1] + 1;
+	        LanguageStack[StackLevel] = currentLanguage;
 		GINumberStack[StackLevel++] = entry;
 	      }
      }
@@ -4349,6 +4358,7 @@ char               *GIname;
 		  ThotLevel[StackLevel] = ThotLevel[StackLevel - 1];
 		else
 		  ThotLevel[StackLevel] = ThotLevel[StackLevel - 1] + 1;
+	        LanguageStack[StackLevel] = currentLanguage;
 		GINumberStack[StackLevel++] = entry;
 	      }
 	  }
@@ -4557,8 +4567,7 @@ char               *ChrString;
 	if (elType.ElTypeNum == HTML_EL_TEXT_UNIT)
 	   length = TtaGetTextLength (el);
 	if (length == 0)
-	   TtaSetTextContent (el, ChrString, currentLanguage,
-			      theDocument);
+	   TtaSetTextContent (el, ChrString, currentLanguage, theDocument);
 	else
 	   TtaAppendTextContent (el, ChrString, theDocument);
      }
@@ -4820,8 +4829,7 @@ char                c;
    char                translation;
    char                shape;
    char                msgBuffer[MaxBufferLength];
-#define LANGLEN 50
-   char		       langName[LANGLEN];
+   Language	       lang;
 
 #ifdef MATHML
    if (WithinMathML)
@@ -4923,8 +4931,8 @@ char                c;
 					if (attrType.AttrTypeNum == HTML_ATTR_Langue)
 					   /* it's a LANG attribute value */
 					   {
-					   strncpy (langName, TtaGetLanguageNameFromCode(inputBuffer), LANGLEN-1);
-					   if (langName[0] == '\0')
+					   lang = TtaGetLanguageIdFromName (inputBuffer);
+					   if (lang == 0)
 					      {
 					      sprintf (msgBuffer, "Unknown language: %s", inputBuffer);
 					      ParseHTMLError (theDocument, msgBuffer);
@@ -4932,7 +4940,8 @@ char                c;
 					   else
 					      {
 					      /* change current language */
-					      currentLanguage = TtaGetLanguageIdFromName (langName);
+					      currentLanguage = lang;
+					      LanguageStack[StackLevel - 1] = currentLanguage;
 					      }
 					   }
 					}
@@ -7149,11 +7158,11 @@ Document            doc;
    SSchema	       schema;
 
    StackLevel = 1;
+   currentLanguage = TtaGetDefaultLanguage ();
    if (lastelem != NULL && doc != 0)
      {
 	/* initialize the stack with ancestors of lastelem */
 	theDocument = doc;
-	currentLanguage = TtaGetDefaultLanguage ();
 	HTMLSSchema = TtaGetDocumentSSchema (theDocument);
 	elType = TtaGetElementType (lastelem);
 	if (strcmp ("MathML", TtaGetSSchemaName (elType.ElSSchema)) == 0)
@@ -7177,11 +7186,13 @@ Document            doc;
 		    {
 		       GINumberStack[i + 1] = GINumberStack[i];
 		       ElementStack[i + 1] = ElementStack[i];
+		       LanguageStack[i + 1] = LanguageStack[i];
 		       ThotLevel[i + 1] = ThotLevel[i] + 1;
 		    }
 		  GINumberStack[1] = MapGI (tag, &schema);
 		  ElementStack[1] = elem;
 		  ThotLevel[1] = 1;
+		  LanguageStack[1] = currentLanguage;
 		  StackLevel++;
 	       }
 	     elem = TtaGetParent (elem);
