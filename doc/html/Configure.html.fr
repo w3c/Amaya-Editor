@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Configurer Amaya</title>
-  <meta name="GENERATOR" content="amaya 5.3, see http://www.w3.org/Amaya/" />
+  <meta name="GENERATOR" content="amaya 5.4, see http://www.w3.org/Amaya/" />
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 </head>
 
@@ -229,7 +229,7 @@ alt="General Preferences Menu" /></p>
       href="EditChar.html.fr#Keyboard">deux tables différentes</a>.</p>
       <p></p>
     </dd>
-  <dt> <strong>Montrer les images en arrière plan</strong></dt>
+  <dt>&nbsp;<strong>Montrer les images en arrière plan</strong></dt>
     <dd>Contrôle si les images en arrière plan doivent être montrées ou non.
       Cette option est effective uniquement quand on charge un nouveau
       document.</dd>
@@ -324,9 +324,27 @@ alt="General Preferences Menu" /></p>
 <h4><a name="Publishing">Pré</a><a name="Publishing1">férences de
 publication</a></h4>
 
+<p>Cette boîte de dialogue vous permet d'enregistrer vos préférences pour les
+ETAGS et pré-conditions, pour vérifier ou non chaque commande PUT avec une
+commande GET, pour définir un nom par défault pour les URLs finissant par un
+'/' et pour autoriser la redirection automatique de la commande PUT dans des
+domaines spécifiques.</p>
+
 <p style="text-align: center"><img src="../images/PublishMenufr.gif"
 alt="Publish Preferences Menu" /></p>
 <dl>
+  <dt><strong>Utiliser le type MIME application/xhtml+xml pour les documents
+  XHTML</strong></dt>
+    <dd>Lorsqu'elle est active, cette option associe le nouveau (et officiel)
+      type MIME XHTML à tout nouveau document XHTML publié sur le Web. Elle
+      est désactivée par défaut pour cette version d'Amaya car à l'heure
+      actuelle, tous les serveurs ne gèrent pas ce type MIME. Cette option ne
+      modifie pas le type MIME des anciens documents: le type MIME qui est
+      recu est celui qui sera utilisé pour publier le document, sauf si vous
+      utilisez la commande <strong>Sauver comme</strong>. Il est à noter que
+      cette  option nécessite aussi de modifier la configuration de votre
+      serveur si celui-ci n'enregistre pas les meta-données associées à
+      chaque document.</dd>
   <dt><strong>Utiliser les ETAGS et les conditions requises</strong></dt>
     <dd>HTTP/1.1 introduit des nouvelles entêtes qui permettent d'éviter le
       problème de <a
