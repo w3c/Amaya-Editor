@@ -1379,7 +1379,7 @@ static int SafeSaveFileThroughNet (Document doc, char *localfile,
 #ifdef AMAYA_DEBUG
   fprintf(stderr, "Save %s to %s type=%s", localfile, remotefile, content_type);
   AM_GetFileSize (localfile, &file_size);
-  fprintf(stderr, " size=%u\n", file_size);
+  fprintf(stderr, " size=%lu\n", file_size);
 #endif
 
   /* Save */
