@@ -206,7 +206,6 @@ typedef enum _AnnotMode {
 #define ANNOT_MAIN_INDEX  "annot.index"
 #define ANNOT_INDEX_SUFFIX ".index"
 #define ANNOT_USER  "amaya"
-#define LINK_IMAGE "target.gif"
 #define ANNOT_ANAME "Annotation"
 
 /* RDF Schema entry */
