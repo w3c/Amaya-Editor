@@ -650,9 +650,9 @@ int                 fg;
 #endif /* __STDC__ */
 {
    int                 xm, yf, yend, exnum, delta;
+   int                 wd;
 
    exnum = 0;
-
    if (FontHeight (font) *1.2 >= h)
      /* display a single glyph */
      {
@@ -664,7 +664,7 @@ int                 fg;
    else
      {
      /* Need more than one glyph */
-     xm = x + ((l - CharacterWidth ('\364', font)) / 2);
+     xm = x + ((l - CharacterWidth ('\363', font)) / 2);
      yf = y - FontAscent (font) + CharacterAscent ('\363', font);
      DrawChar ('\363', frame, xm, yf, font, RO, active, fg);
      yend = y + h - CharacterHeight ('\365', font) - FontAscent (font) +
@@ -673,17 +673,18 @@ int                 fg;
 
      yf += CharacterHeight ('\363', font);
      delta = yend - yf;
+     wd = (CharacterWidth ('\363', font) - CharacterWidth ('\364', font)) / 2;
      if (delta >= 0)
        {
-	for (yf += CharacterAscent ('\364', font) - FontAscent (font),
+	for (yf += CharacterAscent ('\364', font) - FontAscent (font) - 1,
 	     yend -= CharacterHeight ('\364', font) - 1;
 	     yf < yend;
 	     yf += CharacterHeight ('\364', font), exnum++)
-	   DrawChar ('\364', frame, xm, yf, font, RO, active, fg);
+	   DrawChar ('\364', frame, xm+wd, yf, font, RO, active, fg);
 	if (exnum)
-	   DrawChar ('\364', frame, xm, yend, font, RO, active, fg);
+	   DrawChar ('\364', frame, xm+wd, yend, font, RO, active, fg);
 	else
-	   DrawChar ('\364', frame, xm, yf + ((delta - CharacterHeight ('\364', font)) / 2), font, RO, active, fg);
+	   DrawChar ('\364', frame, xm+wd, yf + ((delta - CharacterHeight ('\364', font)) / 2), font, RO, active, fg);
        }
      }
 

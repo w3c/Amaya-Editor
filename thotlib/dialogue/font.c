@@ -549,10 +549,11 @@ int                 size;
  *      LoadFont load a given font designed by its name.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ptrfont             LoadFont (char name[100])
+ptrfont             LoadFont (char name[100], boolean toPatch)
 #else  /* __STDC__ */
-ptrfont             LoadFont (name)
+ptrfont             LoadFont (name, toPatch)
 char                name[100];
+boolean             toPatch;
 #endif /* __STDC__ */
 {
    char                tmp[200];
@@ -568,6 +569,12 @@ char                name[100];
 	{
 	   mincar = result->min_char_or_byte2;
 	   spacewd = result->per_char[32 - mincar].width;
+	   if (toPatch)
+	     {
+	       /* a patch due to errors in standard symbol fonts */
+	       /*result->per_char[244 - mincar].width -= 2;
+	       result->per_char[244 - mincar].ascent -= 2;*/
+	     }
 	   if (result->max_char_or_byte2 > UNBREAKABLE_SPACE)
 	      /* largeur(Ctrl Space) = largeur(Space) */
 	      result->per_char[UNBREAKABLE_SPACE - mincar].width = spacewd;
@@ -739,7 +746,7 @@ TypeUnit            unit;
 
    FontIdentifier (alphabet, family, highlight, size, unit, name, nameX);
 #  ifndef _WINDOWS
-   return LoadFont (nameX);
+   return LoadFont (nameX, FALSE);
 #  else  /* _WINDOWS */
    return NULL;
 #  endif /* _WINDOWS */
@@ -861,7 +868,10 @@ boolean             increase;
 	   currentFontCharacteristics->unit      = unit;
 #      endif /* !_WIN_PRINT */
 #          else  /* _WINDOWS */
-	   ptfont = LoadFont (textX);
+	   if (alphabet == 'G' && (size == 12 || size == 14))
+	     ptfont = LoadFont (textX, TRUE);
+	   else
+	     ptfont = LoadFont (textX, FALSE);
 #          endif /* !_WINDOWS */
 	   /* Loading failed try to find a neighbour */
 	   if (ptfont == NULL)

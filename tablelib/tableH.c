@@ -1062,9 +1062,9 @@ int             frame;
 				      skip = TRUE;
 				    }
 				  else if (!pAb->AbWidth.DimIsPosition &&
-					   pAb->AbWidth.DimAbRef != NULL &&
 					   pAb->AbHorizEnclosing &&
-					   !IsParentBox (pAb->AbWidth.DimAbRef->AbBox, pAb->AbBox))
+					   (pAb->AbWidth.DimAbRef == NULL ||
+					    !IsParentBox (pAb->AbWidth.DimAbRef->AbBox, pAb->AbBox)))
 				    {
 				      /* the box width doesn't depend on cell width */
 				      if (min < pAb->AbBox->BxWidth + delta)

@@ -2191,7 +2191,13 @@ int                 frame;
 		    /* l'englobement d'une boite ne peut etre traite */
 		    /* plus de deux fois (sinon on boucle).      */
 		      else if (pAb->AbBox->BxCycles <= 1)
-			WidthPack (pAb, pSourceBox, frame);
+			{
+			  if (TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema) &&
+			      ThotLocalActions[T_checkcolumn] && !pAb->AbPresentationBox)
+			    (*ThotLocalActions[T_checkcolumn]) (pAb, NULL, frame);
+			  else
+			    WidthPack (pAb, pSourceBox, frame);
+			}
 		  }
 		else if (!pCurrentAb->AbNew
 			 && Propagate == ToSiblings

@@ -23,8 +23,9 @@
 #include "frame.h"
 #include "picture.h"
 #include "message.h"
-/* #include "pattern.h" */
-
+#ifndef _WIN_PRINT
+#include "pattern.h"
+#endif /* _WIN_PRINT */
 #undef THOT_EXPORT
 #define THOT_EXPORT extern
 #include "frame_tv.h"

@@ -211,7 +211,7 @@ Element             row;
 			TtaNextSibling (&currentrow);
 		      }
 		  }
-		else if (all)
+		else if (!all)
 		  child = NULL;
 	      }
 	    else if (elType.ElTypeNum == HTML_EL_Table_body)
@@ -232,7 +232,7 @@ Element             row;
 			  }
 		      }
 
-		    if (all)
+		    if (!all)
 		      {
 			group = NULL;
 			child = NULL;

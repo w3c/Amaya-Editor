@@ -318,7 +318,7 @@ STRUCT
 	Table_body = LIST OF (tbody = LIST OF (Table_row));
 	? tfoot = LIST OF (Table_row);
 	Table_foot = CONSTANT C_Foot;
-	END;
+	END with Border ?= 1;
   Column_head (ATTR IntWidthPercent; IntWidthPxl) =
 	CONSTANT C_Head;
   Table_row (ATTR Row_align = Row_left, Row_center, Row_right;
