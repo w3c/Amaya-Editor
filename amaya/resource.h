@@ -276,6 +276,7 @@
 #define IDC_URLMESSAGE                  1057
 #define ID_APPLY                        1058
 #define IDC_GETALT                      1058
+#define IDC_CLEAR                       1058
 #define IDC_TIMES                       1060
 #define IDC_HELVETICA                   1061
 #define IDC_COURIER                     1062
