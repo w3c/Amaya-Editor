@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2001.
+ *  (c) COPYRIGHT INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -29,8 +29,6 @@
 #define MAX_RELAT_POS 10	/* Number of position dependencies for a block */
 #define MAX_RELAT_DIM 5		/* Number of dimension dependencies
 				   for a block */
-#define MAX_ALPHABET 3		/* Max. number of used alphabets */
-#define MAX_FONT_STYLE 3	/* Max. number of used font styles */
 #define	HANDLE_WIDTH 5		/* Width of selection handles */	
 #define DELTA_SEL 6             /* Accuracy of the selection */
 #define EXTRA_GRAPH 10		/* Graphic boxes overflow */
