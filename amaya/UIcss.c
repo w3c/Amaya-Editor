@@ -385,6 +385,8 @@ void UpdateStyleSheet (char *url, char *tempdoc)
 			  dispMode = TtaGetDisplayMode (doc);
 			  if (dispMode == DisplayImmediately)
 			    TtaSetDisplayMode (doc, NoComputedDisplay);
+			  /* invalidate current logs */
+			  CloseLogs (doc);
 			  if (refcss && refcss->infos[doc])
 			    {
 			      refInfo = refcss->infos[doc];
@@ -750,6 +752,14 @@ void ShowAppliedStyle (Document doc, View view)
   else
     {
       elType = TtaGetElementType (el);
+      if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
+	  elType.ElTypeNum == HTML_EL_GRAPHICS_UNIT ||
+	  elType.ElTypeNum == HTML_EL_SYMBOL_UNIT)
+	{
+	  /* there is no style on terminal elements */
+	  el = TtaGetParent (el);
+	  elType = TtaGetElementType (el);	  
+	}
       /* list CSS rules applied to the current selection */
       sprintf (fileName, "%s%c%d%cSTYLE.LST",
 	       TempFileDirectory, DIR_SEP, doc, DIR_SEP);
@@ -779,6 +789,7 @@ void ShowAppliedStyle (Document doc, View view)
 void SynchronizeAppliedStyle (NotifyElement *event)
 {
   ElementType         elType;
+  Element             el;
   Document            doc;
   FILE               *list;
   char                fileName[100], dirName[100];
@@ -786,12 +797,21 @@ void SynchronizeAppliedStyle (NotifyElement *event)
 
   /* is there log documents linked to this document? */
   doc = event->document;
+  el = event->element;
   for (i = 1; i < DocumentTableLength; i++)
     if (DocumentURLs[i] && DocumentSource[i] == doc &&
 	DocumentTypes[i] == docLog &&
 	strstr (DocumentURLs[i], "STYLE.LST"))
       {
-	elType = TtaGetElementType (event->element);
+	elType = TtaGetElementType (el);
+	if (elType.ElTypeNum == HTML_EL_TEXT_UNIT ||
+	    elType.ElTypeNum == HTML_EL_GRAPHICS_UNIT ||
+	    elType.ElTypeNum == HTML_EL_SYMBOL_UNIT)
+	  {
+	  /* there is no style on terminal elements */
+	    el = TtaGetParent (el);
+	    elType = TtaGetElementType (el);	  
+	  }
 	/* list CSS rules applied to the current selection */
 	sprintf (dirName, "%s%c%d",
 		 TempFileDirectory, DIR_SEP, doc);
