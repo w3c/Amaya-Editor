@@ -2559,7 +2559,6 @@ View                view;
 #endif
 {
 #ifdef ANNOTATIONS
-#endif /* ANNOTATIONS */
-
   CustomQueryMenuInit (document, view);
+#endif /* ANNOTATIONS */
 }
