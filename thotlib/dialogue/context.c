@@ -52,6 +52,7 @@ extern int              errno;
 
 
 #ifndef _WINDOWS
+#ifndef _GTK
 /*----------------------------------------------------------------------
  * XWindowError is the X-Windows non-fatal errors handler.
  ----------------------------------------------------------------------*/
@@ -79,6 +80,7 @@ static int XWindowFatalError (Display * dpy)
     (*ThotLocalActions[T_backuponfatal]) ();
   return (0);
 }
+#endif /* !_GTK */
 #endif /* _WINDOWS */
 
 
@@ -187,13 +189,12 @@ static void InitColors (char* name)
 #ifdef _GTK
    GdkVisual          *vptr;
    GdkVisualType       vinfo;
-   int                 test;
 #else /* _GTK */
    XVisualInfo        *vptr;
    XVisualInfo         vinfo;
-#endif /* _GTK */
    ThotColorStruct     col;
    int                 i;
+#endif /* _GTK */
 
 #ifdef _GTK
    vptr = gdk_visual_get_best ();
@@ -204,8 +205,8 @@ static void InitColors (char* name)
      TtIsTrueColor = FALSE;
    /* Depending on the display Black and White order may be inverted */
   // if (XWhitePixel (TtDisplay, TtScreen) == 0)
-  test = gdk_color_white (TtCmap, &cwhite);
-  test = gdk_color_black (TtCmap, &cblack);
+  gdk_color_white (TtCmap, (GdkColor *)&cwhite);
+  gdk_color_black (TtCmap, (GdkColor *)&cblack);
    if (cwhite.pixel == 0)
      {
        /* je ne sais pas ce qu'il faut faire */
@@ -313,7 +314,7 @@ static void InitGraphicContexts (void)
   gdk_rgb_gc_set_foreground (TtLineGC, Black_Color);
   gdk_rgb_gc_set_background (TtLineGC, White_Color);
   gdk_gc_set_function (TtLineGC, GDK_COPY);
-  gdk_gc_set_tile (TtLineGC, pix);
+  gdk_gc_set_tile (TtLineGC, (GdkPixmap *)pix);
 
   /* Another Graphic Context to write black on white, for dialogs. */
   TtDialogueGC = gdk_gc_new (DefaultDrawable);
@@ -343,7 +344,7 @@ static void InitGraphicContexts (void)
   gdk_gc_set_function (TtGreyGC, GDK_COPY);
   gdk_gc_set_fill (TtGreyGC, GDK_TILED);
 
-  gdk_pixmap_unref (pix);
+  gdk_pixmap_unref ((GdkPixmap *)pix);
 #else /* _GTK */
    valuemask = GCForeground | GCBackground | GCFunction;
    white = ColorNumber ("White");
