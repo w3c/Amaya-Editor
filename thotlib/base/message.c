@@ -62,11 +62,11 @@ unsigned char *AsciiTranslate (char *pBuffer)
       /* On lit jusqu'au premier backslash rencontre */
       while ((pBuffer[i] != '\\') && (pBuffer[i] != EOS))
 	{
-#ifndef _WINDOWS
+#if !defined(_WINDOWS) && !defined(_WX)
 	  if (pBuffer[i] == '&')
 	    i++;
 	  else
-#endif /* _WINDOWS */
+#endif /* #if !defined(_WINDOWS) && !defined(_WX) */
 	    result[j++] = pBuffer[i++];
 	}
 
