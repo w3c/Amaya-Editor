@@ -486,9 +486,11 @@ int UnicodeFontRenderPoly (void *gl_font, wchar_t *text, float x, float y, int s
 	{
 	  glyph = &(cache->glyph);
 	  glyph_index = cache->character;
-#ifdef _TRACE_GL_BUGS_GLISLIST
-  if (glyph->data) printf ( "GLBUG - UnicodeFontRenderPoly : glIsList=%s (should be yes)\n", glIsList (*((GLuint *)glyph->data)) ? "yes" : "no" );
-#endif /* _TRACE_GL_BUGS_GLISLIST */
+#ifdef _WX
+	  wxASSERT_MSG( !glyph->data ||
+			glIsList(*((GLuint *)glyph->data)),
+			_T("GLBUG - UnicodeFontRenderPoly : glIsList returns false"));
+#endif /* _WX */
 	  if (glyph->data && glyph->data_type == GL_GLYPH_DATATYPE_GLLIST)
 	    {
 	      /* retrieve kerning distance 

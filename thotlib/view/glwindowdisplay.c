@@ -281,9 +281,10 @@ void GL_SetFillOpacity (int opacity)
   ----------------------------------------------------------------------*/
 void GL_SetClipping (int x, int y, int width, int height)
 {
-#ifdef _TRACE_GL_PICTURE 
-	  printf ( "GL_SetClipping : x=%d y=%d w=%d h=%d\n", x, y, width, height );
-#endif /* _TRACE_GL_PICTURE */
+#ifdef _WX
+  wxASSERT_MSG( x>=0 && y>=0 && width>=0 & height>=0, _T("GL_SetClipping : one clipping value is negative") );
+#endif /* _WX */
+  TTALOGDEBUG_4( TTA_LOG_DRAW, _T("GL_SetClipping : x=%d y=%d w=%d h=%d"), x, y, width, height );
   glEnable (GL_SCISSOR_TEST);
   glScissor (x, y, width, height);
   if (Width_Clip == 0 && Height_Clip == 0)
