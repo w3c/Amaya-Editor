@@ -2125,11 +2125,14 @@ char      *MakeRelativeURL (char *aName, char *relatedName)
   after_access = NULL;
   p = aName;
   q = relatedName;
-  for (; *p && (*p == *q); p++, q++)
+  for (; *p && !strncasecmp (p, q, 1); p++, q++)
     {
       /* Find extent of match */
       if (*p == ':')
-	after_access = p + 1;
+	  {
+	  after_access = p + 1;
+	  slashes++;
+	  }
       if (*p == DIR_SEP)
 	{
 	  /* memorize the last slash position and count them */

@@ -2250,8 +2250,8 @@ IDC_WINCURSOR           CURSOR  DISCARDABLE     "wincurso.cur"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,0,1
- PRODUCTVERSION 1,0,0,1
+ FILEVERSION 6,3,0,0
+ PRODUCTVERSION 6,3,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -2269,14 +2269,14 @@ BEGIN
             VALUE "Comments", "\0"
             VALUE "CompanyName", "W3C INRIA\0"
             VALUE "FileDescription", "Amaya\0"
-            VALUE "FileVersion", "1, 0, 0, 1\0"
+            VALUE "FileVersion", "6, 3, 0, 0\0"
             VALUE "InternalName", "Amaya\0"
-            VALUE "LegalCopyright", "Copyright © 1999\0"
+            VALUE "LegalCopyright", "Copyright © 1999-2002\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "Amaya.exe\0"
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "W3C INRIA Amaya\0"
-            VALUE "ProductVersion", "1, 0, 0, 1\0"
+            VALUE "ProductVersion", "6, 3, 0, 0\0"
             VALUE "SpecialBuild", "\0"
         END
     END
