@@ -585,6 +585,7 @@ install : all @NOPRINT@../bin/print
 	  done ; done)
 	$(CP) -r $(THOTDIR)/doc/images $(prefix)/$(AMAYA_INSTALLDIR)/doc
 	$(CP) -r $(THOTDIR)/doc/html $(prefix)/$(AMAYA_INSTALLDIR)/doc
+	$(CP) -r $(THOTDIR)/doc/WX $(prefix)/$(AMAYA_INSTALLDIR)/doc
 	(for i in $(FONTSFILES) ; do \
 	  for file in `$(ECHO) $(THOTDIR)/fonts/$$i` ; do \
 	    $(INSTALL_DATA) $$file $(prefix)/$(AMAYA_INSTALLDIR)/fonts ; \
