@@ -21,8 +21,8 @@ extern void NewPosition ( PtrAbstractBox pAb,
                           int frame,
                           boolean display );
 extern void NewDimension ( PtrAbstractBox pAb,
-                           int deltaX,
-                           int deltaY,
+                           int width,
+                           int height,
                            int frame,
                            boolean display );
 extern void ApplyNewRule ( PtrDocument pDoc,
@@ -104,8 +104,8 @@ extern void NewPosition (/* PtrAbstractBox pAb,
                             int frame,
                             boolean display */);
 extern void NewDimension (/* PtrAbstractBox pAb,
-                             int deltaX,
-                             int deltaY,
+                             int width,
+                             int height,
                              int frame,
                              boolean display */);
 extern void ApplyNewRule (/* PtrDocument pDoc,

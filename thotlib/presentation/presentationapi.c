@@ -803,7 +803,7 @@ Document            document;
 		       deltaX = PixelValue (deltaX, unit, pAb);
 		       deltaY = PixelValue (deltaY, unit, pAb);
 		    }
-		  NewDimension (pAb, deltaX, deltaY, frame, FALSE);
+		  NewDimension (pAb, deltaX+pAb->AbBox->BxWidth, deltaY+pAb->AbBox->BxHeight, frame, FALSE);
 		  RedispNewGeometry (document, (PtrElement) element);
 	       }
 	  }

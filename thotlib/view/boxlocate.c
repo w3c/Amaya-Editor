@@ -1926,8 +1926,6 @@ int                 ym;
 	     UserGeometryResize (frame, x, y, &width, &height, xr, yr, xmin, xmax, ymin, ymax, xm, ym);
 
 	     /* On transmet la modification a l'editeur */
-	     width = width - pBox->BxWidth;
-	     height = height - pBox->BxHeight;
 	     NewDimension (pBox->BxAbstractBox, width, height, frame, TRUE);
 	  }
 	else

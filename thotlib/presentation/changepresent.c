@@ -1112,6 +1112,7 @@ boolean             display;
 	       }
 	  }
      }
+
    if (reDisp)
      {
 	if (display)
@@ -1120,8 +1121,10 @@ boolean             display;
 		if (updateframe[view - 1] > 0)
 		   /* eteint la selection dans la view traitee */
 		   SwitchSelection (updateframe[view - 1], FALSE);
-	     AbstractImageUpdated (pDoc);	/* met a jour l'image abstraite */
-	     RedisplayDocViews (pDoc);	/* fait reafficher ce qui doit l'etre */
+	     /* met a jour l'image abstraite */
+	     AbstractImageUpdated (pDoc);
+	     /* fait reafficher ce qui doit l'etre */
+	     RedisplayDocViews (pDoc);
 	     for (view = 1; view <= MAX_VIEW_DOC; view++)
 		if (updateframe[view - 1] > 0)
 		   /* rallume la selection dans la view traitee */
@@ -1132,21 +1135,19 @@ boolean             display;
 
 
 /*----------------------------------------------------------------------
-   	NewDimension est appele par le Mediateur, lorsque l'utilisateur
-   		deforme une boite a l'ecran. pAb est le pave deforme'	
-   		et deltaX,deltaY representent l'amplitude de la		
-   		deformation en pixels.					
-   		frame indique la fenetre.				
-   		display indique s'il faut reafficher ou simplement		
-   		recalculer l'image.					
+  NewDimension est appele par le Mediateur, lorsque l'utilisateur
+  deforme une boite a l'ecran. pAb est le pave deforme'	
+  width et height donnent les nouvelles dimensions en pixels.
+  frame indique la fenetre.				
+  display indique s'il faut reafficher ou simplement recalculer l'image.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                NewDimension (PtrAbstractBox pAb, int deltaX, int deltaY, int frame, boolean display)
+void                NewDimension (PtrAbstractBox pAb, int width, int height, int frame, boolean display)
 #else  /* __STDC__ */
-void                NewDimension (pAb, deltaX, deltaY, frame, display)
+void                NewDimension (pAb, width, height, frame, display)
 PtrAbstractBox      pAb;
-int                 deltaX;
-int                 deltaY;
+int                 width;
+int                 height;
 int                 frame;
 boolean             display;
 
@@ -1159,7 +1160,7 @@ boolean             display;
    PtrAttribute        pAttr;
    PtrDocument         pDoc;
    PtrElement          pEl;
-   int                 height, width, heightRef, widthRef;
+   int                 heightRef, widthRef;
    int                 updateframe[MAX_VIEW_DOC];
    int                 viewSch;
    boolean             attr;
@@ -1186,7 +1187,7 @@ boolean             display;
    doit = FALSE;
 
    /* traite le changement de largeur */
-   if (deltaX != 0)
+   if (width != 0)
      {
 	/* cherche d'abord la regle de dimension qui s'applique a l'element */
 	pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch, PtWidth, FnAny, FALSE, TRUE, &pAttr);
@@ -1206,8 +1207,6 @@ boolean             display;
 
 	if (ok)
 	  {
-	     /* largeur courante de la boite */
-	     width = pAb->AbBox->BxWidth;
 	     if (pRStd->PrDimRule.DrUnit == UnPercent)
 	       {
 		  if (!pRStd->PrDimRule.DrAbsolute)
@@ -1223,11 +1222,11 @@ boolean             display;
 		     /* de la boite englobante */
 		     widthRef = pAb->AbEnclosing->AbBox->BxWidth;
 		  /* calcule le isNew rapport (pourcentage) de la boite */
-		  x = LogicalValue (deltaX + width, UnPercent, (PtrAbstractBox) widthRef);
+		  x = LogicalValue (width, UnPercent, (PtrAbstractBox) widthRef);
 	       }
 	     else
 		/* calcule la nouvelle largeur en unite logique */
-		x = LogicalValue (deltaX + width, pRStd->PrDimRule.DrUnit, pAb);
+		x = LogicalValue (width, pRStd->PrDimRule.DrUnit, pAb);
 
 	     /* cherche si la largeur de l'element est determinee par un */
 	     /* attribut auquel est associee l'exception NewWidth */
@@ -1348,7 +1347,7 @@ boolean             display;
      }
 
    /* traite le changement de hauteur de la boite */
-   if (deltaY != 0)
+   if (height != 0)
       /* cherche d'abord la regle de dimension qui s'applique a l'element */
      {
 	pRStd = GlobalSearchRulepEl (pEl, &pSPR, &pSSR, 0, NULL, viewSch, PtHeight, FnAny, FALSE, TRUE, &pAttr);
@@ -1367,8 +1366,6 @@ boolean             display;
 
 	if (ok)
 	  {
-	     /* hauteur courante de la boite */
-	     height = pAb->AbBox->BxHeight;
 	     if (pRStd->PrDimRule.DrUnit == UnPercent)
 	       {
 		  if (!pRStd->PrDimRule.DrAbsolute)
@@ -1384,11 +1381,11 @@ boolean             display;
 		     /* de la boite englobante */
 		     heightRef = pAb->AbEnclosing->AbBox->BxHeight;
 		  /* calcule le isNew rapport (pourcentage) de la boite */
-		  y = LogicalValue (deltaY + height, UnPercent, (PtrAbstractBox) heightRef);
+		  y = LogicalValue (height, UnPercent, (PtrAbstractBox) heightRef);
 	       }
 	     else
 		/* calcule la nouvelle largeur en unite logique */
-		y = LogicalValue (deltaY + height, pRStd->PrDimRule.DrUnit, pAb);
+		y = LogicalValue (height, pRStd->PrDimRule.DrUnit, pAb);
 
 	     /* cherche si la hauteur de l'element est determinee par un */
 	     /* attribut auquel est associee l'exception NewHeight */

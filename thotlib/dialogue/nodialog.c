@@ -119,19 +119,6 @@ boolean             Disp;
 {
 }
 
-#ifdef __STDC__
-void                NewDimension (PtrAbstractBox pAb, int DeltaX, int DeltaY, int frame, boolean Disp)
-#else  /* __STDC__ */
-void                NewDimension (pAb, DeltaX, DeltaY, frame, Disp)
-PtrAbstractBox      pAb;
-int                 DeltaX;
-int                 DeltaY;
-int                 frame;
-boolean             Disp;
-
-#endif /* __STDC__ */
-{
-}
 
 #ifdef __STDC__
 boolean             BothHaveNoSpecRules (PtrElement pEl1, PtrElement pEl2)
