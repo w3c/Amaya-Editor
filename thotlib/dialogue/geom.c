@@ -1520,9 +1520,9 @@ int                 percentH;
 	  
 	case WM_MOUSEMOVE:
 	  GetCursorPos (&cursorPos);
-	  ScreenToClient (w, &cursorPos);
-	  dl = cursorPos.x - rect.left - xm;
-	  dh = cursorPos.y - rect.top - ym;
+	  /*ScreenToClient (w, &cursorPos);*/
+	  dl = cursorPos.x /*+ rect.left*/ - xm;
+	  dh = cursorPos.y /*+ rect.top*/ - ym;
 	  if (percentW != 0)
 	    {
 	      /* keep the greater value */
@@ -1717,9 +1717,9 @@ int                 percentH;
 	  if (warpx >= 0 || warpy >= 0)
 	    {
 	      if (warpx >= 0)
-		xm = warpx + rect.left;
+		xm = warpx /*+ rect.left*/;
 	      if (warpy >= 0)
-		ym = warpy + rect.top;
+		ym = warpy /*+ rect.top*/;
 	    }
 	  break;
 	default:  break;
