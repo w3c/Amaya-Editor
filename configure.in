@@ -425,9 +425,10 @@ dnl  ***************************************************************
 
 AC_ARG_WITH(graphic-libs, [  --without-graphic-libs    doesn't use provided libjpeg, libpng.])
 if test "$withval" = "no" ; then
-  no_graphic = yes
-else
-  no_graphic =
+  no_graphic=yes
+fi
+if test "$withval" = "yes" ; then
+  no_graphic=no
 fi
 
 if test "$no_graphic" = yes; then

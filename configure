@@ -6360,16 +6360,17 @@ if test "${with_graphic_libs+set}" = set; then
 fi
 
 if test "$withval" = "no" ; then
-  no_graphic = yes
-else
-  no_graphic =
+  no_graphic=yes
+fi
+if test "$withval" = "yes" ; then
+  no_graphic=no
 fi
 
 if test "$no_graphic" = yes; then
     echo $ac_n "checking for libjpeg version = 6b""... $ac_c" 1>&6
-echo "configure:6371: checking for libjpeg version = 6b" >&5
+echo "configure:6372: checking for libjpeg version = 6b" >&5
     cat > conftest.$ac_ext <<EOF
-#line 6373 "configure"
+#line 6374 "configure"
 #include "confdefs.h"
 #include <jpeglib.h>
          x JPEG_LIB_VERSION x
@@ -6388,9 +6389,9 @@ fi
 rm -f conftest*
 
     echo $ac_n "checking for libpng version = 1.0.x""... $ac_c" 1>&6
-echo "configure:6392: checking for libpng version = 1.0.x" >&5
+echo "configure:6393: checking for libpng version = 1.0.x" >&5
     cat > conftest.$ac_ext <<EOF
-#line 6394 "configure"
+#line 6395 "configure"
 #include "confdefs.h"
 #include <png.h>
 	x PNG_LIBPNG_VER_STRING x
@@ -6491,7 +6492,7 @@ if test "$with_gl" = "" ; then
 fi  
 if test "$with_gl" = "yes" ; then
   	echo $ac_n "checking OpenGL""... $ac_c" 1>&6
-echo "configure:6495: checking OpenGL" >&5
+echo "configure:6496: checking OpenGL" >&5
 	for ac_dir in               		\
 		/usr/include 			\
 		/usr/X11R6/include 		\
@@ -6507,7 +6508,7 @@ echo "configure:6495: checking OpenGL" >&5
     	    fi
 	done	
   	echo $ac_n "checking GLU""... $ac_c" 1>&6
-echo "configure:6511: checking GLU" >&5	
+echo "configure:6512: checking GLU" >&5	
 	for ac_dir in               		\
 		/usr/include/GL			\
 		/usr/include 			\
@@ -6528,7 +6529,7 @@ echo "configure:6511: checking GLU" >&5
     	    fi
 	done	
   	echo $ac_n "checking GTKGLAREA""... $ac_c" 1>&6
-echo "configure:6532: checking GTKGLAREA" >&5	
+echo "configure:6533: checking GTKGLAREA" >&5	
 	for ac_dir in               		\
 		/usr/include/GL			\
 		/usr/include 			\
@@ -6550,7 +6551,7 @@ echo "configure:6532: checking GTKGLAREA" >&5
     	    fi
 	done	
   	echo $ac_n "checking freetype""... $ac_c" 1>&6
-echo "configure:6554: checking freetype" >&5	
+echo "configure:6555: checking freetype" >&5	
 	for ac_dir in               		\
 		/usr/include 			\
 		/usr/X11R6/include 		\
