@@ -1390,7 +1390,7 @@ void TteOpenMainWindow (char *name)
   ActionList = NULL;
   TteLoadApplications ();
   
-#ifndef _WX
+#ifdef _GTK
    if (TtDisplay == 0)
      {
        /* Connexion au serveur X impossible */
@@ -1403,7 +1403,7 @@ void TteOpenMainWindow (char *name)
        wind_pixmap = TtaCreateBitmapLogo (logowindow_width, logowindow_height,
 					  (char *)logowindow_bits);
      }
-#endif /* _WX */
+#endif /* _GTK */
 }
 
 #if defined(_WINGUI) || defined(_GTK)
