@@ -906,7 +906,7 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
   AttributeType       attrTypeHSpan, attrTypeVSpan, attrType;
   Attribute           attr;
   int                *colVSpan;
-  int                 span, cRef, cNumber, extracol;
+  int                 span, cRef, cNumber;
   int                 i, rowType;
   ThotBool            inMath;
 
@@ -938,8 +938,6 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
       cNumber++;
     }
   cell = NULL;
-  /* number of extra columns */
-  extracol = 0;
   attrType.AttrSSchema = elType.ElSSchema;
   attrTypeHSpan.AttrSSchema = elType.ElSSchema;
   attrTypeVSpan.AttrSSchema = elType.ElSSchema;
@@ -1071,6 +1069,25 @@ void CheckAllRows (Element table, Document doc, ThotBool placeholder,
 		      cRef++;
 		      colVSpan[cRef] = colVSpan[cRef-1];
 		      i++;
+		    }
+		  if (nextCell)
+		    /* There are more cells in this row, after the spanning
+		       cell. Create additional Column_heads for the spanning
+		       cell, except if spanning is "infinite". */
+		    {
+		    if (span < THOT_MAXINT)
+		      while (i < span)
+			{
+			if (cRef + 1 < MAX_COLS)
+			  {
+			  cRef++;
+			  colElement[cRef] = NewColumnHead (colElement[cRef-1],
+					  FALSE, TRUE, row, doc, inMath, TRUE);
+			  cNumber++;
+			  }
+			colVSpan[cRef] = colVSpan[cRef-1];
+			i++;
+			}
 		    }
 		  }
 		}
@@ -2188,14 +2205,17 @@ void RowPasted (NotifyElement * event)
 	      else
 		/* the pasted row has no cell for this column.
 		   Add an empty cell */
-		AddEmptyCellInRow (row, colhead, prevCell, FALSE, doc, inMath,
-				   FALSE, FALSE);
+		cell = AddEmptyCellInRow (row, colhead, prevCell, FALSE, doc,
+					  inMath, FALSE, FALSE);
 	    }
 	  else
 	    /* this position is taken by a cell from a row above */
 	    if (cell)
 	      /* the pasted row has a cell at this position. Remove it */
-	      TtaDeleteTree (cell, doc);
+	      {
+		TtaDeleteTree (cell, doc);
+	        cell = NULL;
+	      }
 	  /* get the next column where there is a free slot for the pasted
 	     row */
           if (colspan == 0)
