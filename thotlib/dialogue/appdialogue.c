@@ -2958,9 +2958,9 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	     g_print("Error creating GtkGLArea!\n");
 	     exit(0);
 	   }
-#else 
+#else /*  _GL */
 	   drawing_area = gtk_drawing_area_new ();
-#endif/*  _GL */	  
+#endif /*  _GL */	  
 	   gtk_widget_show (drawing_area);
            gtk_container_add (GTK_CONTAINER (drawing_frame), drawing_area);
 
@@ -3026,11 +3026,18 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 	       GTK_SIGNAL_FUNC (selection_received), 
 	       NULL);   
 
-	   /*When another app steal the clipboard handling*/
-	   gtk_signal_connect (GTK_OBJECT(drawing_area), 
-	       "selection_clear_event",
-	       GTK_SIGNAL_FUNC (selection_clear), 
-	       NULL);   
+	   /*
+	     When another app steal the clipboard handling
+	     recommanded by the GTK
+	     http://www.gtk.org/tutorial/sec-supplyingtheselection.html
+	     BUT it works better without. 
+	     I've posted in the gtk-devel-list in order to have clues...
+	    */
+
+	   /*  gtk_signal_connect (GTK_OBJECT(drawing_area),  */
+	   /* 	       "selection_clear_event", */
+	   /* 	       GTK_SIGNAL_FUNC (selection_clear),  */
+	   /* 	       NULL);    */
 
 	   /* register as a selection handler */
 	   gtk_selection_add_target (GTK_WIDGET(drawing_area),
