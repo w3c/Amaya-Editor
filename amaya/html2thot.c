@@ -4077,6 +4077,7 @@ static sourceTransition sourceAutomaton[] =
 /* state 10: "<!" has been read */
    {10, '-', (Proc) Do_nothing, 11},
    {10, 'S', (Proc) Do_nothing, 10},
+   {10, '>', (Proc) Do_nothing, 0},            /* weird empty comment <!> */
    {10, '*', (Proc) PutInBuffer, 15},
 /* state 11: "<!-" has been read. Probably a comment */
    {11, '-', (Proc) StartOfComment, 12},
