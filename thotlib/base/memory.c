@@ -230,12 +230,14 @@ void *TtaNewAnimation ()
   anim_info->Fill = Otherfill;
   return anim_info;
 }
+
 /*----------------------------------------------------------------------
    TtaFreeMotionPath
   ----------------------------------------------------------------------*/
 static void TtaFreeMotionPath (void *from)
 {
   PtrPathSeg  pPa, pPaNext;
+#ifdef _GL
   AnimPath    *pop_path = (AnimPath *) from;
 
   TtaFreeMemory (pop_path->Proportion);
@@ -248,7 +250,9 @@ static void TtaFreeMotionPath (void *from)
       pPa = pPaNext;
     }
   while (pPa);
-} 
+#endif _GL
+}
+
 /*----------------------------------------------------------------------
    TtaFreeAnimation
   ----------------------------------------------------------------------*/
@@ -443,6 +447,8 @@ void                FreeAll ()
     {
       ptr = (void *)PtFree_Box;
       PtFree_Box = PtFree_Box->BxNexChild;
+      if (PtFree_Box)
+	PtFree_Box->BxNexChild = NULL;
       TtaFreeMemory (ptr);
     }
   PtFree_Box = 0;
@@ -1966,16 +1972,16 @@ PtrBox FreeBox (PtrBox pBox)
    PtrPosRelations     nepos;
    PtrDimRelations     pDimRel;
    PtrDimRelations     nedim;
-   PtrBox              NextBox;
+   PtrBox              nextBox, box;
 
    /* get next child */
    if (pBox->BxType == BoSplit ||
        pBox->BxType == BoPiece ||
        pBox->BxType == BoScript ||
        pBox->BxType == BoDotted)
-     NextBox = pBox->BxNexChild;
+     nextBox = pBox->BxNexChild;
    else
-     NextBox = NULL;
+     nextBox = NULL;
 
    /* Free remaining relation blocks */
    pPosRel = pBox->BxPosRelations;
@@ -2012,13 +2018,31 @@ PtrBox FreeBox (PtrBox pBox)
 #ifdef DEBUG_MEMORY
    TtaFreeMemory (pBox);
 #else
-   /* Don't use BxNext field because it's used when removing break lines */
-   pBox->BxNexChild = PtFree_Box;
-   PtFree_Box = pBox;
-   NbFree_Box++;
+   box = PtFree_Box;
+   while (box)
+     {
+       if (box == pBox)
+	 {
+	   printf ("Box chaining ERROR\n");
+	   pBox = NULL;
+	   nextBox = NULL;
+	   box = NULL;
+	   NbUsed_Box++;
+	 }
+       else
+	 box = box->BxNexChild;
+     }
+   if (pBox)
+     {
+       /* Don't use BxNext field because it's used when removing break lines */
+       pBox->BxNexChild = PtFree_Box;
+       pBox->BxType = BoComplete;
+       PtFree_Box = pBox;
+       NbFree_Box++;
+     }
 #endif
    NbUsed_Box--;
-   return NextBox;
+   return nextBox;
 }
 
 
