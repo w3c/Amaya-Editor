@@ -195,7 +195,7 @@
 193 **Temporary directory
 194 **Use palette
 195 **Language Negotiation
-196 **The XML parsing failed - please check your document
+196 **This document is not valid - fix your document or change your profile
 197 **Configuration for annotations
 198 **Annotation user
 199 **Annotation post server
@@ -207,3 +207,5 @@
 205 **Portrait
 206 **Landscape
 207 **Enable FTP (experimental)
+208 **In the current Amaya profile:
+209 **Tags/attributes are ignored - see the log file

@@ -2217,11 +2217,13 @@ ThotBool            history;
 	       else if (!ustrncasecmp (&content_type[i+1], TEXT("css"), 3))
 		 {
 		   docType = docCSS;
+		   parsingLevel = L_Other;
 		   unknown = FALSE;
 		 }
 	       else
 		 {
 		   docType = docText;
+		   parsingLevel = L_Other;
 		   unknown = FALSE;
 		 }
 	     }
@@ -2229,6 +2231,7 @@ ThotBool            history;
 		    !ustrncasecmp (&content_type[i+1], TEXT("x-sh"), 4))
 	     {
 	       docType = docText;
+	       parsingLevel = L_Other;
 	       unknown = FALSE;
 	     }	     
 	 }

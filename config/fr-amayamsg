@@ -195,7 +195,7 @@
 193 Repertoire témporaire
 194 Par palette
 195 Négotiation de langues
-196 Une erreur XML a été detectée - vérifiez votre document
+196 Ce document est invalide - corrigez votre document ou changez de profil
 197 Configurer les annotations
 198 Nom de l'utilisateur
 199 Serveur de publication
@@ -207,3 +207,5 @@
 205 Portrait
 206 Paysage
 207 Support FTP (experimental)
+208 Dans le profil Amaya courant :
+209 Des balises/attributs sont ignorées - voir le fichier log

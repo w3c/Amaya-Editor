@@ -175,7 +175,6 @@ static STRING	    XMLrootClosingTag = NULL;
 static int	    XMLrootLevel = 0;
 static ThotBool	    lastTagRead = FALSE;
 static ThotBool     XMLabort = FALSE;
-static ThotBool     XMLerror = FALSE;
 
 /* maximum size of error messages */
 #define MaxMsgLength 200
@@ -3319,14 +3318,18 @@ ThotBool   withDoctype;
        fclose (ErrFile);
        ErrFile = NULL;
        if (XMLabort)
-	 InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_XML_ERROR));
-       else if (XMLerror)
 	 {
 	   profile = TtaGetEnvString ("Profile");
 	   if (!profile)
-	     InitInfo (TtaGetMessage (AMAYA, AM_XML_WARNING), profile);
-	   else
-	     InitInfo (TtaGetMessage (AMAYA, AM_XML_WARNING), TEXT(""));
+	     profile = TEXT("");
+	   InitConfirm3L (XMLcontext.doc, 1, TtaGetMessage (AMAYA, AM_XML_PROFILE), TtaGetMessage (AMAYA, AM_XML_ERROR), profile);
+	 }
+       else if (HTMLErrorsFound)
+	 {
+	   profile = TtaGetEnvString ("Profile");
+	   if (!profile)
+	     profile = TEXT("");
+	   InitConfirm3L (XMLcontext.doc, 1, TtaGetMessage (AMAYA, AM_XML_PROFILE), TtaGetMessage (AMAYA, AM_XML_WARNING), profile);
 	 }
      } 
 }

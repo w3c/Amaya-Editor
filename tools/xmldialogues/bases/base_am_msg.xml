@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Fri Aug 25 12:59:08 CEST 2000" version="12">
+<base last_update="Fri Sep  1 16:19:03 CEST 2000" version="13">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -1306,8 +1306,8 @@
 	<message xml:lang="it">Negoziazione della lingua</message>
 </label>
 <label define="AM_XML_ERROR">
-	<message xml:lang="en">The XML parsing failed - please check your document</message>
-	<message xml:lang="fr">Une erreur XML a été detectée - vérifiez votre document</message>
+	<message xml:lang="en">This document is not valid - fix your document or change your profile</message>
+	<message xml:lang="fr">Ce document est invalide - corrigez votre document ou changez de profil</message>
 	<message xml:lang="de">Fehler beim XML parsen - bitte Dokument überprüfen</message>
 	<message xml:lang="it">Errore XML - si consiglia di verificare il documento</message>
 </label>
@@ -1376,6 +1376,14 @@
 	<message xml:lang="fr">Support FTP (experimental)</message>
 	<message xml:lang="it">Abilita FTP (sperimentale)</message>
 	<message xml:lang="de">FTP zulassen (noch in der Erprobung)</message>
+</label>
+<label define="AM_XML_PROFILE">
+	<message xml:lang="en">In the current Amaya profile:</message>
+	<message xml:lang="fr">Dans le profil Amaya courant :</message>
+</label>
+<label define="AM_XML_WARNING">
+	<message xml:lang="en">Tags/attributes are ignored - see the log file</message>
+	<message xml:lang="fr">Des balises/attributs sont ignorées - voir le fichier log</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>
