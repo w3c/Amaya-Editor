@@ -532,8 +532,6 @@ void FollowTheLink_callback (int targetDocument, int status, char *urlName,
   anchor = ctx->anchor;
   url = ctx->url;
   elSource = ctx->elSource;
-  docSchema = TtaGetDocumentSSchema (doc);
-
   if (url[0] == '#' && targetDocument != 0)
     /* attribute HREF contains the NAME of a target anchor */
     elFound = SearchNAMEattribute (targetDocument, &url[1], NULL);
@@ -542,34 +540,37 @@ void FollowTheLink_callback (int targetDocument, int status, char *urlName,
   elType = TtaGetElementType (anchor);
   if (elType.ElTypeNum == HTML_EL_Anchor &&
       !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-    /* it's an HTML A element. Change it's color */
-    if ((doc != targetDocument || url[0] == '#') && anchor != NULL) 
-      {
-	/* search PseudoAttr attribute */
-	attrType.AttrSSchema = docSchema;
-	attrType.AttrTypeNum = HTML_ATTR_PseudoClass;
-	PseudoAttr = TtaGetAttribute (anchor, attrType);
-	/* if the target document has replaced the clicked
-	   document, pseudo attribute "visited" should not be set */
-	if (targetDocument == doc)
-	  /* the target document is in the same window as the
-	     source document */
-	  if (strcmp (sourceDocUrl, DocumentURLs[targetDocument]))
-	    /* both document have different URLs */
-	    PseudoAttr = NULL;
-	/* only turn off the link if it points that exists or that we can
-	   follow */
-	if (PseudoAttr && status != -1)
-	  {
-	    if (url[0] == '#')
-	      {
-		if (targetDocument != 0 && elFound)
-		  TtaSetAttributeText (PseudoAttr, "visited", anchor, doc);
-	      }
-	    else
-	      TtaSetAttributeText (PseudoAttr, "visited", anchor, doc);
-	  }
-      }
+    {
+      /* it's an HTML A element. Change it's color */
+      docSchema =   TtaGetSSchema ("HTML", doc);
+      if (docSchema && (doc != targetDocument || url[0] == '#') && anchor != NULL)
+	{
+	  /* search PseudoAttr attribute */
+	  attrType.AttrSSchema = docSchema;
+	  attrType.AttrTypeNum = HTML_ATTR_PseudoClass;
+	  PseudoAttr = TtaGetAttribute (anchor, attrType);
+	  /* if the target document has replaced the clicked
+	     document, pseudo attribute "visited" should not be set */
+	  if (targetDocument == doc)
+	    /* the target document is in the same window as the
+	       source document */
+	    if (strcmp (sourceDocUrl, DocumentURLs[targetDocument]))
+	      /* both document have different URLs */
+	      PseudoAttr = NULL;
+	  /* only turn off the link if it points that exists or that we can
+	     follow */
+	  if (PseudoAttr && status != -1)
+	    {
+	      if (url[0] == '#')
+		{
+		  if (targetDocument != 0 && elFound)
+		    TtaSetAttributeText (PseudoAttr, "visited", anchor, doc);
+		}
+	      else
+		TtaSetAttributeText (PseudoAttr, "visited", anchor, doc);
+	    }
+	}
+    }
   }
 
   if (url[0] == '#' && targetDocument != 0)
@@ -2390,7 +2391,7 @@ void SetCharFontOrPhrase (int document, int elemtype)
   /* of the requested type, the text leaves of selected elements should not */
   /* be any longer within an element of that type */
   /* else, they should all be within an element of that type */
-  elType.ElSSchema = TtaGetDocumentSSchema (document);
+  elType.ElSSchema = TtaGetSSchema ("HTML", document);
   elType.ElTypeNum = elemtype;
   remove = (TtaGetTypedAncestor (elem, elType) != NULL);
 
