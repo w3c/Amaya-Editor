@@ -30,6 +30,7 @@
 
 #ifdef _WINDOWS
 #include "thotprinter_f.h"
+#include "resource.h"
 #endif /* _WINDOWS */
 
 #define MAX_VOLUME        10000	/* volume maximum d'une page, en octets */
@@ -140,12 +141,12 @@ extern int          errno;
 
 
 #ifdef _WINDOWS
-#define PRINTPROGRESSDLG 389
 HBITMAP          WIN_LastBitmap = 0;
 
 static BOOL      gbAbort;
 static HWND      GHwnAbort;
 static HINSTANCE hCurrentInstance;
+static int       pg_counter;
 
 /*----------------------------------------------------------------------
    WinErrorBox :  Pops-up a message box when an MS-Window error      
@@ -239,6 +240,8 @@ BOOL PASCAL InitPrinting(HDC hDC, HWND hWnd, HANDLE hInst, LPSTR msg)
   DOCINFO         DocInfo;
 
   gbAbort    = FALSE;     /* user hasn't aborted */
+  pg_counter = 0;         /* number of pages we have printed */
+
   if (!(GHwnAbort = CreateDialog (hInst, "Printinprogress", WIN_Main_Wd,
 				    (DLGPROC) AbortDlgProc)))
     WinErrorBox (WIN_Main_Wd, "InitPrinting: DE_LANG");
@@ -2057,6 +2060,15 @@ static int       n = 1;
 	  AbortProc (TtPrinterDC, 0);
       if (gbAbort)
         return;
+	  /***/
+	  /* update and display the number of pages we have printed */
+	  {
+		char print_msg [20];
+		pg_counter++;
+	    sprintf (print_msg, "Page: %d", pg_counter);
+		SetWindowText (GetDlgItem (GHwnAbort, IDC_PAGENO), print_msg);
+	  }
+	  /***/
     }
   else
 #endif /* _WINDOWS */
