@@ -478,15 +478,15 @@ void  AddAbsBoxes (PtrAbstractBox pAbbRoot, PtrDocument pDoc, ThotBool head)
    non mis en ligne ou explicitement secable. Les marques  
    de page son traitees comme non-secables.                
   ----------------------------------------------------------------------*/
-ThotBool            IsBreakable (PtrAbstractBox pAb, PtrDocument pDoc)
+ThotBool IsBreakable (PtrAbstractBox pAb, PtrDocument pDoc)
 {
    ThotBool            unbreakable;
 
    unbreakable = FALSE;
    /* boucle sur les paves englobants */
-   while (pAb != NULL && !unbreakable)
+   while (pAb && !unbreakable)
      {
-	if (pAb->AbLeafType == LtCompound)
+	if (pAb->AbElement && pAb->AbLeafType == LtCompound)
 	  /* pave' compose' */
 	  {
 	   if (pAb->AbElement->ElTypeNumber == PageBreak + 1)
@@ -821,7 +821,7 @@ static void  SupprAbsBoxes (PtrAbstractBox pAbbRoot, PtrDocument pDoc, ThotBool 
   abstraite affichee dans ViewFrame.             
   On cree des paves, le Mediateur se charge du reaffichage
   ----------------------------------------------------------------------*/
-void                IncreaseVolume (ThotBool head, int dVol, int frame)
+void IncreaseVolume (ThotBool head, int dVol, int frame)
 {
   PtrDocument         pDoc;
   PtrAbstractBox      pAb;
@@ -866,7 +866,7 @@ void                IncreaseVolume (ThotBool head, int dVol, int frame)
   affichee dans frame.
   On supprime des paves, le Mediateur se charge du reaffichage
   ----------------------------------------------------------------------*/
-void                DecreaseVolume (ThotBool head, int dVol, int frame)
+void DecreaseVolume (ThotBool head, int dVol, int frame)
 {
   PtrDocument         pDoc;
   PtrAbstractBox      pAb;
