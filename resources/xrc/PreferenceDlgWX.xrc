@@ -52,21 +52,18 @@
                         <object class="sizeritem">
                           <object class="wxStaticText" name="wxID_LABEL_CHARMENUSIZE">
                             <label>Taille caracteres des menus</label>
+                            <hidden>1</hidden>
                           </object>
+                          <option>1</option>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxBoxSizer">
-                            <orient>wxHORIZONTAL</orient>
-                            <object class="sizeritem">
-                              <object class="wxSlider" name="wxID_CHARMENUSIZE_VALUE">
-                                <value>12</value>
-                                <min>8</min>
-                                <max>20</max>
-                                <style>wxSL_LABELS</style>
-                              </object>
-                              <option>1</option>
-                              <flag>wxALL|wxEXPAND</flag>
-                            </object>
+                          <object class="wxSlider" name="wxID_CHARMENUSIZE_VALUE">
+                            <value>12</value>
+                            <min>8</min>
+                            <max>20</max>
+                            <size>0,0</size>
+                            <style>wxSL_LABELS</style>
+                            <hidden>1</hidden>
                           </object>
                           <option>1</option>
                           <flag>wxALL|wxEXPAND</flag>
@@ -75,7 +72,7 @@
                       <option>1</option>
                     </object>
                     <object class="spacer">
-                      <size>10,0</size>
+                      <size>0,0</size>
                     </object>
                     <object class="sizeritem">
                       <object class="wxBoxSizer">
@@ -86,24 +83,17 @@
                           </object>
                         </object>
                         <object class="sizeritem">
-                          <object class="wxBoxSizer">
-                            <orient>wxHORIZONTAL</orient>
-                            <object class="sizeritem">
-                              <object class="wxSlider" name="wxID_CHARZOOM_VALUE">
-                                <value></value>
-                                <min>10</min>
-                                <max>100</max>
-                                <style>wxSL_LABELS</style>
-                              </object>
-                              <option>1</option>
-                              <flag>wxALL|wxEXPAND</flag>
-                            </object>
+                          <object class="wxSlider" name="wxID_CHARZOOM_VALUE">
+                            <value></value>
+                            <min>10</min>
+                            <max>100</max>
+                            <style>wxSL_LABELS</style>
                           </object>
                           <option>1</option>
                           <flag>wxALL|wxEXPAND</flag>
                         </object>
                       </object>
-                      <option>1</option>
+                      <option>100</option>
                     </object>
                   </object>
                   <option>0</option>
