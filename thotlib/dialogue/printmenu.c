@@ -107,7 +107,11 @@ char               *viewsToPrint;
 {
 #ifndef _WINDOWS
    char                cmd[800];
+   char                server[800];
    int                 res;
+
+   if (!servername) sprintf (server, "-");
+   else sprintf (server, "%s", servername);
 
    if(userOrientation == 0)
       strcpy (Orientation, "Portrait");
@@ -115,12 +119,12 @@ char               *viewsToPrint;
       strcpy (Orientation, "Landscape");
 
    if (printer[0] != '\0')
-      sprintf (cmd, "%s/print %s %s %d %d %d %s \"%s\" %s %d %d %d %s %d %d %d %d %d %ld PRINTER %s &",
-	       BinariesDirectory, name, dir, repaginate, firstPage, lastPage, realName, printer, PageSize, nCopies, hShift,
+      sprintf (cmd, "%s/print %s %s %s %d %d %d %s \"%s\" %s %d %d %d %s %d %d %d %d %d %ld PRINTER %s &",
+	       BinariesDirectory, server, name, dir, repaginate, firstPage, lastPage, realName, printer, PageSize, nCopies, hShift,
 	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], viewsToPrint);
    else
-      sprintf (cmd, "%s/print %s %s %d %d %d %s \"%s\" %s %d %d %d %s %d %d %d %d %d %ld PRINTER %s &",
-	       BinariesDirectory, name, dir, repaginate, firstPage, lastPage, realName, "lp", PageSize, nCopies, hShift,
+      sprintf (cmd, "%s/print %s %s %s %d %d %d %s \"%s\" %s %d %d %d %s %d %d %d %d %d %ld PRINTER %s &",
+	       BinariesDirectory, server, name, dir, repaginate, firstPage, lastPage, realName, "lp", PageSize, nCopies, hShift,
 	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], viewsToPrint);
 
    res = system (cmd);
@@ -165,8 +169,11 @@ char               *viewsToPrint;
 
 {
    char                cmd[800];
+   char                server[800];
    int                 res;
    
+   if (!servername) sprintf (server, "-");
+   else sprintf (server, "%s", servername);
    
    if(userOrientation == 0)
       strcpy (Orientation, "Portrait");
@@ -174,12 +181,12 @@ char               *viewsToPrint;
       strcpy (Orientation, "Landscape");
 
    if (psName[0] != '\0')
-      sprintf (cmd, "%s/print %s %s %d %d %d %s %s %s %d %d %d %s %d %d %d %d %d %ld PSFILE %s &\n",
-	       BinariesDirectory, name, dir, repaginate, firstPage, lastPage, realName, psName, PageSize, nCopies, hShift,
+      sprintf (cmd, "%s/print %s %s %s %d %d %d %s %s %s %d %d %d %s %d %d %d %d %d %ld PSFILE %s &\n",
+	       BinariesDirectory, server, name, dir, repaginate, firstPage, lastPage, realName, psName, PageSize, nCopies, hShift,
 	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], viewsToPrint);
    else
-      sprintf (cmd, "%s/print %s %s %d %d %d %s %s %s %d %d %d %s %d %d %d %d %d %ld PSFILE %s &\n",
-	       BinariesDirectory, name, dir, repaginate, firstPage, lastPage, realName, "out.ps", PageSize, nCopies, hShift,
+      sprintf (cmd, "%s/print %s %s %s %d %d %d %s %s %s %d %d %d %s %d %d %d %d %d %ld PSFILE %s &\n",
+	       BinariesDirectory, server, name, dir, repaginate, firstPage, lastPage, realName, "out.ps", PageSize, nCopies, hShift,
 	       vShift, Orientation, reduction, nbPagesPerSheet, suppFrame, manualFeed, blackAndWhite, FrRef[0], viewsToPrint);
 
    res = system (cmd);
