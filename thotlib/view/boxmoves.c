@@ -2665,7 +2665,7 @@ int                 frame;
 			      pAb->AbBox != pFromBox*/)
 		       /* differe le traitement de l'englobement   */
 		       /* quand la mise a jour a une origine externe  */
-		       if (Propagate != ToAll)
+		       if (Propagate != ToAll && !TypeHasException (ExcIsCell, pAb->AbElement->ElTypeNumber, pAb->AbElement->ElStructSchema))
 			 RecordEnclosing (pAb->AbBox, FALSE);
 		     /* l'englobement d'une boite ne peut etre traite */
 		     /* plus de deux fois (sinon on boucle).      */

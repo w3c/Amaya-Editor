@@ -460,7 +460,7 @@ PtrAbstractBox      pAb;
 	    case GraphicElem:
 	       pAb->AbLeafType = LtGraphics;
 	       pAb->AbShape = pConst->PdString[0];
-	       pAb->AbGraphAlphabet = 'G';
+	       pAb->AbGraphAlphabet = 'L';
 	       pAb->AbVolume = 1;
 	       break;
 	    case Symbol:
