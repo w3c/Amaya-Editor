@@ -101,12 +101,7 @@ typedef enum _AnnotLoadMode {
 /*-----------------------------------------------------------------------
    GetAnnotCustomQuery
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 ThotBool GetAnnotCustomQuery (void)
-#else /* __STDC__*/
-ThotBool GetAnnotCustomQuery (void)
-#endif /* __STDC__*/
 {
   return annotCustomQuery;
 }
@@ -114,12 +109,7 @@ ThotBool GetAnnotCustomQuery (void)
 /*-----------------------------------------------------------------------
    SetAnnotCustomQuery
   -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void SetAnnotCustomQuery (ThotBool value)
-#else /* __STDC__*/
-void SetAnnotCustomQuery (value)
-ThotBool value
-#endif /* __STDC__*/
 {
   annotCustomQuery = value;
 }
@@ -127,12 +117,7 @@ ThotBool value
 /*-----------------------------------------------------------------------
    GetAnnotAlgaeText
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 CHAR_T *GetAnnotAlgaeText (void)
-#else /* __STDC__*/
-CHAR_T *GetAnnotAlgaeText (void)
-#endif /* __STDC__*/
 {
   return annotAlgaeText;
 }
@@ -140,12 +125,7 @@ CHAR_T *GetAnnotAlgaeText (void)
 /*-----------------------------------------------------------------------
    SetAnnotAlgaeText
   -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void SetAnnotAlgaeText (CHAR_T *value)
-#else /* __STDC__*/
-void SetAnnotAlgaeText (CHAR_T *value)
-ThotBool value
-#endif /* __STDC__*/
 {
   if (!value && *value == WC_EOS)
     annotAlgaeText = NULL;
@@ -157,12 +137,7 @@ ThotBool value
    GetAnnotUser
    Returns the directory where the annotations of a given document are stored.
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 CHAR_T *GetAnnotUser (void)
-#else /* __STDC__*/
-CHAR_T *GetAnnotUser (void)
-#endif /* __STDC__*/
 {
   return annotUser;
 }
@@ -171,12 +146,7 @@ CHAR_T *GetAnnotUser (void)
    GetAnnotServers
    Returns the URLs of the annotation servers
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 List *GetAnnotServers (void)
-#else /* __STDC__*/
-List *GetAnnotServers (void)
-#endif /* __STDC__*/
 {
   return annotServers;
 }
@@ -185,12 +155,7 @@ List *GetAnnotServers (void)
    GetAnnotPostServer
    Returns the URLs of the annotation Post server
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 CHAR_T *GetAnnotPostServer (void)
-#else /* __STDC__*/
-CHAR_T *GetAnnotPostServer (void)
-#endif /* __STDC__*/
 {
   return annotPostServer;
 }
@@ -200,12 +165,7 @@ CHAR_T *GetAnnotPostServer (void)
   -----------------------------------------------------------------------
    Returns the directory where the annotations of a given document are stored.
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 CHAR_T *GetAnnotMainIndex (void)
-#else /* __STDC__*/
-CHAR_T *GetAnnotationMainIndex(void)
-#endif /* __STDC__*/
 {
   return annotMainIndex;
 }
@@ -215,12 +175,7 @@ CHAR_T *GetAnnotationMainIndex(void)
   -----------------------------------------------------------------------
    Returns the directory where the annotations of a given document are stored.
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 CHAR_T *GetAnnotDir (void)
-#else /* __STDC__*/
-CHAR_T *GetAnnotDir (void)
-#endif /* __STDC__*/
 {
   return annotDir;
 }
@@ -230,12 +185,7 @@ CHAR_T *GetAnnotDir (void)
   -----------------------------------------------------------------------
    Returns the directory where the annotations of a given document are stored.
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 List *CopyAnnotServers (CHAR_T *server_list)
-#else /* __STDC__*/
-List *CopyAnnotServers (CHAR_T *server_list)
-#endif /* __STDC__*/
 {
   List *me = NULL;
   CHAR_T *server;
@@ -269,15 +219,7 @@ List *CopyAnnotServers (CHAR_T *server_list)
    Prepares a query URL using the algae text template. Any %u will be
    substituted with the url given in the parameter.
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void CopyAlgaeTemplateURL (CHAR_T **dest, CHAR_T *proto, CHAR_T *url)
-#else /* __STDC__*/
-static void CopyAlgaeTemplateURL (dest, proto, url)
-CHAR_T **dest;
-CHAR_T *proto;
-CHAR_T *url;
-#endif /* __STDC__*/
 {
   CHAR_T *in;
   CHAR_T *out;
@@ -333,12 +275,7 @@ CHAR_T *url;
    A frontend to the Amaya UpdateTransfer function, that takes into
    account open transfers.
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void ANNOT_UpdateTransfer (Document doc)
-#else /* __STDC__*/
-void ANNOT_UpdateTransfer (doc)
-#endif /* __STDC__*/
 {
   if (FilesLoading[doc] == 0)
     ActiveTransfer (doc);
@@ -350,12 +287,7 @@ void ANNOT_UpdateTransfer (doc)
    ANNOT_Init
    Initializes the annotation library
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void ANNOT_Init ()
-#else /* __STDC__*/
-void ANNOT_Init ()
-#endif /* __STDC__*/
 {
   CHAR_T *tmp;
 
@@ -394,12 +326,7 @@ void ANNOT_Init ()
    ANNOT_FreeConf
   -----------------------------------------------------------------------
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void ANNOT_FreeConf ()
-#else /* __STDC__*/
-void ANNOT_FreeConf ()
-#endif /* __STDC__*/
 {
   if (annotDir)
     TtaFreeMemory (annotDir);
@@ -423,12 +350,7 @@ void ANNOT_FreeConf ()
    Be careful about outstanding references to RDF resources if you
    call this without intending to exit the application.
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void ANNOT_Quit ()
-#else /* __STDC__*/
-void ANNOT_Quit ()
-#endif /* __STDC__*/
 {
   ANNOT_FreeConf ();
   SCHEMA_FreeAnnotSchema ();
@@ -440,15 +362,8 @@ void ANNOT_Quit ()
    Frees all the annotation resources that are associated with
    annotation annot (doesn't remove this annotation yet).
   -----------------------------------------------------------------------*/
-#ifdef __STDC__
 static void ANNOT_FreeAnnotResource (Document source_doc, Element annotEl, 
 				AnnotMeta *annot)
-#else /* __STDC__*/
-static void ANNOT_FreeAnnotResource (source_doc, annotEl, annot)
-Document source_doc;
-Element annotEl;
-AnnottMeta *annot;
-#endif /* __STDC__*/
 {
   /* remove the annotation link in the source document */
   if (annotEl)
@@ -469,12 +384,7 @@ AnnottMeta *annot;
    Frees all the annotation resources that are associated with
    Document doc
   -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void ANNOT_FreeDocumentResource (Document doc)
-#else /* __STDC__*/
-void ANNOT_FreeDocumentResource (doc)
-Document doc;
-#endif /* __STDC__*/
 {
   int i;
 
@@ -538,24 +448,11 @@ Document doc;
   RemoteLoad_callback
   -----------------------------------------------------------------------
   -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void RemoteLoad_callback (int doc, int status, 
 			  CHAR_T *urlName,
 			  CHAR_T *outputfile, 
 			  AHTHeaders *http_headers,
 			  void * context)
-#else  /* __STDC__ */
-void RemoteLoad_callback (doc, status, urlName,
-			  outputfile, http_headers,
-			  context)
-int doc;
-int status;
-CHAR_T *urlName;
-CHAR_T *outputfile;
-AHTHeaders *http_headers;
-void *context;
-
-#endif
 {
    REMOTELOAD_context *ctx;
    Document source_doc;
@@ -602,15 +499,7 @@ void *context;
   Loads the annotations from the local and remote servers. 
   The mode parameter says what kind of servers we want to consult
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 static void ANNOT_Load2 (Document doc, View view, AnnotLoadMode mode)
-#else /* __STDC__*/
-static ANNOT_Load2 (doc, view, mode)
-Document doc;
-View view;
-AnnotLoadMode mode;
-#endif /* __STDC__*/
 {
   char *annotIndex;
   char *annotURL;
@@ -732,14 +621,7 @@ AnnotLoadMode mode;
    ANNOT_AutoLoad
   -----------------------------------------------------------------------
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void ANNOT_AutoLoad (Document doc, View view)
-#else /* __STDC__*/
-void ANNOT_AutoLoad (doc, view)
-Document doc;
-View view;
-#endif /* __STDC__*/
 {
   AnnotLoadMode mode = AM_LOAD_NONE;
 
@@ -758,14 +640,7 @@ View view;
   ANNOT_Load
   Front end to the Load Annotations command
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void ANNOT_Load (Document doc, View view)
-#else /* __STDC__*/
-void ANNOT_Load (doc, view)
-Document doc;
-View view;
-#endif /* __STDC__*/
 {
   ANNOT_Load2 (doc, view, AM_LOAD_LOCAL | AM_LOAD_REMOTE);
 }
@@ -774,15 +649,11 @@ View view;
   ANNOT_Create
   Creates an annotation on the selected text. If there's no selected
   text, it doesn't do anything.
-  -----------------------------------------------------------------------*/
 
-#ifdef __STDC__
+  ** To do: protect for annot/annot agains the user putting an annotation
+  on other parts of the annotation than the body
+  -----------------------------------------------------------------------*/
 void ANNOT_Create (Document doc, View view, ThotBool useDocRoot)
-#else /* __STDC__*/
-void ANNOT_Create (doc, view)
-     Document doc;
-     View view;
-#endif /* __STDC__*/
 {
   Document    doc_annot;
   AnnotMeta  *annot;
@@ -907,24 +778,11 @@ void ANNOT_Create (doc, view)
 /*-----------------------------------------------------------------------
    ANNOT_Post_callback
   -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void ANNOT_Post_callback (int doc, int status, 
 			  CHAR_T *urlName,
 			  CHAR_T *outputfile, 
 			  AHTHeaders *http_headers,
 			  void * context)
-#else  /* __STDC__ */
-void ANNOT_Post_callback (doc, status, urlName,
-			  outputfile, http_headers,
-			  context)
-int doc;
-int status;
-CHAR_T *urlName;
-CHAR_T *outputfile;
-AHTHeaders *http_headers;
-void *context;
-
-#endif
 {
   /* get the server's reply */
   /* update the source doc link */
@@ -1049,14 +907,7 @@ void *context;
 /*-----------------------------------------------------------------------
    ANNOT_Post
   -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void ANNOT_Post (Document doc, View view)
-#else /* __STDC__*/
-void ANNOT_Post (doc, view)
-Document doc;
-View view;
-#endif /* __STDC__*/
 {
   REMOTELOAD_context *ctx;
   int res;
@@ -1154,14 +1005,7 @@ View view;
   it should be saved remotely or locally. It then calls the appropriate 
   function to do this operation.
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 void ANNOT_SaveDocument (Document doc_annot, View view)
-#else  /* __STDC__ */
-void ANNOT_SaveDocument (doc_annot, view)
-Document doc_annot;
-View view;
-
-#endif /* __STDC__ */
 {
   CHAR_T *filename;
 
@@ -1190,14 +1034,7 @@ View view;
   If the user clicked on an annotation link in the source document,
   it highlights the annotated text.
   -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void ANNOT_SelectSourceDoc (int doc, Element el)
-#else  /* __STDC__ */
-void ANNOT_SelectSourceDoc (doc, el)
-int doc;
-Element el;
-
-#endif /* __STDC__ */
 {
   ElementType      elType;
   AttributeType    attrType;
@@ -1236,24 +1073,11 @@ Element el;
 /*-----------------------------------------------------------------------
   RaiseSourceDoc_callback
   -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void Annot_RaiseSourceDoc_callback (int doc, int status, 
 				    CHAR_T *urlName,
 				    CHAR_T *outputfile, 
 				    AHTHeaders *http_headers,
 				    void * context)
-#else  /* __STDC__ */
-void Annot_RaiseSourceDoc_callback (doc, status, urlName,
-				    outputfile, http_headers,
-				    context)
-int doc;
-int status;
-CHAR_T *urlName;
-CHAR_T *outputfile;
-AHTHeaders *http_headers;
-void *context;
-
-#endif /* __STDC__ */
 {
   RAISESOURCEDOC_context *ctx;
 
@@ -1283,12 +1107,7 @@ void *context;
   Annot_Raisesourcedoc
   The user has double clicked on the annot link to the source document
   -----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool Annot_RaiseSourceDoc (NotifyElement *event)
-#else
-ThotBool Annot_RaiseSourceDoc (event)
-NotifyElement *event;
-#endif /* __STDC__ */
 {
   Element          el;
   Document         doc_annot;
@@ -1344,12 +1163,7 @@ NotifyElement *event;
 /*----------------------------------------------------------------------
   Annot_ShowTypes
   ----------------------------------------------------------------------*/
-#ifdef __STDC__
 ThotBool Annot_Types (NotifyElement *event)
-#else
-ThotBool Annot_Types (event)
-NotifyElement *event;
-#endif /* __STDC__*/
 {
   Element          el;
   Document         doc_annot;
@@ -1390,24 +1204,11 @@ NotifyElement *event;
   Todo: rename the LINK_SaveLink to LINK_SaveIndex, as that's what 
   it's really doing.
   -----------------------------------------------------------------------*/
-#ifdef __STDC__
 void ANNOT_Delete_callback (int doc, int status, 
 			    CHAR_T *urlName,
 			    CHAR_T *outputfile, 
 			    AHTHeaders *http_headers,
 			    void * context)
-#else  /* __STDC__ */
-void ANNOT_Delete_callback (doc, status, urlName,
-			    outputfile, http_headers,
-			    context)
-int doc;
-int status;
-CHAR_T *urlName;
-CHAR_T *outputfile;
-AHTHeaders *http_headers;
-void *context;
-
-#endif
 {
   DELETE_context *ctx;
   Document source_doc;
@@ -1498,14 +1299,7 @@ void *context;
   ANNOT_Delete 
   Erases one annotation
  -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void ANNOT_Delete (Document doc, View view)
-#else /* __STDC__*/
-void ANNOT_Delete (document, view)
-     Document doc;
-     View view;
-#endif /* __STDC__*/
 {
   Document         source_doc, annot_doc;
   ElementType      elType;
@@ -1863,14 +1657,7 @@ void ANNOT_Move (Document doc, View view, ThotBool useSel)
   ANNOT_AddLink
   adds a new link to an annotation
  -----------------------------------------------------------------------*/
-
-#ifdef __STDC__
 void ANNOT_AddLink (Document doc, View view)
-#else /* __STDC__*/
-void ANNOT_AddLink (document, view)
-     Document doc;
-     View view;
-#endif /* __STDC__*/
 {
 #if 0
   ElementType elType;
