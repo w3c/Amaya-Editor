@@ -8,6 +8,7 @@
 
 extern void TteInitMenus ( char* name,
                            int number );
+extern void FreeMenus ( void );
 extern void TteAddMenuAction ( char* actionName,
                                Proc procedure,
                                ThotBool state );
@@ -124,6 +125,7 @@ extern void ThotCallback ( int ref,
 
 extern void TteInitMenus (/* char* name,
                              int number */);
+extern void FreeMenus (/* void */);
 extern void TteAddMenuAction (/* char* actionName,
                                  Proc procedure,
                                  ThotBool state */);

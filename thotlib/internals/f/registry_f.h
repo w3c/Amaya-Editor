@@ -33,6 +33,7 @@ extern ThotBool TtaGetDefEnvBoolean ( STRING name,
 extern STRING TtaGetDefEnvString ( STRING name );
 extern void TtaSaveAppRegistry ( void );
 extern void TtaInitializeAppRegistry ( STRING appArgv0 );
+extern void TtaFreeAppRegistry ( void );
 extern int SearchFile ( STRING fileName,
                         int dir,
                         STRING fullName );
@@ -66,6 +67,7 @@ extern ThotBool TtaGetDefEnvBoolean (/* STRING name,
 extern STRING TtaGetDefEnvString (/* STRING name */);
 extern void TtaSaveAppRegistry (/* void */);
 extern void TtaInitializeAppRegistry (/* STRING appArgv0 */);
+extern void TtaFreeAppRegistry (/* void */);
 extern int SearchFile (/* STRING fileName,
                           int dir,
                           STRING fullName */);

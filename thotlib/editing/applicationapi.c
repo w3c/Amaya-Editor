@@ -402,6 +402,7 @@ void                TtaQuit ()
   FreeAll ();
 #ifndef NODISPLAY
   FreeTranslations ();
+  FreeMenus ();
 #endif /* NODISPLAY */
   TtaFreeAppRegistry ();
   exit (0);

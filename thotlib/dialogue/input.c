@@ -1337,29 +1337,31 @@ STRING              appliname;
                ustrcat (text, TEXT("\n"));
 	    }
 
-            if (i == 0) {
-               /* C'est l'action insert-string */
-               /* FnCopy la ligne dans le source de la table de translations */
-               ustrcat (text, line);
-               ustrcat (text, AsciiTranslate (name));
-               ustrcat (text, TEXT("\n"));
-               /* C'est un encodage de caractere */
-               adr = AsciiTranslate (&name[len]);
-               MemoKey (mod1, key1, mod2, key2, (unsigned int) adr[0], 0);
-			} else if (i < max) {
-                   /* C'est une autre action Thot */
-                   MemoKey (mod1, key1, mod2, key2, /*255+i */ 0, i);
-                   /* On met a jour l'equivalent clavier */
-                   MenuActionList[i].ActionEquiv = TtaAllocString (ustrlen (equiv) + 1);
-                   ustrcpy (MenuActionList[i].ActionEquiv, equiv);
-			}  
+            if (i == 0)
+	      {
+		/* C'est l'action insert-string */
+		/* FnCopy la ligne dans le source de la table de translations */
+		ustrcat (text, line);
+		ustrcat (text, AsciiTranslate (name));
+		ustrcat (text, TEXT("\n"));
+		/* C'est un encodage de caractere */
+		adr = AsciiTranslate (&name[len]);
+		MemoKey (mod1, key1, mod2, key2, (unsigned int) adr[0], 0);
+	      }
+	    else if (i < max)
+	      {
+		/* C'est une autre action Thot */
+		MemoKey (mod1, key1, mod2, key2, /*255+i */ 0, i);
+		/* On met a jour l'equivalent clavier */
+		MenuActionList[i].ActionEquiv = TtaStrdup (equiv);
+	      }  
        } else {
-              /* skip this line */
-              do
-                i = fgetc (file);
-             while (i != NEW_LINE);
-	   }
-	   ch[0] = 0;
+	 /* skip this line */
+	 do
+	   i = fgetc (file);
+	 while (i != NEW_LINE);
+       }
+       ch[0] = 0;
        fscanf (file, "%80s", ch);
 	} while (e != 0);
 

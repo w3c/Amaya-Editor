@@ -310,12 +310,13 @@ int                 number;
 	for (i = 0; i < MAX_FRAME; i++)
 	   MenuActionList[FreeMenuAction].ActionActive[i] = TRUE;
      }
-   for (i = FreeMenuAction;i < MaxMenuAction;i++) {
+   for (i = FreeMenuAction; i < MaxMenuAction; i++)
+     {
 	MenuActionList[i].ActionName = "";
 	MenuActionList[i].Call_Action = NULL;
 	MenuActionList[i].User_Action = NULL;
 	MenuActionList[i].ActionEquiv = NULL;
-   }
+     }
 
    /* Initialisation des actions internes obligatoires */
    MenuActionList[0].ActionName = "TtcInsertChar";	/* action InsertChar() */
@@ -439,6 +440,23 @@ int                 number;
    MenuActionList[CMD_NextSelLine].ActionName = "TtcNextSelLine";
    MenuActionList[CMD_NextSelLine].Call_Action = (Proc) TtcNextSelLine;
    MenuActionList[CMD_NextSelLine].User_Action = (UserProc) NULL;
+}
+
+
+/*----------------------------------------------------------------------
+   FreeMenus frees all contextes allocated by the menu manager
+  ----------------------------------------------------------------------*/
+void    FreeMenus ()
+{
+  int                 i;
+
+   for (i = MAX_INTERNAL_CMD; i < FreeMenuAction; i++)
+     {
+       TtaFreeMemory (MenuActionList[i].ActionName);
+       TtaFreeMemory (MenuActionList[i].ActionEquiv);
+     }
+     
+  TtaFreeMemory (MenuActionList);
 }
 
 

@@ -1096,6 +1096,7 @@ void                CheckAmayaClosed ()
 #endif /* ANNOTATIONS */
       TtaFreeMemory (LastURLName);
       TtaFreeMemory (DocumentName);
+      TtaFreeMemory (DirectoryName);
       TtaFreeMemory (SavePath);
       TtaFreeMemory (SaveName);
       TtaFreeMemory (ObjectName);
