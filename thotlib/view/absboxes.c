@@ -99,6 +99,8 @@ void FreeAbView (PtrAbstractBox pAb, int frame)
 
   if (pAb != NULL)
     {
+if (!strcmp (pAb->AbElement->ElLabel, "L522"))
+  printf ("FreeAbView\n");
       /* reformat the last edited paragraph if needed */
       if (pAb == LastInsertParagraph)
 	LastInsertParagraph = NULL;

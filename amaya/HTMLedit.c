@@ -2439,7 +2439,9 @@ void ElementPasted (NotifyElement * event)
     {
       dispMode = TtaGetDisplayMode (doc);
       if (dispMode == DisplayImmediately)
-	TtaSetDisplayMode (doc, NoComputedDisplay);
+	/* don't set NoComputedDisplay
+	   -> it breaks down views formatting when Enter generates new elements  */
+	TtaSetDisplayMode (doc, DeferredDisplay);
       oldStructureChecking = TtaGetStructureChecking (doc);
       TtaSetStructureChecking (0, doc);
       /* Is there an anchor ancestor? */

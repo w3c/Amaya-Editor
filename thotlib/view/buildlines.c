@@ -1361,7 +1361,7 @@ static ThotBool BreakMainBox (PtrLine pLine, PtrBox pBox, int max,
   int                 nSpaces, length;
   
   if (pBox->BxType == BoScript)
-    return BreakPieceOfBox (pLine, pBox, max, l, r, pRootAb);;
+    return BreakPieceOfBox (pLine, pBox, max, l, r, pRootAb);
   pAb = pBox->BxAbstractBox;
   height = pBox->BxHeight;
   baseline = pBox->BxHorizRef;
@@ -1922,17 +1922,24 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 	  else if (pBox->BxWidth + xi <= pLine->LiXMax)
 	    {
 	      if (pBox->BxNexChild)
-		/* get the next child */
-		pNextBox = pBox->BxNexChild;
-	      else 
 		{
-		  /* the whole box can be inserted in the line */
-		  pNextBox = GetNextBox (pBox->BxAbstractBox);
-		  if (pNextBox == NULL)
+		  /* get the next child */
+		  pNextBox = pBox->BxNexChild;
+		  if (pNextBox && pNextBox->BxType == BoPiece)
 		    {
 		      *full = FALSE;
 		      still = FALSE;
 		    }
+		}
+	      else
+		{
+		/* the whole box can be inserted in the line */
+		pNextBox = GetNextBox (pBox->BxAbstractBox);
+		if (pNextBox == NULL)
+		  {
+		    *full = FALSE;
+		    still = FALSE;
+		  }
 		}
 	    }
 	  else
@@ -2165,7 +2172,7 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
     {
       /* Try to break the box pNextBox or a previous one */
       maxLength = pLine->LiXMax - xi;
-      if (pNextBox == pLine->LiFirstBox)
+      if (pNextBox == pLine->LiFirstBox || pNextBox == pLine->LiFirstPiece)
 	{
 	  /* There is only one box in the line */
 	  if (!pNextBox->BxAbstractBox->AbAcceptLineBreak ||

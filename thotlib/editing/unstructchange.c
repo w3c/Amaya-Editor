@@ -1789,8 +1789,6 @@ void TtcCreateElement (Document doc, View view)
 	      if (pListEl != NULL)
 		{
 		  if (lastSel->ElTerminal &&
-		      /*(lastSel->ElLeafType == LtText ||
-			lastSel->ElLeafType == LtPicture) &&*/
 		      pListEl == lastSel->ElParent &&
 		      (lastSel->ElNext == NULL || selBegin) &&
 		      !TypeHasException (ExcReturnCreateWithin,
