@@ -1520,11 +1520,6 @@ View                view;
 	else
 	  {
 	    ok = TtaExportDocument (doc, tempname, TEXT("TextFileT"));
-
-	    /* save a local copy of the current document */
-	    ptr = GetLocalPath (doc, tempname);
-	    TtaFileCopy (tempname, ptr);
-	    TtaFreeMemory (ptr);
 	  }
       else
 	{
@@ -1537,6 +1532,13 @@ View                view;
 						      TEXT("HTMLT"));
 	  newLineNumbers = TRUE;
 	}
+      /* save a local copy of the current document */
+      if (htmlDoc)
+	ptr = GetLocalPath (htmlDoc, tempname);
+      else
+	ptr = GetLocalPath (doc, tempname);
+      TtaFileCopy (tempname, ptr);
+      TtaFreeMemory (ptr);
     }
 
   SavingDocument = 0;

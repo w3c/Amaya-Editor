@@ -41,7 +41,7 @@ STRUCT
   HTML								{ HTML }
      (ATTR SectionNumbering = Yes_; ShowAreas = Yes_;
 	   PrintURL = Yes_; HtmlDTD = Transitional, Frameset;
-	   Namespaces = Text) =
+	   Namespaces = Text; RealLang = Yes_;) =
 	BEGIN
 	HEAD;
       ? BODY;	{ only one of BODY, FRAMESET is allowed }
@@ -845,6 +845,7 @@ EXCEPT
 	ShowAreas:	Invisible;
 	PrintURL:       Invisible;
 	Namespaces:	Invisible;
+	RealLang:	Invisible;
 	HtmlDTD:	Invisible;
 	shape:		Invisible;
 	Data_cell:	IsCell, NoMove, NoResize;

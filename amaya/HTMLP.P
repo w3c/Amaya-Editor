@@ -1328,6 +1328,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
 		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTR_Color;
 		END;
@@ -1340,6 +1341,7 @@ BOXES
 	Visibility: 0;
 	IN Structure_view BEGIN
 		Size: TAG_FONTSIZE;
+		Font: TAG_Font;
 		Style: ATTR_Style; Weight: ATTR_Weight;
 		Visibility: ATTR_Visibility;  Foreground: ATTRVALUE_Color;
 		END;
@@ -8324,8 +8326,16 @@ ATTRIBUTES
 
  Langue:
 	BEGIN
-	CreateBefore(ATTR_LANG);
-	CreateBefore(VALUE_LANG);
+	If HTML and RealLang
+	   BEGIN
+	   CreateFirst(ATTR_LANG);
+	   CreateFirst(VALUE_LANG);
+	   END;
+	If not HTML
+	   BEGIN
+	   CreateBefore(ATTR_LANG);
+	   CreateBefore(VALUE_LANG);
+	   END;
 	END;
 
  HREF_:

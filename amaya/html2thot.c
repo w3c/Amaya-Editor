@@ -4391,17 +4391,17 @@ CHAR_T                c;
    AttributeType       attrType, attrType1;
    Attribute	       attr;
    ElementType	       elType;
-   Element             child;
+   Element             child, parent;
    Language	       lang;
-   CHAR_T                translation;
-   CHAR_T                shape;
+   CHAR_T              translation;
+   CHAR_T              shape;
    STRING              buffer;
    STRING              attrName;
    int                 val;
    int                 length;
    int                 attrKind;
    ThotBool            done;
-   UCHAR_T       msgBuffer[MaxMsgLength];
+   UCHAR_T             msgBuffer[MaxMsgLength];
 
    if (UnknownAttr)
       /* this is the end of value of an invalid attribute. Keep the */
@@ -4523,8 +4523,18 @@ CHAR_T                c;
 			      currentLanguage = lang;
 			      LanguageStack[StackLevel - 1] = currentLanguage;
 			      }
-			    }
-			  }
+			   if (!TtaGetParent (lastAttrElement))
+			      /* it's a LANG attribute on the root element */
+			      /* set the RealLang attribute */
+			      {
+			      attrType1.AttrSSchema = DocumentSSchema;
+			      attrType1.AttrTypeNum = HTML_ATTR_RealLang;
+			      attr = TtaNewAttribute (attrType1);
+			      TtaAttachAttribute (lastAttrElement, attr, theDocument);
+			      TtaSetAttributeValue (attr, HTML_ATTR_RealLang_VAL_Yes_, lastAttrElement, theDocument);
+			      }
+			   }
+			 }
 		     else
 			 /* this is the content of an invalid attribute */
 			 /* append it to the current Invalid_attribute */

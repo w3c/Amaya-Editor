@@ -1055,6 +1055,7 @@ ATTRIBUTES
 	END;
 
  Langue:
+	BEGIN
 	IF not HTML
 	    BEGIN
 	    Create ' lang="';
@@ -1066,6 +1067,18 @@ ATTRIBUTES
 	    Create DoubleQuote;
 #endif
 	    END;
+	IF HTML and RealLang
+	    BEGIN
+	    Create ' lang="';
+	    Create Langue;
+	    Create DoubleQuote;
+#ifdef XML
+	    Create ' xml:lang="';
+	    Create Langue;
+	    Create DoubleQuote;
+#endif
+	    END;
+	END;
 
  content_type: BEGIN
 	Create ' type="';

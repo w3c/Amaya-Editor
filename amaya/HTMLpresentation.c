@@ -674,11 +674,23 @@ void AttrLangDeleted(event)
      NotifyAttribute *event;
 #endif /* __STDC__*/
 {
-   Element	firstChild, lastChild;
+   Element	 firstChild, lastChild;
+   AttributeType attrType;
+   Attribute	 attr;
 
   /* if the element is a SPAN without any other attribute, remove the SPAN
      element */
   DeleteSpanIfNoAttr (event->element, event->document, &firstChild, &lastChild);
+  /* if it's the root (HTML) element, delete the RealLang attribute */
+  if (!TtaGetParent (event->element))
+     /* it's the root element */
+     {
+     attrType.AttrSSchema = event->attributeType.AttrSSchema;
+     attrType.AttrTypeNum = HTML_ATTR_RealLang;
+     attr = TtaGetAttribute (event->element, attrType);
+     if (attr)
+	TtaRemoveAttribute (event->element, attr, event->document);
+     }
 }
 
 
@@ -777,6 +789,8 @@ void AttrLangCreated(event)
 {
   Element	elem;
   int		len;
+  AttributeType attrType;
+  Attribute	attr;
   STRING	value    = TtaAllocString (ATTRLEN); 
 
   /* move the LANG attribute to the parent element if all sibling have the
@@ -787,7 +801,8 @@ void AttrLangCreated(event)
   len = ATTRLEN - 1;
   TtaGiveTextAttributeValue (event->attribute, value, &len);
   if (ustrcasecmp(value, TEXT("Symbol")) == 0)
-     /* it's a character string in the Symbol character set, it's not really a language */
+     /* it's a character string in the Symbol character set, it's not really
+	a language */
     {
     TtaRemoveAttribute (elem, event->attribute, event->document);      
     }
@@ -798,4 +813,77 @@ void AttrLangCreated(event)
 	 element */
       AttrToSpan (elem, event->attribute, event->document);
     }
+  /* if it's the root (HTML) element, create a RealLang attribute too */
+  if (!TtaGetParent (elem))
+     /* it's the root element */
+     {
+     attrType.AttrSSchema = event->attributeType.AttrSSchema;
+     attrType.AttrTypeNum = HTML_ATTR_RealLang;
+     attr = TtaNewAttribute (attrType);
+     TtaAttachAttribute (elem, attr, event->document);
+     TtaSetAttributeValue (attr, HTML_ATTR_RealLang_VAL_Yes_, elem,
+			   event->document);
+     }
+}
+
+/*----------------------------------------------------------------------
+ AttrLangModified
+ A Lang attribute has been modified
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+void AttrLangModified (NotifyAttribute *event)
+#else /* __STDC__*/
+void AttrLangModified(event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+  Element	elem;
+  AttributeType attrType;
+  Attribute	attr;
+
+  elem = event->element;
+  /* if it's the root (HTML) element, create a RealLang attribute */
+  if (!TtaGetParent (elem))
+     /* it's the root element */
+     {
+     attrType.AttrSSchema = event->attributeType.AttrSSchema;
+     attrType.AttrTypeNum = HTML_ATTR_RealLang;
+     attr = TtaGetAttribute (elem, attrType);
+     if (!attr)
+	{
+        attr = TtaNewAttribute (attrType);
+        TtaAttachAttribute (elem, attr, event->document);
+        TtaSetAttributeValue (attr, HTML_ATTR_RealLang_VAL_Yes_, elem,
+			      event->document);
+	}
+     }  
+}
+
+/*----------------------------------------------------------------------
+ AttrLangShouldBeDeleted
+ The user wants to remove a Lang attribute
+ -----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool AttrLangShouldBeDeleted (NotifyAttribute *event)
+#else /* __STDC__*/
+ThotBool AttrLangShouldBeDeleted(event)
+     NotifyAttribute *event;
+#endif /* __STDC__*/
+{
+  Element	elem;
+  AttributeType attrType;
+  Attribute	attr;
+
+  elem = event->element;
+  /* if it's the root (HTML) element, delete the RealLang attribute */
+  if (!TtaGetParent (elem))
+     /* it's the root element */
+     {
+     attrType.AttrSSchema = event->attributeType.AttrSSchema;
+     attrType.AttrTypeNum = HTML_ATTR_RealLang;
+     attr = TtaGetAttribute (elem, attrType);
+     if (attr)
+	TtaRemoveAttribute (elem, attr, event->document);
+     }  
+  return FALSE; /* let Thot perform normal operation */
 }
