@@ -280,7 +280,8 @@ void XhtmlElementComplete (ParserData *context, Element el, int *error)
        elType.ElTypeNum == HTML_EL_CAPTION ||
        elType.ElTypeNum == HTML_EL_rb ||
        elType.ElTypeNum == HTML_EL_rt ||
-       (isInline && elType.ElTypeNum != HTML_EL_Text_Area))
+       (isInline &&  !TtaIsLeaf (elType) &&
+	elType.ElTypeNum != HTML_EL_Text_Area))
      /* It's an element that is supposed to contain at least a Basic_Elem.
 	If it is empty, insert a Basic_Elem to allow the user to put the
 	selection within this element */

@@ -3138,7 +3138,6 @@ void YMove (PtrBox pBox, PtrBox pFromBox, int delta, int frame)
     return;
   else
     pCurrentAb = pBox->BxAbstractBox;
-
   if (delta != 0 && pCurrentAb && !IsDead (pCurrentAb))
     {
       /* check if the box is in the history of moved boxes */
