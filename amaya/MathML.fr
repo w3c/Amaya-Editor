@@ -27,6 +27,7 @@ MSPACE: mspace
 MROW: mrow
 MFRAC: mfrac
 MSQRT: msqrt
+MENCLOSE: menclose
 MROOT: mroot
 MSTYLE: mstyle
 MERROR: merror
@@ -43,6 +44,9 @@ MUNDEROVER: munderover
 MMULTISCRIPTS: mmultiscripts
 MTABLE: mtable
 MTR: mtr
+MLABELEDTR: mlabeledtr
+MCHAR: mchar
+MGLYPH: mglyph
 MACTION: maction
 SEP: sep
 MTD: mtd
@@ -50,4 +54,5 @@ MALIGNGROUP: maligngroup
 MALIGNMARK: malignmark
 
 Langue: lang
+normal_: normal
 bold_: bold

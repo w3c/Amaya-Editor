@@ -1046,7 +1046,7 @@ PtrAttribute        pNewAttr;
 {
    PtrAttribute        pAttr, pAttrAsc, pAttrNext;
    PtrElement          pChild, pElAttr;
-   ThotBool            suppress, compare, inherit, mandatory, create;
+   ThotBool            suppress, compare, inherit, mandatory, create, allowed;
    NotifyAttribute     notifyAttr;
 
    if (pNewAttr == NULL || pNewAttr->AeAttrNum == 0)
@@ -1059,7 +1059,8 @@ PtrAttribute        pNewAttr;
    create = (pAttr == NULL);
 
    /* peut-on appliquer l'attribut a l'element ? */
-   if (create && !CanAssociateAttr (pEl, pAttr, pNewAttr, &mandatory))
+   allowed = CanAssociateAttr (pEl, pAttr, pNewAttr, &mandatory);
+   if (!allowed && create)
       return;
 
    /* est-ce une suppression d'attribut */
