@@ -26,19 +26,38 @@
 </table>
 
 <div id="page_body">
-<h1>Support Xml</h1>
-
-<p>The following topics are covered in this section:</p>
-<ul>
-  <li><a href="using_graphics/working_with_graphics.html#page_body"
-    rel="subdocument">1</a></li>
-  <li><a
-    href="using_graphics/creating_graphics_with_the_palette.html#page_body"
-    rel="subdocument">2</a></li>
-  <li><a href="using_graphics/moving_graphics.html#page_body"
-    rel="subdocument">3</a></li>
-</ul>
+<h1>Support XML</h1>
 </div>
+
+<p>Amaya permet de lire et d'afficher n'importe quel document XML
+bien-formé.</p>
+
+<p>Pour un document XML faisant référence à une DTD non supportée (autre que
+XHTML, MathML et SVG), Amaya offre un support d'affichage et d'édition plus
+restreint. En effet, comme Amaya n'analyse pas la DTD associée, il ne peut
+vérifier la validité d'un tel document et n'a pas d'informations
+particulières sur les éléments et attributs et sur leur organisation dans le
+document.</p>
+
+<p>Pour ces documents XML, Amaya propose une vue source, une vue structure
+qui reflète l'organisation du document et une vue formattée qui affiche le
+contenu des éléments. Sans autre indication de style, tous les éléments sont
+considérés comme <strong>blocs</strong>. Néanmoins, pour des raisons de
+lisibilité les éléments contenant au moins un fils de type "texte" sont
+considérés comme des <strong>inline</strong> et sont mis en ligne dans la vue
+formattée. Amaya permet également d'associer des feuilles de styles CSS pour
+ces documents par l'intermédiaire d'instructions de traitement.</p>
+
+<p>Le support des documents XML dans Amaya est encore expérimental et aucune
+interface d'édition spécifique n'est disponible dans cette version. C'est
+pour cette raison également que ces documents sont proposés en mode "browser"
+uniquement. Pour modifier ces documents vous pouvez soit passer par la vue
+source puis utiliser la commande <strong>synchronizer</strong>, soit repasser
+en mode éditeur et modifier le contenu des éléments directement dans la vue
+formattée. Cependant comme la sauvegarde des documents XML n'est pas encore
+complètement stable, il est préférable d'utiliser la commande <strong>Sauver
+comme</strong> <em>nouveau_nom</em> plutôt que la commande
+<strong>Sauver</strong>.</p>
 
 <p></p>
 
