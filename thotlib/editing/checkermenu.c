@@ -487,7 +487,7 @@ void TtcSpellCheck (Document doc, View view)
    indx += strlen (&BufMenu[indx]) + 1;
    sprintf (&BufMenu[indx], "B%s", TtaGetMessage (CORR, Romans));
    indx += strlen (&BufMenu[indx]) + 1;
-   printf (&BufMenu[indx], "B%s", TtaGetMessage (CORR, Specials));
+   sprintf (&BufMenu[indx], "B%s", TtaGetMessage (CORR, Specials));
    TtaNewToggleMenu (SpellingBase + ChkrMenuIgnore,
 		     SpellingBase + ChkrFormCorrect,
 		     TtaGetMessage (CORR, Ignore),

@@ -409,7 +409,7 @@ static void Cmp (unsigned char *wordtest, PtrDict dict)
   int                 dist[MAX_WORD_LEN][MAX_WORD_LEN];
   unsigned char       wordcmp[MAX_WORD_LEN];
   unsigned char       currentWord[MAX_WORD_LEN];
-  int                 Lg, idx, sup, pWord, seuilCourant;
+  int                 lg, idx, sup, pWord, seuilCourant;
   int                 i, j, k, x, y, z;
   int                 difference, iteration, size, largeur, word;
   int                 minimum;
@@ -431,13 +431,13 @@ static void Cmp (unsigned char *wordtest, PtrDict dict)
     dist[i][0] = dist[i - 1][0] + KO;
   for (i = 1; i < MAX_WORD_LEN; i++)
     dist[0][i] = dist[0][i - 1] + KI;
-  
+  idx = 0;
   strcpy (wordcmp, wordtest);
   SmallLettering (wordcmp);
   Asci2Code (wordcmp);
-  Lg = strlen (wordcmp);
-  seuilCourant = Seuil[Lg];
-  largeur = Delta[Lg];
+  lg = strlen (wordcmp);
+  seuilCourant = Seuil[lg];
+  largeur = Delta[lg];
   
   /* parcours du dictionnaire
      avec d'abord les mots de meme size,
@@ -448,7 +448,7 @@ static void Cmp (unsigned char *wordtest, PtrDict dict)
   for (iteration = 0; iteration <= 2 * largeur; iteration++)
     {
       difference = (difference > 0) ? difference - iteration : difference + iteration;
-      size = Lg - difference;
+      size = lg - difference;
       if (size >= 0 && size < MAX_WORD_LEN)
 	{
 	  /*
@@ -458,19 +458,18 @@ static void Cmp (unsigned char *wordtest, PtrDict dict)
 	    ces mots
 	  */
 	  dist_mini = (difference > 0) ? difference * KI : -difference * KO;
-	  if (dist_mini > seuilCourant)
-	    continue;
+	  /*if (dist_mini > seuilCourant)
+	    continue;*/
 	  
 	  /* calcul des indices de debut et fin de dictionnaire */
 	  word = dict->DictLengths[size];
 	  idx = dict->DictWords[word];
-	  if (size >= MAX_WORD_LEN || (dict->DictLengths[size + 1] - 1 > dict->DictNbWords))
+	  if (dict->DictLengths[size + 1] - 1 > dict->DictNbWords)
 	    sup = dict->DictWords[dict->DictNbWords];
 	  else
 	    sup = dict->DictWords[dict->DictLengths[size + 1]];
 	  
 	  /* initialisation des valeurs en dehors des diagonales de calculs effectifs */
-	  
 	  for (j = 1; j <= size; j++)
 	    {
 	      i = j - largeur - 1;
@@ -481,7 +480,7 @@ static void Cmp (unsigned char *wordtest, PtrDict dict)
 	      i = j + largeur + 1;
 	      if (difference < 0)
 		i = i + difference;
-	      if (i <= Lg)
+	      if (i <= lg)
 		dist[i][j] = seuilCourant + 1;
 	    }
 	  
@@ -510,8 +509,8 @@ static void Cmp (unsigned char *wordtest, PtrDict dict)
 		      fin = j + largeur;
 		      if (difference < 0)
 			fin = fin + difference;
-		      if (fin > Lg)
-			fin = Lg;
+		      if (fin > lg)
+			fin = lg;
 		      for (i = deb; i <= fin; i++)
 			{
 			  x = dist[i][j - 1] + KI;
@@ -924,12 +923,12 @@ void WordReplace (unsigned char *orgWord,  unsigned char *newWord)
    int                 idx;
    int                 stringLength;	/* longueur de cette chaine */
    char                pChaineRemplace[MAX_WORD_LEN]; /* la chaine de remplacement */
-   int                 LgChaineRempl;	/* longueur de cette chaine */
+   int                 lgChaineRempl;	/* longueur de cette chaine */
 
    /* remplacer le mot errone par le mot corrige */
    stringLength = strlen (orgWord);
-   /* initialiser LgChaineRempl et pChaineRemplace */
-   LgChaineRempl = strlen (newWord);
+   /* initialiser lgChaineRempl et pChaineRemplace */
+   lgChaineRempl = strlen (newWord);
    strcpy (pChaineRemplace, newWord);
 
    /* substitue la nouvelle chaine et la selectionne */
@@ -941,16 +940,16 @@ void WordReplace (unsigned char *orgWord,  unsigned char *newWord)
 	AddEditOpInHistory (ChkrElement, ChkrRange->SDocument, TRUE, TRUE);
 	CloseHistorySequence (ChkrRange->SDocument);
 	ReplaceString (ChkrRange->SDocument, ChkrElement, idx,
-		       stringLength, pChaineRemplace, LgChaineRempl, TRUE);
+		       stringLength, pChaineRemplace, lgChaineRempl, TRUE);
 	/* met a jour ChkrIndChar */
-	ChkrIndChar = idx + LgChaineRempl - 1;
+	ChkrIndChar = idx + lgChaineRempl - 1;
 
 	/* met eventuellement a jour la borne de fin du domaine de recherche */
 	if (ChkrElement == ChkrRange->SEndElement)
 	   /* la borne est dans l'element ou` on a fait le remplacement */
 	   if (ChkrRange->SEndChar != 0)
 	      /* la borne n'est pas a la fin de l'element, on decale la borne */
-	      ChkrRange->SEndChar += LgChaineRempl - stringLength;
+	      ChkrRange->SEndChar += lgChaineRempl - stringLength;
      }
    else
      {
@@ -960,11 +959,11 @@ void WordReplace (unsigned char *orgWord,  unsigned char *newWord)
 	AddEditOpInHistory (ChkrElement, ChkrRange->SDocument, TRUE, TRUE);
 	CloseHistorySequence (ChkrRange->SDocument);
 	ReplaceString (ChkrRange->SDocument, ChkrElement, idx,
-		       stringLength, pChaineRemplace, LgChaineRempl, TRUE);
+		       stringLength, pChaineRemplace, lgChaineRempl, TRUE);
      }
 
    /* met eventuellement a jour la selection initiale */
-   UpdateDuringSearch (ChkrElement, LgChaineRempl - stringLength);
+   UpdateDuringSearch (ChkrElement, lgChaineRempl - stringLength);
 }
 
 
