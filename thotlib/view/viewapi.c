@@ -737,8 +737,6 @@ int                 value;
 	  SetFrameParams (frame, valvisib, valzoom);
 	}
     }
-  else
-    TtaError (ERR_invalid_parameter);
 }
 
 

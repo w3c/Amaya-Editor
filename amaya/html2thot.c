@@ -7452,7 +7452,8 @@ char               *pathURL;
 #ifdef AMAYA_JAVA
            handleLinkHeaders (theDocument);
 #endif /* AMAYA_JAVA */
-	   ApplyFinalStyle (theDocument);
+	   if (TtaIsViewOpened (theDocument, 1))
+	       ApplyFinalStyle (theDocument);
 #ifndef INCR_DISPLAY
 	   TtaSetDisplayMode (theDocument, DeferredDisplay);
 	   TtaSetDisplayMode (theDocument, DisplayImmediately);

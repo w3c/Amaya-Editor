@@ -173,13 +173,14 @@ char               *documentURL;
 {
    int                 i;
    boolean             found;
-   char                otherURL[MAX_LENGTH];
+   char               *otherURL;
 
    if (!documentURL)
       return ((Document) None);
 
    i = 1;
    found = FALSE;
+   otherURL = TtaGetMemory (MAX_LENGTH);
    strcpy (otherURL, documentURL);
    strcat (otherURL, DIR_STR);
    while (!found && i < DocumentTableLength)
@@ -195,6 +196,7 @@ char               *documentURL;
 	  }
      }
 
+   TtaFreeMemory (otherURL);
    if (i < DocumentTableLength)
       /* document is found */
       return ((Document) i);
@@ -213,14 +215,14 @@ void                ExtractParameters (char *aName, char *parameters)
 void                ExtractParameters (aName, parameters)
 char               *aName;
 char               *parameters;
-
 #endif
 {
    int                 lg, i;
    char               *ptr, *oldptr;
 
    if (!parameters || !aName)
-      return;			/* bad parameters */
+     /* bad parameters */
+     return;
 
    parameters[0] = EOS;
    lg = strlen (aName);
@@ -256,14 +258,14 @@ static void         ExtractTarget (char *aName, char *target)
 static void         ExtractTarget (aName, target)
 char               *aName;
 char               *target;
-
 #endif
 {
    int                 lg, i;
    char               *ptr, *oldptr;
 
    if (!target || !aName)
-      return;			/* bad target */
+     /* bad target */
+     return;
 
    target[0] = EOS;
    lg = strlen (aName);
@@ -306,7 +308,8 @@ char               *aSuffix;
    char               *ptr, *oldptr;
 
    if (!aSuffix || !aName)
-      return;			/* bad suffix */
+     /* bad suffix */
+     return;
 
    aSuffix[0] = EOS;
    lg = strlen (aName);
@@ -340,7 +343,6 @@ void                ResetStop (Document document)
 #else
 void                ResetStop (document)
 Document            document;
-
 #endif
 {
    if (FilesLoading[document] != 0)
@@ -507,7 +509,7 @@ char               *text;
 
 #endif
 {
-  char              s[MAX_LENGTH];
+  char             *s;
   boolean           change;
 
   change = FALSE;
@@ -515,12 +517,14 @@ char               *text;
     {
       if (!IsW3Path (text))
 	{
+	  s = TtaGetMemory (MAX_LENGTH);
 	  change = NormalizeFile (text, s);
 	  if (!TtaFileExist (s))
 	    {
 	      /* It is not a valid URL */
 	      /*TtaSetTextZone (document, view, 1, DocumentURLs[document]);*/
 	      TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), text);
+	      TtaFreeMemory (s);
 	      return;
 	    }
 	}
@@ -543,7 +547,9 @@ char               *text;
       if (change)
 	{
 	  /* change the text value */
+	  s = TtaGetMemory (MAX_LENGTH);
 	  TtaSetTextZone (document, view, 1, s);
+	  TtaFreeMemory (s);
 	  CallbackDialogue (BaseDialog + URLName, STRING_DATA, s);
 	}
       else
@@ -754,8 +760,8 @@ char               *pathname;
 
 #endif
 {
-   char                tempname[MAX_LENGTH];
-   char                temppath[MAX_LENGTH];
+   char               *tempname;
+   char               *temppath;
    View                mainView, structView, altView, linksView, tocView;
    Document            old_doc;
    boolean             opened;
@@ -814,12 +820,15 @@ char               *pathname;
       opened = FALSE;
 
    /* open the main view */
+   temppath = TtaGetMemory (MAX_LENGTH);
+   tempname = TtaGetMemory (MAX_LENGTH);
    TtaExtractName (pathname, temppath, tempname);
    if (tempname[0] == EOS)
       /* there is a slash at the end of the path */
       strcpy (tempname, "noname.html");
 
    doc = TtaNewDocument ("HTML", tempname);
+   TtaFreeMemory (tempname);
    if (doc < DocumentTableLength)
      {
 	/* assign a presentation model to the document */
@@ -839,7 +848,8 @@ char               *pathname;
 	if (mainView == 0)
 	  {
 	     TtaCloseDocument (doc);
-	     return 0;
+	     TtaFreeMemory (temppath);
+	     return (0);
 	  }
 	if (!opened)
 	  {
@@ -959,6 +969,7 @@ char               *pathname;
 	       }
 	  }
      }
+   TtaFreeMemory (temppath);
    return (doc);
 }
 
@@ -977,12 +988,13 @@ char               *documentname;
 
 #endif
 {
-   char                tempdocument[MAX_LENGTH];
-   char                tempdir[MAX_LENGTH];
-   int                 i;
-   char               *s;
    Document            newdoc = 0;
+   char               *tempdocument;
+   char               *tempdir;
+   char               *s;
+   int                 i;
 
+   tempdocument = TtaGetMemory (MAX_LENGTH);
    if (!IsTextName (pathname) && tempfile[0] != EOS)
      {
 	/* The document is not an HTML file and cannot be parsed */
@@ -1007,6 +1019,7 @@ char               *documentname;
 	   newdoc = doc;
 
 	/* what we have to do if doc and targetDocument are different */
+	tempdir = TtaGetMemory (MAX_LENGTH);
 	if (tempfile[0] != EOS)
 	  {
 	     /* It is a document loaded from the Web */
@@ -1014,6 +1027,7 @@ char               *documentname;
 	       {
 		  /* Nothing is loaded */
 		  ResetStop (doc);
+		  TtaFreeMemory (tempdocument);
 		  return (0);
 	       }
 	     /* we have to rename the temporary file */
@@ -1054,7 +1068,9 @@ char               *documentname;
 	StartHTMLParser (newdoc, tempdocument, documentname, tempdir, pathname);
 	/* add this URL in history file */
 	AddHTMLHistory (DocumentURLs[newdoc]);
+	TtaFreeMemory (tempdir);
      }
+   TtaFreeMemory (tempdocument);
    return (newdoc);
 }
 
@@ -1070,11 +1086,11 @@ View                view;
 
 #endif
 {
-   char                tempfile[MAX_LENGTH];
-   char                pathname[MAX_LENGTH];
-   char                documentname[MAX_LENGTH];
    Document            newdoc;
    Document            res;
+   char               *tempfile;
+   char               *pathname;
+   char               *documentname;
    int                 toparse;
 
    if (DocumentURLs[(int) document] == NULL)
@@ -1094,19 +1110,23 @@ View                view;
 	   return;
      }
    /* reload the document */
+   pathname = TtaGetMemory (MAX_LENGTH);
+   documentname = TtaGetMemory (MAX_LENGTH);
    NormalizeURL (DocumentURLs[(int) document], 0, pathname, documentname);
    W3Loading = document;	/* this document is currently in load */
    newdoc = InitDocView (document, pathname);
 
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-   /*
-    * Check against concurrent loading on the same frame.
-    */
-   if (FilesLoading[newdoc]) {
+   /* Check against concurrent loading on the same frame */
+   if (FilesLoading[newdoc])
+     {
+       TtaFreeMemory (pathname);
+       TtaFreeMemory (documentname);
        return;
-   }
+     }
 #endif 
 
+   tempfile = TtaGetMemory (MAX_LENGTH);
    tempfile[0] = EOS;
    toparse = 0;
    ActiveTransfer (newdoc);
@@ -1130,6 +1150,9 @@ View                view;
 	TtaResetCursor (0, 0);
      }
    ResetStop(newdoc);
+   TtaFreeMemory (tempfile);
+   TtaFreeMemory (pathname);
+   TtaFreeMemory (documentname);
 }
 
 
@@ -1141,7 +1164,6 @@ void                ShowStructure (Document document, View view)
 void                ShowStructure (document, view)
 Document            document;
 View                view;
-
 #endif
 {
    View                structView;
@@ -1412,16 +1434,17 @@ DoubleClickEvent    DC_event;
 {
    Element             elFound;
    Document            newdoc, res;
-   char                tempfile[MAX_LENGTH];
-   char                tempdocument[MAX_LENGTH];
-   char                parameters[MAX_LENGTH];
-   char                target[MAX_LENGTH];
-   char                pathname[MAX_LENGTH];
-   char                documentname[MAX_LENGTH];
+   char               *tempfile;
+   char               *tempdocument;
+   char               *parameters;
+   char               *target;
+   char               *pathname;
+   char               *documentname;
+   char               *s;
    int                 toparse;
    int                 i;
    int                 slash;
-   char               *s;
+   boolean             ok;
 
    /* Extract parameters if necessary */
 
@@ -1430,7 +1453,13 @@ DoubleClickEvent    DC_event;
        TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_TOO_LONG_URL), "512");
        return (0);
      }
-
+   ok = TRUE;
+   tempdocument = TtaGetMemory (MAX_LENGTH);
+   target = TtaGetMemory (MAX_LENGTH);
+   documentname = TtaGetMemory (MAX_LENGTH);
+   parameters = TtaGetMemory (MAX_LENGTH);
+   tempfile = TtaGetMemory (MAX_LENGTH);
+   pathname = TtaGetMemory (MAX_LENGTH);
    strcpy (tempdocument, documentPath);
    ExtractParameters (tempdocument, parameters);
    /* Extract the target if necessary */
@@ -1453,121 +1482,137 @@ DoubleClickEvent    DC_event;
 
    if ((DC_event & DC_FORM_POST) || (DC_event & DC_FORM_GET))
      {
-	/* special checks for forms */
-	if (!IsW3Path (pathname))
-	  {
-	     /* the target document doesn't exist */
-	     TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), pathname);
-	     return (0);
-	  }
-	/* we always have a fresh newdoc for forms */
-	newdoc = 0;
-     }
-
-   if (newdoc == 0)
-     {
-	/* document not loaded yet */
-	if (DC_event & DC_TRUE && !IsW3Path (pathname) && !TtaFileExist (pathname))
+       /* special checks for forms */
+       if (!IsW3Path (pathname))
+	 {
 	   /* the target document doesn't exist */
 	   TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), pathname);
-	else
-	  {
-	     tempfile[0] = EOS;
-	     toparse = 0;
-	     /* In case of initial document, open the view before loading */
-	     if (doc == 0)
-	       {
-		 newdoc = InitDocView (doc, pathname);
-		 if (newdoc == 0)
-		   /* cannot display the new document */
-		   return (newdoc);
-	       }
-	     else
-	       {
-		  /* stop current transfer for previous document */
-		 if (!(DC_event & DC_MAKEBOOK))
-		   StopTransfer (baseDoc, 1);
-		 newdoc = doc;
+	   newdoc = 0;
+	   ok = FALSE; /* do not continue */
+	 }
+       else
+	 /* we always have a fresh newdoc for forms */
+	 newdoc = 0;
+     }
 
-	       }
+   if (ok && newdoc == 0)
+     {
+       /* document not loaded yet */
+       if (DC_event & DC_TRUE && !IsW3Path (pathname) && !TtaFileExist (pathname))
+	 /* the target document doesn't exist */
+	 TtaSetStatus (baseDoc, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), pathname);
+       else
+	 {
+	   tempfile[0] = EOS;
+	   toparse = 0;
+	   /* In case of initial document, open the view before loading */
+	   if (doc == 0)
+	     {
+	       newdoc = InitDocView (doc, pathname);
+	       if (newdoc == 0)
+		 /* cannot display the new document */
+		 ok = FALSE;
+	     }
+	   else
+	     {
+	       /* stop current transfer for previous document */
+	       if (!(DC_event & DC_MAKEBOOK))
+		 StopTransfer (baseDoc, 1);
+	       newdoc = doc;
+	     }
 
 #if defined(AMAYA_JAVA) || defined(AMAYA_ILU)
-             /* Check against concurrent loading on the same frame */
-	     if (FilesLoading[newdoc])
-	       return(0);
+	   if (ok)
+	     {
+	       /* Check against concurrent loading on the same frame */
+	       if (FilesLoading[newdoc])
+		 {
+		   newdoc = 0;
+		   ok = FALSE;
+		 }
+	     }
 #endif /* AMAYA_JAVA */
+	   
+	   if (ok)
+	     {
+	       /* this document is currently in load */
+	       W3Loading = newdoc;
+	       ActiveTransfer (newdoc);
+	       if (IsW3Path (pathname))
+		 {
+		   if (DC_event & DC_FORM_POST)
+		     toparse = GetObjectWWW (newdoc, pathname, form_data, tempfile,
+					     AMAYA_FORM_POST | AMAYA_SYNC,
+					     NULL, NULL, NULL, NULL, YES);
+		   else
+		     {
+		       if (!strcmp (documentname, "noname.html"))
+			 {
+			   slash = strlen (pathname);
+			   if (slash && pathname[slash - 1] != '/')
+			     strcat (pathname, "/");
+			   
+			   toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, YES);
+			   
+			   /* keep the real name */
+			   NormalizeURL (pathname, 0, tempdocument, documentname);
+			 }
+		       else 
+			 toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, YES);
+		     }
+		 }
+	       else
+		 TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
+	       TtaHandlePendingEvents ();
 
-	     /* this document is currently in load */
-	     W3Loading = newdoc;
-	     ActiveTransfer (newdoc);
-	     if (IsW3Path (pathname))
-	       {
-		  if (DC_event & DC_FORM_POST)
-		    toparse = GetObjectWWW (newdoc, pathname, form_data, tempfile,
-					    AMAYA_FORM_POST | AMAYA_SYNC,
-					    NULL, NULL, NULL, NULL, YES);
+	       /* memorize the initial newdoc value in doc because LoadHTMLDocument */
+	       /* will opem a new document if newdoc is a modified document */
+	       if (toparse != -1)
+		 {
+		   /* do we need to control the last slash here? */
+		   res = LoadHTMLDocument (newdoc, pathname, tempfile, documentname);
+		   W3Loading = 0;		/* loading is complete now */
+		   if (res == 0)
+		     {
+		       /* cannot load the document */
+		       ResetStop(newdoc);
+		       newdoc = 0;
+		       ok = FALSE;
+		     }
+		   else if (newdoc != res)
+		     newdoc = res;
+		   
+		   TtaHandlePendingEvents ();
+		   if (ok)
+		     {
+		       /* fetch and display all images referred by the document */
+		       if (doc == baseDoc)
+			 /* it's not a temporary document */
+			 FetchAndDisplayImages (newdoc, 0);
+		     }
+		 }
+	       else
+		 {
+		   if (DocumentURLs[(int) newdoc] == NULL)
+		     {
+		       /* save the document name into the document table */
+		       i = strlen (pathname) + 1;
+		       s = TtaGetMemory (i);
+		       strcpy (s, pathname);
+		       DocumentURLs[(int) newdoc] = s;
+		       TtaSetTextZone (newdoc, 1, 1, s);
+		     }
+		   W3Loading = 0;	/* loading is complete now */
+		 }
 
-		  else
-		    {
- 		      if (!strcmp (documentname, "noname.html"))
-			{
-			  slash = strlen (pathname);
-			  if (slash && pathname[slash - 1] != '/')
-			    strcat (pathname, "/");
-
-			  toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, YES);
-
-			  /* keep the real name */
-			  NormalizeURL (pathname, 0, tempdocument, documentname);
-			}
-		      else 
-			toparse = GetObjectWWW (newdoc, pathname, NULL, tempfile, AMAYA_SYNC, NULL, NULL, NULL, NULL, YES);
-		    }
-	       }
-	     else
-	       TtaSetStatus (newdoc, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
-	     TtaHandlePendingEvents ();
-
-	     /* memorize the initial newdoc value in doc because LoadHTMLDocument */
-	     /* will opem a new document if newdoc is a modified document */
-	     if (toparse != -1)
-	       {
-		  /* do we need to control the last slash here? */
-		  res = LoadHTMLDocument (newdoc, pathname, tempfile, documentname);
-		  W3Loading = 0;		/* loading is complete now */
-		  if (res == 0)
-		    {
-		      /* cannot load the document */
-		      ResetStop(newdoc);
-		      return (res);
-		    }
-		  else if (newdoc != res)
-		    newdoc = res;
-
-		  TtaHandlePendingEvents ();
-		  /* fetch and display all images referred by the document */
-		  if (doc == baseDoc)
-		    /* it's not a temporary document */
-		    FetchAndDisplayImages (newdoc, 0);
-	       }
-	     else
-	       {
-		 if (DocumentURLs[(int) newdoc] == NULL)
-		   {
-		     /* save the document name into the document table */
-		     i = strlen (pathname) + 1;
-		     s = TtaGetMemory (i);
-		     strcpy (s, pathname);
-		     DocumentURLs[(int) newdoc] = s;
-		     TtaSetTextZone (newdoc, 1, 1, s);
-		   }
-		 W3Loading = 0;	/* loading is complete now */
-	       }
-	     ResetStop(newdoc);
-	  }
+	       if (ok)
+		 ResetStop(newdoc);
+	     }
+	 }
      }
+
    /* select the target if present */
-   if (target[0] != EOS && newdoc != 0)
+   if (ok && target[0] != EOS && newdoc != 0)
      {
        /* attribute HREF contains the NAME of a target anchor */
        elFound = SearchNAMEattribute (newdoc, target, NULL);
@@ -1579,6 +1624,12 @@ DoubleClickEvent    DC_event;
 	       TtaShowElement (newdoc, i, elFound, 10);
 	 }
      }
+   TtaFreeMemory (tempdocument);
+   TtaFreeMemory (target);
+   TtaFreeMemory (documentname);
+   TtaFreeMemory (parameters);
+   TtaFreeMemory (tempfile);
+   TtaFreeMemory (pathname);
    return (newdoc);
 }
 
@@ -1597,12 +1648,11 @@ char               *data;
 #endif
 {
   int                 val, i;
-  char                tempfile[MAX_LENGTH];
-  char                tempname[MAX_LENGTH];
+  char               *tempfile;
+  char               *tempname;
   AttributeType       attrType;
   Attribute           attrHREF;
   boolean             change;
-
   char                my_dir_sep;
 
   if ((typedata == 2) && data && strchr (data, '/'))
@@ -1651,6 +1701,7 @@ char               *data;
 	       else if (DirectoryName[0] != EOS && DocumentName[0] != EOS)
 		 {
 		   /* load a local file */
+		   tempfile = TtaGetMemory (MAX_LENGTH);
 		   strcpy (tempfile, DirectoryName);
 		   strcat (tempfile, DIR_STR);
 		   strcat (tempfile, DocumentName);
@@ -1663,6 +1714,7 @@ char               *data;
 		     }
 		   else
 		     TtaSetStatus (CurrentDocument, 1, TtaGetMessage (AMAYA, AM_CANNOT_LOAD), tempfile);
+		   TtaFreeMemory (tempfile);
 		 }
 	       else
 		 {
@@ -1687,6 +1739,7 @@ char               *data;
        else
 	 {
 	   LastURLName[0] = EOS;
+	   tempfile = TtaGetMemory (MAX_LENGTH);
 	   change = NormalizeFile (data, tempfile);
 	   if (change)
 	     TtaSetTextForm (BaseDialog + URLName, tempfile);
@@ -1698,6 +1751,7 @@ char               *data;
 	     }
 	   else
 	     TtaExtractName (tempfile, DirectoryName, DocumentName);
+	   TtaFreeMemory (tempfile);
 	 }
        
        break;
@@ -1705,8 +1759,12 @@ char               *data;
        if (!strcmp (data, ".."))
 	 {
 	   /* suppress last directory */
+	   tempname = TtaGetMemory (MAX_LENGTH);
+	   tempfile = TtaGetMemory (MAX_LENGTH);
 	   strcpy (tempname, DirectoryName);
 	   TtaExtractName (tempname, DirectoryName, tempfile);
+	   TtaFreeMemory (tempfile);
+	   TtaFreeMemory (tempname);
 	 }
        else
 	 {
@@ -1728,10 +1786,12 @@ char               *data;
        strcpy (DocumentName, data);
        LastURLName[0] = EOS;
        /* construct the document full name */
+       tempfile = TtaGetMemory (MAX_LENGTH);
        strcpy (tempfile, DirectoryName);
        strcat (tempfile, DIR_STR);
        strcat (tempfile, DocumentName);
        TtaSetTextForm (BaseDialog + URLName, tempfile);
+       TtaFreeMemory (tempfile);
        break;
        
      case ConfirmForm:
@@ -1857,6 +1917,7 @@ char               *data;
 	 }
        break;
      case NameSave:
+       tempfile = TtaGetMemory (MAX_LENGTH);
        if (!IsW3Path (data))
 	 {
 	   change = NormalizeFile (data, tempfile);
@@ -1883,16 +1944,20 @@ char               *data;
 	   else
 	     TtaExtractName (tempfile, DirectoryName, ObjectName);
 	 }
+       TtaFreeMemory (tempfile);
        break;
      case ImgDirSave:
        strcpy (SaveImgsURL, data);
        break;
      case DirSave:
+       tempfile = TtaGetMemory (MAX_LENGTH);
        if (!strcmp (data, ".."))
 	 {
 	   /* suppress last directory */
+	   tempname = TtaGetMemory (MAX_LENGTH);
 	   strcpy (tempname, DirectoryName);
 	   TtaExtractName (tempname, DirectoryName, tempfile);
+	   TtaFreeMemory (tempname);
 	 }
        else
 	 {
@@ -1909,6 +1974,7 @@ char               *data;
        TtaListDirectory (DirectoryName, BaseDialog + SaveForm,
 			 TtaGetMessage (LIB, TMSG_DOC_DIR), BaseDialog + DirSave,
 			 ScanFilter, TtaGetMessage (AMAYA, AM_FILES), BaseDialog + DocSave);
+       TtaFreeMemory (tempfile);
        break;
      case DocSave:
        if (DirectoryName[0] == EOS)
@@ -1917,10 +1983,12 @@ char               *data;
        
        strcpy (DocumentName, data);
        /* construct the document full name */
+       tempfile = TtaGetMemory (MAX_LENGTH);
        strcpy (tempfile, DirectoryName);
        strcat (tempfile, DIR_STR);
        strcat (tempfile, DocumentName);
        TtaSetTextForm (BaseDialog + NameSave, tempfile);
+       TtaFreeMemory (tempfile);
        break;
      case ConfirmSave:
        /* *********SaveConfirm********* */
@@ -1971,11 +2039,10 @@ void                InitAmaya (NotifyEvent * event)
 #else
 void                InitAmaya (event)
 NotifyEvent        *event;
-
 #endif
 {
    int                 i;
-   char               *s, tempname[MAX_LENGTH];
+   char               *s, *tempname;
 
    if (AmayaInitialized)
       return;
@@ -2093,9 +2160,11 @@ NotifyEvent        *event;
      {
        /* initialize document table */
        DocumentURLs[i] = NULL;
+       tempname = TtaGetMemory (MAX_LENGTH);
        sprintf (tempname, "%s%c%d", TempFileDirectory, DIR_SEP, i);
        if (!TtaCheckDirectory (tempname))
 	 mkdir (tempname, S_IRWXU);
+       TtaFreeMemory (tempname);
      }
 
    /* allocate working buffers */
