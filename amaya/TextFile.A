@@ -7,8 +7,8 @@ DEFAULT
 	PRuleCreate.Pre -> ChangePRule;
 	PRuleModify.Pre -> ChangePRule;
 	ElemSelect.Post -> SynchronizeSourceView;
-        ElemClick.Pre -> SimpleClickError;
-	ElemActivate.Pre -> DoubleClickError;
+        ElemClick.Pre -> SimpleClickInLog;
+	ElemActivate.Pre -> DoubleClickInLog;
    END;
 
 ATTRIBUTES

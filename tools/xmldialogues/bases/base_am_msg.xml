@@ -997,7 +997,7 @@
 	<message xml:lang="pt">%d requisições pendentes</message>
 	<message xml:lang="fi">%d selvittämätön pyyntö</message>
 </label>
-<label define="AM_NO_CCS">
+<label define="AM_NO_CSS">
 	<message xml:lang="en">No CSS</message>
 	<message xml:lang="fr">Pas de CSS</message>
 	<message xml:lang="de">Keine CSS</message>
@@ -3567,7 +3567,16 @@
 	<message xml:lang="en">All CSS</message>
 	<message xml:lang="fr">Toutes les CSS</message>
 </label>
+<label define="AM_STYLE_APPLIED">
+	<message xml:lang="en">Style CSS applied to the &lt;%s> element\n</message>
+	<message xml:lang="fr">Style CSS appliqué �  l'élément &lt;%s> \n</message>
+</label>
+<label define="AM_LINK_LINE">
+	<message xml:lang="en">Blue lines are links activated by a double (or a single) click\n</message>
+	<message xml:lang="fr">Les lignes bleues sont des liens activés par un double (ou simple) click</message>
+</label>
 <label define="AMAYA_MSG_MAX">
 </label>
 </messages>
 </base>
+

@@ -7,6 +7,8 @@ DEFPRES TextFileP;
 ATTR
    Highlight = Yes_;
    IsLink = Yes_;
+   IsTag = Yes_;
+   IsString = Yes_;
 
 STRUCT
    TextFile (ATTR PrintURL = Yes_; Source = Yes_) =
@@ -25,6 +27,8 @@ EXCEPT
         Language:	Invisible; 
 	Highlight:	Invisible;
 	IsLink:		Invisible;
+	IsTag:		Invisible;
+	IsString:       Invisible;
         PrintURL:       Invisible;
 	Source:	        Invisible;
 END

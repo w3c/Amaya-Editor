@@ -49,8 +49,8 @@ extern void SynchronizeSourceView ( NotifyElement *event );
 extern void GotoLine ( Document doc,
                        int line,
                        int index );
-extern ThotBool SimpleClickError ( NotifyElement *event );
-extern ThotBool DoubleClickError ( NotifyElement *event );
+extern ThotBool SimpleClickInLog ( NotifyElement *event );
+extern ThotBool DoubleClickInLog ( NotifyElement *event );
 extern void SelectionChanged ( NotifyElement *event );
 extern void XmlSelectionChanged ( NotifyElement *event );
 extern void SetCharFontOrPhrase ( int document,
@@ -101,8 +101,8 @@ extern void SynchronizeSourceView (/* NotifyElement *event */);
 extern void GotoLine (/* Document doc,
                          int line,
                          int index */);
-extern ThotBool SimpleClickError (/* NotifyElement *event */);
-extern ThotBool DoubleClickError (/* NotifyElement *event */);
+extern ThotBool SimpleClickInLog (/* NotifyElement *event */);
+extern ThotBool DoubleClickInLog (/* NotifyElement *event */);
 extern void SelectionChanged (/* NotifyElement *event */);
 extern void XmlSelectionChanged (/* NotifyElement *event */);
 extern void SetCharFontOrPhrase (/* int document,

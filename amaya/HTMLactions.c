@@ -2604,9 +2604,9 @@ static ThotBool ShowError (Element el, Document doc)
 }
 
 /*----------------------------------------------------------------------
-  SimpleClickError The user has clicked an error message.         
+  SimpleClickInLog The user has clicked a log message.         
   ----------------------------------------------------------------------*/
-ThotBool SimpleClickError (NotifyElement *event)
+ThotBool SimpleClickInLog (NotifyElement *event)
 {
   ThotBool usedouble;
 
@@ -2619,9 +2619,9 @@ ThotBool SimpleClickError (NotifyElement *event)
 }
 
 /*----------------------------------------------------------------------
-  DoubleClickError     The user has double-clicked an error message.         
+  DoubleClickInLog The user has double-clicked a log message.         
   ----------------------------------------------------------------------*/
-ThotBool DoubleClickError (NotifyElement *event)
+ThotBool DoubleClickInLog (NotifyElement *event)
 {
   ThotBool usedouble;
 

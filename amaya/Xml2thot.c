@@ -507,14 +507,14 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
 	{
 	  if (Parser != NULL)
 	    {
-	      fprintf (ErrFile, "  line %d, char %d: %s\n",
+	      fprintf (ErrFile, "@  line %d, char %d: %s\n",
 		       XML_GetCurrentLineNumber (Parser) + htmlLineRead -  extraLineRead,
 		       XML_GetCurrentColumnNumber (Parser),
 		       msg);
 	    }
 	}
       else
-	fprintf (ErrFile, "  line %d: %s\n", line, msg); 
+	fprintf (ErrFile, "@  line %d: %s\n", line, msg); 
       XMLNotWellFormed = TRUE;
       break;
     case errorCharacterNotSupported:
@@ -522,14 +522,14 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
 	{
 	  if (Parser != NULL)
 	    {
-	      fprintf (ErrFile, "  line %d, char %d: %s\n",
+	      fprintf (ErrFile, "@  line %d, char %d: %s\n",
 		       XML_GetCurrentLineNumber (Parser) + htmlLineRead -  extraLineRead,
 		       XML_GetCurrentColumnNumber (Parser),
 		       msg);
 	    }
 	}
       else
-	fprintf (ErrFile, "  line %d: %s\n", line, msg); 
+	fprintf (ErrFile, "@  line %d: %s\n", line, msg); 
       XMLCharacterNotSupported = TRUE;
       break;
     case errorParsing:
@@ -539,32 +539,32 @@ void  XmlParseError (ErrorType type, unsigned char *msg, int line)
 	{
 	  if (Parser != NULL)
 	    {
-	      fprintf (ErrFile, "  line %d, char %d: %s\n",
+	      fprintf (ErrFile, "@  line %d, char %d: %s\n",
 		       XML_GetCurrentLineNumber (Parser) + htmlLineRead -  extraLineRead,
 		       XML_GetCurrentColumnNumber (Parser),
 		       msg);
 	    }
 	}
       else
-	fprintf (ErrFile, "  line %d: %s\n", line, msg);
+	fprintf (ErrFile, "@  line %d: %s\n", line, msg);
       break;
     case errorParsingProfile:
       if (line == 0)
 	{
 	  if (Parser != NULL)
 	    {
-	      fprintf (ErrFile, "  line %d, char %d: %s\n",
+	      fprintf (ErrFile, "@  line %d, char %d: %s\n",
 		       XML_GetCurrentLineNumber (Parser) + htmlLineRead -  extraLineRead,
 		       XML_GetCurrentColumnNumber (Parser),
 		       msg);
 	    }
 	}
       else
-	fprintf (ErrFile, "  line %d: %s\n", line, msg); 
+	fprintf (ErrFile, "@  line %d: %s\n", line, msg); 
       XMLErrorsFoundInProfile = TRUE;
       break;
     case undefinedEncoding:
-      fprintf (ErrFile, "  %s\n", msg);
+      fprintf (ErrFile, "@  %s\n", msg);
       break;
     }
 }

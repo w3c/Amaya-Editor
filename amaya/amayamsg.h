@@ -99,7 +99,7 @@
 #define AM_REPEAT_Y		96
 #define AM_GET_USER_NAME		97
 #define AM_WAITING_REQUESTS		98
-#define AM_NO_CCS		99
+#define AM_NO_CSS		99
 #define AM_BUTTON_INTERRUPT		100
 #define AM_BUTTON_PREVIOUS		101
 #define AM_BUTTON_NEXT		102
@@ -369,4 +369,6 @@
 #define AM_BM_DESCRIPTION		366
 #define AM_NO_SELECTION		367
 #define AM_ALL_CSS		368
-#define AMAYA_MSG_MAX		369
+#define AM_STYLE_APPLIED		369
+#define AM_LINK_LINE		370
+#define AMAYA_MSG_MAX		371

@@ -6,9 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern void CountNodes ( PtrElement pNode,
-                         FILE *fileDescriptor,
-                         int level );
 extern void TtaListAbstractTree ( Element root,
                                   FILE *fileDescriptor );
 extern void TtaListView ( Document document,
@@ -23,20 +20,17 @@ extern void ListBoxes ( int frame,
 extern void TtaListBoxes ( Document document,
                            View view,
                            FILE *fileDescriptor );
+extern void TtaListStyleSchemas ( Document document,
+                                  FILE *fileDescriptor );
 extern void DisplayPRule ( PtrPRule rule,
                            FILE *fileDescriptor,
                            PtrElement pEl,
                            PtrSSchema pSchS );
-extern void TtaListStyleOfCurrentElement ( Document document,
-                                           FILE *fileDescriptor );
-extern void TtaListStyleSchemas ( Document document,
-                                  FILE *fileDescriptor );
+extern int TtaListStyleOfCurrentElement ( Document document,
+                                          FILE *fileDescriptor );
 
 #else /* __STDC__ */
 
-extern void CountNodes (/* PtrElement pNode,
-                           FILE *fileDescriptor,
-                           int level */);
 extern void TtaListAbstractTree (/* Element root,
                                     FILE *fileDescriptor */);
 extern void TtaListView (/* Document document,
@@ -51,14 +45,14 @@ extern void ListBoxes (/* int frame,
 extern void TtaListBoxes (/* Document document,
                              View view,
                              FILE *fileDescriptor */);
+extern void TtaListStyleSchemas (/* Document document,
+                                    FILE *fileDescriptor */);
 extern void DisplayPRule (/* PtrPRule rule,
                              FILE *fileDescriptor,
                              PtrElement pEl,
                              PtrSSchema pSchS */);
-extern void TtaListStyleOfCurrentElement (/* Document document,
-                                             FILE *fileDescriptor */);
-extern void TtaListStyleSchemas (/* Document document,
-                                    FILE *fileDescriptor */);
+extern int TtaListStyleOfCurrentElement (/* Document document,
+                                            FILE *fileDescriptor */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

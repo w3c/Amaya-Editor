@@ -368,3 +368,5 @@
 366 Description:
 367 Sélectionnez un lment
 368 Toutes les CSS
+369 Style CSS appliqué   l'élément <%s> \n
+370 Les lignes bleues sont des liens activés par un double (ou simple) click

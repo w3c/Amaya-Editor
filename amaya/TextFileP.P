@@ -262,6 +262,10 @@ ATTRIBUTES
 
   IsLink:
 	Foreground: DarkIndigo1;
+  IsTag:
+	Foreground: DarkMagenta2;
+  IsString:
+	Foreground: Red;
 #endif
 
 END

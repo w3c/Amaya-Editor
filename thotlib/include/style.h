@@ -161,19 +161,6 @@ extern void TtaCleanElementPresentation (Element el, Document doc);
 extern char *TtaGetStyledAttributeValues (PSchema tsch, int attrType);
 
 /*----------------------------------------------------------------------
-   TtaListStyleSchemas
-
-   Produces in a file a human-readable form of style schemas applied to 
-   the current document.
-   Parameters:
-   document: the document.
-   fileDescriptor: file descriptor of the file that will contain the list.
-   This file must be open when calling the function.
-  ----------------------------------------------------------------------*/
-extern void TtaListStyleSchemas (Document document, FILE * fileDescriptor);
-
-
-/*----------------------------------------------------------------------
  TtaPToCss:  translate a PresentationSetting to the
      equivalent CSS string, and add it to the buffer given as the
      argument. It is used when extracting the CSS string from actual
@@ -185,4 +172,29 @@ extern void TtaListStyleSchemas (Document document, FILE * fileDescriptor);
  -----------------------------------------------------------------------*/
 extern void TtaPToCss (PresentationSetting settings, char *buffer, int len,
 		       Element el);
+
+/*----------------------------------------------------------------------
+   TtaListStyleSchemas
+   Produces in a file a human-readable form of style schemas applied to 
+   the current document.
+   Parameters:
+   document: the document.
+   fileDescriptor: file descriptor of the file that will contain the list.
+   This file must be open when calling the function.
+  ----------------------------------------------------------------------*/
+extern void TtaListStyleSchemas (Document document, FILE * fileDescriptor);
+
+/*----------------------------------------------------------------------
+   TtaListStyleOfCurrentElement
+   Produces in a file a human-readable form of style rules applied to 
+   the first selected element.
+   Parameters:
+   document: the document.
+   el: the element.
+   fileDescriptor: file descriptor of the file that will contain the list.
+   This file must be open when calling the function.
+   Returns the number of rules generated.
+  ----------------------------------------------------------------------*/
+extern int TtaListStyleOfCurrentElement (Document document, FILE *fileDescriptor);
+
 #endif /* __STYLE_H__ */

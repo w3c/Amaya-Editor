@@ -368,3 +368,5 @@
 366 **Description:
 367 **Please select an element
 368 **All CSS
+369 **Style CSS applied to the <%s> element\n
+370 **Blue lines are links activated by a double (or a single) click\n

@@ -182,7 +182,7 @@ static void CSSPrintError (char *msg, char *value)
       if (LineNumber < 0)
 	fprintf (ErrFile, "  In style attribute, %s \"%s\"\n", msg, value);
       else
-	fprintf (ErrFile, "  line %d: %s \"%s\"\n", LineNumber+NewLineSkipped,
+	fprintf (ErrFile, "@  line %d: %s \"%s\"\n", LineNumber+NewLineSkipped,
 		 msg, value);
     }
 }

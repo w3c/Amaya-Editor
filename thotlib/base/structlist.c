@@ -30,16 +30,9 @@
 #include "edit_tv.h"
 #include "boxes_tv.h"
 
-#define MAXNB 200
-static int          NbChildren[MAXNB];
-static int          LeafLevel[MAXNB];
-static int          NbElemLevels[MAXNB];
-static int          NbAscendSiblings[MAXNB];
-static int          NbNodes;
-static int          NbLeaves;
 static PtrSSchema   pSchemaStr;
 static PtrPSchema   pSc1;
-char                mbsTmpStr[MAX_TXT_LEN];
+static int          DisplayedRuleCounter;
 
 #include "absboxes_f.h"
 #include "boxmoves_f.h"
@@ -431,125 +424,6 @@ static void WrPath (PtrPathSeg pPE, int length, FILE *fileDescriptor)
      }
 }
 
-/*----------------------------------------------------------------------
-   CountNodes ecrit dans le fichier fileDescriptor les statistiques       
-   sur le sous-arbre de racine pNode.                      
-  ----------------------------------------------------------------------*/
-void CountNodes (PtrElement pNode, FILE *fileDescriptor, int level)
-{
-   int                 i;
-   int                 nbf;
-   int                 der;
-   int                 Prof, Fils;
-   float               Moyenne;
-   PtrElement          f;
-   PtrElement          pEl;
-   PtrElement          pAsc;
-   PtrSRule            pRe1;
-
-   if (pNode != NULL)
-     {
-	if (level == 0)
-	  {
-	     for (i = 0; i < MAXNB; i++)
-	       {
-		  NbChildren[i] = 0;
-		  LeafLevel[i] = 0;
-		  NbElemLevels[i] = 0;
-		  NbAscendSiblings[i] = 0;
-	       }
-	     NbNodes = 0;
-	     NbLeaves = 0;
-	  }
-	pEl = pNode;
-	NbNodes++;
-	NbElemLevels[level]++;
-	pAsc = pEl->ElParent;
-	nbf = 0;
-	while (pAsc != NULL)
-	  {
-	     f = pAsc->ElPrevious;
-	     while (f != NULL)
-	       {
-		  nbf++;
-		  f = f->ElPrevious;
-	       }
-	     f = pAsc->ElNext;
-	     while (f != NULL)
-	       {
-		  nbf++;
-		  f = f->ElNext;
-	       }
-	     pAsc = pAsc->ElParent;
-	  }
-	NbAscendSiblings[level] += nbf;
-	if (pEl->ElTerminal)
-	  {
-	     LeafLevel[level]++;
-	     NbLeaves++;
-	  }
-	else
-	  {
-	     /* element non terminal, on traite sa descendance */
-	     f = pEl->ElFirstChild;
-	     nbf = 0;
-	     while (f != NULL)
-	       {
-		  CountNodes (f, fileDescriptor, level + 1);
-		  nbf++;
-		  f = f->ElNext;
-	       }
-	     NbChildren[nbf]++;
-	  }
-
-	if (level == 0)
-	   /* on a parcourru tout l'arbre, on imprime les resultats */
-	  {
-	     fprintf (fileDescriptor, "L'arbre ");
-	     /* ecrit le nom du type de l'element */
-	     if (pEl->ElStructSchema != NULL)
-	       {
-		  pRe1 = pEl->ElStructSchema->SsRule->SrElem[pEl->ElTypeNumber - 1];
-		  fprintf (fileDescriptor, "%s", pRe1->SrOrigName);
-		  /* ecrit le nom du schema de structure de l'element */
-		  fprintf (fileDescriptor, "(%s) ", pEl->ElStructSchema->SsName);
-	       }
-	     fprintf (fileDescriptor, "contient %d elements, dont %d feuilles\n\n", NbNodes, NbLeaves);
-
-	     der = MAXNB - 1;
-	     while (LeafLevel[der] == 0 && NbElemLevels[der] == 0)
-		der--;
-
-	     fprintf (fileDescriptor, "Profondeur\tfeuilles\telements\tnb. moyen de freres des ascend.\n");
-	     Prof = 0;
-	     for (i = 0; i <= der; i++)
-	       {
-		  fprintf (fileDescriptor, "%d\t\t%d", i, LeafLevel[i]);
-		  Prof += i * LeafLevel[i];
-		  fprintf (fileDescriptor, "\t\t%d", NbElemLevels[i]);
-		  Moyenne = (float) NbAscendSiblings[i] / (float) NbElemLevels[i];
-		  fprintf (fileDescriptor, "\t\t%f\n", Moyenne);
-	       }
-	     Moyenne = (float) Prof / (float) NbLeaves;
-	     fprintf (fileDescriptor, "Profondeur moyenne : %f\n", Moyenne);
-	     Moyenne = (float) NbNodes / (float) (der + 1);
-	     fprintf (fileDescriptor, "Nombre moyen d'elements par niveau : %f\n\n", Moyenne);
-
-	     der = MAXNB - 1;
-	     while (NbChildren[der] == 0)
-		der--;
-	     fprintf (fileDescriptor, "Nombre de fils   nombre d'elements ayant ce nombre de fils\n");
-	     Fils = 0;
-	     for (i = 0; i <= der; i++)
-	       {
-		  fprintf (fileDescriptor, "%d \t\t %d\n", i, NbChildren[i]);
-		  Fils += i * NbChildren[i];
-	       }
-	     Moyenne = (float) Fils / (float) (NbNodes - NbLeaves);
-	     fprintf (fileDescriptor, "Nombre moyen de fils par noeud non feuille : %f\n\n", Moyenne);
-	  }
-     }
-}
 
 /*----------------------------------------------------------------------
   wrRef ecrit une reference.                                     
@@ -951,9 +825,9 @@ static void wrThotBool (ThotBool b, FILE *fileDescriptor)
 }
 
 /*----------------------------------------------------------------------
-   wrrepere ecrit la valeur du point de reference.                 
+   wranchor ecrit la valeur du point de reference.                 
   ----------------------------------------------------------------------*/
-static void wrrepere (BoxEdge r, FILE *fileDescriptor)
+static void wranchor (BoxEdge r, FILE *fileDescriptor)
 {
    switch (r)
 	 {
@@ -1031,12 +905,12 @@ static void wrpos (AbPosition *pPos, ThotBool racine, FILE *fileDescriptor)
       fprintf (fileDescriptor, "PosRef = NULL");
    else
      {
-	wrrepere (pPos->PosEdge, fileDescriptor);
+	wranchor (pPos->PosEdge, fileDescriptor);
 	if (racine && pPos->PosAbRef == NULL)
 	   fprintf (fileDescriptor, " = ThotWindow.");
 	else
 	   fprintf (fileDescriptor, " = AbstractBox%d.", pPos->PosAbRef->AbNum);
-	wrrepere (pPos->PosRefEdge, fileDescriptor);
+	wranchor (pPos->PosRefEdge, fileDescriptor);
 	if (pPos->PosDistance != 0)
 	  {
 	     if (pPos->PosDistance < 0)
@@ -1685,72 +1559,72 @@ static void wrtext (char *Text, FILE *fileDescriptor)
 
 #ifdef _GL
 
-static void PrintTransformation(PtrTransform Trans,  FILE *fileDescriptor)
+/*----------------------------------------------------------------------
+   WrTransform writes transformations
+  ----------------------------------------------------------------------*/
+static void WrTransform (PtrTransform trans,  FILE *fileDescriptor)
 {
-
-  while (Trans)
+  while (trans)
     {
-      switch (Trans->TransType)
+      switch (trans->TransType)
 	{
 	case  PtElBoxTranslate:
 	  fprintf (fileDescriptor, "ORIGIN Box Translation: ");
-	  fprintf (fileDescriptor, " X=%2e, Y=%2e ", Trans->XScale, Trans->YScale);
+	  fprintf (fileDescriptor, " X=%2e, Y=%2e ", trans->XScale, trans->YScale);
 	  break;
 
 	case  PtElviewboxScale:
 	  fprintf (fileDescriptor, "viewboxScale: ");
-	  fprintf (fileDescriptor, " X=%2e, Y=%2e ", Trans->XScale, Trans->YScale);
+	  fprintf (fileDescriptor, " X=%2e, Y=%2e ", trans->XScale, trans->YScale);
 	  break;
 
 	case PtElviewboxTranslate:
 	  fprintf (fileDescriptor, "viewboxTranslate: ");
-	  fprintf (fileDescriptor, " X=%2e, Y=%2e ", Trans->XScale, Trans->YScale);
+	  fprintf (fileDescriptor, " X=%2e, Y=%2e ", trans->XScale, trans->YScale);
 	  break;
 
 	case  PtElScale:
 	  fprintf (fileDescriptor, "Scale: ");
-	  fprintf (fileDescriptor, " X=%2e, Y=%2e ", Trans->XScale, Trans->YScale);
+	  fprintf (fileDescriptor, " X=%2e, Y=%2e ", trans->XScale, trans->YScale);
 	  break;
 
 	case PtElTranslate:
 	  fprintf (fileDescriptor, "Translation: ");
-	  fprintf (fileDescriptor, " X=%2e, Y=%2e ", Trans->XScale, Trans->YScale);
+	  fprintf (fileDescriptor, " X=%2e, Y=%2e ", trans->XScale, trans->YScale);
 	  break;
 
 	case PtElRotate:
 	  fprintf (fileDescriptor, "Rotate: ");
-	  fprintf (fileDescriptor, "Angle %2e X=%2e, Y=%2e ", Trans->TrAngle, Trans->XRotate, Trans->YRotate);
+	  fprintf (fileDescriptor, "Angle %2e X=%2e, Y=%2e ", trans->TrAngle, trans->XRotate, trans->YRotate);
 	  break;
 
 	case PtElMatrix:
 	  fprintf (fileDescriptor, "Matrix: ");
 	  fprintf (fileDescriptor, "A %2e B %2e C %2e D %2e E %2e F %2e ", 
-		   Trans->AMatrix, Trans->BMatrix, Trans->CMatrix, Trans->DMatrix,
-		   Trans->EMatrix, Trans->FMatrix);
+		   trans->AMatrix, trans->BMatrix, trans->CMatrix, trans->DMatrix,
+		   trans->EMatrix, trans->FMatrix);
 	  break;
 	case PtElSkewX:
 	  fprintf (fileDescriptor, "SkewX : ");
-	  fprintf (fileDescriptor, " %2e ", Trans->TrFactor);
+	  fprintf (fileDescriptor, " %2e ", trans->TrFactor);
 	  break;
 
 	case PtElSkewY: 
 	  fprintf (fileDescriptor, "SkewY : ");
-	  fprintf (fileDescriptor, " %2e ", Trans->TrFactor);
+	  fprintf (fileDescriptor, " %2e ", trans->TrFactor);
 	  break;
 
 	default:
 	  break;
 	}
-      Trans = Trans->Next;
+      trans = trans->Next;
     }  
 }
 #endif /* _GL */ 
 
 /*----------------------------------------------------------------------
-   ListBoxTree
-   ecrit dans le fichier fileDescriptor les informations sur les boites
-   concretes de la boite abstraite pAb et de toutes les boites
-   englobees.
+   ListBoxTree writes information about boxes associated to the abstract
+   box pAb and all children.
   ----------------------------------------------------------------------*/
 static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 {
@@ -1817,7 +1691,7 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 		 fprintf (fileDescriptor, "\n");
 		 for (j = 1; j <= Indent; j++)
 		   fprintf (fileDescriptor, " ");
-                 PrintTransformation (pAb->AbElement->ElTransform ,fileDescriptor);
+                 WrTransform (pAb->AbElement->ElTransform ,fileDescriptor);
 	       }
 	     
 #endif /* _GL */
@@ -2164,7 +2038,7 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 			    fprintf (fileDescriptor, "\n");
 			    for (j = 1; j <= Indent + 6; j++)
 			       fprintf (fileDescriptor, " ");
-			    wrrepere (pRe1->ReRefEdge, fileDescriptor);
+			    wranchor (pRe1->ReRefEdge, fileDescriptor);
 			    switch (pRe1->ReOp)
 				  {
 				     case OpHorizDep:
@@ -2280,8 +2154,7 @@ static void ListBoxTree (PtrAbstractBox pAb, int Indent, FILE *fileDescriptor)
 }
 
 /*----------------------------------------------------------------------
-   ListBoxes cree un fichier fname qui contient la liste des     
-   relations entre boites dans la fenetre frame.           
+   ListBoxes writes information about all boxes within the frame.           
   ----------------------------------------------------------------------*/
 void ListBoxes (int frame, FILE *fileDescriptor)
 {
@@ -2324,7 +2197,7 @@ void TtaListBoxes (Document document, View view, FILE *fileDescriptor)
 }
 
 /*----------------------------------------------------------------------
-   wrlevel ecrit au terminal le niveau relatif n.                 
+   wrlevel writes the level n.                 
   ----------------------------------------------------------------------*/
 static void wrlevel (Level n, FILE *fileDescriptor)
 {
@@ -2364,7 +2237,7 @@ static void wrlevel (Level n, FILE *fileDescriptor)
 }
 
 /*----------------------------------------------------------------------
-   wrdistunit ecrit le nom d'une unite' de distance.               
+   wrdistunit writes the unit u.               
   ----------------------------------------------------------------------*/
 static void wrdistunit (TypeUnit u, FILE *fileDescriptor)
 {
@@ -2391,41 +2264,36 @@ static void wrdistunit (TypeUnit u, FILE *fileDescriptor)
 	 }
 }
 
-
 /*----------------------------------------------------------------------
-   wrnomregle ecrit au terminal le nom de la regle de numero r.    
+  wrrulename writes the name of the rule r.
   ----------------------------------------------------------------------*/
-static void wrnomregle (int r, FILE *fileDescriptor)
+static void wrrulename (int r, FILE *fileDescriptor)
 {
   if (r > 0)
     fprintf (fileDescriptor, pSchemaStr->SsRule->SrElem[r - 1]->SrName);
 }
 
-
 /*----------------------------------------------------------------------
-   wrnomattr ecrit au terminal le nom de l'attribut de numero a.   
+  wrattrname writes the name of the attribute a.
   ----------------------------------------------------------------------*/
-static void wrnomattr (int a, FILE *fileDescriptor)
+static void wrattrname (int a, FILE *fileDescriptor)
 {
   if (a != 0)
     fprintf (fileDescriptor,
 	     pSchemaStr->SsAttribute->TtAttr[abs (a) - 1]->AttrName);
 }
 
-
 /*----------------------------------------------------------------------
-   wrnomboite ecrit au terminal le nom de la boite de presentation 
-   de numero b.                                            
+  wrboxname writes the name of the presentation box b.
   ----------------------------------------------------------------------*/
-static void wrnomboite (int b, FILE *fileDescriptor)
+static void wrboxname (int b, FILE *fileDescriptor)
 {
   if (b > 0)
     fprintf (fileDescriptor, pSc1->PsPresentBox->PresBox[b - 1]->PbName);
 }
 
-
 /*----------------------------------------------------------------------
-   wrModeHerit ecrit au terminal un mode d'heritage.               
+  wrModeHerit writes the inheritage mode.
   ----------------------------------------------------------------------*/
 static void wrModeHerit (InheritMode M, FILE *fileDescriptor)
 {
@@ -2462,7 +2330,7 @@ static void wrsize (PtrPRule pR, FILE *fileDescriptor)
 	  {
 	  fprintf (fileDescriptor, " * ");
 	  if (pR->PrInhAttr)
-	     wrnomattr (pR->PrInhDelta, fileDescriptor);
+	     wrattrname (pR->PrInhDelta, fileDescriptor);
 	  else
 	     wrnumber (pR->PrInhDelta, fileDescriptor);
 	  fprintf (fileDescriptor, " %%");
@@ -2475,7 +2343,7 @@ static void wrsize (PtrPRule pR, FILE *fileDescriptor)
 	      if (pR->PrInhDelta > 0)
 		 fprintf (fileDescriptor, "+");
 	      if (pR->PrInhAttr)
-		 wrnomattr (pR->PrInhDelta, fileDescriptor);
+		 wrattrname (pR->PrInhDelta, fileDescriptor);
 	      else
 		 wrnumber (pR->PrInhDelta, fileDescriptor);
 	      wrdistunit (pR->PrInhUnit, fileDescriptor);
@@ -2487,7 +2355,7 @@ static void wrsize (PtrPRule pR, FILE *fileDescriptor)
 	     else
 		fprintf (fileDescriptor, " min ");
 	     if (pR->PrMinMaxAttr)
-		wrnomattr (pR->PrInhMinOrMax, fileDescriptor);
+		wrattrname (pR->PrInhMinOrMax, fileDescriptor);
 	     else
 		wrnumber (pR->PrInhMinOrMax, fileDescriptor);
 	  }
@@ -2495,7 +2363,7 @@ static void wrsize (PtrPRule pR, FILE *fileDescriptor)
    else if (pR->PrPresMode == PresImmediate)
      {
 	if (pR->PrMinAttr)
-	   wrnomattr (pR->PrMinValue, fileDescriptor);
+	   wrattrname (pR->PrMinValue, fileDescriptor);
 	else
 	   wrnumber (pR->PrMinValue, fileDescriptor);
 	wrdistunit (pR->PrMinUnit, fileDescriptor);
@@ -2754,7 +2622,7 @@ static void wrnbherit (PtrPRule pR, FILE *fileDescriptor)
 	     if (pR->PrInhDelta > 0)
 		fprintf (fileDescriptor, "+");
 	     if (pR->PrInhAttr)
-		wrnomattr (pR->PrInhDelta, fileDescriptor);
+		wrattrname (pR->PrInhDelta, fileDescriptor);
 	     else
 		wrnumber (pR->PrInhDelta, fileDescriptor);
 	  }
@@ -2765,14 +2633,14 @@ static void wrnbherit (PtrPRule pR, FILE *fileDescriptor)
 	     else
 		fprintf (fileDescriptor, " min ");
 	     if (pR->PrMinMaxAttr)
-		wrnomattr (pR->PrInhMinOrMax, fileDescriptor);
+		wrattrname (pR->PrInhMinOrMax, fileDescriptor);
 	     else
 		wrnumber (pR->PrInhMinOrMax, fileDescriptor);
 	  }
         }
    else if (pR->PrPresMode == PresImmediate)
       if (pR->PrAttrValue)
-	 wrnomattr (pR->PrIntValue, fileDescriptor);
+	 wrattrname (pR->PrIntValue, fileDescriptor);
       else
 	 wrnumber (pR->PrIntValue, fileDescriptor);
    else
@@ -2798,7 +2666,7 @@ static void wrminind (PtrPRule pR, FILE *fileDescriptor)
 	     else
 	       {
 	       if (pR->PrMinAttr)
-		  wrnomattr (pR->PrMinValue, fileDescriptor);
+		  wrattrname (pR->PrMinValue, fileDescriptor);
 	       else
 		  wrnumber (pR->PrMinValue, fileDescriptor);
 	       wrdistunit (pR->PrMinUnit, fileDescriptor);
@@ -2822,7 +2690,7 @@ static void WrPos (PosRule pos, ThotBool Def, FILE *fileDescriptor)
 	 fprintf (fileDescriptor, " NULL");
       else
 	{
-	   wrrepere (pos.PoPosDef, fileDescriptor);
+	   wranchor (pos.PoPosDef, fileDescriptor);
 	   fprintf (fileDescriptor, " = ");
 	}
      }
@@ -2833,17 +2701,17 @@ static void WrPos (PosRule pos, ThotBool Def, FILE *fileDescriptor)
 	   fprintf (fileDescriptor, " NOT");
 	fprintf (fileDescriptor, " ");
 	if (pos.PoRefKind == RkElType)
-	   wrnomregle (pos.PoRefIdent, fileDescriptor);
+	   wrrulename (pos.PoRefIdent, fileDescriptor);
 	else if (pos.PoRefKind == RkPresBox)
-	   wrnomboite (pos.PoRefIdent, fileDescriptor);
+	   wrboxname (pos.PoRefIdent, fileDescriptor);
 	else if (pos.PoRefKind == RkAttr)
-	   wrnomattr (pos.PoRefIdent, fileDescriptor);
+	   wrattrname (pos.PoRefIdent, fileDescriptor);
 	else if (pos.PoRefKind == RkAnyElem)
 	   fprintf (fileDescriptor, "AnyElem");
 	else if (pos.PoRefKind == RkAnyBox)
 	   fprintf (fileDescriptor, "AnyBox");
 	fprintf (fileDescriptor, ". ");
-	wrrepere (pos.PoPosRef, fileDescriptor);
+	wranchor (pos.PoPosRef, fileDescriptor);
 	if (pos.PoDistance != 0)
 	  {
 	     if (pos.PoDistance > 0)
@@ -2851,7 +2719,7 @@ static void WrPos (PosRule pos, ThotBool Def, FILE *fileDescriptor)
 	     else
 		fprintf (fileDescriptor, "-");
 	     if (pos.PoDistAttr)
-		wrnomattr (abs (pos.PoDistance), fileDescriptor);
+		wrattrname (abs (pos.PoDistance), fileDescriptor);
 	     else
 		wrnumber (abs (pos.PoDistance), fileDescriptor);
 	     wrdistunit (pos.PoDistUnit, fileDescriptor);
@@ -2876,7 +2744,7 @@ static void wrdimens (DimensionRule Dim, ThotBool Hauteur,
 	if (Dim.DrAbsolute)
 	  {
 	     if (Dim.DrAttr)
-		wrnomattr (Dim.DrValue, fileDescriptor);
+		wrattrname (Dim.DrValue, fileDescriptor);
 	     else
 		wrnumber (Dim.DrValue, fileDescriptor);
 	     if (Dim.DrValue != 0)
@@ -2893,11 +2761,11 @@ static void wrdimens (DimensionRule Dim, ThotBool Hauteur,
 	     if (Dim.DrNotRelat)
 		fprintf (fileDescriptor, "not ");
 	     if (Dim.DrRefKind == RkElType)
-		wrnomregle (Dim.DrRefIdent, fileDescriptor);
+		wrrulename (Dim.DrRefIdent, fileDescriptor);
 	     else if (Dim.DrRefKind == RkPresBox)
-		wrnomboite (Dim.DrRefIdent, fileDescriptor);
+		wrboxname (Dim.DrRefIdent, fileDescriptor);
 	     else if (Dim.DrRefKind == RkAttr)
-		wrnomattr (Dim.DrRefIdent, fileDescriptor);
+		wrattrname (Dim.DrRefIdent, fileDescriptor);
 	     else if (Dim.DrRefKind == RkAnyElem)
 	        fprintf (fileDescriptor, "AnyElem");
 	     else if (Dim.DrRefKind == RkAnyBox)
@@ -2913,7 +2781,7 @@ static void wrdimens (DimensionRule Dim, ThotBool Hauteur,
 		  if (Dim.DrValue < 0)
 		     fprintf (fileDescriptor, "-");
 		  if (Dim.DrAttr)
-		     wrnomattr (abs (Dim.DrValue), fileDescriptor);
+		     wrattrname (abs (Dim.DrValue), fileDescriptor);
 		  else
 		     wrnumber (abs (Dim.DrValue), fileDescriptor);
 		  fprintf (fileDescriptor, "%%");
@@ -2927,7 +2795,7 @@ static void wrdimens (DimensionRule Dim, ThotBool Hauteur,
 		  if (Dim.DrValue != 0)
 		    {
 		       if (Dim.DrAttr)
-			  wrnomattr (abs (Dim.DrValue), fileDescriptor);
+			  wrattrname (abs (Dim.DrValue), fileDescriptor);
 		       else
 			  wrnumber (abs (Dim.DrValue), fileDescriptor);
 		       wrdistunit (Dim.DrUnit, fileDescriptor);
@@ -3031,7 +2899,7 @@ static void wrCondition (PtrCondition pCond, FILE *fileDescriptor)
 		    fprintf (fileDescriptor, ")");
 		 }
 	       else
-		  wrnomregle (pCond->CoTypeAncestor, fileDescriptor);
+		  wrrulename (pCond->CoTypeAncestor, fileDescriptor);
 	       fprintf (fileDescriptor, " ");
 	       break;
 	    case PcInterval:
@@ -3048,13 +2916,13 @@ static void wrCondition (PtrCondition pCond, FILE *fileDescriptor)
 		 }
 	       break;
 	    case PcElemType:
-	       wrnomregle (pCond->CoTypeElem, fileDescriptor);
+	       wrrulename (pCond->CoTypeElem, fileDescriptor);
 	       fprintf (fileDescriptor, " ");
 	       break;
 	    case PcInheritAttribute:
 	       fprintf (fileDescriptor, "Inherited ");
 	    case PcAttribute:
-	       wrnomattr (pCond->CoTypeAttr, fileDescriptor);
+	       wrattrname (pCond->CoTypeAttr, fileDescriptor);
 	       if (pCond->CoTestAttrValue)
 		 {
 		   if (pSchemaStr->SsAttribute->TtAttr[pCond->CoTypeAttr - 1]->AttrType == AtTextAttr)
@@ -3200,9 +3068,9 @@ static void wrFonctPres (PtrPRule pR, FILE *fileDescriptor)
 		if (i > 1)
 		   fprintf (fileDescriptor, ", ");
 		if (pR->PrElement)
-		   wrnomregle (pR->PrPresBox[i - 1], fileDescriptor);
+		   wrrulename (pR->PrPresBox[i - 1], fileDescriptor);
 		else
-		   wrnomboite (pR->PrPresBox[i - 1], fileDescriptor);
+		   wrboxname (pR->PrPresBox[i - 1], fileDescriptor);
 	     }
 	fprintf (fileDescriptor, ")");
      }
@@ -3254,45 +3122,6 @@ static void wrjustif (PtrPRule pR, FILE *fileDescriptor)
       else
 	 fprintf (fileDescriptor, "No;");
      }
-}
-
-
-/*----------------------------------------------------------------------
-  DisplayPRule displays the presentation rule in the CSS format.
-  ----------------------------------------------------------------------*/
-void DisplayPRule (PtrPRule rule, FILE *fileDescriptor,
-		   PtrElement pEl, PtrSSchema pSchS)
-{
-  PresentationSettingBlock setting;
-  char                     buffer[200];
-  int                      l;
-
-  if (rule == NULL)
-    return;
-  if (rule->PrSpecificity != 100 && rule->PrCSSLine == 0)
-    return;
-
-  PRuleToPresentationSetting (rule, &setting, pSchS);
-  buffer[0] = EOS;
-  TtaPToCss (&setting, buffer, 199, (Element) pEl);
-  if (buffer[0] == EOS)
-    return;
-  
-  fprintf (fileDescriptor, "%s", buffer);
-  l = strlen (buffer);
-  while (l < 30)
-    {
-      fprintf (fileDescriptor, " ");
-      l++;
-    }
-  if (rule->PrImportant)
-    fprintf (fileDescriptor, "!important");
-  if (rule->PrSpecificity == 100)
-    fprintf (fileDescriptor, " Style Attribute\n");
-  else if (rule->PrCSSURL)
-    fprintf (fileDescriptor, " line %d, File %s\n", rule->PrCSSLine, rule->PrCSSURL);
-  else
-    fprintf (fileDescriptor, " line %d, Style Element\n", rule->PrCSSLine);
 }
 
 /*----------------------------------------------------------------------
@@ -3604,62 +3433,7 @@ static void wrprules (PtrPRule RP, FILE *fileDescriptor)
 }
 
 /*----------------------------------------------------------------------
-   TtaListStyleOfCurrentElement
-
-   Produces in a file a human-readable form of style rules applied to 
-   the first selected element.
-   Parameters:
-   document: the document.
-   el: the element.
-   fileDescriptor: file descriptor of the file that will contain the list.
-   This file must be open when calling the function.
-  ----------------------------------------------------------------------*/
-void TtaListStyleOfCurrentElement (Document document, FILE *fileDescriptor)
-{
-  PtrDocument         pDoc;
-  PtrPSchema          pSchP;
-  PtrSSchema          pSchS;
-  PtrElement          pEl;
-  PtrPRule            pRDef, pRSpec;
-  PtrPRule            queuePR[MAX_QUEUE_LEN];
-  PtrAbstractBox      queuePP[MAX_QUEUE_LEN];
-  PtrPSchema          queuePS[MAX_QUEUE_LEN];
-  PtrAttribute        queuePA[MAX_QUEUE_LEN];
-  PtrAbstractBox      pAb, pNew;
-  int                 lqueue = 0, f, l;
-  int                 index, viewSch;
-
-  if (document < 1 || document > MAX_DOCUMENTS)
-    TtaError (ERR_invalid_document_parameter);
-  else if (LoadedDocument[document - 1] == NULL)
-    TtaError (ERR_invalid_document_parameter);
-  else
-    /* parametre document correct */
-    {
-      pDoc = LoadedDocument[document - 1];
-      TtaGiveFirstSelectedElement (document, &pEl, &f, &l);
-      if (pEl && pEl->ElTerminal)
-	pEl = pEl->ElParent;
-      if (pEl == NULL)
-	return;
-      SearchPresSchema (pEl, &pSchP, &index, &pSchS, pDoc);
-      viewSch = AppliedView (pEl, NULL, pDoc, 1);
-      if (pSchP == NULL)
-	return;
-      pRSpec = pSchP->PsElemPRule->ElemPres[index - 1];
-      /* premiere regle de presentation par defaut */
-      pRDef = pSchP->PsFirstDefaultPRule;
-      pAb = pEl->ElAbstractBox[0];
-      pNew = pAb;
-      ApplyPresRules (pEl, pDoc, 1, viewSch, pSchS, pSchP,
-		      &pRSpec, &pRDef, &pAb, FALSE, &lqueue,
-		      queuePR, queuePP, queuePS, queuePA, pNew, fileDescriptor);
-    }
-}
-
-/*----------------------------------------------------------------------
    TtaListStyleSchemas
-
    Produces in a file a human-readable form of style schemas applied to 
    the current document.
    Parameters:
@@ -3776,7 +3550,7 @@ void TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 			   else
 			     fprintf (fileDescriptor, "Second ");
 			   }
-			 wrnomregle (el + 1, fileDescriptor);
+			 wrrulename (el + 1, fileDescriptor);
 			 fprintf (fileDescriptor, ":\n");
 			 fprintf (fileDescriptor, "   BEGIN\n");
 			 wrprules (pSc1->PsElemPRule->ElemPres[el], fileDescriptor);
@@ -3811,7 +3585,7 @@ void TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 				     if (pRP1->ApElemType > 0)
 				       {
 					 fprintf (fileDescriptor, "(");
-					 wrnomregle (pRP1->ApElemType, fileDescriptor);
+					 wrrulename (pRP1->ApElemType, fileDescriptor);
 					 if (pRP1->ApElemInherits)
 					   fprintf (fileDescriptor, " *");
 					 fprintf (fileDescriptor, ")");
@@ -3865,7 +3639,7 @@ void TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 				     if (pRP1->ApElemType > 0)
 				       {
 					 fprintf (fileDescriptor, "(");
-					 wrnomregle (pRP1->ApElemType, fileDescriptor);
+					 wrrulename (pRP1->ApElemType, fileDescriptor);
 					 if (pRP1->ApElemInherits)
 					   fprintf (fileDescriptor, " *");
 					 fprintf (fileDescriptor, ")");
@@ -3897,7 +3671,7 @@ void TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 				     if (pRP1->ApElemType > 0)
 				       {
 					 fprintf (fileDescriptor, "(");
-					 wrnomregle (pRP1->ApElemType, fileDescriptor);
+					 wrrulename (pRP1->ApElemType, fileDescriptor);
 					 if (pRP1->ApElemInherits)
 					   fprintf (fileDescriptor, " *");
 					 fprintf (fileDescriptor, ")");
@@ -3919,7 +3693,7 @@ void TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 				       if (pRP1->ApElemType > 0)
 					 {
 					   fprintf (fileDescriptor, "(");
-					   wrnomregle (pRP1->ApElemType, fileDescriptor);
+					   wrrulename (pRP1->ApElemType, fileDescriptor);
 					 if (pRP1->ApElemInherits)
 					   fprintf (fileDescriptor, " *");
 					   fprintf (fileDescriptor, ")");
@@ -3951,4 +3725,103 @@ void TtaListStyleSchemas (Document document, FILE *fileDescriptor)
           pPfS = pPfS->PfNext;
 	}
      }
+}
+
+/*----------------------------------------------------------------------
+  DisplayPRule displays the presentation rule in the CSS format.
+  ----------------------------------------------------------------------*/
+void DisplayPRule (PtrPRule rule, FILE *fileDescriptor,
+		   PtrElement pEl, PtrSSchema pSchS)
+{
+  PresentationSettingBlock setting;
+  char                     buffer[200];
+  int                      l;
+
+  if (rule == NULL)
+    return;
+  if (rule->PrSpecificity != 100 && rule->PrCSSLine == 0)
+    return;
+
+  PRuleToPresentationSetting (rule, &setting, pSchS);
+  buffer[0] = EOS;
+  TtaPToCss (&setting, buffer, 199, (Element) pEl);
+  if (buffer[0] == EOS)
+    return;
+  /* display the rule */
+  fprintf (fileDescriptor, "@%s", buffer);
+  DisplayedRuleCounter++;
+  l = strlen (buffer);
+  while (l < 30)
+    {
+      fprintf (fileDescriptor, " ");
+      l++;
+    }
+  if (rule->PrImportant)
+    fprintf (fileDescriptor, "!important");
+  if (rule->PrSpecificity == 100)
+    fprintf (fileDescriptor, " Style Attribute\n");
+  else if (rule->PrCSSURL)
+    fprintf (fileDescriptor, " line %d, File %s\n", rule->PrCSSLine, rule->PrCSSURL);
+  else
+    fprintf (fileDescriptor, " line %d, Style Element\n", rule->PrCSSLine);
+}
+
+/*----------------------------------------------------------------------
+   TtaListStyleOfCurrentElement
+   Produces in a file a human-readable form of style rules applied to 
+   the first selected element.
+   Parameters:
+   document: the document.
+   el: the element.
+   fileDescriptor: file descriptor of the file that will contain the list.
+   This file must be open when calling the function.
+   Returns the number of rules generated.
+  ----------------------------------------------------------------------*/
+int TtaListStyleOfCurrentElement (Document document, FILE *fileDescriptor)
+{
+  PtrDocument         pDoc;
+  PtrPSchema          pSchP;
+  PtrSSchema          pSchS;
+  PtrElement          pEl;
+  PtrPRule            pRDef, pRSpec;
+  PtrPRule            queuePR[MAX_QUEUE_LEN];
+  PtrAbstractBox      queuePP[MAX_QUEUE_LEN];
+  PtrPSchema          queuePS[MAX_QUEUE_LEN];
+  PtrAttribute        queuePA[MAX_QUEUE_LEN];
+  PtrAbstractBox      pAb, pNew;
+  int                 lqueue = 0, f, l;
+  int                 index, viewSch;
+
+  /* Number of rules displayed */
+  DisplayedRuleCounter = 0;
+  if (document < 1 || document > MAX_DOCUMENTS)
+    TtaError (ERR_invalid_document_parameter);
+  else if (LoadedDocument[document - 1] == NULL)
+    TtaError (ERR_invalid_document_parameter);
+  else
+    /* parametre document correct */
+    {
+      pDoc = LoadedDocument[document - 1];
+      TtaGiveFirstSelectedElement (document, &pEl, &f, &l);
+      if (pEl && pEl->ElTerminal)
+	pEl = pEl->ElParent;
+      if (pEl)
+	{
+	  SearchPresSchema (pEl, &pSchP, &index, &pSchS, pDoc);
+	  viewSch = AppliedView (pEl, NULL, pDoc, 1);
+	  if (pSchP)
+	    {
+	      pRSpec = pSchP->PsElemPRule->ElemPres[index - 1];
+	      /* premiere regle de presentation par defaut */
+	      pRDef = pSchP->PsFirstDefaultPRule;
+	      pAb = pEl->ElAbstractBox[0];
+	      pNew = pAb;
+	      ApplyPresRules (pEl, pDoc, 1, viewSch, pSchS, pSchP,
+			      &pRSpec, &pRDef, &pAb, FALSE, &lqueue,
+			      queuePR, queuePP, queuePS, queuePA, pNew,
+			      fileDescriptor);
+	    }
+	}
+    }
+  return DisplayedRuleCounter;
 }

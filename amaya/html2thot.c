@@ -697,7 +697,6 @@ void ParseAreaCoords (Element element, Document document)
   Sets the value of the language.
   ----------------------------------------------------------------------*/
 void  SetLanguagInHTMLStack (Language lang)
-
 {
   LanguageStack[StackLevel - 1] = lang;
 }
@@ -707,7 +706,6 @@ void  SetLanguagInHTMLStack (Language lang)
   Returns the value of ParsingCSS boolean.
   ----------------------------------------------------------------------*/
 ThotBool  IsHtmlParsingCSS ()
-
 {
    return HTMLcontext.parsingCSS;
 }
@@ -717,7 +715,6 @@ ThotBool  IsHtmlParsingCSS ()
   Sets the value of ParsingCSS boolean.
   ----------------------------------------------------------------------*/
 void  SetHtmlParsingCSS (ThotBool value)
-
 {
    HTMLcontext.parsingCSS = value;
 }
@@ -727,7 +724,6 @@ void  SetHtmlParsingCSS (ThotBool value)
   Sets the value of ParsingTextArea boolean.
   ----------------------------------------------------------------------*/
 void  SetHtmlParsingTextArea (ThotBool value)
-
 {
    HTMLcontext.parsingTextArea = value;
 }
@@ -737,7 +733,6 @@ void  SetHtmlParsingTextArea (ThotBool value)
    Assigns the current line number
   ----------------------------------------------------------------------*/
 void SetHtmlElemLineNumber (Element el)
-
 {
   TtaSetElementLineNumber (el, NumberOfLinesRead);
 }
@@ -747,7 +742,6 @@ void SetHtmlElemLineNumber (Element el)
   Returns the value of WithinTable integer.
   ----------------------------------------------------------------------*/
 int  IsWithinHtmlTable ()
-
 {
    return HTMLcontext.withinTable;
 }
@@ -780,8 +774,8 @@ static PtrClosedElement copyCEstring (PtrClosedElement first)
 }
 
 /*----------------------------------------------------------------------
-   InitMapping     intialise the list of the elements closed by
-   each start tag.
+  InitMapping     intialise the list of the elements closed by
+  each start tag.
   ----------------------------------------------------------------------*/
 void                   InitMapping (void)
 {
@@ -975,7 +969,7 @@ void HTMLParseError (Document doc, char* msg)
 	   docURL = NULL;
 	 }
        /* print the line number and character number before the message */
-       fprintf (ErrFile, "   line %d, char %d: %s\n", NumberOfLinesRead,
+       fprintf (ErrFile, "@   line %d, char %d: %s\n", NumberOfLinesRead,
 		NumberOfCharRead, msg);
      }
    else
@@ -4825,6 +4819,29 @@ static void HTMLparse (FILE * infile, char* HTMLbuf)
 }
 
 /*----------------------------------------------------------------------
+  GetANewText generates a new text element within a line.
+  ----------------------------------------------------------------------*/
+static Element GetANewText (Element el, ElementType elType, Document doc)
+{
+  Element             elLeaf;
+
+  if (LgBuffer)
+    {
+      inputBuffer[LgBuffer] = EOS;
+      TtaAppendTextContent (el, inputBuffer, doc);
+      LgBuffer = 0;
+      /* Create a new text leaf */
+      elType.ElTypeNum = TextFile_EL_TEXT_UNIT;
+      elLeaf = TtaNewElement (doc, elType);
+      TtaSetElementLineNumber (elLeaf, NumberOfLinesRead);
+      TtaInsertSibling (elLeaf, el,  FALSE, doc);
+      el = elLeaf;
+      HTMLcontext.lastElement = el;
+    }
+  return el;
+}
+
+/*----------------------------------------------------------------------
    ReadTextFile
    read plain text file into a TextFile document.
    input text comes from either the infile file or the text
@@ -4842,6 +4859,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
   char               *ptr;
   int		      val;
   ThotBool            endOfTextFile;
+  ThotBool            withinTag = FALSE, withinString = FALSE;
 
   InputText = textbuf;
   LgBuffer = 0;
@@ -4891,6 +4909,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
   HTMLcontext.doc = doc;
   HTMLcontext.mergeText = FALSE;
   HTMLcontext.language = TtaGetDefaultLanguage ();
+  attrType.AttrSSchema = TtaGetSSchema ("TextFile", doc);
   /* initialize input buffer */
   charRead = GetNextInputChar (infile, &CurrentBufChar, &endOfTextFile);
   /* read the text file sequentially */
@@ -4930,26 +4949,10 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 	{
 	  /* LF = end of line */
 	  inputBuffer[LgBuffer] = EOS;
-	  if (DocumentTypes[doc] == docLog)
-	    {
-	       ptr = inputBuffer;
-	       while (*ptr == SPACE)
-		 ptr++;
-	       if (!strncmp (ptr, "line", 4))
-		 {
-		 attrType.AttrSSchema = TtaGetSSchema ("TextFile",
-						       doc);
-		 attrType.AttrTypeNum = TextFile_ATTR_IsLink;
-		 val = TextFile_ATTR_IsLink_VAL_Yes_;
-		 attr = TtaNewAttribute (attrType);
-		 TtaAttachAttribute (el, attr, doc);
-		 TtaSetAttributeValue (attr, val, el, doc);
-		 }
-	    }
 	  if (LgBuffer != 0)
 	    TtaAppendTextContent (el, inputBuffer, doc);
 	  LgBuffer = 0;
-	  el = NULL;
+	  el = NULL; /* generate a new line */
 	  charRead = EOS;
 	}
 #ifndef _I18N_
@@ -4963,14 +4966,91 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
       if (charRead != EOS)
 	{
 	  /* a valid character has been read */
-	  if (LgBuffer + 1 >= AllmostFullBuffer)
+	  if (charRead == '@' && DocumentTypes[doc] == docLog)
+	    {
+	      attrType.AttrTypeNum = TextFile_ATTR_IsLink;
+	      val = TextFile_ATTR_IsLink_VAL_Yes_;
+	      attr = TtaNewAttribute (attrType);
+	      TtaAttachAttribute (el, attr, doc);
+	      TtaSetAttributeValue (attr, val, el, doc);
+	    }
+	  else if (charRead == '"' || (LgBuffer == 0 && withinString))
+	    {
+	      if (charRead == '"')
+		withinString = !withinString;
+	      if (withinString)
+		{
+		  el = GetANewText (el, elType, doc);
+		  attrType.AttrTypeNum = TextFile_ATTR_IsString;
+		  attr = TtaGetAttribute (el, attrType);
+		  if (attr == NULL)
+		    {
+		      attr = TtaNewAttribute (attrType);
+		      val = TextFile_ATTR_IsString_VAL_Yes_;
+		      TtaAttachAttribute (el, attr, doc);
+		      TtaSetAttributeValue (attr, val, el, doc);
+		    }
+		  /* add the current character */
+		  inputBuffer[LgBuffer++] = charRead;
+		}
+	      else
+		{
+		  /* add the current character */
+		  inputBuffer[LgBuffer++] = charRead;
+		  el = GetANewText (el, elType, doc);
+		}
+	    }
+	  else if (!withinString &&
+		   DocumentTypes[doc] != docLog &&
+		   (charRead == '<' || charRead == '>') ||
+		   (LgBuffer == 0 && withinTag))
+	    {
+	      if (charRead == '<' || charRead == '>')
+		withinTag = !withinTag;
+	      if (withinTag)
+		{
+		  el = GetANewText (el, elType, doc);
+		  attrType.AttrTypeNum = TextFile_ATTR_IsTag;
+		  attr = TtaGetAttribute (el, attrType);
+		  if (attr == NULL)
+		    {
+		      attr = TtaNewAttribute (attrType);
+		      val = TextFile_ATTR_IsTag_VAL_Yes_;
+		      TtaAttachAttribute (el, attr, doc);
+		      TtaSetAttributeValue (attr, val, el, doc);
+		    }
+		  /* add the current character */
+		  inputBuffer[LgBuffer++] = charRead;
+		}
+	      else
+		{
+		  /* add the current character */
+		  inputBuffer[LgBuffer++] = charRead;
+		  if (LgBuffer == 1)
+		    {
+		      attrType.AttrTypeNum = TextFile_ATTR_IsTag;
+		      attr = TtaGetAttribute (el, attrType);
+		      if (attr == NULL)
+			{
+			  attr = TtaNewAttribute (attrType);
+			  val = TextFile_ATTR_IsTag_VAL_Yes_;
+			  TtaAttachAttribute (el, attr, doc);
+			  TtaSetAttributeValue (attr, val, el, doc);
+			}
+		    }
+		  el = GetANewText (el, elType, doc);
+		}
+	    }
+	  else if (LgBuffer + 1 >= AllmostFullBuffer)
 	    {
 	      /* store the current buffer contents and continue */
 	      inputBuffer[LgBuffer] = EOS;
 	      TtaAppendTextContent (el, inputBuffer, doc);
 	      LgBuffer = 0;
+	      inputBuffer[LgBuffer++] = charRead;
 	    }
-	  inputBuffer[LgBuffer++] = charRead;
+	  else
+	    inputBuffer[LgBuffer++] = charRead;
 	  if (el != NULL)
 	    {
 	      /* test if last created element is a Symbol */

@@ -1304,11 +1304,8 @@ ThotBool OpenParsingErrors (Document document)
   if ((ErrFile = fopen (fileName, "w")) == NULL)
     return FALSE;
   else
-    {
-      fprintf (ErrFile, "Each error line is a link.\n");      
-      fprintf (ErrFile, "It can be activated by a double (or a single) click\n");      
-    return TRUE;
-    }
+    fprintf (ErrFile, TtaGetMessage (AMAYA, AM_LINK_LINE));      
+  return TRUE;
 }
 
 /*----------------------------------------------------------------------
@@ -7254,7 +7251,7 @@ void HelpAmaya (Document document, View view)
    list = fopen (localname, "w");
    TtaListStyleSchemas (document, list);
    fclose (list);
-   /* list now CSS rules */
+   /* list CSS rules applied to the current selection */
    strcpy (localname, TempFileDirectory);
    strcat (localname, DIR_STR);
    strcat (localname, "style_element.debug");

@@ -735,10 +735,11 @@ static void CallbackCSS (int ref, int typedata, char *data)
 void ShowAppliedStyle (Document doc, View view)
 {
   Element             el;
+  ElementType         elType;
   Document            newdoc;
   FILE               *list;
   char                fileName [100];
-  int                 f, l;
+  int                 f, l, n;
 
   TtaGiveFirstSelectedElement (doc, &el, &f, &l);
   if (el == NULL)
@@ -746,19 +747,32 @@ void ShowAppliedStyle (Document doc, View view)
 		TtaGetMessage (AMAYA, AM_NO_SELECTION));
   else
     {
+      elType = TtaGetElementType (el);
       /* list CSS rules applied to the current selection */
       sprintf (fileName, "%s%c%d%cSTYLE.LST",
 	       TempFileDirectory, DIR_SEP, doc, DIR_SEP);
+      if (TtaFileExist (fileName))
+	TtaFileUnlink (fileName);
       list = fopen (fileName, "w");
-      TtaListStyleOfCurrentElement (doc, list);
+      fprintf (list, "\n\n");      
+      fprintf (list, TtaGetMessage (AMAYA, AM_STYLE_APPLIED),
+	       GetXMLElementName (elType, doc));      
+      fprintf (list, TtaGetMessage (AMAYA, AM_LINK_LINE));      
+      n = TtaListStyleOfCurrentElement (doc, list);
       fclose (list);
-      newdoc = GetAmayaDoc (fileName, NULL, 0, doc, CE_LOG, FALSE, NULL,
-			    NULL, TtaGetDefaultCharset ());
-      /* store the relation with the original document */
-      if (newdoc)
+      if (n == 0)
+	InitInfo (TtaGetMessage (AMAYA, AM_ERROR),
+		  TtaGetMessage (AMAYA, AM_NO_CSS));
+      else
 	{
-	  DocumentSource[newdoc] = doc;
-	  TtaSetStatus (newdoc, 1, "   ", NULL);
+	  newdoc = GetAmayaDoc (fileName, NULL, 0, doc, CE_LOG, FALSE, NULL,
+				NULL, TtaGetDefaultCharset ());
+	  /* store the relation with the original document */
+	  if (newdoc)
+	    {
+	      DocumentSource[newdoc] = doc;
+	      TtaSetStatus (newdoc, 1, "   ", NULL);
+	    }
 	}
     }
 }
@@ -949,7 +963,7 @@ static void InitCSSDialog (Document doc, char *s)
     }
   else
     TtaNewLabel (BaseCSS + CSSSelect, BaseCSS + CSSForm,
-		 TtaGetMessage (AMAYA, AM_NO_CCS));
+		 TtaGetMessage (AMAYA, AM_NO_CSS));
   TtaShowDialogue (BaseCSS + CSSForm, TRUE);
   if (nb > 0)
     TtaSetSelector (BaseCSS + CSSSelect, select, NULL);
