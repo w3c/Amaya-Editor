@@ -16,15 +16,15 @@
 #ifdef __STDC__
 extern HDC  PASCAL GetPrinterDC (void);
 extern void WinInitPrinterColors (void);
-extern void CreateCSSDlgWindow (HWND, int, int, int, char*, int, char*, char*);
-extern void CreateLinkDlgWindow (HWND, char*, int, int, int);
+extern void CreateCSSDlgWindow (HWND, int, int, int, char*, int, char*, char*, CHAR_T*);
+extern void CreateLinkDlgWindow (HWND, char*, int, int, int, CHAR_T*, CHAR_T*);
 extern void CreateHelpDlgWindow (HWND, char*, char*, char*);
-extern void CreateMathDlgWindow (HWND, int, HWND);
+extern void CreateMathDlgWindow (HWND, int, HWND, CHAR_T*);
 extern void CreatePrintDlgWindow (HWND, char*, int, int, int, int, int, int);
 extern void CreateAlign1DlgWindow (HWND, int);
 extern void CreateAlign2DlgWindow (HWND, int);
 extern void CreateAlign3DlgWindow (HWND, int);
-extern void CreateSearchDlgWindow (HWND, BOOL);
+extern void CreateSearchDlgWindow (HWND, BOOL, CHAR_T*);
 extern void CreateSaveAsDlgWindow (HWND, char*, int, int, int, int, int, int);
 extern void CreateOpenDocDlgWindow (HWND, char*, char*, char*, int, int, int, int, int, int);
 extern void CreateGraphicsDlgWindow (int, int, int, HWND);

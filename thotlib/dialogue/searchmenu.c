@@ -1110,7 +1110,7 @@ View                view;
       InitSearchDomain (3, searchDomain);
    searchDomain->SDocument = pDoc;
    TextOK = FALSE;
-   CreateSearchDlgWindow (TtaGetViewFrame (document, view), ok);
+   CreateSearchDlgWindow (TtaGetViewFrame (document, view), ok, msgCaption);
 #  endif /* _WINDOWS */ 
 }
 

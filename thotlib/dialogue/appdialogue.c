@@ -4137,44 +4137,42 @@ int                 menuID;
      return;
 
    menu = FindMenu (frame, menuID, &ptrmenu);
-   if (menu != -1)
-     {
+   if (menu != -1) {
        menu--;
-       if (!FrameTable[frame].EnabledMenus[menu])
-	 {
-	   /* Get the button widget */
-	   w = FrameTable[frame].WdMenus[menu];
-	   if (w != 0)
-	     {
-	       FrameTable[frame].EnabledMenus[menu] = TRUE;
-	       ref = (menu * MAX_ITEM) + frame + MAX_LocalMenu;
-	       /* Enaable */
-#         ifdef _WINDOWS
-	       WIN_TtaSetPulldownOn (ref, w, TtaGetViewFrame (document, view));
-#         else /* !_WINDOWS */
-	       TtaSetPulldownOn (ref, w);
-#         endif /* _WINDOWS */
+#      ifndef _WINDOWS
+       if (!FrameTable[frame].EnabledMenus[menu]) {
+#      endif /* !_WINDOWS */
+          /* Get the button widget */
+          w = FrameTable[frame].WdMenus[menu];
+          if (w != 0) {
+             FrameTable[frame].EnabledMenus[menu] = TRUE;
+             ref = (menu * MAX_ITEM) + frame + MAX_LocalMenu;
+             /* Enaable */
+#            ifdef _WINDOWS
+             WIN_TtaSetPulldownOn (ref, w, TtaGetViewFrame (document, view));
+#            else /* !_WINDOWS */
+             TtaSetPulldownOn (ref, w);
+#            endif /* _WINDOWS */
 
-#ifndef _WINDOWS
-	       /* Set the button active */
-	       if (TtWDepth > 1)
-		 {
-		   /* Change the color */
-		   XtSetArg (args[0], XmNforeground, FgMenu_Color);
-		   XtSetValues (w, args, 1);
-		   XtManageChild (w);
-		 }
-	       else
-		 {
-		   /* Change the font */
-		   XtSetArg (args[0], XmNfontList, DefaultFont);
-		   XtSetValues (w, args, 1);
-		   XtManageChild (w);
-		 }
-#endif
-	     }
-	 }
-     }
+#            ifndef _WINDOWS
+             /* Set the button active */
+             if (TtWDepth > 1) {
+                /* Change the color */
+                XtSetArg (args[0], XmNforeground, FgMenu_Color);
+                XtSetValues (w, args, 1);
+                XtManageChild (w);
+			 } else {
+                    /* Change the font */
+                    XtSetArg (args[0], XmNfontList, DefaultFont);
+                    XtSetValues (w, args, 1);
+                    XtManageChild (w);
+			 }
+#            endif
+#         ifndef _WINDOWS
+		  }  
+#         endif /* !_WINDOWS */
+	   } 
+   }  
 #endif /* _GTK */
 }
 
