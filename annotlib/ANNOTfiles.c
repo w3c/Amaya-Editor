@@ -769,14 +769,16 @@ void ANNOT_DeleteThread (Document thread_doc)
   Element el;
   ElementType elType;
 
-  /* we find the the Thread element and make it our root */
-  el = TtaGetRootElement (thread_doc);
-  elType = TtaGetElementType (el);
-  elType.ElTypeNum = Annot_EL_Thread;
-  el = TtaSearchTypedElement (elType, SearchInTree, el);
-
-  if (el)
-    TtaDeleteTree (el, thread_doc);
+  if (DocumentTypes[thread_doc] == docAnnot)
+    {
+      /* we find the the Thread element and make it our root */
+      el = TtaGetRootElement (thread_doc);
+      elType = TtaGetElementType (el);
+      elType.ElTypeNum = Annot_EL_Thread;
+      el = TtaSearchTypedElement (elType, SearchInTree, el);
+      if (el)
+	TtaDeleteTree (el, thread_doc);
+    }
 }
 
 /*-----------------------------------------------------------------------
