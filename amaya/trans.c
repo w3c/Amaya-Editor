@@ -2532,7 +2532,7 @@ void                TransformType (Document doc, View view)
       TtaFreeMemory (tag);
       if (i > 0)
 	{ /* if some transformations have been matched, shows the menu */
-	  TtaNewPopup (TransBaseDialog + TransMenu, 0, 
+	  TtaNewPopup (TransBaseDialog + TransMenu, TtaGetViewFrame (doc, 1), 
 		       TtaGetMessage (AMAYA, AM_TRANS), i, menuBuf,
 		       NULL, 'L');
 #ifndef _WINDOWS
