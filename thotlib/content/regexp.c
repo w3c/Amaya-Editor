@@ -1,17 +1,10 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
-   Projet THOT
-   Module traitant la recherche d'expression regulieres
-   V. Quint      Septembre 1984
-   Adaptation aux caracteres accentues 8 bits
-   H. Richy      Aout 1993
+  This module processes regular expressions.
+
  */
-#ifndef SONY
+
 #ifdef RS
 #pragma alloca
-#endif
 #endif
 
 #include "constmedia.h"
@@ -285,7 +278,7 @@ char                syntax_code_spec[14] =
 #define alloca(x) _alloca(x)
 #endif
 
- /* Identification des messages */
+ /* messages identification */
 static char         MAJiso[] =
 {'\300', '\302', '\306', '\307', '\310', '\311', '\312', '\313', '\316', '\317', '\324', '\327', '\331', '\333', '\334'};
 static char         miniso[] =
@@ -316,29 +309,29 @@ static void         InitSyntaxTable ()
 /*
    re_syntax_table['-'] = Sword; 
  */
-   /* les MAJUSCULES accentuees */
+   /* accented UPPERCASE characters */
    lg = strlen (MAJiso);
    for (i = 0; i < lg; i++)
       re_syntax_table[(int) MAJiso[i]] = Sword;
 
-   /* les minuscules accentuees */
+   /* accented lowercase characters */
    lg = strlen (MAJiso);
    for (i = 0; i < lg; i++)
       re_syntax_table[(int) miniso[i]] = Sword;
 
-   /* les ouvrants */
+   /* opening delimiters */
    re_syntax_table['('] = Sopen;
    re_syntax_table['['] = Sopen;
    re_syntax_table['{'] = Sopen;
-   /* les fermants */
+   /* closing delimiters */
    re_syntax_table[')'] = Sclose;
    re_syntax_table[']'] = Sclose;
    re_syntax_table['}'] = Sclose;
-   /* les espaces */
-   re_syntax_table[' '] = Swhitespace;	/* espace = \40 */
-   re_syntax_table[160] = Swhitespace;	/* ctrl Espace = \240 */
-   re_syntax_table[129] = Swhitespace;	/* fine = 1/4 cadr = \201 */
-   re_syntax_table[130] = Swhitespace;	/* 1/2 cadratin = \202 */
+   /* spaces */
+   re_syntax_table[' '] = Swhitespace;	/* space = \40 */
+   re_syntax_table[160] = Swhitespace;	/* ctrl space = \240 */
+   re_syntax_table[129] = Swhitespace;	/* fine = 1/4 em = \201 */
+   re_syntax_table[130] = Swhitespace;	/* 1/2 em = \202 */
    re_syntax_table[138] = Swhitespace;	/* ctrl Return = \212 */
    /* la ponctuation */
    re_syntax_table['.'] = Spunct;
@@ -349,9 +342,9 @@ static void         InitSyntaxTable ()
    re_syntax_table['!'] = Sinter;
    re_syntax_table['?'] = Sinter;
    /* debut de citation */
-   re_syntax_table[171] = Sopen;	/* guillemet ouvrant = \253 */
+   re_syntax_table[171] = Sopen;	/* opening french guillemet = \253 */
    /* fin de citation */
-   re_syntax_table[187] = Sclose;	/* guillemet fermant = \273 */
+   re_syntax_table[187] = Sclose;	/* closing french guillemet = \273 */
 
 
 
@@ -1051,16 +1044,16 @@ struct re_pattern_buffer *bufp;
 
 /* ---------------------------------------------------------------------- */
 /* |    NextStruct: Advances pEl in the next element in any direction.  | */
-/* |            If the next element is a text-struct return TRUE        | */
+/* |            If the next element is a text element return TRUE       | */
 /* |            Otherwise return FALSE.                                 | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static boolean      NextStruct (boolean EnAvant, PtrElement * pEl, int *charNb)
+static boolean      NextStruct (boolean Forward, PtrElement * pEl, int *charNb)
 
 #else  /* __STDC__ */
-static boolean      NextStruct (EnAvant, pEl, charNb)
-boolean             EnAvant;
+static boolean      NextStruct (Forward, pEl, charNb)
+boolean             Forward;
 PtrElement         *pEl;
 int                *charNb;
 
@@ -1076,13 +1069,13 @@ int                *charNb;
 
    if (pEl1 != NULL)
      {
-	if (!EnAvant)
+	if (!Forward)
 	  {
 	     pElTmp = pEl1->ElPrevious;
 	     if (pElTmp == NULL)
 	       {
 		  /* pEl points to the last sibling. No advances made
-		     We all ready point to a boarder. */
+		     We already point to a boarder. */
 		  while ((*pEl)->ElPrevious == NULL && (*pEl)->ElParent != NULL)
 		     *pEl = (*pEl)->ElParent;
 		  *pEl = (*pEl)->ElPrevious;
@@ -1095,28 +1088,26 @@ int                *charNb;
 	     if (pElTmp == NULL)
 	       {
 		  /* pEl points to the last sibling. No advances made
-		     We all ready point to a boarder. */
+		     We already point to a boarder. */
 		  while ((*pEl)->ElNext == NULL && (*pEl)->ElParent != NULL)
 		     *pEl = (*pEl)->ElParent;
 		  *pEl = (*pEl)->ElNext;
-		  /*HR *//*deb */
 		  if ((*pEl) != NULL)
 		     pEl1 = *pEl;
 		  else
-		     /*HR *//*fin */
 		     return FALSE;
 	       }
 	  }
 
 	if (pElTmp != NULL)
-	   if (!EnAvant)
+	   if (!Forward)
 	      pEl1 = pEl1->ElPrevious;
 	   else
 	      pEl1 = pEl1->ElNext;
 
 	if (pEl1->ElTerminal && pEl1->ElLeafType == LtText)
 	  {
-	     if (!EnAvant)
+	     if (!Forward)
 	       {
 		  /* The leftmost character */
 		  *charNb = pEl1->ElTextLength;
@@ -1132,7 +1123,7 @@ int                *charNb;
 	       }
 	  }
 	else
-	   /* the next element is not a text-struct */
+	   /* the next element is not a text element */
 	  {
 	     *pEl = pEl1;
 	     return FALSE;
@@ -1195,11 +1186,11 @@ int                 charNb;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         NextChar (boolean EnAvant, int *textChar, PtrElement * pEl, int *charNb)
+static void         NextChar (boolean Forward, int *textChar, PtrElement * pEl, int *charNb)
 
 #else  /* __STDC__ */
-static void         NextChar (EnAvant, textChar, pEl, charNb)
-boolean             EnAvant;
+static void         NextChar (Forward, textChar, pEl, charNb)
+boolean             Forward;
 int                *textChar;
 PtrElement         *pEl;
 int                *charNb;
@@ -1212,13 +1203,12 @@ int                *charNb;
    nextstructure = TRUE;
    if (*pEl != NULL)
      {
-
 	/* Text unit and not a copy */
 	if ((*pEl)->ElTerminal && (*pEl)->ElLeafType == LtText)
 	  {
-	     if (!EnAvant)
+	     if (!Forward)
 		if ((*charNb) <= 1)
-		   nextstructure = NextStruct (EnAvant, pEl, charNb);
+		   nextstructure = NextStruct (Forward, pEl, charNb);
 		else if ((*charNb) <= (*pEl)->ElTextLength)
 		   (*charNb)--;
 		else
@@ -1228,7 +1218,7 @@ int                *charNb;
 		        be < pEl->ElTextLength */
 		  }
 	     else if ((*charNb) == (*pEl)->ElTextLength)
-		nextstructure = NextStruct (EnAvant, pEl, charNb);
+		nextstructure = NextStruct (Forward, pEl, charNb);
 	     else if ((*charNb) >= 0)
 		(*charNb)++;
 	     else
@@ -1239,7 +1229,7 @@ int                *charNb;
 	       }
 	  }
 	else
-	   nextstructure = NextStruct (EnAvant, pEl, charNb);
+	   nextstructure = NextStruct (Forward, pEl, charNb);
      }
    else
      {
@@ -1253,9 +1243,9 @@ int                *charNb;
 }
 
 /* ---------------------------------------------------------------------- */
-/* | nbmatch calcule le nombre de caracteres dans l'exprssion trouvee   | */
-/* |     et retoune ce nombre;                                          | */
-/* |     Il est utilise dans la recherche en arriere                    | */
+/* | nbmatch computes the number of characters in the expression found	| */
+/* |	and returns that number.					| */
+/* |    Used in backwards search.					| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
@@ -1285,28 +1275,24 @@ int                 pos2;
 /* ---------------------------------------------------------------------- */
 /* | ReMatch matchs the pattern described by PBUFP against data which   | */
 /* |      start at the position described by pEl1 and pos1.             | */
-/* |      Do not consider matching past the position described by       | */
-/* |      zonerecherche.                                                | */
 /* |       1 is returned if thers is a match.                            | */
 /* |      -1 is returned if there is no match.                          | */
 /* |      -2 is returned if there is an error (such as match stack      | */
 /* |      overflow).                                                    | */
 /* ---------------------------------------------------------------------- */
 
-
-
 #ifdef __STDC__
-static int          ReMatch (struct re_pattern_buffer *pbufp, PtrElement pEl1, int pos1, PtrElement * pEl2, int *pos2, PtrElement pElFin, int NumCarFin, boolean forw)
+static int          ReMatch (struct re_pattern_buffer *pbufp, PtrElement pEl1, int pos1, PtrElement * pEl2, int *pos2, PtrElement pEndEl, int endCharNb, boolean forw)
 
 #else  /* __STDC__ */
-static int          ReMatch (pbufp, pEl1, pos1, pEl2, pos2, pElFin, NumCarFin, forw)
+static int          ReMatch (pbufp, pEl1, pos1, pEl2, pos2, pEndEl, endCharNb, forw)
 struct re_pattern_buffer *pbufp;
 PtrElement          pEl1;
 int                 pos1;
 PtrElement         *pEl2;
 int                *pos2;
-PtrElement          pElFin;
-int                 NumCarFin;
+PtrElement          pEndEl;
+int                 endCharNb;
 boolean             forw;
 
 #endif /* __STDC__ */
@@ -1320,7 +1306,7 @@ boolean             forw;
    register unsigned char *pend = p + pbufp->used;
    int                 textchar;
    int                 textchar2;
-   boolean             stopavancer = FALSE;
+   boolean             stop = FALSE;
    PtrElement          pElTmp;
    int                 posTmp;
 
@@ -1374,73 +1360,71 @@ boolean             forw;
 		return -1;
 
 	  }
-	if (!stopavancer)
-	   /*HR *//*debut */
+	if (!stop)
 	  {
 	     if (pEl1 != *pEl2)
 	       {
 		  if (pEl1->ElTypeNumber == 1)
-		     /* considerer le changement d'element comme un separateur */
+		     /* considers element change as a separator */
 		    {
 		       *pEl2 = pEl1;
 		       *pos2 = (*pEl2)->ElTextLength + 1;
-		       textchar = 32;	/* un espace (pourquoi pas ?) */
+		       textchar = 32;	/* space */
 		    }
 		  else
-		     /* debut de recherche */
+		     /* start searching */
 		    {
-/*HR */ pEl1 = *pEl2;
+			pEl1 = *pEl2;
 		       *pos2 = forw ? 0 : (*pEl2)->ElTextLength + 1;
-		       textchar = 32;	/* un espace (pourquoi pas ?) */
+		       textchar = 32;	/* space */
 		    }
 	       }
 	     else
-		/* ou bien continuer la recherche */
+		/* keep searching */
 	       {
 		  if ((*pEl2) != NULL)
 		    {
 		       if ((*pEl2)->ElTypeNumber != 1)
 			 {
-			    /* se placer sur le prochain texte */
+			    /* go to next text element */
 			    *pEl2 = forw ?
 			       FwdSearchTypedElem (*pEl2, CharString + 1, NULL) :
 			       BackSearchTypedElem (*pEl2, CharString + 1, NULL);
 			    if ((*pEl2) != NULL)
 			       *pos2 = forw ? 1 : (*pEl2)->ElTextLength;
 			    else
-			       /* pas de texte suivant */
+			       /* no text found */
 			       *pos2 = -1;
 			 }
 		       else
 			 {
 			    if (pos1 == 0 && !forw)
 			      {
-				 /* se placer sur le texte precedent */
+				 /* go to previous text element */
 				 *pEl2 = BackSearchTypedElem (*pEl2, CharString + 1, NULL);
 				 if ((*pEl2) != NULL)
 				    *pos2 = forw ? 1 : (*pEl2)->ElTextLength;
 				 else
-				    /* pas de texte suivant */
+				    /* no text found */
 				    *pos2 = -1;
 			      }
 			    else
-/*HR */ if (pos1 > pEl1->ElTextLength && forw)
+			      if (pos1 > pEl1->ElTextLength && forw)
 			      {
-				 /* se placer sur le prochain texte */
+				 /* go to next text */
 				 *pEl2 = FwdSearchTypedElem (*pEl2, CharString + 1, NULL);
 				 if ((*pEl2) != NULL)
 				    *pos2 = forw ? 1 : (*pEl2)->ElTextLength;
 				 else
-				    /* pas de texte suivant */
+				    /* no text found */
 				    *pos2 = -1;
 			      }
-			 }	/* end of else */
-		    }		/* end of if  ((*pEl2) != NULL) */
+			 }
+		    }
 		  if ((*pEl2) != NULL)
 		     GetOrd (&textchar, *pEl2, *pos2);
 	       }
 	  }
-	/*HR *//*fin */
 	switch ((enum regexpcode) *p++)
 
 	      {
@@ -1458,7 +1442,7 @@ boolean             forw;
 
 		 case anychar:
 		    /* Match anything but a newline and a whitespace.  */
-		    if (!stopavancer)
+		    if (!stop)
 		       GetOrd (&textchar, *pEl2, *pos2);
 		    if ((translate ? translate[textchar] : textchar) == '\n'
 		      || (translate ? translate[textchar] : textchar) == ' '
@@ -1475,16 +1459,16 @@ boolean             forw;
 
 		    /* advance a character */
 
-		    if (*pEl2 == pElFin && *pos2 == NumCarFin)
+		    if (*pEl2 == pEndEl && *pos2 == endCharNb)
 		      {
 			 textchar = -1;
-			 stopavancer = TRUE;
+			 stop = TRUE;
 		      }
 		    else
 		      {
 			 NextChar (TRUE, &textchar, pEl2, pos2);
 			 if (textchar == -1)
-			    stopavancer = TRUE;
+			    stop = TRUE;
 		      }
 		    break;
 
@@ -1514,10 +1498,10 @@ boolean             forw;
 			    goto fail;
 			 pElTmp = *pEl2;
 			 posTmp = *pos2;
-			 if (*pEl2 == pElFin && *pos2 == NumCarFin)
+			 if (*pEl2 == pEndEl && *pos2 == endCharNb)
 			   {
 			      textchar = -1;
-			      stopavancer = TRUE;
+			      stop = TRUE;
 			   }
 			 else
 			   {
@@ -1526,7 +1510,7 @@ boolean             forw;
 			      NextChar (TRUE, &textchar, pEl2, pos2);	/* advance a character */
 			      if (textchar == -1)
 				{
-				   stopavancer = TRUE;
+				   stop = TRUE;
 				   *pEl2 = pElBack;
 				   *pos2 = posBack;
 				}
@@ -1789,11 +1773,11 @@ boolean             forw;
 		      }
 		    pElTmp = *pEl2;
 		    posTmp = *pos2;
-/***HR***/ if ((*pEl2 == pElFin && *pos2 == NumCarFin)
-/***HR***/  || (*pEl2 == NULL && *pos2 == -1))
+		    if ((*pEl2 == pEndEl && *pos2 == endCharNb)
+			|| (*pEl2 == NULL && *pos2 == -1))
 		      {
 			 textchar = -1;
-			 stopavancer = TRUE;
+			 stop = TRUE;
 		      }
 		    else
 		       NextChar (TRUE, &textchar, pEl2, pos2);	/* advance a character */
@@ -1814,10 +1798,10 @@ boolean             forw;
 		      }
 		    pElTmp = *pEl2;
 		    posTmp = *pos2;
-		    if (*pEl2 == pElFin && *pos2 == NumCarFin)
+		    if (*pEl2 == pEndEl && *pos2 == endCharNb)
 		      {
 			 textchar = -1;
-			 stopavancer = TRUE;
+			 stop = TRUE;
 		      }
 		    else
 		       NextChar (TRUE, &textchar, pEl2, pos2);	/* advance a character */
@@ -1838,10 +1822,10 @@ boolean             forw;
 				}
 			      pElTmp = *pEl2;
 			      posTmp = *pos2;
-			      if (*pEl2 == pElFin && *pos2 == NumCarFin)
+			      if (*pEl2 == pEndEl && *pos2 == endCharNb)
 				{
 				   textchar = -1;
-				   stopavancer = TRUE;
+				   stop = TRUE;
 				}
 			      else
 				 NextChar (TRUE, &textchar, pEl2, pos2);	/* advance a character */
@@ -1858,10 +1842,10 @@ boolean             forw;
 				}
 			      pElTmp = *pEl2;
 			      posTmp = *pos2;
-			      if (*pEl2 == pElFin && *pos2 == NumCarFin)
+			      if (*pEl2 == pEndEl && *pos2 == endCharNb)
 				{
 				   textchar = -1;
-				   stopavancer = TRUE;
+				   stop = TRUE;
 				}
 			      else
 				 NextChar (TRUE, &textchar, pEl2, pos2);	/* advance a character */
@@ -1887,7 +1871,7 @@ boolean             forw;
 	     *pos2 = (*stackp)->index;
 	     *pEl2 = (*stackp)->pEl;
 	     p = (*stackp)->pchar;
-	     stopavancer = FALSE;
+	     stop = FALSE;
 
 	  }
 	else
@@ -1899,30 +1883,28 @@ boolean             forw;
 }
 
 
-
 /* ---------------------------------------------------------------------- */
-/* |  ChRegExp recherche une expression reguliere.                      | */
-/* |  (initialisee dans Recherche ou Remplacement)                      | */
+/* |  ChRegExp	search a regular expression				| */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-boolean             ChRegExp (PtrElement * pElDebut, int *NumCarDebut, PtrElement * pElFin, int *NumCarFin, boolean EnAvant, boolean MajEgalMin, char *expression)
+boolean             ChRegExp (PtrElement * firstEl, int *firstChar, PtrElement * lastEl, int *lastChar, boolean forward, boolean caseEquiv, char *expression)
 
 #else  /* __STDC__ */
-boolean             ChRegExp (pElDebut, NumCarDebut, pElFin, NumCarFin, EnAvant, MajEgalMin, expression)
-PtrElement         *pElDebut;
-int                *NumCarDebut;
-PtrElement         *pElFin;
-int                *NumCarFin;
-boolean             EnAvant;
-boolean             MajEgalMin;
+boolean             ChRegExp (firstEl, firstChar, lastEl, lastChar, forward, caseEquiv, expression)
+PtrElement         *firstEl;
+int                *firstChar;
+PtrElement         *lastEl;
+int                *lastChar;
+boolean             forward;
+boolean             caseEquiv;
 char               *expression;
 
 #endif /* __STDC__ */
 
 {
 
-/*HR */ PtrElement  pEl1, pEl1old;
+   PtrElement	       pEl1, pEl1old;
    PtrElement         *pEl2;
    PtrElement          pElTmp1;
    PtrElement          pElTmp2;
@@ -1931,36 +1913,35 @@ char               *expression;
    int                 posTmp1;
    int                 posTmp2;
    int                *textchar;
-   boolean             trouve;
+   boolean             found;
    boolean             stop;
    struct re_pattern_buffer buf;
    char                fastmap[(1 << BYTEWIDTH)];
-   int                 ResultCompile;
+   int                 compilResult;
    register unsigned char *translate;
    int                 val;
    int                 nbmatched1 = 0;
    int                 nbmatched2 = 0;
-   char                pChaineCherchee[256];
+   char                express[256];
 
-   strcpy (pChaineCherchee, expression);
+   strcpy (express, expression);
 
 
    buf.allocated = 40;
    buf.buffer = (char *) malloc (buf.allocated);
    buf.fastmap = fastmap;
-   buf.translate = MajEgalMin ? upcase : NULL;
+   buf.translate = caseEquiv ? upcase : NULL;
    posTmp2 = 0;
    posTmp1 = 0;
    stop = FALSE;
-   trouve = FALSE;
+   found = FALSE;
    pElTmp1 = pElTmp2 = NULL;
 
-   ResultCompile = ReCompilePattern (pChaineCherchee, strlen (pChaineCherchee),
-				     &buf);
-   if (ResultCompile != 0)
+   compilResult = ReCompilePattern (express, strlen (express), &buf);
+   if (compilResult != 0)
       /* error */
      {
-	switch (ResultCompile)
+	switch (compilResult)
 	      {
 		 case 1:
 		    TtaDisplaySimpleMessage (INFO, LIB, INCORRECT_REG_EXP);
@@ -1993,10 +1974,10 @@ char               *expression;
 	pEl2 = (PtrElement *) malloc (sizeof (PtrElement));
 	textchar = (int *) malloc (sizeof (int));
 
-	pEl1 = *pElDebut;
-	inx1 = *NumCarDebut;
+	pEl1 = *firstEl;
+	inx1 = *firstChar;
 
-	while (!trouve && !stop)	/* (!trouve && pEl1 != NULL) */
+	while (!found && !stop)
 	  {
 	     /* If a fastmap is supplied, skip quickly over characters
 	        that cannot possibly be the start of a match.
@@ -2009,11 +1990,11 @@ char               *expression;
 
 		  if (pEl1 != NULL && pEl1->ElTypeNumber != 1)
 		    {
-		       pEl1 = EnAvant ?
+		       pEl1 = forward ?
 			  FwdSearchTypedElem (pEl1, CharString + 1, NULL) :
 			  BackSearchTypedElem (NextElement (pEl1), CharString + 1, NULL);
 		       if (pEl1 != NULL)
-			  inx1 = EnAvant ? 1 : pEl1->ElTextLength;
+			  inx1 = forward ? 1 : pEl1->ElTextLength;
 		    }
 
 		  GetOrd (textchar, pEl1, inx1);
@@ -2025,12 +2006,12 @@ char               *expression;
 			  goto Lstop;
 		       else
 			 {
-			    if (pEl1 != *pElFin || inx1 != *NumCarFin)
+			    if (pEl1 != *lastEl || inx1 != *lastChar)
 			      {
-				 NextChar (EnAvant, textchar, &pEl1, &inx1);
+				 NextChar (forward, textchar, &pEl1, &inx1);
 				 if (*textchar == -1)
 				   {
-				      pEl1 = EnAvant ?
+				      pEl1 = forward ?
 					 FwdSearchTypedElem (pEl1, CharString + 1, NULL) :
 					 BackSearchTypedElem (NextElement (pEl1), CharString + 1,
 						    NULL);
@@ -2040,7 +2021,7 @@ char               *expression;
 					   break;
 					}
 				      else
-					 inx1 = EnAvant ? 1 : pEl1->ElTextLength;
+					 inx1 = forward ? 1 : pEl1->ElTextLength;
 				      GetOrd (textchar, pEl1, inx1);
 				   }
 				 if (translate)
@@ -2058,45 +2039,36 @@ char               *expression;
 	     if (stop)
 		break;
 	     else
-		/*HR *//*debut */
 	       {
 		  val = ReMatch (&buf, pEl1, inx1, pEl2, &inx2,
-				 *pElFin, *NumCarFin, EnAvant);
+				 *lastEl, *lastChar, forward);
 		  if (inx1 < 0)
-		    {
-		       inx1 = 0;	/* se placer en debut de cet element */
-		    }
+		       /* go to the beginning of the text element */
+		       inx1 = 0;
 	       }
-	     /*HR *//*fin */
 	     /* Propagate error indication if worse than mere failure.  */
-	     /* if (val == -2) */
-	     /* appeler l'affichage d'erreur */
-	     /*HR *//*debut */
 	     if (val == -2)
 	       {
 		  TtaDisplaySimpleMessage (INFO, LIB, NO_MEMORY);
 		  return (TRUE);
 	       }
-	     /*HR *//*fin */
 	     if (val == 1)
 	       {
 		  if (*pEl2 == NULL)
 		     break;
-		  if (EnAvant)
+		  if (forward)
 		    {
-		       trouve = TRUE;	/* une expression a ete trouvee */
+		       found = TRUE;
 		       break;
 		    }
 		  else
-		     /* En arriere, essayer de trouver une expression plus grande */
+		    /* search a larger expression backwards */
 		    {
-		       /*HR *//*debut ajout */
 		       if (inx2 == 0)
 			 {
 			    *pEl2 = pEl1;
 			    inx2 = pEl1->ElTextLength;
 			 }
-		       /*HR *//*fin ajout */
 		       nbmatched1 = nbmatched2;
 		       nbmatched2 = nbmatch (pEl1, inx1, *pEl2, inx2);
 		       if (nbmatched2 > nbmatched1)
@@ -2105,7 +2077,7 @@ char               *expression;
 			    posTmp1 = inx1;
 			    pElTmp2 = *pEl2;
 			    posTmp2 = inx2;
-/***HR***/ nbmatched1 = nbmatched2;
+			    nbmatched1 = nbmatched2;
 			    goto Lcontinue;
 			 }
 		       else
@@ -2119,22 +2091,20 @@ char               *expression;
 		  else
 		    {
 		     Lcontinue:
-		       if (pEl1 != *pElFin || inx1 != *NumCarFin)
+		       if (pEl1 != *lastEl || inx1 != *lastChar)
 			 {
-			    /*HR *//*debut */
 			    pEl1old = pEl1;
-			    /*HR *//*fin */
-			    NextChar (EnAvant, textchar, &pEl1, &inx1);
+			    NextChar (forward, textchar, &pEl1, &inx1);
 			    if (*textchar == -1)
 			      {
-/*HR */ pEl1 = EnAvant ?
+				    pEl1 = forward ?
 				    FwdSearchTypedElem (pEl1old, CharString + 1, NULL) :
 				    BackSearchTypedElem (pEl1old, CharString + 1,
 					       NULL);
 				 if (pEl1 == NULL)
 				    goto Lstop;
 				 else
-				    inx1 = EnAvant ? 1 : pEl1->ElTextLength;
+				    inx1 = forward ? 1 : pEl1->ElTextLength;
 			      }
 			 }
 		       else
@@ -2143,55 +2113,51 @@ char               *expression;
 	       }
 	  }
 
-      Lstop:if (pElTmp1 != NULL && !EnAvant)
+      Lstop:if (pElTmp1 != NULL && !forward)
 	  {
 	     pEl1 = pElTmp1;
 	     inx1 = posTmp1;
 	     *pEl2 = pElTmp2;
 	     inx2 = posTmp2;
-	     trouve = TRUE;
+	     found = TRUE;
 	  }
-	/*HR *//* debut ajout */
-	if (trouve)
-	   /* on a trouve' la chaine cherchee */
-	   /* l'element trouve' est pointe' par pEl1 et inx1 est le rang */
-	   /* dans cet element du 1er caractere de la chaine trouvee */
-	   if (*pElFin != NULL)
-	      /* il faut s'arreter avant l'extremite' du document */
-	      if (pEl1 == *pElFin)
-		 /* la chaine trouvee est dans l'element ou il faut s'arreter */
+	if (found)
+	   /* element found is pointed to by pEl1 and inx1 is the rank of
+	      the first character found in that element */
+	   if (*lastEl != NULL)
+	      /* stop before document end */
+	      if (pEl1 == *lastEl)
+		 /* string found is in the last element of the search domain */
 		{
-		   if (EnAvant)
+		   if (forward)
 		     {
-			if (inx2 - 1 > *NumCarFin)
-			   /* la chaine trouvee se termine au-dela du caractere ou il */
-			   /* faut s'arreter, on fait comme si on n'avait pas trouve' */
-			   trouve = FALSE;
+			if (inx2 - 1 > *lastChar)
+			   /* found string end after the last character of the
+			      search domain */
+			   found = FALSE;
 		     }
 		   else
 		     {
-			if (*NumCarFin > 0)
-			   if (inx1 < *NumCarFin)
-			      trouve = FALSE;
+			if (*lastChar > 0)
+			   if (inx1 < *lastChar)
+			      found = FALSE;
 		     }
 		}
-	      else if (EnAvant)
+	      else if (forward)
 		{
-		   if (ElemIsBefore (*pElFin, pEl1))
-		      /* l'element trouve' est apres l'element de fin, on fait */
-		      /* comme si on n'avait pas trouve' */
-		      trouve = FALSE;
+		   if (ElemIsBefore (*lastEl, pEl1))
+		      /* found element is after the search domain */
+		      found = FALSE;
 		}
-	      else if (ElemIsBefore (pEl1, *pElFin))
-		 trouve = FALSE;
-	/*HR *//* fin ajout */
-	if (trouve)
+	      else if (ElemIsBefore (pEl1, *lastEl))
+		 found = FALSE;
+	if (found)
 	  {
-	     *pElDebut = pEl1;
-	     *NumCarDebut = inx1;
-	     *pElFin = *pEl2;
-	     *NumCarFin = inx2;
+	     *firstEl = pEl1;
+	     *firstChar = inx1;
+	     *lastEl = *pEl2;
+	     *lastChar = inx2;
 	  }
-	return trouve;
+	return found;
      }
 }
