@@ -5203,8 +5203,11 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
 			  while (*cssRule != EOS && *cssRule != ')')
 			    cssRule++;
 			  if (quoted)
-			    /* isolate the file name */
-			    cssRule[-1] = EOS;
+			    {
+			      /* isolate the file name */
+			      cssRule[-1] = EOS;
+			      quoted = FALSE;
+			    }
 			  *cssRule = EOS;
 			}
 		    }
