@@ -346,8 +346,10 @@ static ThotBool FontLoadFile ( FILE *file, FontScript **fontsscript_tab)
 #else /* _GL */
 			      if (!IsXLFDPatterneAFont (&word[2]))
 #endif /* _GL */
-				complete = FALSE;
-			      else
+                       		{
+				   complete = FALSE;
+				}		
+	      		      else
 				{
 				  fontface = TtaStrdup (&word[2]);
 				  fontsscript_tab[script]->family[face]->highlight[style] = fontface;
@@ -393,7 +395,11 @@ static FontScript **FontConfigLoad ()
 #ifdef _WINDOWS
   strcpy (word, "fonts.gl.win");  
 #else /* _WINDOWS */
+#ifdef _MACOS
+  strcpy (word, "fonts.gl.mac");  
+#else /* _MACOS */
   strcpy (word, "fonts.gl");  
+#endif /* _MACOS */  
 #endif /* _WINDOWS */  
 #endif /* _GL */
 
@@ -420,17 +426,25 @@ static FontScript **FontConfigLoad ()
   if (!complete)
     {
       /* try a second font file */
+#ifdef _MACOS
+      strcpy (word1, word);
+      strcat (word1, ".def");
+      strcpy (fname1, fname);
+      strcat (fname1, ".def");
+#else /* _MACOS */
       strcpy (word1, word);
       strcat (word1, ".rd");
       strcpy (fname1, fname);
       strcat (fname1, ".rd");
+#endif /* _MACOS */  
       if (!SearchFile (fname1, 0, name))
 	SearchFile (word1, 2, name);
       /* open the fonts definition file */
       file = TtaReadOpen (name);
       if (file)
-	complete = FontLoadFile (file, fontsscript_tab);
+	 complete = FontLoadFile (file, fontsscript_tab);
     }
+#ifndef _MACOS
   if (!complete)
     {
       /* try a last font file */
@@ -445,6 +459,7 @@ static FontScript **FontConfigLoad ()
       if (file)
 	complete = FontLoadFile (file, fontsscript_tab);
     }
+#endif /* _MACOS */  
 #endif /* _UNIX */
   return fontsscript_tab;
 }

@@ -29,7 +29,6 @@
 //  #include "wx/gdicmn.h"
 //  #include "wx/font.h"
   #include <ft2build.h>
-  #include "Xft.h"
 #endif /* defined(_WX) && !defined(_WINDOWS) */
 
 #if defined(_WX) && defined(_WINDOWS)
@@ -73,19 +72,23 @@ static int GetFontFilenameFromConfig (char script, int family, int highlight,
 int GetFontFilename (char script, int family, int highlight, int size, 
 		     char *filename)
 {
-#if defined(_GTK) || defined(_WX) && !defined(_WINDOWS)
+
+#if defined(_WX) && !defined(_WINDOWS)
+     if (GetFontFilenameFromConfig (script, family, highlight,  size, filename))
+       return 1;
+     return 0;
+#endif /* defined(_WX) && !defined(_WINDOWS) */
+
+#if defined(_GTK)
   XftPattern	*match, *pat;
   XftResult     result;
   char	        *s;
   int           ok = 0;
 
-#ifndef _GL
-  if (!Printing)
-#endif /* _GL */
-    if (GetFontFilenameFromConfig (script, family, highlight,  size, filename))
-      return 1;
-  
-  pat = XftPatternCreate ();
+  if (GetFontFilenameFromConfig (script, family, highlight,  size, filename))
+    return 1;
+
+  pat = XftgPatternCreate ();
   if (!pat)
     return ok;  
   /*Directs Xft to use client-side fonts*/
@@ -397,16 +400,7 @@ int GetFontFilename (char script, int family, int highlight, int size,
   if (script != 'E')
     XftPatternAddDouble (pat, XFT_SIZE, ((double) size) / 10.0);
 
-  /* Returns a pattern more precise that let us load fonts*/
-  /* TODO : pour la version mac, il faut trouver une solution pour utiliser xft sachant que
-   *        la fonction wxGetDisplay() n'existe pas sur mac. Il faudrait donc recuperer le Display* 
-   *        d'une autre facon */
-#if defined _WX && !defined(_MACOS)
-  match = XftFontMatch ((Display*)wxGetDisplay(), 0, pat, &result); 
-#endif /* _WX */
-#ifdef _GTK
   match = XftFontMatch (GDK_DISPLAY(), 0, pat, &result);   
-#endif /* _GTK */
   if (match) 
     {
      if (XftPatternGetString (match, XFT_FILE, 0, &s) == XftResultMatch)
@@ -427,8 +421,7 @@ int GetFontFilename (char script, int family, int highlight, int size,
     }
   XftPatternDestroy (pat); 
   return ok;
-#endif /* #if defined(_GTK) || defined(_WX) && !defined(_WINDOWS) */
-  
+#endif /* defined(_GTK)  */
 
 #ifdef _WINDOWS
   if (GetFontFilenameFromConfig (script, family, highlight,  size, filename))
