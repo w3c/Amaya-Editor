@@ -1,0 +1,471 @@
+cd ..
+cp -p Amaya/thotlib/document/docs.c.grif Amaya/thotlib/document/docs.c
+cp -p Amaya/amaya/HTML.S.grif Amaya/amaya/HTML.S
+tar cvbfh 200 - \
+Amaya/amaya/AHTBridge.c\
+Amaya/amaya/AHTBridge.h\
+Amaya/amaya/AHTCommon.h\
+Amaya/amaya/AHTDialog.h\
+Amaya/amaya/AHTErrors.h\
+Amaya/amaya/AHTFWrite.c\
+Amaya/amaya/AHTFWrite.h\
+Amaya/amaya/AHTMemConv.c\
+Amaya/amaya/AHTMemConv.h\
+Amaya/amaya/AHTURLTools.c\
+Amaya/amaya/AHTURLTools.h\
+Amaya/amaya/EDITORactions.c\
+Amaya/amaya/EDITORactions.h\
+Amaya/amaya/EDITimage.c\
+Amaya/amaya/EDITimage.h\
+Amaya/amaya/EDITstyle.c\
+Amaya/amaya/HTML.S\
+Amaya/amaya/HTML.conf\
+Amaya/amaya/HTMLP.P\
+Amaya/amaya/HTMLactions.c\
+Amaya/amaya/HTMLactions.h\
+Amaya/amaya/HTMLedit.c\
+Amaya/amaya/HTMLedit.h\
+Amaya/amaya/HTMLform.c\
+Amaya/amaya/HTMLform.h\
+Amaya/amaya/HTMLhistory.c\
+Amaya/amaya/HTMLhistory.h\
+Amaya/amaya/HTMLimage.c\
+Amaya/amaya/HTMLimage.h\
+Amaya/amaya/HTMLpresentation.c\
+Amaya/amaya/HTMLsave.c\
+Amaya/amaya/HTMLsave.h\
+Amaya/amaya/HTMLstyle.c\
+Amaya/amaya/HTMLstyle.h\
+Amaya/amaya/HTMLstyleColor.h\
+Amaya/amaya/HTMLtable.c\
+Amaya/amaya/THTDialog.h\
+Amaya/amaya/UIcss.c\
+Amaya/amaya/UIcss.h\
+Amaya/amaya/amaya.h\
+Amaya/amaya/amayamsg.h\
+Amaya/amaya/answer.c\
+Amaya/amaya/answer.h\
+Amaya/amaya/css.c\
+Amaya/amaya/css.h\
+Amaya/amaya/cssInc.h\
+Amaya/amaya/f/AHTBridge_f.h\
+Amaya/amaya/f/AHTFWrite_f.h\
+Amaya/amaya/f/AHTMemConv_f.h\
+Amaya/amaya/f/AHTURLTools_f.h\
+Amaya/amaya/f/EDITORactions_f.h\
+Amaya/amaya/f/EDITimage_f.h\
+Amaya/amaya/f/EDITstyle_f.h\
+Amaya/amaya/f/HTMLactions_f.h\
+Amaya/amaya/f/HTMLedit_f.h\
+Amaya/amaya/f/HTMLform_f.h\
+Amaya/amaya/f/HTMLhistory_f.h\
+Amaya/amaya/f/HTMLimage_f.h\
+Amaya/amaya/f/HTMLpresentation_f.h\
+Amaya/amaya/f/HTMLsave_f.h\
+Amaya/amaya/f/HTMLstyle_f.h\
+Amaya/amaya/f/HTMLtable_f.h\
+Amaya/amaya/f/UIcss_f.h\
+Amaya/amaya/f/answer_f.h\
+Amaya/amaya/f/css_f.h\
+Amaya/amaya/f/html2thot_f.h\
+Amaya/amaya/f/init_f.h\
+Amaya/amaya/f/p2css_f.h\
+Amaya/amaya/f/query_f.h\
+Amaya/amaya/f/trans_f.h\
+Amaya/amaya/f/transparse_f.h\
+Amaya/amaya/html2thot.c\
+Amaya/amaya/html2thot.h\
+Amaya/amaya/init.c\
+Amaya/amaya/init.h\
+Amaya/amaya/p2css.c\
+Amaya/amaya/p2css.h\
+Amaya/amaya/query.c\
+Amaya/amaya/query.h\
+Amaya/amaya/trans.c\
+Amaya/amaya/trans.h\
+Amaya/amaya/transparse.c\
+Amaya/amaya/transparse.h\
+Amaya/batch/APP.LAN \
+Amaya/batch/META.LAN \
+Amaya/batch/PRESEN.LAN \
+Amaya/batch/STRUCT.LAN \
+Amaya/batch/TRANS.LAN \
+Amaya/batch/app.c \
+Amaya/batch/grammar.c \
+Amaya/batch/parser.c \
+Amaya/batch/prs.c \
+Amaya/batch/str.c \
+Amaya/batch/tra.c \
+Amaya/batch/writeapp.c \
+Amaya/batch/writeprs.c \
+Amaya/batch/writestr.c \
+Amaya/batch/writetra.c \
+Amaya/thotlib/base/alloca.c \
+Amaya/thotlib/base/batchmessage.c \
+Amaya/thotlib/base/compilmsg.c \
+Amaya/thotlib/base/config.c \
+Amaya/thotlib/base/dlsym.c \
+Amaya/thotlib/base/fileaccess.c \
+Amaya/thotlib/base/memory.c \
+Amaya/thotlib/base/message.c \
+Amaya/thotlib/base/platform.c \
+Amaya/thotlib/base/registry.c \
+Amaya/thotlib/base/thotmsg.c \
+Amaya/thotlib/content/content.c \
+Amaya/thotlib/content/contentapi.c \
+Amaya/thotlib/content/dictionary.c \
+Amaya/thotlib/content/regexp.c \
+Amaya/thotlib/content/search.c \
+Amaya/thotlib/content/searchref.c \
+Amaya/thotlib/content/word.c \
+Amaya/thotlib/dialogue/appdialogue.c \
+Amaya/thotlib/dialogue/appli.c \
+Amaya/thotlib/dialogue/attrmenu.c \
+Amaya/thotlib/dialogue/browser.c \
+Amaya/thotlib/dialogue/callback.c \
+Amaya/thotlib/dialogue/callbackinit.c \
+Amaya/thotlib/dialogue/closedoc.c \
+Amaya/thotlib/dialogue/colors.c \
+Amaya/thotlib/dialogue/context.c \
+Amaya/thotlib/dialogue/createdoc.c \
+Amaya/thotlib/dialogue/creationmenu.c \
+Amaya/thotlib/dialogue/font.c \
+Amaya/thotlib/dialogue/geom.c \
+Amaya/thotlib/dialogue/input.c \
+Amaya/thotlib/dialogue/interface.c \
+Amaya/thotlib/dialogue/keyboards.c \
+Amaya/thotlib/dialogue/lookup.c \
+Amaya/thotlib/dialogue/modiftype.c \
+Amaya/thotlib/dialogue/opendoc.c \
+Amaya/thotlib/dialogue/openview.c \
+Amaya/thotlib/dialogue/picturemenu.c \
+Amaya/thotlib/dialogue/presentmenu.c \
+Amaya/thotlib/dialogue/printmenu.c \
+Amaya/thotlib/dialogue/quit.c \
+Amaya/thotlib/dialogue/savedoc.c \
+Amaya/thotlib/dialogue/searchmenu.c \
+Amaya/thotlib/dialogue/searchmenustr.c \
+Amaya/thotlib/dialogue/selectmenu.c \
+Amaya/thotlib/dialogue/visibility.c \
+Amaya/thotlib/dialogue/zoom.c \
+Amaya/thotlib/document/docs.c \
+Amaya/thotlib/document/documentapi.c \
+Amaya/thotlib/document/externalref.c \
+Amaya/thotlib/document/language.c \
+Amaya/thotlib/document/readpivot.c \
+Amaya/thotlib/document/readprs.c \
+Amaya/thotlib/document/readstr.c \
+Amaya/thotlib/document/readtra.c \
+Amaya/thotlib/document/schemas.c \
+Amaya/thotlib/document/schemastr.c \
+Amaya/thotlib/document/schtrad.c \
+Amaya/thotlib/document/translation.c \
+Amaya/thotlib/document/views.c \
+Amaya/thotlib/document/writepivot.c \
+Amaya/thotlib/edition/applicationapi.c \
+Amaya/thotlib/edition/checkermenu.c \
+Amaya/thotlib/edition/editcommands.c \
+Amaya/thotlib/edition/loaddocument.c \
+Amaya/thotlib/edition/print.c \
+Amaya/thotlib/edition/scroll.c \
+Amaya/thotlib/edition/selectionapi.c \
+Amaya/thotlib/edition/spellchecker.c \
+Amaya/thotlib/edition/structcommands.c \
+Amaya/thotlib/edition/structcreation.c \
+Amaya/thotlib/edition/structmodif.c \
+Amaya/thotlib/edition/structselect.c \
+Amaya/thotlib/edition/textcommands.c \
+Amaya/thotlib/edition/unstructchange.c \
+Amaya/thotlib/edition/viewcommands.c \
+Amaya/thotlib/image/abspictures.c \
+Amaya/thotlib/image/epshandler.c \
+Amaya/thotlib/image/gifhandler.c \
+Amaya/thotlib/image/jpeghandler.c \
+Amaya/thotlib/image/picture.c \
+Amaya/thotlib/image/pictureapi.c \
+Amaya/thotlib/image/pnghandler.c \
+Amaya/thotlib/image/xbmhandler.c \
+Amaya/thotlib/image/xpmcrbuffri.c \
+Amaya/thotlib/image/xpmcrbuffrp.c \
+Amaya/thotlib/image/xpmcrdatafri.c \
+Amaya/thotlib/image/xpmcrdatafrp.c \
+Amaya/thotlib/image/xpmcreate.c \
+Amaya/thotlib/image/xpmcrifrbuf.c \
+Amaya/thotlib/image/xpmcrifrdata.c \
+Amaya/thotlib/image/xpmcrpfrbuf.c \
+Amaya/thotlib/image/xpmcrpfrdata.c \
+Amaya/thotlib/image/xpmdata.c \
+Amaya/thotlib/image/xpmhandler.c \
+Amaya/thotlib/image/xpmhashtable.c \
+Amaya/thotlib/image/xpmmisc.c \
+Amaya/thotlib/image/xpmparse.c \
+Amaya/thotlib/image/xpmrdftodata.c \
+Amaya/thotlib/image/xpmrdftoi.c \
+Amaya/thotlib/image/xpmrdftop.c \
+Amaya/thotlib/image/xpmrgb.c \
+Amaya/thotlib/internals/f/absboxes_f.h \
+Amaya/thotlib/internals/f/abspictures_f.h \
+Amaya/thotlib/internals/f/alloca_f.h \
+Amaya/thotlib/internals/f/appdialogue_f.h \
+Amaya/thotlib/internals/f/appli_f.h \
+Amaya/thotlib/internals/f/applicationapi_f.h \
+Amaya/thotlib/internals/f/attributeapi_f.h \
+Amaya/thotlib/internals/f/attributes_f.h \
+Amaya/thotlib/internals/f/attrmenu_f.h \
+Amaya/thotlib/internals/f/attrpresent_f.h \
+Amaya/thotlib/internals/f/boxlocate_f.h \
+Amaya/thotlib/internals/f/boxmoves_f.h \
+Amaya/thotlib/internals/f/boxparams_f.h \
+Amaya/thotlib/internals/f/boxpositions_f.h \
+Amaya/thotlib/internals/f/boxrelations_f.h \
+Amaya/thotlib/internals/f/boxselection_f.h \
+Amaya/thotlib/internals/f/browser_f.h \
+Amaya/thotlib/internals/f/buildboxes_f.h \
+Amaya/thotlib/internals/f/buildlines_f.h \
+Amaya/thotlib/internals/f/callback_f.h \
+Amaya/thotlib/internals/f/callbackinit_f.h \
+Amaya/thotlib/internals/f/changeabsbox_f.h \
+Amaya/thotlib/internals/f/changepresent_f.h \
+Amaya/thotlib/internals/f/checkermenu_f.h \
+Amaya/thotlib/internals/f/closedoc_f.h \
+Amaya/thotlib/internals/f/colors_f.h \
+Amaya/thotlib/internals/f/compilmsg_f.h \
+Amaya/thotlib/internals/f/config_f.h \
+Amaya/thotlib/internals/f/content_f.h \
+Amaya/thotlib/internals/f/contentapi_f.h \
+Amaya/thotlib/internals/f/context_f.h \
+Amaya/thotlib/internals/f/createabsbox_f.h \
+Amaya/thotlib/internals/f/createdoc_f.h \
+Amaya/thotlib/internals/f/createpages_f.h \
+Amaya/thotlib/internals/f/creationmenu_f.h \
+Amaya/thotlib/internals/f/dictionary_f.h \
+Amaya/thotlib/internals/f/displaybox_f.h \
+Amaya/thotlib/internals/f/displayselect_f.h \
+Amaya/thotlib/internals/f/dlsym_f.h \
+Amaya/thotlib/internals/f/documentapi_f.h \
+Amaya/thotlib/internals/f/editcommands_f.h \
+Amaya/thotlib/internals/f/edition_f.h \
+Amaya/thotlib/internals/f/epshandler_f.h \
+Amaya/thotlib/internals/f/exceptions_f.h \
+Amaya/thotlib/internals/f/externalref_f.h \
+Amaya/thotlib/internals/f/fileaccess_f.h \
+Amaya/thotlib/internals/f/font_f.h \
+Amaya/thotlib/internals/f/frame_f.h \
+Amaya/thotlib/internals/f/genericdriver_f.h \
+Amaya/thotlib/internals/f/geom_f.h \
+Amaya/thotlib/internals/f/gifhandler_f.h \
+Amaya/thotlib/internals/f/hyphen_f.h \
+Amaya/thotlib/internals/f/inites_f.h \
+Amaya/thotlib/internals/f/initpses_f.h \
+Amaya/thotlib/internals/f/input_f.h \
+Amaya/thotlib/internals/f/interface_f.h \
+Amaya/thotlib/internals/f/jpeghandler_f.h \
+Amaya/thotlib/internals/f/keyboards_f.h \
+Amaya/thotlib/internals/f/language_f.h \
+Amaya/thotlib/internals/f/loaddocument_f.h \
+Amaya/thotlib/internals/f/lookup_f.h \
+Amaya/thotlib/internals/f/memory_f.h \
+Amaya/thotlib/internals/f/message_f.h \
+Amaya/thotlib/internals/f/modiftype_f.h \
+Amaya/thotlib/internals/f/opendoc_f.h \
+Amaya/thotlib/internals/f/openview_f.h \
+Amaya/thotlib/internals/f/pagecommands_f.h \
+Amaya/thotlib/internals/f/paginate_f.h \
+Amaya/thotlib/internals/f/picture_f.h \
+Amaya/thotlib/internals/f/pictureapi_f.h \
+Amaya/thotlib/internals/f/picturemenu_f.h \
+Amaya/thotlib/internals/f/platform_f.h \
+Amaya/thotlib/internals/f/pnghandler_f.h \
+Amaya/thotlib/internals/f/presentationapi_f.h \
+Amaya/thotlib/internals/f/presentdriver_f.h \
+Amaya/thotlib/internals/f/presentmenu_f.h \
+Amaya/thotlib/internals/f/presrules_f.h \
+Amaya/thotlib/internals/f/presvariables_f.h \
+Amaya/thotlib/internals/f/print_f.h \
+Amaya/thotlib/internals/f/printmenu_f.h \
+Amaya/thotlib/internals/f/pschemaapi_f.h \
+Amaya/thotlib/internals/f/psdisplay_f.h \
+Amaya/thotlib/internals/f/quit_f.h \
+Amaya/thotlib/internals/f/readpivot_f.h \
+Amaya/thotlib/internals/f/readprs_f.h \
+Amaya/thotlib/internals/f/readstr_f.h \
+Amaya/thotlib/internals/f/readtra_f.h \
+Amaya/thotlib/internals/f/referenceapi_f.h \
+Amaya/thotlib/internals/f/references_f.h \
+Amaya/thotlib/internals/f/regexp_f.h \
+Amaya/thotlib/internals/f/registry_f.h \
+Amaya/thotlib/internals/f/savedoc_f.h \
+Amaya/thotlib/internals/f/schemas_f.h \
+Amaya/thotlib/internals/f/schemastr_f.h \
+Amaya/thotlib/internals/f/schtrad_f.h \
+Amaya/thotlib/internals/f/scroll_f.h \
+Amaya/thotlib/internals/f/search_f.h \
+Amaya/thotlib/internals/f/searchmenu_f.h \
+Amaya/thotlib/internals/f/searchmenustr_f.h \
+Amaya/thotlib/internals/f/searchref_f.h \
+Amaya/thotlib/internals/f/selectionapi_f.h \
+Amaya/thotlib/internals/f/selectmenu_f.h \
+Amaya/thotlib/internals/f/specificdriver_f.h \
+Amaya/thotlib/internals/f/spellchecker_f.h \
+Amaya/thotlib/internals/f/structcreation_f.h \
+Amaya/thotlib/internals/f/structmodif_f.h \
+Amaya/thotlib/internals/f/structschema_f.h \
+Amaya/thotlib/internals/f/structselect_f.h \
+Amaya/thotlib/internals/f/textcommands_f.h \
+Amaya/thotlib/internals/f/thotmsg_f.h \
+Amaya/thotlib/internals/f/translation_f.h \
+Amaya/thotlib/internals/f/tree_f.h \
+Amaya/thotlib/internals/f/treeapi_f.h \
+Amaya/thotlib/internals/f/unstructchange_f.h \
+Amaya/thotlib/internals/f/unstructlocate_f.h \
+Amaya/thotlib/internals/f/viewapi_f.h \
+Amaya/thotlib/internals/f/viewcommands_f.h \
+Amaya/thotlib/internals/f/views_f.h \
+Amaya/thotlib/internals/f/visibility_f.h \
+Amaya/thotlib/internals/f/windowdisplay_f.h \
+Amaya/thotlib/internals/f/word_f.h \
+Amaya/thotlib/internals/f/writepivot_f.h \
+Amaya/thotlib/internals/f/xbmhandler_f.h \
+Amaya/thotlib/internals/f/xpmcrbuffri_f.h \
+Amaya/thotlib/internals/f/xpmcrbuffrp_f.h \
+Amaya/thotlib/internals/f/xpmcrdatafri_f.h \
+Amaya/thotlib/internals/f/xpmcrdatafrp_f.h \
+Amaya/thotlib/internals/f/xpmcreate_f.h \
+Amaya/thotlib/internals/f/xpmcrifrbuf_f.h \
+Amaya/thotlib/internals/f/xpmcrifrdata_f.h \
+Amaya/thotlib/internals/f/xpmcrpfrbuf_f.h \
+Amaya/thotlib/internals/f/xpmcrpfrdata_f.h \
+Amaya/thotlib/internals/f/xpmdata_f.h \
+Amaya/thotlib/internals/f/xpmhandler_f.h \
+Amaya/thotlib/internals/f/xpmhashtable_f.h \
+Amaya/thotlib/internals/f/xpmmisc_f.h \
+Amaya/thotlib/internals/f/xpmparse_f.h \
+Amaya/thotlib/internals/f/xpmrdftodata_f.h \
+Amaya/thotlib/internals/f/xpmrdftoi_f.h \
+Amaya/thotlib/internals/f/xpmrdftop_f.h \
+Amaya/thotlib/internals/f/xpmrgb_f.h \
+Amaya/thotlib/internals/f/zoom_f.h \
+Amaya/thotlib/internals/h/APP.h \
+Amaya/thotlib/internals/h/PRESEN.h \
+Amaya/thotlib/internals/h/STRUCT.h \
+Amaya/thotlib/internals/h/SelectRestruct.h \
+Amaya/thotlib/internals/h/TRANS.h \
+Amaya/thotlib/internals/h/annmsg.h \
+Amaya/thotlib/internals/h/appdialogue.h \
+Amaya/thotlib/internals/h/appmsg.h \
+Amaya/thotlib/internals/h/colorpalette.h \
+Amaya/thotlib/internals/h/compilmsg.h \
+Amaya/thotlib/internals/h/constcorr.h \
+Amaya/thotlib/internals/h/constgrm.h \
+Amaya/thotlib/internals/h/constint.h \
+Amaya/thotlib/internals/h/constmedia.h \
+Amaya/thotlib/internals/h/constmenu.h \
+Amaya/thotlib/internals/h/constmot.h \
+Amaya/thotlib/internals/h/constpiv.h \
+Amaya/thotlib/internals/h/constprs.h \
+Amaya/thotlib/internals/h/conststr.h \
+Amaya/thotlib/internals/h/consttra.h \
+Amaya/thotlib/internals/h/copyright.xbm \
+Amaya/thotlib/internals/h/corrmenu.h \
+Amaya/thotlib/internals/h/corrmsg.h \
+Amaya/thotlib/internals/h/dictionary.h \
+Amaya/thotlib/internals/h/epsflogo.h \
+Amaya/thotlib/internals/h/frame.h \
+Amaya/thotlib/internals/h/grmmsg.h \
+Amaya/thotlib/internals/h/logowindow.h \
+Amaya/thotlib/internals/h/lost.h \
+Amaya/thotlib/internals/h/lost.xpm \
+Amaya/thotlib/internals/h/menuaction.h \
+Amaya/thotlib/internals/h/modif.h \
+Amaya/thotlib/internals/h/palette.h \
+Amaya/thotlib/internals/h/pattern.h \
+Amaya/thotlib/internals/h/picture.h \
+Amaya/thotlib/internals/h/printmsg.h \
+Amaya/thotlib/internals/h/prsmsg.h \
+Amaya/thotlib/internals/h/rgbtab.h \
+Amaya/thotlib/internals/h/simx.h \
+Amaya/thotlib/internals/h/stdlogo.h \
+Amaya/thotlib/internals/h/storage.h \
+Amaya/thotlib/internals/h/strmsg.h \
+Amaya/thotlib/internals/h/system.h \
+Amaya/thotlib/internals/h/thot_key.h \
+Amaya/thotlib/internals/h/thotcolor.h \
+Amaya/thotlib/internals/h/thotdir.h \
+Amaya/thotlib/internals/h/thotfile.h \
+Amaya/thotlib/internals/h/thotkey.h \
+Amaya/thotlib/internals/h/thotmsg.h \
+Amaya/thotlib/internals/h/thotpattern.h \
+Amaya/thotlib/internals/h/tramsg.h \
+Amaya/thotlib/internals/h/transform.h \
+Amaya/thotlib/internals/h/typecorr.h \
+Amaya/thotlib/internals/h/typegrm.h \
+Amaya/thotlib/internals/h/typeint.h \
+Amaya/thotlib/internals/h/typemedia.h \
+Amaya/thotlib/internals/h/typeprs.h \
+Amaya/thotlib/internals/h/typestr.h \
+Amaya/thotlib/internals/h/typetra.h \
+Amaya/thotlib/internals/h/typmsg.h \
+Amaya/thotlib/internals/h/xpm.h \
+Amaya/thotlib/internals/h/xpmP.h \
+Amaya/thotlib/internals/var/analsynt_tv.h \
+Amaya/thotlib/internals/var/appdialogue_tv.h \
+Amaya/thotlib/internals/var/appevents_tv.h \
+Amaya/thotlib/internals/var/boxes_tv.h \
+Amaya/thotlib/internals/var/compil_tv.h \
+Amaya/thotlib/internals/var/creation_tv.h \
+Amaya/thotlib/internals/var/edit_tv.h \
+Amaya/thotlib/internals/var/font_tv.h \
+Amaya/thotlib/internals/var/frame_tv.h \
+Amaya/thotlib/internals/var/modif_tv.h \
+Amaya/thotlib/internals/var/page_tv.h \
+Amaya/thotlib/internals/var/picture_tv.h \
+Amaya/thotlib/internals/var/platform_tv.h \
+Amaya/thotlib/internals/var/select_tv.h \
+Amaya/thotlib/internals/var/spell_tv.h \
+Amaya/thotlib/internals/var/thotcolor_tv.h \
+Amaya/thotlib/internals/var/thotpalette_tv.h \
+Amaya/thotlib/internals/var/word_tv.h \
+Amaya/thotlib/presentation/attrpresent.c \
+Amaya/thotlib/presentation/changepresent.c \
+Amaya/thotlib/presentation/genericdriver.c \
+Amaya/thotlib/presentation/presentationapi.c \
+Amaya/thotlib/presentation/presentdriver.c \
+Amaya/thotlib/presentation/presrules.c \
+Amaya/thotlib/presentation/presvariables.c \
+Amaya/thotlib/presentation/pschemaapi.c \
+Amaya/thotlib/presentation/specificdriver.c \
+Amaya/thotlib/tree/attributeapi.c \
+Amaya/thotlib/tree/attributes.c \
+Amaya/thotlib/tree/exceptions.c \
+Amaya/thotlib/tree/pagecommands.c \
+Amaya/thotlib/tree/paginate.c \
+Amaya/thotlib/tree/referenceapi.c \
+Amaya/thotlib/tree/references.c \
+Amaya/thotlib/tree/structschema.c \
+Amaya/thotlib/tree/tree.c \
+Amaya/thotlib/tree/treeapi.c \
+Amaya/thotlib/view/absboxes.c \
+Amaya/thotlib/view/boxlocate.c \
+Amaya/thotlib/view/boxmoves.c \
+Amaya/thotlib/view/boxparams.c \
+Amaya/thotlib/view/boxpositions.c \
+Amaya/thotlib/view/boxrelations.c \
+Amaya/thotlib/view/boxselection.c \
+Amaya/thotlib/view/buildboxes.c \
+Amaya/thotlib/view/buildlines.c \
+Amaya/thotlib/view/changeabsbox.c \
+Amaya/thotlib/view/createabsbox.c \
+Amaya/thotlib/view/createpages.c \
+Amaya/thotlib/view/displaybox.c \
+Amaya/thotlib/view/displayselect.c \
+Amaya/thotlib/view/frame.c \
+Amaya/thotlib/view/hyphen.c \
+Amaya/thotlib/view/inites.c \
+Amaya/thotlib/view/initpses.c \
+Amaya/thotlib/view/psdisplay.c \
+Amaya/thotlib/view/unstructlocate.c \
+Amaya/thotlib/view/viewapi.c \
+Amaya/thotlib/view/windowdisplay.c \
+ | gzip -9  > /tahiti/thottape/sources.tar.gz
+cp -p Amaya/thotlib/document/docs.c.new Amaya/thotlib/document/docs.c
+cp -p Amaya/amaya/HTML.S.new Amaya/amaya/HTML.S
