@@ -337,17 +337,17 @@ int                 y;
 
 
 /*----------------------------------------------------------------------
-   SurLaPolyLine teste qu'un point x,y est sur un segment de la    
+   GetPolylinePoint teste qu'un point x,y est sur un segment de la    
    boi^te polyline.                                        
    Si oui, retourne l'adresse de la boi^te correspondante et le    
    point de contro^le se'lectionne' (0 pour toute la boi^te).      
    sinon, la valeur NULL.                                          
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrBox     SurLaPolyLine (PtrAbstractBox pAb, int x, int y, int *pointselect)
+static PtrBox     GetPolylinePoint (PtrAbstractBox pAb, int x, int y, int *pointselect)
 #else  /* __STDC__ */
-static PtrBox     SurLaPolyLine (pAb, x, y, pointselect)
-PtrAbstractBox             pAb;
+static PtrBox     GetPolylinePoint (pAb, x, y, pointselect)
+PtrAbstractBox      pAb;
 int                 x;
 int                 y;
 int                *pointselect;
@@ -425,13 +425,13 @@ int                *pointselect;
 }
 
 /*----------------------------------------------------------------------
-   DansLeGraphique indique si le point x,y se trouve a`            
+   InShape indique si le point x,y se trouve a`            
    l'inte'rieur du graphique ou non.                              
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static boolean      DansLeGraphique (PtrAbstractBox pAb, int x, int y)
+static boolean      InShape (PtrAbstractBox pAb, int x, int y)
 #else  /* __STDC__ */
-static boolean      DansLeGraphique (pAb, x, y)
+static boolean      InShape (pAb, x, y)
 PtrAbstractBox             pAb;
 int                 x;
 int                 y;
@@ -880,7 +880,7 @@ int                *pointselect;
 		if (pBox != NULL)
 		   return (pBox);
 		/* le point n'est pas sur un des segments */
-		if (DansLeGraphique (pAb, lowerX, y))
+		if (InShape (pAb, lowerX, y))
 		   return (pAb->AbBox);
 		else
 		   return (pBox);
@@ -888,7 +888,7 @@ int                *pointselect;
 	   else if (pAb->AbLeafType == LtPlyLine && pAb->AbVolume > 2)
 	     {
 		/* La polyline contient au moins un segment */
-		pBox = SurLaPolyLine (pAb, lowerX, y, pointselect);
+		pBox = GetPolylinePoint (pAb, lowerX, y, pointselect);
 		if (pBox != NULL)
 		   return (pBox);
 		/* le point n'est pas sur un des segments */

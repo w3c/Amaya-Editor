@@ -14,15 +14,15 @@ extern boolean ismajuscule ( char *chaine );
 extern boolean iscapital ( char *chaine );
 extern boolean isiso ( char *chaine );
 extern int existmot ( char mot[MAX_WORD_LEN],
-                      PtrDico dico );
+                      PtrDict dico );
 extern int Corr_verifiermot ( char mot[MAX_WORD_LEN],
                               Language langue,
-                              PtrDico dico );
+                              PtrDict dico );
 extern void Corr_ajoutermot ( char mot[MAX_WORD_LEN],
-                              PtrDico * pDico );
+                              PtrDict * pDict );
 extern void Corr_init_correction ( void );
 extern void Corr_proposer ( Language langue,
-                            PtrDico dicodocu );
+                            PtrDict dicodocu );
 extern void param_defauts ( int lettres );
 extern int Corr_Param ( void );
 extern void Corr_remplacermot ( char motorigine[MAX_WORD_LEN],
@@ -34,8 +34,8 @@ extern boolean AUnNombre ( char mot[MAX_CHAR] );
 extern boolean EstUnNombre ( char mot[MAX_CHAR] );
 extern boolean EnRomain ( char mot[MAX_CHAR] );
 extern void Corr_errsuivant ( char mot[MAX_CHAR],
-                              PtrDico dicodocu );
-extern void sauverdicofichier ( PtrDico dicodocu );
+                              PtrDict dicodocu );
+extern void sauverdicofichier ( PtrDict dicodocu );
 
 #else /* __STDC__ */
 
@@ -47,15 +47,15 @@ extern boolean ismajuscule (/* char *chaine */);
 extern boolean iscapital (/* char *chaine */);
 extern boolean isiso (/* char *chaine */);
 extern int existmot (/* char mot[MAX_WORD_LEN],
-                        PtrDico dico */);
+                        PtrDict dico */);
 extern int Corr_verifiermot (/* char mot[MAX_WORD_LEN],
                                 Language langue,
-                                PtrDico dico */);
+                                PtrDict dico */);
 extern void Corr_ajoutermot (/* char mot[MAX_WORD_LEN],
-                                PtrDico * pDico */);
+                                PtrDict * pDict */);
 extern void Corr_init_correction (/* void */);
 extern void Corr_proposer (/* Language langue,
-                              PtrDico dicodocu */);
+                              PtrDict dicodocu */);
 extern void param_defauts (/* int lettres */);
 extern int Corr_Param (/* void */);
 extern void Corr_remplacermot (/* char motorigine[MAX_WORD_LEN],
@@ -67,8 +67,8 @@ extern boolean AUnNombre (/* char mot[MAX_CHAR] */);
 extern boolean EstUnNombre (/* char mot[MAX_CHAR] */);
 extern boolean EnRomain (/* char mot[MAX_CHAR] */);
 extern void Corr_errsuivant (/* char mot[MAX_CHAR],
-                                PtrDico dicodocu */);
-extern void sauverdicofichier (/* PtrDico dicodocu */);
+                                PtrDict dicodocu */);
+extern void sauverdicofichier (/* PtrDict dicodocu */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -178,7 +178,7 @@ int                 number;
    /* Definition de la procedure de retour des dialogues */
    TtaDefineDialogueCallback (ThotCallback);
 
-   Dico_Init ();
+   Dict_Init ();
    ThotInitDisplay (name, 0, 0);
    FontIdentifier ('L', 'H', 0, MenuSize, UnPoint, text, namef1);
    FontIdentifier ('L', 'H', 1, MenuSize, UnPoint, text, namef2);

@@ -44,8 +44,8 @@ static void         InitTypoLanguage ()
      {
 	TypoLangTable[i].LangNom[0] = '\0';
 	TypoLangTable[i].LangAlphabet = 'L';
-	for (j = 0; j < MAX_DICOS; j++)
-	   TypoLangTable[i].LangDico[j] = NULL;
+	for (j = 0; j < MAX_DICTS; j++)
+	   TypoLangTable[i].LangDict[j] = NULL;
 	TypoLangTable[i].LangPattern[0] = '\0';
 	TypoLangTable[i].LangTabPattern.Charge = 0;
      }
@@ -101,8 +101,8 @@ void                InitLanguage ()
      {
 	LangTable[i].LangNom[0] = '\0';
 	LangTable[i].LangAlphabet = 'L';
-	for (j = 0; j < MAX_DICOS; j++)
-	   LangTable[i].LangDico[j] = NULL;
+	for (j = 0; j < MAX_DICTS; j++)
+	   LangTable[i].LangDict[j] = NULL;
 	LangTable[i].LangPattern[0] = '\0';
 	LangTable[i].LangTabPattern.Charge = 0;
      }
@@ -790,5 +790,3 @@ Language            languageId;
    else
       return FALSE;
 }
-
-/* end of module */

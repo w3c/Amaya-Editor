@@ -5,10 +5,7 @@
 /*----------------------------------------------------------------------
    
    Thot Toolkit: Application Program Interface                     
-   --->Dictionnary managment                                       
-   
-   I. Vatton       November 93                     
-   
+   Dictionnary managment                                       
   ----------------------------------------------------------------------*/
 
 #include "thot_sys.h"
@@ -25,7 +22,7 @@
 #include "thotfile.h"
 #include "thotdir.h"
 
-#define MAX_DICOS        2  /* Maximum number of dictionaries related to a given language */
+#define MAX_DICTS        2  /* Maximum number of dictionaries related to a given language */
 #define MAXLIGNE        80  /* Length of a line in the dictionary                         */
 #define MaxDictionaries 15  /* Maximum number of simultaneous dictionaries                */
 
@@ -36,7 +33,7 @@ extern int          FreeEntry;
 static char        *dictPath;	        /* environment variable DICOPAR */
 static boolean      alphabetLoaded;
 static unsigned     reverseCode[NbLtr];    
-static PtrDico      dictTable[MaxDictionaries];
+static PtrDict      dictTable[MaxDictionaries];
 
 unsigned char       Code[256];	/* Alphabet characters */
 
@@ -121,10 +118,10 @@ char               *string;
  * Resolves the common characters for two consecutive words 
  */
 #ifdef __STDC__
-void                Corr_pretraitement (PtrDico dict)
+void                Corr_pretraitement (PtrDict dict)
 #else  /* __STDC__ */
 void                Corr_pretraitement (dict)
-PtrDico             dict;
+PtrDict             dict;
 
 #endif /* __STDC__ */
 {
@@ -171,10 +168,10 @@ PtrDico             dict;
    referenced by pDictionary.                   
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         ReleaseDictionary (PtrDico * pDictionary)
+static void         ReleaseDictionary (PtrDict * pDictionary)
 #else  /* __STDC__ */
 static void         ReleaseDictionary (pDictionary)
-PtrDico            *pDictionary;
+PtrDict            *pDictionary;
 
 #endif /* __STDC__ */
 {
@@ -204,10 +201,10 @@ PtrDico            *pDictionary;
    there is a lack of memory.                                             
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         CreateDictionary (PtrDico * pDictionary, PtrDocument document)
+static void         CreateDictionary (PtrDict * pDictionary, PtrDocument document)
 #else  /* __STDC__ */
 static void         CreateDictionary (pDictionary, document)
-PtrDico            *pDictionary;
+PtrDict            *pDictionary;
 PtrDocument         document;
 
 #endif /* __STDC__ */
@@ -223,21 +220,21 @@ PtrDocument         document;
     {
       /* If a dictionary FILE is loaded but not used, one release it */
       d = 0;
-      while (d < MaxDictionaries && dictTable[d]->DicoDoc == document)
+      while (d < MaxDictionaries && dictTable[d]->DictDoc == document)
 	d++;
       
-      if (d == MaxDictionaries || dictTable[d]->DicoReadOnly == TRUE)
+      if (d == MaxDictionaries || dictTable[d]->DictReadOnly == TRUE)
 	{
 	  /* Looking for a dictionary FILE */
 	  d = 0;
-	  while (d < MaxDictionaries && dictTable[d]->DicoReadOnly == TRUE)
+	  while (d < MaxDictionaries && dictTable[d]->DictReadOnly == TRUE)
 	    d++;
 	}
 	/* Flushing the dictionary FILE  */
       if (d < MaxDictionaries)	
 	{
 	  TtaDisplayMessage (INFO, TtaGetMessage(LIB, ERR_LOADING_DICO),
-			     dictTable[d]->DicoNom);
+			     dictTable[d]->DictNom);
 	  ReleaseDictionary (&dictTable[d]);
 	  
 	}
@@ -249,7 +246,7 @@ PtrDocument         document;
       /* Getting a descriptor of a dictionary */
       GetDictionary (&dictTable[d]);
       *pDictionary = dictTable[d];
-      (*pDictionary)->DicoDoc = document;
+      (*pDictionary)->DictDoc = document;
     }
 }				/*CreateDictionary */
 
@@ -259,10 +256,10 @@ PtrDocument         document;
    a pointer (pDictionary) referencing its descriptor or NULL    
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         SearchDictName (PtrDico * pDictionary, char *dictName, char *dictDirectory)
+static void         SearchDictName (PtrDict * pDictionary, char *dictName, char *dictDirectory)
 #else  /* __STDC__ */
 static void         SearchDictName (pDictionary, dictName, dictDirectory)
-PtrDico            *pDictionary;
+PtrDict            *pDictionary;
 char               *dictName;
 char               *dictDirectory;
 
@@ -275,8 +272,8 @@ char               *dictDirectory;
    d = 0;
    while (d < MaxDictionaries && (dictTable[d] != NULL) && (!found))
      {
-	found = (strcmp (dictTable[d]->DicoNom, dictName) == 0
-		  && strcmp (dictTable[d]->DicoDirectory, dictDirectory) == 0);
+	found = (strcmp (dictTable[d]->DictNom, dictName) == 0
+		  && strcmp (dictTable[d]->DictDirectory, dictDirectory) == 0);
 	d++;
      }
    if (found)
@@ -333,11 +330,11 @@ char               *dictDirectory;
    PROCEDURE PORTABLE ON VAX                                               
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          Create (FILE * dictFile, PtrDico dict)
+static int          Create (FILE * dictFile, PtrDict dict)
 #else  /* __STDC__ */
 static int          Create (dictFile, dict)
 FILE               *dictFile;
-PtrDico             dict;
+PtrDict             dict;
 
 #endif /* __STDC__ */
 {
@@ -365,7 +362,7 @@ PtrDico             dict;
       BIOreadInteger (dictFile, &dict->plgdico[i]);
 
    /* Loaded */
-   dict->DicoCharge = TRUE;
+   dict->DictCharge = TRUE;
    return (1);			/* OK */
 }				/* end of Create */
 
@@ -375,11 +372,11 @@ PtrDico             dict;
    Returns 1 if a dictionary is loaded else returs 0                 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int          Load (FILE * dictFile, PtrDico dict)
+static int          Load (FILE * dictFile, PtrDict dict)
 #else  /* __STDC__ */
 static int          Load (dictFile, dict)
 FILE               *dictFile;
-PtrDico             dict;
+PtrDict             dict;
 
 #endif /* __STDC__ */
 {
@@ -425,7 +422,7 @@ PtrDico             dict;
 	      {
 		/* impossible to load the dictionary */
 		TtaDisplayMessage (INFO, TtaGetMessage(LIB, ERR_LOADING_DICO),
-				   dict->DicoNom);
+				   dict->DictNom);
 		/* Release the dictionary */
 		ReleaseDictionary (&dict);	/* => dict = nil */
 		return (0);
@@ -440,7 +437,7 @@ PtrDico             dict;
       dict->plgdico[i] = last_word;
    dict->chaine[nbChar] = '\0';
    dict->nbcars = nbChar;
-   dict->DicoCharge = TRUE;
+   dict->DictCharge = TRUE;
    return (1);
 }				/*Load */
 
@@ -452,10 +449,10 @@ PtrDico             dict;
    retourne dans pDictionary le pointeur sur son descripteur ou NULL        
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PrepareDictionary (PtrDico * pDictionary, char *dictName, PtrDocument document, char *dictDirectory, Language lang, boolean readonly, boolean treated, boolean toTreat)
+static void         PrepareDictionary (PtrDict * pDictionary, char *dictName, PtrDocument document, char *dictDirectory, Language lang, boolean readonly, boolean treated, boolean toTreat)
 #else  /* __STDC__ */
 static void         PrepareDictionary (pDictionary, dictName, document, dictDirectory, lang, readonly, treated, toTreat)
-PtrDico            *pDictionary;
+PtrDict            *pDictionary;
 char               *dictName;
 PtrDocument         document;
 char               *dictDirectory;
@@ -470,7 +467,7 @@ boolean             toTreat;
    boolean             new = FALSE;
    boolean             ret;
    FILE               *dictFile; 
-   PtrDico             pdict;
+   PtrDict             pdict;
    int                 i, im, ic;
 
    *pDictionary = NULL;
@@ -522,11 +519,11 @@ boolean             toTreat;
      }
 
    pdict = *pDictionary;
-   pdict->DicoDoc = document;
-   pdict->DicoLangue = lang;
-   strcpy (pdict->DicoDirectory, dictDirectory);
-   strcpy (pdict->DicoNom, dictName);
-   pdict->DicoReadOnly = readonly;
+   pdict->DictDoc = document;
+   pdict->DictLangue = lang;
+   strcpy (pdict->DictDirectory, dictDirectory);
+   strcpy (pdict->DictNom, dictName);
+   pdict->DictReadOnly = readonly;
 
    /* calculation of the memory size needed by the dictionary */
    if (new == FALSE)
@@ -616,7 +613,7 @@ boolean             toTreat;
 
 
 /*----------------------------------------------------------------------
-   LoadDico                                                         
+   LoadDict                                                         
    Returns -1 if the dictionary can't be loaded.                     
    0 if the dictionary was already loaded.                  
    1 if the dictionary is loaded.                           
@@ -625,11 +622,11 @@ boolean             toTreat;
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-static int          LoadDico (PtrDico * pDictionary, Language lang, PtrDocument document, char *dictName, char *dictDirectory, boolean readonly, boolean toCreate)
+static int          LoadDict (PtrDict * pDictionary, Language lang, PtrDocument document, char *dictName, char *dictDirectory, boolean readonly, boolean toCreate)
 
 #else  /* __STDC__ */
-static int          LoadDico (pDictionary, lang, document, dictName, dictDirectory, readonly, toCreate)
-PtrDico            *pDictionary;
+static int          LoadDict (pDictionary, lang, document, dictName, dictDirectory, readonly, toCreate)
+PtrDict            *pDictionary;
 Language            lang;
 PtrDocument         document;
 char               *dictName;
@@ -640,7 +637,7 @@ boolean             toCreate;
 #endif /* __STDC__ */
 
 {
-   PtrDico             pdict;
+   PtrDict             pdict;
    int                 i;
    int                 ret = 0;
 
@@ -693,29 +690,29 @@ boolean             toCreate;
    else
       /* The dictionary was already loaded by anther document */
       /* just update the dictionary context */
-      pdict->DicoDoc = document;
+      pdict->DictDoc = document;
 
    *pDictionary = pdict;
    return ret;
-}				/*LoadDico */
+}				/*LoadDict */
 
 
 /*----------------------------------------------------------------------
-   Corr_ReloadDico: reload a dictionary                            
+   Corr_ReloadDict: reload a dictionary                            
    returns TRUE if the FILE dictionary is found and well loaded       
   ----------------------------------------------------------------------*/
 
 #ifdef __STDC__
-boolean             Corr_ReloadDico (PtrDico * pDictionary)
+boolean             Corr_ReloadDict (PtrDict * pDictionary)
 
 #else  /* __STDC__ */
-boolean             Corr_ReloadDico (pDictionary)
-PtrDico            *pDictionary;
+boolean             Corr_ReloadDict (pDictionary)
+PtrDict            *pDictionary;
 
 #endif /* __STDC__ */
 
 {
-   PtrDico             pdict;
+   PtrDict             pdict;
    PtrDocument         document;
    int                 d;
    Name                dictName;
@@ -734,8 +731,8 @@ PtrDico            *pDictionary;
 	if (dictTable[d] == pdict)
 	  {
 	     /* Getting information about the dictionary */
-	     strcpy (dictName, pdict->DicoNom);
-	     document = pdict->DicoDoc;
+	     strcpy (dictName, pdict->DictNom);
+	     document = pdict->DictDoc;
 	     /* Release the string and the list of words ... */
 	     FreeStringInDict (pdict);
 	     FreeDictionary (pdict);
@@ -744,19 +741,19 @@ PtrDico            *pDictionary;
 	  }
      }
 
-   d = LoadDico (pDictionary, '\0', document, dictName,
+   d = LoadDict (pDictionary, '\0', document, dictName,
 		 document->DocDirectory, FALSE, TRUE);
    if (d == -1)
       return (FALSE);
 
    return (TRUE);
-}				/*Corr_ReloadDico */
+}				/*Corr_ReloadDict */
 
 
 /*----------------------------------------------------------------------
-   Dico_Init                                                       
+   Dict_Init                                                       
   ----------------------------------------------------------------------*/
-void                Dico_Init ()
+void                Dict_Init ()
 {
    int                 i;
 
@@ -774,7 +771,7 @@ void                Dico_Init ()
    alphabetLoaded = Corr_alphabet ();
    if (alphabetLoaded == FALSE)
       TtaDisplaySimpleMessage (INFO, LIB, MISSING_ALPHABET);
-}				/* end proc Dico_Init */
+}				/* end proc Dict_Init */
 
 
 /*----------------------------------------------------------------------
@@ -800,10 +797,10 @@ boolean             ToCreate;
 
    dicodoc = (char *) TtaGetEnvString ("DICODOC");
    if (dicodoc != NULL)
-      (void) LoadDico ((PtrDico *) pDictionary, 0, document, dicodoc,
+      (void) LoadDict ((PtrDict *) pDictionary, 0, document, dicodoc,
                         document->DocDirectory, FALSE, ToCreate);
    else
-      (void) LoadDico ((PtrDico *) pDictionary, 0, document, document->DocDName, document->DocDirectory, FALSE, ToCreate);
+      (void) LoadDict ((PtrDict *) pDictionary, 0, document, document->DocDName, document->DocDirectory, FALSE, ToCreate);
    return (*pDictionary != '\0');
 }				/*TtaLoadDocumentDictionary */
 
@@ -834,7 +831,7 @@ Language            languageId;
 
 {
    int                 lang;
-   PtrDico             dictPtr;
+   PtrDict             dictPtr;
    int                 ret;
 
    /* If the variable dictPath is not loaded -> do nothig */
@@ -844,29 +841,29 @@ Language            languageId;
    ret = 1;
    lang = (int) languageId;
    /* Verifies if the main dictionary is already loaded */
-   if (LangTable[lang].LangDico[0] == NULL)
+   if (LangTable[lang].LangDict[0] == NULL)
      {
 	/* Loading the main dictionary */
 	if (LangTable[lang].LangPrincipal[0] != '\0')
 	  {
-	     ret = LoadDico (&dictPtr, lang, NULL, LangTable[lang].LangPrincipal, dictPath, TRUE, FALSE);
+	     ret = LoadDict (&dictPtr, lang, NULL, LangTable[lang].LangPrincipal, dictPath, TRUE, FALSE);
 	     if (ret > 0)
-		LangTable[lang].LangDico[0] = (Dictionary) dictPtr;
+		LangTable[lang].LangDict[0] = (Dictionary) dictPtr;
 	  }
      }
 
    /* Verifies if the secondary dictionary is already laded */
-   if (LangTable[lang].LangDico[1] == NULL)
+   if (LangTable[lang].LangDict[1] == NULL)
      {
 	/* Loading the secondary dictionary */
 	if (LangTable[lang].LangSecondary[0] != '\0')
 	  {
-	     ret = LoadDico (&dictPtr, lang, NULL, LangTable[lang].LangSecondary, dictPath, TRUE, FALSE);
+	     ret = LoadDict (&dictPtr, lang, NULL, LangTable[lang].LangSecondary, dictPath, TRUE, FALSE);
 	     if (ret > 0)
-		LangTable[lang].LangDico[1] = (Dictionary) dictPtr;
+		LangTable[lang].LangDict[1] = (Dictionary) dictPtr;
 	  }
      }
-   return (LangTable[lang].LangDico[0] != NULL || LangTable[lang].LangDico[1] != NULL);
+   return (LangTable[lang].LangDict[0] != NULL || LangTable[lang].LangDict[1] != NULL);
 }				/*TtaLoadLanguageDictionaries */
 
 
@@ -895,7 +892,7 @@ Language            languageId;
 
 {
    int                 lang;
-   PtrDico             dictPtr;
+   PtrDict             dictPtr;
    int                 ret;
 
    /* If the variable dictPath is not loaded -> do nothig */
@@ -905,32 +902,32 @@ Language            languageId;
    ret = 1;
    lang = (int) languageId;
    /* Verifies if the main dictionary is already loaded */
-   if (TypoLangTable[lang].LangDico[0] == NULL)
+   if (TypoLangTable[lang].LangDict[0] == NULL)
      {
 	/* Loading the main dictionary */
 	if (TypoLangTable[lang].LangPrincipal[0] != '\0')
 	  {
-	     ret = LoadDico (&dictPtr, lang, NULL,
+	     ret = LoadDict (&dictPtr, lang, NULL,
 		  TypoLangTable[lang].LangPrincipal, dictPath, TRUE, FALSE);
 	     if (ret > 0)
-		TypoLangTable[lang].LangDico[0] = (Dictionary) dictPtr;
+		TypoLangTable[lang].LangDict[0] = (Dictionary) dictPtr;
 	  }
      }
 
    /* Verifies if the secondary dictionary is already laded */
-   if (TypoLangTable[lang].LangDico[1] == NULL)
+   if (TypoLangTable[lang].LangDict[1] == NULL)
      {
 	/* Loading the secondary dictionary */
 	if (TypoLangTable[lang].LangSecondary[0] != '\0')
 	  {
-	     ret = LoadDico (&dictPtr, lang, NULL,
+	     ret = LoadDict (&dictPtr, lang, NULL,
 		  TypoLangTable[lang].LangSecondary, dictPath, TRUE, FALSE);
 	     if (ret > 0)
-		TypoLangTable[lang].LangDico[1] = (Dictionary) dictPtr;
+		TypoLangTable[lang].LangDict[1] = (Dictionary) dictPtr;
 	  }
      }
-   return (TypoLangTable[lang].LangDico[0] != NULL
-	   || TypoLangTable[lang].LangDico[1] != NULL);
+   return (TypoLangTable[lang].LangDict[0] != NULL
+	   || TypoLangTable[lang].LangDict[1] != NULL);
 }				/*TtaLoadTypoDictionaries */
 
 
@@ -958,10 +955,10 @@ Language            languageId;
 
    i = (int) languageId;
    j = 0;
-   while (LangTable[i].LangDico[j] != NULL && j < MAX_DICOS)
+   while (LangTable[i].LangDict[j] != NULL && j < MAX_DICTS)
      {
-	ReleaseDictionary ((PtrDico *) & LangTable[i].LangDico[j]);
-	LangTable[i].LangDico[j] = NULL;
+	ReleaseDictionary ((PtrDict *) & LangTable[i].LangDict[j]);
+	LangTable[i].LangDict[j] = NULL;
      }
 }				/*TtaUnLoadDictionaries */
 
@@ -990,10 +987,10 @@ Language            languageId;
 
    i = (int) languageId;
    j = 0;
-   while (TypoLangTable[i].LangDico[j] != NULL && j < MAX_DICOS)
+   while (TypoLangTable[i].LangDict[j] != NULL && j < MAX_DICTS)
      {
-	ReleaseDictionary ((PtrDico *) & TypoLangTable[i].LangDico[j]);
-	TypoLangTable[i].LangDico[j] = NULL;
+	ReleaseDictionary ((PtrDict *) & TypoLangTable[i].LangDict[j]);
+	TypoLangTable[i].LangDict[j] = NULL;
      }
 }				/*TtaUnLoadTypoDictionaries */
 
@@ -1031,7 +1028,7 @@ Language            languageId;
 
    /* Loading dictionaries if exist */
    TtaLoadLanguageDictionaries (languageId);
-   return (LangTable[i].LangDico[0]);
+   return (LangTable[i].LangDict[0]);
 }				/*TtaGetPrincipalDictionary */
 
 
@@ -1068,7 +1065,7 @@ Language            languageId;
 
    /* Loading dictionaries if exist */
    TtaLoadTypoDictionaries (languageId);
-   return (TypoLangTable[i].LangDico[0]);
+   return (TypoLangTable[i].LangDict[0]);
 }				/*TtaGetPrincipalTypoDictionary */
 
 
@@ -1102,7 +1099,7 @@ Language            languageId;
 	TtaError (ERR_language_not_found);
 	return NULL;
      }
-   return (LangTable[i].LangDico[1]);
+   return (LangTable[i].LangDict[1]);
 }				/*TtaGetSecondaryDictionary */
 
 
@@ -1136,7 +1133,5 @@ Language            languageId;
 	TtaError (ERR_language_not_found);
 	return NULL;
      }
-   return (TypoLangTable[i].LangDico[1]);
-}				/*TtaGetSecondaryTypoDictionary */
-
-/* end of module */
+   return (TypoLangTable[i].LangDict[1]);
+}

@@ -13,6 +13,7 @@
 #include "app.h"
 #include "typecorr.h"
 
+#include "applicationapi_f.h"
 #include "memory_f.h"
 #include "tree_f.h"
 #include "references_f.h"

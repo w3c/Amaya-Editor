@@ -5,7 +5,7 @@
 #include "typebase.h"
 
 #define MAX_LANGUAGES 20
-#define MAX_DICOS   2  /* nombre max de dictionnaires associes a une langue */
+#define MAX_DICTS        2  /* Maximum number of dictionaries related to a given language */
 
 #define MAX_PATTERN	5000  	/* nbre max de pattern dans une langue */
 #define MAX_LET_PATTERN	13	/* nbre max de lettres dans un pattern +1 */
@@ -39,7 +39,7 @@ struct Langue_Ctl
   char		LangAlphabet;		/* Alphabet associe a la langue */
   char		LangPrincipal[MAX_NAME_LENGTH];	/* Name du dictionnaire principal */
   char		LangSecondary[MAX_NAME_LENGTH];	/* Name du dictionnaire secondaire */
-  Dictionary    LangDico[MAX_DICOS];    /* Pointeurs vers les dictionnaires */
+  Dictionary    LangDict[MAX_DICTS];    /* Pointeurs vers les dictionnaires */
   char		LangPattern[MAX_NAME_LENGTH];	/* Name de la liste de patterns d'hyphenation */
   struct PatternList	LangTabPattern;		/* Pointeur sur la liste de patterns */
 };
@@ -47,14 +47,14 @@ struct Langue_Ctl
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern boolean TtaLoadDocumentDictionary ( PtrDocument document, int *pDico, boolean ToCreate );
+extern boolean TtaLoadDocumentDictionary ( PtrDocument document, int *pDict, boolean ToCreate );
 extern char *TtaGetHyphenList ( char word[30], Language languageId );
 extern int *TtaGetPatternHyphenList( char word[100], Language languageId );
 extern boolean TtaExistPatternList ( Language languageId );
 
 #else /* __STDC__ */
 
-extern boolean TtaLoadDocumentDictionary (/* PtrDocument document, int *pDico, boolean ToCreate */);
+extern boolean TtaLoadDocumentDictionary (/* PtrDocument document, int *pDict, boolean ToCreate */);
 extern char *TtaGetHyphenList (/* char word[30], Language languageId */);
 extern int *TtaGetPatternHyphenList(/* char word[100], Language languageId */);
 extern boolean TtaExistPatternList (/* Language languageId */);

@@ -21,6 +21,7 @@
 #include "platform_tv.h"
 #include "edit_tv.h"
 
+#include "applicationapi_f.h"
 #include "tree_f.h"
 #include "attrpresent_f.h"
 #include "search_f.h"

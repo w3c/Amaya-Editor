@@ -64,11 +64,11 @@ extern void GetLine ( PtrLine * adligne );
 extern void FreeLine ( PtrLine adligne );
 extern void GetSearchContext ( PtrSearchContext * pSearch );
 extern void FreeSearchContext ( PtrSearchContext * pSearch );
-extern void FreeStringInDict ( PtrDico pDict );
-extern int GetStringInDict ( PtrDico * pDict,
+extern void FreeStringInDict ( PtrDict pDict );
+extern int GetStringInDict ( PtrDict * pDict,
                              boolean readonly );
-extern void GetDictionary ( PtrDico * pDico );
-extern void FreeDictionary ( PtrDico pDico );
+extern void GetDictionary ( PtrDict * pDict );
+extern void FreeDictionary ( PtrDict pDict );
 
 #else /* __STDC__ */
 
@@ -130,11 +130,11 @@ extern void GetLine (/* PtrLine * adligne */);
 extern void FreeLine (/* PtrLine adligne */);
 extern void GetSearchContext (/* PtrSearchContext * pSearch */);
 extern void FreeSearchContext (/* PtrSearchContext * pSearch */);
-extern void FreeStringInDict (/* PtrDico pDict */);
-extern int GetStringInDict (/* PtrDico * pDict,
+extern void FreeStringInDict (/* PtrDict pDict */);
+extern int GetStringInDict (/* PtrDict * pDict,
                                boolean readonly */);
-extern void GetDictionary (/* PtrDico * pDico */);
-extern void FreeDictionary (/* PtrDico pDico */);
+extern void GetDictionary (/* PtrDict * pDict */);
+extern void FreeDictionary (/* PtrDict pDict */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
