@@ -355,6 +355,7 @@ void DocumentMetaClear (DocumentMetaDataElement *me)
 char * DocumentTypeString (Document document)
 {
   char *result;
+  ThotBool isXml;
 
   result = NULL;
   switch (DocumentTypes[document])
@@ -365,7 +366,7 @@ char * DocumentTypeString (Document document)
     case docImage:
       result = "Image";
     case docCSS:
-      result = "CSS Style Sheet";
+      result = "CSS style sheet";
       break;
     case docSource:
       result = "Document source";
@@ -374,13 +375,13 @@ char * DocumentTypeString (Document document)
       result = "Annotation";
       break;
     case docLog:
-      result = "Log File"; 
+      result = "Log file"; 
       break;
     case docSVG:
       result = "SVG";
       break;
     case docXml:
-      result = "Generic XML";
+      result = "XML";
       break;
     default:
       break;
@@ -388,25 +389,32 @@ char * DocumentTypeString (Document document)
 
   if (!result) /* try the profiles */
     {
+      isXml = DocumentMeta[document]->xmlformat;
       switch (TtaGetDocumentProfile (document))
 	{
-	case L_Xhtml11:
-	  result = "XHTML 1.1";
-	  break;
 	case L_Other:
 	  result = "Unknown";
+	  break;
+	case L_Xhtml11:
+	  result = "XHTML 1.1";
 	  break;
 	case L_Basic:
 	  result = "XHTML 1.0 Basic";
 	  break;
 	case L_Strict:
-	  result = "XHTML 1.0 Strict";
+	  if (isXml)
+	    result = "XHTML 1.0 Strict";
+	  else
+	    result = "HTML 1.0 Strict";
 	  break;
 	case L_Transitional:
-	  result = "XHTML 1.0 Transitional";
+	  if (isXml)
+	    result = "XHTML 1.0 Transitional";
+	  else
+	    result = "HTML 1.0 Transitional";
 	  break;
 	case L_MathML:
-	  result = "Mathml";
+	  result = "MathML";
 	  break;
 	}
     }
