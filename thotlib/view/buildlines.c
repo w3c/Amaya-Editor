@@ -562,8 +562,8 @@ static void ManageBreakLine (PtrBox pBox, int width, int breakWidth,
   int                 baseline;
   int                 height;
 
-  if (boxLength < 0)
-    printf ("Error in ManageBreakLine\n");
+  if (boxLength <= 1)
+    return;
   /* Initialisation */
   ibox1 = NULL;
   pAb = pBox->BxAbstractBox;
@@ -3149,7 +3149,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	{
 	  /* manage this box as an extensible box */
 	  maxWidth = 30 * DOT_PER_INCH;
-	  pBox->BxW = maxWidth;
+	  extensibleBox = TRUE;
 	}
       pBox->BxRuleWidth = maxWidth;
     }
@@ -3291,8 +3291,6 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	      if (extensibleBox)
 		/* no limit for an extensible line */
 		pLine->LiXMax = maxWidth;
-	      /*else
-		pLine->LiXMax = pBox->BxW;*/
 	      pLine->LiHeight = pNextBox->BxHeight;
 	      pLine->LiRealLength = pNextBox->BxWidth;
 	      /* the paragraph should be large enough
