@@ -3000,7 +3000,7 @@ void BrowseConfMenu (Document document, View view)
   TtaNewToggleMenu (BrowseBase + mToggleBrowse,
 		    BrowseBase + BrowseMenu,
 		    NULL,
-		    5, s,
+		    6, s,
 		    NULL,
 		    FALSE);
   BuildScreenSelector ();
