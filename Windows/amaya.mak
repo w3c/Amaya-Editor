@@ -39,12 +39,12 @@ ALL : "$(OUTDIR)\amaya.exe"
 
 !ELSE 
 
-ALL : "Compilers - Win32 Release" "annotlib - Win32 Release" "libThotTable - Win32 Release" "libpng - Win32 Release" "libjpeg - Win32 Release" "thotprinter - Win32 Release" "libwww - Win32 Release" "libThotEditor - Win32 Release" "$(OUTDIR)\amaya.exe"
+ALL : "davlib - Win32 Release" "Compilers - Win32 Release" "annotlib - Win32 Release" "libThotTable - Win32 Release" "libpng - Win32 Release" "libjpeg - Win32 Release" "thotprinter - Win32 Release" "libwww - Win32 Release" "libThotEditor - Win32 Release" "$(OUTDIR)\amaya.exe"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"libThotEditor - Win32 ReleaseCLEAN" "libwww - Win32 ReleaseCLEAN" "thotprinter - Win32 ReleaseCLEAN" "libjpeg - Win32 ReleaseCLEAN" "libpng - Win32 ReleaseCLEAN" "libThotTable - Win32 ReleaseCLEAN" "annotlib - Win32 ReleaseCLEAN" "Compilers - Win32 ReleaseCLEAN" 
+CLEAN :"libThotEditor - Win32 ReleaseCLEAN" "libwww - Win32 ReleaseCLEAN" "thotprinter - Win32 ReleaseCLEAN" "libjpeg - Win32 ReleaseCLEAN" "libpng - Win32 ReleaseCLEAN" "libThotTable - Win32 ReleaseCLEAN" "annotlib - Win32 ReleaseCLEAN" "Compilers - Win32 ReleaseCLEAN" "davlib - Win32 ReleaseCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -111,7 +111,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=cl.exe
-CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /D "NDEBUG" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D "WIN32" /D "_WINDOWS" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /D "XML_GENERIC" /D "ANNOT_ON_ANNOT" /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /ML /W3 /GX /O2 /I "..\davlib" /I "..\davlib\f" /I "..\davlib\tree\h" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /I "..\davlib\h" /D "NDEBUG" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /D "XML_GENERIC" /D "_I18N_" /D "WIN32" /D "_WINDOWS" /D "DAV" /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -213,7 +213,8 @@ LINK32_OBJS= \
 	".\libjpeg.lib" \
 	".\libpng.lib" \
 	".\libThotTable.lib" \
-	".\annotlib.lib"
+	".\annotlib.lib" \
+	".\davlib\Release\davlib.lib"
 
 "$(OUTDIR)\amaya.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -234,12 +235,12 @@ ALL : "$(OUTDIR)\amaya.exe" "$(OUTDIR)\amaya.bsc"
 
 !ELSE 
 
-ALL : "Compilers - Win32 Debug" "annotlib - Win32 Debug" "libThotTable - Win32 Debug" "libpng - Win32 Debug" "libjpeg - Win32 Debug" "thotprinter - Win32 Debug" "libwww - Win32 Debug" "libThotEditor - Win32 Debug" "$(OUTDIR)\amaya.exe" "$(OUTDIR)\amaya.bsc"
+ALL : "davlib - Win32 Debug" "Compilers - Win32 Debug" "annotlib - Win32 Debug" "libThotTable - Win32 Debug" "libpng - Win32 Debug" "libjpeg - Win32 Debug" "thotprinter - Win32 Debug" "libwww - Win32 Debug" "libThotEditor - Win32 Debug" "$(OUTDIR)\amaya.exe" "$(OUTDIR)\amaya.bsc"
 
 !ENDIF 
 
 !IF "$(RECURSE)" == "1" 
-CLEAN :"libThotEditor - Win32 DebugCLEAN" "libwww - Win32 DebugCLEAN" "thotprinter - Win32 DebugCLEAN" "libjpeg - Win32 DebugCLEAN" "libpng - Win32 DebugCLEAN" "libThotTable - Win32 DebugCLEAN" "annotlib - Win32 DebugCLEAN" "Compilers - Win32 DebugCLEAN" 
+CLEAN :"libThotEditor - Win32 DebugCLEAN" "libwww - Win32 DebugCLEAN" "thotprinter - Win32 DebugCLEAN" "libjpeg - Win32 DebugCLEAN" "libpng - Win32 DebugCLEAN" "libThotTable - Win32 DebugCLEAN" "annotlib - Win32 DebugCLEAN" "Compilers - Win32 DebugCLEAN" "davlib - Win32 DebugCLEAN" 
 !ELSE 
 CLEAN :
 !ENDIF 
@@ -362,7 +363,7 @@ CLEAN :
     if not exist "$(INTDIR)/$(NULL)" mkdir "$(INTDIR)"
 
 CPP=cl.exe
-CPP_PROJ=/nologo /MLd /W3 /GX /ZI /Od /I "..\..\..\libwww\modules\expat\xmlparse" /I "..\..\..\libwww\modules\expat\xmltok" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /D "EXPAT_PARSER" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /D "XML_GENERIC" /D "ANNOT_ON_ANNOT" /D "_I18N_" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /FR"$(INTDIR)\\" /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /MLd /W3 /GX /ZI /Od /I "..\..\..\libwww\modules\expat\xmlparse" /I "..\..\..\libwww\modules\expat\xmltok" /I "..\thotlib\internals\h" /I "..\thotlib\internals\var" /I ".\amaya" /I "..\amaya" /I "..\amaya\f" /I "..\thotlib\include" /I "..\..\libwww\Library\src" /I "..\libpng\zlib" /I "..\thotlib\internals\f" /I "..\annotlib" /I "..\annotlib\f" /I "..\davlib\h" /I "..\davlib\f" /I "..\davlib\tree\h" /D "EXPAT_PARSER" /D "ANNOT_ON_ANNOT" /D "_DEBUG" /D "XML_DTD" /D "XML_NS" /D "_SVG" /D "__STDC__" /D "WWW_WIN_ASYNC" /D "WWW_WIN_DLL" /D "SOCKS" /D "THOT_TOOLTIPS" /D "ANNOTATIONS" /D "XML_GENERIC" /D "_I18N_" /D "WIN32" /D "_WINDOWS" /D "DAV" /FR"$(INTDIR)\\" /Fp"$(INTDIR)\amaya.pch" /YX /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 
 .c{$(INTDIR)}.obj::
    $(CPP) @<<
@@ -521,7 +522,8 @@ LINK32_OBJS= \
 	".\libjpeg.lib" \
 	".\libpng.lib" \
 	".\libThotTable.lib" \
-	".\annotlib.lib"
+	".\annotlib.lib" \
+	".\davlib\Debug\davlib.lib"
 
 "$(OUTDIR)\amaya.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -746,6 +748,32 @@ LINK32_OBJS= \
 "Compilers - Win32 DebugCLEAN" : 
    cd ".\Compilers"
    $(MAKE) /$(MAKEFLAGS) /F .\Compilers.mak CFG="Compilers - Win32 Debug" RECURSE=1 CLEAN 
+   cd ".."
+
+!ENDIF 
+
+!IF  "$(CFG)" == "amaya - Win32 Release"
+
+"davlib - Win32 Release" : 
+   cd ".\davlib"
+   $(MAKE) /$(MAKEFLAGS) /F .\davlib.mak CFG="davlib - Win32 Release" 
+   cd ".."
+
+"davlib - Win32 ReleaseCLEAN" : 
+   cd ".\davlib"
+   $(MAKE) /$(MAKEFLAGS) /F .\davlib.mak CFG="davlib - Win32 Release" RECURSE=1 CLEAN 
+   cd ".."
+
+!ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
+
+"davlib - Win32 Debug" : 
+   cd ".\davlib"
+   $(MAKE) /$(MAKEFLAGS) /F .\davlib.mak CFG="davlib - Win32 Debug" 
+   cd ".."
+
+"davlib - Win32 DebugCLEAN" : 
+   cd ".\davlib"
+   $(MAKE) /$(MAKEFLAGS) /F .\davlib.mak CFG="davlib - Win32 Debug" RECURSE=1 CLEAN 
    cd ".."
 
 !ENDIF 
