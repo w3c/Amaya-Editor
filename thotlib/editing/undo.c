@@ -285,9 +285,9 @@ PtrDocument pDoc;
    Clear the current history
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void ClearHistory (PtrDocument pDoc)
+void ClearHistory ()
 #else  /* __STDC__ */
-void ClearHistory (pDoc)
+void ClearHistory ()
 PtrDocument pDoc;
 
 #endif /* __STDC__ */
@@ -307,8 +307,6 @@ PtrDocument pDoc;
    LastEdit = NULL;
    NbEditsInHistory = 0;
    EditSequence = FALSE;
-   /* disable Undo command */
-   SwitchUndo (pDoc, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -525,7 +523,12 @@ int lastSelChar;
   /* if it's for a different document, clear the current history and start
      a new one for the document of interest */
   if (HistoryDoc && HistoryDoc != pDoc)
-     ClearHistory (pDoc);
+     {
+       ClearHistory (pDoc);
+       /* disable Undo command */
+       SwitchUndo (pDoc, FALSE);
+     }
+
   HistoryDoc = pDoc;
   EditSequence = TRUE;
 

@@ -146,9 +146,9 @@ Document document;
 }
 
 /* ----------------------------------------------------------------------
-   TtaUndoElementCreate
+   TtaRegisterElementReplace
     
-   Register a single element creation in the editing history
+   Register a single element replacement in the editing history
    
    Parameters:
 
@@ -156,24 +156,23 @@ Document document;
    element: the created element
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void         TtaUndoElementCreate (Document document, Element element)
+void         TtaRegisterElementReplace (Document document, Element element)
 #else /* __STDC__ */
-void         TtaUndoElementCreate (document, element)
+void         TtaRegisterElementReplace (document, element)
 Document document;
 Element element;
 #endif /* __STDC__ */
 {
   AddEditOpInHistory ((PtrElement)element, LoadedDocument [document - 1], 
-		      FALSE, /* the element do not have to be saved */ 
+		      TRUE,  /* the element has to be saved */ 
 		      TRUE   /* the element have to be removed when undoing */
  		      );
 }
 /* ----------------------------------------------------------------------
-   TtaUndoElementDelete
+   TtaRegisterElementCreate
     
-   Register a single element Deletion in the editing history
-   The registratration must be performed before the element is actually
-   removed from the structure.
+   Register a single element creation in the editing history
+   The registratration must be performed AFTER the element is inserted
 
    Parameters:
 
@@ -189,16 +188,16 @@ Element element;
 #endif /* __STDC__ */
 {
   AddEditOpInHistory ((PtrElement)element, LoadedDocument [document - 1], 
-		      FALSE, /* the element do not have to be saved */ 
+		      FALSE, /* the element does not have to be saved */ 
 		      TRUE   /* the element will be removed when undoing */
  		      );
 }
 
 /* ----------------------------------------------------------------------
-   TtaUndoElementDelete
+   TtaRegisterElementDelete
     
    Register a single element Deletion in the editing history
-   The registratration must be performed before the element is actually
+   The registratration must be performed BEFORE the element is actually
    removed from the structure.
 
    Parameters:
@@ -215,7 +214,22 @@ Element element;
 #endif /* __STDC__ */
 {
   AddEditOpInHistory ((PtrElement)element, LoadedDocument [document - 1], 
-		      TRUE, /* the element  have to be saved */ 
+		      TRUE, /* the element has to be saved */ 
 		      FALSE  /* the element wont be removed when undoing */
  		      );
+}
+
+/* ----------------------------------------------------------------------
+   TtaClearHistory
+
+   Clears the previous registered sequence of editing operarations
+
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         TtaClearHistory ()
+#else /* __STDC__ */
+void         TtaClearHistory ()
+#endif /* __STDC__ */
+{
+   ClearHistory ();
 }
