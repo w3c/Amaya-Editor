@@ -26,7 +26,6 @@
 static char        *TargetDocumentURL = NULL;
 static int          OldWidth;
 static int          OldHeight;
-static Element      ElemAfterPastedElement = NULL;
 #define buflen 50
 
 #include "AHTURLTools_f.h"
@@ -1840,28 +1839,8 @@ void CreateRemoveIDAttribute (char *elName, Document doc, ThotBool createID,
 }
 
 /*----------------------------------------------------------------------
-  ElementWillBePasted
-  This function is called by Thot before an element is pasted.
-  ----------------------------------------------------------------------*/
-ThotBool ElementWillBePasted (NotifyOnValue *event)
-{
-  ElementType   elType;
-  Element       next;
-  int           i;
-
-      next = TtaGetFirstChild (event->element);
-      for (i = 0; i < event->value; i++)
-	TtaNextSibling (&next);
-      elType = TtaGetElementType (next);
-      if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph &&
-	  !strcmp (TtaGetSSchemaName (elType.ElSSchema), "HTML"))
-	ElemAfterPastedElement = next;
-  return FALSE; /* let Thot perform normal operation */
-}
-
-/*----------------------------------------------------------------------
    CheckPseudoParagraph
-   Element el has been created or pasted. If its a Pseudo_paragraph,
+   Element el has been created or pasted. If it's a Pseudo_paragraph,
    it is turned into an ordinary Paragraph if it's not the first child
    of its parent.
    If the next sibiling is a Pseudo_paragraph, this sibling is turned into
@@ -1873,14 +1852,16 @@ static void CheckPseudoParagraph (Element el, Document doc)
   Element		prev, next, parent;
   Attribute             attr;
   ElementType		elType;
+  SSchema               htmlSchema;
   
   elType = TtaGetElementType (el);
-  if (!TtaSameSSchemas (elType.ElSSchema, TtaGetSSchema ("HTML", doc)))
+  htmlSchema = TtaGetSSchema ("HTML", doc);
+  if (!htmlSchema || elType.ElSSchema != htmlSchema)
     /* it's not an HTML element */
     return;
 
   if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
-    /* the element is a Pseudo_paragraph */
+    /* the new element is a Pseudo_paragraph */
     {
       prev = el;
       TtaPreviousSibling (&prev);
@@ -1892,10 +1873,20 @@ static void CheckPseudoParagraph (Element el, Document doc)
         TtaChangeElementType (el, HTML_EL_Paragraph);
     }
   else if (elType.ElTypeNum == HTML_EL_Paragraph)
-    /* the element is a Paragraph */
+    /* the new element is a Paragraph */
     {
+      /* get the previous element that is not a comment or a PI */
       prev = el;
-      TtaPreviousSibling (&prev);
+      do
+	{
+	  TtaPreviousSibling (&prev);
+	  if (prev)
+	    elType = TtaGetElementType (prev);
+	 }
+      while (prev && elType.ElSSchema == htmlSchema &&
+	     (elType.ElTypeNum == HTML_EL_Comment_ ||
+	      elType.ElTypeNum == HTML_EL_XMLPI));
+
       attr = NULL;
       TtaNextAttribute (el, &attr);
       if (prev == NULL && attr == NULL)
@@ -1916,21 +1907,26 @@ static void CheckPseudoParagraph (Element el, Document doc)
 	    }
 	 }
     }
+
+  /* get the next element that is not a comment or a PI */
   next = el;
-  TtaNextSibling (&next);
-  if (next && next == ElemAfterPastedElement)
+  do
     {
-      elType = TtaGetElementType (next);
-      if (elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
-	/* the next element is a Pseudo-paragraph */
-	/* turn it into an ordinary paragraph */
-	{
-	  TtaRegisterElementReplace (next, doc);
-	  TtaRemoveTree (next, doc);
-	  TtaChangeElementType (next, HTML_EL_Paragraph);
-	  TtaInsertSibling (next, el, FALSE, doc);
-	}
-      ElemAfterPastedElement = NULL;
+      TtaNextSibling (&next);
+      if (next)
+	elType = TtaGetElementType (next);
+    }
+  while (next && elType.ElSSchema == htmlSchema &&
+	 (elType.ElTypeNum == HTML_EL_Comment_ ||
+	  elType.ElTypeNum == HTML_EL_XMLPI));
+
+  if (next && elType.ElSSchema == htmlSchema &&
+      elType.ElTypeNum == HTML_EL_Pseudo_paragraph)
+    /* the next element is a Pseudo-paragraph */
+    /* turn it into an ordinary paragraph */
+    {
+      TtaChangeElementType (next, HTML_EL_Paragraph);
+      TtaRegisterElementTypeChange (next, elType.ElTypeNum, doc);
     }
 }
 

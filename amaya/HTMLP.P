@@ -1880,8 +1880,10 @@ BOXES
 	HorizPos: Left = Enclosing . Left + 1.7 cm;
 #else
 	Width: 15.6 cm;
-	Height: 25.9 cm;
+{****	Height: 25.9 cm;
 	VertPos: Top = Enclosing . Top + 1.7 cm;
+****}	Height: 23.1 cm;
+	VertPos: Top = Enclosing . Top + 3 cm;
 	HorizPos: Left = Enclosing . Left + 2.7 cm;
 #endif
 #endif
