@@ -7207,10 +7207,21 @@ void InitAmaya (NotifyEvent * event)
    LastURLName = (char *)TtaGetMemory (MAX_LENGTH);
    LastURLName[0] = EOS;
    DirectoryName = (char *)TtaGetMemory (MAX_LENGTH);
+   DirectoryName[0] = EOS;
    SavedDocumentURL = NULL;
-
    /* set path on current directory */
-   getcwd (DirectoryName, MAX_LENGTH);
+#ifdef _WINDOWS
+   s = getenv ("HOMEDRIVE");
+   ptr = getenv ("HOMEPATH");
+   if (s && *s && ptr)
+   {
+     sprintf (DirectoryName, "%s%s", s, ptr);
+     s = NULL;
+	 ptr = NULL;
+   }
+#endif /* _WINDOWS */
+   if (DirectoryName[0] == EOS || !TtaDirExists (DirectoryName))
+     getcwd (DirectoryName, MAX_LENGTH);
    DocumentName = (char *)TtaGetMemory (MAX_LENGTH);
    memset (DocumentName, EOS, MAX_LENGTH);
    SavePath = (char *)TtaGetMemory (MAX_LENGTH);

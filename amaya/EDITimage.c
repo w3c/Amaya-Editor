@@ -361,7 +361,7 @@ void InitImage (void)
    LastURLImage[0] = EOS;
    strcpy (ImgFilter, "*.*");
    /* set path on current directory */
-   getcwd (DirectoryImage, MAX_LENGTH);
+   strcpy (DirectoryImage, DirectoryName);
 }
 
 /*----------------------------------------------------------------------

@@ -74,6 +74,13 @@ extern ThotBool     PrintURL;
 extern ThotBool     IgnoreCSS;
 extern HFONT        DialogFont;
 
+ThotWindow          ghwndAbort;
+ThotWindow          ghwndMain;
+ThotWindow          MakeIDHwnd;
+ThotBool            gbAbort;
+Document            TmpDoc; /* used to pass the Document id to the
+			       callback when setting up a menu */
+
 static HDC          hDC;
 static HDC          hMemDC;
 static char         UrlToOpen[MAX_LENGTH];
@@ -96,6 +103,9 @@ static char        *SavList;
 static char        *cssList;
 static char        *mimeType;
 static char        *charSet;
+static char        *string_par1;
+static char        *string_par2;
+static char         text[1024];
 static int          repeatMode;
 static int          fontNum;
 static int          fontStyle;
@@ -121,6 +131,9 @@ static int          iLocation;
 static int          cxChar;
 static int          cyChar;
 static int          iMode;
+static int          indexImgFilter = 1;
+static int          indexLinkFilter = 1;
+static int          indexFilter = 1;
 
 static ThotBool	    saveBeforeClose;
 static ThotBool     closeDontSave;
@@ -129,6 +142,7 @@ static ThotBool     WithEdit;
 static ThotBool     WithCancel;
 static ThotBool     WithBorder;
 static ThotBool     HTMLFormat;
+static ThotBool     ReleaseFocus;
 
 static OPENFILENAME OpenFileName;
 static char        *SzFilter;
@@ -155,17 +169,6 @@ static ThotWindow   DocInfo[DocumentTableLength];
 static UINT         itemIndex;
 static UINT         nbClass;
 static UINT         NbItem;
-static char        *string_par1;
-static char        *string_par2;
-static ThotBool     ReleaseFocus;
-static char         text[1024];
-
-ThotWindow          ghwndAbort;
-ThotWindow          ghwndMain;
-ThotWindow          MakeIDHwnd;
-ThotBool            gbAbort;
-Document            TmpDoc; /* used to pass the Document id to the
-			       callback when setting up a menu */
 
 #include "init_f.h"
 /*----------------------------------------------------------------------
@@ -424,11 +427,11 @@ LRESULT CALLBACK HRefDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  OpenFileName.lpstrFilter       = (LPTSTR) SzFilter;
 	  OpenFileName.lpstrCustomFilter = (LPTSTR) NULL;
 	  OpenFileName.nMaxCustFilter    = 0L;
-	  OpenFileName.nFilterIndex      = 1L;
+	  OpenFileName.nFilterIndex      = indexLinkFilter;
 	  OpenFileName.lpstrFile         = (LPTSTR) TmpDocName;
 	  OpenFileName.nMaxFile          = MAX_LENGTH;
 	  OpenFileName.lpstrInitialDir   = (LPTSTR) DirectoryName;
-	  OpenFileName.lpstrTitle        = "Select";
+	  OpenFileName.lpstrTitle        = TtaGetMessage (AMAYA, AM_BROWSE);
 	  OpenFileName.nFileOffset       = 0;
 	  OpenFileName.nFileExtension    = 0;
 	  OpenFileName.lpstrDefExt       = "html";
@@ -436,7 +439,10 @@ LRESULT CALLBACK HRefDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY;
 	  
 	  if (GetOpenFileName (&OpenFileName))
+	  {
 	    strcpy (HrefUrl, OpenFileName.lpstrFile);
+		indexLinkFilter = OpenFileName.nFilterIndex;
+	  }
 	  
 	  SetDlgItemText (hwnDlg, IDC_GETURL, HrefUrl);
 	  if (HrefUrl[0] != EOS)
@@ -1426,11 +1432,11 @@ LRESULT CALLBACK OpenDocDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	OpenFileName.lpstrFilter       = (LPTSTR) SzFilter;
 	OpenFileName.lpstrCustomFilter = (LPTSTR) NULL;
 	OpenFileName.nMaxCustFilter    = 0L;
-	OpenFileName.nFilterIndex      = 1L;
+	OpenFileName.nFilterIndex      = indexFilter;
 	OpenFileName.lpstrFile         = (LPTSTR) TmpDocName;
 	OpenFileName.nMaxFile          = MAX_LENGTH;
 	OpenFileName.lpstrInitialDir   = (LPTSTR) DirectoryName;
-	OpenFileName.lpstrTitle        = "Select";
+	OpenFileName.lpstrTitle        = TtaGetMessage (AMAYA, AM_OPEN_URL);
 	OpenFileName.nFileOffset       = 0;
 	OpenFileName.nFileExtension    = 0;
 	OpenFileName.lpstrDefExt       = "html";
@@ -1440,7 +1446,8 @@ LRESULT CALLBACK OpenDocDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	if (GetOpenFileName (&OpenFileName))
 	{
 	  strcpy (UrlToOpen, OpenFileName.lpstrFile);
-      
+      indexFilter = OpenFileName.nFilterIndex;
+      strcpy (DirectoryName, OpenFileName.lpstrInitialDir);
 	SetDlgItemText (hwnDlg, IDC_GETURL, UrlToOpen);
 	if (UrlToOpen[0] != EOS)
 	  {
@@ -1479,9 +1486,9 @@ LRESULT CALLBACK OpenImgDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
   switch (msg)
     {
     case WM_INITDIALOG:
-      SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_IMAGES_LOCATION));
+      SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_BUTTON_IMG));
       SetWindowText (GetDlgItem (hwnDlg, IDC_URLMESSAGE),
-		     TtaGetMessage (AMAYA, AM_BUTTON_IMG));
+		     TtaGetMessage (AMAYA, AM_LOCATION));
       SetWindowText (GetDlgItem (hwnDlg, IDC_ALTMESSAGE), TtaGetMessage (AMAYA, AM_ALT));
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
 		     TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
@@ -1519,19 +1526,23 @@ LRESULT CALLBACK OpenImgDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  OpenFileName.lpstrFilter       = (LPTSTR) SzFilter;
 	  OpenFileName.lpstrCustomFilter = (LPTSTR) NULL;
 	  OpenFileName.nMaxCustFilter    = 0L;
-	  OpenFileName.nFilterIndex      = 1L;
+	  OpenFileName.nFilterIndex      = indexImgFilter;
 	  OpenFileName.lpstrFile         = (LPTSTR) TmpDocName;
 	  OpenFileName.nMaxFile          = MAX_LENGTH;
 	  OpenFileName.lpstrInitialDir   = (LPTSTR) DirectoryImage;
-	  OpenFileName.lpstrTitle        = TtaGetMessage (AMAYA, AM_FILES);
+	  OpenFileName.lpstrTitle        = TtaGetMessage (AMAYA, AM_BROWSE);
 	  OpenFileName.nFileOffset       = 0;
 	  OpenFileName.nFileExtension    = 0;
-	  OpenFileName.lpstrDefExt       = ImgFilter;
+	  OpenFileName.lpstrDefExt       = "";
 	  OpenFileName.lCustData         = 0;
 	  OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY;
 	  
 	  if (GetOpenFileName (&OpenFileName))
+	  {
 	    strcpy (UrlToOpen, OpenFileName.lpstrFile);
+		indexImgFilter = OpenFileName.nFilterIndex;
+        strcpy (DirectoryImage, OpenFileName.lpstrInitialDir);
+	  }
 	  
 	  SetDlgItemText (hwnDlg, IDC_GETURL, UrlToOpen);
 	  if (AltText[0] != 0)
@@ -3267,19 +3278,22 @@ LRESULT CALLBACK BackgroundImageDlgProc (ThotWindow hwnDlg, UINT msg,
 	    OpenFileName.lpstrFilter       = (LPTSTR) SzFilter;
 	    OpenFileName.lpstrCustomFilter = (LPTSTR) NULL;
 	    OpenFileName.nMaxCustFilter    = 0L;
-	    OpenFileName.nFilterIndex      = 1L;
+	    OpenFileName.nFilterIndex      = indexImgFilter;
 	    OpenFileName.lpstrFile         = (LPTSTR) TmpDocName;
 	    OpenFileName.nMaxFile          = MAX_LENGTH;
 	    OpenFileName.lpstrInitialDir   = (LPTSTR) DirectoryName;
-	    OpenFileName.lpstrTitle        = "Open a File";
+	    OpenFileName.lpstrTitle        = TtaGetMessage (AMAYA, AM_BACKGROUND_IMAGE);
 	    OpenFileName.nFileOffset       = 0;
 	    OpenFileName.nFileExtension    = 0;
-	    OpenFileName.lpstrDefExt       = "*.gif";
+	    OpenFileName.lpstrDefExt       = "";
 	    OpenFileName.lCustData         = 0;
 	    OpenFileName.Flags             = OFN_SHOWHELP | OFN_HIDEREADONLY;
 	    
 	    if (GetOpenFileName (&OpenFileName))
+		{
 	      strcpy (UrlToOpen, OpenFileName.lpstrFile);
+		  indexImgFilter = OpenFileName.nFilterIndex;
+		}
 	    
 	    SetDlgItemText (hwnDlg, IDC_BGLOCATION, UrlToOpen);
 	    EndDialog (hwnDlg, ID_CONFIRM);

@@ -1541,42 +1541,42 @@ void TtaInitializeAppRegistry (char *appArgv0)
 	   
 	   if (app_home[0] == EOS)
 	     {
-	       /* the Windows 2000/XP convention */
-	       sprintf (app_home, "%s\\Documents and Settings\\%s\\%s", windir, ptr, AppNameW);
-	       if (!TtaDirExists (app_home))
-		 app_home[0] = EOS;
-	     }
-
-	   /* At this point app_home has a value if the directory existed. Otherwise,
-	      we'll try to create a new one */       
-	   if (app_home[0] == EOS)
-	     {
 	       /* use the HOMEDRIVE and HOMEPATH environment variables first */
 	       ptr2 = getenv ("HOMEDRIVE");
 	       ptr3 = getenv ("HOMEPATH");
 	       if (ptr2 && *ptr2 && ptr3)
 		 {
-		   sprintf (windir, "%s%s", ptr2, ptr3);
-		   if (TtaDirExists (windir))
-		     sprintf (app_home, "%s\\%s", windir, AppNameW);
-		   else
+		     sprintf (app_home, "%s%s\\%s", ptr2, ptr3, AppNameW);
+	     if (!TtaDirExists (app_home))
 		     app_home[0] = EOS;
 		 }
 	     }
+	   if (app_home[0] == EOS)
+	     {
+	       /* another possible Windows 2000/XP convention */
+           sprintf (app_home, "%s\\Documents and Settings\\%s\\%s", windir, ptr, AppNameW);
+	       if (!TtaDirExists (app_home))
+		 app_home[0] = EOS;
+	     }
 
+	   /* At this point app_home has a value if the directory existed. Otherwise,
+	      we'll try to create a new one */
 	   if (app_home[0] == EOS)
 	     {
 	       /* try to use one of the system home dirs */
-	       GetWindowsDirectory (windir, dwSize);
 	       /* the Windows 2000/XP convention */
-	       sprintf (app_home, "%s\\Documents and Settings", windir);
+	       if (ptr2 && *ptr2 && ptr3)
+	         sprintf (app_home, "%s%s", ptr2, ptr3);
+		   else
+             sprintf (app_home, "%s\\Documents and Settings\\%s", windir, ptr);
+
 	       if (! TtaDirExists (app_home))
 		 {
 		   /* the Windows NT convention */
-		   sprintf (app_home, "%s\\profiles", windir);
+		   sprintf (app_home, "%s\\profiles\\%s", windir, ptr);
 		 }
 	       /* add the end suffix */
-	       sprintf (windir, "\\%s\\%s", ptr, AppNameW);
+	       sprintf (windir, "\\%s", AppNameW);
 	       strcat (app_home, windir);
 	     }
 	 }
