@@ -1477,6 +1477,10 @@ ThotBitmap         *mask1;
   Gif89.disposal = 0;
 
   buffer = ReadGifToData (fn, &w, &h, &ncolors, &cpp, colrs);
+
+  if (buffer == NULL)
+     return ThotBitmapNone;
+
   if (*xif == 0 && *yif != 0)
     *xif = w;
   if (*xif != 0 && *yif == 0)
@@ -1492,9 +1496,10 @@ ThotBitmap         *mask1;
       h = *yif;
     }
 
+  /*
    if (buffer == NULL)
      return ThotBitmapNone;
-
+	*/
    if (Gif89.transparent != -1)
      {
        if (Gif89.transparent < 0)

@@ -258,6 +258,10 @@ ThotBitmap         *mask1;
 
   /* effective load of the Picture from Jpeg Library */
   buffer = ReadJpegToData (fn, &w, &h, colrs);
+
+  if (!buffer)
+	 return ThotBitmapNone;
+
   if (*xif == 0 && *yif != 0)
     *xif = w;
   if (*xif != 0 && *yif == 0)
