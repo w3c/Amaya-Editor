@@ -1091,6 +1091,7 @@ void                QueryClose ()
    HTNet_deleteAfter (AHTLoadTerminate_handler);
    HTNet_deleteAfter (redirection_handler);
    HTAlertCall_deleteAll (HTAlert_global () );
+   HTAlert_setGlobal ((HTList *) NULL);
 
    Thread_deleteAll ();
  
