@@ -2484,7 +2484,9 @@ void DoExtendSelection (PtrElement pEl, int rank, ThotBool fixed, ThotBool begin
 	      FirstSelectedElement->ElVolume == 0)
 	    SelPosition = TRUE;
 	  else if (FirstSelectedElement == LastSelectedElement &&
-		   LastSelectedChar <= FirstSelectedChar)
+		   LastSelectedChar <= FirstSelectedChar &&
+		   FirstSelectedElement->ElTerminal &&
+		   FirstSelectedElement->ElLeafType != LtPicture)
 	    /* In this case there is no longer an extended selection */
 	    SelPosition = TRUE;
 	  
