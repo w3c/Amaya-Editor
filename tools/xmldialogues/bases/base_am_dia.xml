@@ -450,7 +450,7 @@
 </label>
 <label define="BISO_8859_1">
 	<message xml:lang="en">Western (ISO-8859-1)</message>
-	<message xml:lang="fr">Europe de l'ouest (ISO-8859-1)</message>
+	<message xml:lang="fr">Occidental (ISO-8859-1)</message>
 	<message xml:lang="it">Western (ISO-8859-1)</message>
 	<message xml:lang="es">Western (ISO-8859-1)</message>
 	<message xml:lang="pt">Western (ISO-8859-1)</message>
@@ -460,7 +460,7 @@
 </label>
 <label define="BISO_8859_15">
 	<message xml:lang="en">Western (ISO-8859-15)</message>
-	<message xml:lang="fr">Europe de l'ouest (ISO-8859-15)</message>
+	<message xml:lang="fr">Occidental (ISO-8859-15)</message>
 	<message xml:lang="it">Western (ISO-8859-15)</message>
 	<message xml:lang="es">Western (ISO-8859-15)</message>
 	<message xml:lang="pt">Western (ISO-8859-15)</message>
@@ -470,7 +470,7 @@
 </label>
 <label define="BWINDOWS_1252">
 	<message xml:lang="en">Western (Windows-1252)</message>
-	<message xml:lang="fr">Europe de l'ouest (Windows-1252)</message>
+	<message xml:lang="fr">Occidental (Windows-1252)</message>
 	<message xml:lang="it">Western (Windows-1252)</message>
 	<message xml:lang="es">Western (Windows-1252)</message>
 	<message xml:lang="pt">Western (Windows-1252)</message>

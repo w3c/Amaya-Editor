@@ -288,8 +288,8 @@
 286 Formatvorlagen wurden ignoriert - siehe Ansicht/Parserfehler anzeigen
 287 Dieses Dokument wird bereits in einem anderen Fenster angezeigt
 288 Beim Speichern dieser Instanz des Dokuments können Änderungen in anderen Instanzen verloren gehen (lost update problem)
-289 **Adding or changing the doctype will remove some elements or attributes
-290 **Do you confirm the operation ?
+289 Durch das Hinzufügen oder Ändern des Dokumententyps gehen Elemente oder Attribute verloren
+290 Soll die Operation ausgeführt werden ?
 291 MIME-Typ application/xhtml+xml für XHTML-Dokumente verwenden
 292 Standardzeichensatz für neue Dakumente
 293 Sperrung erfolgreich
@@ -365,7 +365,7 @@
 363 Eigenschaften der Überschriften
 364 Inhaltsverzeichnis:
 365 Titel:
-366 Wiederherstellungen:
+366 Umbenennen:
 367 Autor:
 368 Erstellt am:
 369 Zuletzt geändert am:

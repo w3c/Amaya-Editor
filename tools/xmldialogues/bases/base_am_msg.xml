@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Mon Feb 23 11:50:07 CET 2004" version="64">
+<base last_update="Tue Feb 24 09:07:54 CET 2004" version="66">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -2877,10 +2877,14 @@
 <label define="AM_CHANGE_DOCTYPE1">
 	<message xml:lang="en">Adding or changing the doctype will remove some elements or attributes</message>
 	<message xml:lang="fr">Ajouter ou modifier le doctype du document supprimera certains éléments ou attributs</message>
+	<message xml:lang="it">Aggiungere o cambiare doctype eliminerà alcuni elementi o attributi</message>
+	<message xml:lang="de">Durch das Hinzufügen oder Ändern des Dokumententyps gehen Elemente oder Attribute verloren</message>
 </label>
 <label define="AM_CHANGE_DOCTYPE2">
 	<message xml:lang="en">Do you confirm the operation ?</message>
 	<message xml:lang="fr">Confirmez-vous l'opération ?</message>
+	<message xml:lang="it">Confermi l'operazione?</message>
+	<message xml:lang="de">Soll die Operation ausgeführt werden ?</message>
 </label>
 <label define="AM_USE_XHTML_MIMETYPE">
 	<message xml:lang="en">Use the application/xhtml+xml MIME type for XHTML documents</message>
@@ -3575,10 +3579,10 @@
 </label>
 <label define="AM_BM_RECALLS">
 	<message xml:lang="en">Recalls:</message>
-	<message xml:lang="fr">Rappele:</message>
+	<message xml:lang="fr">Appelle:</message>
 	<message xml:lang="it">Richiama :</message>
 	<message xml:lang="es">Enlaza:</message>
-	<message xml:lang="de">Wiederherstellungen:</message>
+	<message xml:lang="de">Umbenennen:</message>
 </label>
 <label define="AM_BM_AUTHOR">
 	<message xml:lang="en">Author:</message>
