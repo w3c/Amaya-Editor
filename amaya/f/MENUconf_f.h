@@ -7,7 +7,6 @@
 #ifdef __STDC__
 
 extern void InitAmayaDefEnv ( void );
-extern void InitConfMenu ( void );
 extern int CleanDirSep ( STRING name );
 extern int CleanSpace ( STRING name );
 extern void CacheConfMenu ( Document document,
@@ -28,11 +27,11 @@ extern void ProfileConfMenu ( Document document,
                               View view );
 extern void TemplatesConfMenu ( Document document,
                                 View view );
+extern void InitConfMenu ( void );
 
 #else /* __STDC__ */
 
 extern void InitAmayaDefEnv (/* void */);
-extern void InitConfMenu (/* void */);
 extern int CleanDirSep (/* STRING name */);
 extern int CleanSpace (/* STRING name */);
 extern void CacheConfMenu (/* Document document,
@@ -53,6 +52,7 @@ extern void ProfileConfMenu (/* Document document,
                                 View view */);
 extern void TemplatesConfMenu (/* Document document,
                                   View view */);
+extern void InitConfMenu (/* void */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

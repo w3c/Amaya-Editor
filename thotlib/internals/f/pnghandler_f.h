@@ -8,8 +8,8 @@
 
 extern unsigned char *ReadPng ( FILE* infile,
                                 int* width,
-                                int *height,
-                                int *ncolors,
+                                int* height,
+                                int* ncolors,
                                 int* cpp,
                                 ThotColorStruct colrs[256],
                                 int* bg );
@@ -43,14 +43,14 @@ extern void PngPrint ( STRING fn,
                        int PicHArea,
                        int fd,
                        unsigned long BackGroundPixel );
-extern ThotBool IsPngFormat ( STRING fn );
+extern ThotBool IsPngFormat ( char* fn );
 
 #else /* __STDC__ */
 
 extern unsigned char *ReadPng (/* FILE* infile,
                                   int* width,
-                                  int *height,
-                                  int *ncolors,
+                                  int* height,
+                                  int* ncolors,
                                   int* cpp,
                                   ThotColorStruct colrs[256],
                                   int* bg */);
@@ -84,7 +84,7 @@ extern void PngPrint (/* STRING fn,
                          int PicHArea,
                          int fd,
                          unsigned long BackGroundPixel */);
-extern ThotBool IsPngFormat (/* STRING fn */);
+extern ThotBool IsPngFormat (/* char* fn */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

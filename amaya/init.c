@@ -1644,10 +1644,6 @@ ThotBool     logFile;
 			 TtaGetMessage (AMAYA, AM_BUTTON_JAVA),
 			 TBSTYLE_BUTTON, TRUE);
 #endif /* AMAYA_JAVA */
-
-	   /* FREE THE PROFILE TABLE */
-	   Prof_DeleteFunTable();
-
 #ifdef MATHML
 	   AddMathButton (doc, 1);
 #endif /* MATHML */

@@ -11,7 +11,7 @@ extern void CallbackConfirmMenu ( int ref,
                                   STRING data );
 extern void CallbackNewDocMenu ( int ref,
                                  int typeData,
-                                 STRING data );
+                                 char* data );
 extern void TtcCreateDocument ( Document document,
                                 View view );
 
@@ -22,7 +22,7 @@ extern void CallbackConfirmMenu (/* int ref,
                                     STRING data */);
 extern void CallbackNewDocMenu (/* int ref,
                                    int typeData,
-                                   STRING data */);
+                                   char* data */);
 extern void TtcCreateDocument (/* Document document,
                                   View view */);
 

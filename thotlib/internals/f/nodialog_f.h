@@ -35,6 +35,7 @@ extern void FetchImage ( Document doc,
                          int flags,
                          Proc callback,
                          void *extra );
+extern void Prof_FreeTable ( void );
 extern Pixmap TtaCreatePixmapLogo ( char** data );
 extern void TtaHandlePendingEvents ( void );
 extern void ConfigInit ( void );
@@ -144,6 +145,7 @@ extern void FetchImage (/* Document doc,
                            int flags,
                            Proc callback,
                            void *extra */);
+extern void Prof_FreeTable (/* void */);
 extern Pixmap TtaCreatePixmapLogo (/* char** data */);
 extern void TtaHandlePendingEvents (/* void */);
 extern void ConfigInit (/* void */);

@@ -33,7 +33,7 @@ extern unsigned long CreatePattern ( int disp,
 #else /* __STDC__ */
 
 extern void FreeDocColors (/* void */);
-extern void InitDocColors (/* STRING name */);
+extern void InitDocColors (/* char* name */);
 extern int NumberOfColors (/* void */);
 extern char* ColorName (/* int num */);
 extern ThotColor ColorPixel (/* int num */);

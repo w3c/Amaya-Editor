@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern char* AbsBoxType ( PtrAbstractBox pAb,
-                           ThotBool origName );
+                          ThotBool origName );
 extern void FreeAbView ( PtrAbstractBox pAb,
                          int frame );
 extern void FreeAbEl ( PtrElement pEl,
@@ -43,7 +43,7 @@ extern void JumpIntoView ( int frame,
 #else /* __STDC__ */
 
 extern char* AbsBoxType (/* PtrAbstractBox pAb,
-                             ThotBool origName */);
+                            ThotBool origName */);
 extern void FreeAbView (/* PtrAbstractBox pAb,
                            int frame */);
 extern void FreeAbEl (/* PtrElement pEl,

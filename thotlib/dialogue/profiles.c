@@ -9,8 +9,10 @@
  * profile.c: This module contains all the functions used to handle
  * the profile configuration in Amaya. Each function beginning with
  * "Prof_" prefix is called by an extern module.
+ * Profile files are coded in ISO-latin
  *
  * Authors: L. Bonameau - Amaya profiles
+            I. Vatton - review of the code
  *
  */
 
@@ -24,429 +26,728 @@
 #include "registry.h"
 #include "profiles.h"
 
+#define MAX_ENTRIES 10
+typedef struct _Profile_Ctl *PtrProCtl;
+typedef struct _ProElement
+{
+  char                *ProName;      /* Name of the entry */
+  PtrProCtl            ProSubModule; /* Pointer to a sub-module context */
+  ThotBool             ProIsModule;    /* TRUE if it is a sub-module */
+  ThotBool             ProEdit;      /* TRUE if it's a editing function */
+} ProElement;
 
-/*---------------------------
-  Static Functions prototypes
----------------------------*/
-
-
-static void ProcessElements(char * element);
-static void InsertTable(STRING string, STRING * Table, int * nbelem);
-static void FileToTable(FILE * File,  STRING * Table,
-			int * nbelem, int maxelem);
-static void SortTable (STRING * Table, int nbelem);
-static void DeleteTable(STRING * Table, int  *nbelem);
-static int  SearchInTable(char * StringToFind, STRING * Table, 
-			  int nbelem, ThotBool sort);
-static void SkipNewLineSymbol(char  * Astring);
-static void SkipAllBlanks (char * Astring);
-static char * AddHooks (char * Astring);
-static void RemoveHooks (char  * Astring);
+typedef struct _Profile_Ctl
+{
+  ProElement           ProEntries[MAX_ENTRIES]; /* list of names */
+  PtrProCtl            ProNext;                 /* next list */
+} Profile_Ctl;
 
 
 /*--------------------------
   Static vars
 ---------------------------*/
+/* Profiles table contains the name of all the available profiles */
+static PtrProCtl            ProfileTable = NULL;
+static int                  NbProfiles = 0;
+/* Modules table contains the name of all the available modules */
+static PtrProCtl            ModuleTable = NULL;
+static int                  NbModules = 0;
+/* Functions table contains current list of available functions */
+static PtrProCtl            FunctionTable = NULL;
+static int                  NbFunctions = 0;
+static char               **SortedFunctionTable = NULL;
 
+/* The first context of the current module or profile in progress */
+static PtrProCtl            CurrentModule;
+static int                  CurrentEntries;
 /* Determine either a profile is defined or not */
-static ThotBool             defined_profile = FALSE;
-
-/* Definition table : correspondence between Modules and functions */
-static  STRING              Def_Table[MAX_DEF];
-static  int                 Def_nbelem = 0;
-
-/* Functions table : Table of functions defined in the user profile */
-static STRING               Fun_Table[MAX_FUNCTIONS];
-static int                  Fun_nbelem = 0;
-
-/* Profiles table : contains the name of all the available profiles*/
-static STRING               Pro_Table[MAX_PRO];
-static int                  Pro_nbelem = 0;
-
-/* Edition table : contains the name of all the functions used for edition */
-static STRING               Edition_Table[MAX_EDITION_FUNCTIONS];
-static int                  Edition_nbelem = 0;
-
-/* Current profile : the current selected profile */
-static char                 CurrentProfile[MAX_PRO_LENGTH];
-                
-/* User Profile (taken from the thot.rc) */  
+static ThotBool             CheckProfile = FALSE;
+/* User Profile (taken from the thot.rc) */
 static char                 UserProfile[MAX_PRO_LENGTH];
-
-static char                 TempString[MAX_PRO_LENGTH];
-
+static PtrProCtl            UserProfContext = NULL;
+static char                 ProfileBuff[MAX_PRO_LENGTH];
 /* This boolean goes FALSE if the profile only contains browsing functions */
-static ThotBool             Prof_ReadOnly = TRUE;
+static ThotBool             ProfileReadOnly = TRUE;
 
 
-/*-----------------------------------------------------------------------
-   Prof_InitTable: Seek the current profile and init the function table
-  ----------------------------------------------------------------------*/
-
-
-
-void Prof_InitTable(void)
-{
-  FILE *              Def_FILE;
-  FILE *              Prof_FILE; 
-  char *              ptr;
-  char *              ptr2;
-  char                TempString [MAX_PRO_LENGTH];
-  int                 i = 0;
-
-
-  /* Retrive thot.rc variables and open usefull files */
-  ptr = TtaGetEnvString("Profiles_File");
-  if (ptr && *ptr)
-    Prof_FILE = fopen(ptr,"r");
-  else
-    Prof_FILE = NULL;
-  
-  ptr = TtaGetEnvString ("Profile");
-  if (ptr && *ptr)
-  {
-    strcpy (UserProfile, AddHooks (ptr));	
-  }
-  else
-     UserProfile[0] = EOS;
-    
-  
-  ptr = TtaGetEnvString("THOTDIR");
-  ptr2 = TtaGetMemory (strlen (ptr) + strlen (DEF_FILE) + 10);
-  if (ptr2) 
-    {
-      sprintf (ptr2, "%s%c%s%c%s", ptr, DIR_SEP, "config", DIR_SEP, DEF_FILE);
-      Def_FILE = fopen(ptr2, "r");
-      TtaFreeMemory (ptr2);
-    }
-  else
-    Def_FILE = NULL;
-  
-  if (Def_FILE && Prof_FILE && UserProfile)
-     {    
-       
-       /* Fill a table for modules definition */
-       FileToTable (Def_FILE, Def_Table, &Def_nbelem, MAX_DEF);
-       
-       /* Generate a functions table*/
-       while (fgets(TempString, sizeof(TempString), Prof_FILE))
-         {
-	   
-	   SkipAllBlanks(TempString);
-  	   ProcessElements(TempString);
-	 } 
-       
-       /* Sort the functions and edition table */
-       SortTable(Fun_Table, Fun_nbelem);
-       SortTable (Edition_Table, Edition_nbelem);
-       /* delete the modules definition table */
-       DeleteTable (Def_Table, &Def_nbelem);
-
-       /* Check if the profile correspond to a read only profile */
-       while (( i<Fun_nbelem) && (Prof_ReadOnly))
-	 {
-	   if (SearchInTable (Fun_Table[i], Edition_Table, Edition_nbelem, TRUE))
-	     Prof_ReadOnly = FALSE;
-	 }
-       
-     }       
-  else
-    {
-      /* can NOT open profile files or no profile defined */
-    }
-  if (Fun_nbelem > 0)
-    defined_profile = TRUE;
-  
-  /* Close the open files */
-  if (Def_FILE) 
-      fclose(Def_FILE);
-
-  if (Prof_FILE)
-      fclose(Prof_FILE);
-}
-
-/*--------------------------------------------------------
-   Prof_RebuildProTable : Rebuild the Profiles Table
-   Returns the number of elements if operation succeded or
-   a 0 if operation failed.
-----------------------------------------------------------*/
-
+/*********************************************************
+  String functions : set of useful functions for strings
+***********************************************************/
+/*----------------------------------------------------------------------
+  SkipNewLineSymbol : Remove the EOF ('end of line') character
+----------------------------------------------------------------------*/
 #ifdef __STDC__
-int  Prof_RebuildProTable(STRING prof_file)
+static void   SkipNewLineSymbol (char *Astring)
 #else  /* !__STDC__ */
-int  Prof_RebuildProTable(STRING prof_file)
+static void   SkipNewLineSymbol (Astring)
+char         *Astring;
 #endif /* !__STDC__ */
 {
-  FILE *              Prof_FILE; 
-  
-  Prof_FILE = fopen(prof_file,"r");
-  DeleteTable(Pro_Table, &Pro_nbelem);
-  if (Prof_FILE)
-    {
-      while (fgets(TempString, sizeof(TempString), Prof_FILE))
-	{
-	  SkipAllBlanks(TempString);
-	  if (TempString[0] == PROFILE_START)
-	    {
-	      if (Pro_nbelem < MAX_PRO)
-		{
-		  RemoveHooks(TempString);
-		  InsertTable(TempString, Pro_Table, & Pro_nbelem);
-		}
-	    }
-	} 
-      fclose(Prof_FILE);
-      return (Pro_nbelem > 0);
-    }
-  else
-    {
-      /* file not found, table is empty */
-      return 0;
-    }
+  int         c = 0;
+
+  while (Astring[c] != EOS && Astring[c] != EOL)
+    c++;
+  if (Astring[c] == EOL)
+    Astring[c] = EOS;    
 }
 
-/*----------------------------------------------------------------------
-  ProcessElements : Recursive function that helps
-  building the profile table
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static   void ProcessElements(char * element)
-#else  /* !__STDC__ */
-static   void ProcessElements(element)
-char   *  element;
-#endif /* !__STDC__ */ 
-{
-  ThotBool            EOM = FALSE;
-  int                 i;
-  int                 j = 0;
- 
-  
-  if ( element[0] == PROFILE_START )
-    {
-     /* Case 1 : the element is a profile start tag. Insert it in the Profile table */
-      strcpy(CurrentProfile, element);
-      if (Pro_nbelem < MAX_PRO)
-	{
-	  RemoveHooks(element);
-	  InsertTable(element, Pro_Table, &Pro_nbelem);
-	}
-    }
-  else if (element[0] == MODULE_REF)
-    {
-      /* Case 2 : the element is a module. Process the element inside the module
-	 with a recursive call */
-      if (strcmp(CurrentProfile, UserProfile) == 0)
-	{
 
-	  /* Remove the module start tag */
-	  while (element[j+1] != EOS)
+/*----------------------------------------------------------------------
+  SkipAllBlanks:  Remove all the spaces, tabulations and return
+  returns (CR) and "end of line" characters.
+----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void   SkipAllBlanks (char  *Astring)
+#else  /* !__STDC__ */
+static void   SkipAllBlanks (Astring)
+char         *string;
+#endif /* !__STDC__ */
+{
+  int         c = 0;
+  int         nbsp = 0;
+  
+  do
+    {
+      while (Astring[c+nbsp] == SPACE || Astring[c+nbsp] == TAB || Astring[c+nbsp] == __CR__)
+	nbsp++;
+      Astring[c] = Astring[c+nbsp];
+    } 
+  while (Astring[c++] != EOS);
+
+  SkipNewLineSymbol (Astring);
+}
+
+
+/*----------------------------------------------------------------------
+  AddInTable inserts an element in a table.
+  The parameter name is the name of the new entry.
+  The parameter isModule is TRUE if that entry is the name of a module.
+  The parameter edit is TRUE if that entry is an editable function.
+  The parameter subModule points to the first ctxt of the sub-module. If
+  t is NULL and isModule is TRUE the context is created.
+  The parameter number give the current number of entries in the table.
+  The parameter ctxt points to the first ctxt of the table.
+  Return the first context of the new module.
+----------------------------------------------------------------------*/
+#ifdef __STDC__
+static PtrProCtl   AddInTable (char *name, ThotBool isModule, ThotBool edit, PtrProCtl subModule, int number, PtrProCtl ctxt)
+#else  /* !__STDC__ */
+static PtrProCtl   AddInTable (name, isModule, edit, subModule, number, ctxt)
+char              *name;
+ThotBool           isModule;
+ThotBool           edit;
+int                number;
+PtrProCtl          table;
+#endif /* !__STDC__ */
+{
+  PtrProCtl           current, prev, new;
+  int                 i;
+
+  i = number;
+  current = ctxt;
+  new = NULL;
+  prev = NULL;
+  /* skip full contexts */
+  while (i >= MAX_ENTRIES && current)
+    {
+      prev = current;
+      current = current->ProNext;
+      i -= MAX_ENTRIES;
+    }
+  /* add a next context if it is necessary */
+  if (prev && i == 0)
+    {
+      i = 0;
+      current = (PtrProCtl) TtaGetMemory (sizeof (Profile_Ctl));
+      memset (current, 0, sizeof (Profile_Ctl));
+      prev->ProNext = current;
+    }
+
+  /* add the new entry */
+  if (current && i < MAX_ENTRIES)
+    {
+      if (name)
+	{
+	  current->ProEntries[i].ProName = TtaStrdup (name);
+	  current->ProEntries[i].ProIsModule = isModule;
+	  current->ProEntries[i].ProEdit = edit;
+	  if (isModule && subModule == NULL)
 	    {
-	      element[j] = element[j+1];
-	      j++;
-	    }
-	  element[j]=EOS;
-	  
-	 
-	  i = SearchInTable(AddHooks(element), Def_Table, Def_nbelem, FALSE);
-	  if (i>=0)
-	    {
-	      i++;
-	      /* process the elements inside the module */
-	      while (!EOM && (i<=Def_nbelem-1))
-		{
-		  ustrcpy(ISO2WideChar(element), Def_Table[i]);
-		  EOM = (element[0] == MODULE_START);
-		  
-		  if (!EOM)
-		    ProcessElements(element);
-		  i++;
-		}
-	      EOM = FALSE;
+	      /* allocate the context of the sub-module */
+	      new = (PtrProCtl) TtaGetMemory (sizeof (Profile_Ctl));
+	      memset (new, 0, sizeof (Profile_Ctl));
+	      current->ProEntries[i].ProSubModule = new;
 	    }
 	  else
-	    {
-	      /* Module not defined - Skip it */
-	    }
+	    current->ProEntries[i].ProSubModule = subModule;
 	}
     }
-  else
+  return new;
+}
+
+/*----------------------------------------------------------------------
+  AddModule inserts a new module in the module table.
+  Return the first context of the new module.
+----------------------------------------------------------------------*/
+#ifdef __STDC__
+static PtrProCtl    AddModule (char *name)
+#else  /* !__STDC__ */
+static PtrProCtl    AddModule (name)
+char               *name;
+#endif /* !__STDC__ */
+{
+  PtrProCtl     new = NULL;
+
+  /* Register the new module */
+  if (NbModules == 0)
     {
-      /* Last case : the element is a function. */
-
-      /* if the function is an edition function, insert in the edition table */
-       if (element[0] == EDITION_REF)
-	 {
-	   /* remove edition tag */
-	   while (element[j+1] != EOS)
-	     {
-	      element[j] = element[j+1];
-	      j++;
-	    }
-	   element[j]=EOS;
-
-	   /* insertion */
-	   if (Edition_nbelem < MAX_EDITION_FUNCTIONS)
-	     InsertTable(element, Edition_Table, &Edition_nbelem);
-	   
-	 }
-     
-       if ((strcmp(CurrentProfile, UserProfile) == 0) && (strlen(element) > 0))
-	 {
-	   
-	   /* Insert the element in the table of functions */
-	     
-	     if (Fun_nbelem < MAX_FUNCTIONS)
-	       InsertTable(element, Fun_Table, &Fun_nbelem);
-	 }
+      ModuleTable = (PtrProCtl) TtaGetMemory (sizeof (Profile_Ctl));
+      memset (ModuleTable, 0, sizeof (Profile_Ctl));
     }
-	
+  new = AddInTable (name, TRUE, FALSE, NULL, NbModules, ModuleTable);
+  NbModules++;
+  return new;
 }
 
 
 /*----------------------------------------------------------------------
-   Prof_BelongTable : Check if a function belongs to the profile functions
-   table.
-  ----------------------------------------------------------------------*/
+  AddProfile inserts a new profile in the profile table.
+  Return the first context of the new profile.
+----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool Prof_BelongTable(STRING FunctionName)
-#else  /* __STDC__ */
-ThotBool Prof_BelongTable(FunctionName)
-STRING functionName;
-#endif /* __STDC__ */
+static PtrProCtl    AddProfile (char *name)
+#else  /* !__STDC__ */
+static PtrProCtl    AddProfile (name)
+char               *name;
+#endif /* !__STDC__ */
 {
+  PtrProCtl     new = NULL;
 
-  if (!defined_profile)
-    return TRUE;
-
-  /* seek for functionName in the table */
- 
-  return (SearchInTable (FunctionName, Fun_Table, Fun_nbelem, TRUE) != -1);
+  /* Register the new profile */
+  if (NbProfiles == 0)
+    {
+      ProfileTable = (PtrProCtl) TtaGetMemory (sizeof (Profile_Ctl));
+      memset (ProfileTable, 0, sizeof (Profile_Ctl));
+    }
+  new = AddInTable (name, TRUE, FALSE, NULL, NbProfiles, ProfileTable);
+  NbProfiles++;
+  /* store the context of the user profile */
+  if (UserProfContext == NULL && !strcmp (name, UserProfile))
+    UserProfContext = new;
+  return new;
 }
 
 
 /*----------------------------------------------------------------------
-   Prof_DeleteFunTable : Deletes the function table (free allocated memory)
-  ----------------------------------------------------------------------*/
+  DeleteTable frees all contexts allocated for the table.
+  The parameter ctxt points to the first context of the table.
+  The parameter recursive is TRUE if the referred context must be freed.
+----------------------------------------------------------------------*/
 #ifdef __STDC__
-void Prof_DeleteFunTable(void)
+static void    DeleteTable (PtrProCtl ctxt, ThotBool recursive)
 #else  /* __STDC__ */
-void Prof_DeleteFunTable(void)
+static void    DeleteTable (ctxt, recursive)
+PtrProCtl      ctxt;
+ThotBool       recursive;
 #endif /* __STDC__ */
 {
-  DeleteTable(Fun_Table, & Fun_nbelem);
-}
+  PtrProCtl           next;
+  int                 i;
 
-
-/*---------------------------------------------------------------
-   Prof_GetProfilesItems :  Get the text for the profile menu items.
-   Returns the number of items
-------------------------------------------------------------------*/
-
-#ifdef __STDC__
-int  Prof_GetProfilesItems(STRING MenuText[])
-#else  /* !__STDC__ */
-int  Prof_GetProfilesItems(MenuText[])
-STRING MenuText[];
-#endif /* !__STDC__ */
-
-{
-  int                   nbelem = 0;
-  int                   j;
-
-  for (j=0 ; j < Pro_nbelem ; j++)
+  while (ctxt)
     {
-      InsertTable( Pro_Table[j], MenuText, & nbelem);
+      i = 0;
+      while (i < MAX_ENTRIES && ctxt->ProEntries[i].ProName)
+	{
+	  TtaFreeMemory (ctxt->ProEntries[i].ProName);
+	  if (recursive)
+	    DeleteTable (ctxt->ProEntries[i].ProSubModule, FALSE);
+	  i++;
+	}
+      /* free the current context and manage the next one */
+      next = ctxt->ProNext;
+      TtaFreeMemory (ctxt);
+      ctxt = next;
     }
-  return nbelem;
 }
 
 
-/*-----------------------------------------------------------------------------
-  Prof_ItemNumber2Profile : Conversion between item number in the profile menu
-  and the profile name
------------------------------------------------------------------------------*/
-
+/*----------------------------------------------------------------------
+  SearchModule searchs a module in the module table and return the
+  pointer to current entry.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-STRING Prof_ItemNumber2Profile(int ItemNumber)
+static ProElement  *SearchModule (char *name)
 #else  /* !__STDC__ */
-STRING Prof_ItemNumber2Profile(ItemNumber)
-int ItemNumber;
+static ProElement  *SearchModule (name) 
+char            *name;
 #endif /* !__STDC__ */
 {
-  if (Pro_nbelem)
-    return Pro_Table[ItemNumber];
+  PtrProCtl        current;
+  int              i;
+  ThotBool         found;
+
+  if (name == NULL)
+    return NULL;
+
+  /* check the current list of modules */
+  current = ModuleTable;
+  found = FALSE;
+  while (!found && current)
+    {
+      i = 0;
+      while (i < MAX_ENTRIES && current->ProEntries[i].ProName &&
+	     strcmp (name, current->ProEntries[i].ProName))
+	i++;
+      found = (i < MAX_ENTRIES && current->ProEntries[i].ProName);
+      if (!found)
+	current = current->ProNext;
+    }
+  if (found)
+    return &(current->ProEntries[i]);
   else
     return NULL;
 }
 
 
-/*-----------------------------------------------------------------------
-  Prof_Profile2ItemNumber : Conversion between profile name and item 
-  number in the menu
-----------------------------------------------------------------------*/
+/*----------------------------------------------------------------------
+  ProcessDefinition : Recursive function that helps
+  building the profile table
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int Prof_Profile2ItemNumber(STRING Profile)
+static void    ProcessDefinition (char *element)
 #else  /* !__STDC__ */
-int Prof_Profile2ItemNumber(Profile)
-STRING Profile;
+static void    ProcessDefinition (element)
+char          *element;
+#endif /* !__STDC__ */ 
+{
+  ProElement      *pEntry;
+  PtrProCtl        ctxt;
+  int              i;
+  ThotBool         endOfItem = FALSE;
+  
+  if (*element == PROFILE_START)
+    {
+      /*
+       * It's a profile definition -> insert it in the Profile table
+       * Remove the start tag and the end tag
+       */
+      i = 1;
+      while (element[i] != PROFILE_END)
+	i++;
+      element[i] = EOS;
+      /* The new profile in progress */
+      CurrentModule = AddProfile (&element[1]);
+      CurrentEntries = 0;
+    }
+  else if (*element == MODULE_START)
+    {
+      /*
+       * It's a module definition -> insert it in the Definiton table
+       * Remove the start tag and the end tag
+       */
+      i = 1;
+      while (element[i] != MODULE_END)
+	i++;
+      element[i] = EOS;
+
+      /* Is the module already declared? */
+      pEntry = SearchModule (&element[1]);
+      if (pEntry == NULL)
+	/* The new profile in progress */
+	CurrentModule = AddModule (&element[1]);
+      else
+	/* The new profile in progress */
+	CurrentModule = pEntry->ProSubModule;
+      CurrentEntries = 0;
+    }
+  else if (*element == MODULE_REF)
+    {
+      /*
+       * The element is a module inclusion -> insert it in the module
+       * or the profile in progress.
+       * Skip the MODULE_REF tag
+       */
+      pEntry = SearchModule (&element[1]);
+      if (pEntry == NULL)
+	{
+	  /* the module is not already declared */
+	  ctxt = AddModule (&element[1]);
+	}
+      else
+	ctxt = pEntry->ProSubModule;
+      /* add the new entry in the current profile or module */
+      AddInTable (&element[1], TRUE, FALSE, ctxt, CurrentEntries, CurrentModule);
+      CurrentEntries++;
+    }
+  else
+    {
+      /*
+       * The element is a function -> insert it in the module
+       * or the profile in progress.
+       * Look for and skip the EDITION_REF tag
+       */
+
+      /* add the new entry in the current profile or module */
+       if (*element == EDITING_REF)
+	 AddInTable (&element[1], FALSE, TRUE, NULL, CurrentEntries, CurrentModule);
+       else
+	 AddInTable (element, FALSE, FALSE, NULL, CurrentEntries, CurrentModule);
+      CurrentEntries++;
+    }
+}
+
+
+/*-----------------------------------------------------------------------
+   AddFunctions keep in the function table the list of functions
+   declared in the list of contexts.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void AddFunctions (PtrProCtl ctxt)
+#else  /* !__STDC__ */
+static void AddFunctions (ctxt)
+PtrProCtl   ctxt;
 #endif /* !__STDC__ */
 {
-  if (Profile)
-    {    
-      return (SearchInTable(Profile, Pro_Table, Pro_nbelem, FALSE));
+  int           i;
+
+  while (ctxt)
+    {
+      i = 0;
+      while (i < MAX_ENTRIES && ctxt->ProEntries[i].ProName)
+	{
+	  if (ctxt->ProEntries[i].ProIsModule)
+	    /* add functions of the sub-module */
+	    AddFunctions (ctxt->ProEntries[i].ProSubModule);
+	  else
+	    {
+	      AddInTable (ctxt->ProEntries[i].ProName, FALSE, ctxt->ProEntries[i].ProEdit, NULL, NbFunctions, FunctionTable);
+	      NbFunctions++;
+	    }
+	  /* next entry */
+	  i++;
+	}
+      /* next context */
+      ctxt = ctxt->ProNext;
     }
-  else 
-    return -1;
+}
+
+
+/*----------------------------------------------------------------------
+  SortFunctionTable generates a sorted the function table in ascending
+  order.
+  ----------------------------------------------------------------------*/
+static void SortFunctionTable ()
+{
+  PtrProCtl     ctxt;
+  char         *ptr;
+  int           i, j, index;
+
+  /* copy the list of contexts in a large table */
+  SortedFunctionTable = (char **) TtaGetMemory (NbFunctions * sizeof (char *));
+  index = 0;
+  ctxt = FunctionTable;
+  while (ctxt && index < NbFunctions)
+    {
+      i = 0;
+      while (i < MAX_ENTRIES && ctxt->ProEntries[i].ProName)
+	{
+	  if (!ProfileReadOnly && ctxt->ProEntries[i].ProEdit)
+	    /* there is almost one editing function */
+	    ProfileReadOnly = FALSE;
+	  SortedFunctionTable[index] = TtaStrdup (ctxt->ProEntries[i].ProName);
+	  index++;
+	  /* next entry */
+	  i++;
+	}
+      /* next context */
+      ctxt = ctxt->ProNext;
+    }
+
+  /* sort the large table */
+  for (i = 0 ; i < NbFunctions; i++)
+    {
+      index = i;
+      for (j = i+1; j < NbFunctions; j++)
+        if (strcmp (SortedFunctionTable[j], SortedFunctionTable[index]) <= 0)
+	  index = j;
+      ptr = SortedFunctionTable[index];
+      SortedFunctionTable[index] = SortedFunctionTable[i];
+      SortedFunctionTable[i] = ptr;
+    }
+
+  /* delete the function table */
+  if (FunctionTable)
+    {
+      DeleteTable (FunctionTable, FALSE);
+      FunctionTable = NULL;
+    }
+}
+
+
+/*----------------------------------------------------------------------
+  Prof_BelongTable searchs a function in the function table and return TRUE
+  if the function exists.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool    Prof_BelongTable (char *name)
+#else  /* !__STDC__ */
+ThotBool    Prof_BelongTable (name) 
+char              *name;
+#endif /* !__STDC__ */
+{
+  char            *ptr;
+  int              left, right, middle, i;
+  ThotBool         found = FALSE;
+
+  if (NbFunctions == 0)
+    /* All functions are allowed */
+    return TRUE;
+
+  /* Dichotomic search */
+  left = middle = 0;
+  right = NbFunctions - 1;
+ 
+  while (left <= right && !found)
+    {
+      middle = (right + left) / 2;
+      i = strcmp (SortedFunctionTable[middle], name);
+      if (i == 0)
+	found = TRUE;
+      else if (i < 0)
+	left = middle + 1;
+      else
+	right = middle - 1;
+    }
+  return found;
+}
+
+
+/*-----------------------------------------------------------------------
+   Prof_InitTable: Seek the current profile file and init tables
+  ----------------------------------------------------------------------*/
+void Prof_InitTable ()
+{
+  FILE               *profFile;
+  char               *ptr;
+  char                buffer[200];
+  int                 i = 0;
+
+  /* TODO: use a ISO functions for TtaGetEnvString and TtaStrdup */
+  /* Retreive thot.rc variables and open the profile file */
+  ptr = TtaGetEnvString ("Profiles_File");
+
+  if (ptr && *ptr)
+    {
+      if (SearchFile (ptr, 2, buffer))
+	{
+	  profFile = fopen (buffer,"r");
+	  /* what is the current active profile */  
+	  ptr = TtaGetEnvString ("Profile");
+	  if (ptr && *ptr)
+	    strcpy (UserProfile, ptr);	
+	  else
+	    UserProfile[0] = EOS;
+
+	  /* Fill a profile and module tables */
+	  while (fgets (ProfileBuff, sizeof (ProfileBuff), profFile))
+	    {
+	      SkipAllBlanks (ProfileBuff);
+	      /* skip comments */
+	      if (strlen (ProfileBuff) >=2 && ProfileBuff[0] != '#')
+		ProcessDefinition (ProfileBuff);
+	    }
+	  fclose (profFile);
+
+	}
+    }
+
+  /* All functions are available when:
+   * - the profiles file doesn't exist
+   * - or there is no specific user profile
+   * - or the user profile is None
+   */
+  if (NbProfiles > 0 && UserProfile[0] != EOS &&  strcmp (UserProfile, "None"))
+    {
+      CheckProfile = TRUE;
+      /* Now build the list of current available functions */
+      if (UserProfContext)
+	{
+	  FunctionTable = (PtrProCtl) TtaGetMemory (sizeof (Profile_Ctl));
+	  memset (FunctionTable, 0, sizeof (Profile_Ctl));
+	  AddFunctions (UserProfContext);
+	  /* generate a sorted list of available functions */
+	  SortFunctionTable ();
+	}
+    }
+  /* TODO: remove that clean up as soon as we are able to update Amaya UI */
+  /* delete the modules table */
+  DeleteTable (ModuleTable, TRUE);
+  ModuleTable = NULL;
+  NbModules = 0;
+}
+
+
+/*-----------------------------------------------------------------------
+   Prof_FreeTable: Remove profile tables
+  ----------------------------------------------------------------------*/
+void Prof_FreeTable ()
+{
+  /* delete the profiles table */
+  DeleteTable (ProfileTable, TRUE);
+  NbProfiles = 0;
+  UserProfContext = NULL;
+   TtaFreeMemory (SortedFunctionTable);
+  SortedFunctionTable = NULL;
+  NbFunctions = 0;
+}
+
+
+/*----------------------------------------------------------------------
+  TtaRebuildProTable: Rebuild the Profiles Table
+   Returns the number of elements if operation succeded or a 0 if 
+   the operation failed.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int      TtaRebuildProTable (char *prof_file)
+#else  /* !__STDC__ */
+int      TtaRebuildProTable (prof_file)
+char    *prof_file;
+#endif /* !__STDC__ */
+{
+  /* delete the profiles table */
+  Prof_FreeTable ();
+  Prof_InitTable ();
+}
+
+
+/*----------------------------------------------------------------------
+   TtaGetProfileFileName:  Get the text for the profile file name.
+   name is a provided buffer of length characters to receive the name.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void     TtaGetProfileFileName (STRING name, int length)
+#else  /* !__STDC__ */
+void     TtaGetProfileFileName (name, length)
+STRING   name;
+#endif /* !__STDC__ */
+{
+  char               *ptr;
+  char                buffer[200];
+
+  name[0] = EOS;
+  ptr = TtaGetEnvString ("Profiles_File");
+  if (ptr && *ptr)
+    {
+      SearchFile (ptr, 2, buffer);
+      if (strlen (buffer) < length)
+	ustrcpy (name, ISO2WideChar (buffer));
+    }
+}
+
+/*----------------------------------------------------------------------
+   TtaGetDefProfileFileName:  Get the text for the default profile file name.
+   name is a provided buffer of length characters to receive the name.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void     TtaGetDefProfileFileName (STRING name, int length)
+#else  /* !__STDC__ */
+void     TtaGetDefProfileFileName (name, length)
+STRING   name;
+#endif /* !__STDC__ */
+{
+  char               *ptr;
+  char                buffer[200];
+
+  name[0] = EOS;
+  ptr = TtaGetDefEnvString ("Profiles_File");
+  if (ptr && *ptr)
+    {
+      SearchFile (ptr, 2, buffer);
+      if (strlen (buffer) < length)
+	ustrcpy (name, ISO2WideChar (buffer));
+    }
+}
+
+
+/*----------------------------------------------------------------------
+   TtaGetProfilesItems:  Get the text for the profile menu items.
+   listEntries is a provided list of length pointers.
+   Returns the number of items
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+int      TtaGetProfilesItems (STRING *listEntries, int length)
+#else  /* !__STDC__ */
+int      TtaGetProfilesItems (listEntries, length)
+STRING  *listEntries;
+#endif /* !__STDC__ */
+{
+  PtrProCtl     ctxt;
+  int           nbelem = 0;
+  int           i;
+
+  ctxt = ProfileTable;
+  while (ctxt && nbelem < NbProfiles && nbelem < length)
+    {
+      i = 0;
+      while (i < MAX_ENTRIES && ctxt->ProEntries[i].ProName)
+	{
+	  listEntries[nbelem] = ISO2WideChar (ctxt->ProEntries[i].ProName);
+	  i++;
+	  nbelem++;
+	}
+      ctxt = ctxt->ProNext;
+    }
+  return nbelem;
 }
 
 
 /*----------------------------------------------------------------------
     Prof_ShowSeparator : determines if a separator must be displayed
     in the menu interface. Two consecutive separators musn't be displayed
-----------------------------------------------------------------------*/
-
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool Prof_ShowSeparator(Menu_Ctl *ptrmenu, int item, char LastItemType)
+ThotBool     Prof_ShowSeparator (Menu_Ctl *ptrmenu, int item, char LastItemType)
 #else  /* __STDC__ */
-ThotBool Prof_ShowSeparator(*ptrmenu, item, LastItemType)
-Menu_Ctl *ptrmenu;
-int       item;
-char LastItemType;
+ThotBool     Prof_ShowSeparator (*ptrmenu, item, LastItemType)
+Menu_Ctl    *ptrmenu;
+int          item;
+char         LastItemType;
 #endif /* __STDC__ */
 {  
-  return !(( LastItemType ==  'S') || (item == 0) );
+  return !(LastItemType == 'S' || item == 0);
 }
 
 
 /*-----------------------------------------------------------------------
     Prof_ShowButton : Add a button if the function associated to that button
     belongs to the user profile
-----------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool Prof_ShowButton(STRING FunctionName)
+ThotBool    Prof_ShowButton (char *FunctionName)
 #else  /* __STDC__ */
-ThotBool Prof_ShowButton(FunctionName)
-STRING   FunctionName;
+ThotBool    Prof_ShowButton (FunctionName)
+char       *FunctionName;
 #endif /* __STDC__ */
 {
-  return (Prof_BelongTable(FunctionName));
+  return (Prof_BelongTable (FunctionName));
 }
 
 
 /*----------------------------------------------------------------------
     Prof_ShowSubMenu : Check if a submenu has to be displayed.
     A submenu musn't be displayed if it contains no entry
------------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool   Prof_ShowSubMenu(Menu_Ctl *ptrsubmenu)
+ThotBool   Prof_ShowSubMenu (Menu_Ctl *ptrsubmenu)
 #else  /* __STDC__ */
-ThotBool   Prof_ShowSubMenu(ptrsubmenu)
+ThotBool   Prof_ShowSubMenu (ptrsubmenu)
 Menu_Ctl  *ptrsubmenu;
 #endif /* __STDC__ */
 {
   int      item    = 0;
   
-  if ((ptrsubmenu->ItemsNb == 0) || (ptrsubmenu == NULL))
+  if (ptrsubmenu->ItemsNb == 0 || ptrsubmenu == NULL)
     return FALSE;
   while (item < ptrsubmenu->ItemsNb)
     {
@@ -460,30 +761,31 @@ Menu_Ctl  *ptrsubmenu;
 /*----------------------------------------------------------------------
     Prof_ShowMenu : Check if a menu has to be displayed. A menu mustn't be
     displayed if it contains no entry.
------------------------------------------------------------------------*/
+ -----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool   Prof_ShowMenu(Menu_Ctl *ptrmenu)
+ThotBool   Prof_ShowMenu (Menu_Ctl *ptrmenu)
 #else  /* __STDC__ */
-ThotBool   Prof_ShowMenu(ptrmenu)
+ThotBool   Prof_ShowMenu (ptrmenu)
 Menu_Ctl  *ptrmenu;
 #endif /* __STDC__ */
 {
   int      item    = 0;
 
-  /* If profiles are not used, do not erase any menu */
-  if (!defined_profile)
+  if (!CheckProfile)
+    /* there is no user profile, do not erase any menu */
     return TRUE;
-  /* this should not happen... */
-  if (ptrmenu == NULL)
+  else if (ptrmenu == NULL)
+    /* this should not happen... */
     return FALSE;
-  /* check if the attr and select menu are in the profile */
-  if (ptrmenu->MenuAttr)
-    return (Prof_BelongTable(TEXT("MenuAttribute")));
-  if (ptrmenu->MenuSelect)
-    return (Prof_BelongTable(TEXT("MenuSelection")));    
-  /* an empty menu has to be removed */
-  if (ptrmenu->ItemsNb == 0)
+  else if (ptrmenu->MenuAttr)
+    /* check if the attr and select menu are in the profile */
+    return (Prof_BelongTable (TEXT("MenuAttribute")));
+  else if (ptrmenu->MenuSelect)
+    return (Prof_BelongTable (TEXT("MenuSelection")));    
+  else if (ptrmenu->ItemsNb == 0)
+    /* an empty menu has to be removed */
     return FALSE;
+
   /* check if the menu is only composed of empty sub menus and separators */
   while (item < ptrmenu->ItemsNb)
     {
@@ -502,272 +804,4 @@ Menu_Ctl  *ptrmenu;
       item ++;
     }
   return FALSE;
-}
-
-
-
-/*********************************************************************
-  Table functions : set of functions to handle table manipulations :
-  insertions, deletions, searchs, sorts
-**********************************************************************/
-
-
-
-/*----------------------------------------------------------------------
-  InsertTable : Insert an element in a table
-----------------------------------------------------------------------*/
-
-
-#ifdef __STDC__
-static void InsertTable(STRING function, STRING  * Table, int * nbelem)
-#else  /* !__STDC__ */
-static void InsertTable(function, Table, nbelem )
-STRING         function;
-STRING        * Table;
-int           * nbelem;
-#endif /* !__STDC__ */
-{
-  Table[*nbelem] = TtaStrdup (function);
-  *nbelem = *nbelem+1;
-}
-
-
-/*----------------------------------------------------------------------
-  FileToTable : Copy a text file in a table. The lines beginning with "#"
-  are considered as comments and are not included
-----------------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void FileToTable(FILE * File, STRING * Table,int * nbelem, int maxelem)
-#else  /* !__STDC__ */
-static void FileToTable(File, Table, nbelem, maxelem)
-STRING    *  Table;
-FILE      *  File;
-int       *  nbelem;
-int         maxelem;
-#endif /* !__STDC__ */
-{
-  
-  while (fgets (TempString, sizeof (TempString), File) && *nbelem < maxelem)
-    {
-      SkipAllBlanks(TempString);
-      if (strlen(TempString) >=2 && !(TempString[0] == '#' ))
-	InsertTable (ISO2WideChar(TempString), Table, nbelem);
-    }
-}
-
-
-/*-----------------------------------------------------------
-  DeleteTable : Free all memory allocated for a table
--------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void DeleteTable(STRING * Table, int  *nbelem)
-#else  /* __STDC__ */
-static void DeleteTable(Table, nbelem)
-STRING      * Table;
-int         * nbelem;
-#endif /* __STDC__ */
-{
-  int        i;
-
-  for ( i = 0; i < *nbelem; i++)
-    TtaFreeMemory (Table[i]);
-  *nbelem = 0;
-}
-
-
-
-/*----------------------------------------------------------------------
-  Search a string in the table and return the line number of the first
-  occurence or -1 if not found. The function can perform a dichotomic search 
-  if the table given is sorted and if the boolean parameter is set TRUE.
-
-  int SearchInTable(char * StringToFind, ** Researched string     
-		    STRING Table[],      ** Table in which to search 
-		    int nbelem,          ** Number of elements of the table
-		    ThotBool sort)       ** Is the table sorted ?
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static int SearchInTable(char * StringToFind, STRING  * Table,
-			 int nbelem, ThotBool sort)
-#else  /* !__STDC__ */
-static int SearchInTable(stringToFind, Table, nbelem, sort) 
-char * StringToFind;
-STRING * Table;
-int nbelem;
-ThotBool sort;
-#endif /* !__STDC__ */
-{
-  int              j = 0;
-  ThotBool         found = FALSE;
-  int              left, right, middle;
-  char             temp [MAX_PRO_LENGTH];
-  
-  if (sort)
-    {
-      /* Dichotomic search */
-      left = middle = 0;
-      right = nbelem - 1;
-      
-      while (left <= right && !found)
-	{
-	  middle = (right + left) / 2;
-	  ustrcpy (ISO2WideChar(temp), Table[middle]);
-	  if (ustrcmp(temp, StringToFind)==0)
-	    found = TRUE;
-	  else if (ustrcmp(temp, StringToFind) < 0)
-	    left = middle + 1;
-	  else right = middle - 1;
-	}     
-      if (found)
-	return middle;
-      else
-	return -1;
-    }
-  else
-    {
-      /* simple sequential search */      
-      for (j = 0; j < nbelem;j++)
-	{
-	  if (strcmp(Table[j], StringToFind) == 0)
-	    return j;
-	}
-      return -1; 
-    }
-}
-
-
-/*------------------------------------------------------
-  SortTable : Sort a table of strings in ascending order
---------------------------------------------------------*/
-
-#ifdef __STDC__
-static void SortTable (STRING * Table, int nbelem)
-#else  /* !__STDC__ */
-static void SortTable (Table, nbelem)
-STRING  * Table;
-int     nbelem;
-#endif /* !__STDC__ */
-{
-  int i, j, kmax;
-  char *     tempo;
-
-  for (i=0 ; i < nbelem - 1 ; i++)
-    {
-      kmax = i;
-      for (j = i+1; j < nbelem; j++)
-        if (ustrcmp( Table[j] ,Table[kmax]) <= 0) kmax = j;
-      tempo = Table[kmax];
-      Table[kmax] = Table[i];
-      Table[i] = tempo;
-    }
-}
-
-
-
-/*********************************************************
-  String functions : set of useful functions for strings
-***********************************************************/
-
-/*-------------------------------------------------------------
-  SkipNewLineSymbol : Remove the EOF ('end of line') character
-------------------------------------------------------------*/
-
-#ifdef __STDC__
-static void SkipNewLineSymbol(char * Astring)
-#else  /* !__STDC__ */
-static void SkipNewLineSymbol(Astring)
-char   * Astring;
-#endif /* !__STDC__ */
-{
-  int         c = 0;
-
-  while (Astring[c] != EOS && Astring[c] != EOL)
-    {c++;}
-  if (Astring[c] == EOL)
-    Astring[c] = EOS;    
-}
-
-
-/*----------------------------------------------------
-  SkipAllBlanks :  Remove all the spaces, tabulations,
-  returns (CR) and "end of line" characters.
------------------------------------------------------*/
-
-#ifdef __STDC__
-static void SkipAllBlanks (char  * Astring)
-#else  /* !__STDC__ */
-static void SkipAllBlanks (Astring)
-char  * string;
-#endif /* !__STDC__ */
-{
-  int c = 0;
-  int nbsp = 0;
-  
-  do
-    { 
-      while (Astring[c+nbsp] == SPACE || Astring[c+nbsp] == TAB || Astring[c+nbsp] == __CR__)
-	nbsp++;
-      
-      Astring [c] = Astring[c+nbsp];
-    } 
-  while (Astring [c++] != EOS);
-  SkipNewLineSymbol(Astring);
- 
-}
-
-/*--------------------------------------------------
-  AddHooks : Jsut add the opening and closing hooks
-  characters ('[' and ']') respectively at the beginning
-  and at the end of the string
------------------------------------------------------*/
-
-#ifdef __STDC__
-static char *  AddHooks (char * Astring)
-#else  /* !__STDC__ */
-static char *  AddHooks (Astring)
-char * Astring;
-#endif /* !__STDC__ */
-{
-  int          k = 0;
-  
-  TempString[k] = MODULE_START;
-  
-  do
-    {
-      TempString[k+1] = Astring[k];
-      k++;
-    }
-  while (Astring[k] != EOS);
- 
-  TempString[k+1] = MODULE_END;
-  TempString[k+2] = EOS;
-
-  return TempString;
-}
-
-/*--------------------------------------------------
-  RemoveHook : removes the character first which must
-  be an opening hook ('[') and goes on recopying the
-  string until the closing hook is found
-----------------------------------------------------*/
-
-#ifdef __STDC__
-static void RemoveHooks (char * string)
-#else  /* !__STDC__ */
-static void RemoveHooks (string)
-char * string;
-#endif /* !__STDC__ */
-{
-  char         new[MAX_PRO_LENGTH];
-  int          k = 0;
-
-  while (string [k+1] != MODULE_END)
-    {
-      new[k] = string [k+1];
-      k++;
-    }
-  new[k] = EOS;
-  strcpy (string, new);
 }

@@ -6,33 +6,35 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern ThotBool Prof_BelongTable ( char *name );
 extern void Prof_InitTable ( void );
-extern int Prof_RebuildProTable ( STRING prof_file );
-extern ThotBool Prof_BelongTable ( STRING FunctionName );
-extern void Prof_DeleteFunTable ( void );
-extern int Prof_GetProfilesItems ( STRING MenuText[] );
-extern STRING Prof_ItemNumber2Profile ( int ItemNumber );
-extern int Prof_Profile2ItemNumber ( STRING Profile );
+extern void Prof_FreeTable ( void );
+extern int TtaRebuildProTable ( char *prof_file );
+extern void TtaGetProfileFileName ( STRING name,
+                                    int length );
+extern int TtaGetProfilesItems ( STRING *listEntries,
+                                 int length );
 extern ThotBool Prof_ShowSeparator ( Menu_Ctl *ptrmenu,
                                      int item,
                                      char LastItemType );
-extern ThotBool Prof_ShowButton ( STRING FunctionName );
+extern ThotBool Prof_ShowButton ( char *FunctionName );
 extern ThotBool Prof_ShowSubMenu ( Menu_Ctl *ptrsubmenu );
 extern ThotBool Prof_ShowMenu ( Menu_Ctl *ptrmenu );
 
 #else /* __STDC__ */
 
+extern ThotBool Prof_BelongTable (/* char *name */);
 extern void Prof_InitTable (/* void */);
-extern int Prof_RebuildProTable (/* STRING prof_file */);
-extern ThotBool Prof_BelongTable (/* STRING FunctionName */);
-extern void Prof_DeleteFunTable (/* void */);
-extern int Prof_GetProfilesItems (/* STRING MenuText[] */);
-extern STRING Prof_ItemNumber2Profile (/* int ItemNumber */);
-extern int Prof_Profile2ItemNumber (/* STRING Profile */);
+extern void Prof_FreeTable (/* void */);
+extern int TtaRebuildProTable (/* char *prof_file */);
+extern void TtaGetProfileFileName (/* STRING name,
+                                      int length */);
+extern int TtaGetProfilesItems (/* STRING *listEntries,
+                                   int length */);
 extern ThotBool Prof_ShowSeparator (/* Menu_Ctl *ptrmenu,
                                        int item,
                                        char LastItemType */);
-extern ThotBool Prof_ShowButton (/* STRING FunctionName */);
+extern ThotBool Prof_ShowButton (/* char *FunctionName */);
 extern ThotBool Prof_ShowSubMenu (/* Menu_Ctl *ptrsubmenu */);
 extern ThotBool Prof_ShowMenu (/* Menu_Ctl *ptrmenu */);
 

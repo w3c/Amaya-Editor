@@ -14,3 +14,4 @@ HTTP_PROXY=
 # ex: NO_PROXY=harpo.marx.edu)
 NO_PROXY=
 ENABLE_PIPELINING=
+Profiles_File=amaya.profiles

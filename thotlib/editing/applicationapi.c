@@ -56,6 +56,7 @@
 #include "language_f.h"
 #include "memory_f.h"
 #include "message_f.h"
+#include "profiles_f.h"
 #include "references_f.h"
 #include "schemas_f.h"
 #include "schtrad_f.h"
@@ -398,6 +399,7 @@ void                TtaQuit ()
 #ifndef NODISPLAY
   FreeDocColors ();
   FreeAllMessages ();
+  Prof_FreeTable ();
 #endif /* NODISPLAY */
   FreeAll ();
 #ifndef NODISPLAY

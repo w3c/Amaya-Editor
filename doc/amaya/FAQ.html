@@ -144,10 +144,21 @@ href="http://www.w3.org/Amaya/User/Math.html">http://www.w3.org/Amaya/User/Math.
 
 <p>Amaya has been built as a structured document editor.  This approach allows
 it to handle complex documents and highly structured objects such as tables,
-structured graphics or mathematical expressions. While editing, Amaya works on
-the document tree, not on its textual representation, which is generated only
-at save time, in the syntax you choose (plain text, HTML, XML).  That's why
-you cannot edit tags.</p>
+structured graphics or mathematical expressions. While editing in the  HTML or
+the XML mode, Amaya works on the document tree, not on its textual
+representation, which is generated only at save time, in the syntax you choose
+(plain text, HTML, XML).</p>
+
+<p> Amaya allows one to open the source view of the document and to edit tags.
+This is done in a separated document. Amaya is able to show what part of the
+source document is concerned by a current selection in the formatted document
+and .what part of the formatted document is concerned by a current selection
+in the source document. Either thesource document or the formatted document
+can be edited but not at the same time. As soon as the source document or the
+formatted document is edited the second one is set in read-only mode.
+Documents must be synchronized to change the editing access. The
+synchronisation is done by an explicit command or when the document is
+saved.</p>
 
 <p></p>
 <hr>
@@ -162,7 +173,7 @@ Views menu allows you to change the zoom factor for a single window.</p>
 
 <p>You can also change the zoom factor permanently. By default the zoom factor
 is 0 (documents are displayed with their own size). This default value can be
-modified by means of the Special/Preferences/General menu.</p>
+modified by means of the <em>Special/Preferences/General</em> menu.</p>
 
 <p></p>
 <hr>
@@ -187,8 +198,8 @@ invalid documents and tries to dynamically correct detected errors. For
 example it's able to add missing end-tags and to move misplaced elements.</p>
 
 <p>Nevertheless when Amaya find invalid tags and invalid attributes it
-generates a log file which can be displayed by the command "Show log file" of
-the menu "Special".</p>
+generates a log file which can be displayed by the command <em>Special/Show
+log file</em>.</p>
 
 <p></p>
 <hr>
@@ -252,11 +263,16 @@ following documentation:</p>
     href="http://www.w3.org/Amaya/User/AmayaArchi.html">Amaya
     architecture.</a></li>
   <li>The <a href="http://www.w3.org/Amaya/User/APIman.toc.html">Thot API
-    manual</a></li>
+    manual</a> explains how the Thotlib works and gives the list of available
+    functions</li>
   <li>The <a href="http://www.w3.org/Amaya/User/Appman.toc.html">Thot
-    Application generation manual</a></li>
+    Application generation manual</a> explains how to generate menus and the
+    mechanism of Thot events.</li>
   <li>The <a href="http://www.w3.org/Amaya/User/languages.toc.html">Thot
-    language manual</a></li>
+    language manual</a> gives the syntax of the S, P and T languages.</li>
+  <li>The page <a
+    href="http://www.w3.org/Amaya/User/Amaya-dev.html">Amaya-dev.html</a>
+    gives team conventions for writing the Thotlib and the Amaya code.</li>
 </ul>
 
 <p></p>
@@ -312,7 +328,7 @@ src="http://validator.w3.org/images/vh40.gif" alt="Valid HTML 4.0!"
 height="31" width="88"></a></p>
 <address>
   <a href="mailto:irene.vatton@w3.org">Ir&egrave;ne Vatton</a><br>
-  $Date$
+  $Date$ 
 </address>
 <address>
   <p class="policyfooter"><small><a
@@ -321,9 +337,9 @@ height="31" width="88"></a></p>
   href="http://www.lcs.mit.edu/">MIT</a>, <a
   href="http://www.inria.fr/">INRIA</a>, <a
   href="http://www.keio.ac.jp/">Keio</a> ), All Rights Reserved. W3C <a
-  href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Legal
+  href="http://www.w3.org/Consortium/Legal/ipr-notice.html#Legal  
   Disclaimer">liability,</a> <a
-  href="http://www.w3.org/Consortium/Legal/ipr-notice.html#W3C
+  href="http://www.w3.org/Consortium/Legal/ipr-notice.html#W3C  
   Trademarks">trademark</a>, <a
   href="http://www.w3.org/Consortium/Legal/copyright-documents.html">document
   use </a>and <a

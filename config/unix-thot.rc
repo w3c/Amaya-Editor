@@ -34,7 +34,7 @@ HTTP_PROXY=
 NO_PROXY=
 ENABLE_LOST_UPDATE_CHECK=Yes
 PERSIST_CX_TIMEOUT=600
-
+Profiles_File=amaya.profiles
 [alliance]
 THOTSYSSCH=$(THOTDIR)/schemas:$(THOTDIR)/schemasOPERA:$(THOTDIR)/alliance/schemas:$(THOTDIR)/alliance/icons:$(THOTDIR)/alliance/manuals
 LANG=en_US

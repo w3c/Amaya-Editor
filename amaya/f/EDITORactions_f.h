@@ -156,7 +156,9 @@ extern void ConfigTemplates ( Document doc,
 extern void SaveOptions ( Document doc,
                           View view );
 extern void AnnotateDocument ( Document doc,
-			       View view );
+                               View view );
+extern void LoadAnnotations ( Document doc,
+                              View view );
 
 #else /* __STDC__ */
 
@@ -310,6 +312,9 @@ extern void ConfigTemplates (/* Document doc,
 extern void SaveOptions (/* Document doc,
                             View view */);
 extern void AnnotateDocument (/* Document doc,
-				 View view */);
+                                 View view */);
+extern void LoadAnnotations (/* Document doc,
+                                View view */);
+
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

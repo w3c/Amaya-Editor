@@ -7,6 +7,8 @@
 #ifdef __STDC__
 
 extern void ColorsEvent ( ThotEvent * event );
+extern ThotBool ThotCreatePalette ( int x,
+                                    int y );
 extern void TtcChangeColors ( Document document,
                               View view );
 extern void TtcGetPaletteColors ( int *fg,
@@ -15,6 +17,8 @@ extern void TtcGetPaletteColors ( int *fg,
 #else /* __STDC__ */
 
 extern void ColorsEvent (/* ThotEvent * event */);
+extern ThotBool ThotCreatePalette (/* int x,
+                                      int y */);
 extern void TtcChangeColors (/* Document document,
                                 View view */);
 extern void TtcGetPaletteColors (/* int *fg,

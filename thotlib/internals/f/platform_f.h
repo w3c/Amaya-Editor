@@ -6,7 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern int TtaFileExist ( CONST PathBuffer filename );
+extern int TtaFileExist ( CONST char* filename );
 extern int TtaFileUnlink ( CONST STRING filename );
 extern int ThotDirBrowse_first ( ThotDirBrowse * me,
                                  char* dir,
@@ -35,12 +35,12 @@ extern ThotBool TtaCompareFiles ( CONST STRING file1,
 
 #else /* __STDC__ */
 
-extern int TtaFileExist (/* CONST STRING filename */);
+extern int TtaFileExist (/* CONST char* filename */);
 extern int TtaFileUnlink (/* CONST STRING filename */);
 extern int ThotDirBrowse_first (/* ThotDirBrowse * me,
-                                   STRING dir,
-                                   STRING name,
-                                   STRING ext */);
+                                   char* dir,
+                                   char* name,
+                                   char* ext */);
 extern int ThotDirBrowse_next (/* ThotDirBrowse * me */);
 extern int ThotDirBrowse_close (/* ThotDirBrowse * me */);
 extern ThotFileHandle TtaFileOpen (/* CONST STRING name,

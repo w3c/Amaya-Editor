@@ -1,0 +1,313 @@
+## The ProfileDefs file contain units of modules definition separated
+## by comments lines beginning with one or several hashes '#' (like ####VIEWS).
+## These comments are there to help you searching your module (or function).
+
+## The structure is recursive (modules contains functions and modules which can
+## contain other functions and modules which ...)
+
+## This file can contain 4 different types of elements :
+##   ** Profile definitions : 
+##      Beginning of module definition is set by a name between brackets (like [views] or [zoom])
+##   ** Module definitions : 
+##      Beginning of module definition is set by a name between brackets (like [views] or [zoom])
+##      All the modules or functions between this module start and the next module start        
+##      belong to the module.            
+##   ** Module insertions :
+##      A module name (like views of the previous example) is preceded by
+##      the plus '+' symbol to mean that this module is inserted in the current module definition.
+##   ** Function insertions : 
+##      Function are inserted in module without any symbol before the
+##      name of the function or with the symbol '&'.
+
+## WARNING : Marks '&' before a function's name are marks used by internal 
+## profile function. You don't have to deal with it (they are used to determine 
+## which functions are edition functions). 
+## DO NOT INCLUDE THIS SYMBOL IN YOUR PROFILE CONFIGURATION FILE
+
+################# AMAYA EDITOR
+<editor>
++amayabase
++areas
++browsing
++config
++css-style
++edit
++forms
++head
++html-style
++makebook
++maths
++objects
++print
++source-view
++spell
++tables
++templates
++views
+
+################# AMAYA BROWSER
+<browser>
++amayabase
++browsing
++config
++css-browsing
++print
++source-view
++views
+ShowMapAreas
+
+################# AMAYA MINI-EDITOR
+<mini-editor>
++amayabase
++css-style
++edit
++print
++source-view
+
+################# AMAYA MINI-BROWSER
+<mini-browser>
++amayabase
++browsing
++print
++source-view
+
+################# AMAYA FUNCTIONS
+[amayabase]
+AmayaClose
+ConfigProfile
+HelpAmaya
+HelpAtW3C
+TtcSwitchButtonBar
+TtcSwitchCommands
+ZoomIn
+ZoomOut
+
+######### BROWSING
+[browsing]
+HelpSearching
+HelpSelecting
+GoToHome
+GotoPreviousHTML
+GotoNextHTML
+HelpBrowsing
+OpenDoc
+OpenDocInNewWindow
+Reload
+SaveDocumentAs
+ShowLogFile
+StopTransfer
+TtcCloseDocument
+TtcSearchText
+
+########### EDITING
+[edit]
++html
++links
+HelpAttributes
+HelpChanging
+HelpPublishing
+&MenuAttribute
+&New
+SaveDocument
+SetBrowserEditor
+&TransformType
+&TtcCutSelection
+&TtcCopySelection
+&TtcDeleteSelection
+&TtcPaste
+&TtcUndo
+&TtcRedo
+
+######### VIEWS
+[source-view]
+HelpViews
+ShowSource
+TtcCloseView
+
+[views]
+ShowAlternate
+ShowLinks
+ShowStructure
+ShowToC
+
+########### PRINTING
+[print]
+HelpPrinting
+PrintAs
+SetupAndPrint
+
+########### HTML
+[head]
+&CreateBase
+&CreateMeta
+&CreateLinkInHead
+&CreateScript
+&CreateStyle
+&CreateComment
+&CreateAddress
+
+[html]
+&CreateBlockQuote
+&CreateBreak
+&CreateDefinitionList
+&CreateDefinitionTerm
+&CreateDefinitionDef
+&CreateDivision
+&CreateHeading1
+&CreateHeading2
+&CreateHeading3
+&CreateHeading4
+&CreateHeading5
+&CreateHeading6
+&CreateHorizontalRule
+&CreateImage
+&CreateParagraph
+&CreatePreformatted
+&CreateList
+&CreateNumberedList
+HelpCreating
+HelpImageMaps
+
+[links]
+&CreateOrChangeLink
+&CreateTarget
+&DeleteAnchor
+HelpLinks
+ShowTargets
+
+[areas]
+CreateAreaCircle
+CreateAreaPoly
+CreateAreaRect
+ShowMapAreas
+
+[forms]
+&CreateForm
+&CreatePushButton
+&CreateToggle
+&CreateFileInput
+&CreateHiddenInput
+&CreatePasswordInput
+&CreateRadio
+&CreateReset
+&CreateSubmit
+&CreateTextInput
+&CreateFieldset
+&CreateLabel
+&CreateOption
+&CreateOptGroup
+&CreateTextArea
+
+[objects]
+&CreateObject
+&CreateParameter
+
+[tables]
+&CreateTable
+&CreateCaption
+&CreateColgroup
+&CreateCol
+&CreateTHead
+&CreateTBody
+&CreateTFoot
+&CreateRow
+&CreateDataCell
+&CreateHeadingCell
+&DeleteColumn
+HelpTables
+
+################# MATHML
+[maths]
+&CreateMath
+&CreateMROOT
+&CreateMSQRT
+&CreateMFRAC
+&CreateMSUBSUP
+&CreateMSUB
+&CreateMSUP
+&CreateMUNDEROVER
+&CreateMUNDER
+&CreateMOVER
+&CreateMROW
+&CreateMMULTISCRIPTS
+&CreateMTABLE
+&DeleteMColumn
+&CreateNOSCRIPT
+HelpMath
+
+########### STYLE
+[html-style]
+&ChangeBackgroundImage
+&CreateElemEmphasis
+&CreateElemStrong
+&CreateElemCite
+&CreateElemDefinition
+&CreateElemCode
+&CreateElemVariable
+&CreateElemSample
+&CreateElemKeyboard
+&CreateElemAbbr
+&CreateElemAcronym
+&CreateElemINS
+&CreateElemDEL
+&CreateElemItalic
+&CreateElemBold
+&CreateElemTeletype
+&CreateElemBig
+&CreateElemSmall
+&CreateIFrame
+&CreateSub
+&CreateSup
+&CreateQuotation
+&CreateBDO
+&SetCharEmphasis
+&SetCharStrong
+&SetCharCode
+
+[css-browsing]
+OpenCSS
+DisableCSS
+EnableCSS
+
+[css-style]
++css-browsing
+&NewCss
+&CreateClass
+&ApplyClass
+&LinkCSS
+OpenCSS
+&RemoveCSS
+HelpStyleSheets
+&TtcChangeCharacters
+&TtcChangeColors
+&TtcChangeFormat
+
+########### OPTIONAL MODULES
+[config]
+ConfigGeneral
+ConfigPublish
+ConfigCache
+ConfigProxy
+ConfigColor
+ConfigGeometry
+ConfigLanNeg
+HelpConfigure
+
+[templates]
+ConfigTemplates
+HelpConfigure
+&NewTemplate
+
+[spell]
+SpellCheck
+HelpSpellChecking
+
+[makebook]
+HelpMakeBook
+HelpNumbering
+&MakeBook
+&SectionNumbering
+
+[annot]
+AnnotateDocument
+LoadAnnotations

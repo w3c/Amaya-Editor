@@ -7,8 +7,9 @@
 #ifdef __STDC__
 
 extern void ConvertToLowerCase ( STRING string );
-extern void EscapeChar (STRING string, UCHAR_T c);
-extern STRING EscapeURL (const STRING url);
+extern void EscapeChar ( STRING string,
+                         UCHAR_T c );
+extern STRING EscapeURL ( const STRING url );
 extern void ExplodeURL ( char *url,
                          char **proto,
                          char **host,
@@ -44,7 +45,6 @@ extern STRING AmayaParseUrl ( const STRING aName,
                               STRING relatedName,
                               int wanted );
 extern void SimplifyUrl ( STRING* url );
-extern void ConvertFileURL ( /* STRING url */);
 extern ThotBool NormalizeFile ( STRING src,
                                 STRING target );
 extern STRING MakeRelativeURL ( STRING aName,
@@ -53,7 +53,8 @@ extern STRING MakeRelativeURL ( STRING aName,
 #else /* __STDC__ */
 
 extern void ConvertToLowerCase (/* STRING string */);
-extern void EscapeChar (/* STRING string, UCHAR_T c */);
+extern void EscapeChar (/* STRING string,
+                           UCHAR_T c */);
 extern STRING EscapeURL (/* const STRING url */);
 extern void ExplodeURL (/* char *url,
                            char **proto,
@@ -75,6 +76,7 @@ extern ThotBool IsValidProtocol (/* const STRING url */);
 extern STRING GetBaseURL (/* Document doc */);
 extern STRING GetLocalPath (/* Document doc,
                                STRING url */);
+extern void ConvertFileURL (/* STRING url */);
 extern void NormalizeURL (/* STRING orgName,
                              Document doc,
                              STRING newName,

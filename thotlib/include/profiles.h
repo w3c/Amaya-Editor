@@ -9,18 +9,47 @@
  * profiles.h : define profiles data 
  */
 
-
-#define THOT_EXPORT extern
-#define MAX_FUNCTIONS              2000    /* Maximum of functions defined in Amaya software */       
-#define MAX_DEF                    3000      /* Maximun of lines for the module definition file */
-#define MAX_EDITION_FUNCTIONS       100  /* Maximum of functions that are used for edition */
-#define MAX_PRO                      50         /* Maximum of profile displayed in the menu */
 #define MAX_PRO_LENGTH              200       /* Maximum length of a string */
-#define DEF_FILE                   "ProfileDefs"
-#define PROFILE_START              '['
+#define DEF_FILE                   "amaya.profiles"
+#define PROFILE_START              '<'
 #define MODULE_START               '['
-#define PROFILE_END                ']'
+#define PROFILE_END                '>'
 #define MODULE_END                 ']'
 #define MODULE_REF                 '+'
-#define EDITION_REF                '&'
+#define EDITING_REF                '&'
+
+#ifdef __STDC__
+/*----------------------------------------------------------------------
+  TtaRebuildProTable: Rebuild the Profiles Table
+   Returns the number of elements if operation succeded or a 0 if 
+   the operation failed.
+  ----------------------------------------------------------------------*/
+extern int      TtaRebuildProTable (char *prof_file);
+
+/*----------------------------------------------------------------------
+   TtaGetProfileFineName:  Get the text for the profile file name.
+   name is a provided buffer of length characters to receive the name.
+  ----------------------------------------------------------------------*/
+extern void     TtaGetProfileFileName (STRING name, int length);
+
+/*----------------------------------------------------------------------
+   TtaGetDefProfileFileName:  Get the text for the default profile file name.
+   name is a provided buffer of length characters to receive the name.
+  ----------------------------------------------------------------------*/
+extern void     TtaGetDefProfileFileName (STRING name, int length);
+
+/*---------------------------------------------------------------
+   TtaGetProfilesItems:  Get the text for the profile menu items.
+   listEntries is a provided list of length pointers.
+   Returns the number of items
+------------------------------------------------------------------*/
+extern int      TtaGetProfilesItems (STRING *listEntries, int length);
+
+#else  /* !__STDC__ */
+extern int      TtaRebuildProTable (/*char *prof_file*/);
+extern void     TtaGetProfileFileName (/*STRING name, int length*/);
+extern void     TtaGetDefProfileFileName (/*STRING name, int length*/);
+extern int      TtaGetProfilesItems (/*STRING *listEntries, int length*/);
+
+#endif /* !__STDC__ */
 

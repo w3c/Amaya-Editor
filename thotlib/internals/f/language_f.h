@@ -38,7 +38,7 @@ extern Language TtaNewLanguage (/* STRING languageName,
                                    STRING principalDictionary,
                                    STRING secondDictionary */);
 extern void TtaRemoveLanguage (/* Language language */);
-extern Language TtaGetLanguageIdFromName (/* STRING languageName */);
+extern Language TtaGetLanguageIdFromName (/* char* languageName */);
 extern char* TtaGetVarLANG (/* void */);
 extern Language TtaGetDefaultLanguage (/* void */);
 extern Language TtaGetLanguageIdFromAlphabet (/* CHAR_T languageAlphabet */);

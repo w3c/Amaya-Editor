@@ -8,7 +8,7 @@
 
 extern STRING TtaSkipBlanks ( STRING ptr );
 extern ThotBool TtaIsBlank ( STRING ptr );
-extern ThotBool TtaGetEnvInt ( STRING name,
+extern ThotBool TtaGetEnvInt ( char* name,
                                int *value );
 extern ThotBool TtaGetEnvBoolean ( char* name,
                                    ThotBool *value );
@@ -41,11 +41,11 @@ extern int SearchFile ( STRING fileName,
 
 extern STRING TtaSkipBlanks (/* STRING ptr */);
 extern ThotBool TtaIsBlank (/* STRING ptr */);
-extern ThotBool TtaGetEnvInt (/* STRING name,
+extern ThotBool TtaGetEnvInt (/* char* name,
                                  int *value */);
-extern ThotBool TtaGetEnvBoolean (/* STRING name,
+extern ThotBool TtaGetEnvBoolean (/* char* name,
                                      ThotBool *value */);
-extern char* TtaGetEnvString (/* STRING name */);
+extern char* TtaGetEnvString (/* char* name */);
 extern void TtaClearEnvString (/* STRING name */);
 extern void TtaSetEnvInt (/* STRING name,
                              int value,

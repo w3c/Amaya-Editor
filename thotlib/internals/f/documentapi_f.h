@@ -13,12 +13,15 @@ extern Document TtaOpenDocument ( STRING documentName,
 extern ThotBool TtaExportDocument ( Document document,
                                     STRING fileName,
                                     STRING TSchemaName );
+extern ThotBool TtaExportDocumentWithNewLineNumbers ( Document document,
+                                                      STRING fileName,
+                                                      STRING TSchemaName );
 extern void UnloadTree ( Document document );
 extern void UnloadDocument ( PtrDocument * pDoc );
 extern void TtaCloseDocument ( Document document );
 extern void TtaSetDocumentPath ( STRING path );
 extern ThotBool TtaCheckPath ( char* path );
-extern ThotBool TtaIsInDocumentPath ( char* directory );
+extern ThotBool TtaIsInDocumentPath ( PathBuffer directory );
 extern void TtaAppendDocumentPath ( STRING directory );
 extern void TtaSetSchemaPath ( STRING path );
 extern SSchema TtaNewNature ( SSchema schema,
@@ -81,12 +84,15 @@ extern Document TtaOpenDocument (/* STRING documentName,
 extern ThotBool TtaExportDocument (/* Document document,
                                       STRING fileName,
                                       STRING TSchemaName */);
+extern ThotBool TtaExportDocumentWithNewLineNumbers (/* Document document,
+                                                        STRING fileName,
+                                                        STRING TSchemaName */);
 extern void UnloadTree (/* Document document */);
 extern void UnloadDocument (/* PtrDocument * pDoc */);
 extern void TtaCloseDocument (/* Document document */);
 extern void TtaSetDocumentPath (/* STRING path */);
-extern ThotBool TtaCheckPath (/* PathBuffer path */);
-extern ThotBool TtaIsInDocumentPath (/* STRING directory */);
+extern ThotBool TtaCheckPath (/* char* path */);
+extern ThotBool TtaIsInDocumentPath (/* PathBuffer directory */);
 extern void TtaAppendDocumentPath (/* STRING directory */);
 extern void TtaSetSchemaPath (/* STRING path */);
 extern SSchema TtaNewNature (/* SSchema schema,
