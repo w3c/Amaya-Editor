@@ -90,7 +90,6 @@ void CallbackImage (int ref, int typedata, char *data)
   LoadedImageDesc    *desc;
   char               tempfile[MAX_LENGTH];
   char               tempname[MAX_LENGTH];
-  char             *localname;
   int                i, c1, cN;
   int                val;
   ThotBool           change, isHTML;
