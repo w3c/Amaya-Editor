@@ -14,7 +14,7 @@
 12 Spé&cial
 13 &Attributs
 14 A&nnotations
-15 Ma&rque-feuilles
+15 &Signets
 16 C&oopération
 17 A&ide
 18 &Nouveau
@@ -233,9 +233,9 @@
 231 Personaliser la requête...
 232 Filtrer local...
 233 Configuration...
-234 Nouveau marque-feuille
+234 Nouveau signet
 235 Nouvelle rubrique
-236 Visualiser les marque-feuilles
+236 Visualiser les signets
 237 **Import a topic hierarchy
 238 Verrouiller la ressource...
 239 Déverrouiller la ressource...
@@ -269,7 +269,7 @@
 267 Numéroter
 268 Construire un livre
 269 Annotations
-270 Ma&rque-feuilles
+270 &Signets
 271 Configurer Amaya
 272 Raccourcis clavier
 273 Accessibilité d'Amaya

@@ -229,7 +229,7 @@
 227 Autoload remote annotations
 228 Disable remote autoload at each startup (for off-line work)
 229 Selection color
-230 Caret color
+230 Selection background color
 231 Orientation
 232 Portrait
 233 Landscape

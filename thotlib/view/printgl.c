@@ -382,7 +382,7 @@ void PrintBox (PtrBox box, int frame, int xmin, int xmax,
   glFeedbackBuffer (FEEDBUFFERSIZE, GL_3D_COLOR, feedBuffer);
   NotFeedBackMode = FALSE;  
   glRenderMode (GL_FEEDBACK);
-  DisplayBox (box, frame, xmin, xmax, ymin, ymax);
+  DisplayBox (box, frame, xmin, xmax, ymin, ymax, FALSE);
   NotFeedBackMode = TRUE;
   GLParseFeedbackBuffer (feedBuffer);
   NotFeedBackMode = TRUE;

@@ -204,10 +204,8 @@ int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
 	  
 	    }
 	  if (fg >= 0)
-	    {
-	      width = GL_UnicodeDrawString (fg, (CHAR_T *) buff, 
-					    (float) x, (float) y, hyphen, font, lg);
-	    }
+	    width = GL_UnicodeDrawString (fg, (CHAR_T *) buff, 
+					  (float) x, (float) y, hyphen, font, lg);
 	}
     }
   return (width);
@@ -2220,13 +2218,9 @@ void PaintWithPattern (int frame, int x, int y, int width, int height,
    if (pattern == 2)
      {
 	if (w != 0) 
-	{
 	  GL_DrawRectangle (pattern, x,  y, width, height);
-	} 
 	else 
-	{
 	  GL_DrawRectangle (fg, x,  y + FrameTable[frame].FrTopMargin, width, height);
-	}
    }
 }
 #endif /* _GL*/

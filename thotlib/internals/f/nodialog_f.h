@@ -119,7 +119,11 @@ extern void SetNewSelectionStatus ( int frame,
 extern void DisplayStringSelection ( int frame,
                                      int leftX,
                                      int rightX,
-                                     PtrBox pBox );
+                                     PtrBox pBox,
+                                     int t,
+                                     int b,
+                                     int l,
+                                     int r );
 extern void DirectCreation ( PtrBox pBox,
                              int frame );
 extern ThotBool IsAbstractBoxDisplayed ( PtrAbstractBox pav,
@@ -256,7 +260,11 @@ extern void SetNewSelectionStatus (/* int frame,
 extern void DisplayStringSelection (/* int frame,
                                        int leftX,
                                        int rightX,
-                                       PtrBox pBox */);
+                                       PtrBox pBox,
+                                       int t,
+                                       int b,
+                                       int l,
+                                       int r */);
 extern void DirectCreation (/* PtrBox pBox,
                                int frame */);
 extern ThotBool IsAbstractBoxDisplayed (/* PtrAbstractBox pav,

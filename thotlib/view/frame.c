@@ -229,9 +229,10 @@ static void AddBoxToCreate (PtrBox * tocreate, PtrBox pBox, int frame)
   Parameters first and last are TRUE when the box pBox is respectively
   at the first position and/or the last position of pFrom (they must be
   TRUE for pFrom itself).
+  selected is TRUE when a parent box or the box itself is selected.
   ----------------------------------------------------------------------*/
 void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
-		    int xmin, int xmax, int ymin, int ymax,
+		    int xmin, int xmax, int ymin, int ymax, ThotBool selected,
 		    ThotBool first, ThotBool last, ThotBool topdown)
 {
   PtrBox              from;
@@ -275,8 +276,8 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
 	  isLast = (last && pNext == NULL);
 	  if (pChild->AbBox && !pChild->AbPresentationBox)
 	    {
-	      DrawFilledBox (pChild->AbBox, pFrom, frame, xmin, xmax, ymin, ymax,
-			     first, isLast, topdown);
+	      DrawFilledBox (pChild->AbBox, pFrom, frame, xmin, xmax, ymin,
+			     ymax, selected, first, isLast, topdown);
 	      first = FALSE;
 	    }
 	  pChild = pNext;
@@ -290,7 +291,7 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
 	{
 	  isLast = (last && pBox->BxNexChild == NULL);
 	  DrawFilledBox (pBox, pFrom, frame, xmin, xmax, ymin, ymax,
-			 first, isLast, topdown);
+			 selected, first, isLast, topdown);
 	  pBox = pBox->BxNexChild;
 	  first = FALSE;
 	}
@@ -413,13 +414,11 @@ void DrawFilledBox (PtrBox pBox, PtrAbstractBox pFrom, int frame,
       if (pFrom->AbSelected)
 	{
 	  /* draw the box selection */
-	  if (pFrom->AbVolume == 0 && pBox->BxWidth <= 2)
-	    DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height, 0, InsertColor, 2);
-	  else
-	    DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height, 0, SelColor, 2);
+	  DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height, 0, BgSelColor, 2);
 	}
-      else
+      else if (!selected)
 	{
+	  /* don't fill the background when an enclosing box is selected */
 	  if (!setWindow && pFrom->AbFillBox && pFrom->AbFillPattern)
 	    /* draw the box background */
 	    DrawRectangle (frame, 0, 0, xd - x, yd - y, width, height,
@@ -1144,7 +1143,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
   int                 winTop, winBottom;
   int                 bt, bb;
   int                 l, h;
-  ThotBool            userSpec = FALSE;
+  ThotBool            userSpec = FALSE, selected;
 
   pFrame = &ViewFrameTable[frame - 1];
   pAb = pFrame->FrAbstractBox;
@@ -1160,8 +1159,10 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
   nextplane = plane - 1;
   topBox = NULL;
   pAb = pFrame->FrAbstractBox;
-  if (pBox->BxDisplay || pAb->AbSelected)
-    DrawFilledBox (pBox, pAb, frame, xmin, xmax, ymin, ymax, TRUE, TRUE, TRUE);
+  selected = pAb->AbSelected;
+  if (pBox->BxDisplay || selected)
+    DrawFilledBox (pBox, pAb, frame, xmin, xmax, ymin, ymax, selected,
+		   TRUE, TRUE, TRUE);
   while (plane != nextplane)
     /* there is a new plane to display */
     {
@@ -1170,17 +1171,19 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
       pAb = pFrame->FrAbstractBox;
       while (pAb)
 	{
-	  if (pAb->AbDepth == plane &&
-	      pAb != pFrame->FrAbstractBox &&
+	  if (pAb->AbDepth == plane && pAb != pFrame->FrAbstractBox &&
 	      pAb->AbBox)
 	    {
+	      if (!selected && pAb->AbSelected)
+		  selected = pAb->AbSelected;
 	      /* box in the current plane */
 	      pBox = pAb->AbBox;
 	      if (pAb->AbLeafType == LtCompound)
 		{
 		  if (pAb->AbVisibility >= pFrame->FrVisibility &&
 		      (pBox->BxDisplay || pAb->AbSelected))
-		    DrawFilledBox (pBox, pAb, frame, xmin, xmax, ymin, ymax, TRUE, TRUE, TRUE);
+		    DrawFilledBox (pBox, pAb, frame, xmin, xmax, ymin, ymax,
+				   selected, TRUE, TRUE, TRUE);
 		  if (pBox->BxNew && pAb->AbFirstEnclosed == NULL)
 		    {
 		      /* this is a new box */
@@ -1278,13 +1281,13 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 				    pBox->BxYOrg <= ymax && 
 				    pBox->BxXOrg + pBox->BxWidth + pBox->BxEndOfBloc >= xmin &&
 				    pBox->BxXOrg <= xmax)
-				  DisplayBox (pBox, frame, xmin, xmax, ymin, ymax);
+				  DisplayBox (pBox, frame, xmin, xmax, ymin, ymax, selected);
 			      }
 			  else if (bb >= ymin  &&
 				   bt <= ymax && 
 				   pBox->BxXOrg + pBox->BxWidth + pBox->BxEndOfBloc >= xmin &&
 				   pBox->BxXOrg <= xmax)
-			    DisplayBox (pBox, frame, xmin, xmax, ymin, ymax);
+			    DisplayBox (pBox, frame, xmin, xmax, ymin, ymax, selected);
 			  else if (pBox->BxType == BoPicture)
 			    {
 			      imageDesc = (PictInfo *)pBox->BxPictInfo;
@@ -1295,7 +1298,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 				UnmapImage (imageDesc);
 			      else if (imageDesc->PicType >= PLUGIN_FORMAT)
 				/* redisplay plugins */
-				DisplayBox (pBox, frame, xmin, xmax, ymin, ymax);
+				DisplayBox (pBox, frame, xmin, xmax, ymin, ymax, selected);
 			    }
 			}
 		    }
@@ -1309,15 +1312,17 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 	      else if (pAb->AbDepth > nextplane)
 		nextplane = pAb->AbDepth;
 	    }
+
 	  /* get next abstract box */
-	  if (pAb->AbLeafType == LtCompound && 
-	      pAb->AbFirstEnclosed)
+	  if (pAb->AbLeafType == LtCompound && pAb->AbFirstEnclosed)
 	    /* get the first child */
 	    pAb = pAb->AbFirstEnclosed;
 	  else if (pAb->AbNext)
 	    /* get the next sibling */
 	    {
-	      OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin, ymax, FALSE);	      
+	      OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin, ymax, FALSE);
+	      if (pAb->AbSelected)
+		selected = FALSE;
 	      pAb = pAb->AbNext;
 	    }
 	  else
@@ -1327,13 +1332,19 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 		     pAb->AbEnclosing->AbNext == NULL)
 		{
 		  OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin, ymax, FALSE);
+		  if (pAb->AbSelected)
+		    selected = FALSE;
 		  pAb = pAb->AbEnclosing;
 		}
 	      OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin, ymax, FALSE);
+	      if (pAb->AbSelected)
+		selected = FALSE;
 	      pAb = pAb->AbEnclosing;
 	      if (pAb)
 		{
 		  OpacityAndTransformNext (pAb, plane, frame, xmin, xmax, ymin, ymax, FALSE);
+		  if (pAb->AbSelected)
+		    selected = FALSE;
 		  pAb = pAb->AbNext;
 		}
 	    }
@@ -1411,6 +1422,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
   int                 OldXOrg, OldYOrg, 
                       ClipXOfFirstCoordSys, ClipYOfFirstCoordSys;
   ThotBool            NotGroupOpacityDisplayed, not_in_feedback;
+  ThotBool            selected;
 
   FrameUpdatingStatus = FrameUpdating;
   FrameUpdating = TRUE;  
@@ -1443,8 +1455,10 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
   OldYOrg = 0;
   ClipXOfFirstCoordSys = ClipYOfFirstCoordSys = 0;
   not_in_feedback =  GL_NotInFeedbackMode ();
-  if (pBox->BxDisplay || pAb->AbSelected)
-    DrawFilledBox (pBox, pAb, frame, xmin, xmax, ymin, ymax, TRUE, TRUE, TRUE);
+  selected = pAb->AbSelected;
+  if (pBox->BxDisplay || selected)
+    DrawFilledBox (pBox, pAb, frame, xmin, xmax, ymin, ymax, selected,
+		   TRUE, TRUE, TRUE);
   while (plane != nextplane)
     /* there is a new plane to display */
     {
@@ -1454,19 +1468,18 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
       NotGroupOpacityDisplayed = TRUE;
       while (pAb)
 	{
-	  if (pAb->AbDepth == plane &&
-	      pAb != pFrame->FrAbstractBox &&
-	      pAb->AbBox)
+	  if (pAb->AbDepth == plane && pAb != pFrame->FrAbstractBox && pAb->AbBox)
 	    {
 	      /* box in the current plane */
 	      pBox = pAb->AbBox;
-	      if (pAb->AbElement &&
-		  NotGroupOpacityDisplayed)
+	      if (!selected && pAb->AbSelected)
+		selected = pAb->AbSelected;
+	      if (pAb->AbElement && NotGroupOpacityDisplayed)
 		{ 
 		  if (FormattedFrame)
 		    {
 		      /* If the coord sys origin is translated, 
-			 it must be before any other transfromation*/
+			 it must be before any other transformation */
 		      if (pAb->AbElement->ElSystemOrigin)
 			DisplayBoxTransformation (pAb->AbElement->ElTransform, 
 						  pFrame->FrXOrg, pFrame->FrYOrg);
@@ -1474,8 +1487,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 		      if (pAb->AbElement->ElTransform)
 			DisplayTransformation (frame,
 					       pAb->AbElement->ElTransform, 
-					       pBox->BxWidth, 
-					       pBox->BxHeight);
+					       pBox->BxWidth, pBox->BxHeight);
 		      if (pAb->AbElement->ElSystemOrigin)
 			{
 			  /*Need to Get REAL computed COORD ORIG
@@ -1485,19 +1497,19 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 			    else compute if near screen"*/
 
 			  /* if (pBox->BxTransformationComputed) */
-			  /* 		      { */
-			  /* 			GetBoxTransformed (pAb->AbElement->ElTransform,  */
-			  /* 					   &(pBox->BxClipX),  */
-			  /* 					   &(pBox->BxClipY)); */
-			  /* 			pBox->BxClipX -= pFrame->FrXOrg; */
-			  /* 			pBox->BxClipY -= pFrame->FrYOrg; */
-			  /* 		      } */
+			  /*   { */
+			  /*   GetBoxTransformed (pAb->AbElement->ElTransform,  */
+			  /* 			  &(pBox->BxClipX),  */
+			  /* 			  &(pBox->BxClipY)); */
+			  /*   pBox->BxClipX -= pFrame->FrXOrg; */
+			  /*   pBox->BxClipY -= pFrame->FrYOrg; */
+			  /*   } */
 			  /*  if (pBox->BxClipY + pBox->BxClipH >= y_real_min  && */
-			  /* 			  pBox->BxClipY <= y_real_max &&  */
-			  /* 			  pBox->BxClipX + pBox->BxClipW >= x_real_min && */
-			  /* 			  pBox->BxClipX <= x_real_max) */
+			  /* 	  pBox->BxClipY <= y_real_max &&  */
+			  /* 	  pBox->BxClipX + pBox->BxClipW >= x_real_min && */
+			  /* 	  pBox->BxClipX <= x_real_max) */
 			  {
-			    if (pFrame->FrXOrg ||pFrame->FrYOrg)
+			    if (pFrame->FrXOrg || pFrame->FrYOrg)
 			      {
 				pFrame->OldFrXOrg = pFrame->FrXOrg;
 				pFrame->OldFrYOrg = pFrame->FrYOrg;
@@ -1515,10 +1527,11 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 			      ComputeBoundingBoxes (frame, 
 						    x_real_min, x_real_max,
 						    y_real_min, y_real_max, pAb);
+printf ("boundingbox label=%s\n", pAb->AbElement->ElLabel);
 			  }
 			  /* New Coordinate system means Clipping around */
-			  /* 			GL_PushClip (pBox->BxClipX, pBox->BxClipY,  */
-			  /* 					pBox->BxClipW, pBox->BxClipH);   */
+			  /* GL_PushClip (pBox->BxClipX, pBox->BxClipY,  */
+			  /* 		  pBox->BxClipW, pBox->BxClipH);   */
 			}
 		      if (pAb->AbOpacity != 1000 &&  not_in_feedback)
 			{
@@ -1533,37 +1546,37 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 				  continue;
 				}
 			      else
-				  {
-				    if (pAb->AbBox->Post_computed_Pic)
-				      {
-					FreeGlTextureNoCache (pAb->AbBox->Post_computed_Pic);
-					TtaFreeMemory (pAb->AbBox->Post_computed_Pic);
-					pAb->AbBox->Post_computed_Pic = NULL; 
-				      }
-				    OpaqueGroupTexturize (pAb, frame, x_real_min, x_real_max, y_real_min, y_real_max, TRUE);
-				    ClearOpaqueGroup (pAb, frame, x_real_min, x_real_max, y_real_min, y_real_max);
-				  }
+				{
+				  if (pAb->AbBox->Post_computed_Pic)
+				    {
+				      FreeGlTextureNoCache (pAb->AbBox->Post_computed_Pic);
+				      TtaFreeMemory (pAb->AbBox->Post_computed_Pic);
+				      pAb->AbBox->Post_computed_Pic = NULL; 
+				    }
+				  OpaqueGroupTexturize (pAb, frame, x_real_min, x_real_max,
+							y_real_min, y_real_max, TRUE);
+				  ClearOpaqueGroup (pAb, frame, x_real_min, x_real_max,
+						    y_real_min, y_real_max);
+				}
 			    }
-			  else
+			  else if (pAb->AbFirstEnclosed)
 			    {
-			      if (pAb->AbFirstEnclosed)
-				{
-				  pAb->AbFirstEnclosed->AbFillOpacity = pAb->AbOpacity;      
-				  pAb->AbFirstEnclosed->AbStrokeOpacity = pAb->AbOpacity; 
-				}
-			      else 
-				{
-				  pAb->AbFillOpacity = pAb->AbOpacity;      
-				  pAb->AbStrokeOpacity = pAb->AbOpacity; 
-				}
-			    }		      
+			      pAb->AbFirstEnclosed->AbFillOpacity = pAb->AbOpacity;
+			      pAb->AbFirstEnclosed->AbStrokeOpacity = pAb->AbOpacity;
+			    }
+			  else 
+			    {
+			      pAb->AbFillOpacity = pAb->AbOpacity;      
+			      pAb->AbStrokeOpacity = pAb->AbOpacity; 
+			    }
 			}
 		    }
 		  if (pAb->AbLeafType == LtCompound)
 		    {
 		      if (pAb->AbVisibility >= pFrame->FrVisibility &&
 			  (pBox->BxDisplay || pAb->AbSelected))
-			DrawFilledBox (pBox, pAb, frame, xmin, xmax, ymin, ymax, TRUE, TRUE, TRUE);
+			DrawFilledBox (pBox, pAb, frame, xmin, xmax, ymin, ymax,
+				       selected, TRUE, TRUE, TRUE);
 		      if (pBox->BxNew && pAb->AbFirstEnclosed == NULL)
 			{
 			  /* this is a new box */
@@ -1656,6 +1669,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 			    }
 			  if (!userSpec)
 			    {
+printf ("test box label=%s\n", pBox->BxAbstractBox->AbElement->ElLabel);
 			      if (pBox->BxType == BoSplit || 
 				  pBox->BxType == BoMulScript)
 				while (pBox->BxNexChild)
@@ -1666,7 +1680,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 					pBox->BxClipX + pBox->BxClipW  + pBox->BxEndOfBloc>= x_real_min &&
 					pBox->BxClipX <= x_real_max)
 				      {
-					DisplayBox (pBox, frame, xmin, xmax, ymin, ymax);
+					DisplayBox (pBox, frame, xmin, xmax, ymin, ymax, selected);
 				      }				    
 				  }
 			      else if (bb >= y_real_min  &&
@@ -1674,7 +1688,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 				       pBox->BxClipX + pBox->BxClipW >= x_real_min &&
 				       pBox->BxClipX <= x_real_max)
 				{
-				  DisplayBox (pBox, frame, xmin, xmax, ymin, ymax);
+				  DisplayBox (pBox, frame, xmin, xmax, ymin, ymax, selected);
 				}
 			      else if (pBox->BxType == BoPicture)
 				{
@@ -1687,7 +1701,7 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 				  else if (imageDesc->PicType >= PLUGIN_FORMAT)
 				    /* redisplay plugins */
 				    {
-				      DisplayBox (pBox, frame, xmin, xmax, ymin, ymax);
+				      DisplayBox (pBox, frame, xmin, xmax, ymin, ymax, selected);
 				    }
 				}
 			    }
@@ -1703,9 +1717,9 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 	      else if (pAb->AbDepth > nextplane)
 		nextplane = pAb->AbDepth;
 	    }
+
 	  /* get next abstract box */
-	  if (pAb->AbLeafType == LtCompound && 
-	      pAb->AbFirstEnclosed && 
+	  if (pAb->AbLeafType == LtCompound && pAb->AbFirstEnclosed && 
 	      NotGroupOpacityDisplayed)
 	    /* get the first child */
 	    pAb = pAb->AbFirstEnclosed;
@@ -1719,13 +1733,14 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 		} 
 	      NotGroupOpacityDisplayed = TRUE;
 	      /* get the next sibling */
+	      if (pAb->AbSelected)
+		selected = FALSE;
 	      pAb = pAb->AbNext;
 	    }
 	  else
 	    {
 	      /* go up in the tree */
-	      while (pAb->AbEnclosing && 
-		     pAb->AbEnclosing->AbNext == NULL)
+	      while (pAb->AbEnclosing && pAb->AbEnclosing->AbNext == NULL)
 		{
 		  if (FormattedFrame)
 		    {
@@ -1734,6 +1749,8 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 					ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);
 		    }
 		  NotGroupOpacityDisplayed = TRUE;
+		  if (pAb->AbSelected)
+		    selected = FALSE;
 		  pAb = pAb->AbEnclosing;
 		}
 	      if (FormattedFrame)
@@ -1743,6 +1760,8 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 				    ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);	  
 		}
 	      NotGroupOpacityDisplayed = TRUE;
+	      if (pAb->AbSelected)
+		selected = FALSE;
 	      pAb = pAb->AbEnclosing;
 	      if (pAb)
 		{
@@ -1753,6 +1772,8 @@ PtrBox DisplayAllBoxes (int frame, int xmin, int xmax, int ymin, int ymax,
 					ClipXOfFirstCoordSys, ClipYOfFirstCoordSys);	  
 		    }
 		  NotGroupOpacityDisplayed = TRUE;
+		  if (pAb->AbSelected)
+		    selected = FALSE;
 		  pAb = pAb->AbNext;
 		}
 	    }

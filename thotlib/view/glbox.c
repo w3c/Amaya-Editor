@@ -847,7 +847,7 @@ void ComputeBoundingBox (PtrBox box, int frame,
       glFeedbackBuffer (FEEDBUFFERSIZE, GL_2D, feedBuffer);
       NotFeedBackMode = FALSE;  
       glRenderMode (GL_FEEDBACK);
-      DisplayBox (box, frame, xmin, xmax, ymin, ymax);
+      DisplayBox (box, frame, xmin, xmax, ymin, ymax, FALSE);
       size = glRenderMode (GL_RENDER);
       NotFeedBackMode = TRUE;
       if (size > 0)
@@ -894,7 +894,7 @@ void ComputeFilledBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int 
       NotFeedBackMode = FALSE;
       glRenderMode (GL_FEEDBACK);
       DrawFilledBox (box, box->BxAbstractBox, frame,
-		     xmin, xmax, ymin, ymax, TRUE, TRUE, TRUE);
+		     xmin, xmax, ymin, ymax, FALSE, TRUE, TRUE, TRUE);
       size = glRenderMode (GL_RENDER);
       NotFeedBackMode = TRUE;
       if (size > 0)

@@ -197,10 +197,10 @@
 195 Restaurer la géométrie défaut
 196 Ces changements seront effectifs lors de l'ouverture d'une fenêtre
 197 Configuration des couleurs
-198 Couleur d'avant-plan des documents
-199 Couleur d'arrière-plan des documents
-200 Couleur d'avant-plan des menus
-201 Couleur d'arrière-plan des menus
+198 Couleur du texte
+199 Couleur de fond
+200 Couleur des menus
+201 Couleur de fond des menus
 202 Impossible d'initialiser le cache. Vous avez peut-être specifié un répertoire invalide ou vous exécutez un autre Amaya en méme-temps.
 203 Page personelle
 204 Liste des langues préférées comme "fr, en" :
@@ -229,7 +229,7 @@
 227 Charger automatiquement les annotations distantes
 228 Désactiver le chargement automatique des annotations distantes au démarrage
 229 Couleur de sélection
-230 Couleur du curseur d'insertion
+230 Couleur de fond de sélection
 231 Orientation
 232 Portrait
 233 Paysage
@@ -357,7 +357,7 @@
 355 Appliquer CSS
 356 Type d'écran courant
 357 Nouvelle Rubrique
-358 Propriétés du marque-feuille
+358 Propriétés du signet
 359 Propriétés de la rubrique
 360 Hiérarchie des rubriques:
 361 Titre:

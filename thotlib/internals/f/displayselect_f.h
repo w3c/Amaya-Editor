@@ -19,7 +19,11 @@ extern void SetNewSelectionStatus ( int frame,
 extern void DisplayStringSelection ( int frame,
                                      int leftX,
                                      int rightX,
-                                     PtrBox pBox );
+                                     PtrBox pBox,
+                                     int t,
+                                     int b,
+                                     int l,
+                                     int r );
 
 #else /* __STDC__ */
 
@@ -36,7 +40,11 @@ extern void SetNewSelectionStatus (/* int frame,
 extern void DisplayStringSelection (/* int frame,
                                        int leftX,
                                        int rightX,
-                                       PtrBox pBox */);
+                                       PtrBox pBox,
+                                       int t,
+                                       int b,
+                                       int l,
+                                       int r */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

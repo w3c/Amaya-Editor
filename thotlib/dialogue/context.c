@@ -36,7 +36,6 @@
 
 ThotColorStruct  cblack;
 static ThotColorStruct  cwhite;
-static ThotColor        Select_Color;
 extern int              errno;
 
 #include "appli_f.h"
@@ -111,10 +110,10 @@ static ThotBool FindColor (int disp, char *name, char *colorplace,
    /* register the default background color */
    else if (strcmp (colorplace, "ForegroundColor") == 0)
      DefaultFColor = col;
-   else if (strcmp (colorplace, "DocSelectColor") == 0)
-     SelColor = col;
-   else if (strcmp (colorplace, "InserPointColor") == 0)
-     InsertColor = col;
+   else if (strcmp (colorplace, "BgSelectColor") == 0)
+     BgSelColor = col;
+   else if (strcmp (colorplace, "FgSelectColor") == 0)
+     FgSelColor = col;
 #ifdef _WINDOWS 
    *colorpixel = col;
 #else  /* _WINDOWS */
@@ -162,8 +161,8 @@ void TtaUpdateEditorColors (void)
   /* drawing color */
   found = FindColor (0, name, "ForegroundColor", "Black", &Black_Color);
   /* selection colors */
-  found = FindColor (0, name, "InserPointColor", "Red", &Select_Color);
-  found = FindColor (0, name, "DocSelectColor", "LightCoral3", &Select_Color);
+  found = FindColor (0, name, "FgSelectColor", "White", &White_Color);
+  found = FindColor (0, name, "BgSelectColor", "#008BB2", &Black_Color);
   /* The reference color */
   found = FindColor (0, name, "ActiveBoxColor", "Red", &(Box_Color));
   /* color for read-only sections */
@@ -207,13 +206,8 @@ static void InitColors (char* name)
   gdk_color_white (TtCmap, (GdkColor *)&cwhite);
   gdk_color_black (TtCmap, (GdkColor *)&cblack);
    /* Initialize colors for the application */
-   /*   Black_Color  = cblack.pixel;
-	FgMenu_Color = Select_Color = cblack.pixel;
-	White_Color  = cwhite.pixel;
-	Scroll_Color = BgMenu_Color = cwhite.pixel; */
-   /* a modifier */
     Black_Color = 0x000000;
-    FgMenu_Color = Select_Color =0x000000;
+    FgMenu_Color = 0x000000;
     White_Color = 0xffffff;
     Scroll_Color =  0xffffff;
 #else /* _GTK */
@@ -244,7 +238,7 @@ static void InitColors (char* name)
      }
    /* Initialize colors for the application */
    Black_Color = Box_Color = RO_Color = cblack.pixel;
-   FgMenu_Color = Select_Color = cblack.pixel;
+   FgMenu_Color = cblack.pixel;
    White_Color  = cwhite.pixel;
    Scroll_Color = BgMenu_Color = cwhite.pixel;
 #endif /* _GTK */
@@ -252,8 +246,11 @@ static void InitColors (char* name)
    if (TtWDepth > 1)
      TtaUpdateEditorColors ();
    else
+     {
      /* at least allocate the selection color */
-     found = FindColor (0, name, "DocSelectColor", "White", &Select_Color);
+       found = FindColor (0, name, "FgSelectColor", "White", &White_Color);
+       found = FindColor (0, name, "BgSelectColor", "Black", &Black_Color);
+     }
 }
 
 #ifndef _WINDOWS
@@ -317,7 +314,7 @@ static void InitGraphicContexts (void)
   if (TtWDepth > 1)
     gdk_rgb_gc_set_foreground (TtInvertGC, Black_Color);
   else
-    gdk_rgb_gc_set_foreground (TtInvertGC, Select_Color);
+    gdk_rgb_gc_set_foreground (TtInvertGC, Black_Color);
   gdk_rgb_gc_set_background (TtInvertGC, White_Color);
   gdk_gc_set_function (TtInvertGC, GDK_INVERT);
 
@@ -367,11 +364,8 @@ static void InitGraphicContexts (void)
     * destroying the colors : XOR.XOR = I ...
     */
    GCmodel.function = GXinvert;
-   GCmodel.plane_mask = Select_Color;
-   if (TtWDepth > 1)
-      GCmodel.foreground = Black_Color;
-   else
-      GCmodel.foreground = Select_Color;
+   GCmodel.plane_mask = Black_Color;
+   GCmodel.foreground = Black_Color;
    GCmodel.background = White_Color;
    TtInvertGC = XCreateGC (TtDisplay, TtRootWindow, valuemask | GCPlaneMask, &GCmodel);
 

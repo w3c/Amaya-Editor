@@ -1984,7 +1984,7 @@
 </label>
 <label define="AM_DOC_FG_COLOR">
 	<message xml:lang="en">Document foreground color</message>
-	<message xml:lang="fr">Couleur d'avant-plan des documents</message>
+	<message xml:lang="fr">Couleur du texte</message>
 	<message xml:lang="de">Schrift (Dokument)</message>
 	<message xml:lang="it">Colore in primo piano nei documenti</message>
 	<message xml:lang="es">Color del documento:</message>
@@ -1994,7 +1994,7 @@
 </label>
 <label define="AM_DOC_BG_COLOR">
 	<message xml:lang="en">Document background color</message>
-	<message xml:lang="fr">Couleur d'arrière-plan des documents</message>
+	<message xml:lang="fr">Couleur de fond</message>
 	<message xml:lang="de">Hintergrund(Dokument)</message>
 	<message xml:lang="it">Colore dello sfondo nei documenti</message>
 	<message xml:lang="es">Color del fondo del documento:</message>
@@ -2004,7 +2004,7 @@
 </label>
 <label define="AM_MENU_FG_COLOR">
 	<message xml:lang="en">Menu foreground color</message>
-	<message xml:lang="fr">Couleur d'avant-plan des menus</message>
+	<message xml:lang="fr">Couleur des menus</message>
 	<message xml:lang="de">Schrift (Menüs)</message>
 	<message xml:lang="it">Colore in primo piano nei menu</message>
 	<message xml:lang="es">Color del menú</message>
@@ -2014,7 +2014,7 @@
 </label>
 <label define="AM_MENU_BG_COLOR">
 	<message xml:lang="en">Menu background color</message>
-	<message xml:lang="fr">Couleur d'arrière-plan des menus</message>
+	<message xml:lang="fr">Couleur de fond des menus</message>
 	<message xml:lang="de">Hintergrund (Menüs)</message>
 	<message xml:lang="it">Colore dello sfondo nei menu</message>
 	<message xml:lang="es">Color del fondo del menú</message>
@@ -2292,7 +2292,7 @@
 	<message xml:lang="fi">Poista etälataus käytöstä käynnistyksen yhteydessä (etätyötä varten)</message>
 	<message xml:lang="tr">Amaya\'nın başlangıcında otomatik dıştan notları yüklemesini durdurun</message>
 </label>
-<label define="AM_DOC_SEL_COLOR">
+<label define="AM_FG_SEL_COLOR">
 	<message xml:lang="en">Selection color</message>
 	<message xml:lang="fr">Couleur de sélection</message>
 	<message xml:lang="de">Markierung</message>
@@ -2302,15 +2302,9 @@
 	<message xml:lang="fi">Valintaväri</message>
 	<message xml:lang="tr">Renk seçimi</message>
 </label>
-<label define="AM_DOC_INS_COLOR">
-	<message xml:lang="en">Caret color</message>
-	<message xml:lang="fr">Couleur du curseur d'insertion</message>
-	<message xml:lang="de">Cursor</message>
-	<message xml:lang="it">Colore del cursore</message>
-	<message xml:lang="es">Color del cursor de texto:</message>
-	<message xml:lang="pt">Cor do cursor de inserção</message>
-	<message xml:lang="fi">Caret väri</message>
-	<message xml:lang="tr">Kürsörün rengi</message>
+<label define="AM_BG_SEL_COLOR">
+	<message xml:lang="en">Selection background color</message>
+	<message xml:lang="fr">Couleur de fond de sélection</message>
 </label>
 <label define="AM_ORIENTATION">
 	<message xml:lang="en">Orientation</message>
@@ -3514,7 +3508,7 @@
 </label>
 <label define="AM_BM_BPROPERTIES">
 	<message xml:lang="en">Bookmark Properties</message>
-	<message xml:lang="fr">Propriétés du marque-feuille</message>
+	<message xml:lang="fr">Propriétés du signet</message>
 </label>
 <label define="AM_BM_TPROPERTIES">
 	<message xml:lang="en">Topic Properties</message>

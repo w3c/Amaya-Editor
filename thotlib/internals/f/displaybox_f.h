@@ -77,7 +77,8 @@ extern void DisplayBox ( PtrBox box,
                          int xmin,
                          int xmax,
                          int ymin,
-                         int ymax );
+                         int ymax,
+                         ThotBool selected );
 extern int GetArabFontAndIndex ( CHAR_T c,
                                  CHAR_T prev,
                                  CHAR_T next,
@@ -157,7 +158,8 @@ extern void DisplayBox (/* PtrBox box,
                            int xmin,
                            int xmax,
                            int ymin,
-                           int ymax */);
+                           int ymax,
+                           ThotBool selected */);
 extern int GetArabFontAndIndex (/* CHAR_T c,
                                    CHAR_T prev,
                                    CHAR_T next,

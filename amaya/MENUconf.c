@@ -96,7 +96,7 @@ static ThotBool EnableCache;
 static ThotBool CacheProtectedDocs;
 static ThotBool CacheDisconnectMode;
 static ThotBool CacheExpireIgnore;
-static char     CacheDirectory [MAX_LENGTH];
+static char     CacheDirectory[MAX_LENGTH];
 static int      CacheSize;
 static int      MaxCacheFile;
 
@@ -116,14 +116,14 @@ static AM_WIN_MenuText WIN_ProxyMenuText[] =
 };
 #endif /* _WINDOWS */
 static int      ProxyBase;
-static char     HttpProxy [MAX_LENGTH];
-static char     ProxyDomain [MAX_LENGTH];
+static char     HttpProxy[MAX_LENGTH];
+static char     ProxyDomain[MAX_LENGTH];
 static ThotBool ProxyDomainIsOnlyProxy;
 
 /* General menu options */
 #ifdef _WINDOWS
-static char     AppHome [MAX_LENGTH];
-static char     AppTmpDir [MAX_LENGTH];
+static char     AppHome[MAX_LENGTH];
+static char     AppTmpDir[MAX_LENGTH];
 static HWND     GeneralHwnd = NULL;
 /* the message table text to IDC convertion table */
 static AM_WIN_MenuText WIN_GeneralMenuText[] = 
@@ -203,7 +203,7 @@ static ThotBool UseXHTMLMimeType;
 static ThotBool LostUpdateCheck;
 static ThotBool ExportCRLF;
 static ThotBool VerifyPublish;
-static char     SafePutRedirect [MAX_LENGTH];
+static char     SafePutRedirect[MAX_LENGTH];
 
 /* Color menu options */
 #ifdef _WINDOWS
@@ -213,21 +213,21 @@ static AM_WIN_MenuText WIN_ColorMenuText[] =
 	{AM_INIT_ALL, AM_COLOR_MENU},
 	{IDC_TFGCOLOR, AM_DOC_FG_COLOR},
 	{IDC_TBGCOLOR, AM_DOC_BG_COLOR},
-	{IDC_TSECOLOR, AM_DOC_SEL_COLOR},
-	{IDC_TINCOLOR, AM_DOC_INS_COLOR},
+	{IDC_TSECOLOR, AM_BG_SEL_COLOR},
+	{IDC_TINCOLOR, AM_FG_SEL_COLOR},
  	{IDC_CHANGCOLOR, AM_COLOR_PALETTE},
  	{IDC_CHANGCOLOR2, AM_COLOR_PALETTE},
 	{0, 0}
 };
 #endif /* _WINDOWS */
 static int      ColorBase;
-static char     FgColor [MAX_LENGTH];
-static char     BgColor [MAX_LENGTH];
-static char     SelColor [MAX_LENGTH];
-static char     InsColor [MAX_LENGTH];
+static char     FgColor[MAX_LENGTH];
+static char     BgColor[MAX_LENGTH];
+static char     BgSelColor[MAX_LENGTH];
+static char     FgSelColor[MAX_LENGTH];
 #ifndef _WINDOWS
-static char     MenuFgColor [MAX_LENGTH];
-static char     MenuBgColor [MAX_LENGTH];
+static char     MenuFgColor[MAX_LENGTH];
+static char     MenuBgColor[MAX_LENGTH];
 #endif /* !_WINDOWS */
 
 /* Geometry menu options */
@@ -258,7 +258,7 @@ static AM_WIN_MenuText WIN_LanNegMenuText[] =
 };
 #endif /* _WINDOWS */
 static int      LanNegBase;
-static char     LanNeg [MAX_LENGTH];
+static char     LanNeg[MAX_LENGTH];
 
 /* Profile menu options */
 #ifdef _WINDOWS
@@ -536,7 +536,7 @@ static int NormalizeDirName (char *dirname, const char *end_path)
   if (dirname[0] != EOS)
     {
       /* if dirname ends in DIR_SEP, we remove it */
-      if (dirname [strlen (dirname) -1] == DIR_SEP)
+      if (dirname[strlen (dirname) -1] == DIR_SEP)
 	{
 	  dir_sep = strrchr (dirname, DIR_SEP);
 	  *dir_sep = EOS;
@@ -575,7 +575,7 @@ static int NormalizeDirName (char *dirname, const char *end_path)
 static void AmCopyFile (const char  *source_dir, const char  *dest_dir,
 			const char  *filename)
 {
- char   source_file [MAX_LENGTH];
+ char   source_file[MAX_LENGTH];
  
  sprintf (source_file, "%s%c%s", source_dir, DIR_SEP, filename);
  if (TtaFileExist (source_file))
@@ -1157,7 +1157,7 @@ static void CacheCallbackDialog (int ref, int typedata, char *data)
 	  if (data)
 	    strcpy (CacheDirectory, data);
 	  else
-	    CacheDirectory [0] = EOS;
+	    CacheDirectory[0] = EOS;
 	  break;
 	case mCacheSize:
 	  CacheStatus |= AMAYA_CACHE_RESTART;
@@ -1441,7 +1441,7 @@ static void ProxyCallbackDialog (int ref, int typedata, char *data)
 	  if (data)
 	    strcpy (HttpProxy, data);
 	  else
-	    HttpProxy [0] = EOS;
+	    HttpProxy[0] = EOS;
 	  break;
 
 	case mProxyDomain:
@@ -1449,7 +1449,7 @@ static void ProxyCallbackDialog (int ref, int typedata, char *data)
 	  if (data)
 	    strcpy (ProxyDomain, data);
 	  else
-	    ProxyDomain [0] = EOS;
+	    ProxyDomain[0] = EOS;
 	  break;
 
 	case mToggleProxy:
@@ -1596,7 +1596,7 @@ static void ValidateGeneralConf (void)
   char        lang[3];
   char       *ptr;
 #ifdef _WINDOWS
-  char        old_AppTmpDir [MAX_LENGTH];
+  char        old_AppTmpDir[MAX_LENGTH];
   int         i;
 
   /* normalize and validate the zoom factor */
@@ -2130,7 +2130,7 @@ static void GeneralCallbackDialog (int ref, int typedata, char *data)
 	  if (data)
 	    strcpy (HomePage, data);
 	  else
-	    HomePage [0] = EOS;
+	    HomePage[0] = EOS;
 	  break;
 
 	case mToggleGeneral:
@@ -2165,7 +2165,7 @@ static void GeneralCallbackDialog (int ref, int typedata, char *data)
 	  if (data)
 	    strcpy (DialogueLang, data);
 	  else
-	    DialogueLang [0] = EOS;
+	    DialogueLang[0] = EOS;
 	  break;
 	  
 	case mGeneralAccessKey:
@@ -2785,11 +2785,11 @@ LRESULT CALLBACK WIN_BrowseDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
   ----------------------------------------------------------------------*/
 static void BuildScreenSelector (void)
 {
-  int                  i;
-  int                  nbscreens = sizeof(ScreensTxt) / sizeof(char *);
-  int                  indx, length;
-  char                *entry;
-  char                 BufMenu[MAX_LENGTH];
+  int         i;
+  int         nbscreens = sizeof(ScreensTxt) / sizeof(char *);
+  int         indx, length;
+  char       *entry;
+  char        BufMenu[MAX_LENGTH];
 
   /* recopy the propositions  */
   indx = 0;
@@ -2977,8 +2977,8 @@ static void GetColorConf (void)
 {
   GetEnvString ("ForegroundColor", FgColor);
   GetEnvString ("BackgroundColor", BgColor);
-  GetEnvString ("DocSelectColor", SelColor);
-  GetEnvString ("InserPointColor", InsColor);
+  GetEnvString ("BgSelectColor", BgSelColor);
+  GetEnvString ("FgSelectColor", FgSelColor);
 #ifndef _WINDOWS
   GetEnvString ("MenuFgColor", MenuFgColor);
   GetEnvString ("MenuBgColor", MenuBgColor);
@@ -2993,8 +2993,8 @@ static void GetDefaultColorConf (void)
 {
   GetDefEnvString ("ForegroundColor", FgColor);
   GetDefEnvString ("BackgroundColor", BgColor);
-  GetDefEnvString ("DocSelectColor", SelColor);
-  GetDefEnvString ("InserPointColor", InsColor);
+  GetDefEnvString ("BgSelectColor", BgSelColor);
+  GetDefEnvString ("FgSelectColor", FgSelColor);
 #ifndef _WINDOWS
   GetDefEnvString ("MenuFgColor", MenuFgColor);
   GetDefEnvString ("MenuBgColor", MenuBgColor);
@@ -3009,8 +3009,8 @@ static void SetColorConf (void)
 {
   TtaSetEnvString ("ForegroundColor", FgColor, TRUE);
   TtaSetEnvString ("BackgroundColor", BgColor, TRUE);
-  TtaSetEnvString ("DocSelectColor", SelColor, TRUE);
-  TtaSetEnvString ("InserPointColor", InsColor, TRUE);
+  TtaSetEnvString ("BgSelectColor", BgSelColor, TRUE);
+  TtaSetEnvString ("FgSelectColor", FgSelColor, TRUE);
 #ifndef _WINDOWS
   TtaSetEnvString ("MenuFgColor", MenuFgColor, TRUE);
   TtaSetEnvString ("MenuBgColor", MenuBgColor, TRUE);
@@ -3042,8 +3042,8 @@ static void RefreshColorMenu ()
 {
   TtaSetTextForm (ColorBase + mFgColor, FgColor);
   TtaSetTextForm (ColorBase + mBgColor, BgColor);
-  TtaSetTextForm (ColorBase + mSeColor, SelColor);
-  TtaSetTextForm (ColorBase + mInColor, InsColor);
+  TtaSetTextForm (ColorBase + mSeColor, BgSelColor);
+  TtaSetTextForm (ColorBase + mInColor, FgSelColor);
   TtaSetTextForm (ColorBase + mMenuFgColor, MenuFgColor);
   TtaSetTextForm (ColorBase + mMenuBgColor, MenuBgColor);
 }
@@ -3089,11 +3089,11 @@ LRESULT CALLBACK WIN_ColorDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 			      sizeof (BgColor) - 1);
 	      break;
 	    case IDC_SECOLOR:
-	      GetDlgItemText (hwnDlg, IDC_SECOLOR, SelColor,
+	      GetDlgItemText (hwnDlg, IDC_SECOLOR, BgSelColor,
 			      sizeof (SelColor) - 1);
 	      break;
 	    case IDC_INCOLOR:
-	      GetDlgItemText (hwnDlg, IDC_INCOLOR, InsColor,
+	      GetDlgItemText (hwnDlg, IDC_INCOLOR, FgSelColor,
 			      sizeof (InsColor) - 1);
 	      break;
 	    }
@@ -3113,9 +3113,9 @@ LRESULT CALLBACK WIN_ColorDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 	case IDC_CHANGCOLOR2:
 	  TtcGetPaletteColors (&fgcolor, &bgcolor, FALSE);
 	  if (fgcolor != -1)
-	    strcpy (SelColor, ColorName (fgcolor));
+	    strcpy (FgSelColor, ColorName (fgcolor));
 	  if (bgcolor != -1)
-	    strcpy (InsColor, ColorName (bgcolor));
+	    strcpy (FgSelColor, ColorName (bgcolor));
 	  WIN_RefreshColorMenu (ColorHwnd);
 	  SetFocus (ColorHwnd);
 	  break;
@@ -3183,37 +3183,37 @@ static void ColorCallbackDialog (int ref, int typedata, char *data)
 	  if (data)
 	    strcpy (FgColor, data);
 	  else
-	    FgColor [0] = EOS;
+	    FgColor[0] = EOS;
 	  break;
 	case mBgColor:
 	  if (data)
 	    strcpy (BgColor, data);
 	  else
-	    BgColor [0] = EOS;
+	    BgColor[0] = EOS;
 	  break;
 	case mSeColor:
 	  if (data)
-	    strcpy (SelColor, data);
+	    strcpy (BgSelColor, data);
 	  else
-	    SelColor [0] = EOS;
+	    BgSelColor[0] = EOS;
 	  break;
 	case mInColor:
 	  if (data)
-	    strcpy (InsColor, data);
+	    strcpy (FgSelColor, data);
 	  else
-	    InsColor [0] = EOS;
+	    FgSelColor[0] = EOS;
 	  break;
 	case mMenuFgColor:
 	  if (data)
 	    strcpy (MenuFgColor, data);
 	  else
-	    MenuFgColor [0] = EOS;
+	    MenuFgColor[0] = EOS;
 	  break;
 	case mMenuBgColor:
 	  if (data)
 	    strcpy (MenuBgColor, data);
 	  else
-	    MenuBgColor [0] = EOS;
+	    MenuBgColor[0] = EOS;
 	  break;
 
 	default:
@@ -3246,39 +3246,39 @@ void         ColorConfMenu (Document document, View view)
    TtaNewTextForm (ColorBase + mFgColor,
 		   ColorBase + ColorMenu,
 		   TtaGetMessage (AMAYA, AM_DOC_FG_COLOR),
-		   20,
+		   25,
 		   1,
 		   FALSE);   
    TtaNewTextForm (ColorBase + mBgColor,
 		   ColorBase + ColorMenu,
 		   TtaGetMessage (AMAYA, AM_DOC_BG_COLOR),
-		   20,
+		   25,
 		   1,
 		   FALSE);   
    /* second col */
    TtaNewTextForm (ColorBase + mInColor,
 		   ColorBase + ColorMenu,
-		   TtaGetMessage (AMAYA, AM_DOC_INS_COLOR),
-		   20,
+		   TtaGetMessage (AMAYA, AM_FG_SEL_COLOR),
+		   25,
 		   1,
 		   FALSE);   
    TtaNewTextForm (ColorBase + mSeColor,
 		   ColorBase + ColorMenu,
-		   TtaGetMessage (AMAYA, AM_DOC_SEL_COLOR),
-		   20,
+		   TtaGetMessage (AMAYA, AM_BG_SEL_COLOR),
+		   25,
 		   1,
 		   FALSE);   
    /* third col */
    TtaNewTextForm (ColorBase + mMenuFgColor,
 		   ColorBase + ColorMenu,
 		   TtaGetMessage (AMAYA, AM_MENU_FG_COLOR),
-		   20,
+		   25,
 		   1,
 		   FALSE);   
    TtaNewTextForm (ColorBase + mMenuBgColor,
 		   ColorBase + ColorMenu,
 		   TtaGetMessage (AMAYA, AM_MENU_BG_COLOR),
-		   20,
+		   25,
 		   1,
 		   FALSE);
 
@@ -3693,7 +3693,7 @@ static void LanNegCallbackDialog (int ref, int typedata, char *data)
 	  if (data)
 	    strcpy (LanNeg, data);
 	  else
-	    LanNeg [0] = EOS;
+	    LanNeg[0] = EOS;
 	  break;
 	  
 	default:
@@ -3776,7 +3776,7 @@ static void GetDefaultProfileConf (void)
   ----------------------------------------------------------------------*/
 static void SetProfileConf (void)
 {
-  char def_profiles_file [MAX_LENGTH];
+  char def_profiles_file[MAX_LENGTH];
 
   TtaGetDefProfileFileName (def_profiles_file, MAX_LENGTH);
   if (!strcasecmp (def_profiles_file, Profiles_File))
@@ -4024,7 +4024,7 @@ static void ProfileCallbackDialog (int ref, int typedata, char *data)
 		strcpy (Profiles_File, data);
 	    }
 	  else
-	    Profiles_File [0] = EOS;
+	    Profiles_File[0] = EOS;
  	  break;
 
 	default:
@@ -4233,7 +4233,7 @@ static void TemplatesCallbackDialog (int ref, int typedata, char *data)
 	  if (data)
 	    strcpy (TemplatesUrl, data);
 	  else
-	    TemplatesUrl [0] = EOS;
+	    TemplatesUrl[0] = EOS;
 	  break;
 	  
 	default:
@@ -4510,21 +4510,21 @@ static void AnnotCallbackDialog (int ref, int typedata, char *data)
 	  if (data)
 	    strcpy (AnnotUser, data);
 	  else
-	    AnnotUser [0] = EOS;
+	    AnnotUser[0] = EOS;
 	  break;
 
 	case mAnnotPostServer:
 	  if (data)
 	    strcpy (AnnotPostServer, data);
 	  else
-	    AnnotPostServer [0] = EOS;
+	    AnnotPostServer[0] = EOS;
 	  break;
 
 	case mAnnotServers:
 	  if (data)
 	    strcpy (AnnotServers, data);
 	  else
-	    AnnotServers [0] = EOS;
+	    AnnotServers[0] = EOS;
 	  break;
 
 	case mToggleAnnot:

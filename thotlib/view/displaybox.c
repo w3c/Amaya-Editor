@@ -139,7 +139,8 @@ static void DisplayImage (PtrBox pBox, int frame, int xmin, int xmax,
 	  DisplayStringSelection (frame,
 				  pFrame->FrSelectionBegin.VsXPos,
 				  pFrame->FrSelectionBegin.VsXPos + 2,
-				  pFrame->FrSelectionBegin.VsBox);
+				  pFrame->FrSelectionBegin.VsBox,
+				  t, b, l, r);
 	else
 	  DisplayPointSelection (frame, pBox, 0);
 	}
@@ -326,7 +327,8 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 	  if (selected &&
 	      !pFrame->FrSelectOnePosition &&
 	      pFrame->FrSelectionBegin.VsXPos != pBox->BxW)
-	    DisplayStringSelection (frame, 0, pBox->BxW, pBox);
+	    DisplayStringSelection (frame, 0, pBox->BxW, pBox,
+				    t, b, l, r);
 	  
 	  /* Line thickness */
 	  i = GetLineWeight (pBox->BxAbstractBox, frame);
@@ -493,7 +495,7 @@ static void DisplaySymbol (PtrBox pBox, int frame, ThotBool selected,
 	    DisplayStringSelection (frame,
 				    pFrame->FrSelectionBegin.VsXPos,
 				    pFrame->FrSelectionBegin.VsXPos + 2,
-				    pBox);
+				    pBox, t, b, l, r);
 	}
     }
 }
@@ -531,17 +533,15 @@ void DisplayEmptyBox (PtrBox pBox, int frame, ThotBool selected,
        /* show the selection on the current symbol */
       if (selected)
 	{
-	  bg = SelColor;
+	  bg = BgSelColor;
 	  if (pAb->AbLeafType == LtGraphics)
 	    DrawRectangle (frame, 2, 0, xd, yd, width,
-			   height, pAb->AbForeground,
-			   bg, 0);
+			   height, pAb->AbForeground, bg, 0);
 	  else
 	    {
 	      PaintWithPattern (frame, xd, yd, width, height, 0,
-				pAb->AbForeground,
-				bg, 4);
-	      DisplayStringSelection (frame, 0, 2, pBox);
+				pAb->AbForeground, bg, 4);
+	      DisplayStringSelection (frame, 0, 2, pBox, t, b, l, r);
 	    }
 	}
       else
@@ -549,12 +549,10 @@ void DisplayEmptyBox (PtrBox pBox, int frame, ThotBool selected,
 	  bg = pAb->AbBackground;
 	  if (pAb->AbLeafType == LtGraphics)
 	    DrawRectangle (frame, 2, 0, xd, yd, width,
-			   height, pAb->AbForeground,
-			   bg, 0);
+			   height, pAb->AbForeground, bg, 0);
 	  else
 	    PaintWithPattern (frame, xd, yd, width, height, 0,
-			      pAb->AbForeground,
-			      bg, 4);
+			      pAb->AbForeground, bg, 4);
 	}
       
     }
@@ -1443,9 +1441,9 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   int                 lgspace, whitespace;
   int                 fg, bg;
   int                 shadow;
-  int                 width, org;
+  int                 width, org, xpos;
   int                 left, right;
-  ThotBool            blockbegin;
+  ThotBool            blockbegin, withinSel = FALSE;
   ThotBool            hyphen, rtl;
   CHAR_T              prevChar, nextChar;
 
@@ -1505,8 +1503,6 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
       bg = pAb->AbBackground;
     }
   pFrame = &ViewFrameTable[frame - 1];
-  left = 0;
-  right = 0;
   if (pAb->AbVisibility >= pFrame->FrVisibility)
     {
       /* Initialization */
@@ -1533,9 +1529,82 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
       
       /* locate the first character */
       LocateFirstChar (pBox, rtl, &adbuff, &indbuff);
+      left = 0; /* start position of the selection */
+      right = 0; /* end position of the selection */
       /* Search the first displayable char */
       if (charleft > 0 && adbuff)
 	{
+	  /* check if the box is selected */
+	  if (pBox == pFrame->FrSelectionBegin.VsBox ||
+		   pBox == pFrame->FrSelectionEnd.VsBox)
+	    {
+	      selected = TRUE;
+	      if (pFrame->FrSelectOnePosition)
+		{
+		  left = pFrame->FrSelectionBegin.VsXPos;
+		  right = left + 2;
+		}
+	      else
+		{
+		  /* almost one character is selected */
+		  if (pBox == pFrame->FrSelectionBegin.VsBox)
+		    left = pFrame->FrSelectionBegin.VsXPos;
+		  if (pBox == pFrame->FrSelectionEnd.VsBox)
+		    right = pFrame->FrSelectionEnd.VsXPos;
+		  else
+		    right = pBox->BxW;
+		  DisplayStringSelection (frame, left, right, pBox,
+					  t, b, l, r);
+		  left += x;
+		  right += x;
+		}
+	    }
+	  else if (selected &&
+		   (pFrame->FrSelectionBegin.VsBox == NULL ||
+		    pAb != pFrame->FrSelectionBegin.VsBox->BxAbstractBox ) &&
+		   (pFrame->FrSelectionEnd.VsBox == NULL ||
+		    pAb != pFrame->FrSelectionEnd.VsBox->BxAbstractBox))
+	    {
+	      /* the whole box is selected */
+	      DisplayBgBoxSelection (frame, pBox);
+	      right = x + pBox->BxWidth;
+	    }
+	  else if (pBox->BxType == BoPiece ||
+		   pBox->BxType == BoScript ||
+		   pBox->BxType == BoDotted)
+	    {
+	      /* check if the box in within the selection */
+	      if (pFrame->FrSelectionBegin.VsBox &&
+		  pAb == pFrame->FrSelectionBegin.VsBox->BxAbstractBox)
+		{
+		  nbox = pFrame->FrSelectionBegin.VsBox;
+		  while (nbox && nbox != pFrame->FrSelectionEnd.VsBox &&
+			 nbox != pBox)
+		    nbox = nbox->BxNexChild;
+		  if (nbox == pBox)
+		    {
+		      /* it's within the current selection */
+		      selected = TRUE;
+		      DisplayBgBoxSelection (frame, pBox);
+		      right = x + pBox->BxWidth;
+		    }
+		}
+	      else if (pFrame->FrSelectionEnd.VsBox &&
+		       pAb == pFrame->FrSelectionEnd.VsBox->BxAbstractBox)
+		{
+		  nbox = pBox->BxNexChild;
+		  while (nbox && nbox != pFrame->FrSelectionEnd.VsBox)
+		    nbox = nbox->BxNexChild;
+		  if (nbox == pFrame->FrSelectionEnd.VsBox)
+		    {
+		      /* it's within the current selection */
+		      selected = TRUE;
+		      DisplayBgBoxSelection (frame, pBox);
+		      right = x + pBox->BxWidth;
+		    }
+		}
+	    }
+
 	  /* there is almost one character to display */
 	  do
 	    {
@@ -1627,118 +1696,94 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	    } 
 	}
 
-      /* check if the box is selected */
-      if (selected)
-	{
-	  if (pBox == pFrame->FrSelectionBegin.VsBox ||
-	      pBox == pFrame->FrSelectionEnd.VsBox)
-	    {
-	      if (pFrame->FrSelectOnePosition)
-		{
-		  left = pFrame->FrSelectionBegin.VsXPos;
-		  right = left + 2;
-		}
-	      else
-		{
-		  /* almost one character is selected */
-		  if (pBox == pFrame->FrSelectionBegin.VsBox)
-		    left = pFrame->FrSelectionBegin.VsXPos;
-		  if (pBox == pFrame->FrSelectionEnd.VsBox)
-		    right = pFrame->FrSelectionEnd.VsXPos;
-		  else
-		    right = pBox->BxW;
-		  DisplayStringSelection (frame, left, right, pBox);
-		  /* the selection is done now */
-		  left = 0;
-		  right = 0;
-		}
-	    }
-	  else if (pBox->BxType == BoPiece ||
-		   pBox->BxType == BoScript ||
-		   pBox->BxType == BoDotted)
-	    {
-	      /* check if the box in within the selection */
-	      if (pFrame->FrSelectionBegin.VsBox &&
-		  pAb == pFrame->FrSelectionBegin.VsBox->BxAbstractBox)
-		{
-		  nbox = pFrame->FrSelectionBegin.VsBox;
-		  while (nbox && nbox != pFrame->FrSelectionEnd.VsBox &&
-			 nbox != pBox)
-		    nbox = nbox->BxNexChild;
-		  if (nbox == pBox)
-		    /* it's within the current selection */
-		    DisplayBgBoxSelection (frame, pBox);
-		}
-	      else if (pFrame->FrSelectionEnd.VsBox &&
-		       pAb == pFrame->FrSelectionEnd.VsBox->BxAbstractBox)
-		{
-		  nbox = pBox->BxNexChild;
-		  while (nbox && nbox != pFrame->FrSelectionEnd.VsBox)
-		    nbox = nbox->BxNexChild;
-		  if (nbox == pFrame->FrSelectionEnd.VsBox)
-		    /* it's within the current selection */
-		    DisplayBgBoxSelection (frame, pBox);
-		}
-	      else if (!pFrame->FrSelectOnePosition)
-		DisplayBgBoxSelection (frame, pBox);
-	    }
-	  else if (!pFrame->FrSelectOnePosition)
-	    DisplayBgBoxSelection (frame, pBox);
-	}
-
       /* allocate a buffer to store converted characters */
 #ifdef _GL
-      if (Printing && !GL_TransText ())
-	{
-#endif /* _GL */
-      if ((script == 'Z')||(script == 'A' ))
+      if (script == 'Z' || script == 'A' ||
+	  !Printing || GL_TransText ())
+#else /*_GL*/
+      if (script == 'Z' || script == 'A')
+#endif /*_GL*/
 	wbuffer = TtaGetMemory ((pBox->BxNChars + 1) * sizeof(wchar_t));
       else
 	buffer = TtaGetMemory (pBox->BxNChars + 1);
-#ifdef _GL
-	}
-      else
-	wbuffer = TtaGetMemory ((pBox->BxNChars + 1) * sizeof(wchar_t));
-#endif /*_GL*/
       nbcar = 0;
       org = x;
+      xpos = x; /* position of the new displayed character */
       while (charleft > 0)
 	{
 	  /* handle each char in the buffer */
-	  while ((rtl && indbuff >= indmax) ||
-		 (!rtl && indbuff <= indmax))
+	  while ((rtl && indbuff >= indmax) || (!rtl && indbuff <= indmax))
 	    {
+	      /* get the font index into val */
 	      c = adbuff->BuContent[indbuff];
-	      if ( c == 0x28 && script == 'A') 
+	      if (c == 0x28 && script == 'A') 
 		c = 0x29;
-	      else if ( c == 0x29 && script == 'A') c = 0x28;
-	      if ( c >= 0x0600 && c <= 0x06B0 ) /* arabic char */
+	      else if (c == 0x29 && script == 'A')
+		c = 0x28;
+	      if (c >= 0x0600 && c <= 0x06B0) /* arabic char */
 		{
 		  nextChar = Previous_Char (&adbuff, &indbuff);
 		  prevChar = Next_Char (&adbuff, &indbuff);
-	       	  if (( nextChar >= 0x064B )&&( nextChar <= 0x0655 ))
+	       	  if (nextChar >= 0x064B && nextChar <= 0x0655)
 		    {
-		      if ( indbuff < (adbuff->BuLength - 2) )
+		      if (indbuff < adbuff->BuLength - 2)
 			nextChar = adbuff->BuContent[indbuff + 2];
 		      else 
 			nextChar = 0x0020;
 		    }
-		  if ((prevChar >= 0x064B )&&( prevChar <= 0x0655 ))
+		  if (prevChar >= 0x064B && prevChar <= 0x0655)
 		    {
-		      if ( indbuff > 1 )
+		      if (indbuff > 1)
 			prevChar = adbuff->BuContent[indbuff -2];
 		      else
 			prevChar = 0x0020;
 		    }  
-		  val = GetArabFontAndIndex (c ,prevChar, nextChar, font, &nextfont);
+		  val = GetArabFontAndIndex (c, prevChar, nextChar, font, &nextfont);
 		}
 	      else
-		
 		val = GetFontAndIndexFromSpec (c, font, &nextfont);
+
 	      if (val == INVISIBLE_CHAR || c == ZERO_SPACE ||
 		  c == EOL || c == BREAK_LINE)
 		/* do nothing */;
-	      else if (nextfont == NULL && val == UNDISPLAYED_UNICODE)
+	      else if (!Printing && selected &&
+		       ((!withinSel &&
+			 (right != left + 2 || pBox->BxW <= 2) &&
+			 xpos >= left && xpos <= right) ||
+			withinSel && xpos >= right))
+		{
+		  if (nbcar > 0)
+		    {
+		      width = width + org;
+		      org -= x;
+		      if (org == 0)
+			org = -1;
+		      /* enter or leave a selected region */
+#ifdef _GL
+		      if (script == 'Z' || script == 'A' ||
+			  !Printing || GL_TransText ())
+#else /*_GL*/
+		      if (script == 'Z' || script == 'A')
+#endif /*_GL*/
+			x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,
+					  org, bl, x, blockbegin, fg, shadow);
+		      else
+			x += DrawString (buffer, nbcar, frame, x, y1, prevfont,
+					 org, bl, x, blockbegin, fg, shadow);
+		      width = width - x;
+		      org = x;
+		    }
+		  withinSel = !withinSel;
+		  if (withinSel)
+		    fg = FgSelColor;
+		  else
+		    fg = pAb->AbForeground;
+		  nbcar = 0;
+		  prevfont = nextfont;
+		  xpos = x;
+		}
+
+	      if (nextfont == NULL && val == UNDISPLAYED_UNICODE)
 		{
 		  /* display previous chars handled */
 		  if (nbcar > 0)
@@ -1748,30 +1793,25 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      if (org == 0)
 			org = -1;
 #ifdef _GL
-		      if (Printing && !GL_TransText ())
-			{
+		      if (script == 'Z' || script == 'A' ||
+			  !Printing || GL_TransText ())
+#else /*_GL*/
+		      if (script == 'Z' || script == 'A')
 #endif /*_GL*/
-			  if (script == 'Z' || script == 'A')
-			    x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,
-					      org, bl, x, blockbegin, fg, shadow);
-			  else
-			    x += DrawString (buffer, nbcar, frame, x, y1, prevfont,
-					     org, bl, x, blockbegin, fg, shadow);
-#ifdef _GL		      
-			}
-		      else
 			x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,
 					  org, bl, x, blockbegin, fg, shadow);
-#endif /*_GL*/
+		      else
+			x += DrawString (buffer, nbcar, frame, x, y1, prevfont,
+					 org, bl, x, blockbegin, fg, shadow);
 		      width = width - x;
 		    }
 		  nbcar = 0;
-		  /* all previous spaces are declared */
-		  bl = 0;
+		  bl = 0; /* all previous spaces are managed */
 		  prevfont = nextfont;
 		  DrawRectangle (frame, 1, 5, x, y, 6, pBox->BxH - 1, fg, 0, 0);
 		  x += 6;
 		  org = x;
+		  xpos = x;
 		}
 	      else
 		{
@@ -1789,10 +1829,11 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 			  if (org == 0)
 			    org = -1;	
 #ifdef _GL
-		      if (Printing && !GL_TransText ())
-			{
+			  if (script == 'Z' || script == 'A' ||
+			      !Printing || GL_TransText ())
+#else /*_GL*/
+		          if (script == 'Z' || script == 'A')
 #endif /*_GL*/
-			  if (script == 'Z' || script == 'A')
 			    x += WDrawString (wbuffer, nbcar, frame, x, y1,
 					      prevfont, org, bl, 0, blockbegin,
 					      fg, shadow);
@@ -1804,20 +1845,13 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 					       prevfont, org, bl, 0, blockbegin,
 					       fg, shadow);
 			    }
-#ifdef _GL
-			}
-		      else
-			  x += WDrawString (wbuffer, nbcar, frame, x, y1,
-					    prevfont, org, bl, 0, blockbegin,
-					    fg, shadow);
-#endif /*_GL*/
 			  width = width - x;
 			  org = x;
-			  /* all previous spaces are declared */
-			  bl = 0;
+			  bl = 0; /* all previous spaces are managed */
 			}
 		      nbcar = 0;
 		      prevfont = nextfont;
+		      xpos = x;
 		    }
 		  if (c == SPACE || c == TAB ||
 		      c == NEW_LINE || c == UNBREAKABLE_SPACE ||
@@ -1832,25 +1866,17 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      if (nbcar > 0)
 			{
 #ifdef _GL
-		      if (Printing && !GL_TransText ())
-			{
-#endif /*_GL*/
+			  if (script == 'Z' || script == 'A' ||
+			      !Printing || GL_TransText ())
+#else /*_GL*/
 			  if (script == 'Z' || script == 'A')
+#endif /*_GL*/
 			    x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,  
 					      0, bl, 0, blockbegin, fg, shadow);
 			  else
 			    x += DrawString (buffer, nbcar, frame, x, y1, prevfont,  
 					     0, bl, 0, blockbegin, fg, shadow);
-#ifdef _GL
-			}
-		      else
-			x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont,  
-					  0, bl, 0, blockbegin, fg, shadow);
-			
-
-#endif /*_GL*/
-			  /* all previous spaces are declared */
-			  bl = 0;
+			  bl = 0; /* all previous spaces are managed */
 			}
 		  
 		      if (shadow)
@@ -1891,27 +1917,25 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      else
 			x += lg;
 #endif /* _WINDOWS */
+		      xpos = x;
 		      /* a new space is handled */
 		      bl++;
 		    }
-#ifdef _GL
-		  else if (Printing && !GL_TransText ())
-		    {
-		      if (script == 'Z' || script == 'A')
-#else /*_GL*/
-		  else if (script == 'Z' || script == 'A')
-#endif /*_GL*/
-		    /* add the new char */
-		    wbuffer[nbcar++] = val;
 		  else
-		    /* add the new char */
-		    buffer[nbcar++] = val;
+		    {
 #ifdef _GL
-		    }
-		  else 
-		    /* add the new char */
-		    wbuffer[nbcar++] = val;
+		      if (script == 'Z' || script == 'A' ||
+			  !Printing || GL_TransText ())
+#else /*_GL*/
+		      if (script == 'Z' || script == 'A')
 #endif /*_GL*/
+			/* add the new char */
+			wbuffer[nbcar++] = val;
+		      else
+			/* add the new char */
+			buffer[nbcar++] = val;
+		      xpos += CharacterWidth (val, nextfont);
+		    }
 		}
 	      /* Skip to next char */
 	      if (rtl)
@@ -1966,28 +1990,21 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 
 	  if (charleft <= 0)
 	    {
-	      /*
-		Draw the content of the buffer.
-		Call the function in any case to let Postscript justify the
-		text of the box.
+	      /* Draw the end of the box.
+		 Call the function in any case to let Postscript justify the
+		 text of the box.
 	      */
 #ifdef _GL
-	      if (Printing && !GL_TransText ())
-		{
+	      if (script == 'Z' || script == 'A' ||
+		  !Printing || GL_TransText ())
+#else /*_GL*/
+	      if (script == 'Z' || script == 'A')
 #endif /*_GL*/
-		  if (script == 'Z' || script == 'A')
-		    x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont, width,
-				      bl, hyphen, blockbegin, fg, shadow);
-		  else
-	     
-		    x += DrawString (buffer, nbcar, frame, x, y1, prevfont, width,
-				     bl, hyphen, blockbegin, fg, shadow);
-#ifdef _GL
-		}
-	      else
 		x += WDrawString (wbuffer, nbcar, frame, x, y1, prevfont, width,
 				  bl, hyphen, blockbegin, fg, shadow);
-#endif /*_GL*/
+	      else
+		x += DrawString (buffer, nbcar, frame, x, y1, prevfont, width,
+				 bl, hyphen, blockbegin, fg, shadow);
 	      if (pBox->BxUnderline != 0)
 		{
 #ifdef _GL
@@ -1995,7 +2012,6 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 #endif /* _GL */
 		  DisplayUnderline (frame, x, y, nextfont,
 				    pBox->BxUnderline, width, fg);
-
 #ifdef _GL
 		  StopTextureScale ();
 #endif /* _GL */
@@ -2009,9 +2025,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	{
 	if (prevfont == NULL)
 	  prevfont = nextfont;
-	DrawString (buffer, 0, frame, x, y1,
-		    prevfont, -1, 0, 0, 1,
-		    0, 0);
+	DrawString (buffer, 0, frame, x, y1, prevfont, -1, 0, 0, 1, 0, 0);
 	}
 #endif /* _GL */
 
@@ -2026,8 +2040,8 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      pBox->BxEndOfBloc, fg);
 	}
       /* display a caret if needed */
-      if (left != right)
-	DisplayStringSelection (frame, left, right, pBox);
+      if (selected && right == left + 2)
+	DisplayStringSelection (frame, left, right, pBox, t, b, l, r);
       TtaFreeMemory (wbuffer);
       TtaFreeMemory (buffer);
     }
@@ -2333,8 +2347,10 @@ void ComputeBoundingBox (PtrBox box, int frame, int xmin, int xmax,
 
 /*----------------------------------------------------------------------
   DisplayBox display a box depending on its content.
+  selected is TRUE when an eclosing box or the box itself is selected.
   ----------------------------------------------------------------------*/
-void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
+void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin,
+		 int ymax, ThotBool selected)
 {
   ViewFrame         *pFrame;
   PtrBox             mbox;
@@ -2342,7 +2358,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
   int                x, y;
   int                xd, yd, width, height;
   int                t, b, l, r;
-  ThotBool           selected;
+  ThotBool           selfsel;
 
   pFrame = &ViewFrameTable[frame - 1];
   pAb = box->BxAbstractBox;
@@ -2373,48 +2389,46 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
       /* clipping on the height */
       if (yd + height > ymax)
 	height = ymax - yd;
-
 #ifdef _GL
       InitPrintBox ();
 #endif /* _GL */
     }
+
   /* is the box selected? */
-  selected = (pAb->AbSelected || box == pFrame->FrSelectionBegin.VsBox);
+  selfsel = pAb->AbSelected;
   /* Search for the enclosing box */
   if (pAb->AbEnclosing == NULL)
     mbox = box;
   else
     {
+      /* get the visible enclosing box */
       mbox = pAb->AbEnclosing->AbBox;
       if (mbox->BxType == BoGhost || mbox->BxType == BoFloatGhost)
 	{
-	  selected = selected || mbox->BxAbstractBox->AbSelected;
+	  selfsel = selfsel || mbox->BxAbstractBox->AbSelected;
 	  while (mbox->BxAbstractBox->AbEnclosing &&
 		 (mbox->BxType == BoGhost ||
 		  mbox->BxType == BoFloatGhost))
 	    {
 	      mbox = mbox->BxAbstractBox->AbEnclosing->AbBox;
-	      selected = selected ||
+	      selfsel = selfsel ||
 		(mbox->BxAbstractBox->AbSelected &&
 		 (mbox->BxType == BoGhost || mbox->BxType == BoFloatGhost));
 	    }
 	}
     }
+
 #ifdef _GL 
-  /*does box need to be recomputed 
-    in a new display list*/
+  /*does box need to be recomputed in a new display list*/
   if (FrameTable[frame].FrView == 1 && !Printing)
     {
       /* box->VisibleModification = TRUE; */
-      if ((pAb->AbLeafType == LtPolyLine ||
-	  /* pAb->AbLeafType == LtGraphics || */
-	  pAb->AbLeafType == LtPath) &&
+      if ((pAb->AbLeafType == LtPolyLine || pAb->AbLeafType == LtPath) &&
 	  !selected)
 	{
 	  if (!(box->VisibleModification) &&
 	      !selected &&
-	      box->DisplayList &&
-	      glIsList (box->DisplayList))
+	      box->DisplayList && glIsList (box->DisplayList))
 	    {
 	      glCallList (box->DisplayList);
 	      return;
@@ -2435,30 +2449,30 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 	  (pAb->AbElement->ElParent) &&
 	  (pAb->AbElement->ElParent->ElGradient))
 	{
-	  if (DisplayGradient (pAb, box, frame, selected))
+	  if (DisplayGradient (pAb, box, frame, selfsel))
 	    return;          
 	}
     }
 #endif /*_GL*/
       
   if (pAb->AbVolume == 0 ||
-      (pAb->AbLeafType == LtPolyLine && 
-       box->BxNChars == 1))
+      (pAb->AbLeafType == LtPolyLine && box->BxNChars == 1))
     {
       /* Empty */
-      selected = (box == pFrame->FrSelectionBegin.VsBox &&
-		  box == pFrame->FrSelectionEnd.VsBox);
+      selfsel = (box == pFrame->FrSelectionBegin.VsBox &&
+		 box == pFrame->FrSelectionEnd.VsBox);
       
       if (pAb->AbLeafType == LtSymbol)
-	DisplayEmptyBox (box, frame, selected, t, b, l, r);
+	DisplayEmptyBox (box, frame, selfsel, t, b, l, r);
       else if (pAb->AbLeafType != LtPolyLine &&
 	       pAb->AbLeafType != LtGraphics &&
 	       pAb->AbLeafType != LtPath)
 	{
-	  if (selected)
-	    DisplayStringSelection (frame, 0, box->BxW, box);
-	  else if (ThotLocalActions[T_emptybox] != NULL)
-	    (*ThotLocalActions[T_emptybox]) (box, frame, selected);
+	  if (selfsel)
+	    DisplayStringSelection (frame, 0, box->BxW, box,
+				    t, b, l, r);
+	  else if (ThotLocalActions[T_emptybox])
+	    (*ThotLocalActions[T_emptybox]) (box, frame, selfsel);
 	}
     }
   else if (pAb->AbLeafType == LtText)
@@ -2466,26 +2480,26 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
     DisplayJustifiedText (box, mbox, frame, selected, t, b, l, r);
   else if (box->BxType == BoPicture || pAb->AbLeafType == LtPicture)
     /* Picture */
-    DisplayImage (box, frame, xmin, xmax, ymin, ymax, selected,
+    DisplayImage (box, frame, xmin, xmax, ymin, ymax, selfsel,
 		  t, b, l, r);
   else if (pAb->AbLeafType == LtSymbol)
     /* Symbol */
     if (pAb->AbShape == EOS)
-      DisplayEmptyBox (box, frame, selected, t, b, l, r);
+      DisplayEmptyBox (box, frame, selfsel, t, b, l, r);
     else
-      DisplaySymbol (box, frame, selected, t, b, l, r);
+      DisplaySymbol (box, frame, selfsel, t, b, l, r);
   else if (pAb->AbLeafType == LtGraphics)
     /* Graphics */
     if (pAb->AbShape == EOS)
-      DisplayEmptyBox (box, frame, selected, t, b, l, r);
+      DisplayEmptyBox (box, frame, selfsel, t, b, l, r);
     else
-      DisplayGraph (box, frame, selected, t, b, l, r);
+      DisplayGraph (box, frame, selfsel, t, b, l, r);
   else if (pAb->AbLeafType == LtPolyLine)
     /* Polyline */
-    DisplayPolyLine (box, frame, selected, t, b, l, r);
+    DisplayPolyLine (box, frame, selfsel, t, b, l, r);
   else if (pAb->AbLeafType == LtPath)
     /* Path */
-    DisplayPath (box, frame, selected, t, b, l, r);
+    DisplayPath (box, frame, selfsel, t, b, l, r);
 
 
   /* then display borders */
@@ -2509,9 +2523,8 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 	GL_SetStrokeOpacity (1000);
 	box->VisibleModification = FALSE;  
 	if ((pAb->AbLeafType == LtPolyLine ||
-	     /* 	  pAb->AbLeafType == LtGraphics || */
 	     pAb->AbLeafType == LtPath) && 
-	    !selected)
+	    !selfsel)
 	  glEndList ();
       }
 #endif /*_GL*/
