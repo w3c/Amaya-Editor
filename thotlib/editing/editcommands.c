@@ -2471,7 +2471,7 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 {
   PtrTextBuffer       pBuffer;
   PtrAbstractBox      pAb, pBlock;
-  PtrBox              pBox;
+  PtrBox              pBox, box;
   PtrBox              pSelBox;
   ViewSelection      *pViewSel;
   ViewSelection      *pViewSelEnd;
@@ -2486,6 +2486,9 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
   int                 visib, zoom;
   int                 ind;
   int                 previousChars;
+#ifdef _I18N_
+  char                script;
+#endif /* _I18N_ */
   ThotBool            beginOfBox;
   ThotBool            toDelete;
   ThotBool            toSplit;
@@ -2550,12 +2553,9 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 		InsertChar (frame, c, keyboard);
 	      else
 		{
-		  /* selection could not be modified by the application */
-
-		  /* Recherche le point d'insertion du texte */
+		  /* Look for the insert point */
 		  GiveInsertPoint (pAb, frame, &pSelBox, &pBuffer,
 				   &ind, &xx, &previousChars);
-		  
 		  if (pAb)
 		    {
 		      /* keyboard ni Symbol ni Graphique */
@@ -2586,18 +2586,16 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 		      /* point d'insertion inferieur en y */
 		      bottomY = topY + pSelBox->BxHeight;
 #ifdef _GL
-			  if (xx)
-				xx = xx - 1;
-			  if (bottomY + 1 < FrameTable[frame].FrHeight)
-				bottomY = bottomY + 1;
+		      if (xx)
+			xx = xx - 1;
+		      if (bottomY + 1 < FrameTable[frame].FrHeight)
+			bottomY = bottomY + 1;
 		      DefClip (frame, 
-						xx, topY, 
-						xx, bottomY);
+			       xx, topY, 
+			       xx, bottomY);
 #else /*_GL*/
-			  DefClip (frame, xx, topY, xx, bottomY );
+		      DefClip (frame, xx, topY, xx, bottomY);
 #endif /*_GL*/
-
-		      
 		      /* Est-on au debut d'une boite entiere ou coupee ? */
 		      pBox = pAb->AbBox->BxNexChild;
 		      if ((pBox == NULL || pSelBox == pBox) &&
@@ -2606,7 +2604,9 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 		      else
 			beginOfBox = FALSE;
 		  
-		      if (toDelete)	/* ========================== Delete */
+		      if (toDelete)
+			{
+			/* ========================== Delete */
 			if (beginOfBox)
 			  {
 			    /* no removable character here */
@@ -2859,10 +2859,11 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 				else
 				  UpdateViewSelMarks (frame, xDelta, spacesDelta, charsDelta);
 			      }
-			  } /* ====================================== Delete */
+			  }
+			}
 		      else
 			{
-			  /* Initialise l'insertion d'un caractere */
+			  /* Insert a new character */
 			  charsDelta = 1;
 			  pix = 0;
 			  adjust = 0;
@@ -2872,6 +2873,101 @@ void InsertChar (int frame, CHAR_T c, int keyboard)
 			    spacesDelta = 0;
 			  toSplit = FALSE;
 			  toDelete = FALSE;
+#ifdef _I18N_
+			  script = TtaGetCharacterScript (c);
+			  if  (script != ' ' &&script != 'D' &&
+			       pSelBox && pSelBox->BxScript != script)
+			    {
+			      /* update the clipping */
+			      DefClip (frame, pSelBox->BxXOrg, topY,
+				       pSelBox->BxXOrg + pSelBox->BxWidth, bottomY);
+			      /* split the current box */
+			      pBox = SplitForScript (pSelBox, pAb, pSelBox->BxScript,
+						     previousChars,
+						     xx, pSelBox->BxH,
+						     pViewSel->VsNSpaces,
+						     ind, pBuffer,
+						     ViewFrameTable[frame - 1].FrAbstractBox->AbBox);
+			      pBox->BxScript = pSelBox->BxScript;
+			      /* add the new box */
+			      box = GetBox (pAb);
+			      pSelBox = pBox->BxPrevious;
+			      pSelBox->BxNexChild = box;
+			      pSelBox->BxNext = box;
+			      box->BxPrevious = pSelBox;
+			      box->BxNext = pBox;
+			      box->BxNexChild = pBox;
+			      pBox->BxPrevious = box;
+			      box->BxType = BoScript;
+			      box->BxScript = script;
+			      box->BxAbstractBox = pAb;
+			      box->BxIndChar = ind;
+			      box->BxContentWidth = TRUE;
+			      box->BxContentHeight = TRUE;
+			      box->BxFont = pBox->BxFont;
+			      box->BxUnderline = pBox->BxUnderline;
+			      box->BxThickness = pBox->BxThickness;
+			      box->BxHorizRef = pBox->BxHorizRef;
+			      box->BxH = pBox->BxH;
+			      box->BxHeight = pBox->BxHeight;
+			      box->BxW = 0;
+			      box->BxWidth = 0;
+			      box->BxTMargin = pBox->BxTMargin;
+			      box->BxTBorder = pBox->BxTBorder;
+			      box->BxTPadding = pBox->BxTPadding;
+			      box->BxBMargin = pBox->BxBMargin;
+			      box->BxBBorder = pBox->BxBBorder;
+			      box->BxBPadding = pBox->BxBPadding;
+			      box->BxRMargin = 0;
+			      box->BxRBorder = 0;
+			      box->BxRPadding = 0;
+			      box->BxBuffer = pBuffer;
+			      box->BxFirstChar = pBox->BxFirstChar;
+			      box->BxNChars = 0;
+			      box->BxNSpaces = 0;
+			      box->BxYOrg = pBox->BxYOrg;
+			      if (script == 'A' || script == 'H')
+				{
+				  if (pBox->BxScript == 'A' ||  pBox->BxScript == 'H')
+				    /* same direction rtl */
+				    box->BxXOrg = pSelBox->BxXOrg;
+				  else if (pAb->AbDirection == 'L')
+				    {
+				      /* the first box is moved */
+				      pSelBox->BxXOrg = pBox->BxXOrg;
+				      /* insert after the first box */
+				      box->BxXOrg = pSelBox->BxXOrg + pSelBox->BxWidth;
+				      /* the next box is moved too */
+				      pBox->BxXOrg = box->BxXOrg;
+				    }
+				  else
+				    /* between the 2 boxes */
+				    box->BxXOrg = pSelBox->BxXOrg;
+				}
+			      else
+				{
+				  if (pBox->BxScript != 'A' ||  pBox->BxScript != 'H')
+				    /* same direction ltr */
+				    box->BxXOrg = pBox->BxXOrg;
+				  else if (pAb->AbDirection == 'L')
+				    /* between the 2 boxes */
+				    box->BxXOrg = pBox->BxXOrg;
+				  else
+				    {
+				      /* the first box is moved */
+				      pSelBox->BxXOrg = pBox->BxXOrg + pBox->BxWidth - pSelBox->BxWidth;
+				      /* insert before the first box */
+				      box->BxXOrg = pSelBox->BxXOrg;
+				      /* the next box is moved too */
+				      pBox->BxXOrg = box->BxXOrg - pBox->BxWidth;
+				    }
+				}
+			      xx = 0;
+			      pSelBox = box;
+			      previousChars = 0;
+			      toSplit = TRUE;
+			    }
+#endif /* _I18N_ */
 			  
 			  /* Si la selection debutait sur une boite de presentation */
 			  /* il faut deplacer la selection sur le premier caractere */
@@ -3867,7 +3963,8 @@ void TtcPaste (Document doc, View view)
 	    }
 #ifdef _WINDOWS
 	  OpenClipboard (FrRef [frame]);
-	  if (hMem = GetClipboardData (CF_UNICODETEXT)) {
+	  if (hMem = GetClipboardData (CF_UNICODETEXT))
+	    {
 	      wchar_t* lpData = (wchar_t*) GlobalLock (hMem);
 	      lpDatalength = wcslen (lpData);
 	      if (Xbuffer == NULL /*|| wcscmp (@@@@Xbuffer, lpData)*/) /* MJD: trial-and-error hacking */
@@ -3875,7 +3972,7 @@ void TtcPaste (Document doc, View view)
 	      else  
 		ContentEditing (TEXT_PASTE);
 	      GlobalUnlock (hMem);
-	  }
+	    }
 	  /* the CF_TEXT part is probably not necessary, because
 	     CF_UNICODETEXT is supported from Win9x up, by the system,
 	     even for non-Unicode applications */

@@ -303,7 +303,7 @@ BinFile TtaReadOpen (CONST char *filename)
   ----------------------------------------------------------------------*/
 void TtaReadClose (BinFile file)
 {
-  if (file != NULL)
+  if (file)
     fclose (file);
 }
 
@@ -326,7 +326,7 @@ BinFile TtaWriteOpen (CONST char *filename)
   ----------------------------------------------------------------------*/
 void TtaWriteClose (BinFile file)
 {
-  if (file != NULL)
+  if (file)
     fclose (file);
 }
 

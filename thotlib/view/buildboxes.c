@@ -759,6 +759,177 @@ static void FreePath (PtrBox box)
     }
 }
 
+/*----------------------------------------------------------------------
+  SplitForScript splits a box due to a change of script.
+  Return the last box generated.
+  ----------------------------------------------------------------------*/
+PtrBox SplitForScript (PtrBox box, PtrAbstractBox pAb, char script, int lg,
+		       int width, int height, int spaces, int ind,
+		       PtrTextBuffer pBuffer, PtrBox pMainBox)
+{
+  PtrBox              ibox1, ibox2;
+  PtrBox              pPreviousBox, pNextBox;
+  int                 l, v;
+
+  pPreviousBox = box->BxPrevious;
+  pNextBox = box->BxNext;
+  if (box->BxType == BoComplete)
+    {
+      l = box->BxLMargin + box->BxLBorder + box->BxLPadding;
+      v = box->BxTMargin + box->BxTBorder + box->BxTPadding + box->BxBMargin + box->BxBBorder + box->BxBPadding;
+      /* Update the main box */
+      box->BxType = BoMulScript;
+      ibox1 = GetBox (pAb);
+      ibox2 = GetBox (pAb);
+      box->BxNexChild = ibox1;
+
+      /* Initialize the first piece */
+      ibox1->BxType = BoScript;
+      ibox1->BxScript = script;
+      ibox1->BxAbstractBox = pAb;
+      ibox1->BxIndChar = box->BxIndChar;
+      ibox1->BxContentWidth = TRUE;
+      ibox1->BxContentHeight = TRUE;
+      ibox1->BxFont = box->BxFont;
+      ibox1->BxUnderline = box->BxUnderline;
+      ibox1->BxThickness = box->BxThickness;
+      ibox1->BxHorizRef = box->BxHorizRef;
+      ibox1->BxH = height;
+      ibox1->BxHeight = height + v;
+      ibox1->BxW = width;
+      ibox1->BxWidth = width + l;
+      ibox1->BxTMargin = box->BxTMargin;
+      ibox1->BxTBorder = box->BxTBorder;
+      ibox1->BxTPadding = box->BxTPadding;
+      ibox1->BxBMargin = box->BxBMargin;
+      ibox1->BxBBorder = box->BxBBorder;
+      ibox1->BxBPadding = box->BxBPadding;
+      ibox1->BxLMargin = box->BxLMargin;
+      ibox1->BxLBorder = box->BxLBorder;
+      ibox1->BxLPadding = box->BxLPadding;
+      ibox1->BxBuffer = box->BxBuffer;
+      ibox1->BxFirstChar = box->BxFirstChar;
+      ibox1->BxNChars = lg;
+      ibox1->BxNSpaces = spaces;
+      if (script == 'A' || script == 'H')
+	ibox1->BxXOrg = box->BxXOrg + box->BxWidth - ibox1->BxWidth;
+      else
+	ibox1->BxXOrg = box->BxXOrg;
+      ibox1->BxYOrg = box->BxYOrg;
+      /* Initialize the second piece */
+      ibox2->BxType = BoScript;
+      ibox2->BxAbstractBox = pAb;
+      ibox2->BxIndChar = ind;
+      ibox2->BxContentWidth = TRUE;
+      ibox2->BxContentHeight = TRUE;
+      ibox2->BxFont = box->BxFont;
+      ibox2->BxUnderline = box->BxUnderline;
+      ibox2->BxThickness = box->BxThickness;
+      ibox2->BxHorizRef = box->BxHorizRef;
+      ibox2->BxH = height;
+      ibox2->BxHeight = height + v;
+      ibox2->BxW = box->BxW - width;
+      ibox2->BxWidth = box->BxWidth - width;
+      ibox2->BxTMargin = box->BxTMargin;
+      ibox2->BxTBorder = box->BxTBorder;
+      ibox2->BxTPadding = box->BxTPadding;
+      ibox2->BxBMargin = box->BxBMargin;
+      ibox2->BxBBorder = box->BxBBorder;
+      ibox2->BxBPadding = box->BxBPadding;
+      ibox2->BxRMargin = box->BxRMargin;
+      ibox2->BxRBorder = box->BxRBorder;
+      ibox2->BxRPadding = box->BxRPadding;
+      ibox2->BxBuffer = pBuffer;
+      ibox2->BxFirstChar = ibox1->BxFirstChar + lg;
+      ibox2->BxNChars = box->BxNChars - lg;
+      ibox2->BxNSpaces = box->BxNSpaces - spaces;
+      if (script == 'A' || script == 'H')
+	ibox2->BxXOrg = ibox1->BxXOrg - ibox2->BxWidth;
+      else
+	ibox2->BxXOrg = ibox1->BxXOrg + ibox1->BxWidth;
+      ibox2->BxYOrg = box->BxYOrg;
+      /* update the chain of leaf boxes */
+      ibox1->BxNexChild = ibox2;
+      ibox1->BxPrevious = pPreviousBox;
+      if (pPreviousBox != NULL)
+	pPreviousBox->BxNext = ibox1;
+      else
+	pMainBox->BxNext = ibox1;
+      ibox1->BxNext = ibox2;
+      ibox2->BxPrevious = ibox1;
+      ibox2->BxNext = pNextBox;
+      if (pNextBox != NULL)
+	pNextBox->BxPrevious = ibox2;
+      else
+	pMainBox->BxPrevious = ibox2;
+    }
+  else
+    {
+      ibox1 = pAb->AbBox;
+      l = ibox1->BxLMargin + ibox1->BxLBorder + ibox1->BxLPadding;
+      v = ibox1->BxTMargin + ibox1->BxTBorder + ibox1->BxTPadding + ibox1->BxBMargin + ibox1->BxBBorder + ibox1->BxBPadding;
+      /* Initialize the second piece */
+      ibox2 = GetBox (pAb);
+      ibox2->BxType = BoScript;
+      ibox2->BxAbstractBox = pAb;
+      ibox2->BxIndChar = ind;
+      ibox2->BxContentWidth = TRUE;
+      ibox2->BxContentHeight = TRUE;
+      ibox2->BxFont = box->BxFont;
+      ibox2->BxUnderline = box->BxUnderline;
+      ibox2->BxThickness = box->BxThickness;
+      ibox2->BxHorizRef = box->BxHorizRef;
+      ibox2->BxH = height;
+      ibox2->BxHeight = height + v;
+      ibox2->BxW = box->BxW - width;
+      ibox2->BxWidth = box->BxWidth - width - l;
+      ibox2->BxTMargin = box->BxTMargin;
+      ibox2->BxTBorder = box->BxTBorder;
+      ibox2->BxTPadding = box->BxTPadding;
+      ibox2->BxBMargin = box->BxBMargin;
+      ibox2->BxBBorder = box->BxBBorder;
+      ibox2->BxBPadding = box->BxBPadding;
+      ibox2->BxRMargin = box->BxRMargin;
+      ibox2->BxRBorder = box->BxRBorder;
+      ibox2->BxRPadding = box->BxRPadding;
+      ibox2->BxBuffer = pBuffer;
+      ibox2->BxFirstChar = box->BxFirstChar + lg;
+      ibox2->BxNChars =  box->BxNChars - lg;
+      ibox2->BxNSpaces = box->BxNSpaces - spaces;
+      if (script == 'A' || script == 'H')
+	{
+	  box->BxXOrg = box->BxXOrg + box->BxWidth - width + l;
+	  ibox2->BxXOrg = box->BxXOrg - ibox2->BxWidth;
+	}
+      else
+	ibox2->BxXOrg = box->BxXOrg + box->BxWidth;
+      ibox2->BxYOrg = box->BxYOrg;
+      /* Update the first piece */
+      box->BxScript = script; 
+      box->BxRMargin = 0;
+      box->BxRBorder = 0;
+      box->BxRPadding = 0;
+      box->BxW = width;
+      box->BxWidth = width + l;
+      box->BxRMargin = 0;
+      box->BxRBorder = 0;
+      box->BxRPadding = 0;
+      box->BxNChars = lg;
+      box->BxNSpaces = spaces;
+
+      /* update the chain of leaf boxes */
+      ibox2->BxNexChild = box->BxNexChild;
+      box->BxNexChild = ibox2;
+      box->BxNext = ibox2;
+      ibox2->BxPrevious = box;
+      ibox2->BxNext = pNextBox;
+      if (pNextBox)
+	pNextBox->BxPrevious = ibox2;
+      else
+	pMainBox->BxPrevious = ibox2;
+    }
+  return ibox2;
+}
 
 /*----------------------------------------------------------------------
   GiveTextSize gives the internal width and height of a text box.
@@ -768,11 +939,10 @@ static void GiveTextSize (PtrAbstractBox pAb, PtrBox pMainBox, int *width,
 {
   PtrTextBuffer       pBuffer;
   SpecFont            font;
-  PtrBox              box, ibox1, ibox2;
-  PtrBox              pPreviousBox, pNextBox;
+  PtrBox              box;
   char                script, dir;
   int                 ind, nChars;
-  int                 l, r, v, pos;
+  int                 l, pos;
   int                 lg, spaces, bwidth;
 
   box = pAb->AbBox;
@@ -794,14 +964,9 @@ static void GiveTextSize (PtrAbstractBox pAb, PtrBox pMainBox, int *width,
       /* first character to be handled */
       pBuffer = pAb->AbText;
       ind = box->BxIndChar;
-      l = box->BxLMargin + box->BxLBorder + box->BxLPadding;
-      r = box->BxRMargin + box->BxRBorder + box->BxRPadding;
-      v = box->BxTMargin + box->BxTBorder + box->BxTPadding + box->BxBMargin + box->BxBBorder + box->BxBPadding;
       *nSpaces = 0;
       *width = 0;
       pos = 1;
-      pPreviousBox = box->BxPrevious;
-      pNextBox = box->BxNext;
       dir = pAb->AbDirection;
       while (nChars > 0)
 	{
@@ -814,136 +979,13 @@ static void GiveTextSize (PtrAbstractBox pAb, PtrBox pMainBox, int *width,
 	  *width += bwidth;
 	  *nSpaces += spaces;
 	  lg -= nChars;
-	  if (nChars > 0 && box->BxType == BoComplete)
-	    {
-	      /* Update the main box */
-	      box->BxType = BoMulScript;
-	      ibox1 = GetBox (pAb);
-	      ibox2 = GetBox (pAb);
-	      box->BxNexChild = ibox1;
-
-	      /* Initialize the first piece */
-	      ibox1->BxType = BoScript;
-	      ibox1->BxScript = script;
-	      ibox1->BxAbstractBox = box->BxAbstractBox;
-	      ibox1->BxIndChar = box->BxIndChar;
-	      ibox1->BxContentWidth = TRUE;
-	      ibox1->BxContentHeight = TRUE;
-	      ibox1->BxFont = font;
-	      ibox1->BxUnderline = box->BxUnderline;
-	      ibox1->BxThickness = box->BxThickness;
-	      ibox1->BxHorizRef = box->BxHorizRef;
-	      ibox1->BxH = *height;
-	      ibox1->BxHeight = *height + v;
-	      ibox1->BxW = bwidth;
-	      ibox1->BxWidth = bwidth + l;
-	      ibox1->BxTMargin = box->BxTMargin;
-	      ibox1->BxTBorder = box->BxTBorder;
-	      ibox1->BxTPadding = box->BxTPadding;
-	      ibox1->BxBMargin = box->BxBMargin;
-	      ibox1->BxBBorder = box->BxBBorder;
-	      ibox1->BxBPadding = box->BxBPadding;
-	      ibox1->BxLMargin = box->BxLMargin;
-	      ibox1->BxLBorder = box->BxLBorder;
-	      ibox1->BxLPadding = box->BxLPadding;
-	      ibox1->BxBuffer = box->BxBuffer;
-	      ibox1->BxFirstChar = box->BxFirstChar;
-	      ibox1->BxNChars = lg;
-	      ibox1->BxNSpaces = spaces;
-	      ibox1->BxXOrg = box->BxXOrg;
-	      /* Initialize the second piece */
-	      ibox2->BxType = BoScript;
-	      ibox2->BxAbstractBox = box->BxAbstractBox;
-	      ibox2->BxIndChar = ind;
-	      ibox2->BxContentWidth = TRUE;
-	      ibox2->BxContentHeight = TRUE;
-	      ibox2->BxFont = font;
-	      ibox2->BxUnderline = box->BxUnderline;
-	      ibox2->BxThickness = box->BxThickness;
-	      ibox2->BxHorizRef = box->BxHorizRef;
-	      ibox2->BxH = *height;
-	      ibox2->BxHeight = *height + v;
-	      ibox2->BxTMargin = box->BxTMargin;
-	      ibox2->BxTBorder = box->BxTBorder;
-	      ibox2->BxTPadding = box->BxTPadding;
-	      ibox2->BxBMargin = box->BxBMargin;
-	      ibox2->BxBBorder = box->BxBBorder;
-	      ibox2->BxBPadding = box->BxBPadding;
-	      ibox2->BxRMargin = box->BxRMargin;
-	      ibox2->BxRBorder = box->BxRBorder;
-	      ibox2->BxRPadding = box->BxRPadding;
-	      ibox2->BxBuffer = pBuffer;
-	      ibox2->BxFirstChar = ibox1->BxFirstChar + lg;
-	      ibox2->BxNChars = nChars;
-	      ibox2->BxNSpaces = 0;
-	      ibox2->BxXOrg = ibox1->BxXOrg + ibox1->BxWidth;
-	      /* update the chain of leaf boxes */
-	      ibox1->BxNexChild = ibox2;
-	      ibox1->BxPrevious = pPreviousBox;
-	      if (pPreviousBox != NULL)
-		pPreviousBox->BxNext = ibox1;
-	      else
-		pMainBox->BxNext = ibox1;
-	      ibox1->BxNext = ibox2;
-	      ibox2->BxPrevious = ibox1;
-	      ibox2->BxNext = pNextBox;
-	      if (pNextBox != NULL)
-		pNextBox->BxPrevious = ibox2;
-	      else
-		pMainBox->BxPrevious = ibox2;
-	      box = ibox2;
-	    }
-	  else if (nChars > 0)
-	    {
-	      box->BxW = bwidth;
-	      box->BxWidth = bwidth + l;
-	      box->BxRMargin = 0;
-	      box->BxRBorder = 0;
-	      box->BxRPadding = 0;
-	      box->BxNChars = lg;
-	      box->BxNSpaces = spaces;
-	      /* Initialize the second piece */
-	      ibox2 = GetBox (pAb);
-	      ibox2->BxType = BoScript;
-	      ibox2->BxAbstractBox = box->BxAbstractBox;
-	      ibox2->BxIndChar = ind;
-	      ibox2->BxContentWidth = TRUE;
-	      ibox2->BxContentHeight = TRUE;
-	      ibox2->BxFont = font;
-	      ibox2->BxUnderline = box->BxUnderline;
-	      ibox2->BxThickness = box->BxThickness;
-	      ibox2->BxHorizRef = box->BxHorizRef;
-	      ibox2->BxH = *height;
-	      ibox2->BxHeight = *height + v;
-	      ibox2->BxTMargin = box->BxTMargin;
-	      ibox2->BxTBorder = box->BxTBorder;
-	      ibox2->BxTPadding = box->BxTPadding;
-	      ibox2->BxBMargin = box->BxBMargin;
-	      ibox2->BxBBorder = box->BxBBorder;
-	      ibox2->BxBPadding = box->BxBPadding;
-	      ibox2->BxRMargin = box->BxRMargin;
-	      ibox2->BxRBorder = box->BxRBorder;
-	      ibox2->BxRPadding = box->BxRPadding;
-	      ibox2->BxBuffer = pBuffer;
-	      ibox2->BxFirstChar = box->BxFirstChar + lg;
-	      ibox2->BxNChars = nChars;
-	      ibox2->BxNSpaces = 0;
-	      ibox2->BxXOrg = box->BxXOrg + box->BxWidth;
-
-	      /* update the chain of leaf boxes */
-	      box->BxNexChild = ibox2;
-	      box->BxNext = ibox2;
-	      ibox2->BxPrevious = box;
-	      ibox2->BxNext = pNextBox;
-	      if (pNextBox != NULL)
-		pNextBox->BxPrevious = ibox2;
-	      else
-		pMainBox->BxPrevious = ibox2;
-	      box = ibox2;
-	    }
+	  if (nChars > 0)
+	      box = SplitForScript (box, pAb, script, lg, bwidth, *height, spaces,
+				    ind, pBuffer, pMainBox);
 	  else if (box->BxType == BoScript)
 	    {
 	      box->BxW = bwidth;
+	      l = box->BxLMargin + box->BxLBorder + box->BxLPadding;
 	      box->BxWidth = bwidth + l;
 	      box->BxNChars = lg;
 	      box->BxNSpaces = spaces;

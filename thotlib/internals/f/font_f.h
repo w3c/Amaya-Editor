@@ -45,6 +45,8 @@ extern PtrFont ReadFont ( char script,
                           int highlight,
                           int size,
                           TypeUnit unit );
+extern void *LoadStixFont ( int family,
+                            int size );
 extern int GetFontAndIndexFromSpec ( CHAR_T c,
                                      SpecFont fontset,
                                      PtrFont *font );
@@ -100,6 +102,8 @@ extern PtrFont ReadFont (/* char script,
                             int highlight,
                             int size,
                             TypeUnit unit */);
+extern void *LoadStixFont (/* int family,
+                              int size */);
 extern int GetFontAndIndexFromSpec (/* CHAR_T c,
                                        SpecFont fontset,
                                        PtrFont *font */);

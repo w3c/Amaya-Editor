@@ -1154,8 +1154,6 @@ static void BreakPieceOfBox (PtrLine pLine, PtrBox pBox, int max,
   /* search a break */
   lostPixels = SearchBreak (pLine, pBox, max, font, &length, &width,
 			    &nSpaces, &newIndex, &pNewBuff);
-  /*if (pBox->BxScript == 'Z')
-    printf ("length=%d width=%d\n", length, width);*/
   if (lostPixels <= 0)
     /* don't break on a space */
     spaceWidth = 0;

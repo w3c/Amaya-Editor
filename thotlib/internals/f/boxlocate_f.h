@@ -6,6 +6,10 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern ThotBool APPgraphicModify ( PtrElement pEl,
+                                   int value,
+                                   int frame,
+                                   ThotBool pre );
 extern void LocateSelectionInView ( int frame,
                                     int x,
                                     int y,
@@ -78,10 +82,6 @@ extern int GetShapeDistance ( int xRef,
 extern PtrBox GetClickedLeafBox ( int frame,
                                   int xRef,
                                   int yRef );
-extern ThotBool APPgraphicModify ( PtrElement pEl,
-                                   int value,
-                                   int frame,
-                                   ThotBool pre );
 extern void ApplyDirectTranslate ( int frame,
                                    int xm,
                                    int ym );
@@ -100,6 +100,10 @@ extern void LocateClickedChar ( PtrBox pBox,
 
 #else /* __STDC__ */
 
+extern ThotBool APPgraphicModify (/* PtrElement pEl,
+                                     int value,
+                                     int frame,
+                                     ThotBool pre */);
 extern void LocateSelectionInView (/* int frame,
                                       int x,
                                       int y,
@@ -172,10 +176,6 @@ extern int GetShapeDistance (/* int xRef,
 extern PtrBox GetClickedLeafBox (/* int frame,
                                     int xRef,
                                     int yRef */);
-extern ThotBool APPgraphicModify (/* PtrElement pEl,
-                                     int value,
-                                     int frame,
-                                     ThotBool pre */);
 extern void ApplyDirectTranslate (/* int frame,
                                      int xm,
                                      int ym */);
