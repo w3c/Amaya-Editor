@@ -1115,7 +1115,7 @@ LRESULT CALLBACK MimeTypeDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 				(HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
       /* set the font of the window */
       if (newFont)
-	SendMessage (wndMTlist, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
+	    SendMessage (wndMTlist, WM_SETFONT, (WPARAM) newFont, MAKELPARAM(FALSE, 0));
       SendMessage (wndMTlist, LB_RESETCONTENT, 0, 0);
       while (i < nbItem && mimeType[index] != '\0')
 	{
@@ -1123,11 +1123,11 @@ LRESULT CALLBACK MimeTypeDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  index += strlen (&mimeType[index]) + 1;/* Longueur de l'intitule */
 	  i++;
 	}
-      SetDlgItemText (hwnDlg, IDC_MTEDIT, &mimeType[0]);
       /* select the first list item */
-      SendMessage (wndMTlist, LB_SETCURSEL, 0, 0);
+      /* SendMessage (wndMTlist, LB_SETCURSEL, 0, 0); */
       /* put the focus on the first list item */
-      SetFocus (wndMTlist);
+	  SetDlgItemText (hwnDlg, IDC_MTEDIT, UserMimeType);
+      SetFocus (GetDlgItem (hwnDlg, IDC_MTEDIT));
       return FALSE;
       break;
       
@@ -3937,7 +3937,7 @@ void CreateGreekKeyboardDlgWindow (ThotWindow parent)
 void CreateAuthenticationDlgWindow (ThotWindow parent, const char *realm,
 				    char *server)
 {  
-  string_par1 = realm;
+  string_par1 = (char *) realm;
   string_par2 = server;
 
   DialogBox (hInstance, MAKEINTRESOURCE (AUTHENTIFICATIONDIALOG), parent, (DLGPROC) AuthentificationDlgProc);
