@@ -2775,11 +2775,10 @@ char              **argv;
    boolean             fileOK;
    int                 nb;	/* identifier index of found word if it is
 				   an indentifier */
-   int                 libtable; /* index of table libdialogue */
    int                 param;
 
    TtaInitializeAppRegistry (argv[0]);
-   libtable = TtaGetMessageTable ("libdialogue", TMSG_LIB_MSG_MAX);
+   (void *) TtaGetMessageTable ("libdialogue", TMSG_LIB_MSG_MAX);
    COMPIL = TtaGetMessageTable ("compildialogue", COMP_MSG_MAX);
    STR = TtaGetMessageTable ("strdialogue", STR_MSG_MAX);
    error = False;
