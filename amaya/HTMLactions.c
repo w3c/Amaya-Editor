@@ -2471,17 +2471,62 @@ void SynchronizeSourceView (NotifyElement *event)
     {
       /* display the line position of the selection */
       line = TtaGetElementLineNumber (firstSel);
+      elType = TtaGetElementType (firstSel);
+      /* take into account previous elements in the same line */
+      el = TtaGetParent (firstSel);
+      el = TtaGetFirstChild (el);
+      while (el != firstSel)
+	{
+	  /* add characters of previous elements */
+	  firstChar += TtaGetElementVolume (el);
+	  TtaNextSibling (&el);
+	}
       sprintf (message, "line %d char %d", line, firstChar);
       TtaSetStatus (doc, 1, message, NULL);
     }
 }
 
 /*----------------------------------------------------------------------
-  GotoLine points the corresponding line in a source file.
+  GetCurrentLine returns the current selected line char index in the
+  source file.
  -----------------------------------------------------------------------*/
-void GotoLine (Document doc, int line, int index)
+void GetCurrentLine (Document doc, int *line, int *index)
 {
-  Element             el, child;
+  Element             el, child, parent;
+  ElementType         elType;
+  int                 first, last;
+
+  *line = 0;
+  *index = 0;
+  /* look for a selection in the current document */
+  TtaGiveFirstSelectedElement (doc, &el, &first, &last);
+  if (el)
+    {
+      *line = TtaGetElementLineNumber (el);
+      *index = first;
+      elType = TtaGetElementType (el);
+      if (elType.ElTypeNum == TextFile_EL_Line_)
+	{
+	  /* take into account previous elements in the same line */
+	  parent = TtaGetParent (el);
+	  child = TtaGetFirstChild (parent);
+	  while (child != el)
+	    {
+	      /* add characters of previous elements */
+	      *index += TtaGetElementVolume (child);
+	      TtaNextSibling (&child);
+	    }
+	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  GotoLine points the corresponding line and char index in the
+  source file.
+ -----------------------------------------------------------------------*/
+void GotoLine (Document doc, int line, int index, ThotBool selpos)
+{
+  Element             el, child, prev;
   ElementType         elType;
   char                message[50];
   int                 i, len;
@@ -2489,7 +2534,7 @@ void GotoLine (Document doc, int line, int index)
   if (line)
     {
       /* open the source file */
-      if (DocumentTypes[doc] != docCSS)
+      if (DocumentTypes[doc] != docCSS && DocumentTypes[doc] != docSource)
 	{
 	  if (DocumentSource[doc] == 0)
 	    ShowSource (doc, 1);
@@ -2513,14 +2558,24 @@ void GotoLine (Document doc, int line, int index)
 		{
 		  i = index;
 		  len = TtaGetElementVolume (child);
-		  while (len < i)
+		  while (child && len < i)
 		    {
 		      /* skip previous elements in the same line */
 		      i -= len;
+		      prev = child;
 		      TtaNextSibling (&child);
-		      len = TtaGetElementVolume (child);
+		      if (child == NULL)
+			{
+			  len = i;
+			  child = prev;
+			}
+		      else
+			len = TtaGetElementVolume (child);
 		    }
-		  TtaSelectString (doc, child, i, i);
+		  if (selpos)
+		    TtaSelectString (doc, child, i, i-1);
+		  else
+		    TtaSelectString (doc, child, i, i);
 		}
 	      else
 		TtaSelectElement (doc, child);
@@ -2606,7 +2661,7 @@ static ThotBool ShowLogLine (Element el, Document doc)
 
       /* skip to the line */
       if (line && otherDoc && otherDoc < MAX_DOCUMENTS)
-	GotoLine (otherDoc, line, index);
+	GotoLine (otherDoc, line, index, FALSE);
       return TRUE; /* don't let Thot perform normal operation */
     }
   else

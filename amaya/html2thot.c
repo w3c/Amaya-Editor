@@ -4857,8 +4857,10 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
   Attribute	      attr;
   unsigned char       charRead;
   int		      val;
-  ThotBool            endOfTextFile, withinMarkup = FALSE;
-  ThotBool            withinTag = FALSE, withinString = FALSE;
+  ThotBool            endOfTextFile;
+  ThotBool            withinMarkup = FALSE, withinTag = FALSE;
+  ThotBool            withinQuote = FALSE, withinString = FALSE;
+  ThotBool            withinComment = FALSE;
 
   InputText = textbuf;
   LgBuffer = 0;
@@ -4953,6 +4955,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 	  LgBuffer = 0;
 	  el = NULL; /* generate a new line */
 	  charRead = EOS;
+	  withinTag = FALSE;
 	}
 #ifndef _I18N_
       else if (((int) charRead < 32 ||
@@ -4973,11 +4976,48 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 	      TtaAttachAttribute (el, attr, doc);
 	      TtaSetAttributeValue (attr, val, el, doc);
 	    }
-	  else if (charRead == '"' || (LgBuffer == 0 && withinString))
+	  else if (!withinQuote &&
+		   DocumentTypes[doc] != docCSS &&
+		   DocumentTypes[doc] != docLog &&
+		   (charRead == '"' || (LgBuffer == 0 && withinString)))
 	    {
 	      if (charRead == '"')
 		withinString = !withinString;
 	      if (withinString)
+		{
+		  /* generate a new IsString element */
+		  el = GetANewText (el, elType, doc);
+		  attrType.AttrTypeNum = TextFile_ATTR_IsString;
+		  attr = TtaGetAttribute (el, attrType);
+		  if (attr == NULL)
+		    {
+		      attr = TtaNewAttribute (attrType);
+		      val = TextFile_ATTR_IsString_VAL_Yes_;
+		      TtaAttachAttribute (el, attr, doc);
+		      TtaSetAttributeValue (attr, val, el, doc);
+		    }
+		  /* add the current character */
+		  inputBuffer[LgBuffer++] = charRead;
+		}
+	      else
+		{
+		  /* add the current character */
+		  inputBuffer[LgBuffer++] = charRead;
+		  /* close the IsString element */
+		  el = GetANewText (el, elType, doc);
+		}
+	    }
+	  else if (!withinString &&
+		   DocumentTypes[doc] != docCSS &&
+		   DocumentTypes[doc] != docLog &&
+		   ((charRead == '\'' && withinQuote) ||
+		    (charRead == '\'' && !withinQuote &&
+		     LgBuffer > 0 && inputBuffer[LgBuffer-1] == '=') ||
+		    (LgBuffer == 0 && withinQuote)))
+	    {
+	      if (charRead == '\'')
+		withinQuote = !withinQuote;
+	      if (withinQuote)
 		{
 		  /* generate a new IsString element */
 		  el = GetANewText (el, elType, doc);
@@ -5056,7 +5096,7 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 		  el = GetANewText (el, elType, doc);
 		}
 	    }
-	  else if (!withinString &&
+	  else if (!withinString &&!withinQuote &&
 		   DocumentTypes[doc] != docCSS &&
 		   DocumentTypes[doc] != docLog &&
 		   (charRead == '<' || charRead == '>' ||
@@ -5087,6 +5127,51 @@ static void ReadTextFile (FILE *infile, char *textbuf, Document doc,
 		      TtaSetAttributeValue (attr, val, el, doc);
 		    }
 		  /* close the IsMarkup element */
+		  el = GetANewText (el, elType, doc);
+		}
+	    }
+	  else if (DocumentTypes[doc] == docCSS &&
+		   (charRead == '*' || charRead == '/' ||
+		    (LgBuffer == 0 && withinComment)))
+	    {
+	      if (!withinComment && charRead == '*' &&
+		  LgBuffer > 0 && inputBuffer[LgBuffer-1] == '/')
+		{
+		  /* open a comment */
+		  withinComment = !withinComment;
+		  /* close previous element */
+		   inputBuffer[0] = EOS;
+		  el = GetANewText (el, elType, doc);
+		  /* add the current character */
+		  inputBuffer[LgBuffer++] = '/';
+		}
+	      else if ((withinComment && charRead == '*') ||
+		       (!withinComment && charRead == '/'))
+		{
+		  /* flush the current buffer */
+		  inputBuffer[LgBuffer] = EOS;
+		  TtaAppendTextContent (el, inputBuffer, doc);
+		  LgBuffer = 0;
+		}
+	      if (withinComment)
+		{
+		  attrType.AttrTypeNum = TextFile_ATTR_IsComment;
+		  attr = TtaGetAttribute (el, attrType);
+		  if (attr == NULL)
+		    {
+		      attr = TtaNewAttribute (attrType);
+		      val = TextFile_ATTR_IsComment_VAL_Yes_;
+		      TtaAttachAttribute (el, attr, doc);
+		      TtaSetAttributeValue (attr, val, el, doc);
+		    }
+		}
+	      /* add the current character */
+	      inputBuffer[LgBuffer++] = charRead;
+	      if (withinComment && charRead == '/' &&
+		  LgBuffer == 2 && inputBuffer[0] == '*')
+		{
+		  /* close a comment */
+		  withinComment = !withinComment;
 		  el = GetANewText (el, elType, doc);
 		}
 	    }
@@ -6967,6 +7052,7 @@ void StartParser (Document doc, char *fileName,
 		  char *documentName, char* documentDirectory,
 		  char *pathURL, ThotBool plainText)
 {
+  DisplayMode     dispMode;
   CHARSET         charset;
   Element         el, oldel, root;
   AttributeType   attrType;
@@ -7144,7 +7230,9 @@ void StartParser (Document doc, char *fileName,
 	    ChangeAttrOnRoot (doc, HTML_ATTR_ShowAreas);
 	}
 
-      TtaSetDisplayMode (doc, NoComputedDisplay);
+      dispMode = TtaGetDisplayMode (doc);
+      if (dispMode != NoComputedDisplay)
+	TtaSetDisplayMode (doc, NoComputedDisplay);
       /* delete all element except the root element and its parent document
 	 element */
       el = TtaGetFirstChild (rootElement);
@@ -7191,7 +7279,8 @@ void StartParser (Document doc, char *fileName,
       /* an HTML document could be a template */
       if (!plainText)
 	OpenTemplateDocument (doc);
-      TtaSetDisplayMode (doc, DisplayImmediately);
+
+      TtaSetDisplayMode (doc, dispMode);
       /* check the Thot abstract tree against the structure schema. */
       TtaSetStructureChecking (1, doc);
       DocumentSSchema = NULL;

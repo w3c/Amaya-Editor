@@ -46,9 +46,13 @@ extern void DocumentClosed ( NotifyDialog * event );
 extern void UpdateContextSensitiveMenus ( Document doc );
 extern void ResetHighlightedElement ( void );
 extern void SynchronizeSourceView ( NotifyElement *event );
+extern void GetCurrentLine ( Document doc,
+                             int *line,
+                             int *index );
 extern void GotoLine ( Document doc,
                        int line,
-                       int index );
+                       int index,
+                       ThotBool position );
 extern ThotBool SimpleClickInLog ( NotifyElement *event );
 extern ThotBool DoubleClickInLog ( NotifyElement *event );
 extern void SelectionChanged ( NotifyElement *event );
@@ -98,9 +102,13 @@ extern void DocumentClosed (/* NotifyDialog * event */);
 extern void UpdateContextSensitiveMenus (/* Document doc */);
 extern void ResetHighlightedElement (/* void */);
 extern void SynchronizeSourceView (/* NotifyElement *event */);
+extern void GetCurrentLine (/* Document doc,
+                               int *line,
+                               int *index */);
 extern void GotoLine (/* Document doc,
                          int line,
-                         int index */);
+                         int index,
+                         ThotBool position */);
 extern ThotBool SimpleClickInLog (/* NotifyElement *event */);
 extern ThotBool DoubleClickInLog (/* NotifyElement *event */);
 extern void SelectionChanged (/* NotifyElement *event */);

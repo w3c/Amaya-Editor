@@ -1754,12 +1754,13 @@ Document GetDocFromSource (Document sourceDoc)
   ----------------------------------------------------------------------*/
 void Synchronize (Document doc, View view)
 {
+   DisplayMode       dispMode;
+   Document          xmlDoc, otherDoc;
    NotifyElement     event;
    char             *tempdoc = NULL;
    char              docname[MAX_LENGTH];
    char              tempdir[MAX_LENGTH];
-   DisplayMode       dispMode;
-   Document          xmlDoc, otherDoc;
+   int               line, index;
    ThotBool          saveBefore;
 
    if (!DocumentURLs[doc])
@@ -1799,9 +1800,6 @@ void Synchronize (Document doc, View view)
    /* change display mode to avoid flicker due to callbacks executed when
       saving some elements, for instance META */
    dispMode = TtaGetDisplayMode (doc);
-   if (dispMode == DisplayImmediately)
-     TtaSetDisplayMode (doc, DeferredDisplay);
-       
    if (DocumentTypes[doc] == docHTML ||
        DocumentTypes[doc] == docSVG ||
        DocumentTypes[doc] == docLibrary ||
@@ -1809,7 +1807,10 @@ void Synchronize (Document doc, View view)
        DocumentTypes[doc] == docXml)
      /* it's the structured form of the document */
      {
-	   tempdoc = GetLocalPath (doc, DocumentURLs[doc]);
+       if (dispMode == DisplayImmediately)
+	 TtaSetDisplayMode (doc, DeferredDisplay);
+       
+       tempdoc = GetLocalPath (doc, DocumentURLs[doc]);
        if (saveBefore)
 	 {
 	   /* save the current state of the document into the temporary file */
@@ -1829,18 +1830,17 @@ void Synchronize (Document doc, View view)
 	     TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "MathMLT");
 	   else
 	     TtaExportDocumentWithNewLineNumbers (doc, tempdoc, NULL);
-       RedisplaySourceFile (doc);
-       otherDoc = DocumentSource[doc];
-       /* the other document is now different from the original file. It can
-	  be saved */
-       TtaSetItemOn (otherDoc, 1, File, BSave);
-
-       ANNOT_Reload (otherDoc, 1);
+	   RedisplaySourceFile (doc);
+	   otherDoc = DocumentSource[doc];
+	   /* the other document is now different from the original file. It can
+	      be saved */
+	   TtaSetItemOn (otherDoc, 1, File, BSave);
+	   ANNOT_Reload (otherDoc, 1);
 	 }
-    else
-	{
+       else
+	 {
 	   TtaExtractName (tempdoc, tempdir, docname);
-       RestartParser (doc, tempdoc, tempdir, docname);
+	   RestartParser (doc, tempdoc, tempdir, docname);
 	}
      }
    else if (DocumentTypes[doc] == docSource)
@@ -1850,10 +1850,16 @@ void Synchronize (Document doc, View view)
        otherDoc = xmlDoc;
        if (saveBefore)
 	 {
+	   TtaSetDisplayMode (doc, NoComputedDisplay);
+	   /* save the current selection */
+	   GetCurrentLine (doc, &line, &index);
 	   /* save the current state of the document into the temporary file */
 	   tempdoc = GetLocalPath (xmlDoc, DocumentURLs[xmlDoc]);
 	   TtaExportDocumentWithNewLineNumbers (doc, tempdoc, "TextFileT");
 	   TtaExtractName (tempdoc, tempdir, docname);
+	   StartParser (doc, tempdoc, docname, tempdir, tempdoc, TRUE);
+	   /* restore the current selection */
+	   GotoLine (doc, line, index, TRUE);
 	   RestartParser (xmlDoc, tempdoc, tempdir, docname);
 	   /* the other document is now different from the original file. It can
 	      be saved */
@@ -1868,9 +1874,16 @@ void Synchronize (Document doc, View view)
      {
        if (saveBefore)
 	 {
+	   TtaSetDisplayMode (doc, NoComputedDisplay);
+	   /* save the current selection */
+	   GetCurrentLine (doc, &line, &index);
 	   /* save the current state of the CSS document into the temporary file */
 	   tempdoc = GetLocalPath (doc, DocumentURLs[doc]);
 	   TtaExportDocument (doc, tempdoc, "TextFileT");
+	   TtaExtractName (tempdoc, tempdir, docname);
+	   StartParser (doc, tempdoc, docname, tempdir, tempdoc, TRUE);
+	   /* restore the current selection */
+	   GotoLine (doc, line, index, TRUE);
 	   /* reapply the CSS to relative documents */
 	   UpdateStyleSheet (DocumentURLs[doc], tempdoc);
 	 }
@@ -1882,14 +1895,14 @@ void Synchronize (Document doc, View view)
    /* disable the Synchronize command for both documents */
    if (otherDoc)
    {
-	   if (DocumentTypes[doc] != docCSS)
-	   {
-       TtaSetItemOff (otherDoc, 1, File, BSynchro);
-       TtaSetDocumentUnupdated (otherDoc);
-	   }
+     if (DocumentTypes[doc] != docCSS)
+       {
+	 TtaSetItemOff (otherDoc, 1, File, BSynchro);
+	 TtaSetDocumentUnupdated (otherDoc);
+       }
      TtaSetItemOff (doc, 1, File, BSynchro);
      TtaSetDocumentUnupdated (doc);
-
+     
      /* Synchronize selections */
      event.document = doc;
      SynchronizeSourceView (&event);
@@ -1914,6 +1927,7 @@ void SaveDocument (Document doc, View view)
   char                tempdir[MAX_LENGTH];
   char               *ptr;
   int                 i;
+  int                 line = 0, index = 0;
   ThotBool            ok, newLineNumbers;
 
   if (DocumentTypes[doc] == docAnnot) 
@@ -1970,7 +1984,14 @@ void SaveDocument (Document doc, View view)
   /* change display mode to avoid flicker due to callbacks executed when
      saving some elements, for instance META */
   dispMode = TtaGetDisplayMode (doc);
-  if (dispMode == DisplayImmediately)
+  if (TextFormat)
+    {
+      dispMode = TtaGetDisplayMode (doc);
+      TtaSetDisplayMode (doc, NoComputedDisplay);
+      /* save the current selection */
+      GetCurrentLine (doc, &line, &index);
+    }
+  else if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, DeferredDisplay);
 
   /* the suffix determines the output format */
@@ -1998,36 +2019,6 @@ void SaveDocument (Document doc, View view)
 	    TtaFreeMemory (DocumentMeta[doc]->content_location);
 	  ptr = TtaGetEnvString ("DEFAULTNAME");
 	  DocumentMeta[doc]->content_location = TtaStrdup (ptr);
-#if 0  /* JK, trying to change this */
-	  /* need to update the document url */
-	  res = strlen(tempname) - 1;
-	  if (tempname[res] != URL_SEP)
-	    strcat (tempname, URL_STR);
-	  strcat (tempname, DefaultName);
-	  TtaFreeMemory (DocumentURLs[doc]);
-	  DocumentURLs[doc] = TtaStrdup (tempname);
-	  if (DocumentTypes[doc] == docHTML)
-	    /* it's an HTML document. It could have a source doc */
-	    /* change the URL of the source document if it exists */
-	    {
-	      if (DocumentSource[doc])
-		/* it has a source document */
-		{
-		  TtaFreeMemory (DocumentURLs[DocumentSource[doc]]);
-		  DocumentURLs[DocumentSource[doc]] = TtaStrdup (tempname);
-		}
-	    }
-	  else if (DocumentTypes[doc] == docSource)
-	    {
-	      /* it's a source document. Change the URL of the corresponding
-		 HTML document */
-	      if (xmlDoc)
-		{
-		  TtaFreeMemory (DocumentURLs[xmlDoc]);
-		  DocumentURLs[xmlDoc] = TtaStrdup (tempname);
-		}
-	    }
-#endif
 	}
 
       ptr = GetLocalPath (doc, DocumentURLs[doc]);
@@ -2056,12 +2047,7 @@ void SaveDocument (Document doc, View view)
 	    /* it's a source file. renumber lines */
 	    ok = TtaExportDocumentWithNewLineNumbers (doc, tempname, "TextFileT");
 	  else
-	    {
-	      ok = TtaExportDocument (doc, tempname, "TextFileT");
-	      if (DocumentTypes[doc] == docCSS)
-		/* reapply the CSS to relative documents */
-		UpdateStyleSheet (DocumentURLs[doc], tempname);
-	    }
+	    ok = TtaExportDocument (doc, tempname, "TextFileT");
 	}
       else
 	{
@@ -2100,8 +2086,18 @@ void SaveDocument (Document doc, View view)
       TtaFreeMemory (ptr);
     }
 
+  if (TextFormat)
+    {
+      StartParser (doc, localFile, documentname, tempdir, localFile, TRUE);
+      /* restore the current selection */
+      GotoLine (doc, line, index, TRUE);
+    }
   /* restore original display mode */
   TtaSetDisplayMode (doc, dispMode);
+
+  if (DocumentTypes[doc] == docCSS)
+    /* reapply the CSS to relative documents */
+    UpdateStyleSheet (DocumentURLs[doc], tempname);
   SavingDocument = 0;
   if (newLineNumbers)
     {

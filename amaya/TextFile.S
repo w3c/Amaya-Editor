@@ -10,6 +10,7 @@ ATTR
    IsTag = Yes_;
    IsMarkup = Yes_;
    IsString = Yes_;
+   IsComment = Yes_;
 
 STRUCT
    TextFile (ATTR PrintURL = Yes_; Source = Yes_) =
@@ -31,6 +32,7 @@ EXCEPT
 	IsTag:		Invisible;
 	IsMarkup:	Invisible;
 	IsString:       Invisible;
+	IsComment:      Invisible;
         PrintURL:       Invisible;
 	Source:	        Invisible;
 END

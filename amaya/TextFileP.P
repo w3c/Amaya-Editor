@@ -19,6 +19,7 @@ PRINT
 #define MARKUP_Color DarkIndigo1
 #define LINK_Color DarkIndigo1
 #define ATTRVALUE_Color DarkMagenta2
+#define COMMENT_Color DarkLawnGreen3
 
 COUNTERS
 #ifdef PAGE
@@ -276,6 +277,8 @@ ATTRIBUTES
 	END;
   IsString:
 	Foreground: ATTRVALUE_Color;
+  IsComment:
+	Foreground: COMMENT_Color;
 #endif
 
 END

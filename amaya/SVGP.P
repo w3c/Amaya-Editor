@@ -14,7 +14,7 @@ VIEWS
 #define TAG_FONTSIZE 12 pt
 #define DOC_FONTSIZE 12 pt
 #define TAG_Style Roman
-#define TAG_Weight Normal
+#define TAG_Weight Bold
 #define TAG_Visibility 7
 #define ATTR_Style Roman
 #define ATTR_Weight Normal
