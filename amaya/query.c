@@ -2490,17 +2490,18 @@ int                 docid;
 {
    HTList             *cur;
    AHTReqContext      *me;
+   static boolean      lock_stop = 0;
 
    /* only do the stop if we're not being called while processing a 
-      request */
-   if (Amaya && CanDoStop ())
+      request, and if we're not already dealing with a stop */
+   if (Amaya && CanDoStop () && !lock_stop)
      {
-
 #ifdef DEBUG_LIBWWW
        fprintf (stderr, "StopRequest: number of Amaya requests "
 		"before kill: %d\n", Amaya->open_requests);
 #endif /* DEBUG_LIBWWW */
-       
+	   /* avoid being called twice while doing a stop */
+       lock_stop = TRUE; 
        /* delete the libwww request status */
        HTTimer_deleteAll ();
        EventOrder_deleteAll ();
@@ -2532,7 +2533,8 @@ int                 docid;
 #endif /* WWW_XWINDOWS */
 #endif /* !_WINDOWS */
 	 }
-       
+	  /* free the stop routine */
+       lock_stop =FALSE; 
 #ifdef DEBUG_LIBWWW
        fprintf (stderr, "StopRequest: number of Amaya requests "
 		"after kill: %d\n", Amaya->open_requests);

@@ -463,6 +463,9 @@ Document            doc;
   char               *ptr, *basename;
   int                 length;
 
+  /* @@@ irene */
+  if (!DocumentURLs[doc])
+	  return NULL;
   basename = TtaGetMemory (MAX_LENGTH);
   strncpy (basename, DocumentURLs[doc], MAX_LENGTH-1);
   basename[MAX_LENGTH-1] = EOS;
