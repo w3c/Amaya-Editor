@@ -559,8 +559,6 @@ void DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox)
 	width = 0;
       else
 	{
-	  if (rightX > pBox->BxW)
-	    rightX = pBox->BxW;
 	  rightX = rightX + l - pFrame->FrXOrg;
 	  if (rightX > width)
 	    width -= leftX;
@@ -574,3 +572,6 @@ void DisplayStringSelection (int frame, int leftX, int rightX, PtrBox pBox)
       DrawRectangle (frame, 0, 0, leftX, topY, width, h, 0, col, 2);
     }
 }
+
+
+

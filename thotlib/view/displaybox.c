@@ -51,8 +51,8 @@ static int GetLineWeight (PtrAbstractBox pAb, int frame)
 /*----------------------------------------------------------------------
   DisplayImage displays an image in the frame.
   ----------------------------------------------------------------------*/
-static void  DisplayImage (PtrBox pBox, int frame, int xmin, int xmax,
-			   int ymin, int ymax, ThotBool selected)
+static void DisplayImage (PtrBox pBox, int frame, int xmin, int xmax,
+			  int ymin, int ymax, ThotBool selected)
 {
   ViewFrame          *pFrame;
   int                 xd, yd, x, y;
@@ -1149,7 +1149,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      pFrame->FrSelectionEnd.VsXPos != 0)
 		    right = pFrame->FrSelectionEnd.VsXPos;
 		  else
-		    right = pBox->BxWidth;
+		    right = pBox->BxW;
 		  DisplayStringSelection (frame, left, right, pBox);
 		  /* the selection is done now */
 		  left = 0;
