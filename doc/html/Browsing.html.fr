@@ -276,6 +276,5 @@ uniquement).</p>
 
 <p></p>
 
-<p><a href="Manual.html.fr"><img alt="" /></a></p>
 </body>
 </html>

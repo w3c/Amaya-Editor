@@ -23,50 +23,6 @@
 	<message xml:lang="fi">&amp;Tiedosto</message>
 	<message xml:lang="ru">Ф&amp;айл</message>
 </label>
-<label define="File2">
-	<message xml:lang="en">&amp;File</message>
-	<message xml:lang="fr">&amp;Fichier</message>
-	<message xml:lang="de">&amp;Datei</message>
-	<message xml:lang="it">&amp;File</message>
-	<message xml:lang="tr">&amp;Dosya</message>
-	<message xml:lang="es">&amp;Archivo</message>
-	<message xml:lang="pt">&amp;Arquivo</message>
-	<message xml:lang="fi">&amp;Tiedosto</message>
-	<message xml:lang="ru">Ф&amp;айл</message>
-</label>
-<label define="File3">
-	<message xml:lang="en">&amp;File</message>
-	<message xml:lang="fr">&amp;Fichier</message>
-	<message xml:lang="de">&amp;Datei</message>
-	<message xml:lang="it">&amp;File</message>
-	<message xml:lang="tr">&amp;Dosya</message>
-	<message xml:lang="es">&amp;Archivo</message>
-	<message xml:lang="pt">&amp;Arquivo</message>
-	<message xml:lang="fi">&amp;Tiedosto</message>
-	<message xml:lang="ru">Ф&amp;айл</message>
-</label>
-<label define="File4">
-	<message xml:lang="en">&amp;File</message>
-	<message xml:lang="fr">&amp;Fichier</message>
-	<message xml:lang="de">&amp;Datei</message>
-	<message xml:lang="it">&amp;File</message>
-	<message xml:lang="tr">&amp;Dosya</message>
-	<message xml:lang="es">&amp;Archivo</message>
-	<message xml:lang="pt">&amp;Arquivo</message>
-	<message xml:lang="fi">&amp;Tiedosto</message>
-	<message xml:lang="ru">Ф&amp;айл</message>
-</label>
-<label define="File5">
-	<message xml:lang="en">&amp;File</message>
-	<message xml:lang="fr">&amp;Fichier</message>
-	<message xml:lang="de">&amp;Datei</message>
-	<message xml:lang="it">&amp;File</message>
-	<message xml:lang="tr">&amp;Dosya</message>
-	<message xml:lang="es">&amp;Archivo</message>
-	<message xml:lang="pt">&amp;Arquivo</message>
-	<message xml:lang="fi">&amp;Tiedosto</message>
-	<message xml:lang="ru">Ф&amp;айл</message>
-</label>
 <label define="Context_">
 	<message xml:lang="en">Context</message>
 	<message xml:lang="fr">Context</message>
@@ -799,17 +755,6 @@
 	<message xml:lang="es">&amp;Cerrar pestaña</message>
 	<message xml:lang="it">&amp;Chiudi tab</message>
 	<message xml:lang="ru">Закрыть пан&amp;ель</message>
-</label>
-<label define="BCloseWindow">
-	<message xml:lang="en">&amp;Close window</message>
-	<message xml:lang="fr">&amp;Fermer la fenêtre</message>
-	<message xml:lang="de">Schließen</message>
-	<message xml:lang="it">Chiudi</message>
-	<message xml:lang="tr">Belgeyi kapat</message>
-	<message xml:lang="es">Cerrar &amp;ventana</message>
-	<message xml:lang="pt">Fechar janela</message>
-	<message xml:lang="fi">Sulje ikkuna</message>
-	<message xml:lang="ru">Закрыть окно</message>
 </label>
 <label define="BExit">
 	<message xml:lang="en">E&amp;xit Amaya</message>

@@ -1104,6 +1104,8 @@ void UpdateEditorMenus (Document doc)
 	{
 	  /* update specific menu entries */
 	  TtaUpdateMenus (doc, view, FALSE);
+	  TtaSetItemOff (doc, view, File, BShowLogFile);
+	  TtaSetItemOff (doc, view, File, BSynchro);
 	  TtaSetItemOn (doc, view, Edit_, BCut);
 	  TtaSetItemOn (doc, view, Edit_, BPaste);
 	  TtaSetItemOn (doc, view, Edit_, BClear);
@@ -1122,6 +1124,8 @@ void UpdateEditorMenus (Document doc)
 	{
 	  /* update specific menu entries */
 	  TtaUpdateMenus (doc, view, FALSE);
+	  TtaSetItemOff (doc, view, File, BShowLogFile);
+	  TtaSetItemOff (doc, view, File, BSynchro);
 	  /* structure information is active only in the structure view */
 	  TtaSetItemOff (doc, view, Types, BStyle);
 	  TtaSetItemOff (doc, view, Types, BComment);
@@ -1145,6 +1149,8 @@ void UpdateEditorMenus (Document doc)
 	{
 	  /* update specific menu entries */
 	  TtaUpdateMenus (doc, view, FALSE);
+	  TtaSetItemOff (doc, view, File, BShowLogFile);
+	  TtaSetItemOff (doc, view, File, BSynchro);
 	  /* structure information is active only in the structure view */
 	  TtaSetItemOff (doc, view, Types, BStyle);
 	  TtaSetItemOff (doc, view, Types, BComment);
@@ -1172,6 +1178,8 @@ void UpdateEditorMenus (Document doc)
 	{
 	  /* update specific menu entries */
 	  TtaUpdateMenus (doc, view, FALSE);
+	  TtaSetItemOff (doc, view, File, BShowLogFile);
+	  TtaSetItemOff (doc, view, File, BSynchro);
 	  /* structure information is active only in the structure view */
 	  TtaSetItemOff (doc, view, Types, BStyle);
 	  TtaSetItemOff (doc, view, Types, BComment);
@@ -4527,6 +4535,9 @@ void ShowStructure (Document doc, View view)
   int                 x, y, w, h;
   char                structureName[30];
 
+  if (DocumentTypes[doc] == docSource)
+    /* work on the formatted document */
+    doc = GetDocFromSource (doc);
   strcpy (structureName, "Structure_view");  
   structView = TtaGetViewFromName (doc, structureName);
   if (structView != 0 && TtaIsViewOpen (doc, structView))
@@ -4554,6 +4565,9 @@ void ShowAlternate (Document doc, View view)
   View                altView;
   int                 x, y, w, h;
 
+  if (DocumentTypes[doc] == docSource)
+    /* work on the formatted document */
+    doc = GetDocFromSource (doc);
   altView = TtaGetViewFromName (doc, "Alternate_view");
   if (view == altView)
     TtaRaiseView (doc, view);
@@ -4583,6 +4597,9 @@ void ShowLinks (Document doc, View view)
   View                linksView;
   int                 x, y, w, h;
 
+  if (DocumentTypes[doc] == docSource)
+    /* work on the formatted document */
+    doc = GetDocFromSource (doc);
   linksView = TtaGetViewFromName (doc, "Links_view");
   if (view == linksView)
     TtaRaiseView (doc, view);
@@ -4612,6 +4629,9 @@ void ShowToC (Document doc, View view)
   View                tocView;
   int                 x, y, w, h;
 
+  if (DocumentTypes[doc] == docSource)
+    /* work on the formatted document */
+    doc = GetDocFromSource (doc);
   tocView = TtaGetViewFromName (doc, "Table_of_contents");
   if (view == tocView)
     TtaRaiseView (doc, view);
@@ -7652,16 +7672,19 @@ void AmayaCloseWindow (Document doc, View view)
 {
   /* Save the current windows geometry */
   SaveGeometryOnExit( doc, NULL);
-
 #ifdef _WX
   /* get the document's parent window and try to close it */
   int window_id = TtaGetDocumentWindowId( doc, view );
   TtaCloseWindow( window_id );
 #else /* _WX */
-  if (DocumentURLs[doc])
-    TtcCloseDocument (doc, view);
-  if (!W3Loading)
-    CheckAmayaClosed ();
+  if (DocumentURLs[doc] && view == 1)
+    {
+      TtcCloseDocument (doc, view);
+      if (!W3Loading)
+	CheckAmayaClosed ();
+    }
+  else
+    TtcCloseView (doc, view);
 #endif /* _WX */
 }
 
