@@ -690,6 +690,7 @@ PtrFont LoadFont (char *name)
 
   result = gdk_font_load ((gchar *)name);
   return (result);
+
 #else /* _GTK */
   return ((PtrFont) XLoadQueryFont (TtDisplay, name));
 #endif /* _GTK */
