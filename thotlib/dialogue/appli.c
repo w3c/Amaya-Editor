@@ -3503,10 +3503,20 @@ void ChangeFrameTitle (int frame, unsigned char *text, CHARSET encoding)
   ----------------------------------------------------------------------*/
 void ChangeSelFrame (int frame)
 {
+#ifdef _WX
+  Document            doc;
+  View                view;
+#endif /* _WX */
+
   if (ActiveFrame != frame)
     {
       CloseTextInsertion ();
       ActiveFrame = frame;
+#ifdef _WX
+      FrameToView (frame, &doc, &view);
+      /* update the class list */
+      TtaExecuteMenuAction ("ApplyClass", doc, 1, FALSE);
+#endif /* _WX */
       /* the active frame changed so update the application focus */
       TtaRedirectFocus();
     }

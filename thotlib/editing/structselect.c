@@ -59,7 +59,6 @@
 #include "gtk-functions.h"
 #endif /* _GTK */
 
-
 static int          NSelectedElements;	/* number of elements in table
 					   SelectedElement */
 static PtrElement   SelectedElement[MAX_SEL_ELEM]; /* the selected elements if
@@ -1731,11 +1730,11 @@ void SelectStringInAttr (PtrDocument pDoc, PtrAbstractBox pAb, int firstChar,
 static void SelectStringOrPosition (PtrDocument pDoc, PtrElement pEl,
 				    int firstChar, int lastChar, ThotBool string)
 {
-   int                 i;
+   PtrElement          pAncest;
    ThotBool            elVisible;
    PtrElement          oldFirstSelEl;
    int                 oldFirstSelChar;
-   PtrElement          pAncest;
+   int                 i;
    ThotBool            holophrast;
 
    /* If the selected element is in a holophrasted subtree, the root of that */

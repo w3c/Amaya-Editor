@@ -6,6 +6,10 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void TtaExecuteMenuAction ( const char *actionName,
+                                   Document doc,
+                                   View view,
+                                   ThotBool force );
 extern void DisplayPRule ( PtrPRule RP,
                            FILE *fileDescriptor,
                            PtrElement pEl,
@@ -155,6 +159,10 @@ extern ThotBool OpenParsingErrors ( Document document );
 
 #else /* __STDC__ */
 
+extern void TtaExecuteMenuAction ( const char *actionName,
+                                     Document doc,
+                                     View view,
+                                     ThotBool force );
 extern void DisplayPRule ( PtrPRule RP,
                              FILE *fileDescriptor,
                              PtrElement pEl,

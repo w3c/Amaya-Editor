@@ -22,7 +22,13 @@
 #include "memory_f.h"
 #include "nodialog.h"
 
-
+/*----------------------------------------------------------------------
+  TtaExecuteMenuAction execute the corresponding menu action.
+  ----------------------------------------------------------------------*/
+void TtaExecuteMenuAction (const char *actionName, Document doc, View view,
+			   ThotBool force)
+{
+}
 /*----------------------------------------------------------------------
   DisplayPRule displays the presentation rule pointed by RP.
   ----------------------------------------------------------------------*/

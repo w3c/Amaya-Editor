@@ -12,6 +12,7 @@
 class AmayaSubPanel;
 class AmayaXHTMLPanel;
 class AmayaAttributePanel;
+class AmayaApplyClassPanel;
 class AmayaColorsPanel;
 class AmayaCharStylePanel;
 class AmayaFormatPanel;
@@ -76,8 +77,9 @@ class AmayaPanel : public wxPanel
 
   void ShowWhenUnsplit( bool show );
 
-  AmayaXHTMLPanel *     GetXHTMLPanel() const;
-  AmayaAttributePanel * GetAttributePanel() const;
+  AmayaXHTMLPanel      * GetXHTMLPanel() const;
+  AmayaAttributePanel  * GetAttributePanel() const;
+  AmayaApplyClassPanel * GetApplyClassPanel() const;
   void OpenSubPanel( int panel_type );
   void CloseSubPanel( int panel_type );
 
@@ -90,16 +92,7 @@ class AmayaPanel : public wxPanel
  protected:
   int          m_PanelId;        // amaya panel id
   int          m_ParentWindowId; // amaya parent window id
-  AmayaNormalWindow * m_pParentNWindow  ;
-
-  /*
-  AmayaXHTMLPanel *      m_pPanel_xhtml;
-  AmayaAttributePanel *  m_pPanel_attribute;
-  AmayaColorsPanel *     m_pPanel_colors;
-  AmayaCharStylePanel *  m_pPanel_charstyle;
-  AmayaFormatPanel *     m_pPanel_format;
-*/
-
+  AmayaNormalWindow * m_pParentNWindow ;
   AmayaSubPanel *        m_aPanelList[WXAMAYA_PANEL_TYPE_NB];
 
   wxPanel *          m_pTitlePanel;

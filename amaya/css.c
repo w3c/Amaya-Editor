@@ -934,7 +934,7 @@ char *GetStyleContents (Element el)
   The parameter css gives the CSS context which imports this CSS file.
   The parameter media gives the application limits of the CSS.
   The parameter user is true when it's a User style sheet. It's false
-  when it's an authr style sheet
+  when it's an author style sheet
   ----------------------------------------------------------------------*/
 void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
 		     CSSmedia media, ThotBool user)
@@ -1056,5 +1056,7 @@ void LoadStyleSheet (char *url, Document doc, Element link, CSSInfoPtr css,
       else
 	ReadCSSRules (doc, refcss, tmpBuff, NULL, 0, FALSE, link);
       TtaFreeMemory (tmpBuff);
+      /* Update the list of classes */
+      TtaExecuteMenuAction ("ApplyClass", doc, 1, FALSE);
     }
 }

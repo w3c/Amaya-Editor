@@ -79,10 +79,10 @@ AmayaPanel::AmayaPanel( wxWindow *      p_parent_window
   m_aPanelList[WXAMAYA_PANEL_MATHML]     = new AmayaMathMLPanel( m_pScrolledWindow, p_parent_nwindow );
   m_aPanelList[WXAMAYA_PANEL_SPECHAR]    = new AmayaSpeCharPanel( m_pScrolledWindow, p_parent_nwindow );
   m_aPanelList[WXAMAYA_PANEL_XML]        = new AmayaXMLPanel( m_pScrolledWindow, p_parent_nwindow );
+  m_aPanelList[WXAMAYA_PANEL_APPLYCLASS] = new AmayaApplyClassPanel( m_pScrolledWindow, p_parent_nwindow );
   m_aPanelList[WXAMAYA_PANEL_COLORS]     = new AmayaColorsPanel(    m_pScrolledWindow, p_parent_nwindow );
   m_aPanelList[WXAMAYA_PANEL_CHARSTYLE]  = new AmayaCharStylePanel( m_pScrolledWindow, p_parent_nwindow );
   m_aPanelList[WXAMAYA_PANEL_FORMAT]     = new AmayaFormatPanel(    m_pScrolledWindow, p_parent_nwindow );
-  m_aPanelList[WXAMAYA_PANEL_APPLYCLASS] = new AmayaApplyClassPanel( m_pScrolledWindow, p_parent_nwindow );
 
   // attach subpanels & title to the panel
   wxBoxSizer * p_TopSizer = new wxBoxSizer ( wxVERTICAL );
@@ -97,10 +97,10 @@ AmayaPanel::AmayaPanel( wxWindow *      p_parent_window
   p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_MATHML],     0, wxBOTTOM | wxEXPAND, 5 );
   p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_SPECHAR],    0, wxBOTTOM | wxEXPAND, 5 );
   p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_XML],        0, wxBOTTOM | wxEXPAND, 5 );
+  p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_APPLYCLASS], 0, wxBOTTOM | wxEXPAND, 5 );
   p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_COLORS],     0, wxBOTTOM | wxEXPAND, 5 );
   p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_CHARSTYLE],  0, wxBOTTOM | wxEXPAND, 5 );
   p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_FORMAT],     0, wxBOTTOM | wxEXPAND, 5 );
-  p_PanelSizer->Add( m_aPanelList[WXAMAYA_PANEL_APPLYCLASS], 0, wxBOTTOM | wxEXPAND, 5 );
   
   // setup labels
   XRCCTRL(*this, "wxID_LABEL_TOOLS", wxStaticText)->SetLabel(TtaConvMessageToWX(TtaGetMessage(LIB,TMSG_TOOLS)));
@@ -182,6 +182,17 @@ AmayaXHTMLPanel * AmayaPanel::GetXHTMLPanel() const
 AmayaAttributePanel * AmayaPanel::GetAttributePanel() const
 {
   return (AmayaAttributePanel *)m_aPanelList[WXAMAYA_PANEL_ATTRIBUTE];
+}
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaPanel
+ *      Method:  GetApplyClassPanel
+ * Description:  
+ *--------------------------------------------------------------------------------------
+ */
+AmayaApplyClassPanel * AmayaPanel::GetApplyClassPanel() const
+{
+  return (AmayaApplyClassPanel *)m_aPanelList[WXAMAYA_PANEL_APPLYCLASS];
 }
 
 /*
