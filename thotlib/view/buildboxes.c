@@ -354,11 +354,11 @@ void GiveTextParams (PtrTextBuffer pBuffer, int nChars, ptrfont font,
    int                 i, j;
    int                 charWidth;
    int                 spaceWidth;
-   CHAR_T               car;
+   CHAR_T              car;
 
    /* Calcule la largeur des blancs */
    if (*nSpaces == 0)
-      spaceWidth = CharacterWidth (WC_SPACE, font);
+      spaceWidth = CharacterWidth (SPACE, font);
    else
       spaceWidth = *nSpaces;
    i = *width;			/* Index dans le buffer */
@@ -388,7 +388,7 @@ void GiveTextParams (PtrTextBuffer pBuffer, int nChars, ptrfont font,
 	  }
 	else
 	   i++;
-	if (car != WC_EOS)
+	if (car != EOS)
 	  j++;
      }
 }

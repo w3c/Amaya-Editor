@@ -868,7 +868,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   ViewFrame          *pFrame;
   PtrBox              nbox;
   PtrAbstractBox      pAb;
-  CHAR_T             car;
+  CHAR_T              car;
   int                 indbuff;
   int                 restbl;
   int                 newind;
@@ -967,7 +967,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	      indbuff = newind;
 	      restbl = newbl;
 	      x += lg;
-	      car = (CHAR_T) (adbuff->BuContent[indbuff - 1]);
+	      car = adbuff->BuContent[indbuff - 1];
 	      if (car == SPACE)
 		{
 		  lg = lgspace;
@@ -1084,7 +1084,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	  /* handle each char in the buffer */
 	  while (indbuff <= indmax)
 	    {
-	      car = (CHAR_T) (adbuff->BuContent[indbuff - 1]);
+	      car = adbuff->BuContent[indbuff - 1];
 	      
 	      if (car == SPACE || car == THIN_SPACE ||
 		  car == HALF_EM || car == UNBREAKABLE_SPACE || car == TAB)
@@ -1150,8 +1150,8 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		   DisplayUnderline (frame, x, y, pBox->BxFont,
 				     pBox->BxUnderline, pBox->BxWidth, fg);
 		 /* Next char lookup */
-		 if (((CHAR_T) adbuff->BuContent[indbuff - 1] == BREAK_LINE ||
-		      (CHAR_T) adbuff->BuContent[indbuff - 1] == NEW_LINE) &&
+		 if ((adbuff->BuContent[indbuff - 1] == BREAK_LINE ||
+		      adbuff->BuContent[indbuff - 1] == NEW_LINE) &&
 		     !ShowSpace)
 		   DrawChar (SHOWN_BREAK_LINE, frame, x, y, pBox->BxFont, fg);
 	       }

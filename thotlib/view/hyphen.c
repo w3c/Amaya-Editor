@@ -146,7 +146,7 @@ static int NextWord (ptrfont font, PtrTextBuffer * buffer, int *rank,
    ThotBool            changedebut;
 
    /* Initialisations */
-   word[0] = WC_EOS;
+   word[0] = EOS;
    lg = 0;
    nbChars = 0;
    j = 0;
@@ -194,7 +194,7 @@ static int NextWord (ptrfont font, PtrTextBuffer * buffer, int *rank,
 		  /* On ne traite pas les separateurs en debut de mot */
 		  if (j != 0)
 		    {
-		       word[j] = WC_EOS;
+		       word[j] = EOS;
 		       still = FALSE;
 		    }
 		  else
@@ -223,7 +223,7 @@ static int NextWord (ptrfont font, PtrTextBuffer * buffer, int *rank,
      }
 
    /* Termine le mot */
-   word[j] = WC_EOS;
+   word[j] = EOS;
    if (nbChars == 0)
       *width = 0;
    else

@@ -1295,12 +1295,12 @@ void DrawSegments (int frame, int thick, int style, int x, int y,
 }
 
 /*----------------------------------------------------------------------
-  DoDrawPolygon
+  DoDrawLines
   Draw a polygon whose points are stored in buffer points
   Parameters fg, bg, and pattern are for drawing
   color, background color and fill pattern.
   ----------------------------------------------------------------------*/
-static void DoDrawPolygon (int frame, int thick, int style,
+static void DoDrawLines (int frame, int thick, int style,
 			   ThotPoint *points, int npoints, int fg, int bg,
 			   int pattern)
 {
@@ -1327,7 +1327,7 @@ static void DoDrawPolygon (int frame, int thick, int style,
      {
        InitDrawing (style, thick, fg);
 #ifdef _GTK
-       gdk_draw_polygon (FrRef[frame], TtLineGC, FALSE, points, npoints); 
+       gdk_draw_lines (FrRef[frame], TtLineGC, points, npoints); 
 #else /* _GTK */
        XDrawLines (TtDisplay, FrRef[frame], TtLineGC, points, npoints,
 		   CoordModeOrigin);
@@ -1374,7 +1374,7 @@ void DrawPolygon (int frame, int thick, int style, int x, int y,
    /* Close the polygon */
    points[nb - 1].x = points[0].x;
    points[nb - 1].y = points[0].y;
-   DoDrawPolygon (frame, thick, style, points, nb, fg, bg, pattern);
+   DoDrawLines (frame, thick, style, points, nb, fg, bg, pattern);
    /* free the table of points */
    free (points);
 }
@@ -1644,7 +1644,7 @@ static void  DrawCurrent (int frame, int thick, int style,
 	}
       else
 	/* draw a polyline or a ploygon */
-	DoDrawPolygon (frame, thick, style, points, npoints, fg, bg, pattern);
+	DoDrawLines (frame, thick, style, points, npoints, fg, bg, pattern);
     }
 }
 
