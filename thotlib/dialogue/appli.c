@@ -435,6 +435,8 @@ Dimension           height;
    NotifyWindow        notifyDoc;
    Document            doc;
 
+   if (FrameTable[frame].FrDoc == 0)
+     return;
    if ((width > 0) && (height > 0) && 
        documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
      /* ne pas traiter si le document est en mode NoComputedDisplay */

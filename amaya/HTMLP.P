@@ -5921,6 +5921,7 @@ RULES
 		CreateLast(BodyBottomSpace);
 #endif
 	IN Structure_view BEGIN
+		VertPos: Top = Previous . Bottom;
                 HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		MarginTop: 0;
 		MarginLeft: 0;

@@ -918,6 +918,9 @@ printf ("cref=%d: Min =%d, Max=%d, colWidth=%d, colPercent=%d\n", cRef, pBox->Bx
   if (max <= width && !constraint)
     {
       /* assign the maximum width to each column */
+      if (max - pBox->BxW)
+	/* we will have to recheck scrollbars */
+	AnyWidthUpdate = TRUE;
       ResizeWidth (pBox, pBox, NULL, max - pBox->BxW, 0, 0, 0, frame);
       for (cRef = 0; cRef < cNumber; cRef++)
 	{
@@ -940,6 +943,9 @@ printf ("Width[%d]=%d\n", cRef, pBox->BxWidth);
   else if (min >= width || (!constraint && i == 0))
     {
       /* assign the minimum width to each column */
+      if (min - pBox->BxW)
+	/* we will have to recheck scrollbars */
+	AnyWidthUpdate = TRUE;
       ResizeWidth (pBox, pBox, NULL, min - pBox->BxW, 0, 0, 0, frame);
       for (cRef = 0; cRef < cNumber; cRef++)
 	{
@@ -964,6 +970,9 @@ printf ("Width[%d]=%d\n", cRef, pBox->BxWidth);
   else
     {
       /* assign a specific width to each column */
+      if (width - pBox->BxW)
+	/* we will have to recheck scrollbars */
+	AnyWidthUpdate = TRUE;
       ResizeWidth (pBox, pBox, NULL, width - pBox->BxW, 0, 0, 0, frame);
       useMax = FALSE;
       if (max < width)

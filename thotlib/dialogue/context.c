@@ -669,9 +669,10 @@ void InitDocContexts ()
       FrMainRef[i] = 0;
 #endif /* _WINDOWS */
     }
-  PackBoxRoot = NULL;		/* Don't do englobing placement for current boxes */
-  DifferedPackBlocks = NULL;	/* Don't differ englobing placement for current boxes */
-  BoxCreating = FALSE;		/* no interractive creation yet */
+  PackBoxRoot = NULL;		/* Don't check enclosing for current boxes */
+  DifferedPackBlocks = NULL;	/* Don't differ enclosing for current boxes */
+  BoxCreating = FALSE;		/* No interractive creation yet */
+  AnyWidthUpdate = FALSE;	/* No current width change */
   InitializeOtherThings ();
 }
 

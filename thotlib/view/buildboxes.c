@@ -48,7 +48,6 @@
 #define MAX_BOX_INWORK 10
 static PtrAbstractBox  BoxInWork[MAX_BOX_INWORK];
 static int             BiwIndex = 0;
-static ThotBool        AnyWidthUpdate = FALSE;
 
 #include "abspictures_f.h"
 #include "appli_f.h"
