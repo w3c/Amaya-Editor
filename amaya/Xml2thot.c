@@ -3508,7 +3508,7 @@ static void     Hndl_NameSpaceStart (void *userData,
       strcpy (Ns_Uri[Ns_Level], (char*) uri);
     }
   else
-    Ns_Prefix[Ns_Level] = NULL;
+    Ns_Uri[Ns_Level] = NULL;
 
   Ns_Level ++;
  
