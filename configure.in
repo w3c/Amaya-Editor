@@ -10,7 +10,7 @@ dnl    GENERIC AUTOCONF STUFF : GUESS INFORMATIONS ON SYSTEM SETUP
 dnl
 dnl  ***************************************************************
 
-AC_PREREQ(2.2)
+AC_PREREQ(2.53)
 AC_INIT(thotlib/internals/h/constpiv.h)
 AC_REVISION
 
@@ -962,7 +962,7 @@ if test "$build_amaya" = "yes" ; then
        with_redland="no"
     fi
 
-    if test "$with_redland" = "yes" -a ! -d "$srcdir/redland" ; then
+    if test "$with_redland" = "yes" -a ! -d "$srcdir/../redland" ; then
        AC_MSG_WARN(Redland source dir not found !!)
        AC_MSG_WARN(Disabling redland build !)
        MAKEREDLAND=['#']
@@ -971,9 +971,9 @@ if test "$build_amaya" = "yes" ; then
 
     if test "$with_redland" = "yes" ; then
        AMAYA_RAPTOR_SRC="amaya_comp_redland"
-       AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS -DLIBRDF_INTERNAL=1 -DAM_REDLAND -DRAPTOR_RDF_PARSER -I\$(THOTDIR)/redland/librdf -I\$(THOTDIR)/redland/raptor"
+       AMAYA_ANNOT_OPTIONS="$AMAYA_ANNOT_OPTIONS -DLIBRDF_INTERNAL=1 -DAM_REDLAND -DRAPTOR_RDF_PARSER -I\$(THOTDIR)/../redland/librdf -I\$(THOTDIR)/../redland/raptor"
        AMAYA_RAPTOR_LIBS="../redland/librdf/.libs/librdf.a ../redland/raptor/.libs/libraptor.a -lexpat"
-       AMAYA_RAPTOR_INCLUDES="-I\$(THOTDIR)/redland/librdf -I\$(THOTDIR)/redland/raptor"
+       AMAYA_RAPTOR_INCLUDES="-I\$(THOTDIR)/../redland/librdf -I\$(THOTDIR)/../redland/raptor"
     fi
 
     dnl control whether we should build the bookmarks support

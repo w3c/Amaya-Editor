@@ -304,19 +304,20 @@ libraptor: @MAKERAPTOR@ libraptor_config libraptor_make
 #
 
 redland_config: @MAKEREDLAND@ force
-	@(if test ! -e "$(THOTDIR)/$(REDLAND)"  ; then \
+	@(if test ! -e "$(THOTDIR)/../$(REDLAND)"  ; then \
 	      $(ECHO) "Error redland dir not found at $(THOTDIR)/$(REDLAND)" ; \
 	  fi)
-	@(if test ! -e "$(THOTDIR)/$(REDLAND)/expat"  ; then \
+	@(if test ! -e "$(THOTDIR)/../$(REDLAND)/expat"  ; then \
 	      libwwwdir="$(THOTDIR)/../$(LIBWWW)" ; \
 	      echo $$libwwwdir ; \
-	      $(LN_S) "$$libwwwdir/modules/expat" "$(THOTDIR)/$(REDLAND)/expat" ; \
+	      $(LN_S) "$$libwwwdir/modules/expat" "$(THOTDIR)/../$(REDLAND)/expat" ; \
 	  fi)
 	 @(if test ! -d "$(REDLAND)"  ; then \
 		$(MKDIR) $(REDLAND) ; \
           fi)
-	 @(localdir=`pwd` ; redlanddir="$$localdir/../$(REDLAND)" ; \
+	 @(localdir=`pwd` ; redlanddir="$$localdir/../../$(REDLAND)" ; \
 	  cd $(REDLAND) ; unset LANG; \
+	  $(ECHO) "I'm at $$localdir" ; \
 	  if test ! -f Makefile -o ! -f  redland-src-config ; then \
 			$$redlanddir/configure \
 			--disable-shared \
