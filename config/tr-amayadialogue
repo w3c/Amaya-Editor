@@ -124,152 +124,156 @@
 122 thead……
 123 tbody ……..
 124 tfoot………..
-125 Sıra (tr)
-126 Veri hücresi (td)
-127 Başlık hücresi (th)
-128 Tablodaki sütünları sil
-129 Bilgi türü
-130 Vurgu (em)
-131 Kuvvetli (strong)
-132 Metin aktarımı (cite)
-133 Tanım (dfn)
-134 Kod (code)
-135 Değişken (var)
-136 Örnek (samp)
-137 Klaviye (kbd)
-138 kısaltmak (abbr)
-139 acronym
-140 Araya Koy (ins)
-141 Sil (del)
-142 Karakter birimi
-143 Eğik (i)
-144 Kalın (b)
-145 Teletip) (tt)
-146 Büyük (big)
-147 Küçük (small)
-148 Alt (sub)
-149 Üst (sup)
-150 Alıntılama (q)
-151 BiDi (bdo)
-152 Matematik
-153 Yeni formül (math)
-154 Düz yazı (mtext)
-155 Teşhis eden (mi)
-156 Numara (mn)
-157 Oparatör (mo)
-158 Boşluk (mspace)
-159 Karakter (&xxx;)
-160 Kayip zaman
-161 Fonksiyonu onayla
-162 Kök (mroot)
-163 Karekök (msqrt)
-164 Kapsamak (menclose)
-165 Kesir (mfrac)
-166 Alt ve üstyazı (msubsup)
-167 altyazı (msub)
-168 üstyazı (msup)
-169 alt ve üst (munderover)
-170 alt (munder)
-171 üst (mover)
-172 Parantezler (mrow)
-173 Multiscripts (mmultiscripts)
-174 Matris (mtable)
-175 Matris sütununu sil
-176 SVG
-177 SVG kütüphanesini göster
-178 SVG kütüphanesine seçili alanı ekle
-179 XML elementlerin
-180 Önceki hedefe bağlantı
-181 Baglantı yarat...
-182 Hedef yarat
-183 tanımı sil
-184 seçilen alanı XPointer gibi kaydet
-185 Tusları göster
-186 Adres göster
-187 Yakınlaştır
-188 Hedefi göster
-189 Uzaklaştır
-190 Harita alanlarını göster
-191 Pars hatalarını göster
-192 Yapıyı göster
-193 Alternatif gösterim
-194 Bağlantıları göster
-195 Içindekileri göster
-196 kaynak göster
-197 Karakter tarzı...
-198 Renkler...
-199 Biçim...
-200 Arkaplan görüntüsü...
-201 Kural yarat...
-202 \'class\' uygula...
-203 **Show applied style...
-204 Bağlantı
-205 Aç
-206 Olumsuzla
-207 Olumla
-208 Sil
-209 Bölüm numaralandırması
-210 Kitap yap
-211 IDs ekle/sil
-212 Tercih
-213 Genel...
-214 Tarama...
-215 Derleme...
-216 Önbellekleme...
-217 Proxy...
-218 Renkler...
-219 Geometri...
-220 Ülke dilleri...
-221 Profiller...
-222 Sayfa modelleri...
-223 Seçili alan ekleme
-224 Doküman eklemek
-225 Seçili alanı taşı
-226 Xpointer\'daki birikenleri taşı
-227 Tekrar ekle
-228 Server\'e kaydet
-229 Sil
-230 Yükle
-231 Kişisel ayarlama...
-232 Sabit filitre...
-233 **Configure...
-234 **New Bookmark
-235 **New Topic
-236 kilitli bilgileri kopyala
-237 **Import a topic hierarchy
-238 Tekrar okumayı kitle...
-239 Tekrar okumayı kilidi aç...
-240 Tekrar okuma ayarlarını göster...
-241 kilitli bilgileri kopyala...
-242 kitli mi?
-243 Ayarlar...
-244 Amaya hakkında
-245 W3C deki Amaya hakkında
-246 Içerik
-247 Tarama
-248 Görünümler
-249 Seç
-250 Döküman
-251 Yarat
-252 Tarz tanımları
-253 karakterler
-254 Yeniden yapılandırma
-255 Bağlantılar
-256 Tablolar
-257 Aktif alan
-258 Matematik
-259 Grafik
-260 XML desteği
-261 Görüntü haritaları
-262 Yazı hataları arama
-263 Yazı hataları düzeltmek
-264 Bastırma
-265 WebDAV
-266 Sayfa yerleştirme
-267 Numaralandır
-268 Kitap oluşturma
-269 Not ekleme
-270 &Birlikte çalışmak
-271 Amaya yapılandırması
-272 Kısalmalar
-273 Amaya\'ya ulaşmak
+125 **Change to Data cell (td)
+126 **Change to Heading cell (th)
+127 **Select a row
+128 **Create a row (tr)
+129 **Delete a row
+130 **Select a column
+131 **Create a column
+132 Tablodaki sütünları sil
+133 Bilgi türü
+134 Vurgu (em)
+135 Kuvvetli (strong)
+136 Metin aktarımı (cite)
+137 Tanım (dfn)
+138 Kod (code)
+139 Değişken (var)
+140 Örnek (samp)
+141 Klaviye (kbd)
+142 kısaltmak (abbr)
+143 acronym
+144 Araya Koy (ins)
+145 Sil (del)
+146 Karakter birimi
+147 Eğik (i)
+148 Kalın (b)
+149 Teletip) (tt)
+150 Büyük (big)
+151 Küçük (small)
+152 Alt (sub)
+153 Üst (sup)
+154 Alıntılama (q)
+155 BiDi (bdo)
+156 Matematik
+157 Yeni formül (math)
+158 Düz yazı (mtext)
+159 Teşhis eden (mi)
+160 Numara (mn)
+161 Oparatör (mo)
+162 Boşluk (mspace)
+163 Karakter (&xxx;)
+164 Kayip zaman
+165 Fonksiyonu onayla
+166 Kök (mroot)
+167 Karekök (msqrt)
+168 Kapsamak (menclose)
+169 Kesir (mfrac)
+170 Alt ve üstyazı (msubsup)
+171 altyazı (msub)
+172 üstyazı (msup)
+173 alt ve üst (munderover)
+174 alt (munder)
+175 üst (mover)
+176 Parantezler (mrow)
+177 Multiscripts (mmultiscripts)
+178 Matris (mtable)
+179 Matris sütununu sil
+180 SVG
+181 SVG kütüphanesini göster
+182 SVG kütüphanesine seçili alanı ekle
+183 XML elementlerin
+184 Önceki hedefe bağlantı
+185 Baglantı yarat...
+186 Hedef yarat
+187 tanımı sil
+188 seçilen alanı XPointer gibi kaydet
+189 Tusları göster
+190 Adres göster
+191 Yakınlaştır
+192 Hedefi göster
+193 Uzaklaştır
+194 Harita alanlarını göster
+195 Pars hatalarını göster
+196 Yapıyı göster
+197 Alternatif gösterim
+198 Bağlantıları göster
+199 Içindekileri göster
+200 kaynak göster
+201 Karakter tarzı...
+202 Renkler...
+203 Biçim...
+204 Arkaplan görüntüsü...
+205 Kural yarat...
+206 \'class\' uygula...
+207 **Show applied style...
+208 Bağlantı
+209 Aç
+210 Olumsuzla
+211 Olumla
+212 Sil
+213 Bölüm numaralandırması
+214 Kitap yap
+215 IDs ekle/sil
+216 Tercih
+217 Genel...
+218 Tarama...
+219 Derleme...
+220 Önbellekleme...
+221 Proxy...
+222 Renkler...
+223 Geometri...
+224 Ülke dilleri...
+225 Profiller...
+226 Sayfa modelleri...
+227 Seçili alan ekleme
+228 Doküman eklemek
+229 Seçili alanı taşı
+230 Xpointer\'daki birikenleri taşı
+231 Tekrar ekle
+232 Server\'e kaydet
+233 Sil
+234 Yükle
+235 Kişisel ayarlama...
+236 Sabit filitre...
+237 **Configure...
+238 **New Bookmark
+239 **New Topic
+240 kilitli bilgileri kopyala
+241 **Import a topic hierarchy
+242 Tekrar okumayı kitle...
+243 Tekrar okumayı kilidi aç...
+244 Tekrar okuma ayarlarını göster...
+245 kilitli bilgileri kopyala...
+246 kitli mi?
+247 Ayarlar...
+248 Amaya hakkında
+249 W3C deki Amaya hakkında
+250 Içerik
+251 Tarama
+252 Görünümler
+253 Seç
+254 Döküman
+255 Yarat
+256 Tarz tanımları
+257 karakterler
+258 Yeniden yapılandırma
+259 Bağlantılar
+260 Tablolar
+261 Aktif alan
+262 Matematik
+263 Grafik
+264 XML desteği
+265 Görüntü haritaları
+266 Yazı hataları arama
+267 Yazı hataları düzeltmek
+268 Bastırma
+269 WebDAV
+270 Sayfa yerleştirme
+271 Numaralandır
+272 Kitap oluşturma
+273 Not ekleme
+274 &Birlikte çalışmak
+275 Amaya yapılandırması
+276 Kısalmalar
+277 Amaya\'ya ulaşmak

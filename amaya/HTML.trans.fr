@@ -350,12 +350,12 @@ Transposer la table:table{tbody{tr{(td|th)+}|(tr{td2:td|th2:th})+}};
 
 Cellule titre :?(td|th)+,td,?(td|th)+;
 	{
-	$CreateHeadingCell;
+	$ChangeToHeadingCell;
 	}
 
 Cellule :?(td|th)+,th,?(td|th)+;
 	{
-	$CreateDataCell;
+	$ChangeToDataCell;
 	}
 
 !headings to/from definitions

@@ -163,10 +163,14 @@ MENUS
 	Types.Table button:BTHead -> CreateTHead;
 	Types.Table button:BTBody -> CreateTBody;
 	Types.Table button:BTFoot -> CreateTFoot;
-	Types.Table button:BRow -> CreateRow;
-	Types.Table button:BDataCell -> CreateDataCell;
-	Types.Table button:BHeadingCell -> CreateHeadingCell;
 	Types.Table Separator;
+	Types.Table button:BDataCell -> ChangeToDataCell;
+	Types.Table button:BHeadingCell -> ChangeToHeadingCell;
+	Types.Table button:BSelectRow -> SelectRow;
+	Types.Table button:BRow -> CreateRow;
+	Types.Table button:BDeleteRow -> DeleteRow;
+	Types.Table button:BSelectColumn -> SelectColumn;
+	Types.Table button:BCreateColumn -> CreateColumn;
 	Types.Table button:BDeleteColumn -> DeleteColumn;
 	Types Separator;
         Types.Phrase toggle:TEmphasis -> SetOnOffEmphasis;

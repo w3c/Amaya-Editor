@@ -417,9 +417,13 @@ HelpImageMaps
 &CreateCaption
 &CreateTable
 &CreateTBody
+&ChangeToDataCell
+&ChangeToHeadingCell
+SelectRow
 &CreateRow
-&CreateDataCell
-&CreateHeadingCell
+&DeleteRow
+SelectColumn
+&CreateColumn
 &DeleteColumn
 HelpTables
 

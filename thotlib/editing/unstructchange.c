@@ -795,7 +795,7 @@ void PasteCommand ()
 		  else if (WholeColumnSaved)
 		    {
 		      /* get the last column of the cell */
-		      GetCellSpans (pEl, &colspan, &rowspan);
+		      GetCellSpans (pPasted, &colspan, &rowspan);
 		      while (pNextRow && rowspan > 1)
 			{
 			  pNextRow = NextRowInTable (pNextRow, pTable);

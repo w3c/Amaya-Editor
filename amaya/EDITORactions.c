@@ -1847,17 +1847,88 @@ void CreateTFoot (Document document, View view)
 }
 
 /*----------------------------------------------------------------------
-  CreateRow
+  SelectRow
   ----------------------------------------------------------------------*/
-void CreateRow (Document document, View view)
+void SelectRow (Document doc, View view)
 {
-   CreateHTMLelement (HTML_EL_Table_row, document);
+  Element             el;
+  ElementType         elType;
+  char               *s;
+  int                 firstchar, lastchar;
+
+  /* get the first selected element */
+  TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
+  if (el)
+    {
+      elType = TtaGetElementType (el);
+      s = TtaGetSSchemaName (elType.ElSSchema);
+      while (el &&
+	     (strcmp (s, "HTML") ||
+	      elType.ElTypeNum != HTML_EL_Table_row) &&
+	     (strcmp (s, "MathML") ||
+	      elType.ElTypeNum != MathML_EL_MTR))
+	{
+	  el = TtaGetParent (el);
+	  if (el)
+	    {
+	      elType = TtaGetElementType (el);
+	      s = TtaGetSSchemaName (elType.ElSSchema);
+	    }
+	  TtaGetSSchemaName (elType.ElSSchema);
+	}
+      if (el)
+	TtaSelectElement (doc, el);
+    }
 }
 
 /*----------------------------------------------------------------------
-  CreateCell creates or transforms a cell
+  CreateRow
   ----------------------------------------------------------------------*/
-static void CreateCell (Document doc, View view, int typeCell)
+void CreateRow (Document doc, View view)
+{
+   CreateHTMLelement (HTML_EL_Table_row, doc);
+}
+
+/*----------------------------------------------------------------------
+  DeleteRow
+  ----------------------------------------------------------------------*/
+void DeleteRow (Document doc, View view)
+{
+  Element             el;
+  ElementType         elType;
+  char               *s;
+  int                 firstchar, lastchar;
+
+  /* get the first selected element */
+  TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
+  if (el)
+    {
+      elType = TtaGetElementType (el);
+      s = TtaGetSSchemaName (elType.ElSSchema);
+      while (el &&
+	     (strcmp (s, "HTML") ||
+	      elType.ElTypeNum != HTML_EL_Table_row) &&
+	     (strcmp (s, "MathML") ||
+	      elType.ElTypeNum != MathML_EL_MTR))
+	{
+	  el = TtaGetParent (el);
+	  if (el)
+	    {
+	      elType = TtaGetElementType (el);
+	      s = TtaGetSSchemaName (elType.ElSSchema);
+	    }
+	  TtaGetSSchemaName (elType.ElSSchema);
+	}
+      if (el)
+	TtaSelectElement (doc, el);
+      /* todo: remove the element */
+    }
+}
+
+/*----------------------------------------------------------------------
+  ChangeCell creates or transforms a cell
+  ----------------------------------------------------------------------*/
+static void ChangeCell (Document doc, View view, int typeCell)
 {
   Element             el, firstSel, lastSel, parent;
   ElementType         elType;
@@ -1961,26 +2032,40 @@ static void CreateCell (Document doc, View view, int typeCell)
 	}
       if (open)
 	TtaCloseUndoSequence (doc);
-      if (!done)
-	/* try to create the data cell close to the current position */
-	CreateHTMLelement (typeCell, doc);
     }
 }
 
 /*----------------------------------------------------------------------
-  CreateDataCell
+  ChangeToDataCell
   ----------------------------------------------------------------------*/
-void CreateDataCell (Document doc, View view)
+void ChangeToDataCell (Document doc, View view)
 {
-  CreateCell (doc, view, HTML_EL_Data_cell);
+  ChangeCell (doc, view, HTML_EL_Data_cell);
 }
 
 /*----------------------------------------------------------------------
-  CreateHeadingCell
+  ChangeToHeadingCell
   ----------------------------------------------------------------------*/
-void CreateHeadingCell (Document doc, View view)
+void ChangeToHeadingCell (Document doc, View view)
 {
-  CreateCell (doc, view, HTML_EL_Heading_cell);
+  ChangeCell (doc, view, HTML_EL_Heading_cell);
+}
+
+/*----------------------------------------------------------------------
+  SelectColumn
+  ----------------------------------------------------------------------*/
+void SelectColumn (Document doc, View view)
+{
+  /* todo */;
+}
+
+/*----------------------------------------------------------------------
+  CreateColumn
+  ----------------------------------------------------------------------*/
+void CreateColumn (Document doc, View view)
+{
+  /* try to create the data cell close to the current position */
+  CreateHTMLelement (HTML_EL_Data_cell, doc);
 }
 
 /*----------------------------------------------------------------------

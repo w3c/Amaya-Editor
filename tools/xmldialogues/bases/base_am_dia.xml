@@ -1255,39 +1255,37 @@
 	<message xml:lang="pt">Rodapé (tfoot)</message>
 	<message xml:lang="fi">Taulukon alaotsikko</message>
 </label>
-<label define="BRow">
-	<message xml:lang="en">Row (tr)</message>
-	<message xml:lang="fr">Ligne (tr)</message>
-	<message xml:lang="de">Zeile (tr)</message>
-	<message xml:lang="it">Linea (tr)</message>
-	<message xml:lang="tr">Sıra (tr)</message>
-	<message xml:lang="es">Fila (tr)</message>
-	<message xml:lang="pt">Linha (tr)</message>
-	<message xml:lang="fi">Rivi solu (tr)</message>
-</label>
 <label define="BDataCell">
-	<message xml:lang="en">Data cell (td)</message>
-	<message xml:lang="fr">Cellule (td)</message>
-	<message xml:lang="de">Zelle (td)</message>
-	<message xml:lang="it">Cella dati (td)</message>
-	<message xml:lang="tr">Veri hücresi (td)</message>
-	<message xml:lang="es">Celda de datos (td)</message>
-	<message xml:lang="pt">Célula de dados (td)</message>
-	<message xml:lang="fi">Sisältö solu (td)</message>
+	<message xml:lang="en">Change to Data cell (td)</message>
+	<message xml:lang="fr">Changer en cellule (td)</message>
 </label>
 <label define="BHeadingCell">
-	<message xml:lang="en">Heading cell (th)</message>
-	<message xml:lang="fr">Cellule titre (th)</message>
-	<message xml:lang="de">Kopfzelle (th)</message>
-	<message xml:lang="it">Cella intestazione (th)</message>
-	<message xml:lang="tr">Başlık hücresi (th)</message>
-	<message xml:lang="es">Celda cabecera (th)</message>
-	<message xml:lang="pt">Célula de cabeçalho (th)</message>
-	<message xml:lang="fi">Otsake solu (th)</message>
+	<message xml:lang="en">Change to Heading cell (th)</message>
+	<message xml:lang="fr">Changer en cellule titre (th)</message>
+</label>
+<label define="BSelectRow">
+	<message xml:lang="en">Select a row</message>
+	<message xml:lang="fr">Sélectionner une ligne</message>
+</label>
+<label define="BRow">
+	<message xml:lang="en">Create a row (tr)</message>
+	<message xml:lang="fr">Créer une ligne (tr)</message>
+</label>
+<label define="BDeleteRow">
+	<message xml:lang="en">Delete a row</message>
+	<message xml:lang="fr">Détruire une ligne</message>
+</label>
+<label define="BSelectColumn">
+	<message xml:lang="en">Select a column</message>
+	<message xml:lang="fr">Sélectionner une colonne</message>
+</label>
+<label define="BCreateColumn">
+	<message xml:lang="en">Create a column</message>
+	<message xml:lang="fr">Créer une colonne</message>
 </label>
 <label define="BDeleteColumn">
-	<message xml:lang="en">Delete table column</message>
-	<message xml:lang="fr">Détruire colonne de table</message>
+	<message xml:lang="en">Delete a column</message>
+	<message xml:lang="fr">Détruire une colonne</message>
 	<message xml:lang="de">Spalte löschen</message>
 	<message xml:lang="it">Cancella colonna della tabella</message>
 	<message xml:lang="es">Borrar columna de tabla</message>
