@@ -86,6 +86,11 @@ ELEMENTS
 	ElemTextModify.Post -> StyleChanged;
 	END;
 
+   META:
+	BEGIN
+	ElemExport.Pre -> CheckGenerator;
+	END;
+
    List_Item:
 	BEGIN
 	ElemNew.Post -> ListItemCreated;

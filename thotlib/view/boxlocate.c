@@ -998,6 +998,10 @@ int                 yDelta;
 	  pBox = GetClickedLeafBox (frame, *x, *y);
 	  if (pBox == NULL)
 	    pBox = pSourceBox;
+	  else if (TypeHasException (ExcNoSelect,
+				     pBox->BxAbstractBox->AbElement->ElTypeNumber,
+				     pBox->BxAbstractBox->AbElement->ElStructSchema))
+	    pBox = pSourceBox;
 	  if (pBox == pSourceBox || pBox->BxAbstractBox->AbBox == pSourceBox)
 	    {
 	      /* compute the height to be moved*/

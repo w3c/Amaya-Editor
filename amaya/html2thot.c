@@ -2976,39 +2976,39 @@ Element             el;
     case HTML_EL_Text_Input:
     case HTML_EL_Password_Input:
     case HTML_EL_File_Input:
-	attrType.AttrSSchema = HTMLSSchema;
-	attrType.AttrTypeNum = HTML_ATTR_Value_;
-	attr = TtaGetAttribute (el, attrType);
-	if (attr != NULL)
-	   {
-	   /* copy the value of attribute "value" into the first text
-	      leaf of element */
-	   length = TtaGetTextAttributeLength (attr);
-	   if (length > 0)
-	      {
-	      /* get element Inserted_Text */
-	      child = TtaGetFirstChild (el);
-	      if (child != NULL)
-		 {
-		 /* get the text leaf */
-		 leaf = TtaGetFirstChild (child);
-		 if (leaf != NULL)
+      /* get element Inserted_Text */
+      child = TtaGetFirstChild (el);
+      if (child != NULL)
+	{
+	  attrType.AttrSSchema = HTMLSSchema;
+	  attrType.AttrTypeNum = HTML_ATTR_Value_;
+	  attr = TtaGetAttribute (el, attrType);
+	  if (attr != NULL)
+	    {
+	      /* copy the value of attribute "value" into the first text
+		 leaf of element */
+	      length = TtaGetTextAttributeLength (attr);
+	      if (length > 0)
+		{
+		  /* get the text leaf */
+		  leaf = TtaGetFirstChild (child);
+		  if (leaf != NULL)
 		    {
-		    childType = TtaGetElementType (leaf);
-		    if (childType.ElTypeNum == HTML_EL_TEXT_UNIT)
-		       {
-		       /* copy attribute value into the text leaf */
-	               text = TtaGetMemory (length + 1);
-	               TtaGiveTextAttributeValue (attr, text, &length);
-		       TtaSetTextContent (leaf, text, currentLanguage,
-				          theDocument);
-		       TtaFreeMemory (text);
-		       }
+		      childType = TtaGetElementType (leaf);
+		      if (childType.ElTypeNum == HTML_EL_TEXT_UNIT)
+			{
+			  /* copy attribute value into the text leaf */
+			  text = TtaGetMemory (length + 1);
+			  TtaGiveTextAttributeValue (attr, text, &length);
+			  TtaSetTextContent (leaf, text, currentLanguage,
+					     theDocument);
+			  TtaFreeMemory (text);
+			}
 		    }
-		 }
-	      }
-	   }
-       break;
+		}
+	    }
+	}
+      break;
 
     case HTML_EL_STYLE_:	/* it's a STYLE element */
 	ParsingCSS = FALSE;
@@ -3049,27 +3049,27 @@ Element             el;
 	  /* it's an empty Text_Area */
 	  /* insert a Inserted_Text element in the element */
 	 {
-	    newElType.ElTypeNum = HTML_EL_Inserted_Text;
-	    child = TtaNewTree (theDocument, newElType, "");
-	    TtaInsertFirstChild (&child, el, theDocument);
+	   newElType.ElTypeNum = HTML_EL_Inserted_Text;
+	   child = TtaNewTree (theDocument, newElType, "");
+	   TtaInsertFirstChild (&child, el, theDocument);
 	 }
        else
 	 {
-	    /* save the text into Default_Value attribute */
-	    attrType.AttrSSchema = HTMLSSchema;
-	    attrType.AttrTypeNum = HTML_ATTR_Default_Value;
-	    if (TtaGetAttribute (el, attrType) == NULL)
-	       /* attribute Default_Value is missing */
-	      {
-		 attr = TtaNewAttribute (attrType);
-		 TtaAttachAttribute (el, attr, theDocument);
-		 desc = TtaGetFirstChild (child);
-		 length = TtaGetTextLength (desc) + 1;
-		 text = TtaGetMemory (length);
-		 TtaGiveTextContent (desc, text, &length, &lang);
-		 TtaSetAttributeText (attr, text, el, theDocument);
-		 TtaFreeMemory (text);
-	      }
+	   /* save the text into Default_Value attribute */
+	   attrType.AttrSSchema = HTMLSSchema;
+	   attrType.AttrTypeNum = HTML_ATTR_Default_Value;
+	   if (TtaGetAttribute (el, attrType) == NULL)
+	     /* attribute Default_Value is missing */
+	     {
+	       attr = TtaNewAttribute (attrType);
+	       TtaAttachAttribute (el, attr, theDocument);
+	       desc = TtaGetFirstChild (child);
+	       length = TtaGetTextLength (desc) + 1;
+	       text = TtaGetMemory (length);
+	       TtaGiveTextContent (desc, text, &length, &lang);
+	       TtaSetAttributeText (attr, text, el, theDocument);
+	       TtaFreeMemory (text);
+	     }
 	 }
        /* insert a Frame element */
        newElType.ElTypeNum = HTML_EL_Frame;

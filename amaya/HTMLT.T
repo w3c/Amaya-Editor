@@ -997,9 +997,8 @@ ATTRIBUTES
 	END;
 
  meta_content: BEGIN
-	Create ' content="';
+	Create ' content=';
 	Create Translated meta_content;
-	Create DoubleQuote;
 	END;
 
  scheme: BEGIN

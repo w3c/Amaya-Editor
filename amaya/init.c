@@ -1427,6 +1427,58 @@ boolean		    history;
   return (newdoc);
 }
 
+/*----------------------------------------------------------------------
+   SetHTMLReadOnly
+   Set the whole document in ReadOnly mode except input elements
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void	SetHTMLReadOnly (Document doc)
+#else
+static void	SetHTMLReadOnly (doc)
+Document        doc;
+#endif
+{
+   ElementType         elType;
+   Element             el, elForm, child, next;
+
+  TtaSetDocumentAccessMode (doc, 0);
+  el = TtaGetMainRoot (doc);
+  elType = TtaGetElementType (el);
+  elType.ElTypeNum = HTML_EL_Form;
+  elForm = TtaSearchTypedElement (elType, SearchForward, el);
+  while (elForm != NULL)
+    {
+      /* there is a form */
+      el = TtaGetFirstChild (elForm);
+      while (el != NULL)
+	{
+	  /* look at all elements within this form */
+	  elType = TtaGetElementType (el);
+	  child = TtaGetFirstChild (el);
+	  next = el;
+	  TtaNextSibling (&next);
+	  switch (elType.ElTypeNum)
+	    {
+	    case HTML_EL_Input:
+	    case HTML_EL_Text_Input:
+	    case HTML_EL_Password_Input:
+	    case HTML_EL_File_Input:
+	    case HTML_EL_Text_Area:	/* it's a Text_Area */
+	      TtaSetAccessRight (child, ReadWrite, doc);
+	      child = NULL;
+	      break;
+	    default:
+	      break;
+	    }
+	  if (child != NULL)
+	    el = child;
+	  else
+	    el = next;
+	}
+      elForm = TtaSearchTypedElement (elType, SearchForward, elForm);
+    }
+}
+
 
 /*----------------------------------------------------------------------
   Reload_callback
@@ -1476,6 +1528,8 @@ void *context;
        res = LoadHTMLDocument (newdoc, pathname, form_data, method, tempfile, 
 			       documentname, content_type, FALSE);
 	W3Loading = 0;		/* loading is complete now */
+	if (DocumentTypes[res] == docHelp)
+	  SetHTMLReadOnly (res);
 	TtaHandlePendingEvents ();
 	/* fetch and display all images referred by the document */
 	if (res != 0)
@@ -1989,7 +2043,6 @@ NotifyDialog       *event;
 	/* abort the command and don't let Thot perform normal operation */
 	return TRUE;
 
-   DocumentTypes[document] = docHTML;
    if (structView != 0 && TtaIsViewOpened (document, structView))
      TtaCloseView (document, structView);
    if (altView != 0 && TtaIsViewOpened (document, altView))
@@ -2170,8 +2223,9 @@ void *context;
      TtaFreeMemory (form_data);
    TtaFreeMemory (ctx);
    if (DocumentTypes[newdoc] == docHelp)
-     TtaSetDocumentAccessMode (newdoc, 0);
+     SetHTMLReadOnly (newdoc);
 }
+
 
 /*----------------------------------------------------------------------
   GetHTMLDocument loads the document if it is not loaded yet and    
@@ -2303,18 +2357,19 @@ void               *ctx_cbf;
 	       if (newdoc == 0)
 		 /* cannot display the new document */
 		 ok = FALSE;
-	       else if (CE_event == CE_HELP)
+	       else if (CE_event == CE_HELP && DocumentTypes[newdoc] != docHelp)
 		 {
+		   DocumentTypes[newdoc] = docHelp;
 		   /* help document has to be in read-only mode */
 		   TtcSwitchCommands (newdoc, 1);
 		   TtaSetToggleItem (newdoc, 1, Views, TShowTextZone, FALSE);
 		   TtcSwitchButtonBar (newdoc, 1);
 		   TtaSetToggleItem (newdoc, 1, Views, TShowButtonbar, FALSE);
-		   DocumentTypes[newdoc] = docHelp;
 		   TtaSetItemOff (newdoc, 1, Edit_, BCut);
 		   TtaSetItemOff (newdoc, 1, Edit_, BPaste);
 		   TtaSetItemOff (newdoc, 1, Edit_, BClear);
 		   TtaSetItemOff (newdoc, 1, Edit_, BSpellCheck);
+		   TtaSetItemOff (newdoc, 1, Edit_, BTransform);
 		   TtaSetMenuOff (newdoc, 1, Types);
 		   TtaSetMenuOff (newdoc, 1, Links);
 		   TtaSetMenuOff (newdoc, 1, Style);
@@ -2322,12 +2377,15 @@ void               *ctx_cbf;
 		   TtaSetMenuOff (newdoc, 1, Attributes_);
 		   TtaSetMenuOff (newdoc, 1, Help_);
 		   TtaSetItemOff (newdoc, 1, File, BNew);
-
+		   
 		   TtaSetItemOff (newdoc, 1, File, BOpenDoc);
 		   TtaSetItemOff (newdoc, 1, File, BOpenInNewWindow);
 		   TtaSetItemOff (newdoc, 1, File, BReload);
 		   TtaSetItemOff (newdoc, 1, File, BSave);
 		 }
+	       else
+		 /* it's a simple HTML document */
+		 DocumentTypes[newdoc] = docHTML;
 	     }
 	   else
 	     {
@@ -2434,8 +2492,6 @@ void               *ctx_cbf;
    TtaFreeMemory (parameters);
    TtaFreeMemory (tempfile);
    TtaFreeMemory (pathname);
-   if (DocumentTypes[newdoc] == docHelp)
-     TtaSetDocumentAccessMode (newdoc, 0);
    return (newdoc);
 
    TtaHandlePendingEvents ();
@@ -3546,7 +3602,7 @@ int         index;
   else {
        s = (char *) TtaGetEnvString ("THOTDIR");
        if (s != NULL)
-          sprintf (localname, "%s%cdoc%camaya%c", s, DIR_SEP, DIR_SEP, DIR_SEP);
+          sprintf (localname, "%s%cdoc%camaya%c%s", s, DIR_SEP, DIR_SEP, DIR_SEP, Manual[index]);
   } 
 
   if (!TtaFileExist (localname)) {

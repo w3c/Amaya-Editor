@@ -141,6 +141,57 @@ LPARAM lParam;
 #endif /* _WINDOWS */
 
 /*----------------------------------------------------------------------
+  CheckGenerator                                                 
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean             CheckGenerator (NotifyElement * event)
+#else  /* __STDC__ */
+boolean             CheckGenerator (event)
+NotifyElement      *event;
+
+#endif /* __STDC__ */
+{
+  AttributeType      attrType;
+  Attribute          attr;
+  char               buff[MAX_LENGTH], *ptr;
+  int                length;
+
+  attrType.AttrSSchema = TtaGetDocumentSSchema (event->document);
+  attrType.AttrTypeNum = HTML_ATTR_meta_name;
+  attr = TtaGetAttribute (event->element, attrType);
+  if (attr != 0)
+    {
+      length = MAX_LENGTH - 1;
+      TtaGiveTextAttributeValue (attr, buff, &length);
+      if (!strcasecmp (buff, "GENERATOR"))
+	{
+	  /* is it Amaya generator ? */
+	  attrType.AttrTypeNum = HTML_ATTR_meta_content;
+	  attr = TtaGetAttribute (event->element, attrType);
+	  if (attr != 0)
+	    {
+	      length = MAX_LENGTH - 1;
+	      TtaGiveTextAttributeValue (attr, buff, &length);
+	      ptr = strstr (buff, "amaya");
+	      if (ptr == NULL)
+		/* it's not a pure Amaya document -> remove the meta element */
+		return TRUE;
+	      else
+		{
+		  /* update the version */
+		  strcpy (buff, HTAppName);
+		  strcat (buff, " ");
+		  strcat (buff, HTAppVersion);
+		  TtaSetAttributeText (attr, buff, event->element, event->document);
+		}
+	    }
+	}
+    }
+  return FALSE;  /* let Thot perform normal operation */
+}
+
+
+/*----------------------------------------------------------------------
   GenerateQuoteBefore                                                  
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
@@ -175,6 +226,7 @@ NotifyAttribute    *event;
       QuotedText[length+1] = '\'';
     }
   TtaSetAttributeText (event->attribute, QuotedText, event->element, event->document);
+  TtaFreeMemory (QuotedText);
   return FALSE;  /* let Thot perform normal operation */
 }
 
@@ -1435,7 +1487,11 @@ void                DoSaveAs ()
   char               *tempname, *localPath;
   char               *imagePath, *base;
   char                imgbase[MAX_LENGTH];
+#ifndef IV
   char                backupName[MAX_LENGTH], backupFile[MAX_LENGTH];
+#else
+  Element             copy;
+#endif
   char                url_sep;
   int                 res;
   int                 len;
@@ -1604,9 +1660,13 @@ DBG(fprintf(stderr, " set SaveName to noname.html\n");)
   if (ok)
     {
       docModified = TtaIsDocumentModified (doc);
+#ifndef IV
       strcpy (backupName, DocumentURLs[doc]);
       sprintf (backupFile, "%s%cbackup.html", TempFileDirectory, DIR_SEP);
       ok = TtaExportDocument (doc, backupFile, "HTMLT");
+#else
+      copy = TtaCopyTree (root, doc, doc, NULL);
+#endif
     }
 
   if (ok)
@@ -1682,8 +1742,14 @@ DBG(fprintf(stderr, "   Uploading document to net %s\n", documentFile);)
 	      Operation failed:
 	      restore the previous contents of the document
 	      */
+#ifndef IV
+	    /* allow Amaya to replace the current document */
 	    TtaSetDocumentUnmodified (doc);
 	    doc = RestoreOneAmayaDoc (doc, backupFile, backupName);
+#else
+	    TtaDeleteTree (root, doc);
+	    TtaAttachNewTree(copy, doc);
+#endif
 	    TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_CANNOT_SAVE), documentFile);
 	    /* restore the previous status of the document */
 	    if (!docModified)

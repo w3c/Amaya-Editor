@@ -145,18 +145,19 @@ boolean             toend;
 
 /*----------------------------------------------------------------------
    LocateLeafBox repe`re la boite terminale a' la position x+xDelta
-   y+yDelta. Si la selection reste identique VsBox le decalage  
+   y+yDelta. Si la selection reste identique le decalage  
    est incremente de xDelta et yDelta.                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         LocateLeafBox (int frame, int x, int y, int xDelta, int yDelta)
+static void         LocateLeafBox (int frame, int x, int y, int xDelta, int yDelta, PtrBox pFrom)
 #else  /* __STDC__ */
-static void         LocateLeafBox (frame, x, y, xDelta, yDelta)
+static void         LocateLeafBox (frame, x, y, xDelta, yDelta, pFrom)
 int                 frame;
 int                 x;
 int                 y;
 int                 xDelta;
 int                 yDelta;
+PtrBox              pFrom;
 #endif /* __STDC__ */
 {
    int                 index;
@@ -166,12 +167,17 @@ int                 yDelta;
    int                 nbbl;
    int                 nChars;
 
-   /* pLastBox = current selected box */
-   pLastBox = ViewFrameTable[frame - 1].FrSelectionBegin.VsBox;
-   while (pLastBox->BxNext != NULL
-	  && pLastBox->BxAbstractBox->AbPresentationBox
-	  && !pLastBox->BxAbstractBox->AbCanBeModified)
-      pLastBox = pLastBox->BxNext;
+   if (pFrom != NULL)
+     pLastBox = pFrom;
+   else
+     /* pLastBox = current selected box */
+     pLastBox = ViewFrameTable[frame - 1].FrSelectionBegin.VsBox;
+   /* skip presentation boxes */
+   while (pLastBox->BxNext != NULL &&
+	  pLastBox->BxAbstractBox->AbPresentationBox &&
+	  /* constants */
+	  !pLastBox->BxAbstractBox->AbCanBeModified)
+     pLastBox = pLastBox->BxNext;
 
    pBox = GetLeafBox (pLastBox, frame, &x, &y, xDelta, yDelta);
    nChars = 0;
@@ -211,6 +217,7 @@ View                view;
    int                 frame, x, y;
    int                 xDelta, yDelta;
    int                 h, w;
+   int                 indpos, xpos;
    boolean             ok;
 
    if (code == 9)
@@ -230,10 +237,26 @@ View                view;
 	       {
 		  ok = TRUE;
 		  pBox = pViewSel->VsBox;
+		  indpos = pViewSel->VsIndBox;
+		  xpos = pViewSel->VsXPos;
 		  while (pBox != NULL && pBox->BxType == BoGhost &&
 			 pBox->BxAbstractBox != NULL &&
 			 pBox->BxAbstractBox->AbFirstEnclosed != NULL)
-		    pBox = pBox->BxAbstractBox->AbFirstEnclosed->AbBox;
+		    {
+		      /* the real selection is on child elements */
+		      pBox = pBox->BxAbstractBox->AbFirstEnclosed->AbBox;
+		      if (code == 2)
+			{
+			  /* take the last child into account */
+			  while (pBox->BxAbstractBox->AbNext != NULL)
+			    pBox = pBox->BxAbstractBox->AbNext->AbBox;
+			  while (pBox->BxAbstractBox->AbPrevious != NULL &&
+				 pBox->BxAbstractBox->AbPresentationBox)
+			    pBox = pBox->BxAbstractBox->AbPrevious->AbBox;
+			  indpos = pBox->BxAbstractBox->AbBox->BxNChars;
+			  xpos = pBox->BxAbstractBox->AbBox->BxWidth;
+			}
+		    }
 		  GetSizesFrame (frame, &w, &h);
 		  if (pBox->BxYOrg + pBox->BxHeight <= pFrame->FrYOrg ||
 		      pBox->BxYOrg >= pFrame->FrYOrg + h)
@@ -251,15 +274,15 @@ View                view;
 	       case 1:	/* En arriere d'un car (^B) */
 		 if (pBox != NULL)
 		   {
-		     x = pViewSel->VsIndBox + pBox->BxIndChar;
+		     x = indpos + pBox->BxIndChar;
 		     if (x > 0)
 		       ChangeSelection (frame, pBox->BxAbstractBox, x, FALSE, TRUE, FALSE, FALSE);
 		     else
 		       {
-			 x = pBox->BxXOrg + pViewSel->VsXPos;
+			 x = pBox->BxXOrg + xpos;
 			 y = pBox->BxYOrg + (pBox->BxHeight / 2);
 			 xDelta = -2;
-			 LocateLeafBox (frame, x, y, xDelta, 0);
+			 LocateLeafBox (frame, x, y, xDelta, 0, pBox);
 		       }
 		   }
 		 break;
@@ -267,7 +290,7 @@ View                view;
 	       case 2:	/* En avant d'un car (^F) */
 		 if (pBox != NULL)
 		   {
-		     x = pViewSel->VsIndBox + pBox->BxIndChar;
+		     x = indpos + pBox->BxIndChar;
 		     if (x < pBox->BxAbstractBox->AbBox->BxNChars)
 		       ChangeSelection (frame, pBox->BxAbstractBox, x + 2, FALSE, TRUE, FALSE, FALSE);
 		     else
@@ -275,7 +298,7 @@ View                view;
 			 x = pBox->BxXOrg + pBox->BxWidth;
 			 y = pBox->BxYOrg + (pBox->BxHeight / 2);
 			 xDelta = 2;
-			 LocateLeafBox (frame, x, y, xDelta, 0);
+			 LocateLeafBox (frame, x, y, xDelta, 0, pBox);
 		       }
 		   }
 		 break;
@@ -295,7 +318,7 @@ View                view;
 		   {
 		     y = pBox->BxYOrg + pBox->BxHeight;
 		     yDelta = 10;
-		     LocateLeafBox (frame, ClickX - pFrame->FrXOrg, y, 0, yDelta);
+		     LocateLeafBox (frame, ClickX - pFrame->FrXOrg, y, 0, yDelta, NULL);
 		     ok = FALSE;
 		   }
 		 else
@@ -307,7 +330,7 @@ View                view;
 		   {
 		     y = pBox->BxYOrg;
 		     yDelta = -10;
-		     LocateLeafBox (frame, ClickX - pFrame->FrXOrg, y, 0, yDelta);
+		     LocateLeafBox (frame, ClickX - pFrame->FrXOrg, y, 0, yDelta, NULL);
 		     ok = FALSE;
 		   }
 		 else

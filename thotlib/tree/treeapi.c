@@ -830,151 +830,138 @@ Document            document;
 
 {
    PtrDocument         pDoc;
-   int                 numAssoc, numAssocLibre;
    SRule              *pRule;
+   PtrElement          pRoot, pEl;
+   PtrSSchema          curExtension;
+   int                 numAssoc, numAssocLibre;
    boolean             found;
    boolean             ok;
-   PtrElement          pRoot;
-   PtrSSchema          curExtension;
 
    UserErrorCode = 0;
    numAssocLibre = 0;
    pRoot = (PtrElement) tree;
    ok = FALSE;
    if (tree == NULL)
-     {
-	TtaError (ERR_invalid_parameter);
-     }
+     TtaError (ERR_invalid_parameter);
    else
       /* Checks the parameter document */
    if (document < 1 || document > MAX_DOCUMENTS)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_document_parameter);
    else if (LoadedDocument[document - 1] == NULL)
-     {
-	TtaError (ERR_invalid_document_parameter);
-     }
+     TtaError (ERR_invalid_document_parameter);
    else
-      /* Parameter document is ok */
+     /* Parameter document is ok */
      {
-	pDoc = LoadedDocument[document - 1];
-	/* verifies that the tree type is defined into the document schema 
-	   or into one of its extensions */
-	found = FALSE;
-	if (pDoc->DocSSchema->SsCode == pRoot->ElStructSchema->SsCode)
-	   /* document schema */
-	   found = TRUE;
-	else if (pRoot->ElStructSchema->SsExtension)
-	   /* The tree is defined by an extension schema */
-	   /* Is it an extension of this document ? */
-	  {
-	     curExtension = pDoc->DocSSchema->SsNextExtens;
-	     while (!found && curExtension != NULL)
-		if (pRoot->ElStructSchema->SsCode == curExtension->SsCode)
-		   found = TRUE;
-		else
-		   curExtension = curExtension->SsNextExtens;
-	  }
-	if (!found)
-	   /* The tree is not defined into a structure schema of the document */
-	  {
+       pDoc = LoadedDocument[document - 1];
+       /* verifies that the tree type is defined into the document schema 
+	  or into one of its extensions */
+       found = FALSE;
+       if (pDoc->DocSSchema->SsCode == pRoot->ElStructSchema->SsCode)
+	 /* document schema */
+	 found = TRUE;
+       else if (pRoot->ElStructSchema->SsExtension)
+	 /* The tree is defined by an extension schema */
+	 /* Is it an extension of this document ? */
+	 {
+	   curExtension = pDoc->DocSSchema->SsNextExtens;
+	   while (!found && curExtension != NULL)
+	     if (pRoot->ElStructSchema->SsCode == curExtension->SsCode)
+	       found = TRUE;
+	     else
+	       curExtension = curExtension->SsNextExtens;
+	 }
+
+       if (!found)
+	 /* The tree is not defined into a structure schema of the document */
+	 TtaError (ERR_element_does_not_match_DTD);
+       else
+	 {
+	   if (pRoot->ElTypeNumber == pRoot->ElStructSchema->SsRootElem)
+	     /* The main tree */
+	     {
+#ifndef NODISPLAY
+	       if (pDoc->DocRootElement != NULL)
+		 UndisplayElement (pDoc->DocRootElement, document);
+#endif
+	       /* Don't remove the root element */
+	       DeleteElement (&pDoc->DocRootElement, pDoc);
+	       pDoc->DocRootElement = pRoot;
+	       numAssocLibre = 0;
+	       ok = TRUE;
+	     }
+	   else if (pRoot->ElTerminal)
+	     /* Is it a right associated tree ? */
 	     TtaError (ERR_element_does_not_match_DTD);
-	  }
-	else
-	  {
-	     if (pRoot->ElTypeNumber == pRoot->ElStructSchema->SsRootElem)
-		/* The main tree */
-	       {
+	   else
+	     {
+	       /* One access to the rule which defines the root of the tree */
+	       pRule = &pRoot->ElStructSchema->SsRule[pRoot->ElTypeNumber - 1];
+	       if (pRule->SrConstruct != CsList)
+		 /* Error: not a list */
+		 TtaError (ERR_element_does_not_match_DTD);
+	       else
+		 /* It is a list */
+		 {
+		   /* one access to rules defining the elements of the list */
+		   pRule = &pRoot->ElStructSchema->SsRule[pRule->SrListItem - 1];
+		   if (!pRule->SrAssocElem)
+		     /* Error: elements of the list are not associated elements */
+		     TtaError (ERR_element_does_not_match_DTD);
+		   else
+		     ok = TRUE;
+		 }
+	       if (ok)
+		 {
+		   /* Verifies if some associated elements of this type already exist into the document */
+		   numAssocLibre = 0;
+		   numAssoc = 1;
+		   found = FALSE;
+		   while (!found && numAssoc <= MAX_ASSOC_DOC)
+		     {
+		       if (pDoc->DocAssocRoot[numAssoc - 1] == NULL)
+			 {
+			   if (numAssocLibre == 0)
+			     numAssocLibre = numAssoc;
+			 }
+		       else if (pRoot->ElTypeNumber == pDoc->DocAssocRoot[numAssoc - 1]->ElTypeNumber)
+			 found = TRUE;
+		       if (!found)
+			 numAssoc++;
+		     }
+		   if (found)
+		     /* Associated elements of this type already exist */
+		     {
 #ifndef NODISPLAY
-		  if (pDoc->DocRootElement != NULL)
-		     UndisplayElement (pDoc->DocRootElement, document);
+		       if (pDoc->DocAssocRoot[numAssoc - 1] != NULL)
+			 UndisplayElement (pDoc->DocAssocRoot[numAssoc - 1],
+					   document);
 #endif
-		  DeleteElement (&pDoc->DocRootElement, pDoc);
-		  pDoc->DocRootElement = pRoot;
-		  numAssocLibre = 0;
-		  ok = TRUE;
-	       }
-	     else
-		/* Is it a right associated tree ? */
-	     if (pRoot->ElTerminal)
-	       {
-		  TtaError (ERR_element_does_not_match_DTD);
-	       }
-	     else
-	       {
-		  /* One access to the rule which defines the root of the tree */
-		  pRule = &pRoot->ElStructSchema->SsRule[pRoot->ElTypeNumber - 1];
-		  if (pRule->SrConstruct != CsList)
-		     /* Error: not a list */
-		    {
-		       TtaError (ERR_element_does_not_match_DTD);
-		    }
-		  else
-		     /* It is a list */
-		    {
-		       /* one access to rules defining the elements of the list */
-		       pRule = &pRoot->ElStructSchema->SsRule[pRule->SrListItem - 1];
-		       if (!pRule->SrAssocElem)
-			  /* Error: elements of the list are not associated elements */
-			 {
-			    TtaError (ERR_element_does_not_match_DTD);
-			 }
-		       else
-			  ok = TRUE;
-		    }
-		  if (ok)
-		    {
-		       /* Verifies if some associated elements of this type already exist into the document */
-		       numAssocLibre = 0;
-		       numAssoc = 1;
-		       found = FALSE;
-		       while (!found && numAssoc <= MAX_ASSOC_DOC)
-			 {
-			    if (pDoc->DocAssocRoot[numAssoc - 1] == NULL)
-			      {
-				 if (numAssocLibre == 0)
-				    numAssocLibre = numAssoc;
-			      }
-			    else if (pRoot->ElTypeNumber == pDoc->DocAssocRoot[numAssoc - 1]->ElTypeNumber)
-			       found = TRUE;
-			    if (!found)
-			       numAssoc++;
-			 }
-		       if (found)
-			  /* Associated elements of this type already exist */
-			 {
-#ifndef NODISPLAY
-			    if (pDoc->DocAssocRoot[numAssoc - 1] != NULL)
-			       UndisplayElement (pDoc->DocAssocRoot[numAssoc - 1],
-						 document);
-#endif
-			    DeleteElement (&pDoc->DocAssocRoot[numAssoc - 1], pDoc);
-			    if (numAssocLibre == 0)
-			       numAssocLibre = numAssoc;
-			 }
+		       DeleteElement (&pDoc->DocAssocRoot[numAssoc - 1], pDoc);
 		       if (numAssocLibre == 0)
-			  /* All associated elements of the document are busy */
-			 {
-			    TtaError (ERR_invalid_parameter);
-			    ok = FALSE;
-			 }
-		       else
-			  pDoc->DocAssocRoot[numAssocLibre - 1] = pRoot;
-		    }
-	       }
-	     /* change the associated element number of the whole tree */
-	     if (ok)
-	       {
-		  pRoot->ElAccess = AccessReadWrite;
-		  SetAssocNumber (pRoot, numAssocLibre);
-		  /* verifies if the new root has an attribut language */
-		  CheckLanguageAttr (pDoc, pRoot);
+			 numAssocLibre = numAssoc;
+		     }
+		   if (numAssocLibre == 0)
+		     /* All associated elements of the document are busy */
+		     {
+		       TtaError (ERR_invalid_parameter);
+		       ok = FALSE;
+		     }
+		   else
+		     pDoc->DocAssocRoot[numAssocLibre - 1] = pRoot;
+		 }
+	     }
+	   /* change the associated element number of the whole tree */
+	   if (ok)
+	     {
+	       pRoot->ElAccess = AccessReadWrite;
+	       SetAssocNumber (pRoot, numAssocLibre);
+	       /* verifies if the new root has an attribut language */
+	       CheckLanguageAttr (pDoc, pRoot);
 #ifndef NODISPLAY
-		  RedisplayNewElement (document, pRoot, NULL, TRUE, TRUE);
+	       RedisplayNewElement (document, pRoot, NULL, TRUE, TRUE);
 #endif
-	       }
-	  }
+	     }
+	 }
      }
 }
 

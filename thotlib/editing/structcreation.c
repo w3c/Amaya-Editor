@@ -231,6 +231,8 @@ PtrDocument         pDoc;
 	h = 0;
 	frame = pDoc->DocViewFrame[i];
 	pAb = pDoc->DocViewModifiedAb[i];
+	if (pDoc->DocViewRootAb[i] == NULL)
+	  pDoc->DocViewRootAb[i] = pAb;
 	pDoc->DocViewModifiedAb[i] = NULL;
 	ChangeConcreteImage (frame, &h, pAb);
 	/* libere les paves morts */

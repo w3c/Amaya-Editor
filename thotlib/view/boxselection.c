@@ -522,7 +522,7 @@ boolean             alone;
 
 #endif /* __STDC__ */
 {
-   PtrLine             adligne;
+   PtrLine             adline;
    PtrTextBuffer       pBuffer;
    int                 ind, charIndex;
    PtrBox              pBox;
@@ -540,7 +540,7 @@ boolean             alone;
 	  {
 	     /* eteint la selection */
 	     pBox = pAb->AbBox;
-	     adligne = SearchLine (pBox);
+	     adline = SearchLine (pBox);
 
 	     /* verifie la coherence des indices de caracteres */
 	     if (pAb->AbLeafType == LtText)
@@ -592,7 +592,7 @@ boolean             alone;
 			  pViewSel->VsIndBox = firstChar;
 		       pViewSel->VsIndBuf = ind;
 		       pViewSel->VsBuffer = pBuffer;
-		       pViewSel->VsLine = adligne;
+		       pViewSel->VsLine = adline;
 		       if (pAb->AbLeafType == LtPicture && firstChar > 0)
 			  pViewSel->VsXPos = pBox->BxWidth;
 		       else
@@ -606,7 +606,7 @@ boolean             alone;
 		       pViewSel->VsIndBox = 0;
 		       pViewSel->VsIndBuf = ind;
 		       pViewSel->VsBuffer = pBuffer;
-		       pViewSel->VsLine = adligne;
+		       pViewSel->VsLine = adline;
 		       if (pAb->AbLeafType == LtPicture && firstChar > 0)
 			  pViewSel->VsXPos = pBox->BxWidth;
 		       else
