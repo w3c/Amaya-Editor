@@ -303,6 +303,42 @@ Document document;
 }
 
 /* ----------------------------------------------------------------------
+   TtaChangeLastRegisteredAttr
+
+   Change the most recent editing operation registered in the editing history
+   of document, only if it's an attribute operation for element oldEl.
+   In that case, make it related to element newEl and attribute newAttr.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         TtaChangeLastRegisteredAttr (Element oldEl, Element newEl, Attribute oldAttr, Attribute newAttr, Document document)
+#else /* __STDC__ */
+void         TtaChangeLastRegisteredAttr (oldEl, newEl, oldAttr, newAttr, document)
+Element oldEl;
+Element newEl;
+Attribute oldAttr;
+Attribute newAttr;
+Document document;
+#endif /* __STDC__ */
+{
+   ChangeLastRegisteredAttr ((PtrElement)oldEl, (PtrElement)newEl, (PtrAttribute)oldAttr, (PtrAttribute)newAttr, LoadedDocument [document - 1]);
+}
+
+/* ----------------------------------------------------------------------
+   TtaCancelLastRegisteredOperation
+
+   Cancel the latest operation registered in the editing history of document.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void         TtaCancelLastRegisteredOperation (Document document)
+#else /* __STDC__ */
+void         TtaCancelLastRegisteredOperation (document)
+Document document;
+#endif /* __STDC__ */
+{
+   CancelLastEditFromHistory (LoadedDocument [document - 1]);
+}
+
+/* ----------------------------------------------------------------------
    TtaUndoNoRedo
 
    Undo the latest sequence of editing operations recorded in the history

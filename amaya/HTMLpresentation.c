@@ -23,6 +23,7 @@
 #include "HTMLimage_f.h"
 #include "html2thot_f.h"
 #include "presentation.h"
+#include "undo.h"
 
 /*----------------------------------------------------------------------
  MakeASpan
@@ -134,6 +135,12 @@ void DeleteSpanIfNoAttr (el, doc, firstChild, lastChild)
 	   *lastChild = child;
 	   child = next;
 	   }
+	/* The standard Thot command has registered the operation that
+ 	   removed the attribute from the SPAN element.  Cancel this operation
+	   from the editing history and register the removal for the TEXT
+	   element instead */
+	if (*firstChild)
+	   TtaChangeLastRegisteredAttr (span, *firstChild, NULL, NULL, doc);
 	TtaDeleteTree (span, doc);
 	}
      }
@@ -176,19 +183,24 @@ void  AttrToSpan (elem, attr, doc)
 	span = parent;
       if (span != NULL)
         {
-	  oldValue = (STRING) TtaGetMemory (sizeof (CHAR) * ATTRLEN);
-	  TtaGiveAttributeType (attr, &attrType, &kind);
+          oldValue = (STRING) TtaGetMemory (sizeof (CHAR) * ATTRLEN);
+          TtaGiveAttributeType (attr, &attrType, &kind);
 	  newAttr = TtaGetAttribute (span, attrType);
 	  if (newAttr == NULL)
 	     {
 	     newAttr = TtaNewAttribute (attrType);
 	     TtaAttachAttribute (span, newAttr, doc);
 	     }
-	  len = ATTRLEN - 1;
-	  TtaGiveTextAttributeValue (attr, oldValue, &len);
-	  TtaRemoveAttribute (elem, attr, doc);
+          len = ATTRLEN - 1;
+          TtaGiveTextAttributeValue (attr, oldValue, &len);
 	  TtaSetAttributeText (newAttr, oldValue, span, doc);
-	  TtaFreeMemory (oldValue);
+	  /* The standard Thot command has registered the operation that
+ 	     added the attribute to the TEXT element.  Cancel this operation
+	     from the editing history and register the new attribute on the
+	     span element instead */
+	  TtaChangeLastRegisteredAttr (elem, span, attr, newAttr, doc);
+          TtaRemoveAttribute (elem, attr, doc);
+          TtaFreeMemory (oldValue);
         }
     }
 }

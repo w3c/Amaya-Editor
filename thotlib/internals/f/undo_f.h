@@ -16,6 +16,11 @@ extern void AddAttrEditOpInHistory ( PtrAttribute pAttr,
                                      PtrDocument pDoc,
                                      boolean save,
                                      boolean removeWhenUndoing );
+extern void ChangeLastRegisteredAttr ( PtrElement oldEl,
+                                       PtrElement newEl,
+                                       PtrAttribute oldAttr,
+                                       PtrAttribute newAttr,
+                                       PtrDocument pDoc );
 extern void CancelLastEditFromHistory ( PtrDocument pDoc );
 extern void OpenHistorySequence ( PtrDocument pDoc,
                                   PtrElement firstSel,
@@ -42,6 +47,11 @@ extern void AddAttrEditOpInHistory (/* PtrAttribute pAttr,
                                        PtrDocument pDoc,
                                        boolean save,
                                        boolean removeWhenUndoing */);
+extern void ChangeLastRegisteredAttr (/* PtrElement oldEl,
+                                         PtrElement newEl,
+                                         PtrAttribute oldAttr,
+                                         PtrAttribute newAttr,
+                                         PtrDocument pDoc */);
 extern void CancelLastEditFromHistory (/* PtrDocument pDoc */);
 extern void OpenHistorySequence (/* PtrDocument pDoc,
                                     PtrElement firstSel,

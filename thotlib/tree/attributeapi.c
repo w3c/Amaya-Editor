@@ -237,6 +237,9 @@ Document            document;
   UserErrorCode = 0;
   if (element == NULL || attribute == NULL)
     TtaError (ERR_invalid_parameter);
+  else if (((PtrAttribute) attribute)->AeAttrSSchema == NULL ||
+	   ((PtrElement) element)->ElStructSchema == NULL)
+    TtaError (ERR_invalid_parameter);
   else
     {
       pAttr = ((PtrElement) element)->ElFirstAttr;

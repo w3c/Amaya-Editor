@@ -482,7 +482,8 @@ boolean removeWhenUndoing;
 #endif /* __STDC__ */
 {
    PtrEditOperation	editOp;
-   PtrAttribute		pCopy;
+   PtrAttribute		pCopy, pOldAttr;
+   boolean		merge;
 
    if (!pEl && !pAttr)
       return;
@@ -493,20 +494,46 @@ boolean removeWhenUndoing;
       return;
      }
 
-   /* create a new operation descriptor in the history */
-   editOp = (PtrEditOperation) TtaGetMemory (sizeof (EditOperation));
-   /* link the new operation descriptor in the history */
-   editOp->EoPreviousOp = pDoc->DocLastEdit;
-   if (pDoc->DocLastEdit)
-      pDoc->DocLastEdit->EoNextOp = editOp;
-   pDoc->DocLastEdit = editOp;
-   editOp->EoNextOp = NULL;
-   editOp->EoType = EtAttribute;
-   editOp->EoElement = pEl;
+   /* if the previous operation recorded is about the same attribute for the
+      same element, just modify the previous operation */
+   merge = FALSE;
+   if (!save || !removeWhenUndoing)
+     if (pDoc->DocLastEdit)
+       {
+       editOp = pDoc->DocLastEdit;
+       if (editOp->EoType == EtAttribute)
+	  if (editOp->EoElement == pEl)
+	     {
+	     pOldAttr = NULL;
+	     if (save && editOp->EoSavedAttribute == NULL)
+		pOldAttr = editOp->EoCreatedAttribute;
+	     else if (removeWhenUndoing && editOp->EoCreatedAttribute == NULL)
+		pOldAttr = editOp->EoSavedAttribute;
+	     if (pOldAttr)
+		if (pAttr->AeAttrSSchema == pOldAttr->AeAttrSSchema)
+		   if (pAttr->AeAttrNum == pOldAttr->AeAttrNum)
+		      merge = TRUE;
+	     }
+       }
+
+   if (!merge)
+      {
+      /* create a new operation descriptor in the history */
+      editOp = (PtrEditOperation) TtaGetMemory (sizeof (EditOperation));
+      /* link the new operation descriptor in the history */
+      editOp->EoPreviousOp = pDoc->DocLastEdit;
+      if (pDoc->DocLastEdit)
+         pDoc->DocLastEdit->EoNextOp = editOp;
+      pDoc->DocLastEdit = editOp;
+      editOp->EoNextOp = NULL;
+      editOp->EoType = EtAttribute;
+      editOp->EoElement = pEl;
+      editOp->EoCreatedAttribute = NULL;
+      editOp->EoSavedAttribute = NULL;
+      }
+
    if (removeWhenUndoing)
       editOp->EoCreatedAttribute = pAttr;
-   else
-      editOp->EoCreatedAttribute = NULL;
 
    if (save)
      /* copy the attribute concerned by the operation and attach it to the
@@ -518,8 +545,62 @@ boolean removeWhenUndoing;
 	has been copied, change these references to the copy */
      ChangeAttrPointersOlderEdits (editOp, pAttr, pCopy);
      }
-   else
-     editOp->EoSavedAttribute = NULL;
+}
+
+/*----------------------------------------------------------------------
+   ChangeLastRegisteredAttr
+   Change the most recent editing operation registered in the editing history
+   of document, only if it's an attribute operation for element oldEl.
+   In that case, make it related to element newEl and attribute newAttr.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void ChangeLastRegisteredAttr (PtrElement oldEl, PtrElement newEl, PtrAttribute oldAttr, PtrAttribute newAttr, PtrDocument pDoc)
+#else  /* __STDC__ */
+void ChangeLastRegisteredAttr (oldEl, newEl, oldAttr, newAttr, pDoc)
+PtrElement oldEl;
+PtrElement newEl;
+PtrAttribute oldAttr;
+PtrAttribute newAttr;
+PtrDocument pDoc;
+
+#endif /* __STDC__ */
+{
+   boolean	done;
+
+   done = FALSE;
+   if (pDoc->DocLastEdit)
+     if (pDoc->DocLastEdit->EoType == EtAttribute)
+        if (pDoc->DocLastEdit->EoElement == oldEl)
+	   {
+	   pDoc->DocLastEdit->EoElement = newEl;
+	   if (newAttr)
+	      {
+	      pDoc->DocLastEdit->EoCreatedAttribute = newAttr;
+	      /* if older editing operations in the history refer to the
+	      attribute that has been copied, change these references to the
+	      copy */
+	      ChangeAttrPointersOlderEdits (pDoc->DocLastEdit, oldAttr,
+					    newAttr);
+	      }
+	   done = TRUE;
+	   }
+   if (!done)
+     if (pDoc->DocLastUndone)
+        if (pDoc->DocLastUndone->EoType == EtAttribute)
+           if (pDoc->DocLastUndone->EoElement == oldEl)
+	      {
+	      pDoc->DocLastUndone->EoElement = newEl;
+	      if (newAttr)
+		 {
+	         pDoc->DocLastUndone->EoCreatedAttribute = newAttr;
+	         /* if older editing operations in the history refer to the
+		 attribute that has been copied, change these references to
+		 the copy */
+	         ChangeAttrPointersOlderEdits (pDoc->DocLastUndone, oldAttr,
+					       newAttr);
+		 }
+	      done = TRUE;
+	      }
 }
 
 /*----------------------------------------------------------------------
@@ -676,7 +757,6 @@ PtrDocument pDoc;
 
 /*----------------------------------------------------------------------
    CancelLastSequenceFromHistory
-
    Cancel the last sequence of editing operations registered in the
    editing history of document.
   ----------------------------------------------------------------------*/
@@ -705,30 +785,37 @@ PtrDocument         pDoc;
 /*----------------------------------------------------------------------
    UndoOperation
 
-   Undo the editing operation described by editOp for document doc.
-   If reverse, editOp will decribe the reverse editing operation when
-   returning.
+   Undo the latest editing operation registered in the Undo (if undo==TRUE)
+   or Redo (if redo==FALSE) queue of document doc.
+   If reverse, the editing operation descriptor will decribe the reverse
+   editing operation when returning.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void	UndoOperation (PtrEditOperation editOp, Document doc, boolean reverse)
+static void	UndoOperation (boolean undo, Document doc, boolean reverse)
 #else  /* __STDC__ */
-static void	UndoOperation (editOp, doc, reverse)
-PtrEditOperation editOp;
+static void	UndoOperation (undo, doc, reverse)
+boolean undo;
 Document doc;
 boolean reverse
 
 #endif /* __STDC__ */
 {
+   PtrEditOperation	editOp;
    PtrElement		pEl, pSibling,
                         newParent, newPreviousSibling, newCreatedElement,
-                        newSavedElement, newElement;
-   PtrAttribute         newCreatedAttribute, newSavedAttribute;
+                        newSavedElement;
+   PtrAttribute         SavedAttribute, CreatedAttribute;
    PtrDocument		pDoc;
+   PtrEditOperation	queue;
    NotifyElement	notifyEl;
    NotifyAttribute	notifyAttr;
    int			i, nSiblings;
 
    pDoc = LoadedDocument [doc - 1];
+   if (undo)
+      editOp = pDoc->DocLastEdit;
+   else
+      editOp = pDoc->DocLastUndone;
 
    if (editOp->EoType == EtDelimiter)
       /* end of a sequence */
@@ -801,19 +888,20 @@ boolean reverse
 
    if (editOp->EoType == EtAttribute)
       {
-      if (reverse)
-	 {
-	 newElement = NULL;
-	 newCreatedAttribute = NULL;
-	 newSavedAttribute = NULL;
-	 }
+      SavedAttribute = editOp->EoSavedAttribute;
+      CreatedAttribute = editOp->EoCreatedAttribute;
+      editOp->EoSavedAttribute = NULL;
+
       notifyAttr.document = doc;
       notifyAttr.element = (Element) (editOp->EoElement);
       /* delete the attribute that has to be removed from the element */
       if (editOp->EoElement && editOp->EoCreatedAttribute)
          {
          /* tell the application that an attribute will be removed */
-         notifyAttr.event = TteAttrDelete;
+	 if (SavedAttribute)
+            notifyAttr.event = TteAttrModify;	    
+	 else
+            notifyAttr.event = TteAttrDelete;
          notifyAttr.attribute = (Attribute) (editOp->EoCreatedAttribute);
          notifyAttr.attributeType.AttrSSchema =
 			(SSchema) (editOp->EoCreatedAttribute->AeAttrSSchema);
@@ -822,52 +910,52 @@ boolean reverse
          CallEventAttribute (&notifyAttr, TRUE);
          if (reverse)
 	    {
-	    newElement = editOp->EoElement;
-            newSavedAttribute = AddAttrToElem (NULL, editOp->EoCreatedAttribute, NULL);
-            /* if older editing operations in the history refer to the
+            editOp->EoSavedAttribute = AddAttrToElem (NULL,
+					     editOp->EoCreatedAttribute, NULL);
+            /* if older editing operations in the queue refer to the
 	       attribute that has been copied, change these references to the
 	       copy */
-            ChangeAttrPointersOlderEdits (editOp, editOp->EoCreatedAttribute,
-					  newSavedAttribute);
+	    if (undo)
+	       queue = pDoc->DocLastUndone;
+	    else
+	       queue = pDoc->DocLastEdit;
+            ChangeAttrPointersOlderEdits (queue, editOp->EoCreatedAttribute,
+					  editOp->EoSavedAttribute);
 	    }
          /* remove the attribute */
          TtaRemoveAttribute ((Element) (editOp->EoElement),
 			     (Attribute)(editOp->EoCreatedAttribute), doc);
-         notifyAttr.attribute = NULL;
-         /* tell the application that an attribute has been removed */
-         CallEventAttribute (&notifyAttr, FALSE);	    
+	 if (reverse)
+	    editOp->EoCreatedAttribute = NULL;
+	 if (!SavedAttribute)
+	    {
+            notifyAttr.attribute = NULL;
+            /* tell the application that an attribute has been removed */
+            CallEventAttribute (&notifyAttr, FALSE);
+	    }	    
          }
       /* put the saved attribute (if any) on the element */
-      if (editOp->EoElement && editOp->EoSavedAttribute)
+      if (editOp->EoElement && SavedAttribute)
          {
-         /* tell the application that an attribute will be created */
-         notifyAttr.event = TteAttrCreate;
-         notifyAttr.attribute = NULL;
-         notifyAttr.attributeType.AttrSSchema =
-			(SSchema) (editOp->EoSavedAttribute->AeAttrSSchema);
-         notifyAttr.attributeType.AttrTypeNum =
-			editOp->EoSavedAttribute->AeAttrNum;
-         CallEventAttribute (&notifyAttr, TRUE);
+	 if (!CreatedAttribute)
+	    {
+            /* tell the application that an attribute will be created */
+            notifyAttr.event = TteAttrCreate;
+            notifyAttr.attribute = NULL;
+            notifyAttr.attributeType.AttrSSchema =
+				    (SSchema) (SavedAttribute->AeAttrSSchema);
+            notifyAttr.attributeType.AttrTypeNum = SavedAttribute->AeAttrNum;
+            CallEventAttribute (&notifyAttr, TRUE);
+	    }
          /* put the attribute on the element */
          TtaAttachAttribute ((Element)(editOp->EoElement),
-			     (Attribute)(editOp->EoSavedAttribute), doc);
+			     (Attribute)(SavedAttribute), doc);
 	 if (reverse)
-	    {
-	    newElement = editOp->EoElement;
-	    newCreatedAttribute = editOp->EoSavedAttribute;
-	    }
+	    editOp->EoCreatedAttribute = SavedAttribute;
          /* tell the application that an attribute has been put */
-         notifyAttr.attribute = (Attribute) (editOp->EoSavedAttribute);
+         notifyAttr.attribute = (Attribute) (SavedAttribute);
          CallEventAttribute (&notifyAttr, FALSE);	    
-         /* the attribute is no longer associated with the history block */
-         editOp->EoSavedAttribute = NULL;
          }
-      if (reverse)
-	 {
-	 editOp->EoElement = newElement;
-	 editOp->EoCreatedAttribute = newCreatedAttribute;
-	 editOp->EoSavedAttribute = newSavedAttribute;
-	 }
       }
 
    if (editOp->EoType == EtElement)
@@ -884,7 +972,7 @@ boolean reverse
          {
          pEl = editOp->EoCreatedElement;
          /* tell the application that an element will be removed from the
-         abstract tree */
+            abstract tree */
          SendEventSubTree (TteElemDelete, pDoc, pEl,
 			   TTE_STANDARD_DELETE_LAST_ITEM);
          /* prepare event TteElemDelete to be sent to the application */
@@ -1060,7 +1148,7 @@ Document            doc;
    doit = TRUE;
    while (doit)
       {
-      UndoOperation (pDoc->DocLastEdit, doc, FALSE);
+      UndoOperation (TRUE, doc, FALSE);
       if (pDoc->DocLastEdit->EoType == EtDelimiter)
 	 /* end of sequence */
 	 doit = FALSE;
@@ -1096,7 +1184,8 @@ View                view;
    OpenRedoSequence (doc);
 
    TtaUnselect (doc);
-   TtaSetDisplayMode (doc, DeferredDisplay);
+/*****   TtaSetDisplayMode (doc, DeferredDisplay);
+*****/   TtaSetDisplayMode (doc, DisplayImmediately);
    /* disable structure checking */
    TtaSetStructureChecking (FALSE, doc);
 
@@ -1104,7 +1193,7 @@ View                view;
    doit = TRUE;
    while (doit)
       {
-      UndoOperation (pDoc->DocLastEdit, doc, TRUE);
+      UndoOperation (TRUE, doc, TRUE);
       if (pDoc->DocLastEdit->EoType == EtDelimiter)
 	 /* end of sequence */
 	 {
@@ -1148,7 +1237,8 @@ View                view;
    TtaUnselect (doc);
    OpenHistorySequence (pDoc, (PtrElement)firstSel, (PtrElement)lastSel,
 			firstSelChar, lastSelChar);
-   TtaSetDisplayMode (doc, DeferredDisplay);
+/*****   TtaSetDisplayMode (doc, DeferredDisplay);
+*****/   TtaSetDisplayMode (doc, DisplayImmediately);
    /* disable structure checking */
    TtaSetStructureChecking (FALSE, doc);
 
@@ -1156,7 +1246,7 @@ View                view;
    doit = TRUE;
    while (doit)
       {
-      UndoOperation (pDoc->DocLastUndone, doc, TRUE);
+      UndoOperation (FALSE, doc, TRUE);
       if (pDoc->DocLastUndone->EoType == EtDelimiter)
 	 /* end of sequence */
 	 {

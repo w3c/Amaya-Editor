@@ -138,6 +138,22 @@ extern void         TtaClearUndoHistory (Document document);
 extern void         TtaCancelLastRegisteredSequence (Document document);
 
 /* ----------------------------------------------------------------------
+   TtaChangeLastRegisteredAttr
+ 
+   Change the most recent editing operation registered in the editing history
+   of document, only if it's an attribute operation for element oldEl.
+   In that case, make it related to element newEl and attribute newAttr.
+  ----------------------------------------------------------------------*/
+extern void         TtaChangeLastRegisteredAttr (Element oldEl, Element newEl, Attribute oldAttr, Attribute newAttr, Document document);
+
+/* ----------------------------------------------------------------------
+   TtaCancelLastRegisteredOperation
+ 
+   Cancel the latest operation registered in the editing history of document.
+  ----------------------------------------------------------------------*/
+extern void         TtaCancelLastRegisteredOperation (Document document);
+
+/* ----------------------------------------------------------------------
    TtaUndoNoRedo
  
    Undo the latest sequence of editing operations recorded in the history
@@ -157,6 +173,8 @@ extern void         TtaRegisterAttributeDelete (/* Attribute attribute, Element 
 extern void         TtaRegisterAttributeReplace (/* Attribute attribute, Element element, Document document */);
 extern void         TtaClearUndoHistory (/* Document document */);
 extern void         TtaCancelLastRegisteredSequence (/* Document document */);
+extern void         TtaChangeLastRegisteredAttr (/* Element oldEl, Element newEl, Attribute oldAttr, Attribute newAttr, Document document */);
+extern void         TtaCancelLastRegisteredOperation (/* Document document */);
 extern void         TtaUndoNoRedo (/* Document document */);
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
