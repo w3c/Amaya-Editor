@@ -153,7 +153,7 @@ void   GetClickedBox (PtrBox *result, PtrAbstractBox pRootAb, int frame,
      MAX_DISTANCE when no box is selected */
   dist = MAX_DISTANCE;
   pFrame = &ViewFrameTable[frame - 1];
-  
+
   if (pFrame->FrAbstractBox != NULL)
     pBox = pFrame->FrAbstractBox->AbBox;
   
