@@ -408,9 +408,17 @@ PtrSSchema          pSS;
    PathBuffer          buf;
    PathBuffer          dirBuffer;
    int                 i;
+#  ifdef _WINDOWS
+   char*               pwdPath;
+#  endif /* _WINDOWS */
 
    /* compose le nom du fichier a ouvrir */
+#  if 0 
+   pwdPath = TtaGetEnvString ("PWD");
+   strncpy (dirBuffer, pwdPath, MAX_PATH);
+#  endif  /* !_WINDOWS_COMPILERS */
    strncpy (dirBuffer, SchemaPath, MAX_PATH);
+/* #  endif * _WINDOWS_COMPILERS */
    MakeCompleteName (fileName, "STR", dirBuffer, buf, &i);
 
    /* ouvre le fichier */
