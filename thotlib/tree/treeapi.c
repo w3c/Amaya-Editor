@@ -1681,7 +1681,10 @@ Document            document;
 
 #endif /* __STDC__ */
 
-{ 
+{
+  int	ret;
+
+  ret = 0;
   if (document < 1 || document > MAX_DOCUMENTS)
     {
       TtaError (ERR_invalid_document_parameter);
@@ -1691,7 +1694,8 @@ Document            document;
       TtaError (ERR_invalid_document_parameter);
     }
   else
-    return !(boolean)(~COMPLETE_CHECK_MASK | (LoadedDocument[document - 1]->DocCheckingMode));
+    ret = !(boolean)(~COMPLETE_CHECK_MASK | (LoadedDocument[document - 1]->DocCheckingMode));
+  return ret;
 }
 
 

@@ -306,7 +306,7 @@ int                *clipOrg;
     if (pAb == NULL)
       stop = TRUE;
     else if (!pAb->AbPresentationBox)
-      /* the page break line is not a presentation box, all others are
+      /* the page break line is not a presentation box, all others are */
       /* presentation boxes */
       {
 	stop = TRUE;
