@@ -154,6 +154,12 @@ Amaya/batch/comp_ico.ico \
 Amaya/batch/comp_toolbar.bmp \
 Amaya/batch/*.c \
 Amaya/batch/f/*.h \
+Amaya/davlib/Makefile.in \
+Amaya/davlib/*.c \
+Amaya/davlib/f/*.h \
+Amaya/davlib/h/*.h \
+Amaya/davlib/tree/*.c \
+Amaya/davlib/tre/h/*.h \
 Amaya/doc/html/*.html* \
 Amaya/doc/html/*/*.html* \
 Amaya/doc/html/*.css \
