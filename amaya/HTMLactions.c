@@ -1634,7 +1634,6 @@ void UpdateTitle (Element el, Document doc)
 void FreeDocumentResource (Document doc)
 {
   Document	     sourceDoc;
-  char               htmlErrFile [80];
   char              *tempdocument;
   int		     i;
 
@@ -1642,8 +1641,7 @@ void FreeDocumentResource (Document doc)
     return;
 
   TtaSetItemOff (doc, 1, Views, BShowLogFile);
-  HTMLErrorsFound = FALSE;
-  XMLErrorsFound = FALSE;
+  CleanUpParsingErrors ();
 
   if (DocumentURLs[doc] != NULL)
     {
@@ -1653,11 +1651,8 @@ void FreeDocumentResource (Document doc)
 	  tempdocument = GetLocalPath (doc, DocumentURLs[doc]);
 	  TtaFileUnlink (tempdocument);
 	  TtaFreeMemory (tempdocument);
-	  /* remove the log file */
-	  sprintf (htmlErrFile, "%s%c%d%cPARSING.ERR",
-		    TempFileDirectory, DIR_SEP, doc, DIR_SEP);
-	  if (TtaFileExist (htmlErrFile))
-	    TtaFileUnlink (htmlErrFile);
+	  /* remove the Parsing errors file */
+	  RemoveParsingErrors (doc);
 
 #ifdef ANNOTATIONS
 	  ANNOT_FreeDocumentResource (doc);

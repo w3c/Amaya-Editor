@@ -20,6 +20,8 @@ extern void InsertXmlElement ( Element *el );
 extern Element XmlLastLeafInElement ( Element el );
 extern void PutInXmlElement ( char *data );
 extern void FreeXmlParserContexts ( void );
+extern Element ChangeSvgImageType ( Element el,
+                                    Document doc );
 extern ThotBool ParseXmlSubTree ( char *xmlBuffer,
                                   char *fileName,
                                   Element el,
@@ -67,6 +69,8 @@ extern void InsertXmlElement (/* Element *el */);
 extern Element XmlLastLeafInElement (/* Element el */);
 extern void PutInXmlElement (/* char *data */);
 extern void FreeXmlParserContexts (/* void */);
+extern Element ChangeSvgImageType (/* Element el,
+                                      Document doc */);
 extern ThotBool ParseXmlSubTree (/* char *xmlBuffer,
                                     char *fileName,
                                     Element el,

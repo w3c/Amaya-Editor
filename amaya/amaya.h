@@ -364,6 +364,9 @@ THOT_EXPORT ThotBool   XMLErrorsFound;
 THOT_EXPORT ThotBool   CSSErrorsFound;
 THOT_EXPORT ThotBool   XMLErrorsFoundInProfile;
 THOT_EXPORT ThotBool   XMLNotWellFormed;
+THOT_EXPORT ThotBool   XMLCharacterNotSupported;
+THOT_EXPORT ThotBool   XMLUnknownEncoding;
+
 THOT_EXPORT ThotBool   IdApplyToSelection; /* used in the Make ID menu */
 THOT_EXPORT FILE      *ErrFile;
 typedef enum

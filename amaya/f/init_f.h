@@ -27,6 +27,10 @@ extern void DocStatusUpdate ( Document document,
 extern void ChangeToEditorMode ( Document doc );
 extern void ChangeToBrowserMode ( Document doc );
 extern void SetBrowserEditor ( Document doc );
+extern ThotBool OpenParsingErrors ( Document document );
+extern void RemoveParsingErrors ( Document document );
+extern void CleanUpParsingErrors ( void );
+extern void CheckParsingErrors ( Document document );
 extern void UpdateTransfer ( Document document );
 extern void StopTransfer ( Document document,
                            View view );
@@ -195,6 +199,10 @@ extern void DocStatusUpdate (/* Document document,
 extern void ChangeToEditorMode (/* Document doc */);
 extern void ChangeToBrowserMode (/* Document doc */);
 extern void SetBrowserEditor (/* Document doc */);
+extern ThotBool OpenParsingErrors (/* Document document */);
+extern void RemoveParsingErrors (/* Document document */);
+extern void CleanUpParsingErrors (/* void */);
+extern void CheckParsingErrors (/* Document document */);
 extern void UpdateTransfer (/* Document document */);
 extern void StopTransfer (/* Document document,
                              View view */);

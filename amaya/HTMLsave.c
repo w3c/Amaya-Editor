@@ -956,32 +956,22 @@ void         SetNamespacesAndDTD (Document doc)
 /*----------------------------------------------------------------------
    RestartParser
   ----------------------------------------------------------------------*/
-static void RestartParser (Document doc, char *localFile, char *tempdir,
-			   char *documentname)
+static void     RestartParser (Document doc, char *localFile,
+			       char *tempdir, char *documentname)
 {
-  CHARSET             charset;
-  char              htmlErrFile [80];
-  char              charsetname[MAX_LENGTH];
-  int                 parsingLevel;
-  int                 i;
-  ThotBool            xmlDec, withDoctype, isXML;
-  DocumentType        thotType;
+  CHARSET       charset;
+  char          charsetname[MAX_LENGTH];
+  int           parsingLevel;
+  int           i;
+  ThotBool      xmlDec, withDoctype, isXML;
+  DocumentType  thotType;
 
-  /* clean up previous log file */
-  HTMLErrorsFound = FALSE;
-  XMLErrorsFound = FALSE;
-  CSSErrorsFound = FALSE;
-  /* close the error file */
-  if (ErrFile)
-    {
-      fclose (ErrFile);
-      ErrFile = NULL;
-    }
-  /* remove the log file */
-  sprintf (htmlErrFile, "%s%c%d%cPARSING.ERR",
-	    TempFileDirectory, DIR_SEP, doc, DIR_SEP);
-  if (TtaFileExist (htmlErrFile))
-    TtaFileUnlink (htmlErrFile);
+  /* clean up previous Parsing errors file */
+  CleanUpParsingErrors ();
+
+  /* remove the Parsing errors file */
+  RemoveParsingErrors (doc);
+
   for (i = 1; i < DocumentTableLength; i++)
     if (DocumentURLs[i] != NULL)
       if (DocumentSource[i] == doc && DocumentTypes[i] == docLog)
@@ -992,7 +982,7 @@ static void RestartParser (Document doc, char *localFile, char *tempdir,
 	  TtaFileUnlink (DocumentURLs[i]);
 	  TtaFreeMemory (DocumentURLs[i]);
 	  DocumentURLs[i] = NULL;
-	  /* switch off the button Show Log file */
+	  /* switch off the button Show Parsing errors file */
 	  TtaSetItemOff (doc, 1, Views, BShowLogFile);
 	}
 
@@ -1014,25 +1004,13 @@ static void RestartParser (Document doc, char *localFile, char *tempdir,
   else
     StartParser (doc, localFile, documentname, tempdir, localFile, FALSE);
 
-  /* check parsing errors */
-  if ((HTMLErrorsFound || XMLErrorsFound || CSSErrorsFound) &&
-      ErrFile)
-    {
-      /* Some errors are detected */
-      fclose (ErrFile);
-      ErrFile = NULL;
-      TtaSetItemOn (doc, 1, Views, BShowLogFile);
-     }
-  else
-    TtaSetItemOff (doc, 1, Views, BShowLogFile);
-  HTMLErrorsFound = FALSE;
-  XMLErrorsFound = FALSE;
-  CSSErrorsFound = FALSE;
-
   /* fetch and display all images referred by the document */
   DocNetworkStatus[doc] = AMAYA_NET_ACTIVE;
   FetchAndDisplayImages (doc, AMAYA_LOAD_IMAGE);
   DocNetworkStatus[doc] = AMAYA_NET_INACTIVE;
+
+  /* check parsing errors */
+  CheckParsingErrors (doc);
 }
 
 /*----------------------------------------------------------------------

@@ -382,3 +382,10 @@ PtrElement CreateSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before, Tho
 void CloseAttributeDialogues (PtrDocument pDoc)
 {
 }
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+ThotBool OpenParsingErrors (Document document)
+{
+  return TRUE;
+}

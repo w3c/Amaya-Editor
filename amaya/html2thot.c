@@ -503,9 +503,6 @@ static int          CharRank = 0;	  /* rank of the last matching
 static void         ProcessStartGI (char* GIname);
 static void         EndOfAttrValue (char c);
 
-/* Information for errors related to the current profile */
-static ThotBool     HTMLErrorsFoundInProfile;
-
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
@@ -900,13 +897,9 @@ void HTMLParseError (Document doc, char* msg)
 
    HTMLErrorsFound = TRUE;
    if (!ErrFile)
-     {
-      sprintf (fileName, "%s%c%d%cPARSING.ERR", TempFileDirectory,
-		DIR_SEP, doc, DIR_SEP);
-      if ((ErrFile = fopen (fileName, "w")) == NULL)
-         return;
-     }
-
+     if (OpenParsingErrors (doc) == FALSE)
+       return;
+   
    if (doc == HTMLcontext.doc)
      {
        /* the error message is related to the document being parsed */
@@ -2718,14 +2711,14 @@ static void           ProcessStartGI (char* GIname)
 	  pHTMLGIMapping[entry].Level > ParsingLevel[HTMLcontext.doc])
 	{
 	  /* Invalid element for the current profile */
-	  /* doesn't process that element */
+	  /* don't process that element */
 	  if (strlen (GIname) > MaxMsgLength - 20)
 	    GIname[MaxMsgLength - 20] = EOS;
 	  sprintf (msgBuffer,
 		   "Invalid start element <%s> for the current profile",
 		   GIname);
 	  HTMLParseError (HTMLcontext.doc, msgBuffer);
-	  HTMLErrorsFoundInProfile = TRUE;
+	  XMLErrorsFoundInProfile = TRUE;
 	  UnknownTag = TRUE;
 	}
       else
@@ -2989,7 +2982,7 @@ static void        EndOfEndTag (char c)
 		   "Invalid end element <%s> for the current profile",
 		   inputBuffer);
 	  HTMLParseError (HTMLcontext.doc, msgBuffer);
-	  HTMLErrorsFoundInProfile = TRUE;
+	  XMLErrorsFoundInProfile = TRUE;
 	}
       else if (!CloseElement (entry, -1, FALSE))
         /* the end tag does not close any current element */
@@ -3133,7 +3126,7 @@ static void            EndOfAttrName (char c)
 		    "Invalid attribut \"%s\" for the current profile",
 		    inputBuffer);
 	   HTMLParseError (HTMLcontext.doc, msgBuffer);
-	   HTMLErrorsFoundInProfile = TRUE;
+	   XMLErrorsFoundInProfile = TRUE;
 	   UnknownAttr = TRUE;
 	   lastAttrEntry = NULL;
 	 }
@@ -6376,7 +6369,6 @@ void StartParser (Document doc, char *fileName,
   char            tempname[MAX_LENGTH];
   char            temppath[MAX_LENGTH];
   int             length;
-  char           *profile;
   ThotBool        isHTML;
 
   HTMLcontext.doc = doc;
@@ -6396,7 +6388,6 @@ void StartParser (Document doc, char *fileName,
   LgEntityName = 0;
   EntityTableEntry = 0;
   CharRank = 0;
-  HTMLErrorsFoundInProfile = FALSE;
 
   HTMLcontext.encoding = TtaGetDocumentCharset (doc);
   stream = gzopen (fileName, "r");
@@ -6559,30 +6550,6 @@ void StartParser (Document doc, char *fileName,
     }
 
    TtaSetDocumentUnmodified (doc);
-
-   if (!plainText)
-     {
-     if (XMLNotWellFormed)
-       {
-	 InitInfo ("", TtaGetMessage (AMAYA, AM_XML_NOT_WELL_FORMED));
-	 ChangeToBrowserMode (doc);
-	 XMLErrorsFound = TRUE;
-	 XMLNotWellFormed = FALSE;
-       }
-     else if (XMLErrorsFound)
-	 InitInfo ("", TtaGetMessage (AMAYA, AM_XML_ERROR));
-     else if (HTMLErrorsFoundInProfile)
-       {
-	 /* Some elements or attributes have been removed from the document */
-	 /* accordingly to the current profile */
-	 profile = TtaGetEnvString ("Profile");
-	 if (!profile)
-	   profile = "";
-	 InitConfirm3L (HTMLcontext.doc, 1,
-			TtaGetMessage (AMAYA, AM_XML_PROFILE),
-			profile, TtaGetMessage (AMAYA, AM_XML_ERROR), FALSE);
-       }
-     }
    HTMLcontext.doc = 0;
 }
 

@@ -177,9 +177,7 @@ static void  CSSParseError (char *msg, char *value)
     {
       if (!ErrFile)
 	{
-	  sprintf (fileName, "%s%c%d%cPARSING.ERR",
-		   TempFileDirectory, DIR_SEP, ParsedDoc, DIR_SEP);
-	  if ((ErrFile = fopen (fileName, "w")) == NULL)
+	  if (OpenParsingErrors (ParsedDoc) == FALSE)
 	    return;
 	}
 

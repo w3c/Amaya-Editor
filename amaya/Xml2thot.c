@@ -184,7 +184,6 @@ static ThotBool	    HTMLStyleAttribute = FALSE;
 static ThotBool	    XMLSpaceAttribute = FALSE;
 static char	    currentElementContent = ' ';
 static char	    currentElementName[40];
-static ThotBool     XMLUnknownEncoding;
 static ThotBool     IgnoreCommentAndPi;
 
 /* Global variable to handle white-space in XML documents */
@@ -198,8 +197,6 @@ static int          extraLineRead = 0;
 static int          extraOffset = 0;
 static int          htmlLineRead = 0;
 static int          htmlCharRead = 0;
-
-static ThotBool     XMLCharacterNotSupported;
 
 /* Virtual DOCTYPE Declaration */
 #define DECL_DOCTYPE "<!DOCTYPE html PUBLIC \"\" \"\">\n"
@@ -481,81 +478,75 @@ void XmlSetElemLineNumber (Element el)
   ----------------------------------------------------------------------*/
 void  XmlParseError (ErrorType type, unsigned char *msg, int line)
 {
-  char       fileName [100];
-
-   if (!ErrFile)
-     {
-       sprintf (fileName, "%s%c%d%cPARSING.ERR",
-		TempFileDirectory, DIR_SEP, XMLcontext.doc, DIR_SEP);
-       if ((ErrFile = fopen (fileName, "w")) == NULL)
-         return;
-     }
-
-   if (docURL != NULL)
-     {
-       fprintf (ErrFile, "*** Errors/warnings in %s\n", docURL);
-       TtaFreeMemory (docURL);
-       docURL = NULL;
-     }
-   
-   switch (type)
-     {
-     case errorEncoding: 
-       fprintf (ErrFile, "  %s\n", msg);
-       XMLNotWellFormed = TRUE;
-       break;
-     case errorNotWellFormed:
-       if (line == 0)
-	 {
-	   fprintf (ErrFile, "  line %d, char %d: %s\n",
-		    XML_GetCurrentLineNumber (Parser) + htmlLineRead -  extraLineRead,
-		    XML_GetCurrentColumnNumber (Parser),
-		    msg);
-	 }
-       else
-	 fprintf (ErrFile, "  line %d: %s\n", line, msg); 
-       XMLNotWellFormed = TRUE;
-       break;
-     case errorCharacterNotSupported:
-       if (line == 0)
-	 {
-	   fprintf (ErrFile, "  line %d, char %d: %s\n",
-		    XML_GetCurrentLineNumber (Parser) + htmlLineRead -  extraLineRead,
-		    XML_GetCurrentColumnNumber (Parser),
-		    msg);
-	 }
-       else
-	 fprintf (ErrFile, "  line %d: %s\n", line, msg); 
-       XMLCharacterNotSupported = TRUE;
-       break;
-     case errorParsing:
-       if (line == 0)
-	 {
-	   fprintf (ErrFile, "  line %d, char %d: %s\n",
-		    XML_GetCurrentLineNumber (Parser) + htmlLineRead -  extraLineRead,
-		    XML_GetCurrentColumnNumber (Parser),
-		    msg);
-	 }
-       else
-	 fprintf (ErrFile, "  line %d: %s\n", line, msg); 
-       XMLErrorsFound = TRUE;
-       break;
-     case errorParsingProfile:
-       if (line == 0)
-	 {
-	   fprintf (ErrFile, "  line %d, char %d: %s\n",
-		    XML_GetCurrentLineNumber (Parser) + htmlLineRead -  extraLineRead,
-		    XML_GetCurrentColumnNumber (Parser),
-		    msg);
-	 }
-       else
-	 fprintf (ErrFile, "  line %d: %s\n", line, msg); 
-       XMLErrorsFoundInProfile = TRUE;
-       break;
-     case undefinedEncoding:
-       fprintf (ErrFile, "  %s\n", msg);
-       break;
-     }
+  if (!ErrFile)
+    if (OpenParsingErrors (XMLcontext.doc) == FALSE)
+      return;
+  
+  if (docURL != NULL)
+    {
+      fprintf (ErrFile, "*** Errors/warnings in %s\n", docURL);
+      TtaFreeMemory (docURL);
+      docURL = NULL;
+    }
+  
+  switch (type)
+    {
+    case errorEncoding: 
+      fprintf (ErrFile, "  %s\n", msg);
+      XMLNotWellFormed = TRUE;
+      break;
+    case errorNotWellFormed:
+      if (line == 0)
+	{
+	  fprintf (ErrFile, "  line %d, char %d: %s\n",
+		   XML_GetCurrentLineNumber (Parser) + htmlLineRead -  extraLineRead,
+		   XML_GetCurrentColumnNumber (Parser),
+		   msg);
+	}
+      else
+	fprintf (ErrFile, "  line %d: %s\n", line, msg); 
+      XMLNotWellFormed = TRUE;
+      break;
+    case errorCharacterNotSupported:
+      if (line == 0)
+	{
+	  fprintf (ErrFile, "  line %d, char %d: %s\n",
+		   XML_GetCurrentLineNumber (Parser) + htmlLineRead -  extraLineRead,
+		   XML_GetCurrentColumnNumber (Parser),
+		   msg);
+	}
+      else
+	fprintf (ErrFile, "  line %d: %s\n", line, msg); 
+      XMLCharacterNotSupported = TRUE;
+      break;
+    case errorParsing:
+      if (line == 0)
+	{
+	  fprintf (ErrFile, "  line %d, char %d: %s\n",
+		   XML_GetCurrentLineNumber (Parser) + htmlLineRead -  extraLineRead,
+		   XML_GetCurrentColumnNumber (Parser),
+		   msg);
+	}
+      else
+	fprintf (ErrFile, "  line %d: %s\n", line, msg); 
+      XMLErrorsFound = TRUE;
+      break;
+    case errorParsingProfile:
+      if (line == 0)
+	{
+	  fprintf (ErrFile, "  line %d, char %d: %s\n",
+		   XML_GetCurrentLineNumber (Parser) + htmlLineRead -  extraLineRead,
+		   XML_GetCurrentColumnNumber (Parser),
+		   msg);
+	}
+      else
+	fprintf (ErrFile, "  line %d: %s\n", line, msg); 
+      XMLErrorsFoundInProfile = TRUE;
+      break;
+    case undefinedEncoding:
+      fprintf (ErrFile, "  %s\n", msg);
+      break;
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -3798,9 +3789,6 @@ static void  InitializeXmlParsingContext (Document doc,
   XMLrootClosed = FALSE;
   IgnoreCommentAndPi = FALSE;
 
-  XMLNotWellFormed = FALSE;
-  XMLUnknownEncoding = FALSE;
-  XMLCharacterNotSupported = FALSE;
   htmlLineRead = 0;
   htmlCharRead = 0;
   
@@ -3968,6 +3956,11 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
     }
   else
     {
+      /* Set document URL */
+      tmpLen = strlen (fileName);
+      docURL = TtaGetMemory (tmpLen + 1);
+      strcpy (docURL, fileName);
+
       /* Reading of the file */
       infile = gzopen (fileName, "r");
       if (infile != 0)
@@ -3992,6 +3985,12 @@ ThotBool       ParseXmlSubTree (char     *xmlBuffer,
 
   if (svgEl != NULL && !XMLNotWellFormed)
     TtaSetAccessRight (TtaGetParent (svgEl), ReadOnly, doc);
+
+  if (docURL != NULL)
+    {
+      TtaFreeMemory (docURL);
+      docURL = NULL;
+    }
 
   TtaSetDisplayMode (doc, DisplayImmediately);
 
@@ -4304,7 +4303,6 @@ void StartXmlParser (Document doc,
   char           *s;
   char            tempname[MAX_LENGTH];
   char            temppath[MAX_LENGTH];
-  char           *profile;
   int             length, error;
   ThotBool        isXHTML;
   CHARSET         charset;
@@ -4316,8 +4314,6 @@ void StartXmlParser (Document doc,
   /* Specific Initialization */
   XMLcontext.language = TtaGetDefaultLanguage ();
   DocumentSSchema = TtaGetDocumentSSchema (doc);
-  XMLErrorsFoundInProfile = FALSE;
-  XMLErrorsFound = FALSE;
 
   /* Reading of the file */
   stream = gzopen (fileName, "r");
@@ -4365,11 +4361,6 @@ void StartXmlParser (Document doc,
       /* Is the current document a XHTML document */
       isXHTML = (strcmp (TtaGetSSchemaName (DocumentSSchema),
 			  "HTML") == 0);
-      /*
-	if (isXHTML)
-	strcpy (XMLRootName, "html");
-      */
-
       LoadUserStyleSheet (doc);
 
       TtaSetDisplayMode (doc, NoComputedDisplay);
@@ -4442,52 +4433,8 @@ void StartXmlParser (Document doc,
       TtaSetStructureChecking (1, doc);
       DocumentSSchema = NULL;
     }
-   TtaSetDocumentUnmodified (doc);
-
-   /* Display a warning if an error was found */
-   /* and set the document in read-only access mode */
-
-   if (XMLUnknownEncoding)
-     {
-       InitInfo ("", TtaGetMessage (AMAYA, AM_UNKNOWN_ENCODING));
-       ChangeToBrowserMode (doc);
-       XMLNotWellFormed = FALSE;
-       XMLErrorsFound = TRUE;
-     }
-   else
-     {
-       if (XMLNotWellFormed)
-	 {
-	   /* The document is not well-formed */
-	   InitInfo ("", TtaGetMessage (AMAYA, AM_XML_NOT_WELL_FORMED));
-	   ChangeToBrowserMode (doc);
-	   XMLErrorsFound = TRUE;
-	   XMLNotWellFormed = FALSE;
-	 }
-       else if (XMLCharacterNotSupported)
-	 {
-	   /* Some characters are not supported */
-	   InitInfo ("", TtaGetMessage (AMAYA, AM_XML_CHARACTER_ERROR));
-	   XMLErrorsFound = TRUE;
-	 }
-       else if (XMLErrorsFound)
-	 {
-	   /* Some elements or attributes are not supported */
-	   InitInfo ("", TtaGetMessage (AMAYA, AM_XML_ERROR));
-	 }
-       else if (XMLErrorsFoundInProfile)
-	 {
-	   /* Some elements or attributes are not supported */
-	   /* for the current profile */
-	   profile = TtaGetEnvString ("Profile");
-	   if (!profile)
-	     profile = "";
-	   InitConfirm3L (XMLcontext.doc, 1, TtaGetMessage (AMAYA, AM_XML_PROFILE),
-			  profile, TtaGetMessage (AMAYA, AM_XML_ERROR), FALSE);
-	   XMLErrorsFound = TRUE;
-	   XMLErrorsFoundInProfile = FALSE;    
-	 }
-     }
+  TtaSetDocumentUnmodified (doc);
+  
 }
 
 /* end of module */
