@@ -189,33 +189,37 @@ static void AddElement (unsigned char *element, CHARSET charset)
 	      AddToBuffer (tmp2);
 	      break;
 	    default:
-#ifdef _I18N_
-	      if (charset != UTF_8)
-		{
-		  TtaMBstringToWC (&element, &wc);
-		  tmp2[0] = TtaGetCharFromWC (wc, charset);
-		  element--; /* it will be incremented after */
-		}
-	      else
-#endif /* _I18N_ */
-		tmp2[0] = *element;
+	      tmp2[0] = *element;
 	      AddToBuffer (tmp2);
 	      break;
 	    }
 	}
-      /* for all other characters */
-      else if (*element == '\n')
-	  {
-	    EscapeChar (&tmp[1], __CR__);
-	    AddToBuffer (&tmp[0]);
-	    EscapeChar (&tmp[1], EOL);
-	    AddToBuffer (&tmp[0]);
-	  }
-	else
-	  {
-	    EscapeChar (&tmp[1], *element);
-	    AddToBuffer (tmp);
-	  }
+      else
+	{
+	  /* for all other characters */
+#ifdef _I18N_
+	  if (charset != UTF_8)
+	    {
+	      TtaMBstringToWC (&element, &wc);
+	      tmp2[0] = TtaGetCharFromWC (wc, charset);
+	      element--; /* it will be incremented after */
+	    }
+	  else
+#endif /* _I18N_ */
+	    tmp2[0] = *element;
+	  if (tmp2[0] == '\n')
+	    {
+	      EscapeChar (&tmp[1], __CR__);
+	      AddToBuffer (&tmp[0]);
+	      EscapeChar (&tmp[1], EOL);
+	      AddToBuffer (&tmp[0]);
+	    }
+	  else
+	    {
+	      EscapeChar (&tmp[1], tmp2[0]);
+	      AddToBuffer (tmp);
+	    }
+	}
       element++;
     }
 }
