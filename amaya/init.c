@@ -3355,12 +3355,8 @@ void*     context;
 	     newdoc = res;
 	   
 	   if (ok)
-	     {
-	       /* fetch and display all images referred by the document */
-	       if (doc == baseDoc)
-		 /* it's not a temporary document */
-		 stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_LOAD_IMAGE);
-	     }
+	     /* fetch and display all images referred by the document */
+	     stopped_flag = FetchAndDisplayImages (newdoc, AMAYA_LOAD_IMAGE);
 	 }
        else
 	 {
