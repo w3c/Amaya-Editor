@@ -69,6 +69,12 @@ extern void TtaSetFontZoom ( int zoom );
 extern void InitDialogueFonts ( char *name );
 extern void ThotFreeFont ( int frame );
 extern void ThotFreeAllFonts ( void );
+extern void LoadingArabicFont ( SpecFont fontset,
+                                PtrFont *font );
+extern int BoxArabicCharacterWidth ( CHAR_T c,
+                                     PtrTextBuffer *adbuff,
+                                     int *ind,
+                                     SpecFont specfont );
 
 #else /* __STDC__ */
 
@@ -135,6 +141,12 @@ extern void TtaSetFontZoom (/* int zoom */);
 extern void InitDialogueFonts (/* char *name */);
 extern void ThotFreeFont (/* int frame */);
 extern void ThotFreeAllFonts (/* void */);
+extern void LoadingArabicFont (/* SpecFont fontset,
+                                  PtrFont *font */);
+extern int BoxArabicCharacterWidth (/* CHAR_T c,
+                                       PtrTextBuffer *adbuff,
+                                       int *ind,
+                                       SpecFont specfont */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

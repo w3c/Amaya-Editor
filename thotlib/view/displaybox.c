@@ -54,7 +54,7 @@
     to the index given by ind and according to the orientation.it returns 
     space if it pass to another buffer
     -------------------------------------------------------------------------*/
-CHAR_T Previous_Char(PtrTextBuffer *adbuff,int *ind )
+static CHAR_T Previous_Char(PtrTextBuffer *adbuff,int *ind )
 {
   if (*ind < ( (*adbuff)->BuLength-1))
     return ((*adbuff)->BuContent[(*ind)+1]);
@@ -65,7 +65,7 @@ CHAR_T Previous_Char(PtrTextBuffer *adbuff,int *ind )
     PreviousChar do the same as NextChar but in the opposite way.It gives
     the previous Character.
     ------------------------------------------------------------------------*/
-CHAR_T Next_Char(PtrTextBuffer *adbuff, int *ind )
+static CHAR_T Next_Char(PtrTextBuffer *adbuff, int *ind )
   {
     if (*ind > 0)
       return ((*adbuff)->BuContent[(*ind)-1]);
@@ -2695,7 +2695,8 @@ CHAR_T Unicode_Map[]={
 
 
 #define Arab_length 51
-CHAR_T Arab_Map[500][500]={
+#define nbre_champs 5
+CHAR_T Arab_Map[Arab_length][nbre_champs]={
   /* codes en ArabicWeb des caracteres avec leurs possibilite 
    *  de jointure avec leurs suivants 0 ou non 1 */
 {0x00F4 , 0x00F4 , 0x00F4 , 0x00F4 , 1 },   /*hamza */
@@ -2752,6 +2753,26 @@ CHAR_T Arab_Map[500][500]={
 
 
 };
+
+
+static int recherche_dicoto(CHAR_T elmt,int p,int q)
+{
+  int q1=(int)(p+q)/2;
+  wchar_t res=Unicode_Map[q1];
+
+  if(p >= q1) 
+    return (-1);
+  if(res == elmt) 
+    return(q1);
+  else
+    {    
+      if(res< elmt) 
+	return ( recherche_dicoto(elmt,q1,q));
+      else 
+	return ( recherche_dicoto(elmt,p,q1));
+
+    }
+}
 
 
   /*---------------------------------------------------------------------
@@ -2896,15 +2917,6 @@ int GetArabFontAndIndex(CHAR_T un ,CHAR_T prec ,CHAR_T suiv ,SpecFont fontset ,P
 
 
 
-int recherche_dicoto(CHAR_T elmt,int p,int q){
-  int q1=(int)(p+q)/2;
-  wchar_t res=Unicode_Map[q1];
-  if(p>=q1)return(-1);
-  if(res == elmt) return(q1);
-  else if(res< elmt) recherche_dicoto(elmt,q1,q);
-  else recherche_dicoto(elmt,p,q1);
-  
-}
 
 
 

@@ -71,6 +71,11 @@ extern void DisplayBox ( PtrBox box,
                          int xmax,
                          int ymin,
                          int ymax );
+extern int GetArabFontAndIndex ( CHAR_T un,
+                                 CHAR_T prec,
+                                 CHAR_T suiv,
+                                 SpecFont fontset,
+                                 PtrFont *font );
 
 #else /* __STDC__ */
 
@@ -139,6 +144,11 @@ extern void DisplayBox (/* PtrBox box,
                            int xmax,
                            int ymin,
                            int ymax */);
+extern int GetArabFontAndIndex (/* CHAR_T un,
+                                   CHAR_T prec,
+                                   CHAR_T suiv,
+                                   SpecFont fontset,
+                                   PtrFont *font */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
