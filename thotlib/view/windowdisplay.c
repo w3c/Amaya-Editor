@@ -214,7 +214,7 @@ static void  DrawOneLine (int frame, int thick, int style, int x1, int y1,
   ----------------------------------------------------------------------*/
 void DrawChar (char car, int frame, int x, int y, ptrfont font, int fg)
 {
-  CHAR_T              str[2] = {car, 0};
+  char                str[2] = {car, 0};
   HFONT               hOldFont;
   HDC                 display;
 
@@ -232,7 +232,7 @@ void DrawChar (char car, int frame, int x, int y, ptrfont font, int fg)
    SetBkMode (display, TRANSPARENT);
    SetMapperFlags (display, 1);
    hOldFont = WinLoadFont (display, font);
-   TextOut (display, x, y, (STRING) str, 1);
+   TextOut (display, x, y, str, 1);
    SelectObject (display, hOldFont);
    DeleteObject (ActiveFont);
    ActiveFont = (HFONT)0;
@@ -413,12 +413,12 @@ void DisplayUnderline (int frame, int x, int y, ptrfont font, int type,
   DrawPoints draw a line of dot.
   The parameter fg indicates the drawing color
   ----------------------------------------------------------------------*/
-void      DrawPoints (int frame, int x, int y, int boxWidth, int fg)
+void DrawPoints (int frame, int x, int y, int boxWidth, int fg)
 {
   ptrfont             font;
+  char               *ptcar;
   int                 xcour;
   int                 width, nb;
-  STRING              ptcar;
 
 #ifdef _WIN_PRINT
   if (y < 0)
@@ -440,11 +440,11 @@ void      DrawPoints (int frame, int x, int y, int boxWidth, int fg)
 
       /* draw the points */
       while (nb > 0)
-	  {
-      DrawChar ('\362', frame, xcour, y, font, fg);
+	{
+	  DrawChar ('\362', frame, xcour, y, font, fg);
 	  xcour += width;
 	  nb--;
-	  }
+	}
     }
 }
 
