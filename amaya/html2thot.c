@@ -3750,8 +3750,11 @@ static void EndOfDoctypeDecl (char c)
   ----------------------------------------------------------------------*/
 static void EndOfPI (char c)
 {
+  /* useless test as the closing '?' isn't put into the buffer */
+  /*
   if (LgBuffer && inputBuffer[LgBuffer - 1] != '?')
     HTMLParseError (HTMLcontext.doc, "PI should be closed by \"?>\"");
+  */
    CloseBuffer ();
    /* process the Processing Instruction available in inputBuffer */
    /* printf ("PI: %s\n", inputBuffer); */
