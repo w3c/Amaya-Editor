@@ -1720,7 +1720,8 @@ char               *cssRule;
    else
      {
        cssRule = ParseCSSUnit (cssRule, &pval);
-       if (pval.typed_data.unit == DRIVERP_UNIT_INVALID)
+       if (pval.typed_data.unit == DRIVERP_UNIT_INVALID ||
+           pval.typed_data.value < 0)
 	 return (cssRule);
        if (pval.typed_data.unit == DRIVERP_UNIT_REL && pval.typed_data.value > 0)
 	 /* CSS relative sizes have to be higher than Thot ones */
