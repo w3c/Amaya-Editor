@@ -5147,24 +5147,12 @@ char ReadCSSRules (Document docRef, CSSInfoPtr css, char *buffer, char *url,
     css = AddCSS (docRef, docRef, CSS_DOCUMENT_STYLE, NULL, NULL,
 		  styleElement);
 
-  /* Lookk for the first external css as reference */
-  if (css->category == CSS_EXTERNAL_STYLE)
-    refcss = css;
-  else
+  /* look for the CSS descriptor that points to the extension schema */
+  refcss = css;
+  if (import)
     {
-      tmpcss = css;
-      while (tmpcss != NULL)
-	{
-	  if (tmpcss->category == CSS_EXTERNAL_STYLE)
-	    {
-	      refcss = tmpcss;
-	      tmpcss = NULL;
-	    }
-	  else
-	    tmpcss = tmpcss->NextCSS;
-	}
-      if (refcss == NULL)
-	refcss = css;
+      while (refcss && refcss->category == CSS_IMPORT)
+	refcss = refcss->NextCSS;
     }
 
   /* register parsed CSS file and the document to which CSS are to be applied*/

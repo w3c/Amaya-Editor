@@ -653,7 +653,7 @@ char *GetStyleContents (Element el)
 void LoadStyleSheet (char *url, Document doc, Element el, CSSInfoPtr css,
 		     CSSmedia media, ThotBool user)
 {
-  CSSInfoPtr          oldcss, refcss = NULL, tmpcss;
+  CSSInfoPtr          oldcss, refcss = NULL;
   PInfoPtr            pInfo;
   struct stat         buf;
   FILE               *res;
@@ -703,24 +703,13 @@ void LoadStyleSheet (char *url, Document doc, Element el, CSSInfoPtr css,
 	}
     }
   
+  /* look for the CSS descriptor that points to the extension schema */
+  refcss = oldcss;
   if (import)
     {
-      tmpcss = oldcss;
-      while (tmpcss != NULL)
-	{
-	  if (tmpcss->category == CSS_EXTERNAL_STYLE)
-	    {
-	      refcss = tmpcss;
-	      tmpcss = NULL;
-	    }
-	  else
-	    tmpcss = tmpcss->NextCSS;
-	}
-      if (refcss == NULL)
-	refcss = css;
+      while (refcss && refcss->category == CSS_IMPORT)
+	refcss = refcss->NextCSS;
     }
-  else
-    refcss = oldcss;
 
   if (tempfile[0] == EOS)
     /* cannot do more */
