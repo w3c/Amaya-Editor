@@ -4671,6 +4671,9 @@ ThotBool       ParseExternalXmlResource (char     *fileName,
 	  if (copyEl != NULL)
 	    TtaInsertFirstChild (&copyEl, extEl, doc);
 	}
+      /* Remove the ParsingErrors file */
+      RemoveParsingErrors (externalDoc);
+
       /* Delete the external document */
       FreeDocumentResource (externalDoc);
       TtaCloseDocument (externalDoc);

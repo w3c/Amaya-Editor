@@ -1533,8 +1533,6 @@ void FreeDocumentResource (Document doc)
   /* unmap the Save as form */
   TtaDestroyDialogue (BaseDialog + SaveForm);
 
-  CleanUpParsingErrors ();
-  
   if (DocumentURLs[doc] != NULL)
     {
       if (DocumentTypes[doc] != docLog)
@@ -1618,10 +1616,12 @@ void DocumentClosed (NotifyDialog * event)
        * Windows machines, this request will be killed when the application
        * exit, and no unlock will be done.
        */ 
-      DAVFreeLock (event->document);
+   DAVFreeLock (event->document);
 #endif
   
    FreeDocumentResource (event->document);
+   
+   CleanUpParsingErrors ();  
 }
 
 /*----------------------------------------------------------------------
