@@ -3941,6 +3941,7 @@ void TtcPaste (Document doc, View view)
 	    }
 #ifdef _WINDOWS
 	  OpenClipboard (FrRef [frame]);
+	  /* check if the clipboard comes from Amaya */
 	  if (hMem = GetClipboardData (CF_UNICODETEXT))
 	    {			
 	      wchar_t* lpData = (wchar_t*) GlobalLock (hMem);
@@ -3951,11 +3952,9 @@ void TtcPaste (Document doc, View view)
   	        PasteXClipboardW (lpData, lpDatalength);
 	      else 
 	        ContentEditing (TEXT_PASTE);
+		  TtaFreeMemory (dest);
 	      GlobalUnlock (hMem);
 	    }
-	  /* the CF_TEXT part is probably not necessary, because
-	     CF_UNICODETEXT is supported from Win9x up, by the system,
-	     even for non-Unicode applications */
 	  else if (hMem = GetClipboardData (CF_TEXT))
 	    {
 	      lpData = GlobalLock (hMem);
