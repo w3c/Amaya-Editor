@@ -1478,6 +1478,7 @@ boolean             isHTML;
 	       if (real)
 		 {
 		   pval.typed_data.value /= 10;
+		   pval.typed_data.real = FALSE;
 		   real = FALSE;
 		 }
 	       else

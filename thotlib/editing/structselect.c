@@ -1678,13 +1678,13 @@ boolean             string;
 	   lastView = MAX_VIEW_DOC;
 	SelPosition = !string;
 	/* highlight the new selection in all views */
-	for (view = 1; view <= lastView; view++)
+	for (view = 0; view < lastView; view++)
 	  {
 	     /* frame: window where the view is displayed */
 	     if (assoc)
 		frame = pDoc->DocAssocFrame[pAb->AbElement->ElAssocNum - 1];
-	     else if (pDoc->DocView[view - 1].DvPSchemaView > 0)
-		frame = pDoc->DocViewFrame[view - 1];
+	     else if (pDoc->DocView[view].DvPSchemaView > 0)
+		frame = pDoc->DocViewFrame[view];
 	     else
 		frame = 0;	/* vue non creee */
 	     /* if the view exists, highlight selection in that view */
@@ -1692,7 +1692,7 @@ boolean             string;
 	       {
 		  /* search in the view the presentation abstract box that */
 		  /* contains an attribute value */
-		  pAbView = GetAbsBoxSelectedAttr (view);
+		  pAbView = GetAbsBoxSelectedAttr (view+1);
 		  /* switch the former selection off in that view */
 		  ClearViewSelection (frame);
 		  if (pAbView != NULL)

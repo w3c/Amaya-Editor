@@ -358,13 +358,13 @@ int                 number;
    MenuActionList[CMD_DeleteSelection].User_Action = (UserProc) NULL;
    MenuActionList[CMD_DeleteSelection].ActionEquiv = CST_EquivDel;
 
-   MenuActionList[CMD_BackwardChar].ActionName = CST_BackwardChar;
-   MenuActionList[CMD_BackwardChar].Call_Action = (Proc) TtcPreviousChar;
-   MenuActionList[CMD_BackwardChar].User_Action = (UserProc) NULL;
+   MenuActionList[CMD_PreviousChar].ActionName = CST_PreviousChar;
+   MenuActionList[CMD_PreviousChar].Call_Action = (Proc) TtcPreviousChar;
+   MenuActionList[CMD_PreviousChar].User_Action = (UserProc) NULL;
 
-   MenuActionList[CMD_ForwardChar].ActionName = CST_ForwardChar;
-   MenuActionList[CMD_ForwardChar].Call_Action = (Proc) TtcNextChar;
-   MenuActionList[CMD_ForwardChar].User_Action = (UserProc) NULL;
+   MenuActionList[CMD_NextChar].ActionName = CST_NextChar;
+   MenuActionList[CMD_NextChar].Call_Action = (Proc) TtcNextChar;
+   MenuActionList[CMD_NextChar].User_Action = (UserProc) NULL;
 
    MenuActionList[CMD_PreviousLine].ActionName = CST_PreviousLine;
    MenuActionList[CMD_PreviousLine].Call_Action = (Proc) TtcPreviousLine;
@@ -429,6 +429,22 @@ int                 number;
    MenuActionList[CMD_PasteFromClipboard].ActionName = CST_PasteClipboard;
    MenuActionList[CMD_PasteFromClipboard].Call_Action = (Proc) NULL;
    MenuActionList[CMD_PasteFromClipboard].User_Action = (UserProc) NULL;
+
+   MenuActionList[CMD_PreviousSelChar].ActionName = CST_PreviousSelChar;
+   MenuActionList[CMD_PreviousSelChar].Call_Action = (Proc) TtcPreviousSelChar;
+   MenuActionList[CMD_PreviousSelChar].User_Action = (UserProc) NULL;
+
+   MenuActionList[CMD_NextSelChar].ActionName = CST_NextSelChar;
+   MenuActionList[CMD_NextSelChar].Call_Action = (Proc) TtcNextSelChar;
+   MenuActionList[CMD_NextSelChar].User_Action = (UserProc) NULL;
+
+   MenuActionList[CMD_PreviousSelLine].ActionName = CST_PreviousSelLine;
+   MenuActionList[CMD_PreviousSelLine].Call_Action = (Proc) TtcPreviousSelLine;
+   MenuActionList[CMD_PreviousSelLine].User_Action = (UserProc) NULL;
+
+   MenuActionList[CMD_NextSelLine].ActionName = CST_NextSelLine;
+   MenuActionList[CMD_NextSelLine].Call_Action = (Proc) TtcNextSelLine;
+   MenuActionList[CMD_NextSelLine].User_Action = (UserProc) NULL;
 }
 
 

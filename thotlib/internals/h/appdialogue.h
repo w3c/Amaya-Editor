@@ -201,8 +201,8 @@ typedef struct _SchemaMenu_Ctl
  */
 #define CMD_DeletePrevChar	1
 #define CMD_DeleteSelection	2
-#define CMD_BackwardChar	3
-#define CMD_ForwardChar		4
+#define CMD_PreviousChar	3
+#define CMD_NextChar		4
 #define CMD_PreviousLine	5
 #define CMD_NextLine		6
 #define CMD_BeginningOfLine	7
@@ -218,13 +218,17 @@ typedef struct _SchemaMenu_Ctl
 #define CMD_CreateElement	17
 #define CMD_CopyToClipboard	18
 #define CMD_PasteFromClipboard	19
-#define MAX_INTERNAL_CMD	20
+#define CMD_PreviousSelChar	20
+#define CMD_NextSelChar		21
+#define CMD_PreviousSelLine	22
+#define CMD_NextSelLine		23
+#define MAX_INTERNAL_CMD	24
 
 #define CST_InsertChar "TtcInsertChar"
 #define CST_DeleteSelection "TtcDeleteSelection"
 #define CST_DeletePrevChar "TtcDeletePreviousChar"
-#define CST_BackwardChar "TtcBackwardChar"
-#define CST_ForwardChar "TtcForwardChar"
+#define CST_PreviousChar "TtcPreviousChar"
+#define CST_NextChar "TtcNextChar"
 #define CST_PreviousLine "TtcPreviousLine"
 #define CST_NextLine "TtcNextLine"
 #define CST_BeginningOfLine "TtcStartOfLine"
@@ -240,6 +244,10 @@ typedef struct _SchemaMenu_Ctl
 #define CST_CreateElement "TtcCreateElement"
 #define CST_CopyClipboard "TtcCopyToClipboard"
 #define CST_PasteClipboard "TtcPasteFromClipboard"
+#define CST_PreviousSelLine "TtcPreviousSelLine"
+#define CST_NextSelLine "TtcNextSelLine"
+#define CST_PreviousSelChar "TtcPreviousSelChar"
+#define CST_NextSelChar "TtcNextSelChar"
 
 #define CST_EquivDel "Delete"
 #define CST_EquivBS "BackSpace"

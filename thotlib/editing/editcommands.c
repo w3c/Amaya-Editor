@@ -2190,7 +2190,7 @@ PtrTextBuffer       clipboard;
 	       pNewBuffer = pBuffer;
 	       CopyBuffers (font, frame, 1, 0, ind, clipboard, NULL, &pNewBuffer, &xDelta, &spacesDelta, &charsDelta);
 	       /* index fin d'insertion */
-	       endInd = pNewBuffer->BuLength;
+	       endInd = pNewBuffer->BuLength + 1;
 
 	       /* termine l'insertion */
 	       pAb->AbVolume += charsDelta;

@@ -100,6 +100,10 @@ KEY;
 #define MY_KEY_End       9
 static int          SpecialKeys[] =
 {5, 3, 4, 6, 1, 2, 13, 14, 15, 16};
+static int          SpecialShiftKeys[] =
+{22, 20, 21, 23, 1, 2, 13, 14, 15, 16};
+static int          SpecialCtrlKeys[] =
+{5, 3, 4, 6, 1, 2, 15, 16, 15, 16};
 
 /* the automata */
 static KEY         *Automata_normal = NULL;
@@ -761,7 +765,12 @@ int                 key;
 #      ifdef THOT_KEY_R8
        case THOT_KEY_R8:
 #      endif
-	 command = SpecialKeys[MY_KEY_Up];
+	 if (modtype == THOT_MOD_SHIFT)
+	   command = SpecialShiftKeys[MY_KEY_Up];
+	 else if (modtype == THOT_MOD_CTRL)
+	   command = SpecialCtrlKeys[MY_KEY_Up];
+	 else
+	   command = SpecialKeys[MY_KEY_Up];
 	 Automata_current = NULL;
 	 break;
 
@@ -769,7 +778,12 @@ int                 key;
 #      ifdef THOT_KEY_R10
        case THOT_KEY_R10:
 #      endif
-	 command = SpecialKeys[MY_KEY_Left];
+	 if (modtype == THOT_MOD_SHIFT)
+	   command = SpecialShiftKeys[MY_KEY_Left];
+	 else if (modtype == THOT_MOD_CTRL)
+	   command = SpecialCtrlKeys[MY_KEY_Left];
+	 else
+	   command = SpecialKeys[MY_KEY_Left];
 	 Automata_current = NULL;
 	 break;
 
@@ -777,7 +791,12 @@ int                 key;
 #      ifdef THOT_KEY_R12
        case THOT_KEY_R12:
 #      endif
-	 command = SpecialKeys[MY_KEY_Right];
+	 if (modtype == THOT_MOD_SHIFT)
+	   command = SpecialShiftKeys[MY_KEY_Right];
+	 else if (modtype == THOT_MOD_CTRL)
+	   command = SpecialCtrlKeys[MY_KEY_Right];
+	 else
+	   command = SpecialKeys[MY_KEY_Right];
 	 Automata_current = NULL;
 	 break;
 
@@ -785,7 +804,12 @@ int                 key;
 #      ifdef THOT_KEY_R14
        case THOT_KEY_R14:
 #      endif
-	 command = SpecialKeys[MY_KEY_Down];
+	 if (modtype == THOT_MOD_SHIFT)
+	   command = SpecialShiftKeys[MY_KEY_Down];
+	 else if (modtype == THOT_MOD_CTRL)
+	   command = SpecialCtrlKeys[MY_KEY_Down];
+	 else
+	   command = SpecialKeys[MY_KEY_Down];
 	 Automata_current = NULL;
 	 break;
 
@@ -793,7 +817,12 @@ int                 key;
 #      ifdef THOT_KEY_R9
        case THOT_KEY_R9:
 #      endif
-	 command = SpecialKeys[MY_KEY_Prior];
+	 if (modtype == THOT_MOD_SHIFT)
+	   command = SpecialShiftKeys[MY_KEY_Prior];
+	 else if (modtype == THOT_MOD_CTRL)
+	   command = SpecialCtrlKeys[MY_KEY_Prior];
+	 else
+	   command = SpecialKeys[MY_KEY_Prior];
 	 Automata_current = NULL;
 	 break;
 
@@ -801,7 +830,12 @@ int                 key;
 #      ifdef THOT_KEY_R15
        case THOT_KEY_R15:
 #      endif
-	 command = SpecialKeys[MY_KEY_Next];
+	 if (modtype == THOT_MOD_SHIFT)
+	   command = SpecialShiftKeys[MY_KEY_Next];
+	 else if (modtype == THOT_MOD_CTRL)
+	   command = SpecialCtrlKeys[MY_KEY_Next];
+	 else
+	   command = SpecialKeys[MY_KEY_Next];
 	 Automata_current = NULL;
 	 break;
 
@@ -809,7 +843,12 @@ int                 key;
 #      ifdef THOT_KEY_R7
        case THOT_KEY_R7:
 #      endif
-	 command = SpecialKeys[MY_KEY_Home];
+	 if (modtype == THOT_MOD_SHIFT)
+	   command = SpecialShiftKeys[MY_KEY_Home];
+	 else if (modtype == THOT_MOD_CTRL)
+	   command = SpecialCtrlKeys[MY_KEY_Home];
+	 else
+	   command = SpecialKeys[MY_KEY_Home];
 	 Automata_current = NULL;
 	 break;
 
@@ -817,17 +856,32 @@ int                 key;
 #      ifdef THOT_KEY_R13
        case THOT_KEY_R13:
 #      endif
-	 command = SpecialKeys[MY_KEY_End];
+	 if (modtype == THOT_MOD_SHIFT)
+	   command = SpecialShiftKeys[MY_KEY_End];
+	 else if (modtype == THOT_MOD_CTRL)
+	   command = SpecialCtrlKeys[MY_KEY_End];
+	 else
+	   command = SpecialKeys[MY_KEY_End];
 	 Automata_current = NULL;
 	 break;
 
        case THOT_KEY_BackSpace:
-	 command = SpecialKeys[MY_KEY_BackSpace];
+	 if (modtype == THOT_MOD_SHIFT)
+	   command = SpecialShiftKeys[MY_KEY_BackSpace];
+	 else if (modtype == THOT_MOD_CTRL)
+	   command = SpecialCtrlKeys[MY_KEY_BackSpace];
+	 else
+	   command = SpecialKeys[MY_KEY_BackSpace];
 	 Automata_current = NULL;
 	 break;
 	 
        case THOT_KEY_Delete:
-	 command = SpecialKeys[MY_KEY_Delete];
+	 if (modtype == THOT_MOD_SHIFT)
+	   command = SpecialShiftKeys[MY_KEY_Delete];
+	 else if (modtype == THOT_MOD_CTRL)
+	   command = SpecialCtrlKeys[MY_KEY_Delete];
+	 else
+	   command = SpecialKeys[MY_KEY_Delete];
 	 Automata_current = NULL;
 	 break;
 
@@ -1257,9 +1311,9 @@ STRING              appliname;
 			  ustrcat (text, "delete-selection()");
 		       else if (!ustrcmp (ch, CST_DeletePrevChar))
 			  ustrcat (text, "delete-prev-char()");
-		       else if (!ustrcmp (ch, CST_BackwardChar))
+		       else if (!ustrcmp (ch, CST_PreviousChar))
 			  ustrcat (text, "backward-char()");
-		       else if (!ustrcmp (ch, CST_ForwardChar))
+		       else if (!ustrcmp (ch, CST_NextChar))
 			  ustrcat (text, "forward-char()");
 		       else if (!ustrcmp (ch, CST_PreviousLine))
 			  ustrcat (text, "previous-line()");

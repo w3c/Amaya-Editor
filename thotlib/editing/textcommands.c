@@ -150,15 +150,16 @@ boolean             toend;
    est incremente de xDelta et yDelta.                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         LocateLeafBox (int frame, int x, int y, int xDelta, int yDelta, PtrBox pFrom)
+static void         LocateLeafBox (int frame, int x, int y, int xDelta, int yDelta, PtrBox pFrom, boolean extendSel)
 #else  /* __STDC__ */
-static void         LocateLeafBox (frame, x, y, xDelta, yDelta, pFrom)
+static void         LocateLeafBox (frame, x, y, xDelta, yDelta, pFrom, extendSel)
 int                 frame;
 int                 x;
 int                 y;
 int                 xDelta;
 int                 yDelta;
 PtrBox              pFrom;
+boolean             extendSel;
 #endif /* __STDC__ */
 {
    int                 index;
@@ -194,7 +195,10 @@ PtrBox              pFrom;
 		  nChars = pBox->BxIndChar + nChars + 1;
 	       }
 	     /* Change the selection */
-	     ChangeSelection (frame, pAb, nChars, FALSE, TRUE, FALSE, FALSE);
+	     if (extendSel)
+	       ChangeSelection (frame, pAb, nChars, TRUE, TRUE, FALSE, FALSE);
+	     else
+	       ChangeSelection (frame, pAb, nChars, FALSE, TRUE, FALSE, FALSE);
 	  }
      }
 }
@@ -203,18 +207,19 @@ PtrBox              pFrom;
    Commandes de deplacement                                           
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         MovingCommands (int code, Document document, View view)
+static void         MovingCommands (int code, Document document, View view, boolean extendSel)
 #else  /* __STDC__ */
-static void         MovingCommands (code, document, view)
+static void         MovingCommands (code, document, view, extendSel)
 int                 code;
 Document            document;
 View                view;
-
+boolean             extendSel;
 #endif /* __STDC__ */
 {
    PtrBox              pBox;
    ViewFrame          *pFrame;
    ViewSelection      *pViewSel;
+   ViewSelection      *pViewSelEnd;
    int                 frame, x, y;
    int                 xDelta, yDelta;
    int                 h, w;
@@ -236,6 +241,7 @@ View                view;
 	  {
 	     pFrame = &ViewFrameTable[frame - 1];
 	     pViewSel = &(pFrame->FrSelectionBegin);
+	     pViewSelEnd = &(pFrame->FrSelectionEnd);
 	     if (pViewSel->VsBox != NULL)
 	       {
 		  ok = TRUE;
@@ -279,13 +285,17 @@ View                view;
 		   {
 		     x = indpos + pBox->BxIndChar;
 		     if (x > 0)
-		       ChangeSelection (frame, pBox->BxAbstractBox, x, FALSE, TRUE, FALSE, FALSE);
+		       if (extendSel)
+			 /* extend the beginning of the current selection */
+			 ChangeSelection (frame, pBox->BxAbstractBox, x, TRUE, TRUE, FALSE, FALSE);
+		       else
+			 ChangeSelection (frame, pBox->BxAbstractBox, x, FALSE, TRUE, FALSE, FALSE);
 		     else
 		       {
 			 x = pBox->BxXOrg + xpos;
 			 y = pBox->BxYOrg + (pBox->BxHeight / 2);
 			 xDelta = -2;
-			 LocateLeafBox (frame, x, y, xDelta, 0, pBox);
+			 LocateLeafBox (frame, x, y, xDelta, 0, pBox, extendSel);
 		       }
 		   }
 		 break;
@@ -293,15 +303,33 @@ View                view;
 	       case 2:	/* En avant d'un car (^F) */
 		 if (pBox != NULL)
 		   {
-		     x = indpos + pBox->BxIndChar;
-		     if (x < pBox->BxAbstractBox->AbBox->BxNChars)
-		       ChangeSelection (frame, pBox->BxAbstractBox, x + 2, FALSE, TRUE, FALSE, FALSE);
+		     if (extendSel)
+		       {
+			 pBox = pViewSelEnd->VsBox;
+			 x = pViewSelEnd->VsIndBox + pBox->BxIndChar;
+			 if (x < pBox->BxAbstractBox->AbBox->BxNChars)
+			   /* extend the end of the current selection */
+			   ChangeSelection (frame, pBox->BxAbstractBox, x + 1, TRUE, TRUE, FALSE, FALSE);
+			 else
+			   {
+			     x = pBox->BxXOrg + pBox->BxWidth;
+			     y = pBox->BxYOrg + (pBox->BxHeight / 2);
+			     xDelta = 2;
+			     LocateLeafBox (frame, x, y, xDelta, 0, pBox, extendSel);
+			   }
+		       }
 		     else
 		       {
-			 x = pBox->BxXOrg + pBox->BxWidth;
-			 y = pBox->BxYOrg + (pBox->BxHeight / 2);
-			 xDelta = 2;
-			 LocateLeafBox (frame, x, y, xDelta, 0, pBox);
+			 x = indpos + pBox->BxIndChar;
+			 if (x < pBox->BxAbstractBox->AbBox->BxNChars)
+			   ChangeSelection (frame, pBox->BxAbstractBox, x + 2, FALSE, TRUE, FALSE, FALSE);
+			 else
+			   {
+			     x = pBox->BxXOrg + pBox->BxWidth;
+			     y = pBox->BxYOrg + (pBox->BxHeight / 2);
+			     xDelta = 2;
+			     LocateLeafBox (frame, x, y, xDelta, 0, pBox, extendSel);
+			   }
 		       }
 		   }
 		 break;
@@ -319,9 +347,19 @@ View                view;
 	       case 7:	/* Line suivante (^N) */
 		 if (pBox != NULL)
 		   {
-		     y = pBox->BxYOrg + pBox->BxHeight;
-		     yDelta = 10;
-		     LocateLeafBox (frame, ClickX - pFrame->FrXOrg, y, 0, yDelta, NULL);
+		     if (extendSel)
+		       {
+			 pBox = pViewSelEnd->VsBox;
+			 y = pBox->BxYOrg + pBox->BxHeight;
+			 yDelta = 10;
+			 LocateLeafBox (frame, ClickX - pFrame->FrXOrg, y, 0, yDelta, NULL, extendSel);
+		       }
+		     else
+		       {
+			 y = pBox->BxYOrg + pBox->BxHeight;
+			 yDelta = 10;
+			 LocateLeafBox (frame, ClickX - pFrame->FrXOrg, y, 0, yDelta, NULL, extendSel);
+		       }
 		     ok = FALSE;
 		   }
 		 else
@@ -333,7 +371,7 @@ View                view;
 		   {
 		     y = pBox->BxYOrg;
 		     yDelta = -10;
-		     LocateLeafBox (frame, ClickX - pFrame->FrXOrg, y, 0, yDelta, NULL);
+		     LocateLeafBox (frame, ClickX - pFrame->FrXOrg, y, 0, yDelta, NULL, extendSel);
 		     ok = FALSE;
 		   }
 		 else
@@ -341,9 +379,14 @@ View                view;
 		 break;
 	       }
 	     
-	     /* Nouvelle position de reference du curseur */
+	     /* Get the last X position */
 	     if (ok)
-	       ClickX = pViewSel->VsBox->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
+	       {
+		 if (extendSel && (code == 2 || code == 7))
+		   ClickX = pViewSelEnd->VsBox->BxXOrg + pViewSelEnd->VsXPos - pFrame->FrXOrg;
+		 else
+		   ClickX = pViewSel->VsBox->BxXOrg + pViewSel->VsXPos - pFrame->FrXOrg;
+	       }
 	  }
      }
 }
@@ -359,7 +402,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   MovingCommands (1, document, view);
+   MovingCommands (1, document, view, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -373,7 +416,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   MovingCommands (2, document, view);
+   MovingCommands (2, document, view, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -387,7 +430,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   MovingCommands (8, document, view);
+   MovingCommands (8, document, view, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -401,7 +444,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   MovingCommands (7, document, view);
+   MovingCommands (7, document, view, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -415,7 +458,7 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   MovingCommands (4, document, view);
+   MovingCommands (4, document, view, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -429,7 +472,63 @@ View                view;
 
 #endif /* __STDC__ */
 {
-   MovingCommands (3, document, view);
+   MovingCommands (3, document, view, FALSE);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtcPreviousSelChar (Document document, View view)
+#else  /* __STDC__ */
+void                TtcPreviousSelChar (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   MovingCommands (1, document, view, TRUE);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtcNextSelChar (Document document, View view)
+#else  /* __STDC__ */
+void                TtcNextSelChar (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   MovingCommands (2, document, view, TRUE);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtcPreviousSelLine (Document document, View view)
+#else  /* __STDC__ */
+void                TtcPreviousSelLine (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   MovingCommands (8, document, view, TRUE);
+}
+
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtcNextSelLine (Document document, View view)
+#else  /* __STDC__ */
+void                TtcNextSelLine (document, view)
+Document            document;
+View                view;
+
+#endif /* __STDC__ */
+{
+   MovingCommands (7, document, view, TRUE);
 }
 
 #ifndef _WIN_PRINT

@@ -85,8 +85,8 @@ THOT_EXPORT ThotCursor HVCurs;	/* Curseur modification presentation 	*/
 
 THOT_EXPORT int            ActiveFrame;	      /* Numero de fenetre document active   */
 THOT_EXPORT int            ClickFrame;	      /* ViewFrame designee par la selection */
-THOT_EXPORT int            ClickX;	      /* Position X de la selection          */
-THOT_EXPORT int            ClickY;	      /* Position X de la selection          */
+THOT_EXPORT int            ClickX;	      /* Start position of the selection     */
+THOT_EXPORT int            ClickY;	      /* Start position of the selectio      */
 THOT_EXPORT int            ClickIsDone;	      /* Indicateur de selection             */
 THOT_EXPORT USTRING        Xbuffer;	      /* Buffer pour echanges avec X         */
 THOT_EXPORT int		   ClipboardLength;
