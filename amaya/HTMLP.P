@@ -130,7 +130,7 @@ BOXES
 		Size: Creator =;
 		END;
 	END;
-{******
+
  TargetPageNumber:
 	BEGIN
 	Content: (Text ' (cf. p. ' Value(PageNumber(Formatted_view), Arabic) Text ')');
@@ -155,7 +155,6 @@ BOXES
 	IN Links_view
 		Visibility: 0;
 	END;
-*********}
 #endif
 
  H2_section_number:
@@ -5510,8 +5509,7 @@ ATTRIBUTES
  InternalLink:
 	BEGIN
 #ifdef LINK_NUMBER
-{****	CreateAfter(SeeTargetPage);
-*****}
+	CreateAfter(SeeTargetPage);
 #endif
 #ifdef PAGE
 	IN Links_view
@@ -5589,8 +5587,7 @@ ATTRIBUTES
 	CreateLast(ATTR_NAME_ANCH);
 	CreateLast(VALUE_NAME_ANCH);
 #ifdef LINK_NUMBER
-{*****	CreateAfter(TargetPageNumber);
-*****}
+	CreateAfter(TargetPageNumber);
 #endif
 #ifndef PAGE
 #ifdef BLACK_WHITE

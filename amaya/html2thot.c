@@ -2722,6 +2722,7 @@ int                 entry;
 #endif
 {
    boolean             ok;
+   int		       saveLastElemEntry;
 
    if (StackLevel == 0 || GINumberStack[StackLevel - 1] < 0)
      return TRUE;
@@ -2747,7 +2748,14 @@ int                 entry;
 	     if (!strcmp (GIMappingTable[entry].htmlGI, "TD") ||
 		 !strcmp (GIMappingTable[entry].htmlGI, "TH"))
 	       /* Table cell within a TABLE, without a TR. Assume TR */
-	       ProcessStartGI ("TR");
+	       {
+		/* save the last last GI read from the input file */
+		saveLastElemEntry = lastElemEntry;
+		/* simulate a <TR> tag */
+	        ProcessStartGI ("TR");
+		/* restore the last tag that has actually been read */
+		lastElemEntry = saveLastElemEntry;
+	       }
 	     else
 	       ok = FALSE;
        if (ok)
@@ -2760,7 +2768,14 @@ int                 entry;
 		 !strcmp (GIMappingTable[entry].htmlGI, "TH"))
 	       /* Table cell within a THEAD, TFOOT or TBODY without a TR. */
 	       /* Assume TR */
-	       ProcessStartGI ("TR");
+	       {
+		/* save the last last GI read from the input file */
+		saveLastElemEntry = lastElemEntry;
+		/* simulate a <TR> tag */
+	        ProcessStartGI ("TR");
+		/* restore the last tag that has actually been read */
+		lastElemEntry = saveLastElemEntry;
+	       }
 	     else
 	       ok = FALSE;
        if (ok)

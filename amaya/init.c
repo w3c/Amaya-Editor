@@ -1841,8 +1841,12 @@ NotifyEvent        *event;
 	strcpy (LastURLName, s);
 	CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
      }
-   else if (TtaFileExist (s))
+   else
      {
+     if (strncmp(s, "file://localhost", 16) == 0)
+	s += 16;
+     if (TtaFileExist (s))
+        {
 	NormalizeFile (s, LastURLName);
 	/* check if it is an absolute or a relative name */
 #ifdef _WINDOWS
@@ -1858,10 +1862,11 @@ NotifyEvent        *event;
 	/* start with the local document */
 	LastURLName[0] = EOS;
 	CallbackDialogue (BaseDialog + OpenForm, INTEGER_DATA, (char *) 1);
-     }
-   else
-      /* Create a new document */
-      New (0, 1);
+        }
+    else
+        /* Create a new document */
+        New (0, 1);
+    }
 }
 
 
@@ -2205,7 +2210,7 @@ View                view;
       el = GetIncludedDocuments (el, document);
    SetInternalLinks (body, document);		
    /********
-   TtaPrint (document, "Links_view Table_of_contents");
+   TtaPrint (document, "Formatted_view Links_view Table_of_contents");
    *********/
 }
 
