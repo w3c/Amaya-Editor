@@ -110,13 +110,6 @@ SOURCE=..\amaya\amaya.bmp
 # Begin Source File
 
 SOURCE=..\amaya\amaya.rc
-
-!IF  "$(CFG)" == "amaya - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "amaya - Win32 Debug"
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
@@ -385,6 +378,14 @@ SOURCE=..\amaya\wincurso.cur
 # Begin Source File
 
 SOURCE=..\amaya\windialogapi.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\XLinkbuilder.c
+# End Source File
+# Begin Source File
+
+SOURCE=..\amaya\XLinkedit.c
 # End Source File
 # Begin Source File
 

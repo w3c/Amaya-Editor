@@ -349,9 +349,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\writepivot.obj" \
 	"$(INTDIR)\xbmhandler.obj" \
 	"$(INTDIR)\xpmhandler.obj" \
-	"$(INTDIR)\zoom.obj" \
-	"$(OUTDIR)\libjpeg.lib" \
-	"$(OUTDIR)\libpng.lib"
+	"$(INTDIR)\zoom.obj"
 
 "$(OUTDIR)\libThotEditor.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<
@@ -678,9 +676,7 @@ LIB32_OBJS= \
 	"$(INTDIR)\writepivot.obj" \
 	"$(INTDIR)\xbmhandler.obj" \
 	"$(INTDIR)\xpmhandler.obj" \
-	"$(INTDIR)\zoom.obj" \
-	"$(OUTDIR)\libjpeg.lib" \
-	"$(OUTDIR)\libpng.lib"
+	"$(INTDIR)\zoom.obj"
 
 "$(OUTDIR)\libThotEditor.lib" : "$(OUTDIR)" $(DEF_FILE) $(LIB32_OBJS)
     $(LIB32) @<<
