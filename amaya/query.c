@@ -24,9 +24,9 @@
 #define AMAYA_LOST_UPDATE
 
 #ifdef _WINDOWS
-#      define CACHE_DIR_NAME TEXT("\\libwww-cache\\")
+#define CACHE_DIR_NAME TEXT("\\libwww-cache\\")
 #else
-#      define CACHE_DIR_NAME TEXT("/libwww-cache/")
+#define CACHE_DIR_NAME TEXT("/libwww-cache/")
 #endif
 
 /* libwww default parameters */
@@ -391,7 +391,12 @@ int                 status;
       /* libwww gives www/unknown when it gets an error. As this is 
 	 an HTML test, we force the type to text/html */
       if (!strcmp (tmp_char, "www/unknown"))
-	me->http_headers.content_type = TtaWCSdup (TEXT("text/html"));
+	{
+	  /* if it's not a file downloaded from FTP, initialize the
+	     content type to text/html by default */
+ 	  if (ustrncmp (me->urlName, TEXT("ftp:"), 4))
+	    me->http_headers.content_type = TtaWCSdup (TEXT("text/html"));
+	}
       else 
 	{
 	  iso2wc_strcpy (tmp_wchar, tmp_char);
@@ -892,17 +897,18 @@ int                 status;
       /* @@ verify if this is important */
       /* @@@ new libwww doesn't need this free stream while making
          a PUT. Is it the case everywhere or just for PUT? */
-      if (me->method != METHOD_PUT && me->request->orig_output_stream != NULL) {
-         AHTFWriter_FREE (me->request->orig_output_stream);
-         me->request->orig_output_stream = NULL;
-         if (me->output != stdout) { /* Are we writing to a file? */
-#           ifdef DEBUG_LIBWWW
+      if (me->method != METHOD_PUT && me->request->orig_output_stream != NULL)
+	{
+	  AHTFWriter_FREE (me->request->orig_output_stream);
+	  me->request->orig_output_stream = NULL;
+	  if (me->output != stdout) { /* Are we writing to a file? */
+#ifdef DEBUG_LIBWWW
             fprintf (stderr, "redirection_handler: New URL is  %s, closing FILE %p\n", me->urlName, me->output); 
-#           endif 
+#endif 
             fclose (me->output);
             me->output = NULL;
-		 }
 	  }
+	}
 
       /* tell the user what we're doing */
       TtaSetStatus (me->docid, 1, TtaGetMessage (AMAYA, AM_RED_FETCHING), me->status_urlName); 
@@ -1425,6 +1431,11 @@ HTList             *c;
    /* Register the default set of file suffix bindings */
    HTFileInit ();
 
+   /* Register additional bindings */
+   HTBind_add("tgz", "application/gnutar",  NULL, "binary", NULL, 1.0);
+   HTBind_add("mml", "text/xml",  NULL, "8bit", NULL, 1.0);
+   HTBind_add("svg", "text/xml",  NULL, "8bit", NULL, 1.0);
+   HTBind_add("svg", "text/xml",  NULL, "8bit", NULL, 1.0);
    /* Don't do any case distinction */
    HTBind_caseSensitive (FALSE);
 }
@@ -2225,28 +2236,30 @@ char* AppVersion;
 #endif /* __STDC__ */
 {
    CHAR_T* strptr;
-#  ifdef _I18N_
+#ifdef _I18N_
    unsigned char mbAppName[MAX_LENGTH], mbAppVersion[MAX_LENGTH];
-#  else  /* !_I18N_ */
+#else  /* !_I18N_ */
    char* mbAppName    = AppName;
    char* mbAppVersion = AppVersion;
-#  endif /* !_I18N_ */
+#endif /* !_I18N_ */
 
    /* If the Library is not already initialized then do it */
-   if (!HTLib_isInitialized ()) {
-#     ifdef _I18N_
-      /* Here we suppose that libwww works with multibyte character string (MBCS).
-         AppName and AppVersion are wide character strings (WCS). The following 
-		 code transform each of AppName and AppVersion (WCSs) int mbAppName and
-         mbAppName (MBCSs).
-         If the libwww will support WCSs, than you have to remove the code related 
-         to _I18N_ (rounded by #ifdef _I18N_ #endif) and pass to HTLibInit
-         AppName instead of mbAppName and AppVersion instead of mbAppVersion */
-      wcstombs (mbAppName, AppName, MAX_LENGTH);
-      wcstombs (mbAppVersion, AppVersion, MAX_LENGTH);
-#     endif /* _I18N_ */
-      HTLibInit (mbAppName, mbAppVersion);
-   } 
+   if (!HTLib_isInitialized ()) 
+     {
+#ifdef _I18N_
+       /* Here we suppose that libwww works with multibyte character string 
+	  (MBCS) AppName and AppVersion are wide character strings (WCS). 
+	  The following  code transforms each of AppName and 
+	  AppVersion (WCSs) int mbAppName and mbAppName (MBCSs).
+	  If the libwww will support WCSs, than you have to remove the code 
+	  related  to _I18N_ (rounded by #ifdef _I18N_ #endif) and pass
+	  to HTLibInit AppName instead of mbAppName and AppVersion instead 
+	  of mbAppVersion */
+       wcstombs (mbAppName, AppName, MAX_LENGTH);
+       wcstombs (mbAppVersion, AppVersion, MAX_LENGTH);
+#endif /* _I18N_ */
+       HTLibInit (mbAppName, mbAppVersion);
+     } 
 
    if (!converters)
       converters = HTList_new ();
@@ -2288,7 +2301,7 @@ char* AppVersion;
    strptr = TtaGetEnvString ("ENABLE_MDA");
    if (!strptr || (strptr && *strptr && ustrcasecmp (strptr, TEXT("no"))))
      HTAA_newModule ("digest", HTDigest_generate, HTDigest_parse, HTDigest_updateInfo, HTDigest_delete);
-
+   
    /* Get any proxy settings */
    ProxyInit ();
 
