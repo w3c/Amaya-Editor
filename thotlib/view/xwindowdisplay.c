@@ -66,7 +66,7 @@ typedef enum {
 /*----------------------------------------------------------------------
  GL_SetForeground : set color before drawing a or many vertex
   ----------------------------------------------------------------------*/
-static void GL_SetForeground (int fg)
+void GL_SetForeground (int fg)
 {
     unsigned short red, green, blue;
 

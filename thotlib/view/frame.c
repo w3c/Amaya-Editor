@@ -80,9 +80,22 @@ glPopMatrix();
 }
 
 static ThotBool GL_Buffering;
+extern int BG_Frame;
+/*----------------------------------------------------------------------
+   GL_DrawEmptyRectangle Outlined rectangle
+  ----------------------------------------------------------------------*/
+static void  GL_ClearBackground (int width, int height)
+{
+  GL_SetForeground (BG_Frame);
+  glBegin (GL_LINE_STRIP);
+  glVertex2d (  0, 0 );
+  glVertex2d (  0, 0 + height);
+  glVertex2d (  0 +  width, 0 + height);
+  glVertex2d (  0 + width, 0);
+  glVertex2d (  0, 0 );
+  glEnd ();
 
-extern void GL_ClearBackground(int w, int h);
-
+}
 /*----------------------------------------------------------------------
    GL_prepare: Defines Opengl Buffer properties, 
    must be called before drawing (or Sigsev on some platforms...)
