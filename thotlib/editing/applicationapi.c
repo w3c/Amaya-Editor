@@ -21,6 +21,7 @@
 #include "language.h"
 #include "application.h"
 #include "typecorr.h"
+
 #include "consttra.h"
 #include "typetra.h"
 #include "appaction.h"
@@ -51,9 +52,11 @@
 #include "applicationapi_f.h"
 #include "checkaccess_f.h"
 #include "callback_f.h"
+#include "callbackinit_f.h"
 #include "config_f.h"
 #include "dialogapi_f.h"
 #include "documentapi_f.h"
+#include "font_f.h"
 #include "inites_f.h"
 #include "input_f.h"
 #include "language_f.h"
@@ -441,6 +444,10 @@ void                TtaQuit ()
   Prof_FreeTable ();
   FreeTranslations ();
   FreeMenus ();
+  ThotFreeAllFonts ();
+  TtaFreeAllEventsLists ();
+  TtaFreeAllCatalogs ();
+  ConfigFree ();
 #endif /* NODISPLAY */
   FreeAll ();
   TtaFreeAppRegistry ();

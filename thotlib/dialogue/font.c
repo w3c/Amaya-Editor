@@ -32,7 +32,6 @@
 #define THOT_EXPORT
 #include "font_tv.h"
 
-
 /* that table for the charSThotLoacter glyphs */
 static int          FirstRemovableFont = 1;
 static char         StylesTable[MAX_HIGHLIGHT] = "rbiogq";
@@ -1417,4 +1416,24 @@ int                 frame;
 	       }
 	  }
      }
+}
+
+/*----------------------------------------------------------------------
+ *      ThotFreeAllFonts
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                ThotFreeAllFonts (void)
+#else  /* __STDC__ */
+void                ThotFreeAllFonts (void)
+
+#endif /* __STDC__ */
+{
+   TtaFreeMemory (FontFamily);
+   FontFamily = NULL;
+   TtaFreeMemory (FontDialogue);
+   FontDialogue = NULL;
+   TtaFreeMemory (IFontDialogue); 
+   IFontDialogue =  NULL;
+   TtaFreeMemory (LargeFontDialogue);
+   LargeFontDialogue = NULL;
 }

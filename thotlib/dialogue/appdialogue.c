@@ -101,7 +101,7 @@ typedef struct _CallbackCTX
   }
 CallbackCTX;
 
-static PtrCallbackCTX firstCallbackAPI;
+static PtrCallbackCTX FirstCallbackAPI;
 static int          FreeMenuAction;
 static Pixmap       wind_pixmap;
 static  void *      LastProcedure = NULL;   
@@ -455,6 +455,7 @@ void    FreeMenus ()
   Menu_Ctl           *ptrmenu, *mNext;
   SchemaMenu_Ctl     *ptrschema, *sNext;
   Item_Ctl           *ptrItem;
+  PtrCallbackCTX      ctxCallback;
   int                 i;
 
   /* free menu actions */
@@ -546,6 +547,15 @@ void    FreeMenus ()
        aNext = pAction->ActNext;
        TtaFreeMemory (pAction);
        pAction = aNext;
+     }
+
+  /* free callback contexts */
+   ctxCallback = FirstCallbackAPI;
+   while (ctxCallback)
+     {
+	   FirstCallbackAPI = ctxCallback->callbackNext;
+	   TtaFreeMemory (ctxCallback);
+	   ctxCallback = FirstCallbackAPI;
      }
 }
 
@@ -4399,15 +4409,15 @@ int                 set;
    PtrCallbackCTX      ctxCallback;
 
    UserErrorCode = 0;
-   if (firstCallbackAPI == NULL)
+   if (FirstCallbackAPI == NULL)
      {
 	/* le premier bloc de callback */
-	firstCallbackAPI = (PtrCallbackCTX) TtaGetMemory (sizeof (CallbackCTX));
-	ctxCallback = firstCallbackAPI;
+	FirstCallbackAPI = (PtrCallbackCTX) TtaGetMemory (sizeof (CallbackCTX));
+	ctxCallback = FirstCallbackAPI;
      }
    else
      {
-	ctxCallback = firstCallbackAPI;
+	ctxCallback = FirstCallbackAPI;
 	while (ctxCallback->callbackNext != NULL)
 	   ctxCallback = ctxCallback->callbackNext;
 	ctxCallback->callbackNext = (PtrCallbackCTX) TtaGetMemory (sizeof (CallbackCTX));
@@ -4453,12 +4463,12 @@ STRING              data;
 
    if (ref >= MAX_ThotMenu)
      {
-	if (firstCallbackAPI == NULL)
+	if (FirstCallbackAPI == NULL)
 	   return;		/* pas de callback definis */
 	else
 	  {
 	     /* recherc he le bon callback */
-	     ctxCallback = firstCallbackAPI;
+	     ctxCallback = FirstCallbackAPI;
 	     base = MAX_ThotMenu;
 	     while (ref >= base + ctxCallback->callbackSet)
 	       {

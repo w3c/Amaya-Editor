@@ -7,6 +7,7 @@
 #ifdef __STDC__
 
 extern void ConfigInit ( void );
+extern void ConfigFree ( void );
 extern void TtaConfigReadConfigFiles ( CHAR_T* aSchemaPath );
 extern int ConfigMakeDocTypeMenu ( CHAR_T* BufMenu,
                                    int *lgmenu,
@@ -79,6 +80,7 @@ extern ThotBool ConfigDefaultTypoSchema ( PtrSSchema pSS,
 
 #else /* __STDC__ */
 
+extern void ConfigFree (/* void */);
 extern void ConfigInit (/* void */);
 extern void TtaConfigReadConfigFiles (/* CHAR_T* aSchemaPath */);
 extern int ConfigMakeDocTypeMenu (/* CHAR_T* BufMenu,

@@ -21,6 +21,7 @@ extern void TteAddActionEvent ( PtrEventsSet eventsList,
                                 APPevent event,
                                 ThotBool pre,
                                 char* actionName );
+extern void TteFreeAllEventsList ( void );
 
 #else /* __STDC__ */
 
@@ -39,6 +40,7 @@ extern void TteAddActionEvent (/* PtrEventsSet eventsList,
                                   APPevent event,
                                   ThotBool pre,
                                   char* actionName */);
+extern void TteFreeAllEventsList (/* void */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -151,6 +151,7 @@ extern void TtaShowDialogue ( int ref,
 extern void TtaWaitShowDialogue ( void );
 extern ThotBool TtaTestWaitShowDialogue ( void );
 extern void TtaAbortShowDialogue ( void );
+extern void TtaFreeAllCatalogs ( void );
 
 #else /* __STDC__ */
 
@@ -299,6 +300,7 @@ extern void TtaShowDialogue (/* int ref,
 extern void TtaWaitShowDialogue (/* void */);
 extern ThotBool TtaTestWaitShowDialogue (/* void */);
 extern void TtaAbortShowDialogue (/* void */);
+extern void TtaFreeAllCatalogs (/* void */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

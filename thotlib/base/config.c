@@ -618,6 +618,54 @@ ThotBool*           import;
      }
 }
 
+/*----------------------------------------------------------------------
+   ConfigFree
+   Frees the table entries of all the document types, natures and
+   extensions.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                ConfigFree (void)
+#else                        /* __STDC__ */
+void                ConfigFree (void)
+#endif                       /* __STDC__ */
+{
+   int i;
+
+   for (i = 0; i < MAX_ITEM_CONF; i++)
+     {
+	if (doc_items[i] != NULL)
+	  {
+	     TtaFreeMemory (doc_items[i]);
+	     doc_items[i] = NULL;
+	  }
+	doc_import[i] = FALSE;
+	if (doc_items_menu[i] != NULL)
+	  {
+	     TtaFreeMemory (doc_items_menu[i]);
+	     doc_items_menu[i] = NULL;
+	  }
+	if (nat_items[i] != NULL)
+	  {
+	     TtaFreeMemory (nat_items[i]);
+	     nat_items[i] = NULL;
+	  }
+	if (nat_items_menu[i] != NULL)
+	  {
+	     TtaFreeMemory (nat_items_menu[i]);
+	     nat_items_menu[i] = NULL;
+	  }
+	if (ext_items[i] != NULL)
+	  {
+	     TtaFreeMemory (ext_items[i]);
+	     ext_items[i] = NULL;
+	  }
+	if (ext_items_menu[i] != NULL)
+	  {
+	     TtaFreeMemory (ext_items_menu[i]);
+	     ext_items_menu[i] = NULL;
+	  }
+     }
+   }
 
 /*----------------------------------------------------------------------
    TtaConfigReadConfigFiles (re)initialise les tables des schemas de
@@ -660,40 +708,8 @@ CHAR_T*             aSchemaPath;
 
    /* libere les anciennes entrees des tables de types de documents */
    /* de natures et d'extensions */
-   for (i = 0; i < MAX_ITEM_CONF; i++)
-     {
-	if (doc_items[i] != NULL)
-	  {
-	     TtaFreeMemory (doc_items[i]);
-	     doc_items[i] = NULL;
-	  }
-	doc_import[i] = FALSE;
-	if (doc_items_menu[i] != NULL)
-	  {
-	     TtaFreeMemory (doc_items_menu[i]);
-	     doc_items_menu[i] = NULL;
-	  }
-	if (nat_items[i] != NULL)
-	  {
-	     TtaFreeMemory (nat_items[i]);
-	     nat_items[i] = NULL;
-	  }
-	if (nat_items_menu[i] != NULL)
-	  {
-	     TtaFreeMemory (nat_items_menu[i]);
-	     nat_items_menu[i] = NULL;
-	  }
-	if (ext_items[i] != NULL)
-	  {
-	     TtaFreeMemory (ext_items[i]);
-	     ext_items[i] = NULL;
-	  }
-	if (ext_items_menu[i] != NULL)
-	  {
-	     TtaFreeMemory (ext_items_menu[i]);
-	     ext_items_menu[i] = NULL;
-	  }
-     }
+   ConfigFree ();
+
    beginning = 0;
    i = 0;
    nbitemdoc = 0;

@@ -326,3 +326,50 @@ Char*               actionName;
    newactevent->AEvNext = pactevent;
    eventsList->EvSList[event] = newactevent;
 }
+
+/*----------------------------------------------------------------------
+   TteFreeEvents frees all event lists and the event/action context pointers.			                        
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void                TteFreeEventsList (PtrEventsSet eventsList)
+#else  /* __STDC__ */
+static void                TteFreeEventsList (PtrEventsSet eventsList)
+
+#endif /* __STDC__ */
+{
+  PtrEventsSet current;
+  int event;
+
+  current = eventsList;
+  while (current)
+  {
+   for (event = 0; event <= TteExit; event++)
+   {
+      if (current->EvSList[event])
+	  {
+        TtaFreeMemory (current->EvSList[event]);
+	    current->EvSList = NULL;
+	  }
+   }
+   eventsList = current->EvSNext;
+   TtaFreeMemory (current);
+   current = eventsList;
+  }
+}
+
+/*----------------------------------------------------------------------
+   TteFreeAllEventsList frees all event lists and the event/action
+   context pointers.			                        
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TteFreeAllEventsList (void)
+#else  /* __STDC__ */
+void                TteFreeAllEventsList (void)
+
+#endif /* __STDC__ */
+{
+  TteFreeEventsList (EditorEvents);
+  EditorEvents = NULL;
+  TteFreeEventsList (SchemasEvents);
+  SchemaEvents = NULL;
+}

@@ -7510,3 +7510,24 @@ void                TtaAbortShowDialogue ()
 #endif /* _GTK */
 }
 #endif /* !_WINDOWS */
+
+/*----------------------------------------------------------------------
+   TtaFreeAllCatalogs frees the memory associated with catalogs.                      
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                TtaFreeAllCatalogs (void)
+#else  /* __STDC__ */
+void                TtaFreeAllCatalogs (void)
+
+#endif /* __STDC__ */
+{
+  static struct Cat_List *current;
+  
+  current = PtrCatalogue;
+  while (current)
+  {
+   PtrCatalogue = current->Cat_Next;
+   TtaFreeMemory (current);
+   current = PtrCatalogue;
+  }
+}
