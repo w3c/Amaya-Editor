@@ -418,19 +418,22 @@ char *ParseCSSUnit (char *cssRule, PresentationValue *pval)
    ParseClampedUnit:                                                  
    parse a CSS Unit substring and returns the corresponding value and unit.
    [0,1]
-   or
-   [0,100] in %
   ----------------------------------------------------------------------*/
 char *ParseClampedUnit (char *cssRule, PresentationValue *pval)
 {
+  char           *p;
+
+  p = cssRule;
   cssRule = ParseNumber (cssRule, pval);
-  if (pval->typed_data.unit == UNIT_PERCENT)
+  if (*cssRule != EOS && *cssRule != SPACE && *cssRule != ';')
     {
+      cssRule++;
       pval->typed_data.unit = UNIT_REL;
       if (pval->typed_data.value > 100)
 	pval->typed_data.value = 1000;
       else
 	pval->typed_data.value *= 10;
+      CSSParseError ("Invalid value", p, cssRule);
     }
   else
     {
@@ -438,7 +441,15 @@ char *ParseClampedUnit (char *cssRule, PresentationValue *pval)
       if (pval->typed_data.real)
 	pval->typed_data.real = FALSE;
       else if (pval->typed_data.value > 1)
-	pval->typed_data.value = 1000;
+	{
+	  pval->typed_data.value = 1000;
+	  CSSParseError ("Invalid value", p, cssRule);
+	}
+      else if (pval->typed_data.value < 0)
+	{
+	  pval->typed_data.value = 0;
+	  CSSParseError ("Invalid value", p, cssRule);
+	}
       else
 	pval->typed_data.value *= 1000;
     }
@@ -4207,7 +4218,7 @@ static void  ParseCSSRule (Element element, PSchema tsch,
 		      /* update index and skip the ";" separator if present */
 		      next = SkipBlanksAndComments (p);
 		      if (*next != EOS && *next != ';')
-			CSSParseError ("Missing ';' at the end: ", cssRule, p);
+			CSSParseError ("Missing closing ';'", cssRule, p);
 		      cssRule = next;
 		    }
 		}

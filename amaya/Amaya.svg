@@ -86,7 +86,7 @@
                       from="rgb(0,0,255)" to="rgb(128,0,0)" begin="13s"
                       dur="6s" fill="freeze"/>
       </use>
-      <use transform="translate(90, 363)scale(1,-1)skewX(-50)" opacity="20%"
+      <use transform="translate(90, 363)scale(1,-1)skewX(-50)" opacity="0.2"
            xlink:href="#logo"/>
     </g>
     <!-- XML document in a foreign object-->
