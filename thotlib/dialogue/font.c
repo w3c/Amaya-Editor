@@ -61,15 +61,14 @@ static SpecFont   FirstFontSel = NULL;
 #endif /* _I18N_ */
 
 #include "buildlines_f.h"
-#include "registry_f.h"
-#include "language_f.h"
+#include "dialogapi_f.h"
 #include "font_f.h"
+#include "language_f.h"
 #include "memory_f.h"
+#include "platform_f.h"
 #include "registry_f.h"
 #include "units_f.h"
 #include "windowdisplay_f.h"
-#include "windowdisplay_f.h"
-#include "platform_f.h"
 
 #include "stix.h"
 
