@@ -33,7 +33,7 @@ IMPLEMENT_DYNAMIC_CLASS(AmayaURLBar, wxComboBox)
  */
 AmayaURLBar::AmayaURLBar ( wxWindow *     parent
 			   ,AmayaWindow *  amaya_window_parent ) :
-  wxComboBox( parent, -1, _T(""), wxDefaultPosition, wxSize(500,-1)/*wxDefaultSize*/ )
+  wxComboBox( parent, -1, _T(""), wxDefaultPosition, wxDefaultSize )
 {
   m_pAmayaWindowParent = amaya_window_parent;
   m_URLLocked = FALSE;
