@@ -351,11 +351,12 @@ int TtaMakeFrame( const char * schema_name,
       if (visiVal < 0 || visiVal > 10)
 	visiVal = 5;
     }
+
   /* Initialise la visibilite et le zoom de la fenetre */
-  InitializeFrameParams (frame_id, visiVal, 0);
-  /* Initialise la couleur de fond */
-  /* SG : not used */
-  /*BackgroundColor[frame_id] = DefaultBColor;*/
+  /* get the old value : 0 if this is the first */
+  int zoom, visilibity;
+  GetFrameParams (frame_id, &visilibity, &zoom);
+  InitializeFrameParams (frame_id, visiVal, zoom);
 
   /* the document title will be used to name the frame's page */
   p_AmayaFrame->SetFrameTitle( TtaConvMessageToWX( doc_name ) );
