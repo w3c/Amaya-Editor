@@ -1312,8 +1312,8 @@ void GetFontIdentifier (char script, int family, int highlight, int size,
 			TypeUnit unit, char text[10], char textX[100])
 {
   char *result = NULL;
-#ifndef _WINDOWS
-  int i, j, k;
+#if !defined(_WINDOWS) && !defined(_GL)
+  int i, j, k, internalsize;
 
   result = FontLoadFromConfig (script, family, highlight);
   if (result)
@@ -1323,12 +1323,16 @@ void GetFontIdentifier (char script, int family, int highlight, int size,
 	{
 	  /* La size est relative */
 	  if (size > MaxNumberOfSizes)
-	    size = LogicalPointsSizes[MaxNumberOfSizes];
+	    internalsize = LogicalPointsSizes[MaxNumberOfSizes];
 	  else if (size >= 0)
-	    size = LogicalPointsSizes[size];
+	    internalsize = LogicalPointsSizes[size];
+	  else
+	    internalsize = size;
 	}
       else if (unit == UnPixel)
-	size = PixelToPoint (size);
+	internalsize = PixelToPoint (size);
+      else
+	internalsize = size;
       i = k = 0;
       j = strlen (result);  
       while (i < j)
@@ -1350,16 +1354,16 @@ void GetFontIdentifier (char script, int family, int highlight, int size,
 	{
 	  strncpy  (textX, result, i);
 	  strcpy  (&textX[i], "%d\0");
-	  sprintf (textX, textX, size);  
+	  sprintf (textX, textX, internalsize);  
 	  while (i < j && result[i] != '-')
 	    i++;
 	  strcat (textX, result + i);  
-	  GeneratePoscriptFont (text, script, family, highlight, size);
+	  GeneratePoscriptFont (text, script, family, highlight, internalsize);
 	}
     }
-#endif /*_WINDOWS*/
+#endif /*_WINDOWS && _GL*/
   if (result == NULL)
-    FontIdentifier (script, family, highlight, size, UnRelative, text, textX);
+    FontIdentifier (script, family, highlight, size, unit, text, textX);
 }
 
 /*----------------------------------------------------------------------
