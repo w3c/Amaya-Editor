@@ -56,6 +56,7 @@ extern void TtaChangeLimitOfPolyline ( Element element,
 extern void TtaCopyPage ( Element destination,
                           Element source );
 extern int TtaGetTextLength ( Element element );
+extern PicType TtaGetPictureType ( Element element );
 extern void TtaGiveTextContent ( Element element,
                                  char *buffer,
                                  int *length,

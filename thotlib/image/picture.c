@@ -1078,6 +1078,9 @@ PictInfo           *imageDesc;
 	imageDesc->PicPixmap = None;
 	imageDesc->PicMask = None;
      }
+
+     if ((imageDesc->PicType >= InlineHandlers) && (PictureHandlerTable[imageDesc->PicType].FreePicture != NULL))
+        (*(PictureHandlerTable[imageDesc->PicType].FreePicture)) (imageDesc);   
 #endif /* _WINDOWS */
 }				
 

@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void Ap_FreePicture ( PictInfo* imageDesc );
 extern NPError Ap_DestroyStream ( NPP instance,
                                   NPStream* stream,
                                   NPError reason );
@@ -53,6 +54,7 @@ extern void Ap_CreatePluginInstance ( PictInfo *imageDesc,
 
 #else /* __STDC__ */
 
+extern void Ap_FreePicture (/* PictInfo* imageDesc */);
 extern NPError Ap_DestroyStream (/* NPP instance,
                                     NPStream* stream,
                                     NPError reason */);

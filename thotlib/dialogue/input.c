@@ -817,9 +817,9 @@ int                 key;
    intializes the keybord encoding.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-XtTranslations      InitTranslations (char *appliname)
+ThotTranslations      InitTranslations (char *appliname)
 #else  /* __STDC__ */
-XtTranslations      InitTranslations (appliname)
+ThotTranslations      InitTranslations (appliname)
 char               *appliname;
 
 #endif /* __STDC__ */
@@ -833,7 +833,7 @@ char               *appliname;
    int                 mod1, mod2;	/* 1er et 2eme modifieurs : voir definitions THOT_MOD_xx */
    int                 len, max;
    FILE               *file;
-   XtTranslations      table;
+   ThotTranslations      table;
 
    text = TtaGetEnvString ("HOME");
    strcpy (name, appliname);

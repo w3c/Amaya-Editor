@@ -61,7 +61,11 @@ void TtaBrowsePluginDirectory ()
       thotDir.buf = word;
       thotDir.bufLen = sizeof (word);
       thotDir.PicMask = ThotDirBrowse_FILES;
+#ifdef WINDOWS
+      if (ThotDirBrowse_first (&thotDir, amayaPluginDir, "*", ".DLL") == 1) {
+#else  /* WINDOWS */
       if (ThotDirBrowse_first (&thotDir, amayaPluginDir, "*", ".so") == 1) {
+#endif /* WINDOWS */
          do {
             pluginTable [pluginCounter] = (PluginInfo*) malloc (sizeof (PluginInfo)) ;
             pluginTable [pluginCounter]->pluginDL = (char*) malloc (strlen (thotDir.buf) + 1);

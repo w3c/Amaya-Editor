@@ -24,13 +24,13 @@ THOT_EXPORT Proc		ThotLocalActions[MAX_LOCAL_ACTIONS];
 #endif
 #endif /* _WINDOWS */
 
+THOT_EXPORT ThotAppContext	app_cont;
 #ifdef _WINDOWS
 
 THOT_EXPORT WNDCLASSEX       RootShell;
 
 #else /* _WINDOWS */
 
-THOT_EXPORT ThotAppContext	app_cont;
 THOT_EXPORT ThotWidget	RootShell;
 
 #endif /* !_WINDOWS */

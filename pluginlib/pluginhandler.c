@@ -40,6 +40,7 @@
 #include "inites_f.h"
 #include "fileaccess_f.h"
 #include "pluginbrowse_f.h"
+#include "pluginapi_f.h"
 
 /* ---------------------------------------------------------------------- */
 /* |	BitmapOpenImageDrvr loading the driver.				| */
@@ -270,6 +271,7 @@ int     indexHandler;
    PictureHandlerTable[HandlersCounter].Produce_Postscript = Ap_ProducePostscript;
    PictureHandlerTable[HandlersCounter].DrawPicture        = Ap_DrawPicture;
    PictureHandlerTable[HandlersCounter].Match_Format       = Ap_MatchFormat;
+   PictureHandlerTable[HandlersCounter].FreePicture        = Ap_FreePicture;
 
    PictureIdType[HandlersCounter]                          = PLUGIN_FORMAT;
    PictureMenuType[HandlersCounter]                        = PLUGIN_FORMAT;

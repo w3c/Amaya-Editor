@@ -14,7 +14,7 @@ extern void TtaInitDialogue ( char *server,
                               char *txtDone,
                               ThotAppContext * app_context,
                               Display ** Dp );
-extern void TtaInitDialogueTranslations ( XtTranslations translations );
+extern void TtaInitDialogueTranslations ( ThotTranslations translations );
 extern void TtaChangeDialogueFonts ( char *menufont,
                                      char *formfont );
 extern int TtaGetReferencesBase ( int number );
@@ -161,7 +161,7 @@ extern void TtaInitDialogue (/* char *server,
                                 char *txtDone,
                                 ThotAppContext * app_context,
                                 Display ** Dp */);
-extern void TtaInitDialogueTranslations (/* XtTranslations translations */);
+extern void TtaInitDialogueTranslations (/* ThotTranslations translations */);
 extern void TtaChangeDialogueFonts (/* char *menufont,
                                        char *formfont */);
 extern int TtaGetReferencesBase (/* int number */);

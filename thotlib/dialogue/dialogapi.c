@@ -132,7 +132,7 @@ static struct Cat_Context *ShowCat = NULL;
 #ifndef _WINDOWS
 static ThotAppContext Def_AppCont;
 static Display     *GDp;
-static XtTranslations TextTranslations;
+static ThotTranslations TextTranslations;
 #endif
 static ThotWidget   MainShell;
 
@@ -1344,10 +1344,10 @@ Display           **Dp;
    dialogue. Ce sont tous les racoursis claviers.                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                TtaInitDialogueTranslations (XtTranslations translations)
+void                TtaInitDialogueTranslations (ThotTranslations translations)
 #else  /* __STDC__ */
 void                TtaInitDialogueTranslations (translations)
-XtTranslations      translations;
+ThotTranslations      translations;
 
 #endif /* __STDC__ */
 {

@@ -7,6 +7,7 @@
 #ifdef __STDC__
 
 extern boolean DoubleClick ( NotifyElement * event );
+extern void FreeDocumentResource ( Document doc );
 extern void DocumentClosed ( NotifyDialog * event );
 extern void UpdateContextSensitiveMenus ( Document doc );
 extern void SelectionChanged ( NotifyElement * event );
@@ -23,6 +24,7 @@ extern void SelectDestination ( Document doc,
 #else /* __STDC__ */
 
 extern boolean DoubleClick (/* NotifyElement * event */);
+extern void FreeDocumentResource (/* Document doc */);
 extern void DocumentClosed (/* NotifyDialog * event */);
 extern void UpdateContextSensitiveMenus (/* Document doc */);
 extern void SelectionChanged (/* NotifyElement * event */);

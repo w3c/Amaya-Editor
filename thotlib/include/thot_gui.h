@@ -71,6 +71,7 @@ typedef MSG         ThotEvent;
 typedef MSG         ThotKeyEvent;
 typedef UINT        ThotComposeStatus;
 typedef void       *ThotAppContext;
+typedef void       *ThotTranslations;
 
 #define ThotColorNone ((COLORREF)~1)	/* anything in high byte is bad COLORREF */
 #define ThotBitmapNone ((ThotBitmap)NULL)
@@ -135,6 +136,7 @@ typedef MSG         ThotEvent;
 typedef MSG         ThotKeyEvent;
 typedef UINT        ThotComposeStatus;
 typedef void       *ThotAppContext;
+typedef void       *ThotTranslations;
 
 #define ThotColorNone ((COLORREF)~1)	/* anything in high byte is bad COLORREF */
 #define ThotBitmapNone ((ThotBitmap)NULL)
@@ -216,6 +218,7 @@ typedef XEvent      ThotEvent;
 typedef XKeyEvent   ThotKeyEvent;
 typedef XComposeStatus ThotComposeStatus;
 typedef XtAppContext ThotAppContext;
+typedef XtTranslations ThotTranslations;
 
 #define ThotColorNone ((Pixel)-1)
 #define ThotBitmapNone ((ThotBitmap)-1)

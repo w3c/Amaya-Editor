@@ -35,8 +35,12 @@ typedef struct _PluginInfo {
         char*            pluginID ;       /* Plugin identifier                             */
         char*            pluginURL ;      /* URL of the plugin                             */
         char*            fileExt ;        /* Suffix of files supported by the plugin       */
+#ifdef WINDOWS
+        HANDLE           pluginHandle ;
+#else  /* WINDOWS */
         void*            pluginHandle ;
-        NPP              pluginInstance;
+#endif /* WINDOWS */
+    /*        NPP              pluginInstance; */
         NPPluginFuncs*   pluginFunctionsTable;
 } PluginInfo ;
 

@@ -136,7 +136,9 @@
 #include <time.h>
 
 
+#ifndef __GNUC__
 #define HAVE_STDIO_H
+#endif /* __GNUC__ */
 
 #include <stdlib.h>
 #ifndef __GNUC__
@@ -152,8 +154,10 @@
 #undef HAVE_ALTZONE
 #define NO_GETWD
 #define NO_FCNTL
+#ifndef __GNUC__
 #define HAVE_GETCWD
 #define BOOLEAN			/* Windows have BOOLEAN defined */
+#endif /* __GNUC__ */
 
 #undef HAVE_GETDOMAINNAME
 
@@ -678,8 +682,10 @@ typedef unsigned long mode_t;
 #endif
 
 #ifdef WWW_MSWINDOWS
+#ifndef __GNUC__
 #define HAVE_MKTIME
 #define HAVE_STRFTIME
+#endif /* __GNUC__ */
 #endif
 /*
 

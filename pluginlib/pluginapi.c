@@ -49,8 +49,13 @@ extern PictureHandler   PictureHandlerTable[MAX_PICT_FORMATS];
 /* static NPPluginFuncs*   pluginFunctionsTable; */
 static NPMIMEType       pluginMimeType;
 
+#ifdef WINDOWS
+FARPROC ptr_NPP_GetMIMEDescription ;
+FARPROC ptr_NP_Initialize;
+#else  /* WINDOWS */
 static int (*ptr_NPP_GetMIMEDescription) () ;
 static int (*ptr_NP_Initialize)          (NPNetscapeFuncs*, NPPluginFuncs*) ;
+#endif /* WINDOWS */
 
 NPNetscapeFuncs* amayaFunctionsTable;
 
@@ -121,7 +126,7 @@ const char* pluginMimeType;
          token [ndx] = EOS;
          if (pluginMimeType [index] == EOS) {
 	    if (token) {
-		/* printf ("Plugin name: %s\n", token) ; */
+		printf ("Plugin name: %s\n", token) ; 
                pluginTable [indexHandler]->pluginID = (char*) malloc (strlen (token) + 1);
                strcpy (pluginTable [indexHandler]->pluginID, token);
             } else {
@@ -132,7 +137,7 @@ const char* pluginMimeType;
          } else {
               pluginTable [indexHandler]->pluginType = (char*) malloc (strlen (token) + 1) ;
               strcpy (pluginTable [indexHandler]->pluginType, token) ;
-	      /* printf ("Plugin type: %s\n", token) ; */
+	      printf ("Plugin type: %s\n", token) ;
               if (pluginMimeType [index] != ':')
                  printf ("bad mime type\n") ;
               else 
@@ -154,7 +159,7 @@ const char* pluginMimeType;
                     if (pluginMimeType [index] == ',')
                        token [ndx++] = suffixes [suffixNdx++] = pluginMimeType [index++];
               }
-              /* printf ("suffixes: %s\n", token); */
+              printf ("suffixes: %s\n", token);
               if (pluginMimeType [index] !=EOS) {
                  ndx = 0;
                  while (pluginMimeType [index] != EOS && pluginMimeType [index] != ';' && pluginMimeType [index] != ':')
@@ -166,14 +171,18 @@ const char* pluginMimeType;
                  }
                  if (pluginMimeType [index] == ':')
                     index++;
-                 /* printf ("comment: %s\n", token); */
+                 printf ("comment: %s\n", token);
               }
          }
    }
    suffixes [suffixNdx] = EOS;
-   /* printf ("Suffixes: %s\n", suffixes) ; */
+   printf ("Suffixes: %s\n", suffixes) ;
    pluginTable [indexHandler]->fileExt = (char*) malloc (strlen (suffixes) + 1) ;
    strcpy (pluginTable [indexHandler]->fileExt, suffixes);
+}
+
+void Ap_FreePicture (PictInfo* imageDesc) {
+     pluginTable [imageDesc->PicType - InlineHandlers]->pluginFunctionsTable->destroy (imageDesc->pluginInstance, NULL);
 }
 
 /*----------------------------------------------------------------------
@@ -188,7 +197,7 @@ NPStream* stream ;
 NPError   reason ;
 #endif /* __STDC__ */
 {
-    /* printf ("***** Ap_DestroyStream *****\n") ; */
+    printf ("***** Ap_DestroyStream *****\n") ;
 
     if (instance == NULL)
        return NPERR_INVALID_INSTANCE_ERROR;
@@ -206,7 +215,7 @@ JRIEnv*  Ap_GetJavaEnv (void)
 JRIEnv*  Ap_GetJavaEnv ()
 #endif /* __STDC__ */
 {
-    /* printf ("***** Ap_GetJavaEnv *****\n") ; */
+    printf ("***** Ap_GetJavaEnv *****\n") ; 
     return (NULL);
 }
 
@@ -220,7 +229,7 @@ jref Ap_GetJavaPeer (instance)
 NPP instance ;
 #endif /* __STDC__ */
 {
-    /* printf ("***** Ap_GetJavaPeer *****\n") ; */
+    printf ("***** Ap_GetJavaPeer *****\n") ; 
     return (NULL);
 }
 
@@ -238,7 +247,7 @@ const char* window ;
 {
    /*NPStream * stream;*/
 
-    /* printf ("***** Ap_GetURL *****\n") ; */
+    printf ("***** Ap_GetURL *****\n") ; 
     
    if (window) {
       /* pass the stream to AMAYA */
@@ -265,7 +274,7 @@ void* Ap_MemAlloc (size)
 uint32 size ;
 #endif /* __STDC__ */
 {
-    /* printf ("***** Ap_MemAlloc *****\n") ; */
+    printf ("***** Ap_MemAlloc *****\n") ;
     return malloc (size);
 }
 
@@ -279,7 +288,7 @@ uint32  Ap_MemFlush (size)
 uint32 size ;
 #endif /* __STDC__ */
 {
-    /* printf ("***** Ap_MemFlush *****\n") ; */
+    printf ("***** Ap_MemFlush *****\n") ; 
     return (0);
 }
 
@@ -293,7 +302,7 @@ void  Ap_MemFree (ptr)
 void* ptr ;
 #endif /* __STDC__ */
 {
-    /* printf ("***** Ap_MemFree *****\n") ; */
+    printf ("***** Ap_MemFree *****\n") ;
     free (ptr);
 }
 
@@ -306,7 +315,7 @@ NPError Ap_NewStream (NPP instance, NPMIMEType type, const char* window, NPStrea
 NPError Ap_NewStream (NPP instance, NPMIMEType type, const char* window, NPStream** stream_ptr)
 #endif /* __STDC__ */
 {
-    /* printf ("***** Ap_NewStream *****\n") ; */
+    printf ("***** Ap_NewStream *****\n") ;
 
     (*stream_ptr) = (NPStream*) malloc (sizeof (NPStream));
     
@@ -328,7 +337,7 @@ const char* buf ;
 NPBool      file ;
 #endif /* __STDC__ */
 {
-    /* printf ("***** Ap_PostURL *****\n") ; */
+    printf ("***** Ap_PostURL *****\n") ;
    return NPERR_NO_ERROR;
 }
 
@@ -345,15 +354,15 @@ NPByteRange* rangeList ;
 {
     FILE        *fptr;
 
-    /* printf ("***** Ap_RequestRead *****\n") ; */
+    printf ("***** Ap_RequestRead *****\n") ;
 
     /*
     char        *buffer;
     int         count = 0, ret = 0, ready_to_read, size;
-    long        offset;
+    long        offset;*/
 
     printf ("RequestRead  \n");
-    
+    /*
     fptr = fopen ("/tahiti/guetari/example/nasa.cgm","rb");
 
     offset = 0;
@@ -388,7 +397,7 @@ NPP         instance ;
 const char* message ;
 #endif /* __STDC__ */
 {
-    /* printf ("***** Ap_Status *****\n") ; */
+    printf ("***** Ap_Status *****\n") ;
     printf ("Status %s\n", message);
 }
 
@@ -402,7 +411,7 @@ const char* Ap_UserAgent (instance)
 NPP instance ;
 #endif /* __STDC__ */
 {
-    /* printf ("***** Ap_UserAgent *****\n") ; */
+    printf ("***** Ap_UserAgent *****\n") ;
     return ("Amaya");
 }
 
@@ -419,7 +428,7 @@ int32     len ;
 void*     buffer ;
 #endif /* __STDC__ */
 {
-    /* printf ("***** Ap_Write *****\n") ; */
+    printf ("***** Ap_Write *****\n") ;
     return 4;
 }
 
@@ -436,7 +445,7 @@ int* amaya_major  ;
 int* amaya_minor  ;
 #endif /* __STDC__ */
 {
-    /* printf ("***** Ap_Version *****\n") ; */
+    printf ("***** Ap_Version *****\n") ;
     *plugin_major = NP_VERSION_MAJOR;
     *plugin_minor = NP_VERSION_MINOR;
 }
@@ -451,7 +460,7 @@ void Ap_ReloadPlugins (reloadPages)
 NPBool reloadPages ;
 #endif /* __STDC__ */
 {
-    /* printf ("***** Ap_ReloadPlugins *****\n") ; */
+    printf ("***** Ap_ReloadPlugins *****\n") ;
 }
 
 /*----------------------------------------------------------------------
@@ -467,7 +476,7 @@ void*       r_value ;
 #endif /* __STDC__ */
 {
     NPError error = NPERR_NO_ERROR;
-    /* printf ("***** Ap_GetValue *****\n") ; */
+    printf ("***** Ap_GetValue *****\n") ; 
     if (!instance) error = NPERR_INVALID_INSTANCE_ERROR;
     else {
          switch (variable) {
@@ -494,7 +503,7 @@ void Ap_InitializeAmayaTable ()
 #endif /* __STDC__ */
 {
     amayaFunctionsTable  = (NPNetscapeFuncs*) malloc (sizeof (NPNetscapeFuncs));
-    /* printf ("Size of NPAmayaFuncs = %d\n", (int) sizeof (NPNetscapeFuncs)); */
+    printf ("Size of NPAmayaFuncs = %d\n", (int) sizeof (NPNetscapeFuncs));
 
     amayaFunctionsTable->version       = ((uint16) (0));
     amayaFunctionsTable->size          = ((uint16) (sizeof       (NPNetscapeFuncs)));
@@ -525,18 +534,27 @@ int indexHandler;
     char* message ;
     int   ret ;
 
-    /* printf ("***** Ap_InitializePluginTable *****\n") ; */
+    printf ("***** Ap_InitializePluginTable *****\n") ;
 
     pluginTable [indexHandler]->pluginFunctionsTable = (NPPluginFuncs*) malloc (sizeof (NPPluginFuncs));
     /* printf ("Size of NPPluginFuncs = %d\n", (int) sizeof (NPPluginFuncs)); */
     pluginTable [indexHandler]->pluginFunctionsTable->size         = ((uint16) (sizeof (NPPluginFuncs)));
 
+#ifdef WINDOWS
+    ptr_NP_Initialize = GetProcAdress (pluginTable [indexHandler]->pluginHandle, "NP_Initialize");
+    if (ptr_NP_Initialize == NULL) {
+       message (char*) malloc (65 + strlen (pluginTable [indexHandler]->pluginDL));
+       sprintf (message, "relocation error: symbol not found: NP_Initialize referenced in %s", pluginTable [indexHandler]->pluginDL);
+    } else
+          ret = (*ptr_NP_Initialize) (amayaFunctionsTable, pluginTable [indexHandler]->pluginFunctionsTable);
+#else  /* WINDOWS */
     ptr_NP_Initialize = (int (*) (NPNetscapeFuncs*, NPPluginFuncs*)) dlsym (pluginTable [indexHandler]->pluginHandle, "NP_Initialize");
     message = (char*) dlerror ();    
     if (message) 
 	printf ("ERROR at Initialization: %s\n", message);
 
     ret = ptr_NP_Initialize (amayaFunctionsTable, pluginTable [indexHandler]->pluginFunctionsTable);
+#endif /* WINDOWS */
     /* printf ("result = %d\n", ret); */
 }
 
@@ -553,18 +571,23 @@ int   indexHandler;
 #endif /* __STDC__ */
 {
     /* Open the library and get the symbols addresses */
-    char* message ;
+    char* message = (char*) NULL;
     char GUI_Name [20];
     int index1 = 0 ;
     int index2 = 0;
 
-    /* printf ("***** Ap_InitializePlugin *****\n") ; */
+    printf ("***** Ap_InitializePlugin *****\n") ;
 
+#ifdef WINDOWS
+    pluginTable [indexHandler]->pluginHandle = LoadLibrary (path);
+    if (pluginTable [indexHandler]->pluginHandle == NULL) {
+	message = (char*) malloc (12 + strlen (path));
+        sprintf (message, "Cannot open library %s", path);
+    }
+#else  /* WINDOWS */
     pluginTable [indexHandler]->pluginHandle = dlopen (path, RTLD_NOW);
-    
-    /* strcpy(message, dlerror());*/
- 
     message = (char*) dlerror ();
+#endif /* WINDOWS */
     
     if (message) {
 	printf ("dlerror message: %s\n", message);
@@ -572,7 +595,11 @@ int   indexHandler;
     }
 
     /* get the symbols from the dynamic library */
+#ifdef WINDOWS
+    ptr_NPP_GetMIMEDescription = GetProcAdress (pluginTable [indexHandler]->pluginHandle, "NPP_GetMIMEDescription");
+#else  /* WINDOWS */
     ptr_NPP_GetMIMEDescription = (int(*) ()) dlsym (pluginTable [indexHandler]->pluginHandle, "NPP_GetMIMEDescription");
+#endif /* WINDOWS */
     pluginMimeType = (NPMIMEType) (*ptr_NPP_GetMIMEDescription) ();
     pluginTable [indexHandler]->pluginMimeType = (char*) malloc (strlen (pluginMimeType) + 1) ;
     strcpy (pluginTable [indexHandler]->pluginMimeType, pluginMimeType);
@@ -612,21 +639,28 @@ Display* display;
     NPWindow*   pwindow;
     int         indexPlug;
     char        widthText[10], heightText[10];
-    char       *argn[3], *argv[3];
+    char       *argn[6], *argv[6];
+    char*       url;
     uint16      stype;
     int         ret;
-    int16 argc  = 3; /* to parametrize */
+    int16 argc  = 6; /* to parametrize */
      
-    /* printf ("***** Ap_CreatePluginInstance *****\n") ; */
+    printf ("***** Ap_CreatePluginInstance *****\n") ;
 
     argn[0] = "SRC";
     argn[1] = "WIDTH";
     argn[2] = "HEIGHT";
+    argn[3] = "CONTROLS";
+    argn[4] = "AUTOSTART";
+    argn[5] = "STATUSBAR";
     sprintf (widthText, "%d", imageDesc->PicWArea);
     sprintf (heightText, "%d", imageDesc->PicHArea);
     argv[0] = imageDesc->PicFileName;
     argv[1] = widthText;
     argv[2] = heightText;
+    argv[3] = "TRUE";
+    argv[4] = "TRUE";
+    argv[5] = "TRUE";
     indexPlug = imageDesc->PicType - InlineHandlers;
 
     /* Prepare window information and "instance" structure */
@@ -649,18 +683,24 @@ Display* display;
     ((NPSetWindowCallbackStruct*) (pwindow->ws_info))->colormap = DefaultColormap(display, DefaultScreen (display));
     ((NPSetWindowCallbackStruct*) (pwindow->ws_info))->depth    = DefaultDepth(display, DefaultScreen (display));
     ((NPSetWindowCallbackStruct*) (pwindow->ws_info))->type     = 0;
-    
-    pluginTable [indexPlug]->pluginInstance = (NPP) malloc (sizeof (NPP_t));
 
-    (*(pluginTable [indexPlug]->pluginFunctionsTable->newp)) (pluginTable [indexPlug]->pluginType, pluginTable [indexPlug]->pluginInstance, NP_EMBED, argc, argn, argv,  NULL);
+    url = (char*) malloc (strlen (imageDesc->PicFileName) + 1);
+    strcpy (url, imageDesc->PicFileName);
+    
+    /*     pluginTable [indexPlug]->pluginInstance = (NPP) malloc (sizeof (NPP_t)); */
+    imageDesc->pluginInstance = (NPP) malloc (sizeof (NPP_t)); 
+    (*(pluginTable [indexPlug]->pluginFunctionsTable->newp)) (pluginTable [indexPlug]->pluginType, imageDesc->pluginInstance, NP_EMBED, argc, argn, argv,  NULL);
+    /*    (*(pluginTable [indexPlug]->pluginFunctionsTable->newp)) (pluginTable [indexPlug]->pluginType, pluginTable [indexPlug]->pluginInstance, NP_EMBED, argc, argn, argv,  NULL); */
 
     stream      = (NPStream*) malloc (sizeof (NPStream));
-    stream->url = imageDesc->PicFileName;
+    stream->url = url;
     stream->end = 0;
        
-    (*(pluginTable [indexPlug]->pluginFunctionsTable->setwindow)) (pluginTable [indexPlug]->pluginInstance, pwindow); 
+    /*    (*(pluginTable [indexPlug]->pluginFunctionsTable->setwindow)) (pluginTable [indexPlug]->pluginInstance, pwindow); */
+    (*(pluginTable [indexPlug]->pluginFunctionsTable->setwindow)) (imageDesc->pluginInstance, pwindow); 
     
-    ret = (*(pluginTable [indexPlug]->pluginFunctionsTable->newstream)) (pluginTable [indexPlug]->pluginInstance, pluginMimeType, stream, TRUE, &stype); 
+    /*ret = (*(pluginTable [indexPlug]->pluginFunctionsTable->newstream)) (pluginTable [indexPlug]->pluginInstance, pluginMimeType, stream, TRUE, &stype); */
+    ret = (*(pluginTable [indexPlug]->pluginFunctionsTable->newstream)) (imageDesc->pluginInstance, pluginMimeType, stream, TRUE, &stype); 
 
     range.offset = 0; /*10; */
     range.length = 2000; /*20;*/
@@ -669,7 +709,8 @@ Display* display;
     /*AM_requestread(stream, &range);*/
  
     /* printf ("Retrun from new stream = %d\n", ret); */
-    (*(pluginTable [indexPlug]->pluginFunctionsTable->asfile)) (pluginTable [indexPlug]->pluginInstance, stream, imageDesc->PicFileName);
+    /* (*(pluginTable [indexPlug]->pluginFunctionsTable->asfile)) (pluginTable [indexPlug]->pluginInstance, stream, url); */
+    (*(pluginTable [indexPlug]->pluginFunctionsTable->asfile)) (imageDesc->pluginInstance, stream, url); 
     /*dlclose(fighandle);*/       
 }
 

@@ -17,7 +17,17 @@
 /*
  * Definition for picture management
 */
+#ifdef AMAYA_PLUGIN
+#include "thot_gui.h"
+#include "thot_sys.h"
+#include "thotdir.h"
+#include "dialog.h"
+#include "message.h"
+#include "application.h"
 
+#include "npapi.h"
+#include "npupp.h"
+#endif /* AMAYA_PLUGIN */
 
 #ifndef _PICTURE_h
 #define _PICTURE_h
@@ -56,7 +66,10 @@ typedef struct
   Pixmap         PicMask;
   boolean        mapped;
   boolean        created;
-  Widget         wid;
+  ThotWidget         wid;
+#ifdef AMAYA_PLUGIN
+  NPP            pluginInstance;
+#endif /* AMAYA_PLUGIN */
 } PictInfo;
 
 typedef enum
@@ -74,6 +87,7 @@ typedef struct
   void     (*Produce_Postscript) ();
   boolean  (*Match_Format) ();
   void     (*DrawPicture) ();
+  void     (*FreePicture)();
 } PictureHandler;
 
 
