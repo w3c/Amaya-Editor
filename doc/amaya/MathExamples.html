@@ -45,6 +45,7 @@ Here is how it looks in your browser:</p>
       </msub>
     </mfrac>
   </mrow>
+  <mtext>&thickspace;;&thickspace;</mtext>
   <mrow>
     <mrow>
       <mi fontstyle="normal">&dtri;</mi>
@@ -68,6 +69,7 @@ Here is how it looks in your browser:</p>
       </mfrac>
     </mrow>
   </mrow>
+  <mtext>&thickspace;;&thickspace;</mtext>
   <mrow>
     <mrow>
       <msup>
@@ -105,6 +107,7 @@ Here is how it looks in your browser:</p>
       </mfrac>
     </mrow>
   </mrow>
+  <mtext>&thickspace;;&thickspace;</mtext>
   <mrow>
     <mrow>
       <mi fontstyle="normal">&dtri;</mi>
@@ -120,39 +123,45 @@ Here is how it looks in your browser:</p>
 Here is the source code representing the beginning of the above expression,
 but you don't need to learn that language: a few simple commands in Amaya
 allow you to build complex expressions in a few seconds.</p>
-<pre>   &lt;mrow>
-     &lt;mi fontstyle="normal">&amp;dtri;&lt;/mi>
-     &lt;mo>&amp;middot;&lt;/mo>
-     &lt;mi fontstyle="normal">E&lt;/mi>
-   &lt;/mrow>
-   &lt;mo>=&lt;/mo>
-   &lt;mfrac>
-     &lt;mi>&amp;rho;&lt;/mi>
-     &lt;msub>
-       &lt;mi>&amp;epsiv;&lt;/mi>
-       &lt;mn>0&lt;/mn>
-     &lt;/msub>
-   &lt;/mfrac>
+<pre>
    &lt;mrow>
-     &lt;mi fontstyle="normal">&amp;dtri;&lt;/mi>
-     &lt;mo>&amp;times;&lt;/mo>
-     &lt;mi fontstyle="normal">E&lt;/mi>
-   &lt;/mrow>
-   &lt;mo>=&lt;/mo>
-   &lt;mrow>
-     &lt;mo>-&lt;/mo>
+     &lt;mrow>
+       &lt;mi fontstyle="normal">&amp;dtri;&lt;/mi>
+       &lt;mo>&amp;CenterDot;&lt;/mo>
+       &lt;mi fontstyle="normal">E&lt;/mi>
+     &lt;/mrow>
+     &lt;mo>=&lt;/mo>
      &lt;mfrac>
-       &lt;mrow>
-         &lt;mi>&amp;part;&lt;/mi>
-         &lt;mo>&amp;ApplyFunction;&lt;/mo>
-         &lt;mi fontstyle="normal">B&lt;/mi>
-       &lt;/mrow>
-       &lt;mrow>
-         &lt;mi>&amp;part;&lt;/mi>
-         &lt;mo>&amp;ApplyFunction;&lt;/mo>
-         &lt;mi>t&lt;/mi>
-       &lt;/mrow>
+       &lt;mi>&amp;rho;&lt;/mi>
+       &lt;msub>
+         &lt;mi>&amp;epsiv;&lt;/mi>
+         &lt;mn>0&lt;/mn>
+       &lt;/msub>
      &lt;/mfrac>
+   &lt;/mrow>
+   &lt;mtext>&amp;thickspace;;&amp;thickspace;&lt;/mtext>
+   &lt;mrow>
+     &lt;mrow>
+       &lt;mi fontstyle="normal">&amp;dtri;&lt;/mi>
+       &lt;mo>&amp;times;&lt;/mo>
+       &lt;mi fontstyle="normal">E&lt;/mi>
+     &lt;/mrow>
+     &lt;mo>=&lt;/mo>
+     &lt;mrow>
+       &lt;mo>-&lt;/mo>
+       &lt;mfrac>
+         &lt;mrow>
+           &lt;mi>&amp;PartialD;&lt;/mi>
+           &lt;mo>&amp;ApplyFunction;&lt;/mo>
+           &lt;mi fontstyle="normal">B&lt;/mi>
+         &lt;/mrow>
+         &lt;mrow>
+           &lt;mi>&amp;PartialD;&lt;/mi>
+           &lt;mo>&amp;ApplyFunction;&lt;/mo>
+           &lt;mi>t&lt;/mi>
+         &lt;/mrow>
+       &lt;/mfrac>
+     &lt;/mrow>
    &lt;/mrow></pre>
 <hr>
 
