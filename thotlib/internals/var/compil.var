@@ -1,5 +1,5 @@
 /*
- * Variables used by compilers grm, str et prs.
+ * Variables used by compilers grm, str, prs, and app
  */
 
 /* message origin */
@@ -11,8 +11,7 @@ EXPORT int        	GRM;
 EXPORT int		APP;
 
 /* a line from the source file being compiled */
-EXPORT lineBuffer 	inputLine;	/* ligne traitee */
+EXPORT lineBuffer 	inputLine;
 
 /* an error has been detected */
 EXPORT boolean 	error;
-

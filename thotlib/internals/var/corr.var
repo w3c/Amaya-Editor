@@ -1,12 +1,11 @@
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
+/*
+ * variables for the spelling checker
+ */
 
-/* corr.var
- * variables exportees par le module corrmenu.c
-*/
-EXPORT  int	CORR; /* identification des messages du correcteur  */
-EXPORT  int	NC; /* Nbre max de corrections */
-EXPORT  char	tab_c[NbCorrMax+1][MAX_WORD_LEN];  /* Tab. corrections */
-EXPORT  char	tab_e[MAX_WORD_LEN];               /* Tab. des mots errones */
+EXPORT int	CORR;	/* identifier for messages issued by the checker  */
+EXPORT int	NC;	/* max. number of corrections */
+EXPORT char	tab_c[NbCorrMax+1][MAX_WORD_LEN];  /* Tab. corrections */
+EXPORT char	tab_e[MAX_WORD_LEN];               /* Tab. des mots errones */
 EXPORT PtrElement CorrElTrouve;	     /* Element a corriger */
 EXPORT int	IdxCarTrouve; /* Index dans l'element trouve */
 EXPORT Language CorrLangue;     /* Langue de la correction */

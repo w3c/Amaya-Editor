@@ -1,5 +1,4 @@
 
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
 #ifndef _APPDIALOG_H
 #define _APPDIALOG_H
 
@@ -8,7 +7,7 @@
 /* Structures utilisees dans les table d'actions d'interface */
 typedef struct _Action_Ctl
 {
-  char 		*ActionName;	/* Name externe de l'action		*/
+  char 		*ActionName;	/* Nom externe de l'action		*/
   Proc 		Call_Action;	/* Adresse de la procedure		*/
   char 		*ActionEquiv;	/* Equivalent clavier de l'action	*/
   boolean	ActionActive[MAX_FRAME];
@@ -29,7 +28,7 @@ typedef struct _Item_Ctl
     } s0;
     struct
     {
-      struct _Menu_Ctl	*_SubMenu; /* Contexte du sous-menu attache	*/
+      struct _Menu_Ctl	*_SubMenu; /* Contexte du sous-menu attache'	*/
     } s1;
   } u;
 }Item_Ctl;
@@ -50,7 +49,7 @@ typedef struct _Menu_Ctl
 
 typedef struct _SchemaMenu_Ctl
 {
-  char		*SchemaName;	/* Name du schema concerne		*/
+  char		*SchemaName;	/* Nom du schema concerne		*/
   Menu_Ctl	*SchemaMenu;	/* Contexte du premier menu		*/
   struct _SchemaMenu_Ctl *NextSchema;	/* Contexte suivant	       	*/
 }SchemaMenu_Ctl;

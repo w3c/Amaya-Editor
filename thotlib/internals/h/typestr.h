@@ -1,104 +1,106 @@
 
 /*
- * Declarations de types pour les schemas de structure de l'Editeur 
- * V. Quint	Juin 1984
+ * Type declarations for the Editor structure schemas
+ *
  */
-
+ 
 /* DEFINITIONS:
-
-     Quelle que soit la categorie d'un element structure (compose, associe,
-     parametre), sa structure est definie par une regle de la table
+ 
+   Whatever the category of an element is (composed, associated,
+   parameter), its structure is defined by a rule from the table
+   StructSchema.SsRule.
+   A rule number is the rank of the rule in the table
      StructSchema.SsRule.
-     Un numero de regle est le rang de la regle dans la table
-        StructSchema.SsRule.
-     Un numero d'attribut est le rang d'un attribut dans la table
-        StructSchema.SsAttribute.
-     Un numero de valeur d'attribut est le rang de la valeur dans la table
-        AttrEnumValue de l'attribut. 
-
-*/
-
+   An attribute number is the rank of an attribute in the table
+     StructSchema.SsAttribute.
+   An attribute value number is the rank of the value in the table
+     AttrEnumValue of the attribute.
+ 
+     */
+ 
 #include "app.h"
-
-typedef char    Name[MAX_NAME_LENGTH];	/* le nom se termine par un octet nul */
-
-/* constructeurs des regles de structure */
+ 
+typedef char    Name[MAX_NAME_LENGTH]; /* a name is terminated by a null byte*/
+ 
+/* constructors for structure rules */
 typedef enum
 {
-  	CsIdentity,
-	CsList,
-	CsChoice,
-	CsAggregate,
-	CsUnorderedAggregate,
-	CsConstant,
-	CsReference,
-	CsBasicElement,
-	CsNatureSchema,
-	CsPairedElement,
-	CsExtensionRule
+        CsIdentity,
+        CsList,
+        CsChoice,
+        CsAggregate,
+        CsUnorderedAggregate,
+        CsConstant,
+        CsReference,
+        CsBasicElement,
+        CsNatureSchema,
+        CsPairedElement,
+        CsExtensionRule
 } RConstruct;
-#define MAX_CONSTRUCT	11	/* nombre de valeurs de RConstruct */
-
-/* types de base connus de l'Editeur (voir la constante MAX_BASIC_TYPE) */
+#define MAX_CONSTRUCT   11      /* number of values for RConstruct */
+ 
+/* basic types known by Thot (refer to the constant MAX_BASIC_TYPE) */
 typedef enum
 {
-	CharString,
-	GraphicElem,
-	Symbol,
-	Picture,
-	Refer,
-	PageBreak,
-	UnusedBasicType
+        CharString,
+        GraphicElem,
+        Symbol,
+        Picture,
+        Refer,
+        PageBreak,
+        UnusedBasicType
 } BasicType;
-#define MAX_BASIC_TYPE 7		/* nombre de valeurs de BasicType */
-
+#define MAX_BASIC_TYPE 7                /* number of values for BasicType */
+ 
 typedef enum
 {
-  	AtNumAttr, 
-	AtTextAttr,
-	AtReferenceAttr,
-	AtEnumAttr
+        AtNumAttr, 		/* integer attribute */
+        AtTextAttr,		/* text attribute */
+        AtReferenceAttr,	/* reference attribute */
+        AtEnumAttr		/* enumerated attribute */
 } AttribType;
-
-#define MAX_ATTR_TYPE	4	/* nombre de valeurs de AttribType */
-
-/* Une definition d'attribut dans un schema de structure */
-/* Chaque definition d'attribut comprend le nom de l'attribut, les noms de
-   ses valeurs possibles. Dans la representation interne d'un document ne
-   figurent que les attributs qui ont une valeur. */
-
+#define MAX_ATTR_TYPE   4       /* number of values for AttribType */
+ 
+/* A definition of an attribute in a structure schema */
+/* Each attribute definition includes the attribute name and, if it is
+   an enumerated attribute, the names of its possible values. */
+ 
 typedef struct _TtAttribute
 {
-	Name             AttrName;	/* nom de l'attribut, eventuellement
-					   traduit dans la langue utilisateur*/
-	Name             AttrOrigName;	/* nom reel de l'attribut */
-	boolean         AttrGlobal;	/* l'attribut peut s'appliquer a tous
-					  les elements definis dans le schema*/
-	int       AttrFirstExcept;	/* indice dans SsException du 1er
-					   numero d'exception associe' a cet
-					   attribut, 0 s'il n'y a pas
-					   d'exception associee */
-	int       AttrLastExcept;	/* indice dans SsException du dernier
-					   numero d'exception associe' a cet
-					   attribut */
-	AttribType 	AttrType;	/* type de l'attribut */
-	union
-	{
-	  struct			/* AttribType = AtReferenceAttr */
-	  {
-	    /* numero de la regle definissant le type d'elt reference' par
-	       l'attribut */
-	    int     _AttrTypeRef_;	
-	    /* schema de struct ou est defini le type d'elt reference', 0 si
-	       meme schema */	
-	    Name             _AttrTypeRefNature_;
-	  } s2;
+        Name             AttrName;      /* name of the attribute, may be
+                                           translated in the user's language */
+        Name             AttrOrigName;  /* real name of the attribute */
+        boolean         AttrGlobal;     /* the attribute can apply to all
+                                           the elements defined in the schema 
+*/
+        int       AttrFirstExcept;      /* index in SsException of the first
+                                           exception number associated with 
+this
+                                           attribute, 0 if no exception is
+                                           associated */
+        int       AttrLastExcept;       /* index in SsException of the last
+                                           exception number associated with 
+this
+                                           attribute */
+        AttribType      AttrType;       /* attribute type */
+        union
+        {
+          struct                        /* AttribType = AtReferenceAttr */
+          {
+            /* number of the rule defining the type of element referenced
+               by the attribute */
+            int     _AttrTypeRef_;
+            /* structure schema where the type of referenced element is
+               defined, 0 if same schema */
+            Name             _AttrTypeRefNature_;
+          } s2;
 	  struct			/* AttribType = AtEnumAttr */
 	  {
-	    /* nombre de valeurs possibles: (taille effective de la table
+	    /* number of possible values (effective size of the table
 	       AttrEnumValue) */
 	    int   _AttrNEnumValues_;
-	    Name             _AttrEnumValue_[MAX_ATTR_VAL]; /* noms de ces valeurs */
+	    Name             _AttrEnumValue_[MAX_ATTR_VAL]; /* names of those values 
+*/
 	  } s3;
 	} u;
 } TtAttribute;
@@ -111,56 +113,59 @@ typedef struct _TtAttribute
 
 typedef struct _StructSchema *PtrSSchema;
 
-/* Une regle definissant un type dans un schema de structure */
+/* A rule defining a type in a structure schema */
 typedef struct _SRule
 {
-	Name             SrName;	/* symbole gauche de la regle = type
-					   defini par la regle */
-	int 		SrNDefAttrs; 	/* 0..MAX_DEFAULT_ATTR, nombre d'attributs
-					   a valeur imposee */ 
-	/* numeros des attributs a valeur imposee */
+	Name             SrName;	/* left-hand symbol of the rule =
+					   type defined by the rule */
+	int 		SrNDefAttrs; 	/* 0..MAX_DEFAULT_ATTR, number of
+					   attributes with a default value */
+        /* numbers of default value attributes */
 	int  SrDefAttr[MAX_DEFAULT_ATTR];  
-	/* valeurs imposees de ces attributs, dans le meme ordre */
+        /* default values of these attributes, in the same order */ 
 	int             SrDefAttrValue[MAX_DEFAULT_ATTR];  
 	boolean		SrDefAttrModif[MAX_DEFAULT_ATTR];
-	/* 0..MAX_LOCAL_ATTR, nombre d'attributs pouvant s'appliquer au type */ 
+        /* 0..MAX_LOCAL_ATTR, number of attributes that can apply to the type 
+*/
 	int 		SrNLocalAttrs;
-	/* numeros des attributs pouvant s'appliquer au type */
+        /* numbers of the attributes that can apply to the type */ 
 	int  SrLocalAttr[MAX_LOCAL_ATTR];  
-	/* l'attribut local de meme rang est obligatoire */
+        /* the local attribute of same rank is mandatory */
 	boolean		SrRequiredAttr[MAX_LOCAL_ATTR];
-	boolean         SrAssocElem;	/* c'est un element associe */
-	boolean         SrParamElem;	/* c'est un parametre */
-	boolean         SrUnitElem;	/* c'est une unite exportee */
-	boolean         SrRecursive;	/* regle recursive */
-	boolean         SrRecursDone;	/* regle recursive deja appliquee */
-	boolean         SrExportedElem;	/* ce type d'element est exporte' */
-	int     SrExportContent;	/* type d'element constituant le
-					   contenu si l'element est exporte'*/
-	Name             SrNatExpContent;	/* schema de structure ou est defini
-					   SrExportContent, octet 0 si meme schema*/
-	int       SrFirstExcept;	/* indice dans SsException du premier
-					   numero d'exception associe' a ce
-					   type d'element, 0 s'il n'y a pas
-					   d'exception associee */
-	int       SrLastExcept;	/* indice dans SsException du dernier
-					   numero d'exception associe' a ce
-					   type d'element */
-	int		SrNInclusions;	/* nombre d'inclusions au sens SGML */
-	int	SrInclusion[MAX_INCL_EXCL_SRULE]; /* les types d'elements
-					   inclus au sens SGML */
-	int		SrNExclusions;	/* nombre d'exclusions au sens SGML */
-	int	SrExclusion[MAX_INCL_EXCL_SRULE]; /* les types d'elements
-					   exclus au sens SGML */
-	boolean         SrRefImportedDoc;	/* c'est un lien d'inclusion d'un
-					   document externe */
+	boolean         SrAssocElem;	/* it is an associated element */
+	boolean         SrParamElem;	/* it is a parameter */
+	boolean         SrUnitElem;	/* it is an exported unit */
+	boolean         SrRecursive;	/* recursive rule */
+	boolean         SrRecursDone;	/* already applied recursive rule */
+	boolean         SrExportedElem;	/* this type of element is exported */
+	int     SrExportContent;	/* type of element making up the
+					   content if the element is exported */
+	Name             SrNatExpContent;	/* structure schema where
+					   SrExportContent is defined, byte 0 if
+					   same schema */
+	int       SrFirstExcept;	/* index in SsException of the first
+					   exception number associated with this
+					   element type, 0 if none */
+	int       SrLastExcept;	        /* index in SsException of the last
+					   exception number associated with this
+					   element type */
+	int		SrNInclusions;	/* number of SGML-style inclusions ? */
+	int	SrInclusion[MAX_INCL_EXCL_SRULE]; /* the SGML-style included
+						     element types */
+	int		SrNExclusions;	/* number of SGML-style exclusions ?*/
+        int	SrExclusion[MAX_INCL_EXCL_SRULE]; /* the SGML-style exluded
+						     element types */
+	boolean         SrRefImportedDoc;	  /* inclusion link of an
+						     external document */
 	RConstruct    SrConstruct;
 	union
 	{
 	  struct			/* SrConstruct = CsNatureSchema */
 	  {
-	    	PtrSSchema    _SrSSchemaNat_;	/* schema de str de la nature*/
-		Name             _SrOrigNat_;	/* nom (traduit) de la nature*/
+	    	PtrSSchema    _SrSSchemaNat_;	/* structure schema of the
+						   nature */
+		Name             _SrOrigNat_;	/* (translated) name of the
+						   nature */
 	  } s0;
 	  struct			/* SrConstruct = CsBasicElement */
 	  {
@@ -168,51 +173,55 @@ typedef struct _SRule
 	  } s1;
 	  struct			/* SrConstruct = CsReference */
 	  {
-	    	/*numero de la regle definissant le type d'element reference'*/
+	        /* number of the rule defining the referenced element type */ 
 	    	int     _SrReferredType_;
-		/*schema de structure ou est defini le type d'element
-		  reference', octet nul si meme schema */
+		/* structure schema where the referenced element type is
+		   defined, null byte if same schema */
 		Name             _SrRefTypeNat_;	
 	  } s2;
 	  struct			/* SrConstruct = CsIdentity */
 	  {
-		int     _SrIdentRule_; /* numero de la regle definissant
-						 le symbole droit */
+		int     _SrIdentRule_;  /* number of the rule defining
+					   the right-hand symbol */
 	  } s3;
 	  struct			/* SrConstruct = CsList */
 	  {
-		int     _SrListItem_;/*numero de la regle definissant 
-						 les elements de la liste */
-		int             _SrMinItems_;   /* nombre minimum d'elts */
-		int             _SrMaxItems_;   /* nombre maximum d'elts */
+		int     _SrListItem_;   /* number of the rule defining
+					   the list elements */
+		int             _SrMinItems_;   /* min number of elements */
+		int             _SrMaxItems_;   /* max number of elements */
 	  } s4;
 	  struct			/* SrConstruct = CsChoice */
 	  {
-	    	int 		_SrNChoices_; /* -1..MAX_OPTION_CASE, nombre
-						d'elements du choix, ou  0 si
-						unite quelconque (UNIT), ou -1
-						si nature quelconque (NATURE)*/
-		int	_SrChoice_[MAX_OPTION_CASE];	/* numeros des
-				regles definissant chaque element du choix */
+	    	int 		_SrNChoices_;   /* -1..MAX_OPTION_CASE, number
+						   of choice elements, 0 if any
+						   unit (UNIT) or -1 if any nature
+						   (NATURE) */
+		int	_SrChoice_[MAX_OPTION_CASE];	/* numbers of rules
+							   defining each choice
+							   element */
 	  } s5;
 	  struct			/* SrConstruct = CsAggregate | CsUnorderedAggregate */
 	  {
-	    	int		_SrNComponents_; /* 0..MAX_COMP_AGG, nombre de 
-						   composants de l'agregat */
-		int	_SrComponent_[MAX_COMP_AGG]; /* numeros des regles
-						definissant chaque composant */
-		boolean         _SrOptComponent_[MAX_COMP_AGG]; /* table des
-						composants optionnels */
+	    	int		_SrNComponents_; /* 0..MAX_COMP_AGG, number of
+						    components in the
+						    aggregate */
+		int	_SrComponent_[MAX_COMP_AGG]; /* numbers of the rules
+							defining each
+							component */
+		boolean         _SrOptComponent_[MAX_COMP_AGG]; /* table of
+							optional components */
 	  } s6;
 	  struct			/* SrConstruct = CsConstant */
 	  {
-	    	int 		_SrIndexConst_;	/* 1..MAX_LEN_ALL_CONST, Indice dans 
-						SsConstBuffer du debut de la
-						chaine constante */
+	    	int 		_SrIndexConst_;	/* 1..MAX_LEN_ALL_CONST, index
+						   in SsConstBuffer of the
+						   beginning of the constant
+						   string */
 	  } s7;
 	  struct			/* SrConstruct = CsPairedElement */
 	  {
-		boolean		_SrFirstOfPair_;	/* marque de debut ou de fin */
+		boolean		_SrFirstOfPair_; /* begin or end mark */
 	  } s8;
 	} u;
 } SRule;
@@ -237,82 +246,84 @@ typedef struct _SRule
 typedef struct _PresentSchema *PtrPSchema;
 typedef struct _HandlePSchema *PtrHandlePSchema;
 
-/* un element de chainage des schemas de presentation */
+/* a presentation schema chaining element */
 typedef struct _HandlePSchema
 {
-    PtrPSchema		HdPSchema;   /* pointeur sur le schema de pres.     */
-    PtrHandlePSchema	HdNextPSchema;	     /* handle du schema de pres. suivant   */
-    PtrHandlePSchema	HdPrevPSchema;  /* handle du schema de pres. precedent */
+    PtrPSchema		HdPSchema;   /* pointer on the presentation schema */
+    PtrHandlePSchema	HdNextPSchema;	/* handle of the next presentation
+					   schema */     
+    PtrHandlePSchema	HdPrevPSchema;  /* handle of the previous presentation
+					   schema */
 }       HandlePSchema;
 
 typedef struct _ExtensBlock *PtrExtensBlock;
 
-/* bloc contenant l'ensemble des regles d'extension (section EXTENS) */
-/* d'un schema d'extension */
+/* block containing all the extension rules (EXTENS section) of an
+   extension schema */
 typedef struct _ExtensBlock
 {
     PtrExtensBlock	EbNextBlock;	
     SRule		EbExtensRule[MAX_EXTENS_SSCHEMA];
 } ExtensBlock;
 
-/*       
-     Un schema de structure (de document ou de nature) en memoire.
+/*
+  A structure schema (for a document or a nature) in memory.
 
-     Tous les elements structures, quelle que soit leur categorie (composes,
-     associes, parametres), sont definis dans la table de regles
-     SsRule. Dans cette table, les regles sont regroupees par categories.
-     La premiere regle definit l'element racine de la structure, puis suivent
-     toutes les regles definissant les elements composes. Les regles qui
-     definissent les elements associes sont consecutives, de meme que celles
-     qui definissent les parametres. Pour chacun de ces groupes de regles on
-     a le numero de la premiere et de la derniere regle du groupe.
-     Les attributs du schema sont ranges dans un tableau : SsAttribute.
+  All the elements, whatever their category is (composed,
+  associated, parameters) are defined in the rule table SsRule. In this
+  table rules are grouped by category. The first rule defines the root
+  element of the structure, then all the rules defining the composed
+  elements. Then come the rules defining the associative elements, as well
+  as those defining the parameters. The number of the first and last rule
+  is available for each of these groups of rules. The schema attributes
+  are stored in the array SsAttribute.
  */
 
 typedef struct _StructSchema
 {
-	PtrSSchema    SsNextExtens;	/* Pointeur sur l'extension de schema*/
-					/* suivante */
-	PtrSSchema    SsPrevExtens;	/* Pointeur sur l'extension de schema*/
-					/* precedente ou nil si pas extension*/
-	Name             SsName;	/* nom de la structure generique */
-	int             SsCode;	/* code identifiant la version */
-	Name             SsDefaultPSchema;	/* nom du schema de presentation par */
-					/* defaut associe a cette structure */
-	PtrPSchema      SsPSchema;	/* pointeur sur le schema de */
-					/* presentation effectivement associe*/
-	PtrHandlePSchema SsFirstPSchemaExtens;	/* premier schema de presentation */
-					/* additionnel */
+	PtrSSchema    SsNextExtens;	/* Pointer on the next schema
+					   extension */
+	PtrSSchema    SsPrevExtens;	/* Pointer on the previous schema
+					   extension or nil if none */
+	Name             SsName;	/* generic structure name*/
+        int             SsCode;	        /* code to identify the version */
+	Name             SsDefaultPSchema;	/* name of the default
+					   presentation schema associated with
+					   this structure */
+	PtrPSchema      SsPSchema;	/* pointer on the actual associated
+					   presentation schema */
+	PtrHandlePSchema SsFirstPSchemaExtens;	/* first addtional presentation
+						   schema */
 	PtrEventsSet    SsActionList;	/* Pointer to the list of actions */
 					/* that can be applied in documents */
 					/* with this schema. */
-	boolean		SsExtension;	/* Faux si schema de document ou de */
-					/* nature,Vrai si extension de schema*/
-	int		SsNExtensRules; /* nombre de regles d'extension si*/
-					/* il c'est une extension de schema */
-	PtrExtensBlock	SsExtensBlock;/* bloc des regles d'extension, s'il */
-					/* s'agit d'une extension de schema */
-	int     SsRootElem;	/* numero de la regle racine */
-	int             SsNObjects;	/* nombre d'elements existant du type*/
-					/* de la regle racine */
-	int  SsNAttributes;	/* nombre d'attributs du schema */
-	int     SsNRules;	/* nombre courant de regles definissant */
-					/* les elements structures, y compris*/
-					/* les regles de nature ajoutees */
-					/* dynamiquement */
-	boolean         SsExport;	/* ce schema exporte des elements */
-	int             SsNExceptions;	/* Nombre d'entrees dans SsException*/
-	/* tous les numeros d'exception, associes aux types d'elts et aux
-	   attributs */
+	boolean		SsExtension;	/* False if document or nature schema,
+					   True if schema extension */
+	int		SsNExtensRules; /* number of extension rules if it is
+					   a schema extension */
+	PtrExtensBlock	SsExtensBlock;  /* Extension rules block if it is
+					   a schema extension */
+        int     SsRootElem;	        /* number of the root rule */
+	int             SsNObjects;	/* number of existing elements with the
+					   root rule type */
+	int  SsNAttributes;	        /* number of attributes in the schema */
+	int     SsNRules;	        /* current number of rules defining the
+					   elements, including the nature rules
+					   added dynamically */
+	boolean         SsExport;	/* this schema exports elements */
+	int             SsNExceptions;	/* number of entries in SsException */
+        /* All the exception numbers associated with the element types and
+	   the attributes */
 	int             SsException[MAX_EXCEPT_SSCHEMA];
-	/* buffer pour le texte des constantes */
+        /* buffer for the text of the constants */
 	char            SsConstBuffer[MAX_LEN_ALL_CONST];
-	/* numero de la regle definissant la premiere nature chargee
-	dynamiquement */
+        /* number of the rule defining the first dynamically loaded nature */
 	int     SsFirstDynNature;
-	/* les attributs definis pour ce schema */
+        /* attributes for this schema */
 	TtAttribute        SsAttribute[MAX_ATTR_SSCHEMA];
-	/* regles definissant les elements structures */
-	SRule           SsRule[MAX_RULES_SSCHEMA + 2]; /* on fait + 2 pour se
-			      garantir deux regles libres en fin de tableaux */
+        /* structure rules defining the elements */
+	SRule           SsRule[MAX_RULES_SSCHEMA + 2]; /* +2 to be sure to have
+			      two free rules at the end of the arrays */
 } StructSchema;
+
+

@@ -1,14 +1,12 @@
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /* 
-   Variables exportees par l'analyseur syntaxique analsynt
+   Variables for parsing languages S, P, T, and A
 */
 
-EXPORT int 		lgkwtable;	    /* longueur effective de kwtable */
-EXPORT int 		lastshortkw;	    /* rang du dernier mot-cle court 
-					       dans kwtable */
-EXPORT SrcKeywordDesc  	kwtable[nbkw];	    /* table des mots-cles */
-EXPORT int 		lgidenttable;	    /* longueur effective de la table*/
-EXPORT SrcIdentDesc 	identtable[nbident];/* table des identificateurs */
-EXPORT SyntRuleNum     	lgruletable;	    /*longueur effective de ruletable*/
-EXPORT SyntacticRule    	ruletable[maxrule]; /* table des regles */
+EXPORT int 		lgkwtable;	    /* length of kwtable */
+EXPORT int 		lastshortkw;	    /* rank of last short keyword
+					       in kwtable */
+EXPORT SrcKeywordDesc  	kwtable[nbkw];	    /* table of short key words */
+EXPORT int 		lgidenttable;	    /* length of identtable */
+EXPORT SrcIdentDesc 	identtable[nbident];/* table of identifiers */
+EXPORT SyntRuleNum     	lgruletable;	    /* length of ruletable */
+EXPORT SyntacticRule    ruletable[maxrule]; /* table of syntactic rules */
