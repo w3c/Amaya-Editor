@@ -181,8 +181,11 @@ CSSInfoPtr      css;
 				    }
 				  else
 				    found = FALSE;
+				  oldcss = NULL;
 				}
-			      oldcss = NULL;
+			      else
+				/* it's not the the previous style sheet */
+				oldcss = oldcss->NextCSS;
 			    }
 			  else
 			    oldcss = oldcss->NextCSS;
