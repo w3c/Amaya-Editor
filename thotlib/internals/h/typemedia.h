@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2002
+ *  (c) COPYRIGHT INRIA, 1996-2003
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -126,6 +126,7 @@ typedef struct _Line
   PtrBox          LiFirstPiece;	/* Index if split box */
   PtrBox          LiLastBox;	/* Index of last contained box */
   PtrBox          LiLastPiece;	/* Index if split box */
+  ThotBool        LiNoOverlap;  /* The line cannot overlap */
 } Line;
 
 typedef struct _BoxRelation

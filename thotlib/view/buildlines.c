@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2002
+ *  (c) COPYRIGHT INRIA, 1996-2003
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1430,12 +1430,17 @@ static void BreakMainBox (PtrLine pLine, PtrBox pBox, int max,
   ----------------------------------------------------------------------*/
 static void AddBoxInLine (PtrBox pBox, int *descent, int *ascent, PtrLine pLine)
 {
-   pLine->LiRealLength += pBox->BxWidth;
-   /* Compute the current line height */
-   if (*ascent < pBox->BxHorizRef)
-      *ascent = pBox->BxHorizRef;
-   if (*descent < pBox->BxHeight - pBox->BxHorizRef)
-      *descent = pBox->BxHeight - pBox->BxHorizRef;
+  pLine->LiRealLength += pBox->BxWidth;
+  /* Compute the current line height */
+  if (*ascent < pBox->BxHorizRef)
+    *ascent = pBox->BxHorizRef;
+  if (*descent < pBox->BxHeight - pBox->BxHorizRef)
+    *descent = pBox->BxHeight - pBox->BxHorizRef;
+  /* check if the line includes a compound box or an image */
+  if (pBox->BxAbstractBox &&
+      (pBox->BxAbstractBox->AbLeafType == LtCompound ||
+       pBox->BxAbstractBox->AbLeafType == LtPicture))
+    pLine->LiNoOverlap = TRUE;
 }
 
 
@@ -1832,26 +1837,26 @@ static int FillLine (PtrLine pLine, PtrAbstractBox pRootAb,
    still = TRUE;
    while (still)
      {
-	if (pNextBox->BxType == BoSplit || pNextBox->BxType == BoMulScript)
-	   pNextBox = pNextBox->BxNexChild;
-	if (!pNextBox->BxAbstractBox->AbNotInLine ||
-	    pNextBox->BxAbstractBox->AbDisplay != 'U')
-	  AddBoxInLine (pNextBox, &descent, &ascent, pLine);
-	if (pNextBox == pBox)
-	   still = FALSE;
-	else
-	{
-	  if (pNextBox->BxAbstractBox->AbLeafType == LtText &&
-	      pNextBox->BxNexChild)
-	    /* get the next child */
-	    pNextBox = pNextBox->BxNexChild;
-	  else
-	    {
-	      pNextBox = GetNextBox (pNextBox->BxAbstractBox);
-	      if (pNextBox == NULL)
-		still = FALSE;
-	    }
-	}
+       if (pNextBox->BxType == BoSplit || pNextBox->BxType == BoMulScript)
+	 pNextBox = pNextBox->BxNexChild;
+       if (!pNextBox->BxAbstractBox->AbNotInLine ||
+	   pNextBox->BxAbstractBox->AbDisplay != 'U')
+	 AddBoxInLine (pNextBox, &descent, &ascent, pLine);
+       if (pNextBox == pBox)
+	 still = FALSE;
+       else
+	 {
+	   if (pNextBox->BxAbstractBox->AbLeafType == LtText &&
+	       pNextBox->BxNexChild)
+	     /* get the next child */
+	     pNextBox = pNextBox->BxNexChild;
+	   else
+	     {
+	       pNextBox = GetNextBox (pNextBox->BxAbstractBox);
+	       if (pNextBox == NULL)
+		 still = FALSE;
+	     }
+	 }
      }
 
    /* termine le chainage */
@@ -2161,7 +2166,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   ThotBool            still;
   ThotBool            toLineSpace;
 
-  /* Remplissage de la boite bloc de ligne */
+  /* Fill the block box */
   noWrappedWidth = 0;
   pAb = pBox->BxAbstractBox;
   extensibleBox = (pBox->BxContentWidth ||
@@ -2173,31 +2178,31 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   rigth = pBox->BxRMargin + pBox->BxRBorder + pBox->BxRPadding;
   x = 0;
   pRootAb = ViewFrameTable[frame - 1].FrAbstractBox;
-  /* evalue si le positionnement en X et en Y doit etre absolu */
+  /* check if the X, Y position is relative or absolute */
   IsXYPosComplete (pBox, &orgXComplete, &orgYComplete);
-  /* Construction complete du bloc de ligne */
   if (pBox->BxFirstLine == NULL)
     {
+      /* Build all the block of lines */
       /* reset the value of the width without wrapping */
       pBox->BxMaxWidth = 0;
       pBox->BxMinWidth = 0;
-      /* recherche la premiere boite mise en ligne */
+      /* look for the first included box */
       pChildAb = pAb->AbFirstEnclosed;
       still = (pChildAb != NULL);
       pNextBox = NULL;
       while (still)
 	if (pChildAb == NULL)
 	  still = FALSE;
-	/* Est-ce que le pave est mort ? */
+	/* Is the abstract box dead? */
 	else if (pChildAb->AbDead || pChildAb->AbNew ||
 		 (pChildAb->AbNotInLine && pChildAb->AbDisplay == 'U'))
 	  pChildAb = pChildAb->AbNext;
 	else if (pChildAb->AbBox->BxType == BoGhost)
-	  /* descend la hierarchie */
+	  /* go down into the hierarchy */
 	  pChildAb = pChildAb->AbFirstEnclosed;
 	else
 	  {
-	    /* Sinon c'est la boite du pave */
+	    /* keep the current box */
 	    pNextBox = pChildAb->AbBox;
 	    still = FALSE;
 	  }
@@ -2206,10 +2211,11 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
   width = pBox->BxW;
   if (width > BoxCharacterWidth (119, pBox->BxFont)/*'w' */ || extensibleBox)
     {
-      /* Calcul de l'interligne */
-      lineSpacing = PixelValue (pAb->AbLineSpacing,pAb->AbLineSpacingUnit,
+      /* compute the line spacing */
+      lineSpacing = PixelValue (pAb->AbLineSpacing, pAb->AbLineSpacingUnit,
 				pAb, ViewFrameTable[frame - 1].FrMagnification);
-      /* Calcul de l'indentation */
+printf ("linespacing=%d\n", lineSpacing);
+      /* compute the indent */
       if (extensibleBox)
 	{
 	  indentLine = 0;
@@ -2224,7 +2230,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
       if (pBox->BxFirstLine == NULL)
 	{
 	  if (pNextBox == NULL)
-	    /* Rien a mettre en ligne */
+	    /* Nothing to add in the line */
 	    full = FALSE;
 	  else
 	    {
@@ -2234,26 +2240,26 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	  
 	  pBoxToBreak = NULL;
 	  pPreviousLine = NULL;
-	  /* hauteur de la boite bloc de lignes */
+	  /* height of the block box */
 	  *height = 0;
-	  /* origine de la nouvelle ligne */
+	  /* origin of the next line */
 	  org = top;
 	  toLineSpace = FALSE;
 	}
       else
 	{
-	  /* Reconstruction partielle du bloc de ligne */
+	  /* Partial building of the block */
 	  pPreviousLine = pBox->BxLastLine;
 	  pChildAb = pPreviousLine->LiLastBox->BxAbstractBox;
 	  pBoxToBreak = pPreviousLine->LiLastPiece;
-	  /* hauteur boite bloc de lignes */
+	  /* height of the block box */
 	  *height = pPreviousLine->LiYOrg + pPreviousLine->LiHeight - top;
-	  /* Origine de la future ligne */
+	  /* origin of the next line */
 	  if (!pChildAb->AbHorizEnclosing ||
 	      (pChildAb->AbNotInLine && pChildAb->AbDisplay != 'U'))
 	    {
 	      /* the box is presented under the previous line */
-	      org = *height + top;
+	      org = *height;
 	      toLineSpace = FALSE;
 	    }
 	  else
@@ -2282,19 +2288,20 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 	    }
 	  
 	  if (pNextBox == NULL)
-	    full = FALSE;	/* Rien a mettre en ligne */
-	  /* prepare la nouvelle ligne */
+	    /* nothing else */
+	    full = FALSE;
 	  else
 	    {
+	      /* prepare the next line */
 	      GetLine (&pLine);
 	      pPreviousLine->LiNext = pLine;
-	      /* Si la 1ere boite nouvellement mise en lignes n'est pas englobee */
 	      if (!pNextBox->BxAbstractBox->AbHorizEnclosing ||
 		  (pNextBox->BxAbstractBox->AbNotInLine &&
 		   pNextBox->BxAbstractBox->AbDisplay != 'U'))
 		{
+		  /* the next box is presented out of the line */
 		  org = *height + top;
-		  /* colle la nouvelle ligne en dessous */
+		  /* don't add the line sapcing */
 		  toLineSpace = FALSE;
 		}
 	    }
@@ -2371,20 +2378,29 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 				   &full, &toAdjust, &breakLine, frame);
 	      if (pBox->BxMinWidth < minWidth)
 		pBox->BxMinWidth = minWidth;
-	      /* Positionnement de la ligne en respectant l'interligne */
 	      if (toLineSpace)
+		/* take into account the baseline of the previous line */
 		org -= pLine->LiHorizRef;
-#ifndef IV
-	      /* verifie que les lignes ne se chevauchent pas */
-	      if (org < *height + top)
-		org = *height + top;
-#endif
-	      pLine->LiYOrg = org;
-	      *height = org + pLine->LiHeight - top;
+	      else
+		/* reset the information for the next line */
+		toLineSpace = TRUE;
+		
+	      /* check lines that cannot overlap */
+	      if (org < *height + top && pPreviousLine &&
+		  (pPreviousLine->LiNoOverlap ||
+		   pLine->LiNoOverlap))
+		{
+		  org = *height - pPreviousLine->LiHeight + pPreviousLine->LiHorizRef + top;
+		  pLine->LiYOrg = org;
+		}
+	      else
+		pLine->LiYOrg = org;
+	      /* prepare information for the next line */
+	      *height = org - top + pLine->LiHeight;
 	      org = org + pLine->LiHorizRef + lineSpacing;
 	      toLineSpace = TRUE;
 
-	      /* is there a breaked box ? */
+	      /* is there a broken box? */
 	      if (pLine->LiLastPiece)
 		pBoxToBreak = pLine->LiLastPiece->BxNexChild;
 	      else

@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT INRIA, 1996-2002
+ *  (c) COPYRIGHT INRIA, 1996-2003
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -1869,7 +1869,7 @@ PtrBox FreeBox (PtrBox pBox)
 /*----------------------------------------------------------------------
    GetLine alloue un contexte de ligne.                            
   ----------------------------------------------------------------------*/
-void GetLine (PtrLine * pLine)
+void GetLine (PtrLine *pLine)
 {
    PtrLine             pNewLine;
 
@@ -1888,22 +1888,6 @@ void GetLine (PtrLine * pLine)
    if (pNewLine)
      {
 	memset (pNewLine, 0, sizeof (Line));
-	pNewLine->LiPrevious = NULL;
-	pNewLine->LiNext = NULL;
-	pNewLine->LiXOrg = 0;
-	pNewLine->LiYOrg = 0;
-	pNewLine->LiXMax = 0;
-	pNewLine->LiMinLength = 0;
-	pNewLine->LiHeight = 0;
-	pNewLine->LiHorizRef = 0;
-	pNewLine->LiNSpaces = 0;
-	pNewLine->LiSpaceWidth = 0;
-	pNewLine->LiNPixels = 0;
-	pNewLine->LiFirstBox = NULL;
-	pNewLine->LiLastBox = NULL;
-	pNewLine->LiFirstPiece = NULL;
-	pNewLine->LiLastPiece = NULL;
-	pNewLine->LiRealLength = 0;
 	NbUsed_Line++;
      }
 }
