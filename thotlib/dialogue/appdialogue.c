@@ -975,7 +975,7 @@ static void BuildSubMenu (Menu_Ctl *ptrmenu, int ref, int entry,
 	      if (update)
 		{
 		  /* desactivate the entry */
-		  TtaRedrawMenuEntry (ref, entries, NULL, InactiveB_Color, 0);
+		  TtaRedrawMenuEntry (sref, entries, NULL, InactiveB_Color, 0);
 		  MenuActionList[action].ActionActive[frame] = FALSE;
 		}
 	      /* doesn't count this entry */
