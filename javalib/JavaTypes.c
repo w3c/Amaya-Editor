@@ -40,19 +40,55 @@ void JavaElement2CElementPtr(struct Hthotlib_Element* in, Element **out)
 {
     *out = (Element *) &(unhand(in)->element);
 }
+void CElementPtr2JavaElement(Element *in, struct Hthotlib_Element** out)
+{
+}
+
 void JavaElementType2CElementTypePtr(struct Hthotlib_ElementType* in, ElementType **out)
 {
     *out = (ElementType *) &(unhand(in)->elementType);
 }
+void CElementTypePtr2JavaElementType(ElementType *in, struct Hthotlib_ElementType** out)
+{
+}
+
 void JavaDocument2CDocumentPtr(struct Hthotlib_Document* in, Document **out)
 {
     *out = (Document *) &(unhand(in)->document);
 }
+void CDocumentPtr2JavaDocument(Document *in, struct Hthotlib_Document** out)
+{
+}
+
 void JavaSSchema2CSSchemaPtr(struct Hthotlib_SSchema* in, SSchema **out)
 {
     *out = (SSchema *) &(unhand(in)->sschema);
 }
+void CSSchemaPtr2JavaSSchema(SSchema *in, struct Hthotlib_SSchema** out)
+{
+}
+
 void JavaAttribute2CAttributePtr(struct Hthotlib_Attribute* in, Attribute **out)
 {
     *out = (Attribute *) &(unhand(in)->attribute);
 }
+void CAttributePtr2JavaAttribute(Attribute *in, struct Hthotlib_Attribute** out)
+{
+}
+
+void JavaPRule2CPRulePtr(struct Hthotlib_PRule* in, PRule **out)
+{
+    *out = (PRule *) &(unhand(in)->prule);
+}
+void CPRulePtr2JavaPRule(PRule *in, struct Hthotlib_PRule** out)
+{
+}
+
+void JavaAttributeType2CAttributeTypePtr(struct Hthotlib_AttributeType* in, AttributeType **out)
+{
+    *out = (AttributeType *) &(unhand(in)->attributeType);
+}
+void CAttributeTypePtr2JavaAttributeType(AttributeType *in, struct Hthotlib_AttributeType** out)
+{
+}
+

@@ -55,6 +55,8 @@ extern jint thotlib_APIDocument_TtaGetNotificationMode(struct Hthotlib_APIDocume
 extern void thotlib_APIDocument_TtaGetDocumentPath(struct Hthotlib_APIDocument*, struct Hjava_lang_String*, jint);
 extern void thotlib_APIDocument_TtaGetSchemaPath(struct Hthotlib_APIDocument*, struct Hjava_lang_String*, jint);
 extern jint thotlib_APIDocument_TtaGetDocumentOfSavedElements(struct Hthotlib_APIDocument*);
+extern void thotlib_APIDocument_TtaConfigReadConfigFiles(struct Hthotlib_APIDocument*, struct Hjava_lang_String*);
+extern void thotlib_APIDocument_TtaConfigSSchemaExternalName(struct Hthotlib_APIDocument*, struct Hjava_lang_String*, struct Hjava_lang_String*, jint);
 
 #ifdef __cplusplus
 }

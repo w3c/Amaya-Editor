@@ -588,11 +588,18 @@ void dump_stubs(FILE *out) {
            classname);
     fprintf(out," * The user need to write JavaTypes.h which gives the\n");
     fprintf(out," * signatures of Java2C and C2Java conversion handlers\n");
+    fprintf(out," * As well as the Class LOCK/UNLOCK macros\n");
     fprintf(out," */\n\n");
     fprintf(out,"#include <native.h>\n");
     fprintf(out,"#include \"JavaTypes.h\"\n");
     fprintf(out,"#include \"%s.h\"\n", classname);
-    fprintf(out,"#include \"%s\"\n", stubHOutputFile);
+    fprintf(out,"#include \"%s\"\n\n", stubHOutputFile);
+    fprintf(out,"#ifndef %s_LOCK\n", classname);
+    fprintf(out,"#define %s_LOCK()\n", classname);
+    fprintf(out,"#endif /* %s_LOCK */\n", classname);
+    fprintf(out,"#ifndef %s_UNLOCK\n", classname);
+    fprintf(out,"#define %s_UNLOCK()\n", classname);
+    fprintf(out,"#endif /* %s_UNLOCK */\n\n", classname);
 
     /*
      * Dump each function.
@@ -676,6 +683,11 @@ void dump_stubs(FILE *out) {
 	}
 
         /*
+	 * Take the lock.
+	 */
+	fprintf(out,"\n\t%s_LOCK();\n", classname);
+
+        /*
 	 * Call the C function.
 	 */
 	if (strcmp(rt->name, "void"))
@@ -693,6 +705,42 @@ void dump_stubs(FILE *out) {
 	}
 	fprintf(out,");\n");
 
+        /*
+	 * Release the lock.
+	 */
+	fprintf(out,"\n\t%s_UNLOCK();\n", classname);
+
+	/*
+	 * Transform the parameter passed by pointer in the C function.
+	 */
+	for (n = 0;n < f->nb_args;n++) {
+	    a = &f->args[n];
+	    t = &tabType[a->type];
+
+	    if (t->convert != NULL) {
+	       if (!strcmp(t->jname, "String")) {
+                  /*********************
+	          fprintf(stderr,
+		          "%s : Return value for String object not handled\n",
+		          f->name);
+	          fprintf(out,"\tCString2JavaString(j%s, %s, sizeof(%s));\n",
+		         a->name,a->name,a->name);
+                   *********************/
+	       } else {
+		  fprintf(out,"\t/* convert %s ", t->name);
+		  for (p = 0;p < t->indir;p++) fprintf(out,"*");
+		  fprintf(out,"%s to arg %s j%s */\n",
+		          a->name, t->itype, a->name);
+		  fprintf(out,"\tC%s",t->name);
+		  for (p = 0;p < t->indir;p++) fprintf(out,"Ptr");
+		  fprintf(out,"2Java%s(%s,&j%s);\n",t->jname, a->name, a->name);
+	       }
+	    }
+	}
+
+        /*
+	 * in case of a void function, return.
+	 */
 	if (!strcmp(rt->name, "void")) {
 	   fprintf(out,"}\n\n");
 	   continue;

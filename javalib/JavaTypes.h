@@ -8,10 +8,13 @@
 
 #include "native.h"
 
+extern void addNativeMethod(char*, void*);
+
 #include "thot_gui.h"
 #include "thot_sys.h"
 #include "tree.h"
 #include "attribute.h"
+#include "presentation.h"
 
 /*
  * Includes auto-generated interface Java classes.
@@ -23,6 +26,7 @@
 #include "thotlib_ElementType.h"
 #include "thotlib_Attribute.h"
 #include "thotlib_AttributeType.h"
+#include "thotlib_PRule.h"
 
 /*
  * Includes auto-generated interface to stubs.
@@ -45,5 +49,36 @@
  * The signatures of the conversion functions.
  */
 #include "JavaTypes_f.h"
+#include "kaffeine_f.h"
+
+/*
+ * Setup the Lock/Release macros
+ */
+
+#define thotlib_APIApplication_LOCK() JavaThotlibLock()
+#define thotlib_APIAttribute_LOCK() JavaThotlibLock()
+#define thotlib_APIContent_LOCK() JavaThotlibLock()
+#define thotlib_APIDialog_LOCK() JavaThotlibLock()
+#define thotlib_APIInterface_LOCK() JavaThotlibLock()
+#define thotlib_APILanguage_LOCK() JavaThotlibLock()
+#define thotlib_APIPresentation_LOCK() JavaThotlibLock()
+#define thotlib_APIReference_LOCK() JavaThotlibLock()
+#define thotlib_APIRegistry_LOCK() JavaThotlibLock()
+#define thotlib_APISelection_LOCK() JavaThotlibLock()
+#define thotlib_APITree_LOCK() JavaThotlibLock()
+#define thotlib_APIView_LOCK() JavaThotlibLock()
+
+#define thotlib_APIApplication_UNLOCK() JavaThotlibRelease()
+#define thotlib_APIAttribute_UNLOCK() JavaThotlibRelease()
+#define thotlib_APIContent_UNLOCK() JavaThotlibRelease()
+#define thotlib_APIDialog_UNLOCK() JavaThotlibRelease()
+#define thotlib_APIInterface_UNLOCK() JavaThotlibRelease()
+#define thotlib_APILanguage_UNLOCK() JavaThotlibRelease()
+#define thotlib_APIPresentation_UNLOCK() JavaThotlibRelease()
+#define thotlib_APIReference_UNLOCK() JavaThotlibRelease()
+#define thotlib_APIRegistry_UNLOCK() JavaThotlibRelease()
+#define thotlib_APISelection_UNLOCK() JavaThotlibRelease()
+#define thotlib_APITree_UNLOCK() JavaThotlibRelease()
+#define thotlib_APIView_UNLOCK() JavaThotlibRelease()
 
 #endif /* _Included_Java_Type_H_ */

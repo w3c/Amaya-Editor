@@ -18,14 +18,32 @@ extern void JavaElement2CElement ( struct Hthotlib_Element *in,
                                    Element *out );
 extern void JavaElement2CElementPtr ( struct Hthotlib_Element* in,
                                       Element **out );
+extern void CElementPtr2JavaElement ( Element *in,
+                                      struct Hthotlib_Element** out );
 extern void JavaElementType2CElementTypePtr ( struct Hthotlib_ElementType* in,
                                               ElementType **out );
+extern void CElementTypePtr2JavaElementType ( ElementType *in,
+                                              struct Hthotlib_ElementType** out );
 extern void JavaDocument2CDocumentPtr ( struct Hthotlib_Document* in,
                                         Document **out );
+extern void CDocumentPtr2JavaDocument ( Document *in,
+                                        struct Hthotlib_Document** out );
 extern void JavaSSchema2CSSchemaPtr ( struct Hthotlib_SSchema* in,
                                       SSchema **out );
+extern void CSSchemaPtr2JavaSSchema ( SSchema *in,
+                                      struct Hthotlib_SSchema** out );
 extern void JavaAttribute2CAttributePtr ( struct Hthotlib_Attribute* in,
                                           Attribute **out );
+extern void CAttributePtr2JavaAttribute ( Attribute *in,
+                                          struct Hthotlib_Attribute** out );
+extern void JavaPRule2CPRulePtr ( struct Hthotlib_PRule* in,
+                                  PRule **out );
+extern void CPRulePtr2JavaPRule ( PRule *in,
+                                  struct Hthotlib_PRule** out );
+extern void JavaAttributeType2CAttributeTypePtr ( struct Hthotlib_AttributeType* in,
+                                                  AttributeType **out );
+extern void CAttributeTypePtr2JavaAttributeType ( AttributeType *in,
+                                                  struct Hthotlib_AttributeType** out );
 
 #else /* __STDC__ */
 
@@ -41,14 +59,32 @@ extern void JavaElement2CElement (/* struct Hthotlib_Element *in,
                                      Element *out */);
 extern void JavaElement2CElementPtr (/* struct Hthotlib_Element* in,
                                         Element **out */);
+extern void CElementPtr2JavaElement (/* Element *in,
+                                        struct Hthotlib_Element** out */);
 extern void JavaElementType2CElementTypePtr (/* struct Hthotlib_ElementType* in,
                                                 ElementType **out */);
+extern void CElementTypePtr2JavaElementType (/* ElementType *in,
+                                                struct Hthotlib_ElementType** out */);
 extern void JavaDocument2CDocumentPtr (/* struct Hthotlib_Document* in,
                                           Document **out */);
+extern void CDocumentPtr2JavaDocument (/* Document *in,
+                                          struct Hthotlib_Document** out */);
 extern void JavaSSchema2CSSchemaPtr (/* struct Hthotlib_SSchema* in,
                                         SSchema **out */);
+extern void CSSchemaPtr2JavaSSchema (/* SSchema *in,
+                                        struct Hthotlib_SSchema** out */);
 extern void JavaAttribute2CAttributePtr (/* struct Hthotlib_Attribute* in,
                                             Attribute **out */);
+extern void CAttributePtr2JavaAttribute (/* Attribute *in,
+                                            struct Hthotlib_Attribute** out */);
+extern void JavaPRule2CPRulePtr (/* struct Hthotlib_PRule* in,
+                                    PRule **out */);
+extern void CPRulePtr2JavaPRule (/* PRule *in,
+                                    struct Hthotlib_PRule** out */);
+extern void JavaAttributeType2CAttributeTypePtr (/* struct Hthotlib_AttributeType* in,
+                                                    AttributeType **out */);
+extern void CAttributeTypePtr2JavaAttributeType (/* AttributeType *in,
+                                                    struct Hthotlib_AttributeType** out */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

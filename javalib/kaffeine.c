@@ -11,6 +11,7 @@
 #include "StubPreamble.h"
 #include "jtypes.h"
 #include "native.h"
+#include "registry.h"
 
 #include "thotlib_APIApplication_stubs.h"
 #include "thotlib_APIDocument_stubs.h"
@@ -39,7 +40,13 @@ extern int threadedFileDescriptor(int fd);
 extern void yieldThread();
 extern int blockOnFile(int fd, int op);
 extern int (*select_call)(int, fd_set*, fd_set*, fd_set*, struct timeval*);
+extern int blockInts;
+extern void yieldThread();
+extern void reschedule();
 static void register_stubs(void);
+void register_biss_awt_API_stubs(void);
+
+int JavaEnabled = 0;
 
 /************************************************************************
  *									*
@@ -249,11 +256,13 @@ ThotEvent *ev;
     /*
      * Check for reentrancy, would be a Very Bad Thing (c)
      */
-    if (InJavaSelect) {
+    if ((InJavaSelect) &&
+        ((timeout == NULL) || (timeout->tv_usec != 0) ||
+	 (timeout->tv_sec != 0))){
         char *p = NULL;
         fprintf(stderr, "JavaSelect reentrancy !\n");
-	/* call debugger or dump core ! */
-	*p = 0;
+	/* call debugger or dump core
+	*p = 0; ! */
     }
     InJavaSelect = 1;
 
@@ -450,6 +459,85 @@ restart_select:
     return(res);
 }
 
+/************************************************************************
+ *									*
+ *	Locks Handling : One for the X-Windows Events, One for the	*
+ *	Thotlib Access.							*
+ *									*
+ ************************************************************************/
+
+static int ThotlibLockValue = 0;
+
+void JavaThotlibLock()
+{
+    while (1) {
+        /*
+	 * block on the entry.
+	 */
+        while (ThotlibLockValue > 0) {
+	    /****
+	    yieldThread();
+	    blockInts++;
+	    reschedule();
+	    blockInts--;
+	     ****/
+	    sleepThread(5);
+        }
+
+        /*
+	 * try.
+	 */
+        ThotlibLockValue++;
+
+	/*
+	 * if not alone back ..
+	 */
+	if (ThotlibLockValue > 1) {
+	   ThotlibLockValue--;
+	   continue;
+	}
+	break;
+    }
+}
+
+void JavaThotlibRelease()
+{
+    ThotlibLockValue--;
+}
+
+static int XWindowSocketLockValue = 0;
+
+void JavaXWindowSocketLock()
+{
+    while (1) {
+        /*
+	 * block on the entry.
+	 */
+        while (XWindowSocketLockValue > 0) {
+	    sleepThread(30);
+        }
+
+        /*
+	 * try.
+	 */
+        XWindowSocketLockValue++;
+
+	/*
+	 * if not alone back ..
+	 */
+	if (XWindowSocketLockValue > 1) {
+	   XWindowSocketLockValue--;
+	   continue;
+	}
+	break;
+    }
+}
+
+void JavaXWindowSocketRelease()
+{
+    XWindowSocketLockValue--;
+}
+
 /*----------------------------------------------------------------------
   JavaHandleOneEvent
 
@@ -484,18 +572,28 @@ ThotEvent *ev;
 {
   int status;
 
-#ifdef WWW_XWINDOWS
+  JavaThotlibRelease();
+  JavaXWindowSocketLock();
+
+#ifdef _WINDOWS
+#else  /* !_WINDOWS */
   /*
    * Need to check whether something else has to be scheduled.
    */
   status = XtAppPending (app_ctxt);
   if (!status) {
      status = blockOnFile(x_window_socket, 0);
-     if (status < 0) return(status);
+     if (status < 0) {
+         JavaXWindowSocketRelease();
+	 JavaThotlibLock();
+         return(status);
+     }
   }
   XtAppNextEvent (app_ctxt, ev);
-#else  /* WWW_XWINDOWS */
-#endif /* !WWW_XWINDOWS */
+#endif /* _WINDOWS */
+
+  JavaXWindowSocketRelease();
+  JavaThotlibLock();
   return(0);
 }
 
@@ -518,15 +616,15 @@ ThotEvent *ev;
 {
   int status;
 
-#ifdef WWW_XWINDOWS
+#ifdef _WINDOWS
+#else  /* !_WINDOWS */
   status = XtAppPending (app_ctxt);
   if (status) {
      XtAppNextEvent (app_ctxt, ev);
      return(TRUE);
   }
   return(FALSE);
-#else  /* WWW_XWINDOWS */
-#endif /* !WWW_XWINDOWS */
+#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -678,7 +776,6 @@ ThotAppContext app_ctxt;
    /* Loop waiting for the events */
    while (1)
      {
-#ifdef WWW_XWINDOWS
         res = JavaFetchEvent (app_ctxt, &ev);
 	if (res < 0) {
 	    DoJavaSelectPoll = 0;
@@ -689,11 +786,6 @@ ThotAppContext app_ctxt;
 	    return(res);
 	}
         JavaHandleOneEvent (&ev);
-#else  /* WWW_XWINDOWS */
-	GetMessage (&msg, NULL, 0, 0);
-	TranslateMessage (&msg);
-	TtaHandleOneWindowEvent (&msg);
-#endif /* !WWW_XWINDOWS */
      }
    /*ENOTREACHED*/
    return(0);
@@ -736,18 +828,13 @@ ThotAppContext app_ctxt;
    /* Loop waiting for the events */
    while (1)
      {
-#ifdef WWW_XWINDOWS
-        if (JavaFetchEvent (app_ctxt, &ev) < 0) {
+	JavaThotlibRelease();
+        while (JavaFetchEvent (app_ctxt, &ev) < 0) {
 	    DoJavaSelectPoll = 0;
 	    BreakJavaSelectPoll = 0;
-	    continue;
 	}
+	JavaThotlibLock();
         JavaHandleOneEvent (&ev);
-#else  /* WWW_XWINDOWS */
-	GetMessage (&msg, NULL, 0, 0);
-	TranslateMessage (&msg);
-	TtaHandleOneWindowEvent (&msg);
-#endif /* !WWW_XWINDOWS */
      }
 }
 
@@ -758,8 +845,15 @@ ThotAppContext app_ctxt;
   ----------------------------------------------------------------------*/
 void                JavaLoadResources ()
 {
-   TtaSetMainLoop (InitJavaEventLoop, JavaEventLoop,
-                   JavaFetchEvent, JavaFetchAvailableEvent);
+   char *enable_java;
+
+   enable_java = TtaGetEnvString("ENABLE_JAVA");
+   if ((enable_java != NULL) &&
+       ((!strcasecmp(enable_java,"yes")) ||
+        (!strcasecmp(enable_java,"true")) ||
+        (!strcasecmp(enable_java,"1"))))
+      TtaSetMainLoop (InitJavaEventLoop, JavaEventLoop,
+		      JavaFetchEvent, JavaFetchAvailableEvent);
 }
 
 /*
@@ -783,6 +877,7 @@ throwOutOfMemory ()
  */
 static void register_stubs(void)
 {
+   register_biss_awt_API_stubs();
    register_thotlib_APIApplication_stubs();
    register_thotlib_APIDocument_stubs();
    register_thotlib_APITree_stubs();
