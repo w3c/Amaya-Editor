@@ -7,8 +7,7 @@
 #ifdef __STDC__
 
 extern PSchema TtaNewPSchema ( SSchema nature,
-                               ThotBool userStyleSheet,
-                               Element refElement );
+                               ThotBool userStyleSheet );
 extern void TtaMoveDocumentExtensionsToElement ( Document document,
                                                  Element element );
 extern void TtaUnlinkPSchema ( PSchema schema,
@@ -31,8 +30,7 @@ extern void TtaNextPSchema ( PSchema * schema,
 #else /* __STDC__ */
 
 extern PSchema TtaNewPSchema (/* SSchema nature,
-                                 ThotBool userStyleSheet,
-                                 Element refElement */);
+                                 ThotBool userStyleSheet */);
 extern void TtaMoveDocumentExtensionsToElement (/* Document document,
                                                    Element element */);
 extern void TtaUnlinkPSchema (/* PSchema schema,
