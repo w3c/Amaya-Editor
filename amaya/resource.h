@@ -362,6 +362,7 @@
 #define DE_PROFILEMENU                  520
 #define MATH_ENTITY_DLG                 534
 #define IDD_DIALOG2                     535
+#define INITCONFIRM3LDIALOG             536
 #define ID_CONFIRM                      1000
 #define ID_DONE                         1001
 #define IDC_URLEDIT                     1002
@@ -778,6 +779,9 @@
 #define IDC_TPROFILESELECT              1489
 #define IDC_TPROFILECHANGE              1490
 #define IDC_CSSFILES                    1491
+#define IDC_MESSAGE1                    1492
+#define IDC_MESSAGE2                    1493
+#define IDC_MESSAGE3                    1494
 #define ID_BUTTON40017                  40017
 #define ID_BUTTON40018                  40018
 #define ID_BUTTON40019                  40019
@@ -820,9 +824,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        536
+#define _APS_NEXT_RESOURCE_VALUE        537
 #define _APS_NEXT_COMMAND_VALUE         40052
-#define _APS_NEXT_CONTROL_VALUE         1492
+#define _APS_NEXT_CONTROL_VALUE         1495
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -232,6 +232,7 @@ LRESULT CALLBACK ApplyClassDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK SpellCheckDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK MathAttribDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK InitConfirmDlgProc (HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK InitConfirm3LDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK ChangeFormatDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK GreekKeyboardDlgProc (HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK AuthentificationDlgProc (HWND, UINT, WPARAM, LPARAM);
@@ -265,6 +266,7 @@ LRESULT CALLBACK ApplyClassDlgProc ();
 LRESULT CALLBACK SpellCheckDlgProc ();
 LRESULT CALLBACK MathAttribDlgProc ();
 LRESULT CALLBACK InitConfirmDlgProc ();
+LRESULT CALLBACK InitConfirm3LDlgProc ();
 LRESULT CALLBACK ChangeFormatDlgProc ();
 LRESULT CALLBACK GreekKeyboardDlgProc ();
 LRESULT CALLBACK AuthentificationDlgProc ();
@@ -1076,6 +1078,26 @@ int   chkrSpecial;
  CreateInitConfirmDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
+void CreateInitConfirmDlgWindow (HWND parent, int ref, STRING title, STRING msg)
+#else  /* !__STDC__ */
+void CreateInitConfirmDlgWindow (parent, ref, title, msg)
+HWND  parent;
+int   ref;
+STRING title;
+STRING msg;
+#endif /* __STDC__ */
+{  
+	ustrcpy (message, msg);
+	ustrcpy (wndTitle, title);
+	currentRef = ref;
+
+    DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRMDIALOG), parent, (DLGPROC) InitConfirmDlgProc);
+}
+
+/*-----------------------------------------------------------------------
+ CreateInitConfirm3LDlgWindow
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
 void CreateInitConfirm3LDlgWindow (HWND parent, int ref, STRING title, STRING msg, STRING msg2, STRING msg3)
 #else  /* !__STDC__ */
 void CreateInitConfirm3LDlgWindow (parent, ref, title, msg, msg2, msg3)
@@ -1100,27 +1122,7 @@ STRING msg3;
 	ustrcpy (wndTitle, title);
 	currentRef = ref;
 
-    DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRMDIALOG), parent, (DLGPROC) InitConfirmDlgProc);
-}
-
-/*-----------------------------------------------------------------------
- CreateInitConfirmDlgWindow
- ------------------------------------------------------------------------*/
-#ifdef __STDC__
-void CreateInitConfirmDlgWindow (HWND parent, int ref, STRING title, STRING msg)
-#else  /* !__STDC__ */
-void CreateInitConfirmDlgWindow (parent, ref, title, msg)
-HWND  parent;
-int   ref;
-STRING title;
-STRING msg;
-#endif /* __STDC__ */
-{  
-	ustrcpy (message, msg);
-	ustrcpy (wndTitle, title);
-	currentRef = ref;
-
-    DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRMDIALOG), parent, (DLGPROC) InitConfirmDlgProc);
+    DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRM3LDIALOG), parent, (DLGPROC) InitConfirm3LDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -3505,7 +3507,7 @@ LPARAM lParam;
 }
 
 /*-----------------------------------------------------------------------
- CloseDocDlgProc
+ InitConfirmDlgProc
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
 LRESULT CALLBACK InitConfirmDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -3518,8 +3520,6 @@ LPARAM lParam;
 #endif /* __STDC__ */
 {
 	HWND messageWnd;
-	HWND message2Wnd;
-	HWND message3Wnd;
 
     switch (msg) {
 	       case WM_INITDIALOG:
@@ -3530,16 +3530,51 @@ LPARAM lParam;
 				messageWnd = CreateWindow (TEXT("STATIC"), message, WS_CHILD | WS_VISIBLE | SS_LEFT,
 					                       15, 15, 303, 60, hwnDlg, (HMENU) 99, 
 										   (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
-				if (message2)
-				   message2Wnd = CreateWindow (TEXT("STATIC"), message2, WS_CHILD | WS_VISIBLE | SS_LEFT,
-					                        15, 30, 303, 60, hwnDlg, (HMENU) 99, 
-										    (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+				break; 
 
-				if (message3)
-				   message3Wnd = CreateWindow (TEXT("STATIC"), message3, WS_CHILD | WS_VISIBLE | SS_LEFT,
-					                        15, 45, 303, 60, hwnDlg, (HMENU) 99, 
-										    (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+		   case WM_COMMAND:
+			    switch (LOWORD (wParam)) {
+		               case ID_CONFIRM:
+			                EndDialog (hwnDlg, ID_CONFIRM);
+				            ThotCallback (currentRef, INTEGER_DATA, (CHAR_T*) 1);
+			                break;
 
+		               case IDCANCEL:
+			                EndDialog (hwnDlg, IDCANCEL);
+				            ThotCallback (currentRef, INTEGER_DATA, (CHAR_T*) 0);
+				            break;
+				}
+				break;
+
+				default: return FALSE;
+	}
+	return TRUE;
+}
+
+/*-----------------------------------------------------------------------
+ InitConfirm3LDlgProc
+ ------------------------------------------------------------------------*/
+#ifdef __STDC__
+LRESULT CALLBACK InitConfirm3LDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam, LPARAM lParam)
+#else  /* !__STDC__ */
+LRESULT CALLBACK InitConfirm3LDlgProc (hwnDlg, msg, wParam, lParam)
+HWND   hwndParent;
+UINT   msg;
+WPARAM wParam;
+LPARAM lParam;
+#endif /* __STDC__ */
+{
+    switch (msg) {
+	       case WM_INITDIALOG:
+			    SetWindowText (hwnDlg, wndTitle);
+				SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+				SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+                if (message)
+				   SetWindowText (GetDlgItem (hwnDlg, IDC_MESSAGE1), message);
+                if (message2)
+				   SetWindowText (GetDlgItem (hwnDlg, IDC_MESSAGE2), message2);
+                if (message3)
+				   SetWindowText (GetDlgItem (hwnDlg, IDC_MESSAGE3), message3);
 				break; 
 
 		   case WM_COMMAND:
