@@ -63,7 +63,7 @@
 
 
 21;#esstix (uncomment if you have those fonts in your system)
-#2;1=*-ESSTIXSix-*;2=*-ESSTIXSeven-*;3=*-esstixheight-*;4=*-esstixnine-*;5=*-esstixten-*;
+2;1=*-ESSTIXSix-*;2=*-ESSTIXSeven-*;3=*-esstixheight-*;4=*-esstixnine-*;5=*-esstixten-*;
 
 
 0;#Unicode (.or ... JAPANESe)
