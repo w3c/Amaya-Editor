@@ -813,149 +813,6 @@ static void SetPictureClipping (int *picWArea, int *picHArea, int wFrame,
      }
 }
 
-#ifdef _GL
-/*----------------------------------------------------------------------
-  LayoutPicture performs the layout of pixmap on the screen described
-  by the drawable.
-  if picXOrg or picYOrg are postive, the copy operation is shifted
-  ----------------------------------------------------------------------*/
-static void LayoutPicture (Pixmap pixmap, 
-			   Drawable drawable, 
-			   int picXOrg, int picYOrg, 
-			   int w, int h, 
-			   int xFrame, int yFrame, 
-			   int frame, 
-			   PictInfo *imageDesc, PtrBox box)
-{
-  ViewFrame*        pFrame;
-  PictureScaling    picPresent;
-  int               x, y, clipWidth, clipHeight;
-  int               i, j;
-  
-  if (picXOrg < 0)
-    {
-      xFrame = xFrame - picXOrg;
-      picXOrg = 0;
-    }
-  if (picYOrg < 0)
-    {
-      yFrame = yFrame - picYOrg;
-      picYOrg = 0;
-    }
-  pFrame = &ViewFrameTable[frame - 1];
-  if (glIsTexture (imageDesc->TextureBind))
-    {
-      /* the default presentation depends on the box type */
-      picPresent = imageDesc->PicPresent;
-      if (picPresent == DefaultPres)
-	{
-	  if (box->BxType == BoPicture)
-	    /* an image is rescaled */
-	    picPresent = ReScale;
-	  else
-	    /* a background image is repeated */
-	    picPresent = FillFrame;
-	}
-      switch (picPresent)
-	{
-	case ReScale:
-	  GL_TextureMap (imageDesc, xFrame, yFrame, w, h);
-	  break;
-	case RealSize:
-	  GL_TextureMap (imageDesc, xFrame, yFrame,
-			 imageDesc->PicWidth, 
-			 imageDesc->PicHeight);
-	  break;
-	case FillFrame:
-	case XRepeat:
-	case YRepeat:
-	  x          = pFrame->FrClipXBegin;
-          y          = pFrame->FrClipYBegin;
-          clipWidth  = pFrame->FrClipXEnd - x;
-          clipHeight = pFrame->FrClipYEnd - y;
-          x          -= pFrame->FrXOrg;
-          y          -= pFrame->FrYOrg;
-
-          if (picPresent == FillFrame || picPresent == YRepeat)
-	    {
-	      /* clipping height is done by the box height */
-	      if (y < yFrame)
-		{
-		  /* reduce the height in delta value */
-		  clipHeight = clipHeight + y - yFrame;
-		  y = yFrame;
-		}
-	      if (clipHeight > h)
-		clipHeight = h;
-	    }
-	  else
-	    {
-	      clipHeight = imageDesc->PicHeight;
-	      if (clipHeight > h)
-		clipHeight = h;
-	    }	  
-
-          if (picPresent == FillFrame || picPresent == XRepeat)
-	    {
-	      /* clipping width is done by the box width */
-	      if (x < xFrame)
-		{
-		  /* reduce the width in delta value */
-		  clipWidth = clipWidth + x - xFrame;
-		  x = xFrame;
-		}
-	      if (clipWidth > w)
-		clipWidth = w;
-	    }
-	  else
-	    {
-	      clipWidth = imageDesc->PicWidth;
-	      if (clipWidth > w)
-		clipWidth = w;
-	    }
-
-	  if (w > clipWidth)
-	    {
-	      
-	      if (clipWidth < imageDesc->PicWidth)
-		w = clipWidth;
-	      else
-		w = imageDesc->PicWidth;
-	    }
-	  if (h > clipHeight)
-	    {
-	      
-	      if (clipHeight < imageDesc->PicHeight) 
-		h = clipHeight;
-	      else
-		h = imageDesc->PicHeight;
-	    }
-	  
-
-	  j = 0;
-	  do
-	    {	      
-	      i = 0;
-	      do
-		{		  
-		  GL_TexturePartialMap (imageDesc, 
-				 xFrame + i, yFrame + j,
-				 w, h);
-		  i += imageDesc->PicWidth;
-		} 
-	      while (i < clipWidth);
-	      j += imageDesc->PicHeight;
-	    } 
-	  while (j < clipHeight);
-
-	  break;  
-	default: 
-	  break;
-	}
-    }
-}
-
-#else /*_GL*/
 
 /*----------------------------------------------------------------------
   LayoutPicture performs the layout of pixmap on the screen described
@@ -972,6 +829,9 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
   PictureScaling    picPresent;
   int               delta, dx, dy, x, y, ix, jy;
   int               clipWidth, clipHeight;
+#ifdef _GL
+  int               i, j;
+#else /* _GL */
 #ifdef _WINDOWS
   HDC               hMemDC;
   BITMAP            bm;
@@ -1007,10 +867,15 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
       nbPalColors = RealizePalette (TtDisplay);
     }
 #endif /* _WINDOWS */
+#endif /* _GL */
 
   pFrame = &ViewFrameTable[frame - 1];
   pAb = box->BxAbstractBox;
+#ifndef _GL
   if (pixmap != None)
+#else /* _GL */
+  if (glIsTexture (imageDesc->TextureBind))
+#endif /* _GL */
     {
       /* the default presentation depends on the box type */
       picPresent = imageDesc->PicPresent;
@@ -1038,6 +903,9 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	  /* size of the copied zone */
 	  clipWidth = pFrame->FrClipXEnd - pFrame->FrClipXBegin;
 	  clipHeight = pFrame->FrClipYEnd - pFrame->FrClipYBegin;
+#ifdef _GL
+	  GL_TextureMap (imageDesc, xFrame, yFrame, w, h);
+#else /*_GL*/
 #ifndef _WINDOWS
 #ifndef _GTK
 	  if (imageDesc->PicMask)
@@ -1095,10 +963,42 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 		DeleteDC (hMemDC);
 	    }
 #endif /* _WINDOWS */
+#endif /* _GL */
 	}
       else
 	{
 	  /* give origins in the concrete image */
+#ifdef _GL
+	  x = box->BxXOrg - box->BxLMargin - pFrame->FrXOrg;
+	  y = box->BxYOrg - box->BxTMargin - pFrame->FrYOrg;
+ 	  clipWidth  = pFrame->FrClipXEnd; 
+ 	  clipHeight = pFrame->FrClipYEnd; 
+	  if (pAb &&
+	      !TypeHasException (ExcSetWindowBackground, pAb->AbElement->ElTypeNumber,
+				 pAb->AbElement->ElStructSchema))
+	    {
+	      x = + box->BxLMargin;
+	      y = + box->BxTMargin;
+	    }
+	  if (picPresent == FillFrame || picPresent == XRepeat)
+	    {
+	      if (clipWidth > w)
+		w = clipWidth;
+	    }
+	  else 
+	    {
+	      w = imageDesc->PicWidth;
+	    }
+	  if (picPresent == FillFrame || picPresent == YRepeat)
+	    {
+	      if (clipHeight > h)
+		h = clipHeight;
+	    }
+	  else
+	    {
+	      h = imageDesc->PicHeight;
+	    }
+#else /* _GL */
 	  dx = pFrame->FrClipXBegin;
 	  dy = pFrame->FrClipYBegin;
 	  x = xFrame - picXOrg + pFrame->FrXOrg;
@@ -1107,8 +1007,8 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	  y = yFrame - picYOrg + pFrame->FrYOrg;
 	  if (y < dy)
 	    y = dy;
-	  clipWidth  = pFrame->FrClipXEnd - x;
-	  clipHeight = pFrame->FrClipYEnd - y;
+	  clipWidth  = pFrame->FrClipXEnd;
+	  clipHeight = pFrame->FrClipYEnd;
 	  /* compute the shift in the source image */
 	  dx = x;
 	  dy = y;
@@ -1119,13 +1019,17 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	      dx = dx - box->BxXOrg - box->BxLMargin;
 	      dy = dy - box->BxYOrg - box->BxTMargin;
 	    }
-	  if (picPresent == FillFrame || picPresent == XRepeat)
+	  if ((picPresent == FillFrame || picPresent == XRepeat) &&
+	      imageDesc->PicWArea)
 	    while (dx >= imageDesc->PicWArea)
 	      dx -= imageDesc->PicWArea;
-	  if (picPresent == FillFrame || picPresent == YRepeat)
+	  if ((picPresent == FillFrame || picPresent == YRepeat) && 
+	      imageDesc->PicHArea)
 	    while (dy >= imageDesc->PicHArea)
 	      dy -= imageDesc->PicHArea;
 	  /* compute the clipping in the drawing area */
+#endif /* _GL */
+#ifndef _GL
 	  x -= pFrame->FrXOrg;
 	  y -= pFrame->FrYOrg;
 	  if (picPresent == FillFrame || picPresent == YRepeat)
@@ -1173,6 +1077,34 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 		    w = delta;
 		}
 	    }
+#endif /* _GL */
+#ifdef _GL
+	  if (w > 0 && h > 0)
+	    {
+	      j = 0;
+	      jy = imageDesc->PicHeight;
+	      do
+		{	      
+		  i = 0;
+		  ix = imageDesc->PicWidth;
+		  do
+		    {		  
+		      if ((x + i + ix) > w)
+			ix += w - (x + i + ix);
+		      if ((y + j + jy) > h)
+			jy += h - (y + j + jy);
+		      GL_TexturePartialMap (imageDesc, 
+					    x + i, y + j,
+					    ix, 
+					    jy);
+		      i += ix;
+		    } 
+		  while (i < w && ix);
+		  j += jy;
+		} 
+	      while (j < h && jy);
+	    }
+#else /* _GL */
 #ifndef _WINDOWS
 	  ix = -pFrame->FrXOrg;
 	  jy = -pFrame->FrYOrg;
@@ -1279,10 +1211,10 @@ static void LayoutPicture (Pixmap pixmap, Drawable drawable, int picXOrg,
 	  if (hrgn)
 	    DeleteObject (hrgn);
 #endif /* _WINDOWS */
+#endif /* _GL */
 	}
     }
 }
-#endif /*_GL*/
 
 /*----------------------------------------------------------------------
    GetPictureFormat returns the format of a file picture           
@@ -2283,6 +2215,8 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 	  if (h == 0)
 	    h = hBox = imageDesc->PicHeight;
 	  ClipAndBoxUpdate (pAb, box, w, h, top, bottom, left, right, frame);
+	  imageDesc->PicWArea = w;
+	  imageDesc->PicHArea = h;
 	}
       
       if (pres != ReScale || Printing)
@@ -2413,13 +2347,19 @@ void LoadPicture (int frame, PtrBox box, PictInfo *imageDesc)
 			       width, height))
 	    {
 	      if (imageDesc->PicWArea == 0)
-		ChangeWidth (box,
-			     box, NULL,
-			     w + left + right, 0, frame);		  
+		{
+		  imageDesc->PicWArea = w;
+		  ChangeWidth (box,
+			       box, NULL,
+			       w + left + right, 0, frame);
+		}		  
 	      if (imageDesc->PicHArea == 0)
-		ChangeHeight (box,
-			      box, NULL,
-			      h + top + bottom + top + bottom, frame);
+		{
+		  imageDesc->PicHArea = h;
+		  ChangeHeight (box,
+				box, NULL,
+				h + top + bottom + top + bottom, frame);
+		}
 	    }
 
 	}
