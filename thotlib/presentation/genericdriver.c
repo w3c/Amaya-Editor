@@ -715,12 +715,12 @@ int                 nr;
 }
 
 /*----------------------------------------------------------------------
-  PresRuleAddSurElemCond : add a SurElem condition to a presentation rule.
+  PresRuleAddAttrCond : add a Attr condition to a presentation rule.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void         PresRuleAddSurElemCond (PtrPRule rule, int type)
+static void         PresRuleAddAttrCond (PtrPRule rule, int type)
 #else  /* __STDC__ */
-static void         PresRuleAddSurElemCond (rule, type)
+static void         PresRuleAddAttrCond (rule, type)
 PtrPRule            rule;
 int                 type;
 #endif /* !__STDC__ */
@@ -1046,16 +1046,15 @@ int                 extra;
 	  pRule->PrSpecifAttr = 0;
 	  pRule->PrSpecifAttrSSchema = NULL;
       
-	  /* In case of an attribute rule, add the SurElem condition */
+	  /* In case of an attribute rule, add the Attr condition */
 	  if ((ctxt->attr || ctxt->class) && ctxt->attrelem != 0)
-	    PresRuleAddSurElemCond (pRule, ctxt->attrelem);
+	    PresRuleAddAttrCond (pRule, ctxt->attrelem);
 	  /* add the ancesters conditions ... */
-	  for (i = 0; i < MAX_ANCESTORS; i++)
+	  i = 0;
+	  while (i < MAX_ANCESTORS && ctxt->ancestors[i] != 0)
 	    {
-	      if (ctxt->ancestors[i] != 0)
-		PresRuleAddAncestorCond (pRule, ctxt->ancestors[i], ctxt->ancestors_nb[i]);
-	      else
-		break;
+	      PresRuleAddAncestorCond (pRule, ctxt->ancestors[i], ctxt->ancestors_nb[i]);
+	      i++;
 	    }
 
 	  /* Add the order / conditions .... */

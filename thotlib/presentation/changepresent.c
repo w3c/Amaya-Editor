@@ -1251,6 +1251,7 @@ boolean             display;
 		       pPRule->PrSpecifAttr = pAttr->AeAttrNum;
 		       pPRule->PrSpecifAttrSSchema = pAttr->AeAttrSSchema;
 		     }
+		   value = pPRule->PrDimRule.DrValue;
 		 }
 	       else if (pAb->AbLeafType == LtPicture &&
 			pAb->AbBox->BxWidth != 0 &&
@@ -1259,15 +1260,16 @@ boolean             display;
 		   /* specific case for pictures:
 		      the rule is NULL but the width is not */
 		   if (pRStd->PrDimRule.DrUnit == UnPercent)
-		     dx = LogicalValue (width, UnPercent, (PtrAbstractBox) widthRef, 0);
+		     value = LogicalValue (width, UnPercent, (PtrAbstractBox) widthRef, 0);
 		   else
-		     dx = LogicalValue (width, pAb->AbWidth.DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+		     value = LogicalValue (width, pAb->AbWidth.DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 		 }
 	       else
-		 dx += pPRule->PrDimRule.DrValue;
-
-	       /* put the absolute value into the rule for the application */
-	       value = pPRule->PrDimRule.DrValue;
+		 {
+		   dx += pPRule->PrDimRule.DrValue;
+		   value = pPRule->PrDimRule.DrValue;
+		 }
+	       /* set the absolute value into the rule */
 	       pPRule->PrDimRule.DrValue = dx;
 	       /* send the event message to the application */
 	       doit = !PRuleMessagePre (pEl, pPRule, pDoc, isNew);
@@ -1423,6 +1425,7 @@ boolean             display;
 		       pPRule->PrSpecifAttr = pAttr->AeAttrNum;
 		       pPRule->PrSpecifAttrSSchema = pAttr->AeAttrSSchema;
 		     }
+		   value = pPRule->PrDimRule.DrValue;
 		 }
 	       else if (pAb->AbLeafType == LtPicture &&
 			pAb->AbBox->BxHeight != 0 &&
@@ -1431,15 +1434,17 @@ boolean             display;
 		   /* specific case for pictures:
 		      the rule is NULL but the height is not */
 		   if (pRStd->PrDimRule.DrUnit == UnPercent)
-		     dy = LogicalValue (height, UnPercent, (PtrAbstractBox) heightRef, 0);
+		     value = LogicalValue (height, UnPercent, (PtrAbstractBox) heightRef, 0);
 		   else
-		     dy = LogicalValue (height, pAb->AbHeight.DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
+		     value = LogicalValue (height, pAb->AbHeight.DimUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 		 }
 	       else
-		 dy += pPRule->PrDimRule.DrValue;
+		 {
+		   dy += pPRule->PrDimRule.DrValue;
+		   value = pPRule->PrDimRule.DrValue;
+		 }
 
-	       /* put the absolute value into the rule for the application */
-	       value = pPRule->PrDimRule.DrValue;
+	       /* set the absolute value into the rule */
 	       pPRule->PrDimRule.DrValue = dy;
 	       /* send the event message to the application */
 	       doit = !PRuleMessagePre (pEl, pPRule, pDoc, isNew);

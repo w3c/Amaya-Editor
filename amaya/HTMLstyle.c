@@ -3436,12 +3436,13 @@ CSSInfoPtr      css;
   STRING              cur;
   STRING              ancestors[MAX_ANCESTORS];
   int                 i, j;
-  boolean             isHTML;
+  boolean             isHTML, classOnly;
 
   sel[0] = EOS;
   class[0] = EOS;
   pseudoclass[0] = EOS;
   id[0] = EOS;
+  classOnly = FALSE;
   attrelemname[0] = EOS;
   deb = cur = elem = &sel[0];
   for (i = 0; i < MAX_ANCESTORS; i++)
@@ -3455,35 +3456,33 @@ CSSInfoPtr      css;
   selector = TtaSkipBlanks (selector);
   while (1)
     {
+      cur = deb;
       /* put one word in the sel buffer */
-      while ((*selector != EOS) && (*selector != ',') &&
-	     (*selector != '.') && (*selector != ':') &&
-	     (*selector != '#') && (!TtaIsBlank (selector)))
+      while (*selector != EOS && *selector != ',' &&
+	     *selector != '.' && *selector != ':' &&
+	     *selector != '#' && !TtaIsBlank (selector))
 	*cur++ = *selector++;
       *cur++ = EOS;
       
-      if ((*selector == ':') || (*selector == '.') || (*selector == '#'))
-	{
-	  /* keep the name as attrelemname, it's not an ancestor */
-	  ustrcpy (attrelemname, elem);
-	  elem = "";
-	}
-      else
-	elem = deb;
+      /* now deb points to the parsed type and cur to the next chain to be parsed */
+      elem = deb;
+      if (*selector == ':' || *selector == '.' || *selector == '#')
+	/* keep the name as attrelemname */
+	strcpy (attrelemname, elem);
       deb = cur;
-      
+
       if (*selector == '.')
 	{
 	  /* read the class id : only one allowed by selector */
 	  class[0] = EOS;
 	  cur = class;
+	  classOnly = (elem == NULL || *elem == EOS);
 	  selector++;
-	  while ((*selector != EOS) && (*selector != ',') &&
-		 (*selector != '.') && (*selector != ':') &&
-		 (!TtaIsBlank (selector)))
+	  while (*selector != EOS && *selector != ',' &&
+		 *selector != '.' && *selector != ':' &&
+		 !TtaIsBlank (selector))
 	    *cur++ = *selector++;
 	  *cur++ = EOS;
-	  cur = deb;
 	}
       else if (*selector == ':')
 	{
@@ -3491,9 +3490,9 @@ CSSInfoPtr      css;
 	  pseudoclass[0] = EOS;
 	  cur = pseudoclass;
 	  selector++;
-	  while ((*selector != EOS) && (*selector != ',') &&
-		 (*selector != '.') && (*selector != ':') &&
-		 (!TtaIsBlank (selector)))
+	  while (*selector != EOS && *selector != ',' &&
+		 *selector != '.' && *selector != ':' &&
+		 !TtaIsBlank (selector))
 	    *cur++ = *selector++;
 	  *cur++ = EOS;
 	  cur = deb;
@@ -3504,9 +3503,9 @@ CSSInfoPtr      css;
 	  id[0] = EOS;
 	  cur = &id[0];
 	  selector++;
-	  while ((*selector != EOS) && (*selector != ',') &&
-		 (*selector != '.') && (*selector != ':') &&
-		 (!TtaIsBlank (selector)))
+	  while (*selector != EOS && *selector != ',' &&
+		 *selector != '.' && *selector != ':' &&
+		 !TtaIsBlank (selector))
 	    *cur++ = *selector++;
 	  *cur++ = EOS;
 	  cur = deb;
@@ -3521,21 +3520,22 @@ CSSInfoPtr      css;
 	  id[0] = EOS;
 	  if (attrelemname[0] != EOS)
 	     {
-	     ancestors[0] = NULL;
-	     while ((*selector != EOS) && (*selector != ','))
-		  selector++;
-	     break;
+	       ancestors[0] = NULL;
+	       while (*selector != EOS && *selector != ',')
+		 selector++;
+	       break;
 	     }
 	}
 
       /* store elem in the list if the string is non-empty */
       if (*elem != EOS)
 	{
-	/* shifts the list to make room for the new elem */
-	for (i = MAX_ANCESTORS - 1; i > 0; i--)
-	  ancestors[i] = ancestors[i - 1];
-	/* store the new elem */
-	ancestors[0] = elem;
+	  /* shifts the list to make room for the new elem */
+	  for (i = MAX_ANCESTORS - 1; i > 0; i--)
+	    if (ancestors[i - 1] != NULL)
+	      ancestors[i] = ancestors[i - 1];
+	  /* store the new elem */
+	  ancestors[0] = elem;
 	}
 
       /* why did we stop ? */
@@ -3553,7 +3553,7 @@ CSSInfoPtr      css;
   /* Now set up the context block */
   ctxt->box = 0;
   elem = ancestors[0];
-  if ((elem == NULL) || (*elem == EOS))
+  if (elem == NULL || elem[0] == EOS)
     {
       if (class[0] != EOS)
 	elem = &class[0];
@@ -3608,31 +3608,31 @@ CSSInfoPtr      css;
       ctxt->classattr = HTML_ATTR_Class;
     }
   
-  if (ctxt->class != NULL)
+  if (classOnly)
     i = 0;
   else
     i = 1;
-  for (; i < MAX_ANCESTORS; i++)
+  while (i < MAX_ANCESTORS && ancestors[i] != NULL)
     {
-      if (ancestors[i] == NULL)
-	break;
       GIType (ancestors[i], &elType, doc);
-      if (elType.ElTypeNum == 0)
-	continue;
-      for (j = 0; j < MAX_ANCESTORS; j++)
+      if (elType.ElTypeNum != 0)
 	{
-	  if (ctxt->ancestors[j] == 0)
+	  for (j = 0; j < MAX_ANCESTORS; j++)
 	    {
-	      ctxt->ancestors[j] = elType.ElTypeNum;
-	      ctxt->ancestors_nb[j] = 0;
-	      break;
-	    }
-	  if (ctxt->ancestors[j] == elType.ElTypeNum)
-	    {
-	      ctxt->ancestors_nb[j]++;
-	      break;
+	      if (ctxt->ancestors[j] == 0)
+		{
+		  ctxt->ancestors[j] = elType.ElTypeNum;
+		  ctxt->ancestors_nb[j] = 0;
+		  break;
+		}
+	      if (ctxt->ancestors[j] == elType.ElTypeNum)
+		{
+		  ctxt->ancestors_nb[j]++;
+		  break;
+		}
 	    }
 	}
+      i++;
     }
 
   if (cssRule)

@@ -15,8 +15,8 @@ Extensions 1.5:
 * COLGROUP and COL elements are accepted and can be created within TABLE
   elements, but the rendering is not implemented yet.
 
-* CSS left margin and top margin are now interpreted as positionning into 
-  enclosing element.
+* New CSS properties "left-margin", "top-margin", "right-margin",
+  "display:none" are now interpreted.
 
 * Publication thru the net now uses the HTTP/1.1 etags and conditional
   headers to avoid the lost updates problem.
@@ -47,3 +47,9 @@ Fixed bugs 1.5:
 * When the current position was in a sequence of empty blocks (paragraphs, for
   instance), the Backspace key deleted two of these blocks at once and did not
   select anything.
+
+* When pasting a paragraph with an attribute at the beginning of a table cell
+  or list item, it was turned into a pseudo-paragraph, and produced wrong HTML
+  code when the document was saved.
+
+* CSS selectors like "PRE SPAN.test" didn't work.

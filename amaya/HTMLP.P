@@ -6604,7 +6604,7 @@ RULES
 	CreateBefore(BIG_S);
 	CreateWith(VerticalLine);
 	LineBreak: Yes;
-	Size: Enclosing + 2;
+	Size: 6;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
@@ -6621,7 +6621,7 @@ RULES
 	CreateBefore(SMALL_S);
 	CreateWith(VerticalLine);
 	LineBreak: Yes;
-	Size: Enclosing - 2;
+	Size: 3;
 	HorizPos: Left = Previous . Right;
 	VertPos: HRef = Previous . HRef;
 	IN Structure_view BEGIN
@@ -6854,8 +6854,8 @@ RULES
 	CreateBefore(FONT_S);
 	CreateWith(VerticalLine);
 	LineBreak: Yes;
-	HorizPos: Left = Previous . Right;
-	VertPos: HRef = Previous . HRef;
+	HorizPos: Left = Enclosing . Left;
+	VertPos: Top = Previous NOT MAP . Bottom + 0.4;
 	IN Structure_view BEGIN
 		Width: Enclosing . Width - STRUCT_INDENT;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
