@@ -338,6 +338,8 @@ AttributeMapping XHTMLAttributeMappingTable[] =
 
    {"usemap", "", 'A', HTML_ATTR_USEMAP, L_BasicValue},
 
+   {"valign", "col", 'A', HTML_ATTR_Cell_valign, L_StrictValue},
+   {"valign", "colgroup", 'A', HTML_ATTR_Cell_valign, L_StrictValue},
    {"valign", "tbody", 'A', HTML_ATTR_Row_valign, L_StrictValue},
    {"valign", "td", 'A', HTML_ATTR_Cell_valign, L_StrictValue},
    {"valign", "tfoot", 'A', HTML_ATTR_Row_valign, L_StrictValue},
