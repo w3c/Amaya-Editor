@@ -15,9 +15,6 @@ extern void SaveInHTML ( char *directoryName,
 extern void InitSaveForm ( Document document,
                            View view,
                            char *pathname );
-extern int SaveDocumentThroughNet ( Document document,
-                                    View view,
-                                    boolean confirm );
 extern void SaveDocument ( Document document,
                            View view );
 extern boolean DocumentToSave ( NotifyDialog * event );
@@ -39,9 +36,6 @@ extern void SaveInHTML (/* char *directoryName,
 extern void InitSaveForm (/* Document document,
                              View view,
                              char *pathname */);
-extern int SaveDocumentThroughNet (/* Document document,
-                                      View view,
-                                      boolean confirm */);
 extern void SaveDocument (/* Document document,
                              View view */);
 extern boolean DocumentToSave (/* NotifyDialog * event */);

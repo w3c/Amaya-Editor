@@ -3,10 +3,9 @@ APPLICATION EDITOR;
 USES
 	HTML, Lookup, NoStructSelect
 #ifdef AMAYA_PLUGIN
-       , Plugin;
-#else /* AMAYA_PLUGIN */
-       ;
+       , Plugin
 #endif /* AMAYA_PLUGIN */
+       ;
 
 DEFAULT
    Init.Post -> InitAmaya;

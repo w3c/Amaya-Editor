@@ -28,6 +28,7 @@
 #include "appdialogue.h"
 #include "dialog.h"
 #include "tree.h"
+#include "content.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT extern

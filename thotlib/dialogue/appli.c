@@ -47,6 +47,7 @@
 #include "edit_tv.h"
 #include "frame_tv.h"
 #include "appdialogue_tv.h"
+#include "applicationapi_f.h"
 
 #ifndef _WINDOWS
 static XmString     null_string;

@@ -35,6 +35,7 @@
 #include "message.h"
 #include "fileaccess.h"
 #include "appdialogue.h"
+#include "content.h"
 
 #undef THOT_EXPORT
 #define THOT_EXPORT

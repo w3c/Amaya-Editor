@@ -304,9 +304,9 @@ boolean            *ok;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-int                 SaveDocumentThroughNet (Document document, View view, boolean confirm)
+static int          SaveDocumentThroughNet (Document document, View view, boolean confirm)
 #else
-int                 SaveDocumentThroughNet (document, view, confirm)
+static int          SaveDocumentThroughNet (document, view, confirm)
 Document            document;
 View                view;
 boolean             confirm;
@@ -321,7 +321,7 @@ boolean             confirm;
    int                 index = 0, len, nb = 0;
    LoadedImageDesc    *pImage;
    int                 res;
-   PicType             imageType;
+   int                 imageType;
 
    if (!IsW3Path (DocumentURLs[document]))
       return (-1);
@@ -402,7 +402,7 @@ boolean             confirm;
 	  {
 	     if (pImage->status == IMAGE_MODIFIED)
 	       {
-		  imageType = TtaGetPictureType ((Element) pImage->elImage);
+		  imageType = (int) TtaGetPictureType ((Element) pImage->elImage);
 		  res = PutObjectWWW (document, pImage->localName,
 				      pImage->originalName, AMAYA_SYNC, imageType,
 				      (TTcbf *) NULL, (void *) NULL);
