@@ -960,7 +960,7 @@ EXCEPT
 	C_Head:		Hidden, NoSelect;
 	Table_foot:	NoCut, Hidden, NoSelect, PageBreakRepBefore;
 	C_Foot:		Hidden, NoSelect;
-	Cols:		Hidden, NoSelect;
+	Cols:		Hidden, NoSelect, NoCreate;
 	Table_body:	PageBreakAllowed, Hidden, NoBreakByReturn;
         thead:		NoBreakByReturn; 
         tbody:	        NoBreakByReturn;

@@ -3509,13 +3509,13 @@ void TtaInsertAnyElement (Document document, ThotBool before)
 	       attributes */
 	    {
 	      CreationExceptions (pNew, pDoc);
+	      /* send an event ElemNew.Post to application */
+	      NotifySubTree (TteElemNew, pSelDoc, pNew, 0, 0, FALSE, FALSE);
 	      CreateAllAbsBoxesOfEl (pNew, pDoc);
 	      AbstractImageUpdated (pDoc);
 	      RedisplayDocViews (pDoc);
 	      RedisplayCopies (pNew, pDoc, TRUE);
 	      UpdateNumbers (NextElement (pNew), pNew, pDoc, TRUE);
-	      /* send an event ElemNew.Post to application */
-	      NotifySubTree (TteElemNew, pSelDoc, pNew, 0, 0, FALSE, FALSE);
 	      if (pNew && pNew->ElParent)
 		{
 		  SetDocumentModified (pDoc, TRUE, 30);

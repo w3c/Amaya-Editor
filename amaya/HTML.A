@@ -86,6 +86,12 @@ ELEMENTS
 	ElemDelete.Pre -> DeleteColumn;
 	END;
 
+   Table_cell:
+	BEGIN
+	ElemNew.Post -> CellCreated;
+	ElemPaste.Post -> CellPasted;
+	END;
+
    Data_cell:
 	BEGIN
 	ElemNew.Post -> CellCreated;
