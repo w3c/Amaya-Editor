@@ -42,7 +42,7 @@
 
 #moving around 
 <Key>Delete:        TtcDeleteSelection() 
-<Key>Backspace:    TtcDeletePreviousChar() 
+<Key>Backspace:     TtcDeletePreviousChar() 
 <Key>Escape:        TtcParentElement() 
 <Key>Return:        TtcCreateElement() 
 <Key>Home:          TtcStartOfLine() 
@@ -57,7 +57,8 @@
 <Key>L6:            TtcCopyToClipboard() 
 <Key>L8:            TtcPasteFromClipboard() 
 <Key>F6:            TtcCopyToClipboard() 
-<Key>F8:            TtcPasteFromClipboard() 
+<Key>F8:            TtcPasteFromClipboard()
+<Key>Tab:           NextLinkOrFormElement()
 Ctrl <Key>a:        TtcStartOfLine() 
 Ctrl <Key>e:        TtcEndOfLine() 
 Ctrl <Key>j:        TtcPreviousElement() 
@@ -65,7 +66,7 @@ Ctrl <Key>k:        TtcNextElement()
 Ctrl <Key>-:        TtcChildElement()
 Ctrl <Key>Home:     TtcPageTop() 
 Ctrl <Key>End:      TtcPageEnd() 
-Alt <Key>Return:    DoAction() 
+Alt <Key>Return:    DoAction()
 Alt <Key>Home:      GoToHome()
 
 #File menu 

@@ -1180,15 +1180,126 @@ static void DisplayUrlAnchor (Element element, Document document)
   ----------------------------------------------------------------------*/
 void DoAction (Document doc, View view)
 {
-   Element             firstSel;
-   int                 firstChar, lastChar;
+  Element             firstSel;
+  int                 firstChar, lastChar;
 
-   TtaGiveFirstSelectedElement (doc, &firstSel, &firstChar, &lastChar);
-   if (firstSel)
-     {
-       if (!ActivateElement (firstSel, doc))
-	 TtaSelectWord (firstSel, firstChar, doc, view);
-     }
+  TtaGiveFirstSelectedElement (doc, &firstSel, &firstChar, &lastChar);
+  if (firstSel)
+    {
+      if (!ActivateElement (firstSel, doc))
+	TtaSelectWord (firstSel, firstChar, doc, view);
+    }
+}
+
+/*----------------------------------------------------------------------
+  AcceptTab inserts a TAB.
+ -----------------------------------------------------------------------*/
+ThotBool AcceptTab (NotifyOnTarget *event)
+{
+  TtcInsertChar (event->document, 1, TAB);
+  /* don't let Thot perform it's normal operation */
+  return TRUE;
+}
+
+/*----------------------------------------------------------------------
+  NextLinkOrFormElement selects the next link or form element.
+ -----------------------------------------------------------------------*/
+void NextLinkOrFormElement (Document doc, View view)
+{
+  ElementType         elType;
+  Element             root, child, next, startEl, el;
+  Attribute           attr;
+  AttributeType       attrType;
+  ThotBool            found, cycle;
+  int                 i;
+  int                 firstChar, lastChar;
+
+  root = TtaGetRootElement (doc);
+  TtaGiveFirstSelectedElement (doc, &el, &firstChar, &lastChar);
+  if (el == NULL)
+    /* start from the root element */
+    el = root;
+  /* don't manage this element */
+  startEl = el;
+  elType = TtaGetElementType (el);
+  attrType.AttrTypeNum = HTML_ATTR_NAME;
+  attrType.AttrSSchema = elType.ElSSchema;
+  /* we're looking for a next element */
+  cycle = FALSE;
+  TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
+  found = FALSE;
+  while (!found)
+    {
+      if (el == startEl)
+	{
+	  /* we made a complete trun and no other element was found */
+	  el = NULL;
+	  attr = NULL;
+	  found = TRUE;
+	}
+      else if (el == NULL)
+	{
+	  /* out of the form */
+	  el = NULL;
+	  attr = NULL;
+	  if (!cycle && startEl != root)
+	    {
+	      /* restart from the beginning of the form */
+	      cycle = TRUE;
+	      el = root;
+	    }
+	  else
+	    /* stop the search */
+	    found = TRUE;
+	}  
+      else if (attr)
+	{
+	  elType = TtaGetElementType (el);
+	  switch (elType.ElTypeNum)
+	    {
+	    case HTML_EL_Option_Menu:
+	    case HTML_EL_Checkbox_Input:
+	    case HTML_EL_Radio_Input:
+	    case HTML_EL_Submit_Input:
+	    case HTML_EL_Reset_Input:
+	    case HTML_EL_Button_Input:
+	    case HTML_EL_BUTTON_:
+	      /* no included text: select the element itself */
+	      TtaSelectElement (doc, el);
+	      found =TRUE;
+	      break;
+	      
+	    case HTML_EL_Text_Area:
+	    case HTML_EL_Text_Input:
+	    case HTML_EL_File_Input:
+	    case HTML_EL_Password_Input:
+	      /* look for the last included text */
+	      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
+	      child = TtaSearchTypedElement (elType, SearchForward, el);
+	      if (child)
+		{
+		  next = child;
+		  do
+		    {
+		      child = next;
+		      next = TtaSearchTypedElementInTree (elType,
+							  SearchForward,
+							  el, child);
+		    }
+		  while (next);
+		  i = TtaGetTextLength (child);
+		  TtaSelectString (doc, child, i+1, i);
+		}
+	      found =TRUE;
+	      break;
+	      
+	    default:
+	      break;
+	    }
+	}
+      if (!found)
+	TtaSearchAttribute (attrType, SearchForward, el, &el, &attr);
+    }
 }
 
 /*----------------------------------------------------------------------

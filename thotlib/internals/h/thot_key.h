@@ -21,6 +21,7 @@
 #define THOT_KEY_BackSpace	VK_BACK
 #define THOT_KEY_Escape		VK_ESCAPE
 #define THOT_KEY_Delete		VK_DELETE
+#define THOT_KEY_Tab            VK_TAB
 #define THOT_KEY_F1		VK_F1
 #define THOT_KEY_F2		VK_F2
 #define THOT_KEY_F3		VK_F3
@@ -76,6 +77,7 @@
 #define THOT_KEY_BackSpace	XK_BackSpace
 #define THOT_KEY_Escape		XK_Escape
 #define THOT_KEY_Delete		XK_Delete
+#define THOT_KEY_Tab            XK_Tab
 #define THOT_KEY_F1		XK_F1
 #define THOT_KEY_F2		XK_F2
 #define THOT_KEY_F3		XK_F3

@@ -152,6 +152,7 @@ GoToHome
 GotoPreviousHTML
 GotoNextHTML
 HelpBrowsing
+NextLinkOrFormElement
 OpenDoc
 OpenDocInNewWindow
 Reload

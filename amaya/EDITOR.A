@@ -288,6 +288,7 @@ MENUS
 
 FUNCTIONS
   DoAction,
+  NextLinkOrFormElement,
   StopTransfer,
   GoToHome;
 END

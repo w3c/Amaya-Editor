@@ -205,6 +205,11 @@ static unsigned int  SpecialKey (char *name, ThotBool *isSpecial)
      *isSpecial = FALSE;
      return 32;
    }
+   else if (!strcasecmp (name, "Tab"))
+   {
+     *isSpecial = FALSE;
+     return (unsigned int) THOT_KEY_Tab;
+   }
    else if (!strcasecmp (name, "Escape"))
      return (unsigned int) THOT_KEY_Escape;
    else if (!strcasecmp (name, "Delete"))
@@ -915,6 +920,8 @@ void ThotInput (int frame, unsigned char *string, unsigned int nb,
 	  if (command != CMD_DeletePrevChar)
 	    /* It's not a delete, close the current insertion */
 	    CloseInsertion ();
+
+	  /* ***Check events TteElemReturn and TteElemTab*** */
 	  if (LoadedDocument[document - 1] == SelectedDocument &&
 	      command == CMD_CreateElement)
 	    /* check if the application wants to handle the return */
@@ -923,6 +930,14 @@ void ThotInput (int frame, unsigned char *string, unsigned int nb,
 	      command == CMD_CreateElement)
 	    /* check if the application wants to handle the return */
 	    done = APPKey (TteElemReturn, AbsBoxSelectedAttr->AbElement, document, TRUE);
+	  else if (LoadedDocument[document - 1] == SelectedDocument &&
+		   value == TAB)
+	    /* check if the application wants to handle the Tab */
+	    done = APPKey (TteElemTab, FirstSelectedElement, document, TRUE);
+	  else if (LoadedDocument[document - 1] == DocSelectedAttr &&
+		   value == TAB)
+	    /* check if the application wants to handle the return */
+	    done = APPKey (TteElemTab, AbsBoxSelectedAttr->AbElement, document, TRUE);
 	  else
 	    done = FALSE;
 	  /* Call action if it's active */
@@ -933,6 +948,8 @@ void ThotInput (int frame, unsigned char *string, unsigned int nb,
 	      /* available action for this frame or the main frame */
 	      if (MenuActionList[command].Call_Action)
 		(*MenuActionList[command].Call_Action) (document, view);
+
+	      /* ***Check events TteElemReturn and TteElemTab*** */
 	      if (LoadedDocument[document - 1] == SelectedDocument &&
 		  command == CMD_CreateElement)
 		/* post treatment for the application */
@@ -941,6 +958,14 @@ void ThotInput (int frame, unsigned char *string, unsigned int nb,
 		       command == CMD_CreateElement)
 		/* check if the application wants to handle the return */
 		APPKey (TteElemReturn, AbsBoxSelectedAttr->AbElement, document, FALSE);
+	      else if (LoadedDocument[document - 1] == SelectedDocument &&
+		       value == TAB)
+		/* post treatment for the application */
+		APPKey (TteElemTab, FirstSelectedElement, document, FALSE);
+	      else if (LoadedDocument[document - 1] == DocSelectedAttr &&
+		       value == TAB)
+		/* check if the application wants to handle the return */
+		APPKey (TteElemTab, AbsBoxSelectedAttr->AbElement, document, FALSE);
 	    }
 	}
      else if (nb == 0)

@@ -19,6 +19,9 @@ extern ThotBool IsCSSLink ( Element el,
                             Document doc );
 extern void DoAction ( Document doc,
                        View view );
+extern ThotBool AcceptTab ( NotifyOnTarget *event );
+extern void NextLinkOrFormElement ( Document doc,
+                                    View view );
 extern void AccessKeyHandler ( Document doc,
                                void *param );
 extern ThotBool IgnoreEvent ( NotifyElement *event );
@@ -52,6 +55,9 @@ extern ThotBool IsCSSLink (/* Element el,
                               Document doc */);
 extern void DoAction (/* Document doc,
                          View view */);
+extern ThotBool AcceptTab (/* NotifyOnTarget *event */);
+extern void NextLinkOrFormElement (/* Document doc,
+                                      View view */);
 extern void AccessKeyHandler (/* Document doc,
                                  void *param */);
 extern ThotBool IgnoreEvent (/* NotifyElement *event */);

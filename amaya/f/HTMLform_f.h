@@ -10,7 +10,6 @@ extern ThotBool SaveDocumentStatus ( NotifyOnTarget *event );
 extern void RestoreDocumentStatus ( NotifyOnTarget *event );
 extern void SubmitForm ( Document doc,
                          Element element );
-extern ThotBool HandleTab ( NotifyOnTarget *event );
 extern ThotBool HandleReturn ( NotifyOnTarget *event );
 extern void ActivateFileInput ( Document doc,
                                 Element el );
@@ -28,7 +27,6 @@ extern ThotBool SaveDocumentStatus (/* NotifyOnTarget *event */);
 extern void RestoreDocumentStatus (/* NotifyOnTarget *event */);
 extern void SubmitForm (/* Document doc,
                            Element element */);
-extern ThotBool HandleTab (/* NotifyOnTarget *event */);
 extern ThotBool HandleReturn (/* NotifyOnTarget *event */);
 extern void ActivateFileInput (/* Document doc,
                                   Element el */);
