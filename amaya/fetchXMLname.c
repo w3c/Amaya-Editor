@@ -344,6 +344,45 @@ ThotBool IsXMLElementInline (ElementType elType, Document doc)
 }
 
 /*----------------------------------------------------------------------
+   MapMathMLAttributeValue
+   Search in the Attribute Value Mapping Table the entry for the attribute
+   ThotAtt and its value attVal. Returns the corresponding Thot value.
+  ----------------------------------------------------------------------*/
+void MapXMLAttributeValue (int XMLtype, char *attVal, AttributeType attrType,
+			      int *value)
+{
+  AttrValueMapping   *ptr;
+  int                 i;
+
+  /* Select the right table */
+  if (XMLtype == XHTML_TYPE)
+    ptr = XHTMLAttributeMappingTable;
+  else if (XMLtype == MATH_TYPE)
+    ptr = MathMLAttrValueMappingTable;
+  else if (XMLtype == SVG_TYPE)
+    ptr = SVGAttributeMappingTable;
+  else if (XMLtype == XLINK_TYPE)
+    ptr = XLinkAttributeMappingTable;
+  else
+    ptr = NULL;
+  
+  *value = 0;
+  i = 0;
+  if (ptr == NULL)
+    return;
+  while (ptr[i].ThotAttr != attrType.AttrTypeNum && ptr[i].ThotAttr != 0)
+    i++;
+  if (ptr[i].ThotAttr == attrType.AttrTypeNum)
+    do
+      if (!strcmp (ptr[i].XMLattrValue, attVal))
+	*value = ptr[i].ThotAttrValue;
+      else
+	i++;
+    while (*value == 0 && ptr[i].ThotAttr == attrType.AttrTypeNum);
+}
+
+
+/*----------------------------------------------------------------------
    MapXMLAttribute
    Generic function which searchs in the Attribute Mapping Table (table)
    the entry attrName associated to the element elementName.

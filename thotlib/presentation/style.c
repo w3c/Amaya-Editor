@@ -882,10 +882,8 @@ static PtrPRule *PresAttrChainInsert (PtrPSchema tsch, int attrType,
 	  return (&(new->ApRefFirstPRule));
 	  break;
 	case AtEnumAttr:
-	  if (attrVal)
-	    sscanf (attrVal, "%d", &val);
-	  else
-	    val = 0;
+	  /* get the attribute value */
+	  val = (int) attrVal;
 	  if (val)
 	    {
 	      new->ApEnumFirstPRule[val - 1] = NULL;

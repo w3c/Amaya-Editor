@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996-2001.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2002
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -70,7 +70,8 @@ extern void TtaSetAttributeValue (Attribute attribute, int value, Element elemen
    document: the document to which the element belongs.
    Must be 0 if element is NULL.
    ---------------------------------------------------------------------- */
-extern void TtaSetAttributeText (Attribute attribute, char *buffer, Element element, Document document);
+extern void TtaSetAttributeText (Attribute attribute, char *buffer,
+				 Element element, Document document);
 
 /* ----------------------------------------------------------------------
    TtaNextAttribute
@@ -106,19 +107,29 @@ extern void TtaNextAttribute (Element element, /*INOUT*/ Attribute *attribute);
 extern Attribute TtaGetAttribute (Element element, AttributeType attributeType);
 
 /* ----------------------------------------------------------------------
+   TtaGetAttributeKind
+
+   Returns the kind of the attribute: 0 = Enumerate, 1 = Integer, 2 = Text,
+   3 = CsReference.
+   Parameter:
+   attType: type of the attribute.
+   ---------------------------------------------------------------------- */
+extern int TtaGetAttributeKind (AttributeType attType);
+
+/* ----------------------------------------------------------------------
    TtaGiveAttributeType
 
    Returns the type of a given attribute.
 
    Parameter:
    attribute: the attribute of interest.
-
    Return parameters:
    attributeType: type of the attribute.
    attrKind: kind of the attribute: 0 = Enumerate, 1 = Integer, 2 = Text,
    3 = CsReference
    ---------------------------------------------------------------------- */
-extern void TtaGiveAttributeType (Attribute attribute, AttributeType *attributeType, int *attrKind);
+extern void TtaGiveAttributeType (Attribute attribute, AttributeType *attributeType,
+				  int *attrKind);
 
 /* ----------------------------------------------------------------------
    TtaGiveAttributeTypeFromName

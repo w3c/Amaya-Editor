@@ -993,7 +993,7 @@ void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		      pFrame->FrSelectionEnd.VsXPos != 0)
 		    right = pFrame->FrSelectionEnd.VsXPos;
 		  else
-		    right = pBox->BxWidth;
+		    right = pBox->BxW;
 		  DisplayStringSelection (frame, left, right, pBox);
 		  /* the selection is done now */
 		  left = 0;

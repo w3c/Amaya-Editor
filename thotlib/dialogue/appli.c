@@ -139,8 +139,43 @@ int         X_Pos;
 int         Y_Pos;
 int         cyToolBar;
 TBADDBITMAP ThotTBBitmap;
+#endif /* _WINDOWS */
+
+#include "absboxes_f.h"
+#ifdef _GTK
+#include "gtk-functions.h"
+#else /* _GTK */
+#include "appli_f.h"
+#include "input_f.h"
+#endif /* _GTK */
+#include "applicationapi_f.h"
+#include "boxlocate_f.h"
+#include "boxparams_f.h"
+#include "boxselection_f.h"
+#include "buildboxes_f.h"
+#include "callback_f.h"
+#include "context_f.h"
+#include "editcommands_f.h"
+#include "font_f.h"
+#include "frame_f.h"
+#include "interface_f.h"
+#include "keyboards_f.h"
+#include "memory_f.h"
+#include "message_f.h"
+#include "scroll_f.h"
+#include "selectmenu_f.h"
+#include "structcommands_f.h"
+#include "structcreation_f.h"
+#include "structmodif_f.h"
+#include "structselect_f.h"
+#include "textcommands_f.h"
+#include "thotmsg_f.h"
+#include "views_f.h"
+#include "viewapi_f.h"
+#include "xwindowdisplay_f.h"
 
 
+#ifdef _WINDOWS
 #ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
   Clear clear the area of frame located at (x, y) and of size width x height.
@@ -208,40 +243,6 @@ ThotBool InitToolTip (HWND hwndToolBar)
    return bSuccess;
 }
 #endif /* _WINDOWS */
-
-#include "absboxes_f.h"
-#ifdef _GTK
-#include "gtk-functions.h"
-#else /* _GTK */
-#include "appli_f.h"
-#include "input_f.h"
-#endif /* _GTK */
-
-#include "applicationapi_f.h"
-#include "boxlocate_f.h"
-#include "boxparams_f.h"
-#include "boxselection_f.h"
-#include "buildboxes_f.h"
-#include "callback_f.h"
-#include "context_f.h"
-#include "editcommands_f.h"
-#include "font_f.h"
-#include "frame_f.h"
-#include "interface_f.h"
-#include "keyboards_f.h"
-#include "memory_f.h"
-#include "message_f.h"
-#include "scroll_f.h"
-#include "selectmenu_f.h"
-#include "structcommands_f.h"
-#include "structcreation_f.h"
-#include "structmodif_f.h"
-#include "structselect_f.h"
-#include "textcommands_f.h"
-#include "thotmsg_f.h"
-#include "views_f.h"
-#include "viewapi_f.h"
-#include "xwindowdisplay_f.h"
 
 /*----------------------------------------------------------------------
    FrameToView retourne, sous la forme qui convient a l'API Thot, 
@@ -520,6 +521,7 @@ gboolean Idle_draw_GTK (GtkWidget *widget)
   GL_DrawAll (widget, frame);      
   return TRUE;
 }
+
 /*----------------------------------------------------------------------
   GL_FocusIn :
   Manage Drawing Timer upon Frame focus by user
@@ -533,7 +535,8 @@ gboolean GL_FocusIn (ThotWidget widget,
   frame = (int) data;
   /*Start animation*/
   return TRUE;
-}  
+}
+
 /*----------------------------------------------------------------------
   GL_FocusOut :
   Manage Drawing Timer upon Frame focus by user
@@ -565,6 +568,7 @@ gboolean GL_DrawCallback (ThotWidget widget, GdkEventExpose *event, gpointer dat
      GL_DrawAll (widget, nframe); 
   return TRUE;
 }
+
 /*----------------------------------------------------------------------
  GL_Destroy :
  Close Opengl pipeline
@@ -579,6 +583,7 @@ gboolean  GL_Destroy (ThotWidget widget,
  
   return TRUE ;
 }
+
 /*----------------------------------------------------------------------
  GL_Init :
  Opengl pipeline state initialization
@@ -605,6 +610,7 @@ gboolean  GL_Init (ThotWidget widget,
   else
     return FALSE;   
 }
+
 /*----------------------------------------------------------------------
   ExposeCallbackGTK : 
   When a part of the canvas is hidden by a window or menu 
@@ -641,12 +647,11 @@ gboolean ExposeCallbackGTK (ThotWidget widget, GdkEventExpose *event, gpointer d
     }
   return FALSE;
 }
+
 /*----------------------------------------------------------------------
    FrameResizedGTK When user resize window
   ----------------------------------------------------------------------*/
-void FrameResizedGTK (GtkWidget *widget, 
-		      GdkEventConfigure *event, 
-		      gpointer data)
+void FrameResizedGTK (GtkWidget *widget, GdkEventConfigure *event, gpointer data)
 {
   int                 frame;
   Dimension           width, height;

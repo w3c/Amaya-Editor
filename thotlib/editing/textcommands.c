@@ -1018,9 +1018,9 @@ static int CopyXClipboard (unsigned char **buffer, View view)
 	      if (pEl != NULL)
 		{
 		  if (pEl == pLastEl)
-		    maxLength += lastChar;
+		    maxLength += lastChar + 1;
 		  else
-		    maxLength += pEl->ElVolume;
+		    maxLength += pEl->ElVolume + 1;
 		  lg += 2;
 		}
 	    }
@@ -1130,10 +1130,11 @@ void TtcCopyToClipboard (Document doc, View view)
       if (Xbuffer)
 	free (Xbuffer);
       Xbuffer = buffer;
+printf ("TtcCopyToClipboard lg=%d\n", len);
     }
   else if (Xbuffer)
     {
-	free (Xbuffer);
+	TtaFreeMemory (Xbuffer);
       Xbuffer = NULL;
     }
 #else /* _GTK */

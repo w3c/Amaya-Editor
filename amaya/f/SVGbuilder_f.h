@@ -13,7 +13,7 @@ extern void MapSVGAttribute ( char *attrName,
                               char* elementName,
                               ThotBool *level,
                               Document doc );
-extern void MapSVGAttributeValue ( char* AttrVal,
+extern void MapSVGAttributeValue ( char* attVal,
                                    AttributeType attrType,
                                    int *value );
 extern void MapSVGEntity ( char *entityName,
@@ -77,7 +77,7 @@ extern void MapSVGAttribute (/* char *attrName,
                                 char* elementName,
                                 ThotBool *level,
                                 Document doc */);
-extern void MapSVGAttributeValue (/* char* AttrVal,
+extern void MapSVGAttributeValue (/* char* attVal,
                                      AttributeType attrType,
                                      int *value */);
 extern void MapSVGEntity (/* char *entityName,

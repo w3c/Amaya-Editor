@@ -2456,7 +2456,7 @@ void selection_received (GtkWidget *widget, GtkSelectionData *sel_data,
   if (sel_data->type != GDK_SELECTION_TYPE_STRING)
     return;
   if (Xbuffer)
-    free(Xbuffer);
+    TtaFreeMemory (Xbuffer);
   Xbuffer = TtaGetMemory ((sel_data->length + 1) * sizeof (unsigned char));
   strcpy (Xbuffer, sel_data->data);
   return;

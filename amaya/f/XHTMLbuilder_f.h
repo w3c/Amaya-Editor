@@ -50,7 +50,7 @@ extern void EndOfHTMLAttributeValue ( char *attrValue,
                                       ThotBool UnknownAttr,
                                       ParserData *context,
                                       ThotBool isXML );
-extern void MapHTMLAttributeValue ( char *AttrVal,
+extern void MapHTMLAttributeValue ( char *attVal,
                                     AttributeType attrType,
                                     int *value );
 
@@ -100,7 +100,7 @@ extern void EndOfHTMLAttributeValue (/* char *attrValue,
                                         ThotBool UnknownAttr,
                                         ParserData *context,
                                         ThotBool isXML */);
-extern void MapHTMLAttributeValue (/* char *AttrVal,
+extern void MapHTMLAttributeValue (/* char *attVal,
                                       AttributeType attrType,
                                       int *value */);
 

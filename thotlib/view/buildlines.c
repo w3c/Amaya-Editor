@@ -1145,8 +1145,8 @@ static void BreakPieceOfBox (PtrLine pLine, PtrBox pBox, int max,
    *   or without (lostPixels = -2);
    * - if we want to remove extra spaces at the end of the box.
    */
-  if (pNewBuff != NULL
-      && (lostPixels != 0 || nSpaces != 0 || oldnSpaces == 0)
+  if (/*pNewBuff != NULL
+	&& */(lostPixels != 0 || nSpaces != 0 || oldnSpaces == 0)
       && (pBox->BxWidth != max || lostPixels != pBox->BxNSpaces))
     ibox2 = GetBox (pAb);
   else
@@ -1270,7 +1270,7 @@ static void BreakMainBox (PtrLine pLine, PtrBox pBox, int max,
     /* don't break on a space */
     spaceWidth = 0;
   else
-    /* break on a space */
+    /* breakmak on a space */
     spaceWidth = BoxCharacterWidth (SPACE, font);
 
   /*

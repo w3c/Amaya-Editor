@@ -1280,3 +1280,43 @@ void TtaGiveTextAttributeValue (Attribute attribute, char *buffer, int *length)
     *length = CopyBuffer2MBs (((PtrAttribute) attribute)->AeAttrText, 0,
 			     buffer, *length);
 }
+
+/* ----------------------------------------------------------------------
+   TtaGetAttributeKind
+
+   Returns the kind of the attribute: 0 = Enumerate, 1 = Integer, 2 = Text,
+   3 = CsReference.
+   Parameter:
+   attType: type of the attribute.
+   ---------------------------------------------------------------------- */
+int TtaGetAttributeKind (AttributeType attType)
+{
+  PtrSSchema          pSS;
+  int                 attrKind = 2;
+
+  UserErrorCode = 0;
+  if (attType.AttrSSchema == NULL || attType.AttrTypeNum == 0)
+    TtaError (ERR_invalid_parameter);
+  else
+    {
+      pSS = (PtrSSchema)(attType.AttrSSchema);
+      switch (pSS->SsAttribute->TtAttr[attType.AttrTypeNum - 1]->AttrType)
+	{
+	case AtEnumAttr:
+	  attrKind = 0;
+	  break;
+	case AtNumAttr:
+	  attrKind = 1;
+	  break;
+	case AtTextAttr:
+	  attrKind = 2;
+	  break;
+	case AtReferenceAttr:
+	  attrKind = 3;
+	  break;
+	default:
+	  break;
+	}
+    } 
+  return attrKind;
+}

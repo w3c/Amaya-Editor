@@ -63,6 +63,7 @@ extern int TtaGetTextAttributeLength ( Attribute attribute );
 extern void TtaGiveTextAttributeValue ( Attribute attribute,
                                         char *buffer,
                                         int *length );
+extern int TtaGetAttributeKind ( AttributeType attType );
 
 #else /* __STDC__ */
 
@@ -123,6 +124,7 @@ extern int TtaGetTextAttributeLength (/* Attribute attribute */);
 extern void TtaGiveTextAttributeValue (/* Attribute attribute,
                                           char *buffer,
                                           int *length */);
+extern int TtaGetAttributeKind (/* AttributeType attType */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -96,6 +96,51 @@ static AttributeMapping SVGAttributeMappingTable[] =
    {"zzghost", "", 'A', SVG_ATTR_Ghost_restruct, L_OtherValue},
    {"", "", EOS, 0, L_OtherValue}	  /* Last entry. Mandatory */
 };
+
+/* mapping table of attribute values */
+static AttrValueMapping SVGAttrValueMappingTable[] =
+{ 
+   {SVG_ATTR_xml_space, "default", SVG_ATTR_xml_space_VAL_xml_space_default},
+   {SVG_ATTR_xml_space, "preserve", SVG_ATTR_xml_space_VAL_xml_space_preserve},
+
+   {SVG_ATTR_externalResourcesRequired, "false", SVG_ATTR_externalResourcesRequired_VAL_false},
+   {SVG_ATTR_externalResourcesRequired, "true", SVG_ATTR_externalResourcesRequired_VAL_true},
+
+   {SVG_ATTR_font_style, "inherit", SVG_ATTR_font_style_VAL_inherit},
+   {SVG_ATTR_font_style, "italic", SVG_ATTR_font_style_VAL_italic},
+   {SVG_ATTR_font_style, "normal", SVG_ATTR_font_style_VAL_normal_},
+   {SVG_ATTR_font_style, "oblique", SVG_ATTR_font_style_VAL_oblique_},
+
+   {SVG_ATTR_font_variant, "inherit", SVG_ATTR_font_variant_VAL_inherit},
+   {SVG_ATTR_font_variant, "normal", SVG_ATTR_font_variant_VAL_normal_},
+   {SVG_ATTR_font_variant, "small-caps", SVG_ATTR_font_variant_VAL_small_caps},
+
+   {SVG_ATTR_font_weight, "100", SVG_ATTR_font_weight_VAL_w100},
+   {SVG_ATTR_font_weight, "200", SVG_ATTR_font_weight_VAL_w200},
+   {SVG_ATTR_font_weight, "300", SVG_ATTR_font_weight_VAL_w300},
+   {SVG_ATTR_font_weight, "400", SVG_ATTR_font_weight_VAL_w400},
+   {SVG_ATTR_font_weight, "500", SVG_ATTR_font_weight_VAL_w500},
+   {SVG_ATTR_font_weight, "600", SVG_ATTR_font_weight_VAL_w600},
+   {SVG_ATTR_font_weight, "700", SVG_ATTR_font_weight_VAL_w700},
+   {SVG_ATTR_font_weight, "800", SVG_ATTR_font_weight_VAL_w800},
+   {SVG_ATTR_font_weight, "900", SVG_ATTR_font_weight_VAL_w900},
+   {SVG_ATTR_font_weight, "bold", SVG_ATTR_font_weight_VAL_bold_},
+   {SVG_ATTR_font_weight, "bolder", SVG_ATTR_font_weight_VAL_bolder},
+   {SVG_ATTR_font_weight, "inherit", SVG_ATTR_font_weight_VAL_inherit},
+   {SVG_ATTR_font_weight, "lighter", SVG_ATTR_font_weight_VAL_lighter},
+   {SVG_ATTR_font_weight, "normal", SVG_ATTR_font_weight_VAL_normal_},
+
+   {SVG_ATTR_direction_, "ltr", SVG_ATTR_direction__VAL_ltr_},
+   {SVG_ATTR_direction_, "rtl", SVG_ATTR_direction__VAL_rtl_},
+   {SVG_ATTR_direction_, "inherit", SVG_ATTR_direction__VAL_inherit},
+
+   {SVG_ATTR_unicode_bidi, "normal", SVG_ATTR_unicode_bidi_VAL_normal_},
+   {SVG_ATTR_unicode_bidi, "embed", SVG_ATTR_unicode_bidi_VAL_embed_},
+   {SVG_ATTR_unicode_bidi, "bidi-override", SVG_ATTR_unicode_bidi_VAL_bidi_override},
+   {SVG_ATTR_unicode_bidi, "inherit", SVG_ATTR_unicode_bidi_VAL_inherit},
+
+   {0, "", 0}			/* Last entry. Mandatory */
+};
 #else /* _SVG */
 /* there is no mapping table of SVG elements */
 

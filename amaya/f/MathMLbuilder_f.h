@@ -11,7 +11,7 @@ extern void MapMathMLAttribute ( char *attrName,
                                  char *elementName,
                                  ThotBool *level,
                                  Document doc );
-extern void MapMathMLAttributeValue ( char *AttrVal,
+extern void MapMathMLAttributeValue ( char *attVal,
                                       AttributeType attrType,
                                       int *value );
 extern void MathMLEntityCreated ( unsigned char *entityValue,
@@ -79,7 +79,7 @@ extern void MapMathMLAttribute (/* char *attrName,
                                    char *elementName,
                                    ThotBool *level,
                                    Document doc */);
-extern void MapMathMLAttributeValue (/* char *AttrVal,
+extern void MapMathMLAttributeValue (/* char *attVal,
                                         AttributeType attrType,
                                         int *value */);
 extern void MathMLEntityCreated (/* unsigned char *entityValue,

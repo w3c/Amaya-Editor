@@ -3925,7 +3925,7 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
   char              *attrs[MAX_ANCESTORS];
   char              *attrvals[MAX_ANCESTORS];
   int                i, j, k, max;
-  int                att, maxAttr;
+  int                att, maxAttr, kind;
   int                specificity, xmlType;
   ThotBool           isHTML;
   ThotBool           level;
@@ -4324,17 +4324,20 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	}
       if (attrs[i])
 	{
+	  /* it's an attribute */
 	  MapXMLAttribute (xmlType, attrs[i], names[i], &level, doc, &att);
 	  ctxt->attrType[j] = att;
+	  attrType.AttrSSchema = ctxt->schema;
+	  attrType.AttrTypeNum = att;
 	  if (i == 0 && att == 0 && ctxt->schema == NULL)
 	    {
-	      /* Search in the list of loaded schemas */
+	      /* Not found -> search in the list of loaded schemas */
 	      attrType.AttrSSchema = NULL;
 	      TtaGetXmlAttributeType (attrs[i], &attrType, doc);
 	      ctxt->attrType[j] = attrType.AttrTypeNum;
 	      if (attrType.AttrSSchema)
-		/* the element type concerns an imprted nature */
-		schemaName = TtaGetSSchemaName(elType.ElSSchema);
+		/* the element type concerns an imported nature */
+		schemaName = TtaGetSSchemaName(attrType.AttrSSchema);
 #ifdef XML_GENERIC
 	      else if (xmlType == XML_TYPE)
 		{
@@ -4351,8 +4354,29 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 	      else
 		ctxt->schema = elType.ElSSchema;
 	    }
-	  ctxt->attrText[j] = attrvals[i];
-	  /* todo: store the attribute schema in the context */
+	  /* check the attribute type */
+	  if (!strcmp (schemaName, "HTML"))
+	    xmlType = XHTML_TYPE;
+	  else if (!strcmp (schemaName, "MathML"))
+	    xmlType = MATH_TYPE;
+	  else if (!strcmp (schemaName, "SVG"))
+	    xmlType = SVG_TYPE;
+	  else if (!strcmp (schemaName, "XLink"))
+	    xmlType = XLINK_TYPE;
+	  else if (!strcmp (schemaName, "Annot"))
+	    xmlType = ANNOT_TYPE;
+	  else
+	    xmlType = XML_TYPE;
+	  kind = TtaGetAttributeKind (attrType);
+	  if (kind == 0 && attrvals[i])
+	    {
+	      /* enumerated value */
+	      MapXMLAttributeValue (xmlType, attrvals[i], attrType, &kind);
+	      /* store the attribute value */
+	      ctxt->attrText[j] = (char *) kind;
+	    }
+	  else
+	    ctxt->attrText[j] = attrvals[i];
 	  maxAttr = i + 1;
 	}
       i++;
