@@ -1108,7 +1108,7 @@ fi
 
 fi
 
-for ac_prog in mawk gawk nawk awk
+for ac_prog in gawk mawk nawk awk
 do
 # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
@@ -6370,7 +6370,7 @@ fi
 
 if test "$with_plugin" = "" ; then
   if test "$enable_plugin" = "yes" ; then
-    with_plugin="no"
+    with_plugin="yes"
   else
     with_plugin="no"
   fi
@@ -6385,10 +6385,10 @@ if test "$with_graph" = "" ; then
 fi
 
 if test "$with_annot" = "" ; then
-    if test "$enable_annot" = "yes" ; then
-	with_annot="yes"
-    else
+    if test "$enable_annot" = "no" ; then
 	with_annot="no"
+    else
+	with_annot="yes"
     fi
 fi
 
@@ -6425,6 +6425,13 @@ if test "$build_amaya" = "yes" ; then
 	    with_annot="no"
 	fi
     fi
+
+    if test "$with_plugin" = "yes" ; then
+        echo "configure: warning: The plugin library isn't supported anymore in Amaya !!" 1>&2
+	echo "configure: warning: Disabling plugin build !" 1>&2
+	with_plugin="no"
+    fi
+
 fi
 
 
