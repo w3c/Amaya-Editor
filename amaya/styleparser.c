@@ -2508,12 +2508,14 @@ static char *ParseCSSBackgroundColor (Element element, PSchema tsch,
 					char *cssRule,
 					CSSInfoPtr css, ThotBool isHTML)
 {
+  GenericContext        ctxt = (GenericContext) context;
   PresentationValue     best;
   unsigned int          savedtype = 0;
   ThotBool              moved;
 
-  /* move the HTML rule to the root element */
-  moved = ((context->type == HTML_EL_HTML || context->type == HTML_EL_BODY) && isHTML);
+  /* Horrible hack requested by CSS: move the rule to the root element */
+  moved = (isHTML && ctxt->attrType[0] == 0 &&
+	   (ctxt->type == HTML_EL_HTML || ctxt->type == HTML_EL_BODY) && isHTML);
   if (moved)
     {
       if (element)
@@ -2747,9 +2749,8 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
 				      char *cssRule, CSSInfoPtr css,
 				      ThotBool isHTML)
 {
+  GenericContext             ctxt = (GenericContext) context;
   Element                    el;
-  GenericContext             gblock;
-  PresentationContext        sblock;
   BackgroundImageCallbackPtr callblock;
   PresentationValue          image, value;
   char                      *url;
@@ -2763,8 +2764,9 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
 
   /* default element for FetchImage */
   el = TtaGetMainRoot (context->doc);
-  /* move the HTML rule to the root element */
-  moved = ((context->type == HTML_EL_HTML || context->type == HTML_EL_BODY) && isHTML);
+  /* Horrible hack requested by CSS: move the rule to the root element */
+  moved = (isHTML && ctxt->attrType[0] == 0 &&
+	   (ctxt->type == HTML_EL_HTML || ctxt->type == HTML_EL_BODY) && isHTML);
   if (moved)
     {
       if (element)
@@ -2839,17 +2841,11 @@ static char *ParseCSSBackgroundImage (Element element, PSchema tsch,
 		  callblock->el = element;
 		  callblock->tsch = tsch;
 		  if (element == NULL)
-		    {
-		      gblock = (GenericContext) context;
-		      memcpy (&callblock->context.generic, gblock,
-			      sizeof (GenericContextBlock));
-		    }
+		    memcpy (&callblock->context.generic, ctxt,
+			    sizeof (GenericContextBlock));
 		  else
-		    {
-		      sblock = context;
-		      memcpy (&callblock->context.specific, sblock,
-			      sizeof(PresentationContextBlock));
-		    }
+		    memcpy (&callblock->context.specific, context,
+			    sizeof(PresentationContextBlock));
 
 		  /* check if the image url is related to an external CSS */
 		  if (css != NULL && css->category == CSS_EXTERNAL_STYLE)
@@ -2881,12 +2877,14 @@ static char *ParseCSSBackgroundRepeat (Element element, PSchema tsch,
 				       PresentationContext context,
 				       char *cssRule, CSSInfoPtr css, ThotBool isHTML)
 {
+  GenericContext      ctxt = (GenericContext) context;
   PresentationValue   repeat;
   unsigned int        savedtype = 0;
   ThotBool            moved;
 
-  /* move the HTML rule to the root element */
-  moved = ((context->type == HTML_EL_HTML || context->type == HTML_EL_BODY) && isHTML);
+  /* Horrible hack requested by CSS: move the rule to the root element */
+  moved = (isHTML && ctxt->attrType[0] == 0 &&
+	   (ctxt->type == HTML_EL_HTML || ctxt->type == HTML_EL_BODY) && isHTML);
   if (moved)
     {
       if (element)
@@ -2938,11 +2936,13 @@ static char *ParseCSSBackgroundAttachment (Element element, PSchema tsch,
 					   char *cssRule, CSSInfoPtr css,
 					   ThotBool isHTML)
 {
+  GenericContext        ctxt = (GenericContext) context;
   unsigned int          savedtype = 0;
   ThotBool              moved;
 
-  /* move the HTML rule to the root element */
-  moved = ((context->type == HTML_EL_HTML || context->type == HTML_EL_BODY) && isHTML);
+  /* Horrible hack requested by CSS: move the rule to the root element */
+  moved = (isHTML && ctxt->attrType[0] == 0 &&
+	   (ctxt->type == HTML_EL_HTML || ctxt->type == HTML_EL_BODY) && isHTML);
   if (moved)
     {
       if (element)
@@ -2975,13 +2975,15 @@ static char *ParseCSSBackgroundPosition (Element element, PSchema tsch,
 					 char *cssRule, CSSInfoPtr css,
 					 ThotBool isHTML)
 {
+  GenericContext        ctxt = (GenericContext) context;
   PresentationValue     repeat;
   unsigned int          savedtype = 0;
   ThotBool              moved;
   ThotBool              ok;
 
-  /* move the HTML rule to the root element */
-  moved = ((context->type == HTML_EL_HTML || context->type == HTML_EL_BODY) && isHTML);
+  /* Horrible hack requested by CSS: move the rule to the root element */
+  moved = (isHTML && ctxt->attrType[0] == 0 &&
+	   (ctxt->type == HTML_EL_HTML || ctxt->type == HTML_EL_BODY) && isHTML);
   if (moved)
     {
       if (element)
@@ -4058,7 +4060,11 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
       if (deb[0] != EOS)
 	{
 	  names[0] = deb;
-	  specificity += 1;
+	  if (!strcmp (names, "html"))
+	    /* give a greater priority to the backgoud color of html */
+	    specificity += 3;
+	  else
+	    specificity += 1;
 	}
       else
 	names[0] = NULL;
