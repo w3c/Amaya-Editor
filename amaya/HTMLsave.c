@@ -84,6 +84,7 @@ static char        *QuotedText;
 static char *HTMLDocTypes_1[] =
 {
   "\"-//W3C//DTD XHTML Basic 1.0//EN\"",
+  "\"-//W3C//DTD XHTML 1.0 Strict//EN\"",
   "\"-//W3C//DTD XHTML 1.1//EN\"",
   "\"-//W3C//DTD XHTML 1.0 Transitional//EN\"",
   "\"-//W3C//DTD XHTML 1.0 Frameset//EN\"",
@@ -95,6 +96,7 @@ static char *HTMLDocTypes_1[] =
 static char *HTMLDocTypes_2[] =
 {
   "\"http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd\">\n",
+  "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n",
   "\"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n",
   "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n",
   "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd\">\n",
@@ -500,6 +502,7 @@ static void InitSaveForm (Document document, View view, char *pathname)
   else if (IsXMLName (pathname) || DocumentMeta[document]->xmlformat ||
 	   (!DocumentMeta[document]->xmlformat && 
 	    (ParsingLevel[document] == L_Basic ||
+	     ParsingLevel[document] == L_Xhtml11 ||
 	     ParsingLevel[document] == L_Strict)))
     {
       SaveAsHTML = FALSE;
@@ -905,9 +908,9 @@ void SetNamespacesAndDTD (Document doc)
 	    /* xml format */
 	    if (useFrames)
 	      {
-		strcat (buffer, HTMLDocTypes_1[3]);
+		strcat (buffer, HTMLDocTypes_1[4]);
 		strcat (buffer, "\n    ");
-		strcat (buffer, HTMLDocTypes_2[3]);
+		strcat (buffer, HTMLDocTypes_2[4]);
 	      }
 	    else if (ParsingLevel[doc] == L_Basic)
 	      {
@@ -921,32 +924,38 @@ void SetNamespacesAndDTD (Document doc)
 		strcat (buffer, "\n    ");
 		strcat (buffer, HTMLDocTypes_2[1]);
 	      }
-	    else
+	    else if (ParsingLevel[doc] == L_Xhtml11)
 	      {
 		strcat (buffer, HTMLDocTypes_1[2]);
 		strcat (buffer, "\n    ");
 		strcat (buffer, HTMLDocTypes_2[2]);
+	      }
+	    else
+	      {
+		strcat (buffer, HTMLDocTypes_1[3]);
+		strcat (buffer, "\n    ");
+		strcat (buffer, HTMLDocTypes_2[3]);
 	      }
 	  }
 	else
 	  {
 	    if (useFrames)
 	      {
-		strcat (buffer, HTMLDocTypes_1[6]);
+		strcat (buffer, HTMLDocTypes_1[7]);
 		strcat (buffer, "\n    ");
-		strcat (buffer, HTMLDocTypes_2[6]);
+		strcat (buffer, HTMLDocTypes_2[7]);
 	      }
 	    else if (ParsingLevel[doc] == L_Strict)
-	      {
-		strcat (buffer, HTMLDocTypes_1[4]);
-		strcat (buffer, "\n    ");
-		strcat (buffer, HTMLDocTypes_2[4]);
-	      }
-	    else
 	      {
 		strcat (buffer, HTMLDocTypes_1[5]);
 		strcat (buffer, "\n    ");
 		strcat (buffer, HTMLDocTypes_2[5]);
+	      }
+	    else
+	      {
+		strcat (buffer, HTMLDocTypes_1[6]);
+		strcat (buffer, "\n    ");
+		strcat (buffer, HTMLDocTypes_2[6]);
 	      }
 	  }
 	TtaSetAttributeText (attr, buffer, root, doc);
@@ -1856,7 +1865,8 @@ void SaveDocument (Document doc, View view)
      when we have a xhtml profile */
     if (!SaveAsXML &&
 	(ParsingLevel[doc] == L_Basic ||
-	 ParsingLevel[doc] == L_Strict))
+	 ParsingLevel[doc] == L_Strict ||
+	 ParsingLevel[doc] == L_Xhtml11))
       SaveAsXML = TRUE;
 
   if (IsW3Path (tempname))

@@ -2882,8 +2882,10 @@ static Document LoadDocument (Document doc, char *pathname,
 	{
 	  if (strncmp (profile, "XHTML-basic", 11) == 0)
 	    ParsingLevel[newdoc] = L_Basic;
-	  else if (strncmp (profile, "XHTML-1.1", 9) == 0)
+	  else if (strncmp (profile, "XHTML-strict", 12) == 0)
 	    ParsingLevel[newdoc] = L_Strict;
+	  else if (strncmp (profile, "XHTML-1.1", 9) == 0)
+	    ParsingLevel[newdoc] = L_Xhtml11;
 	  else
 	    ParsingLevel[newdoc] = L_Transitional;
 	}

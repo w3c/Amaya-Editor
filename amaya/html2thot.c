@@ -2723,7 +2723,7 @@ static void           ProcessStartGI (char* GIname)
   if (entry >= 0)
     {
       if (ParsingLevel[HTMLcontext.doc] != L_Other &&
-	  pHTMLGIMapping[entry].Level > ParsingLevel[HTMLcontext.doc])
+	  !(pHTMLGIMapping[entry].Level & ParsingLevel[HTMLcontext.doc])) 
 	{
 	  /* Invalid element for the current profile */
 	  /* don't process that element */
@@ -2988,7 +2988,7 @@ static void        EndOfEndTag (char c)
         }
       else if (entry >= 0 &&
 	       ParsingLevel[HTMLcontext.doc] != L_Other &&
-	       pHTMLGIMapping[entry].Level > ParsingLevel[HTMLcontext.doc])
+	       !(pHTMLGIMapping[entry].Level & ParsingLevel[HTMLcontext.doc])) 
 	{
 	  /* Invalid element for the current profile */
 	  if (strlen (inputBuffer) > MaxMsgLength - 20)
@@ -5023,9 +5023,17 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 			    *parsingLevel = L_Basic;
 			  else
 			    {
-			      ptr = strstr (&FileBuffer[i], "1.1");
+			      ptr = strstr (&FileBuffer[i], "Strict");
+			      if (!ptr || (ptr && ptr > end))
+				ptr = strstr (&FileBuffer[i], "strict");
 			      if (ptr && ptr < end)
 				*parsingLevel = L_Strict;
+			      else
+				{
+				  ptr = strstr (&FileBuffer[i], "1.1");
+				  if (ptr && ptr < end)
+				    *parsingLevel = L_Xhtml11;
+				}
 			    }
 			}
 		      else
@@ -5114,10 +5122,25 @@ void CheckDocHeader (char *fileName, ThotBool *xmlDec, ThotBool *docType,
 			    ptr = strstr (&FileBuffer[i], "xhtml");
 			  if (ptr && ptr < end)
 			    *isXML = TRUE;
-			  
-			  ptr = strstr (&FileBuffer[i], "1.1");
+			  ptr = strstr (&FileBuffer[i], "Basic");
+			  if (!ptr || (ptr && ptr > end))
+			    ptr = strstr (&FileBuffer[i], "basic");
 			  if (ptr && ptr < end)
-			    *parsingLevel = L_Strict;
+			    *parsingLevel = L_Basic;
+			  else
+			    {
+			      ptr = strstr (&FileBuffer[i], "Strict");
+			      if (!ptr || (ptr && ptr > end))
+				ptr = strstr (&FileBuffer[i], "strict");
+			      if (ptr && ptr < end)
+				*parsingLevel = L_Strict;
+			      else
+				{
+				  ptr = strstr (&FileBuffer[i], "1.1");
+				  if (ptr && ptr < end)
+				    *parsingLevel = L_Xhtml11;
+				}
+			    }
 			}
 		      else if (!strncasecmp (&FileBuffer[i], "svg", 3))
 			{

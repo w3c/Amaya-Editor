@@ -142,10 +142,12 @@ void InitializeNewDoc (char *url, int docType, Document doc)
       DocumentMeta[doc]->xmlformat = TRUE;
       /* check the current profile */
       profile = TtaGetEnvString ("Profile");
-      if (!strncmp (profile, "XHTML-basic", 10))
+      if (!strncmp (profile, "XHTML-basic", 11))
 	ParsingLevel[doc] = L_Basic;
-      else if (!strncmp (profile, "XHTML-strict", 10))
+      else if (!strncmp (profile, "XHTML-strict", 12))
 	ParsingLevel[doc] = L_Strict;
+      else if (!strncmp (profile, "XHTML-1.1", 9))
+	ParsingLevel[doc] = L_Xhtml11;
       
       LoadUserStyleSheet (doc);
       /* attach an attribute PrintURL to the root element */

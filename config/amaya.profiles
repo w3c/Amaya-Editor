@@ -54,9 +54,38 @@
 +templates
 +views
 
-################# XHTML-STRICT
+################# XHTML1.1
 <XHTML-1.1 (editor)>
 &CreateRuby
++amayabase
++annot
++base-module
++bdi-text-module
++browsing
++clientside-module
++config
++css-style
++edit
++forms
++link-module
++edit-module
++meta-module
++presentation-module
++makebook
++makeid
++maths
++object-module
++print
++script-module
++source-view
++spell
++svg
++tables
++templates
++views
+
+################# XHTML-STRICT
+<XHTML-strict (editor)>
 +amayabase
 +annot
 +base-module

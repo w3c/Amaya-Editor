@@ -214,7 +214,7 @@ void MapXMLElementType (int XMLtype,
 	   /* it's not the tag */
 	   i++;
 	 else if (ParsingLevel[doc] != L_Other &&
-		  ptr[i].Level > ParsingLevel[doc])
+		  !(ptr[i].Level & ParsingLevel[doc]))
 	   {
 	     /* this tag is not valid for the current parsing level */
 	     *highEnoughLevel = FALSE;
@@ -264,7 +264,7 @@ char*           GetXMLElementName (ElementType elType, Document doc)
 	      {
 		if (doc == 0 || 
 		    ParsingLevel[doc] == L_Other ||
-		    ptr[i].Level <= ParsingLevel[doc])
+		    (ptr[i].Level & ParsingLevel[doc]))
 		  return ptr[i].XMLname;
 		else
 		  invalid = TRUE;
@@ -361,7 +361,8 @@ int       MapXMLAttribute (int XMLtype, char *attrName,
 	  (ptr[i].XMLelement[0] != EOS &&
 	   strcmp (ptr[i].XMLelement, elementName)))
 	i++;
-      else if (ParsingLevel[doc] != L_Other && ptr[i].Level > ParsingLevel[doc])
+      else if (ParsingLevel[doc] != L_Other &&
+	       !(ptr[i].Level & ParsingLevel[doc]))
 	{
 	  *highEnoughLevel = FALSE;
 	  i++;
@@ -417,7 +418,8 @@ char*           GetXMLAttributeName (AttributeType attrType,
 		(ptr[i].XMLelement[0] == EOS ||
 		 !strcmp (ptr[i].XMLelement, tag)))
 	      {
-		if (doc == 0 || ptr[i].Level <= ParsingLevel[doc])
+		if (doc == 0 ||
+		    (ptr[i].Level & ParsingLevel[doc])) 
 		  return ptr[i].XMLattribute;
 		else
 		  invalid = TRUE;

@@ -14,11 +14,20 @@
 #define XHTML_TYPE   4
 #define XML_TYPE     5
 
-/* current HTML parsing level */
-#define L_Other        0
-#define L_Basic        1
-#define L_Strict       2
-#define L_Transitional 3
+/* Masks for the XHTML profiles */
+#define L_Other            0x00
+#define L_Basic            0x02
+#define L_Strict           0x06
+#define L_Xhtml11          0x1E
+#define L_Transitional     0x2E
+
+/* Value for the XHTML profiles */
+#define L_BasicValue        0x02
+#define L_StrictValue       0x0C
+#define L_Xhmli11Value      0x0C
+#define L_RubyValue         0x10
+#define L_TransitionalValue 0x20
+#define L_OtherValue        0xFF
 
 #define MaxTypeNameLength 30
 #define DummyAttribute    500
@@ -38,7 +47,7 @@ ElemMapping;
 
 typedef struct _AttributeMapping
 {	     /* mapping of a XML attribute */
-  char     XMLattribute[30]; /* name of XML attribute */
+  char       XMLattribute[30]; /* name of XML attribute */
   typeName   XMLelement;       /* name of XML element type */
   char       AttrOrContent;    /* info about the corresponding Thot
 				  thing: 'A'=Attribute, 'C'=Content
@@ -51,7 +60,7 @@ AttributeMapping;
 typedef struct _AttrValueMapping
 {	     /* mapping of a XML attribute value */
   int        ThotAttr;	        /* corresponding Thot attribute */
-  char     XMLattrValue[24];	/* XML value */
+  char       XMLattrValue[24];	/* XML value */
   int        ThotAttrValue;	/* corresponding value of the Thot attribute */
 }
 AttrValueMapping;
