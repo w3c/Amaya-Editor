@@ -447,7 +447,8 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
 	  *height += hfont;
 	  break;
 	case 'd':	/*integrale double */
-	  *width = BoxCharacterWidth (231, font) + BoxCharacterWidth (231, font) / 2;
+	  *width = BoxCharacterWidth (231, font) +
+	           BoxCharacterWidth (231, font) / 2;
 	  *height += hfont;
 	  break;
 	case 'r':	/* root */
@@ -482,7 +483,7 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
 	  break;
 	case '<':
 	case '>':
-	  *width = 2 * BoxCharacterWidth (230, font);
+	  *width = BoxCharacterWidth (241, font);
 	  *height = hfont;
 	  break;
 	case '|':       /* vertical bar */

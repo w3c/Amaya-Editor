@@ -765,17 +765,17 @@ void DrawBracket (int frame, int thick, int x, int y, int l, int h,
    int                 ey, yf;
    FILE               *fout;
 
+   if (y < 0)
+     return;
+   if (thick < 0 || fg < 0)
+      return;
    fout = (FILE *) FrRef[frame];
-  if (y < 0)
-    return;
-
-   y += FrameTable[frame].FrTopMargin;
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
-
    /* Do we need to change the current font ? */
    CurrentFont (fout, font);
 
+   y += FrameTable[frame].FrTopMargin;
    l--;
    h--;
    ey = FontHeight (font);
@@ -787,21 +787,22 @@ void DrawBracket (int frame, int thick, int x, int y, int l, int h,
 
    if (h < ey / 4)
      {
-	/* Made of only one glyph */
-	if (direction == 0)
-	   fprintf (fout, "%d %d ([) c\n", -yf, x);
-	else
-	   fprintf (fout, "%d %d (])c\n", -yf, x);
+       yf = yf - (h / 2);
+       /* Made of only one glyph */
+       if (direction == 0)
+	 fprintf (fout, "%d %d ([) c\n", -yf, x);
+       else
+	 fprintf (fout, "%d %d (])c\n", -yf, x);
      }
    else
      {
-	/* Drawn with more than one glyph */
-	if (direction == 0)	/* Trace un crochet ouvrant */
-	   fprintf (fout, "%d %d %d %s (\\351) (\\352) (\\353) s3\n",
-		    x + 1, -yf, -y, Scale);
-	else
-	   fprintf (fout, "%d %d %d %s (\\371) (\\372) (\\373) s3\n",
-		    x, -yf, -y, Scale);
+       /* Drawn with more than one glyph */
+       if (direction == 0)	/* Trace un crochet ouvrant */
+	 fprintf (fout, "%d %d %d %s (\\351) (\\352) (\\353) s3\n",
+		  x + 1, -yf, -y, Scale);
+       else
+	 fprintf (fout, "%d %d %d %s (\\371) (\\372) (\\373) s3\n",
+		  x, -yf, -y, Scale);
      }
 }
 
@@ -816,50 +817,50 @@ void DrawPointyBracket (int frame, int thick, int x, int y, int l, int h,
    int                 ey, yf;
    FILE               *fout;
 
+   if (y < 0)
+     return;
+   if (thick < 0 || fg < 0)
+      return;
    fout = (FILE *) FrRef[frame];
-  if (y < 0)
-    return;
-
-   y += FrameTable[frame].FrTopMargin;
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
-
    /* Do we need to change the current font ? */
    CurrentFont (fout, font);
 
+   y += FrameTable[frame].FrTopMargin;
    l--;
    h--;
    ey = FontHeight (font);
-   h -= ey;
-   y += FontBase (font);
 
-   if (h < ey / 4)
+   if (h - ey < ey / 4)
      {
-       x = x + (l / 2);
+       /* Made of only one glyph */
+       h -= ey;
+       y += FontBase (font);
        yf = y + h;
        y = y + 1;
-	/* Made of only one glyph */
-	if (direction == 0)
-	   fprintf (fout, "%d %d (\341) c\n", -yf, x);
-	else
-	   fprintf (fout, "%d %d (\361)c\n", -yf, x);
+       x = x + (l / 2);
+       yf = yf - (h / 2);
+       if (direction == 0)
+	 fprintf (fout, "%d %d (\341) c\n", -yf, x);
+       else
+	 fprintf (fout, "%d %d (\361)c\n", -yf, x);
      }
    else
      {
-	/* Drawn with more than one glyph */
-	if (direction == 0)
-	  /* Trace un crochet ouvrant */
-	  fprintf (fout, "%d %d %d %d %d %d %d %d %d Seg\n",
-		   x + l, -(y),
-		   x, -(y + (h / 2)),
-		   x + l, -(y + h),
-		   5, 1, 3);
-	else
-	  fprintf (fout, "%d %d %d %d %d %d %d %d %d Seg\n",
-		   x, -(y),
-		   x + l, -(y + (h / 2)),
-		   x, -(y + h),
-		   5, 1, 3);
+       /* Drawn with more than one glyph */
+       if (direction == 0)
+	 fprintf (fout, "%d %d %d %d %d %d %d %d %d Seg\n",
+		  x + l, -(y),
+		  x, -(y + (h / 2)),
+		  x + l, -(y + h),
+		  5, 1, 3);
+       else
+	 fprintf (fout, "%d %d %d %d %d %d %d %d %d Seg\n",
+		  x, -(y),
+		  x + l, -(y + (h / 2)),
+		  x, -(y + h),
+		  5, 1, 3);
      }
 }
 
@@ -875,18 +876,15 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
 
    if (y < 0)
       return;
-
-   y += FrameTable[frame].FrTopMargin;
    if (thick < 0 || fg < 0)
       return;
-
    fout = (FILE *) FrRef[frame];
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
-
    /* Do we need to change the current font ? */
    CurrentFont (fout, font);
 
+   y += FrameTable[frame].FrTopMargin;
    l--;
    h--;
    ey = FontHeight (font);
@@ -898,22 +896,23 @@ void DrawParenthesis (int frame, int thick, int x, int y, int l, int h,
 
    if (h < ey / 3)
      {
-	/* Made of only one glyph */
-	if (direction == 0)
-	   /* draw an opening parenthesis */
-	   fprintf (fout, "%d %d (\\() c\n", -yf, x);
-	else
-	   fprintf (fout, "%d %d (\\)) c\n", -yf, x);
+       /* Made of only one glyph */
+       yf = yf - (h / 2);
+       if (direction == 0)
+	 /* draw an opening parenthesis */
+	 fprintf (fout, "%d %d (\\() c\n", -yf, x);
+       else
+	 fprintf (fout, "%d %d (\\)) c\n", -yf, x);
      }
    else
      {
-	/* Drawn with more than one glyph */
-	if (direction == 0)
-	   fprintf (fout, "%d %d %d %s (\\346) (\\347) (\\350) s3\n",
-		    x+1, -yf, -y, Scale);
-	else
-	   fprintf (fout, "%d %d %d %s (\\366) (\\367) (\\370) s3\n",
-		    x, -yf, -y, Scale);
+       /* Drawn with more than one glyph */
+       if (direction == 0)
+	 fprintf (fout, "%d %d %d %s (\\346) (\\347) (\\350) s3\n",
+		  x+1, -yf, -y, Scale);
+       else
+	 fprintf (fout, "%d %d %d %s (\\366) (\\367) (\\370) s3\n",
+		  x, -yf, -y, Scale);
      }
 }
 
@@ -927,43 +926,44 @@ void DrawBrace (int frame, int thick, int x, int y, int l, int h,
    int                 ey, yf;
    FILE               *fout;
 
+   if (y < 0)
+     return;
+   if (thick < 0 || fg < 0)
+      return;
    fout = (FILE *) FrRef[frame];
-  if (y < 0)
-    return;
-
-   y += FrameTable[frame].FrTopMargin;
    /* Do we need to change the current color ? */
    CurrentColor (fout, fg);
-
    /* Do we need to change the current font ? */
    CurrentFont (fout, font);
 
+   y += FrameTable[frame].FrTopMargin;
    l--;
    h--;
    ey = FontHeight (font);
    h -= ey;
    y += FontBase (font);
-   x = x + (l / 2);
    yf = y + h;
    y = y + 1;
+   x = x + (l / 2);
 
    if (h < ey - 1)
      {
-	/* Made of only one glyph */
-	if (direction == 0)
-	   fprintf (fout, "%d %d ({) c\n", -yf, x);
-	else
-	   fprintf (fout, "%d %d (}) c\n", -yf, x);
+       /* Made of only one glyph */
+       yf = yf - (h / 2);
+       if (direction == 0)
+	 fprintf (fout, "%d %d ({) c\n", -yf, x);
+       else
+	 fprintf (fout, "%d %d (}) c\n", -yf, x);
      }
    else
      {
-	/* Drawn with more than one glyph */
-	if (direction == 0)
-	   fprintf (fout, "%d %d %d %s (\\354) (\\355) (\\356) (\\357) s4\n",
-		    x, -yf, -y, Scale);
-	else
-	   fprintf (fout, "%d %d %d %s (\\374) (\\375) (\\376) (\\357) s4\n",
-		    x, -yf, -y, Scale);
+       /* Drawn with more than one glyph */
+       if (direction == 0)
+	 fprintf (fout, "%d %d %d %s (\\354) (\\355) (\\356) (\\357) s4\n",
+		  x, -yf, -y, Scale);
+       else
+	 fprintf (fout, "%d %d %d %s (\\374) (\\375) (\\376) (\\357) s4\n",
+		  x, -yf, -y, Scale);
      }
 }
 
