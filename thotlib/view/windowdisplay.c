@@ -239,23 +239,22 @@ void DrawChar (char car, int frame, int x, int y, PtrFont font, int fg)
 }
 
 /*----------------------------------------------------------------------
-  DrawString draw a char string of lg chars beginning at buff[i].
+  DrawString draw a char string of lg chars beginning in buff.
   Drawing starts at (x, y) in frame and using font.
   boxWidth gives the width of the final box or zero,
   this is used only by the thot formmating engine.
-  bl indicates taht there is a space before the string
+  bl indicates that there are one or more spaces before the string
   hyphen indicates whether an hyphen char has to be added.
   startABlock is 1 if the text is at a paragraph beginning
   (no justification of first spaces).
   parameter fg indicates the drawing color
   Returns the lenght of the string drawn.
   ----------------------------------------------------------------------*/
-int DrawString (unsigned char *buff, int i, int lg, int frame, int x,
-		int y, PtrFont font, int boxWidth, int bl, int hyphen,
+int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
+		PtrFont font, int boxWidth, int bl, int hyphen,
 		int startABlock, int fg, int shadow)
 {
   HDC                 display;
-  char               *ptcar = &buff[i];
   HFONT               hOldFont;
   int                 j, width;
 
@@ -281,21 +280,21 @@ int DrawString (unsigned char *buff, int i, int lg, int frame, int x,
       j = 0;
       while (j < lg)
 	{
-	  ptcar[j++] = '*';
+	  buff[j++] = '*';
 	  width += CharacterWidth (42, font);
 	}
-      ptcar[lg] = EOS;
+      buff[lg] = EOS;
     }
   else
     {
-      ptcar[lg] = EOS;
-      TranslateChars (ptcar);
+      buff[lg] = EOS;
+      TranslateChars (buff);
       j = 0;
       while (j < lg)
-	width += CharacterWidth (ptcar[j++], font);
+	width += CharacterWidth (buff[j++], font);
     }
   /* get the string size
-     GetTextExtentPoint (display, ptcar, lg, &size);
+     GetTextExtentPoint (display, buff, lg, &size);
      width = size.cx;*/
   if (fg >= 0)
     {
@@ -303,7 +302,7 @@ int DrawString (unsigned char *buff, int i, int lg, int frame, int x,
       y += FrameTable[frame].FrTopMargin;
       SetTextColor (display, ColorPixel (fg));
       SetBkMode (display, TRANSPARENT);
-      TextOut (display, x, y, ptcar, lg);
+      TextOut (display, x, y, buff, lg);
       if (hyphen)
 	/* draw the hyphen */
 	TextOut (display, x + width, y, "\255", 1);

@@ -47,7 +47,8 @@ extern void FreeTRule ( PtrTRule pR );
 extern void GetAttributeTransl ( PtrAttributeTransl *pB );
 extern void FreeAttributeTransl ( PtrAttributeTransl pB );
 extern void GetSchTra ( PtrTSchema *pST );
-extern void FreeSchTra ( PtrTSchema pST, PtrSSchema pSS );
+extern void FreeSchTra ( PtrTSchema pST,
+                         PtrSSchema pSS );
 extern void GetExternalBlock ( PtrExtensBlock * pBE );
 extern void FreeExternalBlock ( PtrExtensBlock pBE );
 extern void GetSchStruct ( PtrSSchema * pSS );
@@ -118,7 +119,8 @@ extern void FreeTRule (/* PtrTRule pR */);
 extern void GetAttributeTransl (/* PtrAttributeTransl *pB */);
 extern void FreeAttributeTransl (/* PtrAttributeTransl pB */);
 extern void GetSchTra (/* PtrTSchema *pST */);
-extern void FreeSchTra (/* PtrTSchema pST, PtrSSchema pSS */);
+extern void FreeSchTra (/* PtrTSchema pST,
+                           PtrSSchema pSS */);
 extern void GetExternalBlock (/* PtrExtensBlock * pBE */);
 extern void FreeExternalBlock (/* PtrExtensBlock pBE */);
 extern void GetSchStruct (/* PtrSSchema * pSS */);

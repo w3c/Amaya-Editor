@@ -3336,16 +3336,19 @@ void GetFallbackCharacter (int code, unsigned char *fallback, Language *lang)
   else
     /* this character is on the fallback table */
     {
-#ifdef _I18N_
-      i = TtaWCToMBstring (code, &fallback);
-      fallback[i] = EOS;
-#else /* _I18N_ */
       if (UnicodeFallbackTable[i].EightbitCode < 255)
 	{
 	  /* Symbol character */
 	  *lang = TtaGetLanguageIdFromAlphabet('G');
 	  fallback[0] = UnicodeFallbackTable[i].EightbitCode;
 	}
+#ifdef _I18N_
+      else
+	{
+	  i = TtaWCToMBstring (code, &fallback);
+	  fallback[i] = EOS;
+	}
+#else /* _I18N_ */
       else if (UnicodeFallbackTable[i].EightbitCode < 2000)
 	{
 	  /* ISO latin-1 fallback */

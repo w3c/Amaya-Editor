@@ -883,14 +883,14 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   int                 buffleft;
   int                 indmax, bl;
   int                 nbcar, x, y;
-  int                 lgspace;
+  int                 lgspace, whitespace;
   int                 fg, bg;
   int                 shadow;
   int                 width;
   int                 left, right;
   ThotBool            blockbegin;
   ThotBool            withbackground;
-  ThotBool            withline;
+  ThotBool            hyphen;
 
   indmax = 0;
   buffleft = 0;
@@ -921,9 +921,9 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
   
   /* Is an hyphenation mark needed at the end of the box? */
   if (pBox->BxType == BoDotted)
-    withline = TRUE;
+    hyphen = TRUE;
   else
-    withline = FALSE;
+    hyphen = FALSE;
   /* in SVG foreground and background are inverted in the main view */
   if (!strcmp(pAb->AbElement->ElStructSchema->SsName, "SVG") &&
       FrameTable[frame].FrView == 1)
@@ -948,6 +948,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	  pBox->BxLPadding - pFrame->FrXOrg;
       y = pBox->BxYOrg + pBox->BxTMargin + pBox->BxTBorder +
 	  pBox->BxTPadding - pFrame->FrYOrg;
+      /* no previous spaces */
       bl = 0;
       newind = pBox->BxFirstChar;
       newbuff = pBox->BxBuffer;
@@ -959,9 +960,10 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
       width = pBox->BxW;
       if (width < 0)
 	width = 0;
+      whitespace = BoxCharacterWidth (SPACE, font);
       lgspace = pBox->BxSpaceWidth;
       if (lgspace == 0)
-	lgspace = BoxCharacterWidth (SPACE, font);
+	lgspace = whitespace;
       
       /* Search the first displayable char */
       if (charleft > 0)
@@ -1099,8 +1101,12 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		{
 		  /* display previous chars handled */
 		  if (nbcar > 0)
-		    x += DrawString (buffer, 0, nbcar, frame, x, y,
-				     nextfont, 0, bl, 0, blockbegin, fg, shadow);
+		    {
+		      x += DrawString (buffer, nbcar, frame, x, y,
+				       nextfont, 0, bl, 0, blockbegin, fg, shadow);
+		      /* all previous spaces are declared */
+		      bl = 0;
+		    }
 		  
 		  if (shadow)
 		    DrawChar ('*', frame, x, y, nextfont, fg);
@@ -1132,19 +1138,21 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		    }
 		  else
 		    x += CharacterWidth (car, nextfont);
-		  
-		  bl = 1;
+		  /* a new space is handled */
+		  bl++;
 		}
 	      else if (nextfont == NULL && car == UNDISPLAYED_UNICODE)
 		{
 		  /* display previous chars handled */
 		  if (nbcar > 0)
-		    x += DrawString (buffer, 0, nbcar, frame, x, y,
-				     prevfont, 0, bl, 0, blockbegin, fg, shadow);
+		    x += DrawString (buffer, nbcar, frame, x, y,
+				     prevfont, 0, bl, x, blockbegin, fg, shadow);
 		  nbcar = 0;
+		  /* all previous spaces are declared */
+		  bl = 0;
 		  prevfont = nextfont;
-		  DrawRectangle (frame, 1, 5, x, y, 3, pBox->BxH - 1, fg, 0, 0);
-		  x += 3;
+		  DrawRectangle (frame, 1, 5, x, y, whitespace, pBox->BxH - 1, fg, 0, 0);
+		  x += whitespace;
 		}
 	      else
 		{
@@ -1152,7 +1160,7 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 		    {
 		      /* display previous chars handled */
 		      if (nbcar > 0)
-			x += DrawString (buffer, 0, nbcar, frame, x, y,
+			x += DrawString (buffer, nbcar, frame, x, y,
 					 prevfont, 0, bl, 0, blockbegin, fg, shadow);
 		      nbcar = 0;
 		      prevfont = nextfont;
@@ -1184,14 +1192,15 @@ static void DisplayJustifiedText (PtrBox pBox, PtrBox mbox, int frame,
 	    }
 	  if (charleft <= 0)
 	    {
-	      /* Finished */
-	      if (nbcar > 0)
-		x += DrawString (buffer, 0, nbcar, frame, x, y,
-				 nextfont, width, bl, withline,
-				 blockbegin, fg, shadow);
+	      /*
+		call the function in any case to let Postscript justify the
+		text of the box.
+	      */
+	      x += DrawString (buffer, nbcar, frame, x, y, nextfont, width,
+			       bl, hyphen, blockbegin, fg, shadow);
 	      if (pBox->BxUnderline != 0)
 		DisplayUnderline (frame, x, y, nextfont,
-				  pBox->BxUnderline, pBox->BxWidth, fg);
+				  pBox->BxUnderline, width, fg);
 	      /* Next char lookup */
 	      if ((bchar == BREAK_LINE || bchar == NEW_LINE) && !ShowSpace)
 		DrawChar (SHOWN_BREAK_LINE, frame, x, y, nextfont, fg);

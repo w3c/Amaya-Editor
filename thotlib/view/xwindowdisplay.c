@@ -193,23 +193,22 @@ void DrawChar (char car, int frame, int x, int y, PtrFont font, int fg)
 }
 
 /*----------------------------------------------------------------------
-  DrawString draw a char string of lg chars beginning at buff[i].
+  DrawString draw a char string of lg chars beginning in buff.
   Drawing starts at (x, y) in frame and using font.
   boxWidth gives the width of the final box or zero,
   this is used only by the thot formmating engine.
-  bl indicates taht there is a space before the string
+  bl indicates that there are one or more spaces before the string
   hyphen indicates whether an hyphen char has to be added.
   startABlock is 1 if the text is at a paragraph beginning
   (no justification of first spaces).
   parameter fg indicates the drawing color
   Returns the lenght of the string drawn.
   ----------------------------------------------------------------------*/
-int DrawString (unsigned char *buff, int i, int lg, int frame, int x,
-		int y, PtrFont font, int boxWidth, int bl, int hyphen,
+int DrawString (unsigned char *buff, int lg, int frame, int x, int y,
+		PtrFont font, int boxWidth, int bl, int hyphen,
 		int startABlock, int fg, int shadow)
 {
   ThotWindow          w;
-  char               *ptcar = &buff[i];
   int                 width;
   register int        j;
 
@@ -230,27 +229,27 @@ int DrawString (unsigned char *buff, int i, int lg, int frame, int x,
 	  j = 0;
 	  while (j < lg)
 	    {
-	      ptcar[j++] = '*';
+	      buff[j++] = '*';
 	      width += CharacterWidth (42, font);
 	    }
-	  ptcar[lg] = EOS;
+	  buff[lg] = EOS;
 	}
       else
 	{
-	  ptcar[lg] = EOS;
-	  TranslateChars (ptcar);
+	  buff[lg] = EOS;
+	  TranslateChars (buff);
 	  j = 0;
 	  while (j < lg)
-	    width += CharacterWidth (ptcar[j++], font);
+	    width += CharacterWidth (buff[j++], font);
 	}
 
       if (fg >= 0)
 	{
 	  LoadColor (fg);
 #ifdef _GTK
-	  gdk_draw_string (w, font,TtLineGC, x, y, ptcar);
+	  gdk_draw_string (w, font,TtLineGC, x, y, buff);
 #else /* _GTK */
-	  XDrawString (TtDisplay, w, TtLineGC, x, y, ptcar, lg);
+	  XDrawString (TtDisplay, w, TtLineGC, x, y, buff, lg);
 #endif /* _GTK */
 	  if (hyphen)
 	    /* draw the hyphen */

@@ -313,7 +313,7 @@ int BoxCharacterWidth (CHAR_T c, SpecFont specfont)
 
   car = GetFontAndIndexFromSpec (c, specfont, &font);
   if (font == NULL)
-    return 3;
+    return CharacterWidth (car, font);
   else
     return CharacterWidth (car, font);
 #else /* _I18N_ */
@@ -1408,7 +1408,6 @@ void InitDialogueFonts (char *name)
 
   /* Initialize the Thot Lib standards fonts */
   FontDialogue = IFontDialogue = LargeFontDialogue = NULL;
-  SymbolIcons = NULL;
   GraphicsIcons = NULL;
   SmallFontDialogue = NULL;
 

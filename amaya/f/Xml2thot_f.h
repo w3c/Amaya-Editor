@@ -18,8 +18,6 @@ extern int IsWithinTable ( void );
 extern void SubWithinTable ( void );
 extern void InsertXmlElement ( Element *el );
 extern Element XmlLastLeafInElement ( Element el );
-extern void CreateXmlLinePRule ( Element elText,
-                                 Document doc );
 extern void PutInXmlElement ( char *data,
                               int length );
 extern void FreeXmlParserContexts ( void );
@@ -70,8 +68,6 @@ extern int IsWithinTable (/* void */);
 extern void SubWithinTable (/* void */);
 extern void InsertXmlElement (/* Element *el */);
 extern Element XmlLastLeafInElement (/* Element el */);
-extern void CreateXmlLinePRule (/* Element elText,
-                                   Document doc */);
 extern void PutInXmlElement (/* char *data,
                                 int length */);
 extern void FreeXmlParserContexts (/* void */);

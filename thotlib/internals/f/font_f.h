@@ -6,9 +6,6 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
-extern unsigned char GetFontAndIndexFromSpec ( CHAR_T c,
-                                               SpecFont fontset,
-                                               PtrFont *font );
 extern int NumberOfFonts ( void );
 extern int GetCharsCapacity ( int volpixel );
 extern int CharacterWidth ( unsigned char c,
@@ -47,6 +44,9 @@ extern PtrFont ReadFont ( char alphabet,
                           int highlight,
                           int size,
                           TypeUnit unit );
+extern unsigned char GetFontAndIndexFromSpec ( CHAR_T c,
+                                               SpecFont fontset,
+                                               PtrFont *font );
 extern SpecFont ThotLoadFont ( char alphabet,
                                char family,
                                int highlight,
@@ -60,9 +60,6 @@ extern void ThotFreeAllFonts ( void );
 
 #else /* __STDC__ */
 
-extern unsigned char GetFontAndIndexFromSpec (/* CHAR_T c,
-                                                 SpecFont fontset,
-                                                 PtrFont *font */);
 extern int NumberOfFonts (/* void */);
 extern int GetCharsCapacity (/* int volpixel */);
 extern int CharacterWidth (/* unsigned char c,
@@ -101,6 +98,9 @@ extern PtrFont ReadFont (/* char alphabet,
                             int highlight,
                             int size,
                             TypeUnit unit */);
+extern unsigned char GetFontAndIndexFromSpec (/* CHAR_T c,
+                                                 SpecFont fontset,
+                                                 PtrFont *font */);
 extern SpecFont ThotLoadFont (/* char alphabet,
                                  char family,
                                  int highlight,
