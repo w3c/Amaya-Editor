@@ -2956,6 +2956,7 @@ static void EndOfXmlAttributeValue (char *attrValue)
    unsigned char    msgBuffer[MaxMsgLength];
    int              length;
    char            *buffer;
+   Language         lang;
 
    TtaGiveAttributeType (currentAttribute, &attrType, &attrKind);
    switch (attrKind)
@@ -2997,9 +2998,29 @@ static void EndOfXmlAttributeValue (char *attrValue)
 	 {
 	   TtaSetAttributeText (currentAttribute, attrValue,
 				XMLcontext.lastElement, XMLcontext.doc);
+
+	   /* It's a style attribute */
 	   if (HTMLStyleAttribute)
 	     ParseHTMLSpecificStyle (XMLcontext.lastElement, attrValue,
 				     XMLcontext.doc, 100, FALSE);
+	   
+	   /* it's a LANG attribute value */
+	   if (attrType.AttrTypeNum == 1)
+	     {
+	       lang = TtaGetLanguageIdFromName (attrValue);
+	       if (lang < 0)
+		 {
+		   sprintf (msgBuffer,
+			    "warning - unsupported language: %s", attrValue);
+		   XmlParseError (errorParsing, msgBuffer, 0);
+		 }
+	       else
+		 {
+		   /* change current language */
+		   XMLcontext.language = lang;
+		   SetLanguagInXmlStack (lang);
+		 }
+	     }
 	 }
        break;
      case 3:       /* reference */
