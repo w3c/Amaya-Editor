@@ -2422,9 +2422,7 @@ static int          LoopForStop (AHTReqContext * me)
     /* Amaya was killed by one of the callback handlers */
     exit (0);
 #else /* _WINDOWS */
-   extern ThotAppContext app_cont;
-   XEvent                ev;
-   XtInputMask           status;
+   ThotEvent                ev;
    int                 status_req = HT_OK;
 
    /* to test the async calls  */
@@ -2435,15 +2433,9 @@ static int          LoopForStop (AHTReqContext * me)
 	 if (!AmayaIsAlive ())
 	    /* Amaya was killed by one of the callback handlers */
 	    exit (0);
-
-	 status = XtAppPending (app_cont);
-	 if (status & XtIMXEvent)
-	   {
-	     XtAppNextEvent (app_cont, &ev);
-	     TtaHandleOneEvent (&ev);
-	   } 
-	 else if (status != 0) 
-	   XtAppProcessEvent (app_cont, XtIMAll);
+	 
+         if (TtaFetchOneAvailableEvent (&ev))
+	   TtaHandleOneEvent (&ev);
    }
 #endif /* _WINDOWS */
    switch (me->reqStatus) {
