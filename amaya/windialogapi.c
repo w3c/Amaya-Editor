@@ -718,7 +718,7 @@ LRESULT CALLBACK PrintDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	  PrintForm = hwnDlg;
       SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_LIB_PRINT));
       SetWindowText (GetDlgItem (hwnDlg, ID_PRINT),
-		     TtaGetMessage (AMAYA, AM_BUTTON_PRINT));
+		     TtaGetMessage (LIB, TMSG_BUTTON_PRINT));
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL),
 		     TtaGetMessage (LIB, TMSG_CANCEL));
       SetWindowText (GetDlgItem (hwnDlg, IDC_OPTIONS),
@@ -791,7 +791,7 @@ LRESULT CALLBACK TableDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
   switch (msg)
   {
     case WM_INITDIALOG:
-      SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_BUTTON_TABLE));
+      SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_BUTTON_TABLE));
       SetWindowText (GetDlgItem (hwnDlg, IDC_NUMCOL),
 		     TtaGetMessage (AMAYA, AM_COLS));
       SetWindowText (GetDlgItem (hwnDlg, IDC_NUMROWS),
@@ -1608,7 +1608,7 @@ LRESULT CALLBACK OpenImgDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
   switch (msg)
     {
     case WM_INITDIALOG:
-      SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_BUTTON_IMG));
+      SetWindowText (hwnDlg, TtaGetMessage (LIB, TMSG_BUTTON_IMG));
       SetWindowText (GetDlgItem (hwnDlg, IDC_URLMESSAGE),
 		     TtaGetMessage (AMAYA, AM_LOCATION));
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM),
@@ -1642,7 +1642,7 @@ LRESULT CALLBACK OpenImgDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
 	      GetDlgItemText (hwnDlg, IDC_GETALT, AltText, sizeof (AltText) - 1);
 	      if (!AltText || AltText[0] == 0)
 		MessageBox (hwnDlg, TtaGetMessage (AMAYA, AM_ALT_MISSING),
-			    TtaGetMessage (AMAYA, AM_BUTTON_IMG),
+			    TtaGetMessage (LIB, TMSG_BUTTON_IMG),
 			    MB_OK | MB_ICONERROR);
 	      else 
 		{
