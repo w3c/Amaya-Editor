@@ -4140,6 +4140,7 @@ RULES
 	IN Structure_view BEGIN
 		Font: Enclosing =;
 		Width: 0;
+		Height:  Enclosed . Height;
 		VertPos: Top = Previous ElementName . Top;
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Depth: 0;
