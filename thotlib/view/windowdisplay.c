@@ -49,6 +49,56 @@ static int             NbWhiteSp;
 #include "inites_f.h"
 #include "units_f.h"
 #include "xwindowdisplay_f.h"
+/*
+ * Math Macros conversion from
+ * degrees to radians and so on...
+ * All for EllipticSplit and/or GL_DrawArc
+ */
+#include <math.h>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+#define M_PI_DOUBLE (6.2831853718027492)
+
+/* ((A)*(M_PI/180.0)) */
+#define DEG_TO_RAD(A)   ((float)A)/57.29577957795135
+#define RAD_TO_DEG(A)   ((float)A)*57.29577957795135
+
+/*If we should use a static table instead for
+  performance bottleneck...*/
+#define DCOS(A) ((float)cos (A))
+#define DSIN(A) ((float)sin (A))
+#define DACOS(A) ((float)acos (A))
+#define A_DEGREE 0.017453293
+
+/* Precision of a degree/1 
+   If we need more precision 
+   dision is our friend 
+   1/2 degree = 0.0087266465
+   1/4 degree = 0.0043633233
+   or the inverse 
+   24 degree = 0.41887903
+   5 degree = 0.087266465
+   2 degree = 0.034906586
+   but best is a degree...
+*/
+#define TRIGO_PRECISION 1;
+#define A_DEGREE_PART A_DEGREE/TRIGO_RECISION
+
+/* Must find better one... 
+   Bits methods...*/
+/*for float => ( pow (N, 2))*/
+/*for int  => (((int)N)<<1)*/
+#define P2(N) (N*N)
+
+
+#define Y_RATIO 200		/* penalisation en Y */
+#define ANCHOR_SIZE 3		/* taille des ancres */
+#define	MAX_STACK	50
+#define	MIDDLE_OF(v1, v2) (((v1)+(v2))/2.0)
+#define SEG_SPLINE      5
+#define ALLOC_POINTS    300
 
 #ifndef _WIN_PRINT
 /*----------------------------------------------------------------------
@@ -1704,7 +1754,187 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
   SelectObject (display, hOldPen);
   DeleteObject (hPen);
 }
+/*----------------------------------------------------------------------
+  ArcNewPoint : add a new point to the current Arc
+  ----------------------------------------------------------------------*/
+static ThotBool ArcNewPoint (int x, int y, POINT **points, int *npoints,
+		       int *maxpoints)
+{
+   ThotPoint          *tmp;
+   int                 size;
 
+   if (*npoints >= *maxpoints)
+     {
+	size = *maxpoints + ALLOC_POINTS;
+	if ((tmp = (POINT*)realloc(*points, size * sizeof(POINT))) ==0)
+	   return (FALSE);
+	else
+	  {
+	     /* la reallocation a reussi */
+	     *points = tmp;
+	     *maxpoints = size;
+	  }
+     }
+   (*points)[*npoints].x = x;
+   (*points)[*npoints].y = y;
+   (*npoints)++;
+   return (TRUE);
+}
+/*----------------------------------------------------------------------
+  WinEllipticSplit : creates points on the given elliptic arc 
+  (using endpoint parameterization)
+  see http://www.w3.org/TR/SVG/implnote.html for implementations notes
+  ----------------------------------------------------------------------*/
+static void  WinEllipticSplit (int frame, int x, int y,
+		     double x1, double y1, 
+		     double x2, double y2, 
+		     double xradius, double yradius, 
+		     int Phi, int large, int sweep, 
+		     POINT **points, int *npoints, int *maxpoints)
+{
+  double xmid, ymid, 
+    Phicos, Phisin, 
+    rx_p2, ry_p2, 
+    translate, xprim, yprim,
+    cprim, cxprim, cyprim,
+    Rxcos, Rysin, cX, cY,
+    xtheta, ytheta, xthetaprim, ythetaprim,
+    x3, y3, theta, deltatheta, inveangle,
+    thetabegin;
+
+  if (xradius == 0 || yradius == 0)
+      return;
+  xradius = (xradius<0)?fabs (xradius):xradius;
+  yradius = (yradius<0)?fabs (yradius):yradius;
+  
+  /*local var init*/
+
+  Phicos = cos (DEG_TO_RAD(Phi));
+  Phisin = sin (DEG_TO_RAD(Phi));
+  
+  /* Math Recall : dot matrix multiplication => 
+     V . D = (Vx * Dx) + (Vy * Dy) + (Vz * Dz) 
+     and dot product =>
+     (a b) (I) = aI + bS;
+     (c d) (S) = cI + bS;
+     and vector scalar product =>
+     A.B = |A||B|cos (theta)
+     (where |A| = sqrt (x_p2 + y_p2))
+  */
+  
+  /* Step 1: Compute (x1', y1')*/
+  xmid = ((x1 - x2) / 2);
+  ymid = ((y1 - y2) / 2);
+  xprim = Phicos*xmid + Phisin*ymid;
+  yprim = -Phisin*xmid + Phicos*ymid;
+  
+  /* step 1bis:  verify & correct radius 
+   to get at least one solution */
+  rx_p2 = (double) P2 (xradius);
+  ry_p2 = (double) P2 (yradius);
+  translate = (double) P2 (xprim)/rx_p2 + P2 (yprim) / ry_p2;
+  if ( translate > 1 )
+    {
+      translate = (double) sqrt (translate);
+      xradius = (double) translate*xradius;
+      yradius = (double) translate*yradius; 
+      rx_p2 = (double) P2 (xradius);
+      ry_p2 = (double) P2 (yradius);
+    }
+
+  /* Step 2: Compute (cX ', cY ') */ 
+  cprim = (large ==  sweep) ? -1 : 1;
+  translate = (double)( rx_p2*P2 (yprim) + ry_p2*P2 (xprim));
+  if (translate == 0)
+    {
+      /*cannot happen... 'a priori' !!
+       (according to math demonstration 
+       (mainly caus'of the radius correction))*/
+      return;
+    }
+  /*   Original formulae :
+       cprim =  (double) cprim * sqrt ((rx_p2*ry_p2 - translate) / translate); 
+       But double precision is no sufficent so I've made a math simplification 
+       that works well */
+  translate = ((rx_p2*ry_p2 / translate) - 1);
+  translate = (translate > 0)?translate:-translate;
+  cprim = (double) cprim * sqrt (translate);
+  cxprim = cprim * ((xradius*yprim)/yradius);
+  cyprim = -cprim * ((yradius*xprim)/xradius);
+  
+  /* Step3: Compute (cX, Cy) from (cX ', cY ') */
+  xmid = ((x1 + x2) / 2);
+  ymid = ((y1 + y2) / 2);
+  cX = Phicos * cxprim - Phisin * cyprim + xmid;
+  cY = Phisin * cxprim + Phicos * cyprim + ymid;
+  
+  /* Step 4: Compute theta and delta_theta */
+  xtheta = (xprim - cxprim) / xradius;
+  ytheta = (yprim - cyprim) / yradius;
+  /*could also use hypot(x,y) = sqrt(x*x+y*Y),
+   but further optimisation could be harder..*/
+  inveangle = (double) (xtheta) /  (double) sqrt (P2 (xtheta) + P2 (ytheta));
+  cprim = 1;
+  cprim = ( ytheta < 0) ?-1 : 1;
+  theta = cprim * DACOS (inveangle);
+  xthetaprim = (double) (-xprim - cxprim) / xradius;
+  ythetaprim = (double) (-yprim - cyprim) / yradius;
+  inveangle =  (double) (xtheta*xthetaprim + ytheta*ythetaprim) /  
+    (double) (sqrt (P2 (xtheta) + P2 (ytheta))* sqrt (P2 (xthetaprim) + P2 (ythetaprim)) );
+  cprim = ( xtheta*ythetaprim - ytheta*xthetaprim < 0) ? -1 : 1;
+  deltatheta = fmod (cprim * DACOS (inveangle), M_PI_DOUBLE);
+  if (sweep && deltatheta < 0)
+    deltatheta += M_PI_DOUBLE;
+  else
+    if (sweep == 0 && deltatheta > 0)
+      deltatheta -= M_PI_DOUBLE;
+ /* Step 5: NOW that we have the center and the angles
+     we can at least and at last 
+     compute the points. */
+  thetabegin = theta;
+  translate = 0;  
+  theta = 0;
+  if (sweep)
+    cprim = A_DEGREE;
+  else
+    cprim = -1 * A_DEGREE;
+  deltatheta = fabs (deltatheta);
+  while (fabs (theta) < deltatheta)
+    {
+      Rxcos = xradius * cos (thetabegin + theta);
+      Rysin = yradius * sin (thetabegin + theta);
+      x3 = Phicos*Rxcos - Phisin*Rysin + cX;
+      y3 = Phisin*Rxcos + Phicos*Rysin + cY;
+      x3 = (double) (x + PixelValue ((int) x3, UnPixel, NULL,
+			    ViewFrameTable[frame - 1].FrMagnification));
+      y3 = (double) (y + PixelValue ((int) y3, UnPixel, NULL,
+			    ViewFrameTable[frame - 1].FrMagnification));
+      ArcNewPoint ((int) x3, (int) y3, points, npoints, maxpoints); 
+      theta += cprim;
+    }  
+}
+/*----------------------------------------------------------------------
+  SVGEllipticArcTo draws an Elliptic Arc
+  ----------------------------------------------------------------------*/
+static void SVGEllipticArcTo (HDC display, int frame, PtrPathSeg pPa, int x, int y)
+{
+
+  POINT       *points;
+  int             npoints, maxpoints;
+
+  maxpoints = 2048;
+  points = (POINT *) TtaGetMemory (sizeof (POINT) * maxpoints);
+  npoints = 0;
+
+  WinEllipticSplit (frame, x, y,
+			       (double) pPa->XStart, (double) pPa->YStart, 
+			       (double) pPa->XEnd, (double) pPa->YEnd, 
+			       (double) pPa->XRadius, (double) pPa->YRadius,
+			       (int) fmod(pPa->XAxisRotation, 360), 
+			       pPa->LargeArc, pPa->Sweep,
+			       &points, &npoints, &maxpoints);
+  PolylineTo (display, points, npoints);
+}
 /*----------------------------------------------------------------------
   SetPath draws a path.
   Parameter path is a pointer to the list of path segments
@@ -1781,118 +2011,7 @@ static void SetPath (int frame, HDC display, int x, int y, PtrPathSeg path)
 	  break;
 
 	case PtEllipticalArc:
-	  /**** to do ****/
-	  /* draws a Bezier if it's a half or quarter of a circle */
-	  if (pPa->XRadius == pPa->YRadius)
-	    /* it's an arc of a circle */
-	    {
-	      x1 = x + PixelValue (pPa->XStart, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification);
-	      y1 = y + PixelValue (pPa->YStart, UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification);
-	      x2 = x + PixelValue (pPa->XEnd, UnPixel, NULL,
-			           ViewFrameTable[frame - 1].FrMagnification);
-	      y2 = y + PixelValue (pPa->YEnd, UnPixel, NULL,
-			           ViewFrameTable[frame - 1].FrMagnification);
-	      if (pPa->XStart == pPa->XEnd &&
-		  abs (pPa->YEnd - pPa->YStart) == 2 * pPa->XRadius)
-		/* half circle (vertical) */
-		{
-		  if ((pPa->Sweep  && pPa->YEnd > pPa->YStart) ||
-		      (!pPa->Sweep && pPa->YEnd < pPa->YStart))
-		    ptCurve[0].x  = x + PixelValue (pPa->XStart + (int)(1.36 * pPa->XRadius), UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification);
-		  else
-		    ptCurve[0].x  = x + PixelValue (pPa->XStart - (int)(1.36 * pPa->XRadius), UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification);
-		    ptCurve[0].y = y1;
-		    ptCurve[1].x = ptCurve[0].x;
-		    ptCurve[1].y = y2;
-		    ptCurve[2].x = x2;
-		    ptCurve[2].y = y2;
-		    PolyBezierTo (display, &ptCurve[0], 3);
-		    }
-		  else if (pPa->YStart == pPa->YEnd &&
-		      abs (pPa->XEnd - pPa->XStart) == 2 * pPa->XRadius)
-		    /* half circle (horizontal) */
-		    {
-		    if ((pPa->Sweep  && pPa->XEnd < pPa->XStart) ||
-			(!pPa->Sweep && pPa->XEnd > pPa->XStart))
-		      ptCurve[0].y = y + PixelValue (pPa->YStart + (int)(1.36 * pPa->YRadius), UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification);
-		    else
-		      ptCurve[0].y = y + PixelValue (pPa->YStart - (int)(1.36 * pPa->YRadius), UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification);
-		    ptCurve[0].x = x1;
-		    ptCurve[1].x = x2;
-		    ptCurve[1].y = ptCurve[0].y;
-		    ptCurve[2].x = x2;
-		    ptCurve[2].y = y2;
-		    PolyBezierTo (display, &ptCurve[0], 3);
-		    }
-		  else if (abs (pPa->YEnd - pPa->YStart) == pPa->YRadius &&
-			   abs (pPa->XEnd - pPa->XStart) == pPa->XRadius)
-		    /* a quarter or 3/4 of a circle */
-		    {
-		      if (!pPa->LargeArc)
-			/* a quarter of a circle */
-			{
-			  if (pPa->XStart < pPa->XEnd)
-			    if (pPa->YStart < pPa->YEnd)
-			      if (pPa->Sweep)
-			        {
-			          cx1 = x2;
-			          cy1 = y1;
-			        }
-			      else
-			        {
-			          cx1 = x1;
-			          cy1 = y2;
-			        }
-			    else
-			      if (pPa->Sweep)
-			        {
-			          cx1 = x1;
-			          cy1 = y2;
-			        }
-			      else
-			        {
-			          cx1 = x2;
-			          cy1 = y1;
-			        }
-			  else
-			    if (pPa->YStart < pPa->YEnd)
-			      if (pPa->Sweep)
-			        {
-			          cx1 = x1;
-			          cy1 = y2;
-			        }
-			      else
-			        {
-			          cx1 = x2;
-			          cy1 = y1;
-			        }
-			    else
-			      if (pPa->Sweep)
-			        {
-			          cx1 = x2;
-			          cy1 = y1;
-			        }
-			      else
-			        {
-			          cx1 = x1;
-			          cy1 = y2;
-			        }
-			  ptCurve[0].x = x1+((2*(cx1-x1))/3);
-			  ptCurve[0].y = y1+((2*(cy1-y1))/3);
-			  ptCurve[1].x = x2+((2*(cx1-x2))/3);
-			  ptCurve[1].y = y2+((2*(cy1-y2))/3);
-			  ptCurve[2].x = x2;
-			  ptCurve[2].y = y2;
-			  PolyBezierTo (display, &ptCurve[0], 3);
-			}
-		    }
-		}
+		SVGEllipticArcTo (display, frame, pPa, x, y);
 	  break;
 	}
       pPa = pPa->PaNext;
