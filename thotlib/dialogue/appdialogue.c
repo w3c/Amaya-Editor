@@ -305,11 +305,6 @@ LRESULT CALLBACK ComboBoxProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
 		}
 		break;
 
-
-	case CBN_SELCHANGE:
-		SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
-		break;
-
 	case VK_RETURN: 
 		SendMessage (GetParent (hwnd), WM_ENTER, 0, 0);
 		break; 
