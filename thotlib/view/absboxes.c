@@ -775,7 +775,8 @@ int                *dvol;
 	do
 	   if (pAb == NULL)
 	      stop = TRUE;
-	   else if (pAb->AbVolume + volpres <= *dvol || !(IsBreakable (pAb)))
+	   else if (pAb != pAbbRoot &&
+		    (pAb->AbVolume + volpres <= *dvol || !IsBreakable (pAb)))
 	      stop = TRUE;
 	   else
 	     {

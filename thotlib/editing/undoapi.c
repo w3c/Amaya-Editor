@@ -9,6 +9,7 @@
  * This module Implements the Undo API
  *
  * Authors: S. Bonhomme (INRIA)
+ *          I. Vatton (INRIA)
  *          
  */
 #include "thot_sys.h"
@@ -27,8 +28,27 @@
 #undef THOT_EXPORT
 
 /* ----------------------------------------------------------------------
-   TtaOpenUndoSequence
+   TtaWithinUndoSequence returns TRUE if a undo sequence is opened
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+ThotBool      TtaWithinUndoSequence (Document document)
+#else  /* __STDC__ */
+ThotBool      TtaWithinUndoSequence (document)
+Document document;
+#endif /* __STDC__ */
+{
 
+  if (document < 1 || document > MAX_DOCUMENTS)
+    return FALSE;
+  else if (LoadedDocument [document - 1])
+    return (LoadedDocument [document - 1]->DocEditSequence);
+  else
+    return FALSE;
+}
+
+
+/* ----------------------------------------------------------------------
+   TtaOpenUndoSequence
    Open a sequence of editing operations in the history.
 
    Parameters:
@@ -57,9 +77,7 @@ int lastSelChar;
   int i;
 
   if (document < 1 || document > MAX_DOCUMENTS)
-    {
       TtaError (ERR_invalid_document_parameter);
-    }
   else 
     {
       if (firstSel == NULL)

@@ -1389,7 +1389,7 @@ ThotBool     inMath;
 		      if (attr != NULL && TtaGetAttributeValue (attr) > 1)
 			span = TRUE;
 		    }
-		  if (!ifEmpty)
+		  if (TtaWithinUndoSequence (doc))
 		     TtaRegisterElementDelete (cell, doc);
 		  TtaDeleteTree (cell, doc);
 		}
@@ -1424,7 +1424,8 @@ ThotBool     inMath;
 		    row = NULL;
 		}
 	    }
-	  TtaDeleteTree (colhead, doc);
+	  if (TtaWithinUndoSequence (doc))
+	      TtaDeleteTree (colhead, doc);
 	  if (span)
 	     CheckAllRows (table, doc);
 	}
@@ -1535,18 +1536,23 @@ NotifyElement      *event;
   sibling = TtaGetFirstChild (table);
   empty = TRUE;
   while (sibling != NULL && empty)
-     {
-     elType = TtaGetElementType (sibling);
-     if (elType.ElTypeNum == HTML_EL_CAPTION ||
-	 elType.ElTypeNum == HTML_EL_thead ||
-	 elType.ElTypeNum == HTML_EL_Table_body ||
-	 elType.ElTypeNum == HTML_EL_tfoot)
+    {
+      elType = TtaGetElementType (sibling);
+      if (elType.ElTypeNum == HTML_EL_CAPTION ||
+	  elType.ElTypeNum == HTML_EL_thead ||
+	  elType.ElTypeNum == HTML_EL_Table_body ||
+	  elType.ElTypeNum == HTML_EL_tfoot)
 	if (TtaGetElementVolume (sibling) > 0)
-	   empty = FALSE;
-     TtaNextSibling (&sibling);
-     }
+	  empty = FALSE;
+      TtaNextSibling (&sibling);
+    }
   if (empty)
-     TtaDeleteTree (table, doc);
+    {
+      if (TtaWithinUndoSequence (doc))
+	  /* register that the table is deleted */
+	  TtaRegisterElementDelete (table, doc);
+      TtaDeleteTree (table, doc);
+    }
 }
 
 
