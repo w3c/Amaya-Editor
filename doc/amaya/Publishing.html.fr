@@ -31,9 +31,9 @@
 
 <p>Amaya permet de sauver les documents soit en HTML soit en format texte.</p>
 
-<p>Les sauvegardes lointaine et locale peuvent être accéder de deux façons,
-grâce aux commandes <strong>Sauver</strong> et <strong>Sauver
-comme</strong>.</p>
+<p>Il est possible d'accéder aux sauvegardes lointaine et locale peuvent être
+accéder de deux façons, grâce aux commandes <strong>Sauver</strong> et
+<strong>Sauver comme</strong>.</p>
 
 <p>Cette section manuelle décrit les commandes du menu de publication. En
 plus, il existe un nombre d'options de configuration que vous pouvez changer
@@ -42,8 +42,8 @@ configuration</a>.</p>
 
 <h3><a name="L1104">Sauver des documents en HTML</a></h3>
 
-<p><b>Amaya</b> fournit aucune vue d'ensemble de série de pages installées sur
-le serveur. Cependant il est possible de sauver des fichiers d'un serveur
+<p><b>Amaya</b> ne fournit aucune vue d'ensemble de série de pages installées
+sur le serveur. Cependant il est possible de sauver des fichiers d'un serveur
 lointain comme des fichiers locaux grâce aux commandes <strong>Sauver</strong>
 et <strong>Sauver comme</strong>. Pendant ces opérations, Amaya tient compte
 des images.</p>
@@ -56,7 +56,7 @@ pour Windows, control-x, control-s pour Unix) ou bien en cliquant sur le
 bouton <img alt="floppy" src="../Icons/floppy.gif" align="middle" border="0"
 /> . Cette commande sauve le document courant à l'adresse où il a été amené.
 Les images nouvellement ajoutées sont sauvées dans le même répertoire et
-aucune confirmation n'est demandé, exceptée si le nom du document est inconnu.
+aucune confirmation n'est demandée, excepté si le nom du document est inconnu.
 Les serveurs permettent aux utilisateurs d'importer un document quand seuls le
 nom du serveur ou le répertoire du serveur sont donnés. C'est très utile au
 moment de la navigation, mais ça n'est pas supporté par la méthode "put". Dans
@@ -96,25 +96,25 @@ sont utilisés comme suivant:</p>
     et vous devez changer si vous voulez produire un document XML (Voyager) ou
     un format texte du document courant.</li>
   <li>Le choix <strong>Copier les Images</strong> indique si les images
-    encastrées dans le document courant doivent être copiées avec le document
-    à une nouvelle adresse. Il vaut mieux généralement garder ce bouton actif,
+    emboîtées dans le document courant doivent être copiées avec le document à
+    une nouvelle adresse. Il vaut mieux généralement garder ce bouton actif,
     autrement vous ne serez pas sûr que les images correspondantes seront
     trouvées en ouvrant le document ultérieurement. Cependant, le rendre
     inactif est utile quand vous avez changé uniquement le texte du document
     et que le document est stocké sur le même serveur. Quand les images seront
     copiées, Amaya mettra à jour automatiquement tous les attributs
-    <strong>SRC</strong> pour pointer vers des nouvelles adresses d'images.
-    Les nouvelles adresses seront des URIs relatifs.</li>
+    <strong>SRC</strong> pour pointer vers de nouvelles adresses d'images. Les
+    nouvelles adresses seront des URIs relatifs.</li>
   <li>Le choix <strong>Transformer les URIs</strong> transforme tous les URIs
     courants en URIs relatifs quand c'est possible. Biensûr, si le document
     est sauvé dans un fichier local et si les URIs pointent sur des fichiers
-    lointains, les URIs seront absolus. Ça assure que tous les liens dans le
-    document resteront correctes après la copie. Cependant, si vous avez
-    plusieurs document reliés aux URIs relatifs et que vous avez l'intention
+    lointains, les URIs seront absolus. Ceci assure que tous les liens dans le
+    document restent correctes après la copie. Cependant, si vous avez
+    plusieurs documents reliés aux URIs relatifs et que vous avez l'intention
     de les déplacer vers une adresse lointaine, la désactivation de la
     conversion en URI est nécessaire afin d'éviter le référencement des
     adresses initiales.</li>
-  <li>Le champ <strong>Adresse du document</strong>  indique l'adresse ou le
+  <li>Le champ <strong>Adresse du document</strong>  indique l'adresse où le
     fichier HTML a été écrit. Ce peut être un fichier dans le fichier système
     local (par exemple "/pub/html/welcome.html") ou le nom d'un URI lointain
     (par exemple "http://www.w3.org/pub/WWW/Welcome.html").
@@ -128,7 +128,7 @@ sont utilisés comme suivant:</p>
   </li>
   <li>Le champ <strong>Adresse des images</strong> vous permet de sauver des
     images (si <strong>Copier les Images</strong> a été sélectionné) à un
-    autre endroit que le fichier HTML. Ce camp devrait contenir le nom d'un
+    autre endroit que le fichier HTML. Ce champ devrait contenir le nom d'un
     répertoire dans le fichier système local ou une adresse dans le serveur
     lointain.
     <ul>
@@ -155,7 +155,7 @@ sont utilisés comme suivant:</p>
   </li>
   <li>Le fait de cliquer sur <strong>OK</strong> débute le processus de
     transformation du document et un événement demande confirmation dans les
-    deux cas suivant:
+    deux cas suivants:
     <ol>
       <li>Le document a été sauvé sur un serveur lointain. L'URI complet qui
         doit être écrit est visualisé pour vérification.</li>
@@ -164,7 +164,7 @@ sont utilisés comme suivant:</p>
     </ol>
     <p><strong>Notes</strong> :</p>
     <ul>
-      <li>Quand on sauve à une adresse lointaine, s'il vous plaît vérifier que
+      <li>Quand on sauve à une adresse lointaine, s'il vous plaît vérifiez que
         le proxy http n'est pas mis, ou que le serveur proxy et le <a
         href="http://www.w3.org/Amaya/User/Put.html">serveur cible sont
         configurés pour travailler avec la méthode PUT</a>.</li>
@@ -182,7 +182,7 @@ sont utilisés comme suivant:</p>
 </strong>visualise une boîte de dialogue permettant de sauver le document
 courant en formats variables.Le bouton <strong>Texte</strong> du menu<strong>
 Format du document</strong> sauve le document sous forme de texte, dans un
-fichier local. Une liste de tous les URIs utilisés s'affichent dans ce
+fichier local. Une liste de tous les URIs utilisés s'affiche dans ce
 fichier.</p>
 </div>
 

@@ -32,8 +32,8 @@
 <p>Le menu <strong>Style</strong> vous permet de changer l'apparence de vos
 documents de deux façons différentes:</p>
 <ul>
-  <li>utilisant les cascades des feuilles de style (CSS).</li>
-  <li>utilisant les éléments et les attributs HTML.</li>
+  <li>en utilisant les cascades des feuilles de style (CSS).</li>
+  <li>en utilisant les éléments et les attributs HTML.</li>
 </ul>
 
 <p>Les premières entrées du menu <strong>Style</strong> sont consacrées au CSS
@@ -89,7 +89,7 @@ pour remplir sa nouvelle boîte.</p>
 <h3><a name="Creating,">Créer un style générique pour un élément ou une
 classe</a></h3>
 
-<p>Quand un attribut <code>style</code> a été associée à un élément, vous
+<p>Quand un attribut <code>style</code> a été associé à un élément, vous
 pouvez utiliser cet élément comme un modèle pour créer ou modifier une règle
 de style. Sélectionnez cet élément (vous devez sélectionner un seul élément et
 cet élément doit avoir un attribut <code>style</code>) et choisissez
@@ -98,7 +98,7 @@ boîte de dialogue surgit et visualise une liste de sélecteurs CSS. Cette liste
 inclus toutes les classes qui sont définies pour le document courant, ainsi
 que les types d'éléments auxquels un certain style est associé. Choisissez un
 sélecteur dans cette liste ou entrez un nouveau nom de classe ou un nouveau
-non de type et cliquer sur le bouton <strong>Confirmer</strong>. Le style de
+nom de type et cliquer sur le bouton <strong>Confirmer</strong>. Le style de
 l'élément sélectionné est désormais associé au sélecteur choisi et l'attribut
 <code>style</code> est supprimé pour l'élément sélectionné. Son contenu est
 déplacé à l'élément <code>STYLE</code>, dans le document <code>HEAD</code>, et
@@ -108,7 +108,7 @@ style.</p>
 <p>Quand vous avez créé de nouvelles classes avec la commande <strong>Créer
 une règle</strong>, vous pouvez associer  ces classes à certains éléments dans
 le document. Choisissez <strong>Appliquer une classe</strong> depuis le menu
-<strong>Style</strong>. Une boîte de dialogue surgit,  affichant toutes les
+<strong>Style</strong>. Une boîte de dialogue surgit, affichant toutes les
 classes existantes. Choisissez une de ces classes. Les éléments sélectionnés
 sont désormais visualisés avec le style associé à la classe choisie.</p>
 
@@ -139,8 +139,8 @@ donnent les préférences de l'utilisateur:</p>
     d'une des feuilles de style CSS désactivées du document courant. Cette
     commande n'affecte en rien le lien CSS dans le document.</li>
   <li>La commande <strong>Retirer</strong> permet de retirer une des feuilles
-    de style CSS externes. Cette commande agit comme la commande Désactiver en
-    plus de cela l'élément lien, qui attache les feuilles de style CSS, est
+    de style CSS externes. Cette commande agit comme la commande Désactiver.
+    En plus de cela, l'élément lien qui attache les feuilles de style CSS est
     supprimé.</li>
 </ul>
 
@@ -162,13 +162,13 @@ actuellement appliquée à un  document, une boîte de dialogue expliquera
 d'associer le style et les chaînes de caractères. Deux entrées depuis le menu
 <strong>Style</strong> permettent de manier ces éléments HTML.</p>
 
-<h4>Créer des éléments de style HTML </h4>
+<h4>Créer des éléments de style HTML</h4>
 
 <p>La commande<strong> Types information</strong> du menu
 <strong>Style</strong>  présente un sous-menu offrant un choix d'éléments HTML
 qui définissent des styles abstraits. Sélectionnez tout d'abord une chaîne de
-caractère dans votre page et ensuite choisissez une commande dans ce menu. La
-chaîne de caractère sélectionnée reçoit le style correspondant. Trois de ces
+caractères dans votre page et ensuite choisissez une commande dans ce menu. La
+chaîne de caractères sélectionnée reçoit le style correspondant. Trois de ces
 styles sont également disponibles par l'intermédiaire des boutons:
 <em>emphasis</em> (<img src="../Icons/Em.gif" alt="Emphasis button" />),
 <strong>strong</strong> (<img src="../Icons/Strong.gif" alt="Strong button"
@@ -183,7 +183,7 @@ l'implantation de HTML 3.2.</p>
 
 <h4>Supprimer le style</h4>
 
-<p>Pour supprimer le style d'une chaîne de caractère, sélectionnez tout
+<p>Pour supprimer le style d'une chaîne de caractères, sélectionnez tout
 d'abord la chaîne et appliquez de nouveau la commande qui a été utilisée pour
 associer le style que vous voulez supprimer. Toutes les commandes des
 sous-menu<strong> Types</strong><strong> information </strong>et
