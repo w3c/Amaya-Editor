@@ -56,7 +56,10 @@ class AmayaPage;
 class AmayaNotebook : public wxNotebook
 {
 public:
-  AmayaNotebook( wxWindow * p_parent_window, AmayaWindow * p_amaya_window );
+  DECLARE_DYNAMIC_CLASS(AmayaNotebook)
+
+  AmayaNotebook( wxWindow * p_parent_window = NULL,
+		 AmayaWindow * p_amaya_window = NULL );
   virtual ~AmayaNotebook( );
  
   int GetPageId( const AmayaPage * p_page );

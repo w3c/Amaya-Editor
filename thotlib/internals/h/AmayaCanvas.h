@@ -63,7 +63,9 @@ class AmayaCanvas : public wxPanel
 #endif // #ifdef _GL
 {
 public:
-  AmayaCanvas( AmayaFrame * p_parent_window,
+  DECLARE_DYNAMIC_CLASS(AmayaCanvas)
+
+  AmayaCanvas( AmayaFrame * p_parent_window = NULL,
 	       AmayaCanvas * p_shared_canvas = NULL );
   virtual ~AmayaCanvas( );
 
@@ -75,11 +77,7 @@ public:
   void OnMouse( wxMouseEvent& event );
   void OnChar( wxKeyEvent& event );
   void OnKeyDown( wxKeyEvent& event );
-   
-  void OnInit( wxInitDialogEvent& event );
-  void OnActivate( wxActivateEvent& event );
-  void OnClose( wxCloseEvent& event );
- 
+    
   void OnIdle( wxIdleEvent& event );
   
 protected:

@@ -70,8 +70,9 @@ class AmayaWindow : public wxFrame
 {
 public:
 //  friend class AmayaApp;
+  DECLARE_DYNAMIC_CLASS(AmayaWindow)
 
-  AmayaWindow ( int             window_id
+  AmayaWindow ( int             window_id = -1
       		,wxWindow *     frame = NULL
 	        ,const wxPoint& pos  = wxDefaultPosition
 	        ,const wxSize&  size = wxDefaultSize

@@ -11,6 +11,9 @@
 class AmayaFrame;
 class AmayaNotebook;
 
+// there is a maximum of 2 frames into a page
+#define MAX_MULTI_FRAME 2
+
 /*
  *  Description:  - a page contains 1 or 2 frames which are splited
  *                into a wxSplitterWindow
@@ -60,14 +63,14 @@ class AmayaNotebook;
 class AmayaPage : public wxPanel
 {
 public:
+  DECLARE_DYNAMIC_CLASS(AmayaPage)
+
   AmayaPage( wxWindow * p_parent_window = NULL );
   virtual ~AmayaPage();
 
-  AmayaFrame * AttachTopFrame( AmayaFrame * p_frame );
-  AmayaFrame * AttachBottomFrame( AmayaFrame * p_frame );
-  AmayaFrame * DetachTopFrame();
-  AmayaFrame * DetachBottomFrame();
-  
+  AmayaFrame * AttachFrame( AmayaFrame * p_frame, int position );
+  AmayaFrame * DetachFrame( int position );
+
   bool IsClosed();
   bool IsSelected();
   void SetSelected( bool isSelected );
@@ -86,6 +89,7 @@ public:
   int GetPageId();
 
   AmayaFrame * GetFrame( int frame_position ) const;
+  int GetFramePosition( const AmayaFrame * p_frame ) const;
 
   void DeletedFrame( AmayaFrame * p_frame );
 
@@ -98,9 +102,13 @@ public:
   void OnPaint( wxPaintEvent& event );
 
  protected:
+  void AdjustSplitterPos( int height = -1, int width = -1 );
+
+ protected:
   DECLARE_EVENT_TABLE()
 
   wxSplitterWindow * m_pSplitterWindow;
+  wxPanel *          m_DummyPanel;
   AmayaFrame *       m_pTopFrame;
   AmayaFrame *       m_pBottomFrame;
   AmayaNotebook *    m_pNoteBookParent;

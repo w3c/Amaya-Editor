@@ -3,12 +3,8 @@
 #ifndef __AMAYAFRAME_H__
 #define __AMAYAFRAME_H__
 
-#include "wx/wxprec.h"
-
-#ifndef WX_PRECOMP
-    #include "wx/wx.h"
-    #include "wx/panel.h"
-#endif
+#include "wx/wx.h"
+#include "wx/panel.h"
 
 class AmayaCanvas;
 class AmayaPage;
@@ -58,11 +54,12 @@ class AmayaContext;
  *      Created:  12/10/2003 04:45:34 PM CET
  *     Revision:  none
 */
-
 class AmayaFrame : public wxPanel
 {
 public:
-  AmayaFrame(  int            frame_id
+  DECLARE_DYNAMIC_CLASS(AmayaFrame)
+
+  AmayaFrame(  int            frame_id = -1
       	      ,wxWindow *     p_parent_window = NULL
 	    );
   virtual ~AmayaFrame( );
@@ -104,25 +101,34 @@ public:
   void SetActive( bool active = TRUE );
   bool IsActive();
 
+  void DestroyFrame();
+
 #ifdef _GL
   void SetCurrent();
   void SwapBuffers();
 #endif // #ifdef _GL
-  
+
+  void OnScrollLineUp( wxScrollEvent& event );
+  void OnScrollLineDown( wxScrollEvent& event );
   void OnScroll( wxScrollEvent& event );
   void OnMouse( wxMouseEvent& event );
   void OnSize( wxSizeEvent& event );
   void OnClose(wxCloseEvent& event);
   void OnMenuItem( wxCommandEvent& event );
+  void OnIdle( wxIdleEvent& event );
 
 protected:
   DECLARE_EVENT_TABLE()
   
   int          m_FrameId;        // amaya frame id
   bool         m_IsActive;
+  bool         m_ToDestroy;
   wxString     m_PageTitle;
   wxString     m_WindowTitle;
   wxString     m_StatusBarText;
+
+  int          m_HOldPosition;
+  int          m_VOldPosition;
   
   AmayaPage *     m_pPageParent;  
   AmayaCanvas *   m_pCanvas;
