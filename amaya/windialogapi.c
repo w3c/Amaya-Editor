@@ -94,6 +94,10 @@ static int          bgImageForm;
 static int          imageURL;
 static int          repeatImage;
 static int          imageSel;
+static int          fontNum;
+static int          fontStyle;
+static int          fontUnderline;
+static int          fontSize;
 static BOOL         manualFeed      = FALSE;
 static BOOL         tableOfContents = FALSE;
 static BOOL         numberedLinks   = FALSE;
@@ -409,12 +413,21 @@ char* msg2;
  CreateCharacterDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateCharacterDlgWindow (HWND parent)
+void CreateCharacterDlgWindow (HWND parent, int font_num, int font_style, int font_underline, int font_size)
 #else  /* !__STDC__ */
-void CreateCharacterDlgWindow (parent)
+void CreateCharacterDlgWindow (parentint font_num, font_style, font_underline, font_size)
 HWND  parent;
+int   font_num; 
+int   font_style; 
+int   font_underline; 
+int   font_size;
 #endif /* __STDC__ */
 {  
+    fontNum       = font_num;
+    fontStyle     = font_style;
+    fontUnderline = font_underline;
+    fontSize      = font_size;
+
 	DialogBox (hInstance, MAKEINTRESOURCE (CHARACTERSDIALOG), parent, (DLGPROC) CharacterDlgProc);
 }
 
@@ -1453,10 +1466,70 @@ LPARAM lParam;
 {
     switch (msg) {
 	       case WM_INITDIALOG:
-				CheckRadioButton (hwnDlg, IDC_TIMES, IDC_DEFAULTFAMILY, IDC_TIMES);
-				CheckRadioButton (hwnDlg, IDC_ROMAN, IDC_DEFAULTSTYLE, IDC_ROMAN);
-				CheckRadioButton (hwnDlg, IDC_NORMAL, IDC_DEFAULTUNDERLINE, IDC_NORMAL);
-				CheckRadioButton (hwnDlg, IDC_06PT, IDC_DEFAULTSIZE, IDC_12PT);
+                switch (fontNum) {
+                       case 1:  CheckRadioButton (hwnDlg, IDC_TIMES, IDC_DEFAULTFAMILY, IDC_TIMES);
+                                break;
+                       case 2:  CheckRadioButton (hwnDlg, IDC_TIMES, IDC_DEFAULTFAMILY, IDC_HELVETICA);
+                                break;
+                       case 3:  CheckRadioButton (hwnDlg, IDC_TIMES, IDC_DEFAULTFAMILY, IDC_COURIER);
+                                break;
+                       default: CheckRadioButton (hwnDlg, IDC_TIMES, IDC_DEFAULTFAMILY, IDC_DEFAULTFAMILY);
+                }
+
+                switch (fontStyle) {
+                       case 0:  CheckRadioButton (hwnDlg, IDC_ROMAN, IDC_DEFAULTSTYLE, IDC_ROMAN);
+                                break;
+                       case 1:  CheckRadioButton (hwnDlg, IDC_ROMAN, IDC_DEFAULTSTYLE, IDC_BOLD);
+                                break;
+                       case 2:  CheckRadioButton (hwnDlg, IDC_ROMAN, IDC_DEFAULTSTYLE, IDC_ITALIC);
+                                break;
+                       case 3:  CheckRadioButton (hwnDlg, IDC_ROMAN, IDC_DEFAULTSTYLE, IDC_OBLIQUE);
+                                break;
+                       case 4:  CheckRadioButton (hwnDlg, IDC_ROMAN, IDC_DEFAULTSTYLE, IDC_BOLDITALIC);
+                                break;
+                       case 5:  CheckRadioButton (hwnDlg, IDC_ROMAN, IDC_DEFAULTSTYLE, IDC_BOLDOBLIQUE);
+                                break;
+                       default: CheckRadioButton (hwnDlg, IDC_ROMAN, IDC_DEFAULTSTYLE, IDC_DEFAULTSTYLE);
+                                break;
+                }
+
+                switch (fontUnderline) {
+                       case 0:  CheckRadioButton (hwnDlg, IDC_NORMAL, IDC_DEFAULTUNDERLINE, IDC_NORMAL);
+                                break;
+                       case 1:  CheckRadioButton (hwnDlg, IDC_NORMAL, IDC_DEFAULTUNDERLINE, IDC_UNDERLINE);
+                                break;
+                       case 2:  CheckRadioButton (hwnDlg, IDC_NORMAL, IDC_DEFAULTUNDERLINE, IDC_CROSSOUT);
+                                break;
+                       default: CheckRadioButton (hwnDlg, IDC_NORMAL, IDC_DEFAULTUNDERLINE, IDC_DEFAULTUNDERLINE);
+                                break;
+                }
+
+                switch (fontSize) {
+                       case  6:  CheckRadioButton (hwnDlg, IDC_06PT, IDC_DEFAULTSIZE, IDC_06PT);
+                                 break;
+                       case  8:  CheckRadioButton (hwnDlg, IDC_06PT, IDC_DEFAULTSIZE, IDC_08PT);
+                                 break;
+                       case 10:  CheckRadioButton (hwnDlg, IDC_06PT, IDC_DEFAULTSIZE, IDC_10PT);
+                                 break;
+                       case 12:  CheckRadioButton (hwnDlg, IDC_06PT, IDC_DEFAULTSIZE, IDC_12PT);
+                                 break;
+                       case 14:  CheckRadioButton (hwnDlg, IDC_06PT, IDC_DEFAULTSIZE, IDC_14PT);
+                                 break;
+                       case 16:  CheckRadioButton (hwnDlg, IDC_06PT, IDC_DEFAULTSIZE, IDC_16PT);
+                                 break;
+                       case 20:  CheckRadioButton (hwnDlg, IDC_06PT, IDC_DEFAULTSIZE, IDC_20PT);
+                                 break;
+                       case 24:  CheckRadioButton (hwnDlg, IDC_06PT, IDC_DEFAULTSIZE, IDC_24PT);
+                                 break;
+                       case 30:  CheckRadioButton (hwnDlg, IDC_06PT, IDC_DEFAULTSIZE, IDC_30PT);
+                                 break;
+                       case 40:  CheckRadioButton (hwnDlg, IDC_06PT, IDC_DEFAULTSIZE, IDC_40PT);
+                                 break;
+                       case 60:  CheckRadioButton (hwnDlg, IDC_06PT, IDC_DEFAULTSIZE, IDC_60PT);
+                                 break;
+                       default:  CheckRadioButton (hwnDlg, IDC_06PT, IDC_DEFAULTSIZE, IDC_DEFAULTSIZE);
+                                 break;
+                }
 
 				break;
 		   case WM_COMMAND:

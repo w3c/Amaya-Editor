@@ -1614,18 +1614,26 @@ char 	     *content_type;
     */
 
    if ((mode & AMAYA_ASYNC) || (mode & AMAYA_IASYNC)) {
-     char* tmp;
-     
+     /*     
+      char* tmp;
       tmp = TtaGetMemory (strlen (outputfile) + 1);
       strcpy (tmp, outputfile);
       me->outputfile = tmp;
-      
+	  */
+      me->outputfile = TtaGetMemory (strlen (outputfile) + 1);
+      strcpy (me->outputfile, outputfile);
+      /*
       tmp = TtaGetMemory (MAX_LENGTH + 1);
       strncpy (tmp, urlName, MAX_LENGTH);
       tmp[MAX_LENGTH] = EOS;
       me->urlName = tmp;
+	  */
+      me->urlName = TtaGetMemory (strlen (urlName) + 1);
+      strcpy (me->urlName, urlName);
+	  /*
       me->content_type = TtaGetMemory (MAX_LENGTH + 1);
       me->content_type[MAX_LENGTH] = EOS;
+	  */
 #  ifdef _WINDOWS
       HTRequest_setPreemptive (me->request, NO);
    } else {

@@ -156,6 +156,9 @@ static Pixmap       iconJava;
 #define iconForwardNo 24
 
 static BOOL itemChecked = FALSE;
+extern int currentFrame;
+extern int menu_item;
+extern char LostPicturePath [512];
 #endif /* _WINDOWS */
 
 #include "css_f.h"
@@ -2839,8 +2842,12 @@ NotifyEvent        *event;
       /* default Amaya URL */
      {
        s = (char *) TtaGetEnvString ("THOTDIR");
-       if (s != NULL)
-	strcpy (LastURLName, s);
+       if (s != NULL) {
+#         ifdef _WINDOWS
+          sprintf (LostPicturePath, "%s\\amaya\\lost.gif", s);              
+#         endif /* _WINDOWS */
+          strcpy (LastURLName, s);
+          }
        else
 	LastURLName[0] = EOS;
        strcat (LastURLName, AMAYA_PAGE);
@@ -2932,25 +2939,23 @@ View                view;
 
 #endif
 {
-#  if 0
 #  ifdef _WINDOWS
    int frame = GetWindowNumber (document, view);
 
-   if (frame == 0 || frame > MAX_FRAME)
+   if (currentFrame == 0 || currentFrame > 10)
       TtaError (ERR_invalid_parameter);
    else {
-        HMENU hmenu = GetMenu (FrMainRef[frame]); 
+        HMENU hmenu = WIN_GetMenu (currentFrame); 
         if (!itemChecked) {
           CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_CHECKED); 
           itemChecked = TRUE ;
        } else {
-              hmenu = GetMenu (FrMainRef[frame]); 
+              hmenu = WIN_GetMenu (currentFrame); 
               CheckMenuItem (hmenu, menu_item, MF_BYCOMMAND | MF_UNCHECKED); 
               itemChecked = FALSE ;
        }
    }
 #  endif /* _WINDOWS */
-#  endif /* 0 */
    ChangeAttrOnRoot (document, HTML_ATTR_ShowAreas);
 }
 

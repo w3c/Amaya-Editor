@@ -590,9 +590,9 @@ char               *docName;
       return;
 
    if (doc != 0)
-     basename = GetBaseURL (doc);
+      basename = GetBaseURL (doc);
    else
-     basename = (char *) NULL;
+       basename = (char *) NULL;
 
    /*
     * Clean orgName
@@ -609,43 +609,36 @@ char               *docName;
     * If the URL does not include a protocol, then try to calculate
     * one using the doc's base element (if it exists),
     */
-   if (tempOrgName[0] == EOS)
-     {
-       newName[0] = EOS;
-       TtaFreeMemory (basename);
-       return;
-     }
+   if (tempOrgName[0] == EOS) {
+      newName[0] = EOS;
+      TtaFreeMemory (basename);
+      return;
+   }
 
    /* clean trailing white space */
    length = strlen (tempOrgName) - 1;
-   while (tempOrgName[length] == SPACE && tempOrgName[length] == EOL)
-     {
-       tempOrgName[length] = EOS;
-       length--;
-     }
+   while (tempOrgName[length] == SPACE && tempOrgName[length] == EOL) {
+         tempOrgName[length] = EOS;
+         length--;
+   }
+
    /* remove extra dot */
    if (tempOrgName[length] == '.')
-     tempOrgName[length] = EOS;
+      tempOrgName[length] = EOS;
 
-   if (IsW3Path (tempOrgName))
-     {
-       /* the name is complete, go to the Sixth Step */
-       strcpy (newName, tempOrgName);
-       /* verify if the URL has the form "protocol://server:port" */
-       ptr = AmayaParseUrl (newName, "", AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST |
-		      AMAYA_PARSE_PUNCTUATION);
-       if (ptr && !strcmp (ptr, newName))
-	 /* it has this form, we complete it by adding a DIR_STR  */
-	 strcat (newName, URL_STR);
+   if (IsW3Path (tempOrgName)) {
+      /* the name is complete, go to the Sixth Step */
+      strcpy (newName, tempOrgName);
+      /* verify if the URL has the form "protocol://server:port" */
+      ptr = AmayaParseUrl (newName, "", AMAYA_PARSE_ACCESS | AMAYA_PARSE_HOST | AMAYA_PARSE_PUNCTUATION);
+      if (ptr && !strcmp (ptr, newName)) /* it has this form, we complete it by adding a DIR_STR  */
+         strcat (newName, URL_STR);
 
-       if (ptr)
-	 TtaFreeMemory (ptr);
-     }
-   else if ( doc == 0)
-     /* the name is complete, go to the Sixth Step */
+      if (ptr)
+         TtaFreeMemory (ptr);
+   } else if ( doc == 0) /* the name is complete, go to the Sixth Step */
      strcpy (newName, tempOrgName);
-   else
-     {
+   else {
        /* Calculate the absolute URL, using the base or document URL */
 #      ifdef _WINDOWS
 	   if (!IsW3Path (basename)) {
@@ -656,15 +649,13 @@ char               *docName;
 	   }
 #      endif /* _WINDOWS */
        ptr = AmayaParseUrl (tempOrgName, basename, AMAYA_PARSE_ALL);
-       if (ptr)
-	 {
-	   SimplifyUrl (&ptr);
-	   strcpy (newName, ptr);
-	   TtaFreeMemory (ptr);
-	 }
-       else
-	   newName[0] = EOS;
-     }
+       if (ptr) {
+          SimplifyUrl (&ptr);
+          strcpy (newName, ptr);
+          TtaFreeMemory (ptr);
+       } else
+            newName[0] = EOS;
+   }
 
    TtaFreeMemory (basename);
    /*
@@ -672,52 +663,42 @@ char               *docName;
     * .amaya directory. If the new URL finishes on DIR_SEP, then use
     * noname.html as a default ressource name
    */
-   if (newName[0] != EOS)
-     {
-       length = strlen (newName) - 1;
-       if (newName[length] == URL_SEP || newName[length] == DIR_SEP)
-	 {
-	   used_sep = newName[length];
-	   check = TRUE;
-	   while (check)
-	     {
-	       length--;
-	       while (length >= 0 && newName[length] != used_sep)
-		 length--;
-	       if (!strncmp (&newName[length+1], "..", 2))
-		 {
-		   newName[length+1] = EOS;
-		   /* remove also previous directory */
-		   length--;
-		   while (length >= 0 && newName[length] != used_sep)
-		     length--;
-		   if (strncmp (&newName[length+1], "//", 2))
-		     /* don't remove server name */
-		     newName[length+1] = EOS;
-		 }
-	       else if (!strncmp (&newName[length+1], ".", 1))
-		 newName[length+1] = EOS;
-	       else
-		 check = FALSE;
-	     }
+   if (newName[0] != EOS) {
+      length = strlen (newName) - 1;
+      if (newName[length] == URL_SEP || newName[length] == DIR_SEP) {
+         used_sep = newName[length];
+         check = TRUE;
+         while (check) {
+               length--;
+               while (length >= 0 && newName[length] != used_sep)
+                     length--;
+               if (!strncmp (&newName[length+1], "..", 2)) {
+                  newName[length+1] = EOS;
+                  /* remove also previous directory */
+                  length--;
+                  while (length >= 0 && newName[length] != used_sep)
+                        length--;
+                  if (strncmp (&newName[length+1], "//", 2)) /* don't remove server name */
+                     newName[length+1] = EOS;
+               } else if (!strncmp (&newName[length+1], ".", 1))
+                      newName[length+1] = EOS;
+               else
+                  check = FALSE;
+         }
 	     strcpy (docName, "noname.html");	       
-	   /* docname was not comprised inside the URL, so let's */
-	   /* assign the default ressource name */
-	   strcpy (docName, "noname.html");
-	 }
-       else
-	 {
-	   /* docname is comprised inside the URL */
-	   while (length >= 0 && newName[length] != URL_SEP && newName[length] != DIR_SEP)
-	     length--;
-	   if (length < 0)
-	     strcpy (docName, newName);
-	   else
-	       strcpy (docName, &newName[length+1]);
-	 }
-     }
-   else
-     docName[0] = EOS;
+         /* docname was not comprised inside the URL, so let's */
+         /* assign the default ressource name */
+         strcpy (docName, "noname.html");
+      } else { /* docname is comprised inside the URL */
+           while (length >= 0 && newName[length] != URL_SEP && newName[length] != DIR_SEP)
+                 length--;
+          if (length < 0)
+             strcpy (docName, newName);
+          else
+              strcpy (docName, &newName[length+1]);
+      }
+   } else
+        docName[0] = EOS;
 } 
 
 /*----------------------------------------------------------------------
