@@ -33,6 +33,9 @@ public:
 protected:
   DECLARE_EVENT_TABLE()
 
+  bool m_AmayaIsLaunched;
+
+
   wxAmayaSocketEventLoop * m_SocketEventLoop;
 
 #ifdef _GL

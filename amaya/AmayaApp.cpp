@@ -59,6 +59,11 @@ int AmayaApp::AttrList[] =
 
 bool AmayaApp::OnInit()
 {
+  // this flag is set to false because amaya_main is not allready called
+  // the flag will be set to true when amaya_main will be called
+  // (when the first idle event will be called)
+  m_AmayaIsLaunched = FALSE;
+
   // for debug : the output is stderr
   delete wxLog::SetActiveTarget( new wxLogStderr );
 
@@ -110,14 +115,7 @@ bool AmayaApp::OnInit()
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "TitleDlgWX.xrc") );
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "SearchDlgWX.xrc") );
   wxXmlResource::Get()->Load( TtaGetResourcePathWX( WX_RESOURCES_XRC, "PrintDlgWX.xrc") );
-  // TODO: rajouter ici toutes les autres ressources a charger
-  
-  // just call amaya main from EDITORAPP.c
-  amaya_main( amaya_argc, amaya_argv );
-#endif /* #ifndef _GLPRINT */
-
-#ifdef _GLPRINT
-  main( amaya_argc, amaya_argv );
+  // TODO: rajouter ici toutes les autres ressources a charger  
 #endif /* #ifndef _GLPRINT */
 
   /* setup the socket event loop */
@@ -191,7 +189,21 @@ void AmayaApp::ClearAmayaArgs()
 
 void AmayaApp::OnIdle( wxIdleEvent& event )
 {
-  //  wxLogDebug( _T("AmayaApp::OnIdle") );
+  // amaya_main is called only once when the first Idle event is received
+  // amaya_main can't be called into OnInit because it can
+  // launch user dialogs (ex: Confirm dialogs).
+  // The dialogues can't be shown into OnInit because 
+  // wxEventLoop is not ready at this place !
+  if (!m_AmayaIsLaunched)
+    {
+      m_AmayaIsLaunched = TRUE;
+#ifndef _GLPRINT
+      // just call amaya main from EDITORAPP.c
+      amaya_main( amaya_argc, amaya_argv );
+#else /* _GLPRINT */
+      main( amaya_argc, amaya_argv );
+#endif /* _GLPRINT */
+    }
 
   event.Skip();
 }
