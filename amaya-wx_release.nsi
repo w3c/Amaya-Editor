@@ -24,7 +24,7 @@
 ;--------------------------------
 ;Variables
 
-  Var MUI_TEMP
+
   Var STARTMENU_FOLDER
 
 ;--------------------------------
@@ -257,6 +257,8 @@ Section "Amaya" SecAmaya
     CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Amaya.lnk" "$INSTDIR\WindowsWX\bin\amaya.exe"
   !insertmacro MUI_STARTMENU_WRITE_END
 
+  ;Create desktop link
+  CreateShortCut "$DESKTOP\AmayaWX.lnk" "$INSTDIR\WindowsWX\bin\amaya.exe"
 SectionEnd
 
 ;--------------------------------
@@ -289,18 +291,20 @@ Section "Uninstall"
   RMDir /r "$INSTDIR"
 
   ;Start Menu uninstall
-  !insertmacro MUI_STARTMENU_GETFOLDER Application $MUI_TEMP   
-  Delete "$SMPROGRAMS\$MUI_TEMP\Uninstall.lnk"
-  ;Delete empty start menu parent diretories
-  StrCpy $MUI_TEMP "$SMPROGRAMS\$MUI_TEMP"
-  startMenuDeleteLoop:
-    ClearErrors
-    RMDir $MUI_TEMP
-    GetFullPathName $MUI_TEMP "$MUI_TEMP\.."    
-    IfErrors startMenuDeleteLoopDone
-    StrCmp $MUI_TEMP $SMPROGRAMS startMenuDeleteLoopDone startMenuDeleteLoop
-  startMenuDeleteLoopDone:
+;  !insertmacro MUI_STARTMENU_GETFOLDER Application $MUI_TEMP   
+;  Delete "$SMPROGRAMS\$MUI_TEMP\Uninstall.lnk"
+;  ;Delete empty start menu parent diretories
+;  StrCpy $MUI_TEMP "$SMPROGRAMS\$MUI_TEMP"
+;  startMenuDeleteLoop:
+;    ClearErrors
+;    RMDir $MUI_TEMP
+;    GetFullPathName $MUI_TEMP "$MUI_TEMP\.."    
+;    IfErrors startMenuDeleteLoopDone
+;    StrCmp $MUI_TEMP $SMPROGRAMS startMenuDeleteLoopDone startMenuDeleteLoop
+;  startMenuDeleteLoopDone:
 
+  RMDir /r "$SMPROGRAMS\$STARTMENU_FOLDER"
+  Delete "$DESKTOP\AmayaWX.lnk"
 
   DeleteRegKey /ifempty HKCU "Software\AmayaWX"
 
