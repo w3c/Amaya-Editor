@@ -44,6 +44,9 @@ extern void CopyDescrExtDoc ( PtrElement pEl,
                               PtrChangedReferredEl pChngRef );
 extern void RegisterDeletedReferredElem ( PtrElement pEl,
                                           PtrDocument pDoc );
+extern void UpdateInclusionElements ( PtrDocument pDoc,
+                                      boolean loadExternalDoc,
+                                      boolean removeExclusions );
 
 #else /* __STDC__ */
 
@@ -85,6 +88,9 @@ extern void CopyDescrExtDoc (/* PtrElement pEl,
                                 PtrChangedReferredEl pChngRef */);
 extern void RegisterDeletedReferredElem (/* PtrElement pEl,
                                             PtrDocument pDoc */);
+extern void UpdateInclusionElements (/* PtrDocument pDoc,
+                                        boolean loadExternalDoc,
+                                        boolean removeExclusions */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

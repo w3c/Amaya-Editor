@@ -24,7 +24,8 @@ extern void TtaCopyAttributeReference ( Attribute attribute,
                                         Element element,
                                         Attribute source );
 extern void TtaUpdateInclusionElements ( Document document,
-                                         boolean loadExternalDoc );
+                                         boolean loadExternalDoc,
+                                         boolean removeExclusions );
 extern void TtaGiveReferredElement ( Element element,
                                      Element * target,
                                      char *targetDocumentName,
@@ -70,7 +71,8 @@ extern void TtaCopyAttributeReference (/* Attribute attribute,
                                           Element element,
                                           Attribute source */);
 extern void TtaUpdateInclusionElements (/* Document document,
-                                           boolean loadExternalDoc */);
+                                           boolean loadExternalDoc,
+                                           boolean removeExclusions */);
 extern void TtaGiveReferredElement (/* Element element,
                                        Element * target,
                                        char *targetDocumentName,
