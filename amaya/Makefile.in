@@ -203,8 +203,10 @@ HTMLAPP.o : HTMLAPP.c
 	$(CC) $(CFLAGS) $(AMAYA_OPTIONS) $(INCLUDES) -c HTMLAPP.c -o $@
 
 HTML.h HTMLAPP.c : @srcdir@/HTML.STR @srcdir@/HTML.A
-	$(CP) @srcdir@/HTML.A . 
-	$(CP) @srcdir@/HTML.STR . 
+	(if test "@srcdir@" != "" -a "@srcdir@" != "." ; then \
+	    $(CP) @srcdir@/HTML.A .  ; \
+	    $(CP) @srcdir@/HTML.STR .  ; \
+	fi)
 	THOTDIR=$(THOTDIR) ; export THOTDIR ; \
 	../bin/app $(AMAYA_OPTIONS) HTML.A
 
@@ -212,8 +214,10 @@ EDITORAPP.o : EDITORAPP.c
 	$(CC) $(CFLAGS) $(AMAYA_OPTIONS) $(INCLUDES) -c EDITORAPP.c -o $@
 
 EDITORAPP.c : @srcdir@/EDITOR.A
-	$(CP) @srcdir@/EDITOR.A . 
-	$(CP) @srcdir@/logo.xpm . 
+	(if test "@srcdir@" != "" -a "@srcdir@" != "." ; then \
+	    $(CP) @srcdir@/EDITOR.A . ; \
+	    $(CP) @srcdir@/logo.xpm . ; \
+	fi)
 	THOTDIR=$(THOTDIR) ; export THOTDIR ; \
 	../bin/app $(AMAYA_OPTIONS) EDITOR.A
 
