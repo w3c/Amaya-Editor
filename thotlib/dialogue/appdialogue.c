@@ -208,7 +208,7 @@ void TteInitMenus (char *name, int number)
    InitDocContexts ();
 
    /* Init the profile table */
-   Prof_InitTable();
+   Prof_InitTable(NULL);
  
    /* Initialise le dialogue */
    servername = NULL;

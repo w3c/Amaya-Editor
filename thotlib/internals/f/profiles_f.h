@@ -7,7 +7,7 @@
 #ifdef __STDC__
 
 extern ThotBool Prof_BelongTable ( char *name );
-extern void Prof_InitTable ( void );
+extern void Prof_InitTable ( char *prof_file );
 extern void Prof_FreeTable ( void );
 extern void TtaRebuildProTable ( char *prof_file );
 extern ThotBool TtaCanEdit ( void );
@@ -27,7 +27,7 @@ extern ThotBool Prof_ShowMenu ( Menu_Ctl *ptrmenu );
 #else /* __STDC__ */
 
 extern ThotBool Prof_BelongTable (/* char *name */);
-extern void Prof_InitTable (/* void */);
+extern void Prof_InitTable (/* char *prof_file */);
 extern void Prof_FreeTable (/* void */);
 extern void TtaRebuildProTable (/* char *prof_file */);
 extern ThotBool TtaCanEdit (/* void */);

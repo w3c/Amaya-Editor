@@ -478,15 +478,20 @@ ThotBool    Prof_BelongTable (char *name)
 /*-----------------------------------------------------------------------
    Prof_InitTable: Seek the current profile file and init tables
   ----------------------------------------------------------------------*/
-void Prof_InitTable ()
+void Prof_InitTable (char *prof_file)
 {
   FILE   *profFile;
   char   *ptr;
   char    buffer[MAX_LENGTH];
 
-  /* TODO: use a ISO functions for TtaGetEnvString and TtaStrdup */
-  /* Retreive thot.rc variables and open the profile file */
-  ptr = TtaGetEnvString ("Profiles_File");
+  /* open the profile file */
+
+  /* if the caller didn't specify any profile, we use the one
+     given in the registry */
+  if (prof_file && *prof_file)
+    ptr = prof_file;
+  else
+    ptr = TtaGetEnvString ("Profiles_File");
 
   if (ptr && *ptr)
     {
@@ -548,6 +553,7 @@ void Prof_FreeTable ()
 
   /* delete the profiles table */
   DeleteTable (ProfileTable, TRUE);
+  ProfileTable = NULL;
   NbProfiles = 0;
   UserProfContext = NULL;
   for (i = 0; i < NbFunctions; i++)
@@ -565,7 +571,7 @@ void     TtaRebuildProTable (char *prof_file)
 {
   /* delete the profiles table */
   Prof_FreeTable ();
-  Prof_InitTable ();
+  Prof_InitTable (prof_file);
 }
 
 

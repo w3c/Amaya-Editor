@@ -3261,8 +3261,8 @@ LRESULT CALLBACK WIN_ProfileDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 				     LPARAM lParam)
 {
 
-  int  itemIndex = 0;
-  char *ptr;
+  int       itemIndex = 0;
+  char     *ptr;
 
   switch (msg)
     {
@@ -3307,10 +3307,8 @@ LRESULT CALLBACK WIN_ProfileDlgProc (HWND hwnDlg, UINT msg, WPARAM wParam,
 
 	  /* action buttons */
 	case ID_APPLY:
-	  ptr = TtaGetEnvString ("Profiles_File");
-	  if (ptr && strcmp (ptr, Profiles_File))
-	    TtaRebuildProTable (ptr);
-	  SetProfileConf ();	  
+	  SetProfileConf ();
+	  TtaRebuildProTable (Profiles_File);
 	  /* reset the status flag */
 	  EndDialog (hwnDlg, ID_DONE);
 	  break;
@@ -3437,18 +3435,14 @@ static void ProfileCallbackDialog (int ref, int typedata, char *data)
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 1:
-	      ptr = TtaGetEnvString ("Profiles_File");
-	      if (ptr && strcmp (ptr, Profiles_File))
-		TtaRebuildProTable (ptr);
 	      SetProfileConf ();
+	      TtaRebuildProTable (Profiles_File);
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 2:
 	      GetDefaultProfileConf ();
 	      /* update the current profile */
-	      ptr = TtaGetEnvString ("Profiles_File");
-	      if (strcmp (ptr, Profiles_File))
-		TtaRebuildProTable (Profiles_File);
+	      TtaRebuildProTable (Profiles_File);
 	      BuildProfileSelector();
 	      RefreshProfileMenu ();
 	      break;
@@ -3479,9 +3473,13 @@ static void ProfileCallbackDialog (int ref, int typedata, char *data)
 		      profile definition file and display the new
 		      profiles in the selector */
 		  strcpy (Profiles_File, data);
+		  /* only activate the following lines if we're using
+		     a reactive menu */
+#if 0
 		  TtaRebuildProTable (Profiles_File);
 		  BuildProfileSelector ();
 		  RefreshProfileMenu();
+#endif
 		}
 	    }
 	  else
