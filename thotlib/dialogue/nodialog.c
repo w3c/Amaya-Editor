@@ -447,7 +447,9 @@ void Clear (int frame, int larg, int haut, int x, int y)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-PtrElement CreateSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before, ThotBool createAbsBox, int typeNum, PtrSSchema pSS, ThotBool inclusion)
+PtrElement CreateSibling (PtrDocument pDoc, PtrElement pEl, ThotBool before,
+						  ThotBool createAbsBox, int typeNum, PtrSSchema pSS,
+						  ThotBool inclusion)
 {
   return NULL;
 }
@@ -472,7 +474,7 @@ int TtaGiveActiveFrame()
 
 ThotBool GL_DrawAll()
 {
-  return false;
+  return FALSE;
 }
 
 #ifdef _WX
