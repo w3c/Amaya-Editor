@@ -2,10 +2,10 @@
 ! see HTML.trans for a description of Trans language
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-! WARNING : transformations does NOT work with Multiscript elements
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! WARNING : transformations do NOT work with Multiscript elements
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-!!! mrow transformation
+!!! mrow transformations
 
 !surround an element with a mrow
 surrounding row: *;
@@ -22,6 +22,27 @@ surrounding row: *,*+;
 
 ! remove a mrow level
 remove row: mrow{*+};
+        {
+        * > :*;
+        }
+
+!!! mstyle transformations
+
+!surround an element with a mstyle
+surrounding mstyle: *;
+        {
+        * > mstyle:*;
+        }
+
+
+!surround a sequence of elements with a mstyle
+surrounding mstyle: *,*+;
+        {
+        * > mstyle:*;
+        }
+
+! remove a mstyle level
+remove mstyle: mstyle{*+};
         {
         * > :*;
         }
