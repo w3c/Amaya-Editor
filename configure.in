@@ -1338,7 +1338,7 @@ if test "$build_amaya" = "yes" ; then
     EXTRA_MAKEFILE_IN="$srcdir/amaya/Makefile.in \
     $srcdir/amaya/Makefile.libwww"
 
-    if test "$$with_plugin" = "yes" ; then
+    if test "$with_plugin" = "yes" ; then
        make_output="$make_output pluginlib/Makefile"
        EXTRA_MAKEFILE_IN="$srcdir/pluginlib/Makefile.in \
        $srcdir/pluginlib/Makefile.plugin"
@@ -1352,6 +1352,10 @@ if test "$build_amaya" = "yes" ; then
     if test "$with_dav" = "yes" ; then
        make_output="$make_output davlib/Makefile"
        EXTRA_MAKEFILE_IN="$srcdir/davlib/Makefile.in"
+    fi
+
+    if test "$with_wx" = "yes" ; then
+       EXTRA_MAKEFILE_IN="$EXTRA_MAKEFILE_IN $WX_SRCDIR/Makefile.in $WX_SRCDIR/configure.in"
     fi
 
 fi

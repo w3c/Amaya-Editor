@@ -419,8 +419,7 @@ $(THOTDIR)/thotlib/Makefile.in \
 $(THOTDIR)/thotlib/include/Makefile.in \
 $(THOTDIR)/tools/Makefile.in \
 $(THOTDIR)/tools/mkdep/Makefile.in \
-$(THOTDIR)/tools/cextract-1.7/Makefile.in \
-$(WX_SRCDIR)/configure.in
+$(THOTDIR)/tools/cextract-1.7/Makefile.in
 
 rebuild : tools/mkdep/mkdep Makefile
 
