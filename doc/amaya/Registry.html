@@ -1,31 +1,39 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Draft//EN">
-<HTML>
-<HEAD>
-<TITLE></TITLE>
-</HEAD>
-<BODY>
-<P>
-<A href="../../"><IMG border="0" alt="W3C" src="../../Icons/WWW/w3c_home"></A>
-<A href="../"><IMG border="0" src="amaya.gif" alt="Amaya"></A> <A
-href="./"><IMG border="0" src="../../Icons/WWW/guide48x" alt="Using"></A></P>
-<H1>The Amaya Registry</H1>
-<P>Since version 0.9 beta of Amaya, all the settings allowing the
-configuration of <STRONG>Amaya</STRONG> are stored in a small database called
-<STRONG>registry</STRONG>. It's syntax is highly similar to the
-<CODE>WIN.INI</CODE> file found on most PC setup.</P>
-<P>This database is splitted onto 2 different files, one for system wide
-setting, which should not be modified by users, and a user specific one.
-The system one is called <CODE>thot.ini</CODE> and is stored in the
-<CODE>Thot/bin</CODE> directory (e.g., if <STRONG>Amaya</STRONG> has been
-installed in <CODE>/usr/local/Amaya</CODE> , the system-wide registry should
-be found in <CODE>/usr/local/Thot/config/thot.ini</CODE>). The user specific
-one, named <CODE>.thotrc</CODE>, is stored in the home directory of the user
-and will be created automatically if it does not exist at
-<STRONG>Amaya</STRONG> startup.</P>
-<P>Here is an example of the system-wide thot.ini, it defines where the main
-ressources needed by amaya and the Thot library are located. It also defines
-the print command to be used on this system.</P>
-<PRE>[system]
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>
+</title>
+</head>
+<body lang="en">
+
+<div id="head">
+<p>
+<a href="../../"><img border="0" alt="W3C" src="../../Icons/WWW/w3c_home"></a>
+<a href="../"><img border="0" src="amaya.gif" alt="Amaya"></a> <a
+href="./"><img border="0" src="../../Icons/WWW/guide48x" alt="Using"></a></p>
+</div>
+
+<h1>The Amaya Registry</h1>
+<p>
+Since version 0.9 beta of Amaya, all the settings allowing the configuration
+of <strong>Amaya</strong> are stored in a small database called
+<strong>registry</strong>. It's syntax is highly similar to the
+<code>WIN.INI</code> file found on most PC setup.</p>
+<p>
+This database is split onto 2 different files, one for system wide setting,
+which should not be modified by users, and a user specific one. The system one
+is called <code>thot.ini</code> and is stored in the <code>Thot/bin</code>
+directory (e.g., if <strong>Amaya</strong> has been installed in
+<code>/usr/local/Amaya</code> , the system-wide registry should be found in
+<code>/usr/local/Thot/config/thot.ini</code>). The user specific one, named
+<code>.thotrc</code>, is stored in the home directory of the user and will be
+created automatically if it does not exist at <strong>Amaya</strong>
+startup.</p>
+<p>
+Here is an example of the system-wide thot.ini, it defines where the main
+resources needed by amaya and the Thot library are located. It also defines
+the print command to be used on this system.</p>
+<pre>[system]
 
 [thot_lib]
 THOTSCH=$(THOTDIR)/schemas:$(THOTDIR)/amaya
@@ -38,27 +46,30 @@ THOTPRINT=lpr
 
 [amaya]
 THOTSCH=$(THOTDIR)/amaya
-LANG=en_US</PRE>
-<P>Each application has it's own section defined by it's name between
+LANG=en_US</pre>
+<p>
+Each application has it's own section defined by it's name between
 brackets.Each section contains the variable definition specific to this
-application. The section <CODE>[thot_lib]</CODE> is common to all applications
-using the Thot library and the <CODE>[system]</CODE> section contains
-variables wich cannot be overwritten by the user's registry. The format
-is:</P>
-<P><CODE>variable=value up to the end of the line</CODE></P>
-<P>Lines beginning by semicolumns are comments. THOTDIR is an internal
-variable specifying the location of the <STRONG>Amaya</STRONG> installation (
-<CODE>/usr/local/Amaya</CODE> in the previous example). An existing variable
-can be used to compute a new one by using the $(variable name) construct.</P>
-<P>The system thot.ini file is not expected to be changed by users of Amaya,
+application. The section <code>[thot_lib]</code> is common to all applications
+using the Thot library and the <code>[system]</code> section contains
+variables which cannot be overwritten by the user's registry. The format
+is:</p>
+<p>
+<code>variable=value up to the end of the line</code></p>
+<p>
+Lines beginning by semicolons are comments. THOTDIR is an internal variable
+specifying the location of the <strong>Amaya</strong> installation (
+<code>/usr/local/Amaya</code> in the previous example). An existing variable
+can be used to compute a new one by using the $(variable name) construct.</p>
+<p>
+The system thot.ini file is not expected to be changed by users of Amaya,
 however, each user has it's own thot.ini file (automatically created if not
 present), where the user can modify the defaults settings like the user
-interface language, colors or the home page to load on start-up.</P>
-
-<HR>
-<ADDRESS>
-<A href="mailto:daniel.veillard@w3.org">Daniel Veillard</A><BR><A
-href="../../Help/Webmaster">Webmaster</A><BR>$Date: 1996/07/08
-14:50:11$</ADDRESS>
-</BODY>
-</HTML>
+interface language, colors or the home page to load on start-up.</p>
+<hr>
+<address>
+<a href="mailto:daniel.veillard@w3.org">Daniel Veillard</a><br>
+<a href="../../Help/Webmaster">Webmaster</a><br>
+$Date: 1997/07/08</address>
+</body>
+</html>
