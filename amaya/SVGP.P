@@ -71,7 +71,17 @@ DEFAULT
 	HorizRef: Enclosed . HRef;
 	END;
    IN Links_view
+	BEGIN
 	Visibility: 0;
+	VertPos: Top = Previous . Bottom;
+	HorizPos: Left = Enclosing . Left + 1;
+	Width: Enclosed . Width;
+	Height: Enclosed . Height;
+	HorizRef: Enclosed . HRef;
+        Opacity: 100%;
+        FillOpacity: 100%;
+        StrokeOpacity: 100%;
+	END;
    END;
 
 BOXES
@@ -285,11 +295,11 @@ RULES
 		PaddingLeft: 0.4;
 		Font: Helvetica;
 		END;
-        IN Links_view
-	        Visibility: 10;
         IN Links_view BEGIN
+	        Visibility: 10;
 		Height: Enclosed . Height;
-		PaddingLeft: 0.4;
+		Width: Enclosed . Width;
+		HorizPos: Left = Enclosing . Left;
 		PaddingTop: 0.8;
 		PaddingBottom: 3;
 		Font: Helvetica;
@@ -338,9 +348,9 @@ RULES
         IN Links_view BEGIN
 		if not within SVG BEGIN
 	            Visibility: 10;
-                    VertPos: Top = Previous . Bottom;
+                    VertPos: Top = Enclosing . Top;
                     HorizPos: Left = Enclosing . Left;
-		    Width: Enclosing . Width;
+		    Width: Enclosed . Width;
         	    Height: Enclosed . Height;
                     END;
                 END;
@@ -494,6 +504,11 @@ RULES
 		Width: Enclosing . Width;
 		VertPos: Top = Previous . Bottom;
 		END;
+	IN Links_view BEGIN
+		Visibility: 0;
+		Width: Enclosed . Width;
+		Height: Enclosed . Height;
+		END;		
 	END;
 
    style__:
@@ -529,6 +544,11 @@ RULES
 		END;
 	IN Alternate_view
 		Visibility: 0;
+	IN Links_view BEGIN
+		Visibility: 0;
+		Width: Enclosed . Width;
+		Height: Enclosed . Height;
+		END;		
 	END;
 
    rect:
@@ -550,6 +570,11 @@ RULES
 		END;
 	IN Alternate_view
 		Visibility: 0;
+	IN Links_view BEGIN
+		Visibility: 0;
+		Width: Enclosed . Width;
+		Height: Enclosed . Height;
+		END;		
 	END;
 
    circle:
@@ -571,6 +596,11 @@ RULES
 		END;
 	IN Alternate_view
 		Visibility: 0;
+	IN Links_view BEGIN
+		Visibility: 0;
+		Width: Enclosed . Width;
+		Height: Enclosed . Height;
+		END;		
 	END;
 
    ellipse:
@@ -592,6 +622,11 @@ RULES
 		END;
 	IN Alternate_view
 		Visibility: 0;
+	IN Links_view BEGIN
+		Visibility: 0;
+		Width: Enclosed . Width;
+		Height: Enclosed . Height;
+		END;		
 	END;
 
    line_:
@@ -610,6 +645,11 @@ RULES
 		END;
 	IN Alternate_view
 		Visibility: 0;
+	IN Links_view BEGIN
+		Visibility: 0;
+		Width: Enclosed . Width;
+		Height: Enclosed . Height;
+		END;		
 	END;
 
    polyline:
@@ -626,6 +666,11 @@ RULES
 		END;
 	IN Alternate_view
 		Visibility: 0;
+	IN Links_view BEGIN
+		Visibility: 0;
+		Width: Enclosed . Width;
+		Height: Enclosed . Height;
+		END;		
 	END;
 
    polygon:
@@ -645,6 +690,11 @@ RULES
 		END;
 	IN Alternate_view
 		Visibility: 0;
+	IN Links_view BEGIN
+		Visibility: 0;
+		Width: Enclosed . Width;
+		Height: Enclosed . Height;
+		END;		
 	END;
 
    text_:
@@ -749,6 +799,11 @@ RULES
 		END;
 	IN Alternate_view
 		Visibility: 0;
+	IN Links_view BEGIN
+		Visibility: 0;
+		Width: Enclosed . Width;
+		Height: Enclosed . Height;
+		END;		
 	END;
 
    script_:
@@ -920,6 +975,11 @@ RULES
 		Width: Enclosing . Width;
 		VertPos: Top = Previous . Bottom;
 		END;
+	IN Links_view BEGIN
+		Visibility: 0;
+		Width: Enclosed . Width;
+		Height: Enclosed . Height;
+		END;		
 	END;
 
   DOCTYPE:
