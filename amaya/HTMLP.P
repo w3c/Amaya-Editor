@@ -8107,7 +8107,8 @@ RULES
 	IN Structure_view BEGIN
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Width: Enclosing . Width - STRUCT_INDENT;
-		VertPos: Top = Previous . Bottom;	
+		VertPos: Top = Previous . Bottom;
+		MarginTop: 0;	
 		END;
 	IN Links_view
 		Visibility: 0;
