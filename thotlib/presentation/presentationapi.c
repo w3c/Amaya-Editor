@@ -186,6 +186,8 @@ void NewPosition (PtrAbstractBox pAb, int X, int xref, int Y, int yref,
   /* avoid too many redisplays */
   doc = FrameTable[frame].FrDoc;
   pParent = pAb->AbEnclosing;
+  doitV = FALSE;
+  doitH = FALSE;
   dispMode = documentDisplayMode[doc - 1];
   if (dispMode == DisplayImmediately)
     TtaSetDisplayMode (doc, DeferredDisplay);
@@ -196,7 +198,6 @@ void NewPosition (PtrAbstractBox pAb, int X, int xref, int Y, int yref,
       /* look for the position rule that applies to the element */
       pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, 0, NULL, viewSch,
 				   PtVertPos, FnAny, FALSE, TRUE, &pAttrV);
-      doitV = FALSE;
       /* doesn't move boxes with floating position or set in lines */
       if (pRStd->PrPosRule.PoPosDef != NoEdge &&
 	  pAb->AbVertPos.PosAbRef != NULL && !isLined)
@@ -345,7 +346,6 @@ void NewPosition (PtrAbstractBox pAb, int X, int xref, int Y, int yref,
       /* look for the position rule that applies to the element */
       pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPR, &pSSR, 0, NULL, viewSch,
 				   PtHorizPos, FnAny, FALSE, TRUE, &pAttrH);
-      doitH = FALSE;
       /* doesn't move boxes with floating position or set in lines */
       if (pRStd->PrPosRule.PoPosDef != NoEdge
 	  && pAb->AbHorizPos.PosAbRef != NULL
@@ -545,6 +545,8 @@ void NewDimension (PtrAbstractBox pAb, int width, int height, int frame,
   reDisp = FALSE;
   dispMode = documentDisplayMode[doc - 1];
   histOpen = FALSE;
+  doitH = FALSE;
+  doitV = FALSE;
   if (dispMode == DisplayImmediately)
     {
       TtaSetDisplayMode (doc, DeferredDisplay);
@@ -557,7 +559,6 @@ void NewDimension (PtrAbstractBox pAb, int width, int height, int frame,
       /* look for the dimension rule applied to the element */
       pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPRH, &pSSR, 0, NULL, viewSch,
 				   PtWidth, FnAny, FALSE, TRUE, &pAttrH);
-      doitH = FALSE;
       /* don't change the width when it depends on the contents or it's */
       /* a stretched box */
       ok = TRUE;
@@ -728,7 +729,6 @@ void NewDimension (PtrAbstractBox pAb, int width, int height, int frame,
        /* look for the dimension rule applied to the element */
        pRStd = GlobalSearchRulepEl (pEl, pDoc, &pSPRV, &pSSR, 0, NULL, viewSch,
 				    PtHeight, FnAny, FALSE, TRUE, &pAttrV);
-       doitV = FALSE;
        /* don't change the height when it depends on the contents or it's */
        /* a stretched box */
        ok = TRUE;
