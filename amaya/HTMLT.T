@@ -733,6 +733,7 @@ RULES
 	Create 'textarea';
 	Create Attributes;
 	Create '>';
+	NoLineBreak;
 	create SCT after;
 	Create 'textarea>' After;
 	END;
