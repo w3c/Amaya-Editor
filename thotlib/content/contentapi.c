@@ -62,15 +62,14 @@
 static void InsertText (PtrElement pEl, int position, unsigned char *content,
 			Document document)
 {
-  PtrTextBuffer       pBuf, pPreviousBuff, newBuf;
+  PtrTextBuffer       pBuf, newBuf;
 #ifndef NODISPLAY
   PtrDocument         selDoc;
   PtrElement          firstSelection, lastSelection;
   int                 firstChar, lastChar;
   ThotBool            selOk, changeSelection = FALSE;
 #endif /* NODISPLAY */
-  unsigned char      *ptr;
-  int                 length, l, delta, lengthBefore, i;
+  int                 length, delta, lengthBefore;
   PtrElement          pElAsc;
    
   length = strlen (content);
@@ -192,7 +191,7 @@ static void SetContent (Element element, unsigned char *content,
 			Language language, Document document)
 {
   PtrTextBuffer       pBuf, pNextBuff;
-  int                 length, l, delta = 0, i;
+  int                 length, delta = 0, i;
   int                 max;
   PtrElement          pEl;
 #ifndef NODISPLAY

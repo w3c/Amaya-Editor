@@ -1465,20 +1465,22 @@ PtrElement AddLastPageBreak (PtrElement pRootEl, int schView, PtrDocument pDoc,
 void PaginateView (PtrDocument pDoc, int view)
 {
   PtrElement          pRootEl, firstPage, lastPage, pPage;
-  PtrAbstractBox      rootAbsBox, pP, pAb;
+  PtrAbstractBox      rootAbsBox, pP;
   PtrAbstractBox      previousPageAbBox;
 #ifdef PAGINEETIMPRIME
+  PtrAbstractBox      pAb;
   PtrPSchema          pSchP;
   PtrElement          pEl;
+  AbPosition         *pPos;
+  int                 val;
   int                 h, cpt;
 #else /*  PAGINEETIMPRIME */
   PtrElement          firstSelection, lastSelection;
   int                 FirstSelectedChar = 0, LastSelectedChar = 0;
   ThotBool            sel;
 #endif /* PAGINEETIMPRIME */
-  AbPosition         *pPos;
   PtrPSchema          pSchPage;
-  int                 b, val;
+  int                 b;
   int                 schView;
   int                 v, clipOrg;
   int                 frame, volume, volprec, iview;

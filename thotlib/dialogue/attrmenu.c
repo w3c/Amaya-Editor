@@ -111,6 +111,7 @@ extern UINT      subMenuID[MAX_FRAME];
 #include "exceptions_f.h"
 #include "language_f.h"
 #include "memory_f.h"
+#include "schemas_f.h"
 #include "selectmenu_f.h"
 #include "structcommands_f.h"
 #include "structcreation_f.h"
