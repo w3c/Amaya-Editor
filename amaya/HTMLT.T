@@ -14,7 +14,7 @@ RULES
 
  HTML : BEGIN
 #ifdef XML
-	Create '<?xmlversion="1.0" ?>\12';
+	Create '<?xml version="1.0"?>\12';
 	Create Namespaces;
 #endif
 	Create '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">\12';

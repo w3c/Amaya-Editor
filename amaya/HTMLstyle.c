@@ -3424,47 +3424,6 @@ boolean             destroy;
   *decl_end = sauve2;
 }
 
-/*----------------------------------------------------------------------
-   ParseHTMLClass : parse a CSS Class string                    
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                ParseHTMLClass (Element elem, char *cssRule, Document doc)
-#else
-void                ParseHTMLClass (elem, cssRule, doc)
-Element             elem;
-char               *cssRule;
-Document            doc;
-#endif
-{
-   ElementType         elType;
-   Element             el;
-   PRule               rule, added;
-   Element             best = NULL;
-
-   elType.ElSSchema = TtaGetDocumentSSchema (doc);
-   elType.ElTypeNum = HTML_EL_STYLE_;
-   el = TtaSearchTypedElement (elType, SearchInTree, TtaGetMainRoot (doc));
-   /*
-    * browse the style definitions, looking for the given class name.
-    */
-   if (el == NULL)
-	return;
-
-   /* apply all presentation specific attributes found */
-   rule = NULL;
-   if (best != NULL)
-     do
-       {
-	 TtaNextPRule (best, &rule);
-	 if (rule)
-	   {
-	     added = TtaCopyPRule (rule);
-	     TtaAttachPRule (elem, added, doc);
-	   }
-       }
-     while (rule != NULL);
-}
-
 /************************************************************************
  *									*  
  *	EVALUATION FUNCTIONS / CASCADING AND OVERLOADING		*

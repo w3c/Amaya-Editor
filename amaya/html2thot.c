@@ -4322,15 +4322,6 @@ char                c;
 #endif
 	done = TRUE;
      }
-   else if (!strcmp (lastAttrEntry->XMLattribute, "CLASS"))
-     {
-#ifndef STANDALONE
-	TtaSetAttributeText (lastAttribute, inputBuffer, lastAttrElement,
-			     theDocument);
-	ParseHTMLClass (lastElement, (char *) inputBuffer, theDocument);
-#endif
-	done = TRUE;
-     }
 #ifndef STANDALONE
    else if (!strcmp (lastAttrEntry->XMLattribute, "LINK"))
       HTMLSetAlinkColor (theDocument, (char *) inputBuffer);

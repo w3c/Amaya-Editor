@@ -34,9 +34,6 @@ extern char *GetCSSBackgroundURL ( char *styleString );
 extern void ParseCSSRule ( PresentationTarget target,
                            PresentationContext context,
                            char *cssRule );
-extern void ParseHTMLClass ( Element elem,
-                             char *cssRule,
-                             Document doc );
 extern int EvaluateClassContext ( Element el,
                                   char *class,
                                   char *selector,
@@ -111,9 +108,6 @@ extern char *GetCSSBackgroundURL (/* char *styleString */);
 extern void ParseCSSRule (/* PresentationTarget target,
                              PresentationContext context,
                              char *cssRule */);
-extern void ParseHTMLClass (/* Element elem,
-                               char *cssRule,
-                               Document doc */);
 extern int EvaluateClassContext (/* Element el,
                                     char *class,
                                     char *selector,
