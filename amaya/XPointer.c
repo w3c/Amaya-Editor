@@ -30,13 +30,16 @@ typedef struct _XPathItem XPathItem;
 struct _XPathItem {
   ElementType elType;
   int index;
+  char *id_value;
   XPathItem * next;
 };
 
 typedef XPathItem * XPathList;
 
-#define THOT_TEXT_UNIT  1  /* the thotlib element type used to identify
-			      a text node */
+/* the thotlib element type used to identify a text node */
+#define THOT_TEXT_UNIT  1
+/* the thotlib attribute type used to identify an id attribute*/
+#define THOT_ATTR_ID    2  
 
 /*----------------------------------------------------------------------
   AdjustChIndex
@@ -142,6 +145,40 @@ static void PreviousSibling (Element *el)
 }
 
 /*----------------------------------------------------------------------
+  GetIdValue
+
+  If the element has an id attribute, the function returns the value of
+  this attribute. It's up to the caller to free the string that's returned.
+  Returns NULL otherwise
+  ----------------------------------------------------------------------*/
+static char * GetIdValue (Element el)
+{
+  Attribute attr;
+  AttributeType attrType;
+  ElementType elType;
+  char *value;
+  int len;
+
+  elType = TtaGetElementType (el);
+  attrType.AttrSSchema = elType.ElSSchema;
+  attrType.AttrTypeNum = THOT_ATTR_ID;
+
+  attr = TtaGetAttribute (el, attrType);
+  if (attr != NULL)
+    {
+      /* there's an ID attribute */
+      len = TtaGetTextAttributeLength (attr) + 1;
+      value = TtaAllocString (len);
+      TtaGiveTextAttributeValue (attr, value, &len);
+      
+    }
+  else
+    value  = NULL;
+
+  return value;
+}
+
+/*----------------------------------------------------------------------
   XPathList2Str
 
   Returns an XPath expression corresponding to the list structure.
@@ -160,29 +197,51 @@ static char * XPathList2Str (XPathList *xpath_list, int firstCh, int len)
   index = 0;
   while (xpath_item)
     {
-      typeName = TtaGetElementTypeName (xpath_item->elType);
-      /** @@ I need to add here the text unit types we know about */
+      if (!xpath_item->id_value)
+	typeName = TtaGetElementTypeName (xpath_item->elType);
+
       if (xpath_item->next 
 	  && xpath_item->next->elType.ElTypeNum == THOT_TEXT_UNIT)
 	{
 	  if (firstCh > 0)
-	    sprintf (&xpath_expr[index], "/string-range(%s[%d],\"\",%d,%d)",
-		     typeName, xpath_item->index, firstCh, len);
+	    {
+	      if (xpath_item->id_value)
+		sprintf (&xpath_expr[index], 
+			 "/string-range(id(\"%s\"),\"\",%d,%d)",
+			 xpath_item->id_value, firstCh, len);
+	      else
+		sprintf (&xpath_expr[index], 
+			 "/string-range(%s[%d],\"\",%d,%d)",
+			 typeName, xpath_item->index, firstCh, len);
+	    }
 	  else
-	    sprintf (&xpath_expr[index], "/string-range(%s[%d],\"\"",
-		     typeName, xpath_item->index);
+	    {
+	      if (xpath_item->id_value)
+		sprintf (&xpath_expr[index], "/string-range(id(\"%s\"),\"\"",
+			 xpath_item->id_value);
+	      else
+		sprintf (&xpath_expr[index], "/string-range(%s[%d],\"\"",
+			 typeName, xpath_item->index);
+	    }
+	  /* we remove the extra element, as we have already used it */
 	  xpath_tmp = xpath_item->next->next;
 	  TtaFreeMemory (xpath_item->next);
-	  TtaFreeMemory (xpath_item);
-	  xpath_item = xpath_tmp;
 	}
       else
 	{
-	  sprintf (&xpath_expr[index], "/%s[%d]", typeName, xpath_item->index);
+	  if (xpath_item->id_value)
+	    sprintf (&xpath_expr[index], "id(\"%s\")", xpath_item->id_value);
+	  else
+	    sprintf (&xpath_expr[index], "/%s[%d]", typeName, 
+		     xpath_item->index);
 	  xpath_tmp = xpath_item->next;
-	  TtaFreeMemory (xpath_item);
-	  xpath_item = xpath_tmp;
 	}
+
+      if (xpath_item->id_value)
+	TtaFreeMemory (xpath_item->id_value);
+      TtaFreeMemory (xpath_item);
+      xpath_item = xpath_tmp;
+
       index = strlen (xpath_expr);
     }
 
@@ -214,7 +273,8 @@ Element start;
   XPathItem *xpath_item;
   XPathList xpath_list = (XPathItem *) NULL;
   char *xpath_expr;
-  
+  char *id_value = NULL;
+
   el = start;
   /* if we chose a hidden element, climb up */
   if (ElIsHidden (el))
@@ -222,6 +282,10 @@ Element start;
   /* browse the tree */
   while (el)
     {
+      /* stop browsing the tree if we found an id attribute */
+      id_value = GetIdValue (el);
+      if (id_value)
+	break;
       /* sibling browse */
       child_count = 1;
       elType = TtaGetElementType (el);
@@ -243,9 +307,17 @@ Element start;
 	  xpath_item = TtaGetMemory (sizeof (XPathItem));
 	  xpath_item->elType = elType;
 	  xpath_item->index = child_count;
+	  xpath_item->id_value = NULL;
 	  xpath_item->next = xpath_list;
 	  xpath_list = xpath_item;
 	}
+    }
+  if (id_value)
+    {
+      xpath_item = TtaGetMemory (sizeof (XPathItem));
+      xpath_item->id_value = id_value;
+      xpath_item->next = xpath_list;
+      xpath_list = xpath_item;
     }
   
   /* find the xpath expression (this function frees the list while building
@@ -339,7 +411,7 @@ View view;
 
   firstXpath = XPointer_ThotEl2XPath (firstEl, firstCh, firstLen);
   fprintf (stderr, "\nfirst xpointer is %s", firstXpath);
-  sprintf (xptr, "xptr(%s", firstXpath);
+  sprintf (xptr, "xpointer(%s", firstXpath);
 
   if (lastEl)
     {
@@ -347,12 +419,17 @@ View view;
       fprintf (stderr, "\nlast xpointer is %s\n", lastXpath);
       sprintf (&xptr[strlen (xptr)], "/range-to(%s)", lastXpath);
     }
+  else 
+    fprintf (stderr, "\n");
   strcat (xptr, ")");
   fprintf (stderr, "final expression is: %s\n", xptr);
   
   return NULL;
 }
 #endif ANNOTATIONS
+
+
+
 
 
 
