@@ -21,11 +21,11 @@
 #define EXPORT extern
 #include "img.var"
 
-#include "memory.f"
-#include "appli.f"
-#include "dep.f"
-#include "imabs.f"
-#include "font.f"
+#include "memory_f.h"
+#include "appli_f.h"
+#include "boxmoves_f.h"
+#include "absboxes_f.h"
+#include "font_f.h"
 
 
 

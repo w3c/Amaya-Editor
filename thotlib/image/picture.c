@@ -7,6 +7,9 @@
 #include "frame.h"
 #include "epsflogo.h"
 #include "interface.h"
+#include "thotfile.h"
+#include "thotdir.h"
+#include "png.h"
 
 typedef enum
 {
@@ -85,22 +88,23 @@ static char         reverseByte[0x100] =
    0x1f, 0x9f, 0x5f, 0xdf, 0x3f, 0xbf, 0x7f, 0xff
 };
 
-#include "appli.f"
-#include "arbabs.f"
-#include "xbmhandler.f"
-#include "docvues.f"
-#include "dofile.f"
-#include "epshandler.f"
-#include "filesystem.f"
-#include "font.f"
-#include "fen.f"
-#include "gifhandler.f"
-#include "jpeghandler.f"
-#include "picture.f"
-#include "xpmhandler.f"
-#include "pnghandler.f"
-#include "pres.f"
-#include "inites.f"
+#include "appli_f.h"
+#include "tree_f.h"
+#include "xbmhandler_f.h"
+#include "views_f.h"
+#include "xbmhandler_f.h"
+#include "dofile_f.h"
+#include "platform_f.h"
+#include "font_f.h"
+#include "frame_f.h"
+#include "gifhandler_f.h"
+#include "jpeghandler_f.h"
+#include "picture_f.h"
+#include "xpmhandler_f.h"
+#include "pnghandler_f.h"
+#include "presrules_f.h"
+#include "epshandler_f.h"
+#include "inites_f.h"
 
 /* ---------------------------------------------------------------------- */
 /* |    IsFormat retourne TRUE si le fichier de nom fileName contient une     | */

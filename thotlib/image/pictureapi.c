@@ -25,7 +25,7 @@
 #include "environ.var"
 static char         NoneTxt[] = "None";
 
-#include "memory.f"
+#include "memory_f.h"
 
 /* ----------------------------------------------------------------------
    TtaCreateBitmapLogo

@@ -23,9 +23,9 @@
 #include "xpmP.h"
 #include "xpm.h"
 
-#include "picture.f"
-#include "inites.f"
-#include "font.f"
+#include "picture_f.h"
+#include "inites_f.h"
+#include "font_f.h"
 
 
 /* ---------------------------------------------------------------------- */

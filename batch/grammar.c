@@ -18,6 +18,10 @@
 #include "storage.h"
 #include "typegrm.h"
 #include "typeint.h"
+#include "thotfile.h"
+#include "thotdir.h"
+
+typedef char        fname[30];	/* nom de fichier */
 
 #undef EXPORT
 #define EXPORT
@@ -26,8 +30,12 @@
 #define EXPORT extern
 #include "analsynt.var"
 
-#include "compilmsg.f"
-#include "storage.f"
+#include "compilmsg_f.h"
+#include "fileaccess_f.h"
+
+#define NBSTRING 200		/* nombre max de chaines dans une grammaire */
+#define MAXNRULE 160		/* nombre max de regles de la grammaire */
+#define MAXREF   50		/* nombre max de references a une regle */
 
 #define MAX_STRING_GRM	200	/* nombre max de chaines dans une grammaire */
 #define MAX_RULE_GRM	160	/* nombre max de regles de la grammaire */
@@ -58,10 +66,9 @@ static int          curRule;	/* regle en cours de generation */
 static int          curIndx;	/* position courante dans la regle courante */
 static FILE        *listFile;	/* fichier des listes */
 
-#include "analsynt.f"
-#include "cdialog.f"
-#include "filesystem.f"
-#include "message.f"
+#include "parser_f.h"
+#include "platform_f.h"
+#include "message_f.h"
 
 #ifdef __STDC__
 extern void         TtaInitializeAppRegistry (char *);

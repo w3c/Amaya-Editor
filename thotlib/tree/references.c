@@ -14,15 +14,14 @@
 #include "typecorr.h"
 #include "app.h"
 
-#include "arbabs.f"
-#include "ouvre.f"
-#include "refelem.f"
-#include "commun.f"
-#include "memory.f"
-#include "appexec.f"
-#include "storage.f"
-#include "textelem.f"
-#include "structure.f"
+#include "tree_f.h"
+#include "ouvre_f.h"
+#include "references_f.h"
+#include "memory_f.h"
+#include "callback_f.h"
+#include "fileaccess_f.h"
+#include "content_f.h"
+#include "structschema_f.h"
 
 /* ---------------------------------------------------------------------- */
 /* |    SearchElemLabel    cherche dans tout le sous arbre de pEl	| */

@@ -30,6 +30,8 @@
 #include "compilmsg.h"
 #include "libmsg.h"
 #include "typmsg.h"
+#include "thotfile.h"
+#include "thotdir.h"
 
 /* Variables  pour l'analyseur syntaxique */
 #define EXPORT
@@ -93,14 +95,13 @@ static int          SigneAttrVal;	/* Signe d'une valeur d'attribut numerique */
 static int /* 0 .. MAX_ATTR_SSCHEMA */ CourAttr;	/* numero de l'attribut courant */
 static int /* 0 .. MAX_ATTR_VAL */ CourValAttr;	/* numero de la valeur d'attribut */
 
-#include "filesystem.f"
-#include "analsynt.f"
-#include "rdschstr.f"
-#include "cdialog.f"
-#include "compilmsg.f"
-#include "message.f"
-#include "wrschtyp.f"
-#include "storage.f"
+#include "platform_f.h"
+#include "parser_f.h"
+#include "readstr_f.h"
+#include "compilmsg_f.h"
+#include "message_f.h"
+#include "writetyp_f.h"
+#include "fileaccess_f.h"
 int                 TYP;
 
 #ifdef __STDC__

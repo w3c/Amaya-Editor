@@ -15,9 +15,9 @@
 
 static boolean      InProcedureQuitThot = FALSE;
 
-#include "appdialogue.f"
-#include "appexec.f"
-#include "edit.f"
+#include "appdialogue_f.h"
+#include "callback_f.h"
+#include "viewcommands_f.h"
 
 #ifdef __STDC__
 extern boolean      FermeUnDocument (Document, Document, View);

@@ -14,6 +14,8 @@
 #include "message.h"
 #include "dialog.h"
 #include "document.h"
+#include "thotfile.h"
+#include "thotdir.h"
 
 #undef EXPORT
 #define EXPORT extern
@@ -26,14 +28,13 @@ static char         NomDocACreer[100] = "";
 static char         ClasseDocACreer[100] = "";
 static char         DirectoryDocACreer[MAX_PATH] = "";
 
-#include "structure.f"
-#include "browser.f"
-#include "filesystem.f"
-#include "appdialogue.f"
-#include "docvues.f"
-#include "config.f"
-#include "environmenu.f"
-#include "opendoc.f"
+#include "structschema_f.h"
+#include "browser_f.h"
+#include "platform_f.h"
+#include "appdialogue_f.h"
+#include "views_f.h"
+#include "config_f.h"
+#include "opendoc_f.h"
 
 #ifdef __STDC__
 extern void         TtaExtractName (char *, char *, char *);

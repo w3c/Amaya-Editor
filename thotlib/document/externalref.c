@@ -16,12 +16,12 @@
 #define EXPORT extern
 #include "edit.var"
 
-#include "arbabs.f"
-#include "memory.f"
-#include "refelem.f"
-#include "pivlec.f"
-#include "storage.f"
-#include "message.f"
+#include "tree_f.h"
+#include "memory_f.h"
+#include "references_f.h"
+#include "readpivot_f.h"
+#include "fileaccess_f.h"
+#include "message_f.h"
 
 
 /* ---------------------------------------------------------------------- */

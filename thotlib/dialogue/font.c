@@ -37,10 +37,10 @@ static boolean      Enlucida;
 static boolean      EnBitStream;
 
 
-#include "memory.f"
-#include "font.f"
-#include "es.f"
-#include "lig.f"
+#include "memory_f.h"
+#include "font_f.h"
+#include "windowdisplay_f.h"
+#include "buildlines_f.h"
 
 #ifdef __STDC__
 extern char        *TtaGetEnvString (char *);

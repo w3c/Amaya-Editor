@@ -48,21 +48,20 @@ static char         ValeurTexteAttribut[LgMaxAttrTexte];
 /* contexte des attributs requis */
 static PtrAttribute  PtrAttrRequis;
 
-#include "appli.f"
-#include "arbabs.f"
-#include "attrherit.f"
-#include "attribut.f"
-#include "commun.f"
-#include "creation.f"
-#include "appdialogue.f"
-#include "appexec.f"
-#include "except.f"
-#include "memory.f"
-#include "modimabs.f"
-#include "select.f"
-#include "selectmenu.f"
-#include "structure.f"
-#include "textelem.f"
+#include "appli_f.h"
+#include "tree_f.h"
+#include "attrherit_f.h"
+#include "attributes_f.h"
+#include "structcreation_f.h"
+#include "appdialogue_f.h"
+#include "callback_f.h"
+#include "exceptions_f.h"
+#include "memory_f.h"
+#include "changeabsbox_f.h"
+#include "structselect_f.h"
+#include "selectmenu_f.h"
+#include "structschema_f.h"
+#include "content_f.h"
 
 
 /* ---------------------------------------------------------------------- */

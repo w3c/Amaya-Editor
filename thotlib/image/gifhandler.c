@@ -23,9 +23,9 @@
 #include "picture.var"
 #include "frame.var"
 
-#include "picture.f"
-#include "gifhandler.f"
-#include "font.f"
+#include "picture_f.h"
+#include "gifhandler_f.h"
+#include "font_f.h"
 
 
 #define	MAXCOLORMAPSIZE		256

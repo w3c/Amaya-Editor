@@ -21,7 +21,7 @@
 #include "application.h"
 #include "interface.h"
 #include "appdialogue.h"
-#include "appli.f"
+#include "appli_f.h"
 #include "message.h"
 
 #define EXPORT extern
@@ -132,8 +132,8 @@ static XtTranslations TextTranslations;
 #endif /* WWW_XWINDOWS */
 static ThotWidget   MainShell;
 
-#include "memory.f"
-#include "thotmsg.f"
+#include "memory_f.h"
+#include "thotmsg_f.h"
 
 #ifdef __STDC__
 extern ThotWidget   XmCreateBulletinBoard (ThotWidget, char *, Arg[], int);
@@ -1281,7 +1281,7 @@ Display           **Dp;
 
 #endif /* __STDC__ */
 #else  /* WWW_XWINDOWS */
-void                TtaInitDialogue (char *server, char *txtOK, char *txtRAZ)
+void                TtaInitDialogueWindows (char *server, char *txtOK, char *txtRAZ)
 #endif				/* !WWW_XWINDOWS */
 {
    int                 n;

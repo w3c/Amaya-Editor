@@ -16,9 +16,9 @@
 #include "font.var"
 
 
-#include "picture.f"
-#include "font.f"
-#include "memory.f"
+#include "picture_f.h"
+#include "font_f.h"
+#include "memory_f.h"
 
 #define ABS(x) (x<0?-x:x)
 #define MAX(x,y) (x>y?x:y)

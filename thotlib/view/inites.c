@@ -29,7 +29,7 @@
 #include "frame.var"
 #include "thotcolor.var"
 
-#include "context.f"
+#include "context_f.h"
 
 #ifdef NEW_WILLOWS
 COLORREF            WIN_Pix_Color[MAX_COLOR];

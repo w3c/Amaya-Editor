@@ -13,13 +13,13 @@
 #include "constmedia.h"
 #include "typemedia.h"
 
-#include "memory.f"
-#include "refelem.f"
-#include "arbabs.f"
-#include "attribut.f"
-#include "textelem.f"
-#include "pres.f"
-#include "modimabs.f"
+#include "memory_f.h"
+#include "references_f.h"
+#include "tree_f.h"
+#include "attributes_f.h"
+#include "content_f.h"
+#include "presrules_f.h"
+#include "changeabsbox_f.h"
 
 /* ---------------------------------------------------------------------- */
 /* |    CreateInheritedAttrTable alloue et remplit une table de type          | */

@@ -65,27 +65,26 @@ static Menu_Ctl    *DocumentMenuList;
 /* CsList des menus attache's aux frames de documents particuliers */
 static SchemaMenu_Ctl *SchemasMenuList;
 
-#include "appli.f"
-#include "cmd.f"
-#include "commun.f"
-#include "creation.f"
-#include "def.f"
-#include "des.f"
-#include "dialog.f"
-#include "docvues.f"
-#include "appdialogue.f"
-#include "appexec.f"
-#include "es.f"
-#include "font.f"
-#include "imabs.f"
-#include "img.f"
-#include "input.f"
-#include "memory.f"
-#include "modif.f"
-#include "option.f"
-#include "sel.f"
-#include "select.f"
-#include "thotmsg.f"
+#include "appli_f.h"
+#include "textcommands_f.h"
+#include "structcreation_f.h"
+#include "scroll_f.h"
+#include "boxlocate_f.h"
+#include "dialogapi_f.h"
+#include "views_f.h"
+#include "appdialogue_f.h"
+#include "callback_f.h"
+#include "windowdisplay_f.h"
+#include "font_f.h"
+#include "absboxes_f.h"
+#include "buildboxes_f.h"
+#include "input_f.h"
+#include "memory_f.h"
+#include "structmodif_f.h"
+#include "boxparams_f.h"
+#include "boxselection_f.h"
+#include "structselect_f.h"
+#include "thotmsg_f.h"
 
 #ifdef __STDC__
 extern void         EndInsert (void);
@@ -164,7 +163,7 @@ int                 number;
 	     }
      }
 #ifdef NEW_WILLOWS
-   TtaInitDialogue (servername, TtaGetMessage (LIB, LIB_CONFIRM),
+   TtaInitDialogueWindows (servername, TtaGetMessage (LIB, LIB_CONFIRM),
 		    TtaGetMessage (LIB, LIB_CANCEL));
 #else  /* NEW_WILLOWS */
    TtaInitDialogue (servername, TtaGetMessage (LIB, LIB_CONFIRM),

@@ -13,7 +13,7 @@
 
 int                 FindePage = 0;
 
-#include "memory.f"
+#include "memory_f.h"
 
 /*******************************************************************/
 /* Les fonctions vides pour l'edition de lien */

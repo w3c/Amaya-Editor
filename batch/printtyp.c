@@ -18,8 +18,7 @@
 #define EXPORT
 #include "environ.var"
 
-#include "cdialog.f"
-#include "memory.f"
+#include "memory_f.h"
 
 static PtrSSchema pSchemaStr;
 static PtrSchTypo   pSchemaTyp;

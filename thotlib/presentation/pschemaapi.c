@@ -11,9 +11,9 @@
 #define EXPORT
 #include "edit.var"
 
-#include "memory.f"
-#include "schemas.f"
-#include "compilmsg.f"
+#include "memory_f.h"
+#include "schemas_f.h"
+#include "compilmsg_f.h"
 
 /* -------------------------------------------------------------------
    HandleOfPSchema      returns the handle that points the additional

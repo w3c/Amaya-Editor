@@ -17,7 +17,7 @@
 #include "typemedia.h"
 #include "typetyp.h"
 #include "storage.h"
-#include "storage.f"
+#include "fileaccess_f.h"
 
 static BinFile      outfile;
 

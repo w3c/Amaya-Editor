@@ -13,12 +13,14 @@
 #include "constmedia.h"
 #include "typemedia.h"
 #include "registry.h"
+#include "thotfile.h"
+#include "thotdir.h"
 
 #define EXPORT extern
 #include "environ.var"
 
-#include "dofile.f"
-#include "filesystem.f"
+#include "dofile_f.h"
+#include "platform_f.h"
 
 /* ---------------------------------------------------------------------- */
 /* |    IsExtended compare la fin de fname avec fext. Si la fin est     | */

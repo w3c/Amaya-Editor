@@ -16,8 +16,8 @@
 #define EXPORT extern
 #include "edit.var"
 
-#include "except.f"
-#include "structure.f"
+#include "exceptions_f.h"
+#include "structschema_f.h"
 
 /* ---------------------------------------------------------------------- */
 /* |    TypeHasException retourne Vrai si le numero d'exception exceptNum | */

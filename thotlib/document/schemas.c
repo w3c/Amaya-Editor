@@ -47,12 +47,11 @@ extern PtrEventsSet applicationList;
 /* table des schemas de presentation charges */
 static UnePresent   TabSchPres[MAX_PSCHEMAS];
 
-#include "config.f"
-#include "memory.f"
-#include "rdschstr.f"
-#include "rdschprs.f"
-#include "schemas.f"
-#include "editmenu.f"
+#include "config_f.h"
+#include "memory_f.h"
+#include "readstr_f.h"
+#include "readprs_f.h"
+#include "schemas_f.h"
 
 /* ---------------------------------------------------------------------- */
 /* |    InitSchAppli(scheme)                                            | */

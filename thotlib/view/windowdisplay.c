@@ -45,11 +45,11 @@ static int          pile_profond;
 
 /*fin */
 
-#include "font.f"
-#include "context.f"
-#include "memory.f"
-#include "inites.f"
-#include "lig.f"
+#include "font_f.h"
+#include "context_f.h"
+#include "memory_f.h"
+#include "inites_f.h"
+#include "buildlines_f.h"
 
 #ifdef __STDC__
 void                AfPage (FILE * fout)

@@ -26,6 +26,8 @@
 #include "storage.h"
 #include "PRESEN.h"
 #include "thotpattern.h"
+#include "thotfile.h"
+#include "thotdir.h"
 
 #define EXPORT
 #include "compil.var"
@@ -150,15 +152,14 @@ static boolean      SecondInPair;	/* on a rencontre' "Second" */
 static boolean      AttrInitCounter;	/* on a rencontre' "Init" dans une definition
 
 					   de compteur */
-#include "analsynt.f"
-#include "cdialog.f"
-#include "compilmsg.f"
-#include "filesystem.f"
-#include "message.f"
-#include "prs.f"
-#include "rdschstr.f"
-#include "storage.f"
-#include "wrschprs.f"
+#include "parser_f.h"
+#include "compilmsg_f.h"
+#include "platform_f.h"
+#include "message_f.h"
+#include "prs_f.h"
+#include "readstr_f.h"
+#include "fileaccess_f.h"
+#include "writeprs_f.h"
 
 /* ---------------------------------------------------------------------- */
 /* |    Initialize							| */

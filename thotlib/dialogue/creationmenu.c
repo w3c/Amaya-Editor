@@ -38,7 +38,7 @@ TypeAction;
 static boolean      RetourAskForNew;	/* reponse valide au menu creer/designer */
 static boolean      CreerAskForNew;	/* reponse Creer au menu creer/designer */
 
-#include "creation.f"
+#include "structcreation_f.h"
 
 #ifdef __STDC__
 extern int          ConfigMakeDocTypeMenu (char *, int *, boolean);

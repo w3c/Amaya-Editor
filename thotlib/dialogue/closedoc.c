@@ -22,9 +22,8 @@
 static boolean      AbandonFermer;
 static boolean      SauverAvantFermer;
 
-#include "commun.f"
-#include "docvues.f"
-#include "appdialogue.f"
+#include "views_f.h"
+#include "appdialogue_f.h"
 
 #ifdef __STDC__
 extern void         FermerDocument (PtrDocument);

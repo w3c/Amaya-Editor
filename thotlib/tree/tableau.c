@@ -25,18 +25,18 @@
 #include "appdialogue.var"
 
 /* procedures importees de l'Editeur */
-#include "arbabs.f"
-#include "creation.f"
-#include "except.f"
-#include "memory.f"
-#include "crimabs.f"
-#include "modimabs.f"
-#include "pres.f"
-#include "select.f"
-#include "attribut.f"
-#include "attrherit.f"
-#include "refelem.f"
-#include "tableau2.f"
+#include "tree_f.h"
+#include "structcreation_f.h"
+#include "exceptions_f.h"
+#include "memory_f.h"
+#include "createabsbox_f.h"
+#include "changeabsbox_f.h"
+#include "presrules_f.h"
+#include "structselect_f.h"
+#include "attributes_f.h"
+#include "attrherit_f.h"
+#include "references_f.h"
+#include "tableau2_f.h"
 
 
 /* exceptions definies dans Tableau */

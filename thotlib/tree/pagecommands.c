@@ -15,12 +15,12 @@
 #include "page.var"
 
 
-#include "img.f"
-#include "imabs.f"
-#include "modimabs.f"
-#include "pres.f"
-#include "pos.f"
-#include "traitepage.f"
+#include "buildboxes_f.h"
+#include "absboxes_f.h"
+#include "changeabsbox_f.h"
+#include "presrules_f.h"
+#include "boxpositions_f.h"
+#include "pagecommands_f.h"
 
 
 /* ---------------------------------------------------------------------- */

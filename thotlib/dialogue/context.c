@@ -34,18 +34,17 @@
 ThotColorStruct     cblack;
 static ThotColorStruct cwhite;
 
-#include "appli.f"
-#include "curs.f"
-#include "cmd.f"
-#include "cmdedit.f"
-#include "corrmenu.f"
-#include "font.f"
-#include "picture.f"
-#include "indmenu.f"
-#include "initcatal.f"
-#include "inites.f"
-#include "memory.f"
-#include "sysexec.f"
+#include "appli_f.h"
+#include "curs_f.h"
+#include "textcommands_f.h"
+#include "editcommands_f.h"
+#include "checkermenu_f.h"
+#include "font_f.h"
+#include "picture_f.h"
+#include "indmenu_f.h"
+#include "inites_f.h"
+#include "memory_f.h"
+#include "sysexec_f.h"
 
 #ifdef __STDC__
 extern void         ColorRGB (int, unsigned short *, unsigned short *, unsigned short *);

@@ -17,14 +17,14 @@
 #include "storage.h"
 #include "language.h"
 
-#include "arbabs.f"
-#include "memory.f"
-#include "modimabs.f"
-#include "pres.f"
-#include "storage.f"
-#include "structure.f"
-#include "textelem.f"
-#include "varpres.f"
+#include "tree_f.h"
+#include "memory_f.h"
+#include "changeabsbox_f.h"
+#include "presrules_f.h"
+#include "fileaccess_f.h"
+#include "structschema_f.h"
+#include "content_f.h"
+#include "presvariables_f.h"
 
 
 /* ---------------------------------------------------------------------- */

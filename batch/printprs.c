@@ -24,10 +24,9 @@
 #define EXPORT
 #include "environ.var"
 
-#include "rdschprs.f"
-#include "cdialog.f"
-#include "memory.f"
-#include "storage.f"
+#include "readprs_f.h"
+#include "memory_f.h"
+#include "fileaccess_f.h"
 
 static PtrSSchema pSchemaStr;
 static PtrPSchema   pSchemaPrs;

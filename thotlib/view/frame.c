@@ -18,14 +18,14 @@
 #include "img.var"
 #include "environ.var"
 
-#include "aff.f"
-#include "appli.f"
-#include "es.f"
-#include "des.f"
+#include "displaybox_f.h"
+#include "appli_f.h"
+#include "windowdisplay_f.h"
+#include "boxlocate_f.h"
 
-#include "font.f"
-#include "imabs.f"
-#include "visu.f"
+#include "font_f.h"
+#include "absboxes_f.h"
+#include "displayselect_f.h"
 
 #ifdef __STDC__
 boolean             AfFinFenetre (int frame, int delta);

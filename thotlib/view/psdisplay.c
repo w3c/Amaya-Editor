@@ -72,9 +72,9 @@ static ptrfont      PolEnPs = NULL;
 static char        *Scale = NULL;
 static int          ColorPs = -1;
 
-#include "lig.f"
-#include "font.f"
-#include "initpses.f"
+#include "buildlines_f.h"
+#include "font_f.h"
+#include "initpses_f.h"
 
 
 

@@ -21,6 +21,8 @@
 #include "libmsg.h"
 #include "message.h"
 #include "dictionary.h"
+#include "thotfile.h"
+#include "thotdir.h"
 
 #define MAX_DICOS   2		/* nombre max de dictionnaires associes a une langue */
 #define MAXLIGNE   80		/* longueur d'une ligne dans le dictionnaire */
@@ -39,11 +41,11 @@ static PtrDico      TabDicos[MaxDicos];
 unsigned char       Code[256];	/* code des caracteres de l'alphabet */
 
 /* procedures importees */
-#include "memory.f"
-#include "storage.f"
-#include "thotmsg.f"
-#include "dofile.f"
-#include "filesystem.f"
+#include "memory_f.h"
+#include "fileaccess_f.h"
+#include "thotmsg_f.h"
+#include "dofile_f.h"
+#include "platform_f.h"
 
 /***************************** ALPHABET ************************************/
 boolean             Corr_alphabet ()

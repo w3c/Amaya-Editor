@@ -9,27 +9,26 @@
 #include "constmedia.h"
 #include "typemedia.h"
 #include "storage.h"
-#include "res.h"		/* PCS resdyn */
+#include "res.h"
 
 #define EXPORT extern
 #include "select.var"
 #include "edit.var"
-#include "res.var"		/* PCS resdyn */
+#include "res.var"
 
-#include "memory.f"
-#include "schemas.f"
-#include "imabs.f"
-#include "draw.f"
-#include "textelem.f"
-#include "refelem.f"
-#include "storage.f"
-#include "structure.f"
-#include "ouvre.f"
-#include "arbabs.f"
-#include "except.f"
-#include "imagepres.f"
-#include "refext.f"
-#include "res.f"		/* PCS resdyn */
+#include "memory_f.h"
+#include "schemas_f.h"
+#include "absboxes_f.h"
+#include "draw_f.h"
+#include "content_f.h"
+#include "references_f.h"
+#include "fileaccess_f.h"
+#include "structschema_f.h"
+#include "ouvre_f.h"
+#include "tree_f.h"
+#include "exceptions_f.h"
+#include "abspictures_f.h"
+#include "externalref_f.h"
 
 /* ----------------------------------------------------------------------
    DocumentOfElement

@@ -23,10 +23,10 @@
 #include "edit.var"
 
 /* procedures importees de l'editeur */
-#include "config.f"
-#include "memory.f"
-#include "rdschstr.f"
-#include "schemas.f"
+#include "config_f.h"
+#include "memory_f.h"
+#include "readstr_f.h"
+#include "schemas_f.h"
 
 void                InitNatures ()
 {

@@ -24,9 +24,8 @@ static int          NumeroVueAOuvrir;
 static PtrElement   SousArbreVueAOuvrir;
 static DocViewNumber    VueDeReference;
 
-#include "commun.f"
-#include "docvues.f"
-#include "appdialogue.f"
+#include "views_f.h"
+#include "appdialogue_f.h"
 
 
 /* ---------------------------------------------------------------------- */

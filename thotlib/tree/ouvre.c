@@ -11,13 +11,13 @@
 #include "edit.var"
 #include "environ.var"
 
-#include "arbabs.f"
-#include "dofile.f"
-#include "storage.f"
-#include "ouvre.f"
-#include "memory.f"
-#include "pivlec.f"
-#include "refext.f"
+#include "tree_f.h"
+#include "dofile_f.h"
+#include "fileaccess_f.h"
+#include "ouvre_f.h"
+#include "memory_f.h"
+#include "readpivot_f.h"
+#include "externalref_f.h"
 
 /* ---------------------------------------------------------------------- */
 /* |	FreeUnusedReferredElemDesc					| */

@@ -4,8 +4,8 @@
 #include "modif.h"
 #include "app.h"
 
-#include "memory.f"
-#include "rdschstr.f"
+#include "memory_f.h"
+#include "readstr_f.h"
 
 /* Global variable pointing to the list of action-definitions. */
 PtrEventsSet  applicationList = NULL;

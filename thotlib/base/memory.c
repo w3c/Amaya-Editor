@@ -111,9 +111,9 @@ static PtrDelayedPRule PtFreeRRetard;
 /*CORR */ static int NbOccDico;
 /*CORR */ static PtrDico PtFreeDico;
 
-#include "liste.f"
-#include "memory.f"
-#include "storage.f"
+#include "absboxlist_f.h"
+#include "memory_f.h"
+#include "fileaccess_f.h"
 
 /* ---------------------------------------------------------------------- */
 /* |    DicoAlloc effectue un malloc controle.                          | */

@@ -19,8 +19,8 @@
 int                 UserErrorCode;
 boolean             PrintErrorMessages;
 
-#include "edit.f"
-#include "sysexec.f"
+#include "viewcommands_f.h"
+#include "sysexec_f.h"
 
 
 /* ---------------------------------------------------------------------- */

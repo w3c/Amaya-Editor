@@ -14,6 +14,8 @@
 #include "dialog.h"
 #include "application.h"
 #include "document.h"
+#include "thotfile.h"
+#include "thotdir.h"
 
 #define MAX_ARGS 20
 
@@ -62,16 +64,15 @@ static Name          SchStrImport;
 /* static PathBuffer DirectoryDocImport; */
 static Name          NomSchemaSaisi;
 
-#include "browser.f"
-#include "commun.f"
-#include "config.f"
-#include "docvues.f"
-#include "dofile.f"
-#include "appdialogue.f"
-#include "edit.f"
-#include "filesystem.f"
-#include "opendoc.f"
-#include "structure.f"
+#include "browser_f.h"
+#include "config_f.h"
+#include "views_f.h"
+#include "dofile_f.h"
+#include "appdialogue_f.h"
+#include "viewcommands_f.h"
+#include "platform_f.h"
+#include "opendoc_f.h"
+#include "structschema_f.h"
 
 
 /* ---------------------------------------------------------------------- */

@@ -29,6 +29,8 @@
 #include "tramsg.h"
 #include "message.h"
 #include "thotpattern.h"
+#include "thotfile.h"
+#include "thotdir.h"
 
 #define EXPORT
 #include "compil.var"
@@ -103,14 +105,13 @@ static boolean      VarDefinition;
 static boolean      FirstInPair;	/* on a rencontre' "First" */
 static boolean      SecondInPair;	/* on a rencontre' "Second" */
 
-#include "filesystem.f"
-#include "analsynt.f"
-#include "rdschstr.f"
-#include "wrschtra.f"
-#include "cdialog.f"
-#include "storage.f"
-#include "message.f"
-#include "compilmsg.f"
+#include "platform_f.h"
+#include "parser_f.h"
+#include "readstr_f.h"
+#include "writetra_f.h"
+#include "fileaccess_f.h"
+#include "message_f.h"
+#include "compilmsg_f.h"
 
 #ifdef __STDC__
 extern void         TtaInitializeAppRegistry (char *);

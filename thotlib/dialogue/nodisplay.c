@@ -11,10 +11,10 @@
 #include "edit.var"
 
 /* procedures importees */
-#include "schemas.f"
-#include "dofile.f"
-#include "ouvre.f"
-#include "memory.f"
+#include "schemas_f.h"
+#include "dofile_f.h"
+#include "ouvre_f.h"
+#include "memory_f.h"
 
 /* procedure bidon declarees localement et exportees */
 #ifdef __STDC__

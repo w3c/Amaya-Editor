@@ -63,18 +63,17 @@ TOUCHE;
 #include "appdialogue.var"
 
 /* Table des actions */
-#include "appli.f"
-#include "cmd.f"
-#include "cmdedit.f"
-#include "context.f"
-#include "editmenu.f"
-#include "es.f"
-#include "input.f"
-#include "memory.f"
-#include "message.f"
-#include "modif.f"
-#include "modifcmd.f"
-#include "select.f"
+#include "appli_f.h"
+#include "textcommands_f.h"
+#include "editcommands_f.h"
+#include "context_f.h"
+#include "windowdisplay_f.h"
+#include "input_f.h"
+#include "memory_f.h"
+#include "message_f.h"
+#include "structmodif_f.h"
+#include "structcommands_f.h"
+#include "structselect_f.h"
 
 
 /* Actions associees par defaut aux cles XK_Up, XK_Left, XK_Right, XK_Down */

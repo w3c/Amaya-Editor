@@ -22,8 +22,8 @@
 
 static int          Fenvisibilityview;
 
-#include "appdialogue.f"
-#include "option.f"
+#include "appdialogue_f.h"
+#include "boxparams_f.h"
 
 #ifdef __STDC__
 extern int          GetWindowNumber (Document, View);

@@ -20,11 +20,10 @@
 #define EXPORT extern
 #include "edit.var"
 
-#include "cdialog.f"
-#include "rdschstr.f"
-#include "rdschtra.f"
-#include "schemas.f"
-#include "schtrad.f"
+#include "readstr_f.h"
+#include "readtra_f.h"
+#include "schemas_f.h"
+#include "schtrad_f.h"
 
 typedef struct _UneTraduc
   {

@@ -19,9 +19,9 @@
 #include "libmsg.h"
 #include "message.h"
 
-#include "memory.f"
-#include "select.f"
-#include "arbabs.f"
+#include "memory_f.h"
+#include "structselect_f.h"
+#include "tree_f.h"
 
 /* Define number of error messages */
 #define Invalid_pattern 1

@@ -24,11 +24,11 @@
 #include "environ.var"
 #include "appdialogue.var"
 
-#include "arbabs.f"
-#include "except.f"
-#include "memory.f"
-#include "schemastr.f"
-#include "structure.f"
+#include "tree_f.h"
+#include "exceptions_f.h"
+#include "memory_f.h"
+#include "schemastr_f.h"
+#include "structschema_f.h"
 
 /* ---------------------------------------------------------------------- */
 /* |    CreateDocument acquiert et initialise un contexte de document.    | */

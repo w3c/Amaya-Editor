@@ -21,12 +21,11 @@
 #include "frame.var"
 #include "appdialogue.var"
 
-#include "es.f"
-#include "font.f"
-#include "aff.f"
-#include "picture.f"
-#include "img.f"
-
+#include "windowdisplay_f.h"
+#include "font_f.h"
+#include "displaybox_f.h"
+#include "picture_f.h"
+#include "buildboxes_f.h"
 
 /* ---------------------------------------------------------------------- */
 /* |    ValEpaisseur calcule l'e'paisseur du trace' de la boi^te.       | */

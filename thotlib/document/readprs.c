@@ -27,11 +27,11 @@
 #include "environ.var"
 static boolean      erreur;
 
-#include "dofile.f"
-#include "storage.f"
-#include "memory.f"
-#include "rdschstr.f"
-#include "rdschprs.f"
+#include "dofile_f.h"
+#include "fileaccess_f.h"
+#include "memory_f.h"
+#include "readstr_f.h"
+#include "readprs_f.h"
 
 
 /* ---------------------------------------------------------------------- */

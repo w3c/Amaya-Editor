@@ -18,13 +18,13 @@
 #include "img.var"
 #include "environ.var"
 
-#include "memory.f"
-#include "imabs.f"
-#include "img.f"
-#include "dep.f"
-#include "rel.f"
-#include "pos.f"
-#include "font.f"
+#include "memory_f.h"
+#include "absboxes_f.h"
+#include "buildboxes_f.h"
+#include "boxmoves_f.h"
+#include "boxrelations_f.h"
+#include "boxpositions_f.h"
+#include "font_f.h"
 
 /* ---------------------------------------------------------------------- */
 /* |    VoirXHorsStruct regarde si des boites ont des relations         | */

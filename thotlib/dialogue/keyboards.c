@@ -369,13 +369,12 @@ static ITEM         Items_Graph[] =
    {'s', 's', NULL}		/* bezier fermee */
 };
 
-#include "cmd.f"
-#include "config.f"
-#include "appdialogue.f"
-#include "es.f"
-#include "font.f"
-#include "inites.f"
-#include "select.f"
+#include "textcommands_f.h"
+#include "config_f.h"
+#include "appdialogue_f.h"
+#include "windowdisplay_f.h"
+#include "font_f.h"
+#include "structselect_f.h"
 
 #ifdef __STDC__
 extern ThotWidget   XmCreateBulletinBoard (ThotWidget, char *, Arg[], int);

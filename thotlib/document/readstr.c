@@ -19,10 +19,10 @@
 #define EXPORT extern
 #include "environ.var"
 
-#include "dofile.f"
-#include "storage.f"
-#include "rdschstr.f"
-#include "memory.f"
+#include "dofile_f.h"
+#include "fileaccess_f.h"
+#include "readstr_f.h"
+#include "memory_f.h"
 
 
 /* ---------------------------------------------------------------------- */

@@ -22,8 +22,8 @@
 #define EXPORT extern
 static BinFile      outfile;
 
-#include "storage.f"
-#include "wrschtra.f"
+#include "fileaccess_f.h"
+#include "writetra_f.h"
 
 /* wrshort      ecrit dans le fichier de sortie un entier sur 2 octets */
 #ifdef __STDC__

@@ -23,12 +23,12 @@
 typedef int         Ensemble[4];
 
 /* procedures importees de l'Editeur */
-#include "arbabs.f"
-#include "memory.f"
-#include "except.f"
-#include "select.f"
+#include "tree_f.h"
+#include "memory_f.h"
+#include "exceptions_f.h"
+#include "structselect_f.h"
 /* procedures definies dans le module */
-#include "draw.f"
+#include "draw_f.h"
 
 /* AjouteAttr   ajoute a l'element pointe' par pEl l'attribut */
 /* numerique auquel est associe' le numero d'exception NumExcept dans */

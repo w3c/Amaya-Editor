@@ -21,10 +21,10 @@ typedef int         L_Relations[30];
  /* Identification des messages */
 
 
-#include "debug.f"
-#include "imabs.f"
-#include "liste.f"
-#include "storage.f"
+#include "structlist_f.h"
+#include "absboxes_f.h"
+#include "absboxlist_f.h"
+#include "fileaccess_f.h"
 
 /* ---------------------------------------------------------------------- */
 /* |    wrnumber ecrit un entier a` la console.                         | */

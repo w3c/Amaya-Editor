@@ -12,11 +12,10 @@
 #include "app.h"
 #include "typecorr.h"
 
-#include "memory.f"
-#include "arbabs.f"
-#include "commun.f"
-#include "refelem.f"
-#include "appexec.f"
+#include "memory_f.h"
+#include "tree_f.h"
+#include "references_f.h"
+#include "callback_f.h"
 
 #define EXPORT extern
 #include "select.var"

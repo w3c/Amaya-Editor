@@ -9,8 +9,8 @@
 #include "picture.var"
 #include "frame.var"
 
-#include "picture.f"
-#include "font.f"
+#include "picture_f.h"
+#include "font_f.h"
 
 /* ---------------------------------------------------------------------- */
 /* |    XbmCreate lit et retourne le bitmap lu dans le fichier  | */

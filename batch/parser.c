@@ -30,7 +30,7 @@ ParserStackItem;
 #undef EXPORT
 #define EXPORT
 #include "analsynt.var"
-#include "compilmsg.f"
+#include "compilmsg_f.h"
 
 extern int          LineNum;	/* Numero de la ligne courante dans le fichier
 				   en cours de compilation */
@@ -41,8 +41,8 @@ static boolean      Comment;	/* on est dans un commentaire */
 static int          level;	/* niveau courant dans la pile */
 static ParserStackItem    Stack[STACKSIZE];	/* pile d'analyse */
 
-#include "storage.f"
-#include "analsynt.f"
+#include "fileaccess_f.h"
+#include "parser_f.h"
 
 /* ---------------------------------------------------------------------- */
 /* |    InitParser initialise les donnees de l'analyseur syntaxique.    | */

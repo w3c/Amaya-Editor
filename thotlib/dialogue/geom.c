@@ -21,11 +21,11 @@ static int          PasGrille = 1;
 
 #define ALIGNE(val) ((val + (PasGrille/2)) / PasGrille) * PasGrille
 
-#include "appli.f"
-#include "es.f"
-#include "font.f"
-#include "memory.f"
-#include "textelem.f"
+#include "appli_f.h"
+#include "windowdisplay_f.h"
+#include "font_f.h"
+#include "memory_f.h"
+#include "content_f.h"
 
 
 /* ---------------------------------------------------------------------- */

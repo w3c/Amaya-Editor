@@ -21,8 +21,8 @@
 
 static BinFile      outfile;
 
-#include "storage.f"
-#include "wrschprs.f"
+#include "fileaccess_f.h"
+#include "writeprs_f.h"
 
 /* ---------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------- */

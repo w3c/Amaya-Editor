@@ -13,9 +13,9 @@
 #include "message.h"
 #include "dialog.h"
 
-#include "appdialogue.f"
-#include "appexec.f"
-#include "edit.f"
+#include "appdialogue_f.h"
+#include "callback_f.h"
+#include "viewcommands_f.h"
 
 
 /* ---------------------------------------------------------------------- */

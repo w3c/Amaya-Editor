@@ -14,13 +14,12 @@
 #define EXPORT
 #include "edit.var"
 
-#include "appli.f"
-#include "commun.f"
-#include "compilmsg.f"
-#include "font.f"
-#include "memory.f"
-#include "modpres.f"
-#include "pos.f"
+#include "appli_f.h"
+#include "compilmsg_f.h"
+#include "font_f.h"
+#include "memory_f.h"
+#include "changepresent_f.h"
+#include "boxpositions_f.h"
 
 extern int          UserErrorCode;
 

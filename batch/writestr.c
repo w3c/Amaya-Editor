@@ -22,8 +22,8 @@
 #define EXPORT extern
 static BinFile      outfile;
 
-#include "storage.f"
-#include "wrschstr.f"
+#include "fileaccess_f.h"
+#include "writestr_f.h"
 
 /* retourne un nombre entier qui sera utilise comme un identificateur */
 /* unique */

@@ -20,16 +20,15 @@
 #include "environ.var"
 #include "appdialogue.var"
 
-#include "arbabs.f"
-#include "attribut.f"
-#include "attribute.f"
-#include "commun.f"
-#include "creation.f"
-#include "modif.f"
-#include "refelem.f"
-#include "refext.f"
-#include "structure.f"
-#include "thotmsg.f"
+#include "tree_f.h"
+#include "attributes_f.h"
+#include "attributeapi_f.h"
+#include "structcreation_f.h"
+#include "structmodif_f.h"
+#include "references_f.h"
+#include "externalref_f.h"
+#include "structschema_f.h"
+#include "thotmsg_f.h"
 
 extern int          UserErrorCode;
 static Name          nameBuffer;

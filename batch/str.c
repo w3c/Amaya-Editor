@@ -25,6 +25,8 @@
 #include "typemedia.h"
 #include "typegrm.h"
 #include "storage.h"
+#include "thotfile.h"
+#include "thotdir.h"
 
 #define MAX_SRULE_RECURS 15	/* nombre maximuimum de niveaux de
 				   definition de regles dans une regle */
@@ -129,14 +131,13 @@ static boolean      ImportExcept;	/* on rencontre' une exception ImportLine ou
 
 					   ImportParagraph */
 
-#include "filesystem.f"
-#include "analsynt.f"
-#include "wrschstr.f"
-#include "rdschstr.f"
-#include "cdialog.f"
-#include "storage.f"
-#include "message.f"
-#include "compilmsg.f"
+#include "platform_f.h"
+#include "parser_f.h"
+#include "writestr_f.h"
+#include "readstr_f.h"
+#include "fileaccess_f.h"
+#include "message_f.h"
+#include "compilmsg_f.h"
 
 #ifdef __STDC__
 extern void         TtaInitializeAppRegistry (char *);

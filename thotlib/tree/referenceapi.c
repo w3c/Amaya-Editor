@@ -17,15 +17,14 @@
 #define EXPORT
 #include "edit.var"
 
-#include "refelem.f"
-#include "arbabs.f"
-#include "cherche.f"
-#include "commun.f"
-#include "ouvre.f"
-#include "storage.f"
-#include "thotmsg.f"
-#include "modif.f"
-#include "memory.f"
+#include "references_f.h"
+#include "tree_f.h"
+#include "search_f.h"
+#include "ouvre_f.h"
+#include "fileaccess_f.h"
+#include "thotmsg_f.h"
+#include "structmodif_f.h"
+#include "memory_f.h"
 
 extern int          UserErrorCode;
 

@@ -13,8 +13,8 @@
 #include "typemedia.h"
 #include "picture.h"
 
-#include "picture.f"
-#include "memory.f"
+#include "picture_f.h"
+#include "memory_f.h"
 
 /* ---------------------------------------------------------------------- */
 /* |    Retourne un pointeur sur la regle de pres specifique de l'elt   | */

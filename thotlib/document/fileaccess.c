@@ -8,7 +8,7 @@
 #include "typemedia.h"
 #include "storage.h"
 
-#include "storage.f"
+#include "fileaccess_f.h"
 
 /* ---------------------------------------------------------------------- */
 /* |    BIOreadByte reads a character (or byte) value.                  | */

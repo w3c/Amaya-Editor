@@ -7,6 +7,8 @@
 #include "logo.xpm"
 #include "logo.xbm"
 #include "registry.h"
+#include "thotfile.h"
+#include "thotdir.h"
 
 extern PtrAction    externalActions;
 extern PtrEventsSet pAppli;
@@ -24,8 +26,8 @@ static FILE        *AppFile;
 #define APP_NOOPCHAR "NoOp"
 
 
-#include "filesystem.f"
-#include "memory.f"
+#include "platform_f.h"
+#include "memory_f.h"
 
 /* ---------------------------------------------------------------------- */
 /* |   WriteIncludes writes Thot includes.      		        | */

@@ -9,8 +9,8 @@
 #define EXPORT extern
 #include "edit.var"
 
-#include "rdschstr.f"
-#include "appinit.f"
+#include "readstr_f.h"
+#include "callbackinit_f.h"
 
 /* Global variable pointing to the list of action-definitions. */
 extern PtrEventsSet applicationList;

@@ -41,7 +41,7 @@ static boolean      redisplayPicture;
 static char         NomImage[100] = "";
 static char         DirectoryImage[MAX_PATH] = "";
 
-#include "picture.f"
+#include "picture_f.h"
 
 #ifdef __STDC__
 extern void         DesactiveEntree (int, int);

@@ -16,14 +16,14 @@
 #define EXPORT extern
 #include "img.var"
 
-#include "dep.f"
-#include "es.f"
-#include "fen.f"
-#include "font.f"
-#include "img.f"
-#include "lig.f"
-#include "memory.f"
-#include "rel.f"
+#include "boxmoves_f.h"
+#include "windowdisplay_f.h"
+#include "frame_f.h"
+#include "font_f.h"
+#include "buildboxes_f.h"
+#include "buildlines_f.h"
+#include "memory_f.h"
+#include "boxrelations_f.h"
 
 
 /* ---------------------------------------------------------------------- */

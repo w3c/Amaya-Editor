@@ -24,11 +24,11 @@
 
 static boolean      erreurTra = FALSE;
 
-#include "dofile.f"
-#include "rdschtra.f"
-#include "memory.f"
-#include "storage.f"
-#include "message.f"
+#include "dofile_f.h"
+#include "readtra_f.h"
+#include "memory_f.h"
+#include "fileaccess_f.h"
+#include "message_f.h"
 
 
 /* ---------------------------------------------------------------------- */

@@ -23,11 +23,12 @@
 
 extern int          UserErrorCode;
 
-#include "arbabs.f"
-#include "pres.f"
-#include "debug.f"
-#include "thotmsg.f"
-#include "storage.f"
+#include "tree_f.h"
+#include "presrules_f.h"
+#include "structlist_f.h"
+#include "thotmsg_f.h"
+#include "fileaccess_f.h"
+#include "viewapi_f.h"
 
 /* ---------------------------------------------------------------------- */
 /* |    wrTypeReglePres ecrit le type de la regle de presentation       | */

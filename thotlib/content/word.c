@@ -18,9 +18,9 @@ static PtrElement   ElFinSelInitial;
 static int          CarDebutSelInitial;
 static int          CarFinSelInitial;
 
-#include "select.f"
-#include "arbabs.f"
-#include "hyphen.f"
+#include "structselect_f.h"
+#include "tree_f.h"
+#include "hyphen_f.h"
 
 /* ---------------------------------------------------------------------- */
 /* | CarSuivant retourne le caractere qui suit le caractere courant     | */

@@ -30,10 +30,10 @@ static PtrTabMsg    FirstTableMsg = NULL;
 static char         EmptyMsg[] = "";
 static char         result[MAX_TXT_LEN];
 
-#include "dialog.f"
-#include "memory.f"
-#include "message.f"
-#include "registry.f"
+#include "dialogapi_f.h"
+#include "memory_f.h"
+#include "message_f.h"
+#include "registry_f.h"
 
 #ifdef _WINDOWS
 #define isascii(c) __isascii(c)

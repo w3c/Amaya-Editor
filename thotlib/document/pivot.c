@@ -23,15 +23,15 @@
 #include "presentation.h"
 #include "constpiv.h"
 
-#include "arbabs.f"
-#include "thotmsg.f"
-#include "structure.f"
-#include "application.f"
-#include "pivecr.f"
-#include "pivlec.f"
-#include "storage.f"
-#include "appexec.f"
-#include "refext.f"
+#include "tree_f.h"
+#include "thotmsg_f.h"
+#include "structschema_f.h"
+#include "applicationapi_f.h"
+#include "writepivot_f.h"
+#include "readpivot_f.h"
+#include "fileaccess_f.h"
+#include "callback_f.h"
+#include "externalref_f.h"
 
 #undef EXPORT
 #define EXPORT

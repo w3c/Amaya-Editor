@@ -14,11 +14,11 @@
 #define EXPORT extern
 #include "img.var"
 
-#include "img.f"
-#include "cmd.f"
-#include "font.f"
-#include "sel.f"
-#include "option.f"
+#include "buildboxes_f.h"
+#include "textcommands_f.h"
+#include "font_f.h"
+#include "boxselection_f.h"
+#include "boxparams_f.h"
 
 #ifdef __STDC__
 extern void         DefClip (int, int, int, int, int);

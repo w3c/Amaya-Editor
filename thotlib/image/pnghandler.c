@@ -12,7 +12,7 @@
 #define EXPORT extern
 #include "picture.var"
 #include "frame.var"
-#include "picture.f"
+#include "picture_f.h"
 
 
 #define MAX(x,y)  (((x) > (y)) ? (x) : (y))

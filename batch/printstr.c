@@ -35,7 +35,7 @@ PtrSSchema        pSc1;
 SRule              *pRe1;
 TtAttribute           *pAt1;
 
-#include "rdschstr.f"
+#include "readstr_f.h"
 
 #ifdef __STDC__
 extern char        *TtaGetEnvString (char *);

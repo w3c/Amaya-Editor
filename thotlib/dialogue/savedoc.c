@@ -20,8 +20,8 @@
 #include "environ.var"
 #include "img.var"
 #include "frame.var"
-#include "opendoc.f"
-#include "createdoc.f"
+#include "opendoc_f.h"
+#include "createdoc_f.h"
 extern int          CurrentDialog;
 static PathBuffer   NomDirectorySauver;
 static PathBuffer   NomFichierSauver;

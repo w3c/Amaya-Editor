@@ -29,12 +29,12 @@
 
 #define MAX_ITEM_CONF 100
 
-#include "docvues.f"
-#include "dofile.f"
-#include "inites.f"
-#include "memory.f"
-#include "message.f"
-#include "thotmsg.f"
+#include "views_f.h"
+#include "dofile_f.h"
+#include "inites_f.h"
+#include "memory_f.h"
+#include "message_f.h"
+#include "thotmsg_f.h"
 
 static char        *doc_items[MAX_ITEM_CONF];
 static boolean      doc_import[MAX_ITEM_CONF];

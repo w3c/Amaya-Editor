@@ -19,10 +19,10 @@
 #include "select.var"
 #include "edit.var"
 
-#include "es.f"
-#include "visu.f"
-#include "font.f"
-#include "except.f"
+#include "windowdisplay_f.h"
+#include "displayselect_f.h"
+#include "font_f.h"
+#include "exceptions_f.h"
 
 /* ---------------------------------------------------------------------- */
 /* |    VisuPartiel trace le contour de la boite de texte pBox          | */

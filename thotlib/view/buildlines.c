@@ -18,14 +18,14 @@
 /* Nombre maximum de coupures de mots consecutives */
 static int          maxcoupuresvoisines = 2;
 
-#include "dep.f"
-#include "des.f"
-#include "img.f"
-#include "memory.f"
-#include "sel.f"
-#include "lig.f"
-#include "font.f"
-#include "hyphen.f"
+#include "boxmoves_f.h"
+#include "boxlocate_f.h"
+#include "buildboxes_f.h"
+#include "memory_f.h"
+#include "boxselection_f.h"
+#include "buildlines_f.h"
+#include "font_f.h"
+#include "hyphen_f.h"
 
 #ifdef __STDC__
 extern void         DefClip (int, int, int, int, int);

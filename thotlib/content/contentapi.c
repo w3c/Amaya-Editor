@@ -16,20 +16,19 @@
 #endif
 #include "typecorr.h"
 
-#include "arbabs.f"
-#include "attribut.f"
-#include "commun.f"
-#include "font.f"
-#include "picture.f"
-#include "modpres.f"
-#include "modimabs.f"
-#include "memory.f"
-#include "select.f"
+#include "tree_f.h"
+#include "attributes_f.h"
+#include "font_f.h"
+#include "picture_f.h"
+#include "changepresent_f.h"
+#include "changeabsbox_f.h"
+#include "memory_f.h"
+#include "structselect_f.h"
 #ifndef NODISPLAY
-#include "sel.f"
+#include "boxselection_f.h"
 #endif
-#include "textelem.f"
-#include "thotmsg.f"
+#include "content_f.h"
+#include "thotmsg_f.h"
 
 
 #undef EXPORT
