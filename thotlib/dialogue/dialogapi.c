@@ -594,46 +594,32 @@ void TtaInitDialogue (char *server, ThotAppContext *app_context)
    FirstFreeRef = 0;
 #ifdef _GTK
    /* initialize everything needed to operate the toolkit and parses some standard command line options */
-   if (server)
-     {
-       gtk_init (&appArgc, &appArgv);
-       n = 0;
-       arg = NULL;
-       /*
-	 TtDisplay = XOpenDisplay (server);
-       if (TtDisplay == NULL)
-	 {
-	   printf ("cannot open display: %s\n", server);
-	   gtk_exit (0);
-	 }
-       gdk_display = TtDisplay;
-       gdk_screen = DefaultScreen (gdk_display);
-       gdk_root_window = RootWindow (gdk_display, gdk_screen);
-       gdk_leader_window = XCreateSimpleWindow (gdk_display, gdk_root_window,
-                           10, 10, 10, 10, 0, 0 , 0);
-       */
-       printf ("cannot open display: %s\n", server);
-       gtk_exit (0);
-     }
-   else if (!gtk_init_check (&appArgc, &appArgv))
-     {
-       printf ("cannot open display\n");
-       gtk_exit (0);
-     }
+   
+   /* initialize local before gtk, order is important */
+   gtk_set_locale ();
+   
+   /* init gtk */
+   if (!gtk_init_check (&appArgc, &appArgv))
+   {
+     printf ("cannot open display\n");
+     gtk_exit (0);
+   }
    else
-     {
-       char                fname[MAX_TXT_LEN], name[MAX_TXT_LEN];
-       char               *appHome;
-       appHome = TtaGetEnvString ("APP_HOME");
-       strcpy (fname, appHome);
-       strcat (fname, DIR_STR);
-       strcat (fname, "gtkrc");
-       if (SearchFile (fname, 0, name))
-	 gtk_rc_parse (name);
-       else if (SearchFile ("gtkrc", 2, name))
-	 gtk_rc_parse (name);
-       TtDisplay = GDK_DISPLAY ();
-     }
+     gtk_init (&appArgc, &appArgv);
+   
+   /* load specific gtkrc file */
+   char                fname[MAX_TXT_LEN], name[MAX_TXT_LEN];
+   char               *appHome;
+   appHome = TtaGetEnvString ("APP_HOME");
+   strcpy (fname, appHome);
+   strcat (fname, DIR_STR);
+   strcat (fname, "gtkrc");
+   if (SearchFile (fname, 0, name))
+     gtk_rc_parse (name);
+   else if (SearchFile ("gtkrc", 2, name))
+     gtk_rc_parse (name);
+   
+   TtDisplay = GDK_DISPLAY ();
    DefaultFont = gdk_font_load ("fixed");
 #ifndef _GL
    gdk_imlib_init ();

@@ -151,9 +151,6 @@ void TtaMainLoop ()
   
   UserErrorCode = 0;
   /* Sets the current locale according to the program environment */
-#ifdef _GTK
-  gtk_set_locale ();
-#endif /* _GTK */
 #if defined(_WX) || defined(_GTK)
   /* In order to get a "." even in a localised unix (ie: french becomes ",") */
   setlocale (LC_NUMERIC, "C");
@@ -174,6 +171,7 @@ void TtaMainLoop ()
 
   notifyEvt.event = TteInit; /* Sends the message Init.Post */
   CallEventType (&notifyEvt, FALSE);
+
 #if defined(_GTK) && defined(_GL)
   /* First Time drawing (if we don't have focus)  */
   while (gtk_events_pending ()) 
