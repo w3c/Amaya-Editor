@@ -2864,9 +2864,9 @@ static char *ParseCSSPageBreakInside (Element element, PSchema tsch,
     }
   cssRule = SkipWord (cssRule);
   /* install the new presentation */
-  if (page.typed_data.unit == STYLE_UNIT_REL &&
+  /*if (page.typed_data.unit == STYLE_UNIT_REL &&
       page.typed_data.value == STYLE_AVOID)
-    TtaSetStylePresentation (PRPageInside, element, tsch, context, page);
+      TtaSetStylePresentation (PRPageInside, element, tsch, context, page);*/
   return (cssRule);
 }
 

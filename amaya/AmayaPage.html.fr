@@ -26,40 +26,40 @@
 height="352">
   <rect x="0" y="0" width="604" height="353" style="fill: #E1E1E1"/>
   <text y="38px" x="477px" xmlns:xlink="http://www.w3.org/1999/xlink"
-  xlink:type="simple" xlink:href="http://www.w3.org/Amaya"
-  style="fill:#dc5b53; font: bold 16px">Amaya au W3C
+        xlink:type="simple" xlink:href="http://www.w3.org/Amaya"
+        style="fill:#dc5b53; font: bold 16px">Amaya au W3C
   </text>
   <text y="68px" x="477px" xmlns:xlink="http://www.w3.org/1999/xlink"
-  xlink:type="simple" xlink:href="../doc/amaya/Manual.html.fr"
-  style="fill:#dc5b53; font: bold 16px">Manuel en ligne
+        xlink:type="simple" xlink:href="../doc/amaya/Manual.html.fr"
+        style="fill:#dc5b53; font: bold 16px">Manuel en ligne
   </text>
   <text y="98px" x="477px" style="fill:#dc5b53; font: bold 16px"
-  xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple"
-  xlink:href="../doc/amaya/Index.html">Index
+        xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple"
+        xlink:href="../doc/amaya/Index.html">Index
   </text>
   <text y="128px" x="477px" style="fill:#dc5b53; font: bold 16px"
-  xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple"
-  xlink:href="../doc/amaya/Annotations.html.fr">Annotations
+        xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple"
+        xlink:href="../doc/amaya/Annotations.html.fr">Annotations
   </text>
   <text y="158px" x="477px" style="fill:#dc5b53; font: bold 16px"
-  xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple"
-  xlink:href="../doc/amaya/Creating.html.fr">XHTML
+        xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple"
+        xlink:href="../doc/amaya/Creating.html.fr">XHTML
   </text>
   <text y="188px" x="477px" style="fill:#dc5b53; font: bold 16px"
-  xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple"
-  xlink:href="../doc/amaya/Math.html.fr">MathML
+        xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple"
+        xlink:href="../doc/amaya/Math.html.fr">MathML
   </text>
   <text y="218px" x="477px" style="fill:#dc5b53; font: bold 16px"
-  xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple"
-  xlink:href="../doc/amaya/SVG.html.fr">SVG
+        xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple"
+        xlink:href="../doc/amaya/SVG.html.fr">SVG
   </text>
   <text y="248px" x="477px" style="fill:#dc5b53; font: bold 16px"
-  xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple"
-  xlink:href="../doc/amaya/StyleSheets.html.fr">CSS
+        xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple"
+        xlink:href="../doc/amaya/StyleSheets.html.fr">CSS
   </text>
   <text y="278px" x="477px" xmlns:xlink="http://www.w3.org/1999/xlink"
-  xlink:type="simple" xlink:href="http://www.w3.org"
-  style="fill:#dc5b53; font: bold 16px">W3C
+        xlink:type="simple" xlink:href="http://www.w3.org"
+        style="fill:#dc5b53; font: bold 16px">W3C
   </text>
   <g transform="translate(2,2)">
     <image id="backgroundImage" x="0" y="0" width="466" height="349"
@@ -88,10 +88,10 @@ height="352">
       <use x="410" y="172" xlink:href="#cube" style="fill: #DC5B53"/>
     </g>
     <text id="logo" x="304" y="162"
-    style="font: 24px helvetica; font-weight: bold; fill: #488B9B;">AMAYA
+          style="font: 24px helvetica; font-weight: bold; fill: #488B9B;">AMAYA
     </text>
     <text id="version" x="362px" y="313"
-    style="font: bold 16px italic; fill: #0192BF;">Release 5.0
+          style="font: bold 16px italic; fill: #0192BF;">Release 5.1
     </text>
     <g id="polygonMask" style="stroke: none;">
       <polygon style="fill: #0192BF;" points="30,60  30,230  108,208"
