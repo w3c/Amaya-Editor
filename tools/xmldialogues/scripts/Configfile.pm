@@ -98,7 +98,7 @@ sub printer {
 
 #_____________________________________________________.......................
 sub ask_for_amaya {
-	my $text = 	"What is the path of the parent directory of the main directory  Amaya? \n"
+	my $text = 	"Give the path of the parent directory of the directory Amaya. \n"
 					
 					. "[by default $home ]: ";
 	my $directory = shift;
@@ -137,7 +137,7 @@ return $directory;
 } 
 ######################
 sub ask_for_obj {
-	my $text = 	"What is the name of your object dirertory for amaya\n"
+	my $text = 	"Give the name of your object dirertory:\n"
 					."Ex : LINUX-ELF  "
 					."($dir_amaya/Amaya is already known) : ";
 	my $directory = shift;
@@ -168,7 +168,7 @@ return $directory;
 } 
 ######################
 sub ask_for_perso {
-	my $text = 	"\tWhat is the name of your own dirertory for store files to integrate?\n"
+	my $text = 	"\tGive the path of the dirertory where input files are stored.\n"
 					. "\t(don't end with \"/\" ) :";
 	my $directory = shift;
 	

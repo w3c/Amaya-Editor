@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base version="7" last_update="Tue Jun 27 13:15:07 CEST 2000">
+<base version="12" last_update="Fri Aug 25 12:48:56 CEST 2000">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -1291,7 +1291,7 @@
 </label>
 <label define="BConfigProfile">
 	<message xml:lang="en">Profiles...</message>
-	<message xml:lang="fr">Profiles...</message>
+	<message xml:lang="fr">Profils...</message>
 	<message xml:lang="de">Profiles...</message>
 	<message xml:lang="it">Profili...</message>
 </label>
