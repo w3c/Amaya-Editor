@@ -2664,7 +2664,7 @@ static Document  LoadDocument (Document doc, char *pathname,
  	TtaSetItemOff (newdoc, 1, File, BTemplate);
 #ifdef ANNOTATIONS
       /* auto-load the annotations associated with the document */
-      if (!plainText && DocumentTypes[newdoc] != docAnnot)
+      if (!plainText && ANNOT_CanAnnotate(doc))
 	ANNOT_AutoLoad (newdoc, 1);
 #endif /* ANNOTATIONS */
     }
