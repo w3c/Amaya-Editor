@@ -210,7 +210,6 @@ RULES
 	END;
 
  Pseudo_paragraph: BEGIN
-	Create '\12';
 	Create '\12' After;
 	END;
 
@@ -280,7 +279,7 @@ RULES
  List_Item: BEGIN
 	Create Attributes;
 	Indent +3;
-	Indent -3 after;
+	Indent -3 After;
 	Create '\12' After;
 	END;
 
@@ -296,113 +295,75 @@ RULES
 	END;
 
  Form: BEGIN
-	Create '<form';
-	Create Attributes;
-	Create '>\12';
-	Create '</form>\12' After;
+	Create '\12';
+	Create '\12' After;
 	END;
 
  Option_Menu: BEGIN
-	Create '\12<select';
-	Create Attributes;
-	Create '>';
-	Create '\12</select>\12' After;
+	Remove;
 	END;
 
  Option: BEGIN
-	Create '\12<option';
-	Create Attributes;
-	Create '>';
+	Remove;
 	END;
 
  Toggle_Menu: BEGIN
-	Create '<!--toggle_menu-->\12<pre>\12';
-	Create '</pre>\12' After;
+	Remove;
 	END;
 
  Toggle_Item: BEGIN
-	Create '\12' After;
+	Remove;
 	END;
 
  Radio_Menu: BEGIN
-	Create '<!--radio_menu-->\12<pre>\12';
-	Create '</pre>\12' After;
+	Remove;
 	END;
 
  Radio_Item: BEGIN
-	Create '\12' After;
+	Remove;
 	END;
 
  Text_Input_Line: BEGIN
-	Create '<!--text_input_line-->\12<p>\12';
-	Create '</p>\12' After;
+	Remove;
 	END;
 
  Command_Line: BEGIN
-	Create '<!--command_line-->\12<p>\12';
-	Create '</p>\12' After;
+	Remove;
 	END;
 
  Text_Area: BEGIN
-	Create '<textarea';
-	Create Attributes;
-	Create '>';
-	Create '</textarea>';
+	Remove;
 	END;
 
  Checkbox_Input: BEGIN
-	Create '<input type=checkbox';
-	Create Attributes;
-	Create '>';
 	Remove;
 	END;
 
  Radio_Input: BEGIN
-	Create '<input type=radio';
-	Create Attributes;
-	Create '>';
 	Remove;
 	END;
 
  Text_Input: BEGIN
-	Create '<input type=text';
-	Create Attributes;
-	Create '>';
 	Remove;
 	END;
 
  Hidden_Input: BEGIN
-	Create '<input type=hidden';
-	Create Attributes;
-	Create '>';
 	Remove;
 	END;
 
  Password_Input: BEGIN
-	Create '<input type=password';
-	Create Attributes;
-	Create '>';
 	Remove;
 	END;
 
  File_Input: BEGIN
-	Create '<input type=file';
-	Create Attributes;
-	Create '>';
 	Remove;
 	END;
 
  Reset_Input: BEGIN
-	Create '\12<input type=reset';
-	Create Attributes;
-	Create '>';
 	Remove;
 	END;
 
  Submit_Input: BEGIN
-	Create '\12<input type=submit';
-	Create Attributes;
-	Create '>';
 	Remove;
 	END;
 
@@ -569,7 +530,8 @@ ATTRIBUTES
 
  HREF_ :
 	BEGIN
-        Create IN TmpFile HREF_;
+	If NOT Within LINK
+           Create IN TmpFile HREF_;
 	END;
 
  background_ :
