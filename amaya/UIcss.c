@@ -47,13 +47,7 @@ int                 typedata;
 STRING              data;
 #endif
 {
-  Element             el;
-  ElementType         elType;
-  AttributeType       attrType;
-  Attribute           attr;
-  CHAR                s[MAX_LENGTH];
   int                 val, length;
-  boolean             found;
 
   val = (int) data;
   switch (ref - BaseCSS)
@@ -69,27 +63,7 @@ STRING              data;
       else if (val == 3)
 	{
 	  /* remove the link to this file */
-	  el = TtaGetMainRoot (docCSS);
-	  elType = TtaGetElementType (el);
-	  elType.ElTypeNum = HTML_EL_LINK;
-	  /* look for the Link element */
-	  el = TtaSearchTypedElement (elType, SearchInTree, el);
-	  attrType.AttrSSchema = elType.ElSSchema;
-	  attrType.AttrTypeNum = HTML_ATTR_HREF_;
-	  found = FALSE;
-	  while (el != NULL && !found)
-	    {
-	      attr = TtaGetAttribute (el, attrType);
-	      if (attr != 0)
-		{
-		  length = MAX_LENGTH;
-		  TtaGiveTextAttributeValue (attr, s, &length);
-		}
-	      if (!found)
-		el = TtaSearchTypedElement (elType, SearchForward, el);
-	    }
-	  if (el)
-	    RemoveLink (el, docCSS);
+	  /* RemoveLink (el, docCSS); */
 	}
       else if (val == 4)
 	/* add a new link to a CSS file */

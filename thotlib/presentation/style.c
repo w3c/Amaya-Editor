@@ -2143,7 +2143,7 @@ Document            doc;
 	  pRule = ((PtrPSchema) tsch)->PsElemPRule[elType];
 	  while (pRule != NULL)
 	    {
-	      ApplyPRules (doc, pSS, elType, 0, 0, pRule, TRUE);
+	      ApplyPRules (doc, pSS, elType+1, 0, 0, pRule, TRUE);
 	      pRule = pRule->PrNextPRule;
 	    }
 	}
@@ -2164,7 +2164,7 @@ Document            doc;
 		      pRule = attrs->ApCase[j].CaFirstPRule;
 		      while (pRule != NULL)
 			{
-			  ApplyPRules (doc, pSS, 0, attrType, 0, pRule, TRUE);
+			  ApplyPRules (doc, pSS, 0, attrType+1, 0, pRule, TRUE);
 			  pRule = pRule->PrNextPRule;
 			}
 		    }

@@ -17,7 +17,7 @@
 #include "amaya.h"
 #include "css.h"
 #include "trans.h"
-
+#include "zlib.h"
 
 #ifdef _WINDOWS
 #include "resource.h"
@@ -25,6 +25,7 @@
 #include "stopN.xpm"
 #include "stopR.xpm"
 #include "save.xpm"
+#include "saveNo.xpm"
 #include "find.xpm"
 #include "Reload.xpm"
 #include "Browser.xpm"
@@ -108,6 +109,7 @@ static STRING       Manual[] = {
 static ThotIcon       stopR;
 static ThotIcon       stopN;
 static ThotIcon       iconSave;
+static ThotIcon       iconSaveNo;
 static ThotIcon       iconFind;
 static ThotIcon       iconReload;
 static ThotIcon       iconI;
@@ -158,6 +160,7 @@ static ThotIcon       iconJava;
 #define iconForwardNo  2
 #define iconReload     3
 #define iconSave       4
+#define iconSaveNo     4
 #define iconPrint      5
 #define iconFind       6
 #define iconI          7
@@ -675,6 +678,7 @@ Document            doc;
 #else  /* _WINDOWS */
        TtaChangeButton (document, 1, 5, iconBrowser, TRUE);
 #endif /* _WINDOWS */
+       TtaChangeButton (document, 1, 7, iconSaveNo, FALSE);
        TtaChangeButton (document, 1, 11, iconINo, FALSE);
        TtaChangeButton (document, 1, 12, iconBNo, FALSE);
        TtaChangeButton (document, 1, 13, iconTNo, FALSE);
@@ -786,6 +790,7 @@ Document            doc;
 #else  /* _WINDOWS */
        TtaChangeButton (document, 1, 5, iconEditor, TRUE);
 #endif /* _WINDOWS */
+       TtaChangeButton (document, 1, 7, iconSave, TRUE);
        TtaChangeButton (document, 1, 11, iconI, TRUE);
        TtaChangeButton (document, 1, 12, iconB, TRUE);
        TtaChangeButton (document, 1, 13, iconT, TRUE);
@@ -1671,6 +1676,7 @@ boolean             logFile;
 	     TtaSetItemOff (doc, 1, Views, BShowToC);
 	   }
 
+	 TtaChangeButton (doc, 1, 7, iconSaveNo, FALSE);
 	 TtaChangeButton (doc, 1, 11, iconINo, FALSE);
 	 TtaChangeButton (doc, 1, 12, iconBNo, FALSE);
 	 TtaChangeButton (doc, 1, 13, iconTNo, FALSE);
@@ -1703,6 +1709,7 @@ boolean             logFile;
 #else  /* _WINDOWS */
 	     TtaChangeButton (doc, 1, 5, iconEditor, TRUE);
 #endif /* _WINDOWS */
+	     TtaChangeButton (doc, 1, 7, iconSave, TRUE);
 	     TtaChangeButton (doc, 1, 11, iconI, TRUE);
 	     TtaChangeButton (doc, 1, 12, iconB, TRUE);
 	     TtaChangeButton (doc, 1, 13, iconT, TRUE);
@@ -1844,8 +1851,9 @@ STRING documentname;
 /*----------------------------------------------------------------------
   LoadHTMLDocument parses of the new document and stores its path (or
   URL) into the document table.
-  For a local loading tempfile must be an empty string, for a remote loading
-  tempfile gives the file name of the current copy of the remote file.
+  For a local loading, the parameter tempfile must be an empty string.
+  For a remote loading, the parameter tempfile gives the file name that
+  contains the current copy of the remote file.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static Document     LoadHTMLDocument (Document doc, STRING pathname, STRING form_data, int method, STRING tempfile, STRING documentname, STRING content_type, boolean history)
@@ -1878,10 +1886,20 @@ boolean		    history;
     {
       /* local document */
       /* try to guess the document type after its file name extension */
-      if (IsHTMLName (pathname) || IsXMLName (pathname))
+      if (IsHTMLName (pathname))
 	{
-	/* Let's try to process this file as an HTML document written in XML */
+	/* it's an HTML document */
 	  docType = docHTML;
+	  otherFile = FALSE;
+	}
+      else if (IsXMLName (pathname))
+	{
+	/* it's a document written in XML: check its doctype */
+	  if ((tempfile[0] != EOS && IsXHTMLDocType (tempfile)) ||
+	      (tempfile[0] == EOS && IsXHTMLDocType (pathname)))
+	    docType = docHTML;
+	  else
+	    docType = docText;
 	  otherFile = FALSE;
 	}
       else if (IsCSSName (pathname))
@@ -1906,9 +1924,9 @@ boolean		    history;
      /* the server returned a content type */
      {
        i = 0;
-       while (content_type[i] != '/' && content_type[i] != EOS)
+       while (content_type[i] != URL_SEP && content_type[i] != EOS)
 	 i++;
-       if (content_type[i] == '/')
+       if (content_type[i] == URL_SEP)
 	 {
 	   content_type[i] = EOS;
 	   j = i+1;
@@ -1916,16 +1934,23 @@ boolean		    history;
 	     j++;
 	   if (content_type[j] == ';')
 	     content_type[j] = EOS;
-	   if (ustrcasecmp (content_type, "text") == 0)
+	   if (!ustrcasecmp (content_type, "text"))
 	     {
-	       if (!ustrncasecmp (&content_type[i+1], "html", 4))
+	       if (!ustrncasecmp (&content_type[i+1], "html", 4) ||
+		   !ustrncasecmp (&content_type[i+1], "xhtml", 5))
 		 {
+		   /* it's an HTML document */
 		   docType = docHTML;
 		   otherFile = FALSE;
 		 }
 	       else if (!ustrncasecmp (&content_type[i+1], "xml", 3))
 		 {
-		   docType = docHTML;
+		   /* it's a document written in XML: check its doctype */
+		   if ((tempfile[0] != EOS && IsXHTMLDocType (tempfile)) ||
+		       (tempfile[0] == EOS && IsXHTMLDocType (pathname)))
+		     docType = docHTML;
+		   else
+		     docType = docText;
 		   otherFile = FALSE;
 		 }
 	       else if (!ustrncasecmp (&content_type[i+1], "css", 3))
@@ -1939,6 +1964,12 @@ boolean		    history;
 		   otherFile = FALSE;
 		 }
 	     }
+	   else if (!ustrcasecmp (content_type, "application") &&
+		    !ustrncasecmp (&content_type[i+1], "x-sh", 4))
+	     {
+	       docType = docText;
+	       otherFile = FALSE;
+	     }	     
 	 }
      }
 
@@ -3226,7 +3257,7 @@ static void	SetFileSuffix ()
 	ustrcpy (suffix, "html");
 #endif /* _WINDOWS */
        else if (SaveAsXHTML)
-	ustrcpy (suffix, "xml");
+	ustrcpy (suffix, "xht");
        else if (SaveAsText)
 	ustrcpy (suffix, "txt");
       else
@@ -3882,6 +3913,7 @@ NotifyEvent        *event;
    stopR = TtaCreatePixmapLogo (stopR_xpm);
    stopN = TtaCreatePixmapLogo (stopN_xpm);
    iconSave = TtaCreatePixmapLogo (save_xpm);
+   iconSaveNo = TtaCreatePixmapLogo (saveNo_xpm);
    iconFind = TtaCreatePixmapLogo (find_xpm);
    iconReload = TtaCreatePixmapLogo (Reload_xpm);
    iconI = TtaCreatePixmapLogo (I_xpm);
@@ -3923,6 +3955,7 @@ NotifyEvent        *event;
    TtaRegisterPixmap("stopR", stopR);
    TtaRegisterPixmap("stopN", stopN);
    TtaRegisterPixmap("Save", iconSave);
+   TtaRegisterPixmap("SaveNo", iconSaveNo);
    TtaRegisterPixmap("Find", iconFind);
    TtaRegisterPixmap("Reload", iconReload);
    TtaRegisterPixmap("Italic", iconI);

@@ -1118,6 +1118,7 @@ void MakeBook_callback (Document document)
   /* remove registered  sub-documents */
   FreeSubDocTable ();
   DocBook = 0;
+  SetBrowserEditor (document);
   TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), NULL);
 }
 

@@ -2237,7 +2237,7 @@ boolean             isHTML;
   cssRule = TtaSkipBlanks (cssRule);
   /* first parse the attribute string */
   cssRule = ParseCSSUnit (cssRule, &margin);
-  if (margin.typed_data.unit != STYLE_UNIT_INVALID)
+  if (margin.typed_data.unit != STYLE_UNIT_INVALID && margin.typed_data.value != 0)
     {
       TtaSetStylePresentation (PRTMargin, element, tsch, context, margin);
       if (margin.typed_data.value < 0)
@@ -2296,7 +2296,7 @@ boolean             isHTML;
   cssRule = TtaSkipBlanks (cssRule);
   /* first parse the attribute string */
   cssRule = ParseCSSUnit (cssRule, &margin);
-  if (margin.typed_data.unit != STYLE_UNIT_INVALID)
+  if (margin.typed_data.unit != STYLE_UNIT_INVALID && margin.typed_data.value != 0)
     {
       TtaSetStylePresentation (PRLMargin, element, tsch, context, margin);
       if (margin.typed_data.value < 0)

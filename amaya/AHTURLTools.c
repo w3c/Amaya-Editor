@@ -250,6 +250,7 @@ const char         *path;
    nsuffix[i] = EOS;
    if (!strcmp (nsuffix, "html") ||
        !strcmp (nsuffix, "htm") ||
+       !strcmp (nsuffix, "xhtl") ||
        !strcmp (nsuffix, "shtml"))
      return (TRUE);
    else if (!strcmp (nsuffix, "gz"))
@@ -266,6 +267,7 @@ const char         *path;
        nsuffix[i] = EOS;
        if (!strcmp (nsuffix, "html") ||
 	   !strcmp (nsuffix, "htm") ||
+	   !strcmp (nsuffix, "xhtl") ||
 	   !strcmp (nsuffix, "shtml"))
 	 return (TRUE);
        else

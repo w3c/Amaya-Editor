@@ -6141,7 +6141,67 @@ STRING	           pathURL;
     }
   /* close the document */
   if (LgBuffer != 0)
-    TtaAppendTextContent (el, inputBuffer, doc);
+    {
+      inputBuffer[LgBuffer] = EOS;
+      TtaAppendTextContent (el, inputBuffer, doc);
+    }
+}
+
+/*----------------------------------------------------------------------
+  IsXHTMLDocType parses the XML file to detect if it's XHML document.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+boolean             IsXHTMLDocType (STRING fileName)
+#else
+boolean             IsXHTMLDocType (fileName)
+STRING              fileName;
+#endif
+{
+  gzFile              stream;
+  UCHAR               charRead;
+  int                 res, i;
+  boolean             endOfFile, isXHTML;
+
+  isXHTML = FALSE;
+  stream = gzopen (fileName, "r");
+  if (stream != 0)
+    {
+      InputText = NULL;
+      LgBuffer = 0;
+      endOfFile = FALSE;
+      while (!endOfFile)
+	{
+	  res = gzread (stream, FileBuffer, INPUT_FILE_BUFFER_SIZE);
+	  if (res <= 0)
+	    endOfFile = TRUE;
+	  else
+	    FileBuffer[res] = EOS;
+	  /* if we are reading a file with "<!DOCTYPE HTML" */
+	  i = 0;
+	  while (!endOfFile && i < res)
+	    {
+	      if (ustrncasecmp(&FileBuffer[i], "<!DOCTYPE", 9))
+		i++;
+	      else
+		{
+		  /* we've found the document type */
+		  i += 9;
+		  /* stop the research */
+		  endOfFile = TRUE;
+		  /* skip spaces */
+		  while (FileBuffer[i] == SPACE ||
+			 FileBuffer[i] == '\b' ||
+			 FileBuffer[i] == '\n' ||
+			 FileBuffer[i] == '\t' ||
+			 FileBuffer[i] == '\r')
+		    i++;
+		  if (!ustrncasecmp(&FileBuffer[i], "html", 4))
+		    isXHTML = TRUE;
+		}
+	    }
+	}
+    }
+  return (isXHTML);
 }
 
 
@@ -7326,7 +7386,7 @@ STRING              pathURL;
 boolean	            plainText;
 #endif
 {
-  gzFile              stream = NULL;
+  gzFile              stream;
   Element             el, oldel;
   AttributeType       attrType;
   Attribute           attr;

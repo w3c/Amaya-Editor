@@ -8,7 +8,7 @@ have been introduced in Amaya and Thot since version 1.4 of Amaya.
 Extensions 1.5a:
 ---------------
 
-* First implementation of a multi-document, multi-level Undo/Redo command
+* First implementation of a multi-document, multi-level Undo/Redo command.
 
 * WAI guidelines on Image and Maps.
 
@@ -23,6 +23,9 @@ Extensions 1.5a:
   menu entry "Style Sheets". At the same time a displayed CSS file can be
   linked to a new document by a simple click when the element LINK is created.
   As soon as the CSS file is linked, CSS rules are applied to the new document.
+
+* After a "Make Book" the document is automatically switched to the Read-Only
+  mode. This will avoid the user to edit it or save it by error.
 
 * Publication thru the net now uses the HTTP/1.1 etags and conditional
   headers to avoid the lost updates problem.

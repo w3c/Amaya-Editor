@@ -45,6 +45,7 @@ extern void CreateAttrIntSize ( STRING buffer,
 extern void InitAutomaton ( void );
 extern void FreeHTMLParser ( void );
 extern CHAR GetNextInputChar ( boolean *endOfFile );
+extern boolean IsXHTMLDocType ( STRING fileName );
 extern void CheckAbstractTree ( STRING pathURL );
 extern void ParseIncludedHTML ( Element elem,
                                 STRING closingTag );
@@ -100,6 +101,7 @@ extern void CreateAttrIntSize (/* STRING buffer,
 extern void InitAutomaton (/* void */);
 extern void FreeHTMLParser (/* void */);
 extern CHAR GetNextInputChar (/* boolean *endOfFile */);
+extern boolean IsXHTMLDocType (/* STRING fileName */);
 extern void CheckAbstractTree (/* STRING pathURL */);
 extern void ParseIncludedHTML (/* Element elem,
                                   STRING closingTag */);

@@ -116,7 +116,6 @@ Document            doc;
        if (IsCSSName (buffer))
 	 RemoveStyleSheet (buffer, doc);
      }
-  return FALSE;		/* let Thot perform normal operation */
 }
 /*----------------------------------------------------------------------
    DeleteLink                                              

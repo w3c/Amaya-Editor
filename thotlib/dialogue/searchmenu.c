@@ -1206,7 +1206,6 @@ STRING              txt;
 	  pLastSel = NULL;
 	  firstChar = 0;
 	  lastChar = 0;
-	  searchDomain->SDocument = NULL;
 	  selectionOK = FALSE;
 	  StartSearch = TRUE;
 	}

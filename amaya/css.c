@@ -272,16 +272,6 @@ Document            doc;
 	      i++;
 	    }
 	}
-      TtaCleanStylePresentation (NULL, css->pschemas, doc);
-      if (!used)
-	{
-	  /* remove this css file */
-	  next = css->NextCSS;
-	  RemoveCSS (css, TRUE);
-	  css = next;
-	}
-      else
-	{
 	  /* look for the specific P descriptors in the css */
 	  pInfo = css->pschemas;
 	  prevInfo = NULL;
@@ -297,11 +287,19 @@ Document            doc;
 		css->pschemas = pInfo->PiNext;
 	      else
 		prevInfo->PiNext = pInfo->PiNext;
+	      TtaCleanStylePresentation (NULL, pInfo->PiPSchema, pInfo->PiDoc);
 	      /* remove presentation schemas */
 	      TtaRemovePSchema (pInfo->PiPSchema, pInfo->PiDoc, pInfo->PiSSchema);
 	      /* remove P descriptors in the css structure */
 	      TtaFreeMemory (pInfo);
 	    }
+
+      if (!used)
+	{
+	  /* remove this css file */
+	  next = css->NextCSS;
+	  RemoveCSS (css, TRUE);
+	  css = next;
 	}
     }
 }
