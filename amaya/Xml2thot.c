@@ -757,12 +757,13 @@ ElementType         elType;
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static ThotBool     CheckSurrounding (Element *el,
-				      Element  parent)
+				      Element  parent, 
+				      Document doc)
 #else
-static ThotBool     CheckSurrounding (el,
-				      parent)
-Element          *el;
-Element           parent;
+static ThotBool     CheckSurrounding (el, parent, doc)
+Element     *el;
+Element      parent;
+Document     doc;
 
 #endif
 {
@@ -799,14 +800,14 @@ Element           parent;
 		/* Pseudo_paragraph element as the parent of the text element */
 		newElType.ElSSchema = DocumentSSchema;
 		newElType.ElTypeNum = HTML_EL_Pseudo_paragraph;
-		newEl = TtaNewElement (XMLcontext.doc, newElType);
+		newEl = TtaNewElement (doc, newElType);
 		XmlSetElemLineNumber (newEl);
 		/* insert the new Pseudo_paragraph element */
 		InsertElement (&newEl);
 		if (newEl != NULL)
 		  {
 		    /* insert the Text element in the tree */
-		    TtaInsertFirstChild (el, newEl, XMLcontext.doc);
+		    TtaInsertFirstChild (el, newEl, doc);
 		    BlockInCharLevelElem (newEl);
 		    ret = TRUE;
 		    
@@ -822,8 +823,8 @@ Element           parent;
 			else
 			  {
 			    prevprev = prev;  TtaPreviousSibling (&prevprev);
-			    TtaRemoveTree (prev, XMLcontext.doc);
-			    TtaInsertFirstChild (&prev, newEl, XMLcontext.doc);
+			    TtaRemoveTree (prev, doc);
+			    TtaInsertFirstChild (&prev, newEl, doc);
 			    prev = prevprev;
 			  }
 		      }
@@ -839,7 +840,7 @@ Element           parent;
 	 parentType = TtaGetElementType (parent);
 	 if (parentType.ElTypeNum == HTML_EL_Pseudo_paragraph)
 	   {
-	     TtaInsertSibling (*el, parent, FALSE, XMLcontext.doc);
+	     TtaInsertSibling (*el, parent, FALSE, doc);
 	     ret = TRUE;
 	   }
        }
@@ -857,12 +858,12 @@ Element           parent;
 	     /* create a Inserted_Text element as a child of Text_Area */
 	     newElType.ElSSchema = DocumentSSchema;
 	     newElType.ElTypeNum = HTML_EL_Inserted_Text;
-	     newEl = TtaNewElement (XMLcontext.doc, newElType);
+	     newEl = TtaNewElement (doc, newElType);
 	     XmlSetElemLineNumber (newEl);
 	     InsertElement (&newEl);
 	     if (newEl != NULL)
 	       {
-		 TtaInsertFirstChild (el, newEl, XMLcontext.doc);
+		 TtaInsertFirstChild (el, newEl, doc);
 		 ret = TRUE;
 	       }
 	   }
@@ -892,7 +893,7 @@ Element *el;
        else
 	   parent = TtaGetParent (XMLcontext.lastElement);
 
-       if (!CheckSurrounding (el, parent))
+       if (!CheckSurrounding (el, parent, XMLcontext.doc))
 	 {
 	   if (parent != NULL)
 	       TtaInsertSibling (*el, XMLcontext.lastElement, FALSE, XMLcontext.doc);
@@ -905,7 +906,7 @@ Element *el;
      }
    else
      {
-       if (!CheckSurrounding (el, XMLcontext.lastElement))
+       if (!CheckSurrounding (el, XMLcontext.lastElement, XMLcontext.doc))
 	   TtaInsertFirstChild (el, XMLcontext.lastElement, XMLcontext.doc);
      }
 }
@@ -942,13 +943,14 @@ Element    *el;
 #endif
 {
   if (currentParserCtxt != NULL)
-    (*(currentParserCtxt->InsertElem)) (el);
-   
-   if (*el != NULL)
-     {
-       XMLcontext.lastElement = *el;
-       XMLcontext.lastElementClosed = FALSE;
-     }
+    {
+      (*(currentParserCtxt->InsertElem)) (el);
+      if (*el != NULL)
+	{
+	  XMLcontext.lastElement = *el;
+	  XMLcontext.lastElementClosed = FALSE;
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1084,6 +1086,70 @@ Element el;
 }
 
 /*----------------------------------------------------------------------
+   RemoveTrailingSpaces
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void     RemoveTrailingSpaces (Element el)
+#else
+static void     RemoveTrailingSpaces (el)
+Element el;
+
+#endif
+{
+   int           length, nbspaces;
+   ElementType   elType;
+   Element       lastLeaf;
+   CHAR_T        lastChar[2];
+
+   /* Search the last leaf in the element's tree */
+   lastLeaf = XmlLastLeafInElement (el);
+   if (lastLeaf != NULL)
+     {
+       elType = TtaGetElementType (lastLeaf);
+       if (elType.ElTypeNum == 1)
+	 /* the last leaf is a TEXT element */
+	 {
+	   length = TtaGetTextLength (lastLeaf);
+	   if (length > 0)
+	     {
+	       nbspaces = 0;
+	       if (RemoveTrailingSpace)
+		 {
+		   do
+		     {
+		       TtaGiveSubString (lastLeaf, lastChar, length, 1);
+		       if (lastChar[0] == WC_SPACE)
+			 {
+			   length--;
+			   nbspaces++;
+			 }
+		     }
+		   while (lastChar[0] == WC_SPACE && length > 0);
+		 }
+	       else
+		 {
+		   TtaGiveSubString (lastLeaf, lastChar, length, 1);
+		   if (lastChar[0] == WC_CR || lastChar[0] == WC_EOL)
+		     {
+		       length--;
+		       nbspaces++;
+		     }
+		 }
+
+	       if (nbspaces > 0)
+		 if (length == 0)
+		   /* empty TEXT element */
+		   TtaDeleteTree (lastLeaf, XMLcontext.doc);
+		 else
+		   /* remove the ending spaces */
+		   TtaDeleteTextContent (lastLeaf, length + 1,
+					 nbspaces, XMLcontext.doc);
+	     }
+	 }
+     }
+}
+
+/*----------------------------------------------------------------------
    CloseElement
    Terminate corresponding Thot element.
   ----------------------------------------------------------------------*/
@@ -1170,10 +1236,16 @@ USTRING          mappedName;
 	     {
 	       (*(currentParserCtxt->ElementComplete)) (el, XMLcontext.doc,
 							&error);
+	       /* If the element closed is a block-element, remove */
+	       /* spaces contained at the end of that element */
+	       /*
 	       if (!spacesDeleted)
-	          /* If the element closed is a block-element, remove */
-	          /* spaces contained at the end of that element */
 	          spacesDeleted = RemoveEndingSpaces (el);
+	       */
+
+	       /* Remove the trailing spaces of that element */
+	       RemoveTrailingSpaces (el);
+
 	       if (el == XMLcontext.lastElement)
 		 el = NULL;
 	       else
