@@ -1041,7 +1041,7 @@ NotifyElement *event;
 
   docModified = TtaIsDocumentModified (doc_annot);
 
-  new_type = AnnotTypes (doc_annot, 1);
+  new_type = AnnotTypes2 (doc_annot, 1);
   if (new_type)
     ANNOT_SetType (doc_annot, new_type);
 

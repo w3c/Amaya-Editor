@@ -780,7 +780,8 @@ static void BuildAnnotTypesSelector ()
   RDFClassP		annotClass;
 
   nb_entries = 0;
-  List_delAll (&typesList, List_delCharObj);
+  if (&typesList)
+    List_delAll (&typesList, List_delCharObj);
   ustrcpy (s, TEXT(""));
   i = 0;
 
@@ -810,7 +811,7 @@ static void BuildAnnotTypesSelector ()
     }
   else
     {
-      /* use the default values @@ RRS */
+      /* @@ RRS use the default values */
       ustrcpy (&s[i], TEXT("positive comment"));
       i += ustrlen (&s[i]) + 1;
       ustrcpy (&s[i], TEXT("flame"));
@@ -829,6 +830,68 @@ static void BuildAnnotTypesSelector ()
 		  TRUE,
 		  TRUE);
 #endif /* !_WINDOWS */
+}
+
+/*---------------------------------------------------------------
+  BuildAnnotTypesSelector2
+  builds the list showing the different annotation types.
+  Returns the number of entries in the menu.
+------------------------------------------------------------------*/
+#ifdef __STDC__
+static int BuildAnnotTypesSelector2 (Document doc)
+#else
+static	int BuildAnnotTypesSelector2 (doc)
+Document doc;
+#endif /* __STDC__ */
+{
+  int                   nb_entries;
+  int                   i;
+  RDFClassP		annotClass;
+
+  nb_entries = 0;
+  if (typesList)
+    List_delAll (&typesList, List_delCharObj);
+  ustrcpy (s, TEXT(""));
+  i = 0;
+
+  annotClass = ANNOT_FindRDFResource (&annot_schema_list,
+				      ANNOTATION_PROP,
+				      FALSE);
+
+  if (annotClass && annotClass->class)
+    {
+      List *item;
+
+      for (item=annotClass->class->subClasses; item; item=item->next)
+	{
+	  RDFClassP subType = (RDFClassP)item->object;
+	  TypeSelector *t = (TypeSelector *) TtaGetMemory (sizeof(TypeSelector));
+
+	  t->type = subType;
+	  t->name = ANNOT_GetLabel(&annot_schema_list, subType);
+	  List_add (&typesList, (void *) t);
+
+	  usprintf (&s[i], "B%s", t->name);
+	  i += ustrlen (&s[i]);
+	  s[i] = WC_EOS;
+	  i++;
+	  nb_entries++;
+	}
+    }
+  else
+    {
+      /* @@ RRS use the default values */
+      ustrcpy (&s[i], TEXT("Bpositive comment"));
+      i += ustrlen (&s[i]) + 1;
+      ustrcpy (&s[i], TEXT("Bflame"));
+      nb_entries = 2;
+    }
+
+  /* create the main menu */
+  TtaNewPopup (BaseDialog + OptionMenu, TtaGetViewFrame (doc, 1),
+	       NULL, nb_entries, s, NULL, 'L');
+
+  return nb_entries;
 }
 
 /*----------------------------------------------------------------------
@@ -862,9 +925,11 @@ CHAR_T             *data;
 	      /** @@ I need to add a case for cancel */
 	    case 0:
 	      AnnotTypesSelItem[0] = WC_EOS;
+	      List_delAll (&typesList, List_delCharObj);
 	      TtaDestroyDialogue (ref);
 	      break;
 	    case 1:
+	      List_delAll (&typesList, List_delCharObj);
 	      TtaDestroyDialogue (ref);
 	      break;
 	    default:
@@ -931,11 +996,56 @@ View                view;
 	  return t->type;
       }
   }
-#endif /* !_WINDOWS */
 
   return NULL;
+#endif /* _WINDOWS */
 }
 
+/*----------------------------------------------------------------------
+  AnnotTypes2
+  Returns the RDF Resource pointer that represents the type selection
+  of the user. It is NULL if the user doesn't select a type.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+RDFResourceP AnnotTypes2 (Document document, View view)
+#else
+RDFResourceP AnnotTypes2 (document, view)
+Document            document;
+View                view;
+#endif /* __STDC__*/
+{
+  RDFResourceP result = NULL;
+  int nb_entries;
+
+  /* prepare the selector */
+  nb_entries = BuildAnnotTypesSelector2 (document);
+  
+  /* activate the menu that has just been created */
+  ReturnOption = -1;
+  ReturnOptionMenu = -1;
+#ifndef _WINDOWS
+  TtaSetDialoguePosition ();
+#endif /* !_WINDOWS */
+  TtaShowDialogue (BaseDialog + OptionMenu, FALSE);
+  /* wait for an answer from the user */
+  TtaWaitShowDialogue ();
+  if (ReturnOption >= 0 && ReturnOptionMenu >= 0) 
+    {
+      /* make the returned option selected */
+      if (ReturnOptionMenu == 0)
+	{ /* an item in the main (SELECT) menu */
+	  List *item;
+	  int entry;
+
+	  entry = nb_entries - ReturnOptionMenu - 1;
+	  for (item = typesList; item && (entry > 0); item=item->next, entry);
+	  if (item->object)
+	    result = ((TypeSelector *) item->object)->type;
+	}
+    }
+  List_delAll (&typesList, List_delCharObj);
+  return result;
+}
 
 
 
