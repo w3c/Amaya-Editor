@@ -1797,7 +1797,6 @@ void InitKernelMemory ()
   ----------------------------------------------------------------------*/
 void GetPosBlock (PtrPosRelations * pBlock)
 {
-   int                 i;
    PtrPosRelations     pNewBlock;
 
    if (PtFree_PosB == NULL)
@@ -2166,7 +2165,6 @@ int GetStringInDict (PtrDict * pDict, ThotBool readonly)
   ----------------------------------------------------------------------*/
 void GetDictionary (PtrDict * pDict)
 {
-   int                 i;
    PtrDict             pdict;
 
    if (PtFree_Dict == NULL)
