@@ -11,7 +11,7 @@ extern void PrintAs ( Document doc,
                       View view );
 extern void CallbackPrint ( int ref,
                             int typedata,
-                            STRING data );
+                            char *data );
 extern void InitPrint ( void );
 extern void SetupAndPrint ( Document doc,
                             View view );
@@ -19,8 +19,8 @@ extern void SectionNumbering ( Document doc,
                                View view );
 extern void GetIncludedDocuments_callback ( int newdoc,
                                             int status,
-                                            STRING urlName,
-                                            STRING outputfile,
+                                            char *urlName,
+                                            char *outputfile,
                                             AHTHeaders *http_headers,
                                             void * context );
 extern void MakeBook ( Document document,
@@ -33,7 +33,7 @@ extern void PrintAs (/* Document doc,
                         View view */);
 extern void CallbackPrint (/* int ref,
                               int typedata,
-                              STRING data */);
+                              char *data */);
 extern void InitPrint (/* void */);
 extern void SetupAndPrint (/* Document doc,
                               View view */);
@@ -41,8 +41,8 @@ extern void SectionNumbering (/* Document doc,
                                  View view */);
 extern void GetIncludedDocuments_callback (/* int newdoc,
                                               int status,
-                                              STRING urlName,
-                                              STRING outputfile,
+                                              char *urlName,
+                                              char *outputfile,
                                               AHTHeaders *http_headers,
                                               void * context */);
 extern void MakeBook (/* Document document,

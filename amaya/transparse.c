@@ -1,6 +1,6 @@
 /*
  *
- *  (c) COPYRIGHT MIT and INRIA, 1996.
+ *  (c) COPYRIGHT MIT and INRIA, 1996-2001.
  *  Please first read the full copyright statement in file COPYRIGHT.
  *
  */
@@ -272,7 +272,7 @@ static void         FreeChoice (parChoice * pc)
 /*----------------------------------------------------------------------
    	ErrorMessage	print the error message msg on stderr.		
   ----------------------------------------------------------------------*/
-static void         ErrorMessage (USTRING msg)
+static void         ErrorMessage (unsigned char *msg)
 {
    char                numline[5];
 
@@ -284,10 +284,10 @@ static void         ErrorMessage (USTRING msg)
 /*----------------------------------------------------------------------
   adds the pattern symbol symb to the plist symbol list 
   ----------------------------------------------------------------------*/
-static void  AddSymbToList (strListSymb ** pList, strSymbDesc * symb)
+static void  AddSymbToList (strListSymb **pList, strSymbDesc *symb)
 {
    ThotBool            isjok, isnull, found;
-   strListSymb           *pl, *plnext;
+   strListSymb        *pl, *plnext;
 
    if (*pList == NULL)
      {
@@ -2128,13 +2128,13 @@ static void         initpparse (void)
 /*----------------------------------------------------------------------
   ppStartParser loads the file Directory/FileName for parsing	
   ----------------------------------------------------------------------*/
-int ppStartParser (STRING name,SSchema tStrSchema, strTransSet **resTrSet)
+int ppStartParser (char *name, SSchema tStrSchema, strTransSet **resTrSet)
 {
-   char             msg[200];
-   BinFile            infile = (BinFile)0;
-   char	      fileName[MAX_LENGTH];
-   char              pathes[MAX_LENGTH];
-   STRING              next, cour;
+   BinFile             infile = (BinFile)0;
+   char                msg[200];
+   char	               fileName[MAX_LENGTH];
+   char                pathes[MAX_LENGTH];
+   char               *next, *cour;
    ThotBool            found = FALSE;
    struct stat        *StatBuffer;
    int                 len, status;

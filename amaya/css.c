@@ -33,7 +33,7 @@
   the document doc and the structure sSchema
   At the same time, this funciton updates the css context.
   ----------------------------------------------------------------------*/
-PSchema         GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
+PSchema GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
 {
   CSSInfoPtr          oldcss;
   PInfoPtr            pInfo;
@@ -319,7 +319,8 @@ PSchema         GetPExtension (Document doc, SSchema sSchema, CSSInfoPtr css)
 /*----------------------------------------------------------------------
    AddCSS adds a new CSS context in the list.
   ----------------------------------------------------------------------*/
-CSSInfoPtr      AddCSS (Document doc, Document docRef, CSSCategory category, STRING url, STRING localName)
+CSSInfoPtr AddCSS (Document doc, Document docRef, CSSCategory category,
+		   char *url, char *localName)
 {
   CSSInfoPtr          css, prev;
   int                 i;
@@ -363,7 +364,7 @@ CSSInfoPtr      AddCSS (Document doc, Document docRef, CSSCategory category, STR
    SearchCSS searchs the css corresponding to the specific url (doc == 0)
    or the CSS_DOCUMENT_STYLE css of the document.
   ----------------------------------------------------------------------*/
-CSSInfoPtr          SearchCSS (Document doc, STRING url)
+CSSInfoPtr SearchCSS (Document doc, char *url)
 {
   CSSInfoPtr          css = CSSList;
  
@@ -389,7 +390,8 @@ CSSInfoPtr          SearchCSS (Document doc, STRING url)
    If this CSS is no longer used the context and attached information
    are freed.
   ----------------------------------------------------------------------*/
-static void     UnlinkCSS (CSSInfoPtr css, Document doc, ThotBool disabled, ThotBool removed)
+static void UnlinkCSS (CSSInfoPtr css, Document doc, ThotBool disabled,
+		       ThotBool removed)
 {
   CSSInfoPtr          prev;
   PInfoPtr            pInfo, prevInfo;
@@ -477,7 +479,7 @@ static void     UnlinkCSS (CSSInfoPtr css, Document doc, ThotBool disabled, Thot
 /*----------------------------------------------------------------------
    RemoveDocCSSs removes all CSS information linked with the document.
   ----------------------------------------------------------------------*/
-void                RemoveDocCSSs (Document doc)
+void RemoveDocCSSs (Document doc)
 {
   CSSInfoPtr          css, next;
  
@@ -503,7 +505,8 @@ void                RemoveDocCSSs (Document doc)
    It could be an external CSS file linked with the document (url not NULL)
    or the document Style element.
   ----------------------------------------------------------------------*/
-void   RemoveStyleSheet (STRING url, Document doc, ThotBool disabled, ThotBool removed)
+void  RemoveStyleSheet (char *url, Document doc, ThotBool disabled,
+			ThotBool removed)
 {
   CSSInfoPtr          css;
   ThotBool            found;
@@ -533,12 +536,12 @@ void   RemoveStyleSheet (STRING url, Document doc, ThotBool disabled, ThotBool r
   style element el. It returns NULL if the element is empty.
   The buffer should be freed by the caller.
   ----------------------------------------------------------------------*/
-STRING              GetStyleContents (Element el)
+char *GetStyleContents (Element el)
 {
   ElementType         elType;
   Element             text;
   Language            lang;
-  STRING              buffer;
+  char               *buffer;
   int                 length, i, j;
 
   buffer = NULL;
@@ -571,16 +574,17 @@ STRING              GetStyleContents (Element el)
   The parameter css gives the CSS context which imports this CSS file.
   The parameter media gives the application limits of the CSS.
   ----------------------------------------------------------------------*/
-void        LoadStyleSheet (STRING url, Document doc, Element el, CSSInfoPtr css, CSSmedia media)
+void LoadStyleSheet (char *url, Document doc, Element el, CSSInfoPtr css,
+		     CSSmedia media)
 {
   CSSInfoPtr          oldcss;
   PInfoPtr            pInfo;
   struct stat         buf;
   FILE               *res;
-  char              tempfile[MAX_LENGTH];
-  char              tempURL[MAX_LENGTH];
-  char*             buffer = NULL;
-  char*               tmpBuff;
+  char                tempfile[MAX_LENGTH];
+  char                tempURL[MAX_LENGTH];
+  char               *buffer = NULL;
+  char               *tmpBuff;
   int                 len;
   ThotBool            import, printing;
 

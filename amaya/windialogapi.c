@@ -3217,8 +3217,8 @@ void CreateAltDlgWindow ()
 /*-----------------------------------------------------------------------
  CreateCSSDlgWindow
  ------------------------------------------------------------------------*/
-void CreateCSSDlgWindow (ThotWindow parent, int nb_item, STRING buffer,
-			 STRING title, char* msg_text)
+void CreateCSSDlgWindow (ThotWindow parent, int nb_item, char *buffer,
+			 char *title, char *msg_text)
 {
   nbItem     = (UINT)nb_item;
   cssList    = buffer;
@@ -3235,7 +3235,7 @@ void CreateCSSDlgWindow (ThotWindow parent, int nb_item, STRING buffer,
 /*-----------------------------------------------------------------------
  CreateTitleDlgWindow
  ------------------------------------------------------------------------*/
-void       CreateTitleDlgWindow (ThotWindow parent, STRING title)
+void       CreateTitleDlgWindow (ThotWindow parent, char *title)
 {  
   strcpy (urlToOpen, title);
   ReleaseFocus = FALSE;
@@ -3248,7 +3248,7 @@ void       CreateTitleDlgWindow (ThotWindow parent, STRING title)
 /*-----------------------------------------------------------------------
  CreateHRefDlgWindow
  ------------------------------------------------------------------------*/
-void CreateHRefDlgWindow (ThotWindow parent, STRING HRefValue,
+void CreateHRefDlgWindow (ThotWindow parent, char *HRefValue,
 			  int doc_select, int dir_select, int doc_type)
 {  	
   docSelect = doc_select;
@@ -3293,7 +3293,7 @@ void CreateMathDlgWindow (ThotWindow parent)
 /*-----------------------------------------------------------------------
  CreatePrintDlgWindow
  ------------------------------------------------------------------------*/
-void CreatePrintDlgWindow (ThotWindow parent, STRING ps_dir)
+void CreatePrintDlgWindow (ThotWindow parent, char *ps_dir)
 {  
   gbAbort            = FALSE;
   ghwndMain          = parent;
@@ -3315,7 +3315,7 @@ void CreatePrintDlgWindow (ThotWindow parent, STRING ps_dir)
 /*-----------------------------------------------------------------------
  CreateTableDlgWindow
  ------------------------------------------------------------------------*/
-void   CreateTableDlgWindow (int num_cols, int num_rows, int t_border)
+void  CreateTableDlgWindow (int num_cols, int num_rows, int t_border)
 {
   numCols   = num_cols;
   numRows   = num_rows;
@@ -3327,7 +3327,7 @@ void   CreateTableDlgWindow (int num_cols, int num_rows, int t_border)
 /*-----------------------------------------------------------------------
  CreateMatrixDlgWindow
  ------------------------------------------------------------------------*/
-void   CreateMatrixDlgWindow (int num_cols, int num_rows)
+void  CreateMatrixDlgWindow (int num_cols, int num_rows)
 {
   numCols   = num_cols;
   numRows   = num_rows;
@@ -3338,7 +3338,7 @@ void   CreateMatrixDlgWindow (int num_cols, int num_rows)
 /*-----------------------------------------------------------------------
  CreateSaveAsDlgWindow
  ------------------------------------------------------------------------*/
-void   CreateSaveAsDlgWindow (ThotWindow parent, STRING path_name)
+void  CreateSaveAsDlgWindow (ThotWindow parent, char *path_name)
 {
   HTMLFormat = (DocumentTypes[SavingDocument] != docText &&
 		        DocumentTypes[SavingDocument] != docCSS &&
@@ -3356,8 +3356,8 @@ void   CreateSaveAsDlgWindow (ThotWindow parent, STRING path_name)
 /*-----------------------------------------------------------------------
  CreateOPenDocDlgWindow
  ------------------------------------------------------------------------*/
-void   CreateOpenDocDlgWindow (ThotWindow parent, STRING title, STRING docName,
-							   int doc_select, int dir_select, int doc_type)
+void  CreateOpenDocDlgWindow (ThotWindow parent, char *title, char *docName,
+			      int doc_select, int dir_select, int doc_type)
 {  
   docSelect = doc_select;
   dirSelect = dir_select;
@@ -3379,8 +3379,8 @@ void   CreateOpenDocDlgWindow (ThotWindow parent, STRING title, STRING docName,
 /*-----------------------------------------------------------------------
  CreateOPenImgDlgWindow
  ------------------------------------------------------------------------*/
-void CreateOpenImgDlgWindow (ThotWindow parent, STRING imgName, int doc_select,
-							 int dir_select, int doc_type)
+void CreateOpenImgDlgWindow (ThotWindow parent, char *imgName, int doc_select,
+			     int dir_select, int doc_type)
 {  
   docSelect = doc_select;
   dirSelect = dir_select;
@@ -3411,7 +3411,7 @@ void  CreateGraphicsDlgWindow (ThotWindow frame)
 /*-----------------------------------------------------------------------
  CreateSaveListDlgWindow
  ------------------------------------------------------------------------*/
-void       CreateSaveListDlgWindow (ThotWindow parent, int nb_item, STRING save_list)
+void CreateSaveListDlgWindow (ThotWindow parent, int nb_item, char *save_list)
 {  
   nbItem      = (UINT)nb_item;
   saveList    = save_list;
@@ -3421,7 +3421,8 @@ void       CreateSaveListDlgWindow (ThotWindow parent, int nb_item, STRING save_
 /*-----------------------------------------------------------------------
  CreateCloseDocDlgWindow
  ------------------------------------------------------------------------*/
-void       CreateCloseDocDlgWindow (ThotWindow parent, STRING msg, ThotBool* save_befor, ThotBool* close_dont_save)
+void CreateCloseDocDlgWindow (ThotWindow parent, char *msg, ThotBool *save_befor,
+			      ThotBool *close_dont_save)
 {  
   strcpy (message, msg);
   DialogBox (hInstance, MAKEINTRESOURCE (CLOSEDOCDIALOG), parent, (DLGPROC) CloseDocDlgProc);
@@ -3432,7 +3433,9 @@ void       CreateCloseDocDlgWindow (ThotWindow parent, STRING msg, ThotBool* sav
 /*-----------------------------------------------------------------------
  CreateLanguageDlgWindow
  ------------------------------------------------------------------------*/
-void        CreateLanguageDlgWindow (ThotWindow parent, STRING title, STRING msg1, int nb_item, STRING lang_list, STRING msg2, int lang_value, STRING curLang)
+void CreateLanguageDlgWindow (ThotWindow parent, char *title, char *msg1,
+			      int nb_item, char *lang_list, char *msg2,
+			      int lang_value, char *curLang)
 {
   if (LangForm)
 	  EndDialog (LangForm, ID_DONE); 
@@ -3450,7 +3453,8 @@ void        CreateLanguageDlgWindow (ThotWindow parent, STRING title, STRING msg
 /*-----------------------------------------------------------------------
  CreateCharacterDlgWindow
  ------------------------------------------------------------------------*/
-void CreateCharacterDlgWindow (ThotWindow parent, int font_num, int font_style, int font_weight, int font_underline, int font_size)
+void CreateCharacterDlgWindow (ThotWindow parent, int font_num, int font_style,
+			       int font_weight, int font_underline, int font_size)
 {  
     fontNum       = font_num;
     fontStyle     = font_style;
@@ -3467,7 +3471,7 @@ void CreateCharacterDlgWindow (ThotWindow parent, int font_num, int font_style, 
 /*-----------------------------------------------------------------------
  CreateAttributeDlgWindow
  ------------------------------------------------------------------------*/
-void CreateAttributeDlgWindow (STRING title, int curr_val, int nb_items) 
+void CreateAttributeDlgWindow (char *title, int curr_val, int nb_items) 
 {
   /* destroy the precent attribute menu */
   if (AttrForm)
@@ -3520,7 +3524,7 @@ void CreateAttributeDlgWindow (STRING title, int curr_val, int nb_items)
 /*-----------------------------------------------------------------------
  CreateMCHARDlgWindow
  ------------------------------------------------------------------------*/
-void CreateMCHARDlgWindow (ThotWindow parent, STRING math_entity_name) 
+void CreateMCHARDlgWindow (ThotWindow parent, char *math_entity_name) 
 {
     strcpy (mathEntityName, math_entity_name);
     DialogBox (hInstance, MAKEINTRESOURCE (MATH_ENTITY_DLG), NULL, (DLGPROC) MathEntityDlgProc);
@@ -3530,7 +3534,7 @@ void CreateMCHARDlgWindow (ThotWindow parent, STRING math_entity_name)
 /*-----------------------------------------------------------------------
  CreateRuleDlgWindow
  ------------------------------------------------------------------------*/
-void CreateRuleDlgWindow (ThotWindow parent, int nb_class, STRING class_list)
+void CreateRuleDlgWindow (ThotWindow parent, int nb_class, char *class_list)
 {  
   nbClass     = (UINT)nb_class;
   classList   = class_list;
@@ -3541,7 +3545,7 @@ void CreateRuleDlgWindow (ThotWindow parent, int nb_class, STRING class_list)
 /*-----------------------------------------------------------------------
  CreateApplyClassDlgWindow
  ------------------------------------------------------------------------*/
-void CreateApplyClassDlgWindow (ThotWindow parent, int nb_class, STRING class_list)
+void CreateApplyClassDlgWindow (ThotWindow parent, int nb_class, char *class_list)
 {  
   nbClass     = (UINT)nb_class;
   classList   = class_list;
@@ -3552,7 +3556,7 @@ void CreateApplyClassDlgWindow (ThotWindow parent, int nb_class, STRING class_li
 /*-----------------------------------------------------------------------
  CreateInitConfirmDlgWindow
  ------------------------------------------------------------------------*/
-void CreateInitConfirmDlgWindow (ThotWindow parent, int ref, STRING title, STRING msg)
+void CreateInitConfirmDlgWindow (ThotWindow parent, int ref, char *title, char *msg)
 {  
   strcpy (message, msg);
   strcpy (wndTitle, title);
@@ -3564,7 +3568,9 @@ void CreateInitConfirmDlgWindow (ThotWindow parent, int ref, STRING title, STRIN
 /*-----------------------------------------------------------------------
  CreateInitConfirm3LDlgWindow
  ------------------------------------------------------------------------*/
-void CreateInitConfirm3LDlgWindow (ThotWindow parent, int ref, STRING title, STRING msg, STRING msg2, STRING msg3, ThotBool withCancel)
+void CreateInitConfirm3LDlgWindow (ThotWindow parent, int ref, char *title,
+				   char *msg, char *msg2, char *msg3,
+				   ThotBool withCancel)
 {
   strcpy (message, msg);
   if (msg2 && *msg2 != EOS)
@@ -3590,7 +3596,9 @@ void CreateInitConfirm3LDlgWindow (ThotWindow parent, int ref, STRING title, STR
 /*-----------------------------------------------------------------------
  CreateChangeFormatDlgWindow
  ------------------------------------------------------------------------*/
-void CreateChangeFormatDlgWindow (int num_zone_recess, int num_zone_line_spacing, int align_num, int indent_value, int indent_num, int old_lineSp, int line_spacingNum)
+void CreateChangeFormatDlgWindow (int num_zone_recess, int num_zone_line_spacing,
+				  int align_num, int indent_value, int indent_num,
+				  int old_lineSp, int line_spacingNum)
 {  
   Num_zoneRecess      = num_zone_recess;
   Num_zoneLineSpacing = num_zone_line_spacing;
@@ -3620,7 +3628,8 @@ void CreateGreekKeyboardDlgWindow (ThotWindow parent)
 /*-----------------------------------------------------------------------
  CreateAuthentificationDlgWindow
  ------------------------------------------------------------------------*/
-void CreateAuthenticationDlgWindow (ThotWindow parent, const STRING realm, STRING server)
+void CreateAuthenticationDlgWindow (ThotWindow parent, const char *realm,
+				    char *server)
 {  
   string_par1 = realm;
   string_par2 = server;
@@ -3631,7 +3640,7 @@ void CreateAuthenticationDlgWindow (ThotWindow parent, const STRING realm, STRIN
 /*-----------------------------------------------------------------------
  CreateBackgroundImageDlgWindow
  ------------------------------------------------------------------------*/
-void CreateBackgroundImageDlgWindow (ThotWindow parent, STRING image_location)
+void CreateBackgroundImageDlgWindow (ThotWindow parent, char *image_location)
 {
   szFilter         = APPIMAGENAMEFILTER;
   strcpy (currentPathName, image_location);

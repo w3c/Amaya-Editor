@@ -12,17 +12,17 @@ extern PSchema GetPExtension ( Document doc,
 extern CSSInfoPtr AddCSS ( Document doc,
                            Document docRef,
                            CSSCategory category,
-                           STRING url,
-                           STRING localName );
+                           char *url,
+                           char *localName );
 extern CSSInfoPtr SearchCSS ( Document doc,
-                              STRING url );
+                              char *url );
 extern void RemoveDocCSSs ( Document doc );
-extern void RemoveStyleSheet ( STRING url,
+extern void RemoveStyleSheet ( char *url,
                                Document doc,
                                ThotBool disabled,
                                ThotBool removed );
-extern STRING GetStyleContents ( Element el );
-extern void LoadStyleSheet ( STRING url,
+extern char *GetStyleContents ( Element el );
+extern void LoadStyleSheet ( char *url,
                              Document doc,
                              Element el,
                              CSSInfoPtr css,
@@ -36,17 +36,17 @@ extern PSchema GetPExtension (/* Document doc,
 extern CSSInfoPtr AddCSS (/* Document doc,
                              Document docRef,
                              CSSCategory category,
-                             STRING url,
-                             STRING localName */);
+                             char *url,
+                             char *localName */);
 extern CSSInfoPtr SearchCSS (/* Document doc,
-                                STRING url */);
+                                char *url */);
 extern void RemoveDocCSSs (/* Document doc */);
-extern void RemoveStyleSheet (/* STRING url,
+extern void RemoveStyleSheet (/* char *url,
                                  Document doc,
                                  ThotBool disabled,
                                  ThotBool removed */);
-extern STRING GetStyleContents (/* Element el */);
-extern void LoadStyleSheet (/* STRING url,
+extern char *GetStyleContents (/* Element el */);
+extern void LoadStyleSheet (/* char *url,
                                Document doc,
                                Element el,
                                CSSInfoPtr css,

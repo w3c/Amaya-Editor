@@ -9,7 +9,7 @@
  * Initialization functions and button functions of Amaya application.
  *
  * Authors: V. Quint, I. Vatton
- *          R. Guetari (W3C/INRIA) - Unicode and Windows version.
+ *          R. Guetari (W3C/INRIA) - Windows version.
  */
 
 
@@ -25,7 +25,7 @@ typedef struct _SubDoc
   {
      struct _SubDoc  *SDnext;
      Element          SDel;
-     STRING           SDname;
+     char            *SDname;
   }SubDoc;
 
 /* the structure used for the GetIncludedDocuments_callback function */
@@ -33,8 +33,8 @@ typedef struct _IncludeCtxt
 {
   Element		div; /* enclosing element for the search */
   Element		link; /* current processed link */
-  STRING		url; /* called url */
-  STRING                name; /* the fragment name */
+  char		       *url; /* called url */
+  char                 *name; /* the fragment name */
   struct _IncludeCtxt  *ctxt; /* the previous context */
 } IncludeCtxt;
 
@@ -45,9 +45,9 @@ ThotBool	 WithToC;
 ThotBool         IgnoreCSS;
 
 static struct _SubDoc  *SubDocs;
-static char           PSfile[MAX_PATH];
-static char           PPrinter[MAX_PATH];
-static STRING           DocPrintURL;
+static char             PSfile[MAX_PATH];
+static char             PPrinter[MAX_PATH];
+static char            *DocPrintURL;
 static Document		DocPrint;
 static int              PaperPrint;
 static int              ManualFeed = PP_OFF;
@@ -71,7 +71,7 @@ static ThotBool GetIncludedDocuments ();
 /*----------------------------------------------------------------------
   RegisterSubDoc adds a new entry in SubDoc table.
   ----------------------------------------------------------------------*/
-static void         RegisterSubDoc (Element el, STRING url)
+static void         RegisterSubDoc (Element el, char *url)
 {
   struct _SubDoc  *entry, *last;
 
@@ -100,7 +100,7 @@ static void         RegisterSubDoc (Element el, STRING url)
   within the SubDoc table.
   Return the DIV element that correspond to the sub-document or NULL.
   ----------------------------------------------------------------------*/
-static Element      SearchSubDoc (STRING url)
+static Element      SearchSubDoc (char *url)
 {
   Element          el;
   struct _SubDoc  *entry;
@@ -158,7 +158,7 @@ void             SetInternalLinks (Document document)
   Attribute		HrefAttr, IntLinkAttr;
   Attribute             attr, ExtLinkAttr;
   AttributeType	        attrType;
-  STRING		text, ptr, url; 
+  char		       *text, *ptr, *url; 
   char                  number[10];
   char                  value[MAX_LENGTH];
   int			length, i, volume;
@@ -386,7 +386,7 @@ static void         PrintDocument (Document doc, View view)
   ElementType        elType;
   Attribute          attr;
   Element            el, docEl;
-  STRING             files, dir;
+  char              *files, *dir;
   char               viewsToPrint[MAX_PATH];
   ThotBool           status, textFile;
 
@@ -524,7 +524,7 @@ void                PrintAs (Document doc, View view)
 /*----------------------------------------------------------------------
    CallbackImage manage returns of Picture form.                   
   ----------------------------------------------------------------------*/
-void CallbackPrint (int ref, int typedata, STRING data)
+void CallbackPrint (int ref, int typedata, char *data)
 {
   int                 val;
 
@@ -863,8 +863,8 @@ static void         UpdateURLsInSubtree (NotifyElement *event, Element el)
   Return the root element that delimits the new inserted part (a div).
   ----------------------------------------------------------------------*/
 static Element MoveDocumentBody (Element el, Document destDoc,
-				 Document sourceDoc, STRING target,
-				 STRING url, ThotBool deleteTree)
+				 Document sourceDoc, char *target,
+				 char *url, ThotBool deleteTree)
 {
   Element	   root, ancestor, elem, firstInserted, div;
   Element          lastInserted, srce, copy, old, parent, sibling;
@@ -1010,14 +1010,14 @@ static void CloseMakeBook (Document document)
   GetIncludedDocuments_callback finishes the GetIncludedDocuments procedure
   ----------------------------------------------------------------------*/
 void   GetIncludedDocuments_callback (int newdoc, int status, 
-				      STRING urlName,
-				      STRING outputfile, 
+				      char *urlName,
+				      char *outputfile, 
 				      AHTHeaders *http_headers,
 				      void * context)
 {
   Element		link, div;
   IncludeCtxt          *ctx, *prev;
-  STRING		url, ptr;
+  char		       *url, *ptr;
   ThotBool              found = FALSE;
 
   /* restore GetIncludedDocuments's context */
@@ -1083,7 +1083,7 @@ static ThotBool  GetIncludedDocuments (Element el, Element link,
   AttributeType	        attrType;
   Document		newdoc;
   IncludeCtxt          *ctx = NULL;
-  STRING		text, ptr, url = NULL;
+  char		       *text, *ptr, *url = NULL;
   int			length;
   ThotBool              found = FALSE;
 
