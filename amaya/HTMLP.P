@@ -5082,7 +5082,7 @@ ATTRIBUTES
 	IN Structure_view
 		Visibility: Enclosing =;
 	IN Alternate_view
-		Visibility: 0;
+		Visibility: Enclosing =;
 	IN Table_of_contents
 		Visibility: 0;
 	IN Links_view
@@ -5094,7 +5094,7 @@ ATTRIBUTES
 	IN Structure_view
 		Visibility: Enclosing =;
 	IN Alternate_view
-		Visibility: 0;
+		Visibility: Enclosing =;
 	IN Table_of_contents
 		Visibility: 0;
 	IN Links_view
