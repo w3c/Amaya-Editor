@@ -883,49 +883,24 @@ PtrBox       box;
           rect.height = pFrame->FrClipYEnd - rect.y;
           rect.x -= pFrame->FrXOrg;
           rect.y -= pFrame->FrYOrg;
-          if (picPresent == FillFrame || picPresent == YRepeat)
+	  /* clipping height is done by the box height */
+	  if (rect.y < yFrame)
 	    {
-	      /* clipping height is done by the box height */
-	      if (rect.y < yFrame)
-		{
-		  /* reduce the height in delta value */
-		  rect.height = rect.height + rect.y - yFrame;
-		  rect.y = yFrame;
-		}
-	      if (rect.height > h)
-		rect.height = h;
+	      /* reduce the height in delta value */
+	      rect.height = rect.height + rect.y - yFrame;
+	      rect.y = yFrame;
 	    }
-	  else
+	  if (rect.height > h)
+	    rect.height = h;
+	  /* clipping width is done by the box width */
+	  if (rect.x < xFrame)
 	    {
-               /* clipping height is done by the image height */
-               delta = yFrame + imageDesc->PicHArea - rect.y;
-               if (delta <= 0)
-                  rect.height = 0;
-               else
-                  rect.height = delta;
+	      /* reduce the width in delta value */
+	      rect.width = rect.width +rect.x - xFrame;
+	      rect.x = xFrame;
 	    }
-	  
-          if (picPresent == FillFrame || picPresent == XRepeat)
-	    {
-             /* clipping width is done by the box width */
-             if (rect.x < xFrame)
-	       {
-		 /* reduce the width in delta value */
-		 rect.width = rect.width +rect.x - xFrame;
-		 rect.x = xFrame;
-	       }
-	     if (rect.width > w)
-               rect.width = w;
-	    }
-	  else
-	    {
-               /* clipping width is done by the image width */
-               delta = xFrame + imageDesc->PicWArea - rect.x;
-               if (delta <= 0)
-                  rect.width = 0;
-               else
-                  rect.width = delta;
-	    }
+	  if (rect.width > w)
+	    rect.width = w;
 #ifndef _GTK 
 	  valuemask = GCTile | GCFillStyle | GCTileStipXOrigin | GCTileStipYOrigin;
 	  values.tile = pixmap;
@@ -942,9 +917,10 @@ PtrBox       box;
 				  yFrame - picYOrg);
 		  XSetClipMask (TtDisplay, tiledGC, imageDesc->PicMask);
 		}
+	      else
+		XSetClipRectangles (TtDisplay, tiledGC, 0, 0, &rect, 1, Unsorted);
 	      XFillRectangle (TtDisplay, drawable, tiledGC, xFrame, yFrame,
-			      /*w, h);*/
-			      imageDesc->PicWArea, imageDesc->PicHArea);
+			      w, h);
 	    }
 	  else
 	    {
