@@ -69,9 +69,19 @@ static int              PagePerSheet;
 static ThotBool GetIncludedDocuments ();
 
 /*----------------------------------------------------------------------
+  RedisplayDocument redisplays a view of a document
+  ----------------------------------------------------------------------*/
+void  RedisplayDocument(Document doc, View view)
+{
+  TtaSetDisplayMode (doc, NoComputedDisplay);
+  TtaSetDisplayMode (doc, DisplayImmediately);
+}
+
+
+/*----------------------------------------------------------------------
   RegisterSubDoc adds a new entry in SubDoc table.
   ----------------------------------------------------------------------*/
-static void         RegisterSubDoc (Element el, char *url)
+static void RegisterSubDoc (Element el, char *url)
 {
   struct _SubDoc  *entry, *last;
 
@@ -100,7 +110,7 @@ static void         RegisterSubDoc (Element el, char *url)
   within the SubDoc table.
   Return the DIV element that correspond to the sub-document or NULL.
   ----------------------------------------------------------------------*/
-static Element      SearchSubDoc (char *url)
+static Element SearchSubDoc (char *url)
 {
   Element          el;
   struct _SubDoc  *entry;
@@ -127,7 +137,7 @@ static Element      SearchSubDoc (char *url)
 /*----------------------------------------------------------------------
   FreeSubDocTable frees all entries in SubDoc table.
   ----------------------------------------------------------------------*/
-static void         FreeSubDocTable ()
+static void FreeSubDocTable ()
 {
   struct _SubDoc  *entry, *last;
 
@@ -151,7 +161,7 @@ static void         FreeSubDocTable ()
   InternalLink is a Thot reference attribute that links a source and a
   target anchor and that allows P schemas to display and print cross-references
   ----------------------------------------------------------------------*/
-void             SetInternalLinks (Document document)
+void SetInternalLinks (Document document)
 {
   Element	        el, div, link, target, sibling;
   ElementType		elType, linkType;
@@ -650,7 +660,7 @@ void CallbackPrint (int ref, int typedata, char *data)
 
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
-void                InitPrint (void)
+void InitPrint (void)
 {
   char* ptr;
 

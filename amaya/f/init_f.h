@@ -133,7 +133,7 @@ extern ThotBool CheckMakeDirectory ( char *name,
                                      ThotBool recursive );
 extern void FreeAmayaStructures ( void );
 extern void InitAmaya ( NotifyEvent * event );
-extern void ChangeAttrOnRoot ( Document document,
+extern void ChangeAttrOnRoot ( Document doc,
                                int attrNum );
 extern void ShowMapAreas ( Document doc,
                            View view );
@@ -326,7 +326,7 @@ extern ThotBool CheckMakeDirectory (/* char *name,
                                        ThotBool recursive */);
 extern void FreeAmayaStructures (/* void */);
 extern void InitAmaya (/* NotifyEvent * event */);
-extern void ChangeAttrOnRoot (/* Document document,
+extern void ChangeAttrOnRoot (/* Document doc,
                                  int attrNum */);
 extern void ShowMapAreas (/* Document doc,
                              View view */);

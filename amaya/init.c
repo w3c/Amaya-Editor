@@ -6307,34 +6307,36 @@ void InitAmaya (NotifyEvent * event)
   type attrNum, create one.
   If the root has such an attribute, delete it.
   ----------------------------------------------------------------------*/
-void ChangeAttrOnRoot (Document document, int attrNum)
+void ChangeAttrOnRoot (Document doc, int attrNum)
 {
-   Element	    root;
-   AttributeType    attrType;
-   Attribute	    attr;
-   ThotBool	    docModified;
+  Element	    root;
+  AttributeType    attrType;
+  Attribute	    attr;
+  ThotBool	    docModified;
 
-   docModified = TtaIsDocumentModified (document);
-   root = TtaGetRootElement (document);
-   attrType.AttrSSchema = TtaGetDocumentSSchema (document);
-   attrType.AttrTypeNum = attrNum;
-   attr = TtaGetAttribute (root, attrType);
-   if (attr != NULL)
-      /* the root element has that attribute. Remove it */
-      TtaRemoveAttribute (root, attr, document);
-   else
-      /* the root element does not have that attribute. Create it */
-      {
-	attr = TtaNewAttribute (attrType);
-	TtaAttachAttribute (root, attr, document);
-        TtaSetAttributeValue (attr, 1, root, document);
-      }
-   if (!docModified)
-     {
-	TtaSetDocumentUnmodified (document);
-	/* switch Amaya buttons and menus */
-	DocStatusUpdate (document, docModified);
-     }
+  docModified = TtaIsDocumentModified (doc);
+  root = TtaGetRootElement (doc);
+  TtaSetDisplayMode (doc, NoComputedDisplay);
+  attrType.AttrSSchema = TtaGetDocumentSSchema (doc);
+  attrType.AttrTypeNum = attrNum;
+  attr = TtaGetAttribute (root, attrType);
+  if (attr != NULL)
+    /* the root element has that attribute. Remove it */
+    TtaRemoveAttribute (root, attr, doc);
+  else
+    /* the root element does not have that attribute. Create it */
+    {
+      attr = TtaNewAttribute (attrType);
+      TtaAttachAttribute (root, attr, doc);
+      TtaSetAttributeValue (attr, 1, root, doc);
+    }
+  if (!docModified)
+    {
+      TtaSetDocumentUnmodified (doc);
+      /* switch Amaya buttons and menus */
+      DocStatusUpdate (doc, docModified);
+    }
+  TtaSetDisplayMode (doc, DisplayImmediately);
 }
 
 /*----------------------------------------------------------------------

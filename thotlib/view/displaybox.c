@@ -1702,7 +1702,7 @@ void DisplayBox (PtrBox box, int frame, int xmin, int xmax, int ymin, int ymax)
 	       pAb->AbLeafType != LtPath)
 	{
 	  if (selected)
-	    DisplayStringSelection (frame, 0, box->BxWidth, box);
+	    DisplayStringSelection (frame, 0, box->BxW, box);
 	  else if (ThotLocalActions[T_emptybox] != NULL)
 	    (*ThotLocalActions[T_emptybox]) (box, frame, selected);
 	}

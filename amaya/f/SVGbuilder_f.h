@@ -35,6 +35,10 @@ extern void CopyUseContent ( Element el,
                              char *href );
 extern void EvaluateTestAttrs ( Element el,
                                 Document doc );
+extern void SetTextAnchor ( Attribute attr,
+                            Element el,
+                            Document doc,
+                            ThotBool delete );
 extern void SVGElementComplete ( Element el,
                                  Document doc,
                                  int *error );
@@ -61,10 +65,6 @@ extern void ParseTransformAttribute ( Attribute attr,
                                       Element el,
                                       Document doc,
                                       ThotBool delete );
-extern void SetTextAnchor ( Attribute attr,
-                            Element el,
-                            Document doc,
-                            ThotBool delete );
 extern void ParsePathDataAttribute ( Attribute attr,
                                      Element el,
                                      Document doc );
@@ -103,6 +103,10 @@ extern void CopyUseContent (/* Element el,
                                char *href */);
 extern void EvaluateTestAttrs (/* Element el,
                                   Document doc */);
+extern void SetTextAnchor (/* Attribute attr,
+                              Element el,
+                              Document doc,
+                              ThotBool delete */);
 extern void SVGElementComplete (/* Element el,
                                    Document doc,
                                    int *error */);
@@ -129,10 +133,6 @@ extern void ParseTransformAttribute (/* Attribute attr,
                                         Element el,
                                         Document doc,
                                         ThotBool delete */);
-extern void SetTextAnchor (/* Attribute attr,
-                              Element el,
-                              Document doc,
-                              ThotBool delete */);
 extern void ParsePathDataAttribute (/* Attribute attr,
                                        Element el,
                                        Document doc */);

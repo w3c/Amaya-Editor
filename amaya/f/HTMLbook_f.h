@@ -6,6 +6,8 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern void RedisplayDocument ( Document doc,
+                                View view );
 extern void SetInternalLinks ( Document document );
 extern void PrintAs ( Document doc,
                       View view );
@@ -26,6 +28,8 @@ extern void MakeBook ( Document document,
 
 #else /* __STDC__ */
 
+extern void RedisplayDocument (/* Document doc,
+                                  View view */);
 extern void SetInternalLinks (/* Document document */);
 extern void PrintAs (/* Document doc,
                         View view */);
