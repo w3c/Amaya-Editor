@@ -65,7 +65,8 @@ typedef struct
   GLrgb   rgb;
 } GLvertex;
 
-typedef struct {
+typedef struct 
+{
   GLshort     fontsize;
   char        *str, *fontname;
 } GLstring;
@@ -105,33 +106,35 @@ typedef struct
 extern "C" {
 #endif
 
-GLint GLBeginPage (const char *title, const char *producer, 
-				  GLint viewport[4],
-				  FILE *stream, const char *filename);
+  GLint GLBeginPage (char *title, char *producer, 
+		     GLint viewport[4],
+		     FILE *stream, const char *filename);
 
-GLint GLEndPage (void);
+  GLint GLEndPage (void);
 
-GLint GLBeginViewport (GLint viewport[4]);
-GLint GLEndViewport (void);
+  GLint GLBeginViewport (GLint viewport[4]);
+  GLint GLEndViewport (void);
 
-GLint GLEnable (GLint mode);
-GLint GLDisable (GLint mode);
-GLint GLPointSize (GLfloat value);
-GLint GLLineWidth (GLfloat value);
+  GLint GLEnable (GLint mode);
+  GLint GLDisable (GLint mode);
+  GLint GLPointSize (GLfloat value);
+  GLint GLLineWidth (GLfloat value);
 
-/*Graphic stuff*/
-GLint GLParseFeedbackBuffer (GLfloat *current);
+  /*Graphic stuff*/
+  GLint GLParseFeedbackBuffer (GLfloat *current);
 
-void GLPrintPostScriptColor(GLrgb rgb);
+  void GLPrintPostScriptColor(GLrgb rgb);
 
-/*Text*/
-GLint GLText (const char *str, const char *fontname, GLshort fontsize, 
-	      GLfloat x, GLfloat y);
+  /*Text*/
+  GLint GLText (const char *str, const char *fontname, GLshort fontsize, 
+		GLfloat x, GLfloat y);
 
-/*Pictures*/
-GLint GLDrawPixels (GLsizei width, GLsizei height,
-				   GLint xorig, GLint yorig,
-				   GLenum format, GLenum type, const void *pixels);
+  /*Pictures*/
+  GLint GLDrawPixelsPoscript(GLsizei width, GLsizei height,
+			    GLint xorig, GLint yorig,
+			    GLenum format, GLenum type, 
+			    unsigned char *pixels, 
+			     GLfloat x, GLfloat y);
 
 
 #ifdef __cplusplus

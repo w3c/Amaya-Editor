@@ -90,6 +90,8 @@ extern int MakeFrame ( char *schema,
                        int doc,
                        ThotBool withMenu,
                        ThotBool withButton );
+extern void TtaDisableScrollbars ( Document doc,
+                                   View view );
 extern void DestroyFrame ( int frame );
 extern int FindMenu ( int frame,
                       int menuID,
@@ -211,6 +213,8 @@ extern int MakeFrame (/* char *schema,
                          int doc,
                          ThotBool withMenu,
                          ThotBool withButton */);
+extern void TtaDisableScrollbars (/* Document doc,
+                                     View view */);
 extern void DestroyFrame (/* int frame */);
 extern int FindMenu (/* int frame,
                         int menuID,

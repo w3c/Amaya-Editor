@@ -62,11 +62,16 @@ void FDrawRectangle (int frame, int thick, int style, float x, float y, float wi
 void GL_DrawEmptyRectangle (int fg, int x, int y, int width, int height);
 void GL_DrawRectangle (int fg, int x, int y, int width, int height);
 
-void GL_DrawEmptyRectanglef (int fg, float x, float y, float width, float height);
+void GL_DrawEmptyRectanglef (int fg, 
+			     float x, float y, 
+			     float width, float height, 
+			     float thick);
+
 void GL_DrawRectanglef (int fg, float x, float y, float width, float height);
 
 void GL_DrawSegments (XSegment *point, int npoints);
-void GL_DrawArc (int x, int y, int w, int h, int angle1, int angle2, ThotBool filled);
+void GL_DrawArc (float x, float y, float w, float h, 
+		 int angle1, int angle2, ThotBool filled);
 
 void GL_DrawPolygon (ThotPoint *points, int npoints);
 

@@ -1091,7 +1091,9 @@ void  GL_DrawEmptyRectangle (int fg, int x, int y, int width, int height)
 /*----------------------------------------------------------------------
   GL_DrawEmptyRectangle Outlined rectangle
   ----------------------------------------------------------------------*/
-void  GL_DrawEmptyRectanglef (int fg, float x, float y, float width, float height)
+void  GL_DrawEmptyRectanglef (int fg, float x, 
+			      float y, float width, float height,
+			      float thick)
 { 
   Fill_style = FALSE;	
   GL_SetForeground (fg);
@@ -1105,12 +1107,25 @@ void  GL_DrawEmptyRectanglef (int fg, float x, float y, float width, float heigh
       glVertex2f (x, y );
       glEnd ();
     }  
+
+  thick = thick / 2;
+
   glBegin (GL_LINE_LOOP);
-  glVertex2f (x, y );
-  glVertex2f (x + width, y);
-  glVertex2f (x +  width, y + height);
-  glVertex2f (x, y + height);
-  /* glVertex2i (x, y ); */
+  glVertex2i (x + width, y + height);
+  glVertex2i (x + width, y);
+  glVertex2i (x, y);
+  glVertex2i (x, y + height);
+
+ /*  glBegin (GL_LINES); */
+/*   glVertex2f (x - thick, y); */
+/*   glVertex2f (x + width + thick, y); */
+/*   glVertex2f (x + width, y - thick); */
+/*   glVertex2f (x + width, y + height + thick); */
+/*   glVertex2f (x + width + thick, y + height); */
+/*   glVertex2f (x - thick, y + height); */
+/*   glVertex2f (x, y + height - thick); */
+/*   glVertex2f (x, y + thick );  */
+
   glEnd ();   
 }
 /*----------------------------------------------------------------------
@@ -1193,8 +1208,8 @@ void GL_DrawSegments (XSegment *point, int npoints)
 /*----------------------------------------------------------------------
   GL_DrawArc : Draw an arc
   ----------------------------------------------------------------------*/
-void GL_DrawArc (int x, int y, 
-		 int w, int h, 
+void GL_DrawArc (float x, float y, 
+		 float w, float h, 
 		 int startAngle, int sweepAngle, 
 		 ThotBool filled)
 {
@@ -2541,7 +2556,6 @@ static AnimTime ComputeAmayaCurrentTime (int frame)
   struct timeb	after;
 #endif /*_GTK*/
   AnimTime current_time; 
-  Document doc;
   int i;
 
   if (FrameTable[frame].Anim_play) 

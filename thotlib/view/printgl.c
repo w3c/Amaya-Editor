@@ -375,7 +375,8 @@ static GLint GLPrintPostScriptEndViewport (void)
 
 
 /* The public routines */
-GLint GLBeginPage (const char *title, const char *producer, 
+GLint GLBeginPage (char *title, 
+		   char *producer, 
 		   GLint viewport[4], 
 		   FILE *stream, const char *filename)
 {

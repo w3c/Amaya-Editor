@@ -26,6 +26,8 @@ extern void ShowSourceOfTimeline ( Document document,
 extern void Set_slider_position ( Document basedoc,
                                   Document timelinedoc,
                                   double f );
+extern void Set_slider_position_from_doc ( Document basedoc,
+                                           double f );
 extern void TimelineTextPostModify ( NotifyOnTarget *event );
 extern ThotBool TimelineElSelection ( NotifyElement *event );
 extern void Timeline_finished_moving_slider ( NotifyPresentation *event );
@@ -64,6 +66,8 @@ extern void ShowSourceOfTimeline (/* Document document,
 extern void Set_slider_position (/* Document basedoc,
                                     Document timelinedoc,
                                     double f */);
+extern void Set_slider_position_from_doc (/* Document basedoc,
+                                             double f */);
 extern void TimelineTextPostModify (/* NotifyOnTarget *event */);
 extern ThotBool TimelineElSelection (/* NotifyElement *event */);
 extern void Timeline_finished_moving_slider (/* NotifyPresentation *event */);
