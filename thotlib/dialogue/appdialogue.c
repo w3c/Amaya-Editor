@@ -2773,6 +2773,23 @@ void RemoveSignalGTK (GtkObject *w, gchar *signal_name)
 }
 
 /*-----------------------------------------------------------------------
+  get_targets
+  Signal handler invoked when user focus on drawing area 
+  -------------------------------------------------------------------------*/
+void get_targets (GtkWidget *widget, gpointer data)
+{  
+  static GdkAtom targets_atom = GDK_NONE;
+
+  if (targets_atom == GDK_NONE)
+    targets_atom = gdk_atom_intern ("STRING", FALSE);
+  if (FrameTable[ActiveFrame].WdFrame)
+    gtk_selection_convert (GTK_WIDGET (FrameTable[ActiveFrame].WdFrame), 
+			   GDK_SELECTION_PRIMARY, 
+			   targets_atom,  
+			   GDK_CURRENT_TIME);
+}
+
+/*-----------------------------------------------------------------------
   selection_received
   Signal handler called when the selections owner 
   (another application) returns the data 
@@ -2782,7 +2799,8 @@ void selection_received (GtkWidget *widget, GtkSelectionData *sel_data,
 {   
   if (sel_data->length < 0)
     return;
-  if (sel_data->type != GDK_SELECTION_TYPE_STRING)
+  if (sel_data->type != GDK_SELECTION_TYPE_STRING &&
+      sel_data->target != GDK_SELECTION_TYPE_STRING)
     return;
   /* if ClipboardLength is not zero, the last Xbuffer comes from Thot */
   if (Xbuffer && ClipboardLength == 0)
@@ -2799,23 +2817,6 @@ void selection_received (GtkWidget *widget, GtkSelectionData *sel_data,
   return;
 } 
 
-
-/*-----------------------------------------------------------------------
-  get_targets
-  Signal handler invoked when user focus on drawing area 
-  -------------------------------------------------------------------------*/
-void get_targets (GtkWidget *widget, gpointer data)
-{
-  static GdkAtom targets_atom = GDK_NONE;
-  
-  if (targets_atom == GDK_NONE)
-    targets_atom = gdk_atom_intern ("STRING", FALSE);
-  if (FrameTable[ActiveFrame].WdFrame)
-    gtk_selection_convert (GTK_WIDGET (FrameTable[ActiveFrame].WdFrame), 
-			   GDK_SELECTION_PRIMARY, 
-			   targets_atom,  
-			   GDK_CURRENT_TIME);
-}
 
 /*-----------------------------------------------------------------------
  selection_clear
@@ -3369,8 +3370,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 		       g_print("Error creating GtkGLArea!\n");
 		       exit(0);
 		     }
-		   else
-		     g_print("Warning : upgrade you Opengl implementation (ie: Mesa) to get group opacity !\n");
 		 }	       
 	       SetSharedContext (frame);
 	     }
@@ -3385,8 +3384,6 @@ int  MakeFrame (char *schema, int view, char *name, int X, int Y,
 		       g_print("Error creating GtkGLArea!\n");
 		       exit(0);
 		     }
-		   else
-		     g_print("Warning : upgrade you Opengl implementation (ie: Mesa) to get group opacity !\n");
 		 }
 	     }	       
 #endif /*_NOSHARELIST*/
