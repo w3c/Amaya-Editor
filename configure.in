@@ -388,11 +388,17 @@ if test "$with_wx" = "yes" ; then
   # --------- compile wxWidgets library --------------- #
   echo "---> Configuring wxWidgets library."
   OLDDIR=`pwd`
+  # create the build directory (debug or release)
   cd ../../wxWidgets/
-  mkdir -p AMAYABUILD
-  cd AMAYABUILD
+  if test $with_wxdebug = yes ; then
+    WXBUILD_DIR="AMAYABUILD_DEBUG"
+  else
+    WXBUILD_DIR="AMAYABUILD_RELEASE"
+  fi
+  mkdir -p $WXBUILD_DIR
+  cd $WXBUILD_DIR
 
-  # remove old configure options
+  # remove old configure cached options
   rm -f configarg.cache
 
   # setup configure options
@@ -453,28 +459,36 @@ if test "$with_wx" = "yes" ; then
   echo "---> Install wxWidgets library into Amaya."
   OLDDIR=$(pwd)
   cd ../../wxWidgets
-  mkdir -p $OLDDIR/../wxWidgets
-  mkdir -p $OLDDIR/../wxWidgets/include
-  mkdir -p $OLDDIR/../wxWidgets/contrib
-  mkdir -p $OLDDIR/../wxWidgets/contrib/include
-  mkdir -p $OLDDIR/../wxWidgets/lib
+  # create destination directories
+  if test $with_wxdebug = yes ; then
+    WXAMAYA_DIR="wxWidgets_debug"
+  else
+    WXAMAYA_DIR="wxWidgets_release"
+  fi
+  mkdir -p $OLDDIR/../$WXAMAYA_DIR
+  mkdir -p $OLDDIR/../$WXAMAYA_DIR/include
+  mkdir -p $OLDDIR/../$WXAMAYA_DIR/contrib
+  mkdir -p $OLDDIR/../$WXAMAYA_DIR/contrib/include
+  mkdir -p $OLDDIR/../$WXAMAYA_DIR/lib
+  # remove old lib
+  rm -rf $OLDDIR/../$WXAMAYA_DIR/lib/*
   # copy includes
-  cp -r include/* $OLDDIR/../wxWidgets/include/
-  cp -r contrib/include/* $OLDDIR/../wxWidgets/contrib/include/
-  cp -r AMAYABUILD/lib/wx $OLDDIR/../wxWidgets/lib/
+  cp -r include/* $OLDDIR/../$WXAMAYA_DIR/include/
+  cp -r contrib/include/* $OLDDIR/../$WXAMAYA_DIR/contrib/include/
+  cp -r $WXBUILD_DIR/lib/wx $OLDDIR/../$WXAMAYA_DIR/lib/
   # copy libraries (only .a because we dont want to share)
-  cp -pd AMAYABUILD/lib/*.a $OLDDIR/../wxWidgets/lib/
+  cp -pd $WXBUILD_DIR/lib/*.a $OLDDIR/../$WXAMAYA_DIR/lib/
   # copy autoconfig script (needed to setup 'Option' file)
-  cp -pd AMAYABUILD/*-config $OLDDIR/../wxWidgets/
+  cp -pd $WXBUILD_DIR/*-config $OLDDIR/../$WXAMAYA_DIR/
   cd $OLDDIR
   echo "---> Install wxWidgets library into Amaya. - DONE"
   # --------- install wxWidgets library - DONE --------------- #
 
 
   # --------- configuring wxWidgets paths --------------- #
-  WXCONFIG=../wxWidgets/wx-config
+  WXCONFIG=../$WXAMAYA_DIR/wx-config
   # look for relative wxWidgets path : necessary to install into different paths amaya
-  WXCONFIG_ARGS="--prefix=../../wxWidgets --exec-prefix=../../wxWidgets"
+  WXCONFIG_ARGS="--prefix=../../$WXAMAYA_DIR --exec-prefix=../../$WXAMAYA_DIR"
   # check that wx-config exists
   if test ! -f $WXCONFIG ; then
     AC_MSG_ERROR(Cannot find wx-config. Please download wxWidgets (http://www.wxwidgets.org/))
@@ -482,7 +496,7 @@ if test "$with_wx" = "yes" ; then
 
   # setup include paths  
   WX_INCLUDES="`$WXCONFIG $WXCONFIG_ARGS --cxxflags`"
-  WX_INCLUDES="-I../../wxWidgets/contrib/include/ ${WX_INCLUDES}"
+  WX_INCLUDES="-I../../$WXAMAYA_DIR/contrib/include/ ${WX_INCLUDES}"
   AC_SUBST(WX_INCLUDES)
 
   # setup libraries paths
@@ -497,7 +511,7 @@ if test "$with_wx" = "yes" ; then
       WX_LIBRARIES_EXTRA_PARAM="-framework OpenGL -framework AGL"
     fi
   fi
-  WX_LIBRARIES="-Wl,-rpath,../../wxWidgets/lib `$WXCONFIG $WXCONFIG_ARGS --libs=${WXCONFIG_LIBS_PARAM}` ${WX_LIBRARIES_EXTRA_PARAM}"
+  WX_LIBRARIES="-Wl,-rpath,../../$WXAMAYA_DIR/lib `$WXCONFIG $WXCONFIG_ARGS --libs=${WXCONFIG_LIBS_PARAM}` ${WX_LIBRARIES_EXTRA_PARAM}"
   AC_SUBST(WX_LIBRARIES)
 
   WX_OPTIONS="-D_WX"
