@@ -4458,7 +4458,7 @@ char GetNextInputChar (FILE *infile, int *index, ThotBool *endOfFile)
 	{
 	  /* Read next character */
 	  charRead = GetNextChar (infile, InputText, index, endOfFile);
-	  if ((int) charRead != EOL)
+	  if ((int) charRead != EOL && (int) charRead != CR)
 	    /* next character is not LF. Store next character and return LF */
 	    {
 	      PreviousBufChar = charRead;
