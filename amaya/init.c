@@ -2898,7 +2898,7 @@ NotifyEvent        *event;
    strcpy (ScanFilter, ".*htm*");
    SaveAsHTML = TRUE;
    SaveAsText = FALSE;
-   CopyImages = TRUE;
+   CopyImages = FALSE;
    UpdateURLs = FALSE;
    SavingFile = TtaGetMemory (MAX_LENGTH);
    AttrHREFvalue = TtaGetMemory (MAX_LENGTH);

@@ -178,10 +178,11 @@ typedef struct _SchemaMenu_Ctl
 #define T_cleartable			98
 #define T_resizetable                   99
 #define T_firstcolumn			100
-#define T_backuponfatal			101
-#define T_AIupdate			102
-#define T_redisplay			103
-#define MAX_LOCAL_ACTIONS               104
+#define T_colupdates			101
+#define T_backuponfatal			102
+#define T_AIupdate			103
+#define T_redisplay			104
+#define MAX_LOCAL_ACTIONS               105
 
 /* Indices des actions internes accessibles au clavier et
    non presentees dans les menus */

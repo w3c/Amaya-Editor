@@ -2863,7 +2863,11 @@ DisplayMode         newDisplayMode;
               if (oldDisplayMode == NoComputedDisplay)
                 /* il faut recalculer l'image */
 		RebuildImage (LoadedDocument[document - 1]);
-	      
+
+	      /* update tables if necessary */
+	      if (ThotLocalActions[T_colupdates])
+		(*ThotLocalActions[T_colupdates]) (document);
+		
               /* reaffiche ce qui a deja ete prepare' */
               RedisplayDocViews (LoadedDocument[document - 1]);
 

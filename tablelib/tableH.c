@@ -26,6 +26,7 @@
 #include "edit_tv.h"
 #include "frame_tv.h"
 
+static PtrTabUpdate FirstColUpdate;
 #include "attributes_f.h"
 #include "boxmoves_f.h"
 #include "boxrelations_f.h"
@@ -442,12 +443,12 @@ printf("width=%d%%\n", *percent);
 
 
 /*----------------------------------------------------------------------
-  CheckRowHeihgts checks row-spanned cells with related rows.
+  CheckRowHeights checks row-spanned cells with related rows.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void     CheckRowHeihgts (PtrAbstractBox table, int number, PtrAbstractBox *rowSpanCell, int *rowSpans, int frame)
+static void     CheckRowHeights (PtrAbstractBox table, int number, PtrAbstractBox *rowSpanCell, int *rowSpans, int frame)
 #else
-static void     CheckRowHeihgts (table, nmmber, rowSpanCell, rowSpans, frame)
+static void     CheckRowHeights (table, nmmber, rowSpanCell, rowSpans, frame)
 PtrAbstractBox  table;
 int             number;
 PtrAbstractBox *crowSpanCell;
@@ -485,7 +486,8 @@ int             frame;
 	  while (pTabRel != NULL && !found)
 	    {
 	      j = 0;
-	      while ( j < MAX_RELAT_DIM && pTabRel->TaRTable[j] != NULL && row != pTabRel->TaRTable[j])
+	      while ( j < MAX_RELAT_DIM && pTabRel->TaRTable[j] != NULL &&
+		      row != pTabRel->TaRTable[j])
 		j++;
 	      
 	      found = (row == pTabRel->TaRTable[j]);
@@ -493,67 +495,74 @@ int             frame;
 		pTabRel = pTabRel->TaRNext;
 	    }
 
-	  /* get real cell's height */
-	  pAb = cell->AbFirstEnclosed;
-	  height = 0;
-	  org = cell->AbBox->BxYOrg;
-	  while (pAb != NULL)
+	  if (found)
 	    {
-	      if (!pAb->AbDead && pAb->AbBox != NULL )
+	      /* get real cell's height */
+	      pAb = cell->AbFirstEnclosed;
+	      height = 0;
+	      org = cell->AbBox->BxYOrg;
+	      while (pAb != NULL)
 		{
-		  if (pAb->AbHeight.DimAbRef == NULL ||
-		      !IsParentBox (pAb->AbHeight.DimAbRef->AbBox, pAb->AbBox))
+		  if (!pAb->AbDead && pAb->AbBox != NULL )
 		    {
-		      val = pAb->AbBox->BxYOrg + pAb->AbBox->BxHeight - org;
-		      if (height < val)
-			height = val;
-		      pAb = NextSiblingAbsBox (pAb, cell);
+		      if (pAb->AbHeight.DimAbRef == NULL ||
+			  !IsParentBox (pAb->AbHeight.DimAbRef->AbBox, pAb->AbBox))
+			{
+			  val = pAb->AbBox->BxYOrg + pAb->AbBox->BxHeight - org;
+			  if (height < val)
+			    height = val;
+			  pAb = NextSiblingAbsBox (pAb, cell);
+			}
+		      else
+			pAb = pAb->AbFirstEnclosed;
 		    }
 		  else
-		    pAb = pAb->AbFirstEnclosed;
+		    pAb = NextSiblingAbsBox (pAb, cell);
 		}
-	      else
-		pAb = NextSiblingAbsBox (pAb, cell);
-	    }
 
-	  /* compare cell's height with rows' heights */
-	  sum = 0;
-	  for (k = 0; k < rowSpans[i] && k < MAX_COLROW; k++)
-	    {
-	      rowList[k] = row;
-	      HeightPack (row, NULL, frame);
-	      if (row != NULL && row->AbBox != NULL)
-		sum += row->AbBox->BxHeight;
-	      /* select nex row in the list */
-	      j++;
-	      if (j > MAX_RELAT_DIM || pTabRel->TaRTable[j] == NULL)
+	      /* compare cell's height with rows' heights */
+	      sum = 0;
+	      for (k = 0; k < rowSpans[i] && k < MAX_COLROW; k++)
 		{
-		  pTabRel = pTabRel->TaRNext;
-		  j = 0;
+		  rowList[k] = row;
+		  HeightPack (row, NULL, frame);
+		  if (row != NULL && row->AbBox != NULL)
+		    sum += row->AbBox->BxHeight;
+		  /* select nex row in the list */
+		  j++;
+		  if (pTabRel != NULL &&
+		      (j > MAX_RELAT_DIM || pTabRel->TaRTable[j] == NULL))
+		    {
+		      pTabRel = pTabRel->TaRNext;
+		      j = 0;
+		    }
+		  if (pTabRel != NULL)
+		    row = pTabRel->TaRTable[j];
+		  else
+		    row = NULL;
 		}
-	      if (pTabRel != NULL)
-		row = pTabRel->TaRTable[j];
-	    }
 	   
-	  /* update rows' height if necessary */
-	  height -= sum;
-	    {
-	      height = height / rowSpans[i];
-	      for (k = 0; k < rowSpans[i]; k++)
-		if (rowList[k]->AbBox->BxHeight + height > 0)
-		  {
-		    /* create the attribute for this element */
-		    GetAttribute (&pAttr);
-		    pAttr->AeAttrSSchema = pSS;
-		    pAttr->AeAttrNum = attrHeight;
-		    pAttr->AeAttrType = AtNumAttr;
-		    pAttr->AeAttrValue = rowList[k]->AbBox->BxHeight + height;
-		    AttachAttrWithValue (rowList[k]->AbElement, pDoc, pAttr);
-		    DeleteAttribute (NULL, pAttr);
-		  }
-	      /* Redisplay views */
-	      if (ThotLocalActions[T_redisplay] != NULL)
-		(*ThotLocalActions[T_redisplay]) (pDoc);
+	      /* update rows' height if necessary */
+	      height -= sum;
+	      {
+		height = height / rowSpans[i];
+		for (k = 0; k < rowSpans[i]; k++)
+		  if (rowList[k] != NULL &&
+		      rowList[k]->AbBox->BxHeight + height > 0)
+		    {
+		      /* create the attribute for this element */
+		      GetAttribute (&pAttr);
+		      pAttr->AeAttrSSchema = pSS;
+		      pAttr->AeAttrNum = attrHeight;
+		      pAttr->AeAttrType = AtNumAttr;
+		      pAttr->AeAttrValue = rowList[k]->AbBox->BxHeight + height;
+		      AttachAttrWithValue (rowList[k]->AbElement, pDoc, pAttr);
+		      DeleteAttribute (NULL, pAttr);
+		    }
+		/* Redisplay views */
+		if (ThotLocalActions[T_redisplay] != NULL)
+		  (*ThotLocalActions[T_redisplay]) (pDoc);
+	      }
 	    }
 	}
     }
@@ -964,7 +973,6 @@ int             frame;
   TtaFreeMemory (colWidth);
   TtaFreeMemory (colPercent);
 }
-
 
 /*----------------------------------------------------------------------
   ComputeColWidth computes the minimum width and the maximum width of a
@@ -1428,8 +1436,90 @@ int             frame;
   TtaFreeMemory (colWidth);
   TtaFreeMemory (colPercent);
   /* Now check row heights */
-  CheckRowHeihgts (table, rspanNumber, rowSpanCell, rowSpans, frame);
+  CheckRowHeights (table, rspanNumber, rowSpanCell, rowSpans, frame);
   pDoc->DocModified = modified;
+}
+
+
+/*----------------------------------------------------------------------
+  SaveColUpdate stores a new call to ComputeColWidth
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void     SaveColUpdate (PtrAbstractBox col, PtrAbstractBox table, int frame)
+#else
+static void     SaveColUpdate (col, table, frame)
+PtrAbstractBox  col;
+PtrAbstractBox  table;
+int             frame;
+#endif
+{
+  PtrTabUpdate pTabUpdate, pPrevTabUpdate;
+  boolean      found;
+
+  pPrevTabUpdate = NULL;
+  pTabUpdate = FirstColUpdate;
+  /* look at if a similar update is already registered */
+  found = FALSE;
+  while (!found && pTabUpdate != NULL)
+    {
+      pPrevTabUpdate = pTabUpdate;
+      found = (pTabUpdate->TaUTable == table);
+      if (found && col != pTabUpdate->TaUColumn && pTabUpdate->TaUColumn != NULL)
+	/* update the entry */
+	pTabUpdate->TaUColumn = NULL;
+      else if (!found)
+	pTabUpdate = pTabUpdate->TaUNext;
+    }
+
+  if (!found)
+    {
+      /* create a new entry */
+      pTabUpdate = (PtrTabUpdate) TtaGetMemory (sizeof (TabUpdate));
+      pTabUpdate->TaUNext = NULL;
+      pTabUpdate->TaUTable = table;
+      pTabUpdate->TaUColumn = col;
+      pTabUpdate->TaUFrame = frame;
+      if (pPrevTabUpdate != NULL)
+	pPrevTabUpdate->TaUNext = pTabUpdate;
+      else
+	FirstColUpdate = pTabUpdate;
+    }
+}
+
+
+/*----------------------------------------------------------------------
+  ComputeColUpdates computes calls to ComputeColWidth
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void     ComputeColUpdates (Document document)
+#else
+static void     ComputeColUpdates (document)
+Document        document;
+#endif
+{
+  PtrTabUpdate pTabUpdate, pPrevTabUpdate, pOldTabUpdate;
+
+  pPrevTabUpdate = NULL;
+  pTabUpdate = FirstColUpdate;
+  while (pTabUpdate != NULL)
+    {
+      if (FrameTable[pTabUpdate->TaUFrame].FrDoc == document)
+	{
+	  ComputeColWidth (pTabUpdate->TaUColumn, pTabUpdate->TaUTable, pTabUpdate->TaUFrame);
+	  if (pPrevTabUpdate == NULL)
+	    FirstColUpdate = pTabUpdate->TaUNext;
+	  else
+	    pPrevTabUpdate->TaUNext = pTabUpdate->TaUNext;
+	  pOldTabUpdate = pTabUpdate->TaUNext;
+	  TtaFreeMemory (pTabUpdate);
+	  pTabUpdate = pOldTabUpdate;
+	}
+      else
+	{
+	  pPrevTabUpdate = pTabUpdate;
+	  pTabUpdate = pTabUpdate->TaUNext;
+	}
+    }
 }
 
 /*----------------------------------------------------------------------
@@ -1519,7 +1609,10 @@ int              frame;
       (col != NULL || span > 1))
     {
       /* the table exists, compute the column width */
-      ComputeColWidth (col, table, frame);
+      if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == DisplayImmediately)
+	ComputeColWidth (col, table, frame);
+      else
+	SaveColUpdate (col, table, frame);
     }
 }
 
@@ -1579,7 +1672,10 @@ int              frame;
 	BuildColOrRowList (pAb, BoRow);
       
       /* compute widths of each column within the table */
-      ComputeColWidth (col, pAb, frame);
+      if (documentDisplayMode[FrameTable[frame].FrDoc - 1] == DisplayImmediately)
+	ComputeColWidth (col, pAb, frame);
+      else
+	SaveColUpdate (col, pAb, frame);
     }
 }
 
@@ -1662,13 +1758,14 @@ void                TableHLoadResources ()
    if (ThotLocalActions[T_checktable] == NULL)
      {
 	/* initialisations */
-
+        FirstColUpdate = NULL;
 	/* connexion des ressources */
 	TteConnectAction (T_checktable, (Proc) UpdateTable);
 	TteConnectAction (T_checkcolumn, (Proc) UpdateColumnWidth);
 	TteConnectAction (T_resizetable, (Proc) UpdateTableWidth);
 	TteConnectAction (T_cleartable, (Proc) ClearTable);
 	TteConnectAction (T_firstcolumn, (Proc) IsFirstColumn);
+	TteConnectAction (T_colupdates, (Proc) ComputeColUpdates);
      }
 }
 

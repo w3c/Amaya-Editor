@@ -121,6 +121,7 @@ typedef struct _DimRelations
   boolean         DimRSame[MAX_RELAT_DIM]; /* Description of a displayed box */
 } DimRelations;
 
+/* Structure to store table information */
 typedef struct _TabRelations *PtrTabRelations;
 typedef struct _TabRelations
 {
@@ -129,6 +130,16 @@ typedef struct _TabRelations
   int              TaRTWidths[MAX_RELAT_DIM];
   int              TaRTPercents[MAX_RELAT_DIM];
 } TabRelations;
+
+/* Structure to store table updates */
+typedef struct _TabUpdate *PtrTabUpdate;
+typedef struct _TabUpdate
+{
+  PtrTabUpdate     TaUNext;	/* Next block */
+  PtrAbstractBox   TaUTable;
+  PtrAbstractBox   TaUColumn;
+  int              TaUFrame;
+} TabUpdate;
 
 typedef struct _Box
 {
