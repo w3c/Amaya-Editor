@@ -1587,10 +1587,10 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 			   }
 			 else if (pAbb1->AbNext == NULL ||
 				  AttrIsAfter (pAbb1->AbCreatorAttr, pAttr))
-			   /* le nouveau pave attache a un attribut doit s'inserer
-			      avant ceux d'un attribut suivant */
+			   /* le nouveau pave attache a un attribut doit
+			      s'inserer avant ceux d'un attribut suivant */
 			   stop = TRUE;
-			 else
+			 else			   
 			   pAbb1 = pAbb1->AbNext;
 		       }
 		     else
@@ -1690,7 +1690,8 @@ PtrAbstractBox CrAbsBoxesPres (PtrElement pEl, PtrDocument pDoc,
 		     pAbbCreated = NULL;
 		     stop = TRUE;
 		   }
-		 else if ((!pAbb1->AbPresentationBox && !pAbb1->AbDead) ||
+		 else if ((pAbb1->AbNext == NULL) ||
+			  (!pAbb1->AbPresentationBox && !pAbb1->AbDead) ||
 			  AttrIsAfter (pAbb1->AbCreatorAttr, pAttr))
 		   /* le nouveau pave attache a un attribut doit
 		      s'inserer avant ceux d'un attribut suivant */
