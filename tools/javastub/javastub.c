@@ -25,7 +25,7 @@
 #include <sys/fcntl.h>
 #endif
 #endif
-#ifdef HAVE_MMAP
+#ifdef linux
 #include <sys/mman.h>
 #endif
 
@@ -332,7 +332,7 @@ static inout parse_comment(char **next)
     char *p = *next;
     inout retval = TYPE_NONE;
 
-    if (*next >= mmap_map + filesize) return(-1);
+    if (*next >= mmap_map + filesize) return(retval);
     SKIP_BLANK(p)
     if ((*p == '/') && (*(p+1) == '*')) {
         p += 2;
@@ -763,7 +763,8 @@ static void do_parse(void)
 	mmap_mapsize = st.st_size + 2*sizeof(unsigned long);
 	mmap_mapsize = (mmap_mapsize+pagesizem1) & ~pagesizem1;
 #ifdef linux
-	mmap_map = mmap(NULL, mmap_mapsize, PROT_READ, MAP_PRIVATE, fd, 0);
+	mmap_map = mmap(NULL, (size_t) mmap_mapsize, PROT_READ,
+                        MAP_PRIVATE, fd, 0);
 	if (-1 == (long)mmap_map) {
 		perror("mkdep: mmap");
 		close(fd);
@@ -771,7 +772,8 @@ static void do_parse(void)
 	}
 	res = close(fd);
 	parse(mmap_map);
-	res = munmap(mmap_map, mmap_mapsize);
+	res = munmap(mmap_map, (size_t) mmap_mapsize);
+        if (res < 0) perror("munmap failed");
 #else
         mmap_map = malloc(mmap_mapsize);
 	if (mmap_map == NULL) {
@@ -1333,3 +1335,6 @@ int main(int argc, char **argv)
 	}
 	return 0;
 }
+
+
+

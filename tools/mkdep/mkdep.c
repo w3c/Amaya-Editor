@@ -20,7 +20,7 @@
 #include <sys/fcntl.h>
 #endif
 #endif
-#ifdef HAVE_MMAP
+#ifdef linux
 #include <sys/mman.h>
 #endif
 
@@ -194,7 +194,7 @@ static void handle_local_include(char *name, int len)
         for (i = 0;i < nb_path;i++) {
 	   path = &path_array[i];
 	   plen = path->len;
-	   memcpy(path->buffer+plen, name, len);
+	   memcpy(path->buffer+plen, name, (size_t) len);
 	   plen += len;
 	   path->buffer[plen] = '\0';
 	   if (access(path->buffer, F_OK))
@@ -372,7 +372,8 @@ static void do_depend(void)
 	mmap_mapsize = st.st_size + 2*sizeof(unsigned long);
 	mmap_mapsize = (mmap_mapsize+pagesizem1) & ~pagesizem1;
 #ifdef linux
-	mmap_map = mmap(NULL, mmap_mapsize, PROT_READ, MAP_PRIVATE, fd, 0);
+	mmap_map = mmap(NULL, (size_t) mmap_mapsize, PROT_READ,
+                        MAP_PRIVATE, fd, (off_t) 0);
 	if (-1 == (long)mmap_map) {
 		fprintf(stderr,"mkdep : mmap file %s : ", filename);
 		perror("");
@@ -381,7 +382,8 @@ static void do_depend(void)
 	}
 	res = close(fd);
 	state_machine(mmap_map);
-	res = munmap(mmap_map, mmap_mapsize);
+	res = munmap(mmap_map, (size_t) mmap_mapsize);
+        if (res < 0) perror("unmap failed");
 #else
         mmap_map = malloc(mmap_mapsize);
 	if (mmap_map == NULL) {
@@ -459,7 +461,7 @@ int main(int argc, char **argv)
 
 		filename = name;
 		len = strlen(name);
-		memcpy(depname, name, len+1);
+		memcpy(depname, name, (size_t) len+1);
 		command = __depname;
 		if (len > 2 && name[len-2] == '.') {
 			switch (name[len-1]) {
@@ -533,3 +535,7 @@ int main(int argc, char **argv)
 #endif
 	return 0;
 }
+
+
+
+

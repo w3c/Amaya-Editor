@@ -416,7 +416,7 @@ char               *viewNames;
        lg = 4;
      }
 
-   sprintf (tmpDocName, "Thot%ld", pid + numOfJobs);
+   sprintf (tmpDocName, "Thot%ld", (long) pid + numOfJobs);
    strcpy(&tmpDirName[lg], DIR_STR);
    strcat(&tmpDirName[lg], tmpDocName);
 #ifdef DEBUG
@@ -903,3 +903,4 @@ View                view;
    TtaShowDialogue (NumFormPrint, FALSE);
 
 }
+

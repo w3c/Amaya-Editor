@@ -128,7 +128,7 @@ int                 imagetype;
       image->PicPixmap = 0;
       image->PicMask = 0;
       image->PicType = imagetype;
-      image->PicPresent = picPresent;
+      image->PicPresent = (PictureScaling) picPresent;
       image->PicXArea = 0;
       image->PicYArea = 0;
       image->PicWArea = 0;
@@ -184,3 +184,4 @@ int                *Imdsource;
    imagec->PicPresent = images->PicPresent;
    imagec->PicType = images->PicType;
 }
+

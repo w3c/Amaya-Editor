@@ -97,7 +97,8 @@ char               *suffix;
      {
 	thotDir.buf = command;
 	thotDir.bufLen = sizeof (command);
-	thotDir.PicMask = (int)(ThotDirBrowse_FILES | ThotDirBrowse_DIRECTORIES);
+	thotDir.PicMask = (ThotDirBrowse_mask)
+                          (ThotDirBrowse_FILES | ThotDirBrowse_DIRECTORIES);
 	ret = ThotDirBrowse_first (&thotDir, aDirectory, "*", suffix);
 	ThotDirBrowse_close (&thotDir);
      }
@@ -281,3 +282,4 @@ int                 fileRef;
   /* WIN_ListDirectory (dirRef, formRef, aDirectory, suffix);	   */
 #  endif /* _WINDOWS */
 }
+

@@ -1380,6 +1380,8 @@ Document            doc;
    selector string. If the selector is made of multiple comma- 
    separated selector items, it parses them one at a time and  
    return the end of the selector string to be handled or NULL 
+
+   Need to add multi-DTD support here !!!!
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 char               *ParseHTMLGenericSelector (char *selector, char *attrstr,
@@ -1402,7 +1404,6 @@ PSchema             gPres;
   char               *deb = &sel[0];
   char               *elem = &sel[0];
   char               *cur = &sel[0];
-  int                 attr, attrval;
   ElementType         elType;
   char               *ancestors[MAX_ANCESTORS];
   int                 i, j;
@@ -1570,7 +1571,6 @@ PSchema             gPres;
     {
       if (ancestors[i] == NULL)
 	break;
-      attr = attrval = 0;
       GIType (ancestors[i], &elType);
       if (elType.ElTypeNum == HTML_EL_BODY && elType.ElSSchema == HTMLschema)
 	elType.ElTypeNum = HTML_EL_HTML;
@@ -4797,3 +4797,5 @@ Document            doc;
    ParseHTMLStyleHeader (NULL, css_command, doc, TRUE);
    SetHTMLStyleParserDestructiveMode (FALSE);
 }
+
+

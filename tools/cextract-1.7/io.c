@@ -379,7 +379,6 @@ void
 cxt_close()
 {
   P_BUFDATA holdbuf;
-  int len;
 
   /* close up buffers and open file */
   out_char(-1, '\0');
@@ -2271,3 +2270,4 @@ close_input (stream)
   return(pclose(stream));
 #endif /* NO_POPEN */
 }
+

@@ -92,7 +92,7 @@ DBG(fprintf(stderr, "SetRelativeURLs\n");)
 	      /* get the URL contained in the attribute. */
 	      len = MAX_LENGTH - 1;
 	      TtaGiveTextAttributeValue (attr, old_url, &len);
-	      old_url[MAX_LENGTH] = EOS;
+	      old_url[MAX_LENGTH - 1] = EOS;
 	      /* save the new attribute value */
 	      if (old_url[0] != '#')
 		{
@@ -336,7 +336,7 @@ PicType             filetype;
 #endif
 {
     int res;
-    char msg[10000];
+    char msg[MAX_LENGTH];
     char tempfile[MAX_LENGTH]; /* Name of the file used to refetch */
     char tempURL[MAX_LENGTH];  /* May be redirected */
     char *no_reread_check;
@@ -433,7 +433,7 @@ boolean             with_images;
    char             url[MAX_LENGTH];
    char             tempname[MAX_LENGTH];
    char             documentname[MAX_LENGTH];
-   char             msg[5000];
+   char            *msg;
    int              free = 10000;
    int              index = 0, len, nb = 0;
    LoadedImageDesc *pImage;
@@ -442,6 +442,14 @@ boolean             with_images;
 
    if (!IsW3Path (DocumentURLs[document]))
       return (-1);
+
+   /*
+    * Don't use memory allocated on the stack ! May overflow the 
+    * memory allocated for this Java thread.
+    */
+   msg = TtaGetMemory(free);
+   if (msg == NULL)
+       return (-1);
 
    /*
     * First step : build the output and ask for confirmation.
@@ -503,8 +511,10 @@ DBG(fprintf(stderr, "SaveFileThroughNet :  export to %s \n", tempname);)
        TtaShowDialogue (BaseDialog + ConfirmSave, FALSE);
        /* wait for an answer */
        TtaWaitShowDialogue ();
-       if (!UserAnswer)
+       if (!UserAnswer) {
+	 TtaFreeMemory(msg);
 	 return (-1);
+       }
      }
    /*
     * Second step : saving the HTML content and the images modified locally.
@@ -552,6 +562,7 @@ DBG(fprintf(stderr, "Image %s modified\n", pImage->localName);)
 		       /* erase the last status message */
 		       TtaSetStatus (document, view, "", NULL);
 
+		       TtaFreeMemory(msg);
 		       if (UserAnswer)
 			  return (-1);
 		       return (0);
@@ -591,6 +602,8 @@ DBG(fprintf(stderr, "Saving HTML document %s\n", tempname);)
 	InitConfirm (document, view, msg);
 	/* JK: to erase the last status message */
 	TtaSetStatus (document, view, "", NULL);
+
+        TtaFreeMemory(msg);
 	if (UserAnswer)
 	   return (-1);
 	return (0);
@@ -600,6 +613,7 @@ DBG(fprintf(stderr, "Saving HTML document %s\n", tempname);)
 
 DBG(fprintf(stderr, "Saving completed\n");)
 
+   TtaFreeMemory(msg);
    return (0);
 }
 
@@ -1207,4 +1221,5 @@ void                DoSaveObjectAs ()
    SavingObject = 0;
    SavingDocument = 0;
 }
+
 

@@ -820,17 +820,14 @@ HTURI               *parts;
   char * p;
   char * after_access = name;
   char       used_sep;
-  char       my_path_sep;
 
   if (name && strchr (name, URL_SEP))
     {
       used_sep = URL_SEP;
-      my_path_sep = ':';
     }
   else
     {
       used_sep = DIR_SEP;
-      my_path_sep = ':';
     }
 
   memset(parts, '\0', sizeof(HTURI));
@@ -1074,17 +1071,14 @@ char        *host;
     char *path;
     char *access = host-3;
     char       used_sep;
-    char      *used_str;
 
   
      if (*filename && strchr (*filename, URL_SEP))
        {
-	 used_str = URL_STR;
 	 used_sep = URL_SEP;
        }
      else
        {
-	 used_str = DIR_STR;
 	 used_sep = DIR_SEP;
        }
   
@@ -1196,7 +1190,6 @@ char        **url;
   char *orig, *dest, *end;
 
   char       used_sep;
-  char      *used_str;
 
 
   if (!url || !*url)
@@ -1204,12 +1197,10 @@ char        **url;
 
   if (strchr (*url, URL_SEP))
     {
-      used_str = URL_STR;
       used_sep = URL_SEP;
     }
   else
     {
-      used_str = DIR_STR;
       used_sep = DIR_SEP;
     }
 
@@ -1452,3 +1443,5 @@ char            *relatedName;
     }
   return (return_value);
 }
+
+
