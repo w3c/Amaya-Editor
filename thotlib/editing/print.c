@@ -192,7 +192,6 @@ LRESULT CALLBACK AbortDlgProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam
 	   {
 	   case IDCANCEL:
        gbAbort = TRUE;
-	   AbortDoc (TtPrinterDC);
 	   DestroyWindow (hwnd);
 	   return TRUE;
 	   }
@@ -218,6 +217,9 @@ BOOL CALLBACK AbortProc (HDC hdc, int error)
           TranslateMessage (&msg);
           DispatchMessage (&msg);
 	  }
+
+	/* the gbAbort function is TRUE (return is FALSE)
+	   if the user has canceled the print operation */
    return !gbAbort;
 }
 
@@ -1958,16 +1960,18 @@ static int PrintDocument (PtrDocument pDoc, int viewsCounter)
 #ifdef _WINDOWS
   if (TtPrinterDC)
     {
-    if ((EndDoc (TtPrinterDC)) <= 0)
-      WinErrorBox (NULL, "PrintDocument (2)");
-    
-    /*DeleteDC (TtPrinterDC);*/
-    TtPrinterDC = NULL;
-    
-    if (!gbAbort)
-      {
+    if (gbAbort)
+		AbortDoc (TtPrinterDC);
+	else 
+	{
+	  /* remove the Abort window */
       DestroyWindow (GHwnAbort);
-      }
+
+	  /* end the document */
+      if ((EndDoc (TtPrinterDC)) <= 0)
+        WinErrorBox (NULL, "PrintDocument (2)");    
+	}
+     TtPrinterDC = NULL;
     return 0;
     }
   else
