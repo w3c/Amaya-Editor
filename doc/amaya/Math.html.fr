@@ -36,7 +36,7 @@ manipuler les expressions mathématiques de la même manière que vous manipulez
 les autres parties des éléments HTML. Toutes les commandes d'édition fournies
 par Amaya pour traiter le texte sont également utilisables pour les
 mathématiques. Il y a quelques manipulations supplémentaires pour entrer des
-constructions mathématiques.  </p>
+constructions mathématiques.</p>
 
 <h3><a name="Creating">Créer une expression mathématique</a></h3>
 
@@ -303,12 +303,12 @@ ajouter par exemple un exposant ou mettre des parenthèses autour d'une
 expression, il suffit de sélectionner l'expression et d'entrer la nouvelle
 expression avec la palette, le menu <strong>Math</strong> ou le <a
 href="#Entering">clavier</a>. Vous pouvez également utiliser la commande
-<strong>Transformer </strong>du menu  <strong>Edition</strong>. Sélectionnez 
+<strong>Transformer </strong>du menu  <strong>Edition</strong>. Sélectionnez
 l'expression que vous voulez transformer et la
 commande<strong>Transformer</strong> affichera un menu avec tous les
 changements possibles.</p>
 
-<h3><a name="Math_Struc">Vue Math_Structure </a></h3>
+<h3><a name="Math_Struc">Vue Math_Structure</a></h3>
 
 <p>Toutes les fois qu'un document contient des éléments MathML, la sélection
 de  l'article  <a href="Views.html#Structure">Montrer la structure </a>du menu
@@ -380,20 +380,20 @@ la formule ci-dessous est un lien vers la page d'accueil W3C:</p>
 
 
 <p>Cliquer deux fois sur un des caractères à l'intérieur de la fraction fait
-apparaître la page d'accueil W3C. Dans le classeur XML, la fraction est
+apparaître la page d'accueil W3C. Dans le fichier XML, la fraction est
 représentée par:</p>
 <pre><code>&lt;mfrac xml:link="simple" href="http://www.w3.org/"&gt;...&lt;/mfrac&gt;</code></pre>
 
-<p>(Vous pouvez trouver cela seulement dans la vue structure. ce n'est pas
+<p>(Vous pouvez trouver cela seulement dans la vue structure. Ce n'est pas
 couremment indiqué dans la vue liens).  Pour créer un tel lien, il suffit de
-sélectionner une expression (la fraction dans l'exemple ci-dessus ), de
-cliquer sur le bouton Lien ( ou de sélectionner le "créer lien" du menu
-Liens), et de cliquer sur la cible désirée. Si la cible est une expression
-dans une formule, vous devez d'abord transformer cette expression en cible. Il
-suffit de sélectionner l'expression ainsi que le "créer cible" du menu Liens.
-Ceci crée un attribut <code>id</code> pour l'expression cible.</p>
+sélectionner une expression (la fraction dans la démonstration  ci-dessus par
+exemple), de cliquer sur le bouton Lien ( ou de sélectionner le "créer lien"
+du menu Liens), et de cliquer sur la cible désirée. Si la cible est une
+expression dans une formule, vous devez d'abord transformer cette expression
+en cible. Il suffit de sélectionner l'expression ainsi que le "créer cible" du
+menu Liens. Ceci crée un attribut <code>id</code> pour l'expression cible.</p>
 
-<h3><a name="Current">Limite  courantes</a></h3>
+<h3><a name="Current">Limites  courantes</a></h3>
 
 <p>Amaya implémente seulement les <em>Etiquettes de Présentation</em> à partir
 du MathML 2.0, et non  le  <em>Balisage du Contenu</em>. Tous les éléments de
