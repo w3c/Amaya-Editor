@@ -1689,6 +1689,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
   int          status;
   int          delta;
   int          key;
+  int          key_menu;
   int          document, view;
   UINT         i, nNumFiles;
   RECT         rect;
@@ -1815,13 +1816,19 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
 	  if (wParam >= 48 && wParam <= 57)
 	    {
 	    /* handling Ctrl 0-9 or Alt 0-9 */
-	      key = GetKeyState (VK_CONTROL);
+	      key_menu = GetKeyState (VK_MENU);
+  	      key = GetKeyState (VK_CONTROL);
+		  /* is it an Alt-GR modifier? (WIN32 interprets this
+		     as having both a control + menu key pressed down) */
+	      if (HIBYTE (key_menu) && HIBYTE (key))
+			return 0;
+		  /* is a control key pressed? */
 	      if (HIBYTE (key))
-		isSpecial = FALSE;
+		    isSpecial = FALSE;
 	      else
 		{
-		  key = GetKeyState (VK_MENU);
-		  if (HIBYTE (key))
+          /* is a menu key pressed? */
+		  if (HIBYTE (key_menu))
 		    isSpecial = FALSE;
 		  else
 		    /* don't handle a simple 0-9 */
