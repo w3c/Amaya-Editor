@@ -336,7 +336,8 @@ AttributeType	attrType;
      if (*el == NULL)
        return;
      elType = TtaGetElementType (*el);
-     if (elType.ElTypeNum == MathML_EL_Construct)
+     if (elType.ElTypeNum == MathML_EL_Construct ||
+         elType.ElTypeNum == MathML_EL_Construct1)
 	{
         attrType.AttrSSchema = elType.ElSSchema;
         attrType.AttrTypeNum = MathML_ATTR_IntPlaceholder;
@@ -365,57 +366,88 @@ static Element InsertPlaceholder (Element el, ThotBool before, Document doc,
   ElementType	elType;
   Attribute	attr;
   AttributeType	attrType;
-  ThotBool		createConstruct, oldStructureChecking;
+  ThotBool	createConstruct, oldStructureChecking, afterMsubsup;
 
-     placeholderEl = NULL;
+  placeholderEl = NULL;
 
-     if (!ElementNeedsPlaceholder (el))
-	/* this element does not need placeholders.  Delete its previous
-	   and next siblings if they are place holders */
-	{
-	sibling = el;
+  if (!ElementNeedsPlaceholder (el))
+    /* this element does not need placeholders.  Delete its previous
+       and next siblings if they are place holders */
+    {
+      sibling = el;
+      TtaPreviousSibling (&sibling);
+      DeleteIfPlaceholder (&sibling, doc, record);
+      sibling = el;
+      TtaNextSibling (&sibling);
+      DeleteIfPlaceholder (&sibling, doc, record);
+    }
+  else
+    /* this element needs placeholders.  Create placeholders if the
+       previous and/or next sibling are absent or need placeholders too */
+    {
+      createConstruct = TRUE;
+      sibling = el;
+      afterMsubsup = FALSE;
+      if (before)
 	TtaPreviousSibling (&sibling);
-	DeleteIfPlaceholder (&sibling, doc, record);
-	sibling = el;
-	TtaNextSibling (&sibling);
-	DeleteIfPlaceholder (&sibling, doc, record);
-	}
-     else
-	/* this element needs placeholders.  Create placeholders if the
-	   previous and/or next sibling are absent or need placeholders too */
+      else
 	{
-	createConstruct = TRUE;
-	sibling = el;
-	if (before)
-	   TtaPreviousSibling (&sibling);
-	else
-	   TtaNextSibling (&sibling);
-	if (sibling != NULL)
-	   if (!ElementNeedsPlaceholder (sibling))
-	      createConstruct = FALSE;
-	if (createConstruct)
-	   {
-	   elType = TtaGetElementType (el);
-	   elType.ElTypeNum = MathML_EL_Construct;
-	   placeholderEl = TtaNewElement (doc, elType);
-	   /* do not check the Thot abstract tree against the structure */
-	   /* schema while inserting the Placeholder */
-	   oldStructureChecking = TtaGetStructureChecking (doc);
-	   TtaSetStructureChecking (0, doc);
-	   TtaInsertSibling (placeholderEl, el, before, doc);
-	   /* resume structure checking */
-	   TtaSetStructureChecking (oldStructureChecking, doc);
-           attrType.AttrSSchema = elType.ElSSchema;
-           attrType.AttrTypeNum = MathML_ATTR_IntPlaceholder;
-           attr = TtaNewAttribute (attrType);
-           TtaAttachAttribute (placeholderEl, attr, doc);
-           TtaSetAttributeValue (attr, MathML_ATTR_IntPlaceholder_VAL_yes_,
-				 placeholderEl, doc);
-	   if (record)
-	      TtaRegisterElementCreate (placeholderEl, doc);
-	   }
+	  TtaNextSibling (&sibling);
+	  if (!sibling)
+	    /* the element has no following sibling */
+	    {
+	      elType = TtaGetElementType (el);
+	      if (elType.ElTypeNum == MathML_EL_MSUBSUP ||
+		  elType.ElTypeNum == MathML_EL_MSUB ||
+		  elType.ElTypeNum == MathML_EL_MSUP ||
+		  elType.ElTypeNum == MathML_EL_MUNDEROVER ||
+		  elType.ElTypeNum == MathML_EL_MUNDER ||
+		  elType.ElTypeNum == MathML_EL_MOVER )
+		/* the element is a msubsup, msub, msup, munderover, munder
+		 or mover */
+		{
+		  attrType.AttrSSchema = elType.ElSSchema;
+		  attrType.AttrTypeNum = MathML_ATTR_IntVertStretch;
+		  if (TtaGetAttribute (el, attrType))
+		    /* it has an attribute IntVertStretch */
+		    /* the place holder has to be created after this element
+		       that stretches vertically and that has no other
+		       following sibling, to allow presentation rules to
+		       operate correctly.
+		       Create a Construct1 element */
+		    afterMsubsup = TRUE;
+		}
+	    }
 	}
-     return placeholderEl;
+      if (sibling != NULL)
+	if (!ElementNeedsPlaceholder (sibling))
+	  createConstruct = FALSE;
+      if (createConstruct)
+	{
+	  elType = TtaGetElementType (el);
+	  if (afterMsubsup)
+	    elType.ElTypeNum = MathML_EL_Construct1;
+	  else
+	    elType.ElTypeNum = MathML_EL_Construct;
+	  placeholderEl = TtaNewElement (doc, elType);
+	  /* do not check the Thot abstract tree against the structure */
+	  /* schema while inserting the Placeholder */
+	  oldStructureChecking = TtaGetStructureChecking (doc);
+	  TtaSetStructureChecking (0, doc);
+	  TtaInsertSibling (placeholderEl, el, before, doc);
+	  /* resume structure checking */
+	  TtaSetStructureChecking (oldStructureChecking, doc);
+	  attrType.AttrSSchema = elType.ElSSchema;
+	  attrType.AttrTypeNum = MathML_ATTR_IntPlaceholder;
+	  attr = TtaNewAttribute (attrType);
+	  TtaAttachAttribute (placeholderEl, attr, doc);
+	  TtaSetAttributeValue (attr, MathML_ATTR_IntPlaceholder_VAL_yes_,
+				placeholderEl, doc);
+	  if (record)
+	    TtaRegisterElementCreate (placeholderEl, doc);
+	}
+    }
+  return placeholderEl;
 }
 
 /*----------------------------------------------------------------------
@@ -487,7 +519,8 @@ static void	   CreateParentMROW (Element el, Document doc)
 	while (sibling != NULL)
 	  {
 	    elType = TtaGetElementType (sibling);
-	    if (elType.ElTypeNum != MathML_EL_Construct)
+	    if (elType.ElTypeNum != MathML_EL_Construct &&
+		elType.ElTypeNum != MathML_EL_Construct1)
 	      /* it's not a placeholder, count it */
 	      nChildren++;
 	    TtaNextSibling (&sibling);
@@ -1126,11 +1159,13 @@ static void         CreateMathConstruct (int construct)
 	    {
 	      /* check whether the selected element is a Construct */
 	      elType = TtaGetElementType (sibling);
-	      if (elType.ElTypeNum == MathML_EL_Construct &&
+	      if ((elType.ElTypeNum == MathML_EL_Construct ||
+		   elType.ElTypeNum == MathML_EL_Construct1)&&
 		  elType.ElSSchema == mathSchema)
 		{
-		  TtaInsertFirstChild (&el, sibling, doc);
-		  RemoveAttr (el, doc, MathML_ATTR_IntPlaceholder);
+		  /* replace the Construct element */
+		  TtaInsertSibling (el, sibling, FALSE, doc);
+		  TtaRemoveTree (sibling, doc);
 		}
 	      else
 		TtaInsertSibling (el, sibling, before, doc);
@@ -1138,14 +1173,18 @@ static void         CreateMathConstruct (int construct)
 		TtaRegisterElementCreate (el, doc);
 	    }
 	}
-      else if (elType.ElTypeNum == MathML_EL_Construct &&
+      else if ((elType.ElTypeNum == MathML_EL_Construct ||
+		elType.ElTypeNum == MathML_EL_Construct1) &&
 	       elType.ElSSchema == mathSchema)
 	{
 	  /* replace the Construct element */
-	  TtaInsertFirstChild (&el, sibling, doc);
-	  RemoveAttr (el, doc, MathML_ATTR_IntPlaceholder);
+	  TtaInsertSibling (el, sibling, FALSE, doc);
 	  if (!registered)
-	    TtaRegisterElementCreate (el, doc);
+	    {
+	      TtaRegisterElementCreate (el, doc);
+	      TtaRegisterElementDelete (sibling, doc);
+	    }
+	  TtaRemoveTree (sibling, doc);
 	}
       else
 	{
@@ -1479,7 +1518,8 @@ static void CheckMROW (Element* el, Document doc)
      while (child != NULL && nChildren < 2)
 	{
 	elType = TtaGetElementType (child);
-	if (elType.ElTypeNum != MathML_EL_Construct)
+	if (elType.ElTypeNum != MathML_EL_Construct &&
+	    elType.ElTypeNum != MathML_EL_Construct1)
 	   /* this is not a Construct */
 	   nChildren++;
 	else
@@ -1894,6 +1934,7 @@ ThotBool  GlobalMathAttrInMenu (NotifyAttribute * event)
        /*  Construct, TableRow, and MathMLCharacters do not accept any
 	   global attribute */
        if (elType.ElTypeNum == MathML_EL_Construct ||
+	   elType.ElTypeNum == MathML_EL_Construct1 ||
 	   elType.ElTypeNum == MathML_EL_TableRow ||
 	   elType.ElTypeNum == MathML_EL_MathMLCharacters)
 	 return TRUE;
@@ -2531,14 +2572,14 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
   SSchema	MathMLSchema;
   int		firstSelChar, lastSelChar, newSelChar, len, totLen, i, j,
 		start;
-  char	alphabet, c;
+  char	        alphabet, c;
   Language	lang;
 #define TXTBUFLEN 200
-  unsigned char       text[TXTBUFLEN];
+  unsigned char text[TXTBUFLEN];
   Language	language[TXTBUFLEN];
   char          mathType[TXTBUFLEN];
   int           oldStructureChecking;
-  ThotBool      empty, closeUndoSeq;
+  ThotBool      empty, closeUndoSeq, separate;
 
   elType = TtaGetElementType (theElem);
   MathMLSchema = elType.ElSSchema;
@@ -2740,13 +2781,33 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
   else
     /* the modified character string is not empty. Parse it */
     for (i = 1; i <= totLen; i++)
-     if (mathType[i] != mathType[i-1] ||
-	 language[i] != language[i-1] ||
-	 mathType[i-1] == (char)MathML_EL_MO ||
-	 i == totLen)
-       /* create a new element */
-       {
-       if (lastEl == NULL)
+      {
+      separate = FALSE;
+      if (mathType[i] != mathType[i-1] ||
+	  language[i] != language[i-1])
+	/* different mathematical type or different alphabet.
+	   Create a separate element */
+	separate = TRUE;
+      else if (i == totLen)
+	/* end of string. Create an element anyway */
+	separate = TRUE;
+      else if (mathType[i-1] == (char)MathML_EL_MO)
+	/* an operator */
+	{
+	/* by default create a separate element */
+	separate = TRUE;
+        /* if successive integral characters, keep them in the same element */
+	if ((int)text[i] == 242 && text[i] == text [i-1])
+	  {
+	  if (TtaGetAlphabet (language[i]) == 'G' &&
+	      language[i] == language[i-1])
+	    separate = FALSE;
+	  }
+	}
+      if (separate)
+        /* create a new element */
+        {
+        if (lastEl == NULL)
 	  {
 	  elType = TtaGetElementType (theElem);
 	  if (elType.ElTypeNum != (int)mathType[i-1] ||
@@ -2807,7 +2868,7 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
 	  textEl = theText;
 	  firstEl = theElem;
 	  }
-       else
+	else
 	  {
           elType.ElTypeNum = (int)mathType[i-1];
           newEl = TtaNewElement (doc, elType);
@@ -2817,18 +2878,18 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
 	  TtaInsertFirstChild (&textEl, newEl, doc);
 	  TtaRegisterElementCreate (newEl, doc);
           }
-       while (text[start] == ' ')
+	while (text[start] == ' ')
 	  start++;
-       j = i - 1;
-       while (text[j] == ' ' && j > start)
+	j = i - 1;
+	while (text[j] == ' ' && j > start)
 	  j--;
-       j++;
-       c = text[j];
-       text[j] = '\0';
-       TtaSetTextContent (textEl, &text[start], language[start], doc);
-       text[j] = c;
-       lastEl = newEl;
-       if (newSelEl != NULL)
+	j++;
+	c = text[j];
+	text[j] = '\0';
+	TtaSetTextContent (textEl, &text[start], language[start], doc);
+	text[j] = c;
+	lastEl = newEl;
+	if (newSelEl != NULL)
 	  {
 	  newSelEl = textEl;
 	  if (newSelChar < j)
@@ -2839,10 +2900,10 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
 		newSelChar -= start;
 	    }
 	  }
-       MathSetAttributes (newEl, doc, &newSelEl);
-       start = i;
+	MathSetAttributes (newEl, doc, &newSelEl);
+	start = i;
 
-       if (mathType[i-1] == (char)MathML_EL_MO)
+	if (mathType[i-1] == (char)MathML_EL_MO)
 	  /* the new element is an operator */
 	  {
 	  /* the new element may be a vertically stretchable symbol */
@@ -2863,7 +2924,8 @@ static void ParseMathString (Element theText, Element theElem, Document doc)
 	       SetSingleIntHorizStretchAttr (parent, doc, &newSelEl);
 	    }
 	  }
-       }
+        }
+      }
 
   /* try to merge the first element processed with its previous sibling */
   if (prevEl != NULL && firstEl != NULL)
@@ -2986,7 +3048,8 @@ static void InsertMathEntity (unsigned char *entityName, Document document)
   elType1.ElSSchema = elType.ElSSchema;
   elType1.ElTypeNum = MathML_EL_TEXT_UNIT;
   el = TtaNewElement (document, elType1);
-  if (elType.ElTypeNum == MathML_EL_Construct)
+  if (elType.ElTypeNum == MathML_EL_Construct ||
+      elType.ElTypeNum == MathML_EL_Construct1)
     /* the selected element is an empty expression. Replace it by a
        mtext element*/
     {

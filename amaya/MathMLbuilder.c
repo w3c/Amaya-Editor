@@ -713,103 +713,221 @@ void SetIntVertStretchAttr (Element el, Document doc, int base, Element* selEl)
   ElementType	elType;
   Attribute	attr;
   AttributeType	attrType;
+  SSchema       MathMLSSchema;
   Language	lang;
   char		alphabet;
-  CHAR_T        text[2];
+#define buflen 50
+  CHAR_T        text[buflen];
   unsigned char c;
-  int		len;
+  int		len, i;
+  ThotBool      inbase, integral;
 
   if (el == NULL)
-     return;
+    return;
   operator = NULL;
+  inbase = FALSE;
+  MathMLSSchema = TtaGetElementType(el).ElSSchema;
+    
   if (base == 0)
-     /* it's a MO */
-     {
-     parent = TtaGetParent (el);
-     if (parent != NULL)
+    /* it's a MO */
+    {
+      parent = TtaGetParent (el);
+      if (parent != NULL)
 	{
-	elType = TtaGetElementType (parent);
-	if (elType.ElTypeNum != MathML_EL_Base &&
-	    elType.ElTypeNum != MathML_EL_UnderOverBase &&
-	    elType.ElTypeNum != MathML_EL_MSUBSUP &&
-	    elType.ElTypeNum != MathML_EL_MSUB &&
-	    elType.ElTypeNum != MathML_EL_MSUP &&
-	    elType.ElTypeNum != MathML_EL_MUNDEROVER &&
-	    elType.ElTypeNum != MathML_EL_MUNDER &&
-	    elType.ElTypeNum != MathML_EL_MUNDEROVER)
-	   operator = el;
+	  /* don't process the mo if it is within a base. It will be processed
+	     when the enclosing construct is processed (see below) */
+	  elType = TtaGetElementType (parent);
+	  if (elType.ElSSchema != MathMLSSchema ||
+	      (elType.ElTypeNum != MathML_EL_Base &&
+	       elType.ElTypeNum != MathML_EL_UnderOverBase &&
+	       elType.ElTypeNum != MathML_EL_MSUBSUP &&
+	       elType.ElTypeNum != MathML_EL_MSUB &&
+	       elType.ElTypeNum != MathML_EL_MSUP &&
+	       elType.ElTypeNum != MathML_EL_MUNDEROVER &&
+	       elType.ElTypeNum != MathML_EL_MUNDER &&
+	       elType.ElTypeNum != MathML_EL_MUNDEROVER))
+	    operator = el;
         }
-     }
+    }
   else
-     /* it's not a MO */
-     {
-     /* search the Base or UnderOverBase child */
-     child = TtaGetFirstChild (el);
-     if (child != NULL)
+    /* it's not a MO */
+    {
+      /* search the Base or UnderOverBase child */
+      child = TtaGetFirstChild (el);
+      if (child != NULL)
         {
-        elType = TtaGetElementType (child);
-        if (elType.ElTypeNum == base)
-	   /* the first child is a Base or UnderOverBase */
-           {
-	   child = TtaGetFirstChild (child);
-	   if (child != NULL)
-	      {
-	      elType = TtaGetElementType (child);
-              if (elType.ElTypeNum == MathML_EL_MO)
-	         /* its first child is a MO */
-                 {
-                 sibling = child;
-                 TtaNextSibling (&sibling);
-	         if (sibling == NULL)
-	            /* there is no other child */
-	            operator = child;
-		 }
-	      }
-	   }
-	}
-     }
-  if (operator != NULL)
-     {
-     textEl = TtaGetFirstChild (operator);
-     if (textEl != NULL)
-        {
-	elType = TtaGetElementType (textEl);
-	if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
-	   {
-	   len = TtaGetVolume (textEl);
-	   if (len == 1)
-	      {
-	      len = 2;
-	      TtaGiveBufferContent (textEl, text, len, &lang); 
-	      alphabet = TtaGetAlphabet (lang);
-	      if (alphabet == 'G')
-		 /* a single Symbol character */
-		 if (text[0] == 242)
-		    /* Integral */
+	  elType = TtaGetElementType (child);
+	  if (elType.ElTypeNum == base && elType.ElSSchema == MathMLSSchema)
+	    /* the first child is a Base or UnderOverBase */
+	    {
+	      child = TtaGetFirstChild (child);
+	      if (child != NULL)
+		{
+		  elType = TtaGetElementType (child);
+		  if (elType.ElTypeNum == MathML_EL_MO &&
+		      elType.ElSSchema == MathMLSSchema)
+		    /* its first child is a MO */
 		    {
-		    /* attach a IntVertStretch attribute */
-		    attrType.AttrSSchema = elType.ElSSchema;
-		    attrType.AttrTypeNum = MathML_ATTR_IntVertStretch;
-		    attr = TtaNewAttribute (attrType);
-		    TtaAttachAttribute (el, attr, doc);
-		    TtaSetAttributeValue (attr,
-					  MathML_ATTR_IntVertStretch_VAL_yes_,
-					  el, doc);
-		    /* replace the TEXT element by a Thot SYMBOL element*/
-		    elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
-		    symbolEl = TtaNewElement (doc, elType);
-		    TtaInsertSibling (symbolEl, textEl, FALSE, doc);
-		    if (selEl != NULL)
-		       if (*selEl == textEl)
-			  *selEl = symbolEl;
-		    TtaDeleteTree (textEl, doc);
-		    c = 'i';
-		    TtaSetGraphicsShape (symbolEl, c, doc);
+		      sibling = child;
+		      TtaNextSibling (&sibling);
+		      if (sibling == NULL)
+			/* there is no other child */
+			{
+			  operator = child;
+			  if (base == MathML_EL_Base ||
+			      base == MathML_EL_UnderOverBase)
+			    {
+			      parent = el;
+			      inbase = TRUE;
+			    }
+			}
 		    }
-	      }
-	   }
+		}
+	    }
 	}
-     }
+    }
+  if (operator)
+    {
+      textEl = TtaGetFirstChild (operator);
+      if (textEl != NULL)
+        {
+	  elType = TtaGetElementType (textEl);
+	  if (elType.ElTypeNum == MathML_EL_TEXT_UNIT)
+	    {
+	      len = TtaGetVolume (textEl);
+	      if (len >= 1)
+		{
+		  if (len >= buflen)
+		    len = buflen-1;
+		  len++;
+		  TtaGiveBufferContent (textEl, text, len, &lang);
+		  len --;
+		  alphabet = TtaGetAlphabet (lang);
+		  if (alphabet == 'G')
+		    /* Adobe Symbol character set */
+		    {
+		    integral = TRUE;
+		    /* check all characters in this TEXT element */
+		    for (i = 0; i < len; i++)
+		      if (text[i] != 242)
+		        /**** accept also other symbols like double or triple
+			      integral, contour integral, etc. ****/
+			integral = FALSE;
+		    if (integral)
+		      /* the operator contains only integral symbols */
+		      {
+			/* attach a IntVertStretch attribute */
+			attrType.AttrSSchema = MathMLSSchema;
+			attrType.AttrTypeNum = MathML_ATTR_IntVertStretch;
+			attr = TtaNewAttribute (attrType);
+			TtaAttachAttribute (el, attr, doc);
+			TtaSetAttributeValue (attr,
+					   MathML_ATTR_IntVertStretch_VAL_yes_,
+					   el, doc);
+			TtaRegisterAttributeCreate (attr, el, doc);
+
+			/* replace the Integral characters by a Thot SYMBOL
+			   element. If there are several such characters in
+			   the mo (multiple integral), replace them too. */
+			do
+			  {
+			    /* replace the TEXT element by a Thot SYMBOL */
+			    elType.ElTypeNum = MathML_EL_SYMBOL_UNIT;
+			    elType.ElSSchema = MathMLSSchema;
+			    for (i = 0; i < len; i++)
+			      if (text[i] == 242)
+			        {
+				symbolEl = TtaNewElement (doc, elType);
+				TtaInsertSibling (symbolEl, textEl, TRUE,doc);
+				if (selEl != NULL)
+				  if (*selEl == textEl)
+				    *selEl = symbolEl;
+				c = 'i';
+				TtaSetGraphicsShape (symbolEl, c, doc);
+				TtaRegisterElementCreate (symbolEl, doc);
+			        }
+			    TtaRegisterElementDelete (textEl, doc);
+			    TtaDeleteTree (textEl, doc);
+			    /* is there an other text element after the
+			       integral symbol? */
+			    textEl = symbolEl; TtaNextSibling (&textEl);
+			    if (textEl)
+			      {
+				elType = TtaGetElementType (textEl);
+				if (elType.ElTypeNum != MathML_EL_TEXT_UNIT)
+				  textEl = NULL;
+				else
+				  /* there is another text element.
+				     Is it a single integral symbol? */
+				  {
+				    len = TtaGetVolume (textEl);
+				    if (len < 1)
+				      /* not a single character */
+				      textEl = NULL;
+				    else
+				      {
+					if (len >= buflen)
+					  len = buflen-1;
+					len++;
+					TtaGiveBufferContent (textEl, text,
+							      len, &lang); 
+					alphabet = TtaGetAlphabet (lang);
+					if (alphabet != 'G')
+					  /* not the right alphabet for an
+					     integral*/
+					  textEl = NULL;
+					else
+					  if (text[0] != 242)
+					    /* not an integral symbol */
+					    textEl = NULL;
+				      }
+				  }
+			      }
+			  }
+			while (textEl);
+
+			if (inbase)
+			  /* it's within a Base or UnderOverBase element */
+			  {
+			    sibling = parent;
+			    TtaNextSibling (&sibling);
+			    if (!sibling)
+			      /* the msubsup or munderover has no next sibling.
+				 Add a Construct1 element as the next sibling,
+				 to allow P rules to operate correctly */
+			      {
+				elType.ElTypeNum = MathML_EL_Construct1;
+				elType.ElSSchema = MathMLSSchema;
+				sibling = TtaNewElement (doc, elType);
+				TtaInsertSibling (sibling, parent, FALSE, doc);
+				TtaRegisterElementCreate (sibling, doc);
+			      }
+			    else
+			      {
+				elType = TtaGetElementType (sibling);
+				if (elType.ElTypeNum == MathML_EL_Construct &&
+				    elType.ElSSchema == MathMLSSchema)
+				  {
+				    TtaRegisterElementDelete (sibling, doc);
+				    TtaRemoveTree (sibling, doc);
+				    ChangeElementType (sibling,
+						       MathML_EL_Construct1);
+				    TtaInsertSibling (sibling, parent, FALSE,
+						      doc);
+				    TtaRegisterElementCreate (sibling, doc);
+				  }
+			      }
+			    /* force the msubsup element to be reformatted and
+			       take into account its new next sibling */
+			    TtaRemoveTree (parent, doc);
+			    TtaInsertSibling (parent, sibling, TRUE, doc);
+			  } 
+		      }
+		    }
+		}
+	    }
+	}
+    }
 }
 
 /*----------------------------------------------------------------------

@@ -445,7 +445,7 @@ void GiveSymbolSize (PtrAbstractBox pAb, int *width, int *height)
 	{
 	case 'c':	/*integrale curviligne */
 	case 'i':	/*integrale */
-	  *width = (int) ((float) (BoxCharacterWidth (231, font)) * value);
+	  *width = BoxCharacterWidth (231, font);
 	  *height += hfont;
 	  break;
 	case 'd':	/*integrale double */

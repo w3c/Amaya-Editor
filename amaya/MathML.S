@@ -352,6 +352,14 @@ STRUCT
       XLink;     { for annotations }
       END;	 { End of Construct definition }
 
+   Construct1 = CASE OF	{ *** to solve the integral problem. ***
+	                  This definition must be the same as Construct. }
+	        MTEXT; MI; MN; MO; MS; MSPACE; MROW; MFRAC; BevelledMFRAC;
+	        MSQRT; MENCLOSE; MROOT; MSTYLE; MERROR; MPADDED; MPHANTOM;
+	        MFENCED; MF; MSUB; MSUP; MSUBSUP; MUNDER; MOVER; MUNDEROVER;
+	        MMULTISCRIPTS; MTABLE; MGLYPH; MACTION; XLink;
+	        END;
+
    TableRow = CASE OF
 		MTR;
 		MLABELEDTR;
@@ -408,7 +416,7 @@ STRUCT
 	     TEXT;
 	     MGLYPH;
 	     END;
-
+	
 EXCEPT
 
    MathML:		NoMove, NoResize;

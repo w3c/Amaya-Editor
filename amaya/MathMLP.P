@@ -548,6 +548,21 @@ RULES
 		END;
   	END;
 
+   Construct1:
+	BEGIN
+        Height: 1;
+	Width: Enclosed . Width;
+	VertPos: HRef = Previous not ElemWithAttr IntVertStretch . HRef;
+	Fillpattern: nopattern;
+	LineWeight: 0;	{ do not draw the outline }
+	ShowBox;
+	IN Structure_view BEGIN
+		Width: Enclosing . Width;
+		Height: Enclosed . Height;
+		HorizPos: Left = Enclosing . Left;
+		END;
+  	END;
+
    MSQRT:
         BEGIN
 	CreateFirst(SqrtSymbol);
@@ -858,7 +873,7 @@ RULES
 	BEGIN
 	Size: Enclosing * SCRIPTSIZEMULTIPLIER;
 	HorizPos: Left = Base . Right;
-	VertPos: Top = Base . Bottom - 0.8;
+	VertPos: Top = Base . Bottom - 0.7;
 	IN Structure_view BEGIN
 		Size: Enclosing =;
 		Width: Enclosing . Width;
@@ -1404,15 +1419,12 @@ RULES
 	   Height: Enclosing . Height;
 	Width: Enclosed . Width;
 	VertPos: Nil;
-{***	HorizPos: Nil;  ***}
 	HorizPos: Left = Previous . Right;
 	IN Structure_view BEGIN
 		Size: DOC_FONTSIZE;
 		Height: 1;
-{***}		HorizPos: Left = Previous . Right;
-{***}           VertPos: HRef = Previous . HRef;
-{***		HorizPos: Left = Enclosing . Left;
-		VertPos: Top = Previous . Bottom; ***}
+		HorizPos: Left = Previous . Right;
+		VertPos: HRef = Previous . HRef;
 		END;
 	END;
 
@@ -1441,17 +1453,8 @@ RULES
 	IN Structure_view BEGIN
 		IF immediately within MGLYPH
 		   Visibility: 0;
-{***}		HorizPos: Left = Previous . Right;
-{***}           VertPos: HRef = Previous . HRef;
-{***		if NOT within XMLcomment_line AND NOT within XMLPI_line
-		   BEGIN
-		   HorizPos: Left = Enclosing . Left;
-		   VertPos: Top = Previous AnyBox . Bottom;
-		   END;
-		if within XMLcomment_line
-		   HorizPos: Left = Previous . Right;
-		if within XMLPI_line
-		   HorizPos: Left = Previous . Right;  ***}
+		HorizPos: Left = Previous . Right;
+                VertPos: HRef = Previous . HRef;
 		Size: DOC_FONTSIZE;
 		END;
 	END;
@@ -2376,8 +2379,8 @@ ATTRIBUTES
 		END;
 	if MSUBSUP
 		BEGIN
-		Height: Next not Construct . Height + 1;
-		VertPos: Top = Next not Construct . Top - 0.5;
+		Height: Next not Construct . Height + 1.2;
+		VertPos: Top = Next not Construct . Top - 0.6;
 		END;
 	if MSUB
 		BEGIN
@@ -2411,15 +2414,26 @@ ATTRIBUTES
 	END;
   IntVertStretch (Superscript):
 	BEGIN
-	VertPos: Bottom = Base . Top + 0.5;
-	IN Structure_view
+	VertPos: Top = Enclosing . Top;
+	HorizPos: Left = Base . Right + 0.3;
+	IN Structure_view BEGIN
                 VertPos: Top = Previous . Bottom;
+                HorizPos: Left = Enclosing . Left;
+		END;
+	END;
+  IntVertStretch (Subscript):
+	BEGIN
+	VertPos: Bottom = Enclosing . Bottom;
+	HorizPos: Left = Base . Right - 0.1;
+	IN Structure_view BEGIN
+                VertPos: Top = Previous . Bottom;
+		END;
 	END;
   IntVertStretch (Base):
 	BEGIN
 	IF within MSUBSUP BEGIN
-		Height: Enclosing . Height - 1;
-		VertPos: Top = Enclosing . Top + 0.5;
+		Height: Enclosing . Height - 0.8;
+		VertPos: Top = Enclosing . Top + 0.4;
 		END;
 	IF within MSUB BEGIN
 		Height: Enclosing . Height - 0.5;

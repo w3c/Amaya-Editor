@@ -2626,7 +2626,7 @@ void ResizeHeight (PtrBox pBox, PtrBox pSourceBox, PtrBox pFromBox,
 	      i = BoxCharacterWidth (231, font) + BoxCharacterWidth (231, font) / 2;
 	    case 'i':	/* integral */
 	    case 'c':	/* circle integral */
-	      i = (int) ((float) BoxCharacterWidth (231, font) * value);
+	      i = BoxCharacterWidth (231, font);
 	      ResizeWidth (pBox, NULL, NULL, i - pBox->BxW, 0, 0, 0, frame);
 	      break;
 	    case '(':

@@ -55,6 +55,7 @@ MALIGNGROUP: maligngroup
 MALIGNMARK: malignmark
 MathMLCharacters: \0
 Construct: \0
+Construct1: \0
 
 Language: xml:lang
 xml_space_default: default
