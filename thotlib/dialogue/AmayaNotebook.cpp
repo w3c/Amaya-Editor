@@ -1,0 +1,161 @@
+#ifdef _WX
+
+#include "AmayaNotebook.h"
+#include "AmayaPage.h"
+
+AmayaNotebook::AmayaNotebook( wxWindow * p_parent_window, AmayaWindow * p_amaya_window )
+	:  wxNotebook( p_parent_window,
+		       -1,
+		       wxDefaultPosition, wxDefaultSize,
+		       wxNB_FIXEDWIDTH )
+          ,m_pAmayaWindow( p_amaya_window )
+{
+}
+
+AmayaNotebook::~AmayaNotebook()
+{ 
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaNotebook
+ *      Method:  OnClose
+ * Description:  called when the AmayaNotebook is closed.
+ *               just forward close event to each AmayaPage
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaNotebook::OnClose(wxCloseEvent& event)
+{
+  wxLogDebug( _T("AmayaNotebook::OnClose") );
+
+  /* if this boolean is set to false, the window must not be closed */
+  bool close_window = true; 
+
+  int page_id = 0;
+  while ( page_id < GetPageCount() )
+  {
+    AmayaPage * p_page = (AmayaPage *)GetPage(page_id);
+    p_page->OnClose(event);
+    close_window &= p_page->IsClosed();
+
+    /* really delete the page if the document has been closed */
+    if (p_page->IsClosed())
+      {
+	DeletePage(page_id);
+      }
+    else
+      page_id++;
+  }
+  
+  // maybe something has been removed so update the ids
+  UpdatePageId();
+
+  /* there is still open pages ? */
+  if (close_window)
+    event.Skip(); /* everything is closed => close the window */
+  else
+    event.Veto(); /* still an opened page => keep the window open */
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaNotebook
+ *      Method:  UpdatePageId
+ * Description:  this function is called to update the page id and document's pageid
+ *               when a page has been removed or moved ... 
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaNotebook::UpdatePageId()
+{
+  /* update page_id for each page */
+  int page_id = 0;
+  while ( page_id < GetPageCount() )
+    {
+      AmayaPage * p_page = (AmayaPage *)GetPage(page_id);
+      if (!p_page->IsClosed())
+	{
+	  p_page->SetPageId( page_id );
+	}
+      else
+	{
+	  wxLogDebug( _T("y a un problem, on essaye de mettre a jour une page qui est deja fermee") );
+	}
+      page_id++;
+    }
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaNotebook
+ *      Method:  OnPageChanged
+ * Description:  called when a new page has been selected
+ *--------------------------------------------------------------------------------------
+ */
+void AmayaNotebook::OnPageChanged(wxNotebookEvent& event)
+{
+  wxLogDebug( _T("AmayaNotebook::OnPageChanged : old=%d, new=%d"),
+              event.GetOldSelection(),
+              event.GetSelection() );
+
+  // do not change the page if this is the same as old one
+  // this case can occure when notebook's pages are deleted ...
+  if ( event.GetOldSelection() == event.GetSelection() )
+    {
+      event.Skip();
+      return;
+    }
+
+  // Get the selected page
+  AmayaPage * p_selected_page = (AmayaPage *)GetPage(event.GetSelection());
+
+  // Update every page
+  // important work is done when SetSelected is called :
+  // + window title is updated in order to match current selected page
+  int page_id = 0;
+  while ( page_id < GetPageCount() )
+  {
+    AmayaPage * p_page = (AmayaPage *)GetPage(page_id);
+    if ( !p_page->IsClosed() && p_page == p_selected_page )
+    {
+      p_page->SetSelected( TRUE );
+    }
+    else
+    {
+      p_page->SetSelected( FALSE );
+    }
+    page_id++;
+  }
+  
+  event.Skip();
+}
+
+/*
+ *--------------------------------------------------------------------------------------
+ *       Class:  AmayaNotebook
+ *      Method:  GetPageId
+ * Description:  used to get the page Id when only the page @ is known
+ *--------------------------------------------------------------------------------------
+ */
+int AmayaNotebook::GetPageId( const AmayaPage * p_page )
+{
+  int page_id = 0;
+  bool found = false;
+  while ( !found && page_id < GetPageCount() )
+  {
+    found = ( GetPage(page_id) == p_page );
+    page_id++;
+  }
+
+  if (found)
+    return page_id-1;
+  else
+    return -1;
+}
+
+
+BEGIN_EVENT_TABLE(AmayaNotebook, wxNotebook)
+  EVT_CLOSE(	                 AmayaNotebook::OnClose )
+  EVT_NOTEBOOK_PAGE_CHANGED( -1, AmayaNotebook::OnPageChanged )
+END_EVENT_TABLE()
+  
+#endif /* #ifdef _WX */
