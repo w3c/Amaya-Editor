@@ -44,7 +44,6 @@ static ThotColorStruct cwhite;
 #include "indmenu_f.h"
 #include "inites_f.h"
 #include "memory_f.h"
-#include "sysexec_f.h"
 
 #ifdef __STDC__
 extern void         ColorRGB (int, unsigned short *, unsigned short *, unsigned short *);

@@ -14,7 +14,6 @@
 #define EXPORT extern
 #include "select.var"
 #include "edit.var"
-#include "res.var"
 
 #include "memory_f.h"
 #include "schemas_f.h"
