@@ -2753,7 +2753,7 @@ CHAR_T Arab_Map[Arab_length][fields_nbre]={
   /*---------------------------------------------------------------
     FindIndex give the position of a character in Unicode_Map table
     ---------------------------------------------------------------*/
-static int recherche_dicoto (CHAR_T elmt,int p,int q)
+static int FindIndex (CHAR_T elmt,int p,int q)
 {
   int q1=(int)(p+q)/2;
   wchar_t res=Unicode_Map[q1];
@@ -2765,9 +2765,9 @@ static int recherche_dicoto (CHAR_T elmt,int p,int q)
   else
     {    
       if(res< elmt) 
-	return ( recherche_dicoto(elmt,q1,q));
+	return ( FindIndex(elmt,q1,q));
       else 
-	return ( recherche_dicoto(elmt,p,q1));
+	return ( FindIndex(elmt,p,q1));
 
     }
 }
@@ -2807,15 +2807,15 @@ int GetArabFontAndIndex (CHAR_T un ,CHAR_T prec ,CHAR_T suiv ,SpecFont fontset ,
     LoadingArabicFont ( fontset , font );
     return((int)un -1584);
     }
-  i=recherche_dicoto(un,0,Unicode_length-1); 
+  i=FindIndex(un,0,Unicode_length-1); 
 
   if (i==-1)
     {
       return(-1);
     }
   else {
-    k=recherche_dicoto(prec,0,Unicode_length-1);
-    j=recherche_dicoto(suiv,0,Unicode_length-1);
+    k=FindIndex(prec,0,Unicode_length-1);
+    j=FindIndex(suiv,0,Unicode_length-1);
     if((j==-1)&&(k==-1)) 
       {
 	LoadingArabicFont ( fontset , font );
