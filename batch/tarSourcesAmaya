@@ -40,7 +40,7 @@ Amaya/amaya/*.A \
 Amaya/amaya/*.P \
 Amaya/amaya/*.S \
 Amaya/amaya/*.T \
-Amaya/amaya.spec \
+Amaya/amaya*.spec \
 Amaya/amaya/*.c \
 Amaya/amaya/*.conf \
 Amaya/amaya/*.en \

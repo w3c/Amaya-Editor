@@ -73,7 +73,7 @@ autoconf
 mkdir linux
 cd linux
 export HOME=`pwd`
-../configure --with-gtk --prefix=/usr/share --exec-prefix=/usr 
+../configure --with-gl --prefix=/usr/share --exec-prefix=/usr 
 #cp Options.orig Options
 make all
 %install
