@@ -1656,11 +1656,14 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
 		content_type = pImage->content_type;
 	      else
 		content_type = PicTypeToMIME (pImage->imageType);
-	      res = SafeSaveFileThroughNet(doc, pImage->localName,
+	      res = SafeSaveFileThroughNet(doc, pImage->tempfile,
 					   pImage->originalName, content_type,
 					   use_preconditions);
+	      if (res == -1 && AmayaLastHTTPErrorMsgR[0] == EOS)
+		res = 0;
 	      if (res)
 		{
+		  /* message not null if an error is detected */
 		  DocNetworkStatus[doc] |= AMAYA_NET_ERROR;
 		  ResetStop (doc);
 		  sprintf (msg, "%s %s",
@@ -1670,10 +1673,7 @@ static ThotBool SaveDocumentThroughNet (Document doc, View view, char *url,
 				 AmayaLastHTTPErrorMsgR, FALSE);
 		  /* erase the last status message */
 		  TtaSetStatus (doc, view, "", NULL);
-		  if (UserAnswer)
-		    res = -1;
-		  else
-		    res = -1;
+		  res = -1;
 		  /* do not continue */
 		  pImage = NULL;
 		}
@@ -2751,7 +2751,7 @@ void DoSaveAs (char *user_charset, char *user_mimetype)
   ElementType         elType;
   Element             el, root, doc_url;
   char               *documentFile;
-  char               *tempname, *oldLocal, *newLocal;
+  char               *tempname, *oldLocal, *newLocal = NULL;
   char               *imagePath, *base;
   char                imgbase[MAX_LENGTH];
   char                documentname[MAX_LENGTH];
