@@ -206,6 +206,30 @@ static void CSSParseError (char *msg, char *value, char *endvalue)
     *endvalue = c;
 }
 
+/*----------------------------------------------------------------------
+   CSSCheckEndValue
+   print an error message if another character is found
+  ----------------------------------------------------------------------*/
+static char *CSSCheckEndValue (char *cssRule, char *endvalue, char *msg)
+{
+  char        c = EOS;
+  if (*endvalue != EOS && *endvalue != SPACE && *endvalue != '/' &&
+      *endvalue != ';' && *endvalue != EOL && *endvalue != TAB &&
+      *endvalue !=  __CR__)
+    {
+      while (*endvalue != EOS && *endvalue != SPACE && *endvalue != '/' &&
+	     *endvalue != ';' && *endvalue != EOL && *endvalue != TAB &&
+	     *endvalue !=  __CR__)
+	endvalue++;
+      /* close the string here */
+      c = *endvalue;
+      *endvalue = EOS;
+      CSSPrintError (msg, cssRule);
+      *endvalue = c;
+    }
+  return endvalue;
+}
+
 
 /*----------------------------------------------------------------------
    SkipProperty skips a property and display and error message
@@ -228,6 +252,7 @@ static char *SkipProperty (char *ptr, ThotBool reportError)
 	}
       ptr++;
     }
+#ifdef IV
   /* print the skipped property */
   c = *ptr;
   *ptr = EOS;
@@ -260,6 +285,7 @@ static char *SkipProperty (char *ptr, ThotBool reportError)
       strncasecmp (deb, "widows", 6))
     CSSPrintError ("CSS property ignored:", deb);
   *ptr = c;
+#endif /* IV */
   return (ptr);
 }
 
@@ -462,11 +488,11 @@ char *ParseClampedUnit (char *cssRule, PresentationValue *pval)
 
 
 /*----------------------------------------------------------------------
-   ParseBorderValue                                       
+   ParseABorderValue                                       
   ----------------------------------------------------------------------*/
-static char *ParseBorderValue (char *cssRule, PresentationValue *border)
+static char *ParseABorderValue (char *cssRule, PresentationValue *border)
 {
-  char             *ptr;
+  char             *ptr = cssRule;
 
   /* first parse the attribute string */
    border->typed_data.value = 0;
@@ -476,23 +502,22 @@ static char *ParseBorderValue (char *cssRule, PresentationValue *border)
      {
        border->typed_data.unit = UNIT_PX;
        border->typed_data.value = 1;
-       cssRule = SkipWord (cssRule);
+       cssRule += 4;
      }
    else if (!strncasecmp (cssRule, "medium", 6))
      {
        border->typed_data.unit = UNIT_PX;
        border->typed_data.value = 3;
-       cssRule = SkipWord (cssRule);
+       cssRule += 6;
      }
    else if (!strncasecmp (cssRule, "thick", 5))
      {
        border->typed_data.unit = UNIT_PX;
        border->typed_data.value = 5;
-       cssRule = SkipWord (cssRule);
+       cssRule += 5;
      }
    else if (isdigit (*cssRule) || *cssRule == '.')
      {
-       ptr = cssRule;
        cssRule = ParseCSSUnit (cssRule, border);
        if (border->typed_data.value == 0)
 	 border->typed_data.unit = UNIT_PX;
@@ -509,34 +534,80 @@ static char *ParseBorderValue (char *cssRule, PresentationValue *border)
 }
 
 /*----------------------------------------------------------------------
+   ParseBorderValue                                       
+  ----------------------------------------------------------------------*/
+static char *ParseBorderValue (char *cssRule, PresentationValue *border)
+{
+  char             *ptr = cssRule;
+
+  cssRule = ParseABorderValue (cssRule, border);
+   /* the value is parsed now */
+  if (ptr != cssRule)
+     cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid border value");
+   return (cssRule);
+}
+
+/*----------------------------------------------------------------------
    ParseBorderStyle                                      
   ----------------------------------------------------------------------*/
 static char *ParseBorderStyle (char *cssRule, PresentationValue *border)
 {
+  char *ptr = cssRule;
+
   /* first parse the attribute string */
    border->typed_data.value = 0;
    border->typed_data.unit = UNIT_PX;
    border->typed_data.real = FALSE;
    if (!strncasecmp (cssRule, "none", 4))
+     {
      border->typed_data.value = BorderStyleNone;
+     cssRule += 4;
+     }
    else if (!strncasecmp (cssRule, "hidden", 6))
+     {
      border->typed_data.value = BorderStyleHidden;
+     cssRule += 6;
+     }
    else if (!strncasecmp (cssRule, "dotted", 6))
+     {
+     cssRule += 6;
      border->typed_data.value = BorderStyleDotted;
+     }
    else if (!strncasecmp (cssRule, "dashed", 6))
+     {
      border->typed_data.value = BorderStyleDashed;
+     cssRule += 6;
+     }
    else if (!strncasecmp (cssRule, "solid", 5))
+     {
      border->typed_data.value = BorderStyleSolid;
+     cssRule += 5;
+     }
    else if (!strncasecmp (cssRule, "double", 6))
+     {
      border->typed_data.value = BorderStyleDouble;
+     cssRule += 6;
+     }
    else if (!strncasecmp (cssRule, "groove", 6))
+     {
      border->typed_data.value = BorderStyleGroove;
+     cssRule += 6;
+     }
    else if (!strncasecmp (cssRule, "ridge", 5))
+     {
      border->typed_data.value = BorderStyleRidge;
+     cssRule += 5;
+     }
    else if (!strncasecmp (cssRule, "inset", 5))
+     {
      border->typed_data.value = BorderStyleInset;
+     cssRule += 5;
+     }
    else if (!strncasecmp (cssRule, "outset", 6))
+     {
      border->typed_data.value = BorderStyleOutset;
+      cssRule += 6;
+    }
    else
      {
        /* invalid style */
@@ -544,7 +615,7 @@ static char *ParseBorderStyle (char *cssRule, PresentationValue *border)
        return (cssRule);
      }
    /* the value is parsed now */
-   cssRule = SkipWord (cssRule);
+   /*cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid border-style value");*/
    return (cssRule);
 }
 
@@ -570,7 +641,7 @@ static char *ParseCSSColor (char *cssRule, PresentationValue * val)
   ptr = TtaGiveRGB (cssRule, &redval, &greenval, &blueval);
   if (!strncasecmp (cssRule, "inherit", 7))
     {
-      cssRule = SkipWord (cssRule);
+      cssRule += 7;
       return (cssRule);
     }
   if (ptr == cssRule)
@@ -636,7 +707,7 @@ static char *ParseCSSBorderTopWidth (Element element, PSchema tsch,
   PresentationValue   border;
   
   cssRule = SkipBlanksAndComments (cssRule);
-  cssRule = ParseBorderValue (cssRule, &border);
+  cssRule = ParseABorderValue (cssRule, &border);
   if (border.typed_data.unit != UNIT_INVALID && DoApply)
     {
       /* check if it's an important rule */
@@ -661,7 +732,7 @@ static char *ParseCSSBorderBottomWidth (Element element, PSchema tsch,
   
   cssRule = SkipBlanksAndComments (cssRule);
   /* first parse the attribute string */
-  cssRule = ParseBorderValue (cssRule, &border);
+  cssRule = ParseABorderValue (cssRule, &border);
   if (border.typed_data.unit != UNIT_INVALID && DoApply)
     {
       /* check if it's an important rule */
@@ -686,7 +757,7 @@ static char *ParseCSSBorderLeftWidth (Element element, PSchema tsch,
   
   cssRule = SkipBlanksAndComments (cssRule);
   /* first parse the attribute string */
-  cssRule = ParseBorderValue (cssRule, &border);
+  cssRule = ParseABorderValue (cssRule, &border);
   if (border.typed_data.unit != UNIT_INVALID && DoApply)
     {
       /* check if it's an important rule */
@@ -711,7 +782,7 @@ static char *ParseCSSBorderRightWidth (Element element, PSchema tsch,
   
   cssRule = SkipBlanksAndComments (cssRule);
   /* first parse the attribute string */
-  cssRule = ParseBorderValue (cssRule, &border);
+  cssRule = ParseABorderValue (cssRule, &border);
   if (border.typed_data.unit != UNIT_INVALID && DoApply)
     {
       /* check if it's an important rule */
@@ -1262,21 +1333,32 @@ static char *ParseCSSFloat (Element element, PSchema tsch,
 {
   DisplayMode         dispMode;
   PresentationValue   pval;
+  char               *ptr = cssRule;
 
   pval.typed_data.value = 0;
   pval.typed_data.unit = UNIT_BOX;
   pval.typed_data.real = FALSE;
   if (!strncasecmp (cssRule, "inherit", 7))
     {
-      cssRule = SkipWord (cssRule);
+      cssRule += 7;
+      cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid float value");
       return (cssRule);
     }
   if (!strncasecmp (cssRule, "none", 4))
-    pval.typed_data.value = FloatNone;
+    {
+      pval.typed_data.value = FloatNone;
+     cssRule += 4;
+    }
   else if (!strncasecmp (cssRule, "left", 4))
-    pval.typed_data.value = FloatLeft;
+    {
+      pval.typed_data.value = FloatLeft;
+     cssRule += 4;
+    }
   else if (!strncasecmp (cssRule, "right", 5))
-    pval.typed_data.value = FloatRight;
+    {
+      pval.typed_data.value = FloatRight;
+     cssRule += 5;
+    }
 
   if (pval.typed_data.value == 0)
     cssRule = SkipValue ("Invalid float value", cssRule);
@@ -1296,7 +1378,7 @@ static char *ParseCSSFloat (Element element, PSchema tsch,
 	  cssRule = CheckImportantRule (cssRule, context);
 	  TtaSetStylePresentation (PRFloat, element, tsch, context, pval);
 	}
-      cssRule = SkipValue (NULL, cssRule);
+      cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid float value");
     }
   return (cssRule);
 }
@@ -1349,22 +1431,41 @@ static char *ParseCSSDisplay (Element element, PSchema tsch,
 			      CSSInfoPtr css, ThotBool isHTML)
 {
   PresentationValue   pval;
+  char               *ptr = cssRule;
 
   pval.typed_data.unit = UNIT_REL;
   pval.typed_data.real = FALSE;
   cssRule = SkipBlanksAndComments (cssRule);
   if (!strncasecmp (cssRule, "none", 4))
-    pval.typed_data.value = DisplayNone;
+    {
+      cssRule += 4;
+      pval.typed_data.value = DisplayNone;
+    }
   else if (!strncasecmp (cssRule, "block", 5))
-    pval.typed_data.value = Block;
+    {
+      cssRule += 5;
+      pval.typed_data.value = Block;
+    }
   else if (!strncasecmp (cssRule, "inline", 6))
-    pval.typed_data.value = Inline;
+    {
+      cssRule += 6;
+      pval.typed_data.value = Inline;
+    }
   else if (!strncasecmp (cssRule, "list-item", 9))
-    pval.typed_data.value = ListItem;
+    {
+      cssRule += 9;
+      pval.typed_data.value = ListItem;
+    }
   else if (!strncasecmp (cssRule, "run-in", 6))
-    pval.typed_data.value = RunIn;
+    {
+      cssRule += 6;
+      pval.typed_data.value = RunIn;
+    }
   else if (!strncasecmp (cssRule, "inline-block", 12))
-    pval.typed_data.value = InlineBlock;
+    {
+      cssRule += 12;
+      pval.typed_data.value = InlineBlock;
+    }
   else
     {
       if (strncasecmp (cssRule, "table-row-group", 15) &&
@@ -1388,7 +1489,7 @@ static char *ParseCSSDisplay (Element element, PSchema tsch,
       cssRule = CheckImportantRule (cssRule, context);
       TtaSetStylePresentation (PRDisplay, element, tsch, context, pval);
     }
-  cssRule = SkipWord (cssRule);
+  cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid display value");
   return (cssRule);
 }
 
@@ -1413,44 +1514,91 @@ static char *ParseCSSListStyleType (Element element, PSchema tsch,
 				    CSSInfoPtr css, ThotBool isHTML)
 {
   PresentationValue   pval;
+  char               *ptr = cssRule;
 
   pval.typed_data.unit = UNIT_REL;
   pval.typed_data.real = FALSE;
   cssRule = SkipBlanksAndComments (cssRule);
   if (!strncasecmp (cssRule, "disc", 4))
-    pval.typed_data.value = Disc;
+    {
+      cssRule += 4;
+      pval.typed_data.value = Disc;
+    }
   else if (!strncasecmp (cssRule, "circle", 6))
-    pval.typed_data.value = Circle;
+   {
+      cssRule += 6;
+      pval.typed_data.value = Circle;
+   }
   else if (!strncasecmp (cssRule, "square", 6))
+   {
+      cssRule += 6;
     pval.typed_data.value = Square;
+   }
   else if (!strncasecmp (cssRule, "decimal-leading-zero", 20))
+   {
+      cssRule += 20;
     pval.typed_data.value = DecimalLeadingZero;
+   }
   else if (!strncasecmp (cssRule, "decimal", 7))
+   {
+      cssRule += 7;
     pval.typed_data.value = Decimal;
+   }
   else if (!strncasecmp (cssRule, "lower-roman", 11))
+   {
+      cssRule += 11;
     pval.typed_data.value = LowerRoman;
+   }
   else if (!strncasecmp (cssRule, "upper-roman", 11))
+   {
+      cssRule += 11;
     pval.typed_data.value = UpperRoman;
+   }
   else if (!strncasecmp (cssRule, "lower-greek", 11))
+   {
+      cssRule += 11;
     pval.typed_data.value = LowerGreek;
+   }
   else if (!strncasecmp (cssRule, "lower-latin", 11))
+   {
+      cssRule += 11;
     pval.typed_data.value = LowerLatin;
+   }
   else if (!strncasecmp (cssRule, "lower-alpha", 11))
+   {
+      cssRule += 11;
     pval.typed_data.value = LowerLatin;
+   }
   else if (!strncasecmp (cssRule, "upper-latin", 11))
+   {
+      cssRule += 11;
     pval.typed_data.value = UpperLatin;
+   }
   else if (!strncasecmp (cssRule, "upper-alpha", 11))
+   {
+      cssRule += 11;
     pval.typed_data.value = UpperLatin;
+   }
   else if (!strncasecmp (cssRule, "armenian", 8))
+   {
+      cssRule += 8;
     pval.typed_data.value = Decimal;
+   }
   else if (!strncasecmp (cssRule, "georgian", 8))
+   {
+      cssRule += 8;
     pval.typed_data.value = Decimal;
+   }
   else if (!strncasecmp (cssRule, "none", 4))
+   {
+      cssRule += 4;
     pval.typed_data.value = ListStyleTypeNone;
+   }
   else if (!strncasecmp (cssRule, "inherit", 7))
     /* not supported */
     {
-      cssRule = SkipWord (cssRule);
+       cssRule += 7;
+      cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid list-style-type value");
       return (cssRule);
     }
   else
@@ -1464,7 +1612,7 @@ static char *ParseCSSListStyleType (Element element, PSchema tsch,
       cssRule = CheckImportantRule (cssRule, context);
       TtaSetStylePresentation (PRListStyleType, element, tsch, context, pval);
     } 
-  cssRule = SkipWord (cssRule);
+  cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid list-style-type value");
   return (cssRule);
 }
 
@@ -1542,7 +1690,8 @@ static char *ParseCSSListStyleImage (Element element, PSchema tsch,
 				     char *cssRule, CSSInfoPtr css,
 				     ThotBool isHTML)
 {
-  char                      *url;
+  char               *url;
+  char               *ptr = cssRule;
 
   url = NULL;
   cssRule = SkipBlanksAndComments (cssRule);
@@ -1559,8 +1708,11 @@ static char *ParseCSSListStyleImage (Element element, PSchema tsch,
       /* @@@@@@@@@@@@@ */
     }
   else if (!strncasecmp (cssRule, "inherit", 7))
+    {
     /* not implemented */
-    cssRule = SkipWord (cssRule);
+      cssRule += 7;
+      cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid list-style-image value");
+     }
   else
     cssRule = SkipValue ("Invalid list-style-image value", cssRule);
 
@@ -1577,19 +1729,29 @@ static char *ParseCSSListStylePosition (Element element, PSchema tsch,
 					ThotBool isHTML)
 {
   PresentationValue   pval;
+  char               *ptr = cssRule;
 
   pval.typed_data.unit = UNIT_REL;
   pval.typed_data.real = FALSE;
   cssRule = SkipBlanksAndComments (cssRule);
   if (!strncasecmp (cssRule, "inside", 6))
-    pval.typed_data.value = Inside;
+    {
+      pval.typed_data.value = Inside;
+      cssRule += 6;
+    }
   else if (!strncasecmp (cssRule, "outside", 7))
-    pval.typed_data.value = Outside;
+    {
+      pval.typed_data.value = Outside;
+      cssRule += 7;
+    }
   else
     {
       if (!strncasecmp (cssRule, "inherit", 7))
+	{
 	/* not implemented */
-	cssRule = SkipWord (cssRule);
+	cssRule += 7;
+	cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid list-style-position value");
+	}
       else
 	cssRule = SkipValue ("Invalid list-style-position value", cssRule);
       return (cssRule);
@@ -1601,8 +1763,8 @@ static char *ParseCSSListStylePosition (Element element, PSchema tsch,
 			       pval);
     }
 
-  cssRule = SkipWord (cssRule);
-  return (cssRule);
+  cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid list-style-position value");
+ return (cssRule);
 }
 
 /*----------------------------------------------------------------------
@@ -1665,6 +1827,7 @@ static char *ParseCSSTextAlign (Element element, PSchema tsch,
 				PresentationContext context, char *cssRule,
 				CSSInfoPtr css, ThotBool isHTML)
 {
+   char *ptr = cssRule;
    PresentationValue   align;
 
    align.typed_data.value = 0;
@@ -1675,22 +1838,22 @@ static char *ParseCSSTextAlign (Element element, PSchema tsch,
    if (!strncasecmp (cssRule, "left", 4))
      {
 	align.typed_data.value = AdjustLeft;
-	cssRule = SkipWord (cssRule);
+	cssRule += 4;
      }
    else if (!strncasecmp (cssRule, "right", 5))
      {
 	align.typed_data.value = AdjustRight;
-	cssRule = SkipWord (cssRule);
+	cssRule += 5;
      }
    else if (!strncasecmp (cssRule, "center", 6))
      {
 	align.typed_data.value = Centered;
-	cssRule = SkipWord (cssRule);
+	cssRule += 6;
      }
    else if (!strncasecmp (cssRule, "justify", 7))
      {
 	align.typed_data.value = Justify;
-	cssRule = SkipWord (cssRule);
+	cssRule += 7;
      }
    else
      {
@@ -1706,6 +1869,7 @@ static char *ParseCSSTextAlign (Element element, PSchema tsch,
        cssRule = CheckImportantRule (cssRule, context);
        TtaSetStylePresentation (PRAdjust, element, tsch, context, align);
      }
+   cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid text-align value");
    return (cssRule);
 }
 
@@ -1719,6 +1883,7 @@ static char *ParseCSSTextAnchor (Element element, PSchema tsch,
 				 CSSInfoPtr css, ThotBool isHTML)
 {
    PresentationValue   align;
+   char               *ptr = cssRule;
 
    align.typed_data.value = 0;
    align.typed_data.unit = UNIT_REL;
@@ -1728,22 +1893,23 @@ static char *ParseCSSTextAnchor (Element element, PSchema tsch,
    if (!strncasecmp (cssRule, "start", 5))
      {
 	align.typed_data.value = AdjustLeft;
-	cssRule = SkipWord (cssRule);
+	cssRule += 5;
      }
    else if (!strncasecmp (cssRule, "middle", 6))
      {
 	align.typed_data.value = Centered;
-	cssRule = SkipWord (cssRule);
+	cssRule += 6;
      }
    else if (!strncasecmp (cssRule, "end", 3))
      {
 	align.typed_data.value = AdjustRight;
-	cssRule = SkipWord (cssRule);
+	cssRule += 3;
      }
    else if (!strncasecmp (cssRule, "inherit", 7))
      {
        /* not implemented */
-       cssRule = SkipWord (cssRule);
+       cssRule += 7;
+       cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid text-anchor value");
        return (cssRule);
      }
    else
@@ -1760,6 +1926,7 @@ static char *ParseCSSTextAnchor (Element element, PSchema tsch,
        cssRule = CheckImportantRule (cssRule, context);
        TtaSetStylePresentation (PRAdjust, element, tsch, context, align);
      }
+   cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid text-anchor value");
    return (cssRule);
 }
 
@@ -1771,6 +1938,7 @@ static char *ParseCSSDirection (Element element, PSchema tsch,
 				CSSInfoPtr css, ThotBool isHTML)
 {
    PresentationValue   direction;
+   char               *ptr = cssRule;
 
    direction.typed_data.value = 0;
    direction.typed_data.unit = UNIT_REL;
@@ -1780,17 +1948,17 @@ static char *ParseCSSDirection (Element element, PSchema tsch,
    if (!strncasecmp (cssRule, "ltr", 3))
      {
        direction.typed_data.value = LeftToRight;
-       cssRule = SkipWord (cssRule);
+       cssRule += 3;
      }
    else if (!strncasecmp (cssRule, "rtl", 3))
      {
        direction.typed_data.value = RightToLeft;
-       cssRule = SkipWord (cssRule);
+       cssRule += 3;
      }
    else if (!strncasecmp (cssRule, "inherit", 7))
      {
        /* not implemented */
-       cssRule = SkipWord (cssRule);
+       cssRule += 7;
        return (cssRule);
      }
    else
@@ -1807,6 +1975,7 @@ static char *ParseCSSDirection (Element element, PSchema tsch,
        cssRule = CheckImportantRule (cssRule, context);
        TtaSetStylePresentation (PRDirection, element, tsch, context, direction);
      }
+   cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid direction value");
    return (cssRule);
 }
 
@@ -1818,6 +1987,7 @@ static char *ParseCSSUnicodeBidi (Element element, PSchema tsch,
 				  CSSInfoPtr css, ThotBool isHTML)
 {
    PresentationValue   bidi;
+   char               *ptr = cssRule;
 
    bidi.typed_data.value = 0;
    bidi.typed_data.unit = UNIT_REL;
@@ -1827,22 +1997,22 @@ static char *ParseCSSUnicodeBidi (Element element, PSchema tsch,
    if (!strncasecmp (cssRule, "normal", 6))
      {
        bidi.typed_data.value = Normal;
-       cssRule = SkipWord (cssRule);
+       cssRule += 6;
      }
    else if (!strncasecmp (cssRule, "embed", 5))
      {
        bidi.typed_data.value = Embed;
-       cssRule = SkipWord (cssRule);
+       cssRule += 5;
      }
    else if (!strncasecmp (cssRule, "bidi-override", 13))
      {
        bidi.typed_data.value = Override;
-       cssRule = SkipWord (cssRule);
+       cssRule += 13;
      }
    else if (!strncasecmp (cssRule, "inherit", 7))
      {
        /* not implemented */
-       cssRule = SkipWord (cssRule);
+       cssRule += 7;
        return (cssRule);
      }
    else
@@ -1859,6 +2029,7 @@ static char *ParseCSSUnicodeBidi (Element element, PSchema tsch,
        cssRule = CheckImportantRule (cssRule, context);
        TtaSetStylePresentation (PRUnicodeBidi, element, tsch, context, bidi);
      }
+   cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid unicode-bidi value");
    return (cssRule);
 }
 
@@ -1919,75 +2090,72 @@ static char *ParseCSSVerticalAlign (Element element, PSchema tsch,
   pval.typed_data.unit = UNIT_REL;
   pval.typed_data.real = FALSE;
   cssRule = SkipBlanksAndComments (cssRule);
+  ptr = cssRule;
   if (!strncasecmp (cssRule, "baseline", 8))
     {
       pval.typed_data.value = 0;
-      cssRule = SkipWord (cssRule);
+      cssRule += 8;
     }
   else if (!strncasecmp (cssRule, "sub", 3))
     {
       pval.typed_data.value = -3;
-      cssRule = SkipWord (cssRule);
+      cssRule += 3;
     }
   else if (!strncasecmp (cssRule, "super", 5))
     {
       pval.typed_data.value = 4;
-      cssRule = SkipWord (cssRule);
+      cssRule += 5;
     }
   else if (!strncasecmp (cssRule, "top", 3))
     {
       pval.typed_data.unit = UNIT_INVALID;      /* Not supported yet */
       pval.typed_data.value = 0;
-      cssRule = SkipWord (cssRule);
+      cssRule += 3;
     }
   else if (!strncasecmp (cssRule, "text-top", 8))
     {
       pval.typed_data.unit = UNIT_INVALID;      /* Not supported yet */
       pval.typed_data.value = 0;
-      cssRule = SkipWord (cssRule);
+      cssRule += 8;
     }
   else if (!strncasecmp (cssRule, "middle", 6))
     {
       pval.typed_data.unit = UNIT_INVALID;      /* Not supported yet */
       pval.typed_data.value = 0;
-      cssRule = SkipWord (cssRule);
+      cssRule += 6;
     }
   else if (!strncasecmp (cssRule, "bottom", 6))
     {
       pval.typed_data.unit = UNIT_INVALID;      /* Not supported yet */
       pval.typed_data.value = 0;
-      cssRule = SkipWord (cssRule);
+      cssRule += 6;
     }
   else if (!strncasecmp (cssRule, "text-bottom", 11))
     {
       pval.typed_data.unit = UNIT_INVALID;      /* Not supported yet */
       pval.typed_data.value = 0;
-      cssRule = SkipWord (cssRule);
+      cssRule += 11;
     }
   else if (!strncasecmp (cssRule, "inherit", 7))
     {
       pval.typed_data.unit = UNIT_INVALID;      /* Not supported yet */
       pval.typed_data.value = 0;
-      cssRule = SkipWord (cssRule);
+      cssRule +=7;
     }
   else
     {
       /* parse <percentage> or <length> */
-      ptr = cssRule;
       cssRule = ParseCSSUnit (cssRule, &pval);
       if (pval.typed_data.unit == UNIT_INVALID)
 	{
 	  pval.typed_data.value = 0;
 	  CSSParseError ("Invalid vertical-align value", ptr, cssRule);
+	  return (cssRule);
 	}
       else if (pval.typed_data.value == 0)
-	{
 	  pval.typed_data.unit = UNIT_PX;
-	}
       else if (pval.typed_data.unit == UNIT_BOX)
-	{
 	  pval.typed_data.unit = UNIT_EM;
-	}
       else if (pval.typed_data.unit == UNIT_PERCENT)
 	/* it's a percentage */
 	{
@@ -1998,6 +2166,7 @@ static char *ParseCSSVerticalAlign (Element element, PSchema tsch,
     }
   if (pval.typed_data.unit != UNIT_INVALID && DoApply)
     TtaSetStylePresentation (PRHorizRef, element, tsch, context, pval);
+  cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid vertical-align value");
   return (cssRule);
 }
 
@@ -2009,21 +2178,27 @@ static char *ParseCSSWhiteSpace (Element element, PSchema tsch,
 				 PresentationContext context, char *cssRule,
 				 CSSInfoPtr css, ThotBool isHTML)
 {
+  char *ptr = cssRule;
+
    cssRule = SkipBlanksAndComments (cssRule);
    if (!strncasecmp (cssRule, "normal", 6))
-     cssRule = SkipWord (cssRule);
+     cssRule += 6;
    else if (!strncasecmp (cssRule, "pre", 3))
-     cssRule = SkipWord (cssRule);
-   else if (!strncasecmp (cssRule, "nowrap", 6))
-     cssRule = SkipWord (cssRule);
-   else if (!strncasecmp (cssRule, "pre-wrap", 8))
-     cssRule = SkipWord (cssRule);
-   else if (!strncasecmp (cssRule, "pre-line", 8))
-     cssRule = SkipWord (cssRule);
-   else if (!strncasecmp (cssRule, "inherit", 7))
-     cssRule = SkipWord (cssRule);
+     cssRule += 3;
+    else if (!strncasecmp (cssRule, "nowrap", 6))
+     cssRule += 6;
+    else if (!strncasecmp (cssRule, "pre-wrap", 8))
+     cssRule += 8;
+    else if (!strncasecmp (cssRule, "pre-line", 8))
+     cssRule += 8;
+    else if (!strncasecmp (cssRule, "inherit", 7))
+     cssRule += 7;
    else
-     cssRule = SkipValue ("Invalid white-space value", cssRule);
+     {
+       cssRule = SkipValue ("Invalid white-space value", cssRule);
+       return (cssRule);
+     }
+   cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid white-space value");
    return (cssRule);
 }
 
@@ -2047,7 +2222,7 @@ static char *ParseCSSLineHeight (Element element, PSchema tsch,
 				 CSSInfoPtr css, ThotBool isHTML)
 {
   PresentationValue   pval;
-  char                *ptr;
+  char               *ptr;
 
   ptr = cssRule;
   if (!strncasecmp (cssRule, "normal", 6))
@@ -2055,12 +2230,13 @@ static char *ParseCSSLineHeight (Element element, PSchema tsch,
       pval.typed_data.unit = UNIT_REL;
       pval.typed_data.real = TRUE;
       pval.typed_data.value = 1100;
-      cssRule = SkipWord (cssRule);
+      cssRule += 6;
     }
   else if (!strncasecmp (cssRule, "inherit", 7))
     {
-      cssRule = SkipWord (cssRule);
-      return (cssRule);
+      cssRule += 6;
+      cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid line-height value");
+     return (cssRule);
     }
   else
     cssRule = ParseCSSUnit (cssRule, &pval);
@@ -2106,71 +2282,85 @@ static char *ParseACSSFontSize (Element element, PSchema tsch,
    ElementType         elType;
    PresentationValue   pval;
    char               *ptr = NULL, *ptr1 = NULL;
-   ThotBool	       real;
+   ThotBool	       real, linespace = FALSE;
 
    pval.typed_data.real = FALSE;
    cssRule = SkipBlanksAndComments (cssRule);
+   /* look for a '/' within the current cssRule */
+   ptr1 = strchr (cssRule, ';');
+   ptr = strchr (cssRule, '/');
+   if (ptr && (ptr1 == NULL || ptr < ptr1))
+     {
+       /* keep the line spacing rule */
+       linespace = TRUE;
+       ptr[0] = EOS;
+      }
+   else
+     ptr = NULL;
+   ptr1 = cssRule;
    /* absolute size */
    if (!strncasecmp (cssRule, "xx-small", 8))
      {
 	pval.typed_data.unit = UNIT_PT;
 	pval.typed_data.value = 8;
-	cssRule = SkipWord (cssRule);
+	cssRule += 8;
      }
    else if (!strncasecmp (cssRule, "x-small", 7))
      {
 	pval.typed_data.unit = UNIT_PT;
 	pval.typed_data.value = 10;
-	cssRule = SkipWord (cssRule);
+	cssRule += 7;
      }
    else if (!strncasecmp (cssRule, "small", 5))
      {
 	pval.typed_data.unit = UNIT_PT;
 	pval.typed_data.value = 11;
-	cssRule = SkipWord (cssRule);
+	cssRule += 5;
      }
    else if (!strncasecmp (cssRule, "medium", 6))
      {
 	pval.typed_data.unit = UNIT_PT;
 	pval.typed_data.value = 12;
-	cssRule = SkipWord (cssRule);
+	cssRule += 6;
      }
    else if (!strncasecmp (cssRule, "large", 5))
      {
 	pval.typed_data.unit = UNIT_PT;
 	pval.typed_data.value = 13;
-	cssRule = SkipWord (cssRule);
+	cssRule += 5;
      }
    else if (!strncasecmp (cssRule, "x-large", 7))
      {
 	pval.typed_data.unit = UNIT_PT;
 	pval.typed_data.value = 14;
-	cssRule = SkipWord (cssRule);
+	cssRule += 7;
      }
    else if (!strncasecmp (cssRule, "xx-large", 8))
      {
 	pval.typed_data.unit = UNIT_PT;
 	pval.typed_data.value = 16;
-	cssRule = SkipWord (cssRule);
+	cssRule += 8;
      }
    /* relative size */
    else if (!strncasecmp (cssRule, "larger", 6))
      {
 	pval.typed_data.unit = UNIT_PERCENT;
 	pval.typed_data.value = 130;
-	cssRule = SkipWord (cssRule);
+	cssRule += 6;
      }
    else if (!strncasecmp (cssRule, "smaller", 7))
      {
 	pval.typed_data.unit = UNIT_PERCENT;
 	pval.typed_data.value = 80;
-	cssRule = SkipWord (cssRule);
+	cssRule += 7;
      }
    /* inherit */
    else if (!strncasecmp (cssRule, "inherit", 7))
      {
        /* not implemented */
-       cssRule = SkipWord (cssRule);
+       ptr = cssRule;
+       cssRule += 7;
+       cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid value");
        return (cssRule);
      }
    /* length or percentage */
@@ -2181,19 +2371,7 @@ static char *ParseACSSFontSize (Element element, PSchema tsch,
        return (cssRule);
      }
    else
-     {
-       /* look for a '/' within the current cssRule */
-       ptr1 = strchr (cssRule, ';');
-       ptr = strchr (cssRule, '/');
-       if (ptr && (ptr1 == NULL || ptr < ptr1))
-	 {
-	   /* keep the line spacing rule */
-	   ptr[0] = EOS;
-	   ptr = &ptr[1];
-	 }
-       else
-	 ptr = NULL;
-       
+     {       
        cssRule = ParseCSSUnit (cssRule, &pval);
        if (pval.typed_data.unit == UNIT_BOX)
 	 /* no unit specified */
@@ -2250,11 +2428,15 @@ static char *ParseACSSFontSize (Element element, PSchema tsch,
    /* install the presentation style */
    if (!check && DoApply)
      {
+       cssRule = CSSCheckEndValue (ptr1, cssRule, "Invalid font-size value");
        cssRule = CheckImportantRule (cssRule, context);
        TtaSetStylePresentation (PRSize, element, tsch, context, pval);
      }
-   if (!check && ptr)
-     cssRule = ParseCSSLineHeight (element, tsch, context, ptr, css, isHTML);
+    if (!check && ptr)
+     cssRule = ParseCSSLineHeight (element, tsch, context, &ptr[1], css, isHTML);
+   if (linespace)
+     *ptr = '/';
+
    return (cssRule);
 }
 
@@ -2776,6 +2958,7 @@ static char *ParseCSSTextDecoration (Element element, PSchema tsch,
 				     CSSInfoPtr css, ThotBool isHTML)
 {
    PresentationValue   decor;
+   char               *ptr = cssRule;
 
    decor.typed_data.value = 0;
    decor.typed_data.unit = UNIT_REL;
@@ -2784,32 +2967,33 @@ static char *ParseCSSTextDecoration (Element element, PSchema tsch,
    if (!strncasecmp (cssRule, "none", 4))
      {
 	decor.typed_data.value = NoUnderline;
-	cssRule = SkipWord (cssRule);
+	cssRule += 4;
      }
    else if (!strncasecmp (cssRule, "underline", 9))
      {
 	decor.typed_data.value = Underline;
-	cssRule = SkipWord (cssRule);
+	cssRule += 9;
      }
    else if (!strncasecmp (cssRule, "overline", 8))
      {
 	decor.typed_data.value = Overline;
-	cssRule = SkipWord (cssRule);
+	cssRule += 8;
      }
    else if (!strncasecmp (cssRule, "line-through", 12))
      {
 	decor.typed_data.value = CrossOut;
-	cssRule = SkipWord (cssRule);
+	cssRule += 12;
      }
    else if (!strncasecmp (cssRule, "blink", 5))
      {
 	/* the blink text-decoration attribute is not supported */
-	cssRule = SkipWord (cssRule);
+	cssRule += 5;
      }
    else if (!strncasecmp (cssRule, "inherit", 7))
      {
-       cssRule = SkipWord (cssRule);
-       return (cssRule);
+       cssRule += 7;
+       cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid text-decoration value");
+      return (cssRule);
      }
    else
      {
@@ -2825,6 +3009,7 @@ static char *ParseCSSTextDecoration (Element element, PSchema tsch,
        cssRule = CheckImportantRule (cssRule, context);
        TtaSetStylePresentation (PRUnderline, element, tsch, context, decor);
      }
+   cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid text-decoration value");
    return (cssRule);
 }
 
@@ -2846,7 +3031,8 @@ static char *ParseCSSHeight (Element element, PSchema tsch,
       val.typed_data.unit = VALUE_AUTO;
       val.typed_data.value = 0;
       val.typed_data.real = FALSE;
-      cssRule = SkipWord (cssRule);
+      cssRule += 4;
+      cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid height value");
     }
   else
     cssRule = ParseCSSUnit (cssRule, &val);
@@ -2885,7 +3071,8 @@ static char *ParseCSSWidth (Element element, PSchema tsch,
       val.typed_data.unit = VALUE_AUTO;
       val.typed_data.value = 0;
       val.typed_data.real = FALSE;
-      cssRule = SkipWord (cssRule);
+      cssRule += 4;
+      cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid width value");
     }
   else
       cssRule = ParseCSSUnit (cssRule, &val);
@@ -2924,7 +3111,8 @@ static char *ParseCSSMarginTop (Element element, PSchema tsch,
       margin.typed_data.unit = VALUE_AUTO;
       margin.typed_data.value = 0;
       margin.typed_data.real = FALSE;
-      cssRule = SkipWord (cssRule);
+      cssRule += 4;
+      cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid margin-top value");
     }
   else
     cssRule = ParseCSSUnit (cssRule, &margin);
@@ -2959,7 +3147,8 @@ static char *ParseCSSMarginBottom (Element element, PSchema tsch,
       margin.typed_data.unit = VALUE_AUTO;
       margin.typed_data.value = 0;
       margin.typed_data.real = FALSE;
-      cssRule = SkipWord (cssRule);
+      cssRule += 4;
+      cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid margin-bottom value");
     }
   else
     cssRule = ParseCSSUnit (cssRule, &margin);
@@ -2994,7 +3183,8 @@ static char *ParseCSSMarginLeft (Element element, PSchema tsch,
       margin.typed_data.unit = VALUE_AUTO;
       margin.typed_data.value = 0;
       margin.typed_data.real = FALSE;
-      cssRule = SkipWord (cssRule);
+      cssRule += 4;
+      cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid margin-left value");
     }
   else
     cssRule = ParseCSSUnit (cssRule, &margin);
@@ -3030,7 +3220,8 @@ static char *ParseCSSMarginRight (Element element, PSchema tsch,
       margin.typed_data.unit = VALUE_AUTO;
       margin.typed_data.value = 0;
       margin.typed_data.real = FALSE;
-      cssRule = SkipWord (cssRule);
+      cssRule += 4;
+      cssRule = CSSCheckEndValue (ptr, cssRule, "Invalid margin-right value");
     }
   else
     cssRule = ParseCSSUnit (cssRule, &margin);

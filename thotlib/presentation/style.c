@@ -205,6 +205,7 @@ char *TtaGiveRGB (char *value, unsigned short *red, unsigned short *green,
 	  }
       if (failed)
 	failed = ThotGiveRGB (colname, red, green, blue);
+#ifdef IV
       if (failed)
 	/* it may be a sequence of 3 or 6 hex. digits with a missing
            leading '#' */
@@ -233,6 +234,7 @@ char *TtaGiveRGB (char *value, unsigned short *red, unsigned short *green,
 		}
 	    }
 	}
+#endif /* _IV */
     }
   if (failed)
     return (value);
