@@ -182,7 +182,38 @@ ThotBool AnnotFilter_show (List *list, CHAR_T *object)
   List *list_item = list;
   AnnotFilterData *filter;
 
+  if (!object)
+    return TRUE;
+
   list_item = AnnotFilter_search (list, object);
+  if (!list_item)
+    return TRUE;
+  filter = (AnnotFilterData *) list_item->object;
+  if (filter)
+    return filter->show;
+  else
+    return TRUE;
+}
+
+/*------------------------------------------------------------
+   AnnotFilter_showServer
+   Returns a boolean saying if a filter element containing
+   a given object should be shown. If no filter element is
+   found, it returns TRUE.
+   ------------------------------------------------------------*/
+ThotBool AnnotFilter_showServer (List *list, CHAR_T *url)
+{
+  List *list_item = list;
+  AnnotFilterData *filter;
+  CHAR_T server[MAX_LENGTH];
+
+  if (!url)
+    return TRUE;
+
+  /* we first normalize the url name to get the server */
+  GetServerName (url, server);
+
+  list_item = AnnotFilter_search (list, server);
   if (!list_item)
     return TRUE;
   filter = (AnnotFilterData *) list_item->object;
@@ -791,6 +822,41 @@ CHAR_T *filename;
      return 0L;
 
    return (info.size);
+}
+
+#ifdef __STDC__
+void GetServerName (CHAR_T *url, CHAR_T *server)
+#else
+void GetServerName (url, server)
+CHAR_T *url;
+CHAR_T *server;
+
+#endif /* __STDC__ */
+{
+  CHAR_T      *scratch_url;
+  CHAR_T      *protocol;
+  CHAR_T      *host;
+  CHAR_T      *dir;
+  CHAR_T      *file;
+
+  if (IsFilePath (url))
+      ustrcpy (server, TEXT("localhost"));
+  else
+    {
+      scratch_url = TtaStrdup (url);
+      ExplodeURL (scratch_url, &protocol, &host, &dir, &file);
+      ustrcpy (server, host);
+      if (dir[0])
+	{
+	  ustrcat (server, TEXT("/"));
+	  ustrcat (server, dir);
+	}
+      TtaFreeMemory (scratch_url);
+      /* remove the query string */
+      scratch_url = ustrrchr (server, TEXT('?'));
+      if (scratch_url)
+	*scratch_url = WC_EOS;
+    }
 }
 
 /***************************************************

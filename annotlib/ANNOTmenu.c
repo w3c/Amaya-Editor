@@ -357,11 +357,8 @@ ThotBool show;
 	continue;
       
       if (( !AnnotFilter_show (AnnotMetaData[doc].authors, annot->author)
-	  || !AnnotFilter_show (AnnotMetaData[doc].types, annot->type)
-	      /*** here, I need to extract the server from annot->url? 
-	  || !AnnotFilter_show (AnnotMetaData[doc].servers, annot->servers)))
-	      ***/
-	   ))
+	    || !AnnotFilter_show (AnnotMetaData[doc].types, annot->type)
+	    || !AnnotFilter_showServer (AnnotMetaData[doc].servers, annot->annot_url)))
 	show = FALSE;
       else
 	show = TRUE;

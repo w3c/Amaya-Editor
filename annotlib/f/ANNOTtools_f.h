@@ -19,6 +19,8 @@ extern List *AnnotFilter_search ( List *list,
                                   CHAR_T *object );
 extern ThotBool AnnotFilter_show ( List *list,
                                    CHAR_T *object );
+extern ThotBool AnnotFilter_showServer ( List *list,
+                                         CHAR_T *url );
 extern List *AnnotList_search ( List *list,
                                 CHAR_T *object );
 extern AnnotMeta *AnnotList_searchAnnot ( List *list,
@@ -44,6 +46,8 @@ extern void SubstituteCharInString ( char *buffer,
 extern char *GetTempName ( const char *dir,
                            const char *prefix );
 extern long GetFileSize ( CHAR_T *filename );
+extern void GetServerName ( CHAR_T *url,
+                            CHAR_T *server );
 extern ThotBool IsAnnotationDocument ( Document document );
 extern ThotBool IsAnnotationLink ( Document document,
                                    Element element );
@@ -65,6 +69,8 @@ extern List *AnnotFilter_search (/* List *list,
                                     CHAR_T *object */);
 extern ThotBool AnnotFilter_show (/* List *list,
                                      CHAR_T *object */);
+extern ThotBool AnnotFilter_showServer (/* List *list,
+                                           CHAR_T *url */);
 extern List *AnnotList_search (/* List *list,
                                   CHAR_T *object */);
 extern AnnotMeta *AnnotList_searchAnnot (/* List *list,
@@ -90,6 +96,8 @@ extern void SubstituteCharInString (/* char *buffer,
 extern char *GetTempName (/* const char *dir,
                              const char *prefix */);
 extern long GetFileSize (/* CHAR_T *filename */);
+extern void GetServerName (/* CHAR_T *url,
+                              CHAR_T *server */);
 extern ThotBool IsAnnotationDocument (/* Document document */);
 extern ThotBool IsAnnotationLink (/* Document document,
                                      Element element */);

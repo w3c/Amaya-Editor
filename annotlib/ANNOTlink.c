@@ -139,6 +139,7 @@ AnnotMeta *annot;
   CHAR_T       *annotName;
   CHAR_T       *annot_user;
   CHAR_T       *tmp;
+  CHAR_T       server[MAX_LENGTH];
 
   annot_user = GetAnnotUser ();
   
@@ -194,6 +195,9 @@ AnnotMeta *annot;
   /* add the annotation to the filter list */
   AnnotFilter_add (&(AnnotMetaData[source_doc].authors), annot->author);
   AnnotFilter_add (&(AnnotMetaData[source_doc].types), annot->type);
+  GetServerName (annot->annot_url, server);
+  AnnotFilter_add (&(AnnotMetaData[source_doc].servers), server);
+
 }
 
 /*-----------------------------------------------------------------------
@@ -280,9 +284,7 @@ void LINK_SaveLink (source_doc)
      Document source_doc;
 #endif /* __STDC__*/
 {
-  char   *annot_user;
   char   *indexName;
-  AnnotMeta *annot;
   List   *annot_list;
 
   /* Open the annotation index */
