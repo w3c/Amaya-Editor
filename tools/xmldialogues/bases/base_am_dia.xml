@@ -1280,8 +1280,8 @@
 	<message xml:lang="fr">Réduire la cellule vers le haut</message>
 </label>
 <label define="BSelectRow">
-	<message xml:lang="en">Select a row</message>
-	<message xml:lang="fr">Sélectionner une ligne</message>
+	<message xml:lang="en">Select the row</message>
+	<message xml:lang="fr">Sélectionner la ligne</message>
 </label>
 <label define="BCreateRowB">
 	<message xml:lang="en">Insert a row before</message>
@@ -1292,8 +1292,8 @@
 	<message xml:lang="fr">Insérer une ligne après</message>
 </label>
 <label define="BSelectColumn">
-	<message xml:lang="en">Select a column</message>
-	<message xml:lang="fr">Sélectionner une colonne</message>
+	<message xml:lang="en">Select the column</message>
+	<message xml:lang="fr">Sélectionner la colonne</message>
 </label>
 <label define="BCreateColumnB">
 	<message xml:lang="en">Insert a column before</message>

@@ -3393,6 +3393,89 @@ ThotBool SelectPairInterval ()
 
 
 /*----------------------------------------------------------------------
+   SelectColumn
+   Select the whole column.
+  ----------------------------------------------------------------------*/
+void SelectColumn (PtrElement column)
+{
+  PtrElement          pNextRow, pCell;
+  PtrElement          pFirst, pLast, firstParent, lastParent, pRow, pTable;
+  int                 rowType;
+  
+  /* get the table ancestor first */
+  pTable = column;
+  while (pTable &&
+	 !TypeHasException (ExcIsTable,
+			    pTable->ElTypeNumber,
+			    pTable->ElStructSchema))
+    pTable = pTable->ElParent;
+  /* get the first row of the table */
+  /* ********* TODO: there are several types in MathML */
+  rowType = GetElemWithException (ExcIsRow, column->ElStructSchema);
+  pRow = FwdSearchTypedElem (column, rowType, column->ElStructSchema);
+  /* get the relevant cell in the first row */
+  do
+    {
+      pCell = GetCellInRow (pRow, column);
+      if (!pCell)
+	pRow = NextRowInTable (pRow, pTable);
+    }
+  while (pRow && !pCell);
+  pFirst = pCell;
+  /* get the last row of the table */
+  pNextRow = pRow;
+  do
+    {
+      pRow = pNextRow;
+      pNextRow = NextRowInTable (pRow, pTable);
+    }
+  while (pNextRow);
+  /* get the relevant cell in the last row */
+  do
+    {
+      pCell = GetCellInRow (pRow, column);
+      if (!pCell)
+	pRow = PreviousRowInTable (pRow, pTable);
+    }
+  while (pRow && !pCell);
+  pLast = pCell;
+  if (pFirst && pFirst == pLast)
+    SelectElementWithEvent (SelectedDocument, pFirst, TRUE, FALSE);
+  else
+    {
+      SelectElementWithEvent (SelectedDocument, pFirst, TRUE, FALSE);
+      ExtendSelection (pLast, 0, FALSE, TRUE, FALSE);
+    }
+  WholeColumnSelected = TRUE;
+  /* update the selection message */
+  BuildSelectionMessage ();
+}
+
+/*----------------------------------------------------------------------
+   TtaSelectEnclosingColumn
+   Select the enclosing column of the element.
+  ----------------------------------------------------------------------*/
+void TtaSelectEnclosingColumn (Element el)
+{
+  PtrElement          pEl;
+  
+  /* get the cell ancestor first */
+  if (el == NULL)
+    return;
+  else
+    pEl = (PtrElement) el;
+  while (pEl &&
+	 !TypeHasException (ExcIsCell,
+			    pEl->ElTypeNumber,
+			    pEl->ElStructSchema))
+    pEl = pEl->ElParent;
+  if (pEl)
+    pEl = GetColHeadOfCell (pEl);
+  if (pEl)
+      SelectColumn (pEl);
+}
+
+/*----------------------------------------------------------------------
    SelectAround
    Select an element relatively to current selection:
    - parent of first selected element if val = 1
@@ -3405,12 +3488,13 @@ void SelectAround (int val)
   PtrElement          pEl, pParent, pNextRow, pCell;
   PtrElement          pFirst, pLast, firstParent, lastParent, pRow, pTable;
   int                 rowType;
-  ThotBool            done, ColSelectedCompletely;
+  ThotBool            done;
 
   pEl = NULL;
   pLast = NULL;
   pFirst = NULL;
-  ColSelectedCompletely = FALSE;
+  firstParent = NULL;
+  lastParent = NULL;
   switch (val)
     {
     case 1:
@@ -3491,48 +3575,11 @@ void SelectAround (int val)
 		      done = TRUE;
 		    }
 		  if (!done)
-		    /* the current selection contains only complete cells */
-		    /* select all cells in the column */
 		    {
-		      /* get the table ancestor first */
-		      pTable = SelectedColumn;
-		      while (pTable &&
-			     !TypeHasException (ExcIsTable,
-						pTable->ElTypeNumber,
-						pTable->ElStructSchema))
-			pTable = pTable->ElParent;
-		      /* get the first row of the table */
-		      rowType = GetElemWithException (ExcIsRow,
-					       SelectedColumn->ElStructSchema);
-		      pRow = FwdSearchTypedElem (SelectedColumn, rowType,
-					       SelectedColumn->ElStructSchema);
-		      /* get the relevant cell in the first row */
-		      do
-			{
-			  pCell = GetCellInRow (pRow, SelectedColumn);
-			  if (!pCell)
-			    pRow = NextRowInTable (pRow, pTable);
-			}
-		      while (pRow && !pCell);
-		      pFirst = pCell;
-		      /* get the last row of the table */
-		      pNextRow = pRow;
-		      do
-			{
-			  pRow = pNextRow;
-			  pNextRow = NextRowInTable (pRow, pTable);
-			}
-		      while (pNextRow);
-		      /* get the relevant cell in the last row */
-		      do
-			{
-		          pCell = GetCellInRow (pRow, SelectedColumn);
-			  if (!pCell)
-			    pRow = PreviousRowInTable (pRow, pTable);
-			}
-		      while (pRow && !pCell);
-		      pLast = pCell;
-		      ColSelectedCompletely = TRUE;
+		      /* the current selection contains only complete cells */
+		      /* select all cells in the column */
+		      SelectColumn (SelectedColumn);
+		      return;
 		    }
 		}
 	      }
@@ -3559,8 +3606,6 @@ void SelectAround (int val)
 		    {
 		      pFirst = FirstSelectedElement;
 		      pLast = LastSelectedElement;
-		      firstParent = NULL;
-		      lastParent = NULL;
 		      /* get the ancestors of the first selected */
 		      /* element */
 		      pParent = pFirst->ElParent;
@@ -3631,12 +3676,6 @@ void SelectAround (int val)
 		    SelectElementWithEvent (SelectedDocument, pFirst, TRUE,
 					    FALSE);
 		    ExtendSelection (pLast, 0, FALSE, TRUE, FALSE);
-		    if (ColSelectedCompletely)
-		      {
-			WholeColumnSelected = TRUE;
-			/* update the selection message */
-			BuildSelectionMessage ();
-		      }
 		  }
 	      }
 	    }
@@ -3664,7 +3703,7 @@ void SelectAround (int val)
    TtcParentElement
    Select the parent of the first selected element
   ----------------------------------------------------------------------*/
-void                TtcParentElement (Document document, View view)
+void TtcParentElement (Document document, View view)
 {
    SelectAround (1);
 }
@@ -3674,7 +3713,7 @@ void                TtcParentElement (Document document, View view)
    TtcPreviousElement
    Select the element preceding the first selected element
   ----------------------------------------------------------------------*/
-void                TtcPreviousElement (Document document, View view)
+void TtcPreviousElement (Document document, View view)
 {
    SelectAround (2);
 }
@@ -3684,7 +3723,7 @@ void                TtcPreviousElement (Document document, View view)
    TtcNextElement
    Select the element following the last selected element
   ----------------------------------------------------------------------*/
-void                TtcNextElement (Document document, View view)
+void TtcNextElement (Document document, View view)
 {
    SelectAround (3);
 }
@@ -3693,7 +3732,7 @@ void                TtcNextElement (Document document, View view)
    TtcChildElement
    Select the first child of the first selected element
   ----------------------------------------------------------------------*/
-void                TtcChildElement (Document document, View view)
+void TtcChildElement (Document document, View view)
 {
    SelectAround (4);
 }

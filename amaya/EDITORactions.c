@@ -2105,7 +2105,12 @@ void CreateRowAfter (Document doc, View view)
   ----------------------------------------------------------------------*/
 void SelectColumn (Document doc, View view)
 {
-  /* todo */;
+  Element             el;
+  int                 firstchar, lastchar;
+
+  /* get the first selected element */
+  TtaGiveFirstSelectedElement (doc, &el, &firstchar, &lastchar);
+  TtaSelectEnclosingColumn (el);
 }
 
 /*----------------------------------------------------------------------

@@ -16,7 +16,7 @@
 /*----------------------------------------------------------------------
    TtaIsDocumentSelected answers TRUE if the document is selected.  
   ----------------------------------------------------------------------*/
-extern ThotBool     TtaIsDocumentSelected (Document document);
+extern ThotBool TtaIsDocumentSelected (Document document);
 
 /*----------------------------------------------------------------------
   TtaSelectWord selects the word around the current point in an element
@@ -37,12 +37,12 @@ extern void TtaSelectWord (Element element, int pos, Document doc, View view);
    selection in the document.
 
   ----------------------------------------------------------------------*/
-extern void         TtaSelectElement (Document document, Element selectedElement);
+extern void TtaSelectElement (Document document, Element selectedElement);
 
 /*----------------------------------------------------------------------
    TtaGetSelectedDocument returns the current selected document
   ----------------------------------------------------------------------*/
-extern Document   TtaGetSelectedDocument ();
+extern Document TtaGetSelectedDocument ();
 
 /*----------------------------------------------------------------------
    TtaGetActiveView returns the selected document and the active view
@@ -53,7 +53,7 @@ extern void TtaGetActiveView (Document *doc, View *view);
 /*----------------------------------------------------------------------
    TtaSelectView posts the selected view in the document
   ----------------------------------------------------------------------*/
-extern void         TtaSelectView (Document document, View view);
+extern void TtaSelectView (Document document, View view);
 
 /*----------------------------------------------------------------------
    TtaSelectString
@@ -70,7 +70,7 @@ extern void         TtaSelectView (Document document, View view);
    to be selected.
 
   ----------------------------------------------------------------------*/
-extern void         TtaSelectString (Document document, Element textElement, int firstCharacter, int lastCharacter);
+extern void TtaSelectString (Document document, Element textElement, int firstCharacter, int lastCharacter);
 
 /*----------------------------------------------------------------------
    TtaExtendSelection
@@ -84,7 +84,7 @@ extern void         TtaSelectString (Document document, Element textElement, int
    to be selected. 0 if the whole element must be selected.
 
   ----------------------------------------------------------------------*/
-extern void         TtaExtendSelection (Document document, Element element, int lastCharacter);
+extern void TtaExtendSelection (Document document, Element element, int lastCharacter);
 
 /*----------------------------------------------------------------------
    TtaAddElementToSelection
@@ -97,9 +97,8 @@ extern void         TtaExtendSelection (Document document, Element element, int 
         belong to the same document as the elements selected by previous calls
         to TtaAddElementToSelection and by the last call to TtaSelectElement.
    element: the element to be added to the current selection
- 
   ----------------------------------------------------------------------*/
-extern void         TtaAddElementToSelection (Document document, Element element);
+extern void TtaAddElementToSelection (Document document, Element element);
 
 /*----------------------------------------------------------------------
    TtaSelectInterval
@@ -107,29 +106,23 @@ extern void         TtaAddElementToSelection (Document document, Element element
    If a pair of paired elements is selected, select also all elements
    between the two paired elements. Nothing is done if the current
    selection is not a pair.
-
    Parameters:
    No parameter
-
    Return value:
    No return value
-
   ----------------------------------------------------------------------*/
-extern void         TtaSelectInterval ();
+extern void TtaSelectInterval ();
 
 /*----------------------------------------------------------------------
    TtaUnselect
 
    Turns the selection off for a document.
-
    Parameters:
    document: the document for which the selection must be turned off
-
    Return value:
    No return value
-
   ----------------------------------------------------------------------*/
-extern void         TtaUnselect (Document document);
+extern void TtaUnselect (Document document);
 
 /*----------------------------------------------------------------------
    TtaSetSelectionMode
@@ -138,11 +131,10 @@ extern void         TtaUnselect (Document document);
    functions TtaSelectElement, TtaSelectString, TtaExtendSelection and
    TtaUnselect do not update the menus that depend on the selection
    and do not display the selection message. Default mode is withMenu = TRUE.
-
    Parameter:
    withMenu: the new selection mode.
   ----------------------------------------------------------------------*/
-extern void         TtaSetSelectionMode (ThotBool withMenu);
+extern void TtaSetSelectionMode (ThotBool withMenu);
 
 /*----------------------------------------------------------------------
    TtaIsSelectionEmpty
@@ -150,7 +142,7 @@ extern void         TtaSetSelectionMode (ThotBool withMenu);
    Returns TRUE if there is a current selection and this selection is 
    empty (a caret).
   ----------------------------------------------------------------------*/
-extern ThotBool     TtaIsSelectionEmpty ();
+extern ThotBool TtaIsSelectionEmpty ();
 
 /*----------------------------------------------------------------------
    TtaGiveFirstSelectedElement
@@ -158,10 +150,8 @@ extern ThotBool     TtaIsSelectionEmpty ();
    Returns the first element in the current selection in a given document.
    If this element is a Text element and if only a substring is selected,
    return also the rank of the first and last characters in the selection.
-
    Parameter:
    document: the document for which the selection is asked.
-
    Return values:
    selectedElement: the first selected element, NULL if no element is
    selected in the document.
@@ -169,9 +159,8 @@ extern ThotBool     TtaIsSelectionEmpty ();
    whole element is in the selection.
    lastCharacter: rank of the last character in the selection, or 0 if the
    whole element is in the selection.
-
   ----------------------------------------------------------------------*/
-extern void         TtaGiveFirstSelectedElement (Document document, /*OUT*/ Element * selectedElement, /*OUT*/ int *firstCharacter, /*OUT*/ int *lastCharacter);
+extern void TtaGiveFirstSelectedElement (Document document, /*OUT*/ Element * selectedElement, /*OUT*/ int *firstCharacter, /*OUT*/ int *lastCharacter);
 
 /*----------------------------------------------------------------------
    TtaGiveNextSelectedElement
@@ -180,11 +169,9 @@ extern void         TtaGiveFirstSelectedElement (Document document, /*OUT*/ Elem
    in a given document. If this element is a Text element and if only a
    substring is selected, return also the rank of the first and last
    characters in the selection.
-
    Parameters:
    document: the document for which the selection is asked.
    selectedElement: the current element.
-
    Return parameters:
    selectedElement: the next selected element, NULL if
    this was the last selected element in the document.
@@ -192,24 +179,21 @@ extern void         TtaGiveFirstSelectedElement (Document document, /*OUT*/ Elem
    whole element is in the selection.
    lastCharacter: rank of the last character in the selection, or 0 if the
    whole element is in the selection.
-
   ----------------------------------------------------------------------*/
-extern void         TtaGiveNextSelectedElement (Document document, /*OUT*/ Element * selectedElement, /*OUT*/ int *firstCharacter, /*OUT*/ int *lastCharacter);
+extern void TtaGiveNextSelectedElement (Document document, /*OUT*/ Element * selectedElement, /*OUT*/ int *firstCharacter, /*OUT*/ int *lastCharacter);
 
 /*----------------------------------------------------------------------
    TtaGiveNextElement
  
    Returns the element that follows a given element in the selection order
- 
    Parameters:
    document: the document for which the selection is asked.
    element: the current element.
    last: end of the range to be searched, usually last selected element.
- 
    Return parameters:
    element: the next element in the selection order. NULL if not found.
   ----------------------------------------------------------------------*/
-extern void         TtaGiveNextElement (Document document, /*OUT*/ Element * element, Element last);
+extern void TtaGiveNextElement (Document document, /*OUT*/ Element * element, Element last);
 
 /*----------------------------------------------------------------------
    TtaGiveLastSelectedElement
@@ -217,10 +201,8 @@ extern void         TtaGiveNextElement (Document document, /*OUT*/ Element * ele
    Returns the last element in the current selection in a given document.
    If this element is a Text element and if only a substring is selected,
    return also the rank of the first and last characters in the selection.
-
    Parameter:
    document: the document for which the selection is asked.
-
    Return values:
    selectedElement: the last selected element, NULL if no element is
    selected in the document.
@@ -228,22 +210,26 @@ extern void         TtaGiveNextElement (Document document, /*OUT*/ Element * ele
    whole element is in the selection.
    lastCharacter: rank of the last character in the selection, or 0 if the
    whole element is in the selection.
-
   ----------------------------------------------------------------------*/
-extern void         TtaGiveLastSelectedElement (Document document, /*OUT*/ Element * selectedElement, /*OUT*/ int *firstCharacter, /*OUT*/ int *lastCharacter);
+extern void TtaGiveLastSelectedElement (Document document, /*OUT*/ Element * selectedElement, /*OUT*/ int *firstCharacter, /*OUT*/ int *lastCharacter);
 
 /*----------------------------------------------------------------------
    TtaSetMoveForwardCallback permet de connecter une fonction de
    l'application a la touche de deplacement du curseur vers l'avant
   ----------------------------------------------------------------------*/
-extern void  TtaSetMoveForwardCallback (Func callbackFunc);
+extern void TtaSetMoveForwardCallback (Func callbackFunc);
 
 /*----------------------------------------------------------------------
    TtaSetMoveBackwardCallback permet de connecter une fonction de
    l'application a la touche de deplacement du curseur vers l'arriere
   ----------------------------------------------------------------------*/
-extern void  TtaSetMoveBackwardCallback (Func callbackFunc);
+extern void TtaSetMoveBackwardCallback (Func callbackFunc);
 
+/*----------------------------------------------------------------------
+   TtaSelectEnclosingColumn
+   Select the enclosing column of the element.
+  ----------------------------------------------------------------------*/
+extern void TtaSelectEnclosingColumn (Element el);
 #endif /* __CEXTRACT__ */
 
 #endif
