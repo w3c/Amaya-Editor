@@ -2930,7 +2930,7 @@ ThotWidget	 GetNoAlphaVisual ()
       GDK_GL_RED_SIZE,1,
       GDK_GL_GREEN_SIZE,1,
       GDK_GL_BLUE_SIZE,1,
-      GDK_GL_ALPHA_SIZE,1,
+      GDK_GL_ALPHA_SIZE,0,
       GDK_GL_STENCIL_SIZE, 1,
       GDK_GL_DOUBLEBUFFER,
       GDK_GL_NONE
