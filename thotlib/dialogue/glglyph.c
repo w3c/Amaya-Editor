@@ -516,6 +516,6 @@ int UnicodeFontRenderPoly (void *gl_font, wchar_t *text, float x, float y, int s
       n++;      
     }
   glPopMatrix ();
-  return (SUPERSAMPLING(pen_x));
+  return ((int)SUPERSAMPLING(pen_x));
 }
 #endif /* _GL */
