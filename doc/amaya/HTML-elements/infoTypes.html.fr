@@ -73,7 +73,7 @@ par les éléments HTML sont:</p>
       les acronymes.</dd>
   <dt><a href="inline.html.fr#Inline2">Insertions et suppressions</a></dt>
     <dd>Il existe des éléments pour marquer le texte qui a été inséré, ou qui
-      devrait être supprimé. <ins>(Cela est utile pour l'édition collaborative
+      devrait être supprimé. <ins>(Cela est utile pour l'édition collabo
       )</ins></dd>
   <dt><a href="inline.html.fr#Emphasis">Mises en évidence</a></dt>
   <dt>HTML fournit deux niveaux de mise en évidence:<em> mise en évidence

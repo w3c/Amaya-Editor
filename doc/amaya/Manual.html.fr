@@ -304,8 +304,8 @@ utiliser.</a></p>
     information dans HTML</a></li>
   <li><a href="HTML-elements/structure.html.fr#HTML" rel="Chapter">Structure
     du document HTML</a></li>
-  <li><a href="HTML-elements/headings.html.fr#Heading"
-    rel="Chapter">En-têtes</a></li>
+  <li><a href="HTML-elements/headings.html.fr#Heading" rel="Chapter">Eléments
+    d'entête</a></li>
   <li><a href="HTML-elements/lists.html.fr#List" rel="Chapter">Eléments d'une
     liste</a></li>
   <li><a href="HTML-elements/address.html.fr#About" rel="Chapter">A propos de
