@@ -3743,6 +3743,10 @@ void  TtaListStyleSchemas (Document document, FILE *fileDescriptor)
 				       }
 				     if (pRP1->ApString)
 				       {
+					 if (pRP1->ApMatch == CoWord)
+					   fprintf (fileDescriptor, "~");
+					 else if (pRP1->ApMatch == CoSubstring)
+					   fprintf (fileDescriptor, "|");
 					 fprintf (fileDescriptor, "=\'");
 					 if (*pRP1->ApString != EOS)
 					   wrtext (pRP1->ApString, fileDescriptor);

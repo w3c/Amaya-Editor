@@ -4940,9 +4940,14 @@ static char *ParseGenericSelector (char *selector, char *cssRule,
 		      }
 		    else
 		      {
+			if (attrmatch[0] == Txtword && TtaIsBlank (selector))
+			  {
+			    CSSPrintError ("No space allowed here: ", selector);
+			    DoApply = FALSE;
+			  }
 			*cur++ = tolower (*selector);
-			selector++;
 		      }
+		    selector++;
 		  }
 		/* there is a value */
 		if (quoted && *selector == '"')

@@ -1193,7 +1193,7 @@ ThotBool CondPresentation (PtrCondition pCond, PtrElement pEl,
 			  /* we don't care about the attribute value */
 			  found = TRUE;
 			else
-			  /* test the attribute value */
+			  /* check the attribute value */
 			  {
 			    if (pA->AeAttrType == AtTextAttr)
 			      /* it's a text attribute. Compare strings */
@@ -3476,6 +3476,59 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
   if (!pNewAbbox)
     return;
 
+  /* fetch all rules that apply to any element type in all extensions of the
+     document's P schema */
+  /* We need to do that only if we are working for the main view and if
+     the element is not a basic or hidden element */
+  if (viewSch == 1 &&     /* main view */
+      pEl->ElTypeNumber >= pEl->ElStructSchema->SsRootElem &&   /* not basic */
+      !TypeHasException (ExcHidden, pEl->ElTypeNumber, pEl->ElStructSchema))
+    {
+      /* get the first P schema extension */
+      pHd = FirstPSchemaExtension (pDoc->DocSSchema, pDoc, NULL);
+      while (pHd)
+	{
+	  pSchPres = pHd->HdPSchema;
+	  /* look at the rules that apply to any element type in this
+	     P schema extension */
+	  pRule = pSchPres->PsElemPRule->ElemPres[AnyType];
+	  while (pRule != NULL)
+	    {
+	      if (pRule->PrCond == NULL ||
+		  CondPresentation (pRule->PrCond, pEl, NULL, NULL, 1,
+				    pEl->ElStructSchema, pDoc))
+		/* conditions are ok */
+		{
+		  /* keep that rule only if it has a higher priority than the
+		     the rule for the same property we have already
+		     encountered */
+		  if (pRule->PrType != PtFunction ||
+		      (pRule->PrType == PtFunction &&
+		       pRule->PrPresFunction == FnBackgroundPicture))
+		    {
+		      if (RuleHasHigherPriority (pRule, pSchPres,
+					  selectedRule[pRule->PrType],
+					  schemaOfSelectedRule[pRule->PrType]))
+			{
+			  selectedRule[pRule->PrType] = pRule;
+			  schemaOfSelectedRule[pRule->PrType] = pSchPres;
+			  attrOfSelectedRule[pRule->PrType] = NULL;
+			}
+		    }
+		  else
+		    if (!ApplyRule (pRule, pSchPres, pNewAbbox, pDoc,NULL))
+		      WaitingRule (pRule, pNewAbbox, pSchPres, NULL, queuePA,
+				   queuePS, queuePP, queuePR, lqueue);
+		}
+	      /* next rule for all element types in the same P schema
+		 extension */
+	      pRule = pRule->PrNextPRule;
+	    }
+	  /* next P schema extension */
+	  pHd = pHd->HdNextPSchema;
+	}
+    }
+
   /* look at all additional P schemas (CSS style sheets) in the order of
      their weight, but look first at the main presentation schema to
      get presentation rules associated with attributes */
@@ -3493,49 +3546,6 @@ static void  ApplyPresRules (PtrElement pEl, PtrDocument pDoc,
 	  /* we are interested in the main view and it's not the default
 	     style sheet */
 	{
-	  if (pEl->ElTypeNumber >= pEl->ElStructSchema->SsRootElem &&
-	      !TypeHasException (ExcHidden, pEl->ElTypeNumber,
-				 pEl->ElStructSchema))
-	    /* it's not a basic type and it's not a hidden element */
-	    /* look at the rules that apply to any element type in this
-	       P schema extension */
-	    {
-	      pRule = pSchPres->PsElemPRule->ElemPres[AnyType];
-	      while (pRule != NULL)
-		{
-		  if (pRule->PrCond == NULL ||
-		      CondPresentation (pRule->PrCond, pEl, NULL, NULL, 1,
-					pEl->ElStructSchema, pDoc))
-		    /* conditions are ok */
-		    {
-		      /* keep that rule only if it has a higher priority than
-			 the rule for the same property we have already
-			 encountered */
-		      if (pRule->PrType != PtFunction ||
-			  (pRule->PrType == PtFunction &&
-			   pRule->PrPresFunction == FnBackgroundPicture))
-			{
-			  if (RuleHasHigherPriority (pRule, pSchPres,
-					  selectedRule[pRule->PrType],
-					  schemaOfSelectedRule[pRule->PrType]))
-			    {
-			      selectedRule[pRule->PrType] = pRule;
-			      schemaOfSelectedRule[pRule->PrType] = pSchPres;
-			      attrOfSelectedRule[pRule->PrType] = NULL;
-			    }
-			}
-		      else
-			if (!ApplyRule (pRule, pSchPres, pNewAbbox, pDoc,NULL))
-			  WaitingRule (pRule, pNewAbbox, pSchPres, NULL,
-				       queuePA, queuePS, queuePP, queuePR,
-				       lqueue);
-		    }
-		  /* next rule for all element types in the same P schema
-		     extension */
-		  pRule = pRule->PrNextPRule;
-		}
-	    }
-
 	  /* look at the rules that apply to the element type in this
 	       P schema extension */
 	  pRule = pSchPres->PsElemPRule->ElemPres[pEl->ElTypeNumber - 1];

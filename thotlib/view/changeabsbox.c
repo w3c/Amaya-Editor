@@ -256,6 +256,40 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
       *pSPR = pSchP;
       *pSSR = pSchS;
 
+      /* fetch all rules that apply to any element type in all extensions of
+	 the document's P schema */
+      /* We need to do that only if we are working for the main view,
+	 if it's not a presentation box and if the element is not a basic or
+	 hidden element */
+      if (view == 1 &&                   /* main view */
+	  presNum == 0 &&                /* not a presentation box */
+	  index >= pSchS->SsRootElem &&  /* not basic */
+	  !TypeHasException (ExcHidden, index, pSchS)) /*not a hidden element*/
+	{
+	  /* get the first P schema extension */
+	  pHd = FirstPSchemaExtension (pDoc->DocSSchema, pDoc, NULL);
+	  while (pHd)
+	    {
+	      pSP = pHd->HdPSchema;
+	      /* look at the rules that apply to any element type in this
+		 P schema extension */
+	      pR = pSP->PsElemPRule->ElemPres[AnyType];
+	      if (pR)
+		{
+		  SimpleSearchRulepEl (&pRuleView1, pEl, view, typeRule,
+				       typeFunc, &pR, pDoc);
+		  if (pR && RuleHasHigherPriority (pR, pSP, pRule, *pSPR))
+		    {
+		      pRule = pR;
+		      *pSPR = pSP;
+		      *pSSR = pSchS;
+		    }
+		}
+	      /* next P schema extension */
+	      pHd = pHd->HdNextPSchema;
+	    }
+	}
+
       /* look at at the main presentation schema and all additional P schemas
 	 (CSS style sheets) in the order of their weight */
       pHd = NULL;
@@ -269,28 +303,6 @@ PtrPRule GlobalSearchRulepEl (PtrElement pEl, PtrDocument pDoc,
 	     apply only to the main view (view = 1) */
 	  if (view == 1 || pHd == NULL)
 	    {
-	      if (presNum == 0 &&
-		  index >= pSchS->SsRootElem &&
-		  !TypeHasException (ExcHidden, index, pSchS))
-		/* it's not a presentation box, it's not a basic type and
-		   it's not a hidden element */
-	        /* look at the rules that apply to any element type in this
-		   P schema extension */
-		{
-		  pR = pSP->PsElemPRule->ElemPres[AnyType];
-		  if (pR)
-		    {
-		      SimpleSearchRulepEl (&pRuleView1, pEl, view, typeRule,
-					   typeFunc, &pR, pDoc);
-		      if (pR && RuleHasHigherPriority (pR, pSP, pRule, *pSPR))
-			{
-			  pRule = pR;
-			  *pSPR = pSP;
-			  *pSSR = pSchS;
-			}
-		    }
-		}
-
 	      /* look at the rules associated with the element type in this
 		 P schema extension */
 	      if (presNum > 0 && pSP->PsPresentBox)
