@@ -35,7 +35,6 @@
 /*-----------------------
   Functions prototypes
 -----------------------*/
-
 static void ProcessElements(char string[]);
 static void InsertTable(STRING string, STRING Table[], int * nbelem);
 static void FileToTable(FILE * File, STRING Table[],int * nbelem, int maxelem);
@@ -52,9 +51,8 @@ static int  type(char * string);
 
 
 /*--------------------------
-  Module variables
+  Local variables
 ---------------------------*/
-
 /* determine either a profile is defined or not */
 static ThotBool             defined_profile = FALSE;
 
@@ -70,16 +68,16 @@ static STRING               Pro_Table[MAX_PRO];
 static int                  Pro_nbelem = 0;
 
 /* Current profile : the current selected profile*/
-static char                        CurrentProfile[MAX_LENGTH];
+static char                 CurrentProfile[MAX_LENGTH];
 
 /* User Profile */  
-static char                        UserProfile[MAX_LENGTH];
+static char                 UserProfile[MAX_LENGTH];
+static char                 TempString[MAX_LENGTH];
 
 
-/*----------------------------
+/*----------------------------------------------------------------------
    Prof_WhichProfiles
-----------------------------*/
-
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int  Prof_WhichProfiles(CHAR_T string[])
 #else  /* !__STDC__ */
@@ -97,15 +95,13 @@ CHAR_T string[];
        i += ustrlen (&string[i]) + 1;
     }
   return j;
-
 }
 
 
-/*-----------------------------------------------------------------------------
-  Prof_ItemNumber2Profile : Conversion between item number in the profile menu
-  and the profile name
-------------------------------------------------------------------------------*/
-
+/*-----------------------------------------------------------------------
+  Prof_ItemNumber2Profile : Conversion between item number in the profile
+  menu and the profile name
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 STRING Prof_ItemNumber2Profile(int val)
 #else  /* !__STDC__ */
@@ -118,9 +114,9 @@ int val;
 
 
 /*-----------------------------------------------------------------------
-   Prof_Profile2ItemNumber : Conversion between profile name and item 
-   number in the menu
--------------------------------------------------------------------------*/
+  Prof_Profile2ItemNumber : Conversion between profile name and item 
+  number in the menu
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 int Prof_Profile2ItemNumber(STRING Profile)
 #else  /* !__STDC__ */
@@ -136,24 +132,18 @@ STRING Profile;
     return -1;
 }
 
-/*-------------------------------------------------------------------------
+/*-----------------------------------------------------------------------
    Prof_InitTable: Seek the current profile and init the function table
---------------------------------------------------------------------------*/
-
+  ----------------------------------------------------------------------*/
 void Prof_InitTable()
 {
-
-
   FILE *              Def_FILE;
   FILE *              Prof_FILE; 
   char *              Prof_File;
-
-
   char                string   [MAX_LENGTH];
   char                Def_File [MAX_LENGTH];
   char                thotdir  [MAX_LENGTH];
   
-
   Prof_File = TtaGetEnvString("Profiles_File");
   if (TtaGetEnvString ("Profile"))
     strcpy (UserProfile, HookIt ( TtaGetEnvString ("Profile") ) );
@@ -201,10 +191,10 @@ void Prof_InitTable()
 }
 
 
-/*-----------------------------------------------------------------------------------
-   Prof_BelongTable : Check if a function belongs to the profile functions table
-------------------------------------------------------------------------------------*/
-   
+/*----------------------------------------------------------------------
+   Prof_BelongTable : Check if a function belongs to the profile functions
+   table.
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 ThotBool Prof_BelongTable(STRING functionName)
 #else  /* __STDC__ */
@@ -213,22 +203,17 @@ STRING functionName;
 #endif /* __STDC__ */
 {
 
-
   if (!defined_profile)
     return TRUE;
 
   /* seek for functionName in the table */
-  
   return (SearchInTable (functionName, 0, Fun_Table, Fun_nbelem, TRUE) != -1);
 }
 
 
-
-/*----------------------------------------------------------------------------
+/*----------------------------------------------------------------------
    Prof_DeleteFunTable : Deletes the function table (free allocated memory)
------------------------------------------------------------------------------*/
-
-
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void Prof_DeleteFunTable()
 #else  /* __STDC__ */
@@ -239,32 +224,30 @@ void Prof_DeleteFunTable()
 }
 
 
-/*-------------------------------------------------------------------------
+/*-----------------------------------------------------------------------
     Prof_AddButton : Add a button if the function associated to that button
     belongs to the user profile
----------------------------------------------------------------------------*/
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 ThotBool Prof_AddButton(STRING FunctionName)
 #else  /* __STDC__ */
 ThotBool Prof_AddButton(FunctionName)
-STRING FunctionName;
+STRING   FunctionName;
 #endif /* __STDC__ */
 {
   return (Prof_BelongTable(FunctionName));
 }
 
 
-/*------------------------------------------------------------------------
+/*----------------------------------------------------------------------
     Prof_RemoveSeparators : Remove bad separators in the menu interface
---------------------------------------------------------------------------*/
-
-
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 ThotBool Prof_RemoveSeparators(Menu_Ctl *ptrmenu, int item, char LastItemType)
 #else  /* __STDC__ */
 ThotBool Prof_RemoveSeparators(*ptrmenu, item)
 Menu_Ctl *ptrmenu;
-int item;
+int       item;
 #endif /* __STDC__ */
 {  
   return (( LastItemType ==  'S') || (item == 0) );
@@ -274,11 +257,10 @@ int item;
     Prof_RemoveSubMenu : Check if a submenu has to be removed
 -----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool Prof_RemoveSubMenu(Menu_Ctl *ptrsubmenu)
+ThotBool   Prof_RemoveSubMenu(Menu_Ctl *ptrsubmenu)
 #else  /* __STDC__ */
-ThotBool RProf_RemoveSubMenu(ptrsubmenu)
-Menu_Ctl *ptrsubmenu;
-
+ThotBool   RProf_RemoveSubMenu(ptrsubmenu)
+Menu_Ctl  *ptrsubmenu;
 #endif /* __STDC__ */
 {
   int      item    = 0;
@@ -298,11 +280,10 @@ Menu_Ctl *ptrsubmenu;
     Prof_RemoveMenu : Remove a menu
 -----------------------------------------------------------------------*/
 #ifdef __STDC__
-ThotBool Prof_RemoveMenu(Menu_Ctl *ptrmenu)
+ThotBool   Prof_RemoveMenu(Menu_Ctl *ptrmenu)
 #else  /* __STDC__ */
-ThotBool Prof_RemoveMenu(ptrmenu)
-Menu_Ctl *ptrmenu;
-
+ThotBool   Prof_RemoveMenu(ptrmenu)
+Menu_Ctl  *ptrmenu;
 #endif /* __STDC__ */
 {
   int      item    = 0;
@@ -341,19 +322,17 @@ Menu_Ctl *ptrmenu;
   return TRUE;
 }
 
-/*----------------------------------------------------
+/*----------------------------------------------------------------------
   ProcessElements : Recursive function that helps
   building the profile table
-----------------------------------------------------*/
-
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void ProcessElements(char string[])
+static   void ProcessElements(char string[])
 #else  /* !__STDC__ */
-static void ProcessElements(string)
-char  string[];
+static   void ProcessElements(string)
+char     string[];
 #endif /* !__STDC__ */ 
 {
-
   ThotBool            EOM = FALSE;
   int                 i;
  
@@ -408,11 +387,11 @@ char  string[];
 }
 
 
-/*-------------------------------------
-  Table functions
---------------------------------------*/
-
-
+/*-------------------
+ * Table functions
+ *-------------------*/
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void InsertTable(STRING string, STRING Table[], int * nbelem)
 #else  /* !__STDC__ */
@@ -427,6 +406,8 @@ int *          nbelem;
 }
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void FileToTable(FILE * File, STRING Table[],int * nbelem, int maxelem)
 #else  /* !__STDC__ */
@@ -437,22 +418,19 @@ int  *      nbelem;
 int         maxelem;
 #endif /* !__STDC__ */
 {
-
   char   string[MAX_LENGTH];
   
-
-  while (fgets(string, sizeof (string), File) && (*nbelem < maxelem))
+  while (fgets (string, sizeof (string), File) && *nbelem < maxelem)
     {
-      
       SkipAllBlanks(string);
-      if (( strlen(string) >=2 )  && !((string[0]=='#') && (string[1] == '#')) )
+      if (strlen(string) >=2 && !(string[0] == '#' && string[1] == '#'))
 	InsertTable (ISO2WideChar(string), Table, nbelem);
     }
-
-
 }
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void DeleteTable(STRING Table[], int  *nbelem)
 #else  /* __STDC__ */
@@ -463,18 +441,17 @@ int *       nbelem;
 {
   int        i;
 
-  for ( i=0; i < *nbelem; i++)
-    {
+  for ( i = 0; i < *nbelem; i++)
       TtaFreeMemory (Table[i]);
-    }
   *nbelem = 0;
-  
 }
 
 
 
-/* look for a string in the table and return the number 
-of the line where the first occurence is found or -1 if not found*/
+/*----------------------------------------------------------------------
+  look for a string in the table and return the number 
+  of the line where the first occurence is found or -1 if not found
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int SearchInTable(char * string, int elem_type, STRING Table[],
 			 int nbelem, ThotBool sort)
@@ -487,7 +464,6 @@ int nbelem;
 ThotBool sort;
 #endif /* !__STDC__ */
 {
-
   int              j = 0;
   ThotBool         found = FALSE;
   int              left, right, middle;
@@ -515,11 +491,10 @@ ThotBool sort;
     }
   else
     {
-      /* simple sequential search */
-      
-      for (j=0; j < nbelem;j++)
+      /* simple sequential search */      
+      for (j = 0; j < nbelem;j++)
 	{
-	  if ( (type(Table[j]) == elem_type) && (strcmp(Table[j],string) ==0 ) )
+	  if (type (Table[j]) == elem_type && strcmp(Table[j],string) == 0)
 	    return j;
 	}
       return -1; 
@@ -527,7 +502,8 @@ ThotBool sort;
 }
 
 
-
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void SortTable (STRING Table[], int nbelem)
 #else  /* !__STDC__ */
@@ -555,7 +531,8 @@ int nbelem;
 /*--------------------------------------------
   String functions
 --------------------------------------------*/
-
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static int type(char * string)
 #else  /* !__STDC__ */
@@ -572,6 +549,8 @@ char * string;
 }
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void SkipNewLineSymbol(char string[])
 #else  /* !__STDC__ */
@@ -579,16 +558,17 @@ static void SkipNewLineSymbol(string)
 char  string[];
 #endif /* !__STDC__ */
 {
-
   int         c = 0;
 
-  while ((string[c] != EOS) && (string[c] != '\n'))
+  while (string[c] != EOS && string[c] != '\n')
     {c++;}
   if (string[c] == '\n')
     string[c] = EOS;    
 }
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void SkipAllBlanks (char  string[])
 #else  /* !__STDC__ */
@@ -612,6 +592,8 @@ char  string[];
  
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char *  HookIt (char * string)
 #else  /* !__STDC__ */
@@ -619,29 +601,26 @@ static char *  HookIt (string)
 char * string;
 #endif /* !__STDC__ */
 {
-
-  char         new[MAX_LENGTH];
   int          k = 0;
 
-
-    new[k] = '[';
+    TempString[k] = '[';
     do
       {
-	new[k+1] = string [k];
+	TempString[k+1] = string[k];
 	k++;
       }
     while (string[k] != EOS);
     
-    new[k+1] = ']';
-    new[k+2] = EOS;
+    TempString[k+1] = ']';
+    TempString[k+2] = EOS;
 
-    //  strcpy (string,new);
-    return new;
-  
-  
+    /*  strcpy (string, TempString); */
+    return TempString;
 }
 
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void RemoveHooks (char string[])
 #else  /* !__STDC__ */
@@ -658,9 +637,11 @@ char string[];
       k++;
     }
   new[k] = EOS;
-  strcpy (string,new);
+  strcpy (string, new);
 }
 
+/*----------------------------------------------------------------------
+  ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void Remove_module_sign(char * string)
 #else  /* !__STDC__ */
