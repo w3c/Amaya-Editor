@@ -7333,10 +7333,30 @@ RULES
 	Width: Enclosing . Width;
 	VertPos: Top = Previous NOT MAP . Bottom;
 	MarginTop: 0.2;
+	PaddingTop: 0.1;
+	PaddingLeft: 0.4;
+	BorderTopWidth: 1 px;
+	BorderRightWidth: 1 px;
+	BorderBottomWidth: 1 px;
+	BorderLeftWidth: 1 px;
+	BorderTopColor: Grey;
+	BorderRightColor: Black;
+	BorderBottomColor: Black;
+	BorderLeftColor: Grey;
+	BorderTopStyle: Solid;
+	BorderRightStyle: Solid;
+	BorderBottomStyle: Solid;
+	BorderLeftStyle: Solid;
 	IN Structure_view BEGIN
 		HorizPos: Left = Enclosing . Left + STRUCT_INDENT;
 		Width: Enclosing . Width - STRUCT_INDENT;
 		VertPos: Top = Previous . Bottom;
+		PaddingTop: 0;
+		PaddingLeft: 0;
+		BorderTopWidth: 0;
+		BorderRightWidth: 0;
+		BorderBottomWidth: 0;
+		BorderLeftWidth: 0;
 		END;
 	IN Links_view
 		Visibility: 0;
