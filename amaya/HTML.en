@@ -20,6 +20,7 @@ PICTURE_UNIT: img
 REFERENCE_UNIT: Reference
 PAGE_BREAK: Page_break
 
+C_Foot: \240
 HTML: html
 BODY: body
 Invalid_element: invalid element

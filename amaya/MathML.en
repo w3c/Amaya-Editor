@@ -50,6 +50,7 @@ MMULTISCRIPTS: mmultiscripts
 MTABLE: mtable
 MTR: mtr
 MLABELEDTR: mlabeledtr
+LabelCell: mtd
 MGLYPH: mglyph
 MACTION: maction
 MTD: mtd
