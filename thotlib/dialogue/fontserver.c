@@ -32,7 +32,7 @@
 #endif /* defined(_WX) && !defined(_WINDOWS) */
 
 #if defined(_WX) && defined(_WINDOWS)
-  #include "wx/filename.h"
+  //#include "wx/filename.h"  
 #endif /* #if defined(_WX) && defined(_WINDOWS) */
 
 #ifdef _GTK
@@ -390,8 +390,9 @@ int GetFontFilename (char script, int family, int highlight, int size,
   wxChar buff[MAX_PATH];
   GetWindowsDirectory (buff , MAX_PATH);
 
+  wxCSConv conv_ascii(_T("ISO-8859-1"));
   wxString winpath = buff;
-  sprintf( filename, "%s", winpath.mb_str(AmayaWindow::conv_ascii) );
+  sprintf( filename, "%s", winpath.mb_str(conv_ascii) );
 #else /* _WX */
   GetWindowsDirectory (filename , 1024);
 #endif /* _WX */

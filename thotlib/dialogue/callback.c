@@ -465,7 +465,7 @@ ThotBool CallMenu (ThotWidget w, struct Cat_Context *catalogue, caddr_t call_d)
 ThotBool CallMenuWX (ThotWidget w, void * catalogue)
 {
 #ifdef _WX
-  CallMenu( w, (struct Cat_Context *)catalogue, 0 );
+  return CallMenu( w, (struct Cat_Context *)catalogue, 0 );
 #else /* _WX */
   return FALSE;
 #endif /* _WX */
@@ -477,7 +477,7 @@ ThotBool CallMenuWX (ThotWidget w, void * catalogue)
 ThotBool CallMenuGTK (ThotWidget w, struct Cat_Context *catalogue)
 {
 #ifdef _GTK
-  CallMenu( w, (struct Cat_Context *)catalogue, 0 );
+  return CallMenu( w, (struct Cat_Context *)catalogue, 0 );
 #else /* _GTK */
   return FALSE;
 #endif /* _GTK */

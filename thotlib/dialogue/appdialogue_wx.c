@@ -1,8 +1,6 @@
 
 #ifdef _WX
   #include "wx/wx.h"
-  #include "wx/app.h"
-  DECLARE_APP(wxApp)
 #endif /* _WX */
 
 #include "thot_gui.h"
@@ -356,9 +354,8 @@ ThotBool TtaAttachFrame( int frame_id, int window_id, int page_id, int position 
   p_page->Show();
 
   /* wait for frame initialisation (needed by opengl) */
-  wxApp & app = wxGetApp();
-  while ( app.Pending() )
-    app.Dispatch();
+  while ( wxTheApp->Pending() )
+	wxTheApp->Dispatch();
   
   return TRUE;
 #else

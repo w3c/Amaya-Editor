@@ -3,12 +3,9 @@
 #ifndef __AMAYANOTEBOOK_H__
 #define __AMAYANOTEBOOK_H__
 
-#include "wx/wxprec.h"
+#include "wx/wx.h"
+#include "wx/notebook.h"
 
-#ifndef WX_PRECOMP
-    #include "wx/wx.h"
-    #include "wx/notebook.h"
-#endif
 
 class AmayaWindow;
 class AmayaPage;

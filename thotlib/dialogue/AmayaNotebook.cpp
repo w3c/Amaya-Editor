@@ -1,8 +1,5 @@
 #ifdef _WX
 
-#include "wx/app.h"
-DECLARE_APP(wxApp)
-
 #include "AmayaNotebook.h"
 #include "AmayaPage.h"
 #include "AmayaWindow.h"
@@ -54,9 +51,8 @@ void AmayaNotebook::OnClose(wxCloseEvent& event)
 
 	/* wait for pending events :
 	   if a page is deleted, it throws notebookevent */
-	wxApp & app = wxGetApp();
-	while ( app.Pending() )
-	  app.Dispatch();
+	while ( wxTheApp->Pending() )
+	  wxTheApp->Dispatch();
       }
     else
       page_id++;
@@ -154,7 +150,7 @@ int AmayaNotebook::GetPageId( const AmayaPage * p_page )
   bool found = false;
   while ( !found && page_id < GetPageCount() )
   {
-    found = ( GetPage(page_id) == p_page );
+    found = ( GetPage(page_id) == wxDynamicCast(p_page,wxWindow) );
     page_id++;
   }
 

@@ -1,8 +1,10 @@
 #ifdef _WX
 
 #include "wx/wx.h"
-#include "wx/xrc/xmlres.h"          // XRC XML resouces
 #include "wx/memory.h"
+#ifndef _GLPRINT
+  #include "wx/xrc/xmlres.h"          // XRC XML resouces
+#endif /* _GLPRINT */
 
 #define THOT_EXPORT extern
 #include "amaya.h"
@@ -22,68 +24,23 @@ IMPLEMENT_APP(AmayaApp)
 // or from ISO-8859-1 to unicode
 wxCSConv AmayaApp::conv_ascii(_T("ISO-8859-1"));
 
+#ifndef _GLPRINT
 // defined into EDITORAPP.c
 extern int amaya_main (int argc, char** argv);
+#else /* _GLPRINT */
+// defined into print.c
+extern int main (int argc, char** argv);
+#endif /* #ifndef _GLPRINT */
 
 bool AmayaApp::OnInit()
 {
-  /*  const wxString langs[] =
-    {
-      _T("(System default)"),
-      _T("French"),
-      _T("Russian"),
-      _T("English"),
-      _T("English (U.S.)")
-    };
-  
-  SetExitOnFrameDelete(FALSE);
-  int lng = wxGetSingleChoiceIndex(_T("Please choose language:"), _T("Language"), 
-                                   WXSIZEOF(langs), langs);
-  SetExitOnFrameDelete(TRUE);
-  
-  // Initialize local system with the given language
-  switch (lng)
-    {
-    case 0 : _locale.Init(wxLANGUAGE_DEFAULT); break;
-    case 1 : _locale.Init(wxLANGUAGE_FRENCH); break;
-    case 2 : _locale.Init(wxLANGUAGE_GERMAN); break;
-    case 3 : _locale.Init(wxLANGUAGE_RUSSIAN); break;
-    case 4 : _locale.Init(wxLANGUAGE_ENGLISH); break;
-    case -1:
-    case 5 : _locale.Init(wxLANGUAGE_ENGLISH_US); break;
-    }
-  
-  // Add a catalogue : allow application to find translations (into '/language/catalog.mo' here : '/fr/amayaui.mo' for the french translation)
-  _locale.AddCatalog(_T("amayaui"));
-  */
-  
-  // Launche thot init functions
-//  InitThot ();
-
-  /*
-  AmayaFrame *frame = new AmayaFrame( (wxFrame *) NULL,
-				      _("Amaya [International] [OpenGL]"),
-				      wxPoint(100, 100), wxSize(800, 600),
-				      _locale);
-
-  frame->Show(TRUE);
-
-
-  SetTopWindow(frame);
-  */
-
-/*  // Insert a log window for debug
-  wxTextCtrl * p_log_win = new wxTextCtrl( this, -1, _T("This is the log window.\n"),
-                            wxPoint(5,260), wxSize(630,100),
-                            wxTE_MULTILINE | wxTE_READONLY );
- */
-
   // for debug : the output is stderr
   delete wxLog::SetActiveTarget( new wxLogStderr );
   
   // just convert arguments format (unicode to iso-8859-1) before passing it to amaya_main
   InitAmayaArgs();
 
+#ifndef _GLPRINT
   /* initialize the Registry */
   TtaInitializeAppRegistry (amaya_argv[0]);
 
@@ -109,6 +66,11 @@ bool AmayaApp::OnInit()
   
   // just call amaya main from EDITORAPP.c
   amaya_main( amaya_argc, amaya_argv );
+#endif /* #ifndef _GLPRINT */
+
+#ifdef _GLPRINT
+  main( amaya_argc, amaya_argv );
+#endif /* #ifndef _GLPRINT */
 
   return true;
 }

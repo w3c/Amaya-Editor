@@ -569,6 +569,8 @@ AmayaFrame * AmayaPage::GetFrame( int frame_position ) const
     {
       return m_pBottomFrame;
     }
+  else
+	  return NULL;
 }
 
 /*

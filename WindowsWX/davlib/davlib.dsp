@@ -80,9 +80,6 @@ LIB32=link.exe -lib
 
 # Name "davlib - Win32 Release"
 # Name "davlib - Win32 Debug"
-# Begin Group "Source Files"
-
-# PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
 SOURCE=..\..\davlib\AHTLockBase.c
@@ -127,10 +124,5 @@ SOURCE=..\..\davlib\davlibUI.c
 
 SOURCE=..\..\davlib\tree\list.c
 # End Source File
-# End Group
-# Begin Group "Header Files"
-
-# PROP Default_Filter "h;hpp;hxx;hm;inl"
-# End Group
 # End Target
 # End Project

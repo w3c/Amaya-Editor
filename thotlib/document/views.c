@@ -11,8 +11,6 @@
  */
 #ifdef _WX
   #include "wx/wx.h"
-  #include "wx/app.h"
-  DECLARE_APP(wxApp)
 #endif /* _WX */
 
 #include "thot_gui.h"
@@ -620,9 +618,8 @@ void OpenCreatedView (PtrDocument pDoc, int view, int X, int Y,
 
 #ifdef _WX
       /* wait for frame initialisation (needed by opengl) */
-      wxApp & app = wxGetApp();
-      while ( app.Pending() )
-	app.Dispatch();
+	  while ( wxTheApp->Pending() )
+	    wxTheApp->Dispatch();
 #endif /* _WX */
     }
 }

@@ -20,10 +20,11 @@ void CreateInitConfirmDlgWX (ThotWindow parent, char *title, char *label)
 #ifdef _WX
   // TODO : creer la class InitConfirmDlgWX a l'aide des ressources
   //  wxCSConv conv_ascii(_T("ISO-8859-1"));
-  InitConfirmDlgWX dlg(
+  InitConfirmDlgWX * p_dlg = new InitConfirmDlgWX(
       parent, /* parent window */
       wxString(TtaGetMessage (LIB, TMSG_LIB_CONFIRM), AmayaApp::conv_ascii), /* title */
       wxString(label, AmayaApp::conv_ascii) ); /* message label */
-  dlg.ShowModal();
+  p_dlg->ShowModal();
+  p_dlg->Destroy();
 #endif /* _WX */
 }
