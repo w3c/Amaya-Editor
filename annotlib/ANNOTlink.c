@@ -172,6 +172,23 @@ static void AddAnnotationIndexFile (char *source_url, char *index_file)
 }
 
 /*-----------------------------------------------------------------------
+  LINK_AddAnnotIcon
+  If the annotation is not orphan, adds an annotation icon to a source document, an annotation link pointing to the annotation.
+  Returns TRUE if the annotation could be attached and FALSE if the
+  annotation became orphan.
+  -----------------------------------------------------------------------*/
+void LINK_AddAnnotIcon (Document source_doc, Element anchor, AnnotMeta *annot)
+{
+  Element el;
+  char s[MAX_LENGTH];
+
+  el = TtaGetFirstChild (anchor);
+  sprintf (s, "%s%camaya%cannot.gif",
+	   TtaGetEnvString ("THOTDIR"), DIR_SEP, DIR_SEP);
+  TtaSetPictureContent (el, s, SPACE, source_doc, "image/gif");
+}
+
+/*-----------------------------------------------------------------------
   LINK_AddLinkToSource
   Adds to a source document, an annotation link pointing to the annotation.
   Returns TRUE if the annotation could be attached and FALSE if the
@@ -437,10 +454,8 @@ ThotBool LINK_AddLinkToSource (Document source_doc, AnnotMeta *annot)
   TtaAttachAttribute (anchor, attr, source_doc);
   /* set the ID value (anchor endpoint) */
   TtaSetAttributeText (attr, annot->name, anchor, source_doc);
-  el = TtaGetFirstChild (anchor);
-  sprintf (s, "%s%camaya%cannot.gif",
-	   TtaGetEnvString ("THOTDIR"), DIR_SEP, DIR_SEP);
-  TtaSetPictureContent (el, s, SPACE, source_doc, "image/gif");
+  /* add the annotation icon */
+  LINK_AddAnnotIcon (source_doc, anchor, annot);
   return (!(annot->is_orphan));
 }
 
