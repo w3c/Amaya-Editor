@@ -24,33 +24,35 @@
 /* two different contexts for generic and specific presentation */
 typedef struct struct_GenericContext
   {
-     Document              doc;	     /* document number */
-     SSchema               schema;   /* associated structure */
-     unsigned int          type;     /* type of element */
-     ThotBool              destroy;  /* destructive mode ? */
-     /*
-      * below is the context description.
-      */
-     int                   box;	     /* specific presentation box if any */
-     int                   name[MAX_ANCESTORS]; /* ancestors type */
-     int                   names_nb[MAX_ANCESTORS]; /* number of occurences */
-     int                   attrType[MAX_ANCESTORS]; /* type of the attribute */
-     CHAR_T*               attrText[MAX_ANCESTORS]; /* attr. or box name */
+    Document              doc;	     /* document number */
+    SSchema               schema;    /* associated structure */
+    unsigned int          type;      /* type of element */
+    int                   cssLevel;  /* CSS priority level for generic rules */
+    ThotBool              destroy;   /* destructive mode ? */
+    /*
+     * below is the context description.
+     */
+    int                   box;	     /* specific presentation box if any */
+    int                   name[MAX_ANCESTORS]; /* ancestors type */
+    int                   names_nb[MAX_ANCESTORS]; /* number of occurences */
+    int                   attrType[MAX_ANCESTORS]; /* type of the attribute */
+    CHAR_T*               attrText[MAX_ANCESTORS]; /* attr. or box name */
   }
 GenericContextBlock, *GenericContext;
 
 typedef struct struct_SpecificContext
   {
-     Document              doc;	     /* document number */
-     SSchema               schema;   /* associated structure */
-     int                   type;     /* type of element */
-     ThotBool              destroy;  /* destructive mode ? */
-
-     /*
-      * The end of the block is to be filled with other kind
-      * of informations needed to specify the conditions
-      * influencing rendering.
-      */
+    Document              doc;	     /* document number */
+    SSchema               schema;    /* associated structure */
+    int                   type;      /* type of element */
+    int                   cssLevel;  /* For specific rules: > 0 when the rule
+				        translates a CSS style rule */
+    ThotBool              destroy;  /* destructive mode ? */
+    /*
+     * The end of the block is to be filled with other kind
+     * of informations needed to specify the conditions
+     * influencing rendering.
+     */
   }
 PresentationContextBlock, *PresentationContext;
 

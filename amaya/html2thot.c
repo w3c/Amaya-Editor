@@ -3749,7 +3749,7 @@ CHAR_T              c;
       {
       TtaSetAttributeText (lastAttribute, inputBuffer, lastAttrElement,
 			   HTMLcontext.doc);
-      ParseHTMLSpecificStyle (HTMLcontext.lastElement, inputBuffer, HTMLcontext.doc, FALSE);
+      ParseHTMLSpecificStyle (HTMLcontext.lastElement, inputBuffer, HTMLcontext.doc, 1, FALSE);
       done = TRUE;
       }
    else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("link")))
@@ -3959,7 +3959,7 @@ CHAR_T              c;
          if (ustrlen (inputBuffer) > MaxMsgLength - 30)
 	    inputBuffer[MaxMsgLength - 30] = WC_EOS;
 	 usprintf (msgBuffer, TEXT("background: url(%s)"), inputBuffer);
-	 ParseHTMLSpecificStyle (HTMLcontext.lastElement, msgBuffer, HTMLcontext.doc, FALSE);
+	 ParseHTMLSpecificStyle (HTMLcontext.lastElement, msgBuffer, HTMLcontext.doc, 1, FALSE);
 	 }
       else if (!ustrcmp (lastAttrEntry->XMLattribute, TEXT("bgcolor")))
          HTMLSetBackgroundColor (HTMLcontext.doc, HTMLcontext.lastElement, inputBuffer);

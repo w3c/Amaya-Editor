@@ -216,17 +216,19 @@ int                 LineColor;
   int                 viewSch, value;
   ThotBool            isNew;
 
-  /* numero de cette view */
+  /* view number */
   viewSch = AppliedView (pEl, NULL, pDoc, viewToApply);
-  /* style des traits dans le graphique */
+  /* graphics line style */
   if (modifLineStyle)
     {
-      /*cherche la regle de presentation specifique 'LineStyle' de l'element */
+      /* look for a specific presentation rule 'LineStyle' */
       /* ou en cree une nouvelle */
       pPRule = SearchPresRule (pEl, PtLineStyle, 0, &isNew, pDoc, viewToApply);
-      /* met les choix de l'utilisateur dans cette regle */
+      /* get user choices */
       pPRule->PrType = PtLineStyle;
       pPRule->PrViewNum = viewSch;
+      /* by default it should be translated into a CSS rule */
+      pPRule->PrLevel = 1;
       pPRule->PrPresMode = PresImmediate;
       value = (int) pPRule->PrChrValue;
       pPRule->PrChrValue = LineStyle;
@@ -242,7 +244,7 @@ int                 LineColor;
 	pPRule->PrChrValue = value;
     }
 
-  /* epaisseur des traits dans le graphique */
+  /* graphics line weight */
   if (modifLineWeight)
     {
       /* cherche la regle de presentation specifique 'Epaisseur Trait' de */
@@ -251,6 +253,8 @@ int                 LineColor;
       /* met les choix de l'utilisateur dans cette regle */
       pPRule->PrType = PtLineWeight;
       pPRule->PrViewNum = viewSch;
+      /* by default it should be translated into a CSS rule */
+      pPRule->PrLevel = 1;
       pPRule->PrPresMode = PresImmediate;
       unit = pPRule->PrMinUnit;
       pPRule->PrMinUnit = LineWeightUnit;
@@ -272,7 +276,7 @@ int                 LineColor;
 	}
     }
 
-  /* trame de remplissage */
+  /* graphics fill pattern */
   if (modifFillPattern)
     {
       /* cherche la regle de presentation specifique 'FillPattern' de */
@@ -281,6 +285,8 @@ int                 LineColor;
       /* met les choix de l'utilisateur dans cette regle */
       pPRule->PrType = PtFillPattern;
       pPRule->PrViewNum = viewSch;
+      /* by default it should be translated into a CSS rule */
+      pPRule->PrLevel = 1;
       pPRule->PrPresMode = PresImmediate;
       value = pPRule->PrIntValue;
       pPRule->PrIntValue = FillPattern;
@@ -326,6 +332,8 @@ int                 LineColor;
       pPRule = SearchPresRule (pEl, PtBackground, 0, &isNew, pDoc, viewToApply);
       pPRule->PrType = PtBackground;
       pPRule->PrViewNum = viewSch;
+      /* by default it should be translated into a CSS rule */
+      pPRule->PrLevel = 1;
       pPRule->PrPresMode = PresImmediate;
       value = pPRule->PrIntValue;
       pPRule->PrIntValue = ColorBackground;
@@ -373,6 +381,8 @@ int                 LineColor;
       /* met les choix de l'utilisateur dans cette regle */
       pPRule->PrType = PtForeground;
       pPRule->PrViewNum = viewSch;
+      /* by default it should be translated into a CSS rule */
+      pPRule->PrLevel = 1;
       pPRule->PrPresMode = PresImmediate;
       value = pPRule->PrIntValue;
       pPRule->PrIntValue = LineColor;
@@ -577,6 +587,8 @@ int                 weightUnderline;
 	/* met les choix de l'utilisateur dans cette regle */
 	pPRule->PrType = PtFont;
 	pPRule->PrViewNum = viewSch;
+	/* by default it should be translated into a CSS rule */
+	pPRule->PrLevel = 1;
 	pPRule->PrPresMode = PresImmediate;
 	value = pPRule->PrChrValue;
 	pPRule->PrChrValue = family;
@@ -600,6 +612,8 @@ int                 weightUnderline;
 	/* met les choix de l'utilisateur dans cette regle */
 	pPRule->PrType = PtStyle;
 	pPRule->PrViewNum = viewSch;
+	/* by default it should be translated into a CSS rule */
+	pPRule->PrLevel = 1;
 	pPRule->PrPresMode = PresImmediate;
 	value = pPRule->PrChrValue;
 	switch (charStyle)
@@ -637,6 +651,8 @@ int                 weightUnderline;
 	/* met les choix de l'utilisateur dans cette regle */
 	pPRule->PrType = PtWeight;
 	pPRule->PrViewNum = viewSch;
+	/* by default it should be translated into a CSS rule */
+	pPRule->PrLevel = 1;
 	pPRule->PrPresMode = PresImmediate;
 	value = pPRule->PrChrValue;
 	switch (charWeight)
@@ -671,6 +687,8 @@ int                 weightUnderline;
 	/* met les choix de l'utilisateur dans cette regle */
 	pPRule->PrType = PtSize;
 	pPRule->PrViewNum = viewSch;
+	/* by default it should be translated into a CSS rule */
+	pPRule->PrLevel = 1;
 	pPRule->PrPresMode = PresImmediate;
 	pPRule->PrMinUnit = UnPoint;
 	pPRule->PrMinAttr = FALSE;
@@ -697,6 +715,8 @@ int                 weightUnderline;
 	/* met les choix de l'utilisateur dans cette regle */
 	pPRule->PrType = PtUnderline;
 	pPRule->PrViewNum = viewSch;
+	/* by default it should be translated into a CSS rule */
+	pPRule->PrLevel = 1;
 	pPRule->PrPresMode = PresImmediate;
 	value = pPRule->PrChrValue;
 	switch (underline)
@@ -737,6 +757,8 @@ int                 weightUnderline;
 	/* met les choix de l'utilisateur dans cette regle */
 	pPRule->PrType = PtThickness;
 	pPRule->PrViewNum = viewSch;
+	/* by default it should be translated into a CSS rule */
+	pPRule->PrLevel = 1;
 	pPRule->PrPresMode = PresImmediate;
 	value = pPRule->PrChrValue;
 	switch (weightUnderline)
@@ -802,6 +824,8 @@ ThotBool            Hyphenate;
 	pPRule = SearchPresRule (pEl, PtAdjust, 0, &isNew, pDoc, viewToApply);
 	pPRule->PrType = PtAdjust;
 	pPRule->PrViewNum = viewSch;
+	/* by default it should be translated into a CSS rule */
+	pPRule->PrLevel = 1;
 	pPRule->PrPresMode = PresImmediate;
 	value = pPRule->PrAdjust;
 	switch (Adjust)
@@ -838,6 +862,8 @@ ThotBool            Hyphenate;
 	pPRule = SearchPresRule (pEl, PtJustify, 0, &isNew, pDoc, viewToApply);
 	pPRule->PrType = PtJustify;
 	pPRule->PrViewNum = viewSch;
+	/* by default it should be translated into a CSS rule */
+	pPRule->PrLevel = 1;
 	pPRule->PrPresMode = PresImmediate;
 	bValue = pPRule->PrJustify;
 	pPRule->PrJustify = Justif;
@@ -857,6 +883,8 @@ ThotBool            Hyphenate;
 	pPRule = SearchPresRule (pEl, PtHyphenate, 0, &isNew, pDoc, viewToApply);
 	pPRule->PrType = PtHyphenate;
 	pPRule->PrViewNum = viewSch;
+	/* by default it should be translated into a CSS rule */
+	pPRule->PrLevel = 1;
 	pPRule->PrPresMode = PresImmediate;
 	bValue = pPRule->PrJustify;
 	pPRule->PrJustify = Hyphenate;
@@ -876,6 +904,8 @@ ThotBool            Hyphenate;
 	pPRule = SearchPresRule (pEl, PtIndent, 0, &isNew, pDoc, viewToApply);
 	pPRule->PrType = PtIndent;
 	pPRule->PrViewNum = viewSch;
+	/* by default it should be translated into a CSS rule */
+	pPRule->PrLevel = 1;
 	pPRule->PrPresMode = PresImmediate;
 	pPRule->PrMinUnit = UnPoint;
 	pPRule->PrMinAttr = FALSE;
@@ -898,6 +928,8 @@ ThotBool            Hyphenate;
 	pPRule = SearchPresRule (pEl, PtLineSpacing, 0, &isNew, pDoc, viewToApply);
 	pPRule->PrType = PtLineSpacing;
 	pPRule->PrViewNum = viewSch;
+	/* by default it should be translated into a CSS rule */
+	pPRule->PrLevel = 1;
 	pPRule->PrPresMode = PresImmediate;
 	pPRule->PrMinUnit = UnPoint;
 	pPRule->PrMinAttr = FALSE;

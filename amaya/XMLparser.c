@@ -916,7 +916,7 @@ CHAR_T                c;
 				currentDocument);
 	   if (HTMLStyleAttribute)
 	      ParseHTMLSpecificStyle (currentElement, inputBuffer,
-				      currentDocument, FALSE);
+				      currentDocument, 1, FALSE);
 	   break;
 
 	case 3:       /* reference */

@@ -12,6 +12,7 @@ extern void SwitchIconGraph ( Document doc,
                               View view,
                               ThotBool state );
 extern void SVGCreated ( NotifyElement * event );
+extern void TspanCreated ( NotifyElement * event );
 
 #else /* __STDC__ */
 
@@ -21,6 +22,7 @@ extern void SwitchIconGraph (/* Document doc,
                                 View view,
                                 ThotBool state */);
 extern void SVGCreated (/* NotifyElement * event */);
+extern void TspanCreated (/* NotifyElement * event */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

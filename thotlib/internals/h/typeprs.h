@@ -399,14 +399,17 @@ typedef struct _PresRule
   PtrCondition  PrCond;		/* application conditions for the rule */
   int		PrViewNum;	/* number of the view to which the rule
 				   applies */	
-  int		PrSpecifAttr;	/* only for specifical presentation rules
+  int		PrSpecifAttr;	/* only for specific presentation rules
 				   attached to the abstract tree elements:
 				   number of the attribute to which the
 				   rule corresponds, 0 if the rule is not
 				   derived from an attribute rule */
+  int           PrLevel;        /* CSS priority level for generic rules
+				   For specific rules: > 0 when the rule
+				   translates a CSS style rule */
   PtrSSchema    PrSpecifAttrSSchema; /* pointer on the structure schema
                                         defining the attribute PrSpecifAttr */
-  PresMode	PrPresMode;	/* computing mode of the value */	
+  PresMode	PrPresMode;	/* computing mode of the value */
   union
   {
     struct			/* PrPresMode = PresInherit */

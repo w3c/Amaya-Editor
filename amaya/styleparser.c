@@ -3893,14 +3893,18 @@ Element              el;
    ParseHTMLSpecificStyle: parse and apply a CSS Style string.
    This function must be called when a specific style is applied to an
    element.
+   The parameter isCSS is 1 when the specific presentation should be
+   translated into a CSS rule, 0 if it should be translated into a
+   presentation attribute.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                ParseHTMLSpecificStyle (Element el, CHAR_T* cssRule, Document doc, ThotBool destroy)
+void                ParseHTMLSpecificStyle (Element el, CHAR_T* cssRule, Document doc, int isCSS, ThotBool destroy)
 #else
-void                ParseHTMLSpecificStyle (el, cssRule, doc, destroy)
+void                ParseHTMLSpecificStyle (el, cssRule, doc, isCSS, destroy)
 Element             elem;
 CHAR_T*             cssRule;
 Document            doc;
+int                 isCSS;
 ThotBool            destroy;
 #endif
 {
@@ -3916,12 +3920,14 @@ ThotBool            destroy;
    if (context == NULL)
      return;
    context->type = elType.ElTypeNum;
+   context->cssLevel = isCSS;
    context->destroy = destroy;
    /* Call the parser */
    ParseCSSRule (el, NULL, (PresentationContext) context, cssRule, NULL, isHTML);
    /* free the context */
    TtaFreeMemory(context);
 }
+
 
 /*----------------------------------------------------------------------
    ParseGenericSelector: Create a generic context for a given 
@@ -3973,6 +3979,8 @@ CSSInfoPtr      css;
     }
   ctxt->box = 0;
   ctxt->type = 0;
+  /* the priority level of the rule depends on the selector */
+  ctxt->cssLevel = 0;
   
   selector = SkipWCBlanksAndComments (selector);
   cur = &sel[0];
@@ -4356,7 +4364,7 @@ CHAR_T*             color;
    CHAR_T             css_command[100];
 
    usprintf (css_command, TEXT("background-color: %s"), color);
-   ParseHTMLSpecificStyle (el, css_command, doc, FALSE);
+   ParseHTMLSpecificStyle (el, css_command, doc, 1, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -4386,7 +4394,7 @@ CHAR_T*             image;
      ustrcat (css_command, TEXT("repeat-y"));
    else
      ustrcat (css_command, TEXT("no-repeat"));
-   ParseHTMLSpecificStyle (el, css_command, doc, FALSE);
+   ParseHTMLSpecificStyle (el, css_command, doc, 1, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -4404,7 +4412,7 @@ CHAR_T*             color;
    CHAR_T           css_command[100];
 
    usprintf (css_command, TEXT("color: %s"), color);
-   ParseHTMLSpecificStyle (el, css_command, doc, FALSE);
+   ParseHTMLSpecificStyle (el, css_command, doc, 1, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -4421,7 +4429,7 @@ Element             el;
    CHAR_T           css_command[100];
 
    usprintf (css_command, TEXT("background: red"));
-   ParseHTMLSpecificStyle (el, css_command, doc, TRUE);
+   ParseHTMLSpecificStyle (el, css_command, doc, 1, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -4438,7 +4446,7 @@ Element             el;
    CHAR_T           css_command[1000];
 
    usprintf (css_command, TEXT("background-image: url(xx); background-repeat: repeat"));
-   ParseHTMLSpecificStyle (el, css_command, doc, TRUE);
+   ParseHTMLSpecificStyle (el, css_command, doc, 1, TRUE);
 }
 
 /*----------------------------------------------------------------------
@@ -4456,7 +4464,7 @@ Element             el;
 
    /* it's not necessary to well know the current color but it must be valid */
    usprintf (css_command, TEXT("color: red"));
-   ParseHTMLSpecificStyle (el, css_command, doc, TRUE);
+   ParseHTMLSpecificStyle (el, css_command, doc, 1, TRUE);
 }
 
 /*----------------------------------------------------------------------

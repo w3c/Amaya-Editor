@@ -169,7 +169,7 @@ unsigned short    *blue;
       colname[i] = WC_EOS;
       
       /* Lookup the color name in our own color name database */
-      for (i = 0; i < NBCOLORNAME && failed; i++)
+      for (i = 0; i < (int)NBCOLORNAME && failed; i++)
 	if (!ustrcasecmp (ColornameTable[i].name, colname))
 	  {
 	    *red = ColornameTable[i].red;
@@ -267,51 +267,50 @@ unsigned int    extra;
 
 #endif
 {
-    PtrPRule cur;
+  PtrPRule      cur;
+  ThotBool      found;
     
-    cur = el->ElFirstPRule;
-
-    while (cur != NULL)
-      {
-	/* shortcut : rules are sorted by type and view number */
-	if (cur->PrType > type ||
-	    (cur->PrType == type && cur->PrViewNum > 1) ||
-	    (cur->PrType == type && type == PRFunction &&
-	     cur->PrPresFunction > (FunctionType) extra))
-	  {
-	     cur = NULL;
-	     break;
-	  }
-	
-	/* check for extra specification in case of function rule */
-	if (type == PRFunction && cur->PrPresFunction != (FunctionType) extra)
-	  {
+  cur = el->ElFirstPRule;
+  found = FALSE;
+  while (cur != NULL && !found)
+    {
+      /* shortcut : rules are sorted by type and view number */
+      if (cur->PrType > type ||
+	  (cur->PrType == type && cur->PrViewNum > 1) ||
+	  (cur->PrType == type && type == PRFunction &&
+	   cur->PrPresFunction > (FunctionType) extra))
+	/* not found */
+	cur = NULL;
+      else if (type == PRFunction)
+	{
+	  /* check for extra specification in case of function rule */
+	  if (cur->PrPresFunction == (FunctionType) extra)
+	    found = TRUE;
+	  else
 	    cur = cur->PrNextPRule;
-	    continue;
-	  }
-
-	/* check this rule */
-	if (type == cur->PrType)
-	   break;
-
+	}
+      else if (type == cur->PrType)
+	found = TRUE;
+      else
 	/* jump to next and keep track of previous */
 	cur = cur->PrNextPRule;
     }
-    return (cur);
+  return (cur);
 }
 
 /*----------------------------------------------------------------------
    Function used to to add a specific presentation rule
    for a given type of rule associated to an element.
+   The parameter isCSS is 1 when the specific rule translates a CSS rule.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static PtrPRule  InsertElementPRule (PtrElement el, PRuleType type, unsigned int extra)
+static PtrPRule  InsertElementPRule (PtrElement el, PRuleType type, unsigned int extra, int isCSS)
 #else
-static PtrPRule  InsertElementPRule (el, type, extra)
+static PtrPRule  InsertElementPRule (el, type, extra, isCSS)
 PtrElement       el;
 PRuleType        type;
 unsigned int     extra;
-
+int              isCSS;
 #endif
 {
    PtrPSchema          pSPR;
@@ -367,6 +366,7 @@ unsigned int     extra;
 		pRule->PrType = type;
 	    pRule->PrCond = NULL;
 	    pRule->PrSpecifAttr = 0;
+	    pRule->PrLevel = isCSS;
 	    pRule->PrSpecifAttrSSchema = NULL;
 	    /* set it specific to view 1 */
 	    pRule->PrViewNum = 1;
@@ -1138,6 +1138,8 @@ unsigned int        extra;
 	  pRule->PrCond = NULL;
 	  pRule->PrViewNum = 1;
 	  pRule->PrSpecifAttr = 0;
+	  /* store the rule priority */
+	  pRule->PrLevel = ctxt->cssLevel;
 	  pRule->PrSpecifAttrSSchema = NULL;
       
 	  /* In case of an attribute rule, add the Attr condition */
@@ -2297,7 +2299,7 @@ PresentationValue   v;
       if (generic)
 	pRule = PresRuleInsert ((PtrPSchema) tsch, ctxt, intRule, func);
       else
-	pRule = InsertElementPRule ((PtrElement) el, intRule, func);
+	pRule = InsertElementPRule ((PtrElement) el, intRule, func, c->cssLevel);
 
       if (pRule)
 	{
@@ -2737,21 +2739,25 @@ void                *param;
    */
   while (rule != NULL)
     {
-      /* fill in the PresentationSetting and call the handler */
-      if (rule->PrPresMode == PresFunction)
-	PRuleToPresentationSetting (rule, &setting, rule->PrPresFunction);
-      else
-	PRuleToPresentationSetting (rule, &setting, 0);
-
-      /* need to do some tweaking in the case of BackgroudPicture */
-      if (setting.type == PRBackgroundPicture)
+      if (rule->PrLevel != 0)
 	{
-	  cst = setting.value.typed_data.value;
-	  pSc1 = LoadedDocument[doc - 1]->DocSSchema->SsPSchema;
-	  setting.value.pointer = &pSc1->PsConstant[cst-1].PdString[0];
-	}
+	  /* the rule translates a CSS rule */
+	  /* fill in the PresentationSetting and call the handler */
+	  if (rule->PrType == PtFunction)
+	    PRuleToPresentationSetting (rule, &setting, rule->PrPresFunction);
+	  else
+	    PRuleToPresentationSetting (rule, &setting, 0);
+	  
+	  /* need to do some tweaking in the case of BackgroudPicture */
+	  if (setting.type == PRBackgroundPicture)
+	    {
+	      cst = setting.value.typed_data.value;
+	      pSc1 = LoadedDocument[doc - 1]->DocSSchema->SsPSchema;
+	      setting.value.pointer = &pSc1->PsConstant[cst-1].PdString[0];
+	    }
 
-	handler (el, doc, &setting, param);
+	  handler (el, doc, &setting, param);
+	}
 	rule = rule->PrNextPRule;
      }
 }

@@ -2096,7 +2096,7 @@ CHAR_T     *attrValue;
 				XMLcontext.lastElement, XMLcontext.doc);
 	   if (HTMLStyleAttribute)
 	       ParseHTMLSpecificStyle (XMLcontext.lastElement, attrValue,
-				       XMLcontext.doc, FALSE);
+				       XMLcontext.doc, 1, FALSE);
 	   break;
 	 case 3:       /* reference */
 	   break;
@@ -2149,7 +2149,7 @@ CHAR_T     *attrValue;
        TtaSetAttributeText (lastAttribute, attrValue,
 			    lastAttrElement, XMLcontext.doc);
        ParseHTMLSpecificStyle (XMLcontext.lastElement, attrValue,
-			       XMLcontext.doc, FALSE);
+			       XMLcontext.doc, 1, FALSE);
        done = TRUE;
      }
    else
@@ -2375,7 +2375,7 @@ CHAR_T     *attrValue;
 			     TEXT("background: url(%s)"),
 			     attrValue );
 		   ParseHTMLSpecificStyle (XMLcontext.lastElement, msgBuffer,
-					   XMLcontext.doc, FALSE);
+					   XMLcontext.doc, 1, FALSE);
 		 }
 	       else
 		 if (!ustrcmp (lastMappedAttr->XMLattribute, TEXT("bgcolor")))

@@ -11,7 +11,7 @@ extern CHAR_T* SkipWCBlanksAndComments ( CHAR_T* ptr );
 extern CHAR_T* SkipProperty ( CHAR_T* ptr );
 extern CHAR_T* ParseNumber ( CHAR_T* cssRule,
                              PresentationValue *pval );
-extern CHAR_T* ParseCSSUnit ( CHAR_T* cssRule,
+extern CHAR_T *ParseCSSUnit ( CHAR_T* cssRule,
                               PresentationValue *pval );
 extern void ParseCSSBackgroundImageCallback ( Document doc,
                                               Element element,
@@ -25,6 +25,7 @@ extern void PToCss ( PresentationSetting settings,
 extern void ParseHTMLSpecificStyle ( Element el,
                                      CHAR_T* cssRule,
                                      Document doc,
+                                     int isCSS,
                                      ThotBool destroy );
 extern int IsImplicitClassName ( CHAR_T* class,
                                  Document doc );
@@ -69,7 +70,7 @@ extern CHAR_T* SkipWCBlanksAndComments (/* CHAR_T* ptr */);
 extern CHAR_T* SkipProperty (/* CHAR_T* ptr */);
 extern CHAR_T* ParseNumber (/* CHAR_T* cssRule,
                                PresentationValue *pval */);
-extern CHAR_T* ParseCSSUnit (/* CHAR_T* cssRule,
+extern CHAR_T *ParseCSSUnit (/* CHAR_T* cssRule,
                                 PresentationValue *pval */);
 extern void ParseCSSBackgroundImageCallback (/* Document doc,
                                                 Element element,
@@ -83,6 +84,7 @@ extern void PToCss (/* PresentationSetting settings,
 extern void ParseHTMLSpecificStyle (/* Element el,
                                        CHAR_T* cssRule,
                                        Document doc,
+                                       int isCSS,
                                        ThotBool destroy */);
 extern int IsImplicitClassName (/* CHAR_T* class,
                                    Document doc */);

@@ -252,7 +252,7 @@ NotifyAttribute    *event;
 	   return FALSE;
 	TtaGiveTextAttributeValue (event->attribute, style, &len);
 	style[len] = WC_EOS;
-	ParseHTMLSpecificStyle (el, style, event->document, TRUE);
+	ParseHTMLSpecificStyle (el, style, event->document, 1, TRUE);
 	TtaFreeMemory (style);
      }
   return FALSE;  /* let Thot perform normal operation */
@@ -511,7 +511,7 @@ NotifyAttribute    *event;
 	   /* a new SPAN element has been created. Generate the PRules
 	      for the SPAN element */
 	   el = newParent;
-	ParseHTMLSpecificStyle (el, style, doc, FALSE);
+	ParseHTMLSpecificStyle (el, style, doc, 1, FALSE);
 	TtaFreeMemory (style);
      }
 }

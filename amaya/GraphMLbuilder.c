@@ -392,7 +392,7 @@ ThotBoool       delete;
       else if (attrType == GraphML_ATTR_stroke_width)
           usprintf (css_command, TEXT("stroke-width: %s"), text);
       /* parse the CSS rule */
-      ParseHTMLSpecificStyle (el, css_command, doc, delete);
+      ParseHTMLSpecificStyle (el, css_command, doc, 0, delete);
       TtaFreeMemory (text);
       }
 }
@@ -511,6 +511,8 @@ void UpdatePositionOfPoly (el, leaf, doc, minX, minY, maxX, maxY)
    PresentationContext  ctxt;
 
    ctxt = TtaGetSpecificStyleContext (doc);
+   /* the specific presentation is not a CSS rule */
+   ctxt->cssLevel = 0;
    ctxt->destroy = FALSE;
    pval.typed_data.unit = STYLE_UNIT_PT;
 
@@ -679,6 +681,8 @@ Document	doc;
       /* get the value of the x or y attribute */
       TtaGiveTextAttributeValue (attr, text, &length);
       ctxt = TtaGetSpecificStyleContext (doc);
+      /* the specific presentation is not a CSS rule */
+      ctxt->cssLevel = 0;
       ctxt->destroy = FALSE;
       /* parse the attribute value (a number followed by a unit) */
       ptr = text;
@@ -727,6 +731,8 @@ ThotBool   delete;
 	 return ret;
      }
    ctxt = TtaGetSpecificStyleContext (doc);
+   /* the specific presentation is not a CSS rule */
+   ctxt->cssLevel = 0;
    ctxt->destroy = FALSE;
    /* decide of the presentation rule to be created or updated */
    TtaGiveAttributeType (attr, &attrType, &attrKind);
@@ -863,6 +869,8 @@ ThotBool        delete
 	  if (pval.typed_data.unit != STYLE_UNIT_INVALID)
 	    {
 	    pval.typed_data.unit = STYLE_UNIT_PX;
+	    /* the specific presentation is not a CSS rule */
+	    ctxt->cssLevel = 0;
             ctxt->destroy = delete;
 	    TtaSetStylePresentation (PRHorizPos, el, NULL, ctxt, pval);
 	    }	    

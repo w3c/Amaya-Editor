@@ -3645,7 +3645,7 @@ ThotBool MathAttrFontsizeDelete(event)
   /* in the statement below, "10pt" is meaningless. It's here just to
      make the CSS parser happy */
   ParseHTMLSpecificStyle (event->element, TEXT("font-size: 10pt"),
-			  event->document, TRUE);
+			  event->document, 0, TRUE);
   return FALSE; /* let Thot perform normal operation */
 }
 
@@ -3665,7 +3665,7 @@ ThotBool MathAttrLspaceDelete(event)
   /* in the statement below, "10pt" is meaningless. It's here just to
      make the CSS parser happy */
   ParseHTMLSpecificStyle (event->element, TEXT("padding-left: 10pt"),
-			  event->document, TRUE);
+			  event->document, 0, TRUE);
   return FALSE; /* let Thot perform normal operation */
 }
 
@@ -3685,7 +3685,7 @@ ThotBool MathAttrRspaceDelete(event)
   /* in the statement below, "10pt" is meaningless. It's here just to
      make the CSS parser happy */
   ParseHTMLSpecificStyle (event->element, TEXT("padding-right: 10pt"),
-			  event->document, TRUE);
+			  event->document, 0, TRUE);
   return FALSE; /* let Thot perform normal operation */
 }
 
@@ -3730,7 +3730,7 @@ ThotBool MathAttrFontfamilyDelete (event)
   /* in the statement below, "serif" is meaningless. It's here just to
      make the CSS parser happy */
   ParseHTMLSpecificStyle (event->element, TEXT("font-family: serif"),
-			  event->document, TRUE);
+			  event->document, 0, TRUE);
   return FALSE; /* let Thot perform normal operation */
 }
 

@@ -2499,7 +2499,7 @@ void SetFontfamily (doc, el, value)
   CHAR_T           css_command[buflen+20];
  
   usprintf (css_command, TEXT("font-family: %s"), value);
-  ParseHTMLSpecificStyle (el, css_command, doc, FALSE);
+  ParseHTMLSpecificStyle (el, css_command, doc, 0, FALSE);
 }
 
 /*----------------------------------------------------------------------
@@ -2532,7 +2532,7 @@ void MathMLAttrToStyleProperty (doc, el, value, attr)
        usprintf (css_command, TEXT("padding-right: %s"), value);
        break;
     }
-  ParseHTMLSpecificStyle (el, css_command, doc, FALSE);
+  ParseHTMLSpecificStyle (el, css_command, doc, 0, FALSE);
 }
 
 /*----------------------------------------------------------------------
