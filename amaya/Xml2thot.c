@@ -2869,6 +2869,7 @@ static void EndOfAttributeName (char *xmlName)
    if (UnknownElement)
      /* The corresponding element doesn't belong to the current DTD */ 
      return;
+
    /* look for a NS_SEP in the tag name (namespaces) */ 
    /* and ignore the prefix if there is one */
    savParserCtxt = currentParserCtxt;
@@ -2928,7 +2929,11 @@ static void EndOfAttributeName (char *xmlName)
 			    "Undefined prefix for the attribute <%s>", ptr+1);
 		   XmlParseError (errorParsing, (unsigned char *)msgBuffer, 0);
 		   *ptr = NS_COLON;
-		   TtaFreeMemory (nsURI);
+		   if (nsURI)
+		     {
+		       TtaFreeMemory (nsURI);
+		       nsURI = NULL;
+		     }
 		   UnknownAttr = TRUE;
 		   return;
 		 }     
@@ -2936,6 +2941,8 @@ static void EndOfAttributeName (char *xmlName)
 	   *ptr = NS_COLON;
 	 }
        /* This attribute belongs to the same namespace as the element */
+       TtaFreeMemory (nsURI);
+       nsURI = NULL;
        attrName = (char *)TtaStrdup ((char *)xmlName);
        if (UnknownNS)
 	 /* The corresponding element doesn't belong to a supported namespace */ 
@@ -2980,8 +2987,8 @@ static void EndOfAttributeName (char *xmlName)
 	 EndOfXhtmlAttributeName (attrName,
 				  XMLcontext.lastElement, XMLcontext.doc);
        else
-	 EndOfXmlAttributeName (attrName, nsURI,
-				XMLcontext.lastElement, XMLcontext.doc);
+	 EndOfXmlAttributeName (attrName, nsURI, XMLcontext.lastElement,
+				XMLcontext.doc);
      }
    
    TtaFreeMemory (nsURI);
