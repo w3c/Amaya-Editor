@@ -4,7 +4,7 @@
 
 /*----------------------------------------------------------------------
    
-   Module de gestion des entrees clavier.                
+   Module for keyboard input handling.
    
   ----------------------------------------------------------------------*/
 
@@ -38,18 +38,18 @@ extern void         CloseInsertion ();
 #define THOT_MOD_S_META	12
 #define THOT_MOD_S_ALT	14
 #define MAX_AUTOMATA	80
-/* structure d'automata pour les touches */
+/* automata structure for the keys */
 typedef struct _key
   {
-     int                 K_EntryCode;	/* cle d'entree                             */
-     struct _key        *K_Next;	/* 1ere touche complementaire (1er niveau)  */
-     struct _key        *K_Other;	/* entree suivante de meme niveau           */
-     short               K_Command;	/* indice dans la liste des commandes ou -1 */
-     int                 K_Value;	/* cle de retour si commande = -1           */
+     int                 K_EntryCode;	/* input key                                */
+     struct _key        *K_Next;	/* 1st complementary touch (1st level)      */
+     struct _key        *K_Other;	/* next entry at the same level             */
+     short               K_Command;	/* index in the command list or -1          */
+     int                 K_Value;	/* return key if command = -1               */
   }
 KEY;
 
-#define T_Modifieur K_Next	/* valeur du modifieur (2eme niveau)          */
+#define T_Modifieur K_Next	/* modifier value (2nd level) */
 
 
 #undef EXPORT
@@ -59,7 +59,7 @@ KEY;
 #include "edit_tv.h"
 #include "appdialogue_tv.h"
 
-/* Table des actions */
+/* Actions table */
 #include "appli_f.h"
 #include "textcommands_f.h"
 #include "editcommands_f.h"
@@ -73,7 +73,7 @@ KEY;
 #include "structselect_f.h"
 #include "registry_f.h"
 
-/* Actions associees par defaut aux cles XK_Up, XK_Left, XK_Right, XK_Down */
+/* Default actions for XK_Up, XK_Left, XK_Right, XK_Down keys */
 #define MY_KEY_Up 0
 #define MY_KEY_Left 1
 #define MY_KEY_Right 2
@@ -87,7 +87,7 @@ KEY;
 static int          SpecialKeys[] =
 {5, 3, 4, 6, 1, 2, 13, 14, 15, 16};
 
-/* Les automates */
+/* the automata */
 static KEY         *Automata_normal = NULL;
 
 static KEY         *Automata_ctrl = NULL;
@@ -99,8 +99,9 @@ static KEY         *Automata_ALT = NULL;
 static KEY         *Automata_current = NULL;
 
 /*----------------------------------------------------------------------
-   NomCle traduit les noms de cle's non supporte's par             
-   l'interpre'teur des translations Motif.                 
+   NameCode
+   translates the keynames not supported by the interpreter of
+   Motif translations.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static char        *NameCode (char *name)
@@ -133,8 +134,9 @@ char               *name;
 
 
 /*----------------------------------------------------------------------
-   CleSpecial traduit le nom fourni dans le fichier thot.keyboard  
-   en une valeur de cle' exploitable par Thot.             
+   SpecialKey
+   translates the name given by the file thot.keyboard into a key value
+   which Thot can use.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static unsigned int SpecialKey (char *name)
@@ -144,7 +146,7 @@ char               *name;
 
 #endif /* __STDC__ */
 {
-   /* Est-ce le nom d'un caractere special */
+   /* is it the name of a special character? */
    if (!strcmp (name, "Return"))
       return (unsigned int) THOT_KEY_Return;
    else if (!strcmp (name, "BackSpace"))
@@ -246,13 +248,14 @@ char               *name;
 
 
 /*----------------------------------------------------------------------
-   MemoKey memorise un raccourci clavier dans les automates.    
-   mod1 = 1ere modifieur                                   
-   key1 = 1ere cle                                         
-   key2 = 2eme modifieur                                   
-   key2 = 2eme cle                                         
-   key  = valeur du keysym ou 0                            
-   command = numero de commande dans MesActions           
+   MemoKey
+   memorizes a keyboard shortcut inside the automata.
+   mod1 = 1st modifier                                   
+   key1 = 1st key                                         
+   key2 = 2nd modifier
+   key2 = 2nd key                                       
+   key  = keysym value or 0
+   command = number of the command in MyActions
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 static void         MemoKey (int mod1, int key1, int mod2, int key2, int key, int command)
@@ -275,7 +278,7 @@ int                 command;
    if (key1 == 0)
       return;
 
-   /* Point d'entree dans l'automate */
+   /* Entry point into the automata */
    switch (mod1)
 	 {
 	    case THOT_NO_MOD:
@@ -303,39 +306,39 @@ int                 command;
 	       return;
 	 }
 
-   /* Initialisations */
+   /* Initializations */
    ptr = (KEY *) TtaGetMemory (sizeof (KEY));	/* nouvelle entree */
    oldptr = *addFirst;		/* debut chainage entrees existantes */
-   /* Regarde si l'on a deja une touche ctrl */
+   /* Verifies if we already have a ctrl key */
    if (oldptr == NULL)
      {
-	/* C'est la premiere touche crtl cree */
+	/* It's the first ctrl key we'll create */
 	*addFirst = ptr;
-	exists = FALSE;		/* la key1 n'est pas encore connue */
+	exists = FALSE;		/* key1 isn't yet known */
      }
    else
      {
-	/* Regarde si cette touche est deja enregistree */
+	/* verifies if this key is already recorded */
 	exists = FALSE;
 	do
 	  {
-	     /* Est-ce la meme key d'entree */
+	     /* is it the same entry key ? */
 	     if (oldptr->K_EntryCode == key1)
-		exists = TRUE;	/* L'entree cle1 existe deja */
+		exists = TRUE;	/* the key1 entry already exists */
 	     else if (oldptr->K_Other != NULL)
 	       {
 		  oldptr = oldptr->K_Other;
 		  if (oldptr->K_EntryCode == key1)
-		     exists = TRUE;	/* Il faut en plus verifier la derniere entree */
+		     exists = TRUE;	/* we must also verify the last entry */
 	       }
 	  }
 	while (oldptr->K_Other != NULL && !exists);
      }
 
-   /* Est-ce une sequence a 2 cles avec modifieur sur la 1ere ? */
+   /* is it a two key sequence with a modifier on the first one? */
    if ((key2 != 0) && (mod1 != THOT_NO_MOD))
      {
-	/* Est-ce que l'entree de 1er niveau existe deja ? */
+	/* Does the first level entry already exists ? */
 	if (!exists)
 	  {
 	     /* Creation d'une entree d'automate de 1er niveau */
@@ -422,9 +425,10 @@ int                 command;
 
 #ifdef _WINDOWS
 /*----------------------------------------------------------------------
-   MSCharTranslation is the MS-Window front-end to the character   
-   translation and handling. Decodes the MS-Window callback     
-   parameters and calls the generic character handling routine. 
+   MSCharTranslation
+   MS-Window front-end to the character translation and handling.
+   Decodes the MS-Window callback parameters and calls the
+   generic character handling function. 
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                MSCharTranslation (HWND hWnd, int frame, UINT msg,
@@ -464,9 +468,10 @@ void                MSCharTranslation (HWND hWnd, int frame, UINT msg,
 
 #ifdef WWW_XWINDOWS
 /*----------------------------------------------------------------------
-   XCharTranslation is the X-Window front-end to the character     
-   translation and handling. Decodes the X-Window event       
-   and calls the generic character handling routine.          
+   XCharTranslation
+   X-Window front-end to the character translation and handling.
+   Decodes the X-Window event  and calls the generic character
+   handling function.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                XCharTranslation (XEvent * event)
@@ -523,7 +528,8 @@ XEvent             *event;
 #endif /* WWW_XWINDOWS */
 
 /*----------------------------------------------------------------------
-   ThotInput handle the caracter encoding.                     
+   ThotInput
+   handles the character encoding.                     
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                ThotInput (int frame, unsigned char *string, unsigned int nb,
@@ -799,7 +805,8 @@ int                 key;
 
 #ifdef WWW_XWINDOWS
 /*----------------------------------------------------------------------
-   InitTranslations initialise l'encodage du clavier.              
+   InitTranslations
+   intializes the keybord encoding.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 XtTranslations      InitTranslations (char *appliname)

@@ -6,9 +6,8 @@
    
    THOT                                     
    
-   Ce module traite les commandes de creation              
-   appelees par le mediateur.                              
-   
+   This module handles the creation commands called by the mediator
+
   ----------------------------------------------------------------------*/
 
 #include "thot_gui.h"
@@ -20,12 +19,6 @@
 #define MAX_ENTRIES 20
 #include "typemedia.h"
 
-typedef enum
-  {
-     Dedans, ActionAvant, Apres, ElementRef
-  }
-TypeAction;
-
 #undef EXPORT
 #define EXPORT extern
 #include "modif_tv.h"
@@ -33,11 +26,11 @@ TypeAction;
 #include "platform_tv.h"
 #include "edit_tv.h"
 
-static boolean      AnswerMenuAskForNew;	/* reponse valide au menu creer/designer */
-static boolean      AnswerCreateAskForNew;	/* reponse Creer au menu creer/designer */
+static boolean      AnswerMenuAskForNew;	/* valid answer to the create/designate menu */
+static boolean      AnswerCreateAskForNew;	/* answer AnswerCreateAskForNew to the create/designate menu */ 
 
 #include "structcreation_f.h"
-
+ 
 #ifdef __STDC__
 extern int          ConfigMakeDocTypeMenu (char *, int *, boolean);
 
@@ -47,12 +40,13 @@ extern int          ConfigMakeDocTypeMenu ();
 #endif /* __STDC__ */
 
 /*----------------------------------------------------------------------
-   AskForNew_RemplRefer Lors de l'etablissement d'une reference, demande 
-   a l'utilisateur s'il veut creer en meme temps l'element reference' 
-   ou s'il veut simplement designer un element existant 
-   Au retour, la fonction retourne Faux si l'utilisateur abandonne la 
-   commande, et sinon Creer vaut Vrai si l'utilisateur veut creer 
-   l'element reference', Faux s'il veut simplement le designer. 
+   AskForNew_RemplRefer
+   After setting up  a reference, this function asks the user if he wants
+   to create at the same time the referenced element or if he just wants
+   to designate an existing element.
+   It returns FALSE if the user aborts the command. Otherwise
+   generate is TRUE if the user wants to create the referenced
+   element, FALSE if he only wants to designate it.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 boolean             AskForNew_RemplRefer (boolean * generate, Name typeName)
@@ -66,7 +60,7 @@ Name                typeName;
    int                 i;
    char                bufMenu[MAX_TXT_LEN];
 
-   /* cree et active le menu */
+   /* creates and activates the menu */
    i = 0;
    sprintf (&bufMenu[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_CREATE_EL_REF));
    i += strlen (&bufMenu[i]) + 1;
@@ -74,16 +68,17 @@ Name                typeName;
    TtaNewPopup (NumMenuCreateReferenceElem, 0,
 	      TtaGetMessage (LIB, TMSG_MODE_INSERT), 2, bufMenu, NULL, 'L');
    TtaShowDialogue (NumMenuCreateReferenceElem, FALSE);
-   /* attend que l'utilisateur aie repondu au menu */
+   /* waits until the user replies to the menu */
    TtaWaitShowDialogue ();
    *generate = AnswerCreateAskForNew;
    return AnswerMenuAskForNew;
 }
 
 /*----------------------------------------------------------------------
-   CallbackAskForNew   traite le retour du menu qui demande a         
-   l'utilisateur s'il veut designer un element a referencer       
-   s'il prefere creer un nouvel element.                          
+   CallbackAskForNew
+   handles the callback of the menu which asks the user if he wants
+   to designate a referenced element or if if he prefers to create
+   a new element.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                CallbackAskForNew (int Val)
@@ -107,6 +102,7 @@ int                 Val;
 
 
 /*----------------------------------------------------------------------
+  BuildChoiceMenu
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                BuildChoiceMenu (char *bufMenu, Name menuTitle, int nbEntries, boolean natureChoice)
@@ -128,35 +124,35 @@ boolean             natureChoice;
    if (natureChoice)
      {
 	menu = NumFormNature;
-	/* selecteur de saisie de la nature de l'element a creer (ou zone de saisie */
-	/* s'il n'y a pas de natures definies dans les fichiers de config.). */
+	/* selector stating the nature of the element to create (or of the capture zone
+	   if the configuration files don't define any natures */
 	TtaNewForm (NumFormNature, 0, 0, 0,
 	       TtaGetMessage (LIB, TMSG_OBJECT_TYPE), TRUE, 1, 'L', D_DONE);
 	nbitem = ConfigMakeDocTypeMenu (bufMenuB, &length, FALSE);
 	if (nbitem > 0)
-	   /* le fichier Start Up definit des natures */
+	   /* the Start Up file defines the natures */
 	  {
-	     /* calcule la hauteur de la partie menu du selecteur */
+	     /* computes the height of the menu part of the selector */
 	     if (nbitem < 5)
 		length = nbitem;
 	     else
 		length = 5;
-	     /* cree le selecteur */
+	     /* creates the selector */
 	     TtaNewSelector (NumSelectNatureName, NumFormNature,
 			     TtaGetMessage (LIB, TMSG_OBJECT_TYPE), nbitem, bufMenuB, length, NULL, TRUE, FALSE);
-	     /* initialise le selecteur sur sa premiere entree */
+	     /* sets the selector on its first entry */
 	     TtaSetSelector (NumSelectNatureName, 0, "");
 	  }
 	else
-	   /* on n'a pas cree' de selecteur, on cree une zone de saisie */
-	   /* zone de saisie de la nature de l'element a creer */
+	   /* we did not create a selector, we create a capture zone having
+	      the nature of the element to create */
 	   TtaNewTextForm (NumSelectNatureName, NumFormNature,
 		       TtaGetMessage (LIB, TMSG_OBJECT_TYPE), 30, 1, FALSE);
      }
    else
      {
 	menu = NumMenuElChoice;
-	/* ajoute 'B' au debut de chaque entree */
+	/* adds 'B' to the beginning of each entry of the menu */
 	dest = &bufMenuB[0];
 	src = &bufMenu[0];
 	for (k = 1; k <= nbEntries; k++)
@@ -171,15 +167,15 @@ boolean             natureChoice;
 	TtaNewPopup (NumMenuElChoice, 0, menuTitle, nbEntries, bufMenuB, NULL, 'L');
      }
    TtaShowDialogue (menu, FALSE);
-   /* attend que l'utilisateur ait repondu au menu et que le */
-   /* mediateur ait appele' ChoiceMenuCallback */
+   /* waits until the user has answered to the menu and that the 
+      mediator has called ChoiceMenuCallback */
    TtaWaitShowDialogue ();
 }
 
 
 /*----------------------------------------------------------------------
-   InsertSeparatorInMenu      met un separateur dans le menu Inserer/ 
-   Coller / Inclure                        
+   InsertSeparatorInMenu 
+   Inserts a separator in the menu Insert/Paste/Include
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                InsertSeparatorInMenu (int *prevMenuInd, int *nbEntries, int *menuInd, char *bufMenu)
@@ -193,7 +189,7 @@ char               *bufMenu;
 #endif /* __STDC__ */
 {
    *prevMenuInd = *menuInd;
-   /* indique qu'il s'agit d'un separateur */
+   /* indicates if it's a separator */
    bufMenu[*menuInd] = 'S';
    (*menuInd)++;
    bufMenu[*menuInd] = '\0';
@@ -202,6 +198,7 @@ char               *bufMenu;
 }
 
 /*----------------------------------------------------------------------
+  BuildPasteMenu
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                BuildPasteMenu (int RefMenu, char *bufMenu, Name title, int nbEntries, char button)
@@ -220,13 +217,13 @@ char                button;
    char               *dest;
    int                 k, l;
 
-   /* ajoute 'B' au debut de chaque entree du menu */
+   /* adds 'B' to the beginning of each entry of the menu */
    dest = &bufMenuB[0];
    src = &bufMenu[0];
    for (k = 1; k <= nbEntries; k++)
      {
 	l = strlen (src);
-	/* on ne met pas de 'B' devant les separateurs */
+	/* don't add 'B' to the beginning of separators */
 	if (*src != 'S' || l != 1)
 	  {
 	     strcpy (dest, "B");
@@ -238,6 +235,16 @@ char                button;
      }
    TtaNewPopup (RefMenu, 0, title, nbEntries, bufMenuB, NULL, button);
    TtaShowDialogue (RefMenu, FALSE);
-   /* attend la reponse de l'utilisateur */
+   /* waits for the user's answer */
    TtaWaitShowDialogue ();
 }
+
+
+
+
+
+
+
+
+
+
