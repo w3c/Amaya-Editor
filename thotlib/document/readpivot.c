@@ -15,8 +15,7 @@
  */
  
 /*
-   ce module charge un document depuis un fichier contenant une representation
-   pivot et construit les arbres abstraits correspondants.
+   that module read documents in pivot format and build an abstract tree
  */
 
 #include "thot_gui.h"
@@ -1999,8 +1998,8 @@ ThotBool            link;
 	  default:
 	    break;
 	  }
-      /* si la regle copiee est associee a un attribut, garde le lien */
-      /* avec cet attribut */
+      /* whether the presentation rule is related to an attribute */
+      /* keep the link with that attribute */
       if (pAttr != NULL)
 	{
 	  pPRule->PrSpecifAttr = pAttr->AeAttrNum;
@@ -2009,36 +2008,36 @@ ThotBool            link;
       
       if (link)
 	{
-	/* chaine la nouvelle regle de presentation en queue de la */
-	/* chaine des regles de presentation de l'element */
-	if (pEl->ElFirstPRule == NULL)
-	  /* pas encore de regle de presentation pour l'element */
-	  pEl->ElFirstPRule = pPRule;
-	else
-	  {
-	    /* 1ere regle de presentation de l'element */
-	    pPRule1 = pEl->ElFirstPRule;
-	    /* cherche la derniere regle de l'element */
-	    while (pPRule1->PrNextPRule != NULL)
-	      pPRule1 = pPRule1->PrNextPRule;
-	    /* chaine la nouvelle regle */
-	    pPRule1->PrNextPRule = pPRule;
-	  }
-	if (pPRule->PrType == PtBackground)
-	  /* add a ShowBox rule for the Background rule */
-	  {
-	  GetPresentRule (&pPRule1);
-	  pPRule->PrNextPRule = pPRule1;
-	  pPRule = pPRule1;
-	  pPRule->PrType = PtFunction;
-          pPRule->PrViewNum = view;
-          pPRule->PrPresMode = PresFunction;
-          pPRule->PrPresFunction = FnShowBox;
-          pPRule->PrPresBoxRepeat = FALSE;
-          pPRule->PrNPresBoxes = 0;
-	  }
+	  /* add the new presentation rule at the end */
+	  if (pEl->ElFirstPRule == NULL)
+	    /* no presentation rule for the element */
+	    pEl->ElFirstPRule = pPRule;
+	  else
+	    {
+	      /* first presentation rule of the element */
+	      pPRule1 = pEl->ElFirstPRule;
+	      /* look for the last rule of the element */
+	      while (pPRule1->PrNextPRule != NULL)
+		pPRule1 = pPRule1->PrNextPRule;
+	      /* add the new rule */
+	      pPRule1->PrNextPRule = pPRule;
+	    }
+	  if (pPRule->PrType == PtBackground &&
+	      !TypeHasException (ExcNoShowBox, pEl->ElTypeNumber, pEl->ElStructSchema))
+	    /* add a ShowBox rule for the Background rule */
+	    {
+	      GetPresentRule (&pPRule1);
+	      pPRule->PrNextPRule = pPRule1;
+	      pPRule = pPRule1;
+	      pPRule->PrType = PtFunction;
+	      pPRule->PrViewNum = view;
+	      pPRule->PrPresMode = PresFunction;
+	      pPRule->PrPresFunction = FnShowBox;
+	      pPRule->PrPresBoxRepeat = FALSE;
+	      pPRule->PrNPresBoxes = 0;
+	    }
 	}
-      /* c'est la derniere regle */
+      /* it's the last rule */
       pPRule->PrNextPRule = NULL;
     }
 }
