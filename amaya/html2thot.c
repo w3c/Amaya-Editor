@@ -2658,14 +2658,22 @@ Document            doc;
 }
 
 /*----------------------------------------------------------------------
-   StopParsing stops the document parsingwhen an unrecoverable error .
+   StopParsing 
+   Stops the document parsing when an unrecoverable error is found
   ----------------------------------------------------------------------*/
-static void         StopParsing ()
+#ifdef __STDC__
+static void         StopParsing (Document doc)
+#else
+static void         StopParsing (doc)
+Document       doc;
+
+#endif
 {
   NormalTransition = FALSE;
   HTMLrootClosed = TRUE;
   InitInfo (TEXT(""), TtaGetMessage (AMAYA, AM_XML_ERROR));
   CurrentBufChar = 0;
+  SetBrowserEditor (doc);
 }
 
 /*----------------------------------------------------------------------
@@ -3142,7 +3150,7 @@ CHAR_T              c;
 			 HTMLcontext.doc, &HTMLcontext.lastElement,
 			 &HTMLcontext.lastElementClosed,
 			 HTMLcontext.language))
-	    StopParsing ();   /* the XML parser raised an error */
+	    StopParsing (HTMLcontext.doc);   /* the XML parser raised an error */
 #else /* OLD_XML_PARSER */
 	  if (!ParseIncludedXml (stream, FileBuffer, INPUT_FILE_BUFFER_SIZE,
 				 &EndOfHtmlFile, &NotToReadFile, PreviousFileBuffer,
@@ -3152,7 +3160,7 @@ CHAR_T              c;
 				 &HTMLcontext.lastElement,
 				 &HTMLcontext.lastElementClosed,
 				 HTMLcontext.language))
-	    StopParsing ();   /* the XML parser raised an error */
+	    StopParsing (HTMLcontext.doc);   /* the XML parser raised an error */
 #endif /* OLD_XML_PARSER */
 	  /* the whole element has been read by the XML parser */
 	  /* reset the automaton state */
@@ -6989,11 +6997,11 @@ Document   doc;
 #ifdef OLD_XML_PARSER
        if (!XMLparse (NULL, &CurrentBufChar, schemaName, doc, &lastelem,
 		      &isclosed, TtaGetDefaultLanguage()))
-	 StopParsing ();
+	 StopParsing (doc);
 #else /* OLD_XML_PARSER */
        if (!ParseXmlSubTree (InputText, &lastelem, &isclosed,
 			     doc, TtaGetDefaultLanguage()))
-	 StopParsing ();
+	 StopParsing (doc);
 #endif /* OLD_XML_PARSER */
       }
 }

@@ -504,7 +504,7 @@ int         line;
        }
      else
        {
-	 fprintf (ErrFile, "   line %d, char %d: %s\n", line, 0, mbcsMsg);
+	 fprintf (ErrFile, "  line %d, char %d: %s\n", line, 0, mbcsMsg);
 	 fclose (ErrFile);
 	 ErrFile = NULL;
        }
@@ -518,7 +518,7 @@ int         line;
 	  docURL = NULL;
 	}
       /* print the line number and character number before the message */
-      fprintf (ErrFile, "   line %d, char %d: %s\n",
+      fprintf (ErrFile, "  line %d, char %d: %s\n",
 	       XML_GetCurrentLineNumber (parser) + htmlLineRead -  extraLineRead,
 	       XML_GetCurrentColumnNumber (parser),
 	       mbcsMsg);
@@ -4303,11 +4303,6 @@ ThotBool    xmlDoctype;
 	  TtaFreeMemory (docURL);
 	  docURL = NULL;
 	}
-      
-      /* Document with unknown is set in a read-only access mode */
-      if (unknownCharset)
-	  SetBrowserEditor (doc);
-
       TtaSetDisplayMode (doc, DisplayImmediately);
 
       /* Check the Thot abstract tree against the structure schema. */
@@ -4317,8 +4312,10 @@ ThotBool    xmlDoctype;
    TtaSetDocumentUnmodified (doc);
 
    /* Display a warning if an error was found */
-   if (XMLabort)
+   /* and set the document in read-only access mode */
+   if (XMLabort || unknownCharset)
      {
+       SetBrowserEditor (doc);
        profile = TtaGetEnvString ("Profile");
        if (!profile)
 	 profile = TEXT("");
