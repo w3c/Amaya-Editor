@@ -2,8 +2,8 @@ APPLICATION Topics;
 
 DEFAULT
    BEGIN
-     ElemRClick.Pre -> BM_SimpleRClick;
-     ElemActivate.Pre -> BM_ShowProperties;
+     ElemRClick.Pre -> BM_ShowProperties;
+     ElemActivate.Pre -> BM_FollowBookmark;
      ElemDelete.Pre -> BM_ItemDelete;
      DocClose.Post -> DocumentClosed;
    END;

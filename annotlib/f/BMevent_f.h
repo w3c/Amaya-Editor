@@ -22,7 +22,7 @@ extern void BM_ViewBookmarks ( Document doc,
 extern void BM_refreshBookmarkView ( void );
 extern void BM_ImportTopics ( Document doc,
                               View view );
-extern ThotBool BM_SimpleRClick ( NotifyElement *event );
+extern ThotBool BM_FollowBookmark ( NotifyElement *event );
 extern ThotBool BM_ShowProperties ( NotifyElement *event );
 extern ThotBool BM_ItemDelete ( NotifyElement *event );
 
@@ -44,7 +44,7 @@ extern void BM_ViewBookmarks (/* Document doc,
 extern void BM_refreshBookmarkView (/* void */);
 extern void BM_ImportTopics (/* Document doc,
                                 View view */);
-extern ThotBool BM_SimpleRClick (/* NotifyElement *event */);
+extern ThotBool BM_FollowBookmark (/* NotifyElement *event */);
 extern ThotBool BM_ShowProperties (/* NotifyElement *event */);
 extern ThotBool BM_ItemDelete (/* NotifyElement *event */);
 

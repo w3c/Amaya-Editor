@@ -344,7 +344,7 @@ static void FollowBookmark_callback (Document doc, int status, char *urlName,
 
 /*-----------------------------------------------------------------------
   -----------------------------------------------------------------------*/
-ThotBool BM_SimpleRClick (NotifyElement *event)
+ThotBool BM_FollowBookmark (NotifyElement *event)
 {
   Document doc;
   Element el;
