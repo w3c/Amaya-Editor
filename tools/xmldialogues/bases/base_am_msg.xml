@@ -3611,7 +3611,7 @@
 </label>
 <label define="AM_LINK_LINE">
 	<message xml:lang="en">Blue lines are links activated by a double (or a single) click\n</message>
-	<message xml:lang="fr">Les lignes bleues sont des liens activés par un double (ou simple) click</message>
+	<message xml:lang="fr">Les lignes bleues sont des liens activés par un double (ou simple) click\n</message>
 	<message xml:lang="it">Le righe in blu sono collegamenti attivati con un doppio (o semplice) clic\n</message>
 	<message xml:lang="es">Las líneas azules son enlaces activados por un doble clic (o un único clic)\n</message>
 </label>

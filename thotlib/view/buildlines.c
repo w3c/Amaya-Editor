@@ -1945,6 +1945,8 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
   /* look for a box to split */
   while (still)
     {
+if (pNextBox->BxAbstractBox->AbElement->ElTypeNumber == 127)
+  printf ("Button\n");
       val = 0;
       if (pNextBox->BxAbstractBox->AbLeafType == LtCompound)
 	{
@@ -2159,10 +2161,16 @@ static int FillLine (PtrLine pLine, PtrBox pBlock, PtrAbstractBox pRootAb,
 	    {
 	      /* cannot break the box */
 	      pBox = pNextBox;	/* it's also the last box */
-	      if (pBox->BxType == BoPicture)
-		wordWidth = pBox->BxWidth;
-	      else
+	      if (pBox->BxType == BoBlock ||
+		  pBox->BxType == BoFloatBlock ||
+		  pBox->BxType == BoTable)
 		wordWidth = pBox->BxMinWidth;
+	      else if (!pBox->BxAbstractBox->AbWidth.DimIsPosition &&
+		       pBox->BxAbstractBox->AbHorizEnclosing &&
+		       (pBox->BxAbstractBox->AbWidth.DimAbRef == NULL ||
+			!IsParentBox (pBox->BxAbstractBox->AbWidth.DimAbRef->AbBox,
+				      pBox->BxAbstractBox->AbBox)))
+		wordWidth = pBox->BxWidth;
 	      /* check if next boxes are set in lines */
 	      lastbox = pBox;
 	      still = (lastbox != NULL);
@@ -3335,6 +3343,7 @@ void ComputeLines (PtrBox pBox, int frame, int *height)
 		}
 	      if (pBox->BxMaxWidth < pLine->LiRealLength)
 		pBox->BxMaxWidth = pLine->LiRealLength;
+	      pLine->LiRealLength = 0;
 	      if (pLine->LiHeight > *height)
 		*height += pLine->LiHeight;
 	      Align (pBox, pLine, frame, FALSE, xAbs, yAbs);

@@ -992,8 +992,8 @@ static void ChangeTableWidth (PtrAbstractBox table, int frame)
 static void GiveCellWidths (PtrAbstractBox cell, int frame, int *min, int *max,
 			    int *width, int *percent)
 {
-  PtrAbstractBox      pAb;
-  PtrBox              box;
+  PtrAbstractBox      pAb, pParent;
+  PtrBox              box, parent;
   PtrSSchema          pSS;
   int                 mbp, delta;
   ThotBool            skip;
@@ -1033,6 +1033,17 @@ static void GiveCellWidths (PtrAbstractBox cell, int frame, int *min, int *max,
 	      pAb->AbBox->BxType == BoFloatBlock ||
 	      pAb->AbBox->BxType == BoTable)
 	    {
+	      /* take into account enclosing margins */
+	      pParent = pAb->AbEnclosing;
+	      while (pParent && pParent != cell && pParent->AbBox)
+		{
+		  parent = pParent->AbBox;
+		  if (parent->BxType != BoGhost &&
+		      parent->BxType != BoFloatGhost)
+		  delta += parent->BxLBorder + parent->BxLPadding + parent->BxLMargin
+		    + parent->BxRBorder + parent->BxRPadding + parent->BxRMargin;
+		pParent = pParent->AbEnclosing;
+		}
 	      if (*min < pAb->AbBox->BxMinWidth + delta)
 		*min = pAb->AbBox->BxMinWidth + delta;
 	      if (*max < pAb->AbBox->BxMaxWidth + delta)
