@@ -1207,6 +1207,9 @@ ThotBool FetchAndDisplayImages (Document doc, int flags, Element elSubTree)
 	      /* get the PICTURE_UNIT or use_ element within the image element */
 	      elType = TtaGetElementType (el);
 	      if ((!strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG")) &&
+		  elType.ElTypeNum == SVG_EL_a)
+		pic = NULL;
+	      else if ((!strcmp(TtaGetSSchemaName (elType.ElSSchema), "SVG")) &&
 		  (elType.ElTypeNum == SVG_EL_use_ ||
 		   elType.ElTypeNum == SVG_EL_tref))
 		pic = el;

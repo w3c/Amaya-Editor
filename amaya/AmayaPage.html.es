@@ -27,7 +27,7 @@
 <body xml:lang="es">
 <p style="text-align: center"><svg xmlns="http://www.w3.org/2000/svg"
      width="600" height="349">
-  <rect x="464" y="4" width="138" height="330" style="fill: #E1E1E1"/>
+  <rect x="464" y="4" width="140" height="330" style="fill: #E1E1E1"/>
   <g style="fill:#dc5b53; font: bold 16px"
     transform="translate(477,0)">
     <a xlink:href="http://www.w3.org/Amaya">
@@ -63,8 +63,9 @@
       </text>
     </a>
     <a xlink:href="http://www.w3.org">
-      <text y="278px" x="0px">W3C
-      </text>
+      <image xlink:href="../doc/images/w3c_home" y="278px" x="0px">
+        <desc>W3C</desc>
+      </image>
     </a>
   </g>
   <g>

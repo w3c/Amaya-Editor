@@ -26,58 +26,61 @@
 
 <body xml:lang="fr">
 <p style="text-align:center"><svg xmlns="http://www.w3.org/2000/svg"
-     width="604" height="352">
-  <rect x="0" y="0" width="604" height="353" style="fill: #E1E1E1"/>
-  <text xmlns:xlink="http://www.w3.org/1999/xlink" y="38px" x="477px"
-        xlink:type="simple" xlink:href="http://www.w3.org/Amaya"
-        style="fill:#dc5b53; font: bold 16px">Amaya au W3C
-  </text>
-  <text xmlns:xlink="http://www.w3.org/1999/xlink" y="68px" x="477px"
-        xlink:type="simple" xlink:href="../doc/html/Manual.html.fr"
-        style="fill:#dc5b53; font: bold 16px">Manuel en ligne
-  </text>
-  <text xmlns:xlink="http://www.w3.org/1999/xlink" y="98px" x="477px"
-        style="fill:#dc5b53; font: bold 16px" xlink:type="simple"
-        xlink:href="../doc/html/Index.html.fr">Index
-  </text>
-  <text xmlns:xlink="http://www.w3.org/1999/xlink" y="128px" x="477px"
-        style="fill:#dc5b53; font: bold 16px" xlink:type="simple"
-        xlink:href="../doc/html/Annotations.html.fr">Annotations
-  </text>
-  <text xmlns:xlink="http://www.w3.org/1999/xlink" y="158px" x="477px"
-        style="fill:#dc5b53; font: bold 16px" xlink:type="simple"
-        xlink:href="../doc/html/Creating.html.fr">XHTML
-  </text>
-  <text xmlns:xlink="http://www.w3.org/1999/xlink" y="188px" x="477px"
-        style="fill:#dc5b53; font: bold 16px" xlink:type="simple"
-        xlink:href="../doc/html/Math.html.fr">MathML
-  </text>
-  <text xmlns:xlink="http://www.w3.org/1999/xlink" y="218px" x="477px"
-        style="fill:#dc5b53; font: bold 16px" xlink:type="simple"
-        xlink:href="../doc/html/SVG.html.fr">SVG
-  </text>
-  <text xmlns:xlink="http://www.w3.org/1999/xlink" y="248px" x="477px"
-        style="fill:#dc5b53; font: bold 16px" xlink:type="simple"
-        xlink:href="../doc/html/StyleSheets.html.fr">CSS
-  </text>
-  <text xmlns:xlink="http://www.w3.org/1999/xlink" y="278px" x="477px"
-        xlink:type="simple" xlink:href="http://www.w3.org"
-        style="fill:#dc5b53; font: bold 16px">W3C
-  </text>
+     width="600" height="349">
+  <defs>
+    <symbol id="cube">
+      <polygon points="0,0 5,5 5,20 0,15" transform="translate(0,1)"
+               stroke-width="1"/>
+      <polygon points="0,0 15,0 20,5 5,5" transform="translate(1,0)"
+               stroke-width="1"/>
+      <rect x="6" y="6" width="15" height="15" stroke-width="1"/>
+    </symbol>
+  </defs>
+  <rect x="464" y="4" width="138" height="330" style="fill: #E1E1E1"/>
+  <g style="fill:#dc5b53; font: bold 16px" transform="translate(477,0)">
+    <a xlink:href="http://www.w3.org/Amaya">
+      <text y="38px" x="0px">Amaya au W3C
+      </text>
+    </a>
+    <a xlink:href="../doc/html/Manual.html.fr">
+      <text y="68px" x="0px">Manuel en ligne
+      </text>
+    </a>
+    <a xlink:href="../doc/html/Index.html.fr">
+      <text y="98px" x="3px">Index
+      </text>
+    </a>
+    <a xlink:href="../doc/html/Annotations.html.fr">
+      <text y="128px" x="0px">Annotations
+      </text>
+    </a>
+    <a xlink:href="../doc/html/Creating.html.fr">
+      <text y="158px" x="0px">XHTML
+      </text>
+    </a>
+    <a xlink:href="../doc/html/Math.html.fr">
+      <text y="188px" x="0px">MathML
+      </text>
+    </a>
+    <a xlink:href="../doc/html/SVG.html.fr">
+      <text y="218px" x="0px">SVG
+      </text>
+    </a>
+    <a xlink:href="../doc/html/StyleSheets.html.fr">
+      <text y="248px" x="0px">CSS
+      </text>
+    </a>
+    <a xlink:href="http://www.w3.org">
+      <image xlink:href="../doc/images/w3c_home" y="278px" x="0px">
+        <desc>W3C</desc>
+      </image>
+    </a>
+  </g>
   <g transform="translate(2,2)">
     <image id="backgroundImage" x="0" y="0" width="466" height="349"
            xlink:href="amaya.png">
       <desc>Leading the Web to its full potential</desc>
     </image>
-    <defs>
-      <symbol id="cube">
-        <polygon points="0,0 5,5 5,20 0,15" transform="translate(0,1)"
-                 stroke-width="1"/>
-        <polygon points="0,0 15,0 20,5 5,5" transform="translate(1,0)"
-                 stroke-width="1"/>
-        <rect x="6" y="6" width="15" height="15" stroke-width="1"/>
-      </symbol>
-    </defs>
     <g id="cubes">
       <use x="200" y="112" xlink:href="#cube" style="fill: #0192BF"/>
       <use x="230" y="112" xlink:href="#cube" style="fill: #2B9FC3"/>
