@@ -1,6 +1,5 @@
 /*
-   storage.c : Primitives d'entrees/sorties pour les fichiers binaires
-   (schemas et pivot).
+   Input/output for Thot binary files (schemas and pivot files)
  */
 
 #include "thot_sys.h"
@@ -371,237 +370,228 @@ DocumentIdentifier     Ident;
 /* |    GetDocIdent                                                     | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                GetDocIdent (DocumentIdentifier * Ident, Name NomDoc)
+void                GetDocIdent (DocumentIdentifier * Ident, Name docName)
 #else  /* __STDC__ */
-void                GetDocIdent (Ident, NomDoc)
+void                GetDocIdent (Ident, docName)
 DocumentIdentifier    *Ident;
-Name                 NomDoc;
+Name                 docName;
 
 #endif /* __STDC__ */
 
 {
-   strncpy (*Ident, NomDoc, MAX_DOC_IDENT_LEN);
+   strncpy (*Ident, docName, MAX_DOC_IDENT_LEN);
 }
 
 /* ---------------------------------------------------------------------- */
 /* |    GetDocName                                                      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                GetDocName (DocumentIdentifier Ident, Name NomDoc)
+void                GetDocName (DocumentIdentifier Ident, Name docName)
 #else  /* __STDC__ */
-void                GetDocName (Ident, NomDoc)
+void                GetDocName (Ident, docName)
 DocumentIdentifier     Ident;
-Name                 NomDoc;
+Name                 docName;
 
 #endif /* __STDC__ */
 {
-   strncpy (NomDoc, Ident, MAX_NAME_LENGTH);
+   strncpy (docName, Ident, MAX_NAME_LENGTH);
 }
 
 
 /* ---------------------------------------------------------------------- */
-/* |    OuvrEcr teste le droit d'ecriture du fichier :                  | */
-/* |            - Si le fichier existe, on teste son droit d'ecriture.  | */
-/* |            - Sinon on teste le droit d'ecriture du repertoire.     | */
+/* |     OuvrEcr	returns the write access right for a file	| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-int                 OuvrEcr (char *fichier)
+int                 OuvrEcr (char *fileName)
 #else  /* __STDC__ */
-int                 OuvrEcr (fichier)
-char               *fichier;
+int                 OuvrEcr (fileName)
+char               *fileName;
 
 #endif /* __STDC__ */
 {
    int                 ret, i;
-   char                sauve;
+   char                c;
 
 #ifdef NEW_WILLOWS
-   ret = _access (fichier, 0);
+   ret = _access (fileName, 0);
 #else  /* NEW_WILLOWS */
-   ret = access (fichier, 0);
+   ret = access (fileName, 0);
 #endif /* NEW_WILLOWS */
    if (ret == -1)
+     /* file does not exist */
      {
-	/* Le fichier n'existe pas */
-	/* On recherche le repertoire de creation */
-	i = strlen (fichier);
-	while ((i >= 0) && (fichier[i] != DIR_SEP))
+	/* check its directory */
+	i = strlen (fileName);
+	while ((i >= 0) && (fileName[i] != DIR_SEP))
 	   i--;
 	if (i < 0)
+	   /* no directory name: current directory */
 	   ret = access (".", 2);
-	/* C'est le repertoire courant */
 	else
 	  {
-	     /* On prend le nom du repertoire */
-	     sauve = fichier[i];
-	     fichier[i] = '\0';
-	     ret = access (fichier, 2);
-	     /* On restaure le nom du fichier */
-	     fichier[i] = sauve;
+	     /* isolate the directory name */
+	     c = fileName[i];
+	     fileName[i] = '\0';
+	     /* get access right for the directory */
+	     ret = access (fileName, 2);
+	     fileName[i] = c;
 	  }
      }
    else
-     {
-	/* Le fichier existe */
-	ret = access (fichier, 2);
-	/* Droit d'ecriture */
-     }
+     /* file exists */
+	ret = access (fileName, 2);
    return (ret);
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    ConvertitNombre convertit le nombre nb sous la forme d'une      | */
-/* |    chaine de caracteres et met le resultat dans Chaine.            | */
-/* |    Au retour, lg contient la longueur du nombre converti.          | */
-/* |    Style indique s'il faut convertir en chiffre arabes, en chiffres| */
-/* |    romains ou en lettres.                                          | */
+/* |	ConvertitNombre	converts the value number into a character	| */
+/* |	string according to a given style (arabic, roman, letter).	| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                ConvertitNombre (int nb, CounterStyle Style, char *Chaine, int *lg)
+void                ConvertitNombre (int number, CounterStyle style, char *string, int *len)
 #else  /* __STDC__ */
-void                ConvertitNombre (nb, Style, Chaine, lg)
-int                 nb;
-CounterStyle          Style;
-char               *Chaine;
-int                *lg;
+void                ConvertitNombre (number, style, string, len)
+int                 number;
+CounterStyle        style;
+char               *string;
+int                *len;
 
 #endif /* __STDC__ */
 {
-   int                 n, c, i, debut;
+   int                 c, i, begin;
 
-   n = nb;
-   *lg = 0;
-   if (n < 0)
+   *len = 0;
+   if (number < 0)
      {
-	Chaine[(*lg)++] = '-';
-	n = -n;
+	string[(*len)++] = '-';
+	number = -number;
      }
 
-   switch (Style)
+   switch (style)
 	 {
 	    case CntArabic:
-	       if (n >= 100000)
+	       if (number >= 100000)
 		 {
-		    Chaine[(*lg)++] = '?';
-		    n = n % 100000;
+		    string[(*len)++] = '?';
+		    number = number % 100000;
 		 }
-	       if (n >= 10000)
+	       if (number >= 10000)
 		  c = 5;
-	       else if (n >= 1000)
+	       else if (number >= 1000)
 		  c = 4;
-	       else if (n >= 100)
+	       else if (number >= 100)
 		  c = 3;
-	       else if (n >= 10)
+	       else if (number >= 10)
 		  c = 2;
 	       else
 		  c = 1;
-	       *lg += c;
-	       i = *lg;
+	       *len += c;
+	       i = *len;
 	       do
 		 {
-		    Chaine[i - 1] = (char) ((int) ('0') + n % 10);
+		    string[i - 1] = (char) ((int) ('0') + number % 10);
 		    i--;
-		    n = n / 10;
+		    number = number / 10;
 		 }
-	       while (!(n == 0));
+	       while (!(number == 0));
 	       break;
 	    case CntURoman:
 	    case CntLRoman:
-	       if (n >= 4000)
-		  Chaine[(*lg)++] = '?';
+	       if (number >= 4000)
+		  string[(*len)++] = '?';
 	       else
 		 {
-		    debut = *lg + 1;
-		    while (n >= 1000)
+		    begin = *len + 1;
+		    while (number >= 1000)
 		      {
-			 Chaine[(*lg)++] = 'M';
-			 n -= 1000;
+			 string[(*len)++] = 'M';
+			 number -= 1000;
 		      }
-		    if (n >= 900)
+		    if (number >= 900)
 		      {
-			 Chaine[(*lg)++] = 'C';
-			 Chaine[(*lg)++] = 'M';
-			 n -= 900;
+			 string[(*len)++] = 'C';
+			 string[(*len)++] = 'M';
+			 number -= 900;
 		      }
-		    else if (n >= 500)
+		    else if (number >= 500)
 		      {
-			 Chaine[(*lg)++] = 'D';
-			 n -= 500;
+			 string[(*len)++] = 'D';
+			 number -= 500;
 		      }
-		    else if (n >= 400)
+		    else if (number >= 400)
 		      {
-			 Chaine[(*lg)++] = 'C';
-			 Chaine[(*lg)++] = 'D';
-			 n -= 400;
+			 string[(*len)++] = 'C';
+			 string[(*len)++] = 'D';
+			 number -= 400;
 		      }
-		    while (n >= 100)
+		    while (number >= 100)
 		      {
-			 Chaine[(*lg)++] = 'C';
-			 n -= 100;
+			 string[(*len)++] = 'C';
+			 number -= 100;
 		      }
-		    if (n >= 90)
+		    if (number >= 90)
 		      {
-			 Chaine[(*lg)++] = 'X';
-			 Chaine[(*lg)++] = 'C';
-			 n -= 90;
+			 string[(*len)++] = 'X';
+			 string[(*len)++] = 'C';
+			 number -= 90;
 		      }
-		    else if (n >= 50)
+		    else if (number >= 50)
 		      {
-			 Chaine[(*lg)++] = 'L';
-			 n -= 50;
+			 string[(*len)++] = 'L';
+			 number -= 50;
 		      }
-		    else if (n >= 40)
+		    else if (number >= 40)
 		      {
-			 Chaine[(*lg)++] = 'X';
-			 Chaine[(*lg)++] = 'L';
-			 n -= 40;
+			 string[(*len)++] = 'X';
+			 string[(*len)++] = 'L';
+			 number -= 40;
 		      }
-		    while (n >= 10)
+		    while (number >= 10)
 		      {
-			 Chaine[(*lg)++] = 'X';
-			 n -= 10;
+			 string[(*len)++] = 'X';
+			 number -= 10;
 		      }
-		    if (n >= 9)
+		    if (number >= 9)
 		      {
-			 Chaine[(*lg)++] = 'I';
-			 Chaine[(*lg)++] = 'X';
-			 n -= 9;
+			 string[(*len)++] = 'I';
+			 string[(*len)++] = 'X';
+			 number -= 9;
 		      }
-		    else if (n >= 5)
+		    else if (number >= 5)
 		      {
-			 Chaine[(*lg)++] = 'V';
-			 n -= 5;
+			 string[(*len)++] = 'V';
+			 number -= 5;
 		      }
-		    else if (n >= 4)
+		    else if (number >= 4)
 		      {
-			 Chaine[(*lg)++] = 'I';
-			 Chaine[(*lg)++] = 'V';
-			 n -= 4;
+			 string[(*len)++] = 'I';
+			 string[(*len)++] = 'V';
+			 number -= 4;
 		      }
-		    while (n >= 1)
+		    while (number >= 1)
 		      {
-			 Chaine[(*lg)++] = 'I';
-			 n--;
+			 string[(*len)++] = 'I';
+			 number--;
 		      }
-		    if (Style == CntLRoman)
-		       /* traduit en minuscules */
-		       for (i = debut; i <= *lg; i++)
-			  if (Chaine[i - 1] != '?')
-			     Chaine[i - 1] = (char) ((int) (Chaine[i - 1]) + 32);
+		    if (style == CntLRoman)
+		       /* UPPERCASE --> lowercase */
+		       for (i = begin; i <= *len; i++)
+			  if (string[i - 1] != '?')
+			     string[i - 1] = (char) ((int) (string[i - 1]) + 32);
 		 }
 	       break;
 	    case CntUppercase:
 	    case CntLowercase:
 
-	       if (n > 26)
-		  Chaine[(*lg)++] = '?';
-	       else if (Style == CntUppercase)
-		  Chaine[(*lg)++] = (char) (n + (int) ('@'));
+	       if (number > 26)
+		  string[(*len)++] = '?';
+	       else if (style == CntUppercase)
+		  string[(*len)++] = (char) (number + (int) ('@'));
 	       else
-		  Chaine[(*lg)++] = (char) (n + (int) ('`'));
+		  string[(*len)++] = (char) (number + (int) ('`'));
 	       break;
 	    default:
 	       break;
 	 }
-   Chaine[*lg] = '\0';
+   string[*len] = '\0';
 }
