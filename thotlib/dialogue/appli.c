@@ -905,7 +905,7 @@ void FrameVScrolledGTK (GtkAdjustment *w, int frame)
 	      JumpIntoView (frame, delta);
 	      /* recompute the scroll bars */
 	      UpdateScrollbars (frame);
-	      JumpInProgress = TRUE;
+	      JumpInProgress = FALSE;
 	    }
 #ifndef _GTK
 	}
