@@ -681,10 +681,10 @@ void                TtaInstallMultiKey ()
 
 # ifdef _WINDOWS 
   ptr = TtaGetEnvString ("ENABLE_MULTIKEY");
-  if (ptr != NULL && !ustrcasecmp (ptr, "no"))
-    Enable_Multikey = FALSE;
-  else
+  if (ptr != NULL && !ustrcasecmp (ptr, "yes"))
     Enable_Multikey = TRUE;
+  else
+    Enable_Multikey = FALSE;
    TtaKeyboardMapInstalled = 1;
 # else  /* _WINDOWS */
   KeySym             *keymap;
@@ -701,10 +701,10 @@ void                TtaInstallMultiKey ()
   TtaDisplay = dpy;
   /* check whether multi-key is enabled */
   ptr = TtaGetEnvString ("ENABLE_MULTIKEY");
-  if (ptr != NULL && !ustrcasecmp (ptr, "no"))
-    Enable_Multikey = FALSE;
-  else
+  if (ptr != NULL && !ustrcasecmp (ptr, "yes"))
     Enable_Multikey = TRUE;
+  else
+    Enable_Multikey = FALSE;
 
   /* load the current keyboard mapping */
   XDisplayKeycodes (dpy, &TtaMinKeyCode, &TtaMaxKeyCode);
