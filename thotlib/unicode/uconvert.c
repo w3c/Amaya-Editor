@@ -8,7 +8,7 @@
 /* Unicode Routines
  * Author: R. Guetari (W3C/INRIA)
  */
-
+#include "thot_sys.h"
 #include "uconvert.h"
 
 extern unsigned long offset[6];
