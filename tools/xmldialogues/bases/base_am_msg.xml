@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<base last_update="Fri Feb  9 17:15:26 CET 2001" version="28">
+<base last_update="Thu Feb 22 09:40:19 CET 2001" version="31">
 <control>
 	<language encoding="latin1">en</language>
 	<language encoding="latin1">fr</language>
@@ -1760,21 +1760,29 @@
 	<message xml:lang="en">Access keys</message>
 	<message xml:lang="fr">Accés rapides</message>
 	<message xml:lang="es">Access keys</message>
+	<message xml:lang="de">Zugriffstasten</message>
+	<message xml:lang="it">Chiavi di accesso</message>
 </label>
 <label define="AM_NONE">
 	<message xml:lang="en">Ignore</message>
 	<message xml:lang="fr">Ignorer</message>
 	<message xml:lang="es">Ignorar</message>
+	<message xml:lang="de">Ignorieren</message>
+	<message xml:lang="it">Ignora</message>
 </label>
 <label define="AM_LOCAL_CSS">
 	<message xml:lang="en">Style element</message>
 	<message xml:lang="fr">Elément Style</message>
-	<message xml:lang="es">Elemento Style</message>
+	<message xml:lang="es">Elemento de estilo</message>
+	<message xml:lang="de">Stilelement</message>
+	<message xml:lang="it">Elemento si stile</message>
 </label>
 <label define="AM_NO_XPOINTER">
 	<message xml:lang="en">Cannot create an XPointer</message>
 	<message xml:lang="fr">Impossible de créer un XPointer</message>
-	<message xml:lang="es">No pude crear un XPointer</message>
+	<message xml:lang="es">No puedo crear un XPointer</message>
+	<message xml:lang="de">Kann keinen XPointer erzeugen</message>
+	<message xml:lang="it">No posso create un XPointer</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>
