@@ -583,7 +583,7 @@ void ParseAreaCoords (Element element, Document document)
 	     TtaAttachAttribute (element, attrW, document);
 	  }
 	/* Search the height attribute */
-	attrType.AttrTypeNum = HTML_ATTR_height_;
+	attrType.AttrTypeNum = HTML_ATTR_IntHeightPxl;
 	attrH = TtaGetAttribute (element, attrType);
 	if (attrH == NULL)
 	  {

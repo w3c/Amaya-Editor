@@ -1765,11 +1765,28 @@ ThotBool  ComputeDimRelation (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 		  else if (inLine && pDimAb->DimAbRef == pParentAb
 			   && (pAb->AbLeafType == LtPicture || pAb->AbLeafType == LtCompound))
 		    {
-		      /* inherited from the contents */
-		      pBox->BxContentHeight = TRUE;
-		      pDimAb->DimAbRef = NULL;
-		      pDimAb->DimValue = -1;
-		      pDimAb->DimUnit = UnRelative;
+		      if (pDimAb->DimUnit == UnPercent)
+			{
+			  while (!pParentAb->AbHeight.DimIsPosition &&
+				 pParentAb->AbHeight.DimValue < 0 &&
+				 pParentAb->AbHeight.DimAbRef == NULL &&
+				 pParentAb->AbEnclosing)
+			    pParentAb = pParentAb->AbEnclosing;
+			  GetSizesFrame (frame, &val, &i);
+			  /* inherited from the parent */
+			  val = PixelValue (pDimAb->DimValue, UnPercent, (PtrAbstractBox) i, 0);
+			  /* the rule gives the outside value */
+			  val = val - pBox->BxTMargin - pBox->BxTBorder - pBox->BxTPadding - pBox->BxBMargin - pBox->BxBBorder - pBox->BxBPadding;
+			  InsertDimRelation (pParentAb->AbBox, pBox, pDimAb->DimSameDimension, horizRef);
+			}
+		      else
+			{
+			  /* inherited from the contents */
+			  pBox->BxContentHeight = TRUE;
+			  pDimAb->DimAbRef = NULL;
+			  pDimAb->DimValue = -1;
+			  pDimAb->DimUnit = UnRelative;
+			}
 		    }
 		  else
 		    {

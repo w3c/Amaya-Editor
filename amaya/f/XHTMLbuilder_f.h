@@ -35,6 +35,10 @@ extern void CreateAttrWidthPercentPxl ( char *buffer,
                                         Element el,
                                         Document doc,
                                         int oldWidth );
+extern void CreateAttrHeightPercentPxl ( char *buffer,
+                                         Element el,
+                                         Document doc,
+                                         int oldHeight );
 extern void CreateAttrIntSize ( char *buffer,
                                 Element el,
                                 Document doc );
@@ -80,6 +84,10 @@ extern void CreateAttrWidthPercentPxl (/* char *buffer,
                                           Element el,
                                           Document doc,
                                           int oldWidth */);
+extern void CreateAttrHeightPercentPxl (/* char *buffer,
+                                           Element el,
+                                           Document doc,
+                                           int oldHeight */);
 extern void CreateAttrIntSize (/* char *buffer,
                                   Element el,
                                   Document doc */);

@@ -4992,12 +4992,18 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(AttrName);
 	CreateBefore(AttrValue);
+	END;
+
+ IntHeightPxl:
+	BEGIN
 	if Data_cell
-	   Height: Height_ px min;
+	   Height: IntHeightPxl px min;
         if Heading_cell
-	   Height: Height_ px min;
-        If NOT Data_cell and NOT Heading_cell
-	   Height: Height_ px;
+	   Height: IntHeightPxl px min;
+	if AREA
+	   Height: IntHeightPxl px UserSpecified;
+	if NOT AREA and NOT Data_cell and NOT Heading_cell
+	   Height: IntHeightPxl px;
 	IN Structure_view BEGIN
 	   If PICTURE_UNIT
 	        Height: 0;
@@ -5011,6 +5017,32 @@ ATTRIBUTES
 		Height: Enclosed . Height;
 	   END;
 	END;
+
+ IntHeightPercent:
+	BEGIN
+	Height: Enclosing . Height * IntHeightPercent %;
+	IN Structure_view BEGIN
+	   If NOT PICTURE_UNIT
+	   	Height: Enclosed . Height;
+	   If PICTURE_UNIT
+		Height: 0;
+	   END;
+	IN Alternate_view BEGIN
+	  If Data_cell  BEGIN
+		VertPos : Top = Previous . Bottom;
+		HorizPos: Left = Previous Table_cell . Left + STRUCT_INDENT;
+		Width: Right = Enclosing . Right;
+		END;
+	  If Heading_cell  BEGIN
+		VertPos : Top = Previous . Bottom;
+		HorizPos: Left = Previous Table_cell . Left + STRUCT_INDENT;
+		Width: Right = Enclosing . Right;
+		END;
+	  If NOT Data_cell and NOT Heading_cell
+	   Height: Enclosed . Height;
+	   END;
+	END;
+
 
  hspace:
 	BEGIN
@@ -6226,22 +6258,6 @@ ATTRIBUTES
  	VertPos: Top = Enclosing . Top + y_coord px UserSpecified;
 	IN Structure_view
  	   VertPos: Top = Previous ElementName . Top;
-	END;
-
-  height\240(AREA):
-	BEGIN
-	Height: height\240 px UserSpecified;
-	IN Structure_view
-	   Height: Enclosed . Height;
-	END;
-
-  height\240(Table_row):
-	BEGIN
-	Height: height\240 px min;
-	IN Structure_view
-	   Height: Enclosed . Height;
-	IN Alternate_view
-	   Height: Enclosed . Height;
 	END;
 
   shape:

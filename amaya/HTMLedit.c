@@ -1926,7 +1926,7 @@ void                UpdateAttrID (NotifyAttribute * event)
    CoordsModified  updates x_ccord, y_coord, width, height or      
    polyline according to the new coords value.             
   ----------------------------------------------------------------------*/
-void                CoordsModified (NotifyAttribute * event)
+void CoordsModified (NotifyAttribute * event)
 {
    ParseAreaCoords (event->element, event->document);
 }
@@ -1936,7 +1936,7 @@ void                CoordsModified (NotifyAttribute * event)
    GraphicsModified        updates coords attribute value          
    according to the new coord value.                       
   ----------------------------------------------------------------------*/
-void                GraphicsModified (NotifyAttribute * event)
+void GraphicsModified (NotifyAttribute * event)
 {
    Element             el;
    ElementType         elType;
@@ -1964,10 +1964,20 @@ void                GraphicsModified (NotifyAttribute * event)
 	      TtaSetAttributeText (attr, buffer, el, event->document);
 	      }
 	 }
-       else
+       else if (event->attributeType.AttrTypeNum == HTML_ATTR_IntHeightPxl)
 	 {
 	   UpdateImageMap (el, event->document, -1, OldHeight);
 	   OldHeight = -1;
+	   /* update attribute Height_ */
+	   attrType.AttrSSchema = event->attributeType.AttrSSchema;
+	   attrType.AttrTypeNum = HTML_ATTR_Height_;
+	   attr = TtaGetAttribute (el, attrType);
+	   if (attr)
+	      {
+	      sprintf (buffer, "%d",
+			TtaGetAttributeValue (event->attribute));
+	      TtaSetAttributeText (attr, buffer, el, event->document);
+	      }
 	 }
      }
    else
@@ -1985,7 +1995,7 @@ void                GraphicsModified (NotifyAttribute * event)
 /*----------------------------------------------------------------------
    StoreWidth IntWidthPxl will be changed, store the old value.
   ----------------------------------------------------------------------*/
-ThotBool            StoreWidth (NotifyAttribute * event)
+ThotBool StoreWidth (NotifyAttribute *event)
 {
   ElementType	     elType;
   int                h;
@@ -2001,7 +2011,7 @@ ThotBool            StoreWidth (NotifyAttribute * event)
 /*----------------------------------------------------------------------
    StoreHeight height_ will be changed, store the old value.
   ----------------------------------------------------------------------*/
-ThotBool            StoreHeight (NotifyAttribute * event)
+ThotBool StoreHeight (NotifyAttribute * event)
 {
   ElementType	     elType;
   int                w;
@@ -2016,16 +2026,59 @@ ThotBool            StoreHeight (NotifyAttribute * event)
 }
 
 /*----------------------------------------------------------------------
-   AttrWidthDelete         An attribute Width__ will be deleted.   
-   Delete the corresponding attribute IntWidthPercent or   
-   IntWidthPxl.                                            
+   AttrHeightDelete An attribute Height_ will be deleted.   
+   Delete the corresponding attribute IntHeightPercent or   
+   IntHeightPxl.                                            
   ----------------------------------------------------------------------*/
-ThotBool            AttrWidthDelete (NotifyAttribute * event)
+ThotBool AttrHeightDelete (NotifyAttribute *event)
 {
    AttributeType       attrType;
    Attribute           attr;
 
    StoreHeight (event);
+   attrType = event->attributeType;
+   attrType.AttrTypeNum = HTML_ATTR_IntHeightPxl;
+   attr = TtaGetAttribute (event->element, attrType);
+   if (attr == NULL)
+     {
+	attrType.AttrTypeNum = HTML_ATTR_IntHeightPercent;
+	attr = TtaGetAttribute (event->element, attrType);
+     }
+   if (attr != NULL)
+      TtaRemoveAttribute (event->element, attr, event->document);
+   return FALSE;		/* let Thot perform normal operation */
+}
+
+
+/*----------------------------------------------------------------------
+   AttrHeightModifed  An attribute Height__ has been created or modified.
+   Create the corresponding attribute IntHeightPercent or IntHeightPxl.
+  ----------------------------------------------------------------------*/
+void AttrHeightModified (NotifyAttribute *event)
+{
+  char               *buffer;
+  int                 length;
+
+  length = buflen - 1;
+  buffer = TtaGetMemory (buflen);
+  TtaGiveTextAttributeValue (event->attribute, buffer, &length);
+  CreateAttrHeightPercentPxl (buffer, event->element, event->document,
+			     OldHeight);
+  TtaFreeMemory (buffer);
+  OldHeight = -1;
+}
+
+/*----------------------------------------------------------------------
+   AttrWidthDelete An attribute Width__ will be deleted.   
+   Delete the corresponding attribute IntWidthPercent or   
+   IntWidthPxl.                                            
+  ----------------------------------------------------------------------*/
+ThotBool AttrWidthDelete (NotifyAttribute *event)
+{
+   AttributeType       attrType;
+   Attribute           attr;
+
+   StoreWidth (event);
    attrType = event->attributeType;
    attrType.AttrTypeNum = HTML_ATTR_IntWidthPxl;
    attr = TtaGetAttribute (event->element, attrType);
@@ -2044,7 +2097,7 @@ ThotBool            AttrWidthDelete (NotifyAttribute * event)
    AttrWidthModifed  An attribute Width__ has been created or modified.
    Create the corresponding attribute IntWidthPercent or IntWidthPxl.
   ----------------------------------------------------------------------*/
-void AttrWidthModified (NotifyAttribute * event)
+void AttrWidthModified (NotifyAttribute *event)
 {
   char               *buffer;
   int                 length;
@@ -2062,7 +2115,7 @@ void AttrWidthModified (NotifyAttribute * event)
    an HTML attribute "size" has been created for a Font element.   
    Create the corresponding internal attribute.                    
   ----------------------------------------------------------------------*/
-void AttrFontSizeCreated (NotifyAttribute * event)
+void AttrFontSizeCreated (NotifyAttribute *event)
 {
    char               *buffer = TtaGetMemory (buflen);
    int                 length;
@@ -2144,7 +2197,7 @@ void AttrColorCreated (NotifyAttribute * event)
    an attribute color, TextColor or BackgroundColor is being       
    deleted.                                                        
   ----------------------------------------------------------------------*/
-ThotBool            AttrColorDelete (NotifyAttribute * event)
+ThotBool AttrColorDelete (NotifyAttribute * event)
 {
    if (event->attributeType.AttrTypeNum == HTML_ATTR_BackgroundColor)
       HTMLResetBackgroundColor (event->document, event->element);
@@ -2166,7 +2219,7 @@ ThotBool            AttrColorDelete (NotifyAttribute * event)
    An element List_Item has been created or pasted. Set its        
    IntItemStyle attribute according to its surrounding elements.   
   ----------------------------------------------------------------------*/
-void                ListItemCreated (NotifyElement * event)
+void ListItemCreated (NotifyElement * event)
 {
    SetAttrIntItemStyle (event->element, event->document);
 }
@@ -2175,7 +2228,7 @@ void                ListItemCreated (NotifyElement * event)
    Set the IntItemStyle attribute of all List_Item elements in the 
    el subtree.                                                     
   ----------------------------------------------------------------------*/
-static void         SetItemStyleSubtree (Element el, Document doc)
+static void SetItemStyleSubtree (Element el, Document doc)
 {
    ElementType         elType;
    Element             child;
@@ -2195,7 +2248,7 @@ static void         SetItemStyleSubtree (Element el, Document doc)
    An element Unnumbered_List or Numbered_List has changed type.   
    Set the IntItemStyle attribute for all enclosed List_Items      
   ----------------------------------------------------------------------*/
-void                ListChangedType (NotifyElement * event)
+void ListChangedType (NotifyElement * event)
 {
    SetItemStyleSubtree (event->element, event->document);
 }
@@ -2205,7 +2258,7 @@ void                ListChangedType (NotifyElement * event)
    deleted or modified for a list. Create or updated the           
    corresponding IntItemStyle attribute for all items of the list. 
   ----------------------------------------------------------------------*/
-void                UpdateAttrIntItemStyle (NotifyAttribute * event)
+void UpdateAttrIntItemStyle (NotifyAttribute * event)
 {
    Element             child;
 
@@ -2221,7 +2274,7 @@ void                UpdateAttrIntItemStyle (NotifyAttribute * event)
    An attribute ItemStyle has been created, updated or deleted.    
    Create or update the corresponding IntItemStyle attribute.      
   ----------------------------------------------------------------------*/
-void                AttrItemStyle (NotifyAttribute * event)
+void AttrItemStyle (NotifyAttribute * event)
 {
    Element             el;
 
@@ -2239,7 +2292,7 @@ void                AttrItemStyle (NotifyAttribute * event)
    Prevent Thot from including a global attribute in the menu if the selected
    element does not accept this attribute.
   ----------------------------------------------------------------------*/
-ThotBool            GlobalAttrInMenu (NotifyAttribute * event)
+ThotBool GlobalAttrInMenu (NotifyAttribute * event)
 {
    ElementType         elType;
    char               *attr;

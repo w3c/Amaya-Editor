@@ -206,7 +206,7 @@ void  AttrToSpan (Element elem, Attribute attr, Document doc)
 /*----------------------------------------------------------------------
   GlobalAttrCreated: the user has created a global attribute
   ----------------------------------------------------------------------*/
-void                GlobalAttrCreated (NotifyAttribute * event)
+void GlobalAttrCreated (NotifyAttribute * event)
 {
    /* if the attribute is on a text string, create a SPAN element that encloses
       this text string and move the attribute to that SPAN element */
@@ -216,7 +216,7 @@ void                GlobalAttrCreated (NotifyAttribute * event)
 /*----------------------------------------------------------------------
   GlobalAttrDeleted: the user has removed a global attribute
   ----------------------------------------------------------------------*/
-void                GlobalAttrDeleted (NotifyAttribute * event)
+void GlobalAttrDeleted (NotifyAttribute * event)
 {
    Element	firstChild, lastChild;
 
@@ -229,7 +229,7 @@ void                GlobalAttrDeleted (NotifyAttribute * event)
   AttrClassChanged: the user has created removed or modified a Class
   attribute
   ----------------------------------------------------------------------*/
-void                AttrClassChanged (NotifyAttribute * event)
+void AttrClassChanged (NotifyAttribute * event)
 {
    Element	firstChild, lastChild;
 
@@ -292,7 +292,7 @@ void MovePRule (PRule presRule, Element fromEl, Element toEl, Document doc,
 /*----------------------------------------------------------------------
   SetStyleAttribute.
   ----------------------------------------------------------------------*/
-void                SetStyleAttribute (Document doc, Element elem)
+void SetStyleAttribute (Document doc, Element elem)
 {
    AttributeType       attrType;
    Attribute           styleAttr;
@@ -366,7 +366,7 @@ void                SetStyleAttribute (Document doc, Element elem)
   A specific PRule will be created or modified by the user for
   a given element. (pre-event)
   ----------------------------------------------------------------------*/
-ThotBool            ChangePRule (NotifyPresentation * event)
+ThotBool ChangePRule (NotifyPresentation *event)
 {
   ElementType	     elType, parentType;
   Element	     el, span, body, root, parent;
@@ -539,7 +539,7 @@ ThotBool            ChangePRule (NotifyPresentation * event)
 		      {
 			attr = TtaNewAttribute (attrType);
 			TtaAttachAttribute (el, attr, doc);
-		        TtaSetAttributeValue (attr, value, el, doc);
+			TtaSetAttributeText (attr, buffer, el, doc);
 			TtaRegisterAttributeCreate (attr, el, doc);
 		      }
 		    else
@@ -547,10 +547,9 @@ ThotBool            ChangePRule (NotifyPresentation * event)
 			TtaRegisterAttributeReplace (attr, el, doc);
 		        TtaSetAttributeValue (attr, value, el, doc);
 		      }
-		    /* update the associated map */
-		    if (elType.ElTypeNum == HTML_EL_PICTURE_UNIT)
-		      UpdateImageMap (el, doc, -1, h);
+		    CreateAttrHeightPercentPxl (buffer, el, doc, h);
 		  }
+		TtaSetDocumentModified (doc);
 		return TRUE; /* don't let Thot perform normal operation */
 	      }
 	    else if (IsCharacterLevelElement (el)
@@ -602,7 +601,7 @@ ThotBool            ChangePRule (NotifyPresentation * event)
   A specific PRule has been deleted by the user for a given element
   (post-event)
   ----------------------------------------------------------------------*/
-void                PRuleDeleted (NotifyPresentation * event)
+void PRuleDeleted (NotifyPresentation * event)
 {
   /* set the Style_ attribute ? */
   SetStyleAttribute (event->document, event->element);

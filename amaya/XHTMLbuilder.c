@@ -953,9 +953,8 @@ void              XhtmlTypeAttrValue (char       *val,
    Create the corresponding attribute IntWidthPercent or IntWidthPxl.
    oldWidth is -1 or the old image width.
   ----------------------------------------------------------------------*/
-void              CreateAttrWidthPercentPxl (char *buffer, Element el,
-					     Document doc, int oldWidth)
-
+void CreateAttrWidthPercentPxl (char *buffer, Element el,
+				Document doc, int oldWidth)
 {
   AttributeType   attrTypePxl, attrTypePercent;
   Attribute       attrOld, attrNew;
@@ -1034,6 +1033,94 @@ void              CreateAttrWidthPercentPxl (char *buffer, Element el,
     }
   if (isImage)
     UpdateImageMap (el, doc, oldWidth, -1);
+}
+
+/*----------------------------------------------------------------------
+   CreateAttrHeightPercentPxl
+   an HTML attribute "width" has been created for a Table of a HR.
+   Create the corresponding attribute IntHeightPercent or IntHeightPxl.
+   oldHeight is -1 or the old image width.
+  ----------------------------------------------------------------------*/
+void CreateAttrHeightPercentPxl (char *buffer, Element el,
+				Document doc, int oldHeight)
+{
+  AttributeType   attrTypePxl, attrTypePercent;
+  Attribute       attrOld, attrNew;
+  int             length, val;
+  char            msgBuffer[MaxMsgLength];
+  ElementType	  elType;
+  int             w, h;
+  ThotBool        isImage;
+
+  elType = TtaGetElementType (el);
+  isImage = (elType.ElTypeNum == HTML_EL_PICTURE_UNIT ||
+	     elType.ElTypeNum == HTML_EL_Data_cell ||
+	     elType.ElTypeNum == HTML_EL_Heading_cell);
+
+  /* remove trailing spaces */
+  length = strlen (buffer) - 1;
+  while (length > 0 && buffer[length] <= SPACE)
+    length--;
+  attrTypePxl.AttrSSchema = TtaGetDocumentSSchema (doc);
+  attrTypePercent.AttrSSchema = TtaGetDocumentSSchema (doc);
+  attrTypePxl.AttrTypeNum = HTML_ATTR_IntHeightPxl;
+  attrTypePercent.AttrTypeNum = HTML_ATTR_IntHeightPercent;
+  /* is the last character a '%' ? */
+  if (buffer[length] == '%')
+    {
+      /* remove IntHeightPxl */
+      attrOld = TtaGetAttribute (el, attrTypePxl);
+      /* update IntHeightPercent */
+      attrNew = TtaGetAttribute (el, attrTypePercent);
+      if (attrNew == NULL)
+	{
+	  attrNew = TtaNewAttribute (attrTypePercent);
+	  TtaAttachAttribute (el, attrNew, doc);
+	}
+      else if (isImage && oldHeight == -1)
+	{
+	  if (attrOld == NULL)
+	    oldHeight = TtaGetAttributeValue (attrNew);
+	  else
+	    oldHeight = TtaGetAttributeValue (attrOld);
+	}
+    }
+  else
+    {
+      /* remove IntHeightPercent */
+      attrOld = TtaGetAttribute (el, attrTypePercent);
+      /* update IntHeightPxl */
+      attrNew = TtaGetAttribute (el, attrTypePxl);
+      if (attrNew == NULL)
+	{
+	  attrNew = TtaNewAttribute (attrTypePxl);
+	  TtaAttachAttribute (el, attrNew, doc);
+	}
+      else if (isImage && oldHeight == -1)
+	{
+	  TtaGiveBoxSize (el, doc, 1, UnPixel, &w, &h);
+	  if (attrOld == NULL)
+	    oldHeight = w * TtaGetAttributeValue (attrNew) / 100;
+	  else
+	    oldHeight = w * TtaGetAttributeValue (attrOld) / 100;	  
+	}
+    }
+
+  if (attrOld != NULL)
+    TtaRemoveAttribute (el, attrOld, doc);
+  if (sscanf (buffer, "%d", &val))
+    TtaSetAttributeValue (attrNew, val, el, doc);
+  else
+    /* its not a number. Delete attribute and send an error message */
+    {
+    TtaRemoveAttribute (el, attrNew, doc);
+    if (strlen (buffer) > MaxMsgLength - 30)
+        buffer[MaxMsgLength - 30] = EOS;
+    sprintf (msgBuffer, "Invalid attribute value \"%s\"", buffer);
+    HTMLParseError (doc, msgBuffer);
+    }
+  if (isImage)
+    UpdateImageMap (el, doc, oldHeight, -1);
 }
 
 /*----------------------------------------------------------------------
@@ -1319,6 +1406,11 @@ void EndOfHTMLAttributeValue (char *attrValue,
 	/* create the corresponding attribute IntWidthPercent or */
 	/* IntWidthPxl */
 	CreateAttrWidthPercentPxl (attrValue, lastAttrElement, context->doc, -1);
+      else if (lastMappedAttr->ThotAttribute == HTML_ATTR_Height_)
+	/* HTML attribute "width" for a table or a hr */
+	/* create the corresponding attribute IntHeightPercent or */
+	/* IntHeightPxl */
+	CreateAttrHeightPercentPxl (attrValue, lastAttrElement, context->doc, -1);
       else if (!strcmp (lastMappedAttr->XMLattribute, "size"))
 	{
 	  TtaGiveAttributeType (currentAttribute, &attrType, &attrKind);

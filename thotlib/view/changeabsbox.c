@@ -3546,7 +3546,12 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 			    }
 			  if (!sameType)
 			    pR = NULL;
-			  else if (pR->PrViewNum == viewSch)
+			  else if (pR->PrViewNum == viewSch &&
+				   (!pR->PrCond ||
+				    CondPresentation (pR->PrCond, pEl, pAttr,
+						      pElAttr, viewSch,
+						      pAttr->AeAttrSSchema, pDoc)))
+			    /* and conditions match too */
 			    stop = TRUE;
 			  else
 			    pR = pR->PrNextPRule;
@@ -3556,11 +3561,10 @@ void                UpdatePresAttr (PtrElement pEl, PtrAttribute pAttr,
 		      if (pR == NULL)
 			pR = pRuleView1;
 		    }
-		  if (pR && pR->PrCond &&
+		      /*if (pR && pR->PrCond &&
 		      !CondPresentation (pR->PrCond, pEl, pAttr, pElAttr,
 					 viewSch, pAttr->AeAttrSSchema, pDoc))
-		    /* due to conditions the rule doesn't apply */
-		    pR = NULL;
+					 pR = NULL;*/
 		}
 	      else
 		pR = NULL;

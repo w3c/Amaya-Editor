@@ -252,7 +252,7 @@ FrameSrc: src
 Border1: 1
 Border0: 0
 no_resize: noresize
-height\240: height
+IntHeightPxl: height
 justify_: justify
 NoShade_: noshade
 Top_: top

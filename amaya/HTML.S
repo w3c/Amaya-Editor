@@ -144,9 +144,10 @@ STRUCT
 	PICTURE							{ IMG }
 	    (ATTR SRC = Text; ALT = Text; longdesc = Text;
 		{ src         alt         longdesc }
-		  Height_ = Integer; Width__ = Text;
+		  Height_ = Text; Width__ = Text;
 		{ height             width }
 		  IntWidthPercent = Integer; IntWidthPxl = Integer;
+		  IntHeightPercent = Integer; IntHeightPxl = Integer;
 		  USEMAP = Text; ISMAP = Yes_;
 		{ usemap         ismap }
 		 IsInput = Yes_;    NAME = Text;
@@ -169,6 +170,7 @@ STRUCT
 		  Height_; Width__;
 		{ height   width }
 		  IntWidthPercent; IntWidthPxl;
+		  IntHeightPercent; IntHeightPxl;
 		  USEMAP; ISMAP;
 		{ usemap  ismap }
 		 IsInput;    NAME;
@@ -340,7 +342,8 @@ STRUCT
 	 { codebase         archive         code }
 	   object = Text; alt = Text; applet_name = Text;
 	 { object         alt         name }
-	   Width__; Height_; IntWidthPercent; IntWidthPxl;
+	   Width__; IntWidthPercent; IntWidthPxl;
+           Height_; IntHeightPercent; IntHeightPxl;
 	 { width    height }
 	   Alignment; hspace; vspace) =
 	 { align      hspace  vspace }
@@ -364,7 +367,9 @@ STRUCT
 	 { data         type }
 	   codetype = Text; archive; standby = Text;
          { codetype         archive  standby }
-	   !Height_; !Width__; IntWidthPercent; IntWidthPxl; 
+	   !Height_; !Width__;
+	   IntWidthPercent; IntWidthPxl; 
+           IntHeightPercent; IntHeightPxl;
 	 {  height    width }
 	   USEMAP; NAME; tabindex; Alignment; Img_border;
 	 { usemap  name  tabindex  align      border }
@@ -374,8 +379,8 @@ STRUCT
 	PICTURE;
 	Object_Content = LIST OF (CASE OF Element; Parameter; END);
 						 { PARAM }
-	END with Height_ ?= 400, Width__ ?= '400',
-		 IntWidthPxl ?= 400;
+	END with Height_ ?= '400', Width__ ?= '400',
+		 IntWidthPxl ?= 400, IntHeightPxl ?= 400;
 
   INS								{ INS }
      (ATTR cite; datetime = Text; InternalLink; ExternalLink) =
@@ -660,7 +665,7 @@ STRUCT
 	 { char	        charoff }
 	   Row_valign = Row_top, Row_middle, Row_bottom, Row_baseline;
 	 { valign       top      middle      bottom      baseline }
-	   BackgroundColor; height\240 = Integer) =
+	   BackgroundColor; IntHeightPxl) =
 	 { bgcolor          Special attribute to control row span }
 	LIST OF (Table_cell);
 
@@ -733,7 +738,8 @@ STRUCT
 	 { valign        top       middle       bottom       baseline }
            No_wrap = no_wrap; BackgroundColor;
 	 { nowrap             bgcolor }
-	   Width__; Height_; IntWidthPxl; IntWidthPercent) =
+	   Width__; IntWidthPxl; IntWidthPercent;
+	   Height_;  IntHeightPercent; IntHeightPxl;) =
 	 { width    height }
 	LIST OF (Element);
 
@@ -747,7 +753,8 @@ STRUCT
 	 { align       char  charoff  valign }
 	   No_wrap; BackgroundColor;
 	 { nowrap   bgcolor }
-	   Width__; Height_; IntWidthPxl; IntWidthPercent) =
+	   Width__; IntWidthPxl; IntWidthPercent;
+	   Height_;  IntHeightPercent; IntHeightPxl) =
 	 { width    height }
 	LIST OF (Element);
 
@@ -777,9 +784,9 @@ STRUCT
 	   tabindex; accesskey; onfocus; onblur;
 	 { tabindex  accesskey  onfocus  onblur }
 	   x_coord = Integer; y_coord = Integer; IntWidthPxl;
-           height\240; AreaRef_IMG = REFERENCE(Any)) =
+           IntWidthPxl; AreaRef_IMG = REFERENCE(Any)) =
 	GRAPHICS with x_coord ?= 0, y_coord ?= 0,
-		      IntWidthPxl ?= 25, height\240 ?= 10;
+		      IntWidthPxl ?= 25, IntWidthPxl ?= 10;
 
   FRAMESET							{ FRAMESET }
      (ATTR RowHeight = Text; ColWidth = Text;
@@ -900,6 +907,8 @@ EXCEPT
 	InternalLink:	Invisible;
 	IntWidthPercent:NewPercentWidth, Invisible;
 	IntWidthPxl:	NewWidth, Invisible;
+	IntHeightPercent: Invisible;
+	IntHeightPxl:	NewHeight, Invisible;
 	IntItemStyle:	Invisible;
 	IntSizeIncr:	Invisible;
 	IntSizeDecr:	Invisible;
@@ -907,7 +916,6 @@ EXCEPT
 	IsInput:	Invisible;
 	x_coord:	Invisible, NewHPos;
 	y_coord:	Invisible, NewVPos;
-	height\240:	Invisible, NewHeight;
 	Ref_IMG:	Invisible;
 	AreaRef_IMG:	Invisible;
 	Invalid_attribute: Invisible;

@@ -155,13 +155,31 @@ ATTRIBUTES
       	AttrModify.Post -> GraphicsModified;
      	END;
 
+   Width__:
+	BEGIN
+	AttrCreate.Pre -> StoreWidth;
+	AttrCreate.Post -> AttrWidthModified;
+	AttrModify.Pre -> StoreWidth;
+	AttrModify.Post -> AttrWidthModified;
+	AttrDelete.Pre ->  AttrWidthDelete;	
+	END;
+
    IntWidthPxl:
    	BEGIN
 	AttrModify.Pre -> StoreWidth;
    	AttrModify.Post -> GraphicsModified;
     	END;
+   
+   Height_:
+   	BEGIN
+	AttrCreate.Pre -> StoreHeight;
+	AttrCreate.Post -> GraphicsModified;
+	AttrModify.Pre -> StoreHeight;
+	AttrModify.Post -> AttrHeightModified;
+	AttrDelete.Pre ->  AttrHeightDelete;	
+   	END;
     
-   height\240:
+   IntHeightPxl:
    	BEGIN
 	AttrModify.Pre -> StoreHeight;
    	AttrModify.Post -> GraphicsModified;
@@ -189,24 +207,6 @@ ATTRIBUTES
 	BEGIN
 	AttrMenu.Pre ->    AttrNAMEinMenu;
 	AttrExport.Pre ->  CheckValidID;	
-	END;
-    
-   Height_:
-   	BEGIN
-	AttrCreate.Pre -> StoreHeight;
-	AttrCreate.Post -> GraphicsModified;
-	AttrModify.Pre -> StoreHeight;
-   	AttrModify.Post -> GraphicsModified;
-	AttrDelete.Pre -> StoreHeight;
-   	END;
-
-   Width__:
-	BEGIN
-	AttrCreate.Pre -> StoreWidth;
-	AttrCreate.Post -> AttrWidthModified;
-	AttrModify.Pre -> StoreWidth;
-	AttrModify.Post -> AttrWidthModified;
-	AttrDelete.Pre ->  AttrWidthDelete;	
 	END;
 
    Font_size:

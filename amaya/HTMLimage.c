@@ -229,7 +229,7 @@ void SetAreaCoords (Document document, Element element, int attrNum)
 	if (attrW == NULL)
 	   return;
 	/* Search the height attribute */
-	attrType.AttrTypeNum = HTML_ATTR_height_;
+	attrType.AttrTypeNum = HTML_ATTR_IntHeightPxl;
 	attrH = TtaGetAttribute (element, attrType);
 	if (attrH == NULL)
 	   return;
@@ -298,7 +298,7 @@ void SetAreaCoords (Document document, Element element, int attrNum)
 	  {
 	     /* to make a circle, height and width have to be equal */
 	     if ((attrNum == 0 && x2 > y2) ||
-		 attrNum == HTML_ATTR_height_)
+		 attrNum == HTML_ATTR_IntHeightPxl)
 	       {
 		 /* we need to update the width */
 		 w = y2;
@@ -485,7 +485,7 @@ void UpdateImageMap (Element image, Document doc, int oldWidth, int oldHeight)
 			      val = val + (val * deltay / 100);
 			      TtaSetAttributeValue (attr, val, el, doc);
 			      /* Search the height attribute */
-			      attrType.AttrTypeNum = HTML_ATTR_height_;
+			      attrType.AttrTypeNum = HTML_ATTR_IntHeightPxl;
 			      attr = TtaGetAttribute (el, attrType);
 			      val = TtaGetAttributeValue (attr);
 			      val = val + (val * deltay / 100);
@@ -502,7 +502,7 @@ void UpdateImageMap (Element image, Document doc, int oldWidth, int oldHeight)
 			SetAreaCoords (doc, el, HTML_ATTR_IntWidthPxl);
 		      else
 			/* only height */
-			SetAreaCoords (doc, el, HTML_ATTR_height_);
+			SetAreaCoords (doc, el, HTML_ATTR_IntHeightPxl);
 		    }
 	       }
 	     TtaNextSibling (&el);

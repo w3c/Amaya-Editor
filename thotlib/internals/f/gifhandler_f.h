@@ -11,7 +11,7 @@ extern unsigned char *ReadGIF ( FILE *fd,
                                 int *h,
                                 int *ncolors,
                                 int *cpp,
-                                ThotColorStruct colrs[512] );
+                                ThotColorStruct *colrs );
 extern int ReadColorMap ( FILE *fd,
                           int number,
                           unsigned char buffer[3][256 ] );
@@ -87,7 +87,7 @@ extern unsigned char *ReadGIF (/* FILE *fd,
                                   int *h,
                                   int *ncolors,
                                   int *cpp,
-                                  ThotColorStruct colrs[512] */);
+                                  ThotColorStruct *colrs */);
 extern int ReadColorMap (/* FILE *fd,
                             int number,
                             unsigned char buffer[3][256 ] */);
