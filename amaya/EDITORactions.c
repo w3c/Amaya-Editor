@@ -133,7 +133,7 @@ int          docType;
   s = TtaWCSdup (url);
   TtaSetTextZone (doc, 1, 1, url);
   DocumentURLs[doc] = s;
-  DocumentMeta[doc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
+  DocumentMeta[doc] = DocumentMetaDataAlloc ();
   DocumentMeta[doc]->form_data = NULL;
   DocumentMeta[doc]->initial_url = NULL;
   DocumentMeta[doc]->method = CE_ABSOLUTE;

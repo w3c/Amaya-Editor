@@ -85,9 +85,7 @@ Document ANNOT_NewDocument (doc)
       if (DocumentURLs[annotDoc])
 	TtaFreeMemory (DocumentURLs[annotDoc]);
       DocumentURLs[annotDoc] = fname;
-      DocumentMeta[annotDoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
-      DocumentMeta[annotDoc]->form_data = NULL;
-      DocumentMeta[annotDoc]->initial_url = NULL;
+      DocumentMeta[annotDoc] = DocumentMetaDataAlloc ();
       DocumentMeta[annotDoc]->method = CE_ABSOLUTE;
       DocumentSource[annotDoc] = 0;
 

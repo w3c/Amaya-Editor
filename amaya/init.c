@@ -278,6 +278,23 @@ typedef enum
 TypeBrowserFile WidgetParent;
 
 /*----------------------------------------------------------------------
+   DocumentMetaDataAlloc
+   Creates a DocumentMeta element and initializes it to its default
+   values.
+  ----------------------------------------------------------------------*/
+DocumentMetaDataElement *   DocumentMetaDataAlloc (void)
+{
+  DocumentMetaDataElement *me;
+
+  me = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
+  memset ((void *) me, 0, sizeof (DocumentMetaDataElement));
+  me->method = CE_ABSOLUTE;
+  me->put_default_name = FALSE;
+
+  return (me);
+}
+
+/*----------------------------------------------------------------------
    DocumentMetaClear
    Clears the dynamically allocated memory associated to a metadata
    element. Doesn't free the element or clears any of its other elements.
@@ -2464,7 +2481,7 @@ static Document  LoadDocument (Document doc, char *pathname,
       if (DocumentMeta[newdoc] != NULL)
 	DocumentMetaClear (DocumentMeta[newdoc]);
       else
-	DocumentMeta[newdoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
+	DocumentMeta[newdoc] = DocumentMetaDataAlloc ();
       DocumentMeta[newdoc]->form_data = TtaWCSdup (form_data);
       if (initial_url && strcmp (pathname, initial_url))
 	DocumentMeta[newdoc]->initial_url = TtaWCSdup (initial_url);
@@ -2934,7 +2951,7 @@ void                ShowSource (Document document, View view)
 	 DocumentSource[document] = sourceDoc;
 	 s = TtaWCSdup (DocumentURLs[document]);
 	 DocumentURLs[sourceDoc] = s;
-	 DocumentMeta[sourceDoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
+	 DocumentMeta[sourceDoc] = DocumentMetaDataAlloc ();
 	 DocumentMeta[sourceDoc]->form_data = NULL;
 	 DocumentMeta[sourceDoc]->initial_url = NULL;
 	 DocumentMeta[sourceDoc]->method = CE_ABSOLUTE;
@@ -3275,7 +3292,7 @@ void GetHTMLDocument_callback (int newdoc, int status, char *urlName, char *outp
 	       if (DocumentMeta[newdoc])
 		   DocumentMetaClear (DocumentMeta[(int) newdoc]);
 	       else
-		 DocumentMeta[newdoc] = (DocumentMetaDataElement *) TtaGetMemory (sizeof (DocumentMetaDataElement));
+		 DocumentMeta[newdoc] = DocumentMetaDataAlloc ();
 	       DocumentMeta[newdoc]->form_data = TtaWCSdup (form_data);
 	       if (strcmp (pathname, initial_url))
 		 DocumentMeta[newdoc]->initial_url = TtaWCSdup (initial_url);

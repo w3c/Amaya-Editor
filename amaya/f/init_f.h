@@ -6,6 +6,7 @@
 #ifndef __CEXTRACT__
 #ifdef __STDC__
 
+extern DocumentMetaDataElement * DocumentMetaDataAlloc ( void );
 extern void DocumentMetaClear ( DocumentMetaDataElement *me );
 extern void DocumentInfo ( Document document,
                            View view );
@@ -171,6 +172,7 @@ extern void AmayaClose ( Document document,
 
 #else /* __STDC__ */
 
+extern DocumentMetaDataElement * DocumentMetaDataAlloc (/* void */);
 extern void DocumentMetaClear (/* DocumentMetaDataElement *me */);
 extern void DocumentInfo (/* Document document,
                              View view */);
