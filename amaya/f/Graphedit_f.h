@@ -11,6 +11,7 @@ extern void AddGraphicsButton ( Document doc,
 extern void SwitchIconGraph ( Document doc,
                               View view,
                               ThotBool state );
+extern void SVGCreated ( NotifyElement * event );
 
 #else /* __STDC__ */
 
@@ -19,6 +20,7 @@ extern void AddGraphicsButton (/* Document doc,
 extern void SwitchIconGraph (/* Document doc,
                                 View view,
                                 ThotBool state */);
+extern void SVGCreated (/* NotifyElement * event */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

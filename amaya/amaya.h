@@ -313,7 +313,7 @@ THOT_EXPORT ThotBool     SelectionInSup;
 THOT_EXPORT ThotBool     SelectionInQuote;
 THOT_EXPORT ThotBool     SelectionInBDO;
 THOT_EXPORT ThotBool     HTMLErrorsFound;
-
+THOT_EXPORT ThotBool     XMLabort;
 typedef enum
 {
   docHTML,

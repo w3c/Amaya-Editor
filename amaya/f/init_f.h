@@ -37,7 +37,8 @@ extern void InitConfirm3L ( Document document,
                             View view,
                             CHAR_T *label1,
                             CHAR_T *label2,
-                            CHAR_T *label3 );
+                            CHAR_T *label3,
+                            ThotBool withCancel );
 extern void InitConfirm ( Document document,
                           View view,
                           CHAR_T* label );
@@ -187,7 +188,8 @@ extern void InitConfirm3L (/* Document document,
                               View view,
                               CHAR_T *label1,
                               CHAR_T *label2,
-                              CHAR_T *label3 */);
+                              CHAR_T *label3,
+                              ThotBool withCancel */);
 extern void InitConfirm (/* Document document,
                             View view,
                             CHAR_T* label */);

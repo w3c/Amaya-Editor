@@ -1333,7 +1333,7 @@ ThotBool            use_preconditions;
       if (confirm)
 	{
 	  InitConfirm3L (document, view, msg, AmayaLastHTTPErrorMsg, 
-			 TtaGetMessage (AMAYA, AM_SAVE_DISK));
+			 TtaGetMessage (AMAYA, AM_SAVE_DISK), TRUE);
 	  if (UserAnswer)
 	    res = -1;
 	  else
@@ -1483,7 +1483,7 @@ ThotBool         use_preconditions;
 		    url);
 	  if (confirm)
 	    {
-	      InitConfirm3L (doc, view, msg, AmayaLastHTTPErrorMsg, NULL);
+	      InitConfirm3L (doc, view, msg, AmayaLastHTTPErrorMsg, NULL, TRUE);
 	      if (UserAnswer)
 		res = -1;
 	      else
@@ -1515,7 +1515,7 @@ ThotBool         use_preconditions;
 		  usprintf (msg, TEXT("%s %s"),
 			    TtaGetMessage (AMAYA, AM_URL_SAVE_FAILED),
 			    pImage->originalName);
-		  InitConfirm3L (doc, view, msg, AmayaLastHTTPErrorMsg, NULL);
+		  InitConfirm3L (doc, view, msg, AmayaLastHTTPErrorMsg, NULL, TRUE);
 		  /* erase the last status message */
 		  TtaSetStatus (doc, view, TEXT(""), NULL);
 		  if (UserAnswer)

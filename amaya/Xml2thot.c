@@ -174,7 +174,6 @@ static ThotBool	    XMLrootClosed = FALSE;
 static STRING	    XMLrootClosingTag = NULL;
 static int	    XMLrootLevel = 0;
 static ThotBool	    lastTagRead = FALSE;
-static ThotBool     XMLabort = FALSE;
 
 /* maximum size of error messages */
 #define MaxMsgLength 200
@@ -3258,7 +3257,6 @@ ThotBool   withDoctype;
    char         tmp2Buffer[COPY_BUFFER_SIZE];
    UCHAR_T      charRead; 
    CHAR_T      *ptr;
-   STRING       profile;
    int          res;
    int          tmplen;
    ThotBool     endOfFile = FALSE;
@@ -3330,20 +3328,6 @@ ThotBool   withDoctype;
      {
        fclose (ErrFile);
        ErrFile = NULL;
-       if (XMLabort)
-	 {
-	   profile = TtaGetEnvString ("Profile");
-	   if (!profile)
-	     profile = TEXT("");
-	   InitConfirm3L (XMLcontext.doc, 1, TtaGetMessage (AMAYA, AM_XML_PROFILE), TtaGetMessage (AMAYA, AM_XML_ERROR), profile);
-	 }
-       else if (HTMLErrorsFound)
-	 {
-	   profile = TtaGetEnvString ("Profile");
-	   if (!profile)
-	     profile = TEXT("");
-	   InitConfirm3L (XMLcontext.doc, 1, TtaGetMessage (AMAYA, AM_XML_PROFILE), TtaGetMessage (AMAYA, AM_XML_WARNING), profile);
-	 }
      } 
 }
 
@@ -3547,7 +3531,7 @@ Document            doc;
 
 	while (elem != NULL && elem != rootElement)
 	  {
-	     ustrcpy (tag, GITagNameByType (TtaGetElementType (elem)));
+	     ustrcpy (tag, GetXMLElementName (TtaGetElementType (elem), doc));
 	     if (ustrcmp (tag, TEXT("???")))
 	       {
 		  for (i = stackLevel; i > 0; i--)
@@ -3794,10 +3778,11 @@ ThotBool    withDoctype;
   CHAR_T*         s;
   CHAR_T          tempname[MAX_LENGTH];
   CHAR_T          temppath[MAX_LENGTH];
+  STRING          profile;
+  char            www_file_name[MAX_LENGTH];
   int             length, error;
   ThotBool        isXHTML;
   ThotBool        isANNOT = FALSE;
-  char            www_file_name[MAX_LENGTH];
 
   XMLcontext.doc = doc;
   XMLcontext.lastElement = NULL;
@@ -3954,6 +3939,25 @@ ThotBool    withDoctype;
     }
    TtaSetDocumentUnmodified (doc);
    XMLcontext.doc = 0;
+
+   /* display a warning if an error was found */
+   if (XMLabort)
+     {
+       profile = TtaGetEnvString ("Profile");
+       if (!profile)
+	 profile = TEXT("");
+       InitConfirm3L (XMLcontext.doc, 1, TtaGetMessage (AMAYA, AM_XML_PROFILE),
+		      profile, TtaGetMessage (AMAYA, AM_XML_ERROR), FALSE);
+       HTMLErrorsFound = TRUE;
+     }
+   else if (HTMLErrorsFound)
+     {
+       profile = TtaGetEnvString ("Profile");
+       if (!profile)
+	 profile = TEXT("");
+       InitConfirm3L (XMLcontext.doc, 1, TtaGetMessage (AMAYA, AM_XML_PROFILE),
+		      profile, TtaGetMessage (AMAYA, AM_XML_WARNING), FALSE);
+     }
 }
 
 /* end of module */

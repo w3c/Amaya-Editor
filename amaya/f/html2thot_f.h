@@ -10,8 +10,6 @@ extern STRING SkipSep ( STRING ptr );
 extern STRING SkipInt ( STRING ptr );
 extern void ParseAreaCoords ( Element element,
                               Document document );
-extern CHAR_T* GITagNameByType ( ElementType elType );
-extern CHAR_T* GITagName ( Element elem );
 extern int MapThotAttr ( CHAR_T* Attr,
                          CHAR_T* tag );
 extern void InitMapping ( void );
@@ -77,8 +75,6 @@ extern STRING SkipSep (/* STRING ptr */);
 extern STRING SkipInt (/* STRING ptr */);
 extern void ParseAreaCoords (/* Element element,
                                 Document document */);
-extern CHAR_T* GITagNameByType (/* ElementType elType */);
-extern CHAR_T* GITagName (/* Element elem */);
 extern int MapThotAttr (/* CHAR_T* Attr,
                            CHAR_T* tag */);
 extern void InitMapping (/* void */);

@@ -18,13 +18,15 @@ extern void MapXMLElementType ( int XMLtype,
                                 STRING *mappedName,
                                 CHAR_T *content,
                                 Document doc );
-extern void GetXMLElementName ( ElementType elType,
-                                CHAR_T** buffer );
+extern CHAR_T* GetXMLElementName ( ElementType elType,
+                                   Document doc );
 extern int MapXMLAttribute ( int XMLtype,
                              CHAR_T *attrName,
                              CHAR_T *elementName,
                              Document doc,
                              int *thotType );
+extern CHAR_T* GetXMLAttributeName ( AttributeType attrType,
+                                     Document doc );
 
 #else /* __STDC__ */
 
@@ -40,13 +42,15 @@ extern void MapXMLElementType (/* int XMLtype,
                                   STRING *mappedName,
                                   CHAR_T *content,
                                   Document doc */);
-extern void GetXMLElementName (/* ElementType elType,
-                                  CHAR_T** buffer */);
+extern CHAR_T* GetXMLElementName (/* ElementType elType,
+                                     Document doc */);
 extern int MapXMLAttribute (/* int XMLtype,
                                CHAR_T *attrName,
                                CHAR_T *elementName,
                                Document doc,
                                int *thotType */);
+extern CHAR_T* GetXMLAttributeName (/* AttributeType attrType,
+                                       Document doc */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

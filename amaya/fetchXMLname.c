@@ -212,11 +212,11 @@ Document           doc;
    a given Thot type.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void              GetXMLElementName (ElementType elType, CHAR_T** buffer)
+CHAR_T*           GetXMLElementName (ElementType elType, Document doc)
 #else
-void              GetXMLElementName (elType, buffer)
+CHAR_T*           GetXMLElementName (elType, doc)
 ElementType       elType;
-CHAR_T**          buffer;
+Document          doc;
 #endif
 {
    int                 i;
@@ -233,23 +233,26 @@ CHAR_T**          buffer;
 	else if (ustrcmp (TEXT("GraphML"), name) == 0)
 	  ptr = GraphMLElemMappingTable;
         else
-	  ptr = NULL;
+	  ptr = XHTMLElemMappingTable;
 
 	if (ptr)
 	  do
 	    {
-	    if (ptr[i].ThotType == elType.ElTypeNum)
-	      {
-		*buffer = ptr[i].XMLname;
-		return;
-	      }
-	    i++;
+	      if (ptr[i].ThotType == elType.ElTypeNum)
+		{
+		  if (ptr[i].Level <= ParsingLevel[doc])
+		    return ptr[i].XMLname;
+		  else
+		    return TEXT("???");
+		}
+	      i++;
 	    }
 	  while (ptr[i].XMLname[0] != WC_EOS);	  
      }
-   *buffer = TEXT("???");
-   return;
+   return TEXT("???");
 }
+
+
 /*----------------------------------------------------------------------
    MapXMLAttribute
    Generic function which searchs in the Attribute Mapping Table (table)
@@ -311,4 +314,53 @@ int              *thotType;
 	}
     }
   return (-1);
+}
+
+
+/*----------------------------------------------------------------------
+   GetXMLElementName
+   Generic function which searchs in the mapping table the XML name for
+   a given Thot type.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+CHAR_T*           GetXMLAttributeName (AttributeType attrType, Document doc)
+#else
+CHAR_T*           GetXMLAttributeName (attrType, doc)
+AttributeType     attrType;
+Document          doc;
+#endif
+{
+  AttributeMapping   *ptr;
+  STRING              name;
+  int                 i;
+
+   if (attrType.AttrTypeNum > 0)
+     {
+	i = 0;
+	/* Select the table which matches with the element schema */
+	name = TtaGetSSchemaName (attrType.AttrSSchema);
+	if (ustrcmp (TEXT("MathML"), name) == 0)
+	  ptr = MathMLAttributeMappingTable;
+	else if (ustrcmp (TEXT("GraphML"), name) == 0)
+	  ptr = GraphMLAttributeMappingTable;
+	else if (ustrcmp (TEXT("XLink"), name) == 0)
+	  ptr = XLinkAttributeMappingTable;
+        else
+	  ptr = XHTMLAttributeMappingTable;
+
+	if (ptr)
+	  do
+	    {
+	    if (ptr[i].ThotAttribute == attrType.AttrTypeNum)
+	      {
+		if (ptr[i].Level <= ParsingLevel[doc])
+		  return ptr[i].XMLattribute;
+		else
+		  return TEXT("???");
+	      }
+	    i++;
+	    }
+	  while (ptr[i].XMLattribute[0] != WC_EOS);	  
+     }
+   return TEXT("???");
 }

@@ -19,12 +19,13 @@
 #include "tree.h"
 #include "fetchHTMLname.h"
 
-#include "HTMLimage_f.h"
-#include "XMLparser_f.h"
-#include "MathML.h"
 #include "fetchHTMLname_f.h"
+#include "fetchXMLname_f.h"
 #include "html2thot_f.h"
+#include "HTMLimage_f.h"
+#include "MathML.h"
 #include "transparse_f.h"
+#include "XMLparser_f.h"
 
 #ifdef _WINDOWS
 #include "wininclude.h"
@@ -98,38 +99,38 @@ structureTree       t;
 
 #endif
 {
-   strMatch           *m, *m2;
-   strMatchChildren   *mc, *mc2;
-   strNode            *c, *n;
+  strMatch           *m, *m2;
+  strMatchChildren   *mc, *mc2;
+  strNode            *c, *n;
 
-   if (t != NULL)
-     {
-	m = t->Matches;
-	while (m != NULL)
-	  {
-	     mc = m->MatchChildren;
-	     while (mc != NULL)
-	       {
-		  mc2 = mc->Next;
-		  TtaFreeMemory ( mc);
-		  mc = mc2;
-	       }
-	     m2 = m->Next;
-	     TtaFreeMemory ( m);
-	     m = m2;
-	  }
+  if (t != NULL)
+    {
+      m = t->Matches;
+      while (m != NULL)
+	{
+	  mc = m->MatchChildren;
+	  while (mc != NULL)
+	    {
+	      mc2 = mc->Next;
+	      TtaFreeMemory ( mc);
+	      mc = mc2;
+	    }
+	  m2 = m->Next;
+	  TtaFreeMemory ( m);
+	  m = m2;
+	}
 
-	c = t->Child;
-	while (c != NULL)
-	  {
-	     n = c->Next;
-	     FreeStructTree (c);
-	     c = n;
-	  }
-	TtaFreeMemory (t->Tag);
-	TtaFreeMemory (t->Candidates);
-	TtaFreeMemory ( t);
-     }
+      c = t->Child;
+      while (c != NULL)
+	{
+	  n = c->Next;
+	  FreeStructTree (c);
+	  c = n;
+	}
+      TtaFreeMemory (t->Tag);
+      TtaFreeMemory (t->Candidates);
+      TtaFreeMemory ( t);
+    }
 }
 
 
@@ -169,8 +170,8 @@ void                InitTransform ()
 void                InitTransform ()
 #endif
 {
-   TransBaseDialog = TtaSetCallback (TransCallbackDialog, MAX_TRANS_DLG);
-   ppInitAutomaton ();
+  TransBaseDialog = TtaSetCallback (TransCallbackDialog, MAX_TRANS_DLG);
+  ppInitAutomaton ();
 }
 
 /*----------------------------------------------------------------------
@@ -231,7 +232,7 @@ int                 depth;
       return;
    tag = TtaAllocString (NAME_LENGTH);
    elemType = TtaGetElementType (elem);
-   ustrcpy (tag, GITagNameByType (elemType));
+   ustrcpy (tag, GetXMLElementName (elemType, doc));
    attr = NULL;
    TtaNextAttribute (elem, &attr);
    if (ustrcmp (tag, TEXT("???")) && ustrcmp (tag, TEXT("none")) &&
@@ -893,8 +894,8 @@ Document doc;
 static void RemoveHTMLTree (Element elem, Document doc)
 #else
 static void RemoveHTMLTree (elem, doc)
-Element elem;
-Document doc;
+Element     elem;
+Document    doc;
 #endif
 {
   Element parent;
@@ -911,8 +912,8 @@ Document doc;
       
       while (parent != NULL && 
 	     TtaSameSSchemas (parSch, elSch) &&
-	     (ustrcmp (GITagName (parent), TEXT("???")) == 0) &&
-	     TtaGetFirstChild (parent) == TtaGetLastChild (parent))
+	     TtaGetFirstChild (parent) == TtaGetLastChild (parent) &&
+	     !ustrcmp (GetXMLElementName (TtaGetElementType (parent), doc), TEXT("???")))
 	{
 	  elem = parent;
 	  parent = TtaGetParent (parent);
@@ -923,7 +924,7 @@ Document doc;
 	      parSch = (TtaGetElementType (parent)).ElSSchema;
 	}
     }
-  TtaRegisterElementDelete (elem, doc) ;
+  TtaRegisterElementDelete (elem, doc);
   TtaRemoveTree (elem, doc);  
 }
 
@@ -936,8 +937,8 @@ Document doc;
 static ThotBool StartHtmlParser (strMatchChildren * sMatch, Document doc)
 #else
 static ThotBool StartHtmlParser (sMatch, doc)
-strMatch           *sMatch;
-Document            doc;
+strMatch       *sMatch;
+Document        doc;
 #endif
 {
    strMatchChildren   *prevMatch, *DMatch;
@@ -965,8 +966,8 @@ Document            doc;
 	 courSch = (TtaGetElementType (TtaGetParent (courEl))).ElSSchema;
        else
 	 courSch = (TtaGetElementType (courEl)).ElSSchema;
-       if (ustrcmp (GITagName (courEl), TEXT("???")) == 0 && 
-	   TtaSameSSchemas (courSch,selSch))
+       if (TtaSameSSchemas (courSch, selSch) &&
+           !ustrcmp (GetXMLElementName (TtaGetElementType (courEl), doc), TEXT("???")))
 	 {
 	   myFirstSelect = courEl;
 	   TtaPreviousSibling (&myFirstSelect);
@@ -1496,7 +1497,7 @@ strNode               *TN;
 		  if (ancestor->Tag && ustrcmp(ancestor->Tag, TEXT("Root")))
 		    {
 		      tag = TtaAllocString (NAME_LENGTH);
-		      ustrcpy (tag, GITagNameByType (TtaGetElementType (ancestor->Elem)));
+		      ustrcpy (tag, GetXMLElementName (TtaGetElementType (ancestor->Elem), TransDoc));
 		      attrType.AttrTypeNum = MapThotAttr (AD->AttrAttr, tag);
 		      TtaFreeMemory (tag);
 		      if (attrType.AttrTypeNum != -1)
@@ -2042,10 +2043,14 @@ Document            doc;
 	prevFirst = myFirstSelect;
 	do
 	   TtaNextSibling (&nextLast);
-	while (nextLast != NULL && GITagName (nextLast) == NULL);
+	while (nextLast != NULL &&
+	       GetXMLElementName (TtaGetElementType (nextLast), doc) == NULL);
+
 	do
 	   TtaPreviousSibling (&prevFirst);
-	while (prevFirst != NULL && GITagName (prevFirst) == NULL);
+	while (prevFirst != NULL &&
+	       GetXMLElementName (TtaGetElementType (prevFirst), doc) == NULL);
+
 	while (parentFirst != NULL &&
 	       ((ustrcmp (TtaGetSSchemaName (TtaGetElementType (parentFirst).ElSSchema), TEXT("HTML")) != 0) ||
 		TtaGetElementType (parentFirst).ElTypeNum != HTML_EL_HTML) &&
@@ -2060,10 +2065,13 @@ Document            doc;
 		  prevFirst = mySelect;
 		  do
 		     TtaNextSibling (&nextLast);
-		  while (nextLast != NULL && GITagName (nextLast) == NULL);
+		  while (nextLast != NULL &&
+			 GetXMLElementName (TtaGetElementType (nextLast), doc) == NULL);
+
 		  do
 		     TtaPreviousSibling (&prevFirst);
-		  while (prevFirst != NULL && GITagName (prevFirst) == NULL);
+		  while (prevFirst != NULL &&
+			 GetXMLElementName (TtaGetElementType (prevFirst), doc) == NULL);
 	       }
 	  }
      }
@@ -2155,9 +2163,9 @@ STRING              prevtag;
 	result = TRUE;
       else
 	{
-	  name = GITagNameByType (subTypes[0]);
+	  name = GetXMLElementName (subTypes[0], TransDoc);
 	  if (!ustrcmp (name, TEXT("???")) ||
-	      !ustrcmp (name, TEXT("none")))
+    	      !ustrcmp (name, TEXT("none")))
 	    /* search if tag can be inserted as a child of the identity */
 	    result = IsValidHtmlChild (subTypes[0], tag, TEXT(""));
 	}
@@ -2173,10 +2181,10 @@ STRING              prevtag;
 	result = TRUE;
       else
 	{
-	  name = GITagNameByType (subTypes[0]);
+	  name = GetXMLElementName (subTypes[0], TransDoc);
 	  if (!ustrcmp (name, TEXT("???")) ||
 	      !ustrcmp (name, TEXT("p*")) ||
-	      !ustrcmp (name, TEXT("none")))
+    	      !ustrcmp (name, TEXT("none")))
 	    result = IsValidHtmlChild (subTypes[0], tag, TEXT(""));
 	}
       break;
@@ -2188,7 +2196,7 @@ STRING              prevtag;
       if (!result)
          for (i = 0; !result && i < cardinal; i++)
 	   {
-	     name = GITagNameByType (subTypes[i]);
+	     name = GetXMLElementName (subTypes[i], TransDoc);
 	     if (!ustrcmp (name, TEXT("???")) ||
 		 !ustrcmp (name, TEXT("p*")) ||
 		 !ustrcmp (name, TEXT("none")))
@@ -2215,7 +2223,7 @@ STRING              prevtag;
 	    }
 	  else
 	    {
-	      name = GITagNameByType (subTypes[i]);
+	      name = GetXMLElementName (subTypes[i], TransDoc);
 	      if (ustrcmp (name, TEXT("???")) ||
 		  ustrcmp (name, TEXT("p*")) ||
 		  ustrcmp (name, TEXT("none")))
@@ -2232,11 +2240,11 @@ STRING              prevtag;
 		result = TRUE;
 	      else
 		{
-		  name = GITagNameByType (subTypes[i]);
+		  name = GetXMLElementName (subTypes[i], TransDoc);
 		  if (!ustrcmp (name, TEXT("???")) ||
 		      !ustrcmp (name, TEXT("p*")) ||
 		      !ustrcmp (name, TEXT("none")) ||
-		      TtaIsOptionalInAggregate(i, elemType)) 
+		      TtaIsOptionalInAggregate (i, elemType)) 
 		    i++;
 		  else
 		    i = cardinal;
@@ -2247,7 +2255,7 @@ STRING              prevtag;
 	    i = start;
 	    while (!result && i < cardinal)
 	      {
-		name = GITagNameByType (subTypes[i]);
+		name = GetXMLElementName (subTypes[i], TransDoc);
 		if (!ustrcmp (name, TEXT("???")) ||
 		    !ustrcmp (name, TEXT("p*")) ||
 		    !ustrcmp (name, TEXT("none")))
@@ -2273,7 +2281,7 @@ STRING              prevtag;
       if (!result)
 	for (i = 0; !result && i < cardinal; i++)
 	  {
-	    name = GITagNameByType (subTypes[i]);
+	    name = GetXMLElementName (subTypes[i], TransDoc);
 	    if (!ustrcmp (name, TEXT("???")) ||
 		!ustrcmp (name, TEXT("p*")) ||
 		!ustrcmp (name, TEXT("none")))
@@ -2290,7 +2298,7 @@ STRING              prevtag;
 	    result = TRUE;
 	  else
 	    {
-	      name = GITagNameByType (subTypes[0]);
+	      name = GetXMLElementName (subTypes[0], TransDoc);
 	      if (!ustrcmp (name, TEXT("???")) ||
 		  !ustrcmp (name, TEXT("p*")) ||
 		  !ustrcmp (name, TEXT("none")))
@@ -2473,7 +2481,7 @@ CHAR_T*             data;
 	      else
 		elParent = myFirstSelect;
 	      while (elParent != NULL &&
-		     ustrcmp (GITagName (elParent), TEXT("???")) == 0)
+		     !ustrcmp (GetXMLElementName (TtaGetElementType (elParent), TransDoc), TEXT("???")))
 		elParent = TtaGetParent (elParent);
 	      if (elParent != NULL)
 		{
@@ -2696,14 +2704,14 @@ View                view;
 		  elemSelect = sm->MatchChildren->MatchNode->Elem;
 		  TtaPreviousSibling (&elemSelect);
 		  if (elemSelect != NULL)
-		    ustrcpy (tag, GITagNameByType (TtaGetElementType (elemSelect)));
+		    ustrcpy (tag, GetXMLElementName (TtaGetElementType (elemSelect), TransDoc));
 		  while (elemSelect != NULL &&
 			 (!ustrcmp (tag, TEXT("???")) ||
 			  !ustrcmp (tag, TEXT("none"))))
 		    {
 		      TtaPreviousSibling (&elemSelect);
 		      if (elemSelect != NULL)
-			ustrcpy (tag, GITagNameByType (TtaGetElementType (elemSelect)));
+			ustrcpy (tag, GetXMLElementName (TtaGetElementType (elemSelect), TransDoc));
 		    }
 		  if (elemSelect == NULL)
 		    ustrcpy (tag, TEXT(""));
@@ -2841,7 +2849,7 @@ Document            doc;
     }
   if (ok)
     {
-      ustrcpy (DestTag, GITagNameByType (resultType));
+      ustrcpy (DestTag, GetXMLElementName (resultType, TransDoc));
       td = CourTransSet->Transformations;
       CourTransSet->MaxDepth = 0;
       while (td != NULL)

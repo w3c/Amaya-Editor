@@ -246,8 +246,6 @@ Bulleted list: (p|ol|menu|dir|pre|form)+;
    	{
         p > ul:<li style=p.style>;
         ol> ul;
-        menu> ul:li.menu;
-        dir> ul:li.dir;
         pre> ul:li.pre;
         form> ul:li.form;
         }
@@ -256,8 +254,6 @@ Numbered list:(p|ul|menu|dir|pre|form)+;
 	   {
         p > ol:li;
         ul> ol;
-        menu> ol:li.menu;
-        dir> ol:li.dir;
         pre> ol:li.pre;
         form> ol:li.form;
         }

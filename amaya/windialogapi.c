@@ -161,8 +161,9 @@ static ThotBool	    saveBeforeClose;
 static ThotBool     closeDontSave;
 static ThotBool     selectionFound;
 static ThotBool     isHref;
-static ThotBool     withEdit;
-static ThotBool     withBorder;
+static ThotBool     WithEdit;
+static ThotBool     WithCancel;
+static ThotBool     WithBorder;
 static ThotBool     upper_lower = FALSE;
 
 static OPENFILENAME OpenFileName;
@@ -749,14 +750,14 @@ LPARAM  lParam;
       SetWindowText (hwnDlg, TtaGetMessage (1, BTable));
       SetWindowText (GetDlgItem (hwnDlg, IDC_NUMCOL), TtaGetMessage (AMAYA, AM_COLS));
       SetWindowText (GetDlgItem (hwnDlg, IDC_NUMROWS), TtaGetMessage (AMAYA, AM_ROWS));
-      if (withBorder)
+      if (WithBorder)
 	SetWindowText (GetDlgItem (hwnDlg, IDC_BORDER), TtaGetMessage (AMAYA, AM_BORDER));
       SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
       SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
 	
       SetDlgItemInt (hwnDlg, IDC_NUMCOLEDIT, numCols, FALSE);
       SetDlgItemInt (hwnDlg, IDC_NUMROWSEDIT, numRows, FALSE);
-      if (withBorder)
+      if (WithBorder)
 	SetDlgItemInt (hwnDlg, IDC_BORDEREDIT, tBorder, FALSE);
       break;
 
@@ -2077,7 +2078,7 @@ LPARAM lParam;
   switch (msg)
     {
     case WM_INITDIALOG:
-      if (withEdit)
+      if (WithEdit)
 	  {
         SetWindowText (hwnDlg, TtaGetMessage (AMAYA, AM_DEF_CLASS));
 	    SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
@@ -2100,7 +2101,7 @@ LPARAM lParam;
 	  index += ustrlen (&classList[index]) + 1;	/* entry length */
 	  i++;
 	}
-      if (withEdit)
+      if (WithEdit)
 	{
 	  wndEditRule	= CreateWindow (TEXT("EDIT"), NULL, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
 					10, 130, 200, 30, hwnDlg, (HMENU) IDC_EDITRULE, 
@@ -2116,7 +2117,7 @@ LPARAM lParam;
 	  itemIndex = SendMessage (wndListRule, LB_GETCURSEL, 0, 0);
 	  itemIndex = SendMessage (wndListRule, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
 	  SetDlgItemText (hwnDlg, IDC_EDITRULE, szBuffer);
-	  if (withEdit)
+	  if (WithEdit)
 	  ThotCallback (BaseDialog + ClassSelect, STRING_DATA, szBuffer);
 	  else
 	  ThotCallback (BaseDialog + AClassSelect, STRING_DATA, szBuffer);
@@ -2127,7 +2128,7 @@ LPARAM lParam;
 	    break;
 	  itemIndex = SendMessage (wndListRule, LB_GETTEXT, itemIndex, (LPARAM) szBuffer);
 	  SetDlgItemText (hwnDlg, IDC_EDITRULE, szBuffer);
-	  if (withEdit)
+	  if (WithEdit)
 	  {
 	    ThotCallback (BaseDialog + ClassSelect, STRING_DATA, szBuffer);
 	    ThotCallback (BaseDialog + ClassForm, INTEGER_DATA, (CHAR_T*) 1);
@@ -2140,7 +2141,7 @@ LPARAM lParam;
 	  EndDialog (hwnDlg, ID_CONFIRM);
 	  return FALSE;
 	}
-      else if (withEdit && HIWORD (wParam) == EN_UPDATE)
+      else if (WithEdit && HIWORD (wParam) == EN_UPDATE)
 	{
 	  GetDlgItemText (hwnDlg, IDC_EDITRULE, szBuffer, sizeof (szBuffer) - 1);
 	  ThotCallback (BaseDialog + ClassSelect, STRING_DATA, szBuffer);
@@ -2149,7 +2150,7 @@ LPARAM lParam;
       switch (LOWORD (wParam))
 	{
 	case ID_CONFIRM:
-	  if (withEdit)
+	  if (WithEdit)
 	  {
 	    ThotCallback (BaseDialog + ClassForm, INTEGER_DATA, (CHAR_T*) 1);
 	    EndDialog (hwnDlg, ID_CONFIRM);
@@ -2162,7 +2163,7 @@ LPARAM lParam;
 	  break;
 	  
 	case ID_DONE:
-	  if (withEdit)
+	  if (WithEdit)
 	    ThotCallback (BaseDialog + ClassForm, INTEGER_DATA, (CHAR_T*) 0);
 	  else
 	    ThotCallback (BaseDialog + AClassForm, INTEGER_DATA, (CHAR_T*) 0);
@@ -2194,178 +2195,188 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-	ThotBool ok;	  
-	int  val;
+  ThotBool ok;	  
+  int  val;
 
-	static int  iLocation;
-	static int  iIgnore;
+  static int  iLocation;
+  static int  iIgnore;
 
-    switch (msg) {
-	       case WM_INITDIALOG:
-                hwndLanguage = GetDlgItem (hwnDlg, IDC_LANG);
-				wordButton = GetDlgItem (hwnDlg, IDC_CURWORD);
-				SetWindowText (GetDlgItem (hwnDlg, IDC_LABEL), currentLabel);
-				SetWindowText (GetDlgItem (hwnDlg, IDC_BEFORE), TtaGetMessage (LIB, TMSG_BEFORE_SEL));
-				SetWindowText (GetDlgItem (hwnDlg, IDC_WITHIN), TtaGetMessage (LIB, TMSG_WITHIN_SEL));
-				SetWindowText (GetDlgItem (hwnDlg, IDC_AFTER), TtaGetMessage (LIB, TMSG_AFTER_SEL));
-				SetWindowText (GetDlgItem (hwnDlg, IDC_WHOLEDOC), TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC));
-				SetWindowText (GetDlgItem (hwnDlg, IDC_NBPROPOSALS), TtaGetMessage (CORR, Number_Propositions));
-
-				SetWindowText (GetDlgItem (hwnDlg, ID_SKIPNEXT), TtaGetMessage (CORR, Pass_Without));
-				SetWindowText (GetDlgItem (hwnDlg, ID_SKIPDIC), TtaGetMessage (CORR, Pass_With));
-				SetWindowText (GetDlgItem (hwnDlg, ID_REPLACENEXT), TtaGetMessage (CORR, Replace_Without));
-				SetWindowText (GetDlgItem (hwnDlg, ID_REPLACEDIC), TtaGetMessage(CORR, Replace_With));
-
-				SetWindowText (GetDlgItem (hwnDlg, IDC_IGNORE1), TtaGetMessage (CORR, Capitals));
-				SetWindowText (GetDlgItem (hwnDlg, IDC_IGNORE2), TtaGetMessage (CORR, Arabics));
-				SetWindowText (GetDlgItem (hwnDlg, IDC_IGNORE3), TtaGetMessage (CORR, Romans));
-				SetWindowText (GetDlgItem (hwnDlg, IDC_IGNORE4), TtaGetMessage (CORR, Specials));
-
-				SetWindowText (GetDlgItem (hwnDlg, IDC_CHECKGROUP), TtaGetMessage (CORR, What));
-
-				SetWindowText (GetDlgItem (hwnDlg, IDC_IGNOREGROUP), TtaGetMessage (CORR, Ignore));
-
-				SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
-
-				hwnListWords = CreateWindow (TEXT("listbox"), NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
-					                         13, 72, 150, 70, hwnDlg, (HMENU) 1, 
-											 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
-
-				hwndCurrentWord = CreateWindow (TEXT("EDIT"), NULL, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
-					                            13, 146, 150, 20, hwnDlg, (HMENU) IDC_LANGEDIT, 
-											 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
- 
-
-				CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
-			    SetDlgItemInt (hwnDlg, IDC_EDITPROPOSALS, 3, FALSE);
-				SetDlgItemText (hwnDlg, IDC_EDITIGNORE, currentRejectedchars);
-				iLocation = 2;
-                SetWindowText (hwndCurrentWord, TEXT(""));
-				WIN_DisplayWords ();
-			    break;
-
-		   case WM_COMMAND:
-				if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_SELCHANGE) {
-				   itemIndex = SendMessage (hwnListWords, LB_GETCURSEL, 0, 0);
-				   itemIndex = SendMessage (hwnListWords, LB_GETTEXT, itemIndex, (LPARAM) currentWord);
-			       SetDlgItemText (hwnDlg, IDC_LANGEDIT, currentWord);
-				} else if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_DBLCLK) {
-                       if (LB_ERR == (itemIndex = SendMessage (hwnListWords, LB_GETCURSEL, 0, 0L)))
-                          break;
-                       itemIndex = SendMessage (hwnListWords, LB_GETTEXT, itemIndex, (LPARAM) currentWord);
-                       SetDlgItemText (hwnDlg, IDC_LANGEDIT, currentWord);
-                       ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, currentWord);
-                       ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (CHAR_T*) iLocation);
-                       ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (CHAR_T*) 3);
-                       if (iLocation == 3) {
-                          CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
-                          iLocation = 2;
-					   }
-                       return 0;
-				} 
-                if (HIWORD (wParam) == EN_UPDATE) {
-				   if (LOWORD (wParam) == IDC_EDITPROPOSALS) {
-					  val = GetDlgItemInt (hwnDlg, IDC_EDITPROPOSALS, &ok, TRUE);
-                      if (ok)
-                         ThotCallback (SpellingBase + ChkrCaptureNC, INTEGER_DATA, (CHAR_T*) val);
-				   } else if (LOWORD (wParam) == IDC_EDITIGNORE) {
-                          GetDlgItemText (hwnDlg, IDC_EDITIGNORE, currentRejectedchars, sizeof (currentRejectedchars) + 1);
-                          ThotCallback (SpellingBase + ChkrSpecial, STRING_DATA, currentRejectedchars);
-                   } else if (LOWORD (wParam) == IDC_LANGEDIT) 
-                          GetDlgItemText (hwnDlg, IDC_LANGEDIT, currentWord, sizeof (currentWord) + 1);
-                }
-
-			    switch (LOWORD (wParam)) {
-				       case IDC_BEFORE:
-						    iLocation = 0;
-						    break;
-
-					   case IDC_WITHIN:
-						    iLocation = 1;
-						    break;
-
-					   case IDC_AFTER:
-						    iLocation = 2;
-						    break;
-
-					   case IDC_WHOLEDOC:
-						    iLocation = 3;
-						    break;
-
-					   case IDC_IGNORE1:
-                            ThotCallback (SpellingBase + ChkrMenuIgnore, INTEGER_DATA, (CHAR_T*) 0);
-						    break;
-
-					   case IDC_IGNORE2:
-                            ThotCallback (SpellingBase + ChkrMenuIgnore, INTEGER_DATA, (CHAR_T*) 1);
-						    break;
-
-					   case IDC_IGNORE3: 
-                            ThotCallback (SpellingBase + ChkrMenuIgnore, INTEGER_DATA, (CHAR_T*) 2);
-						    break;
-
-					   case IDC_IGNORE4:
-                            ThotCallback (SpellingBase + ChkrMenuIgnore, INTEGER_DATA, (CHAR_T*) 3);
-						    break;
-
-					   case ID_SKIPNEXT:
-                            ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, currentWord);
-							ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (CHAR_T*) iLocation);
-							ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (CHAR_T*) 1);
-							if (iLocation == 3) {
-				               CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
-							   iLocation = 2;
-							}
-						    break;
-
-					   case ID_SKIPDIC:
-                            ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, currentWord);
-							ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (CHAR_T*) iLocation);
-							ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (CHAR_T*) 2);
-							if (iLocation == 3) {
-				               CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
-							   iLocation = 2;
-							}
-						    break;
-
-					   case ID_REPLACENEXT:
-                            ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, currentWord);
-							ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (CHAR_T*) iLocation);
-							ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (CHAR_T*) 3);
-							if (iLocation == 3) {
-				               CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
-							   iLocation = 2;
-							}
-						    break;
-
-					   case ID_REPLACEDIC:
-                            ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, currentWord);
-							ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (CHAR_T*) iLocation);
-							ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (CHAR_T*) 4);
-							if (iLocation == 3) {
-				               CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
-							   iLocation = 2;
-							}
-						    break;
-
-					   case IDC_WORDBUTTON:
-                            GetWindowText (wordButton, currentWord, MAX_WORD_LEN);
-                            SetWindowText (hwndCurrentWord, currentWord);
-						    break;
-
-					   case ID_DONE:
-						    EndDialog (hwnDlg, ID_DONE);
-							break;
-
-				       case WM_CLOSE:
-					   case WM_DESTROY:
-						    EndDialog (hwnDlg, ID_DONE);
-							break;
-				}
-				break;
-		   default: return FALSE;
+  switch (msg)
+    {
+    case WM_INITDIALOG:
+      hwndLanguage = GetDlgItem (hwnDlg, IDC_LANG);
+      wordButton = GetDlgItem (hwnDlg, IDC_CURWORD);
+      SetWindowText (GetDlgItem (hwnDlg, IDC_LABEL), currentLabel);
+      SetWindowText (GetDlgItem (hwnDlg, IDC_BEFORE), TtaGetMessage (LIB, TMSG_BEFORE_SEL));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_WITHIN), TtaGetMessage (LIB, TMSG_WITHIN_SEL));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_AFTER), TtaGetMessage (LIB, TMSG_AFTER_SEL));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_WHOLEDOC), TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_NBPROPOSALS), TtaGetMessage (CORR, Number_Propositions));
+      
+      SetWindowText (GetDlgItem (hwnDlg, ID_SKIPNEXT), TtaGetMessage (CORR, Pass_Without));
+      SetWindowText (GetDlgItem (hwnDlg, ID_SKIPDIC), TtaGetMessage (CORR, Pass_With));
+      SetWindowText (GetDlgItem (hwnDlg, ID_REPLACENEXT), TtaGetMessage (CORR, Replace_Without));
+      SetWindowText (GetDlgItem (hwnDlg, ID_REPLACEDIC), TtaGetMessage(CORR, Replace_With));
+      
+      SetWindowText (GetDlgItem (hwnDlg, IDC_IGNORE1), TtaGetMessage (CORR, Capitals));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_IGNORE2), TtaGetMessage (CORR, Arabics));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_IGNORE3), TtaGetMessage (CORR, Romans));
+      SetWindowText (GetDlgItem (hwnDlg, IDC_IGNORE4), TtaGetMessage (CORR, Specials));
+      
+      SetWindowText (GetDlgItem (hwnDlg, IDC_CHECKGROUP), TtaGetMessage (CORR, What));
+      
+      SetWindowText (GetDlgItem (hwnDlg, IDC_IGNOREGROUP), TtaGetMessage (CORR, Ignore));
+      
+      SetWindowText (GetDlgItem (hwnDlg, ID_DONE), TtaGetMessage (LIB, TMSG_DONE));
+      
+      hwnListWords = CreateWindow (TEXT("listbox"), NULL, WS_CHILD | WS_VISIBLE | LBS_STANDARD,
+				   13, 72, 150, 70, hwnDlg, (HMENU) 1, 
+				   (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+      
+      hwndCurrentWord = CreateWindow (TEXT("EDIT"), NULL, WS_CHILD | WS_VISIBLE | ES_LEFT | WS_BORDER,
+				      13, 146, 150, 20, hwnDlg, (HMENU) IDC_LANGEDIT, 
+				      (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+      
+      
+      CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
+      SetDlgItemInt (hwnDlg, IDC_EDITPROPOSALS, 3, FALSE);
+      SetDlgItemText (hwnDlg, IDC_EDITIGNORE, currentRejectedchars);
+      iLocation = 2;
+      SetWindowText (hwndCurrentWord, TEXT(""));
+      WIN_DisplayWords ();
+      break;
+      
+    case WM_COMMAND:
+      if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_SELCHANGE) {
+	itemIndex = SendMessage (hwnListWords, LB_GETCURSEL, 0, 0);
+	itemIndex = SendMessage (hwnListWords, LB_GETTEXT, itemIndex, (LPARAM) currentWord);
+	SetDlgItemText (hwnDlg, IDC_LANGEDIT, currentWord);
+      } else if (LOWORD (wParam) == 1 && HIWORD (wParam) == LBN_DBLCLK) {
+	if (LB_ERR == (itemIndex = SendMessage (hwnListWords, LB_GETCURSEL, 0, 0L)))
+	  break;
+	itemIndex = SendMessage (hwnListWords, LB_GETTEXT, itemIndex, (LPARAM) currentWord);
+	SetDlgItemText (hwnDlg, IDC_LANGEDIT, currentWord);
+	ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, currentWord);
+	ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (CHAR_T*) iLocation);
+	ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (CHAR_T*) 3);
+	if (iLocation == 3) {
+	  CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
+	  iLocation = 2;
 	}
-	return TRUE;
+	return 0;
+      } 
+      if (HIWORD (wParam) == EN_UPDATE)
+	{
+	  if (LOWORD (wParam) == IDC_EDITPROPOSALS)
+	    {
+	      val = GetDlgItemInt (hwnDlg, IDC_EDITPROPOSALS, &ok, TRUE);
+	      if (ok)
+		ThotCallback (SpellingBase + ChkrCaptureNC, INTEGER_DATA, (CHAR_T*) val);
+	    }
+	  else if (LOWORD (wParam) == IDC_EDITIGNORE)
+	    {
+	      GetDlgItemText (hwnDlg, IDC_EDITIGNORE, currentRejectedchars, sizeof (currentRejectedchars) + 1);
+	      ThotCallback (SpellingBase + ChkrSpecial, STRING_DATA, currentRejectedchars);
+	    }
+	  else if (LOWORD (wParam) == IDC_LANGEDIT) 
+	    GetDlgItemText (hwnDlg, IDC_LANGEDIT, currentWord, sizeof (currentWord) + 1);
+	}
+      
+      switch (LOWORD (wParam))
+	{
+	case IDC_BEFORE:
+	  iLocation = 0;
+	  break;
+	  
+	case IDC_WITHIN:
+	  iLocation = 1;
+	  break;
+	  
+	case IDC_AFTER:
+	  iLocation = 2;
+	  break;
+	  
+	case IDC_WHOLEDOC:
+	  iLocation = 3;
+	  break;
+	  
+	case IDC_IGNORE1:
+	  ThotCallback (SpellingBase + ChkrMenuIgnore, INTEGER_DATA, (CHAR_T*) 0);
+	  break;
+	  
+	case IDC_IGNORE2:
+	  ThotCallback (SpellingBase + ChkrMenuIgnore, INTEGER_DATA, (CHAR_T*) 1);
+	  break;
+	  
+	case IDC_IGNORE3: 
+	  ThotCallback (SpellingBase + ChkrMenuIgnore, INTEGER_DATA, (CHAR_T*) 2);
+	  break;
+	  
+	case IDC_IGNORE4:
+	  ThotCallback (SpellingBase + ChkrMenuIgnore, INTEGER_DATA, (CHAR_T*) 3);
+	  break;
+	  
+	case ID_SKIPNEXT:
+	  ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, currentWord);
+	  ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (CHAR_T*) iLocation);
+	  ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (CHAR_T*) 1);
+	  if (iLocation == 3) {
+	    CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
+	    iLocation = 2;
+	  }
+	  break;
+	  
+	case ID_SKIPDIC:
+	  ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, currentWord);
+	  ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (CHAR_T*) iLocation);
+	  ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (CHAR_T*) 2);
+	  if (iLocation == 3)
+	    {
+	      CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
+	      iLocation = 2;
+	    }
+	  break;
+	  
+	case ID_REPLACENEXT:
+	  ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, currentWord);
+	  ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (CHAR_T*) iLocation);
+	  ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (CHAR_T*) 3);
+	  if (iLocation == 3)
+	    {
+	      CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
+	      iLocation = 2;
+	    }
+	  break;
+	  
+	case ID_REPLACEDIC:
+	  ThotCallback (SpellingBase + ChkrSelectProp, STRING_DATA, currentWord);
+	  ThotCallback (SpellingBase + ChkrMenuOR, INTEGER_DATA, (CHAR_T*) iLocation);
+	  ThotCallback (SpellingBase + ChkrFormCorrect, INTEGER_DATA, (CHAR_T*) 4);
+	  if (iLocation == 3)
+	    {
+	      CheckRadioButton (hwnDlg, IDC_BEFORE, IDC_WHOLEDOC, IDC_AFTER);
+	      iLocation = 2;
+	    }
+	  break;
+	  
+	case IDC_WORDBUTTON:
+	  GetWindowText (wordButton, currentWord, MAX_WORD_LEN);
+	  SetWindowText (hwndCurrentWord, currentWord);
+	  break;
+	  
+	case ID_DONE:
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+	  
+	case WM_CLOSE:
+	case WM_DESTROY:
+	  EndDialog (hwnDlg, ID_DONE);
+	  break;
+	}
+      break;
+    default: return FALSE;
+    }
+  return TRUE;
 }
 
 /*-----------------------------------------------------------------------
@@ -2381,36 +2392,38 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-	ThotWindow messageWnd;
+  ThotWindow messageWnd;
 
-    switch (msg) {
-	       case WM_INITDIALOG:
-			    SetWindowText (hwnDlg, wndTitle);
-				SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-				SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+  switch (msg)
+    {
+    case WM_INITDIALOG:
+      SetWindowText (hwnDlg, wndTitle);
+      SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+      SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+      
+      messageWnd = CreateWindow (TEXT("STATIC"), message, WS_CHILD | WS_VISIBLE | SS_LEFT,
+				 15, 10, 303, 60, hwnDlg, (HMENU) 99, 
+				 (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
+      break; 
+      
+    case WM_COMMAND:
+      switch (LOWORD (wParam))
+	{
+	case ID_CONFIRM:
+	  EndDialog (hwnDlg, ID_CONFIRM);
+	  ThotCallback (currentRef, INTEGER_DATA, (CHAR_T*) 1);
+	  break;
 
-				messageWnd = CreateWindow (TEXT("STATIC"), message, WS_CHILD | WS_VISIBLE | SS_LEFT,
-					                       15, 10, 303, 60, hwnDlg, (HMENU) 99, 
-										   (HINSTANCE) GetWindowLong (hwnDlg, GWL_HINSTANCE), NULL);
-				break; 
-
-		   case WM_COMMAND:
-			    switch (LOWORD (wParam)) {
-		               case ID_CONFIRM:
-			                EndDialog (hwnDlg, ID_CONFIRM);
-				            ThotCallback (currentRef, INTEGER_DATA, (CHAR_T*) 1);
-			                break;
-
-		               case IDCANCEL:
-			                EndDialog (hwnDlg, IDCANCEL);
-				            ThotCallback (currentRef, INTEGER_DATA, (CHAR_T*) 0);
-				            break;
-				}
-				break;
-
-				default: return FALSE;
+	case IDCANCEL:
+	  EndDialog (hwnDlg, IDCANCEL);
+	  ThotCallback (currentRef, INTEGER_DATA, (CHAR_T*) 0);
+	  break;
 	}
-	return TRUE;
+      break;
+      
+    default: return FALSE;
+    }
+  return TRUE;
 }
 
 /*-----------------------------------------------------------------------
@@ -2426,36 +2439,39 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-    switch (msg) {
-	       case WM_INITDIALOG:
-			    SetWindowText (hwnDlg, wndTitle);
-				SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
-				SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
-                if (message)
-				   SetWindowText (GetDlgItem (hwnDlg, IDC_MESSAGE1), message);
-                if (message2)
-				   SetWindowText (GetDlgItem (hwnDlg, IDC_MESSAGE2), message2);
-                if (message3)
-				   SetWindowText (GetDlgItem (hwnDlg, IDC_MESSAGE3), message3);
-				break; 
-
-		   case WM_COMMAND:
-			    switch (LOWORD (wParam)) {
-		               case ID_CONFIRM:
-			                EndDialog (hwnDlg, ID_CONFIRM);
-				            ThotCallback (currentRef, INTEGER_DATA, (CHAR_T*) 1);
-			                break;
-
-		               case IDCANCEL:
-			                EndDialog (hwnDlg, IDCANCEL);
-				            ThotCallback (currentRef, INTEGER_DATA, (CHAR_T*) 0);
-				            break;
-				}
-				break;
-
-				default: return FALSE;
-	}
-	return TRUE;
+    switch (msg)
+      {
+      case WM_INITDIALOG:
+	SetWindowText (hwnDlg, wndTitle);
+	SetWindowText (GetDlgItem (hwnDlg, ID_CONFIRM), TtaGetMessage (LIB, TMSG_LIB_CONFIRM));
+	if (WithCancel)
+	  SetWindowText (GetDlgItem (hwnDlg, IDCANCEL), TtaGetMessage (LIB, TMSG_CANCEL));
+	if (message)
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_MESSAGE1), message);
+	if (message2)
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_MESSAGE2), message2);
+	if (message3)
+	  SetWindowText (GetDlgItem (hwnDlg, IDC_MESSAGE3), message3);
+	break; 
+	
+      case WM_COMMAND:
+	switch (LOWORD (wParam))
+	  {
+	  case ID_CONFIRM:
+	    EndDialog (hwnDlg, ID_CONFIRM);
+	    ThotCallback (currentRef, INTEGER_DATA, (CHAR_T*) 1);
+	    break;
+	    
+	  case IDCANCEL:
+	    EndDialog (hwnDlg, IDCANCEL);
+	    ThotCallback (currentRef, INTEGER_DATA, (CHAR_T*) 0);
+	    break;
+	  }
+	break;
+	
+      default: return FALSE;
+      }
+    return TRUE;
 }
 
 /*-----------------------------------------------------------------------
@@ -3665,7 +3681,7 @@ int    t_border;
   numCols   = num_cols;
   numRows   = num_rows;
   tBorder   = t_border;
-  withBorder = TRUE;
+  WithBorder = TRUE;
   DialogBox (hInstance, MAKEINTRESOURCE (TABLEDIALOG), NULL, (DLGPROC) TableDlgProc);
 }
 
@@ -3682,7 +3698,7 @@ int    num_rows;
 {
   numCols   = num_cols;
   numRows   = num_rows;
-  withBorder = FALSE;
+  WithBorder = FALSE;
   DialogBox (hInstance, MAKEINTRESOURCE (MATRIXDIALOG), NULL, (DLGPROC) TableDlgProc);
 }
 
@@ -3963,7 +3979,7 @@ STRING class_list;
 {  
   nbClass     = (UINT)nb_class;
   classList   = class_list;
-  withEdit = TRUE;
+  WithEdit = TRUE;
   DialogBox (hInstance, MAKEINTRESOURCE (CREATERULEDIALOG), parent, (DLGPROC) ApplyClassDlgProc);
 }
 
@@ -3981,7 +3997,7 @@ STRING class_list;
 {  
   nbClass     = (UINT)nb_class;
   classList   = class_list;
-  withEdit = FALSE;
+  WithEdit = FALSE;
   DialogBox (hInstance, MAKEINTRESOURCE (APPLYCLASSDIALOG), NULL/*parent*/, (DLGPROC) ApplyClassDlgProc);
 }
 
@@ -4032,42 +4048,45 @@ STRING title;
 STRING msg;
 #endif /* __STDC__ */
 {  
-	ustrcpy (message, msg);
-	ustrcpy (wndTitle, title);
-	currentRef = ref;
+  ustrcpy (message, msg);
+  ustrcpy (wndTitle, title);
+  currentRef = ref;
 
-    DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRMDIALOG), parent, (DLGPROC) InitConfirmDlgProc);
+  DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRMDIALOG), parent, (DLGPROC) InitConfirmDlgProc);
 }
 
 /*-----------------------------------------------------------------------
  CreateInitConfirm3LDlgWindow
  ------------------------------------------------------------------------*/
 #ifdef __STDC__
-void CreateInitConfirm3LDlgWindow (ThotWindow parent, int ref, STRING title, STRING msg, STRING msg2, STRING msg3)
+void        CreateInitConfirm3LDlgWindow (ThotWindow parent, int ref, STRING title, STRING msg, STRING msg2, STRING msg3, ThotBool withCancel)
 #else  /* !__STDC__ */
-void CreateInitConfirm3LDlgWindow (parent, ref, title, msg, msg2, msg3)
+void        CreateInitConfirm3LDlgWindow (parent, ref, title, msg, msg2, msg3)
 ThotWindow  parent;
-int   ref;
-STRING title;
-STRING msg;
-STRING msg2;
-STRING msg3;
+int         ref;
+STRING      title;
+STRING      msg;
+STRING      msg2;
+STRING      msg3;
+ThotBool    withCancel;
 #endif /* __STDC__ */
-{  
-	ustrcpy (message, msg);
-	if (msg2 && *msg2 != WC_EOS)
-		ustrcpy (message2, msg2);
-	else
-		message2[0] = WC_EOS;
-	if (msg3 && *msg3 != WC_EOS)
-		ustrcpy (message3, msg3);
-	else
-		message3[0] = WC_EOS;
-
-	ustrcpy (wndTitle, title);
-	currentRef = ref;
-
-    DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRM3LDIALOG), parent, (DLGPROC) InitConfirm3LDlgProc);
+{
+  ustrcpy (message, msg);
+  if (msg2 && *msg2 != WC_EOS)
+    ustrcpy (message2, msg2);
+  else
+    message2[0] = WC_EOS;
+  if (msg3 && *msg3 != WC_EOS)
+    ustrcpy (message3, msg3);
+  else
+    message3[0] = WC_EOS;
+  
+  ustrcpy (wndTitle, title);
+  currentRef = ref;
+  
+  /* register if the cancel button has to be generated */
+  WithCancel = withCancel;
+  DialogBox (hInstance, MAKEINTRESOURCE (INITCONFIRM3LDIALOG), parent, (DLGPROC) InitConfirm3LDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -4088,16 +4107,16 @@ int line_spacingNum;
 ThotWindow  parent;
 #endif /* __STDC__ */
 {  
-    Num_zoneRecess      = num_zone_recess;
-    Num_zoneLineSpacing = num_zone_line_spacing;
-    Align_num           = align_num; 
-    Indent_value        = indent_value;
-    Indent_num          = indent_num;
-    Justification_num   = justification_num;
-    Old_lineSp          = old_lineSp;
-    Line_spacingNum     = line_spacingNum;
-
-    DialogBox (hInstance, MAKEINTRESOURCE (FORMATDIALOG), NULL, (DLGPROC) ChangeFormatDlgProc);
+  Num_zoneRecess      = num_zone_recess;
+  Num_zoneLineSpacing = num_zone_line_spacing;
+  Align_num           = align_num; 
+  Indent_value        = indent_value;
+  Indent_num          = indent_num;
+  Justification_num   = justification_num;
+  Old_lineSp          = old_lineSp;
+  Line_spacingNum     = line_spacingNum;
+  
+  DialogBox (hInstance, MAKEINTRESOURCE (FORMATDIALOG), NULL, (DLGPROC) ChangeFormatDlgProc);
 }
 
 /*-----------------------------------------------------------------------
@@ -4110,7 +4129,7 @@ void CreateGreekKeyboardDlgWindow (parent)
 ThotWindow  parent;
 #endif /* __STDC__ */
 {  
-    DialogBox (hInstance, MAKEINTRESOURCE (GALPHABETDIALOG), NULL, (DLGPROC) GreekKeyboardDlgProc);
+  DialogBox (hInstance, MAKEINTRESOURCE (GALPHABETDIALOG), NULL, (DLGPROC) GreekKeyboardDlgProc);
 }
 
 /*-----------------------------------------------------------------------

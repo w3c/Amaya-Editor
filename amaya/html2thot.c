@@ -646,58 +646,6 @@ Document            document;
    TtaFreeMemory (text);
 }
 
-/*----------------------------------------------------------------------
-   GITagNameByType search in the mapping tables the name for a given type
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-CHAR_T*            GITagNameByType (ElementType elType)
-#else
-CHAR_T*            GITagNameByType (elType)
-ElementType elType;
-
-#endif
-{
-  int		i;
-  CHAR_T*   buffer;
-
-  if (elType.ElTypeNum > 0)
-    {
-      i = 0;
-      if (ustrcmp (TEXT("HTML"), TtaGetSSchemaName (elType.ElSSchema)) == 0)
-	do
-	  {
-	    if (pHTMLGIMapping[i].ThotType == elType.ElTypeNum &&
-		ustrcmp (pHTMLGIMapping[i].XMLname, TEXT("listing")))
-	      /* use PRE */
-	      return  pHTMLGIMapping[i].XMLname;
-	    i++;
-	  }
-	while (pHTMLGIMapping[i].XMLname[0] != WC_EOS);
-      else
-	{
-	  GetXMLElementName (elType, &buffer);
-	  return buffer;
-	}
-    }
-  return TEXT("???");
-}
-
-/*----------------------------------------------------------------------
-   GITagName search in GIMappingTable the name for a given element
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-CHAR_T*            GITagName (Element elem)
-#else
-CHAR_T*            GITagName (elem)
-Element            elem;
-
-#endif
-{
-   ElementType         elType;
-
-   elType = TtaGetElementType (elem);
-   return (GITagNameByType (elType));
-}
 
 /*----------------------------------------------------------------------
    MapThotAttr     search in AttributeMappingTable the entry for
@@ -5599,7 +5547,7 @@ CHARSET        *charset;
 {
   gzFile        stream;
   char          file_name[MAX_LENGTH];
-  char         *ptr, *end;
+  char         *ptr, *end, *org;
   char          charsetname[MAX_LENGTH];
   int           res, i, j, k;
   ThotBool      endOfFile, beginning;
@@ -5625,16 +5573,34 @@ CHARSET        *charset;
 	    FileBuffer[res] = EOS;
 	  /* check if the file contains "<?xml ..." */
 	  i = 0;
-	  endOfFile = res < INPUT_FILE_BUFFER_SIZE;
+	  endOfFile = (res < INPUT_FILE_BUFFER_SIZE);
 	  found = TRUE;
 	  while (found)
 	    {
-	      found = FALSE;
-	      while (!found && i < res)
-		if (FileBuffer[i] == '<')
-		  found = TRUE;
-		else
-		  i++;
+	      if (beginning)
+		{
+		  /* looks for the first tag */
+    		  while (i < res &&
+			 (FileBuffer[i] == SPACE  ||
+			  FileBuffer[i] == EOL    ||
+			  FileBuffer[i] == TAB    ||
+			  FileBuffer[i] == __CR__))
+		    i++;
+		  if (FileBuffer[i] == '<')
+		    found = TRUE;
+		  else
+		    found = FALSE;
+		}
+	      else
+		{
+		  /* looks for the next tag */
+		  found = FALSE;
+		  while (!found && i < res)
+		    if (FileBuffer[i] == '<')
+		      found = TRUE;
+		    else
+		      i++;
+		}
 	      /* if the declaration is present it's the first element */
 	      if (found)
 		{
@@ -5661,36 +5627,39 @@ CHARSET        *charset;
 			  *charset = TtaGetCharset (charsetname);
 			}
 		    }
-		  else if (!strncasecmp (&FileBuffer[i], "<!DOCTYPE ", 10))
+		  else if (!strncasecmp (&FileBuffer[i], "<!DOCTYPE", 9))
 		    {
 		      /* the doctype is found */
-		      i += 10;
+		      i += 9;
 		      *docType = TRUE;
 		      /* it's not necessary to continue */
 		      found = FALSE;
 		      endOfFile = TRUE;
+		      end = strstr (&FileBuffer[i], ">");
 		      /* check the current DOCTYPE */
-		      if (!strncasecmp (&FileBuffer[i], "html PUBLIC", 11))
+		      ptr = strstr (&FileBuffer[i], "HTML");
+		      if (!ptr)
+			ptr = strstr (&FileBuffer[i], "html");
+		      if (ptr && ptr < end)
 			{
-			  i += 11;
 			  /* by default all HTML tags are accepted */
 			  *parsingLevel = L_Transitional;
-			  end = strstr (&FileBuffer[i], ">");
-			  ptr = strstr (&FileBuffer[i], "XHTML");
+			  org = ptr;
+			  ptr = strstr (org, "XHTML");
 			  if (!ptr)
-			  ptr = strstr (&FileBuffer[i], "xhtml");
+			  ptr = strstr (org, "xhtml");
 			  if (ptr && ptr < end)
 			    *isXML = TRUE;
-			  ptr = strstr (&FileBuffer[i], "Basic");
+			  ptr = strstr (org, "Basic");
 			  if (!ptr)
-			    ptr = strstr (&FileBuffer[i], "basic");
+			    ptr = strstr (org, "basic");
 			  if (ptr && ptr < end)
 			    *parsingLevel = L_Basic;
 			  else
 			    {
-			      ptr = strstr (&FileBuffer[i], "Strict");
+			      ptr = strstr (org, "Strict");
 			      if (!ptr)
-				ptr = strstr (&FileBuffer[i], "strict");
+				ptr = strstr (org, "strict");
 			      if (ptr && ptr < end)
 				*parsingLevel = L_Strict;
 			    }
@@ -5717,17 +5686,17 @@ CHARSET        *charset;
 		      if (ptr && ptr < end)
 			*parsingLevel = L_Strict;
 		    }
-		  else if (!strncmp (&FileBuffer[i], "<!--", 4))
+		  else if (!strncmp (&FileBuffer[i], "<!", 2) ||
+			   !strncmp (&FileBuffer[i], "<?", 2))
 		    {
-		      /* it's a comment */
-		      i += 4;
-		      found = TRUE;
+		      /* it's a comment or a pi */
+		      i += 2;
+		      /* continue */
 		    }
 		  else
 		    {
 		      /* it's not a comment */
-		      /* it's not necessary to continue */
-		      i += 4;
+		      /* stop the analyze */
 		      found = FALSE;
 		      endOfFile = TRUE;
 		    }
@@ -6738,7 +6707,7 @@ Document            doc;
 	   elem = lastelem;
 	while (elem != NULL && elem != rootElement)
 	  {
-	     ustrcpy (tag, GITagNameByType (TtaGetElementType (elem)));
+	     ustrcpy (tag, GetXMLElementName (TtaGetElementType (elem), doc));
 	     if (ustrcmp (tag, TEXT("???")))
 	       {
 		  for (i = StackLevel; i > 0; i--)

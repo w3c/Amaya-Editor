@@ -1143,7 +1143,7 @@ CHAR_T*              info;
 
 #endif
 {
-  if (!info || *info == EOS)
+  if (!info || *info == WC_EOS)
     return;
 #ifdef _WINDOWS   
   MessageBox (NULL, info, label, MB_OK);
@@ -1155,20 +1155,27 @@ CHAR_T*              info;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                InitConfirm3L (Document document, View view, CHAR_T *label1, CHAR_T *label2, CHAR_T *label3)
+void      InitConfirm3L (Document document, View view, CHAR_T *label1, CHAR_T *label2, CHAR_T *label3, ThotBool withCancel)
 #else
-void                InitConfirm3L (document, view, label1, label2, label3)
-Document            document;
-View                view;
-CHAR_T*              label1;
-CHAR_T*              label2;
-CHAR_T*              label3;
+void      InitConfirm3L (document, view, label1, label2, label3, withCancel)
+Document  document;
+View      view;
+CHAR_T   *label1;
+CHAR_T   *label2;
+CHAR_T   *label3;
+ThotBool  withCancel;
 #endif
 {
 #ifndef _WINDOWS
-   /* Confirm form */
-   TtaNewForm (BaseDialog + ConfirmForm, TtaGetViewFrame (document, view),  
-	       TtaGetMessage (LIB, TMSG_LIB_CONFIRM), FALSE, 2, 'L', D_CANCEL);
+  /* Confirm form */
+  if (withCancel)
+    TtaNewForm (BaseDialog + ConfirmForm, TtaGetViewFrame (document, view),  
+		TtaGetMessage (LIB, TMSG_LIB_CONFIRM), FALSE, 3, 'L', D_CANCEL);
+  else
+    TtaNewDialogSheet (BaseDialog + ConfirmForm, TtaGetViewFrame (document, view),
+		       TtaGetMessage(LIB, TMSG_LIB_CONFIRM),
+		       1,  TtaGetMessage(LIB, TMSG_LIB_CONFIRM),
+		       FALSE, 3, 'L');
    /* open as many label widgets as \n we find in the label */
    if (label1 && *label1 != WC_EOS)
      TtaNewLabel (BaseDialog + Label1, BaseDialog + ConfirmForm, label1);
@@ -1185,25 +1192,24 @@ CHAR_T*              label3;
    CreateInitConfirm3LDlgWindow (TtaGetViewFrame (document, view),
 				 BaseDialog + ConfirmForm,
 				 TtaGetMessage (LIB, TMSG_LIB_CONFIRM), label1,
-				 label2, label3);
+				 label2, label3, withCancel);
 #endif /* _WINDOWS */
 }
 
+static ThotBool critic = FALSE;
 /*----------------------------------------------------------------------
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void                InitConfirm (Document document, View view, CHAR_T* label)
+void             InitConfirm (Document document, View view, CHAR_T* label)
 #else
-void                InitConfirm (document, view, label)
-Document            document;
-View                view;
-CHAR_T*              label;
-
+void             InitConfirm (document, view, label)
+Document         document;
+View             view;
+CHAR_T*          label;
 #endif
 {
 #ifndef _WINDOWS
    /* Confirm form */
-   static ThotBool critic = FALSE;
 
    /* JK: This widget can't be called twice, but it happens when downloading a
       document with protected images. This is a quick silution to avoid the
@@ -2123,9 +2129,6 @@ ThotBool            history;
   CSSInfoPtr          css;
   Document            newdoc = 0;
   DocumentType        docType;
-  Element             root;
-  Attribute           attr;
-  AttributeType       attrType;
   CHARSET             charset, httpcharset;
   CHAR_T*             charEncoding;
   CHAR_T*             tempdocument;
@@ -2439,10 +2442,10 @@ ThotBool            history;
 
       charEncoding = HTTP_headers (http_headers, AM_HTTP_CHARSET);
       httpcharset = TtaGetCharset (charEncoding);
-      if (httpcharset != UNDEFINED_CHARSET)
-	TtaSetDocumentCharset (newdoc, httpcharset);
-      else if (charset != UNDEFINED_CHARSET)
+      if (charset != UNDEFINED_CHARSET)
 	TtaSetDocumentCharset (newdoc, charset);
+      else if (httpcharset != UNDEFINED_CHARSET)
+	TtaSetDocumentCharset (newdoc, httpcharset);
 
       if (TtaGetViewFrame (newdoc, 1) != 0)
 	/* this document is displayed */

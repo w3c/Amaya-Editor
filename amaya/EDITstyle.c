@@ -29,8 +29,9 @@
 #include "UIcss_f.h"
 #include "css_f.h"
 #include "fetchHTMLname_f.h"
-#include "init_f.h"
+#include "fetchXMLname_f.h"
 #include "html2thot_f.h"
+#include "init_f.h"
 #include "styleparser_f.h"
 
 #ifdef _WINDOWS
@@ -1310,7 +1311,7 @@ View                view;
     return;
 
   /* update the class name selector. */
-  elHtmlName = GITagName (ClassReference);
+  elHtmlName =  GetXMLElementName (TtaGetElementType (ClassReference), doc);
   if (elHtmlName[0] == TEXT('?'))
     InitConfirm (doc, 1, TtaGetMessage (AMAYA, AM_SEL_CLASS));
   else
