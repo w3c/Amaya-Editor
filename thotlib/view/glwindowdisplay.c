@@ -70,9 +70,9 @@
 
 /*If we should use a static table instead for
   performance bottleneck...*/
-#define DCOS(A) ((double)cos (A))
-#define DSIN(A) ((double)sin (A))
-#define DACOS(A) ((double)acos (A))
+#define DCOS(A) (cos (A))
+#define DSIN(A) (sin (A))
+#define DACOS(A) (acos (A))
 #define A_DEGREE 0.017453293
 
 /* Precision of a degree/1 
@@ -150,9 +150,6 @@ ThotBool GL_Err()
     return FALSE;
 }
 
-/*-----------GLOBALS----------*/
-/* Prevents double access */
-ThotBool GL_Drawing = FALSE;
 
 /*--------- STATICS ------*/
 
@@ -1218,7 +1215,6 @@ ThotBool GL_prepare (int frame)
   if (frame < MAX_FRAME)
     {
       FrameTable[frame].DblBuffNeedSwap = TRUE;
-GL_Drawing = TRUE;
     if (FrRef[frame])
 #ifdef _WINDOWS
       if (GL_Windows[frame])
@@ -1231,7 +1227,6 @@ GL_Drawing = TRUE;
 	return TRUE;
 #endif /*_WINDOWS*/
     }
-  GL_Drawing = FALSE;
   return FALSE;
 }
 
@@ -1240,10 +1235,9 @@ GL_Drawing = TRUE;
   ----------------------------------------------------------------------*/
 void GL_realize (int frame)
 {
-  GL_Drawing = FALSE;
-FrameTable[frame].DblBuffNeedSwap = TRUE;
-/* FrameTable[frame].DblBuffNeedSwap = FALSE;
-   GL_Swap (frame);*/
+  FrameTable[frame].DblBuffNeedSwap = TRUE;
+  /* FrameTable[frame].DblBuffNeedSwap = FALSE;
+     GL_Swap (frame);*/
   return;
 }
 /*----------------------------------------------------------------------
@@ -1271,7 +1265,7 @@ void GL_DrawAll (ThotWidget widget, int frame)
   /* if (GL_ANIM)
      RefreshAnimation (frame); */
  
-  if (!GL_Drawing && !FrameUpdating )
+  if (!FrameUpdating )
     {
       for (frame = 1 ; frame < MAX_FRAME; frame++)
 	{
@@ -1291,14 +1285,8 @@ void GL_DrawAll (ThotWidget widget, int frame)
 #ifdef _PCLDEBUGTIME
 			  ftime(&before);
 
-#endif /*_PCLDEBUG*/ 
-			  GL_Drawing = TRUE;  	   
-			  
-			  /*RedrawFrameBottom (frame, 0, NULL);*/
-			  glFinish ();
-			  /*
-			    saveBuffer (FrameTable[frame].FrWidth, FrameTable[frame].FrHeight);
-			  */
+#endif /*_PCLDEBUG*/ 	   
+			  glFinish ();glFlush();
 			  GL_Swap (frame);
 			  if (GL_Err())
 #ifdef _GTK
@@ -1320,7 +1308,6 @@ void GL_DrawAll (ThotWidget widget, int frame)
 			    } 
 			  
 #endif /*_PCLDEBUG*/
-			  GL_Drawing = FALSE;
 			  FrameTable[frame].DblBuffNeedSwap = FALSE;
 			}
 		  }
@@ -1391,11 +1378,8 @@ void SetGlPipelineState ()
 	 Because Thot draws outlined polygons with lines
 	 so...  if blending svg => GL_FRONT_AND_BACK*/
       glPolygonMode (GL_FRONT, GL_FILL);
-      /*Hardware opengl may 
-	support better rendering*/
-      /*
-      glEnable (GL_DITHER);
-      */
+      
+      glDisable (GL_DITHER);
       /*  Antialiasing 
 	  Those Options give better 
 	  quality image upon performance loss
@@ -1563,7 +1547,6 @@ void GL_window_copy_area (int frame,
 	  glFinish ();
 	  glDisable (GL_BLEND);
 
-	  glDisable (GL_DITHER);
 	  glRasterPos2i (xf, yf+height);	  
 	  /*IF Rasterpos is outside canvas...
 	   we must use a decaling 'feinte'*/
@@ -1586,10 +1569,8 @@ void GL_window_copy_area (int frame,
 			height,
 			GL_COLOR); 
 	  glEnable (GL_BLEND);
-	  glEnable (GL_DITHER);
 	  /*copy from back to front */
-	  glFinish ();
-	  FrameTable[frame].DblBuffNeedSwap = TRUE;
+	  GL_realize (frame);	 
 	}
 }
 /*-----------------------------------
@@ -1623,22 +1604,27 @@ viewport so we redraw all
 ------------------------------------*/
 void gl_window_resize (int frame, int width, int height)
 {
+#ifdef _GTK
   GtkWidget *widget;
-  
+#endif /*_GTK*/
   if (GL_prepare (frame))
       {
-	widget = FrameTable[frame].WdFrame;	
-	GLResize (widget->allocation.width+width, 
-		  widget->allocation.height+height, 
+#ifdef _GTK
+  widget = FrameTable[frame].WdFrame;
+
+  gtk_widget_queue_resize  (widget->parent->parent);
+  while (gtk_events_pending ()) 
+    gtk_main_iteration ();
+  return;
+  GLResize (widget->allocation.width+width, 
+	    widget->allocation.height+height, 
 	    0, 0);
+#endif /*_GTK*/
 	DefRegion (frame, 
  		   0, 0,
  		   width, height);
 	FrameRedraw (frame, width, height);
-	glFlush();
-	glFinish ();
-FrameTable[frame].DblBuffNeedSwap = TRUE;
-GL_Swap (frame);
+	GL_realize (frame);	 
       }
 
 }
