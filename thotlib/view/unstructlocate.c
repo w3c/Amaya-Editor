@@ -37,22 +37,6 @@
 #include <math.h>
 #endif /* WWW_MSWINDOWS */
 
-#define YFACTOR 200		/* penalisation en Y */
-#define ASIZE 3			/* taille des ancres */
-#define MAXLINE 500
-#define MAXVERTS 100
-
-#ifdef __STDC__
-extern PtrBox     DansLaBoite (PtrAbstractBox, int, int, int, int *);
-extern int          DistGraphique (int, int, PtrBox, int);
-extern int          DistBox (int, int, int, int, int, int);
-
-#else
-extern PtrBox     DansLaBoite ();
-extern int          DistGraphique ();
-extern int          DistBox ();
-
-#endif /* __STDC__ */
 
 /* ---------------------------------------------------------------------- */
 /* |    DesBoite recherche recursivement le pave qui englobe le point   | */
@@ -124,11 +108,11 @@ int                *pointselect;
 			    d = pBox->BxXOrg + (pBox->BxWidth / 2);
 			    if (x > d)
 			       pointIndex = 1;
-			    d = DistBox (x, y, pBox->BxXOrg, pBox->BxYOrg,
+			    d = GetBoxDistance (x, y, pBox->BxXOrg, pBox->BxYOrg,
 					 pBox->BxWidth, pBox->BxHeight);
 			 }
 		       else
-			  d = DistBox (x, y, pBox->BxXOrg, pBox->BxYOrg,
+			  d = GetBoxDistance (x, y, pBox->BxXOrg, pBox->BxYOrg,
 				       pBox->BxWidth, pBox->BxHeight);
 		    }
 		  else

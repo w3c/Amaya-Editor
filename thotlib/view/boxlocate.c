@@ -36,22 +36,8 @@
 #include <math.h>
 #endif /* WWW_MSWINDOWS */
 
-#define YFACTOR 200		/* penalisation en Y */
-#define ASIZE 3			/* taille des ancres */
-#define MAXLINE 500
-#define MAXVERTS 100
-
-#ifdef __STDC__
-extern boolean      TypeHasException (int, int, PtrSSchema);
-extern void         DefClip (int, int, int, int, int);
-extern boolean      AfFinFenetre (int, int);
-
-#else  /* __STDC__ */
-extern boolean      TypeHasException ();
-extern void         DefClip ();
-extern boolean      AfFinFenetre ();
-
-#endif /* __STDC__ */
+#define Y_RATIO 200		/* penalisation en Y */
+#define ANCHOR_SIZE 3		/* taille des ancres */
 
 
 /* ---------------------------------------------------------------------- */
@@ -73,13 +59,13 @@ int                 y;
 int                 button;
 #endif /* __STDC__ */
 {
-   int               indbuff;
+   int               index;
    PtrBox            pBox;
-   PtrTextBuffer      pBuffer;
-   PtrAbstractBox             paved;
-   int                 nbcar;
-   int                 nbbl;
-   ViewFrame            *pFrame;
+   PtrTextBuffer     pBuffer;
+   PtrAbstractBox    pAb;
+   int               charsNumber;
+   int               spacesNumber;
+   ViewFrame        *pFrame;
 
    if (frame >= 1)
      {
@@ -87,11 +73,11 @@ int                 button;
 	pFrame = &FntrTable[frame - 1];
 	x += pFrame->FrXOrg;
 	y += pFrame->FrYOrg;
-	paved = pFrame->FrAbstractBox;
-	nbcar = 0;
+	pAb = pFrame->FrAbstractBox;
+	charsNumber = 0;
 	/* recupere la boite selectionnee */
 	if (ThotLocalActions[T_selecbox] != NULL)
-	   (*ThotLocalActions[T_selecbox]) (&pBox, paved, frame, x, y, &nbcar);
+	   (*ThotLocalActions[T_selecbox]) (&pBox, pAb, frame, x, y, &charsNumber);
 	/* S'il s'agit d'une extension de la selection */
 	/* il faut eviter de selectionner la boite englobante */
 	if (button == 0 || button == 1)
@@ -101,249 +87,96 @@ int                 button;
 	  }
 	if (pBox != NULL)
 	  {
-	     paved = pBox->BxAbstractBox;
-	     if (paved->AbLeafType == LtText &&
-		 (!paved->AbPresentationBox || paved->AbCanBeModified))
+	     pAb = pBox->BxAbstractBox;
+	     if (pAb->AbLeafType == LtText &&
+		 (!pAb->AbPresentationBox || pAb->AbCanBeModified))
 	       {
 		  x -= pBox->BxXOrg;
-		  DesCaractere (pBox, &pBuffer, &x, &indbuff, &nbcar, &nbbl);
-		  nbcar = pBox->BxIndChar + nbcar + 1;
+		  DesCaractere (pBox, &pBuffer, &x, &index, &charsNumber, &spacesNumber);
+		  charsNumber = pBox->BxIndChar + charsNumber + 1;
 	       }
 	  }
 	else
-	   paved = NULL;
+	   pAb = NULL;
 
 	EndInsert ();
-	if (paved != NULL)
+	if (pAb != NULL)
 	   /* Initialisation de la selection */
 	   if (button == 3)
-	      SelectCour (frame, paved, nbcar, FALSE, TRUE, TRUE, FALSE);
+	      SelectCour (frame, pAb, charsNumber, FALSE, TRUE, TRUE, FALSE);
 	   else if (button == 2)
-	      SelectCour (frame, paved, nbcar, FALSE, TRUE, FALSE, FALSE);
+	      SelectCour (frame, pAb, charsNumber, FALSE, TRUE, FALSE, FALSE);
 	/* Extension de la selection */
 	   else if (button == 0)
-	      SelectCour (frame, paved, nbcar, TRUE, TRUE, FALSE, FALSE);
+	      SelectCour (frame, pAb, charsNumber, TRUE, TRUE, FALSE, FALSE);
 	   else if (button == 1)
-	      SelectCour (frame, paved, nbcar, TRUE, TRUE, FALSE, TRUE);
+	      SelectCour (frame, pAb, charsNumber, TRUE, TRUE, FALSE, TRUE);
      }
 }
 
+
 /* ---------------------------------------------------------------------- */
-/* |    ecrete rend 0 si val dans l'intervalle [-CHKR_LIMIT,+CHKR_LIMIT] et sinon | */
-/* |            abs(val)-CHKR_LIMIT. Avec CHKR_LIMIT = 0, donne la valeur absolue.| */
+/* |    GetDistance rend 0 si value dans l'intervalle de delta		| */
+/* |         sinon la  distance absloue - delta.       	       		| */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static int          ecrete (int val, int CHKR_LIMIT)
+static int          GetDistance (int value, int delta)
 #else  /* __STDC__ */
-static int          ecrete (val, CHKR_LIMIT)
-int                 val;
-int                 CHKR_LIMIT;
+static int          GetDistance (value, delta)
+int                 value;
+int                 delta;
 
 #endif /* __STDC__ */
 {
-   if (val > CHKR_LIMIT)
-      return (val - CHKR_LIMIT);
-   else if (val < -CHKR_LIMIT)
-      return (-val - CHKR_LIMIT);
+   if (value > delta)
+      return (value - delta);
+   else if (value < -delta)
+      return (-value - delta);
    else
       return (0);
 }
 
+
 /* ---------------------------------------------------------------------- */
-/* |    DistAncre calcule la distance d'une ancre x,y au point          | */
-/* |            Xpoint,Ypoint. La fonction rend la distance minimale    | */
-/* |            entre la distance calcule'e et dist.                    | */
+/* | GetBoxDistance calcule la distance d'un point xRef, yRef a` une    | */
+/* |            boite. On penalise favorise la distance verticale.      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static int          DistAncre (int Xpoint, int Ypoint, int x, int y, int dist)
+int                 GetBoxDistance (int xRef, int yRef, int x, int y, int width, int height)
 #else  /* __STDC__ */
-static int          DistAncre (Xpoint, Ypoint, x, y, dist)
-int                 Xpoint;
-int                 Ypoint;
+int                 GetBoxDistance (xRef, yRef, x, y, width, height)
+int                 xRef;
+int                 yRef;
 int                 x;
 int                 y;
-int                 dist;
+int                 width;
+int                 height;
 
 #endif /* __STDC__ */
 {
-   int                 d;
+   int              value;
 
-   d = ecrete (x - Xpoint, ASIZE - 1) + YFACTOR * ecrete (y - Ypoint, ASIZE - 1);
-   if (d < dist)
-      return (d);
-   else
-      return (dist);
+   /* prend le centre de la boite */
+   width /= 2;
+   x += width;
+   height /= 2;
+   y += height;
+   value = GetDistance (xRef - x, width) + Y_RATIO * GetDistance (yRef - y, height);
+   return (value);
 }
 
 /* ---------------------------------------------------------------------- */
-/* |    DistBox calcule la distance d'un point x, y a` une boi^te non   | */
-/* |            graphique. Si la boi^te contient du texte, on favorise  | */
-/* |            la distance en X.                                       | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-int                 DistBox (int x, int y, int X, int Y, int W, int H)
-#else  /* __STDC__ */
-int                 DistBox (x, y, X, Y, W, H)
-int                 x;
-int                 y;
-int                 X;
-int                 Y;
-int                 W;
-int                 H;
-
-#endif /* __STDC__ */
-{
-   int                 d;
-
-   /* centrer la boite */
-   W /= 2;
-   X += W;
-   H /= 2;
-   Y += H;
-
-   d = ecrete (x - X, W) + YFACTOR * ecrete (y - Y, H);
-   return (d);
-}
-
-/* ---------------------------------------------------------------------- */
-/* |    DistGraphique calcule la distance d'un point Xpoint,Ypoint a`   | */
-/* |            un point de la boite graphique (min des distances aux   | */
-/* |            ancres).                                                | */
-/* |            Cette selection est limitee aux boites terminale.       | */
-/* |            Rend la distance de la boite au point.                  | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-int                 DistGraphique (int Xpoint, int Ypoint, PtrBox pBox, int val)
-#else  /* __STDC__ */
-int                 DistGraphique (Xpoint, Ypoint, pBox, val)
-int                 Xpoint;
-int                 Ypoint;
-PtrBox            pBox;
-int                 val;
-
-#endif /* __STDC__ */
-{
-   int                 distance;
-   int                 X, Y, W, H;
-
-   /* centrer la boite */
-   W = pBox->BxWidth / 2;
-   X = pBox->BxXOrg + W;
-   H = pBox->BxHeight / 2;
-   Y = pBox->BxYOrg + H;
-   distance = 1000;
-
-   switch (val)
-	 {
-	    case 1:		/* racine .. */
-	       distance = DistAncre (Xpoint, Ypoint, X - W + H / 3, Y + H, distance);
-	       distance = DistAncre (Xpoint, Ypoint, X - W + (2 * H) / 3, Y - H, distance);
-	       distance = DistAncre (Xpoint, Ypoint, X + W, Y - H, distance);
-	       break;
-
-	    case 'c':		/* cercle */
-	       if (W < H)
-		  H = W;
-	       else
-		  W = H;
-	       /* ATTENTION: on continue en sequence, */
-	       /* vu qu'un cercle est aussi une ellipse */
-	    case 'C':		/* ellipse */
-	       distance = DistAncre (Xpoint, Ypoint, X - W, Y, distance);
-	       distance = DistAncre (Xpoint, Ypoint, X + W, Y, distance);
-	       distance = DistAncre (Xpoint, Ypoint, X, Y - H, distance);
-	       distance = DistAncre (Xpoint, Ypoint, X, Y + H, distance);
-	       H = (71 * H) / 100;
-	       W = (71 * W) / 100;
-	       distance = DistAncre (Xpoint, Ypoint, X - W, Y + H, distance);
-	       distance = DistAncre (Xpoint, Ypoint, X - W, Y - H, distance);
-	       distance = DistAncre (Xpoint, Ypoint, X + W, Y + H, distance);
-	       distance = DistAncre (Xpoint, Ypoint, X + W, Y - H, distance);
-	       break;
-
-	    case 'L':		/* losange */
-	       distance = DistAncre (Xpoint, Ypoint, X - W, Y, distance);
-	       distance = DistAncre (Xpoint, Ypoint, X + W, Y, distance);
-	       distance = DistAncre (Xpoint, Ypoint, X, Y - H, distance);
-	       distance = DistAncre (Xpoint, Ypoint, X, Y + H, distance);
-	       break;
-
-	    case 't':		/* trait horiz en haut */
-	       distance = DistAncre (Xpoint, Ypoint, X - W, Y - H, distance);
-	       distance = DistAncre (Xpoint, Ypoint, X + W, Y - H, distance);
-	       distance = DistAncre (Xpoint, Ypoint, X, Y - H, distance);
-	       break;
-
-	    case 'b':		/* trait horiz en bas */
-	       distance = DistAncre (Xpoint, Ypoint, X - W, Y + H, distance);
-	       distance = DistAncre (Xpoint, Ypoint, X + W, Y + H, distance);
-	       distance = DistAncre (Xpoint, Ypoint, X, Y + H, distance);
-	       break;
-
-	    case 'h':		/* trait horizontal centre ou fleche */
-	    case '<':
-	    case '>':
-	       distance = DistAncre (Xpoint, Ypoint, X - W, Y, distance);
-	       distance = DistAncre (Xpoint, Ypoint, X + W, Y, distance);
-	       distance = DistAncre (Xpoint, Ypoint, X, Y, distance);
-	       break;
-
-	    case 'v':
-	    case 'V':		/* trait vertical centre ou fleche ^ */
-	    case '^':
-	       distance = DistAncre (Xpoint, Ypoint, X, Y - H, distance);
-	       distance = DistAncre (Xpoint, Ypoint, X, Y + H, distance);
-	       distance = DistAncre (Xpoint, Ypoint, X, Y, distance);
-	       break;
-
-	    case 'l':		/* trait vertical gauche */
-	       distance = DistAncre (Xpoint, Ypoint, X - W, Y - H, distance);
-	       distance = DistAncre (Xpoint, Ypoint, X - W, Y + H, distance);
-	       distance = DistAncre (Xpoint, Ypoint, X - W, Y, distance);
-	       break;
-	    case 'r':		/* trait vertical droit */
-	       distance = DistAncre (Xpoint, Ypoint, X + W, Y - H, distance);
-	       distance = DistAncre (Xpoint, Ypoint, X + W, Y + H, distance);
-	       distance = DistAncre (Xpoint, Ypoint, X + W, Y, distance);
-	       break;
-
-	    case '/':		/* diagonale ou fleche vers le haut */
-	    case 'E':
-	    case 'o':
-	       distance = DistAncre (Xpoint, Ypoint, X - W, Y + H, distance);
-	       distance = DistAncre (Xpoint, Ypoint, X + W, Y - H, distance);
-	       distance = DistAncre (Xpoint, Ypoint, X, Y, distance);
-	       break;
-
-	    case '\\':		/* diagonale ou fleche vers le bas */
-	    case 'e':
-	    case 'O':
-	       distance = DistAncre (Xpoint, Ypoint, X - W, Y - H, distance);
-	       distance = DistAncre (Xpoint, Ypoint, X + W, Y + H, distance);
-	       distance = DistAncre (Xpoint, Ypoint, X, Y, distance);
-	       break;
-	    default:		/* rectangle ou autre */
-	       distance = DistAncre (Xpoint, Ypoint, X - W, Y + H, distance);
-	       distance = DistAncre (Xpoint, Ypoint, X - W, Y - H, distance);
-	       distance = DistAncre (Xpoint, Ypoint, X + W, Y + H, distance);
-	       distance = DistAncre (Xpoint, Ypoint, X + W, Y - H, distance);
-	       break;
-	 }
-   return (distance);
-}				/*DistGraphique */
-
-/* ---------------------------------------------------------------------- */
-/* |    pointOnLine teste qu'un point x,y est sur un segment P1(x1,y1)  | */
+/* |    IsOnPolyline teste qu'un point x,y est sur un segment P1(x1,y1)  | */
 /* |            P2(x2,y2) avec une certaine precision DELTA_SEL.         | */
-/* |            On teste l'appartenance du point a` un rectangle cree   | */
+/* |            On teste l'appartenance du point a` un rectangle cree    | */
 /* |            par e'largissement de DELTA_SEL autour des deux points.  | */
-/* |            Le test est fait apres une rotation permettant de se    | */
-/* |            ramener a` un rectangle horizontal.                     | */
+/* |            Le test est fait apres une rotation permettant de se     | */
+/* |            ramener a` un rectangle horizontal.                      | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static boolean      pointOnLine (int x, int y, int x1, int y1, int x2, int y2)
+static boolean      IsOnPolyline (int x, int y, int x1, int y1, int x2, int y2)
 #else  /* __STDC__ */
-static boolean      pointOnLine (x, y, x1, y1, x2, y2)
+static boolean      IsOnPolyline (x, y, x1, y1, x2, y2)
 int                 x;
 int                 y;
 int                 x1;
@@ -354,25 +187,25 @@ int                 y2;
 #endif /* __STDC__ */
 {
    int                 dX, dY, nX, nY;
-   double              R, C, S;
+   double              ra, cs, ss;
 
    x -= x1;
-   y -= y1;			/* translation */
+   y -= y1;
    dX = x2 - x1;
    dY = y2 - y1;
-   /* rotation ramenant le 2e point sur l'horizontale */
-   R = sqrt ((double) dX * dX + dY * dY);
-   if (R == 0.0)
+   /* ramene le 2e point sur l'horizontale */
+   ra = sqrt ((double) dX * dX + dY * dY);
+   if (ra == 0.0)
       return FALSE;
-   C = dX / R;
-   S = dY / R;
-   nX = x * C + y * S;
-   nY = y * C - x * S;
+   cs = dX / ra;
+   ss = dY / ra;
+   nX = x * cs + y * ss;
+   nY = y * cs - x * ss;
    /* test */
    return (nY <= DELTA_SEL
 	   && nY >= -DELTA_SEL
 	   && nX >= -DELTA_SEL
-	   && nX <= R + DELTA_SEL);
+	   && nX <= ra + DELTA_SEL);
 }
 
 
@@ -566,7 +399,7 @@ int                *pointselect;
 	else if (X1 == -1)
 	   OK = FALSE;
 	else
-	   OK = pointOnLine (x, y, X1, Y1, X2, Y2);
+	   OK = IsOnPolyline (x, y, X1, Y1, X2, Y2);
 
 	if (OK)
 	   /* Le point est sur ce segment -> le test est fini */
@@ -583,7 +416,7 @@ int                *pointselect;
      {
 	X2 = PointToPixel (box->BxBuffer->BuPoints[1].XCoord / 1000);
 	Y2 = PointToPixel (box->BxBuffer->BuPoints[1].YCoord / 1000);
-	OK = pointOnLine (x, y, X1, Y1, X2, Y2);
+	OK = IsOnPolyline (x, y, X1, Y1, X2, Y2);
 	if (OK)
 	   return (box);
      }
@@ -610,7 +443,7 @@ int                 y;
    int                 prevX, prevY;
    int                 nextX, nextY;
    int                 arc;
-   float               val1, val2;
+   float               value1, value2;
    PtrBox            box;
    boolean             OK;
 
@@ -677,12 +510,12 @@ int                 y;
 	       break;
 	    case 'c':
 	    case 'Q':		/* ellipses */
-	       val1 = x - ((float) box->BxWidth / 2);
-	       val2 = (y - ((float) box->BxHeight / 2)) * ((float) box->BxWidth / (float) box->BxHeight);
-	       val1 = val1 * val1 + val2 * val2;
-	       val2 = (float) box->BxWidth / 2;
-	       val2 = val2 * val2;
-	       if (val1 <= val2)
+	       value1 = x - ((float) box->BxWidth / 2);
+	       value2 = (y - ((float) box->BxHeight / 2)) * ((float) box->BxWidth / (float) box->BxHeight);
+	       value1 = value1 * value1 + value2 * value2;
+	       value2 = (float) box->BxWidth / 2;
+	       value2 = value2 * value2;
+	       if (value1 <= value2)
 		  return (TRUE);	/* le point est dans le cercle */
 	       else
 		  return (FALSE);	/* le point est hors du cercle */
@@ -852,26 +685,26 @@ int                 y;
 	    case '6':
 	    case '7':
 	    case '8':
-	       if (pointOnLine (x, y, 0, 0, box->BxWidth, 0)
-		   || pointOnLine (x, y, 0, box->BxHeight, box->BxWidth, box->BxHeight)
-		   || pointOnLine (x, y, 0, 0, 0, box->BxHeight)
-		   || pointOnLine (x, y, box->BxWidth, 0, box->BxWidth, box->BxHeight))
+	       if (IsOnPolyline (x, y, 0, 0, box->BxWidth, 0) ||
+		   IsOnPolyline (x, y, 0, box->BxHeight, box->BxWidth, box->BxHeight) ||
+		   IsOnPolyline (x, y, 0, 0, 0, box->BxHeight) ||
+		   IsOnPolyline (x, y, box->BxWidth, 0, box->BxWidth, box->BxHeight))
 		  return (box);
 	       break;
 	    case 'L':
-	       if (pointOnLine (x, y, 0, box->BxHeight / 2, box->BxWidth / 2, 0)
-		   || pointOnLine (x, y, 0, box->BxHeight / 2, box->BxWidth / 2, box->BxHeight)
-		   || pointOnLine (x, y, box->BxWidth, box->BxHeight / 2, box->BxWidth / 2, 0)
-		   || pointOnLine (x, y, box->BxWidth, box->BxHeight / 2, box->BxWidth / 2, box->BxHeight))
+	       if (IsOnPolyline (x, y, 0, box->BxHeight / 2, box->BxWidth / 2, 0) ||
+		   IsOnPolyline (x, y, 0, box->BxHeight / 2, box->BxWidth / 2, box->BxHeight) ||
+		   IsOnPolyline (x, y, box->BxWidth, box->BxHeight / 2, box->BxWidth / 2, 0) ||
+		   IsOnPolyline (x, y, box->BxWidth, box->BxHeight / 2, box->BxWidth / 2, box->BxHeight))
 		  return (box);
 	       break;
 	    case 'C':
 	    case 'P':
 	       arc = (3 * DOT_PER_INCHE) / 25.4 + 0.5;
-	       if (pointOnLine (x, y, arc, 0, box->BxWidth - arc, 0)
-		   || pointOnLine (x, y, 0, arc, 0, box->BxHeight - arc)
-		   || pointOnLine (x, y, arc, box->BxHeight, box->BxWidth - arc, box->BxHeight)
-		   || pointOnLine (x, y, box->BxWidth, arc, box->BxWidth, box->BxHeight - arc))
+	       if (IsOnPolyline (x, y, arc, 0, box->BxWidth - arc, 0) ||
+		   IsOnPolyline (x, y, 0, arc, 0, box->BxHeight - arc) ||
+		   IsOnPolyline (x, y, arc, box->BxHeight, box->BxWidth - arc, box->BxHeight) ||
+		   IsOnPolyline (x, y, box->BxWidth, arc, box->BxWidth, box->BxHeight - arc))
 		  return (box);
 	       break;
 	    case 'c':
@@ -881,81 +714,81 @@ int                 y;
 	       break;
 	    case 'W':
 	       if (ptc == 1 || ptc == 3 || ptc == 5 ||
-		   pointOnLine (x, y, 0, 0, box->BxWidth, 0) ||
-	       pointOnLine (x, y, box->BxWidth, 0, box->BxWidth, box->BxHeight))
+		   IsOnPolyline (x, y, 0, 0, box->BxWidth, 0) ||
+	       IsOnPolyline (x, y, box->BxWidth, 0, box->BxWidth, box->BxHeight))
 		  return (box);
 	       break;
 	    case 'X':
 	       if (ptc == 3 || ptc == 5 || ptc == 7 ||
-		   pointOnLine (x, y, box->BxWidth, 0, box->BxWidth, box->BxHeight) ||
-	       pointOnLine (x, y, box->BxWidth, box->BxHeight, 0, box->BxHeight))
+		   IsOnPolyline (x, y, box->BxWidth, 0, box->BxWidth, box->BxHeight) ||
+	       IsOnPolyline (x, y, box->BxWidth, box->BxHeight, 0, box->BxHeight))
 		  return (box);
 	       break;
 	    case 'Y':
 	       if (ptc == 1 || ptc == 5 || ptc == 7 ||
-		   pointOnLine (x, y, box->BxWidth, box->BxHeight, 0, box->BxHeight) ||
-		   pointOnLine (x, y, 0, box->BxHeight, 0, 0))
+		   IsOnPolyline (x, y, box->BxWidth, box->BxHeight, 0, box->BxHeight) ||
+		   IsOnPolyline (x, y, 0, box->BxHeight, 0, 0))
 		  return (box);
 	       break;
 	    case 'Z':
 	       if (ptc == 1 || ptc == 3 || ptc == 7 ||
-		   pointOnLine (x, y, 0, box->BxHeight, 0, 0) ||
-		   pointOnLine (x, y, 0, 0, box->BxWidth, 0))
+		   IsOnPolyline (x, y, 0, box->BxHeight, 0, 0) ||
+		   IsOnPolyline (x, y, 0, 0, box->BxWidth, 0))
 		  return (box);
 	       break;
 	    case 'h':
 	    case '<':
 	    case '>':
 	       if (ptc == 4 || ptc == 8 ||
-		   pointOnLine (x, y, 0, box->BxHeight / 2, box->BxWidth, box->BxHeight / 2))
+		   IsOnPolyline (x, y, 0, box->BxHeight / 2, box->BxWidth, box->BxHeight / 2))
 		  return (box);
 	       break;
 	    case 't':
 	       if (ptc == 1 || ptc == 2 || ptc == 3 ||
-		   pointOnLine (x, y, 0, 0, box->BxWidth, 0))
+		   IsOnPolyline (x, y, 0, 0, box->BxWidth, 0))
 		  return (box);
 	       break;
 	    case 'b':
 	       if (ptc == 5 || ptc == 6 || ptc == 7 ||
-	       pointOnLine (x, y, box->BxWidth, box->BxHeight, 0, box->BxHeight))
+	       IsOnPolyline (x, y, box->BxWidth, box->BxHeight, 0, box->BxHeight))
 		  return (box);
 	       break;
 	    case 'v':
 	    case '^':
 	    case 'V':
-	       if (ptc == 2 || ptc == 6 || pointOnLine (x, y, box->BxWidth / 2, 0,
-					      box->BxWidth / 2, box->BxHeight))
+	       if (ptc == 2 || ptc == 6 ||
+		   IsOnPolyline (x, y, box->BxWidth / 2, 0, box->BxWidth / 2, box->BxHeight))
 		  return (box);
 	       break;
 	    case 'l':
 	       if (ptc == 1 || ptc == 7 || ptc == 8 ||
-		   pointOnLine (x, y, 0, box->BxHeight, 0, 0))
+		   IsOnPolyline (x, y, 0, box->BxHeight, 0, 0))
 		  return (box);
 	       break;
 	    case 'r':
 	       if (ptc == 3 || ptc == 4 || ptc == 5 ||
-	       pointOnLine (x, y, box->BxWidth, 0, box->BxWidth, box->BxHeight))
+	       IsOnPolyline (x, y, box->BxWidth, 0, box->BxWidth, box->BxHeight))
 		  return (box);
 	       break;
 	    case '\\':
 	    case 'O':
 	    case 'e':
 	       if (ptc == 1 || ptc == 5 ||
-		   pointOnLine (x, y, 0, 0, box->BxWidth, box->BxHeight))
+		   IsOnPolyline (x, y, 0, 0, box->BxWidth, box->BxHeight))
 		  return (box);
 	       break;
 	    case '/':
 	    case 'o':
 	    case 'E':
 	       if (ptc == 3 || ptc == 7 ||
-		   pointOnLine (x, y, 0, box->BxHeight, box->BxWidth, 0))
+		   IsOnPolyline (x, y, 0, box->BxHeight, box->BxWidth, 0))
 		  return (box);
 	       break;
 	    default:
 	       break;
 	 }
    return (NULL);
-}				/*SurLeGraphique */
+}
 
 /* ---------------------------------------------------------------------- */
 /* |    DansLaBoite teste si le point x, y appartient au pave'          | */
@@ -1036,7 +869,7 @@ int                *pointselect;
 	else
 	   return (NULL);
      }
-}				/*DansLaBoite */
+}
 
 
 /* ---------------------------------------------------------------------- */
@@ -1103,6 +936,159 @@ PtrAbstractBox             pAb;
       return (NULL);
 }
 
+/* ---------------------------------------------------------------------- */
+/* |  GetGetMinimumDistance calcule la distance d'une ancre x,y au point| */
+/* |            xRef,yRef. La fonction rend la distance minimale        | */
+/* |            entre la distance calcule'e et dist.                    | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+static int          GetGetMinimumDistance (int xRef, int yRef, int x, int y, int dist)
+#else  /* __STDC__ */
+static int          GetGetMinimumDistance (xRef, yRef, x, y, dist)
+int                 xRef;
+int                 yRef;
+int                 x;
+int                 y;
+int                 dist;
+
+#endif /* __STDC__ */
+{
+   int              value;
+
+   value = GetDistance (x - xRef, ANCHOR_SIZE) + GetDistance (y - yRef, ANCHOR_SIZE) * Y_RATIO;
+   if (value < dist)
+      return (value);
+   else
+      return (dist);
+}
+
+/* ---------------------------------------------------------------------- */
+/* |    DistGraphique calcule la distance d'un point xRef,yRef a`       | */
+/* |            un point de la boite graphique (min des distances aux   | */
+/* |            ancres).                                                | */
+/* |            Cette selection est limitee aux boites terminale.       | */
+/* |            Rend la distance de la boite au point.                  | */
+/* ---------------------------------------------------------------------- */
+#ifdef __STDC__
+int                 DistGraphique (int xRef, int yRef, PtrBox pBox, int value)
+#else  /* __STDC__ */
+int                 DistGraphique (xRef, yRef, pBox, value)
+int                 xRef;
+int                 yRef;
+PtrBox            pBox;
+int                 value;
+
+#endif /* __STDC__ */
+{
+   int                 distance;
+   int                 x, y, width, height;
+
+   /* centrer la boite */
+   width = pBox->BxWidth / 2;
+   x = pBox->BxXOrg + width;
+   height = pBox->BxHeight / 2;
+   y = pBox->BxYOrg + height;
+   distance = 1000;
+
+   switch (value)
+	 {
+	    case 1:		/* racine .. */
+	       distance = GetGetMinimumDistance (xRef, yRef, x - width + height / 3, y + height, distance);
+	       distance = GetGetMinimumDistance (xRef, yRef, x - width + (2 * height) / 3, y - height, distance);
+	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y - height, distance);
+	       break;
+
+	    case 'c':		/* cercle */
+	       if (width < height)
+		  height = width;
+	       else
+		  width = height;
+	       /* ATTENTION: on continue en sequence, */
+	       /* vu qu'un cercle est aussi une ellipse */
+	    case 'C':		/* ellipse */
+	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y, distance);
+	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y, distance);
+	       distance = GetGetMinimumDistance (xRef, yRef, x, y - height, distance);
+	       distance = GetGetMinimumDistance (xRef, yRef, x, y + height, distance);
+	       height = (71 * height) / 100;
+	       width = (71 * width) / 100;
+	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y + height, distance);
+	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y - height, distance);
+	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y + height, distance);
+	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y - height, distance);
+	       break;
+
+	    case 'L':		/* losange */
+	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y, distance);
+	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y, distance);
+	       distance = GetGetMinimumDistance (xRef, yRef, x, y - height, distance);
+	       distance = GetGetMinimumDistance (xRef, yRef, x, y + height, distance);
+	       break;
+
+	    case 't':		/* trait horiz en haut */
+	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y - height, distance);
+	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y - height, distance);
+	       distance = GetGetMinimumDistance (xRef, yRef, x, y - height, distance);
+	       break;
+
+	    case 'b':		/* trait horiz en bas */
+	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y + height, distance);
+	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y + height, distance);
+	       distance = GetGetMinimumDistance (xRef, yRef, x, y + height, distance);
+	       break;
+
+	    case 'h':		/* trait horizontal centre ou fleche */
+	    case '<':
+	    case '>':
+	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y, distance);
+	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y, distance);
+	       distance = GetGetMinimumDistance (xRef, yRef, x, y, distance);
+	       break;
+
+	    case 'v':
+	    case 'V':		/* trait vertical centre ou fleche ^ */
+	    case '^':
+	       distance = GetGetMinimumDistance (xRef, yRef, x, y - height, distance);
+	       distance = GetGetMinimumDistance (xRef, yRef, x, y + height, distance);
+	       distance = GetGetMinimumDistance (xRef, yRef, x, y, distance);
+	       break;
+
+	    case 'l':		/* trait vertical gauche */
+	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y - height, distance);
+	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y + height, distance);
+	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y, distance);
+	       break;
+	    case 'r':		/* trait vertical droit */
+	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y - height, distance);
+	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y + height, distance);
+	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y, distance);
+	       break;
+
+	    case '/':		/* diagonale ou fleche vers le haut */
+	    case 'E':
+	    case 'o':
+	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y + height, distance);
+	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y - height, distance);
+	       distance = GetGetMinimumDistance (xRef, yRef, x, y, distance);
+	       break;
+
+	    case '\\':		/* diagonale ou fleche vers le bas */
+	    case 'e':
+	    case 'O':
+	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y - height, distance);
+	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y + height, distance);
+	       distance = GetGetMinimumDistance (xRef, yRef, x, y, distance);
+	       break;
+	    default:		/* rectangle ou autre */
+	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y + height, distance);
+	       distance = GetGetMinimumDistance (xRef, yRef, x - width, y - height, distance);
+	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y + height, distance);
+	       distance = GetGetMinimumDistance (xRef, yRef, x + width, y - height, distance);
+	       break;
+	 }
+   return (distance);
+}
+
 
 
 /* ---------------------------------------------------------------------- */
@@ -1129,7 +1115,8 @@ int                 y;
 
    pBox = NULL;
    sbox = NULL;
-   distmax = 2000;		/* au-dela, on n'accepte pas la selection */
+   /* au-dela de distmax, on n'accepte pas la selection */
+   distmax = 2000;
    pFrame = &FntrTable[frame - 1];
 
    if (pFrame->FrAbstractBox != NULL)
@@ -1146,7 +1133,6 @@ int                 y;
 		  if (pav->AbLeafType == LtGraphics || pav->AbLeafType == LtPlyLine)
 		    {
 		       testbox = DansLaBoite (pav, x, x, y, &pointIndex);
-		       /*d = DistGraphique(x, y, pBox, (int)pav->AbRealShape); */
 		       if (testbox == NULL)
 			  d = distmax + 1;
 		       else
@@ -1160,7 +1146,7 @@ int                 y;
 			   || pav->AbLeafType == LtPicture
 		     /* ou une boite composee vide */
 		   || (pav->AbLeafType == LtCompound && pav->AbVolume == 0))
-		     d = DistBox (x, y, pBox->BxXOrg, pBox->BxYOrg, pBox->BxWidth, pBox->BxHeight);
+		     d = GetBoxDistance (x, y, pBox->BxXOrg, pBox->BxYOrg, pBox->BxWidth, pBox->BxHeight);
 		  else
 		     d = distmax + 1;
 
@@ -1402,12 +1388,12 @@ int                *max;
 /* |            modifie'.                                               | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-boolean             APPgraphicModify (PtrElement pEl, int val, int frame, boolean pre)
+boolean             APPgraphicModify (PtrElement pEl, int value, int frame, boolean pre)
 
 #else  /* __STDC__ */
-boolean             APPgraphicModify (pEl, val, frame, pre)
+boolean             APPgraphicModify (pEl, value, frame, pre)
 PtrElement          pEl;
-int                 val;
+int                 value;
 int                 frame;
 boolean             pre;
 
@@ -1431,7 +1417,7 @@ boolean             pre;
 	notifyEl.document = (Document) IdentDocument (pDoc);
 	notifyEl.element = (Element) pAsc;
 	notifyEl.target = (Element) pEl;
-	notifyEl.value = val;
+	notifyEl.value = value;
 	ok = CallEventType ((NotifyEvent *) & notifyEl, pre);
 	result = result || ok;
 	pAsc = pAsc->ElParent;
@@ -2013,15 +1999,15 @@ int                 frame;
 /* |            Met a jour la valeur x.                                 | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                DesCaractere (PtrBox pBox, PtrTextBuffer * adbuff, int *x, int *icar, int *nbcar, int *nbbl)
+void                DesCaractere (PtrBox pBox, PtrTextBuffer * adbuff, int *x, int *icar, int *charsNumber, int *spacesNumber)
 #else  /* __STDC__ */
-void                DesCaractere (pBox, adbuff, x, icar, nbcar, nbbl)
+void                DesCaractere (pBox, adbuff, x, icar, charsNumber, spacesNumber)
 PtrBox            pBox;
 PtrTextBuffer     *adbuff;
 int                *x;
 int                *icar;
-int                *nbcar;
-int                *nbbl;
+int                *charsNumber;
+int                *spacesNumber;
 
 #endif /* __STDC__ */
 {
@@ -2037,8 +2023,8 @@ int                *nbbl;
 
 
    /* Nombre de caracteres qui precedent */
-   *nbcar = 0;
-   *nbbl = 0;
+   *charsNumber = 0;
+   *spacesNumber = 0;
    car = '\0';
    lgcar = 0;
    if (pBox->BxNChars == 0 || *x <= 0)
@@ -2096,7 +2082,7 @@ int                *nbbl;
 
 	     if (car == BLANC)
 	       {
-		  (*nbbl)++;
+		  (*spacesNumber)++;
 		  if (restbl > 0)
 		    {
 		       dx++;
@@ -2105,7 +2091,7 @@ int                *nbbl;
 	       }
 
 	     dx += lgcar;
-	     (*nbcar)++;
+	     (*charsNumber)++;
 
 	     /* On passe au caractere suivant */
 	     *icar = newcar;
@@ -2146,14 +2132,14 @@ int                *nbbl;
 	     *x = dx - lgcar;	/* BAlignment sur le caractere */
 	     if (car == BLANC)
 	       {
-		  if (*nbbl > 0 && pBox->BxNPixels >= *nbbl)
+		  if (*spacesNumber > 0 && pBox->BxNPixels >= *spacesNumber)
 		     (*x)--;
-		  (*nbbl)--;
+		  (*spacesNumber)--;
 	       }
 
 	     if (newcar == 1)
 		*adbuff = (*adbuff)->BuPrevious;
-	     (*nbcar)--;
+	     (*charsNumber)--;
 #else
 	     *x = dx;
 	     *icar = newcar;

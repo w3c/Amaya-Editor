@@ -36,18 +36,6 @@
 #include <math.h>
 #endif /* WWW_MSWINDOWS */
 
-#define YFACTOR 200		/* penalisation en Y */
-#define ASIZE 3			/* taille des ancres */
-#define MAXLINE 500
-#define MAXVERTS 100
-
-#ifdef __STDC__
-extern PtrBox     DansLaBoite (PtrAbstractBox, int, int, int, int *);
-
-#else  /* __STDC__ */
-extern PtrBox     DansLaBoite ();
-
-#endif /* __STDC__ */
 
 /* ---------------------------------------------------------------------- */
 /* |    DesBoite recherche recursivement le pave qui englobe le point   | */
@@ -78,8 +66,8 @@ int                *pointselect;
    int                 pointIndex;
    ViewFrame            *pFrame;
 
-   /* On admet une erreur de precision de DELTA dans la designation */
-   distmax = x - DELTA;
+   /* On admet une erreur de precision de DELTA_SEL dans la designation */
+   distmax = x - DELTA_SEL;
    pFrame = &FntrTable[frame - 1];
    sbox = NULL;
    pav = pAb;

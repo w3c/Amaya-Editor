@@ -1,19 +1,18 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /* 
- * font.var : Variables globales du Mediateur
- * -> pour la gestion des fontes. I. Vatton - Juillet 87
+ * Global variables for font management
  */
 
 
+#ifndef THOT_FONT_VAR
+#define THOT_FONT_VAR
 
-EXPORT ptrfont   FontMenu;	/* Fonte utilisee pour l'interface */
-EXPORT ptrfont   FontMenu2;	/* Fonte utilisee pour l'interface */
-EXPORT ptrfont   FontMenu3;	/* Fonte utilisee pour l'interface */
-EXPORT ptrfont   FontMenu4;	/* Fonte utilisee pour l'interface */
-EXPORT ptrfont   FontGraph;	/* Fonte utilisee dans le graphique */
-EXPORT ptrfont   FontIGr;	/* Fonte des images de graphiques   */
-EXPORT ptrfont   FontIS;	/* Fonte des images de symbloles    */
-EXPORT ptrfont   FonteLeg;	/* Fonte des legendes de claviers */
-EXPORT int	  MenuSize;	/* Taille utilisee pour dialogue */
+EXPORT ptrfont   FontMenu;	/* Standard font dialogue */
+EXPORT ptrfont   FontMenu2;	/* Italics font dialogue  */
+EXPORT ptrfont   FontMenu3;	/* Large font dialogue    */
+EXPORT ptrfont   FonteLeg;	/* Small font dialogue    */
+EXPORT ptrfont   FontIGr;	/* Graphics icons         */
+EXPORT ptrfont   FontIS;	/* Symblol icons          */
+EXPORT int	 MenuSize;	/* Dialogue font size     */
+
+
+#endif

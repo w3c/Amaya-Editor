@@ -1,6 +1,5 @@
 /*
-   liste.c : module de trace des e'tats du Mediateur.
-   I. Vatton
+   Module dedicated to boxe management debuging.
  */
 
 #include "thot_sys.h"
@@ -15,8 +14,6 @@ typedef int         L_Relations[30];
 
 #define EXPORT extern
 #include "img.var"
- /* Identification des messages */
-
 
 #include "structlist_f.h"
 #include "absboxes_f.h"
@@ -652,103 +649,4 @@ FILE               *outfile;
 #endif /* __STDC__ */
 
 {
-   int                 i, nb;
-   L_Relations         TabPos;
-   L_Relations         TabDimH;
-   L_Relations         TabDimV;
-   int                 total = 0;
-   ViewFrame            *pFrame;
-
-
-   /* On ecrit les informations sur les blocs de memoires utilises */
-   fprintf (outfile, "\n");
-   fprintf (outfile, "\n");
-   fprintf (outfile, "Boites libres :");
-   fprintf (outfile, "%5d\n", NbLibBox);
-   fprintf (outfile, "Boites occupees :");
-   fprintf (outfile, "%5d\n", NbOccBox);
-   i = sizeof (Box);
-   fprintf (outfile, "%5d", i);
-   fprintf (outfile, " octets par boite, total =");
-   i = i * (NbLibBox + NbOccBox);
-   total += i;
-   fprintf (outfile, "%10d\n", i);
-   fprintf (outfile, "\n");
-   fprintf (outfile, "Blocs de position libres :");
-   fprintf (outfile, "%5d\n", NbLibBPos);
-   fprintf (outfile, "Blocs de position occupes :");
-   fprintf (outfile, "%5d\n", NbOccBPos);
-   i = sizeof (PosRelations);
-   fprintf (outfile, "%5d", i);
-   fprintf (outfile, " octets par bloc de relations de position, total =");
-   i = i * (NbLibBPos + NbOccBPos);
-   total += i;
-   fprintf (outfile, "%10d\n", i);
-   fprintf (outfile, "\n");
-   fprintf (outfile, "Blocs de dimension libres :");
-   fprintf (outfile, "%5d\n", NbLibBDim);
-   fprintf (outfile, "Blocs de dimension occupes :");
-   fprintf (outfile, "%5d\n", NbOccBDim);
-   i = sizeof (DimRelations);
-   fprintf (outfile, "%5d", i);
-   fprintf (outfile, " octets par bloc de relations de dimension, total =");
-   i = i * (NbLibBPos + NbOccBPos);
-   total += i;
-   fprintf (outfile, "%10d\n", i);
-   fprintf (outfile, "\n");
-   fprintf (outfile, "Lignes libres :");
-   fprintf (outfile, "%5d\n", NbLibLine);
-   fprintf (outfile, "Lignes occupees :");
-   fprintf (outfile, "%5d\n", NbOccLine);
-   i = sizeof (Line);
-   fprintf (outfile, "%5d", i);
-   fprintf (outfile, " octets par ligne, total =");
-   i = i * (NbLibLine + NbOccLine);
-   total += i;
-   fprintf (outfile, "%10d\n", i);
-   /* Evaluation du nombre d'entrees des blocs utilises */
-   for (i = 1; i <= 30; i++)
-     {
-	TabPos[i - 1] = 0;
-	TabDimH[i - 1] = 0;
-	TabDimV[i - 1] = 0;
-     }
-   for (i = 1; i <= MAX_FRAME; i++)
-     {
-	pFrame = &FntrTable[i - 1];
-	if (pFrame->FrAbstractBox != NULL)
-	   StPav (pFrame->FrAbstractBox, TabPos, TabDimH, TabDimV);
-     }
-   /* Evaluation des pourcentages de nombres d'entrees utilisees */
-   fprintf (outfile, "\n");
-   fprintf (outfile, "Pourcentage de relations de position\n");
-   for (i = 1; i <= 30; i++)
-      if (TabPos[i - 1] != 0)
-	{
-	   nb = TabPos[i - 1] * 100 / NbOccBox;
-	   fprintf (outfile, "%2d->", i);
-	   fprintf (outfile, "%3d%%  ", nb);
-	}
-   fprintf (outfile, "\n");
-   fprintf (outfile, "Pourcentage de relations de largeur\n");
-   for (i = 1; i <= 30; i++)
-      if (TabDimH[i - 1] != 0)
-	{
-	   nb = TabDimH[i - 1] * 100 / NbOccBox;
-	   fprintf (outfile, "%2d->", i);
-	   fprintf (outfile, "%3d%%  ", nb);
-	}
-   fprintf (outfile, "\n");
-   fprintf (outfile, "Pourcentage de relations de hauteur\n");
-   for (i = 1; i <= 30; i++)
-      if (TabDimV[i - 1] != 0)
-	{
-	   nb = TabDimV[i - 1] * 100 / NbOccBox;
-	   fprintf (outfile, "%2d->", i);
-	   fprintf (outfile, "%3d%%  ", nb);
-	}
-   fprintf (outfile, "\n");
-   fprintf (outfile, "	Total pour le Mediateur =%10d", total);
-   fprintf (outfile, " octets\n");
 }
-/* End Of Module liste */

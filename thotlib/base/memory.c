@@ -1,7 +1,5 @@
 /*
-   memory.c : gestion des free-lists et de l'allocation memoire.
-   Module de gestion memoire de l'editeur 
-   V. Quint    I. Vatton
+   Manage free-lists and memory allocation.
  */
 
 #include "thot_sys.h"
@@ -99,9 +97,22 @@ static int          NbLibRRetard;
 static int          NbOccRRetard;
 static PtrDelayedPRule PtFreeRRetard;
 
-/*CORR */ static int NbLibDico;
-/*CORR */ static int NbOccDico;
-/*CORR */ static PtrDico PtFreeDico;
+static PtrBox 	PtFreBox;	/* File des contextes de boite libres */
+static int     	NbLibBox;
+static int     	NbOccBox;
+static PtrPosRelations 	PtFreBPos; /* File des blocs relation de position libres */
+static int     	NbLibBPos;
+static int     	NbOccBPos;
+static PtrDimRelations 	PtFreBDim; /* File des blocs relation de dimension libres */
+static int     	NbLibBDim;
+static int     	NbOccBDim;
+static PtrLine 	PtFreeLine;	/* File des contextes de ligne libres */
+static int     	NbLibLine;
+static int     	NbOccLine;
+
+static int NbLibDico;
+static int NbOccDico;
+static PtrDico PtFreeDico;
 
 #include "absboxlist_f.h"
 #include "memory_f.h"
@@ -1791,7 +1802,6 @@ void                MemInit ()
    NbLibLine = 0;
    NbOccLine = 0;
    Complete = FALSE;
-   Erreur = FALSE;
    Insert = FALSE;
 
 }

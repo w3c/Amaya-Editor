@@ -33,16 +33,6 @@ static ThotColorStruct cwhite;
 #include "inites_f.h"
 #include "memory_f.h"
 
-#ifdef __STDC__
-extern void         ColorRGB (int, unsigned short *, unsigned short *, unsigned short *);
-extern char        *TtaGetEnvString (char *);
-
-#else
-extern void         ColorRGB ();
-extern char        *TtaGetEnvString ();
-
-#endif /* __STDC__ */
-
 #ifdef NEW_WILLOWS
 /**
  *      WinCreateGC is an emulation of the XWindows XCreateGC under
@@ -702,20 +692,15 @@ void                InitDocContexts ()
 {
    int                 i;
 
-   MemInit ();			/* Initialize the memory allocator */
-
+   /* Initialize the memory allocator */
+   MemInit ();
    /* Initialisation de la table des frames */
    for (i = 0; i <= MAX_FRAME; i++)
       FrRef[i] = 0;
-
-   MIN_BLANC = 3;	/* minimum size of a space */
-   MAX_BLANC = 6;	/* maximum size of a space */
-   DELTA = 4;		/* maximum palcement error allowed */
    Englobement = NULL;	/* Don't do englobing placement for current boxes */
    RetardeEngl = NULL;	/* Don't differ englobing placement for current boxes */
    EnCreation = FALSE;	/* no interractive creation yet */
    InitAutreContexts ();
-
 }
 
 #ifndef NEW_WILLOWS

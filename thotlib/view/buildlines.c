@@ -1,6 +1,5 @@
 /*
-   lig.c :  gestion de la mise en lignes des boites
-   I. Vatton
+   Manage line constructions
  */
 
 #include "thot_sys.h"
@@ -9,9 +8,6 @@
 
 #define EXPORT extern
 #include "img.var"
-
-/* Nombre maximum de coupures de mots consecutives */
-static int          MaxSiblingBreaks = 2;
 
 #include "boxmoves_f.h"
 #include "boxlocate_f.h"
@@ -22,6 +18,11 @@ static int          MaxSiblingBreaks = 2;
 #include "font_f.h"
 #include "frame_f.h"
 #include "hyphen_f.h"
+
+#define SPACE_VALUE_MIN  3
+#define SPACE_VALUE_MAX  6
+/* max number of consecutive hyphens */
+#define MAX_SIBLING_HYPHENS 2
 
 
 /* ---------------------------------------------------------------------- */
@@ -201,7 +202,7 @@ boolean           orgYComplete;
 	   pLine->LiSpaceWidth = pLine->LiNPixels / nSpaces;
 	pLine->LiNSpaces = nSpaces;
 	/* Largeur minimum de ligne */
-	pLine->LiMinLength = length + nSpaces * MIN_BLANC;
+	pLine->LiMinLength = length + nSpaces * SPACE_VALUE_MIN;
 	/* Pixels restants a repartir */
 	pLine->LiNPixels -= pLine->LiSpaceWidth * nSpaces;
      }
@@ -645,7 +646,7 @@ PtrTextBuffer     *pNewBuff;
 	  {
 	     pPreviousLine = pLine->LiPrevious;
 	     count = 0;
-	     while (count < MaxSiblingBreaks && pPreviousLine != NULL)
+	     while (count < MAX_SIBLING_HYPHENS && pPreviousLine != NULL)
 		if (pPreviousLine->LiLastPiece != NULL)
 		   if (pPreviousLine->LiLastPiece->BxType == BoDotted)
 		     {
@@ -659,7 +660,7 @@ PtrTextBuffer     *pNewBuff;
 		else
 		   pPreviousLine = NULL;
 
-	     if (count == MaxSiblingBreaks)
+	     if (count == MAX_SIBLING_HYPHENS)
 		/* refuse de couper le dernier mot */
 		still = FALSE;
 	  }			/*if pLine != NULL */
@@ -1242,7 +1243,7 @@ PtrAbstractBox     pRootAb;
    /* - pour sauter les derniers blancs de fin de texte a` condition    */
    /*   qu'il reste au moins un blanc pour justifier le texte restant */
    if (pNewBuff != NULL
-/**528*/  && (lostPixels != 0 || nSpaces != 0 || oldnSpaces == 0)
+       && (lostPixels != 0 || nSpaces != 0 || oldnSpaces == 0)
        && (pBox->BxWidth != maxLength || lostPixels != pBox->BxNSpaces))
       pRemainBox = GetBox (pAb);
    else
@@ -2142,7 +2143,7 @@ int                spaceDelta;
    /* met a jour la ligne */
    pLine->LiNPixels = remainder;
    /* pour chaque blanc insere ou retire on compte la largeur minimale */
-   xDelta -= spaceDelta * (pLine->LiSpaceWidth - MIN_BLANC);
+   xDelta -= spaceDelta * (pLine->LiSpaceWidth - SPACE_VALUE_MIN);
    pLine->LiMinLength += xDelta;
    pLine->LiSpaceWidth -= spaceValue;
 
@@ -2565,7 +2566,7 @@ int               frame;
 	/* Zone affichee apres modification */
 	/* Il ne faut pas tenir compte de la boite si elle */
 	/* n'est pas encore placee dans l'image concrete   */
-/**MIN*/ if (EvalAffich && !pBox->BxXToCompute && !pBox->BxYToCompute)
+	if (EvalAffich && !pBox->BxXToCompute && !pBox->BxYToCompute)
 	  {
 	     if (pBox->BxWidth > l)
 		l = pBox->BxWidth;
@@ -2707,7 +2708,7 @@ int                frame;
 	  {
 	     /* calcule la place qu'il lostPixels dans la ligne courante */
 	     pLine->LiNSpaces += spaceDelta;
-	     maxlostPixels = pLine->LiNSpaces * MAX_BLANC + xDelta;
+	     maxlostPixels = pLine->LiNSpaces * SPACE_VALUE_MAX + xDelta;
 	     if (pLine->LiSpaceWidth > 0)
 	       {
 		  /* Line justifiee */
@@ -2744,7 +2745,7 @@ int                frame;
 		  if (pLine->LiPrevious != NULL)
 		    {
 		       /* Largeur restante */
-		       maxLength = pLine->LiPrevious->LiXMax - pLine->LiPrevious->LiRealLength - MAX_BLANC;
+		       maxLength = pLine->LiPrevious->LiXMax - pLine->LiPrevious->LiRealLength - SPACE_VALUE_MAX;
 		       if (pLine->LiFirstPiece != NULL)
 			  pFirstBox = pLine->LiFirstPiece;
 		       else

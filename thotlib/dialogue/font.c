@@ -1,5 +1,5 @@
 /*
- * font.c : Module dedicated to font handling.
+ * Module dedicated to font handling.
  */
 
 #include "thot_sys.h"
@@ -23,28 +23,22 @@
 
 /* that table for the character glyphs */
 static int          FirstRemovableFont = 1;
-
-static char         EvidenceT[MAX_HIGHLIGHT] = "rbiogq";
-static int          NbMaxTaille;  /* Maximum number of font size handled */
-static int          TenPoints[MAX_LOG_SIZE] =
+static char         StylesTable[MAX_HIGHLIGHT] = "rbiogq";
+/* Maximum number of font size handled */
+static int          MaxNumberOfSizes;
+static int          LogicalPointsSizes[MAX_LOG_SIZE] =
 {6, 8, 10, 12, 14, 16, 20, 24, 30, 40, 60};
 static char        *FontFamily;
-static boolean      Enlucida;
-static boolean      EnBitStream;
+static boolean      UseLucidaFamily;
+static boolean      UseBitStreamFamily;
 
 
 #include "memory_f.h"
 #include "font_f.h"
 #include "windowdisplay_f.h"
 #include "buildlines_f.h"
+#include "registry_f.h"
 
-#ifdef __STDC__
-extern char        *TtaGetEnvString (char *);
-
-#else  /* __STDC__ */
-extern char        *TtaGetEnvString ();
-
-#endif /* __STDC__ */
 
 #ifdef NEW_WILLOWS
 /**
@@ -71,7 +65,28 @@ void                WinLoadFont (HDC hdc, ptrfont font)
 #endif /* NEW_WILLOWS */
 
 /**
- *      VolumCar convert from pixel volume to char size
+ *      NumberOfFonts returns the number of fonts.
+ **/
+int                 NumberOfFonts ()
+{
+   return MaxNumberOfSizes + 1;
+}
+
+/**
+ *      PointToPixel convert from points to pixels.
+ **/
+#ifdef __STDC__
+int                 PointToPixel (int value)
+#else  /* __STDC__ */
+int                 PointToPixel (value)
+int                 value;
+#endif /* __STDC__ */
+{
+   return ((value * DOT_PER_INCHE) / DOT_PER_INCHE);
+}
+
+/**
+ *      VolumCar converts from pixel volume to char size
  **/
 #ifdef __STDC__
 int                 VolumCar (int volpixel)
@@ -87,37 +102,16 @@ int                 volpixel;
 }
 
 /**
- *      NumberOfFonts returns the number of fonts.
- **/
-int                 NumberOfFonts ()
-{
-   return NbMaxTaille + 1;
-}
-
-/**
- *      PointToPixel convert from points to pixels.
- **/
-#ifdef __STDC__
-int                 PointToPixel (int valeur)
-#else  /* __STDC__ */
-int                 PointToPixel (valeur)
-int                 valeur;
-#endif /* __STDC__ */
-{
-   return ((valeur * DOT_PER_INCHE) / DOT_PER_INCHE);
-}
-
-/**
  *      PixelToPoint convert from pixels to points.
  **/
 #ifdef __STDC__
-int                 PixelToPoint (int valeur)
+int                 PixelToPoint (int value)
 #else  /* __STDC__ */
-int                 PixelToPoint (valeur)
-int                 valeur;
+int                 PixelToPoint (value)
+int                 value;
 #endif /* __STDC__ */
 {
-   return ((valeur * DOT_PER_INCHE + DOT_PER_INCHE / 2) / DOT_PER_INCHE);
+   return ((value * DOT_PER_INCHE + DOT_PER_INCHE / 2) / DOT_PER_INCHE);
 }
 
 /**
@@ -215,7 +209,7 @@ ptrfont             font;
    else
      {
 	TEXTMETRIC          textMetric;
-	BOOL                res;
+	boolean                res;
 
 	WIN_GetDeviceContext (-1);
 	WinLoadFont (WIN_curHdc, font);
@@ -254,7 +248,7 @@ ptrfont             font;
    else
      {
 	TEXTMETRIC          textMetric;
-	BOOL                res;
+	boolean                res;
 
 	WIN_GetDeviceContext (-1);
 	WinLoadFont (WIN_curHdc, font);
@@ -290,7 +284,7 @@ ptrfont             font;
    else
      {
 	TEXTMETRIC          textMetric;
-	BOOL                res;
+	boolean             res;
 
 	WIN_GetDeviceContext (-1);
 	WinLoadFont (WIN_curHdc, font);
@@ -317,7 +311,7 @@ int                 PixelValue (int val, TypeUnit unit, PtrAbstractBox pAb)
 int                 PixelValue (val, unit, pAb)
 int                 val;
 TypeUnit            unit;
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 
 #endif /* __STDC__ */
 {
@@ -362,11 +356,11 @@ int                 LogicalValue (int val, TypeUnit unit, PtrAbstractBox pAb)
 int                 LogicalValue (val, unit, pAb)
 int                 val;
 TypeUnit            unit;
-PtrAbstractBox             pAb;
+PtrAbstractBox      pAb;
 
 #endif /* __STDC__ */
 {
-   int                 dist, i;
+   int              dist, i;
 
    switch (unit)
 	 {
@@ -436,7 +430,7 @@ int                 size;
    int                 j;
 
    j = 0;
-   while ((size > TenPoints[j]) && (j < NbMaxTaille))
+   while ((size > LogicalPointsSizes[j]) && (j < MaxNumberOfSizes))
       j++;
 
    return (j);
@@ -454,12 +448,12 @@ int                 size;
 #endif /* __STDC__ */
 {
 
-   if (size > NbMaxTaille)
-      size = NbMaxTaille;
+   if (size > MaxNumberOfSizes)
+      size = MaxNumberOfSizes;
    else if (size < 0)
       size = 0;
 
-   return (TenPoints[size]);
+   return (LogicalPointsSizes[size]);
 }
 
 /**
@@ -510,16 +504,16 @@ char                name[100];
  *      NomFonte computes the name of a Thot font.
  **/
 #ifdef __STDC__
-void                NomFonte (char alphabet, char family, int highlight, int size, TypeUnit unit, char r_nom[10], char r_nomX[100])
+void                NomFonte (char alphabet, char family, int highlight, int size, TypeUnit unit, char r_name[10], char r_nameX[100])
 #else  /* __STDC__ */
-void                NomFonte (alphabet, family, highlight, size, unit, r_nom, r_nomX)
+void                NomFonte (alphabet, family, highlight, size, unit, r_name, r_nameX)
 char                alphabet;
 char                family;
 int                 highlight;
 int                 size;
 TypeUnit            unit;
-char                r_nom[10];
-char                r_nomX[100];
+char                r_name[10];
+char                r_nameX[100];
 
 #endif /* __STDC__ */
 {
@@ -528,35 +522,35 @@ char                r_nomX[100];
       highlight = MAX_HIGHLIGHT;
    if (alphabet == 'g' || alphabet == 'G')
      {
-	highlight = 0;		/* romain only for symbols */
+	highlight = 0;		/* roman only for symbols */
 	family = 's';		/* times only for symbols */
-	strcpy (r_nomX, "-*");
+	strcpy (r_nameX, "-*");
      }
    else
-      strcpy (r_nomX, FontFamily);
+      strcpy (r_nameX, FontFamily);
 
    if (unit == UnRelative)
      {
 	/* La size est relative */
 	if (size < 0)
-	   size = TenPoints[0];
-	else if (size > NbMaxTaille)
-	   size = TenPoints[NbMaxTaille];
+	   size = LogicalPointsSizes[0];
+	else if (size > MaxNumberOfSizes)
+	   size = LogicalPointsSizes[MaxNumberOfSizes];
 	else
-	   size = TenPoints[size];
+	   size = LogicalPointsSizes[size];
      }
    else if (unit == UnPixel)
       size = PixelToPoint (size);
 
-   if (Enlucida)
+   if (UseLucidaFamily)
      {
 	switch ((char) TOLOWER (family))
 	      {
 		 case 't':
-		    strcat (r_nomX, "bright");
+		    strcat (r_nameX, "bright");
 		    break;
 		 case 'c':
-		    strcat (r_nomX, "typewriter");
+		    strcat (r_nameX, "typewriter");
 		    break;
 		 default:
 		    break;
@@ -567,76 +561,76 @@ char                r_nomX[100];
 	switch ((char) TOLOWER (family))
 	      {
 		 case 't':
-		    strcat (r_nomX, "-times");
+		    strcat (r_nameX, "-times");
 		    break;
 		 case 'h':
-		    strcat (r_nomX, "-helvetica");
+		    strcat (r_nameX, "-helvetica");
 		    break;
 		 case 'c':
-		    strcat (r_nomX, "-courier");
+		    strcat (r_nameX, "-courier");
 		    break;
 		 case 's':
-		    strcat (r_nomX, "-symbol");
+		    strcat (r_nameX, "-symbol");
 		    break;
 		 default:
-		    strcat (r_nomX, "-*");
+		    strcat (r_nameX, "-*");
 	      }
      }
 
-   switch ((char) TOLOWER (EvidenceT[highlight]))
+   switch ((char) TOLOWER (StylesTable[highlight]))
 	 {
 	    case 'r':
-	       strcat (r_nomX, "-medium-r");
+	       strcat (r_nameX, "-medium-r");
 	       break;
 	    case 'i':
 	    case 'o':
 	       if ((char) TOLOWER (family) == 'h' || (char) TOLOWER (family) == 'c')
-		  strcat (r_nomX, "-medium-o");
+		  strcat (r_nameX, "-medium-o");
 	       else
-		  strcat (r_nomX, "-medium-i");
+		  strcat (r_nameX, "-medium-i");
 	       break;
 	    case 'b':
 	    case 'g':
 	    case 'q':
-	       if (Enlucida && (char) TOLOWER (family) == 't')
-		  strcat (r_nomX, "-demibold-r");
+	       if (UseLucidaFamily && (char) TOLOWER (family) == 't')
+		  strcat (r_nameX, "-demibold-r");
 	       else
-		  strcat (r_nomX, "-bold-r");
+		  strcat (r_nameX, "-bold-r");
 	       break;
 	 }
 
    if ((char) TOLOWER (family) == 'h')
-      strcat (r_nomX, "-normal");	/* narrow helvetica does not exist */
+      strcat (r_nameX, "-normal");	/* narrow helvetica does not exist */
    else
-      strcat (r_nomX, "-*");
+      strcat (r_nameX, "-*");
 
    if ((char) TOLOWER (family) == 's')
      {
-	if (EnBitStream)
-	   sprintf (r_nomX, "%s-*-*-%d-83-83-p-*-*-fontspecific", r_nomX, size * 10);
+	if (UseBitStreamFamily)
+	   sprintf (r_nameX, "%s-*-*-%d-83-83-p-*-*-fontspecific", r_nameX, size * 10);
 	else
-	   sprintf (r_nomX, "%s-*-%d-*-75-75-p-*-*-fontspecific", r_nomX, size);
+	   sprintf (r_nameX, "%s-*-%d-*-75-75-p-*-*-fontspecific", r_nameX, size);
      }
    else
      {
-	if (EnBitStream)
-	   sprintf (r_nomX, "%s-*-*-%d-83-83", r_nomX, size * 10);
+	if (UseBitStreamFamily)
+	   sprintf (r_nameX, "%s-*-*-%d-83-83", r_nameX, size * 10);
 	else
-	   sprintf (r_nomX, "%s-*-%d-*-75-75", r_nomX, size);
+	   sprintf (r_nameX, "%s-*-%d-*-75-75", r_nameX, size);
 	if ((char) TOLOWER (family) == 'c')
-	   strcat (r_nomX, "-m-*");
+	   strcat (r_nameX, "-m-*");
 	else
-	   strcat (r_nomX, "-p-*");
+	   strcat (r_nameX, "-p-*");
 
 	if ((char) TOLOWER (alphabet) == 'l')
-	   strcat (r_nomX, "-iso8859-1");
+	   strcat (r_nameX, "-iso8859-1");
 	else
-	   strcat (r_nomX, "-*-fontspecific");	/*adobe */
+	   strcat (r_nameX, "-*-fontspecific");	/*adobe */
      }
 
-   sprintf (r_nom, "%c%c%c%d",
+   sprintf (r_name, "%c%c%c%d",
 	    TOLOWER (alphabet), TOLOWER (family),
-	    EvidenceT[highlight], size);
+	    StylesTable[highlight], size);
 }
 
 /**
@@ -654,10 +648,10 @@ TypeUnit            unit;
 
 #endif /* __STDC__ */
 {
-   char                nom[10], nomX[100];
+   char                name[10], nameX[100];
 
-   NomFonte (alphabet, family, highlight, size, unit, nom, nomX);
-   return LoadFont (nomX);
+   NomFonte (alphabet, family, highlight, size, unit, name, nameX);
+   return LoadFont (nameX);
 }
 
 #ifdef NEW_WILLOWS
@@ -724,7 +718,7 @@ int                 frame;
 	       goto no_win;
 	 }
    fprintf (stderr, "'%s', ", WIN_lpszFace);
-   switch (EvidenceT[highlight])
+   switch (StylesTable[highlight])
 	 {
 	    case 'r':
 	       break;
@@ -792,14 +786,14 @@ boolean             increase;
      {
 	/* nearest standard size lookup */
 	index = 0;
-	while (TenPoints[index] < size && index <= NbMaxTaille)
+	while (LogicalPointsSizes[index] < size && index <= MaxNumberOfSizes)
 	   index++;
      }
    else
       index = size;
 
 
-   if (EnBitStream && size == 11)
+   if (UseBitStreamFamily && size == 11)
       /* in the case of Bitstream, accept 11 points font size */
       NomFonte (alphabet, family, highlight, size, TRUE, text, textX);
    else
@@ -846,7 +840,7 @@ boolean             increase;
 	     if (ptfont == NULL)
 	       {
 		  /* Change size */
-		  if (index == NbMaxTaille)
+		  if (index == MaxNumberOfSizes)
 		    {
 		       /* size cannot increase */
 		       increase = FALSE;
@@ -857,10 +851,10 @@ boolean             increase;
 		  else
 		     index--;
 
-		  if (index < NbMaxTaille && index >= 0)
+		  if (index < MaxNumberOfSizes && index >= 0)
 		     ptfont = LoadNearestFont (alphabet, family, highlight, index, FALSE, frame, increase);
-		  else if (index >= NbMaxTaille)
-		     ptfont = LoadNearestFont (alphabet, family, highlight, NbMaxTaille, FALSE, frame, FALSE);
+		  else if (index >= MaxNumberOfSizes)
+		     ptfont = LoadNearestFont (alphabet, family, highlight, MaxNumberOfSizes, FALSE, frame, FALSE);
 		  if (ptfont == NULL)
 		     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_MISSING_FILE), textX);
 	       }
@@ -957,7 +951,7 @@ char               *name;
    /* is there a predefined font family ? */
    MenuSize = 12;
    value = TtaGetEnvString ("FontFamily");
-   NbMaxTaille = 10;
+   MaxNumberOfSizes = 10;
    if (value == NULL)
      {
 	FontFamily = TtaGetMemory (8);
@@ -968,21 +962,21 @@ char               *name;
 	FontFamily = TtaGetMemory (strlen (value) + 1);
 	strcpy (FontFamily, value);
 	if (!strcmp (FontFamily, "-b&h-lucida"))
-	   Enlucida = TRUE;
+	   UseLucidaFamily = TRUE;
 	else
 	  {
-	     Enlucida = FALSE;
+	     UseLucidaFamily = FALSE;
 	     if (!strcmp (FontFamily, "gipsi-bitstream"))
 	       {
-		  EnBitStream = TRUE;
+		  UseBitStreamFamily = TRUE;
 		  /* Changes size 30, 40 and 60 to resp. 36, 48 et 72 */
-		  TenPoints[NbMaxTaille] = 72;
-		  TenPoints[NbMaxTaille - 1] = 48;
-		  TenPoints[NbMaxTaille - 2] = 36;
+		  LogicalPointsSizes[MaxNumberOfSizes] = 72;
+		  LogicalPointsSizes[MaxNumberOfSizes - 1] = 48;
+		  LogicalPointsSizes[MaxNumberOfSizes - 2] = 36;
 		  MenuSize = 11;
 	       }
 	     else
-		EnBitStream = FALSE;
+		UseBitStreamFamily = FALSE;
 	  }
      }
    DOT_PER_INCHE = 72;
@@ -1039,7 +1033,7 @@ char               *name;
 #endif /* NEW_WILLOWS */
 
    /* Initialize the Thot Lib standards fonts */
-   FontMenu = FontMenu2 = FontMenu3 = FontMenu4 = NULL;
+   FontMenu = FontMenu2 = FontMenu3 = NULL;
    FontIS = NULL;
    FontIGr = NULL;
    FonteLeg = NULL;
@@ -1057,10 +1051,10 @@ char               *name;
 	   TtaDisplaySimpleMessage (FATAL, LIB, MISSING_FONT);
      }
 
-   FontMenu2 = ThotLoadFont ('L', 't', 2, 12, UnPoint, 0);
+   FontMenu2 = ThotLoadFont ('L', 't', 2, MenuSize, UnPoint, 0);
    if (FontMenu2 == NULL)
      {
-	FontMenu2 = ThotLoadFont ('L', 'l', 2, 12, UnPoint, 0);
+	FontMenu2 = ThotLoadFont ('L', 'l', 2, MenuSize, UnPoint, 0);
 	if (FontMenu2 == NULL)
 	   FontMenu2 = FontMenu;
      }
@@ -1072,25 +1066,8 @@ char               *name;
 	if (FontMenu3 == NULL)
 	   FontMenu3 = FontMenu2;
      }
-
-   FontMenu4 = ThotLoadFont ('L', 'h', 1, f4, UnPoint, 0);
-   if (FontMenu4 == NULL)
-     {
-	FontMenu4 = ThotLoadFont ('L', 'h', 1, f4, UnPoint, 0);
-	if (FontMenu4 == NULL)
-	   FontMenu4 = FontMenu;
-     }
-
-   FontGraph = ThotLoadFont ('L', 't', 1, f5, UnPoint, 0);
-   if (FontGraph == NULL)
-     {
-	FontGraph = ThotLoadFont ('L', 't', 1, f5, UnPoint, 0);
-	if (FontGraph == NULL)
-	   FontGraph = FontMenu;
-     }
-
-   FirstRemovableFont = 5;
-}				/*InitFont */
+   FirstRemovableFont = 3;
+}
 
 /**
  *      ThotFreeFont free the font familly loaded by a frame.
@@ -1175,4 +1152,4 @@ int                 frame;
 	       }
 	  }
      }
-}				/*ThotFreeFont */
+}

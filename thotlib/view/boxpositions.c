@@ -1,6 +1,5 @@
 /*
-   compute box positions.
-   I. Vatton
+ * Module dedicated to box positions managing.
  */
 
 #include "thot_sys.h"
@@ -290,54 +289,26 @@ boolean             EnY;
 			if (pChildAb->AbHorizEnclosing && placeenX
 			    && (pBo1->BxXOrg < 0 || pBo1->BxXOrg > larg))
 			  {
-			     Erreur = TRUE;
 			     if (HighlightBoxErrors)
-			       {
-				  pChildAb->AbSelected = TRUE;	/* Mise en evidence de l'erreur, pas une 
-								   selection ! */
-				  /* Erreur sur l'inclusion des boites */
-				  TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_HORIZ_POS), AbsBoxType (pChildAb));
-
-			       }
+			       TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_HORIZ_POS), AbsBoxType (pChildAb));
 			  }
 			else if (pChildAb->AbVertEnclosing && placeenY
 			       && (pBo1->BxYOrg < 0 || pBo1->BxYOrg > haut))
 			  {
-			     Erreur = TRUE;
 			     if (HighlightBoxErrors)
-			       {
-				  pChildAb->AbSelected = TRUE;	/* Mise en evidence de l'erreur, pas une 
-								   selection ! */
-				  /* Erreur sur l'inclusion des boites */
-				  TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_VERT_POS), AbsBoxType (pChildAb));
-
-			       }
+			       TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_VERT_POS), AbsBoxType (pChildAb));
 			  }
 			else if (pBo1->BxWidth < 0)
 			  {
 			     pBo1->BxWidth = 1;
-			     Erreur = TRUE;
 			     if (HighlightBoxErrors)
-			       {
-				  pChildAb->AbSelected = TRUE;
-				  /* Mise en evidence de l'erreur, pas une selection ! */
-				  /* ** Erreur sur les dimensions des boites */
-				  TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_HORIZ_SIZING), AbsBoxType (pChildAb));
-
-			       }
+			       TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_HORIZ_SIZING), AbsBoxType (pChildAb));
 			  }
 			else if (pBo1->BxHeight < 0)
 			  {
 			     pBo1->BxHeight = 1;
-			     Erreur = TRUE;
 			     if (HighlightBoxErrors)
-			       {
-				  pChildAb->AbSelected = TRUE;
-				  /* Mise en evidence de l'erreur, pas une selection ! */
-				  /* ** Erreur sur les dimensions des boites */
-				  TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_VERT_SIZING), AbsBoxType (pChildAb));
-
-			       }
+			       TtaDisplayMessage (INFO, TtaGetMessage(LIB, INCORRECT_VERT_SIZING), AbsBoxType (pChildAb));
 			  }
 		     /* On decale la boite positionnee en X dans l'englobante */
 		     if (EnX && newX)
@@ -369,15 +340,8 @@ boolean             EnY;
 			      && !pBo1->BxHorizFlex
 			      && !pBox->BxHorizFlex)
 			    {
-			       Erreur = TRUE;
 			       if (HighlightBoxErrors)
-				 {
-				    pChildAb->AbSelected = TRUE;
-				    /* Mise en evidence de l'erreur, pas une selection ! */
-				    /* Erreur sur l'inclusion des boites */
-				    TtaDisplayMessage (INFO, TtaGetMessage(LIB, HORIZ_BOX_OVERFLOW), AbsBoxType (pChildAb));
-
-				 }
+				 TtaDisplayMessage (INFO, TtaGetMessage(LIB, HORIZ_BOX_OVERFLOW), AbsBoxType (pChildAb));
 			    }
 			  /* Decale les boites qui ont des relations hors-structure avec */
 			  /* la boite deplacee et met a jour les dimensions elastiques   */
@@ -466,15 +430,8 @@ boolean             EnY;
 			      && !pBo1->BxVertFlex
 			      && !pBox->BxVertFlex)
 			    {
-			       Erreur = TRUE;
 			       if (HighlightBoxErrors)
-				 {
-				    pChildAb->AbSelected = TRUE;
-				    /* Mise en evidence de l'erreur, pas une selection ! */
-				    /* Erreur sur l'inclusion des boites */
-				    TtaDisplayMessage (INFO, TtaGetMessage(LIB, VERT_BOX_OVERFLOW), AbsBoxType (pChildAb));
-
-				 }
+				 TtaDisplayMessage (INFO, TtaGetMessage(LIB, VERT_BOX_OVERFLOW), AbsBoxType (pChildAb));
 			    }
 			  /* Decale les boites qui ont des relations hors-structure avec */
 			  /* la boite deplacee et met a jour les dimensions elastiques   */

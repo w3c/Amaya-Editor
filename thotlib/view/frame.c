@@ -1,10 +1,5 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
-   frame.c : affichage incremental dans les frames.
-   I. Vatton - Mai 87
-   IV : Aout 92 coupure des mots
+   Manage incremental display of frames.
  */
 
 #include "thot_sys.h"
@@ -22,20 +17,12 @@
 #include "appli_f.h"
 #include "windowdisplay_f.h"
 #include "boxlocate_f.h"
-
+#include "frame_f.h"
 #include "font_f.h"
 #include "absboxes_f.h"
 #include "displayselect_f.h"
 
-#ifdef __STDC__
-boolean             AfFinFenetre (int frame, int delta);
 
-#else  /* __STDC__ */
-boolean             AfFinFenetre ( /* frame, delta */ );
-
-#endif /* __STDC__ */
-
-/*debut */
 /* ------------------------------------------------------------------- */
 /* | On fait une conversion de coordonnees                           | */
 /* ------------------------------------------------------------------- */
@@ -58,7 +45,7 @@ int                *YOrg;
    *XOrg = pFrame->FrXOrg;
    *YOrg = pFrame->FrYOrg;
 }
-/*fin */
+
 
 /* ---------------------------------------------------------------------- */
 /* |    DefClip de'limite la zone de reaffichage dans la fenetre frame. | */
@@ -880,16 +867,12 @@ int                 delta;
 /* |            l'image concrete qui lui correspond est positionnee     | */
 /* |            au centre de la fenetre.                                | */
 /* ---------------------------------------------------------------------- */
-
 #ifdef __STDC__
 void                DisplayFrame (int frame)
-
 #else  /* __STDC__ */
 void                DisplayFrame (frame)
 int                 frame;
-
 #endif /* __STDC__ */
-
 {
    /*boolean ajoute; */
    ViewFrame            *pFrame;
@@ -901,19 +884,6 @@ int                 frame;
      {
 	/* Affichage du rectangle mis a jour */
 	AfFinFenetre (frame, 0);
-	/* Mise en evidence des boites en erreur */
-	if (Erreur)
-	  {
-	     MajPavSelect (frame, pFrame->FrAbstractBox, TRUE);
-	     if (HighlightBoxErrors)
-		/* Attend un moment avant d'annuler les mises en evidences */
-	       {
-		  TtaDisplaySimpleMessage (INFO, LIB, LIB_CONFIRM);
-	       }
-	     MajPavSelect (frame, pFrame->FrAbstractBox, FALSE);
-	     Erreur = FALSE;
-	  }
-
 	/* Reevalue les ascenseurs */
 	MajScrolls (frame);
 
@@ -924,6 +894,4 @@ int                 frame;
 	DimFenetre (frame, &l, &h);
 	Clear (frame, l, h, 0, 0);
      }
-}				/* procedure DisplayFrame */
-
-/* End Of Module frame */
+}
