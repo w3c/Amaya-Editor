@@ -1598,7 +1598,7 @@ void CloseLogs (Document doc)
 {
   int		     i;
 
-  /* is this document the source of another document? */
+  /* is there log documents linked to this document? */
   for (i = 1; i < DocumentTableLength; i++)
     if (DocumentURLs[i] && DocumentSource[i] == doc &&
 	DocumentTypes[i] == docLog)
@@ -2703,28 +2703,21 @@ ThotBool DoubleClickInLog (NotifyElement *event)
   ----------------------------------------------------------------------*/
 void SelectionChanged (NotifyElement *event)
 {
-   if (event->document != SelectionDoc)
-     {
-	if (SelectionDoc != 0 && DocumentURLs[SelectionDoc] != NULL)
-	   /* Reset buttons state in previous selected document */
-	   UpdateContextSensitiveMenus (SelectionDoc);
-	/* change the new selected document */
-	SelectionDoc = event->document;
-     }
-   UpdateContextSensitiveMenus (event->document);
-   SynchronizeSourceView (event);
-   TtaSelectView (SelectionDoc, 1);
+  if (event->document != SelectionDoc)
+    {
+      if (SelectionDoc != 0 && DocumentURLs[SelectionDoc] != NULL)
+	/* Reset buttons state in previous selected document */
+	UpdateContextSensitiveMenus (SelectionDoc);
+      /* change the new selected document */
+      SelectionDoc = event->document;
+    }
+  UpdateContextSensitiveMenus (event->document);
+  SynchronizeSourceView (event);
+  TtaSelectView (SelectionDoc, 1);
+  /* update the displayed style information */
+  SynchronizeAppliedStyle (event);
 }
 
-
-/*----------------------------------------------------------------------
-  A new XML element has been selected. Update menus accordingly.
-  ----------------------------------------------------------------------*/
-void XmlSelectionChanged (NotifyElement *event)
-{
-   SynchronizeSourceView (event);
-   TtaSelectView (SelectionDoc, 1);
-}
 
 /*----------------------------------------------------------------------
   SetCharFontOrPhrase

@@ -9,9 +9,10 @@
 extern void XmlAttributeComplete ( Attribute attr,
                                    Element el,
                                    Document doc );
+extern void XmlSelectionChanged ( NotifyElement *event );
 extern void CreateXmlAttribute ( Element el,
                                  AttributeType attrType,
-                                 char* text,
+                                 char *text,
                                  ThotBool isInvalid,
                                  Document doc,
                                  Attribute *lastAttribute,
@@ -45,9 +46,10 @@ extern void CreateXMLElementMenu ( Document doc,
 extern void XmlAttributeComplete (/* Attribute attr,
                                      Element el,
                                      Document doc */);
+extern void XmlSelectionChanged (/* NotifyElement *event */);
 extern void CreateXmlAttribute (/* Element el,
                                    AttributeType attrType,
-                                   char* text,
+                                   char *text,
                                    ThotBool isInvalid,
                                    Document doc,
                                    Attribute *lastAttribute,

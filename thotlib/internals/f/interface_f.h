@@ -29,8 +29,6 @@ extern void TtaGiveSelectPosition ( Document document,
                                     View view,
                                     int *X,
                                     int *Y );
-extern void TtaSetMultikey ( ThotBool value );
-extern ThotBool TtaGetMultikey ( void );
 
 #else /* __STDC__ */
 
@@ -57,8 +55,6 @@ extern void TtaGiveSelectPosition (/* Document document,
                                       View view,
                                       int *X,
                                       int *Y */);
-extern void TtaSetMultikey (/* ThotBool value */);
-extern ThotBool TtaGetMultikey (/* void */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */

@@ -739,7 +739,7 @@ void ShowAppliedStyle (Document doc, View view)
   ElementType         elType;
   Document            newdoc;
   FILE               *list;
-  char                fileName [100];
+  char                fileName[100];
   int                 f, l, n;
 
   TtaGiveFirstSelectedElement (doc, &el, &f, &l);
@@ -761,20 +761,52 @@ void ShowAppliedStyle (Document doc, View view)
       fprintf (list, TtaGetMessage (AMAYA, AM_LINK_LINE));      
       n = TtaListStyleOfCurrentElement (doc, list);
       fclose (list);
-      if (n == 0)
-	InitInfo (TtaGetMessage (AMAYA, AM_ERROR),
-		  TtaGetMessage (AMAYA, AM_NO_CSS));
-      else
+      newdoc = GetAmayaDoc (fileName, "STYLE.LST", 0, doc, CE_LOG, FALSE, NULL,
+			    NULL, TtaGetDefaultCharset ());
+      /* store the relation with the original document */
+      if (newdoc)
 	{
-	  newdoc = GetAmayaDoc (fileName, NULL, 0, doc, CE_LOG, FALSE, NULL,
-				NULL, TtaGetDefaultCharset ());
-	  /* store the relation with the original document */
-	  if (newdoc)
-	    {
-	      DocumentSource[newdoc] = doc;
-	      TtaSetStatus (newdoc, 1, "   ", NULL);
-	    }
+	  DocumentSource[newdoc] = doc;
+	  TtaSetStatus (newdoc, 1, "   ", NULL);
 	}
+    }
+}
+
+/*----------------------------------------------------------------------
+  SynchronizeAppliedStyle updates the displayed style information.
+ -----------------------------------------------------------------------*/
+void SynchronizeAppliedStyle (NotifyElement *event)
+{
+  ElementType         elType;
+  Document            doc, newdoc;
+  FILE               *list;
+  char                fileName[100], dirName[100];
+  int                 i, n;
+
+  /* is there log documents linked to this document? */
+  doc = event->document;
+  for (i = 1; i < DocumentTableLength; i++)
+    if (DocumentURLs[i] && DocumentSource[i] == doc &&
+	DocumentTypes[i] == docLog &&
+	strstr (DocumentURLs[i], "STYLE.LST"))
+      {
+	elType = TtaGetElementType (event->element);
+	/* list CSS rules applied to the current selection */
+	sprintf (dirName, "%s%c%d",
+		 TempFileDirectory, DIR_SEP, doc);
+	sprintf (fileName, "%s%c%d%cSTYLE.LST",
+		 TempFileDirectory, DIR_SEP, doc, DIR_SEP);
+	if (TtaFileExist (fileName))
+	TtaFileUnlink (fileName);
+	list = fopen (fileName, "w");
+	fprintf (list, "\n\n");      
+	fprintf (list, TtaGetMessage (AMAYA, AM_STYLE_APPLIED),
+		 GetXMLElementName (elType, doc));      
+	fprintf (list, TtaGetMessage (AMAYA, AM_LINK_LINE));      
+	n = TtaListStyleOfCurrentElement (doc, list);
+	fclose (list);
+	StartParser (i, fileName, "STYLE.LST", dirName, "STYLE.LST", TRUE);
+	return;
     }
 }
 

@@ -174,6 +174,8 @@ void GraphicsSelectionChanged (NotifyElement * event)
     }
   SynchronizeSourceView (event);
   Selection_changed_in_basedoc (event);
+  /* update the displayed style information */
+  SynchronizeAppliedStyle (event);
 }
 
 /*----------------------------------------------------------------------

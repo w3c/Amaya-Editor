@@ -56,7 +56,6 @@ extern void GotoLine ( Document doc,
 extern ThotBool SimpleClickInLog ( NotifyElement *event );
 extern ThotBool DoubleClickInLog ( NotifyElement *event );
 extern void SelectionChanged ( NotifyElement *event );
-extern void XmlSelectionChanged ( NotifyElement *event );
 extern void SetCharFontOrPhrase ( int document,
                                   int elemtype );
 
@@ -112,7 +111,6 @@ extern void GotoLine (/* Document doc,
 extern ThotBool SimpleClickInLog (/* NotifyElement *event */);
 extern ThotBool DoubleClickInLog (/* NotifyElement *event */);
 extern void SelectionChanged (/* NotifyElement *event */);
-extern void XmlSelectionChanged (/* NotifyElement *event */);
 extern void SetCharFontOrPhrase (/* int document,
                                     int elemtype */);
 

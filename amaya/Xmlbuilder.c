@@ -86,16 +86,23 @@ void XmlAttributeComplete (Attribute attr, Element el, Document doc)
 }
 
 /*----------------------------------------------------------------------
+   A new element has been selected. Synchronize selection in source view.      
+  ----------------------------------------------------------------------*/
+void XmlSelectionChanged (NotifyElement *event)
+{
+  SynchronizeSourceView (event);
+  /* update the displayed style information */
+  SynchronizeAppliedStyle (event);
+}
+
+/*----------------------------------------------------------------------
    CreateXmlAttribute
    create an attribute of type attrType for the element el.
   ----------------------------------------------------------------------*/
-void CreateXmlAttribute (Element       el,
-			 AttributeType attrType,
-			 char*         text,
-			 ThotBool      isInvalid,
-			 Document      doc,
-			 Attribute    *lastAttribute,
-			 Element      *lastAttrElement)
+void CreateXmlAttribute (Element el, AttributeType attrType,
+			 char *text, ThotBool isInvalid,
+			 Document doc, Attribute *lastAttribute,
+			 Element *lastAttrElement)
      
 {
 }
@@ -118,7 +125,6 @@ void MapXmlAttributeValue (char *AttrVal, AttributeType  attrType,
 void MapGenericXmlAttribute (char *attrName, AttributeType *attrType,
 			     Document doc)
 {
-
   if (attrType->AttrSSchema == NULL)
     return;
 

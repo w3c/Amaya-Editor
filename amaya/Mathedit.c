@@ -2091,9 +2091,11 @@ void CreateMSPACE (Document document, View view)
 /*----------------------------------------------------------------------
    A new element has been selected. Synchronize selection in source view.      
   ----------------------------------------------------------------------*/
-void MathSelectionChanged (NotifyElement * event)
+void MathSelectionChanged (NotifyElement *event)
 {
-   SynchronizeSourceView (event);
+  SynchronizeSourceView (event);
+  /* update the displayed style information */
+  SynchronizeAppliedStyle (event);
 }
 
 /*----------------------------------------------------------------------
@@ -2102,7 +2104,7 @@ void MathSelectionChanged (NotifyElement * event)
    Prevent Thot from including a global attribute in the menu if the selected
    element does not accept this attribute.
   ----------------------------------------------------------------------*/
-ThotBool  GlobalMathAttrInMenu (NotifyAttribute * event)
+ThotBool  GlobalMathAttrInMenu (NotifyAttribute *event)
 {
    ElementType         elType, parentType;
    Element             parent;

@@ -2980,7 +2980,7 @@ void ParseCSSBackgroundImageCallback (Document doc, Element element,
 				      char *file, void *extra,
 				      ThotBool isnew)
 {
-  DisplayMode                dispMode;
+  DisplayMode                dispMode = DisplayImmediately;
   BackgroundImageCallbackPtr callblock;
   Element                    el;
   PSchema                    tsch;

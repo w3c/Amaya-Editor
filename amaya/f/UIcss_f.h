@@ -25,6 +25,7 @@ extern char *CssToPrint ( Document doc,
                           char *printdir );
 extern void ShowAppliedStyle ( Document doc,
                                View view );
+extern void SynchronizeAppliedStyle ( NotifyElement *event );
 extern void InitCSS ( void );
 extern void LinkCSS ( Document doc,
                       View view );
@@ -58,6 +59,7 @@ extern char *CssToPrint (/* Document doc,
                             char *printdir */);
 extern void ShowAppliedStyle (/* Document doc,
                                  View view */);
+extern void SynchronizeAppliedStyle (/* NotifyElement *event */);
 extern void InitCSS (/* void */);
 extern void LinkCSS (/* Document doc,
                         View view */);

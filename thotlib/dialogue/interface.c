@@ -38,6 +38,9 @@
 #include "wininclude.h"
 #else /* _WINDOWS */
 #include <X11/Intrinsic.h>
+#ifndef _GTK
+/*#include <X11/Xlibint.h>*/
+#endif /* _GTK */
 #endif /* _WINDOWS */
 #include <locale.h>
 
@@ -70,7 +73,6 @@
 
 
 #if !defined(_WINDOWS) && !defined(_GTK)
-#include <X11/Xlibint.h>
 static int           mk_state = 0;
 static int           TtaKeyboardMapInstalled = 0;
 static KeySym        previous_keysym;
