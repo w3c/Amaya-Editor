@@ -590,6 +590,34 @@ PtrDocument pDoc;
 
 
 /*----------------------------------------------------------------------
+   CancelLastSequenceFromHistory
+
+   Cancel the last sequence of editing operations registered in the
+   editing history of document.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+void                CancelLastSequenceFromHistory (PtrDocument pDoc)
+#else  /* __STDC__ */
+void                CancelLastSequenceFromHistory (pDoc)
+PtrDocument         pDoc;
+
+#endif /* __STDC__ */
+{
+   boolean	stop;
+
+   if (!pDoc->DocLastEdit)
+      /* history is empty */
+      return;
+   stop = FALSE;
+   while (!stop)
+      {
+      if (pDoc->DocLastEdit->EoType == EtDelimiter)
+	 stop = TRUE;
+      CancelAnEdit (pDoc->DocLastEdit, pDoc);
+      }
+}
+
+/*----------------------------------------------------------------------
    TtcUndo
    Undo the latest sequence of editing operations recorded in the history and
    remove it from the history.

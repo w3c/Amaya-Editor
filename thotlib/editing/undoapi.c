@@ -287,17 +287,17 @@ Document document;
 }
 
 /* ----------------------------------------------------------------------
-   TtaCancelLastRegisteredOperation
+   TtaCancelLastRegisteredSequence
 
    Cancel the last sequence of editing operations registered in the
    editing history of document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-void         TtaCancelLastRegisteredOperation (Document document)
+void         TtaCancelLastRegisteredSequence (Document document)
 #else /* __STDC__ */
-void         TtaCancelLastRegisteredOperation (document)
+void         TtaCancelLastRegisteredSequence (document)
 Document document;
 #endif /* __STDC__ */
 {
-   CancelLastEditFromHistory (LoadedDocument [document - 1]);
+   CancelLastSequenceFromHistory (LoadedDocument [document - 1]);
 }

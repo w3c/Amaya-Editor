@@ -130,12 +130,12 @@ extern void         TtaRegisterAttributeReplace (Attribute attribute, Element el
 extern void         TtaClearUndoHistory (Document document);
 
 /* ----------------------------------------------------------------------
-   TtaCancelLastRegisteredOperation
+   TtaCancelLastRegisteredSequence
  
    Cancel the last sequence of editing operations registered in the
    editing history of document.
   ----------------------------------------------------------------------*/
-extern void         TtaCancelLastRegisteredOperation (Document document);
+extern void         TtaCancelLastRegisteredSequence (Document document);
 
 #else  /* __STDC__ */
 extern void         TtaOpenUndoSequence (/* Document document, Element firstSel,Element lastSel, int firstSelChar, int lastSelChar */);
@@ -147,7 +147,7 @@ extern void         TtaRegisterAttributeCreate (/* Attribute attribute, Element 
 extern void         TtaRegisterAttributeDelete (/* Attribute attribute, Element element, Document document */);
 extern void         TtaRegisterAttributeReplace (/* Attribute attribute, Element element, Document document */);
 extern void         TtaClearUndoHistory (/* Document document */);
-extern void         TtaCancelLastRegisteredOperation (/* Document document */);
+extern void         TtaCancelLastRegisteredSequence (/* Document document */);
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
 

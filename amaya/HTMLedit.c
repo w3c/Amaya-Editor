@@ -737,7 +737,11 @@ Document	doc;
       if (prev || attr)
         /* the Pseudo-paragraph is not the first element among its sibling */
         /* or it has attributes: turn it into an ordinary paragraph */
+	{
+	TtaRemoveTree (el, doc);
         ChangeElementType (el, HTML_EL_Paragraph);
+	TtaInsertSibling (el, prev, FALSE, doc);
+	}
     }
   else if (elType.ElTypeNum == HTML_EL_Paragraph)
     /* the element is a Paragraph */
@@ -753,14 +757,18 @@ Document	doc;
 	   table cell. */
          {
 	 parent = TtaGetParent (el);
-	 if (parent != NULL)
+	 if (parent)
 	    {
 	    elType = TtaGetElementType (parent);
 	    if (elType.ElTypeNum == HTML_EL_List_Item ||
 		elType.ElTypeNum == HTML_EL_Definition ||
 		elType.ElTypeNum == HTML_EL_Data_cell ||
 		elType.ElTypeNum == HTML_EL_Heading_cell)
+		{
+		TtaRemoveTree (el, doc);
 		ChangeElementType (el, HTML_EL_Pseudo_paragraph);
+		TtaInsertFirstChild (&el, parent, doc);
+		}
 	    }
 	 }
     }
@@ -773,6 +781,7 @@ Document	doc;
 	/* the next element is a Pseudo-paragraph */
 	/* turn it into an ordinary paragraph */
 	{
+	  TtaRegisterElementReplace (next, doc);
 	  TtaRemoveTree (next, doc);
 	  ChangeElementType (next, HTML_EL_Paragraph);
 	  TtaInsertSibling (next, el, FALSE, doc);
@@ -808,7 +817,7 @@ void ElementDeleted(event)
 #endif /* __STDC__*/
 {
   Element	child, el;
-  ElementType	elType;
+  ElementType	elType, childType;
   boolean	empty;
 
   elType = TtaGetElementType (event->element);
@@ -830,6 +839,7 @@ void ElementDeleted(event)
 	elType.ElTypeNum = HTML_EL_Paragraph;
 	child = TtaNewTree (event->document, elType, "");
 	TtaInsertFirstChild (&child, event->element, event->document);
+	TtaRegisterElementCreate (child, event->document);
 	do
 	   {
 	   el = TtaGetFirstChild (child);
@@ -840,7 +850,27 @@ void ElementDeleted(event)
 	TtaSelectElement (event->document, child);
 	}
      }
-  /* code to be written */
+   /* if the deleted element was the first child of a LI, transform
+      the new first child into a Pseudo-Paragraph if it's a Paragraph */
+   else if (elType.ElTypeNum == HTML_EL_List_Item)
+     /* the parent element is a List_Item */
+     if (event->position == 0)
+        /* the deleted element was the first child */
+        {
+        child = TtaGetFirstChild (event->element);
+        if (child)
+	   {
+	   childType = TtaGetElementType (child);
+	   if (childType.ElTypeNum == HTML_EL_Paragraph)
+	      /* the new first child is a Paragraph */
+	      {
+	      TtaRegisterElementReplace (child, event->document);
+	      TtaRemoveTree (child, event->document);
+	      ChangeElementType (child, HTML_EL_Pseudo_paragraph);
+	      TtaInsertFirstChild (&child, event->element, event->document);
+	      }
+	   }
+        }
 }
 
 /*----------------------------------------------------------------------

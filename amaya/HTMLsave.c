@@ -1776,7 +1776,7 @@ void                DoSaveAs ()
       if (ok)
 	{
 	  if (toUndo)
-	    TtaCancelLastRegisteredOperation (doc);
+	    TtaCancelLastRegisteredSequence (doc);
 	  /* Sucess of the operation */
 	  TtaSetStatus (doc, 1, TtaGetMessage (AMAYA, AM_SAVED), documentFile);
 	  TtaSetTextZone (doc, 1, 1, DocumentURLs[doc]);
