@@ -4965,7 +4965,8 @@ BOXES
 	Height: Enclosing . Height;
 	FillPattern: backgroundcolor;
 	Background : Creator = ;
-	Depth : Creator + 1;
+	Depth : Creator + 7;	{* do not hide images (PICTURE_UNIT) that
+				   are at Depth 5 *}
 	Lineweight : 0;
 	IN Structure_view
 		Visibility: 0;
@@ -9250,13 +9251,11 @@ ATTRIBUTES
 	BEGIN
 	CreateBefore(ATTR_BGCOLOR);
 	CreateBefore(VALUE_BGCOLOR);
+	if Data_cell
+	    CreateAfter(CellBgColor);
+	if Heading_cell
+	    CreateAfter(CellBgColor);
 	END;
-
- BackgroundColor (Data_cell):
-	CreateAfter(CellBgColor);
-
- BackgroundColor (Heading_cell):
-	CreateAfter(CellBgColor);
 
  TextColor:
 	BEGIN
