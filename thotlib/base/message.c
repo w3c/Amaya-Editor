@@ -1,12 +1,6 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
    message.c : traitement des messages d'erreur venant de THOT, impression, traduction...
-
-   Major Changes:
-   IV : Mai 92  adaptation Tool Kit
-   IV : Nov 93  fusion du dialogue et des messages
+   Irene Vatton
  */
 
 #include "thot_gui.h"
@@ -316,53 +310,15 @@ int                 msgType;
 /* |    TtaDisplaySimpleMessage construit un message simple.            | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-void                TtaDisplaySimpleMessage (int origin, int msgType, int number)
+void                TtaDisplaySimpleMessage (int msgType, int origin, int number)
 #else  /* __STDC__ */
-void                TtaDisplaySimpleMessage (origin, msgType, number)
+void                TtaDisplaySimpleMessage (msgType, origin, number)
+int                 msgType;
 int                 origin;
-int                 index;
 int                 number;
-
 #endif /* __STDC__ */
-
 {
   TtaDisplayMessage(msgType, TtaGetMessage (origin, number));
-}
-
-
-/* ---------------------------------------------------------------------- */
-/* |    TtaDisplaySimpleMessageString construit un message avec une     | */
-/* |            chaine de caracteres.                                   | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-void                TtaDisplaySimpleMessageString (int origin, int msgType, int number, char *string)
-#else  /* __STDC__ */
-void                TtaDisplaySimpleMessageString (origin, msgType, number, string)
-int                 origin;
-int                 msgType;
-int                 number;
-char               *string;
-#endif /* __STDC__ */
-{
-  TtaDisplayMessage(msgType, TtaGetMessage (origin, number), string);
-}
-
-
-/* ---------------------------------------------------------------------- */
-/* |    TtaDisplaySimpleMessageNum construit un message avec une valeur | */
-/* |             numerique.                                             | */
-/* ---------------------------------------------------------------------- */
-#ifdef __STDC__
-void                TtaDisplaySimpleMessageNum (int origin, int msgType, int numero, int num)
-#else  /* __STDC__ */
-void                TtaDisplaySimpleMessageNum (origin, msgType, numero, num)
-int                 origine;
-int                 msgType;
-int                 numero;
-int                 num;
-#endif /* __STDC__ */
-{
-  TtaDisplayMessage(msgType, TtaGetMessage (origin, numero), num);
 }
 
 

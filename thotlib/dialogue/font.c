@@ -1080,7 +1080,7 @@ char               *name;
      {
 	FontMenu = ChargeFonte ('L', 'l', 0, MenuSize, UnPoint, 0);
 	if (FontMenu == NULL)
-	   TtaDisplaySimpleMessage (LIB, FATAL, LIB_ERR_FONT_NOT_FOUND);
+	   TtaDisplaySimpleMessage (FATAL, LIB, LIB_ERR_FONT_NOT_FOUND);
      }
    /*deuxieme fonte chargee */
    FontMenu2 = ChargeFonte ('L', 't', 2, 12, UnPoint, 0);

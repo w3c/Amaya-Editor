@@ -183,7 +183,7 @@ char               *vuesaimprimer;
 
    res = system (cmd);
    if (res == -1)
-      TtaDisplaySimpleMessage (LIB, CONFIRM, LIB_ERROR_POSTSCRIPT_TRANSLATION);
+      TtaDisplaySimpleMessage (CONFIRM, LIB, LIB_ERROR_POSTSCRIPT_TRANSLATION);
    else
       /* Un nouveau shell en background */
       background++;
@@ -252,7 +252,7 @@ char               *vuesaimprimer;
 
    res = system (cmd);
    if (res == -1)
-      TtaDisplaySimpleMessage (LIB, CONFIRM, LIB_ERROR_POSTSCRIPT_TRANSLATION);
+      TtaDisplaySimpleMessage (CONFIRM, LIB, LIB_ERROR_POSTSCRIPT_TRANSLATION);
    else
       /* Un nouveau shell en background */
       background++;

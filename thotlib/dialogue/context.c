@@ -21,7 +21,7 @@
 #include "thotconfig.h"
 #include "libmsg.h"
 #include "message.h"
-#include "imagedrvr.h"
+#include "picture.h"
 #include "appdialogue.h"
 
 #undef EXPORT
@@ -419,16 +419,16 @@ char               *name;
    if (XWhitePixel (GDp (0), ThotScreen (0)) == 0)
      {
 	if (!XAllocNamedColor (GDp (0), cmap (0), "White", &cwhite, &col))
-	   TtaDisplaySimpleMessage (LIB, FATAL, LIB_ERR_NOT_ENOUGH_MEM);
+	   TtaDisplaySimpleMessage (FATAL, LIB, LIB_ERR_NOT_ENOUGH_MEM);
 	if (!XAllocNamedColor (GDp (0), cmap (0), "Black", &cblack, &col))
-	   TtaDisplaySimpleMessage (LIB, FATAL, LIB_ERR_NOT_ENOUGH_MEM);
+	   TtaDisplaySimpleMessage (FATAL, LIB, LIB_ERR_NOT_ENOUGH_MEM);
      }
    else
      {
 	if (!XAllocNamedColor (GDp (0), cmap (0), "Black", &cblack, &col))
-	   TtaDisplaySimpleMessage (LIB, FATAL, LIB_ERR_NOT_ENOUGH_MEM);
+	   TtaDisplaySimpleMessage (FATAL, LIB, LIB_ERR_NOT_ENOUGH_MEM);
 	if (!XAllocNamedColor (GDp (0), cmap (0), "White", &cwhite, &col))
-	   TtaDisplaySimpleMessage (LIB, FATAL, LIB_ERR_NOT_ENOUGH_MEM);
+	   TtaDisplaySimpleMessage (FATAL, LIB, LIB_ERR_NOT_ENOUGH_MEM);
      }
 
    /* Initialise les couleurs de l'application */

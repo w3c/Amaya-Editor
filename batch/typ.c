@@ -128,11 +128,11 @@ void                initgener ()
 
    /* acquiert la memoire pour un schema de structure */
    if ((pSchStr = (PtrSSchema) malloc (sizeof (StructSchema))) == NULL)
-      TtaDisplaySimpleMessage (TYP, FATAL, TYP_NOT_ENOUGH_MEM);
+      TtaDisplaySimpleMessage (FATAL, TYP, TYP_NOT_ENOUGH_MEM);
    else
       /* acquiert la memoire pour un schema de typographie */
    if ((pSchTypo = (PtrSchTypo) malloc (sizeof (SchTypo))) == NULL)
-      TtaDisplaySimpleMessage (TYP, FATAL, TYP_NOT_ENOUGH_MEM);
+      TtaDisplaySimpleMessage (FATAL, TYP, TYP_NOT_ENOUGH_MEM);
    else
      {
 	pSchTypo->STySuivant = NULL;
@@ -319,7 +319,7 @@ void                nouvregle ()
    PtrRTypoAttribut    pRTy1;
 
    if ((r = (PtrRegleTypo) malloc (sizeof (RegleTypo))) == NULL)
-      TtaDisplaySimpleMessage (TYP, FATAL, TYP_NOT_ENOUGH_MEM);
+      TtaDisplaySimpleMessage (FATAL, TYP, TYP_NOT_ENOUGH_MEM);
    /* chaine la nouvelle regle a la regle courante s'il y en a une */
    if (CourRegle == NULL || ChangeBloc)
      {
@@ -1131,7 +1131,7 @@ rnb                 pr;
 				     {
 					/* lit le schema de structure compile' */
 					if (!RdSchStruct (n, pSchStr))
-					   TtaDisplaySimpleMessage (TYP, FATAL, TYP_CANNOT_READ_STRUCT_SCHEM);	/* echec lecture du  schema de structure */
+					   TtaDisplaySimpleMessage (FATAL, TYP, TYP_CANNOT_READ_STRUCT_SCHEM);	/* echec lecture du  schema de structure */
 					else if (strncmp (pSchStr->SsName, n, MAX_NAME_LENGTH) != 0)
 					   CompilerError (wi, TYP, FATAL, TYP_STRUCT_SCHEM_DOES_NOT_MATCH, inputLine, linenb);
 					else
@@ -1510,7 +1510,7 @@ char              **argv;
      {
 	/* teste les arguments d'appel du programme */
 	if (argc != 2)
-	   TtaDisplaySimpleMessage (TYP, FATAL, TYP_FILE_NOT_FOUND);
+	   TtaDisplaySimpleMessage (FATAL, TYP, TYP_FILE_NOT_FOUND);
 	else
 	  {
 	     /* recupere le nom du fichier a compiler */
@@ -1520,7 +1520,7 @@ char              **argv;
 	     strcat (pfilename, ".SCH");
 	     /* teste si le fichier a compiler existe */
 	     if (FileExist (pfilename) == 0)
-		TtaDisplaySimpleMessage (TYP, FATAL, TYP_FILE_NOT_FOUND);
+		TtaDisplaySimpleMessage (FATAL, TYP, TYP_FILE_NOT_FOUND);
 	     else
 		/* le fichier d'entree existe, on l'ouvre */
 	       {

@@ -736,7 +736,7 @@ int                 nr;
    memset (cond, 0, sizeof (Condition));
    if (cond == NULL)
      {
-	TtaDisplaySimpleMessage (LIB, FATAL, LIB_MEMORY_EXHAUSTED);
+	TtaDisplaySimpleMessage (FATAL, LIB, LIB_MEMORY_EXHAUSTED);
 	return;
      }
    cond->CoCondition = PcWithin;
@@ -770,7 +770,7 @@ int                 type;
    memset (cond, 0, sizeof (Condition));
    if (cond == NULL)
      {
-	TtaDisplaySimpleMessage (LIB, FATAL, LIB_MEMORY_EXHAUSTED);
+	TtaDisplaySimpleMessage (FATAL, LIB, LIB_MEMORY_EXHAUSTED);
 	return;
      }
    cond->CoCondition = PcElemType;
@@ -1066,7 +1066,7 @@ PRuleType           pres;
    GetReglePres (&new);
    if (new == NULL)
      {
-	TtaDisplaySimpleMessage (LIB, FATAL, LIB_MEMORY_EXHAUSTED);
+	TtaDisplaySimpleMessage (FATAL, LIB, LIB_MEMORY_EXHAUSTED);
 	return (NULL);
      }
    new->PrType = pres;

@@ -13,7 +13,7 @@
 
 #define HAVE_BOOLEAN
 #include "typemedia.h"
-#include "imagedrvr.h"
+#include "picture.h"
 #include "frame.h"
 #include "message.h"
 #include "application.h"

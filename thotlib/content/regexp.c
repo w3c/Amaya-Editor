@@ -1963,25 +1963,25 @@ char               *expression;
 	switch (ResultCompile)
 	      {
 		 case 1:
-		    TtaDisplaySimpleMessage (LIB, INFO, LIB_INVALID_REGULAR_EXPRESSION);
+		    TtaDisplaySimpleMessage (INFO, LIB, LIB_INVALID_REGULAR_EXPRESSION);
 		    break;
 		 case 2:
-		    TtaDisplaySimpleMessage (LIB, INFO, LIB_UNMATCHED_GAUCHE);
+		    TtaDisplaySimpleMessage (INFO, LIB, LIB_UNMATCHED_GAUCHE);
 		    break;
 		 case 3:
-		    TtaDisplaySimpleMessage (LIB, INFO, LIB_UNMATCHED_DROITE);
+		    TtaDisplaySimpleMessage (INFO, LIB, LIB_UNMATCHED_DROITE);
 		    break;
 		 case 4:
-		    TtaDisplaySimpleMessage (LIB, INFO, LIB_PREMATURE_END_REGULAR_EXPRESSION);
+		    TtaDisplaySimpleMessage (INFO, LIB, LIB_PREMATURE_END_REGULAR_EXPRESSION);
 		    break;
 		 case 5:
-		    TtaDisplaySimpleMessage (LIB, INFO, LIB_NESTING_TOO_DEEP);
+		    TtaDisplaySimpleMessage (INFO, LIB, LIB_NESTING_TOO_DEEP);
 		    break;
 		 case 6:
-		    TtaDisplaySimpleMessage (LIB, INFO, LIB_REGULAR_EXPRESSION_TOO_BIG);
+		    TtaDisplaySimpleMessage (INFO, LIB, LIB_REGULAR_EXPRESSION_TOO_BIG);
 		    break;
 		 case 7:
-		    TtaDisplaySimpleMessage (LIB, INFO, LIB_MEMORY_EXHAUSTED);
+		    TtaDisplaySimpleMessage (INFO, LIB, LIB_MEMORY_EXHAUSTED);
 		    break;
 	      }
 	return True;
@@ -2074,7 +2074,7 @@ char               *expression;
 	     /*HR *//*debut */
 	     if (val == -2)
 	       {
-		  TtaDisplaySimpleMessage (LIB, INFO, LIB_MEMORY_EXHAUSTED);
+		  TtaDisplaySimpleMessage (INFO, LIB, LIB_MEMORY_EXHAUSTED);
 		  return (True);
 	       }
 	     /*HR *//*fin */

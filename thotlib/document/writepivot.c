@@ -18,7 +18,7 @@
 #include "message.h"
 #include "constmedia.h"
 #include "typemedia.h"
-#include "imagedrvr.h"
+#include "picture.h"
 #include "constpiv.h"
 #include "storage.h"
 #include "appaction.h"

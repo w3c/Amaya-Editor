@@ -14,7 +14,7 @@
 
 #include "constmedia.h"
 #include "typemedia.h"
-#include "imagedrvr.h"
+#include "picture.h"
 #include "frame.h"
 #include "libmsg.h"
 #include "message.h"
@@ -61,7 +61,7 @@ ImagingModel        model;
    int                 refNum;
 
    refNum = GetImageDrvrID (Pixmap_drvr);
-/** a definir dans imagedrvr.h */
+/** a definir dans picture.h */
    return refNum;
 
 }				/*PixmapOpenImageDrvr */
@@ -114,27 +114,27 @@ int                 ErrorNumber;
 
 	    case XpmColorError:
 	       {
-		  TtaDisplaySimpleMessage (LIB, INFO, XPM_COLOR_ERROR);
+		  TtaDisplaySimpleMessage (INFO, LIB, XPM_COLOR_ERROR);
 		  break;
 	       }
 	    case XpmOpenFailed:
 	       {
-		  TtaDisplaySimpleMessage (LIB, INFO, XPM_OPEN_FAILED);
+		  TtaDisplaySimpleMessage (INFO, LIB, XPM_OPEN_FAILED);
 		  break;
 	       }
 	    case XpmFileInvalid:
 	       {
-		  TtaDisplaySimpleMessage (LIB, INFO, XPM_FILE_INVALID);
+		  TtaDisplaySimpleMessage (INFO, LIB, XPM_FILE_INVALID);
 		  break;
 	       }
 	    case XpmNoMemory:
 	       {
-		  TtaDisplaySimpleMessage (LIB, INFO, XPM_NO_MEMORY);
+		  TtaDisplaySimpleMessage (INFO, LIB, XPM_NO_MEMORY);
 		  break;
 	       }
 	    case XpmColorFailed:
 	       {
-		  TtaDisplaySimpleMessage (LIB, INFO, XPM_COLOR_FAILED);
+		  TtaDisplaySimpleMessage (INFO, LIB, XPM_COLOR_FAILED);
 		  break;
 	       }
 

@@ -459,7 +459,7 @@ static void         writefiles ()
    includefile = fopen (pfilename, "w");
    if (includefile == NULL)
      {
-	TtaDisplaySimpleMessageString (GRM, FATAL, GRM_CAN_T_CREATE_HEADER_FILE, pfilename);
+	TtaDisplayMessage (FATAL, TtaGetMessage(GRM, GRM_CAN_T_CREATE_HEADER_FILE), pfilename);
 	exit (1);
      }
    else
@@ -747,13 +747,13 @@ static boolean      defrefok ()
      {
 	if (identtable[ic].identdef == 0)
 	  {
-	     TtaDisplaySimpleMessageString (GRM, FATAL, GRM_UNDEFINED_SYMBOL, identtable[ic].identname);
+	     TtaDisplayMessage (FATAL, TtaGetMessage(GRM, GRM_UNDEFINED_SYMBOL), identtable[ic].identname);
 	     ok = False;
 	  }
 	if (identtable[ic].identref == 0)
 	   if (ic > 0)
 	     {
-		TtaDisplaySimpleMessageString (GRM, FATAL, GRM_UNREFERENCED_SYMBOL, identtable[ic].identname);
+		TtaDisplayMessage (FATAL, TtaGetMessage(GRM, GRM_UNREFERENCED_SYMBOL), identtable[ic].identname);
 		ok = False;
 	     }
      }
@@ -795,7 +795,7 @@ char              **argv;
    COMPIL = TtaGetMessageTable ("compildialogue", COMPIL_MSG_MAX);
 
    if (argc != 2)
-      TtaDisplaySimpleMessage (GRM, FATAL, GRM_NO_SUCH_FILE);
+      TtaDisplaySimpleMessage (FATAL, GRM, GRM_NO_SUCH_FILE);
    else
      {
 	strncpy (pfilename, argv[1], MAX_NAME_LENGTH - 1);
@@ -804,7 +804,7 @@ char              **argv;
 	strcat (pfilename, ".LAN");
 
 	if (FileExist (pfilename) == 0)
-	   TtaDisplaySimpleMessage (GRM, FATAL, GRM_NO_SUCH_FILE);
+	   TtaDisplaySimpleMessage (FATAL, GRM, GRM_NO_SUCH_FILE);
 	else
 	   /* le fichier d'entree existe, on l'ouvre */
 	  {
@@ -882,7 +882,7 @@ char              **argv;
 	     if (!error)
 		if (defrefok ())
 		  {
-		     TtaDisplaySimpleMessage (GRM, INFO, GRM_CREATING_GRAMMAR_FILE);
+		     TtaDisplaySimpleMessage (INFO, GRM, GRM_CREATING_GRAMMAR_FILE);
 		     writefiles ();	/* ecrit les tables dans le fichier */
 		  }
 	     fclose (infile);

@@ -1544,7 +1544,7 @@ int                 ym;
 	  }
 	else
 	   /* On n'a pas trouve de boite modifiable */
-	   TtaDisplaySimpleMessage (LIB, INFO, LIB_YOU_CANNOT_MODIFY_A_BOX_HERE);
+	   TtaDisplaySimpleMessage (INFO, LIB, LIB_YOU_CANNOT_MODIFY_A_BOX_HERE);
      }
 }
 
@@ -1791,7 +1791,7 @@ int                 ym;
 	  }
 	else
 	   /* On n'a pas trouve de boite modifiable */
-	   TtaDisplaySimpleMessage (LIB, INFO, LIB_YOU_CANNOT_MODIFY_A_BOX_HERE);
+	   TtaDisplaySimpleMessage (INFO, LIB, LIB_YOU_CANNOT_MODIFY_A_BOX_HERE);
      }
 }
 

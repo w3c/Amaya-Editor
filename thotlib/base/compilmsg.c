@@ -88,7 +88,7 @@ int                 numline;
 	linecurseur[index] = '\0';
 	TtaDisplayMessage (INFO, TtaGetMessage(COMPIL, COMPIL_STRING), inputline, linecurseur);
      }
-   TtaDisplaySimpleMessage (origine, niveau, numero);
+   TtaDisplaySimpleMessage (niveau, origine, numero);
 }
 
 
@@ -121,5 +121,5 @@ char               *string;
 	linecurseur[index] = '\0';
 	TtaDisplayMessage (INFO, TtaGetMessage(COMPIL, COMPIL_STRING), inputline, linecurseur);
      }
-   TtaDisplaySimpleMessageString (origine, niveau, numero, string);
+   TtaDisplayMessage (niveau, TtaGetMessage(origine, numero), string);
 }

@@ -15,7 +15,7 @@
 #include "thotconfig.h"
 #include "constmedia.h"
 #include "typemedia.h"
-#include "imagedrvr.h"
+#include "picture.h"
 #include "appdialogue.h"
 
 #define EXPORT extern

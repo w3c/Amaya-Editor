@@ -199,7 +199,7 @@ boolean             DocExtSuivant;
 	ok = SelEditeur (&docsel, &premsel, &dersel, &premcar, &dercar);
 	if (!ok)
 	   /* pas de selection, message 'Selectionnez' */
-	   TtaDisplaySimpleMessage (LIB, INFO, LIB_SELECT_AN_ELEM);
+	   TtaDisplaySimpleMessage (INFO, LIB, LIB_SELECT_AN_ELEM);
 	else
 	   /* cherche le premier element reference' qui englobe la */
 	   /* selection courante */
@@ -291,7 +291,7 @@ void                ChElemRefer ()
 
    /* y-a-t'il une selection au niveau editeur ou mediateur ? */
    if (!SelEditeur (&docsel, &premsel, &dersel, &premcar, &dercar))
-      TtaDisplaySimpleMessage (LIB, INFO, LIB_SELECT_AN_ELEM);
+      TtaDisplaySimpleMessage (INFO, LIB, LIB_SELECT_AN_ELEM);
    else
      {
 	pEl = NULL;		/* pointeur sur l'element reference' */
@@ -357,7 +357,7 @@ void                ChElemRefer ()
 		/* il n'y a pas d'element reference' */
 		if (IdentDocNul (IdentDoc) || pDoc != NULL)
 		   /* ce n'est pas une reference externe ou c'est une reference vide */
-		   TtaDisplaySimpleMessage (LIB, INFO, LIB_EMPTY_REF);
+		   TtaDisplaySimpleMessage (INFO, LIB, LIB_EMPTY_REF);
 		else
 		   /* l'element reference' est dans un autre document qui n'est */
 		   /* pas charge' */
@@ -388,7 +388,7 @@ void                ChElemRefer ()
 	       {
 		  pEl = NULL;
 		  /* message 'CsReference vide' */
-		  TtaDisplaySimpleMessage (LIB, INFO, LIB_EMPTY_REF);
+		  TtaDisplaySimpleMessage (INFO, LIB, LIB_EMPTY_REF);
 	       }
 	  }
 	if (pEl != NULL)

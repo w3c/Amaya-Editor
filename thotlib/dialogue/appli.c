@@ -1217,11 +1217,11 @@ XEvent             *ev;
 			   EndInsert ();
 			   TtaSetDialoguePosition ();
 			   if (!SelEditeur (&docsel, &premsel, &dersel, &premcar, &dercar))
-			      TtaDisplaySimpleMessage (LIB, INFO, LIB_SELECT_AN_ELEM);
+			      TtaDisplaySimpleMessage (INFO, LIB, LIB_SELECT_AN_ELEM);
 			   /* non, message 'Selectionnez' */
 			   else if (docsel->DocReadOnly)
 			      /* on ne peut inserer ou coller dans un document en lecture seule */
-			      TtaDisplaySimpleMessage (LIB, INFO, LIB_NOT_ALLOWED_READ_ONLY_DOC);
+			      TtaDisplaySimpleMessage (INFO, LIB, LIB_NOT_ALLOWED_READ_ONLY_DOC);
 			   /* Message 'Document en lecture seule' */
 			   else if (premcar != 0 && premsel->ElTerminal && premsel->ElLeafType == LtPlyLine)
 			     {

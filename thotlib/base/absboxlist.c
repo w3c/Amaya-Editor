@@ -9,7 +9,7 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
-#include "imagedrvr.h"
+#include "picture.h"
 #include "libmsg.h"
 #include "message.h"
 #include "storage.h"

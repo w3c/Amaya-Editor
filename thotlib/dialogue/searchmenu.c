@@ -805,7 +805,7 @@ PtrDocument         pDoc;
 
    if (!SelEditeur (&docsel, &premsel, &dersel, &premcar, &dercar))
       /* message 'Pas de selection' */
-      TtaDisplaySimpleMessage (LIB, INFO, LIB_DEBUG_NO_SELECTION);
+      TtaDisplaySimpleMessage (INFO, LIB, LIB_DEBUG_NO_SELECTION);
    else
      {
 	/* initialise les variables de recherche des references */

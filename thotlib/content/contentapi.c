@@ -4,7 +4,7 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
-#include "imagedrvr.h"
+#include "picture.h"
 #include "application.h"
 #include "document.h"
 #include "tree.h"

@@ -265,7 +265,7 @@ PtrElement          pEl;
 				    if (pAt1->AeAttrReference->RdReferred->ReReferredElem != NULL)
 				       if (pAt1->AeAttrReference->RdReferred->ReReferredElem == pEl)
 					 {
-					    TtaDisplaySimpleMessage (LIB, INFO, LIB_AN_ELEM_CANNOT_REFER_TO_ITSELF);
+					    TtaDisplaySimpleMessage (INFO, LIB, LIB_AN_ELEM_CANNOT_REFER_TO_ITSELF);
 					    ok = False;
 					 }
 			/* message 'CsReference a soi-meme' */

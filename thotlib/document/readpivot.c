@@ -20,7 +20,7 @@
 #include "constmedia.h"
 #include "constpiv.h"
 #include "typemedia.h"
-#include "imagedrvr.h"
+#include "picture.h"
 
 #include "language.h"
 #include "libmsg.h"
@@ -396,7 +396,7 @@ BinFile             fich;
 	       rdTypePage = ColComputed;
 #else  /* __COLPAGE__ */
 	       rdTypePage = PgComputed;
-	       TtaDisplaySimpleMessage (LIB, INFO, LIB_DOC_WITH_COLUMNS_PAGINATE_AGAIN);
+	       TtaDisplaySimpleMessage (INFO, LIB, LIB_DOC_WITH_COLUMNS_PAGINATE_AGAIN);
 #endif /* __COLPAGE__ */
 	       break;
 	    case C_PIV_START_COL:
@@ -404,7 +404,7 @@ BinFile             fich;
 	       rdTypePage = ColBegin;
 #else  /* __COLPAGE__ */
 	       rdTypePage = PgComputed;
-	       TtaDisplaySimpleMessage (LIB, INFO, LIB_DOC_WITH_COLUMNS_PAGINATE_AGAIN);
+	       TtaDisplaySimpleMessage (INFO, LIB, LIB_DOC_WITH_COLUMNS_PAGINATE_AGAIN);
 #endif /* __COLPAGE__ */
 	       break;
 	    case C_PIV_USER_COL:
@@ -412,7 +412,7 @@ BinFile             fich;
 	       rdTypePage = ColUser;
 #else  /* __COLPAGE__ */
 	       rdTypePage = PgComputed;
-	       TtaDisplaySimpleMessage (LIB, INFO, LIB_DOC_WITH_COLUMNS_PAGINATE_AGAIN);
+	       TtaDisplaySimpleMessage (INFO, LIB, LIB_DOC_WITH_COLUMNS_PAGINATE_AGAIN);
 #endif /* __COLPAGE__ */
 	       break;
 	    case C_PIV_COL_GROUP:
@@ -420,7 +420,7 @@ BinFile             fich;
 	       rdTypePage = ColGroup;
 #else  /* __COLPAGE__ */
 	       rdTypePage = PgComputed;
-	       TtaDisplaySimpleMessage (LIB, INFO, LIB_DOC_WITH_COLUMNS_PAGINATE_AGAIN);
+	       TtaDisplaySimpleMessage (INFO, LIB, LIB_DOC_WITH_COLUMNS_PAGINATE_AGAIN);
 #endif /* __COLPAGE__ */
 	       break;
 	    case C_PIV_REPEAT_PAGE:
@@ -754,7 +754,7 @@ BinFile             fich;
 	if (msgAncienFormat)
 	  {
 	     PivotError (fich);
-	     TtaDisplaySimpleMessage (LIB, INFO, LIB_OLD_PIV_FORMAT_SAVE_THE_DOC_WITH_THOT);
+	     TtaDisplaySimpleMessage (INFO, LIB, LIB_OLD_PIV_FORMAT_SAVE_THE_DOC_WITH_THOT);
 	     msgAncienFormat = False;	/* c'est fait */
 	  }
 	if (c == MOldRefInterne || c == MOldRefExterne || c == MOldRefInclusion)
@@ -3577,7 +3577,7 @@ boolean             WithAPPEvent;
 	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_STRUCTURE_OF_DOCUMENT_X_INVALID), pDoc->DocDName);
 	     /* on met le document en Read-Only */
 	     pDoc->DocReadOnly = True;
-	     TtaDisplaySimpleMessageString (LIB, INFO, LIB_DOCUMENT_X_LOCKED, pDoc->DocDName);
+	     TtaDisplayMessage (INFO, TtaGetMessage(LIB, LIB_DOCUMENT_X_LOCKED), pDoc->DocDName);
 	  }
 	/* libere les labels des elements reference's par d'autres */
 	/* documents */

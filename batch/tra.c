@@ -162,11 +162,11 @@ static void         Initialize ()
    TypeWithin[0] = '\0';
    AncestorName[0] = '\0';
    if ((pExtSSchema = (PtrSSchema) malloc (sizeof (StructSchema))) == NULL)
-      TtaDisplaySimpleMessage (TRA, FATAL, TRA_NOT_ENOUGH_MEM);
+      TtaDisplaySimpleMessage (FATAL, TRA, TRA_NOT_ENOUGH_MEM);
    if ((pSSchema = (PtrSSchema) malloc (sizeof (StructSchema))) == NULL)
-      TtaDisplaySimpleMessage (TRA, FATAL, TRA_NOT_ENOUGH_MEM);
+      TtaDisplaySimpleMessage (FATAL, TRA, TRA_NOT_ENOUGH_MEM);
    if ((pTSchema = (PtrTSchema) malloc (sizeof (TranslSchema))) == NULL)
-      TtaDisplaySimpleMessage (TRA, FATAL, TRA_NOT_ENOUGH_MEM);
+      TtaDisplaySimpleMessage (FATAL, TRA, TRA_NOT_ENOUGH_MEM);
    /* initialise le schema de traduction */
    pTSchema->TsLineLength = 0;	/* pas de longueur max des lignes traduites */
    strcpy (pTSchema->TsEOL, "\n");	/* caractere fin de ligne par
@@ -639,7 +639,7 @@ static void         NewRuleBlock ()
 
    ChangeRuleBlock = False;
    if ((pBlock = (PtrTRuleBlock) malloc (sizeof (TRuleBlock))) == NULL)
-      TtaDisplaySimpleMessage (TRA, FATAL, TRA_NOT_ENOUGH_MEM);
+      TtaDisplaySimpleMessage (FATAL, TRA, TRA_NOT_ENOUGH_MEM);
    /* cree un pBlock */
    if (CurBlock == NULL)
       /* pas de bloc courant, attache ce bloc au schema de traduction */
@@ -713,7 +713,7 @@ static void         NewTransRule ()
    EndOfContdition (pSSchema);
    InCondition = False;
    if ((pTRule = (PtrTRule) malloc (sizeof (TranslRule))) == NULL)
-      TtaDisplaySimpleMessage (TRA, FATAL, TRA_NOT_ENOUGH_MEM);
+      TtaDisplaySimpleMessage (FATAL, TRA, TRA_NOT_ENOUGH_MEM);
    /* cree une nouvelle regle */
    if (CurBlock == NULL || ChangeRuleBlock)
       /* cree un nouveau bloc de regle pour la nouvelle regle */
@@ -2121,7 +2121,7 @@ rnb                 pr;
 					CopyWord (pTSchema->TsStructName, wi, wl);
 					/* lit le schema de structure compile' */
 					if (!RdSchStruct (pTSchema->TsStructName, pSSchema))
-					   TtaDisplaySimpleMessage (TRA, FATAL, TRA_CANNOT_READ_STRUCT_SCHEM);	/* echec lecture du  schema de structure */
+					   TtaDisplaySimpleMessage (FATAL, TRA, TRA_CANNOT_READ_STRUCT_SCHEM);	/* echec lecture du  schema de structure */
 					else if (strcmp (pTSchema->TsStructName, pSSchema->SsName) != 0)
 					   CompilerError (wi, TRA, FATAL, TRA_STRUCT_SCHEM_DOES_NOT_MATCH, inputLine, linenb);
 					else
@@ -3106,7 +3106,7 @@ char              **argv;
    if (!error)
      {
 	if (argc != 2)
-	   TtaDisplaySimpleMessage (TRA, FATAL, TRA_FILE_NOT_FOUND);
+	   TtaDisplaySimpleMessage (FATAL, TRA, TRA_FILE_NOT_FOUND);
 	else
 	  {
 	     strncpy (srceFileName, argv[1], MAX_NAME_LENGTH - 1);
@@ -3115,7 +3115,7 @@ char              **argv;
 	     strcat (srceFileName, ".SCH");
 
 	     if (FileExist (srceFileName) == 0)
-		TtaDisplaySimpleMessage (TRA, FATAL, TRA_FILE_NOT_FOUND);
+		TtaDisplaySimpleMessage (FATAL, TRA, TRA_FILE_NOT_FOUND);
 	     else
 		/* le fichier d'entree existe, on l'ouvre */
 	       {
@@ -3124,7 +3124,7 @@ char              **argv;
 		  srceFileName[len] = '\0';
 		  /* acquiert la memoire pour le schema de traduction */
 		  if ((pTSchema = (PtrTSchema) malloc (sizeof (TranslSchema))) == NULL)
-		     TtaDisplaySimpleMessage (TRA, FATAL, TRA_NOT_ENOUGH_MEM);
+		     TtaDisplaySimpleMessage (FATAL, TRA, TRA_NOT_ENOUGH_MEM);
 		  lgidenttable = 0;	/* table des identificateurs vide */
 		  linenb = 0;
 		  Initialize ();	/* prepare la generation */
@@ -3190,7 +3190,7 @@ char              **argv;
 		       strcat (srceFileName, ".TRA");
 		       fileOK = WrSchTrad (srceFileName, pTSchema, pSSchema);
 		       if (!fileOK)
-			  TtaDisplaySimpleMessageString (TRA, FATAL, TRA_CANNOT_WRITE, srceFileName);
+			  TtaDisplayMessage (FATAL, TtaGetMessage(TRA, TRA_CANNOT_WRITE), srceFileName);
 		    }
 		  free (pTSchema);
 		  free (pSSchema);

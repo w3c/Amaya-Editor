@@ -992,7 +992,7 @@ char              **argv;
    ReadEnv ();
    /* on utilise le directory courant */
    if (!RdSchStruct (fn, pSchStr))
-      TtaDisplaySimpleMessage (STR, FATAL, STR_CANNOT_READ_STRUCT_SCHEM);
+      TtaDisplaySimpleMessage (FATAL, STR, STR_CANNOT_READ_STRUCT_SCHEM);
    else if (!optionl)
      {
 	pSc1 = pSchStr;

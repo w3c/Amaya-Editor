@@ -382,7 +382,7 @@ char              **argv;
    /* lit le schema de typographie et le schema de structure correspondant */
    pSchemaTyp = RdSchTypo (filename, pSchemaStr);
    if (pSchemaTyp == NULL)
-      TtaDisplaySimpleMessage (TYP, FATAL, TYP_FILE_NOT_FOUND);
+      TtaDisplaySimpleMessage (FATAL, TYP, TYP_FILE_NOT_FOUND);
    else
       /* les schemas ont ete lus correctement */
      {

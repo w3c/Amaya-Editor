@@ -340,9 +340,9 @@ int                 n;
    SRule              *pRule;
 
    pIdent = &identtable[n - 1];
-   TtaDisplaySimpleMessageString (STR, INFO, STR_EXTERNAL_STRUCT, pIdent->identname);
+   TtaDisplayMessage (INFO, TtaGetMessage(STR, STR_EXTERNAL_STRUCT), pIdent->identname);
    if (pSSchema->SsNRules >= MAX_RULES_SSCHEMA)
-      TtaDisplaySimpleMessage (STR, FATAL, STR_TOO_MAN_RULES);
+      TtaDisplaySimpleMessage (FATAL, STR, STR_TOO_MAN_RULES);
    /* trop de regles */
    else
       /* ajoute une regle de nature a la fin du schema */
@@ -350,7 +350,7 @@ int                 n;
 	pSSchema->SsNRules++;
 	pIdent->identdef = pSSchema->SsNRules;
 	if (pIdent->identlg > MAX_NAME_LENGTH - 1)
-	   TtaDisplaySimpleMessage (STR, FATAL, STR_WORD_TOO_LONG);
+	   TtaDisplaySimpleMessage (FATAL, STR, STR_WORD_TOO_LONG);
 	else
 	  {
 	     pRule = &pSSchema->SsRule[pSSchema->SsNRules - 1];
@@ -372,7 +372,7 @@ int                 n;
 	     pRule->SrFirstExcept = 0;
 	     pRule->SrLastExcept = 0;
 	     if (RuleNameExist ())
-		TtaDisplaySimpleMessage (STR, FATAL, STR_NAME_ALREADY_DECLARED);
+		TtaDisplaySimpleMessage (FATAL, STR, STR_NAME_ALREADY_DECLARED);
 	  }
      }
 }
@@ -1120,7 +1120,7 @@ iline               wl;
       CompilerError (wi, STR, FATAL, STR_NAME_ALREADY_DECLARED, inputLine, linenb);
    if (pSSchema->SsExtensBlock == NULL)
       if ((pSSchema->SsExtensBlock = (PtrExtensBlock) malloc (sizeof (ExtensBlock))) == NULL)
-	 TtaDisplaySimpleMessage (STR, FATAL, STR_NOT_ENOUGH_MEM);
+	 TtaDisplaySimpleMessage (FATAL, STR, STR_NOT_ENOUGH_MEM);
    if (pSSchema->SsExtensBlock != NULL)
       if (pSSchema->SsNExtensRules >= MAX_EXTENS_SSCHEMA)
 	 CompilerError (wi, STR, FATAL, STR_TOO_MAN_RULES, inputLine, linenb);
@@ -2619,7 +2619,7 @@ static void         ChkRecurs ()
      {
 	pRule = &pSSchema->SsRule[i];
 	if (pRule->SrRecursive)
-	   TtaDisplaySimpleMessageString (STR, INFO, STR_RECURSIVE_ELEM, (char *) pRule->SrName);
+	   TtaDisplayMessage (INFO, TtaGetMessage(STR, STR_RECURSIVE_ELEM), (char *) pRule->SrName);
      }
 }
 
@@ -2643,7 +2643,7 @@ static void         ListAssocElem ()
     {
       if (pSSchema->SsRule[i].SrParamElem)
 	/* affiche un message */
-	    TtaDisplaySimpleMessageString(STR, INFO, STR_PARAMETER, (char *)pSSchema->SsRule[i].SrName);
+	    TtaDisplayMessage (INFO, TtaGetMessage(STR, STR_PARAMETER), (char *)pSSchema->SsRule[i].SrName);
       if (pSSchema->SsRule[i].SrAssocElem)
 	if (!pSSchema->SsRule[i].SrRecursDone)
 	  /* l'element associe est utilise dans une autre regle, erreur */
@@ -2657,7 +2657,7 @@ static void         ListAssocElem ()
 	  /* regles */
 	  {
 	    if (pSSchema->SsNRules >= MAX_RULES_SSCHEMA)
-		TtaDisplaySimpleMessage(STR, FATAL, STR_TOO_MAN_RULES);
+		TtaDisplaySimpleMessage (FATAL, STR, STR_TOO_MAN_RULES);
 	    /* saturation de la table des regles */
 	    else
 	      pSSchema->SsNRules++;
@@ -2684,9 +2684,9 @@ static void         ListAssocElem ()
 	    pRule->SrMinItems = 0;
 	    pRule->SrMaxItems = 32000;
 	    /* ecrit un message au terminal */
-	    TtaDisplaySimpleMessageString(STR, INFO, STR_ASSOC_ELEMS, (char *)pRule->SrName);
+	    TtaDisplayMessage (INFO, TtaGetMessage(STR, STR_ASSOC_ELEMS), (char *)pRule->SrName);
 	    if (RuleNameExist())
-		TtaDisplaySimpleMessage(STR, FATAL, STR_NAME_ALREADY_DECLARED);
+		TtaDisplaySimpleMessage (FATAL, STR, STR_NAME_ALREADY_DECLARED);
 	  }
 	else
 	   /* ce n'est pas un element associe */
@@ -2699,14 +2699,14 @@ static void         ListAssocElem ()
 		  {
 		     NAlias++;
 		     Alias[NAlias - 1] = i + 1;
-		     TtaDisplaySimpleMessageString (STR, INFO, STR_ALIAS, (char *) pSSchema->SsRule[i].SrName);
+		     TtaDisplayMessage (INFO, TtaGetMessage(STR, STR_ALIAS), (char *) pSSchema->SsRule[i].SrName);
 		  }
 		else
 		   /* les regles de Fin de CsPairedElement ne sont jamais referencees */
 		   if (pSSchema->SsRule[i].SrConstruct != CsPairedElement ||
 		       pSSchema->SsRule[i].SrFirstOfPair)
 		   /* c'est une definition inutile */
-		   TtaDisplaySimpleMessageString (STR, INFO, STR_UNUSED, (char *) pSSchema->SsRule[i].SrName);
+		   TtaDisplayMessage (INFO, TtaGetMessage(STR, STR_UNUSED), (char *) pSSchema->SsRule[i].SrName);
 	     }
      }
 }
@@ -2839,13 +2839,13 @@ static void         ListNotCreated ()
 		      /* l'element est dans la table. Il ne sera pas cree */
 		      temp = False;
 	     if (temp)
-		TtaDisplaySimpleMessageString (STR, INFO, STR_IS_A_TEMPORARY_ELEM, (char *) pRule->SrName);
+		TtaDisplayMessage (INFO, TtaGetMessage(STR, STR_IS_A_TEMPORARY_ELEM), (char *) pRule->SrName);
 	  }
 	else if (!pRule->SrRecursDone)
 	   /* les unites peuvent ne pas etre utilisees dans le schema */
 	   if (!pRule->SrUnitElem)
 	     {
-		TtaDisplaySimpleMessageString (STR, INFO, STR_WON_T_BE_CREATED, (char *) pRule->SrName);
+		TtaDisplayMessage (INFO, TtaGetMessage(STR, STR_WON_T_BE_CREATED), (char *) pRule->SrName);
 		/* cherche s'il y a des REFERENCES sur ce type d'element */
 		for (rr = 0; rr < pSSchema->SsNRules; rr++)
 		  {
@@ -2853,7 +2853,7 @@ static void         ListNotCreated ()
 		     if (pRule2->SrConstruct == CsReference)
 			if (pRule2->SrRefTypeNat[0] == '\0')
 			   if (pRule2->SrReferredType == r + 1)
-			      TtaDisplaySimpleMessageString (STR, INFO, STR_WON_T_BE_CREATED_AND_IS_REFD, (char *) pRule->SrName);
+			      TtaDisplayMessage (INFO, TtaGetMessage(STR, STR_WON_T_BE_CREATED_AND_IS_REFD), (char *) pRule->SrName);
 		  }
 	     }
      }
@@ -2901,7 +2901,7 @@ char              **argv;
      {
 	/* teste les arguments d'appel du programme */
 	if (argc != 2)
-	   TtaDisplaySimpleMessage (STR, FATAL, STR_NO_SUCH_FILE);
+	   TtaDisplaySimpleMessage (FATAL, STR, STR_NO_SUCH_FILE);
 	else
 	  {
 	     /* recupere le nom du fichier a compiler */
@@ -2911,7 +2911,7 @@ char              **argv;
 	     strcat (srceFileName, ".SCH");
 	     /* teste si le fichier a compiler existe */
 	     if (FileExist (srceFileName) == 0)
-		TtaDisplaySimpleMessage (STR, FATAL, STR_NO_SUCH_FILE);
+		TtaDisplaySimpleMessage (FATAL, STR, STR_NO_SUCH_FILE);
 	     else
 		/* le fichier d'entree existe, on l'ouvre */
 	       {
@@ -2920,10 +2920,10 @@ char              **argv;
 		  srceFileName[i] = '\0';
 		  /* acquiert la memoire pour le schema de structure */
 		  if ((pSSchema = (PtrSSchema) malloc (sizeof (StructSchema))) == NULL)
-		     TtaDisplaySimpleMessage (STR, FATAL, STR_NOT_ENOUGH_MEM);
+		     TtaDisplaySimpleMessage (FATAL, STR, STR_NOT_ENOUGH_MEM);
 		  /* memoire pour un schema de structure externe */
 		  if ((pExternSSchema = (PtrSSchema) malloc (sizeof (StructSchema))) == NULL)
-		     TtaDisplaySimpleMessage (STR, FATAL, STR_NOT_ENOUGH_MEM);
+		     TtaDisplaySimpleMessage (FATAL, STR, STR_NOT_ENOUGH_MEM);
 
 		  lgidenttable = 0;	/* table des identificateurs vide */
 		  linenb = 0;
@@ -3006,7 +3006,7 @@ char              **argv;
 			    strcat (srceFileName, ".STR");
 			    fileOK = WrSchStruct (srceFileName, pSSchema, 0);
 			    if (!fileOK)
-			       TtaDisplaySimpleMessageString (STR, FATAL, STR_CANNOT_WRITE, srceFileName);
+			       TtaDisplayMessage (FATAL, TtaGetMessage(STR, STR_CANNOT_WRITE), srceFileName);
 			 }
 		    }
 		  free (pSSchema);

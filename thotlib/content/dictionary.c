@@ -776,7 +776,7 @@ void                Dico_Init ()
      }
    Alphabet_charge = Corr_alphabet ();
    if (Alphabet_charge == False)
-      TtaDisplaySimpleMessage (LIB, INFO, LIB_NO_ALPHABET);
+      TtaDisplaySimpleMessage (INFO, LIB, LIB_NO_ALPHABET);
 }				/* end proc Dico_Init */
 
 

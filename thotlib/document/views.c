@@ -244,7 +244,7 @@ boolean            *assoc;
 	  }
      }
    if (*nv == 0)
-      TtaDisplaySimpleMessage (LIB, INFO, LIB_VIEW_NOT_FOUND);
+      TtaDisplaySimpleMessage (INFO, LIB, LIB_VIEW_NOT_FOUND);
    else
       *pD = pDoc;
 }
@@ -1173,7 +1173,7 @@ boolean             SauveDocAvecMove;
 	     ok = OuvrEcr (NomTemporaire) == 0;
 	     if (ok)
 	       {
-		  TtaDisplaySimpleMessage (LIB, INFO, LIB_WRITING);
+		  TtaDisplaySimpleMessage (INFO, LIB, LIB_WRITING);
 		  ok = simpleSave (pDoc, NomTemporaire, False);
 	       }
 	     if (ok)
@@ -1311,9 +1311,9 @@ boolean             ask;
    status = False;
    if (pDoc->DocReadOnly)
       /* on ne sauve pas les documents qui sont en lecture seule */
-      TtaDisplaySimpleMessage (LIB, INFO, LIB_NOT_ALLOWED_READ_ONLY_DOC);
+      TtaDisplaySimpleMessage (INFO, LIB, LIB_NOT_ALLOWED_READ_ONLY_DOC);
    else if (pDoc->DocSSchema == NULL)
-      TtaDisplaySimpleMessage (LIB, INFO, LIB_EMPTY_DOC_NOT_WRITTEN);
+      TtaDisplaySimpleMessage (INFO, LIB, LIB_EMPTY_DOC_NOT_WRITTEN);
    else
      {
 	strncpy (nomdoc, pDoc->DocDName, MAX_NAME_LENGTH);
@@ -1548,7 +1548,7 @@ PtrDocument         pDoc;
       /* echec creation frame */
      {
 	LibDocument (&pDoc);
-	TtaDisplaySimpleMessage (LIB, INFO, LIB_IMPOSSIBLE_TO_OPEN_NEW_WINDOW);
+	TtaDisplaySimpleMessage (INFO, LIB, LIB_IMPOSSIBLE_TO_OPEN_NEW_WINDOW);
      }
    else
      {
@@ -1682,7 +1682,7 @@ char               *nomfichier;
      {
 	/* on ouvre le document en chargeant temporairement les documents */
 	/* externes qui contiennent les elements inclus dans notre document */
-	TtaDisplaySimpleMessage (LIB, INFO, LIB_READING_THE_DOC);
+	TtaDisplaySimpleMessage (INFO, LIB, LIB_READING_THE_DOC);
 	ok = OuvreDoc (NomDocument, *pDoc, True, False, NULL, True);
 	/* restaure le path des documents s'il a ete ecrase */
 	if (SaveDirDoc[0] != '\0')
@@ -2242,7 +2242,7 @@ int                 H;
    if (frame == 0)
       /* on n'a pas pu creer la fenetre, echec */
      {
-	TtaDisplaySimpleMessage (LIB, INFO, LIB_TOO_MANY_VIEWS);
+	TtaDisplaySimpleMessage (INFO, LIB, LIB_TOO_MANY_VIEWS);
 	if (!Assoc)
 	   pDoc->DocView[vue - 1].DvPSchemaView = 0;
      }

@@ -112,7 +112,7 @@ PtrDocument         pDoc;
    else if (NbFichierSortie >= MaxFichierSortie)
       /* table saturee */
      {
-	TtaDisplaySimpleMessage (LIB, INFO, LIB_TOO_MANY_OUTPUT_FILES);
+	TtaDisplaySimpleMessage (INFO, LIB, LIB_TOO_MANY_OUTPUT_FILES);
 	return 0;
      }
    else

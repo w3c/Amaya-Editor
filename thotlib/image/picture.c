@@ -3,7 +3,7 @@
 #include "constmedia.h"
 #include "typemedia.h"
 #include "lost.xpm"
-#include "imagedrvr.h"
+#include "picture.h"
 #include "thotconfig.h"
 #include "frame.h"
 

@@ -11,7 +11,7 @@
 #include "functions.h"
 #include "constmedia.h"
 #include "typemedia.h"
-#include "imagedrvr.h"
+#include "picture.h"
 
 #include "imagedrvr.f"
 #include "memory.f"

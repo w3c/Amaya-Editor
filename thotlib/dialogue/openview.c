@@ -89,7 +89,7 @@ View                vue;
 	/* construit le menus des vues que l'on peut ouvrir */
 	MenuVuesAOuvrir (pDoc, Buf, &nbitem);
 	if (nbitem == 0)
-	   TtaDisplaySimpleMessage (LIB, INFO, LIB_ALL_VIEWS_ALREADY_CREATED);
+	   TtaDisplaySimpleMessage (INFO, LIB, LIB_ALL_VIEWS_ALREADY_CREATED);
 	else
 	  {
 	     NumeroVueAOuvrir = -1;

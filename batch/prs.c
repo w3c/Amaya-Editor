@@ -182,7 +182,7 @@ static void         Initialize ()
       CompilerError (0, PRS, FATAL, PRS_NOT_ENOUGH_MEM, inputLine, linenb);
    /* acquiert un schema de structure pour les structures externes */
    if ((pExternalSS = (PtrSSchema) malloc (sizeof (StructSchema))) == NULL)
-      TtaDisplaySimpleMessage (PRS, FATAL, PRS_NOT_ENOUGH_MEM);
+      TtaDisplaySimpleMessage (FATAL, PRS, PRS_NOT_ENOUGH_MEM);
    /* initialise ce schema */
    pPSchema->PsStructName[0] = '\0';
    pPSchema->PsNViews = 0;
@@ -3696,9 +3696,9 @@ iline               wi;
 		    CopyName (n, wi, wl);
 		    /* lit le schema de structure compile' */
 		    if ((pSSchema = (PtrSSchema) malloc (sizeof (StructSchema))) == NULL)
-		       TtaDisplaySimpleMessage (PRS, FATAL, PRS_NOT_ENOUGH_MEM);	/* memoire insuffisante */
+		       TtaDisplaySimpleMessage (FATAL, PRS, PRS_NOT_ENOUGH_MEM);	/* memoire insuffisante */
 		    if (!RdSchStruct (n, pSSchema))
-		       TtaDisplaySimpleMessage (PRS, FATAL, PRS_STRUCT_SCHEM_NOT_FOUND);
+		       TtaDisplaySimpleMessage (FATAL, PRS, PRS_STRUCT_SCHEM_NOT_FOUND);
 		    /* echec lecture du schema de structure */
 		    else if (strcmp (n, pSSchema->SsName))
 		       CompilerError (wi, PRS, FATAL, PRS_THE_STRUCT_SCHEM_DOES_NOT_MATCH, inputLine, linenb);
@@ -5205,7 +5205,7 @@ int                 view;
      {
 
 	if ((pR = (PtrPRule) malloc (sizeof (PresRule))) == NULL)
-	   TtaDisplaySimpleMessage (PRS, FATAL, PRS_NOT_ENOUGH_MEM);
+	   TtaDisplaySimpleMessage (FATAL, PRS, PRS_NOT_ENOUGH_MEM);
 	pR->PrType = ruleType;
 	/* on insere la regle cree */
 	if (pPRule == NULL)
@@ -5322,12 +5322,12 @@ static void         CheckPageBoxes ()
 		       while (!(stop1));
 		       if (!exist)
 			  /* il n'y a pas de regle de hauteur, erreur */
-			  TtaDisplaySimpleMessageString (PRS, FATAL, PRS_INVALID_HEIGHT_RULE, pPSchema->PsPresentBox[b - 1].PbName);
+			  TtaDisplayMessage (FATAL, TtaGetMessage(PRS, PRS_INVALID_HEIGHT_RULE), pPSchema->PsPresentBox[b - 1].PbName);
 		       else if (!pRule->PrDimRule.DrAbsolute
 				|| pRule->PrDimRule.DrUnit == UnRelative
 				|| pRule->PrDimRule.DrPosition)
 			  /* ce n'est pas une hauteur absolue fixe, erreur */
-			  TtaDisplaySimpleMessageString (PRS, FATAL, PRS_INVALID_HEIGHT_RULE, pPSchema->PsPresentBox[b - 1].PbName);
+			  TtaDisplayMessage (FATAL, TtaGetMessage(PRS, PRS_INVALID_HEIGHT_RULE), pPSchema->PsPresentBox[b - 1].PbName);
 		       /* cherche la regle de largeur */
 		       pRule = pPSchema->PsPresentBox[b - 1].PbFirstPRule;
 		       stop1 = False;
@@ -5349,12 +5349,12 @@ static void         CheckPageBoxes ()
 		       while (!(stop1));
 		       if (!exist)
 			  /* il n'y a pas de regle de largeur, erreur */
-			  TtaDisplaySimpleMessageString (PRS, FATAL, PRS_INVALID_WIDTH_RULE, pPSchema->PsPresentBox[b - 1].PbName);
+			  TtaDisplayMessage (FATAL, TtaGetMessage(PRS, PRS_INVALID_WIDTH_RULE), pPSchema->PsPresentBox[b - 1].PbName);
 		       else if (!pRule->PrDimRule.DrAbsolute
 				|| pRule->PrDimRule.DrUnit == UnRelative
 				|| pRule->PrDimRule.DrPosition)
 			  /* ce n'est pas une largeur absolue fixe, erreur */
-			  TtaDisplaySimpleMessageString (PRS, FATAL, PRS_INVALID_WIDTH_RULE, pPSchema->PsPresentBox[b - 1].PbName);
+			  TtaDisplayMessage (FATAL, TtaGetMessage(PRS, PRS_INVALID_WIDTH_RULE), pPSchema->PsPresentBox[b - 1].PbName);
 		       /* cherche la regle de largeur de la boite qui porte la */
 		       /* regle Page, ou cree une regle s'il n'y a pas de regle de */
 		       /* largeur */
@@ -5388,7 +5388,7 @@ static void         CheckPageBoxes ()
 		       while (!(stop1));
 		       if (!exist)
 			  /* il n'y a pas de regle de position verticale, erreur */
-			  TtaDisplaySimpleMessageString (PRS, FATAL, PRS_INVALID_VERTPOS_RULE, pPSchema->PsPresentBox[b - 1].PbName);
+			  TtaDisplayMessage (FATAL, TtaGetMessage(PRS, PRS_INVALID_VERTPOS_RULE), pPSchema->PsPresentBox[b - 1].PbName);
 		       else
 			 {
 #ifdef __COLPAGE__
@@ -5410,7 +5410,7 @@ static void         CheckPageBoxes ()
 #endif /* __COLPAGE__ */
 			       /* et distance absolue */
 			       /* ce n'est pas un positionnement correct, erreur */
-			       TtaDisplaySimpleMessageString (PRS, FATAL, PRS_INVALID_VERTPOS_RULE, pPSchema->PsPresentBox[b - 1].PbName);
+			       TtaDisplayMessage (FATAL, TtaGetMessage(PRS, PRS_INVALID_VERTPOS_RULE), pPSchema->PsPresentBox[b - 1].PbName);
 			 }
 		       /* cherche la regle de position horizontale */
 		       pRule = pPSchema->PsPresentBox[b - 1].PbFirstPRule;
@@ -5433,7 +5433,7 @@ static void         CheckPageBoxes ()
 		       while (!(stop1));
 		       if (!exist)
 			  /* il n'y a pas de regle de position horiz., erreur */
-			  TtaDisplaySimpleMessageString (PRS, FATAL, PRS_INVALID_HORIZPOS_RULE, pPSchema->PsPresentBox[b - 1].PbName);
+			  TtaDisplayMessage (FATAL, TtaGetMessage(PRS, PRS_INVALID_HORIZPOS_RULE), pPSchema->PsPresentBox[b - 1].PbName);
 		       else
 			 {
 			    if (pRule->PrPosRule.PoPosDef != Left
@@ -5445,7 +5445,7 @@ static void         CheckPageBoxes ()
 				|| (pRule->PrPosRule.PoDistUnit == UnRelative && pRule->PrPosRule.PoDistance != 0))
 			       /* et distance absolue */
 			       /* ce n'est pas un positionnement correct, erreur */
-			       TtaDisplaySimpleMessageString (PRS, FATAL, PRS_INVALID_HORIZPOS_RULE, pPSchema->PsPresentBox[b - 1].PbName);
+			       TtaDisplayMessage (FATAL, TtaGetMessage(PRS, PRS_INVALID_HORIZPOS_RULE), pPSchema->PsPresentBox[b - 1].PbName);
 			 }
 		    }
 		  pR = pR->PrNextPRule;
@@ -5487,7 +5487,7 @@ static void         CheckPageBoxes ()
 			/* c'est une regle de creation */
 			if (!(pR->PrPresFunction == FnCreateBefore || pR->PrPresFunction == FnCreateAfter))
 			   /* ce n'est pas une regle de creation autorisee, erreur */
-			   TtaDisplaySimpleMessageString (PRS, FATAL, PRS_CREA_RULE_NOT_ALLOWED, pPSchema->PsPresentBox[b].PbName);
+			   TtaDisplayMessage (FATAL, TtaGetMessage(PRS, PRS_CREA_RULE_NOT_ALLOWED), pPSchema->PsPresentBox[b].PbName);
 			else
 			   /* la regle pR est une regle CreateAfter ou */
 			   /* a CreateBefore */
@@ -5527,7 +5527,7 @@ static void         CheckPageBoxes ()
 			     while (!(stop1));
 			     if (!exist)
 				/* pas de regle de positionnement vertical, erreur */
-				TtaDisplaySimpleMessageString (PRS, FATAL, PRS_HAS_NO_VERTIC_POS_IN_THE_PAGE, pPSchema->PsPresentBox[hfB].PbName);
+				TtaDisplayMessage (FATAL, TtaGetMessage(PRS, PRS_HAS_NO_VERTIC_POS_IN_THE_PAGE), pPSchema->PsPresentBox[hfB].PbName);
 			     else
 			       {
 #ifdef __COLPAGE__
@@ -5544,13 +5544,13 @@ static void         CheckPageBoxes ()
 				      || !pPRule->PrPosRule.PoRefElem
 				      || pPRule->PrPosRule.PoTypeRefElem != ord (PageBreak) + 1)
 #endif /* __COLPAGE__ */
-				     TtaDisplaySimpleMessageString (PRS, FATAL, PRS_INCOR_VERTIC_POS_IN_PAGE, pPSchema->PsPresentBox[hfB].PbName);
+				     TtaDisplayMessage (FATAL, TtaGetMessage(PRS, PRS_INCOR_VERTIC_POS_IN_PAGE), pPSchema->PsPresentBox[hfB].PbName);
 				  if (pPRule->PrPosRule.PoDistance != 0)
 				     if (pPRule->PrPosRule.PoDistUnit == UnRelative)
-					TtaDisplaySimpleMessageString (PRS, FATAL, PRS_VERTIC_DIST_MUST_BE_CONSTANT, pPSchema->PsPresentBox[hfB].PbName);
+					TtaDisplayMessage (FATAL, TtaGetMessage(PRS, PRS_VERTIC_DIST_MUST_BE_CONSTANT), pPSchema->PsPresentBox[hfB].PbName);
 #ifdef __COLPAGE__
 				  if (pPRule->PrPosRule.PoRelation != RlPrevious)
-				     TtaDisplaySimpleMessageString (PRS, FATAL, PRS_INCOR_VERTIC_POS_IN_PAGE, pPSchema->PsPresentBox[hfB].PbName);
+				     TtaDisplayMessage (FATAL, TtaGetMessage(PRS, PRS_INCOR_VERTIC_POS_IN_PAGE), pPSchema->PsPresentBox[hfB].PbName);
 				  else
 				     /* la boite creee est positionnee par rapport */
 				     /* a la boite precedente : seul cas autorise */
@@ -5585,19 +5585,19 @@ static void         CheckPageBoxes ()
 				       if (exist)
 					  if (pHeadR->PrDimRule.DrPosition)
 					     /* c'est une hauteur elastique, erreur */
-					     TtaDisplaySimpleMessageString (PRS, FATAL, PRS_INVALID_HEIGHT_RULE, pPSchema->PsPresentBox[hfB].PbName);
+					     TtaDisplayMessage (FATAL, TtaGetMessage(PRS, PRS_INVALID_HEIGHT_RULE), pPSchema->PsPresentBox[hfB].PbName);
 					  else if (!pHeadR->PrDimRule.DrAbsolute)
 					     /* c'est une hauteur relative, on n'accepte */
 					     /* que la hauteur du contenu */
 					    {
 					       if (pHeadR->PrDimRule.DrRelation != RlEnclosed)
-						  TtaDisplaySimpleMessageString (PRS, FATAL, PRS_INVALID_HEIGHT_RULE, pPSchema->PsPresentBox[hfB].PbName);
+						  TtaDisplayMessage (FATAL, TtaGetMessage(PRS, PRS_INVALID_HEIGHT_RULE), pPSchema->PsPresentBox[hfB].PbName);
 					    }
 					  else
 					     /* regle de hauteur absolue */
 					  if (pHeadR->PrDimRule.DrUnit == UnRelative)
 					     /* la hauteur n'est pas en unites fixes */
-					     TtaDisplaySimpleMessageString (PRS, FATAL, PRS_INVALID_HEIGHT_RULE, pPSchema->PsPresentBox[hfB].PbName);
+					     TtaDisplayMessage (FATAL, TtaGetMessage(PRS, PRS_INVALID_HEIGHT_RULE), pPSchema->PsPresentBox[hfB].PbName);
 					  else
 					     /* calcule la distance entre le bas de la */
 					     /* boite de haut de page et le haut de la page */
@@ -5663,24 +5663,24 @@ static void         CheckPageBoxes ()
 #else  /* __COLPAGE__ */
 				       if (!exist)
 					  /* il n'y a pas de regle de hauteur, erreur */
-					  TtaDisplaySimpleMessageString (PRS, FATAL, PRS_INVALID_HEIGHT_RULE, pPSchema->PsPresentBox[hfB].PbName);
+					  TtaDisplayMessage (FATAL, TtaGetMessage(PRS, PRS_INVALID_HEIGHT_RULE), pPSchema->PsPresentBox[hfB].PbName);
 				       else
 #endif /* __COLPAGE__ */
 				       if (pHeadR->PrDimRule.DrPosition)
 					  /* c'est une hauteur elastique, erreur */
-					  TtaDisplaySimpleMessageString (PRS, FATAL, PRS_INVALID_HEIGHT_RULE, pPSchema->PsPresentBox[hfB].PbName);
+					  TtaDisplayMessage (FATAL, TtaGetMessage(PRS, PRS_INVALID_HEIGHT_RULE), pPSchema->PsPresentBox[hfB].PbName);
 				       else if (!pHeadR->PrDimRule.DrAbsolute)
 					  /* c'est une hauteur relative, on n'accepte */
 					  /* que la hauteur du contenu */
 					 {
 					    if (pHeadR->PrDimRule.DrRelation != RlEnclosed)
-					       TtaDisplaySimpleMessageString (PRS, FATAL, PRS_INVALID_HEIGHT_RULE, pPSchema->PsPresentBox[hfB].PbName);
+					       TtaDisplayMessage (FATAL, TtaGetMessage(PRS, PRS_INVALID_HEIGHT_RULE), pPSchema->PsPresentBox[hfB].PbName);
 					 }
 				       else
 					  /* regle de hauteur absolue */
 				       if (pHeadR->PrDimRule.DrUnit == UnRelative)
 					  /* la hauteur n'est pas en unites fixes */
-					  TtaDisplaySimpleMessageString (PRS, FATAL, PRS_INVALID_HEIGHT_RULE, pPSchema->PsPresentBox[hfB].PbName);
+					  TtaDisplayMessage (FATAL, TtaGetMessage(PRS, PRS_INVALID_HEIGHT_RULE), pPSchema->PsPresentBox[hfB].PbName);
 				       else
 					  /* calcule la distance entre le haut de la */
 					  /* boite de bas de page et le bas de la page */
@@ -5718,7 +5718,7 @@ static void         CheckPageBoxes ()
 				  else
 				     /* la boite creee n'est pas positionnee par */
 				     /* rapport a la page, erreur */
-				     TtaDisplaySimpleMessageString (PRS, FATAL, PRS_INCOR_VERTIC_POS_IN_PAGE, pPSchema->PsPresentBox[hfB].PbName);
+				     TtaDisplayMessage (FATAL, TtaGetMessage(PRS, PRS_INCOR_VERTIC_POS_IN_PAGE), pPSchema->PsPresentBox[hfB].PbName);
 #endif /* __COLPAGE__ */
 				  /* examine les conditions de creation de la boite de */
 				  /* haut ou de bas de page, a la recherche d'un */
@@ -5740,7 +5740,7 @@ static void         CheckPageBoxes ()
 						 {
 						    if (pPSchema->PsPresentBox[b].PbPageCounter != counter)
 						       /* ce n'est pas le meme compteur */
-						       TtaDisplaySimpleMessageString (PRS, FATAL, PRS_USES_DIFFERENT_PAGE_COUNTERS, pPSchema->PsPresentBox[b].PbName);
+						       TtaDisplayMessage (FATAL, TtaGetMessage(PRS, PRS_USES_DIFFERENT_PAGE_COUNTERS), pPSchema->PsPresentBox[b].PbName);
 						 }
 					       else
 						  /* on a trouve' le compteur de pages associe' */
@@ -5769,7 +5769,7 @@ static void         CheckPageBoxes ()
 						      {
 							 if (pPSchema->PsPresentBox[b].PbPageCounter != counter)
 							    /* ce n'est pas le meme compteur */
-							    TtaDisplaySimpleMessageString (PRS, FATAL, PRS_TWO_DIFFERENT_PAGE_NUMBERS, pPSchema->PsPresentBox[hfB].PbName);
+							    TtaDisplayMessage (FATAL, TtaGetMessage(PRS, PRS_TWO_DIFFERENT_PAGE_NUMBERS), pPSchema->PsPresentBox[hfB].PbName);
 						      }
 						    else
 						       /* on trouve' le compteur de pages */
@@ -5805,7 +5805,7 @@ static void         CheckPageBoxes ()
 						    /* c'est une regle de creation */
 						    if (pRC->PrPresFunction == FnCreateBefore || pRC->PrPresFunction == FnCreateAfter)
 						       /* ce n'est pas une regle de creation autorisee, erreur */
-						       TtaDisplaySimpleMessageString (PRS, FATAL, PRS_CREA_RULE_NOT_ALLOWED, pPSchema->PsPresentBox[hfB].PbName);
+						       TtaDisplayMessage (FATAL, TtaGetMessage(PRS, PRS_CREA_RULE_NOT_ALLOWED), pPSchema->PsPresentBox[hfB].PbName);
 						    else
 						       /* la regle pRC est une regle CreatePremFils ou */
 						       /* CreateDerFils */
@@ -5834,7 +5834,7 @@ static void         CheckPageBoxes ()
 									     {
 										if (pPSchema->PsPresentBox[b].PbPageCounter != counter)
 										   /* ce n'est pas le meme compteur */
-										   TtaDisplaySimpleMessageString (PRS, FATAL, PRS_TWO_DIFFERENT_PAGE_NUMBERS, pPSchema->PsPresentBox[hfB].PbName);
+										   TtaDisplayMessage (FATAL, TtaGetMessage(PRS, PRS_TWO_DIFFERENT_PAGE_NUMBERS), pPSchema->PsPresentBox[hfB].PbName);
 									     }
 									   else
 									      /* on a trouve' le compteur de pages */
@@ -5879,14 +5879,14 @@ static void         CheckPageBoxes ()
 	   /* verifie sa regle Content */
 	   if (pPresBox->PbContent == ContElement)
 	      /* le contenu est un type d'element, erreur */
-	      TtaDisplaySimpleMessageString (PRS, FATAL, PRS_INCOR_CONTENT_RULE, pPSchema->PsPresentBox[b].PbName);
+	      TtaDisplayMessage (FATAL, TtaGetMessage(PRS, PRS_INCOR_CONTENT_RULE), pPSchema->PsPresentBox[b].PbName);
 	if (pPresBox->PbPageHeader || pPresBox->PbPageFooter)
 	   /* c'est une boite de haut ou bas de page, */
 	   if (pPresBox->PbContent == ContElement)
 	      /* son contenu est un type d'element */
 	      if (viewOfBox[b] != 1)
 		 /* elle n'est pas creee par une page de la vue 1 */
-		 TtaDisplaySimpleMessageString (PRS, FATAL, PRS_CONTENT_ALLOWED_ONLY_IN_MAIN_VIEW, pPSchema->PsPresentBox[b].PbName);
+		 TtaDisplayMessage (FATAL, TtaGetMessage(PRS, PRS_CONTENT_ALLOWED_ONLY_IN_MAIN_VIEW), pPSchema->PsPresentBox[b].PbName);
 	/* cherche les regles de creation de la boite */
 	pR = pPresBox->PbFirstPRule;
 	/* 1ere regle de presentation */
@@ -5905,7 +5905,7 @@ static void         CheckPageBoxes ()
 			  || pR->PrPresFunction == FnCreateAfter))
 		     /* ce n'est pas une regle de creation autorisee */
 		     if (!pPresBox->PbPageBox)
-			TtaDisplaySimpleMessageString (PRS, FATAL, PRS_CREA_RULE_NOT_ALLOWED, pPSchema->PsPresentBox[b].PbName);
+			TtaDisplayMessage (FATAL, TtaGetMessage(PRS, PRS_CREA_RULE_NOT_ALLOWED), pPSchema->PsPresentBox[b].PbName);
 		  pR = pR->PrNextPRule;
 		  /* passe a la regle suivante */
 	       }
@@ -6096,7 +6096,7 @@ static void         CheckAllBoxesUsed ()
    /* sort un message pour chaque boite inutilisee */
    for (b = 0; b < pPSchema->PsNPresentBoxes; b++)
       if (!usedBox[b])
-	 TtaDisplaySimpleMessageString (PRS, INFO, PRS_UNUSED_BOX, pPSchema->PsPresentBox[b].PbName);
+	 TtaDisplayMessage (INFO, TtaGetMessage(PRS, PRS_UNUSED_BOX), pPSchema->PsPresentBox[b].PbName);
 }
 
 
@@ -6155,7 +6155,7 @@ char              **argv;
 	strcat (fname, ".SCH");
 	/* ouvre le fichier a compiler */
 	if (FileExist (fname) == 0)
-	   TtaDisplaySimpleMessageString (PRS, FATAL, PRS_NO_SUCH_FILE, fname);
+	   TtaDisplayMessage (FATAL, TtaGetMessage(PRS, PRS_NO_SUCH_FILE), fname);
 	else
 	  {
 	     infile = BIOreadOpen (fname);
@@ -6242,7 +6242,7 @@ char              **argv;
 		  /* ecrit le schema compile' dans le directory courant */
 		  fileOK = WrSchPres (fname, pPSchema, pSSchema);
 		  if (!fileOK)
-		     TtaDisplaySimpleMessageString (PRS, FATAL, PRS_CANNOT_WRITE, fname);
+		     TtaDisplayMessage (FATAL, TtaGetMessage(PRS, PRS_CANNOT_WRITE), fname);
 	       }
 	  }
      }

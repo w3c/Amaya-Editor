@@ -13,7 +13,7 @@
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
-#include "imagedrvr.h"
+#include "picture.h"
 #include "language.h"
 #include "libmsg.h"
 #include "message.h"
@@ -2900,10 +2900,10 @@ PtrAbstractBox             Pv;
    adligne = NULL;
    /* Pas de pave en parametre */
    if (Pv == NULL)
-      TtaDisplaySimpleMessage (LIB, INFO, LIB_VIEW_IS_EMPTY);
+      TtaDisplaySimpleMessage (INFO, LIB, LIB_VIEW_IS_EMPTY);
    /* Le numero de frame est erronne */
    else if (frame < 1 || frame > MAX_FRAME)
-      TtaDisplaySimpleMessage (LIB, INFO, LIB_INCOR_WINDOW_NUMBER);
+      TtaDisplaySimpleMessage (INFO, LIB, LIB_INCOR_WINDOW_NUMBER);
    else
      {
 	pFrame = &FntrTable[frame - 1];
@@ -2911,19 +2911,19 @@ PtrAbstractBox             Pv;
 	/* La vue n'est pas cree a la racine */
 	if (pFrame->FrAbstractBox == NULL && (pPa1->AbEnclosing != NULL
 		 || pPa1->AbPrevious != NULL || pPa1->AbNext != NULL))
-	   TtaDisplaySimpleMessage (LIB, INFO, LIB_VIEW_IS_MODIFIED_BEFORE_CREA);
+	   TtaDisplaySimpleMessage (INFO, LIB, LIB_VIEW_IS_MODIFIED_BEFORE_CREA);
 	/* On detruit toute la vue */
 	else if (pPa1->AbEnclosing == NULL && pPa1->AbDead)
 	  {
 	     if (pPa1 == pFrame->FrAbstractBox)
 		RazVue (frame);
 	     else
-		TtaDisplaySimpleMessage (LIB, INFO, LIB_VIEW_IS_MODIFIED_BEFORE_CREA);
+		TtaDisplaySimpleMessage (INFO, LIB, LIB_VIEW_IS_MODIFIED_BEFORE_CREA);
 	  }
 	/* La vue est deja cree */
 	else if (pFrame->FrAbstractBox != NULL && pPa1->AbEnclosing == NULL
 		 && pPa1->AbNew)
-	   TtaDisplaySimpleMessage (LIB, INFO, LIB_NEW_VIEW_CANNOT_REPLACE_THE_OLD_ONE);
+	   TtaDisplaySimpleMessage (INFO, LIB, LIB_NEW_VIEW_CANNOT_REPLACE_THE_OLD_ONE);
 	/* Dans les autres cas */
 	else
 	  {

@@ -845,7 +845,7 @@ char               *appliname;
    if (!fich)
      {
 	/*Fichier inaccessible */
-	TtaDisplaySimpleMessage (LIB, INFO, LIB_NO_THOT_KEYBOARD);
+	TtaDisplaySimpleMessage (INFO, LIB, LIB_NO_THOT_KEYBOARD);
 	return NULL;
      }
    else

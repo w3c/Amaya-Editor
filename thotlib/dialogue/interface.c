@@ -22,7 +22,7 @@
 /* Needed for a glitch with Motif 2.0 see ResizeEvents below ! */
 #include "thotconfig.h"
 #include "typemedia.h"
-#include "imagedrvr.h"
+#include "picture.h"
 #include "libmsg.h"
 #include "dialog.h"
 #include "application.h"

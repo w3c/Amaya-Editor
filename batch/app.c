@@ -1559,7 +1559,7 @@ char              **argv;
 	     /* ouvre le fichier a compiler */
 	     filedesc = fopen (pfilename, "r");
 	     if (filedesc == 0)
-		TtaDisplaySimpleMessageString (APP, FATAL, APP_NO_SUCH_FILE, pfilename);
+		TtaDisplayMessage (FATAL, TtaGetMessage(APP, APP_NO_SUCH_FILE), pfilename);
 	     else
 	       {
 		  /* le fichier a compiler est ouvert */

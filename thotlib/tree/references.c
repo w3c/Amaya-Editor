@@ -1009,7 +1009,7 @@ boolean             withAppEvent;
 	   if (pDoc == pTargetDoc)
 	      /* reference et element reference' sont dans le meme document */
 	     {
-		TtaDisplaySimpleMessage (LIB, INFO, LIB_A_DOC_CANNOT_INCLUDE_ITSELF);
+		TtaDisplaySimpleMessage (INFO, LIB, LIB_A_DOC_CANNOT_INCLUDE_ITSELF);
 		pTargetEl = NULL;	/* sort de la procedure sans rien faire d'autre */
 	     }
      }
@@ -1043,7 +1043,7 @@ boolean             withAppEvent;
 		       {
 			  pAsc = NULL;	/* stop */
 			  pEl = NULL;	/* abandon */
-			  TtaDisplaySimpleMessage (LIB, INFO, LIB_THIS_IS_A_COPY);
+			  TtaDisplaySimpleMessage (INFO, LIB, LIB_THIS_IS_A_COPY);
 			  /* message 'Designez l'original' */
 		       }
 		     else

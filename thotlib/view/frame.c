@@ -908,7 +908,7 @@ int                 frame;
 	     if (HardMsgAff)
 		/* Attend un moment avant d'annuler les mises en evidences */
 	       {
-		  TtaDisplaySimpleMessage (LIB, INFO, LIB_CONFIRM);
+		  TtaDisplaySimpleMessage (INFO, LIB, LIB_CONFIRM);
 	       }
 	     MajPavSelect (frame, pFrame->FrAbstractBox, False);
 	     Erreur = False;

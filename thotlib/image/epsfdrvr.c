@@ -9,7 +9,7 @@
 #include "libmsg.h"
 #include "message.h"
 #include "typemedia.h"
-#include "imagedrvr.h"
+#include "picture.h"
 #include "frame.h"
 
 #define EXPORT extern
@@ -160,7 +160,7 @@ FILE               *ifd;
 	i = getc (ifd);
 	if (i == EOF)
 	  {
-	     TtaDisplaySimpleMessage (LIB, INFO, EPSF_PREMAT_EOF);
+	     TtaDisplaySimpleMessage (INFO, LIB, EPSF_PREMAT_EOF);
 	  }
 	c = (char) i;
 	if (c >= '0' && c <= '9')

@@ -17,7 +17,7 @@
 #include "constmedia.h"
 #include "typemedia.h"
 #include "frame.h"
-#include "imagedrvr.h"
+#include "picture.h"
 
 
 #undef EXPORT

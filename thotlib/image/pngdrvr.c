@@ -6,7 +6,7 @@
 
 #include "constmedia.h"
 #include "typemedia.h"
-#include "imagedrvr.h"
+#include "picture.h"
 #include "frame.h"
 #include "message.h"
 
@@ -559,7 +559,7 @@ int PngOpenImageDrvr(model)
 {
     /*int refNum;
 
-  refNum = GetImageDrvrID(Png_drvr); a definir dans imagedrvr.h 
+  refNum = GetImageDrvrID(Png_drvr); a definir dans picture.h 
   return refNum;*/
 
 }/*PngOpenImageDrvr*/

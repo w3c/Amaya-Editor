@@ -19,7 +19,7 @@
 
 
 /* #include "functions.h" */
-#include "imagedrvr.h"
+#include "picture.h"
 #undef EXPORT
 #define EXPORT extern
 #define MyNumMenuCadrageImage		1
