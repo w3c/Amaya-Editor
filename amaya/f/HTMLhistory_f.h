@@ -8,6 +8,10 @@
 
 extern void InitDocHistory ( Document doc );
 extern void FreeDocHistory ( void );
+extern Element ElementAtPosition ( Document doc,
+                                   int pos );
+extern int RelativePosition ( Document doc,
+                              int *distance );
 extern void GotoPreviousHTML_callback ( int newdoc,
                                         int status,
                                         char *urlName,
@@ -33,6 +37,10 @@ extern void AddDocHistory ( Document doc,
 
 extern void InitDocHistory (/* Document doc */);
 extern void FreeDocHistory (/* void */);
+extern Element ElementAtPosition (/* Document doc,
+                                     int pos */);
+extern int RelativePosition (/* Document doc,
+                                int *distance */);
 extern void GotoPreviousHTML_callback (/* int newdoc,
                                           int status,
                                           char *urlName,

@@ -86,9 +86,9 @@ void                FreeDocHistory ()
   Returns the element that is at position pos in document doc.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static Element	ElementAtPosition (Document doc, int pos)
+Element       	ElementAtPosition (Document doc, int pos)
 #else  /* __STDC__ */
-static Element	ElementAtPosition (doc, pos)
+Element       	ElementAtPosition (doc, pos)
    Document	doc;
    int		pos;
 #endif /* __STDC__ */
@@ -118,7 +118,7 @@ static Element	ElementAtPosition (doc, pos)
 	     vol = TtaGetElementVolume (el);
 	     if (sum + vol <= pos)
 	        {
-		next = el;
+	next = el;
 	        TtaNextSibling (&next);
 		if (next == NULL)
 		  stop = TRUE;
@@ -155,9 +155,9 @@ static Element	ElementAtPosition (doc, pos)
   document doc.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static int      RelativePosition (Document doc, int *distance)
+int             RelativePosition (Document doc, int *distance)
 #else  /* __STDC__ */
-static int      RelativePosition (doc, distance)
+int             RelativePosition (doc, distance)
    Document	doc;
    int		*distance;
 #endif /* __STDC__ */
@@ -557,10 +557,3 @@ ClickEvent          method;
    /* set the Forward button off */
    SetArrowButton (doc, FALSE, FALSE);
 }
-
-
-
-
-
-
-

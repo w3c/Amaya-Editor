@@ -228,6 +228,9 @@ typedef struct _RELOAD_context {
   char *documentname;
   char *form_data;
   ClickEvent method;
+  int position;	/* volume preceding the the first element to be shown */
+  int distance; /* distance from the top of the window to the top of this
+		   element (% of the window height) */
 } RELOAD_context;
 
 boolean HTMLErrorsFound = FALSE;
@@ -1426,6 +1429,7 @@ boolean		    history;
 
 
 /*----------------------------------------------------------------------
+  Reload_callback
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                Reload_callback (int doc, int status, char *urlName,
@@ -1450,6 +1454,7 @@ void *context;
   char *form_data;
   ClickEvent method;
   Document res;
+  Element el;
   RELOAD_context *ctx;
 
   /* restore the context associated with the request */
@@ -1476,6 +1481,9 @@ void *context;
 	if (res != 0)
 	  FetchAndDisplayImages (res, AMAYA_NOCACHE);
 	TtaResetCursor (0, 0);
+	/* show the document at the same position as before Reload */
+	el = ElementAtPosition (newdoc, ctx->position);
+	TtaShowElement (newdoc, 1, el, ctx->distance);
      }
   ResetStop(newdoc);
   TtaFreeMemory (pathname);
@@ -1487,6 +1495,7 @@ void *context;
 
 
 /*----------------------------------------------------------------------
+  Reload
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
 void                Reload (Document document, View view)
@@ -1505,6 +1514,8 @@ View                view;
    char               *form_data;
    ClickEvent          method;
    int                 mode;
+   int		       position;
+   int		       distance;
    RELOAD_context     *ctx;
 
    if (DocumentURLs[(int) document] == NULL)
@@ -1536,6 +1547,9 @@ View                view;
        /* cannot reload this document */
        return;
      }
+
+   /* get the current position in the document */
+   position = RelativePosition (document, &distance);
 
    W3Loading = document;	/* this document is currently in load */
    newdoc = InitDocView (document, pathname);
@@ -1570,6 +1584,8 @@ View                view;
    ctx->documentname = documentname;
    ctx->form_data = form_data;
    ctx->method = method;
+   ctx->position = position;
+   ctx->distance = distance;
 
    if (IsW3Path (pathname))
      {
