@@ -2501,6 +2501,8 @@ Document InitDocAndView (Document doc, char *docname, DocumentType docType,
        /* get the geometry of the main view */
        if (docType == docAnnot)
 	 tmp = "Annot_Formatted_view";
+       else if (docType == docBookmark)
+	 tmp = "Topics_Formatted_view";
        else if (sourceOfDoc && docType == docSource)
 	 tmp = "Source_view";
        else
