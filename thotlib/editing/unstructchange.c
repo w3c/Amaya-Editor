@@ -1554,10 +1554,9 @@ boolean             before;
    NotifyOnValue       notifyVal;
    Document            doc;
    int                 nSiblings;
-   int                 nbEl, j;
+   int                 nbEl, i, j;
    boolean             stop, ok, isRow;
 
-/****** record command in history *****/
    if (pEl == NULL)
       return;
    if (before)
@@ -1727,8 +1726,23 @@ boolean             before;
 	 }
        pParent = pElem->ElParent;
        isRow = TypeHasException (ExcIsRow, pParent->ElTypeNumber, pParent->ElStructSchema);
-       j = 0;
        doc = IdentDocument (pDoc);
+
+       /* start history sequence */
+       /* first, determine the current selection */
+       i = 0;  j= 0;
+       if (pEl->ElTerminal)
+	  if (pEl->ElLeafType == LtText)
+	    {
+	    if (before)
+	      i = 1;
+	    else
+	      i = pEl->ElVolume + 1;
+	    j = i -1;
+	    }
+       OpenHistorySequence (pDoc, pEl, pEl, i, j);
+
+       j = 0;
        while (pElem != NULL)
 	 {
 	   j++;
@@ -1761,6 +1775,8 @@ boolean             before;
 		   notifyEl.position = nSiblings;
 		 }
 	       pSuccessor = NextElement (pElem);
+	       /* record the element to be deleted in the history */
+	       AddEditOpInHistory (pElem, pDoc, TRUE, FALSE);
 	       /* retire l'element de l'arbre abstrait */
 	       RemoveElement (pElem);
 	       UpdateNumbers (pSuccessor, pElem, pDoc, TRUE);
@@ -1794,6 +1810,8 @@ boolean             before;
 		   /* l'application accepte */
 		   /* insere l'element a sa nouvelle position */
 		   InsertElementAfter (pSibling, pElem);
+		   /* record the inserted element in the history */
+		   AddEditOpInHistory (pElem, pDoc, FALSE, TRUE);
 		   if (!isRow)
 		     NotifySubTree (TteElemPaste, pDoc, pElem, 0);
 		 }
@@ -1842,6 +1860,8 @@ boolean             before;
 			  pS = pS->ElPrevious;
 		       }
 		     notifyEl.position = nSiblings;
+		     /* record the element the element that will be deleted */
+		     AddEditOpInHistory (pE, pDoc, TRUE, FALSE);
 		     /* retire l'element courant de l'arbre */
 		     RemoveElement (pE);
 		     UpdateNumbers (pNext, pE, pDoc, TRUE);
@@ -1923,6 +1943,8 @@ boolean             before;
 		}
 	     }
 	}
+       /* end of command: close history sequence */
+       CloseHistorySequence (pDoc);
 }
 
 /*----------------------------------------------------------------------

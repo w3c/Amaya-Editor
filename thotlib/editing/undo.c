@@ -1,7 +1,7 @@
 /*
  *
  *  (c) COPYRIGHT INRIA 1996.
- *  Please first read the full copyright statement in file COPYRIGHT.
+ *  Please read the full copyright statement in file COPYRIGHT.
  *
  */
 
@@ -80,6 +80,15 @@ union
      PtrElement	   _EoSavedElement_;    /* copy of the element to be inserted
 					   to undo the operation */
      } s1;
+  struct      /* EoType = EtAttribute */
+    {
+    PtrElement     _EoElement_;         /* the element to which the attribute
+					   belongs */
+    PtrAttribute   _EoCreatedAttribute_;/* attribute to be removed to undo the
+					   operation */
+    PtrAttribute   _EoSavedAttribute_;  /* copy of the attribute to be inserted
+					   to undo the operation */
+    } s2;
   } u;
 } EditOperation;
 
@@ -91,6 +100,9 @@ union
 #define EoPreviousSibling u.s1._EoPreviousSibling_
 #define EoCreatedElement u.s1._EoCreatedElement_
 #define EoSavedElement u.s1._EoSavedElement_
+#define EoElement u.s2._EoElement_
+#define EoCreatedAttribute u.s2._EoCreatedAttribute_
+#define EoSavedAttribute u.s2._EoSavedAttribute_
 
 /* Current status of editing history */
    /* document whose editing history is recorded */
@@ -200,6 +212,7 @@ PtrDocument pDoc;
 #endif /* __STDC__ */
 {
    PtrElement		pEl;
+   PtrAttribute         pAttr;
    PtrEditOperation	prevOp;
 
    /* Error if there is no current history or if the current history is not
@@ -251,7 +264,11 @@ PtrDocument pDoc;
 
    if (editOp->EoType == EtAttribute)
       {
-      /*********/;
+      pAttr = editOp->EoSavedAttribute;
+      if (pAttr)
+         /* free the saved attribute */
+	 DeleteAttribute (NULL, pAttr);
+      editOp->EoSavedAttribute = NULL;
       }
 
    if (editOp->EoType == EtDelimiter)
@@ -339,7 +356,9 @@ PtrElement pTree;
        }
     if (editOp->EoType == EtAttribute)
        {
-       /**********/;
+       if (editOp->EoElement)
+	 if (ElemIsWithinSubtree(editOp->EoElement, pTree))
+	   editOp->EoElement = editOp->EoElement->ElCopy;
        }
     editOp = editOp->EoPreviousOp;
     }
@@ -533,17 +552,15 @@ int lastSelChar;
       /* get the last descriptor */
       while (editOp->EoPreviousOp)
 	 editOp = editOp->EoPreviousOp;
-      /* delete all descriptors up to the first Delimiter */
+      /* delete the last descriptor and all following descriptors up to the
+	 first Delimiter */
       do
 	 {
-	 if (editOp->EoType == EtDelimiter)
+	 nextOp = editOp->EoNextOp;
+         CancelAnEdit (editOp, pDoc);
+	 editOp = nextOp;
+	 if (editOp && editOp->EoType == EtDelimiter)
 	    editOp = NULL;
-	 else
-	    {
-	    nextOp = editOp->EoNextOp;
-            CancelAnEdit (editOp, pDoc);
-	    editOp = nextOp;
-	    }
 	 }
       while (editOp);
       }
@@ -580,8 +597,6 @@ PtrDocument pDoc;
    /* sequence closed */
    EditSequence = FALSE;
 }
-
-
 
 /*----------------------------------------------------------------------
    TtcUndo

@@ -3216,7 +3216,9 @@ PtrAttribute        pAttr;
    PtrPRule            pPR, pPRprev, pPRnext;
    PtrTextBuffer       buf, nextbuf;
 
-   if (pEl != NULL && pAttr != NULL)
+   if (!pAttr)
+       return;
+   if (pEl != NULL)
       /* deletes the specific presentation rules which are linked
 	 to the element and that are associated to  the attribute */
      {
@@ -3244,30 +3246,31 @@ PtrAttribute        pAttr;
 		  pPR = pPRnext;
 	       }
 	  }
-
-	/* frees the memory allocated to the attribute */
-	if (pAttr->AeAttrType == AtReferenceAttr)
-	   /* frees the reference */
-	   if (pAttr->AeAttrReference != NULL)
-	     {
-		DeleteReference (pAttr->AeAttrReference);
-		FreeReference (pAttr->AeAttrReference);
-	     }
-	if (pAttr->AeAttrType == AtTextAttr)
-	   /* frees the text buffers */
-	  {
-	     buf = pAttr->AeAttrText;
-	     while (buf != NULL)
-	       {
-		  nextbuf = buf->BuNext;
-		  FreeTextBuffer (buf);
-		  buf = nextbuf;
-	       }
-	     pAttr->AeAttrText = NULL;
-	  }
-	/* specific processing for deleting the attributes of a Draw */
-	DrawSupprAttr (pAttr, pEl);
      }
+   /* frees the memory allocated to the attribute */
+   if (pAttr->AeAttrType == AtReferenceAttr)
+      /* frees the reference */
+      if (pAttr->AeAttrReference != NULL)
+        {
+      	DeleteReference (pAttr->AeAttrReference);
+       	FreeReference (pAttr->AeAttrReference);
+	}
+   if (pAttr->AeAttrType == AtTextAttr)
+      /* frees the text buffers */
+      {
+      buf = pAttr->AeAttrText;
+      while (buf != NULL)
+         {
+	 nextbuf = buf->BuNext;
+	 FreeTextBuffer (buf);
+	 buf = nextbuf;
+	 }
+      pAttr->AeAttrText = NULL;
+      }
+   /* specific processing for deleting the attributes of a Draw */
+   if (pEl)
+      DrawSupprAttr (pAttr, pEl);
+
    /* frees the attribute block */
    if (pAttr != NULL)
      FreeAttribute (pAttr);

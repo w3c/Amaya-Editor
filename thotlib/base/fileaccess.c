@@ -885,8 +885,9 @@ int                *len;
 		    i--;
 		    number = number / 10;
 		 }
-	       while (!(number == 0));
+	       while (number > 0);
 	       break;
+
 	    case CntURoman:
 	    case CntLRoman:
 	       if (number >= 4000)
@@ -972,16 +973,38 @@ int                *len;
 			     string[i - 1] = (char) ((int) (string[i - 1]) + 32);
 		 }
 	       break;
+
 	    case CntUppercase:
 	    case CntLowercase:
-
-	       if (number > 26)
+	       if (number > 475354)
+		 {
 		  string[(*len)++] = '?';
-	       else if (style == CntUppercase)
-		  string[(*len)++] = (char) (number + (int) ('@'));
+		  number = number % 475254;
+		 }
+	       if (number > 18278)
+		 c = 4;
+	       else if (number > 702)
+		 c = 3;
+	       else if (number > 26)
+		 c = 2;
 	       else
-		  string[(*len)++] = (char) (number + (int) ('`'));
+		 c = 1;
+	       *len += c;
+	       i = *len;
+	       do
+		 {
+	          number --;
+	          if (style == CntUppercase)
+		     string[i - 1] = (char) ((number % 26) + (int) ('A'));
+	          else
+		     string[i - 1] = (char) ((number % 26) + (int) ('a'));
+		  i --;
+		  c --;
+		  number = number / 26;
+		 }
+	       while (c > 0);
 	       break;
+
 	    default:
 	       break;
 	 }

@@ -2373,22 +2373,24 @@ PtrSSchema          newSSchema;
 			  if (ok)
 			     /* le type est dans la table, on effectue le
 			        changement */
+			    {
+			    /* store the command in the history */
+			    AddEditOpInHistory (pEl, pDoc, TRUE, TRUE);
+			    done = FALSE;
 			    switch (method)
 			      {
 			      case M_EQUIV :
-				/* store the command in the history */
-				AddEditOpInHistory (pEl, pDoc, TRUE, TRUE);
 				done = DoChangeType (pEl, pDoc, newTypeNum,
 						     newSSchema);
-				if (!done)
-				   CancelLastEditFromHistory (pDoc);
 				break;
 			      case M_RESDYN :
-				/***** history ******/
 				done = RestChangeType((Element)pEl, IdentDocument (pDoc),
 						      newTypeNum, (SSchema)newSSchema);
 				break;
-			   }
+			      }
+			    if (!done)
+			       CancelLastEditFromHistory (pDoc);
+			    }
 		       }
 		     if (!done)
 			/* on essaie de changer le type du pere si on est sur
@@ -3404,25 +3406,25 @@ int                 entree;
    GetCurrentSelection (&pDoc, &pEl, &lastEl, &firstChar, &lastChar);
    if (pEl == NULL)
      return;
+   /* store the command in the history */
+   OpenHistorySequence (pDoc, pEl, lastEl, firstChar, lastChar);
+   AddEditOpInHistory (pEl, pDoc, TRUE, TRUE);
+   done = FALSE;
    switch (ChangeTypeMethod[entree])
      {
      case M_EQUIV :
-       /* store the command in the history */
-       OpenHistorySequence (pDoc, pEl, lastEl, firstChar, lastChar);
-       AddEditOpInHistory (pEl, pDoc, TRUE, TRUE);
        done = DoChangeType (pEl, pDoc, ChangeTypeTypeNum[entree],
 			    ChangeTypeSSchema[entree]);
-       if (!done)
-	  CancelLastEditFromHistory (pDoc);
-       CloseHistorySequence (pDoc);
        break;
      case M_RESDYN :
-       /****** history ******/
        done = RestChangeType((Element)pEl,IdentDocument (pDoc),
 			     ChangeTypeTypeNum[entree],
 			     (SSchema)ChangeTypeSSchema[entree]);
        break;
      }
+   if (!done)
+      CancelLastEditFromHistory (pDoc);
+   CloseHistorySequence (pDoc);
 }
 
 /*----------------------------------------------------------------------
