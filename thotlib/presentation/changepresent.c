@@ -82,7 +82,7 @@ static void   ApplyRuleSubTree (PtrElement pE, PRuleType ruleType,
       pAbb = pE->ElAbstractBox[view - 1];
       if (pAbb == NULL)
 	/* no abstract box */
-	if (ruleType == PtVisibility || PtDisplay)
+	if (ruleType == PtVisibility || ruleType == PtDisplay)
 	  /* it's a visibility rule. Try to create the abstract box */
 	  pAbb = AbsBoxesCreate (pE, pDoc, view, True, True, &complete);
       if (pAbb)
@@ -897,7 +897,7 @@ void  ApplyASpecificStyleRule (PtrPRule pRule, PtrElement pEl,
       pAb = pEl->ElAbstractBox[view];
       if (pAb == NULL)
 	/* no abstract box */
-	if (pRule->PrType == PtVisibility || PtDisplay)
+	if (pRule->PrType == PtVisibility || pRule->PrType == PtDisplay)
 	  /* it's a visibility rule. Try to create the abstract box */
 	  pAb = AbsBoxesCreate (pEl, pDoc, view+1, True, True, &complete);
       /* the schema view associatde with the current view */
