@@ -55,6 +55,12 @@ typedef struct _AnOutputFile
 }
 AnOutputFile;
 
+/* Variables for date generation */
+static ThotBool          StartDollar = FALSE;
+static ThotBool          StartDate = FALSE;
+static unsigned char     DateString[10];
+static int               DateIndex = 0;
+
 /* number of output files in use */
 static int          NOutFiles = 0;
 /* the output files */
@@ -184,9 +190,9 @@ static int GetSecondaryFile (char *fName, PtrDocument pDoc, ThotBool open)
   in other case it will be translated according to the document encoding.
   If the parameter entityName is TRUE
   ----------------------------------------------------------------------*/
-static void PutChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
-		     ThotBool lineBreak, ThotBool translate,
-		     ThotBool entityName)
+static void ExportChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
+			ThotBool lineBreak, ThotBool translate,
+			ThotBool entityName)
 {
   PtrTSchema          pTSch;
   FILE               *fileDesc;
@@ -200,7 +206,7 @@ static void PutChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
 
   nb_bytes2write = 0;  
   if (translate)
-    {  
+    {
       if (c == START_ENTITY)
 	{
 	  mbc[0] = '&';
@@ -465,6 +471,91 @@ static void PutChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
     }
 }
 
+/*----------------------------------------------------------------------
+  CheckDate checks if the current date should be generated
+  Returns TRUE if the character must be skipped.
+  ----------------------------------------------------------------------*/
+static ThotBool CheckDate (unsigned char c, int fnum, char *outBuf,
+			   PtrDocument pDoc)
+{
+  char    *tm;
+  time_t   t;
+  int      index;
+
+  if (c == '$')
+    {
+      /* start/stop the analyse of the date */
+      StartDollar = !StartDollar;
+      if (StartDate)
+	StartDate = FALSE;
+      DateIndex = 0;
+    }
+  else if (StartDollar)
+    {
+      if (c == ':')
+	{
+	  if (!StartDate && !strncasecmp (DateString, "Date", DateIndex))
+	    {
+	      /* following characters will be skipped until the $ or EOL or EOS */
+	      StartDate = TRUE;
+
+	      /* generate the current date */
+	      time (&t);
+	      ExportChar ((wchar_t) c, fnum, outBuf, pDoc,
+			    FALSE, FALSE, FALSE);
+	      ExportChar ((wchar_t) SPACE, fnum, outBuf, pDoc,
+			    FALSE, FALSE, FALSE);
+	      tm = ctime (&t);
+	      for (index = 0; tm[index] != EOL; index++)
+		ExportChar ((wchar_t) tm[index], fnum, outBuf, pDoc,
+			    FALSE, FALSE, FALSE);
+	      return TRUE;
+	    }
+	  else
+	    {
+	      StartDate = FALSE;
+	      StartDollar = FALSE;
+	    }
+	}
+      else if (c == EOS || c == EOL || DateIndex == 10)
+	{
+	  /* stop the analyse of the date */
+	  StartDollar = FALSE;
+	  StartDate = FALSE;
+	}
+      else if (StartDate && StartDollar)
+	/* it's a character of the previous date */
+	return TRUE;
+      else
+	DateString[DateIndex++] = c;
+    }
+  return FALSE;
+}
+
+
+/*----------------------------------------------------------------------
+  PutChar writes the character c on the terminal or into the file buffer
+  if fnum is not null.
+  The file buffer is written when the line limit is reatched.
+  If the parameter lineBreak is FALSE the pretty printing is desactivated.
+  If the parameter translate is FALSE the character is written as this,
+  in other case it will be translated according to the document encoding.
+  If the parameter entityName is TRUE
+  ----------------------------------------------------------------------*/
+static void PutChar (wchar_t c, int fnum, char *outBuf, PtrDocument pDoc,
+		     ThotBool lineBreak, ThotBool translate,
+		     ThotBool entityName)
+{
+#ifdef _DATE
+  /* detect if the generation of a date is requested */
+  if (fnum > 0 && CheckDate ((unsigned char) c, fnum, outBuf, pDoc))
+    /* remove the previous date */
+    return;
+  else
+#endif
+    ExportChar (c, fnum, outBuf, pDoc, lineBreak, translate,
+		entityName);
+}
 
 /*----------------------------------------------------------------------
   PutColor generates the color name at the position n in the color table.
@@ -597,6 +688,7 @@ static PtrTSchema GetTransSchForContent (PtrElement pEl, LeafType leafType,
   while (!transExist && pAncestor != NULL);
   return pTSch;
 }
+
 
 /*----------------------------------------------------------------------
   TranslateText translate the text according to the current translation
@@ -819,6 +911,7 @@ static void TranslateText (PtrTextBuffer pBufT, PtrTSchema pTSch,
        PutChar ((wchar_t) c, fnum, NULL, pDoc, lineBreak, TRUE, entityName);
      }
 }
+
 
 /*----------------------------------------------------------------------
    TranslateLeaf   traite l'element feuille pointe' par pEl, en	
@@ -3951,7 +4044,7 @@ static void ExportXmlText (PtrDocument pDoc, PtrTextBuffer pBT,
 	{
 	  c = (wchar_t) b->BuContent[i];
 	  PutChar (c, fnum, NULL, pDoc, TRUE, translate, TRUE);
-	  /* Next charcater */
+	  /* Next character */
 	  i++;
 	}
       /* Export the following text buffer for the same element */
