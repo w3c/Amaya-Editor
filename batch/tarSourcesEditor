@@ -66,11 +66,13 @@ dicopar/*.tri \
 dicopar/*.ptn \
 doc/APIman-E.PIV \
 doc/Appman-E.PIV \
-doc/Dialogue.PIV \
+doc/languages.html \
+doc/languages.toc.html \
 doc/button.gif \
-doc/Thotman-E.PIV \
-doc/Thotman-F.EXT \
-doc/Thotman-F.PIV \
+doc/thoteditor/Thotman-E.PIV \
+doc/thoteditor/Thotman-F.EXT \
+doc/thoteditor/Thotman-F.PIV \
+doc/thoteditor/ThotmanHTML/* \
 doc/thoteditor/Bilbon.gif \
 doc/thoteditor/COPYRIGHT.html \
 doc/thoteditor/Compiling.html \

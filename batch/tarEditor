@@ -25,6 +25,8 @@ do
    Thot/COPYRIGHT \
    Thot/AboutThot \
    Thot/README.2.0b \
+   Thot/doc/languages.html \
+   Thot/doc/languages.toc.html \
    Thot/doc/thoteditor/Bilbon.gif \
    Thot/doc/thoteditor/COPYRIGHT.html \
    Thot/doc/thoteditor/Compiling.html \
