@@ -59,6 +59,7 @@
                                 <object class="sizeritem">
                                   <object class="wxCheckListBox" name="wxID_CLIST_ATTR">
                                     <content/>
+                                    <size>-1,150</size>
                                     <focused>1</focused>
                                   </object>
                                   <option>1</option>
