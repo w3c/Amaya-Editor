@@ -109,8 +109,8 @@ public:
   void ReplaceDrawingArea( AmayaCanvas * p_new_canvas );
 
 #ifdef _GL
-  void SetCurrent();
-  void SwapBuffers();
+  bool SetCurrent();
+  bool SwapBuffers();
 #endif // #ifdef _GL
 
   void OnClose(wxCloseEvent& event);

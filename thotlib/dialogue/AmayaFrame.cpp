@@ -328,16 +328,18 @@ void AmayaFrame::ShowScrollbar( int scrollbar_id )
  *               now opengl commands are forwared to this canvas
  *--------------------------------------------------------------------------------------
  */
-void AmayaFrame::SetCurrent()
+bool AmayaFrame::SetCurrent()
 {
   if ( DisplayIsReady() )
   {
     TTALOGDEBUG_1( TTA_LOG_DRAW, _T("AmayaFrame::SetCurrent()[OK] - frame_id=%d"), m_FrameId );
     m_pCanvas->SetCurrent();
+    return TRUE;
   }
   else
   {
     TTALOGDEBUG_1( TTA_LOG_DRAW, _T("AmayaFrame::SetCurrent()[!OK] - frame_id=%d"), m_FrameId );
+    return FALSE;
   }
 }
 
@@ -363,10 +365,19 @@ bool AmayaFrame::DisplayIsReady()
  *               to show this backbuffer this command must be called
  *--------------------------------------------------------------------------------------
  */
-void AmayaFrame::SwapBuffers()
+bool AmayaFrame::SwapBuffers()
 {
-  if (m_pCanvas && m_pCanvas->IsInit())
-    m_pCanvas->SwapBuffers();
+  if (DisplayIsReady())
+    {
+      TTALOGDEBUG_1( TTA_LOG_DRAW, _T("AmayaFrame::SwapBuffers()[OK] - frame_id=%d"), m_FrameId );
+      m_pCanvas->SwapBuffers();
+      return TRUE;
+    }
+  else
+    {
+      TTALOGDEBUG_1( TTA_LOG_DRAW, _T("AmayaFrame::SwapBuffers()[!OK] - frame_id=%d"), m_FrameId );      
+      return FALSE;
+    }
 }
 #endif // #ifdef _GL
 

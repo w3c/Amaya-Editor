@@ -705,10 +705,9 @@ ThotBool GL_prepare (int frame)
 	  return TRUE;
 #endif /* #ifdef _GTK */
 #ifdef _WX
-    if (FrameTable[frame].WdFrame && FrameTable[frame].WdFrame->DisplayIsReady() )
+    if (FrameTable[frame].WdFrame)
     {
-      FrameTable[frame].WdFrame->SetCurrent();
-      return TRUE;
+      return FrameTable[frame].WdFrame->SetCurrent();
     }
 #endif /* _WX */
 

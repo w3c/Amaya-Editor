@@ -73,7 +73,7 @@ int AmayaApp::AttrList[] =
   WX_GL_MIN_RED, 1,
   WX_GL_MIN_GREEN , 1,
   WX_GL_MIN_BLUE, 1,
-  WX_GL_MIN_ALPHA, 1, /* don't change the position of the entry (8) */
+  WX_GL_MIN_ALPHA, 0, /* don't change the position of the entry (8) */
   WX_GL_STENCIL_SIZE, 1,
   WX_GL_DOUBLEBUFFER,
   0
@@ -120,9 +120,8 @@ bool AmayaApp::OnInit()
   if ( !InitGLVisual(AttrList) )
     {
       TTALOGDEBUG_0( TTA_LOG_INIT, _T("AmayaApp - ERROR -> Try to find another valide opengl configuration (simplier: without ALPHA channel)."));
-      // error : try another configuration
-      AttrList[8] = 0; /* remove the alpha channel: entry  (8)*/
-      if ( !InitGLVisual(AttrList) )
+      // error : try another configuration => wxWidgets default one
+      if ( !InitGLVisual(NULL) )
 	{
 	  // error !
 	  wxPrintf(_T("FATAL ERROR : Your OpenGL implementation does not support needed features!\n"));
