@@ -134,6 +134,11 @@ void SetMainWindowBackgroundColor (int frame, int color)
 {
   unsigned short red, green, blue;
 
+#ifdef _GL
+  /* to be sure that the frame is the current one when drawing its background */
+  GL_prepare(frame);
+#endif /* _GL */
+
 #ifdef _GTK
   update_bg_colorGTK (frame, color);
 #endif /*_GTK*/
@@ -147,7 +152,7 @@ void SetMainWindowBackgroundColor (int frame, int color)
   {
     float tmp[4];
     glGetFloatv( GL_COLOR_CLEAR_VALUE, tmp );
-    printf( "glClearColor=(%f,%f,%f,%f)\n",tmp[0],tmp[1],tmp[2],tmp[3] );
+    wxLogDebug( _T("glClearColor CLEAR_VALUE(%f,%f,%f,%f) - frame=%d"),tmp[0],tmp[1],tmp[2],tmp[3],frame );
   }
 #endif /* _GL_COLOR_DEBUG */
 }
@@ -160,6 +165,11 @@ void ResetMainWindowBackgroundColor (int frame)
   unsigned short red, green, blue;
   int color = GL_Background[frame];
 
+#ifdef _GL
+  /* to be sure that the frame is the current one when drawing its background */
+  GL_prepare(frame);
+#endif /* _GL */
+
 #ifdef _GTK
   update_bg_colorGTK (frame, color);
 #endif /*_GTK*/
@@ -168,6 +178,11 @@ void ResetMainWindowBackgroundColor (int frame)
   TtaGiveThotRGB (color, &red, &green, &blue);
   /* the 0.0 for alpha is needed for group opacity */
   glClearColor ((float)red/255., (float)green/255., (float)blue/255., 0.0);
+#ifdef _GL_COLOR_DEBUG
+  float tmp[4];
+  glGetFloatv( GL_COLOR_CLEAR_VALUE, tmp );
+  wxLogDebug( _T("glClearColor CLEAR_VALUE(%f,%f,%f,%f) - frame=%d"),tmp[0],tmp[1],tmp[2],tmp[3],frame );
+#endif /* _GL_COLOR_DEBUG */
 } 
 
 /*----------------------------------------------------------------------
@@ -185,7 +200,7 @@ void Clear (int frame, int width, int height, int x, int y)
       {
 	float tmp[4];
 	glGetFloatv( GL_COLOR_CLEAR_VALUE, tmp );
-	printf( "glClearColor=(%f,%f,%f,%f)\n",tmp[0],tmp[1],tmp[2],tmp[3] );
+	wxLogDebug( _T("glClear CLEAR_VALUE(%f,%f,%f,%f) - frame"),tmp[0],tmp[1],tmp[2],tmp[3],frame );
       }
 #endif /* _GL_COLOR_DEBUG */
       glClear( GL_COLOR_BUFFER_BIT );

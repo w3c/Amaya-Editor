@@ -219,7 +219,7 @@ void ClearAll (int frame)
   {
     float tmp[4];
     glGetFloatv( GL_COLOR_CLEAR_VALUE, tmp );
-    printf( "glClearColor=(%f,%f,%f,%f)\n",tmp[0],tmp[1],tmp[2],tmp[3] );
+    wxLogDebug( _T("glClear CLEAR_VALUE(%f,%f,%f,%f) - frame=%d"),tmp[0],tmp[1],tmp[2],tmp[3], frame );
   }
 #endif /* _GL_COLOR_DEBUG */
   glClear( GL_COLOR_BUFFER_BIT );
@@ -1619,7 +1619,7 @@ void GLResize (int width, int height, int x, int y)
   {
     float tmp[4];
     glGetFloatv( GL_COLOR_CLEAR_VALUE, tmp );
-    printf( "glClearColor=(%f,%f,%f,%f)\n",tmp[0],tmp[1],tmp[2],tmp[3] );
+    wxLogDebug( _T("glClear CLEAR_VALUE(%f,%f,%f,%f)"),tmp[0],tmp[1],tmp[2],tmp[3] );
   }
 #endif /* _GL_COLOR_DEBUG */  
   glDisable (GL_SCISSOR_TEST);

@@ -186,10 +186,6 @@ AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
     }
   wxASSERT_MSG(ok, _T("AmayaPage::AttachFrame -> Impossible d'attacher la frame") );
 
-  p_frame->Show();
-
-  SetAutoLayout(TRUE);
-
   // update old and new AmayaFrame parents
   if (oldframe)
     oldframe->SetPageParent( NULL ); // no more parent
@@ -209,6 +205,11 @@ AmayaFrame * AmayaPage::AttachFrame( AmayaFrame * p_frame, int position )
       /* hide the split button */
       ShowQuickSplitButton( false );
     }
+
+  p_frame->Show();
+  p_frame->Refresh();
+
+  SetAutoLayout(TRUE);
 
   // return the old frame : needs to be manualy deleted ..
   return oldframe;

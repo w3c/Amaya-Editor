@@ -331,7 +331,14 @@ void AmayaFrame::ShowScrollbar( int scrollbar_id )
 void AmayaFrame::SetCurrent()
 {
   if ( DisplayIsReady() )
+  {
+	wxLogDebug( _T("AmayaFrame::SetCurrent()[OK] - frame_id=%d"), m_FrameId );
     m_pCanvas->SetCurrent();
+  }
+  else
+  {
+    wxLogDebug( _T("AmayaFrame::SetCurrent()[!OK] - frame_id=%d"), m_FrameId );
+  }
 }
 
 /*
