@@ -510,8 +510,13 @@ void     ComputeRadius (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 {
   PtrBox              pBox;
+  PtrBox              pParent;
   int                 dim;
 
+  if (pAb->AbEnclosing && pAb->AbEnclosing->AbBox)
+    pParent = pAb->AbEnclosing->AbBox;
+  else
+    pParent = NULL;
   if (horizRef)
     {
       pBox = pAb->AbBox;
@@ -551,15 +556,28 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 	pBox->BxRBorder = PixelValue (pAb->AbRightBorder, pAb->AbRightBorderUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 
       /* Manage auto margins */
-      if (pAb->AbLeftMarginUnit == UnAuto && pAb->AbRightMarginUnit == UnAuto)
+      if (pAb->AbLeftMarginUnit == UnAuto || pAb->AbRightMarginUnit == UnAuto)
 	{
-	  pBox->BxLMargin = (dim - pBox->BxLPadding - pBox->BxRPadding - pBox->BxLBorder - pBox->BxRBorder) / 2;
-	  pBox->BxRMargin = pBox->BxLMargin;
+	  if (pParent && !pAb->AbEnclosing->AbNew /* cannot manage this rule */ &&
+	      pParent->BxType != BoBlock && pParent->BxType != BoGhost)
+	    {
+	      dim = - dim + pParent->BxW - pBox->BxLPadding - pBox->BxRPadding - pBox->BxLBorder - pBox->BxRBorder;
+	      if (pAb->AbLeftMarginUnit == UnAuto && pAb->AbRightMarginUnit == UnAuto)
+		{
+		  pBox->BxLMargin = dim / 2;
+		  pBox->BxRMargin = pBox->BxLMargin;
+		}
+	      else if (pAb->AbLeftMarginUnit == UnAuto)
+		pBox->BxLMargin = dim - pBox->BxRMargin;
+	      else if (pAb->AbRightMarginUnit == UnAuto)
+		pBox->BxRMargin = dim - pBox->BxLMargin;
+	    }
+	  else
+	    {
+	      pBox->BxLMargin = 0;
+	      pBox->BxRMargin = 0;
+	    }
 	}
-      else if (pAb->AbLeftMarginUnit == UnAuto)
-	pBox->BxLMargin = dim - pBox->BxRMargin - pBox->BxLPadding - pBox->BxRPadding - pBox->BxLBorder - pBox->BxRBorder;
-      else if (pAb->AbRightMarginUnit == UnAuto)
-	pBox->BxRMargin = dim - pBox->BxLMargin - pBox->BxLPadding - pBox->BxRPadding - pBox->BxLBorder - pBox->BxRBorder;
     }
   else
     {
@@ -600,15 +618,10 @@ void ComputeMBP (PtrAbstractBox pAb, int frame, ThotBool horizRef)
 	pBox->BxBBorder = PixelValue (pAb->AbBottomBorder, pAb->AbBottomBorderUnit, pAb, ViewFrameTable[frame - 1].FrMagnification);
 
       /* Manage auto margins */
-      if (pAb->AbTopMarginUnit == UnAuto && pAb->AbBottomMarginUnit == UnAuto)
-	{
-	  pBox->BxTMargin = (dim - pBox->BxTPadding - pBox->BxBPadding - pBox->BxTBorder - pBox->BxBBorder) / 2;
-	  pBox->BxBMargin = pBox->BxTMargin;
-	}
-      else if (pAb->AbTopMarginUnit == UnAuto)
-	pBox->BxTMargin = dim - pBox->BxBMargin - pBox->BxTPadding - pBox->BxBPadding - pBox->BxTBorder - pBox->BxBBorder;
+      if (pAb->AbTopMarginUnit == UnAuto)
+	pBox->BxTMargin = 0;
       else if (pAb->AbBottomMarginUnit == UnAuto)
-	pBox->BxBMargin = dim - pBox->BxTMargin - pBox->BxTPadding - pBox->BxBPadding - pBox->BxTBorder - pBox->BxBBorder;
+	pBox->BxBMargin = 0;
      }
 }
 
