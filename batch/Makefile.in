@@ -22,7 +22,7 @@ datadir = @datadir@
 COMPILERS=../bin/grm ../bin/str ../bin/prs ../bin/typ ../bin/tra ../bin/app \
           ../bin/printstr ../bin/printprs ../bin/printtyp
 
-GRMS     = APP.GRM PRESEN.GRM STRUCT.GRM TRANS.GRM TYP.GRM
+GRMS     = APP.GRM PRESEN.GRM STRUCT.GRM TRANS.GRM
 
 LANGUAGES=*.GRM *.LAN *.LST
 
@@ -32,19 +32,24 @@ LANGUAGES=*.GRM *.LAN *.LST
 all : ../bin $(GRMS) $(COMPILERS)
 
 APP.GRM : APP.LAN ../bin/grm
-	(DIR=`pwd` ; cd @srcdir@ ; $$DIR/../bin/grm APP)
+	(DIR=`pwd` ; THOTDIR=$$DIR/$(THOTDIR) ; export THOTDIR ; \
+        cd @srcdir@ ; $$DIR/../bin/grm APP)
 
 PRESEN.GRM : PRESEN.LAN ../bin/grm
-	(DIR=`pwd` ; cd @srcdir@ ; $$DIR/../bin/grm PRESEN)
+	(DIR=`pwd` ; THOTDIR=$$DIR/$(THOTDIR) ; export THOTDIR ; \
+        cd @srcdir@ ; $$DIR/../bin/grm PRESEN)
 
 STRUCT.GRM : STRUCT.LAN ../bin/grm
-	(DIR=`pwd` ; cd @srcdir@ ; $$DIR/../bin/grm STRUCT)
+	(DIR=`pwd` ; THOTDIR=$$DIR/$(THOTDIR) ; export THOTDIR ; \
+        cd @srcdir@ ; $$DIR/../bin/grm STRUCT)
 
 TRANS.GRM : TRANS.LAN ../bin/grm
-	(DIR=`pwd` ; cd @srcdir@ ; $$DIR/../bin/grm TRANS)
+	(DIR=`pwd` ; THOTDIR=$$DIR/$(THOTDIR) ; export THOTDIR ; \
+         cd @srcdir@ ; $$DIR/../bin/grm TRANS)
 
 TYP.GRM : TYP.LAN ../bin/grm
-	(DIR=`pwd` ; cd @srcdir@ ; $$DIR/../bin/grm TYP)
+	(DIR=`pwd` ; THOTDIR=$$DIR/$(THOTDIR) ; export THOTDIR ; \
+        cd @srcdir@ ; $$DIR/../bin/grm TYP)
 
 force :
 
@@ -65,7 +70,7 @@ GRM_OBJ= \
 grm : ../thotlib/libThotKernel.a ../bin ../bin/grm
 	
 
-../bin/grm : $(GRM_OBJ) $(LANG) ../thotlib/libThotKernel.a
+../bin/grm : $(GRM_OBJ) ../thotlib/libThotKernel.a
 	$(CC) $(LDFLAGS) -o $@ $(GRM_OBJ) $(LIBS)
 	@$(ECHO) "====>" grm is done
 
@@ -78,10 +83,10 @@ STR_OBJ = \
 	writestr.o \
 	str.o
 
-str : ../thotlib/libThotKernel.a ../bin ../bin/str
+str : STRUCT.GRM ../thotlib/libThotKernel.a ../bin ../bin/str
 	
 
-../bin/str : $(STR_OBJ) $(LANG) ../thotlib/libThotKernel.a
+../bin/str : $(STR_OBJ) $(GRMS) ../thotlib/libThotKernel.a
 	$(CC) $(LDFLAGS) -o $@ $(STR_OBJ) $(LIBS)
 	@$(ECHO) "====>" str is done
 
@@ -94,7 +99,7 @@ PRS_OBJ = \
 	writeprs.o \
 	prs.o
 
-prs : ../thotlib/libThotKernel.a ../bin ../bin/prs
+prs : PRESEN.GRM ../thotlib/libThotKernel.a ../bin ../bin/prs
 	
 
 ../bin/prs : $(PRS_OBJ) ../thotlib/libThotKernel.a
@@ -110,7 +115,7 @@ TYP_OBJ = \
 	writetyp.o \
 	typ.o
 
-typ : ../thotlib/libThotKernel.a ../bin ../bin/typ
+typ : TYP.GRM ../thotlib/libThotKernel.a ../bin ../bin/typ
 	
 
 ../bin/typ : $(TYP_OBJ) ../thotlib/libThotKernel.a
@@ -126,7 +131,7 @@ TRA_OBJ = \
 	writetra.o \
 	tra.o
 
-tra : ../thotlib/libThotKernel.a ../bin ../bin/tra
+tra : TRANS.GRM ../thotlib/libThotKernel.a ../bin ../bin/tra
 	
 
 ../bin/tra : $(TRA_OBJ) ../thotlib/libThotKernel.a
@@ -143,7 +148,7 @@ APP_OBJ = \
 	writeapp.o \
 	app.o
 
-app : ../thotlib/libThotKernel.a ../bin ../bin/app
+app : APP.GRM ../thotlib/libThotKernel.a ../bin ../bin/app
 	
 
 ../bin/app : $(APP_OBJ) ../thotlib/libThotKernel.a
