@@ -5058,13 +5058,11 @@ ThotBool*       endOfFile;
       ptrextrabuf = &buffer[*index];
       nbBytes = TtaGetNextWideCharFromMultibyteString (&wcharRead, &ptrextrabuf,
 						       HTMLcontext.encoding);
-      if (nbBytes > 0)
-	*endOfFile = 0;
-      else if (wcharRead != 0)
+      (*index) += nbBytes;
+      if (wcharRead != 0)
 	charRead = (CHAR_T) wcharRead;
       else
 	*endOfFile = TRUE;
-      (*index) += nbBytes;
     }
   else if (infile == NULL)
     *endOfFile = TRUE;
