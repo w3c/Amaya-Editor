@@ -37,6 +37,8 @@ extern ThotBool XmlStyleSheetWillBeModified ( NotifyOnTarget *event );
 extern void XmlStyleSheetModified ( NotifyOnTarget *event );
 extern ThotBool XmlStyleSheetDeleted ( NotifyElement * event );
 extern void XmlStyleSheetPasted ( NotifyElement *event );
+extern void CreateXMLElementMenu ( Document doc,
+                                   View view );
 
 #else /* __STDC__ */
 
@@ -71,6 +73,8 @@ extern ThotBool XmlStyleSheetWillBeModified (/* NotifyOnTarget *event */);
 extern void XmlStyleSheetModified (/* NotifyOnTarget *event */);
 extern ThotBool XmlStyleSheetDeleted (/* NotifyElement * event */);
 extern void XmlStyleSheetPasted (/* NotifyElement *event */);
+extern void CreateXMLElementMenu (/* Document doc,
+                                     View view */);
 
 #endif /* __STDC__ */
 #endif /* __CEXTRACT__ */
