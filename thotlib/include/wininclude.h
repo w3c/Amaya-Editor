@@ -4,7 +4,10 @@
 
 #include "fileaccess.h"
 
+
+
 #ifdef __STDC__
+extern void       DropFile (Document, View, STRING);
 extern HMENU      WIN_GetMenu (int);
 extern void       WinErrorBox (HWND);
 extern void       WinLoadGC (HDC, int, int);
@@ -74,6 +77,7 @@ extern void       KbdCallbackHandler (ThotWidget, int, caddr_t);
 extern void       CheckTtCmap ();
 
 #else  /* __STDC__ */
+extern void       DropFile ();
 extern HMENU      WIN_GetMenu ();
 extern void       WinErrorBox ();
 extern void       WinLoadGC ();

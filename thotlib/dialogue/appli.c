@@ -144,7 +144,6 @@ DWORD       dwToolBarStyles   = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_TO
 DWORD       dwStatusBarStyles = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
 TBADDBITMAP ThotTBBitmap;
 
-static ThotBool CloseEvent = FALSE;
 #include "wininclude.h"
 
 /*----------------------------------------------------------------------
@@ -1319,7 +1318,7 @@ LPARAM      lParam;
   RECT                rect;
   RECT                rWindow;
   int                 frame = GetMainFrameNumber (hwnd);
-  int                 doc, view;
+  int                 view;
   ThotBool            assoc;
 
   if (frame != -1)
@@ -1439,10 +1438,15 @@ LPARAM      lParam;
           GetDocAndView (frame, &pDoc, &view, &assoc);
           CloseView (pDoc, view, assoc);
 	   }
-       TtaQuit ();
+       for (frame = 0; frame <= MAX_FRAME; frame++)
+           if (FrRef[frame] != 0) {
+              /* there is still an active frame */
+              IsViewClosed = FALSE;
+              PostQuitMessage (0);
+              return 0;
+		   }
+           TtaQuit();
 	}
-    IsViewClosed = FALSE;
-    PostQuitMessage (0);
     return 0;
         
   case WM_SIZE: {
@@ -1535,8 +1539,6 @@ WPARAM wParam;
 LPARAM lParam;
 #endif /* __STDC__ */
 {
-     HDC          saveHdc;	/* Used to save TtDisplay during current event processing */
-	 HWND         saveCurWin;
      int          frame;
      int          status;
 	 int          delta;
@@ -1630,8 +1632,8 @@ LPARAM lParam;
 
             case WM_DROPFILES: {
                  char DroppedFileName [MAX_PATH + 1];
-                 UINT nNumFiles = DragQueryFile ((HDROP)wParam, 0xFFFFFFFF, NULL, 0);
-                 int document, view, i;
+                 UINT i, nNumFiles = DragQueryFile ((HDROP)wParam, 0xFFFFFFFF, NULL, 0);
+                 int document, view;
                  FrameToView (frame, &document, &view);
                  for (i = 0; i < nNumFiles; i++) {
                      DragQueryFile ((HDROP)wParam, i, DroppedFileName, MAX_PATH + 1);
