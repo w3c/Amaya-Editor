@@ -6496,6 +6496,7 @@ void InitAmaya (NotifyEvent * event)
    SelectionInTT = FALSE;
    SelectionInBIG = FALSE;
    SelectionInSMALL = FALSE;
+   IdElemName[0] = EOS;
    /* Initialize the LogFile variables */
    CleanUpParsingErrors ();
    /* we're not linking an external CSS */
@@ -6767,6 +6768,8 @@ void InitAmaya (NotifyEvent * event)
  *      initialize davlib module otherwise */
 #ifdef DAV
    InitDAV ();
+#else /* DAV */
+   DAVLibEnable = FALSE;
 #endif /* DAV */
    URL_list = NULL;
    URL_list_len = 0;
@@ -7030,38 +7033,34 @@ void MakeIDMenu (Document doc, View view)
 #endif /* _WINDOWS */
 
   /* initialize the global variables */
-  IdElemName[0] = EOS;
   IdStatus[0] = EOS;
   IdDoc = doc;
 
   /* Create the dialogue form */
 #ifndef _WINDOWS
   i = 0;
-  strcpy (&s[i], "Add ID");
+  strcpy (&s[i], TtaGetMessage (AMAYA, ADD_ID));
   i += strlen (&s[i]) + 1;
-  strcpy (&s[i], "Remove ID");
+  strcpy (&s[i], TtaGetMessage (AMAYA, REMOVE_ID));
   TtaNewSheet (BaseDialog + MakeIdMenu,
 	       TtaGetViewFrame (doc, view),
-	       "ID attributes",
+	       TtaGetMessage (AMAYA, ADD_REMOVE_ID),
 	       2, s, FALSE, 6, 'L', D_DONE);
   TtaNewTextForm (BaseDialog + mElemName,
 		  BaseDialog + MakeIdMenu,
-		  "Enter an element name",
-		  10,
-		  1,
-		  TRUE);
+		  TtaGetMessage (AMAYA, ENTER_ELEMENT_NAME),
+		  10, 1, FALSE);
+  TtaSetTextForm (BaseDialog + mElemName, IdElemName);
   /* apply operation in */
-  strcpy (s, "TIn the whole document");
+  i = 0;
+  sprintf (&s[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC));
   i += strlen (&s[i]) + 1;
-  strcpy (&s[i], "TWithin selection");
+  sprintf (&s[i], "%s%s", "B", TtaGetMessage (LIB, TMSG_WITHIN_SEL));
   TtaNewSubmenu (BaseDialog + mIdUseSelection,
-		 BaseDialog + MakeIdMenu,
-		 0,
-		 "Apply operation",
-		 2,
-		 s,
-		 NULL,
-		 TRUE);
+		 BaseDialog + MakeIdMenu, 0,
+		 TtaGetMessage (AMAYA, APPLY_OPERATION),
+		 2, s,
+		 NULL, FALSE);
   /* status label */
   TtaNewLabel (BaseDialog + mIdStatus,
 	       BaseDialog + MakeIdMenu,

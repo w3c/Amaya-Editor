@@ -3472,13 +3472,33 @@
 	<message xml:lang="tr">Hareketli özellikler</message>
 </label>
 <label define="AM_SVGANIM_NO_ID">
-	<message xml:lang="en">Element without id</message>
-	<message xml:lang="fr">Elément sans identificateur</message>
-	<message xml:lang="de">Element ohne id</message>
+	<message xml:lang="en">Element without ID</message>
+	<message xml:lang="fr">Elément sans ID</message>
+	<message xml:lang="de">Element ohne ID</message>
 	<message xml:lang="fi">Elementti ilman tunnusta</message>
 	<message xml:lang="it">Elemento senza ID</message>
-	<message xml:lang="es">Elemento sin id</message>
+	<message xml:lang="es">Elemento sin ID</message>
 	<message xml:lang="tr">Tanımsız eleman</message>
+</label>
+<label define="ADD_ID">
+	<message xml:lang="en">Add ID</message>
+	<message xml:lang="fr">Ajouter ID</message>
+</label>
+<label define="REMOVE_ID">
+	<message xml:lang="en">Remove ID</message>
+	<message xml:lang="fr">Supprimer ID</message>
+</label>
+<label define="ADD_REMOVE_ID">
+	<message xml:lang="en">Add/Remove IDs</message>
+	<message xml:lang="fr">Ajouter/Supprimer IDs</message>
+</label>
+<label define="APPLY_OPERATION">
+	<message xml:lang="en">Apply operation</message>
+	<message xml:lang="fr">Appliquer opération</message>
+</label>
+<label define="ENTER_ELEMENT_NAME">
+	<message xml:lang="en">Enter an element name</message>
+	<message xml:lang="fr">Entrer le nom d'un élément</message>
 </label>
 <label define="AMAYA_MSG_MAX">
 </label>

@@ -348,4 +348,9 @@
 346 Select ending color...
 347 Animation defined.
 348 Animated attribute
-349 Element without id
+349 Element without ID
+350 Add ID
+351 Remove ID
+352 Add/Remove IDs
+353 Apply operation
+354 Enter an element name

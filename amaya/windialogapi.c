@@ -3353,21 +3353,33 @@ LRESULT CALLBACK BackgroundImageDlgProc (ThotWindow hwnDlg, UINT msg,
  MakeIDDlgProc
  ------------------------------------------------------------------------*/
 LRESULT CALLBACK MakeIDDlgProc (ThotWindow hwnDlg, UINT msg, WPARAM wParam,
-								LPARAM lParam)
+				LPARAM lParam)
 {
   switch (msg)
     {
     case WM_INITDIALOG:
       MakeIDHwnd = hwnDlg;
       /* init the dialog's text */
-      SetWindowText (hwnDlg, "ID Handler menu");
+      SetWindowText (hwnDlg, TtaGetMessage (AMAYA, ADD_REMOVE_ID));
+      SetWindowText (GetDlgItem (hwnDlg, ID_CREATEID), 
+		     TtaGetMessage (AMAYA, ADD_ID));
+      SetWindowText (GetDlgItem (hwnDlg, ID_REMOVEID), 
+		     TtaGetMessage (AMAYA, REMOVE_ID));
       SetWindowText (GetDlgItem (hwnDlg, ID_DONE), 
 		     TtaGetMessage (LIB, TMSG_DONE));
       /* set up/clear the other options */
       /* elem name */
-      SetDlgItemText (hwnDlg, IDC_IDELEMNAME, "");
+      SetDlgItemText (hwnDlg, IDC_IDELEMNAME,
+		      TtaGetMessage (AMAYA, ENTER_ELEMENT_NAME));
+      SetDlgItemText (hwnDlg, IDC_IDELEMNAME, IdElemName);
+      SetDlgItemText (hwnDlg, IDC_IDAPPLYTODOC,
+		      TtaGetMessage (LIB, TMSG_IN_WHOLE_DOC));
+      SetDlgItemText (hwnDlg, IDC_IDAPPLYTOSEL,
+		      TtaGetMessage (LIB, TMSG_WITHIN_SEL));
+      SetDlgItemText (hwnDlg, IDC_IDAPPLYTODOC,
+		      TtaGetMessage (AMAYA, APPLY_OPERATION));
       /* status bar */
-      SetDlgItemText (hwnDlg, IDC_IDSTATUS, "");
+      SetDlgItemText (hwnDlg, IDC_IDSTATUS, TtaGetMessage (AMAYA, APPLY_OPERATION));
       /* radio buttons */
       if (IdApplyToSelection)
 	CheckRadioButton (hwnDlg, IDC_IDAPPLYTOSEL, 

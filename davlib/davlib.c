@@ -14,7 +14,11 @@
  ** $Id$
  ** $Date$
  ** $Log$
- ** Revision 1.10  2002-07-01 10:34:16  kahan
+ ** Revision 1.11  2003-05-19 10:24:54  vatton
+ ** Internationalization of the MakeID dialogue.
+ ** Irene
+ **
+ ** Revision 1.10  2002/07/01 10:34:16  kahan
  ** JK: Enabling/Disabling DAV support by means of the new DAV_Enable
  ** registry entry.
  ** Removed the DAV menu from the standard profile.
@@ -96,11 +100,11 @@ void InitDAV (void)
     char *fqdn = NULL;
     char *email = NULL;
 
-    /* check if DAV support is enabled */
-    TtaGetEnvBoolean ("DAV_ENABLE", &DAVLibEnable);
+    /* DAV support is enabled */
+    /*TtaGetEnvBoolean ("DAV_ENABLE", &DAVLibEnable);
     if (!DAVLibEnable)
-      return;
-
+    return;*/
+    DAVLibEnable = TRUE;
     /* ******************** DAVHome ********************* */
     /* try to get default home (.amaya) dir from APP_HOME */
     ptr = TtaGetEnvString ("APP_HOME");
@@ -609,5 +613,3 @@ void DAVPreferences (Document document, View view)
 
     DAVShowPreferencesDlg (document);
 }
-
-
