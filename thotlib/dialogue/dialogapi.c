@@ -583,7 +583,7 @@ void    WIN_ListSaveDirectory (int parentRef, char *title, char *fileName)
 
   parentCatalogue = CatEntry (parentRef);
   szFilter = APPFILENAMEFILTER;
-  szFileName[0] = EOS;
+  strncpy (szFileName, fileName, 256);
   OpenFileName.lStructSize = sizeof (OPENFILENAME); 
   OpenFileName.hwndOwner = parentCatalogue->Cat_Widget; 
   OpenFileName.lpstrFilter = szFilter;
