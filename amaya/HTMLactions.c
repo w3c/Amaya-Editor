@@ -1660,7 +1660,7 @@ Element	el;
 #endif /* __STDC__ */
 {
    int		ln;
-   Element	child, sibling, uncle, ancestor;
+   Element	child, sibling, uncle, ancestor, prev, parent;
 
    ln = TtaGetElementLineNumber (el);
    if (ln == 0)
@@ -1709,6 +1709,44 @@ Element	el;
 	       }
 	    }
 	 while (ancestor && ln == 0);
+	 }
+      if (ln == 0)
+         /* Still no line number. Get the line number of the previous
+	    element with a line number */
+	 {
+	 ancestor = el;
+         prev = el;
+	 TtaPreviousSibling (&prev);
+	 while (prev == NULL && ln == 0 && ancestor != NULL)
+	    {
+	    ancestor = TtaGetParent (ancestor);
+	    ln = TtaGetElementLineNumber (ancestor);
+	    if (ln == 0)
+	       {
+	       prev = ancestor;
+	       TtaPreviousSibling (&prev);
+	       }
+	    }
+	 ancestor = prev;
+
+	 while (ancestor && ln == 0)
+	    {
+	    prev = TtaGetLastLeaf (ancestor);
+	    if (prev)
+	       {
+	       parent = TtaGetParent (prev);
+	       while (prev && ln == 0)
+		  {
+		  ln = TtaGetElementLineNumber (prev);
+		  if (ln == 0)
+		     TtaPreviousSibling (&prev);
+		  }
+	       if (ln == 0)
+		  ln = TtaGetElementLineNumber (parent);
+	       if (ln == 0)
+		  ancestor = TtaGetPredecessor (parent);
+	       }
+	    }
 	 }
       }
    return ln;

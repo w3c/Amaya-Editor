@@ -1802,7 +1802,7 @@ Element             parent;
    if (parent == NULL)
 	TtaError (ERR_invalid_parameter);
    else
-      leaf = (Element)FirstLeaf ((PtrElement)parent);
+      leaf = (Element)LastLeaf ((PtrElement)parent);
    return (leaf);
 }
 
