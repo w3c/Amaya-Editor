@@ -79,11 +79,11 @@ static void         ReadEnv ()
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         wrcar (char ch)
+static void         wrcar (unsigned char ch)
 
 #else  /* __STDC__ */
 static void         wrcar (ch)
-char                ch;
+unsigned char                ch;
 
 #endif /* __STDC__ */
 
@@ -95,7 +95,7 @@ char                ch;
 	if (ch < ' ' || ch > '~')
 	   /* caractere non imprimable, on ecrit son code octal apres \ */
 	  {
-	     c = ch;
+	     c = (int) ch;
 	     printf ("\\%o", c);
 	  }
 	else

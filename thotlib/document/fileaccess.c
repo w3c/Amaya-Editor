@@ -1,19 +1,12 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
    storage.c : Primitives d'entrees/sorties pour les fichiers binaires
    (schemas et pivot).
-
-   Major changes:
-   PMA 7/06/91  remise en forme
  */
 
 #include "thot_sys.h"
 #include "constmedia.h"
 #include "typemedia.h"
 #include "storage.h"
-
 
 #include "storage.f"
 
@@ -74,7 +67,7 @@ int                *sval;
 
 #endif /* __STDC__ */
 {
-   char                b1, b2;
+   unsigned char                b1, b2;
 
    if (!BIOreadByte (file, &b1))
      {
@@ -86,7 +79,7 @@ int                *sval;
 	*sval = 0;
 	return False;
      }
-   *sval = 256 * b1 + b2;
+   *sval = 256 * ((int) b1) + ((int) b2);
    return True;
 }
 
@@ -115,7 +108,7 @@ int                *sval;
 	*sval = 0;
 	return False;
      }
-   *sval = 256 * b1 + b2;
+   *sval = 256 * ((int)b1) + ((int) b2);
    if (*sval > 32767)
       *sval = *sval - 65536;
    return True;

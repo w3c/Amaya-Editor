@@ -812,10 +812,10 @@ iline               wl;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                generate (iline wi, iline wl, grmcode c, grmcode r, int nb, rnb pr)
+void                ProcessToken (iline wi, iline wl, grmcode c, grmcode r, int nb, rnb pr)
 
 #else  /* __STDC__ */
-void                generate (wi, wl, c, r, nb, pr)
+void                ProcessToken (wi, wl, c, r, nb, pr)
 iline               wi;
 iline               wl;
 grmcode             c;
@@ -1365,7 +1365,7 @@ rnb                 pr;
 		       break;
 
 		    case 3002:	/* un nombre */
-		       k = trnb (wi, wl);
+		       k = AsciiToInt (wi, wl);
 		       switch (r)	/* r= numero de regle */
 			     {
 				case RULE_MinVal:	/* MinVal */
@@ -1504,8 +1504,8 @@ char              **argv;
    TYP = TtaGetMessageTable ("typdialogue", TYP_MSG_MAX);
    error = False;
    /* initialise l'analyseur syntaxique */
-   initsynt ();
-   initgrm ("TYP.GRM");
+   InitParser ();
+   InitSyntax ("TYP.GRM");
    if (!error)
      {
 	/* teste les arguments d'appel du programme */
@@ -1560,7 +1560,7 @@ char              **argv;
 		       else
 			  /* traduit les caracteres de la ligne */
 			 {
-			    transchar ();
+			    OctalToChar ();
 			    /* analyse la ligne */
 			    wi = 1;
 			    wl = 0;
@@ -1568,15 +1568,15 @@ char              **argv;
 			    do
 			      {
 				 i = wi + wl;
-				 getword (i, &wi, &wl, &wn);
+				 GetNextToken (i, &wi, &wl, &wn);
 				 /* mot suivant */
 				 if (wi > 0)
 				    /* on a trouve un mot */
 				   {
-				      analword (wi, wl, wn, &c, &r, &nb, &pr);
+				      AnalyzeToken(wi, wl, wn, &c, &r, &nb, &pr);
 				      /* on analyse le mot */
 				      if (!error)
-					 generate (wi, wl, c, r, nb, pr);
+					 ProcessToken (wi, wl, c, r, nb, pr);
 				      /* on le traite */
 				   }
 			      }
@@ -1585,7 +1585,7 @@ char              **argv;
 		    }
 		  BIOreadClose (infile);
 		  if (!error)
-		     termsynt ();	/* fin d'analyse */
+		     ParserEnd ();	/* fin d'analyse */
 		  if (!error)
 		    {
 		       /* ecrit le schema compile' dans le fichier de sortie */

@@ -715,6 +715,7 @@ static void         EndOfNumber ()
 {
    TypeUnit            unit;
 
+   unit = UnRelative;
    if (LatestNumber != 0)
      {
 	if (LatestNumberAttr)
@@ -4576,7 +4577,7 @@ iline               wi;
    int                 n;
    Counter           *pCntr;
 
-   n = trnb (wi, wl);
+   n = AsciiToInt (wi, wl);
    switch (gCode)
 	 {
 	       /* r= numero de la regle ou apparait le nombre */
@@ -6136,9 +6137,9 @@ char              **argv;
 
    error = False;
    /* initialise l'analyseur syntaxique */
-   initsynt ();
+   InitParser ();
    /* charge la grammaire du langage a compiler */
-   initgrm ("PRESEN.GRM");
+   InitSyntax ("PRESEN.GRM");
    if (!error)
      {
 	/* recupere d'abord le nom du schema a compiler */
@@ -6189,7 +6190,7 @@ char              **argv;
 		  else
 		     /* traduit tous les caracteres de la ligne */
 		    {
-		       transchar ();
+		       OctalToChar ();
 		       /* analyse la ligne */
 		       wi = 1;
 		       wl = 0;
@@ -6197,12 +6198,12 @@ char              **argv;
 		       do
 			 {
 			    i = wi + wl;
-			    getword (i, &wi, &wl, &wn);
+			    GetNextToken (i, &wi, &wl, &wn);
 			    /* mot suivant */
 			    if (wi > 0)
 			       /* on a trouve un mot */
 			      {
-				 analword (wi, wl, wn, &c, &r, &nb, &pr);
+				 AnalyzeToken (wi, wl, wn, &c, &r, &nb, &pr);
 				 /* on analyse le mot */
 				 if (!error)
 				    ProcessToken (wi, wl, c, r, nb - 1, pr);	/* on le traite */
@@ -6215,7 +6216,7 @@ char              **argv;
 	     /* fin du fichier */
 	     BIOreadClose (infile);
 	     if (!error)
-		termsynt ();
+		ParserEnd ();
 	     /* fin d'analyse */
 	     if (!error)
 	       {

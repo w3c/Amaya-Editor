@@ -14,5 +14,4 @@ EXPORT int        	GRM;		/* Identification des messages Grm */
 EXPORT int		APP;		/* Identification des messages App */
 EXPORT lineBuffer 	inputLine;	/* ligne traitee */
 EXPORT boolean 	error;		/* erreur detectee */
-EXPORT msgerr  	msg[120];	/* texte des messages d'erreur */
 

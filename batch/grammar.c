@@ -8,9 +8,6 @@
    La grammaire codee est destinee aux programmes STR, PRS, TRA ou APP
    qui compilent, selon cette grammaire, un schema de structure,
    de presentation, de traduction ou d'application.
-
-   V. Quint     Juin 1984
-   IV : Mai 92   adaptation Tool Kit
  */
 
 #include "thot_sys.h"
@@ -158,17 +155,17 @@ iline               wi;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    generate traite le mot commencant a` la position wi dans la     | */
+/* |    ProcessToken traite le mot commencant a` la position wi dans la | */
 /* |            ligne courante, de longueur wl et code grammatical c,   | */
 /* |            apparaissant dans la regl r. Si c'est un identif, nb    | */
 /* |            contient son rang dans la table des identificateurs.    | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-static void         generate (iline wi, iline wl, grmcode c, rulenb r, int nb)
+static void         ProcessToken (iline wi, iline wl, grmcode c, rulenb r, int nb)
 
 #else  /* __STDC__ */
-static void         generate (wi, wl, c, r, nb)
+static void         ProcessToken (wi, wl, c, r, nb)
 iline               wi;
 iline               wl;
 grmcode             c;
@@ -819,7 +816,7 @@ char              **argv;
 	     shortkwcode = 1000;
 	     keywordcode = 1100;
 	     initreftb ();	/* initialise la table des references */
-	     initsynt ();	/* initialise l'analyseur syntaxique */
+	     InitParser ();	/* initialise l'analyseur syntaxique */
 	     /* met le suffixe LST a la fin du nom de fichier */
 	     strcpy (&pfilename[i + 1], "LST");
 	     /* cree le fichier .LST */
@@ -848,7 +845,7 @@ char              **argv;
 		  strncpy (srcline, inputLine, linelen);
 		  linenb++;
 		  /* traduit les caracteres de la ligne */
-		  transchar ();
+		  OctalToChar ();
 		  /* analyse la ligne */
 		  wi = 1;
 		  wl = 0;
@@ -856,16 +853,16 @@ char              **argv;
 		  do
 		    {
 		       i = wi + wl;
-		       getword (i, &wi, &wl, &wn);	/* mot suivant */
+		       GetNextToken (i, &wi, &wl, &wn);	/* mot suivant */
 		       if (wi > 0)
 			 {
 			    /* on a trouve un mot */
 			    if (wn == strng)
 			       checkword (wi, wl);	/* mot-cle valide ? */
 			    if (!error)
-			       analword (wi, wl, wn, &c, &r, &nb, &pr);		/* on analyse le mot */
+			       AnalyzeToken (wi, wl, wn, &c, &r, &nb, &pr);		/* on analyse le mot */
 			    if (!error)
-			       generate (wi, wl, c, r, nb);	/* on le traite */
+			       ProcessToken (wi, wl, c, r, nb);	/* on le traite */
 			 }
 		    }
 		  while (wi != 0 && !error);
@@ -878,7 +875,7 @@ char              **argv;
 		  fprintf (list, "\n");
 	       }
 	     if (!error)
-		termsynt ();	/* fin d'analyse */
+		ParserEnd ();	/* fin d'analyse */
 	     if (!error)
 		if (defrefok ())
 		  {

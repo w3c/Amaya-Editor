@@ -574,6 +574,8 @@ grmcode             pr;
 	     typeId = ruleNb;
 	   else if (AttributesSection)
 	     typeId = attribNb;
+	   else
+	     typeId = 0;
 	   TteAddActionEvent (pAppli, typeId, curEvent, PreEvent, eventAction);
 	   curEvent = 0;
 	   PreEvent = True;
@@ -1009,7 +1011,7 @@ iline               wi;
 {
    int                 n;
 
-   n = trnb (wi, wl);
+   n = AsciiToInt (wi, wl);
    switch (r)
 	 {
 	       /* r = numero de la regle ou apparait le nombre */
@@ -1025,7 +1027,7 @@ iline               wi;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    GenerateApp traite le mot commencant a` la position wi dans la  | */
+/* |    ProcessToken traite le mot commencant a` la position wi dans la | */
 /* |            ligne courante, de longueur wl et de code grammatical c.| */
 /* |            Si c'est un identif, nb contient son rang dans la table | */
 /* |            des identificateurs. r est le numero de la regle dans   | */
@@ -1033,9 +1035,9 @@ iline               wi;
 /* |            precedente, celle qui a appele la regle r.              | */
 /* ---------------------------------------------------------------------- */
 #ifdef __STDC__
-static void         GenerateApp (iline wi, iline wl, grmcode c, grmcode r, int nb, grmcode pr)
+static void         ProcessToken (iline wi, iline wl, grmcode c, grmcode r, int nb, grmcode pr)
 #else  /* __STDC__ */
-static void         GenerateApp (wi, wl, c, r, nb, pr)
+static void         ProcessToken (wi, wl, c, r, nb, pr)
 iline               wi;
 iline               wl;
 grmcode             c;
@@ -1538,9 +1540,9 @@ char              **argv;
    COMPIL = TtaGetMessageTable ("compildialogue", COMPIL_MSG_MAX);
    error = False;
    /* initialise l'analyseur syntaxique */
-   initsynt ();
+   InitParser ();
    /* charge la grammaire du langage a compiler */
-   initgrm ("APP.GRM");
+   InitSyntax ("APP.GRM");
    if (!error)
      {
 	if (argc != 2)
@@ -1594,7 +1596,7 @@ char              **argv;
 		       else
 			  /* traduit tous les caracteres de la ligne */
 			 {
-			    transchar ();
+			    OctalToChar ();
 			    /* analyse la ligne */
 			    wi = 1;
 			    wl = 0;
@@ -1602,15 +1604,15 @@ char              **argv;
 			    do
 			      {
 				 i = wi + wl;
-				 getword (i, &wi, &wl, &wn);
+				 GetNextToken (i, &wi, &wl, &wn);
 				 /* mot suivant */
 				 if (wi > 0)
 				    /* on a trouve un mot */
 				   {
-				      analword (wi, wl, wn, &c, &r, &nb, &pr);
+				      AnalyzeToken (wi, wl, wn, &c, &r, &nb, &pr);
 				      /* on analyse le mot */
 				      if (!error)
-					 GenerateApp (wi, wl, c, r, nb, pr);	/* on le traite */
+					 ProcessToken (wi, wl, c, r, nb, pr);	/* on le traite */
 				   }
 			      }
 			    while (!(wi == 0 || error));
@@ -1619,7 +1621,7 @@ char              **argv;
 		    }
 		  /* fin du fichier */
 		  if (!error)
-		     termsynt ();
+		     ParserEnd ();
 		  /* fin d'analyse */
 		  if (!error)
 		    {

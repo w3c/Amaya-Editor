@@ -907,6 +907,7 @@ rnb                 pr;
 {
    SRule              *pRule;
 
+   pRule = NULL;
    if (pr == RULE_InclElem || pr == RULE_ExclElem)
       if (CompilExtens)
 	 pRule = CurExtensRule;
@@ -2398,7 +2399,7 @@ rnb                 pr;
 		  break;
 	       case 3002:
 		  /* un nombre */
-		  number = trnb (wi, wl);
+		  number = AsciiToInt (wi, wl);
 		  /* le nombre lu */
 		  if (r == RULE_Integer)
 		     /* nombre d'elements min. ou max. d'une liste */
@@ -2895,8 +2896,8 @@ char              **argv;
    STR = TtaGetMessageTable ("strdialogue", STR_MSG_MAX);
    error = False;
    /* initialise l'analyseur syntaxique */
-   initsynt ();
-   initgrm ("STRUCT.GRM");
+   InitParser ();
+   InitSyntax ("STRUCT.GRM");
    if (!error)
      {
 	/* teste les arguments d'appel du programme */
@@ -2956,7 +2957,7 @@ char              **argv;
 		       else
 			  /* traduit les caracteres de la ligne */
 			 {
-			    transchar ();
+			    OctalToChar ();
 			    /* analyse la ligne */
 			    wi = 1;
 			    wl = 0;
@@ -2964,12 +2965,12 @@ char              **argv;
 			    do
 			      {
 				 i = wi + wl;
-				 getword (i, &wi, &wl, &wn);	/* mot suivant */
+				 GetNextToken (i, &wi, &wl, &wn);	/* mot suivant */
 				 if (wi > 0)
 				    /* on a trouve un mot */
 				   {
 				      /* on analyse le mot */
-				      analword (wi, wl, wn, &c, &r, &nb, &pr);
+				      AnalyzeToken (wi, wl, wn, &c, &r, &nb, &pr);
 				      if (!error)
 					 /* on le traite */
 					 ProcessToken (wi, wl, c, r, nb, pr);
@@ -2979,7 +2980,7 @@ char              **argv;
 			 }	/* il n'y a plus de mots */
 		    }
 		  if (!error)
-		     termsynt ();	/* fin d'analyse */
+		     ParserEnd ();	/* fin d'analyse */
 		  if (!error)
 		     /* met les bons numeros de regle si ca n'a pas deja ete fait */
 		     /* lorsqu'on a rencontre' le mot-cle' EXPORT */

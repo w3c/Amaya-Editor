@@ -1,14 +1,8 @@
-
-/* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
-
 /*
-   analsynt.c : Ce module effectue l'analyse syntaxique d'un texte source dont
-   il recoit les mots un par un.
-   Il est parametre par une grammaire qui lui est fournie dans la table
+   Ce module effectue l'analyse syntaxique d'un texte source dont il
+   recoit les mots un par un.
+   Il est parametre' par une grammaire qui lui est fournie dans la table
    ruletable ou dans un fichier de type .GRM
-
-   V. Quint     Juin 1984
-   IV : Mai 92   adaptation Tool Kit
  */
 
 #include "thot_sys.h"
@@ -21,19 +15,15 @@
 #include "registry.h"
 #include "storage.h"
 
-typedef gname      *ptrgname;
-typedef struct _stackelem
+typedef struct _ParserStackItem
   {
-     int                 strule;	/* numero de la regle */
-     int                 struleptr;	/* pointeur dans la regle */
-     boolean             option;	/* option en cours */
-     boolean             alt;	/* on peut chercher une alternative */
-     boolean             tested;	/* regle en cours de test avec le mot courant */
+     int                 StRule;	/* numero de la regle */
+     int                 StRuleInd;	/* pointeur dans la regle */
+     boolean             Option;	/* option en cours */
+     boolean             Alt;		/* on peut chercher une alternative */
+     boolean             Tested;	/* regle en cours de test avec le mot courant */
   }
-stackelem;
-
-typedef char        bufgname[200];
-typedef bufgname   *ptrbufgname;
+ParserStackItem;
 
 #define EXPORT extern
 #include "compil.var"
@@ -42,35 +32,34 @@ typedef bufgname   *ptrbufgname;
 #include "analsynt.var"
 #include "compilmsg.f"
 
-extern int          linenb;	/* Numero de la ligne courante dans le fichier en cours
-
-				   de compilation */
-
-#define STACKSIZE 40		/* taille de la pile */
+extern int          linenb;	/* Numero de la ligne courante dans le fichier
+				   en cours de compilation */
 
 static boolean      comment;	/* on est dans un commentaire */
-static int          sptr;	/* pointeur de pile */
-static stackelem    stack[STACKSIZE];	/* pile d'analyse */
+
+#define STACKSIZE 40		/* taille de la pile */
+static int          level;	/* niveau courant dans la pile */
+static ParserStackItem    Stack[STACKSIZE];	/* pile d'analyse */
 
 #include "storage.f"
 #include "analsynt.f"
 
 /* ---------------------------------------------------------------------- */
-/* |    initsynt initialise les donnees de l'analyseur syntaxique.      | */
+/* |    InitParser initialise les donnees de l'analyseur syntaxique.    | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                initsynt ()
+void                InitParser ()
 
 #else  /* __STDC__ */
-void                initsynt ()
+void                InitParser ()
 #endif				/* __STDC__ */
 
 {
    comment = False;		/* pas de commentaire en cours */
-   sptr = 0;			/* initialise la pile */
-   stack[0].strule = 0;
-   stack[0].struleptr = 1;	/* au debut de la regle initiale */
+   level = 0;			/* initialise la pile */
+   Stack[0].StRule = 0;
+   Stack[0].StRuleInd = 1;	/* au debut de la regle initiale */
 }
 
 
@@ -226,16 +215,16 @@ int                *nb;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    trnb traduit le nombre qui est sous sa forme ASCII a` la        | */
+/* |    AsciiToInt traduit le nombre qui est sous sa forme ASCII a` la  | */
 /* |            position index de la ligne courante et qui est de       | */
 /* |            longueur lg.                                            | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-int                 trnb (iline index, iline lg)
+int                 AsciiToInt (iline index, iline lg)
 
 #else  /* __STDC__ */
-int                 trnb (index, lg)
+int                 AsciiToInt (index, lg)
 iline               index;
 iline               lg;
 
@@ -255,16 +244,16 @@ iline               lg;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    transchar remplace dans le buffer d'entree inputLine les        | */
+/* |    OctalToChar remplace dans le buffer d'entree inputLine les      | */
 /* |            sequences \nn par le caractere dont le code octal est   | */
 /* |            nn. Remplace aussi \\ par \.                            | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                transchar ()
+void                OctalToChar ()
 
 #else  /* __STDC__ */
-void                transchar ()
+void                OctalToChar ()
 #endif				/* __STDC__ */
 
 {
@@ -284,13 +273,13 @@ void                transchar ()
 		  k = i + 1;
 		  n = 0;
 		  while (inputLine[k] >= '0' && inputLine[k] <= '7' && k < i + 4)
-		     n = n * 8 + inputLine[k++] - '0';
+		     n = n * 8 + ((int) inputLine[k++]) - '0';
 		  if (n < 1 || n > 255)
 		     CompilerError (i, COMPIL, FATAL, COMPIL_INVALID_CHARACTER,
 				    inputLine, linenb);
 		  else
 		    {
-		       inputLine[i] = (char) n;
+		       inputLine[i] = (unsigned char) n;
 		       d = k - i - 1;
 		    }
 	       }
@@ -314,7 +303,7 @@ void                transchar ()
 
 
 /* ---------------------------------------------------------------------- */
-/* |    getword cherche le prochain mot a` partir de la position start  | */
+/* |    GetNextToken cherche le prochain mot a` partir de la position start  | */
 /* |            dans la ligne courante. Au retour:                      | */
 /* |            - wi: position dans la ligne du debut du mot trouve, ou | */
 /* |            si pas trouve, 0.                                       | */
@@ -324,10 +313,10 @@ void                transchar ()
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                getword (iline start, iline * wi, iline * wl, nature * wn)
+void                GetNextToken (iline start, iline * wi, iline * wl, nature * wn)
 
 #else  /* __STDC__ */
-void                getword (start, wi, wl, wn)
+void                GetNextToken (start, wi, wl, wn)
 iline               start;
 iline              *wi;
 iline              *wl;
@@ -594,7 +583,7 @@ int                *nb;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    analword procede a` l'analyse du mot commencant a` la postion wi| */
+/* |    AnalyzeToken procede a` l'analyse du mot commencant a` la postion wi| */
 /* |            de la ligne courante (inputLine), de longueur wl et de  | */
 /* |            nature wn. Rend dans c le code grammatical du mot, dans | */
 /* |            r le numero de la derniere regle ou` il a ete trouve et | */
@@ -604,10 +593,10 @@ int                *nb;
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                analword (iline wi, iline wl, nature wn, grmcode * c, rnb * r, int *nb, rnb * pr)
+void                AnalyzeToken (iline wi, iline wl, nature wn, grmcode * c, rnb * r, int *nb, rnb * pr)
 
 #else  /* __STDC__ */
-void                analword (wi, wl, wn, c, r, nb, pr)
+void                AnalyzeToken (wi, wl, wn, c, r, nb, pr)
 iline               wi;
 iline               wl;
 nature              wn;
@@ -625,15 +614,15 @@ rnb                *pr;
    boolean             meta;
    int                 s;
 
-   if (sptr < 0)
+   if (level < 0)
       CompilerError (wi, COMPIL, FATAL, COMPIL_END_HAS_ALREADY_BEEN_REACHED,
 		     inputLine, linenb);
    else
      {
 	ok = False;
 	stop = False;
-	for (s = 0; s < sptr; s++)
-	   stack[s].tested = False;
+	for (s = 0; s < level; s++)
+	   Stack[s].Tested = False;
 	/* aucune regle de la pile n'a ete testee avec ce mot, sauf celle
 	   du haut, en cours */
 	do
@@ -643,65 +632,65 @@ rnb                *pr;
 	     /* traite les meta symboles de la regle courante */
 	     do
 	       {
-		  if (ruletable[stack[sptr].strule][stack[sptr].struleptr] >= 2000
-		      && ruletable[stack[sptr].strule][stack[sptr].struleptr] <= 2005)
-		     switch (ruletable[stack[sptr].strule][stack[sptr].struleptr])
+		  if (ruletable[Stack[level].StRule][Stack[level].StRuleInd] >= 2000
+		      && ruletable[Stack[level].StRule][Stack[level].StRuleInd] <= 2005)
+		     switch (ruletable[Stack[level].StRule][Stack[level].StRuleInd])
 			   {
 			      case 2001:
 				 /* debut d'option */
-				 stack[sptr].option = True;
-				 stack[sptr].struleptr++;
+				 Stack[level].Option = True;
+				 Stack[level].StRuleInd++;
 				 break;
 			      case 2002:
 				 /* fin d'option */
-				 stack[sptr].option = False;
-				 stack[sptr].struleptr++;
+				 Stack[level].Option = False;
+				 Stack[level].StRuleInd++;
 				 break;
 			      case 2000:
 			      case 2003:
 				 /* fin de regle ou alternative */
-				 sptr--;	/* depile une regle */
-				 if (sptr < 0)
+				 level--;	/* depile une regle */
+				 if (level < 0)
 				    stop = True;
 				 /* on est a la fin de la regle initiale */
 				 else
 				   {
-				      if (stack[sptr].alt)
+				      if (Stack[level].Alt)
 					 /* essaie une alternative de la nvelle regle */
 					{
 					   do
-					      stack[sptr].struleptr++;
-					   while (!(ruletable[stack[sptr].strule][stack[sptr].struleptr] == 2003
-						    || ruletable[stack[sptr].strule][stack[sptr].struleptr] == 2000));
-					   if (ruletable[stack[sptr].strule][stack[sptr].struleptr] == 2003)
-					      stack[sptr].struleptr++;
+					      Stack[level].StRuleInd++;
+					   while (!(ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2003
+						    || ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2000));
+					   if (ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2003)
+					      Stack[level].StRuleInd++;
 					}
 				      else
-					 stack[sptr].struleptr++;
+					 Stack[level].StRuleInd++;
 				   }
 				 break;
 			      case 2004:
 				 /* debut de repetition */
-				 stack[sptr].struleptr++;
-				 stack[sptr].option = True;
+				 Stack[level].StRuleInd++;
+				 Stack[level].Option = True;
 				 break;
 			      case 2005:
 				 /* fin de repetition */
-				 if (stack[sptr].tested)
+				 if (Stack[level].Tested)
 				    /* on a deja essaye ce mot, on saute */
 				   {
-				      stack[sptr].struleptr++;
-				      stack[sptr].option = False;
+				      Stack[level].StRuleInd++;
+				      Stack[level].Option = False;
 				   }
 				 else
 				    /* ce mot n'a pas ete essaye, on y va */
 				   {
 				      do
-					 stack[sptr].struleptr--;
-				      while (!(ruletable[stack[sptr].strule][stack[sptr].struleptr] == 2004));
-				      stack[sptr].struleptr++;
-				      stack[sptr].option = True;
-				      stack[sptr].tested = True;
+					 Stack[level].StRuleInd--;
+				      while (!(ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2004));
+				      Stack[level].StRuleInd++;
+				      Stack[level].Option = True;
+				      Stack[level].Tested = True;
 				   }
 				 break;
 			   }
@@ -709,62 +698,62 @@ rnb                *pr;
 		  else
 		     meta = False;
 	       }
-	     while (meta && sptr >= 0);
-	     if (sptr >= 0)
+	     while (meta && level >= 0);
+	     if (level >= 0)
 	       {
-		  *c = ruletable[stack[sptr].strule][stack[sptr].struleptr];
-		  if (wordmatch (wi, wl, wn, *c, stack[sptr].strule + 1, nb))
+		  *c = ruletable[Stack[level].StRule][Stack[level].StRuleInd];
+		  if (wordmatch (wi, wl, wn, *c, Stack[level].StRule + 1, nb))
 		     /* ca correspond */
 		     if (*c < 1000)
 			/* symbole non terminal */
-			if (sptr >= STACKSIZE)
+			if (level >= STACKSIZE)
 			   CompilerError (wi, COMPIL, FATAL, COMPIL_STACK_IS_FULL,
 					  inputLine, linenb);
 			else
 			   /* empile la regle definissant ce symbole */
 			  {
-			     sptr++;
-			     stack[sptr].strule = *c - 1;
-			     stack[sptr].struleptr = 1;
-			     stack[sptr].option = False;
-			     stack[sptr].alt = True;
-			     stack[sptr].tested = True;
+			     level++;
+			     Stack[level].StRule = *c - 1;
+			     Stack[level].StRuleInd = 1;
+			     Stack[level].Option = False;
+			     Stack[level].Alt = True;
+			     Stack[level].Tested = True;
 			  }
 		     else
 		       {
 			  ok = True;
-			  *r = stack[sptr].strule + 1;
-			  if (sptr > 0)
-			     *pr = stack[sptr - 1].strule + 1;
-			  for (s = 0; s < sptr; s++)
+			  *r = Stack[level].StRule + 1;
+			  if (level > 0)
+			     *pr = Stack[level - 1].StRule + 1;
+			  for (s = 0; s < level; s++)
 			    {
 			       /* sur toute la pile */
-			       stack[s].alt = False;
+			       Stack[s].Alt = False;
 			       /* s'il y a une alternative, on ne peut */
 			       /* plus en changer */
-			       stack[s].option = False;
+			       Stack[s].Option = False;
 			    }
 			  do
 			     /* si on etait dans une partie */
 			     /* optionnelle, on ne peut plus la sauter */
 			     /* traite les meta symboles suivant le mot ok */
 			    {
-			       stack[sptr].struleptr++;
-			       if (ruletable[stack[sptr].strule][stack[sptr].struleptr] >= 2000
-				   && ruletable[stack[sptr].strule][stack[sptr].struleptr] <= 2005)
-				  switch (ruletable[stack[sptr].strule][stack[sptr].struleptr])
+			       Stack[level].StRuleInd++;
+			       if (ruletable[Stack[level].StRule][Stack[level].StRuleInd] >= 2000
+				   && ruletable[Stack[level].StRule][Stack[level].StRuleInd] <= 2005)
+				  switch (ruletable[Stack[level].StRule][Stack[level].StRuleInd])
 					{
 					   case 2001:
 					      stop = True;	/* debut d'option */
 					      break;
 					   case 2002:
-					      stack[sptr].option = False;	/* fin d'option */
+					      Stack[level].Option = False;	/* fin d'option */
 					      break;
 					   case 2000:
 					   case 2003:
 					      /* fin de regle ou alternative */
-					      sptr--;	/* regle epuisee */
-					      if (sptr < 0)
+					      level--;	/* regle epuisee */
+					      if (level < 0)
 						 stop = True;
 					      /* on est a la fin de la regle initiale */
 					      break;
@@ -774,10 +763,10 @@ rnb                *pr;
 					   case 2005:
 					      /* fin de repetition */
 					      do
-						 stack[sptr].struleptr--;
-					      while (!(ruletable[stack[sptr].strule][stack[sptr].struleptr] == 2004));
-					      stack[sptr].struleptr++;
-					      stack[sptr].option = True;
+						 Stack[level].StRuleInd--;
+					      while (!(ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2004));
+					      Stack[level].StRuleInd++;
+					      Stack[level].Option = True;
 					      stop = True;
 					      break;
 					}
@@ -785,29 +774,29 @@ rnb                *pr;
 			       else
 				  stop = True;
 			    }
-			  while (!stop && sptr >= 0);
+			  while (!stop && level >= 0);
 		       }
 		  else
 		    {
 		       /* le mot ne correspond pas */
-		       if (stack[sptr].option)	/* saute la partie optionnelle */
+		       if (Stack[level].Option)	/* saute la partie optionnelle */
 			  /* cherche la fin de la partie a option */
 			 {
 			    do
-			       stack[sptr].struleptr++;
-			    while (!(ruletable[stack[sptr].strule][stack[sptr].struleptr] == 2002
-				     || ruletable[stack[sptr].strule][stack[sptr].struleptr] == 2005));
-			    stack[sptr].struleptr++;
-			    stack[sptr].option = False;
-			    if (ruletable[stack[sptr].strule][stack[sptr].struleptr] == 2000
-				|| ruletable[stack[sptr].strule][stack[sptr].struleptr] == 2003)
+			       Stack[level].StRuleInd++;
+			    while (!(ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2002
+				     || ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2005));
+			    Stack[level].StRuleInd++;
+			    Stack[level].Option = False;
+			    if (ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2000
+				|| ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2003)
 			       /* fin regle */
 			      {
-				 sptr--;	/* depile une regle */
-				 if (sptr < 0)
+				 level--;	/* depile une regle */
+				 if (level < 0)
 				    stop = True;	/* pile vide */
 				 else
-				    stack[sptr].struleptr++;
+				    Stack[level].StRuleInd++;
 			      }
 			 }
 		       else
@@ -818,16 +807,16 @@ rnb                *pr;
 			       /* cherche une alternative dans la regle */
 			      {
 				 do
-				    stack[sptr].struleptr++;
-				 while (!(ruletable[stack[sptr].strule][stack[sptr].struleptr] == 2003
-					  || ruletable[stack[sptr].strule][stack[sptr].struleptr] == 2000));
-				 if (ruletable[stack[sptr].strule][stack[sptr].struleptr] == 2003)
+				    Stack[level].StRuleInd++;
+				 while (!(ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2003
+					  || ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2000));
+				 if (ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2003)
 				    /* une alternative dans la regle */
 				   {
-				      if (stack[sptr].alt)
+				      if (Stack[level].Alt)
 					 /* alternative autorisee */
 					{
-					   stack[sptr].struleptr++;	/* essaie l'alternative */
+					   Stack[level].StRuleInd++;	/* essaie l'alternative */
 					   st1 = True;
 					}
 				   }
@@ -836,33 +825,33 @@ rnb                *pr;
 				    /* depile les regles jusqu'a en trouver une ou on est */
 				    /* dans une partie optionnelle ou un choix */
 				   {
-				      while (sptr >= 0 && !st1)
+				      while (level >= 0 && !st1)
 					{
-					   sptr--;
-					   if (sptr >= 0)
+					   level--;
+					   if (level >= 0)
 					     {
-						if (stack[sptr].option)
+						if (Stack[level].Option)
 						   /* saute la partie optionnelle */
 						   /* cherche la fin de la partie a option */
 						  {
 						     do
-							stack[sptr].struleptr++;
-						     while (!(ruletable[stack[sptr].strule][stack[sptr].struleptr] == 2002
-							      || ruletable[stack[sptr].strule][stack[sptr].struleptr] == 2005));
-						     stack[sptr].struleptr++;
-						     stack[sptr].option = False;
+							Stack[level].StRuleInd++;
+						     while (!(ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2002
+							      || ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2005));
+						     Stack[level].StRuleInd++;
+						     Stack[level].Option = False;
 						     st1 = True;
 						  }
-						else if (stack[sptr].alt)
+						else if (Stack[level].Alt)
 						   /* cherche une alternative */
 						  {
 						     do
-							stack[sptr].struleptr++;
-						     while (!(ruletable[stack[sptr].strule][stack[sptr].struleptr] == 2003
-							      || ruletable[stack[sptr].strule][stack[sptr].struleptr] == 2000));
-						     if (ruletable[stack[sptr].strule][stack[sptr].struleptr] == 2003)
+							Stack[level].StRuleInd++;
+						     while (!(ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2003
+							      || ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2000));
+						     if (ruletable[Stack[level].StRule][Stack[level].StRuleInd] == 2003)
 						       {
-							  stack[sptr].struleptr++;
+							  Stack[level].StRuleInd++;
 							  st1 = True;
 						       }
 						  }
@@ -876,7 +865,7 @@ rnb                *pr;
 		    }
 	       }
 	  }
-	while (!stop && sptr >= 0);	/* mot ok ou fin de regle */
+	while (!stop && level >= 0);	/* mot ok ou fin de regle */
 	if (!ok)
 	   CompilerError (wi, COMPIL, FATAL, COMPIL_SYNTAX_ERR, inputLine, linenb);
      }
@@ -884,25 +873,25 @@ rnb                *pr;
 
 
 /* ---------------------------------------------------------------------- */
-/* |    termsynt verifie, en fin de fichier source, que tout est correct| */
+/* |    ParserEnd verifie, en fin de fichier source, que tout est correct| */
 /* |            du point de vue syntaxique.                             | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                termsynt ()
+void                ParserEnd ()
 
 #else  /* __STDC__ */
-void                termsynt ()
+void                ParserEnd ()
 #endif				/* __STDC__ */
 
 {
-   if (sptr >= 0)
+   if (level >= 0)
       /* la pile n'est pas vide */
       CompilerError (1, COMPIL, FATAL, COMPIL_ABNORMAL_END, inputLine, linenb);
    else
      {
 	/* la pile est vide */
-	if (ruletable[stack[0].strule][stack[0].struleptr] != 2000)
+	if (ruletable[Stack[0].StRule][Stack[0].StRuleInd] != 2000)
 	   /* la regle initiale n'est pas terminee */
 	   CompilerError (1, COMPIL, FATAL, COMPIL_ABNORMAL_END, inputLine, linenb);
      }
@@ -910,17 +899,17 @@ void                termsynt ()
 
 
 /* ---------------------------------------------------------------------- */
-/* |    initgrm initialise la table des mots-cles et la table des regles| */
+/* |    InitSyntax initialise la table des mots-cles et la table des regles| */
 /* |            a` partir d'un fichier grammaire de type GRM. fn est le | */
 /* |            nom du fichier grammaire, avec le suffixe .GRM.         | */
 /* ---------------------------------------------------------------------- */
 
 #ifdef __STDC__
-void                initgrm (gname fn)
+void                InitSyntax (char *fileName)
 
 #else  /* __STDC__ */
-void                initgrm (fn)
-gname               fn;
+void                InitSyntax (fileName)
+	char       *fileName;
 
 #endif /* __STDC__ */
 
@@ -931,13 +920,13 @@ gname               fn;
    boolean             defkwd;
    int                 ruleptr;
    int                 currule;
-   bufgname            pgrname;
-   bufgname            pnomcourt;
+   char                pgrname[200];
+   char                pnomcourt[200];
    kwelem             *pkw1;
    BinFile             grmfile;
    boolean             fileOK;
 
-   strcpy (pnomcourt, fn);
+   strcpy (pnomcourt, fileName);
    /* cherche dans le directory compil si le fichier grammaire existe */
    if (SearchFile (pnomcourt, 3, pgrname) == 0)
       CompilerError (0, COMPIL, FATAL, COMPIL_GRAMMAR_FILE_GRM_NOT_FOUND,
@@ -969,7 +958,7 @@ gname               fn;
 	     j = 1;
 	     do
 	       {
-		  getword (j, &wind, &wlen, &wnat);
+		  GetNextToken (j, &wind, &wlen, &wnat);
 		  /* mot suivant de la ligne */
 		  if (defkwd)
 		     /* definition des mots-cles */
@@ -1005,11 +994,11 @@ gname               fn;
 			    /* traduit */
 			    /* le mot-cle en majuscules */
 			    j = wind + wlen;
-			    getword (j, &wind, &wlen, &wnat);
+			    GetNextToken (j, &wind, &wlen, &wnat);
 			    /* lit le code */
 			    /* grammatical du mot-cle */
 			    if (wnat == number)
-			       pkw1->gcode = trnb (wind, wlen);
+			       pkw1->gcode = AsciiToInt (wind, wlen);
 			    else
 			       /* fichier incorrect */
 			       CompilerError (wind, COMPIL, FATAL, COMPIL_INCOR_GRAMMAR_FILE_GRM, inputLine, linenb);
@@ -1024,7 +1013,7 @@ gname               fn;
 			if (ruleptr == 0)
 			   /* nouvelle regle */
 			  {
-			     currule = trnb (wind, wlen);	/* numero de regle */
+			     currule = AsciiToInt (wind, wlen);	/* numero de regle */
 			     if (currule > maxrule)
 			       {
 				  /* table des regles saturee */
@@ -1039,7 +1028,7 @@ gname               fn;
 			else
 			  {
 			     /* on est dans une regle */
-			     ruletable[currule - 1][ruleptr] = trnb (wind, wlen);
+			     ruletable[currule - 1][ruleptr] = AsciiToInt (wind, wlen);
 			     if (ruletable[currule - 1][ruleptr] == 2000)
 				ruleptr = 0;	/* fin regle */
 			     else if (ruleptr >= maxlgrule)

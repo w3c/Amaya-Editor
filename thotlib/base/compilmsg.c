@@ -2,8 +2,9 @@
 /* -- Copyright (c) 1990 - 1994 Inria/CNRS  All rights reserved. -- */
 
 /*
-   printmsg.c : affichage des messages d'erreur de different niveau
+   affichage des messages d'erreur de different niveau
  */
+
 #include "compilmsg.h"
 #include "message.h"
 #include "thot_sys.h"

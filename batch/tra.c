@@ -2683,7 +2683,7 @@ rnb                 pr;
 		       break;
 
 		    case 3002:	/* un nombre */
-		       k = trnb (wi, wl);
+		       k = AsciiToInt (wi, wl);
 		       switch (r)	/* r= numero de regle */
 			     {
 				case RULE_MaxLineLength:	/* MaxLineLength */
@@ -3100,8 +3100,8 @@ char              **argv;
 
    error = False;
    /* initialise l'analyseur syntaxique */
-   initsynt ();
-   initgrm ("TRANS.GRM");
+   InitParser ();
+   InitSyntax ("TRANS.GRM");
    if (!error)
      {
 	if (argc != 2)
@@ -3156,7 +3156,7 @@ char              **argv;
 		       else
 			  /* traduit les caracteres de la ligne */
 			 {
-			    transchar ();
+			    OctalToChar ();
 			    /* analyse la ligne */
 			    wi = 1;
 			    wl = 0;
@@ -3164,12 +3164,12 @@ char              **argv;
 			    do
 			      {
 				 i = wi + wl;
-				 getword (i, &wi, &wl, &wn);
+				 GetNextToken (i, &wi, &wl, &wn);
 				 /* mot suivant */
 				 if (wi > 0)
 				    /* on a trouve un mot */
 				   {
-				      analword (wi, wl, wn, &c, &r, &nb, &pr);
+				      AnalyzeToken (wi, wl, wn, &c, &r, &nb, &pr);
 				      /* on analyse le mot */
 				      if (!error)
 					 ProcessToken (wi, wl, c, r, nb, pr);
@@ -3181,7 +3181,7 @@ char              **argv;
 		    }
 		  BIOreadClose (infile);
 		  if (!error)
-		     termsynt ();	/* fin d'analyse */
+		     ParserEnd ();	/* fin d'analyse */
 		  if (!error)
 		    {
 		       /* ecrit le schema compile' dans le fichier de sortie */
