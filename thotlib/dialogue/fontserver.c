@@ -28,6 +28,7 @@
 #if defined(_WX) && !defined(_WINDOWS)
 //  #include "wx/gdicmn.h"
 //  #include "wx/font.h"
+  #include <ft2build.h>
   #include "Xft.h"
 #endif /* defined(_WX) && !defined(_WINDOWS) */
 
