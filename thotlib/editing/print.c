@@ -551,12 +551,6 @@ static void FirstFrame (char *server)
    DefaultBColor = 0;
    DefaultFColor = 1;
    InitDocColors ("thot");
-   /* Initialisation des polices de caracteres */
-#ifdef _WINDOWS 
-   WIN_InitDialogueFonts (TtPrinterDC, "thot");
-#else  /* _WINDOWS */
-   InitDialogueFonts ("thot");
-#endif /* _WINDOWS */
 }
 
 /*----------------------------------------------------------------------
@@ -2229,28 +2223,6 @@ int main (int argc, char **argv)
   ThotBool          viewFound = FALSE;
   ThotBool          done;
 
-#ifdef _WINDOWS 
-  TtPrinterDC = PrinterDC;
-  TtIsTrueColor = isTrueColors;
-  TtWDepth = depth;
-  TtWPrinterDepth = GetDeviceCaps (TtPrinterDC, PLANES);
-  hCurrentInstance = hInst;
-  TtDisplay = GetDC (NULL);
-  ScreenDPI = GetDeviceCaps (TtDisplay, LOGPIXELSY);
-  DOT_PER_INCH = ScreenDPI;
-  ReleaseDC (NULL, TtDisplay);
-  TtDisplay = NULL;
-  PrinterDPI = GetDeviceCaps (TtPrinterDC, LOGPIXELSY);
-  if (buttonCmd == FALSE && TtPrinterDC == NULL)
-     DOT_PER_INCH = 72;
-  else 
-     DOT_PER_INCH = PrinterDPI;
-  WIN_Main_Wd = hWnd;
-  buttonCommand = buttonCmd;
-#else /* _WINDOWS */
-  DOT_PER_INCH = 90;
-#endif /* _WINDOWS */
-
   thotWindow       = 0;
   removeDirectory = FALSE;
   Repaginate     = 0;
@@ -2487,7 +2459,7 @@ int main (int argc, char **argv)
   index  = 0;
 
   /* The following loop removes the suffix from the filename (name) */
-   while ((index < length) && !done)
+  while ((index < length) && !done)
      {
        if (name [index] == '.')
 	 {
@@ -2498,7 +2470,31 @@ int main (int argc, char **argv)
 	 index++;
      }
 
-   FirstFrame (server);
+  FirstFrame (server);
+
+#ifdef _WINDOWS 
+  TtPrinterDC = PrinterDC;
+  TtIsTrueColor = isTrueColors;
+  TtWDepth = depth;
+  TtWPrinterDepth = GetDeviceCaps (TtPrinterDC, PLANES);
+  hCurrentInstance = hInst;
+  TtDisplay = GetDC (NULL);
+  ScreenDPI = GetDeviceCaps (TtDisplay, LOGPIXELSY);
+  DOT_PER_INCH = ScreenDPI;
+  ReleaseDC (NULL, TtDisplay);
+  TtDisplay = NULL;
+  PrinterDPI = GetDeviceCaps (TtPrinterDC, LOGPIXELSY);
+  if (buttonCmd == FALSE && TtPrinterDC == NULL)
+     DOT_PER_INCH = 72;
+  else 
+     DOT_PER_INCH = PrinterDPI;
+  WIN_Main_Wd = hWnd;
+  buttonCommand = buttonCmd;
+#else /* _WINDOWS */
+  DOT_PER_INCH = 90;
+#endif /* _WINDOWS */
+   /* Initialisation des polices de caracteres */
+   InitDialogueFonts ("thot");
    /* Initialise the color table */
    NColors = MAX_COLOR;
    RGB_Table = RGB_colors;

@@ -32,6 +32,7 @@
 #include "boxes_tv.h"
 #include "thotcolor_tv.h"
 #include "appdialogue_tv.h"
+#include "units_tv.h"
 
 ThotColorStruct  cblack;
 static ThotColorStruct  cwhite;

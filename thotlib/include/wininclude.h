@@ -58,6 +58,7 @@ extern void       CreateAlign3DlgWindow (ThotWindow, int);
 extern void       CreateSearchDlgWindow (ThotWindow parent);
 extern void       CreateCharsetDlgWindow (ThotWindow parent);
 extern void       CreateMimeTypeDlgWindow (ThotWindow parent, int nb_item, char *mimetype_list);
+extern void       MimeTypeDlgStatus (char *msg);
 extern void       SaveAsDlgStatus (char *msg);
 extern void       CreateSaveAsDlgWindow (ThotWindow parent, char *path_name);
 extern void       CreateOpenDocDlgWindow (ThotWindow parent, char *title, char *docName, int doc_select, int dir_select, int doc_type);
