@@ -809,15 +809,18 @@ static GL_glyph  *MakeBitmapGlyph (GL_font *font,
 	      h = (short unsigned int) source->rows;
 	      p = w*h;
 	      data = TtaGetMemory ((int) p*sizeof (unsigned char));
-	      memset (data, 0, (int)p);
-	      p = y = 0;
-	      ptr = data;	      
-	      while (y++ < h)
-		{		
-		  for(x = 0; x < w; ++x)
-		      *ptr++ = *(source->buffer + p + x);
-		  p += source->pitch;
-		}	    
+	      if (data)
+		{
+		  memset (data, 0, (int)p);
+		  p = y = 0;
+		  ptr = data;	      
+		  while (y++ < h)
+		    {		
+		      for(x = 0; x < w; ++x)
+			*ptr++ = *(source->buffer + p + x);
+		      p += source->pitch;
+		    }	    
+		}	      
 	    }
 	  
 	  BitmapGlyph = (GL_glyph *) TtaGetMemory (sizeof (GL_glyph) );
@@ -1163,7 +1166,8 @@ int UnicodeFontRender (void *gl_font,
   /* Load glyph image into the texture */
   for (n = 0; n < size; n++)
     {
-      if (bitmaps[n])
+      if (bitmaps[n] && 
+	  bitmaps[n]->data)
 	{
 	  BitmapAppend (data, 
 			bitmaps[n]->data,
@@ -1194,16 +1198,16 @@ int UnicodeFontRender (void *gl_font,
     ((bitmaps[n])?bitmaps[n]->dimension.x:0);
   */
 
-    GL_TextureMap ((x - SUPERSAMPLING(shift)), 
-		y, 
-		   pen_x, 
-		   miny, maxy, 
-		   (GLfloat)Width, (GLfloat)Height);
+  GL_TextureMap ((x - SUPERSAMPLING(shift)), 
+		 y, 
+		 pen_x, 
+		 miny, maxy, 
+		 (GLfloat)Width, (GLfloat)Height);
   
   
-  /*
+  
     glDeleteTextures (1, &(FontBind));
-  */
+  
 
   /* If there is no cache we must free
      allocated glyphs   */

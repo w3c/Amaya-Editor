@@ -56,6 +56,8 @@ typedef struct FontScript
   */
 } FontScript;
 
+static FontScript **Fonttab = NULL;
+
 #ifdef O
 /*----------------------------------------------------------------------
    FontConfigCreate
@@ -71,7 +73,7 @@ static void FontConfigUserSelect ()
 {
 
 }
-#endif
+#endif /*o*/
 
 #ifndef _GL
 /*----------------------------------------------------------------------
@@ -130,9 +132,10 @@ static int IsXLFDPatterneAFont (char *pattern)
 /*----------------------------------------------------------------------
    isnum                                                    
   ----------------------------------------------------------------------*/
-int isnum( char c )
+int isnum (char c)
 {
-  return( c >= '0' && c <= '9' ? 1 : 0 );
+  return ((c >= '0') && 
+	  (c <= '9'));
 }
 
 /*----------------------------------------------------------------------
@@ -305,7 +308,9 @@ static FontScript **FontConfigLoad ()
 	     if (indline && word[0] != EOS)
 	       {
 		 script = atoi (word);
-		 if (script < 30 && Fonts[script] == NULL)
+		 if (script >= 0 && 
+		     script < 30 )
+		   if ( Fonts[script] == NULL)
 		   {
 		     Fonts[script] = TtaGetMemory (sizeof (FontScript));
 		     for (family = 0; family < 6; family++)
@@ -319,10 +324,11 @@ static FontScript **FontConfigLoad ()
 			   break;
 			 family = atoi (word);	
 			 if (family <= 6 && 
-				 Fonts[script]->family[family] == NULL)
+			     family >= 0)
+			   if (Fonts[script]->family[family] == NULL)
 			   {
 			     Fonts[script]->family[family] = 
-			       TtaGetMemory (sizeof (FontScript));
+			       TtaGetMemory (sizeof (FontFamilyConfig));
 			     /*reads all highlights*/
 			     for (highlight = 0;highlight < 6; highlight++)
 			       Fonts[script]->family[family]->highlight[highlight] = NULL;
@@ -334,7 +340,8 @@ static FontScript **FontConfigLoad ()
 				   break;
 				 highlight = atoi (word);
 				 if (highlight < 6 && 
-					 Fonts[script]->family[family]->highlight[highlight] == NULL)
+				     highlight >= 0)
+				   if (Fonts[script]->family[family]->highlight[highlight] == NULL)
 				   {
 				     /*Get the font-face in 
 				       1=font-face 
@@ -356,7 +363,6 @@ static FontScript **FontConfigLoad ()
    return Fonts;
 }
 
-static FontScript **Fonttab = NULL;
 /*----------------------------------------------------------------------
    FontLoadFromConfig : GEt a font dame upon its characteristics
   ----------------------------------------------------------------------*/
