@@ -41,8 +41,10 @@ static int          GridSize = 1;
 #ifdef _WINDOWS
 #include "wininclude.h"
 
-extern int X_Pos;
-extern int Y_Pos;
+/* working display for geom.c */
+static HDC     Gdc = NULL;
+extern int     X_Pos;
+extern int     Y_Pos;
 
 /*----------------------------------------------------------------------
   DrawOutline :                                                    
@@ -94,7 +96,7 @@ static void VideoInvert (int frame, int width, int height, int x, int y)
   if (w != None)
     {
 #ifdef _WINDOWS
-      PatBlt (TtDisplay, x, y, width, height, PATINVERT);
+      PatBlt (Gdc, x, y, width, height, PATINVERT);
 #else /* _WINDOWS */
 #ifdef _GTK
       gdk_draw_rectangle (w, TtInvertGC, TRUE, x, y, width, height);
@@ -146,13 +148,13 @@ static void InvertEllipse (int frame, int x, int y, int width, int height,
 	  rgn = CreateEllipticRgn (x, y, x + width, y + height);
 	  if (rgn)
 	  {
-	    InvertRgn (TtDisplay, rgn);
+	    InvertRgn (Gdc, rgn);
 	    DeleteObject (rgn);
 	  }
 	  rgn = CreateEllipticRgn (x + 1, y + 1, x + width - 2, y + height - 2);
 	  if (rgn)
 	  {
-	    InvertRgn (TtDisplay, rgn);
+	    InvertRgn (Gdc, rgn);
 	    DeleteObject (rgn);
 	  }
 #else /* _WINDOWS */
@@ -289,6 +291,7 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
   POINT               ptBeg;
   POINT               ptEnd;
   POINT               ptCur;
+  HCURSOR             cross;
 #else /* _WINDOWS */
   ThotWindow          wdum;
   int                 dx, dy;
@@ -311,7 +314,7 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
   ptEnd.y = y3;
   if (!SetCursorPos (lastx + rect.left, lasty + rect.top))
     WinErrorBox (w, "AddPoints (1)");
-  SetCursor (LoadCursor (NULL, IDC_CROSS));
+  cross = LoadCursor (NULL, IDC_CROSS);
 #else /* !_WINDOWS */
   e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
   XMapRaised (TtDisplay, w);
@@ -332,6 +335,7 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
     {
 #ifdef _WINDOWS
       GetMessage (&event, NULL, 0, 0);
+	  SetCursor (cross);
       if (event.message == WM_MOUSEMOVE)
 	{
 	  GetCursorPos (&cursorPos);
@@ -486,6 +490,8 @@ static void AddPoints (int frame, int x, int y, int x1, int y1, int x3,
 		}
 	      break;
 
+		case WM_PAINT:
+		  WIN_HandleExpose (w, frame, event.wParam, event.lParam);
 	    default: break;
 	    }
 	}
@@ -677,6 +683,7 @@ static void MoveApoint (int frame, int x, int y, int x1, int y1, int x3,
   POINT               ptBeg;
   POINT               ptEnd;
   POINT               ptCur;
+  HCURSOR             cross;
 #else /* _WINDOWS */
   int                 e,f;
 #endif /* _WINDOWS */
@@ -695,9 +702,8 @@ static void MoveApoint (int frame, int x, int y, int x1, int y1, int x3,
   ptBeg.y = y1;
   ptEnd.x = x3;
   ptEnd.y = y3;
-  SetCursor (LoadCursor (NULL, IDC_CROSS));
-  if (!SetCursorPos (lastx + rect.left, lasty + rect.top))
-    WinErrorBox (w, "MoveAPoint (1)");
+  cross = LoadCursor (NULL, IDC_CROSS);
+  SetCursorPos (lastx + rect.left, lasty + rect.top);
 #else /* !_WINDOWS */
   e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
   XMapRaised (TtDisplay, w);
@@ -739,12 +745,11 @@ static void MoveApoint (int frame, int x, int y, int x1, int y1, int x3,
 	    newy = y;
 	  else if (newy > y + height)
 	    newy = y + height;
-	  
-	  if (!SetCursorPos (newx, newy))
-	    WinErrorBox (w, "MoveAPoint (2)");
+	  SetCursorPos (newx, newy);
 	}
 	  
       GetMessage (&event, NULL, 0, 0);
+	  SetCursor (cross);
       switch (event.message)
 	{
 	case WM_LBUTTONUP:
@@ -794,6 +799,8 @@ static void MoveApoint (int frame, int x, int y, int x1, int y1, int x3,
 	  lasty = newy;
 	  break;
 
+	case WM_PAINT:
+	  WIN_HandleExpose (w, frame, event.wParam, event.lParam);
 	default: break;
 	}
 #else /* !_WINDOWS */
@@ -931,7 +938,7 @@ int PolyLineCreation (int frame, int *xOrg, int *yOrg, PtrBox pBox,
 		       ViewFrameTable[frame - 1].FrMagnification);
 
 #ifdef _WINDOWS
-  WIN_GetDeviceContext (frame);
+  Gdc = GetDC (FrRef[frame]);
 #endif /* _WINDOWS */
   nbpoints = 1;
   lastx = x; 
@@ -939,7 +946,7 @@ int PolyLineCreation (int frame, int *xOrg, int *yOrg, PtrBox pBox,
   AddPoints (frame, x, y, -1, -1, -1, -1, lastx, lasty, 1, &nbpoints, maxPoints, width, height,
 	     Pbuffer, Bbuffer);
 #ifdef _WINDOWS
-  WIN_ReleaseDeviceContext ();
+  ReleaseDC (FrRef[frame], Gdc);
 #endif /* _WINDOWS */
   return (nbpoints);
 }
@@ -983,14 +990,14 @@ void PolyLineModification (int frame, int *xOrg, int *yOrg, PtrBox pBox,
 		       ViewFrameTable[frame - 1].FrMagnification);
 
 #ifdef _WINDOWS
-  WIN_GetDeviceContext (frame);
+  Gdc = GetDC (FrRef[frame]);
 #endif /* _WINDOWS */
   /* get the current point */
   RedrawPolyLine (frame, x, y, Bbuffer, nbpoints, point, close,
 		  &x1, &y1, &lastx, &lasty, &x3, &y3);
   MoveApoint (frame, x, y, x1, y1, x3, y3, lastx, lasty, point, width, height, Pbuffer, Bbuffer);
 #ifdef _WINDOWS
-  WIN_ReleaseDeviceContext ();
+  ReleaseDC (FrRef[frame], Gdc);
 #endif /* _WINDOWS */
   if (pBox->BxPictInfo != NULL)
     {
@@ -1042,7 +1049,7 @@ int PolyLineExtension (int frame, int *xOrg, int *yOrg, PtrBox pBox,
 		       ViewFrameTable[frame - 1].FrMagnification);
 
 #ifdef _WINDOWS
-  WIN_GetDeviceContext (frame);
+  Gdc = GetDC (FrRef[frame]);
 #endif /* _WINDOWS */
   RedrawPolyLine (frame, x, y, Bbuffer, nbpoints, point, close,
 		  &x1, &y1, &lastx, &lasty, &x3, &y3);
@@ -1051,7 +1058,7 @@ int PolyLineExtension (int frame, int *xOrg, int *yOrg, PtrBox pBox,
   AddPoints (frame, x, y, x1, y1, x3, y3, lastx, lasty, point, &nbpoints, 0, width, height,
 	     Pbuffer, Bbuffer);
 #ifdef _WINDOWS
-  WIN_ReleaseDeviceContext ();
+  ReleaseDC (FrRef[frame], Gdc);
 #endif /* _WINDOWS */
   return (nbpoints);
 }
@@ -1073,7 +1080,8 @@ int LineCreation (int frame, PtrBox pBox, int *x1, int *y1, int *x2,
   int                 lastx, lasty;
   int                 nbpoints;
 
-  if (pBox == NULL || pBox->BxAbstractBox == NULL || pBox->BxAbstractBox->AbEnclosing == NULL)
+  if (pBox == NULL || pBox->BxAbstractBox == NULL ||
+	  pBox->BxAbstractBox->AbEnclosing == NULL)
     return (0);
 
   /* Allocate a polyline buffer to simulate a polyline */ 
@@ -1098,7 +1106,7 @@ int LineCreation (int frame, PtrBox pBox, int *x1, int *y1, int *x2,
   y = *y1;
 
 #ifdef _WINDOWS
-  WIN_GetDeviceContext (frame);
+  Gdc = GetDC (FrRef[frame]);
 #endif /* _WINDOWS */
   nbpoints = 1;
   lastx = x; 
@@ -1114,7 +1122,7 @@ int LineCreation (int frame, PtrBox pBox, int *x1, int *y1, int *x2,
   *y2 = PixelValue (pBuffer->BuPoints[2].YCoord, UnPixel, NULL,
 		    ViewFrameTable[frame - 1].FrMagnification);
 #ifdef _WINDOWS
-  WIN_ReleaseDeviceContext ();
+  ReleaseDC (FrRef[frame], Gdc);
 #endif /* _WINDOWS */
   /* Free the buffer */
   FreeTextBuffer (pBuffer);
@@ -1204,20 +1212,21 @@ void LineModification (int frame, PtrBox pBox, int point, int *xi, int *yi)
 					      ViewFrameTable[frame - 1].FrMagnification);
 
 #ifdef _WINDOWS
-  WIN_GetDeviceContext (frame);
+  Gdc = GetDC (FrRef[frame]);
 #endif /* _WINDOWS */
   /* get the current point */
   xorg -= pFrame->FrXOrg;
   yorg -= pFrame->FrYOrg;
   RedrawPolyLine (frame, xorg, yorg, pBuffer, 3, 1, FALSE,
 		  &x1, &y1, &lastx, &lasty, &x3, &y3);
-  MoveApoint (frame, xorg, yorg, x1, y1, x3, y3, lastx, lasty, 1, width, height, pBuffer, pBuffer);
+  MoveApoint (frame, xorg, yorg, x1, y1, x3, y3, lastx, lasty, 1, width,
+	          height, pBuffer, pBuffer);
   *xi = PixelValue (pBuffer->BuPoints[1].XCoord, UnPixel, NULL,
 		    ViewFrameTable[frame - 1].FrMagnification);
   *yi = PixelValue (pBuffer->BuPoints[1].YCoord, UnPixel, NULL,
 		    ViewFrameTable[frame - 1].FrMagnification);
 #ifdef _WINDOWS
-  WIN_ReleaseDeviceContext ();
+  ReleaseDC (FrRef[frame], Gdc);
 #endif /* _WINDOWS */
   /* Free the buffer */
   FreeTextBuffer (pBuffer);
@@ -1247,7 +1256,6 @@ static void Resizing (int frame, int *x, int *y, int *width, int *height,
   int                 xref, yref;
   int                 warpx, warpy;
 #ifdef _WINDOWS
-  /*RECT                rect;*/
   POINT               cursorPos;
 #endif /* _WINDOWS */
   ThotBool           isEllipse;
@@ -1322,10 +1330,6 @@ static void Resizing (int frame, int *x, int *y, int *width, int *height,
       break;
     }  
 
-#ifdef _WINDOWS
-  /*GetWindowRect (w, &rect);*/
-#endif /* _WINDOWS */
-
   /* Shows the initial box size */
   if (isEllipse)
     InvertEllipse (frame, *x, *y, *width, *height, *x + xref, *y + yref);
@@ -1346,9 +1350,8 @@ static void Resizing (int frame, int *x, int *y, int *width, int *height,
 	  
 	case WM_MOUSEMOVE:
 	  GetCursorPos (&cursorPos);
-	  /*ScreenToClient (w, &cursorPos);*/
-	  dl = cursorPos.x /*+ rect.left*/ - xm;
-	  dh = cursorPos.y /*+ rect.top*/ - ym;
+	  dl = cursorPos.x - xm;
+	  dh = cursorPos.y - ym;
 	  if (percentW != 0)
 	    {
 	      /* keep the greater value */
@@ -1548,6 +1551,9 @@ static void Resizing (int frame, int *x, int *y, int *width, int *height,
 		ym = warpy /*+ rect.top*/;
 	    }
 	  break;
+
+	case WM_PAINT:
+	  WIN_HandleExpose (w, frame, event.wParam, event.lParam);
 	default:  break;
         }
 #else  /* _WINDOWS */
@@ -1803,21 +1809,26 @@ void GeometryResize (int frame, int x, int y, int *width, int *height,
 		     PtrBox box, int xmin, int xmax, int ymin, int ymax,
 		     int xm, int ym, int percentW, int percentH)
 {
-  ThotWindow          w;
-#ifndef _WINDOWS
-  int                 e;
+  ThotWindow       w;
+#ifdef _WINDOWS
+  POINT            cursorPos;
+#else /* _WINDOWS */
+  int              e;
 #endif /* _WINDOWS */
 
   /* select the correct cursor */
   w = FrRef[frame];
 #ifdef _WINDOWS
-  WIN_GetDeviceContext (frame);
+  Gdc = GetDC (w);
   SetCursor (LoadCursor (NULL, IDC_CROSS));
+  GetCursorPos (&cursorPos);
+  xm = cursorPos.x;
+  ym = cursorPos.y;
   Resizing (frame, &x, &y, width, height, box, xmin, xmax, ymin, ymax, xm, ym,
 	  percentW, percentH);
   /* Erase the box drawing */
   SetCursor (LoadCursor (NULL, IDC_ARROW));
-  WIN_ReleaseDeviceContext ();
+  ReleaseDC (w, Gdc);
 #else  /* _WINDOWS */
   e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
   if (xmin == xmax)
@@ -2005,6 +2016,9 @@ static void Moving (int frame, int *x, int *y, int width, int height,
 		ym = warpy;
 	    }
 	  break;
+
+	case WM_PAINT:
+	  WIN_HandleExpose (w, frame, event.wParam, event.lParam);
 	default: break;
 	}
 #else  /* !_WINDOWS */
@@ -2153,14 +2167,14 @@ void GeometryMove (int frame, int *x, int *y, int width, int height,
    int                 e;
 #endif /* _WINDOWS */
 
-   /* Pick the correct cursor */
-   w = FrRef[frame];
+  /* Pick the correct cursor */
+  w = FrRef[frame];
 #ifdef _WINDOWS
-  WIN_GetDeviceContext (frame);
+  Gdc = GetDC (w);
   SetCursor (LoadCursor (NULL, IDC_CROSS));
   Moving (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym);
   SetCursor (LoadCursor (NULL, IDC_ARROW));
-  WIN_ReleaseDeviceContext ();
+  ReleaseDC (w, Gdc);
 #else  /* !_WINDOWS */
   e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
   if ((xmin >= *x) && (xmax <= *x + width))
@@ -2207,6 +2221,7 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
 #ifdef _WINDOWS
   RECT                rect;
   POINT               cursorPos;
+  HCURSOR             cross;
 #else  /* _WINDOWS */
   ThotWindow          wdum;
   int                 e, f;
@@ -2274,11 +2289,10 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
   /* change the cursor, modify library state */
   w = FrRef[frame];
 #ifdef _WINDOWS
-  /* WIN_HandleExpose (w, int frame, WPARAM wParam, LPARAM lParam); */
-  WIN_GetDeviceContext (frame);
+  cross = LoadCursor (NULL, IDC_CROSS);
+  Gdc = GetDC (w);
   GetWindowRect (w, &rect);
   SetCursorPos (*x + rect.left, *y + rect.top);
-  SetCursor (LoadCursor (NULL, IDC_CROSS));
 #else /* !_WINDOWS */
   e = ButtonPressMask | ButtonReleaseMask | ButtonMotionMask;
   ThotGrab (w, HVCurs, e, 0);
@@ -2297,6 +2311,7 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
     {
 #ifdef _WINDOWS
      GetMessage (&event, NULL, 0, 0);
+	 SetCursor (cross);
       if (event.message == WM_MOUSEMOVE)
 	{
 	  GetCursorPos (&cursorPos);
@@ -2357,6 +2372,8 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
 		ret = 1;
 	      break; 
 	      
+		case WM_PAINT:
+		  WIN_HandleExpose (w, frame, event.wParam, event.lParam);
 	    default: break;
 	    } 
 	} 
@@ -2450,8 +2467,8 @@ void GeometryCreate (int frame, int *x, int *y, int *width, int *height,
 #endif /* _WINDOWS */
   Resizing (frame, x, y, width, height, box, xmin, xmax, ymin, ymax, xm, ym, percentW, percentH);
 #ifdef _WINDOWS 
+  ReleaseDC (w, Gdc);
   SetCursor (LoadCursor (NULL, IDC_ARROW));
-  WIN_ReleaseDeviceContext ();
 #else  /* _WINDOWS */
   /* restore state of the Thot Library */
   ThotUngrab ();

@@ -49,7 +49,7 @@
 /*----------------------------------------------------------------------
    GetXYOrg : do a coordinate shift related to current frame.
   ----------------------------------------------------------------------*/
-void                GetXYOrg (int frame, int *XOrg, int *YOrg)
+void GetXYOrg (int frame, int *XOrg, int *YOrg)
 {
    ViewFrame          *pFrame;
 
@@ -61,7 +61,7 @@ void                GetXYOrg (int frame, int *XOrg, int *YOrg)
 /*----------------------------------------------------------------------
    DefClip defines the area of the frame which need to be redrawn.
   ----------------------------------------------------------------------*/
-void                DefClip (int frame, int xd, int yd, int xf, int yf)
+void DefClip (int frame, int xd, int yd, int xf, int yf)
 {
    int                 width, height;
    ViewFrame          *pFrame;
@@ -135,19 +135,19 @@ void                DefClip (int frame, int xd, int yd, int xf, int yf)
 /*----------------------------------------------------------------------
    DefRegion store the area of frame which need to be redrawn.
   ----------------------------------------------------------------------*/
-void                DefRegion (int frame, int xd, int yd, int xf, int yf)
+void DefRegion (int frame, int xd, int yd, int xf, int yf)
 {
-   ViewFrame          *pFrame;
+  ViewFrame          *pFrame;
 
-
-   pFrame = &ViewFrameTable[frame - 1];
-   DefClip (frame, xd + pFrame->FrXOrg, yd + pFrame->FrYOrg, xf + pFrame->FrXOrg, yf + pFrame->FrYOrg);
+  pFrame = &ViewFrameTable[frame - 1];
+  DefClip (frame, xd + pFrame->FrXOrg, yd + pFrame->FrYOrg,
+	  xf + pFrame->FrXOrg, yf + pFrame->FrYOrg);
 }
 
 /*----------------------------------------------------------------------
    TtaRefresh redraw all the frame of all the loaded documents.
   ----------------------------------------------------------------------*/
-void                TtaRefresh ()
+void TtaRefresh ()
 {
    int                 frame;
 

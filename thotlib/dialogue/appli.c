@@ -290,28 +290,49 @@ static void   CopyToolTipText (int frame, LPTOOLTIPTEXT lpttt)
   ----------------------------------------------------------------------*/
 void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
 {
-  PAINTSTRUCT         ps;
-  RECT                rect;
+ PAINTSTRUCT         ps;
+ RECT                rect;
+ ViewFrame          *pFrame;
+ int                 xmin, xmax, ymin, ymax;
 
-  if (frame > 0 && frame <= MAX_FRAME)
-    {
-      /* Do not redraw if the document is in NoComputedDisplay mode. */
-      if (documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
-	{
-	  BeginPaint (w, &ps);
-	  GetClientRect (w, &rect);
-	  DefRegion (frame, ps.rcPaint.left, ps.rcPaint.top, ps.rcPaint.right, ps.rcPaint.bottom);
-	  EndPaint (w, &ps);
-	  DisplayFrame (frame);
-	}
-    }
+ if (frame > 0 && frame <= MAX_FRAME)
+ {
+   /* Do not redraw if the document is in NoComputedDisplay mode. */
+   if (documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
+   {
+	 BeginPaint (w, &ps);
+	 GetClientRect (w, &rect);
+	 /* save the previous clipping */
+     pFrame = &ViewFrameTable[frame - 1];
+	 xmin = pFrame->FrClipXBegin;
+	 xmax = pFrame->FrClipXEnd;
+	 ymin = pFrame->FrClipYBegin;
+	 ymax = pFrame->FrClipYEnd;
+     pFrame = &ViewFrameTable[frame - 1];
+	 pFrame->FrClipXBegin = 0;
+	 pFrame->FrClipXEnd = 0;
+	 pFrame->FrClipYBegin = 0;
+	 pFrame->FrClipYEnd = 0;
+	 DefRegion (frame, ps.rcPaint.left, ps.rcPaint.top, ps.rcPaint.right,
+		 ps.rcPaint.bottom);
+	 EndPaint (w, &ps);
+	 DisplayFrame (frame);
+	 /* restore the previous clipping */
+     pFrame = &ViewFrameTable[frame - 1];
+	 pFrame->FrClipXBegin = xmin;
+	 pFrame->FrClipXEnd = xmax;
+	 pFrame->FrClipYBegin = ymin;
+	 pFrame->FrClipYEnd = ymax;
+   }
+ }
 }
 
 /*----------------------------------------------------------------------
    WIN_ChangeTaille : function called when a view is resized under    
    MS-Windows.                                                   
   ----------------------------------------------------------------------*/
-void WIN_ChangeViewSize (int frame, int width, int height, int top_delta, int bottom_delta)
+void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
+						 int bottom_delta)
 {
    int                 view;
    Document            doc;
@@ -340,7 +361,7 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta, int bo
 /*----------------------------------------------------------------------
   XFlushOutput enforce updating of the calculated image for frame.
   ----------------------------------------------------------------------*/
-void                XFlushOutput (int frame)
+void XFlushOutput (int frame)
 {
 #ifndef _GTK
    XFlush (TtDisplay);
@@ -351,32 +372,47 @@ void                XFlushOutput (int frame)
    FrameToRedisplay effectue le traitement des expositions X11 des     
    frames de dialogue et de documents.                   
   ----------------------------------------------------------------------*/
-void                FrameToRedisplay (ThotWindow w, int frame, void *ev)
+void FrameToRedisplay (ThotWindow w, int frame, void *ev)
 {
-  int                 x;
-  int                 y;
-  int                 l;
-  int                 h;
-  XExposeEvent       *event = (XExposeEvent *) ev;
+ XExposeEvent       *event = (XExposeEvent *) ev;
+ ViewFrame          *pFrame;
+ int                 xmin, xmax, ymin, ymax;
+ int                 x, y, l, h;
 
-  x = event->x;
-  y = event->y;
-  l = event->width;
-  h = event->height;
-  if (frame > 0 && frame <= MAX_FRAME && FrameTable[frame].FrDoc > 0 &&
-      /* don't handle a document in mode NoComputedDisplay */
-      documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
-    {
-      DefRegion (frame, x, y, x + l, y + h);
-      RedrawFrameBottom (frame, 0, NULL);
-    }
+ x = event->x;
+ y = event->y;
+ l = event->width;
+ h = event->height;
+ if (frame > 0 && frame <= MAX_FRAME && FrameTable[frame].FrDoc > 0 &&
+     /* don't handle a document in mode NoComputedDisplay */
+     documentDisplayMode[FrameTable[frame].FrDoc - 1] != NoComputedDisplay)
+   {
+	 /* save the previous clipping */
+     pFrame = &ViewFrameTable[frame - 1];
+	 xmin = pFrame->FrClipXBegin;
+	 xmax = pFrame->FrClipXEnd;
+	 ymin = pFrame->FrClipYBegin;
+	 ymax = pFrame->FrClipYEnd;
+     pFrame = &ViewFrameTable[frame - 1];
+	 pFrame->FrClipXBegin = 0;
+	 pFrame->FrClipXEnd = 0;
+	 pFrame->FrClipYBegin = 0;
+     DefRegion (frame, x, y, x + l, y + h);
+     RedrawFrameBottom (frame, 0, NULL);
+	 /* restore the previous clipping */
+     pFrame = &ViewFrameTable[frame - 1];
+	 pFrame->FrClipXBegin = xmin;
+	 pFrame->FrClipXEnd = xmax;
+	 pFrame->FrClipYBegin = ymin;
+	 pFrame->FrClipYEnd = ymax;
+   }
 }
 
 
 /*----------------------------------------------------------------------
   FrameRedraw
   ----------------------------------------------------------------------*/
-void                FrameRedraw (int frame, Dimension width, Dimension height)
+void FrameRedraw (int frame, Dimension width, Dimension height)
 {
    int                 dx, dy, view;
    NotifyWindow        notifyDoc;
@@ -420,7 +456,7 @@ void                FrameRedraw (int frame, Dimension width, Dimension height)
    FrameResized Evenement sur une frame document.                              
   ----------------------------------------------------------------------*/
 #ifdef _GTK
-void    FrameResized (GtkWidget *w, GdkEventConfigure *event, gpointer data)
+void FrameResized (GtkWidget *w, GdkEventConfigure *event, gpointer data)
 {
   int frame;
   Dimension           width, height;
@@ -573,7 +609,7 @@ void WIN_ChangeHScroll (int frame, int reason, int value)
 /*----------------------------------------------------------------------
    Demande de scroll horizontal.                                    
   ----------------------------------------------------------------------*/
-void                FrameHScrolled (int *w, int frame, int *param)
+void FrameHScrolled (int *w, int frame, int *param)
 {
 #ifndef _GTK
    int                 delta, l;
@@ -649,7 +685,7 @@ void                FrameHScrolled (int *w, int frame, int *param)
 /*----------------------------------------------------------------------
    Demande de scroll vertical.                                      
   ----------------------------------------------------------------------*/
-void                FrameVScrolled (int *w, int frame, int *param)
+void FrameVScrolled (int *w, int frame, int *param)
 {
 #ifndef _GTK
   int                 delta;
@@ -769,7 +805,7 @@ void                FrameVScrolled (int *w, int frame, int *param)
 /*----------------------------------------------------------------------
    TtcLineUp scrolls one line up.                                    
   ----------------------------------------------------------------------*/
-void                TtcLineUp (Document document, View view)
+void TtcLineUp (Document document, View view)
 {
 #ifndef _WINDOWS
   XmScrollBarCallbackStruct infos;
@@ -795,7 +831,7 @@ void                TtcLineUp (Document document, View view)
 /*----------------------------------------------------------------------
    TtcLineDown scrolls one line down.                                
   ----------------------------------------------------------------------*/
-void                TtcLineDown (Document document, View view)
+void TtcLineDown (Document document, View view)
 {
 #ifndef _WINDOWS
   XmScrollBarCallbackStruct infos;
@@ -821,7 +857,7 @@ void                TtcLineDown (Document document, View view)
 /*----------------------------------------------------------------------
    TtcScrollLeft scrolls one position left.                                    
   ----------------------------------------------------------------------*/
-void                TtcScrollLeft (Document document, View view)
+void TtcScrollLeft (Document document, View view)
 {
 #ifndef _WINDOWS
   XmScrollBarCallbackStruct infos;
@@ -847,7 +883,7 @@ void                TtcScrollLeft (Document document, View view)
 /*----------------------------------------------------------------------
    TtcScrollRight scrolls one position right.                                
   ----------------------------------------------------------------------*/
-void                TtcScrollRight (Document document, View view)
+void TtcScrollRight (Document document, View view)
 {
 #ifndef _WINDOWS
   XmScrollBarCallbackStruct infos;
@@ -873,7 +909,7 @@ void                TtcScrollRight (Document document, View view)
 /*----------------------------------------------------------------------
    PageUp scrolls one screen up.                                    
   ----------------------------------------------------------------------*/
-void                TtcPageUp (Document document, View view)
+void TtcPageUp (Document document, View view)
 {
    int                 frame;
 #  ifndef _WINDOWS
@@ -898,7 +934,7 @@ void                TtcPageUp (Document document, View view)
 /*----------------------------------------------------------------------
    PageDown scrolls one screen down.                                
   ----------------------------------------------------------------------*/
-void                TtcPageDown (Document document, View view)
+void TtcPageDown (Document document, View view)
 {
    int                 frame;
 
@@ -925,7 +961,7 @@ void                TtcPageDown (Document document, View view)
 /*----------------------------------------------------------------------
    PageTop goes to the document top.                                
   ----------------------------------------------------------------------*/
-void                TtcPageTop (Document document, View view)
+void TtcPageTop (Document document, View view)
 {
 #  ifdef _WINDOWS
    int                 frame;
@@ -951,7 +987,7 @@ void                TtcPageTop (Document document, View view)
 /*----------------------------------------------------------------------
    PageEnd goes to the document end.                                
   ----------------------------------------------------------------------*/
-void                TtcPageEnd (Document document, View view)
+void TtcPageEnd (Document document, View view)
 {
 #  ifdef _WINDOWS
    int                 frame;
@@ -980,7 +1016,7 @@ void                TtcPageEnd (Document document, View view)
 /*----------------------------------------------------------------------
    InitializeOtherThings initialise les contextes complementaires.     
   ----------------------------------------------------------------------*/
-void                InitializeOtherThings ()
+void InitializeOtherThings ()
 {
    int                 i;
 
@@ -1008,7 +1044,7 @@ void                InitializeOtherThings ()
    if view == 0, changes the title of all windows of document
    otherwise change the window title of the specified view.
   ----------------------------------------------------------------------*/
-void     TtaChangeWindowTitle (Document document, View view, STRING title)
+void TtaChangeWindowTitle (Document document, View view, STRING title)
 {
     int          idwindow, v;
     PtrDocument  pDoc;
@@ -1037,7 +1073,7 @@ void     TtaChangeWindowTitle (Document document, View view, STRING title)
 /*----------------------------------------------------------------------
    Map and raise the corresponding window.                          
   ----------------------------------------------------------------------*/
-void                TtaRaiseView (Document document, View view)
+void TtaRaiseView (Document document, View view)
 {
 #ifndef _GTK
    int                 idwindow;
@@ -1062,7 +1098,7 @@ void                TtaRaiseView (Document document, View view)
    DisplaySelMessage affiche la se'lection donne'e en parame`tre (texte) dans 
    la fenetre active.                                            
   ----------------------------------------------------------------------*/
-void                DisplaySelMessage (STRING text, PtrDocument pDoc)
+void DisplaySelMessage (STRING text, PtrDocument pDoc)
 {
    int                 doc;
    int                 view;
@@ -1086,7 +1122,7 @@ void                DisplaySelMessage (STRING text, PtrDocument pDoc)
 /*----------------------------------------------------------------------
    TtaSetStatus affiche le status de la vue du document.                      
   ----------------------------------------------------------------------*/
-void                TtaSetStatus (Document document, View view, CONST STRING text, CONST STRING name)
+void TtaSetStatus (Document document, View view, CONST STRING text, CONST STRING name)
 {
    int                 frame;
    CHAR_T              s[MAX_LENGTH];
@@ -1702,7 +1738,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
    Evenement sur une frame document.                              
    D.V. equivalent de la fontion MS-Windows ci dessus !           
   ----------------------------------------------------------------------*/
-void                FrameCallback (int frame, void *evnt)
+void FrameCallback (int frame, void *evnt)
 {
    PtrDocument         docsel;
    PtrElement          firstSel, lastSel;

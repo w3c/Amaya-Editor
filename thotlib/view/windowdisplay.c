@@ -1485,16 +1485,16 @@ void DrawCurve (int frame, int thick, int style, int x, int y,
 				UnPixel, NULL,
 				ViewFrameTable[frame - 1].FrMagnification);
   j++;
-  cx1 = (controls[j].lx * 3 + x1 - x) / 4 + x;
-  cy1 = (controls[j].ly * 3 + y1 - y) / 4 + y;
+  cx1 = ((int) controls[j].lx * 3 + x1 - x) / 4 + x;
+  cy1 = ((int) controls[j].ly * 3 + y1 - y) / 4 + y;
   x2 = x + PixelValue (adbuff->BuPoints[j].XCoord,
 				UnPixel, NULL,
 				ViewFrameTable[frame - 1].FrMagnification);
   y2 = y + PixelValue (adbuff->BuPoints[j].YCoord,
 				UnPixel, NULL,
 				ViewFrameTable[frame - 1].FrMagnification);
-  cx2 = (controls[j].lx * 3 + x2 - x) / 4 + x;
-  cy2 = (controls[j].ly * 3 + y2 - y) / 4 + y;
+  cx2 = ((int) controls[j].lx * 3 + x2 - x) / 4 + x;
+  cy2 = ((int) controls[j].ly * 3 + y2 - y) / 4 + y;
 
   /* backward arrow  */
   if (arrow == 2 || arrow == 3)
@@ -1536,8 +1536,8 @@ void DrawCurve (int frame, int thick, int style, int x, int y,
       /* skip to next points */
       x1 = x2;
       y1 = y2;
-      cx1 = controls[i].rx + x;
-      cy1 = controls[i].ry + y;
+      cx1 = (int) controls[i].rx + x;
+      cy1 = (int) controls[i].ry + y;
       if (i < nb - 1)
 	{
 	  /* not finished */
@@ -1549,21 +1549,21 @@ void DrawCurve (int frame, int thick, int style, int x, int y,
 	      adbuff = adbuff->BuNext;
 	      j = 0;
 	    }
-	  x2 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord, UnPixel,
-			     NULL, ViewFrameTable[frame - 1].FrMagnification));
-	  y2 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord, UnPixel,
-                             NULL, ViewFrameTable[frame - 1].FrMagnification));
+	  x2 = x + PixelValue (adbuff->BuPoints[j].XCoord, UnPixel,
+			     NULL, ViewFrameTable[frame - 1].FrMagnification);
+	  y2 = y + PixelValue (adbuff->BuPoints[j].YCoord, UnPixel,
+                             NULL, ViewFrameTable[frame - 1].FrMagnification);
 	  if (i == nb - 2)
 	    {
-	      cx1 = (controls[i].rx * 3 + x1 - x) / 4 + x;
-	      cy1 = (controls[i].ry * 3 + y1 - y) / 4 + y;
-	      cx2 = (controls[i].rx * 3 + x2 - x) / 4 + x;
-	      cy2 = (controls[i].ry * 3 + y2 - y) / 4 + y;
+	      cx1 = ((int) controls[i].rx * 3 + x1 - x) / 4 + x;
+	      cy1 = ((int) controls[i].ry * 3 + y1 - y) / 4 + y;
+	      cx2 = ((int) controls[i].rx * 3 + x2 - x) / 4 + x;
+	      cy2 = ((int) controls[i].ry * 3 + y2 - y) / 4 + y;
 	    }
 	  else
 	    {
-	      cx2 = controls[i + 1].lx + x;
-	      cy2 = controls[i + 1].ly + y;
+	      cx2 = (int) controls[i + 1].lx + x;
+	      cy2 = (int) controls[i + 1].ly + y;
 	    }
 	}
     }
@@ -1590,8 +1590,8 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
 {
   PtrTextBuffer adbuff;
   int           i, j;
-  float         x1, y1, x2, y2;
-  float         cx1, cy1, cx2, cy2;
+  int           x1, y1, x2, y2;
+  int           cx1, cy1, cx2, cy2;
   HDC           display;
   HPEN          hPen;
   HPEN          hOldPen;
@@ -1649,23 +1649,23 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
   y += FrameTable[frame].FrTopMargin;
   adbuff = buffer;
   j = 1;
-  x1 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord,
+  x1 = x + PixelValue (adbuff->BuPoints[j].XCoord,
 				UnPixel, NULL,
-				ViewFrameTable[frame - 1].FrMagnification));
-  y1 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord,
+				ViewFrameTable[frame - 1].FrMagnification);
+  y1 = y + PixelValue (adbuff->BuPoints[j].YCoord,
 				UnPixel, NULL,
-				ViewFrameTable[frame - 1].FrMagnification));
-  cx1 = controls[j].rx + x;
-  cy1 = controls[j].ry + y;
+				ViewFrameTable[frame - 1].FrMagnification);
+  cx1 = (int) controls[j].rx + x;
+  cy1 = (int) controls[j].ry + y;
   j++;
-  x2 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord,
+  x2 = x + PixelValue (adbuff->BuPoints[j].XCoord,
 				UnPixel, NULL,
-				ViewFrameTable[frame - 1].FrMagnification));
-  y2 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord,
+				ViewFrameTable[frame - 1].FrMagnification);
+  y2 = y + PixelValue (adbuff->BuPoints[j].YCoord,
 				UnPixel, NULL,
-				ViewFrameTable[frame - 1].FrMagnification));
-  cx2 = controls[j].lx + x;
-  cy2 = controls[j].ly + y;
+				ViewFrameTable[frame - 1].FrMagnification);
+  cx2 = (int) controls[j].lx + x;
+  cy2 = (int) controls[j].ly + y;
 
   BeginPath (display);
   MoveToEx (display, x1, y1, NULL);
@@ -1681,8 +1681,8 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
       PolyBezierTo (display, &ptCurve[0], 3);
 
       /* next points */
-      cx1 = controls[i].rx + x;
-      cy1 = controls[i].ry + y;
+      cx1 = (int) controls[i].rx + x;
+      cy1 = (int) controls[i].ry + y;
       if (i < nb - 1)
 	{
 	  j++;
@@ -1693,26 +1693,26 @@ void DrawSpline (int frame, int thick, int style, int x, int y,
 	      adbuff = adbuff->BuNext;
 	      j = 0;
 	    }
-	  x2 = (float) (x + PixelValue (adbuff->BuPoints[j].XCoord,
+	  x2 = x + PixelValue (adbuff->BuPoints[j].XCoord,
 				   UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	  y2 = (float) (y + PixelValue (adbuff->BuPoints[j].YCoord,
+				   ViewFrameTable[frame - 1].FrMagnification);
+	  y2 = y + PixelValue (adbuff->BuPoints[j].YCoord,
 				   UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	  cx2 = controls[i + 1].lx + x;
-	  cy2 = controls[i + 1].ly + y;
+				   ViewFrameTable[frame - 1].FrMagnification);
+	  cx2 = (int) controls[i + 1].lx + x;
+	  cy2 = (int) controls[i + 1].ly + y;
 	}
       else
 	{
 	  /* last point. The next one is the first */
-	  x2 = (float) (x + PixelValue (buffer->BuPoints[1].XCoord,
+	  x2 = x + PixelValue (buffer->BuPoints[1].XCoord,
 				   UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	  y2 = (float) (y + PixelValue (buffer->BuPoints[1].YCoord,
+				   ViewFrameTable[frame - 1].FrMagnification);
+	  y2 = y + PixelValue (buffer->BuPoints[1].YCoord,
 				   UnPixel, NULL,
-				   ViewFrameTable[frame - 1].FrMagnification));
-	  cx2 = controls[1].lx + x;
-	  cy2 = controls[1].ly + y;
+				   ViewFrameTable[frame - 1].FrMagnification);
+	  cx2 = (int) controls[1].lx + x;
+	  cy2 = (int) controls[1].ly + y;
 	}
     }
 

@@ -21,6 +21,7 @@ extern void       WIN_TtaSetToggleMenu (int, int, ThotBool, ThotWindow);
 extern void       WIN_ThotCallBack (ThotWindow, WPARAM, LPARAM);
 extern void       WIN_CharTranslation (HWND hWnd, int frame, UINT msg, WPARAM wParam, LPARAM lParam, ThotBool isSpecial);
 extern void       WIN_InitDialogueFonts (HDC, CHAR_T*);
+extern void       WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam);
 extern void       APP_ButtonCallback (ThotButton, int, caddr_t);
 extern void       CleanFrameCatList (int frame, int ref);
 extern int        GetMainFrameNumber (ThotWindow);
