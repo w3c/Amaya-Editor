@@ -465,15 +465,8 @@ void WIN_HandleExpose (ThotWindow w, int frame, WPARAM wParam, LPARAM lParam)
      pFrame->FrClipYBegin = ymin;
      pFrame->FrClipYEnd = ymax;
 #else /*_GL*/
-	 
-     BeginPaint (w, &ps);
-     GL_prepare (frame);
-     DefRegion (frame, ps.rcPaint.left, 
-		ps.rcPaint.top, ps.rcPaint.right,
-		ps.rcPaint.bottom);
-     RedrawFrameBottom (frame, 0, NULL);
-     /*glMatroxBUG (frame, x, y, width, height);	*/
-     GL_Swap (frame);
+	 BeginPaint (w, &ps);
+	 FrameTable[frame].DblBuffNeedSwap = TRUE;
      EndPaint (w, &ps);
 #endif /*_GL*/
    }
@@ -507,7 +500,6 @@ void WIN_ChangeViewSize (int frame, int width, int height, int top_delta,
  		height);
       RedrawFrameBottom (frame, 0, NULL);
 	  GL_realize (frame);
-	 GL_DrawAll (NULL, -1);
    }
 #endif/*_GL*/
    /* recompute the scroll bars */
@@ -919,11 +911,11 @@ void WIN_ChangeVScroll (int frame, int reason, int value)
 	   delta = (int) (((float)value / (float)FrameTable[frame].FrHeight) * 100);
 	   JumpIntoView (frame, delta);
 	 }
-#ifdef _GL
+#ifdef _GL2
 	GL_ActivateDrawing (frame);
 	GL_DrawAll (NULL, frame);
 	GL_Swap (frame);
-#endif /*_GL*/
+#endif /*_GL2*/
        break;
      } 
 }
@@ -2277,7 +2269,7 @@ LRESULT CALLBACK ClientWndProc (HWND hwnd, UINT mMsg, WPARAM wParam, LPARAM lPar
     default:
       break;
     }
-#ifdef _GL
+#ifdef _GL2
   GL_DrawAll (NULL, -1);
 #endif /*GL*/
   return (DefWindowProc (hwnd, mMsg, wParam, lParam));

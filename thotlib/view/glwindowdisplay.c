@@ -488,7 +488,7 @@ void GL_Win32ContextInit (HWND hwndClient, int frame)
 }
 
 /*----------------------------------------------------------------------
- GL_Win32ContextInit : Free opengl contexts
+ GL_Win32ContextClose : Free opengl contexts
   ----------------------------------------------------------------------*/
 void GL_Win32ContextClose (int frame, HWND hwndClient)
 {
@@ -1195,14 +1195,24 @@ int CharacterWidth (int c, PtrFont font)
   ----------------------------------------------------------------------*/
 void GL_Swap (int frame)
 {
+#ifdef _WINDOWS
+ PAINTSTRUCT         ps;
+#endif /*_WINDOWS*/
   if (frame < MAX_FRAME)
     {
       glFinish ();
       glFlush ();
-      
+     
 #ifdef _WINDOWS
-    if (GL_Windows[frame])
-      SwapBuffers (GL_Windows[frame]);
+
+	 GetDC (FrRef[frame]);
+     /*BeginPaint (FrRef[frame], &ps);*/
+
+	  if (GL_Windows[frame])
+		SwapBuffers (GL_Windows[frame]);
+
+	  /*EndPaint (FrRef[frame], &ps);*/
+	  ReleaseDC (FrRef[frame], GL_Windows[frame]);
 #else
   if (FrameTable[frame].WdFrame)
     gtk_gl_area_swapbuffers (GTK_GL_AREA(FrameTable[frame].WdFrame));
