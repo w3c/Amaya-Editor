@@ -61,7 +61,7 @@ char docToOpen [256];
 #ifdef WITH_SOCKS
 char                __res = 0;
 #endif
-#define AMAYA_PAGE "http://www.w3.org/Amaya/User"
+#define AMAYA_PAGE "http://www.w3.org/Amaya/User/"
 /*
 #define AMAYA_PAGE "http://tuvalu.inrialpes.fr:3030/aa/test.html"
 */
@@ -2020,8 +2020,6 @@ NotifyEvent        *event;
 
    strcat (TempFileDirectory, "/.amaya");
 #  endif /* _WINDOWS */
-
-   printf ("TempFileDirectory: %s\n", TempFileDirectory);
 
    i = mkdir (TempFileDirectory, S_IRWXU);
    if (i != 0 && errno != EEXIST)

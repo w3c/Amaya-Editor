@@ -35,10 +35,107 @@ static boolean		numberLinks;
 static boolean		withToC;
 static int              basePrint;
 
+/* structure to register sub-documents */
+typedef struct _SubDoc
+  {
+     struct _SubDoc  *SDnext;
+     Element          SDel;
+     char            *SDname;
+  }SubDoc;
+static struct _SubDoc  *SubDocs = NULL;
+static Document		docBook = 0;
+
 #include "init_f.h"
 #include "HTMLactions_f.h"
 #include "HTMLbook_f.h"
 #include "HTMLedit_f.h"
+
+
+/*----------------------------------------------------------------------
+  RegisterSubDoc adds a new entry in SubDoc table.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static void         RegisterSubDoc (Element el, char *url)
+#else
+static void         RegisterSubDoc (el, url)
+Element             el;
+char               *url;
+#endif
+{
+  struct _SubDoc  *entry, *last;
+
+  if (url == NULL || url[0] == EOS)
+    return;
+
+  entry = TtaGetMemory (sizeof (struct _SubDoc));
+  entry->SDnext = NULL;
+  entry->SDel = el;
+  entry->SDname = TtaStrdup (url);
+
+  if (SubDocs == NULL)
+    SubDocs = entry;
+  else
+    {
+      last = SubDocs;
+      while (last->SDnext != NULL)
+	last = last->SDnext;
+      last->SDnext = entry;
+    }
+}
+
+
+/*----------------------------------------------------------------------
+  SearchSubDoc searches whether a document name is registered or not
+  within the SubDoc table.
+  Return the DIV element that correspond to the sub-document or NULL.
+  ----------------------------------------------------------------------*/
+#ifdef __STDC__
+static Element      SearchSubDoc (char *url)
+#else
+static Element      SearchSubDoc (url)
+char               *url;
+#endif
+{
+  Element          el;
+  struct _SubDoc  *entry;
+  boolean          docFound;
+
+  if (url == NULL || url[0] == EOS)
+    return (NULL);
+
+  entry = SubDocs;
+  docFound = FALSE;
+  el = NULL;
+  while (!docFound && entry != NULL)
+    {
+      docFound = (strcmp (url, entry->SDname) == 0);
+      if (!docFound)
+	entry = entry->SDnext;
+      else
+	/* document found -> return the DIV element */
+	el = entry->SDel;
+    }
+  return (el);
+}
+
+/*----------------------------------------------------------------------
+  FreeSubDocTable frees all entries in SubDoc table.
+  ----------------------------------------------------------------------*/
+static void         FreeSubDocTable ()
+{
+  struct _SubDoc  *entry, *last;
+
+  entry = SubDocs;
+  while (entry != NULL)
+    {
+      last = entry;
+      entry = entry->SDnext;
+      TtaFreeMemory (last->SDname);
+      TtaFreeMemory (last);
+    }
+  SubDocs = NULL;
+}
+
 
 
 /*----------------------------------------------------------------------
@@ -57,92 +154,160 @@ void             SetInternalLinks (document)
 Document                document;
 #endif
 {
-   Element	        root, el;
-   Element		link, target;
-   ElementType		elType;
-   Attribute		HrefAttr, IntLinkAttr, ExtLinkAttr;
-   AttributeType	attrType;
-   int			length;
-   int                  status;
-   char		       *text;
+  Element	        root, el, div;
+  Element		link, target;
+  ElementType		elType;
+  Attribute		HrefAttr, IntLinkAttr;
+  Attribute             ExtLinkAttr;
+  AttributeType	        attrType;
+  char		       *text, *ptr, *url;
+  char                  value[MAX_LENGTH];
+  int			length, i;
+  int                   status;
+  boolean               split;
 
-   /* Remember the current status of the document */
-   status = TtaIsDocumentModified (document);
-   root = TtaGetMainRoot (document);
-   elType = TtaGetElementType (root);
-   elType.ElTypeNum = HTML_EL_BODY;
-   el = TtaSearchTypedElement (elType, SearchForward, root);
+  /* Remember the current status of the document */
+  status = TtaIsDocumentModified (document);
+  root = TtaGetMainRoot (document);
+  elType = TtaGetElementType (root);
+  elType.ElTypeNum = HTML_EL_BODY;
+  el = TtaSearchTypedElement (elType, SearchForward, root);
 
-   elType.ElTypeNum = HTML_EL_Anchor;
-   attrType.AttrSSchema = elType.ElSSchema;
-   /* looks for all anchors in the document */
-   link = el;
-   while (link != NULL)
-     {
-       link = TtaSearchTypedElement (elType, SearchForward, link);
-       if (link != NULL)
-	 /* an anchor has been found */
-	 {
-	 attrType.AttrTypeNum = HTML_ATTR_HREF_;
-         HrefAttr = TtaGetAttribute (link, attrType);
-	 attrType.AttrTypeNum = HTML_ATTR_InternalLink;
-	 IntLinkAttr = TtaGetAttribute (link, attrType);
-	 attrType.AttrTypeNum = HTML_ATTR_ExternalLink;
-	 ExtLinkAttr = TtaGetAttribute (link, attrType);
-         if (HrefAttr == NULL)
-	   /* this anchor is not a link (no href attribute) */
-	   /* remove attributes InternalLink and ExternalLink if they
-	      are present */
-	   {
-	   if (IntLinkAttr != NULL)
-	      TtaRemoveAttribute (link, IntLinkAttr, document);
-	   if (ExtLinkAttr != NULL)
-	      TtaRemoveAttribute (link, ExtLinkAttr, document);	   
-	   }
-	 else
-	   /* this anchor has an HREF attribute */
-	   {
-	   length = TtaGetTextAttributeLength (HrefAttr);
-	   text = TtaGetMemory (length + 1);
-	   TtaGiveTextAttributeValue (HrefAttr, text, &length);
-	   if (text[0] == '#')
-	      /* it's an internal link. Attach an attribute InternalLink to */
-	      /* the link, if this attribute does not exist yet */
-	      {
-		if (IntLinkAttr == NULL)
-		   {
-		     attrType.AttrTypeNum = HTML_ATTR_InternalLink;
-		     IntLinkAttr = TtaNewAttribute (attrType);
-		     TtaAttachAttribute (link, IntLinkAttr, document);
-		   }
-		/* looks for the target element */
-		target = SearchNAMEattribute (document, &text[1], NULL);
-		if (target != NULL)
-		   /* set the Thot link */
-		   TtaSetAttributeReference (IntLinkAttr, link, document,
-					     target, document);
-	      }
-	   else
-	      /* it's an external link */
-	      {
-	      /* Remove the InternalLink attribute if it is present */
+  elType.ElTypeNum = HTML_EL_Anchor;
+  attrType.AttrSSchema = elType.ElSSchema;
+  /* looks for all anchors in the document */
+  link = el;
+  split = FALSE;
+  while (link != NULL)
+    {
+      link = TtaSearchTypedElement (elType, SearchForward, link);
+      if (link != NULL)
+	/* an anchor has been found */
+	{
+	  attrType.AttrTypeNum = HTML_ATTR_HREF_;
+	  HrefAttr = TtaGetAttribute (link, attrType);
+	  attrType.AttrTypeNum = HTML_ATTR_InternalLink;
+	  IntLinkAttr = TtaGetAttribute (link, attrType);
+	  attrType.AttrTypeNum = HTML_ATTR_ExternalLink;
+	  ExtLinkAttr = TtaGetAttribute (link, attrType);
+	  if (HrefAttr == NULL)
+	    /* this anchor is not a link (no href attribute) */
+	    /* remove attributes InternalLink and ExternalLink if they
+	       are present */
+	    {
 	      if (IntLinkAttr != NULL)
-		 TtaRemoveAttribute (link, IntLinkAttr, document);
-	      /* create an ExternalLink attribute if there is none */
-	      if (ExtLinkAttr == NULL)
-	         {
-		 attrType.AttrTypeNum = HTML_ATTR_ExternalLink;
-		 ExtLinkAttr = TtaNewAttribute (attrType);
-		 TtaAttachAttribute (link, ExtLinkAttr, document);
-		 }
-	      }
-	   TtaFreeMemory (text);
-	   }
-	 }
-     }
-   /* Reset document status */
-   if (!status)
-     TtaSetDocumentUnmodified (document);
+		TtaRemoveAttribute (link, IntLinkAttr, document);
+	      if (ExtLinkAttr != NULL)
+		TtaRemoveAttribute (link, ExtLinkAttr, document);	   
+	    }
+	  else
+	    /* this anchor has an HREF attribute */
+	    {
+	      length = TtaGetTextAttributeLength (HrefAttr);
+	      text = TtaGetMemory (length + 1);
+	      TtaGiveTextAttributeValue (HrefAttr, text, &length);
+
+	      /* does an external link become an internal link ? */
+	      if (document == docBook && SubDocs != NULL)
+		{
+		  ptr = strrchr (text, '#');
+		  url = text;
+		  if (ptr == text)
+		      /* a local link */
+		      url = NULL;
+		  else if (ptr == NULL)
+		    /* no specific position */
+		    ptr = text;
+		  else
+		    {
+		      /* split url and name part */
+		      ptr[0] = EOS;
+		      split = TRUE;
+		    }
+
+		  /* Is it a sub-document */
+		  div = SearchSubDoc (url);
+		  if (split)
+		    /* retore the mark */
+		    ptr[0] = '#';
+
+		  if (div == NULL)
+		    {
+		      /* it's not a sub-document */
+		      if (url == NULL)
+			/* a local link */
+			ptr = &text[1];
+		      else
+			/* still an externa; link */
+			ptr = NULL;
+		    }
+		  else
+		    {
+		      /* this link becomes internal */
+		      /* todo: check whether the name changed */
+		      strcpy (value, ptr);
+		      length = strlen (value);
+		      i = 0;
+		      target = SearchNAMEattribute (document, &value[1], NULL);
+		      while (target != NULL)
+			{
+			  /* is it the right NAME */
+			  if (TtaIsAncestor (target, div))
+			    target = NULL;
+			  else
+			    {
+			      /* continue the search */
+			      i++;
+			      sprintf (&value[length], "%d", i);
+			      target = SearchNAMEattribute (document, &value[1], NULL);
+			    }
+			}
+		      ptr = &value[1];
+		      TtaSetAttributeText (HrefAttr, value, link, document);
+		    }
+		}
+	      else if (text[0] == '#')
+		  ptr = &text[1];
+	      else
+		ptr = NULL;
+
+	      if (ptr != NULL)
+		/* it's an internal link. Attach an attribute InternalLink */
+		/* to the link, if this attribute does not exist yet */
+		{
+		  if (IntLinkAttr == NULL)
+		    {
+		      attrType.AttrTypeNum = HTML_ATTR_InternalLink;
+		      IntLinkAttr = TtaNewAttribute (attrType);
+		      TtaAttachAttribute (link, IntLinkAttr, document);
+		    }
+		  /* looks for the target element */
+		  target = SearchNAMEattribute (document, ptr, NULL);
+		  if (target != NULL)
+		    /* set the Thot link */
+		    TtaSetAttributeReference (IntLinkAttr, link, document, target, document);
+		}
+	      else
+		/* it's an external link */
+		{
+		  /* Remove the InternalLink attribute if it is present */
+		  if (IntLinkAttr != NULL)
+		    TtaRemoveAttribute (link, IntLinkAttr, document);
+		  /* create an ExternalLink attribute if there is none */
+		  if (ExtLinkAttr == NULL)
+		    {
+		      attrType.AttrTypeNum = HTML_ATTR_ExternalLink;
+		      ExtLinkAttr = TtaNewAttribute (attrType);
+		      TtaAttachAttribute (link, ExtLinkAttr, document);
+		    }
+		}
+	      TtaFreeMemory (text);
+	    }
+	}
+    }
+  /* Reset document status */
+  if (!status)
+    TtaSetDocumentUnmodified (document);
 }
 
 /*----------------------------------------------------------------------
@@ -496,14 +661,14 @@ Element             nextEl;
   document.
   ----------------------------------------------------------------------*/
 #ifdef __STDC__
-static void    MoveDocumentBody (Element *el, Document destDoc,
-				 Document sourceDoc, char *target, boolean deleteTree)
+static void    MoveDocumentBody (Element *el, Document destDoc, Document sourceDoc, char *target, char *url, boolean deleteTree)
 #else
-static void    MoveDocumentBody (el, destDoc, sourceDoc, target, deleteTree)
+static void    MoveDocumentBody (el, destDoc, sourceDoc, target, url, deleteTree)
 Element       *el;
 Document       destDoc;
 Document       sourceDoc;
 char          *target;
+char          *url;
 boolean        deleteTree;
 #endif
 {
@@ -514,7 +679,6 @@ boolean        deleteTree;
   int		   checkingMode;
   boolean          isID;
 
-  firstInserted = NULL;
   if (target != NULL)
     {
       /* locate the target element within the source document */
@@ -560,21 +724,22 @@ boolean        deleteTree;
 
       /* insert a DIV element */
       elType.ElTypeNum = HTML_EL_Division;
-      copy = TtaNewElement (destDoc, elType);
-      TtaInsertSibling (copy, elem, TRUE, destDoc);
+      lastInserted = TtaNewElement (destDoc, elType);
+      TtaInsertSibling (lastInserted, elem, TRUE, destDoc);
+      RegisterSubDoc (lastInserted, url);
 
       /* do copy */
-      lastInserted = NULL;
+      firstInserted = NULL;
       srce = TtaGetFirstChild (root);
       while (srce != NULL)
 	{
 	  copy = TtaCopyTree (srce, sourceDoc, destDoc, parent);
 	  if (copy != NULL)
 	    {
-	      if (lastInserted == NULL)
+	      if (firstInserted == NULL)
 		/* this is the first copied element. Insert it before elem */
 		{
-		  TtaInsertSibling (copy, elem, TRUE, destDoc);
+		  TtaInsertFirstChild (&copy, lastInserted, destDoc);
 		  firstInserted = copy;
 		}
 	      else
@@ -680,7 +845,7 @@ Document            document;
 	     {
 	       if (ptr == text)
 		 url = NULL;
-	       /* link to a particular position within a document */
+	       /* link to a particular position within a remote document */
 	       ptr[0] = EOS;
 	       ptr = &ptr[1];
 	     }
@@ -697,7 +862,7 @@ Document            document;
 		 {
 		   /* it's not the document itself */
 		   /* copy the target document at the position of the link */
-		   MoveDocumentBody (&next, document, newdoc, ptr,
+		   MoveDocumentBody (&next, document, newdoc, ptr, url,
 				     newdoc == includedDocument);
 		 }
 	       FreeDocumentResource (includedDocument);
@@ -728,6 +893,7 @@ View                view;
    Element	    root, body, el;
    ElementType	    elType;
 
+   docBook = document;
    root = TtaGetMainRoot (document);
    elType = TtaGetElementType (root);
    elType.ElTypeNum = HTML_EL_BODY;
@@ -737,92 +903,9 @@ View                view;
    while (el != NULL)
       el = GetIncludedDocuments (el, document);
    TtaSetStatus (document, 1, TtaGetMessage (AMAYA, AM_DOCUMENT_LOADED), "");
-}
-
-
-#ifdef R_HTML
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-static void         LoadEntity (Document document, char *text)
-#else
-static void         LoadEntity (document, text)
-Document            document;
-char               *text;
-#endif
-{
-  Document          includedDocument;
-  Attribute	    attr;
-  AttributeType	    attrType;
-  Element           el, includedEl;
-  ElementType	    elType;
-  int               length;
-
-  /* create the temporary document */
-  includedDocument = TtaNewDocument ("HTML", "tmp");
-  /* read the temporary document */
-  includedDocument = GetHTMLDocument (text, NULL, includedDocument, document, DC_TRUE);
-  
-  if (includedDocument != 0)
-    {
-      /* To do: Seach entity in the table */
-      /* locate the entity in the document */
-      el = TtaGetMainRoot (document);
-      elType = TtaGetElementType (el);
-      elType.ElTypeNum = HTML_EL_Entity;
-      /* TtaSearchElementByLabel (label, el); */
-      el = TtaSearchTypedElement (elType, SearchForward, el);
-      /* keep the entity name to know where to insert the sub-tree */
-      attrType.AttrSSchema = TtaGetDocumentSSchema (document);
-      attrType.AttrTypeNum = HTML_ATTR_entity_name;
-      attr = TtaGetAttribute (el, attrType);
-      if (attr != NULL)
-	{
-	  length = TtaGetTextAttributeLength (attr);
-	  text = TtaGetMemory (length + 1);
-	  TtaGiveTextAttributeValue (attr, text, &length);
-	}
-      /* To do: translate the entity name into element type
-	 and search this first element type in included document */
-      includedEl = TtaGetMainRoot (includedDocument);
-      elType = TtaGetElementType (includedEl);
-      elType.ElTypeNum = HTML_EL_TEXT_UNIT;
-      includedEl = TtaSearchTypedElement (elType, SearchForward, includedEl);
-      /* remove Entity */
-      /* To do: insert sub-trees */
-      FreeDocumentResource (includedDocument);
-      TtaCloseDocument (includedDocument);
-    }
-}
-#endif /* R_HTML */
-
-
-/*----------------------------------------------------------------------
-  ----------------------------------------------------------------------*/
-#ifdef __STDC__
-void                RealTimeHTML (Document document, View view)
-#else
-void                RealTimeHTML (document, view)
-Document            document;
-View                view;
-#endif
-{
-#ifdef R_HTML
-  Element	    root, el;
-  ElementType	    elType;
-
-  root = TtaGetMainRoot (document);
-  elType = TtaGetElementType (root);
-  elType.ElTypeNum = HTML_EL_Entity;
-  el = TtaSearchTypedElement (elType, SearchForward, root);
-  if (el != NULL)
-    {
-      /* document contains entities */
-      /* To do -> build table of entities */
-
-      /* simulate reception of different entities */
-      LoadEntity (document, "0/0");
-      LoadEntity (document, "0/1");
-    }
-#endif /* R_HTML */
+   /* update internal links */
+   SetInternalLinks (document);
+   /* remove registered  sub-documents */
+   FreeSubDocTable ();
+   docBook = 0;
 }
