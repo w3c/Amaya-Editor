@@ -11,6 +11,11 @@
  * Author: I. Vatton (INRIA)
  *
  */
+
+#ifdef _WX
+  #include "wx/wx.h"
+#endif /* _WX */
+
 #include "thot_gui.h"
 #include "ustring.h"
 #include "thot_sys.h"
@@ -3086,9 +3091,11 @@ static void RemoveBreaks (PtrBox pBox, int frame, ThotBool removed,
 			    }
 			}
 #ifdef _GL
-#ifdef _TRACE_GL_BUGS_GLISLIST
-  if (ibox1->DisplayList) printf ( "GLBUG - RemoveBreaks : glIsList=%s (pose prb sur certaines machines)\n", glIsList (ibox1->DisplayList) ? "yes" : "no" );
-#endif /* _TRACE_GL_BUGS_GLISLIST */
+#ifdef _WX
+		      wxASSERT_MSG( !ibox1->DisplayList ||
+				    glIsList(ibox1->DisplayList),
+				    _T("GLBUG - RemoveBreaks : glIsList returns false (pose prb sur certaines machines)"));
+#endif /* _WX */
 		      if (glIsList (ibox1->DisplayList))
 			{
 			  glDeleteLists (ibox1->DisplayList, 1);
